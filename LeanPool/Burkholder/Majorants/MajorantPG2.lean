@@ -62,6 +62,58 @@ private lemma pStar_eq_self_of_two_le (p : ℝ) (hp : 2 ≤ p) : pStar p = p := 
   apply (div_le_iff₀ (by linarith : 0 < p - 1)).2
   nlinarith only [hp]
 
+/-- Points of the interior of a closed interval lie in the open interval. -/
+private lemma mem_Ioo_of_mem_interior_Icc {a b t : ℝ} (ht : t ∈ interior (Set.Icc a b)) :
+    t ∈ Set.Ioo a b := by
+  rwa [interior_Icc] at ht
+
+/-! Elementary consequences of `2 ≤ p`, stated once so that the many proofs below can use
+them as terms instead of re-running `linarith`. -/
+
+private lemma p_pos_of_two_le (p : ℝ) (hp : 2 ≤ p) : 0 < p := by linarith
+private lemma p_nonneg_of_two_le (p : ℝ) (hp : 2 ≤ p) : 0 ≤ p := by linarith
+private lemma one_lt_of_two_le (p : ℝ) (hp : 2 ≤ p) : 1 < p := by linarith
+private lemma one_le_of_two_le (p : ℝ) (hp : 2 ≤ p) : 1 ≤ p := by linarith
+private lemma sub_one_pos_of_two_le (p : ℝ) (hp : 2 ≤ p) : 0 < p - 1 := by linarith
+private lemma sub_one_nonneg_of_two_le (p : ℝ) (hp : 2 ≤ p) : 0 ≤ p - 1 := by linarith
+private lemma one_le_sub_one_of_two_le (p : ℝ) (hp : 2 ≤ p) : 1 ≤ p - 1 := by linarith
+private lemma sub_one_ne_zero_of_two_le (p : ℝ) (hp : 2 ≤ p) : p - 1 ≠ 0 := by linarith
+private lemma p_ne_zero_of_two_le (p : ℝ) (hp : 2 ≤ p) : p ≠ 0 := by linarith
+private lemma half_p_nonneg_of_two_le (p : ℝ) (hp : 2 ≤ p) : 0 ≤ p / 2 := by linarith
+
+private lemma a_nonneg_of_two_le (p : ℝ) (hp : 2 ≤ p) : 0 ≤ a p := by
+  have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
+  have hp_pos : 0 < p := by linarith
+  rw [a, hpStar]
+  field_simp [hp_pos.ne]
+  linarith
+
+private lemma a_pos_of_two_lt (p : ℝ) (hp : 2 < p) : 0 < a p := by
+  have hp' : 2 ≤ p := by linarith
+  have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp'
+  have hp_pos : 0 < p := by linarith
+  rw [a, hpStar]
+  field_simp [hp_pos.ne']
+  linarith
+
+private lemma a_lt_one_of_two_le (p : ℝ) (hp : 2 ≤ p) : a p < 1 := by
+  have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
+  have hp_pos : 0 < p := by linarith
+  rw [a, hpStar]
+  have hdiv : 0 < 2 / p := by positivity
+  linarith
+
+
+/-- Below the ray `y = a p * x` in the right half-plane, `y` is below `x`. -/
+private lemma lt_of_lt_mul_a (p : ℝ) (hp : 2 ≤ p) {x y : ℝ} (hx : 0 < x) (hay : y < a p * x) :
+    y < x :=
+  lt_trans hay (mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp))
+
+
+
+
+
+
 /-- The same expression specialized to the `p ≥ 2` regime. -/
 private def vGeTwo (p x y : ℝ) : ℝ :=
   Real.rpow (|((x + y) / 2)|) p
@@ -447,7 +499,7 @@ private lemma DxvGeTwo_eq_formula_on_closureA2
   · simp [DxvGeTwoFun, DxvGeTwoFormula, DxvGeTwo, hx0]
   · have h00 := closureA2_x0_y0 p x y ⟨hx, hlow, hup⟩ hx0
     rcases h00 with ⟨rfl, rfl⟩
-    have hp1 : p - 1 ≠ 0 := by linarith
+    have hp1 : p - 1 ≠ 0 := sub_one_ne_zero_of_two_le p hp
     have hzero : Real.rpow (0 : ℝ) (p - 1) = 0 := Real.zero_rpow hp1
     simp only [DxvGeTwoFun, DxvGeTwo, gt_iff_lt, lt_self_iff_false, ↓reduceIte, DxvGeTwoFormula,
       add_zero, zero_div, abs_zero, Real.rpow_eq_pow, sub_self]
@@ -463,7 +515,7 @@ private lemma DyvGeTwo_eq_formula_on_closureA2
   · simp [DyvGeTwoFun, DyvGeTwoFormula, DyvGeTwo, hx0]
   · have h00 := closureA2_x0_y0 p x y ⟨hx, hlow, hup⟩ hx0
     rcases h00 with ⟨rfl, rfl⟩
-    have hp1 : p - 1 ≠ 0 := by linarith
+    have hp1 : p - 1 ≠ 0 := sub_one_ne_zero_of_two_le p hp
     have hzero : Real.rpow (0 : ℝ) (p - 1) = 0 := Real.zero_rpow hp1
     simp only [DyvGeTwoFun, DyvGeTwo, gt_iff_lt, lt_self_iff_false, ↓reduceIte, DyvGeTwoFormula,
       add_zero, zero_div, abs_zero, Real.rpow_eq_pow, sub_self]
@@ -473,7 +525,7 @@ private lemma DyvGeTwo_eq_formula_on_closureA2
 private lemma continuousOn_DxvGeTwo_closureA2
     (p : ℝ) (hp : 2 ≤ p) :
     ContinuousOn (DxvGeTwoFun p) (closureA2Set p) := by
-  have hp1 : 0 ≤ p - 1 := by linarith
+  have hp1 : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
   have hcont : Continuous (DxvGeTwoFormula p) := by
     have hsum :
         Continuous (fun z : ℝ × ℝ => Real.rpow (|((z.1 + z.2) / 2)|) (p - 1)) := by
@@ -493,7 +545,7 @@ private lemma continuousOn_DxvGeTwo_closureA2
 private lemma continuousOn_DyvGeTwo_closureA2
     (p : ℝ) (hp : 2 ≤ p) :
     ContinuousOn (DyvGeTwoFun p) (closureA2Set p) := by
-  have hp1 : 0 ≤ p - 1 := by linarith
+  have hp1 : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
   have hcont : Continuous (DyvGeTwoFormula p) := by
     have hsum :
         Continuous (fun z : ℝ × ℝ => Real.rpow (|((z.1 + z.2) / 2)|) (p - 1)) := by
@@ -568,6 +620,18 @@ private def QuarterPlane4 (x y : ℝ) : Prop := y ≤ 0 ∧ y ≤ x ∧ x ≤ -y
 
 private def QuarterPlane4Open (x y : ℝ) : Prop := y < 0 ∧ y < x ∧ x < -y
 
+private lemma not_quarterPlane_of_neg {x y : ℝ} (hx : x < 0) : ¬ QuarterPlane x y :=
+  fun hq => not_le_of_gt hx hq.1
+
+private lemma not_quarterPlane_of_lt {x y : ℝ} (hxy : x < y) : ¬ QuarterPlane x y :=
+  fun hq => not_le_of_gt hxy hq.2.1
+
+private lemma not_quarterPlane2_of_lt {x y : ℝ} (h : -x < y) : ¬ QuarterPlane2 x y :=
+  fun hq => not_le_of_gt h hq.2.1
+
+private lemma not_quarterPlane2_of_gt {x y : ℝ} (hyx : y < x) : ¬ QuarterPlane2 x y :=
+  fun hq => not_le_of_gt hyx hq.2.2
+
 
 
 private def uCandidate (p x y : ℝ) : ℝ :=
@@ -625,7 +689,7 @@ candidate, and later for differentiability/tangent estimates at break points.
 /-- For x ≥ 0, uA1 equals the smooth expression (using 0^(p-1)=0 when x=0). -/
 private lemma uA1_eq_smooth_of_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hx : 0 ≤ x) :
     uA1 p x y = alpha p * x ^ (p - 1) * (x - pStar p * (x - y) / 2) := by
-  have hexp_ne : p - 1 ≠ 0 := by linarith
+  have hexp_ne : p - 1 ≠ 0 := sub_one_ne_zero_of_two_le p hp
   unfold uA1
   rcases hx.lt_or_eq with hxpos | hxeq
   · exact ite_eq_left hxpos
@@ -636,7 +700,7 @@ private lemma uA1_eq_smooth_of_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hx :
 /-- uA1 is continuous on {(x, y) | 0 ≤ x} when p ≥ 2. -/
 private lemma continuousOn_uA1 (p : ℝ) (hp : 2 ≤ p) :
     ContinuousOn (fun z : ℝ × ℝ => uA1 p z.1 z.2) {z | 0 ≤ z.1} := by
-  have hexp_pos : 0 < p - 1 := by linarith
+  have hexp_pos : 0 < p - 1 := sub_one_pos_of_two_le p hp
   have heq : ∀ z : ℝ × ℝ, z ∈ {z : ℝ × ℝ | 0 ≤ z.1} →
       uA1 p z.1 z.2 = alpha p * z.1 ^ (p - 1) * (z.1 - pStar p * (z.1 - z.2) / 2) :=
     fun ⟨x, y⟩ hx => uA1_eq_smooth_of_nonneg p hp x y hx
@@ -654,7 +718,7 @@ private lemma continuousOn_uA1 (p : ℝ) (hp : 2 ≤ p) :
 private lemma uA1_eq_zero_on_boundary (p x : ℝ) (hp : 2 ≤ p) (hx : 0 < x) :
     uA1 p x ((a p) * x) = 0 := by
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
-  have hp_pos : 0 < p := by linarith
+  have hp_pos : 0 < p := p_pos_of_two_le p hp
   unfold uA1
   rw [ite_eq_left hx]
   have hfactor : x - pStar p * (x - a p * x) / 2 = 0 := by
@@ -667,7 +731,7 @@ private lemma uA1_eq_zero_on_boundary (p x : ℝ) (hp : 2 ≤ p) (hx : 0 < x) :
 private lemma vGeTwo_eq_zero_on_boundary (p x : ℝ) (hp : 2 ≤ p) (hx : 0 < x) :
     vGeTwo p x ((a p) * x) = 0 := by
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
-  have hp_pos : 0 < p := by linarith
+  have hp_pos : 0 < p := p_pos_of_two_le p hp
   simp only [vGeTwo, a, hpStar]
   have h_sum : (x + (1 - 2 / p) * x) / 2 = (p - 1) / p * x := by
     field_simp [hp_pos.ne']; ring
@@ -776,8 +840,8 @@ private lemma auxFunction1_eq_vGeTwo (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (h2 : 
 private lemma alpha_eq_boundary_coeff (p : ℝ) (hp : 2 ≤ p) :
     alpha p = p * Real.rpow ((p - 1) / p) (p - 1) := by
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
-  have hp_pos : 0 < p := by linarith
-  have hp1_nonneg : 0 ≤ p - 1 := by linarith
+  have hp_pos : 0 < p := p_pos_of_two_le p hp
+  have hp1_nonneg : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
   rw [alpha, hpStar]
   simp_rw [Real.rpow_eq_pow]
   calc
@@ -807,13 +871,13 @@ private lemma one_le_alpha (p : ℝ) (hp : 2 ≤ p) :
   change 1 ≤ p * ((p - 1) / p) ^ (p - 1)
   let G : ℝ → ℝ := fun t =>
     Real.log t - (t - 1) * Real.log (t / (t - 1))
-  have hp_pos : 0 < p := by linarith
-  have hp1_pos : 0 < p - 1 := by linarith
+  have hp_pos : 0 < p := p_pos_of_two_le p hp
+  have hp1_pos : 0 < p - 1 := sub_one_pos_of_two_le p hp
   have hG_nonneg : 0 ≤ G p := by
     have hderiv_formula :
         ∀ x, 2 < x → HasDerivAt G (2 / x - Real.log (x / (x - 1))) x := by
       intro x hx2
-      have hx_pos : 0 < x := by linarith
+      have hx_pos : 0 < x := by positivity
       have hx1_pos : 0 < x - 1 := by linarith
       have hdiv_ne : x - 1 ≠ 0 := by linarith
       have hquot_pos : 0 < x / (x - 1) := div_pos hx_pos hx1_pos
@@ -864,7 +928,7 @@ private lemma one_le_alpha (p : ℝ) (hp : 2 ≤ p) :
       · intro x hx
         have hx2 : 2 < x := by simpa [interior_Ici] using hx
         rw [(hderiv_formula x hx2).deriv]
-        have hx_pos : 0 < x := by linarith
+        have hx_pos : 0 < x := by positivity
         have hx1_pos : 0 < x - 1 := by linarith
         have hlog : Real.log (x / (x - 1)) ≤ 1 / (x - 1) := by
           have hpos : 0 < x / (x - 1) := div_pos hx_pos hx1_pos
@@ -875,7 +939,7 @@ private lemma one_le_alpha (p : ℝ) (hp : 2 ≤ p) :
           simpa [hs] using h
         have hfrac : 1 / (x - 1) ≤ 2 / x := by
           field_simp [hx_pos.ne', hx1_pos.ne']
-          nlinarith
+          linarith
         linarith
     have h2mem : (2 : ℝ) ∈ Set.Ici 2 := by simp
     have hpmem : p ∈ Set.Ici 2 := hp
@@ -942,8 +1006,8 @@ private lemma vGeTwo_le_uA1_on_diag
 private lemma DxuA1_eq_DxvGeTwo_on_A1A2_boundary (p x : ℝ) (hp : 2 ≤ p) (hx : 0 < x) :
     DxuA1 p x ((a p) * x) = DxvGeTwo p x ((a p) * x) := by
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
-  have hp_pos : 0 < p := by linarith
-  have hp1_pos : 0 < p - 1 := by linarith
+  have hp_pos : 0 < p := p_pos_of_two_le p hp
+  have hp1_pos : 0 < p - 1 := sub_one_pos_of_two_le p hp
   simp only [DxuA1, gt_iff_lt, hx, ↓reduceIte, Real.rpow_eq_pow, a, hpStar, DxvGeTwo]
   have h_sum : (x + (1 - 2 / p) * x) / 2 = ((p - 1) / p) * x := by
     field_simp [hp_pos.ne]
@@ -1002,8 +1066,8 @@ private lemma DxuA1_eq_DxvGeTwo_on_A1A2_boundary (p x : ℝ) (hp : 2 ≤ p) (hx 
 private lemma DyuA1_eq_DyvGeTwo_on_A1A2_boundary (p x : ℝ) (hp : 2 ≤ p) (hx : 0 < x) :
     DyuA1 p x ((a p) * x) = DyvGeTwo p x ((a p) * x) := by
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
-  have hp_pos : 0 < p := by linarith
-  have hp1_pos : 0 < p - 1 := by linarith
+  have hp_pos : 0 < p := p_pos_of_two_le p hp
+  have hp1_pos : 0 < p - 1 := sub_one_pos_of_two_le p hp
   simp only [DyuA1, gt_iff_lt, hx, ↓reduceIte, Real.rpow_eq_pow, hpStar, DyvGeTwo, a]
   have h_sum : (x + (1 - 2 / p) * x) / 2 = ((p - 1) / p) * x := by
     field_simp [hp_pos.ne]
@@ -1088,11 +1152,11 @@ private lemma auxFunction1_Dy_eq_DyvGeTwo (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (
 private lemma DxauxFunction1_eq_DyauxFunction1_on_diag (p : ℝ) (hp : 2 < p) (x : ℝ)
     (hx : 0 ≤ x) :
     DxauxFunction1 p x x = DyauxFunction1 p x x := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   rcases hx.lt_or_eq with hxpos | hxeq
   · have hlt : a p < 1 := by
       have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp'
-      have hp_pos : 0 < p := by linarith
+      have hp_pos : 0 < p := p_pos_of_two_le p (le_of_lt hp)
       rw [a, hpStar]
       have hdiv : 0 < 2 / p := by positivity
       linarith
@@ -1117,14 +1181,14 @@ private lemma DxauxFunction1_eq_DyauxFunction1_on_diag (p : ℝ) (hp : 2 < p) (x
 private lemma DxauxFunction1_eq_neg_DyauxFunction1_on_antidiag (p : ℝ) (hp : 2 < p) (x : ℝ)
     (hx : 0 ≤ x) :
     DxauxFunction1 p x (-x) = -DyauxFunction1 p x (-x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   rcases hx.lt_or_eq with hxpos | hxeq
   · have ha_nonneg : 0 ≤ a p := by
       have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp'
-      have hp_pos : 0 < p := by linarith
+      have hp_pos : 0 < p := p_pos_of_two_le p (le_of_lt hp)
       rw [a, hpStar]
       field_simp [hp_pos.ne]
-      nlinarith
+      linarith
     have hcl : closureA2 p x (-x) := by
       refine ⟨hx, le_rfl, ?_⟩
       exact le_trans (neg_nonpos.mpr hx) (mul_nonneg ha_nonneg hx)
@@ -1132,7 +1196,7 @@ private lemma DxauxFunction1_eq_neg_DyauxFunction1_on_antidiag (p : ℝ) (hp : 2
       DxauxFunction1 p x (-x) = DxvGeTwo p x (-x) :=
         auxFunction1_Dx_eq_DxvGeTwo p hp' x (-x) hcl
       _ = -DyvGeTwo p x (-x) := by
-        have hp1_ne : p - 1 ≠ 0 := by linarith
+        have hp1_ne : p - 1 ≠ 0 := sub_one_ne_zero_of_two_le p (le_of_lt hp)
         have hdiff : (x - -x) / 2 = x := by ring
         simp [DxvGeTwo, DyvGeTwo, hxpos, hp1_ne, abs_of_pos hxpos]
       _ = -DyauxFunction1 p x (-x) := by
@@ -1143,7 +1207,7 @@ private lemma DxauxFunction1_eq_neg_DyauxFunction1_on_antidiag (p : ℝ) (hp : 2
 private lemma continuousOn_DxauxFunction1 (p : ℝ) (hp : 2 ≤ p) :
     ContinuousOn (fun z : ℝ × ℝ => DxauxFunction1 p z.1 z.2)
       {z | QuarterPlane z.1 z.2} := by
-  have hp1 : 1 < p := by linarith
+  have hp1 : 1 < p := one_lt_of_two_le p hp
   let S  := {z : ℝ × ℝ | QuarterPlane z.1 z.2}
   let S1 := {z : ℝ × ℝ | closureA1 p z.1 z.2}
   let S2 := {z : ℝ × ℝ | closureA2 p z.1 z.2}
@@ -1188,7 +1252,7 @@ private lemma continuousOn_DyauxFunction1 (p : ℝ) (hp : 2 < p) :
   let S  := {z : ℝ × ℝ | QuarterPlane z.1 z.2}
   let S1 := {z : ℝ × ℝ | closureA1 p z.1 z.2}
   let S2 := {z : ℝ × ℝ | closureA2 p z.1 z.2}
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have hcover : S ⊆ S1 ∪ S2 := by
     intro ⟨x, y⟩ hz
     simp only [QuarterPlane, closureA1, closureA2, S, S1, S2,
@@ -1228,7 +1292,7 @@ private lemma continuousOn_DyauxFunction1 (p : ℝ) (hp : 2 < p) :
 private lemma continuousOn_auxFunction1 (p : ℝ) (hp : 2 ≤ p) :
     ContinuousOn (fun z : ℝ × ℝ => auxFunction1 p z.1 z.2)
       {z | QuarterPlane z.1 z.2} := by
-  have hp1 : 1 < p := by linarith
+  have hp1 : 1 < p := one_lt_of_two_le p hp
   let S  := {z : ℝ × ℝ | QuarterPlane z.1 z.2}
   let S1 := {z : ℝ × ℝ | closureA1 p z.1 z.2}
   let S2 := {z : ℝ × ℝ | closureA2 p z.1 z.2}
@@ -1322,8 +1386,8 @@ private lemma continuousuCandidate (p : ℝ) (hp : 2 ≤ p) :
       intro z hz
       rcases hz with ⟨hx, hy, hxy⟩
       exact ⟨by linarith, by linarith, by linarith⟩
-    have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) := by
-      continuity
+    have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) :=
+      continuous_fst.neg.prodMk continuous_snd.neg
     simpa [Q1, Q2, f2, Function.comp_def] using
       (continuousOn_auxFunction1 p hp).comp hneg.continuousOn hmap
   have hcont3 : ContinuousOn f3 Q3 := by
@@ -1331,8 +1395,7 @@ private lemma continuousuCandidate (p : ℝ) (hp : 2 ≤ p) :
       intro z hz
       rcases hz with ⟨hy, hnyx, hxy⟩
       exact ⟨hy, hxy, hnyx⟩
-    have hswap : Continuous (fun z : ℝ × ℝ => (z.2, z.1)) := by
-      continuity
+    have hswap : Continuous (fun z : ℝ × ℝ => (z.2, z.1)) := continuous_snd.prodMk continuous_fst
     simpa [Q1, Q3, f3, Function.comp_def] using
       (continuousOn_auxFunction1 p hp).comp hswap.continuousOn hmap
   have hcont4 : ContinuousOn f4 Q4 := by
@@ -1340,8 +1403,8 @@ private lemma continuousuCandidate (p : ℝ) (hp : 2 ≤ p) :
       intro z hz
       rcases hz with ⟨hy, hyx, hxn⟩
       exact ⟨by linarith, by linarith, by linarith⟩
-    have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) := by
-      continuity
+    have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) :=
+      continuous_snd.neg.prodMk continuous_fst.neg
     simpa [Q1, Q4, f4, Function.comp_def] using
       (continuousOn_auxFunction1 p hp).comp hns.continuousOn hmap
   have hcl1 : IsClosed Q1 := isClosed_setOf_QuarterPlane
@@ -1504,7 +1567,7 @@ private lemma continuousuCandidate (p : ℝ) (hp : 2 ≤ p) :
 
 private lemma continuousDxuCandidate (p : ℝ) (hp : 2 < p) :
     ContinuousOn (fun z : ℝ × ℝ => DxuCandidate p z.1 z.2) Set.univ := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   let Q1 : Set (ℝ × ℝ) := {z | QuarterPlane z.1 z.2}
   let Q2 : Set (ℝ × ℝ) := {z | QuarterPlane2 z.1 z.2}
   let Q3 : Set (ℝ × ℝ) := {z | QuarterPlane3 z.1 z.2}
@@ -1520,7 +1583,8 @@ private lemma continuousDxuCandidate (p : ℝ) (hp : 2 < p) :
       intro z hz
       rcases hz with ⟨hx, hy, hxy⟩
       exact ⟨by linarith, by linarith, by linarith⟩
-    have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) := by continuity
+    have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) :=
+      continuous_fst.neg.prodMk continuous_snd.neg
     have hbase : ContinuousOn (fun z : ℝ × ℝ => DxauxFunction1 p (-z.1) (-z.2)) Q2 := by
       simpa [Q1, Q2, Function.comp_def] using
         (continuousOn_DxauxFunction1 p hp').comp hneg.continuousOn hmap
@@ -1530,7 +1594,7 @@ private lemma continuousDxuCandidate (p : ℝ) (hp : 2 < p) :
       intro z hz
       rcases hz with ⟨hy, hnyx, hxy⟩
       exact ⟨hy, hxy, hnyx⟩
-    have hswap : Continuous (fun z : ℝ × ℝ => (z.2, z.1)) := by continuity
+    have hswap : Continuous (fun z : ℝ × ℝ => (z.2, z.1)) := continuous_snd.prodMk continuous_fst
     simpa [Q1, Q3, f3, Function.comp_def] using
       (continuousOn_DyauxFunction1 p hp).comp hswap.continuousOn hmap
   have hcont4 : ContinuousOn f4 Q4 := by
@@ -1538,7 +1602,8 @@ private lemma continuousDxuCandidate (p : ℝ) (hp : 2 < p) :
       intro z hz
       rcases hz with ⟨hy, hyx, hxn⟩
       exact ⟨by linarith, by linarith, by linarith⟩
-    have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) := by continuity
+    have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) :=
+      continuous_snd.neg.prodMk continuous_fst.neg
     have hbase : ContinuousOn (fun z : ℝ × ℝ => DyauxFunction1 p (-z.2) (-z.1)) Q4 := by
       simpa [Q1, Q4, Function.comp_def] using
         (continuousOn_DyauxFunction1 p hp).comp hns.continuousOn hmap
@@ -1688,7 +1753,7 @@ private lemma continuousDxuCandidate (p : ℝ) (hp : 2 < p) :
 
 private lemma continuousDyuCandidate (p : ℝ) (hp : 2 < p) :
     ContinuousOn (fun z : ℝ × ℝ => DyuCandidate p z.1 z.2) Set.univ := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   let Q1 : Set (ℝ × ℝ) := {z | QuarterPlane z.1 z.2}
   let Q2 : Set (ℝ × ℝ) := {z | QuarterPlane2 z.1 z.2}
   let Q3 : Set (ℝ × ℝ) := {z | QuarterPlane3 z.1 z.2}
@@ -1704,7 +1769,8 @@ private lemma continuousDyuCandidate (p : ℝ) (hp : 2 < p) :
       intro z hz
       rcases hz with ⟨hx, hy, hxy⟩
       exact ⟨by linarith, by linarith, by linarith⟩
-    have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) := by continuity
+    have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) :=
+      continuous_fst.neg.prodMk continuous_snd.neg
     have hbase : ContinuousOn (fun z : ℝ × ℝ => DyauxFunction1 p (-z.1) (-z.2)) Q2 := by
       simpa [Q1, Q2, Function.comp_def] using
         (continuousOn_DyauxFunction1 p hp).comp hneg.continuousOn hmap
@@ -1714,7 +1780,7 @@ private lemma continuousDyuCandidate (p : ℝ) (hp : 2 < p) :
       intro z hz
       rcases hz with ⟨hy, hnyx, hxy⟩
       exact ⟨hy, hxy, hnyx⟩
-    have hswap : Continuous (fun z : ℝ × ℝ => (z.2, z.1)) := by continuity
+    have hswap : Continuous (fun z : ℝ × ℝ => (z.2, z.1)) := continuous_snd.prodMk continuous_fst
     simpa [Q1, Q3, f3, Function.comp_def] using
       (continuousOn_DxauxFunction1 p hp').comp hswap.continuousOn hmap
   have hcont4 : ContinuousOn f4 Q4 := by
@@ -1722,7 +1788,8 @@ private lemma continuousDyuCandidate (p : ℝ) (hp : 2 < p) :
       intro z hz
       rcases hz with ⟨hy, hyx, hxn⟩
       exact ⟨by linarith, by linarith, by linarith⟩
-    have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) := by continuity
+    have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) :=
+      continuous_snd.neg.prodMk continuous_fst.neg
     have hbase : ContinuousOn (fun z : ℝ × ℝ => DxauxFunction1 p (-z.2) (-z.1)) Q4 := by
       simpa [Q1, Q4, Function.comp_def] using
         (continuousOn_DxauxFunction1 p hp').comp hns.continuousOn hmap
@@ -2274,26 +2341,19 @@ private lemma deriv_uA1_eq_DxuA1Fun_on_A1 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (
     have hxne1 : x ≠ 0 ∨ 1 ≤ p := Or.inl hxne
     have hxne2 : x ≠ 0 ∨ 1 ≤ p - 1 := Or.inl hxne
     have hd1 :
-        HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x := by
-      simpa using
-        (Real.hasDerivAt_rpow_const hxne1 :
-          HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x)
+        HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x := Real.hasDerivAt_rpow_const hxne1
     have hd2 :
-        HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x := by
-      have h := (Real.hasDerivAt_rpow_const hxne2 :
-        HasDerivAt (fun t : ℝ => t ^ (p - 1))
-          ((p - 1) * x ^ ((p - 1) - 1)) x)
-      simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc,
-        show p + (-1 + -1) = p + -2 by ring] using h
+        HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x :=
+        (Real.hasDerivAt_rpow_const hxne2).congr_deriv (by rw [show p - 1 - 1 = p - 2 by ring])
     have hd :
         HasDerivAt g
           (alpha p *
             ((1 - p / 2) * (p * x ^ (p - 1)) +
               (p * y / 2) * ((p - 1) * x ^ (p - 2)))) x := by
-      dsimp [g]
-      have hsum :=
-        ((hd1.const_mul (1 - p / 2)).add (hd2.const_mul (p * y / 2))).const_mul (alpha p)
-      simpa [mul_add, mul_assoc, mul_left_comm, mul_comm] using hsum
+      dsimp only [g]
+      refine (((hd1.const_mul (1 - p / 2)).add (hd2.const_mul (p * y / 2))).const_mul
+        (alpha p)).congr_deriv ?_
+      ring
     have hpow : x ^ (p - 1) = x ^ (p - 2) * x := by
       calc
         x ^ (p - 1) = x ^ ((p - 2) + (1 : ℝ)) := by ring_nf
@@ -2334,26 +2394,19 @@ private lemma hasDerivAt_uA1_x_of_pos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hx :
   have hxne1 : x ≠ 0 ∨ 1 ≤ p := Or.inl hxne
   have hxne2 : x ≠ 0 ∨ 1 ≤ p - 1 := Or.inl hxne
   have hd1 :
-      HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x := by
-    simpa using
-      (Real.hasDerivAt_rpow_const hxne1 :
-        HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x)
+      HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x := Real.hasDerivAt_rpow_const hxne1
   have hd2 :
-      HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x := by
-    have h := (Real.hasDerivAt_rpow_const hxne2 :
-      HasDerivAt (fun t : ℝ => t ^ (p - 1))
-        ((p - 1) * x ^ ((p - 1) - 1)) x)
-    simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc,
-      show p + (-1 + -1) = p + -2 by ring] using h
+      HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x :=
+      (Real.hasDerivAt_rpow_const hxne2).congr_deriv (by rw [show p - 1 - 1 = p - 2 by ring])
   have hd :
       HasDerivAt g
         (alpha p *
           ((1 - p / 2) * (p * x ^ (p - 1)) +
             (p * y / 2) * ((p - 1) * x ^ (p - 2)))) x := by
-    dsimp [g]
-    have hsum :=
-      ((hd1.const_mul (1 - p / 2)).add (hd2.const_mul (p * y / 2))).const_mul (alpha p)
-    simpa [mul_add, mul_assoc, mul_left_comm, mul_comm] using hsum
+    dsimp only [g]
+    refine (((hd1.const_mul (1 - p / 2)).add (hd2.const_mul (p * y / 2))).const_mul
+      (alpha p)).congr_deriv ?_
+    ring
   have hpow : x ^ (p - 1) = x ^ (p - 2) * x := by
     calc
       x ^ (p - 1) = x ^ ((p - 2) + (1 : ℝ)) := by ring_nf
@@ -2418,8 +2471,8 @@ private lemma Dxx_uA1_nonpos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
       deriv (deriv (fun t => uA1 p t y)) x = deriv (deriv g) x := by
     exact hEq.deriv.deriv_eq
   have hxne : x ≠ 0 := by linarith
-  have hp_ge1 : 1 ≤ p := by linarith
-  have hp1_ge1 : 1 ≤ p - 1 := by linarith
+  have hp_ge1 : 1 ≤ p := one_le_of_two_le p hp
+  have hp1_ge1 : 1 ≤ p - 1 := one_le_sub_one_of_two_le p hp
   have hg1_formula :
       deriv g x =
         alpha p *
@@ -2428,26 +2481,19 @@ private lemma Dxx_uA1_nonpos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
     have hxne1 : x ≠ 0 ∨ 1 ≤ p := Or.inl hxne
     have hxne2 : x ≠ 0 ∨ 1 ≤ p - 1 := Or.inl hxne
     have hd1 :
-        HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x := by
-      simpa using
-        (Real.hasDerivAt_rpow_const hxne1 :
-          HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x)
+        HasDerivAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) x := Real.hasDerivAt_rpow_const hxne1
     have hd2 :
-        HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x := by
-      have h := (Real.hasDerivAt_rpow_const hxne2 :
-        HasDerivAt (fun t : ℝ => t ^ (p - 1))
-          ((p - 1) * x ^ ((p - 1) - 1)) x)
-      simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc,
-        show p + (-1 + -1) = p + -2 by ring] using h
+        HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x :=
+        (Real.hasDerivAt_rpow_const hxne2).congr_deriv (by rw [show p - 1 - 1 = p - 2 by ring])
     have hd :
         HasDerivAt g
           (alpha p *
             ((1 - p / 2) * (p * x ^ (p - 1)) +
               (p * y / 2) * ((p - 1) * x ^ (p - 2)))) x := by
-      dsimp [g]
-      have h :=
-        ((hd1.const_mul (1 - p / 2)).add (hd2.const_mul (p * y / 2))).const_mul (alpha p)
-      simpa [mul_assoc, mul_left_comm, mul_comm] using h
+      dsimp only [g]
+      refine (((hd1.const_mul (1 - p / 2)).add (hd2.const_mul (p * y / 2))).const_mul
+        (alpha p)).congr_deriv ?_
+      ring
     exact hd.deriv
   have hg2 :
       deriv (deriv g) x =
@@ -2455,19 +2501,11 @@ private lemma Dxx_uA1_nonpos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
     have hxne2 : x ≠ 0 ∨ 1 ≤ p - 1 := Or.inl hxne
     have hxne3 : x ≠ 0 ∨ 1 ≤ p - 2 := Or.inl hxne
     have hd1 :
-        HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x := by
-      have h := (Real.hasDerivAt_rpow_const hxne2 :
-        HasDerivAt (fun t : ℝ => t ^ (p - 1))
-          ((p - 1) * x ^ ((p - 1) - 1)) x)
-      simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc,
-        show p + (-1 + -1) = p + -2 by ring] using h
+        HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x :=
+        (Real.hasDerivAt_rpow_const hxne2).congr_deriv (by rw [show p - 1 - 1 = p - 2 by ring])
     have hd2 :
-        HasDerivAt (fun t : ℝ => t ^ (p - 2)) ((p - 2) * x ^ (p - 3)) x := by
-      have h := (Real.hasDerivAt_rpow_const hxne3 :
-        HasDerivAt (fun t : ℝ => t ^ (p - 2))
-          ((p - 2) * x ^ ((p - 2) - 1)) x)
-      simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc,
-        show p + (-1 + -2) = p + -3 by ring] using h
+        HasDerivAt (fun t : ℝ => t ^ (p - 2)) ((p - 2) * x ^ (p - 3)) x :=
+        (Real.hasDerivAt_rpow_const hxne3).congr_deriv (by rw [show p - 2 - 1 = p - 3 by ring])
     have hd :
         HasDerivAt
           (fun t =>
@@ -2501,17 +2539,10 @@ private lemma Dxx_uA1_nonpos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
       have hp_t : t ≠ 0 ∨ 1 ≤ p := Or.inr hp_ge1
       have hp1_t : t ≠ 0 ∨ 1 ≤ p - 1 := Or.inr hp1_ge1
       have hd1t :
-          HasDerivAt (fun s : ℝ => s ^ p) (p * t ^ (p - 1)) t := by
-        simpa using
-          (Real.hasDerivAt_rpow_const hp_t :
-            HasDerivAt (fun s : ℝ => s ^ p) (p * t ^ (p - 1)) t)
+          HasDerivAt (fun s : ℝ => s ^ p) (p * t ^ (p - 1)) t := Real.hasDerivAt_rpow_const hp_t
       have hd2t :
-          HasDerivAt (fun s : ℝ => s ^ (p - 1)) ((p - 1) * t ^ (p - 2)) t := by
-        have h := (Real.hasDerivAt_rpow_const hp1_t :
-          HasDerivAt (fun s : ℝ => s ^ (p - 1))
-            ((p - 1) * t ^ ((p - 1) - 1)) t)
-        simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc,
-          show p + (-1 + -1) = p + -2 by ring] using h
+          HasDerivAt (fun s : ℝ => s ^ (p - 1)) ((p - 1) * t ^ (p - 2)) t :=
+          (Real.hasDerivAt_rpow_const hp1_t).congr_deriv (by rw [show p - 1 - 1 = p - 2 by ring])
       have hdt :
           HasDerivAt g
             (alpha p *
@@ -2542,8 +2573,8 @@ private lemma Dxx_uA1_nonpos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
     · linarith
     · apply Real.rpow_nonneg
       apply div_nonneg <;> linarith
-  have hp0 : 0 ≤ p := by linarith
-  have hp1 : 0 ≤ p - 1 := by linarith
+  have hp0 : 0 ≤ p := p_nonneg_of_two_le p hp
+  have hp1 : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
   have hp2 : 0 ≤ p - 2 := by linarith
   have hpow : 0 ≤ x ^ (p - 3) := by
     exact Real.rpow_nonneg hx.le _
@@ -2596,7 +2627,7 @@ private lemma uA1_tangent_x_on_Icc_of_A1
       (f₁ := fun t => DxuA1Fun p (t, y))
       (f₂ := fun t => deriv (fun s => DxuA1Fun p (s, y)) t)
   · have hpair : ContinuousOn (fun t : ℝ => (t, y)) (Set.Icc a b) :=
-      (by continuity : Continuous (fun t : ℝ => (t, y))).continuousOn
+      (continuous_id.prodMk continuous_const : Continuous (fun t : ℝ => (t, y))).continuousOn
     exact (continuousOn_uA1 p hp).comp hpair (by
       intro t ht
       exact hIcc_nonneg t ht)
@@ -2622,8 +2653,8 @@ private lemma Dyy_uA1_nonpos (p : ℝ) (_hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x
   rw [hrepr]
   have hderiv_lin : deriv (fun t => c + m * t) = fun _ => m := by
     funext t
-    have hlin : HasDerivAt (fun s : ℝ => c + m * s) m t := by
-      simpa [one_mul] using (((hasDerivAt_id t).const_mul m).const_add c)
+    have hlin : HasDerivAt (fun s : ℝ => c + m * s) m t :=
+        ((((hasDerivAt_id t).const_mul m).const_add c)).congr_deriv (by ring)
     exact hlin.deriv
   rw [hderiv_lin]
   simp
@@ -2631,7 +2662,7 @@ private lemma Dyy_uA1_nonpos (p : ℝ) (_hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x
 private lemma deriv_uA1_eq_DyuA1Fun_on_A1 (p : ℝ) (hp : 2 < p) (x y : ℝ) (hA1 : A1 p x y) :
     deriv (fun s => uA1 p x s) y = DyuA1Fun p (x, y) := by
   rcases hA1 with ⟨hx, -, -⟩
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp'
   let c : ℝ := alpha p * x ^ (p - 1) * (x - pStar p * x / 2)
   let m : ℝ := alpha p * x ^ (p - 1) * (pStar p / 2)
@@ -2641,8 +2672,8 @@ private lemma deriv_uA1_eq_DyuA1Fun_on_A1 (p : ℝ) (hp : 2 < p) (x y : ℝ) (hA
     ring
   have hderiv_lin : deriv (fun s => c + m * s) = fun _ => m := by
     funext s
-    have hlin : HasDerivAt (fun z : ℝ => c + m * z) m s := by
-      simpa [one_mul] using (((hasDerivAt_id s).const_mul m).const_add c)
+    have hlin : HasDerivAt (fun z : ℝ => c + m * z) m s :=
+        ((((hasDerivAt_id s).const_mul m).const_add c)).congr_deriv (by ring)
     exact hlin.deriv
   calc
     deriv (fun s => uA1 p x s) y = deriv (fun s => c + m * s) y := by rw [hrepr]
@@ -2659,8 +2690,8 @@ private lemma hasDerivAt_uA1_y_of_pos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hx :
     funext s
     simp [uA1, hx, c, m]
     ring
-  have hderiv_lin : HasDerivAt (fun s => c + m * s) m y := by
-    simpa [one_mul] using (((hasDerivAt_id y).const_mul m).const_add c)
+  have hderiv_lin : HasDerivAt (fun s => c + m * s) m y :=
+      ((((hasDerivAt_id y).const_mul m).const_add c)).congr_deriv (by ring)
   rw [hrepr]
   convert hderiv_lin using 1
   simp [DyuA1Fun, DyuA1, m, hx, hpStar]
@@ -2700,7 +2731,7 @@ private lemma uA1_tangent_y_on_Icc_of_A1
     uA1 p x z ≤ uA1 p x y + f' * (z - y) := by
   have hcont : ContinuousOn (fun t => uA1 p x t) (Set.Icc lo hi) := by
     have hpair : ContinuousOn (fun t : ℝ => (x, t)) (Set.Icc lo hi) :=
-      (by continuity : Continuous (fun t : ℝ => (x, t))).continuousOn
+      (continuous_const.prodMk continuous_id : Continuous (fun t : ℝ => (x, t))).continuousOn
     exact (continuousOn_uA1 p hp).comp hpair (by
       intro t _ht
       exact hx_pos.le)
@@ -2736,8 +2767,8 @@ private lemma Dxy_uA1_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
         ring
       have hderiv_lin : deriv (fun s => c + m * s) = fun _ => m := by
         funext s
-        have hlin : HasDerivAt (fun z : ℝ => c + m * z) m s := by
-          simpa [one_mul] using (((hasDerivAt_id s).const_mul m).const_add c)
+        have hlin : HasDerivAt (fun z : ℝ => c + m * z) m s :=
+            ((((hasDerivAt_id s).const_mul m).const_add c)).congr_deriv (by ring)
         exact hlin.deriv
       calc
         deriv (fun y => uA1 p t y) y = deriv (fun s => c + m * s) y := by rw [hrepr]
@@ -2752,12 +2783,8 @@ private lemma Dxy_uA1_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
         deriv g x = alpha p * (p / 2) * ((p - 1) * x ^ (p - 2)) := by
       have hxne1 : x ≠ 0 ∨ 1 ≤ p - 1 := Or.inl hxne
       have hrpow :
-          HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x := by
-        have h := (Real.hasDerivAt_rpow_const hxne1 :
-          HasDerivAt (fun t : ℝ => t ^ (p - 1))
-            ((p - 1) * x ^ ((p - 1) - 1)) x)
-        simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-          show p + (-1 + -1) = p + -2 by ring] using h
+          HasDerivAt (fun t : ℝ => t ^ (p - 1)) ((p - 1) * x ^ (p - 2)) x :=
+          (Real.hasDerivAt_rpow_const hxne1).congr_deriv (by rw [show p - 1 - 1 = p - 2 by ring])
       have hg' :
           HasDerivAt g (alpha p * (p / 2) * ((p - 1) * x ^ (p - 2))) x := by
         simpa [g, mul_assoc, mul_left_comm, mul_comm] using
@@ -2770,8 +2797,8 @@ private lemma Dxy_uA1_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
       · linarith
       · apply Real.rpow_nonneg
         apply div_nonneg <;> linarith
-    have hp0 : 0 ≤ p / 2 := by linarith
-    have hp1 : 0 ≤ p - 1 := by linarith
+    have hp0 : 0 ≤ p / 2 := half_p_nonneg_of_two_le p hp
+    have hp1 : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
     have hpow : 0 ≤ x ^ (p - 2) := Real.rpow_nonneg hx.le _
     exact mul_nonneg
       (mul_nonneg hα hp0)
@@ -2780,16 +2807,8 @@ private lemma Dxy_uA1_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA1 : A1 p x 
 private lemma deriv_vGeTwo_eq_DxvGeTwo_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p x y) :
     deriv (fun t => vGeTwo p t y) x = DxvGeTwo p x y := by
   rcases hA2 with ⟨hx, hneg, hay⟩
-  have hp1 : 1 ≤ p := by linarith
-  have hyx : y < x := by
-    rw [a, pStar_eq_self_of_two_le p hp] at hay
-    have hp0 : 0 < p := by linarith
-    have hcoeff : 1 - 2 / p < (1 : ℝ) := by
-      have hdiv : 0 < 2 / p := by positivity
-      linarith
-    have hax_lt_x : (1 - 2 / p) * x < x := by
-      simpa using mul_lt_mul_of_pos_right hcoeff hx
-    linarith
+  have hp1 : 1 ≤ p := one_le_of_two_le p hp
+  have hyx : y < x := lt_of_lt_mul_a p hp hx hay
   have hsum : 0 < (x + y) / 2 := by linarith
   have hdiff : 0 < (x - y) / 2 := by linarith
   let g : ℝ → ℝ := fun t =>
@@ -2806,35 +2825,19 @@ private lemma deriv_vGeTwo_eq_DxvGeTwo_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ
   have hderiv :
       deriv (fun t => vGeTwo p t y) x = deriv g x := hEq.deriv_eq
   have hbase_sum :
-      HasDerivAt (fun t : ℝ => (t + y) / 2) (1 / 2) x := by
-    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id x).add_const y).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun t : ℝ => (t + y) / 2) (1 / 2) x :=
+      ((hasDerivAt_id' (x := x)).add_const y).div_const 2
   have hbase_diff :
-      HasDerivAt (fun t : ℝ => (t - y) / 2) (1 / 2) x := by
-    simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id x).add_const (-y)).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun t : ℝ => (t - y) / 2) (1 / 2) x :=
+      ((hasDerivAt_id' (x := x)).sub_const y).div_const 2
   have hpow_sum :
       HasDerivAt (fun t : ℝ => ((t + y) / 2) ^ p)
-        (p * (((x + y) / 2) ^ (p - 1)) * (1 / 2)) x := by
-    have hrpow :
-        HasDerivAt (fun s : ℝ => s ^ p) (p * (((x + y) / 2) ^ (p - 1))) ((x + y) / 2) := by
-      simpa using
-        (Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hsum)) :
-          HasDerivAt (fun s : ℝ => s ^ p) (p * ((x + y) / 2) ^ (p - 1)) ((x + y) / 2))
-    have hcomp := hrpow.comp x hbase_sum
-    simp only [Function.comp_def] at hcomp
-    convert hcomp using 2
+        (p * (((x + y) / 2) ^ (p - 1)) * (1 / 2)) x :=
+      (hbase_sum.rpow_const (Or.inl (ne_of_gt hsum))).congr_deriv (by ring)
   have hpow_diff :
       HasDerivAt (fun t : ℝ => ((t - y) / 2) ^ p)
-        (p * (((x - y) / 2) ^ (p - 1)) * (1 / 2)) x := by
-    have hrpow :
-        HasDerivAt (fun s : ℝ => s ^ p) (p * (((x - y) / 2) ^ (p - 1))) ((x - y) / 2) := by
-      simpa using
-        (Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hdiff)) :
-          HasDerivAt (fun s : ℝ => s ^ p) (p * ((x - y) / 2) ^ (p - 1)) ((x - y) / 2))
-    have hcomp := hrpow.comp x hbase_diff
-    simp only [Function.comp_def] at hcomp
-    convert hcomp using 2
+        (p * (((x - y) / 2) ^ (p - 1)) * (1 / 2)) x :=
+      (hbase_diff.rpow_const (Or.inl (ne_of_gt hdiff))).congr_deriv (by ring)
   have hg :
       deriv g x =
         ((x + y) / 2) ^ (p - 1) * (p / 2) -
@@ -2873,35 +2876,19 @@ private lemma hasDerivAt_vGeTwo_x_of_pos (p : ℝ) (_hp : 2 ≤ p) (x y : ℝ)
     filter_upwards [hsum_nhds, hdiff_nhds] with t ht_sum ht_diff
     simp [vGeTwo, g, abs_of_pos ht_sum, abs_of_pos ht_diff]
   have hbase_sum :
-      HasDerivAt (fun t : ℝ => (t + y) / 2) (1 / 2) x := by
-    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id x).add_const y).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun t : ℝ => (t + y) / 2) (1 / 2) x :=
+      ((hasDerivAt_id' (x := x)).add_const y).div_const 2
   have hbase_diff :
-      HasDerivAt (fun t : ℝ => (t - y) / 2) (1 / 2) x := by
-    simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id x).add_const (-y)).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun t : ℝ => (t - y) / 2) (1 / 2) x :=
+      ((hasDerivAt_id' (x := x)).sub_const y).div_const 2
   have hpow_sum :
       HasDerivAt (fun t : ℝ => ((t + y) / 2) ^ p)
-        (p * (((x + y) / 2) ^ (p - 1)) * (1 / 2)) x := by
-    have hrpow :
-        HasDerivAt (fun s : ℝ => s ^ p) (p * (((x + y) / 2) ^ (p - 1))) ((x + y) / 2) := by
-      simpa using
-        (Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hsum)) :
-          HasDerivAt (fun s : ℝ => s ^ p) (p * ((x + y) / 2) ^ (p - 1)) ((x + y) / 2))
-    have hcomp := hrpow.comp x hbase_sum
-    simp only [Function.comp_def] at hcomp
-    convert hcomp using 2
+        (p * (((x + y) / 2) ^ (p - 1)) * (1 / 2)) x :=
+      (hbase_sum.rpow_const (Or.inl (ne_of_gt hsum))).congr_deriv (by ring)
   have hpow_diff :
       HasDerivAt (fun t : ℝ => ((t - y) / 2) ^ p)
-        (p * (((x - y) / 2) ^ (p - 1)) * (1 / 2)) x := by
-    have hrpow :
-        HasDerivAt (fun s : ℝ => s ^ p) (p * (((x - y) / 2) ^ (p - 1))) ((x - y) / 2) := by
-      simpa using
-        (Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hdiff)) :
-          HasDerivAt (fun s : ℝ => s ^ p) (p * ((x - y) / 2) ^ (p - 1)) ((x - y) / 2))
-    have hcomp := hrpow.comp x hbase_diff
-    simp only [Function.comp_def] at hcomp
-    convert hcomp using 2
+        (p * (((x - y) / 2) ^ (p - 1)) * (1 / 2)) x :=
+      (hbase_diff.rpow_const (Or.inl (ne_of_gt hdiff))).congr_deriv (by ring)
   have hd :
       HasDerivAt g
         (((x + y) / 2) ^ (p - 1) * (p / 2) -
@@ -2960,16 +2947,8 @@ private lemma differentiableAt_DxvGeTwo_x_of_pos (p x y : ℝ)
 private lemma deriv_vGeTwo_eq_DyvGeTwo_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p x y) :
     deriv (fun s => vGeTwo p x s) y = DyvGeTwo p x y := by
   rcases hA2 with ⟨hx, hneg, hay⟩
-  have hp1 : 1 ≤ p := by linarith
-  have hyx : y < x := by
-    rw [a, pStar_eq_self_of_two_le p hp] at hay
-    have hp0 : 0 < p := by linarith
-    have hcoeff : 1 - 2 / p < (1 : ℝ) := by
-      have hdiv : 0 < 2 / p := by positivity
-      linarith
-    have hax_lt_x : (1 - 2 / p) * x < x := by
-      simpa using mul_lt_mul_of_pos_right hcoeff hx
-    linarith
+  have hp1 : 1 ≤ p := one_le_of_two_le p hp
+  have hyx : y < x := lt_of_lt_mul_a p hp hx hay
   have hsum : 0 < (x + y) / 2 := by linarith
   have hdiff : 0 < (x - y) / 2 := by linarith
   let g : ℝ → ℝ := fun s =>
@@ -2986,35 +2965,19 @@ private lemma deriv_vGeTwo_eq_DyvGeTwo_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ
   have hderiv :
       deriv (fun s => vGeTwo p x s) y = deriv g y := hEq.deriv_eq
   have hbase_sum :
-      HasDerivAt (fun s : ℝ => (x + s) / 2) (1 / 2) y := by
-    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id y).const_add x).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun s : ℝ => (x + s) / 2) (1 / 2) y :=
+      ((hasDerivAt_id' (x := y)).const_add x).div_const 2
   have hbase_diff :
-      HasDerivAt (fun s : ℝ => (x - s) / 2) (-(1 / 2)) y := by
-    simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      ((((hasDerivAt_id y).neg).const_add x).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun s : ℝ => (x - s) / 2) (-(1 / 2)) y :=
+      (((hasDerivAt_id' (x := y)).const_sub x).div_const 2).congr_deriv (neg_div 2 1)
   have hpow_sum :
       HasDerivAt (fun s : ℝ => ((x + s) / 2) ^ p)
-        (p * (((x + y) / 2) ^ (p - 1)) * (1 / 2)) y := by
-    have hrpow :
-        HasDerivAt (fun t : ℝ => t ^ p) (p * (((x + y) / 2) ^ (p - 1))) ((x + y) / 2) := by
-      simpa using
-        (Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hsum)) :
-          HasDerivAt (fun t : ℝ => t ^ p) (p * ((x + y) / 2) ^ (p - 1)) ((x + y) / 2))
-    have hcomp := hrpow.comp y hbase_sum
-    simp only [Function.comp_def] at hcomp
-    convert hcomp using 2
+        (p * (((x + y) / 2) ^ (p - 1)) * (1 / 2)) y :=
+      (hbase_sum.rpow_const (Or.inl (ne_of_gt hsum))).congr_deriv (by ring)
   have hpow_diff :
       HasDerivAt (fun s : ℝ => ((x - s) / 2) ^ p)
-        (p * (((x - y) / 2) ^ (p - 1)) * (-(1 / 2))) y := by
-    have hrpow :
-        HasDerivAt (fun t : ℝ => t ^ p) (p * (((x - y) / 2) ^ (p - 1))) ((x - y) / 2) := by
-      simpa using
-        (Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hdiff)) :
-          HasDerivAt (fun t : ℝ => t ^ p) (p * ((x - y) / 2) ^ (p - 1)) ((x - y) / 2))
-    have hcomp := hrpow.comp y hbase_diff
-    simp only [Function.comp_def] at hcomp
-    convert hcomp using 2
+        (p * (((x - y) / 2) ^ (p - 1)) * (-(1 / 2))) y :=
+      (hbase_diff.rpow_const (Or.inl (ne_of_gt hdiff))).congr_deriv (by ring)
   have hg :
       deriv g y =
         ((x + y) / 2) ^ (p - 1) * (p / 2) +
@@ -3053,35 +3016,19 @@ private lemma hasDerivAt_vGeTwo_y_of_pos (p : ℝ) (_hp : 2 ≤ p) (x y : ℝ)
     filter_upwards [hsum_nhds, hdiff_nhds] with s hs_sum hs_diff
     simp [vGeTwo, g, abs_of_pos hs_sum, abs_of_pos hs_diff]
   have hbase_sum :
-      HasDerivAt (fun s : ℝ => (x + s) / 2) (1 / 2) y := by
-    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id y).const_add x).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun s : ℝ => (x + s) / 2) (1 / 2) y :=
+      ((hasDerivAt_id' (x := y)).const_add x).div_const 2
   have hbase_diff :
-      HasDerivAt (fun s : ℝ => (x - s) / 2) (-(1 / 2)) y := by
-    simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      ((((hasDerivAt_id y).neg).const_add x).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun s : ℝ => (x - s) / 2) (-(1 / 2)) y :=
+      (((hasDerivAt_id' (x := y)).const_sub x).div_const 2).congr_deriv (neg_div 2 1)
   have hpow_sum :
       HasDerivAt (fun s : ℝ => ((x + s) / 2) ^ p)
-        (p * (((x + y) / 2) ^ (p - 1)) * (1 / 2)) y := by
-    have hrpow :
-        HasDerivAt (fun t : ℝ => t ^ p) (p * (((x + y) / 2) ^ (p - 1))) ((x + y) / 2) := by
-      simpa using
-        (Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hsum)) :
-          HasDerivAt (fun t : ℝ => t ^ p) (p * ((x + y) / 2) ^ (p - 1)) ((x + y) / 2))
-    have hcomp := hrpow.comp y hbase_sum
-    simp only [Function.comp_def] at hcomp
-    convert hcomp using 2
+        (p * (((x + y) / 2) ^ (p - 1)) * (1 / 2)) y :=
+      (hbase_sum.rpow_const (Or.inl (ne_of_gt hsum))).congr_deriv (by ring)
   have hpow_diff :
       HasDerivAt (fun s : ℝ => ((x - s) / 2) ^ p)
-        (p * (((x - y) / 2) ^ (p - 1)) * (-(1 / 2))) y := by
-    have hrpow :
-        HasDerivAt (fun t : ℝ => t ^ p) (p * (((x - y) / 2) ^ (p - 1))) ((x - y) / 2) := by
-      simpa using
-        (Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hdiff)) :
-          HasDerivAt (fun t : ℝ => t ^ p) (p * ((x - y) / 2) ^ (p - 1)) ((x - y) / 2))
-    have hcomp := hrpow.comp y hbase_diff
-    simp only [Function.comp_def] at hcomp
-    convert hcomp using 2
+        (p * (((x - y) / 2) ^ (p - 1)) * (-(1 / 2))) y :=
+      (hbase_diff.rpow_const (Or.inl (ne_of_gt hdiff))).congr_deriv (by ring)
   have hd :
       HasDerivAt g
         (((x + y) / 2) ^ (p - 1) * (p / 2) +
@@ -3146,15 +3093,13 @@ private lemma hasDerivAt_vGeTwo_x_on_antidiag_pos (p : ℝ) (hp : 2 < p)
   have hEq : (fun t => vGeTwo p t (-x)) = g := by
     ext t
     simp [vGeTwo, g, sub_eq_add_neg]
-  have hp1 : 1 < p := by linarith
+  have hp1 : 1 < p := one_lt_of_two_le p (le_of_lt hp)
   have hbase_sum :
-      HasDerivAt (fun t : ℝ => (t - x) / 2) (1 / 2) x := by
-    simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id x).add_const (-x)).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun t : ℝ => (t - x) / 2) (1 / 2) x :=
+      ((hasDerivAt_id' (x := x)).sub_const x).div_const 2
   have hbase_diff :
-      HasDerivAt (fun t : ℝ => (t + x) / 2) (1 / 2) x := by
-    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id x).add_const x).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun t : ℝ => (t + x) / 2) (1 / 2) x :=
+      ((hasDerivAt_id' (x := x)).add_const x).div_const 2
   have hpow_sum :
       HasDerivAt (fun t : ℝ => |((t - x) / 2)| ^ p) 0 x := by
     have h :
@@ -3184,15 +3129,12 @@ private lemma hasDerivAt_vGeTwo_x_on_antidiag_pos (p : ℝ) (hp : 2 < p)
   have hd :
       HasDerivAt g
         (-(p - 1) ^ p * (p * x ^ (p - 1) * (1 / 2))) x := by
-    have htmp :
-        HasDerivAt g
-          (0 - (p - 1) ^ p * (p * x ^ (p - 1) * (1 / 2))) x := by
-      dsimp [g]
-      exact hpow_sum.sub (hpow_diff.const_mul ((p - 1) ^ p))
-    simpa using htmp
+    dsimp only [g]
+    refine (hpow_sum.sub (hpow_diff.const_mul ((p - 1) ^ p))).congr_deriv ?_
+    ring
   rw [hEq]
   refine hd.congr_deriv ?_
-  have hp1_ne : p - 1 ≠ 0 := by linarith
+  have hp1_ne : p - 1 ≠ 0 := sub_one_ne_zero_of_two_le p (le_of_lt hp)
   simp [DxvGeTwo, hx, hp1_ne, abs_of_pos hx]
   ring
 
@@ -3204,15 +3146,13 @@ private lemma hasDerivAt_vGeTwo_y_on_antidiag_pos (p : ℝ) (hp : 2 < p)
   have hEq : (fun s => vGeTwo p x s) = g := by
     ext s
     rfl
-  have hp1 : 1 < p := by linarith
+  have hp1 : 1 < p := one_lt_of_two_le p (le_of_lt hp)
   have hbase_sum :
-      HasDerivAt (fun s : ℝ => (x + s) / 2) (1 / 2) (-x) := by
-    simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      (((hasDerivAt_id (-x)).const_add x).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun s : ℝ => (x + s) / 2) (1 / 2) (-x) :=
+      ((hasDerivAt_id' (x := (-x))).const_add x).div_const 2
   have hbase_diff :
-      HasDerivAt (fun s : ℝ => (x - s) / 2) (-(1 / 2)) (-x) := by
-    simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-      ((((hasDerivAt_id (-x)).neg).const_add x).const_mul (1 / 2 : ℝ))
+      HasDerivAt (fun s : ℝ => (x - s) / 2) (-(1 / 2)) (-x) :=
+      (((hasDerivAt_id' (x := (-x))).const_sub x).div_const 2).congr_deriv (neg_div 2 1)
   have hpow_sum :
       HasDerivAt (fun s : ℝ => |((x + s) / 2)| ^ p) 0 (-x) := by
     have h :
@@ -3242,15 +3182,12 @@ private lemma hasDerivAt_vGeTwo_y_on_antidiag_pos (p : ℝ) (hp : 2 < p)
   have hd :
       HasDerivAt g
         (-((p - 1) ^ p * (p * x ^ (p - 1) * (-(1 / 2))))) (-x) := by
-    have htmp :
-        HasDerivAt g
-          (0 - (p - 1) ^ p * (p * x ^ (p - 1) * (-(1 / 2)))) (-x) := by
-      dsimp [g]
-      exact hpow_sum.sub (hpow_diff.const_mul ((p - 1) ^ p))
-    simpa using htmp
+    dsimp only [g]
+    refine (hpow_sum.sub (hpow_diff.const_mul ((p - 1) ^ p))).congr_deriv ?_
+    ring
   rw [hEq]
   refine hd.congr_deriv ?_
-  have hp1_ne : p - 1 ≠ 0 := by linarith
+  have hp1_ne : p - 1 ≠ 0 := sub_one_ne_zero_of_two_le p (le_of_lt hp)
   simp [DyvGeTwo, hx, hp1_ne, abs_of_pos hx]
   ring
 
@@ -3260,9 +3197,9 @@ private lemma vGeTwo_A2_second_bracket_nonpos (p : ℝ) (hp : 2 ≤ p)
       (p - 1) ^ p * ((x - y) / 2) ^ (p - 2) ≤ 0 := by
   rcases hA2 with ⟨hx, hneg, hay⟩
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
-  have hp_pos : 0 < p := by linarith
-  have hp1_nonneg : 0 ≤ p - 1 := by linarith
-  have hp1_one : 1 ≤ p - 1 := by linarith
+  have hp_pos : 0 < p := p_pos_of_two_le p hp
+  have hp1_nonneg : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
+  have hp1_one : 1 ≤ p - 1 := one_le_sub_one_of_two_le p hp
   have hp2_nonneg : 0 ≤ p - 2 := by linarith
   have hsum_pos : 0 < (x + y) / 2 := by linarith
   have hdiff_pos : 0 < (x - y) / 2 := by
@@ -3271,8 +3208,7 @@ private lemma vGeTwo_A2_second_bracket_nonpos (p : ℝ) (hp : 2 ≤ p)
       have hcoeff : 1 - 2 / p < (1 : ℝ) := by
         have hdiv : 0 < 2 / p := by positivity
         linarith
-      have hax_lt_x : (1 - 2 / p) * x < x := by
-        simpa using mul_lt_mul_of_pos_right hcoeff hx
+      have hax_lt_x : (1 - 2 / p) * x < x := mul_lt_of_lt_one_left hx hcoeff
       linarith
     linarith
   have hay' : p * y < (p - 2) * x := by
@@ -3281,7 +3217,7 @@ private lemma vGeTwo_A2_second_bracket_nonpos (p : ℝ) (hp : 2 ≤ p)
     field_simp [hp_pos.ne] at h
     linarith
   have hAB : (x + y) / 2 ≤ (p - 1) * ((x - y) / 2) := by
-    nlinarith [le_of_lt hay']
+    linarith [le_of_lt hay']
   have hpow_le :
       ((x + y) / 2) ^ (p - 2) ≤
         ((p - 1) * ((x - y) / 2)) ^ (p - 2) :=
@@ -3305,17 +3241,9 @@ private lemma Dxx_vGeTwo_formula_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2
         (((x + y) / 2) ^ (p - 2) -
           (p - 1) ^ p * ((x - y) / 2) ^ (p - 2)) := by
   rcases hA2 with ⟨hx, hneg, hay⟩
-  have hp_ge1 : 1 ≤ p := by linarith
-  have hp1_ge1 : 1 ≤ p - 1 := by linarith
-  have hyx : y < x := by
-    rw [a, pStar_eq_self_of_two_le p hp] at hay
-    have hp0 : 0 < p := by linarith
-    have hcoeff : 1 - 2 / p < (1 : ℝ) := by
-      have hdiv : 0 < 2 / p := by positivity
-      linarith
-    have hax_lt_x : (1 - 2 / p) * x < x := by
-      simpa using mul_lt_mul_of_pos_right hcoeff hx
-    linarith
+  have hp_ge1 : 1 ≤ p := one_le_of_two_le p hp
+  have hp1_ge1 : 1 ≤ p - 1 := one_le_sub_one_of_two_le p hp
+  have hyx : y < x := lt_of_lt_mul_a p hp hx hay
   have hsum : 0 < (x + y) / 2 := by linarith
   have hdiff : 0 < (x - y) / 2 := by linarith
   let g : ℝ → ℝ := fun t =>
@@ -3339,39 +3267,19 @@ private lemma Dxx_vGeTwo_formula_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2
             (p - 1) ^ p * (((t - y) / 2) ^ (p - 1)) * (p / 2) := by
     funext t
     have hbase_sum :
-        HasDerivAt (fun s : ℝ => (s + y) / 2) (1 / 2) t := by
-      simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        (((hasDerivAt_id t).add_const y).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun s : ℝ => (s + y) / 2) (1 / 2) t :=
+        ((hasDerivAt_id' (x := t)).add_const y).div_const 2
     have hbase_diff :
-        HasDerivAt (fun s : ℝ => (s - y) / 2) (1 / 2) t := by
-      simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        (((hasDerivAt_id t).add_const (-y)).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun s : ℝ => (s - y) / 2) (1 / 2) t :=
+        ((hasDerivAt_id' (x := t)).sub_const y).div_const 2
     have hpow_sum :
         HasDerivAt (fun s : ℝ => ((s + y) / 2) ^ p)
-          (p * (((t + y) / 2) ^ (p - 1)) * (1 / 2)) t := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ p) (p * (((t + y) / 2) ^ (p - 1)))
-            ((t + y) / 2) := by
-        simpa using
-          (Real.hasDerivAt_rpow_const (Or.inr hp_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ p) (p * ((t + y) / 2) ^ (p - 1))
-              ((t + y) / 2))
-      have hcomp := hrpow.comp t hbase_sum
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          (p * (((t + y) / 2) ^ (p - 1)) * (1 / 2)) t :=
+        (hbase_sum.rpow_const (Or.inr hp_ge1)).congr_deriv (by ring)
     have hpow_diff :
         HasDerivAt (fun s : ℝ => ((s - y) / 2) ^ p)
-          (p * (((t - y) / 2) ^ (p - 1)) * (1 / 2)) t := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ p) (p * (((t - y) / 2) ^ (p - 1)))
-            ((t - y) / 2) := by
-        simpa using
-          (Real.hasDerivAt_rpow_const (Or.inr hp_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ p) (p * ((t - y) / 2) ^ (p - 1))
-              ((t - y) / 2))
-      have hcomp := hrpow.comp t hbase_diff
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          (p * (((t - y) / 2) ^ (p - 1)) * (1 / 2)) t :=
+        (hbase_diff.rpow_const (Or.inr hp_ge1)).congr_deriv (by ring)
     have hd :
         HasDerivAt g
           (p * (((t + y) / 2) ^ (p - 1)) * (1 / 2) -
@@ -3393,41 +3301,21 @@ private lemma Dxx_vGeTwo_formula_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2
           (((x + y) / 2) ^ (p - 2) -
             (p - 1) ^ p * ((x - y) / 2) ^ (p - 2))) x := by
     have hbase_sum :
-        HasDerivAt (fun t : ℝ => (t + y) / 2) (1 / 2) x := by
-      simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        (((hasDerivAt_id x).add_const y).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun t : ℝ => (t + y) / 2) (1 / 2) x :=
+        ((hasDerivAt_id' (x := x)).add_const y).div_const 2
     have hbase_diff :
-        HasDerivAt (fun t : ℝ => (t - y) / 2) (1 / 2) x := by
-      simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        (((hasDerivAt_id x).add_const (-y)).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun t : ℝ => (t - y) / 2) (1 / 2) x :=
+        ((hasDerivAt_id' (x := x)).sub_const y).div_const 2
     have hpow_sum :
         HasDerivAt (fun t : ℝ => ((t + y) / 2) ^ (p - 1))
-          ((p - 1) * (((x + y) / 2) ^ (p - 2)) * (1 / 2)) x := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ (p - 1))
-            ((p - 1) * (((x + y) / 2) ^ (p - 2))) ((x + y) / 2) := by
-        simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-          show p + (-1 + -1) = p + -2 by ring] using
-          (Real.hasDerivAt_rpow_const (Or.inr hp1_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ (p - 1))
-              ((p - 1) * ((x + y) / 2) ^ ((p - 1) - 1)) ((x + y) / 2))
-      have hcomp := hrpow.comp x hbase_sum
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          ((p - 1) * (((x + y) / 2) ^ (p - 2)) * (1 / 2)) x :=
+        (hbase_sum.rpow_const (Or.inr hp1_ge1)).congr_deriv
+        (by rw [show p - 1 - 1 = p - 2 by ring]; ring)
     have hpow_diff :
         HasDerivAt (fun t : ℝ => ((t - y) / 2) ^ (p - 1))
-          ((p - 1) * (((x - y) / 2) ^ (p - 2)) * (1 / 2)) x := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ (p - 1))
-            ((p - 1) * (((x - y) / 2) ^ (p - 2))) ((x - y) / 2) := by
-        simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-          show p + (-1 + -1) = p + -2 by ring] using
-          (Real.hasDerivAt_rpow_const (Or.inr hp1_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ (p - 1))
-              ((p - 1) * ((x - y) / 2) ^ ((p - 1) - 1)) ((x - y) / 2))
-      have hcomp := hrpow.comp x hbase_diff
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          ((p - 1) * (((x - y) / 2) ^ (p - 2)) * (1 / 2)) x :=
+        (hbase_diff.rpow_const (Or.inr hp1_ge1)).congr_deriv
+        (by rw [show p - 1 - 1 = p - 2 by ring]; ring)
     have hd :
         HasDerivAt
           (fun t =>
@@ -3450,7 +3338,7 @@ private lemma Dxx_vGeTwo_nonpos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p
   have hcoef : 0 ≤ p * (p - 1) / 4 := by
     exact div_nonneg (mul_nonneg (by linarith) (by linarith)) (by norm_num)
   have hbr := vGeTwo_A2_second_bracket_nonpos p hp x y hA2
-  nlinarith [mul_nonpos_of_nonneg_of_nonpos hcoef hbr]
+  linarith [mul_nonpos_of_nonneg_of_nonpos hcoef hbr]
 
 private lemma deriv_DxvGeTwo_x_nonpos_on_A2
     (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p x y) :
@@ -3485,7 +3373,7 @@ private lemma vGeTwo_tangent_x_on_Icc_of_A2
     vGeTwo p z y ≤ vGeTwo p x y + f' * (z - x) := by
   have hcont : ContinuousOn (fun t => vGeTwo p t y) (Set.Icc lo hi) := by
     have hp1 : 1 < p := by linarith
-    have hpair : Continuous (fun t : ℝ => (t, y)) := by continuity
+    have hpair : Continuous (fun t : ℝ => (t, y)) := continuous_id.prodMk continuous_const
     have hcomp := ((continuous_vGeTwo p hp1).comp hpair).continuousOn
       (s := Set.Icc lo hi)
     simpa [Function.comp_def] using hcomp
@@ -3505,8 +3393,7 @@ private lemma vGeTwo_tangent_x_on_Icc_of_A2
           linarith
         have hay : y < (1 - 2 / p) * t := by
           simpa [a, pStar_eq_self_of_two_le p hp] using hA2.2.2
-        have hax_lt_x : (1 - 2 / p) * t < t := by
-          simpa using mul_lt_mul_of_pos_right hcoeff hA2.1
+        have hax_lt_x : (1 - 2 / p) * t < t := mul_lt_of_lt_one_left hA2.1 hcoeff
         linarith
       linarith
     exact (hasDerivAt_vGeTwo_x_of_pos p hp t y hsum hdiff).hasDerivWithinAt
@@ -3521,8 +3408,7 @@ private lemma vGeTwo_tangent_x_on_Icc_of_A2
           linarith
         have hay : y < (1 - 2 / p) * t := by
           simpa [a, pStar_eq_self_of_two_le p hp] using hA2.2.2
-        have hax_lt_x : (1 - 2 / p) * t < t := by
-          simpa using mul_lt_mul_of_pos_right hcoeff hA2.1
+        have hax_lt_x : (1 - 2 / p) * t < t := mul_lt_of_lt_one_left hA2.1 hcoeff
         linarith
       linarith
     exact (differentiableAt_DxvGeTwo_x_of_pos p t y hsum hdiff).hasDerivAt.hasDerivWithinAt
@@ -3538,17 +3424,9 @@ private lemma Dyy_vGeTwo_formula_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2
         (((x + y) / 2) ^ (p - 2) -
           (p - 1) ^ p * ((x - y) / 2) ^ (p - 2)) := by
   rcases hA2 with ⟨hx, hneg, hay⟩
-  have hp_ge1 : 1 ≤ p := by linarith
-  have hp1_ge1 : 1 ≤ p - 1 := by linarith
-  have hyx : y < x := by
-    rw [a, pStar_eq_self_of_two_le p hp] at hay
-    have hp0 : 0 < p := by linarith
-    have hcoeff : 1 - 2 / p < (1 : ℝ) := by
-      have hdiv : 0 < 2 / p := by positivity
-      linarith
-    have hax_lt_x : (1 - 2 / p) * x < x := by
-      simpa using mul_lt_mul_of_pos_right hcoeff hx
-    linarith
+  have hp_ge1 : 1 ≤ p := one_le_of_two_le p hp
+  have hp1_ge1 : 1 ≤ p - 1 := one_le_sub_one_of_two_le p hp
+  have hyx : y < x := lt_of_lt_mul_a p hp hx hay
   have hsum : 0 < (x + y) / 2 := by linarith
   have hdiff : 0 < (x - y) / 2 := by linarith
   let g : ℝ → ℝ := fun s =>
@@ -3572,39 +3450,19 @@ private lemma Dyy_vGeTwo_formula_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2
             (p - 1) ^ p * (((x - s) / 2) ^ (p - 1)) * (p / 2) := by
     funext s
     have hbase_sum :
-        HasDerivAt (fun u : ℝ => (x + u) / 2) (1 / 2) s := by
-      simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        (((hasDerivAt_id s).const_add x).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun u : ℝ => (x + u) / 2) (1 / 2) s :=
+        ((hasDerivAt_id' (x := s)).const_add x).div_const 2
     have hbase_diff :
-        HasDerivAt (fun u : ℝ => (x - u) / 2) (-(1 / 2)) s := by
-      simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        ((((hasDerivAt_id s).neg).const_add x).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun u : ℝ => (x - u) / 2) (-(1 / 2)) s :=
+        (((hasDerivAt_id' (x := s)).const_sub x).div_const 2).congr_deriv (neg_div 2 1)
     have hpow_sum :
         HasDerivAt (fun u : ℝ => ((x + u) / 2) ^ p)
-          (p * (((x + s) / 2) ^ (p - 1)) * (1 / 2)) s := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ p) (p * (((x + s) / 2) ^ (p - 1)))
-            ((x + s) / 2) := by
-        simpa using
-          (Real.hasDerivAt_rpow_const (Or.inr hp_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ p) (p * ((x + s) / 2) ^ (p - 1))
-              ((x + s) / 2))
-      have hcomp := hrpow.comp s hbase_sum
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          (p * (((x + s) / 2) ^ (p - 1)) * (1 / 2)) s :=
+        (hbase_sum.rpow_const (Or.inr hp_ge1)).congr_deriv (by ring)
     have hpow_diff :
         HasDerivAt (fun u : ℝ => ((x - u) / 2) ^ p)
-          (p * (((x - s) / 2) ^ (p - 1)) * (-(1 / 2))) s := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ p) (p * (((x - s) / 2) ^ (p - 1)))
-            ((x - s) / 2) := by
-        simpa using
-          (Real.hasDerivAt_rpow_const (Or.inr hp_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ p) (p * ((x - s) / 2) ^ (p - 1))
-              ((x - s) / 2))
-      have hcomp := hrpow.comp s hbase_diff
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          (p * (((x - s) / 2) ^ (p - 1)) * (-(1 / 2))) s :=
+        (hbase_diff.rpow_const (Or.inr hp_ge1)).congr_deriv (by ring)
     have hd :
         HasDerivAt g
           (p * (((x + s) / 2) ^ (p - 1)) * (1 / 2) -
@@ -3626,41 +3484,21 @@ private lemma Dyy_vGeTwo_formula_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2
           (((x + y) / 2) ^ (p - 2) -
             (p - 1) ^ p * ((x - y) / 2) ^ (p - 2))) y := by
     have hbase_sum :
-        HasDerivAt (fun s : ℝ => (x + s) / 2) (1 / 2) y := by
-      simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        (((hasDerivAt_id y).const_add x).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun s : ℝ => (x + s) / 2) (1 / 2) y :=
+        ((hasDerivAt_id' (x := y)).const_add x).div_const 2
     have hbase_diff :
-        HasDerivAt (fun s : ℝ => (x - s) / 2) (-(1 / 2)) y := by
-      simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        ((((hasDerivAt_id y).neg).const_add x).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun s : ℝ => (x - s) / 2) (-(1 / 2)) y :=
+        (((hasDerivAt_id' (x := y)).const_sub x).div_const 2).congr_deriv (neg_div 2 1)
     have hpow_sum :
         HasDerivAt (fun s : ℝ => ((x + s) / 2) ^ (p - 1))
-          ((p - 1) * (((x + y) / 2) ^ (p - 2)) * (1 / 2)) y := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ (p - 1))
-            ((p - 1) * (((x + y) / 2) ^ (p - 2))) ((x + y) / 2) := by
-        simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-          show p + (-1 + -1) = p + -2 by ring] using
-          (Real.hasDerivAt_rpow_const (Or.inr hp1_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ (p - 1))
-              ((p - 1) * ((x + y) / 2) ^ ((p - 1) - 1)) ((x + y) / 2))
-      have hcomp := hrpow.comp y hbase_sum
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          ((p - 1) * (((x + y) / 2) ^ (p - 2)) * (1 / 2)) y :=
+        (hbase_sum.rpow_const (Or.inr hp1_ge1)).congr_deriv
+        (by rw [show p - 1 - 1 = p - 2 by ring]; ring)
     have hpow_diff :
         HasDerivAt (fun s : ℝ => ((x - s) / 2) ^ (p - 1))
-          ((p - 1) * (((x - y) / 2) ^ (p - 2)) * (-(1 / 2))) y := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ (p - 1))
-            ((p - 1) * (((x - y) / 2) ^ (p - 2))) ((x - y) / 2) := by
-        simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-          show p + (-1 + -1) = p + -2 by ring] using
-          (Real.hasDerivAt_rpow_const (Or.inr hp1_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ (p - 1))
-              ((p - 1) * ((x - y) / 2) ^ ((p - 1) - 1)) ((x - y) / 2))
-      have hcomp := hrpow.comp y hbase_diff
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          ((p - 1) * (((x - y) / 2) ^ (p - 2)) * (-(1 / 2))) y :=
+        (hbase_diff.rpow_const (Or.inr hp1_ge1)).congr_deriv
+        (by rw [show p - 1 - 1 = p - 2 by ring]; ring)
     have hd :
         HasDerivAt
           (fun s =>
@@ -3683,7 +3521,7 @@ private lemma Dyy_vGeTwo_nonpos (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p
   have hcoef : 0 ≤ p * (p - 1) / 4 := by
     exact div_nonneg (mul_nonneg (by linarith) (by linarith)) (by norm_num)
   have hbr := vGeTwo_A2_second_bracket_nonpos p hp x y hA2
-  nlinarith [mul_nonpos_of_nonneg_of_nonpos hcoef hbr]
+  linarith [mul_nonpos_of_nonneg_of_nonpos hcoef hbr]
 
 private lemma deriv_DyvGeTwo_y_nonpos_on_A2
     (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p x y) :
@@ -3708,7 +3546,7 @@ private lemma vGeTwo_tangent_y_on_Icc_of_A2
     vGeTwo p x z ≤ vGeTwo p x y + f' * (z - y) := by
   have hcont : ContinuousOn (fun t => vGeTwo p x t) (Set.Icc lo hi) := by
     have hp1 : 1 < p := by linarith
-    have hpair : Continuous (fun t : ℝ => (x, t)) := by continuity
+    have hpair : Continuous (fun t : ℝ => (x, t)) := continuous_const.prodMk continuous_id
     have hcomp := ((continuous_vGeTwo p hp1).comp hpair).continuousOn
       (s := Set.Icc lo hi)
     simpa [Function.comp_def] using hcomp
@@ -3725,8 +3563,7 @@ private lemma vGeTwo_tangent_y_on_Icc_of_A2
         linarith
       have hat : t < (1 - 2 / p) * x := by
         simpa [a, pStar_eq_self_of_two_le p hp] using hA2.2.2
-      have hax_lt_x : (1 - 2 / p) * x < x := by
-        simpa using mul_lt_mul_of_pos_right hcoeff hA2.1
+      have hax_lt_x : (1 - 2 / p) * x < x := mul_lt_of_lt_one_left hA2.1 hcoeff
       linarith
     have hsum : 0 < (x + t) / 2 := by linarith [hA2.1, hA2.2.1]
     have hdiff : 0 < (x - t) / 2 := by linarith
@@ -3739,8 +3576,7 @@ private lemma vGeTwo_tangent_y_on_Icc_of_A2
         linarith
       have hat : t < (1 - 2 / p) * x := by
         simpa [a, pStar_eq_self_of_two_le p hp] using hA2.2.2
-      have hax_lt_x : (1 - 2 / p) * x < x := by
-        simpa using mul_lt_mul_of_pos_right hcoeff hA2.1
+      have hax_lt_x : (1 - 2 / p) * x < x := mul_lt_of_lt_one_left hA2.1 hcoeff
       linarith
     have hsum : 0 < (x + t) / 2 := by linarith [hA2.1, hA2.2.1]
     have hdiff : 0 < (x - t) / 2 := by linarith
@@ -3757,16 +3593,8 @@ private lemma Dxy_vGeTwo_formula_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2
         (((x + y) / 2) ^ (p - 2) +
           (p - 1) ^ p * ((x - y) / 2) ^ (p - 2)) := by
   rcases hA2 with ⟨hx, hneg, hay⟩
-  have hp1_ge1 : 1 ≤ p - 1 := by linarith
-  have hyx : y < x := by
-    rw [a, pStar_eq_self_of_two_le p hp] at hay
-    have hp0 : 0 < p := by linarith
-    have hcoeff : 1 - 2 / p < (1 : ℝ) := by
-      have hdiv : 0 < 2 / p := by positivity
-      linarith
-    have hax_lt_x : (1 - 2 / p) * x < x := by
-      simpa using mul_lt_mul_of_pos_right hcoeff hx
-    linarith
+  have hp1_ge1 : 1 ≤ p - 1 := one_le_sub_one_of_two_le p hp
+  have hyx : y < x := lt_of_lt_mul_a p hp hx hay
   have hsum : 0 < (x + y) / 2 := by linarith
   have hdiff : 0 < (x - y) / 2 := by linarith
   let g : ℝ → ℝ := fun t =>
@@ -3806,41 +3634,21 @@ private lemma Dxy_vGeTwo_formula_on_A2 (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2
           (((x + y) / 2) ^ (p - 2) +
             (p - 1) ^ p * ((x - y) / 2) ^ (p - 2))) x := by
     have hbase_sum :
-        HasDerivAt (fun t : ℝ => (t + y) / 2) (1 / 2) x := by
-      simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        (((hasDerivAt_id x).add_const y).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun t : ℝ => (t + y) / 2) (1 / 2) x :=
+        ((hasDerivAt_id' (x := x)).add_const y).div_const 2
     have hbase_diff :
-        HasDerivAt (fun t : ℝ => (t - y) / 2) (1 / 2) x := by
-      simpa [sub_eq_add_neg, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
-        (((hasDerivAt_id x).add_const (-y)).const_mul (1 / 2 : ℝ))
+        HasDerivAt (fun t : ℝ => (t - y) / 2) (1 / 2) x :=
+        ((hasDerivAt_id' (x := x)).sub_const y).div_const 2
     have hpow_sum :
         HasDerivAt (fun t : ℝ => ((t + y) / 2) ^ (p - 1))
-          ((p - 1) * (((x + y) / 2) ^ (p - 2)) * (1 / 2)) x := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ (p - 1))
-            ((p - 1) * (((x + y) / 2) ^ (p - 2))) ((x + y) / 2) := by
-        simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-          show p + (-1 + -1) = p + -2 by ring] using
-          (Real.hasDerivAt_rpow_const (Or.inr hp1_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ (p - 1))
-              ((p - 1) * ((x + y) / 2) ^ ((p - 1) - 1)) ((x + y) / 2))
-      have hcomp := hrpow.comp x hbase_sum
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          ((p - 1) * (((x + y) / 2) ^ (p - 2)) * (1 / 2)) x :=
+        (hbase_sum.rpow_const (Or.inr hp1_ge1)).congr_deriv
+        (by rw [show p - 1 - 1 = p - 2 by ring]; ring)
     have hpow_diff :
         HasDerivAt (fun t : ℝ => ((t - y) / 2) ^ (p - 1))
-          ((p - 1) * (((x - y) / 2) ^ (p - 2)) * (1 / 2)) x := by
-      have hrpow :
-          HasDerivAt (fun u : ℝ => u ^ (p - 1))
-            ((p - 1) * (((x - y) / 2) ^ (p - 2))) ((x - y) / 2) := by
-        simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-          show p + (-1 + -1) = p + -2 by ring] using
-          (Real.hasDerivAt_rpow_const (Or.inr hp1_ge1) :
-            HasDerivAt (fun u : ℝ => u ^ (p - 1))
-              ((p - 1) * ((x - y) / 2) ^ ((p - 1) - 1)) ((x - y) / 2))
-      have hcomp := hrpow.comp x hbase_diff
-      simp only [Function.comp_def] at hcomp
-      convert hcomp using 2
+          ((p - 1) * (((x - y) / 2) ^ (p - 2)) * (1 / 2)) x :=
+        (hbase_diff.rpow_const (Or.inr hp1_ge1)).congr_deriv
+        (by rw [show p - 1 - 1 = p - 2 by ring]; ring)
     have hd' :
         HasDerivAt g
           (((p - 1) * (((x + y) / 2) ^ (p - 2)) * (1 / 2)) * (p / 2) +
@@ -3870,8 +3678,7 @@ private lemma Dxy_vGeTwo_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p
         have hdiv : 0 < 2 / p := by positivity
         linarith
       have hyx : y < x := by
-        have hax_lt_x : (1 - 2 / p) * x < x := by
-          simpa using mul_lt_mul_of_pos_right hcoeff hx
+        have hax_lt_x : (1 - 2 / p) * x < x := mul_lt_of_lt_one_left hx hcoeff
         linarith
       linarith
     exact Real.rpow_nonneg hpos.le _
@@ -3883,8 +3690,7 @@ private lemma Dxy_vGeTwo_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p
         have hdiv : 0 < 2 / p := by positivity
         linarith
       have hyx : y < x := by
-        have hax_lt_x : (1 - 2 / p) * x < x := by
-          simpa using mul_lt_mul_of_pos_right hcoeff hx
+        have hax_lt_x : (1 - 2 / p) * x < x := mul_lt_of_lt_one_left hx hcoeff
         linarith
       linarith
     exact Real.rpow_nonneg hpos.le _
@@ -3895,6 +3701,22 @@ private lemma Dxy_vGeTwo_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hA2 : A2 p
     add_nonneg hsum (mul_nonneg hpbase hdiff)
   exact mul_nonneg hpcoef hsumbr
 
+/-- `vGeTwo` is differentiable in `x` on the closed sector `A2`, with derivative given by the
+glued first partial `DxauxFunction1`. -/
+private lemma hasDerivAt_vGeTwo_x_DxauxFunction1 (p : ℝ) (hp : 2 ≤ p) {x y : ℝ}
+    (hsum : 0 < (x + y) / 2) (hdiff : 0 < (x - y) / 2) (hcl : closureA2 p x y) :
+    HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p x y) x :=
+  (hasDerivAt_vGeTwo_x_of_pos p hp x y hsum hdiff).congr_deriv
+    (auxFunction1_Dx_eq_DxvGeTwo p hp x y hcl).symm
+
+/-- `vGeTwo` is differentiable in `y` on the closed sector `A2`, with derivative given by the
+glued first partial `DyauxFunction1`. -/
+private lemma hasDerivAt_vGeTwo_y_DyauxFunction1 (p : ℝ) (hp : 2 ≤ p) {x y : ℝ}
+    (hsum : 0 < (x + y) / 2) (hdiff : 0 < (x - y) / 2) (hcl : closureA2 p x y) :
+    HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x y) y :=
+  (hasDerivAt_vGeTwo_y_of_pos p hp x y hsum hdiff).congr_deriv
+    (auxFunction1_Dy_eq_DyvGeTwo p hp x y hcl).symm
+
 /-! ## 8. First-quadrant geometry and `auxFunction1` tangent estimates -/
 
 /-
@@ -3904,32 +3726,10 @@ horizontal or vertical segment may cross the internal boundary
 comparisons there, and glue the local A1/A2 tangent inequalities.
 -/
 
-private lemma a_nonneg_of_two_le (p : ℝ) (hp : 2 ≤ p) : 0 ≤ a p := by
-  have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
-  have hp_pos : 0 < p := by linarith
-  rw [a, hpStar]
-  field_simp [hp_pos.ne]
-  nlinarith
-
-private lemma a_pos_of_two_lt (p : ℝ) (hp : 2 < p) : 0 < a p := by
-  have hp' : 2 ≤ p := by linarith
-  have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp'
-  have hp_pos : 0 < p := by linarith
-  rw [a, hpStar]
-  field_simp [hp_pos.ne']
-  linarith
-
-private lemma a_lt_one_of_two_le (p : ℝ) (hp : 2 ≤ p) : a p < 1 := by
-  have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
-  have hp_pos : 0 < p := by linarith
-  rw [a, hpStar]
-  have hdiv : 0 < 2 / p := by positivity
-  linarith
-
 private lemma horizontal_boundary_closureA1_closureA2
     (p y : ℝ) (hp : 2 < p) (hy : 0 < y) :
     closureA1 p (y / a p) y ∧ closureA2 p (y / a p) y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   have ha_lt : a p < 1 := a_lt_one_of_two_le p hp'
   have hboundary : a p * (y / a p) = y := by
@@ -3951,13 +3751,11 @@ private lemma DxauxFunction1_A1_boundary_le
     (p : ℝ) (hp : 2 < p) {x y : ℝ}
     (hx : 0 < x) (hax : (a p) * x < y) (hyx : y < x) :
     DxauxFunction1 p (y / a p) y ≤ DxauxFunction1 p x y := by
-  have hp' : 2 ≤ p := by linarith
-  have hp1 : 1 < p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
+  have hp1 : 1 < p := one_lt_of_two_le p (le_of_lt hp)
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hxc : x < c := by
     have hmul : a p * x < a p * c := by simpa [hac] using hax
     nlinarith [hmul, ha_pos]
@@ -3970,7 +3768,7 @@ private lemma DxauxFunction1_A1_boundary_le
       AntitoneOn (fun t : ℝ => DxuA1Fun p (t, y)) (Set.Icc x c) := by
     have hcont : ContinuousOn (fun t : ℝ => DxuA1Fun p (t, y)) (Set.Icc x c) := by
       have hpair : ContinuousOn (fun t : ℝ => (t, y)) (Set.Icc x c) :=
-        (by continuity : Continuous (fun t : ℝ => (t, y))).continuousOn
+        (continuous_id.prodMk continuous_const : Continuous (fun t : ℝ => (t, y))).continuousOn
       exact (continuousOn_DxuA1_closureA1 p hp1).comp hpair (by
         intro t ht
         have htc : t ≤ c := ht.2
@@ -3986,13 +3784,11 @@ private lemma DxauxFunction1_A1_boundary_le
       (f' := fun t : ℝ => deriv (fun s => DxuA1Fun p (s, y)) t)
       (convex_Icc x c) hcont ?_ ?_
     · intro t ht
-      have htIoo : t ∈ Set.Ioo x c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo x c := mem_Ioo_of_mem_interior_Icc ht
       exact (differentiableAt_DxuA1Fun_x_of_pos p t y
         (lt_trans hx htIoo.1)).hasDerivAt.hasDerivWithinAt
     · intro t ht
-      have htIoo : t ∈ Set.Ioo x c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo x c := mem_Ioo_of_mem_interior_Icc ht
       have hA1 : A1 p t y := by
         have h_at : a p * t < y := by
           have hmul : a p * t < a p * c :=
@@ -4012,12 +3808,10 @@ private lemma DxauxFunction1_A2_le_boundary
     (p : ℝ) (hp : 2 < p) {x y : ℝ}
     (hx : 0 < x) (hy_pos : 0 < y) (hay : y < (a p) * x) :
     DxauxFunction1 p x y ≤ DxauxFunction1 p (y / a p) y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hcx : c < x := by
     have hmul : a p * c < a p * x := by simpa [hac] using hay
     nlinarith [hmul, ha_pos]
@@ -4027,7 +3821,7 @@ private lemma DxauxFunction1_A2_le_boundary
       AntitoneOn (fun t : ℝ => DxvGeTwo p t y) (Set.Icc c x) := by
     have hcont : ContinuousOn (fun t : ℝ => DxvGeTwo p t y) (Set.Icc c x) := by
       have hpair : ContinuousOn (fun t : ℝ => (t, y)) (Set.Icc c x) :=
-        (by continuity : Continuous (fun t : ℝ => (t, y))).continuousOn
+        (continuous_id.prodMk continuous_const : Continuous (fun t : ℝ => (t, y))).continuousOn
       exact (continuousOn_DxvGeTwo_closureA2 p hp').comp hpair (by
         intro t ht
         have hc_pos : 0 < c := div_pos hy_pos ha_pos
@@ -4043,8 +3837,7 @@ private lemma DxauxFunction1_A2_le_boundary
       (f' := fun t : ℝ => deriv (fun s => DxvGeTwo p s y) t)
       (convex_Icc c x) hcont ?_ ?_
     · intro t ht
-      have htIoo : t ∈ Set.Ioo c x := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo c x := mem_Ioo_of_mem_interior_Icc ht
       have hsum : 0 < (t + y) / 2 := by
         have hc_pos : 0 < c := div_pos hy_pos ha_pos
         linarith [htIoo.1]
@@ -4059,8 +3852,7 @@ private lemma DxauxFunction1_A2_le_boundary
         linarith [hy_lt_c, htIoo.1]
       exact (differentiableAt_DxvGeTwo_x_of_pos p t y hsum hdiff).hasDerivAt.hasDerivWithinAt
     · intro t ht
-      have htIoo : t ∈ Set.Ioo c x := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo c x := mem_Ioo_of_mem_interior_Icc ht
       have hA2 : A2 p t y := by
         have hc_pos : 0 < c := div_pos hy_pos ha_pos
         have hyt : y < a p * t := by
@@ -4135,10 +3927,10 @@ private lemma hasDerivAt_auxFunction1_x_on_boundary (p x : ℝ) (hp : 2 ≤ p) (
     have hlt : a p < 1 := a_lt_one_of_two_le p hp
     simpa using mul_lt_mul_of_pos_right hlt hx
   have hsum : 0 < (x + a p * x) / 2 := by
-    have : 0 < x + a p * x := by nlinarith
+    have : 0 < x + a p * x := by linarith
     linarith
   have hdiff : 0 < (x - a p * x) / 2 := by
-    have : 0 < x - a p * x := by nlinarith
+    have : 0 < x - a p * x := by linarith
     linarith
   have hleftEq :
       (fun t => auxFunction1 p t ((a p) * x)) =ᶠ[𝓝[Set.Iic x] x]
@@ -4221,7 +4013,7 @@ private lemma deriv_auxFunction1_eq_DyauxFunction1_on_A2 (p : ℝ) (hp : 2 ≤ p
 private lemma hasDerivAt_auxFunction1_y_on_boundary (p x : ℝ) (hp : 2 < p) (hx : 0 < x) :
     HasDerivAt (fun s => auxFunction1 p x s)
       (DyauxFunction1 p x ((a p) * x)) ((a p) * x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
   have hy_nonneg : 0 ≤ a p * x := mul_nonneg ha_nonneg hx.le
   have hneg : -x < a p * x := by linarith
@@ -4229,10 +4021,10 @@ private lemma hasDerivAt_auxFunction1_y_on_boundary (p x : ℝ) (hp : 2 < p) (hx
     have hlt : a p < 1 := a_lt_one_of_two_le p hp'
     simpa using mul_lt_mul_of_pos_right hlt hx
   have hsum : 0 < (x + a p * x) / 2 := by
-    have : 0 < x + a p * x := by nlinarith
+    have : 0 < x + a p * x := by linarith
     linarith
   have hdiff : 0 < (x - a p * x) / 2 := by
-    have : 0 < x - a p * x := by nlinarith
+    have : 0 < x - a p * x := by linarith
     linarith
   have hleftEq :
       (fun s => auxFunction1 p x s) =ᶠ[𝓝[Set.Iic (a p * x)] (a p * x)]
@@ -4287,7 +4079,7 @@ private lemma DyauxFunction1_A2_boundary_le
       AntitoneOn (fun t : ℝ => DyvGeTwo p x t) (Set.Icc y ((a p) * x)) := by
     have hcont : ContinuousOn (fun t : ℝ => DyvGeTwo p x t) (Set.Icc y ((a p) * x)) := by
       have hpair : ContinuousOn (fun t : ℝ => (x, t)) (Set.Icc y ((a p) * x)) :=
-        (by continuity : Continuous (fun t : ℝ => (x, t))).continuousOn
+        (continuous_const.prodMk continuous_id : Continuous (fun t : ℝ => (x, t))).continuousOn
       exact (continuousOn_DyvGeTwo_closureA2 p hp).comp hpair (by
         intro t ht
         exact ⟨hx.le, by linarith [ht.1], ht.2⟩)
@@ -4297,21 +4089,18 @@ private lemma DyauxFunction1_A2_boundary_le
       (f' := fun t : ℝ => deriv (fun s => DyvGeTwo p x s) t)
       (convex_Icc y ((a p) * x)) hcont ?_ ?_
     · intro t ht
-      have htIoo : t ∈ Set.Ioo y ((a p) * x) := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo y ((a p) * x) := mem_Ioo_of_mem_interior_Icc ht
       have hA2 : A2 p x t := by
         exact ⟨hx, by linarith [htIoo.1], htIoo.2⟩
       have hyx : t < x := by
         have hcoeff : a p < 1 := a_lt_one_of_two_le p hp
-        have hax_lt_x : a p * x < x := by
-          simpa using mul_lt_mul_of_pos_right hcoeff hx
+        have hax_lt_x : a p * x < x := mul_lt_of_lt_one_left hx hcoeff
         exact lt_trans htIoo.2 hax_lt_x
       have hsum : 0 < (x + t) / 2 := by linarith [hA2.2.1]
       have hdiff : 0 < (x - t) / 2 := by linarith
       exact (differentiableAt_DyvGeTwo_y_of_pos p x t hsum hdiff).hasDerivAt.hasDerivWithinAt
     · intro t ht
-      have htIoo : t ∈ Set.Ioo y ((a p) * x) := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo y ((a p) * x) := mem_Ioo_of_mem_interior_Icc ht
       have hA2 : A2 p x t := by
         exact ⟨hx, by linarith [htIoo.1], htIoo.2⟩
       exact deriv_DyvGeTwo_y_nonpos_on_A2 p hp x t hA2
@@ -4323,7 +4112,7 @@ private lemma DyauxFunction1_A2_boundary_le
   have hcl_c : closureA2 p x ((a p) * x) := by
     have hneg : -x ≤ (a p) * x := by
       have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp
-      nlinarith [mul_nonneg ha_nonneg hx.le]
+      linarith [mul_nonneg ha_nonneg hx.le]
     exact ⟨hx.le, hneg, le_rfl⟩
   rwa [auxFunction1_Dy_eq_DyvGeTwo p hp x ((a p) * x) hcl_c,
     auxFunction1_Dy_eq_DyvGeTwo p hp x y hcl_y]
@@ -4335,12 +4124,10 @@ private lemma auxFunction1_tangent_y_forward_cross_A2_A1
     auxFunction1 p x z ≤
       auxFunction1 p x y + DyauxFunction1 p x y * (z - y) := by
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp)
   have hneg_c : -x < c := by
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp
-    nlinarith [mul_nonneg ha_nonneg hx.le]
+    linarith [mul_nonneg ha_nonneg hx.le]
   have hcl_y_A2 : closureA2 p x y := ⟨hx.le, le_of_lt hy_lower, hy_boundary⟩
   have hcl_c_A2 : closureA2 p x c := by
     exact ⟨hx.le, le_of_lt hneg_c, by simp [c]⟩
@@ -4348,11 +4135,8 @@ private lemma auxFunction1_tangent_y_forward_cross_A2_A1
     exact ⟨hx.le, by simp [c], le_of_lt hc_lt_x⟩
   have hcl_z_A1 : closureA1 p x z := ⟨hx.le, hz_boundary, le_of_lt hz_upper⟩
   have hderiv_y :
-      HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x y) y := by
-    have hsum : 0 < (x + y) / 2 := by linarith
-    have hdiff : 0 < (x - y) / 2 := by linarith [hy_boundary, hc_lt_x]
-    refine (hasDerivAt_vGeTwo_y_of_pos p hp x y hsum hdiff).congr_deriv ?_
-    exact (auxFunction1_Dy_eq_DyvGeTwo p hp x y hcl_y_A2).symm
+      HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x y) y :=
+      hasDerivAt_vGeTwo_y_DyauxFunction1 p hp (by linarith) (by linarith) hcl_y_A2
   have hderiv_c :
       HasDerivAt (fun t => uA1 p x t) (DyauxFunction1 p x c) c := by
     refine (hasDerivAt_uA1_y_of_pos p hp x c hx).congr_deriv ?_
@@ -4401,12 +4185,10 @@ private lemma auxFunction1_tangent_y_backward_cross_A1_A2
     auxFunction1 p x z ≤
       auxFunction1 p x y + DyauxFunction1 p x y * (z - y) := by
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp)
   have hneg_c : -x < c := by
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp
-    nlinarith [mul_nonneg ha_nonneg hx.le]
+    linarith [mul_nonneg ha_nonneg hx.le]
   have hcl_y_A1 : closureA1 p x y := ⟨hx.le, hy_boundary, le_of_lt hy_upper⟩
   have hcl_c_A1 : closureA1 p x c := by
     exact ⟨hx.le, by simp [c], le_of_lt hc_lt_x⟩
@@ -4418,19 +4200,15 @@ private lemma auxFunction1_tangent_y_backward_cross_A1_A2
     refine (hasDerivAt_uA1_y_of_pos p hp x y hx).congr_deriv ?_
     exact (auxFunction1_Dy_eq_DyuA1 p x y hcl_y_A1).symm
   have hderiv_c :
-      HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x c) c := by
-    have hsum : 0 < (x + c) / 2 := by linarith [hneg_c]
-    have hdiff : 0 < (x - c) / 2 := by linarith [hc_lt_x]
-    refine (hasDerivAt_vGeTwo_y_of_pos p hp x c hsum hdiff).congr_deriv ?_
-    exact (auxFunction1_Dy_eq_DyvGeTwo p hp x c hcl_c_A2).symm
+      HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x c) c :=
+      hasDerivAt_vGeTwo_y_DyauxFunction1 p hp (by linarith) (by linarith) hcl_c_A2
   have h_yc_u :
       uA1 p x c ≤ uA1 p x y + DyauxFunction1 p x y * (c - y) := by
     apply uA1_tangent_y_on_Icc_of_A1
       (p := p) (hp := hp) (lo := c) (hi := y) (x := x) (y := y) (z := c)
     · exact hx
     · intro t ht
-      have htIoo : t ∈ Set.Ioo c y := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo c y := mem_Ioo_of_mem_interior_Icc ht
       exact ⟨hx, htIoo.1, by linarith [htIoo.2, hy_upper]⟩
     · exact ⟨hy_boundary, le_rfl⟩
     · exact ⟨le_rfl, hy_boundary⟩
@@ -4440,8 +4218,7 @@ private lemma auxFunction1_tangent_y_backward_cross_A1_A2
     apply vGeTwo_tangent_y_on_Icc_of_A2
       (p := p) (hp := hp) (lo := z) (hi := c) (x := x) (y := c) (z := z)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo z c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo z c := mem_Ioo_of_mem_interior_Icc ht
       exact ⟨hx, by linarith [htIoo.1], htIoo.2⟩
     · exact ⟨hz_boundary, le_rfl⟩
     · exact ⟨le_rfl, hz_boundary⟩
@@ -4490,8 +4267,7 @@ private lemma auxFunction1_tangent_y_on_A2_segment
     apply vGeTwo_tangent_y_on_Icc_of_A2
       (p := p) (hp := hp) (lo := lo) (hi := hi) (x := x) (y := y) (z := z)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo lo hi := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo lo hi := mem_Ioo_of_mem_interior_Icc ht
       have hlo_lower : -x < lo := by
         exact lt_min hy_lower hz_lower
       have hhi_boundary : hi ≤ (a p) * x := by
@@ -4523,8 +4299,7 @@ private lemma auxFunction1_tangent_y_on_A1_segment
       (p := p) (hp := hp) (lo := lo) (hi := hi) (x := x) (y := y) (z := z)
     · exact hx
     · intro t ht
-      have htIoo : t ∈ Set.Ioo lo hi := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo lo hi := mem_Ioo_of_mem_interior_Icc ht
       have hlo_boundary : (a p) * x ≤ lo := by
         exact le_min hy_boundary hz_boundary
       have hhi_upper : hi < x := by
@@ -4560,9 +4335,7 @@ private lemma auxFunction1_tangent_y_to_diag_from_QuarterPlaneOpen_segment
     auxFunction1 p x x ≤
       auxFunction1 p x y + DyauxFunction1 p x y * (x - y) := by
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp)
   have hdiag : closureA1 p x x := by
     refine ⟨hx.le, ?_, le_rfl⟩
     exact (le_of_lt hc_lt_x)
@@ -4571,15 +4344,12 @@ private lemma auxFunction1_tangent_y_to_diag_from_QuarterPlaneOpen_segment
     have hcl_c_A2 : closureA2 p x c := by
       have hneg_c : -x < c := by
         have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp
-        nlinarith [mul_nonneg ha_nonneg hx.le]
+        linarith [mul_nonneg ha_nonneg hx.le]
       exact ⟨hx.le, le_of_lt hneg_c, le_rfl⟩
     have hcl_c_A1 : closureA1 p x c := ⟨hx.le, le_rfl, le_of_lt hc_lt_x⟩
     have hderiv_y :
-        HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x y) y := by
-      have hsum : 0 < (x + y) / 2 := by linarith
-      have hdiff : 0 < (x - y) / 2 := by linarith
-      refine (hasDerivAt_vGeTwo_y_of_pos p hp x y hsum hdiff).congr_deriv ?_
-      exact (auxFunction1_Dy_eq_DyvGeTwo p hp x y hcl_y_A2).symm
+        HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x y) y :=
+        hasDerivAt_vGeTwo_y_DyauxFunction1 p hp (by linarith) (by linarith) hcl_y_A2
     have hderiv_c :
         HasDerivAt (fun t => uA1 p x t) (DyauxFunction1 p x c) c := by
       refine (hasDerivAt_uA1_y_of_pos p hp x c hx).congr_deriv ?_
@@ -4589,8 +4359,7 @@ private lemma auxFunction1_tangent_y_to_diag_from_QuarterPlaneOpen_segment
       apply vGeTwo_tangent_y_on_Icc_of_A2
         (p := p) (hp := hp) (lo := y) (hi := c) (x := x) (y := y) (z := c)
       · intro t ht
-        have htIoo : t ∈ Set.Ioo y c := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo y c := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, by linarith [htIoo.1], htIoo.2⟩
       · exact ⟨le_rfl, hyc⟩
       · exact ⟨hyc, le_rfl⟩
@@ -4601,8 +4370,7 @@ private lemma auxFunction1_tangent_y_to_diag_from_QuarterPlaneOpen_segment
         (p := p) (hp := hp) (lo := c) (hi := x) (x := x) (y := c) (z := x)
       · exact hx
       · intro t ht
-        have htIoo : t ∈ Set.Ioo c x := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo c x := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, htIoo.1, htIoo.2⟩
       · exact ⟨le_rfl, hc_lt_x.le⟩
       · exact ⟨hc_lt_x.le, le_rfl⟩
@@ -4631,8 +4399,7 @@ private lemma auxFunction1_tangent_y_to_diag_from_QuarterPlaneOpen_segment
         (p := p) (hp := hp) (lo := y) (hi := x) (x := x) (y := y) (z := x)
       · exact hx
       · intro t ht
-        have htIoo : t ∈ Set.Ioo y x := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo y x := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, lt_of_le_of_lt hcy htIoo.1, htIoo.2⟩
       · exact ⟨le_rfl, hy_upper.le⟩
       · exact ⟨hy_upper.le, le_rfl⟩
@@ -4645,9 +4412,7 @@ private lemma DyauxFunction1_diag_le_of_QuarterPlaneOpen
     (hx : 0 < x) (hy_lower : -x < y) (hy_upper : y < x) :
     DyauxFunction1 p x x ≤ DyauxFunction1 p x y := by
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp)
   have hdiag : closureA1 p x x := ⟨hx.le, le_of_lt hc_lt_x, le_rfl⟩
   rcases le_total y c with hyc | hcy
   · have hcl_c_A1 : closureA1 p x c := ⟨hx.le, le_rfl, le_of_lt hc_lt_x⟩
@@ -4688,8 +4453,7 @@ private lemma auxFunction1_tangent_x_on_A1_segment
       have hlo_pos : 0 < lo := lt_min hx_pos hz_pos
       exact le_of_lt (lt_of_lt_of_le hlo_pos ht.1)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo lo hi := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo lo hi := mem_Ioo_of_mem_interior_Icc ht
       have hhi_boundary : (a p) * hi < y := by
         have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp
         rcases le_total x z with hxz | hzx
@@ -4735,8 +4499,7 @@ private lemma auxFunction1_tangent_x_on_A2_segment
     apply vGeTwo_tangent_x_on_Icc_of_A2
       (p := p) (hp := hp) (lo := lo) (hi := hi) (x := x) (z := z) (y := y)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo lo hi := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo lo hi := mem_Ioo_of_mem_interior_Icc ht
       have hlo_pos : 0 < lo := lt_min hx_pos hz_pos
       have hlo_neg : -lo < y := by
         rcases le_total x z with hxz | hzx
@@ -4769,12 +4532,10 @@ private lemma auxFunction1_tangent_x_forward_cross_A1_A2
     (hz_boundary : y < (a p) * z) :
     auxFunction1 p z y ≤
       auxFunction1 p x y + DxauxFunction1 p x y * (z - x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hxc : x < c := by
     have hmul : a p * x < a p * c := by simpa [hac] using hax
     nlinarith [hmul, ha_pos]
@@ -4794,19 +4555,8 @@ private lemma auxFunction1_tangent_x_forward_cross_A1_A2
     refine (hasDerivAt_uA1_x_of_pos p hp' x y hx).congr_deriv ?_
     exact (auxFunction1_Dx_eq_DxuA1 p x y hcl_x_A1).symm
   have hderiv_c :
-      HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p c y) c := by
-    have hc_pos : 0 < c := div_pos hy_pos ha_pos
-    have hyc : y < c := by
-      have ha_lt : a p < 1 := a_lt_one_of_two_le p hp'
-      have hlt_inv : 1 < (a p)⁻¹ := by
-        rw [one_lt_inv₀ ha_pos]
-        exact ha_lt
-      have hmul := mul_lt_mul_of_pos_left hlt_inv hy_pos
-      simpa [c, div_eq_mul_inv] using hmul
-    have hsum : 0 < (c + y) / 2 := by linarith
-    have hdiff : 0 < (c - y) / 2 := by linarith
-    refine (hasDerivAt_vGeTwo_x_of_pos p hp' c y hsum hdiff).congr_deriv ?_
-    exact (auxFunction1_Dx_eq_DxvGeTwo p hp' c y hboundary.2).symm
+      HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p c y) c :=
+      hasDerivAt_vGeTwo_x_DxauxFunction1 p hp' (by linarith) (by linarith) hboundary.2
   have h_xc_u :
       uA1 p c y ≤ uA1 p x y + DxauxFunction1 p x y * (c - x) := by
     apply uA1_tangent_x_on_Icc_of_A1
@@ -4814,8 +4564,7 @@ private lemma auxFunction1_tangent_x_forward_cross_A1_A2
     · intro t ht
       exact le_trans hx.le ht.1
     · intro t ht
-      have htIoo : t ∈ Set.Ioo x c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo x c := mem_Ioo_of_mem_interior_Icc ht
       have h_at : a p * t < y := by
         have hmul : a p * t < a p * c :=
           mul_lt_mul_of_pos_left htIoo.2 ha_pos
@@ -4829,8 +4578,7 @@ private lemma auxFunction1_tangent_x_forward_cross_A1_A2
     apply vGeTwo_tangent_x_on_Icc_of_A2
       (p := p) (hp := hp') (lo := c) (hi := z) (x := c) (z := z) (y := y)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo c z := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo c z := mem_Ioo_of_mem_interior_Icc ht
       have hc_pos : 0 < c := div_pos hy_pos ha_pos
       have hyt : y < a p * t := by
         have hmul : a p * c < a p * t :=
@@ -4861,12 +4609,10 @@ private lemma auxFunction1_tangent_x_backward_cross_A2_A1
     (hz_boundary : (a p) * z < y) (hyz : y < z) :
     auxFunction1 p z y ≤
       auxFunction1 p x y + DxauxFunction1 p x y * (z - x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hcx : c < x := by
     have hmul : a p * c < a p * x := by simpa [hac] using hay
     nlinarith [hmul, ha_pos]
@@ -4879,15 +4625,8 @@ private lemma auxFunction1_tangent_x_backward_cross_A2_A1
   have hz_pos : 0 < z := lt_trans hy_pos hyz
   have hcl_z_A1 : closureA1 p z y := ⟨hz_pos.le, le_of_lt hz_boundary, le_of_lt hyz⟩
   have hderiv_x :
-      HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p x y) x := by
-    have hsum : 0 < (x + y) / 2 := by linarith
-    have hdiff : 0 < (x - y) / 2 := by
-      have hlt_one : a p < 1 := a_lt_one_of_two_le p hp'
-      have hax_lt_x : a p * x < x := by
-        simpa using mul_lt_mul_of_pos_right hlt_one hx
-      linarith
-    refine (hasDerivAt_vGeTwo_x_of_pos p hp' x y hsum hdiff).congr_deriv ?_
-    exact (auxFunction1_Dx_eq_DxvGeTwo p hp' x y hcl_x_A2).symm
+      HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p x y) x :=
+      hasDerivAt_vGeTwo_x_DxauxFunction1 p hp' (by linarith) (by linarith) hcl_x_A2
   have hderiv_c :
       HasDerivAt (fun t => uA1 p t y) (DxauxFunction1 p c y) c := by
     have hc_pos : 0 < c := div_pos hy_pos ha_pos
@@ -4898,8 +4637,7 @@ private lemma auxFunction1_tangent_x_backward_cross_A2_A1
     apply vGeTwo_tangent_x_on_Icc_of_A2
       (p := p) (hp := hp') (lo := c) (hi := x) (x := x) (z := c) (y := y)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo c x := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo c x := mem_Ioo_of_mem_interior_Icc ht
       have hc_pos : 0 < c := div_pos hy_pos ha_pos
       have hyt : y < a p * t := by
         have hmul : a p * c < a p * t :=
@@ -4917,8 +4655,7 @@ private lemma auxFunction1_tangent_x_backward_cross_A2_A1
     · intro t ht
       exact le_trans hz_pos.le ht.1
     · intro t ht
-      have htIoo : t ∈ Set.Ioo z c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo z c := mem_Ioo_of_mem_interior_Icc ht
       have h_at : a p * t < y := by
         have hmul : a p * t < a p * c :=
           mul_lt_mul_of_pos_left htIoo.2 ha_pos
@@ -4946,12 +4683,10 @@ private lemma auxFunction1_tangent_x_A1_to_boundary
     (hx : 0 < x) (hax : (a p) * x < y) (hyx : y < x) :
     auxFunction1 p (y / a p) y ≤
       auxFunction1 p x y + DxauxFunction1 p x y * (y / a p - x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hxc : x < c := by
     have hmul : a p * x < a p * c := by simpa [hac] using hax
     nlinarith [hmul, ha_pos]
@@ -4971,8 +4706,7 @@ private lemma auxFunction1_tangent_x_A1_to_boundary
     · intro t ht
       exact le_trans hx.le ht.1
     · intro t ht
-      have htIoo : t ∈ Set.Ioo x c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo x c := mem_Ioo_of_mem_interior_Icc ht
       have h_at : a p * t < y := by
         have hmul : a p * t < a p * c :=
           mul_lt_mul_of_pos_left htIoo.2 ha_pos
@@ -4989,12 +4723,10 @@ private lemma auxFunction1_tangent_x_A2_to_boundary
     (hx : 0 < x) (hy_pos : 0 < y) (hay : y < (a p) * x) :
     auxFunction1 p (y / a p) y ≤
       auxFunction1 p x y + DxauxFunction1 p x y * (y / a p - x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hcx : c < x := by
     have hmul : a p * c < a p * x := by simpa [hac] using hay
     nlinarith [hmul, ha_pos]
@@ -5005,8 +4737,7 @@ private lemma auxFunction1_tangent_x_A2_to_boundary
     have hsum : 0 < (x + y) / 2 := by linarith
     have hdiff : 0 < (x - y) / 2 := by
       have hlt_one : a p < 1 := a_lt_one_of_two_le p hp'
-      have hax_lt_x : a p * x < x := by
-        simpa using mul_lt_mul_of_pos_right hlt_one hx
+      have hax_lt_x : a p * x < x := mul_lt_of_lt_one_left hx hlt_one
       linarith
     refine (hasDerivAt_vGeTwo_x_of_pos p hp' x y hsum hdiff).congr_deriv ?_
     exact (auxFunction1_Dx_eq_DxvGeTwo p hp' x y hcl_x).symm
@@ -5015,8 +4746,7 @@ private lemma auxFunction1_tangent_x_A2_to_boundary
     apply vGeTwo_tangent_x_on_Icc_of_A2
       (p := p) (hp := hp') (lo := c) (hi := x) (x := x) (z := c) (y := y)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo c x := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo c x := mem_Ioo_of_mem_interior_Icc ht
       have hc_pos : 0 < c := div_pos hy_pos ha_pos
       have hyt : y < a p * t := by
         have hmul : a p * c < a p * t :=
@@ -5036,12 +4766,10 @@ private lemma auxFunction1_tangent_x_boundary_to_A1
     auxFunction1 p z y ≤
       auxFunction1 p (y / a p) y +
         DxauxFunction1 p (y / a p) y * (z - y / a p) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hzc : z < c := by
     have hmul : a p * z < a p * c := by simpa [hac] using hz_boundary
     nlinarith [hmul, ha_pos]
@@ -5060,8 +4788,7 @@ private lemma auxFunction1_tangent_x_boundary_to_A1
     · intro t ht
       exact le_trans hz_pos.le ht.1
     · intro t ht
-      have htIoo : t ∈ Set.Ioo z c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo z c := mem_Ioo_of_mem_interior_Icc ht
       have h_at : a p * t < y := by
         have hmul : a p * t < a p * c :=
           mul_lt_mul_of_pos_left htIoo.2 ha_pos
@@ -5079,12 +4806,10 @@ private lemma auxFunction1_tangent_x_boundary_to_A2
     auxFunction1 p z y ≤
       auxFunction1 p (y / a p) y +
         DxauxFunction1 p (y / a p) y * (z - y / a p) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hcz : c < z := by
     have hmul : a p * c < a p * z := by simpa [hac] using hz_boundary
     nlinarith [hmul, ha_pos]
@@ -5110,8 +4835,7 @@ private lemma auxFunction1_tangent_x_boundary_to_A2
     apply vGeTwo_tangent_x_on_Icc_of_A2
       (p := p) (hp := hp') (lo := c) (hi := z) (x := c) (z := z) (y := y)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo c z := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo c z := mem_Ioo_of_mem_interior_Icc ht
       have hyt : y < a p * t := by
         have hmul : a p * c < a p * t :=
           mul_lt_mul_of_pos_left htIoo.1 ha_pos
@@ -5130,7 +4854,7 @@ private lemma auxFunction1_tangent_x_on_QuarterPlaneOpen_segment
     (hz_pos : 0 < z) (hyz : y < z) (hneg_z : -z < y) :
     auxFunction1 p z y ≤
       auxFunction1 p x y + DxauxFunction1 p x y * (z - x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   by_cases hxA1 : (a p) * x < y
   · by_cases hzA1 : (a p) * z < y
@@ -5203,14 +4927,12 @@ The most important pattern is:
 private lemma DxauxFunction1_internal_boundary_le_diag
     (p : ℝ) (hp : 2 < p) {y : ℝ} (hy : 0 < y) :
     DxauxFunction1 p (y / a p) y ≤ DxauxFunction1 p y y := by
-  have hp' : 2 ≤ p := by linarith
-  have hp1 : 1 < p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
+  have hp1 : 1 < p := one_lt_of_two_le p (le_of_lt hp)
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   have ha_lt : a p < 1 := a_lt_one_of_two_le p hp'
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hyc : y < c := by
     have hlt_inv : 1 < (a p)⁻¹ := by
       rw [one_lt_inv₀ ha_pos]
@@ -5226,7 +4948,7 @@ private lemma DxauxFunction1_internal_boundary_le_diag
       AntitoneOn (fun t : ℝ => DxuA1Fun p (t, y)) (Set.Icc y c) := by
     have hcont : ContinuousOn (fun t : ℝ => DxuA1Fun p (t, y)) (Set.Icc y c) := by
       have hpair : ContinuousOn (fun t : ℝ => (t, y)) (Set.Icc y c) :=
-        (by continuity : Continuous (fun t : ℝ => (t, y))).continuousOn
+        (continuous_id.prodMk continuous_const : Continuous (fun t : ℝ => (t, y))).continuousOn
       exact (continuousOn_DxuA1_closureA1 p hp1).comp hpair (by
         intro t ht
         have htc : t ≤ c := ht.2
@@ -5242,13 +4964,11 @@ private lemma DxauxFunction1_internal_boundary_le_diag
       (f' := fun t : ℝ => deriv (fun s => DxuA1Fun p (s, y)) t)
       (convex_Icc y c) hcont ?_ ?_
     · intro t ht
-      have htIoo : t ∈ Set.Ioo y c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo y c := mem_Ioo_of_mem_interior_Icc ht
       exact (differentiableAt_DxuA1Fun_x_of_pos p t y
         (lt_trans hy htIoo.1)).hasDerivAt.hasDerivWithinAt
     · intro t ht
-      have htIoo : t ∈ Set.Ioo y c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo y c := mem_Ioo_of_mem_interior_Icc ht
       have h_at : a p * t < y := by
         have hmul : a p * t < a p * c :=
           mul_lt_mul_of_pos_left htIoo.2 ha_pos
@@ -5267,13 +4987,11 @@ private lemma auxFunction1_tangent_x_diag_to_QuarterPlaneOpen_segment
     (hy : 0 < y) (hyz : y < z) :
     auxFunction1 p z y ≤
       auxFunction1 p y y + DxauxFunction1 p y y * (z - y) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   have ha_lt : a p < 1 := a_lt_one_of_two_le p hp'
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hyc : y < c := by
     have hlt_inv : 1 < (a p)⁻¹ := by
       rw [one_lt_inv₀ ha_pos]
@@ -5302,8 +5020,7 @@ private lemma auxFunction1_tangent_x_diag_to_QuarterPlaneOpen_segment
       · intro t ht
         exact le_trans hy.le ht.1
       · intro t ht
-        have htIoo : t ∈ Set.Ioo y z := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo y z := mem_Ioo_of_mem_interior_Icc ht
         have h_at : a p * t < y := by
           have htc : t < c := lt_of_lt_of_le htIoo.2 hzc
           have hmul : a p * t < a p * c :=
@@ -5323,13 +5040,8 @@ private lemma auxFunction1_tangent_x_diag_to_QuarterPlaneOpen_segment
           mul_lt_mul_of_pos_left hcz ha_pos
         exact le_of_lt (by simpa [hac] using hmul)⟩
     have hderiv_c :
-        HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p c y) c := by
-      have hsum : 0 < (c + y) / 2 := by
-        have hc_pos : 0 < c := div_pos hy ha_pos
-        linarith
-      have hdiff : 0 < (c - y) / 2 := by linarith
-      refine (hasDerivAt_vGeTwo_x_of_pos p hp' c y hsum hdiff).congr_deriv ?_
-      exact (auxFunction1_Dx_eq_DxvGeTwo p hp' c y hboundary.2).symm
+        HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p c y) c :=
+        hasDerivAt_vGeTwo_x_DxauxFunction1 p hp' (by linarith) (by linarith) hboundary.2
     have h_yc_u :
         uA1 p c y ≤ uA1 p y y + DxauxFunction1 p y y * (c - y) := by
       apply uA1_tangent_x_on_Icc_of_A1
@@ -5337,8 +5049,7 @@ private lemma auxFunction1_tangent_x_diag_to_QuarterPlaneOpen_segment
       · intro t ht
         exact le_trans hy.le ht.1
       · intro t ht
-        have htIoo : t ∈ Set.Ioo y c := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo y c := mem_Ioo_of_mem_interior_Icc ht
         have h_at : a p * t < y := by
           have hmul : a p * t < a p * c :=
             mul_lt_mul_of_pos_left htIoo.2 ha_pos
@@ -5352,8 +5063,7 @@ private lemma auxFunction1_tangent_x_diag_to_QuarterPlaneOpen_segment
       apply vGeTwo_tangent_x_on_Icc_of_A2
         (p := p) (hp := hp') (lo := c) (hi := z) (x := c) (z := z) (y := y)
       · intro t ht
-        have htIoo : t ∈ Set.Ioo c z := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo c z := mem_Ioo_of_mem_interior_Icc ht
         have hc_pos : 0 < c := div_pos hy ha_pos
         have hyt : y < a p * t := by
           have hmul : a p * c < a p * t :=
@@ -5406,13 +5116,11 @@ private lemma auxFunction1_tangent_x_QuarterPlaneOpen_to_diag_segment
     (hy : 0 < y) (hyx : y < x) :
     auxFunction1 p y y ≤
       auxFunction1 p x y + DxauxFunction1 p x y * (y - x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   have ha_lt : a p < 1 := a_lt_one_of_two_le p hp'
   let c : ℝ := y / a p
-  have hac : a p * c = y := by
-    dsimp [c]
-    field_simp [ha_pos.ne']
+  have hac : a p * c = y := mul_div_cancel₀ y ha_pos.ne'
   have hyc : y < c := by
     have hlt_inv : 1 < (a p)⁻¹ := by
       rw [one_lt_inv₀ ha_pos]
@@ -5441,8 +5149,7 @@ private lemma auxFunction1_tangent_x_QuarterPlaneOpen_to_diag_segment
       · intro t ht
         exact le_trans hy.le ht.1
       · intro t ht
-        have htIoo : t ∈ Set.Ioo y x := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo y x := mem_Ioo_of_mem_interior_Icc ht
         have htc : t < c := lt_of_lt_of_le htIoo.2 hxc
         have h_at : a p * t < y := by
           have hmul : a p * t < a p * c :=
@@ -5462,11 +5169,8 @@ private lemma auxFunction1_tangent_x_QuarterPlaneOpen_to_diag_segment
           mul_lt_mul_of_pos_left hcx ha_pos
         exact le_of_lt (by simpa [hac] using hmul)⟩
     have hderiv_x :
-        HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p x y) x := by
-      have hsum : 0 < (x + y) / 2 := by linarith
-      have hdiff : 0 < (x - y) / 2 := by linarith
-      refine (hasDerivAt_vGeTwo_x_of_pos p hp' x y hsum hdiff).congr_deriv ?_
-      exact (auxFunction1_Dx_eq_DxvGeTwo p hp' x y hcl_x).symm
+        HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p x y) x :=
+        hasDerivAt_vGeTwo_x_DxauxFunction1 p hp' (by linarith) (by linarith) hcl_x
     have hderiv_c :
         HasDerivAt (fun t => uA1 p t y) (DxauxFunction1 p c y) c := by
       have hc_pos : 0 < c := div_pos hy ha_pos
@@ -5477,8 +5181,7 @@ private lemma auxFunction1_tangent_x_QuarterPlaneOpen_to_diag_segment
       apply vGeTwo_tangent_x_on_Icc_of_A2
         (p := p) (hp := hp') (lo := c) (hi := x) (x := x) (z := c) (y := y)
       · intro t ht
-        have htIoo : t ∈ Set.Ioo c x := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo c x := mem_Ioo_of_mem_interior_Icc ht
         have hc_pos : 0 < c := div_pos hy ha_pos
         have hyt : y < a p * t := by
           have hmul : a p * c < a p * t :=
@@ -5496,8 +5199,7 @@ private lemma auxFunction1_tangent_x_QuarterPlaneOpen_to_diag_segment
       · intro t ht
         exact le_trans hy.le ht.1
       · intro t ht
-        have htIoo : t ∈ Set.Ioo y c := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo y c := mem_Ioo_of_mem_interior_Icc ht
         have h_at : a p * t < y := by
           have hmul : a p * t < a p * c :=
             mul_lt_mul_of_pos_left htIoo.2 ha_pos
@@ -5555,12 +5257,8 @@ private lemma uCandidate_tangent_x_on_QuarterPlane2Open_segment
       uCandidate p x y + DxuCandidate p x y * (z - x) := by
   have hQx : QuarterPlane2 x y := ⟨le_of_lt hx_neg, le_of_lt hynegx, le_of_lt hxy⟩
   have hQz : QuarterPlane2 z y := ⟨le_of_lt hz_neg, le_of_lt hynegz, le_of_lt hzy⟩
-  have hnotQx : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hx_neg hq.1
-  have hnotQz : ¬ QuarterPlane z y := by
-    intro hq
-    exact not_le_of_gt hz_neg hq.1
+  have hnotQx : ¬ QuarterPlane x y := not_quarterPlane_of_neg hx_neg
+  have hnotQz : ¬ QuarterPlane z y := not_quarterPlane_of_neg hz_neg
   have haux := auxFunction1_tangent_x_on_QuarterPlaneOpen_segment
     p hp
     (by linarith : 0 < -x)
@@ -5590,12 +5288,8 @@ private lemma uCandidate_tangent_y_on_QuarterPlane2Open_segment
       uCandidate p x y + DyuCandidate p x y * (z - y) := by
   have hQy : QuarterPlane2 x y := ⟨le_of_lt hx_neg, le_of_lt hynegx, le_of_lt hxy⟩
   have hQz : QuarterPlane2 x z := ⟨le_of_lt hx_neg, le_of_lt hznegx, le_of_lt hxz⟩
-  have hnotQy : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hx_neg hq.1
-  have hnotQz : ¬ QuarterPlane x z := by
-    intro hq
-    exact not_le_of_gt hx_neg hq.1
+  have hnotQy : ¬ QuarterPlane x y := not_quarterPlane_of_neg hx_neg
+  have hnotQz : ¬ QuarterPlane x z := not_quarterPlane_of_neg hx_neg
   have haux := auxFunction1_tangent_y_on_QuarterPlaneOpen_segment
     p (by linarith : 2 ≤ p)
     (by linarith : 0 < -x)
@@ -5621,20 +5315,10 @@ private lemma uCandidate_tangent_x_on_QuarterPlane3Open_segment
       uCandidate p x y + DxuCandidate p x y * (z - x) := by
   have hQx : QuarterPlane3 x y := ⟨hy_pos.le, le_of_lt hneg_x, le_of_lt hxy⟩
   have hQz : QuarterPlane3 z y := ⟨hy_pos.le, le_of_lt hneg_z, le_of_lt hzy⟩
-  have hnotQx : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hxy hq.2.1
-  have hnotQ2x : ¬ QuarterPlane2 x y := by
-    intro hq
-    have hlt : -x < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
-  have hnotQz : ¬ QuarterPlane z y := by
-    intro hq
-    exact not_le_of_gt hzy hq.2.1
-  have hnotQ2z : ¬ QuarterPlane2 z y := by
-    intro hq
-    have hlt : -z < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
+  have hnotQx : ¬ QuarterPlane x y := not_quarterPlane_of_lt hxy
+  have hnotQ2x : ¬ QuarterPlane2 x y := not_quarterPlane2_of_lt (by linarith)
+  have hnotQz : ¬ QuarterPlane z y := not_quarterPlane_of_lt hzy
+  have hnotQ2z : ¬ QuarterPlane2 z y := not_quarterPlane2_of_lt (by linarith)
   have haux := auxFunction1_tangent_y_on_QuarterPlaneOpen_segment
     p (by linarith : 2 ≤ p)
     hy_pos hneg_x hxy hneg_z hzy
@@ -5654,13 +5338,8 @@ private lemma uCandidate_tangent_x_QuarterPlane3Open_to_diag_segment
       uCandidate p x y + DxuCandidate p x y * (y - x) := by
   have hQx : QuarterPlane3 x y := ⟨hy_pos.le, le_of_lt hneg_x, le_of_lt hxy⟩
   have hQy : QuarterPlane y y := ⟨hy_pos.le, le_rfl, by linarith⟩
-  have hnotQx : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hxy hq.2.1
-  have hnotQ2x : ¬ QuarterPlane2 x y := by
-    intro hq
-    have hlt : -x < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
+  have hnotQx : ¬ QuarterPlane x y := not_quarterPlane_of_lt hxy
+  have hnotQ2x : ¬ QuarterPlane2 x y := not_quarterPlane2_of_lt (by linarith)
   have haux := auxFunction1_tangent_y_to_diag_from_QuarterPlaneOpen_segment
     p (by linarith : 2 ≤ p) hy_pos hneg_x hxy
   have hdx : DxuCandidate p x y = DyauxFunction1 p y x := by
@@ -5677,14 +5356,12 @@ private lemma auxFunction1_tangent_y_diag_to_QuarterPlaneOpen_segment
     (hx : 0 < x) (hz_lower : -x ≤ z) (hz_upper : z < x) :
     auxFunction1 p x z ≤
       auxFunction1 p x x + DyauxFunction1 p x x * (z - x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp'
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp')
   have hneg_c : -x < c := by
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
-    nlinarith [mul_nonneg ha_nonneg hx.le]
+    linarith [mul_nonneg ha_nonneg hx.le]
   have hdiag : closureA1 p x x := ⟨hx.le, le_of_lt hc_lt_x, le_rfl⟩
   have hcl_c_A1 : closureA1 p x c := ⟨hx.le, le_rfl, le_of_lt hc_lt_x⟩
   have hcl_c_A2 : closureA2 p x c := ⟨hx.le, le_of_lt hneg_c, le_rfl⟩
@@ -5700,8 +5377,7 @@ private lemma auxFunction1_tangent_y_diag_to_QuarterPlaneOpen_segment
         (p := p) (hp := hp') (lo := z) (hi := x) (x := x) (y := x) (z := z)
       · exact hx
       · intro t ht
-        have htIoo : t ∈ Set.Ioo z x := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo z x := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, lt_of_le_of_lt hcz htIoo.1, htIoo.2⟩
       · exact ⟨hz_upper.le, le_rfl⟩
       · exact ⟨le_rfl, hz_upper.le⟩
@@ -5711,19 +5387,15 @@ private lemma auxFunction1_tangent_y_diag_to_QuarterPlaneOpen_segment
   · have hzc : z < c := lt_of_not_ge hcz
     have hcl_z : closureA2 p x z := ⟨hx.le, hz_lower, le_of_lt hzc⟩
     have hderiv_c :
-        HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x c) c := by
-      have hsum : 0 < (x + c) / 2 := by linarith [hneg_c]
-      have hdiff : 0 < (x - c) / 2 := by linarith [hc_lt_x]
-      refine (hasDerivAt_vGeTwo_y_of_pos p hp' x c hsum hdiff).congr_deriv ?_
-      exact (auxFunction1_Dy_eq_DyvGeTwo p hp' x c hcl_c_A2).symm
+        HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x c) c :=
+        hasDerivAt_vGeTwo_y_DyauxFunction1 p hp' (by linarith) (by linarith) hcl_c_A2
     have h_xc_u :
         uA1 p x c ≤ uA1 p x x + DyauxFunction1 p x x * (c - x) := by
       apply uA1_tangent_y_on_Icc_of_A1
         (p := p) (hp := hp') (lo := c) (hi := x) (x := x) (y := x) (z := c)
       · exact hx
       · intro t ht
-        have htIoo : t ∈ Set.Ioo c x := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo c x := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, htIoo.1, htIoo.2⟩
       · exact ⟨hc_lt_x.le, le_rfl⟩
       · exact ⟨le_rfl, hc_lt_x.le⟩
@@ -5733,8 +5405,7 @@ private lemma auxFunction1_tangent_y_diag_to_QuarterPlaneOpen_segment
       apply vGeTwo_tangent_y_on_Icc_of_A2
         (p := p) (hp := hp') (lo := z) (hi := c) (x := x) (y := c) (z := z)
       · intro t ht
-        have htIoo : t ∈ Set.Ioo z c := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo z c := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, by linarith [htIoo.1], htIoo.2⟩
       · exact ⟨le_of_lt hzc, le_rfl⟩
       · exact ⟨le_rfl, le_of_lt hzc⟩
@@ -5762,13 +5433,8 @@ private lemma uCandidate_tangent_x_diag_to_QuarterPlane3Open_segment
       uCandidate p y y + DxuCandidate p y y * (z - y) := by
   have hQd : QuarterPlane y y := ⟨hy_pos.le, le_rfl, by linarith⟩
   have hQz : QuarterPlane3 z y := ⟨hy_pos.le, le_of_lt hz_lower, le_of_lt hz_upper⟩
-  have hnotQz : ¬ QuarterPlane z y := by
-    intro hq
-    exact not_le_of_gt hz_upper hq.2.1
-  have hnotQ2z : ¬ QuarterPlane2 z y := by
-    intro hq
-    have hlt : -z < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
+  have hnotQz : ¬ QuarterPlane z y := not_quarterPlane_of_lt hz_upper
+  have hnotQ2z : ¬ QuarterPlane2 z y := not_quarterPlane2_of_lt (by linarith)
   have haux := auxFunction1_tangent_y_diag_to_QuarterPlaneOpen_segment
     p hp hy_pos hz_lower.le hz_upper
   have hdx : DxuCandidate p y y = DyauxFunction1 p y y := by
@@ -5826,7 +5492,7 @@ private lemma DxuCandidate_QuarterPlaneOpen_le_diag
           AntitoneOn (fun t : ℝ => DxuA1Fun p (t, y)) (Set.Icc y x) := by
         have hcont : ContinuousOn (fun t : ℝ => DxuA1Fun p (t, y)) (Set.Icc y x) := by
           have hpair : ContinuousOn (fun t : ℝ => (t, y)) (Set.Icc y x) :=
-            (by continuity : Continuous (fun t : ℝ => (t, y))).continuousOn
+            (continuous_id.prodMk continuous_const : Continuous (fun t : ℝ => (t, y))).continuousOn
           exact (continuousOn_DxuA1_closureA1 p (by linarith : 1 < p)).comp hpair (by
             intro t ht
             have htc : t ≤ c := le_trans ht.2 hxc
@@ -5841,13 +5507,11 @@ private lemma DxuCandidate_QuarterPlaneOpen_le_diag
           (f' := fun t : ℝ => deriv (fun s => DxuA1Fun p (s, y)) t)
           (convex_Icc y x) hcont ?_ ?_
         · intro t ht
-          have htIoo : t ∈ Set.Ioo y x := by
-            simpa [interior_Icc] using ht
+          have htIoo : t ∈ Set.Ioo y x := mem_Ioo_of_mem_interior_Icc ht
           exact (differentiableAt_DxuA1Fun_x_of_pos p t y
             (lt_trans hy_pos htIoo.1)).hasDerivAt.hasDerivWithinAt
         · intro t ht
-          have htIoo : t ∈ Set.Ioo y x := by
-            simpa [interior_Icc] using ht
+          have htIoo : t ∈ Set.Ioo y x := mem_Ioo_of_mem_interior_Icc ht
           have htc : t < c := lt_of_lt_of_le htIoo.2 hxc
           have h_at : a p * t < y := by
             have hmul : a p * t < a p * c :=
@@ -5896,13 +5560,8 @@ private lemma DxuCandidate_diag_le_QuarterPlane3Open
     DxuCandidate p y y ≤ DxuCandidate p x y := by
   have hQx : QuarterPlane3 x y := ⟨hy_pos.le, le_of_lt hneg_x, le_of_lt hxy⟩
   have hQy : QuarterPlane y y := ⟨hy_pos.le, le_rfl, by linarith⟩
-  have hnotQx : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hxy hq.2.1
-  have hnotQ2x : ¬ QuarterPlane2 x y := by
-    intro hq
-    have hlt : -x < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
+  have hnotQx : ¬ QuarterPlane x y := not_quarterPlane_of_lt hxy
+  have hnotQ2x : ¬ QuarterPlane2 x y := not_quarterPlane2_of_lt (by linarith)
   have hdiag :
       DxuCandidate p y y = DyauxFunction1 p y y := by
     have h := DxauxFunction1_eq_DyauxFunction1_on_diag p hp y hy_pos.le
@@ -5948,18 +5607,14 @@ private lemma auxFunction1_tangent_x_to_antidiag_from_QuarterPlaneOpen_segment
     have hnonneg : 0 ≤ a p * (-y) := mul_nonneg ha_nonneg (neg_nonneg.mpr hy_neg.le)
     linarith
   have hderiv_x :
-      HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p x y) x := by
-    have hsum : 0 < (x + y) / 2 := by linarith
-    have hdiff : 0 < (x - y) / 2 := by linarith
-    refine (hasDerivAt_vGeTwo_x_of_pos p hp x y hsum hdiff).congr_deriv ?_
-    exact (auxFunction1_Dx_eq_DxvGeTwo p hp x y hcl_x).symm
+      HasDerivAt (fun t => vGeTwo p t y) (DxauxFunction1 p x y) x :=
+      hasDerivAt_vGeTwo_x_DxauxFunction1 p hp (by linarith) (by linarith) hcl_x
   have h_v :
       vGeTwo p (-y) y ≤ vGeTwo p x y + DxauxFunction1 p x y * ((-y) - x) := by
     apply vGeTwo_tangent_x_on_Icc_of_A2
       (p := p) (hp := hp) (lo := -y) (hi := x) (x := x) (z := -y) (y := y)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo (-y) x := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo (-y) x := mem_Ioo_of_mem_interior_Icc ht
       have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp
       have ht_pos : 0 < t := lt_trans (neg_pos.mpr hy_neg) htIoo.1
       exact ⟨ht_pos, by linarith [htIoo.1], lt_of_lt_of_le hy_neg
@@ -5987,7 +5642,7 @@ private lemma DxauxFunction1_QuarterPlaneOpen_le_antidiag
       AntitoneOn (fun t : ℝ => DxvGeTwo p t y) (Set.Icc (-y) x) := by
     have hcont : ContinuousOn (fun t : ℝ => DxvGeTwo p t y) (Set.Icc (-y) x) := by
       have hpair : ContinuousOn (fun t : ℝ => (t, y)) (Set.Icc (-y) x) :=
-        (by continuity : Continuous (fun t : ℝ => (t, y))).continuousOn
+        (continuous_id.prodMk continuous_const : Continuous (fun t : ℝ => (t, y))).continuousOn
       exact (continuousOn_DxvGeTwo_closureA2 p hp).comp hpair (by
         intro t ht
         have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp
@@ -6000,14 +5655,12 @@ private lemma DxauxFunction1_QuarterPlaneOpen_le_antidiag
       (f' := fun t : ℝ => deriv (fun s => DxvGeTwo p s y) t)
       (convex_Icc (-y) x) hcont ?_ ?_
     · intro t ht
-      have htIoo : t ∈ Set.Ioo (-y) x := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo (-y) x := mem_Ioo_of_mem_interior_Icc ht
       have hsum : 0 < (t + y) / 2 := by linarith [htIoo.1]
       have hdiff : 0 < (t - y) / 2 := by linarith [hy_neg, htIoo.1]
       exact (differentiableAt_DxvGeTwo_x_of_pos p t y hsum hdiff).hasDerivAt.hasDerivWithinAt
     · intro t ht
-      have htIoo : t ∈ Set.Ioo (-y) x := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo (-y) x := mem_Ioo_of_mem_interior_Icc ht
       have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp
       have ht_pos : 0 < t := lt_trans (neg_pos.mpr hy_neg) htIoo.1
       exact deriv_DxvGeTwo_x_nonpos_on_A2 p hp t y
@@ -6029,12 +5682,8 @@ private lemma uCandidate_tangent_x_QuarterPlane2Open_to_antidiag_segment
   have hQx : QuarterPlane2 x y :=
     ⟨le_of_lt hx_neg, le_of_lt (by linarith : y < -x), le_of_lt (by linarith : x < y)⟩
   have hQa : QuarterPlane2 (-y) y := ⟨by linarith, by linarith, by linarith⟩
-  have hnotQx : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hx_neg hq.1
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
+  have hnotQx : ¬ QuarterPlane x y := not_quarterPlane_of_neg hx_neg
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
   have haux := auxFunction1_tangent_x_to_antidiag_from_QuarterPlaneOpen_segment
     p (by linarith : 2 ≤ p)
     (by linarith : 0 < -x)
@@ -6055,14 +5704,12 @@ private lemma uCandidate_tangent_x_QuarterPlane2Open_to_antidiag_segment
 private lemma DyauxFunction1_internal_boundary_le_antidiag
     (p : ℝ) (hp : 2 < p) {x : ℝ} (hx : 0 < x) :
     DyauxFunction1 p x ((a p) * x) ≤ DyauxFunction1 p x (-x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp'
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp')
   have hneg_c : -x < c := by
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
-    nlinarith [mul_nonneg ha_nonneg hx.le]
+    linarith [mul_nonneg ha_nonneg hx.le]
   have hcl_a : closureA2 p x (-x) := by
     refine ⟨hx.le, le_rfl, ?_⟩
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
@@ -6072,7 +5719,7 @@ private lemma DyauxFunction1_internal_boundary_le_antidiag
       AntitoneOn (fun t : ℝ => DyvGeTwo p x t) (Set.Icc (-x) c) := by
     have hcont : ContinuousOn (fun t : ℝ => DyvGeTwo p x t) (Set.Icc (-x) c) := by
       have hpair : ContinuousOn (fun t : ℝ => (x, t)) (Set.Icc (-x) c) :=
-        (by continuity : Continuous (fun t : ℝ => (x, t))).continuousOn
+        (continuous_const.prodMk continuous_id : Continuous (fun t : ℝ => (x, t))).continuousOn
       exact (continuousOn_DyvGeTwo_closureA2 p hp').comp hpair (by
         intro t ht
         exact ⟨hx.le, ht.1, ht.2⟩)
@@ -6082,14 +5729,12 @@ private lemma DyauxFunction1_internal_boundary_le_antidiag
       (f' := fun t : ℝ => deriv (fun s => DyvGeTwo p x s) t)
       (convex_Icc (-x) c) hcont ?_ ?_
     · intro t ht
-      have htIoo : t ∈ Set.Ioo (-x) c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo (-x) c := mem_Ioo_of_mem_interior_Icc ht
       have hsum : 0 < (x + t) / 2 := by linarith [htIoo.1]
       have hdiff : 0 < (x - t) / 2 := by linarith [htIoo.2, hc_lt_x]
       exact (differentiableAt_DyvGeTwo_y_of_pos p x t hsum hdiff).hasDerivAt.hasDerivWithinAt
     · intro t ht
-      have htIoo : t ∈ Set.Ioo (-x) c := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo (-x) c := mem_Ioo_of_mem_interior_Icc ht
       exact deriv_DyvGeTwo_y_nonpos_on_A2 p hp' x t ⟨hx, htIoo.1, htIoo.2⟩
   have ha_mem : (-x) ∈ Set.Icc (-x) c := ⟨le_rfl, le_of_lt hneg_c⟩
   have hc_mem : c ∈ Set.Icc (-x) c := ⟨le_of_lt hneg_c, le_rfl⟩
@@ -6103,14 +5748,12 @@ private lemma auxFunction1_tangent_y_antidiag_to_QuarterPlaneOpen_segment
     (hx : 0 < x) (hz_lower : -x < z) (hz_upper : z ≤ x) :
     auxFunction1 p x z ≤
       auxFunction1 p x (-x) + DyauxFunction1 p x (-x) * (z - (-x)) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp'
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp')
   have hneg_c : -x < c := by
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
-    nlinarith [mul_nonneg ha_nonneg hx.le]
+    linarith [mul_nonneg ha_nonneg hx.le]
   have hcl_a_A2 : closureA2 p x (-x) := by
     refine ⟨hx.le, le_rfl, ?_⟩
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
@@ -6128,8 +5771,7 @@ private lemma auxFunction1_tangent_y_antidiag_to_QuarterPlaneOpen_segment
       apply vGeTwo_tangent_y_on_Icc_of_A2
         (p := p) (hp := hp') (lo := -x) (hi := z) (x := x) (y := -x) (z := z)
       · intro t ht
-        have htIoo : t ∈ Set.Ioo (-x) z := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo (-x) z := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, htIoo.1, lt_of_lt_of_le htIoo.2 hzc⟩
       · exact ⟨le_rfl, hz_lower.le⟩
       · exact ⟨hz_lower.le, le_rfl⟩
@@ -6147,8 +5789,7 @@ private lemma auxFunction1_tangent_y_antidiag_to_QuarterPlaneOpen_segment
       apply vGeTwo_tangent_y_on_Icc_of_A2
         (p := p) (hp := hp') (lo := -x) (hi := c) (x := x) (y := -x) (z := c)
       · intro t ht
-        have htIoo : t ∈ Set.Ioo (-x) c := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo (-x) c := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, htIoo.1, htIoo.2⟩
       · exact ⟨le_rfl, le_of_lt hneg_c⟩
       · exact ⟨le_of_lt hneg_c, le_rfl⟩
@@ -6159,8 +5800,7 @@ private lemma auxFunction1_tangent_y_antidiag_to_QuarterPlaneOpen_segment
         (p := p) (hp := hp') (lo := c) (hi := z) (x := x) (y := c) (z := z)
       · exact hx
       · intro t ht
-        have htIoo : t ∈ Set.Ioo c z := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo c z := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, htIoo.1, lt_of_lt_of_le htIoo.2 hz_upper⟩
       · exact ⟨le_rfl, hcz.le⟩
       · exact ⟨hcz.le, le_rfl⟩
@@ -6193,14 +5833,12 @@ private lemma auxFunction1_tangent_y_QuarterPlaneOpen_to_antidiag_segment
     (hx : 0 < x) (hy_lower : -x < y) (hy_upper : y < x) :
     auxFunction1 p x (-x) ≤
       auxFunction1 p x y + DyauxFunction1 p x y * ((-x) - y) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp'
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp')
   have hneg_c : -x < c := by
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
-    nlinarith [mul_nonneg ha_nonneg hx.le]
+    linarith [mul_nonneg ha_nonneg hx.le]
   have hcl_a_A2 : closureA2 p x (-x) := by
     refine ⟨hx.le, le_rfl, ?_⟩
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
@@ -6210,11 +5848,8 @@ private lemma auxFunction1_tangent_y_QuarterPlaneOpen_to_antidiag_segment
   by_cases hyc : y ≤ c
   · have hcl_y : closureA2 p x y := ⟨hx.le, le_of_lt hy_lower, hyc⟩
     have hderiv_y :
-        HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x y) y := by
-      have hsum : 0 < (x + y) / 2 := by linarith
-      have hdiff : 0 < (x - y) / 2 := by linarith
-      refine (hasDerivAt_vGeTwo_y_of_pos p hp' x y hsum hdiff).congr_deriv ?_
-      exact (auxFunction1_Dy_eq_DyvGeTwo p hp' x y hcl_y).symm
+        HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x y) y :=
+        hasDerivAt_vGeTwo_y_DyauxFunction1 p hp' (by linarith) (by linarith) hcl_y
     have h_v :
         vGeTwo p x (-x) ≤
           vGeTwo p x y + DyauxFunction1 p x y * ((-x) - y) := by
@@ -6222,8 +5857,7 @@ private lemma auxFunction1_tangent_y_QuarterPlaneOpen_to_antidiag_segment
         (p := p) (hp := hp') (lo := -x) (hi := y)
         (x := x) (y := y) (z := -x)
       · intro t ht
-        have htIoo : t ∈ Set.Ioo (-x) y := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo (-x) y := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, htIoo.1, lt_of_lt_of_le htIoo.2 hyc⟩
       · exact ⟨hy_lower.le, le_rfl⟩
       · exact ⟨le_rfl, hy_lower.le⟩
@@ -6237,11 +5871,8 @@ private lemma auxFunction1_tangent_y_QuarterPlaneOpen_to_antidiag_segment
       refine (hasDerivAt_uA1_y_of_pos p hp' x y hx).congr_deriv ?_
       exact (auxFunction1_Dy_eq_DyuA1 p x y hcl_y).symm
     have hderiv_c :
-        HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x c) c := by
-      have hsum : 0 < (x + c) / 2 := by linarith [hneg_c]
-      have hdiff : 0 < (x - c) / 2 := by linarith [hc_lt_x]
-      refine (hasDerivAt_vGeTwo_y_of_pos p hp' x c hsum hdiff).congr_deriv ?_
-      exact (auxFunction1_Dy_eq_DyvGeTwo p hp' x c hcl_c_A2).symm
+        HasDerivAt (fun t => vGeTwo p x t) (DyauxFunction1 p x c) c :=
+        hasDerivAt_vGeTwo_y_DyauxFunction1 p hp' (by linarith) (by linarith) hcl_c_A2
     have h_yc_u :
         uA1 p x c ≤ uA1 p x y + DyauxFunction1 p x y * (c - y) := by
       apply uA1_tangent_y_on_Icc_of_A1
@@ -6249,8 +5880,7 @@ private lemma auxFunction1_tangent_y_QuarterPlaneOpen_to_antidiag_segment
         (x := x) (y := y) (z := c)
       · exact hx
       · intro t ht
-        have htIoo : t ∈ Set.Ioo c y := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo c y := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, htIoo.1, lt_trans htIoo.2 hy_upper⟩
       · exact ⟨hcy.le, le_rfl⟩
       · exact ⟨le_rfl, hcy.le⟩
@@ -6262,8 +5892,7 @@ private lemma auxFunction1_tangent_y_QuarterPlaneOpen_to_antidiag_segment
         (p := p) (hp := hp') (lo := -x) (hi := c)
         (x := x) (y := c) (z := -x)
       · intro t ht
-        have htIoo : t ∈ Set.Ioo (-x) c := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo (-x) c := mem_Ioo_of_mem_interior_Icc ht
         exact ⟨hx, htIoo.1, htIoo.2⟩
       · exact ⟨le_of_lt hneg_c, le_rfl⟩
       · exact ⟨le_rfl, le_of_lt hneg_c⟩
@@ -6293,16 +5922,9 @@ private lemma uCandidate_tangent_x_antidiag_to_QuarterPlane3Open_segment
       uCandidate p (-y) y + DxuCandidate p (-y) y * (z - (-y)) := by
   have hQa : QuarterPlane2 (-y) y := ⟨by linarith, by linarith, by linarith⟩
   have hQz : QuarterPlane3 z y := ⟨hy_pos.le, le_of_lt hz_lower, le_of_lt hz_upper⟩
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
-  have hnotQz : ¬ QuarterPlane z y := by
-    intro hq
-    exact not_le_of_gt hz_upper hq.2.1
-  have hnotQ2z : ¬ QuarterPlane2 z y := by
-    intro hq
-    have hlt : -z < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
+  have hnotQz : ¬ QuarterPlane z y := not_quarterPlane_of_lt hz_upper
+  have hnotQ2z : ¬ QuarterPlane2 z y := not_quarterPlane2_of_lt (by linarith)
   have haux := auxFunction1_tangent_y_antidiag_to_QuarterPlaneOpen_segment
     p hp hy_pos hz_lower hz_upper.le
   have hdx : DxuCandidate p (-y) y = DyauxFunction1 p y (-y) := by
@@ -6328,16 +5950,9 @@ private lemma uCandidate_tangent_x_QuarterPlane3Open_to_antidiag_segment
       uCandidate p x y + DxuCandidate p x y * ((-y) - x) := by
   have hQx : QuarterPlane3 x y := ⟨hy_pos.le, le_of_lt hneg_x, le_of_lt hxy⟩
   have hQa : QuarterPlane2 (-y) y := ⟨by linarith, by linarith, by linarith⟩
-  have hnotQx : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hxy hq.2.1
-  have hnotQ2x : ¬ QuarterPlane2 x y := by
-    intro hq
-    have hlt : -x < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
+  have hnotQx : ¬ QuarterPlane x y := not_quarterPlane_of_lt hxy
+  have hnotQ2x : ¬ QuarterPlane2 x y := not_quarterPlane2_of_lt (by linarith)
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
   have haux := auxFunction1_tangent_y_QuarterPlaneOpen_to_antidiag_segment
     p hp hy_pos hneg_x hxy
   have hdx : DxuCandidate p x y = DyauxFunction1 p y x := by
@@ -6361,7 +5976,7 @@ private lemma auxFunction1_tangent_x_antidiag_to_right_segment
     (hx : 0 < x) (hxz : x < z) :
     auxFunction1 p z (-x) ≤
       auxFunction1 p x (-x) + DxauxFunction1 p x (-x) * (z - x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
   have hcl_x : closureA2 p x (-x) := by
     refine ⟨hx.le, le_rfl, ?_⟩
@@ -6382,8 +5997,7 @@ private lemma auxFunction1_tangent_x_antidiag_to_right_segment
       (p := p) (hp := hp') (lo := x) (hi := z)
       (x := x) (z := z) (y := -x)
     · intro t ht
-      have htIoo : t ∈ Set.Ioo x z := by
-        simpa [interior_Icc] using ht
+      have htIoo : t ∈ Set.Ioo x z := mem_Ioo_of_mem_interior_Icc ht
       have ht_pos : 0 < t := lt_trans hx htIoo.1
       refine ⟨ht_pos, by linarith [htIoo.1], ?_⟩
       exact lt_of_lt_of_le (by linarith : -x < 0)
@@ -6410,12 +6024,8 @@ private lemma uCandidate_tangent_x_antidiag_to_QuarterPlane2Open_segment
   have hQz : QuarterPlane2 z y :=
     ⟨le_of_lt hz_neg, le_of_lt (by linarith : y < -z),
       le_of_lt (by linarith : z < y)⟩
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
-  have hnotQz : ¬ QuarterPlane z y := by
-    intro hq
-    exact not_le_of_gt hz_neg hq.1
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
+  have hnotQz : ¬ QuarterPlane z y := not_quarterPlane_of_neg hz_neg
   have haux := auxFunction1_tangent_x_antidiag_to_right_segment
     p hp hy_pos (by linarith : y < -z)
   have hdx : DxuCandidate p (-y) y = -DxauxFunction1 p y (-y) := by
@@ -6439,14 +6049,12 @@ private lemma DyauxFunction1_QuarterPlaneOpen_le_antidiag
     (p : ℝ) (hp : 2 < p) {x y : ℝ}
     (hx : 0 < x) (hy_lower : -x < y) (hy_upper : y < x) :
     DyauxFunction1 p x y ≤ DyauxFunction1 p x (-x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   let c : ℝ := (a p) * x
-  have hc_lt_x : c < x := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp'
-    simpa [c] using mul_lt_mul_of_pos_right hlt hx
+  have hc_lt_x : c < x := mul_lt_of_lt_one_left hx (a_lt_one_of_two_le p hp')
   have hneg_c : -x < c := by
     have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
-    nlinarith [mul_nonneg ha_nonneg hx.le]
+    linarith [mul_nonneg ha_nonneg hx.le]
   by_cases hyc : y ≤ c
   · have hcl_y : closureA2 p x y := ⟨hx.le, le_of_lt hy_lower, hyc⟩
     have hcl_a : closureA2 p x (-x) := by
@@ -6457,7 +6065,7 @@ private lemma DyauxFunction1_QuarterPlaneOpen_le_antidiag
         AntitoneOn (fun t : ℝ => DyvGeTwo p x t) (Set.Icc (-x) y) := by
       have hcont : ContinuousOn (fun t : ℝ => DyvGeTwo p x t) (Set.Icc (-x) y) := by
         have hpair : ContinuousOn (fun t : ℝ => (x, t)) (Set.Icc (-x) y) :=
-          (by continuity : Continuous (fun t : ℝ => (x, t))).continuousOn
+          (continuous_const.prodMk continuous_id : Continuous (fun t : ℝ => (x, t))).continuousOn
         exact (continuousOn_DyvGeTwo_closureA2 p hp').comp hpair (by
           intro t ht
           exact ⟨hx.le, ht.1, le_trans ht.2 hyc⟩)
@@ -6467,14 +6075,12 @@ private lemma DyauxFunction1_QuarterPlaneOpen_le_antidiag
         (f' := fun t : ℝ => deriv (fun s => DyvGeTwo p x s) t)
         (convex_Icc (-x) y) hcont ?_ ?_
       · intro t ht
-        have htIoo : t ∈ Set.Ioo (-x) y := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo (-x) y := mem_Ioo_of_mem_interior_Icc ht
         have hsum : 0 < (x + t) / 2 := by linarith [htIoo.1]
         have hdiff : 0 < (x - t) / 2 := by linarith [htIoo.2, hy_upper]
         exact (differentiableAt_DyvGeTwo_y_of_pos p x t hsum hdiff).hasDerivAt.hasDerivWithinAt
       · intro t ht
-        have htIoo : t ∈ Set.Ioo (-x) y := by
-          simpa [interior_Icc] using ht
+        have htIoo : t ∈ Set.Ioo (-x) y := mem_Ioo_of_mem_interior_Icc ht
         exact deriv_DyvGeTwo_y_nonpos_on_A2 p hp' x t
           ⟨hx, htIoo.1, lt_of_lt_of_le htIoo.2 hyc⟩
     have ha_mem : (-x) ∈ Set.Icc (-x) y := ⟨le_rfl, hy_lower.le⟩
@@ -6501,16 +6107,9 @@ private lemma DxuCandidate_QuarterPlane3Open_le_antidiag
     DxuCandidate p x y ≤ DxuCandidate p (-y) y := by
   have hQx : QuarterPlane3 x y := ⟨hy_pos.le, le_of_lt hneg_x, le_of_lt hxy⟩
   have hQa : QuarterPlane2 (-y) y := ⟨by linarith, by linarith, by linarith⟩
-  have hnotQx : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hxy hq.2.1
-  have hnotQ2x : ¬ QuarterPlane2 x y := by
-    intro hq
-    have hlt : -x < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
+  have hnotQx : ¬ QuarterPlane x y := not_quarterPlane_of_lt hxy
+  have hnotQ2x : ¬ QuarterPlane2 x y := not_quarterPlane2_of_lt (by linarith)
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
   have hstart : DxuCandidate p x y = DyauxFunction1 p y x := by
     simp [DxuCandidate, hnotQx, hnotQ2x, hQx]
   have hbreak : DxuCandidate p (-y) y = DyauxFunction1 p y (-y) := by
@@ -6542,9 +6141,7 @@ private lemma uCandidate_tangent_x_antidiag_to_diag_segment
       uCandidate p (-y) y + DxuCandidate p (-y) y * (y - (-y)) := by
   have hQa : QuarterPlane2 (-y) y := ⟨by linarith, by linarith, by linarith⟩
   have hQd : QuarterPlane y y := ⟨hy_pos.le, le_rfl, by linarith⟩
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
   have haux := auxFunction1_tangent_y_antidiag_to_QuarterPlaneOpen_segment
     p hp hy_pos (by linarith : -y < y) le_rfl
   have hdx : DxuCandidate p (-y) y = DyauxFunction1 p y (-y) := by
@@ -6560,18 +6157,14 @@ private lemma uCandidate_tangent_x_antidiag_to_diag_segment
 private lemma DxuCandidate_diag_le_antidiag_pos
     (p : ℝ) (hp : 2 < p) {y : ℝ} (hy_pos : 0 < y) :
     DxuCandidate p y y ≤ DxuCandidate p (-y) y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   let c : ℝ := (a p) * y
-  have hc_lt_y : c < y := by
-    have hlt : a p < 1 := a_lt_one_of_two_le p hp'
-    simpa [c] using mul_lt_mul_of_pos_right hlt hy_pos
+  have hc_lt_y : c < y := mul_lt_of_lt_one_left hy_pos (a_lt_one_of_two_le p hp')
   have hdiag : closureA1 p y y := ⟨hy_pos.le, le_of_lt hc_lt_y, le_rfl⟩
   have hcl_c_A1 : closureA1 p y c := ⟨hy_pos.le, le_rfl, le_of_lt hc_lt_y⟩
   have hQd : QuarterPlane y y := ⟨hy_pos.le, le_rfl, by linarith⟩
   have hQa : QuarterPlane2 (-y) y := ⟨by linarith, by linarith, by linarith⟩
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
   have hdiag_eq : DxuCandidate p y y = DyauxFunction1 p y y := by
     have h := DxauxFunction1_eq_DyauxFunction1_on_diag p hp y hy_pos.le
     simp [DxuCandidate, hQd, h]
@@ -6602,9 +6195,7 @@ private lemma uCandidate_tangent_x_diag_to_antidiag_segment
       uCandidate p y y + DxuCandidate p y y * ((-y) - y) := by
   have hQd : QuarterPlane y y := ⟨hy_pos.le, le_rfl, by linarith⟩
   have hQa : QuarterPlane2 (-y) y := ⟨by linarith, by linarith, by linarith⟩
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
   have haux := auxFunction1_tangent_y_diag_to_QuarterPlaneOpen_segment
     p hp hy_pos le_rfl (by linarith : -y < y)
   have hdx : DxuCandidate p y y = DyauxFunction1 p y y := by
@@ -6704,12 +6295,8 @@ private lemma DxuCandidate_antidiag_le_QuarterPlane2Open
   have hQx : QuarterPlane2 x y :=
     ⟨le_of_lt hx_neg, le_of_lt (by linarith : y < -x), le_of_lt (by linarith : x < y)⟩
   have hQa : QuarterPlane2 (-y) y := ⟨by linarith, by linarith, by linarith⟩
-  have hnotQx : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hx_neg hq.1
-  have hnotQa : ¬ QuarterPlane (-y) y := by
-    intro hq
-    exact not_le_of_gt (by linarith : -y < 0) hq.1
+  have hnotQx : ¬ QuarterPlane x y := not_quarterPlane_of_neg hx_neg
+  have hnotQa : ¬ QuarterPlane (-y) y := not_quarterPlane_of_neg (by linarith : -y < 0)
   have hle :
       DxauxFunction1 p (-x) (-y) ≤ DxauxFunction1 p y (-y) := by
     simpa using DxauxFunction1_QuarterPlaneOpen_le_antidiag
@@ -7186,7 +6773,7 @@ private lemma uCandidate_tangent_x_increment_of_y_zero
     (p : ℝ) (hp : 2 < p) {x h : ℝ} :
     uCandidate p (x + h) 0 ≤
       uCandidate p x 0 + DxuCandidate p x 0 * h := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have hcontU : Continuous (fun z : ℝ × ℝ => uCandidate p z.1 z.2) :=
     continuousOn_univ.mp (continuousuCandidate p hp')
   have hcontDx : Continuous (fun z : ℝ × ℝ => DxuCandidate p z.1 z.2) :=
@@ -7194,7 +6781,7 @@ private lemma uCandidate_tangent_x_increment_of_y_zero
   have htend_lhs :
       Filter.Tendsto (fun yy : ℝ => uCandidate p (x + h) yy)
         (nhdsWithin 0 (Set.Ioi 0)) (nhds (uCandidate p (x + h) 0)) := by
-    have hline : Continuous (fun yy : ℝ => ((x + h), yy)) := by continuity
+    have hline : Continuous (fun yy : ℝ => ((x + h), yy)) := continuous_const.prodMk continuous_id
     have hcomp : Continuous (fun yy : ℝ => uCandidate p (x + h) yy) := by
       simpa [Function.comp_def] using hcontU.comp hline
     exact (hcomp.tendsto 0).mono_left nhdsWithin_le_nhds
@@ -7203,7 +6790,7 @@ private lemma uCandidate_tangent_x_increment_of_y_zero
         (fun yy : ℝ => uCandidate p x yy + DxuCandidate p x yy * h)
         (nhdsWithin 0 (Set.Ioi 0))
         (nhds (uCandidate p x 0 + DxuCandidate p x 0 * h)) := by
-    have hline : Continuous (fun yy : ℝ => (x, yy)) := by continuity
+    have hline : Continuous (fun yy : ℝ => (x, yy)) := continuous_const.prodMk continuous_id
     have hUx : Continuous (fun yy : ℝ => uCandidate p x yy) := by
       simpa [Function.comp_def] using hcontU.comp hline
     have hDxx : Continuous (fun yy : ℝ => DxuCandidate p x yy) := by
@@ -7738,7 +7325,7 @@ private lemma abs_vGeTwo_le_growth_on_closureA2
       _ ≤ (x + x) / 2 := by
         gcongr
       _ = x := by ring
-  have hp_nonneg : 0 ≤ p := by linarith
+  have hp_nonneg : 0 ≤ p := p_nonneg_of_two_le p hp
   have hsum_pow :
       Real.rpow |(x + y) / 2| p ≤ Real.rpow x p :=
     Real.rpow_le_rpow (abs_nonneg _) hsum hp_nonneg
@@ -8020,7 +7607,7 @@ private lemma abs_DxvGeTwo_le_growth_on_closureA2
       closureA2_abs_add_div_two_le_x p hp ⟨hx, hlow, hup⟩
     have hdiff : |(x - y) / 2| ≤ x :=
       closureA2_abs_sub_div_two_le_x p hp ⟨hx, hlow, hup⟩
-    have hp1_nonneg : 0 ≤ p - 1 := by linarith
+    have hp1_nonneg : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
     have hsum_pow :
         Real.rpow |(x + y) / 2| (p - 1) ≤ Real.rpow x (p - 1) :=
       Real.rpow_le_rpow (abs_nonneg _) hsum hp1_nonneg
@@ -8107,7 +7694,7 @@ private lemma abs_DyvGeTwo_le_growth_on_closureA2
       closureA2_abs_add_div_two_le_x p hp ⟨hx, hlow, hup⟩
     have hdiff : |(x - y) / 2| ≤ x :=
       closureA2_abs_sub_div_two_le_x p hp ⟨hx, hlow, hup⟩
-    have hp1_nonneg : 0 ≤ p - 1 := by linarith
+    have hp1_nonneg : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
     have hsum_pow :
         Real.rpow |(x + y) / 2| (p - 1) ≤ Real.rpow x (p - 1) :=
       Real.rpow_le_rpow (abs_nonneg _) hsum hp1_nonneg
@@ -8426,20 +8013,10 @@ private lemma uCandidate_tangent_y_on_QuarterPlane3Open_segment
       uCandidate p x y + DyuCandidate p x y * (z - y) := by
   have hQy : QuarterPlane3 x y := ⟨hy_pos.le, le_of_lt hneg_x, le_of_lt hxy⟩
   have hQz : QuarterPlane3 x z := ⟨hz_pos.le, le_of_lt hneg_z, le_of_lt hxz⟩
-  have hnotQy : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hxy hq.2.1
-  have hnotQ2y : ¬ QuarterPlane2 x y := by
-    intro hq
-    have hlt : -x < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
-  have hnotQz : ¬ QuarterPlane x z := by
-    intro hq
-    exact not_le_of_gt hxz hq.2.1
-  have hnotQ2z : ¬ QuarterPlane2 x z := by
-    intro hq
-    have hlt : -x < z := by linarith
-    exact not_le_of_gt hlt hq.2.1
+  have hnotQy : ¬ QuarterPlane x y := not_quarterPlane_of_lt hxy
+  have hnotQ2y : ¬ QuarterPlane2 x y := not_quarterPlane2_of_lt (by linarith)
+  have hnotQz : ¬ QuarterPlane x z := not_quarterPlane_of_lt hxz
+  have hnotQ2z : ¬ QuarterPlane2 x z := not_quarterPlane2_of_lt (by linarith)
   have haux := auxFunction1_tangent_x_on_QuarterPlaneOpen_segment
     p hp
     hy_pos hxy hneg_x
@@ -8605,7 +8182,7 @@ private lemma deriv_auxFunction1_eq_DyauxFunction1_on_QuarterPlaneOpen (p : ℝ)
     (x y : ℝ) (hQ : QuarterPlaneOpen x y) :
     deriv (fun s => auxFunction1 p x s) y = DyauxFunction1 p x y := by
   rcases hQ with ⟨hx, hyx, hneg⟩
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   by_cases h1 : a p * x < y
   · exact deriv_auxFunction1_eq_DyauxFunction1_on_A1 p hp x y ⟨hx, h1, hyx⟩
   · by_cases h2 : y < a p * x
@@ -8618,7 +8195,7 @@ private lemma hasDerivAt_auxFunction1_y_on_QuarterPlaneOpen (p : ℝ) (hp : 2 < 
     (x y : ℝ) (hQ : QuarterPlaneOpen x y) :
     HasDerivAt (fun s => auxFunction1 p x s) (DyauxFunction1 p x y) y := by
   rcases hQ with ⟨hx, hyx, hneg⟩
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   by_cases h1 : a p * x < y
   · have hEq : (fun s => auxFunction1 p x s) =ᶠ[nhds y] fun s => uA1 p x s := by
       have hA : {s : ℝ | a p * x < s} ∈ nhds y := Ioi_mem_nhds h1
@@ -8699,9 +8276,7 @@ private lemma hasDerivAt_uCandidate_x_on_QuarterPlane2Open (p : ℝ) (hp : 2 ≤
       simpa [Set.preimage, sub_pos] using hcont.preimage_mem_nhds (Ioi_mem_nhds hpos)
     have hXY : {t : ℝ | t < y} ∈ nhds x := Iio_mem_nhds hxy
     filter_upwards [hX, hY, hXY] with t htX htY htXY
-    have hq1 : ¬ QuarterPlane t y := by
-      intro hq
-      exact not_le_of_gt htX hq.1
+    have hq1 : ¬ QuarterPlane t y := not_quarterPlane_of_neg htX
     have hq2 : QuarterPlane2 t y := ⟨le_of_lt htX, le_of_lt htY, le_of_lt htXY⟩
     simp [uCandidate, hq1, hq2]
   have haux :
@@ -8729,26 +8304,16 @@ private lemma hasDerivAt_uCandidate_x_on_QuarterPlane3Open (p : ℝ) (hp : 2 < p
     have hN : {t : ℝ | -y < t} ∈ nhds x := Ioi_mem_nhds hneg
     have hY : {t : ℝ | t < y} ∈ nhds x := Iio_mem_nhds hxy
     filter_upwards [hN, hY] with t htN htY
-    have hq1 : ¬ QuarterPlane t y := by
-      intro hq
-      exact not_le_of_gt htY hq.2.1
-    have hq2 : ¬ QuarterPlane2 t y := by
-      intro hq
-      have hlt : -t < y := by linarith
-      exact not_le_of_gt hlt hq.2.1
+    have hq1 : ¬ QuarterPlane t y := not_quarterPlane_of_lt htY
+    have hq2 : ¬ QuarterPlane2 t y := not_quarterPlane2_of_lt (by linarith)
     have hq3 : QuarterPlane3 t y := ⟨hy.le, le_of_lt htN, le_of_lt htY⟩
     simp [uCandidate, hq1, hq2, hq3]
   have hbase :
       HasDerivAt (fun t => auxFunction1 p y t) (DyauxFunction1 p y x) x :=
     hasDerivAt_auxFunction1_y_on_QuarterPlaneOpen p hp y x hQaux
   refine (hbase.congr_of_eventuallyEq hEq).congr_deriv ?_
-  have hq1 : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hxy hq.2.1
-  have hq2 : ¬ QuarterPlane2 x y := by
-    intro hq
-    have hlt : -x < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
+  have hq1 : ¬ QuarterPlane x y := not_quarterPlane_of_lt hxy
+  have hq2 : ¬ QuarterPlane2 x y := not_quarterPlane2_of_lt (by linarith)
   have hq3 : QuarterPlane3 x y := ⟨hy.le, hneg.le, hxy.le⟩
   simp [DxuCandidate, hq1, hq2, hq3]
 
@@ -8767,9 +8332,7 @@ private lemma hasDerivAt_uCandidate_x_on_QuarterPlane4Open (p : ℝ) (hp : 2 < p
       intro hq
       have hlt : y < -t := by linarith
       exact not_le_of_gt hlt hq.2.2
-    have hq2 : ¬ QuarterPlane2 t y := by
-      intro hq
-      exact not_le_of_gt htY hq.2.2
+    have hq2 : ¬ QuarterPlane2 t y := not_quarterPlane2_of_gt htY
     have hq3 : ¬ QuarterPlane3 t y := by
       intro hq
       exact not_le_of_gt hy hq.1
@@ -8791,9 +8354,7 @@ private lemma hasDerivAt_uCandidate_x_on_QuarterPlane4Open (p : ℝ) (hp : 2 < p
     intro hq
     have hlt : y < -x := by linarith
     exact not_le_of_gt hlt hq.2.2
-  have hq2 : ¬ QuarterPlane2 x y := by
-    intro hq
-    exact not_le_of_gt hyx hq.2.2
+  have hq2 : ¬ QuarterPlane2 x y := not_quarterPlane2_of_gt hyx
   have hq3 : ¬ QuarterPlane3 x y := by
     intro hq
     exact not_le_of_gt hy hq.1
@@ -8811,9 +8372,7 @@ private lemma hasDerivAt_uCandidate_y_on_QuarterPlane2Open (p : ℝ) (hp : 2 < p
     have hY : {s : ℝ | s < -x} ∈ nhds y := Iio_mem_nhds hynegx
     have hX : {s : ℝ | x < s} ∈ nhds y := Ioi_mem_nhds hxy
     filter_upwards [hY, hX] with s hsY hsX
-    have hq1 : ¬ QuarterPlane x s := by
-      intro hq
-      exact not_le_of_gt hx hq.1
+    have hq1 : ¬ QuarterPlane x s := not_quarterPlane_of_neg hx
     have hq2 : QuarterPlane2 x s := ⟨le_of_lt hx, le_of_lt hsY, le_of_lt hsX⟩
     simp [uCandidate, hq1, hq2]
   have haux :
@@ -8828,9 +8387,7 @@ private lemma hasDerivAt_uCandidate_y_on_QuarterPlane2Open (p : ℝ) (hp : 2 < p
     refine hcomp.congr_deriv ?_
     ring
   refine (hbase.congr_of_eventuallyEq hEq).congr_deriv ?_
-  have hq1 : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hx hq.1
+  have hq1 : ¬ QuarterPlane x y := not_quarterPlane_of_neg hx
   have hq2 : QuarterPlane2 x y := ⟨hx.le, hynegx.le, hxy.le⟩
   simp [DyuCandidate, hq1, hq2]
 
@@ -8849,13 +8406,8 @@ private lemma hasDerivAt_uCandidate_y_on_QuarterPlane3Open (p : ℝ) (hp : 2 ≤
       simpa [Set.preimage] using hcont.preimage_mem_nhds (Ioi_mem_nhds hpos)
     have hX : {s : ℝ | x < s} ∈ nhds y := Ioi_mem_nhds hxy
     filter_upwards [hY, hN, hX] with s hsY hsN hsX
-    have hq1 : ¬ QuarterPlane x s := by
-      intro hq
-      exact not_le_of_gt hsX hq.2.1
-    have hq2 : ¬ QuarterPlane2 x s := by
-      intro hq
-      have hlt : -x < s := by linarith
-      exact not_le_of_gt hlt hq.2.1
+    have hq1 : ¬ QuarterPlane x s := not_quarterPlane_of_lt hsX
+    have hq2 : ¬ QuarterPlane2 x s := not_quarterPlane2_of_lt (by linarith)
     have hsN' : -s < x := by linarith
     have hq3 : QuarterPlane3 x s := ⟨le_of_lt hsY, le_of_lt hsN', le_of_lt hsX⟩
     simp [uCandidate, hq1, hq2, hq3]
@@ -8863,13 +8415,8 @@ private lemma hasDerivAt_uCandidate_y_on_QuarterPlane3Open (p : ℝ) (hp : 2 ≤
       HasDerivAt (fun s => auxFunction1 p s x) (DxauxFunction1 p y x) y :=
     hasDerivAt_auxFunction1_x_on_QuarterPlaneOpen p hp y x hQaux
   refine (hbase.congr_of_eventuallyEq hEq).congr_deriv ?_
-  have hq1 : ¬ QuarterPlane x y := by
-    intro hq
-    exact not_le_of_gt hxy hq.2.1
-  have hq2 : ¬ QuarterPlane2 x y := by
-    intro hq
-    have hlt : -x < y := by linarith
-    exact not_le_of_gt hlt hq.2.1
+  have hq1 : ¬ QuarterPlane x y := not_quarterPlane_of_lt hxy
+  have hq2 : ¬ QuarterPlane2 x y := not_quarterPlane2_of_lt (by linarith)
   have hq3 : QuarterPlane3 x y := ⟨hy.le, hneg.le, hxy.le⟩
   simp [DyuCandidate, hq1, hq2, hq3]
 
@@ -8893,9 +8440,7 @@ private lemma hasDerivAt_uCandidate_y_on_QuarterPlane4Open (p : ℝ) (hp : 2 ≤
       intro hq
       have hlt : s < -x := by linarith
       exact not_le_of_gt hlt hq.2.2
-    have hq2 : ¬ QuarterPlane2 x s := by
-      intro hq
-      exact not_le_of_gt hsYX hq.2.2
+    have hq2 : ¬ QuarterPlane2 x s := not_quarterPlane2_of_gt hsYX
     have hq3 : ¬ QuarterPlane3 x s := by
       intro hq
       exact not_le_of_gt hsY hq.1
@@ -8917,9 +8462,7 @@ private lemma hasDerivAt_uCandidate_y_on_QuarterPlane4Open (p : ℝ) (hp : 2 ≤
     intro hq
     have hlt : y < -x := by linarith
     exact not_le_of_gt hlt hq.2.2
-  have hq2 : ¬ QuarterPlane2 x y := by
-    intro hq
-    exact not_le_of_gt hyx hq.2.2
+  have hq2 : ¬ QuarterPlane2 x y := not_quarterPlane2_of_gt hyx
   have hq3 : ¬ QuarterPlane3 x y := by
     intro hq
     exact not_le_of_gt hy hq.1
@@ -8929,7 +8472,7 @@ private lemma hasDerivAt_uCandidate_y_on_QuarterPlane4Open (p : ℝ) (hp : 2 ≤
 private lemma hasDerivAt_uCandidate_x_on_diag_pos (p : ℝ) (hp : 2 < p)
     (x : ℝ) (hx : 0 < x) :
     HasDerivAt (fun t => uCandidate p t x) (DxuCandidate p x x) x := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have hleftEq :
       (fun t => uCandidate p t x) =ᶠ[𝓝[Set.Iic x] x]
         fun t => auxFunction1 p x t := by
@@ -8944,13 +8487,8 @@ private lemma hasDerivAt_uCandidate_x_on_diag_pos (p : ℝ) (hp : 2 < p)
       have hq : QuarterPlane x x := ⟨hx.le, le_rfl, by linarith⟩
       simp [uCandidate, hq]
     · have htx_lt : t < x := lt_of_le_of_ne htx ht_eq
-      have hq1' : ¬ QuarterPlane t x := by
-        intro hq
-        exact not_le_of_gt htx_lt hq.2.1
-      have hq2 : ¬ QuarterPlane2 t x := by
-        intro hq
-        have hlt : -t < x := by linarith
-        exact not_le_of_gt hlt hq.2.1
+      have hq1' : ¬ QuarterPlane t x := not_quarterPlane_of_lt htx_lt
+      have hq2 : ¬ QuarterPlane2 t x := not_quarterPlane2_of_lt (by linarith)
       have hq3 : QuarterPlane3 t x := ⟨hx.le, le_of_lt hneg, htx⟩
       simp [uCandidate, hq1', hq2, hq3]
   have hrightEq :
@@ -9009,7 +8547,7 @@ private lemma hasDerivAt_uCandidate_x_on_diag_pos (p : ℝ) (hp : 2 < p)
             have hp_pos : 0 < p := by linarith
             rw [a, hpStar]
             field_simp [hp_pos.ne]
-            nlinarith
+            linarith
           have hx_lt_div : x < x / a p := by
             rw [div_eq_mul_inv]
             have ha_lt : a p < 1 := a_lt_one_of_two_le p hp'
@@ -9043,7 +8581,7 @@ private lemma hasDerivAt_uCandidate_x_on_diag_pos (p : ℝ) (hp : 2 < p)
 private lemma hasDerivAt_uCandidate_y_on_diag_pos (p : ℝ) (hp : 2 < p)
     (x : ℝ) (hx : 0 < x) :
     HasDerivAt (fun s => uCandidate p x s) (DyuCandidate p x x) x := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have hleftEq :
       (fun s => uCandidate p x s) =ᶠ[𝓝[Set.Iic x] x]
         fun s => auxFunction1 p x s := by
@@ -9064,9 +8602,7 @@ private lemma hasDerivAt_uCandidate_y_on_diag_pos (p : ℝ) (hp : 2 < p)
       have hq : QuarterPlane x x := ⟨hx.le, le_rfl, by linarith⟩
       simp [uCandidate, hq]
     · have hxs_lt : x < s := lt_of_le_of_ne hs (Ne.symm hs_eq)
-      have hq1 : ¬ QuarterPlane x s := by
-        intro hq
-        exact not_le_of_gt hxs_lt hq.2.1
+      have hq1 : ¬ QuarterPlane x s := not_quarterPlane_of_lt hxs_lt
       have hq2 : ¬ QuarterPlane2 x s := by
         intro hq
         exact not_le_of_gt hx hq.1
@@ -9118,7 +8654,7 @@ private lemma hasDerivAt_uCandidate_y_on_diag_pos (p : ℝ) (hp : 2 < p)
             have hp_pos : 0 < p := by linarith
             rw [a, hpStar]
             field_simp [hp_pos.ne]
-            nlinarith
+            linarith
           have hx_lt_div : x < x / a p := by
             rw [div_eq_mul_inv]
             have ha_lt_one : a p < 1 := a_lt_one_of_two_le p hp'
@@ -9155,13 +8691,13 @@ private lemma hasDerivAt_uCandidate_y_on_diag_pos (p : ℝ) (hp : 2 < p)
 private lemma hasDerivAt_uCandidate_x_on_antidiag_pos (p : ℝ) (hp : 2 < p)
     (x : ℝ) (hx : 0 < x) :
     HasDerivAt (fun t => uCandidate p t (-x)) (DxuCandidate p x (-x)) x := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_nonneg : 0 ≤ a p := by
     have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp'
     have hp_pos : 0 < p := by linarith
     rw [a, hpStar]
     field_simp [hp_pos.ne]
-    nlinarith
+    linarith
   have hleftEq :
       (fun t => uCandidate p t (-x)) =ᶠ[𝓝[Set.Iic x] x]
         fun t => auxFunction1 p x (-t) := by
@@ -9270,13 +8806,13 @@ private lemma hasDerivAt_uCandidate_x_on_antidiag_pos (p : ℝ) (hp : 2 < p)
 private lemma hasDerivAt_uCandidate_y_on_antidiag_pos (p : ℝ) (hp : 2 < p)
     (x : ℝ) (hx : 0 < x) :
     HasDerivAt (fun s => uCandidate p x s) (DyuCandidate p x (-x)) (-x) := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_nonneg : 0 ≤ a p := by
     have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp'
     have hp_pos : 0 < p := by linarith
     rw [a, hpStar]
     field_simp [hp_pos.ne]
-    nlinarith
+    linarith
   have hleftEq :
       (fun s => uCandidate p x s) =ᶠ[𝓝[Set.Iic (-x)] (-x)]
         fun s => auxFunction1 p (-s) (-x) := by
@@ -9427,10 +8963,10 @@ private lemma burkholder_scalar_deriv_nonpos
     (1 - t) ^ (p - 1) + (p - 1) ^ p * t ^ (p - 1) ≤ alpha p := by
   let lam : ℝ := 1 - p * t
   let mu : ℝ := p * t
-  have hp_ge : 2 ≤ p := by linarith
-  have hp_pos : 0 < p := by linarith
-  have hp1_ge_one : 1 ≤ p - 1 := by linarith
-  have hp1_pos : 0 < p - 1 := by linarith
+  have hp_ge : 2 ≤ p := le_of_lt hp
+  have hp_pos : 0 < p := p_pos_of_two_le p hp_ge
+  have hp1_ge_one : 1 ≤ p - 1 := one_le_sub_one_of_two_le p hp_ge
+  have hp1_pos : 0 < p - 1 := sub_one_pos_of_two_le p hp_ge
   have hbase_nonneg : 0 ≤ (p - 1) / p := by positivity
   have hbase_le_one : (p - 1) / p ≤ 1 := by
     field_simp [hp_pos.ne']
@@ -9538,9 +9074,9 @@ private lemma burkholder_scalar_A1
     (1 - t) ^ p - (p - 1) ^ p * t ^ p ≤ alpha p * (1 - p * t) := by
   let H : ℝ → ℝ := fun s =>
     (1 - s) ^ p - (p - 1) ^ p * s ^ p - alpha p * (1 - p * s)
-  have hp_ge : 2 ≤ p := by linarith
-  have hp_pos : 0 < p := by linarith
-  have hp1_ge_one : 1 ≤ p - 1 := by linarith
+  have hp_ge : 2 ≤ p := le_of_lt hp
+  have hp_pos : 0 < p := p_pos_of_two_le p hp_ge
+  have hp1_ge_one : 1 ≤ p - 1 := one_le_sub_one_of_two_le p hp_ge
   have hcont : ContinuousOn H (Set.Icc 0 (1 / p)) := by
     unfold H
     apply ContinuousOn.sub
@@ -9651,9 +9187,9 @@ private lemma vGeTwo_le_uA1_on_closureA1
     subst hy0
     simp [vGeTwo, uA1, Real.zero_rpow (by linarith : p ≠ 0)]
   · have hx_nonneg' : 0 ≤ x := le_of_lt hxpos
-    have hp_nonneg : 0 ≤ p := by linarith
-    have hp_pos : 0 < p := by linarith
-    have hp_ne : p ≠ 0 := by linarith
+    have hp_nonneg : 0 ≤ p := p_nonneg_of_two_le p (le_of_lt hp)
+    have hp_pos : 0 < p := p_pos_of_two_le p (le_of_lt hp)
+    have hp_ne : p ≠ 0 := p_ne_zero_of_two_le p (le_of_lt hp)
     have hpStar : pStar p = p := pStar_eq_self_of_two_le p (by linarith)
     have ha_eq : a p = 1 - 2 / p := by simp [a, hpStar]
     have ha_nonneg : 0 ≤ a p := by
@@ -9675,7 +9211,7 @@ private lemma vGeTwo_le_uA1_on_closureA1
         have htmp : x - (1 - 2 / p) * x = 2 * x / p := by
           field_simp [hp_pos.ne']
           ring
-        nlinarith
+        linarith
       have hden_pos : 0 < 2 * x := mul_pos (by norm_num) hxpos
       have h := div_le_div_of_nonneg_right hxy hden_pos.le
       calc
@@ -9915,11 +9451,11 @@ private lemma uCandidate_le_zero_of_xy_zero
 private lemma vGeTwo_le_zero_of_mul_nonpos
     (p x y : ℝ) (hp : 2 ≤ p) (hxy : x * y ≤ 0) :
     vGeTwo p x y ≤ 0 := by
-  have hp_nonneg : 0 ≤ p := by linarith
-  have hp1_nonneg : 0 ≤ p - 1 := by linarith
+  have hp_nonneg : 0 ≤ p := p_nonneg_of_two_le p hp
+  have hp1_nonneg : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
   have hp1_one : (1 : ℝ) ≤ p - 1 := by linarith
   have hsq : ((x + y) / 2) ^ 2 ≤ ((x - y) / 2) ^ 2 := by
-    nlinarith
+    linarith
   have habs : |(x + y) / 2| ≤ |(x - y) / 2| := sq_le_sq.mp hsq
   have hpow :
       Real.rpow (|(x + y) / 2|) p ≤ Real.rpow (|(x - y) / 2|) p :=
@@ -9960,17 +9496,17 @@ private lemma uCandidate_le_zero_of_mul_nonpos
   rcases hrest with hQ2 | hrest
   · have hQ : QuarterPlane (-x) (-y) := ⟨by linarith [hQ2.1], by linarith [hQ2.2.2],
       by linarith [hQ2.2.1]⟩
-    have hxy' : (-x) * (-y) ≤ 0 := by nlinarith
+    have hxy' : (-x) * (-y) ≤ 0 := by linarith
     rw [uCandidate_eq_Q2 p hQ2]
     exact auxFunction1_le_zero_of_QuarterPlane_mul_nonpos p (-x) (-y) hp hQ hxy'
   rcases hrest with hQ3 | hQ4
   · have hQ : QuarterPlane y x := ⟨hQ3.1, hQ3.2.2, hQ3.2.1⟩
-    have hxy' : y * x ≤ 0 := by nlinarith
+    have hxy' : y * x ≤ 0 := by linarith
     rw [uCandidate_eq_Q3 p hQ3]
     exact auxFunction1_le_zero_of_QuarterPlane_mul_nonpos p y x hp hQ hxy'
   · have hQ : QuarterPlane (-y) (-x) := ⟨by linarith [hQ4.1], by linarith [hQ4.2.1],
       by linarith [hQ4.2.2]⟩
-    have hxy' : (-y) * (-x) ≤ 0 := by nlinarith
+    have hxy' : (-y) * (-x) ≤ 0 := by linarith
     rw [uCandidate_eq_Q4 p hQ4]
     exact auxFunction1_le_zero_of_QuarterPlane_mul_nonpos p (-y) (-x) hp hQ hxy'
 
@@ -9978,7 +9514,7 @@ private lemma uCandidate_le_zero_of_mul_nonpos
 private lemma uCandidate_le_zero_of_mul_neg
     (p x y : ℝ) (hp : 2 < p) (hxy : x * y = 0) (hnzero : (x, y) ≠ (0, 0)) :
     uCandidate p x y < 0 := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have hv_axis : ∀ t : ℝ, t ≠ 0 → vGeTwo p t 0 < 0 := by
     intro t htne
     have hp_pos : 0 < p := by linarith
@@ -9988,7 +9524,7 @@ private lemma uCandidate_le_zero_of_mul_neg
       exact abs_pos.mpr (by
         intro hdiv
         apply htne
-        nlinarith)
+        linarith)
     have hA_pos : 0 < Real.rpow (|t / 2|) p :=
       Real.rpow_pos_of_pos hbase_pos p
     have hlt :
@@ -10122,7 +9658,7 @@ private lemma DyvGeTwo_mono_x_of_pos
     (hsum_x : 0 ≤ (x + y) / 2) (hdiff_x : 0 ≤ (x - y) / 2)
     (hxz : x ≤ z) :
     DyvGeTwo p x y ≤ DyvGeTwo p z y := by
-  have hp_exp : 0 ≤ p - 1 := by linarith
+  have hp_exp : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
   have hsum_le : (x + y) / 2 ≤ (z + y) / 2 := by linarith
   have hdiff_le : (x - y) / 2 ≤ (z - y) / 2 := by linarith
   have hsum_z : 0 ≤ (z + y) / 2 := le_trans hsum_x hsum_le
@@ -10130,7 +9666,7 @@ private lemma DyvGeTwo_mono_x_of_pos
   have hA := Real.rpow_le_rpow hsum_x hsum_le hp_exp
   have hB := Real.rpow_le_rpow hdiff_x hdiff_le hp_exp
   have hcoef : 0 ≤ (p - 1) ^ p := Real.rpow_nonneg (by linarith : 0 ≤ p - 1) _
-  have hhalf : 0 ≤ p / 2 := by linarith
+  have hhalf : 0 ≤ p / 2 := half_p_nonneg_of_two_le p hp
   have hzpos : 0 < z := lt_of_lt_of_le hxpos hxz
   simp only [DyvGeTwo, ite_eq_left hxpos, ite_eq_left hzpos, abs_of_nonneg hsum_x,
     abs_of_nonneg hsum_z, abs_of_nonneg hdiff_x, abs_of_nonneg hdiff_z]
@@ -10143,7 +9679,7 @@ private lemma DxvGeTwo_mono_y_of_pos
     (hsum_y : 0 ≤ (x + y) / 2) (hdiff_z : 0 ≤ (x - z) / 2)
     (hyz : y ≤ z) :
     DxvGeTwo p x y ≤ DxvGeTwo p x z := by
-  have hp_exp : 0 ≤ p - 1 := by linarith
+  have hp_exp : 0 ≤ p - 1 := sub_one_nonneg_of_two_le p hp
   have hsum_le : (x + y) / 2 ≤ (x + z) / 2 := by linarith
   have hdiff_le : (x - z) / 2 ≤ (x - y) / 2 := by linarith
   have hsum_z : 0 ≤ (x + z) / 2 := le_trans hsum_y hsum_le
@@ -10151,7 +9687,7 @@ private lemma DxvGeTwo_mono_y_of_pos
   have hA := Real.rpow_le_rpow hsum_y hsum_le hp_exp
   have hB := Real.rpow_le_rpow hdiff_z hdiff_le hp_exp
   have hcoef : 0 ≤ (p - 1) ^ p := Real.rpow_nonneg (by linarith : 0 ≤ p - 1) _
-  have hhalf : 0 ≤ p / 2 := by linarith
+  have hhalf : 0 ≤ p / 2 := half_p_nonneg_of_two_le p hp
   simp only [DxvGeTwo, ite_eq_left hxpos, abs_of_nonneg hsum_y, abs_of_nonneg hsum_z,
     abs_of_nonneg hdiff_y, abs_of_nonneg hdiff_z]
   exact sub_le_sub (mul_le_mul_of_nonneg_right hA hhalf)
@@ -10161,7 +9697,7 @@ private lemma DyuCandidate_mono_x_on_Q2
     (p : ℝ) (hp : 2 < p) {x z y : ℝ}
     (hy_pos : 0 < y) (hz_upper : z ≤ -y) (hxz : x ≤ z) :
     DyuCandidate p x y ≤ DyuCandidate p z y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have hQx : QuarterPlane2 x y := ⟨by linarith, by linarith, by linarith⟩
   have hQz : QuarterPlane2 z y := ⟨by linarith, by linarith, by linarith⟩
   have hclx : closureA2 p (-x) (-y) := by
@@ -10190,7 +9726,7 @@ private lemma DyuCandidate_mono_x_on_Q3_A2
     (hy_pos : 0 < y) (hx_lower : -y ≤ x) (hz_upper : z ≤ a p * y)
     (hxz : x ≤ z) :
     DyuCandidate p x y ≤ DyuCandidate p z y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
   have ha_le_y : a p * y ≤ y :=
     (mul_le_mul_of_nonneg_right (a_lt_one_of_two_le p hp').le hy_pos.le).trans_eq
@@ -10222,7 +9758,7 @@ private lemma DyuCandidate_mono_x_on_Q3_A1
     (hy_pos : 0 < y) (hx_lower : a p * y ≤ x) (hz_upper : z ≤ y)
     (hxz : x ≤ z) :
     DyuCandidate p x y ≤ DyuCandidate p z y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
   have hQx : QuarterPlane3 x y := ⟨hy_pos.le, by
       have haxy_nonneg : 0 ≤ a p * y := mul_nonneg ha_nonneg hy_pos.le
@@ -10246,7 +9782,7 @@ private lemma DyuCandidate_mono_x_on_Q1_A1
     (hy_pos : 0 < y) (hyx : y ≤ x) (hz_upper : z ≤ y / a p)
     (hxz : x ≤ z) :
     DyuCandidate p x y ≤ DyuCandidate p z y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   have hQx : QuarterPlane x y := ⟨(lt_of_lt_of_le hy_pos hyx).le, hyx, by linarith⟩
   have hQz : QuarterPlane z y := ⟨(lt_of_lt_of_le hy_pos (le_trans hyx hxz)).le,
@@ -10274,7 +9810,7 @@ private lemma DyuCandidate_mono_x_on_Q1_A2
     (p : ℝ) (hp : 2 < p) {x z y : ℝ}
     (hy_pos : 0 < y) (hx_lower : y / a p ≤ x) (hxz : x ≤ z) :
     DyuCandidate p x y ≤ DyuCandidate p z y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
   have hx_pos : 0 < x := by
     exact lt_of_lt_of_le (div_pos hy_pos ha_pos) hx_lower
@@ -10320,7 +9856,7 @@ private lemma DyuCandidate_mono_x_of_y_pos
     (p : ℝ) (hp : 2 < p) {x z y : ℝ}
     (hy_pos : 0 < y) (hxz : x ≤ z) :
     DyuCandidate p x y ≤ DyuCandidate p z y := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   have ha_nonneg : 0 ≤ a p := a_nonneg_of_two_le p hp'
   have ha_lt : a p < 1 := a_lt_one_of_two_le p hp'
   have ha_pos : 0 < a p := a_pos_of_two_lt p hp
@@ -10397,16 +9933,16 @@ private lemma DyvGeTwo_axis_nonneg
     have hdiff : 0 ≤ (x - 0) / 2 := by linarith
     have hbase : 0 ≤ |x / 2| ^ (p - 1) := Real.rpow_nonneg (abs_nonneg _) _
     have hcoef : 0 ≤ (p - 1) ^ p := Real.rpow_nonneg (by linarith : 0 ≤ p - 1) _
-    have hhalf : 0 ≤ p / 2 := by linarith
+    have hhalf : 0 ≤ p / 2 := half_p_nonneg_of_two_le p hp
     simp [DyvGeTwo, hx_pos]
-    nlinarith [mul_nonneg hbase hhalf,
+    linarith [mul_nonneg hbase hhalf,
       mul_nonneg (mul_nonneg hcoef hbase) hhalf]
 
 private lemma DyuCandidate_axis_mono_x
     (p : ℝ) (hp : 2 < p) {x z : ℝ}
     (hxz : x ≤ z) :
     DyuCandidate p x 0 ≤ DyuCandidate p z 0 := by
-  have hp' : 2 ≤ p := by linarith
+  have hp' : 2 ≤ p := le_of_lt hp
   by_cases hz_nonpos : z ≤ 0
   · have hx_nonpos : x ≤ 0 := le_trans hxz hz_nonpos
     have hx_eq : DyuCandidate p x 0 = -DyvGeTwo p (-x) 0 := by
@@ -10642,7 +10178,7 @@ theorem exists_majorant_geTwo (p : ℝ) (hp : 2 < p) :
   · -- pointwise majorization
     intros x y
     have hv := MajorantPG2.vGeTwo_le_uCandidate p hp x y
-    have hp' : 2 ≤ p := by linarith
+    have hp' : 2 ≤ p := le_of_lt hp
     simpa [v, MajorantPG2.vGeTwo, MajorantPG2.pStar_eq_self_of_two_le p hp',
       abs_of_nonneg (by linarith : 0 ≤ p - 1)] using hv
   · -- negativity on x*y ≤ 0
