@@ -108,6 +108,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/KahnKalai                 https://github.com/dcposch/kahn-kalai-lean
   LeanPool/KasamiCyclicAdditive      https://github.com/dsm054/kasami_cyclic_additive
   LeanPool/Koethe                    https://github.com/tadamcz/koethe
+  LeanPool/Komlos                    https://github.com/gdahia/Komlos
   LeanPool/KrafftSieve               https://github.com/ElNando888/KrafftSieve
   LeanPool/LanguageGeneration        https://github.com/xiaoyulics/language-generation-characterization
   LeanPool/Lean4GlCoalgebras         https://github.com/mgignoux/lean4-gl-coalgebras
