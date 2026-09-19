@@ -1,61 +1,75 @@
 projects:
-  - slug: champernowne-normality
-    title: Champernowne normality in every base
+  - slug: komlos
+    title: The Komlós and Beck–Fiala bounds with constant 36
     summary: >-
-      Proves that concatenating the base-b digits of the positive integers
-      gives a normal digit sequence for every integer base b at least 2:
-      every nonempty length-k word of digits below b has limiting frequency
-      b^(-k). This is a discrete, all-base generalization of D. G.
-      Champernowne's 1933 base-ten result, without a real-number expansion
-      bridge. Includes reusable substring-counting inequalities, a
-      digit-string equivalence, exact cohort counts, and quantitative prefix
-      bounds used to establish the frequency limit.
-    branch: number theory and asymptotic analysis
-    entry_module: LeanPool.Champernowne
+      Proves that finitely many real vectors of Euclidean norm at most one admit
+      signs whose sum has every coordinate bounded by 36, and deduces the
+      Beck–Fiala discrepancy bound 36 times the square root of the maximum
+      vertex degree for finite hypergraphs. The Karingula–Lovett splitting
+      argument is supported by reusable finite-distribution, total-variation,
+      transport, convex-hull, and matrix-discrepancy infrastructure. The
+      near-invariant distribution uses discrete squared tent weights, and
+      real vectors are handled by coordinatewise truncation toward zero.
+    branch: discrepancy theory
+    entry_module: LeanPool.Komlos
     authors:
-      - Arthur Champernowne
+      - Gabriel Dahia
     source:
-      title: Champernowne Sequence Normality Proof
+      title: An elementary proof of the Komlós conjecture
       authors:
-        - Arthur Champernowne
-      url: https://github.com/OldMathematician/ChampernowneNormality
-      github_repo: OldMathematician/ChampernowneNormality
-      commit: 31a76dbde2727745beb6fb81af4cab1ce6a15fda
+        - Sankeerth Rao Karingula
+        - Shachar Lovett
+      url: https://eccc.weizmann.ac.il/report/2026/188/
+      github_repo: gdahia/Komlos
+      commit: d802857449234318d557361b1dbb0a27e0258528
     license: Apache-2.0
     status: verified
     provenance: AI
     main_declarations:
-      - Champernowne.champernowne_normal
+      - Komlos.discrepancy_le_of_forall_sum_sq_le_one
     main_results:
-      - declaration: Champernowne.champernowne_normal
+      - declaration: Komlos.discrepancy_le_of_forall_sum_sq_le_one
         informal: >-
-          For every integer base b at least 2, the sequence formed by
-          concatenating the base-b digits of 1, 2, 3, and so on is normal:
-          each nonempty word w of digits below b has limiting occurrence
-          frequency 1 / b^(length w), counting overlapping occurrences.
-      - declaration: Champernowne.champernowne_normal_ten
+          For a real matrix with arbitrary finite row and column index types,
+          if each column has sum of squared entries at most one, its minimum
+          signed-column discrepancy is at most 36.
+        source_ref: Theorem 1.2, matrix form.
+      - declaration: Komlos.exists_isColouring_forall_abs_sum_apply_le
         informal: >-
-          The decimal digit sequence 123456789101112... is normal in base ten.
-      - declaration: Champernowne.sum_countOccurrences_cohort
+          Any finite family of vectors in a finite-dimensional real Euclidean
+          space, each of norm at most one, admits signs in {-1, 1} whose signed
+          sum has absolute value at most 36 in every coordinate.
+        source_ref: Theorem 1.2.
+      - declaration: Hypergraph.exists_isColouring_forall_abs_finsum_le
         informal: >-
-          For a nonempty length-k word of base-b digits with nonzero first
-          digit and k at most m, its total occurrences inside all m-digit
-          positive integers equal b^(m-k) + (m-k)(b-1)b^(m-k-1), with natural
-          subtraction in the exponents.
-      - declaration: Champernowne.sum_countOccurrences_cohort_zero
+          If a hypergraph has finitely many vertices and each vertex belongs
+          to at most t edges, there is a {-1, 1} colouring of all vertices
+          whose sum on each edge has absolute value at most 36 times sqrt(t).
+        source_ref: Beck–Fiala consequence discussed in Section 1.
+      - declaration: Komlos.exists_isColouring_mean_add_sum_mem_convexHull
         informal: >-
-          For a nonempty length-k word of base-b digits starting with zero
-          and k at most m, its total occurrences inside all m-digit positive
-          integers equal (m-k)(b-1)b^(m-k-1), with natural subtraction in the
-          exponent.
+          For a finitely supported probability distribution on any real
+          module and n vectors, if translation by six times each vector has
+          total variation distance at most one third, some signed sum added
+          to the mean belongs to the convex hull of the distribution's support.
+        source_ref: Lemma 1.4, generalized to arbitrary real modules.
+      - declaration: Komlos.exists_nearInvariant
+        informal: >-
+          Every positive-denominator integer grid in finite-dimensional real
+          coordinate space admits a finitely supported mean-zero probability
+          distribution in [-6, 6]^d whose total variation distance under any
+          grid translation of Euclidean norm at most one is at most one third.
+        source_ref: Lemma 1.5, using discrete squared tent weights.
     tags:
-      - normal-numbers
-      - digit-expansions
-      - combinatorics-on-words
-      - asymptotic-frequency
+      - discrepancy
+      - vector-balancing
+      - hypergraphs
+      - probability
+      - total-variation
     msc:
-      - 11K16
-      - 68R15
+      - 11K38
+      - 05C65
+      - 05D40
   - slug: sum-difference-exponent
     title: The optimal exponent relating sumsets and difference sets
     summary: >-
@@ -9270,3 +9284,60 @@ projects:
       - cycle-decompositions
     msc:
       - "05C45"
+  - slug: champernowne-normality
+    title: Champernowne normality in every base
+    summary: >-
+      Proves that concatenating the base-b digits of the positive integers
+      gives a normal digit sequence for every integer base b at least 2:
+      every nonempty length-k word of digits below b has limiting frequency
+      b^(-k). This is a discrete, all-base generalization of D. G.
+      Champernowne's 1933 base-ten result, without a real-number expansion
+      bridge. Includes reusable substring-counting inequalities, a
+      digit-string equivalence, exact cohort counts, and quantitative prefix
+      bounds used to establish the frequency limit.
+    branch: number theory and asymptotic analysis
+    entry_module: LeanPool.Champernowne
+    authors:
+      - Arthur Champernowne
+    source:
+      title: Champernowne Sequence Normality Proof
+      authors:
+        - Arthur Champernowne
+      url: https://github.com/OldMathematician/ChampernowneNormality
+      github_repo: OldMathematician/ChampernowneNormality
+      commit: 31a76dbde2727745beb6fb81af4cab1ce6a15fda
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Champernowne.champernowne_normal
+    main_results:
+      - declaration: Champernowne.champernowne_normal
+        informal: >-
+          For every integer base b at least 2, the sequence formed by
+          concatenating the base-b digits of 1, 2, 3, and so on is normal:
+          each nonempty word w of digits below b has limiting occurrence
+          frequency 1 / b^(length w), counting overlapping occurrences.
+      - declaration: Champernowne.champernowne_normal_ten
+        informal: >-
+          The decimal digit sequence 123456789101112... is normal in base ten.
+      - declaration: Champernowne.sum_countOccurrences_cohort
+        informal: >-
+          For a nonempty length-k word of base-b digits with nonzero first
+          digit and k at most m, its total occurrences inside all m-digit
+          positive integers equal b^(m-k) + (m-k)(b-1)b^(m-k-1), with natural
+          subtraction in the exponents.
+      - declaration: Champernowne.sum_countOccurrences_cohort_zero
+        informal: >-
+          For a nonempty length-k word of base-b digits starting with zero
+          and k at most m, its total occurrences inside all m-digit positive
+          integers equal (m-k)(b-1)b^(m-k-1), with natural subtraction in the
+          exponent.
+    tags:
+      - normal-numbers
+      - digit-expansions
+      - combinatorics-on-words
+      - asymptotic-frequency
+    msc:
+      - 11K16
+      - 68R15
