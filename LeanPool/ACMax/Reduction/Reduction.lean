@@ -384,13 +384,13 @@ theorem algConn_le_two_of_card_general_cond (n : ℕ) (hn : 12 ≤ n) [Nonempty 
 
 The `n`-uniform thresholds specialize at `n = 19` to these numerical bounds: -/
 
-/-- Good-triangle threshold at `n = 19`: `19·(S−6) ≤ 2·(3·16) = 96 ⟺ S ≤ 11`. -/
+/-- Good-triangle threshold at `n = 19`: `19·(S−6) ≤ 2·(3·16) = 96 ↔ S ≤ 11`. -/
 example : ∀ S : ℕ, 19 * (S - 6) ≤ 2 * (3 * (19 - 3)) ↔ S ≤ 11 := by intro S; omega
 
-/-- Good-`C₄` threshold at `n = 19`: `19·(S−8) ≤ 2·(4·15) = 120 ⟺ S ≤ 14`. -/
+/-- Good-`C₄` threshold at `n = 19`: `19·(S−8) ≤ 2·(4·15) = 120 ↔ S ≤ 14`. -/
 example : ∀ S : ℕ, 19 * (S - 8) ≤ 2 * (4 * (19 - 4)) ↔ S ≤ 14 := by intro S; omega
 
-/-- Good-`K_{2,3}` threshold at `n = 19`: `19·(S−12) ≤ 2·(5·14) = 140 ⟺ S ≤ 19`. -/
+/-- Good-`K_{2,3}` threshold at `n = 19`: `19·(S−12) ≤ 2·(5·14) = 140 ↔ S ≤ 19`. -/
 example : ∀ S : ℕ, 19 * (S - 12) ≤ 2 * (5 * (19 - 5)) ↔ S ≤ 19 := by intro S; omega
 
 end ACMax

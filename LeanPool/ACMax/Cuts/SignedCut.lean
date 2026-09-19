@@ -23,7 +23,7 @@ to the neutral set cost `1`, edges inside a block cost `0`).  Hence the certific
 `4·e(P,N) + e(P,Z) + e(N,Z) ≤ 4|P|` gives `algConn G ≤ 2`.
 
 This **subsumes**:
-* `algConn_le_two_of_balanced_cut` (`Z = ∅`, `N = Pᶜ`): `4·cut ≤ 4|P| ⟺ cut ≤ |P| = n/2`;
+* `algConn_le_two_of_balanced_cut` (`Z = ∅`, `N = Pᶜ`): `4·cut ≤ 4|P| ↔ cut ≤ |P| = n/2`;
 * `algConn_le_two_of_nonadj_pair` (`P = {u}`, `N = {v}`): `deg u + deg v + 2[u∼v] ≤ 4`;
 
 and, unlike any bipartition cut, it certifies the `λ₂ = 2` Fiedler-eigenvector graphs at

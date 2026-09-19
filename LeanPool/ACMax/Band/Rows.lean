@@ -14,7 +14,7 @@ a degree-`3`-separated obstruction at `n ≥ 48`. Notation:
 `X = excessX n G`, `h = |V₉ᶜ|` (the heavies `deg ≥ 5`), `v = |V₉|`, `n_g` the giant count.
 
 * `giant_le_two` — the giant census `n_g ≤ 2`, from `hoarding_law` and `giant_excess_bound`.
-* `master_dprime` — **MASTER″**: `10·X + 7·h ≤ 4·n − 186`, assembled by `omega` from
+* `master_dprime` — **MASTER''**: `10·X + 7·h ≤ 4·n − 186`, assembled by `omega` from
   `slots_p_row`, `p_choke_row_unconditional`, `heavy_class_ledger`, `heavy_class_disjoint` and
   `giant_le_two`.  Sharper reach than `master_prime_57` (`n ≥ 48` vs `n ≥ 57`) at the slightly
   weaker constant `−186`, avoiding the credit-4 heavy budget.
@@ -92,7 +92,7 @@ theorem v9_card_add_compl {n : ℕ} (G : SimpleGraph (Fin n)) :
   rw [Finset.card_add_card_compl, Fintype.card_fin]
 
 open Classical in
-/-- **The kill-template positivity window** (`X + 3h + 4 ≤ n`).  From MASTER″ and `h ≤ X`; its
+/-- **The kill-template positivity window** (`X + 3h + 4 ≤ n`).  From MASTER'' and `h ≤ X`; its
 role is to keep the honest excess `t₉ = n − 4 − X − 3h` non-negative for the girth kill. -/
 theorem t9_window {n : ℕ} [Nonempty (Fin n)] (G : SimpleGraph (Fin n)) (hn : 48 ≤ n)
     (hm : G.edgeFinset.card = 2 * (n - 2)) (h3 : ∀ v : Fin n, 3 ≤ G.degree v)

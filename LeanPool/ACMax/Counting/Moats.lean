@@ -1252,7 +1252,7 @@ theorem deco_edge_moat_fires {n : ℕ} [Nonempty (Fin n)]
 open Classical in
 /-- **Z4c — the adjacent degree-`4` decorated edge.**  Adjacent degree-`4` hubs `u, v`, each with
 a degree-`3` neighbour (`tu` of `u`, `tv` of `v`, distinct and off the hubs), fire at every
-`n ≥ 30` (`9·(4 + 4) = 72 ≤ n + 42 ⟺ n ≥ 30`).  The twins may be adjacent to each other. -/
+`n ≥ 30` (`9·(4 + 4) = 72 ≤ n + 42 ↔ n ≥ 30`).  The twins may be adjacent to each other. -/
 theorem z4c_fires {n : ℕ} [Nonempty (Fin n)] (hn : 30 ≤ n)
     (G : SimpleGraph (Fin n)) (hm : G.edgeFinset.card = 2 * (n - 2))
     (h3 : ∀ w : Fin n, 3 ≤ G.degree w) (u v tu tv : Fin n)

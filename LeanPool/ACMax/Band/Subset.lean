@@ -26,7 +26,7 @@ per-cell
 SUM inequality (in vertex-ball sum form) is monotone the right way, so it descends from `v` to any
 `v' ≤ v`.  The proof is term-by-term over the geometric sum, each summand comparison reducing to the
 three base facts `v' - 1 ≤ v - 1`, `(v + t)·v' ≤ (v' + t)·v`, `(v + 2t)·v' ≤ (v' + 2t)·v` (all
-`⟺ v' ≤ v`) plus `Nat.pow_le_pow_left` — no `nlinarith`, matching the doc's `0/9000`-violation
+`↔ v' ≤ v`) plus `Nat.pow_le_pow_left` — no `nlinarith`, matching the doc's `0/9000`-violation
 verification.
 
 ## Contents

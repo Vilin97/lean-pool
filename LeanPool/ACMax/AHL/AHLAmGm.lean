@@ -32,7 +32,7 @@ average-degree walk-count lower bound.
   `x ↦ x·log(x − 1)` is convex on `[2, ∞)` (`convexOn_deg_mul_log`, `f'' = (x−2)/(x−1)² ≥ 0`);
   Jensen
   with uniform weights `1/n` at the degrees yields `D·log((D − n)/n) ≤ ∑_v deg v·log(deg v − 1)`,
-  i.e. `Λ ≥ (D − n)/n = d̄ − 1`.
+  i.e. `Λ ≥ (D − n)/n = d_avg − 1`.
 -/
 
 namespace ACMax
@@ -105,10 +105,10 @@ theorem convexOn_deg_mul_log :
     exact div_nonneg (by linarith) (by positivity)
 
 omit [DecidableEq V] in
-/-- **W8 — the degree-log Jensen bound.**  Under `δ ≥ 2`, the average `d̄ = D/n` satisfies
+/-- **W8 — the degree-log Jensen bound.**  Under `δ ≥ 2`, the average `d_avg = D/n` satisfies
 `D·log((D − n)/n) ≤ ∑_v deg v·log(deg v − 1)`.  Jensen's inequality (`ConvexOn.map_sum_le`) for the
 convex `φ(x) = x·log(x − 1)` with uniform weights `1/n` at the degrees `d_v ∈ [2, ∞)` and center
-`d̄ ∈ [2, ∞)`; multiplying through by `n`.  This is the `Λ ≥ d̄ − 1` step in logarithmic form. -/
+`d_avg ∈ [2, ∞)`; multiplying through by `n`.  This is the `Λ ≥ d_avg − 1` step in logarithmic form. -/
 theorem sum_deg_mul_log_ge (hδ2 : ∀ v, 2 ≤ G.degree v) (hn : 0 < Fintype.card V) :
     (∑ v, (G.degree v : ℝ)) *
         Real.log (((∑ v, (G.degree v : ℝ)) - Fintype.card V) / Fintype.card V) ≤
@@ -368,7 +368,7 @@ theorem nb_amgm_lambda (hδ2 : ∀ v, 2 ≤ G.degree v) [Nonempty V] {ℓ : ℕ}
   exact nb_amgm hδ2 hℓ
 
 omit [DecidableEq V] in
-/-- **W8 (sharp `Λ`-form).**  Under `δ ≥ 2`, `Λ ≥ (D − n)/n = d̄ − 1`.  Exponentiating the
+/-- **W8 (sharp `Λ`-form).**  Under `δ ≥ 2`, `Λ ≥ (D − n)/n = d_avg − 1`.  Exponentiating the
 logarithmic
 Jensen bound `sum_deg_mul_log_ge`: `log((D − n)/n) ≤ (∑_v deg v · log(deg v − 1))/D = log Λ`. -/
 theorem lambda_ge (hδ2 : ∀ v, 2 ≤ G.degree v) (hn : 0 < Fintype.card V) :
