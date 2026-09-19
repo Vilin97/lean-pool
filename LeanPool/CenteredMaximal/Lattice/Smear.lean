@@ -13,7 +13,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Interval
 /-!
 # Smearing the lattice into an integrable function
 
-The measure is truncated to the atoms `atomBox N` and each atom of mass `m` at `p` is replaced by
+For `ε > 0`, truncate the measure to the atoms `atomBox N` and replace each atom of mass `m` at `p` by
 `m ε⁻²` times the indicator of the closed square of side `ε` centred at `p`. The resulting function
 `smeared N ε` is integrable, with `‖smeared N ε‖₁` equal to the total mass of the kept atoms.
 

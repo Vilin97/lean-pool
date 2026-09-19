@@ -10,7 +10,7 @@ public import LeanPool.CenteredMaximal.Statement
 /-!
 # The constants of the weighted lattice
 
-The extremal configuration is the periodic measure with columns at `x = i * hgap`, carrying mass
+The chosen configuration is the periodic measure with columns at `x = i * hgap`, carrying mass
 `1` for even `i` and mass `heavy` for odd `i`, and rows at `y = j * vgap` of unit weight. Its
 parameters are determined by three edge collisions of witness rectangles; they reduce to the single
 quadratic `3 u² - 4 u - 6 = 0` for `u = root = (2 + √22)/3`:
@@ -19,8 +19,8 @@ quadratic `3 u² - 4 u - 6 = 0` for `u = root = (2 + √22)/3`:
 * `hgap = (1 + u)/2 = (5 + √22)/6` and `vgap = hgap + 1 = (11 + √22)/6`.
 
 The witness squares use the sides `1`, `u`, `sideH1 = √heavy`, `sideLH2 = √2 · u`,
-`sideLHL2 = √(2 (2 + heavy))` and `2 hgap + 1`. The level set misses, in each quadrant of the
-period cell, one open slot of width `slotW` and height `slotH`, and
+`sideLHL2 = √(2 (2 + heavy))` and `2 hgap + 1`. The witnesses cover the period cell outside
+four open slots, each of width `slotW` and height `slotH`, and
 `phi = (2 hgap vgap - 4 slotW slotH) / (1 + heavy)`.
 
 All numerical facts are proved from rational enclosures of `√2` and `√22`.
@@ -53,10 +53,10 @@ def sideLH2 : ℝ := √2 * root
 /-- Side of the witness made of light, heavy, light atoms in two rows: `√(2(2 + w))`. -/
 def sideLHL2 : ℝ := √(2 * (2 + heavy))
 
-/-- Width of the uncovered slot: `2h - √(2(2 + w))/2 - u/2`. -/
+/-- Width of a slot excluded from the witnessed region: `2h - √(2(2 + w))/2 - u/2`. -/
 def slotW : ℝ := 2 * hgap - sideLHL2 / 2 - root / 2
 
-/-- Height of the uncovered slot: `V - √(2(1 + w))/2 - √w/2`. -/
+/-- Height of a slot excluded from the witnessed region: `V - √(2(1 + w))/2 - √w/2`. -/
 def slotH : ℝ := vgap - sideLH2 / 2 - sideH1 / 2
 
 /-! ### Square roots -/
@@ -284,8 +284,8 @@ theorem two_mul_hgap_mul_vgap : 2 * hgap * vgap = (77 + 16 * √22) / 18 := by
   unfold vgap hgap root
   linear_combination (1 / 18 : ℝ) * sqrt22_sq
 
-/-- `Φ` is the covered area per unit mass: the cell has area `2 h V`, the four slots have
-area `slotW · slotH` each, and a cell carries mass `1 + w`. -/
+/-- The expression for `Φ` used in the area lower bound: subtract the four slot areas
+`slotW · slotH` from the cell area `2 h V`, then divide by the cell mass `1 + w`. -/
 theorem phi_eq : phi = (2 * hgap * vgap - 4 * slotW * slotH) / (1 + heavy) := by
   rw [phi, mul_assoc 4, slotW_eq, slotH_eq, one_add_heavy_eq, two_mul_hgap_mul_vgap]
   have h₁ : (0 : ℝ) < 26 + 4 * √22 := by positivity

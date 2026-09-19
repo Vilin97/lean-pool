@@ -31,7 +31,7 @@ namespace LeanPool.CenteredMaximal.Lattice
 def cell : Set (Fin 2 → ℝ) :=
   univ.pi fun i => Ico (![-hgap, -vgap / 2] i) (![hgap, vgap / 2] i)
 
-/-- The four open slots, one in each quadrant, missed by the witnesses. -/
+/-- The four open slots, one in each quadrant, excluded from the witnessed region. -/
 def slots : Set (Fin 2 → ℝ) :=
   {z | root / 2 < |z 0| ∧ |z 0| < 2 * hgap - sideLHL2 / 2 ∧ sideH1 / 2 < |z 1| ∧
     |z 1| < vgap - sideLH2 / 2}
