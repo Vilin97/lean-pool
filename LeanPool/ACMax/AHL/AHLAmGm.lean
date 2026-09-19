@@ -108,7 +108,8 @@ omit [DecidableEq V] in
 /-- **W8 — the degree-log Jensen bound.**  Under `δ ≥ 2`, the average `d_avg = D/n` satisfies
 `D·log((D − n)/n) ≤ ∑_v deg v·log(deg v − 1)`.  Jensen's inequality (`ConvexOn.map_sum_le`) for the
 convex `φ(x) = x·log(x − 1)` with uniform weights `1/n` at the degrees `d_v ∈ [2, ∞)` and center
-`d_avg ∈ [2, ∞)`; multiplying through by `n`.  This is the `Λ ≥ d_avg − 1` step in logarithmic form. -/
+`d_avg ∈ [2, ∞)`; multiplying through by `n`. This is the `Λ ≥ d_avg − 1` step
+in logarithmic form. -/
 theorem sum_deg_mul_log_ge (hδ2 : ∀ v, 2 ≤ G.degree v) (hn : 0 < Fintype.card V) :
     (∑ v, (G.degree v : ℝ)) *
         Real.log (((∑ v, (G.degree v : ℝ)) - Fintype.card V) / Fintype.card V) ≤
