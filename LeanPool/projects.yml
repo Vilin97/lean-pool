@@ -9290,7 +9290,7 @@ projects:
       Formalizes reusable fixed-width unsigned integers and fixed-size byte values for the
       Ethereum Virtual Machine, including wrapping arithmetic, shifts, signed operations,
       modular arithmetic, byte extraction, sign extension, and checked width conversions.
-    branch: verified systems and blockchain semantics
+    branch: fixed-width arithmetic and byte representations
     entry_module: LeanPool.Lean4EVM
     authors:
       - mrLSD
@@ -9332,7 +9332,7 @@ projects:
       - verified-algorithms
       - ethereum
       - fixed-width-arithmetic
-      - blockchain-semantics
+      - byte-representations
     msc:
       - "68Q60"
       - "68V20"

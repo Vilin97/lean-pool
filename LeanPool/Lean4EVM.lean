@@ -14,14 +14,16 @@ Source: url:https://github.com/mrLSD/Lean4EVM
 Authors: mrLSD
 Status: verified
 Main declarations: `Lean4EVM.U256.toNat_addmod`, `Lean4EVM.U256.toNat_mulmod`
-Tags: verified-algorithms, ethereum, fixed-width-arithmetic, blockchain-semantics
+Tags: verified-algorithms, ethereum, fixed-width-arithmetic, byte-representations
 MSC: 68Q60, 68V20
 -/
 
 /-!
 # Lean4EVM
 
-Lean definitions of Ethereum EVM and their verified executable operations.
+Fixed-width integer and byte primitives for Ethereum, with proofs of their arithmetic and
+conversion operations. The imported library does not define an EVM interpreter, machine state,
+gas accounting, or transaction semantics.
 
 `Primitives.UInt` and `Primitives.FixedBytes` are family façades. Their `Core` modules own shared
 representations and proofs; modules named after public types own width- or meaning-specific APIs.
