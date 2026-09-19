@@ -3,20 +3,13 @@ Copyright (c) 2026 Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz
 -/
+module
+
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.MeasureTheory.Group.GeometryOfNumbers
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
+import Mathlib.Tactic.Positivity.Finset
 /-!
 # Minkowski's theorem for the standard integer lattice in `ℝⁿ`
 
@@ -27,6 +20,8 @@ The main result, `classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt
 states that a symmetric convex set of volume greater than `2 ^ n` contains a nonzero
 point all of whose coordinates are integers.
 -/
+
+@[expose] public section
 
 namespace LeanPool.SumsThreeSquares
 

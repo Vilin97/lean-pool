@@ -6,9 +6,9 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Algebra.BigOperators.Field
-public import Mathlib.Analysis.Convex.Jensen
-public import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 
 /-!
 # Entropy function

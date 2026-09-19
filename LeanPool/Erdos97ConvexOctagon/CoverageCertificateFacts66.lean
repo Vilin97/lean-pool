@@ -3,42 +3,49 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData10
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData11
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData10
+public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData11
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-! # Bounded coverage-certificate computation facts -/
+
+@[expose] public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Root audit for fixed branch (3, 16). -/
 theorem coverageBranchRoot_3_16 :
     branchClaimRootValidB 3 16 (.patternThree 2) = true := by
-  rfl
+  decide +kernel
 
 /-- Root audit for fixed branch (5, 29). -/
 theorem coverageBranchRoot_5_29 :
     branchClaimRootValidB 5 29 (.search branchClaims5Row29) = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (5, 28), starting at 320. -/
 theorem coverageBranchNodes_5_28_00320 :
     nodeClaimChunkValidB branchClaims5Row28 320 14 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (5, 29), starting at 0. -/
 theorem coverageBranchNodes_5_29_00000 :
     nodeClaimChunkValidB branchClaims5Row29 0 64 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (5, 29), starting at 64. -/
 theorem coverageBranchNodes_5_29_00064 :
     nodeClaimChunkValidB branchClaims5Row29 64 64 = true := by
-  rfl
+  decide +kernel
 
 /-- Node audit for fixed branch (5, 29), starting at 128. -/
 theorem coverageBranchNodes_5_29_00128 :
     nodeClaimChunkValidB branchClaims5Row29 128 64 = true := by
-  rfl
+  decide +kernel
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage

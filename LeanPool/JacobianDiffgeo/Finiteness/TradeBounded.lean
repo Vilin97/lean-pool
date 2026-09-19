@@ -3,9 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Finiteness.Chain
+public import LeanPool.JacobianDiffgeo.Finiteness.Chain
+public import LeanPool.JacobianDiffgeo.Cech.Refinement
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
 import LeanPool.JacobianDiffgeo.DolbeaultComparison.Leray
+import LeanPool.JacobianDiffgeo.Finiteness.CompactRestrict
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The norm-bounded trade (`finiteness-and-chi`, gated file 1/3)
@@ -23,6 +29,8 @@ step 5). This is the first of the three files that were blocked on the cech `Col
 * `classMap`/`classMap_tradeDiff_eq_zero`/`classMap_surjective`: the Čech class map and its two
   Schwartz-consumer properties.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech
@@ -279,7 +287,7 @@ variable [T2Space X] [CompactSpace X]
 noncomputable def boundZ1 {P : Fin T.n → Opens X}
     (h : ∀ i, closure (P i : Set X) ⊆ (T.Ustar i : Set X))
     (F : Z1 (0 : RS.Divisor X) T.coverStar) : NC1 T P :=
-  fun p => restrictGerm (closure_inf_pair_subset T h p.1 p.2)
+  fun p => restrictGerm (private_decl% (closure_inf_pair_subset T h p.1 p.2))
     ((F : C1 (0 : RS.Divisor X) T.coverStar) (p.1, p.2))
 
 /-- The `(i, j)`-component of a good-cover cocycle, as a `LinSysOn`-membership term (a named
@@ -369,8 +377,6 @@ theorem trade_evalAt {𝒱 : FinCover (⊤ : Opens X)} {τ : Fin 𝒱.n → Fin 
         + ((g β : RS.MeroGermOn X (𝒱.U β : Set X)).evalAt z
           - (g α : RS.MeroGermOn X (𝒱.U α : Set X)).evalAt z) := by
   have hLopen : IsOpen ((𝒱.U α ⊓ 𝒱.U β : Opens X) : Set X) := (𝒱.U α ⊓ 𝒱.U β).2
-  have hza : (z : X) ∈ 𝒱.U α := hz.1
-  have hzb : (z : X) ∈ 𝒱.U β := hz.2
   have hpt : (resZ1 (0 : RS.Divisor X) τ hτ F : C1 (0 : RS.Divisor X) 𝒱) (α, β) =
       f (α, β) + d0 (0 : RS.Divisor X) 𝒱 g (α, β) := congrFun hFg (α, β)
   rw [resZ1_apply_coe, resC1_apply, d0_apply] at hpt
@@ -378,24 +384,17 @@ theorem trade_evalAt {𝒱 : FinCover (⊤ : Opens X)} {τ : Fin 𝒱.n → Fin 
   simp only [Submodule.coe_add, Submodule.coe_sub, restrictL_apply_coe] at hcoe
   have hnn_f : 0 ≤ (f (α, β) : RS.MeroGermOn X (𝒱.U α ⊓ 𝒱.U β : Set X)).ord z :=
     LinSysOn.ord_nonneg hLopen hz (f (α, β))
-  have hnn_gb : 0 ≤ (g β : RS.MeroGermOn X (𝒱.U β : Set X)).ord z :=
-    LinSysOn.ord_nonneg (𝒱.U β).2 hzb (g β)
-  have hnn_ga : 0 ≤ (g α : RS.MeroGermOn X (𝒱.U α : Set X)).ord z :=
-    LinSysOn.ord_nonneg (𝒱.U α).2 hza (g α)
   have hnn_gb' : 0 ≤ (RS.MeroGermOn.restrict (inf_le_right : 𝒱.U α ⊓ 𝒱.U β ≤ 𝒱.U β)
-      (g β : RS.MeroGermOn X (𝒱.U β : Set X))).ord z := by
-    rw [RS.MeroGermOn.ord_restrict inf_le_right hLopen (𝒱.U β).2 hz]; exact hnn_gb
+      (g β : RS.MeroGermOn X (𝒱.U β : Set X))).ord z :=
+    LinSysOn.ord_nonneg hLopen hz (LinSysOn.restrictL (0 : RS.Divisor X) inf_le_right (g β))
   have hnn_ga' : 0 ≤ (RS.MeroGermOn.restrict (inf_le_left : 𝒱.U α ⊓ 𝒱.U β ≤ 𝒱.U α)
-      (g α : RS.MeroGermOn X (𝒱.U α : Set X))).ord z := by
-    rw [RS.MeroGermOn.ord_restrict inf_le_left hLopen (𝒱.U α).2 hz]; exact hnn_ga
+      (g α : RS.MeroGermOn X (𝒱.U α : Set X))).ord z :=
+    LinSysOn.ord_nonneg hLopen hz (LinSysOn.restrictL (0 : RS.Divisor X) inf_le_left (g α))
   have hnn_sub : 0 ≤ (RS.MeroGermOn.restrict (inf_le_right : 𝒱.U α ⊓ 𝒱.U β ≤ 𝒱.U β) (g β :
         RS.MeroGermOn X (𝒱.U β : Set X))
       - RS.MeroGermOn.restrict (inf_le_left : 𝒱.U α ⊓ 𝒱.U β ≤ 𝒱.U α) (g α :
-        RS.MeroGermOn X (𝒱.U α : Set X))).ord z := by
-    rw [sub_eq_add_neg]
-    refine le_trans (le_min hnn_gb' ?_) (RS.MeroGermOn.ord_add hLopen hz _ _)
-    rw [RS.MeroGermOn.ord_neg]
-    exact hnn_ga'
+        RS.MeroGermOn X (𝒱.U α : Set X))).ord z :=
+    LinSysOn.ord_nonneg hLopen hz (d0 (0 : RS.Divisor X) 𝒱 g (α, β))
   have hcongr := congrArg (fun ψ : RS.MeroGermOn X ((𝒱.U α ⊓ 𝒱.U β : Opens X) : Set X) =>
     ψ.evalAt z) hcoe
   rw [MeroGermOn.evalAt_add hLopen hz hnn_f hnn_sub,
@@ -431,7 +430,7 @@ noncomputable def cComp (ξ : NZ1 T T.V) (α β : Fin T.n) :
 omit [T2Space X] [CompactSpace X] [T1Space X] in
 theorem cComp_eq (ξ : NZ1 T T.V) (α β : Fin T.n) :
     cComp T ξ α β = toGerm (T.V α ⊓ T.V β) ((ξ : NC1 T T.V) (α, β)) := by
-  rw [cComp, cCompMem, cC1, toGermZ1_apply_coe, toGermC1_apply, toGermSub_apply_coe]
+  rfl
 
 omit [T1Space X] in
 /-- **§5's centerpiece**: the trade projection `π : L →L Z¹(𝔙)` is onto (Forster 14.6(a) upgraded
@@ -441,8 +440,8 @@ theorem tradePi_surjective (T : ShrinkChain X) : Function.Surjective (tradePi T)
   obtain ⟨F, g, hFg⟩ := exists_trade (𝒰 := T.coverStar) (𝒱 := T.coverV) (D := (0 : RS.Divisor X))
     (h𝒰 := T.good_star) (hτ := T.ref_star_V) (τ := id) (f := toGermZ1 T T.V T.covers_V ξ)
   have hζmem : boundZ1 T T.closure_U_subset F ∈ NZ1 T T.U := boundZ1_mem_NZ1 T T.closure_U_subset F
-  set ζ : NZ1 T T.U := ⟨boundZ1 T T.closure_U_subset F, hζmem⟩ with hζ_def
-  set η : NC0 T T.W := boundZ1C0 T g with hη_def
+  let ζ : NZ1 T T.U := ⟨boundZ1 T T.closure_U_subset F, hζmem⟩
+  let η : NC0 T T.W := boundZ1C0 T g
   have hmem : (ζ, ξ, η) ∈ tradeSpace T := by
     rw [mem_tradeSpace_iff_eq]
     rintro ⟨α, β⟩
@@ -451,11 +450,12 @@ theorem tradePi_surjective (T : ShrinkChain X) : Function.Surjective (tradePi T)
     intro z
     simp only [Submodule.coe_add, Submodule.coe_sub, BoundedContinuousFunction.coe_add,
       BoundedContinuousFunction.coe_sub, Pi.add_apply, Pi.sub_apply, restrictCLM_apply_coe]
-    have hzeq : (ζ.1 : NC1 T T.U) (α, β) = boundZ1 T T.closure_U_subset F (α, β) := rfl
-    rw [hzeq, boundZ1_apply_eq_evalAt]
-    have hηβ : η β = boundZ1C0 T g β := rfl
-    have hηα : η α = boundZ1C0 T g α := rfl
-    rw [hηβ, hηα, boundZ1C0_apply_eq_evalAt, boundZ1C0_apply_eq_evalAt]
+    change (boundZ1 T T.closure_U_subset F (α, β) : ↥((T.U α ⊓ T.U β : Opens X) : Set X) →ᵇ ℂ)
+      _ = _
+    rw [boundZ1_apply_eq_evalAt]
+    change _ = _ + ((boundZ1C0 T g β : ↥(T.W β : Set X) →ᵇ ℂ) _ -
+      (boundZ1C0 T g α : ↥(T.W α : Set X) →ᵇ ℂ) _)
+    rw [boundZ1C0_apply_eq_evalAt, boundZ1C0_apply_eq_evalAt]
     have hξeval : ((ξ : NC1 T T.V) (α, β) : ↥((T.V α ⊓ T.V β : Set X)) →ᵇ ℂ)
         (Set.inclusion (inf_le_inf (T.W_le_V α) (T.W_le_V β)) z) =
         (toGerm (T.V α ⊓ T.V β) ((ξ : NC1 T T.V) (α, β))).evalAt
@@ -532,42 +532,33 @@ theorem classMap_apply (ψ : NZ1 T T.V) :
   rfl
 
 omit [T2Space X] [CompactSpace X] [T1Space X] in
-/-- The trade defect, restricted to `W`, is minus the coboundary of `x`'s `W`-component.
-
-Split out of `classMap_tradeDiff_eq_zero`: the two halves together exceed the default heartbeat
-budget, and as separate declarations each elaborates well inside it. -/
+/-- The trade defect, restricted to `W`, is minus the coboundary of `x`'s `W`-component. -/
 private theorem resZ_tradeDiff_eq_neg_deltaCLM (x : tradeSpace T) :
     (resZ T T.V T.W T.W_le_V (tradePi T x - tradeCompact T x) : NC1 T T.W) =
       -(deltaCLM T T.W x.1.2.2) := by
-  have hxmem := (mem_tradeSpace_iff_eq T x.1).1 x.2
-  rw [map_sub]
-  funext p
-  obtain ⟨α, β⟩ := p
-  simp only [Submodule.coe_sub, Pi.sub_apply, Pi.neg_apply]
-  rw [tradePi_apply]
-  have hcomp : resZ T T.V T.W T.W_le_V (tradeCompact T x) = resZ T T.U T.W T.W_le_U x.1.1 := by
-    rw [tradeCompact_apply, resZ_resZ]
-  rw [hcomp, resZ_apply_coe, resZ_apply_coe, resNC1_apply, resNC1_apply, deltaCLM_apply]
-  have e1 := hxmem (α, β)
-  rw [e1]
-  abel
+  let b : NC1 T T.W := resZ T T.V T.W T.W_le_V x.1.2.1
+  let a : NC1 T T.W := resZ T T.U T.W T.W_le_U x.1.1
+  have hx : a = b + deltaCLM T T.W x.1.2.2 :=
+    funext ((mem_tradeSpace_iff_eq T x.1).1 x.2)
+  have hcomp : (resZ T T.V T.W T.W_le_V (tradeCompact T x) : NC1 T T.W) = a :=
+    congrArg Subtype.val (resZ_resZ T T.V_le_U T.W_le_V T.W_le_U x.1.1)
+  calc
+    _ = b - (resZ T T.V T.W T.W_le_V (tradeCompact T x) : NC1 T T.W) :=
+      congrArg Subtype.val ((resZ T T.V T.W T.W_le_V).map_sub _ _)
+    _ = b - a := congrArg (fun z : NC1 T T.W => b - z) hcomp
+    _ = -(deltaCLM T T.W x.1.2.2) := by rw [hx]; abel
 
 omit [T2Space X] [CompactSpace X] [T1Space X] in
 /-- **Schwartz-consumer property 1** (§5 step 8): the trade defect dies in `H¹(𝔚)`. -/
 theorem classMap_tradeDiff_eq_zero (x : tradeSpace T) :
     classMap T (tradePi T x - tradeCompact T x) = 0 := by
-  have hkey := resZ_tradeDiff_eq_neg_deltaCLM T x
-  simp only [classMap_apply, H1Cover.mk_eq_zero_iff]
+  apply (H1Cover.mk_eq_zero_iff (0 : RS.Divisor X) T.coverW _).2
   refine ⟨-(toGermC0 T T.W x.1.2.2), ?_⟩
-  rw [toGermZ1W_apply_coe, hkey]
-  have hd0neg : d0 (0 : RS.Divisor X) T.coverW (-(toGermC0 T T.W x.1.2.2)) =
-      -(d0 (0 : RS.Divisor X) T.coverW (toGermC0 T T.W x.1.2.2)) := map_neg _ _
-  have htgneg : toGermC1 T T.W (-(deltaCLM T T.W x.1.2.2)) =
-      -(toGermC1 T T.W (deltaCLM T T.W x.1.2.2)) := map_neg _ _
-  rw [hd0neg, htgneg]
-  congr 1
-  funext p
-  exact (toGermC1_deltaCLM_eq_d0 T x.1.2.2 p).symm
+  have hd0 := funext (toGermC1_deltaCLM_eq_d0 T x.1.2.2)
+  exact ((d0 (0 : RS.Divisor X) T.coverW).map_neg _).trans
+    ((congrArg Neg.neg hd0.symm).trans
+      (((toGermC1 T T.W).map_neg _).symm.trans
+        (congrArg (toGermC1 T T.W) (resZ_tradeDiff_eq_neg_deltaCLM T x).symm)))
 
 omit [T1Space X] [T2Space X] in
 /-- Restriction commutes with `boundZ1` (Banach-level restriction of a de-germified good-cover
@@ -632,27 +623,24 @@ theorem classMap_surjective : Function.Surjective (classMap T) := by
     fun i => (T.closure_W_subset i).trans ((T.V_subset_U i).trans (T.U_subset_Ustar i))
   have hVUstar : ∀ i, closure (T.V i : Set X) ⊆ (T.Ustar i : Set X) :=
     fun i => (T.closure_V_subset i).trans (T.U_subset_Ustar i)
-  set ξF : NZ1 T T.V := ⟨boundZ1 T hVUstar F, boundZ1_mem_NZ1 T hVUstar F⟩ with hξF_def
+  let ξF : NZ1 T T.V := ⟨boundZ1 T hVUstar F, boundZ1_mem_NZ1 T hVUstar F⟩
   refine ⟨ξF, ?_⟩
-  rw [classMap_apply, ← hc]
   have hresZ : resZ T T.V T.W T.W_le_V ξF = ⟨boundZ1 T hWUstar F, boundZ1_mem_NZ1 T hWUstar F⟩ :=
     resZ_boundZ1 T hVUstar T.W_le_V hWUstar F
-  rw [hξF_def, hresZ]
   have hrt := toGermZ1W_boundZ1 T hWUstar F
   have hd0mem : d0 (0 : RS.Divisor X) T.coverW g ∈ Z1 (0 : RS.Divisor X) T.coverW :=
     B1_le_Z1 (0 : RS.Divisor X) T.coverW ⟨g, rfl⟩
   have hsplit : (toGermZ1W T ⟨boundZ1 T hWUstar F, boundZ1_mem_NZ1 T hWUstar F⟩ :
       Z1 (0 : RS.Divisor X) T.coverW) = c + (⟨d0 (0 : RS.Divisor X) T.coverW g, hd0mem⟩ :
-        Z1 (0 : RS.Divisor X) T.coverW) := by
-    apply Subtype.ext
-    rw [hrt]
-    simp only [Submodule.coe_add]
-    exact hFg
-  rw [hsplit, map_add]
+        Z1 (0 : RS.Divisor X) T.coverW) := Subtype.ext (hrt.trans hFg)
   have hmk0 : H1Cover.mk (0 : RS.Divisor X) T.coverW
-      (⟨d0 (0 : RS.Divisor X) T.coverW g, hd0mem⟩ : Z1 (0 : RS.Divisor X) T.coverW) = 0 := by
-    rw [H1Cover.mk_eq_zero_iff]
-    exact ⟨g, rfl⟩
-  rw [hmk0, add_zero]
+      (⟨d0 (0 : RS.Divisor X) T.coverW g, hd0mem⟩ : Z1 (0 : RS.Divisor X) T.coverW) = 0 :=
+    (H1Cover.mk_eq_zero_iff (0 : RS.Divisor X) T.coverW _).2 ⟨g, rfl⟩
+  exact (congrArg (fun ψ : NZ1 T T.W =>
+      H1Cover.mk (0 : RS.Divisor X) T.coverW (toGermZ1W T ψ)) hresZ).trans
+    ((congrArg (H1Cover.mk (0 : RS.Divisor X) T.coverW) hsplit).trans
+      (((H1Cover.mk (0 : RS.Divisor X) T.coverW).map_add _ _).trans
+        ((congrArg (H1Cover.mk (0 : RS.Divisor X) T.coverW c + ·) hmk0).trans
+          ((add_zero _).trans hc))))
 
 end RS.Finiteness

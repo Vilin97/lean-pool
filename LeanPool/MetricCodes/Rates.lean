@@ -3,19 +3,22 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.Binary
-import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Orthogonality
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
-import Mathlib.LinearAlgebra.Lagrange
-import Mathlib.Probability.Distributions.Beta
+public import LeanPool.MetricCodes.Binary
+public import Mathlib.Tactic.NormNum.RealSqrt
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.Orthogonality
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
+public import Mathlib.LinearAlgebra.Lagrange
+public import Mathlib.Probability.Distributions.Beta
 
 /-!
 # Strict rate improvements
 
 The MRRW comparison and the first spherical hierarchy and numerical bounds.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -44,10 +47,12 @@ theorem hasDerivAt_mul_continuous_zero
     field_simp [hrzero]
   simpa only [zero_add, zero_mul, sub_zero, smul_eq_mul] using hquotient
 
-private def inverseDegree (r : ℝ) : ℝ :=
+/-- The smaller-branch inverse degree expression `(1 - sqrt (1 - r ^ 2)) / 2`. -/
+def inverseDegree (r : ℝ) : ℝ :=
   (1 - Real.sqrt (1 - r ^ 2)) / 2
 
-private def inverseVarianceFactor (r : ℝ) : ℝ :=
+/-- The reciprocal variance factor appearing in the inverse-degree entropy expansion. -/
+def inverseVarianceFactor (r : ℝ) : ℝ :=
   (2 * (1 + Real.sqrt (1 - r ^ 2)))⁻¹
 
 theorem inverseVarianceFactor_continuous :
@@ -74,7 +79,8 @@ theorem inverseDegree_eq_sq_mul_factor
   field_simp [hdenominator]
   nlinarith
 
-private def inverseEntropyFactor (r : ℝ) : ℝ :=
+/-- The combination of negative logarithmic terms used in the inverse-degree entropy estimate. -/
+def inverseEntropyFactor (r : ℝ) : ℝ :=
   inverseVarianceFactor r * Real.negMulLog r +
     Real.negMulLog (r * inverseVarianceFactor r)
 
@@ -166,13 +172,16 @@ theorem hasDerivAt_mrrwG_sq_zero :
   rw [hfunctions]
   exact hentropy
 
-private def lowerEndpointRoot (δ : ℝ) : ℝ :=
+/-- The square-root term `sqrt (1 - 2 * δ)` in the MRRW lower-endpoint parameterization. -/
+def lowerEndpointRoot (δ : ℝ) : ℝ :=
   Real.sqrt (1 - 2 * δ)
 
-private def lowerEndpointWeight (δ : ℝ) : ℝ :=
+/-- The lower-endpoint weight `(1 - sqrt (1 - 2 * δ)) / 2`. -/
+def lowerEndpointWeight (δ : ℝ) : ℝ :=
   (1 - lowerEndpointRoot δ) / 2
 
-private def lowerEndpointDerivative (δ : ℝ) : ℝ :=
+/-- The logarithmic derivative expression at the MRRW lower-endpoint weight. -/
+def lowerEndpointDerivative (δ : ℝ) : ℝ :=
   δ *
     (Real.log (1 - lowerEndpointWeight δ) -
       Real.log (lowerEndpointWeight δ)) /
@@ -569,16 +578,21 @@ section
 open Filter Topology
 open scoped Topology
 
-private def interiorSlope (a u : ℝ) : ℝ :=
+/-- The reciprocal slope factor defining the interior perturbation of the shell weight. -/
+def interiorSlope (a u : ℝ) : ℝ :=
   (Real.sqrt (u * (1 - u)) * (1 - 2 * a))⁻¹
 
-private def interiorWeight (a u e : ℝ) : ℝ :=
+/-- The shell weight perturbed linearly from `a` with the prescribed interior slope. -/
+def interiorWeight (a u e : ℝ) : ℝ :=
   a - interiorSlope a u * e
 
-private def interiorSupport (a u e : ℝ) : ℝ :=
+/-- The support-degree parameter along the interior perturbation, equal to the weight times `e`. -/
+def interiorSupport (a u e : ℝ) : ℝ :=
   interiorWeight a u e * e
 
-private def interiorComplement (a u e : ℝ) : ℝ :=
+/-- The complement-degree parameter along the interior perturbation, equal to the complement
+weight times `e`. -/
+def interiorComplement (a u e : ℝ) : ℝ :=
   (1 - interiorWeight a u e) * e
 
 @[simp] theorem interiorWeight_zero (a u : ℝ) :
@@ -709,7 +723,8 @@ theorem eventually_shellRate_interior_improvement
       1 - MetricCodes.binaryEntropy a + MetricCodes.binaryEntropy u
   linarith
 
-private def interiorSpectralMargin (δ a u e : ℝ) : ℝ :=
+/-- The perturbed Johnson spectral limit minus its asymptotic code-distance threshold. -/
+def interiorSpectralMargin (δ a u e : ℝ) : ℝ :=
   MetricCodes.Johnson.spectralLimit
       (interiorWeight a u e)
       (interiorSupport a u e)
@@ -1180,7 +1195,9 @@ section
 
 open scoped BigOperators InnerProductSpace Matrix
 
-private def johnsonWindowBasis {n w p q L : ℕ}
+/-- The Boolean harmonic basis function indexed by a degree and basis coordinate in the shell
+window. -/
+def johnsonWindowBasis {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
     (Q : ShellWindowIndex n p q L) :
     MetricCodes.Boolean.Function n :=
@@ -1195,7 +1212,8 @@ theorem johnsonWindowBasis_isHarmonic {n w p q L : ℕ}
   exact MetricCodes.Boolean.harmonicBasisFunction_isHarmonic n
     (p + q + Q.1.val) (h.window_degree_half Q.1) Q.2
 
-private def johnsonHarmonicCoordinates {n j : ℕ}
+/-- The orthonormal coordinates of a harmonic Boolean function in its global degree space. -/
+def johnsonHarmonicCoordinates {n j : ℕ}
     (hj : 2 * j ≤ n)
     (f : MetricCodes.Boolean.Function n)
     (hf : MetricCodes.Boolean.IsHarmonic j f) :
@@ -1305,7 +1323,8 @@ theorem johnsonWindowBasis_dot_coupled
       (h.supportResidual_bound source)
       (h.complementResidual_bound source) a) b
 
-private def johnsonWindowChannelMatrix {n w p q L : ℕ}
+/-- The adjacent Johnson channel matrix indexed by shell-window harmonic coordinates. -/
+def johnsonWindowChannelMatrix {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
     (hstrict : 2 * w < n)
     (v : Space p q L) (lam : ℝ) :
@@ -1495,7 +1514,8 @@ theorem johnsonWindowChannelMatrix_transpose_mul
       (johnsonWindowBasis_isHarmonic h ⟨other, b⟩)]
     ring
 
-private def johnsonChannelMatrix {n w p q L : ℕ}
+/-- The shell-window channel matrix reindexed by the total Johnson ambient dimension. -/
+def johnsonChannelMatrix {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
     (hstrict : 2 * w < n)
     (v : Space p q L) (lam : ℝ) :
@@ -1891,11 +1911,14 @@ theorem johnsonChannelMatrix_transpose_axis_projection
       h hstrict v hv lam hlam heigen haxis x,
     Matrix.smul_mul]
 
-private def johnsonGramIndexEquiv (n D : ℕ) :
+/-- The enumeration flattening a coordinate and two ambient indices into one finite Gram index. -/
+def johnsonGramIndexEquiv (n D : ℕ) :
     ((Fin n × Fin D) × Fin D) ≃ Fin (n * D * D) :=
   Fintype.equivOfCardEq (by simp only [Fintype.card_prod, Fintype.card_fin])
 
-private def johnsonProjectionGramFeature
+/-- The Euclidean Gram feature built from Johnson fibre projections, geometric axes, and channel
+matrices. -/
+def johnsonProjectionGramFeature
     {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
     (hstrict : 2 * w < n)
@@ -2042,7 +2065,8 @@ open Filter Topology
 open scoped BigOperators Topology
 open MetricCodes.Johnson.Asymptotics
 
-private def terminalIndex (u : ℝ) (r n : ℕ) : ℕ :=
+/-- The terminal degree shifted downward by a fixed window offset `r`. -/
+def terminalIndex (u : ℝ) (r n : ℕ) : ℕ :=
   terminalDegree u n - r
 
 theorem tendsto_terminalIndex_ratio
@@ -2200,7 +2224,9 @@ theorem tendsto_johnsonDelta_ratio
   unfold MetricCodes.johnsonDelta
   ring
 
-private def normalizedMu (j₁ j₂ j m e : ℝ) : ℝ :=
+/-- The dimensionless expression for the Johnson mu coefficient after scaling by the word
+length. -/
+def normalizedMu (j₁ j₂ j m e : ℝ) : ℝ :=
   (m / 2) *
     (j₂ * (j₂ + e) - j₁ * (j₁ + e)) /
       (j * (j + e))
@@ -2220,7 +2246,8 @@ theorem johnsonMu_div_eq_normalized
   unfold MetricCodes.johnsonMu normalizedMu
   field_simp [hnreal.ne', hj, hj']
 
-private def muLimit (a b g u : ℝ) : ℝ :=
+/-- The limiting Johnson mu coefficient under proportional shell and degree scaling. -/
+def muLimit (a b g u : ℝ) : ℝ :=
   (1 - 2 * a) *
       (1 - 2 * b - 2 * g) *
       MetricCodes.Johnson.centeredEta a b g /
@@ -2327,7 +2354,8 @@ theorem tendsto_johnsonMu_div
       (complementDegree g n) (terminalIndex u r n) hn
       hjn.ne' (by positivity)).symm
 
-private def normalizedDiagonal
+/-- The dimensionless Johnson diagonal expression in terms of the normalized mu coefficient. -/
+def normalizedDiagonal
     (j₁ j₂ j m e x y : ℝ) : ℝ :=
   (normalizedMu j₁ j₂ j m e - m ^ 2) / (x * y)
 
@@ -2354,7 +2382,8 @@ theorem johnsonDiagonal_eq_normalized
   unfold MetricCodes.johnsonDiagonal
   field_simp [hnreal.ne', hwreal.ne', hc.ne']
 
-private def diagonalLimit (a b g u : ℝ) : ℝ :=
+/-- The limiting Johnson diagonal coefficient under proportional shell and degree scaling. -/
+def diagonalLimit (a b g u : ℝ) : ℝ :=
   (1 - 2 * a) *
       ((1 - 2 * b - 2 * g) *
         MetricCodes.Johnson.centeredEta a b g -
@@ -2429,7 +2458,8 @@ theorem tendsto_johnsonDiagonal
   rw [← hmuidentity] at hnormalized
   exact hnormalized.symm
 
-private def normalizedNu (j m eta sigma e : ℝ) : ℝ :=
+/-- The homogeneous square-root expression used to scale the Johnson nu coefficient. -/
+def normalizedNu (j m eta sigma e : ℝ) : ℝ :=
   Real.sqrt
       ((j ^ 2 - m ^ 2) *
         (j ^ 2 - eta ^ 2) *
@@ -2502,7 +2532,8 @@ theorem johnsonNu_div_eq_normalized
       (MetricCodes.johnsonDelta n w p q)
       (MetricCodes.johnsonSigma n w p q) hnreal hstep
 
-private def nuLimit (a b g u : ℝ) : ℝ :=
+/-- The limiting normalized Johnson nu coefficient under proportional degree scaling. -/
+def nuLimit (a b g u : ℝ) : ℝ :=
   Real.sqrt
       (((1 - 2 * u) ^ 2 -
           (1 - 2 * a) ^ 2) *
@@ -2647,7 +2678,8 @@ theorem tendsto_johnsonNu_div
       (complementDegree g n) (terminalIndex u r n)
       hn hstep').symm
 
-private def edgeLimit (a b g u : ℝ) : ℝ :=
+/-- The limiting Johnson edge coefficient under proportional shell and degree scaling. -/
+def edgeLimit (a b g u : ℝ) : ℝ :=
   Real.sqrt
       (((1 - 2 * u) ^ 2 -
           (1 - 2 * a) ^ 2) *
@@ -2724,7 +2756,8 @@ theorem zeroFibreParameters
   · simpa only [sub_zero, add_zero] using h.degree_lt_weight
   · nlinarith [h.degree_lt_weight, h.weight_lt_half]
 
-private def hattedDiagonalLimit (a b g u : ℝ) : ℝ :=
+/-- The limiting hatted Johnson diagonal coefficient under proportional degree scaling. -/
+def hattedDiagonalLimit (a b g u : ℝ) : ℝ :=
   ((1 - 2 * b - 2 * g) *
       MetricCodes.Johnson.centeredEta a b g -
       (1 - 2 * a) *
@@ -2733,7 +2766,8 @@ private def hattedDiagonalLimit (a b g u : ℝ) : ℝ :=
       (1 - (1 - 2 * a) ^ 2) *
       (1 - (1 - 2 * u) ^ 2))
 
-private def hattedEdgeLimit (a b g u : ℝ) : ℝ :=
+/-- The limiting hatted Johnson edge coefficient under proportional degree scaling. -/
+def hattedEdgeLimit (a b g u : ℝ) : ℝ :=
   (((1 - 2 * u) ^ 2 -
       MetricCodes.Johnson.centeredEta a b g ^ 2) *
     ((1 - 2 * b - 2 * g) ^ 2 -
@@ -3170,7 +3204,9 @@ theorem terminal_rayleigh_le_top
   exact MetricCodes.Johnson.rayleigh_le_top n w p q L
     (terminalVector p q L m) (terminalVector_ne_zero p q L m)
 
-private def terminalRayleigh (a b g u : ℝ) (m n : ℕ) : ℝ :=
+/-- The Rayleigh quotient of the constant vector on a terminal window of `m + 1` Johnson
+degrees. -/
+def terminalRayleigh (a b g u : ℝ) (m n : ℕ) : ℝ :=
   ((∑ r ∈ Finset.range (m + 1),
       MetricCodes.johnsonHattedDiagonal n (shellWeight a n)
         (supportDegree b n) (complementDegree g n)
@@ -3402,7 +3438,9 @@ namespace Rate
 open MetricCodes.Johnson.Asymptotics
 open MetricCodes.Johnson.SpectralAsymptotics
 
-private def certificateConstant (d a b g u : ℝ) : ℝ :=
+/-- The ratio of the threshold numerator to the positive spectral gap in the Johnson rate
+certificate. -/
+def certificateConstant (d a b g u : ℝ) : ℝ :=
   (2 - MetricCodes.Johnson.asymptoticThreshold d a) /
     spectralGap d a b g u
 
@@ -3654,9 +3692,11 @@ open scoped BigOperators
 
 namespace Numerics
 
-private def kissingA : ℝ := 0.08570143806746
+/-- The fixed first parameter used in the certified numerical kissing-number estimate. -/
+def kissingA : ℝ := 0.08570143806746
 
-private def kissingB : ℝ := 0.00370282933568
+/-- The fixed second parameter used in the certified numerical kissing-number estimate. -/
+def kissingB : ℝ := 0.00370282933568
 
 /-- The log series lower used in the metric-code argument. -/
 def logSeriesLower (x : ℝ) (m : ℕ) : ℝ :=
@@ -3991,7 +4031,8 @@ theorem sphericalImprovementSlope_gt_one {a : ℝ} (ha : 0 < a) :
     1 < (4 * a + 3) := by
   linarith
 
-private def sphericalSpectralMarginPolynomial (a c b : ℝ) : ℝ :=
+/-- The polynomial expression used to certify positivity of the spherical spectral margin. -/
+def sphericalSpectralMarginPolynomial (a c b : ℝ) : ℝ :=
   let T := a * (1 + a)
   let l := 1 + 2 * a
   let p := c * l - 1
@@ -4418,7 +4459,8 @@ theorem Interlacing.lagrangeWeight_nonneg {r : ℕ}
     (h : Interlacing a b) (ℓ : Fin (r + 1)) :
     0 ≤ lagrangeWeight a b ℓ := (h.lagrangeWeight_pos ℓ).le
 
-private def stabilizerPolynomial {r : ℕ} (b : Fin r → ℝ) : Polynomial ℝ :=
+/-- The monic polynomial with roots `b m * (1 + b m)` for the stabilizer parameters. -/
+def stabilizerPolynomial {r : ℕ} (b : Fin r → ℝ) : Polynomial ℝ :=
   ∏ m : Fin r, (Polynomial.X - Polynomial.C (((b m) * (1 + (b m)))))
 
 theorem stabilizerPolynomial_monic {r : ℕ} (b : Fin r → ℝ) :
@@ -4873,7 +4915,8 @@ open scoped BigOperators
 
 namespace HigherHierarchyChebyshev
 
-private def zeroAngle (N j : ℕ) : ℝ :=
+/-- The angle `j * π / N` used to parameterize the Chebyshev zeros. -/
+def zeroAngle (N j : ℕ) : ℝ :=
   ((j : ℝ) * Real.pi) / (N : ℝ)
 
 /-- The zero used in the spherical-code argument. -/

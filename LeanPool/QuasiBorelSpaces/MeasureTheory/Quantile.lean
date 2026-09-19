@@ -3,16 +3,19 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import Mathlib.Probability.CDF
+public import Mathlib.Probability.CDF
+public import Mathlib.MeasureTheory.Constructions.UnitInterval
 import LeanPool.QuasiBorelSpaces.MeasureTheory.Measure
-import Mathlib.MeasureTheory.Constructions.UnitInterval
 
 /-!
 # LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Quantile`.
 -/
+
+@[expose] public section
 
 
 namespace MeasureTheory
@@ -41,7 +44,8 @@ private lemma exists_unitIntervalRat_btwn
   obtain ⟨k, hk₁, hk₂⟩ := exists_rat_btwn h
   exact ⟨⟨⟨k, by grind⟩, by use k⟩, hk₁, hk₂⟩
 
-private noncomputable def cdf (μ : Measure I) (i : I) : I where
+/-- The cumulative distribution function as a map from the unit interval to itself. -/
+noncomputable def cdf (μ : Measure I) (i : I) : I where
   val := ProbabilityTheory.cdf (μ.map Subtype.val) i
   property := by
     simp only [

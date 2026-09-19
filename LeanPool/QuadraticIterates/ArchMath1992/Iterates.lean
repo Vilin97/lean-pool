@@ -3,16 +3,24 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Algebra.Algebra.Rat
-import Mathlib.Algebra.CharP.IntermediateField
-import Mathlib.FieldTheory.PolynomialGaloisGroup
-import Mathlib.GroupTheory.RegularWreathProduct
-import Mathlib.RingTheory.SimpleRing.Principal
+module
 
-import LeanPool.QuadraticIterates.ArchMath1992.Sequences
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Algebra.CharP.IntermediateField
+public import Mathlib.FieldTheory.PolynomialGaloisGroup
+public import Mathlib.GroupTheory.RegularWreathProduct
+public import Mathlib.RingTheory.SimpleRing.Principal
+
+public import LeanPool.QuadraticIterates.ArchMath1992.Sequences
+public import LeanPool.QuadraticIterates.Mathlib.FieldTheory.Multiquadratic
+public import Mathlib.Order.CompletePartialOrder
+import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
 import LeanPool.QuadraticIterates.Mathlib.Data.Nat
-import LeanPool.QuadraticIterates.Mathlib.FieldTheory.Multiquadratic
 import LeanPool.QuadraticIterates.Mathlib.GroupTheory.Card
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # The iterates of `X² + a`, their splitting fields and Galois groups
@@ -31,6 +39,8 @@ Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 
 `fℚ[a, n]` is scoped notation for the iterate `f_n` viewed in `ℚ[X]`.
 -/
+
+@[expose] public section
 
 open Polynomial
 

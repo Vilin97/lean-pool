@@ -3,22 +3,17 @@ Copyright (c) 2024 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Fintype.Basic
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
-import Init.Data.Nat.Lemmas
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Measurability.Init
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 
@@ -38,6 +33,8 @@ In both of the following results, `b` is a natural number greater than `1`.
   if and only if the sum of its digits is divisible by `b`
 
 -/
+
+@[expose] public section
 
 
 open scoped BigOperators

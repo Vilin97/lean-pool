@@ -3,7 +3,17 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
+module
+
+public import LeanPool.BooleanIsoperimetry.Cascade
+public import LeanPool.BooleanIsoperimetry.SimplicialCompression
+import LeanPool.BooleanIsoperimetry.Macaulay
 import LeanPool.BooleanIsoperimetry.Shadow
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Scalar Macaulay minimization
@@ -11,6 +21,8 @@ import LeanPool.BooleanIsoperimetry.Shadow
 This file packages the set-family compression and shadow estimates into scalar
 Macaulay minimization lemmas consumed by the final Harper theorem.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 open Finset

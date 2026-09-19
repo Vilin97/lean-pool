@@ -3,12 +3,12 @@ Copyright (c) 2026 Shengtong Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
+module
 
+public import Mathlib.Analysis.Matrix.Spectrum
+public import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.LinearAlgebra.Matrix.Hadamard
-import Mathlib.LinearAlgebra.Matrix.Symmetric
-import Mathlib.LinearAlgebra.Matrix.Trace
 
 /-!
 # Frobenius pairing, entrywise positive part, and the Schur product
@@ -18,6 +18,8 @@ entrywise positive part of a matrix, the rank-one Laplacian
 `vecMulVec (e i - e j) (e i - e j)`, and the Schur product theorem for real
 positive semidefinite matrices.
 -/
+
+@[expose] public section
 
 namespace BollobasNikiforov
 

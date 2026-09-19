@@ -3,16 +3,19 @@ Copyright (c) 2026 Arthur Freitas Ramos, David Hulak, Ruy de Queiroz. All rights
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Hulak, Ruy de Queiroz
 -/
+module
 
-import Mathlib.GroupTheory.FreeAbelianGroup
+public import Mathlib.GroupTheory.FreeAbelianGroup
+public import LeanPool.FiniteGraphFundamentalGroup.Proof
 import Mathlib.GroupTheory.FreeGroup.Reduce
-import LeanPool.FiniteGraphFundamentalGroup.Proof
 
 /-!
 # Consequences of the spanning-tree computation
 
 This module exposes the free basis, rank identities, basepoint independence, and abelianization.
 -/
+
+@[expose] public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver FreeGroup

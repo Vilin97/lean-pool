@@ -3,14 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
-import LeanPool.InfinitaryLogic.Lomega1omega.FiniteQuantification
-import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
-import LeanPool.InfinitaryLogic.Methods.ConstantSupport
-import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
-import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
-import LeanPool.InfinitaryLogic.Methods.Interpolation.QuantifierRoundTrip
-import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
+public import LeanPool.InfinitaryLogic.Methods.Interpolation.ConstantElimination
+public import LeanPool.InfinitaryLogic.Methods.Henkin.CountableCompletion.GeneratedUniverse
 /-!
 # The signed occurrence calculus (issue #14, Unit 0 layer 2)
 
@@ -33,6 +30,8 @@ Acceptance gates of Unit 0 (all in this file or its Core companion):
 
 No semantics and no inseparability notions appear in Unit 0.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

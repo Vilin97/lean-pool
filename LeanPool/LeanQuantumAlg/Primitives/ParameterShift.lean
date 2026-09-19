@@ -6,10 +6,10 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Core.Components.Gates
-public import LeanPool.LeanQuantumAlg.Core.Measurement
-public import LeanPool.LeanQuantumAlg.Util.TrigPolynomial
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+import LeanPool.LeanQuantumAlg.Util.TrigPolynomial
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Parameter-shift rule

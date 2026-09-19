@@ -8,11 +8,16 @@ Authors: Utensil Song
 Action-indexed finite-extension data for the Zhou semidirect products.
 Paper: §4.
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.SplitExtensions
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.PropertyTTransfer
+public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
 
 /-!
 The finite extensions component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperFiniteExtensions

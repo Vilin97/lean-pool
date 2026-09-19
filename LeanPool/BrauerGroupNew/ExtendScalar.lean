@@ -3,14 +3,17 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
-import Mathlib.RingTheory.TensorProduct.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
 
 /-!
 # LeanPool.BrauerGroupNew.ExtendScalar
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.ExtendScalar`.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

@@ -3,13 +3,16 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 -/
-import Mathlib.Algebra.Lie.Derivation.Basic
-import LeanPool.LowDimSolvClassification.GeneralResults
+module
+
+public import LeanPool.LowDimSolvClassification.GeneralResults
 import LeanPool.LowDimSolvClassification.Tactics
 
 /-!
 # LeanPool.LowDimSolvClassification.Semidirect
 -/
+
+@[expose] public section
 
 section lie_semidirect
 

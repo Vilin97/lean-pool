@@ -3,10 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
+public import LeanPool.JacobianDiffgeo.FormTrace.TraceZkForm
+public import Mathlib.Analysis.Meromorphic.NormalForm
 import LeanPool.JacobianDiffgeo.Surface.Identity
-import Mathlib.Analysis.Meromorphic.NormalForm
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `traceCoeff`: the repaired planar trace coefficient (jacobian-functoriality §6, planar layer)
@@ -31,6 +34,8 @@ proves the repair is genuinely analytic across `0`:
 * `traceZkForm_fun_add`/`traceCoeff_fun_add`, `traceZkForm_const_mul`/`traceCoeff_const_mul` —
   `ℂ`-linearity in `h`, including at the repaired point `0` (by uniqueness of limits).
 -/
+
+@[expose] public section
 
 open Filter Topology Set
 open RS.FormTrace RS.MTrace

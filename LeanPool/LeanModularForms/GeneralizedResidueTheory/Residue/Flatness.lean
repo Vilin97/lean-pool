@@ -3,11 +3,16 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Basic
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber
-import Mathlib.Analysis.Meromorphic.Order
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import Mathlib.Analysis.Meromorphic.Order
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.WindingNumber.Defs
+import Mathlib.Analysis.Calculus.FDeriv.Extend
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Flatness and Higher-Order Pole Conditions (Definition 3.2)
@@ -32,6 +37,8 @@ the generalized residue theorem with higher-order poles.
 
 Reference: Hungerbuhler-Wasem, arXiv:1808.00997v2, Definition 3.2.
 -/
+
+@[expose] public section
 
 open Complex Set Filter Topology Asymptotics
 open scoped Real Interval

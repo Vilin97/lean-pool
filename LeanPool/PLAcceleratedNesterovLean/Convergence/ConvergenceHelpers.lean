@@ -3,11 +3,12 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
+public import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
+public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.TubularProjection.Defs
 import LeanPool.PLAcceleratedNesterovLean.Convergence.GenLocalArgument
-import LeanPool.PLAcceleratedNesterovLean.Convergence.PhaseSchedule
-import LeanPool.PLAcceleratedNesterovLean.Convergence.RateArithmetic
-import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step1
 
 /-!
 # Helpers for single-phase convergence proof
@@ -20,6 +21,8 @@ bounds and phase transitions.
 1. `lyapunov_initial_bound` — Lyap(x₀, v=0) ≤ C·dist² for L-smooth f
 2. `gen_at_every_phase` — gen theorem at any m ∈ S for any phase k ≥ 1
 -/
+
+@[expose] public section
 
 noncomputable section
 

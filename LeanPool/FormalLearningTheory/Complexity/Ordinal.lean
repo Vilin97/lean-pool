@@ -3,9 +3,15 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Complexity.VCDimension
-import LeanPool.FormalLearningTheory.Complexity.Littlestone
+module
+
+public import LeanPool.FormalLearningTheory.Complexity.Littlestone
+public import Mathlib.SetTheory.Ordinal.Basic
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
 import Mathlib.SetTheory.Ordinal.Arithmetic
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Ordinal Extensions
@@ -15,6 +21,8 @@ learning theory. WithTop ℕ has a single infinity (⊤); Ordinal has ω, ω², 
 The embedding ℕ∞ ↪ Ordinal sends n ↦ n and ⊤ ↦ ω, but ordinal VC dimension
 can take values beyond ω.
 -/
+
+@[expose] public section
 
 universe u v
 

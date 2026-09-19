@@ -3,14 +3,17 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.Rigidity
+public import LeanPool.MetricCodes.Rigidity
 
 /-!
 # Canonical spectral decomposition
 
 Gelfand--Tsetlin completeness, Pieri channels, and projected-axis sufficiency.
 -/
+
+@[expose] public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -130,7 +133,8 @@ theorem orthogonalPositiveRootDerivation_youngComplexPolynomialSpan_mem
       exact ambientShortPositiveRoot_youngComplexPolynomialSpan_mem
         h lam W hW p t f hf
 
-private def orthogonalPositiveRootLinearFamily
+/-- The orthogonal positive-root derivations, viewed as a family of complex linear maps. -/
+def orthogonalPositiveRootLinearFamily
     {r n : ℕ} (h : 2 * (r + 1) ≤ n) :
     OrthogonalPositiveRoot r n →
       MvPolynomial (Fin ((r + 1) * n)) ℂ →ₗ[ℂ]
@@ -676,7 +680,9 @@ open MetricCodes.Spherical.HigherYoungArbitraryRowLoweringProjectedAxisWitness
 open MetricCodes.Spherical.HigherYoungCyclicHighestSchur
 open MetricCodes.Spherical.HigherYoungMovingFibres
 
-private def CanonicalBoxReverseAxisRange {r m n : ℕ}
+/-- The reverse axis-range condition: projected lowering of the higher box fibre lands in the
+lower box fibre. -/
+def CanonicalBoxReverseAxisRange {r m n : ℕ}
     (a : Fin (r + 2) → ℝ) (b : Fin (r + 1) → ℝ)
     (hstable : ∀ v : RectangularVertices.Vertex (r + 1) m,
       FiniteInterlacing (n + 1)
@@ -700,7 +706,9 @@ private def CanonicalBoxReverseAxisRange {r m n : ℕ}
       LinearMap.range
         (canonicalBoxGelfandTsetlinFibre a b hstable hgram low).toLinearMap
 
-private def canonicalBoxEdgeAxisData_of_forward_and_raisingGram
+/-- Canonical box-edge axis data assembled from forward lowering data, a positive raising Gram
+scalar, and the reverse range condition. -/
+def canonicalBoxEdgeAxisDataOfForwardAndRaisingGram
     {r m n : ℕ}
     (a : Fin (r + 2) → ℝ) (b : Fin (r + 1) → ℝ)
     (hstable : ∀ v : RectangularVertices.Vertex (r + 1) m,
@@ -805,7 +813,7 @@ def canonicalBoxEdgeAxisDataOfPolynomialData
       (RectangularVertices.Vertex (r + 1) m)).symm high)
   have hraising := canonicalEdgeRaisingGram_of_signature_eq
     lowSignature highSignature stabilizer row hrow hlow hhigh
-  refine canonicalBoxEdgeAxisData_of_forward_and_raisingGram
+  refine canonicalBoxEdgeAxisDataOfForwardAndRaisingGram
     a b hstable hgram low high row hrow
     (canonicalBoxGenuineForwardAxisData
       a b hstable hgram low high row hrow D) ?_ hreverse
@@ -976,7 +984,9 @@ theorem rotationIntertwiner_complexRotation_eigen_of_signatures
       simpa only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] using heigen)
   simpa only [Fin.sum_univ_succ, Fin.sum_univ_zero, add_zero] using h
 
-private def youngIntertwinerHighestPolynomial
+/-- The complex polynomial obtained by applying an intertwiner to the real and imaginary parts
+of a dominant highest vector. -/
+def youngIntertwinerHighestPolynomial
     {r n : ℕ} (hn : 2 * (r + 1) ≤ n)
     (mu nu : Fin (r + 1) → ℕ) (hdom : Antitone mu)
     (A : HarmonicYoungSpace (n := n) mu →ₗ[ℝ]
@@ -1353,7 +1363,8 @@ variable {E : ι → Type*}
   [∀ i, InnerProductSpace ℝ (E i)]
   [∀ i, FiniteDimensional ℝ (E i)]
 
-private def orthogonalBranchSum (f : (i : ι) → E i →ₗᵢ[ℝ] V) :
+/-- The linear map summing the images of a finite family of isometric branch embeddings. -/
+def orthogonalBranchSum (f : (i : ι) → E i →ₗᵢ[ℝ] V) :
     ((i : ι) → E i) →ₗ[ℝ] V := by
   classical
   exact LinearMap.lsum ℝ E ℝ (fun i => (f i).toLinearMap)
@@ -1526,7 +1537,8 @@ section
 
 namespace HigherYoungAllRankWeylBranchingRowDifference
 
-private def adjacentRowDifference {R : Type*} [CommRing R] {r : ℕ}
+/-- The matrix of adjacent row differences, with the final row retained. -/
+def adjacentRowDifference {R : Type*} [CommRing R] {r : ℕ}
     (M : Matrix (Fin (r + 1)) (Fin (r + 1)) R) :
     Matrix (Fin (r + 1)) (Fin (r + 1)) R :=
   fun i j =>
@@ -1571,7 +1583,9 @@ end HigherYoungAllRankWeylBranchingRowDifference
 
 namespace HigherHarmonicYoung.BranchingDimension
 
-private def branchLower {r : ℕ} (lam : Fin (r + 1) → ℕ)
+/-- The lower endpoint of a branching coordinate: the next weight entry, or zero in the final
+position. -/
+def branchLower {r : ℕ} (lam : Fin (r + 1) → ℕ)
     (i : Fin (r + 1)) : ℕ :=
   Fin.lastCases 0 (fun j : Fin r => lam j.succ) i
 
@@ -1649,7 +1663,9 @@ theorem sum_det_eq_det_rowSum
       Matrix.det (fun i j => ∑ a : κ i, row i a j) :=
   (det_rowSum_eq_sum_det row).symm
 
-private def branchJacobiTrudiRow {r : ℕ} (n : ℕ)
+/-- A Jacobi–Trudi row evaluated at an allowed branching coordinate using the coefficients in
+ambient dimension `n`. -/
+def branchJacobiTrudiRow {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (i : Fin (r + 1))
     (x : {a : Fin (lam i + 1) // branchLower lam i ≤ a.val})
     (j : Fin (r + 1)) : ℤ :=
@@ -1855,11 +1871,14 @@ open MetricCodes.Spherical.HigherWeylAllRankJacobiTrudiWeylEvaluation
 open MetricCodes.Spherical.HigherWeylBinomialDeterminant
 open MetricCodes.Spherical.HigherHierarchy
 
-private abbrev OrthogonalBranchCoordinate {r : ℕ}
+/-- An integer branching coordinate between `branchLower lam i` and `lam i`, inclusive. -/
+abbrev OrthogonalBranchCoordinate {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (i : Fin (r + 1)) :=
   {a : Fin (lam i + 1) // branchLower lam i ≤ a.val}
 
-private def orthogonalBranchRow {r : ℕ} (n : ℕ)
+/-- A Jacobi–Trudi row at an allowed branching coordinate, using the coefficients in ambient
+dimension `n - 1`. -/
+def orthogonalBranchRow {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ)
     (i : Fin (r + 1)) (a : OrthogonalBranchCoordinate lam i)
     (j : Fin (r + 1)) : ℤ :=
@@ -2355,7 +2374,9 @@ open MetricCodes.Spherical.HigherYoungAllRankSelectedBranchSignature
 open MetricCodes.Spherical.HigherYoungAllRankZeroRowRotationEquivariance
 open MetricCodes.Spherical.ThreeRowYoungBranching
 
-private def canonicalBranchProjectedLowerCrossGram
+/-- The cross-Gram map from a canonical Gelfand–Tsetlin fibre to a full branch after projected
+lowering along the last coordinate axis. -/
+def canonicalBranchProjectedLowerCrossGram
     {r n : ℕ} (low high : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ)
     (hhigh : Interlaces high mu)
@@ -2508,7 +2529,9 @@ open MetricCodes.Spherical.HigherYoungAllRankSelectedBranchSignature
 open MetricCodes.Spherical.HigherYoungAllRankZeroRowRotationEquivariance
 open MetricCodes.Spherical.ThreeRowYoungBranching
 
-private def canonicalGelfandTsetlinFullBranchCrossGram
+/-- The cross-Gram map between a canonical Gelfand–Tsetlin fibre and a full branch, after
+removing the appended zero row. -/
+def canonicalGelfandTsetlinFullBranchCrossGram
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hn : 2 * (r + 1) + 5 ≤ n + 1)
@@ -3127,7 +3150,8 @@ open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 open MetricCodes.Spherical.HigherChannel
 open MetricCodes.Spherical.HigherYoungAllRankGTCharacteristicResidue
 
-private def cartanCharacteristicInterpolationProjector
+/-- The Lagrange interpolation polynomial for node `i`, evaluated at the endomorphism `T`. -/
+def cartanCharacteristicInterpolationProjector
     {ι V : Type*} [Fintype ι] [DecidableEq ι]
     [AddCommGroup V] [Module ℝ V]
     (nodes : ι → ℝ) (T : Module.End ℝ V) (i : ι) :
@@ -3184,7 +3208,9 @@ open MetricCodes.Spherical.HigherChannel
 open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 
-private def gtTensorCasimir {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
+/-- The tensor Casimir operator, one half of the sum of the negative squares of the tensor
+ambient rotations. -/
+def gtTensorCasimir {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
     Module.End ℝ (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) lam) :=
   (2 : ℝ)⁻¹ • ∑ a : Fin n, ∑ b : Fin n,
@@ -3446,7 +3472,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ClebschRotation
 open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 open MetricCodes.Spherical.HigherHarmonicYoung.AllRankGTRelativeCasimirProjector
 
-private def gtEuclideanCasimir (n : ℕ) :
+/-- The Euclidean Casimir operator, one half of the sum of the negative squares of the ambient
+rotations. -/
+def gtEuclideanCasimir (n : ℕ) :
     Module.End ℝ (SpherePacking.Euclidean n) :=
   (2 : ℝ)⁻¹ • ∑ a : Fin n, ∑ b : Fin n,
     -((euclideanAmbientRotation a b).comp
@@ -3944,7 +3972,8 @@ open MetricCodes.Spherical.HigherYoungArbitraryRowLoweringProjectedAxisWitness
 open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 open MetricCodes.Spherical.HigherRepresentationGraph
 
-private def gtYoungAxisTensor {r n : ℕ}
+/-- The linear map sending a harmonic Young vector `p` to the pure tensor `axis ⊗ₜ p`. -/
+def gtYoungAxisTensor {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (axis : SpherePacking.Euclidean n) :
     HarmonicYoungSpace (n := n) lam →ₗ[ℝ]
       (SpherePacking.Euclidean n ⊗[ℝ]
@@ -4318,7 +4347,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowMickelssonWeightHomog
 open MetricCodes.Spherical.HigherRepresentationGraph (Interlaces)
 open MetricCodes.Spherical.HigherYoungAllRankGTCharacteristicResidue
 
-private def gtSelectedProjectorCompression
+/-- The signed characteristic projector for `(row, true)`, compressed along the canonical
+Gelfand–Tsetlin axis tensor map. -/
+def gtSelectedProjectorCompression
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h)
@@ -4400,7 +4431,9 @@ theorem gtSelectedProjectorCompression_eq_plusProbability_of_minor
       rw [SpherePacking.Fischer.polynomialInner_smul_right]
       ring
 
-private def gtSelectedPhysicalAxisCompression
+/-- The selected Clebsch range projector compressed along tensoring with the last coordinate
+axis. -/
+def gtSelectedPhysicalAxisCompression
     {r n : ℕ} (lam : Fin (r + 2) → ℕ) (row : Fin (r + 2)) :
     Module.End ℝ (HarmonicYoungSpace (n := n + 1) lam) :=
   (gtYoungAxisTensor lam
@@ -4843,7 +4876,9 @@ namespace HigherYoungAllRankOrthogonalTensorPieriCoefficient
 
 open MetricCodes.Spherical.HigherWeylBinomialDeterminant
 
-private def orthogonalTensorPieriCoefficient (n : ℕ) (z j : ℤ) : ℤ :=
+/-- The difference of orthogonal complete symmetric coefficients at indices `z + j` and `z - j -
+2` used in the tensor Pieri formula. -/
+def orthogonalTensorPieriCoefficient (n : ℕ) (z j : ℤ) : ℤ :=
   orthogonalCompleteSymmetricCoefficient n (z + j) -
     orthogonalCompleteSymmetricCoefficient n (z - j - 2)
 
@@ -5154,12 +5189,16 @@ open MetricCodes.Spherical.HigherYoungAllRankOrthogonalTensorPieriCoefficient
 open MetricCodes.Spherical.HigherYoungAllRankOrthogonalTensorPieriInvalidRows
 open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 
-private def orthogonalTensorPieriRaiseRow {r : ℕ} (n : ℕ)
+/-- The tensor Pieri coefficient row obtained by raising the shifted weight coordinate `lam i -
+i` by one. -/
+def orthogonalTensorPieriRaiseRow {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (i : Fin (r + 1)) : Fin (r + 1) → ℤ :=
   fun j => orthogonalTensorPieriCoefficient n
     (((lam i : ℤ) - (i.val : ℤ)) + 1) (j.val : ℤ)
 
-private def orthogonalTensorPieriLowerRow {r : ℕ} (n : ℕ)
+/-- The tensor Pieri coefficient row obtained by lowering the shifted weight coordinate `lam i -
+i` by one. -/
+def orthogonalTensorPieriLowerRow {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (i : Fin (r + 1)) : Fin (r + 1) → ℤ :=
   fun j => orthogonalTensorPieriCoefficient n
     (((lam i : ℤ) - (i.val : ℤ)) - 1) (j.val : ℤ)
@@ -5893,7 +5932,8 @@ open MetricCodes.Spherical.HigherYoungAllRankOrthogonalTensorPieriBoundaryColumn
 open MetricCodes.Spherical.HigherYoungAllRankOrthogonalTensorPieriRowFiltering
 open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 
-private def orthogonalTensorPieriSignedShiftMatrix {r : ℕ} (n : ℕ)
+/-- The matrix whose rows sum the raised and lowered tensor Pieri coefficient rows. -/
+def orthogonalTensorPieriSignedShiftMatrix {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) :
     Matrix (Fin (r + 1)) (Fin (r + 1)) ℤ :=
   fun i j =>
@@ -5902,12 +5942,14 @@ private def orthogonalTensorPieriSignedShiftMatrix {r : ℕ} (n : ℕ)
       orthogonalTensorPieriCoefficient n
         (((lam i : ℤ) - (i.val : ℤ)) - 1) (j.val : ℤ)
 
-private def orthogonalTensorPieriNextColumn {r : ℕ} (n : ℕ)
+/-- The tensor Pieri coefficient column with the column index shifted up by one. -/
+def orthogonalTensorPieriNextColumn {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (j : Fin (r + 1)) : Fin (r + 1) → ℤ :=
   fun i => orthogonalTensorPieriCoefficient n
     ((lam i : ℤ) - (i.val : ℤ)) ((j.val : ℤ) + 1)
 
-private def orthogonalTensorPieriPrevColumn {r : ℕ} (n : ℕ)
+/-- The tensor Pieri coefficient column with the column index shifted down by one. -/
+def orthogonalTensorPieriPrevColumn {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (j : Fin (r + 1)) : Fin (r + 1) → ℤ :=
   fun i => orthogonalTensorPieriCoefficient n
     ((lam i : ℤ) - (i.val : ℤ)) ((j.val : ℤ) - 1)
@@ -6240,7 +6282,7 @@ private theorem lowered_target_tail_finiteInterlacing_metriccodes2_9210a270
     · simp only [loweredInternalYoungWeight, ne_eq, hrow, not_false_eq_true, Function.update_of_ne,
         Std.le_refl]
 
-private theorem existsNormalizedPaddedPieriRaising_metriccodes2_9210a270
+theorem existsNormalizedPaddedPieriRaising_metriccodes2_9210a270
     {r n : ℕ} (hn : 2 * r + 4 ≤ n)
     (target : Fin (r + 1) → ℕ) (hdom : Antitone target)
     (row : PaddedPieriLowerRow target) :
@@ -6274,7 +6316,9 @@ private theorem existsNormalizedPaddedPieriRaising_metriccodes2_9210a270
   exact boundaryNormalizedYoungClebschRaise_rotation_intertwine
     target low hdegree row.val c hc hinner a b
 
-private def normalizedPaddedPieriRaising
+/-- A chosen normalized isometric Pieri raising map from the lowered internal Young weight into
+the tensor representation. -/
+def normalizedPaddedPieriRaising
     {r n : ℕ} (hn : 2 * r + 4 ≤ n)
     (target : Fin (r + 1) → ℕ) (hdom : Antitone target)
     (row : PaddedPieriLowerRow target) :
@@ -8060,7 +8104,9 @@ open MetricCodes.Spherical.HigherHarmonicYoung.AllRankGTRelativeCasimirProjector
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowMickelssonWeightHomogeneity
 open MetricCodes.Spherical.HigherRepresentationGraph
 
-private def gtSelectedPhysicalSignedSpan {r n : ℕ}
+/-- The span of the selected physical Clebsch range and all signed Casimir eigenspaces other
+than the selected channel. -/
+def gtSelectedPhysicalSignedSpan {r n : ℕ}
     (low : Fin (r + 1) → ℕ) (row : Fin (r + 1)) :
     Submodule ℝ
       (SpherePacking.Euclidean n ⊗[ℝ]
@@ -8377,7 +8423,9 @@ theorem originalPaddedSelectedAxisTensor_rotation_intertwine
     ((congrArg (fun q => T (A q)) hZ).trans
       ((congrArg T hA).trans hT))
 
-private def originalAppendedFullBranchAxisCrossGram
+/-- The cross-Gram map between the original padded selected-axis tensor and an appended full-
+branch Pieri lowering map. -/
+def originalAppendedFullBranchAxisCrossGram
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h)

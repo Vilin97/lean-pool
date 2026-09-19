@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
+module
+
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
 # Towards the classical `G₀`-dichotomy: independence and positivity machinery
@@ -46,6 +48,8 @@ extracting the continuous homomorphism build on these in
 `InfinitaryLogic/Descriptive/G0Fusion.lean`; see `docs/silver-phase2-route.md` for the
 completed proof map.
 -/
+
+@[expose] public section
 
 open Set Function MeasureTheory
 

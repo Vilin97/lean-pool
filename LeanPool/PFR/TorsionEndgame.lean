@@ -6,12 +6,16 @@ Authors: PFR contributors
 
 module
 
-public import Mathlib.Data.Set.Card
-public import Mathlib.Algebra.Group.Pointwise.Finset.BigOperators
-public import LeanPool.PFR.Main
-public import LeanPool.PFR.Mathlib.Order.Interval.Finset.Defs
 public import LeanPool.PFR.MultiTauFunctional
-public import LeanPool.PFR.BoundingMutual
+import LeanPool.PFR.BoundingMutual
+import LeanPool.PFR.ForMathlib.Entropy.Group
+import LeanPool.PFR.ForMathlib.FiniteRange.IdentDistrib
+import LeanPool.PFR.Main
+import LeanPool.PFR.Mathlib.MeasureTheory.Group.Arithmetic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.Independence.Basic
+import Mathlib.Algebra.Group.Pointwise.Finset.BigOperators
+import Mathlib.Combinatorics.Additive.RuzsaCovering
+import Mathlib.Data.SetLike.Fintype
 
 /-!
 # Endgame for the Torsion PFR theorem
@@ -119,19 +123,12 @@ lemma mutual_information_le_t_23 : I[Z2 : Z3 | W] ≤ p.m * (4*p.m+1) * p.η * k
   let zero : Fin p.m := ⟨0, by linarith [hm]⟩
   let X' : Fin p.m × Fin p.m → Ω' → G := fun (i, j) ω ↦ Y (i-j, j) ω
   have hX'_indep : iIndepFun X' := by
-    let S : Fin p.m × Fin p.m → Finset (Fin p.m × Fin p.m) := fun (i,j) ↦ {(i-j,j)}
-    let φ : (q:Fin p.m × Fin p.m) → ((_: S q) → G) → G := fun q x ↦ x ⟨(q.1-q.2,q.2), by simp [S]⟩
-    convert iIndepFun.finsets_comp S _ h_indep (by fun_prop) φ (by fun_prop) with i ω
-    rw [Finset.pairwiseDisjoint_iff]; rintro ⟨i,j⟩ _ ⟨i',j'⟩ _ ⟨⟨i₀, j₀⟩, hij⟩
-    simp only [Finset.mem_inter, Finset.mem_singleton, Prod.mk.injEq, S] at hij
-    obtain ⟨⟨rfl, rfl⟩, h1, rfl⟩ := hij
-    simpa using h1
-  have hindep_j (j: Fin p.m) : iIndepFun (fun i ↦ X' (i, j)) := by
-    let S : Fin p.m → Finset (Fin p.m × Fin p.m) := fun i ↦ {(i,j)}
-    let φ : (i:Fin p.m) → ((_: S i) → G) → G := fun i x ↦ x ⟨(i,j), by simp [S]⟩
-    convert iIndepFun.finsets_comp S _ hX'_indep (by fun_prop) φ (by fun_prop) with i ω
-    rw [Finset.pairwiseDisjoint_iff]; rintro _ _ _ _ ⟨⟨_, _⟩, hij⟩
-    simp [S] at hij; omega
+    apply h_indep.precomp (g := fun q : Fin p.m × Fin p.m ↦ (q.1 - q.2, q.2))
+    rintro ⟨i, j⟩ ⟨i', j'⟩ h
+    obtain ⟨hij, rfl⟩ := Prod.mk.inj h
+    exact Prod.ext (by simpa using hij) rfl
+  have hindep_j (j : Fin p.m) : iIndepFun (fun i ↦ X' (i, j)) :=
+    hX'_indep.precomp (g := fun i ↦ (i, j)) (fun _ _ h ↦ congrArg Prod.fst h)
   have := mutual_information_le (by fun_prop) (indep_yj h_mes h_indep zero) ?_ (by fun_prop)
     hX'_indep ?_
   · have k_eq : k = D[fun i ω ↦ Y (i, zero) ω; fun x ↦ hΩ'] := by
@@ -184,19 +181,12 @@ lemma mutual_information_le_t_13 : I[Z1 : Z3 | W] ≤ p.m * (4*p.m+1) * p.η * k
   let zero : Fin p.m := ⟨0, by linarith [hm]⟩
   let X' : Fin p.m × Fin p.m → Ω' → G := fun (i, j) ω ↦ Y (i, j-i) ω
   have hX'_indep : iIndepFun X' := by
-    let S : Fin p.m × Fin p.m → Finset (Fin p.m × Fin p.m) := fun (i,j) ↦ {(i,j-i)}
-    let φ : (q:Fin p.m × Fin p.m) → ((_: S q) → G) → G := fun q x ↦ x ⟨(q.1,q.2-q.1), by simp [S]⟩
-    convert iIndepFun.finsets_comp S _ h_indep (by fun_prop) φ (by fun_prop) with i ω
-    rw [Finset.pairwiseDisjoint_iff]; rintro ⟨i,j⟩ _ ⟨i',j'⟩ _ ⟨⟨i₀, j₀⟩, hij⟩
-    simp only [Finset.mem_inter, Finset.mem_singleton, Prod.mk.injEq, S] at hij
-    obtain ⟨⟨rfl, rfl⟩, rfl, h2⟩ := hij
-    simpa using h2
-  have hindep_j (j: Fin p.m) : iIndepFun (fun i ↦ X' (i, j)) := by
-    let S : Fin p.m → Finset (Fin p.m × Fin p.m) := fun i ↦ {(i,j)}
-    let φ : (i:Fin p.m) → ((_: S i) → G) → G := fun i x ↦ x ⟨(i,j), by simp [S]⟩
-    convert iIndepFun.finsets_comp S _ hX'_indep (by fun_prop) φ (by fun_prop) with i ω
-    rw [Finset.pairwiseDisjoint_iff]; rintro _ _ _ _ ⟨⟨_, _⟩, hij⟩
-    simp [S] at hij; omega
+    apply h_indep.precomp (g := fun q : Fin p.m × Fin p.m ↦ (q.1, q.2 - q.1))
+    rintro ⟨i, j⟩ ⟨i', j'⟩ h
+    obtain ⟨rfl, hij⟩ := Prod.mk.inj h
+    exact Prod.ext rfl (by simpa using hij)
+  have hindep_j (j : Fin p.m) : iIndepFun (fun i ↦ X' (i, j)) :=
+    hX'_indep.precomp (g := fun i ↦ (i, j)) (fun _ _ h ↦ congrArg Prod.fst h)
   have hindep_yj (j: Fin p.m) : iIndepFun (fun i ↦ Y (i, j)) := indep_yj h_mes h_indep j
   have := mutual_information_le (by fun_prop) (hindep_yj zero) ?_ (by fun_prop) hX'_indep ?_
   · have k_eq : k = D[fun i ω ↦ Y (i, zero) ω; fun x ↦ hΩ'] := by
@@ -494,13 +484,12 @@ lemma sum_of_conditional_distance_le : ∑ i, d[ X i # Z2 | W] ≤ 4 * (p.m^3 - 
             rw [← hident₁.entropy_congr, ← hident₀.rdist_congr hident₁,
               ← hident₀.rdist_congr (.refl (by fun_prop))]
             convert kvm_ineq_III hs₀ hs₁ h01 Y' h_mes_Y' _
-            let S : Fin p.m × Fin p.m → Finset (Fin p.m × Fin p.m) := fun q ↦ {q}
-            let φ : (q:Fin p.m × Fin p.m) → ((_: S q) → G) → G :=
-              fun q x ↦ if q = i₀ then x ⟨q, by simp [S]⟩ else q.2.val • x ⟨q, by simp [S]⟩
-            convert iIndepFun.finsets_comp S _ h_indep (by fun_prop) φ (by fun_prop) with q ω
-            · by_cases h : q = i₀ <;> simp [φ,Y',h]
-            rw [Finset.pairwiseDisjoint_iff]; rintro _ _ _ _ ⟨⟨_, _⟩, hij⟩
-            simp [S] at hij; grind
+            convert h_indep.comp (fun q (x : G) ↦ if q = i₀ then x else q.2.val • x)
+              (fun q ↦ by
+                by_cases hq : q = i₀ <;>
+                  simp only [hq, ite_true, ite_false] <;> fun_prop) using 1
+            funext q ω
+            by_cases hq : q = i₀ <;> simp [Y', hq]
           exact mutual_of_W_Z_two_le _ h_mes h_indep hident
         _ = _ := by ring
     _ = ∑ i, d[ X i # X i] + p.m * H[Z2] / 2 - (∑ i, H[X i]) / 2 + p.m * (p.m -1) * k := by

@@ -6,10 +6,10 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.E2
 public import LeanPool.LeanModularForms.Modularforms.Csqrt
-public import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
 public import Mathlib.NumberTheory.ModularForms.DedekindEta
+import LeanPool.LeanModularForms.Modularforms.E2
+import LeanPool.LeanModularForms.Modularforms.Upperhalfplane
 
 /-! # Eta -/
 

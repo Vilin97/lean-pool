@@ -3,9 +3,12 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
+public import LeanPool.Chudnovsky.Quasiperiods
 import LeanPool.Chudnovsky.DivisionValues
 import LeanPool.Chudnovsky.Fourier
+import LeanPool.Chudnovsky.Liouville
 
 /-!
 # Complex multiplication and the integrality of `E₂*` (Milla, Appendix B)
@@ -27,6 +30,8 @@ in place of `√D`, which keeps them branch-free.
 At `τ₁₆₃` : `41 − τ + τ² = 0`, i.e. `A = 41, B = −1, C = 1`, `D = −163`,
 `√D = 2τ − 1 = i√163`, `AC = 41` — the specialization used in `Coefficients.lean`.
 -/
+
+@[expose] public section
 
 noncomputable section
 
@@ -454,8 +459,7 @@ private lemma cmSet_exists_add_mem {τ : ℍ} {A B C : ℤ} {M : ℕ}
   have hxM : x < M := Int.emod_lt_of_pos _ hM0
   have hCy0 : 0 ≤ C * y := mul_nonneg hC.le hy0
   have hCyM : C * y < M := by
-    have h1 : C * y < C * A := mul_lt_mul_of_pos_left hyA hC
-    nlinarith
+    simpa only [hMAC, mul_comm] using mul_lt_mul_of_pos_left hyA hC
   -- exact-division witnesses
   obtain ⟨k, hk⟩ : (A : ℤ) ∣ y - p := ⟨-(p / A), by rw [hydef, Int.emod_def]; ring⟩
   obtain ⟨t, ht⟩ : (M : ℤ) ∣ x - (B * p - A * q) :=
@@ -463,12 +467,12 @@ private lemma cmSet_exists_add_mem {τ : ℍ} {A B C : ℤ} {M : ℕ}
   -- the arithmetic membership conditions
   have hAxy : (A : ℤ) ∣ x - B * y := by
     have d1 : (A : ℤ) ∣ x - (B * p - A * q) := dvd_trans ⟨C, hMAC⟩ ⟨t, ht⟩
-    have d2 : (A : ℤ) ∣ B * (p - y) := Dvd.dvd.mul_left ⟨-k, by linarith⟩ B
+    have d2 : (A : ℤ) ∣ B * (p - y) := Dvd.dvd.mul_left ⟨-k, by linarith only [hk]⟩ B
     have hsplit : x - B * y = (x - (B * p - A * q)) + B * (p - y) + A * (-q) := by ring
     rw [hsplit]
     exact dvd_add (dvd_add d1 d2) (Dvd.intro _ rfl)
-  have hb1 : x.toNat < M := by omega
-  have hb2 : (C * y).toNat < M := by omega
+  have hb1 : x.toNat < M := (Int.toNat_lt hx0).mpr hxM
+  have hb2 : (C * y).toNat < M := (Int.toNat_lt hCy0).mpr hCyM
   set v : Fin M × Fin M := (⟨x.toNat, hb1⟩, ⟨(C * y).toNat, hb2⟩) with hvdef
   have hv1 : ((v.1 : ℕ) : ℤ) = x := by simp [hvdef, Int.toNat_of_nonneg hx0]
   have hv2 : ((v.2 : ℕ) : ℤ) = C * y := by simp [hvdef, Int.toNat_of_nonneg hCy0]
@@ -516,8 +520,8 @@ private lemma card_cmSet {A B C : ℤ} {M : ℕ} (hA : 0 < A) (hC : 0 < C)
     have : (M : ℤ) = (a : ℤ) * c := by rw [haA, hcC]; exact hMAC
     exact_mod_cast this
   have hM0 : 0 < M := by rw [hM]; exact Nat.mul_pos ha0 hc0
-  have hAne : (A : ℤ) ≠ 0 := by omega
-  have hCne : (C : ℤ) ≠ 0 := by omega
+  have hAne : (A : ℤ) ≠ 0 := hA.ne'
+  have hCne : (C : ℤ) ≠ 0 := hC.ne'
   -- bounds for the two maps of the bijection with `Fin a × Fin c`
   have hbound1 : ∀ u : Fin M, (u : ℕ) / c < a := fun u => by
     rw [Nat.div_lt_iff_lt_mul hc0]
@@ -530,13 +534,13 @@ private lemma card_cmSet {A B C : ℤ} {M : ℕ} (hA : 0 < A) (hC : 0 < C)
     _ = c * a := Nat.mul_comm a c
   have hjb1 : ∀ w : Fin a × Fin c,
       ((B * ((w.1 : ℕ) : ℤ)) % A).toNat + a * (w.2 : ℕ) < M := fun w => by
-    have h1 : (B * ((w.1 : ℕ) : ℤ)) % A < A := Int.emod_lt_of_pos _ (by omega)
-    have h2 : 0 ≤ (B * ((w.1 : ℕ) : ℤ)) % A := Int.emod_nonneg _ hAne
-    have h3 : ((B * ((w.1 : ℕ) : ℤ)) % A).toNat < a := by omega
+    have h1 : (B * ((w.1 : ℕ) : ℤ)) % A < A := Int.emod_lt_of_pos _ hA
+    have h3 : ((B * ((w.1 : ℕ) : ℤ)) % A).toNat < a :=
+      (Int.toNat_lt_toNat hA).mpr h1
     calc ((B * ((w.1 : ℕ) : ℤ)) % A).toNat + a * (w.2 : ℕ)
         < a + a * (w.2 : ℕ) := Nat.add_lt_add_right h3 _
     _ = a * ((w.2 : ℕ) + 1) := by ring
-    _ ≤ a * c := Nat.mul_le_mul_left a (by have := w.2.isLt; omega)
+    _ ≤ a * c := Nat.mul_le_mul_left a w.2.isLt
     _ = M := hM.symm
   have hjb2 : ∀ w : Fin a, c * (w : ℕ) < M := fun w => by
     calc c * (w : ℕ) < c * a := mul_lt_mul_of_pos_left w.isLt hc0
@@ -583,12 +587,10 @@ private lemma card_cmSet {A B C : ℤ} {M : ℕ} (hA : 0 < A) (hC : 0 < C)
           _ = C * (A * d) := by rw [hMAC]; ring
         exact mul_left_cancel₀ hCne hCC
       have hmod : (B * (y : ℤ)) % A = ((v.1 : ℕ) : ℤ) % A := by
-        conv_rhs => rw [show ((v.1 : ℕ) : ℤ) = B * (y : ℤ) + A * d by linarith]
+        conv_rhs => rw [show ((v.1 : ℕ) : ℤ) = B * (y : ℤ) + A * d by linarith only [hAd]]
         rw [Int.add_mul_emod_self_left]
       have htn : ((B * (y : ℤ)) % A).toNat = (v.1 : ℕ) % a := by
-        have h1 : ((v.1 : ℕ) : ℤ) % A = (((v.1 : ℕ) % a : ℕ) : ℤ) := by
-          rw [← haA, Int.natCast_mod]
-        omega
+        rw [hmod, ← haA, ← Int.natCast_mod, Int.toNat_natCast]
       refine Prod.ext (Fin.ext ?_) (Fin.ext ?_)
       · change ((B * (y : ℤ)) % A).toNat + a * ((v.1 : ℕ) / a) = (v.1 : ℕ)
         rw [htn]
@@ -596,14 +598,13 @@ private lemma card_cmSet {A B C : ℤ} {M : ℕ} (hA : 0 < A) (hC : 0 < C)
       · exact hv2c
     · -- right inverse (on univ)
       intro w _
-      have h2 : 0 ≤ (B * ((w.1 : ℕ) : ℤ)) % A := Int.emod_nonneg _ hAne
-      have h1 : (B * ((w.1 : ℕ) : ℤ)) % A < A := Int.emod_lt_of_pos _ (by omega)
+      have h1 : (B * ((w.1 : ℕ) : ℤ)) % A < A := Int.emod_lt_of_pos _ hA
       refine Prod.ext (Fin.ext ?_) (Fin.ext ?_)
       · change (c * (w.1 : ℕ)) / c = (w.1 : ℕ)
         exact Nat.mul_div_cancel_left _ hc0
       · change (((B * ((w.1 : ℕ) : ℤ)) % A).toNat + a * (w.2 : ℕ)) / a = (w.2 : ℕ)
-        rw [Nat.add_mul_div_left _ _ ha0, Nat.div_eq_of_lt (by omega)]
-        omega
+        rw [Nat.add_mul_div_left _ _ ha0,
+          Nat.div_eq_of_lt ((Int.toNat_lt_toNat hA).mpr h1), zero_add]
   rw [key, Finset.card_univ]
   simp [hM]
 

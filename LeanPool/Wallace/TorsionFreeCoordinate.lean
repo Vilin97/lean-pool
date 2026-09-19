@@ -3,12 +3,31 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import LeanPool.Wallace.RationalTriangularPreprocess
-import Mathlib.GroupTheory.DivisibleHull
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+
+public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
+
+public import LeanPool.Wallace.RationalTriangularPreprocess
+public import Mathlib.GroupTheory.DivisibleHull
+public import Mathlib.LinearAlgebra.Basis.SMul
+public import Mathlib.LinearAlgebra.Dimension.Basic
+public import Mathlib.LinearAlgebra.FreeModule.Basic
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Rat.Encodable
+import Mathlib.Data.Sym.Sym2.Init
 import Mathlib.GroupTheory.OreLocalization.Cardinality
-import Mathlib.LinearAlgebra.Basis.SMul
 import Mathlib.LinearAlgebra.Dimension.Free
+import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Coordinatizing continuum-sized torsion-free Abelian groups
@@ -17,6 +36,8 @@ This file formalizes the coordinatization lemma used in Section 2 of the paper. 
 Abelian group of cardinality continuum embeds in the rational direct sum of continuum rank in a
 way whose image contains every standard basis vector.
 -/
+
+@[expose] public section
 
 open Cardinal Module
 
@@ -80,18 +101,18 @@ def continuumBasis (hcard : #G = 𝔠) :
 
 /-- A numerator in `G` representing a vector of the chosen basis of the divisible hull. -/
 def basisNumerator (hcard : #G = 𝔠) (i : TriangularPreprocess.ContinuumIndex) : G :=
-  Classical.choose (exists_divisibleHull_mk (G := G) (continuumBasis hcard i))
+  Classical.choose (private_decl% (exists_divisibleHull_mk (G := G) (continuumBasis hcard i)))
 
 /-- The positive denominator attached to `basisNumerator`. -/
 def basisDenominator (hcard : #G = 𝔠) (i : TriangularPreprocess.ContinuumIndex) : ℕ+ :=
   Classical.choose (Classical.choose_spec
-    (exists_divisibleHull_mk (G := G) (continuumBasis hcard i)))
+    (private_decl% (exists_divisibleHull_mk (G := G) (continuumBasis hcard i))))
 
 theorem basisFraction (hcard : #G = 𝔠) (i : TriangularPreprocess.ContinuumIndex) :
     DivisibleHull.mk (basisNumerator hcard i) (basisDenominator hcard i) =
       continuumBasis hcard i :=
   Classical.choose_spec (Classical.choose_spec
-    (exists_divisibleHull_mk (G := G) (continuumBasis hcard i)))
+    (private_decl% (exists_divisibleHull_mk (G := G) (continuumBasis hcard i))))
 
 theorem denominator_smul_basis (hcard : #G = 𝔠)
     (i : TriangularPreprocess.ContinuumIndex) :

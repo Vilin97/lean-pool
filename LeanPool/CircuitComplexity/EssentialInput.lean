@@ -3,8 +3,10 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
-import Mathlib.Data.Fintype.BigOperators
-import LeanPool.CircuitComplexity.Basic
+module
+
+public import LeanPool.CircuitComplexity.Basic
+public import Mathlib.Data.Fintype.Pi
 
 /-! # Essential Inputs
 
@@ -16,6 +18,8 @@ for a Boolean function.
 * `IsEssentialInput` — a function depends on a particular input variable
 * `EssentialInputs` — the set of essential input variables
 -/
+
+@[expose] public section
 
 namespace CircuitComplexity
 

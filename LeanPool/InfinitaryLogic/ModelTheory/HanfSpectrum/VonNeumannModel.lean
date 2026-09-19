@@ -3,9 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
-import Mathlib.SetTheory.ZFC.VonNeumann
-import Mathlib.SetTheory.ZFC.Cardinal
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.IndexOrder
+public import Mathlib.SetTheory.ZFC.VonNeumann
 
 /-!
 # The von Neumann ladder model
@@ -23,6 +24,8 @@ predicate `U_i` is membership in `ladderLevel (idxVal i)`, and `E` is `∈`. Out
 The upper-bound half (every ladder model has size `≤ ℶ_{α+1}`) is `LadderBound.lean`; the
 per-stage endpoint and the supremum assembly are `BethLadder.lean`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 
@@ -50,7 +53,7 @@ private theorem ladderLevel_add_one (β : Ordinal.{0}) :
   rw [ladderLevel, ladderLevel, ← add_assoc, ZFSet.vonNeumann_add_one]
 
 /-- The countable enumeration of the base level `V_ω`. -/
-private noncomputable def omegaEnum : ℕ ≃ Shrink.{0} ↥(ladderLevel 0) :=
+noncomputable def omegaEnum : ℕ ≃ Shrink.{0} ↥(ladderLevel 0) :=
   Classical.choice (Cardinal.eq.mp (by
     rw [Cardinal.mk_nat]
     exact (show (ladderLevel 0).card = Cardinal.aleph0 by

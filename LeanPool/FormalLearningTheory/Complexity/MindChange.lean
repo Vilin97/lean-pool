@@ -3,16 +3,19 @@ Copyright (c) 2026 Dhruv Gupta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Gupta
 -/
-import LeanPool.FormalLearningTheory.Basic
-import LeanPool.FormalLearningTheory.Data
-import LeanPool.FormalLearningTheory.Learner.Core
-import Mathlib.SetTheory.Ordinal.Arithmetic
+module
+
+public import LeanPool.FormalLearningTheory.Data
+public import LeanPool.FormalLearningTheory.Learner.Core
+public import Mathlib.SetTheory.Ordinal.Basic
 
 /-!
 # Mind Change Complexity (Gold Paradigm)
 
 Counts how often a Gold learner changes its conjecture before converging.
 -/
+
+@[expose] public section
 
 universe u v
 

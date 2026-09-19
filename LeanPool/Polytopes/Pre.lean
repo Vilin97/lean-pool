@@ -3,15 +3,19 @@ Copyright (c) 2026 Jun Kwon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jun Kwon
 -/
+module
 
-import Mathlib.Analysis.Convex.Intrinsic
-import Mathlib.Analysis.InnerProductSpace.Orthogonal
-import Mathlib.Data.Vector.Basic
-import Mathlib.LinearAlgebra.Basis.Submodule
+public import Mathlib.Analysis.InnerProductSpace.Orthogonal
+public import Mathlib.Analysis.Normed.Affine.Isometry
+import Mathlib.Data.Nat.Totient
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
 Preliminary lemmas and definitions used by the Polytopes formalization.
 -/
+
+@[expose] public section
 
 open Pointwise Module
 

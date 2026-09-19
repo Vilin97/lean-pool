@@ -3,8 +3,15 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelational
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigSublanguage
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelational
+import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
+import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
 /-!
 # Lyndon interpolation, ambient relational theorem (issue #14, Unit 5, commit 3)
 
@@ -30,6 +37,8 @@ clause (.4) in full, with clause (.3)'s equality-occurrence condition deliberate
 `relationsIn = positive ∪ negative`; it is a *consumer* lemma, so Craig interpolation is visibly
 recoverable without duplicating the existing `craig_interpolation_relational`.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

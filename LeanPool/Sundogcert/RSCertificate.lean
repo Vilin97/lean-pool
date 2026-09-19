@@ -3,11 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
+public import Mathlib.LinearAlgebra.Vandermonde
 import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.LinearAlgebra.Vandermonde
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
 
 /-!
 # The Reed–Solomon evaluation certificate — the interpolation-dual of the syndrome certificate
@@ -41,6 +40,8 @@ there is zero) + `det_vandermonde_ne_zero_iff`. A field discharges `[CommRing]+[
 * Reed–Solomon 1960; MacWilliams–Sloane (two RS views); Guruswami–Vardy 2005 (list-decode NP-hard).
 * `Polynomial.eq_of_natDegree_lt_card_of_eval_eq`, `Matrix.det_vandermonde_ne_zero_iff`.
 -/
+
+@[expose] public section
 
 namespace Sundog.RSCertificate
 

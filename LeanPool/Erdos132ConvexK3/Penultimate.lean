@@ -3,12 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Lens
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
+module
+
+public import LeanPool.Erdos132ConvexK3.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Analysis.Normed.Field.Basic
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Forced penultimate coordinates
@@ -18,6 +23,8 @@ systems force the penultimate points to be mirror images; no symmetry is
 assumed.  The previously implicit P5-4 height constraint is named and used
 explicitly in every distance-subtraction identity.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -32,21 +39,18 @@ theorem forced_penultimate_mirror
     (hKw : 0 < K_w) (hKr : 0 < K_r) :
     W + R = 2 * c ∧ K_w = K_r ∧ A - B = 4 * c * (W - c) := by
   have hW : A - B = 4 * c * (W - c) := by
-    nlinarith
+    linear_combination hwB - hwA
   have hR : A - B = 4 * c * (c - R) := by
-    nlinarith
+    linear_combination hrB - hrA
   have hmul : 4 * c * (W + R - 2 * c) = 0 := by
-    nlinarith
+    linear_combination hR - hW
   have hc4 : 4 * c ≠ 0 := by positivity
   have hsum : W + R = 2 * c := by
     have hz : W + R - 2 * c = 0 := (mul_eq_zero.mp hmul).resolve_left hc4
-    linarith
+    exact sub_eq_zero.mp hz
   have hsq : K_w ^ 2 = K_r ^ 2 := by
-    nlinarith
-  have hK : K_w = K_r := by
-    rcases sq_eq_sq_iff_eq_or_eq_neg.mp hsq with heq | heq
-    · exact heq
-    · nlinarith
+    linear_combination hwB - hrB - (W - 2 * c - R) * hsum
+  have hK : K_w = K_r := (sq_eq_sq₀ hKw.le hKr.le).mp hsq
   exact ⟨hsum, hK, hW⟩
 
 /-- Canonical mirror-coordinate form with `d>0` when `A>B`. -/
@@ -62,13 +66,9 @@ theorem forced_penultimate_coordinates
   obtain ⟨hsum, hK, hclass⟩ :=
     forced_penultimate_mirror hc hwA hwB hrB hrA hKw hKr
   let d := W - c
-  have hd : 0 < d := by
-    by_contra hnot
-    have hdle : d ≤ 0 := le_of_not_gt hnot
-    have hprod : 4 * c * d ≤ 0 :=
-      mul_nonpos_of_nonneg_of_nonpos (by positivity) hdle
-    dsimp [d] at hprod
-    linarith
+  have hd : 0 < d :=
+    (mul_pos_iff_of_pos_left (mul_pos (by norm_num) hc)).mp
+      (hclass ▸ sub_pos.mpr hBA)
   refine ⟨d, K_w, hd, ?_, ?_, rfl, hK.symm, ?_⟩
   · simp [d]
   · dsimp [d]
@@ -83,14 +83,14 @@ theorem forced_penultimate_height_constraint
     (hΔ : Δ = H - K) :
     2 * c * d + d ^ 2 = Δ * (H + K) := by
   rw [hΔ]
-  nlinarith
+  linear_combination hradius
 
 /-- The exact P5-4 constraint in the draft parameterization `K=H-Δ`. -/
 theorem forced_penultimate_height_constraint_reparam
     {c d H Δ : ℝ}
     (hradius : (c + d) ^ 2 + (H - Δ) ^ 2 = c ^ 2 + H ^ 2) :
     2 * c * d + d ^ 2 = Δ * (H + (H - Δ)) := by
-  nlinarith
+  linear_combination hradius
 
 /-- Left penultimate subtraction identity, with P5-4 explicit. -/
 theorem left_penultimate_distance_difference
@@ -99,7 +99,7 @@ theorem left_penultimate_distance_difference
     sqDist (X, Y) (c + d, H - Δ) - sqDist (X, Y) (c, H) =
       -2 * d * X + 2 * Δ * Y := by
   simp only [sqDist]
-  nlinarith
+  linear_combination hconstraint
 
 /-- Right penultimate subtraction identity, with P5-4 explicit. -/
 theorem right_penultimate_distance_difference
@@ -108,7 +108,7 @@ theorem right_penultimate_distance_difference
     sqDist (X, Y) (c - d, H - Δ) - sqDist (X, Y) (c, H) =
       -2 * d * (2 * c - X) + 2 * Δ * Y := by
   simp only [sqDist]
-  nlinarith
+  linear_combination hconstraint
 
 /-- Ordinate of the nontrivial reflection of `(2c,0)` across the line
 through `(c,H)` and `(c+d,H-Δ)`. -/
@@ -120,8 +120,8 @@ above the lower chord. -/
 theorem penultimate_reflection_ordinate_pos
     {c d H Δ : ℝ} (hd : 0 < d) (hconvex : c * Δ < H * d) :
     0 < penultimateReflectionOrdinate c d H Δ := by
-  have hden : 0 < d ^ 2 + Δ ^ 2 := by
-    nlinarith [sq_pos_of_pos hd, sq_nonneg Δ]
+  have hden : 0 < d ^ 2 + Δ ^ 2 :=
+    add_pos_of_pos_of_nonneg (sq_pos_of_pos hd) (sq_nonneg Δ)
   exact div_pos (mul_pos (mul_pos (by norm_num) hd) (sub_pos.mpr hconvex)) hden
 
 /-- The two circle equations have the known intersection `(2c,0)`; every
@@ -137,10 +137,10 @@ theorem penultimate_nontrivial_intersection_ordinate
     Y = penultimateReflectionOrdinate c d H Δ := by
   have hS : X ^ 2 + Y ^ 2 - 2 * c * X - 2 * H * Y = 0 := by
     simp only [sqDist] at hcircleS
-    nlinarith
+    linear_combination hcircleS
   have hline : d * (X - 2 * c) = Δ * Y := by
-    simp only [sqDist] at hcircleW
-    nlinarith [hcircleS]
+    simp only [sqDist] at hcircleS hcircleW
+    linear_combination (hcircleS - hcircleW) / 2
   have hY : Y ≠ 0 := by
     intro hYzero
     have hX : X = 2 * c := by
@@ -156,10 +156,10 @@ theorem penultimate_nontrivial_intersection_ordinate
   have hlinear :
       (d ^ 2 + Δ ^ 2) * Y = 2 * d * (H * d - c * Δ) := by
     exact sub_eq_zero.mp ((mul_eq_zero.mp hfactor).resolve_left hY)
-  have hden : d ^ 2 + Δ ^ 2 ≠ 0 := by
-    nlinarith [sq_pos_of_pos hd, sq_nonneg Δ]
+  have hden : d ^ 2 + Δ ^ 2 ≠ 0 :=
+    ne_of_gt (add_pos_of_pos_of_nonneg (sq_pos_of_pos hd) (sq_nonneg Δ))
   rw [penultimateReflectionOrdinate]
-  exact (eq_div_iff hden).2 (by nlinarith)
+  exact (eq_div_iff hden).2 (by rwa [mul_comm])
 
 /-- With the polygon-order sign `Hd>cΔ`, the nontrivial circle intersection
 is above the lower chord; the known intersection is `(2c,0)`. -/

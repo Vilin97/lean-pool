@@ -9,3 +9,4 @@ public import LeanPool.RiemannRochFunctionFields.Genus.AdeleQuotient
 public import LeanPool.RiemannRochFunctionFields.Genus.Basic
 public import LeanPool.RiemannRochFunctionFields.Genus.Polar
 public import LeanPool.RiemannRochFunctionFields.Genus.Ramification
+import Mathlib.Analysis.SpecialFunctions.Pow.Real

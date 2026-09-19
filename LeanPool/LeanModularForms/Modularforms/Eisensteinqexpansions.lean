@@ -6,10 +6,15 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.NumberTheory.LSeries.Dirichlet
 public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Basic
 
-public import LeanPool.LeanModularForms.Modularforms.Delta
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
+import LeanPool.LeanModularForms.Modularforms.Delta
+import LeanPool.LeanModularForms.Modularforms.SummableLems
+import Mathlib.Data.Int.Star
+import Mathlib.Topology.Separation.CompletelyRegular
 
 /-! # Eisensteinqexpansions -/
 

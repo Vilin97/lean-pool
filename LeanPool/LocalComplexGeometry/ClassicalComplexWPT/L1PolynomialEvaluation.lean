@@ -3,10 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1PowerSeries
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.L1Division
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
 
 /-!
 # Evaluation of finite-support `ℓ¹` coefficient sequences
@@ -14,6 +15,8 @@ import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalizedCoefficients
 These lemmas translate the normalized sequence factorization into the monic
 polynomial identity used by the public preparation witness.
 -/
+
+@[expose] public section
 
 open Finset
 open scoped ENNReal NNReal Topology

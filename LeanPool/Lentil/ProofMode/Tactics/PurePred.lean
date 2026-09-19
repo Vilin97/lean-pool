@@ -3,9 +3,16 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Basic
+module
+
+public import LeanPool.Lentil.ProofMode.Basic
+public meta import LeanPool.Lentil.ProofMode.Basic
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.String
 import LeanPool.Lentil.ProofMode.Tactics.Intro
 import LeanPool.Lentil.ProofMode.Tactics.Revert
+import LeanPool.Lentil.Rules.Basic
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -31,7 +38,7 @@ theorem Entails_pull_pure {σ : Type u} {hyps : List (NamedPred σ)} {goal : pre
   rw [List.get?Internal_eq_getElem?, heq1]; simp only [Option.elim, heq2]
   rwa [← Entails_pure_fact_intro]
 
-private def pullPureTacDSimps := #[``List.findIdx, ``List.findIdx.go, ``List.eraseIdx, ``String.reduceBEq,
+private meta def pullPureTacDSimps := #[``List.findIdx, ``List.findIdx.go, ``List.eraseIdx, ``String.reduceBEq,
   ``String.reduceBNe, ``Bool.cond_false, ``Bool.cond_true, ``Option.elim]
 
 /--

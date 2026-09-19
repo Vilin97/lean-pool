@@ -3,8 +3,10 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.InsertionCommonLaw
-import LeanPool.Feige.ChainInsertion
+module
+
+public import LeanPool.Feige.InsertionCommonLaw
+public import LeanPool.Feige.ChainInsertion
 
 /-!
 # Splitting off the newly inserted coordinate
@@ -15,6 +17,8 @@ lower and upper enlarged states are respectively the positive and negative
 exponential shifts of the old law.  These are the dimension-change
 identifications used at every chain-insertion edge.
 -/
+
+@[expose] public section
 
 open MeasureTheory
 

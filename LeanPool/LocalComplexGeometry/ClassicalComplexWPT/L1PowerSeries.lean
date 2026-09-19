@@ -3,8 +3,10 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.WeightedSeries
+public import Mathlib.Analysis.Analytic.Basic
 import Mathlib.Analysis.Analytic.Constructions
 
 /-!
@@ -16,6 +18,8 @@ sequence and the scalar variable at every point whose scalar coordinate is
 zero.  The proof packages the coordinate evaluations into an operator-valued
 formal multilinear series with radius at least one.
 -/
+
+@[expose] public section
 
 open scoped ENNReal NNReal Topology
 noncomputable section

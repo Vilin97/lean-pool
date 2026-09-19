@@ -3,10 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.SignedPresentation
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Bool.Basic
-import Mathlib.Data.List.Count
+module
+
+public import LeanPool.ClassificationOfSurfaces.SignedPresentation
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Finite cyclic surface presentations
@@ -34,6 +37,8 @@ boundaries. At the end of the file, `IsEmptyWordSphere` recognizes the exception
 isomorphism class and `IsGallierValid` adds it as an explicit disjunct. The presentation
 `twoMonogonSphere` is the nonexceptional two-face model obtained by the book's P2 refinement.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

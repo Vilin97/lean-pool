@@ -10,12 +10,16 @@ Derived in part from Apache-2.0 `openai/ten-proofs`, `ConnesRigidity.lean` at
 Modifications: extracted the double-centralizer generator reduction, added a
 local conjugacy helper, and changed namespace. Paper: §3. See the upstream PORT_MAP.md.
 -/
-import Mathlib.GroupTheory.SemidirectProduct
-import LeanPool.ConnesRigidity.Core
+module
+
+public import Mathlib.GroupTheory.SemidirectProduct
+public import LeanPool.ConnesRigidity.Core
 
 /-!
 The semidirect closure component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 

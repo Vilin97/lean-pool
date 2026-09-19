@@ -3,6 +3,11 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
+module
+
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.ZMod.Defs
+public import Mathlib.RingTheory.Coprime.Basic
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Data.Int.Star
 import Mathlib.Data.Rat.Star
@@ -17,6 +22,8 @@ Criteria for (non-)squareness in `ℚ`, `ℤ` and `ZMod m`.
 Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of some iterated
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
+
+@[expose] public section
 
 /-- If `P ≡ -Q mod m` with `Q` a unit mod `m` and `P/Q` a rational square, then `-1` is a
 square mod `m`. -/

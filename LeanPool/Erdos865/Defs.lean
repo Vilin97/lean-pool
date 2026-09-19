@@ -3,7 +3,9 @@ Copyright (c) 2026 Ricky Cipollini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ricky Cipollini
 -/
-import Mathlib.Order.Interval.Finset.Nat
+module
+
+public import Mathlib.Order.Interval.Finset.Nat
 
 /-!
 # Definitions for the sharp 5/8 bound (Erdős 865)
@@ -12,6 +14,8 @@ Basic objects for the pairwise-sums problem: pairwise-sum triples and triple-fre
 (`HasTriple`, `IsTripleFree`), the folded sum sets `lowSums`/`highSums`/`collisions`, the
 hypothesis `FoldedOK`, and the folding sets `Xset`/`Yset`/`Bset`/`Eset`.
 -/
+
+@[expose] public section
 
 open Finset
 

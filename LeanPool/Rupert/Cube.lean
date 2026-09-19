@@ -3,18 +3,20 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import LeanPool.Rupert.Basic
-import LeanPool.Rupert.Convex
-import LeanPool.Rupert.Quaternion
-import LeanPool.Rupert.MatrixSimps
+public import LeanPool.Rupert.Equivalences.Util
+import LeanPool.Rupert.Attr
 import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
+import LeanPool.Rupert.MatrixSimps
 
 /-!
 # LeanPool.Rupert.Cube
 
 Imported Lean Pool material for `LeanPool.Rupert.Cube`.
 -/
+
+@[expose] public section
 
 namespace Cube
 open Matrix

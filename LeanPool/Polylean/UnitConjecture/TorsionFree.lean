@@ -3,8 +3,17 @@ Copyright (c) 2026 Siddhartha Gadgil, Anand Rao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
+module
 
-import LeanPool.Polylean.UnitConjecture.GardamGroup
+public import LeanPool.Polylean.UnitConjecture.GardamGroup
+import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 ## Torsion-freeness of `P`
@@ -24,6 +33,8 @@ Roughly, the steps are as follows (further details can be found in the correspon
    then it also satisfies `(g ^ 2) ^ n = (1 : G)`.
 5. Together, these statements show that `P` is torsion-free.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Polylean
 

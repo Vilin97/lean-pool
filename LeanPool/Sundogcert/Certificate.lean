@@ -3,11 +3,10 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import Mathlib.Data.Matrix.Mul           -- Matrix, mulVec/vecMul, the `*ᵥ` / `ᵥ*` notation
-import Mathlib.InformationTheory.Hamming  -- hammingNorm (the error weight)
-import Mathlib.Data.Fintype.BigOperators  -- Fintype.card_fun (for secret_bits_lost)
-import Mathlib.Algebra.Order.BigOperators.Group.Finset  -- card_biUnion_le_card_mul (column-weight)
+public import Mathlib.Data.Matrix.Mul           -- Matrix, mulVec/vecMul, the `*ᵥ` / `ᵥ*` notation
+public import Mathlib.InformationTheory.Hamming  -- hammingNorm (the error weight)
 
 /-!
   Sundog syndrome certificate — soundness + lossiness core  (Lean 4 / mathlib v4.30.0)
@@ -19,6 +18,8 @@ import Mathlib.Algebra.Order.BigOperators.Group.Finset  -- card_biUnion_le_card_
   OUT OF SCOPE for Lean: the ISD/SIS one-wayness — an imported hardness assumption, NOT a theorem.
   TRUST SURFACE = the `Scheme` fields (esp. `hHG`) + `Safe`; everything else is machine-checked.
 -/
+
+@[expose] public section
 
 open Matrix
 

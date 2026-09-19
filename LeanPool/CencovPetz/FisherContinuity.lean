@@ -3,7 +3,13 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import LeanPool.CencovPetz.SimplexTopology
+module
+
+public import LeanPool.CencovPetz.SimplexTopology
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!
@@ -19,6 +25,8 @@ family.
 
 - `CencovPetz.Simplex.continuous_fisherBilin_apply`
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

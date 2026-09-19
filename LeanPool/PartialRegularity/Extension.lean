@@ -3,28 +3,24 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang. All 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
+module
+
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.NumberTheory.Bernoulli
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Analysis.SpecialFunctions.Log.Monotone
-import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
 import Mathlib.Data.Set.Card.Arithmetic
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
-import Mathlib.NumberTheory.Bernoulli
+import Mathlib.NumberTheory.LSeries.Dirichlet
 import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
-import Mathlib.NumberTheory.LSeries.Nonvanishing
-import Mathlib.NumberTheory.ZetaValues
-import Mathlib.RingTheory.ZMod.UnitsCyclic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
 /-! # Irregular primes and Bernoulli numbers (extension)
 
 This file proves a variant of the main result with an explicit constant: the count
 of odd primes `p ≤ X` that are not `M_α(p)`-regular is bounded by `10 · X / (log X)^(2α)`. -/
+
+@[expose] public section
 
 namespace LeanPool.PartialRegularity.Extension
 

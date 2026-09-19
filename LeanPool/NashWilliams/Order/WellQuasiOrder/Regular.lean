@@ -3,6 +3,9 @@ Copyright (c) 2026 Yann Pequignot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yann Pequignot
 -/
+module
+
+public import Mathlib.Order.WellQuasiOrder
 import Mathlib.Order.WellFoundedSet
 
 /-!
@@ -30,6 +33,8 @@ many later terms. This file shows that in a WQO every sequence has a regular tai
 * `WellQuasiOrdered.exists_forall_le_of_antitone`: an antitone sequence in a WQO stabilizes.
 * `WellQuasiOrdered.sublistForall₂`: Higman's order is a WQO on `List Q` when `r` is a WQO on `Q`.
 -/
+
+@[expose] public section
 
 open Set Preorder
 

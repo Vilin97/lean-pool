@@ -3,8 +3,9 @@ Copyright (c) 2026 Humiliati. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
+module
 
-import LeanPool.Sundogcert.Certificate
+public import LeanPool.Sundogcert.Certificate
 
 /-!
   Sundog syndrome certificate — the CHECK-COST theorem  (Lean 4 / mathlib v4.30.0)
@@ -30,6 +31,8 @@ import LeanPool.Sundogcert.Certificate
   Nothing forces this correspondence mechanically — it is asserted, then audited, like `hHG`.
   Given that audited model, the polynomial bound is a THEOREM (kernel-checked, `sorry`-free).
 -/
+
+@[expose] public section
 
 open Matrix
 

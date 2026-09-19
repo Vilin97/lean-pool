@@ -6,7 +6,10 @@ Authors: Chris Birkbeck
 
 module
 
-public import LeanPool.LeanModularForms.Modularforms.EisensteinAsymptotics
+public import LeanPool.LeanModularForms.Modularforms.Derivative
+import LeanPool.LeanModularForms.Modularforms.DimensionFormulas
+import LeanPool.LeanModularForms.Modularforms.EisensteinAsymptotics
+import Mathlib.Data.Int.Star
 
 /-! # RamanujanIdentities -/
 

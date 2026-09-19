@@ -3,15 +3,25 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
+public import LeanPool.BrauerGroupNew.ZeroSevenFourE
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.RingTheory.TensorProduct.Basic
 import LeanPool.BrauerGroupNew.BrauerGroup
-import LeanPool.BrauerGroupNew.ZeroSevenFourE
+import LeanPool.BrauerGroupNew.MoritaEquivalence
+import LeanPool.BrauerGroupNew.Wedderburn
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.SkolemNoether
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.SkolemNoether`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 

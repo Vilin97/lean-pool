@@ -3,9 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise222
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.Exercise222
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 3.27 (Scott 1981, PRG-19, §3) — `(𝒟₀ → 𝒟₁)` is a domain, via Exercise
@@ -46,6 +53,8 @@ Scott's "compare with
 `Classical.choice` from
 Exercise 2.22 and from the `graph`-inversion.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise327
 

@@ -6,9 +6,7 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import Mathlib.Logic.Equiv.Fin.Basic
-public import Mathlib.Data.Fin.SuccPred
 public import Mathlib.Algebra.Group.Nat.Defs
 
 /-!

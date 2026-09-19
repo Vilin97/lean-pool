@@ -3,8 +3,9 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Data.Matrix.Basic
-import Mathlib.LinearAlgebra.Matrix.Hermitian
+module
+
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
 import LeanPool.Monlib4.Preq.Ites
 
 /-!
@@ -13,6 +14,8 @@ import LeanPool.Monlib4.Preq.Ites
 This file defines the conjugate of a matrix, `matrix.conj` with the notation `ᴴᵀ`
 (i.e., `xᴴᵀ i j = star (x i j)`), and shows basic properties about it.
 -/
+
+@[expose] public section
 
 
 namespace Matrix

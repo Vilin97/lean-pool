@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMEquivariance
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMEquivariance
 import Mathlib.ModelTheory.Encoding
 
 /-!
@@ -26,6 +28,8 @@ The tuple-code type `LocalEMTupleCode Λ n` (`Σ k, Fin n → Λ[[Fin k]].Term E
 for a countable base language (`countable_localEMTupleCode`) — the quotient-tuple coding and
 the orbit theorem are unit 3b (`LocalEMTupleOrbit.lean`).
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

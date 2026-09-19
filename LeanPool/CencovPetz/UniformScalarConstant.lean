@@ -3,8 +3,16 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
+
+public import LeanPool.CencovPetz.PermutationInvariantBilinForm
+import LeanPool.CencovPetz.PermutationInvariance
 import LeanPool.CencovPetz.ReplicationInvariance
 import LeanPool.CencovPetz.UniformScalarMultiple
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 
 /-!
@@ -24,6 +32,8 @@ pointwise scalar multiple with a scalar depending on the point.
 - `CencovPetz.MonotoneMetricFamily.uniformScalar_eq_of_mul`
 - `CencovPetz.MonotoneMetricFamily.uniformScalar_eq_uniformScalar_two`
 -/
+
+@[expose] public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -52,7 +62,8 @@ private lemma two_le_card_prod {n m : ℕ} (hn : 2 ≤ n) (hm : 0 < m) :
     (le_trans hn (Nat.le_mul_of_pos_right n hm))
 
 theorem uniformScalar_eq_of_mul (G : MonotoneMetricFamily) {n m : ℕ} (hn : 2 ≤ n) (hm : 0 < m) :
-    uniformScalar G (Fintype.card (Fin n × Fin m)) (two_le_card_prod (n := n) (m := m) hn hm)
+    uniformScalar G (Fintype.card (Fin n × Fin m))
+      (by exact two_le_card_prod (n := n) (m := m) hn hm)
       =
       uniformScalar G n hn := by
   classical
@@ -159,11 +170,13 @@ theorem uniformScalar_eq_of_mul (G : MonotoneMetricFamily) {n m : ℕ} (hn : 2 �
   have hFinN :
       (TangentFin.Bilin.B (G := G) (n := N))
         =
-        (uniformScalar G N (two_le_card_prod (n := n) (m := m) hn hm)) •
+        (uniformScalar G N (by exact two_le_card_prod (n := n) (m := m) hn hm)) •
           fisherBilin (Simplex.uniform (α := Fin N)) := by
     -- Use `UniformScalarMultiple` at `0,1` on `Fin N`.
-    let j0 : Fin N := ⟨0, lt_of_lt_of_le Nat.zero_lt_two (two_le_card_prod (n := n) (m := m) hn hm)⟩
-    let j1 : Fin N := ⟨1, lt_of_lt_of_le Nat.one_lt_two (two_le_card_prod (n := n) (m := m) hn hm)⟩
+    let j0 : Fin N := ⟨0, lt_of_lt_of_le Nat.zero_lt_two
+      (by exact two_le_card_prod (n := n) (m := m) hn hm)⟩
+    let j1 : Fin N := ⟨1, lt_of_lt_of_le Nat.one_lt_two
+      (by exact two_le_card_prod (n := n) (m := m) hn hm)⟩
     have hj01 : j0 ≠ j1 := by
       intro h
       exact Nat.zero_ne_one (congrArg Fin.val h)
@@ -179,7 +192,7 @@ theorem uniformScalar_eq_of_mul (G : MonotoneMetricFamily) {n m : ℕ} (hn : 2 �
   -- Evaluate both bilinear-form identities on `v` / `u` and use the isometry equalities.
   have hFinN_apply :
       G.g (α := Fin N) (Simplex.uniform (α := Fin N)) v v
-        = (uniformScalar G N (two_le_card_prod (n := n) (m := m) hn hm)) *
+        = (uniformScalar G N (by exact two_le_card_prod (n := n) (m := m) hn hm)) *
           fisherBilin (Simplex.uniform (α := Fin N)) v v := by
     -- Unfold `B` and apply `hFinN`.
     simp_all
@@ -190,7 +203,7 @@ theorem uniformScalar_eq_of_mul (G : MonotoneMetricFamily) {n m : ℕ} (hn : 2 �
     simpa [TangentFin.Bilin.B, mul_assoc, α] using this
   -- Compare the two scalar factors using `hG` and `hF`.
   have :
-      (uniformScalar G N (two_le_card_prod (n := n) (m := m) hn hm)) *
+      (uniformScalar G N (by exact two_le_card_prod (n := n) (m := m) hn hm)) *
           fisherBilin (Simplex.uniform (α := α)) u u
         =
         (uniformScalar G n hn) *
@@ -199,7 +212,8 @@ theorem uniformScalar_eq_of_mul (G : MonotoneMetricFamily) {n m : ℕ} (hn : 2 �
     simp_all
   -- Cancel the positive Fisher factor.
   have hscalar :
-      uniformScalar G N (two_le_card_prod (n := n) (m := m) hn hm) = uniformScalar G n hn :=
+      uniformScalar G N
+        (by exact two_le_card_prod (n := n) (m := m) hn hm) = uniformScalar G n hn :=
     mul_right_cancel₀ hFne this
   simpa [β, N] using hscalar
 

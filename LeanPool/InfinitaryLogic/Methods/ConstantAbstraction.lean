@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.ConstantSupport
+module
+
+public import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 /-!
 # Constant abstraction and reinterpretation surgery (issue #8 kernel steps 3–5)
 
@@ -27,6 +29,8 @@ on `M`:
 
 Pure realization surgery: no `InsepAt`, no interpolation-specific commitments.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 BochaoKong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: BochaoKong
 -/
+module
 
-import LeanPool.LocalComplexGeometry.Germs.Basic
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import LeanPool.LocalComplexGeometry.Germs.Basic
+public import Mathlib.Topology.Algebra.Module.FiniteDimension
+public import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Basic
 
 /-!
 # Coordinates and pullback for holomorphic germs
@@ -15,6 +17,8 @@ used by the pinned Weierstrass-preparation dependency.  It also constructs
 contravariant pullback homomorphisms on holomorphic germs, the inclusion of
 lower-dimensional base germs, and the resulting algebra structure.
 -/
+
+@[expose] public section
 
 open Filter
 open scoped Topology

@@ -5,10 +5,11 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
-public import LeanPool.Odlyzko.ExplicitFormula.WeightedDiskArgumentPrinciple
-public import LeanPool.Odlyzko.ExplicitFormula.WeightedRectangleArgumentPrinciple
-public import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.LogDerivativeResidue
+public import LeanPool.Odlyzko.CompletedZeta.FunctionalEquation
+public import LeanPool.Odlyzko.FromPrimeNumberTheoremAnd.RectangleIntegral
+import LeanPool.Odlyzko.CompletedZeta.FunctionalEquationLogDeriv
+import LeanPool.Odlyzko.ExplicitFormula.WeightedRectangleArgumentPrinciple
+import Mathlib.Tactic.ArithMult.Init
 
 /-!
 # Completed Zeta Rectangle

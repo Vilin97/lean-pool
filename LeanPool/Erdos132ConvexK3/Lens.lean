@@ -3,9 +3,14 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Geometry
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
+module
+
+public import LeanPool.Erdos132ConvexK3.Basic
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # The shared-diameter lens
@@ -19,6 +24,8 @@ The P5-1 correction is explicit in the theorem statement: the lower point
 `P = (X,Y)` must satisfy `|Ps|² ≤ d₁²`.  Convexity supplies `Y < 0`, but it
 does not by itself supply `0 < X < 2c`; the diameter bound does.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -37,11 +44,12 @@ theorem diameter_partner_abscissa
     0 < X ∧ X < 2 * c := by
   have hHY : H * Y < 0 := mul_neg_of_pos_of_neg hH hY
   have hvertical : H ^ 2 < (H - Y) ^ 2 := by
-    nlinarith [sq_nonneg Y]
+    nlinarith only [hHY, sq_nonneg Y]
   have hxSq : (X - c) ^ 2 < c ^ 2 := by
     simp only [sqDist] at hdiameter
-    nlinarith
-  constructor <;> nlinarith [sq_nonneg X, sq_nonneg (X - 2 * c)]
+    nlinarith only [hdiameter, hvertical]
+  obtain ⟨hlower, hupper⟩ := abs_lt_of_sq_lt_sq' hxSq hc.le
+  constructor <;> linarith only [hlower, hupper]
 
 /-- Every point of the shared-diameter lens has ordinate at most that of the
 upper tip `(c,H)`. -/
@@ -51,13 +59,8 @@ theorem shared_diameter_lens_ordinate_le
   rcases hv with ⟨hleft, hright⟩
   simp only [sqDist] at hleft hright
   have hradial : (x - c) ^ 2 + y ^ 2 ≤ H ^ 2 := by
-    nlinarith
-  by_contra hnot
-  have hy : H < y := lt_of_not_ge hnot
-  have hsum : 0 < y + H := by linarith
-  have hprod : 0 < (y - H) * (y + H) :=
-    mul_pos (sub_pos.mpr hy) hsum
-  nlinarith [sq_nonneg (x - c)]
+    nlinarith only [hleft, hright]
+  exact le_of_sq_le_sq ((le_add_of_nonneg_left (sq_nonneg _)).trans hradial) hH
 
 /-- **Diameter-lens unique farthest point.** Let `P=(X,Y)` be below the
 center line and no farther than the diameter from the upper tip `s`.  Then
@@ -78,26 +81,27 @@ theorem diameter_lens_unique_farthest
   rcases hv with ⟨hleft, hright⟩
   simp only [sqDist] at hleft hright ⊢
   have hradial : (x - c) ^ 2 + y ^ 2 ≤ H ^ 2 := by
-    nlinarith
+    nlinarith only [hleft, hright]
   have hyNe : y ≠ H := by
     intro hy
     apply hne
     have hx : x = c := by
-      nlinarith [sq_nonneg (x - c)]
+      rw [hy, add_le_iff_nonpos_left] at hradial
+      exact sub_eq_zero.mp ((sq_nonpos_iff _).mp hradial)
     exact Prod.ext hx hy
   have hyLt : y < H := lt_of_le_of_ne hyLe hyNe
   have hA : 0 ≤ c ^ 2 + H ^ 2 - (x ^ 2 + y ^ 2) := by
-    nlinarith
+    simpa only [sub_zero] using sub_nonneg.mpr hleft
   have hB : 0 ≤ c ^ 2 + H ^ 2 - ((x - 2 * c) ^ 2 + y ^ 2) := by
-    nlinarith
+    simpa only [sub_zero] using sub_nonneg.mpr hright
   have htermA :
       0 ≤ (2 * c - X) * (c ^ 2 + H ^ 2 - (x ^ 2 + y ^ 2)) :=
-    mul_nonneg (by linarith) hA
+    mul_nonneg (sub_pos.mpr hX2).le hA
   have htermB :
       0 ≤ X * (c ^ 2 + H ^ 2 - ((x - 2 * c) ^ 2 + y ^ 2)) :=
     mul_nonneg hX0.le hB
-  have hcY : 0 < -4 * c * Y := by
-    nlinarith [mul_neg_of_pos_of_neg hc hY]
+  have hcY : 0 < -4 * c * Y :=
+    mul_pos_of_neg_of_neg (mul_neg_of_neg_of_pos (by norm_num) hc) hY
   have htermY : 0 < (-4 * c * Y) * (H - y) :=
     mul_pos hcY (sub_pos.mpr hyLt)
   have hidentity :
@@ -113,7 +117,7 @@ theorem diameter_lens_unique_farthest
           (((c - X) ^ 2 + (H - Y) ^ 2) -
             ((x - X) ^ 2 + (y - Y) ^ 2)) := by
     rw [hidentity]
-    nlinarith
-  nlinarith
+    exact add_pos_of_nonneg_of_pos (add_nonneg htermA htermB) htermY
+  exact sub_pos.mp ((mul_pos_iff_of_pos_left (by positivity)).mp hscaled)
 
 end LeanPool.Erdos132ConvexK3

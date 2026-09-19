@@ -11,12 +11,16 @@ Modifications: extracted the projection-valued spectral interface and
 positive-atom argument, adapted namespace and local spectral interfaces, and
 added the later quotient-approximation bridge. Paper: §4. See the upstream PORT_MAP.md.
 -/
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralCriterion
-import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
+module
+
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.SpectralCriterion
+public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
 
 /-!
 The valued spectral measure component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 

@@ -3,9 +3,16 @@ Copyright (c) 2026 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.GroupTheory.GroupAction.Ring
-import Mathlib.Order.CompletePartialOrder
+module
+
+public import Mathlib.LinearAlgebra.Quotient.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Verma modules over algebras
@@ -44,6 +51,8 @@ Clifford algebras, it allows to construct fermionic Fock spaces.
 Verma module
 
 -/
+
+@[expose] public section
 
 namespace VirasoroProject
 

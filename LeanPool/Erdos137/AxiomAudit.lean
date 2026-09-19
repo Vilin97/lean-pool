@@ -3,20 +3,26 @@ Copyright (c) 2026 Scott D. Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott D. Hughes
 -/
+module
 
-import LeanPool.Erdos137.Finiteness
-import LeanPool.Erdos137.Base
-import LeanPool.Erdos137.BlockFramework
-import LeanPool.Erdos137.RefinedOverlap
-import LeanPool.Erdos137.JointFiniteness
-import LeanPool.Erdos137.SmoothRefinement
-import LeanPool.Erdos137.TaoPoint
-import LeanPool.Erdos137.RoughPartStructure
-import LeanPool.Erdos137.SpliceFiniteness
-import LeanPool.Erdos137.QuarticCrude
-import LeanPool.Erdos137.SexticCrude
-import LeanPool.Erdos137.SquarefreeCapacity
-import LeanPool.Erdos137.CombinedSplice
+public import LeanPool.Erdos137.Finiteness
+public import LeanPool.Erdos137.Base
+public import LeanPool.Erdos137.BlockFramework
+public import LeanPool.Erdos137.RefinedOverlap
+public import LeanPool.Erdos137.JointFiniteness
+public import LeanPool.Erdos137.SmoothRefinement
+public import LeanPool.Erdos137.TaoPoint
+public import LeanPool.Erdos137.RoughPartStructure
+public import LeanPool.Erdos137.SpliceFiniteness
+public import LeanPool.Erdos137.QuarticCrude
+public import LeanPool.Erdos137.SexticCrude
+public import LeanPool.Erdos137.SquarefreeCapacity
+public import LeanPool.Erdos137.CombinedSplice
+
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Axiom audit
@@ -39,3 +45,5 @@ The routes assembled here are:
 * the combined four-range splice (`CombinedSplice`);
 * the term-level rough-part anatomy (`RoughPartStructure`).
 -/
+
+@[expose] public section

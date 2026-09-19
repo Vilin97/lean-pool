@@ -7,10 +7,14 @@ Authors: Yaël Dillies
 module
 public import LeanPool.PFR.AddCombi.Convolution.Finite.Defs
 
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Algebra.Order.Star.Conjneg
-public import Mathlib.Analysis.Complex.Order
-public import Mathlib.Data.Rat.Star
+public import Mathlib.Algebra.Order.Star.Basic
+import Mathlib.Algebra.Order.BigOperators.Expect
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Conjneg
+import Mathlib.Algebra.Star.Module
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Ordered finite convolution estimates

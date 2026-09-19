@@ -3,21 +3,22 @@ Copyright (c) 2026 Anthony Vandikas, Kiarash Sotoudeh. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 -/
+module
 
-import LeanPool.QuasiBorelSpaces.Hom
-import LeanPool.QuasiBorelSpaces.Rose.Encoding
-import LeanPool.QuasiBorelSpaces.List
-import LeanPool.QuasiBorelSpaces.Option
-import LeanPool.QuasiBorelSpaces.Nat
-import LeanPool.QuasiBorelSpaces.Pi
-import LeanPool.QuasiBorelSpaces.ProbabilityMeasure
-import LeanPool.QuasiBorelSpaces.Sigma
+public import LeanPool.QuasiBorelSpaces.Rose.Encoding
+public import LeanPool.QuasiBorelSpaces.List
+import LeanPool.QuasiBorelSpaces.Basic
+import LeanPool.QuasiBorelSpaces.Prop
+import LeanPool.QuasiBorelSpaces.RoseTree.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.QuasiBorelSpaces.Rose
 
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Rose`.
 -/
+
+@[expose] public section
 
 variable {A B C : Type*} [QuasiBorelSpace A] [QuasiBorelSpace B] [QuasiBorelSpace C]
 

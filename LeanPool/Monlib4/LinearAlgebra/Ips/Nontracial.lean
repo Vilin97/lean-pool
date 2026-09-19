@@ -3,19 +3,18 @@ Copyright (c) 2023 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import LeanPool.Monlib4.LinearAlgebra.MulPrimePrime
-import LeanPool.Monlib4.LinearAlgebra.Matrix.PosDefRpow
-import LeanPool.Monlib4.LinearAlgebra.InnerAut
-import LeanPool.Monlib4.LinearAlgebra.Matrix.Reshape
-import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
-import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
-import LeanPool.Monlib4.LinearAlgebra.Ips.Functional
-import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+module
+
+public import LeanPool.Monlib4.LinearAlgebra.Ips.MatIps
+public import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
+public import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
+public import LeanPool.Monlib4.LinearAlgebra.KroneckerToTensor
+public import LeanPool.Monlib4.LinearAlgebra.LmulRmul
+public import Mathlib.LinearAlgebra.Basis.MulOpposite
+import LeanPool.Monlib4.LinearAlgebra.End
+import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
 import LeanPool.Monlib4.LinearAlgebra.Ips.MulOp
-import LeanPool.Monlib4.LinearAlgebra.Matrix.IncludeBlock
-import LeanPool.Monlib4.LinearAlgebra.Ips.OpUnop
-import LeanPool.Monlib4.LinearAlgebra.PiDirectSum
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
+import LeanPool.Monlib4.LinearAlgebra.Ips.TensorHilbert
 import LeanPool.Monlib4.Preq.Finset
 
 /-!
@@ -26,6 +25,8 @@ This file contains some results on the Hilbert space on finite-dimensional C*-al
   (so just a direct sum of matrix algebras over ℂ).
 
 -/
+
+@[expose] public section
 
 
 variable {n : Type _} [Fintype n]
@@ -582,7 +583,8 @@ theorem Pi.transposeAlgEquiv_symm_op_apply (A : PiMat ℂ k s) :
     (Pi.transposeAlgEquiv k s).symm (MulOpposite.op A) = fun i => (A i)ᵀ :=
   rfl
 
-private noncomputable def f₂_equiv :
+/-- Distribute the tensor product of matrix families over pairs of indices. -/
+noncomputable def f₂Equiv :
     (PiMat ℂ k s) ⊗[ℂ] (PiMat ℂ k s) ≃ₐ[ℂ] (Π i : k × k,
       Matrix (s i.1) (s i.1) ℂ ⊗[ℂ] Matrix (s i.2) (s i.2) ℂ) := by
   let this :=
@@ -591,7 +593,8 @@ private noncomputable def f₂_equiv :
       (fun i => Matrix.instAlgebra) fun i => Matrix.instAlgebra
   exact this
 
-private noncomputable def f₃_equiv :
+/-- Identify each tensor product of matrix blocks with a matrix on product indices. -/
+noncomputable def f₃Equiv :
     (Π i : k × k, Matrix (s i.1) (s i.1) ℂ ⊗[ℂ] Matrix (s i.2) (s i.2) ℂ) ≃ₐ[ℂ]
       (Π i : k × k, Matrix (s i.1 × s i.2) (s i.1 × s i.2) ℂ) := by
   apply AlgEquiv.piCongrRight
@@ -604,7 +607,7 @@ noncomputable def tensorProductMulOpEquiv :
       Matrix (s i.1 × s i.2) (s i.1 × s i.2) ℂ) :=
   (AlgEquiv.TensorProduct.map (1 : PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s)
         (Pi.transposeAlgEquiv k s : PiMat ℂ k s ≃ₐ[ℂ] (PiMat ℂ k s)ᵐᵒᵖ).symm).trans
-    (f₂_equiv.trans f₃_equiv)
+    (f₂Equiv.trans f₃Equiv)
 
 /-- Inverse map underlying `psi` for faithful positive functionals on matrix-block products. -/
 noncomputable def Module.Dual.pi.IsFaithfulPosMap.psiInvFun'

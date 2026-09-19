@@ -3,9 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.AbelWeak
-import LeanPool.JacobianDiffgeo.JacobianConstruction
+public import LeanPool.JacobianDiffgeo.JacobianConstruction.Periods
+import LeanPool.JacobianDiffgeo.JacobianConstruction.OfCurve
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: loop-cancellation algebra (`docs/design/abel-theorem.md` §4.2, D2, §2.1 steps 1-3)
@@ -25,6 +29,8 @@ Unit: abel-theorem. Namespace `RS.Abel`. Two deliverables:
   own Remark: "only needs to be checked for a basis" — extended to all of `Form1 X` via linearity
   of `RS.pathIntegralₗ` and `Module.Basis.ext`).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 

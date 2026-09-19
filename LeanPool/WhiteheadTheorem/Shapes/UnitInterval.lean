@@ -3,14 +3,17 @@ Copyright (c) 2026 Jiazhen Xia. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiazhen Xia
 -/
+module
 
-import Mathlib.Topology.UnitInterval
+public import Mathlib.Topology.UnitInterval
 
 /-!
 # LeanPool.WhiteheadTheorem.Shapes.UnitInterval
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.UnitInterval`.
 -/
+
+@[expose] public section
 
 
 namespace unitInterval

@@ -3,8 +3,11 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
+public import LeanPool.JacobianDiffgeo.LaurentTail.Truncation
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # `truncT`/`singleT`/`mulInto`/`nuL`: the truncation and multiplication kit (serre-duality-tails)
@@ -19,6 +22,8 @@ Unit: serre-duality-tails (`docs/design/serre-duality-tails.md` §3 D1/D3, §5.1
 * `nuL`: the packaging `↥(LinSys C) →ₗ[ℂ] (T (A - C) →ₗ[ℂ] T A)` Lemma 3.4's pair map is built from,
   plus the `μ_{1/f}` inversion identity `nuL_mulInto_inv` the surjectivity endgame needs.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

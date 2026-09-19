@@ -3,10 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Descriptive.Topology
-import Mathlib.Topology.MetricSpace.Polish
-import Mathlib.Topology.Metrizable.Basic
-import Mathlib.MeasureTheory.Constructions.Polish.Basic
+module
+
+public import LeanPool.InfinitaryLogic.Descriptive.Topology
+public import Mathlib.MeasureTheory.Constructions.Polish.Basic
+public import LeanPool.InfinitaryLogic.Descriptive.Measurable
 /-!
 # Polish Space and Borel Space Structure on the Structure Space
 
@@ -34,6 +35,8 @@ see through it. We provide the intermediate instances explicitly.
 - `StandardBorelSpace (StructureSpace L)`: The structure space is standard Borel.
 - Analogous instances for the pair space `StructureSpace L × StructureSpace L`.
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,8 +3,9 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
+module
 
-import LeanPool.MetricCodes.Conclusion
+public import LeanPool.MetricCodes.Conclusion
 
 /-!
 # Improved asymptotic bounds for binary and spherical codes
@@ -16,6 +17,8 @@ Main declarations: `MetricCodes.Johnson.main_binary_theorem`
 Tags: coding-theory, spherical-codes, kissing-number, harmonic-analysis, asymptotic-bounds
 MSC: 94B65, 52C17, 41A60
 -/
+
+@[expose] public section
 
 /-!
 ## Provenance

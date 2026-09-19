@@ -5,8 +5,11 @@ Authors: Kenny Lau
 -/
 module
 
-public import LeanPool.ZetaZeros.Defs
-public import LeanPool.ZetaZeros.Meta.Attr
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # The vocabulary of the Hilbert space inequality

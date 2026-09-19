@@ -3,8 +3,9 @@ Copyright (c) 2026 David Renshaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Renshaw
 -/
+module
 
-import LeanPool.Rupert.Basic
+public import LeanPool.Rupert.Basic
 import LeanPool.Rupert.Convex
 import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
 
@@ -13,6 +14,8 @@ import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
 
 Imported Lean Pool material for `LeanPool.Rupert.Square`.
 -/
+
+@[expose] public section
 
 namespace Square
 

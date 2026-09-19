@@ -3,8 +3,10 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
-import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary
-import LeanPool.ArchonFirstProofResults.FirstProof6.Problem6
+module
+
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Auxiliary
+public import LeanPool.ArchonFirstProofResults.FirstProof6.Problem6
 
 /-!
 # Problem 6 — Large `ε`-light vertex subsets
@@ -18,3 +20,5 @@ Laplacian of the induced subgraph on `S`. The main result
 The proof lives in `Problem6`; supporting infrastructure is in the `Auxiliary`
 sub-modules.
 -/
+
+@[expose] public section

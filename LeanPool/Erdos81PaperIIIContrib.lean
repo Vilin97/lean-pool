@@ -3,8 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini and Aristotle contributors. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle, Vasily Ilin
 -/
+module
 
-import LeanPool.Erdos81PaperIIIContrib.SimpleGraph
+public import LeanPool.Erdos81PaperIIIContrib.SimpleGraph
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Near-perfect triangle packings from sum-zero triples
@@ -16,6 +22,8 @@ Main declarations: `SumZeroTriangles.exists_simpleGraph_triangle_packing`
 Tags: extremal-combinatorics, triangle-packing, cyclic-groups
 MSC: 05B07, 05C70
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

@@ -3,17 +3,18 @@ Copyright (c) 2026 Susanna Bertolini, Jaume de Dios Pont. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Susanna Bertolini, Jaume de Dios Pont
 -/
-import Mathlib.Analysis.Complex.UpperHalfPlane.Measure
-import Mathlib.Analysis.Fourier.AddCircle
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-import Mathlib.Topology.Algebra.InfiniteSum.Basic
+module
+
+public import Mathlib.Analysis.Fourier.AddCircle
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! # Definitions -/
+
+@[expose] public section
 
 
 open scoped BigOperators

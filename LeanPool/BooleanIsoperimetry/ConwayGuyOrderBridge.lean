@@ -3,8 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
+
+public import LeanPool.BooleanIsoperimetry.Cube
+public import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
 import LeanPool.BooleanIsoperimetry.ConwayGuyRigidity
-import LeanPool.BooleanIsoperimetry.Cube
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # From unit relations to consecutive subset-sum gaps
@@ -18,6 +27,8 @@ is still an external input if one wants the induced comparison to be a total
 order.  The bridge itself only uses integrality: two subset sums differing by
 one have no integer subset sum strictly between them.
 -/
+
+@[expose] public section
 
 open scoped BigOperators
 

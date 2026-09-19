@@ -3,9 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
-import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Trace
+public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+public import LeanPool.JacobianDiffgeo.JacFunctorial.Pullback
+import LeanPool.JacobianDiffgeo.JacFunctorial.Density
+import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Functoriality laws and the projection formula for `Form1.trace` (jacobian-functoriality §6.5, §9)
@@ -20,6 +27,8 @@ functoriality and `pushforward_pullback`:
 All three are proved at regular values via `RS.coeffAt_traceForm_of_isRegularValue` and extended
 everywhere by `RS.Form1.eq_of_eqOn_dense` (density of regular values).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter Metric IsManifold

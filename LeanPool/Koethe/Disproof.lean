@@ -3,12 +3,17 @@ Copyright (c) 2026 Tom Adamczewski and Epoch AI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: GPT-6 Astra, Tom Adamczewski
 -/
-import Mathlib.Algebra.GroupWithZero.Basic
-import Mathlib.Data.SetLike.Basic
-import Mathlib.RingTheory.Ideal.Defs
-import Mathlib.RingTheory.TwoSidedIdeal.Basic
-import Mathlib.RingTheory.TwoSidedIdeal.Lattice
+module
+
+public import Mathlib.LinearAlgebra.Matrix.Ideal
 import LeanPool.Koethe.Counterexample
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Disproof of the Köthe conjecture in Krempa's matrix form
@@ -33,6 +38,8 @@ Köthe's original statement implies the matrix form; the counterexample therefor
 the conjecture as originally stated. That implication is a standard argument and is not part
 of this formal development.
 -/
+
+@[expose] public section
 
 open Ideal TwoSidedIdeal Polynomial
 

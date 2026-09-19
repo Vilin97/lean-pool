@@ -3,8 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+module
 
-import LeanPool.HadwigerNelsonBounds.Voronoi
+public import LeanPool.HadwigerNelsonBounds.Basic
 
 /-!
 # Separation of equally colored lattice points
@@ -12,6 +13,8 @@ import LeanPool.HadwigerNelsonBounds.Voronoi
 This module proves the modular quadratic-form estimate that separates distinct
 lattice points carrying the same residue color.
 -/
+
+@[expose] public section
 
 namespace HadwigerNelsonBounds
 

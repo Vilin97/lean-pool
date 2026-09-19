@@ -3,17 +3,17 @@ Copyright (c) 2026 Seewoo Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seewoo Lee
 -/
+module
 
-import Mathlib.Algebra.CharP.Defs
-import Mathlib.Algebra.EuclideanDomain.Defs
-import Mathlib.Algebra.Polynomial.FieldDivision
-import LeanPool.LeanPolyABC.Lib.Wronskian
-import LeanPool.LeanPolyABC.Lib.DivRadical
-import LeanPool.LeanPolyABC.Lib.Max3
+public import LeanPool.LeanPolyABC.Lib.DivRadical
+public import LeanPool.LeanPolyABC.Lib.Max3
+import Mathlib.RingTheory.Polynomial.Content
 
 /-!
 # LeanPool.LeanPolyABC.MasonStothers
 -/
+
+@[expose] public section
 
 noncomputable section
 

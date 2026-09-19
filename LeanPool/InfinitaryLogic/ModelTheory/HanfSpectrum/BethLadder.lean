@@ -3,9 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.VonNeumannModel
+module
+
+public import LeanPool.InfinitaryLogic.ModelTheory.MorleyHanf
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.CardinalBounds
 import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.LadderBound
-import LeanPool.InfinitaryLogic.ModelTheory.MorleyHanf
+import LeanPool.InfinitaryLogic.ModelTheory.HanfSpectrum.VonNeumannModel
 /-!
 # The beth ladder: sharpness of the Morley–Hanf bound
 
@@ -21,6 +24,8 @@ upper bound `Lomega1omegaHanfNumber_le_beth_omega1`:
 
 Reference: Marker, *Lectures on Infinitary Model Theory*, Exercise 5.3 and Theorem 5.4.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

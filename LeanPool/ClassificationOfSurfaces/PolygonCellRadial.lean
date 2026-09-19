@@ -3,8 +3,12 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
-import Mathlib.Topology.Homeomorph.Lemmas
+module
+
+public import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Nat.Totient
 
 /-!
 # Radial extension of circle homeomorphisms
@@ -18,6 +22,8 @@ The side-count indices of the source and target cells are independent phantom pa
 later boundary reparameterization only needs to construct a circle homeomorphism with the desired
 action on marked arcs; `PolygonCell.radialHomeomorph` then supplies the disk homeomorphism.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

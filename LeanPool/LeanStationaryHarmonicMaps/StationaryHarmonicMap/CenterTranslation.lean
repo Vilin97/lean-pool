@@ -3,7 +3,12 @@ Copyright (c) 2026 Wei Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wei Wang
 -/
+module
+
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
+public import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
 import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityEuclidean
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Center translations
@@ -11,6 +16,8 @@ import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityEuc
 This module starts the passage from the origin-centered theorem to arbitrary
 centers by isolating the translation identities needed for `weakTheta`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

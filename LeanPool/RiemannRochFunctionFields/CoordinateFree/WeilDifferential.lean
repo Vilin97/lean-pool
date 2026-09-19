@@ -7,6 +7,7 @@ module
 
 public import LeanPool.RiemannRochFunctionFields.CoordinateFree.AdeleSpace
 public import LeanPool.RiemannRochFunctionFields.WeilDifferential.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Weil differentials over intrinsic places

@@ -3,10 +3,11 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
-import Mathlib.Algebra.Algebra.Pi
-import Mathlib.LinearAlgebra.Pi
+module
+
+public import Mathlib.LinearAlgebra.Pi
 -- import Mathlib.LinearAlgebra.ProjectiveSpace.Basic
-import LeanPool.Monlib4.Preq.Ites
+import Mathlib.Tactic.NormNum.Basic
 
 /-!
 
@@ -15,6 +16,8 @@ import LeanPool.Monlib4.Preq.Ites
  This file includes the definition of `direct_sum_from_to`, a linear map from `M i` to `M j`.
 
 -/
+
+@[expose] public section
 
 
 /-- Composition of the `i`-th injection and the `j`-th projection of a dependent

@@ -3,13 +3,12 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.Complex.ExponentialBounds
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.Real.Sqrt
+public import LeanPool.PebblingLean.UpperBoundLoss
 import LeanPool.PebblingLean.LowerBound
-import LeanPool.PebblingLean.UpperBoundLoss
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 /-!
 # Concrete parameter layer for the upper bound
@@ -30,6 +29,8 @@ parameters, and the finite collection of threshold inequalities.  The theorem
 at the bottom proves that these hypotheses imply the real asymptotic upper
 bound.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 
@@ -793,7 +794,7 @@ theorem sampleCountForDemand_mean_of_annulusMean_lower {A K : ℝ} {n t : ℕ}
     positivity
   have hlower_nonneg : 0 ≤ lower := by
     dsimp [lower]
-    have hfactor : 0 ≤ 1 - delta / 8 := by nlinarith
+    have hfactor : 0 ≤ 1 - delta / 8 := by linarith only [hdelta_le]
     positivity
   have hmu_ge : lower ≤ mu := by
     simpa [lower, mu, delta, S, pow34] using hannulus
@@ -822,10 +823,10 @@ theorem sampleCountForDemand_mean_of_annulusMean_lower {A K : ℝ} {n t : ℕ}
     change (t : ℝ) + delta * (t : ℝ) / 4 ≤
       (1 + delta / 2) * (1 - delta / 8) * (t : ℝ)
     have ht_nonneg : 0 ≤ (t : ℝ) := by positivity
-    have htwo_minus : 0 ≤ 2 - delta := by nlinarith
+    have htwo_minus : 0 ≤ 2 - delta := sub_nonneg.mpr hdelta_le
     have hprod_nonneg : 0 ≤ (t : ℝ) * delta * (2 - delta) :=
       mul_nonneg (mul_nonneg ht_nonneg hdelta_nonneg) htwo_minus
-    nlinarith
+    nlinarith only [hprod_nonneg]
   calc
     (t : ℝ) + demandGapForDemand n t ≤ x * lower := htarget_lower
     _ ≤ x * mu := mul_le_mul_of_nonneg_left hmu_ge hx_nonneg
@@ -1238,58 +1239,14 @@ theorem stack_core_log_budget_of_linear_margin {A K : ℝ} {n : ℕ}
         (splitA K n : ℝ) * Real.log ((4 : ℝ) / 3) := by
   have hlog2_nonneg : 0 ≤ Real.log 2 :=
     (Real.log_pos (by norm_num : (1 : ℝ) < 2)).le
-  have hmargin_nonneg := stack_linear_margin_nonneg
-  have hdiva :
-      ((splitA K n / 3 : ℕ) : ℝ) ≤ (splitA K n : ℝ) / 3 :=
-    nat_div_real_le_div (splitA K n) 3 (by decide)
-  have hwidth :=
-    annulusWidthCore_le_sqrt_three_n_log
-      (A := A) (K := K) (n := n) hA hn
-  have hlhsTerm :
-      (((splitA K n / 3 : ℕ) : ℝ) + annulusWidthCore A K n + 1) *
-          Real.log 2 ≤
-        ((splitA K n : ℝ) / 3 +
-            A * Real.sqrt (3 * (n : ℝ) * Real.log (n : ℝ)) + 1) *
-          Real.log 2 := by
-    have hinside :
-        ((splitA K n / 3 : ℕ) : ℝ) + annulusWidthCore A K n + 1 ≤
-          (splitA K n : ℝ) / 3 +
-            A * Real.sqrt (3 * (n : ℝ) * Real.log (n : ℝ)) + 1 := by
-      linarith
-    exact mul_le_mul_of_nonneg_right hinside hlog2_nonneg
-  have hcore := splitM_div_five_real_lower_bound (K := K) (n := n)
-  have hmargin :
-      ((3 : ℝ) * (n : ℝ) / 4) *
-          (Real.log ((4 : ℝ) / 3) - Real.log 2 / 3) ≤
-        (splitA K n : ℝ) *
-          (Real.log ((4 : ℝ) / 3) - Real.log 2 / 3) :=
-    mul_le_mul_of_nonneg_right ha_lower hmargin_nonneg
-  have hrhs :
-      (K * Real.sqrt ((n : ℝ) * Real.log (n : ℝ)) / 5 - 1) *
-            Real.log 2 +
-          ((3 : ℝ) * (n : ℝ) / 4) *
-            (Real.log ((4 : ℝ) / 3) - Real.log 2 / 3) ≤
-        ((splitM K n / 5 : ℕ) : ℝ) * Real.log 2 +
-          (splitA K n : ℝ) * Real.log ((4 : ℝ) / 3) -
-          (splitA K n : ℝ) / 3 * Real.log 2 := by
-    have hcore_log2 := mul_le_mul_of_nonneg_right hcore hlog2_nonneg
-    nlinarith
-  calc
-    Real.log 2 + 2 * Real.log (n : ℝ) +
-        (((splitA K n / 3 : ℕ) : ℝ) + annulusWidthCore A K n + 1) *
-          Real.log 2
-        ≤ Real.log 2 + 2 * Real.log (n : ℝ) +
-          ((splitA K n : ℝ) / 3 +
-              A * Real.sqrt (3 * (n : ℝ) * Real.log (n : ℝ)) + 1) *
-            Real.log 2 := by
-          linarith
-    _ = (Real.log 2 + 2 * Real.log (n : ℝ) +
-          (A * Real.sqrt (3 * (n : ℝ) * Real.log (n : ℝ)) + 1) *
-            Real.log 2) +
-          (splitA K n : ℝ) / 3 * Real.log 2 := by ring
-    _ ≤ ((splitM K n / 5 : ℕ) : ℝ) * Real.log 2 +
-          (splitA K n : ℝ) * Real.log ((4 : ℝ) / 3) := by
-      nlinarith [hcoarse, hrhs]
+  have hdiva := nat_div_real_le_div (splitA K n) 3 (by decide)
+  have hwidth := annulusWidthCore_le_sqrt_three_n_log (K := K) hA hn
+  have hlhs := mul_le_mul_of_nonneg_right
+    (add_le_add_right (add_le_add hdiva hwidth) 1) hlog2_nonneg
+  have hcore := mul_le_mul_of_nonneg_right
+    (splitM_div_five_real_lower_bound (K := K) (n := n)) hlog2_nonneg
+  have hmargin := mul_le_mul_of_nonneg_right ha_lower stack_linear_margin_nonneg
+  linarith only [hlhs, hcore, hmargin, hcoarse]
 
 theorem sqrt_three_n_log_eq (n : ℕ) :
     Real.sqrt (3 * (n : ℝ) * Real.log (n : ℝ)) =
@@ -3596,6 +3553,28 @@ theorem annulusChernoffLambda_le_one_of_three_width_le_splitA
   rw [div_le_iff₀ hden_pos]
   linarith
 
+private theorem chernoff_left_quadratic_le {a w : ℝ} (ha : 0 ≤ a) :
+    let lam := 3 * w / (a + 1);
+    lam * (a / 3 - w) + a * (-lam / 3 + (13 / 54) * lam ^ 2) ≤
+      -((5 / 6) * (w ^ 2 / (a + 1))) := by
+  have hden : 0 < a + 1 := by positivity
+  dsimp
+  field_simp [hden.ne']
+  ring_nf
+  nlinarith only [sq_nonneg w, mul_nonneg ha (sq_nonneg w)]
+
+private theorem chernoff_right_quadratic_le {a w : ℝ} (ha : 0 ≤ a) (hw : 9 ≤ w) :
+    let lam := 3 * w / (a + 1);
+    -(lam * (a / 3 + w - 1)) + a * (lam / 3 + (13 / 54) * lam ^ 2) ≤
+      -((1 / 2) * (w ^ 2 / (a + 1))) := by
+  have hden : 0 < a + 1 := by positivity
+  have hproduct : 0 ≤ (2 * a + 15) * (w - 9) :=
+    mul_nonneg (by positivity) (sub_nonneg.mpr hw)
+  dsimp
+  field_simp [hden.ne']
+  ring_nf
+  nlinarith only [hproduct]
+
 /-- Left-tail standard-lambda log estimate for the annulus window. -/
 theorem left_standard_chernoff_log_le_of_width_exponent
     {A K : ℝ} {n : ℕ} {E : ℝ}
@@ -3609,57 +3588,20 @@ theorem left_standard_chernoff_log_le_of_width_exponent
           Real.log (((1 : ℝ) / 3) *
               Real.exp (-(annulusChernoffLambda A K n)) +
             ((2 : ℝ) / 3)) ≤ -E := by
-  let lam : ℝ := annulusChernoffLambda A K n
+  let lam := annulusChernoffLambda A K n
   let a : ℝ := splitA K n
   let w : ℝ := annulusWidth A K n
-  have hlam0 : 0 ≤ lam := by
-    simpa [lam] using annulusChernoffLambda_nonneg A K n
-  have ha_nonneg : 0 ≤ a := by positivity
-  have hden_pos : 0 < a + 1 := by positivity
-  have hrIn : (rIn A K n : ℝ) ≤ a / 3 - w := by
-    simpa [a, w] using rIn_real_le_third_sub_width
-      (A := A) (K := K) (n := n) hcenter
-  have hlog :=
-    bernoulli_third_left_log_le_quadratic
-      (lam := lam) hlam0 (by simpa [lam] using hlam_le_one)
-  have hfirst :
-      lam * (rIn A K n : ℝ) ≤ lam * (a / 3 - w) :=
-    mul_le_mul_of_nonneg_left hrIn hlam0
-  have hsecond :
-      a *
-          Real.log (((1 : ℝ) / 3) *
-              Real.exp (-(annulusChernoffLambda A K n)) +
-            ((2 : ℝ) / 3)) ≤
-        a * (-lam / 3 + (13 / 54) * lam ^ 2) := by
-    have hlog' :
-        Real.log (((1 : ℝ) / 3) *
-              Real.exp (-(annulusChernoffLambda A K n)) +
-            ((2 : ℝ) / 3)) ≤
-          -lam / 3 + (13 / 54) * lam ^ 2 := by
-      simpa [lam] using hlog
-    exact mul_le_mul_of_nonneg_left hlog' ha_nonneg
-  have hquad :
-      lam * (a / 3 - w) +
-          a * (-lam / 3 + (13 / 54) * lam ^ 2) ≤
-        -((5 / 6) * (w ^ 2 / (a + 1))) := by
-    dsimp [lam, a, w, annulusChernoffLambda]
-    field_simp [hden_pos.ne']
-    ring_nf
-    nlinarith [sq_nonneg w, mul_nonneg ha_nonneg (sq_nonneg w)]
-  have htail : -((5 / 6) * (w ^ 2 / (a + 1))) ≤ -E := by
-    simpa [a, w] using neg_le_neg hE
+  have hlam0 : 0 ≤ lam := annulusChernoffLambda_nonneg A K n
+  have ha : 0 ≤ a := Nat.cast_nonneg _
+  have hrIn : (rIn A K n : ℝ) ≤ a / 3 - w :=
+    rIn_real_le_third_sub_width hcenter
+  have hlog := bernoulli_third_left_log_le_quadratic hlam0 hlam_le_one
   calc
-    annulusChernoffLambda A K n * (rIn A K n : ℝ) +
-        (splitA K n : ℝ) *
-          Real.log (((1 : ℝ) / 3) *
-              Real.exp (-(annulusChernoffLambda A K n)) +
-            ((2 : ℝ) / 3))
-        ≤ lam * (a / 3 - w) +
-            a * (-lam / 3 + (13 / 54) * lam ^ 2) := by
-          dsimp [lam, a]
-          linarith
-    _ ≤ -((5 / 6) * (w ^ 2 / (a + 1))) := hquad
-    _ ≤ -E := htail
+    _ ≤ lam * (a / 3 - w) + a * (-lam / 3 + (13 / 54) * lam ^ 2) :=
+      add_le_add (mul_le_mul_of_nonneg_left hrIn hlam0)
+        (mul_le_mul_of_nonneg_left hlog ha)
+    _ ≤ -((5 / 6) * (w ^ 2 / (a + 1))) := chernoff_left_quadratic_le ha
+    _ ≤ -E := neg_le_neg hE
 
 /-- Right-tail standard-lambda log estimate for the annulus window.  The
 assumption `9≤w` absorbs the one-unit floor slack in `rOut`. -/
@@ -3675,70 +3617,20 @@ theorem right_standard_chernoff_log_le_of_width_exponent
           Real.log (((1 : ℝ) / 3) *
               Real.exp (annulusChernoffLambda A K n) +
             ((2 : ℝ) / 3)) ≤ -E := by
-  let lam : ℝ := annulusChernoffLambda A K n
+  let lam := annulusChernoffLambda A K n
   let a : ℝ := splitA K n
   let w : ℝ := annulusWidth A K n
-  have hlam0 : 0 ≤ lam := by
-    simpa [lam] using annulusChernoffLambda_nonneg A K n
-  have ha_nonneg : 0 ≤ a := by positivity
-  have hw_nonneg : 0 ≤ w := by positivity
-  have hden_pos : 0 < a + 1 := by positivity
-  have hrOut : a / 3 + w - 1 ≤ (rOut A K n : ℝ) := by
-    simpa [a, w] using third_add_width_sub_one_le_rOut_real
-      (A := A) (K := K) (n := n)
-  have hlog :=
-    bernoulli_third_right_log_le_quadratic
-      (lam := lam) hlam0 (by simpa [lam] using hlam_le_one)
-  have hfirst :
-      -(lam * (rOut A K n : ℝ)) ≤ -(lam * (a / 3 + w - 1)) := by
-    have hmul := mul_le_mul_of_nonneg_left hrOut hlam0
-    exact neg_le_neg hmul
-  have hsecond :
-      a *
-          Real.log (((1 : ℝ) / 3) *
-              Real.exp (annulusChernoffLambda A K n) +
-            ((2 : ℝ) / 3)) ≤
-        a * (lam / 3 + (13 / 54) * lam ^ 2) := by
-    have hlog' :
-        Real.log (((1 : ℝ) / 3) *
-              Real.exp (annulusChernoffLambda A K n) +
-            ((2 : ℝ) / 3)) ≤
-          lam / 3 + (13 / 54) * lam ^ 2 := by
-      simpa [lam] using hlog
-    exact mul_le_mul_of_nonneg_left hlog' ha_nonneg
-  have hwidth_w : 9 ≤ w := by
-    simpa [w] using hwidth
-  have hw_sq : 9 * w ≤ w ^ 2 := by
-    have hmul := mul_le_mul_of_nonneg_right hwidth_w hw_nonneg
-    nlinarith
-  have h_a_part : 18 * a * w ≤ 2 * a * w ^ 2 := by
-    have hmul :=
-      mul_le_mul_of_nonneg_left hw_sq (by positivity : 0 ≤ 2 * a)
-    nlinarith
-  have h_const_part : 18 * w ≤ 15 * w ^ 2 := by
-    nlinarith
-  have hquad :
-      -(lam * (a / 3 + w - 1)) +
-          a * (lam / 3 + (13 / 54) * lam ^ 2) ≤
-        -((1 / 2) * (w ^ 2 / (a + 1))) := by
-    dsimp [lam, a, w, annulusChernoffLambda]
-    field_simp [hden_pos.ne']
-    ring_nf
-    nlinarith [h_a_part, h_const_part]
-  have htail : -((1 / 2) * (w ^ 2 / (a + 1))) ≤ -E := by
-    simpa [a, w] using neg_le_neg hE
+  have hlam0 : 0 ≤ lam := annulusChernoffLambda_nonneg A K n
+  have ha : 0 ≤ a := Nat.cast_nonneg _
+  have hrOut : a / 3 + w - 1 ≤ (rOut A K n : ℝ) :=
+    third_add_width_sub_one_le_rOut_real
+  have hlog := bernoulli_third_right_log_le_quadratic hlam0 hlam_le_one
   calc
-    -(annulusChernoffLambda A K n * (rOut A K n : ℝ)) +
-        (splitA K n : ℝ) *
-          Real.log (((1 : ℝ) / 3) *
-              Real.exp (annulusChernoffLambda A K n) +
-            ((2 : ℝ) / 3))
-        ≤ -(lam * (a / 3 + w - 1)) +
-            a * (lam / 3 + (13 / 54) * lam ^ 2) := by
-          dsimp [lam, a]
-          linarith
-    _ ≤ -((1 / 2) * (w ^ 2 / (a + 1))) := hquad
-    _ ≤ -E := htail
+    _ ≤ -(lam * (a / 3 + w - 1)) + a * (lam / 3 + (13 / 54) * lam ^ 2) :=
+      add_le_add (neg_le_neg (mul_le_mul_of_nonneg_left hrOut hlam0))
+        (mul_le_mul_of_nonneg_left hlog ha)
+    _ ≤ -((1 / 2) * (w ^ 2 / (a + 1))) := chernoff_right_quadratic_le ha hwidth
+    _ ≤ -E := neg_le_neg hE
 
 /-- Algebraic form of the Chernoff exponent target with `E_n=6 log n`. -/
 theorem chernoff_six_log_of_width_sq {A K : ℝ} {n : ℕ}
@@ -5750,63 +5642,28 @@ theorem explicit_widthConstCutoff_of_splitThreshold {n0 : ℕ}
     Real.log 128 + 4 * Real.log 2 ≤
       ((217 : ℝ) / 30 * Real.log 2) *
         Real.sqrt ((n0 : ℝ) * Real.log (n0 : ℝ)) := by
-  have hn15 : (15 : ℝ) ≤ (n0 : ℝ) := by
-    have hbig : (15 : ℝ) ≤ (128 * (217 : ℝ) ^ 2) ^ 2 := by norm_num
-    exact hbig.trans hsplitThreshold
-  have hn2 : (2 : ℝ) ≤ (n0 : ℝ) := by linarith
-  have hlog2Lower : (3 : ℝ) / 5 ≤ Real.log 2 := by
-    have h := Real.log_two_gt_d9
-    norm_num at h ⊢
-    linarith
-  have hlog2le : Real.log 2 ≤ Real.log (n0 : ℝ) :=
-    Real.log_le_log (by norm_num : (0 : ℝ) < 2) hn2
+  have hn15 : (15 : ℝ) ≤ (n0 : ℝ) :=
+    (by norm_num : (15 : ℝ) ≤ (128 * (217 : ℝ) ^ 2) ^ 2).trans hsplitThreshold
   have hlogLower : (3 : ℝ) / 5 ≤ Real.log (n0 : ℝ) :=
-    hlog2Lower.trans hlog2le
-  have hargLower : (9 : ℝ) ≤ (n0 : ℝ) * Real.log (n0 : ℝ) := by
-    nlinarith
-  have harg_nonneg : 0 ≤ (n0 : ℝ) * Real.log (n0 : ℝ) := by
-    nlinarith
-  have hsqrtLower :
-      (3 : ℝ) ≤ Real.sqrt ((n0 : ℝ) * Real.log (n0 : ℝ)) := by
-    have hsq :
-        (3 : ℝ) ^ 2 ≤
-          (Real.sqrt ((n0 : ℝ) * Real.log (n0 : ℝ))) ^ 2 := by
-      rw [Real.sq_sqrt harg_nonneg]
-      norm_num
-      exact hargLower
-    exact (sq_le_sq₀ (by norm_num : (0 : ℝ) ≤ 3)
-      (Real.sqrt_nonneg _)).mp hsq
-  have hlog2Sharp : (6931471803 : ℝ) / 10000000000 ≤ Real.log 2 := by
-    have h := Real.log_two_gt_d9
-    norm_num at h ⊢
-    linarith
+    (by linarith only [Real.log_two_gt_d9] : (3 : ℝ) / 5 ≤ Real.log 2).trans
+      (Real.log_le_log (by norm_num) (by linarith only [hn15]))
+  have hsqrtLower : (3 : ℝ) ≤ Real.sqrt ((n0 : ℝ) * Real.log (n0 : ℝ)) :=
+    Real.le_sqrt_of_sq_le (calc
+      (3 : ℝ) ^ 2 = 15 * (3 / 5) := by norm_num
+      _ ≤ (n0 : ℝ) * Real.log (n0 : ℝ) :=
+        mul_le_mul hn15 hlogLower (by norm_num) (Nat.cast_nonneg _))
   have hcoeffLower : (5 : ℝ) ≤ (217 : ℝ) / 30 * Real.log 2 := by
-    nlinarith
-  have hlog2_pos : 0 < Real.log 2 :=
-    Real.log_pos (by norm_num : (1 : ℝ) < 2)
-  have hcoeff_nonneg : 0 ≤ (217 : ℝ) / 30 * Real.log 2 := by positivity
-  have hrhsLower :
-      (15 : ℝ) ≤
-        ((217 : ℝ) / 30 * Real.log 2) *
-          Real.sqrt ((n0 : ℝ) * Real.log (n0 : ℝ)) := by
-    calc
-      (15 : ℝ) = 5 * 3 := by norm_num
-      _ ≤ ((217 : ℝ) / 30 * Real.log 2) *
-          Real.sqrt ((n0 : ℝ) * Real.log (n0 : ℝ)) :=
-        mul_le_mul hcoeffLower hsqrtLower
-          (by norm_num : (0 : ℝ) ≤ 3) hcoeff_nonneg
-  have hlog128 : Real.log 128 = 7 * Real.log 2 := by
-    rw [show (128 : ℝ) = 2 ^ 7 by norm_num]
-    simp_all
+    linarith only [Real.log_two_gt_d9]
   have hlhs : Real.log 128 + 4 * Real.log 2 ≤ 11 := by
-    rw [hlog128]
-    have hlog2le1 := log_two_le_one
-    nlinarith
+    rw [show (128 : ℝ) = 2 ^ 7 by norm_num, Real.log_pow]
+    norm_num
+    linarith only [log_two_le_one]
   calc
     Real.log 128 + 4 * Real.log 2 ≤ 11 := hlhs
-    _ ≤ 15 := by norm_num
+    _ ≤ 5 * 3 := by norm_num
     _ ≤ ((217 : ℝ) / 30 * Real.log 2) *
-          Real.sqrt ((n0 : ℝ) * Real.log (n0 : ℝ)) := hrhsLower
+        Real.sqrt ((n0 : ℝ) * Real.log (n0 : ℝ)) :=
+      mul_le_mul hcoeffLower hsqrtLower (by norm_num) (by linarith only [hcoeffLower])
 
 /-- The stack logarithmic cutoff follows from the explicit split cutoff. -/
 theorem explicit_stackLogThreshold_of_splitThreshold {n0 : ℕ}

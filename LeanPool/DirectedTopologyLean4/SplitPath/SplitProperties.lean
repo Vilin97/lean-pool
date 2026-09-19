@@ -3,11 +3,16 @@ Copyright (c) 2026 Dominique Lawson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
-import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
-import LeanPool.DirectedTopologyLean4.Fraction
+module
+
+public import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
 import LeanPool.DirectedTopologyLean4.FractionEqualities
+import LeanPool.DirectedTopologyLean4.UnitIntervalAux
+import Mathlib.CategoryTheory.Category.Init
 
 /-! ### General -/
+
+@[expose] public section
 
 /-
   This file contains many lemmas about relations that the parts of a split path satisfy.

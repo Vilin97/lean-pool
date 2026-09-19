@@ -3,14 +3,17 @@ Copyright (c) 2026 Jineon Baek. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jineon Baek
 -/
+module
 
-import LeanPool.ErdosTuzaValtr.Lib.List.Defs
+public import LeanPool.ErdosTuzaValtr.Lib.List.Defs
 
 /-!
 # LeanPool.ErdosTuzaValtr.Lib.List.Chain3
 
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.List.Chain3`.
 -/
+
+@[expose] public section
 
 variable {α : Type _} {R : α → α → α → Prop}
 

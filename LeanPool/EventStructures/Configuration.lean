@@ -3,8 +3,11 @@ Copyright (c) 2026 Vikraman Choudhury. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vikraman Choudhury
 -/
-import LeanPool.EventStructures.Basic
-import Mathlib.Data.Finset.Basic
+module
+
+public import LeanPool.EventStructures.Basic
+public import Mathlib.Data.Finset.Defs
+import Mathlib.Data.Finset.Attr
 
 /-!
 # Configurations
@@ -14,6 +17,8 @@ events. This module defines configurations (and their finite variant), the
 enabling relation between a configuration and an event, and proves that enabling
 an event extends a configuration.
 -/
+
+@[expose] public section
 
 namespace EventStructures
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-
-import LeanPool.OSforGFF.Spacetime.Basic
+public import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Generating Functional and Schwinger Functions
@@ -17,6 +19,8 @@ Schwinger n-point functions Sₙ(f₁,...,fₙ) = ∫ ⟨ω,f₁⟩...⟨ω,fₙ
 For centered Gaussian measures: Z[J] = exp(−½⟨J,CJ⟩) and all Sₙ are
 determined by Wick's theorem from the two-point function S₂ = C.
 -/
+
+@[expose] public section
 
 open MeasureTheory Complex
 open TopologicalSpace

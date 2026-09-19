@@ -3,8 +3,15 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.PoincareThreeBody.JointSlabIntegral
+import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 /-!
 # Analyticity under integration over a compact time set
@@ -13,6 +20,8 @@ A finite subcover of the compact time set reduces the result to the one-slab the
 inclusion-exclusion for the finite cover, so no explicit partition or ordering of its members is
 needed.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

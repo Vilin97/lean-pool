@@ -3,11 +3,15 @@ Copyright (c) 2026 Judith Ludwig, Christian Merten. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
-import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
+module
+
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 
 /-!
 # LeanPool.BruhatTits.Utils.RingHom
 -/
+
+@[expose] public section
 
 open Module
 

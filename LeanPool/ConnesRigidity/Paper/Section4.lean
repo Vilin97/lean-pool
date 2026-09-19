@@ -5,8 +5,10 @@ Authors: Utensil Song
 -/
 /-
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
-import LeanPool.ConnesRigidity.Paper.Section4.SpectralFiniteDetection
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
+public import LeanPool.ConnesRigidity.Paper.Section4.SpectralFiniteDetection
 
 /-!
 # Zhou §4: property (T)
@@ -14,3 +16,5 @@ import LeanPool.ConnesRigidity.Paper.Section4.SpectralFiniteDetection
 The section endpoint combines the `EL₃ = SL₃` bridge, finite extensions,
 spectral measures, and the concrete finite detector certificates.
 -/
+
+@[expose] public section

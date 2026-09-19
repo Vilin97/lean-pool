@@ -3,9 +3,14 @@ Copyright (c) 2026 Lior Pachter. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lior Pachter
 -/
+module
 
+public import LeanPool.PebblingLean.Basic
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Nat.Choose.Basic
+import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Fintype.Powerset
-import LeanPool.PebblingLean.Basic
+import Mathlib.Tactic.Bound.Init
 
 /-!
 # Hypercubes
@@ -14,6 +19,8 @@ The `n`-dimensional hypercube is represented as Boolean coordinate functions
 `Fin n → Bool`. Two vertices are adjacent when they differ in exactly one
 coordinate.
 -/
+
+@[expose] public section
 
 namespace PebblingLean
 

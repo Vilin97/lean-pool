@@ -3,8 +3,10 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.LeanEval.ChallengeDeps
-import Mathlib.Geometry.Manifold.Instances.Sphere
+module
+
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Eval representatives and normal-form indices
@@ -14,7 +16,7 @@ The Lean-Eval challenge owns `Complex.ClosedUnitDisc`, `OrientableRel`, and
 only the project-owned sphere abbreviation and the index type used by the normal-form reduction.
 -/
 
-open scoped Manifold
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

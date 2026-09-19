@@ -13,11 +13,17 @@ that operation.  In particular, the public theorem below keeps the source's
 free-variable freshness condition; it does not strengthen it to freshness from
 bound names merely to fit the raw representation.
 -/
-import LeanPool.MatchingLogic.EntryIII.MCSAlpha
+module
+
+public import LeanPool.MatchingLogic.EntryIII.CaptureAvoiding
+import LeanPool.MatchingLogic.EntryIII.Alpha
+import LeanPool.MatchingLogic.EntryIII.LocalTheory
 
 /-!
 # MatchingLogic.EntryIII.WitnessPush
 -/
+
+@[expose] public section
 
 namespace MatchingLogic
 

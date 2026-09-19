@@ -3,11 +3,13 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.Logic.Entailment
-import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
+public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Context
 
 /-! # Supplemental -/
+
+@[expose] public section
 
 
 namespace LO
@@ -947,7 +949,7 @@ noncomputable instance [HasAxiomDNE 𝓢] : HasAxiomPeirce 𝓢 where
     apply deduct;
     refine (FiniteContext.byAxm (φ := (φ ==> ψ) ==> φ)) ⨀ ?_;
     apply deduct;
-    apply efqOfMemEither (by aesop) (by aesop)
+    apply efqOfMemEither (φ := φ) (by aesop) (by aesop)
 
 omit [DecidableEq F] in
 instance [HasAxiomDNE 𝓢] : HasAxiomElimContra 𝓢 where

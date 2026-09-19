@@ -3,9 +3,14 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue.MeasureHelpers
-import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+public import LeanPool.LeanModularForms.GeneralizedResidueTheory.Residue
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Multi-point Principal Value Infrastructure
@@ -26,6 +31,8 @@ sums of single-point PVs.
 * `multipointPV_eq_sum_of_integral_zero` — multi-point PV equals
   sum of single-point PVs when regular integral vanishes
 -/
+
+@[expose] public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

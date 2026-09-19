@@ -9,13 +9,17 @@ I[X:Y|Z])
 into scope for downstream modules, and hosts generic helpers reusable across the
 `ZhangYeung`
 hierarchy. -/
-import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
+module
+
+public import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.Prelude
 
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Prelude`.
 -/
+
+@[expose] public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ZhangYeungPFR

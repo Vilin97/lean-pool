@@ -3,12 +3,20 @@ Copyright (c) 2026 Vincent Beffara. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 -/
-import LeanPool.RiemannMappingTheorem.ToMathlib
+module
+
+public import Mathlib.Analysis.Calculus.FDeriv.Comp
+
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
 import LeanPool.RiemannMappingTheorem.DerivInj
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # LeanPool.RiemannMappingTheorem.Defs
 -/
+
+@[expose] public section
 
 open Complex Metric Set
 

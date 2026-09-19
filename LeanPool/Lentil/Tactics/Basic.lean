@@ -3,9 +3,16 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Aesop
-import Batteries.Tactic.Basic
-import LeanPool.Lentil.Basic
+module
+
+public import LeanPool.Lentil.Basic
+public import Aesop.BuiltinRules
+public import Lean.Elab.Tactic.Basic
+public import Lean.Meta.Tactic.Replace
+public import Std.Do.Triple.SpecLemmas
+import LeanPool.Lentil.Util
+
+@[expose] public section
 
 open Lean Meta Elab Tactic
 

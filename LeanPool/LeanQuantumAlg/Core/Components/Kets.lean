@@ -6,8 +6,8 @@ Authors: QudeLeap Team
 
 module
 
-public import LeanPool.LeanQuantumAlg.Init
 public import LeanPool.LeanQuantumAlg.Core.Measurement
+public import LeanPool.LeanQuantumAlg.Core.Tensor
 
 /-!
 # Named one-qubit kets

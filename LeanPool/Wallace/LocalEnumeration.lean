@@ -3,13 +3,17 @@ Copyright (c) 2026 Juliane Trianon Fraga and Vinicius de Oliveira Rodrigues. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
+module
 
-import Mathlib.Data.Finsupp.Encodable
-import Mathlib.Data.Set.Countable
+public import Mathlib.Data.Set.Countable
+public import Mathlib.Data.Finsupp.Defs
+public import Mathlib.Data.Finsupp.Encodable
 
 /-!
 # Enumeration of a countable local direct sum
 -/
+
+@[expose] public section
 
 namespace Wallace
 

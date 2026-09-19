@@ -3,8 +3,15 @@ Copyright (c) 2026 Carles Marín. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Carles Marín
 -/
+module
 
-import LeanPool.RungeKuttaOrderConditions.ButcherOrder
+public import LeanPool.RungeKuttaOrderConditions.ButcherOrder
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Certified Runge-Kutta Order Conditions
@@ -16,3 +23,5 @@ Main declarations: `RungeKuttaOrderConditions.Butcher.gauss_order6_rat`
 Tags: numerical-analysis, runge-kutta, rooted-trees, order-conditions
 MSC: 65L06, 65L05, 05C05
 -/
+
+@[expose] public section

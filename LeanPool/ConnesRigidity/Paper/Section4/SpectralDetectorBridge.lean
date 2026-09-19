@@ -3,13 +3,17 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetector
-import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section4.SpectralDetector
+public import LeanPool.ConnesRigidity.Paper.Section4.SpectralPropertyT
 
 /-!
 Transport of Zhou's compact-dual detector estimate to the raw Pontryagin-dual
 carrier used by the generic split-extension criterion. Paper: §4.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperSpectralDetectorBridge

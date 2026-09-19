@@ -3,13 +3,11 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
+public import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
 import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 import Mathlib.Analysis.Calculus.LocalExtr.Basic
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Calculus.FDeriv.CompCLM
-import Mathlib.Topology.Order.Compact
 
 /-!
 # Helper lemmas for Hessian coercivity from PŁ
@@ -19,6 +17,8 @@ in `Submanifold.lean`. The proof uses the Rayleigh quotient minimizer
 approach: the minimum of H(w,w) on the unit sphere of ker(H)⊥ is attained
 at an eigenvector, and PŁ forces this minimum to be ≥ μ.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric Submodule Asymptotics
 

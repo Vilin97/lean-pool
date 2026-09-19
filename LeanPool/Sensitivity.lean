@@ -3,15 +3,18 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+module
 
-import LeanPool.Sensitivity.Defs
-import LeanPool.Sensitivity.Basic
-import LeanPool.Sensitivity.Multilinear
-import LeanPool.Sensitivity.Subcube
-import LeanPool.Sensitivity.Parity
-import LeanPool.Sensitivity.HuangBridge
-import LeanPool.Sensitivity.Main
-import LeanPool.Sensitivity.Consequences
+public import LeanPool.Sensitivity.Defs
+public import LeanPool.Sensitivity.Basic
+public import LeanPool.Sensitivity.Multilinear
+public import LeanPool.Sensitivity.Subcube
+public import LeanPool.Sensitivity.Parity
+public import LeanPool.Sensitivity.HuangBridge
+public import LeanPool.Sensitivity.Main
+public import LeanPool.Sensitivity.Consequences
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-!
 # Sensitivity Conjecture: sqrt(deg) <= sensitivity
@@ -23,6 +26,8 @@ Main declarations: `LeanPoolSensitivity.sensitivity_ge_sqrt_degree`
 Tags: combinatorics, boolean-functions, computational-complexity
 MSC: 06E30, 68Q17
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview
@@ -39,7 +44,7 @@ sensitivity conjecture: for every Boolean function `f` with `deg(f) ≥ 1`,
 `deg(f) ≤ s(f)²`. The argument restricts `f` to a subcube of dimension
 `deg(f)` on which the top Möbius coefficient is preserved, derives a
 parity-sign imbalance there, and feeds the result into the Huang hypercube
-lemma `Sensitivity.huang_degree_theorem` from `Mathlib`'s
+lemma `LeanPoolSensitivity.Huang.huang_degree_theorem`, a module port of Mathlib’s
 `Archive.Sensitivity`.
 
 The exported modules follow the proof structure: core definitions

@@ -3,7 +3,17 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Ehrlich
 -/
-import LeanPool.CompositionAlgebras.Composition.Doubling
+module
+
+public import LeanPool.CompositionAlgebras.Composition.Defs
+public import Mathlib.LinearAlgebra.BilinearMap
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Algebra.Order.Field.Power
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 
 /-!
@@ -53,6 +63,8 @@ Substrate for the classification. The headline declaration is the instance
 `CD.instCompositionAlgebra`; the classification itself is
 `Composition/Classification.lean`.
 -/
+
+@[expose] public section
 
 namespace CompositionAlgebra
 

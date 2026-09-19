@@ -3,15 +3,16 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Path.Planar
-import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
-import LeanPool.JacobianDiffgeo.Path.Chain
-import LeanPool.JacobianDiffgeo.Path.Continuation
-import LeanPool.JacobianDiffgeo.Path.Bridge
-import LeanPool.JacobianDiffgeo.Path.HomotopySquare
-import LeanPool.JacobianDiffgeo.Path.Periods
-import LeanPool.JacobianDiffgeo.Path.Perturb
+public import LeanPool.JacobianDiffgeo.Path.Planar
+public import LeanPool.JacobianDiffgeo.Path.LocalPrimitive
+public import LeanPool.JacobianDiffgeo.Path.Chain
+public import LeanPool.JacobianDiffgeo.Path.Continuation
+public import LeanPool.JacobianDiffgeo.Path.Bridge
+public import LeanPool.JacobianDiffgeo.Path.HomotopySquare
+public import LeanPool.JacobianDiffgeo.Path.Periods
+public import LeanPool.JacobianDiffgeo.Path.Perturb
 
 /-!
 # paths-and-integrals (CC6): integration of holomorphic 1-forms along continuous paths
@@ -72,3 +73,5 @@ No `T2Space`/`CompactSpace`/`ConnectedSpace` anywhere in this unit (compactness 
 `[0,1]²` does all the work). No dependency on `Jacobian.Surface` (the `chartAt`-chart trick in
 the bridge/FTC lemma removes the only candidate dependency).
 -/
+
+@[expose] public section

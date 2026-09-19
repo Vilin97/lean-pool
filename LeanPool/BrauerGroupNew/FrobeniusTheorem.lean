@@ -3,18 +3,29 @@ Copyright (c) 2026 Yunzhou Xie and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 -/
+module
 
+public import Mathlib.Algebra.QuaternionBasis
+public import LeanPool.BrauerGroupNew.Subfield.Defs
+public import Mathlib.Algebra.Central.Defs
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import LeanPool.BrauerGroupNew.DoubleCentralizer
+import LeanPool.BrauerGroupNew.SkolemNoether
 import LeanPool.BrauerGroupNew.Subfield.FiniteDimensional
 import LeanPool.BrauerGroupNew.Subfield.Subfield
-import Mathlib.Algebra.QuaternionBasis
-import Mathlib.Analysis.Quaternion
-import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.FieldTheory.PurelyInseparable.Basic
+import Mathlib.LinearAlgebra.FreeModule.PID
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # LeanPool.BrauerGroupNew.FrobeniusTheorem
 
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.FrobeniusTheorem`.
 -/
+
+@[expose] public section
 
 suppress_compilation
 
@@ -26,11 +37,8 @@ section prerequisites
 
 theorem rank_1_D_iso_R [Algebra ℝ D] : Module.finrank ℝ D = 1 →
     Nonempty (D ≃ₐ[ℝ] ℝ) := fun h ↦ by
-  have h' := Subalgebra.finrank_eq_one_iff (F := ℝ) (S := (⊤ : Subalgebra ℝ D))
-  have : Module.finrank ℝ (⊤ : Subalgebra ℝ D) = 1 := by
-    simp_all only [Subalgebra.finrank_eq_one_iff, Subalgebra.bot_eq_top_of_finrank_eq_one]
-  exact ⟨Subalgebra.topEquiv.symm.trans <| Subalgebra.equivOfEq _ _
-    (h'.1 this)|>.trans <| Algebra.botEquiv ℝ D⟩
+  exact ⟨(AlgEquiv.ofBijective (Algebra.ofId ℝ D)
+    (Algebra.finrank_eq_one_iff_bijective_algebraMap.mp h)).symm⟩
 
 lemma RealExtension_is_RorC (K : Type) [Field K] [Algebra ℝ K] [FiniteDimensional ℝ K] :
     Nonempty (K ≃ₐ[ℝ] ℝ) ∨ Nonempty (K ≃ₐ[ℝ] ℂ) := by
@@ -80,16 +88,7 @@ abbrev f : k →ₐ[ℝ] k where
   map_add' x y := by simp only [map_add]
   commutes' := fun r ↦ by
     simp only [AlgEquiv.commutes, Complex.coe_algebraMap, Complex.conj_ofReal]
-    rw [← mul_one (algebraMap _ _ r), ← Algebra.smul_def]
-    nth_rw 1 [← mul_one r]
-    unfold Complex.ofReal
-    rw [← smul_eq_mul, show (⟨r • 1, 0⟩ : ℂ) = r • ⟨1, 0⟩ by
-      apply Complex.ext
-      · simp only [smul_eq_mul, mul_one, Complex.real_smul, Complex.mul_re, Complex.ofReal_re,
-        Complex.ofReal_im, mul_zero, sub_zero]
-      · simp only [Complex.real_smul, Complex.mul_im, Complex.ofReal_re, mul_zero,
-        Complex.ofReal_im, mul_one, add_zero]]
-    rw [_root_.map_smul, show ⟨1, 0⟩ = (1 : ℂ) by rfl, _root_.map_one]
+    exact e.symm.commutes r
 
 omit hD' in
 lemma f_injective : Function.Injective (f k e) := by

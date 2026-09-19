@@ -3,15 +3,22 @@ Copyright (c) 2026 Elan Roth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
+module
 
+public import LeanPool.UlmsTheorem.PGroups.UlmInvariants
 import LeanPool.UlmsTheorem.Ulm.Classification
 import LeanPool.UlmsTheorem.Ulm.Invariance
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Ulm's theorem
 
 Public entry point for the Ulm-theorem track of the project.
 -/
+
+@[expose] public section
 
 namespace UlmsTheorem
 

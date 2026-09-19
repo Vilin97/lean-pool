@@ -3,10 +3,17 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise516
-import Mathlib.Data.Nat.Bits
-import Mathlib.Tactic.Ring
+public import LeanPool.DomainTheory.Neighborhood.Exercise516
+public import Mathlib.Data.Nat.Bits
+public import Mathlib.Algebra.Group.Nat.Defs
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Exercise 5.16 follow-up (Scott 1981, PRG-19, Lecture V) — the Thue–Morse
@@ -56,6 +63,8 @@ uniqueness lemmas. Overlap-freeness (property (b)) is a self-contained
 word-combinatorics theorem and
 lives in its own module.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise516
 
@@ -208,7 +217,7 @@ theorem tmList_length (n : ℕ) : (tmList n).length = n := by
 /-- Thue–Morse prefixes are nested in the prefix order. -/
 theorem tmList_prefix {n m : ℕ} (h : n ≤ m) : tmList n <+: tmList m := by
   induction m with
-  | zero => rw [Nat.le_zero.mp h]
+  | zero => rw [Nat.le_zero.mp h]; exact List.prefix_rfl
   | succ m ih =>
     rcases Nat.lt_succ_iff_lt_or_eq.mp (Nat.lt_succ_of_le h) with hlt | rfl
     · exact (ih (Nat.lt_succ_iff.mp hlt)).trans (by rw [tmList_succ]; exact List.prefix_append _ _)

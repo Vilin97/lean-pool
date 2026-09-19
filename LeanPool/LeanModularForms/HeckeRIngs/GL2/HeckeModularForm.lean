@@ -3,8 +3,11 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GL2.HeckeAction
+public import LeanPool.LeanModularForms.HeckeRIngs.GL2.HeckeAction
+public import Mathlib.NumberTheory.ModularForms.Basic
+import LeanPool.LeanModularForms.HeckeRIngs.AbstractHeckeRing.Associativity
 
 /-!
 # Hecke Operators as Endomorphisms of Modular Forms
@@ -22,6 +25,8 @@ proving holomorphicity, linearity, and boundedness at cusps.
 
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.4
 -/
+
+@[expose] public section
 
 open Matrix Matrix.SpecialLinearGroup Subgroup.Commensurable Pointwise
 open HeckeRing DoubleCoset HeckeRing.GLn HeckeRing.GL2

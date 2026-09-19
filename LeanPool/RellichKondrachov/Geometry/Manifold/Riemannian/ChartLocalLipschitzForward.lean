@@ -3,8 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import Mathlib.Geometry.Manifold.Riemannian.Basic
+public import Mathlib.Geometry.Manifold.Riemannian.Basic
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Riemannian.ChartLocalLipschitzForward`
@@ -16,6 +17,8 @@ Local Lipschitz control for the (forward) extended chart on a Riemannian manifol
 
 - `RellichKondrachov.Geometry.Manifold.Riemannian.lipschitzOnWith_extChartAt_ofRiemannianMetric`
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Geometry

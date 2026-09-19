@@ -7,7 +7,7 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import LeanPool.LeanModularForms.Modularforms.IccIcoLems
+import LeanPool.LeanModularForms.Modularforms.IccIcoLems
 
 /-! # LimunderLems -/
 

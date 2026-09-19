@@ -3,9 +3,14 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonSublanguage
-import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelationalize
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+public import LeanPool.InfinitaryLogic.Lomega1omega.Polarity
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
 import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigArbitrary
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonRelationalize
+import LeanPool.InfinitaryLogic.Methods.Interpolation.LyndonSublanguage
 /-!
 # Lyndon interpolation, arbitrary language (issue #14, Unit 7)
 
@@ -33,6 +38,8 @@ The assembly is Craig's, reused verbatim wherever polarity is irrelevant:
   the two preimage root corollaries (`preimage_baseRelSym_graphAnd/Imp`);
 * both entailments are Craig's graph-expansion arguments, unchanged.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

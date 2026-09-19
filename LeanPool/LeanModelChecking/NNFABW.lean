@@ -3,11 +3,15 @@ Copyright (c) 2026 György Kurucz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: György Kurucz
 -/
-import Mathlib.Topology.Order.MonotoneConvergence
-import Mathlib.Topology.Instances.Discrete
+module
 
-import LeanPool.LeanModelChecking.LTLNNF
-import LeanPool.LeanModelChecking.ABW
+
+public import LeanPool.LeanModelChecking.LTLNNF
+public import LeanPool.LeanModelChecking.ABW
+public import Mathlib.Order.Lattice.Nat
+public import Mathlib.Tactic.Continuity
+import Mathlib.Topology.Instances.Discrete
+import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # From NNF formulas to alternating Büchi automata
@@ -15,6 +19,8 @@ import LeanPool.LeanModelChecking.ABW
 We construct, for every negation normal form formula, an alternating Büchi
 automaton (`ABW`) accepting the same language, establishing `exists_ABW_lang_for_LTL`.
 -/
+
+@[expose] public section
 
 namespace LeanModelChecking
 
@@ -591,73 +597,46 @@ lemma runDag_p_sat
       let (q, i) := v
       ∃ Y, PositiveBool.Sat Y (M.δ q (w i)) ∧
         {(q, i)} ×ˢ Y ⊆ (dag leφ₁ leφ₂ M₁.q₀ M₂.q₀ M.q₀ G₁.toDAG G₂.toDAG).E := by
-    intros v hv
-    simp only [dag, base, Set.mem_union] at hv
-    rcases hv with (hv|hv)|hv
-    · simp only [Set.mem_singleton_iff] at hv; subst hv
-      obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat (M₁.q₀, 0) G₁.p_root
-      obtain ⟨Y₂, p_sat₂, p_sub₂⟩ := G₂.p_sat (M₂.q₀, 0) G₂.p_root
-      exists (((Subtype.embedLe leφ₁) '' Y₁) ∪ ((Subtype.embedLe leφ₂) '' Y₂))
-      constructor
-      · grind
-      · rw [Set.subset_def]
-        simp only [
-          Set.prod_union, Set.mem_union, Set.mem_prod, Set.mem_singleton_iff,
-          Set.mem_image, Subtype.exists, dag, base, Set.singleton_union, Prod.mk.eta, Prod.mk.injEq,
-          Functor.map, Prod.exists, Prod.forall, Subtype.forall,
-        ]
-        rintro q pq l q' _
-        rintro (⟨⟨q_eq, rfl⟩, ⟨pq', q'_in_Y₁⟩⟩|⟨⟨q_eq, rfl⟩, ⟨pq', q'_in_Y₂⟩⟩)
-        · left; grind
-        · right; grind
-    · simp only [Set.mem_image, Set.mem_sdiff, Set.mem_singleton_iff, Prod.exists, Prod.mk.injEq,
-      not_and, Subtype.exists] at hv
-      rcases hv with ⟨q, pq, l, ⟨hV₁, not_root⟩, rfl⟩
-      obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
-      exists Subtype.embedLe leφ₁ '' Y₁
-      constructor
-      · rw [delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
-        exact p_sat₁
-      · rw [Set.subset_def]
-        simp only [dag, base]
-        simp only [Set.mem_image, Subtype.exists, Set.mem_union, Prod.exists, Set.mem_ofPred_eq]
-        grind
-    · simp only [Set.mem_image, Set.mem_sdiff, Set.mem_ofPred_eq, not_and, not_or, Prod.exists,
-      Subtype.exists] at hv
-      rcases hv with ⟨q, pq, l, ⟨hV₂, not_root⟩, rfl⟩
-      by_cases H₁ : (q, l) ∈ (Subtype.val <$> G₁.toDAG).V
-      · simp only [Functor.map, Set.mem_image, Prod.mk.injEq, Prod.exists, exists_eq_right_right,
-        Subtype.exists, exists_and_right, exists_eq_right] at H₁
-        rcases H₁ with ⟨hq1, hV₁⟩
-        obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
-        exists Subtype.embedLe leφ₁ '' Y₁
-        constructor
-        · rw [show Subtype.embedLe leφ₂ ⟨q, pq⟩ = Subtype.embedLe leφ₁ ⟨q, hq1⟩ by rfl,
-            delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
-          exact p_sat₁
-        · rw [Set.subset_def]
-          simp only [dag, base]
-          intros e he
-          simp only [Set.mem_union, Set.mem_image]
-          left; left
-          simp only [Set.mem_prod, Set.mem_singleton_iff, Set.mem_image, Subtype.exists] at he
-          rcases he with ⟨e1_eq, q', pq', q'_in_Y₁, e2_eq⟩
-          exists ((⟨q, hq1⟩, l), ⟨q', pq'⟩)
-          exists Set.mem_of_subset_of_mem p_sub₁ (by grind)
-          grind
-      · obtain ⟨Y₂, p_sat₂, p_sub₂⟩ := G₂.p_sat _ hV₂
-        exists Subtype.embedLe leφ₂ '' Y₂
-        constructor
-        · rw [delta_eq_2, PositiveBool.mapSubtypeImp_embed leφ₂]
-          exact p_sat₂
-        · rw [Set.subset_def]
-          simp only [dag, base]
-          intros e he
-          simp at he
-          simp only [Set.mem_union, Set.mem_image]
-          left; right
-          simp only [Subtype.exists]
-          grind
+  have first (q : Iic φ₁) (l : ℕ) (hq : (q, l) ∈ G₁.V)
+      (hne : (q, l) ≠ (M₁.q₀, 0)) :
+      ∃ Y, PositiveBool.Sat Y (M.δ (q.embedLe leφ₁) (w l)) ∧
+        {(q.embedLe leφ₁, l)} ×ˢ Y ⊆
+          (dag leφ₁ leφ₂ M₁.q₀ M₂.q₀ M.q₀ G₁.toDAG G₂.toDAG).E := by
+    obtain ⟨Y, hY, hE⟩ := G₁.p_sat _ hq
+    refine ⟨Subtype.embedLe leφ₁ '' Y, ?_, ?_⟩
+    · rwa [delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
+    · rintro ⟨v, q'⟩ ⟨rfl, y, hy, rfl⟩
+      exact Or.inl (Or.inl ⟨((q, l), y), hE ⟨rfl, hy⟩, by simp [hne]⟩)
+  intro v hv
+  rcases hv with (hv | hv) | hv
+  · rcases hv with rfl
+    obtain ⟨Y₁, hY₁, hE₁⟩ := G₁.p_sat _ G₁.p_root
+    obtain ⟨Y₂, hY₂, hE₂⟩ := G₂.p_sat _ G₂.p_root
+    refine ⟨Subtype.embedLe leφ₁ '' Y₁ ∪ Subtype.embedLe leφ₂ '' Y₂,
+      delta_root _ _ hY₁ hY₂, ?_⟩
+    rintro ⟨v, q'⟩ ⟨rfl, hq'⟩
+    rcases hq' with ⟨y, hy, rfl⟩ | ⟨y, hy, rfl⟩
+    · exact Or.inl (Or.inl ⟨((M₁.q₀, 0), y), hE₁ ⟨rfl, hy⟩, by simp⟩)
+    · exact Or.inr ⟨y, hE₂ ⟨rfl, hy⟩, rfl⟩
+  · rcases hv with ⟨⟨q, l⟩, ⟨hq, hne⟩, rfl⟩
+    exact first q l hq hne
+  · rcases hv with ⟨⟨q, l⟩, ⟨hq, hne⟩, rfl⟩
+    by_cases hshared : (q.val, l) ∈ (Subtype.val <$> G₁.toDAG).V
+    · simp only [Functor.map, Set.mem_image, Prod.mk.injEq, Prod.exists,
+        exists_eq_right_right, Subtype.exists, exists_and_right, exists_eq_right] at hshared
+      obtain ⟨hq₁, hV₁⟩ := hshared
+      apply first ⟨q.val, hq₁⟩ l hV₁
+      intro h
+      exact hne ⟨(Prod.mk.inj h).2, Or.inl (congrArg Subtype.val (Prod.mk.inj h).1)⟩
+    · obtain ⟨Y, hY, hE⟩ := G₂.p_sat _ hq
+      refine ⟨Subtype.embedLe leφ₂ '' Y, ?_, ?_⟩
+      · rwa [delta_eq_2, PositiveBool.mapSubtypeImp_embed leφ₂]
+      · rintro ⟨v, q'⟩ ⟨rfl, y, hy, rfl⟩
+        refine Or.inl (Or.inr ⟨q, l, y, ⟨hq, hshared, ?_, ?_, hE ⟨rfl, hy⟩⟩, rfl⟩)
+        · intro h
+          exact hne ⟨(Prod.mk.inj h).2, Or.inl (Prod.mk.inj h).1⟩
+        · intro h
+          exact hne ⟨(Prod.mk.inj h).2, Or.inr (Prod.mk.inj h).1⟩
 
 /-- Conjoin run DAGs of `M₁` and `M₂` into a run DAG of `M`, witnessing that `M`
 runs both component automata in parallel from the shared root. -/
@@ -947,26 +926,34 @@ lemma preserves_path
   by_cases H_spine : op = (fun _ => ⟨Φ, le_refl _⟩); { left; exact H_spine }; right
   obtain ⟨bp, H_bp⟩ : ∃ i, op i ≠ ⟨Φ, le_refl _⟩ := by grind
   obtain ⟨n, op_path⟩ := op_path
-  have bp_branch : (op bp).val ≤ φ := by
-    simp only [dag, base, E] at op_path
-    grind
+  have branch_bounds {j : ℕ} (hj : op j ≠ ⟨Φ, le_refl _⟩) :
+      (op j).val ≤ φ ∧ (op (j + 1)).val ≤ φ := by
+    rcases op_path j with ⟨hroot, _⟩ | ⟨_, hp, hp', _⟩
+    · exact (hj hroot).elim
+    · exact ⟨hp, hp'⟩
+  have bp_branch := (branch_bounds H_bp).1
   have pres_branch : ∀ {i}, (op i).val ≤ φ → ∀ j ≥ i, (op j).val ≤ φ := by
-    simp only [dag, base, E, Set.mem_union] at op_path
-    intros _ _ j
-    induction j
-    · grind
-    next n _ => have := op_path n; grind
+    intro i hi j hij
+    induction hij with
+    | refl => exact hi
+    | @step j _ ih =>
+      apply (branch_bounds ?_).2
+      intro hroot
+      exact ltφ.not_ge (by simpa only [hroot] using ih)
   let ι := fun i => mini G (⟨(op (bp + i)).val, (pres_branch bp_branch _ (by omega))⟩, n + (bp + i))
   have ι_antitone : Antitone ι := by
     apply antitone_nat_of_succ_le
     intros n
     specialize op_path (bp + n)
     exact mini_not_increasing ltφ _ _ _ _ op_path
-  obtain ⟨sp, i, hi, _⟩ := antitone_nat_eventually_constant ι_antitone
-  simp only [dag, base, E] at op_path
+  obtain ⟨sp, i, hi, hi₀⟩ := antitone_nat_eventually_constant ι_antitone
   have : i ≤ n + bp := by
-    have : ι 0 ≤ n + bp := by apply mini_le G _ _; grind
-    grind
+    apply hi₀.trans
+    apply mini_le G _ _
+    rcases op_path bp with ⟨hroot, _⟩ | ⟨_, _, _, hV, _⟩
+    · exact (H_bp hroot).elim
+    · exact hV
+  simp only [dag, base, E] at op_path
   exists i, bp + sp
   simp only [DAG.path, Functor.map, Set.mem_image, Prod.mk.injEq, Prod.exists, Subtype.exists,
     exists_and_right, exists_eq_right_right, exists_eq_right]
@@ -975,7 +962,9 @@ lemma preserves_path
   intros l
   specialize op_path (bp + sp + l)
   have not_root : op (bp + sp + l) ≠ ⟨Φ, le_refl _⟩ := by
-    grind [pres_branch bp_branch (bp + sp + l) (by omega)]
+    intro hroot
+    exact ltφ.not_ge (by
+      simpa only [hroot] using pres_branch bp_branch (bp + sp + l) (by omega))
   simp only [ne_eq, exists_prop, exists_and_left, Set.mem_union, Set.mem_ofPred_eq, not_root,
     false_and, not_false_eq_true, true_and, false_or] at op_path
   rcases op_path with ⟨p1, _, p2, he⟩

@@ -3,16 +3,19 @@ Copyright (c) 2026 Jukka Suomela. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
+module
 
-import LeanPool.TwoColoringOneRound.LowerBound.Defs
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+public import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuLinear
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
-import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
 -/
+
+@[expose] public section
 
 namespace Distributed2Coloring.LowerBound
 

@@ -3,12 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Assembly
+module
+
+public import LeanPool.Erdos132ConvexK3.Assembly
+public import LeanPool.Erdos132ConvexK3.UseSite
+import LeanPool.Erdos132ConvexK3.TailClosure
 import LeanPool.Erdos132ConvexK3.TerminalColorClosure
-import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Global convex k = 3 assembly
@@ -18,6 +21,8 @@ maximal-gap diagram.  The unconditional terminal-color closure supplies the
 jointly selected majorants and their outer-endpoint localization.  The first
 stage below packages that data and instantiates the five-row enumeration.
 -/
+
+@[expose] public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -484,13 +489,13 @@ theorem localized_offset_span_eq_yzSides
   have htdeg : 0 < vertexDegree P d₁ d₂ d₃ (cyclicAdvance F.x 3) := by
     have := F.highDegree (cyclicAdvance F.x 3)
     omega
-  have hhxpos : 0 < hx := by
-    simpa [hx] using firstClockwiseNeighborOffset_pos_of_degree_pos hxdeg
-  have hbudget : gx + hx + 6 ≤ n := by
-    simpa [gx, hx] using first_neighbor_gap_cw_budget (v := F.x)
+  have hhxpos : 0 < hx :=
+    firstClockwiseNeighborOffset_pos_of_degree_pos hxdeg
+  have hbudget : gx + hx + 6 ≤ n :=
+    first_neighbor_gap_cw_budget (v := F.x)
       (F.highDegree F.x)
-  have hgtgx : gt ≤ gx := by
-    simpa [gt, gx] using F.maximalGap (cyclicAdvance F.x 3)
+  have hgtgx : gt ≤ gx :=
+    F.maximalGap (cyclicAdvance F.x 3)
   have hb : b ≤ 2 := by
     have h := F.pair.first.coverBudget
     dsimp [b]
@@ -570,10 +575,10 @@ theorem degree_le_six_of_short_arc
   have hxdeg : 0 < vertexDegree P d₁ d₂ d₃ F.x := by
     have := F.highDegree F.x
     omega
-  have hhxpos : 0 < hx := by
-    simpa [hx] using firstClockwiseNeighborOffset_pos_of_degree_pos hxdeg
-  have hbudget : gx + hx + 6 ≤ n := by
-    simpa [gx, hx] using first_neighbor_gap_cw_budget (v := F.x)
+  have hhxpos : 0 < hx :=
+    firstClockwiseNeighborOffset_pos_of_degree_pos hxdeg
+  have hbudget : gx + hx + 6 ≤ n :=
+    first_neighbor_gap_cw_budget (v := F.x)
       (F.highDegree F.x)
   have hzoffn : zoff < n := by
     dsimp [zoff]
@@ -596,15 +601,15 @@ theorem degree_le_six_of_short_arc
   have hzg : gx ≤ zoff := by
     dsimp [zoff]
     omega
-  have hspanEq : (zoff : ℤ) - (gx : ℤ) = F.setup.yzSides := by
-    simpa [zoff, hx, gx] using F.localized_offset_span_eq_yzSides
+  have hspanEq : (zoff : ℤ) - (gx : ℤ) = F.setup.yzSides :=
+    F.localized_offset_span_eq_yzSides
   have hspanInt : ((zoff - gx : ℕ) : ℤ) ≤ 5 := by
     rw [Nat.cast_sub hzg, hspanEq]
     exact hShort
   have hspan : zoff - gx ≤ 5 := by
     exact_mod_cast hspanInt
-  have hdegreeEq : N.card = vertexDegree P d₁ d₂ d₃ F.x := by
-    simpa [N] using ccwNeighborOffsets_card_eq_vertexDegree P d₁ d₂ d₃ F.x
+  have hdegreeEq : N.card = vertexDegree P d₁ d₂ d₃ F.x :=
+    ccwNeighborOffsets_card_eq_vertexDegree P d₁ d₂ d₃ F.x
   rw [← hdegreeEq]
   omega
 

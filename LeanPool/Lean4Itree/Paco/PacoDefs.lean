@@ -3,8 +3,13 @@ Copyright (c) 2026 Paul Mure, Joonhyup Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul Mure, Joonhyup Lee
 -/
-import Lean.Meta
-import Lean.Elab
+module
+
+import all Init.Internal.Order.Basic
+import Std.Data.DTreeMap.Internal.Balancing
+import Std.Tactic.BVDecide.Normalize.Prop
+
+@[expose] public section
 
 namespace Lean.Order.CompleteLattice
 

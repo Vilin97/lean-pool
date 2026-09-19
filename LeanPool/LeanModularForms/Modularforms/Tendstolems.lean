@@ -7,8 +7,7 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Analysis.SpecificLimits.Normed
-public import Mathlib.Topology.EMetricSpace.Paracompact
+import Mathlib.Analysis.SpecificLimits.Normed
 
 /-! # Tendstolems -/
 

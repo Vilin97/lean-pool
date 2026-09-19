@@ -3,8 +3,12 @@ Copyright (c) 2026 Xuanji Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xuanji Li
 -/
+module
 
+public import LeanPool.Chudnovsky.Basic
+import LeanPool.Chudnovsky.Estimates
 import LeanPool.Chudnovsky.Kummer
+import LeanPool.Chudnovsky.Ramanujan
 
 /-!
 # The Main Theorem (Milla, ch. 9)
@@ -31,6 +35,8 @@ estimates), and the principal square root of `w²` is `w` on the right half-plan
 originally planned for this step (PLAN A8) is kept for reference/reuse.
 -/
 
+@[expose] public section
+
 noncomputable section
 
 namespace Chudnovsky
@@ -49,45 +55,56 @@ def mainSummand (τ : ℍ) (n : ℕ) : ℂ :=
   ((1 - s₂ τ) / 6 + n) * (((6 * n)! : ℂ) / (((3 * n)! : ℂ) * ((n ! : ℕ) : ℂ) ^ 3)) /
     (1728 * J τ) ^ n
 
-/-- The sharp factorial bound `(6n)!/((3n)!(n!)³) ≤ 1728ⁿ`, proved by induction from
-the single-step estimate `(6n+1)(6n+3)(6n+5) ≤ (6n+6)³`. -/
-private theorem factorial_ratio_le (n : ℕ) :
+/-- The coefficients `(6n)!/((3n)!(n!)³1728ⁿ)` are weakly decreasing, in product form. -/
+private theorem factorial_ratio_succ (n : ℕ) :
+    (6 * (n + 1))! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)
+      ≤ (6 * n)! * ((3 * (n + 1))! * ((n + 1)!) ^ 3 * 1728 ^ (n + 1)) := by
+  have e6 : (6 * (n + 1))! =
+      ((6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1))
+        * (6 * n)! := by
+    rw [Nat.mul_succ]
+    simp only [Nat.factorial_succ]
+    ring
+  have e3 : (3 * (n + 1))! = ((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (3 * n)! := by
+    rw [Nat.mul_succ]
+    simp only [Nat.factorial_succ]
+    ring
+  have e1 : ((n + 1)!) ^ 3 = (n + 1) ^ 3 * (n !) ^ 3 := by
+    rw [Nat.factorial_succ, mul_pow]
+  have hPQ : (6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1)
+      ≤ 1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3) := by
+    have key : (6 * n + 1) * (6 * n + 3) * (6 * n + 5) ≤ (6 * n + 6) ^ 3 := by
+      rw [pow_succ, pow_two]
+      gcongr <;> omega
+    calc (6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1)
+        = 24 * (n + 1) * (3 * n + 2) * (3 * n + 1)
+            * ((6 * n + 1) * (6 * n + 3) * (6 * n + 5)) := by ring
+      _ ≤ 24 * (n + 1) * (3 * n + 2) * (3 * n + 1) * (6 * n + 6) ^ 3 :=
+            Nat.mul_le_mul le_rfl key
+      _ = 1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3) := by ring
+  calc (6 * (n + 1))! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)
+      = ((6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1))
+          * ((6 * n)! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)) := by rw [e6]; ring
+    _ ≤ (1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3))
+          * ((6 * n)! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)) := Nat.mul_le_mul hPQ le_rfl
+    _ = (6 * n)! * ((3 * (n + 1))! * ((n + 1)!) ^ 3 * 1728 ^ (n + 1)) := by
+        rw [e3, e1, pow_succ]; ring
+
+/-- The factorial quotient `(6n)!/((3n)!(n!)³)` is bounded by `1728ⁿ`. -/
+theorem factorial_ratio_le (n : ℕ) :
     (6 * n)! ≤ 1728 ^ n * ((3 * n)! * (n !) ^ 3) := by
   induction n with
   | zero => simp
   | succ n ih =>
-    have e6 : (6 * (n + 1))! =
-        ((6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1))
-          * (6 * n)! := by
-      have h : 6 * (n + 1) = 6 * n + 6 := by ring
-      rw [h]; simp only [Nat.factorial_succ]; ring
-    have e3 : (3 * (n + 1))! = ((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (3 * n)! := by
-      have h : 3 * (n + 1) = 3 * n + 3 := by ring
-      rw [h]; simp only [Nat.factorial_succ]; ring
-    have e1 : ((n + 1)!) ^ 3 = (n + 1) ^ 3 * (n !) ^ 3 := by
-      rw [Nat.factorial_succ]; ring
-    have hPQ : (6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1)
-        ≤ 1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3) := by
-      have key : (6 * n + 1) * (6 * n + 3) * (6 * n + 5) ≤ (6 * n + 6) ^ 3 := by
-        nlinarith [Nat.zero_le n]
-      calc (6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1)
-          = 24 * (n + 1) * (3 * n + 2) * (3 * n + 1)
-              * ((6 * n + 1) * (6 * n + 3) * (6 * n + 5)) := by ring
-        _ ≤ 24 * (n + 1) * (3 * n + 2) * (3 * n + 1) * (6 * n + 6) ^ 3 :=
-              Nat.mul_le_mul le_rfl key
-        _ = 1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3) := by ring
-    calc (6 * (n + 1))!
-        = ((6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1))
-            * (6 * n)! := e6
-      _ ≤ ((6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1))
-            * (1728 ^ n * ((3 * n)! * (n !) ^ 3)) := Nat.mul_le_mul le_rfl ih
-      _ = 1728 ^ n * (3 * n)! * (n !) ^ 3
-            * ((6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2)
-              * (6 * n + 1)) := by ring
-      _ ≤ 1728 ^ n * (3 * n)! * (n !) ^ 3
-            * (1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3)) :=
-              Nat.mul_le_mul le_rfl hPQ
-      _ = 1728 ^ (n + 1) * ((3 * (n + 1))! * ((n + 1)!) ^ 3) := by rw [e3, e1, pow_succ]; ring
+    apply (mul_le_mul_iff_of_pos_right
+      (by positivity : 0 < (3 * n)! * (n !) ^ 3 * 1728 ^ n)).mp
+    calc (6 * (n + 1))! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)
+        ≤ (6 * n)! * ((3 * (n + 1))! * ((n + 1)!) ^ 3 * 1728 ^ (n + 1)) :=
+          factorial_ratio_succ n
+      _ ≤ (1728 ^ n * ((3 * n)! * (n !) ^ 3))
+          * ((3 * (n + 1))! * ((n + 1)!) ^ 3 * 1728 ^ (n + 1)) := Nat.mul_le_mul_right _ ih
+      _ = (1728 ^ (n + 1) * ((3 * (n + 1))! * ((n + 1)!) ^ 3))
+          * ((3 * n)! * (n !) ^ 3 * 1728 ^ n) := by ring
 
 /-- The Main Theorem's series converges absolutely on the region `Im τ > 1.25`
 (ratio test: `(6n)!/((3n)!(n!)³) ≤ 1728ⁿ` and `‖1728·J‖ > 1728` on the region). -/
@@ -308,39 +325,6 @@ principal square root of `w²` is `w` whenever `Re w > 0` — which holds here b
 explicit estimates `‖G²−1‖ ≤ 0.15` (from the `Gsq` power series, `‖1/J‖ < 1/1.096`)
 and `‖E₆−1‖ ≤ 0.199` (from `Estimates.lean`).  This replaces the paper's
 continuity/connectedness branch argument by a pointwise right-half-plane one. -/
-
-/-- One step of the ratio bound behind `factorial_ratio_le`, in product form: the
-coefficients `(6n)!/((3n)!(n!)³1728ⁿ)` are (weakly) decreasing. -/
-private theorem factorial_ratio_succ (n : ℕ) :
-    (6 * (n + 1))! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)
-      ≤ (6 * n)! * ((3 * (n + 1))! * ((n + 1)!) ^ 3 * 1728 ^ (n + 1)) := by
-  have e6 : (6 * (n + 1))! =
-      ((6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1))
-        * (6 * n)! := by
-    have h : 6 * (n + 1) = 6 * n + 6 := by ring
-    rw [h]; simp only [Nat.factorial_succ]; ring
-  have e3 : (3 * (n + 1))! = ((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (3 * n)! := by
-    have h : 3 * (n + 1) = 3 * n + 3 := by ring
-    rw [h]; simp only [Nat.factorial_succ]; ring
-  have e1 : ((n + 1)!) ^ 3 = (n + 1) ^ 3 * (n !) ^ 3 := by
-    rw [Nat.factorial_succ]; ring
-  have hPQ : (6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1)
-      ≤ 1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3) := by
-    have key : (6 * n + 1) * (6 * n + 3) * (6 * n + 5) ≤ (6 * n + 6) ^ 3 := by
-      nlinarith [Nat.zero_le n]
-    calc (6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1)
-        = 24 * (n + 1) * (3 * n + 2) * (3 * n + 1)
-            * ((6 * n + 1) * (6 * n + 3) * (6 * n + 5)) := by ring
-      _ ≤ 24 * (n + 1) * (3 * n + 2) * (3 * n + 1) * (6 * n + 6) ^ 3 :=
-            Nat.mul_le_mul le_rfl key
-      _ = 1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3) := by ring
-  calc (6 * (n + 1))! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)
-      = ((6 * n + 6) * (6 * n + 5) * (6 * n + 4) * (6 * n + 3) * (6 * n + 2) * (6 * n + 1))
-          * ((6 * n)! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)) := by rw [e6]; ring
-    _ ≤ (1728 * (((3 * n + 3) * (3 * n + 2) * (3 * n + 1)) * (n + 1) ^ 3))
-          * ((6 * n)! * ((3 * n)! * (n !) ^ 3 * 1728 ^ n)) := Nat.mul_le_mul hPQ le_rfl
-    _ = (6 * n)! * ((3 * (n + 1))! * ((n + 1)!) ^ 3 * 1728 ^ (n + 1)) := by
-        rw [e3, e1, pow_succ]; ring
 
 private lemma norm_mainCoeff_eq (n : ℕ) :
     ‖mainCoeff n‖ = ((6 * n)! : ℝ) / (((3 * n)! : ℝ) * ((n ! : ℕ) : ℝ) ^ 3 * 1728 ^ n) := by

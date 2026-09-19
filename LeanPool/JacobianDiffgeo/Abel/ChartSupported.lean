@@ -3,8 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+public import LeanPool.JacobianDiffgeo.Abel.AreaPairing
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # abel-theorem: chart-supported `(0,1)`-forms and pairing localization (design §4.1 step 5)
@@ -32,6 +36,8 @@ Also here: the inverse-derivative units `deriv_trans_mul_deriv_trans_symm` /
 `deriv_trans_ne_zero` (consumed again by the order bookkeeping in `UpgradeDischarge.lean`), and
 `Form01.coeffAt_finsetSum`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory

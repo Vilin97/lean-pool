@@ -3,16 +3,15 @@ Copyright (c) 2026 Seewoo Lee. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seewoo Lee
 -/
+module
 
-import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.Algebra.Ring.Regular
-import Mathlib.RingTheory.Polynomial.Content
-import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
-import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
+public import Mathlib.Algebra.Polynomial.FieldDivision
 
 /-!
 # LeanPool.LeanPolyABC.Lib.Radical
 -/
+
+@[expose] public section
 
 noncomputable section
 

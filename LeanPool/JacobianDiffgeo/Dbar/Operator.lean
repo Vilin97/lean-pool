@@ -3,9 +3,18 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
+public import LeanPool.JacobianDiffgeo.Dbar.Form01
+public import LeanPool.JacobianDiffgeo.Dbar.Wirtinger
+public import Mathlib.Geometry.Manifold.ContMDiff.Defs
 import LeanPool.JacobianDiffgeo.Dbar.SolveDisk
-import LeanPool.JacobianDiffgeo.Dbar.Form01
+import LeanPool.JacobianDiffgeo.Forms.Analyticity
+import LeanPool.JacobianDiffgeo.Surface.Bridges
+import LeanPool.JacobianDiffgeo.Surface.RealSmooth
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # The intrinsic `dbar` operator and `IsDbarOn` (`Jacobian/Dbar/Operator.lean`)
@@ -29,6 +38,8 @@ representative; `IsDbarAt`/`IsDbarOn` are the chart-free (evaluated-at-centers) 
 predicates (D7); `exists_dbar_solution_chart_ball` transports Forster 13.2 (`SolveDisk.lean`)
 through a chart.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold
 open Set IsManifold
@@ -89,24 +100,24 @@ private theorem contMDiff_of_chart_op {f : X → ℂ}
     ContMDiff 𝓘(ℝ, ℂ) 𝓘(ℝ, ℂ) ∞ f := fun x => contMDiffAt_real_iff_contDiffAt.2 (h x)
 
 instance : Add (SmoothC X) where
-  add f g := ⟨fun x => f x + g x, contMDiff_of_chart_op fun x =>
-    (f.contDiffAt_comp_chartAt_symm_self x).add (g.contDiffAt_comp_chartAt_symm_self x)⟩
+  add f g := ⟨fun x => f x + g x, private_decl% (contMDiff_of_chart_op fun x =>
+    (f.contDiffAt_comp_chartAt_symm_self x).add (g.contDiffAt_comp_chartAt_symm_self x))⟩
 
 instance : Neg (SmoothC X) where
-  neg f := ⟨fun x => -f x, contMDiff_of_chart_op fun x =>
-    (f.contDiffAt_comp_chartAt_symm_self x).neg⟩
+  neg f := ⟨fun x => -f x, private_decl% (contMDiff_of_chart_op fun x =>
+    (f.contDiffAt_comp_chartAt_symm_self x).neg)⟩
 
 instance : Sub (SmoothC X) where
-  sub f g := ⟨fun x => f x - g x, contMDiff_of_chart_op fun x =>
-    (f.contDiffAt_comp_chartAt_symm_self x).sub (g.contDiffAt_comp_chartAt_symm_self x)⟩
+  sub f g := ⟨fun x => f x - g x, private_decl% (contMDiff_of_chart_op fun x =>
+    (f.contDiffAt_comp_chartAt_symm_self x).sub (g.contDiffAt_comp_chartAt_symm_self x))⟩
 
 instance : Zero (SmoothC X) where
-  zero := ⟨fun _ => 0, contMDiff_of_chart_op fun _ => contDiffAt_const⟩
+  zero := ⟨fun _ => 0, private_decl% (contMDiff_of_chart_op fun _ => contDiffAt_const)⟩
 
 instance : SMul ℂ (SmoothC X) where
-  smul c f := ⟨fun x => c * f x, contMDiff_of_chart_op fun x =>
+  smul c f := ⟨fun x => c * f x, private_decl% (contMDiff_of_chart_op fun x =>
     (ContinuousLinearMap.mul ℝ ℂ c).contDiff.contDiffAt.comp _
-      (f.contDiffAt_comp_chartAt_symm_self x)⟩
+      (f.contDiffAt_comp_chartAt_symm_self x))⟩
 
 @[simp] theorem coe_add (f g : SmoothC X) (x : X) : (f + g) x = f x + g x := rfl
 @[simp] theorem coe_neg (f : SmoothC X) (x : X) : (-f) x = -f x := rfl
@@ -142,7 +153,7 @@ end SmoothC
 
 /-- The raw coefficient family underlying `dbar f`: chart-local `wirtingerDbar` of the chart
 representative of `f`, junk-zero off the chart target. -/
-private def dbarCoeffAt (f : SmoothC X) (x : X) : ℂ → ℂ :=
+def dbarCoeffAt (f : SmoothC X) (x : X) : ℂ → ℂ :=
   (chartAt ℂ x).target.indicator (fun z => wirtingerDbar (⇑f ∘ ⇑(chartAt ℂ x).symm) z)
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -193,7 +204,7 @@ noncomputable def dbar : SmoothC X →ₗ[ℂ] Form01 X where
           (f.contDiffOn_comp_chartAt_symm x)).congr
         intro z hz
         exact dbarCoeffAt_of_mem f x hz
-      compat := dbarCoeffAt_compat f }
+      compat := private dbarCoeffAt_compat f }
   map_add' f g := by
     apply Form01.ext
     intro x z hz

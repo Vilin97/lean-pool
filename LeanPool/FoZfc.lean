@@ -3,13 +3,14 @@ Copyright (c) 2026 Tetsuya Ishiu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tetsuya Ishiu
 -/
+module
 
-import LeanPool.FoZfc.Basic
-import LeanPool.FoZfc.FixedSnoc
-import LeanPool.FoZfc.BoundedFormulaOps
-import LeanPool.FoZfc.Tostring
-import LeanPool.FoZfc.Axioms
-import LeanPool.FoZfc.Replacement
+public import LeanPool.FoZfc.Basic
+public import LeanPool.FoZfc.FixedSnoc
+public import LeanPool.FoZfc.BoundedFormulaOps
+public import LeanPool.FoZfc.Tostring
+public import LeanPool.FoZfc.Axioms
+public import LeanPool.FoZfc.Replacement
 
 /-!
 # First Order Language of ZF Set Theory
@@ -21,6 +22,8 @@ Main declarations: `FirstOrder.ZFC.ModelZF`, `FirstOrder.ZFC.ext_induction`
 Tags: model-theory, set-theory, zf
 MSC: 03B10, 03E30
 -/
+
+@[expose] public section
 
 /-!
 ## Mathematical overview

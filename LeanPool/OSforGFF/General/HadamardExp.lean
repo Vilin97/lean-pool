@@ -3,16 +3,15 @@ Copyright (c) 2026 Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim. All r
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
+module
 
-import LeanPool.OSforGFF.General.SchurProduct
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.Normed.Algebra.Exponential
+public import LeanPool.OSforGFF.General.SchurProduct
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Topology.Instances.Matrix
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.CStarAlgebra.Classes
 import Mathlib.Analysis.Complex.TaylorSeries
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Topology.Basic
-import Mathlib.Order.Filter.Defs
-import Mathlib.Order.Filter.Basic
-import Mathlib.Topology.Constructions
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-!
 # Entrywise Exponential of PSD Matrices
@@ -24,6 +23,8 @@ coefficients `1/n!` yields a PD matrix. The PSD case follows by a continuity arg
 `R + ε I` is PD for every `ε > 0`, and the limit `ε → 0` uses continuity of the entrywise
 exponential.
 -/
+
+@[expose] public section
 
 
 open Complex

@@ -3,20 +3,12 @@ Copyright (c) 2026 Daniel Smania. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Smania
 -/
+module
 
-import Mathlib.Analysis.Convex.Function
+public import LeanPool.Burkholder.Majorants.Definitions
 import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 import Mathlib.Analysis.Convex.SpecificFunctions.Pow
 import Mathlib.Analysis.InnerProductSpace.NormPow
-import Mathlib.Analysis.MeanInequalities
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import LeanPool.Burkholder.Majorants.Definitions
 
 /-!
 # Burkholder majorant for `1 < p < 2`
@@ -24,6 +16,8 @@ import LeanPool.Burkholder.Majorants.Definitions
 Constructs and verifies the Burkholder majorant in the regime `1 < p < 2`,
 including the explicit derivatives, concavity, and tangent estimates.
 -/
+
+@[expose] public section
 
 noncomputable section
 

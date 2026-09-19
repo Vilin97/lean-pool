@@ -3,8 +3,9 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.ResonantActionObstruction
+public import LeanPool.PoincareThreeBody.ResonantActionObstruction
 
 /-!
 # Propagating resonant obstructions by density
@@ -14,6 +15,8 @@ primary orbit.  Consequently, nonconstancy of the disturbing average at every su
 forces the leading integral differential to be dependent on the Kepler frequency everywhere in
 the corresponding fixed-eccentricity action interval.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

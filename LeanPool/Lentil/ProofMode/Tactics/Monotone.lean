@@ -3,8 +3,16 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import LeanPool.Lentil.ProofMode.Basic
+module
+
+
+public import LeanPool.Lentil.ProofMode.Basic
+meta import LeanPool.Lentil.ProofMode.Basic
 import LeanPool.Lentil.Rules.Basic
+import LeanPool.Lentil.Util
+import Std.Tactic.BVDecide.Normalize.Prop
+
+@[expose] public section
 
 namespace TLA.ProofMode
 
@@ -75,7 +83,7 @@ theorem Entails_always_eventually_monotone_single {name : String} {p : pred σ}
 
 end
 
-private def monotoneKinds : List ((Expr → Option Expr) × Name) := [
+private meta def monotoneKinds : List ((Expr → Option Expr) × Name) := [
   (matchFirstTwo ``TLA.always ``TLA.eventually, ``Entails_always_eventually_monotone_single),
   (matchFirstTwo ``TLA.eventually ``TLA.always, ``Entails_eventually_always_monotone),
   (matchFirst ``TLA.later, ``Entails_later_monotone),
@@ -88,7 +96,7 @@ where
   matchFirstTwo (nm1 nm2 : Name) (e : Expr) : Option Expr :=
     matchFirst nm1 e |>.bind (matchFirst nm2)
 
-private def findMonotonePeelOpt (hyps : List (String × Expr)) (goal : Expr) :
+private meta def findMonotonePeelOpt (hyps : List (String × Expr)) (goal : Expr) :
     Option (Name × List (String × Expr) × Expr) := do
   let recognize (e : Expr) : Option (Name × Expr) :=
     monotoneKinds.findSome? fun (recognizer, nm) => recognizer e |>.map (fun p => (nm, p))
@@ -100,7 +108,7 @@ private def findMonotonePeelOpt (hyps : List (String × Expr)) (goal : Expr) :
   return (nm, peeledHyps, peeledGoal)
 
 /-- A not quite useful fallback to non-proof-mode case. -/
-private def rawMonotone : TacticM Unit := do
+private meta def rawMonotone : TacticM Unit := do
   evalTactic <| ← `(tactic|
     first
     | apply TLA.always_eventually_monotone
@@ -109,7 +117,7 @@ private def rawMonotone : TacticM Unit := do
     | apply TLA.always_monotone
     | apply TLA.eventually_monotone)
 
-private def proofModeMonotone : TacticM Unit := withMainContext do
+private meta def proofModeMonotone : TacticM Unit := withMainContext do
   let g ← getMainGoal
   let target ← cleanupAnnotAndMore (← g.getType)
   let_expr Entails _ hypsExpr goal := target | rawMonotone

@@ -3,13 +3,15 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
-import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.KthRoot
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.PlanarNormalForm
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.ChartBridge
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Multiplicity
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.AdaptedCharts
+public import LeanPool.JacobianDiffgeo.LocalMultiplicity.Composition
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # local-multiplicity (CC4): local multiplicity of holomorphic maps (namespace `RS`)
@@ -37,3 +39,5 @@ API summary (see `docs/design/local-multiplicity.md`):
   `trans_mem_maximalAtlas`, `mem_contDiffGroupoid_iff_analytic`, `map_nhdsNE`) and a local
   `LMCompat` copy of the CC7 holomorphy bridge (canonical version: `Jacobian.Surface`).
 -/
+
+@[expose] public section

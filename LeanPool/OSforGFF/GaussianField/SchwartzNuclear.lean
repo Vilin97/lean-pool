@@ -3,17 +3,23 @@ Copyright (c) 2026 Michael R. Douglas. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas
 -/
+module
 
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.Basis1D
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteFunctions
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteNuclear
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteTensorProduct
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.ParametricCalculus
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
-import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzSlicing
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.Basis1D
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteFunctions
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteNuclear
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.HermiteTensorProduct
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.ParametricCalculus
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzHermiteExpansion
+public import LeanPool.OSforGFF.GaussianField.SchwartzNuclear.SchwartzSlicing
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # `LeanPool.OSforGFF.GaussianField.SchwartzNuclear` index
 
 Import aggregator for the `GaussianField/SchwartzNuclear` directory.
 -/
+
+@[expose] public section

@@ -5,7 +5,8 @@ Authors: Axiom Math
 -/
 module
 
-public import LeanPool.ZetaZeros.Zeta.Basic
+public import LeanPool.ZetaZeros.Zeta.Defs
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # The auxiliary kernel `G`, and why it is constant

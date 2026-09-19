@@ -3,9 +3,16 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise315
-import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+public import LeanPool.DomainTheory.Neighborhood.Exercise315
+public import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 3.24 (Scott 1981, PRG-19, §3) — function-space isomorphisms
@@ -24,6 +31,8 @@ and Proposition 3.2's `prodEquiv` gives the domain isomorphism `funProdIso`.
 
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

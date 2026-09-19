@@ -7,10 +7,7 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.NumberTheory.ModularForms.QExpansion
-public import Mathlib.Order.CompletePartialOrder
-public import Mathlib.Tactic.Cases
 
 /-! # QExpansionLems -/
 

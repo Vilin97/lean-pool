@@ -3,6 +3,11 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+module
+
+public import Mathlib.GroupTheory.MonoidLocalization.Away
+public import Mathlib.RingTheory.Localization.Defs
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Defs
 import Mathlib.RingTheory.Localization.Ideal
 import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
 
@@ -15,6 +20,8 @@ associate to y become units in the localisation
 the remaining
 irreducibles stay prime.
 -/
+
+@[expose] public section
 
 noncomputable section
 

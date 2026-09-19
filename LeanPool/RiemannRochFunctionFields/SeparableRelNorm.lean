@@ -6,7 +6,6 @@ Authors: Guanghao Li
 module
 
 public import Mathlib.RingTheory.Ideal.Norm.RelNorm
-public import Mathlib.FieldTheory.SeparableClosure
 
 /-!
 # Relative norms in finite separable extensions

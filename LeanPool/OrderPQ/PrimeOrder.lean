@@ -3,11 +3,22 @@ Copyright (c) 2026 Scott Harper, Peiran Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
+module
+
+public import Mathlib.Algebra.Group.Subgroup.ZPowers.Basic
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.GroupTheory.Subgroup.Simple
+public import Mathlib.SetTheory.Cardinal.Finite
 import LeanPool.OrderPQ.IsCyclic
+import LeanPool.OrderPQ.MonoidHom
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # LeanPool.OrderPQ.PrimeOrder
 -/
+
+@[expose] public section
 
 lemma ne_iff_eq_of_or_and_ne {α : Type*} {a b c : α} (h1 : a = b ∨ a = c) (h2 : b ≠ c) :
     a ≠ b ↔ a = c :=

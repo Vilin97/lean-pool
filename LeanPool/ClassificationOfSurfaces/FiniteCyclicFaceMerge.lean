@@ -3,7 +3,13 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicCancellation
+module
+
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCancellation
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Exact two-face merging for finite cyclic presentations
@@ -13,6 +19,8 @@ concatenation of their old boundary words, up to rotating the first child.  This
 local merge used to reduce a connected presentation to one face.  It covers both ordinary
 nondegenerate cuts and the one-sided monogon case.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

@@ -3,9 +3,14 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import LeanPool.Clawristotle.Theorem42
-import LeanPool.Clawristotle.TorusInstance
+module
+
+public import LeanPool.Clawristotle.Defs
+public import LeanPool.Clawristotle.TorusDefs
 import LeanPool.Clawristotle.IteratedDerivHelpers
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
 
 /-!
 # Schwartz Decay Definitions and Integrability Helpers
@@ -14,6 +19,8 @@ Defines `UniformSchwartzDecay` (uniform-in-x Schwartz-class decay in velocity)
 and proves basic integrability lemmas. This is the standard regularity assumption
 for kinetic theory used throughout the Coulomb concrete theorem files.
 -/
+
+@[expose] public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

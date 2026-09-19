@@ -3,7 +3,9 @@ Copyright (c) 2026 Aristotle contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle
 -/
-import Mathlib.Combinatorics.SimpleGraph.Matching
+module
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Combinatorics.SimpleGraph.Matching
 
 /-!
 # Spread perfect matchings in Dirac graphs
@@ -45,6 +47,8 @@ matched, and no matched edge `x, f x` has `u` adjacent to `x` and `v` adjacent t
 the matching could be augmented), so the partner involution injects the neighbourhood of `u` into
 the complement of the neighbourhood of `v`, contradicting the degree hypothesis.
 -/
+
+@[expose] public section
 
 open Finset
 

@@ -3,12 +3,10 @@ Copyright (c) 2026 M1ngXU. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Max Obreiter, Tobias Steinbrecher, Robert Foerster
 -/
+module
 
-import LeanPool.PLAcceleratedNesterovLean.MorseBott.Defs
-import Mathlib.Analysis.Calculus.FDeriv.Congr
-import Mathlib.Analysis.Calculus.ContDiff.Comp
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
 
 /-!
 Copyright (c) 2025. All rights reserved.
@@ -19,6 +17,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Core definitions (`optimalityEqn`, `IsTubularNeighborhoodOfSubmanifold`,
 `tubularProj`) and basic helper lemmas for the nearest-point projection.
 -/
+
+@[expose] public section
 
 open Filter Topology Metric NNReal
 

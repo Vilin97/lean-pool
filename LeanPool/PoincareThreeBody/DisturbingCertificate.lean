@@ -3,9 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DisturbingFunction
+public import LeanPool.PoincareThreeBody.DisturbingFunction
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.TrapezoidalRule
 import LeanPool.PoincareThreeBody.ValidatedQuadrature
+import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-!
 # Finite certificates for nonconstant resonant averages
@@ -14,6 +17,8 @@ To prove that a Poincaré disturbing average is nonconstant, it is enough to com
 two phases. This file reduces that comparison to a finite trapezoidal sum plus a certified global
 bound on the second time derivative of the integrand difference.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

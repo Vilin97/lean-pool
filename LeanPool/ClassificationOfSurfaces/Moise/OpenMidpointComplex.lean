@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
+module
+
+public import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFineSubdivision
 
 /-!
 # Nested safe midpoint stages of an open polyhedron
@@ -13,6 +15,8 @@ triangle whose whole carrier is contained in `U`.  These finite stages are neste
 `U`.  They are the finite layers used in Moise Chapter 8, Theorem 2 before adjacent frontier
 subdivisions are reconciled by coning.
 -/
+
+@[expose] public section
 
 namespace LeanEval
 namespace Topology

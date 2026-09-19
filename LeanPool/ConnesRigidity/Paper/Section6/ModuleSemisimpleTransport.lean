@@ -3,13 +3,17 @@ Copyright (c) 2026 Utensil Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Utensil Song
 -/
-import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimple
+module
+
+public import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimple
 import LeanPool.ConnesRigidity.Paper.Section6.NonisomorphismTransport
 
 /-!
 Transport the concrete first-module semisimplicity proof into the paper-facing
 predicate and expose the resulting Section 6 nonisomorphism theorem.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace PaperModuleSemisimpleTransport

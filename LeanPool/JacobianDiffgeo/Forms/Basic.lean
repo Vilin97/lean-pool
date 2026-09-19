@@ -3,11 +3,13 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Geometry.Manifold.VectorBundle.Hom
-import Mathlib.Geometry.Manifold.VectorBundle.Tangent
-import Mathlib.Geometry.Manifold.VectorBundle.ContMDiffSection
+public import Mathlib.Geometry.Manifold.VectorBundle.Hom
+
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.Geometry.Manifold.VectorBundle.ContMDiffSection
+public import Mathlib.Topology.VectorBundle.Hom
 
 /-!
 # Holomorphic 1-forms: the definition (CC1)
@@ -22,6 +24,8 @@ The `AddCommGroup`/`Module ℂ` structure and the `ω`-smooth vector bundle inst
 bundle are all found by typeclass inference (checked by the `example`s below). Evaluation
 `η x v : ℂ` works through the reducible `Bundle.Trivial X ℂ x ≡ ℂ`.
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Bundle
 

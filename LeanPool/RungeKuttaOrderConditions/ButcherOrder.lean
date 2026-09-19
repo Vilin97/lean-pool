@@ -3,12 +3,18 @@ Copyright (c) 2026 Carles Marín. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Carles Marín
 -/
+module
 
-import Mathlib.Data.Rat.Defs
-import Mathlib.Data.List.Basic
-import Mathlib.Tactic.NormNum
+public import Mathlib.Algebra.Ring.Rat
+public meta import Mathlib.Tactic.Basic
+public meta import Mathlib.Tactic.ToAdditive
+public meta import Mathlib.Tactic.ToDual
+import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.Ring.RingNF
 
 /-!
 # Certified Runge-Kutta Order Conditions
@@ -20,13 +26,14 @@ keystone for order conditions, and verifies Euler, Heun, RK4, Dormand-Prince,
 and Gauss-Legendre certificates.
 -/
 
+@[expose] public section
+
 namespace RungeKuttaOrderConditions
 
 /-- ℚ(√15) as a computable `CommRing`: `⟨a, b⟩` means `a + b·√15`; the
     relation √15²=15 is baked into `mul`.  Coefficient ring for the Gauss–Legendre s=3
     (order 6) tableau (Brick 5).  Working in this concrete pair ring keeps the
-    order-condition checks a pure ℚ component computation closed by `norm_num` — no
-    algebraic-number tactic needed. -/
+    order-condition checks a pure ℚ component computation, without algebraic-number tactics. -/
 structure Q15 where
   /-- Rational component. -/
   re : ℚ
@@ -302,8 +309,8 @@ through order 4 but give `5 / 24` on `t5bushy` where `1 / γ = 1 / 5`.
 /-! ### certificates — the order conditions, machine-checked (axiom-free)
 
     Each `orderCond` unfolds the computable engine on the concrete tree/tableau to a closed ℚ
-    arithmetic goal, closed by `norm_num` (symbolic — sidesteps the kernel's stuck `Nat.gcd`
-    reduction in `Rat` normalization that defeats `decide`). -/
+    arithmetic goal. Closed certificates use `decide +kernel`; `butcherCheck` also supports
+    symbolic normalization with `norm_num`. -/
 
 /-- unfold the engine on a concrete instance to a closed ℚ goal, then `norm_num`. -/
 macro "butcherCheck" : tactic =>
@@ -314,25 +321,25 @@ macro "butcherCheck" : tactic =>
       List.zipWith_nil_left, List.sum_cons, List.sum_nil]; norm_num))
 
 -- Euler attains order 1:
-theorem euler_ord1 : orderCond eulerA eulerB t1 := by butcherCheck
+theorem euler_ord1 : orderCond eulerA eulerB t1 := by decide +kernel
 
 -- Heun (explicit trapezoid) attains order 2:
-theorem heun_ord1 : orderCond heunA heunB t1 := by butcherCheck
-theorem heun_ord2 : orderCond heunA heunB t2 := by butcherCheck
+theorem heun_ord1 : orderCond heunA heunB t1 := by decide +kernel
+theorem heun_ord2 : orderCond heunA heunB t2 := by decide +kernel
 -- and FAILS at order 3 (so it is exactly order 2):
-theorem heun_not_ord3 : ¬ orderCond heunA heunB t31 := by butcherCheck
+theorem heun_not_ord3 : ¬ orderCond heunA heunB t31 := by decide +kernel
 
 -- classic RK4 satisfies every order condition through order 4:
-theorem rk4_ord1 : orderCond rk4A rk4B t1  := by butcherCheck
-theorem rk4_ord2 : orderCond rk4A rk4B t2  := by butcherCheck
-theorem rk4_ord3a : orderCond rk4A rk4B t31 := by butcherCheck
-theorem rk4_ord3b : orderCond rk4A rk4B t32 := by butcherCheck
-theorem rk4_ord4a : orderCond rk4A rk4B t41 := by butcherCheck
-theorem rk4_ord4b : orderCond rk4A rk4B t42 := by butcherCheck
-theorem rk4_ord4c : orderCond rk4A rk4B t43 := by butcherCheck
-theorem rk4_ord4d : orderCond rk4A rk4B t44 := by butcherCheck
+theorem rk4_ord1 : orderCond rk4A rk4B t1  := by decide +kernel
+theorem rk4_ord2 : orderCond rk4A rk4B t2  := by decide +kernel
+theorem rk4_ord3a : orderCond rk4A rk4B t31 := by decide +kernel
+theorem rk4_ord3b : orderCond rk4A rk4B t32 := by decide +kernel
+theorem rk4_ord4a : orderCond rk4A rk4B t41 := by decide +kernel
+theorem rk4_ord4b : orderCond rk4A rk4B t42 := by decide +kernel
+theorem rk4_ord4c : orderCond rk4A rk4B t43 := by decide +kernel
+theorem rk4_ord4d : orderCond rk4A rk4B t44 := by decide +kernel
 -- ...but FAILS an order-5 condition (bushy 4-leaf tree: Φ=5/24 ≠ 1/5).  RK4 is EXACTLY order 4:
-theorem rk4_not_ord5 : ¬ orderCond rk4A rk4B t5bushy := by butcherCheck
+theorem rk4_not_ord5 : ¬ orderCond rk4A rk4B t5bushy := by decide +kernel
 
 /-! ### Brick 2+4 — completeness: "order p" is EXACTLY a finite check (order-budget generator)
 
@@ -453,8 +460,8 @@ theorem satisfiesOrderConditions_iff (A : List (List K)) (b : List K) (p : Nat) 
 
 /-- classic RK4 satisfies ALL order-≤4 conditions, certified, axiom-free. -/
 theorem rk4_order4 : satisfiesOrderConditions rk4A rk4B 4 := by
-  rw [satisfiesOrderConditions_iff, catalogFourEq]; intro t ht
-  fin_cases ht <;> butcherCheck
+  rw [satisfiesOrderConditions_iff, catalogFourEq]
+  decide +kernel
 
 /-! ### Brick 3 — the planar→abstract bridge: Φ is symmetric in a node's children
 
@@ -532,87 +539,87 @@ theorem orderCond_node_perm (A : List (List ℚ)) (b : List ℚ) {F G : Forest} 
     certificate that a production RK method (the default in MATLAB `ode45`, SciPy `RK45`) attains
     its full classical order. -/
 private theorem dpCondition01 : orderCond dpA dpB t1 := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition02 : orderCond dpA dpB t2 := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition03 : orderCond dpA dpB t31 := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition04 : orderCond dpA dpB t41 := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition05 : orderCond dpA dpB t5bushy := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition06 :
     orderCond dpA dpB (.node [leaf, leaf, .node [leaf]]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition07 : orderCond dpA dpB t42 := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition08 :
     orderCond dpA dpB (.node [leaf, .node [leaf], leaf]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition09 :
     orderCond dpA dpB (.node [leaf, .node [leaf, leaf]]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition10 :
     orderCond dpA dpB (.node [leaf, .node [.node [leaf]]]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition11 : orderCond dpA dpB t32 := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition12 :
     orderCond dpA dpB (.node [.node [leaf], leaf]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition13 :
     orderCond dpA dpB (.node [.node [leaf], leaf, leaf]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition14 :
     orderCond dpA dpB (.node [.node [leaf], .node [leaf]]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition15 : orderCond dpA dpB t43 := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition16 :
     orderCond dpA dpB (.node [.node [leaf, leaf], leaf]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition17 :
     orderCond dpA dpB (.node [.node [leaf, leaf, leaf]]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition18 :
     orderCond dpA dpB (.node [.node [leaf, .node [leaf]]]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition19 : orderCond dpA dpB t44 := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition20 :
     orderCond dpA dpB (.node [.node [.node [leaf]], leaf]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition21 :
     orderCond dpA dpB (.node [.node [.node [leaf], leaf]]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition22 :
     orderCond dpA dpB (.node [.node [.node [leaf, leaf]]]) := by
-  butcherCheck
+  decide +kernel
 
 private theorem dpCondition23 :
     orderCond dpA dpB (.node [.node [.node [.node [leaf]]]]) := by
-  butcherCheck
+  decide +kernel
 
 -- The public theorem only splits membership in the explicit 23-tree catalogue.
 theorem dp_order5 : satisfiesOrderConditions dpA dpB 5 := by
@@ -642,22 +649,13 @@ theorem dp_order5 : satisfiesOrderConditions dpA dpB 5 := by
   · exact dpCondition22
   · exact dpCondition23
 
-/-! ### Brick 5 — an IMPLICIT method with ALGEBRAIC coefficients: Gauss–Legendre s=3
+/-! ### Brick 5 — Gauss–Legendre s=3 over ℚ(√15)
 
-    Gauss–Legendre with 3 stages is fully implicit, with a tableau living in ℚ(√15).
-    Working in the computable pair ring `Q15` (where √15²=15 is baked into
-    multiplication), every order condition collapses to a pair of ℚ identities that
-    `gaussCheck` closes by `norm_num` — no algebraic-number tactic.  This certifies
-    the framework on implicit methods with irrational (algebraic) coefficients.
-
-    We certify order 4 here by this direct symbolic route.  At order 6 the same
-    route dies: a `fin_cases` over `catalog 6` (65 planar trees) with per-tree
-    `norm_num` is dominated by the elaborator's whnf reduction of the catalogue
-    and does not complete in practical time at this scale.  The full order-6
-    certificate `satisfiesOrderConditions gaussA gaussB 6` is instead
-    `gauss_order6_rat` below: Brick 6 clears denominators into ℤ[√15] and
-    certifies the scaled tableau by `decide`, and Brick 7 transports the result
-    back to `gaussA`/`gaussB` through the formalized homogeneity bridge. -/
+    The computable pair ring `Q15` reduces algebraic coefficients to rational component
+    arithmetic. Kernel decision verifies the closed order-4 certificates, with the final
+    condition also exposing its stage-vector calculation. The full order-6 result below
+    clears denominators into `Z15` and uses the formalized homogeneity bridge to recover
+    the rational tableau's order conditions. -/
 private def gaussOnes : List Q15 := [1, 1, 1]
 
 private def gaussC : List Q15 := [⟨1 / 2, -1 / 10⟩, ⟨1 / 2, 0⟩, ⟨1 / 2, 1 / 10⟩]
@@ -743,29 +741,29 @@ private theorem gaussT44Weight : Phi gaussA gaussB t44 = ⟨1 / 24, 0⟩ := by
   ext <;> norm_num
 
 private theorem gaussCondition01 : orderCond gaussA gaussB t1 := by
-  gaussCheck
+  decide +kernel
 
 private theorem gaussCondition02 : orderCond gaussA gaussB t2 := by
-  gaussCheck
+  decide +kernel
 
 private theorem gaussCondition03 : orderCond gaussA gaussB t31 := by
-  gaussCheck
+  decide +kernel
 
 private theorem gaussCondition04 : orderCond gaussA gaussB t41 := by
-  gaussCheck
+  decide +kernel
 
 private theorem gaussCondition05 : orderCond gaussA gaussB t42 := by
-  gaussCheck
+  decide +kernel
 
 private theorem gaussCondition06 : orderCond gaussA gaussB t32 := by
-  gaussCheck
+  decide +kernel
 
 private theorem gaussCondition07 :
     orderCond gaussA gaussB (.node [.node [leaf], leaf]) := by
-  gaussCheck
+  decide +kernel
 
 private theorem gaussCondition08 : orderCond gaussA gaussB t43 := by
-  gaussCheck
+  decide +kernel
 
 private theorem gaussCondition09 : orderCond gaussA gaussB t44 := by
   change (gamma t44 : Q15) * Phi gaussA gaussB t44 = 1
@@ -789,23 +787,13 @@ theorem gauss_order4 : satisfiesOrderConditions gaussA gaussB 4 := by
   · exact gaussCondition08
   · exact gaussCondition09
 
-/-! ### Brick 6 — Gauss–Legendre s=3 certified to FULL order 6 (integer ℤ[√15] + `decide`)
+/-! ### Brick 6 — Gauss–Legendre s=3 certified to order 6 over ℤ[√15]
 
-    `gauss_order4` above unfolds the engine symbolically and closes the ℚ(√15)
-    components by `norm_num`.  At order 6 that route dies: the 65 per-tree `norm_num`
-    calls exhaust memory (a run reached ~20 GB), because ℚ's `Nat.gcd` normalization
-    does not reduce in the kernel and the unfolded Q15 products are huge.  The fix is
-    a genuinely different *formula* (found by re-questioning the representation, not
-    the method): clear all denominators.  Scaling the tableau by `D = 360` (the lcm of
-    the denominators 36,9,15,30,24,18) lands it in the INTEGER ring `Z15 = ℤ[√15]`.
-    The elementary weight is homogeneous, `Φ(D·A, D·b, t) = D^{|t|}·Φ(A,b,t)`, so
-    the order condition `γ(t)·Φ = 1` becomes the integer identity
-    `γ(t)·Φ(D·A,D·b,t) = D^{|t|}`.  Over `Z15` (a pair of `Int`) this closes by
-    `decide`: the kernel's GMP `Int` arithmetic evaluates it directly — no rational
-    normalization, negligible memory.  The whole certificate (all 65 planar trees of
-    `catalog 6`) checks in ~1 s, axiom-free.  Cross-checked outside Lean three ways
-    (tree recursion + brute-force index sum in Python, brute-force in Sage over ℚ(√15)):
-    Gauss s=3 holds orders 1–6 and fails all 48 order-7 conditions, i.e. it is EXACTLY order 6.
+    Scaling the tableau by `D = 360` clears its denominators into the integer ring `Z15`.
+    Homogeneity gives `Φ(D·A, D·b, t) = D^{|t|}·Φ(A,b,t)`, so the order condition becomes
+    `γ(t)·Φ(D·A,D·b,t) = D^{|t|}`. Kernel decision checks this identity for every tree in
+    the finite catalogue, avoiding repeated rational normalization. Brick 7 transports
+    the result back to the original tableau.
 
     The scaled integer tableau: entry `a + b√15` with denominator cleared by 360 becomes
     `⟨360a, 360b⟩`.
@@ -845,13 +833,12 @@ theorem satisfiesOrderConditionsInt_iff (A : List (List Z15)) (b : List Z15) (D 
 
 /-! Gauss–Legendre s=3 satisfies ALL order-≤6 conditions for the scaled tableau:
     the integer certificate, axiom-free.
-    `fin_cases` enumerates the 65-tree catalogue; each condition is closed by the kernel (`decide`)
-    over `Z15` integer arithmetic.  Brick 7 below transports this certificate back
+    The kernel checks all 65 trees in the catalogue using `Z15` integer arithmetic.
+    Brick 7 below transports this certificate back
     to the rational tableau (`gauss_order6_rat`). -/
--- `fin_cases` unfolds the finite 65-tree Gauss order-6 catalogue.
 theorem gauss_order6 : satisfiesOrderConditionsInt gaussIA gaussIB Dscale 6 := by
-  rw [satisfiesOrderConditionsInt_iff]; intro t ht
-  fin_cases ht <;> decide
+  rw [satisfiesOrderConditionsInt_iff]
+  decide +kernel
 
 /-! ### Brick 7 — the homogeneity bridge: the order-6 certificate over ℚ(√15)
 

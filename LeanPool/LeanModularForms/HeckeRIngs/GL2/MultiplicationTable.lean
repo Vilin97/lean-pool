@@ -3,12 +3,22 @@ Copyright (c) 2026 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
+module
 
-import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
+public import LeanPool.LeanModularForms.HeckeRIngs.GL2.Basic
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.CoprimeMul
 import LeanPool.LeanModularForms.HeckeRIngs.GLn.Degree
+import LeanPool.LeanModularForms.HeckeRIngs.GLn.PrimeDecomposition
 import LeanPool.LeanModularForms.HeckeRIngs.GLn.TransposeAntiInvolution
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
 import Mathlib.Data.Finset.NatDivisors
+import Mathlib.Data.Int.ConditionallyCompleteOrder
+import Mathlib.Data.Int.Star
 import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # Shimura Theorem 3.24: Multiplication Table for GL₂ Hecke Algebra
@@ -27,6 +37,8 @@ Degree formulas (identities 6--7) are in `GL2.Degree`.
 
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, Theorem 3.24
 -/
+
+@[expose] public section
 
 open HeckeRing HeckeRing.GLn HeckeRing.GL2
 open scoped ArithmeticFunction.sigma
@@ -711,7 +723,7 @@ private lemma T_pp_comm_T_sum_ppow (k : ℕ) : TPp p * TSum ⟨p ^ k, pow_pos hp
     exact T_pp_comm_T_elem p hp _
       (fun i' => by fin_cases i' <;> first | exact pow_pos hp.pos i | exact pow_pos hp.pos (k - i))
       (fun i' hi' => by (have : i' = 0 := by omega); subst this; simpa using hdvd)
-  · simp [T_ad_eq_zero h, HA_mul_zero, HA_zero_mul]
+  · simp [T_ad_eq_zero h]
 
 private lemma T_pp_pow_comm_T_sum_ppow (i k : ℕ) : TPp p ^ i *
     TSum ⟨p ^ k, pow_pos hp.pos k⟩ = TSum ⟨p ^ k, pow_pos hp.pos k⟩ * TPp p ^ i := by

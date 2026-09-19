@@ -3,8 +3,13 @@ Copyright (c) 2026 Sven Manthe. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sven Manthe
 -/
+module
 
-import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+
+import all LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+
+public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
+import Mathlib.Tactic.Linarith.Frontend
 
 /-!
 # LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Strat
@@ -12,9 +17,11 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.One.Lift
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
+@[expose] public section
+
 
 namespace GaleStewartGame.BorelDet.One
-open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
+open Stream'.Discrete Descriptive Tree Game PreStrategy
 open CategoryTheory
 
 variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}
@@ -144,25 +151,20 @@ lemma losable_or_winnable :
   let ⟨n, hn⟩ := le_iff_exists_add.mp H.hlvl_le
   induction n generalizing H with
   | zero =>
-    -- TODO: explain why this stronger disjunction helps the following `tauto`.
-    suffices H.preLift.Losable ∨ H.preLift.Winnable ∨ H.preLift.Won by
-      have (h : H.preLift.Won) : H.preLift.Winnable := (PreLift.WLift.mk _ h).winnable; tauto
-    have := Lift.con_of_short (hyp := hyp); tauto
+    by_cases h : H.preLift.Winnable
+    · exact Or.inr h
+    · exact Or.inl ⟨h, Lift.con_of_short _ hn⟩
   | succ n ih =>
     let hlong' : 2 * k + 2 ≤ H.x.val.length := by synthIsPosition
     let Ht := H.dropLast hlong'
+    by_cases hWinnable : H.preLift.Winnable
+    · exact Or.inr hWinnable
+    left
+    have hLosable : H.preLift.Losable' := hWinnable
+    refine ⟨hLosable, ?_⟩
     rcases ih Ht (by dsimp [Ht]; synthIsPosition) with ih | ih
-    · have : ¬ H.preLift.Winnable → ¬ Ht.preLift.Winnable := by
-        intro hw h; apply hw; exact h.winnable_of_le (by simp [Ht, dropLast])
-      have : ¬ H.preLift.Won → ¬ Ht.preLift.Won := by
-        intro hw h; apply hw; exact h.won_of_le (by simp [Ht, dropLast])
-      suffices H.preLift.Losable ∨ H.preLift.Winnable ∨ H.preLift.Won by
-        have (h : H.preLift.Won) : H.preLift.Winnable := (PreLift.WLift.mk _ h).winnable; tauto
-      suffices ¬ Ht.preLift.Winnable → ¬ Ht.preLift.Won → ¬ H.preLift.Winnable
-        → H.preLift.Losable' → H.preLift.Losable by tauto
-      intro hnW hnW' hnW'' h; use h
-      by_cases IsPosition H.x.val Player.one
-      · let HL := PreLift.LLift.mk _ h
+    · by_cases IsPosition H.x.val Player.one
+      · let HL := PreLift.LLift.mk _ hLosable
         by_cases hc : HL.toLift.Con
         · exact hc
         · have hlif : (PreLift.LLift.mk _ ih.1).toLift =
@@ -190,7 +192,7 @@ lemma losable_or_winnable :
           have hcm := HL.concat_mem_tree (a := H.x.val[2 * k + 1 + n]) (by
             unfold HL; synthIsPosition) (by
             simpa [hlist, HL] using subtree_sub _ H.x.prop) hcl (by
-              intro h; apply hnW''; use n + 1
+              intro h; apply hWinnable; use n + 1
               simp_rw [WinningPosition] at h
               convert h using 2
               · simp [hlist, hn, HL]
@@ -212,7 +214,7 @@ lemma losable_or_winnable :
         · change (defensiveQuasi H.preLift.game Player.one (hyp.pruned.sub _)).1.subtree = _
           have hG : H.preLift.game = Ht.preLift.game := by simp [Ht, dropLast]
           exact Game.defensiveQuasi_subtree (hG := hG) (hp := rfl) _
-    · exact Or.inr (ih.winnable_of_le (by simp [Ht, dropLast]))
+    · exact (hWinnable (ih.winnable_of_le (by simp [Ht, dropLast]))).elim
 
 attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma x_mem_tree_short' (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player.one) :
@@ -266,7 +268,9 @@ lemma x_mem_tree_short (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player.
   (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
     (H.pInv_fixing h.le)) (H.pInv_isPosition h.le hp)).val := by
   have hget := congr_arg (fun x ↦ x.val[n]?) (H.x_mem_tree_short' h hp)
-  conv at hget => simp
+  simp only [take_coe, List.getElem?_take_of_lt (Nat.lt_succ_self n),
+    ExtensionsAt.valT'_coe] at hget
+  erw [pInv_treeHom_val (hyp := hyp) _ (List.length_take_le _ _)] at hget
   apply Option.some_injective
   have hHlvl := H.hlvl
   have hnbase :

@@ -3,13 +3,13 @@ Copyright (c) 2026 Daniel Smania. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Smania
 -/
+module
 
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Normed.Field.Basic
-import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Analysis.Complex.Order
 import Mathlib.Analysis.Normed.Operator.Extend
+import Mathlib.Analysis.RCLike.Basic
 import Mathlib.Topology.Algebra.InfiniteSum.Module
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic
 
 /-!
 # Unconditional Schauder Bases
@@ -21,6 +21,8 @@ Main declarations: `UnconditionalCriterion.exists_unconditionalSchauderBasis_of_
 Tags: functional-analysis, banach-spaces, schauder-bases
 MSC: 46B15
 -/
+
+@[expose] public section
 
 /-!
 # Schauder bases and the finite sign criterion

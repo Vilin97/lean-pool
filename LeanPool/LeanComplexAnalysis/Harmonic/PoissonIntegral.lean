@@ -3,6 +3,11 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.CircleIntegral
 import Mathlib.Analysis.Complex.Harmonic.Analytic
 
 /-!
@@ -46,6 +51,8 @@ The proof follows from the
 
 harmonic function, Poisson integral, analytic function, unit disc
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanComplexAnalysis
 

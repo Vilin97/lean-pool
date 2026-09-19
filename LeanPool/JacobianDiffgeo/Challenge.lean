@@ -3,13 +3,18 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Forms
-import LeanPool.JacobianDiffgeo.GenusSphereHeadline
-import LeanPool.JacobianDiffgeo.JacobianConstruction
-import LeanPool.JacobianDiffgeo.JacFunctorial
-import LeanPool.JacobianDiffgeo.ProperDegree
-import LeanPool.JacobianDiffgeo.CechCount
+import LeanPool.JacobianDiffgeo.GenusSphereHeadline.Basic
+
+public import LeanPool.JacobianDiffgeo.CechCount.Final
+public import LeanPool.JacobianDiffgeo.JacFunctorial.PullbackMaps
+public import LeanPool.JacobianDiffgeo.ProperDegree.ChallengeDegree
+import LeanPool.JacobianDiffgeo.JacFunctorial.Challenge
+import LeanPool.JacobianDiffgeo.JacFunctorial.ChallengeLaws
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Jacobians — the assembled challenge API
@@ -69,6 +74,8 @@ surfaces in a single shared `universe u`. This only restricts universes; every s
 otherwise the gist's, and the (overwhelmingly common) same-universe uses — including everything
 in `Type 0` — elaborate verbatim.
 -/
+
+@[expose] public section
 
 open scoped ContDiff -- for ω notation
 

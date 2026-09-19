@@ -3,9 +3,12 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.LocalEMFamily
-import LeanPool.InfinitaryLogic.Methods.Henkin.Construction
-import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
+module
+
+public import LeanPool.InfinitaryLogic.Methods.LocalEMFamily
+public import LeanPool.InfinitaryLogic.Methods.TailIndiscernible
+public import Mathlib.Order.Filter.AtTopBot.Defs
+import LeanPool.InfinitaryLogic.Lomega1omega.OpenBoundsSemantics
 import Mathlib.Order.Filter.AtTopBot.Basic
 import Mathlib.Order.Filter.Finite
 
@@ -45,6 +48,8 @@ file stays EM-free.
 Next layers (subsequent chunks): the `skolemNeedSymbol` witness-term transport and the
 family-membership-carrying restricted truth lemma.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
@@ -520,7 +525,7 @@ def LocalEMContext.mkClass (ctx : LocalEMContext Λ J (M := M)) (t : Λ[[J]].Ter
 /-- A common support covering all argument representatives — the support over which a
 relation's deep
 truth is read. -/
-private noncomputable def LocalEMContext.commonSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
+noncomputable def LocalEMContext.commonSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (xs : Fin n → ctx.Carrier) : Finset J :=
   Finset.univ.biUnion fun i => locJSupport Λ J (Quotient.out (xs i))
 

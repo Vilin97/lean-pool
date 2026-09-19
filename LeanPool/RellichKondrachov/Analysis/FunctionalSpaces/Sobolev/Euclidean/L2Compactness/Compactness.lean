@@ -3,12 +3,9 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
+module
 
-import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
-import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
-import Mathlib.Topology.Algebra.Monoid
-import Mathlib.Topology.UniformSpace.HeineCantor
+public import LeanPool.RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.L2Compactness.Smoothing
 
 /-!
 # `L²` compactness criterion: compact smoothing operator (Euclidean)
@@ -27,6 +24,8 @@ The Arzelà–Ascoli compactness statement for `smoothBCF` lives in
 
 This is tracked under Beads `lean-103.5.2.26.5.3.2.2.1`.
 -/
+
+@[expose] public section
 
 namespace RellichKondrachov
 namespace Analysis
@@ -66,7 +65,8 @@ lemma isCompact_Kψ (hK : IsCompact K) (hψcs : HasCompactSupport ψ) :
     IsCompact (Kψ (K := K) (ψ := ψ)) :=
   IsCompact.add hK hψcs.isCompact
 
-private def smoothOn (hKm : MeasurableSet K) (hψc : Continuous ψ) (hψcs : HasCompactSupport ψ)
+/-- Restrict the smoothed function to its compact domain as a continuous map. -/
+def smoothOn (hKm : MeasurableSet K) (hψc : Continuous ψ) (hψcs : HasCompactSupport ψ)
     (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) :
     C(↥(Kψ (K := K) (ψ := ψ)), ℝ) where
   toFun x := smoothFun (E := E) (K := K) ψ u x

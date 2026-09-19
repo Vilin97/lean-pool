@@ -3,14 +3,20 @@ Copyright (c) 2026 Wondermonger-daydreaming. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wondermonger-daydreaming
 -/
+module
 
-import Mathlib.GroupTheory.Perm.Fin
+public import Mathlib.Algebra.Group.End
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
 
 /-!
   Group-theoretic helpers used with rotation normalization.
 
   The `finRotate` arithmetic lemmas live in `SemicircleCheck.FinRotateLemmas`.
 -/
+
+@[expose] public section
 
 open Equiv Equiv.Perm
 

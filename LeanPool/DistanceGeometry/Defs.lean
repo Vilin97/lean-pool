@@ -6,7 +6,6 @@ Authors: Egor Lyfar
 module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.InnerProductSpace.GramMatrix
 
 /-!
 # Distance geometry: core definitions

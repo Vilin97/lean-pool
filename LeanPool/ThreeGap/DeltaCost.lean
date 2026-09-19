@@ -3,9 +3,15 @@ Copyright (c) 2026 Vico Bonfioli. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vico Bonfioli
 -/
+module
 
-import LeanPool.ThreeGap.ChevallierCount
+public import LeanPool.ThreeGap.ChevallierCount
+public import LeanPool.ThreeGap.SimultaneousApprox
 import LeanPool.ThreeGap.SupNormGrowth
+import Mathlib.Data.EReal.Operations
+import Mathlib.Tactic.Positivity.Finset
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 
 /-!
 # The sup-norm defect cost: growth of its record denominators is *unconditional*
@@ -38,6 +44,8 @@ distance), handled separately.
 
 Axiom-clean.
 -/
+
+@[expose] public section
 
 namespace ThreeGap.DeltaCost
 

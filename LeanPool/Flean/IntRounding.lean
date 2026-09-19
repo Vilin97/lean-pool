@@ -3,12 +3,11 @@ Copyright (c) 2026 Joseph McKinsey. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph McKinsey
 -/
-import Mathlib.Data.Rat.Defs
-import Mathlib.Data.Rat.Floor
-import Mathlib.Tactic.Positivity.Core
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Qify
+module
+
+public import Mathlib.Data.Rat.Floor
 import Mathlib.Algebra.Order.Interval.Set.Group
+import Mathlib.Tactic.Qify
 
 /-!
 # Integer Rounding Functions
@@ -18,6 +17,8 @@ This module collects the integer-valued rounding primitives (`round0`,
 mantissa, together with their basic correctness properties such as round-to-even
 behaviour on half-integers.
 -/
+
+@[expose] public section
 
 /-- An integer-valued rounding rule taking a sign bit and a rational mantissa. -/
 abbrev IntRounder := Bool → ℚ → ℕ
@@ -317,7 +318,7 @@ lemma round_near_eq_iff (q : ℚ) (z : ℤ) :
 open Lean Meta Qq Mathlib.Meta.Positivity in
 /-- A `positivity` extension proving `0 ≤ roundNearInt q` from `0 ≤ q`. -/
 @[positivity roundNearInt _]
-def evalRoundNearInt : PositivityExt where eval {u α} _ pα? e := do
+meta def evalRoundNearInt : PositivityExt where eval {u α} _ pα? e := do
   match u, α, e with
   | 0, ~q(ℤ), ~q(roundNearInt $a) =>
     match (dependent := true) pα? with

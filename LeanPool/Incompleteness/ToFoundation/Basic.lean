@@ -3,10 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Hierarchy
+public import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
+import Mathlib.Algebra.Order.Ring.Nat
 
 /-! # Basic -/
+
+@[expose] public section
 
 
 namespace Fin
@@ -29,20 +33,3 @@ variable {α : Type*}
     appendr u v (i.addNat m) = v i := by simp [appendr, vecAppend_eq_ite]
 
 end Matrix
-
-namespace LO
-namespace FirstOrder
-
-variable {L : Language}
-
-namespace Semiformula
-
-open Rew
-
-variable (ω : Rew L ξ₁ n₁ ξ₂ n₂)
-
-
-end Semiformula
-
-end FirstOrder
-end LO

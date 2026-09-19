@@ -12,9 +12,15 @@ collections, proving the frequency and deficit bounds needed for Corollary 3.1.
 
 **Reference**: Corollary 3.1 in Section 3 of the companion paper.
 -/
-import LeanPool.KaltonRoberts.Defs
-import LeanPool.KaltonRoberts.Collections
+module
+
+public import LeanPool.KaltonRoberts.Collections
 import LeanPool.KaltonRoberts.Lemmas
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Data.Sym.Sym2.Init
+import Mathlib.Tactic.NormNum.GCD
+import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Product and mixed intersection collections
@@ -22,6 +28,8 @@ import LeanPool.KaltonRoberts.Lemmas
 Product and mixed intersection collections with the frequency and deficit
 bounds needed for the mixed-intersection step.
 -/
+
+@[expose] public section
 
 namespace KaltonRoberts
 

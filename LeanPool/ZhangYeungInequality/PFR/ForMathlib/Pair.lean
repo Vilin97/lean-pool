@@ -7,7 +7,6 @@ Authors: PFR contributors
 module
 
 public import Mathlib.Util.Notation3
-public import Mathlib.Tactic.Basic
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.ForMathlib.Pair

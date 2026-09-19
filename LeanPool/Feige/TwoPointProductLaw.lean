@@ -3,13 +3,17 @@ Copyright (c) 2026 Zhengqing Zhou and contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhengqing Zhou, GPT-5.6 Pro
 -/
-import LeanPool.Feige.HighSetLaw
+module
+
+public import LeanPool.Feige.HighSetLaw
+public import LeanPool.Feige.TwoPointMixture
 import LeanPool.Feige.BoundaryNull
-import LeanPool.Feige.TwoPointMixture
 
 /-!
 # Product laws for two-point random variables
 -/
+
+@[expose] public section
 
 open scoped BigOperators ENNReal
 open Set MeasureTheory ProbabilityTheory

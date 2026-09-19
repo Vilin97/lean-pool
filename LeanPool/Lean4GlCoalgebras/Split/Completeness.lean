@@ -3,15 +3,26 @@ Copyright (c) 2026 Madeleine Gignoux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Madeleine Gignoux
 -/
+module
 
+public import LeanPool.Lean4GlCoalgebras.Split.Game
+public import LeanPool.Lean4GlCoalgebras.Logic.Semantics
+public import Mathlib.Algebra.Group.Nat.Even
+public import Mathlib.Data.Fin.Tuple.Basic
 import LeanPool.Lean4GlCoalgebras.Split.Soundness
-import LeanPool.Lean4GlCoalgebras.Split.Game
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-! ## Prover winning the GL-split game builds a GL-split proof.
 
 If Prover has a winning strategy in the game starting from `Γ`, then there is a proof
 of `Γ`, proven in `prover_win_builds_proof`; all other definitions and proofs in this
 file are helpers. -/
+
+@[expose] public section
 
 namespace Lean4GlCoalgebras
 
@@ -645,7 +656,7 @@ private lemma left_turn_not_builder {Γ : SplitSequent} {Γs : List SplitSequent
 def builderMovePremises {Γ : SplitSequent} {strat : Strategy coalgebraGame Prover}
     (g : proof_type Γ strat)
     (h : winning strat (startPos Γ)) : List (proof_type Γ strat) := match g_def : g with
-  | ⟨⟨Sum.inl _, _, _⟩, x, y⟩ => False.elim (left_turn_not_builder y)
+  | ⟨⟨Sum.inl _, _, _⟩, x, y⟩ => False.elim (by exact left_turn_not_builder y)
   | ⟨⟨Sum.inr R, Γs, Rs⟩, _⟩ =>
     match R with
       | RuleApp.topₗ _ _ => []
@@ -656,78 +667,90 @@ def builderMovePremises {Γ : SplitSequent} {strat : Strategy coalgebraGame Prov
       | RuleApp.axᵣᵣ _ _ _ => []
       | RuleApp.orₗ Δ φ1 φ2 φ_in =>
         if rep : (Δ \ {Sum.inl (φ1 v φ2)}) ∪ {Sum.inl φ1, Sum.inl φ2} ∈ Γs
-          then [repNext Γ g (by convert rep; grind)]
+          then [repNext (Δ := (Δ \ {Sum.inl (φ1 v φ2)}) ∪ {Sum.inl φ1, Sum.inl φ2}) Γ g
+            (by convert rep; grind)]
           else
-            [nextNext g h
+            [nextNext (Δ := (Δ \ {Sum.inl (φ1 v φ2)}) ∪ {Sum.inl φ1, Sum.inl φ2}) g h
               (by convert rep; grind)
               (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp])]
       | RuleApp.orᵣ Δ φ1 φ2 φ_in =>
         if rep : (Δ \ {Sum.inr (φ1 v φ2)}) ∪ {Sum.inr φ1, Sum.inr φ2} ∈ Γs
-          then [repNext Γ g (by convert rep; grind)]
+          then [repNext (Δ := (Δ \ {Sum.inr (φ1 v φ2)}) ∪ {Sum.inr φ1, Sum.inr φ2}) Γ g
+            (by convert rep; grind)]
           else
-            [nextNext g h
+            [nextNext (Δ := (Δ \ {Sum.inr (φ1 v φ2)}) ∪ {Sum.inr φ1, Sum.inr φ2}) g h
               (by convert rep; grind)
               (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp])]
       | RuleApp.andₗ Δ φ1 φ2 φ_in =>
         if rep1 : (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ1} ∈ Γs
           then
             if rep2 : (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ2} ∈ Γs
-              then [repNext Γ g (by convert rep1; grind), repNext Γ g (by convert rep2; grind)]
+              then [repNext (Δ := (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ1}) Γ g
+                (by convert rep1; grind),
+                    repNext (Δ := (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ2}) Γ g
+                      (by convert rep2; grind)]
               else
-                [repNext Γ g (by convert rep1; grind),
-                  nextNext g h
+                [repNext (Δ := (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ1}) Γ g
+                  (by convert rep1; grind),
+                  nextNext (Δ := (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ2}) g h
                     (by convert rep2; grind)
                     (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp])]
           else
             if rep2 : (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ2} ∈ Γs
               then
-                [nextNext g h
+                [nextNext (Δ := (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ1}) g h
                   (by convert rep1; grind)
                   (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp]),
-                 repNext Γ g (by convert rep2; grind)]
+                 repNext (Δ := (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ2}) Γ g
+                   (by convert rep2; grind)]
               else
-                [nextNext g h
+                [nextNext (Δ := (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ1}) g h
                   (by convert rep1; grind)
                   (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp]),
-                 nextNext g h
+                 nextNext (Δ := (Δ \ {Sum.inl (φ1 & φ2)}) ∪ {Sum.inl φ2}) g h
                   (by convert rep2; grind)
                   (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp])]
       | RuleApp.andᵣ Δ φ1 φ2 φ_in =>
         if rep1 : (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ1} ∈ Γs
           then
             if rep2 : (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ2} ∈ Γs
-              then [repNext Γ g (by convert rep1; grind), repNext Γ g (by convert rep2; grind)]
+              then [repNext (Δ := (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ1}) Γ g
+                (by convert rep1; grind),
+                    repNext (Δ := (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ2}) Γ g
+                      (by convert rep2; grind)]
               else
-                [repNext Γ g (by convert rep1; grind),
-                 nextNext g h
+                [repNext (Δ := (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ1}) Γ g
+                  (by convert rep1; grind),
+                 nextNext (Δ := (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ2}) g h
                   (by convert rep2; grind)
                   (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp])]
           else
             if rep2 : (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ2} ∈ Γs
               then
-                [nextNext g h
+                [nextNext (Δ := (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ1}) g h
                   (by convert rep1; grind)
                   (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp]),
-                 repNext Γ g (by convert rep2; grind)]
+                 repNext (Δ := (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ2}) Γ g
+                   (by convert rep2; grind)]
               else
-                [nextNext g h
+                [nextNext (Δ := (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ1}) g h
                   (by convert rep1; grind)
                   (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp]),
-                 nextNext g h
+                 nextNext (Δ := (Δ \ {Sum.inr (φ1 & φ2)}) ∪ {Sum.inr φ2}) g h
                   (by convert rep2; grind)
                   (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp])]
       | RuleApp.boxₗ Δ φ φ_in =>
         if rep : (Δ \ {Sum.inl (□φ)}).D ∪ {Sum.inl φ} ∈ Γs
-          then [repNext Γ g (by convert rep; grind)]
+          then [repNext (Δ := (Δ \ {Sum.inl (□φ)}).D ∪ {Sum.inl φ}) Γ g (by convert rep; grind)]
           else
-            [nextNext g h
+            [nextNext (Δ := (Δ \ {Sum.inl (□φ)}).D ∪ {Sum.inl φ}) g h
               (by convert rep; grind)
               (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp])]
       | RuleApp.boxᵣ Δ φ φ_in =>
         if rep : (Δ \ {Sum.inr (□φ)}).D ∪ {Sum.inr φ} ∈ Γs
-          then [repNext Γ g (by convert rep; grind)]
+          then [repNext (Δ := (Δ \ {Sum.inr (□φ)}).D ∪ {Sum.inr φ}) Γ g (by convert rep; grind)]
           else
-            [nextNext g h
+            [nextNext (Δ := (Δ \ {Sum.inr (□φ)}).D ∪ {Sum.inr φ}) g h
               (by convert rep; grind)
               (by subst g_def; simp [RuleApp.splitSequents, builderRuleApp])]
 

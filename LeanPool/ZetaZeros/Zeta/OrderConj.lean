@@ -5,8 +5,9 @@ Authors: Kenny Lau
 -/
 module
 
-public import Mathlib.NumberTheory.Harmonic.ZetaAsymp
-public import LeanPool.ZetaZeros.Zeta.Defs
+public import LeanPool.ZetaZeros.Defs
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.NumberTheory.Harmonic.ZetaAsymp
 
 /-!
 # Conjugation preserves the multiplicity of a zero

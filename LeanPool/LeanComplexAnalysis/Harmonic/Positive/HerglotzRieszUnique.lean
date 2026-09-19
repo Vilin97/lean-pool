@@ -3,19 +3,13 @@ Copyright (c) 2026 seb488, Aristotle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: seb488, Aristotle
 -/
-import Mathlib.Analysis.Complex.Harmonic.Analytic
-import Mathlib.Analysis.Normed.Group.FunctionSeries
-import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+module
+
+public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+public import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Topology.Algebra.Module.PerfectSpace
 import Mathlib.Topology.ContinuousMap.StoneWeierstrass
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.LinearCombination
 /-!
 # Uniqueness of the Herglotz–Riesz measure
 
@@ -27,6 +21,8 @@ If for two probability measures `μ₁` and `μ₂` on the unit circle
 the two functions ∫ x, (x + z) / (x - z) ∂μ₁ and ∫ x, (x + z) / (x - z) ∂μ₂ are
 identical on the unit disc, then `μ₁` = `μ₂`.
 -/
+
+@[expose] public section
 
 namespace LeanPool.LeanComplexAnalysis
 

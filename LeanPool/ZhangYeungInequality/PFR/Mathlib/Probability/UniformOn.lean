@@ -7,7 +7,8 @@ Authors: PFR contributors
 module
 
 public import Mathlib.Probability.UniformOn
-public import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Card
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Basic
+import LeanPool.ZhangYeungInequality.PFR.Mathlib.Data.Set.Card
 
 /-!
 # LeanPool.ZhangYeungInequality.PFR.Mathlib.Probability.UniformOn

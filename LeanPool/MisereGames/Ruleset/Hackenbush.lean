@@ -7,10 +7,15 @@ module
 
 public import LeanPool.MisereGames.GameGraph
 public import LeanPool.MisereGames.Misere.Stride
-public import LeanPool.MisereGames.Mathlib.SimpleGraph
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.NormNum
-import Mathlib.Order.RelClasses
+public import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
+import LeanPool.MisereGames.Mathlib.SimpleGraph
+import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Order.Lattice.Nat
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 Misere combinatorial games.

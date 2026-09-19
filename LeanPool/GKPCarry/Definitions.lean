@@ -3,9 +3,9 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import Lean.Elab.Tactic.Omega
-import Mathlib.Data.List.Count
-import Mathlib.Data.Nat.Digits.Defs
+module
+
+public import Mathlib.Data.Nat.Digits.Defs
 
 /-!
 # Ternary prefixes and doubling carries
@@ -14,6 +14,8 @@ This file gives the definitions used by the carry-language theory and its
 bounded C3 corollary. Ternary digit lists are little-endian, following
 `Nat.digits`.
 -/
+
+@[expose] public section
 
 namespace GKPCarry
 

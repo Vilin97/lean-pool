@@ -3,7 +3,15 @@ Copyright (c) 2026 Alexey Milovanov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
-import LeanPool.BooleanIsoperimetry.KruskalKatona
+module
+
+public import LeanPool.BooleanIsoperimetry.KruskalKatona
+import LeanPool.BooleanIsoperimetry.Cascade
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.Linarith.Frontend
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
 
 /-! # Layer-window accounting for the cross-slice Kruskal–Katona bridge.
 
@@ -22,6 +30,8 @@ the boundary functional `H` that exposes the per-layer windows the
 Kruskal–Katona core operates on — not an opaque scalar.  The pair functional
 `initSegPairLayerWindowCost` then assembles the two slice costs exactly the way
 `PairShadowCost` does on simplicial initial segments. -/
+
+@[expose] public section
 
 namespace BooleanIsoperimetry
 

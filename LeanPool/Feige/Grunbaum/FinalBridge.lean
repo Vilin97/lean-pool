@@ -3,11 +3,15 @@ Copyright (c) 2026 OpenAI. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
-import LeanPool.Feige.Grunbaum.TruncationConcavity
+module
+
+public import LeanPool.Feige.Grunbaum.TruncationConcavity
 
 /-!
 # From truncation concavity to the Grünbaum volume bound
 -/
+
+@[expose] public section
 
 open MeasureTheory Set
 

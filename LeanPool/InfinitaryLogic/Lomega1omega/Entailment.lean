@@ -3,7 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Theory
+module
+
+public import LeanPool.InfinitaryLogic.Lomega1omega.Theory
 /-!
 # Semantic entailment for `L_{ω₁ω}` (issue #8 kernel step 1)
 
@@ -14,6 +16,8 @@ base structure by constant interpretations, which no empty carrier admits).
 
 `Language.{0,0}` throughout, per the arc's D2 freeze.
 -/
+
+@[expose] public section
 
 namespace FirstOrder
 

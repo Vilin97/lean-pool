@@ -6,6 +6,10 @@ Authors: Kenny Lau
 module
 
 public import LeanPool.ZetaZeros.Hilbert.Subspaces
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-!
 # Adapted orthonormal bases and the Bessel coefficients

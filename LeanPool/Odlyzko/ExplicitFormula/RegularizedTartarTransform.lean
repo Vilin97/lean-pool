@@ -6,8 +6,13 @@ Authors: The FLT Project
 module
 
 public import LeanPool.Odlyzko.ExplicitFormula.RegularizedTartar
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
+public import Mathlib.Analysis.Analytic.Basic
+import LeanPool.Odlyzko.TestFunction.Fourier
+import Mathlib.Analysis.Calculus.ParametricIntegral
+import Mathlib.Analysis.Complex.CauchyIntegral
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 /-!
 # Regularized Tartar Transform

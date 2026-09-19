@@ -6,10 +6,11 @@ Authors: Chris Birkbeck
 
 module
 
-public import Mathlib.Analysis.CStarAlgebra.Module.Defs
-public import Mathlib.Geometry.Manifold.Notation
-public import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
-public import LeanPool.LeanModularForms.Modularforms.QExpansionLems
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.ModularForms.QExpansion
+import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
+import LeanPool.LeanModularForms.Modularforms.QExpansionLems
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
 /-! # IsCuspForm -/
 

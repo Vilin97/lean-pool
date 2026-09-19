@@ -3,21 +3,9 @@ Copyright (c) 2026 Alessandro Linzi. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alessandro Linzi
 -/
+module
 
-import Mathlib.RingTheory.Valuation.Basic
-import Mathlib.RingTheory.Valuation.ValuationRing
-import Mathlib.RingTheory.Valuation.Extension
-import Mathlib.RingTheory.Valuation.ValuationSubring
-import Mathlib.Algebra.Order.Group.Defs
-import Mathlib.GroupTheory.Index
-import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
-import Mathlib.RingTheory.LocalRing.ResidueField.Basic
-import Mathlib.FieldTheory.Tower
-import Mathlib.FieldTheory.Separable
-import Mathlib.LinearAlgebra.Basis.Basic
-import Mathlib.LinearAlgebra.Dimension.Free
-import Mathlib.LinearAlgebra.Dimension.Finrank
-import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.RingTheory.Valuation.Extension
 
 /-!
 # The Fundamental Inequality of Valued Fields
@@ -29,6 +17,8 @@ Main declarations: `Valuation.fundamentalInequality`, `Valuation.ramificationInd
 Tags: valued-fields, number-theory, valuation-theory
 MSC: 12J20
 -/
+
+@[expose] public section
 
 /-!
 # Ramification Index, Residue Degree, and the Fundamental Inequality

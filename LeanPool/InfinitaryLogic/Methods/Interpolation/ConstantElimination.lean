@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
-import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+module
+
+public import LeanPool.InfinitaryLogic.Methods.ConstantAbstraction
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
 /-!
 # Constant elimination: the C7 acceptance lemmas (issue #8 kernel step 5)
 
@@ -21,6 +23,8 @@ invariance-outside-support congruence (`realize_congr_const`), bridged to arbitr
 `L[[ℕ]]`-structures by `ambient_realize_iff_wc`. Together they show that abstraction transports a
 separator from constant support `insert c A` back to `A` (the InsepAt C7 step).
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

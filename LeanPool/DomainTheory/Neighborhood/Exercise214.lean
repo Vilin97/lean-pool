@@ -3,8 +3,10 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Approximable
+public import LeanPool.DomainTheory.Neighborhood.Approximable
+import Mathlib.Data.Set.Basic
 
 /-!
 # Exercise 2.14 (Scott 1981, PRG-19, §2) — the neighbourhood correspondence `φ` of
@@ -45,6 +47,8 @@ X' ∈ 𝒟₀`).
 `φ` is `Classical.choose`-based, hence `noncomputable` and classical; the
 order-theoretic proofs of
 `rel_ofIso_iff`/`phi_inter` are otherwise choice-free (`propext`, `Quot.sound`). -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood
 

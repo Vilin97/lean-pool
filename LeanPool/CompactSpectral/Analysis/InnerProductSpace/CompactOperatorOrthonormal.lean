@@ -3,9 +3,11 @@ Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Benenson
 -/
-import Mathlib.Analysis.InnerProductSpace.Orthonormal
-import Mathlib.Order.Filter.AtTopBot.Basic
-import Mathlib.Order.Filter.Cofinite
+module
+
+public import Mathlib.Analysis.InnerProductSpace.Orthonormal
+public import Mathlib.Analysis.Normed.Operator.Compact.Basic
+public import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
 import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
 
 /-!
@@ -24,6 +26,8 @@ operators such as Laplace–Beltrami).
 - `CompactSpectral.tendsto_zero_apply_of_isCompactOperator_of_orthonormal`
 - `CompactSpectral.tendsto_norm_apply_of_isCompactOperator_of_orthonormal`
 -/
+
+@[expose] public section
 
 namespace CompactSpectral
 

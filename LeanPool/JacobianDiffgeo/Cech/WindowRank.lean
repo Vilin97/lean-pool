@@ -3,8 +3,12 @@ Copyright (c) 2026 Rado Kirov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rado Kirov
 -/
+module
 
-import LeanPool.JacobianDiffgeo.Cech.Window
+public import LeanPool.JacobianDiffgeo.Cech.Window
+import LeanPool.JacobianDiffgeo.Surface.Identity
+import Mathlib.Combinatorics.Matroid.Init
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 /-!
 # Window dimension counts (CC8, D7, proof plan §6.8)
@@ -20,6 +24,8 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.6, §6.8).
   explicit one-step splitting `WindowAt p d d' ≃ₗ WindowAt p d (d'-1) × ℂ` and induction on
   `(d' - d).toNat` (no explicit basis/independence argument needed).
 -/
+
+@[expose] public section
 
 open scoped ContDiff Manifold Topology
 open Set TopologicalSpace RS.Cech Filter
@@ -61,16 +67,9 @@ private theorem withTop_lt_neg_add_iff (m : ℤ) (t : WithTop ℤ) :
   by_cases ht : t = ⊤
   · subst ht
     simp
-  · obtain ⟨k, rfl⟩ := WithTop.ne_top_iff_exists.1 ht
-    rw [show (((-m : ℤ) : WithTop ℤ) + (k : WithTop ℤ)) = (((-m + k : ℤ) : ℤ) : WithTop ℤ) by
-      norm_cast]
-    constructor
-    · intro h
-      have h' : (0 : ℤ) < -m + k := by exact_mod_cast h
-      exact_mod_cast (show m + 1 ≤ k by omega)
-    · intro h
-      have h' : m + 1 ≤ k := by exact_mod_cast h
-      exact_mod_cast (show (0 : ℤ) < -m + k by omega)
+  · lift t to ℤ using ht
+    norm_cast
+    omega
 
 theorem leadCoeff_eq_zero_iff (p : X) (m : ℤ) (ψ : ordGe p m) :
     leadCoeff p m ψ = 0 ↔
@@ -81,14 +80,8 @@ theorem leadCoeff_eq_zero_iff (p : X) (m : ℤ) (ψ : ordGe p m) :
   have h0 : (0 : WithTop ℤ) ≤
       (tailGerm p (-m) * (ψ : RS.MeroGermOn X ((chartAt ℂ p).source))).ord p := by
     rw [hmul_ord]
-    have hψm : (m : WithTop ℤ) ≤ (ψ : RS.MeroGermOn X ((chartAt ℂ p).source)).ord p := ψ.2
-    have hstep : (((-m : ℤ) : WithTop ℤ) + (m : WithTop ℤ)) ≤
-        ((-m : ℤ) : WithTop ℤ) + (ψ : RS.MeroGermOn X ((chartAt ℂ p).source)).ord p :=
-      add_le_add le_rfl hψm
-    have hz : (((-m : ℤ) : WithTop ℤ) + (m : WithTop ℤ)) = 0 := by
-      have : (-m + m : ℤ) = 0 := by ring
-      exact_mod_cast this
-    rwa [hz] at hstep
+    simpa only [← WithTop.coe_add, neg_add_cancel, WithTop.coe_zero] using
+      add_le_add (le_refl (((-m : ℤ) : WithTop ℤ))) ψ.2
   change (tailGerm p (-m) * (ψ : RS.MeroGermOn X ((chartAt ℂ p).source))).evalAt p = 0 ↔ _
   rw [RS.Cech.MeroGermOn.evalAt_eq_zero_iff (chartAt ℂ p).open_source (mem_chart_source ℂ p) _ h0,
     hmul_ord, withTop_lt_neg_add_iff]
@@ -145,8 +138,7 @@ private theorem mem_ordGe_succ_rawCorr (d' : ℤ) (ψ : ordGe p (-d')) :
     rw [rawCorr_apply, smul_smul]
   have hleadzero : leadCoeff p (-d') (⟨rawCorr p d' ψ, hmem0⟩ : ordGe p (-d')) = 0 := by
     rw [hcongr, map_sub, map_smul, ← hlam_def, smul_eq_mul, ← hc_def]
-    field_simp
-    ring
+    rw [mul_assoc, inv_mul_cancel₀ hlam0, mul_one, sub_self]
   have hfin := (leadCoeff_eq_zero_iff p (-d') ⟨rawCorr p d' ψ, hmem0⟩).1 hleadzero
   rw [mem_ordGe_iff]
   have heq : ((-(d' - 1) : ℤ) : WithTop ℤ) = ((-d' + 1 : ℤ) : WithTop ℤ) := by
@@ -184,12 +176,8 @@ private theorem bigMap_mem_ker_iff (d d' : ℤ) (h : d ≤ d' - 1) (ψ : ordGe p
   · intro hord
     have hlc : leadCoeff p (-d') ψ = 0 := by
       rw [leadCoeff_eq_zero_iff]
-      have h1 : ((-(d' - 1) : ℤ) : WithTop ℤ) ≤ ((-d : ℤ) : WithTop ℤ) := by
-        exact_mod_cast (show -(d' - 1) ≤ -d by omega)
-      have h2 : ((-d' + 1 : ℤ) : WithTop ℤ) = ((-(d' - 1) : ℤ) : WithTop ℤ) := by
-        congr 1; omega
-      rw [h2]
-      exact h1.trans hord
+      exact (show ((-d' + 1 : ℤ) : WithTop ℤ) ≤ ((-d : ℤ) : WithTop ℤ) by
+        exact_mod_cast (show -d' + 1 ≤ -d by omega)).trans hord
     refine ⟨?_, hlc⟩
     rw [WindowAt.mk_eq_zero_iff, corrMap_apply_coe, rawCorr_eq_of_leadCoeff_eq_zero p d' ψ hlc]
     exact hord
@@ -253,31 +241,10 @@ private theorem finrank_windowAt_aux (p : X) (d : ℤ) (n : ℕ) :
     rw [heq0]
     have hsub : Subsingleton (WindowAt p d d) := by
       refine ⟨fun a b => ?_⟩
-      have hsurj : Function.Surjective (WindowAt.mk p d d) := Submodule.mkQ_surjective _
-      obtain ⟨x, rfl⟩ := hsurj a
-      obtain ⟨y, rfl⟩ := hsurj b
-      have h1 := x.2
-      have h2 := y.2
-      rw [mem_ordGe_iff] at h1 h2
-      have hneg : ((-d : ℤ) : WithTop ℤ) ≤
-          (-(y : RS.MeroGermOn X ((chartAt ℂ p).source))).ord p := by
-        rw [RS.MeroGermOn.ord_neg]
-        exact h2
-      have hxy : ((-d : ℤ) : WithTop ℤ) ≤ ((x : RS.MeroGermOn X ((chartAt ℂ p).source)) -
-          (y : RS.MeroGermOn X ((chartAt ℂ p).source))).ord p := by
-        rw [sub_eq_add_neg]
-        calc ((-d : ℤ) : WithTop ℤ) = min ((-d : ℤ) : WithTop ℤ) ((-d : ℤ) : WithTop ℤ) := by
-              simp
-          _ ≤ min ((x : RS.MeroGermOn X ((chartAt ℂ p).source)).ord p)
-              ((-(y : RS.MeroGermOn X ((chartAt ℂ p).source))).ord p) := min_le_min h1 hneg
-          _ ≤ ((x : RS.MeroGermOn X ((chartAt ℂ p).source)) +
-              (-(y : RS.MeroGermOn X ((chartAt ℂ p).source)))).ord p :=
-            RS.MeroGermOn.ord_add (chartAt ℂ p).open_source (mem_chart_source ℂ p) _ _
-      have hz : WindowAt.mk p d d (x - y) = 0 := by
-        rw [WindowAt.mk_eq_zero_iff]
-        exact hxy
-      rw [map_sub] at hz
-      exact sub_eq_zero.1 hz
+      obtain ⟨x, rfl⟩ := (Submodule.mkQ_surjective _) a
+      obtain ⟨y, rfl⟩ := (Submodule.mkQ_surjective _) b
+      exact ((WindowAt.mk_eq_zero_iff x).2 x.2).trans
+        ((WindowAt.mk_eq_zero_iff y).2 y.2).symm
     exact ⟨by have := hsub; infer_instance, Module.finrank_zero_of_subsingleton⟩
   | succ n ih =>
     obtain ⟨ihFD, ihFR⟩ := ih

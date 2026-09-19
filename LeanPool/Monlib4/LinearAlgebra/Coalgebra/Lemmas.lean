@@ -3,17 +3,19 @@ Copyright (c) 2026 Monica Omar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Monica Omar
 -/
+module
 
-import Mathlib.RingTheory.Coalgebra.Basic
+public import Mathlib.RingTheory.Coalgebra.Basic
+public import Mathlib.Algebra.Algebra.Bilinear
 import Mathlib.RingTheory.Coalgebra.CoassocSimps
-import Mathlib.Algebra.Algebra.Bilinear
-import LeanPool.Monlib4.LinearAlgebra.TensorProduct.BasicLemmas
 
 /-!
 # LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas
 
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas`.
 -/
+
+@[expose] public section
 
 theorem TensorProduct.map_left_up {R A B C D : Type*}
   [CommSemiring R]

@@ -3,9 +3,12 @@ Copyright (c) 2026 Gershon Bialer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
+module
 
-import LeanPool.PoincareThreeBody.DelaunayAnchorChart
-import LeanPool.PoincareThreeBody.EnergyLeafObstruction
+public import LeanPool.PoincareThreeBody.DelaunayAnchorChart
+public import LeanPool.PoincareThreeBody.EnergyLeafObstruction
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Local energy leaves at the rational anchor
@@ -14,6 +17,8 @@ The interior elliptic action region contains a product box around the rational a
 energy/first-action coordinates.  Shrinking the first-action side to an interval ensures that
 the whole straight energy-leaf segment back to the anchor remains in the region.
 -/
+
+@[expose] public section
 
 namespace LeanPool.PoincareThreeBody
 

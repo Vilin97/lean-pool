@@ -3,11 +3,14 @@ Copyright (c) 2026 Palalansoukî. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Palalansoukî
 -/
+module
 
-import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.Basic
-import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Basic
+public import LeanPool.Incompleteness.Foundation.IntProp.Hilbert.Basic
+public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Basic
 
 /-! # Soundness -/
+
+@[expose] public section
 
 
 namespace LO

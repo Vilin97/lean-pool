@@ -5,8 +5,9 @@ Authors: Kenny Lau
 -/
 module
 
-public import Mathlib.NumberTheory.LSeries.ZetaZeros
-public import LeanPool.ZetaZeros.Zeta.Defs
+public import LeanPool.ZetaZeros.Defs
+import LeanPool.ZetaZeros.Meta.Attr
+import Mathlib.NumberTheory.LSeries.ZetaZeros
 
 /-!
 # Finiteness of the zero set up to a height

@@ -3,7 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+module
+
+public import LeanPool.InfinitaryLogic.Methods.ConstantInstances
+import Mathlib.Data.Set.Finite.Range
 /-!
 # The generated enumeration universe `U` (issue #8 tranche 2, commit 1)
 
@@ -26,6 +29,8 @@ atomic relation replacements present; `Countable ↥U`; every member has finite 
 The relational-core collapse lemma `exists_eq_constTerm` (every closed term is a constant) is
 included — it drives the later term-model plumbing.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

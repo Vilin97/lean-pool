@@ -3,10 +3,19 @@ Copyright (c) 2026 Qiyuan Zhao. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Qiyuan Zhao
 -/
-import Lean
-import Batteries.Util.ExtendedBinder
-import LeanPool.Lentil.Util
-import LeanPool.Lentil.Foldable
+module
+
+public meta import LeanPool.Lentil.Util
+
+public meta import LeanPool.Lentil.Utils.SyntaxUtil
+
+public import Batteries.Util.ExtendedBinder
+public import LeanPool.Lentil.Foldable
+public meta import Lean.PrettyPrinter.Delaborator.Basic
+public import Lean.PrettyPrinter.Delaborator.Basic
+public meta import Lean.PrettyPrinter.Parenthesizer
+
+@[expose] public section
 
 open Lean LentilLib
 
@@ -237,14 +246,14 @@ macro_rules
 /-- Converting a syntax in `term` category into `tlafml`.
     This is useful in the cases where we want to eliminate the redundant `[tlafml| ... ]`
     wrapper of some sub-formula when it is inside a `tlafml`. -/
-def TLA.syntaxTermToTlafml [Monad m] [MonadQuotation m] (stx : TSyntax `term) : m (TSyntax `tlafml) := do
+meta def TLA.syntaxTermToTlafml [Monad m] [MonadQuotation m] (stx : TSyntax `term) : m (TSyntax `tlafml) := do
   match stx with
   | `([tlafml| $f:tlafml ]) => pure f
   | `(term|$t:term) => `(tlafml| $t:term )
 
 /-- Converting a syntax in `term` category into `tlafml`,
     by inserting `[tlafml| ... ]` wrapper if needed.  -/
-def TLA.syntaxTlafmlToTerm [Monad m] [MonadQuotation m] (stx : TSyntax `tlafml) : m (TSyntax `term) := do
+meta def TLA.syntaxTlafmlToTerm [Monad m] [MonadQuotation m] (stx : TSyntax `tlafml) : m (TSyntax `term) := do
   match stx with
   | `(tlafml| $t:term ) => pure t
   | f => `(term|[tlafml| $f:tlafml ])
@@ -252,7 +261,7 @@ def TLA.syntaxTlafmlToTerm [Monad m] [MonadQuotation m] (stx : TSyntax `tlafml) 
 -- taken from https://github.com/leanprover/vstte2024/blob/main/Imp/Expr/Delab.lean
 open PrettyPrinter.Delaborator SubExpr in
 /-- Annotate the syntax with term info for the delaborator. -/
-def TLA.annAsTerm {any} (stx : TSyntax any) : DelabM (TSyntax any) :=
+meta def TLA.annAsTerm {any} (stx : TSyntax any) : DelabM (TSyntax any) :=
   (⟨·⟩) <$> annotateTermInfo ⟨stx.raw⟩
 
 -- heavily inspired by https://github.com/leanprover/vstte2024/blob/main/Imp/Expr/Delab.lean
@@ -260,7 +269,7 @@ open PrettyPrinter.Delaborator SubExpr in
 /-- Delaborate the current expression into `tlafml` syntax. `fuel` bounds the
     recursion depth; each recursive call descends into a strict subexpression,
     so seeding it with the expression's depth always suffices. -/
-def TLA.delabTlafmlAux (fuel : Nat) : DelabM (TSyntax `tlafml) := do
+meta def TLA.delabTlafmlAux (fuel : Nat) : DelabM (TSyntax `tlafml) := do
   let e ← getExpr
   let stx ← do
     /- NOTE: we could get rid of the nesting of `withAppFn` and `withAppArg`
@@ -339,12 +348,12 @@ where
 open PrettyPrinter.Delaborator SubExpr in
 /-- Delaborate the current expression into `tlafml` syntax, seeding the depth
     fuel from the expression's own approximate depth. -/
-def TLA.delabTlafmlInner : DelabM (TSyntax `tlafml) := do
+meta def TLA.delabTlafmlInner : DelabM (TSyntax `tlafml) := do
   TLA.delabTlafmlAux ((← getExpr).approxDepth.toNat + 1)
 
 open PrettyPrinter.Delaborator SubExpr in
 /-- Delaborator turning TLA predicate applications back into `tlafml` notation. -/
-def TLA.delabTlafml : Delab := whenPPOption (fun o => o.get lentil.pp.useDelab.name true) do
+meta def TLA.delabTlafml : Delab := whenPPOption (fun o => o.get lentil.pp.useDelab.name true) do
   let e ← getExpr
   let fn := e.getAppFn.constName
   -- need to consider implicit arguments below in comparing `e.getAppNumArgs'`
@@ -377,22 +386,22 @@ attribute [delab app.TLA.tlaForall, delab app.TLA.tlaExists] TLA.delabTlafml
 attribute [delab app.TLA.tlaBigwedge, delab app.TLA.tlaBigvee] TLA.delabTlafml
 
 /-- Unexpander rendering `predImplies` as the `|-tla-` sequent notation. -/
-@[app_unexpander TLA.predImplies] def TLA.unexpandPredImplies : Lean.PrettyPrinter.Unexpander
+@[app_unexpander TLA.predImplies] meta def TLA.unexpandPredImplies : Lean.PrettyPrinter.Unexpander
   | `($_ $stx1 $stx2) => do `(($(← TLA.syntaxTermToTlafml stx1)) |-tla- ($(← TLA.syntaxTermToTlafml stx2)))
   | _ => throw ()
 
 /-- Unexpander rendering `valid` as the `|-tla-` notation. -/
-@[app_unexpander TLA.valid] def TLA.unexpandValid : Lean.PrettyPrinter.Unexpander
+@[app_unexpander TLA.valid] meta def TLA.unexpandValid : Lean.PrettyPrinter.Unexpander
   | `($_ $stx) => do `(|-tla- ($(← TLA.syntaxTermToTlafml stx)))
   | _ => throw ()
 
 /-- Unexpander rendering `satisfies` as the `|=tla=` notation. -/
-@[app_unexpander TLA.exec.satisfies] def TLA.unexpandSatisfies : Lean.PrettyPrinter.Unexpander
+@[app_unexpander TLA.exec.satisfies] meta def TLA.unexpandSatisfies : Lean.PrettyPrinter.Unexpander
   | `($_ $stx1 $stx2) => do `($stx2 |=tla= $(← TLA.syntaxTermToTlafml stx1))
   | _ => throw ()
 
 /-- Unexpander rendering equalities between TLA formulas with `=tla=`. -/
-@[app_unexpander Eq] def TLA.unexpandTlaEq : Lean.PrettyPrinter.Unexpander
+@[app_unexpander Eq] meta def TLA.unexpandTlaEq : Lean.PrettyPrinter.Unexpander
   | `($_ [tlafml| $f1:tlafml ] [tlafml| $f2:tlafml ]) => `(($f1) =tla= ($f2))
   | `($_ [tlafml| $f1:tlafml ] $t2:term) => do `(($f1) =tla= ($(← `(tlafml| $t2:term ))))
   | `($_ $t1:term [tlafml| $f2:tlafml ]) => do `(($(← `(tlafml| $t1:term ))) =tla= ($f2))
@@ -401,7 +410,7 @@ attribute [delab app.TLA.tlaBigwedge, delab app.TLA.tlaBigvee] TLA.delabTlafml
 -- taken from https://github.com/leanprover/vstte2024/blob/main/Imp/Expr/Syntax.lean
 open PrettyPrinter Parenthesizer in
 @[category_parenthesizer tlafml]
-def tlafml.parenthesizer : CategoryParenthesizer | prec => do
+meta def tlafml.parenthesizer : CategoryParenthesizer | prec => do
   maybeParenthesize `tlafml true wrapParens prec $
     parenthesizeCategoryCore `tlafml prec
 where

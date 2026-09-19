@@ -3,9 +3,17 @@ Copyright (c) 2026 Catskills Research Company. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Catskills Research Company
 -/
+module
 
-import LeanPool.DomainTheory.Neighborhood.Exercise419
-import LeanPool.DomainTheory.Neighborhood.Product
+public import LeanPool.DomainTheory.Neighborhood.Exercise419
+public import Mathlib.Tactic.Attr.Core
+public import Mathlib.Tactic.Basic
+import Mathlib.Data.Finset.Attr
+import Mathlib.Data.Rat.Cast.Order
+import Mathlib.Tactic.NormNum.Abs
+import Mathlib.Tactic.NormNum.DivMod
+import Mathlib.Tactic.NormNum.OfScientific
+import Mathlib.Tactic.NormNum.Pow
 
 /-!
 # Exercise 5.16 (Scott 1981, PRG-19, Lecture V) — `neg`, `merge` and `d` on `C`
@@ -56,6 +64,8 @@ description and
 overlap-freeness) are real combinatorics-on-words and are left as a separate
 follow-up.
 -/
+
+@[expose] public section
 
 namespace Domain.Neighborhood.Exercise516
 

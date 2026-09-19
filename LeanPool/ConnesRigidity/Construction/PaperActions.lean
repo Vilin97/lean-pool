@@ -8,12 +8,16 @@ Authors: Utensil Song
 SL₃ action interfaces for the Zhou tensor carrier. Paper: §2. The file keeps
 the linear action and quadratic Sp₄ correction as separate reusable layers.
 -/
-import LeanPool.ConnesRigidity.Construction
-import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
+module
+
+public import LeanPool.ConnesRigidity.Construction
+public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
 
 /-!
 The paper actions component of the Connes rigidity formalization.
 -/
+
+@[expose] public section
 
 namespace Connes
 namespace Construction

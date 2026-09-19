@@ -3,7 +3,9 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import Mathlib.Analysis.Complex.Circle
+module
+
+public import Mathlib.Analysis.Complex.Circle
 
 /-!
 DO NOT EDIT OR MODIFY
@@ -20,6 +22,8 @@ which is a pristine verbatim clone of
 leanprover/lean-eval/generated/topological_classification_of_surfaces
 
 -/
+
+@[expose] public section
 
 /-!
 Benchmark statements for topological classification of compact connected surfaces with boundary.

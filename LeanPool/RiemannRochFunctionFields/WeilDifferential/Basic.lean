@@ -6,8 +6,9 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.RiemannRochFunctionFields.Genus.Basic
-public import LeanPool.RiemannRochFunctionFields.Genus.AdeleQuotient
-public import Mathlib.LinearAlgebra.Dual.Lemmas
+public import LeanPool.RiemannRochFunctionFields.AdeleSpace.FilterChain
+import LeanPool.RiemannRochFunctionFields.Genus.AdeleQuotient
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # Weil differentials and the duality theorem
@@ -66,13 +67,10 @@ theorem finite_adeleFilt_sub_quotient {D D' : DivisorA k K} (hle : D ≤ D') :
   have : Module.Finite k ((adeleFilt k K D') ⧸
       Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)) :=
     finiteAdeleFiltDiff_quotient_add_eq k K (M := D) hdiv.symm hE
-  exact Module.Finite.equiv (Submodule.quotientQuotientEquivQuotient
-    (Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D))
-    (Submodule.comap (adeleFilt k K D').subtype
-      (adeleFilt k K D + diagonalSubmodule k K))
-    (Submodule.comap_mono (by
-      rw [Submodule.add_eq_sup]
-      exact le_sup_left)))
+  exact Module.Finite.of_surjective
+    (Submodule.factor (Submodule.comap_mono
+      (le_sup_left : adeleFilt k K D ≤ adeleFilt k K D + diagonalSubmodule k K)))
+    (Submodule.factor_surjective _)
 
 /-- The adele class space `𝒜_K ⧸ (A(D) + diag(K))` is finite-dimensional over `k`. -/
 instance finiteDimensional_adeleQuotient (D : DivisorA k K) :
@@ -549,9 +547,8 @@ theorem finrank_weilDifferential_eq_one :
   have hn_g : (n : ℤ) > 3 * (genus k K : ℤ) - 3 - deg k K D₀ := by
     have hle : 3 * (genus k K : ℤ) - 3 - deg k K D₀ ≤ M := le_max_right _ _
     omega
-  have hnb_ge : (n : ℤ) * deg k K B ≥ (n : ℤ) := by
-    have hn0 : (0 : ℤ) ≤ (n : ℤ) := Int.natCast_nonneg n
-    nlinarith [hb1, hn0]
+  have hnb_ge : (n : ℤ) * deg k K B ≥ (n : ℤ) :=
+    le_mul_of_one_le_right (Int.natCast_nonneg n) hb1
   have hdegsub : deg k K (D₀ - n • B) = deg k K D₀ - (n : ℤ) * deg k K B := by
     rw [deg_sub, deg_nsmul]
   have hdeg_neg : deg k K (D₀ - n • B) < 0 := by

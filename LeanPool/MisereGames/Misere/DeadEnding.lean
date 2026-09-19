@@ -6,9 +6,8 @@ Authors: Alfie Davies, Tomasz Maciosowski
 module
 
 public import LeanPool.MisereGames.Misere.Comparison
-public import LeanPool.MisereGames.Misere.PFree
-public import LeanPool.MisereGames.Misere.Universe
 public import LeanPool.MisereGames.Misere.OutcomeStable.PropertyX
+import Mathlib.Algebra.Ring.Int.Defs
 
 /-!
 Misere combinatorial games.

@@ -3,10 +3,15 @@ Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ryan McCorvie, Jack McCarthy
 -/
-import LeanPool.ClassificationOfSurfaces.CanonicalGeneratorMaps
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
-import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
-import LeanPool.ClassificationOfSurfaces.SphereQuotientHomeomorph
+module
+
+public import LeanPool.ClassificationOfSurfaces.CanonicalGeneratorMaps
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicCanonical
+public import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
+import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.CategoryTheory.Category.Init
+import Mathlib.Combinatorics.SimpleGraph.Init
+import Mathlib.MeasureTheory.Covering.Besicovitch
 
 /-!
 # Realization of canonical finite-cyclic presentations
@@ -17,6 +22,8 @@ quotient.  The result is the only adapter between the finite-cyclic normalizatio
 already-certified canonical polygonal quotients; in particular, it does not restate either
 Lean-Eval relation.
 -/
+
+@[expose] public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

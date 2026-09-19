@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+module
+
+public import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
 import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
-import LeanPool.InfinitaryLogic.Methods.PolarityCalculus
 /-!
 # The signed root gate (issue #14, Unit 5, commit 1)
 
@@ -21,6 +23,8 @@ The file is deliberately **neutral**: it imports only the unsigned root gate and
 occurrence calculus, so the paired/countable-completion machinery enters the Lyndon development
 only at the countable core (`LyndonRelational.lean`), which is its first semantic consumer.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 

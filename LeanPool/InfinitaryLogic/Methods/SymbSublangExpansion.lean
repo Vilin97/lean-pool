@@ -3,8 +3,10 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
-import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
+module
+
+public import LeanPool.InfinitaryLogic.Methods.GeneratedSublanguage
+public import LeanPool.InfinitaryLogic.Lomega1omega.Entailment
 /-!
 # Semantic expansion of a two-sorted generated sublanguage (neutral prerequisite)
 
@@ -24,6 +26,8 @@ of any `Conditional` file.
 * `entails_restrictSymbols_singleton` — a base-`L` entailment restricts to the sublanguage,
   via the expansion of an arbitrary sublanguage model.
 -/
+
+@[expose] public section
 
 namespace FirstOrder.Language
 
