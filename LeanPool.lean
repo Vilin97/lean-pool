@@ -358,6 +358,15 @@ import LeanPool.CencovPetz.Uniform
 import LeanPool.CencovPetz.UniformScalarConstant
 import LeanPool.CencovPetz.UniformScalarMultiple
 import LeanPool.CencovPetz.UniformSimplex
+import LeanPool.CenteredMaximal
+import LeanPool.CenteredMaximal.Basic
+import LeanPool.CenteredMaximal.Lattice.Constants
+import LeanPool.CenteredMaximal.Lattice.LowerBound
+import LeanPool.CenteredMaximal.Lattice.Smear
+import LeanPool.CenteredMaximal.Lattice.Witness
+import LeanPool.CenteredMaximal.Numerics
+import LeanPool.CenteredMaximal.Statement
+import LeanPool.CenteredMaximal.UpperBound
 import LeanPool.ChannelCapacity
 import LeanPool.ChannelCapacity.Basic
 import LeanPool.ChannelCapacity.Capacity
