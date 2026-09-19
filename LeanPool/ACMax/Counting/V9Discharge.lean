@@ -291,12 +291,12 @@ theorem exists_mediant_component {κ : Type*} [Fintype κ] (nc tc : κ → ℕ) 
   exact absurd hbad (lt_irrefl _)
 
 open Classical in
-/-- **The SQRT discharge.**  `GirthExcessBound` holds for every `n` and `G`.  Given a nonempty `S`
-with `2|S| + 2t ≤ pairs(S)` (edge excess `t`) and the SQRT side condition `2|S|² ≤ (L−5)²·t` with
-`6 ≤ L`, there is a cycle of length `3 ≤ k ≤ L` inside `S`.  Assembly: extract the min-degree-`2`
-`2`-core (`two_core_aux`), pick the excess-carrying component (`exists_mediant_component`), collide
-`sqrt_double_count` with the side condition (`r = ⌊(L−1)/2⌋`), and lift the resulting short cycle
-through the two induced-graph embeddings to `G` via `cycle_walk_to_zmod`. -/
+/-- The girth-excess bound holds for every graph. A nonempty vertex set `S` with at least
+`2 * S.card + 2 * t` ordered adjacent pairs and
+`S.card ^ 2 < S.card * (2 * r + 1) + t * (3 * r ^ 2 - r)`, for positive `t` and `r`,
+contains a cycle of length between `3` and `2 * r + 1`. The proof extracts a
+minimum-degree-two core, selects an excess-carrying component, applies the
+short-cycle bound, and lifts the cycle through the induced-graph embeddings. -/
 theorem girth_excess_bound_holds (n : ℕ) (G : SimpleGraph (Fin n)) : GirthExcessBound n G := by
   classical
   intro S t r hSne ht1 hr1 hpairs hside

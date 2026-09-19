@@ -190,7 +190,7 @@ theorem ds_unblocked_fires (n : ℕ) [Nonempty (Fin n)] (G : SimpleGraph (Fin n)
         have hgap' : p₁ = p₂ + 1 := by omega
         have hp₂3 : 3 ≤ p₂ := by omega
         rw [hgap', he₁', he₂']
-        nlinarith [hp₂3]
+        nlinarith only [hp₂3]
       · rcases Nat.lt_or_ge 2 e₁ with he₁3 | he₁2
         · -- `e₁ = 3, e₂ = 0`: `s ≥ t` gives `2s² ≥ t²`
           have he₁' : e₁ = 3 := by omega
@@ -198,7 +198,7 @@ theorem ds_unblocked_fires (n : ℕ) [Nonempty (Fin n)] (G : SimpleGraph (Fin n)
           rw [he₁', he₂']
           have hsq : (p₂ + 1) * (p₂ + 1) ≤ (p₁ + 1) * (p₁ + 1) :=
             Nat.mul_le_mul hst hst
-          nlinarith [hsq]
+          nlinarith only [hsq]
         · -- both `≤ 2`: termwise `2pᵢ + eᵢ ≤ 2(pᵢ+1)` and ring
           calc (p₁ + e₁ + p₁) * (p₂ + 1) ^ 2 + (p₂ + e₂ + p₂) * (p₁ + 1) ^ 2
               ≤ (2 * (p₁ + 1)) * (p₂ + 1) ^ 2
