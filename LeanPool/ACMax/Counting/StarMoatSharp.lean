@@ -409,69 +409,35 @@ private theorem star_case_twelve_hKdeg_step1 : ∀ (G : SimpleGraph (Fin (12 : �
     exact hs0 t₂ x hd2 hdx (hDadj x hxD)
 
 open Classical in
-private theorem star_case_twelve_hAOneS1_step1 : ∀ (G : SimpleGraph (Fin (12 : ℕ)))
-  (_ : ∀ (v w : Fin (12 : ℕ)), G.degree v = (3 : ℕ) → G.degree w = (3 : ℕ) → ¬G.Adj v w) (h t₁ t₂
-    : Fin (12 : ℕ))
-  (_ : G.degree t₁ = (3 : ℕ)) (_ : G.degree t₂ = (3 : ℕ)),
-  let _ : DecidableEq (Fin (12 : ℕ)) := Classical.decEq (Fin (12 : ℕ));
-  ∀ (S₁ : Finset (Fin (12 : ℕ))) (_ : S₁ = {h, t₁, t₂}),
-    let A : Finset (Fin (12 : ℕ)) := G.neighborFinset h \ S₁;
-    ∀ (_ : h ∈ S₁) (_ : ∀ x ∈ A, G.Adj h x) (_ : ∀ x ∈ A, G.degree x = (3 : ℕ)),
-      ∀ x ∈ A, (G.neighborFinset x ∩ S₁).card = (1 : ℕ) := by
-  classical
-  intro G hs0 h t₁ t₂ hd1 hd2 this S₁ hS1def A hhS1 hAadj hAdegree3 x hxA
-  have hdx := hAdegree3 x hxA
-  have hsub : G.neighborFinset x ∩ S₁ ⊆ {h} := by
-    intro y hy
-    rw [Finset.mem_inter] at hy
-    have hxy : G.Adj x y := (G.mem_neighborFinset x y).mp hy.1
-    rw [hS1def, Finset.mem_insert, Finset.mem_insert,
-      Finset.mem_singleton] at hy
-    rcases hy.2 with hyh | hyt1 | hyt2
-    · simp [hyh]
-    · exfalso
-      exact hs0 x t₁ hdx hd1 (by simpa [hyt1] using hxy)
-    · exfalso
-      exact hs0 x t₂ hdx hd2 (by simpa [hyt2] using hxy)
-  have hle : (G.neighborFinset x ∩ S₁).card ≤ 1 := by
-    simpa using Finset.card_le_card hsub
-  have hhmem : h ∈ G.neighborFinset x ∩ S₁ := by
-    rw [Finset.mem_inter, G.mem_neighborFinset]
-    exact ⟨(hAadj x hxA).symm, hhS1⟩
-  have hpos := Finset.card_pos.mpr ⟨h, hhmem⟩
-  omega
+private theorem star_neighbors_single_hub {n : ℕ} [DecidableEq (Fin n)]
+    (G : SimpleGraph (Fin n))
+    (hs0 : ∀ v w, G.degree v = 3 → G.degree w = 3 → ¬G.Adj v w)
+    {h t₁ t₂ x : Fin n} (hd1 : G.degree t₁ = 3) (hd2 : G.degree t₂ = 3)
+    (hdx : G.degree x = 3) (hxh : G.Adj x h) :
+    (G.neighborFinset x ∩ {h, t₁, t₂}).card = 1 := by
+  have hset : G.neighborFinset x ∩ {h, t₁, t₂} = {h} := by
+    ext y
+    constructor
+    · intro hy
+      obtain ⟨hxy, hy⟩ := Finset.mem_inter.mp hy
+      have hxy := (G.mem_neighborFinset x y).mp hxy
+      simp only [Finset.mem_insert, Finset.mem_singleton] at hy ⊢
+      rcases hy with rfl | rfl | rfl
+      · rfl
+      · exact (hs0 x _ hdx hd1 hxy).elim
+      · exact (hs0 x _ hdx hd2 hxy).elim
+    · intro hy
+      obtain rfl := Finset.mem_singleton.mp hy
+      exact Finset.mem_inter.mpr ⟨(G.mem_neighborFinset x _).mpr hxh, by simp⟩
+  rw [hset, Finset.card_singleton]
 
 open Classical in
-private theorem star_case_twelve_hcover_step1 : ∀ (G : SimpleGraph (Fin (12 : ℕ))),
-  let _ : DecidableEq (Fin (12 : ℕ)) := Classical.decEq (Fin (12 : ℕ));
-  ∀ (S₁ : Finset (Fin (12 : ℕ))),
-    let F : Finset (Fin (12 : ℕ)) := (S₁.biUnion fun x => G.neighborFinset x) \ S₁;
-    ∀ (S₂ : Finset (Fin (12 : ℕ))) (_ : S₂ = (S₁ ∪ F)ᶜ), S₁ ∪ F ∪ S₂ = Finset.univ := by
-  classical
-  intro G this S₁ F S₂ hS2def
-  ext x
-  simp only [Finset.mem_union, Finset.mem_univ, iff_true]
-  by_cases hx1 : x ∈ S₁
-  · exact Or.inl (Or.inl hx1)
-  by_cases hxF : x ∈ F
-  · exact Or.inl (Or.inr hxF)
-  · exact Or.inr (by
-      rw [hS2def, Finset.mem_compl, Finset.mem_union, not_or]
-      exact ⟨hx1, hxF⟩)
-
-open Classical in
-private theorem star_case_twelve_hpartition_step1 : ∀ (G : SimpleGraph (Fin (12 : ℕ))),
-  let _ : DecidableEq (Fin (12 : ℕ)) := Classical.decEq (Fin (12 : ℕ));
-  ∀ (S₁ : Finset (Fin (12 : ℕ))),
-    let F : Finset (Fin (12 : ℕ)) := (S₁.biUnion fun x => G.neighborFinset x) \ S₁;
-    let S₂ : Finset (Fin (12 : ℕ)) := (S₁ ∪ F)ᶜ;
-    ∀ (_ : Disjoint S₁ F) (_ : Disjoint (S₁ ∪ F) S₂) (_ : S₁ ∪ F ∪ S₂ = Finset.univ),
-      ∀ x ∈ F,
-        (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card + (G.neighborFinset x ∩
-          S₂).card =
-          G.degree x := by
-  classical
-  intro G this S₁ F S₂ hdisjS1F hdisjLayer hcover x hxF
+private theorem degree_partition {n : ℕ} [DecidableEq (Fin n)] (G : SimpleGraph (Fin n))
+    (S₁ F S₂ : Finset (Fin n)) (hdisjS1F : Disjoint S₁ F)
+    (hdisjLayer : Disjoint (S₁ ∪ F) S₂) (hcover : S₁ ∪ F ∪ S₂ = Finset.univ)
+    (x : Fin n) :
+    (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card +
+      (G.neighborFinset x ∩ S₂).card = G.degree x := by
   have hdisj12 : Disjoint (G.neighborFinset x ∩ S₁)
       (G.neighborFinset x ∩ F) :=
     hdisjS1F.mono Finset.inter_subset_right Finset.inter_subset_right
@@ -493,31 +459,19 @@ private theorem star_case_twelve_hpartition_step1 : ∀ (G : SimpleGraph (Fin (1
     G.card_neighborFinset_eq_degree]
 
 open Classical in
-private theorem star_case_twelve_hPF0_step1 : ∀ (G : SimpleGraph (Fin (12 : ℕ))) (_ _ _ : Fin (12
-  : ℕ)),
-  let _ : DecidableEq (Fin (12 : ℕ)) := Classical.decEq (Fin (12 : ℕ));
-  ∀ (S₁ : Finset (Fin (12 : ℕ))),
-    let F : Finset (Fin (12 : ℕ)) := (S₁.biUnion fun x => G.neighborFinset x) \ S₁;
-    let S₂ : Finset (Fin (12 : ℕ)) := (S₁ ∪ F)ᶜ;
-    ∀ (_ : Fin (12 : ℕ))
-      (_ :
-        ∀ x ∈ F,
-          (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card + (G.neighborFinset x ∩
-            S₂).card = G.degree x)
-      (_ : ∑ x ∈ F, (G.neighborFinset x ∩ S₁).card = (6 : ℕ))
-      (_ : ∑ x ∈ F, (G.neighborFinset x ∩ S₂).card = (12 : ℕ)) (_ : ∑ x ∈ F, G.degree x = (18 : ℕ)),
-      internalPairCount G F = (0 : ℕ) := by
-  classical
-  intro G h t₁ t₂ this S₁ F S₂ a₁ hpartition hSF1 hSF2 hdegF
-  rw [internalPairCount_eq_sum]
-  have hsumPart :
-      (∑ x ∈ F, (G.neighborFinset x ∩ S₁).card) +
-        (∑ x ∈ F, (G.neighborFinset x ∩ F).card) +
-        ∑ x ∈ F, (G.neighborFinset x ∩ S₂).card =
-          ∑ x ∈ F, G.degree x := by
-    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
-    exact Finset.sum_congr rfl hpartition
-  omega
+private theorem internalPairCount_partition {n : ℕ} [DecidableEq (Fin n)] (G : SimpleGraph (Fin n))
+    (S₁ F S₂ : Finset (Fin n))
+    (hpartition : ∀ x ∈ F, (G.neighborFinset x ∩ S₁).card +
+      (G.neighborFinset x ∩ F).card + (G.neighborFinset x ∩ S₂).card = G.degree x) :
+    (∑ x ∈ F, (G.neighborFinset x ∩ S₁).card) + internalPairCount G F +
+      (∑ x ∈ F, (G.neighborFinset x ∩ S₂).card) = ∑ x ∈ F, G.degree x := by
+  rw [internalPairCount_eq_sum, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro x hx
+  convert hpartition x hx using 1
+  congr 3
+  ext y
+  simp only [Finset.mem_inter]
 
 open Classical in
 private theorem star_twelve_degree_census : ∀ [Nonempty (Fin (12 : ℕ))] (G : SimpleGraph (Fin (12
@@ -583,9 +537,9 @@ private theorem star_twelve_degree_census : ∀ [Nonempty (Fin (12 : ℕ))] (G :
     have := h3 x
     omega
   have hAOneS1 : ∀ x ∈ A, (G.neighborFinset x ∩ S₁).card = 1 := by
-    exact star_case_twelve_hAOneS1_step1 (G := G) (hs0) (h := h) (t₁ := t₁) (t₂ := t₂) (hd1) (hd2)
-      (S₁ := S₁) (hS1def) (hhS1) (hAadj)
-      (hAdegree3)
+    intro x hx
+    rw [hS1def]
+    exact star_neighbors_single_hub G hs0 hd1 hd2 (hAdegree3 x hx) (hAadj x hx).symm
   have hANoB : ∀ x ∈ A, (G.neighborFinset x ∩ S₂).card = 0 := by
     intro x hxA
     rw [Finset.card_eq_zero]
@@ -600,11 +554,11 @@ private theorem star_twelve_degree_census : ∀ [Nonempty (Fin (12 : ℕ))] (G :
     rw [hS2def, Finset.mem_compl] at hxB
     exact hxB hxSF
   have hcover : S₁ ∪ F ∪ S₂ = Finset.univ := by
-    exact star_case_twelve_hcover_step1 (G := G) (S₁ := S₁) (S₂ := S₂) (hS2def)
+    rw [hS2def, Finset.union_compl]
   have hpartition : ∀ x ∈ F,
       (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card +
         (G.neighborFinset x ∩ S₂).card = G.degree x := by
-    exact star_case_twelve_hpartition_step1 (G := G) (S₁ := S₁) (hdisjS1F) (hdisjLayer) (hcover)
+    exact fun x _ => degree_partition G S₁ F S₂ hdisjS1F hdisjLayer hcover x
   have ha1Int2 : (G.neighborFinset a₁ ∩ F).card = 2 := by
     have hp := hpartition a₁ ha1F
     have hone := hAOneS1 a₁ ha1A
@@ -655,8 +609,8 @@ private theorem star_twelve_degree_census : ∀ [Nonempty (Fin (12 : ℕ))] (G :
     rw [hre, Finset.sum_add_distrib, Finset.sum_const, smul_eq_mul,
       Nat.mul_comm, hEF3, hF5]
   have hPF0 : internalPairCount G F = 0 := by
-    exact star_case_twelve_hPF0_step1 (G := G) (h) (t₁) (t₂) (S₁ := S₁) (a₁) (hpartition) (hSF1)
-      (hSF2) (hdegF)
+    have := internalPairCount_partition G S₁ F S₂ hpartition
+    omega
   have htwice := twice_internal_degree_le_internalPairCount G F ha1F
   exfalso
   omega
@@ -789,117 +743,6 @@ private theorem star_case_twelve : ∀ {n : ℕ} [Nonempty (Fin n)] (_ : (10 : �
     (hKexc) (hKexcF) (hFAKcard) (hF5) (hB4) (hKcard) (hEFsplit) (hEB0) (hEF3)
 
 open Classical in
-private theorem star_case_thirteen_hAOneS1_step1 : ∀ (G : SimpleGraph (Fin (13 : ℕ)))
-  (_ : ∀ (v w : Fin (13 : ℕ)), G.degree v = (3 : ℕ) → G.degree w = (3 : ℕ) → ¬G.Adj v w) (h t₁ t₂
-    : Fin (13 : ℕ))
-  (_ : G.degree t₁ = (3 : ℕ)) (_ : G.degree t₂ = (3 : ℕ)),
-  let _ : DecidableEq (Fin (13 : ℕ)) := Classical.decEq (Fin (13 : ℕ));
-  ∀ (S₁ : Finset (Fin (13 : ℕ))) (_ : S₁ = {h, t₁, t₂}),
-    let A : Finset (Fin (13 : ℕ)) := G.neighborFinset h \ S₁;
-    ∀ (_ : h ∈ S₁) (_ : ∀ x ∈ A, G.Adj h x) (_ : ∀ x ∈ A, G.degree x = (3 : ℕ)),
-      ∀ x ∈ A, (G.neighborFinset x ∩ S₁).card = (1 : ℕ) := by
-  classical
-  intro G hs0 h t₁ t₂ hd1 hd2 this S₁ hS1def A hhS1 hAadj hAdegree3 x hxA
-  have hdx := hAdegree3 x hxA
-  have hsub : G.neighborFinset x ∩ S₁ ⊆ {h} := by
-    intro y hy
-    rw [Finset.mem_inter] at hy
-    have hxy : G.Adj x y := (G.mem_neighborFinset x y).mp hy.1
-    rw [hS1def, Finset.mem_insert, Finset.mem_insert,
-      Finset.mem_singleton] at hy
-    rcases hy.2 with hyh | hyt1 | hyt2
-    · simp [hyh]
-    · exfalso
-      exact hs0 x t₁ hdx hd1 (by simpa [hyt1] using hxy)
-    · exfalso
-      exact hs0 x t₂ hdx hd2 (by simpa [hyt2] using hxy)
-  have hle : (G.neighborFinset x ∩ S₁).card ≤ 1 := by
-    simpa using Finset.card_le_card hsub
-  have hhmem : h ∈ G.neighborFinset x ∩ S₁ := by
-    rw [Finset.mem_inter, G.mem_neighborFinset]
-    exact ⟨(hAadj x hxA).symm, hhS1⟩
-  have hpos := Finset.card_pos.mpr ⟨h, hhmem⟩
-  omega
-
-open Classical in
-private theorem star_case_thirteen_hcover_step1 : ∀ (G : SimpleGraph (Fin (13 : ℕ))),
-  let _ : DecidableEq (Fin (13 : ℕ)) := Classical.decEq (Fin (13 : ℕ));
-  ∀ (S₁ : Finset (Fin (13 : ℕ))),
-    let F : Finset (Fin (13 : ℕ)) := (S₁.biUnion fun x => G.neighborFinset x) \ S₁;
-    ∀ (S₂ : Finset (Fin (13 : ℕ))) (_ : S₂ = (S₁ ∪ F)ᶜ), S₁ ∪ F ∪ S₂ = Finset.univ := by
-  classical
-  intro G this S₁ F S₂ hS2def
-  ext x
-  simp only [Finset.mem_union, Finset.mem_univ, iff_true]
-  by_cases hx1 : x ∈ S₁
-  · exact Or.inl (Or.inl hx1)
-  by_cases hxF : x ∈ F
-  · exact Or.inl (Or.inr hxF)
-  · exact Or.inr (by
-      rw [hS2def, Finset.mem_compl, Finset.mem_union, not_or]
-      exact ⟨hx1, hxF⟩)
-
-open Classical in
-private theorem star_case_thirteen_hpartition_step1 : ∀ (G : SimpleGraph (Fin (13 : ℕ))),
-  let _ : DecidableEq (Fin (13 : ℕ)) := Classical.decEq (Fin (13 : ℕ));
-  ∀ (S₁ : Finset (Fin (13 : ℕ))),
-    let F : Finset (Fin (13 : ℕ)) := (S₁.biUnion fun x => G.neighborFinset x) \ S₁;
-    ∀ (S₂ : Finset (Fin (13 : ℕ))),
-    ∀ (_ : Disjoint S₁ F) (_ : Disjoint (S₁ ∪ F) S₂) (_ : S₁ ∪ F ∪ S₂ = Finset.univ),
-      ∀ x ∈ F,
-        (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card + (G.neighborFinset x ∩
-          S₂).card =
-          G.degree x := by
-  classical
-  intro G this S₁ F S₂ hdisjS1F hdisjLayer hcover x hxF
-  have hdisj12 : Disjoint (G.neighborFinset x ∩ S₁)
-      (G.neighborFinset x ∩ F) :=
-    hdisjS1F.mono Finset.inter_subset_right Finset.inter_subset_right
-  have hdisj123 : Disjoint
-      ((G.neighborFinset x ∩ S₁) ∪ (G.neighborFinset x ∩ F))
-      (G.neighborFinset x ∩ S₂) := by
-    apply hdisjLayer.mono _ Finset.inter_subset_right
-    intro y hy
-    rw [Finset.mem_union] at hy
-    rcases hy with hy1 | hyF
-    · exact Finset.mem_union_left F (Finset.mem_inter.mp hy1).2
-    · exact Finset.mem_union_right S₁ (Finset.mem_inter.mp hyF).2
-  have hunion : (G.neighborFinset x ∩ S₁) ∪ (G.neighborFinset x ∩ F) ∪
-      (G.neighborFinset x ∩ S₂) = G.neighborFinset x := by
-    rw [← Finset.inter_union_distrib_left, ← Finset.inter_union_distrib_left,
-      hcover, Finset.inter_univ]
-  rw [← Finset.card_union_of_disjoint hdisj12,
-    ← Finset.card_union_of_disjoint hdisj123, hunion,
-    G.card_neighborFinset_eq_degree]
-
-open Classical in
-private theorem star_case_thirteen_hPF4_step1 : ∀ (G : SimpleGraph (Fin (13 : ℕ))) (_ _ _ : Fin
-  (13 : ℕ)),
-  let _ : DecidableEq (Fin (13 : ℕ)) := Classical.decEq (Fin (13 : ℕ));
-  ∀ (S₁ : Finset (Fin (13 : ℕ))),
-    let F : Finset (Fin (13 : ℕ)) := (S₁.biUnion fun x => G.neighborFinset x) \ S₁;
-    ∀ (S₂ : Finset (Fin (13 : ℕ))),
-    ∀
-      (_ :
-        ∀ x ∈ F,
-          (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card + (G.neighborFinset x ∩
-            S₂).card = G.degree x)
-      (_ : ∑ x ∈ F, (G.neighborFinset x ∩ S₁).card = (6 : ℕ))
-      (_ : ∑ x ∈ F, (G.neighborFinset x ∩ S₂).card = (12 : ℕ)) (_ : ∑ x ∈ F, G.degree x = (22 : ℕ)),
-      internalPairCount G F = (4 : ℕ) := by
-  classical
-  intro G h t₁ t₂ this S₁ F S₂ hpartition hSF1 hSF2 hdegF
-  rw [internalPairCount_eq_sum]
-  have hsumPart :
-      (∑ x ∈ F, (G.neighborFinset x ∩ S₁).card) +
-        (∑ x ∈ F, (G.neighborFinset x ∩ F).card) +
-        ∑ x ∈ F, (G.neighborFinset x ∩ S₂).card =
-          ∑ x ∈ F, G.degree x := by
-    rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
-    exact Finset.sum_congr rfl hpartition
-  omega
-
-open Classical in
 private theorem star_thirteen_degree_census : ∀ [Nonempty (Fin (13 : ℕ))] (G : SimpleGraph (Fin
   (13 : ℕ)))
   (_ : ∀ (v : Fin (13 : ℕ)), (3 : ℕ) ≤ G.degree v)
@@ -962,9 +805,9 @@ private theorem star_thirteen_degree_census : ∀ [Nonempty (Fin (13 : ℕ))] (G
     have := h3 x
     omega
   have hAOneS1 : ∀ x ∈ A, (G.neighborFinset x ∩ S₁).card = 1 := by
-    exact star_case_thirteen_hAOneS1_step1 (G := G) (hs0) (h := h) (t₁ := t₁) (t₂ := t₂)
-      (hd1) (hd2) (S₁ := S₁) (hS1def) (hhS1) (hAadj)
-      (hAdegree3)
+    intro x hx
+    rw [hS1def]
+    exact star_neighbors_single_hub G hs0 hd1 hd2 (hAdegree3 x hx) (hAadj x hx).symm
   have hANoB : ∀ x ∈ A, (G.neighborFinset x ∩ S₂).card = 0 := by
     intro x hxA
     rw [Finset.card_eq_zero]
@@ -979,12 +822,11 @@ private theorem star_thirteen_degree_census : ∀ [Nonempty (Fin (13 : ℕ))] (G
     rw [hS2def, Finset.mem_compl] at hxB
     exact hxB hxSF
   have hcover : S₁ ∪ F ∪ S₂ = Finset.univ := by
-    exact star_case_thirteen_hcover_step1 (G := G) (S₁ := S₁) (S₂ := S₂) (hS2def)
+    rw [hS2def, Finset.union_compl]
   have hpartition : ∀ x ∈ F,
       (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card +
         (G.neighborFinset x ∩ S₂).card = G.degree x := by
-    exact star_case_thirteen_hpartition_step1 (S₂ := S₂) (G := G) (S₁ := S₁) (hdisjS1F)
-      (hdisjLayer) (hcover)
+    exact fun x _ => degree_partition G S₁ F S₂ hdisjS1F hdisjLayer hcover x
   have hAInt2 : ∀ x ∈ A, (G.neighborFinset x ∩ F).card = 2 := by
     intro x hxA
     have hp := hpartition x (hAsubF hxA)
@@ -1036,8 +878,8 @@ private theorem star_thirteen_degree_census : ∀ [Nonempty (Fin (13 : ℕ))] (G
     rw [hre, Finset.sum_add_distrib, Finset.sum_const, smul_eq_mul,
       Nat.mul_comm, hEF4, hF6]
   have hPF4 : internalPairCount G F = 4 := by
-    exact star_case_thirteen_hPF4_step1 (S₂ := S₂) (G := G) (h) (t₁) (t₂) (S₁ := S₁)
-      (hpartition) (hSF1) (hSF2) (hdegF)
+    have := internalPairCount_partition G S₁ F S₂ hpartition
+    omega
   have ha1Int := hAInt2 a₁ ha1A
   have ha2Int := hAInt2 a₂ ha2A
   have ha2Le := internal_degree_le_one_of_pairCount_eq_twice_at
@@ -1255,57 +1097,6 @@ private theorem star_case_fourteen_hOneS1_step1 : ∀ (G : SimpleGraph (Fin (14 
     have hpos := Finset.card_pos.mpr ⟨t₂, htmem⟩
     have hle1 : (G.neighborFinset x ∩ S₁).card ≤ 1 := by simpa using hle
     omega
-
-open Classical in
-private theorem star_case_fourteen_hcover_step1 : ∀ (G : SimpleGraph (Fin (14 : ℕ))),
-  let _ : DecidableEq (Fin (14 : ℕ)) := Classical.decEq (Fin (14 : ℕ));
-  ∀ (S₁ : Finset (Fin (14 : ℕ))),
-    let F : Finset (Fin (14 : ℕ)) := (S₁.biUnion fun x => G.neighborFinset x) \ S₁;
-    ∀ (S₂ : Finset (Fin (14 : ℕ))) (_ : S₂ = (S₁ ∪ F)ᶜ), S₁ ∪ F ∪ S₂ = Finset.univ := by
-  classical
-  intro G this S₁ F S₂ hS2def
-  ext x
-  simp only [Finset.mem_union, Finset.mem_univ, iff_true]
-  by_cases hx1 : x ∈ S₁
-  · exact Or.inl (Or.inl hx1)
-  by_cases hxF : x ∈ F
-  · exact Or.inl (Or.inr hxF)
-  · exact Or.inr (by
-      rw [hS2def, Finset.mem_compl, Finset.mem_union, not_or]
-      exact ⟨hx1, hxF⟩)
-
-open Classical in
-private theorem star_case_fourteen_hpartition_step1 : ∀ (G : SimpleGraph (Fin (14 : ℕ))),
-  let _ : DecidableEq (Fin (14 : ℕ)) := Classical.decEq (Fin (14 : ℕ));
-  ∀ (S₁ : Finset (Fin (14 : ℕ))),
-    let F : Finset (Fin (14 : ℕ)) := (S₁.biUnion fun x => G.neighborFinset x) \ S₁;
-    let S₂ : Finset (Fin (14 : ℕ)) := (S₁ ∪ F)ᶜ;
-    ∀ (_ : Disjoint S₁ F) (_ : Disjoint (S₁ ∪ F) S₂) (_ : S₁ ∪ F ∪ S₂ = Finset.univ),
-      ∀ x ∈ F,
-        (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card + (G.neighborFinset x ∩
-          S₂).card =
-          G.degree x := by
-  classical
-  intro G this S₁ F S₂ hdisjS1F hdisjLayer hcover x hxF
-  have hdisj12 : Disjoint (G.neighborFinset x ∩ S₁)
-      (G.neighborFinset x ∩ F) :=
-    hdisjS1F.mono Finset.inter_subset_right Finset.inter_subset_right
-  have hdisj123 : Disjoint
-      ((G.neighborFinset x ∩ S₁) ∪ (G.neighborFinset x ∩ F))
-      (G.neighborFinset x ∩ S₂) := by
-    apply hdisjLayer.mono _ Finset.inter_subset_right
-    intro y hy
-    rw [Finset.mem_union] at hy
-    rcases hy with hy1 | hyF
-    · exact Finset.mem_union_left F (Finset.mem_inter.mp hy1).2
-    · exact Finset.mem_union_right S₁ (Finset.mem_inter.mp hyF).2
-  have hunion : (G.neighborFinset x ∩ S₁) ∪ (G.neighborFinset x ∩ F) ∪
-      (G.neighborFinset x ∩ S₂) = G.neighborFinset x := by
-    rw [← Finset.inter_union_distrib_left, ← Finset.inter_union_distrib_left,
-      hcover, Finset.inter_univ]
-  rw [← Finset.card_union_of_disjoint hdisj12,
-    ← Finset.card_union_of_disjoint hdisj123, hunion,
-    G.card_neighborFinset_eq_degree]
 
 open Classical in
 private theorem star_case_fourteen_hHcard_step1 : ∀ (G : SimpleGraph (Fin (14 : ℕ))) (_ _ _ : Fin
@@ -1783,12 +1574,11 @@ private theorem star_case_fourteen : ∀ {n : ℕ} [Nonempty (Fin n)] (_ : (10 :
     rw [hS2def, Finset.mem_compl] at hxB
     exact hxB hxSF
   have hcover : S₁ ∪ F ∪ S₂ = Finset.univ := by
-    exact star_case_fourteen_hcover_step1 (G := G) (S₁ := S₁) (S₂ := S₂) (hS2def)
+    rw [hS2def, Finset.union_compl]
   have hpartition : ∀ x ∈ F,
       (G.neighborFinset x ∩ S₁).card + (G.neighborFinset x ∩ F).card +
         (G.neighborFinset x ∩ S₂).card = G.degree x := by
-    exact star_case_fourteen_hpartition_step1 (G := G) (S₁ := S₁) (hdisjS1F)
-      (hdisjLayer) (hcover)
+    exact fun x _ => degree_partition G S₁ F S₂ hdisjS1F hdisjLayer hcover x
   have hqsum : ((S₂ ×ˢ F).filter (fun q => G.Adj q.1 q.2)).card =
       ∑ x ∈ F, (G.neighborFinset x ∩ S₂).card := by
     rw [htrans S₂ F, hcnt F S₂]

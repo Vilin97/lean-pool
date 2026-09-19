@@ -1019,68 +1019,12 @@ theorem p4_pair_CA (n : ℕ) (hn : 18 ≤ n) (G : SimpleGraph (Fin n))
     (hT : ¬HasGoodTriangle n G) (hC4 : ¬HasGoodC4 n G) {a b c d : Fin n}
     (hs : MShapeP4 G a b c d) {γ α : Fin n}
     (hγ4 : G.degree γ = 4) (hγr : 2 ≤ (isoNbrs G γ).card)
-    (hγc : G.Adj γ c) (hγa : ¬G.Adj γ a) (_ : ¬G.Adj γ b) (_ : ¬G.Adj γ d)
+    (hγc : G.Adj γ c) (hγa : ¬G.Adj γ a) (hγb : ¬G.Adj γ b) (hγd : ¬G.Adj γ d)
     (hα4 : G.degree α = 4) (hαr : 2 ≤ (isoNbrs G α).card)
-    (hαa : G.Adj α a) (hαd : G.Adj α d) (_ : ¬G.Adj α b) (hαc : ¬G.Adj α c) :
+    (hαa : G.Adj α a) (hαd : G.Adj α d) (hαb : ¬G.Adj α b) (hαc : ¬G.Adj α c) :
     TwoBlockConfig G := by
-  obtain ⟨k₁, hk₁, k₂, hk₂, hk12⟩ := Finset.one_lt_card.mp hαr
-  obtain ⟨hαk₁, hIk₁⟩ := mem_isoNbrs.mp hk₁
-  obtain ⟨hαk₂, hIk₂⟩ := mem_isoNbrs.mp hk₂
-  have hane : α ≠ γ := fun e => hγa (e ▸ hαa)
-  have hd3k₁ := (mem_isoTwins.mp hIk₁).1
-  have hd3k₂ := (mem_isoTwins.mp hIk₂).1
-  have hak₁ : a ≠ k₁ := fun e => hs.a_not_iso (by rw [e]; exact hIk₁)
-  have hak₂ : a ≠ k₂ := fun e => hs.a_not_iso (by rw [e]; exact hIk₂)
-  have hdk₁ : d ≠ k₁ := fun e => hs.d_not_iso (by rw [e]; exact hIk₁)
-  have hdk₂ : d ≠ k₂ := fun e => hs.d_not_iso (by rw [e]; exact hIk₂)
-  have hpin : ∀ w : Fin n, G.Adj α w → w = a ∨ w = d ∨ w = k₁ ∨ w = k₂ :=
-    fun w hw => deg4_nbr_pin G hα4 hαa hαd hαk₁ hαk₂ hs.ne_ad hak₁ hak₂ hdk₁
-      hdk₂ hk12 hw
-  have hnadj_αγ : ¬G.Adj α γ := by
-    intro hadj
-    have h1 := hs.deg_a
-    have h2 := hs.deg_d
-    rcases hpin γ hadj with e | e | e | e <;> rw [e] at hγ4 <;> omega
-  have hkpick : ∃ k, k ∈ isoTwins G ∧ G.Adj α k ∧ ¬G.Adj γ k := by
-    by_cases h1 : G.Adj γ k₁
-    · by_cases h2 : G.Adj γ k₂
-      · exact (hubs_share_two_false n hn G hT hC4 hγ4 hα4 hane.symm hk12
-          hd3k₁ hd3k₂ h1 hαk₁ h2 hαk₂).elim
-      · exact ⟨k₂, hIk₂, hαk₂, h2⟩
-    · exact ⟨k₁, hIk₁, hαk₁, h1⟩
-  obtain ⟨k, hIk, hαk, hγk⟩ := hkpick
-  obtain ⟨j₁, hj₁, j₂, hj₂, hj12⟩ := Finset.one_lt_card.mp hγr
-  obtain ⟨hγj₁, hIj₁⟩ := mem_isoNbrs.mp hj₁
-  obtain ⟨hγj₂, hIj₂⟩ := mem_isoNbrs.mp hj₂
-  have hjpick : ∃ j, j ∈ isoTwins G ∧ G.Adj γ j ∧ ¬G.Adj α j := by
-    by_cases h1 : G.Adj α j₁
-    · by_cases h2 : G.Adj α j₂
-      · exact (hubs_share_two_false n hn G hT hC4 hγ4 hα4 hane.symm hj12
-          (mem_isoTwins.mp hIj₁).1 (mem_isoTwins.mp hIj₂).1 hγj₁ h1 hγj₂ h2).elim
-      · exact ⟨j₂, hIj₂, hγj₂, h2⟩
-    · exact ⟨j₁, hIj₁, hγj₁, h1⟩
-  obtain ⟨j, hIj, hγj, hαj⟩ := hjpick
-  have hd3k := (mem_isoTwins.mp hIk).1
-  have hd3j := (mem_isoTwins.mp hIj).1
-  have hda := hs.deg_a
-  have hdc := hs.deg_c
-  exact two_hub_opposite_twin_twoBlock G α γ a k c j (le_of_eq hα4) (le_of_eq hγ4)
-    hda hd3k hdc hd3j hαa.symm hαk.symm hγc.symm hγj.symm
-    hnadj_αγ hαc hαj
-    (fun h => hγa h.symm) hs.nadj_ac
-    (deg3_not_adj_iso G hda hIj)
-    (fun h => hγk h.symm) (fun h => (mem_isoTwins.mp hIk).2 c h hdc)
-    (isoTwins_not_adj G hIk hIj)
-    hane
-    (fun e => by rw [e] at hα4; omega) (fun e => by rw [e] at hα4; omega)
-    (fun e => by rw [e] at hα4; omega) (fun e => by rw [e] at hα4; omega)
-    (fun e => by rw [e] at hγ4; omega) (fun e => by rw [e] at hγ4; omega)
-    (fun e => by rw [e] at hγ4; omega) (fun e => by rw [e] at hγ4; omega)
-    (fun e => hs.a_not_iso (by rw [e]; exact hIk)) hs.ne_ac
-    (fun e => hs.a_not_iso (by rw [e]; exact hIj))
-    (fun e => hs.c_not_iso (by rw [← e]; exact hIk))
-    (fun e => hαj (e ▸ hαk))
-    (fun e => hs.c_not_iso (by rw [e]; exact hIj))
+  exact p4_pair_BA n hn G hT hC4 hs.rev hγ4 hγr hγc hγd hγb hγa
+    hα4 hαr hαd hαa hαc hαb
 
 open Classical in
 /-- A rich `a`-hub is TT-killed or is an `α*` (role `A`). -/
