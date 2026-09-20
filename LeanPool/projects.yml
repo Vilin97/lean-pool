@@ -9284,3 +9284,64 @@ projects:
       - cycle-decompositions
     msc:
       - "05C45"
+
+  - slug: gaussian-moments-counterexamples
+    title: Gaussian Moments Conjecture counterexamples
+    summary: >-
+      Proves explicit complex polynomial counterexamples to the Gaussian Moments
+      Conjecture in every dimension at least three, using genuine expectations
+      under finite products of standard real Gaussian measures. Retains reusable
+      polynomial integrability, Stein identities, complex contractions, coefficient
+      formulas, injective-coordinate marginals, and related moment results.
+    branch: probability and polynomial algebra
+    entry_module: LeanPool.GaussianMomentsCounterexamples
+    authors:
+      - Christopher D. Long
+    source:
+      arxiv: '2607.18186'
+      url: https://github.com/long-mathematics/gaussian-moments-counterexamples
+      github_repo: long-mathematics/gaussian-moments-counterexamples
+      commit: c31bb63aaa7cfccf1191893f8e7d04fa71bae025
+      announcement: https://github.com/long-mathematics/gaussian-moments-counterexamples/pull/2
+      completion_date: '2026-09-17T15:47:31Z'
+      notes: >-
+        Imports the completed Gaussian core and related moment infrastructure.
+        The July manuscript predates the September Lean proof release. Five and
+        six term counts refer to the natural complex coordinates; total degrees
+        four and three also hold in the original real coordinates. The separate
+        Jacobian-map and route-arithmetic files are excluded. No general inversion,
+        Jacobian-reduction route, or resolution of the two-dimensional conjecture
+        is claimed. Upstream MIT notice is retained in the project entry module.
+        Upstream Lean authorship is inferred from the public
+        codex/lean-formalization branch; its exact proof-authoring model and extent
+        of human editing are unreported. This port and optimization are Codex-authored.
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GaussianMomentsCounterexamples.not_GMC_of_three_le
+    main_results:
+      - declaration: GaussianMomentsCounterexamples.not_GMC_of_three_le
+        informal: >-
+          For every n at least three, the Gaussian Moments Conjecture fails:
+          some complex polynomial has all positive pure Gaussian moments zero,
+          while a polynomial multiplier prevents eventual mixed-moment vanishing.
+      - declaration: GaussianMomentsCounterexamples.master_three
+        informal: >-
+          For every complex univariate polynomial A and positive m, the expectation
+          of A(Q3) times P3 to power m equals m! times the degree-m coefficient of
+          A(X) times (1+X) to power m-1. The explicit P3 has degree four and five
+          terms in its natural complex coordinates.
+      - declaration: GaussianMomentsCounterexamples.master_four
+        informal: >-
+          The analogous arbitrary-A coefficient identity for the explicit
+          four-variable polynomial P4, of degree three and six terms in its
+          natural complex coordinates, gives an independent counterexample.
+    tags:
+      - gaussian-measure
+      - polynomial-moments
+      - counterexamples
+      - formal-power-series
+    msc:
+      - '60E05'
+      - '13F20'
