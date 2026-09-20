@@ -471,7 +471,7 @@ private def schedule
 private theorem width_positive
     (c : UnconditionalActualFairSourceRoundingContext
       G n S D alpha gamma) : 0 < c.stopping.w := by
-  linarith [c.stopping.width_large]
+  exact lt_of_lt_of_le zero_lt_one c.stopping.width_large
 
 private theorem width_all
     (c : UnconditionalActualFairSourceRoundingContext
@@ -761,36 +761,6 @@ private theorem unconditionalActualFairSourceRoundingContext_cleanBound
       c.stopping.UA c.stopping.UB
       (width_all c) c.stopping.phases c.stopping.grid
       (dimension_pos c) (fine_all c)
-  have fair_hazard :
-      (∑ h : ExactLocallySampleableTuple X Y A B D,
-        law c h *
-          dSVDensityRationalHeterogeneousStoppedCommonPrefixHazard
-            c.stopping.Q c.stopping.m (width c) (schedule c)
-            (gammaVector c h) (phiVector c h)
-            c.stopping.UA c.stopping.UB) ≤
-        (34 / Real.sqrt
-            (64 * Real.sqrt (martingaleRate G n S D) +
-              alpha ^ (1 / 3 : ℝ))) *
-          (64 * Real.sqrt (martingaleRate G n S D) +
-            alpha ^ (1 / 3 : ℝ)) +
-          4 * (alpha ^ (1 / 12 : ℝ)) ^ 2 +
-            unconditionalPrefactorBucketCoefficient *
-              Real.sqrt
-                (64 * Real.sqrt (martingaleRate G n S D) +
-                  alpha ^ (1 / 3 : ℝ)) := by
-    change
-      (∑ h : ExactLocallySampleableTuple X Y A B D,
-        exactLocallySampleableLaw G n S D h *
-          dSVDensityRationalHeterogeneousStoppedCommonPrefixHazard
-            c.stopping.Q c.stopping.m
-            (fun _ : Fin 1 => c.stopping.w)
-            (fun _ : Fin c.stopping.L => 0)
-            (unconditionalExactFairGammaUnit G n S D h)
-            (exactGlobalHistoryFinPhi
-              G n S D h.2.2.2 h.2.2.1)
-            c.stopping.UA c.stopping.UB) ≤ _
-    simpa only [unconditionalExactFairGammaUnit_eq_global] using
-      c.stopping.hazard
   calc
     deviation c =
         (∑ h : ExactLocallySampleableTuple X Y A B D,
@@ -800,7 +770,9 @@ private theorem unconditionalActualFairSourceRoundingContext_cleanBound
               (gammaVector c h) (phiVector c h)
               c.stopping.UA c.stopping.UB) := by
           simpa only [deviation, actual, canonical] using identification
-    _ ≤ _ := fair_hazard
+    _ ≤ _ := by
+      simpa only [law, gammaVector, phiVector,
+        unconditionalExactFairGammaUnit_eq_global] using! c.stopping.hazard
 
 private theorem unconditionalActualFairSourceRoundingContext_analyticLedger
     {X Y A B : Type}
@@ -855,7 +827,7 @@ private theorem unconditionalActualFairSourceRoundingContext_analyticLedger
     apply le_of_eq
     apply Finset.sum_congr rfl
     intro h _
-    congr 1
+    apply congrArg (law c h * ·)
     apply Finset.sum_congr rfl
     intro j _
     change
@@ -981,6 +953,14 @@ private theorem unconditionalActualFairSourceRoundingContext_verifierLedger
       (fun h j => c.actual (h, j))
       (unconditionalActualFairSourceRoundingContext_actualRow c) h
 
+-- Reconcile equality instances before comparing the matrix-to-operator maps. Unfolding
+-- these maps instead makes the kernel repeatedly normalize the large stopping index types.
+private theorem toEuclideanCLM_eq_classical {ι : Type*} [Fintype ι] [decidable : DecidableEq ι] :
+    Matrix.toEuclideanCLM (n := ι) (𝕜 := ℂ) =
+      @Matrix.toEuclideanCLM ℂ ι _ _ (fun a b => Classical.propDecidable (a = b)) := by
+  exact congrArg (fun decidability => @Matrix.toEuclideanCLM ℂ ι _ _ decidability)
+    (Subsingleton.elim _ _)
+
 private theorem unconditionalActualFairSourceRoundingContext_physicalBranch
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
@@ -1018,25 +998,13 @@ private theorem unconditionalActualFairSourceRoundingContext_physicalBranch
   classical
   apply le_of_eq
   simp only [actualStoppingBranchWinningEffect_eq_direct]
-  change
-    (∑ j : Fin c.stopping.L,
-      unconditionalActualFairSourceHistoryStopBorn
-        G n S D c.aliceDefault c.bobDefault
-        c.stopping.Q c.width c.schedule c.stopping.UA c.stopping.UB
-        (exactSourceAliceSampleTuple
-          D c.sampler.denominator c.sampler.numerator
-          c.sampler.nonempty (flag, (x, y))) j) =
-      ∑ j : Fin c.stopping.L,
-        unconditionalActualFairSourcePhysicalStopBorn
-          G n S D c.sampler.denominator c.sampler.numerator
-          c.sampler.nonempty c.aliceDefault c.bobDefault
-          c.stopping.Q c.width c.schedule
-          c.stopping.UA c.stopping.UB flag x y j
-  exact unconditionalActualFairSourcePhysicalBranchWitness
+  have witness := unconditionalActualFairSourcePhysicalBranchWitness
     G n S D c.sampler.denominator c.sampler.numerator
     c.sampler.nonempty c.aliceDefault c.bobDefault
     c.stopping.Q c.width c.schedule c.stopping.UA c.stopping.UB
     c.stopping.grid c.width_all flag x y matching
+  simpa only [unconditionalActualFairSourcePhysicalStopBorn,
+    unconditionalActualC485RawPhysicalVerifierBorn, toEuclideanCLM_eq_classical] using! witness
 
 private theorem unconditionalActualFairSourceRoundingContext_stoppedVerifier
     {X Y A B : Type}
@@ -1053,7 +1021,7 @@ private theorem unconditionalActualFairSourceRoundingContext_stoppedVerifier
           4 * Real.sqrt c.deviation + 2 * Real.sqrt c.clipping) ≤
       c.rounded.winProbability := by
   classical
-  exact
+  refine
     unconditionalActualFairCachedLedgerStoppingTransfer
       G n S D c.remaining c.positive
       c.sampler.base c.sampler.denominator c.sampler.denominator_positive
@@ -1069,9 +1037,10 @@ private theorem unconditionalActualFairSourceRoundingContext_stoppedVerifier
       (unconditionalActualFairSourceRoundingContext_analyticLedger c)
       (unconditionalActualFairSourceRoundingContext_verifierLedger c)
       c.failure c.sampler.total_variation c.sampler.mismatch
-      (fun flag x y matching =>
-        unconditionalActualFairSourceRoundingContext_physicalBranch
-          c flag x y matching)
+      ?_
+  intro flag x y matching
+  simpa only [toEuclideanCLM_eq_classical] using
+    unconditionalActualFairSourceRoundingContext_physicalBranch c flag x y matching
 
 end
 
