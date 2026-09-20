@@ -730,6 +730,17 @@ noncomputable def reindexRingEquiv : A'[M.reindex] ≃+* A'[M] where
   map_add' := toDilatation_add
   map_mul' := toDilatation_mul
 
+/-- Flattening exponent profiles fixes the image of each base element. -/
+@[simp]
+lemma toDilatation_algebraMap (a : A') :
+    toDilatation (algebraMap A' A'[M.reindex] a) = algebraMap A' A'[M] a := by
+  change mk (toPreDil _) = _
+  congr 1
+
+/-- Reindexing is an isomorphism of algebras over the original commutative semiring. -/
+noncomputable def reindexAlgEquiv : A'[M.reindex] ≃ₐ[A'] A'[M] :=
+  { reindexRingEquiv with commutes' := toDilatation_algebraMap }
+
 lemma algebraMap_mul_fraction (ν : M^ℕ) (num : A') (hnum : num ∈ M.LargeIdeal ^ ν) :
     algebraMap A' A'[M] (M.elem ^ ν) * frac ν ⟨num, hnum⟩ = algebraMap A' A'[M] num := by
   simp only [algebraMap_apply, frac, mk_mul_mk, mk_eq_mk]

@@ -194,17 +194,7 @@ theorem restrictPhi_faithful
   rw [restrictPhi_comp_DilaToLoc]
   infer_instance
 
-/-- **Proposition 3.1 (2), defining property.** `b ≫ Θ(dᵢ) = Θ(n)`, i.e. the triangle
-`[n] = Θ(dᵢ) ∘ b` commutes. -/
-lemma fraction_in_dila_comp_mor (Z : Center C) (i : Z.I) (X : C) (m : X ⟶ Z.cod i) (hm : Z.N i m) :
-    fractionInDilatation Z ⟨i, ⟨X, ⟨m, hm⟩⟩⟩ ≫ (CatToDila Z).map (Z.mor i) =
-      (CatToDila Z).map m := by
-  apply Quotient.sound
-  change
-    fractionInLocalization Z ⟨i, ⟨X, ⟨m, hm⟩⟩⟩ ≫ (CenterMorphismProperty Z).Q.map (Z.mor i) =
-      (CenterMorphismProperty Z).Q.map m
-  exact fraction_comp_mor Z i X m hm
-
+/-- A fraction whose numerator already factors through its denominator is an original morphism. -/
 lemma fractionInDilatation_eq_of_factors
     (i : Z.I) (X : C) (q : X ⟶ Z.dom i) (m : X ⟶ Z.cod i) (hm : Z.N i m)
     (hfactor : m = q ≫ Z.mor i) :

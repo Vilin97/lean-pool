@@ -382,6 +382,17 @@ def fractionInDilatation (p : CenterSievePair Z) :
   (GeneratedToDila Z).map
     (Quiver.Hom.toPath (fractionGenerator Z p))
 
+/-- **Proposition 3.1 (2), defining property.** `b ≫ Θ(dᵢ) = Θ(n)`, i.e. the triangle
+`[n] = Θ(dᵢ) ∘ b` commutes. -/
+lemma fraction_in_dila_comp_mor (Z : Center C) (i : Z.I) (X : C) (m : X ⟶ Z.cod i) (hm : Z.N i m) :
+    fractionInDilatation Z ⟨i, ⟨X, ⟨m, hm⟩⟩⟩ ≫ (CatToDila Z).map (Z.mor i) =
+      (CatToDila Z).map m := by
+  apply Quotient.sound
+  change
+    fractionInLocalization Z ⟨i, ⟨X, ⟨m, hm⟩⟩⟩ ≫ (CenterMorphismProperty Z).Q.map (Z.mor i) =
+      (CenterMorphismProperty Z).Q.map m
+  exact fraction_comp_mor Z i X m hm
+
 /-- **Proposition 3.5.** `S ^ C'_Θ(Nᵢ) ⊂ S ^ C'_Θ(dᵢ)`. -/
 theorem CatToDila_image_sieve_le_singleton (i : Z.I) :
     CatToDilaSieve Z (Z.N i) ≤
@@ -1028,6 +1039,15 @@ lemma map_eq_of_agree_on_C
           (h₁.trans h₂.symm)).symm := by
   apply Functor.congr_hom (h₁.trans h₂.symm)
 
+/-- Sigma-regularity makes every mapped denominator a monomorphism. -/
+lemma imageCenter_mono
+    (hfaith : (ImageCenterLocalizationFunctor Z F).Faithful) (i : Z.I) :
+    Mono (F.map (Z.mor i)) := by
+  have := hfaith
+  have : IsIso ((ImageCenterLocalizationFunctor Z F).map (F.map (Z.mor i))) :=
+    MorphismProperty.Q_inverts (ImageCenterMorphismProperty Z F) _ ⟨i, rfl⟩
+  exact (ImageCenterLocalizationFunctor Z F).mono_of_mono_map inferInstance
+
 lemma Dila_factor_unique_fraction
     (G₁ G₂ : Dila Z ⥤ D)
     (hfaith :
@@ -1054,112 +1074,19 @@ lemma Dila_factor_unique_fraction
           (Dila_factor_unique_on_C Z F G₁ G₂ h₁ h₂)
         exact this.symm) :=  by
   intro i X n hn
-  let b :=
-    fractionInDilatation Z ⟨i, ⟨X, ⟨n, hn⟩⟩⟩
-  have hb :
-      b ≫ (CatToDila Z).map (Z.mor i) =
-        (CatToDila Z).map n := by
-    apply Quotient.sound
-    change
-      (GeneratedToLocalization Z).map
-          (Quiver.Hom.toPath
-            (fractionGenerator Z
-              ⟨i, ⟨X, ⟨n, hn⟩⟩⟩)) ≫
-        (GeneratedToLocalization Z).map
-          (Quiver.Hom.toPath
-            ((CToGeneratorQuiver Z).map (Z.mor i)))
-      =
-      (GeneratedToLocalization Z).map
-          (Quiver.Hom.toPath
-            ((CToGeneratorQuiver Z).map n))
-    change
-      fractionInLocalization Z ⟨i, ⟨X, ⟨n, hn⟩⟩⟩ ≫
-          (CenterMorphismProperty Z).Q.map (Z.mor i)
-        =
-      (CenterMorphismProperty Z).Q.map n
-    exact fraction_comp_mor Z i X n hn
-  have h₁b :
-      G₁.map b ≫
-          G₁.map ((CatToDila Z).map (Z.mor i))
-        =
-      G₁.map ((CatToDila Z).map n) := by
-    rw [← Functor.map_comp]
-    rw [hb]
-  have h₂b :
-      G₂.map b ≫
-          G₂.map ((CatToDila Z).map (Z.mor i))
-        =
-      G₂.map ((CatToDila Z).map n) := by
-    rw [← Functor.map_comp]
-    rw [hb]
-  have hmono :
-      Mono (F.map (Z.mor i)) := by
-    constructor
-    intro W u v huv
-    apply hfaith.map_injective
-    have :
-        IsIso ((ImageCenterLocalizationFunctor Z F).map
-          (F.map (Z.mor i))) := by
-      apply CategoryTheory.MorphismProperty.Q_inverts
-        (ImageCenterMorphismProperty Z F)
-      exact ⟨i, rfl⟩
-    apply (cancel_mono
-      ((ImageCenterLocalizationFunctor Z F).map
-        (F.map (Z.mor i)))).1
-    simpa only [Functor.map_comp] using
-      congrArg
-        (fun f =>
-          (ImageCenterLocalizationFunctor Z F).map f)
-        huv
-  have hcancel :
-      ∀ {u v :
-        G₁.obj ((CatToDila Z).obj X) ⟶
-          G₁.obj ((CatToDila Z).obj (Z.dom i))},
-      u ≫ G₁.map ((CatToDila Z).map (Z.mor i)) =
-        v ≫ G₁.map ((CatToDila Z).map (Z.mor i)) →
-      u = v := by
-    intro u v huv
-    have :
-        Mono ((CatToDila Z ⋙ G₁).map (Z.mor i)) := by
-      rw [h₁]
-      exact hmono
-    have :
-        Mono (G₁.map ((CatToDila Z).map (Z.mor i))) := by
-      change Mono ((CatToDila Z ⋙ G₁).map (Z.mor i))
-      infer_instance
-    exact
-      (cancel_mono
-        (G₁.map ((CatToDila Z).map (Z.mor i)))).1 huv
-  apply hcancel
-  rw [h₁b]
-  have hn_map :
-      G₁.map ((CatToDila Z).map n) =
-        eqToHom
-          (congrArg (fun H => H.obj X)
-            (h₁.trans h₂.symm)) ≫
-        G₂.map ((CatToDila Z).map n) ≫
-        eqToHom
-          (congrArg (fun H => H.obj (Z.cod i))
-            (h₁.trans h₂.symm)).symm :=
-    map_eq_of_agree_on_C (Z := Z) (F := F)
-      G₁ G₂ h₁ h₂ n
-  rw [hn_map]
-  rw [← h₂b]
-  have hdi :
-    G₁.map ((CatToDila Z).map (Z.mor i)) =
-      eqToHom
-        (congrArg (fun H => H.obj (Z.dom i))
-          (h₁.trans h₂.symm)) ≫
-      G₂.map ((CatToDila Z).map (Z.mor i)) ≫
-      eqToHom
-        (congrArg (fun H => H.obj (Z.cod i))
-          (h₁.trans h₂.symm)).symm :=
-  map_eq_of_agree_on_C (Z := Z) (F := F)
-    G₁ G₂ h₁ h₂ (Z.mor i)
-  rw [hdi]
-  simp only [Category.assoc]
-  subst b
-  simp
+  have : Mono (G₁.map ((CatToDila Z).map (Z.mor i))) := by
+    change Mono ((CatToDila Z ⋙ G₁).map (Z.mor i))
+    rw [h₁]
+    exact imageCenter_mono Z F hfaith i
+  apply (cancel_mono (G₁.map ((CatToDila Z).map (Z.mor i)))).mp
+  rw [← Functor.map_comp, fraction_in_dila_comp_mor]
+  rw [map_eq_of_agree_on_C Z F G₁ G₂ h₁ h₂ n,
+    map_eq_of_agree_on_C Z F G₁ G₂ h₁ h₂ (Z.mor i)]
+  have hfactor := congrArg G₂.map (fraction_in_dila_comp_mor Z i X n hn)
+  simp only [Functor.map_comp] at hfactor
+  rw [← hfactor]
+  simp [Category.assoc]
+
 
 lemma Subtype.ext_val
     {α : Type*} {p : α → Prop} {a b : Subtype p}
@@ -1191,6 +1118,60 @@ lemma GeneratorQuiver_Hom_ext
       dsimp at h
       subst h
       rfl
+
+lemma Generated_factor_unique_generator
+    (G₁ G₂ :
+      Dila Z ⥤ D)
+    (h_obj :
+      ∀ X : Dila Z, G₁.obj X = G₂.obj X)
+    (h_mor :
+      ∀ {X Y : C} (f : X ⟶ Y),
+        G₁.map ((CatToDila Z).map f) =
+          eqToHom (h_obj ((CatToDila Z).obj X)) ≫
+          G₂.map ((CatToDila Z).map f) ≫
+          eqToHom (h_obj ((CatToDila Z).obj Y)).symm)
+    (h_fraction :
+      ∀ (i : Z.I) (X : C)
+        (n : X ⟶ Z.cod i)
+        (hn : Z.N i n),
+        G₁.map
+          (fractionInDilatation Z ⟨i, ⟨X, ⟨n, hn⟩⟩⟩)
+        =
+        eqToHom (h_obj ((CatToDila Z).obj X)) ≫
+          G₂.map
+            (fractionInDilatation Z ⟨i, ⟨X, ⟨n, hn⟩⟩⟩) ≫
+          eqToHom (h_obj ((CatToDila Z).obj (Z.dom i))).symm)
+    {A B : GeneratorObjects Z} (g : (GeneratorQuiver Z).Hom A B) :
+    G₁.map ((GeneratedToDila Z).map (Quiver.Hom.toPath g)) =
+      eqToHom (h_obj ((GeneratedToDila Z).obj A)) ≫
+        G₂.map ((GeneratedToDila Z).map (Quiver.Hom.toPath g)) ≫
+        eqToHom (h_obj ((GeneratedToDila Z).obj B)).symm := by
+  rcases g.2 with h | h
+  · -- fraction case : h : PairMorWitness Z g.fst
+    obtain ⟨p, heq⟩ := h
+    have hA : A = objEquiv (CenterMorphismProperty Z) p.2.1 :=
+      congrArg Sigma.fst heq
+    have hB : B = objEquiv (CenterMorphismProperty Z) (Z.dom p.1) := by
+      exact congrArg (fun s => s.2.1) heq
+    subst hA
+    subst hB
+    have hg1 : g.1 = fractionInLocalization Z p := by
+      simp only [Sigma.mk.injEq, heq_eq_eq] at heq
+      exact eq_of_heq (Sigma.mk.inj heq.2).2
+    have hgg :
+        (GeneratedToDila Z).map (Quiver.Hom.toPath g) =
+          fractionInDilatation Z p :=
+      GeneratorQuiver_Hom_ext Z g (fractionGenerator Z p) hg1
+    rw [hgg]
+    obtain ⟨i, X, n, hn⟩ := p
+    exact h_fraction i X n hn
+  · -- original case : h : OriginalWitness Z g.fst
+    have hgg :
+        (GeneratedToDila Z).map (Quiver.Hom.toPath g) =
+          (CatToDila Z).map h.g :=
+      GeneratorQuiver_Hom_ext Z g ((CToGeneratorQuiver Z).map h.g) h.eq
+    rw [hgg]
+    exact h_mor h.g
 
 lemma Generated_factor_unique_map
     (G₁ G₂ :
@@ -1237,32 +1218,7 @@ lemma Generated_factor_unique_map
     simp [Functor.map_comp, hf, hg, Category.assoc]
   · intro A B g
     dsimp [P]
-    rcases g.2 with h | h
-    · -- fraction case : h : PairMorWitness Z g.fst
-      obtain ⟨p, heq⟩ := h
-      have hA : A = objEquiv (CenterMorphismProperty Z) p.2.1 :=
-        congrArg Sigma.fst heq
-      have hB : B = objEquiv (CenterMorphismProperty Z) (Z.dom p.1) := by
-        exact congrArg (fun s => s.2.1) heq
-      subst hA
-      subst hB
-      have hg1 : g.1 = fractionInLocalization Z p := by
-        simp only [Sigma.mk.injEq, heq_eq_eq] at heq
-        exact eq_of_heq (Sigma.mk.inj heq.2).2
-      have hgg :
-          (GeneratedToDila Z).map (Quiver.Hom.toPath g) =
-            fractionInDilatation Z p :=
-        GeneratorQuiver_Hom_ext Z g (fractionGenerator Z p) hg1
-      rw [hgg]
-      obtain ⟨i, X, n, hn⟩ := p
-      exact h_fraction i X n hn
-    · -- original case : h : OriginalWitness Z g.fst
-      have hgg :
-          (GeneratedToDila Z).map (Quiver.Hom.toPath g) =
-            (CatToDila Z).map h.g :=
-        GeneratorQuiver_Hom_ext Z g ((CToGeneratorQuiver Z).map h.g) h.eq
-      rw [hgg]
-      exact h_mor h.g
+    exact Generated_factor_unique_generator Z G₁ G₂ h_obj h_mor h_fraction g
 
 lemma localization_obj_eq_Q_obj
     (X : (CenterMorphismProperty Z).Localization) :
@@ -1296,43 +1252,15 @@ theorem Dila_factor_unique
        (ImageCenterLocalizationFunctor Z F).Faithful)
      :
     G₁ = G₂ := by
-  have h_obj :
-      ∀ X : Dila Z, G₁.obj X = G₂.obj X := by
-      intro X
-      obtain ⟨Y, hY⟩ := Dila_obj_eq_C_obj Z X
-      rw [← hY]
-      have h1Y := congrArg (fun H : C ⥤ D => H.obj Y) h₁
-      have h2Y := congrArg (fun H : C ⥤ D => H.obj Y) h₂
-      exact h1Y.trans h2Y.symm
-  apply CategoryTheory.Functor.ext
-  · intro X Y f
-    exact Generated_factor_unique_map
-      Z G₁ G₂
-     (by
-        assumption)
-     (   by
-                intro X Y f
-                have H :
-                    CatToDila Z ⋙ G₁ = CatToDila Z ⋙ G₂ :=
-                  Dila_factor_unique_on_C Z F G₁ G₂ h₁ h₂
-                have hm :
-                    G₁.map ((CatToDila Z).map f) ≍
-                    G₂.map ((CatToDila Z).map f) := by
-                  have hm' :
-                      (CatToDila Z ⋙ G₁).map f ≍
-                      (CatToDila Z ⋙ G₂).map f := by
-                    rw [H]
-                  exact hm'
-                exact (conj_eqToHom_iff_heq
-                          (G₁.map ((CatToDila Z).map f))
-                          (G₂.map ((CatToDila Z).map f))
-                          (h_obj ((CatToDila Z).obj X))
-                          (h_obj ((CatToDila Z).obj Y))).2 hm )
-       (by
-        intro i X n hn
-        exact Dila_factor_unique_fraction
-          Z F G₁ G₂ (by assumption) h₁ h₂ i X n hn)
-        f
+  have h_obj : ∀ X : Dila Z, G₁.obj X = G₂.obj X := by
+    intro X
+    obtain ⟨Y, rfl⟩ := Dila_obj_eq_C_obj Z X
+    exact congrArg (fun H : C ⥤ D => H.obj Y) (h₁.trans h₂.symm)
+  refine Functor.ext h_obj ?_
+  intro X Y f
+  exact Generated_factor_unique_map Z G₁ G₂ h_obj
+    (fun g => map_eq_of_agree_on_C Z F G₁ G₂ h₁ h₂ g)
+    (fun i X n hn => Dila_factor_unique_fraction Z F G₁ G₂ hfaith h₁ h₂ i X n hn) f
 
 /-- **Theorem 3.10, uniqueness half.** Any `G` with `G ∘ Θ = F` equals `DilaLift`. -/
 theorem DilaLift_unique
