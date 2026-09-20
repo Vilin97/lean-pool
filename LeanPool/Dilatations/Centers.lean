@@ -66,21 +66,22 @@ lemma ImageCenterMorphismProperty_restrict_le
   rintro X Y f ⟨k, hk⟩
   exact ⟨k.1, hk⟩
 
+/-- Inverting fewer morphisms preserves faithfulness of the localization functor. -/
+private theorem localizationFaithful_of_le {E : Type*} [Category* E]
+    {W V : MorphismProperty E} (hWV : W ≤ V) (hV : V.Q.Faithful) : W.Q.Faithful := by
+  let L := Localization.Construction.lift (W := W) V.Q
+    (fun _ _ f hf => MorphismProperty.Q_inverts V f (hWV f hf))
+  have hcomp : (W.Q ⋙ L).Faithful := by
+    dsimp [L]
+    erw [Localization.Construction.fac]
+    exact hV
+  exact { map_injective := fun h => hcomp.map_injective (congrArg L.map h) }
+
 lemma CatToDila_isSigmaRegular_restrict
     (Z : Center C) (K : Set Z.I) (hK : K.Nonempty) :
     IsSigmaRegular (Z.restrict K hK) (CatToDila Z) := by
-  change (ImageCenterMorphismProperty (Z.restrict K hK) (CatToDila Z)).Q.Faithful
-  apply faithful_of_comp_faithful
-    (ImageCenterMorphismProperty (Z.restrict K hK) (CatToDila Z)).Q
-    (Localization.Construction.lift
-      (W := ImageCenterMorphismProperty (Z.restrict K hK) (CatToDila Z))
-      (ImageCenterMorphismProperty Z (CatToDila Z)).Q
-      (fun X Y f hf => by
-        show IsIso ((ImageCenterMorphismProperty Z (CatToDila Z)).Q.map f)
-        apply CategoryTheory.MorphismProperty.Q_inverts
-        exact ImageCenterMorphismProperty_restrict_le Z K hK f hf))
-  erw [Localization.Construction.fac]
-  exact CatToDila_isSigmaRegular Z
+  exact localizationFaithful_of_le (ImageCenterMorphismProperty_restrict_le Z K hK)
+    (CatToDila_isSigmaRegular Z)
 
 lemma CatToDila_restrict_hsieve (Z : Center C) (K : Set Z.I) (hK : K.Nonempty) :
     ∀ k : (Z.restrict K hK).I,
@@ -529,33 +530,15 @@ to `CatToDila_isSigmaRegular_restrict`, but for the `Sum.inl`-inclusion into `Z.
 a `Center.restrict`. -/
 lemma CatToDila_isSigmaRegular_sum_inl (Z W : Center C) :
     IsSigmaRegular Z (CatToDila (Z.sum W)) := by
-  change (ImageCenterMorphismProperty Z (CatToDila (Z.sum W))).Q.Faithful
-  apply faithful_of_comp_faithful
-    (ImageCenterMorphismProperty Z (CatToDila (Z.sum W))).Q
-    (Localization.Construction.lift
-      (W := ImageCenterMorphismProperty Z (CatToDila (Z.sum W)))
-      (ImageCenterMorphismProperty (Z.sum W) (CatToDila (Z.sum W))).Q
-      (fun X Y f hf => by
-        show IsIso ((ImageCenterMorphismProperty (Z.sum W) (CatToDila (Z.sum W))).Q.map f)
-        apply CategoryTheory.MorphismProperty.Q_inverts
-        exact ImageCenterMorphismProperty_sum_inl_le Z W (CatToDila (Z.sum W)) f hf))
-  erw [Localization.Construction.fac]
-  exact CatToDila_isSigmaRegular (Z.sum W)
+  exact localizationFaithful_of_le
+    (ImageCenterMorphismProperty_sum_inl_le Z W (CatToDila (Z.sum W)))
+    (CatToDila_isSigmaRegular (Z.sum W))
 
 lemma CatToDila_isSigmaRegular_sum_inr (Z W : Center C) :
     IsSigmaRegular W (CatToDila (Z.sum W)) := by
-  change (ImageCenterMorphismProperty W (CatToDila (Z.sum W))).Q.Faithful
-  apply faithful_of_comp_faithful
-    (ImageCenterMorphismProperty W (CatToDila (Z.sum W))).Q
-    (Localization.Construction.lift
-      (W := ImageCenterMorphismProperty W (CatToDila (Z.sum W)))
-      (ImageCenterMorphismProperty (Z.sum W) (CatToDila (Z.sum W))).Q
-      (fun X Y f hf => by
-        show IsIso ((ImageCenterMorphismProperty (Z.sum W) (CatToDila (Z.sum W))).Q.map f)
-        apply CategoryTheory.MorphismProperty.Q_inverts
-        exact ImageCenterMorphismProperty_sum_inr_le Z W (CatToDila (Z.sum W)) f hf))
-  erw [Localization.Construction.fac]
-  exact CatToDila_isSigmaRegular (Z.sum W)
+  exact localizationFaithful_of_le
+    (ImageCenterMorphismProperty_sum_inr_le Z W (CatToDila (Z.sum W)))
+    (CatToDila_isSigmaRegular (Z.sum W))
 
 /-- The sieve condition needed to extend `CatToDila (Z.sum W)` along `CatToDila Z`. -/
 lemma CatToDila_sum_hsieve_inl (Z W : Center C) :
@@ -835,18 +818,7 @@ theorem Alpha315_unique (Z W : Center C)
 from regularity of `Z.sum W` for *any* target functor `F`, not just `CatToDila (Z.sum W)`. -/
 lemma IsSigmaRegular_sum_inl_of (Z W : Center C) (F : C ⥤ D) (hF : IsSigmaRegular (Z.sum W) F) :
     IsSigmaRegular Z F := by
-  change (ImageCenterMorphismProperty Z F).Q.Faithful
-  apply faithful_of_comp_faithful_gen
-    (ImageCenterMorphismProperty Z F).Q
-    (Localization.Construction.lift
-      (W := ImageCenterMorphismProperty Z F)
-      (ImageCenterMorphismProperty (Z.sum W) F).Q
-      (fun X Y f hf => by
-        show IsIso ((ImageCenterMorphismProperty (Z.sum W) F).Q.map f)
-        apply CategoryTheory.MorphismProperty.Q_inverts
-        exact ImageCenterMorphismProperty_sum_inl_le Z W F f hf))
-  erw [Localization.Construction.fac]
-  exact hF
+  exact localizationFaithful_of_le (ImageCenterMorphismProperty_sum_inl_le Z W F) hF
 
 /-- **Proposition 3.15 (v), part 1.** `Φ ∘ α = β` (equivalently `Φ ⋙ α = β` in Lean's
 left-to-right composition). Conditional on item 2 (`hreg`). -/
