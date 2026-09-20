@@ -345,7 +345,7 @@ private theorem exists_induced_path_of_walk (G : SimpleGraph V) (K : Set V) {x y
   let f : (G.induce K) →g G :=
     { toFun := Subtype.val
       map_rel' := fun h => h }
-  refine ⟨Q.map f, hQpath.map Subtype.val_injective, ?_, ?_⟩
+  refine ⟨Q.map f, Walk.map_isPath_of_injective Subtype.val_injective hQpath, ?_, ?_⟩
   · intro w hw
     have hwMap : w ∈ List.map (⇑f) Q.support := by
       rw [← SimpleGraph.Walk.support_map f Q]
@@ -378,6 +378,66 @@ private theorem exists_induced_path_of_walk (G : SimpleGraph V) (K : Set V) {x y
     rw [Sym2.map_mk] at he'
     exact he'
 
+/-- In a path from `x` to `y`, the edge `s(x, y)` can only occur as the single edge of a
+one-step path. -/
+private theorem length_eq_one_of_isPath_of_mem_edges {x y : V} {P : G.Walk x y}
+    (hP : P.IsPath) (hmem : s(x, y) ∈ P.edges) : P.length = 1 := by
+  cases P with
+  | nil => simp at hmem
+  | @cons _ z _ hadj P' =>
+      rw [Walk.edges_cons, List.mem_cons] at hmem
+      rw [Walk.cons_isPath_iff] at hP
+      rcases hmem with h | h
+      · have hzy : z = y := by
+          rcases Sym2.eq_iff.1 h with ⟨-, h2⟩ | ⟨h1, -⟩
+          · exact h2.symm
+          · exact absurd h1 hadj.ne
+        subst hzy
+        rw [(Walk.isPath_iff_eq_nil P').1 hP.1]
+        simp
+      · exact absurd (P'.fst_mem_support_of_mem_edges h) hP.2
+
+/-- Two internally disjoint paths of length `≥ 2` with the same endpoints concatenate to a cycle. -/
+private theorem isCycle_append_of_isPath {x y : V} {P : G.Walk x y} {Q : G.Walk y x}
+    (hP : P.IsPath) (hQ : Q.IsPath) (hPlen : 2 ≤ P.length) (hQlen : 2 ≤ Q.length)
+    (hdisj : P.support.tail.Disjoint Q.support.tail) : (P.append Q).IsCycle := by
+  have hcommon : ∀ w, w ∈ P.support → w ∈ Q.support → w = x ∨ w = y := by
+    intro w hwP hwQ
+    rw [Walk.support_eq_cons P, List.mem_cons] at hwP
+    rw [Walk.support_eq_cons Q, List.mem_cons] at hwQ
+    rcases hwP with rfl | hwP
+    · exact Or.inl rfl
+    · rcases hwQ with rfl | hwQ
+      · exact Or.inr rfl
+      · exact absurd hwQ (hdisj hwP)
+  refine (Walk.isCycle_def _).2 ⟨⟨?_⟩, ?_, ?_⟩
+  · rw [Walk.edges_append]
+    refine List.Nodup.append hP.isTrail.edges_nodup hQ.isTrail.edges_nodup ?_
+    intro e heP heQ
+    induction e with
+    | _ a b =>
+      have ha : a = x ∨ a = y :=
+        hcommon a (P.fst_mem_support_of_mem_edges heP) (Q.fst_mem_support_of_mem_edges heQ)
+      have hb : b = x ∨ b = y :=
+        hcommon b (P.snd_mem_support_of_mem_edges heP) (Q.snd_mem_support_of_mem_edges heQ)
+      have hab : a ≠ b := (P.adj_of_mem_edges heP).ne
+      have hxy : s(x, y) ∈ P.edges := by
+        rcases ha with rfl | rfl <;> rcases hb with rfl | rfl
+        · exact absurd rfl hab
+        · exact heP
+        · rwa [Sym2.eq_swap] at heP
+        · exact absurd rfl hab
+      have := length_eq_one_of_isPath_of_mem_edges hP hxy
+      omega
+  · intro h
+    have := congrArg Walk.length h
+    rw [Walk.length_append] at this
+    simp at this
+    omega
+  · rw [Walk.support_append, Walk.support_eq_cons P]
+    simp only [List.cons_append, List.tail_cons]
+    exact List.Nodup.append hP.support_nodup.tail hQ.support_nodup.tail hdisj
+
 /-- **Cycle contradiction.** Two internally-disjoint induced `x`–`y` paths (each of length `≥ 2`,
 no cross edges except through the endpoints) form a chordless cycle of length `≥ 4`, contradicting
 chordality. -/
@@ -394,7 +454,7 @@ private theorem two_induced_paths_not_chordal (G : SimpleGraph V) (hG : IsChorda
   have hstart : ∀ {u v : V} {p : G.Walk u v}, p.IsPath → u ∉ p.support.tail := by
     intro u v p hp hmem
     have hnd := hp.support_nodup
-    rw [← Walk.cons_tail_support] at hnd
+    rw [Walk.support_eq_cons p] at hnd
     exact (List.nodup_cons.1 hnd).1 hmem
   have hmemrev : ∀ {w : V}, w ∈ Q.reverse.support → w ∈ Q.support := by
     intro w hw
@@ -406,7 +466,7 @@ private theorem two_induced_paths_not_chordal (G : SimpleGraph V) (hG : IsChorda
     · exact hstart hP hwP
     · exact hstart hQ.reverse hwQ
   have hcyc : (P.append Q.reverse).IsCycle :=
-    hP.isCycle_append hQ.reverse hdisjtails (Or.inl (by omega))
+    isCycle_append_of_isPath hP hQ.reverse hPlen (by simpa using hQlen) hdisjtails
   have hlen : 4 ≤ (P.append Q.reverse).length := by
     rw [Walk.length_append, Walk.length_reverse]
     omega
@@ -484,8 +544,8 @@ private theorem avoidReach_iff_rreach_compl [Fintype V] [DecidableEq V] (G : Sim
     intro p q
     simp only [RStep, Finset.mem_sdiff, Finset.mem_univ, true_and]
   constructor
-  · exact fun h => Relation.ReflTransGen.mono (fun p q hpq => (hstep p q).1 hpq) a b h
-  · exact fun h => Relation.ReflTransGen.mono (fun p q hpq => (hstep p q).2 hpq) a b h
+  · exact fun h => Relation.ReflTransGen.mono (fun p q hpq => (hstep p q).1 hpq) h
+  · exact fun h => Relation.ReflTransGen.mono (fun p q hpq => (hstep p q).2 hpq) h
 
 /-
 The complement of a nonadjacent pair `{a,b}` separates them.
@@ -657,7 +717,7 @@ private theorem exists_simplicial_in_componentU [DecidableEq V] (H : SimpleGraph
         have hrel : RStep H D ≤ RStep H (C ∪ D) := fun p q hpq =>
           ⟨Finset.mem_union_right _ hpq.1, Finset.mem_union_right _ hpq.2.1, hpq.2.2⟩
         have has : RReach H (C ∪ D) a s :=
-          Relation.ReflTransGen.mono hrel a s (hDconn a haD s hsD)
+          Relation.ReflTransGen.mono hrel (hDconn a haD s hsD)
         exact has.tail ⟨Finset.mem_union_right _ hsD, hxCD, hsx⟩
     have hRConn : RConn H (C ∪ D) := fun a ha b hb =>
       (hreach a ha).trans (rreach_symm _ _ (hreach b hb))
@@ -877,13 +937,13 @@ private theorem avoidReach_iff_set (G : SimpleGraph V) (S : Finset V) (a b : V) 
         (fun p q : V => p ∉ (↑S : Set V) ∧ q ∉ (↑S : Set V) ∧ G.Adj p q) := by
       intro p q hpq
       simpa using hpq
-    exact (Relation.ReflTransGen.mono hrel) a b h
+    exact Relation.ReflTransGen.mono hrel h
   · intro h
     have hrel : (fun p q : V => p ∉ (↑S : Set V) ∧ q ∉ (↑S : Set V) ∧ G.Adj p q) ≤
         (fun p q : V => p ∉ S ∧ q ∉ S ∧ G.Adj p q) := by
       intro p q hpq
       simpa using hpq
-    exact (Relation.ReflTransGen.mono hrel) a b h
+    exact Relation.ReflTransGen.mono hrel h
 
 private theorem separatesF_iff_set (G : SimpleGraph V) (S : Finset V) (a b : V) :
     SeparatesF G S a b ↔ G.Separates (↑S) a b := by
