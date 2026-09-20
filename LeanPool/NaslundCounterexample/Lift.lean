@@ -145,19 +145,10 @@ theorem coeff_liftMap_top (m : ℕ) {p : Parameters} (hb : Below m p.2.2.2) :
       zero_mul]
   simp only [liftMap, tail, mul_add, coeff_add, hlow, hQb, hs, hu, zero_add, add_zero]
 
-/-- **Injectivity of the lift on parameters.** Two tuples with base elements of degree below `m`
-that lift to the same polynomial are equal. No division algorithm is needed: equal outputs give
-`(V_s + P·R_r) - (V_s' + P·R_r') = Q · (tail' - tail)`, whose left side has degree below `6`, so
-both sides vanish; evaluating at `0, 1, 2` identifies the code words, cancelling `P` identifies
-`r`, and comparing the coefficients at `T^m` and `T^{m+1}` identifies `u` and `b`. -/
-theorem liftMap_injOn (m : ℕ) (B : Finset (ZMod 3)[X]) (hB : AllBelow m B) :
-    Set.InjOn (liftMap m) (parameters B) := by
-  intro p hp p' hp' h
-  have hpm : p ∈ parameters B := Finset.mem_coe.mp hp
-  have hpm' : p' ∈ parameters B := Finset.mem_coe.mp hp'
-  have hb : Below m p.2.2.2 := hB _ (mem_params.mp hpm).2
-  have hb' : Below m p'.2.2.2 := hB _ (mem_params.mp hpm').2
-  -- the code word is read off the three values and the top coefficient
+/-- Evaluations and the top coefficient recover the code word from a lifted polynomial. -/
+theorem code_eq_of_liftMap_eq (m : ℕ) {p p' : Parameters}
+    (hb : Below m p.2.2.2) (hb' : Below m p'.2.2.2) (h : liftMap m p = liftMap m p') :
+    p.1 = p'.1 := by
   have h0 : p.1 0 = p'.1 0 := by
     rw [← eval_liftMap_zero m p, ← eval_liftMap_zero m p', h]
   have h1 : p.1 1 = p'.1 1 := by
@@ -166,11 +157,14 @@ theorem liftMap_injOn (m : ℕ) (B : Finset (ZMod 3)[X]) (hB : AllBelow m B) :
     rw [← eval_liftMap_two m p, ← eval_liftMap_two m p', h]
   have h3 : p.1 3 = p'.1 3 := by
     rw [← coeff_liftMap_top m hb, ← coeff_liftMap_top m hb', h]
-  have hs : p.1 = p'.1 := by
-    funext i
-    fin_cases i
-    exacts [h0, h1, h2, h3]
-  -- the part below the multiplier `Q` vanishes, which identifies `r`
+  funext i
+  fin_cases i
+  exacts [h0, h1, h2, h3]
+
+/-- Equal lifts with equal code words have equal low-degree vectors and equal tails. -/
+theorem remainder_and_tail_eq (m : ℕ) {p p' : Parameters}
+    (h : liftMap m p = liftMap m p') (hs : p.1 = p'.1) :
+    p.2.1 = p'.2.1 ∧ tail m p' = tail m p := by
   have hV : V p.1 = V p'.1 := by rw [hs]
   have key : P * (R p.2.1 - R p'.2.1) = Q * (tail m p' - tail m p) := by
     have h' := h
@@ -189,6 +183,23 @@ theorem liftMap_injOn (m : ℕ) (B : Finset (ZMod 3)[X]) (hB : AllBelow m B) :
     rcases mul_eq_zero.mp hQ with hQ0 | ht
     · exact absurd hQ0 Q_ne_zero
     · exact sub_eq_zero.mp ht
+  exact ⟨hr, htail⟩
+
+/-- **Injectivity of the lift on parameters.** Two tuples with base elements of degree below `m`
+that lift to the same polynomial are equal. No division algorithm is needed: equal outputs give
+`(V_s + P·R_r) - (V_s' + P·R_r') = Q · (tail' - tail)`, whose left side has degree below `6`, so
+both sides vanish; evaluating at `0, 1, 2` identifies the code words, cancelling `P` identifies
+`r`, and comparing the coefficients at `T^m` and `T^{m+1}` identifies `u` and `b`. -/
+theorem liftMap_injOn (m : ℕ) (B : Finset (ZMod 3)[X]) (hB : AllBelow m B) :
+    Set.InjOn (liftMap m) (parameters B) := by
+  intro p hp p' hp' h
+  have hpm : p ∈ parameters B := Finset.mem_coe.mp hp
+  have hpm' : p' ∈ parameters B := Finset.mem_coe.mp hp'
+  have hb : Below m p.2.2.2 := hB _ (mem_params.mp hpm).2
+  have hb' : Below m p'.2.2.2 := hB _ (mem_params.mp hpm').2
+  have hs := code_eq_of_liftMap_eq m hb hb' h
+  have h3 : p.1 3 = p'.1 3 := by rw [hs]
+  obtain ⟨hr, htail⟩ := remainder_and_tail_eq m h hs
   have hu : p.2.2.1 = p'.2.2.1 := by
     rw [← coeff_tail_succ m hb, ← coeff_tail_succ m hb', htail]
   have hbb : p.2.2.2 = p'.2.2.2 := by
@@ -213,6 +224,105 @@ theorem lift_allBelow (m : ℕ) (B : Finset (ZMod 3)[X]) (hB : AllBelow m B) :
   obtain ⟨p, hp, rfl⟩ := mem_lift.mp hf
   exact liftMap_below m (hB _ (mem_params.mp hp).2)
 
+/-- A square difference of lifts from an even degree bound has a bounded-degree square root. -/
+theorem square_difference_root_degree (t : ℕ) {p p' : Parameters} {z : (ZMod 3)[X]}
+    (hb : Below (t + t) p.2.2.2) (hb' : Below (t + t) p'.2.2.2)
+    (hz : liftMap (t + t) p' - liftMap (t + t) p = z ^ 2) :
+    z.natDegree ≤ t + 3 := by
+  have hdiff : Below (t + t + 7 + 1) (z ^ 2) := by
+    have h8 : Below (t + t + 8) (z ^ 2) := by
+      rw [← hz]
+      exact (liftMap_below _ hb').sub (liftMap_below _ hb)
+    rwa [show t + t + 8 = t + t + 7 + 1 from by omega] at h8
+  have h1 := hdiff.natDegree_le
+  rw [Polynomial.natDegree_pow] at h1
+  omega
+
+/-- All four code coordinates of a square difference are squares, so the code words agree. -/
+theorem code_eq_of_square_difference (t : ℕ) {p p' : Parameters} {z : (ZMod 3)[X]}
+    (hp : p.1 ∈ code) (hp' : p'.1 ∈ code)
+    (hb : Below (t + t) p.2.2.2) (hb' : Below (t + t) p'.2.2.2)
+    (hz : liftMap (t + t) p' - liftMap (t + t) p = z ^ 2) : p.1 = p'.1 := by
+  have hzdeg := square_difference_root_degree t hb hb' hz
+  have htop : p'.1 3 - p.1 3 = z.coeff (t + 3) ^ 2 := by
+    have hc := congrArg (fun f => Polynomial.coeff f (t + t + 6)) hz
+    simp only [coeff_sub, coeff_liftMap_top _ hb, coeff_liftMap_top _ hb'] at hc
+    rw [show t + t + 6 = 2 * (t + 3) from by omega,
+      Polynomial.coeff_pow_of_natDegree_le hzdeg] at hc
+    exact hc
+  have hev0 : p'.1 0 - p.1 0 = z.eval 0 ^ 2 := by
+    have hc := congrArg (fun f => Polynomial.eval 0 f) hz
+    simpa [eval_liftMap_zero] using hc
+  have hev1 : p'.1 1 - p.1 1 = z.eval 1 ^ 2 := by
+    have hc := congrArg (fun f => Polynomial.eval 1 f) hz
+    simpa [eval_liftMap_one] using hc
+  have hev2 : p'.1 2 - p.1 2 = z.eval 2 ^ 2 := by
+    have hc := congrArg (fun f => Polynomial.eval 2 f) hz
+    simpa [eval_liftMap_two] using hc
+  have hsq : ∀ i : Fin 4, ∃ w : ZMod 3, p'.1 i - p.1 i = w ^ 2 := by
+    intro i
+    fin_cases i
+    exacts [⟨_, hev0⟩, ⟨_, hev1⟩, ⟨_, hev2⟩, ⟨_, htop⟩]
+  exact code_property p.1 hp p'.1 hp' fun i => by
+    obtain ⟨w, hw⟩ := hsq i
+    rw [hw]
+    exact sq_eq_zero_or_one w
+
+/-- Equal code coordinates force the square root to vanish at every element of `F_3`. -/
+theorem P_dvd_of_square_difference (m : ℕ) {p p' : Parameters} {z : (ZMod 3)[X]}
+    (hcode : p.1 = p'.1) (hz : liftMap m p' - liftMap m p = z ^ 2) : P ∣ z := by
+  apply P_dvd_of_eval
+  · have h := congrArg (fun f => Polynomial.eval 0 f) hz
+    have hzero : z.eval 0 ^ 2 = 0 := by simpa [eval_liftMap_zero, hcode] using h.symm
+    exact eq_zero_of_sq_eq_zero _ hzero
+  · have h := congrArg (fun f => Polynomial.eval 1 f) hz
+    have hzero : z.eval 1 ^ 2 = 0 := by simpa [eval_liftMap_one, hcode] using h.symm
+    exact eq_zero_of_sq_eq_zero _ hzero
+  · have h := congrArg (fun f => Polynomial.eval 2 f) hz
+    have hzero : z.eval 2 ^ 2 = 0 := by simpa [eval_liftMap_two, hcode] using h.symm
+    exact eq_zero_of_sq_eq_zero _ hzero
+
+/-- The low-degree part vanishes, allowing cancellation of `Q` from a square difference. -/
+theorem square_eq_tail_difference (m : ℕ) {p p' : Parameters} {z w : (ZMod 3)[X]}
+    (hcode : p.1 = p'.1) (hz : liftMap m p' - liftMap m p = z ^ 2) (hw : z = P * w) :
+    w ^ 2 = tail m p' - tail m p := by
+  have hQw : z ^ 2 = Q * w ^ 2 := by simp only [Q, hw, mul_pow]
+  have hV : V p'.1 = V p.1 := by rw [hcode]
+  have key : P * (R p'.2.1 - R p.2.1) = Q * (w ^ 2 - (tail m p' - tail m p)) := by
+    have h' := hz
+    simp only [liftMap] at h'
+    rw [hV, hQw] at h'
+    linear_combination h'
+  have hzero : P * (R p'.2.1 - R p.2.1) = 0 :=
+    eq_zero_of_Q_dvd_of_degree_lt _ (degree_P_mul_R_sub_lt p'.2.1 p.2.1) ⟨_, key⟩
+  have hQ : Q * (w ^ 2 - (tail m p' - tail m p)) = 0 := by rw [← key, hzero]
+  rcases mul_eq_zero.mp hQ with hQ0 | ht
+  · exact absurd hQ0 Q_ne_zero
+  · exact sub_eq_zero.mp ht
+
+/-- A tail difference has odd degree unless its scalar coordinates agree. -/
+theorem scalar_eq_of_square_tail (t : ℕ) {p p' : Parameters} {w : (ZMod 3)[X]}
+    (hb : Below (t + t) p.2.2.2) (hb' : Below (t + t) p'.2.2.2)
+    (hcode : p.1 = p'.1) (hw2 : w ^ 2 = tail (t + t) p' - tail (t + t) p) :
+    p'.2.2.1 = p.2.2.1 := by
+  have htaildiff : tail (t + t) p' - tail (t + t) p
+      = (p'.2.2.2 - p.2.2.2) + C (p'.2.2.1 - p.2.2.1) * X ^ (t + t + 1) := by
+    simp only [tail, hcode, map_sub]
+    ring
+  by_contra hne
+  have hsub : Below (t + t) (p'.2.2.2 - p.2.2.2) := hb'.sub hb
+  have hlt : (p'.2.2.2 - p.2.2.2).natDegree
+      < (C (p'.2.2.1 - p.2.2.1) * X ^ (t + t + 1)).natDegree := by
+    rw [natDegree_C_mul_X_pow _ _ (sub_ne_zero.mpr hne)]
+    have hle : (p'.2.2.2 - p.2.2.2).natDegree ≤ t + t :=
+      Below.natDegree_le (hsub.mono (by omega))
+    omega
+  have hdeg : (w ^ 2).natDegree = t + t + 1 := by
+    rw [hw2, htaildiff, natDegree_add_eq_right_of_natDegree_lt hlt,
+      natDegree_C_mul_X_pow _ _ (sub_ne_zero.mpr hne)]
+  rw [Polynomial.natDegree_pow] at hdeg
+  omega
+
 /-- **The lift preserves square-difference-freeness** for even `m`. If two lifted polynomials
 differ by `z^2`, then the four coordinates of `s' - s` are squares in `F_3`, hence in `{0, 1}`,
 so the code property gives `s = s'`; then `z` vanishes on `F_3`, so `z = P·w`, the parts below
@@ -225,96 +335,17 @@ theorem lift_sdf (m : ℕ) (B : Finset (ZMod 3)[X]) (hm : Even m) (hB : AllBelow
   intro f hf g hg z hz
   obtain ⟨p, hp, rfl⟩ := mem_lift.mp hf
   obtain ⟨p', hp', rfl⟩ := mem_lift.mp hg
-  by_contra hz0
-  have hb : Below (t + t) p.2.2.2 := hB _ (mem_params.mp hp).2
-  have hb' : Below (t + t) p'.2.2.2 := hB _ (mem_params.mp hp').2
-  -- (i) a square of degree below `m + 8` has a root of degree at most `t + 3`
-  have hdiff : Below (t + t + 7 + 1) (z ^ 2) := by
-    have h8 : Below (t + t + 8) (z ^ 2) := by
-      rw [← hz]
-      exact (liftMap_below _ hb').sub (liftMap_below _ hb)
-    rwa [show t + t + 8 = t + t + 7 + 1 from by omega] at h8
-  have hzdeg : z.natDegree ≤ t + 3 := by
-    have h1 : (z ^ 2).natDegree ≤ t + t + 7 := hdiff.natDegree_le
-    rw [Polynomial.natDegree_pow] at h1
-    omega
-  -- (ii) the top coordinate of the difference is the square of a coefficient of `z`
-  have htop : p'.1 3 - p.1 3 = z.coeff (t + 3) ^ 2 := by
-    have hc := congrArg (fun f => Polynomial.coeff f (t + t + 6)) hz
-    simp only [coeff_sub, coeff_liftMap_top _ hb, coeff_liftMap_top _ hb'] at hc
-    rw [show t + t + 6 = 2 * (t + 3) from by omega,
-      Polynomial.coeff_pow_of_natDegree_le hzdeg] at hc
-    exact hc
-  -- (iii) the three values of the difference are squares as well
-  have hev0 : p'.1 0 - p.1 0 = z.eval 0 ^ 2 := by
-    have hc := congrArg (fun f => Polynomial.eval 0 f) hz
-    simpa [eval_liftMap_zero] using hc
-  have hev1 : p'.1 1 - p.1 1 = z.eval 1 ^ 2 := by
-    have hc := congrArg (fun f => Polynomial.eval 1 f) hz
-    simpa [eval_liftMap_one] using hc
-  have hev2 : p'.1 2 - p.1 2 = z.eval 2 ^ 2 := by
-    have hc := congrArg (fun f => Polynomial.eval 2 f) hz
-    simpa [eval_liftMap_two] using hc
-  -- (iv) all four coordinates of `s' - s` are squares, so the code property applies
-  have hsq : ∀ i : Fin 4, ∃ w : ZMod 3, p'.1 i - p.1 i = w ^ 2 := by
-    intro i
-    fin_cases i
-    exacts [⟨_, hev0⟩, ⟨_, hev1⟩, ⟨_, hev2⟩, ⟨_, htop⟩]
-  have hcode : p.1 = p'.1 :=
-    code_property p.1 (mem_params.mp hp).1 p'.1 (mem_params.mp hp').1 fun i => by
-      obtain ⟨w, hw⟩ := hsq i
-      rw [hw]
-      exact sq_eq_zero_or_one w
-  have h3 : p.1 3 = p'.1 3 := by rw [hcode]
-  -- (v) `z` vanishes on `F_3`, so `P` divides it
-  have e0 : z.eval 0 = 0 :=
-    eq_zero_of_sq_eq_zero _ (by rw [← hev0, hcode]; exact sub_self _)
-  have e1 : z.eval 1 = 0 :=
-    eq_zero_of_sq_eq_zero _ (by rw [← hev1, hcode]; exact sub_self _)
-  have e2 : z.eval 2 = 0 :=
-    eq_zero_of_sq_eq_zero _ (by rw [← hev2, hcode]; exact sub_self _)
-  obtain ⟨w, hw⟩ := P_dvd_of_eval z e0 e1 e2
-  have hwne : w ≠ 0 := by
-    intro h
-    exact hz0 (by rw [hw, h, mul_zero])
-  -- (vi) the parts below `Q` cancel and `Q` may be cancelled
-  have hQw : z ^ 2 = Q * w ^ 2 := by simp only [Q, hw, mul_pow]
-  have hV : V p'.1 = V p.1 := by rw [hcode]
-  have key : P * (R p'.2.1 - R p.2.1)
-      = Q * (w ^ 2 - (tail (t + t) p' - tail (t + t) p)) := by
-    have h' := hz
-    simp only [liftMap] at h'
-    rw [hV, hQw] at h'
-    linear_combination h'
-  have hzero : P * (R p'.2.1 - R p.2.1) = 0 :=
-    eq_zero_of_Q_dvd_of_degree_lt _ (degree_P_mul_R_sub_lt p'.2.1 p.2.1) ⟨_, key⟩
-  have hw2 : w ^ 2 = tail (t + t) p' - tail (t + t) p := by
-    have hQ : Q * (w ^ 2 - (tail (t + t) p' - tail (t + t) p)) = 0 := by rw [← key, hzero]
-    rcases mul_eq_zero.mp hQ with hQ0 | ht
-    · exact absurd hQ0 Q_ne_zero
-    · exact sub_eq_zero.mp ht
-  have htaildiff : tail (t + t) p' - tail (t + t) p
-      = (p'.2.2.2 - p.2.2.2) + C (p'.2.2.1 - p.2.2.1) * X ^ (t + t + 1) := by
-    simp only [tail, h3, map_sub]
-    ring
-  -- (vii) an odd degree is impossible for a square, so the scalars agree
-  have hu : p'.2.2.1 = p.2.2.1 := by
-    by_contra hne
-    have hsub : Below (t + t) (p'.2.2.2 - p.2.2.2) := hb'.sub hb
-    have hlt : (p'.2.2.2 - p.2.2.2).natDegree
-        < (C (p'.2.2.1 - p.2.2.1) * X ^ (t + t + 1)).natDegree := by
-      rw [natDegree_C_mul_X_pow _ _ (sub_ne_zero.mpr hne)]
-      have hle : (p'.2.2.2 - p.2.2.2).natDegree ≤ t + t :=
-        Below.natDegree_le (hsub.mono (by omega))
-      omega
-    have hdeg : (w ^ 2).natDegree = t + t + 1 := by
-      rw [hw2, htaildiff, natDegree_add_eq_right_of_natDegree_lt hlt,
-        natDegree_C_mul_X_pow _ _ (sub_ne_zero.mpr hne)]
-    rw [Polynomial.natDegree_pow] at hdeg
-    omega
-  -- what is left is a square difference inside `B`
+  have hb := hB _ (mem_params.mp hp).2
+  have hb' := hB _ (mem_params.mp hp').2
+  have hcode := code_eq_of_square_difference t (mem_params.mp hp).1 (mem_params.mp hp').1 hb hb' hz
+  obtain ⟨w, hw⟩ := P_dvd_of_square_difference (t + t) hcode hz
+  have hw2 := square_eq_tail_difference (t + t) hcode hz hw
+  have hu := scalar_eq_of_square_tail t hb hb' hcode hw2
   have hbeq : p'.2.2.2 - p.2.2.2 = w ^ 2 := by
-    rw [hw2, htaildiff, hu, sub_self, map_zero, zero_mul, add_zero]
-  exact hwne (hS _ (mem_params.mp hp).2 _ (mem_params.mp hp').2 w hbeq)
+    rw [hw2]
+    simp only [tail, hcode, hu]
+    ring
+  have hw0 := hS _ (mem_params.mp hp).2 _ (mem_params.mp hp').2 w hbeq
+  rw [hw, hw0, mul_zero]
 
 end NaslundCounterexample
