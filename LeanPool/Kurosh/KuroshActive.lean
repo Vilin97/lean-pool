@@ -224,7 +224,7 @@ noncomputable def activeProductToTree {ι : Type v}
     KuroshActiveProduct G H →* TreeKuroshProduct G H :=
   Monoid.CoprodI.lift (activeComponentToTree G H)
 
-theorem test_activeProductToTree_comp_treeProductToActive {ι : Type v}
+theorem Internal.activeProductToTree_comp_treeProductToActive {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     (activeProductToTree G H).comp (treeProductToActive G H) =
       MonoidHom.id (TreeKuroshProduct G H) := by
@@ -271,7 +271,7 @@ theorem test_activeProductToTree_comp_treeProductToActive {ι : Type v}
       rw [Monoid.CoprodI.lift_of]
       rfl
 
-theorem test_treeProductToActive_comp_activeProductToTree {ι : Type v}
+theorem Internal.treeProductToActive_comp_activeProductToTree {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     (treeProductToActive G H).comp (activeProductToTree G H) =
       MonoidHom.id (KuroshActiveProduct G H) := by
@@ -319,11 +319,11 @@ noncomputable def treeProductActiveEquiv {ι : Type v}
     left_inv := by
       intro x
       exact congrArg (fun f : TreeKuroshProduct G H →* TreeKuroshProduct G H => f x)
-        (test_activeProductToTree_comp_treeProductToActive G H)
+        (Internal.activeProductToTree_comp_treeProductToActive G H)
     right_inv := by
       intro x
       exact congrArg (fun f : KuroshActiveProduct G H →* KuroshActiveProduct G H => f x)
-        (test_treeProductToActive_comp_activeProductToTree G H)
+        (Internal.treeProductToActive_comp_activeProductToTree G H)
     map_mul' := (treeProductToActive G H).map_mul }
 
 /-- The factor-only Kurosh product is isomorphic to the subgroup. -/
@@ -338,7 +338,7 @@ theorem kurosh_active_vertex_intersection {ι : Type v}
     (j : KuroshActiveVertexIndex G H) :
     ∃ (i : ι) (g : FreeProduct G),
       treeVertexStabilizer G H j.1 = intersectionFactorInH H i g := by
-  rcases test_treeVertexStabilizer_central_or_factor G H j.1 with h | h
+  rcases Internal.treeVertexStabilizer_central_or_factor G H j.1 with h | h
   · rcases h with ⟨g, _, hbot⟩
     exact (j.2 (hbot.trans rfl)).elim
   · rcases h with ⟨i, g, _, heq⟩

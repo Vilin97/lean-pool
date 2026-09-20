@@ -26,7 +26,7 @@ universe u v
 
 namespace GraphCoveringTheory.Kurosh
 
-theorem test_coverPathValue_rawTree {ι : Type v}
+theorem Internal.coverPathValue_rawTree {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a : RawBassSerreOrbitVertex G H}
     (p : @Quiver.Path (RawBassSerreOrbitVertex G H)

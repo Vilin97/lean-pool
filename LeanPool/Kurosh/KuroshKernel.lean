@@ -26,7 +26,7 @@ universe u v
 
 namespace GraphCoveringTheory.Kurosh
 
-theorem test_treeKuroshRootStabilizer_subsingleton {ι : Type v}
+theorem Internal.treeKuroshRootStabilizer_subsingleton {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     ∀ x : treeVertexStabilizer G H (rawBassSerreOrbitRoot G H), x = 1 := by
   intro x
@@ -34,7 +34,7 @@ theorem test_treeKuroshRootStabilizer_subsingleton {ι : Type v}
   have hx : (x.1 : FreeProduct G) • rawTreeRepresentative G H
       (rawBassSerreOrbitRoot G H) =
       rawTreeRepresentative G H (rawBassSerreOrbitRoot G H) := x.property
-  rw [test_rawTreeRepresentative_root G H] at hx
+  rw [Internal.rawTreeRepresentative_root G H] at hx
   have hx' : (x.1 : FreeProduct G) = 1 :=
     (rawBassSerre_central_fixed_iff G 1 (x.1 : FreeProduct G)).mp hx
   have hxH : x.1 = (1 : H) := Subtype.ext hx'
@@ -42,13 +42,13 @@ theorem test_treeKuroshRootStabilizer_subsingleton {ι : Type v}
     (rawBassSerreOrbitRoot G H)).1
   exact hxH
 
-theorem test_treeKuroshProductToH_kernel {ι : Type v}
+theorem Internal.treeKuroshProductToH_kernel {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (z : CoverSource G H)
     (hz : treeKuroshProductToH G H z = 1) : z = 1 := by
   let root := rawBassSerreOrbitRoot G H
   let K := MonoidHom.range (treeKuroshVertexInclusion G H root)
-  have hv := test_coverVertexMk_eq_root_of_treeKuroshProductToH_eq_one
+  have hv := Internal.coverVertexMk_eq_root_of_treeKuroshProductToH_eq_one
     G H z hz
   have hcos : rightCosetMk K z = rightCosetMk K 1 := by
     change (⟨root, rightCosetMk K z⟩ : CoverVertex G H) =
@@ -57,7 +57,7 @@ theorem test_treeKuroshProductToH_kernel {ι : Type v}
   rcases (rightCosetMk_eq_iff K z 1).1 hcos with ⟨k, hk⟩
   rcases k.property with ⟨x, hx⟩
   have hx1 : x = 1 := by
-    exact test_treeKuroshRootStabilizer_subsingleton G H x
+    exact Internal.treeKuroshRootStabilizer_subsingleton G H x
   have hk1val : (k : CoverSource G H) = 1 := by
     calc
       (k : CoverSource G H) = treeKuroshVertexInclusion G H root x := hx.symm
@@ -66,14 +66,14 @@ theorem test_treeKuroshProductToH_kernel {ι : Type v}
   have hk1 : k = 1 := Subtype.ext hk1val
   simpa [hk1] using hk
 
-theorem test_treeDataGenerated_eq_top_for_kernel {ι : Type v}
+theorem Internal.treeDataGenerated_eq_top_for_kernel {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
-    testTreeDataGenerated G H = ⊤ := by
+    Internal.treeDataGenerated G H = ⊤ := by
   apply le_antisymm le_top
   intro h _
-  let p := testRawTreePath G
+  let p := Internal.rawSpanningTreePath G
     (h.1 • RawBassSerreVertex.central (G := G) 1)
-  let a := testRawPathAlignmentGenerated G H p
+  let a := Internal.rawPathAlignmentGenerated G H p
   have horbit :
       actionOrbitMk H (RawBassSerreVertex G)
           (h.1 • RawBassSerreVertex.central (G := G) 1) =
@@ -89,7 +89,7 @@ theorem test_treeDataGenerated_eq_top_for_kernel {ι : Type v}
         (h.1 • RawBassSerreVertex.central (G := G) 1)) =
       RawBassSerreVertex.central (G := G) 1 := by
     rw [horbit]
-    exact test_rawTreeRepresentative_root G H
+    exact Internal.rawTreeRepresentative_root G H
   have hpath : h.1 • RawBassSerreVertex.central (G := G) 1 =
       a.1 • RawBassSerreVertex.central (G := G) 1 := by
     calc
@@ -107,12 +107,12 @@ theorem test_treeDataGenerated_eq_top_for_kernel {ι : Type v}
   have heq : h = a.1 := Subtype.ext hval
   exact heq ▸ a.2.2
 
-theorem test_treeKuroshProductToH_surjective_for_kernel {ι : Type v}
+theorem Internal.treeKuroshProductToH_surjective_for_kernel {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     Function.Surjective (@treeKuroshProductToH.{u, v, 0} ι G _ H) := by
-  have hgen : testTreeDataGenerated G H ≤
+  have hgen : Internal.treeDataGenerated G H ≤
       MonoidHom.range (@treeKuroshProductToH.{u, v, 0} ι G _ H) := by
-    change Subgroup.closure (testTreeDataGeneratorSet G H) ≤
+    change Subgroup.closure (Internal.treeDataGeneratorSet G H) ≤
       MonoidHom.range (@treeKuroshProductToH.{u, v, 0} ι G _ H)
     rw [Subgroup.closure_le]
     intro h hh
@@ -131,7 +131,7 @@ theorem test_treeKuroshProductToH_surjective_for_kernel {ι : Type v}
     apply le_antisymm le_top
     intro h _
     apply hgen
-    rw [test_treeDataGenerated_eq_top_for_kernel G H]
+    rw [Internal.treeDataGenerated_eq_top_for_kernel G H]
     trivial
   intro h
   have hrange : h ∈ MonoidHom.range
@@ -140,7 +140,7 @@ theorem test_treeKuroshProductToH_surjective_for_kernel {ι : Type v}
     trivial
   exact hrange
 
-theorem test_treeKuroshProductToH_injective {ι : Type v}
+theorem Internal.treeKuroshProductToH_injective {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     Function.Injective (@treeKuroshProductToH.{u, v, 0} ι G _ H) := by
   intro p q hpq
@@ -148,7 +148,7 @@ theorem test_treeKuroshProductToH_injective {ι : Type v}
       (p * q⁻¹) = 1 := by
     rw [map_mul, map_inv, hpq]
     simp
-  have hker' := test_treeKuroshProductToH_kernel G H (p * q⁻¹) hker
+  have hker' := Internal.treeKuroshProductToH_kernel G H (p * q⁻¹) hker
   calc
     p = (p * q⁻¹) * q := by simp [mul_assoc]
     _ = 1 * q := by rw [hker']
@@ -159,10 +159,10 @@ noncomputable def treeKuroshProductMulEquivH {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     @TreeKuroshProduct.{u, v, 0} ι G _ H ≃* H :=
   MulEquiv.ofBijective (@treeKuroshProductToH.{u, v, 0} ι G _ H)
-    ⟨test_treeKuroshProductToH_injective G H,
-      test_treeKuroshProductToH_surjective_for_kernel G H⟩
+    ⟨Internal.treeKuroshProductToH_injective G H,
+      Internal.treeKuroshProductToH_surjective_for_kernel G H⟩
 
-theorem test_treeVertexStabilizer_central_or_factor {ι : Type v}
+theorem Internal.treeVertexStabilizer_central_or_factor {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (a : RawBassSerreOrbitVertex G H) :
     (∃ g : FreeProduct G,

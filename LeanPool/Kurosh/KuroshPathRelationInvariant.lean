@@ -62,9 +62,9 @@ theorem catStep {ι : Type v} (G : ι → Type u) [∀ i, Group (G i)]
         (CategoryTheory.Paths.of
           (Quiver.Symmetrify (RawBassSerreVertex G))).obj b :=
       (Quiver.reverse e).toPath
-  have hb := test_coverPathLiftData_backtrack_endpoint G H
+  have hb := Internal.coverPathLiftData_backtrack_endpoint G H
     (catPathToRaw G p) e
-  have ha := test_coverPathLiftData_append_endpoint G H
+  have ha := Internal.coverPathLiftData_append_endpoint G H
     (catPathToRaw G p)
     (((catPathToRaw G p).comp e.toPath).cons (Quiver.reverse e)) hb.symm
     (catPathToRaw G q)

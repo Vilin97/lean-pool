@@ -23,16 +23,16 @@ local instance GraphCoveringTheory.Kurosh.kuroshPathEndpointDecidableEq
 universe u v
 namespace GraphCoveringTheory.Kurosh
 
-theorem test_coverVertexMap_root {ι : Type v}
+theorem Internal.coverVertexMap_root {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     (coverPrefunctor G H).symmetrify.obj
         (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1) =
       RawBassSerreVertex.central 1 := by
   change coverVertexMap G H
       (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1) = _
-  simp [coverVertexMk, coverVertexMap_mk, test_rawTreeRepresentative_root]
+  simp [coverVertexMk, coverVertexMap_mk, Internal.rawTreeRepresentative_root]
 
-theorem test_coverPathLiftData_endpoint_eq_of_mapPath {ι : Type v}
+theorem Internal.coverPathLiftData_endpoint_eq_of_mapPath {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {x : CoverVertex G H}
     (s : @Quiver.Path (Quiver.Symmetrify (CoverVertex G H))
@@ -52,7 +52,7 @@ theorem test_coverPathLiftData_endpoint_eq_of_mapPath {ι : Type v}
   let d := coverPathLiftData G H p
   have hmapd : Quiver.Path.cast rfl d.endpoint
       ((coverPrefunctor G H).symmetrify.mapPath d.path) = p :=
-    test_coverPathLiftData_map G H p
+    Internal.coverPathLiftData_map G H p
   have hvertex : (coverPrefunctor G H).symmetrify.obj x =
       (coverPrefunctor G H).symmetrify.obj d.x := hobj.trans d.endpoint.symm
   have hcast : Quiver.Path.cast rfl hvertex
@@ -75,11 +75,11 @@ theorem test_coverPathLiftData_endpoint_eq_of_mapPath {ι : Type v}
   have hstar_inj :=
     (coverPrefunctor G H).symmetrify.pathStar_injective
       (fun y =>
-        ((test_coverSymmCovering G H).star_bijective y).1)
+        ((Internal.coverSymmCovering G H).star_bijective y).1)
       (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1) hstar
   exact congrArg Sigma.fst hstar_inj
 
-theorem test_coverPathLiftData_closed_endpoint {ι : Type v}
+theorem Internal.coverPathLiftData_closed_endpoint {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {p : @Quiver.Path (Quiver.Symmetrify (RawBassSerreVertex G))
       (@Quiver.symmetrifyQuiver (RawBassSerreVertex G)
@@ -103,7 +103,7 @@ theorem test_coverPathLiftData_closed_endpoint {ι : Type v}
           (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1))))
   simpa [catPathToRaw_rawPathToCat, coverPathLiftData] using h
 
-theorem test_coverVertexMk_eq_root_of_treeKuroshProductToH_eq_one {ι : Type v}
+theorem Internal.coverVertexMk_eq_root_of_treeKuroshProductToH_eq_one {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (z : CoverSource G H)
     (hz : treeKuroshProductToH G H z = 1) :
@@ -118,11 +118,11 @@ theorem test_coverVertexMk_eq_root_of_treeKuroshProductToH_eq_one {ι : Type v}
         (coverVertexMk G H (rawBassSerreOrbitRoot G H) z) =
       coverVertexMap G H
         (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1)
-    simp [coverVertexMk, hz, test_rawTreeRepresentative_root]
+    simp [coverVertexMk, hz, Internal.rawTreeRepresentative_root]
   let : Quiver.RootedConnected
       (show Quiver.Symmetrify (CoverVertex G H) from
         coverVertexMk G H (rawBassSerreOrbitRoot G H) 1) :=
-    test_coverSource_rootedConnected G H
+    Internal.coverSource_rootedConnected G H
   obtain ⟨s⟩ :=
     @Quiver.RootedConnected.nonempty_path
       (Quiver.Symmetrify (CoverVertex G H))
@@ -131,8 +131,8 @@ theorem test_coverVertexMk_eq_root_of_treeKuroshProductToH_eq_one {ι : Type v}
       (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1) _ x
   let t := Quiver.Path.cast rfl hobj
       ((coverPrefunctor G H).symmetrify.mapPath s)
-  have hs := test_coverPathLiftData_endpoint_eq_of_mapPath G H s t hobj rfl
-  have ht := test_coverPathLiftData_closed_endpoint G H (p := t)
+  have hs := Internal.coverPathLiftData_endpoint_eq_of_mapPath G H s t hobj rfl
+  have ht := Internal.coverPathLiftData_closed_endpoint G H (p := t)
   exact hs.trans ht
 
 end GraphCoveringTheory.Kurosh

@@ -136,7 +136,7 @@ theorem kuroshFreePartHom_surjective_of_trivial_stabilizers {ι : Type v}
     Function.Surjective (kuroshFreePartHom G H) := by
   intro h
   obtain ⟨p, hp⟩ :=
-    test_treeKuroshProductToH_surjective_for_kernel G H h
+    Internal.treeKuroshProductToH_surjective_for_kernel G H h
   refine ⟨treeKuroshProductToFreePart G H p, ?_⟩
   have hfactor := congrArg
     (fun f : @TreeKuroshProduct.{u, v, 0} ι G _ H →* H => f p)
@@ -151,7 +151,7 @@ noncomputable def kuroshFreePartEquivOfTrivialStabilizers {ι : Type v}
       Subsingleton (treeVertexStabilizer G H a)) :
     KuroshFreePart G H ≃* H :=
   MulEquiv.ofBijective (kuroshFreePartHom G H)
-    ⟨testKuroshFreePartHom_injective G H,
+    ⟨kuroshFreePartHom_injective G H,
       kuroshFreePartHom_surjective_of_trivial_stabilizers G H htriv⟩
 
 theorem kurosh_subgroup_is_free_of_trivial_stabilizers {ι : Type v}

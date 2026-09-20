@@ -26,10 +26,10 @@ universe u v
 
 namespace GraphCoveringTheory.Kurosh
 
-theorem test_coverSymmCovering {ι : Type v}
+theorem Internal.coverSymmCovering {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     (coverPrefunctor G H).symmetrify.IsCovering :=
-  (test_coverPrefunctor_isCovering G H).symmetrify
+  (Internal.coverPrefunctor_isCovering G H).symmetrify
 
 /-- The covering projection induces an equivalence on symmetrified outgoing edges. -/
 noncomputable def coverStarEquiv {ι : Type v}
@@ -42,7 +42,7 @@ noncomputable def coverStarEquiv {ι : Type v}
           (rawBassSerreQuiver G))
         ((coverPrefunctor G H).symmetrify.obj u) :=
   Equiv.ofBijective ((coverPrefunctor G H).symmetrify.star u)
-    ((test_coverSymmCovering G H).star_bijective u)
+    ((Internal.coverSymmCovering G H).star_bijective u)
 
 /-- Lift a symmetrified outgoing edge using the star equivalence. -/
 noncomputable def coverStarLift {ι : Type v}
@@ -53,7 +53,7 @@ noncomputable def coverStarLift {ι : Type v}
       (@Quiver.symmetrifyQuiver (CoverVertex G H) (coverQuiver G H)) u :=
   (coverStarEquiv G H u).symm ⟨v, e⟩
 
-theorem test_coverStarLift_map {ι : Type v}
+theorem Internal.coverStarLift_map {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (u : CoverVertex G H) {v : Quiver.Symmetrify (RawBassSerreVertex G)}
     (e : (coverPrefunctor G H).symmetrify.obj u ⟶ v) :
@@ -69,7 +69,7 @@ theorem test_coverStarLift_map {ι : Type v}
   erw [Quiver.Hom.cast_eq_iff_heq]
   exact (Sigma.ext_iff.mp h).2
 
-theorem test_coverStar_eq_mk_of_map_cast {ι : Type v}
+theorem Internal.coverStar_eq_mk_of_map_cast {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (u : CoverVertex G H)
     (s : @Quiver.Star (Quiver.Symmetrify (CoverVertex G H))
@@ -85,7 +85,7 @@ theorem test_coverStar_eq_mk_of_map_cast {ι : Type v}
   erw [Quiver.Hom.cast_eq_iff_heq] at hmap
   exact hmap
 
-theorem test_hom_reverse_cast {U : Type u} [q : Quiver.{v} U]
+theorem Internal.hom_reverse_cast {U : Type u} [q : Quiver.{v} U]
     [Quiver.HasReverse U] {a b a' b' : U}
     (e : a ⟶ b) (ha : a = a') (hb : b = b') :
     Quiver.reverse (e.cast ha hb) = (Quiver.reverse e).cast hb ha := by
@@ -93,7 +93,7 @@ theorem test_hom_reverse_cast {U : Type u} [q : Quiver.{v} U]
   cases hb
   rfl
 
-theorem test_coverReverseStar_map {ι : Type v}
+theorem Internal.coverReverseStar_map {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (u : CoverVertex G H)
     (d : @Quiver.Star (Quiver.Symmetrify (CoverVertex G H))
@@ -110,7 +110,7 @@ theorem test_coverReverseStar_map {ι : Type v}
   simp only [Quiver.Hom.cast_rfl_rfl]
   exact Prefunctor.map_reverse _ _
 
-theorem test_coverReverseStar_map_transport {ι : Type v}
+theorem Internal.coverReverseStar_map_transport {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (u : CoverVertex G H)
     (d : @Quiver.Star (Quiver.Symmetrify (CoverVertex G H))
@@ -165,10 +165,10 @@ noncomputable def coverPathLiftData {ι : Type v}
       let ih := coverPathLiftData G H p
       let e' := Quiver.Hom.cast ih.endpoint.symm rfl e
       let d := coverStarLift G H ih.x e'
-      let hd := test_coverStarLift_map G H ih.x e'
+      let hd := Internal.coverStarLift_map G H ih.x e'
       exact ⟨d.1, ih.path.cons d.2, hd.1⟩
 
-theorem test_path_cast_cons_mid {U : Type u} [q : Quiver.{v} U]
+theorem Internal.path_cast_cons_mid {U : Type u} [q : Quiver.{v} U]
     {a b c b' c' : U} (p : Quiver.Path a b) (e : b ⟶ c)
     (hb : b = b') (hc : c = c') :
     (p.cons e).cast rfl hc =
@@ -176,7 +176,7 @@ theorem test_path_cast_cons_mid {U : Type u} [q : Quiver.{v} U]
   cases hb
   exact Quiver.Path.cast_cons p e rfl hc
 
-theorem test_coverPathLiftData_map {ι : Type v}
+theorem Internal.coverPathLiftData_map {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {v : Quiver.Symmetrify (RawBassSerreVertex G)}
     (p : @Quiver.Path (Quiver.Symmetrify (RawBassSerreVertex G))
@@ -193,10 +193,10 @@ theorem test_coverPathLiftData_map {ι : Type v}
       let ihd := coverPathLiftData G H p
       let e' := Quiver.Hom.cast ihd.endpoint.symm rfl e
       let d := coverStarLift G H ihd.x e'
-      let hd := test_coverStarLift_map G H ihd.x e'
+      let hd := Internal.coverStarLift_map G H ihd.x e'
       rcases hd with ⟨hdobj, hdmap⟩
       dsimp [coverPathLiftData]
-      erw [test_path_cast_cons_mid
+      erw [Internal.path_cast_cons_mid
         (p := (coverPrefunctor G H).symmetrify.mapPath ihd.path)
         (e := (coverPrefunctor G H).symmetrify.map d.2)
         (hb := ihd.endpoint) (hc := hdobj)]
@@ -218,7 +218,7 @@ theorem test_coverPathLiftData_map {ι : Type v}
               simp
       rw [hedge]
 
-theorem test_coverPathLiftData_backtrack_endpoint {ι : Type v}
+theorem Internal.coverPathLiftData_backtrack_endpoint {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {v w : Quiver.Symmetrify (RawBassSerreVertex G)}
     (p : @Quiver.Path (Quiver.Symmetrify (RawBassSerreVertex G))
@@ -235,14 +235,14 @@ theorem test_coverPathLiftData_backtrack_endpoint {ι : Type v}
   let ihd := coverPathLiftData G H p
   let e' := Quiver.Hom.cast ihd.endpoint.symm rfl e
   let d := coverStarLift G H ihd.x e'
-  let hd := test_coverStarLift_map G H ihd.x e'
+  let hd := Internal.coverStarLift_map G H ihd.x e'
   rcases hd with ⟨hdobj, hdmap⟩
   dsimp [coverPathLiftData]
   let e2 := (Quiver.reverse e).cast hdobj.symm rfl
   have hrevmap :
       Quiver.Hom.cast rfl ihd.endpoint
           ((coverPrefunctor G H).symmetrify.map (Quiver.reverse d.2)) = e2 := by
-    have h := test_coverReverseStar_map_transport (G := G) (H := H)
+    have h := Internal.coverReverseStar_map_transport (G := G) (H := H)
       (u := ihd.x) (d := d) (e := e) ihd.endpoint hdobj (by
         simpa [d, e'] using hdmap)
     simpa [e2] using h
@@ -250,7 +250,7 @@ theorem test_coverPathLiftData_backtrack_endpoint {ι : Type v}
       (coverPrefunctor G H).symmetrify.star d.1
           (⟨ihd.x, Quiver.reverse d.2⟩ : Quiver.Star d.1) =
         ⟨v, e2⟩ := by
-    apply test_coverStar_eq_mk_of_map_cast (G := G) (H := H)
+    apply Internal.coverStar_eq_mk_of_map_cast (G := G) (H := H)
       (u := d.1) (s := ⟨ihd.x, Quiver.reverse d.2⟩) (e := e2)
       ihd.endpoint
     exact hrevmap
@@ -268,7 +268,7 @@ theorem test_coverPathLiftData_backtrack_endpoint {ι : Type v}
         (ihd.x : Quiver.Symmetrify (CoverVertex G H))
   exact congrArg Sigma.fst hlift
 
-theorem test_coverStarLift_fst_eq_of_heq {ι : Type v}
+theorem Internal.coverStarLift_fst_eq_of_heq {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (u u' : CoverVertex G H)
     {v : Quiver.Symmetrify (RawBassSerreVertex G)}
@@ -281,7 +281,7 @@ theorem test_coverStarLift_fst_eq_of_heq {ι : Type v}
   cases he
   rfl
 
-theorem test_coverPathLiftData_append_edge_endpoint {ι : Type v}
+theorem Internal.coverPathLiftData_append_edge_endpoint {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {v w : Quiver.Symmetrify (RawBassSerreVertex G)}
     (p q : @Quiver.Path (Quiver.Symmetrify (RawBassSerreVertex G))
@@ -310,14 +310,14 @@ theorem test_coverPathLiftData_append_edge_endpoint {ι : Type v}
     (Quiver.Hom.cast_eq_iff_heq
       (congrArg (fun z : CoverVertex G H =>
         (coverPrefunctor G H).symmetrify.obj z) h) rfl ep eq).mp he_cast
-  have hout := test_coverStarLift_fst_eq_of_heq G H dp.x dq.x ep eq
+  have hout := Internal.coverStarLift_fst_eq_of_heq G H dp.x dq.x ep eq
     (heq_of_eq h) he
   change
       (coverStarLift G H dp.x ep).1 =
         (coverStarLift G H dq.x eq).1
   exact hout
 
-theorem test_coverPathLiftData_append_endpoint {ι : Type v}
+theorem Internal.coverPathLiftData_append_endpoint {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {v w : Quiver.Symmetrify (RawBassSerreVertex G)}
     (p q : @Quiver.Path (Quiver.Symmetrify (RawBassSerreVertex G))
@@ -336,7 +336,7 @@ theorem test_coverPathLiftData_append_endpoint {ι : Type v}
   | nil => simpa using h
   | @cons b c r e ih =>
       rw [Quiver.Path.comp_cons, Quiver.Path.comp_cons]
-      exact test_coverPathLiftData_append_edge_endpoint G H
+      exact Internal.coverPathLiftData_append_edge_endpoint G H
         (p.comp r) (q.comp r) ih e
 
 end GraphCoveringTheory.Kurosh

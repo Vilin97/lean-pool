@@ -26,6 +26,9 @@ unstructured existential statement.  This makes the double-coset indexing,
 the factor embeddings, and the final free-product equivalence visible to the
 kernel checker and to the Palomar statement surface.
 
+The orbit type is Mathlib's `MulAction.orbitRel.Quotient`. Proof scaffolding
+shared between this project's modules lives in `GraphCoveringTheory.Kurosh.Internal`.
+
 Adapted for Lean Pool from Arthur742Ramos/KuroshSubgroupTheorem,
 commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
@@ -814,43 +817,25 @@ fundamental-group contribution; the factor vertices retain the stabilizers
 defined above.
 -/
 
-/-- The equivalence relation of lying in the same group-action orbit. -/
-def actionOrbitSetoid (A : Type w) (X : Type w) [Group A] [MulAction A X] : Setoid X where
-  r x y := ∃ a : A, a • x = y
-  iseqv := by
-    refine ⟨?_, ?_, ?_⟩
-    · intro x
-      exact ⟨1, by simp⟩
-    · rintro x y ⟨a, h⟩
-      refine ⟨a⁻¹, ?_⟩
-      rw [← h, smul_smul, inv_mul_cancel, one_smul]
-    · rintro x y z ⟨a, h⟩ ⟨b, k⟩
-      refine ⟨b * a, ?_⟩
-      calc
-        (b * a) • x = b • (a • x) := by rw [smul_smul]
-        _ = b • y := by rw [h]
-        _ = z := k
-
-/-- The quotient of an action by its orbit relation. -/
+/-- The standard Mathlib quotient of an action by its orbit relation. -/
 abbrev ActionOrbit (A : Type w) (X : Type w) [Group A] [MulAction A X] :=
-  Quotient (actionOrbitSetoid A X)
+  MulAction.orbitRel.Quotient A X
 
 /-- Send a point to its group-action orbit. -/
 def actionOrbitMk (A : Type w) (X : Type w) [Group A] [MulAction A X]
-    (x : X) : ActionOrbit A X := Quotient.mk (actionOrbitSetoid A X) x
+    (x : X) : ActionOrbit A X := Quotient.mk (MulAction.orbitRel A X) x
 
+/-- Orbit equality expressed by an element carrying the first point to the second.
+Mathlib's orbit relation uses the reverse orientation. -/
 @[simp]
 theorem actionOrbitMk_eq_iff (A : Type w) (X : Type w) [Group A] [MulAction A X]
     (x y : X) : actionOrbitMk A X x = actionOrbitMk A X y ↔
       ∃ a : A, a • x = y := by
   constructor
   · intro h
-    exact @Quotient.exact X (actionOrbitSetoid A X) x y (by
-      change Quotient.mk (actionOrbitSetoid A X) x =
-        Quotient.mk (actionOrbitSetoid A X) y at h
-      exact h)
+    exact Quotient.exact h.symm
   · intro h
-    exact @Quotient.sound X (actionOrbitSetoid A X) x y h
+    exact (Quotient.sound h).symm
 
 theorem actionOrbitMk_smul (A : Type w) (X : Type w) [Group A] [MulAction A X]
     (a : A) (x : X) : actionOrbitMk A X (a • x) = actionOrbitMk A X x := by
@@ -1049,10 +1034,10 @@ def rawBassSerreOrbitEdgeSource {ι : Type v} (G : ι → Type u)
     (by
       intro x y hxy
       rcases hxy with ⟨a, hxy⟩
-      change (a.1 : FreeProduct G) • x = y at hxy
+      change (a.1 : FreeProduct G) • y = x at hxy
       rw [← hxy, rawBassSerreEdgeData_source_action]
-      exact (actionOrbitMk_smul H (RawBassSerreVertex G) a
-        (rawBassSerreEdgeDataSource G x)).symm) e
+      exact actionOrbitMk_smul H (RawBassSerreVertex G) a
+        (rawBassSerreEdgeDataSource G y)) e
 
 /-- The target vertex orbit of an edge orbit. -/
 def rawBassSerreOrbitEdgeTarget {ι : Type v} (G : ι → Type u)
@@ -1063,10 +1048,10 @@ def rawBassSerreOrbitEdgeTarget {ι : Type v} (G : ι → Type u)
     (by
       intro x y hxy
       rcases hxy with ⟨a, hxy⟩
-      change (a.1 : FreeProduct G) • x = y at hxy
+      change (a.1 : FreeProduct G) • y = x at hxy
       rw [← hxy, rawBassSerreEdgeData_target_action]
-      exact (actionOrbitMk_smul H (RawBassSerreVertex G) a
-        (rawBassSerreEdgeDataTarget G x)).symm) e
+      exact actionOrbitMk_smul H (RawBassSerreVertex G) a
+        (rawBassSerreEdgeDataTarget G y)) e
 
 /-- The quotient quiver whose edges are subgroup orbits with prescribed endpoints. -/
 @[reducible]

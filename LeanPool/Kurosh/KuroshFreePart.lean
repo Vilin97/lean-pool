@@ -22,13 +22,13 @@ universe u v
 namespace GraphCoveringTheory.Kurosh
 
 /-- The quotient-graph free factor embeds in the subgroup. -/
-theorem testKuroshFreePartHom_injective {ι : Type v} (G : ι → Type u)
+theorem kuroshFreePartHom_injective {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     Function.Injective (kuroshFreePartHom G H) := by
   intro x y h
   have hfree : @treeKuroshFreeInclusion.{u, v, 0} ι G _ H x =
       treeKuroshFreeInclusion G H y := by
-    apply test_treeKuroshProductToH_injective G H
+    apply Internal.treeKuroshProductToH_injective G H
     simpa only [treeKuroshProductToH_free] using h
   have hup : (ULift.up x : ULift.{max (u + 1) (v + 1)} (KuroshFreePart G H)) =
       ULift.up y := Monoid.CoprodI.of_injective (Sum.inr PUnit.unit) hfree

@@ -29,7 +29,7 @@ namespace GraphCoveringTheory.Kurosh
 
 open Monoid.CoprodI
 
-theorem test_rightCosetMk_mul_out_mk {P : Type u} [Group P]
+theorem Internal.rightCosetMk_mul_out_mk {P : Type u} [Group P]
     (K : Subgroup P) (p r : P) :
     rightCosetMk K (p * Quotient.out (rightCosetMk K r)) =
       rightCosetMk K (p * r) := by
@@ -44,7 +44,7 @@ theorem test_rightCosetMk_mul_out_mk {P : Type u} [Group P]
           rw [mul_assoc]
     _ = p * r := by rw [hk]
 
-theorem test_coverEdgeSource_smul {ι : Type v}
+theorem Internal.coverEdgeSource_smul {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (p q : CoverSource G H) (e : CoverEdge G H) :
     coverEdgeSource G H (p * q, e) =
@@ -56,9 +56,9 @@ theorem test_coverEdgeSource_smul {ι : Type v}
       (treeKuroshVertexInclusion G H e.1))
       (p * Quotient.out (rightCosetMk
         (MonoidHom.range (treeKuroshVertexInclusion G H e.1)) q))
-  exact (test_rightCosetMk_mul_out_mk _ _ _).symm
+  exact (Internal.rightCosetMk_mul_out_mk _ _ _).symm
 
-theorem test_coverEdgeTarget_smul {ι : Type v}
+theorem Internal.coverEdgeTarget_smul {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (p q : CoverSource G H) (e : CoverEdge G H) :
     coverEdgeTarget G H (p * q, e) =
@@ -73,7 +73,7 @@ theorem test_coverEdgeTarget_smul {ι : Type v}
         (MonoidHom.range (treeKuroshVertexInclusion G H e.2.1))
         (q * (coverEdgeLetter G H e)⁻¹)))
   rw [mul_assoc]
-  exact (test_rightCosetMk_mul_out_mk _ _ _).symm
+  exact (Internal.rightCosetMk_mul_out_mk _ _ _).symm
 
 /-- Translate an auxiliary covering edge by a covering-group element. -/
 noncomputable def coverEdgeAction {ι : Type v}
@@ -85,12 +85,12 @@ noncomputable def coverEdgeAction {ι : Type v}
   · calc
       coverEdgeSource G H (p * d.1.1, d.1.2) =
           p • coverEdgeSource G H d.1 :=
-        test_coverEdgeSource_smul G H p d.1.1 d.1.2
+        Internal.coverEdgeSource_smul G H p d.1.1 d.1.2
       _ = p • x := congrArg (fun z => p • z) d.2.1
   · calc
       coverEdgeTarget G H (p * d.1.1, d.1.2) =
           p • coverEdgeTarget G H d.1 :=
-        test_coverEdgeTarget_smul G H p d.1.1 d.1.2
+        Internal.coverEdgeTarget_smul G H p d.1.1 d.1.2
       _ = p • y := congrArg (fun z => p • z) d.2.2
 
 /-- Translation by a covering-group element as a quiver prefunctor. -/
@@ -116,7 +116,7 @@ noncomputable def coverPathAction {ι : Type v}
     @Quiver.Path (Quiver.Symmetrify (CoverVertex G H)) _ (p • x) (p • y) :=
   (coverActionSymmPrefunctor G H p).mapPath q
 
-theorem test_coverPathAction_nil {ι : Type v}
+theorem Internal.coverPathAction_nil {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (p : CoverSource G H) (x : CoverVertex G H) :
     coverPathAction G H p
@@ -124,7 +124,7 @@ theorem test_coverPathAction_nil {ι : Type v}
         (Quiver.Symmetrify (CoverVertex G H)) _ x x) = Quiver.Path.nil := by
   rfl
 
-theorem test_coverVertex_action_root {ι : Type v}
+theorem Internal.coverVertex_action_root {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (p : CoverSource G H) :
     p • coverVertexMk G H (rawBassSerreOrbitRoot G H) 1 =
@@ -138,11 +138,11 @@ theorem test_coverVertex_action_root {ι : Type v}
           (rawBassSerreOrbitRoot G H))) 1)) =
     rightCosetMk (MonoidHom.range (treeKuroshVertexInclusion G H
       (rawBassSerreOrbitRoot G H))) p
-  simpa using test_rightCosetMk_mul_out_mk
+  simpa using Internal.rightCosetMk_mul_out_mk
     (MonoidHom.range (treeKuroshVertexInclusion G H
       (rawBassSerreOrbitRoot G H))) p 1
 
-theorem test_coverVertexRange_action_one {ι : Type v}
+theorem Internal.coverVertexRange_action_one {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (a : RawBassSerreOrbitVertex G H)
     (k : treeVertexStabilizer G H a) :
@@ -156,7 +156,7 @@ theorem test_coverVertexRange_action_one {ι : Type v}
           (treeKuroshVertexInclusion G H a)) 1)) =
     rightCosetMk (MonoidHom.range
       (treeKuroshVertexInclusion G H a)) 1
-  rw [test_rightCosetMk_mul_out_mk]
+  rw [Internal.rightCosetMk_mul_out_mk]
   apply (rightCosetMk_eq_iff
     (MonoidHom.range (treeKuroshVertexInclusion G H a)) _ _).2
   let kk : MonoidHom.range (treeKuroshVertexInclusion G H a) :=
@@ -167,7 +167,7 @@ theorem test_coverVertexRange_action_one {ι : Type v}
       treeKuroshVertexInclusion G H a k := rfl
   rw [hkk, mul_inv_cancel]
 
-theorem test_coverFactorLoopPath {ι : Type v}
+theorem Internal.coverFactorLoopPath {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (a : RawBassSerreOrbitVertex G H)
     (k : treeVertexStabilizer G H a) :
@@ -179,7 +179,7 @@ theorem test_coverFactorLoopPath {ι : Type v}
   let lp := coverPathLift G H (1 : CoverSource G H) q
   have hr : lp.1 = 1 := by
     dsimp [lp, q]
-    rw [coverPathLift_value, test_coverPathValue_rawTree]
+    rw [coverPathLift_value, Internal.coverPathValue_rawTree]
     simp
   let p₀ : @Quiver.Path (Quiver.Symmetrify (CoverVertex G H)) _
       (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1)
@@ -188,13 +188,13 @@ theorem test_coverFactorLoopPath {ι : Type v}
   let s : CoverSource G H := treeKuroshVertexInclusion G H a k
   let p₁ := coverPathAction G H s p₀.reverse
   have hs : s • coverVertexMk G H a 1 = coverVertexMk G H a 1 := by
-    exact test_coverVertexRange_action_one G H a k
+    exact Internal.coverVertexRange_action_one G H a k
   have hroot : s • coverVertexMk G H (rawBassSerreOrbitRoot G H) 1 =
       coverVertexMk G H (rawBassSerreOrbitRoot G H) s := by
-    exact test_coverVertex_action_root G H s
+    exact Internal.coverVertex_action_root G H s
   refine ⟨p₀.comp (p₁.cast hs hroot)⟩
 
-theorem test_coverFactorLoopPath_value {ι : Type v}
+theorem Internal.coverFactorLoopPath_value {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (a : RawBassSerreOrbitVertex G H)
     (k : treeVertexStabilizer G H a) :
@@ -202,6 +202,6 @@ theorem test_coverFactorLoopPath_value {ι : Type v}
       (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1)
       (coverVertexMk G H (rawBassSerreOrbitRoot G H)
         (treeKuroshVertexInclusion G H a k))) :=
-  test_coverFactorLoopPath G H a k
+  Internal.coverFactorLoopPath G H a k
 
 end GraphCoveringTheory.Kurosh

@@ -22,7 +22,7 @@ universe u v
 
 namespace GraphCoveringTheory.Kurosh
 
-theorem test_coverFreeGroupoidPathHom_eq_quotient_map {ι : Type v}
+theorem Internal.coverFreeGroupoidPathHom_eq_quotient_map {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a b : RawBassSerreOrbitVertex G H}
     (p : @Quiver.Path (Quiver.Symmetrify (RawBassSerreOrbitVertex G H))
@@ -39,7 +39,7 @@ theorem test_coverFreeGroupoidPathHom_eq_quotient_map {ι : Type v}
       rw [ih]
       cases e using Sum.casesOn <;> rfl
 
-theorem test_coverFreePath_exists {ι : Type v}
+theorem Internal.coverFreePath_exists {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a b : RawBassSerreOrbitVertex G H}
     (z : @Quiver.Hom (Quiver.FreeGroupoid (RawBassSerreOrbitVertex G H)) _
@@ -54,7 +54,7 @@ theorem test_coverFreePath_exists {ι : Type v}
       (@Quiver.FreeGroupoid.redStep (RawBassSerreOrbitVertex G H)
         (rawBassSerreOrbitQuiver.inst G H))).map_surjective z
   refine ⟨p, ?_⟩
-  rw [test_coverFreeGroupoidPathHom_eq_quotient_map]
+  rw [Internal.coverFreeGroupoidPathHom_eq_quotient_map]
   exact hp
 
 end GraphCoveringTheory.Kurosh

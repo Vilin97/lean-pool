@@ -79,7 +79,7 @@ theorem coverPathLiftData_eq_of_quotient_map_eq {ι : Type v}
   have hcat := catEqv G H (rawPathToCat G p) (rawPathToCat G q) hrel
   simpa only [catPathToRaw_rawPathToCat] using hcat
 
-theorem testRawFreeGroupoid_hom_subsingleton {ι : Type v}
+theorem Internal.rawFreeGroupoid_hom_subsingleton {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)]
     {x y : Quiver.FreeGroupoid (RawBassSerreVertex G)} :
     Subsingleton (x ⟶ y) := by
@@ -87,7 +87,7 @@ theorem testRawFreeGroupoid_hom_subsingleton {ι : Type v}
       (show Quiver.Symmetrify (RawBassSerreVertex G) from
         RawBassSerreVertex.central 1) := rawBassSerre_rootedConnected G
   let : IsConnected (Quiver.FreeGroupoid (RawBassSerreVertex G)) :=
-    testFreeGroupoid_isConnected_of_rootedConnected
+    Internal.freeGroupoid_isConnected_of_basedPaths
       (RawBassSerreVertex.central 1)
   obtain ⟨p⟩ := CategoryTheory.nonempty_hom_of_preconnected_groupoid
     ((Quiver.FreeGroupoid.of (RawBassSerreVertex G)).obj
@@ -99,7 +99,7 @@ theorem testRawFreeGroupoid_hom_subsingleton {ι : Type v}
   intro f g
   have hroot : p ≫ f ≫ Groupoid.inv q =
       p ≫ g ≫ Groupoid.inv q := by
-    exact @Subsingleton.elim _ (testRawFreeGroupoid_end_subsingleton G) _ _
+    exact @Subsingleton.elim _ (Internal.rawFreeGroupoid_end_subsingleton G) _ _
   have hcancel := congrArg
     (fun z => Groupoid.inv p ≫ z ≫ q) hroot
   simpa [Category.assoc] using hcancel
@@ -122,7 +122,7 @@ theorem coverCatPathLiftData_eq_of_target_tree {ι : Type v}
       (CategoryTheory.Quotient.functor
         (@Quiver.FreeGroupoid.redStep (RawBassSerreVertex G)
           (rawBassSerreQuiver G))).map q := by
-    exact @Subsingleton.elim _ (testRawFreeGroupoid_hom_subsingleton G) _ _
+    exact @Subsingleton.elim _ (Internal.rawFreeGroupoid_hom_subsingleton G) _ _
   have hrel : Relation.EqvGen
       (@CategoryTheory.HomRel.CompClosure
         (CategoryTheory.Paths (Quiver.Symmetrify (RawBassSerreVertex G))) _

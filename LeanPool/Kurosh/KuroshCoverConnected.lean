@@ -27,7 +27,7 @@ universe u v
 
 namespace GraphCoveringTheory.Kurosh
 
-theorem test_coverFreeFactorLoopPath {ι : Type v}
+theorem Internal.coverFreeFactorLoopPath {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (x : KuroshFreePart G H) :
     Nonempty (@Quiver.Path (Quiver.Symmetrify (CoverVertex G H)) _
@@ -35,7 +35,7 @@ theorem test_coverFreeFactorLoopPath {ι : Type v}
     (coverVertexMk G H (rawBassSerreOrbitRoot G H)
         (treeKuroshFreeInclusion G H x))) := by
   let z : KuroshFreePart G H := x⁻¹
-  obtain ⟨q, hq⟩ := test_coverFreePath_exists G H
+  obtain ⟨q, hq⟩ := Internal.coverFreePath_exists G H
     (a := rawBassSerreOrbitRoot G H)
     (b := rawBassSerreOrbitRoot G H) z
   have hloop : coverPathFreeLoop G H q = x⁻¹ := by
@@ -61,7 +61,7 @@ theorem test_coverFreeFactorLoopPath {ι : Type v}
   refine ⟨lp.2.cast rfl (congrArg
     (coverVertexMk G H (rawBassSerreOrbitRoot G H)) hp)⟩
 
-theorem test_coverFactorLoopPath_rawTree {ι : Type v}
+theorem Internal.coverFactorLoopPath_rawTree {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (a : RawBassSerreOrbitVertex G H)
     (k : treeVertexStabilizer G H a) :
@@ -69,9 +69,9 @@ theorem test_coverFactorLoopPath_rawTree {ι : Type v}
       (coverVertexMk G H (rawBassSerreOrbitRoot G H) 1)
       (coverVertexMk G H (rawBassSerreOrbitRoot G H)
         (treeKuroshVertexInclusion G H a k))) :=
-  test_coverFactorLoopPath G H a k
+  Internal.coverFactorLoopPath G H a k
 
-theorem test_coverRootFiberPath {ι : Type v}
+theorem Internal.coverRootFiberPath {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (p : CoverSource G H) :
     Nonempty (@Quiver.Path (Quiver.Symmetrify (CoverVertex G H)) _
@@ -86,35 +86,35 @@ theorem test_coverRootFiberPath {ι : Type v}
           cases m with
           | up k =>
               simpa [treeKuroshVertexInclusion] using
-                test_coverFactorLoopPath_rawTree G H a k
+                Internal.coverFactorLoopPath_rawTree G H a k
       | inr i =>
           cases i
           cases m with
           | up x =>
               simpa [treeKuroshFreeInclusion] using
-                test_coverFreeFactorLoopPath G H x
+                Internal.coverFreeFactorLoopPath G H x
   | mul x y hx hy =>
       rcases hx with ⟨px⟩
       rcases hy with ⟨py⟩
       have hstart :
           x • coverVertexMk G H (rawBassSerreOrbitRoot G H) 1 =
             coverVertexMk G H (rawBassSerreOrbitRoot G H) x := by
-        exact test_coverVertex_action_root G H x
+        exact Internal.coverVertex_action_root G H x
       have htarget :
           x • coverVertexMk G H (rawBassSerreOrbitRoot G H) y =
             coverVertexMk G H (rawBassSerreOrbitRoot G H) (x * y) := by
         calc
           x • coverVertexMk G H (rawBassSerreOrbitRoot G H) y =
               x • (y • coverVertexMk G H (rawBassSerreOrbitRoot G H) 1) := by
-                rw [test_coverVertex_action_root G H y]
+                rw [Internal.coverVertex_action_root G H y]
           _ = (x * y) •
               coverVertexMk G H (rawBassSerreOrbitRoot G H) 1 :=
             (mul_smul x y _).symm
           _ = coverVertexMk G H (rawBassSerreOrbitRoot G H) (x * y) :=
-            test_coverVertex_action_root G H (x * y)
+            Internal.coverVertex_action_root G H (x * y)
       exact ⟨px.comp ((coverPathAction G H x py).cast hstart htarget)⟩
 
-theorem test_coverSource_rootedConnected {ι : Type v}
+theorem Internal.coverSource_rootedConnected {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     Quiver.RootedConnected
       (show Quiver.Symmetrify (CoverVertex G H) from
@@ -128,13 +128,13 @@ theorem test_coverSource_rootedConnected {ι : Type v}
       let lp := coverPathLift G H p q
       have hcoord : lp.1 = p := by
         dsimp [lp, q]
-        rw [coverPathLift_value, test_coverPathValue_rawTree]
+        rw [coverPathLift_value, Internal.coverPathValue_rawTree]
         simp [p]
       have hend : coverVertexMk G H a lp.1 = ⟨a, c⟩ := by
         apply congrArg (Sigma.mk a)
         rw [hcoord]
         exact Quotient.out_eq c
-      rcases test_coverRootFiberPath G H p with ⟨rp⟩
+      rcases Internal.coverRootFiberPath G H p with ⟨rp⟩
       exact ⟨rp.comp (lp.2.cast rfl hend)⟩
 
 end GraphCoveringTheory.Kurosh

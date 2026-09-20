@@ -62,7 +62,7 @@ theorem kurosh_vertex_stabilizer_classification {ι : Type v}
       rawTreeRepresentative G H a =
         RawBassSerreVertex.factor i (factorCosetMk G i g) ∧
       treeVertexStabilizer G H a = intersectionFactorInH H i g) :=
-  test_treeVertexStabilizer_central_or_factor G H a
+  Internal.treeVertexStabilizer_central_or_factor G H a
 
 /-- Each nontrivial factor in the factor-only form is an intersection with a
 conjugate of one of the original free factors. -/
