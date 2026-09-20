@@ -38,14 +38,18 @@ variable (F : C ⥤ D)
 
 open Family
 
-/-! #### Proposition 5.1 : identifying the categorical and ring-theoretic dilatations
+/-! ## The corrected ring comparison
 
-`C := SingleObj A'` is "the category attached to `A'`" from §5.0.2 : a single object `•`, with
-`Hom(•,•) = A'` and composition = multiplication (`CategoryTheory.SingleObj`, already used above
-for Fact 5.2). A `Multicenter A'` (`{[Mᵢ,aᵢ]}ᵢ∈I`) corresponds exactly to a `Center (SingleObj A')`:
-`aᵢ` becomes the morphism `M.elem i : star ⟶ star`, and `Mᵢ` — an ideal, hence automatically
-closed under multiplication by *arbitrary* ring elements — becomes a sieve (`Sieve.ofIdeal`
-below), matching the paper's own identification `ObC = {•}` (§5.0.2). -/
+The one-object category `SingleObj A'` has the elements of the commutative ring `A'`
+as morphisms, with composition given by multiplication. A multicenter supplies a categorical
+center indexed by finitely supported exponent profiles `ν`: the denominator is `M.elem ^ ν`,
+and the numerator sieve comes from `M.LargeIdeal ^ ν`. Each enlarged ideal is
+`M.LargeIdeal i = M.ideal i + (M.elem i)`.
+
+The resulting dilatation is isomorphic to `SingleObj A'[M]` (Theorem 10.1 of the source).
+This replaces the naive single-index identification in the original Proposition 5.1;
+`NaiveCenterCounterexample` gives the explicit obstruction to that earlier statement.
+-/
 namespace Prop51
 
 open CategoryTheory Multicenter Multicenter.Dilatation
