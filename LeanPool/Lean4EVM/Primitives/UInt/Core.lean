@@ -427,6 +427,13 @@ theorem ofNat_toNat (value : α) : ofNat (toNat value) = value := by
 theorem toNat_lt_modulus (value : α) : toNat value < modulus width :=
   (FixedUInt.toBitVec value).isLt
 
+/-- Reduction modulo a nonzero word yields a residue representable at the same width. -/
+theorem toNat_ofNat_mod (n : ℕ) {value : α} (hvalue : value ≠ 0) :
+    toNat (ofNat (n % toNat value) : α) = n % toNat value := by
+  have hpositive : 0 < toNat value := Nat.pos_of_ne_zero fun h =>
+    hvalue (toNat_injective (h.trans toNat_zero.symm))
+  rw [toNat_ofNat, Nat.mod_eq_of_lt ((Nat.mod_lt n hpositive).trans (toNat_lt_modulus value))]
+
 /-- Checked natural construction succeeds exactly for representable values. -/
 theorem ofNatOpt_eq_some_iff {n : ℕ} {value : α} :
     ofNatOpt n = some value ↔ n < modulus width ∧ ofNat n = value := by

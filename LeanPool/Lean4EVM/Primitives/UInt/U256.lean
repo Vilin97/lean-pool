@@ -546,15 +546,8 @@ theorem toNat_addmod (a b modulus : U256) :
       if modulus = 0 then 0 else (a.toNat + b.toNat) % modulus.toNat := by
   by_cases h : modulus = 0
   · simp [addmod, h]
-  · simp only [addmod, h, ↓reduceIte, FixedUInt.toNat_ofNat]
-    rw [Nat.mod_eq_of_lt]
-    have hnonzero : modulus.toNat ≠ 0 := by
-      intro hzero
-      apply h
-      apply FixedUInt.toNat_injective
-      simpa using hzero
-    exact lt_trans (Nat.mod_lt _ (Nat.pos_of_ne_zero hnonzero))
-      (FixedUInt.toNat_lt_modulus modulus)
+  · simp only [addmod, h, ↓reduceIte]
+    exact FixedUInt.toNat_ofNat_mod _ h
 
 /-- Modular multiplication with modulus zero returns zero. -/
 @[simp]
@@ -567,15 +560,8 @@ theorem toNat_mulmod (a b modulus : U256) :
       if modulus = 0 then 0 else (a.toNat * b.toNat) % modulus.toNat := by
   by_cases h : modulus = 0
   · simp [mulmod, h]
-  · simp only [mulmod, h, ↓reduceIte, FixedUInt.toNat_ofNat]
-    rw [Nat.mod_eq_of_lt]
-    have hnonzero : modulus.toNat ≠ 0 := by
-      intro hzero
-      apply h
-      apply FixedUInt.toNat_injective
-      simpa using hzero
-    exact lt_trans (Nat.mod_lt _ (Nat.pos_of_ne_zero hnonzero))
-      (FixedUInt.toNat_lt_modulus modulus)
+  · simp only [mulmod, h, ↓reduceIte]
+    exact FixedUInt.toNat_ofNat_mod _ h
 
 /-- `BYTE` returns zero for an index outside the 32-byte EVM word. -/
 @[simp]
