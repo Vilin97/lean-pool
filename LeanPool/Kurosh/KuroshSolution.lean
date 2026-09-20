@@ -27,6 +27,26 @@ universe u v
 
 namespace GraphCoveringTheory.KuroshStatement
 
+/-- Transport each factor of an indexed free product along an isomorphism. -/
+private def coprodEquiv {ι : Type*} {M N : ι → Type*}
+    [∀ i, Monoid (M i)] [∀ i, Monoid (N i)] (e : ∀ i, M i ≃* N i) :
+    Monoid.CoprodI M ≃* Monoid.CoprodI N :=
+  MonoidHom.toMulEquiv
+    (Monoid.CoprodI.lift fun i => Monoid.CoprodI.of.comp (e i).toMonoidHom)
+    (Monoid.CoprodI.lift fun i => Monoid.CoprodI.of.comp (e i).symm.toMonoidHom)
+    (by
+      apply Monoid.CoprodI.ext_hom
+      intro i
+      ext x
+      simp only [MonoidHom.comp_apply, Monoid.CoprodI.lift_of, MonoidHom.id_apply,
+        MulEquiv.coe_toMonoidHom, MulEquiv.symm_apply_apply])
+    (by
+      apply Monoid.CoprodI.ext_hom
+      intro i
+      ext x
+      simp only [MonoidHom.comp_apply, Monoid.CoprodI.lift_of, MonoidHom.id_apply,
+        MulEquiv.coe_toMonoidHom, MulEquiv.apply_symm_apply])
+
 /-- The group free product expressed using Mathlib's indexed monoid coproduct. -/
 abbrev FreeProduct {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] := Monoid.CoprodI G
@@ -152,51 +172,8 @@ theorem kurosh_decomposition_with_inclusions {ι : Type v}
           ULift.{max (u + 1) (v + 1)}
             (GraphCoveringTheory.Kurosh.KuroshFreePart G H)
         exact freeEquiv
-  let forward : Product G H A X →*
-      GraphCoveringTheory.Kurosh.KuroshActiveProduct G H :=
-    Monoid.CoprodI.lift (fun q =>
-      (Monoid.CoprodI.of :
-        GraphCoveringTheory.Kurosh.KuroshActiveComponent G H q →*
-          GraphCoveringTheory.Kurosh.KuroshActiveProduct G H).comp
-        (componentEquiv q).toMonoidHom)
-  let backward : GraphCoveringTheory.Kurosh.KuroshActiveProduct G H →*
-      Product G H A X :=
-    Monoid.CoprodI.lift (fun q =>
-      (Monoid.CoprodI.of : Component G H A X q →* Product G H A X).comp
-        (componentEquiv q).symm.toMonoidHom)
-  have hforward : backward.comp forward = MonoidHom.id (Product G H A X) := by
-    apply Monoid.CoprodI.ext_hom
-    intro q
-    apply MonoidHom.ext
-    intro x
-    change Monoid.CoprodI.of
-        ((componentEquiv q).symm ((componentEquiv q) x)) =
-      Monoid.CoprodI.of x
-    rw [MulEquiv.symm_apply_apply]
-  have hbackward : forward.comp backward =
-      MonoidHom.id (GraphCoveringTheory.Kurosh.KuroshActiveProduct G H) := by
-    apply Monoid.CoprodI.ext_hom
-    intro q
-    apply MonoidHom.ext
-    intro x
-    change Monoid.CoprodI.of
-        ((componentEquiv q) ((componentEquiv q).symm x)) =
-      Monoid.CoprodI.of x
-    rw [MulEquiv.apply_symm_apply]
   let productEquiv : Product G H A X ≃*
-      GraphCoveringTheory.Kurosh.KuroshActiveProduct G H :=
-    { toFun := forward
-      invFun := backward
-      left_inv := by
-        intro z
-        exact congrArg (fun f : Product G H A X →* Product G H A X => f z)
-          hforward
-      right_inv := by
-        intro z
-        exact congrArg
-          (fun f : GraphCoveringTheory.Kurosh.KuroshActiveProduct G H →*
-            GraphCoveringTheory.Kurosh.KuroshActiveProduct G H => f z) hbackward
-      map_mul' := forward.map_mul }
+      GraphCoveringTheory.Kurosh.KuroshActiveProduct G H := coprodEquiv componentEquiv
   let activeEquiv := GraphCoveringTheory.Kurosh.kuroshActiveEquivH G H
   let freePartMap :
       ULift.{max (u + 1) (v + 1)} (FreeGroup X) →* H :=

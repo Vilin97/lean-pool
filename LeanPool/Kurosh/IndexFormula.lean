@@ -57,21 +57,8 @@ def coverGeneratorTotalEquiv (α : Type u) (A : Type u)
 def freeActionGeneratorTotalEquiv (α : Type u) (A : Type u)
     [MulAction (FreeGroup α) A] :
     @Quiver.Total (CoverVertex α A)
-      (freeActionGroupoidIsFree α A).quiverGenerators ≃ A × α where
-  toFun e := ⟨e.left.back, e.hom.val⟩
-  invFun e :=
-    ⟨(e.1 : CoverVertex α A),
-      ((FreeGroup.of e.2 • e.1 : A) : CoverVertex α A),
-      ⟨e.2, rfl⟩⟩
-  left_inv e := by
-    rcases e with ⟨x, y, ⟨e, h⟩⟩
-    cases x with | mk x
-    cases y with | mk y
-    cases h
-    rfl
-  right_inv e := by
-    rcases e with ⟨a, e⟩
-    rfl
+      (freeActionGroupoidIsFree α A).quiverGenerators ≃ A × α :=
+  coverGeneratorTotalEquiv α A
 
 /-- The geodesic spanning tree in the symmetrified generating quiver, rooted at `r`. -/
 noncomputable def freeGroupoidTree (G : Type u) [Groupoid G]
