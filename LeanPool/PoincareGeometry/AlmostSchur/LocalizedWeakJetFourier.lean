@@ -28,7 +28,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 theorem memLp_compact_coefficient_mul {u a : E → ℝ}
     (hu : MemLp u 2 volume) (ha : Continuous a) (hca : HasCompactSupport a) :
     MemLp (fun x => a x * u x) 2 volume :=
-  hu.mul' (ha.memLp_top_of_hasCompactSupport hca volume)
+  (ha.memLp_top_of_hasCompactSupport hca volume).mul' hu
 
 /-- The same localized field is L¹, by Cauchy--Schwarz. -/
 theorem integrable_compact_coefficient_mul {u a : E → ℝ}

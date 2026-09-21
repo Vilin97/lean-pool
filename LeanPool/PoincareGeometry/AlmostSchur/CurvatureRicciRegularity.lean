@@ -97,9 +97,11 @@ theorem contMDiffAt_ricciTraceEndomorphism_one
         y (ricciTraceEndomorphism cov Y Z y)) x := by
   apply contMDiffAt_endomorphism_of_localFrame 1 _ x (Module.finBasis ℝ E)
   intro i
-  exact contMDiffAt_curvatureTensor_apply_one cov hm ht
+  have hfield := contMDiffAt_curvatureTensor_apply_one cov hm ht
     (contMDiffAt_localFrame_of_mem 3 (trivializationAt E TM x) (Module.finBasis ℝ E) i
       (mem_baseSet_trivializationAt E TM x)) hY hZ
+  simpa only [ricciTraceEndomorphism, LinearMap.coe_toContinuousLinearMap',
+    CovariantDerivative.ricciEndomorphism_apply] using hfield
 
 /-- Ricci paired with locally C³ fields is a genuine C¹ scalar function. -/
 theorem contMDiffAt_ricciCurvature_apply_one

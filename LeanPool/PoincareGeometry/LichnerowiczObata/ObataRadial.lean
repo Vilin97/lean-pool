@@ -51,7 +51,8 @@ theorem gradient_obataRadial {K a : ℝ} {f : M → ℝ} {x : M}
         gradient (I := I) f x := by
   have hd := ((Real.hasDerivAt_arccos hm hp).comp (f x)
     ((hasDerivAt_id (f x)).div_const a)).div_const (Real.sqrt K)
-  exact gradient_comp_hasDerivAt hf hd
+  have hgradient := gradient_comp_hasDerivAt hf hd
+  exact hgradient
 
 /-- The arccosine radial function satisfies the eikonal equation on regular levels. -/
 theorem norm_gradient_obataRadial {K a : ℝ} (hK : 0 < K) (ha : 0 < a)

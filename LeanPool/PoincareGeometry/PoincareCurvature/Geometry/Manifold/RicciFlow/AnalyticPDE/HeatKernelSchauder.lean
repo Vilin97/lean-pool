@@ -792,14 +792,19 @@ lemma aestronglyMeasurable_gradient_heatKernelND_convolution_time
       (heatKernelND (t - s) (x - y) * (-(x - y) k / (2 * (t - s)))) * q s y) := by
   have hK : Measurable (fun p : ℝ × (Fin n → ℝ) =>
       heatKernelND (t - p.1) (x - p.2)) := by
-    exact measurable_uncurry_heatKernelND.comp
-      ((measurable_const.sub measurable_fst).prodMk
-        (measurable_const.sub measurable_snd))
+    have hmap : Measurable (fun p : ℝ × (Fin n → ℝ) => (t - p.1, x - p.2)) :=
+      (measurable_const.sub measurable_fst).prodMk (measurable_const.sub measurable_snd)
+    have hkernel := (measurable_uncurry_heatKernelND (n := n)).comp hmap
+    exact hkernel
   have hc : Measurable (fun p : ℝ × (Fin n → ℝ) =>
-      (-(x - p.2) k / (2 * (t - p.1)))) := by fun_prop
+      (-(x - p.2) k / (2 * (t - p.1)))) := by
+    have hcoord : Measurable (fun p : ℝ × (Fin n → ℝ) => (x - p.2) k) :=
+      measurable_const.sub ((measurable_pi_apply k).comp measurable_snd)
+    exact hcoord.neg.div (measurable_const.mul (measurable_const.sub measurable_fst))
   have hQ : Measurable (fun p : ℝ × (Fin n → ℝ) => q p.1 p.2) := by
-    exact (ContinuousEval.continuous_eval.comp
-      ((hq.comp continuous_fst).prodMk continuous_snd)).measurable
+    have heval : Continuous (fun p : ℝ × (Fin n → ℝ) => q p.1 p.2) :=
+      (hq.comp continuous_fst).eval continuous_snd
+    exact heval.measurable
   have hG : Measurable (fun p : ℝ × (Fin n → ℝ) =>
       (heatKernelND (t - p.1) (x - p.2) * (-(x - p.2) k / (2 * (t - p.1)))) * q p.1 p.2) :=
     (hK.mul hc).mul hQ
@@ -817,14 +822,22 @@ lemma aestronglyMeasurable_hessian_heatKernelND_convolution_time
         ((x - y) k ^ 2 / (4 * (t - s) ^ 2) - 1 / (2 * (t - s)))) * q s y) := by
   have hK : Measurable (fun p : ℝ × (Fin n → ℝ) =>
       heatKernelND (t - p.1) (x - p.2)) := by
-    exact measurable_uncurry_heatKernelND.comp
-      ((measurable_const.sub measurable_fst).prodMk
-        (measurable_const.sub measurable_snd))
+    have hmap : Measurable (fun p : ℝ × (Fin n → ℝ) => (t - p.1, x - p.2)) :=
+      (measurable_const.sub measurable_fst).prodMk (measurable_const.sub measurable_snd)
+    have hkernel := (measurable_uncurry_heatKernelND (n := n)).comp hmap
+    exact hkernel
   have hc : Measurable (fun p : ℝ × (Fin n → ℝ) =>
-      ((x - p.2) k ^ 2 / (4 * (t - p.1) ^ 2) - 1 / (2 * (t - p.1)))) := by fun_prop
+      ((x - p.2) k ^ 2 / (4 * (t - p.1) ^ 2) - 1 / (2 * (t - p.1)))) := by
+    have hcoord : Measurable (fun p : ℝ × (Fin n → ℝ) => (x - p.2) k) :=
+      measurable_const.sub ((measurable_pi_apply k).comp measurable_snd)
+    have htime : Measurable (fun p : ℝ × (Fin n → ℝ) => t - p.1) :=
+      measurable_const.sub measurable_fst
+    exact ((hcoord.pow_const 2).div (measurable_const.mul (htime.pow_const 2))).sub
+      (measurable_const.div (measurable_const.mul htime))
   have hQ : Measurable (fun p : ℝ × (Fin n → ℝ) => q p.1 p.2) := by
-    exact (ContinuousEval.continuous_eval.comp
-      ((hq.comp continuous_fst).prodMk continuous_snd)).measurable
+    have heval : Continuous (fun p : ℝ × (Fin n → ℝ) => q p.1 p.2) :=
+      (hq.comp continuous_fst).eval continuous_snd
+    exact heval.measurable
   have hG : Measurable (fun p : ℝ × (Fin n → ℝ) =>
       (heatKernelND (t - p.1) (x - p.2) *
         ((x - p.2) k ^ 2 / (4 * (t - p.1) ^ 2) - 1 / (2 * (t - p.1)))) * q p.1 p.2) :=

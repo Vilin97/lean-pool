@@ -445,7 +445,7 @@ private lemma extDerivFun_apply_eq_fderivWithin_writtenInExtChartAt_mpullbackWit
     have hx : (extChartAt I x).symm ((extChartAt I x) x) = x := by
       simp
     rw [hx]
-      exact mfderivWithin_extChartAt_symm_inverse_apply (I := I) (x := x) (v := X x)
+    exact mfderivWithin_extChartAt_symm_inverse_apply (I := I) (x := x) (v := X x)
   rw [hmp]
   change (NormedSpace.fromTangentSpace (g x)) ((mfderiv% g x) (X x)) = _
   exact congrArg (fun L => (NormedSpace.fromTangentSpace (g x)) (L (X x))) hg.mfderiv
@@ -478,8 +478,13 @@ private lemma extDerivFun_apply_eq_fderivWithin_writtenInExtChartAt_mpullbackWit
   have hderiv :
       fderivWithin ℝ (writtenInExtChartAt I 𝓘(ℝ) x g) (Set.range I) z =
         (((mfderiv% g y).comp (mfderiv[Set.range I] φ.symm z)) : E →L[ℝ] ℝ) := by
-    simpa [writtenInExtChartAt, φ, z] using
-      hcomp.hasFDerivWithinAt.fderivWithin (I.uniqueDiffOn.uniqueDiffWithinAt hz_range)
+    let D : E →L[ℝ] ℝ := (mfderiv% g y).comp (mfderiv[Set.range I] φ.symm z)
+    have hcomp' : HasMFDerivWithinAt 𝓘(ℝ, E) 𝓘(ℝ) (g ∘ φ.symm) (Set.range I) z D :=
+      hcomp
+    have hfd : HasFDerivWithinAt (g ∘ φ.symm) D (Set.range I) z :=
+      hcomp'.hasFDerivWithinAt
+    have hvalue := hfd.fderivWithin (I.uniqueDiffOn.uniqueDiffWithinAt hz_range)
+    simpa [writtenInExtChartAt, φ, D, chartAt_self_eq] using hvalue
   have hmp :
       VectorField.mpullbackWithin 𝓘(ℝ, E) I φ.symm X (Set.range I) z =
         (mfderiv[Set.range I] φ.symm z).inverse (X y) := by
@@ -847,9 +852,9 @@ theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
     extDerivFun_lieBracket_commutator (I := I) (f := f) (X := X) (Y := Y)
       (x := x) hinnerσ hX hY
   rw [hDXY, hDYX, hDbr] at hcomm
-  abel_nf at hcomm
-  simpa [CovariantDerivative.curvatureAux, sub_eq_add_neg, inner_add_left, inner_add_right,
-    inner_sub_left, inner_sub_right, add_assoc, add_left_comm, add_comm] using hcomm
+  simp only [CovariantDerivative.curvatureAux, Pi.sub_apply, inner_add_left, inner_add_right,
+    inner_sub_left, inner_sub_right]
+  linear_combination hcomm
 
 private lemma along_add_right_of_contMDiff
     {X : Π x : M, TM x} {σ τ : Π x : M, V x}
