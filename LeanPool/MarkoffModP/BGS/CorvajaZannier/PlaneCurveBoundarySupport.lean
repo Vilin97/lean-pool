@@ -32,13 +32,15 @@ open IsDedekindDomain Multiplicative WithZero
 
 namespace BGS.CorvajaZannier
 
+universe u v
+
 noncomputable section
 
 
 attribute [local instance high] Module.Free.of_divisionRing
 
-variable (K : Type*) [Field K] [DecidableEq K] [DecidableEq (RatFunc K)]
-variable (L : Type*) [Field L] [Algebra (RatFunc K) L]
+variable (K : Type u) [Field K] [DecidableEq K] [DecidableEq (RatFunc K)]
+variable (L : Type v) [Field L] [Algebra (RatFunc K) L]
   [FiniteDimensional (RatFunc K) L]
   [Algebra.IsSeparable (RatFunc K) L]
 
@@ -326,6 +328,28 @@ private theorem finrank_eq_of_ringEquiv_of_finite_base
     ← Module.natCard_eq_pow_finrank]
   exact Nat.card_congr e.toEquiv
 
+/-- Equal normalized valuations have residue fields of the same degree over a finite base. -/
+private theorem residueFinrank_eq_of_valuation_eq
+    {k R S F : Type*} [Field k] [Fintype k]
+    [CommRing R] [IsDedekindDomain R] [CommRing S] [IsDedekindDomain S]
+    [Field F] [Algebra R F] [IsFractionRing R F]
+    [Algebra S F] [IsFractionRing S F]
+    (q : HeightOneSpectrum R) (r : HeightOneSpectrum S)
+    [Algebra k q.asIdeal.ResidueField] [Algebra k r.asIdeal.ResidueField]
+    [Finite r.asIdeal.ResidueField]
+    (h : r.valuation F = q.valuation F) :
+    Module.finrank k r.asIdeal.ResidueField = Module.finrank k q.asIdeal.ResidueField := by
+  let e := heightOneSpectrumResidueFieldRingEquivOfComapEq q r (RingEquiv.refl F) (by
+    rw [IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring,
+      IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
+    ext z
+    change r.valuation F z ≤ 1 ↔ q.valuation F z ≤ 1
+    rw [h])
+  let : Finite q.asIdeal.ResidueField := Finite.of_injective e e.injective
+  let : FiniteDimensional k r.asIdeal.ResidueField := inferInstance
+  let : FiniteDimensional k q.asIdeal.ResidueField := inferInstance
+  exact (finrank_eq_of_ringEquiv_of_finite_base e).symm
+
 section ValuationCenter
 
 variable {R S F : Type*} [CommRing R] [IsDomain R]
@@ -482,7 +506,8 @@ private theorem probe_finiteExtensionPlaceDegree_inl_eq_finrank_residue
   letI : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
   letI hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver p.asIdeal q.asIdeal
-  letI : Localization.AtPrime.IsLiesOverAlgebra p.asIdeal q.asIdeal := ⟨rfl⟩
+  have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
+      (Localization.AtPrime q.asIdeal) := inferInstance
   rw [finiteExtensionPlaceDegree, Ideal.inertiaDeg_eq p.asIdeal q.asIdeal]
   rw [← probe_ratFuncFinitePlaceDegree_eq_finrank_residue K L p]
   rw [mul_comm, Module.finrank_mul_finrank]
@@ -493,7 +518,8 @@ private theorem probe_finiteExtensionPlaceDegree_inr_eq_finrank_residue
       Module.finrank K P.1.ResidueField := by
   let p := (ratFuncInfinityPlace K).asIdeal
   letI hLocalAlg := Localization.AtPrime.algebraOfLiesOver p P.1
-  letI : Localization.AtPrime.IsLiesOverAlgebra p P.1 := ⟨rfl⟩
+  have : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
+      (Localization.AtPrime P.1) := inferInstance
   letI : Algebra p.ResidueField P.1.ResidueField :=
     IsLocalRing.ResidueField.instAlgebra
   letI : IsScalarTower K p.ResidueField P.1.ResidueField := inferInstance
@@ -509,349 +535,178 @@ private theorem probe_finiteExtensionPlaceDegree_inr_eq_finrank_residue
     _ = Module.finrank K P.1.ResidueField :=
       Module.finrank_mul_finrank K p.ResidueField P.1.ResidueField
 
-end
+/-- The place degree is determined by any finite residue field with the same valuation. -/
+private theorem probe_placeDegree_eq_of_valuation_eq [Fintype K]
+    {S : Type*} [CommRing S] [IsDedekindDomain S]
+    [Algebra S L] [IsFractionRing S L]
+    (w : FiniteExtensionPlace K L) (q : HeightOneSpectrum S)
+    [Algebra K q.asIdeal.ResidueField] [Finite q.asIdeal.ResidueField]
+    (hq : q.valuation L = probeFiniteExtensionPlaceValuation K L w) :
+    finiteExtensionPlaceDegree K L w = Module.finrank K q.asIdeal.ResidueField := by
+  cases w with
+  | inl r =>
+      rw [probe_finiteExtensionPlaceDegree_inl_eq_finrank_residue K L r]
+      exact (residueFinrank_eq_of_valuation_eq (k := K) r q hq).symm
+  | inr P =>
+      rw [probe_finiteExtensionPlaceDegree_inr_eq_finrank_residue K L P]
+      exact (residueFinrank_eq_of_valuation_eq (k := K)
+        (primeOverHeightOne (ratFuncInfinityPlace K) P) q hq).symm
 
-noncomputable section
+private theorem weightedSum_le_of_injective
+    {α β : Type*} [DecidableEq α] [DecidableEq β]
+    (source : Finset α) (target : Finset β) (map : ↥source → β)
+    (sourceWeight : α → ℕ) (targetWeight : β → ℕ)
+    (injective : Function.Injective map)
+    (weight : ∀ x, targetWeight (map x) = sourceWeight x)
+    (membership : ∀ x, map x ∈ target) :
+    ∑ x ∈ source, sourceWeight x ≤ ∑ y ∈ target, targetWeight y := by
+  have imageSubset : source.attach.image map ⊆ target := by
+    intro y hy
+    obtain ⟨x, _, rfl⟩ := Finset.mem_image.mp hy
+    exact membership x
+  have imageSum : ∑ y ∈ source.attach.image map, targetWeight y =
+      ∑ x ∈ source, sourceWeight x := by
+    rw [Finset.sum_image]
+    · simp only [weight, Finset.sum_attach]
+    · intro x hx y hy hxy
+      exact injective hxy
+  rw [← imageSum]
+  exact Finset.sum_le_sum_of_subset imageSubset
 
-section PlaneBoundaryProbe
+private theorem finitePlace_of_valuation_positive
+    [Algebra K L] [IsScalarTower K (RatFunc K) L]
+    (y : L) (hy0 : y ≠ 0) (hpolyX : algebraMap K[X] L Polynomial.X = y)
+    (v : Valuation L (WithZero (Multiplicative ℤ)))
+    (hvsurj : Function.Surjective v)
+    (hvconst : ∀ c : K, v (algebraMap K L c) ≤ 1)
+    (hvylt : v y < 1) :
+    ∃ q : FiniteExtensionFinitePlace K L, q.valuation L = v := by
+  let V := v.valuationSubring
+  have hyV : y ∈ V := by
+    change v y ≤ 1
+    exact le_of_lt hvylt
+  have hconstV : ∀ c : K, algebraMap K L c ∈ V := by
+    intro c
+    change v (algebraMap K L c) ≤ 1
+    exact hvconst c
+  have hbase : ∀ P : K[X], algebraMap K[X] L P ∈ V := by
+    intro P
+    induction P using Polynomial.induction_on' with
+    | add P Q hP hQ =>
+        rw [map_add]
+        exact add_mem hP hQ
+    | monomial n c =>
+        rw [← Polynomial.C_mul_X_pow_eq_monomial, map_mul, map_pow,
+          hpolyX]
+        have hC : algebraMap K[X] L (Polynomial.C c) =
+            algebraMap K L c := by
+          change algebraMap (RatFunc K) L
+            (algebraMap K[X] (RatFunc K) (Polynomial.C c)) =
+              algebraMap K L c
+          rw [show algebraMap K[X] (RatFunc K) (Polynomial.C c) =
+            algebraMap K (RatFunc K) c by simp,
+            IsScalarTower.algebraMap_apply K (RatFunc K) L]
+        rw [hC]
+        exact mul_mem (hconstV c) (pow_mem hyV n)
+  have hyNonunit : algebraMap K[X] L Polynomial.X ∈ V.nonunits := by
+    rw [hpolyX, ValuationSubring.mem_nonunits_iff_exists_mem_maximalIdeal]
+    exact ⟨hyV, (Valuation.mem_maximalIdeal_iff (v := v)).mpr hvylt⟩
+  have hcenterNe : valuationCenterIdeal
+      (S := RatFuncFiniteIntegralClosure K L) V hbase ≠ ⊥ :=
+    valuationCenterIdeal_ne_bot_of_mem_nonunits
+      (S := RatFuncFiniteIntegralClosure K L) V hbase
+      Polynomial.X (by
+        rw [hpolyX]
+        exact hy0) hyNonunit
+  let q : FiniteExtensionFinitePlace K L :=
+    valuationCenterPlace (S := RatFuncFiniteIntegralClosure K L)
+      V hbase hcenterNe
+  have hvNontrivial : v.IsNontrivial :=
+    (Valuation.isNontrivial_iff_exists_lt_one v).mpr
+      ⟨y, hy0, hvylt⟩
+  have hVne : V ≠ ⊤ := by
+    rw [ne_eq, Valuation.valuationSubring_eq_top_iff]
+    exact not_not_intro hvNontrivial
+  have hsubring :
+      IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime L q = V :=
+    valuationSubringAt_valuationCenterPlace_eq
+      (S := RatFuncFiniteIntegralClosure K L)
+      V hbase hcenterNe hVne
+  have hequiv : (q.valuation L).IsEquiv v := by
+    rw [Valuation.isEquiv_iff_valuationSubring,
+      ← IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
+    exact hsubring
+  have hqval : q.valuation L = v :=
+    valuation_eq_of_isEquiv_of_surjective hequiv
+      (q.valuation_surjective L) hvsurj
+  exact ⟨q, hqval⟩
 
 
-variable {K₀ : Type*} [Field K₀] [Fintype K₀] [DecidableEq K₀]
-  [DecidableEq (RatFunc K₀)]
-
-theorem finiteExtensionPositiveDegree_planeCurveSecondCoordinate_le_degreeOf_first
-    {f : MvPolynomial (Fin 2) K₀} (hf : Irreducible f)
-    (hpartialFirst : MvPolynomial.pderiv 0 f ≠ 0)
-    (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0) :
-    letI := planeCurveCoordinateRing_isDomain hf
-    let hx := firstCoordinate_transcendental hf
-      (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI := finiteDimensional_planeCurveFunctionField_over_ratFunc
-      hf hpartialSecond
-    letI := separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    finiteExtensionPositiveDegree K₀ (PlaneCurveFunctionField f)
-        (planeCurveFunction f 1) ≤ MvPolynomial.degreeOf 0 f := by
+/-- An injective, degree-preserving transport of positive places bounds the positive degree. -/
+private theorem positiveDegree_le_of_valuation_transport
+    [Algebra K L] [IsScalarTower K (RatFunc K) L]
+    {W : Type*} (divisor : W →₀ ℤ) (degree₁ : W → ℕ)
+    (v₁ : W → Valuation L (WithZero (Multiplicative ℤ)))
+    (y : L) (hy0 : y ≠ 0) (hpolyX : algebraMap K[X] L Polynomial.X = y)
+    (hv₁surj : ∀ w, Function.Surjective (v₁ w))
+    (hv₁y : ∀ w, v₁ w y = exp (-divisor w))
+    (hv₁const : ∀ w c, v₁ w (algebraMap K L c) ≤ 1)
+    (hv₁inj : Function.Injective v₁)
+    (hdegree : ∀ w (q : FiniteExtensionFinitePlace K L), q.valuation L = v₁ w →
+      finiteExtensionPlaceDegree K L (.inl q) = degree₁ w) :
+    ∑ w ∈ divisor.support.filter (fun w => 0 < divisor w),
+      (divisor w).toNat * degree₁ w ≤ finiteExtensionPositiveDegree K L y := by
   classical
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
-    planeCurveCoordinateRing_isDomain hf
-  let L₀ := PlaneCurveFunctionField f
-  let x : L₀ := planeCurveFunction f 0
-  let y : L₀ := planeCurveFunction f 1
-  have hxTrans : Transcendental K₀ x :=
-    firstCoordinate_transcendental hf
-      (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  have hyTrans : Transcendental K₀ y :=
-    secondCoordinate_transcendental hf
-      (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
-  have hy0 : y ≠ 0 := by
-    intro h
-    apply hyTrans
-    rw [h]
-    exact isAlgebraic_zero
-  let firstAlg : Algebra (RatFunc K₀) L₀ :=
-    planeCurveFirstCoordinateRatFuncAlgebra f hxTrans
-  letI : Algebra (RatFunc K₀) L₀ := firstAlg
-  letI : FiniteDimensional (RatFunc K₀) L₀ :=
-    finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K₀) L₀ :=
-    separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : IsScalarTower K₀ (RatFunc K₀) L₀ := by
-    apply IsScalarTower.of_algebraMap_eq'
-    ext c
-    change algebraMap K₀ L₀ c =
-      ratFuncSpecialization x hxTrans (RatFunc.C c)
-    have h := DFunLike.congr_fun
-      (ratFuncSpecialization_comp_polynomial_algebraMap x hxTrans)
-      (Polynomial.C c)
-    simpa using h.symm
-  letI : Algebra K₀[X] L₀ :=
-    RingHom.toAlgebra ((algebraMap (RatFunc K₀) L₀).comp
-      (algebraMap K₀[X] (RatFunc K₀)))
-  letI : IsScalarTower K₀[X] (RatFunc K₀) L₀ :=
-    .of_algebraMap_eq' rfl
-  letI : Algebra K₀ (RatFuncFiniteIntegralClosure K₀ L₀) :=
-    RingHom.toAlgebra
-      ((algebraMap K₀[X] (RatFuncFiniteIntegralClosure K₀ L₀)).comp
-        (algebraMap K₀ K₀[X]))
-  letI : IsScalarTower K₀ K₀[X]
-      (RatFuncFiniteIntegralClosure K₀ L₀) :=
-    .of_algebraMap_eq' rfl
-  letI : Algebra K₀ (RatFuncInfinityIntegers K₀) :=
-    (ratFuncInfinityConstantRingHom K₀).toAlgebra
-  letI : IsScalarTower K₀ (RatFuncInfinityIntegers K₀) (RatFunc K₀) :=
-    .of_algebraMap_eq' rfl
-  letI : Algebra K₀ (RatFuncInfinityIntegralClosure K₀ L₀) :=
-    RingHom.toAlgebra
-      ((algebraMap (RatFuncInfinityIntegers K₀)
-        (RatFuncInfinityIntegralClosure K₀ L₀)).comp
-          (algebraMap K₀ (RatFuncInfinityIntegers K₀)))
-  letI : IsScalarTower K₀ (RatFuncInfinityIntegers K₀)
-      (RatFuncInfinityIntegralClosure K₀ L₀) :=
-    .of_algebraMap_eq' rfl
-  letI : IsDedekindDomain (RatFuncFiniteIntegralClosure K₀ L₀) :=
-    integralClosure.isDedekindDomain K₀[X] (RatFunc K₀) L₀
-  letI : IsFractionRing (RatFuncFiniteIntegralClosure K₀ L₀) L₀ :=
-    integralClosure.isFractionRing_of_finite_extension (RatFunc K₀) L₀
-  letI : IsDedekindDomain (RatFuncInfinityIntegralClosure K₀ L₀) :=
-    IsIntegralClosure.isDedekindDomain
-      (RatFuncInfinityIntegers K₀) (RatFunc K₀) L₀
-      (RatFuncInfinityIntegralClosure K₀ L₀)
-  letI : IsFractionRing (RatFuncInfinityIntegralClosure K₀ L₀) L₀ :=
-    integralClosure.isFractionRing_of_finite_extension (RatFunc K₀) L₀
-  let W₁ := FiniteExtensionPlace K₀ L₀
-  let divisor₁ : W₁ →₀ ℤ :=
-    finiteExtensionPrincipalDivisor K₀ L₀ y
-  let D₁ : W₁ → ℤ := fun w =>
-    divisor₁ w
-  let S₁ : Finset W₁ := divisor₁.support.filter
-    (fun w => 0 < D₁ w)
-  let degree₁ : W₁ → ℕ := fun w =>
-    finiteExtensionPlaceDegree K₀ L₀ w
-  let infinityPrime₁ := fun P : FiniteExtensionInfinityPlace K₀ L₀ =>
-    primeOverHeightOne (ratFuncInfinityPlace K₀) P
-  have hdegree₁ : ∀ w : W₁, degree₁ w =
-      match w with
-      | .inl q => Module.finrank K₀ q.asIdeal.ResidueField
-      | .inr P => Module.finrank K₀ P.1.ResidueField := by
-    intro w
-    cases w with
-    | inl q =>
-        exact probe_finiteExtensionPlaceDegree_inl_eq_finrank_residue
-          K₀ L₀ q
-    | inr P =>
-        exact probe_finiteExtensionPlaceDegree_inr_eq_finrank_residue
-          K₀ L₀ P
-  let v₁ : W₁ → Valuation L₀ (WithZero (Multiplicative ℤ)) :=
-    probeFiniteExtensionPlaceValuation K₀ L₀
-  have hv₁surj : ∀ w : W₁, Function.Surjective (v₁ w) := by
-    intro w
-    exact probeFiniteExtensionPlaceValuation_surjective K₀ L₀ w
-  have hv₁y : ∀ w : W₁,
-      v₁ w y = exp (-D₁ w) := by
-    intro w
-    exact probeFiniteExtensionPlaceValuation_eq_exp_neg_order
-      K₀ L₀ w y hy0
-  have hv₁const : ∀ (w : W₁) (c : K₀),
-      v₁ w (algebraMap K₀ L₀ c) ≤ 1 := by
-    intro w c
-    exact (by
-      change probeFiniteExtensionPlaceValuation K₀ L₀ w
-        (algebraMap K₀ L₀ c) ≤ 1
-      cases w with
-      | inl q =>
-          have hrepr : algebraMap K₀ L₀ c =
-              algebraMap (RatFuncFiniteIntegralClosure K₀ L₀) L₀
-                (algebraMap K₀
-                  (RatFuncFiniteIntegralClosure K₀ L₀) c) := by
-            rw [IsScalarTower.algebraMap_apply K₀ (RatFunc K₀) L₀]
-            rfl
-          rw [hrepr]
-          exact q.valuation_le_one _
-      | inr P =>
-          have hrepr : algebraMap K₀ L₀ c =
-              algebraMap (RatFuncInfinityIntegralClosure K₀ L₀) L₀
-                (algebraMap K₀
-                  (RatFuncInfinityIntegralClosure K₀ L₀) c) := by
-            rw [IsScalarTower.algebraMap_apply K₀ (RatFunc K₀) L₀]
-            rfl
-          rw [hrepr]
-          exact (primeOverHeightOne
-            (ratFuncInfinityPlace K₀) P).valuation_le_one _)
-  have hv₁inj : Function.Injective v₁ := by
-    change Function.Injective
-      (probeFiniteExtensionPlaceValuation K₀ L₀)
-    exact probeFiniteExtensionPlaceValuation_injective K₀ L₀
-  let secondAlg : Algebra (RatFunc K₀) L₀ :=
-    planeCurveSecondCoordinateRatFuncAlgebra f hyTrans
-  letI : Algebra (RatFunc K₀) L₀ := secondAlg
-  letI : FiniteDimensional (RatFunc K₀) L₀ :=
-    finiteDimensional_planeCurveFunctionField_over_secondRatFunc
-      hf hpartialFirst
-  letI : Algebra.IsSeparable (RatFunc K₀) L₀ :=
-    separable_planeCurveFunctionField_over_secondRatFunc hf hpartialFirst
-  letI : IsScalarTower K₀ (RatFunc K₀) L₀ := by
-    apply IsScalarTower.of_algebraMap_eq'
-    ext c
-    change algebraMap K₀ L₀ c =
-      ratFuncSpecialization y hyTrans (RatFunc.C c)
-    have h := DFunLike.congr_fun
-      (ratFuncSpecialization_comp_polynomial_algebraMap y hyTrans)
-      (Polynomial.C c)
-    simpa using h.symm
-  letI : Algebra K₀[X] L₀ :=
-    RingHom.toAlgebra ((algebraMap (RatFunc K₀) L₀).comp
-      (algebraMap K₀[X] (RatFunc K₀)))
-  letI : IsScalarTower K₀[X] (RatFunc K₀) L₀ :=
-    .of_algebraMap_eq' rfl
-  letI : Algebra K₀ (RatFuncFiniteIntegralClosure K₀ L₀) :=
-    RingHom.toAlgebra
-      ((algebraMap K₀[X] (RatFuncFiniteIntegralClosure K₀ L₀)).comp
-        (algebraMap K₀ K₀[X]))
-  letI : IsScalarTower K₀ K₀[X]
-      (RatFuncFiniteIntegralClosure K₀ L₀) :=
-    .of_algebraMap_eq' rfl
-  letI : IsDedekindDomain (RatFuncFiniteIntegralClosure K₀ L₀) :=
-    integralClosure.isDedekindDomain K₀[X] (RatFunc K₀) L₀
-  letI : IsFractionRing (RatFuncFiniteIntegralClosure K₀ L₀) L₀ :=
-    integralClosure.isFractionRing_of_finite_extension (RatFunc K₀) L₀
-  have hpolyX : algebraMap K₀[X] L₀ Polynomial.X = y := by
-    change ratFuncSpecialization y hyTrans RatFunc.X = y
-    simp [ratFuncSpecialization, RatFunc.algEquivOfTranscendental_X]
-  have hcenter : ∀ (w : W₁), 0 < D₁ w →
-      ∃ q : FiniteExtensionFinitePlace K₀ L₀,
-        q.valuation L₀ = v₁ w ∧
-          finiteExtensionPlaceDegree K₀ L₀ (.inl q) = degree₁ w ∧
-          finiteExtensionPrincipalDivisor K₀ L₀ y (.inl q) = D₁ w := by
+  let D₁ : W → ℤ := divisor
+  let S₁ := divisor.support.filter (fun w => 0 < D₁ w)
+  have hcenter : ∀ (w : W), 0 < D₁ w →
+      ∃ q : FiniteExtensionFinitePlace K L,
+        q.valuation L = v₁ w ∧
+          finiteExtensionPlaceDegree K L (.inl q) = degree₁ w ∧
+          finiteExtensionPrincipalDivisor K L y (.inl q) = D₁ w := by
     intro w hw
+    change 0 < divisor w at hw
     let v := v₁ w
-    let V := v.valuationSubring
     have hvylt : v y < 1 := by
       rw [hv₁y w, ← exp_zero, exp_lt_exp]
       omega
-    have hyV : y ∈ V := by
-      change v y ≤ 1
-      exact le_of_lt hvylt
-    have hconstV : ∀ c : K₀, algebraMap K₀ L₀ c ∈ V := by
-      intro c
-      change v (algebraMap K₀ L₀ c) ≤ 1
-      exact hv₁const w c
-    have hbase : ∀ P : K₀[X], algebraMap K₀[X] L₀ P ∈ V := by
-      intro P
-      induction P using Polynomial.induction_on' with
-      | add P Q hP hQ =>
-          rw [map_add]
-          exact add_mem hP hQ
-      | monomial n c =>
-          rw [← Polynomial.C_mul_X_pow_eq_monomial, map_mul, map_pow,
-            hpolyX]
-          have hC : algebraMap K₀[X] L₀ (Polynomial.C c) =
-              algebraMap K₀ L₀ c := by
-            change algebraMap (RatFunc K₀) L₀
-              (algebraMap K₀[X] (RatFunc K₀) (Polynomial.C c)) =
-                algebraMap K₀ L₀ c
-            rw [show algebraMap K₀[X] (RatFunc K₀) (Polynomial.C c) =
-              algebraMap K₀ (RatFunc K₀) c by simp,
-              IsScalarTower.algebraMap_apply K₀ (RatFunc K₀) L₀]
-          rw [hC]
-          exact mul_mem (hconstV c) (pow_mem hyV n)
-    have hyNonunit : algebraMap K₀[X] L₀ Polynomial.X ∈ V.nonunits := by
-      rw [hpolyX, ValuationSubring.mem_nonunits_iff_exists_mem_maximalIdeal]
-      exact ⟨hyV, (Valuation.mem_maximalIdeal_iff (v := v)).mpr hvylt⟩
-    have hcenterNe : valuationCenterIdeal
-        (S := RatFuncFiniteIntegralClosure K₀ L₀) V hbase ≠ ⊥ :=
-      valuationCenterIdeal_ne_bot_of_mem_nonunits
-        (S := RatFuncFiniteIntegralClosure K₀ L₀) V hbase
-        Polynomial.X (by
-          rw [hpolyX]
-          intro hy0
-          apply hyTrans
-          rw [hy0]
-          exact isAlgebraic_zero) hyNonunit
-    let q : FiniteExtensionFinitePlace K₀ L₀ :=
-      valuationCenterPlace (S := RatFuncFiniteIntegralClosure K₀ L₀)
-        V hbase hcenterNe
-    have hvNontrivial : v.IsNontrivial :=
-      (Valuation.isNontrivial_iff_exists_lt_one v).mpr
-        ⟨y, (by
-          intro hy0
-          apply hyTrans
-          rw [hy0]
-          exact isAlgebraic_zero), hvylt⟩
-    have hVne : V ≠ ⊤ := by
-      rw [ne_eq, Valuation.valuationSubring_eq_top_iff]
-      exact not_not_intro hvNontrivial
-    have hsubring :
-        IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime L₀ q = V :=
-      valuationSubringAt_valuationCenterPlace_eq
-        (S := RatFuncFiniteIntegralClosure K₀ L₀)
-        V hbase hcenterNe hVne
-    have hequiv : (q.valuation L₀).IsEquiv v := by
-      rw [Valuation.isEquiv_iff_valuationSubring,
-        ← IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
-      exact hsubring
-    have hqval : q.valuation L₀ = v₁ w :=
-      valuation_eq_of_isEquiv_of_surjective hequiv
-        (q.valuation_surjective L₀) (hv₁surj w)
+    obtain ⟨q, hqval⟩ := finitePlace_of_valuation_positive K L y hy0 hpolyX
+      v (hv₁surj w) (hv₁const w) hvylt
     have hqOrderVal := probeFiniteExtensionPlaceValuation_eq_exp_neg_order
-      K₀ L₀ (.inl q) y hy0
-    have horder : finiteExtensionPrincipalDivisor K₀ L₀ y (.inl q) =
+      K L (.inl q) y hy0
+    have horder : finiteExtensionPrincipalDivisor K L y (.inl q) =
         D₁ w := by
-      change q.valuation L₀ y =
-          exp (-finiteExtensionPrincipalDivisor K₀ L₀ y (.inl q)) at hqOrderVal
+      change q.valuation L y =
+          exp (-finiteExtensionPrincipalDivisor K L y (.inl q)) at hqOrderVal
       rw [hqval, hv₁y w] at hqOrderVal
       have hneg := exp_injective hqOrderVal
+      change -D₁ w = _ at hneg
       omega
     refine ⟨q, hqval, ?_, horder⟩
-    letI : Finite q.asIdeal.ResidueField :=
-      finiteExtensionFinitePlace_residueField_finite
-        (K := K₀) (L := L₀) q
-    cases w with
-    | inl q₁ =>
-        let e := heightOneSpectrumResidueFieldRingEquivOfComapEq
-          q₁ q (RingEquiv.refl L₀) (by
-            have hqval' : q.valuation L₀ = q₁.valuation L₀ := by
-              simpa [v₁, probeFiniteExtensionPlaceValuation] using hqval
-            rw [IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring,
-              IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
-            ext z
-            change q.valuation L₀ z ≤ 1 ↔ q₁.valuation L₀ z ≤ 1
-            rw [hqval'])
-        letI : Finite q₁.asIdeal.ResidueField :=
-          Finite.of_injective e e.injective
-        letI : FiniteDimensional K₀ q.asIdeal.ResidueField := inferInstance
-        letI : FiniteDimensional K₀ q₁.asIdeal.ResidueField := inferInstance
-        rw [probe_finiteExtensionPlaceDegree_inl_eq_finrank_residue
-          K₀ L₀ q, hdegree₁]
-        exact (finrank_eq_of_ringEquiv_of_finite_base e).symm
-    | inr P₁ =>
-        let q₁ := infinityPrime₁ P₁
-        let e := heightOneSpectrumResidueFieldRingEquivOfComapEq
-          q₁ q (RingEquiv.refl L₀) (by
-            have hqval' : q.valuation L₀ = q₁.valuation L₀ := by
-              simpa [v₁, probeFiniteExtensionPlaceValuation,
-                q₁, infinityPrime₁] using hqval
-            rw [IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring,
-              IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
-            ext z
-            change q.valuation L₀ z ≤ 1 ↔ q₁.valuation L₀ z ≤ 1
-            rw [hqval'])
-        letI : Finite q₁.asIdeal.ResidueField :=
-          Finite.of_injective e e.injective
-        letI : Fintype q.asIdeal.ResidueField := Fintype.ofFinite _
-        letI : Fintype q₁.asIdeal.ResidueField := Fintype.ofFinite _
-        letI : Module.Finite K₀ q.asIdeal.ResidueField := by
-          rw [Module.finite_def]
-          exact ⟨Finset.univ, by simp⟩
-        letI : Module.Finite K₀ q₁.asIdeal.ResidueField := by
-          rw [Module.finite_def]
-          exact ⟨Finset.univ, by simp⟩
-        rw [probe_finiteExtensionPlaceDegree_inl_eq_finrank_residue
-          K₀ L₀ q, hdegree₁]
-        exact (finrank_eq_of_ringEquiv_of_finite_base e).symm
-  let T₁ := {w : W₁ // w ∈ S₁}
-  let centerFinite : T₁ → FiniteExtensionFinitePlace K₀ L₀ :=
+    exact hdegree w q hqval
+  let T₁ := {w : W // w ∈ S₁}
+  let centerFinite : T₁ → FiniteExtensionFinitePlace K L :=
     fun w => Classical.choose
       (hcenter w.1 (Finset.mem_filter.mp w.2).2)
   have hcenterFiniteVal (w : T₁) :
-      (centerFinite w).valuation L₀ = v₁ w.1 := by
+      (centerFinite w).valuation L = v₁ w.1 := by
     exact (Classical.choose_spec
       (hcenter w.1 (Finset.mem_filter.mp w.2).2)).1
   have hcenterFiniteDegree (w : T₁) :
-      finiteExtensionPlaceDegree K₀ L₀ (.inl (centerFinite w)) =
+      finiteExtensionPlaceDegree K L (.inl (centerFinite w)) =
         degree₁ w.1 := by
     exact (Classical.choose_spec
       (hcenter w.1 (Finset.mem_filter.mp w.2).2)).2.1
   have hcenterFiniteOrder (w : T₁) :
-      finiteExtensionPrincipalDivisor K₀ L₀ y
+      finiteExtensionPrincipalDivisor K L y
           (.inl (centerFinite w)) = D₁ w.1 := by
     exact (Classical.choose_spec
       (hcenter w.1 (Finset.mem_filter.mp w.2).2)).2.2
-  let W₂ := FiniteExtensionPlace K₀ L₀
+  let W₂ := FiniteExtensionPlace K L
   let D₂ : W₂ → ℤ := fun w =>
-    finiteExtensionPrincipalDivisor K₀ L₀ y w
+    finiteExtensionPrincipalDivisor K L y w
   let degree₂ : W₂ → ℕ := fun w =>
-    finiteExtensionPlaceDegree K₀ L₀ w
+    finiteExtensionPlaceDegree K L w
   let center : T₁ → W₂ := fun w => .inl (centerFinite w)
   have hcenterOrder (w : T₁) : D₂ (center w) = D₁ w.1 := by
     exact hcenterFiniteOrder w
@@ -866,46 +721,164 @@ theorem finiteExtensionPositiveDegree_planeCurveSecondCoordinate_le_degreeOf_fir
     apply Subtype.ext
     apply hv₁inj
     rw [← hcenterFiniteVal a, ← hcenterFiniteVal b, hcf]
-  let S₂ := (finiteExtensionPrincipalDivisor K₀ L₀ y).support.filter
+  let S₂ := (finiteExtensionPrincipalDivisor K L y).support.filter
     (fun w => 0 < D₂ w)
-  have hcenterImageSubset : S₁.attach.image center ⊆ S₂ := by
-    intro z hz
-    rcases Finset.mem_image.mp hz with ⟨w, hw, rfl⟩
-    apply Finset.mem_filter.mpr
-    have hpos : 0 < D₁ w.1 := (Finset.mem_filter.mp w.2).2
-    constructor
-    · apply Finsupp.mem_support_iff.mpr
-      change D₂ (center w) ≠ 0
-      rw [hcenterOrder]
-      exact ne_of_gt hpos
-    · rw [hcenterOrder]
-      exact hpos
-  have hsumImage :
-      (∑ z ∈ S₁.attach.image center,
-          (D₂ z).toNat * degree₂ z) =
-        ∑ w ∈ S₁.attach,
-          (D₁ w.1).toNat * degree₁ w.1 := by
-    rw [Finset.sum_image]
-    · apply Finset.sum_congr rfl
-      intro w hw
-      rw [hcenterOrder, hcenterDegree]
-    · intro a ha b hb hab
-      exact hcenterInj hab
   have hsource_le :
       (∑ w ∈ S₁, (D₁ w).toNat * degree₁ w) ≤
-        finiteExtensionPositiveDegree K₀ L₀ y := by
-    calc
-      _ = ∑ w ∈ S₁.attach,
-          (D₁ w.1).toNat * degree₁ w.1 := by
-            symm
-            exact Finset.sum_attach S₁
-              (fun w => (D₁ w).toNat * degree₁ w)
-      _ = ∑ z ∈ S₁.attach.image center,
-          (D₂ z).toNat * degree₂ z := hsumImage.symm
-      _ ≤ ∑ z ∈ S₂, (D₂ z).toNat * degree₂ z :=
-        Finset.sum_le_sum_of_subset hcenterImageSubset
-      _ = finiteExtensionPositiveDegree K₀ L₀ y := by
-        rfl
+        finiteExtensionPositiveDegree K L y := by
+    change _ ≤ ∑ z ∈ S₂, (D₂ z).toNat * degree₂ z
+    apply weightedSum_le_of_injective S₁ S₂ center
+      (fun w => (D₁ w).toNat * degree₁ w)
+      (fun z => (D₂ z).toNat * degree₂ z) hcenterInj
+    · intro w
+      rw [hcenterOrder, hcenterDegree]
+    · intro w
+      apply Finset.mem_filter.mpr
+      have hpos : 0 < D₁ w.1 := (Finset.mem_filter.mp w.2).2
+      constructor
+      · apply Finsupp.mem_support_iff.mpr
+        change D₂ (center w) ≠ 0
+        rw [hcenterOrder]
+        exact ne_of_gt hpos
+      · rw [hcenterOrder]
+        exact hpos
+  exact hsource_le
+
+
+
+/-- Passing to a second rational-function model cannot decrease the positive degree. -/
+private theorem positiveDegree_le_in_secondModel [Fintype K]
+    [Algebra K L] [IsScalarTower K (RatFunc K) L]
+    (second : RatFunc K →+* L) (y : L) (hy0 : y ≠ 0) :
+    let source := finiteExtensionPositiveDegree K L y
+    let : Algebra (RatFunc K) L := second.toAlgebra
+    ∀ (_ : FiniteDimensional (RatFunc K) L) (_ : Algebra.IsSeparable (RatFunc K) L)
+      (_ : IsScalarTower K (RatFunc K) L),
+      algebraMap K[X] L Polynomial.X = y → source ≤ finiteExtensionPositiveDegree K L y := by
+  classical
+  let W₁ := FiniteExtensionPlace K L
+  let divisor₁ : W₁ →₀ ℤ :=
+    finiteExtensionPrincipalDivisor K L y
+  let D₁ : W₁ → ℤ := fun w =>
+    divisor₁ w
+  let S₁ : Finset W₁ := divisor₁.support.filter
+    (fun w => 0 < D₁ w)
+  let degree₁ : W₁ → ℕ := fun w =>
+    finiteExtensionPlaceDegree K L w
+  let v₁ : W₁ → Valuation L (WithZero (Multiplicative ℤ)) :=
+    probeFiniteExtensionPlaceValuation K L
+  have hdegree₁ {S : Type v} [CommRing S] [IsDedekindDomain S]
+      [Algebra S L] [IsFractionRing S L]
+      (w : W₁) (q : HeightOneSpectrum S)
+      [Algebra K q.asIdeal.ResidueField] [Finite q.asIdeal.ResidueField]
+      (hq : q.valuation L = v₁ w) :
+      degree₁ w = Module.finrank K q.asIdeal.ResidueField :=
+    probe_placeDegree_eq_of_valuation_eq K L w q hq
+  have hv₁surj : ∀ w : W₁, Function.Surjective (v₁ w) := by
+    intro w
+    exact probeFiniteExtensionPlaceValuation_surjective K L w
+  have hv₁y : ∀ w : W₁,
+      v₁ w y = exp (-D₁ w) := by
+    intro w
+    exact probeFiniteExtensionPlaceValuation_eq_exp_neg_order
+      K L w y hy0
+  have hv₁const : ∀ (w : W₁) (c : K),
+      v₁ w (algebraMap K L c) ≤ 1 := by
+    intro w c
+    exact probeFiniteExtensionPlaceValuation_constant_le_one K L w c
+  have hv₁inj : Function.Injective v₁ := by
+    change Function.Injective
+      (probeFiniteExtensionPlaceValuation K L)
+    exact probeFiniteExtensionPlaceValuation_injective K L
+  intro source secondAlgebra finiteDimension separable tower hpolyX
+  have hdegreeCompare (w : W₁) (q : FiniteExtensionFinitePlace K L)
+      (hqval : q.valuation L = v₁ w) :
+      finiteExtensionPlaceDegree K L (.inl q) = degree₁ w := by
+    let : Finite q.asIdeal.ResidueField :=
+      finiteExtensionFinitePlace_residueField_finite (K := K) (L := L) q
+    rw [probe_finiteExtensionPlaceDegree_inl_eq_finrank_residue K L q]
+    exact (hdegree₁ w q hqval).symm
+  have hsource_le :
+      (∑ w ∈ S₁, (D₁ w).toNat * degree₁ w) ≤ finiteExtensionPositiveDegree K L y :=
+    positiveDegree_le_of_valuation_transport K L divisor₁ degree₁ v₁ y hy0 hpolyX
+      hv₁surj hv₁y hv₁const hv₁inj hdegreeCompare
+  change (∑ w ∈ S₁, (D₁ w).toNat * degree₁ w) ≤ _
+  exact hsource_le
+
+
+
+end
+
+noncomputable section
+
+section PlaneBoundaryProbe
+
+
+variable {K₀ : Type*} [Field K₀] [Fintype K₀] [DecidableEq K₀]
+  [DecidableEq (RatFunc K₀)]
+
+theorem finiteExtensionPositiveDegree_planeCurveSecondCoordinate_le_degreeOf_first
+    {f : MvPolynomial (Fin 2) K₀} (hf : Irreducible f)
+    (hpartialFirst : MvPolynomial.pderiv 0 f ≠ 0)
+    (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0) :
+    let := planeCurveCoordinateRing_isDomain hf
+    let hx := firstCoordinate_transcendental hf
+      (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : FiniteDimensional (RatFunc K₀) (PlaneCurveFunctionField f) :=
+      finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
+    let : Algebra.IsSeparable (RatFunc K₀) (PlaneCurveFunctionField f) :=
+      separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
+    finiteExtensionPositiveDegree K₀ (PlaneCurveFunctionField f)
+        (planeCurveFunction f 1) ≤ MvPolynomial.degreeOf 0 f := by
+  intro domain hxTrans firstAlg finiteDimension separable
+  classical
+  let L₀ := PlaneCurveFunctionField f
+  let x : L₀ := planeCurveFunction f 0
+  let y : L₀ := planeCurveFunction f 1
+  have hyTrans : Transcendental K₀ y :=
+    secondCoordinate_transcendental hf
+      (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
+  have hy0 : y ≠ 0 := by
+    intro h
+    apply hyTrans
+    rw [h]
+    exact isAlgebraic_zero
+  let : IsScalarTower K₀ (RatFunc K₀) L₀ := by
+    apply IsScalarTower.of_algebraMap_eq'
+    ext c
+    change algebraMap K₀ L₀ c =
+      ratFuncSpecialization x hxTrans (RatFunc.C c)
+    have h := DFunLike.congr_fun
+      (ratFuncSpecialization_comp_polynomial_algebraMap x hxTrans)
+      (Polynomial.C c)
+    simpa using h.symm
+  let secondHom : RatFunc K₀ →+* L₀ := ratFuncSpecialization y hyTrans
+  let sourceDegree := finiteExtensionPositiveDegree K₀ L₀ y
+  have hcompare := positiveDegree_le_in_secondModel K₀ L₀ secondHom y hy0
+  let : Algebra (RatFunc K₀) L₀ := secondHom.toAlgebra
+  let : FiniteDimensional (RatFunc K₀) L₀ :=
+    finiteDimensional_planeCurveFunctionField_over_secondRatFunc
+      hf hpartialFirst
+  let : Algebra.IsSeparable (RatFunc K₀) L₀ :=
+    separable_planeCurveFunctionField_over_secondRatFunc hf hpartialFirst
+  let : IsScalarTower K₀ (RatFunc K₀) L₀ := by
+    apply IsScalarTower.of_algebraMap_eq'
+    ext c
+    change algebraMap K₀ L₀ c =
+      ratFuncSpecialization y hyTrans (RatFunc.C c)
+    have h := DFunLike.congr_fun
+      (ratFuncSpecialization_comp_polynomial_algebraMap y hyTrans)
+      (Polynomial.C c)
+    simpa using h.symm
+  let : Algebra K₀[X] L₀ :=
+    RingHom.toAlgebra ((algebraMap (RatFunc K₀) L₀).comp
+      (algebraMap K₀[X] (RatFunc K₀)))
+  have hpolyX : algebraMap K₀[X] L₀ Polynomial.X = y := by
+    change ratFuncSpecialization y hyTrans RatFunc.X = y
+    simp [ratFuncSpecialization, RatFunc.algEquivOfTranscendental_X]
+  have hsource_le : sourceDegree ≤ finiteExtensionPositiveDegree K₀ L₀ y :=
+    hcompare inferInstance inferInstance inferInstance hpolyX
   have hySecondDegree :
       finiteExtensionPositiveDegree K₀ L₀ y =
         MvPolynomial.degreeOf 0 f := by
@@ -919,13 +892,7 @@ theorem finiteExtensionPositiveDegree_planeCurveSecondCoordinate_le_degreeOf_fir
       finrank_planeCurveFunctionField_over_secondRatFunc_eq_degreeOf_first
         hf hpartialFirst] at hheight
     simpa using hheight
-  have hySourceBound :
-      (∑ w ∈ S₁, (D₁ w).toNat * degree₁ w) ≤
-        MvPolynomial.degreeOf 0 f := by
-    exact hsource_le.trans_eq hySecondDegree
-  change (∑ w ∈ S₁, (D₁ w).toNat * degree₁ w) ≤
-    MvPolynomial.degreeOf 0 f
-  exact hySourceBound
+  exact hsource_le.trans_eq hySecondDegree
 
 /-- The zero/pole boundary of positive powers of the two plane-curve
 coordinates has degree at most twice the sum of the two coordinate degrees. -/
@@ -934,32 +901,29 @@ theorem planeCurve_propositionTwoExceptionalPlaces_weightedDegree_le
     (hpartialFirst : MvPolynomial.pderiv 0 f ≠ 0)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (m n : ℕ) (hm : 0 < m) (hn : 0 < n) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI := finiteDimensional_planeCurveFunctionField_over_ratFunc
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let := finiteDimensional_planeCurveFunctionField_over_ratFunc
       hf hpartialSecond
-    letI := separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
+    let := separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
     ∑ w ∈ propositionTwoExceptionalPlaces K₀ (PlaneCurveFunctionField f)
         ((planeCurveFunction f 0) ^ m) ((planeCurveFunction f 1) ^ n),
         finiteExtensionPlaceDegree K₀ (PlaneCurveFunctionField f) w ≤
       2 * (MvPolynomial.degreeOf 0 f + MvPolynomial.degreeOf 1 f) := by
+  intro domain hxTrans ratFuncAlgebra finiteDimension separable
   classical
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
-    planeCurveCoordinateRing_isDomain hf
   let L₀ := PlaneCurveFunctionField f
   let x : L₀ := planeCurveFunction f 0
   let y : L₀ := planeCurveFunction f 1
-  have hxTrans : Transcendental K₀ x :=
-    firstCoordinate_transcendental hf
-      (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
   have hyTrans : Transcendental K₀ y :=
     secondCoordinate_transcendental hf
       (degreeOf_first_pos_of_pderiv_ne_zero hpartialFirst)
   have hx0 : x ≠ 0 := by
     intro h
     apply hxTrans
+    change IsAlgebraic K₀ x
     rw [h]
     exact isAlgebraic_zero
   have hy0 : y ≠ 0 := by
@@ -967,13 +931,6 @@ theorem planeCurve_propositionTwoExceptionalPlaces_weightedDegree_le
     apply hyTrans
     rw [h]
     exact isAlgebraic_zero
-  letI : Algebra (RatFunc K₀) L₀ :=
-    planeCurveFirstCoordinateRatFuncAlgebra f hxTrans
-  letI : FiniteDimensional (RatFunc K₀) L₀ :=
-    finiteDimensional_planeCurveFunctionField_over_ratFunc
-      hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K₀) L₀ :=
-    separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   have hxDegree : finiteExtensionPositiveDegree K₀ L₀ x =
       MvPolynomial.degreeOf 1 f := by
     have hheight := finiteExtensionPositiveDegree_polynomial
@@ -990,6 +947,7 @@ theorem planeCurve_propositionTwoExceptionalPlaces_weightedDegree_le
       MvPolynomial.degreeOf 0 f := by
     exact finiteExtensionPositiveDegree_planeCurveSecondCoordinate_le_degreeOf_first
       hf hpartialFirst hpartialSecond
+  let _ : DecidableEq (FiniteExtensionPlace K₀ L₀) := fun a b => instDecidableEqSum a b
   have hsupportX :
       (finiteExtensionPrincipalDivisor K₀ L₀ (x ^ m)).support =
         (finiteExtensionPrincipalDivisor K₀ L₀ x).support := by
@@ -1002,10 +960,12 @@ theorem planeCurve_propositionTwoExceptionalPlaces_weightedDegree_le
     rw [finiteExtensionPrincipalDivisor_pow K₀ L₀ y hy0 n]
     ext w
     simp [Finsupp.mem_support_iff, hn.ne']
+  dsimp only [propositionTwoExceptionalPlaces]
   change (∑ w ∈
       (finiteExtensionPrincipalDivisor K₀ L₀ (x ^ m)).support ∪
         (finiteExtensionPrincipalDivisor K₀ L₀ (y ^ n)).support,
-      finiteExtensionPlaceDegree K₀ L₀ w) ≤ _
+      finiteExtensionPlaceDegree K₀ L₀ w) ≤
+    2 * (MvPolynomial.degreeOf 0 f + MvPolynomial.degreeOf 1 f)
   rw [hsupportX, hsupportY]
   calc
     _ ≤
