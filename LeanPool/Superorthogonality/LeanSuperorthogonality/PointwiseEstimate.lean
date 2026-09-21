@@ -5,6 +5,7 @@ Authors: Joris Roos
 -/
 module
 
+public import Mathlib.Tactic
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.Defs
 
 import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex.PointwiseEstimate

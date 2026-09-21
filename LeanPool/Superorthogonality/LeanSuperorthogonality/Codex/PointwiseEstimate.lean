@@ -10,6 +10,9 @@ module
 
 -- public import Mathlib
 
+public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Count
+public import Mathlib.Tactic
 public import LeanPool.Superorthogonality.LeanSuperorthogonality.Defs
 
 /-!
@@ -26,8 +29,10 @@ variable {α : Type*} [MeasurableSpace α]
 variable (μ : Measure α)
 variable {ι : Type*} [Countable ι]
 
-local instance : MeasurableSpace ι := ⊤
-local instance : MeasureSpace ι where
+/-- Every subset of the index type is measurable. -/
+local instance pointwiseDiscreteMeasurableSpace : MeasurableSpace ι := ⊤
+/-- Count indices with counting measure. -/
+local instance pointwiseCountingMeasureSpace : MeasureSpace ι where
   volume := Measure.count
 
 section PointwiseEstimate
@@ -77,21 +82,21 @@ private lemma Q_two_sub_prod_eq_neg_diagonal (a : Fin 2 → ι → ℂ)
     apply tsum_congr
     intro j
     by_cases hj : j 0 = j 1
-    · have hnot : ¬ all_distinct 2 j := by
+    · have hnot : ¬ allDistinct 2 j := by
         intro h
         exact h 0 1 (by decide) hj
-      have hnotmem : j ∉ set_all_distinct 2 := hnot
+      have hnotmem : j ∉ allDistinctSet 2 := hnot
       have hnotmem' : (finTwoArrowEquiv ι j) ∉ offDiag := by
         simpa [offDiag] using hj
       rw [Set.indicator_of_notMem hnotmem, Set.indicator_of_notMem hnotmem']
-    · have hdist : all_distinct 2 j := by
+    · have hdist : allDistinct 2 j := by
         intro i i' hii'
         fin_cases i <;> fin_cases i'
         · contradiction
         · exact hj
         · exact fun h ↦ hj h.symm
         · contradiction
-      have hmem : j ∈ set_all_distinct 2 := hdist
+      have hmem : j ∈ allDistinctSet 2 := hdist
       have hmem' : (finTwoArrowEquiv ι j) ∈ offDiag := by
         simpa [offDiag] using hj
       rw [Set.indicator_of_mem hmem, Set.indicator_of_mem hmem']
@@ -157,10 +162,12 @@ private lemma diagonal_enorm_tsum_le_B_sq (a : Fin 2 → ι → ℂ)
       (μ := (Measure.count : Measure ι)) hpq h0 h1
     rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
         (by norm_num : (2 : ENNReal) ≠ 0)
-        (by norm_num : (2 : ENNReal) ≠ ⊤),
+        (by norm_num : (2 : ENNReal) ≠ ⊤)
+        Measurable.of_discrete.aestronglyMeasurable,
       eLpNorm_eq_lintegral_rpow_enorm_toReal
         (by norm_num : (2 : ENNReal) ≠ 0)
-        (by norm_num : (2 : ENNReal) ≠ ⊤)]
+        (by norm_num : (2 : ENNReal) ≠ ⊤)
+        Measurable.of_discrete.aestronglyMeasurable]
     simpa [one_div] using h
   have hB0 :
       eLpNorm (a 0) 2 (Measure.count : Measure ι) ≤
@@ -218,8 +225,8 @@ previous coordinates are subtracted.
 -/
 omit [Countable ι] in
 private lemma all_distinct_snoc_iff {k : ℕ} (g : Fin k → ι) (m : ι) :
-    all_distinct (k + 1) (Fin.snoc g m) ↔
-      all_distinct k g ∧ ∀ i : Fin k, g i ≠ m := by
+    allDistinct (k + 1) (Fin.snoc g m) ↔
+      allDistinct k g ∧ ∀ i : Fin k, g i ≠ m := by
   constructor
   · intro h
     refine ⟨?_, ?_⟩
@@ -291,11 +298,11 @@ omit [Countable ι] in
 private lemma summable_Q_term {k : ℕ} (a : Fin k → ι → ℂ)
     (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
     Summable (fun j : Fin k → ι =>
-      indicator (set_all_distinct k) (fun j ↦ ∏ i, a i (j i)) j) := by
+      indicator (allDistinctSet k) (fun j ↦ ∏ i, a i (j i)) j) := by
   refine Summable.of_norm ?_
   refine Summable.of_nonneg_of_le (fun j ↦ norm_nonneg _) ?_ (summable_prod_norm a ha)
   intro j
-  by_cases hj : j ∈ set_all_distinct k
+  by_cases hj : j ∈ allDistinctSet k
   · simp [Set.indicator_of_mem hj, norm_prod]
   · exact (by simp [Set.indicator_of_notMem hj,
       Finset.prod_nonneg fun _ _ ↦ norm_nonneg _])
@@ -329,7 +336,7 @@ private lemma tsum_fin_succ_eq_tsum_snoc {k : ℕ}
   exact hF.tsum_prod' hfiber
 
 omit [Countable ι] in
-private lemma tsum_compl_range_injective {k : ℕ} (g : Fin k → ι) (hg : all_distinct k g)
+private lemma tsum_compl_range_injective {k : ℕ} (g : Fin k → ι) (hg : allDistinct k g)
     (f : ι → ℂ) (hf : Summable (fun j ↦ ‖f j‖)) :
     ∑' m : { m // ∀ i : Fin k, g i ≠ m }, f m =
       s f - ∑ i : Fin k, f (g i) := by
@@ -383,32 +390,32 @@ private lemma collisionFamily_prod {k : ℕ} (a : Fin (k + 1) → ι → ℂ)
   rw [hbumped]
   rw [Finset.prod_update_of_mem (Finset.mem_univ i) (f := base)
     (b := base i * a (Fin.last k) (g i))]
-  rw [Finset.prod_eq_mul_prod_diff_singleton_of_mem (Finset.mem_univ i) (f := base)]
+  rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem (Finset.mem_univ i) (f := base)]
   ring
 
 omit [Countable ι] in
 private lemma Q_succ_fiber {k : ℕ} (a : Fin (k + 1) → ι → ℂ)
     (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) (g : Fin k → ι) :
     (∑' m : ι,
-      indicator (set_all_distinct (k + 1)) (fun j ↦ ∏ i, a i (j i)) (Fin.snoc g m)) =
-      indicator (set_all_distinct k)
+      indicator (allDistinctSet (k + 1)) (fun j ↦ ∏ i, a i (j i)) (Fin.snoc g m)) =
+      indicator (allDistinctSet k)
         (fun g ↦ (∏ i, initFamily a i (g i)) *
           (s (a (Fin.last k)) - ∑ i : Fin k, a (Fin.last k) (g i))) g := by
   let avoid : Set ι := fun m ↦ ∀ i : Fin k, g i ≠ m
-  by_cases hg : all_distinct k g
+  by_cases hg : allDistinct k g
   · have hterm : ∀ m : ι,
-        indicator (set_all_distinct (k + 1)) (fun j ↦ ∏ i, a i (j i)) (Fin.snoc g m) =
+        indicator (allDistinctSet (k + 1)) (fun j ↦ ∏ i, a i (j i)) (Fin.snoc g m) =
           avoid.indicator
             (fun m ↦ (∏ i, initFamily a i (g i)) * a (Fin.last k) m) m := by
       intro m
       by_cases hm : ∀ i : Fin k, g i ≠ m
-      · have hsnoc : Fin.snoc g m ∈ set_all_distinct (k + 1) :=
+      · have hsnoc : Fin.snoc g m ∈ allDistinctSet (k + 1) :=
           (all_distinct_snoc_iff g m).2 ⟨hg, hm⟩
         have havoid : m ∈ avoid := hm
         rw [Set.indicator_of_mem hsnoc, Set.indicator_of_mem havoid]
         rw [Fin.prod_univ_castSucc]
         simp [initFamily, Fin.snoc]
-      · have hsnoc : Fin.snoc g m ∉ set_all_distinct (k + 1) := by
+      · have hsnoc : Fin.snoc g m ∉ allDistinctSet (k + 1) := by
           intro h
           exact hm ((all_distinct_snoc_iff g m).1 h).2
         have havoid : m ∉ avoid := hm
@@ -419,21 +426,21 @@ private lemma Q_succ_fiber {k : ℕ} (a : Fin (k + 1) → ι → ℂ)
     rw [tsum_mul_left]
     change (∏ i, initFamily a i (g i)) *
         (∑' m : { m // ∀ i : Fin k, g i ≠ m }, a (Fin.last k) m) =
-      indicator (set_all_distinct k)
+      indicator (allDistinctSet k)
         (fun g ↦ (∏ i, initFamily a i (g i)) *
           (s (a (Fin.last k)) - ∑ i : Fin k, a (Fin.last k) (g i))) g
     rw [tsum_compl_range_injective g hg (a (Fin.last k)) (ha (Fin.last k))]
-    rw [Set.indicator_of_mem (show g ∈ set_all_distinct k from hg)]
+    rw [Set.indicator_of_mem (show g ∈ allDistinctSet k from hg)]
   · have hzero : (fun m : ι ↦
-        indicator (set_all_distinct (k + 1)) (fun j ↦ ∏ i, a i (j i)) (Fin.snoc g m)) =
+        indicator (allDistinctSet (k + 1)) (fun j ↦ ∏ i, a i (j i)) (Fin.snoc g m)) =
         fun _ ↦ 0 := by
       funext m
-      have hsnoc : Fin.snoc g m ∉ set_all_distinct (k + 1) := by
+      have hsnoc : Fin.snoc g m ∉ allDistinctSet (k + 1) := by
         intro h
         exact hg ((all_distinct_snoc_iff g m).1 h).1
       exact Set.indicator_of_notMem hsnoc _
     rw [hzero, tsum_zero]
-    rw [Set.indicator_of_notMem (show g ∉ set_all_distinct k from hg)]
+    rw [Set.indicator_of_notMem (show g ∉ allDistinctSet k from hg)]
 
 omit [Countable ι] in
 private lemma initFamily_summable_core {k : ℕ}
@@ -470,17 +477,17 @@ private lemma Q_init_mul_last_eq_tsum {k : ℕ}
     (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
     Q (initFamily a) * s (a (Fin.last k)) =
       ∑' g : Fin k → ι,
-        indicator (set_all_distinct k)
+        indicator (allDistinctSet k)
           (fun g ↦ (∏ i, initFamily a i (g i)) * s (a (Fin.last k))) g := by
   have hinit := initFamily_summable_core a ha
   have hQ : Summable (fun g : Fin k → ι =>
-      indicator (set_all_distinct k) (fun g ↦ ∏ i, initFamily a i (g i)) g) :=
+      indicator (allDistinctSet k) (fun g ↦ ∏ i, initFamily a i (g i)) g) :=
     summable_Q_term (initFamily a) hinit
   rw [Q]
   rw [← hQ.tsum_mul_right (s (a (Fin.last k)))]
   apply tsum_congr
   intro g
-  by_cases hg : g ∈ set_all_distinct k
+  by_cases hg : g ∈ allDistinctSet k
   · rw [Set.indicator_of_mem hg, Set.indicator_of_mem hg]
   · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem hg]
     simp
@@ -490,12 +497,12 @@ private lemma Q_collision_eq_tsum {k : ℕ}
     (a : Fin (k + 1) → ι → ℂ) (i : Fin k) :
     Q (collisionFamily a i) =
       ∑' g : Fin k → ι,
-        indicator (set_all_distinct k)
+        indicator (allDistinctSet k)
           (fun g ↦ (∏ t, initFamily a t (g t)) * a (Fin.last k) (g i)) g := by
   rw [Q]
   apply tsum_congr
   intro g
-  by_cases hg : g ∈ set_all_distinct k
+  by_cases hg : g ∈ allDistinctSet k
   · rw [Set.indicator_of_mem hg, Set.indicator_of_mem hg]
     exact collisionFamily_prod a i g
   · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem hg]
@@ -506,42 +513,42 @@ private lemma sum_Q_collision_eq_tsum {k : ℕ}
     (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
     (∑ i : Fin k, Q (collisionFamily a i)) =
       ∑' g : Fin k → ι,
-        indicator (set_all_distinct k)
+        indicator (allDistinctSet k)
           (fun g ↦ (∏ t, initFamily a t (g t)) *
             ∑ i : Fin k, a (Fin.last k) (g i)) g := by
   have hterm : ∀ i : Fin k, Summable (fun g : Fin k → ι =>
-      indicator (set_all_distinct k)
+      indicator (allDistinctSet k)
         (fun g ↦ (∏ t, initFamily a t (g t)) * a (Fin.last k) (g i)) g) := by
     intro i
     exact (summable_Q_term (collisionFamily a i)
       (collisionFamily_summable_core a ha i)).congr (by
         intro g
-        by_cases hg : g ∈ set_all_distinct k
+        by_cases hg : g ∈ allDistinctSet k
         · rw [Set.indicator_of_mem hg, Set.indicator_of_mem hg]
           exact collisionFamily_prod a i g
         · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem hg])
   calc
     (∑ i : Fin k, Q (collisionFamily a i)) =
         ∑ i : Fin k, ∑' g : Fin k → ι,
-          indicator (set_all_distinct k)
+          indicator (allDistinctSet k)
             (fun g ↦ (∏ t, initFamily a t (g t)) * a (Fin.last k) (g i)) g := by
       apply Finset.sum_congr rfl
       intro i _
       rw [Q_collision_eq_tsum a i]
     _ = ∑' g : Fin k → ι, ∑ i : Fin k,
-          indicator (set_all_distinct k)
+          indicator (allDistinctSet k)
             (fun g ↦ (∏ t, initFamily a t (g t)) * a (Fin.last k) (g i)) g := by
       rw [(Summable.tsum_finsetSum (s := Finset.univ)
-        (f := fun i g ↦ indicator (set_all_distinct k)
+        (f := fun i g ↦ indicator (allDistinctSet k)
           (fun g ↦ (∏ t, initFamily a t (g t)) * a (Fin.last k) (g i)) g)
         (by intro i _; exact hterm i)).symm]
     _ = ∑' g : Fin k → ι,
-        indicator (set_all_distinct k)
+        indicator (allDistinctSet k)
           (fun g ↦ (∏ t, initFamily a t (g t)) *
             ∑ i : Fin k, a (Fin.last k) (g i)) g := by
       apply tsum_congr
       intro g
-      by_cases hg : g ∈ set_all_distinct k
+      by_cases hg : g ∈ allDistinctSet k
       · simp_rw [Set.indicator_of_mem hg]
         rw [Finset.mul_sum]
       · simp_rw [Set.indicator_of_notMem hg]
@@ -556,7 +563,7 @@ private lemma Q_succ_recursive {k : ℕ} (_hk : 1 ≤ k)
   have h_reindex :
       Q a =
         ∑' g : Fin k → ι,
-          indicator (set_all_distinct k)
+          indicator (allDistinctSet k)
             (fun g ↦ (∏ i, initFamily a i (g i)) *
               (s (a (Fin.last k)) - ∑ i : Fin k, a (Fin.last k) (g i))) g := by
     rw [Q]
@@ -565,30 +572,30 @@ private lemma Q_succ_recursive {k : ℕ} (_hk : 1 ≤ k)
     intro g
     exact Q_succ_fiber a ha g
   have hF : Summable (fun g : Fin k → ι =>
-      indicator (set_all_distinct k)
+      indicator (allDistinctSet k)
         (fun g ↦ (∏ i, initFamily a i (g i)) * s (a (Fin.last k))) g) := by
     have hbase : Summable (fun g : Fin k → ι =>
-        indicator (set_all_distinct k) (fun g ↦ ∏ i, initFamily a i (g i)) g) :=
+        indicator (allDistinctSet k) (fun g ↦ ∏ i, initFamily a i (g i)) g) :=
       summable_Q_term (initFamily a) (initFamily_summable_core a ha)
     exact (hbase.mul_right (s (a (Fin.last k)))).congr (by
       intro g
-      by_cases hg : g ∈ set_all_distinct k
+      by_cases hg : g ∈ allDistinctSet k
       · rw [Set.indicator_of_mem hg, Set.indicator_of_mem hg]
       · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem hg]
         simp)
   have hterm : ∀ i : Fin k, Summable (fun g : Fin k → ι =>
-      indicator (set_all_distinct k)
+      indicator (allDistinctSet k)
         (fun g ↦ (∏ t, initFamily a t (g t)) * a (Fin.last k) (g i)) g) := by
     intro i
     exact (summable_Q_term (collisionFamily a i)
       (collisionFamily_summable_core a ha i)).congr (by
         intro g
-        by_cases hg : g ∈ set_all_distinct k
+        by_cases hg : g ∈ allDistinctSet k
         · rw [Set.indicator_of_mem hg, Set.indicator_of_mem hg]
           exact collisionFamily_prod a i g
         · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem hg])
   let H : Fin k → (Fin k → ι) → ℂ := fun i g ↦
-    indicator (set_all_distinct k)
+    indicator (allDistinctSet k)
       (fun g ↦ (∏ t, initFamily a t (g t)) * a (Fin.last k) (g i)) g
   have hGsum : Summable (fun g : Fin k → ι => ∑ i : Fin k, H i g) := by
     have hG_finset : ∀ s : Finset (Fin k), Summable (fun g : Fin k → ι => ∑ i ∈ s, H i g) := by
@@ -600,19 +607,19 @@ private lemma Q_succ_recursive {k : ℕ} (_hk : 1 ≤ k)
           simpa [Finset.sum_insert his, H] using (hterm i).add ih
     simpa [H] using hG_finset Finset.univ
   have hG : Summable (fun g : Fin k → ι =>
-      indicator (set_all_distinct k)
+      indicator (allDistinctSet k)
         (fun g ↦ (∏ t, initFamily a t (g t)) *
           ∑ i : Fin k, a (Fin.last k) (g i)) g) := by
     exact hGsum.congr (by
       intro g
-      by_cases hg : g ∈ set_all_distinct k
+      by_cases hg : g ∈ allDistinctSet k
       · simp [H, Set.indicator_of_mem hg, Finset.mul_sum]
       · simp [H, Set.indicator_of_notMem hg])
   rw [h_reindex, Q_init_mul_last_eq_tsum a ha, sum_Q_collision_eq_tsum a ha]
   rw [← hF.tsum_sub hG]
   apply tsum_congr
   intro g
-  by_cases hg : g ∈ set_all_distinct k
+  by_cases hg : g ∈ allDistinctSet k
   · rw [Set.indicator_of_mem hg, Set.indicator_of_mem hg, Set.indicator_of_mem hg]
     ring
   · rw [Set.indicator_of_notMem hg, Set.indicator_of_notMem hg, Set.indicator_of_notMem hg]
@@ -660,10 +667,12 @@ private lemma collision_sum_enorm_le_one {k : ℕ} (hk : 2 ≤ k)
       (μ := (Measure.count : Measure ι)) hpq h0 h1
     rw [eLpNorm_eq_lintegral_rpow_enorm_toReal
         (by norm_num : (2 : ENNReal) ≠ 0)
-        (by norm_num : (2 : ENNReal) ≠ ⊤),
+        (by norm_num : (2 : ENNReal) ≠ ⊤)
+        Measurable.of_discrete.aestronglyMeasurable,
       eLpNorm_eq_lintegral_rpow_enorm_toReal
         (by norm_num : (2 : ENNReal) ≠ 0)
-        (by norm_num : (2 : ENNReal) ≠ ⊤)]
+        (by norm_num : (2 : ENNReal) ≠ ⊤)
+        Measurable.of_discrete.aestronglyMeasurable]
     simpa [one_div] using h
   have hBi :
       eLpNorm (a (Fin.castSucc i)) 2 (Measure.count : Measure ι) ≤
@@ -709,7 +718,8 @@ private lemma eLpNorm_two_lt_top_of_summable_norm (a : ι → ℂ)
     (ha : Summable (fun j ↦ ‖a j‖)) :
     eLpNorm a 2 < ⊤ := by
   rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top
-    (by norm_num : (2 : ENNReal) ≠ 0) (by norm_num : (2 : ENNReal) ≠ ⊤)]
+    (by norm_num : (2 : ENNReal) ≠ 0) (by norm_num : (2 : ENNReal) ≠ ⊤)
+        Measurable.of_discrete.aestronglyMeasurable]
   change (∫⁻ j : ι, ‖a j‖ₑ ^ (2 : ENNReal).toReal
     ∂(Measure.count : Measure ι)) < ⊤
   rw [lintegral_count]
@@ -732,7 +742,7 @@ private lemma B_ne_top_of_summable_norm {k : ℕ} (hk : 2 ≤ k)
     B hk a ≠ ⊤ := by
   rw [← lt_top_iff_ne_top]
   unfold B
-  rw [Finset.max'_lt_iff]
+  apply (Finset.max'_lt_iff _ _).mpr
   intro y hy
   rcases Finset.mem_image.mp hy with ⟨i, _, rfl⟩
   exact eLpNorm_two_lt_top_of_summable_norm (a i) (ha i)
@@ -747,7 +757,7 @@ omit [Countable ι] in
 private lemma eLpNorm_mul_le_of_right_enorm_le_one (a b : ι → ℂ)
     (hb : ∀ j, ‖b j‖ₑ ≤ 1) :
     eLpNorm (fun j ↦ a j * b j) 2 ≤ eLpNorm a 2 := by
-  apply eLpNorm_mono_enorm
+  apply eLpNorm_mono_enorm Measurable.of_discrete.aestronglyMeasurable
   intro j
   rw [enorm_mul]
   exact mul_le_of_le_one_right (show (0 : ENNReal) ≤ ‖a j‖ₑ from bot_le) (hb j)
@@ -758,7 +768,7 @@ private lemma B_initFamily_le_one {k : ℕ} (hk : 2 ≤ k)
     (hB : B (by omega : 2 ≤ k + 1) a ≤ 1) :
     B hk (initFamily a) ≤ 1 := by
   unfold B
-  rw [Finset.max'_le_iff]
+  apply Finset.max'_le
   intro y hy
   rcases Finset.mem_image.mp hy with ⟨i, _, rfl⟩
   exact (Finset.le_max' _ _ (by simp [initFamily])).trans hB
@@ -784,7 +794,7 @@ private lemma B_collisionFamily_le_one {k : ℕ} (hk : 2 ≤ k)
     (eLpNorm_mul_le_of_right_enorm_le_one (a (Fin.castSucc i)) (a (Fin.last k))
       hlast_point).trans (hcoord i)
   unfold B
-  rw [Finset.max'_le_iff]
+  apply Finset.max'_le
   intro y hy
   rcases Finset.mem_image.mp hy with ⟨t, _, rfl⟩
   by_cases hti : t = i
@@ -858,7 +868,6 @@ private lemma collision_product_sums_bound {k : ℕ} (hk : 2 ≤ k)
       (∏ t ∈ Finset.univ.erase i, ‖s (collisionFamily a i t)‖ₑ) ≤
           ∏ _t ∈ Finset.univ.erase i, M := by
         exact Finset.prod_le_prod
-          (fun _t _ht ↦ bot_le)
           (fun t ht ↦ hcoord t (Finset.mem_erase.mp ht).1)
       _ = M ^ (k - 1) := by
         rw [Finset.prod_const, Finset.card_erase_of_mem (Finset.mem_univ i),
@@ -1110,7 +1119,7 @@ private lemma B_rescaleFamily_le_one (hk : 2 ≤ k)
         simp [rescaleFamily, htop]
       simp [hzero]
     unfold B
-    rw [Finset.max'_le_iff]
+    apply Finset.max'_le
     intro y hy
     rcases Finset.mem_image.mp hy with ⟨i, _, rfl⟩
     exact hcoord i
@@ -1138,7 +1147,7 @@ private lemma B_rescaleFamily_le_one (hk : 2 ≤ k)
         mul_le_mul' le_rfl (eLpNorm_coord_le_B hk a i)
       exact (eLpNorm_rescaleFamily_le hk a i).trans (hmul.trans_eq hscale)
     unfold B
-    rw [Finset.max'_le_iff]
+    apply Finset.max'_le
     intro y hy
     rcases Finset.mem_image.mp hy with ⟨i, _, rfl⟩
     exact hcoord i
@@ -1170,9 +1179,9 @@ private lemma Q_rescaleFamily (hk : 2 ≤ k)
       ((B hk a).toReal : ℂ)⁻¹ ^ k * Q a := by
   let c : ℂ := ((B hk a).toReal : ℂ)⁻¹
   have hterm (j : Fin k → ι) :
-      indicator (set_all_distinct k) (fun j ↦ ∏ i, rescaleFamily hk a i (j i)) j =
-        c ^ k * indicator (set_all_distinct k) (fun j ↦ ∏ i, a i (j i)) j := by
-    by_cases hj : j ∈ set_all_distinct k
+      indicator (allDistinctSet k) (fun j ↦ ∏ i, rescaleFamily hk a i (j i)) j =
+        c ^ k * indicator (allDistinctSet k) (fun j ↦ ∏ i, a i (j i)) j := by
+    by_cases hj : j ∈ allDistinctSet k
     · rw [Set.indicator_of_mem hj, Set.indicator_of_mem hj]
       simp [c, rescaleFamily, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const,
         Fintype.card_fin]

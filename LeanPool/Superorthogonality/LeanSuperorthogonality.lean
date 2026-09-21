@@ -9,6 +9,8 @@ import LeanPool.Superorthogonality.LeanSuperorthogonality.Defs
 import LeanPool.Superorthogonality.LeanSuperorthogonality.PointwiseEstimate
 import LeanPool.Superorthogonality.LeanSuperorthogonality.MainTheorem
 
+/-! The complete superorthogonality development and its pointwise and square-function estimates. -/
+
 open Superorthogonal
 
 
