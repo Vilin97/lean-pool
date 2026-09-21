@@ -285,7 +285,7 @@ def refinedVertexIndex (hp : Nat.Prime p) (i : Fin p) :
     Fin (p - 1 + 1) :=
   refinedVertexEquiv hp i
 
-@[simp] theorem refinedVertexEquiv_symm_apply_index
+theorem refinedVertexEquiv_symm_apply_index
     (hp : Nat.Prime p) (i : Fin p) :
     (refinedVertexEquiv hp).symm (refinedVertexIndex hp i) = i := by
   simp [refinedVertexIndex]

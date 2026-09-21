@@ -687,8 +687,11 @@ structure RelativeResult
     (hp : Nat.Prime p) (N L : Nat)
     {F₀ F₁ : ZeroFreeMap hp} (H : ZeroFreeHomotopy hp F₀ F₁)
     (m : Real) where
+  /-- The generic prism perturbation underlying the relative-boundary result. -/
   prism : Result hp N L H m
+  /-- The stable regular approximation fixed on the lower endpoint. -/
   lower : StableRegularApproximation hp F₀.map
+  /-- The stable regular approximation fixed on the upper endpoint. -/
   upper : StableRegularApproximation hp F₁.map
   boundaryFixed : BoundaryFixed hp N L lower upper prism.assignment
 

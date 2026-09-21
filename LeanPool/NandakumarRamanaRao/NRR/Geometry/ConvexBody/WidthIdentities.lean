@@ -44,14 +44,14 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
 
 /-- **Translation invariance.** The width is unchanged under translating the body. -/
-@[simp] theorem widthFunction_translate
+theorem widthFunction_translate
     (K : ConvexBody E) (a u : E) :
     widthFunction (K.translate a) u = widthFunction K u := by
   simp only [widthFunction_def, supportFunction_translate, inner_neg_right]
   ring
 
 /-- **Positive scaling of the body.** `w_{rK}(u) = r · w_K(u)` for `0 < r`. -/
-@[simp] theorem widthFunction_scalePos_body
+theorem widthFunction_scalePos_body
     (K : ConvexBody E) {r : ℝ} (hr : 0 < r) (u : E) :
     widthFunction (K.scalePos r hr) u =
       r * widthFunction K u := by

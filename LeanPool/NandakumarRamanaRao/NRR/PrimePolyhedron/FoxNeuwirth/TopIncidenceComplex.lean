@@ -84,11 +84,14 @@ theorem topIncidenceBoundary_orientedTopChain_eq_zero
 /-- The two-term top incidence complex together with its distinguished prime cycle.  This is data,
 not an assumption: both the composite-zero identity and the top-cycle equation are theorems above. -/
 structure PrimeTopIncidenceData (hp : Nat.Prime p) where
+  /-- The oriented top chain satisfying the prime incidence-cycle identity. -/
   topChain : TopCellChain p (ZMod p)
   topChain_eq : topChain = orientedTopChain hp
   boundary_zero : topIncidenceBoundary topChain = 0
   boundary_squared : zeroFacetBoundary (topIncidenceBoundary topChain) =
     (fun _ => (0 : ZMod p))
+
+attribute [-simp] PrimeTopIncidenceData.mk.injEq
 
 /-- Canonical top incidence data produced by the facet--shuffle calculation. -/
 noncomputable def primeTopIncidenceData

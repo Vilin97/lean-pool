@@ -32,10 +32,12 @@ before that declaration, avoiding an import cycle while keeping all public
 definitions in the human-facing file.
 -/
 class ConvexFigureModel (α : Type) where
+  /-- The set of planar points represented by a figure. -/
   carrier : α → Set Plane
   isConvex : ∀ F, Convex ℝ (carrier F)
   isCompact : ∀ F, IsCompact (carrier F)
   hasNonemptyInterior : ∀ F, (interior (carrier F)).Nonempty
+  /-- Represent a convex body in the chosen external figure model. -/
   ofBody : NRR.Geometry.ConvexBody Plane → α
   carrier_ofBody : ∀ K, carrier (ofBody K) = (K : Set Plane)
 

@@ -60,7 +60,7 @@ abbrev cohomologyZMod2 (X : TopCat.{0}) (n : ℕ) : ModuleCat.{0} (ZMod 2) :=
 theorem cohomologyZMod2_eq (X : TopCat.{0}) (n : ℕ) :
     cohomologyZMod2 X n = (singularCohomologyZMod2 n).obj (Opposite.op X) := rfl
 
-@[simp] theorem cochainCx_next (n : ℕ) : (ComplexShape.up ℕ).next n = n + 1 :=
+theorem cochainCx_next (n : ℕ) : (ComplexShape.up ℕ).next n = n + 1 :=
   (ComplexShape.up ℕ).next_eq' rfl
 
 /-! ## 1. Cohomology class of a cocycle -/

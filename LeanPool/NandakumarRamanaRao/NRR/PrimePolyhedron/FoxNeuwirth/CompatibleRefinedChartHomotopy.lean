@@ -48,6 +48,7 @@ theorem continuous_ofDelta {d : Nat} :
 
 /-- A prime-compatible zero-free map written in every refined top-simplex chart. -/
 structure ChartMap (hp : Nat.Prime p) (N : Nat) where
+  /-- Coordinate values in each refined top-simplex chart. -/
   value : TopCell hp N -> StandardSimplex (p - 1) -> Fin p -> Real
   continuous_value : forall q, Continuous (value q)
   decorated_compatible : forall
@@ -61,6 +62,7 @@ structure ChartMap (hp : Nat.Prime p) (N : Nat) where
 /-- A compatible chart homotopy between two compatible chart maps. -/
 structure ChartHomotopy
     (hp : Nat.Prime p) (N : Nat) (K0 K1 : ChartMap hp N) where
+  /-- The time-dependent coordinate values in each refined chart. -/
   value : TopCell hp N -> StandardSimplex (p - 1) -> Set.Icc (0 : Real) 1 ->
     Fin p -> Real
   continuous_value : forall q, Continuous (fun z :

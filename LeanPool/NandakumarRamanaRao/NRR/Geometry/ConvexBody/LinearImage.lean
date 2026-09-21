@@ -79,7 +79,7 @@ def imageLinearEquiv (K : ConvexBody E) (e : E ≃L[ℝ] F) : ConvexBody F where
 @[simp] theorem imageLinearEquiv_carrier (K : ConvexBody E) (e : E ≃L[ℝ] F) :
     ((K.imageLinearEquiv e : ConvexBody F) : Set F) = e '' (K : Set E) := rfl
 
-@[simp] theorem mem_imageLinearEquiv (K : ConvexBody E) (e : E ≃L[ℝ] F) (y : F) :
+theorem mem_imageLinearEquiv (K : ConvexBody E) (e : E ≃L[ℝ] F) (y : F) :
     y ∈ (K.imageLinearEquiv e : Set F) ↔ e.symm y ∈ (K : Set E) := by
   rw [imageLinearEquiv_carrier]
   constructor
@@ -98,7 +98,7 @@ def preimageLinearEquiv (K : ConvexBody F) (e : E ≃L[ℝ] F) : ConvexBody E :=
   rw [preimageLinearEquiv, imageLinearEquiv_carrier,
     ContinuousLinearEquiv.image_eq_preimage_symm, ContinuousLinearEquiv.symm_symm]
 
-@[simp] theorem mem_preimageLinearEquiv (K : ConvexBody F) (e : E ≃L[ℝ] F) (x : E) :
+theorem mem_preimageLinearEquiv (K : ConvexBody F) (e : E ≃L[ℝ] F) (x : E) :
     x ∈ (K.preimageLinearEquiv e : Set E) ↔ e x ∈ (K : Set F) := by
   rw [preimageLinearEquiv_carrier]; rfl
 

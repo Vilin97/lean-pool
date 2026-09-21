@@ -109,6 +109,7 @@ noncomputable def negativeReferenceStableApproximation
 
 /-- The stable positive reference endpoint together with its nonzero count. -/
 structure PositiveReferenceStableData (hp : Nat.Prime p) where
+  /-- The stable regular approximation of the positive reference map with nonzero count. -/
   approximation :
     StableRegularApproximation hp (positiveReferenceZeroFreeMap hp).map
   zeroCount_ne_zero : approximation.zeroCount ≠ 0

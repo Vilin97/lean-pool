@@ -48,7 +48,6 @@ open CategoryTheory AlgebraicTopology
 namespace SphereOddDegree
 
 /-- Functoriality: the integral singular homology functor preserves identities. -/
-@[simp]
 theorem singularHomologyℤ_map_id (X : TopCat.{0}) (n : ℕ) :
     (singularHomologyℤ n).map (𝟙 X) = 𝟙 _ :=
   (singularHomologyℤ n).map_id X
@@ -69,7 +68,6 @@ theorem singularHomologyℤ_map_congr {X Y : TopCat.{0}} {f g : X ⟶ Y}
 
 /-- Functoriality: the integral singular chain complex functor preserves
 identities. -/
-@[simp]
 theorem singularChainℤ_map_id (X : TopCat.{0}) :
     singularChainℤ.map (𝟙 X) = 𝟙 _ :=
   singularChainℤ.map_id X

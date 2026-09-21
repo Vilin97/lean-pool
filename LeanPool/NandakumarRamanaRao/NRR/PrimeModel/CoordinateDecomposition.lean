@@ -10,6 +10,7 @@ namespace NRR
 open scoped BigOperators
 variable {n : ℕ}
 
+/-- The linear functional taking the mean of a nonempty coordinate vector. -/
 noncomputable def coordinateMean (hn : 0 < n) :
     (Fin n → ℝ) →ₗ[ℝ] ℝ where
   toFun v := (∑ i, v i) / (n : ℝ)
@@ -24,6 +25,7 @@ noncomputable def coordinateMean (hn : 0 < n) :
 @[simp] theorem coordinateMean_apply (hn : 0 < n) (v : Fin n → ℝ) :
     coordinateMean hn v = (∑ i, v i) / (n : ℝ) := rfl
 
+/-- Subtract the coordinate mean to obtain a vector in the zero-sum representation. -/
 noncomputable def coordinateDeviation (hn : 0 < n) :
     (Fin n → ℝ) →ₗ[ℝ] ZeroSum n where
   toFun v := ⟨fun i => v i - coordinateMean hn v, by
@@ -65,7 +67,7 @@ def reconstructCoordinates (n : ℕ) :
     (u : ZeroSum n) (c : ℝ) (i : Fin n) :
     reconstructCoordinates n (u, c) i = u i + c := rfl
 
-@[simp] theorem coordinateMean_reconstruct
+theorem coordinateMean_reconstruct
     (hn : 0 < n) (u : ZeroSum n) (c : ℝ) :
     coordinateMean hn (reconstructCoordinates n (u, c)) = c := by
   have hn0 : (n : ℝ) ≠ 0 := by exact_mod_cast hn.ne'
@@ -84,6 +86,7 @@ def reconstructCoordinates (n : ℕ) :
     reconstructCoordinates_apply]
   ring
 
+/-- Decompose a coordinate vector into its zero-sum deviation and scalar mean. -/
 noncomputable def coordinateDecomposition (hn : 0 < n) :
     (Fin n → ℝ) ≃ₗ[ℝ] ZeroSum n × ℝ where
   toFun v := (coordinateDeviation hn v, coordinateMean hn v)

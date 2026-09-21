@@ -43,8 +43,11 @@ namespace MaximalFlagCode
 /-- Finite code for a maximal flag. -/
 @[ext]
 structure Code (p : Nat) where
+  /-- The label permutation at the bottom of the encoded maximal flag. -/
   bottom : Equiv.Perm (Fin p)
+  /-- The order in which the bars are removed along the maximal flag. -/
   removal : Equiv.Perm (Fin (p - 1))
+  /-- The label permutation at the top of the encoded maximal flag. -/
   top : Equiv.Perm (Fin p)
   deriving Fintype, DecidableEq
 
@@ -239,6 +242,7 @@ theorem coefficient_removalPartner
 `Fin.cast` avoids the `p - 2 + 1` vs `p - 1` face-dimension mismatch.  They are consumed by
 `MaximalFlagSourceCancellation`. -/
 
+/-- The order-preserving face map that deletes a chosen maximal-flag vertex. -/
 def deleteFace (hp : Nat.Prime p) (k : Fin (p - 1 + 1)) :
     FaceMap (p - 2) (p - 1) where
   toFun i := k.succAbove (Fin.cast (by have := hp.two_le; omega) i)
@@ -247,6 +251,7 @@ def deleteFace (hp : Nat.Prime p) (k : Fin (p - 1 + 1)) :
     apply Fin.strictMono_succAbove k
     simpa using hab
 
+/-- Bottom-partner flag codes represent the same simplex face after the bottom deletion. -/
 def BottomFaceCompatibility (hp : Nat.Prime p)
     (toSimplex : Code p → Simplex p (p - 1)) : Prop :=
   ∀ z,
@@ -255,6 +260,7 @@ def BottomFaceCompatibility (hp : Nat.Prime p)
     (toSimplex z).restrict
       (deleteFace hp (Fin.cast (by have := hp.two_le; omega) (bottomDeletionIndex hp)))
 
+/-- Removal-partner flag codes represent the same simplex face at the chosen internal deletion. -/
 def RemovalFaceCompatibility (hp : Nat.Prime p)
     (toSimplex : Code p → Simplex p (p - 1)) : Prop :=
   ∀ (i : Fin (p - 2)) (z : Code p),

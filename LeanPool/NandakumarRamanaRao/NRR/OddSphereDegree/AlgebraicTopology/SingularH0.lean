@@ -100,6 +100,7 @@ theorem chainGenerator_sub_mem_range [PathConnectedSpace X] (σ τ : singularSim
   have := chainGenerator_sub_mem_range_of_path (PathConnectedSpace.somePath b a)
   exact this
 
+/-- The augmentation sending every singular zero-simplex to one. -/
 noncomputable def aug (X : TopCat.{0}) : singularChainGroup ℤ X 0 ⟶ ModuleCat.of ℤ ℤ :=
   Limits.Sigma.desc (fun _ => 𝟙 (ModuleCat.of ℤ ℤ))
 

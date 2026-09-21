@@ -80,7 +80,7 @@ theorem triangular_injective : Function.Injective triangular :=
 
 /-- Sum of an indicator over a finite type is the cardinality of its support, cast to the ring. -/
 theorem sum_if_one_zero_eq_card
-    {X R : Type*} [Fintype X] [DecidableEq X] [Semiring R]
+    {X R : Type*} [Fintype X]  [Semiring R]
     (P : X → Prop) [DecidablePred P] :
     (∑ x : X, if P x then (1 : R) else 0) =
       ((Fintype.card {x : X // P x} : Nat) : R) := by
@@ -867,6 +867,7 @@ theorem exists_common_positive_sign_neighborhood
   rw [Metric.mem_ball, Real.dist_eq]
   simpa using (abs_lt.2 ⟨by linarith, by linarith⟩)
 
+/-- A common positive perturbation scale preserving the signs of all reference determinants. -/
 noncomputable def epsilon (hp : Nat.Prime p) : Real :=
   Classical.choose (exists_common_positive_sign_neighborhood
     (fun (s : Simplex p (p - 1)) (e : Real) => (mapAt hp e).determinant s)
@@ -1486,6 +1487,7 @@ noncomputable def topRepr
     (hp : Nat.Prime p) (q : PrimeOrbitCycle.TopOrbit hp) : Simplex p (p - 1) :=
   (coveringTopCell_eq hp) ▸ PrimeOrbitCycle.topRepresentative hp q
 
+/-- The selected maximal flag associated with a top cell's label ordering. -/
 noncomputable def selectedFlagOfTopCell
     (hp : Nat.Prime p) (c : BarredPermutation.TopCell p) : Simplex p (p - 1) :=
   selectedSimplex hp c.1.rank
@@ -1702,6 +1704,7 @@ theorem card_selectedOrbit
   rw [← Nat.card_eq_fintype_card]
   exact Nat.card_congr e
 
+/-- The local zero index of the reference map on each selected orbit representative. -/
 noncomputable def referenceIndex
     (hp : Nat.Prime p) : PrimeOrbitCycle.TopOrbit hp → ZMod p :=
   fun q => (referenceMap hp).localZeroIndex (topRepr hp q)
@@ -1773,6 +1776,7 @@ theorem referenceZeroCount_eq
   rw [card_selectedOrbit hp]
   rfl
 
+/-- The finite orbit zero-count model supplied by the reference affine construction. -/
 noncomputable def model
     (hp : Nat.Prime p) : FiniteOrbitZeroCountModel hp where
   cycle := PrimeOrbitCycle.orbitCycle hp

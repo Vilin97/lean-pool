@@ -65,7 +65,7 @@ def pullback
     (fun y => φ.eval_left_neg (f y))
     (fun y => φ.eval_right_pos (f y))
 
-@[simp] theorem pullback_eval
+theorem pullback_eval
     (φ : NiceMV X) (f : C(Y, X))
     (y : Y) (t : SignedInterval) :
     (φ.pullback f).eval y t = φ.eval (f y) t := rfl
@@ -92,7 +92,7 @@ def ofObservable
       simp only [SignedInterval.coe_right]
       linarith [(abs_lt.mp (hbound x)).2])
 
-@[simp] theorem ofObservable_eval
+theorem ofObservable_eval
     (f : C(X, ℝ)) (hbound : ∀ x, |f x| < 1)
     (x : X) (t : SignedInterval) :
     (NiceMV.ofObservable f hbound).eval x t = (t : ℝ) - f x := rfl
@@ -113,7 +113,7 @@ def scale
     (fun x => mul_neg_of_pos_of_neg hc (φ.eval_left_neg x))
     (fun x => mul_pos hc (φ.eval_right_pos x))
 
-@[simp] theorem scale_eval
+theorem scale_eval
     (φ : NiceMV X) (c : ℝ) (hc : 0 < c)
     (x : X) (t : SignedInterval) :
     (φ.scale c hc).eval x t = c * φ.eval x t := rfl
@@ -140,7 +140,7 @@ def reflect
       simp only [SignedInterval.neg_right]
       linarith [φ.eval_left_neg x])
 
-@[simp] theorem reflect_eval
+theorem reflect_eval
     (φ : NiceMV X) (x : X) (t : SignedInterval) :
     φ.reflect.eval x t =
       -φ.eval x (SignedInterval.neg t) := rfl

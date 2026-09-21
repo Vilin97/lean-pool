@@ -95,16 +95,21 @@ theorem orientedOrbitBoundaryCoefficient_eq_zero
 
 /-- Proof-carrying orbit-level top-cycle data. -/
 structure ModPOrbitCycleData (hp : Nat.Prime p) where
+  /-- The dimension of the top cells in the modulo-prime orbit cycle. -/
   topDimension : Nat
   topDimension_eq : topDimension = p - 1
+  /-- The oriented top-cell coefficient as a function of barred permutations. -/
   coefficient : BarredPermutation p → ZMod p
   coefficient_eq : coefficient = orientedTopCoefficient
   support_iff_top : ∀ b, coefficient b ≠ 0 ↔ b.IsTop
+  /-- The boundary coefficient indexed by a barred permutation and a proper split. -/
   boundaryCoefficient :
     BarredPermutation p → ProperSplit p → ZMod p
   boundaryCoefficient_eq :
     boundaryCoefficient = orientedOrbitBoundaryCoefficient
   boundary_zero : ∀ a s, boundaryCoefficient a s = 0
+
+attribute [-simp] ModPOrbitCycleData.mk.injEq
 
 /-- Canonical modulo-prime Fox--Neuwirth orbit cycle. -/
 noncomputable def modPOrbitCycleData

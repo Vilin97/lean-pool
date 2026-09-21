@@ -36,6 +36,7 @@ variable {p : Nat}
 
 /-- Vertex values of one affine `p`-simplex in the full coordinate representation. -/
 structure VertexMap (p : Nat) where
+  /-- The full coordinate vector assigned to each vertex of the affine simplex. -/
   value : Fin (p + 1) → Fin p → Real
 
 namespace VertexMap
@@ -1467,7 +1468,7 @@ noncomputable def facetCoordinates
 
 /-- Reading the restricted point at the coordinate corresponding to facet vertex `i` recovers the
 original simplex coordinate at `k.succAbove i`. -/
-@[simp] theorem facetCoordinates_facetCoordinateIndex
+theorem facetCoordinates_facetCoordinateIndex
     (hp : Nat.Prime p) (w : StandardSimplex p)
     (k : Fin (p + 1)) (hk : w k = 0) (i : Fin p) :
     facetCoordinates hp w k hk (facetCoordinateIndex i) = w (k.succAbove i) := by
@@ -1567,7 +1568,7 @@ noncomputable def fullSimplexOfFacet
   simp [fullSimplexOfFacet]
 
 /-- Recovery stated directly in the native coordinate type of the facet simplex. -/
-@[simp] theorem fullSimplexOfFacet_succAbove_facetIndexEquiv
+theorem fullSimplexOfFacet_succAbove_facetIndexEquiv
     (hp : Nat.Prime p) (k : Fin (p + 1))
     (u : StandardSimplex (p - 1)) (i : Fin ((p - 1) + 1)) :
     fullSimplexOfFacet hp k u (k.succAbove (facetIndexEquiv hp i)) = u i := by

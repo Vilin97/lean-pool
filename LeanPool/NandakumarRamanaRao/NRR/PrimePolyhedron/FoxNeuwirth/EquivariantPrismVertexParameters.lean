@@ -44,7 +44,9 @@ variable {p : Nat}
 
 /-- The realization cylinder, bundled so that prime symmetry acts only on the spatial coordinate. -/
 structure CylinderPoint (p : Nat) where
+  /-- The spatial point in the order-complex realization. -/
   spatial : Realization p
+  /-- The time coordinate in the closed unit interval. -/
   time : Set.Icc (0 : Real) 1
 
 namespace CylinderPoint

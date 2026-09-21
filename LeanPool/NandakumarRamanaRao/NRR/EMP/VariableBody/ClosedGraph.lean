@@ -34,7 +34,7 @@ Hausdorff; and that image equals `f ⁻¹' F`. -/
 theorem continuous_of_isClosed_graph_of_compact
     {D Y : Type*}
     [TopologicalSpace D] [CompactSpace D] [T2Space D]
-    [TopologicalSpace Y] [CompactSpace Y] [T2Space Y]
+    [TopologicalSpace Y] [CompactSpace Y] 
     (f : D → Y)
     (hgraph : IsClosed {z : D × Y | z.2 = f z.1}) :
     Continuous f := by

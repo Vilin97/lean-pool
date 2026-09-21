@@ -51,7 +51,7 @@ theorem volume_prod_eq_zero_of_fiberwise_eq_zero
     {X Y : Type*}
     [MeasurableSpace X] [MeasurableSpace Y]
     (μ : Measure X) (ν : Measure Y)
-    [SFinite μ] [SFinite ν]
+     [SFinite ν]
     (s : Set (X × Y))
     (hs : MeasurableSet s)
     (hfiber : ∀ x, ν {y | (x, y) ∈ s} = 0) :
@@ -71,9 +71,11 @@ those product coordinates, including the existential barycentric witness.
 The substantive geometric field is `fiber_null`: unlike the old scalar
 statement, it already quantifies over every barycentric witness. -/
 structure VectorBlockEliminationData (p : Nat) where
+  /-- The measured parameter space remaining after one vector block is separated. -/
   Rest : Type*
   [instMeasureSpaceRest : MeasureSpace Rest]
   [instSFiniteVolumeRest : SFinite (volume : Measure Rest)]
+  /-- The exceptional set expressed in the remaining parameters and selected vector block. -/
   badInSplitCoordinates : Set (Rest × (Fin p → Real))
   measurable_bad : MeasurableSet badInSplitCoordinates
   fiber_null : ∀ rest,
@@ -106,7 +108,9 @@ structure MixedFaceVectorBlockCertificate
     (C : RelativeAffineCellSystem hp N₀ N₁ M L)
     (base : Assignment hp C)
     (κ : MixedFaceCase hp C) where
+  /-- The measurable null-fiber data used to eliminate the mixed-face exceptional set. -/
   data : VectorBlockEliminationData p
+  /-- The coordinate split transporting the mixed-face bad set to the null-fiber model. -/
   split : MovableParameterSpace hp C → data.Rest × (Fin p → Real)
   bad_image : split '' mixedFaceBadSet hp C base κ = data.badInSplitCoordinates
   measure_transport :

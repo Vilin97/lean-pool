@@ -55,6 +55,7 @@ namespace FoxNeuwirthOrderComplex
 
 /-- Coordinate-valued vertex data, before splitting into deviation and mean. -/
 structure CoordinateAffineVertexMap (p : Nat) where
+  /-- The coordinate vector assigned to each barred-permutation vertex. -/
   vertexValue : BarredPermutation p → Fin p → Real
 
 namespace CoordinateAffineVertexMap
@@ -253,6 +254,7 @@ one parameter prism. -/
 structure Transgression
     (hp : Nat.Prime p)
     (F₀ F₁ : CoordinateAffineVertexMap p) where
+  /-- Facet-orbit indices whose coboundary records the change of positive index. -/
   facetIndex : PrimeOrbitCycle.FacetOrbit hp → ZMod p
   index_difference :
     positiveIndex hp F₁ - positiveIndex hp F₀ =
@@ -276,6 +278,7 @@ strictly stronger than the desired local constancy of the scalar count. -/
 structure LocalPrismFamily
     {X : Type*} [TopologicalSpace X]
     (hp : Nat.Prime p) (carrier : Set X) where
+  /-- The coordinate-valued vertex map assigned to each point outside the excluded carrier. -/
   map : ∀ z : X, z ∈ carrierᶜ → CoordinateAffineVertexMap p
   local_prism :
     ∀ (z : X) (hz : z ∈ carrierᶜ),

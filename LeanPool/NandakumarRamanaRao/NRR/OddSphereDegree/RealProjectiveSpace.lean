@@ -116,7 +116,6 @@ abstract deck-transformation group is introduced. -/
 proj n x`. This is `proj_neg` phrased through the bundled antipodal map, and is
 the pointwise statement that the antipodal map is a deck transformation of the
 double cover `proj n`. -/
-@[simp]
 theorem proj_antipodal {n : ℕ} (x : Sphere n) :
     proj n (antipodal n x) = proj n x := by
   simpa using proj_neg x
@@ -245,7 +244,6 @@ theorem inducedOnRP_comm
 `inducedOnRP f hf (proj n x) = proj n (f x)`. This is the single-point form of
 `inducedOnRP_comm`, tagged `@[simp]` so that `simp` automatically pushes the
 descended map through `proj n` to the odd map `f` upstairs. -/
-@[simp]
 theorem inducedOnRP_proj
   {n : ℕ}
   (f : C(Sphere n, Sphere n))
@@ -385,7 +383,6 @@ theorem eq_or_eq_neg_of_proj_eq {n : ℕ} {x y : Sphere n}
 /-- Membership criterion for the fiber of `proj n` over `proj n x`: a point `y`
 lies in the fiber iff it equals `x` or its antipode `-x`. This is the `simp`-form
 of `proj_eq_iff` phrased as fiber membership. -/
-@[simp]
 theorem mem_proj_fiber {n : ℕ} {x y : Sphere n} :
     y ∈ proj n ⁻¹' {proj n x} ↔ y = x ∨ y = -x := by
   rw [Set.mem_preimage, Set.mem_singleton_iff]

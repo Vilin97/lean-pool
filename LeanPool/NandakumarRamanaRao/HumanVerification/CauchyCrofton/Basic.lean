@@ -29,7 +29,9 @@ noncomputable section
 
 namespace HumanVerification.CauchyCrofton
 
+/-- The Euclidean plane used by the Cauchy–Crofton verification interface. -/
 abbrev Point2 := NRR.HumanExport.Plane
+/-- Compact convex planar bodies with nonempty interior. -/
 abbrev Body := NRR.Geometry.ConvexBody Point2
 
 /-- Hausdorff perimeter: the one-dimensional Hausdorff measure of the topological boundary. -/

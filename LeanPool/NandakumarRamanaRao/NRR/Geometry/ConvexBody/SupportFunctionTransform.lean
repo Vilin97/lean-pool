@@ -78,7 +78,7 @@ avoid a duplicate declaration. -/
 /-- **Positive scaling of the body.** `h_{rK}(u) = r · h_K(u)` for `0 < r`.
 
 This is the transformation-API spelling of the base-module lemma `supportFunction_scalePos`. -/
-@[simp] theorem supportFunction_scalePos_body
+theorem supportFunction_scalePos_body
     (K : ConvexBody E) {r : ℝ} (hr : 0 < r) (u : E) :
     supportFunction (K.scalePos r hr) u = r * supportFunction K u :=
   K.supportFunction_scalePos hr u
@@ -103,7 +103,7 @@ def neg (K : ConvexBody E) : ConvexBody E where
 @[simp] theorem neg_carrier (K : ConvexBody E) :
     (K.neg : Set E) = Neg.neg '' (K : Set E) := rfl
 
-@[simp] theorem mem_neg (K : ConvexBody E) (x : E) :
+theorem mem_neg (K : ConvexBody E) (x : E) :
     x ∈ (K.neg : Set E) ↔ -x ∈ (K : Set E) := by
   rw [neg_carrier]
   constructor
@@ -142,7 +142,7 @@ def imageLinearIsometryEquiv (K : ConvexBody E) (e : E ≃ₗᵢ[ℝ] F) : Conve
 @[simp] theorem imageLinearIsometryEquiv_carrier (K : ConvexBody E) (e : E ≃ₗᵢ[ℝ] F) :
     (K.imageLinearIsometryEquiv e : Set F) = e '' (K : Set E) := rfl
 
-@[simp] theorem mem_imageLinearIsometryEquiv (K : ConvexBody E) (e : E ≃ₗᵢ[ℝ] F) (y : F) :
+theorem mem_imageLinearIsometryEquiv (K : ConvexBody E) (e : E ≃ₗᵢ[ℝ] F) (y : F) :
     y ∈ (K.imageLinearIsometryEquiv e : Set F) ↔ e.symm y ∈ (K : Set E) := by
   rw [imageLinearIsometryEquiv, mem_imageLinearEquiv]
   rfl

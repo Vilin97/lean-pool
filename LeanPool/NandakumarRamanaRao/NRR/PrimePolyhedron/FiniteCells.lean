@@ -54,14 +54,20 @@ simplex of the declared dimension.  The relation `IsFace a b` means that the cel
 face of `b`.
 -/
 structure FiniteCellStructure (X : Type*) [TopologicalSpace X] where
+  /-- The finite index type of cells in the structure. -/
   Cell : Type*
+  /-- An enumeration of all cells. -/
   [cellFintype : Fintype Cell]
+  /-- Decidable equality of cell indices. -/
   [cellDecidableEq : DecidableEq Cell]
+  /-- The dimension assigned to each cell. -/
   dim : Cell → ℕ
+  /-- Parametrize each cell by the standard simplex of its assigned dimension. -/
   param : ∀ c : Cell, StandardSimplex (dim c) → X
   continuous_param : ∀ c, Continuous (param c)
   isCompact_range : ∀ c, IsCompact (Set.range (param c))
   cover : ∀ x : X, ∃ c w, param c w = x
+  /-- The relation expressing that one cell is a face of another. -/
   IsFace : Cell → Cell → Prop
   face_refl : ∀ c, IsFace c c
   face_trans : ∀ {a b c}, IsFace a b → IsFace b c → IsFace a c

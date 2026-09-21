@@ -36,9 +36,11 @@ open RefinedAffineMap
 
 variable {p d n : Nat}
 
+/-- The identity correspondence between parent vertex indices. -/
 def parentIndex (hp : Nat.Prime p) : Fin (p - 1 + 1) → Fin (p - 1 + 1) :=
   id
 
+/-- Cast cylinder vertex indices to the dimension convention for the endpoint stack. -/
 def cylinderIndex (hp : Nat.Prime p) : Fin (p + 1) → Fin (p - 1 + 2) :=
   Fin.cast (by have := hp.pos; omega)
 

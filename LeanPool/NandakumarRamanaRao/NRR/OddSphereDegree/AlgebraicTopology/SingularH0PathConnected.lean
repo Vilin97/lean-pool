@@ -28,6 +28,7 @@ theorem aug_comp_boundary_eq_zero (Y : TopCat.{0}) :
   ext c
   exact aug_boundary c
 
+/-- The augmentation induced on zeroth singular homology. -/
 def H0aug (Y : TopCat.{0}) : (singularChainComplex ℤ Y).homology 0 ⟶ ModuleCat.of ℤ ℤ :=
   (singularChainComplex ℤ Y).homologyι 0 ≫
     (singularChainComplex ℤ Y).descOpcycles (aug Y) 1 prev_zero (aug_comp_boundary_eq_zero Y)
@@ -136,6 +137,7 @@ theorem surjective_H0aug (Y : TopCat.{0}) [Nonempty ↑Y] :
   unfold H0aug
   erw [ModuleCat.hom_comp, LinearMap.comp_apply, hx, h_eval]
 
+/-- The zeroth-homology augmentation for chains supported in a subset. -/
 def subH0aug (X : TopCat.{0}) (S : Set X) :
     (subChainComplex ℤ X S).homology 0 ⟶ ModuleCat.of ℤ ℤ :=
   (subspaceHomologyIso S 0).hom ≫ H0aug (TopCat.of S)
@@ -146,6 +148,7 @@ instance isIso_subH0aug (X : TopCat.{0}) (S : Set X) [Nonempty S] [PathConnected
   unfold subH0aug
   infer_instance
 
+/-- The continuous inclusion between nested subspaces, bundled in `TopCat`. -/
 def setInclusionTopCat (X : TopCat.{0}) (S T : Set X) (h : S ⊆ T) :
     TopCat.of S ⟶ TopCat.of T :=
   TopCat.ofHom ⟨Set.inclusion h, by fun_prop⟩

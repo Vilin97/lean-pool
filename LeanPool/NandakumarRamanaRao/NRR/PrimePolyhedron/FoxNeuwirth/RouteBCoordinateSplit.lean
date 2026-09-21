@@ -42,9 +42,11 @@ variable (C : RelativeAffineCellSystem hp N₀ N₁ M L)
 /-- A finite decomposition of all movable scalar-orbit indices into the
 selected `p`-coordinate vector block and its complement. -/
 structure SelectedVectorCoordinateSplit where
+  /-- The index type of movable coordinates outside the selected vector block. -/
   Rest : Type
   instFintypeRest : Fintype Rest
   instDecidableEqRest : DecidableEq Rest
+  /-- Split movable coordinate indices into the remaining coordinates and one full vector block. -/
   indexEquiv : MovableParameter hp C ≃ Rest ⊕ Fin p
 
 attribute [instance]
@@ -171,7 +173,9 @@ is discharged by the standard finite-coordinate permutation theorem. -/
 structure MeasurePreservingSelectedVectorSplit
     (hp : Nat.Prime p)
     (C : RelativeAffineCellSystem hp N₀ N₁ M L) where
+  /-- The finite-coordinate decomposition underlying the measure-preserving parameter split. -/
   coordinateSplit : SelectedVectorCoordinateSplit hp C
+  /-- The measurable parameter-space equivalence separating the selected vector block. -/
   measurableEquiv :
     MeasurableEquiv
       (MovableParameterSpace hp C)

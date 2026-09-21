@@ -19,6 +19,7 @@ namespace NRR
 variable {p : ℕ}
 
 structure PrimeConfigurationModel (hp : Nat.Prime p) where
+  /-- The compact metric parameter space of the prime configuration model. -/
   Point : Type
   [metricSpace : MetricSpace Point]
   [compactSpace : CompactSpace Point]
@@ -26,8 +27,10 @@ structure PrimeConfigurationModel (hp : Nat.Prime p) where
   [pointAction : MulAction (PrimeSymmetry hp) Point]
   continuous_smul :
     ∀ g : PrimeSymmetry hp, Continuous fun x : Point => g • x
+  /-- The continuous map from model points to labelled configurations. -/
   toConfig : C(Point, Config p)
   toConfig_equivariant : IsPrimeEquivariant (hp := hp) toConfig
+  /-- The reference continuous map to the zero-sum representation. -/
   reference : C(Point, ZeroSum p)
   reference_equivariant : IsPrimeEquivariant (hp := hp) reference
 

@@ -21,6 +21,7 @@ namespace NRR
 /-- A convex partition indexed by an arbitrary type. Finiteness is only required when converting
 back to the public `ConvexPartition` structure. -/
 structure IndexedConvexPartition (K : Body) (ι : Type*) where
+  /-- The convex body assigned to each index of the partition. -/
   piece : ι → Body
   subset : ∀ i, (piece i : Set E2) ⊆ (K : Set E2)
   covers : (K : Set E2) ⊆ ⋃ i, (piece i : Set E2)

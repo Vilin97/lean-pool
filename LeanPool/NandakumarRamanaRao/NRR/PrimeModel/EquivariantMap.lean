@@ -86,7 +86,7 @@ def PrimeSymmetry.smulParamProd
     (g : PrimeSymmetry hp) (z : P × X) : P × X :=
   (z.1, g • z.2)
 
-@[simp] theorem PrimeSymmetry.smulParamProd_one
+theorem PrimeSymmetry.smulParamProd_one
     [MulAction (PrimeSymmetry hp) X] (z : P × X) :
     PrimeSymmetry.smulParamProd (hp := hp) (1 : PrimeSymmetry hp) z = z := by
   ext <;> simp [PrimeSymmetry.smulParamProd]

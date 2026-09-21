@@ -76,6 +76,7 @@ noncomputable def orbitIncidence
   classical
   exact ∑ c : qt.orbit, C.incidence (facetRepresentative (G := G) C qf) c
 
+omit [Fintype G] in
 /-- Coefficients are constant on every top orbit. -/
 theorem coefficient_eq_representative
     (E : EquivariantData (G := G) C)

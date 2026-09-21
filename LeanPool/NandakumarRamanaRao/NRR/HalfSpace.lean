@@ -39,7 +39,7 @@ theorem convex (u : E2) (c : ℝ) : Convex ℝ (Halfspace.of u c) :=
 theorem isClosed (u : E2) (c : ℝ) : IsClosed (Halfspace.of u c) :=
   Geometry.lowerClosedHalfspace_isClosed u c
 
-@[simp] theorem mem_halfspace (u x : E2) (c : ℝ) :
+theorem mem_halfspace (u x : E2) (c : ℝ) :
     x ∈ Halfspace.of u c ↔ ⟪u, x⟫ ≤ c :=
   Geometry.mem_lowerClosedHalfspace u c x
 

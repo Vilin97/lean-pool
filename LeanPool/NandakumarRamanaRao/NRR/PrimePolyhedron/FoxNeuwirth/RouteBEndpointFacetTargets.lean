@@ -77,7 +77,7 @@ theorem cylinderVertex_point (hp : Nat.Prime p) {N : Nat}
 
 /-- A finite partial injection into a finite type extends to a permutation. -/
 theorem exists_perm_extending_finset
-    {α : Type*} [Fintype α] [DecidableEq α]
+    {α : Type*}  [DecidableEq α]
     (s : Finset α) (f : α → α)
     (hinj : Set.InjOn f (s : Set α)) :
     ∃ e : Equiv.Perm α, ∀ x ∈ s, e x = f x := by

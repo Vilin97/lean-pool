@@ -1541,6 +1541,7 @@ theorem nonhorizontalMapWeight_smul
 def orbitFacetEquiv (hp : Nat.Prime p) : Fin p ≃ Fin (p - 2 + 2) :=
   finCongr (by have := hp.two_le; omega)
 
+/-- The face index corresponding to a labelled facet of a prime orbit. -/
 noncomputable def orbitFacetIndex (hp : Nat.Prime p) (k : Fin p) : Fin (p - 2 + 2) :=
   orbitFacetEquiv hp k
 
@@ -1639,11 +1640,13 @@ abbrev OrbitFaceWitness
         (FaceMap.delete (orbitFacetIndex hp z.2)) =
       PrimeOrbitCycle.facetRepresentative hp z.1.1}
 
+/-- Enumerate the members of a finite top-cell orbit. -/
 noncomputable local instance topOrbitMemberFintype
     (hp : Nat.Prime p) (c : PrimeOrbitCycle.TopOrbit hp) : Fintype c.orbit := by
   classical
   exact Subtype.fintype _
 
+/-- Enumerate the face witnesses of a fixed top-cell orbit. -/
 noncomputable local instance orbitFaceWitnessFintype
     (hp : Nat.Prime p) (c : PrimeOrbitCycle.TopOrbit hp) :
     Fintype (OrbitFaceWitness hp c) := Fintype.ofFinite _

@@ -121,6 +121,7 @@ structure Data
     {F : ContinuousCoordinateMap p}
     (A : RegularApproximation hp F)
     (k : Nat) where
+  /-- The vertex assignment on the iterated collar witnessing the affine pullback. -/
   assignment : Assignment hp (positiveWitness hp A.level k).collar.cells
   represents : Represents (positiveWitness hp A.level k).collar.cells
     (baseOriginalPLMap hp A)

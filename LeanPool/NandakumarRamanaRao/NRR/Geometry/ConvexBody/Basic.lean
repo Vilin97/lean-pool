@@ -81,8 +81,6 @@ instance : Coe (ConvexBody E) (Set E) := ⟨carrier⟩
 /-- Membership `x ∈ K` unfolds to membership in the carrier. -/
 instance : Membership E (ConvexBody E) := ⟨fun K x => x ∈ K.carrier⟩
 
-@[simp] theorem mem_carrier (K : ConvexBody E) (x : E) :
-    x ∈ K.carrier ↔ x ∈ (K : Set E) := Iff.rfl
 
 @[simp] theorem mem_coe (K : ConvexBody E) (x : E) :
     x ∈ (K : Set E) ↔ x ∈ K := Iff.rfl

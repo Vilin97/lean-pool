@@ -13,10 +13,12 @@ noncomputable section
 
 namespace HumanVerification
 
+/-- The real Euclidean plane, with its standard inner product and measure. -/
 abbrev Plane := EuclideanSpace ℝ (Fin 2)
 
 /-- A nondegenerate compact convex figure in the Euclidean plane. -/
 structure ConvexFigure where
+  /-- The set of points belonging to the figure. -/
   carrier : Set Plane
   isConvex : Convex ℝ carrier
   isCompact : IsCompact carrier
@@ -24,9 +26,11 @@ structure ConvexFigure where
 
 namespace ConvexFigure
 
+/-- Lebesgue area of the figure's carrier. -/
 def area (F : ConvexFigure) : ENNReal :=
   MeasureTheory.volume F.carrier
 
+/-- One-dimensional Hausdorff measure of the figure's boundary. -/
 def perimeter (F : ConvexFigure) : ENNReal :=
   (MeasureTheory.Measure.hausdorffMeasure (1 : ℝ) :
       MeasureTheory.Measure Plane)
@@ -34,6 +38,7 @@ def perimeter (F : ConvexFigure) : ENNReal :=
 
 end ConvexFigure
 
+/-- A finite family covers the figure and has pairwise disjoint interiors. -/
 def IsConvexPartition {n : ℕ}
     (F : ConvexFigure) (pieces : Fin n → ConvexFigure) : Prop :=
   F.carrier = ⋃ i, (pieces i).carrier ∧

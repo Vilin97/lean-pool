@@ -23,6 +23,7 @@ namespace NRR
 
 namespace PrimeModel
 
+/-- Site families used to construct the model's power-diagram partitions. -/
 abbrev SiteFamily := EMP.VariableBody.SiteFamily
 
 end PrimeModel

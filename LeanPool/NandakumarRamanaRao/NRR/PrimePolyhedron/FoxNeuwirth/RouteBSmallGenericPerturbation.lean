@@ -171,7 +171,9 @@ regularity are controlled.  `radius` is the radius around the generic center; th
 closeness conclusion uses the independent control radius `min eps (margin / 2)`. -/
 structure SafePerturbationBall
     (base : Assignment hp C) (eps margin : Real) where
+  /-- The center of a ball of admissible movable parameters. -/
   center : MovableParameterSpace hp C
+  /-- The positive radius on which the perturbation bounds and genericity remain valid. -/
   radius : Real
   radius_pos : 0 < radius
   closeToBase : ∀ x ∈ Metric.ball center radius,
@@ -336,6 +338,7 @@ theorem exists_safePerturbationBall
 /-- Complete Step 6 output. -/
 structure SmallGenericPerturbationResult
     (base : Assignment hp C) (eps margin : Real) where
+  /-- The chosen movable parameters realizing the small generic perturbation. -/
   move : MovableParameterSpace hp C
   closeToBase : AssignmentClose
     (assignmentOfMovableParameters hp C base move) base eps

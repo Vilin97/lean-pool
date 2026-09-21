@@ -255,11 +255,11 @@ def vertex (c : BarredPermutation p) : Realization p :=
     vertex c d = if d = c then 1 else 0 :=
   rfl
 
-@[simp] theorem vertex_self (c : BarredPermutation p) :
+theorem vertex_self (c : BarredPermutation p) :
     vertex c c = 1 := by
   simp [vertex_apply]
 
-@[simp] theorem vertex_apply_of_ne
+theorem vertex_apply_of_ne
     {c d : BarredPermutation p} (h : d ≠ c) :
     vertex c d = 0 := by
   simp [vertex_apply, h]
@@ -277,6 +277,7 @@ end Realization
 
 /-- A strictly increasing finite-ordinal map selects a face of an order-complex simplex. -/
 structure FaceMap (m d : Nat) where
+  /-- The strictly increasing map of finite vertex indices selecting the face. -/
   toFun : Fin (m + 1) → Fin (d + 1)
   strictMono : StrictMono toFun
 

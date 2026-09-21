@@ -66,7 +66,7 @@ def translate (K : ConvexBody E) (v : E) : ConvexBody E where
 @[simp] theorem translate_carrier (K : ConvexBody E) (v : E) :
     (K.translate v : Set E) = (fun x => v + x) '' (K : Set E) := rfl
 
-@[simp] theorem mem_translate (K : ConvexBody E) (v x : E) :
+theorem mem_translate (K : ConvexBody E) (v x : E) :
     x ∈ (K.translate v : Set E) ↔ x - v ∈ (K : Set E) := by
   rw [translate_carrier]
   constructor
@@ -107,7 +107,7 @@ def scalePos (K : ConvexBody E) (r : ℝ) (hr : 0 < r) : ConvexBody E where
 @[simp] theorem scalePos_carrier (K : ConvexBody E) {r : ℝ} (hr : 0 < r) :
     (K.scalePos r hr : Set E) = (fun x => r • x) '' (K : Set E) := rfl
 
-@[simp] theorem mem_scalePos (K : ConvexBody E) {r : ℝ} (hr : 0 < r) (x : E) :
+theorem mem_scalePos (K : ConvexBody E) {r : ℝ} (hr : 0 < r) (x : E) :
     x ∈ (K.scalePos r hr : Set E) ↔ (r⁻¹) • x ∈ (K : Set E) := by
   rw [scalePos_carrier]
   constructor

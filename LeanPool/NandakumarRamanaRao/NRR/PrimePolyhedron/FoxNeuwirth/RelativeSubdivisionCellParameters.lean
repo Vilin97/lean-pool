@@ -102,6 +102,7 @@ theorem expansionValue_scaleExpansion
 
 /-- A proof-carrying finite generator representation of a singular chain. -/
 structure FiniteChainRealization (c : singularChainGroup R X n) where
+  /-- A finite list of coefficient–simplex terms representing the singular chain. -/
   terms : List (R × singularSimplices X n)
   value_eq : expansionValue terms = c
 
@@ -200,6 +201,7 @@ realization-cylinder barycentric coordinates. -/
 structure AffineCollarRealization
     {n : Nat}
     (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n) where
+  /-- A finite singular-generator representation of the collar chain. -/
   support : FiniteChainRealization B.collarChain
   affine : ∀ i : support.Occurrence, IsAffineCylinderSimplex (support.simplex i)
 

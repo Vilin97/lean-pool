@@ -158,15 +158,21 @@ structure FineFullCollarReferenceControlData
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) where
+  /-- The common spatial level of the collar equipped with reference control. -/
   commonLevel : Nat
+  /-- The time-refinement level of the collar equipped with reference control. -/
   timeLevel : Nat
+  /-- The endpoint-identified collar carrying the reference-value estimates. -/
   collar : EndpointIdentifiedRelativeAffineCollar hp
     A₀.toRegularApproximation.level A₁.toRegularApproximation.level
     commonLevel timeLevel
+  /-- The collar assignment whose affine values stay close to the reference values. -/
   assignment : Assignment hp collar.cells
   horizontalVertexFixed : HorizontalVertexFixed hp A₀ A₁ collar assignment
+  /-- The positive norm margin used to compare affine values with the reference prescription. -/
   margin : Real
   margin_pos : 0 < margin
+  /-- The reference coordinate vector at every point of each collar cell. -/
   referenceValue : collar.cells.Cell → StandardSimplex p → Fin p → Real
   referenceNormMargin : ∀ (q : collar.cells.Cell) (w : StandardSimplex p),
     margin ≤ ‖referenceValue q w‖
@@ -235,8 +241,11 @@ structure FineRelativePatchedMeshData
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) where
+  /-- The common spatial level of the fine mesh for the patched homotopy. -/
   commonLevel : Nat
+  /-- The time-refinement level of the fine mesh for the patched homotopy. -/
   timeLevel : Nat
+  /-- The collar whose sampled vertex values agree with the stable patched homotopy. -/
   collar : EndpointIdentifiedRelativeAffineCollar hp
     A₀.toRegularApproximation.level A₁.toRegularApproximation.level
     commonLevel timeLevel

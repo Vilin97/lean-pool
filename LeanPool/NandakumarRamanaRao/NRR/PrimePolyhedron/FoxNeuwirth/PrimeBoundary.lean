@@ -44,7 +44,7 @@ end ShuffleIndex
 /-- Number of order-preserving shuffles of blocks of sizes `k` and `p-k`. -/
 def shuffleMultiplicity (p k : ℕ) : ℕ := p.choose k
 
-@[simp] theorem card_shuffleIndex :
+theorem card_shuffleIndex :
     Fintype.card (ShuffleIndex p k) = shuffleMultiplicity p k := by
   simp [shuffleMultiplicity]
 

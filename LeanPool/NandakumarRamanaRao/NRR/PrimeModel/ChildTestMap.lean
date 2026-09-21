@@ -22,6 +22,7 @@ variable {K : Geometry.ConvexBody Plane} {A : ℝ}
 
 namespace PrimeConfigurationModel
 
+/-- Evaluate the multivalued observable on every equal-area child body and interval parameter. -/
 noncomputable def childTestMap
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)

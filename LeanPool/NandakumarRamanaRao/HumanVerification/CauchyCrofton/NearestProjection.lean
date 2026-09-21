@@ -30,7 +30,7 @@ theorem nearestPoint_spec (K : Body) (x : Point2) :
     (exists_norm_eq_iInf_of_complete_convex
       K.nonempty K.isCompact.isComplete K.convex x)
 
-@[simp] theorem nearestPoint_mem (K : Body) (x : Point2) :
+theorem nearestPoint_mem (K : Body) (x : Point2) :
     nearestPoint K x ∈ (K : Set Point2) :=
   (nearestPoint_spec K x).1
 

@@ -83,10 +83,12 @@ structure IteratedPartitionWitness
     (ps : List PrimeFactor) (A : ℝ) (hA : 0 < A)
     (φ : NiceMV (BodySpace K (primeDescendArea A ps)))
     (C : BodySpace K A) (y : SignedInterval) where
+  /-- The indexed convex partition decoded from the iterated refinement. -/
   partition :
     IndexedConvexPartition
       (EMP.VariableBody.solidBody hA C)
       (PrimeRefinementIndex ps)
+  /-- The leaf body associated with each sequence of prime-refinement choices. -/
   leaf : PrimeRefinementIndex ps → BodySpace K (primeDescendArea A ps)
   piece_eq_leaf :
     ∀ i, (partition.piece i : Set Plane) = ((leaf i).body : Set Plane)
@@ -100,7 +102,9 @@ structure IteratedRefinement
     {K : Geometry.ConvexBody Plane}
     (ps : List PrimeFactor) (A : ℝ) (hA : 0 < A)
     (φ : NiceMV (BodySpace K (primeDescendArea A ps))) where
+  /-- The multivalued observable on the parent body produced by all prime-refinement steps. -/
   output : NiceMV (BodySpace K A)
+  /-- Decode a zero of the parent observable into a partition witness with zero-valued leaves. -/
   decode :
     ∀ C : BodySpace K A, ∀ y : SignedInterval,
       output.Zero C y → IteratedPartitionWitness ps A hA φ C y

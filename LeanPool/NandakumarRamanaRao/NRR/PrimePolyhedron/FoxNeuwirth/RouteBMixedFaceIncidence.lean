@@ -38,13 +38,18 @@ scalar orbit is movable.  The selected coordinate `j` is only used to certify
 that the vertex is genuinely movable; once one scalar coordinate at a vertex is
 movable, the corresponding vector value is controlled by movable orbit data. -/
 structure MixedFaceCase where
+  /-- The collar cell containing the mixed face. -/
   cell : C.Cell
+  /-- The first vertex omitted from the codimension-two face. -/
   omitted₀ : Fin (p + 1)
+  /-- The second, distinct vertex omitted from the face. -/
   omitted₁ : Fin (p + 1)
   omitted_ne : omitted₀ ≠ omitted₁
+  /-- A vertex retained in the face whose selected coordinate is movable. -/
   retained : Fin (p + 1)
   retained_ne₀ : retained ≠ omitted₀
   retained_ne₁ : retained ≠ omitted₁
+  /-- The selected scalar coordinate of the retained vertex. -/
   coordinate : Fin p
   movable : ¬ IsFrozenParameter hp C
     (localParameter hp C cell retained coordinate)

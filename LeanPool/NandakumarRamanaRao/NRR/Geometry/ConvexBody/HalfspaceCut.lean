@@ -156,13 +156,13 @@ def cutUpperClosed
     (K.cutUpperClosed u t hInt : Set E) =
       (K : Set E) ∩ upperClosedHalfspace u t := rfl
 
-@[simp] theorem mem_cutLowerClosed
+theorem mem_cutLowerClosed
     (K : ConvexBody E) (u : E) (t : ℝ)
     (hInt : (interior ((K : Set E) ∩ lowerClosedHalfspace u t)).Nonempty) (x : E) :
     x ∈ (K.cutLowerClosed u t hInt : Set E) ↔
       x ∈ (K : Set E) ∧ inner ℝ u x ≤ t := Iff.rfl
 
-@[simp] theorem mem_cutUpperClosed
+theorem mem_cutUpperClosed
     (K : ConvexBody E) (u : E) (t : ℝ)
     (hInt : (interior ((K : Set E) ∩ upperClosedHalfspace u t)).Nonempty) (x : E) :
     x ∈ (K.cutUpperClosed u t hInt : Set E) ↔

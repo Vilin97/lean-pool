@@ -38,13 +38,17 @@ variable {R : Type*} [CommRing R]
 zero-count argument, and it applies equally to an ordinary finite simplicial cycle or to its finite
 symmetry-orbit quotient. -/
 structure FiniteIncidenceCycle (R : Type*) [CommRing R] where
+  /-- The finite type of top-dimensional cells in the incidence cycle. -/
   TopCell : Type*
+  /-- The finite type of codimension-one facets in the incidence cycle. -/
   Facet : Type*
   [topCellFintype : Fintype TopCell]
   [topCellDecidableEq : DecidableEq TopCell]
   [facetFintype : Fintype Facet]
   [facetDecidableEq : DecidableEq Facet]
+  /-- The signed incidence coefficient of a facet in a top cell. -/
   incidence : Facet → TopCell → R
+  /-- The coefficient of each top cell in the cycle. -/
   coefficient : TopCell → R
   boundary_zero : ∀ f : Facet, ∑ c : TopCell, incidence f c * coefficient c = 0
 
@@ -108,6 +112,7 @@ theorem zeroCount_coboundary_eq_zero (h : C.Facet → R) :
 /-- A chain-level admissible homotopy.  The transgression is the finite signed zero set in the
 prism facets, and `index_difference` is the local finite Stokes relation. -/
 structure IndexHomotopy (index₀ index₁ : C.TopCell → R) where
+  /-- The facet cochain whose coboundary relates the two index functions. -/
   transgression : C.Facet → R
   index_difference : index₁ - index₀ = C.coboundary transgression
 
@@ -195,6 +200,7 @@ end SimplicialIncidence
 /-- Vertex data for a map that is affine on every simplex of the order complex.  The target is an
 explicit `d`-dimensional real coordinate space. -/
 structure AffineVertexMap (p d : Nat) where
+  /-- The coordinate vector assigned to each barred-permutation vertex. -/
   vertexValue : BarredPermutation p → Fin d → ℝ
 
 namespace AffineVertexMap
@@ -263,10 +269,14 @@ end FoxNeuwirthOrderComplex
 /-- Proof-carrying finite orbit model for the finite zero count.  The top and facet types are
 intended to be prime-symmetry orbits of transverse simplices and prism facets. -/
 structure FiniteOrbitZeroCountModel {p : Nat} (hp : Nat.Prime p) where
+  /-- The finite incidence cycle on which zero indices are counted. -/
   cycle : FiniteIncidenceCycle (ZMod p)
+  /-- The order-complex simplex representing each top cell of the cycle. -/
   topSimplex : cycle.TopCell → FoxNeuwirthOrderComplex.Simplex p (p - 1)
+  /-- The regular reference affine map used to normalize the zero count. -/
   referenceMap : FoxNeuwirthOrderComplex.AffineVertexMap p (p - 1)
   referenceRegular : referenceMap.IsRegular
+  /-- The local zero index of the reference map on each top cell. -/
   referenceIndex : cycle.TopCell → ZMod p
   referenceIndex_eq :
     ∀ c, referenceIndex c = referenceMap.localZeroIndex (topSimplex c)
@@ -286,8 +296,10 @@ theorem referenceCount_ne_zero (M : FiniteOrbitZeroCountModel hp) :
 /-- Endpoint data for an affine family: its local-index function is related to the reference
 function by a finite incidence transgression. -/
 structure EndpointData (M : FiniteOrbitZeroCountModel hp) where
+  /-- The regular affine map at the endpoint of the index comparison. -/
   map : FoxNeuwirthOrderComplex.AffineVertexMap p (p - 1)
   regular : map.IsRegular
+  /-- The finite incidence transgression connecting reference and endpoint indices. -/
   homotopy : M.cycle.IndexHomotopy M.referenceIndex
     (fun c => map.localZeroIndex (M.topSimplex c))
 

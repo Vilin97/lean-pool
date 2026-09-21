@@ -139,12 +139,14 @@ def relabel (sigma : Equiv.Perm (Fin p))
     (chain : SimplicialChain R p d) : SimplicialChain R p d :=
   fun s => chain (s.relabel sigma.symm)
 
+omit [CommRing R] in
 @[simp] theorem relabel_apply
     (sigma : Equiv.Perm (Fin p))
     (chain : SimplicialChain R p d) (s : Simplex p d) :
     relabel sigma chain s = chain (s.relabel sigma.symm) :=
   rfl
 
+omit [CommRing R] in
 @[simp] theorem relabel_one (chain : SimplicialChain R p d) :
     relabel 1 chain = chain := by
   funext s
@@ -155,6 +157,7 @@ def relabel (sigma : Equiv.Perm (Fin p))
     exact (1 : Equiv.Perm (Fin p)).symm_apply_apply i]
   rw [Simplex.relabel_one]
 
+omit [CommRing R] in
 /-- Relabelling is a left action on chains. -/
 theorem relabel_mul
     (sigma tau : Equiv.Perm (Fin p))

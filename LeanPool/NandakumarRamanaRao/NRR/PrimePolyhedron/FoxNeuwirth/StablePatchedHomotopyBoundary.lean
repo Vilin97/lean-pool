@@ -57,7 +57,7 @@ noncomputable def stablePatchedHomotopy
 
 /-- At every lower refined endpoint vertex, the patched homotopy starts at exactly the stored
 stable approximation sample. -/
-@[simp] theorem stablePatchedHomotopy_zero_refinedVertex
+theorem stablePatchedHomotopy_zero_refinedVertex
     (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)
     (H : ZeroFreeHomotopy hp F₀ F₁)
@@ -74,7 +74,7 @@ stable approximation sample. -/
 
 /-- At every upper refined endpoint vertex, the patched homotopy ends at exactly the stored
 stable approximation sample. -/
-@[simp] theorem stablePatchedHomotopy_one_refinedVertex
+theorem stablePatchedHomotopy_one_refinedVertex
     (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)
     (H : ZeroFreeHomotopy hp F₀ F₁)

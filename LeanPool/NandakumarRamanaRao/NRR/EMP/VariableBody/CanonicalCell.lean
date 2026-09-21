@@ -59,7 +59,7 @@ noncomputable def canonicalCell
      nonempty' := (canonicalCell_interior_nonempty sites hA hn z i).mono interior_subset },
    cellSet_subset_parent hA z.1 (sites z.2) _ i⟩
 
-@[simp] theorem canonicalCell_carrier
+theorem canonicalCell_carrier
     (sites : SiteFamily X n) (hA : 0 < A) (hn : 0 < n)
     (z : BodySpace K A × X) (i : Fin n) :
     ((canonicalCell sites hA hn z i).body : Set Plane) =

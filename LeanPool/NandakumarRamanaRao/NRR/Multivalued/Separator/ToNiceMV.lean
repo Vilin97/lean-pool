@@ -41,7 +41,7 @@ noncomputable def toNiceMV
   left_neg := S.signedDistance_left_neg
   right_pos := S.signedDistance_right_pos
 
-@[simp] theorem toNiceMV_eval
+theorem toNiceMV_eval
     (S : TopBottomSeparator X)
     (x : X) (t : SignedInterval) :
     S.toNiceMV.eval x t = S.signedDistance (x, t) :=

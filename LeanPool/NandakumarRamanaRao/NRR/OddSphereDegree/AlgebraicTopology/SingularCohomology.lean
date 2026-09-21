@@ -108,7 +108,6 @@ noncomputable def singularCohomologyFunctor (R : Type) [CommRing R]
   singularCochainComplexFunctor R M ⋙ HomologicalComplex.homologyFunctor _ _ n
 
 /-- Functoriality: the singular cohomology functor preserves identities. -/
-@[simp]
 theorem singularCohomologyFunctor_map_id (R : Type) [CommRing R]
     (M : ModuleCat.{0} R) (n : ℕ) (X : TopCat.{0}ᵒᵖ) :
     (singularCohomologyFunctor R M n).map (𝟙 X) = 𝟙 _ :=
@@ -133,7 +132,6 @@ theorem singularCohomologyFunctor_map_congr (R : Type) [CommRing R]
   rw [h]
 
 /-- Functoriality: the singular cochain complex functor preserves identities. -/
-@[simp]
 theorem singularCochainComplexFunctor_map_id (R : Type) [CommRing R]
     (M : ModuleCat.{0} R) (X : TopCat.{0}ᵒᵖ) :
     (singularCochainComplexFunctor R M).map (𝟙 X) = 𝟙 _ :=

@@ -60,9 +60,6 @@ noncomputable def area (C : ConvexSubbody K) : ℝ :=
     (C.body : Set Plane) = (C.1 : Set Plane) :=
   rfl
 
-@[simp] theorem coe_to_set (C : ConvexSubbody K) :
-    (C : Set Plane) = (C.body : Set Plane) :=
-  rfl
 
 /-- The carrier of a subbody is convex. -/
 theorem convex (C : ConvexSubbody K) :

@@ -45,6 +45,8 @@ that is stored simplexwise by a regular approximation.  A gluing theorem builds
 this bundled map from the compatible local affine formulas. -/
 structure ZeroFreeEndpointInterpolant
     (hp : Nat.Prime p) (F : ZeroFreeMap hp) where
+  /-- The zero-free interpolating map joined to the original endpoint by a safe straight
+  segment. -/
   map : ZeroFreeMap hp
   zeroFreeStraightLine : ∀ x (t : Set.Icc (0 : Real) 1),
     (1 - t.1) • F.map x + t.1 • map.map x ≠ 0
@@ -69,11 +71,15 @@ structure ExactRelativeStableCollarData
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) where
+  /-- The common spatial level of the exact relative collar. -/
   commonLevel : Nat
+  /-- The time-refinement level of the exact relative collar. -/
   timeLevel : Nat
+  /-- The collar whose assignment agrees exactly with the horizontal endpoint data. -/
   collar : EndpointIdentifiedRelativeAffineCollar hp
     A₀.toRegularApproximation.level A₁.toRegularApproximation.level
     commonLevel timeLevel
+  /-- The boundary-compatible assignment satisfying the local positive-ray Stokes identity. -/
   assignment : Assignment hp collar.cells
   horizontalVertexFixed : HorizontalVertexFixed hp A₀ A₁ collar assignment
   localPositiveRayStokes :
@@ -123,11 +129,15 @@ structure ExactRelativeStableCollarGeneralPositionData
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) where
+  /-- The common spatial level of the collar in positive-ray general position. -/
   commonLevel : Nat
+  /-- The time-refinement level of the collar in positive-ray general position. -/
   timeLevel : Nat
+  /-- The endpoint-identified collar used for the exact general-position certificate. -/
   collar : EndpointIdentifiedRelativeAffineCollar hp
     A₀.toRegularApproximation.level A₁.toRegularApproximation.level
     commonLevel timeLevel
+  /-- The boundary-compatible vertex assignment in positive-ray general position. -/
   assignment : Assignment hp collar.cells
   horizontalVertexFixed : HorizontalVertexFixed hp A₀ A₁ collar assignment
   positiveRayGeneralPosition : ∀ q : collar.cells.Cell,

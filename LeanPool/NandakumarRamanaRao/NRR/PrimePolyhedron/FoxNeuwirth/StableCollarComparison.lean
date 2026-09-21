@@ -42,10 +42,14 @@ structure StableCollar
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) where
+  /-- The spatial subdivision level of the stable collar. -/
   N : Nat
+  /-- The final prism-refinement level of the stable collar. -/
   L : Nat
+  /-- The positive norm margin retained by the stable prism perturbation. -/
   m : Real
   positive : 0 < m
+  /-- The generic prism perturbation with the prescribed endpoint approximations. -/
   prism : Result hp N L H m
   boundaryFixed : BoundaryFixed hp N L A₀ A₁ prism.assignment
 

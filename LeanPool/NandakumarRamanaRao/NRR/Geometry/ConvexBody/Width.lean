@@ -54,13 +54,13 @@ noncomputable def widthFunction (K : ConvexBody E) (u : E) : ℝ :=
   rfl
 
 /-- **Evenness.** The width function is invariant under negation of the direction. -/
-@[simp] theorem widthFunction_neg (K : ConvexBody E) (u : E) :
+theorem widthFunction_neg (K : ConvexBody E) (u : E) :
     widthFunction K (-u) = widthFunction K u := by
   simp only [widthFunction_def, neg_neg]
   ring
 
 /-- **Zero direction.** The width function vanishes in the zero direction. -/
-@[simp] theorem widthFunction_zero (K : ConvexBody E) :
+theorem widthFunction_zero (K : ConvexBody E) :
     widthFunction K 0 = 0 := by
   simp [widthFunction_def]
 

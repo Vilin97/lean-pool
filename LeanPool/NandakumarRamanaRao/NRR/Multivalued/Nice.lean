@@ -97,7 +97,7 @@ def ofFunction
   left_neg := hleft
   right_pos := hright
 
-@[simp] theorem ofFunction_eval
+theorem ofFunction_eval
     (f : X → SignedInterval → ℝ)
     (hf : Continuous fun z : X × SignedInterval => f z.1 z.2)
     (hleft : ∀ x, f x SignedInterval.left < 0)

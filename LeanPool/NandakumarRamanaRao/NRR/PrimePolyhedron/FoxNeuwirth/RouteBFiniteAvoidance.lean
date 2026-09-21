@@ -26,6 +26,7 @@ open MeasureTheory
 
 variable {E ι : Type*} [PseudoMetricSpace E] [MeasurableSpace E]
 
+omit [PseudoMetricSpace E] in
 /-- A finite union of sets of `μ`-measure zero has `μ`-measure zero.
 
 The union is written over the subtype determined by the finite index set.  This

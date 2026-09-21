@@ -217,6 +217,7 @@ theorem kroneckerFunctional_iCycles_smul (X : TopCat.{0}) (n : ℕ) (s : ZMod 2)
   rw [hmap]
   rfl
 
+/-- Evaluate cocycles on homology classes through the Kronecker pairing. -/
 def kroneckerCyclesMap (X : TopCat.{0}) (n : ℕ) :
     (cochainCxZMod2 X).cycles n ⟶ homologyDualZMod2 X n :=
   ModuleCat.ofHom
@@ -264,6 +265,7 @@ theorem kroneckerCyclesMap_toCycles (X : TopCat.{0}) (n : ℕ) :
     rw [hz]
     rfl
 
+/-- The Kronecker map from cohomology to the linear dual of homology. -/
 def kroneckerMap (X : TopCat.{0}) (n : ℕ) :
     cohomologyZMod2 X n ⟶ homologyDualZMod2 X n :=
   ((cochainCxZMod2 X).homologyIsCokernel ((ComplexShape.up ℕ).prev n) n rfl).desc

@@ -39,7 +39,7 @@ In the barycentric subdivision proof, `α` is `Equiv.Perm (Fin (n+2))`,
 `ι π = (swap i i+1).trans π`, and `f π` is the corresponding internal face term.
 -/
 theorem finite_sum_cancel_of_fixedPointFree_involution
-    {α M : Type} [Fintype α] [DecidableEq α] [AddCommGroup M]
+    {α M : Type} [Fintype α]  [AddCommGroup M]
     (ι : α → α) (hιι : Function.Involutive ι) (hneq : ∀ a, ι a ≠ a)
     (f : α → M) (hpair : ∀ a, f (ι a) = - f a) :
     (∑ a : α, f a) = 0 := by

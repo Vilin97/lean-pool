@@ -18,11 +18,14 @@ open Equiv
 
 variable {p : ℕ}
 
+/-- The permutation subgroup used for prime symmetry: all permutations for two labels and even
+permutations otherwise. -/
 def primeSymmetrySubgroup (hp : Nat.Prime p) :
     Subgroup (Equiv.Perm (Fin p)) := by
   classical
   exact if p = 2 then ⊤ else alternatingGroup (Fin p)
 
+/-- The group of prime symmetries acting on the labelled coordinates. -/
 abbrev PrimeSymmetry (hp : Nat.Prime p) := primeSymmetrySubgroup hp
 
 /-- Faithful inclusion of the selected subgroup into all label permutations. -/

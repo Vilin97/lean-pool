@@ -652,6 +652,7 @@ theorem exists_positive_localAffineCoordinateNormMargin
 margin. -/
 structure PerturbationResult
     (base : Assignment hp C) (m : Real) where
+  /-- The selected values of the movable real coordinates. -/
   move : MovableParameter hp C → Real
   closeToBase : AssignmentClose
     (replaceMovable hp C base move) base (m / 2)

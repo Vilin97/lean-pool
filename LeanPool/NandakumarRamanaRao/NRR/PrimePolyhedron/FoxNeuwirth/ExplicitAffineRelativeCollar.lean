@@ -66,13 +66,17 @@ structure RelativeAffineCellSystem
   lower_le_common : N₀ ≤ M
   upper_le_common : N₁ ≤ M
 
+  /-- The finite type of affine cells forming the relative collar. -/
   Cell : Type
   cell_nonempty : Nonempty Cell
   instCellFintype : Fintype Cell
   instCellDecidableEq : DecidableEq Cell
 
+  /-- The coefficient of each collar cell in the prime residue field. -/
   coefficient : Cell → ZMod p
+  /-- The cylinder point assigned to each vertex of a collar cell. -/
   vertex : Cell → Fin (p + 1) → CylinderPoint p
+  /-- The affine simplex chart parametrizing each collar cell. -/
   chart : Cell → Delta p → CylinderPoint p
 
   chart_vertex : ∀ q i, chart q (stdSimplex.vertex i) = vertex q i
@@ -221,8 +225,11 @@ The structure does not assume pairwise cancellation: an arbitrary number of occu
 a signature. -/
 structure FoxNeuwirthRelativeAffineCollar
     (hp : Nat.Prime p) (N₀ N₁ M L : Nat) where
+  /-- The affine cell system underlying the relative collar. -/
   cells : RelativeAffineCellSystem hp N₀ N₁ M L
+  /-- The coefficient assigned to each lower boundary facet. -/
   lowerBoundaryCoefficient : cells.Facet → ZMod p
+  /-- The coefficient assigned to each upper boundary facet. -/
   upperBoundaryCoefficient : cells.Facet → ZMod p
   lower_zero_of_not_lower : ∀ s, ¬ cells.IsLowerFacet s → lowerBoundaryCoefficient s = 0
   upper_zero_of_not_upper : ∀ s, ¬ cells.IsUpperFacet s → upperBoundaryCoefficient s = 0
@@ -275,7 +282,9 @@ an artificial choice of a unique quotient-facet representative. -/
 structure EndpointIdentifiedRelativeAffineCollar
     (hp : Nat.Prime p) (N₀ N₁ M L : Nat)
     extends FoxNeuwirthRelativeAffineCollar hp N₀ N₁ M L where
+  /-- Identify each lower refined top cell with its collar boundary facet. -/
   lowerFacet : RefinedAffineMap.TopCell hp N₀ → cells.Facet
+  /-- Identify each upper refined top cell with its collar boundary facet. -/
   upperFacet : RefinedAffineMap.TopCell hp N₁ → cells.Facet
 
   lowerFacet_isLower : ∀ q, cells.IsLowerFacet (lowerFacet q)
@@ -960,11 +969,14 @@ theorem eval_restrictedGenericityPolynomial
 relative cells. -/
 structure RelativePolynomialAttachment
     (base : Assignment hp C) where
+  /-- The determinant and minor polynomials controlling relative genericity. -/
   polynomial : RelativeGenericityIndex hp C → MovablePolynomialRing hp C
   polynomial_eq : polynomial = restrictedGenericityPolynomial hp C base
   evaluation : ∀ move i,
     MvPolynomial.eval move (polynomial i) =
       genericityValue hp C (replaceMovable hp C base move) i
+
+attribute [-simp] RelativePolynomialAttachment.mk.injEq
 
 /-- Every explicit affine relative cell system carries the audited boundary-restricted determinant
 and minor polynomial attachment. -/
@@ -988,8 +1000,11 @@ variable (hp : Nat.Prime p)
 boundary assignment are available. -/
 structure AffineRelativeCellAndPolynomialAttachment
     (hp : Nat.Prime p) (N₀ N₁ M L : Nat) where
+  /-- The relative affine collar carrying the polynomial attachment. -/
   collar : FoxNeuwirthRelativeAffineCollar hp N₀ N₁ M L
+  /-- The base vertex assignment from which movable coordinates are perturbed. -/
   base : Parameters.Assignment hp collar.cells
+  /-- The polynomial identities attached to the collar and its base assignment. -/
   attachment : Polynomials.RelativePolynomialAttachment hp collar.cells base
 
 /-- Polynomial attachment to any already-constructed genuine relative affine collar. -/

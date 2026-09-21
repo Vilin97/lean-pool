@@ -20,6 +20,7 @@ namespace AffineBarycentricSubdivision
 
 /-! ## 1. The normalized tail of a point of `Δᵏ⁺¹` -/
 
+/-- Normalize the non-apex barycentric coordinates by their total mass. -/
 noncomputable def coneTailFun {k : ℕ} (x : Delta (k + 1)) : Fin (k + 1) → ℝ :=
   fun i => (x : Fin (k + 1 + 1) → ℝ) i.succ / (1 - (x : Fin (k + 1 + 1) → ℝ) 0)
 
@@ -37,6 +38,7 @@ theorem coneTailFun_mem {k : ℕ} (x : Delta (k + 1))
     unfold coneTailFun
     rw [← Finset.sum_div, h_sum, div_self (sub_ne_zero_of_ne (Ne.symm hx))]
 
+/-- The normalized base point of a cone simplex, choosing the first vertex at the apex. -/
 noncomputable def coneTail {k : ℕ} (x : Delta (k + 1)) : Delta k :=
   if h : (x : Fin (k + 1 + 1) → ℝ) 0 = 1 then stdSimplex.vertex (0 : Fin (k + 1))
   else ⟨coneTailFun x, coneTailFun_mem x h⟩
@@ -52,6 +54,7 @@ theorem coneTail_apply {k : ℕ} (x : Delta (k + 1))
 
 /-! ## 2. The affine cone map -/
 
+/-- Barycentric coordinates of the cone from a vertex over a simplex map. -/
 noncomputable def affineConeMapFun {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n)
     (x : Delta (k + 1)) : Fin (n + 1) → ℝ :=
   fun j => (x : Fin (k + 1 + 1) → ℝ) 0 * (v : Fin (n + 1) → ℝ) j
@@ -66,6 +69,7 @@ theorem affineConeMapFun_mem {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n
     simp only [Finset.sum_add_distrib, ← Finset.mul_sum, stdSimplex.sum_eq_one]
     ring
 
+/-- The simplex map obtained by coning a given map to the chosen vertex. -/
 noncomputable def affineConeMap {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n) :
     Delta (k + 1) → Delta n :=
   fun x => ⟨affineConeMapFun v τ x, affineConeMapFun_mem v τ x⟩
@@ -160,6 +164,7 @@ theorem continuous_affineConeMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delt
     (continuous_apply 0 |>.comp continuous_subtype_val).mul continuous_const
   exact hA_cont.add hB_cont
 
+/-- The affine cone construction bundled as a continuous map. -/
 noncomputable def affineConeContinuousMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delta n)) :
     C(Delta (k + 1), Delta n) :=
   ⟨affineConeMap v (⇑τ), continuous_affineConeMap v τ⟩
@@ -291,6 +296,7 @@ theorem cone_face_succ {n k : ℕ} (v : Delta n) (τ : Delta (k + 1) → Delta n
 
 /-! ## 6. The cone on singular simplices and chains of `Δⁿ` -/
 
+/-- The singular simplex obtained by coning to a point of the standard simplex. -/
 noncomputable def coneSimplex (n k : ℕ) (v : Delta n)
     (σ : singularSimplices (TopCat.of (Delta n)) k) :
     singularSimplices (TopCat.of (Delta n)) (k + 1) :=
@@ -303,6 +309,7 @@ theorem coneSimplex_continuousMap (n k : ℕ) (v : Delta n)
       = affineConeContinuousMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) k σ) := by
   exact singularSimplexAsContinuousMap_continuousMapAsSingularSimplex _ _ _
 
+/-- The constant singular zero-simplex at the chosen point. -/
 noncomputable def constSimplex0 (n : ℕ) (v : Delta n) :
     singularSimplices (TopCat.of (Delta n)) 0 :=
   continuousMapAsSingularSimplex (TopCat.of (Delta n)) 0
@@ -364,11 +371,13 @@ theorem coneSimplex_face_one_zero (n : ℕ) (v : Delta n)
 
 /-! ## 7. The cone on chains -/
 
+/-- The chain generator associated with the cone over a singular simplex. -/
 noncomputable def coneGenerator (R : Type) [CommRing R] (n k : ℕ) (v : Delta n)
     (σ : singularSimplices (TopCat.of (Delta n)) k) :
     singularChainGroup R (TopCat.of (Delta n)) (k + 1) :=
   chainGenerator R (TopCat.of (Delta n)) (k + 1) (coneSimplex n k v σ)
 
+/-- Send a coefficient to its scalar multiple of the coned simplex generator. -/
 noncomputable def coneGeneratorHom (R : Type) [CommRing R] (n k : ℕ) (v : Delta n)
     (σ : singularSimplices (TopCat.of (Delta n)) k) :
     ModuleCat.of R R ⟶ singularChainGroup R (TopCat.of (Delta n)) (k + 1) :=
@@ -377,6 +386,7 @@ noncomputable def coneGeneratorHom (R : Type) [CommRing R] (n k : ℕ) (v : Delt
       map_add' := fun r s => add_smul r s (coneGenerator R n k v σ)
       map_smul' := fun a r => mul_smul a r (coneGenerator R n k v σ) }
 
+/-- Extend coning on singular generators linearly to all chains. -/
 noncomputable def coneLinearMap (R : Type) [CommRing R] (n k : ℕ) (v : Delta n) :
     singularChainGroup R (TopCat.of (Delta n)) k
       ⟶ singularChainGroup R (TopCat.of (Delta n)) (k + 1) :=

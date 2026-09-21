@@ -432,7 +432,7 @@ theorem deltaCast_pos_of_forall_pos {m n : Nat} (e : m = n) (x : Delta m)
   exact hx j
 
 /-- A refined staircase side map is never lower-horizontal. -/
-@[simp] theorem refinedSidePrismMap_not_lowerHorizontal
+theorem refinedSidePrismMap_not_lowerHorizontal
     (hp : Nat.Prime (p + 1)) (N : Nat) (orbit : TopCell hp N)
     (r : Fin (p + 1)) (h : Fin p)
     (L : Nat) (eta : Fin L → Equiv.Perm (Fin (p + 1))) :
@@ -479,7 +479,7 @@ theorem deltaCast_pos_of_forall_pos {m n : Nat} (e : m = n) (x : Delta m)
       exact (ne_of_gt ht.1) hi
 
 /-- A refined staircase side map is never upper-horizontal. -/
-@[simp] theorem refinedSidePrismMap_not_upperHorizontal
+theorem refinedSidePrismMap_not_upperHorizontal
     (hp : Nat.Prime (p + 1)) (N : Nat) (orbit : TopCell hp N)
     (r : Fin (p + 1)) (h : Fin p)
     (L : Nat) (eta : Fin L → Equiv.Perm (Fin (p + 1))) :

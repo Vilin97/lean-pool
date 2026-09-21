@@ -51,11 +51,15 @@ structure FineFullCollarData
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) where
+  /-- The common spatial level of the fine full collar. -/
   commonLevel : Nat
+  /-- The time-refinement level of the fine full collar. -/
   timeLevel : Nat
+  /-- The fine endpoint-identified collar on which the cellwise origin avoidance is verified. -/
   collar : EndpointIdentifiedRelativeAffineCollar hp
     A₀.toRegularApproximation.level A₁.toRegularApproximation.level
     commonLevel timeLevel
+  /-- The horizontal-boundary-compatible assignment that avoids the origin on each cell. -/
   assignment : Assignment hp collar.cells
   horizontalVertexFixed : HorizontalVertexFixed hp A₀ A₁ collar assignment
   baseAvoidsOrigin : ∀ q : collar.cells.Cell,
@@ -79,6 +83,7 @@ structure FullCollarOriginMarginData
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map)
     extends FineFullCollarData hp H A₀ A₁ where
+  /-- A positive lower bound for the norm of every affine collar value. -/
   margin : Real
   margin_pos : 0 < margin
   coordinateNormMargin :

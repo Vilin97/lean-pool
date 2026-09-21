@@ -102,12 +102,16 @@ theorem relativeSubdivisionChain_boundary
 collar whose endpoint triangulations may have distinct levels. -/
 structure RelativeSubdivisionBoundary
     (R : Type) [CommRing R] (X : TopCat.{0}) (n : Nat) where
+  /-- The closed singular chain whose two subdivisions are connected by the collar. -/
   baseCycle : singularChainGroup R X n
   baseCycle_closed : match n with
     | 0 => True
     | m + 1 => (singularBoundary R X m).hom baseCycle = 0
+  /-- The subdivision level of the lower endpoint chain. -/
   lowerLevel : Nat
+  /-- The subdivision level of the upper endpoint chain. -/
   upperLevel : Nat
+  /-- The relative subdivision chain connecting the two endpoint subdivisions. -/
   collarChain : singularChainGroup R X (n + 1) :=
     relativeSubdivisionChain R X lowerLevel upperLevel n baseCycle
   collar_boundary :
@@ -161,6 +165,7 @@ transversality is required on the two fixed horizontal chains. -/
 structure RelativeBoundaryFunctional
     {R : Type} [CommRing R] {X : TopCat.{0}} {n : Nat}
     (B : RelativeSubdivisionBoundary R X n) where
+  /-- The linear functional that evaluates boundary chains in the coefficient ring. -/
   weight : singularChainGroup R X n →ₗ[R] R
   collarBoundaryWeightZero :
     weight ((singularBoundary R X n).hom B.collarChain) = 0
@@ -196,9 +201,11 @@ structure RelativeStableCollarCertificate
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map)
     (X : TopCat.{0}) (n : Nat) where
+  /-- The relative subdivision boundary carrying the stable collar comparison. -/
   boundary : RelativeSubdivisionBoundary (ZMod p) X n
   lowerLevel_eq : boundary.lowerLevel = A₀.toRegularApproximation.level
   upperLevel_eq : boundary.upperLevel = A₁.toRegularApproximation.level
+  /-- The boundary functional identifying the endpoint weights with their zero counts. -/
   functional : RelativeBoundaryFunctional boundary
   lowerWeight_eq : functional.weight boundary.lowerChain = A₀.zeroCount
   upperWeight_eq : functional.weight boundary.upperChain = A₁.zeroCount
@@ -247,11 +254,15 @@ structure ExplicitRelativeStableCollarCertificate
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) where
+  /-- The common spatial level of the explicit stable collar certificate. -/
   commonLevel : Nat
+  /-- The time-refinement level of the explicit stable collar certificate. -/
   timeLevel : Nat
+  /-- The endpoint-identified collar carrying the local positive-ray Stokes data. -/
   collar : EndpointIdentifiedRelativeAffineCollar hp
     A₀.toRegularApproximation.level A₁.toRegularApproximation.level
     commonLevel timeLevel
+  /-- The movable vertex coordinates used in the explicit collar certificate. -/
   movableAssignment : MovableParameter hp collar.cells → Real
   localPositiveRayStokes :
     collar.toFoxNeuwirthRelativeAffineCollar.LocalPositiveRayStokes hp
@@ -360,8 +371,11 @@ structure RelativeStableCollarConstructionData
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) where
+  /-- The common spatial level chosen for constructing the relative stable collar. -/
   commonLevel : Nat
+  /-- The time-refinement level chosen for constructing the relative stable collar. -/
   timeLevel : Nat
+  /-- The endpoint-identified collar whose base assignment avoids the origin cellwise. -/
   collar : EndpointIdentifiedRelativeAffineCollar hp
     A₀.toRegularApproximation.level A₁.toRegularApproximation.level
     commonLevel timeLevel

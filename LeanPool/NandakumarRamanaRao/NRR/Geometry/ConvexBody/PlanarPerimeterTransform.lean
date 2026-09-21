@@ -50,7 +50,7 @@ open Real MeasureTheory ConvexBody
 
 /-- **Reflection of the width function.** The width of the reflected body `-K` equals the width
 of `K` in every direction: `w_{-K}(u) = w_K(u)`. -/
-@[simp] theorem widthFunction_neg_body
+theorem widthFunction_neg_body
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (K : ConvexBody E) (u : E) :
     ConvexBody.widthFunction K.neg u = ConvexBody.widthFunction K u := by

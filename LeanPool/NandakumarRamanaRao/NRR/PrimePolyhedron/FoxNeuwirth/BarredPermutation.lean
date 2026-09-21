@@ -30,7 +30,9 @@ variable {p : ℕ}
 `rank i` is the position of label `i` in the displayed permutation.  A member `k` of `bars`
 places a bar after position `k`. -/
 structure BarredPermutation (p : ℕ) where
+  /-- The ordering of labels in the barred permutation. -/
   rank : Equiv.Perm (Fin p)
+  /-- The positions at which bars divide the ordered labels into blocks. -/
   bars : Finset (Fin (p - 1))
   deriving Fintype, DecidableEq
 

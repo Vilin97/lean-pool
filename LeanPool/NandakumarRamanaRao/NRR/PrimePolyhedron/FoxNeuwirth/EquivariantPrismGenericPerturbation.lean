@@ -373,6 +373,7 @@ structure Result
     (hp : Nat.Prime p) (N L : Nat)
     {F₀ F₁ : ZeroFreeMap hp} (H : ZeroFreeHomotopy hp F₀ F₁)
     (m : Real) where
+  /-- The perturbed vertex assignment satisfying the prism's genericity and margin conditions. -/
   assignment : Assignment hp N L
   closeToHomotopy : AssignmentClose assignment (homotopyAssignment hp N L H) (m / 2)
   facetRegular : ∀ q : PrismCell hp N L,

@@ -27,7 +27,9 @@ namespace FoxNeuwirth
 /-- Direct finite cellular top-cycle data.  The facet type is the orbit type of a proper split;
 `boundary_zero` is the actual prime-binomial cancellation theorem. -/
 structure CellularTopCycle (hp : Nat.Prime p) where
+  /-- The coefficient of each oriented top-dimensional cell. -/
   coefficient : BarredPermutation.TopCell p → ZMod p
+  /-- The boundary coefficient associated with a barred permutation and a proper split. -/
   boundaryCoefficient : BarredPermutation p → ProperSplit p → ZMod p
   coefficient_eq : ∀ c, coefficient c = orientedTopCoefficient (c : BarredPermutation p)
   boundaryCoefficient_eq :
@@ -65,7 +67,9 @@ noncomputable def cellularTopCycle (hp : Nat.Prime p) : CellularTopCycle hp wher
 /-- The direct cellular obstruction consists of the cellular cycle and its nonzero reference
 prime-symmetry orbit count. -/
 structure CellularObstruction (hp : Nat.Prime p) where
+  /-- The cellular top cycle underlying the obstruction. -/
   cycle : CellularTopCycle hp
+  /-- The nonzero reference orbit count in the prime residue field. -/
   referenceCount : ZMod p
   referenceCount_eq : referenceCount = referenceSignedOrbitCount hp
   referenceCount_ne_zero : referenceCount ≠ 0

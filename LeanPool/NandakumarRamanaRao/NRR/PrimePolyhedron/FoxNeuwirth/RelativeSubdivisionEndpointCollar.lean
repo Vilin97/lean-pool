@@ -29,8 +29,11 @@ variable {p : Nat}
 
 /-- Existential bookkeeping wrapper for the common and time-refinement levels of a collar. -/
 structure Witness (hp : Nat.Prime p) (N₀ N₁ : Nat) where
+  /-- The common spatial subdivision level of the endpoint collar. -/
   commonLevel : Nat
+  /-- The time-refinement level of the endpoint collar. -/
   timeLevel : Nat
+  /-- The endpoint-identified relative affine collar at the chosen levels. -/
   collar : EndpointIdentifiedRelativeAffineCollar hp N₀ N₁ commonLevel timeLevel
 
 /-- Equal-level identity collar, represented by one unrefined thin slab. -/

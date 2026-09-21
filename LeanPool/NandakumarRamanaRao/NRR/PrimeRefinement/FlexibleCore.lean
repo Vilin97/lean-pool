@@ -26,7 +26,9 @@ structure FlexiblePrimeRefinementStep
     (hp : Nat.Prime p)
     (hA : 0 < A)
     (phi : NiceMV (BodySpace K (A / (p : Real)))) where
+  /-- The prime configuration model selected for the refinement step. -/
   model : PrimeConfigurationModel hp
+  /-- The separator certificate for the selected model and multivalued observable. -/
   certificate : PrimeRefinementSeparator model hA phi
 
 /-- Model-independent prime-refinement theorem. -/

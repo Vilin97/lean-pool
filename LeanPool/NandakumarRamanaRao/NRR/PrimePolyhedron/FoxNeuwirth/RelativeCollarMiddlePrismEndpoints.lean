@@ -26,6 +26,7 @@ namespace FoxNeuwirthOrderComplex
 namespace EquivariantPrismStableRelativeBoundary
 namespace RelativeCollarMiddlePrismEndpoints
 
+/-- Enumerate the facets of the refined middle-prism cell system. -/
 noncomputable local instance facetFintype (hp : Nat.Prime p) (N L : Nat) :
     Fintype (RelativeCollarMiddlePrism.cellSystem hp N L).Facet := Fintype.ofFinite _
 

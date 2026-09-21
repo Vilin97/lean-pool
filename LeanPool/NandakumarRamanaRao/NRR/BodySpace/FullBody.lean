@@ -23,7 +23,7 @@ noncomputable def parentAt
     BodySpace K A :=
   ⟨⟨K.toMathlib, subset_rfl⟩, hAK⟩
 
-@[simp] theorem parentAt_body_carrier
+theorem parentAt_body_carrier
     (K : Geometry.ConvexBody Plane) {A : ℝ} (hAK : A ≤ K.area) :
     ((parentAt K hAK).body : Set Plane) = (K : Set Plane) :=
   rfl
@@ -37,7 +37,7 @@ noncomputable def parentAt
 noncomputable def full (K : Geometry.ConvexBody Plane) : BodySpace K K.area :=
   parentAt K le_rfl
 
-@[simp] theorem full_body_carrier (K : Geometry.ConvexBody Plane) :
+theorem full_body_carrier (K : Geometry.ConvexBody Plane) :
     ((full K).body : Set Plane) = (K : Set Plane) :=
   rfl
 

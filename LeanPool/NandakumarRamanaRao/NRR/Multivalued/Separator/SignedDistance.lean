@@ -41,6 +41,7 @@ noncomputable def signedDistance
   then -Metric.infDist z S.carrier
   else Metric.infDist z S.carrier
 
+omit [Nonempty X] in
 /-- The absolute value of the signed distance is the distance to the carrier. -/
 theorem abs_signedDistance
     (S : TopBottomSeparator X)

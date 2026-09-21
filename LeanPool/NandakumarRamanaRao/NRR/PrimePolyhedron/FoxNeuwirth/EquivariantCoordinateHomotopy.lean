@@ -31,6 +31,7 @@ namespace EquivariantCoordinateHomotopy
 
 variable {p : Nat}
 
+/-- Continuous coordinate-valued maps on the order-complex realization. -/
 abbrev CoordinateMap := RefinedAffineMap.ContinuousCoordinateMap (p := p)
 
 /-- Prime-equivariance of a continuous coordinate map. -/
@@ -39,6 +40,7 @@ abbrev IsEquivariant (hp : Nat.Prime p) (F : CoordinateMap (p := p)) : Prop :=
 
 /-- A continuous prime-equivariant coordinate map avoiding the origin. -/
 structure ZeroFreeMap (hp : Nat.Prime p) where
+  /-- The underlying continuous coordinate map. -/
   map : CoordinateMap
   equivariant : IsEquivariant hp map
   zeroFree : ∀ x, map x ≠ 0
@@ -46,6 +48,7 @@ structure ZeroFreeMap (hp : Nat.Prime p) where
 /-- A continuous equivariant homotopy through maps avoiding the origin. -/
 structure ZeroFreeHomotopy
     (hp : Nat.Prime p) (F₀ F₁ : ZeroFreeMap hp) where
+  /-- The continuous map on the realization times the unit interval defining the homotopy. -/
   map : C(Realization p × Set.Icc (0 : Real) 1, Fin p → Real)
   map_zero : ∀ x, map (x, ⟨0, by simp⟩) = F₀.map x
   map_one : ∀ x, map (x, ⟨1, by simp⟩) = F₁.map x

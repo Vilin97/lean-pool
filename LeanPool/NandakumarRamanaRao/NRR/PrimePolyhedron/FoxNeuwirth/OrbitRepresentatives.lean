@@ -22,6 +22,7 @@ open scoped BigOperators
 structure OrbitRepresentativeData (G X : Type*)
     [Group G] [MulAction G X] [Fintype G] [Fintype X]
     [DecidableEq X] where
+  /-- A finite set containing exactly one representative from each symmetry orbit. -/
   representatives : Finset X
   covers : ∀ x : X, ∃ r ∈ representatives, ∃ g : G, g • r = x
   uniqueOrbit : ∀ r₁ ∈ representatives, ∀ r₂ ∈ representatives,
@@ -68,6 +69,7 @@ noncomputable instance instFintypePrimeSymmetry (hp : Nat.Prime p) :
     Fintype (PrimeSymmetry hp) :=
   Fintype.ofFinite _
 
+/-- Orbit-representative data for the prime action on top-dimensional cells. -/
 abbrev CellularTopOrbitRepresentatives (hp : Nat.Prime p) :=
   OrbitRepresentativeData (PrimeSymmetry hp) (BarredPermutation.TopCell p)
 

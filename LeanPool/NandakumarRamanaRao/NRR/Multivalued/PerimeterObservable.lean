@@ -86,7 +86,7 @@ noncomputable def perimeterNiceMV
     (abs_normalizedPerimeter_lt_one
       (K := K) (A := A) hA)
 
-@[simp] theorem perimeterNiceMV_eval
+theorem perimeterNiceMV_eval
     (hA : 0 < A) (C : BodySpace K A) (t : SignedInterval) :
     (perimeterNiceMV K A hA).eval C t =
       (t : ℝ) - normalizedPerimeter K A hA C := rfl

@@ -24,10 +24,13 @@ variable {p : ℕ}
 
 /-- Proof-carrying statement of the Fox–Neuwirth model layer. -/
 structure FoxNeuwirthPhase5Data (hp : Nat.Prime p) where
+  /-- The prime configuration model realized by the Fox–Neuwirth construction. -/
   model : PrimeConfigurationModel hp
+  /-- The finite type of top cells in the model layer. -/
   topCell : Type
   [topCellFintype : Fintype topCell]
   [topCellDecidableEq : DecidableEq topCell]
+  /-- The dimension function on the model's top cells. -/
   cellDimension : topCell → ℕ
   top_dimension : ∀ c, cellDimension c = p - 1
   hasConcreteModel : model = foxNeuwirthTopCellModel hp

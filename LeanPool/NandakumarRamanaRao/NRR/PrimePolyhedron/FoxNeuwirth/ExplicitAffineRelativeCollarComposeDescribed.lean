@@ -40,7 +40,9 @@ quotient-facet family. -/
 structure EndpointDescribedRelativeAffineCollar
     (hp : Nat.Prime p) (N₀ N₁ M L : Nat)
     extends FoxNeuwirthRelativeAffineCollar hp N₀ N₁ M L where
+  /-- The lower endpoint top cell's described boundary facet. -/
   lowerFacet : TopCell hp N₀ → cells.Facet
+  /-- The upper endpoint top cell's described boundary facet. -/
   upperFacet : TopCell hp N₁ → cells.Facet
   lowerFacet_isLower : ∀ q, cells.IsLowerFacet (lowerFacet q)
   upperFacet_isUpper : ∀ q, cells.IsUpperFacet (upperFacet q)

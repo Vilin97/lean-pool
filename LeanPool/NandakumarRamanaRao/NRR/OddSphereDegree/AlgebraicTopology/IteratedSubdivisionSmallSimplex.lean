@@ -98,6 +98,7 @@ theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
   ext j; simp +decide [ affineSubdivLinear_apply, stdVerts, Pi.single_apply, Finset.sum_ite_eq ];
   exact congr_fun ( prefixBarycenter_val_eq_stepVertices n π k ) j
 
+/-- Compose the barycentric subdivision linear maps selected by a permutation word. -/
 noncomputable def affineCompLinear (n : ℕ) :
     (N : ℕ) → (Fin N → Equiv.Perm (Fin (n + 1))) →
       ((Fin (n + 1) → ℝ) →ₗ[ℝ] (Fin (n + 1) → ℝ))
@@ -129,6 +130,7 @@ theorem affineCompLinear_stdVerts (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (
     rw [map_smul, map_sum]
     simp_rw [ih]
 
+/-- The continuous simplex self-map associated with an iterated subdivision word. -/
 noncomputable def affineCompMap (n : ℕ) :
     (N : ℕ) → (Fin N → Equiv.Perm (Fin (n + 1))) → C(Delta n, Delta n)
   | 0, _ => ContinuousMap.id _
@@ -183,6 +185,7 @@ theorem exists_diam_range_affineCompMap_lt (n : ℕ) (eps : ℝ) (heps : 0 < eps
 
 variable {X : TopCat.{0}}
 
+/-- A singular simplex precomposed with one iterated barycentric subdivision map. -/
 noncomputable def affineSummandSimplex (n N : ℕ) (σ : singularSimplices X n)
     (ρs : Fin N → Equiv.Perm (Fin (n + 1))) : singularSimplices X n :=
   continuousMapAsSingularSimplex X n ((mvSimplexMap σ).comp (affineCompMap n N ρs))

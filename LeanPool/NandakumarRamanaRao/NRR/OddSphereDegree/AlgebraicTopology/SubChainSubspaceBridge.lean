@@ -19,6 +19,7 @@ namespace SphereOddDegree
 
 variable {R : Type} [CommRing R] {X : TopCat.{0}}
 
+/-- The continuous inclusion of a subspace into the ambient space. -/
 def sInclusion (S : Set X) : TopCat.of S ⟶ X :=
   TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩
 
@@ -73,6 +74,7 @@ theorem singularChainMap_sInclusion_mem (S : Set X) (n : ℕ)
   rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hc
   exact hc
 
+/-- Corestrict the subspace singular-chain map to the subcomplex of supported chains. -/
 def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
     ((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj (TopCat.of S) ⟶
       subChainComplex R X S where
@@ -92,6 +94,7 @@ def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
     apply Subtype.ext
     exact this
 
+/-- The linear chain map obtained by reindexing singular-simplex generators in one degree. -/
 noncomputable def reindexChainMap (R : Type) [CommRing R] {X Y : TopCat.{0}} (n : ℕ)
     (g : singularSimplices Y n → singularSimplices X n) :
     singularChainGroup R Y n ⟶ singularChainGroup R X n :=
@@ -168,12 +171,14 @@ instance subChainCorestrict_isIso (S : Set X) :
     IsIso (subChainCorestrict R X S) :=
   HomologicalComplex.Hom.isIso_of_components _
 
+/-- Identify homology of supported chains with singular homology of the subspace. -/
 def subspaceHomologyIso (S : Set X) (n : ℕ) :
     (subChainComplex R X S).homology n ≅
       (((singularChainComplexFunctor (ModuleCat.{0} R)).obj
         (ModuleCat.of R R)).obj (TopCat.of S)).homology n :=
   ((HomologicalComplex.homologyFunctor _ _ n).mapIso (asIso (subChainCorestrict R X S))).symm
 
+/-- The subspace homology identification with integer coefficients. -/
 def subspaceHomologyIsoℤ (X : TopCat.{0}) (S : Set X) (n : ℕ) :
     (subChainComplex ℤ X S).homology n ≅ (singularHomologyℤ n).obj (TopCat.of S) :=
   subspaceHomologyIso S n

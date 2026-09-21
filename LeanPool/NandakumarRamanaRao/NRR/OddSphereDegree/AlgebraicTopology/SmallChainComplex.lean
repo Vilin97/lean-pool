@@ -141,7 +141,7 @@ noncomputable def smallChainsInclusion (R : Type) [CommRing R] (X : TopCat.{0})
 
 /-- The inclusion is, degreewise, the natural inclusion of the submodule:
 its underlying map sends `c` to its value `c.val`. -/
-@[simp] theorem smallChainsInclusion_f_apply
+theorem smallChainsInclusion_f_apply
     {𝒰 : OpenCoverData X} (n : ℕ) (c : smallChainSubmodule R X 𝒰 n) :
     ((smallChainsInclusion R X 𝒰).f n).hom c = (c : singularChainGroup R X n) :=
   rfl

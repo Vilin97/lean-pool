@@ -208,7 +208,7 @@ noncomputable def subChainInclusion (S T : Set X) (h : S ⊆ T) :
     intro c
     rfl
 
-@[simp] theorem subChainInclusion_f_apply
+theorem subChainInclusion_f_apply
     {S T : Set X} (h : S ⊆ T) (n : ℕ) (c : subChainSubmodule R X S n) :
     (((subChainInclusion S T h).f n).hom c).val = (c : singularChainGroup R X n) :=
   rfl
@@ -226,7 +226,7 @@ noncomputable def subChainToSmall (𝒰 : OpenCoverData X) (S : Set X) (hS : S �
     intro c
     rfl
 
-@[simp] theorem subChainToSmall_f_apply
+theorem subChainToSmall_f_apply
     {𝒰 : OpenCoverData X} {S : Set X} (hS : S ∈ 𝒰.sets) (n : ℕ)
     (c : subChainSubmodule R X S n) :
     (((subChainToSmall 𝒰 S hS).f n).hom c).val = (c : singularChainGroup R X n) :=
