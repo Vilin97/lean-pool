@@ -27,7 +27,7 @@ universe u
 
 variable {G H : Type u} [Group G] [Group H]
 
-def RoseVertex {n : ℕ} (w : Fin n → List (Sum G H)) :=
+abbrev RoseVertex {n : ℕ} (w : Fin n → List (Sum G H)) :=
   Option (Σ i : Fin n, Fin ((w i).length - 1))
 
 def rosePosition {n : ℕ} (w : Fin n → List (Sum G H))
@@ -213,7 +213,8 @@ theorem roseForwardPath_labels {n : ℕ} (w : Fin n → List (Sum G H))
 theorem roseForwardPath_read {n : ℕ} (w : Fin n → List (Sum G H))
     (i : Fin n) :
     (roseLabelling w).pathRead (roseForwardPath w i) = factorWordProd (w i) := by
-  rw [BinaryLabelling.pathRead, roseForwardPath_labels]
+  change factorWordProd ((roseLabelling w).pathLabels (roseForwardPath w i)) = _
+  rw [roseForwardPath_labels]
 
 noncomputable instance roseVertexFintype {n : ℕ} (w : Fin n → List (Sum G H)) :
     Fintype (RoseVertex w) := by

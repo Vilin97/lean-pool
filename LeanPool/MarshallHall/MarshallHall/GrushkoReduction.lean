@@ -26,7 +26,7 @@ universe u
 
 variable {G H : Type u} [Group G] [Group H]
 
-def binaryFamily (G H : Type u) : Bool → Type u
+abbrev binaryFamily (G H : Type u) : Bool → Type u
   | false => G
   | true => H
 
@@ -467,7 +467,6 @@ theorem binaryReducedWord_inl_mul_of_fstIdx_ne (g : G) (x : G ∗ H)
     Monoid.CoprodI.of (M := binaryFamily G H) (i := false) g *
       binaryToIndexed (G := G) (H := H) x
   simp [binaryToIndexed, indexedLeft]
-  rfl
 
 theorem binaryReducedLength_inl_mul_of_fstIdx_ne (g : G) (x : G ∗ H)
     (hidx : (binaryReducedWord (G := G) (H := H) x).fstIdx ≠ some false)
@@ -494,7 +493,6 @@ theorem binaryReducedWord_inr_mul_of_fstIdx_ne (h : H) (x : G ∗ H)
     Monoid.CoprodI.of (M := binaryFamily G H) (i := true) h *
       binaryToIndexed (G := G) (H := H) x
   simp [binaryToIndexed, indexedRight]
-  rfl
 
 theorem binaryReducedLength_inr_mul_of_fstIdx_ne (h : H) (x : G ∗ H)
     (hidx : (binaryReducedWord (G := G) (H := H) x).fstIdx ≠ some true)

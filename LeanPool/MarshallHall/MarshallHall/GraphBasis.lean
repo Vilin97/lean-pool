@@ -43,7 +43,8 @@ instance coverQuiver (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :
   unique_lift := by
     intro X _ f
     let f' : α → (A → X) ⋊[mulAutArrow] FreeGroup α := fun e =>
-      ⟨fun b => @f ⟨(), _⟩ ⟨(), b⟩ ⟨e, smul_inv_smul _ b⟩, FreeGroup.of e⟩
+      ⟨fun b => @f (((FreeGroup.of e)⁻¹ • b : A) : ActionCategory (FreeGroup α) A)
+          (b : ActionCategory (FreeGroup α) A) ⟨e, smul_inv_smul _ b⟩, FreeGroup.of e⟩
     let F' : FreeGroup α →* (A → X) ⋊[mulAutArrow] FreeGroup α :=
       FreeGroup.lift f'
     refine ⟨ActionCategory.uncurry F' ?_, ?_, ?_⟩
@@ -53,7 +54,12 @@ instance coverQuiver (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :
       intro e
       rw [MonoidHom.comp_apply, FreeGroup.lift_apply_of]
       rfl
-    · rintro ⟨⟨⟩, a : A⟩ ⟨⟨⟩, b⟩ ⟨e, h : FreeGroup.of e • a = b⟩
+    · intro a b e
+      induction a with | mk a
+      induction b with | mk b
+      induction e with | mk e h
+      change A at a b
+      change FreeGroup.of e • a = b at h
       change (F' (FreeGroup.of _)).left _ = _
       rw [FreeGroup.lift_apply_of]
       cases inv_smul_eq_iff.mpr h.symm
@@ -63,8 +69,7 @@ instance coverQuiver (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :
         apply FreeGroup.ext_hom
         intro e
         ext b
-        · simp only [ActionCategory.curry_apply_left]
-          change E.map (ActionCategory.homOfPair b (FreeGroup.of e)) =
+        · change E.map (ActionCategory.homOfPair b (FreeGroup.of e)) =
             (FreeGroup.lift f' (FreeGroup.of e)).left b
           rw [FreeGroup.lift_apply_of]
           change E.map (ActionCategory.homOfPair b (FreeGroup.of e)) =
@@ -83,8 +88,9 @@ instance coverQuiver (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :
         apply Unit.ext
       · refine ActionCategory.cases ?_
         intros
-        simp only [← hEF, ActionCategory.uncurry_map, ActionCategory.curry_apply_left,
-          ActionCategory.coe_back, ActionCategory.homOfPair.val]
+        apply heq_of_eq
+        change _ = (F' _).left _
+        rw [← hEF]
         rfl
 
 /-!
@@ -108,28 +114,31 @@ noncomputable def spanningTreeBasis {G : Type u} [Groupoid.{u} G] [IsFreeGroupoi
     if h : e ∈ wideSubquiverSymmetrify T a b then 1 else f ⟨⟨a, b, e⟩, h⟩
   rcases IsFreeGroupoid.unique_lift f' with ⟨F', hF', uF'⟩
   refine ⟨F'.mapEnd _, ?_, ?_⟩
-  · suffices ∀ {x y} (q : x ⟶ y),
+  · suffices ∀ {x y : G} (q : x ⟶ y),
         F'.map (IsFreeGroupoid.SpanningTree.loopOfHom T q) = (F'.map q : Y) by
       rintro ⟨⟨a, b, e⟩, h⟩
-      simp only [Functor.mapEnd, DFunLike.coe, this, hF']
-      exact dif_neg h
+      change F'.map (IsFreeGroupoid.SpanningTree.loopOfHom T (IsFreeGroupoid.of e)) = _
+      calc
+        _ = F'.map (IsFreeGroupoid.of e) := this _
+        _ = f' e := hF' a b e
+        _ = _ := dite_eq_right h
     intro x y q
-    suffices ∀ {a} (p : Path (root T) a), F'.map (IsFreeGroupoid.SpanningTree.homOfPath T p) = 1 by
+    suffices ∀ {a : G} (p : Path (root T) a), F'.map (IsFreeGroupoid.SpanningTree.homOfPath T p) = 1 by
       simp only [this, IsFreeGroupoid.SpanningTree.treeHom, comp_as_mul, inv_as_inv,
         IsFreeGroupoid.SpanningTree.loopOfHom, inv_one, mul_one, one_mul, Functor.map_inv,
         Functor.map_comp]
     intro a p
     induction p with
     | nil =>
-        rw [IsFreeGroupoid.SpanningTree.homOfPath]
+        change F'.map (𝟙 _) = 1
         simpa only [id_as_one] using! F'.map_id _
     | cons p e ih =>
-        rw [IsFreeGroupoid.SpanningTree.homOfPath, F'.map_comp, comp_as_mul, ih, mul_one]
+        change F'.map (IsFreeGroupoid.SpanningTree.homOfPath T p ≫ _) = 1
+        rw [F'.map_comp, comp_as_mul, ih, mul_one]
         rcases e with ⟨e | e, eT⟩
-        · rw [hF']
-          exact dif_pos (Or.inl eT)
-        · rw [F'.map_inv, inv_as_inv, inv_eq_one, hF']
-          exact dif_pos (Or.inr eT)
+        · exact (hF' _ _ e).trans (dite_eq_left (Or.inl eT))
+        · rw [F'.map_inv, inv_as_inv, inv_eq_one]
+          exact (hF' _ _ e).trans (dite_eq_left (Or.inr eT))
   · intro E hE
     ext x
     suffices (IsFreeGroupoid.SpanningTree.functorOfMonoidHom T E).map x = F'.map x by

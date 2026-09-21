@@ -695,9 +695,9 @@ def foldEdgePath {a b : V} (e₀ : AllArrow (V := V))
   classical
   by_cases h : allArrowOf e = e₀
   · have hs : x = allArrowSource e₀ := by
-      simpa using congrArg allArrowSource h
+      exact congrArg allArrowSource h
     have ht : y = allArrowTarget e₀ := by
-      simpa using congrArg allArrowTarget h
+      exact congrArg allArrowTarget h
     have hident :
         foldVertexMk (a := a) (b := b) (allArrowSource e₀) =
           foldVertexMk (a := a) (b := b) b := by
@@ -718,9 +718,9 @@ def foldEdgePath {a b : V} (e₀ : AllArrow (V := V))
         (foldPathAvoid_reverse e₀ q hq))
   · by_cases h' : allArrowOf e = allArrowReverse e₀
     · have hs : x = allArrowTarget e₀ := by
-        simpa using congrArg allArrowSource h'
+        exact congrArg allArrowSource h'
       have ht : y = allArrowSource e₀ := by
-        simpa using congrArg allArrowTarget h'
+        exact congrArg allArrowTarget h'
       exact @Quiver.Path.cast (foldVertex a b) (foldQuiver e₀)
         (foldVertexMk (a := a) (b := b) (allArrowTarget e₀))
         (foldVertexMk (a := a) (b := b) b)
@@ -788,7 +788,7 @@ def foldSymmPath {a b : V} (e₀ : AllArrow (V := V))
     (ha : allArrowSource e₀ = a)
     (q : @Quiver.Path V _ (allArrowTarget e₀) b)
     (hq : foldPathAvoid e₀ q) :
-    ∀ {x y : V},
+    ∀ {x y : Symmetrify V},
       @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y →
       @Quiver.Path (Symmetrify (foldVertex a b))
         (@Quiver.symmetrifyQuiver (foldVertex a b) (foldQuiver e₀))
@@ -865,7 +865,7 @@ theorem symmLabel_eq_allArrowLabel_oriented
   | inl f => rfl
   | inr f =>
       change factorWordInv (L.label f) = L.label (Quiver.reverse f)
-      rw [L.reverse_label]
+      exact (L.reverse_label f).symm
 
 def foldSymmPathAvoid (e₀ : AllArrow (V := V)) :
     ∀ {x y : Symmetrify V},
@@ -1147,9 +1147,9 @@ def foldSymmEdgePath {a b : V} (e₀ : AllArrow (V := V))
   | inl f =>
       by_cases h : allArrowOf f = e₀
       · have hs : (show V from x) = allArrowSource e₀ := by
-          simpa using congrArg allArrowSource h
+          exact congrArg allArrowSource h
         have ht : (show V from y) = allArrowTarget e₀ := by
-          simpa using congrArg allArrowTarget h
+          exact congrArg allArrowTarget h
         have hident :
             foldVertexMk (a := a) (b := b) (allArrowSource e₀) =
               foldVertexMk (a := a) (b := b) b := by
@@ -1170,9 +1170,9 @@ def foldSymmEdgePath {a b : V} (e₀ : AllArrow (V := V))
             (foldSymmPathAvoid_reverse e₀ q hq))
       · by_cases h' : allArrowOf f = allArrowReverse e₀
         · have hs : (show V from x) = allArrowTarget e₀ := by
-            simpa using congrArg allArrowSource h'
+            exact congrArg allArrowSource h'
           have ht : (show V from y) = allArrowSource e₀ := by
-            simpa using congrArg allArrowTarget h'
+            exact congrArg allArrowTarget h'
           exact @Quiver.Path.cast (foldVertex a b) (foldQuiver e₀)
             (foldVertexMk (a := a) (b := b) (allArrowTarget e₀))
             (foldVertexMk (a := a) (b := b) b)
@@ -1195,9 +1195,9 @@ def foldSymmEdgePath {a b : V} (e₀ : AllArrow (V := V))
   | inr f =>
       by_cases h : allArrowOf f = e₀
       · have hs : (show V from x) = allArrowTarget e₀ := by
-          simpa using congrArg allArrowTarget h
+          exact congrArg allArrowTarget h
         have ht : (show V from y) = allArrowSource e₀ := by
-          simpa using congrArg allArrowSource h
+          exact congrArg allArrowSource h
         exact @Quiver.Path.cast (foldVertex a b) (foldQuiver e₀)
           (foldVertexMk (a := a) (b := b) (allArrowTarget e₀))
           (foldVertexMk (a := a) (b := b) b)
@@ -1218,9 +1218,9 @@ def foldSymmEdgePath {a b : V} (e₀ : AllArrow (V := V))
           (foldSymmOrdinaryPath (a := a) (b := b) e₀ q hq)
       · by_cases h' : allArrowOf f = allArrowReverse e₀
         · have hs : (show V from x) = allArrowSource e₀ := by
-            simpa using congrArg allArrowTarget h'
+            exact congrArg allArrowTarget h'
           have ht : (show V from y) = allArrowTarget e₀ := by
-            simpa using congrArg allArrowSource h'
+            exact congrArg allArrowSource h'
           have hident :
               foldVertexMk (a := a) (b := b) (allArrowSource e₀) =
                 foldVertexMk (a := a) (b := b) b := by
@@ -1773,8 +1773,8 @@ theorem safeSymmFoldData_of_nullPath
   have hq' : L.symmPathRead q =
       (L.symmPathRead e.toPath)⁻¹ :=
     eq_inv_of_mul_eq_one_right hprod
-  rw [L.symmPathRead_toPath] at hq'
-  simpa [symmLabel_eq_allArrowLabel_oriented] using hq'
+  exact hq'.trans (congrArg Inv.inv ((L.symmPathRead_toPath e).trans
+    (congrArg separatedMap (symmLabel_eq_allArrowLabel_oriented L e))))
 
 theorem exists_safe_folded_marked_graph {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
@@ -1807,7 +1807,7 @@ theorem exists_safe_folded_marked_graph {n : ℕ}
     simpa [e₀] using symmOrientedArrow_source e
   have hct : c =
       (@Quiver.Symmetrify.of V qV).obj (allArrowTarget e₀) := by
-    simpa [e₀] using (symmOrientedArrow_target e).symm
+    exact (symmOrientedArrow_target e).symm
   let q' := q.cast hct rfl
   have hqavoid' : foldSymmPathAvoid e₀ q' := by
     rw [show foldSymmPathAvoid e₀ q' ↔ foldSymmPathAvoid e₀ q by
