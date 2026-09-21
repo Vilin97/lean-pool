@@ -392,6 +392,40 @@ theorem exists_measure_compl_partial_iUnion_lt
   exact (htendsto.eventually_lt_const hε).exists
 
 omit [CompleteSpace Ω] in
+omit [MetricSpace Ω] [SeparableSpace Ω] [BorelSpace Ω] [CompleteSpace Ω] in
+open scoped Classical in
+private theorem sum_floor_partition_mass_le (μ : ProbabilityMeasure Ω)
+    {A : ℕ → Set Ω} (hAmble : ∀ n, MeasurableSet (A n))
+    (hAdisj : Pairwise (fun i j => Disjoint (A i) (A j))) (N m : ℕ) :
+    (∑ i : Fin N, ⌊((μ : Measure Ω) (A i)).toReal * m⌋₊) ≤ m := by
+  have hpart : (∑ n ∈ Finset.range N, (μ : Measure Ω) (A n)) ≤ 1 := by
+    rw [← measure_biUnion_finset
+      (fun i _ k _ hik => hAdisj hik) (fun n _ => hAmble n)]
+    exact prob_le_one
+  have hreal : (∑ n ∈ Finset.range N, ((μ : Measure Ω) (A n)).toReal) ≤ 1 := by
+    rw [← ENNReal.toReal_sum (fun n _ => measure_ne_top _ _)]
+    calc (∑ n ∈ Finset.range N, (μ : Measure Ω) (A n)).toReal
+        ≤ (1 : ℝ≥0∞).toReal := ENNReal.toReal_mono ENNReal.one_ne_top hpart
+      _ = 1 := ENNReal.toReal_one
+  have hcast : ((∑ i : Fin N, ⌊((μ : Measure Ω) (A i)).toReal * m⌋₊ : ℕ) : ℝ) ≤ m := by
+    push_cast
+    calc (∑ i : Fin N, (⌊((μ : Measure Ω) (A i)).toReal * m⌋₊ : ℝ))
+        ≤ ∑ i : Fin N, ((μ : Measure Ω) (A i)).toReal * m :=
+          Finset.sum_le_sum fun i _ => Nat.floor_le (by positivity)
+      _ = (∑ i : Fin N, ((μ : Measure Ω) (A i)).toReal) * m := by
+          rw [← Finset.sum_mul]
+      _ ≤ 1 * m := by
+          have hsum_range :
+              (∑ i : Fin N, ((μ : Measure Ω) (A i)).toReal)
+                = ∑ n ∈ Finset.range N, ((μ : Measure Ω) (A n)).toReal :=
+            Fin.sum_univ_eq_sum_range
+              (fun n => ((μ : Measure Ω) (A n)).toReal) N
+          rw [hsum_range]
+          nlinarith [hreal]
+      _ = m := one_mul _
+  exact_mod_cast hcast
+
+omit [CompleteSpace Ω] in
 open scoped Classical in
 /-- B1+B2: every probability measure on a Polish space is within `3ε` in
     Lévy-Prokhorov distance of a normalized natural-weight Dirac mixture
@@ -428,33 +462,8 @@ theorem exists_diracMix_levyProkhorovDist_le
   refine ⟨N, a, fun i => j i, ?_⟩
   set ν : Measure Ω := diracMix (D 0) (fun i : Fin N => D (j i)) a with hν
   -- total weight is at most m
-  have hsum_le : (∑ i, a i) ≤ m := by
-    have hpart : (∑ n ∈ Finset.range N, (μ : Measure Ω) (A n)) ≤ 1 := by
-      rw [← measure_biUnion_finset
-        (fun i _ k _ hik => hAdisj hik) (fun n _ => hAmble n)]
-      exact prob_le_one
-    have hreal : (∑ n ∈ Finset.range N, ((μ : Measure Ω) (A n)).toReal) ≤ 1 := by
-      rw [← ENNReal.toReal_sum (fun n _ => measure_ne_top _ _)]
-      calc (∑ n ∈ Finset.range N, (μ : Measure Ω) (A n)).toReal
-          ≤ (1 : ℝ≥0∞).toReal := ENNReal.toReal_mono ENNReal.one_ne_top hpart
-        _ = 1 := ENNReal.toReal_one
-    have hcast : ((∑ i, a i : ℕ) : ℝ) ≤ m := by
-      push_cast
-      calc (∑ i : Fin N, (⌊((μ : Measure Ω) (A i)).toReal * m⌋₊ : ℝ))
-          ≤ ∑ i : Fin N, ((μ : Measure Ω) (A i)).toReal * m :=
-            Finset.sum_le_sum fun i _ => Nat.floor_le (by positivity)
-        _ = (∑ i : Fin N, ((μ : Measure Ω) (A i)).toReal) * m := by
-            rw [← Finset.sum_mul]
-        _ ≤ 1 * m := by
-            have hsum_range :
-                (∑ i : Fin N, ((μ : Measure Ω) (A i)).toReal)
-                  = ∑ n ∈ Finset.range N, ((μ : Measure Ω) (A n)).toReal :=
-              Fin.sum_univ_eq_sum_range
-                (fun n => ((μ : Measure Ω) (A n)).toReal) N
-            rw [hsum_range]
-            nlinarith [hreal]
-        _ = m := one_mul _
-    exact_mod_cast hcast
+  have hsum_le : (∑ i, a i) ≤ m :=
+    sum_floor_partition_mass_le μ hAmble hAdisj N m
   -- per-cell mass bound by weights
   have hterm : ∀ i : Fin N, (μ : Measure Ω) (A i)
       ≤ ((a i : ℝ≥0∞) + 1) * (m : ℝ≥0∞)⁻¹ := by
