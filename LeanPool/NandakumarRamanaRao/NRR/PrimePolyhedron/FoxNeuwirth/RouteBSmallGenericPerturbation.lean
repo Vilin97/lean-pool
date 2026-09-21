@@ -371,7 +371,7 @@ Step 5 and is no longer an external hypothesis. -/
 theorem exists_smallGenericPerturbation
     (base : Assignment hp C)
     {eps margin : Real}
-    (heps : 0 < eps) (hmargin : 0 < margin)
+    (hmargin : 0 < margin)
     (hbaseMargin : LocalAffineCoordinateNormMargin hp C base margin)
     (hfrozenBase : FrozenPositiveSupportRaySafe hp C base)
     (B : SafePerturbationBall hp C base eps margin) :

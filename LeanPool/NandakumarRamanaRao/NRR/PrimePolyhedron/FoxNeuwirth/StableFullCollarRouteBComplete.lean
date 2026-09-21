@@ -190,7 +190,7 @@ theorem exists_smallGenericPerturbation_affinePullback_unconditional
   obtain ⟨B⟩ := safePerturbationBall_affinePullback
     hp F₀ F₁ H A₀ A₁ heps
   exact exists_smallGenericPerturbation hp D.collar.cells D.assignment
-    heps D.margin_pos D.coordinateNormMargin
+    D.margin_pos D.coordinateNormMargin
     (frozenPositiveSupportRaySafe_affinePullback hp F₀ F₁ H A₀ A₁) B
 
 /-- An explicit witness form of the unconditional Route B output. -/

@@ -73,7 +73,6 @@ theorem bodyCellSet_eq_of_equalArea_of_weightDifference_max
   have hlt := NRR.measure_lt_of_compact_convex_ssubset
     (PowerDiagram.bodyCellSet_isCompact K s w i)
     (PowerDiagram.bodyCellSet_isCompact K s w' i)
-    (PowerDiagram.bodyCellSet_convex K s w i)
     (PowerDiagram.bodyCellSet_convex K s w' i)
     hstrict hInt
   have harea :

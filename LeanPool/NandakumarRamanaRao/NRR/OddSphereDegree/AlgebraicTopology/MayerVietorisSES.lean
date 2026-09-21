@@ -234,7 +234,7 @@ theorem keepHom_split_subV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
       + (keepHom R X (IsSubVnotU U V)).hom c = c := by
   exact keepHom_split_small R U V hUV k c (subChainSubmodule_le_smallChainSubmodule (twoSetCover_memV U V hUV) k hc)
 
-theorem mvInclUV_V_comp_projVtoUV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+theorem mvInclUV_V_comp_projVtoUV (U V : Opens X) (k : ℕ) :
     (mvInclUVV R U V).f k ≫ projVtoUV R U V k = 𝟙 _ := by
   apply ModuleCat.hom_ext
   apply LinearMap.ext
@@ -286,7 +286,7 @@ noncomputable def mvSplitting (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
     change biprod.lift ((mvInclUVU R U V).f k) (-(mvInclUVV R U V).f k) ≫
            biprod.desc 0 (-projVtoUV R U V k) = 𝟙 _
     rw [biprod.lift_desc, comp_zero, Preadditive.neg_comp, Preadditive.comp_neg, neg_neg, zero_add]
-    exact mvInclUV_V_comp_projVtoUV R U V hUV k
+    exact mvInclUV_V_comp_projVtoUV R U V k
   s_g := by
     change biprod.lift (routeU R U V hUV k) (routeV R U V hUV k) ≫
            biprod.desc ((mvInclUSmall R U V hUV).f k) ((mvInclVSmall R U V hUV).f k) = 𝟙 _

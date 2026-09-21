@@ -124,7 +124,7 @@ lemma deviationPairing_lower_bound_of_max
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
     (hn : 0 < n) (hs : Function.Injective s)
     (w : Fin n → Real) (hw : EMP.WeightNormalized w)
-    (k : Fin n) (hk : ∀ i, w i ≤ w k) :
+    (k : Fin n) :
     (w k - powerGapBound K s) * K.area ≤ deviationPairing K s w := by
   letI : NeZero n := ⟨hn.ne'⟩
   have hterm : ∀ i : Fin n,
@@ -159,7 +159,7 @@ lemma deviationPairing_pos_of_max_gt
   have hK : 0 < K.area :=
     (NRR.SolidConvexBody.ofConvexBody K).area_pos
   exact lt_of_lt_of_le (mul_pos (sub_pos.mpr hlarge) hK)
-    (deviationPairing_lower_bound_of_max K s hn hs w hw k hk)
+    (deviationPairing_lower_bound_of_max K s hn hs w hw k)
 
 end EMP
 end NRR

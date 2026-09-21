@@ -51,12 +51,10 @@ sites `s`, any two equal‑area weight vectors differ by a global additive const
 Derived directly from the isolated uniqueness core
 `EMP.powerDiagram_equalArea_weights_unique_core`.
 
-The `hn : 0 < n` hypothesis is included to match the required public signature; the
-uniqueness-up-to-constant conclusion does not actually need it (it holds vacuously for `n = 0`
-via `c = 0`), so it is unused in the proof. -/
+The conclusion also holds for an empty site set, with additive constant `c = 0`. -/
 theorem EMP.equalArea_weights_unique
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
-    (hn : 0 < n) (hs : Function.Injective s)
+    (hs : Function.Injective s)
     {w w' : Fin n → ℝ}
     (hw : EMP.IsEqualAreaWeight K s w)
     (hw' : EMP.IsEqualAreaWeight K s w') :
@@ -78,7 +76,7 @@ theorem EMP.equalArea_weights_unique_normalized
     (hnorm : EMP.WeightNormalized w)
     (hnorm' : EMP.WeightNormalized w') :
     w = w' := by
-  obtain ⟨c, hc⟩ := EMP.equalArea_weights_unique K s hn hs hw hw'
+  obtain ⟨c, hc⟩ := EMP.equalArea_weights_unique K s hs hw hw'
   have hsum : (0 : ℝ) = ∑ i, w i + (n : ℝ) * c := by
     have : ∑ i, w' i = ∑ i, (w i + c) := Finset.sum_congr rfl (fun i _ => hc i)
     rw [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin,

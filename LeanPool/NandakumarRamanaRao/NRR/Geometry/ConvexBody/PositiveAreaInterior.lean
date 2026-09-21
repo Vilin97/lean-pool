@@ -36,7 +36,6 @@ The compactness hypothesis is not used; it is retained for a uniform interface. 
 theorem convex_emptyInterior_subset_affineLine
     {S : Set Plane}
     (hconv : Convex ℝ S)
-    (hcomp : IsCompact S)
     (hint : interior S = ∅) :
     ∃ u : Plane, ∃ c : ℝ, u ≠ 0 ∧ S ⊆ {x : Plane | ⟪u, x⟫ = c} := by
   by_cases h_empty : S = ∅
@@ -80,7 +79,7 @@ theorem interior_nonempty_of_convex_compact_positive_area
     (interior S).Nonempty := by
   rcases (interior S).eq_empty_or_nonempty with h | h
   · exfalso
-    obtain ⟨u, c, hu, hc⟩ := convex_emptyInterior_subset_affineLine hconv hcomp h
+    obtain ⟨u, c, hu, hc⟩ := convex_emptyInterior_subset_affineLine hconv h
     have hnull := NRR.Halfspace.hyperplane_null hu c
     have hzero : volume S = 0 := nonpos_iff_eq_zero.mp (hnull ▸ measure_mono hc)
     rw [hzero] at harea

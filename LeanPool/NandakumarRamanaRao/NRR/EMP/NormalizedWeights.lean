@@ -65,11 +65,10 @@ end EMP
 
 /-- **Mean subtraction preserves the equal‑area property.** Subtracting the mean is a constant
 shift, and the area vector is invariant under constant shifts (`EMP.areaVec_addConstWeight`,
-the project). The hypothesis `hn : 0 < n` is included to match the required public signature; the proof does not depend on it, since constant‑shift invariance already gives the
-result for every `n`. -/
+the project). Constant-shift invariance gives the result for every number of sites. -/
 theorem EMP.IsEqualAreaWeight_normalizeWeight
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ)
-    (hw : EMP.IsEqualAreaWeight K s w) (hn : 0 < n) :
+    (hw : EMP.IsEqualAreaWeight K s w) :
     EMP.IsEqualAreaWeight K s (EMP.normalizeWeight w) := by
   intro i
   rw [EMP.normalizeWeight_eq_addConstWeight]
@@ -88,7 +87,7 @@ theorem EMP.exists_normalized_equalArea_weight
     Nonempty (EMP.NormalizedEqualAreaWeight K s) := by
   obtain ⟨w, hw⟩ := EMP.exists_equalArea_weights K s hn hs
   exact ⟨⟨EMP.normalizeWeight w,
-    EMP.IsEqualAreaWeight_normalizeWeight K s w hw hn,
+    EMP.IsEqualAreaWeight_normalizeWeight K s w hw,
     EMP.WeightNormalized_normalizeWeight w hn⟩⟩
 
 end NRR

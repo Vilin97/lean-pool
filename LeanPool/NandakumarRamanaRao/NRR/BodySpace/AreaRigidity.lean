@@ -37,7 +37,7 @@ enter the argument. -/
 theorem measure_lt_of_compact_convex_ssubset
     {C D : Set Plane}
     (hCcomp : IsCompact C) (hDcomp : IsCompact D)
-    (hCconv : Convex ℝ C) (hDconv : Convex ℝ D)
+    (hDconv : Convex ℝ D)
     (hCD : C ⊂ D)
     (hDint : (interior D).Nonempty) :
     (volume C).toReal < (volume D).toReal := by
@@ -86,7 +86,7 @@ theorem eq_of_subset_of_area_eq
     Geometry.ConvexBody.interior_nonempty_of_convex_compact_positive_area
       D.convex D.isCompact hDpos
   have hlt := measure_lt_of_compact_convex_ssubset
-    C.isCompact D.isCompact C.convex D.convex h_strict hDint
+    C.isCompact D.isCompact D.convex h_strict hDint
   exact absurd harea (ne_of_lt hlt)
 
 /-- Ergonomic form of `eq_of_subset_of_area_eq` phrased with the subbody-to-set coercion. -/

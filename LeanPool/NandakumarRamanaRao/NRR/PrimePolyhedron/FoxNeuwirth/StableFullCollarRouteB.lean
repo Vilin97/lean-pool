@@ -83,7 +83,7 @@ theorem exists_smallGenericPerturbation_affinePullback
   obtain ⟨B⟩ := exists_safePerturbationBall hp D.collar.cells D.assignment
     heps D.margin_pos G.facetPolynomialsNonzero
   exact exists_smallGenericPerturbation hp D.collar.cells D.assignment
-    heps D.margin_pos D.coordinateNormMargin G.frozenSupportSafe B
+    D.margin_pos D.coordinateNormMargin G.frozenSupportSafe B
 
 /-- The selected perturbation fixes the two horizontal endpoint assignments literally. -/
 theorem smallGenericPerturbation_fixesHorizontal

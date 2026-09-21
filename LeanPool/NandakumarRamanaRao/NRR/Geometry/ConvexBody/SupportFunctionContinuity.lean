@@ -21,7 +21,7 @@ width, Cauchy perimeter, and all later integration over the unit circle / sphere
 * `supportFunction_lipschitzWith` — the bundled `LipschitzWith` statement.
 * `continuous_supportFunction`, `continuousAt_supportFunction`, `continuousOn_supportFunction`
  — full-space continuity.
-* `uniformContinuousOn_supportFunction_of_isCompact` — uniform continuity on any subset (in fact
+* `uniformContinuousOn_supportFunction` — uniform continuity on any subset (in fact
  the global Lipschitz bound gives uniform continuity everywhere).
 * `continuousOn_supportFunction_on_sphere` — continuity restricted to the unit sphere, an
  immediate corollary.
@@ -107,10 +107,9 @@ theorem continuousOn_supportFunction
   K.continuous_supportFunction.continuousOn
 
 /-- **Uniform continuity on a subset.** The global Lipschitz bound gives uniform continuity on
-any set (in particular any compact set). The compactness hypothesis `_hs` is kept to match the
-requested API but is in fact unnecessary: uniform continuity holds on every subset. -/
-theorem uniformContinuousOn_supportFunction_of_isCompact
-    (K : ConvexBody E) {s : Set E} (hs : IsCompact s) :
+every subset of the ambient inner product space. -/
+theorem uniformContinuousOn_supportFunction
+    (K : ConvexBody E) {s : Set E} :
     UniformContinuousOn (fun u : E => supportFunction K u) s := by
   obtain ⟨R, hRnn, hR⟩ := K.exists_radius_bound
   exact ((K.supportFunction_lipschitzWith hRnn hR).uniformContinuous).uniformContinuousOn

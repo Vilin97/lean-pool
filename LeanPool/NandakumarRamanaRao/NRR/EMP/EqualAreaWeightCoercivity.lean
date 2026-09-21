@@ -104,7 +104,7 @@ lemma weightCoercivityGauge_pos_of_ne_zero
     _ = 0 := by rw [heq i, hparts.2, add_zero]
 
 lemma weightCoercivityGauge_smul
-    (hn : 0 < n) {r : Real} (hr : 0 ≤ r) (w : Fin n → Real) :
+    {r : Real} (hr : 0 ≤ r) (w : Fin n → Real) :
     weightCoercivityGauge (fun i => r * w i) = r * weightCoercivityGauge w := by
   have hmean : weightMean (fun i => r * w i) = r * weightMean w := by
     unfold weightMean weightSum
@@ -326,7 +326,7 @@ lemma augmentedPairing_pos_of_gauge_large
     ⟨(⟨0, hn⟩ : Fin n), Finset.mem_univ _⟩
   have hkmax : ∀ i, u i ≤ u k := fun i => hk i (Finset.mem_univ i)
   have hk0 : 0 ≤ u k := max_normalized_weight_nonneg hn u k hkmax hu
-  have hdevLB := deviationPairing_lower_bound_of_max K s hn hs u hu k hkmax
+  have hdevLB := deviationPairing_lower_bound_of_max K s hn hs u hu k
   have hK0 : 0 ≤ K.area := le_of_lt (SolidConvexBody.ofConvexBody K).area_pos
   have hC0 : 0 ≤ powerGapBound K s := powerGapBound_nonneg K s
   have hsplit :
@@ -388,7 +388,7 @@ lemma augmentedAreaDeviation_outward_on_radius
     have h_gauge_eq : weightCoercivityGauge (fun i => (equalAreaOutwardRadius K s hn • x) i) = (equalAreaOutwardRadius K s hn) * weightCoercivityGauge (fun i => x i) := by
       have h1 : (fun i => (equalAreaOutwardRadius K s hn • x) i) = (equalAreaOutwardRadius K s hn) • (fun i => x i) := rfl
       rw [h1]
-      exact weightCoercivityGauge_smul hn (equalAreaOutwardRadius_pos K s hn |> le_of_lt) (fun i => x i)
+      exact weightCoercivityGauge_smul (equalAreaOutwardRadius_pos K s hn |> le_of_lt) (fun i => x i)
     have hspec := Classical.choose_spec (exists_positive_gauge_lower_bound_on_sphere hn)
     have hx_lb := hspec.2 x hx
     rw [h_gauge_eq]
