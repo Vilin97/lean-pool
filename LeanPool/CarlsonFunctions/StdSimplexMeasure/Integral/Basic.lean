@@ -30,8 +30,8 @@ universe u
 
 variable {ι : Type u} [Fintype ι]
 
-open scoped Classical
 
+open scoped Classical in
 /-- Scaling the free coordinates by `c` divides the Bochner integral by
 `c ^ (card ι - 1)`. -/
 theorem integral_smul_free_coords
@@ -53,6 +53,7 @@ theorem integral_smul_free_coords
       rw [integral_smul_measure]
       simp [(pow_pos hc _).le]
 
+open scoped Classical in
 /-- Integration over the standard simplex can be computed in any free-coordinate chart. This is
 stated for functions taking values in a normed real vector space. -/
 theorem integral_stdSimplex_eq_integral_freeCoords
@@ -65,6 +66,7 @@ theorem integral_stdSimplex_eq_integral_freeCoords
   exact
     (isClosedEmbedding_stdSimplexCoordMap i).integral_map f
 
+open scoped Classical in
 /-- A nonnegative integral over the standard simplex can be computed in any free-coordinate
 chart. -/
 theorem lintegral_stdSimplex_eq_lintegral_freeCoords
@@ -94,7 +96,6 @@ theorem integral_stdSimplex_comp_perm
 
 /-- Continuous functions are integrable on the standard simplex. -/
 theorem ContinuousOn.integrableOn_stdSimplex
-    [Nonempty ι]
     {E : Type*} [NormedAddCommGroup E]
     {f : (ι → ℝ) → E}
     (hf : ContinuousOn f (Convexity.StdSimplex.coordinateSet ℝ ι)) :
@@ -132,7 +133,7 @@ theorem integral_stdSimplex_unique
   change ∫ u, f u ∂(dirac (fun _ : ι => (1 : ℝ))).restrict (Convexity.StdSimplex.coordinateSet ℝ ι) = _
   rw [MeasureTheory.restrict_dirac' (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet]
   have hmem : (fun _ : ι => (1 : ℝ)) ∈ Convexity.StdSimplex.coordinateSet ℝ ι := by simp [Convexity.StdSimplex.coordinateSet]
-  rw [if_pos hmem]
+  rw [ite_eq_left hmem]
   exact MeasureTheory.integral_dirac f (fun _ : ι => (1 : ℝ))
 
 end MeasureTheory

@@ -16,7 +16,7 @@ public import LeanPool.CarlsonFunctions.Pochhammer.Identities
 The squared-node regression theorem is retained alongside the correct involutive identity. -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

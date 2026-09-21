@@ -22,7 +22,6 @@ yet that theorem for an arbitrary list of associated shifts.
 -/
 
 open Complex Set
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

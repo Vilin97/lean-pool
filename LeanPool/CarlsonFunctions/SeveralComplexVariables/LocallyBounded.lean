@@ -19,13 +19,14 @@ theorem and the equicontinuity estimate used in Montel's theorem.
 public section
 
 open Complex Filter Function Metric Set
-open scoped Classical NNReal Topology
+open scoped NNReal Topology
 
 namespace SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
 omit [NormedSpace ℂ F] in
+open scoped Classical in
 /-- Coordinate variation bounds telescope to a joint bound on a product set. This also
 includes the empty product, where every function is constant. -/
 theorem norm_sub_le_sum_of_update {s : ι → Set ℂ} {f : (ι → ℂ) → F} {C : ℝ}
@@ -52,6 +53,7 @@ theorem norm_sub_le_sum_of_update {s : ι → Set ℂ} {f : (ι → ℂ) → F} 
       simpa [hi] using hf _ (hmem t) i (y i) (hy i (mem_univ i))
   simpa using hstep Finset.univ
 
+open scoped Classical in
 /-- Updating a coordinate within its disc preserves a closed sup-norm ball. -/
 theorem update_mem_closedBall_of_mem {c z : ι → ℂ} {r : ℝ} (hr : 0 ≤ r)
     (hz : z ∈ closedBall c r) (i : ι) {w : ℂ} (hw : w ∈ closedBall (c i) r) :
@@ -62,6 +64,7 @@ theorem update_mem_closedBall_of_mem {c z : ι → ℂ} {r : ℝ} (hr : 0 ≤ r)
   · simpa [hji] using hw
   · simpa [hji] using hz j
 
+open scoped Classical in
 /-- A bounded separately holomorphic map is jointly Lipschitz on a smaller polydisc.
 The constant is explicit and uniform over families with the same bound. -/
 theorem norm_sub_le_of_separately_analytic_bounded {f : (ι → ℂ) → F}
@@ -104,6 +107,7 @@ theorem norm_sub_le_of_separately_analytic_bounded {f : (ι → ℂ) → F}
         (div_nonneg hM0 hr.le))
     _ = _ := by simp [mul_assoc]
 
+open scoped Classical in
 /-- Local bounds and separate holomorphy give a Lipschitz neighborhood of each point. -/
 theorem exists_lipschitzOnWith_of_separately_analytic_locally_bounded
     {U : Set (ι → ℂ)} {f : (ι → ℂ) → F} (hU : IsOpen U)
@@ -130,6 +134,7 @@ theorem exists_lipschitzOnWith_of_separately_analytic_locally_bounded
 
 variable [CompleteSpace F]
 
+open scoped Classical in
 /-- **Locally bounded Osgood theorem.** Joint continuity need not be assumed when a
 separately holomorphic map is locally bounded on its open domain. -/
 theorem analyticOnNhd_of_separately_analytic_locally_bounded

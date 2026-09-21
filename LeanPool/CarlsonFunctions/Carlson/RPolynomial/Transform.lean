@@ -22,7 +22,6 @@ The Pochhammer reflection identity used in the book's proof is
 -/
 
 open Complex Finset
-open scoped Classical
 @[expose] public noncomputable section CarlsonRPolynomial
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -34,11 +33,13 @@ theorem eval_carlsonPowerPolynomial_smul (n : ℕ) (a : ℂ) (z x : ι → ℂ) 
   rw [carlsonPowerPolynomial_smul]
   simp
 
+open scoped Classical in
 /-- Carlson's transformed Dirichlet parameters for degree `n`, with `i` chosen as the
 distinguished coordinate in Relation 6.5-3. -/
 def carlsonRTransformParameters (n : ℕ) (i : ι) (b : ι → ℂ) : ι → ℂ :=
   Function.update b i (1 - (∑ j, b j) - n)
 
+open scoped Classical in
 /-- Carlson's transformed variables for Relation 6.5-3.  The distinguished variable stays
 fixed and every other variable is replaced by its difference from that variable. -/
 def carlsonRTransformVariables (i : ι) (z : ι → ℂ) : ι → ℂ :=
@@ -56,6 +57,7 @@ theorem sum_carlsonRTransformParameters (n : ℕ) (i : ι) (b : ι → ℂ) :
   rw [← hs]
   ring
 
+open scoped Classical in
 /-- The Pochhammer numerator of a constant vector of variables is a single Pochhammer
 symbol, by the multinomial Chu–Vandermonde identity. -/
 theorem carlsonRPolynomialNumerator_const (n : ℕ) (b : ι → ℂ) (w : ℂ) :
@@ -71,6 +73,7 @@ theorem carlsonRPolynomialNumerator_const (n : ℕ) (b : ι → ℂ) (w : ℂ) :
   rw [hpow]
   ring
 
+open scoped Classical in
 /-- A numerator with just one nonzero node is a single Pochhammer symbol. -/
 theorem carlsonRPolynomialNumerator_single (n : ℕ) (i : ι) (b : ι → ℂ) (w : ℂ) :
     carlsonRPolynomialNumerator n b (Pi.single i w) =
@@ -103,6 +106,7 @@ theorem carlsonRPolynomialNumerator_single (n : ℕ) (i : ι) (b : ι → ℂ) (
   rw [hprod, mul_comm]
 
 omit [Fintype ι] in
+open scoped Classical in
 private lemma carlsonRTransformVariables_update {i j : ι} (hji : j ≠ i)
     (z : ι → ℂ) (w : ℂ) :
     carlsonRTransformVariables i (Function.update z j w) =
@@ -116,6 +120,7 @@ private lemma carlsonRTransformVariables_update {i j : ι} (hji : j ≠ i)
       simp [carlsonRTransformVariables, hji, hji.symm]
     · simp [carlsonRTransformVariables, hki, hkj, hji.symm]
 
+open scoped Classical in
 private lemma carlsonRTransformParameters_addDirichletUnit
     (n : ℕ) {i j : ι} (hji : j ≠ i) (b : ι → ℂ) :
     carlsonRTransformParameters n i (addDirichletUnit b j) =
@@ -136,6 +141,7 @@ private lemma carlsonRTransformParameters_addDirichletUnit
       simp [carlsonRTransformParameters, addDirichletUnit, hji]
     · simp [carlsonRTransformParameters, addDirichletUnit, hki, hkj]
 
+open scoped Classical in
 /-- If changing any coordinate other than `i` leaves a function unchanged, it agrees
 with its value at the constant vector whose entries are `z i`. -/
 private lemma eq_const_of_update_eq (f : (ι → ℂ) → ℂ) (i : ι)
@@ -165,6 +171,7 @@ private lemma eq_const_of_update_eq (f : (ι → ℂ) → ℂ) (i : ι)
   · intro k hk
     exact (mem_erase.mp hk).1
 
+open scoped Classical in
 /-- Division-free form of Carlson's multivariate linear transformation 6.5-3.
 
 Using the Pochhammer numerator avoids hypotheses excluding exceptional parameters.  Carlson's

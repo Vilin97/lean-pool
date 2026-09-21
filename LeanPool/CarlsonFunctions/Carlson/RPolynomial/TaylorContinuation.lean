@@ -20,7 +20,7 @@ The sharp estimate from Section 6.2 supplies locally uniform convergence.
 -/
 
 open Complex Set
-open scoped Classical Topology NNReal ENNReal
+open scoped Topology NNReal ENNReal
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

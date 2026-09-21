@@ -20,7 +20,7 @@ used in the associated-function recurrence of Section 8.4.
 -/
 
 open Complex MeasureTheory Filter Asymptotics
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -29,6 +29,7 @@ variable {ι : Type*} [Fintype ι]
 def carlsonRayProduct (c z : ι → ℂ) (x : ℝ) : ℂ :=
   ∏ i, (1 + (x : ℂ) * z i) ^ (c i)
 
+open scoped Classical in
 /-- Extracting the positive real scale from each affine factor is branch-safe. -/
 theorem carlsonRayProduct_eq_scaled (c : ι → ℂ) {z : ι → ℂ}
     (hz : z ∈ carlsonRVariableDomain) {x : ℝ} (hx : 0 < x) :
@@ -132,12 +133,14 @@ theorem tendsto_cpow_mul_carlsonRayProduct_atTop (a : ℂ) (c : ι → ℂ)
   apply H'.trans_tendsto
   simpa using tendsto_rpow_neg_atTop (neg_pos.mpr ha)
 
+open scoped Classical in
 /-- The Leibniz derivative of a power times a ray product, with each differentiated
 factor represented by lowering just that factor's exponent. -/
 def carlsonRayDerivative (a : ℂ) (c z : ι → ℂ) (x : ℝ) : ℂ :=
   a * ((x : ℂ) ^ (a - 1) * carlsonRayProduct c z x) +
     ∑ i, (c i * z i) * ((x : ℂ) ^ a * carlsonRayProduct (c - Pi.single i 1) z x)
 
+open scoped Classical in
 /-- Differentiation under the branch-safe positive-ray hypotheses. -/
 theorem hasDerivAt_cpow_mul_carlsonRayProduct (a : ℂ) (c : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRVariableDomain) {x : ℝ} (hx : 0 < x) :
@@ -176,6 +179,7 @@ theorem hasDerivAt_cpow_mul_carlsonRayProduct (a : ℂ) (c : ι → ℂ)
     rw [hp]
     ring
 
+open scoped Classical in
 /-- The ray derivative is absolutely integrable in the boundary-vanishing strip. -/
 theorem integrableOn_carlsonRayDerivative (c : ι → ℂ) {z : ι → ℂ}
     (hz : z ∈ carlsonRVariableDomain) {a : ℂ}

@@ -12,7 +12,7 @@ public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.Continuation
 /-! # Positive-ray representation and its change of variables -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -70,6 +70,7 @@ private lemma ofReal_mul_cpow {r : ℝ} (hr : 0 < r) {x e : ℂ} (hx : x ≠ 0) 
     Complex.log_ofReal_mul hr hx, ofReal_log hr.le, add_mul, Complex.exp_add]
 
 omit [Fintype ι] in
+open scoped Classical in
 /-- A finite product of complex powers with the same nonzero base combines by adding the
 exponents. -/
 private lemma prod_cpow_same_base

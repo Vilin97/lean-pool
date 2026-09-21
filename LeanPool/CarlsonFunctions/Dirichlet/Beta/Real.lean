@@ -14,7 +14,6 @@ public import LeanPool.CarlsonFunctions.Pochhammer.BetaIntegral
 namespace ProbabilityTheory
 
 open Real
-open scoped Classical
 
 variable {ι : Type*} [Fintype ι]
 

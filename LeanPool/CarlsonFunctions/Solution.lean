@@ -23,7 +23,7 @@ each theorem below points to an existing project proof. See PALOMAR.md.
 -/
 
 open Complex MeasureTheory Set
-open scoped Classical Topology Matrix
+open scoped Topology Matrix
 noncomputable section
 namespace PalomarSnapshot
 variable {ι : Type*} [Fintype ι]
@@ -34,10 +34,12 @@ def simplex : Set (ι → ℝ) := {u | (∀ i, 0 ≤ u i) ∧ ∑ i, u i = 1}
 /-- The positive-coordinate part of the simplex. -/
 def interior : Set (ι → ℝ) := {u | u ∈ simplex ∧ ∀ i, 0 < u i}
 
+open scoped Classical in
 /-- Recover coordinate i as one minus the sum of the remaining coordinates. -/
 def chart (i : ι) (x : {j : ι // j ≠ i} → ℝ) : ι → ℝ :=
   (Equiv.funSplitAt i ℝ).symm (1 - ∑ j, x j, x)
 
+open scoped Classical in
 /-- Coordinate Lebesgue measure on the whole sum-one hyperplane; zero for no coordinates.
 There is no Euclidean square-root-of-cardinality factor in this normalization. -/
 def simplexMeasure : Measure (ι → ℝ) :=
@@ -59,6 +61,7 @@ def realDirichlet (b : ι → ℝ) : Measure (ι → ℝ) :=
     ((1 / ((∏ i, Real.Gamma (b i)) / Real.Gamma (∑ i, b i))) *
       interior.indicator (fun u => ∏ i, u i ^ (b i - 1)) u))
 
+open scoped Classical in
 /-- Ordinary coordinate differentiation, holding all other coordinates fixed. -/
 def coordDeriv (i : ι) (f : (ι → ℂ) → ℂ) (z : ι → ℂ) : ℂ :=
   deriv (fun w => f (Function.update z i w)) (z i)
@@ -82,6 +85,7 @@ theorem holomorphic_analytic {E F : Type*} [NormedAddCommGroup E] [NormedSpace �
     AnalyticOnNhd ℂ f U := by
   exact hf.analyticOnNhd_finiteDimensional hU
 
+open scoped Classical in
 /-- Joint continuity and separate holomorphy imply joint analyticity (not Hartogs without continuity). -/
 theorem osgood {F : Type*} [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace F]
     {U : Set (ι → ℂ)} {f : (ι → ℂ) → F} (hU : IsOpen U) (hc : ContinuousOn f U)
@@ -96,28 +100,33 @@ theorem cauchy_derivatives {c : ℂ} {r : ℝ} {f : ℂ → ℂ} (hf : DiffContO
       ∮ s in C(c, r), (s - w) ^ (-(n + 1 : ℤ)) * f s := by
   exact hf.iteratedDeriv_eq_circleIntegral_sub_zpow_mul hr n hw
 
+open scoped Classical in
 /-- Every omitted-coordinate chart defines the same ambient measure. -/
 theorem simplex_chart_independent [Nonempty ι] (i : ι) :
     simplexMeasure (ι := ι) = Measure.map (chart i) volume := by
   exact MeasureTheory.Measure.stdSimplexMeasure_eq_at i
 
+open scoped Classical in
 /-- Simplex monomial integral with coordinate-volume normalization, including the singleton case. -/
 theorem simplex_monomial [Nonempty ι] (m : ι → ℕ) :
     ∫ u in simplex, (∏ i, u i ^ m i) ∂simplexMeasure =
       (∏ i, Nat.factorial (m i)) / (Nat.factorial (Fintype.card ι + (∑ i, m i) - 1) : ℝ) := by
   exact MeasureTheory.integral_stdSimplex_explicit_monomial m
 
+open scoped Classical in
 /-- Absolutely convergent multivariate beta integral; each parameter has positive real part. -/
 theorem complex_beta_integral {b : ι → ℂ} (hb : ∀ i, 0 < (b i).re) :
     (∏ i, Gamma (b i)) / Gamma (∑ i, b i) =
       ∫ u in simplex, ∏ i, (u i : ℂ) ^ (b i - 1) ∂simplexMeasure := by
   exact Complex.mvBeta_eq_integral hb
 
+open scoped Classical in
 /-- Positive real parameters on a nonempty simplex define a probability measure. -/
 theorem dirichlet_probability [Nonempty ι] {b : ι → ℝ} (hb : ∀ i, 0 < b i) :
     IsProbabilityMeasure (realDirichlet b) := by
   exact ProbabilityTheory.isProbabilityMeasure_dirichletMeasure hb
 
+open scoped Classical in
 /-- All natural mixed moments of the real Dirichlet distribution. -/
 theorem dirichlet_moments [Nonempty ι] {b : ι → ℝ} (hb : ∀ i, 0 < b i) (m : ι → ℕ) :
     ∫ u, (∏ i, u i ^ m i) ∂(realDirichlet b) =
@@ -125,6 +134,7 @@ theorem dirichlet_moments [Nonempty ι] {b : ι → ℝ} (hb : ∀ i, 0 < b i) (
         (ascPochhammer ℝ (∑ i, m i)).eval (∑ i, b i) := by
   exact ProbabilityTheory.integral_dirichletMeasure_monomial hb m
 
+open scoped Classical in
 /-- Summing coordinates in surjective blocks sums the corresponding Dirichlet parameters. -/
 theorem dirichlet_aggregation {κ : Type*} [Fintype κ] {q : ι → κ} (hq : Function.Surjective q)
     {b : ι → ℝ} (hb : ∀ i, 0 < b i) :
@@ -132,6 +142,7 @@ theorem dirichlet_aggregation {κ : Type*} [Fintype κ] {q : ι → κ} (hq : Fu
       (realDirichlet b) (realDirichlet (FunOnFinite.linearMap ℝ ℝ q b)) := by
   exact ProbabilityTheory.measurePreserving_stdSimplexAggregate_dirichletMeasure hq hb
 
+open scoped Classical in
 /-- Carlson 1977, 6.3-6: joint entire-parameter continuation on every convex open scalar domain. -/
 theorem joint_average_continuation {D : Set ℂ} (hD : IsOpen D) (hconv : Convex ℝ D)
     {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f D) :
@@ -156,6 +167,7 @@ theorem r_joint :
       {p | ∀ i, p (some (.inr i)) ∈ slitPlane} := by
   exact DirichletTransform.analyticOnNhd_regCarlsonRSlit_joint
 
+open scoped Classical in
 /-- R equals its native power average when the entire node convex hull stays in the slit plane. -/
 theorem r_native (t : ℂ) {b z : ι → ℂ} (hb : ∀ i, 0 < (b i).re)
     (hz : convexHull ℝ (Set.range z) ⊆ slitPlane) :
@@ -167,6 +179,7 @@ theorem r_euler (t : ℂ) (b : ι → ℂ) {z : ι → ℂ} (hz : ∀ i, z i ∈
     regR t b z = (∏ i, z i ^ (-b i)) * regR (-(∑ i, b i) - t) b (fun i => (z i)⁻¹) := by
   exact DirichletTransform.regCarlsonRSlit_euler t b hz
 
+open scoped Classical in
 /-- Euler–Poisson on the full slit domain, including repeated indices and coincident nodes. -/
 theorem r_euler_poisson (t : ℂ) (b : ι → ℂ) {z : ι → ℂ} (hz : ∀ i, z i ∈ slitPlane) (i j : ι) :
     (z i - z j) * coordDeriv i (coordDeriv j (regR t b)) z +
@@ -194,6 +207,7 @@ theorem l_joint :
       {p | ∀ i, p (some (.inr i)) ∈ slitPlane} := by
   exact DirichletTransform.analyticOnNhd_regCarlsonLSlit_joint
 
+open scoped Classical in
 /-- L equals the native power-logarithm average on the hull-admissible slit domain. -/
 theorem l_native (t : ℂ) {b z : ι → ℂ} (hb : ∀ i, 0 < (b i).re)
     (hz : convexHull ℝ (Set.range z) ⊆ slitPlane) :

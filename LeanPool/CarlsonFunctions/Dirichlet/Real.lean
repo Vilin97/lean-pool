@@ -46,7 +46,6 @@ namespace ProbabilityTheory
 
 variable {ι : Type*} [Fintype ι]
 
-open scoped Classical
 
 /-- The real-valued Dirichlet PDF with parameters `b`. This PDF is supported on
 `stdSimplexInterior ι`. -/

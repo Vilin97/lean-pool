@@ -21,16 +21,18 @@ is inherited from Mathlib's general Fréchet derivative theorem.
 @[expose] public noncomputable section
 
 open Complex Filter Function Set
-open scoped Classical Topology
+open scoped Topology
 
 namespace SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
+open scoped Classical in
 /-- Differentiate in coordinate `i`, holding all other coordinates fixed. -/
 def partialDeriv (i : ι) (f : (ι → ℂ) → F) (z : ι → ℂ) : F :=
   deriv (fun w => f (update z i w)) (z i)
 
+open scoped Classical in
 /-- The derivative of a coordinate slice is the corresponding Fréchet derivative value. -/
 theorem hasDerivAt_update_of_differentiableAt {f : (ι → ℂ) → F} {z : ι → ℂ}
     (hf : DifferentiableAt ℂ f z) (i : ι) :
@@ -38,12 +40,14 @@ theorem hasDerivAt_update_of_differentiableAt {f : (ι → ℂ) → F} {z : ι �
   have hf' : HasFDerivAt f (fderiv ℂ f z) (update z i (z i)) := by simpa using hf.hasFDerivAt
   exact hf'.comp_hasDerivAt (z i) (hasDerivAt_update z i (z i))
 
+open scoped Classical in
 /-- Coordinate derivatives are Fréchet derivatives evaluated on coordinate vectors. -/
 theorem partialDeriv_eq_fderiv {f : (ι → ℂ) → F} {z : ι → ℂ}
     (hf : DifferentiableAt ℂ f z) (i : ι) :
     partialDeriv i f z = fderiv ℂ f z (Pi.single i 1) :=
   (hasDerivAt_update_of_differentiableAt hf i).deriv
 
+open scoped Classical in
 /-- A coordinate derivative only depends on the germ of the function. -/
 theorem partialDeriv_congr {f g : (ι → ℂ) → F} {z : ι → ℂ}
     (hfg : f =ᶠ[𝓝 z] g) (i : ι) : partialDeriv i f z = partialDeriv i g z := by
@@ -52,6 +56,7 @@ theorem partialDeriv_congr {f g : (ι → ℂ) → F} {z : ι → ℂ}
     simpa using (hasDerivAt_update z i (z i)).continuousAt.tendsto
   exact hfg.comp_tendsto ht
 
+open scoped Classical in
 /-- The Fréchet derivative is recovered from the coordinate derivatives. -/
 theorem fderiv_eq_sum_partialDeriv {f : (ι → ℂ) → F} {z : ι → ℂ}
     (hf : DifferentiableAt ℂ f z) (v : ι → ℂ) :
@@ -68,6 +73,7 @@ theorem partialDeriv_sub {f g : (ι → ℂ) → F} {z : ι → ℂ}
   exact deriv_sub (hasDerivAt_update_of_differentiableAt hf i).differentiableAt
     (hasDerivAt_update_of_differentiableAt hg i).differentiableAt
 
+open scoped Classical in
 /-- Holomorphy restricts to each coordinate slice. -/
 theorem _root_.AnalyticOnNhd.analyticAt_update {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
     (hf : AnalyticOnNhd ℂ f U) {z : ι → ℂ} (hz : z ∈ U) (i : ι) :
@@ -85,6 +91,7 @@ theorem partialDeriv_finset_sum {α : Type*} {f : α → (ι → ℂ) → F}
 
 variable [CompleteSpace F]
 
+open scoped Classical in
 /-- Every coordinate derivative of an analytic function is analytic. -/
 theorem _root_.AnalyticOnNhd.partialDeriv {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
     (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U) (i : ι) :
@@ -103,6 +110,7 @@ def iteratedPartialDeriv : List ι → ((ι → ℂ) → F) → (ι → ℂ) →
   | [], f => f
   | i :: is, f => partialDeriv i (iteratedPartialDeriv is f)
 
+open scoped Classical in
 /-- Differentiate a coordinate derivative by composing the second Fréchet derivative
 with evaluation on its coordinate vector. -/
 theorem hasFDerivAt_partialDeriv {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
@@ -116,6 +124,7 @@ theorem hasFDerivAt_partialDeriv {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
   filter_upwards [hU.eventually_mem hz] with w hw
   exact partialDeriv_eq_fderiv (hf w hw).differentiableAt i
 
+open scoped Classical in
 /-- Mixed coordinate derivatives commute for a holomorphic function. -/
 theorem partialDeriv_partialDeriv_comm {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
     (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U) {z : ι → ℂ} (hz : z ∈ U) (i j : ι) :
@@ -186,8 +195,9 @@ theorem iteratedPartialDeriv_finset_sum {α : Type*} {U : Set (ι → ℂ)}
 def complexJacobian {κ : Type*} (f : (ι → ℂ) → (κ → ℂ)) (z : ι → ℂ) : Matrix κ ι ℂ :=
   fun j i => partialDeriv i (fun w => f w j) z
 
+open scoped Classical in
 /-- Entries of the complex Jacobian are the coordinate entries of the Fréchet derivative. -/
-theorem complexJacobian_apply {κ : Type*} [Fintype κ]
+theorem complexJacobian_apply {κ : Type*} 
     {f : (ι → ℂ) → (κ → ℂ)} {z : ι → ℂ} (hf : DifferentiableAt ℂ f z)
     (j : κ) (i : ι) : complexJacobian f z j i = fderiv ℂ f z (Pi.single i 1) j := by
   rw [complexJacobian, partialDeriv_eq_fderiv (differentiableAt_pi.mp hf j), fderiv_apply hf j]
@@ -205,7 +215,7 @@ theorem partialDeriv_comp {κ : Type*} [Fintype κ]
   simp_rw [complexJacobian_apply hf]
 
 /-- Jacobians compose by matrix multiplication. -/
-theorem complexJacobian_comp {κ ν : Type*} [Fintype κ] [Fintype ν]
+theorem complexJacobian_comp {κ ν : Type*} [Fintype κ] 
     {f : (ι → ℂ) → (κ → ℂ)} {g : (κ → ℂ) → (ν → ℂ)} {z : ι → ℂ}
     (hg : DifferentiableAt ℂ g (f z)) (hf : DifferentiableAt ℂ f z) :
     complexJacobian (g ∘ f) z = complexJacobian g (f z) * complexJacobian f z := by

@@ -29,7 +29,7 @@ collision diagonals) and to Riemann surfaces are left open.
 -/
 
 open Complex ProbabilityTheory Set Filter Metric
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -118,6 +118,7 @@ theorem exists_isJointRegCarlsonContinuationOn_of_convex
   obtain ⟨G, hG, hGeq⟩ := exists_joint_isRegCarlsonContinuation hDo hDc hf (ι := ι)
   exact ⟨G, hG, fun z hz => (hGeq z ((subset_convexHull ℝ (Set.range z)).trans hz)).2⟩
 
+open scoped Classical in
 /-- Local joint continuations on increasing connected open scalar domains glue
 to a joint continuation on their union. Compactness handles both the node set
 and, for native agreement, its entire convex hull. No nonempty-index assumption
@@ -142,7 +143,7 @@ theorem exists_isJointRegCarlsonContinuationOn_iUnion
       (hp : Set.range p.2 ⊆ U n) : G p = F n p := by
     have h : ∃ m, Set.range p.2 ⊆ U m := ⟨n, hp⟩
     dsimp only [G]
-    rw [dif_pos h]
+    rw [dite_eq_left h]
     exact hcompat h.choose n p h.choose_spec hp
   refine ⟨G, ?_, ?_⟩
   · intro p hp

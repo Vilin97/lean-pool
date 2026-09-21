@@ -14,7 +14,7 @@ public import LeanPool.CarlsonFunctions.Carlson.TwoVariable.QuadraticSeries
 /-! # Native integral quadratic transformations -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

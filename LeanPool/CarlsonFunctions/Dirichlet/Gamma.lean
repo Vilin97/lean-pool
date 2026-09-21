@@ -32,7 +32,7 @@ neither complex Dirichlet measures nor analytic continuation is involved.
 @[expose] public noncomputable section
 
 open MeasureTheory MeasureTheory.Measure Real Set
-open scoped ENNReal Classical
+open scoped ENNReal
 
 namespace ProbabilityTheory
 
@@ -92,7 +92,7 @@ theorem gammaPDFReal_radial [Nonempty ι] {b : ι → ℝ} (hb : b ∈ mvRealBet
   have hterm (i : ι) : gammaPDFReal (b i) r (t * u i) =
       (r ^ b i / Gamma (b i)) * t ^ (b i - 1) * u i ^ (b i - 1) *
         exp (-(r * t) * u i) := by
-    rw [gammaPDFReal, if_pos (mul_pos ht (hu.2 i)).le, mul_rpow ht.le (hu.2 i).le]
+    rw [gammaPDFReal, ite_eq_left (mul_pos ht (hu.2 i)).le, mul_rpow ht.le (hu.2 i).le]
     congr 1
     · ring
     · congr 1; ring
@@ -108,7 +108,7 @@ theorem gammaPDFReal_radial [Nonempty ι] {b : ι → ℝ} (hb : b ∈ mvRealBet
   simp_rw [hterm, Finset.prod_mul_distrib]
   rw [Finset.prod_div_distrib, ← rpow_sum_of_pos hr, ← rpow_sum_of_pos ht,
     ← exp_sum, hsum]
-  rw [gammaPDFReal, if_pos ht.le, dirichletPdfReal, Set.indicator_of_mem hu, mvRealBeta]
+  rw [gammaPDFReal, ite_eq_left ht.le, dirichletPdfReal, Set.indicator_of_mem hu, mvRealBeta]
   have hGp : (∏ i, Gamma (b i)) ≠ 0 :=
     Finset.prod_ne_zero_iff.mpr (fun i _ => (Gamma_pos_of_pos (hb i)).ne')
   calc

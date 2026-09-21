@@ -26,7 +26,7 @@ not a nonpositive integer. No extension of the node domains is asserted here.
 -/
 
 open Complex ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 
@@ -253,7 +253,7 @@ theorem isCarlsonGammaRegular_neg_nat_add_half (n : ℕ) :
 /-- Regression check for the removable values: the exponent-zero function is one,
 including at `β = 0, -1, -2, ...`. -/
 @[simp] theorem equalRContinued_zero (β x y : ℂ) (hz : pair x y ∈ carlsonRVariableDomain)
-    (hβ : IsCarlsonGammaRegular (β + 1 / 2)) : equalRContinued 0 x y hz β = 1 := by
+    (hβ : IsCarlsonGammaRegular (β + 2⁻¹)) : equalRContinued 0 x y hz β = 1 := by
   rw [equalRContinued, regEqualRContinued_zero, mul_inv_cancel₀ (Gamma_ne_zero hβ)]
 
 /-- Carlson 6.9-3 on the full common parameter domain of the ordinary functions. -/

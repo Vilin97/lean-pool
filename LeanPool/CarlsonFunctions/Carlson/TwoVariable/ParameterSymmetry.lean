@@ -19,7 +19,7 @@ and in the slit-plane node. This is the R-identity underlying Carlson (1987), (2
 -/
 
 open Complex Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

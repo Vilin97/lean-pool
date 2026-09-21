@@ -29,7 +29,7 @@ boundary term. This result uses only the native integral theory.
 -/
 
 open Complex MeasureTheory ProbabilityTheory MeasureTheory.Measure Set Filter
-open scoped Topology Classical
+open scoped Topology
 
 @[expose] public noncomputable section
 
@@ -84,6 +84,7 @@ theorem dirichletChartDensity_mul_eq_indicator (i : ι) (b : ι → ℂ)
     intro h
     exact hx ((stdSimplexCoordMap_mem_stdSimplex_iff i x).mp h.1)
 
+open scoped Classical in
 theorem integral_dirichletChartDensity_mul (i : ι) (b : ι → ℂ)
     (f : (ι → ℝ) → ℂ) :
     (∫ x, dirichletChartDensity i b x * f (stdSimplexCoordMap i x)) =
@@ -93,6 +94,7 @@ theorem integral_dirichletChartDensity_mul (i : ι) (b : ι → ℂ)
     integral_indicator (isClosed_stdSimplexFreeCoords i).measurableSet,
     regDirichletIntegral, integral_stdSimplex_eq_integral_freeCoords i]
 
+open scoped Classical in
 theorem integrable_dirichletChartDensity_mul (i : ι) (b : ι → ℂ)
     (hb : b ∈ mvBetaConvergent) {f : (ι → ℝ) → ℂ}
     (hf : ContinuousOn f (Convexity.StdSimplex.coordinateSet ℝ ι)) :
@@ -105,6 +107,7 @@ theorem integrable_dirichletChartDensity_mul (i : ι) (b : ι → ℂ)
     integrable_indicator_iff (isClosed_stdSimplexFreeCoords i).measurableSet]
   exact h'
 
+open scoped Classical in
 theorem dirichletChartDensity_lower (i k : ι) (b : ι → ℂ)
     (x : {j : ι // j ≠ i} → ℝ) :
     dirichletChartDensity i (b - Pi.single k 1) x =
@@ -117,6 +120,7 @@ theorem dirichletChartDensity_lower (i k : ι) (b : ι → ℂ)
     intro l hl
     simp [Pi.single_eq_of_ne (Finset.mem_erase.mp hl).1]
 
+open scoped Classical in
 theorem hasLineDerivAt_dirichletChartDensity (i : ι) (j : {j : ι // j ≠ i})
     (b : ι → ℂ) (hb : ∀ k, 2 < (b k).re) (x : {j : ι // j ≠ i} → ℝ) :
     HasLineDerivAt ℝ (dirichletChartDensity i b)
@@ -149,6 +153,7 @@ theorem hasLineDerivAt_dirichletChartDensity (i : ι) (j : {j : ι // j ≠ i})
   convert! hp using 1
   simpa [dirichletChartDensity] using hd.symm
 
+open scoped Classical in
 /-- Tangential integration by parts, initially with exponents that vanish differentiably
 at every boundary face. The Gamma normalization removes the usual exponent coefficients. -/
 theorem regDirichletIntegral_tangent_ibp (i : ι) (j : {j : ι // j ≠ i})

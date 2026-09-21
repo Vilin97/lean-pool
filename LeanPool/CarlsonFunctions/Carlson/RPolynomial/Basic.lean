@@ -14,7 +14,6 @@ public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 /-! # Carlson's R-polynomials -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section CarlsonRPolynomial
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

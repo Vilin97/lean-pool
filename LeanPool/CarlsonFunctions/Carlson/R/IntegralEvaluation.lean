@@ -19,7 +19,6 @@ derived from it without building phase choices into the basic definition.
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

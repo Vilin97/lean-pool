@@ -15,11 +15,12 @@ public import LeanPool.CarlsonFunctions.SeveralComplexVariables.ParametricIntegr
 /-! # Differentiation of associated Dirichlet averages -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- Differentiation under a regularized Carlson average under a local uniform bound for the
 derivative on the affine combinations met by the simplex. -/
 theorem hasDerivAt_regCarlsonDirichletAverage_update_of_bound
@@ -122,6 +123,7 @@ theorem hasDerivAt_regCarlsonDirichletAverage_update_of_bound
       hbound hbound_int hdiff |>.2
   simpa [regCarlsonDirichletAverage, regDirichletIntegral, F, F', μ] using h
 
+open scoped Classical in
 /-- Differentiation under a regularized Carlson average when the derivative of the
 univariate function is globally bounded. -/
 theorem hasDerivAt_regCarlsonDirichletAverage_update
@@ -138,6 +140,7 @@ theorem hasDerivAt_regCarlsonDirichletAverage_update
     (fun w hw u hu ↦ hf _) (fun w hw ↦ hf'_continuous.continuousOn)
   intro w hw u hu
   exact hf'_bound _
+open scoped Classical in
 /-- Differentiation under a regularized Carlson average when the averaged function is
 holomorphic on a convex neighborhood of all the nodes. -/
 theorem hasDerivAt_regCarlsonDirichletAverage_update_of_analyticOnNhd
@@ -178,6 +181,7 @@ theorem hasDerivAt_regCarlsonDirichletAverage_update_of_analyticOnNhd
   · intro w hw u hu
     exact hC _ (hnear hw hu)
 
+open scoped Classical in
 /-- **Carlson 5.3-2, first-order form.** For a function holomorphic on a convex node domain,
 differentiation with respect to node `i` raises the corresponding Dirichlet parameter. -/
 theorem carlsonPartialDeriv_regCarlsonDirichletAverage_of_analyticOnNhd
@@ -193,6 +197,7 @@ theorem carlsonPartialDeriv_regCarlsonDirichletAverage_of_analyticOnNhd
   exact (mul_regDirichletIntegral_addDirichletUnit hb i
     (fun u => deriv f (carlsonAffineForm z u))).symm
 
+open scoped Classical in
 /-- Regularized form of Carlson's relation 5.6-1(5): differentiating with respect to `z i`
 produces the associated average with parameter `b i` increased by one. -/
 theorem carlsonPartialDeriv_regCarlsonDirichletAverage
@@ -252,6 +257,7 @@ private lemma iteratedDirichletShiftCoeff_mul_regDirichletIntegral
       ring
 
 omit [Fintype ι] in
+open scoped Classical in
 /-- Updating one node to another point of the node domain preserves containment of the node
 range in that domain. -/
 private lemma range_update_subset {Ω : Set ℂ} {z : ι → ℂ}
@@ -263,6 +269,7 @@ private lemma range_update_subset {Ω : Set ℂ} {z : ι → ℂ}
   · subst j
     simpa using hw
   · simpa [hji] using hz (Set.mem_range_self j)
+open scoped Classical in
 /-- An iterated node derivative is an average with successively shifted parameters and the
 corresponding iterated derivative of the averaged function. -/
 private lemma carlsonIteratedPartialDeriv_eq_iteratedShift
@@ -319,6 +326,7 @@ theorem carlsonIteratedPartialDeriv_regCarlsonDirichletAverage
   exact iteratedDirichletShiftCoeff_mul_regDirichletIntegral is hb
     (fun u => iteratedDeriv is.length f (carlsonAffineForm z u))
 
+open scoped Classical in
 /-- The unregularized coordinate derivative on a convex domain of holomorphy.
 Unlike the globally bounded derivative specialization, this applies to general holomorphic
 kernels, including exponentials and powers on their branch domains. -/
@@ -347,6 +355,7 @@ theorem carlsonPartialDeriv_carlsonDirichletAverage_of_analyticOnNhd
         regCarlsonDirichletAverage (addDirichletUnit b i) z (deriv f))
   field_simp [hc]
 
+open scoped Classical in
 /-- Carlson's relation 5.6-1(5) in its original normalization.  The coefficient is the
 weight `b i / ∑ j, b j`. -/
 theorem carlsonPartialDeriv_carlsonDirichletAverage [Nonempty ι]

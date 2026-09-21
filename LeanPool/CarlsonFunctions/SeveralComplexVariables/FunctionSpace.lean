@@ -23,26 +23,30 @@ space. No continuity or analyticity at the boundary of the domain is asserted.
 @[expose] public noncomputable section
 
 open Filter Set
-open scoped Classical Topology
+open scoped Topology
 
 namespace SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
+open scoped Classical in
 /-- Extend a continuous map on an open domain by zero; used only for local analytic predicates. -/
 def openExtension (U : TopologicalSpace.Opens (ι → ℂ)) (f : C(U, F)) (z : ι → ℂ) : F :=
   if hz : z ∈ U then f ⟨z, hz⟩ else 0
 
 omit [Fintype ι] [NormedSpace ℂ F] in
+open scoped Classical in
 theorem openExtension_apply (U : TopologicalSpace.Opens (ι → ℂ))
     (f : C(U, F)) {z : ι → ℂ} (hz : z ∈ U) : openExtension U f z = f ⟨z, hz⟩ :=
-  dif_pos hz
+  dite_eq_left hz
 
 omit [Fintype ι] [NormedSpace ℂ F] in
+open scoped Classical in
 @[simp] theorem openExtension_coe (U : TopologicalSpace.Opens (ι → ℂ))
     (f : C(U, F)) (z : U) : openExtension U f z = f z := by
   simp [openExtension, z.property]
 
+open scoped Classical in
 /-- Holomorphic maps are a submodule of continuous maps on the open domain. -/
 def holomorphicSubmodule (U : TopologicalSpace.Opens (ι → ℂ)) : Submodule ℂ C(U, F) where
   carrier := {f | AnalyticOnNhd ℂ (openExtension U f) U}

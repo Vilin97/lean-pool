@@ -12,11 +12,12 @@ public import LeanPool.CarlsonFunctions.Carlson.S.Analytic
 /-! # Differentiation of the entire Carlson S-function -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- Carlson's differentiation formula for the analytically continued `S` function. -/
 theorem carlsonPartialDeriv_regCarlsonSSeries (i : ι) (z b : ι → ℂ) :
     carlsonPartialDeriv i (fun z => regCarlsonSSeries z b) z =

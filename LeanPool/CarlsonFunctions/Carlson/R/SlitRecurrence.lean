@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Analytic.Polynomial
 /-! # Polynomial recurrences on the full slit domain -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

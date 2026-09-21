@@ -18,12 +18,13 @@ coordinate-normalized standard-simplex measure, so the radial factor is `t^(card
 @[expose] public noncomputable section
 
 open MeasureTheory MeasureTheory.Measure Set
-open scoped ENNReal Classical
+open scoped ENNReal
 
 namespace MeasureTheory
 
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- Scaling free coordinates in a slice of fixed coordinate sum scales its simplex chart. -/
 theorem radial_slice_smul (i : ι) (t : ℝ) (v : {j : ι // j ≠ i} → ℝ) :
     (Homeomorph.funSplitAt ℝ i).symm (t - ∑ j, t * v j, t • v) =
@@ -34,6 +35,7 @@ theorem radial_slice_smul (i : ι) (t : ℝ) (v : {j : ι // j ≠ i} → ℝ) :
     simp [stdSimplexCoordMap, ← Finset.mul_sum, mul_sub]
   · simp [stdSimplexCoordMap, hj]
 
+open scoped Classical in
 /-- Lebesgue integration with the sum of the coordinates as the first coordinate. -/
 theorem lintegral_eq_lintegral_sum_slice (i : ι) (f : (ι → ℝ) → ℝ≥0∞) (hf : Measurable f) :
     ∫⁻ x, f x = ∫⁻ t : ℝ, ∫⁻ v : {j : ι // j ≠ i} → ℝ,
@@ -50,6 +52,7 @@ theorem lintegral_eq_lintegral_sum_slice (i : ι) (f : (ι → ℝ) → ℝ≥0�
   simp_rw [← ht]
   exact lintegral_lintegral_swap (by fun_prop)
 
+open scoped Classical in
 /-- The affine slice with total `t` has coordinate sum `t`. -/
 theorem sum_radial_slice (i : ι) (t : ℝ) (v : {j : ι // j ≠ i} → ℝ) :
     ∑ j, (Homeomorph.funSplitAt ℝ i).symm (t - ∑ k, v k, v) j = t := by
@@ -60,6 +63,7 @@ theorem sum_radial_slice (i : ι) (t : ℝ) (v : {j : ι // j ≠ i} → ℝ) :
   rw [hsum]
   simp
 
+open scoped Classical in
 /-- Nonnegative points on the slice of total `t` are parametrized by the positive simplex
 of radius `t` in the free coordinates. -/
 theorem nonneg_radial_slice_iff (i : ι) (t : ℝ) (v : {j : ι // j ≠ i} → ℝ) :
@@ -77,6 +81,7 @@ theorem nonneg_radial_slice_iff (i : ι) (t : ℝ) (v : {j : ι // j ≠ i} → 
       simpa using sub_nonneg.mpr hs
     · simpa [hj] using hv ⟨j, hj⟩
 
+open scoped Classical in
 /-- Radial integration for a measurable nonnegative function supported on the positive
 orthant. The simplex measure is the coordinate-normalized one, with no Euclidean area factor. -/
 theorem lintegral_eq_radial_stdSimplex [Nonempty ι]

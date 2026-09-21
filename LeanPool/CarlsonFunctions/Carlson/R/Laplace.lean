@@ -28,7 +28,7 @@ This file develops the inverse confluence formula of [Carl77, Theorem 5.10-2], w
 -/
 
 open Complex MeasureTheory ProbabilityTheory Set Filter
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

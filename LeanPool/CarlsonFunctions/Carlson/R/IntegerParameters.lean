@@ -30,7 +30,6 @@ configurations in terms of elementary functions.
 -/
 
 open Complex Polynomial ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
@@ -109,6 +108,7 @@ theorem regCarlsonRContinued_option_neg_one (t : ℂ)
     regCarlsonRContinued_option_zero (t - 1) hzero hz, hsome]
 
 omit [Nonempty ι] in
+open scoped Classical in
 /-- Carlson's lowering relation 8.5(1), in pole-free regularized form. It is
 valid even at `a = 1` and coincident nodes, though solving for the left-hand
 function then requires the usual nonvanishing hypotheses. -/

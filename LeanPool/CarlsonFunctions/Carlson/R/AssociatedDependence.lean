@@ -30,15 +30,14 @@ type is handled separately. There are no admitted proofs in this file.
 -/
 
 open Complex ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
-private abbrev CarlsonVariableFunctions (ι : Type*) [Fintype ι] :=
+private abbrev CarlsonVariableFunctions (ι : Type*) :=
   {z : ι → ℂ // z ∈ carlsonRVariableDomain} → ℂ
 
--- Polynomial scalars act by evaluation on the variable domain.
+/-- Polynomial scalars act by evaluation on the variable domain. -/
 local instance : Module (MvPolynomial ι ℂ)
     ({z : ι → ℂ // z ∈ carlsonRVariableDomain} → ℂ) :=
   Module.compHom _ (RingHom.pi
@@ -61,6 +60,7 @@ private theorem sum_mul_carlsonRIntegral_eq_update_add_one
   rw [regCarlsonRIntegral_eq_update_add_one t hb hz i]
   ring
 
+open scoped Classical in
 /-- Repeatedly raising individual parameters puts the original function in the same
 denominator-closed span as all exponent shifts at the raised parameter vector. -/
 private theorem carlsonRIntegral_mem_of_nat_shift
@@ -233,6 +233,7 @@ theorem exists_polynomial_relation_associatedR
     simp only [Finset.sum_apply, Pi.zero_apply] at heq
     exact heq
 
+open scoped Classical in
 /-- In the regularized normalization, raising parameters preserves any polynomial
 submodule containing the raised functions. No scalar denominator is cancelled. -/
 private theorem regCarlsonRContinued_mem_of_nat_shift

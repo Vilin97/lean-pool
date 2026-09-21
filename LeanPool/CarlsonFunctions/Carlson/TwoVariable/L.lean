@@ -21,7 +21,6 @@ coincident nodes; the diagonal value is supplied separately.
 -/
 
 open Complex ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

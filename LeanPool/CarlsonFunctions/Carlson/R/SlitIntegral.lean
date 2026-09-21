@@ -26,7 +26,6 @@ continuation theorem for arbitrary scalar kernels is still separate work.
 -/
 
 open Complex ProbabilityTheory Set Metric
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

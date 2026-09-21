@@ -16,7 +16,6 @@ parts of the parameters. Analytic uniqueness extends it to the native convergenc
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section CarlsonDirichletAverage
 
@@ -26,6 +25,7 @@ variable {ι : Type*} [Fintype ι]
 
 
 
+open scoped Classical in
 private lemma carlson_tangent_fderiv
     {Ω : Set ℂ} (hΩconv : Convex ℝ Ω) {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω)
     {z : ι → ℂ} (hz : Set.range z ⊆ Ω) (i j : ι)
@@ -46,11 +46,13 @@ private lemma continuousOn_carlson_comp
     (fun _ hu => convexHull_min hz hΩconv (carlsonAffineForm_mem_convexHull z hu))
 
 omit [Fintype ι] in
+open scoped Classical in
 private lemma addDirichletUnit_eq_add_single (b : ι → ℂ) (i : ι) :
     addDirichletUnit b i = b + Pi.single i 1 := by
   ext k
   by_cases h : k = i <;> simp [addDirichletUnit, h]
 
+open scoped Classical in
 /-- The tangential contiguous relation, on the native convergence domain. -/
 theorem regCarlsonDirichletAverage_tangent
     {Ω : Set ℂ} (hΩconv : Convex ℝ Ω) {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω)

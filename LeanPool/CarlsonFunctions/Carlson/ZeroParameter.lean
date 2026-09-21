@@ -21,11 +21,11 @@ nonempty remaining index type, the usual special-function setting.
 -/
 
 open Complex Finset Polynomial
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- A zero parameter makes the polynomial numerator independent of its node. -/
 theorem carlsonRPolynomialNumerator_update_of_param_zero (n : ℕ)
     {b : ι → ℂ} (z : ι → ℂ) (i : ι) (hbi : b i = 0) (w : ℂ) :
@@ -44,6 +44,7 @@ theorem carlsonRPolynomialNumerator_update_of_param_zero (n : ℕ)
       simp [hbi, hmi]
     simp [hp]
 
+open scoped Classical in
 /-- Regularized `R` polynomials do not depend on nodes with zero parameter. -/
 theorem regCarlsonR_update_of_param_zero (n : ℕ) {b : ι → ℂ}
     (z : ι → ℂ) (i : ι) (hbi : b i = 0) (w : ℂ) :
@@ -51,6 +52,7 @@ theorem regCarlsonR_update_of_param_zero (n : ℕ) {b : ι → ℂ}
   simp only [regCarlsonR, regCarlsonRPolynomial_eq_numerator_mul_one_div_Gamma,
     carlsonRPolynomialNumerator_update_of_param_zero n z i hbi w]
 
+open scoped Classical in
 /-- The entire regularized `S` function does not depend on a zero-parameter node. -/
 theorem regCarlsonSSeries_update_of_param_zero {b : ι → ℂ}
     (z : ι → ℂ) (i : ι) (hbi : b i = 0) (w : ℂ) :
@@ -58,6 +60,7 @@ theorem regCarlsonSSeries_update_of_param_zero {b : ι → ℂ}
   simp only [regCarlsonSSeries_eq_tsum_regCarlsonR,
     regCarlsonR_update_of_param_zero _ z i hbi w]
 
+open scoped Classical in
 private lemma aggregate_option_zero (k : ι) {b : Option ι → ℂ} (hb : b none = 0) :
     stdSimplexAggregate (fun o => o.elim k id) b = b ∘ some := by
   ext j

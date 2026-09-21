@@ -17,7 +17,6 @@ import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
 /-! # Solid simplex integration by coordinate sum -/
 
 open MeasureTheory
-open scoped Classical
 
 @[expose] public noncomputable section
 

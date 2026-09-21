@@ -20,7 +20,6 @@ Joint analyticity of the finite Pochhammer sum then extends it to all parameters
 -/
 
 open Complex Finset ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section
 namespace DirichletTransform
@@ -46,6 +45,7 @@ theorem analyticOnNhd_carlsonRPolynomialNumerator_joint (n : ℕ) :
       (Set.mem_univ _)).comp (((ContinuousLinearMap.proj (R := ℂ) i).comp
         (ContinuousLinearMap.fst ℂ (ι → ℂ) (ι → ℂ))).analyticAt p)
 
+open scoped Classical in
 /-- Coordinate differentiation of the numerator remains entire in the parameters. -/
 private theorem analyticOnNhd_partial_carlsonRPolynomialNumerator
     (n : ℕ) (i : ι) (z : ι → ℂ) :
@@ -66,6 +66,7 @@ private theorem analyticOnNhd_partial_carlsonRPolynomialNumerator
   exact ((ContinuousLinearMap.apply ℂ ℂ (0, Pi.single i 1)).analyticAt _).comp
     (((hF _ (Set.mem_univ _)).fderiv).comp hmap)
 
+open scoped Classical in
 /-- Differentiating a node lowers the degree and raises the corresponding parameter.
 The numerator formulation has no exceptional-parameter exclusions. -/
 theorem carlsonPartialDeriv_carlsonRPolynomialNumerator_succ
@@ -134,6 +135,7 @@ theorem carlsonPartialDeriv_carlsonRPolynomialNumerator_succ
       field_simp)
   exact congrFun heq b
 
+open scoped Classical in
 /-- Derivative form of the coordinate differentiation identity. -/
 theorem hasDerivAt_carlsonRPolynomialNumerator_update_succ
     (n : ℕ) (i : ι) (b z : ι → ℂ) :

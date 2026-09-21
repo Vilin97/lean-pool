@@ -21,7 +21,6 @@ is `1 / (card ι - 1)!`. Empty and singleton index types are included explicitly
 -/
 
 open MeasureTheory MeasureTheory.Measure
-open scoped Classical
 @[expose] public noncomputable section
 namespace Convexity.StdSimplex
 variable {ι : Type*} [Fintype ι]
@@ -61,7 +60,7 @@ instance : IsFiniteMeasure (coordinateMeasure (ι := ι)) := by
     coordinateMeasure (ι := ι) = 0 := by
   simp [coordinateMeasure, stdSimplexMeasure_empty]
 
-@[simp] theorem coordinateMeasure_univ_unique [Unique ι] :
+theorem coordinateMeasure_univ_unique [Unique ι] :
     coordinateMeasure (Set.univ : Set (StdSimplex ℝ ι)) = 1 := by simp
 
 /-- Integrating an ambient function over the intrinsic simplex is precisely the

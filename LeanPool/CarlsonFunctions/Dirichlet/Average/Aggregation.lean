@@ -20,17 +20,18 @@ The partition is surjective, so no empty blocks are inserted.
 -/
 
 open Complex MeasureTheory ProbabilityTheory Set
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι κ : Type*} [Fintype ι] [Fintype κ]
 
+open scoped Classical in
 /-- Fiber summation preserves the total parameter. -/
 theorem sum_aggregate_dirichletParameters (q : ι → κ) (b : ι → ℂ) :
     ∑ k, stdSimplexAggregate q b k = ∑ i, b i := by
   simp only [stdSimplexAggregate, FunOnFinite.linearMap_apply_apply]
   exact Finset.sum_fiberwise Finset.univ q b
 
+open scoped Classical in
 /-- The affine form factors through aggregation when nodes are constant on blocks. -/
 theorem carlsonAffineForm_aggregate (q : ι → κ) (z : κ → ℂ) (u : ι → ℝ) :
     carlsonAffineForm z (stdSimplexAggregate q u) = carlsonAffineForm (z ∘ q) u := by
@@ -47,6 +48,7 @@ theorem carlsonAffineForm_aggregate (q : ι → κ) (z : κ → ℂ) (u : ι →
       rw [(Finset.mem_filter.mp hi).2]
     _ = _ := Finset.sum_fiberwise Finset.univ q _
 
+open scoped Classical in
 private lemma aggregate_ofReal (q : ι → κ) (b : ι → ℝ) :
     stdSimplexAggregate q (fun i => (b i : ℂ)) =
       fun k => ((stdSimplexAggregate (R := ℝ) q b k : ℝ) : ℂ) := by

@@ -13,7 +13,7 @@ public import LeanPool.CarlsonFunctions.Carlson.S.Series
 /-! # Two-variable S definitions -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

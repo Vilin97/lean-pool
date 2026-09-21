@@ -25,7 +25,7 @@ then removes the strip restriction. There are no admitted proofs in this file.
 -/
 
 open Complex ProbabilityTheory
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -126,6 +126,7 @@ theorem carlsonAssociatedRecurrenceResidual_eq_zero_of_strip [Nonempty ι]
 def carlsonAssociatedRecurrenceKernel (a : ℂ) (b z : ι → ℂ) (w : ℂ) : ℂ :=
   w ^ a * ∏ i, (1 + w * z i) ^ (1 - b i)
 
+open scoped Classical in
 /-- The derivative of the ray primitive, with all complex powers factored out.
 The remaining factor is a polynomial in `w`; expanding it gives the elementary
 symmetric coefficients of Carlson's recurrence. -/
@@ -186,6 +187,7 @@ theorem tendsto_carlsonAssociatedRecurrenceKernel_zero
   unfold carlsonAssociatedRecurrenceKernel
   simpa [ha0] using (hp.fun_mul hg).tendsto
 
+open scoped Classical in
 /-- On the positive ray, the right-half-plane hypothesis supplies all branch
 conditions required by the factored derivative formula. -/
 theorem hasDerivAt_carlsonAssociatedRecurrenceKernel_ofReal
@@ -217,6 +219,7 @@ theorem tendsto_carlsonAssociatedRecurrenceKernel_atTop
     nsmul_eq_mul, mul_one, sub_re, natCast_re] at *
   linarith
 
+open scoped Classical in
 /-- Carlson's integration-by-parts calculation in the proof of Relation 8.4-1
 (pp. 245–246), with absolute integrability and endpoint limits justified.
 
@@ -298,6 +301,7 @@ private theorem carlsonAssociatedRecurrence_term_eq_mellin [Nonempty ι]
     show -(a + (n : ℂ)) = -a - n by ring]
   field_simp
 
+open scoped Classical in
 /-- The recurrence residual vanishes in the absolutely convergent single-integral strip.
 Combine the ray integration-by-parts identity with the elementary-symmetric expansion
 in Carlson's (8.4-5)–(8.4-7), Exercise 6.8-8, and beta/Gamma normalization. -/

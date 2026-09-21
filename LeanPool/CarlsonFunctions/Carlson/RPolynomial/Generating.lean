@@ -24,11 +24,12 @@ in `Pochhammer.BinomialSeries`.
 -/
 
 open Complex Filter Finset
-open scoped Classical Topology Nat
+open scoped Topology Nat
 @[expose] public noncomputable section CarlsonRPolynomial
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- The Pochhammer-weighted multinomial coefficient of total degree `n` on a finite
 index set. -/
 def carlsonGeneratingCoeff (s : Finset ι) (b z : ι → ℂ) (n : ℕ) : ℂ :=
@@ -37,6 +38,7 @@ def carlsonGeneratingCoeff (s : Finset ι) (b z : ι → ℂ) (n : ℕ) : ℂ :=
       (∏ i ∈ s, z i ^ m i) *
       (∏ i ∈ s, (ascPochhammer ℂ (m i)).eval (b i))
 
+open scoped Classical in
 /-- The Pochhammer numerator is the complete degree-`n` multinomial expansion. -/
 theorem carlsonRPolynomialNumerator_eq_sum_piAntidiag (n : ℕ) (b z : ι → ℂ) :
     carlsonRPolynomialNumerator n b z =
@@ -48,7 +50,9 @@ theorem carlsonRPolynomialNumerator_eq_sum_piAntidiag (n : ℕ) (b z : ι → �
 def carlsonRGeneratingKernel (b z : ι → ℂ) (t : ℂ) : ℂ :=
   ∏ i, 1 / (1 - t * z i) ^ (b i)
 
+open scoped Classical in
 /-- One antidiagonal slice of the Cauchy product for a `cons` generating coefficient. -/
+omit [Fintype ι] in
 theorem carlsonGeneratingCoeff_cons_antidiag {s : Finset ι} {i : ι} (hi : i ∉ s)
     (b z : ι → ℂ) (t : ℂ) {k l n : ℕ} (hkl : k + l = n) :
     ∑ m ∈ piAntidiag s l,
@@ -141,6 +145,7 @@ theorem carlsonGeneratingCoeff_cons_antidiag {s : Finset ι} {i : ι} (hi : i �
     ring
   · simp [sum_mul]
 
+open scoped Classical in
 /-- Adjoining one Carlson coordinate corresponds to the Cauchy product of generating
 series. -/
 theorem carlsonGeneratingCoeff_cons {s : Finset ι} {i : ι} (hi : i ∉ s)
@@ -172,7 +177,9 @@ theorem carlsonGeneratingCoeff_cons {s : Finset ι} {i : ι} (hi : i ∉ s)
   · rw [sum_div, mul_comm _ (t ^ n), ← sum_mul, mul_comm]
   · simp [carlsonGeneratingCoeff]
 
+open scoped Classical in
 /-- The empty generating series is the constant series `1`. -/
+omit [Fintype ι] in
 theorem carlsonGeneratingCoeff_empty (b z : ι → ℂ) (n : ℕ) :
     carlsonGeneratingCoeff (∅ : Finset ι) b z n = if n = 0 then 1 else 0 := by
   unfold carlsonGeneratingCoeff

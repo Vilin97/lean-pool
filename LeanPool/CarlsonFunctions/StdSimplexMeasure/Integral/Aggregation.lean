@@ -31,7 +31,6 @@ universe u
 
 variable {ι : Type u} [Fintype ι]
 
-open scoped Classical
 
 /-- Transformation of integrals under coordinate aggregation. The measurability hypothesis is
 stated for the weighted target measure, which is exactly the push-forward measure occurring in

@@ -19,7 +19,7 @@ of that enumeration whenever the Cauchy hypotheses hold.
 public section
 
 open Complex Function MeasureTheory Set
-open scoped Classical Real
+open scoped Real
 
 namespace SeveralComplexVariables
 
@@ -27,6 +27,7 @@ variable {ι κ F : Type*} [Fintype ι] [Fintype κ]
   [NormedAddCommGroup F] [NormedSpace ℂ F]
 
 omit [Fintype ι] [Fintype κ] in
+open scoped Classical in
 /-- Renaming coordinates renames a coordinate derivative by the inverse equivalence. -/
 theorem partialDeriv_reindex (e : κ ≃ ι) (f : (κ → ℂ) → F) (z : ι → ℂ) (i : ι) :
     partialDeriv i (fun w => f (w ∘ e)) z = partialDeriv (e.symm i) f (z ∘ e) := by
@@ -51,6 +52,7 @@ theorem iteratedPartialDeriv_reindex (e : κ ≃ ι) (f : (κ → ℂ) → F) (i
 variable [CompleteSpace F]
 
 omit [Fintype ι] in
+open scoped Classical in
 /-- Cauchy's polydisc formula for an arbitrary finite index type, integrated using any
 enumeration by `Fin n`. No nonemptiness or positive-dimension hypothesis is needed. -/
 theorem polydisc_cauchy_reindex {n : ℕ} (e : Fin n ≃ ι)

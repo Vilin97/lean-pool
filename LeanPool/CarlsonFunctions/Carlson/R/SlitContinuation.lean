@@ -24,7 +24,7 @@ outside that domain. This file does not assert the contour representation (6.8-7
 -/
 
 open Complex Filter
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

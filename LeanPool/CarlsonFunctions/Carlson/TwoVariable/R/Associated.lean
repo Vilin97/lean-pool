@@ -14,7 +14,7 @@ public import LeanPool.CarlsonFunctions.Carlson.R.SlitDeriv
 /-! # Two-variable associated R-relations -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

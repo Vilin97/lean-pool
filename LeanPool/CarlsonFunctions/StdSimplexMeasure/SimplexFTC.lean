@@ -18,7 +18,6 @@ the last free coordinate gives the one-dimensional slices used by the simplex FT
 -/
 
 open MeasureTheory MeasureTheory.Measure
-open scoped Classical
 
 @[expose] public noncomputable section
 
@@ -149,6 +148,7 @@ theorem integral_posSimplexFin_snoc {E : Type*} [NormedAddCommGroup E] [NormedSp
       linarith
     simp [G, he, Set.indicator_of_notMem hnot]
 
+open scoped Classical in
 /-- The same Fubini decomposition, with the separated coordinate integrated last. -/
 theorem integral_posSimplexFin_snoc_outer {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (g : (Fin (n + 1) → ℝ) → E) (hg : IntegrableOn g (posSimplexFin (n + 1) 1)) :
@@ -201,6 +201,7 @@ theorem integral_posSimplexFin_snoc_outer {E : Type*} [NormedAddCommGroup E] [No
       exact ⟨ht0, by linarith⟩
     simp [G, he, Set.indicator_of_notMem hnot]
 
+open scoped Classical in
 /-- Dilation of the solid simplex. -/
 theorem integral_posSimplexFin_scale {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (g : (Fin n → ℝ) → E) {r : ℝ} (hr : 0 < r) :

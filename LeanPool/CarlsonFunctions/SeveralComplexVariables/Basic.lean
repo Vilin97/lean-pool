@@ -37,13 +37,13 @@ no choice of coordinates on the general statements.
 public section
 
 open Set
-open scoped Classical
 
 section Coordinates
 
 variable {ι F : Type*} [Fintype ι]
   [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace F]
 
+open scoped Classical in
 /-- A complex Fréchet-differentiable map on an open subset of a finite complex coordinate
 space is analytic there. -/
 theorem DifferentiableOn.analyticOnNhd_pi {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}

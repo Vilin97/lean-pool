@@ -19,7 +19,6 @@ Home for Carlson's Section 6.2: multi-index coefficients, zero specializations, 
 -/
 
 open Complex Finset
-open scoped Classical
 @[expose] public noncomputable section CarlsonRPolynomial
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -192,6 +191,7 @@ theorem regCarlsonRPolynomial_eq_numerator_mul_one_div_Gamma
   rw [hp]
   simp [regDirichletMvPolynomialTransform]
 
+open scoped Classical in
 /-- Reindexing the degree-`n` Finsupp antidiagonal along `Finsupp.equivFunOnFinite`. -/
 theorem map_equivFunOnFinite_piAntidiag_univ (n : ℕ) :
     (piAntidiag (univ : Finset ι) n).map
@@ -209,6 +209,7 @@ theorem map_equivFunOnFinite_piAntidiag_univ (n : ℕ) :
     refine ⟨(m : ι → ℕ), ⟨hsum, fun _ _ => mem_univ _⟩, ?_⟩
     exact Finsupp.equivFunOnFinite.symm_apply_apply m
 
+open scoped Classical in
 /-- The Pochhammer numerator is the complete degree-`n` multinomial expansion. -/
 theorem carlsonRPolynomialNumerator_eq_multinomial_sum (n : ℕ) (b z : ι → ℂ) :
     carlsonRPolynomialNumerator n b z =

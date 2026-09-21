@@ -18,7 +18,6 @@ parameter or exponent. The proofs differentiate the corresponding R-identities.
 -/
 
 open Complex ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

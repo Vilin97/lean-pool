@@ -22,11 +22,12 @@ first in the parameters, then in the nodes. No L-function theory is used.
 -/
 
 open Complex Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- A coordinate derivative of R is jointly holomorphic in all its arguments. -/
 theorem analyticOnNhd_carlsonPartialDeriv_regCarlsonRSlit_joint (i : ι) :
     AnalyticOnNhd ℂ (fun p : Option (ι ⊕ ι) → ℂ =>
@@ -68,6 +69,7 @@ theorem analyticAt_carlsonPartialDeriv_regCarlsonRSlit_comp
       | inr j => exact (analyticAt_pi_iff.mp hz) j
   exact (analyticOnNhd_carlsonPartialDeriv_regCarlsonRSlit_joint i (f p) hslit).comp_of_eq hf rfl
 
+open scoped Classical in
 private theorem partialDeriv_regCarlsonRSlit_of_right (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRVariableDomain) (i : ι) :
     carlsonPartialDeriv i (regCarlsonRSlit t b) z =
@@ -116,6 +118,7 @@ theorem carlsonPartialDeriv_regCarlsonRSlit (t : ℂ) (b : ι → ℂ)
   exact eqOn_carlsonRSlitDomain_of_eqOn_rightHalfPlane hleft hright
     (fun _ hw => partialDeriv_regCarlsonRSlit_of_right t b hw i) hz
 
+open scoped Classical in
 /-- The first derivative as a one-variable slice, without a convergence hypothesis. -/
 theorem hasDerivAt_regCarlsonRSlit_update (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain) (i : ι) :

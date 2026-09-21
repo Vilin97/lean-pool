@@ -23,7 +23,6 @@ are not yet supplied by this module.
 -/
 
 open Complex Set
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

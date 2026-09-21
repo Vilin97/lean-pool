@@ -23,7 +23,6 @@ the intrinsic simplex itself.
 variable {ι : Type*} [Fintype ι]
 variable {R : Type*}
 
-open scoped Classical
 
 section OrderedSemiring
 
@@ -78,6 +77,7 @@ variable [CommRing R] [PartialOrder R] [IsOrderedRing R]
   change x ∈ stdSimplexCoordMap i ⁻¹' Convexity.StdSimplex.coordinateSet R ι ↔ _
   rw [preimage_stdSimplexCoordMap]
 
+open scoped Classical in
 /-- Coordinate aggregation sends the coordinate realization of the standard simplex on `ι`
 into the coordinate realization on `κ`. -/
 theorem stdSimplexAggregate_mem_stdSimplex {κ : Type*} [Fintype κ]

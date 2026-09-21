@@ -42,7 +42,7 @@ are exported here for that construction.
 -/
 
 open Complex MeasureTheory ProbabilityTheory MeasureTheory.Measure Set
-open scoped Classical Topology
+open scoped Topology
 
 @[expose] public noncomputable section DirichletTransform
 
@@ -88,6 +88,7 @@ theorem mvBetaConvergent_subset_dirichletConvergenceRegion (N : ℕ) :
   rw [← dirichletConvergenceRegion_zero (ι := ι)]
   exact dirichletConvergenceRegion_mono (Nat.zero_le N)
 
+open scoped Classical in
 /-- On a singleton index type the regularized Dirichlet integral is `f 1 / Gamma b`, hence
 entire in the Dirichlet parameter. -/
 theorem exists_regDirichletContinuation_of_unique [Unique ι]
@@ -188,6 +189,7 @@ theorem eqOn_dirichletContinuation {N : ℕ} {F G : (ι → ℂ) → ℂ}
   exact hF'.eqOn_of_preconnected_of_eventuallyEq hG'
     (isPreconnected_dirichletConvergenceRegion N) hz0 hev
 
+open scoped Classical in
 /-- Jacobian identity for the complementary-coordinate exponent in a simplex slice. -/
 theorem slice_jacobian_exponent (i : ι) [Nontrivial ι] (b : ι → ℂ) :
     ((Fintype.card ι - 2 : ℕ) : ℂ) + ∑ q : {j : ι // j ≠ i}, (b q - 1) =
@@ -205,6 +207,7 @@ theorem slice_jacobian_exponent (i : ι) [Nontrivial ι] (b : ι → ℂ) :
   rw [hcast_rest, hcast_two]
   ring
 
+open scoped Classical in
 /-- Native slice formula: a regularized Dirichlet integral is an incomplete Mellin transform
 in one coordinate of a complementary regularized Dirichlet integral on the opposite face. -/
 theorem regDirichletIntegral_split_at [Nontrivial ι] (i : ι)
@@ -303,6 +306,7 @@ theorem regDirichletIntegral_split_at [Nontrivial ι] (i : ι)
 
 /-! ### Continuation by tangential integration by parts -/
 
+open scoped Classical in
 /-- Iterated parameter shifts. Each step raises a free parameter and either lowers the
 omitted parameter or takes one tangential derivative of the integrand. -/
 private def shiftedDirichletIntegral (i : ι) :
@@ -313,12 +317,14 @@ private def shiftedDirichletIntegral (i : ι) :
         shiftedDirichletIntegral i l (b + Pi.single (j : ι) 1)
           (stdSimplexTangentDeriv j i f)
 
+open scoped Classical in
 /-- Convergence region for a finite list of tangential parameter shifts. -/
 def shiftRegion (i : ι) (l : List {j : ι // j ≠ i}) : Set (ι → ℂ) :=
   {b | (l.length : ℝ) < (b i).re ∧ ∀ j : {j : ι // j ≠ i},
     0 < (b j).re + (l.count j : ℝ)}
 
 omit [Fintype ι] in
+open scoped Classical in
 theorem shiftRegion_cons (i : ι) (j : {j : ι // j ≠ i})
     (l : List {j : ι // j ≠ i}) {b : ι → ℂ} (hb : b ∈ shiftRegion i (j :: l)) :
     (b + Pi.single (j : ι) 1 - Pi.single i 1) ∈ shiftRegion i l ∧
@@ -365,6 +371,7 @@ private theorem analyticOnNhd_shiftedDirichletIntegral (i : ι)
         ((analyticAt_id.add analyticAt_const).sub analyticAt_const) rfl).sub
         ((h1 _ hb1).comp_of_eq (analyticAt_id.add analyticAt_const) rfl)
 
+open scoped Classical in
 private theorem shiftedDirichletIntegral_eq (i : ι) (l : List {j : ι // j ≠ i})
     {f : (ι → ℝ) → ℂ} (hf : ContDiffNearStdSimplex l.length f)
     {b : ι → ℂ} (hb : ∀ k, (l.length : ℝ) + 2 < (b k).re) :
@@ -405,22 +412,26 @@ private theorem shiftedDirichletIntegral_eq (i : ι) (l : List {j : ι // j ≠ 
       rw [H]
       ring
 
+open scoped Classical in
 /-- Each free coordinate is shifted `N` times. -/
 def shiftList (i : ι) (N : ℕ) : List {j : ι // j ≠ i} :=
   (List.replicate N (Finset.univ.toList : List {j : ι // j ≠ i})).flatten
 
+open scoped Classical in
 theorem shiftList_length (i : ι) (N : ℕ) :
     (shiftList i N).length = (Fintype.card ι - 1) * N := by
   have hcard : Fintype.card {j : ι // j ≠ i} = Fintype.card ι - 1 := by
     rw [Fintype.card_subtype_compl, Fintype.card_subtype_eq]
   simp [shiftList, List.length_flatten, hcard, mul_comm]
 
+open scoped Classical in
 theorem shiftList_count (i : ι) (N : ℕ) (j : {j : ι // j ≠ i}) :
     (shiftList i N).count j = N := by
   have hc : (Finset.univ.toList : List {j : ι // j ≠ i}).count j = 1 :=
     List.count_eq_one_of_mem (Finset.nodup_toList _) (by simp)
   simp [shiftList, List.count_flatten, hc]
 
+open scoped Classical in
 theorem regDirichletIntegral_power_partition {b : ι → ℂ}
     (hb : b ∈ mvBetaConvergent) {f : (ι → ℝ) → ℂ}
     (hf : ContinuousOn f (Convexity.StdSimplex.coordinateSet ℝ ι)) (M : ℕ) :
@@ -455,6 +466,7 @@ theorem regDirichletIntegral_power_partition {b : ι → ℂ}
   have h := regDirichletIntegral_monomial_mul hb (Pi.single i M) g
   simpa [mvPochhammer, Pi.single_apply, apply_ite, Pi.add_def, add_ite, g] using! h
 
+open scoped Classical in
 /-- If `f` has `(card ι - 1) * N` continuous derivatives near the closed simplex,
 its regularized Dirichlet integral continues to `-N < re (b i)` for every `i`.
 
@@ -543,6 +555,7 @@ theorem exists_regDirichletContinuation_of_contDiffNear {N : ℕ}
         linarith
       · simpa only [Pi.add_apply, Pi.single_eq_of_ne hki, add_zero] using hb k
 
+open scoped Classical in
 /-- If a simplex function has every finite order of differentiability on a neighborhood of
 the simplex, its compatible finite-order regularized continuations glue to an entire function
 of all Dirichlet parameters. -/

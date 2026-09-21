@@ -39,7 +39,6 @@ namespace ProbabilityTheory
 
 variable {ι : Type*} [Fintype ι]
 
-open scoped Classical
 
 /-- The regularized Dirichlet density with parameters `b` on `stdSimplexInterior`. For each
 fixed `u`, this is an entire function of `b`. -/

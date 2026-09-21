@@ -16,7 +16,7 @@ public import LeanPool.CarlsonFunctions.Pochhammer.Gamma
 /-! # Reduction of integral exponent shifts to a finite polynomial span -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -28,7 +28,7 @@ theorem carlsonAssociatedRecurrencePolynomial_lower_ne_zero [Nonempty ι]
     (hz : z ∈ carlsonRVariableDomain) (m : ℕ) :
     (carlsonAssociatedRecurrencePolynomial (Fintype.card ι) (-t + m)
       ((∑ i, b i) + t - m) b).eval z ≠ 0 := by
-  simp only [carlsonAssociatedRecurrencePolynomial, if_neg Fintype.card_ne_zero,
+  simp only [carlsonAssociatedRecurrencePolynomial, ite_eq_right Fintype.card_ne_zero,
     ↓reduceIte, map_mul, MvPolynomial.eval_C]
   change -(ascPochhammer ℂ (Fintype.card ι - 1)).eval (-t + m + 1) *
     carlsonElementarySymmetric (Fintype.card ι) z ≠ 0

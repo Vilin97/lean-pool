@@ -21,13 +21,14 @@ compact-open topology. Compactness is supplied by Mathlib's Arzelà–Ascoli the
 public section
 
 open Complex Filter Function Metric Set
-open scoped Classical Topology
+open scoped Topology
 
 namespace SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace F]
 
 omit [CompleteSpace F] in
+open scoped Classical in
 /-- Compact-local bounds on a holomorphic family give equicontinuity. Banach targets
 are allowed here; finite dimensionality is needed only for compactness in Montel's theorem. -/
 theorem equicontinuous_of_holomorphic_bounded_on_compacts

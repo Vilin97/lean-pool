@@ -13,7 +13,6 @@ public import Mathlib.Data.Complex.Basic
 /-! # Associated shifts and rational coefficient data -/
 
 
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

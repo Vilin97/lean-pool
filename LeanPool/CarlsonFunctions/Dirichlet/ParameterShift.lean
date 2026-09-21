@@ -12,15 +12,17 @@ public import LeanPool.CarlsonFunctions.Dirichlet.Complex
 /-! # Unit shifts of Dirichlet parameters and their integral identities -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- The Dirichlet parameter vector obtained by increasing coordinate `i` by one. -/
 def addDirichletUnit (b : ι → ℂ) (i : ι) : ι → ℂ :=
   Function.update b i (b i + 1)
 
+open scoped Classical in
 /-- A unit parameter shift increases the total parameter by one. -/
 @[simp] theorem sum_addDirichletUnit (b : ι → ℂ) (i : ι) :
     ∑ j, addDirichletUnit b i j = (∑ j, b j) + 1 := by
@@ -43,6 +45,7 @@ theorem addDirichletUnit_mem_mvBetaConvergent {b : ι → ℂ}
     simpa [addDirichletUnit] using add_pos_of_pos_of_nonneg (hb i) (by norm_num : 0 ≤ (1 : ℝ))
   · simpa [addDirichletUnit, hji] using hb j
 
+open scoped Classical in
 /-- Increasing one Dirichlet parameter by one multiplies the regularized density by the
 corresponding simplex coordinate, up to the factor `b i`. -/
 theorem mul_regDirichletDensity_addDirichletUnit {b : ι → ℂ}
@@ -93,6 +96,7 @@ theorem mul_regDirichletIntegral_addDirichletUnit {b : ι → ℂ}
   rw [← mul_assoc, mul_regDirichletDensity_addDirichletUnit hb]
   ring
 
+open scoped Classical in
 /-- Compatibility spelling for the density-shift lemma used by the earlier `R`-function
 development. -/
 theorem mul_regDirichletDensity_update_add_one {b : ι → ℂ}
@@ -101,6 +105,7 @@ theorem mul_regDirichletDensity_update_add_one {b : ι → ℂ}
       (u i : ℂ) * regDirichletDensity b u := by
   simpa [addDirichletUnit] using mul_regDirichletDensity_addDirichletUnit hb i u
 
+open scoped Classical in
 /-- Compatibility spelling for the integral parameter-shift lemma. -/
 theorem mul_regDirichletIntegral_update_add_one {b : ι → ℂ}
     (hb : b ∈ mvBetaConvergent) (i : ι) (f : (ι → ℝ) → ℂ) :

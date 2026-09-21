@@ -19,7 +19,7 @@ The historical `ProbabilityTheory` declaration names are retained for compatibil
 -/
 
 open Real MeasureTheory MeasureTheory.Measure
-open scoped ENNReal Classical
+open scoped ENNReal
 
 @[expose] public noncomputable section
 
@@ -27,6 +27,7 @@ namespace ProbabilityTheory
 
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- Scaling the free coordinates in a simplex slice separates a Dirichlet monomial into its
 distinguished-coordinate factor, radial factor, and lower-dimensional monomial. -/
 private theorem prod_rpow_stdSimplexCoordMap_scale

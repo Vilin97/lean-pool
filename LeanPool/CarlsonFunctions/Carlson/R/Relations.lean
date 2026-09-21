@@ -19,11 +19,11 @@ parameters for `regCarlsonRContinued`. Node derivatives are still stated for the
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- Carlson's first associated-function relation 5.9-5, in regularized form.  Gamma
 regularization absorbs Carlson's weights and leaves the coefficients `b i`. -/
 theorem regCarlsonRIntegral_eq_sum_update_add_one (t : ℂ) {b z : ι → ℂ}
@@ -37,6 +37,7 @@ theorem regCarlsonRIntegral_eq_sum_update_add_one (t : ℂ) {b z : ι → ℂ}
   simpa only [regCarlsonRIntegral, addDirichletUnit] using
     regCarlsonDirichletAverage_eq_sum_addDirichletUnit hb z (fun w => w ^ t) hpow
 
+open scoped Classical in
 /-- Carlson's second associated-function relation 5.9-5, in regularized form. -/
 theorem regCarlsonRIntegral_add_one_eq_sum_mul_update (t : ℂ) {b z : ι → ℂ}
     (hb : b ∈ mvBetaConvergent) (hz : z ∈ carlsonRVariableDomain) :
@@ -133,6 +134,7 @@ theorem regCarlsonRIntegral_tangent (t : ℂ) {b z : ι → ℂ}
       simp_all [addDirichletUnit, Function.update_apply]
   simpa only [hcomm, regCarlsonRIntegral] using H
 
+open scoped Classical in
 private lemma sum_addDirichletUnit_mul (b : ι → ℂ) (i : ι) (f : ι → ℂ) :
     ∑ j, addDirichletUnit b i j * f j = (∑ j, b j * f j) + f i := by
   have hterm (j : ι) : addDirichletUnit b i j * f j =

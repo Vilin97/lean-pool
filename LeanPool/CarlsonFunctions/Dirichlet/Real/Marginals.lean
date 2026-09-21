@@ -27,7 +27,6 @@ namespace ProbabilityTheory
 
 variable {ι : Type*} [Fintype ι]
 
-open scoped Classical
 
 /- Specializations to the two-variable Dirichlet (Beta) density and measure that is defined
 in Mathlib `ProbabilityTheory.betaMeasure`. -/
@@ -79,7 +78,7 @@ parametrization `x ↦ ![x, 1 - x]`. -/
   rw [dirichletPdfReal, betaPDFReal, mvRealBeta_fin_two]
   by_cases hx : 0 < x ∧ x < 1
   · simp [hx, mul_assoc]
-  · rw [if_neg hx]
+  · rw [ite_eq_right hx]
     simp [mem_stdSimplexInterior_fin_two, hx]
 
 /-- The two-variable `ENNReal`-valued Dirichlet density is the beta density. -/
@@ -163,6 +162,7 @@ private theorem map_dirichletMeasure_fin_two_direct (a b : ℝ) :
   · simp only [Set.mem_preimage] at hus
     simp [hus]
 
+open scoped Classical in
 /-- Marginalization of the Dirichlet density with respect to the `i` coordinate. -/
 theorem betaMarginal [Nontrivial ι] {b : ι → ℝ} (hb : b ∈ mvRealBetaDomain) (i : ι) :
     Measure.map (fun u ↦ u i) (dirichletMeasure b) =

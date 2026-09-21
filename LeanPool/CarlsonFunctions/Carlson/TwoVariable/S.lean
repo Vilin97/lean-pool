@@ -14,7 +14,7 @@ public import LeanPool.CarlsonFunctions.Carlson.R.Confluence
 /-! # The two-variable Carlson S-function -/
 
 open Complex Filter
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section CarlsonTwoVariable
 namespace DirichletTransform.TwoVariable
 

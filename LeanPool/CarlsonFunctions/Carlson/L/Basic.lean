@@ -20,7 +20,6 @@ native integrals are distinguished from their analytic continuations in `b`.
 -/
 
 open Complex ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

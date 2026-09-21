@@ -28,7 +28,7 @@ expansion, its uniform convergence and remainder estimates are in `PolydiscTaylo
 @[expose] public section
 
 open Complex Filter Function MeasureTheory Metric Set
-open scoped Classical ENNReal NNReal Real Topology
+open scoped ENNReal NNReal Real Topology
 
 namespace SeveralComplexVariables
 

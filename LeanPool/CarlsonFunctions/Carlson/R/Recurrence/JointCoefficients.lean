@@ -17,7 +17,7 @@ Dirichlet parameters and `some (inr i)` for nodes. No R-function dependence
 or recurrence theorem is imported here. -/
 
 open Complex Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

@@ -17,7 +17,7 @@ on the closed polydisc. It does not depend on the several-variable Osgood theore
 @[expose] public section
 
 open Complex Filter Function MeasureTheory Metric Set
-open scoped Classical ENNReal NNReal Real Topology
+open scoped ENNReal NNReal Real Topology
 
 namespace SeveralComplexVariables
 

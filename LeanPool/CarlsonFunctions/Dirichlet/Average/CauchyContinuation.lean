@@ -27,7 +27,6 @@ The multiply connected and Riemann-surface extensions are left open.
 -/
 
 open Complex MeasureTheory ProbabilityTheory Set Metric
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

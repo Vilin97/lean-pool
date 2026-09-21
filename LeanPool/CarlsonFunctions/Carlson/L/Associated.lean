@@ -18,7 +18,6 @@ differential identities (2.9) and (2.8) are stated for native integrals.
 -/
 
 open Complex ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -35,6 +34,7 @@ theorem isRegCarlsonContinuation_deriv_LKernel (t : ℂ) {z : ι → ℂ}
   rw [regCarlsonLContinued_eq_integral _ hz hb, regCarlsonRContinued_eq_integral _ hz hb]
   exact (regCarlsonDirichletAverage_deriv_LKernel t hb hz).symm
 
+open scoped Classical in
 /-- Equation (3.3), including coincident nodes and indices. -/
 theorem regCarlsonLContinued_three_node (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRVariableDomain) (i j k : ι) :
@@ -45,6 +45,7 @@ theorem regCarlsonLContinued_three_node (t : ℂ) (b : ι → ℂ)
     ((analyticOnNhd_carlsonLKernel t).mono carlsonRightHalfPlane_subset_slitPlane)
     (Set.range_subset_iff.mpr hz) isOpen_carlsonRightHalfPlane b i j k
 
+open scoped Classical in
 /-- Equation (3.7), in pole-free regularized form. -/
 theorem regCarlsonLContinued_tangent_sub (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRVariableDomain) (i j : ι) :

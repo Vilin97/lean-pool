@@ -27,7 +27,7 @@ be proved.
 -/
 
 open Complex Filter ProbabilityTheory MeasureTheory
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -62,6 +62,7 @@ private lemma unitIntervalIntegral_eq_gamma_mul_reg
   have hG := Gamma_ne_zero_of_re_pos (show 0 < (a + a').re by simpa using add_pos ha ha')
   field_simp
 
+open scoped Classical in
 private lemma tendsto_unitIntervalIntegral_update_zero
     (i : ι) {a a' : ℂ} {b z : ι → ℂ}
     (ha : 0 < a.re) (ha' : 0 < a'.re) (ha'i : 0 < (a' - b i).re)
@@ -202,12 +203,13 @@ private lemma tendsto_unitIntervalIntegral_update_zero
   rw [hzero] at H
   simpa only [hfull] using H
 
+open scoped Classical in
 /-- Carlson's sectorial small-variable limit, Theorem 8.3-1, in regularized form.
 
 The beta factors in Carlson's unregularized statement are absorbed by Gamma regularization;
 the remaining shifted Gamma factor is displayed explicitly. -/
 theorem tendsto_regCarlsonRIntegral_update_zero
-    [Nontrivial ι] (i : ι) {a a' : ℂ} {b z : ι → ℂ}
+     (i : ι) {a a' : ℂ} {b z : ι → ℂ}
     (ha : 0 < a.re) (ha' : 0 < a'.re)
     (ha'i : 0 < (a' - b i).re) (hsum : a + a' = ∑ j, b j)
     (hb : b ∈ mvBetaConvergent) (hz : z ∈ carlsonRVariableDomain) :
@@ -262,6 +264,7 @@ theorem tendsto_regCarlsonRIntegral_update_zero
   exact H'.congr' heq
 
 omit [Fintype ι] in
+open scoped Classical in
 /-- Updating one node preserves the domain when the replacement has positive real part. -/
 theorem carlsonRVariableDomain_update {z : ι → ℂ} (hz : z ∈ carlsonRVariableDomain)
     (i : ι) {w : ℂ} (hw : 0 < w.re) :
@@ -288,6 +291,7 @@ theorem regCarlsonRContinued_eq_sum_double_shift (t : ℂ) (b : ι → ℂ)
   intro j _
   ring
 
+open scoped Classical in
 /-- The small-variable limit for the continued R-function with unrestricted
 individual Dirichlet parameters. The approach can be any filter in the right
 half-plane; no narrower angular sector is needed. The positive endpoint-exponent

@@ -15,7 +15,7 @@ public import LeanPool.CarlsonFunctions.Carlson.L.SlitContinuation
 Carlson (1987), (3.10), including the factored and mixed-derivative forms. -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

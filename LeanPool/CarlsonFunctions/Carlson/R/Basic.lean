@@ -11,7 +11,6 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
 /-! # Carlson's R-function: basic definitions -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

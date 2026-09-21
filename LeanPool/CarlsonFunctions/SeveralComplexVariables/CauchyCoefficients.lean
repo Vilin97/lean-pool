@@ -22,7 +22,7 @@ Cauchy estimate. `PolydiscTaylor` uses these coefficients for convergent Taylor 
 @[expose] public noncomputable section
 
 open Complex Filter Function MeasureTheory Metric Set
-open scoped Classical Real Topology
+open scoped Real Topology
 
 namespace SeveralComplexVariables
 

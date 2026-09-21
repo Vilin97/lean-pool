@@ -15,7 +15,6 @@ public import Mathlib.LinearAlgebra.Finsupp.LSum
 /-! # Two-variable Carlson R-polynomials -/
 
 open Complex
-open scoped Classical
 @[expose] public noncomputable section CarlsonTwoVariable
 namespace DirichletTransform.TwoVariable
 
@@ -82,7 +81,7 @@ theorem carlsonRPolynomialNumerator_pair (n : ℕ) (b₀ b₁ x y : ℂ) :
       intro m hm
       rw [MvPolynomial.C_mul_X_eq_monomial, MvPolynomial.C_mul_X_eq_monomial,
         MvPolynomial.monomial_pow, MvPolynomial.monomial_pow,
-        MvPolynomial.monomial_mul]
+        MvPolynomial.monomial_mul_monomial]
       rw [show (n.choose m : MvPolynomial (Fin 2) ℂ) = MvPolynomial.C (n.choose m : ℂ) by rfl,
         mul_comm, MvPolynomial.C_mul_monomial]
       change L (Finsupp.single _ _) = _

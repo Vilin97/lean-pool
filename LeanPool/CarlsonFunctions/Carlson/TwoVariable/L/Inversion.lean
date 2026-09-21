@@ -16,7 +16,7 @@ The full slit-domain correction is `log x + log y`; the `log (x * y)` version
 requires the branch-safe right-half-plane hypotheses. -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

@@ -17,7 +17,7 @@ several-complex-variable analyticity or continuation.
 -/
 
 open Complex Fintype Filter MeasureTheory MeasureTheory.Measure
-open scoped Topology Classical
+open scoped Topology
 
 @[expose] public noncomputable section
 
@@ -80,6 +80,7 @@ theorem integrableOn_mvBetaMonomial
         exact ⟨hus, hu hus⟩
       · exact fun hus ↦ hus.1
 
+open scoped Classical in
 /-- Multiplying one factor of a convergent Dirichlet monomial by the logarithm of its
 coordinate preserves integrability.  This is the basic domination estimate needed when
 differentiating a simplex Mellin integral with respect to a parameter. -/
@@ -163,6 +164,7 @@ theorem integrableOn_mvBetaMonomial_mul_log
         simpa [abs_mul, mul_comm,
           abs_of_pos (Real.rpow_pos_of_pos hui _)] using hlog.le
 
+open scoped Classical in
 /-- A simplex slice separates a complex Dirichlet monomial into its distinguished-coordinate,
 radial, and lower-dimensional factors. -/
 theorem prod_cpow_stdSimplexCoordMap_scale

@@ -17,7 +17,6 @@ complex Carlson integral.
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section CarlsonDirichletBridge
 

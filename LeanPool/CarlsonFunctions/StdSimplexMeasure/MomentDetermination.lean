@@ -15,7 +15,7 @@ public import Mathlib.Topology.ContinuousMap.StoneWeierstrass
 -/
 
 open Real MeasureTheory MeasureTheory.Measure
-open scoped Classical Topology
+open scoped Topology
 
 @[expose] public noncomputable section
 

@@ -21,7 +21,7 @@ but not Carlson's additional contour representation (6.8-7).
 -/
 
 open Complex Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι κ : Type*} [Fintype ι] [Fintype κ]
@@ -67,6 +67,7 @@ private theorem analyticAt_regCarlsonRSlit_comp_of_strip
   rw [hneg]
   field_simp
 
+open scoped Classical in
 /-- Analytic substitutions in all arguments of the slit-plane continuation. No restrictions
 are imposed on the exponent or Dirichlet parameters. -/
 theorem analyticOnNhd_regCarlsonRSlit_comp

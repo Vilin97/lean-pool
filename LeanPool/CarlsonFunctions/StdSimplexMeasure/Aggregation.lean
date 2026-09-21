@@ -32,7 +32,6 @@ constants that occur when coordinate measures on standard simplices are pushed f
 
 variable {ι : Type*} [Fintype ι]
 
-open scoped Classical
 open Convexity
 
 /-- Coordinate aggregation sends `u : ι → R` to its block sums under a map `f : ι → κ`.
@@ -54,7 +53,7 @@ variable [Semiring R] [PartialOrder R] [IsStrictOrderedRing R]
 
 /-- Mapping an intrinsic standard-simplex point and then reading its weights agrees with
 aggregation of its finite coordinate function. -/
-@[simp] theorem weights_map_eq_stdSimplexAggregate (f : ι → κ) (s : StdSimplex R ι) :
+theorem weights_map_eq_stdSimplexAggregate (f : ι → κ) (s : StdSimplex R ι) :
     (fun k ↦ (s.map f).weights k) =
       stdSimplexAggregate f (fun i ↦ s.weights i) := by
   change ⇑(Finsupp.mapDomain f s.weights) =
@@ -88,6 +87,7 @@ def stdSimplexAggregateFiberCard {κ : Type*} (f : ι → κ) (k : κ) : ℕ := 
   classical
   exact Fintype.card {i : ι // f i = k}
 
+open scoped Classical in
 /-- Every fiber of a surjective aggregation map has positive cardinality. -/
 theorem stdSimplexAggregateFiberCard_pos {κ : Type*} {f : ι → κ}
     (hf : Function.Surjective f) (k : κ) :
@@ -97,6 +97,7 @@ theorem stdSimplexAggregateFiberCard_pos {κ : Type*} {f : ι → κ}
     obtain ⟨i, hi⟩ := hf k
     exact ⟨⟨i, hi⟩⟩
 
+open scoped Classical in
 /-- The cardinalities of all fibers of a map from a finite type sum to the cardinality of its
 domain. -/
 theorem sum_stdSimplexAggregateFiberCard {κ : Type*} [Fintype κ] (f : ι → κ) :

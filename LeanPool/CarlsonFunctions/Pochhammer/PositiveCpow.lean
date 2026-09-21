@@ -18,7 +18,7 @@ namespace is retained for compatibility.
 -/
 
 open Complex Set Filter
-open scoped Classical Topology
+open scoped Topology
 
 @[expose] public noncomputable section
 
@@ -63,8 +63,8 @@ theorem hasDerivAt_positiveCpow {a : ℂ} (ha : 1 < a.re) (x : ℝ) :
       filter_upwards [self_mem_nhdsWithin] with x hx
       have hx' : 0 < x := hx
       have hx0 : (x : ℂ) ≠ 0 := ofReal_ne_zero.mpr (ne_of_gt hx')
-      simp only [slope, vsub_eq_sub, sub_zero, positiveCpow, hx', if_true,
-        lt_self_iff_false, if_false, sub_zero, Complex.real_smul, ofReal_inv]
+      simp only [slope, vsub_eq_sub, sub_zero, positiveCpow, hx', ite_true,
+        lt_self_iff_false, ite_false, sub_zero, Complex.real_smul, ofReal_inv]
       rw [cpow_sub _ _ hx0, cpow_one]
       ring
   · rw [show a * positiveCpow (a - 1) x = 0 by

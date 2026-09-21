@@ -26,7 +26,7 @@ normalization and its L-function transformations are not extended by this file.
 -/
 
 open Complex ProbabilityTheory Set Filter
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

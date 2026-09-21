@@ -30,7 +30,6 @@ repeated-integral identity. Both arguments allow coincident nodes.
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section CarlsonNewtonTaylor
 

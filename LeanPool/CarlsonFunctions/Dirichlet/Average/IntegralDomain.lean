@@ -23,7 +23,7 @@ connected domains; its general existence assertion remains open here.
 -/
 
 open Complex ProbabilityTheory Set Filter
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

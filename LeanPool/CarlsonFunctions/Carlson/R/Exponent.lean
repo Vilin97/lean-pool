@@ -18,7 +18,7 @@ recurrences initially obtained from a convergent single-integral representation.
 -/
 
 open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory Filter
-open scoped Classical Topology
+open scoped Topology
 
 @[expose] public noncomputable section
 

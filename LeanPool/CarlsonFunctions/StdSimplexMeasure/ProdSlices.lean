@@ -58,7 +58,7 @@ product. The inner integral is over the section `{y | (x, y) ∈ T}`. Unlike
 `setIntegral_prod_slices`, this result requires no integrability hypothesis. -/
 theorem setLIntegral_prod_slices
     {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
-    {μ : Measure α} {ν : Measure β} [SFinite μ] [SFinite ν]
+    {μ : Measure α} {ν : Measure β} [SFinite ν]
     (T : Set (α × β)) (hT : MeasurableSet T)
     (f : α × β → ENNReal) (hf : AEMeasurable f ((μ.prod ν).restrict T)) :
     ∫⁻ p in T, f p ∂μ.prod ν =

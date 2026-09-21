@@ -20,7 +20,7 @@ The historical `DirichletTransform` namespace is retained for compatibility.
 -/
 
 open Complex Set Filter
-open scoped Classical Topology
+open scoped Topology
 
 @[expose] public noncomputable section
 
@@ -49,6 +49,7 @@ theorem ContDiffNearStdSimplex.continuousOn {N : ℕ} {f : (ι → ℝ) → ℂ}
 
 /-! ### Tangential derivatives -/
 
+open scoped Classical in
 /-- The tangent vector to the simplex that increases coordinate `j` and decreases coordinate
 `k` at the same rate. -/
 def stdSimplexTangentVector (j k : ι) : ι → ℝ :=
@@ -97,6 +98,7 @@ def stdSimplexFaceRestriction (i : ι) (f : (ι → ℝ) → ℂ) :
     ({j : ι // j ≠ i} → ℝ) → ℂ :=
   f ∘ stdSimplexCoordMap i
 
+open scoped Classical in
 /-- The coordinate map sends the smaller standard simplex onto the face where coordinate `i`
 is zero. -/
 theorem stdSimplexCoordMap_mem_face (i : ι)
@@ -105,13 +107,15 @@ theorem stdSimplexCoordMap_mem_face (i : ι)
   rw [stdSimplexCoordMap_mem_stdSimplex_iff]
   exact ⟨hv.1, hv.2.le⟩
 
+open scoped Classical in
 /-- On the smaller standard simplex, the inserted coordinate of the face map is zero. -/
-@[simp] theorem stdSimplexCoordMap_face_apply_self (i : ι)
+theorem stdSimplexCoordMap_face_apply_self (i : ι)
     {v : {j : ι // j ≠ i} → ℝ} (hv : v ∈ Convexity.StdSimplex.coordinateSet ℝ {j : ι // j ≠ i}) :
     stdSimplexCoordMap i v i = 0 := by
   rw [stdSimplexCoordMap_apply_self, hv.2]
   simp
 
+open scoped Classical in
 /-- Restricting to a boundary face preserves finite differentiability near the corresponding
 lower-dimensional standard simplex. -/
 theorem ContDiffNearStdSimplex.faceRestriction {N : ℕ} {f : (ι → ℝ) → ℂ}
@@ -146,6 +150,7 @@ theorem stdSimplexSlice_zero (i : ι) (f : (ι → ℝ) → ℂ) :
   funext v
   simp [stdSimplexSlice, stdSimplexFaceRestriction]
 
+open scoped Classical in
 /-- On the standard simplex of the complementary coordinates, the scaled chart is the line
 from the face point to the vertex `Pi.single i 1`. -/
 theorem stdSimplexCoordMap_scale_eq_line (i : ι) (t : ℝ)
@@ -163,6 +168,7 @@ theorem stdSimplexCoordMap_scale_eq_line (i : ι) (t : ℝ)
       Pi.single_eq_of_ne hji, stdSimplexCoordMap_apply_of_ne i j hji]
     simp
 
+open scoped Classical in
 theorem hasDerivAt_stdSimplexCoordMap_scale (i : ι) (t : ℝ)
     {v : {j : ι // j ≠ i} → ℝ} (hv : ∑ j, v j = 1) :
     HasDerivAt (fun s : ℝ => stdSimplexCoordMap i (fun j => (1 - s) * v j))
@@ -182,6 +188,7 @@ theorem hasDerivAt_stdSimplexCoordMap_scale (i : ι) (t : ℝ)
   rw [← hderiv]
   exact (hid.smul_const _).add (h1.smul_const _)
 
+open scoped Classical in
 /-- Finite differentiability near the simplex is inherited by every slice. -/
 theorem ContDiffNearStdSimplex.slice {N : ℕ} {f : (ι → ℝ) → ℂ}
     (hf : ContDiffNearStdSimplex N f) (i : ι)
@@ -211,6 +218,7 @@ theorem ContDiffNearStdSimplex.slice {N : ℕ} {f : (ι → ℝ) → ℂ}
     exact hsub this
   · exact hfU.comp hmap.contDiffOn fun _ hv ↦ hv
 
+open scoped Classical in
 /-- Affine slices of a continuous simplex function remain continuous on the opposite face. -/
 theorem continuousOn_stdSimplexSlice (i : ι) {t : ℝ} (ht : t ∈ Icc (0 : ℝ) 1)
     {f : (ι → ℝ) → ℂ} (hf : ContinuousOn f (Convexity.StdSimplex.coordinateSet ℝ ι)) :
@@ -279,6 +287,7 @@ theorem isClosed_stdSimplexFreeCoords (i : ι) :
   rw [heq]
   exact (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).preimage (continuous_stdSimplexCoordMap i)
 
+open scoped Classical in
 theorem stdSimplexCoordMap_add_single (i : ι) (j : {j : ι // j ≠ i})
     (x : {j : ι // j ≠ i} → ℝ) (t : ℝ) :
     stdSimplexCoordMap i (x + t • Pi.single j 1) =

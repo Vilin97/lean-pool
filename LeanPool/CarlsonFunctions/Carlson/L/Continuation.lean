@@ -21,7 +21,6 @@ product slit plane and proves joint holomorphy in all arguments.
 -/
 
 open Complex ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Analytic.Polynomial
 -/
 
 open Complex MeasureTheory ProbabilityTheory MeasureTheory.Measure Set Filter
-open scoped Classical Topology
+open scoped Topology
 
 @[expose] public noncomputable section
 

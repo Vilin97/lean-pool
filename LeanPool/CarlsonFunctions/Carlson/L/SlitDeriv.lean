@@ -21,11 +21,12 @@ translation, with the inhomogeneous R-term and without convergence restrictions.
 -/
 
 open Complex Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- A node derivative is jointly holomorphic in all arguments of L. -/
 theorem analyticOnNhd_carlsonPartialDeriv_regCarlsonLSlit_joint (i : ι) :
     AnalyticOnNhd ℂ (fun p : Option (ι ⊕ ι) → ℂ =>
@@ -67,6 +68,7 @@ theorem analyticAt_carlsonPartialDeriv_regCarlsonLSlit_comp
       | inr j => exact (analyticAt_pi_iff.mp hz) j
   exact (analyticOnNhd_carlsonPartialDeriv_regCarlsonLSlit_joint i (f p) hslit).comp_of_eq hf rfl
 
+open scoped Classical in
 private theorem partialDeriv_regCarlsonLSlit_of_right (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRVariableDomain) (i : ι) :
     carlsonPartialDeriv i (regCarlsonLSlit t b) z =

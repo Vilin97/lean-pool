@@ -14,7 +14,7 @@ public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.Continuation
 /-! # The two-variable Carlson R-function -/
 
 open Complex Filter
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section CarlsonTwoVariable
 namespace DirichletTransform.TwoVariable
 

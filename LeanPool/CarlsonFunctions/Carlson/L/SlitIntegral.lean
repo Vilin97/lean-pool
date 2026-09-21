@@ -21,7 +21,6 @@ avoid the cut would be insufficient. All statements allow empty index types.
 -/
 
 open Complex ProbabilityTheory Set
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

@@ -19,7 +19,6 @@ zero; special-function identifications do not belong here.
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section CarlsonTwoVariable
 
 namespace DirichletTransform.TwoVariable

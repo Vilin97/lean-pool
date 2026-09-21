@@ -26,7 +26,7 @@ Riemann surfaces are deliberately left open.
 -/
 
 open Complex MeasureTheory ProbabilityTheory Set Filter Metric
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

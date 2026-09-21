@@ -25,7 +25,7 @@ Mathlib's theorem `Complex.tendsto_one_add_div_pow_exp`.
 -/
 
 open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory Filter
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

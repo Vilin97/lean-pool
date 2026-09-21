@@ -20,7 +20,7 @@ integrable majorant. Parameter-raising relations transport it to the entire cont
 -/
 
 open Complex ProbabilityTheory MeasureTheory MeasureTheory.Measure Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -90,6 +90,7 @@ private theorem locallyBounded_regCarlsonRIntegral_exponent_parameters
     rw [regCarlsonRIntegral, regCarlsonDirichletAverage, regDirichletIntegral_eq_prod_invGamma_mul, norm_mul]
     exact mul_le_mul hq.le (hqD.trans (le_max_left _ _)) (norm_nonneg _) (by dsimp [B]; positivity)
 
+open scoped Classical in
 /-- Joint analyticity of the native regularized integral in its exponent and parameters. -/
 theorem analyticOnNhd_regCarlsonRIntegral_exponent_parameters {z : ι → ℂ}
     (hz : z ∈ carlsonRVariableDomain) :
@@ -114,7 +115,7 @@ theorem analyticOnNhd_regCarlsonRIntegral_exponent_parameters {z : ι → ℂ}
       have hup (v : ι → ℂ) (w : ℂ) : Function.update v i w = fun j => if j = i then w else v j := by
         ext j
         simp only [Function.update_apply]
-      simpa only [hup, Function.update_apply, Option.some.injEq, reduceCtorEq, if_false] using! H
+      simpa only [hup, Function.update_apply, Option.some.injEq, reduceCtorEq, ite_false] using! H
   · exact fun p hp => locallyBounded_regCarlsonRIntegral_exponent_parameters hz p hp
 
 private theorem analyticAt_regCarlsonRContinued_comp_of_pos
@@ -136,6 +137,7 @@ private theorem analyticAt_regCarlsonRContinued_comp_of_pos
   filter_upwards [hevent] with w hw
   exact (regCarlsonRContinued_eq_integral (f w) hz hw).symm
 
+open scoped Classical in
 /-- The continued R-function remains analytic when the exponent and all parameters vary
 analytically together. Parameter raising removes every native convergence restriction. -/
 theorem analyticAt_regCarlsonRContinued_comp

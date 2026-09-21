@@ -14,7 +14,7 @@ public import Mathlib.Algebra.BigOperators.Fin
 /-! # Two-variable Carlson functions -/
 
 open Complex
-open scoped Classical Matrix
+open scoped Matrix
 @[expose] public noncomputable section CarlsonTwoVariable
 namespace DirichletTransform.TwoVariable
 
@@ -28,7 +28,7 @@ def pair (x y : ℂ) : Fin 2 → ℂ := ![x, y]
 @[simp] theorem pair_one (x y : ℂ) : pair x y 1 = y := rfl
 
 /-- The sum of the entries of a pair. -/
-@[simp] theorem sum_pair (x y : ℂ) : ∑ i, pair x y i = x + y := by
+theorem sum_pair (x y : ℂ) : ∑ i, pair x y i = x + y := by
   simp [pair, Fin.sum_univ_two]
 
 /-- The transposition of the two coordinates of `Fin 2`. -/

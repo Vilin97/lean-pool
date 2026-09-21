@@ -194,7 +194,7 @@ theorem eq_taylor_add_mellinPeanoRemainder {N : ℕ} (hN : 0 < N) {a : ℝ}
       (t ^ N : ℝ) • mellinPeanoRemainder N a K t := by
   by_cases ht0 : t = 0
   · subst t
-    rw [taylorWithinEval_self, mellinPeanoRemainder, if_pos rfl]
+    rw [taylorWithinEval_self, mellinPeanoRemainder, ite_eq_left rfl]
     simp [zero_pow hN.ne']
   · simp only [mellinPeanoRemainder, ht0, ↓reduceIte]
     have hne : t ^ N ≠ 0 := pow_ne_zero N ht0
@@ -230,7 +230,7 @@ theorem continuousOn_mellinPeanoRemainder {N : ℕ} (hN : 0 < N) {a : ℝ} (ha :
       intro x hx
       have hx0 : x ≠ 0 := hx.2
       have hxN : x ^ N ≠ 0 := pow_ne_zero N hx0
-      rw [mellinPeanoRemainder, if_neg hx0, taylorWithinEval_succ_pred hN K a]
+      rw [mellinPeanoRemainder, ite_eq_right hx0, taylorWithinEval_succ_pred hN K a]
       simp only [smul_sub, smul_add]
       have hcancel :
           (x ^ N)⁻¹ • (((N.factorial : ℝ)⁻¹ * x ^ N) •

@@ -31,12 +31,12 @@ The integral differentiation formulas in
 namespace DirichletTransform
 
 open Complex
-open scoped Classical
 
 variable {ι : Type*} [Fintype ι]
 
 /-! ## Pointwise differentiation of the averaging kernel -/
 
+open scoped Classical in
 /-- Updating one parameter of Carlson's affine form changes its value by the corresponding
 simplex coordinate times the change in that parameter. -/
 theorem carlsonAffineForm_update (z : ι → ℂ) (u : ι → ℝ) (i : ι) (w : ℂ) :
@@ -58,6 +58,7 @@ theorem carlsonAffineForm_update (z : ι → ℂ) (u : ι → ℝ) (i : ι) (w :
       rw [Finset.sum_add_distrib]
       simp
 
+open scoped Classical in
 /-- As a function of one variable `z i`, Carlson's affine form has derivative `u i`. -/
 theorem hasDerivAt_carlsonAffineForm_update (z : ι → ℂ) (u : ι → ℝ) (i : ι) :
     HasDerivAt (fun w ↦ carlsonAffineForm (Function.update z i w) u) (u i : ℂ) (z i) := by
@@ -67,6 +68,7 @@ theorem hasDerivAt_carlsonAffineForm_update (z : ι → ℂ) (u : ι → ℝ) (i
   · simpa only [Pi.add_apply, id_eq] using carlsonAffineForm_update z u i w
   · ring
 
+open scoped Classical in
 /-- Differentiating a composed Carlson kernel with respect to `z i` introduces the factor
 `u i`.  This is the pointwise identity underlying Carlson's formula (5.3-2). -/
 theorem HasDerivAt.comp_carlsonAffineForm_update {f : ℂ → ℂ} {f' : ℂ}
@@ -82,6 +84,7 @@ theorem HasDerivAt.comp_carlsonAffineForm_update {f : ℂ → ℂ} {f' : ℂ}
 
 /-! ## Differential operators -/
 
+open scoped Classical in
 /-- The partial derivative in the Carlson variable `z i`, defined by updating that coordinate
 while holding all other coordinates fixed. -/
 def carlsonPartialDeriv (i : ι)
@@ -89,6 +92,7 @@ def carlsonPartialDeriv (i : ι)
   deriv (fun w ↦ G (Function.update z i w)) (z i)
 
 omit [Fintype ι] in
+open scoped Classical in
 /-- Carlson's coordinate derivative is the scalar specialization of the SCV derivative. -/
 theorem carlsonPartialDeriv_eq_partialDeriv (i : ι) (G : (ι → ℂ) → ℂ) :
     carlsonPartialDeriv i G = SeveralComplexVariables.partialDeriv i G := rfl

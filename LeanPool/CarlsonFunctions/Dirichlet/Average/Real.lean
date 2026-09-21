@@ -16,7 +16,6 @@ strictly positive real numbers and integration is against `dirichletMeasure`.
 -/
 
 open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section RealCarlsonDirichletAverage
 

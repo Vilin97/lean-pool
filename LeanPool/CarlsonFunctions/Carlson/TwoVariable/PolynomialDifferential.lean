@@ -13,7 +13,6 @@ public import LeanPool.CarlsonFunctions.Pochhammer.Identities
 /-! # Differential and contiguous identities for two-variable Carlson polynomials -/
 
 open Complex Polynomial Finset
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

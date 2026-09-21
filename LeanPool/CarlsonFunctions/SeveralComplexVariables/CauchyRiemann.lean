@@ -25,20 +25,23 @@ coordinates and relate the real derivative to the existing `partialDeriv` interf
 @[expose] public noncomputable section
 
 open Complex Filter Function Set
-open scoped Classical Topology
+open scoped Topology
 
 namespace SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
+open scoped Classical in
 /-- The holomorphic Wirtinger derivative, defined from the real Fréchet derivative. -/
 def wirtingerDeriv (i : ι) (f : (ι → ℂ) → F) (z : ι → ℂ) : F :=
   (1 / 2 : ℂ) • (fderiv ℝ f z (Pi.single i 1) - I • fderiv ℝ f z (Pi.single i I))
 
+open scoped Classical in
 /-- The antiholomorphic Wirtinger derivative, defined from the real Fréchet derivative. -/
 def conjWirtingerDeriv (i : ι) (f : (ι → ℂ) → F) (z : ι → ℂ) : F :=
   (1 / 2 : ℂ) • (fderiv ℝ f z (Pi.single i 1) + I • fderiv ℝ f z (Pi.single i I))
 
+open scoped Classical in
 /-- The real derivative of a coordinate slice is the restriction of the real derivative
 to that coordinate's complex plane. -/
 theorem hasFDerivAt_update_real {f : (ι → ℂ) → F} (z : ι → ℂ) (i : ι) (w : ℂ)
@@ -55,6 +58,7 @@ theorem hasFDerivAt_update_real {f : (ι → ℂ) → F} (z : ι → ℂ) (i : �
 
 variable [CompleteSpace F]
 
+open scoped Classical in
 /-- On an open set, holomorphy is equivalent to real differentiability together with the
 coordinate Cauchy–Riemann equations. Continuous real differentiability is not needed. -/
 theorem analyticOnNhd_iff_differentiableAt_real_cauchyRiemann
@@ -86,6 +90,7 @@ theorem analyticOnNhd_iff_differentiableAt_real_cauchyRiemann
     rw [H.fderiv]
     simpa using hCR (update z i w) hw i
 
+open scoped Classical in
 /-- The antiholomorphic Wirtinger derivative vanishes for a holomorphic function. -/
 theorem _root_.AnalyticOnNhd.conjWirtingerDeriv_eq_zero {U : Set (ι → ℂ)}
     {f : (ι → ℂ) → F} (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U)

@@ -12,11 +12,12 @@ public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.UnitInterval
 /-! # Unit-interval representation at arbitrary Dirichlet parameters -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- The unit-interval kernel obeys parameter raising even outside the simplex
 integral's convergence region. Only the two endpoint exponents must converge. -/
 private theorem carlsonRUnitIntervalIntegral_raise
@@ -74,6 +75,7 @@ private theorem carlsonRUnitIntervalIntegral_raise
   dsimp only [v, K, singleIntegralKernel]
   ring
 
+open scoped Classical in
 /-- Carlson's single-integral representation for arbitrary complex Dirichlet
 parameters. The restrictions concern only the convergent endpoint exponents,
 not the individual entries of `b`. -/

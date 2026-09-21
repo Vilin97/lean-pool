@@ -25,7 +25,6 @@ namespace MeasureTheory.Measure
 
 variable {ι : Type*} [Fintype ι]
 
-open scoped Classical
 
 /-- Density associated with the cardinalities of the fibers of a coordinate aggregation map. -/
 @[expose] def stdSimplexAggregateDensity
@@ -59,6 +58,7 @@ theorem sum_stdSimplexAggregateFiberCard_sub_one
         exact Nat.sub_add_cancel (hpos k)
   omega
 
+open scoped Classical in
 /-- The aggregation formula when the target has one coordinate. This is the base case for
 fiberwise induction on a general surjective aggregation map. -/
 theorem map_stdSimplexMeasure_restrict_stdSimplex_aggregate_of_unique
@@ -75,13 +75,13 @@ theorem map_stdSimplexMeasure_restrict_stdSimplex_aggregate_of_unique
   have hconst_mem : (fun _ : κ => (1 : ℝ)) ∈ Convexity.StdSimplex.coordinateSet ℝ κ := by
     simp [Convexity.StdSimplex.coordinateSet]
   rw [MeasureTheory.restrict_dirac' (Convexity.StdSimplex.isClosed_coordinateSet ℝ κ).measurableSet,
-    if_pos hconst_mem]
+    ite_eq_left hconst_mem]
   have hd : Measurable (stdSimplexAggregateDensity f) := by
     unfold stdSimplexAggregateDensity
     fun_prop
   rw [MeasureTheory.setLIntegral_dirac' hd hs]
   by_cases hmem : (fun _ : κ => (1 : ℝ)) ∈ s
-  · rw [if_pos hmem]
+  · rw [ite_eq_left hmem]
     have hpre : stdSimplexAggregate f ⁻¹' s ∩ Convexity.StdSimplex.coordinateSet ℝ ι = Convexity.StdSimplex.coordinateSet ℝ ι := by
       ext u
       simp only [Set.mem_inter_iff]
@@ -98,7 +98,7 @@ theorem map_stdSimplexMeasure_restrict_stdSimplex_aggregate_of_unique
       stdSimplexMeasure_stdSimplex]
     simp [stdSimplexAggregateDensity, stdSimplexAggregateFiberCard,
       Subsingleton.elim (f _) default]
-  · rw [if_neg hmem]
+  · rw [ite_eq_right hmem]
     have hpre : stdSimplexAggregate f ⁻¹' s ∩ Convexity.StdSimplex.coordinateSet ℝ ι = ∅ := by
       ext u
       simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_empty_iff_false]
@@ -112,6 +112,7 @@ theorem map_stdSimplexMeasure_restrict_stdSimplex_aggregate_of_unique
       · exact False.elim
     rw [Measure.restrict_apply (hs.preimage (by fun_prop)), hpre, measure_empty]
 
+open scoped Classical in
 /-- In omitted-coordinate charts, aggregation discards the coordinates in the remainder of
 the omitted target fibre and aggregates all complementary coordinates. -/
 private theorem stdSimplexAggregate_coordMap_split
@@ -187,6 +188,7 @@ private theorem stdSimplexAggregate_coordMap_split
   · rw [stdSimplexCoordMap_apply_of_ne k j hj]
     exact hfree j hj
 
+open scoped Classical in
 /-- In the same omitted-coordinate charts, the standard-simplex aggregation density is the
 solid-simplex aggregation density on the complementary fibres times the volume of the
 remainder of the omitted fibre. -/
@@ -246,6 +248,7 @@ private theorem stdSimplexAggregateDensity_coordMap_split
     exact Fintype.card_congr E
   rw [hjcard]
 
+open scoped Classical in
 /-- Pushing the restricted simplex measure forward under coordinate aggregation gives the
 restricted target simplex measure weighted by the product of the fiber-volume densities.
 

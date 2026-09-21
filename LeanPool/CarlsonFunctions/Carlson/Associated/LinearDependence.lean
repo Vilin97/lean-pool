@@ -15,7 +15,6 @@ public import Mathlib.RingTheory.FiniteType
 
 These algebraic helpers contain no Carlson functions or analytic assumptions. -/
 
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 

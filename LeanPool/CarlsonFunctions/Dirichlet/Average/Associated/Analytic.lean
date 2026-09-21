@@ -13,7 +13,7 @@ public import LeanPool.CarlsonFunctions.SeveralComplexVariables.LocallyBounded
 /-! # Node and joint analyticity of native Dirichlet averages -/
 
 open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -240,7 +240,7 @@ theorem analyticOnNhd_regCarlsonDirichletAverage_parameters_nodes
           (Function.update (fun j => q (.inl j)) i w) (fun j => q (.inr j)) f) (q (.inl i)) at H
         dsimp only [G]
         simp only [hLapply]
-        simpa only [hupdate, Function.update_apply, Sum.inl.injEq, reduceCtorEq, if_false] using! H
+        simpa only [hupdate, Function.update_apply, Sum.inl.injEq, reduceCtorEq, ite_false] using! H
       | inr i =>
         have H := (analyticOnNhd_regCarlsonDirichletAverage_nodes hΩopen hΩconv hf hq.1).analyticAt_update
           hq.2 i
@@ -248,7 +248,7 @@ theorem analyticOnNhd_regCarlsonDirichletAverage_parameters_nodes
           (fun j => q (.inl j)) (Function.update (fun j => q (.inr j)) i w) f) (q (.inr i)) at H
         dsimp only [G]
         simp only [hLapply]
-        simpa only [hupdate, Function.update_apply, Sum.inr.injEq, reduceCtorEq, if_false] using! H
+        simpa only [hupdate, Function.update_apply, Sum.inr.injEq, reduceCtorEq, ite_false] using! H
     · intro q hq
       obtain ⟨M, hM⟩ := locallyBounded_regCarlsonDirichletAverage_parameters_nodes
         hΩopen hΩconv hf.continuousOn hq.1 hq.2

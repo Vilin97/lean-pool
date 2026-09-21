@@ -22,7 +22,7 @@ Scalar Taylor coefficients also define an element of Mathlib's `MvPowerSeries`.
 @[expose] public noncomputable section
 
 open Complex Filter Function MeasureTheory Metric Set
-open scoped Classical Real Topology
+open scoped Real Topology
 
 namespace SeveralComplexVariables
 

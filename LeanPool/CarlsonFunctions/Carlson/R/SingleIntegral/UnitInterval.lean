@@ -12,7 +12,7 @@ public import LeanPool.CarlsonFunctions.Carlson.R.SingleIntegral.Series
 /-! # The unit-interval representation and node analyticity -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -39,6 +39,7 @@ lemma affineSegment_mem_rightHalfPlane
 def singleIntegralKernel (b z : ι → ℂ) (u : ℝ) : ℂ :=
   ∏ i, ((1 - u : ℂ) + (u : ℂ) * z i) ^ (-b i)
 
+open scoped Classical in
 /-- The Fréchet derivative of the product kernel with respect to the Carlson variables. -/
 private def singleIntegralKernelFDeriv (b z : ι → ℂ) (u : ℝ) :
     (ι → ℂ) →L[ℂ] ℂ :=
@@ -47,6 +48,7 @@ private def singleIntegralKernelFDeriv (b z : ι → ℂ) (u : ℝ) :
     ((-b i * ((1 - u : ℂ) + (u : ℂ) * z i) ^ (-b i - 1)) •
       ((u : ℂ) • (ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ)))
 
+open scoped Classical in
 /-- The displayed derivative is the derivative of the single-integral product kernel. -/
 private lemma hasFDerivAt_singleIntegralKernel
     (b : ι → ℂ) {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain)

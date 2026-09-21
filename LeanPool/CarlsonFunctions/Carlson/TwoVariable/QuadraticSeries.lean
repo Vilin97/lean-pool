@@ -22,7 +22,6 @@ majorant suffices for the local identity, which is subsequently extended by anal
 -/
 
 open Complex
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

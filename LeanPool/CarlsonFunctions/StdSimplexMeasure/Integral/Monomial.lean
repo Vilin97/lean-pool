@@ -31,8 +31,8 @@ universe u
 
 variable {ι : Type u} [Fintype ι]
 
-open scoped Classical
 
+open scoped Classical in
 /-- Reduce a monomial integral on a nontrivial simplex to the monomial integral on the simplex
 obtained by deleting coordinate `i`. -/
 theorem integral_stdSimplex_explicit_monomial_succ [Nontrivial ι] (i : ι) (m : ι → ℕ) :

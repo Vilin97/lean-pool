@@ -13,7 +13,7 @@ public import LeanPool.CarlsonFunctions.Carlson.R.Relations
 /-! # Associated R-relations on the full slit domain -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -38,6 +38,7 @@ theorem regCarlsonRSlit_eq_addDirichletUnit (t : ℂ) (b : ι → ℂ)
   simp_rw [regCarlsonRSlit_eq_continued _ _ hw]
   exact regCarlsonRContinued_eq_addDirichletUnit t b hw i
 
+open scoped Classical in
 /-- Parameter lowering without dividing by the total parameter minus one. -/
 theorem regCarlsonRSlit_sub_dirichletUnit (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain) (i : ι) :
@@ -57,6 +58,7 @@ theorem regCarlsonRSlit_sub_dirichletUnit (t : ℂ) (b : ι → ℂ)
   convert h using 1
   ring
 
+open scoped Classical in
 /-- The backward-shift tangential relation, including equal indices and coincident nodes. -/
 theorem regCarlsonRSlit_tangent_sub (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain) (i j : ι) :
@@ -67,6 +69,7 @@ theorem regCarlsonRSlit_tangent_sub (t : ℂ) (b : ι → ℂ)
     regCarlsonRSlit_sub_dirichletUnit t b hz i]
   ring
 
+open scoped Classical in
 /-- The parameter-raised tangential relation on the full slit domain. -/
 theorem regCarlsonRSlit_tangent (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain) (i j : ι) :

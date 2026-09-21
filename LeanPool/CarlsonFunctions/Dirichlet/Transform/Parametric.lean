@@ -19,17 +19,19 @@ can therefore be used jointly, rather than independently for each auxiliary para
 -/
 
 open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory Set Filter Metric
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι κ : Type*} [Fintype ι] [Fintype κ]
 
+open scoped Classical in
 /-- A tangential derivative in the complexified simplex coordinates, leaving the
 auxiliary parameter block fixed. -/
 def complexSimplexTangentDeriv (j i : ι)
     (H : ((κ → ℂ) × (ι → ℂ)) → ℂ) (p : (κ → ℂ) × (ι → ℂ)) : ℂ :=
   fderiv ℂ H p (0, Pi.single j 1 - Pi.single i 1)
 
+open scoped Classical in
 /-- Complex tangential differentiation preserves joint analyticity. -/
 theorem analyticOnNhd_complexSimplexTangentDeriv
     {W : Set ((κ → ℂ) × (ι → ℂ))} {H : ((κ → ℂ) × (ι → ℂ)) → ℂ}
@@ -52,6 +54,7 @@ theorem contDiffNearStdSimplex_complexKernel
   exact ⟨e ⁻¹' W, hWo.preimage he.continuous, hW,
     (hH.contDiffOn_of_completeSpace.restrict_scalars ℝ).comp he.contDiffOn (fun _ h => h)⟩
 
+open scoped Classical in
 /-- The complexified tangent derivative agrees with the real tangent derivative used
 in the simplex integration-by-parts theorem. -/
 theorem complexSimplexTangentDeriv_eq_real
@@ -77,6 +80,7 @@ theorem complexSimplexTangentDeriv_eq_real
     (fderiv ℂ H (z, fun k => (u k : ℂ))) (0, e (stdSimplexTangentVector j i))
   rw [heV]
 
+open scoped Classical in
 /-- Tangential parameter shifts, retaining a jointly holomorphic kernel. -/
 def shiftedComplexKernelIntegral (i : ι) : List {j : ι // j ≠ i} →
     (((κ → ℂ) × (ι → ℂ)) → ℂ) → ((ι → ℂ) × (κ → ℂ)) → ℂ
@@ -86,6 +90,7 @@ def shiftedComplexKernelIntegral (i : ι) : List {j : ι // j ≠ i} →
         shiftedComplexKernelIntegral i l (complexSimplexTangentDeriv j i H)
           (p.1 + Pi.single (j : ι) 1, p.2)
 
+open scoped Classical in
 /-- Every finite shift expression is jointly holomorphic on its convergence region. -/
 theorem analyticOnNhd_shiftedComplexKernelIntegral
     {U : Set (κ → ℂ)} (hU : IsOpen U) {W : Set ((κ → ℂ) × (ι → ℂ))}
@@ -111,6 +116,7 @@ theorem analyticOnNhd_shiftedComplexKernelIntegral
           (p.1 + Pi.single (j : ι) 1, p.2) ⟨h1, hp.2⟩).comp_of_eq
           ((analyticAt_fst.add analyticAt_const).prod analyticAt_snd) rfl)
 
+open scoped Classical in
 /-- The finite shift expression agrees with the native integral sufficiently far inside
 the convergence region. This is the integration-by-parts identification used for gluing. -/
 theorem shiftedComplexKernelIntegral_eq
@@ -165,6 +171,7 @@ theorem shiftedComplexKernelIntegral_eq
       rw [hIBP]
       ring
 
+open scoped Classical in
 /-- Finite-order continuation, jointly in Dirichlet and auxiliary parameters. -/
 theorem exists_joint_regDirichletContinuation_kernel
     (N : ℕ) {U : Set (κ → ℂ)} (hU : IsOpen U)
@@ -268,6 +275,7 @@ theorem exists_joint_regDirichletContinuation_kernel
     linarith
   · simpa only [Pi.add_apply, Pi.single_eq_of_ne hki, add_zero] using hb k
 
+open scoped Classical in
 /-- The finite shift constructions glue to a continuation entire in the Dirichlet
 parameters and jointly holomorphic with the auxiliary parameters. -/
 theorem exists_entire_joint_regDirichletContinuation_kernel

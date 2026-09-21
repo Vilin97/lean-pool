@@ -16,7 +16,7 @@ public import Mathlib.Analysis.Analytic.Polynomial
 /-! # Coefficient algebra for Carlson's homogeneity recurrence -/
 
 open Complex
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -53,6 +53,7 @@ theorem carlsonElementarySymmetric_euler (n : ℕ) (z : ι → ℂ) :
   have H := congrArg (MvPolynomial.eval z) hhom.sum_X_mul_pderiv
   simpa [carlsonElementarySymmetric, nsmul_eq_mul] using H
 
+open scoped Classical in
 /-- Differentiating the generating polynomial with respect to one Carlson variable. -/
 theorem carlsonElementarySymmetric_generating_pderiv (w : ℂ) (z : ι → ℂ) (i : ι) :
     w * (∏ j ∈ Finset.univ.erase i, (1 + w * z j)) =
@@ -72,6 +73,7 @@ theorem carlsonElementarySymmetric_generating_pderiv (w : ℂ) (z : ι → ℂ) 
   have H' := congrArg (MvPolynomial.eval z) H
   simpa [Derivation.leibniz, smul_eq_mul, mul_comm] using H'
 
+open scoped Classical in
 /-- The polynomial factor in the differentiated ray kernel, expanded as in (8.4-6). -/
 theorem carlsonAssociatedRecurrenceKernel_polynomial (a w : ℂ) (b z : ι → ℂ) :
     a * (∏ i, (1 + w * z i)) + w *
@@ -227,7 +229,7 @@ theorem eval_carlsonAssociatedRecurrencePolynomial [Nonempty ι]
     have h := congrArg (Polynomial.eval w) (ascPochhammer_succ_left ℂ (m - 1))
     simpa only [Nat.sub_add_cancel hm, Polynomial.eval_mul, Polynomial.eval_X,
       Polynomial.eval_comp, Polynomial.eval_add, Polynomial.eval_one] using h
-  simp only [carlsonAssociatedRecurrencePolynomial, if_neg hn0, if_neg hnk,
+  simp only [carlsonAssociatedRecurrencePolynomial, ite_eq_right hn0, ite_eq_right hnk,
     map_mul, MvPolynomial.eval_C, map_sub, map_sum, MvPolynomial.eval_X,
     carlsonAssociatedRecurrenceCoeff, carlsonElementarySymmetric,
     hp n (Nat.pos_of_ne_zero hn0), hp (Fintype.card ι - n) (by omega)]

@@ -21,7 +21,7 @@ local integrable bound. This is the convergent seed for the joint continuation i
 -/
 
 open Complex MeasureTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι κ : Type*} [Fintype ι] [Fintype κ]

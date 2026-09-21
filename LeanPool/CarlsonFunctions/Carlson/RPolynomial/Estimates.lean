@@ -22,7 +22,6 @@ Home for the Section 6.2 bounds used in normally convergent series.
 -/
 
 open Complex Finset ProbabilityTheory Set
-open scoped Classical
 @[expose] public noncomputable section CarlsonRPolynomial
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -177,7 +176,7 @@ theorem exists_summable_norm_regCarlsonR_div_factorial_bounded_variables
         gcongr
       _ = _ := by ring
   by_cases hnm : n < m
-  · exact hraw.trans (by dsimp [M]; rw [if_pos hnm]; gcongr; exact (hD n b hb).trans (le_max_left _ _))
+  · exact hraw.trans (by dsimp [M]; rw [ite_eq_left hnm]; gcongr; exact (hD n b hb).trans (le_max_left _ _))
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le (Nat.le_of_not_gt hnm)
   rw [Nat.add_comm m k] at hraw ⊢
   have hpow := Real.pow_div_factorial_le_exp (B + (k + m : ℕ)) (by positivity) (k + m)
@@ -190,7 +189,7 @@ theorem exists_summable_norm_regCarlsonR_div_factorial_bounded_variables
       gcongr
       exact hgamma k hb
     _ = M (k + m) := by
-      simp only [M, Nat.not_lt.mpr (Nat.le_add_left m k), if_false, Nat.add_sub_cancel_right,
+      simp only [M, Nat.not_lt.mpr (Nat.le_add_left m k), ite_false, Nat.add_sub_cancel_right,
         A, Nat.cast_add, pow_add, Real.exp_add, hexp, mul_pow]
       ring
 

@@ -19,7 +19,7 @@ Continuation beyond that domain is developed separately in `Dirichlet.Transform`
 -/
 
 open Complex Fintype Filter MeasureTheory MeasureTheory.Measure
-open scoped Topology Classical
+open scoped Topology
 
 @[expose] public noncomputable section
 
@@ -27,6 +27,7 @@ namespace ProbabilityTheory
 
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- The product of reciprocal Gamma factors used to regularize a Dirichlet integral is entire
 in the parameter vector. -/
 theorem analyticOnNhd_prod_invGamma :
@@ -68,7 +69,7 @@ theorem hasFDerivAt_mvBetaMonomial {u : ι → ℝ} (hu : ∀ i, 0 < u i) (b : �
   refine hprod.congr_fderiv ?_
   apply ContinuousLinearMap.ext
   intro v
-  simp only [g, g', p, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
+  simp only [g, g', p, _root_.sum_apply, _root_.smul_apply,
     ContinuousLinearMap.proj_apply, smul_eq_mul]
   refine Finset.sum_congr rfl fun i _ ↦ ?_
   have hprod_erase :

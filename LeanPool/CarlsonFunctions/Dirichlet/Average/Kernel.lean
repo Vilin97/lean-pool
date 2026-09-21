@@ -18,7 +18,6 @@ the complex regularized integral.
 -/
 
 open Complex
-open scoped Classical
 
 @[expose] public noncomputable section CarlsonDirichletKernel
 
@@ -103,6 +102,7 @@ lemma hasFDerivAt_carlsonSimplex (z : ι → ℂ) (u : ι → ℝ) :
   funext v
   exact (carlsonSimplexCLM_apply z v).symm
 
+open scoped Classical in
 /-- A coordinate tangent vector is sent to the difference of the corresponding nodes. -/
 lemma carlsonSimplexCLM_tangent (z : ι → ℂ) (i j : ι) :
     carlsonSimplexCLM z (Pi.single i 1 - Pi.single j 1) = z i - z j := by
@@ -117,6 +117,7 @@ theorem carlsonAffineForm_mem_convexHull (z : ι → ℂ) {u : ι → ℝ}
   rw [affineCombination_eq_centerMass hu.2] at h
   simpa [Finset.centerMass, hu.2, carlsonAffineForm, Complex.real_smul, mul_comm] using h
 
+open scoped Classical in
 /-- The convex hull of the nodes is exactly the image of the intrinsic simplex
 under Carlson's affine form, including for empty index types. -/
 theorem mem_convexHull_range_iff_carlsonAffineForm (z : ι → ℂ) (x : ℂ) :

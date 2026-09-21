@@ -22,7 +22,7 @@ public import LeanPool.CarlsonFunctions.Carlson.RPolynomial.Generating
 /-! # Unit-interval kernel and near-one series representation -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

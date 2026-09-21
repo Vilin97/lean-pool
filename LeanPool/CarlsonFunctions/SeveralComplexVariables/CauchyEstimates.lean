@@ -18,12 +18,12 @@ has the supremum norm, so a coordinate disc fits in the ball of the same radius.
 public section
 
 open Complex Function Metric Set
-open scoped Classical
 
 namespace SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
+open scoped Classical in
 /-- Updating one coordinate within its closed disc stays in the corresponding sup-norm ball. -/
 theorem update_mem_closedBall {z : ι → ℂ} {i : ι} {w : ℂ} {r : ℝ}
     (hr : 0 ≤ r) (hw : w ∈ closedBall (z i) r) : update z i w ∈ closedBall z r := by
@@ -34,6 +34,7 @@ theorem update_mem_closedBall {z : ι → ℂ} {i : ι} {w : ℂ} {r : ℝ}
   · simpa [Function.update_of_ne hji] using hr
 
 omit [Fintype ι] in
+open scoped Classical in
 /-- Cauchy's first derivative bound only needs holomorphy along the chosen coordinate disc. -/
 theorem norm_partialDeriv_le_of_slice {f : (ι → ℂ) → F} {z : ι → ℂ}
     (i : ι) {r M : ℝ} (hr : 0 < r)
@@ -43,6 +44,7 @@ theorem norm_partialDeriv_le_of_slice {f : (ι → ℂ) → F} {z : ι → ℂ}
   Complex.norm_deriv_le_of_forall_mem_sphere_norm_le hr
     (hf.diffContOnCl_ball Subset.rfl) hM
 
+open scoped Classical in
 /-- A bound on a closed sup-norm ball controls every coordinate derivative at its center. -/
 theorem norm_partialDeriv_le {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
     (hf : AnalyticOnNhd ℂ f U) {z : ι → ℂ} (i : ι) {r M : ℝ} (hr : 0 < r)

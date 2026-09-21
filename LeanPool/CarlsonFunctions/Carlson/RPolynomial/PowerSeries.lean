@@ -17,7 +17,7 @@ full disk of holomorphy and joint analyticity in parameters and nodes.
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical Topology
+open scoped Topology
 
 @[expose] public noncomputable section
 

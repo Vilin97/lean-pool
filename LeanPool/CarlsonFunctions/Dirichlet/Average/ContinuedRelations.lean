@@ -16,11 +16,11 @@ The derivative appearing here is the derivative of the function being averaged.
 -/
 
 open Complex Set MeasureTheory ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- Parameter shifts are translations, hence entire. -/
 theorem analyticAt_addDirichletUnit (i : ι) (b : ι → ℂ) :
     AnalyticAt ℂ (fun c => addDirichletUnit c i) b := by
@@ -73,6 +73,7 @@ theorem IsRegCarlsonContinuation.tangent
       hG.eq_native (addDirichletUnit_mem_mvBetaConvergent hc j)]
     exact regCarlsonDirichletAverage_tangent hΩconv hf hc hz i j hij
 
+open scoped Classical in
 /-- Carlson's backward-shift relation 5.6-2, in entire regularized form. -/
 theorem IsRegCarlsonContinuation.tangent_sub
     {Ω : Set ℂ} (hΩconv : Convex ℝ Ω) {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω)
@@ -96,6 +97,7 @@ theorem IsRegCarlsonContinuation.tangent_sub
     by_cases hk : k = i <;> simp [addDirichletUnit, hk]
   simpa only [hi, hj, hij'] using h
 
+open scoped Classical in
 /-- Carlson's three-node associated relation 5.6-3. No distinctness assumptions
 on the nodes, indices, or Dirichlet parameters are needed. -/
 theorem IsRegCarlsonContinuation.three_node

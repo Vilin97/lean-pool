@@ -18,7 +18,6 @@ domain; the polynomial and `S` statements allow arbitrary complex nodes.
 -/
 
 open Complex Set
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι κ : Type*} [Fintype ι] [Fintype κ]

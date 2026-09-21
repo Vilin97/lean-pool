@@ -23,7 +23,6 @@ the regularized Carlson Dirichlet average.
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section CarlsonPowerSeries
 

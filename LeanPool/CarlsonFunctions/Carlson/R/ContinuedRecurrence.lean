@@ -17,7 +17,6 @@ extends the native integral proof by permanence of functional relations.
 -/
 
 open Complex Set
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι] [Nonempty ι]

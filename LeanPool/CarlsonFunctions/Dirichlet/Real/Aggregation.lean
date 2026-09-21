@@ -26,7 +26,6 @@ namespace ProbabilityTheory
 
 variable {ι : Type*} [Fintype ι]
 
-open scoped Classical
 
 /-- Aggregating a Dirichlet parameter vector along a surjection stays in the
 positive parameter domain. -/

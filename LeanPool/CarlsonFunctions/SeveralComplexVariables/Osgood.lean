@@ -20,7 +20,7 @@ modules and remain available through this file.
 public section
 
 open Complex Filter Function MeasureTheory Metric Set
-open scoped Classical ENNReal NNReal Real Topology
+open scoped ENNReal NNReal Real Topology
 
 namespace SeveralComplexVariables
 
@@ -46,6 +46,7 @@ private theorem analyticOnNhd_fin_of_analyticOnNhd_update {d : ℕ}
   exact (hasFPowerSeriesOnBall_polydiscCauchy hR hfcP hfaP
     (fun z hz => hM (mem_image_of_mem _ hz))).analyticAt
 
+open scoped Classical in
 /-- **Osgood's theorem, finite-product form.** A jointly continuous function on an open subset of
 a finite product of copies of `ℂ` is jointly analytic when all of its one-coordinate restrictions
 are analytic.

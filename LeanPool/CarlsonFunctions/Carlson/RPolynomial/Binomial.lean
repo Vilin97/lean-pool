@@ -20,7 +20,6 @@ The underlying Chu–Vandermonde identity for `ascPochhammer` is `ascPochhammer_
 -/
 
 open Complex
-open scoped Classical
 @[expose] public noncomputable section CarlsonRPolynomial
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

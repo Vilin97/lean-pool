@@ -17,7 +17,7 @@ public import Mathlib.MeasureTheory.Integral.DominatedConvergence
 /-! # The exponential series and entire parameter continuation of S -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

@@ -42,11 +42,11 @@ by finite sums, currying, and transport along a continuous linear choice of coor
 public section
 
 open Filter Set
-open scoped Classical
 
 variable {ι κ F : Type*} [Fintype ι]
   [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace F]
 
+open scoped Classical in
 /-- **Weierstrass convergence theorem, finite-coordinate form.** A locally uniform limit of
 analytic maps on an open subset of a finite complex coordinate space is analytic. -/
 theorem TendstoLocallyUniformlyOn.analyticOnNhd_pi
@@ -143,6 +143,7 @@ theorem TendstoLocallyUniformlyOn.iteratedPartialDeriv
   | cons i is ih =>
       exact ih.partialDeriv (hf.mono fun n hn => hn.iteratedPartialDeriv hU is) hU i
 
+open scoped Classical in
 /-- Locally uniform convergence of holomorphic maps gives locally uniform convergence
 of their Fréchet derivatives in operator norm. -/
 theorem TendstoLocallyUniformlyOn.fderiv_pi

@@ -16,7 +16,6 @@ zero parameter for every complex exponent and every remaining parameter vector.
 -/
 
 open Complex Set
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

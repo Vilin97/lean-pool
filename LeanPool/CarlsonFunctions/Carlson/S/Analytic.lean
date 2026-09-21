@@ -12,7 +12,7 @@ public import LeanPool.CarlsonFunctions.Carlson.S.Series
 /-! # Joint holomorphy and locally uniform S-series convergence -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

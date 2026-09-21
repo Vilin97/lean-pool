@@ -17,7 +17,6 @@ import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
 /-! # Solid simplex geometry and volume -/
 
 open MeasureTheory
-open scoped Classical
 
 @[expose] public noncomputable section
 
@@ -273,6 +272,7 @@ theorem measurableSet_posSimplex (α : Type*) [Fintype α] (r : ℝ) :
   ext x
   simp
 
+open scoped Classical in
 /-- Separating one coordinate identifies a positive simplex with its product-coordinate
 presentation. -/
 theorem image_posSimplex_funSplitAt {α : Type*} [Fintype α] (i : α) (r : ℝ) :
@@ -304,6 +304,7 @@ theorem image_posSimplex_funSplitAt {α : Type*} [Fintype α] (i : α) (r : ℝ)
       rw [he1, he2]
       exact hpsum
 
+open scoped Classical in
 /-- The product-coordinate presentation of a positive simplex is measurable. -/
 theorem measurableSet_posSimplexSlices {α : Type*} [Fintype α] (i : α) (r : ℝ) :
     MeasurableSet (posSimplexSlices i r) := by
@@ -311,6 +312,7 @@ theorem measurableSet_posSimplexSlices {α : Type*} [Fintype α] (i : α) (r : �
   exact (Homeomorph.funSplitAt ℝ i).measurableEmbedding.measurableSet_image'
     (measurableSet_posSimplex α r)
 
+open scoped Classical in
 /-- A slice of `posSimplexSlices i r` at a point of `[0, r]` is the positive simplex of
 radius `r - t` in the remaining coordinates. -/
 theorem preimage_posSimplexSlices_of_mem {α : Type*} [Fintype α]

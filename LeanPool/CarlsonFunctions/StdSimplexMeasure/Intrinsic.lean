@@ -23,7 +23,6 @@ topology induced by the weights.
 -/
 
 @[expose] public noncomputable section
-open scoped Classical
 namespace Convexity.StdSimplex
 section Semiring
 variable {R : Type*} [Semiring R] [PartialOrder R]

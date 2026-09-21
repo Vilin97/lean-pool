@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 /-! # Native Carlson S-integrals -/
 
 open Complex MeasureTheory ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -34,6 +34,7 @@ theorem analyticOnNhd_exp_carlsonAffineForm (u : ι → ℝ) :
   intro i _
   exact analyticAt_const.mul ((ContinuousLinearMap.proj (R := ℂ) i).analyticAt z)
 
+open scoped Classical in
 /-- Varying coordinate `i` of `z`, the derivative of the exponential Carlson kernel is the
 kernel multiplied by the simplex coordinate `u i`. -/
 theorem hasDerivAt_exp_carlsonAffineForm_update
@@ -43,6 +44,7 @@ theorem hasDerivAt_exp_carlsonAffineForm_update
   exact HasDerivAt.comp_carlsonAffineForm_update i
     (Complex.hasDerivAt_exp (carlsonAffineForm z u))
 
+open scoped Classical in
 /-- Coordinate differentiation of the native regularized `S` integral.  This is the
 specialization of Carlson's differentiation formula to the exponential kernel. -/
 theorem hasDerivAt_regCarlsonSIntegral_update
@@ -55,6 +57,7 @@ theorem hasDerivAt_regCarlsonSIntegral_update
       isOpen_univ convex_univ (fun _ _ => analyticAt_cexp) hb
       (Set.subset_univ (Set.range z)) i
 
+open scoped Classical in
 /-- Carlson's coordinate differentiation formula for the regularized native `S` integral:
 differentiation in `z i` raises the corresponding Dirichlet parameter. -/
 theorem carlsonPartialDeriv_regCarlsonSIntegral

@@ -21,7 +21,7 @@ permanence of functional relations in the parameters and in the nodes. Theorem
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

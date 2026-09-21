@@ -35,7 +35,6 @@ remains to be proved.
 -/
 
 open Complex MeasureTheory ProbabilityTheory Metric
-open scoped Classical
 
 @[expose] public noncomputable section CarlsonCauchyAverage
 

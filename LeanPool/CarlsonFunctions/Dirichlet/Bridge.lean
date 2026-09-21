@@ -18,7 +18,6 @@ They neither require nor invoke analytic continuation.
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section
 

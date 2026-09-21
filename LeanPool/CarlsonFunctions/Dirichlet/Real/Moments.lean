@@ -24,7 +24,6 @@ namespace ProbabilityTheory
 
 variable {ι : Type*} [Fintype ι]
 
-open scoped Classical
 
 /-- The integral of a power product (generalized monomial) against the Dirichlet measure. -/
 theorem integral_dirichletMeasure_power_product {b : ι → ℝ} (hb : b ∈ mvRealBetaDomain)
@@ -126,6 +125,7 @@ theorem integral_dirichletMeasure_monomial [Nonempty ι]
     field_simp
   rw [hratio, div_eq_mul_inv, mul_comm]
 
+open scoped Classical in
 /-- The mean of a single `u i`; a specialization of monomial integration. -/
 theorem integral_dirichletMeasure_coordinate
     {b : ι → ℝ} (hb : b ∈ mvRealBetaDomain) (i : ι) :
@@ -163,6 +163,7 @@ theorem integral_dirichletMeasure_coordinate
   rw [hpow, hsum_m, hprod_m, Gamma_add_one hsum_pos.ne']
   field_simp
 
+open scoped Classical in
 /-- The second raw moment of one coordinate under a Dirichlet measure. -/
 theorem integral_dirichletMeasure_coordinate_sq
     {b : ι → ℝ} (hb : b ∈ mvRealBetaDomain) (i : ι) :
@@ -190,6 +191,7 @@ theorem integral_dirichletMeasure_coordinate_sq
   rw [hnum, hsum]
   simp [ascPochhammer_succ_eval]
 
+open scoped Classical in
 /-- The mixed raw moment of two distinct coordinates under a Dirichlet measure. -/
 theorem integral_dirichletMeasure_two_coordinates
     {b : ι → ℝ} (hb : b ∈ mvRealBetaDomain) {i j : ι} (hij : i ≠ j) :

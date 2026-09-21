@@ -20,7 +20,6 @@ exponent, and the lowering and tangent identities retain their inhomogeneous R-t
 -/
 
 open Complex
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
@@ -92,6 +91,7 @@ theorem regCarlsonLSlit_euler (t : ℂ) (b : ι → ℂ)
   convert h.unique hd using 1
   ring
 
+open scoped Classical in
 /-- Equation (3.3), allowing coincident indices and nodes. -/
 theorem regCarlsonLSlit_three_node (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain) (i j k : ι) :
@@ -113,6 +113,7 @@ theorem regCarlsonLSlit_three_node (t : ℂ) (b : ι → ℂ)
   simp_rw [regCarlsonLSlit_eq_continued _ _ hw]
   exact regCarlsonLContinued_three_node t b hw i j k
 
+open scoped Classical in
 /-- Equation (3.7), with its R-term and without parameter restrictions. -/
 theorem regCarlsonLSlit_tangent_sub (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain) (i j : ι) :
@@ -134,6 +135,7 @@ theorem regCarlsonLSlit_tangent_sub (t : ℂ) (b : ι → ℂ)
   simp_rw [regCarlsonLSlit_eq_continued _ _ hw, regCarlsonRSlit_eq_continued _ _ hw]
   exact regCarlsonLContinued_tangent_sub t b hw i j
 
+open scoped Classical in
 /-- Equation (3.4) in parameter-lowered form. Regularization eliminates the
 ordinary normalization's factor `c - 1`, so no exceptional parameter is excluded. -/
 theorem regCarlsonLSlit_sub_dirichletUnit (t : ℂ) (b : ι → ℂ)
@@ -155,6 +157,7 @@ theorem regCarlsonLSlit_sub_dirichletUnit (t : ℂ) (b : ι → ℂ)
   convert h using 1
   ring
 
+open scoped Classical in
 /-- Carlson (1987), (3.8), on the full slit domain. The undivided identity
 includes coincident nodes and equal indices. -/
 theorem regCarlsonLSlit_weighted_tangent_sub (t : ℂ) (b : ι → ℂ)

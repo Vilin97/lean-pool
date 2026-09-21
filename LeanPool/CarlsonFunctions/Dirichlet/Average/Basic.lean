@@ -25,7 +25,6 @@ in Chapter 6.
 -/
 
 open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section CarlsonDirichletAverage
 

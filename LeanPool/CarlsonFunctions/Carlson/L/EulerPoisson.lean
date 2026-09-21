@@ -18,11 +18,12 @@ parameters and then in the nodes. Equal indices and coincident nodes are include
 -/
 
 open Complex Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 private theorem analyticOnNhd_secondPartial_regCarlsonLSlit_joint (i j : ι) :
     AnalyticOnNhd ℂ (fun p : Option (ι ⊕ ι) → ℂ =>
       carlsonPartialDeriv i (carlsonPartialDeriv j

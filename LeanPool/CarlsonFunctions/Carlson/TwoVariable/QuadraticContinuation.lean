@@ -21,7 +21,7 @@ values at nonpositive integral `β` where the entire ratio here vanishes.
 -/
 
 open Complex ProbabilityTheory Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

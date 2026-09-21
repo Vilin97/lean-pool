@@ -17,12 +17,12 @@ import LeanPool.CarlsonFunctions.StdSimplexMeasure.ProdSlices
 /-! # Aggregation of solid-simplex volume -/
 
 open MeasureTheory
-open scoped Classical
 
 @[expose] public noncomputable section
 
 /-! ## Aggregation of a solid simplex -/
 
+open scoped Classical in
 /-- Tonelli disintegration of a positive simplex after splitting along a decidable predicate. -/
 theorem lintegral_posSimplex_split_pred {α : Type*} [Fintype α]
     (p : α → Prop) [DecidablePred p] (r : ℝ)
@@ -106,6 +106,7 @@ theorem lintegral_posSimplex_split_pred {α : Type*} [Fintype α]
       · simp [hu]
       · simp [hu]
 
+open scoped Classical in
 /-- A parameter-dependent nonnegative integral over a positive simplex whose radius decreases
 with the parameter is measurable. -/
 private theorem measurable_lintegral_posSimplex_sub
@@ -142,6 +143,7 @@ private theorem measurable_lintegral_posSimplex_sub
   rw [heq]
   exact hI.lintegral_prod_right
 
+open scoped Classical in
 /-- Fibrewise density for the push-forward of Lebesgue measure on a solid simplex under
 coordinate aggregation. For a vector `z` this is the product of the solid-simplex volumes
 of the fibres of `f`. -/
@@ -150,6 +152,7 @@ def posSimplexAggregateDensity {α β : Type*} [Fintype α] [Fintype β]
   ∏ k, ENNReal.ofReal (z k) ^ (Fintype.card {i : α // f i = k} - 1) /
     (Nat.factorial (Fintype.card {i : α // f i = k} - 1) : ENNReal)
 
+open scoped Classical in
 /-- After splitting the source at one fibre, coordinate aggregation consists of summing that
 fibre and aggregating the complementary coordinates. -/
 private theorem linearMap_piEquivPiSubtypeProd_eq
@@ -171,13 +174,13 @@ private theorem linearMap_piEquivPiSubtypeProd_eq
   rw [FunOnFinite.linearMap_apply_apply]
   by_cases hj : j = k
   · subst j
-    rw [dif_pos rfl]
+    rw [dite_eq_left rfl]
     rw [Finset.sum_subtype (p := fun a => f a = k)
       (Finset.univ.filter fun a => f a = k) (by simp)]
     apply Finset.sum_congr rfl
     intro a _
     simp [a.property]
-  · simp only [dif_neg hj]
+  · simp only [dite_eq_right hj]
     rw [FunOnFinite.linearMap_apply_apply]
     rw [Finset.sum_subtype (p := fun a => f a = j)
       (Finset.univ.filter fun a => f a = j) (by simp)]
@@ -193,9 +196,10 @@ private theorem linearMap_piEquivPiSubtypeProd_eq
         right_inv := fun a => by ext; rfl }
     intro a
     have hne : ¬f a = k := fun h => hj (a.property.symm.trans h)
-    rw [dif_neg hne]
+    rw [dite_eq_right hne]
     congr 1
 
+open scoped Classical in
 /-- The aggregation density factors when one target coordinate and its source fibre are
 split off. -/
 private theorem posSimplexAggregateDensity_split
@@ -217,7 +221,7 @@ private theorem posSimplexAggregateDensity_split
     ENNReal.ofReal (if h : j = k then s else z ⟨j, h⟩) ^
       (Fintype.card {i : α // f i = j} - 1) /
         (Nat.factorial (Fintype.card {i : α // f i = j} - 1) : ENNReal)) k]
-  rw [dif_pos rfl]
+  rw [dite_eq_left rfl]
   congr 1
   apply Fintype.prod_congr
   intro j
@@ -229,7 +233,7 @@ private theorem posSimplexAggregateDensity_split
       invFun := fun a => ⟨a.1.1, congrArg Subtype.val a.property⟩
       left_inv := fun a => by ext; rfl
       right_inv := fun a => by ext; rfl }
-  rw [dif_neg j.property]
+  rw [dite_eq_right j.property]
   have hj : (⟨(j : β), j.property⟩ : {j : β // j ≠ k}) = j := Subtype.ext rfl
   rw [hj]
   apply congrArg (fun n : ℕ => ENNReal.ofReal (z j) ^ (n - 1) /
@@ -259,6 +263,7 @@ theorem lintegral_posSimplex_comp_aggregate_of_isEmpty
   funext b
   exact isEmptyElim b
 
+open scoped Classical in
 /-- The solid-simplex aggregation formula when the target has a unique coordinate. -/
 theorem lintegral_posSimplex_comp_aggregate_of_unique
     {α β : Type*} [Fintype α] [Fintype β] [Unique β]
@@ -330,6 +335,7 @@ theorem lintegral_posSimplex_comp_aggregate_of_unique
           rw [e.symm_apply_apply]
     _ = ∫⁻ z in posSimplex β r, g z * posSimplexAggregateDensity f z := by rw [hsimplex]
 
+open scoped Classical in
 /-- Pushing Lebesgue measure on a solid simplex forward under coordinate aggregation
 (`FunOnFinite.linearMap`) weights the target solid simplex by the product of fibre volumes.
 
@@ -375,13 +381,13 @@ theorem lintegral_posSimplex_comp_aggregate
                   (FunOnFinite.linearMap ℝ ℝ f' q.2))
               have hG : Measurable G := by
                 apply hg.comp
-                apply measurable_pi_lambda _
+                apply Measurable.of_eval _
                 intro j
                 by_cases hj : j = k
                 · subst j
-                  simp only [assemble, dif_pos rfl]
+                  simp only [assemble, dite_eq_left rfl]
                   fun_prop
-                · simp only [assemble, dif_neg hj]
+                · simp only [assemble, dite_eq_right hj]
                   fun_prop
               have hsource :
                   (∫⁻ x in posSimplex α r,
@@ -404,13 +410,13 @@ theorem lintegral_posSimplex_comp_aggregate
                   g (assemble s z) * posSimplexAggregateDensity f' z)) := by
                 apply Measurable.mul
                 · apply hg.comp
-                  apply measurable_pi_lambda _
+                  apply Measurable.of_eval _
                   intro j
                   by_cases hj : j = k
                   · subst j
-                    simp only [assemble, dif_pos rfl]
+                    simp only [assemble, dite_eq_left rfl]
                     fun_prop
-                  · simp only [assemble, dif_neg hj]
+                  · simp only [assemble, dite_eq_right hj]
                     fun_prop
                 · unfold posSimplexAggregateDensity
                   fun_prop
@@ -434,13 +440,13 @@ theorem lintegral_posSimplex_comp_aggregate
                       (r - ∑ i, u i) hrs (fun z => g (assemble (∑ i, u i) z))
                       (by
                         apply hg.comp
-                        apply measurable_pi_lambda _
+                        apply Measurable.of_eval _
                         intro j
                         by_cases hj : j = k
                         · subst j
-                          simp only [assemble, dif_pos rfl]
+                          simp only [assemble, dite_eq_left rfl]
                           fun_prop
-                        · simp only [assemble, dif_neg hj]
+                        · simp only [assemble, dite_eq_right hj]
                           fun_prop)
                       rfl
                     simpa only [G, H] using hrec
@@ -458,11 +464,11 @@ theorem lintegral_posSimplex_comp_aggregate
                 by_cases hj : j = k
                 · subst j
                   change (if h : k = k then q.1 ⟨k, h⟩ else q.2 ⟨k, h⟩) = _
-                  simp only [dif_pos rfl, assemble]
+                  simp only [dite_eq_left rfl, assemble]
                   rw [Fintype.sum_unique]
                   congr 2
                 · change (if h : j = k then q.1 ⟨j, h⟩ else q.2 ⟨j, h⟩) = _
-                  simp only [dif_neg hj, assemble]
+                  simp only [dite_eq_right hj, assemble]
               let Gβ : (Aβ → ℝ) × (β' → ℝ) → ENNReal := fun q =>
                 g (eβ.symm q) * posSimplexAggregateDensity f (eβ.symm q)
               have hGβ : Measurable Gβ := by

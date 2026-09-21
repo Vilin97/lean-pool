@@ -27,7 +27,7 @@ At exponent zero the correction vanishes, giving both identities (6.8).
 -/
 
 open Complex Filter Set
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform.TwoVariable
 

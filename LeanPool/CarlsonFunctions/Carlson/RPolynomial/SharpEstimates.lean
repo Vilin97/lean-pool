@@ -20,11 +20,11 @@ of node norms. This distinction preserves the full Taylor disk in Section 6.3.
 -/
 
 open Complex Finset Polynomial Set
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
+open scoped Classical in
 /-- Carlson 6.2-7(24), with independent nonnegative bounds for the parameter norms. -/
 theorem norm_carlsonRPolynomialNumerator_le_pochhammer (n : ℕ) (b z : ι → ℂ)
     {B : ι → ℝ} (hb : ∀ i, ‖b i‖ ≤ B i)
@@ -150,7 +150,7 @@ theorem exists_summable_norm_carlsonTaylor_bounded_variables
   by_cases hnm : n < m
   · refine hraw.trans ?_
     dsimp only [M]
-    rw [if_pos hnm]
+    rw [ite_eq_left hnm]
     apply mul_le_mul_of_nonneg_left (hD n b hb)
     rw [← Nat.cast_ascFactorial]
     positivity
@@ -166,7 +166,7 @@ theorem exists_summable_norm_carlsonTaylor_bounded_variables
       rw [← Nat.cast_ascFactorial]
       positivity
     _ = M (m + k) := by
-      simp only [M, Nat.not_lt.mpr (Nat.le_add_right m k), if_false,
+      simp only [M, Nat.not_lt.mpr (Nat.le_add_right m k), ite_false,
         Nat.add_sub_cancel_left, tail, ascPochhammer_add_eval, Nat.cast_add, pow_add]
       ring
 

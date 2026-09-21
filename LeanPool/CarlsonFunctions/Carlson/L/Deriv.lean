@@ -18,7 +18,6 @@ average theorems, not independent integration-by-parts proofs.
 -/
 
 open Complex ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]

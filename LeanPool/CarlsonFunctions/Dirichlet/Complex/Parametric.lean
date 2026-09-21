@@ -19,7 +19,7 @@ Dirichlet-parameter continuation.
 -/
 
 open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory Filter Set Metric
-open scoped Classical Topology
+open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
 variable {ι κ : Type*} [Fintype ι] [Fintype κ]
@@ -146,6 +146,7 @@ theorem locallyBounded_regDirichletIntegral_kernel
   exact mul_le_mul hq.le (hqD.trans (le_max_left _ _)) (norm_nonneg _)
     (by dsimp [B]; positivity)
 
+open scoped Classical in
 /-- Joint holomorphy in the native Dirichlet parameters and all auxiliary variables. -/
 theorem analyticOnNhd_regDirichletIntegral_kernel_joint
     {U : Set (κ → ℂ)} (hU : IsOpen U) {W : Set ((κ → ℂ) × (ι → ℂ))}
@@ -186,7 +187,7 @@ theorem analyticOnNhd_regDirichletIntegral_kernel_joint
         dsimp only [G]
         simp only [hLapply]
         simpa only [hupdateB, Function.update_apply, Sum.inl.injEq,
-          reduceCtorEq, if_false] using! h
+          reduceCtorEq, ite_false] using! h
       | inr i =>
         have h := (analyticOnNhd_regDirichletIntegral_kernel hU hH hW hq.1).analyticAt_update hq.2 i
         change AnalyticAt ℂ (fun w => regDirichletIntegral (fun j => q (.inl j))
@@ -195,7 +196,7 @@ theorem analyticOnNhd_regDirichletIntegral_kernel_joint
         dsimp only [G]
         simp only [hLapply]
         simpa only [hupdateZ, Function.update_apply, Sum.inr.injEq,
-          reduceCtorEq, if_false] using! h
+          reduceCtorEq, ite_false] using! h
     · intro q hq
       obtain ⟨M, hM⟩ := locallyBounded_regDirichletIntegral_kernel
         (F := fun z u => H (z, fun i => (u i : ℂ))) hU hc hq.1 hq.2

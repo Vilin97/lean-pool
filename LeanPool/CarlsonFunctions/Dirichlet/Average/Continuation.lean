@@ -27,7 +27,6 @@ are developed in `Carlson.RPolynomial.PowerSeries`.
 -/
 
 open Complex MeasureTheory ProbabilityTheory
-open scoped Classical
 
 @[expose] public noncomputable section CarlsonDirichletAverage
 

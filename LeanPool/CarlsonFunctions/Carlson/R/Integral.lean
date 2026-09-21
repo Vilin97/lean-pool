@@ -12,7 +12,6 @@ public import LeanPool.CarlsonFunctions.Dirichlet.Average.Continuation
 /-! # Carlson's R-function: native integral representation -/
 
 open Complex ProbabilityTheory
-open scoped Classical
 @[expose] public noncomputable section CarlsonR
 namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
