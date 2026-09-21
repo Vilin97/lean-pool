@@ -9987,7 +9987,6 @@ projects:
     status: verified
     main_declarations:
     - Combinatorics.Line.exists_of_density_atTop
-    - Combinatorics.ArithmeticProgression.exists_of_density_nat_atTop
     main_results:
     - declaration: Combinatorics.Line.exists_of_density_atTop
       informal: Every positive-density subset of sufficiently long words over a finite nontrivial

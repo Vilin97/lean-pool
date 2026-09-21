@@ -31,7 +31,7 @@ namespace Combinatorics.Line
 /-- The **Density Hales--Jewett theorem**: for a positive density `δ`, every sufficiently long word
 length `n` has the property that any set of at least a `δ` fraction of the words of length `n`
 over `α` contains a combinatorial line. -/
-theorem exists_of_density_atTop (α : Type*) [Fintype α] [Nontrivial α] (δ : ℝ) (hδ : 0 < δ) :
+theorem exists_of_density_atTop (α : Type*) [Fintype α] (δ : ℝ) (hδ : 0 < δ) :
     ∀ᶠ n in atTop, ∀ A : Finset (Fin n → α), δ * (Fintype.card α : ℝ) ^ n ≤ #A →
       ∃ l : Line α (Fin n), ∀ x : α, l x ∈ A := by
   refine eventually_atTop.2 ⟨densityTheoremBound (Fintype.card α) δ, ?_⟩

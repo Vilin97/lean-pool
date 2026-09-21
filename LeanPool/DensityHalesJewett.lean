@@ -27,7 +27,7 @@ import LeanPool.DensityHalesJewett.Solution
 Source: url:https://github.com/gdahia/densityhalesjewett
 Authors: Gabriel Dahia
 Status: verified
-Main declarations: `Combinatorics.Line.exists_of_density_atTop`, `Combinatorics.ArithmeticProgression.exists_of_density_nat_atTop`
+Main declarations: `Combinatorics.Line.exists_of_density_atTop`
 Tags: combinatorics
 MSC: 05D10, 05A05, 11B75, 68R15
 -/

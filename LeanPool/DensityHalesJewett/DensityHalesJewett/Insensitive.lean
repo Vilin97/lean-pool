@@ -393,7 +393,7 @@ private lemma fiber_uncovered_padded {α η : Type*} [Fintype α] [Fintype (η �
     subst z'
     apply hyfree V hV
     refine Subspace.mem_range.mpr ⟨x, funext ?_⟩
-    intro j 
+    intro j
     exact (congrFun hconcat (Sum.inr j)).symm
 
 /-- Merge the tiles removed at one packing stage with a recursive tiling of the remainder. -/
