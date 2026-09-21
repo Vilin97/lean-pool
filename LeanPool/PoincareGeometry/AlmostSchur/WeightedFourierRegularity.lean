@@ -29,12 +29,8 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 theorem memLp_inverse_polynomial_weight {s : ℝ}
     (hs : (Module.finrank ℝ E : ℝ) < 2 * s) :
     MemLp (fun x : E => (1 + ‖x‖ ^ 2) ^ (-s / 2)) 2 := by
-  constructor
-  · have h : (fun x : E => (1 + ‖x‖ ^ 2) ^ (-s / 2)).HasTemperateGrowth := by
-      fun_prop
-    exact h.1.continuous.aestronglyMeasurable
-  · rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num)]
-    suffices h : ∫⁻ a : E, ENNReal.ofReal ‖(1 + ‖a‖ ^ 2) ^ (-s)‖ < ⊤ from by
+  rw [MemLp, eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num)]
+  · suffices h : ∫⁻ a : E, ENNReal.ofReal ‖(1 + ‖a‖ ^ 2) ^ (-s)‖ < ⊤ from by
       norm_cast
       simp_rw [ofReal_norm] at h
       simp_rw [← enorm_pow]
@@ -46,6 +42,9 @@ theorem memLp_inverse_polynomial_weight {s : ℝ}
     rw [Real.norm_eq_abs, abs_eq_self.mpr (by positivity)]
     congr
     ring
+  · have h : (fun x : E => (1 + ‖x‖ ^ 2) ^ (-s / 2)).HasTemperateGrowth := by
+      fun_prop
+    exact h.1.continuous.aestronglyMeasurable
 
 /-- Weighted L² control yields genuine L¹ control above half the dimension. -/
 theorem integrable_of_polynomial_weight_memLp {s : ℝ}
@@ -54,7 +53,7 @@ theorem integrable_of_polynomial_weight_memLp {s : ℝ}
     Integrable f := by
   have hp : MemLp (fun x => (f x * (1 + ‖x‖ ^ 2) ^ (s / 2)) *
       (1 + ‖x‖ ^ 2) ^ (-s / 2)) 1 :=
-    (memLp_inverse_polynomial_weight hs).mul hf
+    hf.fun_mul (memLp_inverse_polynomial_weight hs)
   have he : (fun x => (f x * (1 + ‖x‖ ^ 2) ^ (s / 2)) *
       (1 + ‖x‖ ^ 2) ^ (-s / 2)) = f := by
     funext x
@@ -73,7 +72,7 @@ theorem eLpNorm_one_le_polynomial_weight {s : ℝ}
       eLpNorm (fun x => f x * (1 + ‖x‖ ^ 2) ^ (s / 2)) 2 volume *
       eLpNorm (fun x : E => (1 + ‖x‖ ^ 2) ^ (-s / 2)) 2 volume := by
   have h := eLpNorm_smul_le_mul_eLpNorm (p := 2) (q := 2) (r := 1)
-    (memLp_inverse_polynomial_weight hs).1 hf.1
+    hf.aestronglyMeasurable (memLp_inverse_polynomial_weight hs).aestronglyMeasurable
   have he : (fun x => f x * (1 + ‖x‖ ^ 2) ^ (s / 2)) •
       (fun x : E => (1 + ‖x‖ ^ 2) ^ (-s / 2)) = f := by
     funext x

@@ -452,10 +452,15 @@ private lemma extDerivFun_apply_eq_fderivWithin_writtenInExtChartAt_mpullbackWit
     have hx : (extChartAt I x).symm ((extChartAt I x) x) = x := by
       simp
     rw [hx]
-      exact mfderivWithin_extChartAt_symm_inverse_apply (I := I) (x := x) (v := X x)
+    exact mfderivWithin_extChartAt_symm_inverse_apply (I := I) (x := x) (v := X x)
   rw [hmp]
   change (NormedSpace.fromTangentSpace (g x)) ((mfderiv% g x) (X x)) = _
   exact congrArg (fun L => (NormedSpace.fromTangentSpace (g x)) (L (X x))) hg.mfderiv
+
+private lemma real_fderivWithin_eq
+    {f : E → ℝ} {f' : E →L[ℝ] ℝ} {s : Set E} {x : E}
+    (hf : HasFDerivWithinAt f f' s x) (hs : UniqueDiffWithinAt ℝ s x) :
+    fderivWithin ℝ f s x = f' := hf.fderivWithin hs
 
 private lemma extDerivFun_apply_eq_fderivWithin_writtenInExtChartAt_mpullbackWithin_of_mem
     {g : M → ℝ} {X : Π x : M, TM x} {x y : M}
@@ -482,11 +487,14 @@ private lemma extDerivFun_apply_eq_fderivWithin_writtenInExtChartAt_mpullbackWit
     exact HasMFDerivAt.comp_hasMFDerivWithinAt
       (f := φ.symm) (s := Set.range I) (x := z) hg'
       (mdifferentiableWithinAt_extChartAt_symm hz).hasMFDerivWithinAt
+  have hFD : HasFDerivWithinAt (g ∘ φ.symm)
+      (((mfderiv% g y).comp (mfderiv[Set.range I] φ.symm z)) : E →L[ℝ] ℝ)
+      (Set.range I) z := hcomp.hasFDerivWithinAt
   have hderiv :
       fderivWithin ℝ (writtenInExtChartAt I 𝓘(ℝ) x g) (Set.range I) z =
         (((mfderiv% g y).comp (mfderiv[Set.range I] φ.symm z)) : E →L[ℝ] ℝ) := by
-    simpa [writtenInExtChartAt, φ, z] using
-      hcomp.hasFDerivWithinAt.fderivWithin (I.uniqueDiffOn.uniqueDiffWithinAt hz_range)
+    change fderivWithin ℝ (g ∘ φ.symm) (Set.range I) z = _
+    exact real_fderivWithin_eq hFD (I.uniqueDiffOn.uniqueDiffWithinAt hz_range)
   have hmp :
       VectorField.mpullbackWithin 𝓘(ℝ, E) I φ.symm X (Set.range I) z =
         (mfderiv[Set.range I] φ.symm z).inverse (X y) := by
@@ -701,9 +709,7 @@ private lemma mdifferentiableAt_along_of_mdifferentiableAt
       convert hσ using 1 <;> norm_num)
   simpa [CovariantDerivative.along] using
     ((hCovSection x).mdifferentiableAt one_ne_zero).clm_bundle_apply hX
-/-- Metric compatibility makes the raw curvature commutator skew-adjoint in the bundle
-inner product. -/
-theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
+private lemma second_derivative_inner_of_metricCompatible
     [RiemannianBundle V] [IsContMDiffRiemannianBundle I 2 F V]
     (hmetric :
       ∀ {x : M} {σ τ : Π x : M, V x},
@@ -712,12 +718,14 @@ theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
             mvfderiv (I := I) (fun y ↦ inner ℝ (σ y) (τ y)) x u =
               inner ℝ (cov σ x u) (τ x) + inner ℝ (σ x) (cov τ x u))
     {X Y : Π x : M, TM x} {σ τ : Π x : M, V x} {x : M}
-    (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hτ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (τ y))) :
-    inner ℝ (cov.curvatureAux X Y σ x) (τ x) +
-      inner ℝ (σ x) (cov.curvatureAux X Y τ x) = 0 := by
+      mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) (fun z ↦ inner ℝ (σ z) (τ z)) y (Y y)) x (X x) =
+        (inner ℝ (cov.along X (cov.along Y σ) x) (τ x) +
+          inner ℝ (cov.along Y σ x) (cov.along X τ x)) +
+        (inner ℝ (cov.along X σ x) (cov.along Y τ x) +
+          inner ℝ (σ x) (cov.along X (cov.along Y τ) x)) := by
   let f : M → ℝ := fun y ↦ inner ℝ (σ y) (τ y)
   have hσ₁ : ContMDiff I (I.prod 𝓘(ℝ, F)) 1 (fun y ↦ TotalSpace.mk' F y (σ y)) :=
     hσ.of_le (by norm_num)
@@ -733,47 +741,18 @@ theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
         inner ℝ (cov.along Z ρ x0) (υ x0) +
           inner ℝ (ρ x0) (cov.along Z υ x0) := by
     simpa [CovariantDerivative.along] using hmetric (x := x0) hρ hυ (Z x0)
-  have hXσ :
-      ContMDiff I (I.prod 𝓘(ℝ, F)) 1
-        (fun y ↦ TotalSpace.mk' F y (cov.along X σ y)) :=
-    cov.contMDiff_along (n := 1) hX hσ
   have hYσ :
       ContMDiff I (I.prod 𝓘(ℝ, F)) 1
         (fun y ↦ TotalSpace.mk' F y (cov.along Y σ y)) :=
     cov.contMDiff_along (n := 1) hY hσ
-  have hXτ :
-      ContMDiff I (I.prod 𝓘(ℝ, F)) 1
-        (fun y ↦ TotalSpace.mk' F y (cov.along X τ y)) :=
-    cov.contMDiff_along (n := 1) hX hτ
   have hYτ :
       ContMDiff I (I.prod 𝓘(ℝ, F)) 1
         (fun y ↦ TotalSpace.mk' F y (cov.along Y τ y)) :=
     cov.contMDiff_along (n := 1) hY hτ
-  have hXσmd : MDiffAt (T% (cov.along X σ)) x :=
-    cov.mdifferentiableAt_along_of_contMDiff hX hσ
   have hYσmd : MDiffAt (T% (cov.along Y σ)) x :=
     cov.mdifferentiableAt_along_of_contMDiff hY hσ
-  have hXτmd : MDiffAt (T% (cov.along X τ)) x :=
-    cov.mdifferentiableAt_along_of_contMDiff hX hτ
   have hYτmd : MDiffAt (T% (cov.along Y τ)) x :=
     cov.mdifferentiableAt_along_of_contMDiff hY hτ
-  have hinnerσ : ContMDiff I 𝓘(ℝ) 2 f := by
-    simpa [f] using
-      (ContMDiff.inner_bundle (IM := I) (IB := I) (F := F) (E := V) hσ hτ)
-  have hinnerXστ : MDiffAt
-      (fun y ↦ inner ℝ (cov.along X σ y) (τ y)) x := by
-    have h :
-        ContMDiff I 𝓘(ℝ) 1
-          (fun y ↦ inner ℝ (cov.along X σ y) (τ y)) :=
-      ContMDiff.inner_bundle (IM := I) (IB := I) (F := F) (E := V) hXσ hτ₁
-    exact (h x).mdifferentiableAt one_ne_zero
-  have hinnerσXτ : MDiffAt
-      (fun y ↦ inner ℝ (σ y) (cov.along X τ y)) x := by
-    have h :
-        ContMDiff I 𝓘(ℝ) 1
-          (fun y ↦ inner ℝ (σ y) (cov.along X τ y)) :=
-      ContMDiff.inner_bundle (IM := I) (IB := I) (F := F) (E := V) hσ₁ hXτ
-    exact (h x).mdifferentiableAt one_ne_zero
   have hinnerYστ : MDiffAt
       (fun y ↦ inner ℝ (cov.along Y σ y) (τ y)) x := by
     have h :
@@ -798,52 +777,58 @@ theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
     have hτy : MDiffAt (T% τ) y :=
       (hτ y).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
     simpa [f] using hmetric_along (x0 := y) (Z := Y) hσy hτy
-  have hDX_fun :
-      (fun y ↦ mvfderiv (I := I) f y (X y)) =
-        fun y ↦ inner ℝ (cov.along X σ y) (τ y) +
-          inner ℝ (σ y) (cov.along X τ y) := by
-    funext y
-    have hσy : MDiffAt (T% σ) y :=
-      (hσ y).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
-    have hτy : MDiffAt (T% τ) y :=
-      (hτ y).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
-    simpa [f] using hmetric_along (x0 := y) (Z := X) hσy hτy
+  rw [hDY_fun]
+  change mvfderiv (I := I)
+      ((fun y ↦ inner ℝ (cov.along Y σ y) (τ y)) +
+        fun y ↦ inner ℝ (σ y) (cov.along Y τ y)) x (X x) =
+      (inner ℝ (cov.along X (cov.along Y σ) x) (τ x) +
+        inner ℝ (cov.along Y σ x) (cov.along X τ x)) +
+      (inner ℝ (cov.along X σ x) (cov.along Y τ x) +
+        inner ℝ (σ x) (cov.along X (cov.along Y τ) x))
+  rw [mvfderiv_add hinnerYστ hinnerσYτ]
+  simp only [ContinuousLinearMap.add_apply]
+  rw [hmetric_along (x0 := x) (Z := X) hYσmd hτmd,
+    hmetric_along (x0 := x) (Z := X) hσmd hYτmd]
+
+/-- Metric compatibility makes the raw curvature commutator skew-adjoint in the bundle
+inner product. -/
+theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
+    [RiemannianBundle V] [IsContMDiffRiemannianBundle I 2 F V]
+    (hmetric :
+      ∀ {x : M} {σ τ : Π x : M, V x},
+        MDiffAt (T% σ) x → MDiffAt (T% τ) x →
+          ∀ u : TangentSpace I x,
+            mvfderiv (I := I) (fun y ↦ inner ℝ (σ y) (τ y)) x u =
+              inner ℝ (cov σ x u) (τ x) + inner ℝ (σ x) (cov τ x u))
+    {X Y : Π x : M, TM x} {σ τ : Π x : M, V x} {x : M}
+    (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
+    (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
+    (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
+    (hτ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (τ y))) :
+    inner ℝ (cov.curvatureAux X Y σ x) (τ x) +
+      inner ℝ (σ x) (cov.curvatureAux X Y τ x) = 0 := by
+  let f : M → ℝ := fun y ↦ inner ℝ (σ y) (τ y)
+  have hσmd : MDiffAt (T% σ) x :=
+    (hσ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
+  have hτmd : MDiffAt (T% τ) x :=
+    (hτ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
+  have hinnerσ : ContMDiff I 𝓘(ℝ) 2 f := by
+    simpa [f] using
+      (ContMDiff.inner_bundle (IM := I) (IB := I) (F := F) (E := V) hσ hτ)
   have hDXY :
       mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) f y (Y y)) x (X x) =
         (inner ℝ (cov.along X (cov.along Y σ) x) (τ x) +
           inner ℝ (cov.along Y σ x) (cov.along X τ x)) +
         (inner ℝ (cov.along X σ x) (cov.along Y τ x) +
-          inner ℝ (σ x) (cov.along X (cov.along Y τ) x)) := by
-    rw [hDY_fun]
-    change mvfderiv (I := I)
-        ((fun y ↦ inner ℝ (cov.along Y σ y) (τ y)) +
-          fun y ↦ inner ℝ (σ y) (cov.along Y τ y)) x (X x) =
-        (inner ℝ (cov.along X (cov.along Y σ) x) (τ x) +
-          inner ℝ (cov.along Y σ x) (cov.along X τ x)) +
-        (inner ℝ (cov.along X σ x) (cov.along Y τ x) +
-          inner ℝ (σ x) (cov.along X (cov.along Y τ) x))
-    rw [mvfderiv_add hinnerYστ hinnerσYτ]
-    simp only [ContinuousLinearMap.add_apply]
-    rw [hmetric_along (x0 := x) (Z := X) hYσmd hτmd,
-      hmetric_along (x0 := x) (Z := X) hσmd hYτmd]
+          inner ℝ (σ x) (cov.along X (cov.along Y τ) x)) :=
+    cov.second_derivative_inner_of_metricCompatible hmetric (X := X) (Y := Y) hY hσ hτ
   have hDYX :
       mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) f y (X y)) x (Y x) =
         (inner ℝ (cov.along Y (cov.along X σ) x) (τ x) +
           inner ℝ (cov.along X σ x) (cov.along Y τ x)) +
         (inner ℝ (cov.along Y σ x) (cov.along X τ x) +
-          inner ℝ (σ x) (cov.along Y (cov.along X τ) x)) := by
-    rw [hDX_fun]
-    change mvfderiv (I := I)
-        ((fun y ↦ inner ℝ (cov.along X σ y) (τ y)) +
-          fun y ↦ inner ℝ (σ y) (cov.along X τ y)) x (Y x) =
-        (inner ℝ (cov.along Y (cov.along X σ) x) (τ x) +
-          inner ℝ (cov.along X σ x) (cov.along Y τ x)) +
-        (inner ℝ (cov.along Y σ x) (cov.along X τ x) +
-          inner ℝ (σ x) (cov.along Y (cov.along X τ) x))
-    rw [mvfderiv_add hinnerXστ hinnerσXτ]
-    simp only [ContinuousLinearMap.add_apply]
-    rw [hmetric_along (x0 := x) (Z := Y) hXσmd hτmd,
-      hmetric_along (x0 := x) (Z := Y) hσmd hXτmd]
+          inner ℝ (σ x) (cov.along Y (cov.along X τ) x)) :=
+    cov.second_derivative_inner_of_metricCompatible hmetric (X := Y) (Y := X) hX hσ hτ
   have hDbr :
       mvfderiv (I := I) f x (VectorField.mlieBracket I X Y x) =
         inner ℝ (cov.along (VectorField.mlieBracket I X Y) σ x) (τ x) +
