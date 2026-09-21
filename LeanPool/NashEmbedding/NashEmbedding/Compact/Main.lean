@@ -124,7 +124,7 @@ instance instChartedSpaceMatrixSelf {N : ℕ} :
         (@PseudoMetricSpace.toUniformSpace (Matrix (Fin N) (Fin N) ℝ)
           (@SeminormedAddCommGroup.toPseudoMetricSpace (Matrix (Fin N) (Fin N) ℝ)
             (@NormedAddCommGroup.toSeminormedAddCommGroup (Matrix (Fin N) (Fin N) ℝ)
-              (instNormedAddCommGroupMatrixFinReal_nashEmbedding N)))))
+              (NashEmbedding.matrixNormedAddCommGroup N)))))
       (Matrix (Fin N) (Fin N) ℝ)
       (@instTopologicalSpaceMatrix (Fin N) (Fin N) ℝ
         (@UniformSpace.toTopologicalSpace ℝ (@PseudoMetricSpace.toUniformSpace ℝ Real.pseudoMetricSpace))) :=

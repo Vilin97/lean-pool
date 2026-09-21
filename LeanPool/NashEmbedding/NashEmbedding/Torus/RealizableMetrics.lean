@@ -454,7 +454,6 @@ theorem posDefSmoothMetric_stability {n : ℕ}
               have := hg.posDef;
               intro x hx v hv; specialize this x; have := this.2; simp_all +decide [ Matrix.IsHermitian, Matrix.mulVec ] ;
               convert this ( show ( Finsupp.equivFunOnFinite.symm v ) ≠ 0 from by simpa [ Finsupp.ext_iff, funext_iff ] using hv ) using 1
-              · rfl
               · simp +decide [ dotProduct, Matrix.mulVec, Finsupp.sum_fintype, Finset.mul_sum, Finset.sum_mul, mul_assoc, mul_comm ]
                 exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
             -- By definition of $IsPosDefSmoothMetric$, $g(x)$ is positive definite for all $x$, so we can apply the continuity of the quadratic form.
@@ -483,7 +482,6 @@ theorem posDefSmoothMetric_stability {n : ℕ}
               have := hK.2 ( x, ‖v‖⁻¹ • v ) ⟨ hx, by simp +decide [ norm_smul, hv ] ⟩ ; simp_all +decide [ div_le_iff₀, norm_smul ] ;
               simp_all +decide [ Matrix.mulVec_smul, dotProduct_smul, mul_assoc, mul_comm, mul_left_comm, sq, norm_smul ];
               convert mul_le_mul_of_nonneg_right this ( mul_self_nonneg ‖v‖ ) using 1
-              · rfl
               · have hn : ‖v‖ ≠ 0 := norm_ne_zero_iff.mpr hv
                 field_simp
           obtain ⟨ K, hK₀, hK ⟩ := h_compact; use K, hK₀; intro x v hv; specialize hK ( fun i => x i - ⌊x i / ( 2 * Real.pi ) ⌋ * ( 2 * Real.pi ) ) ?_ v hv <;> simp_all +decide [ Matrix.mulVec, dotProduct ] ;

@@ -132,7 +132,7 @@ lemma dil_continuous (n : ℕ) (β : ℝ) : Continuous (dil n β) := (dil_contDi
 
 lemma dil_hasCompactSupport (n : ℕ) {β : ℝ} (hβ : 0 < β) : HasCompactSupport (dil n β) := by
   have h : dil n β = eta n ∘ (Homeomorph.mulLeft₀ β hβ.ne') := by
-    funext t; simp [dil, Homeomorph.mulLeft₀]
+    rfl
   rw [h]
   exact (eta_hasCompactSupport n).comp_homeomorph _
 

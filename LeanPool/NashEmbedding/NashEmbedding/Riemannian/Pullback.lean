@@ -138,8 +138,11 @@ theorem pullbackForm_trivialization_apply (f : M → N)
       pullbackForm (I := I) (J := J) f h x (tcoord I x₀ x a) (tcoord I x₀ x b) := by
   have hb : x ∈ (trivializationAt E (TangentSpace I) x₀).baseSet := by simpa using hx
   rw [hom_trivializationAt_apply, inCoordinates_apply_eq₂ hb hb (Set.mem_univ _)]
-  simp
-  rfl
+  simp [tcoord]
+  exact congrArg₂ (fun v w : TangentSpace I x =>
+    pullbackFormT (I := I) (J := J) f h x v w)
+    (Trivialization.symmL_apply (R := ℝ) _ hb a).symm
+    (Trivialization.symmL_apply (R := ℝ) _ hb b).symm
 
 omit [FiniteDimensional ℝ E] [FiniteDimensional ℝ F] in
 /-- Coordinate map from `T_yN ≅ F` to the model fibre, in the trivialization at `y₀`

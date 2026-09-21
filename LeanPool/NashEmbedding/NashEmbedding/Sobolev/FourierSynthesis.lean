@@ -74,9 +74,8 @@ lemma norm_derivCoeff_le {k : ℕ} {α : Fin n → ℕ} (hα : multiDeg α ≤ k
         | (rw [← Real.rpow_natCast _ (α j), ← Real.rpow_mul
               (add_nonneg zero_le_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _)];
            congr 1; ring))
-    simpa [ Finset.sum_div _ _ _, Real.rpow_sum_of_pos ( add_pos_of_pos_of_nonneg zero_lt_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ] using Finset.prod_le_prod ( fun _ _ => norm_nonneg _ ) fun j ( hj : j ∈ Finset.univ ) => h_abs_term j;
+    simpa [ Finset.sum_div _ _ _, Real.rpow_sum_of_pos ( add_pos_of_pos_of_nonneg zero_lt_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ] using Finset.prod_le_prod₀ ( fun _ _ => norm_nonneg _ ) fun j ( hj : j ∈ Finset.univ ) => h_abs_term j;
   convert mul_le_mul_of_nonneg_right h_prod ( show 0 ≤ ‖a m‖ by positivity ) |> le_trans <| ?_ using 1
-  · rfl
   · unfold derivCoeff
     unfold monomialPow; norm_num [ Complex.norm_exp ]
   · gcongr

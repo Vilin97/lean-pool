@@ -206,8 +206,7 @@ theorem compactInclusion_lp_weighted {s t : ℝ} (hst : s < t)
         · refine' Summable.mul_left _ _;
           have := ha_mem ( φ k );
           convert this.add ha_lim_mem using 1
-          · rfl
-          · ext m; ring
+          ext m; ring
       -- Since $\sum' m, weight n t m * (‖a (φ k) m‖ ^ 2 + ‖a_lim m‖ ^ 2) \leq 2$, we can bound the second sum.
       have h_second_sum_final : ∑' m, weight n t m * (‖a (φ k) m‖ ^ 2 + ‖a_lim m‖ ^ 2) ≤ 2 := by
         have h_second_sum_final : ∑' m, weight n t m * ‖a (φ k) m‖ ^ 2 ≤ 1 ∧ ∑' m, weight n t m * ‖a_lim m‖ ^ 2 ≤ 1 := by
@@ -222,7 +221,6 @@ theorem compactInclusion_lp_weighted {s t : ℝ} (hst : s < t)
             contrapose! h_second_sum_final;
             exact ( Summable.hasSum ( show Summable _ from by exact ( by { by_contra h; rw [ tsum_eq_zero_of_not_summable h ] at h_second_sum_final; linarith } ) ) ) |> fun h => h.eventually ( lt_mem_nhds h_second_sum_final ) |> fun h => h.exists;
         convert add_le_add h_second_sum_final.1 h_second_sum_final.2 using 1
-        · rfl
         · rw [ ← Summable.tsum_add ] ; congr ; ext m ; ring
           · exact ha_mem ( φ k );
           · exact ha_lim_mem;

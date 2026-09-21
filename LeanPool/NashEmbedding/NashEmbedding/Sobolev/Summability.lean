@@ -51,7 +51,7 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
       exact le_trans ( this hn fun _ => by positivity ) ( by rw [ div_le_iff₀ ( by positivity ) ] ; norm_num [ Finset.sum_add_distrib ] ; nlinarith [ show ( n : ℝ ) ≥ 1 by norm_cast, show ( ∑ i : Fin n, ( m i : ℝ ) ^ 2 ) ≥ 0 by exact Finset.sum_nonneg fun _ _ => sq_nonneg _ ] );
     rw [ Real.finsetProd_rpow _ _ fun i _ => by positivity ];
     rw [ neg_div, Real.rpow_neg ( by positivity ), Real.rpow_neg ( by exact Finset.prod_nonneg fun _ _ => by positivity ) ];
-    exact inv_anti₀ ( Real.rpow_pos_of_pos ( Finset.prod_pos fun _ _ => by positivity ) _ ) ( by convert Real.rpow_le_rpow ( by positivity ) h_prod ( show 0 ≤ s by positivity ) using 1 ; rfl ; rw [ ← Real.rpow_mul ( Finset.prod_nonneg fun _ _ => by positivity ) ] ; ring );
+    exact inv_anti₀ ( Real.rpow_pos_of_pos ( Finset.prod_pos fun _ _ => by positivity ) _ ) ( by convert Real.rpow_le_rpow ( by positivity ) h_prod ( show 0 ≤ s by positivity ) using 1 ; rw [ ← Real.rpow_mul ( Finset.prod_nonneg fun _ _ => by positivity ) ] ; ring );
   -- Since \(s > n/2\), we have \(s/n > 1/2\), and thus \(\sum_{m \in \mathbb{Z}} (1 + m^2)^{-s/n}\) converges.
   have h_summable_one_dim : Summable (fun m : ℤ => (1 + (m : ℝ) ^ 2) ^ (-s / n)) := by
     have h_summable_one_dim : Summable (fun m : ℕ => (1 + (m : ℝ) ^ 2) ^ (-s / n)) := by
@@ -67,7 +67,7 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
       · norm_num [ Equiv.intEquivNatSumNat ];
         exact tsum_congr fun m => by ring;
       · convert h_summable_one_dim using 1 ; rfl
-      · convert h_summable_one_dim.comp_injective ( show Function.Injective ( fun k : ℕ => k + 1 ) from fun a b h => by simpa using h ) using 1 ; rfl
+      · convert h_summable_one_dim.comp_injective ( show Function.Injective ( fun k : ℕ => k + 1 ) from fun a b h => by simpa using h ) using 1
         ext; simp [Equiv.intEquivNatSumNat];
         congr 2; ring
     contrapose! h_split;
@@ -82,8 +82,7 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
       · have h_prod_summable : Summable (fun m : ℤ × (Fin k → ℤ) => (1 + (m.1 : ℝ) ^ 2) ^ (-s / n) * ∏ i : Fin k, (1 + (m.2 i : ℝ) ^ 2) ^ (-s / n)) := by
           exact .of_norm <| by simpa using Summable.mul_norm ( h_summable_one_dim.norm ) ( ih.norm ) ;
         convert h_prod_summable.comp_injective ( show Function.Injective ( fun m : Fin ( k + 1 ) → ℤ => ( m 0, fun i => m ( Fin.succ i ) ) ) from fun m m' h => by simpa [ funext_iff, Fin.forall_fin_succ ] using h ) using 1
-        · rfl
-        · rfl
+        rfl
     exact h_prod_summable
 
 /-! ## Cauchy–Schwarz bound -/

@@ -588,7 +588,7 @@ lemma continuous_toUnitTorusFun {f : (Fin n → ℝ) → ℂ} (hf : Continuous f
   have h : toUnitTorusFun n f ∘ toUnitTorus n = fun x => f ((2 * π) • x) :=
     funext fun x => toUnitTorusFun_toUnitTorus hper x
   rw [h]
-  exact hf.comp (continuous_const.smul continuous_id)
+  exact hf.comp (continuous_const_smul (2 * π))
 
 /-- The descent as a continuous map on the unit torus. -/
 def toUnitTorusCM (n : ℕ) (f : (Fin n → ℝ) → ℂ) (hf : Continuous f) (hper : IsPeriodic2Pi f) :
@@ -663,8 +663,11 @@ lemma mFourierCoeff_toUnitTorusCM {f : (Fin n → ℝ) → ℂ} (hf : Continuous
     UnitAddTorus.mFourierCoeff (⇑(toUnitTorusCM n f hf hper)) m = stdFourierCoeff n f m := by
   show ∫ z, UnitAddTorus.mFourier (-m) z • toUnitTorusFun n f z
       ∂(Measure.pi fun _ : Fin n => AddCircle.haarAddCircle) = _
-  rw [integral_toUnitTorus _
-    ((UnitAddTorus.mFourier (-m)).continuous.smul (continuous_toUnitTorusFun hf hper))]
+  rw [integral_toUnitTorus (fun z => UnitAddTorus.mFourier (-m) z • toUnitTorusFun n f z)
+    (by
+      have hc := (UnitAddTorus.mFourier (-m)).continuous.smul
+        (continuous_toUnitTorusFun hf hper)
+      exact hc)]
   have hpt : ∀ x, UnitAddTorus.mFourier (-m) (toUnitTorus n x) • toUnitTorusFun n f (toUnitTorus n x)
       = (fun y => f y * fourierExp n (-m) y) ((2 * π) • x) := by
     intro x

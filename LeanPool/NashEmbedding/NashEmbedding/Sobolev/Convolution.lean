@@ -199,7 +199,10 @@ theorem mollifier_convergence (φ : (Fin n → ℝ) → ℂ)
           intro m;
           -- By definition of $fourierCoeffDistrib$, we know that
           have h_fourierCoeffDistrib : ∀ x > 0, fourierCoeffDistrib (convDistrib n (rescale n φ x) u - ftRn n φ 0 • u) m = (ftRn n φ (x • (fun j => (m j : ℝ))) - ftRn n φ 0) * fourierCoeffDistrib u m := by
-            grind +suggestions;
+            intro x hx
+            rw [fourierCoeffDistrib_sub, fourierCoeffDistrib_convDistrib,
+              fourierCoeffDistrib_smul_complex, ftRn_rescale _ hφ hx]
+            ring
           rw [ Filter.tendsto_congr' ( Filter.eventuallyEq_of_mem self_mem_nhdsWithin fun x hx => by rw [ h_fourierCoeffDistrib x hx ] ) ];
           refine' tendsto_nhdsWithin_of_tendsto_nhds _;
           refine' Continuous.tendsto' _ _ _ _ <;> norm_num;

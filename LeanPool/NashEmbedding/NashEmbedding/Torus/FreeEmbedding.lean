@@ -469,16 +469,22 @@ theorem freeEmb_isFree (n : ℕ) : IsFree (freeEmb n) := by
   intro g hg
   refine hli g ?_
   funext m
-  have h := congrFun hg (Fintype.equivFin (FreeIdx n) m)
-  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply] at h ⊢
+  let e : FreeIdx n ≃ Fin (freeDim n) := Fintype.equivFin (FreeIdx n)
+  have h := congrFun hg (e m)
   change _ = (0 : ℝ) at h
+  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply] at h ⊢
   rw [← h]
   refine Finset.sum_congr rfl fun k _ => ?_
   rcases k with a | pq
   · show _ = g (Sum.inl a) * pderiv a (freeEmb n) x _
-    rw [pderiv_freeEmb_apply, Equiv.symm_apply_apply]
+    rw [pderiv_freeEmb_apply]
+    exact congrArg (fun j => g (Sum.inl a) * pderiv a (fun y => freeEmb₀ n y j) x)
+      (e.symm_apply_apply m).symm
   · show _ = g (Sum.inr pq) * pderiv pq.1.1 (pderiv pq.1.2 (freeEmb n)) x _
-    rw [pderiv_pderiv_freeEmb_apply, Equiv.symm_apply_apply]
+    rw [pderiv_pderiv_freeEmb_apply]
+    exact congrArg (fun j => g (Sum.inr pq) *
+      pderiv pq.1.1 (pderiv pq.1.2 (fun y => freeEmb₀ n y j)) x)
+      (e.symm_apply_apply m).symm
 
 end NashEmbedding
 

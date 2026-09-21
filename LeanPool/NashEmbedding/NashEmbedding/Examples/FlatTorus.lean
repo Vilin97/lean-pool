@@ -167,9 +167,13 @@ theorem mfderiv_circleCoe_exp_apply (t s : ℝ) :
     (contMDiff_circleCoe.mdifferentiable (by simp) (Circle.exp t)).hasMFDerivAt
   have hcomp := hcoe.comp t hexp
   have hfun : (circleCoe ∘ Circle.exp) = fun t : ℝ => Complex.exp (t * Complex.I) := by
-    funext r; simp [circleCoe, Circle.coe_exp]
+    funext r
+    exact Circle.coe_exp r
   rw [hfun] at hcomp
-  have hfd := hasMFDerivAt_iff_hasFDerivAt.1 hcomp
+  let D : ℝ →L[ℝ] ℂ := (mfderiv (𝓡 1) 𝓘(ℝ, ℂ) circleCoe (Circle.exp t)).comp
+    (mfderiv 𝓘(ℝ, ℝ) (𝓡 1) Circle.exp t)
+  have hfd : HasFDerivAt (fun t : ℝ => Complex.exp (t * Complex.I)) D t :=
+    hasMFDerivAt_iff_hasFDerivAt.1 hcomp
   have h0 : HasDerivAt (fun t : ℝ => (t : ℂ)) 1 t := by
     have h_raw : HasDerivAt (⇑Complex.ofRealCLM) 1 t := Complex.ofRealCLM.hasDerivAt
     exact h_raw
@@ -211,7 +215,7 @@ theorem torus2Wrap_pullback (θ : Fin 2 → ℝ) (v v' : Fin 2 → ℝ) :
           EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1)))
       ((mfderiv 𝓘(ℝ, Fin 2 → ℝ) ((𝓡 1).prod (𝓡 1)) torus2Wrap θ v' :
           EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1))) = dotProduct v v' := by
-    rw [prodMetric_inner, mfderiv_torus2Wrap_apply, mfderiv_torus2Wrap_apply]
+    erw [prodMetric_inner, mfderiv_torus2Wrap_apply, mfderiv_torus2Wrap_apply]
     show (inner ℝ (mfderiv (𝓡 1) 𝓘(ℝ, ℂ) circleCoe (Circle.exp (θ 0))
           (mfderiv 𝓘(ℝ, ℝ) (𝓡 1) Circle.exp (θ 0) (v 0)))
         (mfderiv (𝓡 1) 𝓘(ℝ, ℂ) circleCoe (Circle.exp (θ 0))
@@ -220,7 +224,7 @@ theorem torus2Wrap_pullback (θ : Fin 2 → ℝ) (v v' : Fin 2 → ℝ) :
           (mfderiv 𝓘(ℝ, ℝ) (𝓡 1) Circle.exp (θ 1) (v 1)))
         (mfderiv (𝓡 1) 𝓘(ℝ, ℂ) circleCoe (Circle.exp (θ 1))
           (mfderiv 𝓘(ℝ, ℝ) (𝓡 1) Circle.exp (θ 1) (v' 1))) : ℝ) = _
-    rw [mfderiv_circleCoe_exp_apply, mfderiv_circleCoe_exp_apply, mfderiv_circleCoe_exp_apply,
+    erw [mfderiv_circleCoe_exp_apply, mfderiv_circleCoe_exp_apply, mfderiv_circleCoe_exp_apply,
       mfderiv_circleCoe_exp_apply, inner_deriv_circle, inner_deriv_circle]
     simp [dotProduct, Fin.sum_univ_two]
   exact main
@@ -283,9 +287,13 @@ theorem partialDeriv_flatTorus {q : ℕ}
     hasMFDerivAt_iff_hasFDerivAt.2
       (EuclideanSpace.equiv (Fin q) ℝ).toContinuousLinearMap.hasFDerivAt
   have hcomp := (heq.comp (torus2Wrap θ) hw').comp θ hwrap
-  have hfderiv :
-      fderiv ℝ (fun θ : Fin 2 → ℝ => (EuclideanSpace.equiv (Fin q) ℝ) (w (torus2Wrap θ))) θ = _ :=
-    (hasMFDerivAt_iff_hasFDerivAt.1 hcomp).fderiv
+  have hfd : HasFDerivAt
+      (fun θ : Fin 2 → ℝ => (EuclideanSpace.equiv (Fin q) ℝ) (w (torus2Wrap θ)))
+      (((EuclideanSpace.equiv (Fin q) ℝ).toContinuousLinearMap.comp
+        (mfderiv ((𝓡 1).prod (𝓡 1)) 𝓘(ℝ, EuclideanSpace ℝ (Fin q)) w (torus2Wrap θ))).comp
+        (mfderiv 𝓘(ℝ, Fin 2 → ℝ) ((𝓡 1).prod (𝓡 1)) torus2Wrap θ) :
+          (Fin 2 → ℝ) →L[ℝ] (Fin q → ℝ)) θ := hasMFDerivAt_iff_hasFDerivAt.1 hcomp
+  have hfderiv := hfd.fderiv
   rw [partialDeriv, hfderiv]
   rfl
 
@@ -306,7 +314,7 @@ theorem flatTorus_realizes {q : ℕ}
     Realizes (fun θ : Fin 2 → ℝ => (EuclideanSpace.equiv (Fin q) ℝ) (w (torus2Wrap θ)))
       (flatMetric 2) := by
   intro θ i j
-  rw [partialDeriv_flatTorus w hw i θ, partialDeriv_flatTorus w hw j θ, dotProduct_equiv]
+  erw [partialDeriv_flatTorus w hw i θ, partialDeriv_flatTorus w hw j θ, dotProduct_equiv]
   have hp : (flatTorus2Metric.inner (torus2Wrap θ) :
         TangentSpace ((𝓡 1).prod (𝓡 1)) (torus2Wrap θ) →L[ℝ]
         TangentSpace ((𝓡 1).prod (𝓡 1)) (torus2Wrap θ) →L[ℝ] ℝ)
@@ -318,7 +326,7 @@ theorem flatTorus_realizes {q : ℕ}
         (mfderiv ((𝓡 1).prod (𝓡 1)) 𝓘(ℝ, EuclideanSpace ℝ (Fin q)) w (torus2Wrap θ)
           (mfderiv 𝓘(ℝ, Fin 2 → ℝ) ((𝓡 1).prod (𝓡 1)) torus2Wrap θ (Pi.single j 1))) :=
     hpull (torus2Wrap θ) _ _
-  rw [← hp, torus2Wrap_pullback]
+  erw [← hp, torus2Wrap_pullback]
   simp [flatMetric, dotProduct, Pi.single_apply, Matrix.one_apply, eq_comm]
 
 /-- **L6.** Injectivity mod `2πℤ²` for the composite: from `w` injective on `Circle × Circle`

@@ -546,7 +546,12 @@ theorem vcoeff_Wfun (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (h
   show stdFourierCoeff n (fun x => ((Wfun n u₀ h v x α : ℝ) : ℂ)) = _
   rw [hfun, stdFourierCoeff_add ctN ctS2, stdFourierCoeff_neg,
     stdFourierCoeff_finset_sum' _ (fun i _ => ctA i),
-    stdFourierCoeff_finset_sum' _ (fun pq _ => (ctU pq).sub (ctH pq))]
+    stdFourierCoeff_finset_sum' (f := fun pq x =>
+      ((1 / 2 : ℂ) * ((Util n v pq.1 pq.2 x : ℝ) : ℂ)) *
+          ((dualB u₀ pq.1 pq.2 x α : ℝ) : ℂ) -
+        ((1 / 2 : ℂ) * ((h x pq.1 pq.2 : ℝ) : ℂ)) *
+          ((dualB u₀ pq.1 pq.2 x α : ℝ) : ℂ)) (pairs n)
+      (fun pq _ => by exact (ctU pq).sub (ctH pq))]
   funext m
   simp only [gC, gB, smulSeq, Pi.add_apply, Pi.neg_apply, Finset.sum_apply]
   rw [Finset.sum_congr rfl (fun i (_ : i ∈ Finset.univ) => congrFun (cA i) m)]

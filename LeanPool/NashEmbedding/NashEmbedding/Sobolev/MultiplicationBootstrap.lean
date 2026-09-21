@@ -343,39 +343,36 @@ lemma mt3_young_S3
     ∑' m, (∑' i, weight n (((k : ℝ) - 1) / 2) i * ‖a i‖ *
         (weight n (1 / 2 : ℝ) (m - i) * ‖b (m - i)‖)) ^ 2 ≤
       mt3LSq n r * sobolevNormSq n r b * sobolevNormSq n ((k : ℝ) - 1) a := by
-  constructor;
-  · convert young_conv_sq_bound _ _ _ _ |>.1 using 1;
-    rotate_left;
-    use fun m => weight n ( 1 / 2 ) m * ‖b m‖;
-    use fun m => weight n ( ( k - 1 ) / 2 ) m * ‖a m‖;
-    · exact fun m => mul_nonneg ( Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ) _ ) ( norm_nonneg _ );
-    · exact fun m => mul_nonneg ( Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ) _ ) ( norm_nonneg _ );
-    · convert summable_weighted_norm hn ( show 1 + ( n : ℝ ) / 2 < r by linarith ) hb using 1;
-    · convert ha using 1;
-      unfold MemSobolev; simp +decide [ mul_pow, weight ] ;
-      exact iff_of_eq ( by congr; ext m; rw [ ← Real.rpow_natCast, ← Real.rpow_mul ( by exact add_nonneg zero_le_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ] ; ring );
-    · ext m; rw [ ← Equiv.tsum_eq ( Equiv.subLeft m ) ] ; simp +decide [ mul_assoc, mul_comm, mul_left_comm ] ;
-  · apply le_trans _ (mul_le_mul_of_nonneg_right (tsum_weighted_norm_sq_le hn hr hb) (by
-    exact tsum_nonneg fun _ => mul_nonneg ( Real.rpow_nonneg ( by exact add_nonneg zero_le_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) _ ) <| sq_nonneg _));
-    convert (young_conv_sq_bound (f := fun j => weight n (1 / 2) j * ‖b j‖) (g := fun i => weight n ((↑k - 1) / 2) i * ‖a i‖) _ _ _ _).2 using 1
-    rotate_left
-    congr! 1
-    · funext m
-      congr 1
-      rw [← Equiv.tsum_eq (Equiv.subLeft m)]
-      refine tsum_congr fun i => ?_
-      simp only [Equiv.subLeft_apply]
-      have h_arg : m - (m - i) = i := by ring
-      rw [h_arg]; ring
-    · congr 1
-      exact sobolevNormSq_half_weight (↑k - 1) a
-    · exact fun m => mul_nonneg ( Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ) _ ) ( norm_nonneg _ );
-    · exact fun m => mul_nonneg ( Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ) _ ) ( norm_nonneg _ );
-    · convert summable_weighted_norm hn ( show 1 + ( n : ℝ ) / 2 < r by linarith ) hb using 1;
-    · convert ha using 1;
-      unfold MemSobolev; simp +decide [ mul_pow, weight ] ;
-      exact iff_of_eq ( by congr; ext m; rw [ ← Real.rpow_natCast, ← Real.rpow_mul ( by exact add_nonneg zero_le_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ] ; ring );
-    · try congr! 2
+  let f := fun m => weight n (1 / 2 : ℝ) m * ‖b m‖
+  let g := fun m => weight n (((k : ℝ) - 1) / 2) m * ‖a m‖
+  have hf : Summable f := summable_weighted_norm hn hr hb
+  have hg : Summable (fun m => g m ^ 2) := by
+    apply ha.congr
+    intro m
+    dsimp [g]
+    rw [weight_half_mul ((k : ℝ) - 1) m]
+    ring
+  have hbound := young_conv_sq_bound
+    (f := f) (g := g)
+    (fun m => mul_nonneg (weight_nonneg _ _) (norm_nonneg _))
+    (fun m => mul_nonneg (weight_nonneg _ _) (norm_nonneg _)) hf hg
+  have hcomm : (fun m => (∑' i, g i * f (m - i)) ^ 2) =
+      (fun m => (∑' i, f i * g (m - i)) ^ 2) := by
+    funext m
+    congr 1
+    rw [← Equiv.tsum_eq (Equiv.subLeft m)]
+    apply tsum_congr
+    intro i
+    simp only [Equiv.subLeft_apply, sub_sub_cancel, mul_comm]
+  change Summable (fun m => (∑' i, g i * f (m - i)) ^ 2) ∧ _
+  refine ⟨hcomm.symm ▸ hbound.1, ?_⟩
+  change (∑' m, (∑' i, g i * f (m - i)) ^ 2) ≤ _
+  rw [hcomm]
+  apply hbound.2.trans
+  change (∑' i, f i) ^ 2 * (∑' m, g m ^ 2) ≤ _
+  rw [← sobolevNormSq_half_weight ((k : ℝ) - 1) a]
+  exact mul_le_mul_of_nonneg_right (tsum_weighted_norm_sq_le hn hr hb)
+    (tsum_nonneg fun m => mul_nonneg (weight_nonneg _ _) (sq_nonneg _))
 
 /-
 Young bound for S4: ∑ (α^1 ⊛ β^{k-1})² ≤ (∑ w^{1/2}|a|)² · ‖b‖²_{(k-1)}

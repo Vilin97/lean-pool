@@ -127,8 +127,8 @@ theorem pinv_comp_equiv {F : Type*} [NormedAddCommGroup F] [InnerProductSpace �
   have h3 : CompleteSpace F := FiniteDimensional.complete ℝ F
   have hSadj : ((S : F →L[ℝ] E).adjoint).IsInvertible := by
     refine ContinuousLinearMap.IsInvertible.of_inverse (g := ((S.symm : E →L[ℝ] F).adjoint)) ?_ ?_
-    · rw [← ContinuousLinearMap.adjoint_comp]; simp
-    · rw [← ContinuousLinearMap.adjoint_comp]; simp
+    · rw [← ContinuousLinearMap.adjoint_comp]; simp [ContinuousLinearMap.adjoint_id]
+    · rw [← ContinuousLinearMap.adjoint_comp]; simp [ContinuousLinearMap.adjoint_id]
   have hS : ((S : F →L[ℝ] E)).IsInvertible := ⟨S, rfl⟩
   have key : ((L ∘L (S : F →L[ℝ] E)).adjoint ∘L (L ∘L (S : F →L[ℝ] E))) =
       (S : F →L[ℝ] E).adjoint ∘L ((L.adjoint ∘L L) ∘L (S : F →L[ℝ] E)) := by
@@ -199,7 +199,8 @@ omit [FiniteDimensional ℝ E] in
 theorem tcoord_isInvertible {x₀ x : M} (hx : x ∈ (chartAt H x₀).source) :
     (tcoord I x₀ x).IsInvertible := by
   have hb : x ∈ (trivializationAt E (TangentSpace I) x₀).baseSet := by simpa using hx
-  exact ⟨((trivializationAt E (TangentSpace I) x₀).continuousLinearEquivAt ℝ x hb).symm, rfl⟩
+  exact ⟨((trivializationAt E (TangentSpace I) x₀).continuousLinearEquivAt ℝ x hb).symm,
+    Trivialization.symm_continuousLinearEquivAt_eq' _ hb⟩
 
 omit [FiniteDimensional ℝ E] in
 /-- **L7.** The metric, read in the trivialization at `x₀`, is smooth near `x₀`
@@ -227,8 +228,10 @@ theorem metric_trivialization_apply
   -- `FiberBundle.mem_baseSet_trivializationAt`-style from `hx`.
   have hb : x ∈ (trivializationAt E (TangentSpace I) x₀).baseSet := by simpa using hx
   rw [hom_trivializationAt_apply, inCoordinates_apply_eq₂ hb hb (Set.mem_univ _)]
-  simp
-  rfl
+  simp [metricAt, tcoord]
+  exact congrArg₂ (fun u v : TangentSpace I x => g.inner x u v)
+    (Trivialization.symmL_apply (R := ℝ) _ hb a).symm
+    (Trivialization.symmL_apply (R := ℝ) _ hb b).symm
 
 end Coordinates
 
