@@ -178,7 +178,7 @@ theorem subtract_natBits_internal (lhs rhs : ℕ) :
   change (if raw.borrow then [] else trimHighZeros raw.bits) = (lhs - rhs).bits
   cases hborrow : raw.borrow with
   | false =>
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       rw [trimHighZeros_eq_natBits_internal]
       have hvalue : Nat.fromBitsLE raw.bits = lhs - rhs := by
         simp [hborrow] at hinvariant'

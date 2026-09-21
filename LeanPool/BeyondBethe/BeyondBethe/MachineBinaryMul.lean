@@ -292,7 +292,7 @@ theorem binaryMulFold_natBits (bits : List Bool) (shift acc : ℕ) :
           rw [ih (shift + shift) acc]
           simp only [Nat.fromBitsLE_cons]
           congr 1
-          simp only [Bool.false_eq_true, if_false]
+          simp only [Bool.false_eq_true, ite_false]
           ring
       | true =>
           simp only [binaryMulFold, machineBinaryAddBits_pair_natBits]

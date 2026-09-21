@@ -92,7 +92,7 @@ private theorem branched_bound {bit : Bool} {rest : List Bool}
   cases bit with
   | false => simpa [branched] using loaded_bound hinv.store_bound
   | true =>
-      rw [branched, if_pos rfl]
+      rw [branched, ite_eq_left rfl]
       apply (loaded_bound hinv.store_bound).execBasic
         (.add countReg countReg oneReg)
       · simp [countReg]

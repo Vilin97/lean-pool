@@ -730,7 +730,7 @@ theorem BetheEpigraphTarget_inner_cross_outer_zero
           calc
             abs (upper - r) ≤ abs upper + abs r := abs_sub upper r
             _ = abs upper + r := by rw [abs_of_nonneg hr]
-        simp only [epigraphPoint, Fin.snoc_last, if_neg hk, add_zero]
+        simp only [epigraphPoint, Fin.snoc_last, ite_eq_right hk, add_zero]
         exact htriangle.trans (by dsimp only [C]; linarith)
     · have hbase := BetheEpigraphTarget_epigraphBase_abs_le_one hδ
         (hplus k) l
@@ -758,7 +758,7 @@ theorem BetheEpigraphTarget_inner_cross_outer_zero
           calc
             abs (upper - r) ≤ abs upper + abs r := abs_sub upper r
             _ = abs upper + r := by rw [abs_of_nonneg hr]
-        simp only [epigraphPoint, Fin.snoc_last, if_neg hk, sub_zero]
+        simp only [epigraphPoint, Fin.snoc_last, ite_eq_right hk, sub_zero]
         exact htriangle.trans (by dsimp only [C]; linarith)
     · have hbase := BetheEpigraphTarget_epigraphBase_abs_le_one hδ
         (hminus k) l

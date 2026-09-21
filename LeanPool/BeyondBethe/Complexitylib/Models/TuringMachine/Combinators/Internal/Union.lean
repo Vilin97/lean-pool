@@ -64,7 +64,7 @@ private theorem idleTape_write_blank : unionIdleTape.write Γ.blank = unionIdleT
 private theorem idleTape_step_idle :
     (unionIdleTape.write Γw.blank.toΓ).move (idleDir unionIdleTape.read) = unionIdleTape := by
   show (unionIdleTape.write Γ.blank).move (idleDir unionIdleTape.read) = unionIdleTape
-  rw [idleTape_read, idleDir, if_neg (by decide)]
+  rw [idleTape_read, idleDir, ite_eq_right (by decide)]
   simp [idleTape_write_blank, Tape.move]
 
 -- ════════════════════════════════════════════════════════════════════════
@@ -99,7 +99,7 @@ private theorem unionTM_delta_inl (tm₁ : TM n₁) (tm₂ : TM n₂) {q : tm₁
      fun i => if h : i.val < n₁ then r.2.2.2.2.1 ⟨i.val, h⟩
               else if i.val = n₁ then r.2.2.2.2.2 else idleDir (wHeads i),
      idleDir oHead) := by
-  simp only [unionTM, if_neg hne]
+  simp only [unionTM, ite_eq_right hne]
 
 private theorem unionTM_qhalt (tm₁ : TM n₁) (tm₂ : TM n₂) :
     (unionTM tm₁ tm₂).qhalt = Sum.inr (Sum.inr tm₂.qhalt) := rfl
@@ -115,7 +115,7 @@ private theorem unionTM_delta_inr_inr (tm₁ : TM n₁) (tm₂ : TM n₂) {q : t
      fun i => if h : i.val ≤ n₁ then idleDir (wHeads i)
               else r.2.2.2.2.1 ⟨i.val - (n₁ + 1), by omega⟩,
      r.2.2.2.2.2) := by
-  simp only [unionTM, if_neg hne]
+  simp only [unionTM, ite_eq_right hne]
 
 private theorem phase1Cfg_state (tm₁ : TM n₁) (tm₂ : TM n₂) (c : Cfg n₁ tm₁.Q) :
     (unionPhase1Cfg tm₁ tm₂ c).state = Sum.inl c.state := rfl
@@ -138,7 +138,7 @@ private theorem phase1_step_corr (tm₁ : TM n₁) (tm₂ : TM n₂)
   -- Establish that the δ calls produce the same result
   have hfake_read : (if h : (n₁ : ℕ) < n₁ then c.work ⟨n₁, h⟩
       else if (n₁ : ℕ) = n₁ then c.output else unionIdleTape).read = c.output.read := by
-    rw [dif_neg (Nat.lt_irrefl n₁), if_pos rfl]
+    rw [dite_eq_right (Nat.lt_irrefl n₁), ite_eq_left rfl]
   have hwork_reads : (phase1WorkReads fun i : Fin (n₁ + 1 + n₂) =>
       (if h : i.val < n₁ then c.work ⟨i.val, h⟩
        else if i.val = n₁ then c.output else unionIdleTape).read) =
@@ -187,7 +187,7 @@ private theorem phase1_init_step (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List B
     (unionTM tm₁ tm₂).step ((unionTM tm₁ tm₂).initCfg x) = some (unionPhase1Cfg tm₁ tm₂ c_mid) := by
   have hne := state_ne_qhalt_of_step hstep
   simp only [step] at hstep ⊢
-  rw [if_neg hne] at hstep
+  rw [ite_eq_right hne] at hstep
   simp only [Option.some.injEq] at hstep
   subst hstep
   -- Unfold unionTM qstart/qhalt
@@ -197,7 +197,7 @@ private theorem phase1_init_step (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List B
   apply congrArg some
   -- Rewrite the unionTM δ call
   simp only [unionTM_delta_inl tm₁ tm₂ hne]
-  -- The phase1WorkReads of fixedValue function is a fixedValue function
+  -- The phase1WorkReads of constant function is a constant function
   have hwork_reads :
       phase1WorkReads (fun (_ : Fin (n₁ + 1 + n₂)) => (Tape.init ([] : List Γ)).read) =
       fun _ => (Tape.init ([] : List Γ)).read := by ext; rfl
@@ -241,9 +241,9 @@ theorem unionTM_phase1_simulation (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List 
 private theorem idleDir_stay_of_ge_one (t : Tape)
     (hhead : t.head ≥ 1) (hno : ∀ i, i ≥ 1 → t.cells i ≠ Γ.start) :
     idleDir t.read = Dir3.stay := by
-  rw [idleDir, if_neg]; rw [Tape.read]; exact hno _ hhead
+  rw [idleDir, ite_eq_right]; rw [Tape.read]; exact hno _ hhead
 
-/-- Input head stays fixedValue when moved by idleDir if head ≥ 1 and cells[≥1] ≠ start. -/
+/-- Input head stays constant when moved by idleDir if head ≥ 1 and cells[≥1] ≠ start. -/
 private theorem idle_move_preserves_head (t : Tape)
     (hhead : t.head ≥ 1) (hno : ∀ i, i ≥ 1 → t.cells i ≠ Γ.start) :
     (t.move (idleDir t.read)).head = t.head := by
@@ -263,7 +263,7 @@ private theorem unionTM_delta_rewindOut_nostart (tm₁ : TM n₁) (tm₂ : TM n�
       .blank, idleDir iHead,
       fun i => if i.val = n₁ then Dir3.left else idleDir (wHeads i),
       idleDir oHead ) := by
-  unfold unionTM; simp only [if_neg hread]
+  unfold unionTM; simp only [ite_eq_right hread]
 
 /-- Delta computation for rewindOut when fake output is at start. -/
 private theorem unionTM_delta_rewindOut_start (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -274,7 +274,7 @@ private theorem unionTM_delta_rewindOut_start (tm₁ : TM n₁) (tm₂ : TM n₂
       fun _ => .blank, .blank, idleDir iHead,
       fun i => if i.val = n₁ then Dir3.right else idleDir (wHeads i),
       idleDir oHead ) := by
-  unfold unionTM; simp only [if_pos hread]
+  unfold unionTM; simp only [ite_eq_left hread]
 
 /-- Delta computation for checkResult when fake output reads Γ.one. -/
 private theorem unionTM_delta_checkResult_one (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -285,7 +285,7 @@ private theorem unionTM_delta_checkResult_one (tm₁ : TM n₁) (tm₂ : TM n₂
       fun _ => .blank, .one, idleDir iHead,
       fun i => idleDir (wHeads i),
       idleDir oHead ) := by
-  unfold unionTM; simp only [if_pos hread]
+  unfold unionTM; simp only [ite_eq_left hread]
 
 /-- Delta computation for checkResult when fake output does not read Γ.one. -/
 private theorem unionTM_delta_checkResult_notone (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -293,7 +293,7 @@ private theorem unionTM_delta_checkResult_notone (tm₁ : TM n₁) (tm₂ : TM n
     (hread : wHeads fakeOutIdx ≠ Γ.one) :
     (unionTM tm₁ tm₂).δ (Sum.inr (Sum.inl UnionPhase.checkResult)) iHead wHeads oHead =
     allIdle (Sum.inr (Sum.inl UnionPhase.rewindIn)) iHead wHeads oHead := by
-  unfold unionTM; simp only [if_neg hread]
+  unfold unionTM; simp only [ite_eq_right hread]
 
 /-- Delta computation for rewindIn when input is not at start. -/
 private theorem unionTM_delta_rewindIn_nostart (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -304,7 +304,7 @@ private theorem unionTM_delta_rewindIn_nostart (tm₁ : TM n₁) (tm₂ : TM n�
       fun _ => .blank, .blank, Dir3.left,
       fun i => idleDir (wHeads i),
       idleDir oHead ) := by
-  simp only [unionTM, if_neg hread]
+  simp only [unionTM, ite_eq_right hread]
 
 /-- Delta computation for rewindIn when input is at start. -/
 private theorem unionTM_delta_rewindIn_start (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -315,7 +315,7 @@ private theorem unionTM_delta_rewindIn_start (tm₁ : TM n₁) (tm₂ : TM n₂)
       fun _ => .blank, .blank, Dir3.right,
       fun i => idleDir (wHeads i),
       idleDir oHead ) := by
-  simp only [unionTM, if_pos hread]
+  simp only [unionTM, ite_eq_left hread]
 
 /-- Delta computation for setup2. -/
 private theorem unionTM_delta_setup2 (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -369,7 +369,7 @@ private theorem step_rewindOut_nostart_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
           ((if i.val = n₁ then readBackWrite (c.work fakeOutIdx).read else .blank) : Γw).toΓ).move
           (if i.val = n₁ then Dir3.left else idleDir (c.work i).read),
         output := (c.output.write Γw.blank.toΓ).move (idleDir c.output.read) } := by
-  simp only [step]; rw [hstate]; simp only [unionTM, if_neg hread]; rfl
+  simp only [step]; rw [hstate]; simp only [unionTM, ite_eq_right hread]; rfl
 
 /-- Step the union machine from a rewindOut state when fake output reads start. -/
 private theorem step_rewindOut_start_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -382,7 +382,7 @@ private theorem step_rewindOut_start_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
         work := fun i => ((c.work i).write (Γw.blank : Γw).toΓ).move
           (if i.val = n₁ then Dir3.right else idleDir (c.work i).read),
         output := (c.output.write Γw.blank.toΓ).move (idleDir c.output.read) } := by
-  simp only [step]; rw [hstate]; simp only [unionTM, if_pos hread]; rfl
+  simp only [step]; rw [hstate]; simp only [unionTM, ite_eq_left hread]; rfl
 
 /-- Step the union machine from checkResult with Γ.one → halted. -/
 private theorem step_checkResult_one_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -394,7 +394,7 @@ private theorem step_checkResult_one_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
         input := c.input.move (idleDir c.input.read),
         work := fun i => ((c.work i).write (Γw.blank : Γw).toΓ).move (idleDir (c.work i).read),
         output := (c.output.write Γw.one.toΓ).move (idleDir c.output.read) } := by
-  simp only [step]; rw [hstate]; simp only [unionTM, if_pos hread]; rfl
+  simp only [step]; rw [hstate]; simp only [unionTM, ite_eq_left hread]; rfl
 
 /-- Step the union machine from checkResult when not Γ.one → rewindIn (allIdle). -/
 private theorem step_checkResult_notone_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -406,7 +406,7 @@ private theorem step_checkResult_notone_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
         input := c.input.move (idleDir c.input.read),
         work := fun i => ((c.work i).write (Γw.blank : Γw).toΓ).move (idleDir (c.work i).read),
         output := (c.output.write Γw.blank.toΓ).move (idleDir c.output.read) } := by
-  simp only [step]; rw [hstate]; simp only [unionTM, if_neg hread, allIdle]; rfl
+  simp only [step]; rw [hstate]; simp only [unionTM, ite_eq_right hread, allIdle]; rfl
 
 /-- Step the union machine from rewindIn with non-start input. -/
 private theorem step_rewindIn_nostart_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -418,7 +418,7 @@ private theorem step_rewindIn_nostart_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
         input := c.input.move Dir3.left,
         work := fun i => ((c.work i).write (Γw.blank : Γw).toΓ).move (idleDir (c.work i).read),
         output := (c.output.write Γw.blank.toΓ).move (idleDir c.output.read) } := by
-  simp only [step]; rw [hstate]; simp only [unionTM, if_neg hread]; rfl
+  simp only [step]; rw [hstate]; simp only [unionTM, ite_eq_right hread]; rfl
 
 /-- Step the union machine from rewindIn when input reads start. -/
 private theorem step_rewindIn_start_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -430,7 +430,7 @@ private theorem step_rewindIn_start_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
         input := c.input.move Dir3.right,
         work := fun i => ((c.work i).write (Γw.blank : Γw).toΓ).move (idleDir (c.work i).read),
         output := (c.output.write Γw.blank.toΓ).move (idleDir c.output.read) } := by
-  simp only [step]; rw [hstate]; simp only [unionTM, if_pos hread]; rfl
+  simp only [step]; rw [hstate]; simp only [unionTM, ite_eq_left hread]; rfl
 
 /-- Step the union machine from setup2. -/
 private theorem step_setup2_cfg (tm₁ : TM n₁) (tm₂ : TM n₂)
@@ -650,7 +650,7 @@ theorem unionTM_transition_accept (tm₁ : TM n₁) (tm₂ : TM n₂)
   -- c_cr fake output cells preserved (write blank at head 0 is no-op)
   have hcr_fo_cells : (c_cr.work fakeOutIdx).cells = (c_at0.work fakeOutIdx).cells := by
     simp only [hc_cr_def, show (fakeOutIdx : Fin (n₁ + 1 + n₂)).val = n₁ from rfl, ite_true]
-    rw [Tape.move_cells]; simp only [Tape.write, if_pos hhead_at0]
+    rw [Tape.move_cells]; simp only [Tape.write, ite_eq_left hhead_at0]
   -- c_cr fake output reads cell 1 = Γ.one
   have hcr_read : (c_cr.work fakeOutIdx).read = Γ.one := by
     rw [Tape.read, hcr_fo_head, hcr_fo_cells, hcells_at0, hcells_rw]; exact haccept
@@ -782,10 +782,10 @@ private theorem phase2_work_step_idle (tm₁ : TM n₁) (tm₂ : TM n₂)
       congr 1
       · congr 1
         show (if h : (i : ℕ) < n₁ then _ else if (i : ℕ) = n₁ then _ else Γw.blank) = Γw.blank
-        rw [dif_neg (show ¬((i : ℕ) < n₁) from by omega), if_neg hine]
+        rw [dite_eq_right (show ¬((i : ℕ) < n₁) from by omega), ite_eq_right hine]
       · show (if h : (i : ℕ) < n₁ then _
           else if (i : ℕ) = n₁ then _ else idleDir (c.work i).read) = _
-        rw [dif_neg (show ¬((i : ℕ) < n₁) from by omega), if_neg hine]
+        rw [dite_eq_right (show ¬((i : ℕ) < n₁) from by omega), ite_eq_right hine]
   · rw [hq]; dsimp only [unionTM]; split
     · congr 1; simp only [hine, ↓reduceIte]
     · congr 1
@@ -893,7 +893,7 @@ theorem unionTM_transition_reject (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List 
     simp only [Tape.write, hhead_at0, ↓reduceIte, Tape.move]
   have hcr_fo_cells : (c_cr.work fakeOutIdx).cells = (c_at0.work fakeOutIdx).cells := by
     simp only [hc_cr_def, show (fakeOutIdx : Fin (n₁ + 1 + n₂)).val = n₁ from rfl, ite_true]
-    rw [Tape.move_cells]; simp only [Tape.write, if_pos hhead_at0]
+    rw [Tape.move_cells]; simp only [Tape.write, ite_eq_left hhead_at0]
   have hcr_read_ne_one : (c_cr.work fakeOutIdx).read ≠ Γ.one := by
     rw [Tape.read, hcr_fo_head, hcr_fo_cells, hcells_at0, hcells_rw, hreject]; decide
   -- Step 4: checkResult ≠ Γ.one → rewindIn (1 step)
@@ -1011,7 +1011,7 @@ theorem unionTM_transition_reject (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List 
     -- c_mid.input.head = 0 (moveLeftDir of non-start = left, from head 1 → 0)
     have h1 : c_mid.input.head = 0 := by
       show (c_s2.input.move (moveLeftDir c_s2.input.read)).head = 0
-      rw [moveLeftDir, if_neg hs2_read_ne]; simp [Tape.move, hs2_head]
+      rw [moveLeftDir, ite_eq_right hs2_read_ne]; simp [Tape.move, hs2_head]
     -- Combine
     have hcfg : ∀ (a b : Tape), a.head = b.head → a.cells = b.cells → a = b := by
       intros a b hh hc; cases a; cases b; simp only [Tape.mk.injEq] at *; exact ⟨hh, hc⟩
@@ -1056,7 +1056,7 @@ theorem unionTM_transition_reject (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List 
     intro j
     show ((c_at0.work ⟨n₁ + 1 + j.val, by omega⟩).write _).move
       (if (n₁ + 1 + j.val) = n₁ then _ else _) = _
-    rw [if_neg (show n₁ + 1 + j.val ≠ n₁ from by omega), hwork_at0_idle j]
+    rw [ite_eq_right (show n₁ + 1 + j.val ≠ n₁ from by omega), hwork_at0_idle j]
     exact idleTape_step_idle
   -- Step 4 (checkResult→rewindIn): c_ri.work at > n₁ = unionIdleTape
   have hwork_ri_idle : ∀ (j : Fin n₂),
@@ -1085,7 +1085,7 @@ theorem unionTM_transition_reject (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List 
     intro j
     show ((c_s2.work ⟨n₁ + 1 + j.val, by omega⟩).write _).move
       (if (n₁ + 1 + j.val) ≤ n₁ then _ else _) = _
-    rw [if_neg (show ¬(n₁ + 1 + j.val ≤ n₁) from by omega), hwork_s2_idle j]
+    rw [ite_eq_right (show ¬(n₁ + 1 + j.val ≤ n₁) from by omega), hwork_s2_idle j]
     exact idleTape_moveLeft
   -- Compose all reachesIn steps
   have hreach_total : (unionTM tm₁ tm₂).reachesIn
@@ -1135,7 +1135,7 @@ theorem unionTM_transition_reject (tm₁ : TM n₁) (tm₂ : TM n₂) (x : List 
       by_cases hh : c₁.input.head = 0
       · have hread0 : c₁.input.read = Γ.start := by
           rw [Tape.read, hh, hinput_cells]; simp [Tape.init]
-        rw [hread0, idleDir, if_pos rfl]; simp [Tape.move, hh]
+        rw [hread0, idleDir, ite_eq_left rfl]; simp [Tape.move, hh]
       · have hge : c₁.input.head ≥ 1 := by omega
         have hc1_ino : ∀ i, i ≥ 1 → c₁.input.cells i ≠ Γ.start := by
           intro i hi; rw [← hcrw_cells]; exact hcrw_ino i hi
@@ -1193,7 +1193,7 @@ private theorem phase2_step_corr (tm₁ : TM n₁) (tm₂ : TM n₂)
   have hne_u : c_u.state ≠ (unionTM tm₁ tm₂).qhalt := by
     rw [hcompat.state_eq, unionTM_qhalt]; exact fun h => hne (Sum.inr.inj (Sum.inr.inj h))
   -- Unfold the union step; `split` reduces the halting ite (the stored
-  -- decidability instance blocks `simp`/`rw [if_neg]` here), then pin the
+  -- decidability instance blocks `simp`/`rw [ite_eq_right]` here), then pin the
   -- explicit step-result config as the existential witness via `rfl`.
   simp only [step]
   split
@@ -1208,11 +1208,11 @@ private theorem phase2_step_corr (tm₁ : TM n₁) (tm₂ : TM n₂)
   refine ⟨?_, ?_, fun ⟨j, hj⟩ => ?_, ?_⟩ <;> dsimp only [] <;> rw [hcompat.state_eq] <;>
     simp only [unionTM_delta_inr_inr tm₁ tm₂ hne, hcompat.input_eq, hcompat.output_eq, hwork_reads]
   have hgt : ¬((n₁ + 1 + j) ≤ n₁) := by omega
-  rw [dif_neg hgt]
+  rw [dite_eq_right hgt]
   have hfin : ∀ (p : n₁ + 1 + j - (n₁ + 1) < n₂),
       (⟨n₁ + 1 + j - (n₁ + 1), p⟩ : Fin n₂) = ⟨j, hj⟩ := by
     intro p; apply Fin.ext; show n₁ + 1 + j - (n₁ + 1) = j; omega
-  simp only [hfin, hcompat.work_eq ⟨j, hj⟩, dif_neg hgt]
+  simp only [hfin, hcompat.work_eq ⟨j, hj⟩, dite_eq_right hgt]
 
 -- ════════════════════════════════════════════════════════════════════════
 -- Phase 2 simulation

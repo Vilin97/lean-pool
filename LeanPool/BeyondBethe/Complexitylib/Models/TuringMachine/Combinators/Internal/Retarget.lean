@@ -164,7 +164,7 @@ theorem retargetInput_step_commute (M : TM k) {c c' : Cfg k M.Q}
     show (if h : i.val < k then c.work ⟨i.val, h⟩ else c.input).read = (c.work i).read
     rw [dif_pos i.isLt]
   -- Unfold step on the LHS. `split` reduces the halting ite (the stored
-  -- decidability instance blocks `simp`/`if_neg` post-v4.30).
+  -- decidability instance blocks `simp`/`ite_eq_right` post-v4.30).
   simp only [step, show (retargetWrap M realInput c).state = c.state from rfl,
              show (retargetInput M).qhalt = M.qhalt from rfl,
              retargetWrap_input, retargetWrap_output]
@@ -189,7 +189,7 @@ theorem retargetInput_step_commute (M : TM k) {c c' : Cfg k M.Q}
     have hik_eq : i.val = k := by have := i.isLt; omega
     have hwork_k : (retargetWrap M realInput c).work i = c.input := by
       show (if h : i.val < k then c.work ⟨i.val, h⟩ else c.input) = c.input
-      rw [dif_neg hik]
+      rw [dite_eq_right hik]
     have hcond : c.input.head = 0 ∨ c.input.read ≠ Γ.start := by
       by_cases hh : c.input.head = 0
       · left; exact hh
@@ -199,7 +199,7 @@ theorem retargetInput_step_commute (M : TM k) {c c' : Cfg k M.Q}
     -- Rewrite LHS via hwork_k, then use tape_writeBack_eq_move.
     rw [hwork_k]
     show _ = (if h : i.val < k then _ else _)
-    rw [dif_neg hik, dif_neg hik, dif_neg hik]
+    rw [dite_eq_right hik, dite_eq_right hik, dite_eq_right hik]
     exact tape_writeBack_eq_move c.input _ hcond
 
 -- ════════════════════════════════════════════════════════════════════════

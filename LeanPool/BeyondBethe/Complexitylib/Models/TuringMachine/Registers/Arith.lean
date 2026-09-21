@@ -235,7 +235,7 @@ theorem mulAddIntoTM_hoareTime (src₁ src₂ dst : Fin n)
     exact h)
 
 -- ════════════════════════════════════════════════════════════════════════
--- Iterated machines (fixedValue-building)
+-- Iterated machines (constant-building)
 -- ════════════════════════════════════════════════════════════════════════
 
 /-- Run `m` in sequence `c` times. -/
@@ -243,7 +243,7 @@ def iterTM (m : TM n) : ℕ → TM n
   | 0 => skipTM
   | c + 1 => seqTM m (iterTM m c)
 
-/-- **Iterated increment**: add the fixedValue `c` to register `q`. -/
+/-- **Iterated increment**: add the constant `c` to register `q`. -/
 theorem iterTM_incRegTM_hoareTime (q : Fin n) (c : ℕ) :
     ∀ (d : ℕ) (inp₀ : Tape) (work₀ : Fin n → Tape) (ys : List Bool),
     Parked inp₀ → (∀ i, Parked (work₀ i)) → work₀ q = regTape d →

@@ -381,12 +381,12 @@ theorem rationalScales_certificate_of_optimizer
       hA hX hmax
     have hmatch := positiveMatrix_hasPerfectMatching hA
     have hlogBethe : Real.log (bethePermanent A) = betheLogValue A := by
-      rw [bethePermanent, if_pos hmatch, Real.log_exp]
+      rw [bethePermanent, ite_eq_left hmatch, Real.log_exp]
     rw [hlogBethe]
     linarith
   have hmatch := positiveMatrix_hasPerfectMatching hA
   have hlogBethe : Real.log (bethePermanent A) = betheLogValue A := by
-    rw [bethePermanent, if_pos hmatch, Real.log_exp]
+    rw [bethePermanent, ite_eq_left hmatch, Real.log_exp]
   have hupper : Real.log (Matrix.permanent A) ≤
       Real.log (bethePermanent A) + n * (Real.log 2 / 2) := by
     rw [hlogBethe]
@@ -422,7 +422,7 @@ theorem rationalScales_certificate_of_optimizer
   · exact hcertificate
   · simpa only [η, δ, ξ, hεcast] using hgap
 
-/-- The positive-matrix certificate with a rational improvement fixedValue and
+/-- The positive-matrix certificate with a rational improvement constant and
 an explicitly rational regularization scale. -/
 theorem rationalScales_exactPositiveCertificate
     (stableCoefficient : AnariOveisGharanStableCoefficient.{0})

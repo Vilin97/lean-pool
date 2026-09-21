@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.Pow
 The concrete simulator has fixed control once its RAM program is fixed.  The
 only program-dependent quantities that matter asymptotically are therefore
 collected in `programResourceMagnitude`.  `programDecisionScale` combines
-that fixedValue with the public input length and the charged logarithmic RAM
+that constant with the public input length and the charged logarithmic RAM
 time.  The fourth-power envelope is deliberately coarse: it keeps the public
 class-transfer theorem independent of low-level controller constants while
 still recording a genuine polynomial simulation.
@@ -45,7 +45,7 @@ def instructionResourceMagnitude : Instr → ℕ
   | .jmp target => target + 1
   | .halt => 1
 
-/-- One positive fixed fixedValue containing the program length and every
+/-- One positive fixed constant containing the program length and every
 hardwired register, immediate, and jump literal. -/
 def programResourceMagnitude (program : Program) : ℕ :=
   program.length + (program.map instructionResourceMagnitude).sum + 1

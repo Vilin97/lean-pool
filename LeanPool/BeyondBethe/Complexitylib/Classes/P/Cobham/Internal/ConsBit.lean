@@ -122,7 +122,7 @@ private theorem consBitTM_copy_loop (b : Bool) (x : List Bool) :
           c.output.writeAndMove (readBackWrite c.output.read)
               (idleDir c.output.read) = c.output := by
         rw [writeAndMove_readBack c.output (by simp [houtput_blank]),
-          idleDir, if_neg (by simp [houtput_blank]), Tape.move]
+          idleDir, ite_eq_right (by simp [houtput_blank]), Tape.move]
       have hstep : (consBitTM b).step c = some c1 := by
         simp [TM.step, hstate, consBitTM, hread, c1]
       refine ⟨c1, .step hstep .zero, rfl, ?_⟩
@@ -196,7 +196,7 @@ theorem consBitTM_computesInTime (b : Bool) :
     simp [c2, c1, Tape.move_cells]
   have hc2_input_head : c2.input.head = 0 + 1 := by
     show (c1.input.move (idleDir c1.input.read)).head = 0 + 1
-    rw [idleDir, if_neg hne]
+    rw [idleDir, ite_eq_right hne]
     simp [Tape.move, c1, Tape.init]
   have hc2_output : c2.output.HasBinaryPrefix (b :: x.take 0) := by
     have hbase : ((Tape.init []).move Dir3.right).HasBinaryPrefix [] :=

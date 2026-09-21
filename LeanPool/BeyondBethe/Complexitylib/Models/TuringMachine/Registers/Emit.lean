@@ -114,7 +114,7 @@ theorem outAcc_nil_init : OutAcc [] { head := 1, cells := (Tape.init []).cells }
   refine ⟨rfl, by simp [Tape.init], fun i hi => absurd hi (by simp), fun j hj => ?_⟩
   show (Tape.init []).cells j = Γ.blank
   simp only [Tape.init]
-  rw [if_neg (by omega : ¬ j = 0)]
+  rw [ite_eq_right (by omega : ¬ j = 0)]
   simp
 
 /-- **Appending one bit.** Writing `Γ.ofBool b` at the accumulator head and
@@ -128,12 +128,12 @@ theorem outAcc_append_bit {ys : List Bool} {out : Tape} (h : OutAcc ys out) (b :
     show ((out.write _).move _).cells = _
     rw [Tape.move]
     show (out.write _).cells = _
-    rw [Tape.write, if_neg hne, hhead]
+    rw [Tape.write, ite_eq_right hne, hhead]
   have hhead' : (out.writeAndMove (Γ.ofBool b) .right).head = out.head + 1 := by
     show ((out.write _).move _).head = _
     rw [Tape.move]
     show (out.write _).head + 1 = _
-    rw [Tape.write, if_neg hne]
+    rw [Tape.write, ite_eq_right hne]
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [hhead', hhead]; simp
   · rw [hcells, Function.update_of_ne (by omega : ¬ (0 : ℕ) = ys.length + 1)]
@@ -187,7 +187,7 @@ theorem parked_init_input (x : List Bool) :
   refine ⟨le_refl 1, fun j hj => ?_⟩
   show (Tape.init (x.map Γ.ofBool)).cells j ≠ Γ.start
   simp only [Tape.init]
-  rw [if_neg (by omega : ¬ j = 0)]
+  rw [ite_eq_right (by omega : ¬ j = 0)]
   cases h : (x.map Γ.ofBool)[j - 1]? with
   | none => decide
   | some g =>
@@ -250,7 +250,7 @@ private theorem emitBitsTM_step (w : List Bool) (c : Cfg n (emitBitsTM (n := n) 
     rw [hst]
     simp only [emitBitsTM, Fin.mk.injEq]
     omega
-  rw [TM.step, if_neg hne]
+  rw [TM.step, ite_eq_right hne]
   simp only [emitBitsTM, hst, hk, ↓reduceDIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact hinp.move_idle
@@ -408,33 +408,33 @@ def emitUnaryTM (r : Fin n) : TM n where
         dsimp only []
         by_cases hir : i = r
         · subst hir; rw [hone] at hi; exact absurd hi (by decide)
-        · rw [if_neg hir]; exact idleDir_right_of_start hi
+        · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
       · next hnone =>
         refine ⟨idleDir_right_of_start, fun i hi => ?_, idleDir_right_of_start⟩
         dsimp only []
         by_cases hir : i = r
-        · subst hir; rw [if_pos rfl, if_pos hi]
-        · rw [if_neg hir]; exact idleDir_right_of_start hi
+        · subst hir; rw [ite_eq_left rfl, ite_eq_left hi]
+        · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
     | .emitB =>
       refine ⟨idleDir_right_of_start, fun i hi => ?_, fun _ => rfl⟩
       dsimp only []
       by_cases hir : i = r
-      · rw [if_pos hir]
-      · rw [if_neg hir]; exact idleDir_right_of_start hi
+      · rw [ite_eq_left hir]
+      · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
     | .back =>
       dsimp only []
       split
       · refine ⟨idleDir_right_of_start, fun i hi => ?_, idleDir_right_of_start⟩
         dsimp only []
         by_cases hir : i = r
-        · rw [if_pos hir]
-        · rw [if_neg hir]; exact idleDir_right_of_start hi
+        · rw [ite_eq_left hir]
+        · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
       · next hns =>
         refine ⟨idleDir_right_of_start, fun i hi => ?_, idleDir_right_of_start⟩
         dsimp only []
         by_cases hir : i = r
         · subst hir; exact absurd hi hns
-        · rw [if_neg hir]; exact idleDir_right_of_start hi
+        · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
     | .park =>
       exact ⟨idleDir_right_of_start, fun _ => idleDir_right_of_start,
         idleDir_right_of_start⟩
@@ -459,16 +459,16 @@ private theorem emitUnaryTM_step_emitA_one (c : Cfg n (emitUnaryTM (n := n) r).Q
     (emitUnaryTM (n := n) r).step c = some
       { state := .emitB, input := c.input, work := c.work,
         output := c.output.writeAndMove (Γ.ofBool true) .right } := by
-  rw [TM.step, if_neg (emitUnaryTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (emitUnaryTM_ne_halt (by decide) hst)]
   simp only [emitUnaryTM, hst, hone, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact hinp.move_idle
   · funext i
     by_cases hir : i = r
     · subst hir
-      rw [if_pos rfl, writeAndMove_readBack _ (by rw [hone]; decide)]
+      rw [ite_eq_left rfl, writeAndMove_readBack _ (by rw [hone]; decide)]
       rfl
-    · rw [if_neg hir]
+    · rw [ite_eq_right hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · rfl
 
@@ -480,16 +480,16 @@ private theorem emitUnaryTM_step_emitB (c : Cfg n (emitUnaryTM (n := n) r).Q)
       { state := .emitA, input := c.input,
         work := Function.update c.work r ((c.work r).move .right),
         output := c.output.writeAndMove (Γ.ofBool true) .right } := by
-  rw [TM.step, if_neg (emitUnaryTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (emitUnaryTM_ne_halt (by decide) hst)]
   simp only [emitUnaryTM, hst]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact hinp.move_idle
   · funext i
     by_cases hir : i = r
     · subst hir
-      rw [if_pos rfl, Function.update_self,
+      rw [ite_eq_left rfl, Function.update_self,
         writeAndMove_readBack _ (by rw [hone]; decide)]
-    · rw [if_neg hir, Function.update_of_ne hir]
+    · rw [ite_eq_right hir, Function.update_of_ne hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · rfl
 
@@ -503,16 +503,16 @@ private theorem emitUnaryTM_step_emitA_blank (c : Cfg n (emitUnaryTM (n := n) r)
       { state := .back, input := c.input,
         work := Function.update c.work r ((c.work r).move .left),
         output := c.output } := by
-  rw [TM.step, if_neg (emitUnaryTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (emitUnaryTM_ne_halt (by decide) hst)]
   simp only [emitUnaryTM, hst, hblank, reduceCtorEq, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact hinp.move_idle
   · funext i
     by_cases hir : i = r
     · subst hir
-      rw [if_pos rfl, Function.update_self,
+      rw [ite_eq_left rfl, Function.update_self,
         writeAndMove_readBack _ (by rw [hblank]; decide)]
-    · rw [if_neg hir, Function.update_of_ne hir]
+    · rw [ite_eq_right hir, Function.update_of_ne hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · exact hout.writeAndMove_readBack_idle
 
@@ -525,15 +525,15 @@ private theorem emitUnaryTM_step_back_left (c : Cfg n (emitUnaryTM (n := n) r).Q
       { state := .back, input := c.input,
         work := Function.update c.work r ((c.work r).move .left),
         output := c.output } := by
-  rw [TM.step, if_neg (emitUnaryTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (emitUnaryTM_ne_halt (by decide) hst)]
   simp only [emitUnaryTM, hst, hns, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact hinp.move_idle
   · funext i
     by_cases hir : i = r
     · subst hir
-      rw [if_pos rfl, Function.update_self, writeAndMove_readBack _ hns]
-    · rw [if_neg hir, Function.update_of_ne hir]
+      rw [ite_eq_left rfl, Function.update_self, writeAndMove_readBack _ hns]
+    · rw [ite_eq_right hir, Function.update_of_ne hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · exact hout.writeAndMove_readBack_idle
 
@@ -551,18 +551,18 @@ private theorem emitUnaryTM_step_back_start (c : Cfg n (emitUnaryTM (n := n) r).
   have h0 : (c.work r).head = 0 := by
     by_contra hc
     exact hcr _ (by omega) hs
-  rw [TM.step, if_neg (emitUnaryTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (emitUnaryTM_ne_halt (by decide) hst)]
   simp only [emitUnaryTM, hst, hs, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact hinp.move_idle
   · funext i
     by_cases hir : i = r
     · subst hir
-      rw [if_pos rfl, Function.update_self]
+      rw [ite_eq_left rfl, Function.update_self]
       show ((c.work i).write _).move Dir3.right = (c.work i).move .right
       congr 1
-      rw [Tape.write, if_pos h0]
-    · rw [if_neg hir, Function.update_of_ne hir]
+      rw [Tape.write, ite_eq_left h0]
+    · rw [ite_eq_right hir, Function.update_of_ne hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · exact hout.writeAndMove_readBack_idle
 
@@ -572,7 +572,7 @@ private theorem emitUnaryTM_step_park (c : Cfg n (emitUnaryTM (n := n) r).Q)
     (hout : Parked c.output) :
     (emitUnaryTM (n := n) r).step c = some
       { state := .done, input := c.input, work := c.work, output := c.output } := by
-  rw [TM.step, if_neg (emitUnaryTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (emitUnaryTM_ne_halt (by decide) hst)]
   simp only [emitUnaryTM, hst]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact hinp.move_idle

@@ -366,7 +366,7 @@ theorem denseSnapshot_run_halted_internal
     ∀ fuel, snapshot.run program input fuel = snapshot
   | 0 => rfl
   | fuel + 1 => by
-      rw [DenseOverlay.Snapshot.run, if_pos hhalted]
+      rw [DenseOverlay.Snapshot.run, ite_eq_left hhalted]
 
 /-- A halted fuel-bounded dense run is realized by the fixed controller loop.
 The extra iteration handles a snapshot already halted at fuel zero. -/

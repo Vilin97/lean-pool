@@ -228,7 +228,7 @@ theorem tapesStepFn_eq {k : ℕ} {Q : Type} [Fintype Q] [DecidableEq Q]
         ih (j + 1) (by simp only [List.length_cons] at hj; omega)]
       simp [List.append_assoc]
 
-/-- One whole branch of the transition table: the new state block (a fixedValue)
+/-- One whole branch of the transition table: the new state block (a constant)
 followed by every tape stepped. -/
 def branchFn (R q' : List Bool) (acts : List (Γ × Dir3)) (z : List Bool) :
     List Bool :=
@@ -266,7 +266,7 @@ theorem branchFn_eq {k : ℕ} (tm : TM k) {c c' : Cfg k tm.Q} {W : ℕ}
 
 A machine has finitely many (state, read-symbols) keys, so the transition
 function is a finite table: one `branchFn` per key, selected by matching the key
-read out of the encoding against the key's fixedValue pattern. -/
+read out of the encoding against the key's constant pattern. -/
 
 /-- The transition table's index set: every (state, read-symbols) pair. -/
 noncomputable def stepEntries {k : ℕ} (tm : TM k) :
@@ -287,13 +287,13 @@ noncomputable def stepBranch {k : ℕ} (tm : TM k) (R : List Bool)
 
 theorem stepBranch_halt {k : ℕ} (tm : TM k) (R : List Bool)
     {p : tm.Q × (Fin (k + 2) → Γ)} (h : p.1 = tm.qhalt) (z : List Bool) :
-    stepBranch tm R p z = z := if_pos h
+    stepBranch tm R p z = z := ite_eq_left h
 
 theorem stepBranch_step {k : ℕ} (tm : TM k) (R : List Bool)
     {p : tm.Q × (Fin (k + 2) → Γ)} (h : p.1 ≠ tm.qhalt) (z : List Bool) :
     stepBranch tm R p z
       = branchFn R (stateCode (stepStateOf tm p.1 p.2)) (stepActsOf tm p.1 p.2) z :=
-  if_neg h
+  ite_eq_right h
 
 /-- **One machine step, on encodings.** The table dispatches on the key read out
 of the encoding and applies that key's branch. -/
@@ -537,7 +537,7 @@ theorem rewindFn_eq {W : ℕ} (t : Tape) (hinv : t.StartInvariant) (hW : t.head 
   by_cases h0 : t.head = 0
   · have hread : t.read = Γ.start := by rw [Tape.read, h0]; exact hinv.1
     have hmove : t.move Dir3.left = t := move_left_of_head_zero h0
-    rw [rewindFn, matchPrefix_symCode t hW, if_pos hread.symm, caseBit₀_cons, cond_true,
+    rw [rewindFn, matchPrefix_symCode t hW, ite_eq_left hread.symm, caseBit₀_cons, Bool.cond_true,
       hmove]
   · have hread : t.read ≠ Γ.start := hinv.read_ne_start (by omega)
     have hstep : ∀ s : Γ, s = t.read →
@@ -576,7 +576,7 @@ theorem rewindFn_length_le (R z : List Bool) (hz : z.length ≤ 2 * R.length) :
 /-! ## The initial encoding
 
 At the start every tape but the input is blank and every head is at cell `0`, so
-the encoding is a fixedValue apart from the input tape's right half-block — which
+the encoding is a constant apart from the input tape's right half-block — which
 is the input string at two bits per cell. Zero padding *is* blank padding, which
 is why `symCode Γ.blank = [0,0]`. -/
 
@@ -615,7 +615,7 @@ theorem encodeBitsFn {n : ℕ} {g : (Fin n → List Bool) → List Bool} (h : Co
     | cons b x ih =>
         cases b <;>
           · rw [recNotation_cons]
-            simp only [cond_true, cond_false]
+            simp only [Bool.cond_true, Bool.cond_false]
             rw [encStep_cons, ih, encodeBits_cons]
   have hs : ∀ b : Bool, Cobham (encStep b) := fun b =>
     (appendFn (Cobham.const (symCode (Γ.ofBool b))) (Cobham.proj 1)).of_eq fun _ => rfl
@@ -629,7 +629,7 @@ theorem encodeBitsFn {n : ℕ} {g : (Fin n → List Bool) → List Bool} (h : Co
   exact (Cobham.comp hbase fun _ : Fin 1 => h).of_eq fun _ => rfl
 
 /-- **The initial encoding.** Everything but the input tape's right half-block is
-a fixedValue of the machine. -/
+a constant of the machine. -/
 noncomputable def initFn {k : ℕ} (tm : TM k) (R x : List Bool) : List Bool :=
   padTo R (stateCode tm.qstart) ++
     (padTo R [] ++ (padTo R (symCode Γ.start ++ encodeBits x) ++

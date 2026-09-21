@@ -52,7 +52,7 @@ theorem tapeAt_input_internal (cfg : Complexity.Cfg n Q) :
 theorem tapeAt_work_internal (cfg : Complexity.Cfg n Q) (i : Fin n) :
     tapeAt cfg ⟨i.val + 1, by omega⟩ = cfg.work i := by
   simp only [tapeAt]
-  rw [dif_neg (by omega), dif_neg (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_right (by omega)]
   congr 1
 
 theorem tapeAt_output_internal (cfg : Complexity.Cfg n Q) :

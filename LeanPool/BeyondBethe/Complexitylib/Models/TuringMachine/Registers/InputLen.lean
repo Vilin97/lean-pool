@@ -75,30 +75,30 @@ def inputLenRegTM (q : Fin n) : TM n where
           idleDir_right_of_start⟩
         dsimp only []
         by_cases hir : i = q
-        · subst hir; rw [if_pos rfl, if_pos hi]
-        · rw [if_neg hir]; exact idleDir_right_of_start hi
+        · subst hir; rw [ite_eq_left rfl, ite_eq_left hi]
+        · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
       · split
         · exact ⟨fun _ => rfl, fun i hi => idleDir_right_of_start hi,
             idleDir_right_of_start⟩
         · refine ⟨fun _ => rfl, fun i hi => ?_, idleDir_right_of_start⟩
           dsimp only []
           by_cases hir : i = q
-          · rw [if_pos hir]
-          · rw [if_neg hir]; exact idleDir_right_of_start hi
+          · rw [ite_eq_left hir]
+          · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
     | .back =>
       dsimp only []
       split
       · refine ⟨fun _ => rfl, fun i hi => ?_, idleDir_right_of_start⟩
         dsimp only []
         by_cases hir : i = q
-        · rw [if_pos hir]
-        · rw [if_neg hir]; exact idleDir_right_of_start hi
+        · rw [ite_eq_left hir]
+        · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
       · next hns =>
-        refine ⟨fun hi => by rw [if_pos hi], fun i hi => ?_, idleDir_right_of_start⟩
+        refine ⟨fun hi => by rw [ite_eq_left hi], fun i hi => ?_, idleDir_right_of_start⟩
         dsimp only []
         by_cases hir : i = q
         · subst hir; exact absurd hi hns
-        · rw [if_neg hir]; exact idleDir_right_of_start hi
+        · rw [ite_eq_right hir]; exact idleDir_right_of_start hi
     | .park =>
       exact ⟨idleDir_right_of_start, fun _ => idleDir_right_of_start,
         idleDir_right_of_start⟩
@@ -125,14 +125,14 @@ private theorem inputLenRegTM_step_scan_bit (c : Cfg n (inputLenRegTM (n := n) q
         work := Function.update c.work q
           (((c.work q).write Γw.one).move .right),
         output := c.output } := by
-  rw [TM.step, if_neg (inputLenRegTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (inputLenRegTM_ne_halt (by decide) hst)]
   simp only [inputLenRegTM, hst, hbl, hns, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, rfl, ?_, ?_⟩)
   · funext i
     by_cases hir : i = q
     · subst hir
       simp only [↓reduceIte, Function.update_self]
-    · rw [if_neg hir, if_neg hir, Function.update_of_ne hir]
+    · rw [ite_eq_right hir, ite_eq_right hir, Function.update_of_ne hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · exact hout.writeAndMove_readBack_idle
 
@@ -145,15 +145,15 @@ private theorem inputLenRegTM_step_scan_blank (c : Cfg n (inputLenRegTM (n := n)
       { state := .back, input := c.input.move .left,
         work := Function.update c.work q ((c.work q).move .left),
         output := c.output } := by
-  rw [TM.step, if_neg (inputLenRegTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (inputLenRegTM_ne_halt (by decide) hst)]
   simp only [inputLenRegTM, hst, hbl, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, rfl, ?_, ?_⟩)
   · funext i
     by_cases hir : i = q
     · subst hir
-      rw [if_pos rfl, if_neg hqns, Function.update_self,
+      rw [ite_eq_left rfl, ite_eq_right hqns, Function.update_self,
         writeAndMove_readBack _ hqns]
-    · rw [if_neg hir, Function.update_of_ne hir]
+    · rw [ite_eq_right hir, Function.update_of_ne hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · exact hout.writeAndMove_readBack_idle
 
@@ -166,14 +166,14 @@ private theorem inputLenRegTM_step_back_left (c : Cfg n (inputLenRegTM (n := n) 
       { state := .back, input := c.input.move .left,
         work := Function.update c.work q ((c.work q).move .left),
         output := c.output } := by
-  rw [TM.step, if_neg (inputLenRegTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (inputLenRegTM_ne_halt (by decide) hst)]
   simp only [inputLenRegTM, hst, hqns, hins, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, rfl, ?_, ?_⟩)
   · funext i
     by_cases hir : i = q
     · subst hir
-      rw [if_pos rfl, Function.update_self, writeAndMove_readBack _ hqns]
-    · rw [if_neg hir, Function.update_of_ne hir]
+      rw [ite_eq_left rfl, Function.update_self, writeAndMove_readBack _ hqns]
+    · rw [ite_eq_right hir, Function.update_of_ne hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · exact hout.writeAndMove_readBack_idle
 
@@ -189,17 +189,17 @@ private theorem inputLenRegTM_step_back_start (c : Cfg n (inputLenRegTM (n := n)
   have h0 : (c.work q).head = 0 := by
     by_contra hc
     exact hcr _ (by omega) hs
-  rw [TM.step, if_neg (inputLenRegTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (inputLenRegTM_ne_halt (by decide) hst)]
   simp only [inputLenRegTM, hst, hs, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, rfl, ?_, ?_⟩)
   · funext i
     by_cases hir : i = q
     · subst hir
-      rw [if_pos rfl, Function.update_self]
+      rw [ite_eq_left rfl, Function.update_self]
       show ((c.work i).write _).move Dir3.right = (c.work i).move .right
       congr 1
-      rw [Tape.write, if_pos h0]
-    · rw [if_neg hir, Function.update_of_ne hir]
+      rw [Tape.write, ite_eq_left h0]
+    · rw [ite_eq_right hir, Function.update_of_ne hir]
       exact (hwork i hir).writeAndMove_readBack_idle
   · exact hout.writeAndMove_readBack_idle
 
@@ -209,7 +209,7 @@ private theorem inputLenRegTM_step_park (c : Cfg n (inputLenRegTM (n := n) q).Q)
     (hwork : ∀ i, Parked (c.work i)) (hout : Parked c.output) :
     (inputLenRegTM (n := n) q).step c = some
       { state := .done, input := c.input, work := c.work, output := c.output } := by
-  rw [TM.step, if_neg (inputLenRegTM_ne_halt (by decide) hst)]
+  rw [TM.step, ite_eq_right (inputLenRegTM_ne_halt (by decide) hst)]
   simp only [inputLenRegTM, hst]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact hinp.move_idle
@@ -253,7 +253,7 @@ private theorem inputLenRegTM_scan_run (x : List Bool) (m : ℕ) :
     have hq₁cells : (((c.work q).write Γw.one).move .right).cells
         = regCells (k + 1) := by
       show ((c.work q).write Γw.one).cells = _
-      rw [Tape.write, if_neg (by rw [hqh]; omega)]
+      rw [Tape.write, ite_eq_right (by rw [hqh]; omega)]
       show Function.update (c.work q).cells (c.work q).head Γw.one.toΓ = _
       rw [hqh, hqc]
       exact regCells_update_succ k
@@ -448,7 +448,7 @@ theorem inputLenRegTM_hoareTime (q : Fin n) (x : List Bool)
         show (c₁.work q).cells j ≠ _
         rw [h5]
         show regCells x.length j ≠ Γ.start
-        rw [regCells, if_neg (by omega)]
+        rw [regCells, ite_eq_right (by omega)]
         split <;> decide)
       (by show (Function.update c₁.work q _ q).head = x.length
           rw [Function.update_self]

@@ -217,15 +217,15 @@ def bookTapes (rfT junkT : Tape) (H : ℕ) : Fin (3 + (k + 2) + 0) → Tape :=
 
 @[simp] theorem bookTapes_rf (rfT junkT : Tape) (H : ℕ) :
     bookTapes (k := k) rfT junkT H rfIdx = rfT := by
-  rw [bookTapes, if_pos rfl]
+  rw [bookTapes, ite_eq_left rfl]
 
 @[simp] theorem bookTapes_wf (rfT junkT : Tape) (H : ℕ) :
     bookTapes (k := k) rfT junkT H wfIdx = regTape H := by
-  rw [bookTapes, if_neg (fun h => rfIdx_ne_wfIdx h.symm), if_pos rfl]
+  rw [bookTapes, ite_eq_right (fun h => rfIdx_ne_wfIdx h.symm), ite_eq_left rfl]
 
 @[simp] theorem bookTapes_junk (rfT junkT : Tape) (H : ℕ) :
     bookTapes (k := k) rfT junkT H junkIdx = junkT := by
-  rw [bookTapes, if_neg junkIdx_ne_rfIdx, if_neg junkIdx_ne_wfIdx]
+  rw [bookTapes, ite_eq_right junkIdx_ne_rfIdx, ite_eq_right junkIdx_ne_wfIdx]
 
 theorem eq_bookTapes_of_not_middle {work : Fin (3 + (k + 2) + 0) → Tape}
     {rfT junkT : Tape} {H : ℕ}
@@ -346,7 +346,7 @@ variable {M : TM k} {Y : ℕ → List Bool} {inp₀ junkT : Tape} {v H : ℕ}
 theorem iterFamily_book (i : ℕ) (j : Fin (3 + (k + 2) + 0))
     (hj : ¬ placeWorkInMiddle 3 (k + 2) j) :
     iterFamily M Y inp₀ junkT v H i j = bookTapes (regTape v) junkT H j := by
-  rw [iterFamily, dif_neg hj]
+  rw [iterFamily, dite_eq_right hj]
 
 @[simp] theorem iterFamily_rf (i : ℕ) :
     iterFamily M Y inp₀ junkT v H i rfIdx = regTape v := by
@@ -437,12 +437,12 @@ def emitStart (extras : Fin (3 + (k + 2) + 0) → Tape) : Fin (3 + (k + 2) + 0) 
 
 theorem emitStart_middle (extras : Fin (3 + (k + 2) + 0) → Tape) (j : Fin (k + 2)) :
     emitStart extras (appIdx j) = parkedBlank := by
-  rw [emitStart, if_pos (appIdx_middle j)]
+  rw [emitStart, ite_eq_left (appIdx_middle j)]
 
 theorem emitStart_extra (extras : Fin (3 + (k + 2) + 0) → Tape)
     (i : Fin (3 + (k + 2) + 0)) (hi : ¬ placeWorkInMiddle 3 (k + 2) i) :
     emitStart extras i = extras i := by
-  rw [emitStart, if_neg hi]
+  rw [emitStart, ite_eq_right hi]
 
 /-- **The setup's emission phase.** From the bumped input holding `x` and an
 all-blank block, `pair [] x` lands on the result tape and the whole block stays
@@ -471,13 +471,13 @@ theorem placedEmit_hoareTime (x : List Bool) (H : ℕ) (hH : x.length + 4 ≤ H)
     (placeWorkInMiddle 3 (k + 2))
     (fun i => by
       by_cases hi : placeWorkInMiddle 3 (k + 2) i
-      · rw [emitStart, if_pos hi]; exact hblankSI
-      · rw [emitStart, if_neg hi]; exact hextraSI i hi)
-    (fun i hi => by rw [emitStart, if_pos hi, parkedBlank_head])
+      · rw [emitStart, ite_eq_left hi]; exact hblankSI
+      · rw [emitStart, ite_eq_right hi]; exact hextraSI i hi)
+    (fun i hi => by rw [emitStart, ite_eq_left hi, parkedBlank_head])
     (fun i hi j hj => by
-      rw [emitStart, if_pos hi]
+      rw [emitStart, ite_eq_left hi]
       show ((Tape.init ([] : List Γ)).move Dir3.right).cells j = Γ.blank
-      rw [Tape.move_cells, initNil_cells, if_neg (by omega)])
+      rw [Tape.move_cells, initNil_cells, ite_eq_right (by omega)])
   refine ((hconf.weaken_pre ?_).strengthen_post ?_).mono_bound
     (by simp only [TM.pairInputWorkTime, List.length_nil]; omega)
   · rintro inp work out ⟨rfl, rfl, rfl⟩
@@ -508,8 +508,8 @@ theorem parkedBlank_eq_regTape_zero : parkedBlank = regTape 0 := by
   show _ = regCells 0 j
   rw [regCells]
   by_cases hj : j = 0
-  · rw [if_pos hj, if_pos hj]
-  · rw [if_neg hj, if_neg hj, if_neg (by omega)]
+  · rw [ite_eq_left hj, ite_eq_left hj]
+  · rw [ite_eq_right hj, ite_eq_right hj, ite_eq_right (by omega)]
 
 /-- The register value cap the padding polynomial's evaluation runs under. -/
 def polyM (p : Polynomial ℕ) (n : ℕ) : ℕ :=
@@ -614,8 +614,8 @@ theorem iterSetup_hoareTime (p : Polynomial ℕ) (x : List Bool) (H : ℕ)
         Parked (emitStart (bookTapes (regTape x.length) (regTape H) H) i) := by
       intro i
       by_cases hi : placeWorkInMiddle 3 (k + 2) i
-      · rw [emitStart, if_pos hi]; exact parked_parkedBlank
-      · rw [emitStart, if_neg hi]
+      · rw [emitStart, ite_eq_left hi]; exact parked_parkedBlank
+      · rw [emitStart, ite_eq_right hi]
         exact ⟨bookTapes_head (parked_regTape _) (parked_regTape _) i hi,
           (bookTapes_startInvariant (startInvariant_regTape _)
             (startInvariant_regTape _) i hi).2⟩
@@ -697,19 +697,19 @@ theorem iterMain_hoareTime (M : TM k) {G : List Bool → List Bool} {T : ℕ →
     (teardownExtras v H)
     (fun i hi => by
       rcases not_middle_succ_cases i hi with h | h | h | h
-      · rw [h, teardownExtras, if_neg rfIdx_ne_resIdx, bookTapes_rf]
+      · rw [h, teardownExtras, ite_eq_right rfIdx_ne_resIdx, bookTapes_rf]
         exact startInvariant_regTape v
-      · rw [h, teardownExtras, if_neg wfIdx_ne_resIdx, bookTapes_wf]; exact hregSI
-      · rw [h, teardownExtras, if_neg junkIdx_ne_resIdx, bookTapes_junk]; exact hregSI
-      · rw [h, teardownExtras, if_pos rfl]
+      · rw [h, teardownExtras, ite_eq_right wfIdx_ne_resIdx, bookTapes_wf]; exact hregSI
+      · rw [h, teardownExtras, ite_eq_right junkIdx_ne_resIdx, bookTapes_junk]; exact hregSI
+      · rw [h, teardownExtras, ite_eq_left rfl]
         exact startInvariant_initNil.move Dir3.right)
     (fun i hi => by
       rcases not_middle_succ_cases i hi with h | h | h | h
-      · rw [h, teardownExtras, if_neg rfIdx_ne_resIdx, bookTapes_rf]
+      · rw [h, teardownExtras, ite_eq_right rfIdx_ne_resIdx, bookTapes_rf]
         exact (parked_regTape v).1
-      · rw [h, teardownExtras, if_neg wfIdx_ne_resIdx, bookTapes_wf]; exact hregP.1
-      · rw [h, teardownExtras, if_neg junkIdx_ne_resIdx, bookTapes_junk]; exact hregP.1
-      · rw [h, teardownExtras, if_pos rfl]; exact parked_parkedBlank.1)
+      · rw [h, teardownExtras, ite_eq_right wfIdx_ne_resIdx, bookTapes_wf]; exact hregP.1
+      · rw [h, teardownExtras, ite_eq_right junkIdx_ne_resIdx, bookTapes_junk]; exact hregP.1
+      · rw [h, teardownExtras, ite_eq_left rfl]; exact parked_parkedBlank.1)
   -- the two seams are the identity: every tape is parked
   have hseam : ∀ (W : Fin (3 + (k + 2) + 0) → Tape), (∀ i, Parked (W i)) →
       ∀ (inp' : Tape) (out' : Tape), inp' = inp → out' = parkedBlank →
@@ -748,11 +748,11 @@ theorem iterMain_hoareTime (M : TM k) {G : List Bool → List Bool} {T : ℕ →
       rw [iterFamily_app]
       exact congrFun (TM.applyPre_spec M (Y v) inp').1 i
     · rcases not_middle_succ_cases i hi with h | h | h | h
-      · rw [h, iterFamily_rf, teardownExtras, if_neg rfIdx_ne_resIdx, bookTapes_rf]
-      · rw [h, iterFamily_wf, teardownExtras, if_neg wfIdx_ne_resIdx, bookTapes_wf]
-      · rw [h, iterFamily_junk, teardownExtras, if_neg junkIdx_ne_resIdx, bookTapes_junk]
+      · rw [h, iterFamily_rf, teardownExtras, ite_eq_right rfIdx_ne_resIdx, bookTapes_rf]
+      · rw [h, iterFamily_wf, teardownExtras, ite_eq_right wfIdx_ne_resIdx, bookTapes_wf]
+      · rw [h, iterFamily_junk, teardownExtras, ite_eq_right junkIdx_ne_resIdx, bookTapes_junk]
       · rw [h, show (resIdx (k := k)) = appIdx (Fin.last (k + 1)) from rfl, iterFamily_app,
-          teardownExtras, if_pos (show appIdx (Fin.last (k + 1)) = resIdx from rfl),
+          teardownExtras, ite_eq_left (show appIdx (Fin.last (k + 1)) = resIdx from rfl),
           TM.applyPre, Fin.snoc_last]
   · rintro inp' work' out' ⟨hout, -⟩
     exact hout

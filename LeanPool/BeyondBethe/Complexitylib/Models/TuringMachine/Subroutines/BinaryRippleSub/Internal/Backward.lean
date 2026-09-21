@@ -37,13 +37,13 @@ theorem HasBinaryContent.write_blank_last_internal {t : Tape}
   have hhead0 : t.head ≠ 0 := by omega
   constructor
   · intro i hi
-    rw [Tape.write, if_neg hhead0]
+    rw [Tape.write, ite_eq_right hhead0]
     simp only
     rw [hhead, Function.update_of_ne (by omega)]
     have hcell := h.1 i (by simp; omega)
     simpa [List.getElem_append, hi] using hcell
   · intro i hi
-    rw [Tape.write, if_neg hhead0]
+    rw [Tape.write, ite_eq_right hhead0]
     simp only
     rw [hhead]
     by_cases heq : i = bitsPrefix.length
@@ -80,7 +80,7 @@ private theorem binaryRippleSubCoreTM_step_erase
         work := Function.update c.work resultIdx
           (((c.work resultIdx).write Γ.blank).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (binaryRippleSubCoreTM_ne_halt (by simp) hstate)]
+  rw [TM.step, ite_eq_right (binaryRippleSubCoreTM_ne_halt (by simp) hstate)]
   simp only [binaryRippleSubCoreTM, hstate, hread, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
@@ -90,7 +90,7 @@ private theorem binaryRippleSubCoreTM_step_erase
       simp only [↓reduceIte, Function.update_self]
       simp [moveLeftDir, hread]
     · rw [Function.update_of_ne hi]
-      simpa only [if_neg hi] using transitionTape_eq_self (hother i hi)
+      simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
 private theorem binaryRippleSubCoreTM_step_trim_false_zero
@@ -106,7 +106,7 @@ private theorem binaryRippleSubCoreTM_step_trim_false_zero
         work := Function.update c.work resultIdx
           (((c.work resultIdx).write Γ.blank).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (binaryRippleSubCoreTM_ne_halt (by decide) hstate)]
+  rw [TM.step, ite_eq_right (binaryRippleSubCoreTM_ne_halt (by decide) hstate)]
   simp only [binaryRippleSubCoreTM, hstate]
   simp [hread]
   refine ⟨transitionInput_eq_self hinput, ?_, transitionTape_eq_self houtput⟩
@@ -116,7 +116,7 @@ private theorem binaryRippleSubCoreTM_step_trim_false_zero
     simp only [↓reduceIte, Function.update_self]
     simp [moveLeftDir]
   · rw [Function.update_of_ne hi]
-    simpa only [if_neg hi] using transitionTape_eq_self (hother i hi)
+    simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
 
 private theorem binaryRippleSubCoreTM_step_trim_false_one
     (c : Cfg n (binaryRippleSubCoreTM lhsIdx rhsIdx resultIdx).Q)
@@ -131,19 +131,19 @@ private theorem binaryRippleSubCoreTM_step_trim_false_one
         work := Function.update c.work resultIdx
           ((c.work resultIdx).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (binaryRippleSubCoreTM_ne_halt (by decide) hstate)]
+  rw [TM.step, ite_eq_right (binaryRippleSubCoreTM_ne_halt (by decide) hstate)]
   simp only [binaryRippleSubCoreTM, hstate]
   simp [hread]
   refine ⟨transitionInput_eq_self hinput, ?_, transitionTape_eq_self houtput⟩
   funext i
   by_cases hi : i = resultIdx
   · subst i
-    rw [if_pos rfl, Function.update_self]
+    rw [ite_eq_left rfl, Function.update_self]
     change (c.work resultIdx).writeAndMove
       (readBackWrite (c.work resultIdx).read) (moveLeftDir Γ.one) = _
     rw [writeAndMove_readBack _ (by rw [hread]; decide)]
     simp [moveLeftDir]
-  · rw [if_neg hi, Function.update_of_ne hi]
+  · rw [ite_eq_right hi, Function.update_of_ne hi]
     exact transitionTape_eq_self (hother i hi)
 
 private theorem binaryRippleSubCoreTM_step_trim_true
@@ -159,20 +159,20 @@ private theorem binaryRippleSubCoreTM_step_trim_true
         work := Function.update c.work resultIdx
           ((c.work resultIdx).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (binaryRippleSubCoreTM_ne_halt (by decide) hstate)]
+  rw [TM.step, ite_eq_right (binaryRippleSubCoreTM_ne_halt (by decide) hstate)]
   simp only [binaryRippleSubCoreTM, hstate]
   simp [hread]
   refine ⟨transitionInput_eq_self hinput, ?_, transitionTape_eq_self houtput⟩
   funext i
   by_cases hi : i = resultIdx
   · subst i
-    rw [if_pos rfl, Function.update_self]
+    rw [ite_eq_left rfl, Function.update_self]
     change (c.work resultIdx).writeAndMove
       (readBackWrite (c.work resultIdx).read)
         (moveLeftDir (c.work resultIdx).read) = _
     rw [writeAndMove_readBack _ hread]
     simp [moveLeftDir, hread]
-  · rw [if_neg hi, Function.update_of_ne hi]
+  · rw [ite_eq_right hi, Function.update_of_ne hi]
     exact transitionTape_eq_self (hother i hi)
 
 private theorem binaryRippleSubCoreTM_step_erase_start
@@ -189,7 +189,7 @@ private theorem binaryRippleSubCoreTM_step_erase_start
         work := Function.update c.work resultIdx
           ((c.work resultIdx).move Dir3.right)
         output := c.output } := by
-  rw [TM.step, if_neg (binaryRippleSubCoreTM_ne_halt (by simp) hstate)]
+  rw [TM.step, ite_eq_right (binaryRippleSubCoreTM_ne_halt (by simp) hstate)]
   simp only [binaryRippleSubCoreTM, hstate, hread, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
@@ -199,8 +199,8 @@ private theorem binaryRippleSubCoreTM_step_erase_start
       simp only [↓reduceIte, Function.update_self]
       show (((c.work resultIdx).write _).move Dir3.right) =
         (c.work resultIdx).move Dir3.right
-      rw [Tape.write, if_pos hhead]
-    · rw [if_neg hi, Function.update_of_ne hi]
+      rw [Tape.write, ite_eq_left hhead]
+    · rw [ite_eq_right hi, Function.update_of_ne hi]
       exact transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
@@ -219,7 +219,7 @@ private theorem binaryRippleSubCoreTM_step_trim_start
         work := Function.update c.work resultIdx
           ((c.work resultIdx).move Dir3.right)
         output := c.output } := by
-  rw [TM.step, if_neg (binaryRippleSubCoreTM_ne_halt (by simp) hstate)]
+  rw [TM.step, ite_eq_right (binaryRippleSubCoreTM_ne_halt (by simp) hstate)]
   simp only [binaryRippleSubCoreTM, hstate, hread, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
@@ -229,8 +229,8 @@ private theorem binaryRippleSubCoreTM_step_trim_start
       simp only [↓reduceIte, Function.update_self]
       show (((c.work resultIdx).write _).move Dir3.right) =
         (c.work resultIdx).move Dir3.right
-      rw [Tape.write, if_pos hhead]
-    · rw [if_neg hi, Function.update_of_ne hi]
+      rw [Tape.write, ite_eq_left hhead]
+    · rw [ite_eq_right hi, Function.update_of_ne hi]
       exact transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 

@@ -260,7 +260,7 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
       refine ⟨work, hlookupResult, ?_, ?_, ?_, ?_⟩
       · simpa only [Function.update_of_ne tapes.lhs_ne_pc, value] using
           hlookupResult.destination
-      · simpa only [targetTape, Function.update_self, newPC, hzero, if_pos]
+      · simpa only [targetTape, Function.update_self, newPC, hzero, ite_eq_left]
           using htarget
       · intro i
         by_cases hi : i = tapes.pc
@@ -290,7 +290,7 @@ theorem denseZeroJumpInstructionTM_hoareTime_frame
       refine ⟨work, hlookupResult, ?_, ?_, ?_, hframe⟩
       · rw [hframe tapes.data.lhs tapes.lhs_ne_pc]
         simpa only [value] using hlookupResult.destination
-      · simpa only [newPC, if_neg hnonzero] using hfinalPC
+      · simpa only [newPC, ite_eq_right hnonzero] using hfinalPC
       · intro i
         by_cases hi : i = tapes.pc
         · subst i

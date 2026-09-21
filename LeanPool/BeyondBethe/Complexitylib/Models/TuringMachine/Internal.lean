@@ -348,7 +348,7 @@ private theorem tape_cell0_preserved (t : Tape) (s : Γ) (d : Dir3)
   rw [Tape.move_cells]; simp only [Tape.write]
   split
   · exact h0
-  · simp only [Function.update, dif_neg (show (0 : ℕ) ≠ t.head from fun h => by omega)]
+  · simp only [Function.update, dite_eq_right (show (0 : ℕ) ≠ t.head from fun h => by omega)]
     exact h0
 
 /-- Cells ≥ 1 stay non-Γ.start after writing a non-Γ.start value. -/
@@ -513,7 +513,7 @@ theorem input_cells_trace (tm : NTM n) (T : ℕ)
   | succ T ih =>
       by_cases hhalt : c.state = tm.qhalt
       · simp [NTM.trace, hhalt]
-      · simp only [NTM.trace, hhalt, if_false]
+      · simp only [NTM.trace, hhalt, ite_false]
         rw [ih]
         cases (tm.δ (choices ⟨0, Nat.zero_lt_succ T⟩) c.state c.input.read
           (fun i => (c.work i).read) c.output.read).2.2.2.1 <;> rfl
@@ -528,7 +528,7 @@ theorem input_head_trace_le (tm : NTM n) (T : ℕ)
   | succ T ih =>
       by_cases hhalt : c.state = tm.qhalt
       · simp [NTM.trace, hhalt]
-      · simp only [NTM.trace, hhalt, if_false]
+      · simp only [NTM.trace, hhalt, ite_false]
         let b := choices ⟨0, Nat.zero_lt_succ T⟩
         let tr := tm.δ b c.state c.input.read (fun i => (c.work i).read) c.output.read
         let c' : Cfg n tm.Q :=
@@ -556,7 +556,7 @@ theorem work_head_trace_le (tm : NTM n) (T : ℕ)
   | succ T ih =>
       by_cases hhalt : c.state = tm.qhalt
       · simp [NTM.trace, hhalt]
-      · simp only [NTM.trace, hhalt, if_false]
+      · simp only [NTM.trace, hhalt, ite_false]
         let b := choices ⟨0, Nat.zero_lt_succ T⟩
         let tr := tm.δ b c.state c.input.read (fun j => (c.work j).read) c.output.read
         let c' : Cfg n tm.Q :=
@@ -580,7 +580,7 @@ theorem output_head_trace_le (tm : NTM n) (T : ℕ)
   | succ T ih =>
       by_cases hhalt : c.state = tm.qhalt
       · simp [NTM.trace, hhalt]
-      · simp only [NTM.trace, hhalt, if_false]
+      · simp only [NTM.trace, hhalt, ite_false]
         let b := choices ⟨0, Nat.zero_lt_succ T⟩
         let tr := tm.δ b c.state c.input.read (fun i => (c.work i).read) c.output.read
         let c' : Cfg n tm.Q :=

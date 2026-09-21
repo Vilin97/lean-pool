@@ -56,31 +56,31 @@ blanks exactly cells `1 … H` and leaves every other cell alone. -/
 theorem wipedTape_cells_of_head_one {t : Tape} (hh : t.head = 1) (H j : ℕ) :
     (wipedTape t H).cells j = if 1 ≤ j ∧ j ≤ H then Γ.blank else t.cells j := by
   induction H with
-  | zero => rw [wipedTape_zero, if_neg (by omega : ¬(1 ≤ j ∧ j ≤ 0))]
+  | zero => rw [wipedTape_zero, ite_eq_right (by omega : ¬(1 ≤ j ∧ j ≤ 0))]
   | succ H ih =>
       have hheadH : (wipedTape t H).head = H + 1 := by rw [wipedTape_head, hh]; omega
       rw [wipedTape_succ]
       show (((wipedTape t H).write Γw.blank.toΓ).move Dir3.right).cells j = _
-      rw [Tape.move_cells, Tape.write, if_neg (by rw [hheadH]; omega)]
+      rw [Tape.move_cells, Tape.write, ite_eq_right (by rw [hheadH]; omega)]
       show Function.update (wipedTape t H).cells (wipedTape t H).head Γw.blank.toΓ j = _
       rw [hheadH]
       by_cases hj : j = H + 1
-      · rw [hj, Function.update_self, if_pos ⟨by omega, by omega⟩]
+      · rw [hj, Function.update_self, ite_eq_left ⟨by omega, by omega⟩]
         rfl
       · rw [Function.update_of_ne hj, ih]
         by_cases hc : 1 ≤ j ∧ j ≤ H
-        · rw [if_pos hc, if_pos ⟨hc.1, by omega⟩]
+        · rw [ite_eq_left hc, ite_eq_left ⟨hc.1, by omega⟩]
         · have hc' : ¬(1 ≤ j ∧ j ≤ H + 1) := by
             rintro ⟨h1, h2⟩
             exact hc ⟨h1, by omega⟩
-          rw [if_neg hc, if_neg hc']
+          rw [ite_eq_right hc, ite_eq_right hc']
 
 /-- The canonical blank tape's cells, spelled out. -/
 theorem initNil_cells (j : ℕ) :
     (Tape.init ([] : List Γ)).cells j = if j = 0 then Γ.start else Γ.blank := by
   cases j with
   | zero => exact Tape.init_cells_zero []
-  | succ i => rw [Tape.init_cells_ge [] i (by simp), if_neg (Nat.succ_ne_zero i)]
+  | succ i => rw [Tape.init_cells_ge [] i (by simp), ite_eq_right (Nat.succ_ne_zero i)]
 
 /-- **Wiping really blanks the tape.** A tape parked at cell `1` whose content
 is confined to cells `1 … H` becomes literally the blank tape (head at `H + 1`)
@@ -92,11 +92,11 @@ theorem wipedTape_eq_blank {t : Tape} (H : ℕ) (hh : t.head = 1)
   refine Tape.ext (by rw [wipedTape_head, hh]; show 1 + H = H + 1; omega) (funext fun j => ?_)
   rw [wipedTape_cells_of_head_one hh, initNil_cells]
   by_cases hj0 : j = 0
-  · rw [hj0, if_neg (by omega : ¬(1 ≤ 0 ∧ 0 ≤ H)), if_pos rfl, h0]
-  · rw [if_neg hj0]
+  · rw [hj0, ite_eq_right (by omega : ¬(1 ≤ 0 ∧ 0 ≤ H)), ite_eq_left rfl, h0]
+  · rw [ite_eq_right hj0]
     by_cases hc : 1 ≤ j ∧ j ≤ H
-    · rw [if_pos hc]
-    · rw [if_neg hc, hfar j (by omega)]
+    · rw [ite_eq_left hc]
+    · rw [ite_eq_right hc, hfar j (by omega)]
 
 /-- Wiping preserves `Parked`-ness: the head only advances, and every
 written or untouched cell beyond the marker stays off `▷`. -/
@@ -114,7 +114,7 @@ theorem wipedTape_parked {t : Tape} (h : Parked t) (i : ℕ) : Parked (wipedTape
         show 1 ≤ ((wipedTape t i).write Γw.blank.toΓ).head + 1
         omega
       · rw [hheq, Tape.move_cells]
-        simp only [Tape.write, if_neg hhead_ne]
+        simp only [Tape.write, ite_eq_right hhead_ne]
         show Function.update (wipedTape t i).cells (wipedTape t i).head Γw.blank.toΓ j ≠ Γ.start
         by_cases hje : j = (wipedTape t i).head
         · rw [hje, Function.update_self]; decide
@@ -183,7 +183,7 @@ theorem wipeLoop_hoareTime {n : ℕ} (targets : List (Fin n)) (r : Fin n)
     by_cases hjr : j = r
     · subst hjr; simp [hw, Function.update_self]
     · rw [Function.update_of_ne hjr]
-      simp only [hw, if_neg hjr]
+      simp only [hw, ite_eq_right hjr]
       split
       · rfl
       · rfl
@@ -192,13 +192,13 @@ theorem wipeLoop_hoareTime {n : ℕ} (targets : List (Fin n)) (r : Fin n)
     funext j
     by_cases hjr : j = r
     · subst hjr; simp [hw, Function.update_self]
-    · rw [Function.update_of_ne hjr]; simp [hw, if_neg hjr]
+    · rw [Function.update_of_ne hjr]; simp [hw, ite_eq_right hjr]
   have hwork_parked : ∀ i j, j ≠ r → Parked (w i j) := by
     intro i j hjr
     by_cases hjt : j ∈ targets
-    · simp only [hw, if_neg hjr, if_pos hjt]
+    · simp only [hw, ite_eq_right hjr, ite_eq_left hjt]
       exact wipedTape_parked (hother j hjr) i
-    · simp only [hw, if_neg hjr, if_neg hjt]
+    · simp only [hw, ite_eq_right hjr, ite_eq_right hjt]
       exact hother j hjr
   have hbody : ∀ i, i < v → (wipeStepTM targets).HoareTime
       (fun inp work out => inp = inp₀ ∧
@@ -223,20 +223,20 @@ theorem wipeLoop_hoareTime {n : ℕ} (targets : List (Fin n)) (r : Fin n)
       rw [hwork j]
       by_cases hjr : j = r
       · subst hjr
-        rw [if_neg hr, hW, Function.update_self, Function.update_self]
+        rw [ite_eq_right hr, hW, Function.update_self, Function.update_self]
       · by_cases hjt : j ∈ targets
-        · rw [if_pos hjt]
+        · rw [ite_eq_left hjt]
           have hWj : W j = wipedTape (work₀ j) i := by
-            rw [hW, Function.update_of_ne hjr, hw]; simp [if_neg hjr, if_pos hjt]
+            rw [hW, Function.update_of_ne hjr, hw]; simp [ite_eq_right hjr, ite_eq_left hjt]
           have hRj : Function.update (w (i + 1)) r (⟨i + 2, regCells v⟩ : Tape) j =
               wipedTape (work₀ j) (i + 1) := by
-            rw [Function.update_of_ne hjr, hw]; simp [if_neg hjr, if_pos hjt]
+            rw [Function.update_of_ne hjr, hw]; simp [ite_eq_right hjr, ite_eq_left hjt]
           rw [hWj, hRj, wipedTape_succ]
-        · rw [if_neg hjt]
+        · rw [ite_eq_right hjt]
           have hWj : W j = work₀ j := by
-            rw [hW, Function.update_of_ne hjr, hw]; simp [if_neg hjr, if_neg hjt]
+            rw [hW, Function.update_of_ne hjr, hw]; simp [ite_eq_right hjr, ite_eq_right hjt]
           have hRj : Function.update (w (i + 1)) r (⟨i + 2, regCells v⟩ : Tape) j = work₀ j := by
-            rw [Function.update_of_ne hjr, hw]; simp [if_neg hjr, if_neg hjt]
+            rw [Function.update_of_ne hjr, hw]; simp [ite_eq_right hjr, ite_eq_right hjt]
           rw [hWj, hRj]
   have key := forRegTM_hoareTime (wipeStepTM targets) r v inp₀ w (fun _ => []) 1 hinp₀
     (fun i => by simp [hw]) hwork_parked hbody

@@ -45,7 +45,7 @@ private theorem read_eq_matched
         intro heq
         exact hmiss prior (by simp) (congrArg Nat.bits heq)
       simp only [List.cons_append, RegisterStore.read]
-      rw [if_neg (Ne.symm hprior)]
+      rw [ite_eq_right (Ne.symm hprior)]
       apply ih
       intro candidate hcandidate
       exact hmiss candidate (by simp [hcandidate])
@@ -61,7 +61,7 @@ private theorem read_eq_zero
         intro heq
         exact hmiss entry (by simp) (congrArg Nat.bits heq)
       simp only [RegisterStore.read]
-      rw [if_neg (Ne.symm hentry)]
+      rw [ite_eq_right (Ne.symm hentry)]
       exact ih (fun candidate hcandidate =>
         hmiss candidate (by simp [hcandidate]))
 

@@ -41,9 +41,9 @@ theorem forBinaryWorkTM_body_step_internal (driverIdx : Fin n) (body : TM n)
       (forBinaryWorkBodyWrap driverIdx body cfg) =
         some (forBinaryWorkBodyWrap driverIdx body next) := by
   have hne : cfg.state ≠ body.qhalt := state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [forBinaryWorkBodyWrap, forBinaryWorkTM])]
+  rw [TM.step, ite_eq_right (by simp [forBinaryWorkBodyWrap, forBinaryWorkTM])]
   simp only [forBinaryWorkBodyWrap, forBinaryWorkTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize body.δ cfg.state cfg.input.read (fun i => (cfg.work i).read)
     cfg.output.read = action
@@ -85,7 +85,7 @@ theorem forBinaryWorkTM_step_scan_bit_internal
   have hblank : (cfg.work driverIdx).read ≠ Γ.blank := by
     rw [hbit]
     cases bit <;> decide
-  rw [TM.step, if_neg (by rw [hstate]; simp [forBinaryWorkTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [forBinaryWorkTM])]
   simp only [forBinaryWorkTM, hstate, hstart, hblank, allReadBack,
     ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
@@ -108,7 +108,7 @@ theorem forBinaryWorkTM_step_scan_blank_internal
         input := cfg.input
         work := cfg.work
         output := cfg.output } := by
-  rw [TM.step, if_neg (by rw [hstate]; simp [forBinaryWorkTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [forBinaryWorkTM])]
   simp only [forBinaryWorkTM, hstate, hblank, allReadBack,
     ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
@@ -133,7 +133,7 @@ theorem forBinaryWorkTM_step_body_halt_internal
             if i = driverIdx then (cfg.work i).move Dir3.right
             else cfg.work i
           output := cfg.output } := by
-  rw [TM.step, if_neg (by simp [forBinaryWorkBodyWrap, forBinaryWorkTM])]
+  rw [TM.step, ite_eq_right (by simp [forBinaryWorkBodyWrap, forBinaryWorkTM])]
   simp only [forBinaryWorkBodyWrap, forBinaryWorkTM, hhalt, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
@@ -141,9 +141,9 @@ theorem forBinaryWorkTM_step_body_halt_internal
     rw [writeAndMove_readBack _ (hwork i)]
     split
     · rfl
-    · rw [idleDir, if_neg (hwork i)]
+    · rw [idleDir, ite_eq_right (hwork i)]
       rfl
-  · rw [writeAndMove_readBack _ houtput, idleDir, if_neg houtput]
+  · rw [writeAndMove_readBack _ houtput, idleDir, ite_eq_right houtput]
     rfl
 
 /-- A certified bit-driven loop has its advertised exact remaining run. -/

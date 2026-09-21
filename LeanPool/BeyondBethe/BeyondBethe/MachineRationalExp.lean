@@ -369,7 +369,7 @@ theorem binaryNormalizeRawRat_expBasePow_eq
         change (0 : ℚ) ≤ (n : ℚ) / (den : ℚ)
         exact div_nonneg (Nat.cast_nonneg n) (Nat.cast_nonneg den)
       rw [binaryRationalExpLower,
-        if_pos ((binaryRatNonnegative_eq_true_iff _).2 hs),
+        ite_eq_left ((binaryRatNonnegative_eq_true_iff _).2 hs),
         binaryRationalPositiveExpLower]
       simp [RawRat.expApproxSteps, RawRat.expMagnitude,
         binaryRatAdd_eq_add, binaryRatDiv_eq_div,
@@ -386,7 +386,7 @@ theorem binaryNormalizeRawRat_expBasePow_eq
       have hflag : ¬ binaryRatNonnegative
           ((⟨Int.negSucc n, den, hden⟩ : RawRat).value) = true :=
         fun h => hs ((binaryRatNonnegative_eq_true_iff _).1 h)
-      rw [binaryRationalExpLower, if_neg hflag,
+      rw [binaryRationalExpLower, ite_eq_right hflag,
         binaryRationalNegativeExpLower]
       simp [RawRat.expApproxSteps, RawRat.expMagnitude,
         binaryRatNeg_eq_neg, binaryRatSub_eq_sub,

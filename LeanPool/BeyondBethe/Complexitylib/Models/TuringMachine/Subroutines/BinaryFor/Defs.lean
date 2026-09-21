@@ -144,22 +144,22 @@ def binaryForTM {n : ℕ} (body : TM n) (counterIdx limitIdx : Fin n) : TM n :=
             · subst i
               rw [hblank.1] at hi
               exact absurd hi (by decide)
-            · rw [if_neg hic]
+            · rw [ite_eq_right hic]
               by_cases hil : i = limitIdx
               · subst i
                 rw [hblank.2] at hi
                 exact absurd hi (by decide)
-              · rw [if_neg hil]
+              · rw [ite_eq_right hil]
                 exact idleDir_right_of_start hi
           · refine ⟨idleDir_right_of_start, fun i hi => ?_,
               idleDir_right_of_start⟩
             dsimp only
             by_cases hic : i = counterIdx
-            · rw [if_pos hic]
-            · rw [if_neg hic]
+            · rw [ite_eq_left hic]
+            · rw [ite_eq_right hic]
               by_cases hil : i = limitIdx
-              · rw [if_pos hil]
-              · rw [if_neg hil]
+              · rw [ite_eq_left hil]
+              · rw [ite_eq_right hil]
                 exact idleDir_right_of_start hi
       | .inl (.rewind equalSoFar) =>
           dsimp only
@@ -168,23 +168,23 @@ def binaryForTM {n : ℕ} (body : TM n) (counterIdx limitIdx : Fin n) : TM n :=
               idleDir_right_of_start⟩
             dsimp only
             by_cases hic : i = counterIdx
-            · rw [if_pos hic]
-            · rw [if_neg hic]
+            · rw [ite_eq_left hic]
+            · rw [ite_eq_right hic]
               by_cases hil : i = limitIdx
-              · rw [if_pos hil]
-              · rw [if_neg hil]
+              · rw [ite_eq_left hil]
+              · rw [ite_eq_right hil]
                 exact idleDir_right_of_start hi
           · refine ⟨idleDir_right_of_start, fun i hi => ?_,
               idleDir_right_of_start⟩
             dsimp only
             by_cases hic : i = counterIdx
-            · rw [if_pos hic]
+            · rw [ite_eq_left hic]
               exact moveLeftDir_right_of_start hi
-            · rw [if_neg hic]
+            · rw [ite_eq_right hic]
               by_cases hil : i = limitIdx
-              · rw [if_pos hil]
+              · rw [ite_eq_left hil]
                 exact moveLeftDir_right_of_start hi
-              · rw [if_neg hil]
+              · rw [ite_eq_right hil]
                 exact idleDir_right_of_start hi
       | .inl .done => exact rightOfStart_allIdle iHead wHeads oHead
       | .inr q =>

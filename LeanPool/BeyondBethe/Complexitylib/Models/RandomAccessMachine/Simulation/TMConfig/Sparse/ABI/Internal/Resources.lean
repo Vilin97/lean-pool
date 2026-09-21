@@ -739,7 +739,7 @@ private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
     have hrepairStore : repairBitStore n entry store = loaded := by
       unfold repairBitStore
       change (if loaded (valueReg n) = 0 then loaded else _) = loaded
-      rw [if_pos hzero]
+      rw [ite_eq_left hzero]
     refine ⟨3, ?_, ?_⟩
     · rw [hrepairStore]
       simpa [repairBit] using hrun'
@@ -792,7 +792,7 @@ private theorem repairBit_measured_internal {tm : TM n} {bound valueLimit : ℕ}
         Structured.Basic.execList
           [.imm (valueReg n) (entry.2 + 1),
             .store (addressReg n) (valueReg n)] loaded) = final
-      rw [if_neg hzero]
+      rw [ite_eq_right hzero]
       rfl
     refine ⟨6, ?_, ?_⟩
     · rw [hrepairStore]

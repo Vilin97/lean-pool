@@ -81,7 +81,7 @@ private theorem initRegs_index_le_length {x : List Bool} {reg : ℕ}
     (hnonzero : initRegs x reg ≠ 0) : reg ≤ x.length := by
   by_cases hreg : reg = 0
   · omega
-  rw [initRegs, if_neg hreg] at hnonzero
+  rw [initRegs, ite_eq_right hreg] at hnonzero
   cases hbit : x[reg - 1]? with
   | none => simp [hbit] at hnonzero
   | some bit =>
@@ -506,7 +506,7 @@ theorem headsBounded_step_internal {tm : TM n} {bound : ℕ}
       (fun i => (cfg.work i).read) cfg.output.read with
     ⟨nextState, workWrites, outputWrite, inputDirection,
       workDirections, outputDirection⟩
-  rw [TM.step, if_neg hnotHalted, hdelta] at hstep
+  rw [TM.step, ite_eq_right hnotHalted, hdelta] at hstep
   dsimp only at hstep
   injection hstep with hnext
   subst next

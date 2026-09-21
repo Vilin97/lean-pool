@@ -10,7 +10,7 @@ import LeanPool.BeyondBethe.BeyondBethe.MachineListReverse
 # Appending one entry to a finite-word list
 
 The canonical list representation is right-nested, so appending an entry is
-not a fixedValue-time constructor operation.  This machine reverses the encoded
+not a constant-time constructor operation.  This machine reverses the encoded
 list, prepends the supplied encoded entry, and reverses once more.  The two
 uses of the verified list-reversal machine make the construction total and
 polynomial-time on arbitrary finite words.

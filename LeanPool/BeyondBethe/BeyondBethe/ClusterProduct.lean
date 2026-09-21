@@ -478,9 +478,9 @@ theorem coefficientInnerProduct_rowClusterProduct_eq_permanent
             apply Finset.sum_congr rfl
             intro f _
             by_cases hg : IsGlobalClusterChoice C f
-            · rw [if_pos hg,
+            · rw [ite_eq_left hg,
                 sum_selector_matches_choice_of_global C f _ hg]
-            · rw [if_neg hg,
+            · rw [ite_eq_right hg,
                 sum_selector_matches_choice_of_not_global C f _ hg]
     _ = ∑ f : GlobalClusterChoice C, clusterChoiceWeight A C f.1 := by
           apply Finset.sum_subtype

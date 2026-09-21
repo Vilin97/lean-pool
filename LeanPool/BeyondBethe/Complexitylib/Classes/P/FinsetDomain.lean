@@ -10,7 +10,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Classes.P.FinsetDomain.Internal
 /-!
 # Finite-deviation functions are polynomial-time
 
-A function that agrees with the fixedValue empty-output function on all but
+A function that agrees with the constant empty-output function on all but
 finitely many inputs is polynomial-time computable. Concretely, for any target
 function `g` and finite set `S`, the function `fun s => if s ∈ S then g s else []`
 belongs to `FP`: the finite lookup table can be hard-wired into the states of a
@@ -30,7 +30,7 @@ public section
 
 namespace Complexity
 
-/-- A function that agrees with the fixedValue empty-output function except on a
+/-- A function that agrees with the constant empty-output function except on a
 finite set `S` — that is, `fun s => if s ∈ S then g s else []` — is computable in
 polynomial (indeed linear) time. The finite table of exceptional values is
 hard-wired into the lookup machine's states. -/

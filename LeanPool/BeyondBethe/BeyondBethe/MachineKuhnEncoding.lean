@@ -11,7 +11,7 @@ import LeanPool.BeyondBethe.BeyondBethe.MachineUnaryRange
 
 Every natural index is unary.  Boolean visited sets and column-mate tables are
 right-nested lists, and the recursive continuation is an explicit
-right-nested stack.  The rational matrix and the dimension-derived fixedValue
+right-nested stack.  The rational matrix and the dimension-derived constant
 words are carried unchanged beside the control word.
 -/
 
@@ -449,7 +449,7 @@ def kuhnMachineStateCode {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ)
       kuhnStackCode stack := by
   exact machineListTail_cons kuhnFrameCode frame stack
 
-/-! The projections below are all fixedValue-depth pairing operations. -/
+/-! The projections below are all constant-depth pairing operations. -/
 
 theorem machineKuhnStateControl_mem_FP :
     machineKuhnStateControl ∈ Complexity.FP := machinePairFirst_mem_FP

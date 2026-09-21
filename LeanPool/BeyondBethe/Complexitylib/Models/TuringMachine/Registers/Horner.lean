@@ -30,7 +30,7 @@ are deliberately loose.
 - `TM.opBudget` — the uniform per-operation time budget
 - `TM.setConstTM` — `q := c`
 - `TM.hornerLayerRegTM` — `tmp := tmp · X + comp` (register addend)
-- `TM.hornerLayerConstTM` — `tmp := tmp · X + c` (fixedValue addend)
+- `TM.hornerLayerConstTM` — `tmp := tmp · X + c` (constant addend)
 
 ## Main results
 
@@ -56,7 +56,7 @@ variable {n : ℕ}
     × (per-mark sweep length). -/
 def opBudget (M : ℕ) : ℕ := 32 * ((M + 2) * (M + 2) * (M + 2))
 
-/-- Anything at most quadratic in `M + 2` (with fixedValue `6`) fits in `opBudget M`. -/
+/-- Anything at most quadratic in `M + 2` (with constant `6`) fits in `opBudget M`. -/
 theorem le_opBudget_of_le {a M : ℕ} (h : a ≤ 6 * (M + 2) * (M + 2)) :
     a ≤ opBudget M := by
   refine le_trans h ?_
@@ -132,7 +132,7 @@ theorem mulAddIntoTM_le_opBudget {a b d M : ℕ} (ha : a ≤ M) (hb : b ≤ M)
   nlinarith
 
 -- ════════════════════════════════════════════════════════════════════════
--- setConstTM: load a fixedValue into a register
+-- setConstTM: load a constant into a register
 -- ════════════════════════════════════════════════════════════════════════
 
 /-- `q := c` (clear, then increment `c` times). -/
@@ -176,7 +176,7 @@ def hornerLayerRegTM (X comp tmp tmp2 : Fin n) : TM n :=
     (seqTM (mulAddIntoTM tmp X tmp2)
       (seqTM (addIntoTM comp tmp2) (copyIntoTM tmp2 tmp)))
 
-/-- One Horner layer with a **fixedValue** addend:
+/-- One Horner layer with a **constant** addend:
     `tmp := tmp · X + c` (scratch `tmp2` ends holding the same value). -/
 def hornerLayerConstTM (X tmp tmp2 : Fin n) (c : ℕ) : TM n :=
   seqTM (clearRegTM tmp2)
@@ -426,7 +426,7 @@ theorem hornerFold_take_le (x : ℕ) (cs : List ℕ) (k : ℕ) :
       ≤ (cs.sum + 1) * (x + 1) ^ cs.length :=
         Nat.mul_le_mul (by omega) h2
 
-/-- Fold Horner layers (fixedValue addends, highest first) over a register. -/
+/-- Fold Horner layers (constant addends, highest first) over a register. -/
 def hornerLayersTM (X tmp tmp2 : Fin n) (cs : List ℕ) : TM n :=
   bigSeqTM (cs.map (hornerLayerConstTM X tmp tmp2))
 

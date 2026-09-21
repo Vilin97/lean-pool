@@ -72,12 +72,12 @@ private theorem branchWorkSymbolTM_equal_step
         (workSymbolEqualWrap idx symbol onEqual onDifferent c) =
       some (workSymbolEqualWrap idx symbol onEqual onDifferent c') := by
   have hne : c.state ≠ onEqual.qhalt := state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by
+  rw [TM.step, ite_eq_right (by
     simp [workSymbolEqualWrap, workBranchBlankState, branchWorkSymbolTM,
       hne])]
   simp only [workSymbolEqualWrap, workBranchBlankState, hne, ↓reduceIte,
     branchWorkSymbolTM]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : onEqual.δ c.state c.input.read
     (fun i => (c.work i).read) c.output.read = action
@@ -94,12 +94,12 @@ private theorem branchWorkSymbolTM_different_step
         (workSymbolDifferentWrap idx symbol onEqual onDifferent c) =
       some (workSymbolDifferentWrap idx symbol onEqual onDifferent c') := by
   have hne : c.state ≠ onDifferent.qhalt := state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by
+  rw [TM.step, ite_eq_right (by
     simp [workSymbolDifferentWrap, workBranchNonblankState,
       branchWorkSymbolTM, hne])]
   simp only [workSymbolDifferentWrap, workBranchNonblankState, hne,
     ↓reduceIte, branchWorkSymbolTM]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : onDifferent.δ c.state c.input.read
     (fun i => (c.work i).read) c.output.read = action
@@ -143,7 +143,7 @@ private theorem branchWorkSymbolTM_dispatch_equal
           output := out } =
       some (workSymbolEqualWrap idx symbol onEqual onDifferent
         { state := onEqual.qstart, input := inp, work := work, output := out }) := by
-  rw [TM.step, if_neg (by simp [branchWorkSymbolTM])]
+  rw [TM.step, ite_eq_right (by simp [branchWorkSymbolTM])]
   simp only [branchWorkSymbolTM, hequal, allReadBack, ↓reduceIte,
     workSymbolEqualWrap]
   refine congrArg some (Cfg.ext rfl ?_ ?_ ?_)
@@ -166,7 +166,7 @@ private theorem branchWorkSymbolTM_dispatch_different
       some (workSymbolDifferentWrap idx symbol onEqual onDifferent
         { state := onDifferent.qstart, input := inp, work := work,
           output := out }) := by
-  rw [TM.step, if_neg (by simp [branchWorkSymbolTM])]
+  rw [TM.step, ite_eq_right (by simp [branchWorkSymbolTM])]
   simp only [branchWorkSymbolTM, hdifferent, allReadBack, ↓reduceIte,
     workSymbolDifferentWrap]
   refine congrArg some (Cfg.ext rfl ?_ ?_ ?_)

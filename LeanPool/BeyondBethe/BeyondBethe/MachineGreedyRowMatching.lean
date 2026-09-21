@@ -820,7 +820,7 @@ theorem machineMatchingInnerNextSelected_encode {n : ℕ}
       rw [hclamp]
       simp [certifiedGreedyOrderedStep, hij, haccept]
     · simp [certifiedGreedyOrderedStep, hij, haccept]
-  · simp only [dif_neg hij, machineIfHead_false,
+  · simp only [dite_eq_right hij, machineIfHead_false,
       certifiedGreedyOrderedStep, machineMatchingInnerSelected_pack]
 
 theorem certifiedGreedyOrderedScan_take_succ {n : ℕ}
@@ -1541,7 +1541,7 @@ theorem certifiedGreedyOrderedStep_map_endpoints {n : ℕ}
           explicitKappa (directedPairCostPrecision n) (rowPairOfLT i j hij) ∧
           ∀ r ∈ selected, Disjoint (rowPairOfLT i j hij).1 r.1 :=
         ⟨h.1, hiff.mp h.2⟩
-      rw [if_pos h, if_pos htyped, List.map_cons,
+      rw [ite_eq_left h, ite_eq_left htyped, List.map_cons,
         rowPairEndpoints_rowPairOfLT]
     · have htyped : ¬(HasCertifiedCorePair
           (explicitRegularizationScale n) X explicitKappa
@@ -1549,7 +1549,7 @@ theorem certifiedGreedyOrderedStep_map_endpoints {n : ℕ}
           ∀ r ∈ selected, Disjoint (rowPairOfLT i j hij).1 r.1) := by
         intro ht
         exact h ⟨ht.1, hiff.mpr ht.2⟩
-      rw [if_neg h, if_neg htyped]
+      rw [ite_eq_right h, ite_eq_right htyped]
   · simp [certifiedGreedyOrderedStep, certifiedGreedyTypedStep, hij]
 
 def certifiedGreedyTypedInnerScan {n : ℕ}
@@ -1728,13 +1728,13 @@ def greedyRowFinsetStep {n : ℕ}
   by_cases h : ∀ r ∈ selected, Disjoint q.1 r.1
   · have hfin : ∀ r ∈ selected.toFinset, Disjoint q.1 r.1 := by
       simpa using h
-    rw [greedyRowListStep, if_pos h,
-      greedyRowFinsetStep, if_pos hfin]
+    rw [greedyRowListStep, ite_eq_left h,
+      greedyRowFinsetStep, ite_eq_left hfin]
     simp
   · have hfin : ¬(∀ r ∈ selected.toFinset, Disjoint q.1 r.1) := by
       simpa using h
-    rw [greedyRowListStep, if_neg h,
-      greedyRowFinsetStep, if_neg hfin]
+    rw [greedyRowListStep, ite_eq_right h,
+      greedyRowFinsetStep, ite_eq_right hfin]
 
 theorem greedyRowListFold_toFinset {n : ℕ}
     (selected : List (RowPair n)) (edges : List (RowPair n)) :
@@ -1790,7 +1790,7 @@ theorem certifiedGreedyTypedStep_nodup {n : ℕ}
       intro hmem
       exact rowPair_not_disjoint_self _ (haccept.2 _ hmem)
     · exact hselected
-  · rw [certifiedGreedyTypedStep, dif_neg hij]
+  · rw [certifiedGreedyTypedStep, dite_eq_right hij]
     exact hselected
 
 theorem certifiedGreedyTypedInnerScan_nodup {n : ℕ}

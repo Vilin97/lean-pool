@@ -717,13 +717,13 @@ def logUnit (q : ℚ) : RawRat :=
   rw [logUnit, binaryRationalLogUnit]
   by_cases h : binaryRationalBinaryResidual q < 1
   · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using h
-    rw [if_pos ((binaryRatLt_eq_true_iff _ _).2 h), if_neg hnot]
+    rw [ite_eq_left ((binaryRatLt_eq_true_iff _ _).2 h), ite_eq_right hnot]
     simp [binaryRatInv_eq_inv]
   · have hle : 1 ≤ (logResidual q).value := by
       simpa using (le_of_not_gt h)
     have hflag : ¬ binaryRatLt (binaryRationalBinaryResidual q) 1 = true :=
       fun htrue => h ((binaryRatLt_eq_true_iff _ _).1 htrue)
-    rw [if_neg hflag, if_pos hle]
+    rw [ite_eq_right hflag, ite_eq_left hle]
     exact RawRat.value_logResidual q
 
 end RawRat
@@ -834,14 +834,14 @@ def logUpper (q : ℚ) (N : ℕ) : RawRat :=
   rw [logResidualLower]
   by_cases h : binaryRationalBinaryResidual q < 1
   · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using h
-    rw [if_neg hnot,
-      if_pos ((binaryRatLt_eq_true_iff _ _).2 h)]
+    rw [ite_eq_right hnot,
+      ite_eq_left ((binaryRatLt_eq_true_iff _ _).2 h)]
     simp [binaryRatNeg_eq_neg]
   · have hle : 1 ≤ (logResidual q).value := by
       simpa using (le_of_not_gt h)
     have hflag : ¬ binaryRatLt (binaryRationalBinaryResidual q) 1 = true :=
       fun htrue => h ((binaryRatLt_eq_true_iff _ _).1 htrue)
-    rw [if_pos hle, if_neg hflag]
+    rw [ite_eq_left hle, ite_eq_right hflag]
     simpa only [value_logUnit] using value_logUnitLower (logUnit q) N
 
 @[simp] theorem value_logResidualUpper (q : ℚ) (N : ℕ) :
@@ -852,14 +852,14 @@ def logUpper (q : ℚ) (N : ℕ) : RawRat :=
   rw [logResidualUpper]
   by_cases h : binaryRationalBinaryResidual q < 1
   · have hnot : ¬ 1 ≤ (logResidual q).value := by simpa using h
-    rw [if_neg hnot,
-      if_pos ((binaryRatLt_eq_true_iff _ _).2 h)]
+    rw [ite_eq_right hnot,
+      ite_eq_left ((binaryRatLt_eq_true_iff _ _).2 h)]
     simp [binaryRatNeg_eq_neg]
   · have hle : 1 ≤ (logResidual q).value := by
       simpa using (le_of_not_gt h)
     have hflag : ¬ binaryRatLt (binaryRationalBinaryResidual q) 1 = true :=
       fun htrue => h ((binaryRatLt_eq_true_iff _ _).1 htrue)
-    rw [if_pos hle, if_neg hflag]
+    rw [ite_eq_left hle, ite_eq_right hflag]
     simpa only [value_logUnit] using value_logUnitUpper (logUnit q) N
 
 @[simp] theorem value_logLower (q : ℚ) (N : ℕ) :

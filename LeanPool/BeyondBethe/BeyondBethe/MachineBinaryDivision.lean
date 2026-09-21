@@ -612,7 +612,7 @@ theorem natBits_ne_nil_of_ne_zero {n : ℕ} (hn : n ≠ 0) : n.bits ≠ [] := by
   by_cases hdivisor : divisor = 0
   · simp [hdivisor]
   · by_cases htake : divisor ≤ remainder + remainder + bitValue bit
-    · simp only [hdivisor, if_false]
+    · simp only [hdivisor, ite_false]
       simp only [htake, decide_true, machineIfHead_true,
         machineBinaryDivDivisor_pack, if_true]
       rw [machineBinarySubBits_pair_natBits]

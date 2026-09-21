@@ -1501,15 +1501,15 @@ private theorem denseStepVolume_le_runScale_succ
       rw [hhalt]
       rfl
     unfold denseStepVolume denseStepWidth denseRunScale
-    rw [RAM.unitTimeUpto_succ, if_pos hramHalt,
-      RAM.logTimeUpto_succ, if_pos hramHalt]
+    rw [RAM.unitTimeUpto_succ, ite_eq_left hramHalt,
+      RAM.logTimeUpto_succ, ite_eq_left hramHalt]
     rw [hcost]
     nlinarith
   · have hramNotHalt : ¬RAM.Halted program (snapshot.decode input) :=
       fun h => hhalt (hhalted.mpr h)
     unfold denseStepVolume denseStepWidth denseRunScale
-    rw [RAM.unitTimeUpto_succ, if_neg hramNotHalt,
-      RAM.logTimeUpto_succ, if_neg hramNotHalt]
+    rw [RAM.unitTimeUpto_succ, ite_eq_right hramNotHalt,
+      RAM.logTimeUpto_succ, ite_eq_right hramNotHalt]
     nlinarith
 
 private theorem denseRunScale_step_add_width_le
@@ -1545,8 +1545,8 @@ private theorem denseRunScale_step_add_width_le
     have hdecode := DenseOverlay.Snapshot.decode_step program input snapshot
       hvalid.1
     unfold denseRunScale denseStepWidth
-    rw [RAM.unitTimeUpto_succ, if_neg hramNotHalt,
-      RAM.logTimeUpto_succ, if_neg hramNotHalt, hdecode]
+    rw [RAM.unitTimeUpto_succ, ite_eq_right hramNotHalt,
+      RAM.logTimeUpto_succ, ite_eq_right hramNotHalt, hdecode]
     nlinarith
 
 private theorem denseDispatchHaltTime_le_width {m : ℕ}

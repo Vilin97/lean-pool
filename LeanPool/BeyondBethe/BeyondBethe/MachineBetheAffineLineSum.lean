@@ -224,7 +224,7 @@ theorem bethe_flat_index_lt_word_length {m : ℕ} (rowMode : Bool)
       else current.1 * m + fixed.1) < m * m := by
     cases rowMode with
     | false =>
-        simp only [Bool.false_eq_true, if_false]
+        simp only [Bool.false_eq_true, ite_false]
         calc
           current.1 * m + fixed.1 < current.1 * m + m :=
             Nat.add_lt_add_left fixed.isLt _
@@ -262,7 +262,7 @@ theorem bethe_flat_index_lt_word_length {m : ℕ} (rowMode : Bool)
   | false =>
       simp only [machineBetheFlatIndexBits, machineBetheFlatIndexMode,
         betheFlatIndexCanonicalWord, machinePairFirst_pair,
-        machineIfHead_false, Bool.false_eq_true, if_false]
+        machineIfHead_false, Bool.false_eq_true, ite_false]
       change machineBoundedUnary
         (pair (betheFlatIndexCanonicalWord false fixed current y)
           (machineBetheFlatIndexColumnBits
@@ -305,7 +305,7 @@ theorem bethe_flat_index_lt_word_length {m : ℕ} (rowMode : Bool)
     machineBetheFlatIndexVector_encode]
   cases rowMode with
   | false =>
-      simp only [Bool.false_eq_true, if_false, rationalFiniteVectorCode]
+      simp only [Bool.false_eq_true, ite_false, rationalFiniteVectorCode]
       have hk : current.1 * m + fixed.1 < (List.ofFn y).length := by
         simp only [List.length_ofFn]
         calc
@@ -742,7 +742,7 @@ theorem betheAffineLineValue_cost_le_word {m : ℕ} (rowMode : Bool)
   have hzmem : z ∈ List.ofFn y := by
     cases rowMode with
     | false =>
-        simp only [z, Bool.false_eq_true, if_false]
+        simp only [z, Bool.false_eq_true, ite_false]
         exact (List.mem_ofFn).2 ⟨finProdFinEquiv (current, fixed), rfl⟩
     | true =>
         simp only [z, if_true]

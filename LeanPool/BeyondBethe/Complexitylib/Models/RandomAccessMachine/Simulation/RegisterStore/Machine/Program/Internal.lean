@@ -698,7 +698,7 @@ theorem programLoop_rewind_check_internal (tmBody tmTest : TM n)
         exact TM.transitionTape_eq_self (by rw [hread₃]; simp)
     refine ⟨c₃, .step hstep₁ (.step hstep₂ (.step hstep₃ .zero)),
       ?_, ?_, ?_, ?_⟩
-    · rw [hstate₃, if_pos hone]
+    · rw [hstate₃, ite_eq_left hone]
     · rw [hinput₃, hinput₂, hinput₁]
     · rw [hwork₃, hwork₂, hwork₁]
     · rw [houtput₃, houtput₂]
@@ -723,7 +723,7 @@ theorem programLoop_rewind_check_internal (tmBody tmTest : TM n)
       · exact TM.transitionTape_eq_self hread₃Start
     refine ⟨c₃, .step hstep₁ (.step hstep₂ (.step hstep₃ .zero)),
       ?_, ?_, ?_, ?_⟩
-    · rw [hstate₃, if_neg hone]
+    · rw [hstate₃, ite_eq_right hone]
     · rw [hinput₃, hinput₂, hinput₁]
     · rw [hwork₃, hwork₂, hwork₁]
     · rw [houtput₃, houtput₂]
@@ -1256,7 +1256,7 @@ theorem snapshot_run_halted_internal
     ∀ fuel, snapshot.run program fuel = snapshot
   | 0 => rfl
   | fuel + 1 => by
-      rw [Snapshot.run, if_pos hhalted]
+      rw [Snapshot.run, ite_eq_left hhalted]
 
 /-- A halted fuel-bounded sparse run is realized by the fixed controller loop.
 The extra iteration handles a snapshot that is already halted at fuel zero. -/

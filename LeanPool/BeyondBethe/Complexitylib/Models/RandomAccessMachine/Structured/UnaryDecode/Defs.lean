@@ -49,7 +49,7 @@ def inputBase : ℕ := 7
 def inputStore (bits : List Bool) : Store :=
   Input.bitStore remainingReg inputBase bits
 
-/-- Initialize the parser cursor, accumulator, fixedValue, and activity flag. -/
+/-- Initialize the parser cursor, accumulator, constant, and activity flag. -/
 def setupOps : List Basic :=
   [.imm verdictReg 0, .imm valueReg 0, .imm pointerReg inputBase,
     .imm oneReg 1, .imm activeReg 1]
@@ -96,7 +96,7 @@ structure CursorReady (inputLength : ℕ) (remaining : List Bool)
   pointer_eq : store pointerReg = inputBase + offset
   /-- The remaining-length register agrees with the semantic suffix. -/
   remaining_eq : store remainingReg = remaining.length
-  /-- The parser's fixedValue-one register is initialized. -/
+  /-- The parser's constant-one register is initialized. -/
   one_eq : store oneReg = 1
   /-- The loop is active. -/
   active_eq : store activeReg = 1

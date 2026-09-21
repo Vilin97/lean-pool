@@ -69,10 +69,10 @@ private theorem entryScanTM_body_step
       some (entryScanBodyWrap tapes next) := by
   have hne : cfg.state ≠ (entryScanStepTM tapes.entry).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by
+  rw [TM.step, ite_eq_right (by
     simp [entryScanBodyWrap, entryScanTM])]
   simp only [entryScanBodyWrap, entryScanTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (entryScanStepTM tapes.entry).δ cfg.state cfg.input.read
     (fun i => (cfg.work i).read) cfg.output.read = action
@@ -90,10 +90,10 @@ private theorem entryScanTM_pred_step
       some (entryScanPredWrap tapes next) := by
   have hne : cfg.state ≠ (TM.binaryPredTM tapes.count).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by
+  rw [TM.step, ite_eq_right (by
     simp [entryScanPredWrap, entryScanTM])]
   simp only [entryScanPredWrap, entryScanTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (TM.binaryPredTM tapes.count).δ cfg.state cfg.input.read
     (fun i => (cfg.work i).read) cfg.output.read = action
@@ -129,7 +129,7 @@ theorem entryScanTM_step_test_zero_internal
     (entryScanTM tapes).step
       { state := .inl .test, input := inp, work := work, output := out } =
       some { state := .inl .done, input := inp, work := work, output := out } := by
-  rw [TM.step, if_neg (by simp [entryScanTM])]
+  rw [TM.step, ite_eq_right (by simp [entryScanTM])]
   simp only [entryScanTM, hcount, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
   · exact hinput.move_idle
@@ -147,7 +147,7 @@ theorem entryScanTM_step_test_positive_internal
       some (entryScanBodyWrap tapes
         { state := (entryScanStepTM tapes.entry).qstart
           input := inp, work := work, output := out }) := by
-  rw [TM.step, if_neg (by simp [entryScanTM])]
+  rw [TM.step, ite_eq_right (by simp [entryScanTM])]
   simp only [entryScanTM, hcount, ↓reduceIte, entryScanBodyWrap]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
   · exact hinput.move_idle
@@ -164,7 +164,7 @@ theorem entryScanTM_step_body_hit_internal
     (houtput : TM.Parked cfg.output) :
     (entryScanTM tapes).step (entryScanBodyWrap tapes cfg) =
       some (entryScanDoneCfg tapes cfg.input cfg.work cfg.output) := by
-  rw [TM.step, if_neg (by simp [entryScanBodyWrap, entryScanTM])]
+  rw [TM.step, ite_eq_right (by simp [entryScanBodyWrap, entryScanTM])]
   simp only [entryScanBodyWrap, entryScanDoneCfg, entryScanTM, hhalt,
     hresult, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -184,7 +184,7 @@ theorem entryScanTM_step_body_miss_internal
       some (entryScanPredWrap tapes
         { state := (TM.binaryPredTM tapes.count).qstart
           input := cfg.input, work := cfg.work, output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryScanBodyWrap, entryScanTM])]
+  rw [TM.step, ite_eq_right (by simp [entryScanBodyWrap, entryScanTM])]
   simp only [entryScanBodyWrap, entryScanTM, hhalt, hresult, ↓reduceIte,
     entryScanPredWrap]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -201,7 +201,7 @@ theorem entryScanTM_step_pred_halt_internal
     (houtput : TM.Parked cfg.output) :
     (entryScanTM tapes).step (entryScanPredWrap tapes cfg) =
       some (entryScanTestCfg tapes cfg.input cfg.work cfg.output) := by
-  rw [TM.step, if_neg (by simp [entryScanPredWrap, entryScanTM])]
+  rw [TM.step, ite_eq_right (by simp [entryScanPredWrap, entryScanTM])]
   simp only [entryScanPredWrap, entryScanTestCfg, entryScanTM, hhalt,
     ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)

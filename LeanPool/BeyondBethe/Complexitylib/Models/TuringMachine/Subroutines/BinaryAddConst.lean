@@ -31,7 +31,7 @@ namespace TM
 
 variable {n : ℕ}
 
-/-- Fixed-fixedValue addition has the advertised exact runtime and changes only
+/-- Fixed-constant addition has the advertised exact runtime and changes only
 the destination tape. -/
 theorem binaryAddConstTM_reachesIn_frame
     (idx : Fin n) (fixedValue dstValue : ℕ)
@@ -55,7 +55,7 @@ theorem binaryAddConstTM_reachesIn_frame
   binaryAddConstTM_reachesIn_frame_internal idx fixedValue dstValue inp₀ work₀
     out₀ hdst hinp hother hout
 
-/-- Time-bounded literal-frame contract for fixed-fixedValue addition. -/
+/-- Time-bounded literal-frame contract for fixed-constant addition. -/
 theorem binaryAddConstTM_hoareTime_frame
     (idx : Fin n) (fixedValue dstValue : ℕ)
     (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape)
@@ -75,7 +75,7 @@ theorem binaryAddConstTM_hoareTime_frame
   binaryAddConstTM_hoareTime_frame_internal idx fixedValue dstValue inp₀ work₀
     out₀ hdst hinp hother hout
 
-/-- Every prefix of fixed-fixedValue addition respects a bound controlled by
+/-- Every prefix of fixed-constant addition respects a bound controlled by
 the final destination width. -/
 theorem binaryAddConstTM_hoareTimeSpace_frame
     (idx : Fin n) (fixedValue dstValue inputLength initialSpace : ℕ)
@@ -100,7 +100,7 @@ theorem binaryAddConstTM_hoareTimeSpace_frame
     inputLength initialSpace inp₀ work₀ out₀ hdst hinp hother hout
     hworkSpace hinputSpace
 
-/-- Fixed-fixedValue addition never moves its output head left. -/
+/-- Fixed-constant addition never moves its output head left. -/
 theorem binaryAddConstTM_isTransducer (idx : Fin n) (fixedValue : ℕ) :
     (binaryAddConstTM idx fixedValue).IsTransducer :=
   binaryAddConstTM_isTransducer_internal idx fixedValue

@@ -18,7 +18,7 @@ multi-arity. This module gives the public, auditable bridge: `encodeVec` packs a
 fixed-arity argument vector into one string, `vectorLength` measures its unencoded
 size, and `FPn` asks a unary `FP` function to agree on the encoded vectors.
 
-The nested pairing has an arity-dependent fixedValue overhead. It is injective, and
+The nested pairing has an arity-dependent constant overhead. It is injective, and
 for every fixed arity its encoded length is linear in `vectorLength`.
 
 ## Main definitions and results

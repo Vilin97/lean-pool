@@ -326,7 +326,7 @@ def wordDecodeLinearTM {n : ℕ}
           intro i hi
           by_cases him : i = markerIdx
           · subst i
-            simpa only [if_pos] using TM.moveLeftDir_right_of_start hi
+            simpa only [ite_eq_left] using TM.moveLeftDir_right_of_start hi
           · simp [him, TM.idleDir_right_of_start hi]
     | copy =>
         cases hmarker : wHeads markerIdx with

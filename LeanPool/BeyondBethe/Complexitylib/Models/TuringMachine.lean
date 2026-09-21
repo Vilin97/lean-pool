@@ -714,7 +714,7 @@ theorem trace_startInvariant (tm : NTM n) (T : ℕ)
   | succ T ih =>
       by_cases hhalt : c.state = tm.qhalt
       · simpa [trace, hhalt] using And.intro hinp (And.intro hwork hout)
-      · simp only [trace, hhalt, if_false]
+      · simp only [trace, hhalt, ite_false]
         apply ih
         · exact hinp.move _
         · intro i
@@ -776,7 +776,7 @@ theorem trace_mono (tm : NTM n) {T T' : ℕ} (hle : T ≤ T')
       rw [hcT, hcT']
     · have hch0 := hagree ⟨0, Nat.zero_lt_succ _⟩
       have hle' : T ≤ T' := Nat.le_of_succ_le_succ hle
-      simp only [NTM.trace, hc, hch0, if_false] at h ⊢
+      simp only [NTM.trace, hc, hch0, ite_false] at h ⊢
       exact ih hle' (fun i => hagree ⟨i.val + 1, by omega⟩) h
 
 /-- NTM acceptance is monotone in the time bound: `AcceptsInTime x T` implies

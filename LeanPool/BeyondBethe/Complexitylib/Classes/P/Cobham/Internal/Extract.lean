@@ -136,10 +136,10 @@ theorem runTrue_length {z : List Bool} {n : ℕ} (htrue : ∀ i < n, bitOf z i =
   | succ m ih =>
       rw [runTrue, List.length_append, ih]
       rcases Nat.lt_or_ge m n with hm | hm
-      · rw [if_pos ⟨by omega, htrue m hm⟩]
+      · rw [ite_eq_left ⟨by omega, htrue m hm⟩]
         simp only [List.length_cons, List.length_nil]
         omega
-      · rw [if_neg ?_]
+      · rw [ite_eq_right ?_]
         · simp only [List.length_nil]
           omega
         · rintro ⟨h1, h2⟩
@@ -190,7 +190,7 @@ theorem cellBitsFn {n : ℕ} (o : ℕ) {gr gz : (Fin n → List Bool) → List B
           simp; omega
         cases b <;>
           · rw [recNotation_cons]
-            simp only [cond_true, cond_false]
+            simp only [Bool.cond_true, Bool.cond_false]
             rw [cellStep_cons, ih, bitAt_eq, hlen, List.length_cons, cellBits]
   have hh : Cobham (cellStep o) :=
     (appendFn (Cobham.proj 1)
@@ -220,18 +220,18 @@ theorem runTrueFn {n : ℕ} {gr gz : (Fin n → List Bool) → List Bool}
     | cons b x ih =>
         cases b <;>
           · rw [recNotation_cons]
-            simp only [cond_true, cond_false]
+            simp only [Bool.cond_true, Bool.cond_false]
             rw [runStep_cons, ih, bitAt_eq, List.length_cons, runTrue]
             congr 1
             rcases Nat.lt_or_ge (runTrue (v 0) x.length).length x.length with hlt | hge
-            · rw [if_neg (by omega)]
+            · rw [ite_eq_right (by omega)]
               cases hd : x.drop (runTrue (v 0) x.length).length with
               | nil => rw [List.drop_eq_nil_iff] at hd; omega
               | cons c l => cases c <;> rfl
             · rw [List.drop_eq_nil_of_le hge]
               cases hb : bitOf (v 0) x.length
-              · rw [if_neg (by simp)]; rfl
-              · rw [if_pos ⟨hge, rfl⟩]; rfl
+              · rw [ite_eq_right (by simp)]; rfl
+              · rw [ite_eq_left ⟨hge, rfl⟩]; rfl
   have hh : Cobham runStep :=
     (appendFn (Cobham.proj 1)
       (iteFn

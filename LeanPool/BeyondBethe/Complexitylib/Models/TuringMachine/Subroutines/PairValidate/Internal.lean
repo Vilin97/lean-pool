@@ -26,7 +26,7 @@ namespace TM
 
 /-- Semantic meaning of a validator state with a yet-unread suffix. The three
 prefix states reconstruct the pending decoder input; the absorbing states have
-fixedValue verdicts. -/
+constant verdicts. -/
 private def pairValidateSuffix : PairValidateState → List Bool → Bool
   | .next, bits => (unpair? bits).isSome
   | .afterZero, bits => (unpair? (false :: bits)).isSome

@@ -37,7 +37,7 @@ theorem writeAndMove_readBack_of_startInvariant (t : Tape) (h : Tape.StartInvari
   by_cases hh : t.head = 0
   · show (t.write _).move d = t.move d
     congr 1
-    rw [Tape.write, if_pos hh]
+    rw [Tape.write, ite_eq_left hh]
   · exact writeAndMove_readBack t (h.read_ne_start (by omega)) d
 
 /-- One unconditional step: every work tape named in `targets` moves left
@@ -92,14 +92,14 @@ theorem moveLeftStepTM_hoareTime {n : ℕ} (targets : List (Fin n))
     1, le_refl 1, ?_, rfl, hinp.move_idle, hout.writeAndMove_readBack_idle, fun i => ?_⟩
   · refine TM.reachesIn.step ?_ .zero
     simp only [TM.step, moveLeftStepTM,
-      if_neg (show WipeStepPhase.running ≠ WipeStepPhase.done by decide)]
+      ite_eq_right (show WipeStepPhase.running ≠ WipeStepPhase.done by decide)]
     congr 1
     congr 1
     funext i
     by_cases hi : i ∈ targets
-    · simp only [if_pos hi]
+    · simp only [ite_eq_left hi]
       exact writeAndMove_readBack_of_startInvariant (work i) (htarget i hi) _
-    · simp only [if_neg hi]
+    · simp only [ite_eq_right hi]
   · dsimp only
     split
     · rfl

@@ -590,7 +590,7 @@ private theorem binaryShiftMulBodyTime_le (bit : Bool) (acc shift width : ℕ)
   have hdouble := binaryShiftMulDoubleTime_le shift width hshift
   cases bit <;>
     simp only [binaryShiftMulBodyTime, binaryShiftMulOneTime,
-      Bool.false_eq_true, if_false, if_true] <;>
+      Bool.false_eq_true, ite_false, if_true] <;>
     omega
 
 private theorem forBinaryWorkLoopTime_le
@@ -839,9 +839,9 @@ private theorem binaryShiftMulLoopWork_advance {n : ℕ}
   funext i
   by_cases hrhs : i = abi.rhs
   · subst i
-    simp only [if_pos, binaryShiftMulLoopWork_rhs]
+    simp only [ite_eq_left, binaryShiftMulLoopWork_rhs]
     simp [binaryShiftMulCursorTape, Tape.move]
-  · rw [if_neg hrhs]
+  · rw [ite_eq_right hrhs]
     by_cases hacc : i = abi.acc
     · subst i
       rw [binaryShiftMulLoopWork_acc, binaryShiftMulLoopWork_acc]
@@ -1679,9 +1679,9 @@ private theorem binaryShiftMulCleanupTime_le {n : ℕ}
     simp [binaryShiftMulWidth]
   simp only [binaryShiftMulCleanupTime, resetBinaryWorkManyTime,
     binaryShiftMulCleanupBits, binaryShiftMulCleanupHead,
-    resetBinaryWorkTime, clearWorkTimeBound, if_pos]
-  simp only [if_neg (Ne.symm abi.shift_ne_tmp),
-    if_neg (Ne.symm abi.shift_ne_dbl), List.length_nil]
+    resetBinaryWorkTime, clearWorkTimeBound, ite_eq_left]
+  simp only [ite_eq_right (Ne.symm abi.shift_ne_tmp),
+    ite_eq_right (Ne.symm abi.shift_ne_dbl), List.length_nil]
   omega
 
 /-- The concrete shift-and-add multiplier preserves both operands, writes

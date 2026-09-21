@@ -80,7 +80,7 @@ private theorem binaryRippleAddScanTM_step_active {n : ℕ}
           work := binaryRippleAddScanAdvanceWork lhsIdx rhsIdx resultIdx sum work
           output := out } := by
   dsimp only
-  rw [TM.step, if_neg (by simp [binaryRippleAddScanTM])]
+  rw [TM.step, ite_eq_right (by simp [binaryRippleAddScanTM])]
   simp only [binaryRippleAddScanTM, hactive, ↓reduceIte]
   refine congrArg some (Cfg.ext rfl (transitionInput_eq_self hinput) ?_
     (transitionTape_eq_self houtput))
@@ -90,25 +90,25 @@ private theorem binaryRippleAddScanTM_step_active {n : ℕ}
     simp [binaryRippleAddScanAdvanceWork]
   · by_cases hlhsIdx : i = lhsIdx
     · subst i
-      simp only [binaryRippleAddScanAdvanceWork, hresultIdx, if_false,
-        if_pos]
+      simp only [binaryRippleAddScanAdvanceWork, hresultIdx, ite_false,
+        ite_eq_left]
       by_cases hblank : (work lhsIdx).read = Γ.blank
-      · rw [if_pos hblank, if_pos hblank]
+      · rw [ite_eq_left hblank, ite_eq_left hblank]
         simpa [hblank] using
           writeAndMove_readBack_stay (show (work lhsIdx).read ≠ Γ.start from hlhs)
-      · rw [if_neg hblank, if_neg hblank]
+      · rw [ite_eq_right hblank, ite_eq_right hblank]
         exact writeAndMove_readBack_right hlhs
     · by_cases hrhsIdx : i = rhsIdx
       · subst i
-        simp only [binaryRippleAddScanAdvanceWork, hresultIdx, if_false,
-          hlhsIdx, if_pos]
+        simp only [binaryRippleAddScanAdvanceWork, hresultIdx, ite_false,
+          hlhsIdx, ite_eq_left]
         by_cases hblank : (work rhsIdx).read = Γ.blank
-        · rw [if_pos hblank, if_pos hblank]
+        · rw [ite_eq_left hblank, ite_eq_left hblank]
           simpa [hblank] using
             writeAndMove_readBack_stay (show (work rhsIdx).read ≠ Γ.start from hrhs)
-        · rw [if_neg hblank, if_neg hblank]
+        · rw [ite_eq_right hblank, ite_eq_right hblank]
           exact writeAndMove_readBack_right hrhs
-      · simp only [binaryRippleAddScanAdvanceWork, hresultIdx, if_false,
+      · simp only [binaryRippleAddScanAdvanceWork, hresultIdx, ite_false,
           hlhsIdx, hrhsIdx]
         exact transitionTape_eq_self (hother i hlhsIdx hrhsIdx hresultIdx)
 
@@ -141,9 +141,9 @@ private theorem binaryRippleAddScanTM_step_terminal {n : ℕ}
   cases carry with
   | false =>
       refine ⟨work, ?_, rfl, rfl, rfl, rfl, ?_, hresultStart, ?_⟩
-      · rw [TM.step, if_neg (by simp [binaryRippleAddScanTM])]
-        simp only [binaryRippleAddScanTM, hlhs, hrhs, and_self, if_pos,
-          Bool.false_eq_true, if_false, allReadBack]
+      · rw [TM.step, ite_eq_right (by simp [binaryRippleAddScanTM])]
+        simp only [binaryRippleAddScanTM, hlhs, hrhs, and_self, ite_eq_left,
+          Bool.false_eq_true, ite_false, allReadBack]
         refine congrArg some (Cfg.ext rfl (transitionInput_eq_self hinput) ?_
           (transitionTape_eq_self houtput))
         funext i
@@ -166,8 +166,8 @@ private theorem binaryRippleAddScanTM_step_terminal {n : ℕ}
       let finalWork := Function.update work resultIdx
         ((work resultIdx).writeAndMove Γ.one Dir3.right)
       refine ⟨finalWork, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-      · rw [TM.step, if_neg (by simp [binaryRippleAddScanTM])]
-        simp only [binaryRippleAddScanTM, hlhs, hrhs, and_self, if_pos]
+      · rw [TM.step, ite_eq_right (by simp [binaryRippleAddScanTM])]
+        simp only [binaryRippleAddScanTM, hlhs, hrhs, and_self, ite_eq_left]
         refine congrArg some (Cfg.ext rfl (transitionInput_eq_self hinput) ?_
           (transitionTape_eq_self houtput))
         funext i
@@ -329,9 +329,9 @@ private theorem binaryRippleAddScanTM_suffix_reachesIn {n : ℕ}
               hrhsNotBlank, Tape.move_cells] using hfinalRhs
           · rw [hfinalRhsHead]
             simp only [work₁, binaryRippleAddScanAdvanceWork,
-              if_neg hdistinct.rhs_result,
-              if_neg (Ne.symm hdistinct.lhs_rhs), if_pos,
-              if_neg hrhsNotBlank, Tape.move, List.length_cons]
+              ite_eq_right hdistinct.rhs_result,
+              ite_eq_right (Ne.symm hdistinct.lhs_rhs), ite_eq_left,
+              ite_eq_right hrhsNotBlank, Tape.move, List.length_cons]
             omega
           · simpa [BinaryRippleAdd.ripple, sum, nextCarry,
               List.append_assoc] using hfinalResult
@@ -417,7 +417,7 @@ private theorem binaryRippleAddScanTM_suffix_reachesIn {n : ℕ}
               hfinalLhs
           · rw [hfinalLhsHead]
             simp only [work₁, binaryRippleAddScanAdvanceWork,
-              if_neg hdistinct.lhs_result, if_pos, if_neg hlhsNotBlank,
+              ite_eq_right hdistinct.lhs_result, ite_eq_left, ite_eq_right hlhsNotBlank,
               Tape.move, List.length_cons]
             omega
           · simpa [work₁, binaryRippleAddScanAdvanceWork,
@@ -511,7 +511,7 @@ private theorem binaryRippleAddScanTM_suffix_reachesIn {n : ℕ}
               hfinalLhs
           · rw [hfinalLhsHead]
             simp only [work₁, binaryRippleAddScanAdvanceWork,
-              if_neg hdistinct.lhs_result, if_pos, if_neg hlhsNotBlank,
+              ite_eq_right hdistinct.lhs_result, ite_eq_left, ite_eq_right hlhsNotBlank,
               Tape.move, List.length_cons]
             omega
           · simpa [work₁, binaryRippleAddScanAdvanceWork,
@@ -519,9 +519,9 @@ private theorem binaryRippleAddScanTM_suffix_reachesIn {n : ℕ}
               hrhsNotBlank, Tape.move_cells] using hfinalRhs
           · rw [hfinalRhsHead]
             simp only [work₁, binaryRippleAddScanAdvanceWork,
-              if_neg hdistinct.rhs_result,
-              if_neg (Ne.symm hdistinct.lhs_rhs), if_pos,
-              if_neg hrhsNotBlank, Tape.move, List.length_cons]
+              ite_eq_right hdistinct.rhs_result,
+              ite_eq_right (Ne.symm hdistinct.lhs_rhs), ite_eq_left,
+              ite_eq_right hrhsNotBlank, Tape.move, List.length_cons]
             omega
           · simpa [BinaryRippleAdd.ripple, sum, nextCarry,
               List.append_assoc] using hfinalResult

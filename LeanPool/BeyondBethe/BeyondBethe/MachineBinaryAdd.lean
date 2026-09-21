@@ -171,7 +171,7 @@ def machineBinaryAddRuler (word : List Bool) : List Bool :=
   machinePairFirst word ++ machinePairSecond word ++ [false]
 
 /-- A quadratic-width zero word.  This is intentionally generous and makes
-the bounded-iteration proof independent of fine fixedValue accounting. -/
+the bounded-iteration proof independent of fine constant accounting. -/
 def machineBinaryAddWidth (word : List Bool) : List Bool :=
   let padded := List.replicate 8 false ++ word
   List.replicate (padded.length * padded.length) false

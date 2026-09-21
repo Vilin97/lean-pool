@@ -76,7 +76,7 @@ theorem multiaffine_eq_boolExpansion
     · simp [hSd]
     · intro T hT hTS
       simp only [MvPolynomial.coeff_monomial]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       apply hTS
       exact boolExponent_injective (h.trans hSd.symm)
@@ -87,7 +87,7 @@ theorem multiaffine_eq_boolExpansion
     apply Finset.sum_eq_zero
     intro S hS
     simp only [MvPolynomial.coeff_monomial]
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hd
     intro i

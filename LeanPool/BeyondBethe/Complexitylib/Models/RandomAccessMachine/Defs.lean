@@ -70,7 +70,7 @@ two-way simulation bounds are recorded in the surface module
   instruction (`d`, `s`, `t`, `a`) are program constants, bounded by the program
   size, so the cost does not separately charge for them; runtime addresses
   (`R a` in `load`/`store`) *are* charged via `bitlen (c.regs a)`. This keeps the
-  cost within a fixedValue factor of the Cook–Reckhow measure while remaining
+  cost within a constant factor of the Cook–Reckhow measure while remaining
   sound: every value read, computed, or written is charged its bit-length.
 - **Out-of-range `pc` halts**: `curInstr` reads `Instr.halt` when `pc` is past the
   program, so a program need not end in `halt` and jumps may target the end.
@@ -89,7 +89,7 @@ namespace RAM
     accessed register index is itself the content of a register — which is what
     makes the machine "random access". -/
 inductive Instr where
-  /-- `imm d v`: set `R d := v` (load an immediate fixedValue). -/
+  /-- `imm d v`: set `R d := v` (load an immediate constant). -/
   | imm (d v : ℕ)
   /-- `add d s t`: set `R d := R s + R t`. -/
   | add (d s t : ℕ)

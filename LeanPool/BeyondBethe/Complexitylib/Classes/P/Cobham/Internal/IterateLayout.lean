@@ -356,7 +356,7 @@ theorem applyPre_eq (M : TM k) (x : List Bool) (inp₀ : Tape) (j : Fin (k + 2))
       if j = Fin.castSucc (Fin.last k) then (Tape.init (x.map Γ.ofBool)).move Dir3.right
       else parkedBlank := by
   refine Fin.lastCases ?_ ?_ j
-  · rw [TM.applyPre, Fin.snoc_last, if_neg]
+  · rw [TM.applyPre, Fin.snoc_last, ite_eq_right]
     intro hc
     exact absurd (congrArg Fin.val hc) (by simp)
   · intro j'
@@ -365,14 +365,14 @@ theorem applyPre_eq (M : TM k) (x : List Bool) (inp₀ : Tape) (j : Fin (k + 2))
     rw [TM.retargetInputStartedCfg]
     dsimp only
     by_cases hj : j' = Fin.last k
-    · rw [hj, if_neg (by simp), if_pos rfl]
+    · rw [hj, ite_eq_right (by simp), ite_eq_left rfl]
     · have hlt : j'.val < k := by
         have := j'.isLt
         rcases Nat.lt_or_ge j'.val k with h | h
         · exact h
         · exact absurd (Fin.ext (show j'.val = (Fin.last k).val by
             rw [Fin.val_last]; omega)) hj
-      rw [if_pos hlt, if_neg (fun hc => hj (Fin.castSucc_injective (k + 1) hc))]
+      rw [ite_eq_left hlt, ite_eq_right (fun hc => hj (Fin.castSucc_injective (k + 1) hc))]
       rfl
 
 theorem resIdx_ne_vinIdx : resIdx (k := k) ≠ vinIdx := by
@@ -435,7 +435,7 @@ theorem iterFinish_hoareTime (M : TM k) (H : ℕ)
     exact hblankSI
   have hW₀other : ∀ i, i ≠ resIdx → i ≠ vinIdx → Parked (W₀ i) := by
     intro i hir _; rw [hW₀]; dsimp only
-    rw [if_neg hir]
+    rw [ite_eq_right hir]
     split; · exact hrfP
     split; · exact hjunkP
     split; · exact hregP
@@ -444,27 +444,27 @@ theorem iterFinish_hoareTime (M : TM k) (H : ℕ)
   have hW₀vin : W₀ vinIdx = parkedBlank := by
     rw [hW₀]
     dsimp only
-    rw [if_neg (fun h => resIdx_ne_vinIdx h.symm), if_neg (fun h => rfIdx_ne_appIdx _ h.symm),
-      if_neg (fun h => junkIdx_ne_appIdx _ h.symm), if_neg (fun h => wfIdx_ne_appIdx _ h.symm)]
+    rw [ite_eq_right (fun h => resIdx_ne_vinIdx h.symm), ite_eq_right (fun h => rfIdx_ne_appIdx _ h.symm),
+      ite_eq_right (fun h => junkIdx_ne_appIdx _ h.symm), ite_eq_right (fun h => wfIdx_ne_appIdx _ h.symm)]
   have hW₀app : ∀ j : Fin (k + 2), appIdx j ≠ resIdx → W₀ (appIdx j) = parkedBlank := by
     intro j hj
     rw [hW₀]
     dsimp only
-    rw [if_neg hj, if_neg (fun h => rfIdx_ne_appIdx _ h.symm),
-      if_neg (fun h => junkIdx_ne_appIdx _ h.symm), if_neg (fun h => wfIdx_ne_appIdx _ h.symm)]
+    rw [ite_eq_right hj, ite_eq_right (fun h => rfIdx_ne_appIdx _ h.symm),
+      ite_eq_right (fun h => junkIdx_ne_appIdx _ h.symm), ite_eq_right (fun h => wfIdx_ne_appIdx _ h.symm)]
   have hW₀rf : W₀ rfIdx = rfT := by
     rw [hW₀]
     dsimp only
-    rw [if_neg rfIdx_ne_resIdx, if_pos rfl]
+    rw [ite_eq_right rfIdx_ne_resIdx, ite_eq_left rfl]
   have hW₀junk : W₀ junkIdx = junkT := by
     rw [hW₀]
     dsimp only
-    rw [if_neg junkIdx_ne_resIdx, if_neg junkIdx_ne_rfIdx, if_pos rfl]
+    rw [ite_eq_right junkIdx_ne_resIdx, ite_eq_right junkIdx_ne_rfIdx, ite_eq_left rfl]
   have hW₀wf : W₀ wfIdx = regTape H := by
     rw [hW₀]
     dsimp only
-    rw [if_neg wfIdx_ne_resIdx, if_neg (fun h => rfIdx_ne_wfIdx h.symm),
-      if_neg (fun h => junkIdx_ne_wfIdx h.symm), if_pos rfl]
+    rw [ite_eq_right wfIdx_ne_resIdx, ite_eq_right (fun h => rfIdx_ne_wfIdx h.symm),
+      ite_eq_right (fun h => junkIdx_ne_wfIdx h.symm), ite_eq_left rfl]
   -- the value tape produced by the copy, and the family after each phase
   set vinT : Tape := (Tape.init (x.map Γ.ofBool)).move Dir3.right with hvinT
   have hvinSI : Tape.StartInvariant vinT := (startInvariant_initOfBool x).move Dir3.right
@@ -559,9 +559,9 @@ theorem iterFinish_hoareTime (M : TM k) (H : ℕ)
         hW₁other wfIdx wfIdx_ne_resIdx wfIdx_ne_vinIdx, hW₀wf]
     · rw [applyPre_eq]
       by_cases hj : j = Fin.castSucc (Fin.last k)
-      · rw [if_pos hj, hj, show appIdx (Fin.castSucc (Fin.last k)) = vinIdx from rfl,
+      · rw [ite_eq_left hj, hj, show appIdx (Fin.castSucc (Fin.last k)) = vinIdx from rfl,
           hW₂, Function.update_of_ne resIdx_ne_vinIdx.symm, hW₁vin]
-      · rw [if_neg hj]
+      · rw [ite_eq_right hj]
         by_cases hjl : j = Fin.last (k + 1)
         · rw [hjl, show appIdx (Fin.last (k + 1)) = resIdx from rfl, hW₂, Function.update_self]
         · have hjr : appIdx j ≠ resIdx := fun h =>

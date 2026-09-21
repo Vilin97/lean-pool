@@ -161,9 +161,9 @@ private theorem foldl_cnf_eq_start_iff (formula : CNF) :
       rw [CNF.tokens, List.foldl_append]
       rw [foldl_clause]
       by_cases hclause : clause.length = 3
-      · rw [if_pos hclause, ih]
+      · rw [ite_eq_left hclause, ih]
         simp [CNF.is3CNF_cons, hclause]
-      · rw [if_neg hclause, foldl_invalid]
+      · rw [ite_eq_right hclause, foldl_invalid]
         simp [tokenStart, CNF.is3CNF_cons, hclause]
 
 /-- A typed CNF's bit encoding is accepted exactly when it is exact 3-CNF. -/

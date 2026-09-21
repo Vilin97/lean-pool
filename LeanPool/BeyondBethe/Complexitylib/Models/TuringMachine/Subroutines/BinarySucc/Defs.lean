@@ -129,14 +129,14 @@ def binarySuccTM {n : ℕ} (idx : Fin n) : TM n where
             · subst i
               rw [htarget] at hi
               exact absurd hi (by decide)
-            · rw [if_neg hitarget]
+            · rw [ite_eq_right hitarget]
               exact idleDir_right_of_start hi
         | .start =>
             simp only
             refine ⟨idleDir_right_of_start, fun i hi => ?_, idleDir_right_of_start⟩
             by_cases hitarget : i = idx
-            · rw [if_pos hitarget]
-            · rw [if_neg hitarget]
+            · rw [ite_eq_left hitarget]
+            · rw [ite_eq_right hitarget]
               exact idleDir_right_of_start hi
     | .rewind =>
         dsimp only
@@ -144,8 +144,8 @@ def binarySuccTM {n : ℕ} (idx : Fin n) : TM n where
         · simp only
           refine ⟨idleDir_right_of_start, fun i hi => ?_, idleDir_right_of_start⟩
           by_cases hitarget : i = idx
-          · rw [if_pos hitarget]
-          · rw [if_neg hitarget]
+          · rw [ite_eq_left hitarget]
+          · rw [ite_eq_right hitarget]
             exact idleDir_right_of_start hi
         · next hnotStart =>
           simp only
@@ -153,7 +153,7 @@ def binarySuccTM {n : ℕ} (idx : Fin n) : TM n where
           by_cases hitarget : i = idx
           · subst i
             exact absurd hi hnotStart
-          · rw [if_neg hitarget]
+          · rw [ite_eq_right hitarget]
             exact idleDir_right_of_start hi
     | .done => exact rightOfStart_allIdle iHead wHeads oHead
 

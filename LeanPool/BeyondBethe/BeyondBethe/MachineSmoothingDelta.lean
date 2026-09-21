@@ -272,13 +272,13 @@ theorem rawRationalSmoothingDelta_value {n : ℕ}
       1 / ((2 : ℚ) * n) ≤
         χ.value * rationalSupportFloor A ^ n /
           ((4 : ℚ) * n.factorial)
-  · rw [if_pos h, min_eq_left h]
+  · rw [ite_eq_left h, min_eq_left h]
     simp
   · have hright :
         χ.value * rationalSupportFloor A ^ n /
             ((4 : ℚ) * n.factorial) ≤
           1 / ((2 : ℚ) * n) := le_of_not_ge h
-    rw [if_neg h, min_eq_right hright]
+    rw [ite_eq_right h, min_eq_right hright]
     simp [rawRatRowsSupportProduct_eq_rationalSupportFloor]
 
 theorem machineSmoothingDeltaCode_encode {n : ℕ}
@@ -309,13 +309,13 @@ theorem machineSmoothingDeltaCode_encode {n : ℕ}
       1 / ((2 : ℚ) * n) ≤
         χ.value * rationalSupportFloor A ^ n /
           ((4 : ℚ) * n.factorial)
-  · rw [if_pos h, min_eq_left h]
+  · rw [ite_eq_left h, min_eq_left h]
     simp
   · have hright :
         χ.value * rationalSupportFloor A ^ n /
             ((4 : ℚ) * n.factorial) ≤
           1 / ((2 : ℚ) * n) := le_of_not_ge h
-    rw [if_neg h, min_eq_right hright]
+    rw [ite_eq_right h, min_eq_right hright]
     simp [rawRatRowsSupportProduct_eq_rationalSupportFloor]
 
 @[simp] theorem machineSmoothingDeltaCode_rational {n : ℕ}

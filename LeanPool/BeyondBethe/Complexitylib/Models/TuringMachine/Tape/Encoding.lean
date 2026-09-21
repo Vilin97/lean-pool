@@ -102,7 +102,7 @@ theorem HasBinaryContent.write_set {t : Tape} {bits : List Bool}
   have hhead0 : ¬t.head = 0 := by omega
   constructor
   · intro j hj
-    rw [Tape.write, if_neg hhead0]
+    rw [Tape.write, ite_eq_right hhead0]
     simp only
     rw [List.length_set] at hj
     rw [hhead]
@@ -115,7 +115,7 @@ theorem HasBinaryContent.write_set {t : Tape} {bits : List Bool}
         List.getElem_set]
       simp [hij]
   · intro j hj
-    rw [Tape.write, if_neg hhead0]
+    rw [Tape.write, ite_eq_right hhead0]
     simp only
     rw [List.length_set] at hj
     rw [hhead]

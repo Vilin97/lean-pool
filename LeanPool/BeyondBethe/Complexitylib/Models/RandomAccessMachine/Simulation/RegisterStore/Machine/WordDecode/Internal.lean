@@ -465,7 +465,7 @@ private theorem payloadBitTM_step (sourceIdx targetIdx : Fin n)
           work := payloadBitWork sourceIdx targetIdx work₀ bit
           output := out₀ } := by
   have hread := hsource.read_cons
-  rw [TM.step, if_neg (by simp [payloadBitTM])]
+  rw [TM.step, ite_eq_right (by simp [payloadBitTM])]
   cases bit <;>
     simp only [payloadBitTM, hread, Γ.ofBool, reduceCtorEq]
   all_goals
@@ -578,7 +578,7 @@ private theorem wordSeparatorTM_step (sourceIdx : Fin n)
   have hread := hsource.read_cons
   have hzero : (work₀ sourceIdx).read = Γ.zero := by
     simpa [Γ.ofBool] using hread
-  rw [TM.step, if_neg (by simp [wordSeparatorTM])]
+  rw [TM.step, ite_eq_right (by simp [wordSeparatorTM])]
   simp only [wordSeparatorTM, hzero, ↓reduceIte]
   refine congrArg some (Cfg.ext rfl ?_ ?_ ?_)
   · dsimp only

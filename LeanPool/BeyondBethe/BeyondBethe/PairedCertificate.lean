@@ -67,7 +67,7 @@ theorem selectorExponent_injective
   intro h h' heq
   funext j
   have hj := congrArg (fun d : κ × ι →₀ ℕ ↦ d (h j, j)) heq
-  simp only [selectorExponent_apply, if_pos rfl] at hj
+  simp only [selectorExponent_apply, ite_eq_left rfl] at hj
   by_contra hne
   simp [hne] at hj
 

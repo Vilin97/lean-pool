@@ -21,7 +21,7 @@ denominator with `d p` bits even when its numerical magnitude is bounded
 away from zero.  Iterating that rule would multiply the stored precision by
 the dimension.  The definition below instead uses the *difference* between
 the denominator and numerator bit lengths.  It therefore measures
-`log₂ (1 / q)`, up to an additive fixedValue, rather than the cost of writing
+`log₂ (1 / q)`, up to an additive constant, rather than the cost of writing
 the exact reduced fraction.
 -/
 

@@ -366,7 +366,7 @@ private theorem header_cursorReady (gate : CircuitCode.RawGate) (wires : List Bo
     rw [hpreserved]
     simp only [inputStore, Input.bitStore, UnaryDecode.remainingReg,
       UnaryDecode.inputBase]
-    rw [if_neg (by omega : 10 + delta ≠ 3), if_pos (by omega : 7 ≤ 10 + delta)]
+    rw [ite_eq_right (by omega : 10 + delta ≠ 3), ite_eq_left (by omega : 7 ≤ 10 + delta)]
     have hoffset : 10 + delta - 7 = 3 + delta := by omega
     rw [hoffset]
     change
@@ -656,7 +656,7 @@ private theorem input_wire (gate : CircuitCode.RawGate) (wires : List Bool)
     simp only [memoBase, UnaryDecode.inputBase, UnaryDecode.remainingReg]
     omega
   simp only [inputStore, Input.bitStore]
-  rw [if_neg hlength, if_pos hbase]
+  rw [ite_eq_right hlength, ite_eq_left hbase]
   have hoffset : memoBase gate + index - UnaryDecode.inputBase =
       gate.encode.length + index := by
     simp [memoBase]

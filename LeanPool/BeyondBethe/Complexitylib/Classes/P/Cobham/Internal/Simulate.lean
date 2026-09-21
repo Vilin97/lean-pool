@@ -59,7 +59,7 @@ theorem runCfg_of_halted (tm : TM k) {c : Cfg k tm.Q} (h : c.state = tm.qhalt) (
     runCfg tm c n = c := by
   induction n with
   | zero => rfl
-  | succ n ih => rw [runCfg_succ, ih, TM.step, if_pos h, Option.getD_none]
+  | succ n ih => rw [runCfg_succ, ih, TM.step, ite_eq_left h, Option.getD_none]
 
 /-- A run of exactly `t` steps is the `t`-th iterate. -/
 theorem runCfg_of_reachesIn (tm : TM k) {c c' : Cfg k tm.Q} {t : ℕ}
@@ -78,7 +78,7 @@ theorem step_startInvariant (tm : TM k) {c c' : Cfg k tm.Q} (h : tm.step c = som
     (hout : c.output.StartInvariant) :
     c'.input.StartInvariant ∧ (∀ i, (c'.work i).StartInvariant) ∧
       c'.output.StartInvariant := by
-  rw [TM.step, if_neg (TM.state_ne_qhalt_of_step h)] at h
+  rw [TM.step, ite_eq_right (TM.state_ne_qhalt_of_step h)] at h
   injection h with h
   subst h
   exact ⟨hin.move _, fun i => (hwork i).writeAndMove _ _, hout.writeAndMove _ _⟩
@@ -87,7 +87,7 @@ theorem step_startInvariant (tm : TM k) {c c' : Cfg k tm.Q} (h : tm.step c = som
 theorem step_head_le (tm : TM k) {c c' : Cfg k tm.Q} (h : tm.step c = some c') :
     c'.input.head ≤ c.input.head + 1 ∧ (∀ i, (c'.work i).head ≤ (c.work i).head + 1) ∧
       c'.output.head ≤ c.output.head + 1 := by
-  rw [TM.step, if_neg (TM.state_ne_qhalt_of_step h)] at h
+  rw [TM.step, ite_eq_right (TM.state_ne_qhalt_of_step h)] at h
   injection h with h
   subst h
   exact ⟨Tape.head_move_le _ _, fun i => Tape.head_writeAndMove_le _ _ _,

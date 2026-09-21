@@ -716,7 +716,7 @@ theorem exists_regularizedOptimizer_with_logKKT
     hn hτ.le hA hX hmax
   have hmatch := positiveMatrix_hasPerfectMatching hA
   have hlog : Real.log (bethePermanent A) = betheLogValue A := by
-    rw [bethePermanent, if_pos hmatch, Real.log_exp]
+    rw [bethePermanent, ite_eq_left hmatch, Real.log_exp]
   refine ⟨X, hX, hXint, hmax, ⟨r, c, hKKT⟩, ?_⟩
   rw [hlog]
   nlinarith

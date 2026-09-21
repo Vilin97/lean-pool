@@ -335,7 +335,7 @@ theorem rationalEllipsoid_volumeFactor_lt_one {d : ℕ} (hd : 0 < d) :
     _ = 1 := Real.exp_zero
 
 /-- A rationally stated version of the volume contraction.  The weaker
-fixedValue is convenient when we later reserve part of the contraction for
+constant is convenient when we later reserve part of the contraction for
 rounding and inflation. -/
 theorem rationalEllipsoid_volumeFactor_le_one_sub {d : ℕ} (hd : 0 < d) :
     (rationalEllipsoidPerpScale d : ℝ) ^ (d - 1) *

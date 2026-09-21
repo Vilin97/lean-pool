@@ -43,7 +43,7 @@ theorem of_eq {n : ℕ} {f g : (Fin n → List Bool) → List Bool} (hf : Cobham
     (h : ∀ v, f v = g v) : Cobham g :=
   (funext h : f = g) ▸ hf
 
-/-- Every fixedValue function is in the class: build the fixedValue string bit by bit from
+/-- Every constant function is in the class: build the constant string bit by bit from
 `empty` and the successors. -/
 theorem const {n : ℕ} (s : List Bool) : Cobham fun _ : Fin n → List Bool => s := by
   induction s with
@@ -340,9 +340,9 @@ theorem nonemptyFn {n : ℕ} {g : (Fin n → List Bool) → List Bool} (h : Cobh
   (comp₃ dispatch h (Cobham.const [true]) (Cobham.const [true])).of_eq
     fun v => by simp [nonemptyFlag]
 
-/-- **Matching against a fixed fixedValue is in the class.** For each fixedValue the
+/-- **Matching against a fixed constant is in the class.** For each constant the
 test unfolds into finitely many bit comparisons joined by `andFn`, so this is a
-finite composition — the meta-level induction is on the fixedValue, not a
+finite composition — the meta-level induction is on the constant, not a
 recursion inside the algebra. -/
 theorem matchPrefixFn {n : ℕ} {g : (Fin n → List Bool) → List Bool} (h : Cobham g)
     (c : List Bool) :
@@ -426,7 +426,7 @@ theorem padFn {n : ℕ} {gr gx : (Fin n → List Bool) → List Bool}
   (takeFn hr (appendFn hx (zeroBlockFn hr))).of_eq fun _ => rfl
 
 /-- **Finite table dispatch is in the class.** Matching a member of the class
-against each of finitely many fixedValue patterns in turn, taking the first
+against each of finitely many constant patterns in turn, taking the first
 branch that fires and a default otherwise, is a finite chain of `iteFn`s.
 
 This is exactly the shape of a Turing machine's transition function: the patterns
@@ -445,7 +445,7 @@ theorem tableFn {n : ℕ} {g d : (Fin n → List Bool) → List Bool}
       exact iteFn (matchPrefixFn hg p.1) (hbranch p (by simp))
         (ih fun q hq => hbranch q (by simp [hq]))
 
-/-- **A table of fixedValue patterns is a case analysis.** If some entry's pattern
+/-- **A table of constant patterns is a case analysis.** If some entry's pattern
 prefixes the key, and every entry whose pattern prefixes the key carries the same
 value, then the fold returns that value — regardless of the order the entries
 appear in.
@@ -466,13 +466,13 @@ theorem foldr_table_eq (g d val : List Bool) :
       rintro ⟨p, hp, hpre⟩ hall
       rcases Decidable.em (a.1 <+: g) with hm | hm
       · rw [List.foldr_cons, (matchPrefix_eq_true_iff a.1 g).mpr hm, caseBit₀_cons,
-          cond_true]
+          Bool.cond_true]
         exact hall a (by simp) hm
       · have hmf : matchPrefix a.1 g = [false] := by
           rcases matchPrefix_flag a.1 g with h | h
           · exact absurd ((matchPrefix_eq_true_iff a.1 g).mp h) hm
           · exact h
-        rw [List.foldr_cons, hmf, caseBit₀_cons, cond_false]
+        rw [List.foldr_cons, hmf, caseBit₀_cons, Bool.cond_false]
         refine ih ⟨p, ?_, hpre⟩ fun q hq => hall q (by simp [hq])
         rcases List.mem_cons.mp hp with rfl | hp'
         · exact absurd hpre hm
@@ -516,7 +516,7 @@ theorem iterFn {n : ℕ} {e : (Fin n → List Bool) → List Bool}
     exact hbound c v
   · rw [hrec]
 
-/-- **Clocks.** For every fixedValue `c` and exponent `d` there is a member of the
+/-- **Clocks.** For every constant `c` and exponent `d` there is a member of the
 class whose value on `v` is at least `c · (|v 0| + 1) ^ d` bits long — built from
 constants and `smash`, which is exactly what `smash` is for. -/
 theorem exists_pow_clock (c d : ℕ) :

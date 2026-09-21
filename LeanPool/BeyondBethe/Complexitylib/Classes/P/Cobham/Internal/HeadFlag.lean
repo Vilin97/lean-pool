@@ -124,7 +124,7 @@ theorem headFlagTM_computesInTime (target : Bool) :
     have hstep2 : (headFlagTM target).step c1 = some c2 := by
       simp [TM.step, headFlagTM, c1, c2, hri]
     refine ⟨c2, 2, le_rfl, .step hstep1 (.step hstep2 .zero), rfl, ?_⟩
-    rw [headFlag, if_pos hb]
+    rw [headFlag, ite_eq_left hb]
     refine ⟨fun i hi => ?_, ?_⟩
     · have hi0 : i = 0 := by simpa using hi
       subst hi0
@@ -149,7 +149,7 @@ theorem headFlagTM_computesInTime (target : Bool) :
     have hstep2 : (headFlagTM target).step c1 = some c2 := by
       simp [TM.step, headFlagTM, c1, c2, hri]
     refine ⟨c2, 2, le_rfl, .step hstep1 (.step hstep2 .zero), rfl, ?_⟩
-    rw [headFlag, if_neg hb]
+    rw [headFlag, ite_eq_right hb]
     refine ⟨fun i hi => by simp at hi, ?_⟩
     have hoc : c1.output.read = Γ.blank := by
       simp [c1, Tape.read, Tape.move, Tape.init]

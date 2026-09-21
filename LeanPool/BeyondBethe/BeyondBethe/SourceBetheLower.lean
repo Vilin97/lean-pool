@@ -116,7 +116,7 @@ theorem bethePermanent_le_permanent_of_positive
     dsimp only [C] at hvalue hbudget
     linarith
   have hmatch : Matrix.HasPerfectMatching A := positiveMatrix_hasPerfectMatching hA
-  rw [bethePermanent, if_pos hmatch]
+  rw [bethePermanent, ite_eq_left hmatch]
   have hexp := Real.exp_le_exp.mpr hlog
   rwa [Real.exp_log hper] at hexp
 

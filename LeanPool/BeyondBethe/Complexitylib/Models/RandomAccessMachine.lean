@@ -313,7 +313,7 @@ namespace RAM
 
 The two-instruction program `⟨imm 0 1⟩` overwrites the verdict register with `1`
 and then halts (its program counter runs off the end). It decides the universal
-language in fixedValue logarithmic time, exercising the full `DecidesInTime` API
+language in constant logarithmic time, exercising the full `DecidesInTime` API
 end to end. -/
 
 /-- The always-accept program: set the verdict register to `1`. -/
@@ -324,7 +324,7 @@ theorem acceptProg_run (x : List Bool) :
     (run acceptProg 1 (initCfg x)).verdict = 1 := by
   rfl
 
-/-- `acceptProg` decides the universal language in fixedValue logarithmic time. -/
+/-- `acceptProg` decides the universal language in constant logarithmic time. -/
 theorem acceptProg_decides : acceptProg.DecidesInTime Set.univ (fun _ => 2) := by
   intro x
   refine ⟨1, ?_, ?_, ?_, ?_⟩
@@ -333,7 +333,7 @@ theorem acceptProg_decides : acceptProg.DecidesInTime Set.univ (fun _ => 2) := b
   · intro _; rfl
   · intro hx; exact absurd (Set.mem_univ x) hx
 
-/-- The universal language is in `RAM.DTIME` at a fixedValue bound: a witness that
+/-- The universal language is in `RAM.DTIME` at a constant bound: a witness that
     the RAM time classes are inhabited over the shared `Language` interface. -/
 theorem univ_mem_DTIME : Set.univ ∈ DTIME (fun _ => 2) :=
   ⟨acceptProg, (fun _ => 2), acceptProg_decides, BigO.refl _⟩
@@ -345,7 +345,7 @@ def rejectProg : Program := [Instr.imm 0 0]
 theorem rejectProg_run (x : List Bool) :
     (run rejectProg 1 (initCfg x)).verdict = 0 := by rfl
 
-/-- `rejectProg` decides the empty language in fixedValue logarithmic time,
+/-- `rejectProg` decides the empty language in constant logarithmic time,
     exercising the rejection side of the `DecidesInTime` API. -/
 theorem rejectProg_decides : rejectProg.DecidesInTime (∅ : Language) (fun _ => 2) := by
   intro x
@@ -355,7 +355,7 @@ theorem rejectProg_decides : rejectProg.DecidesInTime (∅ : Language) (fun _ =>
   · intro hx; simp at hx
   · intro _; rfl
 
-/-- The empty language is in `RAM.DTIME` at a fixedValue bound (the rejection
+/-- The empty language is in `RAM.DTIME` at a constant bound (the rejection
     counterpart of `univ_mem_DTIME`). -/
 theorem empty_mem_DTIME : (∅ : Language) ∈ DTIME (fun _ => 2) :=
   ⟨rejectProg, (fun _ => 2), rejectProg_decides, BigO.refl _⟩

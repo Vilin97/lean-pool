@@ -364,10 +364,10 @@ theorem average_suffixError_core_lower
     intro π
     have hright0 := strictRightMass_nonneg hp π a
     by_cases hbefore : CoordinateBefore b a π
-    · rw [if_pos hbefore]
+    · rw [ite_eq_left hbefore]
       exact suffixError_anti (hp.nonnegative a) hright0
         (strictRightMass_le_outside_of_before hp hab hbefore)
-    · rw [if_neg hbefore]
+    · rw [ite_eq_right hbefore]
       have hright := strictRightMass_le_one_sub hp π a
       have hmass : p b + q = 1 - p a := by
         dsimp [q]

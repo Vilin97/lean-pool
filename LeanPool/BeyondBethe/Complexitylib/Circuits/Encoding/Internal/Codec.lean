@@ -366,7 +366,7 @@ theorem eval?_isSome_iff_internal (circuit : RawCircuit) (input : List Bool) :
           rw [hsize, List.size_toArray]
           simp
         rw [eval?]
-        simp only [List.isEmpty_cons, Bool.false_eq_true, if_false, haux]
+        simp only [List.isEmpty_cons, Bool.false_eq_true, ite_false, haux]
         change (result[input.length + (gate :: gates).length - 1]?).isSome
         rw [Array.getElem?_eq_getElem hlt]
         simp

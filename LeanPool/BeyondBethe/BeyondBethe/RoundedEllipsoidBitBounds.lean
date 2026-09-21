@@ -163,7 +163,7 @@ theorem rationalEllipsoidPerpScale_le_two {d : ℕ} (hd : 0 < d) :
   nlinarith [sq_nonneg (rationalEllipsoidAlpha d - 1 / 4)]
 
 /-- Every entry of the square-root-free direction update has a universal
-fixedValue bound, independent of the scale of the cut normal. -/
+constant bound, independent of the scale of the cut normal. -/
 theorem abs_directionUpdateMatrix_le_four {d : ℕ} (hd : 0 < d)
     {b : Fin d → ℚ} (hb : b ≠ 0) (i j : Fin d) :
     abs (directionUpdateMatrix

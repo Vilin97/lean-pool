@@ -405,8 +405,8 @@ theorem machineExplicitOptimizerInnerRadiusRawCode_mem_FP :
   rw [rawExplicitOptimizerMix]
   by_cases h : rawOptimizerHalf.value ≤
       (rawOptimizerMixCandidate n B).value
-  · rw [if_pos h, min_eq_left h]
-  · rw [if_neg h, min_eq_right (le_of_not_ge h)]
+  · rw [ite_eq_left h, min_eq_left h]
+  · rw [ite_eq_right h, min_eq_right (le_of_not_ge h)]
 
 @[simp] theorem rawExplicitOptimizerInnerRadius_value (n B : ℕ) :
     (rawExplicitOptimizerInnerRadius n B).value =

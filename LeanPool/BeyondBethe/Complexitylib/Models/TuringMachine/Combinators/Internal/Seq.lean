@@ -63,7 +63,7 @@ theorem seqTM_phase1_step (tm₁ tm₂ : TM n) {c₁ c₁' : Cfg n tm₁.Q}
   subst hstep
   show (if (phase1Wrap tm₁ tm₂ c₁).state = (seqTM tm₁ tm₂).qhalt then none
         else some _) = some _
-  simp only [phase1Wrap, seqTM, if_neg Sum.inl_ne_inr, if_neg hne]
+  simp only [phase1Wrap, seqTM, ite_eq_right Sum.inl_ne_inr, ite_eq_right hne]
 
 /-- Multi-step Phase 1 simulation. -/
 theorem seqTM_reachesIn_phase1Wrap (tm₁ tm₂ : TM n) {t : ℕ}
@@ -89,7 +89,7 @@ theorem seqTM_transition_step (tm₁ tm₂ : TM n) {c₁ : Cfg n tm₁.Q}
           output := transitionTape c₁.output }) := by
   show (if (phase1Wrap tm₁ tm₂ c₁).state = (seqTM tm₁ tm₂).qhalt then none
         else some _) = some _
-  simp only [phase1Wrap, seqTM, if_neg Sum.inl_ne_inr, hhalt, ↓reduceIte]
+  simp only [phase1Wrap, seqTM, ite_eq_right Sum.inl_ne_inr, hhalt, ↓reduceIte]
   congr 1
 
 -- ════════════════════════════════════════════════════════════════════════
@@ -105,7 +105,7 @@ theorem seqTM_phase2_step (tm₁ tm₂ : TM n) {c₂ c₂' : Cfg n tm₂.Q}
   subst hstep
   show (if (phase2Wrap tm₁ tm₂ c₂).state = (seqTM tm₁ tm₂).qhalt then none
         else some _) = some _
-  simp only [phase2Wrap, seqTM, if_neg (Sum.inr_injective.ne hne), if_neg hne]
+  simp only [phase2Wrap, seqTM, ite_eq_right (Sum.inr_injective.ne hne), ite_eq_right hne]
 
 /-- Multi-step Phase 2 simulation. -/
 theorem seqTM_reachesIn_phase2Wrap (tm₁ tm₂ : TM n) {t : ℕ}

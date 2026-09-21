@@ -224,7 +224,7 @@ private theorem initRegs_ne_zero_address_lt (input : List Bool) (address : ℕ)
   rw [not_lt] at hlt
   have haddress : address ≠ 0 := by omega
   apply hvalue
-  simp only [initRegs, haddress, if_false]
+  simp only [initRegs, haddress, ite_false]
   rw [List.getElem?_eq_none (show input.length ≤ address - 1 by omega)]
 
 private theorem initRegs_le_length_add_one (input : List Bool) (address : ℕ) :
@@ -405,9 +405,9 @@ theorem Snapshot.run_canonical_internal (program : Program) (fuel : ℕ)
   | succ fuel ih =>
       rw [Snapshot.run]
       by_cases hhalt : snapshot.Halted program
-      · rw [if_pos hhalt]
+      · rw [ite_eq_left hhalt]
         exact hcanonical
-      · rw [if_neg hhalt]
+      · rw [ite_eq_right hhalt]
         exact ih (snapshot.step program)
           (Snapshot.step_canonical_internal program snapshot hcanonical)
 
@@ -419,10 +419,10 @@ theorem Snapshot.decode_run_internal (program : Program) (fuel : ℕ)
   | succ fuel ih =>
       rw [Snapshot.run, RAM.run]
       by_cases hhalt : snapshot.Halted program
-      · rw [if_pos hhalt,
-          if_pos ((Snapshot.halted_decode_iff_internal program snapshot).mpr hhalt)]
-      · rw [if_neg hhalt,
-          if_neg (mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt)]
+      · rw [ite_eq_left hhalt,
+          ite_eq_left ((Snapshot.halted_decode_iff_internal program snapshot).mpr hhalt)]
+      · rw [ite_eq_right hhalt,
+          ite_eq_right (mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt)]
         rw [ih (snapshot.step program)
           (Snapshot.step_canonical_internal program snapshot hcanonical)]
         rw [Snapshot.decode_step_internal program snapshot hcanonical]
@@ -624,11 +624,11 @@ theorem Snapshot.length_run_le_internal (program : Program) (fuel : ℕ)
   | succ fuel ih =>
       rw [Snapshot.run, RAM.unitTimeUpto]
       by_cases hhalt : snapshot.Halted program
-      · rw [if_pos hhalt,
-          if_pos ((Snapshot.halted_decode_iff_internal program snapshot).mpr hhalt)]
+      · rw [ite_eq_left hhalt,
+          ite_eq_left ((Snapshot.halted_decode_iff_internal program snapshot).mpr hhalt)]
         omega
-      · rw [if_neg hhalt,
-          if_neg (mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt)]
+      · rw [ite_eq_right hhalt,
+          ite_eq_right (mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt)]
         have hstep := Snapshot.length_stepInstr_le_internal
           (snapshot.curInstr program) snapshot
         have hstep' : (snapshot.step program).store.length ≤
@@ -651,13 +651,13 @@ theorem Snapshot.width_run_le_internal (program : Program) (fuel : ℕ)
   | succ fuel ih =>
       rw [Snapshot.run, RAM.unitTimeUpto, RAM.logTimeUpto]
       by_cases hhalt : snapshot.Halted program
-      · rw [if_pos hhalt,
-          if_pos ((Snapshot.halted_decode_iff_internal program snapshot).mpr hhalt),
-          if_pos ((Snapshot.halted_decode_iff_internal program snapshot).mpr hhalt)]
+      · rw [ite_eq_left hhalt,
+          ite_eq_left ((Snapshot.halted_decode_iff_internal program snapshot).mpr hhalt),
+          ite_eq_left ((Snapshot.halted_decode_iff_internal program snapshot).mpr hhalt)]
         omega
-      · rw [if_neg hhalt,
-          if_neg (mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt),
-          if_neg (mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt)]
+      · rw [ite_eq_right hhalt,
+          ite_eq_right (mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt),
+          ite_eq_right (mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt)]
         have hstepCanonical := Snapshot.step_canonical_internal
           program snapshot hcanonical
         have hrun := ih (snapshot.step program) hstepCanonical
@@ -862,9 +862,9 @@ theorem Snapshot.encodedStoreLength_run_le_internal (program : Program)
         simp
       · have hramNotHalted : ¬RAM.Halted program snapshot.decode :=
           mt (Snapshot.halted_decode_iff_internal program snapshot).mp hhalt
-        rw [if_neg hhalt]
+        rw [ite_eq_right hhalt]
         simp only [RAM.unitTimeUpto, RAM.logTimeUpto, hramNotHalted,
-          if_false]
+          ite_false]
         have hstep := encodedStoreLength_step_le program snapshot
         have hnextCanonical :=
           Snapshot.step_canonical_internal program snapshot hcanonical

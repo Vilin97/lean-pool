@@ -78,7 +78,7 @@ theorem encodeVec_mem_internal {n : ℕ} : Cobham (@encodeVec n) := by
 
 /-! ## Soundness: `Cobham f → FPn f`, constructor by constructor -/
 
-/-- `empty` case: the fixedValue empty function is `FPn` at every arity, witnessed
+/-- `empty` case: the constant empty function is `FPn` at every arity, witnessed
 by `const_nil_mem_FP`. -/
 theorem fpn_empty {n : ℕ} : FPn (fun _ : Fin n → List Bool => ([] : List Bool)) :=
   ⟨fun _ => [], const_nil_mem_FP, fun _ => rfl⟩
@@ -232,7 +232,7 @@ theorem fpn_smash :
   rfl
 
 /-- Assembling an encoded vector out of `FP` component functions of a common input
-is `FP`. Proved by induction on the arity: the empty vector is the fixedValue `[]`,
+is `FP`. Proved by induction on the arity: the empty vector is the constant `[]`,
 and the successor step is one `pairFn_mem_FP`. -/
 theorem assembleVec_mem_FP {m : ℕ} (w : Fin m → (List Bool → List Bool))
     (hw : ∀ i, w i ∈ FP) :
@@ -349,7 +349,7 @@ private theorem poly_eval_le_pow (p : Polynomial ℕ) (n : ℕ) :
   exact Nat.mul_le_mul_left _
     (le_trans (Nat.pow_le_pow_left (by omega) i) (Nat.pow_le_pow_right (by omega) hi'))
 
-/-- An `FP` function whose output is at least `c` bits long, for any fixedValue `c`.
+/-- An `FP` function whose output is at least `c` bits long, for any constant `c`.
 Built by iterating `pair · []`, which doubles the length and adds two. -/
 theorem exists_const_ruler (c : ℕ) :
     ∃ K : List Bool → List Bool, K ∈ FP ∧ ∀ z, c ≤ (K z).length := by
@@ -362,7 +362,7 @@ theorem exists_const_ruler (c : ℕ) :
       simp only [pair_length, List.length_nil]
       omega
 
-/-- **Rulers.** For every fixedValue `c` and exponent `d` there is an `FP` function
+/-- **Rulers.** For every constant `c` and exponent `d` there is an `FP` function
 whose output is at least `c · (|z| + 1) ^ d` bits long. Rulers let the loop of the
 `boundedRec` case carry its width clamp as *data* — truncating to a string costs
 linear time, whereas truncating to a computed number would not. -/
@@ -580,15 +580,15 @@ theorem emptyFlag_head_cons (b : Bool) (t : List Bool) :
 
 theorem selectHead_emptyFlag_nil (x y : List Bool) : selectHead (emptyFlag []) x y = x := by
   rw [emptyFlag_nil, selectHead,
-    if_pos (show ([true] : List Bool).head? = some true from rfl)]
+    ite_eq_left (show ([true] : List Bool).head? = some true from rfl)]
 
 theorem length_take_le_arg (n : ℕ) (l : List Bool) : (l.take n).length ≤ n := by
   rw [List.length_take]; omega
 
 theorem selectHead_emptyFlag_cons (b : Bool) (t x y : List Bool) :
     selectHead (emptyFlag (b :: t)) x y = y := by
-  rw [selectHead, if_neg (by rw [emptyFlag_head_cons]; simp),
-    if_pos (emptyFlag_head_cons b t)]
+  rw [selectHead, ite_eq_right (by rw [emptyFlag_head_cons]; simp),
+    ite_eq_left (emptyFlag_head_cons b t)]
 
 theorem selectHead_length_le (s x y : List Bool) :
     (selectHead s x y).length ≤ max x.length y.length := by
@@ -805,12 +805,12 @@ theorem iterVal_eq_iterate (F : List Bool → List Bool) (W v₀ : List Bool) (M
       rw [iterVal, ih]
       by_cases h : i + 2 ≤ M + 1
       · have hhead := counter_head_false (M + 1) (i + 2) (by omega) h
-        rw [selectHead, if_neg (by rw [hhead]; simp), if_pos hhead,
+        rw [selectHead, ite_eq_right (by rw [hhead]; simp), ite_eq_left hhead,
           show min i M = i from by omega, ← Function.iterate_succ_apply' F i v₀,
           List.take_of_length_le (hclamp (i + 1) (by omega)),
           show min (i + 1) M = i + 1 from by omega]
       · have hhead := counter_head_true (M + 1) (i + 2) (by omega)
-        rw [selectHead, if_pos hhead, show min i M = M from by omega,
+        rw [selectHead, ite_eq_left hhead, show min i M = M from by omega,
           show min (i + 1) M = M from by omega]
 
 /-- **`FP` is closed under bounded iteration** — the one machine-level fact the
@@ -1014,8 +1014,8 @@ theorem recFold_eq_recNotation {n : ℕ} {g : (Fin n → List Bool) → List Boo
         = _
       rw [ih, henc, recNotation_cons]
       cases b
-      · simp only [cond_false]; exact hH₀ _
-      · simp only [cond_true]; exact hH₁ _
+      · simp only [Bool.cond_false]; exact hH₀ _
+      · simp only [Bool.cond_true]; exact hH₁ _
 
 /-- Every `FP` function has polynomially bounded output length: a time bound is
 also an output-length bound (`TM.ComputesInTime.output_length_le`). -/
@@ -1110,7 +1110,7 @@ Cobham's algebra.
    head position — is one bitstring of equal-width blocks, each tape split at its
    head so that a head move is a two-bit shift (`Cobham.cfgCode`).
 2. The one-step transition is a finite case split on (state, symbols read), which
-   is `Cobham.tableFn` against the finitely many fixedValue key patterns, with each
+   is `Cobham.tableFn` against the finitely many constant key patterns, with each
    branch built from `takeFn`/`dropFn`/`appendFn`/`padFn` (`Cobham.stepFn`). At
    the halting state the branch is the identity, so the encoding is a fixed point
    once the machine stops.

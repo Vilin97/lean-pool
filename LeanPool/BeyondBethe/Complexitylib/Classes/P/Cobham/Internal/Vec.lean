@@ -31,7 +31,7 @@ namespace Cobham
 
 /-! ## Foundational FP building blocks -/
 
-/-- The fixedValue empty-output function is in `FP` (the empty-support case of
+/-- The constant empty-output function is in `FP` (the empty-support case of
 `ite_mem_finset_mem_FP`). -/
 theorem const_nil_mem_FP : (fun _ : List Bool => ([] : List Bool)) ∈ FP := by
   have h := ite_mem_finset_mem_FP (fun _ => []) (∅ : Finset (List Bool))
@@ -40,7 +40,7 @@ theorem const_nil_mem_FP : (fun _ : List Bool => ([] : List Bool)) ∈ FP := by
 /-- The framing map `x ↦ pair [] x` (i.e. `false :: true :: x`) is
 polynomial-time. This is the foundational map behind the arity-one encoding
 `encodeVec ![x] = pair [] x`, and it is exactly `mem_FP_pairWithInput` applied to
-the fixedValue empty function. -/
+the constant empty function. -/
 theorem pairLeftNil_mem_FP : (fun x : List Bool => pair [] x) ∈ FP := by
   have h := mem_FP_pairWithInput const_nil_mem_FP
   simpa using h

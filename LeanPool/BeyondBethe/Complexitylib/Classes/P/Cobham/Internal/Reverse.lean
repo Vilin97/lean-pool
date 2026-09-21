@@ -107,7 +107,7 @@ def reverseTM : TM 1 where
 /-- A content-preserving idle step on a tape whose head is off the left marker. -/
 private theorem rev_idle_eq {t : Tape} (h : t.read ≠ Γ.start) :
     t.writeAndMove (readBackWrite t.read) (idleDir t.read) = t := by
-  rw [writeAndMove_readBack t h, idleDir, if_neg h, Tape.move]
+  rw [writeAndMove_readBack t h, idleDir, ite_eq_right h, Tape.move]
 
 /-- The copy phase: from `copy` with the input cursor on `w` and the work tape
 holding `acc`, the machine appends `w` to the work tape and enters `emit` with
@@ -137,20 +137,20 @@ private theorem reverseTM_copy_loop :
         exact hwork.2.2 acc.length le_rfl
       have hwne : (c.work 0).read ≠ Γ.start := by rw [hwread]; decide
       have hinp_eq : c.input.move (idleDir Γ.blank) = c.input := by
-        rw [idleDir, if_neg (by decide), Tape.move]
+        rw [idleDir, ite_eq_right (by decide), Tape.move]
       have hwmove : (fun i => (c.work i).writeAndMove (readBackWrite ((c.work i).read)).toΓ
           (moveLeftDir ((c.work i).read))) = fun i => (c.work i).move Dir3.left := by
         funext i
         have hi : i = 0 := Subsingleton.elim i 0
         subst hi
-        rw [moveLeftDir, if_neg hwne]
+        rw [moveLeftDir, ite_eq_right hwne]
         exact writeAndMove_readBack _ hwne _
       refine ⟨{ state := RevPhase.emit
                 input := c.input
                 work := fun i => (c.work i).move Dir3.left
                 output := c.output }, ?_, rfl, ?_, ?_, ?_, by rw [hread]; decide, by simpa⟩
       · refine .step ?_ .zero
-        simp only [TM.step, hstate, reverseTM, hread, hinp_eq, reduceCtorEq, if_false]
+        simp only [TM.step, hstate, reverseTM, hread, hinp_eq, reduceCtorEq, ite_false]
         rw [hwmove, rev_idle_eq houtne]
       · have hc : (c.work 0).HasBinaryContent acc := hwork.2
         simpa using hc.move Dir3.left
@@ -171,7 +171,7 @@ private theorem reverseTM_copy_loop :
       have hstep : reverseTM.step c = some c1 := by
         cases b <;>
           · simp only [TM.step, hstate, reverseTM, hread, Γ.ofBool, hc1,
-              reduceCtorEq, if_false]
+              reduceCtorEq, ite_false]
             rw [rev_idle_eq houtne]
             rfl
       obtain ⟨c', hreach, hst, hcont, hcz, hhd, hinp, hpre⟩ :=
@@ -206,7 +206,7 @@ private theorem reverseTM_emit_loop :
       have hwne1 : ¬ (c.work 0).read = Γ.one := by rw [hwread]; decide
       have houtne : c.output.read ≠ Γ.start := by rw [hout.read_blank]; decide
       have hinp_eq : c.input.move (idleDir c.input.read) = c.input := by
-        rw [idleDir, if_neg hinp, Tape.move]
+        rw [idleDir, ite_eq_right hinp, Tape.move]
       refine ⟨{ state := RevPhase.done
                 input := c.input
                 work := fun i => (c.work i).move Dir3.right
@@ -217,10 +217,10 @@ private theorem reverseTM_emit_loop :
         funext i
         have hi : i = 0 := Subsingleton.elim i 0
         subst hi
-        rw [Tape.writeAndMove, Tape.write, if_pos (by omega : (c.work 0).head = 0),
-          idleDir, if_pos hwread]
+        rw [Tape.writeAndMove, Tape.write, ite_eq_left (by omega : (c.work 0).head = 0),
+          idleDir, ite_eq_left hwread]
       simp only [TM.step, hstate, reverseTM, hinp_eq, hwne0, hwne1, reduceCtorEq,
-        if_false]
+        ite_false]
       rw [hwork, rev_idle_eq houtne]
   | succ j ih =>
       intro bits acc c hstate hcont hw0 hhead hjb hinp hout
@@ -230,13 +230,13 @@ private theorem reverseTM_emit_loop :
       have hwne : (c.work 0).read ≠ Γ.start := by
         rw [hwread]; exact Γ.ofBool_ne_start _
       have hinp_eq : c.input.move (idleDir c.input.read) = c.input := by
-        rw [idleDir, if_neg hinp, Tape.move]
+        rw [idleDir, ite_eq_right hinp, Tape.move]
       have hwmove : (fun i => (c.work i).writeAndMove (readBackWrite ((c.work i).read)).toΓ
           (moveLeftDir ((c.work i).read))) = fun i => (c.work i).move Dir3.left := by
         funext i
         have hi : i = 0 := Subsingleton.elim i 0
         subst hi
-        rw [moveLeftDir, if_neg hwne]
+        rw [moveLeftDir, ite_eq_right hwne]
         exact writeAndMove_readBack _ hwne _
       set c1 : Cfg 1 reverseTM.Q :=
         { state := RevPhase.emit
@@ -247,12 +247,12 @@ private theorem reverseTM_emit_loop :
         rcases hb : bits[j]'hjlt with _ | _
         · have h0 : (c.work 0).read = Γ.zero := by rw [hwread, hb]; rfl
           simp only [TM.step, hstate, reverseTM, hinp_eq, h0, hc1, hb, Γ.ofBool,
-            reduceCtorEq, if_false, reduceIte]
+            reduceCtorEq, ite_false, reduceIte]
           rw [hwmove]
           rfl
         · have h1 : (c.work 0).read = Γ.one := by rw [hwread, hb]; rfl
           simp only [TM.step, hstate, reverseTM, hinp_eq, h1, hc1, hb, Γ.ofBool,
-            reduceCtorEq, if_false, reduceIte]
+            reduceCtorEq, ite_false, reduceIte]
           rw [hwmove]
           rfl
       obtain ⟨c', hreach, hhalt, hfin⟩ :=

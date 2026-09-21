@@ -263,7 +263,7 @@ theorem kuhnSearchWork_le {n : ℕ}
   | case4 fuel col remaining row seen mate hskip hmate =>
       rw [kuhnSearch.eq_def]
       dsimp only
-      rw [dif_neg hskip, hmate]
+      rw [dite_eq_right hskip, hmate]
       simp only [List.length_cons]
       have hnot : col ∉ seen := by aesop
       rw [Finset.card_insert_of_notMem hnot]
@@ -272,7 +272,7 @@ theorem kuhnSearchWork_le {n : ℕ}
       mateWithoutOld recursive recursiveWork mateRec hrec ih =>
       rw [kuhnSearch.eq_def]
       dsimp only
-      rw [dif_neg hskip, hmate]
+      rw [dite_eq_right hskip, hmate]
       simp
       rw [show (kuhnSearch A fuel (List.finRange n) oldRow
         (insert col seen) (Function.update mate col none)).mate? = some mateRec by
@@ -299,7 +299,7 @@ theorem kuhnSearchWork_le {n : ℕ}
       mateWithoutOld recursive recursiveWork hrec ihRec ihContinue =>
       rw [kuhnSearch.eq_def]
       dsimp only
-      rw [dif_neg hskip, hmate]
+      rw [dite_eq_right hskip, hmate]
       simp
       rw [show (kuhnSearch A fuel (List.finRange n) oldRow
         (insert col seen) (Function.update mate col none)).mate? = none by

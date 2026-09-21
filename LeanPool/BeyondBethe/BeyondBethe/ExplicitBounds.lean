@@ -376,7 +376,7 @@ theorem abs_continuousSuffixError_near_half
     _ = 29 * r := by ring
 
 /-- An explicit modulus for the complete three-variable good-row expression.
-The fixedValue `70` is deliberately loose; having a transparent computable
+The constant `70` is deliberately loose; having a transparent computable
 bound is more important than optimizing this one-time structural constant. -/
 theorem abs_continuousGoodRowPsi_sub_center_le
     {u v q r : ℝ} (hr0 : 0 ≤ r) (hr1 : r ≤ 1 / 10)

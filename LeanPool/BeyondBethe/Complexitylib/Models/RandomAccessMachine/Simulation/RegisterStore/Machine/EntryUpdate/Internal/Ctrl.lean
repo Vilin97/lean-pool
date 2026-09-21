@@ -130,9 +130,9 @@ private theorem entryUpdateTM_match_step
       some (entryUpdateMatchWrap tapes next) := by
   have hne : cfg.state ≠ (entryMatchReadTM tapes.entry).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [entryUpdateMatchWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateMatchWrap, entryUpdateTM])]
   simp only [entryUpdateMatchWrap, entryUpdateTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (entryMatchReadTM tapes.entry).δ cfg.state
     cfg.input.read (fun i => (cfg.work i).read) cfg.output.read = action
@@ -150,9 +150,9 @@ private theorem entryUpdateTM_miss_step
       some (entryUpdateMissWrap tapes next) := by
   have hne : cfg.state ≠ (entryMissCopyTM tapes.entry).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [entryUpdateMissWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateMissWrap, entryUpdateTM])]
   simp only [entryUpdateMissWrap, entryUpdateTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (entryMissCopyTM tapes.entry).δ cfg.state
     cfg.input.read (fun i => (cfg.work i).read) cfg.output.read = action
@@ -170,9 +170,9 @@ private theorem entryUpdateTM_delete_step
       some (entryUpdateDeleteWrap tapes next) := by
   have hne : cfg.state ≠ (entryMissCleanupTM tapes.entry).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [entryUpdateDeleteWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateDeleteWrap, entryUpdateTM])]
   simp only [entryUpdateDeleteWrap, entryUpdateTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (entryMissCleanupTM tapes.entry).δ cfg.state
     cfg.input.read (fun i => (cfg.work i).read) cfg.output.read = action
@@ -190,9 +190,9 @@ private theorem entryUpdateTM_replace_step
       some (entryUpdateReplaceWrap tapes next) := by
   have hne : cfg.state ≠ (entryReplaceCleanupTM tapes.replace).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [entryUpdateReplaceWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateReplaceWrap, entryUpdateTM])]
   simp only [entryUpdateReplaceWrap, entryUpdateTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (entryReplaceCleanupTM tapes.replace).δ cfg.state
     cfg.input.read (fun i => (cfg.work i).read) cfg.output.read = action
@@ -210,9 +210,9 @@ private theorem entryUpdateTM_append_step
       some (entryUpdateAppendWrap tapes next) := by
   have hne : cfg.state ≠ (entryAppendRestoreTM tapes.replace).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [entryUpdateAppendWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateAppendWrap, entryUpdateTM])]
   simp only [entryUpdateAppendWrap, entryUpdateTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (entryAppendRestoreTM tapes.replace).δ cfg.state
     cfg.input.read (fun i => (cfg.work i).read) cfg.output.read = action
@@ -230,9 +230,9 @@ private theorem entryUpdateTM_remaining_step
       some (entryUpdateRemainingWrap tapes next) := by
   have hne : cfg.state ≠ (TM.binaryPredTM tapes.remaining).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [entryUpdateRemainingWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateRemainingWrap, entryUpdateTM])]
   simp only [entryUpdateRemainingWrap, entryUpdateTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (TM.binaryPredTM tapes.remaining).δ cfg.state
     cfg.input.read (fun i => (cfg.work i).read) cfg.output.read = action
@@ -250,9 +250,9 @@ private theorem entryUpdateTM_deleteCount_step
       some (entryUpdateDeleteCountWrap tapes next) := by
   have hne : cfg.state ≠ (TM.binaryPredTM tapes.resultCount).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [entryUpdateDeleteCountWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateDeleteCountWrap, entryUpdateTM])]
   simp only [entryUpdateDeleteCountWrap, entryUpdateTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (TM.binaryPredTM tapes.resultCount).δ cfg.state
     cfg.input.read (fun i => (cfg.work i).read) cfg.output.read = action
@@ -270,9 +270,9 @@ private theorem entryUpdateTM_appendCount_step
       some (entryUpdateAppendCountWrap tapes next) := by
   have hne : cfg.state ≠ (TM.binarySuccTM tapes.resultCount).qhalt :=
     TM.state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [entryUpdateAppendCountWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateAppendCountWrap, entryUpdateTM])]
   simp only [entryUpdateAppendCountWrap, entryUpdateTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : (TM.binarySuccTM tapes.resultCount).δ cfg.state
     cfg.input.read (fun i => (cfg.work i).read) cfg.output.read = action
@@ -365,7 +365,7 @@ theorem entryUpdateTM_step_test_continue_internal
       some (entryUpdateMatchWrap tapes
         { state := (entryMatchReadTM tapes.entry).qstart
           input := inp, work := work, output := out }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateTestCfg, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateTestCfg, entryUpdateTM])]
   simp only [entryUpdateTestCfg, entryUpdateTM, hremaining, ↓reduceIte,
     entryUpdateMatchWrap]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -382,7 +382,7 @@ theorem entryUpdateTM_step_test_found_internal
     (houtput : TM.Parked out) :
     (entryUpdateTM tapes).step (entryUpdateTestCfg tapes inp work out) =
       some (entryUpdateDoneCfg tapes inp work out) := by
-  rw [TM.step, if_neg (by simp [entryUpdateTestCfg, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateTestCfg, entryUpdateTM])]
   simp only [entryUpdateTestCfg, entryUpdateDoneCfg, entryUpdateTM,
     hremaining, hfound, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -400,7 +400,7 @@ theorem entryUpdateTM_step_test_zero_internal
     (houtput : TM.Parked out) :
     (entryUpdateTM tapes).step (entryUpdateTestCfg tapes inp work out) =
       some (entryUpdateDoneCfg tapes inp work out) := by
-  rw [TM.step, if_neg (by simp [entryUpdateTestCfg, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateTestCfg, entryUpdateTM])]
   simp only [entryUpdateTestCfg, entryUpdateDoneCfg, entryUpdateTM,
     hremaining, hfound, hreplacement, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -420,7 +420,7 @@ theorem entryUpdateTM_step_test_append_internal
       some (entryUpdateAppendWrap tapes
         { state := (entryAppendRestoreTM tapes.replace).qstart
           input := inp, work := work, output := out }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateTestCfg, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateTestCfg, entryUpdateTM])]
   simp only [entryUpdateTestCfg, entryUpdateTM, hremaining, hfound,
     hreplacement, ↓reduceIte, entryUpdateAppendWrap]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -456,7 +456,7 @@ theorem entryUpdateTM_step_match_delete_internal
           input := cfg.input
           work := entryUpdateMarkFoundWork tapes cfg.work
           output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateMatchWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateMatchWrap, entryUpdateTM])]
   simp only [entryUpdateMatchWrap, entryUpdateDeleteWrap, entryUpdateTM,
     hhalt, hresult, hreplacement, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -470,7 +470,7 @@ theorem entryUpdateTM_step_match_delete_internal
     by_cases hi : i = tapes.found
     · subst i
       simp [entryUpdateMarkFoundWork]
-    · simp only [hi, if_false,
+    · simp only [hi, ite_false,
         entryUpdateMarkFoundWork_apply_ne tapes cfg.work i hi]
       exact (hwork i).writeAndMove_readBack_idle
   · exact houtput.writeAndMove_readBack_idle
@@ -489,7 +489,7 @@ theorem entryUpdateTM_step_match_replace_internal
           input := cfg.input
           work := entryUpdateMarkFoundWork tapes cfg.work
           output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateMatchWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateMatchWrap, entryUpdateTM])]
   simp only [entryUpdateMatchWrap, entryUpdateReplaceWrap, entryUpdateTM,
     hhalt, hresult, hreplacement, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -503,7 +503,7 @@ theorem entryUpdateTM_step_match_replace_internal
     by_cases hi : i = tapes.found
     · subst i
       simp [entryUpdateMarkFoundWork]
-    · simp only [hi, if_false,
+    · simp only [hi, ite_false,
         entryUpdateMarkFoundWork_apply_ne tapes cfg.work i hi]
       exact (hwork i).writeAndMove_readBack_idle
   · exact houtput.writeAndMove_readBack_idle
@@ -519,7 +519,7 @@ theorem entryUpdateTM_step_match_miss_internal
       some (entryUpdateMissWrap tapes
         { state := (entryMissCopyTM tapes.entry).qstart
           input := cfg.input, work := cfg.work, output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateMatchWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateMatchWrap, entryUpdateTM])]
   simp only [entryUpdateMatchWrap, entryUpdateMissWrap, entryUpdateTM,
     hhalt, hresult, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -538,7 +538,7 @@ theorem entryUpdateTM_step_miss_halt_internal
       some (entryUpdateRemainingWrap tapes
         { state := (TM.binaryPredTM tapes.remaining).qstart
           input := cfg.input, work := cfg.work, output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateMissWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateMissWrap, entryUpdateTM])]
   simp only [entryUpdateMissWrap, entryUpdateRemainingWrap, entryUpdateTM,
     hhalt, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -557,7 +557,7 @@ theorem entryUpdateTM_step_delete_halt_internal
       some (entryUpdateDeleteCountWrap tapes
         { state := (TM.binaryPredTM tapes.resultCount).qstart
           input := cfg.input, work := cfg.work, output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateDeleteWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateDeleteWrap, entryUpdateTM])]
   simp only [entryUpdateDeleteWrap, entryUpdateDeleteCountWrap,
     entryUpdateTM, hhalt, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -576,7 +576,7 @@ theorem entryUpdateTM_step_replace_halt_internal
       some (entryUpdateRemainingWrap tapes
         { state := (TM.binaryPredTM tapes.remaining).qstart
           input := cfg.input, work := cfg.work, output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateReplaceWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateReplaceWrap, entryUpdateTM])]
   simp only [entryUpdateReplaceWrap, entryUpdateRemainingWrap, entryUpdateTM,
     hhalt, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -595,7 +595,7 @@ theorem entryUpdateTM_step_append_halt_internal
       some (entryUpdateAppendCountWrap tapes
         { state := (TM.binarySuccTM tapes.resultCount).qstart
           input := cfg.input, work := cfg.work, output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateAppendWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateAppendWrap, entryUpdateTM])]
   simp only [entryUpdateAppendWrap, entryUpdateAppendCountWrap, entryUpdateTM,
     hhalt, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -612,7 +612,7 @@ theorem entryUpdateTM_step_remaining_halt_internal
     (houtput : TM.Parked cfg.output) :
     (entryUpdateTM tapes).step (entryUpdateRemainingWrap tapes cfg) =
       some (entryUpdateTestCfg tapes cfg.input cfg.work cfg.output) := by
-  rw [TM.step, if_neg (by simp [entryUpdateRemainingWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateRemainingWrap, entryUpdateTM])]
   simp only [entryUpdateRemainingWrap, entryUpdateTestCfg, entryUpdateTM,
     hhalt, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -631,7 +631,7 @@ theorem entryUpdateTM_step_deleteCount_halt_internal
       some (entryUpdateRemainingWrap tapes
         { state := (TM.binaryPredTM tapes.remaining).qstart
           input := cfg.input, work := cfg.work, output := cfg.output }) := by
-  rw [TM.step, if_neg (by simp [entryUpdateDeleteCountWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateDeleteCountWrap, entryUpdateTM])]
   simp only [entryUpdateDeleteCountWrap, entryUpdateRemainingWrap,
     entryUpdateTM, hhalt, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)
@@ -648,7 +648,7 @@ theorem entryUpdateTM_step_appendCount_halt_internal
     (houtput : TM.Parked cfg.output) :
     (entryUpdateTM tapes).step (entryUpdateAppendCountWrap tapes cfg) =
       some (entryUpdateDoneCfg tapes cfg.input cfg.work cfg.output) := by
-  rw [TM.step, if_neg (by simp [entryUpdateAppendCountWrap, entryUpdateTM])]
+  rw [TM.step, ite_eq_right (by simp [entryUpdateAppendCountWrap, entryUpdateTM])]
   simp only [entryUpdateAppendCountWrap, entryUpdateDoneCfg, entryUpdateTM,
     hhalt, ↓reduceIte]
   refine congrArg some (Complexity.Cfg.ext rfl ?_ ?_ ?_)

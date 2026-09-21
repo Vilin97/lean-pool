@@ -71,21 +71,21 @@ theorem step_halted {c : Cfg} (h : Halted P c) : step P c = c := by
 theorem run_halted {c : Cfg} (h : Halted P c) (fuel : ℕ) : run P fuel c = c := by
   cases fuel with
   | zero => rfl
-  | succ f => rw [run_succ, if_pos h]
+  | succ f => rw [run_succ, ite_eq_left h]
 
 /-- A halted configuration accumulates no logarithmic time. -/
 theorem logTimeUpto_halted {c : Cfg} (h : Halted P c) (fuel : ℕ) :
     logTimeUpto P fuel c = 0 := by
   cases fuel with
   | zero => rfl
-  | succ f => rw [logTimeUpto_succ, if_pos h]
+  | succ f => rw [logTimeUpto_succ, ite_eq_left h]
 
 /-- A halted configuration accumulates no unit time. -/
 theorem unitTimeUpto_halted {c : Cfg} (h : Halted P c) (fuel : ℕ) :
     unitTimeUpto P fuel c = 0 := by
   cases fuel with
   | zero => rfl
-  | succ f => rw [unitTimeUpto_succ, if_pos h]
+  | succ f => rw [unitTimeUpto_succ, ite_eq_left h]
 
 /-! ### Run/cost algebra -/
 
@@ -93,8 +93,8 @@ theorem unitTimeUpto_halted {c : Cfg} (h : Halted P c) (fuel : ℕ) :
 theorem run_one (c : Cfg) : run P 1 c = step P c := by
   rw [show (1 : ℕ) = 0 + 1 from rfl, run_succ]
   by_cases h : Halted P c
-  · rw [if_pos h, step_halted P h]
-  · rw [if_neg h, run_zero]
+  · rw [ite_eq_left h, step_halted P h]
+  · rw [ite_eq_right h, run_zero]
 
 /-- The run decomposes additively: `a + b` steps is `b` steps after `a` steps. -/
 theorem run_add (a b : ℕ) (c : Cfg) : run P (a + b) c = run P b (run P a c) := by
@@ -103,9 +103,9 @@ theorem run_add (a b : ℕ) (c : Cfg) : run P (a + b) c = run P b (run P a c) :=
   | succ a ih =>
     rw [Nat.succ_add, run_succ, run_succ]
     by_cases h : Halted P c
-    · rw [if_pos h, if_pos h]
+    · rw [ite_eq_left h, ite_eq_left h]
       exact (run_halted P h b).symm
-    · rw [if_neg h, if_neg h]
+    · rw [ite_eq_right h, ite_eq_right h]
       exact ih (step P c)
 
 /-- Running `n + 1` steps is one step after running `n` steps. -/
@@ -121,8 +121,8 @@ theorem logTimeUpto_add (a b : ℕ) (c : Cfg) :
   | succ a ih =>
     rw [Nat.succ_add, logTimeUpto_succ, logTimeUpto_succ, run_succ]
     by_cases h : Halted P c
-    · rw [if_pos h, if_pos h, if_pos h, logTimeUpto_halted P h b]
-    · rw [if_neg h, if_neg h, if_neg h, ih (step P c)]
+    · rw [ite_eq_left h, ite_eq_left h, ite_eq_left h, logTimeUpto_halted P h b]
+    · rw [ite_eq_right h, ite_eq_right h, ite_eq_right h, ih (step P c)]
       ring
 
 /-- Unit time decomposes additively along the run. -/
@@ -134,8 +134,8 @@ theorem unitTimeUpto_add (a b : ℕ) (c : Cfg) :
   | succ a ih =>
     rw [Nat.succ_add, unitTimeUpto_succ, unitTimeUpto_succ, run_succ]
     by_cases h : Halted P c
-    · rw [if_pos h, if_pos h, if_pos h, unitTimeUpto_halted P h b]
-    · rw [if_neg h, if_neg h, if_neg h, ih (step P c)]
+    · rw [ite_eq_left h, ite_eq_left h, ite_eq_left h, unitTimeUpto_halted P h b]
+    · rw [ite_eq_right h, ite_eq_right h, ite_eq_right h, ih (step P c)]
       ring
 
 /-- Once halted after `f` steps, extra fuel does not change the configuration. -/
@@ -185,8 +185,8 @@ theorem unitTimeUpto_le_logTimeUpto (fuel : ℕ) (c : Cfg) :
   | succ f ih =>
     rw [unitTimeUpto_succ, logTimeUpto_succ]
     by_cases h : Halted P c
-    · rw [if_pos h, if_pos h]
-    · rw [if_neg h, if_neg h]
+    · rw [ite_eq_left h, ite_eq_left h]
+    · rw [ite_eq_right h, ite_eq_right h]
       have h1 : 1 ≤ stepLogCost P c := one_le_stepLogCost P c
       have h2 := ih (step P c)
       omega
@@ -199,12 +199,12 @@ theorem unitTimeUpto_eq_of_not_halted (c : Cfg) (fuel : ℕ)
   | zero => simp
   | succ f ih =>
     have h0 : ¬ Halted P c := h 0 (Nat.succ_pos f)
-    rw [unitTimeUpto_succ, if_neg h0]
+    rw [unitTimeUpto_succ, ite_eq_right h0]
     have hrec : unitTimeUpto P f (step P c) = f := by
       apply ih
       intro j hj
       have hstep : run P j (step P c) = run P (j + 1) c := by
-        rw [run_succ, if_neg h0]
+        rw [run_succ, ite_eq_right h0]
       rw [hstep]
       exact h (j + 1) (by omega)
     rw [hrec]
@@ -235,7 +235,7 @@ theorem initRegs_finiteSupport (x : List Bool) :
   rw [not_lt] at hlt
   apply hi
   have hi0 : i ≠ 0 := by omega
-  simp only [initRegs, hi0, if_false, List.getElem?_eq_none (show x.length ≤ i - 1 by omega)]
+  simp only [initRegs, hi0, ite_false, List.getElem?_eq_none (show x.length ≤ i - 1 by omega)]
 
 /-- One instruction preserves finite support of the register file: each
     instruction writes at most one register. -/

@@ -311,9 +311,9 @@ theorem pushforwardMass_isProbabilityVector
   · intro y
     exact Finset.sum_nonneg (fun x _ ↦ by
       by_cases h : f x = y
-      · simp only [if_pos h]
+      · simp only [ite_eq_left h]
         exact hμ.nonnegative x
-      · simp only [if_neg h]
+      · simp only [ite_eq_right h]
         exact le_rfl)
   · simp only [pushforwardMass]
     calc
@@ -345,13 +345,13 @@ theorem pushforwardMass_comp
       apply Finset.sum_congr rfl
       intro x _
       by_cases hx : g (f x) = z
-      · simp only [Function.comp_apply, if_pos hx]
+      · simp only [Function.comp_apply, ite_eq_left hx]
         rw [Finset.sum_eq_single (f x)]
         · simp [hx]
         · intro y _ hy
           simp [Ne.symm hy]
         · simp
-      · simp only [Function.comp_apply, if_neg hx]
+      · simp only [Function.comp_apply, ite_eq_right hx]
         apply Finset.sum_eq_zero
         intro y _
         by_cases hy : f x = y

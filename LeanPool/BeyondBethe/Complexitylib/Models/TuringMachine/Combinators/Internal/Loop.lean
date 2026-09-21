@@ -74,7 +74,7 @@ theorem loopTM_body_step (tmBody tmTest : TM n) {c c' : Cfg n tmBody.Q}
   subst hstep
   show (if (loopBodyWrap tmBody tmTest c).state =
            (loopTM tmBody tmTest).qhalt then none else some _) = some _
-  simp only [loopBodyWrap, loopTM, if_neg loopQ_body_ne_halt, if_neg hne]
+  simp only [loopBodyWrap, loopTM, ite_eq_right loopQ_body_ne_halt, ite_eq_right hne]
 
 /-- A `t`-step run of `tmBody` lifts to a `t`-step run of `loopTM` between the
 body-wrapped configurations. -/
@@ -103,7 +103,7 @@ theorem loopTM_body_to_test (tmBody tmTest : TM n) {c : Cfg n tmBody.Q}
           output := transitionTape c.output }) := by
   show (if (loopBodyWrap tmBody tmTest c).state =
            (loopTM tmBody tmTest).qhalt then none else some _) = some _
-  simp only [loopBodyWrap, loopTM, if_neg loopQ_body_ne_halt, hhalt, ↓reduceIte]
+  simp only [loopBodyWrap, loopTM, ite_eq_right loopQ_body_ne_halt, hhalt, ↓reduceIte]
   congr 1
 
 -- ════════════════════════════════════════════════════════════════════════
@@ -121,7 +121,7 @@ theorem loopTM_test_step (tmBody tmTest : TM n) {c c' : Cfg n tmTest.Q}
   subst hstep
   show (if (loopTestWrap tmBody tmTest c).state =
            (loopTM tmBody tmTest).qhalt then none else some _) = some _
-  simp only [loopTestWrap, loopTM, if_neg loopQ_test_ne_halt, if_neg hne]
+  simp only [loopTestWrap, loopTM, ite_eq_right loopQ_test_ne_halt, ite_eq_right hne]
 
 /-- A `t`-step run of `tmTest` lifts to a `t`-step run of `loopTM` between the
 test-wrapped configurations. -/
@@ -149,7 +149,7 @@ theorem loopTM_test_to_rewind (tmBody tmTest : TM n) {c : Cfg n tmTest.Q}
              output := transitionTape c.output } := by
   show (if (loopTestWrap tmBody tmTest c).state =
            (loopTM tmBody tmTest).qhalt then none else some _) = some _
-  simp only [loopTestWrap, loopTM, if_neg loopQ_test_ne_halt, hhalt, ↓reduceIte]
+  simp only [loopTestWrap, loopTM, ite_eq_right loopQ_test_ne_halt, hhalt, ↓reduceIte]
   congr 1
 
 -- ════════════════════════════════════════════════════════════════════════

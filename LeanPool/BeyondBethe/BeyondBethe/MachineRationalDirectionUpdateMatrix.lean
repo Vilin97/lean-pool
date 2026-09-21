@@ -272,7 +272,7 @@ theorem rawDirectionMatrixEntry_width_le_word {d : ℕ}
       12 + 4 * W := by
     by_cases hij : i = j
     · simpa only [rawDirectionDiagonalEntry, hij, if_true] using hperp
-    · simp only [rawDirectionDiagonalEntry, hij, if_false, rawRatWidth_zero]
+    · simp only [rawDirectionDiagonalEntry, hij, ite_false, rawRatWidth_zero]
       omega
   calc
     _ = rawRatWidth ((rawDirectionDiagonalEntry i j).sub

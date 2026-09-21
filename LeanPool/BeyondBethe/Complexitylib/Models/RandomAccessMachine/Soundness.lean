@@ -58,7 +58,7 @@ private theorem sqProg_getElem_zero (k : ℕ) :
 
 private theorem sqProg_getElem_succ {k j : ℕ} (hj : j < k) :
     (sqProg k)[j + 1]? = some (Instr.mul 1 1 1) := by
-  simp only [sqProg, List.getElem?_cons_succ, List.getElem?_replicate, if_pos hj]
+  simp only [sqProg, List.getElem?_cons_succ, List.getElem?_replicate, ite_eq_left hj]
 
 /-- Squaring `2 ^ (2 ^ j)` yields `2 ^ (2 ^ (j + 1))`. -/
 private theorem sq_pow (j : ℕ) : 2 ^ 2 ^ j * 2 ^ 2 ^ j = 2 ^ 2 ^ (j + 1) := by
@@ -79,7 +79,7 @@ private theorem step_sqStart (k : ℕ) : step (sqProg k) sqStart = sqCfg 0 := by
     by_cases hi : i = 1
     · subst hi; rw [Function.update_self]; rfl
     · rw [Function.update_of_ne hi]
-      simp only [sqStart, sqCfg, if_neg hi]
+      simp only [sqStart, sqCfg, ite_eq_right hi]
 
 /-- One squaring step from `sqCfg j` reaches `sqCfg (j + 1)`, provided the
     `(j + 1)`-th instruction is a `mul` (i.e. `j < k`). -/
@@ -97,7 +97,7 @@ private theorem step_sqCfg {k j : ℕ} (hj : j < k) :
     by_cases hi : i = 1
     · subst hi; rw [Function.update_self]; exact sq_pow j
     · rw [Function.update_of_ne hi]
-      simp only [sqCfg, if_neg hi]
+      simp only [sqCfg, ite_eq_right hi]
 
 /-- The run invariant: `j + 1` steps of `sqProg k` from the start reach
     `sqCfg j`, for every `j ≤ k`. -/
@@ -170,7 +170,7 @@ theorem logGap_squaring {k : ℕ} (hk : 1 ≤ k) :
     -- Evaluate the one-step logarithmic cost of the final `mul`.
     have hstep1 : logTimeUpto (sqProg (m + 1)) 1 (sqCfg m) =
         stepLogCost (sqProg (m + 1)) (sqCfg m) := by
-      rw [show (1 : ℕ) = 0 + 1 from rfl, logTimeUpto_succ, if_neg hnh, logTimeUpto_zero,
+      rw [show (1 : ℕ) = 0 + 1 from rfl, logTimeUpto_succ, ite_eq_right hnh, logTimeUpto_zero,
         Nat.add_zero]
     have hval : (sqCfg m).regs 1 = 2 ^ 2 ^ m := by simp [sqCfg]
     have hcost : stepLogCost (sqProg (m + 1)) (sqCfg m) =

@@ -254,13 +254,13 @@ theorem binaryEuclidStep_two_snd_le_half (a b : ℕ) :
       dsimp only [r]
       exact Nat.mod_lt _ hbpos
     have hfirst : binaryEuclidStep (a, b) = (b, r) := by
-      rw [binaryEuclidStep_eq, if_neg hb]
+      rw [binaryEuclidStep_eq, ite_eq_right hb]
     rw [show (binaryEuclidStep^[2]) (a, b) =
         binaryEuclidStep (binaryEuclidStep (a, b)) by rfl, hfirst]
     by_cases hr : r = 0
     · rw [hr, binaryEuclidStep_zero]
       simp
-    · rw [binaryEuclidStep_eq, if_neg hr]
+    · rw [binaryEuclidStep_eq, ite_eq_right hr]
       simp only [Prod.snd]
       exact mod_le_half_of_pos_of_lt (Nat.pos_of_ne_zero hr) hrb
 

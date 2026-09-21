@@ -149,7 +149,7 @@ private theorem entryMissCopiedWork_target_head
   · by_cases hvalue : i = tapes.entry.value
     · subst i
       simp [entryMissCopiedWork, entryUpdatePostEmitHead, haddress]
-    · simp only [entryMissCopiedWork, haddress, hvalue, if_false]
+    · simp only [entryMissCopiedWork, haddress, hvalue, ite_false]
       exact readable_other_cleanup_target_head tapes entry rest queryBits
         initialWork matchedWork hmatch i hi haddress hvalue
 
@@ -171,7 +171,7 @@ private theorem entryReplaceReadyWork_target_head
         hmatch.value.1
     · have haddress' : i ≠ tapes.replace.entry.address := by
         simpa using haddress
-      rw [entryReplaceReadyWork, if_neg haddress']
+      rw [entryReplaceReadyWork, ite_eq_right haddress']
       exact readable_other_cleanup_target_head tapes entry rest queryBits
         initialWork matchedWork hmatch i hi haddress hvalue
 

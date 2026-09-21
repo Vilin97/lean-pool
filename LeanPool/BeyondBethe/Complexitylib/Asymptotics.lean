@@ -31,7 +31,7 @@ opened and read like standard complexity-theoretic asymptotic notation.
 - `BigO.of_le` — pointwise `≤` implies big-O
 - `BigO.add` — sum of big-O is big-O
 - `BigO.pow` — fixed powers preserve big-O
-- `BigO.const_mul_left` — fixedValue multiple preserves big-O
+- `BigO.const_mul_left` — constant multiple preserves big-O
 - `BigO.natSize_of_pow` — binary widths of power-bounded values are logarithmic
 - `BigO.le_add_left` / `BigO.le_add_right` — projections from a sum
 - `BigO.const_mul_add` — `c * f₁ + f₂ = O(T₁ + T₂)`
@@ -43,7 +43,7 @@ opened and read like standard complexity-theoretic asymptotic notation.
 - `LittleO.trans_bigO` — mixed: `o` then `O` gives `o`
 - `BigO.trans_littleO` — mixed: `O` then `o` gives `o`
 - `LittleO.add` — sum of little-o is little-o
-- `LittleO.const_mul_left` — fixedValue multiple preserves little-o
+- `LittleO.const_mul_left` — constant multiple preserves little-o
 -/
 
 
@@ -241,7 +241,7 @@ theorem BigO.max_same {f₁ f₂ g : ℕ → ℕ} (h₁ : f₁ =O g) (h₂ : f�
     (fun n => max (f₁ n) (f₂ n)) =O g :=
   (BigO.max_le_add f₁ f₂).trans (BigO.add h₁ h₂)
 
-/-- Any function is big-O of itself-plus-fixedValue: `f =O (fun n => f n + c)`. -/
+/-- Any function is big-O of itself-plus-constant: `f =O (fun n => f n + c)`. -/
 theorem BigO.self_le_add_const (f : ℕ → ℕ) (c : ℕ) :
     f =O (fun n => f n + c) :=
   BigO.of_le fun _ => Nat.le_add_right _ _
@@ -262,7 +262,7 @@ theorem BigO.pow_le_pow_right {j k : ℕ} (hjk : j ≤ k) :
   simp only [one_mul, Real.norm_natCast]
   exact_mod_cast Nat.pow_le_pow_right hn hjk
 
-/-- A fixedValue function is big-O of `n^k` (eventually `n^k ≥ 1`). -/
+/-- A constant function is big-O of `n^k` (eventually `n^k ≥ 1`). -/
 theorem BigO.const_le_pow (c k : ℕ) :
     (fun _ : ℕ => c) =O ((· ^ k) : ℕ → ℕ) := by
   apply IsBigO.of_bound c
@@ -271,7 +271,7 @@ theorem BigO.const_le_pow (c k : ℕ) :
   have : 1 ≤ n ^ k := Nat.one_le_pow _ _ hn
   exact_mod_cast le_mul_of_one_le_right (Nat.zero_le _) this
 
-/-- Every fixed natural fixedValue is eventually bounded by a fixedValue multiple
+/-- Every fixed natural constant is eventually bounded by a constant multiple
 of the unshifted base-two logarithm. The threshold `n ≥ 2` is necessary because
 `Nat.log 2 0 = Nat.log 2 1 = 0`. -/
 theorem BigO.const_le_logTwo (c : ℕ) :
@@ -313,9 +313,9 @@ theorem polynomial_eval_mono_nat (p : Polynomial ℕ) : Monotone p.eval := by
     with `f n ≤ p.eval n` *for every* `n` (not just eventually).
 
     The standard big-O definition gives only an asymptotic bound; this lemma
-    turns that into an everywhere-bound by (i) extracting a real fixedValue
+    turns that into an everywhere-bound by (i) extracting a real constant
     `C` and threshold `N` such that `f n ≤ C · n^k` for `n ≥ N`, (ii)
-    rounding `C` up to a natural number, and (iii) adding a fixedValue term
+    rounding `C` up to a natural number, and (iii) adding a constant term
     that dominates `f` on the initial segment `[0, N)`.
 
     This is the bridge from big-O hypotheses to the explicit
@@ -369,7 +369,7 @@ theorem BigO.of_polynomial_bound {f : ℕ → ℕ} (p : Polynomial ℕ)
     exact Nat.mul_le_mul_left _ this
   exact_mod_cast le_trans (h n) hp
 
-/-- Extract a natural-number fixedValue and threshold from a big-O bound:
+/-- Extract a natural-number constant and threshold from a big-O bound:
     `f =O g` yields `c` and `N` with `f n ≤ c * g n` for all `n ≥ N`. -/
 theorem BigO.exists_nat_bound {f g : ℕ → ℕ} (h : f =O g) :
     ∃ (c N : ℕ), ∀ n, N ≤ n → f n ≤ c * g n := by
@@ -386,7 +386,7 @@ theorem BigO.exists_nat_bound {f g : ℕ → ℕ} (h : f =O g) :
 
 /-- Binary widths of power-bounded natural values are logarithmic. The proof
 raises the eventual power bound by one, which uniformly handles exponent zero
-and fixedValue functions. -/
+and constant functions. -/
 theorem BigO.natSize_of_pow {f : ℕ → ℕ} {d : ℕ}
     (hf : f =O ((· ^ d) : ℕ → ℕ)) :
     (fun n => (f n).size) =O (fun n => Nat.log 2 n) := by

@@ -408,7 +408,7 @@ theorem machineIntegerNegCode_encode (z : ℤ) :
       rw [machineIntegerNegCode, machineIntegerSignedMagnitude_encode]
       simp only [machinePairFirst_pair, machinePairSecond_pair,
         machineNotBit_one, Bool.not_true]
-      simpa only [signedMagnitudeValue, if_false] using
+      simpa only [signedMagnitudeValue, ite_false] using
         machineCanonicalIntegerFromSignedAbs_pair false (n + 1)
 
 end BeyondBethe

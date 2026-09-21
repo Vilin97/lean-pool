@@ -30,7 +30,7 @@ namespace TM
 variable {nf : ℕ}
 
 /-- Pairing a computed string with the unchanged original input costs at most
-five source-time budgets, one linear input scan, and fixedValue seam overhead. -/
+five source-time budgets, one linear input scan, and constant seam overhead. -/
 theorem pairWithInputTM_computesInTime
     {tmF : TM nf} {f : List Bool → List Bool} {T : ℕ → ℕ}
     (hcomp : tmF.ComputesInTime f T) :

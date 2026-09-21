@@ -56,7 +56,7 @@ theorem binaryRatFloor_eq_floor (q : ℚ) :
         have hndvdInt : ¬(q.den : ℤ) ∣ ((n + 1 : ℕ) : ℤ) := by
           exact_mod_cast hndvdNat
         have hrepr : Int.negSucc n = -((n + 1 : ℕ) : ℤ) := by omega
-        rw [hrepr, Int.neg_ediv, if_neg hndvdInt,
+        rw [hrepr, Int.neg_ediv, ite_eq_right hndvdInt,
           Int.sign_eq_one_of_pos (by exact_mod_cast hden)]
         norm_num [Nat.add_comm]
         ring

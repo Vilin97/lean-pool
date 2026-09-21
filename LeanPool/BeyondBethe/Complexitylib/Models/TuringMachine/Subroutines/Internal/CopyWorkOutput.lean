@@ -144,7 +144,7 @@ private theorem copyWorkOutput_loop {n : ℕ}
       have hdstTape :
           c1.work dst = (c.work dst).writeAndMove (Γ.ofBool bit) Dir3.right := by
         dsimp only [c1]
-        simp only [if_pos]
+        simp only [ite_eq_left]
         rw [Γw.ofBool_toΓ]
       have hdstPrefix1 : (c1.work dst).HasBinaryPrefix (x.take (k + 1)) := by
         rw [hdstTape]
@@ -152,7 +152,7 @@ private theorem copyWorkOutput_loop {n : ℕ}
       have hdst01 : (c1.work dst).cells 0 = dstCell0 := by
         rw [hdstTape]
         simp only [Tape.writeAndMove, Tape.move_cells, Tape.write]
-        rw [if_neg (by rw [hprefix.1]; omega)]
+        rw [ite_eq_right (by rw [hprefix.1]; omega)]
         change Function.update (c.work dst).cells (c.work dst).head
           (Γ.ofBool bit) 0 = dstCell0
         rw [Function.update_of_ne (by rw [hprefix.1]; omega)]
@@ -250,7 +250,7 @@ private theorem copyWorkOutput_step_frame {n : ℕ} (src dst : Fin n)
       exact hneHalt (by simpa [copyWorkToWorkTM] using hstate)
   | copying =>
       unfold TM.step at hstep
-      rw [if_neg hneHalt] at hstep
+      rw [ite_eq_right hneHalt] at hstep
       have hc := Option.some.inj hstep
       rw [← hc]
       rw [hstate]

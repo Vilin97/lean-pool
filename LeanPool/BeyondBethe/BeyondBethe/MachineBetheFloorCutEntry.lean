@@ -13,7 +13,7 @@ import LeanPool.BeyondBethe.BeyondBethe.MachineBetheHeightCap
 For a queried recovered entry and a current base coordinate, this machine
 returns the canonical rational code of the corresponding cut coefficient.
 The four cases are a negative unit vector, a positive row, a positive column,
-and the fixedValue negative-one vector.  A supplied height-coordinate bit
+and the constant negative-one vector.  A supplied height-coordinate bit
 overrides all four cases with zero.
 -/
 

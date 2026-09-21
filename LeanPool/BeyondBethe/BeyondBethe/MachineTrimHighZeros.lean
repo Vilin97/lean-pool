@@ -92,14 +92,14 @@ theorem machineTrim_recFold_eq : ∀ bits : List Bool,
       simp only [Cobham.recFold]
       cases bit with
       | false =>
-          simp only [Bool.false_eq, cond_false, machineTrimFalseStep,
+          simp only [Bool.false_eq, Bool.cond_false, machineTrimFalseStep,
             machineTrimAcc, machinePairFirst_pair, machinePairSecond_pair, ih]
           cases htrim : BinaryRippleSub.trimHighZeros rest with
           | nil => simp [BinaryRippleSub.trimHighZeros, htrim]
           | cons high tail =>
               simp [BinaryRippleSub.trimHighZeros, htrim]
       | true =>
-          simp only [cond_true, ih]
+          simp only [Bool.cond_true, ih]
           cases htrim : BinaryRippleSub.trimHighZeros rest <;>
             simp [machineTrimTrueStep, machineTrimAcc,
               BinaryRippleSub.trimHighZeros, htrim]

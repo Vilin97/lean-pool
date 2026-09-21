@@ -95,7 +95,7 @@ theorem wipeStepTM_hoareTime {n : ℕ} (targets : List (Fin n))
     1, le_refl 1, ?_, rfl, hinp.move_idle, hout.writeAndMove_readBack_idle, fun i => ?_⟩
   · refine TM.reachesIn.step ?_ .zero
     simp only [TM.step, wipeStepTM,
-      if_neg (show WipeStepPhase.running ≠ WipeStepPhase.done by decide)]
+      ite_eq_right (show WipeStepPhase.running ≠ WipeStepPhase.done by decide)]
     congr 1
     congr 1
     funext i

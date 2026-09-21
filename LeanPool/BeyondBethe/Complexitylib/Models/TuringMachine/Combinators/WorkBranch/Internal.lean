@@ -76,12 +76,12 @@ theorem branchWorkBlankTM_blank_step_internal
         (workBranchBlankWrap idx onBlank onNonblank c) =
       some (workBranchBlankWrap idx onBlank onNonblank c') := by
   have hne : c.state ≠ onBlank.qhalt := state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by
+  rw [TM.step, ite_eq_right (by
     simp [workBranchBlankWrap, workBranchBlankState, branchWorkBlankTM,
       hne])]
   simp only [workBranchBlankWrap, workBranchBlankState, hne, ↓reduceIte,
     branchWorkBlankTM]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : onBlank.δ c.state c.input.read
     (fun i => (c.work i).read) c.output.read = action
@@ -98,12 +98,12 @@ theorem branchWorkBlankTM_nonblank_step_internal
         (workBranchNonblankWrap idx onBlank onNonblank c) =
       some (workBranchNonblankWrap idx onBlank onNonblank c') := by
   have hne : c.state ≠ onNonblank.qhalt := state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by
+  rw [TM.step, ite_eq_right (by
     simp [workBranchNonblankWrap, workBranchNonblankState,
       branchWorkBlankTM, hne])]
   simp only [workBranchNonblankWrap, workBranchNonblankState, hne,
     ↓reduceIte, branchWorkBlankTM]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize haction : onNonblank.δ c.state c.input.read
     (fun i => (c.work i).read) c.output.read = action
@@ -151,7 +151,7 @@ theorem branchWorkBlankTM_dispatch_blank_internal
           input := inp
           work := work
           output := out }) := by
-  rw [TM.step, if_neg (by simp [branchWorkBlankTM])]
+  rw [TM.step, ite_eq_right (by simp [branchWorkBlankTM])]
   simp only [branchWorkBlankTM, hblank, allReadBack, ↓reduceIte,
     workBranchBlankWrap]
   refine congrArg some (Cfg.ext rfl ?_ ?_ ?_)
@@ -176,7 +176,7 @@ theorem branchWorkBlankTM_dispatch_nonblank_internal
           input := inp
           work := work
           output := out }) := by
-  rw [TM.step, if_neg (by simp [branchWorkBlankTM])]
+  rw [TM.step, ite_eq_right (by simp [branchWorkBlankTM])]
   simp only [branchWorkBlankTM, hnonblank, allReadBack, ↓reduceIte,
     workBranchNonblankWrap]
   refine congrArg some (Cfg.ext rfl ?_ ?_ ?_)

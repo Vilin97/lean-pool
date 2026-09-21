@@ -82,7 +82,7 @@ theorem loadOps_correct {tm : TM n} {bound : ℕ}
 straight-line action maps any represented configuration to the exact TM
 successor. The assumptions are precisely those needed by the bounded tape
 layout: all heads are in range, writable tapes retain the left-end marker, and
-the loading phase has initialized the fixedValue-one scratch register. -/
+the loading phase has initialized the constant-one scratch register. -/
 theorem actionOps_correct {tm : TM n} {bound : ℕ}
     {cfg next : Complexity.Cfg n tm.Q} {store : Structured.Store}
     (hstep : tm.step cfg = some next)

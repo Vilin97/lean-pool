@@ -665,8 +665,8 @@ theorem component_accounting
     have hpartR : (g c : ℝ) + b c = k c := by exact_mod_cast hpartition c
     by_cases hk3 : 3 ≤ k c
     · have hk2 : 2 ≤ k c := by omega
-      simp only [longComponentGoodRows, if_pos hk3,
-        nontrivialComponentCount, if_pos hk2, Nat.cast_one]
+      simp only [longComponentGoodRows, ite_eq_left hk3,
+        nontrivialComponentCount, ite_eq_left hk2, Nat.cast_one]
       have hk3R : (3 : ℝ) ≤ k c := by exact_mod_cast hk3
       nlinarith
     · have hklt : k c < 3 := by omega
@@ -677,8 +677,8 @@ theorem component_accounting
         simp [longComponentGoodRows, nontrivialComponentCount, hk1, hgzero]
         positivity
       · have hk2 : 2 ≤ k c := by omega
-        simp only [longComponentGoodRows, if_neg hk3,
-          nontrivialComponentCount, if_pos hk2, Nat.cast_zero, zero_div,
+        simp only [longComponentGoodRows, ite_eq_right hk3,
+          nontrivialComponentCount, ite_eq_left hk2, Nat.cast_zero, zero_div,
           Nat.cast_one]
         have hk2R : (k c : ℝ) = 2 := by exact_mod_cast hk2eq
         nlinarith

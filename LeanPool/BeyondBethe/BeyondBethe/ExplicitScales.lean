@@ -385,7 +385,7 @@ def explicitGreedyCompletionScales :
         _ ≤ 1 / 200000 := hδsmall
         _ < 3 * ((1 / 4) / 4) / 8 := by norm_num }
 
-/-- Structural data weakened exactly by the fixedValue-factor loss of the
+/-- Structural data weakened exactly by the constant-factor loss of the
 greedy implementation.  All analytic inequalities and hard-coded scales are
 unchanged. -/
 def explicitGreedyStructuralScales : RationalStructuralScales where

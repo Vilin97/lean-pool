@@ -91,7 +91,7 @@ theorem ifTM_test_step (tmTest tmThen tmElse : TM n) {c c' : Cfg n tmTest.Q}
   subst hstep
   show (if (ifTestWrap tmTest tmThen tmElse c).state =
            (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
-  simp only [ifTestWrap, ifTM, if_neg ifQ_test_ne_halt, if_neg hne]
+  simp only [ifTestWrap, ifTM, ite_eq_right ifQ_test_ne_halt, ite_eq_right hne]
 
 /-- Multi-step test phase simulation. -/
 theorem ifTM_reachesIn_ifTestWrap (tmTest tmThen tmElse : TM n) {t : ℕ}
@@ -117,7 +117,7 @@ theorem ifTM_then_step (tmTest tmThen tmElse : TM n) {c c' : Cfg n tmThen.Q}
   subst hstep
   show (if (ifThenWrap tmTest tmThen tmElse c).state =
            (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
-  simp only [ifThenWrap, ifTM, if_neg ifQ_then_ne_halt, if_neg hne]
+  simp only [ifThenWrap, ifTM, ite_eq_right ifQ_then_ne_halt, ite_eq_right hne]
 
 /-- Multi-step then-branch simulation. -/
 theorem ifTM_reachesIn_ifThenWrap (tmTest tmThen tmElse : TM n) {t : ℕ}
@@ -143,7 +143,7 @@ theorem ifTM_else_step (tmTest tmThen tmElse : TM n) {c c' : Cfg n tmElse.Q}
   subst hstep
   show (if (ifElseWrap tmTest tmThen tmElse c).state =
            (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
-  simp only [ifElseWrap, ifTM, if_neg ifQ_else_ne_halt, if_neg hne]
+  simp only [ifElseWrap, ifTM, ite_eq_right ifQ_else_ne_halt, ite_eq_right hne]
 
 /-- Multi-step else-branch simulation. -/
 theorem ifTM_reachesIn_ifElseWrap (tmTest tmThen tmElse : TM n) {t : ℕ}
@@ -169,7 +169,7 @@ theorem ifTM_then_halt_step (tmTest tmThen tmElse : TM n) {c : Cfg n tmThen.Q}
              output := transitionTape c.output } := by
   show (if (ifThenWrap tmTest tmThen tmElse c).state =
            (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
-  simp only [ifThenWrap, ifTM, if_neg ifQ_then_ne_halt, hhalt, ↓reduceIte]
+  simp only [ifThenWrap, ifTM, ite_eq_right ifQ_then_ne_halt, hhalt, ↓reduceIte]
   congr 1
 
 /-- When `tmElse` halts, one step transitions to `done`. -/
@@ -182,7 +182,7 @@ theorem ifTM_else_halt_step (tmTest tmThen tmElse : TM n) {c : Cfg n tmElse.Q}
              output := transitionTape c.output } := by
   show (if (ifElseWrap tmTest tmThen tmElse c).state =
            (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
-  simp only [ifElseWrap, ifTM, if_neg ifQ_else_ne_halt, hhalt, ↓reduceIte]
+  simp only [ifElseWrap, ifTM, ite_eq_right ifQ_else_ne_halt, hhalt, ↓reduceIte]
   congr 1
 
 -- ════════════════════════════════════════════════════════════════════════
@@ -199,7 +199,7 @@ theorem ifTM_test_to_rewind (tmTest tmThen tmElse : TM n) {c : Cfg n tmTest.Q}
              output := transitionTape c.output } := by
   show (if (ifTestWrap tmTest tmThen tmElse c).state =
            (ifTM tmTest tmThen tmElse).qhalt then none else some _) = some _
-  simp only [ifTestWrap, ifTM, if_neg ifQ_test_ne_halt, hhalt, ↓reduceIte]
+  simp only [ifTestWrap, ifTM, ite_eq_right ifQ_test_ne_halt, hhalt, ↓reduceIte]
   congr 1
 
 -- ════════════════════════════════════════════════════════════════════════

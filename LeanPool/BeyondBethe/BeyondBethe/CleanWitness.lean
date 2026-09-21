@@ -725,7 +725,7 @@ theorem cleanWitness_coreA_moment
       (cleanWitnessExponent a b) a = αa := by
   rw [exponentMoment]
   simp only [Fintype.sum_sum_type, Fintype.sum_unique,
-    cleanWitnessExponent, if_pos (Or.inl rfl), Nat.cast_one, mul_one]
+    cleanWitnessExponent, ite_eq_left (Or.inl rfl), Nat.cast_one, mul_one]
   have hright : ∀ l : OutsideColumn a b,
       ((if a = b ∨ a = l.1 then 1 else 0 : ℕ) : ℝ) = 0 := by
     intro l
@@ -744,7 +744,7 @@ theorem cleanWitness_coreB_moment
       (cleanWitnessExponent a b) b = αb := by
   rw [exponentMoment]
   simp only [Fintype.sum_sum_type, Fintype.sum_unique,
-    cleanWitnessExponent, if_pos (Or.inr rfl), Nat.cast_one, mul_one]
+    cleanWitnessExponent, ite_eq_left (Or.inr rfl), Nat.cast_one, mul_one]
   have hleft : ∀ l : OutsideColumn a b,
       ((if b = a ∨ b = l.1 then 1 else 0 : ℕ) : ℝ) = 0 := by
     intro l
@@ -765,7 +765,7 @@ theorem cleanWitness_outside_moment
     cleanWitnessExponent]
   have hcore : ¬(l.1 = a ∨ l.1 = b) := by
     exact fun h ↦ h.elim l.ne_a l.ne_b
-  rw [if_neg hcore, Nat.cast_zero, mul_zero, zero_add]
+  rw [ite_eq_right hcore, Nat.cast_zero, mul_zero, zero_add]
   have hleft :
       (∑ x : OutsideColumn a b,
         capacityWitnessMass ρ δa δb α (Sum.inr (Sum.inl x)) *

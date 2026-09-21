@@ -152,7 +152,7 @@ theorem assignmentMarginal_pos
     · exact (permutationWeight_pos A hA σ).le
     · rfl
   · refine ⟨Equiv.swap j i, Finset.mem_univ _, ?_⟩
-    simp only [Equiv.swap_apply_left, if_pos]
+    simp only [Equiv.swap_apply_left, ite_eq_left]
     exact permutationWeight_pos A hA (Equiv.swap j i)
 
 theorem assignmentMarginal_strictProbabilityVector

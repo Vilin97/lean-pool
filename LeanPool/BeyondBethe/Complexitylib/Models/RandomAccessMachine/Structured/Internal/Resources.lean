@@ -73,9 +73,9 @@ theorem Input.bitStoreEnvelope {lengthReg inputBase indexBound valueBound : ℕ}
   · intro index
     by_cases hlengthRegEq : index = lengthReg
     · simpa [Input.bitStore, hlengthRegEq] using hlength
-    · rw [Input.bitStore, if_neg hlengthRegEq]
+    · rw [Input.bitStore, ite_eq_right hlengthRegEq]
       by_cases hbase : inputBase ≤ index
-      · rw [if_pos hbase]
+      · rw [ite_eq_left hbase]
         cases hlookup : bits[index - inputBase]? with
         | none => simp
         | some bit =>

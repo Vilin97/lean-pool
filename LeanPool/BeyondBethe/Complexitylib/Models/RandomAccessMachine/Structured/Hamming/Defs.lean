@@ -53,7 +53,7 @@ def inputStore (bits : List Bool) : Store :=
   Input.bitStore lengthReg inputBase bits
 
 /-- Basic instructions that initialize the accumulator, input pointer, and
-fixedValue-one register. -/
+constant-one register. -/
 def setupOps : List Basic :=
   [.imm countReg 0, .imm pointerReg inputBase, .imm oneReg 1]
 
@@ -86,7 +86,7 @@ def stepCount (bits : List Bool) : ℕ :=
   6 + 6 * bits.length + 2 * weight bits
 
 /-- Explicit logarithmic-cost time budget as a function of input length. The
-fixedValue is deliberately simple: the important content is the linear number
+constant is deliberately simple: the important content is the linear number
 of operations, each on values of `O(bitlen n)` bits. -/
 def timeBound (inputLength : ℕ) : ℕ :=
   64 * (inputLength + 1) * (bitlen (inputLength + 5) + 1)

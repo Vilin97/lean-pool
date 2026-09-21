@@ -102,9 +102,9 @@ private theorem entryReplaceReadyWork_eq
   funext i
   by_cases hia : i = tapes.entry.address
   · subst i
-    simp only [entryReplaceReadyWork, if_pos]
+    simp only [entryReplaceReadyWork, ite_eq_left]
     exact Tape.ext haddressHead haddressCells
-  · simp only [entryReplaceReadyWork, hia, if_false]
+  · simp only [entryReplaceReadyWork, hia, ite_false]
     exact hframe i hia
 
 theorem entryReplaceCleanupTM_hoareTime_frame_internal
@@ -338,7 +338,7 @@ theorem entryReplaceCleanupTM_hoareTime_frame_internal
             { head := entry.1.bits.length + 1,
               cells := (matchedWork tapes.replacement).cells }
           else matchedWork tapes.replacement) = matchedWork tapes.replacement
-        rw [if_neg hne]
+        rw [ite_eq_right hne]
       exact (hready.frame tapes.replacement
         (tapes.replacement_ne 0) (tapes.replacement_ne 1)
         (tapes.replacement_ne 2) (tapes.replacement_ne 3)

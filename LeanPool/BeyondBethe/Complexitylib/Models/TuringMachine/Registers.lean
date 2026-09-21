@@ -62,7 +62,7 @@ theorem Parked.writeAndMove_readBack_idle {t : Tape} (h : Parked t) :
 /-- A parked tape's head does not move under `idleDir`. -/
 theorem Parked.move_idle {t : Tape} (h : Parked t) :
     t.move (idleDir t.read) = t := by
-  rw [idleDir, if_neg h.read_ne_start]
+  rw [idleDir, ite_eq_right h.read_ne_start]
   rfl
 
 /-- Parked tapes pass through combinator phase boundaries unchanged. -/
@@ -124,8 +124,8 @@ theorem read_eq {v : ℕ} {t : Tape} (h : IsReg v t) :
     t.read = if v = 0 then Γ.blank else Γ.one := by
   rw [Tape.read, h.head_eq]
   rcases Nat.eq_zero_or_pos v with rfl | hv
-  · rw [if_pos rfl]; exact h.cells_blank (le_refl _)
-  · rw [if_neg (by omega)]; exact h.cells_one hv
+  · rw [ite_eq_left rfl]; exact h.cells_blank (le_refl _)
+  · rw [ite_eq_right (by omega)]; exact h.cells_one hv
 
 end IsReg
 
@@ -134,7 +134,7 @@ theorem reg_zero_init_bumped : IsReg 0 { head := 1, cells := (Tape.init []).cell
   refine ⟨rfl, by simp [Tape.init], fun _ hi => by omega, fun j hj => ?_⟩
   show (Tape.init []).cells j = Γ.blank
   simp only [Tape.init]
-  rw [if_neg (by omega : ¬ j = 0)]
+  rw [ite_eq_right (by omega : ¬ j = 0)]
   simp
 
 -- ════════════════════════════════════════════════════════════════════════
@@ -159,16 +159,16 @@ def regTape (v : ℕ) : Tape := ⟨1, regCells v⟩
 
 /-- Cells `1..v` of the canonical register cells for `v` hold `1`. -/
 theorem regCells_one {v j : ℕ} (h1 : 1 ≤ j) (h2 : j ≤ v) : regCells v j = Γ.one := by
-  rw [regCells, if_neg (by omega), if_pos h2]
+  rw [regCells, ite_eq_right (by omega), ite_eq_left h2]
 
 /-- Cells beyond position `v` of the canonical register cells for `v` are blank. -/
 theorem regCells_blank {v j : ℕ} (h : v + 1 ≤ j) : regCells v j = Γ.blank := by
-  rw [regCells, if_neg (by omega), if_neg (by omega)]
+  rw [regCells, ite_eq_right (by omega), ite_eq_right (by omega)]
 
 /-- Register cells away from the sentinel are never `▷`. -/
 theorem regCells_ne_start {v j : ℕ} (hj : 1 ≤ j) :
     regCells v j ≠ Γ.start := by
-  rw [regCells, if_neg (by omega)]
+  rw [regCells, ite_eq_right (by omega)]
   split <;> decide
 
 /-- The canonical register tape `regTape v` satisfies `IsReg v`. -/

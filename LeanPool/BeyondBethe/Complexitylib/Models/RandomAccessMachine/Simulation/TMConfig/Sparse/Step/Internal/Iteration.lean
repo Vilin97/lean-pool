@@ -116,7 +116,7 @@ theorem starts_of_step_internal {tm : TM n}
       (fun i => (cfg.work i).read) cfg.output.read with
     ⟨nextState, workWrites, outputWrite, inputDirection,
       workDirections, outputDirection⟩
-  rw [TM.step, if_neg hnotHalted, hdelta] at hstep
+  rw [TM.step, ite_eq_right hnotHalted, hdelta] at hstep
   dsimp only at hstep
   injection hstep with hnext
   subst next

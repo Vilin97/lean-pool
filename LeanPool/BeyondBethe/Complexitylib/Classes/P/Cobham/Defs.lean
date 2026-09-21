@@ -101,7 +101,7 @@ polynomial-growth leash that pins the class to exactly `FP`
 inductive Cobham : ∀ {n : ℕ}, ((Fin n → List Bool) → List Bool) → Prop
   /-- Every projection is in the class. -/
   | proj {n : ℕ} (i : Fin n) : Cobham fun v => v i
-  /-- The empty-string fixedValue (at every arity) is in the class. -/
+  /-- The empty-string constant (at every arity) is in the class. -/
   | empty {n : ℕ} : Cobham fun _ : Fin n → List Bool => []
   /-- The bit successors `x ↦ b :: x` (the string analogue of `n ↦ 2·n + b`) are in
   the class. -/

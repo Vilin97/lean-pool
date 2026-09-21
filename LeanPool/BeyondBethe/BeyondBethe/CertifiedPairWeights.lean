@@ -13,7 +13,7 @@ import Mathlib.Tactic
 namespace BeyondBethe
 
 /-!
-# Executable fixedValue-gain row-pair certificates
+# Executable constant-gain row-pair certificates
 
 A row pair is retained when some two distinct columns pass the directed
 four-core-cost test.  Every retained pair receives the same rational gain.
@@ -57,7 +57,7 @@ theorem certifiedConstantRowWeight_eq_gamma_iff {n : ℕ}
       HasCertifiedCorePair τ X κ p q := by
   by_cases h : HasCertifiedCorePair τ X κ p q
   · simp [certifiedConstantRowWeight, h]
-  · rw [certifiedConstantRowWeight, if_neg h]
+  · rw [certifiedConstantRowWeight, ite_eq_right h]
     exact iff_of_false (fun he ↦ hγ he.symm) h
 
 theorem certifiedConstantRowWeight_eq_gamma_of_threshold {n : ℕ}
@@ -241,7 +241,7 @@ theorem nearCase_greedyCertifiedMatchingGain_ge_threeSixteenths
     _ ≤ _ := hgreedy
 
 /-- The matching test uses the same fixed precision as the final certificate
-evaluation.  The generous additive fixedValue keeps the executable matcher and
+evaluation.  The generous additive constant keeps the executable matcher and
 its analytic correctness theorem literally aligned. -/
 def directedPairCostPrecision (n : ℕ) : ℕ := n + 400
 

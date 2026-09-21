@@ -28,7 +28,7 @@ used by the permanent certificate.
 
 The executable elementary-function oracle approximates the *negative*
 gradient.  The last theorem below records the corresponding sign and the
-additive fixedValue `2 + tau` explicitly.
+additive constant `2 + tau` explicitly.
 -/
 
 /-- On a common floor `delta`, one coordinate of the regularized Bethe
@@ -171,7 +171,7 @@ theorem negativeGradient_close_of_objective_gap
 /-- The complete analytic bridge to the certificate interface.  `Gtilde` is
 an executable approximation to the negative gradient at the returned point
 `Y`.  Anchoring it produces explicit potentials; the signs and the derivative
-fixedValue are incorporated in the displayed output potentials. -/
+constant are incorporated in the displayed output potentials. -/
 theorem approximateLogKKT_of_objective_gap
     {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
     (hcard : 1 < Fintype.card ι)

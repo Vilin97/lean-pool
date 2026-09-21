@@ -114,7 +114,7 @@ theorem capturePreviousInputBitTM_reachesIn_frame_internal {n : ℕ}
           simp [denseInputBitTape, TM.resetBinaryBlank, Tape.writeAndMove,
             Tape.write, Tape.move, TM.idleDir, Tape.read, Tape.init,
             Γ.ofBool]
-      · simp only [finalWork, Function.update_of_ne hi, hi, if_false]
+      · simp only [finalWork, Function.update_of_ne hi, hi, ite_false]
         exact (hwork i).writeAndMove_readBack_idle
     · exact houtput.writeAndMove_readBack_idle
   exact ⟨c₂, .step hstep₁ (.step hstep₂ .zero), rfl, rfl, rfl, rfl⟩
@@ -281,16 +281,16 @@ private theorem denseInputStepResult_eq (input : List Bool)
         (denseInputResultTape input address processed) =
       denseInputResultTape input address (processed + 1) := by
   by_cases hbefore : address ≤ processed
-  · rw [denseInputStepResult, if_neg (by omega)]
+  · rw [denseInputStepResult, ite_eq_right (by omega)]
     unfold denseInputResultTape
-    rw [if_neg haddress, if_pos hbefore, if_neg haddress,
-      if_pos (le_trans hbefore (by omega))]
+    rw [ite_eq_right haddress, ite_eq_left hbefore, ite_eq_right haddress,
+      ite_eq_left (le_trans hbefore (by omega))]
   · by_cases hcurrent : address = processed + 1
     · subst address
       have hremaining : processed + 1 - processed = 1 := by omega
-      rw [denseInputStepResult, if_pos hremaining]
+      rw [denseInputStepResult, ite_eq_left hremaining]
       unfold denseInputResultTape
-      rw [if_neg haddress, if_pos (le_refl (processed + 1))]
+      rw [ite_eq_right haddress, ite_eq_left (le_refl (processed + 1))]
       congr 1
       have hindex : processed + 1 - 1 = processed := by omega
       rw [hindex]
@@ -298,10 +298,10 @@ private theorem denseInputStepResult_eq (input : List Bool)
       rfl
     · have hafter : processed + 1 < address := by omega
       have hremaining : address - processed ≠ 1 := by omega
-      rw [denseInputStepResult, if_neg hremaining]
+      rw [denseInputStepResult, ite_eq_right hremaining]
       unfold denseInputResultTape
-      rw [if_neg haddress, if_neg (by omega), if_neg haddress,
-        if_neg (Nat.not_le_of_lt hafter)]
+      rw [ite_eq_right haddress, ite_eq_right (by omega), ite_eq_right haddress,
+        ite_eq_right (Nat.not_le_of_lt hafter)]
 
 private def denseInputScanCfg {n : ℕ} (counter result : Fin n)
     (work₀ : Fin n → Tape) (out₀ : Tape) (input : List Bool)
@@ -634,7 +634,7 @@ private theorem denseInputScanTM_body_run {n : ℕ}
           result = TM.resetBinaryBlank
         rw [denseInputWork_result]
         unfold denseInputResultTape
-        rw [if_neg haddress, if_neg (by omega)])
+        rw [ite_eq_right haddress, ite_eq_right (by omega)])
       (denseInputWork_parked counter result hne work₀ input address
         processed hwork) houtput
   have hdone : done =
@@ -729,14 +729,14 @@ private theorem denseInputResultTape_final_hasBinaryNat
       (Complexity.RAM.initRegs input address) := by
   by_cases hindex : address ≤ input.length
   · have hlt : address - 1 < input.length := by omega
-    rw [denseInputResultTape, if_neg haddress, if_pos hindex]
-    rw [Complexity.RAM.initRegs, if_neg haddress,
+    rw [denseInputResultTape, ite_eq_right haddress, ite_eq_left hindex]
+    rw [Complexity.RAM.initRegs, ite_eq_right haddress,
       List.getElem?_eq_getElem hlt]
     simpa using denseInputBitTape_hasBinaryNat_internal
       (input[address - 1]'hlt)
   · have hnone : input[address - 1]? = none :=
       List.getElem?_eq_none (by omega)
-    rw [denseInputResultTape, if_neg haddress, if_neg hindex]
+    rw [denseInputResultTape, ite_eq_right haddress, ite_eq_right hindex]
     simpa [Complexity.RAM.initRegs, haddress, hnone,
       TM.resetBinaryBlank] using
       Tape.init_move_right_hasBinaryNat 0
@@ -796,7 +796,7 @@ theorem denseInputScanTM_reachesIn_frame_internal {n : ℕ}
         · subst i
           rw [denseInputWork_result, hresult]
           unfold denseInputResultTape
-          rw [if_neg haddress, if_neg (by omega)]
+          rw [ite_eq_right haddress, ite_eq_right (by omega)]
         · rw [denseInputWork_other counter result work₀ input address 0
             i hic hir]
     · rfl
@@ -837,7 +837,7 @@ private theorem denseInputStepTime_le_width (address processed : ℕ) :
         TM.binaryPredTime_le_internal (address - processed - 1)
       have hwidth : (address - processed).size ≤ address.size :=
         Nat.size_le_size (Nat.sub_le address processed)
-      rw [denseInputStepTime, if_neg hzero, if_neg hone]
+      rw [denseInputStepTime, ite_eq_right hzero, ite_eq_right hone]
       have hsucc : address - processed - 1 + 1 = address - processed := by
         omega
       rw [hsucc] at hpred

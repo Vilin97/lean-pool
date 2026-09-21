@@ -52,7 +52,7 @@ each expressing one head move as two bits crossing the split:
 - `leftCode_write_right`, `rightCode_write_right`
 - `leftCode_write_left`, `rightCode_write_left`
 
-Every right-hand side is built from `take 2`, `drop 2`, `++` and the fixedValue
+Every right-hand side is built from `take 2`, `drop 2`, `++` and the constant
 `symCode s` — all of which the algebra has (`Cobham.takeFn`, `Cobham.dropFn`,
 `Cobham.appendFn`, `Cobham.const`).
 -/
@@ -126,7 +126,7 @@ private theorem length_flatMap_symCode (l : List ℕ) (f : ℕ → Γ) :
 /-! ## The control state
 
 The state is stored one-hot: `|Q|` bits with a single `1`. Fixed width and
-injective, and — the point — every state's code is a *fixedValue* for a fixed
+injective, and — the point — every state's code is a *constant* for a fixed
 machine, so the transition table is finitely many `Cobham.matchPrefixFn` tests
 against constants (`Cobham.tableFn`). Binary would need arithmetic; one-hot needs
 none. -/
@@ -205,7 +205,7 @@ theorem leftCodeFrom_congr {t t' : Tape} {n : ℕ}
 
 The width is `W + 1 - head`, complementary to `leftCode`'s `head`, so the two
 parts always account for exactly the cells `0 … W`: their total width is the
-fixedValue `2 · (W + 1)` and a head move just shifts two bits across the split. -/
+constant `2 · (W + 1)` and a head move just shifts two bits across the split. -/
 def rightCode (t : Tape) (W : ℕ) : List Bool := cellsCode t t.head (W + 1 - t.head)
 
 @[simp] theorem leftCode_length (t : Tape) : (leftCode t).length = 2 * t.head :=
@@ -465,7 +465,7 @@ theorem symDecode_take_padTo_rightCode {W : ℕ} (t : Tape) (hW : t.head ≤ W) 
 /-! ### One tape's step
 
 The encoded step on a tape's two half-blocks. Every right-hand side is
-`take 2` / `drop 2` / `++` / a fixedValue and a re-pad, so the algebra realizes it
+`take 2` / `drop 2` / `++` / a constant and a re-pad, so the algebra realizes it
 with `Cobham.takeFn`, `Cobham.dropFn`, `Cobham.appendFn`, `Cobham.const` and
 `Cobham.padFn` — and within one branch of `Cobham.tableFn` the symbol `s` and the
 direction `d` are *constants*. -/
@@ -545,7 +545,7 @@ def cfgTapes {k : ℕ} {Q : Type} (c : Cfg k Q) : List Tape :=
 
 The transition function is indexed by the current state together with the symbol
 under every head. Packing those into one string turns the whole finite case
-analysis into `Cobham.tableFn`: each (state, symbols) combination is a *fixedValue*
+analysis into `Cobham.tableFn`: each (state, symbols) combination is a *constant*
 pattern, and there are finitely many of them for a fixed machine. -/
 
 /-- The state and the symbols under every head, in tape order. -/
@@ -592,7 +592,7 @@ private theorem zipWith_ofFn {α β γ : Type} {n : ℕ} (f : α → β → γ)
 /-- The write a transition *really* performs: at cell `0` the model makes the
 write a no-op, and this records that. Under `Tape.StartInvariant` the test is on
 the **read symbol**, which the transition table already branches on — so the
-correction costs the algebra nothing, it just picks a different fixedValue in the
+correction costs the algebra nothing, it just picks a different constant in the
 `▷` branch. -/
 def correctWriteSym (r s : Γ) : Γ := if r = Γ.start then Γ.start else s
 
@@ -609,7 +609,7 @@ theorem write_correctWrite {t : Tape} (s : Γ) (h : t.StartInvariant) :
       have hh : t.head = 0 := by
         by_contra hne
         exact h.read_ne_start (by omega) hr
-      rw [Tape.write, if_pos hh, Tape.write, if_pos hh]
+      rw [Tape.write, ite_eq_left hh, Tape.write, ite_eq_left hh]
   · rfl
 
 /-- Under the invariant, the corrected write agrees with cell `0` when the head
@@ -617,7 +617,7 @@ is there — the hypothesis `tapeStepBlocks_eq` needs. -/
 theorem correctWrite_at_zero {t : Tape} (s : Γ) (h : t.StartInvariant)
     (hh : t.head = 0) : correctWrite t s = t.cells t.head := by
   have hr : t.read = Γ.start := by rw [Tape.read, hh]; exact h.1
-  rw [correctWrite, correctWriteSym, if_pos hr]
+  rw [correctWrite, correctWriteSym, ite_eq_left hr]
   show Γ.start = t.cells t.head
   rw [hh]
   exact h.1.symm
@@ -724,7 +724,7 @@ theorem stepActs_eq_stepActsOf {k : ℕ} (tm : TM k) (c : Cfg k tm.Q) :
 theorem step_state_eq {k : ℕ} (tm : TM k) {c c' : Cfg k tm.Q}
     (h : tm.step c = some c') : c'.state = stepStateOf tm c.state (cfgReads c) := by
   have hne : ¬ c.state = tm.qhalt := fun hq => by simp [TM.step, hq] at h
-  rw [TM.step, if_neg hne] at h
+  rw [TM.step, ite_eq_right hne] at h
   injection h with h
   subst h
   rfl
@@ -736,7 +736,7 @@ theorem cfgTapes_step {k : ℕ} (tm : TM k) {c c' : Cfg k tm.Q}
     (hwork : ∀ i, (c.work i).StartInvariant) :
     cfgTapes c' = tapesStep (stepActs tm c) (cfgTapes c) := by
   have hne : ¬ c.state = tm.qhalt := fun hq => by simp [TM.step, hq] at h
-  rw [TM.step, if_neg hne] at h
+  rw [TM.step, ite_eq_right hne] at h
   injection h with h
   subst h
   rw [cfgTapes, cfgTapes, stepActs, tapesStep]

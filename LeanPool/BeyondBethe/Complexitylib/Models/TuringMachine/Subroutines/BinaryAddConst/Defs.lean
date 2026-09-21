@@ -11,7 +11,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Subroutine
 /-!
 # Addition of a fixed natural to a canonical binary tape — definitions
 
-A fixed fixedValue is compiled into finitely many sequential applications of
+A fixed constant is compiled into finitely many sequential applications of
 canonical binary successor. No work tape is needed for the hardwired value,
 so the construction preserves every tape except its destination.
 -/
@@ -29,7 +29,7 @@ def binaryAddConstTM {n : ℕ} (idx : Fin n) : ℕ → TM n
   | fixedValue + 1 =>
       seqTM (binaryAddConstTM idx fixedValue) (binarySuccTM idx)
 
-/-- Exact runtime of fixed-fixedValue binary addition. -/
+/-- Exact runtime of fixed-constant binary addition. -/
 def binaryAddConstTime (fixedValue dstValue : ℕ) : ℕ :=
   match fixedValue with
   | 0 => 1
@@ -37,7 +37,7 @@ def binaryAddConstTime (fixedValue dstValue : ℕ) : ℕ :=
       binaryAddConstTime fixedValue dstValue + 1 +
         binarySuccTime (dstValue + fixedValue)
 
-/-- All-prefix width-based space bound for fixed-fixedValue addition. -/
+/-- All-prefix width-based space bound for fixed-constant addition. -/
 def binaryAddConstSpace
     (initialSpace fixedValue dstValue : ℕ) : ℕ :=
   initialSpace + 2 * (dstValue + fixedValue).size + 3

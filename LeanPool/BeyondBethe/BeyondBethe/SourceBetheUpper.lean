@@ -77,7 +77,7 @@ theorem permanent_le_sqrtTwo_pow_mul_bethePermanent_of_positive
     congr 1
     rw [← Real.exp_log hsqrt, Real.log_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
   have hbethe : bethePermanent A = Real.exp (betheLogValue A) := by
-    rw [bethePermanent, if_pos hmatch]
+    rw [bethePermanent, ite_eq_left hmatch]
   rw [hfactor, ← hbethe] at hexp
   simpa [mul_comm] using hexp
 

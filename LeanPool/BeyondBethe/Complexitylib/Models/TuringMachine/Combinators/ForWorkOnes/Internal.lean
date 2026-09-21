@@ -39,9 +39,9 @@ theorem forWorkOnesTM_body_step_internal (driverIdx : Fin n) (body : TM n)
       (forWorkOnesBodyWrap driverIdx body cfg) =
         some (forWorkOnesBodyWrap driverIdx body next) := by
   have hne : cfg.state ≠ body.qhalt := state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [forWorkOnesBodyWrap, forWorkOnesTM])]
+  rw [TM.step, ite_eq_right (by simp [forWorkOnesBodyWrap, forWorkOnesTM])]
   simp only [forWorkOnesBodyWrap, forWorkOnesTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   revert hstep
   generalize body.δ cfg.state cfg.input.read (fun i => (cfg.work i).read)
     cfg.output.read = action
@@ -74,18 +74,18 @@ theorem forWorkOnesTM_step_scan_one_internal (driverIdx : Fin n) (body : TM n)
         work := fun i =>
           if i = driverIdx then (cfg.work i).move Dir3.right else cfg.work i
         output := cfg.output } := by
-  rw [TM.step, if_neg (by rw [hstate]; simp [forWorkOnesTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [forWorkOnesTM])]
   simp only [forWorkOnesTM, hstate, hone, reduceCtorEq, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
-  · rw [idleDir, if_neg hinput]
+  · rw [idleDir, ite_eq_right hinput]
     rfl
   · funext i
     rw [writeAndMove_readBack _ (hwork i)]
     split
     · rfl
-    · rw [idleDir, if_neg (hwork i)]
+    · rw [idleDir, ite_eq_right (hwork i)]
       rfl
-  · rw [writeAndMove_readBack _ houtput, idleDir, if_neg houtput]
+  · rw [writeAndMove_readBack _ houtput, idleDir, ite_eq_right houtput]
     rfl
 
 /-- On the zero separator, the driver halts without consuming it. -/
@@ -103,15 +103,15 @@ theorem forWorkOnesTM_step_scan_zero_internal (driverIdx : Fin n) (body : TM n)
         output := cfg.output } := by
   have hstart : (cfg.work driverIdx).read ≠ Γ.start := by rw [hzero]; decide
   have hone : (cfg.work driverIdx).read ≠ Γ.one := by rw [hzero]; decide
-  rw [TM.step, if_neg (by rw [hstate]; simp [forWorkOnesTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [forWorkOnesTM])]
   simp only [forWorkOnesTM, hstate, hstart, hone, allReadBack, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
-  · rw [idleDir, if_neg hinput]
+  · rw [idleDir, ite_eq_right hinput]
     rfl
   · funext i
-    rw [writeAndMove_readBack _ (hwork i), idleDir, if_neg (hwork i)]
+    rw [writeAndMove_readBack _ (hwork i), idleDir, ite_eq_right (hwork i)]
     rfl
-  · rw [writeAndMove_readBack _ houtput, idleDir, if_neg houtput]
+  · rw [writeAndMove_readBack _ houtput, idleDir, ite_eq_right houtput]
     rfl
 
 /-- A halted body takes one preserving seam step back to the scanner. -/
@@ -126,14 +126,14 @@ theorem forWorkOnesTM_step_body_halt_internal (driverIdx : Fin n) (body : TM n)
           input := cfg.input
           work := cfg.work
           output := cfg.output } := by
-  rw [TM.step, if_neg (by simp [forWorkOnesBodyWrap, forWorkOnesTM])]
+  rw [TM.step, ite_eq_right (by simp [forWorkOnesBodyWrap, forWorkOnesTM])]
   simp only [forWorkOnesBodyWrap, forWorkOnesTM, hhalt, allReadBack, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
   · funext i
-    rw [writeAndMove_readBack _ (hwork i), idleDir, if_neg (hwork i)]
+    rw [writeAndMove_readBack _ (hwork i), idleDir, ite_eq_right (hwork i)]
     rfl
-  · rw [writeAndMove_readBack _ houtput, idleDir, if_neg houtput]
+  · rw [writeAndMove_readBack _ houtput, idleDir, ite_eq_right houtput]
     rfl
 
 /-- A certified consecutive-one loop has its advertised exact remaining run. -/

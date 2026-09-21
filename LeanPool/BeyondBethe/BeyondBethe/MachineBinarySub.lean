@@ -411,7 +411,7 @@ private theorem machineBinarySubIterate_max
               simp only [List.cons_ne_nil, List.nil_eq, and_false,
                 ↓reduceIte, List.tail_cons, List.tail_nil, List.head?_cons,
                 Option.getD_some, List.head?_nil, Option.getD_none]
-              simp only [false_and, if_false]
+              simp only [false_and, ite_false]
               rw [hrec']
               simp [BinaryRippleSub.scan, List.reverse_cons,
                 List.append_assoc]

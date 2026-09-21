@@ -204,7 +204,7 @@ private theorem shiftedNatBits (n p : ℕ) :
   by_cases hn : n = 0
   · subst n
     simp
-  · rw [if_neg (natBits_ne_nil_of_ne_zero hn),
+  · rw [ite_eq_right (natBits_ne_nil_of_ne_zero hn),
       natBits_mul_pow_two_of_ne_zero n p hn]
 
 def binaryRawDyadicFloorInt (p : ℕ) (q : RawRat) : ℤ :=
@@ -239,7 +239,7 @@ theorem binaryRawDyadicFloorInt_eq_ediv (p : ℕ) (q : RawRat) :
       · simp only [hnum, Int.natAbs_negSucc]
         change (if a % q.den = 0 then -((a / q.den : ℕ) : ℤ)
           else -(((a / q.den : ℕ) + 1 : ℕ) : ℤ)) = _
-        rw [if_pos hrem, hrepr]
+        rw [ite_eq_left hrem, hrepr]
         have hdvdNat : q.den ∣ a := Nat.dvd_of_mod_eq_zero hrem
         have hdvdInt : (q.den : ℤ) ∣ (a : ℤ) := by
           exact_mod_cast hdvdNat
@@ -248,12 +248,12 @@ theorem binaryRawDyadicFloorInt_eq_ediv (p : ℕ) (q : RawRat) :
       · simp only [hnum, Int.natAbs_negSucc]
         change (if a % q.den = 0 then -((a / q.den : ℕ) : ℤ)
           else -(((a / q.den : ℕ) + 1 : ℕ) : ℤ)) = _
-        rw [if_neg hrem, hrepr]
+        rw [ite_eq_right hrem, hrepr]
         have hndvdNat : ¬ q.den ∣ a := by
           rwa [Nat.dvd_iff_mod_eq_zero]
         have hndvdInt : ¬ (q.den : ℤ) ∣ (a : ℤ) := by
           exact_mod_cast hndvdNat
-        rw [Int.neg_ediv, if_neg hndvdInt,
+        rw [Int.neg_ediv, ite_eq_right hndvdInt,
           Int.sign_eq_one_of_pos (by exact_mod_cast hden)]
         norm_num [Nat.add_comm]
         ring

@@ -27,7 +27,7 @@ namespace Sparse
 
 theorem initRegs_bool_of_pos_internal (x : List Bool) {reg : ℕ}
     (hpos : 0 < reg) : initRegs x reg = 0 ∨ initRegs x reg = 1 := by
-  rw [initRegs, if_neg (by omega)]
+  rw [initRegs, ite_eq_right (by omega)]
   cases hbit : x[reg - 1]? with
   | none => simp
   | some bit =>

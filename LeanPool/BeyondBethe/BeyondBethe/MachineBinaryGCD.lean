@@ -99,7 +99,7 @@ theorem machineBinaryGcdStep_pair_natBits (a b : ℕ) :
       (natBits_ne_nil_of_ne_zero hb)]
     simp only [machineBinaryRemainderBits,
       machineBinaryDivModBits_pair_natBits, machinePairSecond_pair,
-      hb, if_false, Prod.fst, Prod.snd]
+      hb, ite_false, Prod.fst, Prod.snd]
 
 def MachineBinaryGcdReachable (word state : List Bool) : Prop :=
   ∃ a b : ℕ,

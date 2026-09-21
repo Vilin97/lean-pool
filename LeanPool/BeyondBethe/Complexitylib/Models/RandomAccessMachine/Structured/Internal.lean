@@ -133,7 +133,7 @@ private theorem spaceUpto_add (P : Program) (first second : ℕ) (cfg : Cfg) :
       simp only [spaceUpto, run_succ]
       by_cases hhalt : Halted P cfg
       · simp [hhalt, spaceUpto_halted P hhalt]
-      · simp only [if_neg hhalt, ih]
+      · simp only [ite_eq_right hhalt, ih]
         omega
 
 private theorem run_space_le_spaceUpto (P : Program) (fuel : ℕ) (cfg : Cfg) :
@@ -274,14 +274,14 @@ theorem compileAt_correct_internal
       rw [logTimeUpto_add _ branchSteps 1]
       rw [hbranchRun.2.1, hbranchRun.1]
       rw [show (1 : ℕ) = 0 + 1 from rfl, logTimeUpto_succ]
-      rw [if_neg hjmpHalt]
+      rw [ite_eq_right hjmpHalt]
       simp [stepLogCost, hjmpInstr', Instr.logCost]
       rw [spaceUpto]
       simp [Halted, curInstr]
       rw [step_jz_nonzero pre _ test _ store htest]
       rw [spaceUpto_add _ branchSteps 1, hbranchRun.2.2, hbranchRun.1]
       rw [show (1 : ℕ) = 0 + 1 from rfl, spaceUpto]
-      rw [if_neg hjmpHalt, hjmp']
+      rw [ite_eq_right hjmpHalt, hjmp']
       simp only [spaceUpto]
       have hfinalSpace : final.space ≤ branchSpace := by
         have hrunSpace := run_space_le_spaceUpto
@@ -359,11 +359,11 @@ theorem compileAt_correct_internal
       rw [show bodySteps + loopSteps + 1 = bodySteps + (loopSteps + 1) by omega]
       rw [run_add, hbodyRun.1]
       rw [run_succ]
-      simp only [if_neg hjmpHalt]
+      simp only [ite_eq_right hjmpHalt]
       rw [hjmp', hloopRun.1]
       rw [logTimeUpto_add _ bodySteps (loopSteps + 1)]
       rw [hbodyRun.2.1, hbodyRun.1]
-      rw [logTimeUpto_succ, if_neg hjmpHalt]
+      rw [logTimeUpto_succ, ite_eq_right hjmpHalt]
       rw [hjmp', hloopRun.2.1]
       simp [stepLogCost, hjmpInstr', Instr.logCost]
       rw [spaceUpto]
@@ -372,7 +372,7 @@ theorem compileAt_correct_internal
       rw [show bodySteps + loopSteps + 1 = bodySteps + (loopSteps + 1) by omega]
       rw [spaceUpto_add _ bodySteps (loopSteps + 1)]
       rw [hbodyRun.2.2, hbodyRun.1]
-      rw [spaceUpto, if_neg hjmpHalt, hjmp', hloopRun.2.2]
+      rw [spaceUpto, ite_eq_right hjmpHalt, hjmp', hloopRun.2.2]
       have hinitialSpace : store.space ≤ bodySpace := by
         have hstart := space_le_spaceUpto
           (pre ++ Instr.jz test (pre.length + (body.codeSize + 2)) ::

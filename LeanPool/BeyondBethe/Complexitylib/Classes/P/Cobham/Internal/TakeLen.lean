@@ -211,7 +211,7 @@ def takeLenTM : TM 1 where
 /-- A content-preserving idle step on a tape whose head is off the left marker. -/
 private theorem take_idle_eq {t : Tape} (h : t.read ≠ Γ.start) :
     t.writeAndMove (readBackWrite t.read) (idleDir t.read) = t := by
-  rw [writeAndMove_readBack t h, idleDir, if_neg h, Tape.move]
+  rw [writeAndMove_readBack t h, idleDir, ite_eq_right h, Tape.move]
 
 /-- The copy phase: with `r` marks left under and to the right of the work head,
 the machine emits the first `r` symbols of the remaining input. -/
@@ -235,7 +235,7 @@ private theorem takeLenTM_copy_loop :
       have hwne1 : ¬ (c.work 0).read = Γ.one := by rw [hwread]; decide
       have houtne : c.output.read ≠ Γ.start := by rw [hpre.read_blank]; decide
       have hinp_eq : c.input.move (idleDir c.input.read) = c.input := by
-        rw [idleDir, if_neg hsuf.read_ne_start, Tape.move]
+        rw [idleDir, ite_eq_right hsuf.read_ne_start, Tape.move]
       have hwork : (fun i => (c.work i).writeAndMove (readBackWrite ((c.work i).read)).toΓ
           (idleDir ((c.work i).read))) = c.work := by
         funext i
@@ -247,7 +247,7 @@ private theorem takeLenTM_copy_loop :
                 work := c.work
                 output := c.output }, 1, by omega, ?_, rfl, by simpa using hpre⟩
       refine .step ?_ .zero
-      simp only [TM.step, hstate, takeLenTM, hwne1, hinp_eq, reduceCtorEq, if_false]
+      simp only [TM.step, hstate, takeLenTM, hwne1, hinp_eq, reduceCtorEq, ite_false]
       rw [hwork, take_idle_eq houtne]
   | succ r ih =>
       intro h m hsum hh y acc c hstate hcells hhead hsuf hpre
@@ -256,7 +256,7 @@ private theorem takeLenTM_copy_loop :
       have hwne : (c.work 0).read ≠ Γ.start := by rw [hwread]; decide
       have houtne : c.output.read ≠ Γ.start := by rw [hpre.read_blank]; decide
       have hinp_eq : c.input.move (idleDir c.input.read) = c.input := by
-        rw [idleDir, if_neg hsuf.read_ne_start, Tape.move]
+        rw [idleDir, ite_eq_right hsuf.read_ne_start, Tape.move]
       have hworkIdle : (fun i => (c.work i).writeAndMove (readBackWrite ((c.work i).read)).toΓ
           (idleDir ((c.work i).read))) = c.work := by
         funext i
@@ -270,7 +270,7 @@ private theorem takeLenTM_copy_loop :
         subst hi
         exact writeAndMove_readBack _ hwne _
       have hidleB : ∀ t : Tape, t.move (idleDir Γ.blank) = t := by
-        intro t; rw [idleDir, if_neg (by decide)]; rfl
+        intro t; rw [idleDir, ite_eq_right (by decide)]; rfl
       match y with
       | [] =>
           have hread : c.input.read = Γ.blank := hsuf.read_nil
@@ -280,7 +280,7 @@ private theorem takeLenTM_copy_loop :
                     output := c.output }, 1, by omega, ?_, rfl, by simpa using hpre⟩
           refine .step ?_ .zero
           simp only [TM.step, hstate, takeLenTM, hwread, hread, hidleB, reduceCtorEq,
-            if_false, reduceIte]
+            ite_false, reduceIte]
           rw [hworkIdle, take_idle_eq houtne]
       | b :: y =>
           have hread : c.input.read = Γ.ofBool b := hsuf.read_cons
@@ -292,7 +292,7 @@ private theorem takeLenTM_copy_loop :
           have hstep : takeLenTM.step c = some c1 := by
             cases b <;>
               · simp only [TM.step, hstate, takeLenTM, hwread, hread, hc1, Γ.ofBool,
-                  reduceCtorEq, if_false, reduceIte]
+                  reduceCtorEq, ite_false, reduceIte]
                 rw [hworkR]
                 rfl
           obtain ⟨c', t, ht, hreach, hhalt, hfin⟩ :=
@@ -326,14 +326,14 @@ private theorem takeLenTM_rew_loop :
       have hwread : (c.work 0).read = Γ.start := by
         rw [Tape.read, hcells, hhead]; rfl
       have hinp_eq : c.input.move (idleDir c.input.read) = c.input := by
-        rw [idleDir, if_neg hinp, Tape.move]
+        rw [idleDir, ite_eq_right hinp, Tape.move]
       have hwork : (fun i => (c.work i).writeAndMove (readBackWrite ((c.work i).read)).toΓ
           Dir3.right) = fun i => (c.work i).move Dir3.right := by
         funext i
         have hi : i = 0 := Subsingleton.elim i 0
         subst hi
         show ((c.work 0).write _).move Dir3.right = (c.work 0).move Dir3.right
-        rw [Tape.write, if_pos hhead]
+        rw [Tape.write, ite_eq_left hhead]
       refine ⟨{ state := TakePhase.copy
                 input := c.input
                 work := fun i => (c.work i).move Dir3.right
@@ -341,14 +341,14 @@ private theorem takeLenTM_rew_loop :
         by simp [Tape.move, hhead], rfl, rfl⟩
       refine .step ?_ .zero
       simp only [TM.step, hstate, takeLenTM, hwread, hinp_eq, reduceIte, reduceCtorEq,
-        if_false]
+        ite_false]
       rw [hwork, take_idle_eq hout]
   | succ h ih =>
       intro m c hstate hcells hhead hinp hout
       have hwne : (c.work 0).read ≠ Γ.start := by
         rw [Tape.read, hcells, hhead]; exact regCells_ne_start (by omega)
       have hinp_eq : c.input.move (idleDir c.input.read) = c.input := by
-        rw [idleDir, if_neg hinp, Tape.move]
+        rw [idleDir, ite_eq_right hinp, Tape.move]
       set c1 : Cfg 1 takeLenTM.Q :=
         { state := TakePhase.rew
           input := c.input
@@ -359,11 +359,11 @@ private theorem takeLenTM_rew_loop :
         funext i
         have hi : i = 0 := Subsingleton.elim i 0
         subst hi
-        rw [moveLeftDir, if_neg hwne]
+        rw [moveLeftDir, ite_eq_right hwne]
         exact writeAndMove_readBack _ hwne _
       have hstep : takeLenTM.step c = some c1 := by
-        simp only [TM.step, hstate, takeLenTM, hinp_eq, hc1, if_neg hwne, reduceCtorEq,
-          if_false]
+        simp only [TM.step, hstate, takeLenTM, hinp_eq, hc1, ite_eq_right hwne, reduceCtorEq,
+          ite_false]
         rw [hwork, take_idle_eq hout]
       obtain ⟨c', hreach, hst, hcl, hhd, hin, hou⟩ :=
         ih m c1 rfl (by rw [hc1]; simpa [Tape.move_cells] using hcells)
@@ -401,13 +401,13 @@ private theorem takeLenTM_scan_loop :
         exact take_idle_eq hwne
       have hread : c.input.read = Γ.blank := hsuf.read_nil
       have hidleB : ∀ t : Tape, t.move (idleDir Γ.blank) = t := by
-        intro t; rw [idleDir, if_neg (by decide)]; rfl
+        intro t; rw [idleDir, ite_eq_right (by decide)]; rfl
       refine ⟨{ state := TakePhase.done
                 input := c.input
                 work := c.work
                 output := c.output }, 1, by omega, ?_, rfl, by simpa using hpre⟩
       refine .step ?_ .zero
-      simp only [TM.step, hstate, takeLenTM, hread, hidleB, reduceCtorEq, if_false]
+      simp only [TM.step, hstate, takeLenTM, hread, hidleB, reduceCtorEq, ite_false]
       rw [hwork, take_idle_eq houtne]
   | succ N ih =>
       intro w k hN c hstate hcells hhead hsuf hpre
@@ -421,9 +421,9 @@ private theorem takeLenTM_scan_loop :
         subst hi
         exact take_idle_eq hwne
       have hidleB : ∀ t : Tape, t.move (idleDir Γ.blank) = t := by
-        intro t; rw [idleDir, if_neg (by decide)]; rfl
+        intro t; rw [idleDir, ite_eq_right (by decide)]; rfl
       have hidleZ : ∀ t : Tape, t.move (idleDir Γ.zero) = t := by
-        intro t; rw [idleDir, if_neg (by decide)]; rfl
+        intro t; rw [idleDir, ite_eq_right (by decide)]; rfl
       have hstepA : ∀ b : Bool,
           c.input.read = Γ.ofBool b →
           takeLenTM.step c = some
@@ -433,8 +433,8 @@ private theorem takeLenTM_scan_loop :
               output := c.output } := by
         intro b hread
         cases b <;>
-          · simp only [TM.step, hstate, takeLenTM, hread, Γ.ofBool, reduceCtorEq, if_false,
-              cond_true, cond_false]
+          · simp only [TM.step, hstate, takeLenTM, hread, Γ.ofBool, reduceCtorEq, ite_false,
+              Bool.cond_true, Bool.cond_false]
             rw [hwork, take_idle_eq houtne]
       match w with
       | [] =>
@@ -444,7 +444,7 @@ private theorem takeLenTM_scan_loop :
                     work := c.work
                     output := c.output }, 1, by omega, ?_, rfl, by simpa using hpre⟩
           refine .step ?_ .zero
-          simp only [TM.step, hstate, takeLenTM, hread, hidleB, reduceCtorEq, if_false]
+          simp only [TM.step, hstate, takeLenTM, hread, hidleB, reduceCtorEq, ite_false]
           rw [hwork, take_idle_eq houtne]
       | [b] =>
           have hsuf1 : (c.input.move Dir3.right).HasBinarySuffix [] := hsuf.move_right_cons
@@ -456,8 +456,8 @@ private theorem takeLenTM_scan_loop :
                       simpa [takeLenAux_singleton] using hpre⟩
           refine .step (hstepA b hsuf.read_cons) (.step ?_ .zero)
           cases b <;>
-            · simp only [TM.step, takeLenTM, hread1, hidleB, reduceCtorEq, if_false,
-                cond_true, cond_false]
+            · simp only [TM.step, takeLenTM, hread1, hidleB, reduceCtorEq, ite_false,
+                Bool.cond_true, Bool.cond_false]
               rw [hwork, take_idle_eq houtne]
       | true :: false :: z =>
           have hsuf1 : (c.input.move Dir3.right).HasBinarySuffix (false :: z) :=
@@ -469,7 +469,7 @@ private theorem takeLenTM_scan_loop :
                     output := c.output }, 2, by omega, ?_, rfl, by
                       simpa [takeLenAux_broken] using hpre⟩
           refine .step (hstepA true hsuf.read_cons) (.step ?_ .zero)
-          simp only [TM.step, takeLenTM, hread1, hidleZ, reduceCtorEq, if_false, cond_true]
+          simp only [TM.step, takeLenTM, hread1, hidleZ, reduceCtorEq, ite_false, Bool.cond_true]
           rw [hwork, take_idle_eq houtne]
       | false :: true :: z =>
           have hsuf1 : (c.input.move Dir3.right).HasBinarySuffix (true :: z) :=
@@ -487,7 +487,7 @@ private theorem takeLenTM_scan_loop :
               work := c.work
               output := c.output } with hc2
           have hstep2 : takeLenTM.step c1 = some c2 := by
-            simp only [TM.step, hc1, hc2, takeLenTM, hread1, reduceCtorEq, if_false]
+            simp only [TM.step, hc1, hc2, takeLenTM, hread1, reduceCtorEq, ite_false]
             rw [hwork, take_idle_eq houtne]
           have hsuf2 : c2.input.HasBinarySuffix z := hsuf1.move_right_cons
           obtain ⟨c3, hreach3, hst3, hcl3, hhd3, hin3, hou3⟩ :=
@@ -520,12 +520,12 @@ private theorem takeLenTM_scan_loop :
           have hwmark : (fun i => (c.work i).writeAndMove (Γw.one).toΓ Dir3.right)
               = fun i => ((c.work i).write Γ.one).move Dir3.right := rfl
           have hstep2 : takeLenTM.step c1 = some c2 := by
-            simp only [TM.step, hc1, hc2, takeLenTM, hread1, reduceCtorEq, if_false]
+            simp only [TM.step, hc1, hc2, takeLenTM, hread1, reduceCtorEq, ite_false]
             rw [hwmark, take_idle_eq houtne]
           have hcells2 : (c2.work 0).cells = regCells (k + 1) := by
             rw [hc2]
             show (((c.work 0).write Γ.one).move Dir3.right).cells = _
-            rw [Tape.move_cells, Tape.write, if_neg (by rw [hhead]; omega)]
+            rw [Tape.move_cells, Tape.write, ite_eq_right (by rw [hhead]; omega)]
             show Function.update (c.work 0).cells ((c.work 0).head) Γ.one = _
             rw [hcells, hhead, regCells_update_succ]
           have hhead2 : (c2.work 0).head = k + 1 + 1 := by
@@ -555,12 +555,12 @@ private theorem takeLenTM_scan_loop :
           have hwmark : (fun i => (c.work i).writeAndMove (Γw.one).toΓ Dir3.right)
               = fun i => ((c.work i).write Γ.one).move Dir3.right := rfl
           have hstep2 : takeLenTM.step c1 = some c2 := by
-            simp only [TM.step, hc1, hc2, takeLenTM, hread1, reduceCtorEq, if_false]
+            simp only [TM.step, hc1, hc2, takeLenTM, hread1, reduceCtorEq, ite_false]
             rw [hwmark, take_idle_eq houtne]
           have hcells2 : (c2.work 0).cells = regCells (k + 1) := by
             rw [hc2]
             show (((c.work 0).write Γ.one).move Dir3.right).cells = _
-            rw [Tape.move_cells, Tape.write, if_neg (by rw [hhead]; omega)]
+            rw [Tape.move_cells, Tape.write, ite_eq_right (by rw [hhead]; omega)]
             show Function.update (c.work 0).cells ((c.work 0).head) Γ.one = _
             rw [hcells, hhead, regCells_update_succ]
           have hhead2 : (c2.work 0).head = k + 1 + 1 := by

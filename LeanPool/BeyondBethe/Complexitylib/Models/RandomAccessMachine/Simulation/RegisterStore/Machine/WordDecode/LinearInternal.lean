@@ -64,7 +64,7 @@ private theorem linearMarkStep
   have hstep :
       (wordDecodeLinearTM sourceIdx targetIdx markerIdx).step
         { state := .mark, input := inp, work := work, output := out } = some c' := by
-    rw [TM.step, if_neg (by simp [wordDecodeLinearTM])]
+    rw [TM.step, ite_eq_right (by simp [wordDecodeLinearTM])]
     simp only [wordDecodeLinearTM, hread]
     apply congrArg some
     refine Cfg.ext rfl ?_ ?_ ?_
@@ -87,10 +87,10 @@ private theorem linearMarkStep
         TM.writeAndMove_readBack out houtput Dir3.stay
   refine ⟨c', hstep, rfl, rfl, ?_, ?_, ?_, rfl, rfl⟩
   · dsimp only [c', work', linearMarkWork]
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact hsource.move_right_cons
   · dsimp only [c', work', linearMarkWork]
-    rw [if_neg (Ne.symm hdistinct.source_marker), if_pos rfl]
+    rw [ite_eq_right (Ne.symm hdistinct.source_marker), ite_eq_left rfl]
     simpa [Γw.ofBool, Γ.ofBool, Γw.toΓ] using
       Tape.hasBinaryPrefix_write_bit true hmarker
   · intro i his him
@@ -197,7 +197,7 @@ private theorem linearSeparatorStep
   have hstep :
       (wordDecodeLinearTM sourceIdx targetIdx markerIdx).step
         { state := .mark, input := inp, work := work, output := out } = some c' := by
-    rw [TM.step, if_neg (by simp [wordDecodeLinearTM])]
+    rw [TM.step, ite_eq_right (by simp [wordDecodeLinearTM])]
     simp only [wordDecodeLinearTM, hread]
     apply congrArg some
     refine Cfg.ext rfl ?_ ?_ ?_
@@ -224,15 +224,15 @@ private theorem linearSeparatorStep
         TM.writeAndMove_readBack out houtput Dir3.stay
   refine ⟨c', hstep, rfl, rfl, ?_, ?_, ?_, ?_, rfl⟩
   · dsimp only [c', work', linearSeparatorWork]
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact hsource.move_right_cons
   · dsimp only [c', work', linearSeparatorWork]
-    rw [if_neg (Ne.symm hdistinct.source_marker), if_pos rfl]
+    rw [ite_eq_right (Ne.symm hdistinct.source_marker), ite_eq_left rfl]
     simp only [Tape.move]
     rw [hmarker.1]
     simp
   · dsimp only [c', work', linearSeparatorWork]
-    rw [if_neg (Ne.symm hdistinct.source_marker), if_pos rfl,
+    rw [ite_eq_right (Ne.symm hdistinct.source_marker), ite_eq_left rfl,
       Tape.move_cells]
   · intro i his him
     simp [c', work', linearSeparatorWork, his, him]
@@ -267,7 +267,7 @@ private theorem linearRewindLeftStep
   have hstep :
       (wordDecodeLinearTM sourceIdx targetIdx markerIdx).step
         { state := .rewind, input := inp, work := work, output := out } = some c' := by
-    rw [TM.step, if_neg (by simp [wordDecodeLinearTM])]
+    rw [TM.step, ite_eq_right (by simp [wordDecodeLinearTM])]
     simp only [wordDecodeLinearTM, hmarkerRead, ↓reduceIte]
     apply congrArg some
     refine Cfg.ext rfl ?_ ?_ ?_
@@ -322,7 +322,7 @@ private theorem linearRewindBaseStep
   have hstep :
       (wordDecodeLinearTM sourceIdx targetIdx markerIdx).step
         { state := .rewind, input := inp, work := work, output := out } = some c' := by
-    rw [TM.step, if_neg (by simp [wordDecodeLinearTM])]
+    rw [TM.step, ite_eq_right (by simp [wordDecodeLinearTM])]
     simp only [wordDecodeLinearTM, hmarkerRead, ↓reduceIte]
     apply congrArg some
     refine Cfg.ext rfl ?_ ?_ ?_
@@ -440,7 +440,7 @@ private theorem linearCopyStep
   have hstep :
       (wordDecodeLinearTM sourceIdx targetIdx markerIdx).step
         { state := .copy, input := inp, work := work, output := out } = some c' := by
-    rw [TM.step, if_neg (by simp [wordDecodeLinearTM])]
+    rw [TM.step, ite_eq_right (by simp [wordDecodeLinearTM])]
     cases bit <;>
       simp only [wordDecodeLinearTM, hmarkerRead, hsourceRead, Γ.ofBool,
         reduceCtorEq]
@@ -473,14 +473,14 @@ private theorem linearCopyStep
           TM.writeAndMove_readBack out houtput Dir3.stay
   refine ⟨c', hstep, rfl, rfl, ?_, ?_, ?_, ?_, rfl, rfl⟩
   · dsimp only [c', work', linearCopyWork]
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact hsource.move_right_cons
   · dsimp only [c', work', linearCopyWork]
-    rw [if_neg (Ne.symm hdistinct.source_marker),
-      if_neg (Ne.symm hdistinct.target_marker), if_pos rfl]
+    rw [ite_eq_right (Ne.symm hdistinct.source_marker),
+      ite_eq_right (Ne.symm hdistinct.target_marker), ite_eq_left rfl]
     exact hmarker.move_right_cons
   · dsimp only [c', work', linearCopyWork]
-    rw [if_neg (Ne.symm hdistinct.source_target), if_pos rfl]
+    rw [ite_eq_right (Ne.symm hdistinct.source_target), ite_eq_left rfl]
     cases bit with
     | false =>
         simpa [Γw.ofBool, Γ.ofBool, Γw.toΓ] using
@@ -509,7 +509,7 @@ private theorem linearCopyDoneStep
   have hstep :
       (wordDecodeLinearTM sourceIdx targetIdx markerIdx).step
         { state := .copy, input := inp, work := work, output := out } = some c' := by
-    rw [TM.step, if_neg (by simp [wordDecodeLinearTM])]
+    rw [TM.step, ite_eq_right (by simp [wordDecodeLinearTM])]
     simp only [wordDecodeLinearTM, hmarkerRead, TM.allReadBack]
     apply congrArg some
     refine Cfg.ext rfl ?_ ?_ ?_

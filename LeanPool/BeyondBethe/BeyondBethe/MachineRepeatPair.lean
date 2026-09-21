@@ -18,7 +18,7 @@ open Complexity
 
 `repeatPairCode n item tail` is the right-nested word obtained by prepending
 `item` exactly `n` times to `tail`.  This is the machine-level constructor for
-fixedValue rational vectors and, later, for the zero blocks of diagonal
+constant rational vectors and, later, for the zero blocks of diagonal
 matrices.  Its iteration count is supplied in unary and its accumulator is
 clamped by an explicit quadratic envelope.
 -/

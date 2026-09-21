@@ -181,7 +181,7 @@ private theorem writeOps_tape {tm : TM n} {cfg : Complexity.Cfg n tm.Q}
         · by_cases hpositionZero : position = 0
           · subst position
             rw [Function.update_self]
-            rw [Tape.write, if_neg hheadZero]
+            rw [Tape.write, ite_eq_right hheadZero]
             change symbolCode Γ.start = symbolCode
               (Function.update (tapeAt cfg slot).cells
                 (tapeAt cfg slot).head write.toΓ 0)
@@ -710,7 +710,7 @@ theorem actionOps_represents_internal {tm : TM n}
       (fun i => (cfg.work i).read) cfg.output.read with
     ⟨nextState, workWrites, outputWrite, inputDirection,
       workDirections, outputDirection⟩
-  rw [TM.step, if_neg hnotHalted, hdelta] at hstep
+  rw [TM.step, ite_eq_right hnotHalted, hdelta] at hstep
   dsimp only at hstep
   injection hstep with hnext
   subst next

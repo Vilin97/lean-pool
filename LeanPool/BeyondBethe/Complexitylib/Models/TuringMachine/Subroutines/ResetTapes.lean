@@ -131,7 +131,7 @@ theorem resetTapes_hoareTime {n : ℕ} (targets : List (Fin n)) (hnodup : target
       by_cases hjt : j ∈ targets
       · rw [hts j hjt, hworkC]; simp [hjt]
       · rw [hnts j hjt, hworkC]
-        simp only [hjt, if_false]
+        simp only [hjt, ite_false]
         exact Tape.ext (by
           show max (work₀ j).head 1 = (work₀ j).head
           have := (hother j hjr hjt).1
@@ -173,7 +173,7 @@ theorem resetTapes_hoareTime {n : ℕ} (targets : List (Fin n)) (hnodup : target
     rintro inp work out ⟨hi, hw, ho⟩
     refine ⟨hi, ho.trans hout0.symm, fun j hjt => ?_, ?_, fun j hjr hjt => ?_⟩
     · rw [hw, Function.update_of_ne (fun h => hr (by rw [h] at hjt; exact hjt)),
-        if_pos hjt, hworkC]
+        ite_eq_left hjt, hworkC]
       simp [hjt]
     · rw [hw, Function.update_self]
     · rw [hw, Function.update_of_ne hjr, hworkC]
@@ -233,7 +233,7 @@ theorem resetTapesTM_hoareTime {n : ℕ} (targets : List (Fin n)) (hnodup : targ
     dsimp only
     split
     · exact ⟨show 1 ≤ H + 1 by omega,
-        fun i hi => by rw [initNil_cells, if_neg (by omega)]; decide⟩
+        fun i hi => by rw [initNil_cells, ite_eq_right (by omega)]; decide⟩
     · split
       · exact hregParked
       · next hjt hjr => exact hother j hjr hjt
@@ -241,8 +241,8 @@ theorem resetTapesTM_hoareTime {n : ℕ} (targets : List (Fin n)) (hnodup : targ
       (workD j).cells 0 = Γ.start ∧ (workD j).head ≤ H + 1 := by
     intro j hj
     rw [hworkD]
-    simp only [if_pos hj]
-    exact ⟨by rw [initNil_cells, if_pos rfl], le_refl _⟩
+    simp only [ite_eq_left hj]
+    exact ⟨by rw [initNil_cells, ite_eq_left rfl], le_refl _⟩
   have hfirst := resetTapes_hoareTime targets hnodup r hr H inp₀ work₀ out₀ hinpSI hinpP
     hout0 hworkSI htargetHead hworkR hother
   have hsecond := rewindList_hoareTime targets hnodup (H + 1) inp₀ workD out₀ hinpP houtP
@@ -265,7 +265,7 @@ theorem resetTapesTM_hoareTime {n : ℕ} (targets : List (Fin n)) (hnodup : targ
   · rintro inp work out ⟨hi, ho, hts, hnts⟩
     refine ⟨hi, ho, fun j hj => ?_, ?_, fun j hjr hjt => ?_⟩
     · rw [hts j hj, hworkD]
-      simp only [if_pos hj]
+      simp only [ite_eq_left hj]
       rfl
     · rw [hnts r hr, hworkD]
       simp [hr]

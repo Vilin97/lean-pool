@@ -21,7 +21,7 @@ vocabulary of the proof.
 * *Flags* — `Complexity.andBit`, `orBit`, `notBit`, `bitAt`,
   `Complexity.nonemptyFlag` and `Complexity.matchPrefix`, the Boolean layer a
   machine's finite transition table is written in. `matchPrefix` unfolds into
-  `|c|` bit tests for each fixed fixedValue `c`, so it is a *finite* composition —
+  `|c|` bit tests for each fixed constant `c`, so it is a *finite* composition —
   the induction is at the meta level, not inside the algebra.
 * *Blocks* — `Complexity.padTo` pads a field to one ruler's width and
   `Complexity.blockAt` reads field `i` back, so a packed configuration needs no
@@ -229,8 +229,8 @@ def nonemptyFlag (x : List Bool) : List Bool := caseBit x [true] [true]
 @[simp] theorem nonemptyFlag_cons (b : Bool) (x : List Bool) :
     nonemptyFlag (b :: x) = [true] := by cases b <;> rfl
 
-/-- Flag: does `x` begin with the fixed fixedValue `c`? Unfolds into `|c|` bit
-tests joined by `andBit`, so for each fixedValue it is a *finite* composition —
+/-- Flag: does `x` begin with the fixed constant `c`? Unfolds into `|c|` bit
+tests joined by `andBit`, so for each constant it is a *finite* composition —
 no recursion on notation is needed. -/
 def matchPrefix : List Bool → List Bool → List Bool
   | [], _ => [true]
@@ -247,13 +247,13 @@ def matchPrefix : List Bool → List Bool → List Bool
         (andBit (bif b then bitAt [] x else notBit (bitAt [] x))
           (matchPrefix c x.tail)) := rfl
 
-/-- A fixedValue is matched by anything it prefixes. -/
+/-- A constant is matched by anything it prefixes. -/
 theorem matchPrefix_append (c y : List Bool) : matchPrefix c (c ++ y) = [true] := by
   induction c generalizing y with
   | nil => rfl
   | cons b c ih => cases b <;> simp [andBit, notBit, ih]
 
-/-- Nothing but the empty fixedValue matches the empty string. (Not a `simp`
+/-- Nothing but the empty constant matches the empty string. (Not a `simp`
 lemma: `simp` unfolds the left-hand side past this shape.) -/
 theorem matchPrefix_nil_right (b : Bool) (c : List Bool) :
     matchPrefix (b :: c) [] = [false] := by
@@ -268,7 +268,7 @@ theorem andBit_flag (x y : List Bool) :
   | cons a x =>
       cases a
       · exact Or.inr rfl
-      · rw [caseBit₀_cons, cond_true]
+      · rw [caseBit₀_cons, Bool.cond_true]
         cases y with
         | nil => exact Or.inr rfl
         | cons d y => cases d <;> simp
@@ -281,7 +281,7 @@ theorem matchPrefix_flag (c x : List Bool) :
   | cons b c => rw [matchPrefix_cons]; exact andBit_flag _ _
 
 /-- **The match test is exactly the prefix test.** This is what makes a table of
-fixedValue patterns behave like a case analysis: the entry whose pattern is a
+constant patterns behave like a case analysis: the entry whose pattern is a
 prefix of the key fires, and no other does. -/
 theorem matchPrefix_eq_true_iff (c x : List Bool) :
     matchPrefix c x = [true] ↔ c <+: x := by
@@ -291,7 +291,7 @@ theorem matchPrefix_eq_true_iff (c x : List Bool) :
       cases x with
       | nil => simp [andBit]
       | cons a x =>
-          rw [matchPrefix_cons, nonemptyFlag_cons, andBit, caseBit₀_cons, cond_true,
+          rw [matchPrefix_cons, nonemptyFlag_cons, andBit, caseBit₀_cons, Bool.cond_true,
             andBit]
           have hbit : (bif b then bitAt [] (a :: x) else notBit (bitAt [] (a :: x)))
               = [decide (a = b)] := by

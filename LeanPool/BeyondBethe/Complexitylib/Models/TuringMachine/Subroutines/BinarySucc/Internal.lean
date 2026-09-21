@@ -118,7 +118,7 @@ private theorem binarySuccTM_step_one (c : Cfg n (binarySuccTM idx).Q)
         work := Function.update c.work idx
           (((c.work idx).write Γ.zero).move Dir3.right)
         output := c.output } := by
-  rw [TM.step, if_neg (binarySuccTM_ne_halt (by decide) hstate)]
+  rw [TM.step, ite_eq_right (binarySuccTM_ne_halt (by decide) hstate)]
   simp only [binarySuccTM, hstate, hread]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
@@ -128,7 +128,7 @@ private theorem binarySuccTM_step_one (c : Cfg n (binarySuccTM idx).Q)
       simp only [↓reduceIte, Function.update_self]
       rfl
     · rw [Function.update_of_ne hi]
-      simpa only [if_neg hi] using transitionTape_eq_self (hother i hi)
+      simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
 /-- Resolve a carry on zero: write one and turn left. -/
@@ -143,7 +143,7 @@ private theorem binarySuccTM_step_zero (c : Cfg n (binarySuccTM idx).Q)
         work := Function.update c.work idx
           (((c.work idx).write Γ.one).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (binarySuccTM_ne_halt (by decide) hstate)]
+  rw [TM.step, ite_eq_right (binarySuccTM_ne_halt (by decide) hstate)]
   simp only [binarySuccTM, hstate, hread]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
@@ -153,7 +153,7 @@ private theorem binarySuccTM_step_zero (c : Cfg n (binarySuccTM idx).Q)
       simp only [↓reduceIte, Function.update_self]
       rfl
     · rw [Function.update_of_ne hi]
-      simpa only [if_neg hi] using transitionTape_eq_self (hother i hi)
+      simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
 /-- Resolve overflow on the terminating blank: append one and turn left. -/
@@ -168,7 +168,7 @@ private theorem binarySuccTM_step_blank (c : Cfg n (binarySuccTM idx).Q)
         work := Function.update c.work idx
           (((c.work idx).write Γ.one).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (binarySuccTM_ne_halt (by decide) hstate)]
+  rw [TM.step, ite_eq_right (binarySuccTM_ne_halt (by decide) hstate)]
   simp only [binarySuccTM, hstate, hread]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
@@ -178,7 +178,7 @@ private theorem binarySuccTM_step_blank (c : Cfg n (binarySuccTM idx).Q)
       simp only [↓reduceIte, Function.update_self]
       rfl
     · rw [Function.update_of_ne hi]
-      simpa only [if_neg hi] using transitionTape_eq_self (hother i hi)
+      simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
 /-- Rewind one ordinary target cell to the left. -/
@@ -192,16 +192,16 @@ private theorem binarySuccTM_step_rewind (c : Cfg n (binarySuccTM idx).Q)
         input := c.input
         work := Function.update c.work idx ((c.work idx).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (binarySuccTM_ne_halt (by decide) hstate)]
+  rw [TM.step, ite_eq_right (binarySuccTM_ne_halt (by decide) hstate)]
   simp only [binarySuccTM, hstate, hread, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
   · funext i
     by_cases hi : i = idx
     · subst i
-      rw [if_pos rfl, Function.update_self,
+      rw [ite_eq_left rfl, Function.update_self,
         writeAndMove_readBack _ hread]
-    · rw [if_neg hi, Function.update_of_ne hi]
+    · rw [ite_eq_right hi, Function.update_of_ne hi]
       exact transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
@@ -217,7 +217,7 @@ private theorem binarySuccTM_step_start (c : Cfg n (binarySuccTM idx).Q)
         input := c.input
         work := Function.update c.work idx ((c.work idx).move Dir3.right)
         output := c.output } := by
-  rw [TM.step, if_neg (binarySuccTM_ne_halt (by decide) hstate)]
+  rw [TM.step, ite_eq_right (binarySuccTM_ne_halt (by decide) hstate)]
   simp only [binarySuccTM, hstate, hread, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
@@ -227,8 +227,8 @@ private theorem binarySuccTM_step_start (c : Cfg n (binarySuccTM idx).Q)
       simp only [↓reduceIte, Function.update_self]
       show (((c.work idx).write _).move Dir3.right) =
         (c.work idx).move Dir3.right
-      rw [Tape.write, if_pos hhead]
-    · rw [if_neg hi, Function.update_of_ne hi]
+      rw [Tape.write, ite_eq_left hhead]
+    · rw [ite_eq_right hi, Function.update_of_ne hi]
       exact transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 

@@ -19,7 +19,7 @@ public import LeanPool.BeyondBethe.Complexitylib.Models.TuringMachine.Combinator
 Construction and correctness of a deterministic Turing machine computing a
 function of the form `fun s => if s ∈ S then g s else []`, where `S` is a finite
 set of "inputs of interest" and `g` an arbitrary target function. Such a
-function differs from the fixedValue empty-output function on only finitely many
+function differs from the constant empty-output function on only finitely many
 inputs, so it can be computed by a table lookup that runs in linear time.
 
 The machine has no work tapes. It works in two phases:
@@ -251,7 +251,7 @@ private theorem lookup_read_bit_step (p : List Bool) (b : Bool)
   · have hp' : p ++ [b] ∉ S.prefixes := fun h =>
       hp (Finset.mem_prefixes_of_prefix (List.prefix_append p [b]) h)
     cases b <;>
-      simp [TM.step, lookupTM, hstate, hread, readState, haltState, dif_neg hp, dif_neg hp',
+      simp [TM.step, lookupTM, hstate, hread, readState, haltState, dite_eq_right hp, dite_eq_right hp',
         Γ.ofBool]
 
 /-- Writing back the (blank) symbol under an idle output head keeps the output
@@ -333,7 +333,7 @@ private theorem lookup_initial_step (x : List Bool) :
     by_cases h : ([] : List Bool) ∈ S.prefixes
     · simp only [TM.step, hc0, lookupTM, readState, dif_pos h]
       exact congrArg some (Cfg.ext rfl rfl (Subsingleton.elim _ _) rfl)
-    · simp only [TM.step, hc0, lookupTM, readState, dif_neg h]
+    · simp only [TM.step, hc0, lookupTM, readState, dite_eq_right h]
       exact congrArg some (Cfg.ext rfl rfl (Subsingleton.elim _ _) rfl)
   refine ⟨c0, hstep, rfl, ?_, ?_, ?_⟩
   · rw [hc0]; simp [Tape.move_cells]
@@ -362,8 +362,8 @@ private theorem lookup_handoff_step (inp : List Bool) (c : Cfg 0 (lookupTM g S).
     by_cases hp : inp ∈ S.prefixes
     · simp [TM.step, lookupTM, hstate, hread, readState, writeState, haltState, dif_pos hp, hc1]
     · have hpS : inp ∉ S := fun h => hp (Finset.mem_prefixes_self h)
-      simp [TM.step, lookupTM, hstate, hread, readState, writeState, haltState, dif_neg hp,
-        if_neg hpS, hc1]
+      simp [TM.step, lookupTM, hstate, hread, readState, writeState, haltState, dite_eq_right hp,
+        ite_eq_right hpS, hc1]
   refine ⟨c1, hstep, by rw [hc1], ?_⟩
   rw [hc1]
   exact hasBinaryPrefix_idle houtput

@@ -135,7 +135,7 @@ theorem coreOutcome_some_mass
       if a ≠ j ∧ b ≠ j then p j else 0 := by
   unfold pushforwardMass
   by_cases hj : a ≠ j ∧ b ≠ j
-  · rw [if_pos hj, Finset.sum_eq_single j]
+  · rw [ite_eq_left hj, Finset.sum_eq_single j]
     · simp [coreOutcome, hj.1.symm, hj.2.symm]
     · intro k _ hkj
       have hne : coreOutcome a b k ≠ some j := by
@@ -144,7 +144,7 @@ theorem coreOutcome_some_mass
         · simp [coreOutcome, hk, hkj]
       simp [hne]
     · simp
-  · rw [if_neg hj]
+  · rw [ite_eq_right hj]
     apply Finset.sum_eq_zero
     intro k _
     by_cases hk : k = a ∨ k = b
@@ -718,7 +718,7 @@ theorem alternating_cleanCycle_count
             (c : Equiv.Perm (Fin n)).support.card = 2 ∧
               cycleGoodCount η P h c = 2 := by
           simpa [k, gc] using And.intro hkEq hg2
-        rw [cleanCycleIndicator, if_pos hclean]
+        rw [cleanCycleIndicator, ite_eq_left hclean]
         simp [longComponentGoodRows, hkEq]
         omega
       · have hgb : gc c ≤ bc c := by omega
@@ -726,7 +726,7 @@ theorem alternating_cleanCycle_count
               cycleGoodCount η P h c = 2) := by
           intro hclean
           exact hg2 (by simpa [gc] using hclean.2)
-        rw [cleanCycleIndicator, if_neg hnotclean]
+        rw [cleanCycleIndicator, ite_eq_right hnotclean]
         simp [longComponentGoodRows, hkEq]
         exact hgb
   have hsum := Finset.sum_le_sum (s := Finset.univ)

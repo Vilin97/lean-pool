@@ -177,7 +177,7 @@ private theorem writeOps_cells (n bound : ℕ) (slot : Fin (n + 2))
     (configReg_ne_address hreg) (configReg_ne_value hreg)]
   rw [hstoreHead]
   by_cases hheadZero : tape.head = 0
-  · rw [Tape.write, if_pos hheadZero]
+  · rw [Tape.write, ite_eq_left hheadZero]
     by_cases hpositionZero : position.val = 0
     · rw [hheadZero, hpositionZero, Nat.add_zero, Function.update_self, hstart]
     · have htarget :
@@ -187,7 +187,7 @@ private theorem writeOps_cells (n bound : ℕ) (slot : Fin (n + 2))
           cellBase n bound slot + position.val ≠ cellBase n bound slot := by
         omega
       rw [Function.update_of_ne hbase, Function.update_of_ne htarget, hstoreCell]
-  · rw [Tape.write, if_neg hheadZero]
+  · rw [Tape.write, ite_eq_right hheadZero]
     change Function.update
         (Function.update store (cellBase n bound slot + tape.head) (writeCode write))
           (cellBase n bound slot) (symbolCode Γ.start)
@@ -749,7 +749,7 @@ theorem actionOps_represents_internal {tm : TM n} {bound : ℕ}
       (fun i => (cfg.work i).read) cfg.output.read with
     ⟨nextState, workWrites, outputWrite, inputDirection,
       workDirections, outputDirection⟩
-  rw [TM.step, if_neg hnotHalted, hdelta] at hstep
+  rw [TM.step, ite_eq_right hnotHalted, hdelta] at hstep
   dsimp only at hstep
   injection hstep with hnext
   subst next

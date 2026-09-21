@@ -343,7 +343,7 @@ theorem tripleOrderProbability_eq_zero_of_left_eq_right
         uniformAverage (fun _ : Equiv.Perm (Fin n) ↦ 0) := by
       apply congrArg uniformAverage
       funext π
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact lt_asymm h.1 h.2
     _ = 0 := uniformAverage_const 0
@@ -963,7 +963,7 @@ theorem rowStabilityH_mono
         exact (show 0 ≤ z / 12 by linarith [hz'.1, hx0]).trans hprime)
   exact hmono ⟨le_rfl, hxy⟩ ⟨hxy, le_rfl⟩ hxy
 
-/-- A concrete version of the paper's fixedValue `c₁`. -/
+/-- A concrete version of the paper's constant `c₁`. -/
 theorem rowStabilityH_gap_to_half
     {x : ℝ} (hxQuarter : 1 / 4 ≤ x) (hxHalf : x ≤ 1 / 2) :
     (1 / 48) * (1 / 2 - x) ≤ rowStabilityC - rowStabilityH x := by
@@ -992,7 +992,7 @@ theorem rowStabilityH_gap_to_half
   rw [rowStabilityH_half] at h
   linarith
 
-/-- A concrete version of the paper's fixedValue `c₂`. -/
+/-- A concrete version of the paper's constant `c₂`. -/
 theorem rowStabilityH_half_argument_gap
     {x : ℝ} (hxQuarter : 1 / 4 ≤ x) (hxHalf : x ≤ 1 / 2) :
     (1 / 1536 : ℝ) ≤ rowStabilityH x - rowStabilityH (x / 2) := by
@@ -1540,7 +1540,7 @@ theorem separableDefect_ge_tail_below_quarter
       apply Finset.sum_le_sum
       intro i _
       by_cases hia : i = a
-      · simp only [hia, ne_eq, not_true_eq_false, if_false]
+      · simp only [hia, ne_eq, not_true_eq_false, ite_false]
         exact mul_nonneg (hp.1.nonnegative a)
           (rowStabilityH_gap_nonnegative (hp.2 a) haHalf)
       · have hgap := rowStabilityH_gap_of_lt_quarter (hp.2 i)
@@ -1809,7 +1809,7 @@ theorem above_half_distance_le_rowDeficit
 /-- A fully explicit, strict-support version of paper Lemma 8.  The sharp
 one-row inequality is kept as an explicit argument for modularity and is
 proved in `SourceAnariRezaeiList`; all stability and compactness arguments are
-discharged here with the concrete fixedValue `3074`.  Strict support is exactly
+discharged here with the concrete constant `3074`.  Strict support is exactly
 the case used for rows of the Gibbs marginal matrix associated with a positive
 input matrix. -/
 theorem row_stability_explicit

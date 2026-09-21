@@ -131,7 +131,7 @@ theorem regularizedBetheObjective_segment_quadratic
   nlinarith
 
 /-- Objective suboptimality controls squared distance from any exact
-regularized maximizer.  The fixedValue `τ/4` comes from the midpoint case. -/
+regularized maximizer.  The constant `τ/4` comes from the midpoint case. -/
 theorem regularizedBetheMaximizer_distance_sq_le_gap
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (hcard : 1 < Fintype.card ι)

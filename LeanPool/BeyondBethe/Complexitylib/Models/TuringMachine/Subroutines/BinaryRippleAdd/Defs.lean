@@ -119,26 +119,26 @@ def binaryRippleAddScanTM {n : ℕ}
             intro i hi
             dsimp only
             by_cases hresult : i = resultIdx
-            · rw [if_pos hresult]
-            · rw [if_neg hresult]
+            · rw [ite_eq_left hresult]
+            · rw [ite_eq_right hresult]
               exact idleDir_right_of_start hi
           · exact rightOfStart_allReadBack iHead wHeads oHead
         · refine ⟨idleDir_right_of_start, ?_, idleDir_right_of_start⟩
           intro i hi
           dsimp only
           by_cases hresult : i = resultIdx
-          · rw [if_pos hresult]
-          · rw [if_neg hresult]
+          · rw [ite_eq_left hresult]
+          · rw [ite_eq_right hresult]
             by_cases hlhs : i = lhsIdx
-            · rw [if_pos hlhs]
+            · rw [ite_eq_left hlhs]
               subst i
               simp [hi]
-            · rw [if_neg hlhs]
+            · rw [ite_eq_right hlhs]
               by_cases hrhs : i = rhsIdx
-              · rw [if_pos hrhs]
+              · rw [ite_eq_left hrhs]
                 subst i
                 simp [hi]
-              · rw [if_neg hrhs]
+              · rw [ite_eq_right hrhs]
                 exact idleDir_right_of_start hi
     | done => exact rightOfStart_allIdle iHead wHeads oHead
 

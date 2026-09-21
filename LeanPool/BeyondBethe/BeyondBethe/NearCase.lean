@@ -1372,7 +1372,7 @@ theorem positiveMatrix_logApproximation
       hlogn hξ hτscale A hA
   have hmatch := positiveMatrix_hasPerfectMatching hA
   have hlogBethe : Real.log (bethePermanent A) = betheLogValue A := by
-    rw [bethePermanent, if_pos hmatch, Real.log_exp]
+    rw [bethePermanent, ite_eq_left hmatch, Real.log_exp]
   have hupper : Real.log (Matrix.permanent A) ≤
       Real.log (bethePermanent A) + n * (Real.log 2 / 2) := by
     rw [hlogBethe]

@@ -69,7 +69,7 @@ private theorem scannerTM_step_scan
       c'.state = ScannerPhase.scan (scanStep s (decide (c.input.read = Γ.one))) ∧
       c'.input.head = c.input.head + 1 ∧ c'.input.cells = c.input.cells ∧
       c'.output.head = 1 ∧ c'.output.cells = c.output.cells := by
-  simp only [TM.step, hst, scannerTM, reduceCtorEq, ↓reduceIte, if_neg hi_nb]
+  simp only [TM.step, hst, scannerTM, reduceCtorEq, ↓reduceIte, ite_eq_right hi_nb]
   have hne : c.output.read ≠ Γ.start := by
     simp only [Tape.read, ho_head]; exact ho_cell1_nb
   have ho_move : idleDir c.output.read = Dir3.stay := by
@@ -91,7 +91,7 @@ private theorem scannerTM_step_halt
     ∃ c', (scannerTM s₀ scanStep finalOutput).step c = some c' ∧
       (scannerTM s₀ scanStep finalOutput).halted c' ∧
       c'.output.cells 1 = (finalOutput s).toΓ := by
-  simp only [TM.step, hst, scannerTM, reduceCtorEq, ↓reduceIte, if_pos hi_blank]
+  simp only [TM.step, hst, scannerTM, reduceCtorEq, ↓reduceIte, ite_eq_left hi_blank]
   refine ⟨_, rfl, rfl, ?_⟩
   have hne : c.output.read ≠ Γ.start := by
     simp only [Tape.read, ho_head]; exact ho_cell1_nb
@@ -221,14 +221,14 @@ theorem scannerTM_decidesInTime
     scannerTM_reachesIn s₀ scanStep (fun s => if accept s then .one else .zero) x
   refine ⟨c', x.length + 2, le_refl _, hreach, hhalt, ?_, ?_⟩
   · intro hxL
-    rw [hout, if_pos ((hL x).mp hxL)]; rfl
+    rw [hout, ite_eq_left ((hL x).mp hxL)]; rfl
   · intro hxnL
     rw [hout]
     have hacc : accept (x.foldl scanStep s₀) = false := by
       rcases h : accept (x.foldl scanStep s₀) with _ | _
       · rfl
       · exact absurd ((hL x).mpr h) hxnL
-    rw [if_neg (by simp [hacc])]; rfl
+    rw [ite_eq_right (by simp [hacc])]; rfl
 
 end TM
 

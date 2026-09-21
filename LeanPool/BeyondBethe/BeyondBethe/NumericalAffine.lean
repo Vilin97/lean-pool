@@ -254,7 +254,7 @@ theorem one_sub_entry_ge_of_common_floor
   rw [← hsum]
   exact (hfloor i k).trans hrest
 
-/-- The uniform point has fixedValue upper-left coordinates. -/
+/-- The uniform point has constant upper-left coordinates. -/
 def uniformAffineCoordinates (n : ℕ) : Matrix (Fin n) (Fin n) ℚ :=
   fun _ _ ↦ 1 / (n + 1)
 

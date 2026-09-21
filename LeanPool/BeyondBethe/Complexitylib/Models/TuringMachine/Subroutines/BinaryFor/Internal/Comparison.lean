@@ -43,7 +43,7 @@ private theorem paddedBinarySymbol_of_lt {bits : List Bool} {i : ℕ}
 private theorem paddedBinarySymbol_of_ge {bits : List Bool} {i : ℕ}
     (h : bits.length ≤ i) :
     paddedBinarySymbol bits i = Γ.blank := by
-  simp only [paddedBinarySymbol, dif_neg (Nat.not_lt.mpr h)]
+  simp only [paddedBinarySymbol, dite_eq_right (Nat.not_lt.mpr h)]
 
 /-- Boolean equality accumulated through the first `width` padded symbols. -/
 private def paddedBinaryPrefixEq (left right : List Bool) : ℕ → Bool

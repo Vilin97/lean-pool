@@ -50,9 +50,9 @@ theorem binaryForTM_iteration_step_internal (body : TM n)
       some (binaryForIterationWrap body counterIdx limitIdx c') := by
   have hne : c.state ≠ (binaryForIterationTM body counterIdx).qhalt :=
     state_ne_qhalt_of_step hstep
-  rw [TM.step, if_neg (by simp [binaryForIterationWrap, binaryForTM])]
+  rw [TM.step, ite_eq_right (by simp [binaryForIterationWrap, binaryForTM])]
   simp only [binaryForIterationWrap, binaryForTM, hne, ↓reduceIte]
-  rw [TM.step, if_neg hne] at hstep
+  rw [TM.step, ite_eq_right hne] at hstep
   simpa only [Option.map_some, binaryForIterationWrap] using
     congrArg (Option.map (binaryForIterationWrap body counterIdx limitIdx)) hstep
 
@@ -88,23 +88,23 @@ theorem binaryForTM_step_scan_internal (body : TM n)
           (Function.update c.work counterIdx ((c.work counterIdx).move Dir3.right))
           limitIdx ((c.work limitIdx).move Dir3.right)
         output := c.output } := by
-  rw [TM.step, if_neg (by rw [hstate]; simp [binaryForTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [binaryForTM])]
   simp only [binaryForTM, hstate]
-  rw [if_neg hmore]
+  rw [ite_eq_right hmore]
   dsimp only
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
   · funext i
     by_cases hic : i = counterIdx
     · subst i
-      rw [if_pos rfl, Function.update_of_ne hne, Function.update_self,
+      rw [ite_eq_left rfl, Function.update_of_ne hne, Function.update_self,
         writeAndMove_readBack _ (hwork counterIdx)]
-    · rw [if_neg hic]
+    · rw [ite_eq_right hic]
       by_cases hil : i = limitIdx
       · subst i
-        rw [if_pos rfl, Function.update_self,
+        rw [ite_eq_left rfl, Function.update_self,
           writeAndMove_readBack _ (hwork limitIdx)]
-      · rw [if_neg hil, Function.update_of_ne hil, Function.update_of_ne hic]
+      · rw [ite_eq_right hil, Function.update_of_ne hil, Function.update_of_ne hic]
         exact transitionTape_eq_self (hwork i)
   · exact transitionTape_eq_self houtput
 
@@ -126,23 +126,23 @@ theorem binaryForTM_step_scan_blank_internal (body : TM n)
           (Function.update c.work counterIdx ((c.work counterIdx).move Dir3.left))
           limitIdx ((c.work limitIdx).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (by rw [hstate]; simp [binaryForTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [binaryForTM])]
   simp only [binaryForTM, hstate]
-  rw [if_pos ⟨hcounter, hlimit⟩]
+  rw [ite_eq_left ⟨hcounter, hlimit⟩]
   dsimp only
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
   · funext i
     by_cases hic : i = counterIdx
     · subst i
-      rw [if_pos rfl, Function.update_of_ne hne, Function.update_self,
+      rw [ite_eq_left rfl, Function.update_of_ne hne, Function.update_self,
         writeAndMove_readBack _ (hwork counterIdx)]
-    · rw [if_neg hic]
+    · rw [ite_eq_right hic]
       by_cases hil : i = limitIdx
       · subst i
-        rw [if_pos rfl, Function.update_self,
+        rw [ite_eq_left rfl, Function.update_self,
           writeAndMove_readBack _ (hwork limitIdx)]
-      · rw [if_neg hil, Function.update_of_ne hil, Function.update_of_ne hic]
+      · rw [ite_eq_right hil, Function.update_of_ne hil, Function.update_of_ne hic]
         exact transitionTape_eq_self (hwork i)
   · exact transitionTape_eq_self houtput
 
@@ -162,29 +162,29 @@ theorem binaryForTM_step_rewind_internal (body : TM n)
           (Function.update c.work counterIdx ((c.work counterIdx).move Dir3.left))
           limitIdx ((c.work limitIdx).move Dir3.left)
         output := c.output } := by
-  rw [TM.step, if_neg (by rw [hstate]; simp [binaryForTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [binaryForTM])]
   have hnotboth : ¬((c.work counterIdx).read = Γ.start ∧
       (c.work limitIdx).read = Γ.start) := by
     intro h
     exact hwork counterIdx h.1
   simp only [binaryForTM, hstate]
-  rw [if_neg hnotboth]
+  rw [ite_eq_right hnotboth]
   dsimp only
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
   · funext i
     by_cases hic : i = counterIdx
     · subst i
-      rw [if_pos rfl, Function.update_of_ne hne, Function.update_self,
+      rw [ite_eq_left rfl, Function.update_of_ne hne, Function.update_self,
         writeAndMove_readBack _ (hwork counterIdx)]
       simp [moveLeftDir, hwork counterIdx]
-    · rw [if_neg hic]
+    · rw [ite_eq_right hic]
       by_cases hil : i = limitIdx
       · subst i
-        rw [if_pos rfl, Function.update_self,
+        rw [ite_eq_left rfl, Function.update_self,
           writeAndMove_readBack _ (hwork limitIdx)]
         simp [moveLeftDir, hwork limitIdx]
-      · rw [if_neg hil, Function.update_of_ne hil, Function.update_of_ne hic]
+      · rw [ite_eq_right hil, Function.update_of_ne hil, Function.update_of_ne hic]
         exact transitionTape_eq_self (hwork i)
   · exact transitionTape_eq_self houtput
 
@@ -209,27 +209,27 @@ theorem binaryForTM_step_rewind_equal_internal (body : TM n)
           (Function.update c.work counterIdx ((c.work counterIdx).move Dir3.right))
           limitIdx ((c.work limitIdx).move Dir3.right)
         output := c.output } := by
-  rw [TM.step, if_neg (by rw [hstate]; simp [binaryForTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [binaryForTM])]
   simp only [binaryForTM, hstate]
-  rw [if_pos ⟨hcounter, hlimit⟩]
+  rw [ite_eq_left ⟨hcounter, hlimit⟩]
   dsimp only
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
   · funext i
     by_cases hic : i = counterIdx
     · subst i
-      rw [if_pos rfl, Function.update_of_ne hne, Function.update_self]
+      rw [ite_eq_left rfl, Function.update_of_ne hne, Function.update_self]
       show (((c.work counterIdx).write _).move Dir3.right) =
         (c.work counterIdx).move Dir3.right
-      rw [Tape.write, if_pos hcounterHead]
-    · rw [if_neg hic]
+      rw [Tape.write, ite_eq_left hcounterHead]
+    · rw [ite_eq_right hic]
       by_cases hil : i = limitIdx
       · subst i
-        rw [if_pos rfl, Function.update_self]
+        rw [ite_eq_left rfl, Function.update_self]
         show (((c.work limitIdx).write _).move Dir3.right) =
           (c.work limitIdx).move Dir3.right
-        rw [Tape.write, if_pos hlimitHead]
-      · rw [if_neg hil, Function.update_of_ne hil, Function.update_of_ne hic]
+        rw [Tape.write, ite_eq_left hlimitHead]
+      · rw [ite_eq_right hil, Function.update_of_ne hil, Function.update_of_ne hic]
         exact transitionTape_eq_self (hother i hic hil)
   · exact transitionTape_eq_self houtput
 
@@ -255,27 +255,27 @@ theorem binaryForTM_step_rewind_unequal_internal (body : TM n)
           (Function.update c.work counterIdx ((c.work counterIdx).move Dir3.right))
           limitIdx ((c.work limitIdx).move Dir3.right)
         output := c.output } := by
-  rw [TM.step, if_neg (by rw [hstate]; simp [binaryForTM])]
+  rw [TM.step, ite_eq_right (by rw [hstate]; simp [binaryForTM])]
   simp only [binaryForTM, hstate]
-  rw [if_pos ⟨hcounter, hlimit⟩]
+  rw [ite_eq_left ⟨hcounter, hlimit⟩]
   dsimp only
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput
   · funext i
     by_cases hic : i = counterIdx
     · subst i
-      rw [if_pos rfl, Function.update_of_ne hne, Function.update_self]
+      rw [ite_eq_left rfl, Function.update_of_ne hne, Function.update_self]
       show (((c.work counterIdx).write _).move Dir3.right) =
         (c.work counterIdx).move Dir3.right
-      rw [Tape.write, if_pos hcounterHead]
-    · rw [if_neg hic]
+      rw [Tape.write, ite_eq_left hcounterHead]
+    · rw [ite_eq_right hic]
       by_cases hil : i = limitIdx
       · subst i
-        rw [if_pos rfl, Function.update_self]
+        rw [ite_eq_left rfl, Function.update_self]
         show (((c.work limitIdx).write _).move Dir3.right) =
           (c.work limitIdx).move Dir3.right
-        rw [Tape.write, if_pos hlimitHead]
-      · rw [if_neg hil, Function.update_of_ne hil, Function.update_of_ne hic]
+        rw [Tape.write, ite_eq_left hlimitHead]
+      · rw [ite_eq_right hil, Function.update_of_ne hil, Function.update_of_ne hic]
         exact transitionTape_eq_self (hother i hic hil)
   · exact transitionTape_eq_self houtput
 
@@ -294,7 +294,7 @@ theorem binaryForTM_step_iteration_halt_internal (body : TM n)
         input := c.input
         work := c.work
         output := c.output } := by
-  rw [TM.step, if_neg (by simp [binaryForIterationWrap, binaryForTM])]
+  rw [TM.step, ite_eq_right (by simp [binaryForIterationWrap, binaryForTM])]
   simp only [binaryForIterationWrap, binaryForTM, hhalt, allReadBack, ↓reduceIte]
   refine congrArg some ((Cfg.mk.injEq ..).mpr ⟨rfl, ?_, ?_, ?_⟩)
   · exact transitionInput_eq_self hinput

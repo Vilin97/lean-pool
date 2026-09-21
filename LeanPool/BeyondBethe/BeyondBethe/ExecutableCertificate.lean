@@ -125,12 +125,12 @@ theorem explicitCertified_certificate_of_logKKT
       (show 1 < n by omega) (by exact_mod_cast hτ0q) hA hX hmax
     have hmatch := positiveMatrix_hasPerfectMatching hA
     have hlogBethe : Real.log (bethePermanent A) = betheLogValue A := by
-      rw [bethePermanent, if_pos hmatch, Real.log_exp]
+      rw [bethePermanent, ite_eq_left hmatch, Real.log_exp]
     rw [hlogBethe]
     linarith
   have hmatch := positiveMatrix_hasPerfectMatching hA
   have hlogBethe : Real.log (bethePermanent A) = betheLogValue A := by
-    rw [bethePermanent, if_pos hmatch, Real.log_exp]
+    rw [bethePermanent, ite_eq_left hmatch, Real.log_exp]
   have hupper : Real.log (Matrix.permanent A) ≤
       Real.log (bethePermanent A) + n * (Real.log 2 / 2) := by
     rw [hlogBethe]

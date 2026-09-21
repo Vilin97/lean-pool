@@ -478,7 +478,7 @@ theorem zeroJumpInstructionTM_hoareTime_frame_internal
           change (work tapes.data.lhs).HasBinaryNat value at hoperand
           simpa only [Function.update_of_ne tapes.lhs_ne_pc] using hoperand
         · simpa only [targetTape, Function.update_self, newPC, value,
-            hzero, if_pos] using htarget
+            hzero, ite_eq_left] using htarget
         · intro i
           by_cases hi : i = tapes.pc
           · subst i
@@ -512,7 +512,7 @@ theorem zeroJumpInstructionTM_hoareTime_frame_internal
         · rw [hframe tapes.data.lhs tapes.lhs_ne_pc]
           change (work tapes.data.lhs).HasBinaryNat value
           exact hlookupResult.destination
-        · simpa only [newPC, value, if_neg hnonzero] using hfinalPC
+        · simpa only [newPC, value, ite_eq_right hnonzero] using hfinalPC
         · intro i
           by_cases hi : i = tapes.pc
           · subst i

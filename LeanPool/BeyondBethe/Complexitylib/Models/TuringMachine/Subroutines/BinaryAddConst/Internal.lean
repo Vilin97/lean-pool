@@ -25,7 +25,7 @@ namespace TM
 
 variable {n : ℕ}
 
-/-- Canonical parked tape encoding of a natural for fixedValue addition. -/
+/-- Canonical parked tape encoding of a natural for constant addition. -/
 def binaryAddConstNatTape (value : ℕ) : Tape :=
   (Tape.init (value.bits.map Γ.ofBool)).move Dir3.right
 
@@ -111,7 +111,7 @@ private theorem binaryAddConstInitialWork_parked
     exact binaryAddConstHasBinaryNat_parked hdst
   · exact hother i hi
 
-/-- Predicate fixing the tapes framing a fixedValue-addition execution. -/
+/-- Predicate fixing the tapes framing a constant-addition execution. -/
 abbrev binaryAddConstFramePred
     (inp₀ : Tape) (work₀ : Fin n → Tape) (out₀ : Tape) : TapePred n :=
   fun inp work out => inp = inp₀ ∧ work = work₀ ∧ out = out₀

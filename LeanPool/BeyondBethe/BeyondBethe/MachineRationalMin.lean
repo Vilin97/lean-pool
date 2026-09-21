@@ -51,10 +51,10 @@ theorem machineRationalMinCode_mem_FP :
       rationalBinaryCode (min q.value r.value) := by
   rw [machineRationalMinCode, machineRawRatMinCode_encode]
   by_cases h : q.value ≤ r.value
-  · rw [if_pos h, machineNormalizeRawRatBinaryCode_encode,
+  · rw [ite_eq_left h, machineNormalizeRawRatBinaryCode_encode,
       binaryNormalizeRawRat_eq_value, min_eq_left h]
   · have hrq : r.value ≤ q.value := le_of_not_ge h
-    rw [if_neg h, machineNormalizeRawRatBinaryCode_encode,
+    rw [ite_eq_right h, machineNormalizeRawRatBinaryCode_encode,
       binaryNormalizeRawRat_eq_value, min_eq_right hrq]
 
 end BeyondBethe

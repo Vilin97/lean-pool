@@ -225,7 +225,7 @@ theorem directedNearbyBetheLower_bounds
   constructor <;> linarith
 
 /-- Fixed precision used for evaluating the final logarithmic certificate.
-The additive fixedValue is deliberately generous; it is independent of the
+The additive constant is deliberately generous; it is independent of the
 input and absorbs the tiny hard-coded structural scale. -/
 def directedCertificatePrecision (n : ℕ) : ℕ := n + 400
 

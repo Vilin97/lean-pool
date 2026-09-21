@@ -270,7 +270,7 @@ theorem upperHalfPlaneStableOrZero_of_positive_ray
 
 /-! ## Coefficients, boundary values, and the Lieb--Sokal contraction -/
 
-/-- Adjoin one multiaffine variable, with fixedValue coefficient `g` and
+/-- Adjoin one multiaffine variable, with constant coefficient `g` and
 linear coefficient `f`. -/
 noncomputable def linearExtension
     {σ : Type*} (g f : MvPolynomial σ ℂ) : MvPolynomial (Option σ) ℂ :=

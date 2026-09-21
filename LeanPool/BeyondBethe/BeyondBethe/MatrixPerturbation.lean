@@ -199,7 +199,7 @@ theorem abs_adjugate_entry_le_of_entrywise {d : ℕ}
     · subst l
       simp [hM]
     · simp [Matrix.updateRow_apply, hil, hM0]
-  · rw [Matrix.updateRow_apply, if_neg hkj]
+  · rw [Matrix.updateRow_apply, ite_eq_right hkj]
     exact hA k l
 
 end BeyondBethe
