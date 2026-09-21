@@ -10,7 +10,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Geometry.Manifold.Algebra.LieGroup
+import Mathlib.Geometry.Manifold.Sheaf.Basic
+import Mathlib.Geometry.Manifold.VectorBundle.Riemannian
+import Mathlib.Geometry.Manifold.VectorField.Pullback
+import Mathlib.Tactic
 
 /-!
 # The ambient metric along an immersion

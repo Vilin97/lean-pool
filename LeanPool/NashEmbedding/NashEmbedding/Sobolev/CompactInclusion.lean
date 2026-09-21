@@ -10,7 +10,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Pi.Interval
+import Mathlib.Tactic
 import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
 
 /-!
@@ -135,7 +137,7 @@ theorem compactInclusion_lp_weighted {s t : ℝ} (hst : s < t)
         have h_split : ∑' m, weight n s m * ‖(a (φ k) m) - (a_lim m)‖ ^ 2 = ∑' m, weight n s m * ‖(a (φ k) m) - (a_lim m)‖ ^ 2 * (if m ∈ F then 1 else 0) + ∑' m, weight n s m * ‖(a (φ k) m) - (a_lim m)‖ ^ 2 * (if m ∈ F then 0 else 1) := by
           rw [ ← Summable.tsum_add ] ; congr ; ext m ; aesop;
           · refine' summable_of_ne_finset_zero _;
-            exacts [ F, fun m hm => by rw [ if_neg hm ] ; ring ];
+            exacts [ F, fun m hm => by rw [ ite_eq_right hm ] ; ring ];
           · have h_summable : Summable (fun m => weight n s m * ‖(a (φ k) m) - (a_lim m)‖ ^ 2) := by
               have h_summable : Summable (fun m => weight n t m * ‖(a (φ k) m) - (a_lim m)‖ ^ 2) := by
                 have h_summable : Summable (fun m => weight n t m * ‖a (φ k) m‖ ^ 2) ∧ Summable (fun m => weight n t m * ‖a_lim m‖ ^ 2) := by
@@ -150,7 +152,7 @@ theorem compactInclusion_lp_weighted {s t : ℝ} (hst : s < t)
             exact Summable.of_nonneg_of_le ( fun m => mul_nonneg ( mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ( by split_ifs <;> norm_num ) ) ( fun m => mul_le_of_le_one_right ( mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ( by split_ifs <;> norm_num ) ) h_summable;
         convert h_split using 2;
         rw [ tsum_eq_sum ];
-        exacts [ Finset.sum_congr rfl fun x hx => by rw [ if_pos hx, mul_one ], fun x hx => by rw [ if_neg hx, MulZeroClass.mul_zero ] ];
+        exacts [ Finset.sum_congr rfl fun x hx => by rw [ ite_eq_left hx, mul_one ], fun x hx => by rw [ ite_eq_right hx, MulZeroClass.mul_zero ] ];
       -- For the second sum, we use the fact that $|a(φ(k)) m - a_lim m|^2 \leq 2(|a(φ(k)) m|^2 + |a_lim m|^2)$ and the boundedness of the norms.
       have h_second_sum : ∑' m, weight n s m * ‖(a (φ k) m) - (a_lim m)‖ ^ 2 * (if m ∈ F then 0 else 1) ≤ 2 * ∑' m, weight n t m * (‖(a (φ k) m)‖ ^ 2 + ‖(a_lim m)‖ ^ 2) * weight n (s - t) m * (if m ∈ F then 0 else 1) := by
         have h_second_sum : ∀ m, weight n s m * ‖(a (φ k) m) - (a_lim m)‖ ^ 2 ≤ 2 * weight n t m * (‖(a (φ k) m)‖ ^ 2 + ‖(a_lim m)‖ ^ 2) * weight n (s - t) m := by

@@ -10,7 +10,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.Calculus.Deriv.Pi
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic
 
 /-!
 # Sobolev spaces on the torus — definitions

@@ -10,7 +10,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Data.Int.Star
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.Tactic
+import Mathlib.Topology.Separation.CompletelyRegular
 import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
 import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Distribution
 

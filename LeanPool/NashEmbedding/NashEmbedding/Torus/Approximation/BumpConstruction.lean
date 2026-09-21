@@ -10,7 +10,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.MeasureTheory.Integral.Pi
+import Mathlib.Tactic
+import Mathlib.Topology.UniformSpace.Uniformizable
 import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Basic
 import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
 
@@ -248,10 +254,10 @@ lemma fderiv_prodBump_single (β : Fin n → ℝ) (y : Fin n → ℝ) (i : Fin n
     exact ((dil_contDiff n (β i)).differentiable NashEmbedding.Sobolev.infty_ne_zero (y i)).hasDerivAt.mul_const _
   rw [h1.unique h2, ← Finset.mul_prod_erase Finset.univ (fun k => factor n β i k (y k))
     (Finset.mem_univ i)]
-  simp only [factor, if_true]
+  simp only [factor, ite_true]
   congr 1
   refine Finset.prod_congr rfl fun k hk => ?_
-  rw [if_neg (Finset.ne_of_mem_erase hk)]
+  rw [ite_eq_right (Finset.ne_of_mem_erase hk)]
 
 /-! ## The Gram matrix -/
 
@@ -269,17 +275,17 @@ theorem gram_prodBump {β : Fin n → ℝ} (hβ : ∀ k, 0 < β k) (i j : Fin n)
   rw [volume_pi, integral_fintype_prod_eq_prod (fun k t => factor n β i k t * factor n β j k t)]
   by_cases hij : i = j
   · subst hij
-    rw [if_pos rfl, ← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ i)]
+    rw [ite_eq_left rfl, ← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ i)]
     congr 1
-    · simp only [factor, if_true, ← sq]
+    · simp only [factor, ite_true, ← sq]
       exact integral_deriv_dil_sq n (hβ i)
     · refine Finset.prod_congr rfl fun k hk => ?_
       have hk' := Finset.ne_of_mem_erase hk
-      simp only [factor, if_neg hk', ← sq]
+      simp only [factor, ite_eq_right hk', ← sq]
       exact integral_dil_sq n (hβ k)
-  · rw [if_neg hij]
+  · rw [ite_eq_right hij]
     apply Finset.prod_eq_zero (Finset.mem_univ i)
-    simp only [factor, if_true, if_neg hij]
+    simp only [factor, ite_true, ite_eq_right hij]
     have h := integral_dil_mul_deriv n (hβ i)
     simp_rw [mul_comm (dil n (β i) _)] at h
     exact h
@@ -403,7 +409,7 @@ theorem gram_rotBump {β : Fin n → ℝ} (hβ : ∀ k, 1 ≤ β k) {M : Matrix 
   rw [Finset.sum_eq_single k]
   · simp
   · intro l _ hlk
-    rw [if_neg (Ne.symm hlk), mul_zero]
+    rw [ite_eq_right (Ne.symm hlk), mul_zero]
   · simp
 
 /-! ## Amplitude -/

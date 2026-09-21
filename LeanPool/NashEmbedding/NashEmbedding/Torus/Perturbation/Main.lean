@@ -10,7 +10,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.DualFrame
 import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherIdentitySeq
 
@@ -660,12 +660,12 @@ lemma Wfun_dot_pderiv {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hfree : IsFr
   have hB : ∀ pq ∈ pairs n, dualB u₀ pq.1 pq.2 x ⬝ᵥ pderiv i u₀ x = 0 := fun pq hpq => by
     have hle : pq.1 ≤ pq.2 := (Finset.mem_filter.mp hpq).2
     have := hd (Sum.inr ⟨pq, hle⟩) (Sum.inl i) x
-    simp only [frame, reduceCtorEq, if_false] at this
+    simp only [frame, reduceCtorEq, ite_false] at this
     simp [dualB, hle, this]
   unfold Wfun
   rw [add_dotProduct, neg_dotProduct, sum_dotProduct, sum_dotProduct]
   simp only [smul_dotProduct, smul_eq_mul, hA, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   rw [Finset.sum_eq_zero (fun pq hpq => by rw [hB pq hpq, mul_zero]), add_zero]
 
 /-- `W · ∂ₚ∂_q u₀ = ½(Ũ_{pq} - h_{pq})` for `p ≤ q`. -/

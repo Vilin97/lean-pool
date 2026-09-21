@@ -10,6 +10,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.ContDiff.Operations
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 import LeanPool.NashEmbedding.NashEmbedding.Torus.Basic
 
 /-!

@@ -10,7 +10,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
-import Mathlib
+import Mathlib.Data.Int.Star
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic
+import Mathlib.Topology.Separation.CompletelyRegular
 import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Convolution
 
 /-!
@@ -225,7 +229,7 @@ private theorem lattice_tail_norm_tendsto_zero (a : (Fin n → ℤ) → ℂ)
     use fun k => ‖a k‖;
     · convert ha using 1;
     · intro k; by_cases hk : ∃ j, |k j - m j| ≥ 0 <;> simp_all +decide ;
-      exact tendsto_const_nhds.congr' ( by filter_upwards [ Filter.eventually_gt_atTop ( ∑ j : Fin n, |( k j : ℝ ) - m j| ) ] with x hx; rw [ if_neg ( by exact fun ⟨ j, hj ⟩ => by linarith [ Finset.single_le_sum ( fun a _ => abs_nonneg ( ( k a : ℝ ) - m a ) ) ( Finset.mem_univ j ) ] ) ] );
+      exact tendsto_const_nhds.congr' ( by filter_upwards [ Filter.eventually_gt_atTop ( ∑ j : Fin n, |( k j : ℝ ) - m j| ) ] with x hx; rw [ ite_eq_right ( by exact fun ⟨ j, hj ⟩ => by linarith [ Finset.single_le_sum ( fun a _ => abs_nonneg ( ( k a : ℝ ) - m a ) ) ( Finset.mem_univ j ) ] ) ] );
     · filter_upwards [ Filter.eventually_gt_atTop 0 ] with M hM using fun k => by split_ifs <;> norm_num;
   aesop;
 
