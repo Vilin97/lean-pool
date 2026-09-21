@@ -140,12 +140,12 @@ theorem memLp_two_mul_real {g : ℝ → ℝ} (hg : Measurable g) {C : ℝ}
 
 /-- `L²` seminorm estimate for multiplication by a bounded real symbol. -/
 theorem eLpNorm_two_mul_real_le {g : ℝ → ℝ} {C : ℝ} (hgC : ∀ t, ‖g t‖ ≤ C)
-    (f : ℝ → ℝ) :
+    (f : ℝ → ℝ) (hgf : AEStronglyMeasurable (fun t => g t * f t) unitIocMeasure) :
     eLpNorm (fun t => g t * f t) 2 unitIocMeasure ≤
       ENNReal.ofReal |C| * eLpNorm f 2 unitIocMeasure := by
   have hle : eLpNorm (fun t => g t * f t) 2 unitIocMeasure ≤
       eLpNorm ((|C| : ℝ) • f) 2 unitIocMeasure := by
-    refine eLpNorm_mono_ae (Filter.Eventually.of_forall fun t => ?_)
+    refine eLpNorm_mono_ae hgf (Filter.Eventually.of_forall fun t => ?_)
     simp only [Pi.smul_apply, smul_eq_mul, norm_mul, Real.norm_eq_abs, abs_abs]
     exact mul_le_mul_of_nonneg_right ((hgC t).trans (le_abs_self C)) (abs_nonneg (f t))
   rw [eLpNorm_const_smul] at hle
@@ -158,7 +158,8 @@ theorem norm_toLp_mul_real_le {g : ℝ → ℝ} (hg : Measurable g) {C : ℝ}
     (hgC : ∀ t, ‖g t‖ ≤ C) (F : BeamL2) :
     ‖MemLp.toLp (fun t => g t * F t) (memLp_two_mul_real hg hgC F)‖ ≤ |C| * ‖F‖ := by
   rw [Lp.norm_toLp, Lp.norm_def, ← ENNReal.toReal_ofReal (abs_nonneg C), ← ENNReal.toReal_mul]
-  refine ENNReal.toReal_mono ?_ (eLpNorm_two_mul_real_le hgC _)
+  refine ENNReal.toReal_mono ?_ (eLpNorm_two_mul_real_le hgC _
+    (hg.aestronglyMeasurable.mul (Lp.aestronglyMeasurable F)))
   exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top (Lp.eLpNorm_ne_top F)
 
 /-- Specialized norm bound for the Section 9 real multiplier. -/

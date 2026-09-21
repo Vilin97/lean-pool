@@ -179,9 +179,10 @@ section Slice
 variable {X : Type*} [MeasurableSpace X]
 
 /-- Finiteness of the `L²` seminorm, phrased through the quadratic Lebesgue integral. -/
-theorem eLpNorm_two_lt_top_iff_lintegral (ν : Measure X) (f : X → ℂ) :
+theorem eLpNorm_two_lt_top_iff_lintegral (ν : Measure X) (f : X → ℂ)
+    (hf : AEStronglyMeasurable f ν) :
     eLpNorm f 2 ν < ∞ ↔ ∫⁻ x, ‖f x‖ₑ ^ 2 ∂ν < ∞ := by
-  rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num)]
+  rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num) hf]
   have h2 : ((2 : ℝ≥0∞)).toReal = ((2 : ℕ) : ℝ) := by norm_num
   rw [h2]
   refine Iff.of_eq (congrArg (· < ∞) (lintegral_congr fun x => ?_))
@@ -191,8 +192,8 @@ theorem eLpNorm_two_lt_top_iff_lintegral (ν : Measure X) (f : X → ℂ) :
 theorem memLp_two_section {ν : ℕ → Measure X} {f : X × ℕ → ℂ} (hm : Measurable f)
     (hf : ∫⁻ p, ‖f p‖ₑ ^ 2 ∂(sliceSum ν) < ∞) (n : ℕ) :
     MemLp (fun z => f (z, n)) 2 (ν n) := by
-  refine ⟨(hm.comp (measurable_id.prodMk measurable_const)).aestronglyMeasurable, ?_⟩
-  rw [eLpNorm_two_lt_top_iff_lintegral]
+  rw [MemLp, eLpNorm_two_lt_top_iff_lintegral (ν n) (fun z => f (z, n))
+    (hm.comp (measurable_id.prodMk measurable_const)).aestronglyMeasurable]
   rw [lintegral_sliceSum ν (hm.enorm.pow_const 2)] at hf
   exact (ENNReal.le_tsum n).trans_lt hf
 
@@ -492,8 +493,7 @@ theorem not_spectralGeneratedLE_mulLp_datumSymbol (D : MultiplicityDatum ℂ) {S
         simp
       rw [lintegral_congr hzero, lintegral_zero]
   have hW2 : MemLp W 2 D.measure := by
-    refine ⟨hWm.aestronglyMeasurable, ?_⟩
-    rw [eLpNorm_two_lt_top_iff_lintegral, hlint]
+    rw [MemLp, eLpNorm_two_lt_top_iff_lintegral _ _ hWm.aestronglyMeasurable, hlint]
     exact measure_lt_top _ _
   set w : Lp ℂ 2 D.measure := hW2.toLp W with hwdef
   have hwcoe : (w : ℂ × ℕ → ℂ) =ᵐ[D.measure] W := hW2.coeFn_toLp

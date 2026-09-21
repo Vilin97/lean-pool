@@ -318,6 +318,7 @@ theorem norm_le_of_selfAdjoint_spectrum_subset_closedBall
   have hSA : IsSelfAdjoint T := ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr hSelf
   have hrad : spectralRadius 𝕜 T = ‖T‖₊ := ContinuousLinearMap.spectralRadius_eq_nnnorm T hSA
   have hbound : spectralRadius 𝕜 T ≤ (ρ.toNNReal : ENNReal) := by
+    rw [spectralRadius_eq_of_unital]
     refine iSup₂_le fun z hz => ?_
     have hzρ : ‖z‖ ≤ ρ := by
       simpa [Metric.mem_closedBall, dist_zero_right] using hspec hz

@@ -700,6 +700,150 @@ theorem coe_gramOperator_reflectionSineCorner_comp_cutoffCorner_apply
     simp only [gramOperator, ContinuousLinearMap.comp_apply, hy, hadj]
   rw [h1, coe_cutoffCorner_apply,
     coe_gramOperator_reflectionSineCorner_apply hZsa]
+private theorem gramSpectralBandModel_ambient_residual
+    (hZsa : IsSelfAdjoint Z) (Ω : TauCeti.BoundedCutoff A U τ) {k : ℕ} {ρ : ℝ}
+    (M : TauCeti.DavisKahan.GramSpectralBandModel
+      (reflectionSineCorner U Z ∘L cutoffCorner Ω) k ρ) (j : Fin M.count) :
+    let X := reflectionSineCorner U Z ∘L cutoffCorner Ω
+    let q : ℝ := X.approximationNumber (j : ℕ)
+    let y : H := ((M.right j : U) : H)
+    ‖Ω.toProj (U.offDiagonalPart Z (U.offDiagonalPart Z y)) -
+      ((q ^ 2 : ℝ) : ℂ) • y‖ ≤ ρ * q / 4 := by
+  let X := reflectionSineCorner U Z ∘L cutoffCorner Ω
+  let q : ℝ := X.approximationNumber (j : ℕ)
+  let y : H := ((M.right j : U) : H)
+  have hfix : cutoffCorner Ω (M.right j) = M.right j :=
+    eq_of_mem_polarInitial_comp (isSelfAdjoint_cutoffCorner Ω)
+      (isIdempotentElem_cutoffCorner Ω) (reflectionSineCorner U Z)
+      (M.right_mem_polarInitial j)
+  have hgram := coe_gramOperator_reflectionSineCorner_comp_cutoffCorner_apply hZsa Ω hfix
+  have hcoe : (((gramOperator X (M.right j) -
+      ((q : ℂ)) ^ 2 • M.right j) : U) : H) =
+      Ω.toProj (U.offDiagonalPart Z (U.offDiagonalPart Z y)) -
+        ((q ^ 2 : ℝ) : ℂ) • y := by
+    rw [Submodule.coe_sub, Submodule.coe_smul, hgram]
+    norm_cast
+  have hnorm : ‖gramOperator X (M.right j) - ((q : ℂ)) ^ 2 • M.right j‖ =
+      ‖Ω.toProj (U.offDiagonalPart Z (U.offDiagonalPart Z y)) -
+        ((q ^ 2 : ℝ) : ℂ) • y‖ := by
+    rw [← hcoe]
+    rfl
+  change ‖Ω.toProj (U.offDiagonalPart Z (U.offDiagonalPart Z y)) -
+    ((q ^ 2 : ℝ) : ℂ) • y‖ ≤ ρ * q / 4
+  rw [← hnorm]
+  exact M.gram_residual j
+
+private theorem sum_tanArcsin_le_of_retained_bound
+    (α : ℕ → ℝ) (m k : ℕ) (a b τ θ κ ρ c gm g : ℝ)
+    (hmk : m ≤ k) (hδ : 0 < b - a) (hτ : 0 ≤ τ)
+    (hθ : 0 < θ) (hθ1 : θ < 1) (hκ : 0 < κ)
+    (hρ : 0 < ρ) (hρdef : ρ = θ ^ 4) (hρθ : ρ ≤ θ)
+    (ha0 : ∀ p, 0 ≤ α p)
+    (hdenominator : ∀ p, κ ≤ √(1 - α p ^ 2))
+    (hleading : ∀ p, m ≤ p → p < k → α p ≤ θ)
+    (hcsq : c ^ 2 = 1 + 3 * (k : ℝ) * (ρ / 4) / (θ ^ 2 * κ ^ 2))
+    (hG0 : 0 ≤ g) (hGm : gm ≤ g)
+    (hmain : (b - a) * ∑ p ∈ Finset.range m, Real.tan (Real.arcsin (α p)) ≤
+      2 * c ^ 2 * gm + (m : ℝ) * ((τ + |b|) * ρ / (4 * κ))) :
+    (b - a) * ∑ p ∈ Finset.range k, Real.tan (Real.arcsin (α p)) ≤
+      2 * g + θ * (3 * k * g / (2 * κ ^ 2) +
+        k * (τ + |b|) / (4 * κ) + (b - a) * k / κ) := by
+  -- the dropped tail
+  have htail : ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
+      (α p)) ≤ (k : ℝ) * (θ / κ) := by
+    have hbd : ∀ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
+        (α p)) ≤ θ / κ := by
+      intro p hp
+      obtain ⟨hp1, hp2⟩ := Finset.mem_Ico.mp hp
+      have hle : α p ≤ θ :=
+        hleading p hp1 hp2
+      rw [Real.tan_arcsin]
+      have hden : κ ≤ √(1 - α p ^ 2) :=
+        hdenominator p
+      have hden0 : 0 < √(1 - α p ^ 2) := lt_of_lt_of_le hκ hden
+      rw [div_le_div_iff₀ hden0 hκ]
+      nlinarith [ha0 p, hκ.le, hden]
+    calc ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
+          (α p)) ≤ ∑ _p ∈ Finset.Ico m k, θ / κ :=
+          Finset.sum_le_sum hbd
+      _ = (k - m : ℕ) * (θ / κ) := by
+          rw [Finset.sum_const, Nat.card_Ico, nsmul_eq_mul]
+      _ ≤ (k : ℝ) * (θ / κ) := by
+          have h1 : ((k - m : ℕ) : ℝ) ≤ (k : ℝ) := by
+            exact_mod_cast Nat.sub_le k m
+          have h2 : (0 : ℝ) ≤ θ / κ := by positivity
+          exact mul_le_mul_of_nonneg_right h1 h2
+  have hsplit : ∑ p ∈ Finset.range k, Real.tan (Real.arcsin
+      (α p)) =
+      (∑ p ∈ Finset.range m, Real.tan (Real.arcsin
+        (α p))) +
+      ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
+        (α p)) :=
+    (Finset.sum_range_add_sum_Ico
+      (f := fun p => Real.tan (Real.arcsin (α p))) hmk).symm
+  -- assemble
+  have hmkR : (m : ℝ) ≤ (k : ℝ) := Nat.cast_le.mpr hmk
+  have hm0 : (0 : ℝ) ≤ (m : ℝ) := Nat.cast_nonneg m
+  have hcsq0 : (0 : ℝ) ≤ c ^ 2 := sq_nonneg c
+  have hstep1 : 2 * c ^ 2 * gm +
+      (m : ℝ) * ((τ + |b|) * ρ / (4 * κ)) ≤
+      2 * g +
+        (3 * (k : ℝ) * ρ / (2 * θ ^ 2 * κ ^ 2)) *
+          g +
+        (k : ℝ) * ((τ + |b|) * ρ / (4 * κ)) := by
+    have h1 : 2 * c ^ 2 * gm ≤
+        2 * c ^ 2 * g := by
+      have : (0 : ℝ) ≤ 2 * c ^ 2 := by positivity
+      exact mul_le_mul_of_nonneg_left hGm this
+    have h2 : 2 * c ^ 2 * g =
+        2 * g +
+          (3 * (k : ℝ) * ρ / (2 * θ ^ 2 * κ ^ 2)) *
+            g := by
+      rw [hcsq]
+      field_simp
+      ring
+    have h3 : (0 : ℝ) ≤ (τ + |b|) * ρ / (4 * κ) := by
+      have hnn : (0 : ℝ) ≤ τ + |b| := by positivity
+      positivity
+    have hmE : (m : ℝ) * ((τ + |b|) * ρ / (4 * κ)) ≤
+        (k : ℝ) * ((τ + |b|) * ρ / (4 * κ)) :=
+      mul_le_mul_of_nonneg_right hmkR h3
+    linarith [h1, h2, hmE]
+  rw [hsplit, mul_add]
+  have hfinal : (b - a) * ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
+      (α p)) ≤ (b - a) * ((k : ℝ) * (θ / κ)) :=
+    mul_le_mul_of_nonneg_left htail hδ.le
+  have hθ4 : ρ ≤ θ := hρθ
+  have hθ2θ : θ ^ 2 ≤ θ := by nlinarith [hθ, hθ1]
+  have hκ2pos : (0 : ℝ) < κ ^ 2 := by positivity
+  have hE1 : (3 * (k : ℝ) * ρ / (2 * θ ^ 2 * κ ^ 2)) *
+      g ≤
+      θ * (3 * (k : ℝ) * g / (2 * κ ^ 2)) := by
+    have hid : (3 * (k : ℝ) * ρ / (2 * θ ^ 2 * κ ^ 2)) *
+        g =
+        θ ^ 2 * (3 * (k : ℝ) * g / (2 * κ ^ 2)) := by
+      rw [hρdef]
+      field_simp
+    rw [hid]
+    have hcoef : (0 : ℝ) ≤ 3 * (k : ℝ) * g /
+        (2 * κ ^ 2) := by positivity
+    exact mul_le_mul_of_nonneg_right hθ2θ hcoef
+  have hE2 : (k : ℝ) * ((τ + |b|) * ρ / (4 * κ)) ≤
+      θ * ((k : ℝ) * (τ + |b|) / (4 * κ)) := by
+    have hcoef : (0 : ℝ) ≤ (k : ℝ) * (τ + |b|) / (4 * κ) := by
+      have : (0 : ℝ) ≤ τ + |b| := by positivity
+      positivity
+    have hid : (k : ℝ) * ((τ + |b|) * ρ / (4 * κ)) =
+        ρ * ((k : ℝ) * (τ + |b|) / (4 * κ)) := by
+      field_simp
+    rw [hid]
+    exact mul_le_mul_of_nonneg_right hθ4 hcoef
+  have hE3 : (b - a) * ((k : ℝ) * (θ / κ)) = θ * ((b - a) * (k : ℝ) / κ) := by
+    field_simp
+  rw [mul_add]
+  linarith [hmain, hstep1, hfinal, hE1, hE2, hE3.le, hE3.ge]
+
+
 /-- **The fixed-cutoff middle inequality, with an explicit `θ`-error.**
 
 For every threshold `θ ∈ (0, 1)`, taking the Gram-band radius `ρ := θ⁴` gives
@@ -736,11 +880,6 @@ theorem gap_mul_sum_tanArcsin_le_two_mul_kyFan_add_of_cutoff
             (b - a) * k / √(1 - ‖U.offDiagonalPart Z‖ ^ 2)) := by
   classical
   set X : U →L[ℂ] Uᗮ := reflectionSineCorner U Z ∘L cutoffCorner Ω with hXdef
-  have hgramAmb : ∀ v : U, cutoffCorner Ω v = v →
-      ((gramOperator X v : U) : H) =
-        Ω.toProj (U.offDiagonalPart Z (U.offDiagonalPart Z ((v : U) : H))) :=
-    fun v hv =>
-      coe_gramOperator_reflectionSineCorner_comp_cutoffCorner_apply hZsa Ω hv
   set r : ℝ := ‖U.offDiagonalPart Z‖ with hrdef
   have hr0 : 0 ≤ r := norm_nonneg _
   have hrsq : r ^ 2 < 1 := by nlinarith
@@ -790,20 +929,12 @@ theorem gap_mul_sum_tanArcsin_le_two_mul_kyFan_add_of_cutoff
       linarith
   set y : Fin m → H := fun j => ((M.right (Fin.castLE hmc j) : U) : H) with hydef
   set q : Fin m → ℝ := fun j => X.approximationNumber (j : ℕ) with hqdef
-  have hqcast : ∀ j : Fin m,
-      X.approximationNumber ((Fin.castLE hmc j : Fin M.count) : ℕ) = q j :=
-    fun j => rfl
   have hyon : Orthonormal ℂ y := by
     have hon0 : Orthonormal ℂ (fun j : Fin m => M.right (Fin.castLE hmc j)) :=
       M.right_orthonormal.comp _ (Fin.castLE_injective hmc)
     rw [orthonormal_iff_ite] at hon0 ⊢
     intro i j
     simpa [hydef, Submodule.coe_inner] using hon0 i j
-  have hfix : ∀ j : Fin m,
-      cutoffCorner Ω (M.right (Fin.castLE hmc j)) = M.right (Fin.castLE hmc j) :=
-    fun j => eq_of_mem_polarInitial_comp (isSelfAdjoint_cutoffCorner Ω)
-      (isIdempotentElem_cutoffCorner Ω) (reflectionSineCorner U Z)
-      (M.right_mem_polarInitial _)
   have hyΩ : ∀ j, Ω.toProj (y j) = y j := fun j =>
     gramSpectralBandModel_toProj_right Ω M (Fin.castLE hmc j)
   have hqθ : ∀ j : Fin m, θ ≤ q j := fun j =>
@@ -816,25 +947,8 @@ theorem gap_mul_sum_tanArcsin_le_two_mul_kyFan_add_of_cutoff
     nlinarith
   have heig : ∀ j : Fin m,
       ‖Ω.toProj (U.offDiagonalPart Z (U.offDiagonalPart Z (y j))) -
-        ((q j ^ 2 : ℝ) : ℂ) • y j‖ ≤ ρ * q j / 4 := by
-    intro j
-    have hres := M.gram_residual (Fin.castLE hmc j)
-    rw [hqcast j] at hres
-    have hcoe : (((gramOperator X (M.right (Fin.castLE hmc j)) -
-        ((q j : ℂ)) ^ 2 • M.right (Fin.castLE hmc j)) : U) : H) =
-        Ω.toProj (U.offDiagonalPart Z (U.offDiagonalPart Z (y j))) -
-          ((q j ^ 2 : ℝ) : ℂ) • y j := by
-      simp only [hydef]
-      rw [Submodule.coe_sub, Submodule.coe_smul, hgramAmb _ (hfix j)]
-      norm_cast
-    have hnorm : ‖gramOperator X (M.right (Fin.castLE hmc j)) -
-        ((q j : ℂ)) ^ 2 • M.right (Fin.castLE hmc j)‖ =
-        ‖Ω.toProj (U.offDiagonalPart Z (U.offDiagonalPart Z (y j))) -
-          ((q j ^ 2 : ℝ) : ℂ) • y j‖ := by
-      rw [← hcoe]
-      rfl
-    rw [← hnorm]
-    exact hres
+        ((q j ^ 2 : ℝ) : ℂ) • y j‖ ≤ ρ * q j / 4 :=
+    fun j => gramSpectralBandModel_ambient_residual hZsa Ω M (Fin.castLE hmc j)
   -- the summed estimate at the retained indices
   set c : ℝ := √(1 + 3 * (k : ℝ) * (ρ / 4) / (θ ^ 2 * κ ^ 2)) with hcdef
   have hcarg : (0 : ℝ) ≤ 1 + 3 * (k : ℝ) * (ρ / 4) / (θ ^ 2 * κ ^ 2) := by
@@ -867,107 +981,21 @@ theorem gap_mul_sum_tanArcsin_le_two_mul_kyFan_add_of_cutoff
     rw [← Fin.sum_univ_eq_sum_range
       (fun p => Real.tan (Real.arcsin (X.approximationNumber p))) m]
     exact Finset.sum_congr rfl fun j _ => Real.tan_arcsin _
-  -- the dropped tail
-  have htail : ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
-      (X.approximationNumber p)) ≤ (k : ℝ) * (θ / κ) := by
-    have hbd : ∀ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
-        (X.approximationNumber p)) ≤ θ / κ := by
-      intro p hp
-      obtain ⟨hp1, hp2⟩ := Finset.mem_Ico.mp hp
-      have hle : X.approximationNumber p ≤ θ :=
-        approximationNumber_le_of_leadingCount_le X k θ hp1 hp2
-      rw [Real.tan_arcsin]
-      have hden : κ ≤ √(1 - X.approximationNumber p ^ 2) :=
-        hcκ _ (ha0 p) (har p)
-      have hden0 : 0 < √(1 - X.approximationNumber p ^ 2) := lt_of_lt_of_le hκ hden
-      rw [div_le_div_iff₀ hden0 hκ]
-      nlinarith [ha0 p, hκ.le, hden]
-    calc ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
-          (X.approximationNumber p)) ≤ ∑ _p ∈ Finset.Ico m k, θ / κ :=
-          Finset.sum_le_sum hbd
-      _ = (k - m : ℕ) * (θ / κ) := by
-          rw [Finset.sum_const, Nat.card_Ico, nsmul_eq_mul]
-      _ ≤ (k : ℝ) * (θ / κ) := by
-          have h1 : ((k - m : ℕ) : ℝ) ≤ (k : ℝ) := by
-            exact_mod_cast Nat.sub_le k m
-          have h2 : (0 : ℝ) ≤ θ / κ := by positivity
-          exact mul_le_mul_of_nonneg_right h1 h2
-  have hsplit : ∑ p ∈ Finset.range k, Real.tan (Real.arcsin
-      (X.approximationNumber p)) =
-      (∑ p ∈ Finset.range m, Real.tan (Real.arcsin
-        (X.approximationNumber p))) +
-      ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
-        (X.approximationNumber p)) :=
-    (Finset.sum_range_add_sum_Ico
-      (f := fun p => Real.tan (Real.arcsin (X.approximationNumber p))) hmk).symm
-  -- assemble
   have hG0 : (0 : ℝ) ≤ kyFanApproximationGauge k (reflectionResidualCorner U B) := by
     rw [kyFanApproximationGauge, ContinuousLinearMap.kyFanGauge]
     exact Finset.sum_nonneg fun p _ =>
       (reflectionResidualCorner U B).approximationNumber_nonneg p
-  have hGm : kyFanApproximationGauge m (reflectionResidualCorner U B) ≤ kyFanApproximationGauge k (reflectionResidualCorner U B) :=
-    TauCeti.DavisKahan.kyFanApproximationGauge_mono_length
-      (reflectionResidualCorner U B) hmk
-  have hmkR : (m : ℝ) ≤ (k : ℝ) := Nat.cast_le.mpr hmk
-  have hm0 : (0 : ℝ) ≤ (m : ℝ) := Nat.cast_nonneg m
-  have hcsq0 : (0 : ℝ) ≤ c ^ 2 := sq_nonneg c
-  have hstep1 : 2 * c ^ 2 * kyFanApproximationGauge m (reflectionResidualCorner U B) +
-      (m : ℝ) * ((τ + |b|) * ρ / (4 * κ)) ≤
-      2 * kyFanApproximationGauge k (reflectionResidualCorner U B) +
-        (3 * (k : ℝ) * ρ / (2 * θ ^ 2 * κ ^ 2)) *
-          kyFanApproximationGauge k (reflectionResidualCorner U B) +
-        (k : ℝ) * ((τ + |b|) * ρ / (4 * κ)) := by
-    have h1 : 2 * c ^ 2 * kyFanApproximationGauge m (reflectionResidualCorner U B) ≤
-        2 * c ^ 2 * kyFanApproximationGauge k (reflectionResidualCorner U B) := by
-      have : (0 : ℝ) ≤ 2 * c ^ 2 := by positivity
-      exact mul_le_mul_of_nonneg_left hGm this
-    have h2 : 2 * c ^ 2 * kyFanApproximationGauge k (reflectionResidualCorner U B) =
-        2 * kyFanApproximationGauge k (reflectionResidualCorner U B) +
-          (3 * (k : ℝ) * ρ / (2 * θ ^ 2 * κ ^ 2)) *
-            kyFanApproximationGauge k (reflectionResidualCorner U B) := by
-      rw [hcsq]
-      field_simp
-      ring
-    have h3 : (0 : ℝ) ≤ (τ + |b|) * ρ / (4 * κ) := by
-      have hnn : (0 : ℝ) ≤ τ + |b| := by positivity
-      positivity
-    have hmE : (m : ℝ) * ((τ + |b|) * ρ / (4 * κ)) ≤
-        (k : ℝ) * ((τ + |b|) * ρ / (4 * κ)) :=
-      mul_le_mul_of_nonneg_right hmkR h3
-    linarith [h1, h2, hmE]
-  rw [hsplit, mul_add, hretained]
-  have hfinal : (b - a) * ∑ p ∈ Finset.Ico m k, Real.tan (Real.arcsin
-      (X.approximationNumber p)) ≤ (b - a) * ((k : ℝ) * (θ / κ)) :=
-    mul_le_mul_of_nonneg_left htail hδ.le
-  have hθ4 : ρ ≤ θ := hρθ.le
-  have hθ2θ : θ ^ 2 ≤ θ := by nlinarith [hθ, hθ1]
-  have hκ2pos : (0 : ℝ) < κ ^ 2 := by positivity
-  have hE1 : (3 * (k : ℝ) * ρ / (2 * θ ^ 2 * κ ^ 2)) *
-      kyFanApproximationGauge k (reflectionResidualCorner U B) ≤
-      θ * (3 * (k : ℝ) * kyFanApproximationGauge k (reflectionResidualCorner U B) / (2 * κ ^ 2)) := by
-    have hid : (3 * (k : ℝ) * ρ / (2 * θ ^ 2 * κ ^ 2)) *
-        kyFanApproximationGauge k (reflectionResidualCorner U B) =
-        θ ^ 2 * (3 * (k : ℝ) * kyFanApproximationGauge k (reflectionResidualCorner U B) / (2 * κ ^ 2)) := by
-      rw [hρdef]
-      field_simp
-    rw [hid]
-    have hcoef : (0 : ℝ) ≤ 3 * (k : ℝ) * kyFanApproximationGauge k (reflectionResidualCorner U B) /
-        (2 * κ ^ 2) := by positivity
-    exact mul_le_mul_of_nonneg_right hθ2θ hcoef
-  have hE2 : (k : ℝ) * ((τ + |b|) * ρ / (4 * κ)) ≤
-      θ * ((k : ℝ) * (τ + |b|) / (4 * κ)) := by
-    have hcoef : (0 : ℝ) ≤ (k : ℝ) * (τ + |b|) / (4 * κ) := by
-      have : (0 : ℝ) ≤ τ + |b| := by positivity
-      positivity
-    have hid : (k : ℝ) * ((τ + |b|) * ρ / (4 * κ)) =
-        ρ * ((k : ℝ) * (τ + |b|) / (4 * κ)) := by
-      field_simp
-    rw [hid]
-    exact mul_le_mul_of_nonneg_right hθ4 hcoef
-  have hE3 : (b - a) * ((k : ℝ) * (θ / κ)) = θ * ((b - a) * (k : ℝ) / κ) := by
-    field_simp
-  rw [mul_add]
-  linarith [hmain, hstep1, hfinal, hE1, hE2, hE3.le, hE3.ge]
+  have hGm := TauCeti.DavisKahan.kyFanApproximationGauge_mono_length
+    (reflectionResidualCorner U B) hmk
+  rw [← hretained] at hmain
+  exact sum_tanArcsin_le_of_retained_bound
+    (fun p => X.approximationNumber p) m k a b τ θ κ ρ c
+    (kyFanApproximationGauge m (reflectionResidualCorner U B))
+    (kyFanApproximationGauge k (reflectionResidualCorner U B))
+    hmk hδ hτ hθ hθ1 hκ hρ hρdef hρθ.le ha0
+    (fun p => hcκ _ (ha0 p) (har p))
+    (fun p hp1 hp2 => approximationNumber_le_of_leadingCount_le X k θ hp1 hp2)
+    hcsq hG0 hGm hmain
 
 /-- **The fixed-cutoff middle inequality.**
 

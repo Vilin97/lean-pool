@@ -50,8 +50,7 @@ theorem realSpectrum_nonempty_of_selfAdjoint [Nontrivial E]
     by_contra hempty
     rw [Set.not_nonempty_iff_eq_empty] at hempty
     have hzeroRadius : spectralRadius ℂ T = 0 := by
-      show (⨆ k ∈ spectrum ℂ T, (‖k‖₊ : ENNReal)) = 0
-      rw [hempty]
+      rw [spectralRadius_eq_of_unital, hempty]
       simp
     have hTzero : T = 0 := by
       have hnormZero : ((‖T‖₊ : ENNReal)) = 0 := by

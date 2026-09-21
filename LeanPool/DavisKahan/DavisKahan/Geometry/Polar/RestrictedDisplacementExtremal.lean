@@ -353,6 +353,299 @@ theorem approximationNumber_direct_le_competitor
     (B.approximationNumber_nonneg n) hltReal
   exact (lt_irrefl (B.approximationNumber n : ℝ)) htransfer
 omit [CompleteSpace F] in
+private theorem cosineCutoff_not_lt_sine
+    {C : E →L[ℂ] E} {A B S : E →L[ℂ] F}
+    (D : CosineDisplacementData C A B)
+    (hSsq : ∀ x, ‖S x‖ ^ 2 = ‖x‖ ^ 2 - ‖C x‖ ^ 2) (n : ℕ)
+    {ca cs : ℝ} (hcaDef : ca = 1 - (A.approximationNumber n : ℝ) ^ 2 / 2)
+    (hcsSq : cs ^ 2 = 1 - (S.approximationNumber n : ℝ) ^ 2)
+    (hca0 : 0 ≤ ca) (hcs0 : 0 ≤ cs) (hcs1 : cs ≤ 1) : ¬ ca < cs := by
+  classical
+  intro hlt
+  let a : ℝ := (A.approximationNumber n : ℝ)
+  let s : ℝ := (S.approximationNumber n : ℝ)
+  have ha0 : 0 ≤ a := A.approximationNumber_nonneg n
+  have hs0 : 0 ≤ s := S.approximationNumber_nonneg n
+  let c : Real := (ca + cs) / 2
+  have hc0 : 0 <= c := by dsimp only [c]; linarith
+  have hcaC : ca < c := by dsimp only [c]; linarith
+  have hcCs : c < cs := by dsimp only [c]; linarith
+  have hc1 : c <= 1 := hcCs.le.trans hcs1
+  let PVM : TauCeti.ProjValMeasure E :=
+    boundedSelfAdjointSpectralPVM C D.cosine_selfAdjoint
+  let P : E →L[ℂ] E := PVM.proj (Set.Iic c) measurableSet_Iic
+  let Q : E →L[ℂ] E := PVM.proj (Set.Ioi c) measurableSet_Ioi
+  have hQeq : Q = ContinuousLinearMap.id ℂ E - P := by
+    have h := PVM.proj_compl (Set.Iic c) measurableSet_Iic
+    rw [PVM.proj_congr Set.compl_Iic measurableSet_Iic.compl measurableSet_Ioi] at h
+    exact h
+
+  have hPrank : P.rank <= (n : Cardinal) := by
+    by_contra hnot
+    have hnlt : (n : Cardinal) < P.rank := lt_of_not_ge hnot
+    let L : Submodule ℂ E := pvmRangeSubspace PVM (Set.Iic c) measurableSet_Iic
+    have hnrank : (((n + 1 : ℕ) : Cardinal) <= Module.rank ℂ L) := by
+      change ((n + 1 : ℕ) : Cardinal) <= P.rank
+      rw [← Cardinal.natCast_add_one_le_iff, ← Nat.cast_add_one] at hnlt
+      exact hnlt
+    obtain ⟨f, hf⟩ := (Module.le_rank_iff).mp hnrank
+    let v : Fin (n + 1) → E := L.subtype ∘ f
+    have hv : LinearIndependent ℂ v := by
+      change LinearIndependent ℂ (L.subtype ∘ f)
+      exact hf.map' L.subtype (LinearMap.ker_eq_bot.mpr L.injective_subtype)
+    let M : Submodule ℂ E := Submodule.span ℂ (Set.range v)
+    have hMle : M <= L := by
+      apply Submodule.span_le.mpr
+      rintro x ⟨i, rfl⟩
+      exact (f i).2
+    let c1 : Real := (c + cs) / 2
+    have hcC1 : c < c1 := by dsimp only [c1]; linarith
+    have hc1Cs : c1 < cs := by dsimp only [c1]; linarith
+    have hc10 : 0 <= c1 := hc0.trans hcC1.le
+    have hc11 : c1 <= 1 := hc1Cs.le.trans hcs1
+    let t : Real := Real.sqrt (1 - c1 ^ 2)
+    have ht0 : 0 <= t := Real.sqrt_nonneg _
+    have htSq : t ^ 2 = 1 - c1 ^ 2 := by
+      dsimp only [t]
+      rw [Real.sq_sqrt]
+      nlinarith
+    have hsT : s < t := by
+      apply (sq_lt_sq₀ hs0 ht0).1
+      rw [htSq]
+      have hc1Sq : c1 ^ 2 < cs ^ 2 :=
+        (sq_lt_sq₀ hc10 hcs0).2 hc1Cs
+      nlinarith [hcsSq]
+    have htNN : (⟨t, ht0⟩ : NNReal) <= S.approximationNumber n := by
+      apply ContinuousLinearMap.le_approximationNumber_of_linearIndependent S n v hv
+      intro x hxM hxNorm
+      have hxL : x ∈ L := hMle hxM
+      have hCbound : ‖C x‖ <= c1 * ‖x‖ :=
+        CosineDisplacementData.cosine_norm_le_on_low_range D hc0 hcC1 x hxL
+      have hCsq : ‖C x‖ ^ 2 <= (c1 * ‖x‖) ^ 2 :=
+        (sq_le_sq₀ (norm_nonneg _) (mul_nonneg hc10 (norm_nonneg x))).2 hCbound
+      have hSx := hSsq x
+      have hsq : (t * ‖x‖) ^ 2 <= ‖S x‖ ^ 2 := by
+        rw [hSx, mul_pow, htSq]
+        nlinarith
+      have hlower : t * ‖x‖ <= ‖S x‖ :=
+        (sq_le_sq₀ (mul_nonneg ht0 (norm_nonneg x)) (norm_nonneg _)).1 hsq
+      change t <= ‖S x‖
+      simpa only [hxNorm, mul_one] using hlower
+    have htLeS : t <= s := htNN
+    exact (not_le_of_gt hsT) htLeS
+
+  let r : Real := Real.sqrt (2 * (1 - c))
+  have hr0 : 0 <= r := Real.sqrt_nonneg _
+  have hrSq : r ^ 2 = 2 * (1 - c) := by
+    dsimp only [r]
+    rw [Real.sq_sqrt]
+    nlinarith
+  have hrA : r < a := by
+    apply (sq_lt_sq₀ hr0 ha0).1
+    rw [hrSq]
+    rw [hcaDef] at hcaC
+    nlinarith
+  have hCsa : IsSelfAdjoint C :=
+    ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr D.cosine_selfAdjoint
+  have htailNorm : ‖A ∘L Q‖ <= r := by
+    refine (A ∘L Q).opNorm_le_bound hr0 ?_
+    intro x
+    let y : E := Q x
+    have hlowZero : PVM.proj (Set.Iic c) measurableSet_Iic y = 0 := by
+      have hinter : Set.Iic c ∩ Set.Ioi c = ∅ := by
+        ext z
+        simp only [Set.mem_inter_iff, Set.mem_Iic, Set.mem_Ioi,
+          Set.mem_empty_iff_false, iff_false]
+        exact fun hz => (not_lt_of_ge hz.1) hz.2
+      have hmul := PVM.proj_inter (Set.Iic c) (Set.Ioi c)
+        measurableSet_Iic measurableSet_Ioi
+      rw [PVM.proj_congr hinter (measurableSet_Iic.inter measurableSet_Ioi)
+        MeasurableSet.empty, PVM.proj_empty] at hmul
+      exact congrArg (fun T : E →L[ℂ] E => T x) hmul
+    have henergy := TauCeti.BorelCalculus.le_re_inner_of_boundedPVM_proj_Iic_eq_zero
+      hCsa c hlowZero
+    have hform : c * ‖y‖ ^ 2 <= RCLike.re ⟪C y, y⟫_ℂ := by
+      rw [RCLike.re_eq_complex_re]
+      exact henergy
+    have hsq : ‖A y‖ ^ 2 <= (r * ‖y‖) ^ 2 := by
+      rw [D.direct_norm_sq, mul_pow, hrSq]
+      nlinarith
+    have hAy : ‖A y‖ <= r * ‖y‖ :=
+      le_of_sq_le_sq hsq (mul_nonneg hr0 (norm_nonneg y))
+    calc
+      ‖(A ∘L Q) x‖ = ‖A y‖ := rfl
+      _ <= r * ‖y‖ := hAy
+      _ <= r * ‖x‖ := mul_le_mul_of_nonneg_left
+        (PVM.norm_proj_apply_le (Set.Ioi c) measurableSet_Ioi x) hr0
+  let R : E →L[ℂ] F := A ∘L P
+  have hRrank : R.rank <= (n : Cardinal) :=
+    ContinuousLinearMap.rank_comp_le_natCast_right P A hPrank
+  have herr : A - R = A ∘L Q := by
+    ext x
+    change A x - A (P x) = A (Q x)
+    rw [hQeq, sub_apply, ContinuousLinearMap.id_apply, map_sub]
+  have happroxReal : a <= ‖A - R‖ := A.approximationNumber_le_norm_sub hRrank
+  have haR : a <= r := by
+    calc
+      a <= ‖A - R‖ := happroxReal
+      _ = ‖A ∘L Q‖ := by rw [herr]
+      _ <= r := htailNorm
+  exact (not_le_of_gt hrA) haR
+
+omit [CompleteSpace F] in
+private theorem sineCutoff_not_lt_cosine
+    {C : E →L[ℂ] E} {A B S : E →L[ℂ] F}
+    (D : CosineDisplacementData C A B)
+    (hSsq : ∀ x, ‖S x‖ ^ 2 = ‖x‖ ^ 2 - ‖C x‖ ^ 2) (n : ℕ)
+    {ca cs : ℝ} (hcaDef : ca = 1 - (A.approximationNumber n : ℝ) ^ 2 / 2)
+    (hcsSq : cs ^ 2 = 1 - (S.approximationNumber n : ℝ) ^ 2)
+    (hca1 : ca ≤ 1) (hcs0 : 0 ≤ cs) : ¬ cs < ca := by
+  classical
+  intro hlt
+  let a : ℝ := (A.approximationNumber n : ℝ)
+  let s : ℝ := (S.approximationNumber n : ℝ)
+  have ha0 : 0 ≤ a := A.approximationNumber_nonneg n
+  have hs0 : 0 ≤ s := S.approximationNumber_nonneg n
+  let c : Real := (cs + ca) / 2
+  have hc0 : 0 <= c := by dsimp only [c]; linarith
+  have hcsC : cs < c := by dsimp only [c]; linarith
+  have hcCa : c < ca := by dsimp only [c]; linarith
+  have hc1 : c <= 1 := hcCa.le.trans hca1
+  let PVM : TauCeti.ProjValMeasure E :=
+    boundedSelfAdjointSpectralPVM C D.cosine_selfAdjoint
+  let P : E →L[ℂ] E := PVM.proj (Set.Iic c) measurableSet_Iic
+  let Q : E →L[ℂ] E := PVM.proj (Set.Ioi c) measurableSet_Ioi
+  have hQeq : Q = ContinuousLinearMap.id ℂ E - P := by
+    have h := PVM.proj_compl (Set.Iic c) measurableSet_Iic
+    rw [PVM.proj_congr Set.compl_Iic measurableSet_Iic.compl measurableSet_Ioi] at h
+    exact h
+  have hCsa : IsSelfAdjoint C :=
+    ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr D.cosine_selfAdjoint
+
+  have hPrank : ¬ P.rank <= (n : Cardinal) := by
+    intro hP
+    let t : Real := Real.sqrt (1 - c ^ 2)
+    have ht0 : 0 <= t := Real.sqrt_nonneg _
+    have htSq : t ^ 2 = 1 - c ^ 2 := by
+      dsimp only [t]
+      rw [Real.sq_sqrt]
+      nlinarith
+    have htS : t < s := by
+      apply (sq_lt_sq₀ ht0 hs0).1
+      rw [htSq]
+      have hcsSqLt : cs ^ 2 < c ^ 2 :=
+        (sq_lt_sq₀ hcs0 hc0).2 hcsC
+      nlinarith [hcsSq]
+    have htailNorm : ‖S ∘L Q‖ <= t := by
+      refine (S ∘L Q).opNorm_le_bound ht0 ?_
+      intro x
+      let y : E := Q x
+      have hlowZero : PVM.proj (Set.Iic c) measurableSet_Iic y = 0 := by
+        have hinter : Set.Iic c ∩ Set.Ioi c = ∅ := by
+          ext z
+          simp only [Set.mem_inter_iff, Set.mem_Iic, Set.mem_Ioi,
+            Set.mem_empty_iff_false, iff_false]
+          exact fun hz => (not_lt_of_ge hz.1) hz.2
+        have hmul := PVM.proj_inter (Set.Iic c) (Set.Ioi c)
+          measurableSet_Iic measurableSet_Ioi
+        rw [PVM.proj_congr hinter (measurableSet_Iic.inter measurableSet_Ioi)
+          MeasurableSet.empty, PVM.proj_empty] at hmul
+        exact congrArg (fun T : E →L[ℂ] E => T x) hmul
+      have henergy := TauCeti.BorelCalculus.le_re_inner_of_boundedPVM_proj_Iic_eq_zero
+        hCsa c hlowZero
+      have hform : c * ‖y‖ ^ 2 <= RCLike.re ⟪C y, y⟫_ℂ := by
+        rw [RCLike.re_eq_complex_re]
+        exact henergy
+      have hCy : c * ‖y‖ ≤ ‖C y‖ := by
+        by_cases hy : ‖y‖ = 0
+        · simp [hy]
+        have hypos : 0 < ‖y‖ := lt_of_le_of_ne (norm_nonneg y) (Ne.symm hy)
+        have hinner : RCLike.re ⟪C y, y⟫_ℂ ≤ ‖C y‖ * ‖y‖ :=
+          (RCLike.re_le_norm _).trans (norm_inner_le_norm _ _)
+        nlinarith only [hform, hinner, hypos]
+      have hSx := hSsq y
+      have hsq : ‖S y‖ ^ 2 <= (t * ‖y‖) ^ 2 := by
+        rw [hSx, mul_pow, htSq]
+        have hCySq : (c * ‖y‖) ^ 2 <= ‖C y‖ ^ 2 :=
+          (sq_le_sq₀ (mul_nonneg hc0 (norm_nonneg y)) (norm_nonneg _)).2 hCy
+        nlinarith
+      have hSy : ‖S y‖ <= t * ‖y‖ :=
+        le_of_sq_le_sq hsq (mul_nonneg ht0 (norm_nonneg y))
+      calc
+        ‖(S ∘L Q) x‖ = ‖S y‖ := rfl
+        _ <= t * ‖y‖ := hSy
+        _ <= t * ‖x‖ := mul_le_mul_of_nonneg_left
+          (PVM.norm_proj_apply_le (Set.Ioi c) measurableSet_Ioi x) ht0
+    let R : E →L[ℂ] F := S ∘L P
+    have hRrank : R.rank <= (n : Cardinal) :=
+      ContinuousLinearMap.rank_comp_le_natCast_right P S hP
+    have herr : S - R = S ∘L Q := by
+      ext x
+      change S x - S (P x) = S (Q x)
+      rw [hQeq, sub_apply, ContinuousLinearMap.id_apply, map_sub]
+    have hsApprox : s <= ‖S - R‖ := S.approximationNumber_le_norm_sub hRrank
+    have hsT : s <= t := by
+      calc
+        s <= ‖S - R‖ := hsApprox
+        _ = ‖S ∘L Q‖ := by rw [herr]
+        _ <= t := htailNorm
+    exact (not_le_of_gt htS) hsT
+
+  let L : Submodule ℂ E := pvmRangeSubspace PVM (Set.Iic c) measurableSet_Iic
+  have hnrank : (((n + 1 : ℕ) : Cardinal) <= Module.rank ℂ L) := by
+    change ((n + 1 : ℕ) : Cardinal) <= P.rank
+    have hnlt : (n : Cardinal) < P.rank := lt_of_not_ge hPrank
+    rw [← Cardinal.natCast_add_one_le_iff, ← Nat.cast_add_one] at hnlt
+    exact hnlt
+  obtain ⟨f, hf⟩ := (Module.le_rank_iff).mp hnrank
+  let v : Fin (n + 1) → E := L.subtype ∘ f
+  have hv : LinearIndependent ℂ v := by
+    change LinearIndependent ℂ (L.subtype ∘ f)
+    exact hf.map' L.subtype (LinearMap.ker_eq_bot.mpr L.injective_subtype)
+  let M : Submodule ℂ E := Submodule.span ℂ (Set.range v)
+  have hMle : M <= L := by
+    apply Submodule.span_le.mpr
+    rintro x ⟨i, rfl⟩
+    exact (f i).2
+  let c1 : Real := (c + ca) / 2
+  have hcC1 : c < c1 := by dsimp only [c1]; linarith
+  have hc1Ca : c1 < ca := by dsimp only [c1]; linarith
+  have hc10 : 0 <= c1 := hc0.trans hcC1.le
+  let r : Real := Real.sqrt (2 * (1 - c1))
+  have hr0 : 0 <= r := Real.sqrt_nonneg _
+  have hrSq : r ^ 2 = 2 * (1 - c1) := by
+    dsimp only [r]
+    rw [Real.sq_sqrt]
+    have hc11 : c1 <= 1 := hc1Ca.le.trans hca1
+    nlinarith
+  have haR : a < r := by
+    apply (sq_lt_sq₀ ha0 hr0).1
+    rw [hrSq]
+    rw [hcaDef] at hc1Ca
+    nlinarith
+  have hrNN : (⟨r, hr0⟩ : NNReal) <= A.approximationNumber n := by
+    apply ContinuousLinearMap.le_approximationNumber_of_linearIndependent A n v hv
+    intro x hxM hxNorm
+    have hxL : x ∈ L := hMle hxM
+    have hCbound : ‖C x‖ <= c1 * ‖x‖ :=
+      CosineDisplacementData.cosine_norm_le_on_low_range D hc0 hcC1 x hxL
+    have hinner : RCLike.re ⟪C x, x⟫_ℂ ≤ c1 * ‖x‖ ^ 2 := by
+      have h1 : RCLike.re ⟪C x, x⟫_ℂ ≤ ‖C x‖ * ‖x‖ :=
+        (RCLike.re_le_norm _).trans (norm_inner_le_norm _ _)
+      have h2 := mul_le_mul_of_nonneg_right hCbound (norm_nonneg x)
+      nlinarith only [h1, h2]
+    have hAsq := D.direct_norm_sq x
+    have hsq : (r * ‖x‖) ^ 2 <= ‖A x‖ ^ 2 := by
+      rw [hAsq, mul_pow, hrSq]
+      nlinarith
+    have hlower : r * ‖x‖ <= ‖A x‖ :=
+      (sq_le_sq₀ (mul_nonneg hr0 (norm_nonneg x)) (norm_nonneg _)).1 hsq
+    change r <= ‖A x‖
+    simpa only [hxNorm, mul_one] using hlower
+  have hrLeA : r <= a := hrNN
+  exact (not_le_of_gt haR) hrLeA
+
+omit [CompleteSpace F] in
 /-- The approximation-number cutoff of the direct displacement is the cosine
 cutoff determined by any sine operator with the same source cosine.  This is
 the basis-free infinite-dimensional replacement for reading the principal
@@ -400,271 +693,9 @@ theorem approximationNumber_direct_cosineCutoff_eq_sine
 
   have hcaCs : ca = cs := by
     rcases lt_trichotomy ca cs with hlt | heq | hgt
-    · let c : Real := (ca + cs) / 2
-      have hc0 : 0 <= c := by dsimp only [c]; linarith
-      have hcaC : ca < c := by dsimp only [c]; linarith
-      have hcCs : c < cs := by dsimp only [c]; linarith
-      have hc1 : c <= 1 := hcCs.le.trans hcs1
-      let PVM : TauCeti.ProjValMeasure E :=
-        boundedSelfAdjointSpectralPVM C D.cosine_selfAdjoint
-      let P : E →L[ℂ] E := PVM.proj (Set.Iic c) measurableSet_Iic
-      let Q : E →L[ℂ] E := PVM.proj (Set.Ioi c) measurableSet_Ioi
-      have hQeq : Q = ContinuousLinearMap.id ℂ E - P := by
-        have h := PVM.proj_compl (Set.Iic c) measurableSet_Iic
-        rw [PVM.proj_congr Set.compl_Iic measurableSet_Iic.compl measurableSet_Ioi] at h
-        exact h
-
-      have hPrank : P.rank <= (n : Cardinal) := by
-        by_contra hnot
-        have hnlt : (n : Cardinal) < P.rank := lt_of_not_ge hnot
-        let L : Submodule ℂ E := pvmRangeSubspace PVM (Set.Iic c) measurableSet_Iic
-        have hnrank : (((n + 1 : ℕ) : Cardinal) <= Module.rank ℂ L) := by
-          change ((n + 1 : ℕ) : Cardinal) <= P.rank
-          rw [← Cardinal.natCast_add_one_le_iff, ← Nat.cast_add_one] at hnlt
-          exact hnlt
-        obtain ⟨f, hf⟩ := (Module.le_rank_iff).mp hnrank
-        let v : Fin (n + 1) → E := L.subtype ∘ f
-        have hv : LinearIndependent ℂ v := by
-          change LinearIndependent ℂ (L.subtype ∘ f)
-          exact hf.map' L.subtype (LinearMap.ker_eq_bot.mpr L.injective_subtype)
-        let M : Submodule ℂ E := Submodule.span ℂ (Set.range v)
-        have hMle : M <= L := by
-          apply Submodule.span_le.mpr
-          rintro x ⟨i, rfl⟩
-          exact (f i).2
-        let c1 : Real := (c + cs) / 2
-        have hcC1 : c < c1 := by dsimp only [c1]; linarith
-        have hc1Cs : c1 < cs := by dsimp only [c1]; linarith
-        have hc10 : 0 <= c1 := hc0.trans hcC1.le
-        have hc11 : c1 <= 1 := hc1Cs.le.trans hcs1
-        let t : Real := Real.sqrt (1 - c1 ^ 2)
-        have ht0 : 0 <= t := Real.sqrt_nonneg _
-        have htSq : t ^ 2 = 1 - c1 ^ 2 := by
-          dsimp only [t]
-          rw [Real.sq_sqrt]
-          nlinarith
-        have hsT : s < t := by
-          apply (sq_lt_sq₀ hs0 ht0).1
-          rw [htSq]
-          have hc1Sq : c1 ^ 2 < cs ^ 2 :=
-            (sq_lt_sq₀ hc10 hcs0).2 hc1Cs
-          nlinarith [hcsSq]
-        have htNN : (⟨t, ht0⟩ : NNReal) <= S.approximationNumber n := by
-          apply ContinuousLinearMap.le_approximationNumber_of_linearIndependent S n v hv
-          intro x hxM hxNorm
-          have hxL : x ∈ L := hMle hxM
-          have hCbound : ‖C x‖ <= c1 * ‖x‖ :=
-            CosineDisplacementData.cosine_norm_le_on_low_range D hc0 hcC1 x hxL
-          have hCsq : ‖C x‖ ^ 2 <= (c1 * ‖x‖) ^ 2 :=
-            (sq_le_sq₀ (norm_nonneg _) (mul_nonneg hc10 (norm_nonneg x))).2 hCbound
-          have hSx := hSsq x
-          have hsq : (t * ‖x‖) ^ 2 <= ‖S x‖ ^ 2 := by
-            rw [hSx, mul_pow, htSq]
-            nlinarith
-          have hlower : t * ‖x‖ <= ‖S x‖ :=
-            (sq_le_sq₀ (mul_nonneg ht0 (norm_nonneg x)) (norm_nonneg _)).1 hsq
-          change t <= ‖S x‖
-          simpa only [hxNorm, mul_one] using hlower
-        have htLeS : t <= s := htNN
-        exact (not_le_of_gt hsT) htLeS
-
-      let r : Real := Real.sqrt (2 * (1 - c))
-      have hr0 : 0 <= r := Real.sqrt_nonneg _
-      have hrSq : r ^ 2 = 2 * (1 - c) := by
-        dsimp only [r]
-        rw [Real.sq_sqrt]
-        nlinarith
-      have hrA : r < a := by
-        apply (sq_lt_sq₀ hr0 ha0).1
-        rw [hrSq]
-        dsimp only [ca] at hcaC
-        nlinarith
-      have hCsa : IsSelfAdjoint C :=
-        ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr D.cosine_selfAdjoint
-      have htailNorm : ‖A ∘L Q‖ <= r := by
-        refine (A ∘L Q).opNorm_le_bound hr0 ?_
-        intro x
-        let y : E := Q x
-        have hlowZero : PVM.proj (Set.Iic c) measurableSet_Iic y = 0 := by
-          have hinter : Set.Iic c ∩ Set.Ioi c = ∅ := by
-            ext z
-            simp only [Set.mem_inter_iff, Set.mem_Iic, Set.mem_Ioi,
-              Set.mem_empty_iff_false, iff_false]
-            exact fun hz => (not_lt_of_ge hz.1) hz.2
-          have hmul := PVM.proj_inter (Set.Iic c) (Set.Ioi c)
-            measurableSet_Iic measurableSet_Ioi
-          rw [PVM.proj_congr hinter (measurableSet_Iic.inter measurableSet_Ioi)
-            MeasurableSet.empty, PVM.proj_empty] at hmul
-          exact congrArg (fun T : E →L[ℂ] E => T x) hmul
-        have henergy := TauCeti.BorelCalculus.le_re_inner_of_boundedPVM_proj_Iic_eq_zero
-          hCsa c hlowZero
-        have hform : c * ‖y‖ ^ 2 <= RCLike.re ⟪C y, y⟫_ℂ := by
-          rw [RCLike.re_eq_complex_re]
-          exact henergy
-        have hsq : ‖A y‖ ^ 2 <= (r * ‖y‖) ^ 2 := by
-          rw [D.direct_norm_sq, mul_pow, hrSq]
-          nlinarith
-        have hAy : ‖A y‖ <= r * ‖y‖ :=
-          le_of_sq_le_sq hsq (mul_nonneg hr0 (norm_nonneg y))
-        calc
-          ‖(A ∘L Q) x‖ = ‖A y‖ := rfl
-          _ <= r * ‖y‖ := hAy
-          _ <= r * ‖x‖ := mul_le_mul_of_nonneg_left
-            (PVM.norm_proj_apply_le (Set.Ioi c) measurableSet_Ioi x) hr0
-      let R : E →L[ℂ] F := A ∘L P
-      have hRrank : R.rank <= (n : Cardinal) :=
-        ContinuousLinearMap.rank_comp_le_natCast_right P A hPrank
-      have herr : A - R = A ∘L Q := by
-        ext x
-        change A x - A (P x) = A (Q x)
-        rw [hQeq, sub_apply, ContinuousLinearMap.id_apply, map_sub]
-      have happroxReal : a <= ‖A - R‖ := A.approximationNumber_le_norm_sub hRrank
-      have haR : a <= r := by
-        calc
-          a <= ‖A - R‖ := happroxReal
-          _ = ‖A ∘L Q‖ := by rw [herr]
-          _ <= r := htailNorm
-      exact ((not_le_of_gt hrA) haR).elim
+    · exact (cosineCutoff_not_lt_sine D hSsq n rfl hcsSq hca0 hcs0 hcs1 hlt).elim
     · exact heq
-    · have hlt : cs < ca := hgt
-      let c : Real := (cs + ca) / 2
-      have hc0 : 0 <= c := by dsimp only [c]; linarith
-      have hcsC : cs < c := by dsimp only [c]; linarith
-      have hcCa : c < ca := by dsimp only [c]; linarith
-      have hc1 : c <= 1 := hcCa.le.trans hca1
-      let PVM : TauCeti.ProjValMeasure E :=
-        boundedSelfAdjointSpectralPVM C D.cosine_selfAdjoint
-      let P : E →L[ℂ] E := PVM.proj (Set.Iic c) measurableSet_Iic
-      let Q : E →L[ℂ] E := PVM.proj (Set.Ioi c) measurableSet_Ioi
-      have hQeq : Q = ContinuousLinearMap.id ℂ E - P := by
-        have h := PVM.proj_compl (Set.Iic c) measurableSet_Iic
-        rw [PVM.proj_congr Set.compl_Iic measurableSet_Iic.compl measurableSet_Ioi] at h
-        exact h
-      have hCsa : IsSelfAdjoint C :=
-        ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr D.cosine_selfAdjoint
-
-      have hPrank : ¬ P.rank <= (n : Cardinal) := by
-        intro hP
-        let t : Real := Real.sqrt (1 - c ^ 2)
-        have ht0 : 0 <= t := Real.sqrt_nonneg _
-        have htSq : t ^ 2 = 1 - c ^ 2 := by
-          dsimp only [t]
-          rw [Real.sq_sqrt]
-          nlinarith
-        have htS : t < s := by
-          apply (sq_lt_sq₀ ht0 hs0).1
-          rw [htSq]
-          have hcsSqLt : cs ^ 2 < c ^ 2 :=
-            (sq_lt_sq₀ hcs0 hc0).2 hcsC
-          nlinarith [hcsSq]
-        have htailNorm : ‖S ∘L Q‖ <= t := by
-          refine (S ∘L Q).opNorm_le_bound ht0 ?_
-          intro x
-          let y : E := Q x
-          have hlowZero : PVM.proj (Set.Iic c) measurableSet_Iic y = 0 := by
-            have hinter : Set.Iic c ∩ Set.Ioi c = ∅ := by
-              ext z
-              simp only [Set.mem_inter_iff, Set.mem_Iic, Set.mem_Ioi,
-                Set.mem_empty_iff_false, iff_false]
-              exact fun hz => (not_lt_of_ge hz.1) hz.2
-            have hmul := PVM.proj_inter (Set.Iic c) (Set.Ioi c)
-              measurableSet_Iic measurableSet_Ioi
-            rw [PVM.proj_congr hinter (measurableSet_Iic.inter measurableSet_Ioi)
-              MeasurableSet.empty, PVM.proj_empty] at hmul
-            exact congrArg (fun T : E →L[ℂ] E => T x) hmul
-          have henergy := TauCeti.BorelCalculus.le_re_inner_of_boundedPVM_proj_Iic_eq_zero
-            hCsa c hlowZero
-          have hform : c * ‖y‖ ^ 2 <= RCLike.re ⟪C y, y⟫_ℂ := by
-            rw [RCLike.re_eq_complex_re]
-            exact henergy
-          have hCy : c * ‖y‖ ≤ ‖C y‖ := by
-            by_cases hy : ‖y‖ = 0
-            · simp [hy]
-            have hypos : 0 < ‖y‖ := lt_of_le_of_ne (norm_nonneg y) (Ne.symm hy)
-            have hinner : RCLike.re ⟪C y, y⟫_ℂ ≤ ‖C y‖ * ‖y‖ :=
-              (RCLike.re_le_norm _).trans (norm_inner_le_norm _ _)
-            nlinarith only [hform, hinner, hypos]
-          have hSx := hSsq y
-          have hsq : ‖S y‖ ^ 2 <= (t * ‖y‖) ^ 2 := by
-            rw [hSx, mul_pow, htSq]
-            have hCySq : (c * ‖y‖) ^ 2 <= ‖C y‖ ^ 2 :=
-              (sq_le_sq₀ (mul_nonneg hc0 (norm_nonneg y)) (norm_nonneg _)).2 hCy
-            nlinarith
-          have hSy : ‖S y‖ <= t * ‖y‖ :=
-            le_of_sq_le_sq hsq (mul_nonneg ht0 (norm_nonneg y))
-          calc
-            ‖(S ∘L Q) x‖ = ‖S y‖ := rfl
-            _ <= t * ‖y‖ := hSy
-            _ <= t * ‖x‖ := mul_le_mul_of_nonneg_left
-              (PVM.norm_proj_apply_le (Set.Ioi c) measurableSet_Ioi x) ht0
-        let R : E →L[ℂ] F := S ∘L P
-        have hRrank : R.rank <= (n : Cardinal) :=
-          ContinuousLinearMap.rank_comp_le_natCast_right P S hP
-        have herr : S - R = S ∘L Q := by
-          ext x
-          change S x - S (P x) = S (Q x)
-          rw [hQeq, sub_apply, ContinuousLinearMap.id_apply, map_sub]
-        have hsApprox : s <= ‖S - R‖ := S.approximationNumber_le_norm_sub hRrank
-        have hsT : s <= t := by
-          calc
-            s <= ‖S - R‖ := hsApprox
-            _ = ‖S ∘L Q‖ := by rw [herr]
-            _ <= t := htailNorm
-        exact (not_le_of_gt htS) hsT
-
-      let L : Submodule ℂ E := pvmRangeSubspace PVM (Set.Iic c) measurableSet_Iic
-      have hnrank : (((n + 1 : ℕ) : Cardinal) <= Module.rank ℂ L) := by
-        change ((n + 1 : ℕ) : Cardinal) <= P.rank
-        have hnlt : (n : Cardinal) < P.rank := lt_of_not_ge hPrank
-        rw [← Cardinal.natCast_add_one_le_iff, ← Nat.cast_add_one] at hnlt
-        exact hnlt
-      obtain ⟨f, hf⟩ := (Module.le_rank_iff).mp hnrank
-      let v : Fin (n + 1) → E := L.subtype ∘ f
-      have hv : LinearIndependent ℂ v := by
-        change LinearIndependent ℂ (L.subtype ∘ f)
-        exact hf.map' L.subtype (LinearMap.ker_eq_bot.mpr L.injective_subtype)
-      let M : Submodule ℂ E := Submodule.span ℂ (Set.range v)
-      have hMle : M <= L := by
-        apply Submodule.span_le.mpr
-        rintro x ⟨i, rfl⟩
-        exact (f i).2
-      let c1 : Real := (c + ca) / 2
-      have hcC1 : c < c1 := by dsimp only [c1]; linarith
-      have hc1Ca : c1 < ca := by dsimp only [c1]; linarith
-      have hc10 : 0 <= c1 := hc0.trans hcC1.le
-      let r : Real := Real.sqrt (2 * (1 - c1))
-      have hr0 : 0 <= r := Real.sqrt_nonneg _
-      have hrSq : r ^ 2 = 2 * (1 - c1) := by
-        dsimp only [r]
-        rw [Real.sq_sqrt]
-        have hc11 : c1 <= 1 := hc1Ca.le.trans hca1
-        nlinarith
-      have haR : a < r := by
-        apply (sq_lt_sq₀ ha0 hr0).1
-        rw [hrSq]
-        dsimp only [ca] at hc1Ca
-        nlinarith
-      have hrNN : (⟨r, hr0⟩ : NNReal) <= A.approximationNumber n := by
-        apply ContinuousLinearMap.le_approximationNumber_of_linearIndependent A n v hv
-        intro x hxM hxNorm
-        have hxL : x ∈ L := hMle hxM
-        have hCbound : ‖C x‖ <= c1 * ‖x‖ :=
-          CosineDisplacementData.cosine_norm_le_on_low_range D hc0 hcC1 x hxL
-        have hinner : RCLike.re ⟪C x, x⟫_ℂ ≤ c1 * ‖x‖ ^ 2 := by
-          have h1 : RCLike.re ⟪C x, x⟫_ℂ ≤ ‖C x‖ * ‖x‖ :=
-            (RCLike.re_le_norm _).trans (norm_inner_le_norm _ _)
-          have h2 := mul_le_mul_of_nonneg_right hCbound (norm_nonneg x)
-          nlinarith only [h1, h2]
-        have hAsq := D.direct_norm_sq x
-        have hsq : (r * ‖x‖) ^ 2 <= ‖A x‖ ^ 2 := by
-          rw [hAsq, mul_pow, hrSq]
-          nlinarith
-        have hlower : r * ‖x‖ <= ‖A x‖ :=
-          (sq_le_sq₀ (mul_nonneg hr0 (norm_nonneg x)) (norm_nonneg _)).1 hsq
-        change r <= ‖A x‖
-        simpa only [hxNorm, mul_one] using hlower
-      have hrLeA : r <= a := hrNN
-      exact ((not_le_of_gt haR) hrLeA).elim
+    · exact (sineCutoff_not_lt_cosine D hSsq n rfl hcsSq hca1 hcs0 hgt).elim
   simpa only [ca, cs, a, s] using hcaCs
 
 end CosineDisplacementData
