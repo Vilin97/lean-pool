@@ -272,7 +272,7 @@ theorem infinityDifferentDegree_le_discriminantOrder_of_primitiveElement
         by
           have hinj : Function.Injective
               (algebraMap B (FractionRing B)) :=
-            FaithfulSMul.algebraMap_injective B (FractionRing B)
+            IsFractionRing.injective B (FractionRing B)
           intro hzero
           apply hd
           apply hinj

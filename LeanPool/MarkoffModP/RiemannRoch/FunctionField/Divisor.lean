@@ -443,7 +443,7 @@ theorem finitePrincipalDegree_eq_intDegree_norm (x : Kˣ) :
         (pn.natDegree : ℤ) - (pd.natDegree : ℤ) := by
     rw [← hnormn, ← hnormd]
     simpa only [FractionalIdeal.weightedDegree_apply, finiteIdealWeight,
-      placeDegree_finite_eq_base_mul_inertiaDeg] using hdeg
+      placeDegree_finite_eq_base_mul_inertiaDeg] using! hdeg
   have hratio := finite_intNorm_div_eq_norm k K x n d hnd
   change algebraMap k[X] k⟮X⟯ pn / algebraMap k[X] k⟮X⟯ pd =
     Algebra.norm k⟮X⟯ (x : K) at hratio
@@ -516,7 +516,7 @@ theorem infinitePrincipalDegree_eq_neg_intDegree_norm (x : Kˣ) :
           (-RatFunc.intDegree (qd : k⟮X⟯)) := by
     have hdeg' := hdeg
     simp only [FractionalIdeal.weightedDegree_apply, infiniteIdealWeight] at hdeg'
-    rw [hupn, hupd] at hdeg'
+    erw [hupn, hupd] at hdeg'
     simpa only [placeDegree_infinite_eq_inertiaDeg] using hdeg'
   have hratio := infinite_intNorm_div_eq_norm k K x n d hnd
   change (qn : k⟮X⟯) / (qd : k⟮X⟯) = Algebra.norm k⟮X⟯ (x : K) at hratio

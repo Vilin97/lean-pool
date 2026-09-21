@@ -850,8 +850,8 @@ theorem finiteExtensionFinitePlace_inertiaDeg_eq_one
   letI : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
   letI hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver p.asIdeal q.asIdeal
-  letI : Localization.AtPrime.IsLiesOverAlgebra p.asIdeal q.asIdeal :=
-    ⟨rfl⟩
+  have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
+      (Localization.AtPrime q.asIdeal) := inferInstance
   letI : IsAlgClosed p.asIdeal.ResidueField :=
     IsAlgClosed.of_ringEquiv K p.asIdeal.ResidueField
       (ratFuncFinitePlaceResidueEquiv K p).symm.toRingEquiv

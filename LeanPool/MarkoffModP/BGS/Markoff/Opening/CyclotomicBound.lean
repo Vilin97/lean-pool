@@ -254,7 +254,7 @@ theorem modulus_le_twenty_pow_totient_of_compatible_residue_traces
           isIntegral_cyclotomicDefect_of_primitiveRoots hz₁ hl₁ hz₂ hl₂ hz₃ hl₃⟩
       Ideal.Quotient.mk P γ = 0 := by
     dsimp only
-    rw [Ideal.Quotient.eq_zero_iff_mem]
+    erw [Ideal.Quotient.eq_zero_iff_mem]
     have hmem := openingCyclotomicIntegerDefect_mem_prime_of_normalizedMarkoff
       p n a₁ a₂ a₃ hcoprime ω hω ha₁ ha₂ ha₃ x hx h₁ h₂ h₃
     rw [show (⟨cyclotomicDefect z₁ z₂ z₃,

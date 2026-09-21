@@ -169,6 +169,8 @@ theorem finrank_over_adjoin_pow_eq_mul
     change FiniteDimensional AK L
     rw [hAK]
     infer_instance
+  have : Module.Free A L := Module.Free.of_divisionRing A L
+  have : Module.Free E0 A := Module.Free.of_divisionRing E0 A
   calc
     Module.finrank E0 L = Module.finrank E0 A * Module.finrank A L := by
       rw [Module.finrank_mul_finrank]

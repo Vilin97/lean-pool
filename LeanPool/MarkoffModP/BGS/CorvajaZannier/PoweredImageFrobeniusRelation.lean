@@ -185,7 +185,7 @@ theorem poweredCoordinateImageRelation_quotient_embeds_source
   letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m) L :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m) yL :=
-    Algebra.IsIntegral.isIntegral _
+    IsIntegral.of_finite _ _
   let g := poweredCoordinateImageRelation hf hpartialSecond m hm n
   have hzeroL : φL g = 0 := by
     simpa [φL, xL, yL, g] using
@@ -242,7 +242,7 @@ theorem bivariateEquiv_map_commutes
 theorem iteratedPolynomialBaseChangeEquiv_tmul_one
     (E : Type*) [Field E] [Algebra K E]
     (g : Polynomial (Polynomial K)) :
-    iteratedPolynomialBaseChangeEquiv E (1 ⊗ₜ[K] g) =
+    iteratedPolynomialBaseChangeEquiv (K := K) E (1 ⊗ₜ[K] g) =
       g.map (Polynomial.mapRingHom (algebraMap K E)) := by
   change (Polynomial.Bivariate.equivMvPolynomial E).symm
       ((MvPolynomial.algebraTensorAlgEquiv K E)

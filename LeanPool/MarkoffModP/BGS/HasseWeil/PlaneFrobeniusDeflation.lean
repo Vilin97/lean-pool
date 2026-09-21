@@ -108,7 +108,7 @@ theorem derivative_finSuccEquiv_eq_finSuccEquiv_pderiv_zero
     MvPolynomial.finSuccEquiv_coeff_coeff,
     coeff_pderiv, nsmul_eq_mul, mul_comm]
   congr 1
-  · apply congrArg (coeff · f)
+  · apply congrArg f.coeff
     apply Finsupp.ext
     intro i
     refine Fin.cases ?_ (fun j => ?_) i <;> simp

@@ -123,7 +123,9 @@ lemma splitTraceAffineToKummerTop_coordinate (i : Fin 2) :
   let hXiIrred :=
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
   letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
-  simp [splitTraceAffineToKummerTop, splitTracePolynomialToKummerTop]
+  change MvPolynomial.aeval
+    ![splitTraceXiRoot sigma e d, splitTraceEtaRootInXiField sigma e d] (MvPolynomial.X i) = _
+  simp
 
 lemma splitTraceBaseV_sq :
     splitTraceBaseV sigma ^ 2 =

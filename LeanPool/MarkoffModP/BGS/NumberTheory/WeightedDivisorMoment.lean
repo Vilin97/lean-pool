@@ -541,6 +541,67 @@ private theorem factorization_succ_pow_twenty_le
                                                     pow_twenty_le_base_oneThousandTwentyFour a)
                                                   hpLower)
 
+-- Separate closed computations keep each kernel check within the default limit.
+private def weightedPrimePenaltyTwentyBlock (k : ℕ) : ℕ :=
+  ∑ p ∈ Finset.range 64, if Nat.Prime (k * 64 + p) then weightedPrimePenaltyTwenty (k * 64 + p) else 0
+private theorem weightedPrimePenaltyTwentyBlock_value_0 : weightedPrimePenaltyTwentyBlock 0 = 320 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_1 : weightedPrimePenaltyTwentyBlock 1 = 97 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_2 : weightedPrimePenaltyTwentyBlock 2 = 71 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_3 : weightedPrimePenaltyTwentyBlock 3 = 55 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_4 : weightedPrimePenaltyTwentyBlock 4 = 48 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_5 : weightedPrimePenaltyTwentyBlock 5 = 36 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_6 : weightedPrimePenaltyTwentyBlock 6 = 30 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_7 : weightedPrimePenaltyTwentyBlock 7 = 33 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_8 : weightedPrimePenaltyTwentyBlock 8 = 16 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_9 : weightedPrimePenaltyTwentyBlock 9 = 20 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_10 : weightedPrimePenaltyTwentyBlock 10 = 22 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_11 : weightedPrimePenaltyTwentyBlock 11 = 11 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_12 : weightedPrimePenaltyTwentyBlock 12 = 10 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_13 : weightedPrimePenaltyTwentyBlock 13 = 9 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_14 : weightedPrimePenaltyTwentyBlock 14 = 8 := by
+  decide +kernel
+
+private theorem weightedPrimePenaltyTwentyBlock_value_15 : weightedPrimePenaltyTwentyBlock 15 = 10 := by
+  decide +kernel
+
+private theorem sum_weightedPrimePenaltyTwenty_blocks (k : ℕ) :
+    (∑ p ∈ Finset.range (k * 64), if Nat.Prime p then weightedPrimePenaltyTwenty p else 0) =
+      ∑ i ∈ Finset.range k, weightedPrimePenaltyTwentyBlock i := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    rw [Nat.succ_mul, Finset.sum_range_add, ih]
+    rw [Finset.sum_range_succ (f := weightedPrimePenaltyTwentyBlock)]
+    rfl
+
 private theorem sum_weightedPrimePenaltyTwenty_le (n : ℕ) :
     ∑ p ∈ n.primeFactors, weightedPrimePenaltyTwenty p ≤ 796 := by
   let smallFactors :=
@@ -570,7 +631,26 @@ private theorem sum_weightedPrimePenaltyTwenty_le (n : ℕ) :
       (fun _ _ _ ↦ Nat.zero_le _)
   have htotal :
       (∑ p ∈ allSmallPrimes, weightedPrimePenaltyTwenty p) ≤ 796 := by
-    decide
+    apply le_of_eq
+    rw [Finset.sum_filter]
+    change (∑ p ∈ Finset.range (16 * 64), if Nat.Prime p then weightedPrimePenaltyTwenty p else 0) = _
+    rw [sum_weightedPrimePenaltyTwenty_blocks]
+    simp only [Finset.sum_range_succ, Finset.sum_range_zero]
+    rw [weightedPrimePenaltyTwentyBlock_value_0, weightedPrimePenaltyTwentyBlock_value_1,
+      weightedPrimePenaltyTwentyBlock_value_2,
+      weightedPrimePenaltyTwentyBlock_value_3,
+      weightedPrimePenaltyTwentyBlock_value_4,
+      weightedPrimePenaltyTwentyBlock_value_5,
+      weightedPrimePenaltyTwentyBlock_value_6,
+      weightedPrimePenaltyTwentyBlock_value_7,
+      weightedPrimePenaltyTwentyBlock_value_8,
+      weightedPrimePenaltyTwentyBlock_value_9,
+      weightedPrimePenaltyTwentyBlock_value_10,
+      weightedPrimePenaltyTwentyBlock_value_11,
+      weightedPrimePenaltyTwentyBlock_value_12,
+      weightedPrimePenaltyTwentyBlock_value_13,
+      weightedPrimePenaltyTwentyBlock_value_14,
+      weightedPrimePenaltyTwentyBlock_value_15]
   rw [← hsumEq]
   exact hle.trans htotal
 
@@ -585,7 +665,7 @@ theorem card_divisors_pow_twenty_le_weighted_constant_mul_sq
         ∏ p ∈ n.primeFactors,
           (2 ^ weightedPrimePenaltyTwenty p *
             p ^ (2 * n.factorization p)) :=
-      Finset.prod_le_prod (fun _ _ ↦ Nat.zero_le _)
+      Finset.prod_le_prod
         (fun p hp ↦ factorization_succ_pow_twenty_le
           (Nat.prime_of_mem_primeFactors hp))
     _ = 2 ^ (∑ p ∈ n.primeFactors, weightedPrimePenaltyTwenty p) * n ^ 2 := by

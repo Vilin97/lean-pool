@@ -124,7 +124,8 @@ theorem finiteExtensionFinitePlace_residueField_finite [Fintype K]
   letI : q.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
   letI hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver p.asIdeal q.asIdeal
-  letI : Localization.AtPrime.IsLiesOverAlgebra p.asIdeal q.asIdeal := ⟨rfl⟩
+  have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
+      (Localization.AtPrime q.asIdeal) := inferInstance
   letI : Algebra.QuasiFiniteAt K[X] q.asIdeal := inferInstance
   letI : Module.Finite p.asIdeal.ResidueField q.asIdeal.ResidueField :=
     inferInstance

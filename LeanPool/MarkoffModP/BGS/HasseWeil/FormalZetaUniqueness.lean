@@ -28,8 +28,8 @@ logarithmic-derivative equation are equal. -/
 theorem powerSeries_eq_of_constantCoeff_eq_of_derivative_eq_mul
     (F G A : PowerSeries ℂ)
     (hconstant : PowerSeries.constantCoeff F = PowerSeries.constantCoeff G)
-    (hF : PowerSeries.derivative ℂ F = F * A)
-    (hG : PowerSeries.derivative ℂ G = G * A) :
+    (hF : PowerSeries.derivative (R := ℂ) F = F * A)
+    (hG : PowerSeries.derivative (R := ℂ) G = G * A) :
     F = G := by
   apply PowerSeries.ext
   intro n

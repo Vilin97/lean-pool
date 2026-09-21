@@ -108,10 +108,7 @@ def neighboringDivisorSumMomentConstant : Nat :=
 moments. It is chosen so that both resulting integer inequalities hold. -/
 theorem neighboringDivisorSumMomentConstant_eq :
     neighboringDivisorSumMomentConstant = 2 ^ 429 * 262145 := by
-  rw [neighboringDivisorSumMomentConstant,
-    show (447 : Nat) = 429 + 18 by norm_num, pow_add]
-  norm_num
-  ring
+  decide +kernel
 
 private def neighboringDivisorSumSplit : Nat :=
   3913424
@@ -119,7 +116,7 @@ private def neighboringDivisorSumSplit : Nat :=
 private theorem neighboringDivisorSum_balanced_constant :
     (neighboringDivisorSumSplit + 1) ^ 10 * 2 ^ 228 ≤
       neighboringDivisorSumMomentConstant := by
-  norm_num [neighboringDivisorSumSplit, neighboringDivisorSumMomentConstant]
+  decide +kernel
 
 private theorem neighboringDivisorSum_dominant_constant
     {p : Nat} (hp : 794039 ≤ p) :

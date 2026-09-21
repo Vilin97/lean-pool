@@ -29,6 +29,7 @@ theorem rotationOrder_zero_le_four
   apply orderOf_le_of_pow_eq_one (by norm_num)
   apply Matrix.SpecialLinearGroup.ext
   intro i j
+  change (rho (0 : ZMod p) ^ 4) i j = (1 : Matrix (Fin 2) (Fin 2) (ZMod p)) i j
   fin_cases i <;> fin_cases j <;>
     norm_num [rhoSL, rho, pow_succ, Matrix.mul_apply, Fin.sum_univ_two]
 

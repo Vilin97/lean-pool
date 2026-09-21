@@ -39,6 +39,10 @@ theorem poweredCoordinateImageRelation_natDegree_mul_imageIndex
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   rw [poweredCoordinateImageRelation_natDegree_eq_finrank
     hf hpartialSecond m hm n]
+  have : Module.Free (FirstPoweredCoordinateSubfield f m) (PoweredImageOverFirst f m n) :=
+    Module.Free.of_divisionRing _ _
+  have : Module.Free (PoweredImageOverFirst f m n) (PlaneCurveFunctionField f) :=
+    Module.Free.of_divisionRing _ _
   exact Module.finrank_mul_finrank
     (FirstPoweredCoordinateSubfield f m)
     (PoweredImageOverFirst f m n)
@@ -67,6 +71,10 @@ theorem poweredCoordinateImageRelation_transpose_natDegree_mul_imageIndex
     finiteDimensional_over_secondPoweredCoordinate hf hpartialFirst n hn
   rw [poweredCoordinateImageRelation_transpose_natDegree_eq_finrank
     hf hpartialFirst hpartialSecond m hm n hn]
+  have : Module.Free (SecondPoweredCoordinateSubfield f n) (PoweredImageOverSecond f m n) :=
+    Module.Free.of_divisionRing _ _
+  have : Module.Free (PoweredImageOverSecond f m n) (PlaneCurveFunctionField f) :=
+    Module.Free.of_divisionRing _ _
   exact Module.finrank_mul_finrank
     (SecondPoweredCoordinateSubfield f n)
     (PoweredImageOverSecond f m n)
