@@ -33,15 +33,22 @@ def symmMul : HermitianMat d 𝕜 :=
     by simp [selfAdjoint, IsSelfAdjoint, add_comm, Matrix.star_eq_conjTranspose]⟩
 
 theorem symmMul_comm : A.symmMul B = B.symmMul A := by
-  rw [symmMul, symmMul, Subtype.mk.injEq, add_comm]
+  apply HermitianMat.ext
+  change (2 : 𝕜)⁻¹ • (A.mat * B.mat + B.mat * A.mat) =
+    (2 : 𝕜)⁻¹ • (B.mat * A.mat + A.mat * B.mat)
+  rw [add_comm]
 
 @[simp]
 theorem symmMul_zero : A.symmMul 0 = 0:= by
-  simp [symmMul]
+  apply HermitianMat.ext
+  change (2 : 𝕜)⁻¹ • (A.mat * 0 + 0 * A.mat) = 0
+  simp
 
 @[simp]
 theorem zero_symmMul : symmMul 0 A = 0 := by
-  simp [symmMul]
+  apply HermitianMat.ext
+  change (2 : 𝕜)⁻¹ • (0 * A.mat + A.mat * 0) = 0
+  simp
 
 theorem symmMul_toMat : (A.symmMul B).mat =
     (2 : 𝕜)⁻¹ • (A.mat * B.mat + B.mat * A.mat) := by

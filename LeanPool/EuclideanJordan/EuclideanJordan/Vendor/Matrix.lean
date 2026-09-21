@@ -859,39 +859,51 @@ variable {d 𝕜 : Type*} [Fintype d] [DecidableEq d] [RCLike 𝕜]
 @[simp]
 theorem cfc_diagonal (g : d → ℝ) (f : ℝ → ℝ) :
     cfc f (Matrix.diagonal (fun x ↦ (g x : 𝕜))) = diagonal (RCLike.ofReal ∘ f ∘ g) := by
-  --Thanks Aristotle
   have h_self_adjoint : _root_.IsSelfAdjoint (diagonal (fun x => (g x : 𝕜))) := by
-      change Matrix.conjTranspose _ = _
-      simp [Matrix.conjTranspose]
-  --TODO cfc_cont_tac
-  rw [cfc, dif_pos ⟨h_self_adjoint, continuousOn_iff_continuous_domRestrict.mpr <| by fun_prop⟩]
-  rw [cfcHom_eq_of_continuous_of_map_id]
-  rotate_left
-  · refine' { .. }
-    use fun f ↦ Matrix.diagonal fun x ↦ f ⟨g x, (by
-      simpa [algebraMap_eq_diagonal, diagonal_apply] using
-        congr_arg (· x x) ·.exists_left_inv.choose_spec
-      )⟩
-    · simp
-    · simp [diagonal, ← Matrix.ext_iff, mul_apply]
-      intro x y i j
-      split_ifs with h
-      · subst h; simp
-      · rfl
-    · simp
-    · simp [diagonal, funext_iff]
-      intro x y i j
-      split_ifs with h
-      · simp
-      · simp
-    · simp [← ext_iff, diagonal]
-      exact fun r i j ↦ rfl
-    · simp [← ext_iff, diagonal]
-      grind [RCLike.conj_ofReal]
-  · dsimp [diagonal]
-    continuity
-  · simp [diagonal]
-  · simp [diagonal]
+    change Matrix.conjTranspose _ = _
+    simp [Matrix.conjTranspose]
+  have hg (x : d) : g x ∈ spectrum ℝ (diagonal (fun y => (g y : 𝕜))) := by
+    intro hc
+    have h := congrArg (fun M : Matrix d d 𝕜 => M x x) hc.exists_left_inv.choose_spec
+    simpa [algebraMap_eq_diagonal, diagonal_apply] using h
+  let φ : C(spectrum ℝ (diagonal (fun x => (g x : 𝕜))), ℝ) →⋆ₐ[ℝ] Matrix d d 𝕜 := {
+    toFun := fun h => diagonal fun x => RCLike.ofReal (h ⟨g x, hg x⟩)
+    map_zero' := by simp
+    map_one' := by simp
+    map_mul' := by
+      intro h k
+      simp only [ContinuousMap.coe_mul, Pi.mul_apply, RCLike.ofReal_mul,
+        diagonal_mul_diagonal]
+    map_add' := by
+      intro h k
+      simp only [ContinuousMap.coe_add, Pi.add_apply, RCLike.ofReal_add, diagonal_add]
+    commutes' := by
+      intro r
+      simp only [Algebra.algebraMap_eq_smul_one, ContinuousMap.smul_apply,
+        ContinuousMap.one_apply, smul_eq_mul, mul_one]
+      exact (diagonal_smul r (1 : d → 𝕜)).trans
+        (congrArg (fun M : Matrix d d 𝕜 => r • M) diagonal_one')
+    map_star' := by
+      intro h
+      simp only [star_trivial, star_eq_conjTranspose, diagonal_conjTranspose, Pi.star_def,
+        RCLike.star_def, RCLike.conj_ofReal] }
+  have hφ : Continuous φ := by
+    apply continuous_matrix
+    intro i j
+    change Continuous (fun h : C(spectrum ℝ (diagonal (fun x => (g x : 𝕜))), ℝ) =>
+      diagonal (fun x => (h ⟨g x, hg x⟩ : 𝕜)) i j)
+    by_cases h : i = j
+    · subst j
+      simp only [diagonal_apply_eq]
+      exact RCLike.continuous_ofReal.comp (continuous_eval_const _)
+    · simp only [diagonal_apply_ne _ h]
+      exact continuous_const
+  rw [cfc, dite_eq_left ⟨h_self_adjoint,
+    continuousOn_iff_continuous_domRestrict.mpr (by fun_prop)⟩]
+  rw [cfcHom_eq_of_continuous_of_map_id h_self_adjoint φ hφ (by
+    ext i j
+    by_cases h : i = j <;> simp [φ, diagonal_apply, h])]
+  rfl
 
 theorem PosSemidef.pos_of_mem_spectrum {A : Matrix d d 𝕜} (hA : A.PosSemidef) (r : ℝ) :
     r ∈ spectrum ℝ A → 0 ≤ r := by

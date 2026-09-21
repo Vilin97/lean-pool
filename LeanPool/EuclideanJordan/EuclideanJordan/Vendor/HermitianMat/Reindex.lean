@@ -86,21 +86,29 @@ variable [Fintype d]
 theorem conj_submatrix (B : Matrix d₂ d₄ 𝕜) (e : d₃ ≃ d₂) (f : d → d₄) :
     A.conj (B.submatrix e f) = (A.conj (B.submatrix id f)).reindex e.symm := by
   ext1
-  simp [conj_apply, ← Matrix.submatrix_mul_equiv (e₂ := .refl d)]
+  change B.submatrix e f * A.mat * (B.submatrix e f).conjTranspose =
+    (B.submatrix id f * A.mat * (B.submatrix id f).conjTranspose).submatrix e e
+  simp [← Matrix.submatrix_mul_equiv (e₂ := .refl d)]
 
 theorem reindex_eq_conj [DecidableEq d] (e : d ≃ d₂) :
     A.reindex e = A.conj (Matrix.reindex e (.refl d) 1) := by
-  ext : 3
-  simp [-mat_apply, reindex, conj_apply, Matrix.submatrix,
-    Matrix.mul_apply, Matrix.one_apply]
+  apply HermitianMat.ext
+  change Matrix.reindex e e A.mat =
+    Matrix.reindex e (Equiv.refl d) 1 * A.mat *
+      (Matrix.reindex e (Equiv.refl d) 1).conjTranspose
+  ext i j
+  change A.mat (e.symm i) (e.symm j) =
+    ∑ k, (∑ l, (if e.symm i = l then 1 else 0) * A.mat l k) *
+      star (if e.symm j = k then (1 : 𝕜) else 0)
+  simp [ite_mul, mul_ite, apply_ite]
 
 variable [Fintype d₂] [DecidableEq d] [DecidableEq d₂]
 
 theorem ker_reindex :
     (A.reindex e).ker = A.ker.comap (LinearEquiv.euclideanOfRelabel 𝕜 e).toLinearMap := by
-  dsimp only [reindex, ker, lin]
-  simp only [mat_mk]
+  change (Matrix.toEuclideanLin (Matrix.reindex e e A.mat)).ker = _
   rw [Matrix.reindex_toEuclideanLin, LinearEquiv.ker_comp, LinearMap.ker_comp]
+  rfl
 
 @[simp]
 theorem ker_reindex_le_iff :

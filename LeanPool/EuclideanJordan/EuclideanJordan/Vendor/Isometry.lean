@@ -390,9 +390,16 @@ theorem LinearMap.IsSymmetric.directSum_isInternal_of_commute' {𝕜 E : Type*} 
       refine Submodule.sum_mem _ fun i hi ↦ ?_
       have hyi := Submodule.coe_mem (y i)
       simp only [Submodule.mem_inf, mem_genEigenspace_one] at hyi
-      refine Submodule.mem_iSup_of_mem ⟨⟨i.2, ?_⟩, ⟨i.1, ?_⟩⟩ (by simp)
-      <;> simp only [HasUnifEigenvalue, ne_eq, Submodule.eq_bot_iff, mem_genEigenspace_one, not_forall]
-      <;> refine ⟨y i, by tauto, by simpa using hi⟩
+      have hiA : HasUnifEigenvalue A i.2 1 := by
+        simp only [HasUnifEigenvalue, ne_eq, Submodule.eq_bot_iff, mem_genEigenspace_one,
+          not_forall]
+        exact ⟨y i, hyi.1, by simpa using hi⟩
+      have hiB : HasUnifEigenvalue B i.1 1 := by
+        simp only [HasUnifEigenvalue, ne_eq, Submodule.eq_bot_iff, mem_genEigenspace_one,
+          not_forall]
+        exact ⟨y i, hyi.2, by simpa using hi⟩
+      apply Submodule.mem_iSup_of_mem (⟨i.2, hiA⟩, ⟨i.1, hiB⟩)
+      exact Submodule.coe_mem (y i)
     intro x
     rw [Submodule.eq_top_iff'] at h_sum
     specialize h_sum x

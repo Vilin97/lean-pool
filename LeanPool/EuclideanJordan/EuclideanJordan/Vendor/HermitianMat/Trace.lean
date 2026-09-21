@@ -151,7 +151,8 @@ theorem trace_eq_one_iff (A : HermitianMat n 𝕜) : A.trace = 1 ↔ A.mat.trace
 @[simp]
 theorem trace_reindex (A : HermitianMat n ℂ) (e : n ≃ m) :
     (A.reindex e).trace = A.trace := by
-  simp [reindex, trace_eq_re_trace]
+  rw [trace_eq_re_trace, trace_eq_re_trace, mat_reindex]
+  simp [Matrix.reindex_apply]
 
 end RCLike
 section partialTrace

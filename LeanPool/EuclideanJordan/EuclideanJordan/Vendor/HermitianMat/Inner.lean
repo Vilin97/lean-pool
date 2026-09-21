@@ -432,7 +432,8 @@ instance : OrderClosedTopology (HermitianMat d 𝕜) where
 instance : CompactIccSpace (HermitianMat d 𝕜) where
   isCompact_Icc := by
     intros A B
-    apply Metric.isCompact_of_isClosed_isBounded isClosed_Icc
+    have hclosed : IsClosed (Set.Icc A B) := isClosed_Icc
+    apply Metric.isCompact_of_isClosed_isBounded hclosed
     rw [Metric.isBounded_iff]
     use 2 * ‖B - A‖
     rintro x ⟨hxA, hxB⟩ y ⟨hyA, hyB⟩

@@ -81,7 +81,12 @@ theorem projector_ker : (projector S).ker = Sᗮ := by
 @[simp]
 theorem trace_projector : (projector S).trace = (Module.finrank 𝕜 S : ℝ) := by
   suffices h_trace : ((S.subtype ∘ₗ S.orthogonalProjectionOnto).toMatrix (EuclideanSpace.basisFun n 𝕜).toBasis (EuclideanSpace.basisFun n 𝕜).toBasis).trace = Module.finrank 𝕜 S by
-    simp [projector, trace_eq_re_trace, h_trace]
+    rw [trace_eq_re_trace]
+    change RCLike.re ((S.subtype ∘ₗ S.orthogonalProjectionOnto).toMatrix
+      (EuclideanSpace.basisFun n 𝕜).toBasis
+      (EuclideanSpace.basisFun n 𝕜).toBasis).trace = _
+    rw [h_trace]
+    simp
   suffices h_trace : ((S.subtype ∘ₗ S.orthogonalProjectionOnto).toMatrix (EuclideanSpace.basisFun n 𝕜).toBasis (EuclideanSpace.basisFun n 𝕜).toBasis).trace = (LinearMap.id.toMatrix (Module.finBasis 𝕜 S) (Module.finBasis 𝕜 S)).trace by
     simp [h_trace]
   rw [LinearMap.toMatrix_comp _ (Module.finBasis 𝕜 ↥S), Matrix.trace_mul_comm, ← LinearMap.toMatrix_comp]
@@ -281,7 +286,7 @@ theorem projLE_le_one : {A ≤ₚ B} ≤ 1 := by
   --The whole `rw` line is a defeq, i.e. `change _root_.cfc _ (B - A).mat ≤ 1` works too.
   --TODO better API.
   open MatrixOrder in
-  rw [← Subtype.coe_le_coe, val_eq_coe, selfAdjoint.val_one]
+  change _root_.cfc (fun x ↦ if 0 ≤ x then 1 else 0) (B - A).mat ≤ 1
   apply cfc_le_one (f := fun x ↦ if 0 ≤ x then 1 else 0)
   intros; split <;> norm_num
 

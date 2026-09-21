@@ -159,8 +159,8 @@ variable  [TopologicalSpace R] [SMul R α] [ContinuousSMul R α] [StarModule R �
 
 instance : ContinuousSMul R (HermitianMat n α) where
   continuous_smul := by
-    rw [continuous_induced_rng]
-    fun_prop
+    apply Continuous.subtype_mk
+    exact continuous_fst.smul (continuous_mat.comp continuous_snd)
 
 --Shorcut instances:
 instance : IsTopologicalAddGroup (HermitianMat n 𝕜) := inferInstance
@@ -208,7 +208,7 @@ def matₗ : HermitianMat n α →L[R] Matrix n n α where
   toFun := mat
   cont := by fun_prop
   map_add' := by simp
-  map_smul' := by simp
+  map_smul' := by intros; rfl
 
 end module
 end addcommgroup
@@ -366,8 +366,15 @@ def conj {m} (B : Matrix m n α) : HermitianMat n α →+ HermitianMat m α wher
     rw [Finset.sum_comm]
     congr! 2
     ring⟩
-  map_add' _ _ := by ext1; simp [Matrix.mul_add, Matrix.add_mul]
-  map_zero' := by simp
+  map_add' X Y := by
+    apply HermitianMat.ext
+    change B * (X.mat + Y.mat) * B.conjTranspose =
+      B * X.mat * B.conjTranspose + B * Y.mat * B.conjTranspose
+    rw [Matrix.mul_add, Matrix.add_mul]
+  map_zero' := by
+    apply HermitianMat.ext
+    change B * 0 * B.conjTranspose = 0
+    rw [Matrix.mul_zero, Matrix.zero_mul]
 
 theorem conj_apply (B : Matrix m n α) (A : HermitianMat n α) :
     conj B A = ⟨B * A.mat * B.conjTranspose, (conj B A).2⟩ := by
@@ -387,11 +394,14 @@ variable (B : HermitianMat n α)
 
 @[simp]
 theorem conj_zero [DecidableEq n] : A.conj (0 : Matrix m n α) = 0 := by
-  simp [conj_apply]
+  apply HermitianMat.ext
+  change 0 * A.mat * (0 : Matrix m n α).conjTranspose = 0
+  rw [Matrix.zero_mul, Matrix.zero_mul]
 
 @[simp]
 theorem conj_one [DecidableEq n] : A.conj 1 = A := by
-  simp [conj_apply]
+  apply HermitianMat.ext
+  simp only [conj_apply_mat, Matrix.one_mul, Matrix.conjTranspose_one, Matrix.mul_one]
 
 @[simp]
 lemma conj_one_unitary [DecidableEq n] (U : Matrix.unitaryGroup n α) :
@@ -405,9 +415,10 @@ variable (R : Type*) [Star R] [TrivialStar R] [CommSemiring R] [Algebra R α] [S
 /-- `HermitianMat.conj` as an `R`-linear map, where `R` is the ring of relevant reals. -/
 def conjLinear {m} (B : Matrix m n α) : HermitianMat n α →ₗ[R] HermitianMat m α where
   toAddHom := conj B
-  map_smul' _ _ := by
-    ext1
-    simp
+  map_smul' r A := by
+    apply HermitianMat.ext
+    change B * (r • A.mat) * B.conjTranspose = r • (B * A.mat * B.conjTranspose)
+    rw [Matrix.mul_smul, Matrix.smul_mul]
 
 @[simp]
 theorem conjLinear_apply (B : Matrix m n α) : conjLinear R B A = conj B A  := by
@@ -415,7 +426,8 @@ theorem conjLinear_apply (B : Matrix m n α) : conjLinear R B A = conj B A  := b
 
 @[fun_prop]
 lemma continuous_conj (ρ : HermitianMat n 𝕜) : Continuous (ρ.conj (m := m) ·) := by
-  simp only [HermitianMat.conj, AddMonoidHom.coe_mk, ZeroHom.coe_mk]
+  apply Continuous.subtype_mk
+  change Continuous (fun B : Matrix m n 𝕜 => B * ρ.mat * B.conjTranspose)
   fun_prop
 
 end conj
@@ -541,9 +553,14 @@ theorem diagonal_mul (c : ℝ) : diagonal 𝕜 (fun x ↦ c * f x) = c • diago
 
 theorem diagonal_conj_diagonal [Fintype n] :
     (diagonal 𝕜 f).conj (diagonal 𝕜 g) = diagonal 𝕜 (fun i ↦ f i * (g i)^2) := by
-  ext1
-  simp [diagonal, conj]
-  intro
+  apply HermitianMat.ext
+  change Matrix.diagonal (fun i => (g i : 𝕜)) * Matrix.diagonal (fun i => (f i : 𝕜)) *
+    (Matrix.diagonal (fun i => (g i : 𝕜))).conjTranspose = _
+  simp only [Matrix.diagonal_conjTranspose, Pi.star_def, RCLike.star_def,
+    RCLike.conj_ofReal, Matrix.diagonal_mul_diagonal]
+  congr 1
+  funext i
+  simp only [diagonal, mat, RCLike.ofReal_mul, RCLike.ofReal_pow]
   ring
 
 /--

@@ -54,20 +54,25 @@ theorem lt_iff_posdef : A < B ↔ (B - A).mat.PosSemidef ∧ A ≠ B :=
 instance : IsStrictOrderedModule ℝ (HermitianMat n 𝕜) where
   smul_lt_smul_of_pos_left a ha b b₂ hb := by
     rw [HermitianMat.lt_iff_posdef] at hb ⊢
-    simp only [← smul_sub, ne_eq, smul_right_inj ha.ne']
-    exact ⟨hb.left.smul ha.le, hb.right⟩
-  smul_lt_smul_of_pos_right a ha b b2 hb := by
-    rw [HermitianMat.lt_iff_posdef] at ha ⊢
-    rw [sub_zero] at ha
-    rw [← sub_pos] at hb
-    convert And.intro (ha.left.smul hb.le) ha.right using 1
-    · simp [← sub_smul]
-    simp only [ne_eq, not_iff_not]
     constructor
+    · change (a • b₂.mat - a • b.mat).PosSemidef
+      simpa only [mat_sub, smul_sub] using hb.1.smul ha.le
     · intro h
-      rw [eq_comm, ← sub_eq_zero, ← sub_smul] at h
-      simpa [eq_comm, hb.ne'] using h
-    · rintro rfl; simp
+      apply hb.2
+      apply HermitianMat.ext
+      have hm := congrArg HermitianMat.mat h
+      exact (smul_right_inj ha.ne').mp hm
+  smul_lt_smul_of_pos_right a ha b b₂ hb := by
+    rw [HermitianMat.lt_iff_posdef] at ha ⊢
+    constructor
+    · change (b₂ • a.mat - b • a.mat).PosSemidef
+      simpa only [sub_zero, mat_sub, mat_zero, sub_smul] using ha.1.smul (sub_nonneg.mpr hb.le)
+    · intro h
+      have hm : (b₂ - b) • a.mat = 0 := by
+        rw [sub_smul]
+        exact sub_eq_zero.mpr (congrArg HermitianMat.mat h).symm
+      have hz : a.mat = 0 := (smul_eq_zero.mp hm).resolve_left (sub_ne_zero.mpr hb.ne')
+      exact ha.2 (HermitianMat.ext hz.symm)
 
 theorem posSemidef_iff_spectrum_Ici [DecidableEq n] (A : HermitianMat n 𝕜) :
     0 ≤ A ↔ spectrum ℝ A.mat ⊆ Set.Ici 0 := by
@@ -106,9 +111,18 @@ meta def evalHermitianMatTrace : PositivityExt where eval {_u _α} _zα _pα? e 
       pure (.nonnegative (← mkAppM ``HermitianMat.trace_nonneg #[pfA]))
 
 --Without these shortcut instances, `gcongr` fails to close certain goals...? Why? TODO
-instance : PosSMulMono ℝ (HermitianMat n 𝕜) := inferInstance
+instance : PosSMulMono ℝ (HermitianMat n 𝕜) where
+  smul_le_smul_of_nonneg_left a ha b c hbc := by
+    rw [le_iff] at hbc ⊢
+    change (a • c.mat - a • b.mat).PosSemidef
+    simpa only [mat_sub, smul_sub] using hbc.smul ha
 
-instance : SMulPosMono ℝ (HermitianMat n 𝕜) := inferInstance
+instance : SMulPosMono ℝ (HermitianMat n 𝕜) where
+  smul_le_smul_of_nonneg_right a ha b c hbc := by
+    rw [zero_le_iff] at ha
+    rw [le_iff]
+    change (c • a.mat - b • a.mat).PosSemidef
+    simpa only [sub_smul] using ha.smul (sub_nonneg.mpr hbc)
 
 --Without explicitly giving this instance, Lean times out trying to find it sometimes.
 instance : PosSMulReflectLE ℝ (HermitianMat n 𝕜) :=
@@ -427,8 +441,7 @@ lemma inv_conj [DecidableEq n] {M : Matrix n n 𝕜} (hM : IsUnit M) :
     simp only [Matrix.isUnit_iff_isUnit_det, isUnit_iff_ne_zero, ne_eq] at hM
     simp [Matrix.conjTranspose_nonsing_inv, hM]
   ext1
-  simp only [conj, AddMonoidHom.coe_mk, ZeroHom.coe_mk, Matrix.conjTranspose_conjTranspose]
-  simp only [mat_inv, mat_mk]
+  simp only [mat_inv, conj_apply_mat, Matrix.conjTranspose_conjTranspose]
   rw [Matrix.mul_inv_rev, Matrix.mul_inv_rev, Matrix.inv_eq_left_inv h_inv, mul_assoc]
 
 theorem le_iff_mulVec_le_mulVec (A B : HermitianMat n 𝕜) :
@@ -446,7 +459,7 @@ theorem inner_mulVec_nonneg (hA : 0 ≤ A) (v : n → 𝕜) :
 
 theorem mem_ker_of_inner_mulVec_zero [DecidableEq n] (hA : 0 ≤ A) (v : EuclideanSpace 𝕜 n)
     (h : star v ⬝ᵥ A.mat *ᵥ v = 0) : v ∈ A.ker := by
-  have := ((zero_le_iff.mp hA).dotProduct_mulVec_zero_iff v).mp h
+  have := ((zero_le_iff.mp hA).dotProduct_mulVec_zero_iff (x := v)).mp h
   exact congr(WithLp.toLp 2 $this)
 
 theorem ker_add [DecidableEq n] (hA : 0 ≤ A) (hB : 0 ≤ B) :
@@ -461,8 +474,8 @@ theorem ker_add [DecidableEq n] (hA : 0 ≤ A) (hB : 0 ≤ B) :
     rw [Matrix.posSemidef_iff_dotProduct_mulVec] at hA' hB'
     obtain ⟨hzA, hzB⟩ := (add_eq_zero_iff_of_nonneg (hA'.2 v) (hB'.2 v)).mp h3
     rw [← Matrix.posSemidef_iff_dotProduct_mulVec] at hA' hB'
-    exact ⟨(hA'.dotProduct_mulVec_zero_iff v).mp hzA,
-           (hB'.dotProduct_mulVec_zero_iff v).mp hzB⟩
+    exact ⟨(hA'.dotProduct_mulVec_zero_iff (x := v)).mp hzA,
+           (hB'.dotProduct_mulVec_zero_iff (x := v)).mp hzB⟩
   · simp +contextual [Matrix.add_mulVec]
 
 theorem ker_sum [DecidableEq n] (f : ι → HermitianMat n 𝕜) (hf : ∀ i, 0 ≤ f i) :
@@ -489,19 +502,21 @@ theorem ker_sum [DecidableEq n] (f : ι → HermitianMat n 𝕜) (hf : ∀ i, 0 
 theorem ker_conj [DecidableEq n] (hA : 0 ≤ A) (B : Matrix n n 𝕜) :
     (A.conj B).ker = Submodule.comap (Matrix.toEuclideanLin B.conjTranspose) A.ker := by
 
-  ext v; simp [HermitianMat.conj];
+  ext v
+  simp only [Submodule.mem_comap]
+  change v ∈ (A.conj B).ker ↔ (Matrix.toEuclideanLin Bᴴ) v ∈ A.ker
   constructor <;> intro h;
-  · have := Matrix.PosSemidef.dotProduct_mulVec_zero_iff ( show Matrix.PosSemidef A.mat from zero_le_iff.mp hA );
-    convert this ( Bᴴ.mulVec v ) |>.1 _ using 1;
+  · have hz := (zero_le_iff.mp hA).dotProduct_mulVec_zero_iff (x := Bᴴ.mulVec v)
+    convert hz.1 _ using 1;
     · rw [ mem_ker_iff_mulVec_zero ];
       congr! 2;
     · convert congr_arg ( fun x : EuclideanSpace _ _ => star v.ofLp ⬝ᵥ x ) h using 1
       simp [Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
-      · simp [Matrix.mul_assoc, Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, Matrix.star_mulVec, Matrix.conjTranspose_conjTranspose, lin]
+      · simp [conj_apply_mat, Matrix.mul_assoc, Matrix.dotProduct_mulVec, Matrix.star_mulVec, Matrix.conjTranspose_conjTranspose, lin]
       · simp [dotProduct]
   · simp only [ker, Matrix.mul_assoc, LinearMap.mem_ker]
     convert congr_arg B.toEuclideanLin h using 1
-    · simp [HermitianMat.lin, Matrix.toEuclideanLin]
+    · simp [HermitianMat.lin, conj_apply_mat, Matrix.toEuclideanLin, Matrix.mulVec_mulVec]
     · exact Eq.symm (LinearMap.map_zero (Matrix.toEuclideanLin B))
 
 theorem ker_le_of_le_smul {α : ℝ} [DecidableEq n] (hα : α ≠ 0) (hA : 0 ≤ A) (hAB : A ≤ α • B) : B.ker ≤ A.ker := by
@@ -684,13 +699,13 @@ example (M : Matrix n m ℂ) : 0 ≤ M * M.conjTranspose := by positivity
 
 example (M : Matrix m n ℂ) :
     (0 : HermitianMat n ℂ) ≤ ⟨M.conjTranspose * M, Matrix.isHermitian_conjTranspose_mul_self M⟩ := by
-  positivity
+  exact zero_le_iff.mpr (Matrix.posSemidef_conjTranspose_mul_self M)
 
 -- Test: ⟨M * Mᴴ, _⟩ nonneg as HermitianMat
 
 example (M : Matrix n m ℝ) :
     (0 : HermitianMat n ℝ) ≤ ⟨M * M.conjTranspose, Matrix.isHermitian_mul_conjTranspose_self M⟩ := by
-  positivity
+  exact zero_le_iff.mpr (Matrix.posSemidef_self_mul_conjTranspose M)
 
 example (M : Matrix n n ℂ) (i : n) (A : HermitianMat n ℂ) (hA : 0 ≤ A) :
     0 ≤ (A + ⟨_, M.isHermitian_mul_conjTranspose_self⟩ + 0).H.eigenvalues i := by

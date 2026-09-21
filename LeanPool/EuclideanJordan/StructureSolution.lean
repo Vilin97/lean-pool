@@ -57,6 +57,8 @@ The one piece of real work is formal reality. The challenge states it as a hypot
 only by reindexing along `Finset.equivFin`, done inline in each of the two positivity proofs.
 -/
 
+namespace EuclideanJordan.StructureSolution
+
 namespace JordanTraceForm
 
 variable {J : Type*} [NonUnitalNonAssocCommRing J] [Module ℝ J] [IsScalarTower ℝ J J]
@@ -505,3 +507,5 @@ theorem finrank_frameBlock_diag [FiniteDimensional ℝ J] (F : JordanFrame J n) 
 end JordanFramePeirce
 
 end
+
+end EuclideanJordan.StructureSolution
