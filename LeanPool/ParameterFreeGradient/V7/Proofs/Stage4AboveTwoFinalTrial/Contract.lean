@@ -8,6 +8,9 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Ledger
 
 namespace V7.Stage4AboveTwoFinalTrial
 
+variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}
+  {report : TrialReport d} {cached : CachedPair d}
+
 noncomputable def shapeWitness (p eps M D : ℝ) (x0 : Point d)
     (oracle : PairOracle d) (m₁ m₂ : ℕ) : AboveTrialWitness p d where
   nF := nF p eps M D

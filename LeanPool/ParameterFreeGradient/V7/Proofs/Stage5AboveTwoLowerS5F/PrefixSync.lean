@@ -41,7 +41,7 @@ lemma obsPrefix_take {P : PrefixParameters p d T} {t u : ℕ} (htu : t ≤ u) :
     simp [hn, hnu]
   · simp [hn]
 
-lemma obsPrefix_getElem? {P : PrefixParameters p d T} {s t : ℕ} (hst : s < t) :
+lemma obsPrefix_getElemOption {P : PrefixParameters p d T} {s t : ℕ} (hst : s < t) :
     (prefixState P t).obsPrefix[s]? =
       some ((partialOracle P s).observe (query P s)) := by
   rw [obsPrefix_eq_map_range]

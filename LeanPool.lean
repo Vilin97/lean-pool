@@ -5928,6 +5928,7 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Certificate
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Closure
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Coefficients
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Contract
+import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.DualRecursion
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.DualTrajectory
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Ledger
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
@@ -5957,6 +5958,7 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Proof
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Semantics
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Shapes
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Trajectory
+import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.TrajectoryDefinitions
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoPrimalRepair.Closure
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoPrimalRepair.PrimalEnergy
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.KernelElementary

@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
 
+import Mathlib.Analysis.MeanInequalitiesPow
+import Mathlib.Analysis.InnerProductSpace.NormPow
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import LeanPool.ParameterFreeGradient.O3.Geometry
 
 namespace O3.Experimental

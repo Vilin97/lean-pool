@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
 
+import Mathlib.Analysis.InnerProductSpace.NormPow
+import Mathlib.Analysis.Calculus.Deriv.Add
 import LeanPool.ParameterFreeGradient.O3.Geometry
 
 /-!

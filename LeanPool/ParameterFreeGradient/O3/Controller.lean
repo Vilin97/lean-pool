@@ -272,7 +272,8 @@ theorem exists_controllerCaps (cfg : ControllerConfig) (L R : ℝ)
     exact hleft.trans (hmiddle.le.trans hright)
 
 /-- Lexicographic search rank inside the finite cap rectangle. -/
-def controllerRank (caps : ControllerCaps cfg L R)
+def controllerRank {cfg : ControllerConfig} {L R : ℝ}
+    (caps : ControllerCaps cfg L R)
     (state : ControllerState d) : ℕ :=
   (caps.scaleCap - state.scaleEpoch) * (caps.radiusCap + 1) +
     (caps.radiusCap - state.radiusLevel)
@@ -344,6 +345,7 @@ theorem controllerNext_wellFounded
 
 /-- A successful finish points to an actually queried terminal observation. -/
 theorem controllerStep_done_queried
+    {oracle : PairOracle d} {gradientSize : Vec d → ℝ} {L R : ℝ}
     {cfg : ControllerConfig} {state : ControllerState d}
     {report : TrialReport d} {finish : ControllerFinish d}
     (hvalid : TrialValid oracle gradientSize cfg.eps L R

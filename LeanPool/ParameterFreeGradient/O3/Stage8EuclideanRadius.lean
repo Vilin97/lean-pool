@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
 
+import Mathlib.Analysis.Normed.Module.FiniteDimension
 import LeanPool.ParameterFreeGradient.O3.Foundation
 import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
 import Mathlib.Topology.MetricSpace.HausdorffDistance

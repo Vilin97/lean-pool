@@ -28,22 +28,20 @@ structure EuclideanEstimateState (d : ℕ) where
   accelerated : Vec d
   cumulativeGradient : Vec d
 
-mutual
-  noncomputable def euclideanEstimateState {d : ℕ}
-      (P : AdmissibleInstance d 2) (M : ℝ) : ℕ → EuclideanEstimateState d
-    | 0 => ⟨P.x0, 0⟩
-    | k + 1 =>
-        let A := euclideanA k
-        let a := euclideanWeight A
-        let state := euclideanEstimateState P M k
-        let z := Stage8EuclideanMinimizer.euclideanPsiMinimizer M P.x0
-          state.cumulativeGradient
-        let y := euclideanBarycenter A a state.accelerated z
-        let observation := P.oracle.observe y
-        let sNext := state.cumulativeGradient + a • observation.gradient
-        let zNext := Stage8EuclideanMinimizer.euclideanPsiMinimizer M P.x0 sNext
-        ⟨euclideanBarycenter A a state.accelerated zNext, sNext⟩
-end
+noncomputable def euclideanEstimateState {d : ℕ}
+    (P : AdmissibleInstance d 2) (M : ℝ) : ℕ → EuclideanEstimateState d
+  | 0 => ⟨P.x0, 0⟩
+  | k + 1 =>
+      let A := euclideanA k
+      let a := euclideanWeight A
+      let state := euclideanEstimateState P M k
+      let z := Stage8EuclideanMinimizer.euclideanPsiMinimizer M P.x0
+        state.cumulativeGradient
+      let y := euclideanBarycenter A a state.accelerated z
+      let observation := P.oracle.observe y
+      let sNext := state.cumulativeGradient + a • observation.gradient
+      let zNext := Stage8EuclideanMinimizer.euclideanPsiMinimizer M P.x0 sNext
+      ⟨euclideanBarycenter A a state.accelerated zNext, sNext⟩
 
 noncomputable def euclideanEstimateMinimizer {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) (k : ℕ) : Vec d :=

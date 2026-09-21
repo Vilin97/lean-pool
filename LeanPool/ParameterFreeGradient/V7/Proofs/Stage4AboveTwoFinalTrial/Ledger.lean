@@ -9,6 +9,9 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Ledger
 
 namespace V7.Stage4AboveTwoFinalTrial
 
+variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}
+  {report : TrialReport d} {cached : CachedPair d}
+
 open V7.Stage3BelowTwoS3F
 
 theorem phaseOneTrace_lastD (p eps M D : ℝ) (x0 : Point d)

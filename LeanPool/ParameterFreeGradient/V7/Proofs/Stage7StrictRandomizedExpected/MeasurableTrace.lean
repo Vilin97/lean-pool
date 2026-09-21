@@ -156,7 +156,7 @@ theorem strictAffineObserve_measurable (eps : ℝ) (x0 : StrictPoint) :
   apply measurable_comap_iff.mpr
   exact measurable_id.prodMk
     (((measurable_pi_apply 0).sub measurable_const).const_mul _ |>.prodMk
-      (measurable_pi_lambda _ fun _ => measurable_const))
+      (Measurable.of_eval fun _ => measurable_const))
 
 theorem hardObserve_measurable (eps : ℝ) (x0 : StrictPoint) (H : ℝ) :
     Measurable (Stage6StrictDeterministic.hardOracle eps x0 H).observe := by
@@ -180,7 +180,7 @@ theorem hardObserve_measurable (eps : ℝ) (x0 : StrictPoint) (H : ℝ) :
         measurable_const)
   apply measurable_comap_iff.mpr
   exact measurable_id.prodMk
-    (hvalue.prodMk (measurable_pi_lambda _ fun _ => hslope))
+    (hvalue.prodMk (Measurable.of_eval fun _ => hslope))
 
 theorem causalQuery_measurable {Ω : Type*} [MeasurableSpace Ω]
     (method : RandomizedStrictLocalMethod Ω) (x0 : StrictPoint) (n : ℕ)

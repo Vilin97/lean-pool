@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
 
+import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Displacement
 
 open MeasureTheory
@@ -52,7 +53,7 @@ theorem hardGradientMagnitude_measurable (eps : ℝ) (x0 : StrictPoint) (H : ℝ
     exact measurable_const.ite hH
       ((measurable_const.mul ((hz.div_const H).sub measurable_const)).ite h3H
         measurable_const)
-  exact hslope.abs
+  simpa only [hardOracle, strictHardDerivative_apply, Real.norm_eq_abs] using hslope.norm
 
 theorem causalTrace_coordinate_measurable
     {Ω : Type*} [MeasurableSpace Ω]

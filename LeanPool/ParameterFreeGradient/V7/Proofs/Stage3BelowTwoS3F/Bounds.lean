@@ -8,6 +8,9 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Contract
 
 namespace V7.Stage3BelowTwoS3F
 
+variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}
+  {report : TrialReport d} {cached : CachedPair d}
+
 theorem calls_first_bound (hp : 1 < p) (heps : 0 < eps)
     (hM : 0 < M) (hD : 0 < D)
     (hshape : FullShape p eps M D x0 oracle report m₁ m₂) :

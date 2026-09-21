@@ -8,6 +8,9 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Certificate
 
 namespace V7.Stage3BelowTwoS3F
 
+variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}
+  {report : TrialReport d} {cached : CachedPair d}
+
 noncomputable def shapeWitness (p eps M D : ℝ) (x0 : Point d)
     (oracle : PairOracle d) (m₁ m₂ : ℕ) : BelowTrialWitness p d where
   n := horizon p eps M D

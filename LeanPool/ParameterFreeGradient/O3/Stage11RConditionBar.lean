@@ -50,8 +50,9 @@ theorem four_mul_rpow_le_conditionBar_rpow (P : AdmissibleInstance d p)
 theorem sqrt_four_condition_le (P : AdmissibleInstance d p) :
     Real.sqrt (4 * P.condition) ≤ 2 * Real.sqrt P.conditionBar := by
   rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 4)]
-  norm_num
-  exact Real.sqrt_le_sqrt (condition_le_conditionBar P)
+  rw [show Real.sqrt 4 = 2 by norm_num [Real.sqrt_eq_iff_mul_self_eq_of_pos]]
+  exact mul_le_mul_of_nonneg_left
+    (Real.sqrt_le_sqrt (condition_le_conditionBar P)) (by norm_num)
 
 theorem log_exp_one_add_conditionBar_ge_one (P : AdmissibleInstance d p) :
     1 ≤ Real.log (Real.exp 1 + P.conditionBar) := by

@@ -8,6 +8,9 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Certifi
 
 namespace V7.Stage4AboveTwoFinalTrial
 
+variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}
+  {report : TrialReport d} {cached : CachedPair d}
+
 noncomputable def trialConstant (p : ℝ) : ℝ :=
   aboveHp p ^ (p / (p + 2)) + aboveJp p ^ (p / (p + 2)) + 2
 

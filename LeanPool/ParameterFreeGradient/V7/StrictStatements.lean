@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
 
+import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 import LeanPool.ParameterFreeGradient.V7.StrictModel
 
 open MeasureTheory

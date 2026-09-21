@@ -83,7 +83,8 @@ noncomputable def runtimeCaps (data : RuntimeData d)
         O3.minimizerDistance_nonneg_of_nonempty (p := data.input.p)
           (x0 := data.input.x0) inst.minimizerNonempty))
 
-def runtimeRank (caps : O3.ControllerCaps (controllerConfig data) L R)
+def runtimeRank {data : RuntimeData d} {L R : ℝ}
+    (caps : O3.ControllerCaps (controllerConfig data) L R)
     (state : RuntimeControllerState d) : ℕ :=
   (caps.scaleCap - state.scaleEpoch) * (caps.radiusCap + 1) +
     (caps.radiusCap - state.radiusLevel)

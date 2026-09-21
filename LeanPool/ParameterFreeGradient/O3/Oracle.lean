@@ -210,11 +210,13 @@ def TrialValid
   | .scale _ => M < L
   | .radius x => eps < gradientSize (oracle.gradient x) ∧ D < R
 
-theorem TrialValid.traceExact {report : TrialReport d}
+theorem TrialValid.traceExact {oracle : PairOracle d} {gradientSize : Vec d → ℝ}
+    {eps L R M D : ℝ} {report : TrialReport d}
     (h : TrialValid oracle gradientSize eps L R M D report) :
     TraceExact oracle report.observations := h.1
 
-theorem TrialValid.outcomeRecorded {report : TrialReport d}
+theorem TrialValid.outcomeRecorded {oracle : PairOracle d} {gradientSize : Vec d → ℝ}
+    {eps L R M D : ℝ} {report : TrialReport d}
     (h : TrialValid oracle gradientSize eps L R M D report) :
     report.OutcomeRecorded := h.2.1
 

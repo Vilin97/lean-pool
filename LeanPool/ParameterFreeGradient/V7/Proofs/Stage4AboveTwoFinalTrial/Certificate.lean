@@ -9,6 +9,9 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
 
 namespace V7.Stage4AboveTwoFinalTrial
 
+variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}
+  {report : TrialReport d} {cached : CachedPair d}
+
 open V7.Stage3BelowTwoS3F
 
 theorem phaseOneNewTrace_exact (p eps M D : ℝ) (x0 : Point d)
