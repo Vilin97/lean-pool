@@ -1,0 +1,130 @@
+/-
+Copyright (c) 2026 Yuma Mizuno. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yuma Mizuno
+-/
+
+import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
+
+/-!
+# The canonical divisor `-2∞` on the rational function field
+
+This module constructs an actual infinity place of the identity extension
+`K(X) / K(X)`, proves that its residue degree is one, and identifies the
+divisor supported there with coefficient `-2` as canonical.  The proof uses
+the in-repository Riemann--Roch theorem and the proved genus-zero theorem for
+`RatFunc K`; it does not assume a base canonical divisor.
+-/
+
+namespace BGS.HasseWeil
+
+open BGS.CorvajaZannier
+open scoped Polynomial
+
+noncomputable section
+
+variable (K : Type*) [Field K] [Fintype K] [DecidableEq K]
+  [DecidableEq (RatFunc K)]
+
+local instance ratFuncIdentityInfinityClosureModuleFinite :
+    Module.Finite (RatFuncInfinityIntegers K)
+      (RatFuncInfinityIntegralClosure K (RatFunc K)) :=
+  IsIntegralClosure.finite (RatFuncInfinityIntegers K) (RatFunc K)
+    (RatFunc K) (RatFuncInfinityIntegralClosure K (RatFunc K))
+
+local instance ratFuncIdentityInfinityClosureIsIntegral :
+    Algebra.IsIntegral (RatFuncInfinityIntegers K)
+      (RatFuncInfinityIntegralClosure K (RatFunc K)) :=
+  IsIntegralClosure.isIntegral_algebra (RatFuncInfinityIntegers K) (RatFunc K)
+
+local instance ratFuncIdentityInfinityClosureIsTorsionFree :
+    Module.IsTorsionFree (RatFuncInfinityIntegers K)
+      (RatFuncInfinityIntegralClosure K (RatFunc K)) :=
+  IsIntegralClosure.isTorsionFree (RatFuncInfinityIntegers K) (RatFunc K)
+
+local instance ratFuncIdentityInfinityClosureNoZeroSMulDivisors :
+    NoZeroSMulDivisors (RatFuncInfinityIntegers K)
+      (RatFuncInfinityIntegralClosure K (RatFunc K)) where
+  eq_zero_or_eq_zero_of_smul_eq_zero h := smul_eq_zero.mp h
+
+local instance ratFuncIdentityInfinityClosureIsDedekind :
+    IsDedekindDomain (RatFuncInfinityIntegralClosure K (RatFunc K)) :=
+  IsIntegralClosure.isDedekindDomain (RatFuncInfinityIntegers K)
+    (RatFunc K) (RatFunc K)
+    (RatFuncInfinityIntegralClosure K (RatFunc K))
+
+local instance ratFuncIdentityInfinityClosureIsFractionRing :
+    IsFractionRing (RatFuncInfinityIntegralClosure K (RatFunc K)) (RatFunc K) :=
+  IsIntegralClosure.isFractionRing_of_finite_extension
+    (RatFuncInfinityIntegers K) (RatFunc K) (RatFunc K)
+    (RatFuncInfinityIntegralClosure K (RatFunc K))
+
+/-- A place above infinity in the identity extension `K(X) / K(X)`. -/
+noncomputable def ratFuncIdentityInfinityPlace :
+    FiniteExtensionInfinityPlace K (RatFunc K) :=
+  Classical.choice inferInstance
+
+omit [Fintype K] in
+/-- The chosen identity-extension infinity place has residue degree one. -/
+theorem ratFuncIdentityInfinityPlace_degree_eq_one :
+    finiteExtensionPlaceDegree K (RatFunc K)
+        (.inr (ratFuncIdentityInfinityPlace K)) = 1 := by
+  let P := ratFuncIdentityInfinityPlace K
+  change P.1.inertiaDeg (RatFuncInfinityIntegers K) = 1
+  have hpos : 0 < P.1.inertiaDeg (RatFuncInfinityIntegers K) :=
+    Ideal.inertiaDeg_pos P.1 (RatFuncInfinityIntegers K)
+  letI : P.1.IsPrime := P.2.1
+  letI : P.1.LiesOver (ratFuncInfinityPlace K).asIdeal := P.2.2
+  letI : (ratFuncInfinityPlace K).asIdeal.IsMaximal :=
+    (ratFuncInfinityPlace K).isPrime.isMaximal (ratFuncInfinityPlace K).ne_bot
+  have hle : (ratFuncInfinityPlace K).asIdeal.inertiaDeg' P.1 ≤
+      Module.finrank (RatFunc K) (RatFunc K) := by
+    exact Ideal.inertiaDeg_le_finrank
+      (RatFuncInfinityIntegralClosure K (RatFunc K))
+      (RatFunc K) (RatFunc K) P.1 (ratFuncInfinityPlace K).ne_bot
+  rw [Ideal.inertiaDeg'_eq_inertiaDeg, Module.finrank_self] at hle
+  omega
+
+/-- The chosen infinity place in the Riemann--Roch two-chart place model. -/
+noncomputable def ratFuncInfinityChartPlace :
+    FunctionField.Chart.PlaceA K (RatFunc K) :=
+  finiteExtensionPlaceEquivChart K (RatFunc K)
+    (.inr (ratFuncIdentityInfinityPlace K))
+
+/-- The explicit divisor `-2∞` on `K(X)`. -/
+noncomputable def ratFuncCanonicalInfinityDivisor :
+    FunctionField.Chart.DivisorA K (RatFunc K) :=
+  Finsupp.single (ratFuncInfinityChartPlace K) (-2)
+
+/-- The explicit divisor `-2∞` has degree `-2`. -/
+theorem ratFuncCanonicalInfinityDivisor_degree :
+    FunctionField.Chart.deg K (RatFunc K)
+        (ratFuncCanonicalInfinityDivisor K) = -2 := by
+  rw [ratFuncCanonicalInfinityDivisor, FunctionField.Chart.deg_single]
+  have hdegree := finiteExtensionPlaceDegree_eq_chart K (RatFunc K)
+    (.inr (ratFuncIdentityInfinityPlace K))
+  rw [ratFuncIdentityInfinityPlace_degree_eq_one K] at hdegree
+  change (1 : ℕ) = FunctionField.Chart.placeDegree K (RatFunc K)
+    (ratFuncInfinityChartPlace K) at hdegree
+  rw [← hdegree]
+  norm_num
+
+/-- The explicit divisor `-2∞` is canonical on `K(X)`. -/
+theorem ratFuncCanonicalInfinityDivisor_isCanonical :
+    FunctionField.Chart.IsCanonical K (RatFunc K)
+      (ratFuncCanonicalInfinityDivisor K) := by
+  rw [FunctionField.chart_isCanonical_iff_degree_ell]
+  constructor
+  · rw [ratFuncCanonicalInfinityDivisor_degree,
+      FunctionField.Chart.genus_ratFunc]
+    norm_num
+  · have hnegative : FunctionField.Chart.deg K (RatFunc K)
+        (ratFuncCanonicalInfinityDivisor K) < 0 := by
+      rw [ratFuncCanonicalInfinityDivisor_degree]
+      norm_num
+    rw [FunctionField.Chart.RRspace_neg_deg_ell K (RatFunc K) hnegative,
+      FunctionField.Chart.genus_ratFunc]
+
+end
+
+end BGS.HasseWeil
