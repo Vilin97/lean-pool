@@ -586,7 +586,7 @@ theorem IsBounded.closure [IsTopologicalRing A] [NonarchimedeanAddGroup A] {S : 
   have hSv : S ⊆ (fun y ↦ y * v) ⁻¹' (G : Set A) :=
     fun s hs ↦ hSV (Set.mul_mem_mul hs hv)
   have hclosed : IsClosed ((fun y ↦ y * v) ⁻¹' (G : Set A)) :=
-    G.isClosed.preimage (continuous_mul_right v)
+    G.isClosed.preimage (continuous_id.mul_const v)
   exact hGU (closure_minimal hSv hclosed hx)
 
 end TopologicalRing
@@ -684,9 +684,8 @@ theorem IsTopologicallyNilpotent.one_sub_det_one_sub_matrix {n : Type*} [Fintype
       rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, hquot, map_one]; abel
   -- Transfer back to `A`: the subring inclusion `mapMatrix` sends `1 - B'` to `1 - B`.
   have hsub : (powerBoundedSubring.toSubring A).subtype.mapMatrix (1 - B') = 1 - B := by
-    ext i j
-    simp [RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.sub_apply, Matrix.one_apply,
-      map_sub, B']
+    rw [map_sub, map_one]
+    congr 1
   have hdet_eq : (1 - B).det
       = (powerBoundedSubring.toSubring A).subtype ((1 - B').det) := by
     rw [RingHom.map_det, hsub]

@@ -82,7 +82,7 @@ and σ-domination `v.vle (σ : A) τ`, multiplying both sides by a constant
 theorem vle_mul_const_of_dominating_at
     (v : Spv A) {σ : Aˣ} {τ : A} (hστ : v.vle (σ : A) τ) (c : A) :
     v.vle ((σ : A) * c) (τ * c) := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact ValuativeRel.mul_vle_mul hστ ((v.vle_total c c).elim id id)
 
 /-- **σ-domination at a power constant**. Power-product version of
@@ -91,7 +91,7 @@ power transfers to a product with any constant `c : A`. -/
 theorem vle_pow_mul_const_of_dominating_at
     (v : Spv A) {σ : Aˣ} {τ : A} (hστ : v.vle (σ : A) τ) (c : A) (N : ℕ) :
     v.vle ((σ : A) ^ N * c) (τ ^ N * c) := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact ValuativeRel.mul_vle_mul (ValuativeRel.pow_vle_pow hστ N)
     ((v.vle_total c c).elim id id)
 
@@ -103,7 +103,7 @@ theorem vle_replace_dominating_at
     (v : Spv A) {σ : Aˣ} {τ a b : A} (hστ : v.vle (σ : A) τ)
     (h_chain : v.vle (τ * a) b) :
     v.vle ((σ : A) * a) b := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact v.vle_trans
     (ValuativeRel.mul_vle_mul hστ ((v.vle_total a a).elim id id)) h_chain
 
@@ -115,7 +115,7 @@ theorem vle_replace_pow_dominating_at
     (v : Spv A) {σ : Aˣ} {τ a b : A} (hστ : v.vle (σ : A) τ) (N : ℕ)
     (h_chain : v.vle (τ ^ N * a) b) :
     v.vle ((σ : A) ^ N * a) b := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact v.vle_trans
     (ValuativeRel.mul_vle_mul (ValuativeRel.pow_vle_pow hστ N)
       ((v.vle_total a a).elim id id)) h_chain
@@ -131,7 +131,7 @@ theorem vle_pow_mul_pow_const_of_dominating_at
     (v : Spv A) {σ : Aˣ} {τ a b : A} (hστ : v.vle (σ : A) τ)
     (hab : v.vle a b) (N M : ℕ) :
     v.vle ((σ : A) ^ N * a ^ M) (τ ^ N * b ^ M) := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact ValuativeRel.mul_vle_mul (ValuativeRel.pow_vle_pow hστ N)
     (ValuativeRel.pow_vle_pow hab M)
 
@@ -183,7 +183,7 @@ theorem one_vle_prod_of_pointwise_lower_bound
     (h_lower : ∀ t ∈ T, w.vle (1 : A) t) :
     w.vle (1 : A) (T.prod id) := by
   classical
-  letI : ValuativeRel A := w.toValuativeRel
+  let : ValuativeRel A := w.toValuativeRel
   induction T using Finset.induction_on with
   | empty =>
       exact (w.vle_total 1 1).elim id id
@@ -221,7 +221,7 @@ theorem vle_per_t_of_prod_vle_of_lower_bound
     (h_lower : ∀ t' ∈ T, w.vle (1 : A) t') :
     ∀ t' ∈ T, w.vle t' D := by
   classical
-  letI : ValuativeRel A := w.toValuativeRel
+  let : ValuativeRel A := w.toValuativeRel
   intro t' ht'
   have h_split : T.prod id = t' * ((T.erase t').prod id) :=
     (Finset.mul_prod_erase T id ht').symm

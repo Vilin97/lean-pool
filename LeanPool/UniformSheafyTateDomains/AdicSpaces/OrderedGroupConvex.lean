@@ -385,7 +385,7 @@ theorem maxAvoid_mem_of_nontrivial {γ : Γ} (hγ : γ ≠ 1)
     rw [(QuotientGroup.eq_one_iff x).mpr hx]; exact one_mem K
   have hγC : γ ∉ C := hγK
   have hle' : C ≤ maxAvoid hγ := le_maxAvoid_of_not_mem hγC
-  apply hK; ext ⟨x⟩; simp only [mem_bot]; constructor
+  apply hK; ext ⟨x⟩; constructor
   · exact fun hx ↦ (QuotientGroup.eq_one_iff x).mpr (hle' _ hx)
   · intro hx; rw [hx]; exact one_mem K
 

@@ -124,15 +124,15 @@ theorem locNhd_span_isOpen
       (locNhd P T s n : Set (Localization.Away s)) :
       Submodule (Localization.Away s) (Localization.Away s)) :
       Set (Localization.Away s)) := by
-  letI : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
-  haveI : IsTopologicalRing (Localization.Away s) :=
+  let : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
+  let : IsTopologicalRing (Localization.Away s) :=
     (locBasis P T s hopen).toRingFilterBasis.isTopologicalRing
   -- The span is in nhds 0 since it contains the open locNhd n.
   have h_locNhd_open : IsOpen ((locNhd P T s n : Set (Localization.Away s))) := by
     have hmem : (locNhd P T s n : Set (Localization.Away s)) ∈
         @nhds _ (locTopology P T s hopen) 0 :=
       (locBasis P T s hopen).hasBasis_nhds_zero.mem_of_mem (i := n) trivial
-    haveI : @IsTopologicalAddGroup _ (locTopology P T s hopen) _ :=
+    let : @IsTopologicalAddGroup _ (locTopology P T s hopen) _ :=
       @IsTopologicalRing.to_topologicalAddGroup _ _
         (locTopology P T s hopen)
         (locBasis P T s hopen).toRingFilterBasis.isTopologicalRing
@@ -1175,7 +1175,7 @@ theorem Jfull_artinRees [IsNoetherianRing A]
     ∃ k₀ : ℕ, ∀ n : ℕ, k₀ ≤ n →
       (Jfull P T s) ^ n ⊓ K =
         (Jfull P T s) ^ (n - k₀) * ((Jfull P T s) ^ k₀ ⊓ K) := by
-  haveI : IsNoetherianRing (Localization.Away s) :=
+  let : IsNoetherianRing (Localization.Away s) :=
     IsLocalization.isNoetherianRing (Submonoid.powers s) _ inferInstance
   obtain ⟨k₀, hk⟩ := Ideal.exists_pow_inf_eq_pow_smul (Jfull P T s) K
   refine ⟨k₀, fun n hn ↦ ?_⟩

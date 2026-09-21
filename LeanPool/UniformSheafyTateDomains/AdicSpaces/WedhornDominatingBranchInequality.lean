@@ -105,7 +105,7 @@ theorem vle_cancel_unit_left
     (v : Spv A) {σ : Aˣ} {a b : A}
     (h : v.vle ((σ : A) * a) b) :
     v.vle a (((σ⁻¹ : Aˣ) : A) * b) := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   have hmul := ValuativeRel.mul_vle_mul_right h ((σ⁻¹ : Aˣ) : A)
   rwa [← mul_assoc, Units.inv_mul, one_mul] at hmul
 
@@ -114,7 +114,7 @@ unit factor on the left can be cancelled in either direction. -/
 theorem vle_cancel_unit_left_iff
     (v : Spv A) (σ : Aˣ) (a b : A) :
     v.vle ((σ : A) * a) b ↔ v.vle a (((σ⁻¹ : Aˣ) : A) * b) := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   refine ⟨vle_cancel_unit_left v, fun h => ?_⟩
   have hmul := ValuativeRel.mul_vle_mul_right h ((σ : A))
   rwa [← mul_assoc, Units.mul_inv, one_mul] at hmul

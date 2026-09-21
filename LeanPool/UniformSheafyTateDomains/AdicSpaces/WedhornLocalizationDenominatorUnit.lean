@@ -97,7 +97,7 @@ any power is non-zero. -/
 theorem not_vle_zero_pow
     {A : Type*} [CommRing A] {v : Spv A} {s : A}
     (hs : ¬ v.vle s 0) (n : ℕ) : ¬ v.vle (s ^ n) 0 := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   induction n with
   | zero =>
       rw [pow_zero]
@@ -113,7 +113,7 @@ theorem not_vle_zero_mul_pow
     {A : Type*} [CommRing A] {v : Spv A} {f s : A}
     (hf : ¬ v.vle f 0) (hs : ¬ v.vle s 0) (n : ℕ) :
     ¬ v.vle (f * s ^ n) 0 := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact ValuativeRel.zero_vlt_mul hf (not_vle_zero_pow hs n)
 
 end ValuationSpectrum

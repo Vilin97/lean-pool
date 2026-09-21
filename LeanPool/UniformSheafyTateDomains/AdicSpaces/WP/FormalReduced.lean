@@ -66,9 +66,9 @@ theorem isReduced_mvPowerSeries (J : Type*) (P : Type*) [CommRing P] [IsReduced 
     IsReduced (MvPowerSeries J P) := by
   classical
   obtain ⟨f, hf⟩ := exists_injective_pi_quotient P
-  haveI hred : ∀ I : {I : Ideal P // I.IsPrime},
+  let hred : ∀ I : {I : Ideal P // I.IsPrime},
       IsReduced (MvPowerSeries J (P ⧸ I.1)) := fun I => by
-    haveI := I.2
+    let := I.2
     infer_instance
   have hmap : Function.Injective
       (MvPowerSeries.map (σ := J) f :

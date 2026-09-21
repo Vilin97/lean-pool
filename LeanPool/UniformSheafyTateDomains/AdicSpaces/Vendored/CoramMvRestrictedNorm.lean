@@ -288,7 +288,7 @@ def isAbsoluteValue [NormedRing R] [IsUltrametricDist R] [LinearOrder σ] [Stron
     (MvPowerSeries.gaussNorm_nonneg norm c _ norm_nonneg))
   abv_mul' f g := by
     by_cases h1 : gaussNorm R c f = 0
-    · simp [h1]
+    · simp? [h1]
       suffices f * g = 0 by
         rw [this]
         show MvPowerSeries.gaussNorm norm c ((0 : MvPowerSeries.Restricted R c)).1 = 0
@@ -300,7 +300,7 @@ def isAbsoluteValue [NormedRing R] [IsUltrametricDist R] [LinearOrder σ] [Stron
         (StrongPos_pos c) (hasGaussNorm c f)).mp h1
       exact ⟨fun h => by rw [h]; rfl, fun h => Subtype.ext h⟩
     by_cases h2 : gaussNorm R c g = 0
-    · simp [h2]
+    · simp? [h2]
       suffices f * g = 0 by
         rw [this]
         show MvPowerSeries.gaussNorm norm c ((0 : MvPowerSeries.Restricted R c)).1 = 0

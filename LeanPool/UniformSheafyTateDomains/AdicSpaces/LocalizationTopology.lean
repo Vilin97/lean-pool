@@ -288,12 +288,12 @@ theorem locSubring_topology_eq_adic (P : PairOfDefinition A) (T : Finset A)
     @IsAdic (locSubring P T s) _
       (TopologicalSpace.induced (locSubring P T s).subtype (locTopology P T s hopen))
       (locIdeal P T s) := by
-  letI : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
-  haveI : IsTopologicalRing (Localization.Away s) :=
+  let : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
+  let : IsTopologicalRing (Localization.Away s) :=
     (locBasis P T s hopen).toRingFilterBasis.isTopologicalRing
-  letI : TopologicalSpace (locSubring P T s) :=
+  let : TopologicalSpace (locSubring P T s) :=
     TopologicalSpace.induced (locSubring P T s).subtype (locTopology P T s hopen)
-  haveI : IsTopologicalRing (locSubring P T s) := Subring.instIsTopologicalRing _
+  let : IsTopologicalRing (locSubring P T s) := Subring.instIsTopologicalRing _
   change TopologicalSpace.induced _ _ = _
   suffices h : @IsAdic (locSubring P T s) _
       (TopologicalSpace.induced (locSubring P T s).subtype (locTopology P T s hopen))
@@ -305,7 +305,7 @@ theorem locSubring_topology_eq_adic (P : PairOfDefinition A) (T : Finset A)
     · have hmem : (locNhd P T s n : Set (Localization.Away s)) ∈
           @nhds _ (locTopology P T s hopen) 0 :=
         (locBasis P T s hopen).hasBasis_nhds_zero.mem_of_mem (i := n) trivial
-      haveI : @IsTopologicalAddGroup _ (locTopology P T s hopen) _ :=
+      let : @IsTopologicalAddGroup _ (locTopology P T s hopen) _ :=
         @IsTopologicalRing.to_topologicalAddGroup _ _
           (locTopology P T s hopen)
           (locBasis P T s hopen).toRingFilterBasis.isTopologicalRing
@@ -454,8 +454,8 @@ theorem locTopology_continuous_lift {B : Type*} [CommRing B] [TopologicalSpace B
               (divByS t s) ^ i from by ring, map_mul, map_pow, mul_comm]
       exact hzV (Set.mul_mem_mul ⟨i, rfl⟩
         (hWV (hm _ (p.coeff i).property b hb)))
-  letI : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
-  haveI : IsTopologicalRing (Localization.Away s) :=
+  let : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
+  let : IsTopologicalRing (Localization.Away s) :=
     (locBasis P T s hopen).toRingFilterBasis.isTopologicalRing
   apply continuous_of_continuousAt_zero f.toAddMonoidHom
   rw [ContinuousAt, map_zero, Filter.tendsto_def]
@@ -536,7 +536,7 @@ theorem locNhd_singleton_one_eq (P : PairOfDefinition A) (n : ℕ) :
   ext x; constructor
   · rintro ⟨d, hd, rfl⟩
     rw [locIdeal, ← Ideal.map_pow] at hd
-    haveI : RingHomSurjective (algebraMapD P {1} (1 : A)) := ⟨algebraMapD_surjective_one P⟩
+    let : RingHomSurjective (algebraMapD P {1} (1 : A)) := ⟨algebraMapD_surjective_one P⟩
     rw [Ideal.map_eq_submodule_map] at hd
     obtain ⟨b, hb, rfl⟩ := Submodule.mem_map.mp hd
     exact ⟨↑b, ⟨b, hb, rfl⟩, rfl⟩
@@ -570,7 +570,7 @@ of the codomain. -/
 theorem locSubring_isNoetherianRing (P : PairOfDefinition A) [IsNoetherianRing P.A₀]
     (T : Finset A) (s : A) :
     IsNoetherianRing (locSubring P T s) := by
-  letI : Algebra P.A₀ (locSubring P T s) := (algebraMapD P T s).toAlgebra
+  let : Algebra P.A₀ (locSubring P T s) := (algebraMapD P T s).toAlgebra
   let g : T → locSubring P T s := fun t ↦
     ⟨divByS t.1 s, divByS_mem_locSubring P T s t.2⟩
   let aeval_g : MvPolynomial T P.A₀ →ₐ[P.A₀] locSubring P T s := MvPolynomial.aeval g
@@ -619,8 +619,8 @@ theorem locSubring_isNoetherianRing (P : PairOfDefinition A) [IsNoetherianRing P
       refine ⟨p₁ * p₂, ?_⟩
       change (aeval_g (p₁ * p₂)).1 = y₁ * y₂
       rw [map_mul]; exact congr_arg₂ (· * ·) hp₁ hp₂
-  haveI : Fintype T := inferInstance
-  haveI : IsNoetherianRing (MvPolynomial T P.A₀) :=
+  let : Fintype T := inferInstance
+  let : IsNoetherianRing (MvPolynomial T P.A₀) :=
     MvPolynomial.isNoetherianRing
   exact isNoetherianRing_of_surjective _ _ aeval_g.toRingHom h_surj
 
@@ -649,7 +649,7 @@ theorem locSubring_isBounded_of_pair [IsTopologicalRing A] (P : PairOfDefinition
     (hopen : ∃ N : ℕ, ∀ b : P.A₀, b ∈ P.I ^ N → divByS (↑b : A) s ∈ locSubring P T s) :
     letI := locTopology P T s hopen
     TopologicalRing.IsBounded (locSubring P T s : Set (Localization.Away s)) := by
-  letI : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
+  let : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
   have hbasis := (locBasis P T s hopen).hasBasis_nhds_zero
   intro U hU
   obtain ⟨k, -, hkU⟩ := hbasis.mem_iff.mp hU
@@ -670,7 +670,7 @@ theorem isBounded_image_algebraMap_of_isBounded [IsTopologicalRing A]
     {S : Set A} (hS : TopologicalRing.IsBounded S) :
     letI := locTopology P T s hopen
     TopologicalRing.IsBounded (algebraMap A (Localization.Away s) '' S) := by
-  letI : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
+  let : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
   have hbasis := (locBasis P T s hopen).hasBasis_nhds_zero
   intro U hU
   obtain ⟨n, -, hnU⟩ := hbasis.mem_iff.mp hU
@@ -715,7 +715,7 @@ theorem isPowerBounded_algebraMap_of_isPowerBounded [IsTopologicalRing A]
     {a : A} (ha : TopologicalRing.IsPowerBounded a) :
     letI := locTopology P T s hopen
     TopologicalRing.IsPowerBounded (algebraMap A (Localization.Away s) a) := by
-  letI : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
+  let : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
   have h : Set.range ((algebraMap A (Localization.Away s) a) ^ · : ℕ → Localization.Away s) =
       algebraMap A (Localization.Away s) '' Set.range (a ^ · : ℕ → A) := by
     ext y

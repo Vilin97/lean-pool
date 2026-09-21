@@ -398,7 +398,7 @@ theorem ker_evalₐ_eq {R : Type*} [CommRing R] (I : Ideal R)
   · intro x hx; rw [RingHom.mem_ker] at hx
     have hxn : x.val n = 0 := by
       unfold AdicCompletion.evalₐ at hx
-      simp only [AlgHom.comp_apply, AlgHom.ofLinearMap_apply] at hx
+      simp only [AlgHom.comp_apply] at hx
       exact (Ideal.quotientEquivAlgOfEq R (ideal_smul_top_eq_self I n)).injective
         (hx.trans (map_zero _).symm)
     have hmkQ : AdicCompletion.map I (I ^ n • ⊤ : Submodule R R).mkQ x = 0 := by
@@ -424,8 +424,7 @@ theorem ker_evalₐ_eq {R : Type*} [CommRing R] (I : Ideal R)
       rwa [← AdicCompletion.map_exact (I := I) Subtype.val_injective
         (LinearMap.exact_subtype_mkQ _) (Submodule.mkQ_surjective _)]
     obtain ⟨t, rfl⟩ := AdicCompletion.ofTensorProduct_surjective_of_finite I _ z
-    refine TensorProduct.induction_on t ?_ ?_ ?_
-    · simp [map_zero]
+    refine TensorProduct.inductionOn t ?_ ?_
     · intro c a
       rw [AdicCompletion.ofTensorProduct_tmul, map_smul, AdicCompletion.map_of]
       have ha_mem : (a : R) ∈ (I ^ n : Ideal R) := by
@@ -480,7 +479,8 @@ theorem map_surjective_of_surjective {R : Type*} [CommRing R] (I : Ideal R)
     rw [hsub]
     refine Submodule.neg_mem _ (Submodule.sum_mem _ fun j hj => ?_)
     exact Submodule.smul_mono_left (Ideal.pow_le_pow_right (Finset.mem_Ico.mp hj).1) (hδmem j)
-  refine ⟨AdicCompletion.mk I M ⟨a, hCauchy⟩, ?_⟩
+  let c : AdicCompletion.AdicCauchySequence I M := ⟨a, hCauchy⟩
+  refine ⟨AdicCompletion.mk I M c, ?_⟩
   rw [AdicCompletion.map_mk]
   congr 1
   ext k
@@ -522,7 +522,8 @@ theorem ker_evalₐ_le_range_map_subtype {R : Type*} [CommRing R] (I : Ideal R) 
     rw [hco, hsmul]
     exact SModEq.sub_mem.mp (c.2 (by omega : m + n ≤ m' + n))
   -- `map subtype (mk d) = mk c` by shift-invariance.
-  refine ⟨AdicCompletion.mk I ↥p ⟨d, hd⟩, ?_⟩
+  let shifted : AdicCompletion.AdicCauchySequence I ↥p := ⟨d, hd⟩
+  refine ⟨AdicCompletion.mk I ↥p shifted, ?_⟩
   rw [AdicCompletion.map_mk]
   refine AdicCompletion.ext fun k => ?_
   rw [AdicCompletion.mk_apply_coe, AdicCompletion.mk_apply_coe]

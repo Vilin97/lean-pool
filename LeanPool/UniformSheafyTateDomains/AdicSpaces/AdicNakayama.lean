@@ -60,7 +60,7 @@ theorem ideal_smul_top_pi {R : Type*} [CommRing R] (I : Ideal R)
       by_cases hj : j = i
       · subst hj
         simp
-      · simp [Pi.single_apply, hj]
+      · simp [ hj]
     rw [h1]
     exact Submodule.smul_mem_smul (hx i trivial) Submodule.mem_top
 
@@ -126,7 +126,7 @@ theorem Module.Finite.of_finite_quotient_smul_top_of_isPrecomplete
           rw [h2 i]
       _ = ∑ a ∈ s, c a • a := Finset.sum_coe_sort s (fun a => c a • a)
       _ = y := hc
-  haveI : IsPrecomplete I (s → R) := isPrecomplete_pi I s
+  let : IsPrecomplete I (s → R) := isPrecomplete_pi I s
   exact Module.Finite.of_surjective F
     (surjective_of_mkQ_comp_surjective hcomp)
 
@@ -521,60 +521,72 @@ noncomputable def AdicCompletion.splitLevel (f : ι → Ideal A)
 theorem AdicCompletion.splitLevel_mk (f : ι → Ideal A)
     (hf : Pairwise fun i j => IsCoprime (f i) (f j)) (r : ℕ) (y : A) :
     AdicCompletion.splitLevel f hf r (Ideal.Quotient.mk _ y) =
-      fun i => Ideal.Quotient.mk _ y := rfl
+      fun _i => Ideal.Quotient.mk _ y := rfl
+
+/-- The forward map of the completion decomposition, defined levelwise. -/
+private noncomputable def AdicCompletion.piSplitForward (f : ι → Ideal A)
+    (hf : Pairwise fun i j => IsCoprime (f i) (f j))
+    (x : AdicCompletion (⨅ i, f i) A) : ∀ i, AdicCompletion (f i) A :=
+  fun i => ⟨fun r => (AdicCompletion.levelEquiv (f i) r).symm
+    ((AdicCompletion.splitLevel f hf r
+      (AdicCompletion.levelEquiv (⨅ i, f i) r (x.1 r))) i), by
+  intro a b hab
+  have h3 := AdicCompletion.levelEquiv_transitionMap (f i) hab
+    ((AdicCompletion.levelEquiv (f i) b).symm
+      ((AdicCompletion.splitLevel f hf b
+        (AdicCompletion.levelEquiv (⨅ i, f i) b (x.1 b))) i))
+  rw [RingEquiv.apply_symm_apply] at h3
+  refine (RingEquiv.eq_symm_apply _).mpr ?_
+  rw [h3]
+  obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective
+    (AdicCompletion.levelEquiv (⨅ i, f i) b (x.1 b))
+  have h4 := AdicCompletion.levelEquiv_transitionMap (⨅ i, f i) hab (x.1 b)
+  rw [x.2 hab, ← hy, Ideal.Quotient.factor_mk] at h4
+  rw [← hy, AdicCompletion.splitLevel_mk, h4,
+    AdicCompletion.splitLevel_mk]
+  rw [Ideal.Quotient.factor_mk]⟩
+
+/-- The inverse map of the completion decomposition, defined by the Chinese remainder maps. -/
+private noncomputable def AdicCompletion.piSplitBackward (f : ι → Ideal A)
+    (hf : Pairwise fun i j => IsCoprime (f i) (f j))
+    (y : ∀ i, AdicCompletion (f i) A) : AdicCompletion (⨅ i, f i) A :=
+  ⟨fun r => (AdicCompletion.levelEquiv (⨅ i, f i) r).symm
+    ((AdicCompletion.splitLevel f hf r).symm
+      (fun i => AdicCompletion.levelEquiv (f i) r ((y i).1 r))), by
+  intro a b hab
+  obtain ⟨z, hz⟩ := Ideal.Quotient.mk_surjective
+    ((AdicCompletion.splitLevel f hf b).symm
+      (fun i => AdicCompletion.levelEquiv (f i) b ((y i).1 b)))
+  have hz2 : (fun i => AdicCompletion.levelEquiv (f i) b ((y i).1 b)) =
+      fun i => Ideal.Quotient.mk _ z := by
+    rw [← AdicCompletion.splitLevel_mk f hf b z, hz,
+      RingEquiv.apply_symm_apply]
+  have h3 := AdicCompletion.levelEquiv_transitionMap (⨅ i, f i) hab
+    ((AdicCompletion.levelEquiv (⨅ i, f i) b).symm
+      ((AdicCompletion.splitLevel f hf b).symm
+        (fun i => AdicCompletion.levelEquiv (f i) b ((y i).1 b))))
+  rw [RingEquiv.apply_symm_apply] at h3
+  refine (RingEquiv.eq_symm_apply _).mpr ?_
+  rw [h3, ← hz, Ideal.Quotient.factor_mk]
+  -- the a-level tuple is the constant-z tuple
+  have h5 : (fun i => AdicCompletion.levelEquiv (f i) a ((y i).1 a)) =
+      fun i => Ideal.Quotient.mk _ z := by
+    funext i
+    have h6 := AdicCompletion.levelEquiv_transitionMap (f i) hab ((y i).1 b)
+    rw [(y i).2 hab] at h6
+    have h7 := congrFun hz2 i
+    rw [h7, Ideal.Quotient.factor_mk] at h6
+    exact h6
+  rw [h5, ← AdicCompletion.splitLevel_mk f hf a z,
+    RingEquiv.symm_apply_apply]⟩
 
 /-- **The adic completion splits along a finite pairwise-comaximal
 family.** -/
 noncomputable def AdicCompletion.piSplit (f : ι → Ideal A)
     (hf : Pairwise fun i j => IsCoprime (f i) (f j)) :
     AdicCompletion (⨅ i, f i) A ≃+* ∀ i, AdicCompletion (f i) A where
-  toFun x := fun i => ⟨fun r => (AdicCompletion.levelEquiv (f i) r).symm
-      ((AdicCompletion.splitLevel f hf r
-        (AdicCompletion.levelEquiv (⨅ i, f i) r (x.1 r))) i), by
-    intro a b hab
-    have h3 := AdicCompletion.levelEquiv_transitionMap (f i) hab
-      ((AdicCompletion.levelEquiv (f i) b).symm
-        ((AdicCompletion.splitLevel f hf b
-          (AdicCompletion.levelEquiv (⨅ i, f i) b (x.1 b))) i))
-    rw [RingEquiv.apply_symm_apply] at h3
-    refine (RingEquiv.eq_symm_apply _).mpr ?_
-    rw [h3]
-    obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective
-      (AdicCompletion.levelEquiv (⨅ i, f i) b (x.1 b))
-    have h4 := AdicCompletion.levelEquiv_transitionMap (⨅ i, f i) hab (x.1 b)
-    rw [x.2 hab, ← hy, Ideal.Quotient.factor_mk] at h4
-    rw [← hy, AdicCompletion.splitLevel_mk, h4,
-      AdicCompletion.splitLevel_mk]
-    rw [Ideal.Quotient.factor_mk]⟩
-  invFun y := ⟨fun r => (AdicCompletion.levelEquiv (⨅ i, f i) r).symm
-      ((AdicCompletion.splitLevel f hf r).symm
-        (fun i => AdicCompletion.levelEquiv (f i) r ((y i).1 r))), by
-    intro a b hab
-    obtain ⟨z, hz⟩ := Ideal.Quotient.mk_surjective
-      ((AdicCompletion.splitLevel f hf b).symm
-        (fun i => AdicCompletion.levelEquiv (f i) b ((y i).1 b)))
-    have hz2 : (fun i => AdicCompletion.levelEquiv (f i) b ((y i).1 b)) =
-        fun i => Ideal.Quotient.mk _ z := by
-      rw [← AdicCompletion.splitLevel_mk f hf b z, hz,
-        RingEquiv.apply_symm_apply]
-    have h3 := AdicCompletion.levelEquiv_transitionMap (⨅ i, f i) hab
-      ((AdicCompletion.levelEquiv (⨅ i, f i) b).symm
-        ((AdicCompletion.splitLevel f hf b).symm
-          (fun i => AdicCompletion.levelEquiv (f i) b ((y i).1 b))))
-    rw [RingEquiv.apply_symm_apply] at h3
-    refine (RingEquiv.eq_symm_apply _).mpr ?_
-    rw [h3, ← hz, Ideal.Quotient.factor_mk]
-    -- the a-level tuple is the constant-z tuple
-    have h5 : (fun i => AdicCompletion.levelEquiv (f i) a ((y i).1 a)) =
-        fun i => Ideal.Quotient.mk _ z := by
-      funext i
-      have h6 := AdicCompletion.levelEquiv_transitionMap (f i) hab ((y i).1 b)
-      rw [(y i).2 hab] at h6
-      have h7 := congrFun hz2 i
-      rw [h7, Ideal.Quotient.factor_mk] at h6
-      exact h6
-    rw [h5, ← AdicCompletion.splitLevel_mk f hf a z,
-      RingEquiv.symm_apply_apply]⟩
+  toFun := AdicCompletion.piSplitForward f hf
+  invFun := AdicCompletion.piSplitBackward f hf
   left_inv x := by
     refine Subtype.ext (funext fun r => ?_)
     show (AdicCompletion.levelEquiv (⨅ i, f i) r).symm

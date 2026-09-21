@@ -341,11 +341,11 @@ lemma MvRestricted.isCompleteSpace' [CompleteSpace R] :
     CompleteSpace (PowerSeries.Restricted (MvPowerSeries.Restricted R (Fin.tail c)) (c 0)) := by
   induction n with
   | zero =>
-    haveI : CompleteSpace (MvPowerSeries.Restricted R (Fin.tail c)) := IsometryEquiv.completeSpace
+    let : CompleteSpace (MvPowerSeries.Restricted R (Fin.tail c)) := IsometryEquiv.completeSpace
       (foo_isom _)
     exact Restricted.isCompleteSpace _
   | succ n ih =>
-    haveI : CompleteSpace (MvPowerSeries.Restricted R (Fin.tail c)) :=
+    let : CompleteSpace (MvPowerSeries.Restricted R (Fin.tail c)) :=
       IsometryEquiv.completeSpace (MvRestricted.finSuccIsometry _ _ _)
     exact Restricted.isCompleteSpace _
 

@@ -158,7 +158,7 @@ lemma supp_ofValuation {Γ₀ : Type*} [LinearOrderedCommGroupWithZero Γ₀]
 lemma ofValuation_valuation (v : Spv A) :
     ofValuation (@ValuativeRel.valuation A _ v.toValuativeRel) = v := by
   apply ValuationSpectrum.ext; funext x y
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact propext (ValuativeRel.valuation A).vle_iff_le.symm
 
 /-! ### Quotient -- Remark 4.4(2) of Wedhorn -/
@@ -192,7 +192,7 @@ lemma quotientLift_comap (w : Spv (A ⧸ 𝔞)) :
   apply ValuationSpectrum.ext; funext x y
   obtain ⟨a₁, rfl⟩ := Ideal.Quotient.mk_surjective x
   obtain ⟨a₂, rfl⟩ := Ideal.Quotient.mk_surjective y
-  letI : ValuativeRel A := ValuativeRel.comap (Ideal.Quotient.mk 𝔞) w.toValuativeRel
+  let : ValuativeRel A := ValuativeRel.comap (Ideal.Quotient.mk 𝔞) w.toValuativeRel
   exact propext (ValuativeRel.valuation A).vle_iff_le.symm
 
 /-- The range of `comap (mk 𝔞)` is `{ v ∈ Spv A | 𝔞 ≤ supp v }`. -/

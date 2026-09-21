@@ -295,7 +295,7 @@ noncomputable def koszulComponent (μ : Fin m →₀ ℕ) {n : ℕ}
     (x : KoszulTerm (MvPolynomial (Fin m) A) m n) :
     KoszulTerm (MvPolynomial (Fin m) A) m n := fun J =>
   if indexDegree J.1 ≤ μ then
-    monomial (μ - indexDegree J.1) (coeff (μ - indexDegree J.1) (x J))
+    monomial (μ - indexDegree J.1) ((x J).coeff (μ - indexDegree J.1))
   else 0
 
 /-- The finitely many total multidegrees appearing in a Koszul chain. -/
@@ -340,7 +340,7 @@ theorem sum_koszulComponent {n : ℕ} (x : KoszulTerm (MvPolynomial (Fin m) A) m
       add_tsub_cancel_left]
   · simp only [koszulComponent]
     split_ifs with h
-    · have hc : coeff (μ - indexDegree J.1) (x J) = 0 := by
+    · have hc : (x J).coeff (μ - indexDegree J.1) = 0 := by
         by_contra hc
         refine hμnot ?_
         have hμeq : indexDegree J.1 + (μ - indexDegree J.1) = μ := add_tsub_cancel_of_le h
@@ -404,7 +404,7 @@ theorem koszulComponent_differential (μ : Fin m →₀ ℕ) (q : ℕ)
   · rw [if_pos hJ, coeff_sum, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     by_cases hiJ : i ∈ J.1
-    · rw [dif_pos hiJ, dif_pos hiJ, coeff_zero, monomial_zero]
+    · simp only [dif_pos hiJ, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, monomial_zero]
     · rw [dif_neg hiJ, dif_neg hiJ]
       have hsgn : ((-1 : MvPolynomial (Fin m) A) ^ (J.1.filter (· < i)).card) =
           C ((-1 : A) ^ (J.1.filter (· < i)).card) := by
@@ -458,8 +458,8 @@ theorem koszulDifferential_coordinate_exact (A : Type*) [CommRing A] (m q : ℕ)
         refine ⟨fun J => if h : j ∈ J.1 ∧ indexDegree (J.1.erase j) ≤ μ then
             (-1 : MvPolynomial (Fin m) A) ^ ((J.1.filter (· < j)).card) *
               monomial (μ - indexDegree (J.1.erase j) - Finsupp.single j 1)
-                (coeff (μ - indexDegree (J.1.erase j))
-                  (y ⟨J.1.erase j, by simp [Finset.card_erase_of_mem h.1, J.2]⟩))
+                ((y ⟨J.1.erase j, by simp [Finset.card_erase_of_mem h.1, J.2]⟩).coeff
+                  (μ - indexDegree (J.1.erase j)))
           else 0, ?_⟩
         funext J
         refine (isRegular_X (n := j)).left ?_
@@ -661,8 +661,8 @@ theorem isLocalizedModule_map_koszulDifferential (S : Submonoid R) [IsLocalizati
     IsLocalizedModule.map S (koszulTermAlgebraMap R B m (n + 1))
         (koszulTermAlgebraMap R B m n) (koszulDifferential r n) =
       (koszulDifferential (fun i => algebraMap R B (r i)) n).restrictScalars R := by
-  haveI := isLocalizedModule_koszulTermAlgebraMap R B S m (n + 1)
-  haveI := isLocalizedModule_koszulTermAlgebraMap R B S m n
+  let := isLocalizedModule_koszulTermAlgebraMap R B S m (n + 1)
+  let := isLocalizedModule_koszulTermAlgebraMap R B S m n
   refine IsLocalizedModule.linearMap_ext S (koszulTermAlgebraMap R B m (n + 1))
     (koszulTermAlgebraMap R B m n) ?_
   rw [IsLocalizedModule.map_comp]
@@ -725,7 +725,7 @@ theorem koszulGraph_polynomial_exact (g : A) (f : Fin m → A)
     · exact Set.mem_union_right _ ⟨k, rfl⟩
   set s : Set (MvPolynomial (Fin m) A) :=
     {C g} ∪ Set.range fun i => (C g * X i - C (f i) : MvPolynomial (Fin m) A) with hs
-  haveI hloc : ∀ (n : ℕ) (t : s), IsLocalizedModule.Away t.1
+  let hloc : ∀ (n : ℕ) (t : s), IsLocalizedModule.Away t.1
       (koszulTermAlgebraMap (MvPolynomial (Fin m) A) (Localization.Away t.1) m n) :=
     fun n t => isLocalizedModule_koszulTermAlgebraMap _ _ (Submonoid.powers t.1) m n
   refine exact_of_isLocalized_span s spn _
@@ -739,7 +739,7 @@ theorem koszulGraph_polynomial_exact (g : A) (f : Fin m → A)
   · -- inverting `C g`: transport from `MvPolynomial (Fin m) (Localization.Away g)`
     rw [Set.mem_singleton_iff] at ht
     subst ht
-    haveI hlocg : IsLocalization
+    let hlocg : IsLocalization
         (Submonoid.powers ((C g : MvPolynomial (Fin m) A)))
         (MvPolynomial (Fin m) (Localization.Away g)) := by
       rw [← Submonoid.map_powers (C : A →+* MvPolynomial (Fin m) A) g]

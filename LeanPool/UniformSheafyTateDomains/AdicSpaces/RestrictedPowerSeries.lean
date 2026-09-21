@@ -259,7 +259,7 @@ zero variables is restricted; `constantCoeff` is then a ring surjection
 theorem IsStronglyNoetherian.isNoetherianRing (A : Type*) [CommRing A]
     [TopologicalSpace A] [NonarchimedeanRing A] [IsStronglyNoetherian A] :
     IsNoetherianRing A := by
-  haveI h0 : IsNoetherianRing (restrictedMvPowerSeriesSubring 0 A) :=
+  let h0 : IsNoetherianRing (restrictedMvPowerSeriesSubring 0 A) :=
     IsStronglyNoetherian.isNoetherianRing_restricted 0
   refine isNoetherianRing_of_surjective (restrictedMvPowerSeriesSubring 0 A) A
     ((MvPowerSeries.constantCoeff (σ := Fin 0) (R := A)).comp

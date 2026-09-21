@@ -322,7 +322,7 @@ theorem koszulDifferential_zero (q : ℕ) :
 subsingleton, so the differential is the zero map. -/
 theorem koszulDifferential_eq_zero_of_le (r : Fin m → R) {q : ℕ} (h : m ≤ q) :
     koszulDifferential r q = 0 := by
-  haveI := KoszulIndex.isEmpty_of_lt (Nat.lt_succ_of_le h)
+  let := KoszulIndex.isEmpty_of_lt (Nat.lt_succ_of_le h)
   refine LinearMap.ext fun x => ?_
   rw [Subsingleton.elim x 0, map_zero, map_zero]
 

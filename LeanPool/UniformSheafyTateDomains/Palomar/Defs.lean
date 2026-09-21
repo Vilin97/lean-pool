@@ -615,9 +615,9 @@ theorem limitRestrict_continuous {V W : Opens ↥(SpaTop A)} (h : W ≤ V) :
 family `R`, as a presheaf of topological commutative rings in Mathlib's sense. -/
 noncomputable def structurePresheaf : TopCat.Presheaf TopCommRingCat.{u} (SpaTop A) where
   obj V := TopCommRingCat.of ↥(limitSections R V.unop)
-  map {V W} i := ⟨limitRestrict R (leOfHom i.unop), limitRestrict_continuous R _⟩
-  map_id V := Subtype.ext (RingHom.ext fun x => Subtype.ext (funext fun i => rfl))
-  map_comp i j := Subtype.ext (RingHom.ext fun x => Subtype.ext (funext fun i => rfl))
+  map {_V _W} i := ⟨limitRestrict R (leOfHom i.unop), limitRestrict_continuous R _⟩
+  map_id _V := Subtype.ext (RingHom.ext fun _x => Subtype.ext (funext fun _i => rfl))
+  map_comp _i _j := Subtype.ext (RingHom.ext fun _x => Subtype.ext (funext fun _i => rfl))
 
 /-- **Sheafiness** (Wedhorn Definition 8.26): the structure presheaf of `(A, A⁺)` is a sheaf of
 topological rings — `TopCat.Presheaf.IsSheaf`, Mathlib's sheaf condition, for the presheaf

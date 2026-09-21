@@ -140,7 +140,7 @@ theorem Ideal.isClosed_of_le_jacobson_pointwise
   have hJ_jac : J ≤ Ideal.jacobson (⊥ : Ideal (R ⧸ q)) := by
     rw [Ideal.jacobson, le_sInf_iff]
     rintro m ⟨-, hm_max⟩
-    haveI : m.IsMaximal := hm_max
+    let : m.IsMaximal := hm_max
     have hm'_max : (Ideal.comap π m).IsMaximal :=
       Ideal.comap_isMaximal_of_surjective π Ideal.Quotient.mk_surjective
     have hq_le_m' : q ≤ Ideal.comap π m := fun y hy ↦ by
@@ -151,7 +151,7 @@ theorem Ideal.isClosed_of_le_jacobson_pointwise
       rw [Ideal.jacobson] at h_jac
       exact h_jac.trans (sInf_le ⟨hq_le_m', hm'_max⟩)
     rwa [hJ_def, Ideal.map_le_iff_le_comap]
-  haveI : IsNoetherianRing (R ⧸ q) := Ideal.Quotient.isNoetherianRing q
+  let : IsNoetherianRing (R ⧸ q) := Ideal.Quotient.isNoetherianRing q
   have hKrull : (⨅ n : ℕ, J ^ n • (⊤ : Submodule (R ⧸ q) (R ⧸ q))) = ⊥ :=
     Ideal.iInf_pow_smul_eq_bot_of_le_jacobson J hJ_jac
   suffices h : π x = 0 from (Ideal.Quotient.eq_zero_iff_mem (I := q)).mp h

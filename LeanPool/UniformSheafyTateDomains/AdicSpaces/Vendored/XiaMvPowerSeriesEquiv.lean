@@ -135,7 +135,8 @@ is patterned after `Mathlib/Algebra/MvPolynomial/Equiv.lean`.
 
 end MvPowerSeries
 
-noncomputable section
+noncomputable
+section
 
 namespace MvPowerSeries
 
@@ -342,7 +343,7 @@ theorem sumAlgEquiv_comp_rename_inr : (sumAlgEquiv σ τ R).toAlgHom.comp
       (MvPowerSeries σ (MvPowerSeries τ R)) := by
   classical
   ext p x y
-  simp only [AlgEquiv.toAlgHom_eq_coe, AlgHom.coe_comp, AlgHom.coe_coe, comp_apply,
+  simp only [ AlgHom.coe_comp,  comp_apply,
     IsScalarTower.coe_toAlgHom', algebraMap_apply,
     Algebra.algebraMap_self, RingHom.id_apply, coeff_C]
   show (coeff y) ((coeff x) (sumToIter σ τ R ((rename ⇑Embedding.inr) p))) =
@@ -360,7 +361,7 @@ theorem sumAlgEquiv_comp_rename_inl : (sumAlgEquiv σ τ R).toAlgHom.comp
     (rename Embedding.inl) = mapAlgHom (Algebra.ofId ..) := by
   classical
   ext p x y
-  simp only [AlgEquiv.toAlgHom_eq_coe, AlgHom.coe_comp, AlgHom.coe_coe, comp_apply,
+  simp only [ AlgHom.coe_comp,  comp_apply,
     show (coeff x) ((mapAlgHom (Algebra.ofId R (MvPowerSeries τ R))) p) = C (coeff x p) from rfl]
   show (coeff y) ((coeff x) (sumToIter σ τ R ((rename ⇑Embedding.inl) p))) =
     (coeff y) (C ((coeff x) p))
@@ -520,7 +521,7 @@ def optionFunRight (p : MvPowerSeries (Option σ) R) : MvPowerSeries σ (PowerSe
 
 private theorem coeff_coeff_optionFunRight (p : MvPowerSeries (Option σ) R) (x : σ →₀ ℕ) (n : ℕ) :
     ((optionFunRight σ R p).coeff x).coeff n = p.coeff (x.optionElim n) := by
-  simp [PowerSeries.coeff, coeff, LinearMap.proj, optionFunRight, PowerSeries.mk]
+  simp only [coeff_apply, optionFunRight, PowerSeries.coeff_mk]
 
 private theorem optionFunRight_monomial (x : Option σ →₀ ℕ) (r : R) :
     optionFunRight σ R (monomial x r) = monomial x.some (PowerSeries.monomial (x none) r) := by

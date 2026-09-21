@@ -79,7 +79,7 @@ v.vle a b`. -/
 theorem vle_iff_mul_unit_right
     (v : Spv A) (σ : Aˣ) (a b : A) :
     v.vle (a * (σ : A)) (b * (σ : A)) ↔ v.vle a b := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact ValuativeRel.mul_vle_mul_iff_left (not_vle_zero_of_isUnit σ.isUnit v)
 
 /-- **Left-cancellation iff for a unit factor**. For any unit
@@ -89,7 +89,7 @@ v.vle a b`. -/
 theorem vle_iff_mul_unit_left
     (v : Spv A) (σ : Aˣ) (a b : A) :
     v.vle ((σ : A) * a) ((σ : A) * b) ↔ v.vle a b := by
-  letI : ValuativeRel A := v.toValuativeRel
+  let : ValuativeRel A := v.toValuativeRel
   exact ValuativeRel.mul_vle_mul_iff_right (not_vle_zero_of_isUnit σ.isUnit v)
 
 /-- **Single-`t'` σ-decay chain transfer** (algebraic core of the
@@ -111,7 +111,7 @@ theorem vle_t_D_s_of_sigma_decay_chain_at
     (h_w_f : w.vle ((σ : A) * t' * D_s ^ N) C_base_s)
     (h_C_decay : w.vle C_base_s ((σ : A) * D_s ^ (N + 1))) :
     w.vle t' D_s := by
-  letI : ValuativeRel A := w.toValuativeRel
+  let : ValuativeRel A := w.toValuativeRel
   have h_combined := w.vle_trans h_w_f h_C_decay
   rwa [mul_assoc, ValuativeRel.mul_vle_mul_iff_right (not_vle_zero_of_isUnit σ.isUnit w),
     pow_succ, mul_comm (D_s ^ N) D_s,

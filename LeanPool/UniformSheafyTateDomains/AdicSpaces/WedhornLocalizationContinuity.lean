@@ -82,8 +82,8 @@ theorem locTopology_algebraMap_continuous
     @Continuous A (Localization.Away s) _
       (locTopology P T s hopen)
       (algebraMap A (Localization.Away s)) := by
-  letI : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
-  haveI : IsTopologicalRing (Localization.Away s) :=
+  let : TopologicalSpace (Localization.Away s) := locTopology P T s hopen
+  let : IsTopologicalRing (Localization.Away s) :=
     (locBasis P T s hopen).toRingFilterBasis.isTopologicalRing
   refine continuous_of_tendsto_nhds_zero
     (f := (algebraMap A (Localization.Away s) :

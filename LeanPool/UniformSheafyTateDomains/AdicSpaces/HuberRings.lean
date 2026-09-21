@@ -265,7 +265,7 @@ theorem isOpen_powerBoundedSubring (P : PairOfDefinition A) :
     IsOpen (TopologicalRing.powerBoundedSubring A) := by
   -- `A°` is realised as an `AddSubgroup` via `powerBoundedSubring.toSubring`, which is a
   -- subring precisely because `A` is non-archimedean — a structure supplied directly by `P`.
-  haveI : NonarchimedeanAddGroup A := P.nonarchimedeanAddGroup
+  let : NonarchimedeanAddGroup A := P.nonarchimedeanAddGroup
   have h_le : P.A₀.toAddSubgroup ≤
       (TopologicalRing.powerBoundedSubring.toSubring A).toAddSubgroup :=
     fun _ ha ↦ P.mem_powerBoundedSubring ha
@@ -291,9 +291,9 @@ to state it as a separate hypothesis. -/
 instance IsHuberRing.firstCountableTopology {A : Type*} [CommRing A]
     [TopologicalSpace A] [IsHuberRing A] : FirstCountableTopology A := by
   obtain ⟨P⟩ := ‹IsHuberRing A›.exists_pairOfDefinition
-  haveI : IsTopologicalRing A := IsHuberRing.toIsTopologicalRing
-  haveI : IsTopologicalAddGroup A := IsTopologicalRing.to_topologicalAddGroup
-  haveI h0 : (nhds (0 : A)).IsCountablyGenerated :=
+  let : IsTopologicalRing A := IsHuberRing.toIsTopologicalRing
+  let : IsTopologicalAddGroup A := IsTopologicalRing.to_topologicalAddGroup
+  let h0 : (nhds (0 : A)).IsCountablyGenerated :=
     P.hasBasis_nhds_zero.isCountablyGenerated
   refine ⟨fun a => ?_⟩
   rw [← map_add_left_nhds_zero a]
@@ -989,9 +989,9 @@ theorem IsTateRing.isAdicHom_of_continuous_with_pairs [IsTateRing A] [IsHuberRin
   have h_agree : a ^ (L * M) = (vL ^ M) ^ (K * N) :=
     Subtype.ext (by
       simp only [a, PairOfDefinition.restrictRingHom, uK, vL,
-        SubmonoidClass.coe_pow, RingHom.codRestrict_apply,
-        RingHom.coe_comp, Function.comp_apply,
-        Subring.coe_subtype, map_pow, ← pow_mul]
+        SubmonoidClass.coe_pow, 
+         
+         map_pow, ← pow_mul]
       show (φ (↑u ^ K)) ^ (N * (L * M)) = (φ ↑u) ^ (L * (M * (K * N)))
       rw [map_pow, ← pow_mul]
       congr 1

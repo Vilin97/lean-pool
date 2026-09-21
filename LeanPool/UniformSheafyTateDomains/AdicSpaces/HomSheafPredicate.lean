@@ -47,7 +47,8 @@ universe-polymorphic Hom-types; the campaign records this as a deliberate policy
 not an accident (P6).
 -/
 
-noncomputable section
+noncomputable
+section
 
 open CategoryTheory TopologicalSpace Opposite
 
@@ -142,7 +143,7 @@ theorem IsSheafOfTopologicalRings.ringPresheaf_isSheaf
   rw [← CategoryTheory.isSheaf_iff_isSheaf_of_type]
   refine (TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing_types _).mpr ?_
   intro ι U sf hsf
-  letI : TopologicalSpace E.carrier := ⊥
+  let : TopologicalSpace E.carrier := ⊥
   have : DiscreteTopology E.carrier := ⟨rfl⟩
   have : IsTopologicalRing E.carrier :=
     { continuous_add := continuous_of_discreteTopology

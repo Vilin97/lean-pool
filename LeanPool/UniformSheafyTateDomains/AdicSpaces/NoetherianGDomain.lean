@@ -99,7 +99,7 @@ theorem Ideal.mem_minimalPrimes_span_of_isPrime_of_ne_bot_of_isField_away
   have hkey : ∀ (𝔯 : Ideal B), 𝔯.IsPrime → 𝔯 ≠ ⊥ → 𝔯.height ≤ 1 →
       𝔯 ∈ (Ideal.span {π}).minimalPrimes := by
     intro 𝔯 hr hr0 hht
-    haveI := hr
+    let := hr
     -- π ∈ 𝔯 by the collapse lemma
     have hπr : π ∈ 𝔯 := by
       by_contra hπr
@@ -108,7 +108,7 @@ theorem Ideal.mem_minimalPrimes_span_of_isPrime_of_ne_bot_of_isField_away
     -- a minimal prime of (π) inside 𝔯
     obtain ⟨𝔮, hq, hqr⟩ := Ideal.exists_minimalPrimes_le
       (I := Ideal.span {π}) (by rwa [Ideal.span_le, Set.singleton_subset_iff])
-    haveI hqp : 𝔮.IsPrime := hq.1.1
+    let hqp : 𝔮.IsPrime := hq.1.1
     have hq0 : 𝔮 ≠ ⊥ := by
       intro h0
       refine hπ0 ?_
@@ -139,13 +139,13 @@ theorem Ideal.mem_minimalPrimes_span_of_isPrime_of_ne_bot_of_isField_away
     intro x hx hx0
     obtain ⟨𝔯, hr, hrp⟩ := Ideal.exists_minimalPrimes_le
       (I := Ideal.span {x}) (by rwa [Ideal.span_le, Set.singleton_subset_iff])
-    haveI hrpr : 𝔯.IsPrime := hr.1.1
+    let hrpr : 𝔯.IsPrime := hr.1.1
     have hxr : x ∈ 𝔯 := hr.1.2 (Ideal.mem_span_singleton_self x)
     have hr0 : 𝔯 ≠ ⊥ := by
       intro h0
       rw [h0] at hxr
       exact hx0 (by simpa using hxr)
-    haveI : (Ideal.span {x} : Ideal B).IsPrincipal := ⟨x, rfl⟩
+    let : (Ideal.span {x} : Ideal B).IsPrincipal := ⟨x, rfl⟩
     have hht := Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes
       (Ideal.span {x}) 𝔯 hr
     exact ⟨𝔯, hkey 𝔯 hrpr hr0 hht, hxr, hrp⟩
@@ -186,7 +186,7 @@ theorem Ideal.mem_minimalPrimes_span_of_isPrime_of_ne_bot_of_isField_away
 /-- **The G-domain lemma, maximality form**: every nonzero prime is maximal
 (minimal primes of `(π)` form an antichain containing every nonzero prime). -/
 theorem Ideal.isMaximal_of_isPrime_of_ne_bot_of_isField_away
-    (hπ0 : π ≠ 0) (hπu : ¬ IsUnit π)
+    (hπ0 : π ≠ 0) (_hπu : ¬ IsUnit π)
     (hfield : IsField (Localization.Away π))
     (𝔭 : Ideal B) (hp : 𝔭.IsPrime) (hp0 : 𝔭 ≠ ⊥) : 𝔭.IsMaximal := by
   classical

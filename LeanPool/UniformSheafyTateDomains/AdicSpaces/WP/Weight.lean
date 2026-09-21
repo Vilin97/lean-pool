@@ -175,7 +175,7 @@ theorem wpMem_single_add_single (w : ℕ → ℕ) (n : ℕ) :
         simpa using fun h => h0 h.symm
     unfold WPMem
     rw [wpWeight_add_of_disjoint w hdisj]
-    simp [Finsupp.add_apply, Finsupp.single_apply, h0, Ne.symm h0]
+    simp [Finsupp.add_apply,  h0, Ne.symm h0]
 
 /-- Even pure-`U` exponents are in `S` ([WP] `Z_n = U_n²`). -/
 theorem wpMem_two_nsmul_single (w : ℕ → ℕ) (n : ℕ) (k : ℕ) :
@@ -251,7 +251,7 @@ theorem wpMem_tailShift (w : ℕ → ℕ) {N : ℕ} (μ : TailIdx N) :
     by_cases hw0 : wpWeight w μ.1 = 0
     · simp [hw0]
     · rw [Finsupp.support_single_ne_zero _ hw0]
-      simp [Finsupp.notMem_support_iff, hμ0]
+      simp [ hμ0]
   unfold WPMem tailShift
   rw [wpWeight_add_of_disjoint w hdisj]
   simp [Finsupp.add_apply, hμ0]

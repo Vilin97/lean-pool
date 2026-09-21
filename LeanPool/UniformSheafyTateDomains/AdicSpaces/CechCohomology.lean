@@ -871,10 +871,13 @@ theorem hasGluing_iff_section (F : AbPresheaf X) (U : FiniteCover X ι) :
       ∃ x : F.obj Set.univ, ∀ i, F.res (Set.subset_univ (U.sets i)) x = g i := by
   constructor
   · intro hglue g hg
-    have hdf : cechDiff F U 0
-        (fun σ => F.res (U.inter_subset_sets σ 0) (g (σ 0))) = 0 := by
+    let f : CechCochain F U 0 :=
+      fun σ => F.res (U.inter_subset_sets σ 0) (g (σ 0))
+    have hdf : cechDiff F U 0 f = 0 := by
       funext τ
-      rw [cechDiff_zero_apply, F.res_comp, F.res_comp]
+      rw [cechDiff_zero_apply]
+      dsimp only [f]
+      rw [F.res_comp, F.res_comp]
       have hsub : U.inter τ ⊆ U.sets (τ 0) ∩ U.sets (τ 1) := (U.inter_fin_two τ).le
       have key := congrArg (F.res hsub) (hg (τ 0) (τ 1))
       rw [F.res_comp, F.res_comp] at key
@@ -1055,8 +1058,11 @@ theorem isDegreeZeroAcyclic_prod (F : AbPresheaf X)
             fun a ha => ⟨⟨ha.1.1, ha.2⟩, ⟨ha.1.2, ha.2⟩⟩
           have ka := congrArg (F.res hd1) (hg i j)
           have kb := congrArg (F.res hd2) (hg i' j)
-          have kc := congrArg (F.res hd3) (hfp' i i' j j)
-          simp only [F.res_comp] at ka kb kc
+          have kc : F.res hd1 (fp (i, j)) = F.res hd2 (fp (i', j)) := by
+            exact (F.res_comp hd3 Set.inter_subset_left (fp (i, j))).symm.trans
+              ((congrArg (F.res hd3) (hfp' i i' j j)).trans
+                (F.res_comp hd3 Set.inter_subset_right (fp (i', j))))
+          simp only [F.res_comp] at ka kb
           exact ka.trans (kc.trans kb.symm))
       exact sub_eq_zero.mp hz
     obtain ⟨x, hx⟩ := (hasGluing_iff_section F U).mp hU.2 g hgcoc
