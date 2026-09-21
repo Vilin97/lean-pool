@@ -9966,3 +9966,39 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: lean-scv
+    title: Classical several complex variables
+    summary: Formalizes Cauchy and Taylor theory, Hartogs phenomena, removable singularities, analytic sets
+      and germs, Weierstrass theory, holomorphic convexity, Cartan–Thullen and Bochner tube theorems, plurisubharmonic
+      functions, Levi convexity, and elementary Runge-domain theory.
+    branch: complex analysis
+    entry_module: LeanPool.SeveralComplexVariables
+    authors:
+    - Bastiaan J Braams
+    source:
+      url: https://github.com/bjbraams/lean-scv
+      github_repo: bjbraams/lean-scv
+      commit: caef1ae776ff79933718312357980d46628d3702
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - SCV.cauchy_formula_polydisc
+    - SCV.osgood
+    - SCV.identity_theorem
+    main_results:
+    - declaration: SCV.cauchy_formula_polydisc
+      informal: Holomorphic functions on a polydisc satisfy the iterated Cauchy integral formula.
+    - declaration: SCV.osgood
+      informal: Locally bounded separately holomorphic functions are jointly holomorphic.
+    - declaration: SCV.identity_theorem
+      informal: Holomorphic functions on a connected domain that agree on a nonempty open subset agree throughout
+        the domain.
+    tags:
+    - complex-analysis
+    - several-complex-variables
+    - holomorphic-functions
+    msc:
+    - 32A10
+    - 32D05
+    - 32E10
