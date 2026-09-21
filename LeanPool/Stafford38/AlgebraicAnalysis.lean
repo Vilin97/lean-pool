@@ -1,0 +1,79 @@
+/-
+Copyright (c) 2026 Christopher Albert. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Christopher Albert
+-/
+
+import LeanPool.Stafford38.AlgebraicAnalysis.Commutator
+import LeanPool.Stafford38.AlgebraicAnalysis.RingTheory.TwoGeneratorIdentity
+import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.Basic
+import LeanPool.Stafford38.AlgebraicAnalysis.CommutatorRiccati
+import LeanPool.Stafford38.AlgebraicAnalysis.FieldTheory.FunctionField
+import LeanPool.Stafford38.AlgebraicAnalysis.Polynomial.DistinguishedVariable
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.ActiveCoordinate
+import LeanPool.Stafford38.AlgebraicAnalysis.Derivation.Central
+import LeanPool.Stafford38.AlgebraicAnalysis.Derivation.Escape
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightHilbertBasis
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightIntersection
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.PrincipalRightIdeal
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Localization
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.LocalizationExtension
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.LeftPBW
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightPBW
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Tower
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.IteratedTower
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.IteratedPBW
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.RankTorsion
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.StablyFree
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.HyperplaneRestriction
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredStrictness
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.RankExact
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.DenominatorTorsion
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.TriangularDenominator
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.Unimodular
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FreeSummandInduction
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.TorsionProjectiveImage
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredSchreyer
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.Splice
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.TwoSimplicity
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.EscapeSpan
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.EscapeAssembly
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.RightCoordinates
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPages
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageEquivalences
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageActions
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalPages
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalActions
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermBoundaryExhaustion
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermBoundaryNaturality
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermSuccessorNaturality
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.CommutingPolynomialAction
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizationModuleComparison
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedKernelCokernelEquivalences
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedMinimalSupportAvoidance
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupport
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupportOverBase
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportKernelCokernelLengths
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulPositivity
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulFiniteTorsion
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.StableTorsionResidualSupport
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulSupportOverBase
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulMinimalSupportPositivity
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportExistence
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizedKoszulPositivity
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.TwoTermPageLength
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.UniformBoundaryVanishing
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.MonicAnnihilatorFinite
+import LeanPool.Stafford38.AlgebraicAnalysis.Module.SplitLatticePresentation
+import LeanPool.Stafford38.AlgebraicAnalysis.LinearAlgebra.FiniteTaylorReconstruction
+import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.CoordinateGeneration
+import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialDerivations
+import LeanPool.Stafford38.AlgebraicAnalysis.DifferentialOperators.LocalizedPolynomialCommutant
+import LeanPool.Stafford38.AlgebraicAnalysis.Ore.RightLocalization
+
+/-!
+# AlgebraicAnalysis
+
+Root module for reusable formal mathematics in algebraic analysis.
+-/
