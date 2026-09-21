@@ -50,7 +50,7 @@ local notation "⟪" x ", " y "⟫" => inner ℝ x y
 
 /-- A covariant derivative on a Riemannian vector bundle is metric-compatible if it differentiates
 the fibrewise inner product by the Leibniz rule. -/
-def IsMetricCompatible (cov : CovariantDerivative I F V) : Prop :=
+def IsMetricCompatiblePoincare (cov : CovariantDerivative I F V) : Prop :=
   ∀ {x : M} {σ τ : Π x : M, V x},
     MDiffAt (T% σ) x → MDiffAt (T% τ) x →
       ∀ u : TangentSpace I x,
@@ -59,7 +59,7 @@ def IsMetricCompatible (cov : CovariantDerivative I F V) : Prop :=
 
 variable {cov : CovariantDerivative I F V}
 
-lemma IsMetricCompatible.inner_eq_add (hcov : cov.IsMetricCompatible)
+lemma IsMetricCompatiblePoincare.inner_eq_add (hcov : cov.IsMetricCompatiblePoincare)
     {x : M} {X : Π x : M, TangentSpace I x} {σ τ : Π x : M, V x}
     (hσ : MDiffAt (T% σ) x) (hτ : MDiffAt (T% τ) x) :
     mvfderiv (I := I) (fun y ↦ ⟪σ y, τ y⟫) x (X x) =
@@ -89,7 +89,7 @@ lemma difference_apply_eq_extend {x : M} (v : V x) :
       (x := x) (σ := extend F v) (mdifferentiableAt_extend (I := I) (F := F) v))
 
 lemma difference_inner_add_eq_zero
-    (hcov : cov.IsMetricCompatible) (hcov' : cov'.IsMetricCompatible)
+    (hcov : cov.IsMetricCompatiblePoincare) (hcov' : cov'.IsMetricCompatiblePoincare)
     (x : M) (u : TangentSpace I x) (v w : V x) :
     ⟪(cov.difference cov' x v) u, w⟫ + ⟪v, (cov.difference cov' x w) u⟫ = 0 := by
   let σ : Π y : M, V y := extend F v
@@ -117,7 +117,7 @@ lemma difference_inner_add_eq_zero
     difference_apply (cov := cov) (cov' := cov') hτ] using hdiff
 
 lemma difference_inner_eq_neg
-    (hcov : cov.IsMetricCompatible) (hcov' : cov'.IsMetricCompatible)
+    (hcov : cov.IsMetricCompatiblePoincare) (hcov' : cov'.IsMetricCompatiblePoincare)
     (x : M) (u : TangentSpace I x) (v w : V x) :
     ⟪(cov.difference cov' x v) u, w⟫ = -⟪v, (cov.difference cov' x w) u⟫ := by
   have h := difference_inner_add_eq_zero (cov := cov) (cov' := cov') hcov hcov' x u v w

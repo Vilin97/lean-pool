@@ -3853,9 +3853,9 @@ lemma isMetricCompatible_pullbackConnectionFamily
         (g t).inner ((Φ t) x)
           (((Φ t).pushforwardTangent x) u)
           (((Φ t).pushforwardTangent x) v))
-    (hcov : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatible
+    (hcov : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatiblePoincare
       (I := I) (M := M) g cov) :
-    CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatible
+    CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatiblePoincare
       (I := I) (M := M) g' (Φ.pullbackConnectionFamily cov) := by
   intro t
   exact SmoothSelfDiffeomorph2.isMetricCompatibleTangent_pullbackCovariantDerivative
@@ -3880,7 +3880,7 @@ lemma isLeviCivita_pullbackConnectionFamily
 lemma isMetricCompatible_pullbackConnectionFamily_pullbackRiemannianMetric
     (g : MetricFamily (I := I) (M := M))
     (cov : ConnectionFamily (I := I) (M := M))
-    (hcov : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatible
+    (hcov : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatiblePoincare
       (I := I) (M := M) g cov) :
     ∀ t : ℝ,
       letI : Bundle.RiemannianBundle TM :=
@@ -5292,9 +5292,9 @@ lemma ricciCurvature_pullbackConnectionFamily_eq_self_at_anchored_time
 lemma isMetricCompatible_pullbackConnectionFamily_pullbackMetricFamily
     (g : MetricFamily (I := I) (M := M))
     (cov : ConnectionFamily (I := I) (M := M))
-    (hcov : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatible
+    (hcov : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatiblePoincare
       (I := I) (M := M) g cov) :
-    CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatible
+    CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatiblePoincare
       (I := I) (M := M) (Φ.pullbackMetricFamily g) (Φ.pullbackConnectionFamily cov) := by
   have hinner : ∀ t : ℝ, ∀ x : M, ∀ u v : TM x,
       ((Φ.pullbackMetricFamily g) t).inner x u v =

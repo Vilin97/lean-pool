@@ -213,7 +213,7 @@ theorem ricciTensor_symm_of_metricCompatible_of_torsion_eq_zero
     (cov : ConnectionFamily (I := I) (M := M))
     (hcov : ∀ t : ℝ, CovariantDerivative.ContMDiffCovariantDerivative (cov t) 1)
     (hT : ∀ t : ℝ, (cov t).torsion = 0)
-    (hmetric : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatible
+    (hmetric : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatiblePoincare
       (I := I) (M := M) g cov)
     (t : ℝ) (x : M) (u v : TM x) :
     ricciTensor (I := I) (M := M) g cov hcov t x u v =
@@ -371,7 +371,7 @@ theorem ricciFlowRHS_symm_of_metricCompatible_of_torsion_eq_zero
     (cov : ConnectionFamily (I := I) (M := M))
     (hcov : ∀ t : ℝ, CovariantDerivative.ContMDiffCovariantDerivative (cov t) 1)
     (hT : ∀ t : ℝ, (cov t).torsion = 0)
-    (hmetric : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatible
+    (hmetric : CovariantDerivative.TimeDependentRiemannianMetric.IsMetricCompatiblePoincare
       (I := I) (M := M) g cov)
     (t : ℝ) (x : M) (u v : TM x) :
     ricciFlowRHS (I := I) (M := M) g cov hcov t x u v =

@@ -132,10 +132,8 @@ theorem curveScalarDeriv_mul
     (hf : MDiffAt f t) (hg : MDiffAt g t) :
     curveScalarDeriv (f * g) t =
       f t * curveScalarDeriv g t + g t * curveScalarDeriv f t := by
-  unfold curveScalarDeriv
-  have h := congrArg (fun L ↦ L (1 : TangentSpace (𝓘(ℝ, ℝ)) t))
-    (mvfderiv_mul (I := 𝓘(ℝ, ℝ)) hf hg)
-  simpa [smul_eq_mul] using h
+  simp only [curveScalarDeriv_eq_deriv]
+  simpa only [mul_comm, add_comm] using deriv_mul hf.differentiableAt hg.differentiableAt
 
 theorem curveScalarDeriv_add
     {f g : ℝ → ℝ} {t : ℝ}
@@ -144,7 +142,7 @@ theorem curveScalarDeriv_add
   unfold curveScalarDeriv
   have h := congrArg (fun L ↦ L (1 : TangentSpace (𝓘(ℝ, ℝ)) t))
     (mvfderiv_add (I := 𝓘(ℝ, ℝ)) hf hg)
-  simpa using h
+  simpa only [add_apply] using h
 
 theorem curveScalarDeriv_sum
     {ι : Type} (s : Finset ι) (f : ι → ℝ → ℝ) {t : ℝ}

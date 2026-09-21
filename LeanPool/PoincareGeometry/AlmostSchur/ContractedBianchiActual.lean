@@ -14,7 +14,6 @@ module
 
 public import LeanPool.PoincareGeometry.AlmostSchur.CurvatureDerivativeComparison
 public import LeanPool.PoincareGeometry.AlmostSchur.ScalarCurvatureTraceDerivative
-import LeanPool.PoincareGeometry.ContractedBianchiSections
 
 /-! # Actual contracted Bianchi for the constructed Levi-Civita connection
 

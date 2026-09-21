@@ -352,7 +352,7 @@ def inner (t : ℝ) (x : M) (u v : TM x) : ℝ :=
     inner (I := I) (M := M) g t x u v = (g t).inner x u v := rfl
 
 /-- A time-dependent connection family is metric-compatible with `g` if each time slice is. -/
-def IsMetricCompatible
+def IsMetricCompatiblePoincare
     (cov : TimeDependentCovariantDerivative (𝕜 := ℝ) (I := I) (M := M) (F := E) (V := TM)) :
     Prop :=
   ∀ t : ℝ,
@@ -548,7 +548,7 @@ theorem ricciCurvature_symm_of_metricCompatible_of_torsion_eq_zero
     (cov : TimeDependentCovariantDerivative (𝕜 := ℝ) (I := I) (M := M) (F := E) (V := TM))
     (hcov : ∀ t : ℝ, ContMDiffCovariantDerivative (cov t) 1)
     (hT : ∀ t : ℝ, (cov t).torsion = 0)
-    (hmetric : g.IsMetricCompatible cov)
+    (hmetric : g.IsMetricCompatiblePoincare cov)
     (t : ℝ) (x : M) (u w : TM x) :
     g.ricciCurvature cov hcov t x u w = g.ricciCurvature cov hcov t x w u := by
   letI : Bundle.RiemannianBundle TM := ⟨(g t).toRiemannianMetric⟩
