@@ -85,6 +85,7 @@ end FiniteLaw
 
 /-- A stochastic kernel on a finite state space. -/
 structure FiniteKernel (α : Type*) [Fintype α] where
+  /-- One-step transition probability from the first state to the second. -/
   trans : α → α → ℝ
   trans_nonneg : ∀ x y, 0 ≤ trans x y
   sum_trans : ∀ x, ∑ y, trans x y = 1
@@ -308,6 +309,22 @@ theorem tendsto_cesaro_error [DecidableEq α] (K : FiniteKernel α)
   · simpa only [one_div] using
       (tendsto_one_div_add_atTop_nhds_zero_nat (𝕜 := ℝ))
 
+/-- The finite probability vectors form a compact subset of Euclidean space. -/
+private theorem compact_probability_vectors :
+    IsCompact {w : α → ℝ | (∀ i, 0 ≤ w i) ∧ ∑ i, w i = 1} := by
+  have hclosed : IsClosed {w : α → ℝ | (∀ i, 0 ≤ w i) ∧ ∑ i, w i = 1} := by
+    have hnonneg : IsClosed {w : α → ℝ | ∀ i, 0 ≤ w i} :=
+      by
+        simpa only [Set.ofPred_forall] using
+          (isClosed_iInter fun i : α =>
+            isClosed_le continuous_const (continuous_apply i) :
+              IsClosed (⋂ i : α, {w : α → ℝ | 0 ≤ w i}))
+    exact hnonneg.inter (isClosed_eq (by fun_prop) continuous_const)
+  refine IsCompact.of_isClosed_subset (s := Set.Icc 0 1) isCompact_Icc hclosed ?_
+  intro w hw
+  refine ⟨hw.1, fun i => ?_⟩
+  exact (Finset.single_le_sum (fun j _ => hw.1 j) (Finset.mem_univ i)).trans_eq hw.2
+
 /-- Every finite stochastic kernel on a nonempty state space has a stationary
 law.  The proof takes a convergent subsequence of Cesaro averages in the
 compact finite probability simplex. -/
@@ -316,10 +333,10 @@ theorem exists_stationary [DecidableEq α] [Nonempty α]
     ∃ μ : FiniteLaw α, K.IsStationary μ := by
   let μ0 : FiniteLaw α := FiniteLaw.dirac (Classical.arbitrary α)
   let A : ℕ → α → ℝ := fun n => (K.cesaroLaw μ0 n).mass
-  have hA (n : ℕ) : A n ∈ stdSimplex ℝ α :=
+  have hA (n : ℕ) : (∀ i, 0 ≤ A n i) ∧ ∑ i, A n i = 1 :=
     ⟨(K.cesaroLaw μ0 n).mass_nonneg, (K.cesaroLaw μ0 n).sum_mass⟩
   obtain ⟨v, hv, φ, hφ, hlim⟩ :=
-    (isCompact_stdSimplex ℝ α).tendsto_subseq hA
+    compact_probability_vectors.tendsto_subseq hA
   let π : FiniteLaw α := ⟨v, hv.1, hv.2⟩
   refine ⟨π, ?_⟩
   have hlim' : Tendsto (fun n => A (φ n)) atTop (𝓝 v) := by
@@ -376,13 +393,13 @@ theorem reaches_trans [DecidableEq α] (K : FiniteKernel α)
 
 /-- Every state has positive mass under a stationary law of an irreducible
 finite kernel. -/
-theorem stationary_mass_pos [DecidableEq α] [Nonempty α]
+theorem stationary_mass_pos [DecidableEq α] 
     {K : FiniteKernel α} (hirr : K.Irreducible)
     {μ : FiniteLaw α} (hμ : K.IsStationary μ) (y : α) :
     0 < μ.mass y := by
   have hex : ∃ x, 0 < μ.mass x := by
     by_contra h
-    push_neg at h
+    push Not at h
     have hz : ∀ x, μ.mass x = 0 :=
       fun x => le_antisymm (h x) (μ.mass_nonneg x)
     have : ∑ x, μ.mass x = 0 := by simp [hz]
@@ -487,7 +504,7 @@ def Equivariant (K : FiniteKernel α) (e : Equiv.Perm α) : Prop :=
 def LawInvariant (μ : FiniteLaw α) (e : Equiv.Perm α) : Prop :=
   ∀ x, μ.mass (e x) = μ.mass x
 
-theorem step_lawInvariant [DecidableEq α] {K : FiniteKernel α}
+theorem step_lawInvariant  {K : FiniteKernel α}
     {μ : FiniteLaw α} {e : Equiv.Perm α}
     (hK : K.Equivariant e) (hμ : LawInvariant μ e) :
     LawInvariant (K.step μ) e := by
@@ -555,7 +572,7 @@ theorem cesaroLaw_groupInvariant [DecidableEq α]
 /-- A finite equivariant Markov kernel has a stationary law invariant under
 the entire finite group action. -/
 theorem exists_stationary_groupInvariant [DecidableEq α] [Nonempty α]
-    {G : Type*} [Group G] [Fintype G]
+    {G : Type*} [Group G] 
     (ρ : G →* Equiv.Perm α) (K : FiniteKernel α)
     (hK : GroupEquivariant ρ K) :
     ∃ μ : FiniteLaw α, K.IsStationary μ ∧ GroupInvariant ρ μ := by
@@ -563,12 +580,12 @@ theorem exists_stationary_groupInvariant [DecidableEq α] [Nonempty α]
   let A : ℕ → α → ℝ := fun n => (K.cesaroLaw μ0 n).mass
   have hμ0 : GroupInvariant ρ μ0 :=
     uniform_groupInvariant ρ
-  have hA (n : ℕ) : A n ∈ stdSimplex ℝ α :=
+  have hA (n : ℕ) : (∀ i, 0 ≤ A n i) ∧ ∑ i, A n i = 1 :=
     ⟨(K.cesaroLaw μ0 n).mass_nonneg, (K.cesaroLaw μ0 n).sum_mass⟩
   have hAinv (n : ℕ) : GroupInvariant ρ (K.cesaroLaw μ0 n) :=
     cesaroLaw_groupInvariant ρ hK hμ0 n
   obtain ⟨v, hv, φ, hφ, hlim⟩ :=
-    (isCompact_stdSimplex ℝ α).tendsto_subseq hA
+    compact_probability_vectors.tendsto_subseq hA
   let π : FiniteLaw α := ⟨v, hv.1, hv.2⟩
   refine ⟨π, ?_, ?_⟩
   · have hlim' : Tendsto (fun n => A (φ n)) atTop (𝓝 v) := by
@@ -679,33 +696,33 @@ theorem move_empty {m : ℕ} (x : InventoryState ι m) {d a : ι}
 theorem move_self {m : ℕ} (x : InventoryState ι m) (d : ι) :
     move x d d = x := by
   by_cases hd : 0 < x.1 d
-  · rw [move, dif_pos hd]
+  · rw [move, dite_eq_left hd]
     apply ext
     intro i
     by_cases hi : i = d
     · subst i
-      simp [Function.update_apply]
+      simp
       omega
-    · simp [Function.update_apply, hi]
+    · simp [hi]
   · simp [move, hd]
 
 theorem move_apply_of_pos {m : ℕ} (x : InventoryState ι m) {d a i : ι}
     (hd : 0 < x.1 d) :
     (move x d a).1 i =
       x.1 i + (if i = a then 1 else 0) - (if i = d then 1 else 0) := by
-  rw [move, dif_pos hd]
+  rw [move, dite_eq_left hd]
   by_cases hia : i = a
   · subst i
     by_cases had : a = d
     · subst d
-      simp [Function.update_apply]
+      simp
       omega
     · have hda : d ≠ a := Ne.symm had
-      simp [Function.update_apply, had, hda]
+      simp [had]
   · by_cases hid : i = d
     · subst i
       have hda : d ≠ a := hia
-      simp [Function.update_apply, hia, hda]
+      simp [Function.update_apply, hia]
     · simp [Function.update_apply, hia, hid]
 
 end InventoryState
@@ -713,6 +730,7 @@ end InventoryState
 /-- A deletion rule chooses an occupied leaf, assigning every occupied leaf
 strictly positive probability. -/
 structure DeletionRule (ι : Type*) [Fintype ι] (m : ℕ) where
+  /-- Probability of deleting an item from each occupied inventory coordinate. -/
   prob : InventoryState ι m → ι → ℝ
   nonneg : ∀ x i, 0 ≤ prob x i
   empty : ∀ x i, x.1 i = 0 → prob x i = 0

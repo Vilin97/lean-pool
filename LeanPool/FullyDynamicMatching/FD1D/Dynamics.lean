@@ -343,9 +343,9 @@ private theorem sum_update_add_one
   by_cases hj : j ∈ S
   · rw [Finset.sum_update_of_mem hj]
     have hsplit := Finset.sum_erase_add S f hj
-    simp only [Finset.sdiff_singleton_eq_erase, if_pos hj]
+    simp only [Finset.sdiff_singleton_eq_erase, ite_eq_left hj]
     omega
-  · rw [if_neg hj]
+  · rw [ite_eq_right hj]
     apply Finset.sum_congr rfl
     intro i hi
     have hij : i ≠ j := by
@@ -361,9 +361,9 @@ private theorem sum_update_sub_one
   by_cases hj : j ∈ S
   · rw [Finset.sum_update_of_mem hj]
     have hsplit := Finset.sum_erase_add S f hj
-    simp only [Finset.sdiff_singleton_eq_erase, if_pos hj]
+    simp only [Finset.sdiff_singleton_eq_erase, ite_eq_left hj]
     omega
-  · rw [if_neg hj, Nat.sub_zero]
+  · rw [ite_eq_right hj, Nat.sub_zero]
     apply Finset.sum_congr rfl
     intro i hi
     have hij : i ≠ j := by
@@ -396,7 +396,7 @@ theorem sum_move_eq_updateCount
     ∑ i ∈ S, (InventoryState.move x deleted arrived).1 i =
       updateCount (∑ i ∈ S, x.1 i)
         (inBlock S deleted) (inBlock S arrived) := by
-  rw [InventoryState.move, dif_pos hdeleted]
+  rw [InventoryState.move, dite_eq_left hdeleted]
   let removed := Function.update x.1 deleted (x.1 deleted - 1)
   change
     (∑ i ∈ S, Function.update removed arrived (removed arrived + 1) i) =

@@ -229,7 +229,7 @@ theorem finite_average_expected_hazard_bound
           ((∑ t ∈ Finset.range T, H t) / (T : ℝ)) ≤
         103 * a / (300 * (m : ℝ) ^ 2) +
           Real.log (1 + (m : ℝ) / a) / (T : ℝ) := by
-    convert hmain using 1 <;> ring
+    convert hmain using 1 ; ring
   have hHave : 0 ≤ (∑ t ∈ Finset.range T, H t) / (T : ℝ) := by
     apply div_nonneg
     · apply Finset.sum_nonneg

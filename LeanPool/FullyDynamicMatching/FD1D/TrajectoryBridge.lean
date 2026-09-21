@@ -54,6 +54,7 @@ def trajectoryLaw (μ₀ : Measure α) (κ : Kernel α α) [IsMarkovKernel κ] :
     Measure (ℕ → α) :=
   Kernel.trajMeasure (X := fun _ => α) μ₀ (historyKernel κ)
 
+omit [MeasureTheory.IsProbabilityMeasure μ₀] in
 theorem trajectoryLaw_marginal_zero
     (μ₀ : Measure α) [IsProbabilityMeasure μ₀]
     (κ : Kernel α α) [IsMarkovKernel κ] :
@@ -107,7 +108,8 @@ theorem trajectoryLaw_marginal_succ
         (X := fun _ => α) (μ₀ := μ₀) (κ := historyKernel κ) (a := n))
   have hsnd := congrArg Measure.snd hjoint
   rw [Measure.snd_compProd,
-    Measure.snd_map_prodMk (show Measurable pref by fun_prop)] at hsnd
+    Measure.snd_map_prodMk (show Measurable pref by fun_prop)
+      (measurable_pi_apply (n + 1))] at hsnd
   rw [← hsnd]
   ext s hs
   rw [Measure.bind_apply hs (Kernel.aemeasurable _),

@@ -99,12 +99,13 @@ theorem sqrt_average_stateSquaredCostEnvelope_le
       _ = _ := by rw [Finset.mul_sum]
   rw [henvelope, hhaarAverage, hsum] at halgebra
   dsimp only [w] at halgebra
-  convert halgebra using 1 <;> ring
+  convert halgebra using 1 ; ring
 
 end Transport
 
 /-! ## Parameterized count chain -/
 
+/-- Inventory transition kernel at the manuscript parameters determined by `m`. -/
 def parameterizedKernel (m : ℕ) (hm : 1 ≤ m) :
     FiniteKernel
       (InventoryState (DyadicNode (treeDepth m)) m) :=
@@ -112,14 +113,17 @@ def parameterizedKernel (m : ℕ) (hm : 1 ≤ m) :
     (L := treeDepth m) (parameterA m : ℝ)
     (parameterA_cast_pos hm) (by omega)
 
+/-- Transport energy at the manuscript parameters determined by `m`. -/
 def parameterizedTransportEnergy (m : ℕ)
     (x : InventoryState (DyadicNode (treeDepth m)) m) : ℝ :=
   Dynamics.stateTransportEnergy (parameterA m : ℝ) x
 
+/-- Squared transport-cost envelope at the manuscript parameters. -/
 def parameterizedSquaredCostEnvelope (m : ℕ)
     (x : InventoryState (DyadicNode (treeDepth m)) m) : ℝ :=
   Transport.stateSquaredCostEnvelope (parameterA m : ℝ) x
 
+/-- Inventory law after `t` steps starting from independently refreshed supply. -/
 def refreshedIterate (m : ℕ) (hm : 1 ≤ m) (t : ℕ) :
     FiniteLaw
       (InventoryState (DyadicNode (treeDepth m)) m) :=
@@ -330,6 +334,7 @@ theorem refreshed_average_rms_squaredCostEnvelope_le
 
 /-! ## Ordinary convergence from arbitrary count laws -/
 
+/-- Expected squared-cost envelope at time `t` from the chosen initial inventory law. -/
 def rmsSquaredCostExpectation
     (m : ℕ) (hm : 1 ≤ m)
     (mu0 : FiniteLaw

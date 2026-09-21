@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
 
+import Mathlib.MeasureTheory.Order.Group.Lattice
+import Mathlib.Analysis.Convex.Integral
 import LeanPool.FullyDynamicMatching.FD1D.Basic
 
 /-! # Transport -/
@@ -151,9 +153,9 @@ theorem piecewiseCDF_nonneg {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
   | @branch L l r ihl ihr =>
       simp only [piecewiseCDF]
       by_cases hz : z ≤ 1 / 2
-      · rw [if_pos hz]
+      · rw [ite_eq_left hz]
         exact ihl hq.1 (by linarith) (by linarith)
-      · rw [if_neg hz]
+      · rw [ite_eq_right hz]
         exact add_nonneg (total_nonneg l hq.1)
           (ihr hq.2 (by linarith) (by linarith))
 
@@ -168,12 +170,12 @@ theorem piecewiseCDF_le_total {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
   | @branch L l r ihl ihr =>
       simp only [piecewiseCDF]
       by_cases hz : z ≤ 1 / 2
-      · rw [if_pos hz]
+      · rw [ite_eq_left hz]
         have hle := ihl hq.1 (z := 2 * z) (by linarith) (by linarith)
         have hr := total_nonneg r hq.2
         simp only [total]
         linarith
-      · rw [if_neg hz]
+      · rw [ite_eq_right hz]
         have hle := ihr hq.2 (z := 2 * z - 1) (by linarith) (by linarith)
         simp only [total]
         linarith
@@ -190,20 +192,20 @@ theorem piecewiseCDF_monotoneOn {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg) 
       intro x hx y hy hxy
       simp only [piecewiseCDF]
       by_cases hxhalf : x ≤ 1 / 2
-      · rw [if_pos hxhalf]
+      · rw [ite_eq_left hxhalf]
         by_cases hyhalf : y ≤ 1 / 2
-        · rw [if_pos hyhalf]
+        · rw [ite_eq_left hyhalf]
           exact ihl hq.1 (a := 2 * x) (b := 2 * y)
             ⟨by linarith [hx.1], by linarith⟩
             ⟨by linarith [hy.1], by linarith⟩ (by linarith)
-        · rw [if_neg hyhalf]
+        · rw [ite_eq_right hyhalf]
           have hleft := piecewiseCDF_le_total l hq.1
             (z := 2 * x) (by linarith [hx.1]) (by linarith)
           have hright := piecewiseCDF_nonneg r hq.2
             (z := 2 * y - 1) (by linarith) (by linarith [hy.2])
           linarith
       · have hyhalf : ¬y ≤ 1 / 2 := by linarith
-        rw [if_neg hxhalf, if_neg hyhalf]
+        rw [ite_eq_right hxhalf, ite_eq_right hyhalf]
         simpa [add_comm] using add_le_add_left (ihr hq.2
           (a := 2 * x - 1) (b := 2 * y - 1)
           ⟨by linarith, by linarith [hx.2]⟩
@@ -280,10 +282,10 @@ theorem quantile_mem_unit {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
   | @branch L l r ihl ihr =>
       simp only [quantile]
       by_cases hu : u ≤ l.total
-      · rw [if_pos hu]
+      · rw [ite_eq_left hu]
         have hlocal := ihl hq.1 hu0 hu
         constructor <;> linarith [hlocal.1, hlocal.2]
-      · rw [if_neg hu]
+      · rw [ite_eq_right hu]
         have hulocal : 0 ≤ u - l.total := by linarith
         have hurlocal : u - l.total ≤ r.total := by
           rw [total] at hu1
@@ -301,10 +303,10 @@ theorem selectedLeaf_mem_unit {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
   | @branch L l r ihl ihr =>
       simp only [selectedLeaf]
       by_cases hu : u ≤ l.total
-      · rw [if_pos hu]
+      · rw [ite_eq_left hu]
         have hlocal := ihl hq.1 hu0 hu
         constructor <;> linarith [hlocal.1, hlocal.2]
-      · rw [if_neg hu]
+      · rw [ite_eq_right hu]
         have hulocal : 0 ≤ u - l.total := by linarith
         have hurlocal : u - l.total ≤ r.total := by
           rw [total] at hu1
@@ -324,9 +326,9 @@ theorem quantile_pos {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
   | @branch L l r ihl ihr =>
       simp only [quantile]
       by_cases hu : u ≤ l.total
-      · rw [if_pos hu]
+      · rw [ite_eq_left hu]
         exact div_pos (ihl hq.1 hu0 hu) (by norm_num)
-      · rw [if_neg hu]
+      · rw [ite_eq_right hu]
         have hlocal : 0 ≤ r.quantile (u - l.total) :=
           (r.quantile_mem_unit hq.2 (by linarith)
             (by
@@ -355,14 +357,14 @@ theorem quantile_le_iff {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
   | @branch L l r ihl ihr =>
       simp only [quantile, piecewiseCDF]
       by_cases hz : z ≤ 1 / 2
-      · rw [if_pos hz]
+      · rw [ite_eq_left hz]
         have h2z0 : 0 ≤ 2 * z := by linarith
         have h2z1 : 2 * z ≤ 1 := by linarith
         by_cases hu : u ≤ l.total
-        · rw [if_pos hu]
+        · rw [ite_eq_left hu]
           rw [div_le_iff₀ (by norm_num : (0 : ℝ) < 2)]
           simpa [mul_comm] using ihl hq.1 hu0 hu h2z0 h2z1
-        · rw [if_neg hu]
+        · rw [ite_eq_right hu]
           have hqr := quantile_mem_unit r hq.2
             (u := u - l.total) (by linarith)
             (by
@@ -380,11 +382,11 @@ theorem quantile_le_iff {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
           · intro h
             exfalso
             exact hu (h.trans hleft)
-      · rw [if_neg hz]
+      · rw [ite_eq_right hz]
         have h2z0 : 0 ≤ 2 * z - 1 := by linarith
         have h2z1 : 2 * z - 1 ≤ 1 := by linarith
         by_cases hu : u ≤ l.total
-        · rw [if_pos hu]
+        · rw [ite_eq_left hu]
           have hql := quantile_mem_unit l hq.1 hu0 hu
           have hright := piecewiseCDF_nonneg r hq.2 h2z0 h2z1
           constructor
@@ -392,7 +394,7 @@ theorem quantile_le_iff {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
             linarith
           · intro _
             linarith [hql.2]
-        · rw [if_neg hu]
+        · rw [ite_eq_right hu]
           have hulocal : 0 ≤ u - l.total := by linarith
           have hurlocal : u - l.total ≤ r.total := by
             rw [total] at hu1
@@ -427,7 +429,7 @@ theorem selectedLeaf_sub_quantile_le {L : ℕ} (q : DyadicMass L)
   | @branch L l r ihl ihr =>
       simp only [selectedLeaf, quantile]
       by_cases hu : u ≤ l.total
-      · rw [if_pos hu, if_pos hu]
+      · rw [ite_eq_left hu, ite_eq_left hu]
         have h := ihl hq.1 hu0 hu
         rw [show l.selectedLeaf u / 2 - l.quantile u / 2 =
           (l.selectedLeaf u - l.quantile u) / 2 by ring]
@@ -435,7 +437,7 @@ theorem selectedLeaf_sub_quantile_le {L : ℕ} (q : DyadicMass L)
         simp only [pow_succ]
         norm_num at h ⊢
         nlinarith
-      · rw [if_neg hu, if_neg hu]
+      · rw [ite_eq_right hu, ite_eq_right hu]
         have hulocal : 0 ≤ u - l.total := by linarith
         have hurlocal : u - l.total ≤ r.total := by
           rw [total] at hu1
@@ -477,18 +479,18 @@ theorem cdf_sub_linear_eq_haar {L : ℕ} (q : DyadicMass L)
       · have h2z0 : 0 ≤ 2 * z := by linarith
         have h2z1 : 2 * z ≤ 1 := by linarith
         rw [piecewiseCDF, haarSeries]
-        simp only [hz, if_pos]
+        simp only [hz, ite_eq_left]
         rw [← ihl h2z0 h2z1]
-        rw [unitTent, if_pos hz]
+        rw [unitTent, ite_eq_left hz]
         simp only [total]
         ring
       · have h2z0 : 0 ≤ 2 * z - 1 := by linarith
         have h2z1 : 2 * z - 1 ≤ 1 := by linarith
         rw [piecewiseCDF, haarSeries]
-        simp only [hz, if_neg]
+        simp only [hz]
         rw [← ihr h2z0 h2z1]
-        rw [unitTent, if_neg hz]
-        simp only [total, if_false]
+        rw [unitTent, ite_eq_right hz]
+        simp only [total, ite_false]
         ring
 
 end DyadicMass
@@ -686,8 +688,11 @@ theorem dyadicTent_mul_integrable (l₁ p₁ l₂ p₂ : ℝ) (hp₁ : 0 < p₁)
 
 /-- One internal-node term in the integrated Haar expansion. -/
 structure HaarTerm where
+  /-- Left endpoint of the dyadic interval supporting the Haar term. -/
   left : ℝ
+  /-- Width of the interval supporting the Haar term. -/
   width : ℝ
+  /-- Coefficient multiplying the integrated Haar tent. -/
   coeff : ℝ
 
 namespace HaarTerm
@@ -781,7 +786,7 @@ private theorem dyadicTent_eq_unitTent_affine {a p z : ℝ}
     have hhalf : (z - a) / p ≤ 1 / 2 := by
       apply (div_le_iff₀ hp).2
       linarith
-    rw [DyadicMass.unitTent, if_pos hhalf]
+    rw [DyadicMass.unitTent, ite_eq_left hhalf]
     simp [dyadicTent, hmem, hnot]
   · have hnot : z ∉ Icc a (a + p / 2) := by
       intro h
@@ -794,7 +799,7 @@ private theorem dyadicTent_eq_unitTent_affine {a p z : ℝ}
       linarith
     simp only [dyadicTent, Set.indicator_of_notMem hnot,
       Set.indicator_of_mem hmem, zero_add, DyadicMass.unitTent,
-      if_neg hhalf]
+      ite_eq_right hhalf]
     field_simp
     ring
 
@@ -856,7 +861,7 @@ theorem DyadicMass.haarSeries_eq_haarTermSumAt
             haarTermSum (r.haarTermsAt (a + p / 2) (p / 2)) z = 0 :=
           r.haarTermSum_haarTermsAt_eq_zero_of_outside hp2 (Or.inl hz)
         rw [DyadicMass.haarSeries]
-        simp only [hhalf, if_pos]
+        simp only [hhalf, ite_eq_left]
         rw [hactive]
         simp [haarTermsAt, HaarTerm.value, hroot, hinactive]
       · have hhalf : ¬(z - a) / p ≤ 1 / 2 := by
@@ -899,12 +904,15 @@ theorem DyadicMass.haarSeries_eq_haarTermSum
 /-- Internal nodes of a depth-`L` complete binary tree. -/
 abbrev CompleteHaarNode (L : ℕ) := Σ d : Fin L, Fin (2 ^ d.val)
 
+/-- Left endpoint of the dyadic interval indexed by a complete Haar node. -/
 def haarNodeLeft {L : ℕ} (v : CompleteHaarNode L) : ℝ :=
   (v.2.val : ℝ) / (2 ^ v.1.val : ℕ)
 
+/-- Width of the dyadic interval indexed by a complete Haar node. -/
 def haarNodeWidth {L : ℕ} (v : CompleteHaarNode L) : ℝ :=
   1 / (2 ^ v.1.val : ℕ)
 
+/-- Integrated Haar tent on the interval indexed by the node. -/
 def haarNodeTent {L : ℕ} (v : CompleteHaarNode L) : ℝ → ℝ :=
   dyadicTent (haarNodeLeft v) (haarNodeWidth v)
 
@@ -958,12 +966,12 @@ theorem nodeCoefficient_eq_childMass_sub {L : ℕ} (q : DyadicMass L)
 
 @[simp] theorem nodeChildMasses_root {L : ℕ} (l r : DyadicMass L) :
     (branch l r).nodeChildMasses
-      ⟨⟨0, Nat.zero_lt_succ L⟩, (0 : Fin 1)⟩ = (l.total, r.total) :=
+      ⟨0, 0⟩ = (l.total, r.total) :=
   rfl
 
 @[simp] theorem nodeCoefficient_root {L : ℕ} (l r : DyadicMass L) :
     (branch l r).nodeCoefficient
-      ⟨⟨0, Nat.zero_lt_succ L⟩, (0 : Fin 1)⟩ = l.total - r.total :=
+      ⟨0, 0⟩ = l.total - r.total :=
   rfl
 
 /-- Embed a node into the left half-tree one level below a new root. -/
@@ -980,6 +988,7 @@ def rightNode {L : ℕ} (v : CompleteHaarNode L) : CompleteHaarNode (L + 1) :=
     rw [pow_succ]
     omega⟩⟩
 
+/-- Identification of the two child index blocks with the next dyadic level. -/
 def childFinEquiv (d : ℕ) : Fin (2 ^ d + 2 ^ d) ≃ Fin (2 ^ (d + 1)) :=
   finCongr (by rw [pow_succ]; omega)
 
@@ -1304,11 +1313,11 @@ theorem haarSeries_eq_haarCombination {L : ℕ} (q : DyadicMass L) {z : ℝ}
       rw [htent]
       simp only [haarSeries]
       by_cases hz : z ≤ 1 / 2
-      · rw [if_pos hz, ihl (by linarith) (by linarith)]
+      · rw [ite_eq_left hz, ihl (by linarith) (by linarith)]
         rw [haarCombination_eq_zero_of_outside r.nodeCoefficient
           (Or.inl (by linarith : 2 * z - 1 ≤ 0))]
         ring
-      · rw [if_neg hz, ihr (by linarith) (by linarith)]
+      · rw [ite_eq_right hz, ihr (by linarith) (by linarith)]
         rw [haarCombination_eq_zero_of_outside l.nodeCoefficient
           (Or.inr (by linarith : 1 ≤ 2 * z))]
         ring
@@ -1590,14 +1599,17 @@ structure MonotoneQuantilePolicy (F : ℝ → ℝ) where
   monotoneCDF : MonotoneOn F (Icc 0 1)
   cdf_measurable : Measurable F
   cdf_mapsTo : MapsTo F (Icc 0 1) (Icc 0 1)
+  /-- Measurable generalized inverse of the cumulative distribution function. -/
   quantileMap : ℝ → ℝ
   quantile_measurable : Measurable quantileMap
   quantile_mapsTo : MapsTo quantileMap (Icc 0 1) (Icc 0 1)
   generalizedInverse : ∀ u ∈ Icc (0 : ℝ) 1, ∀ z ∈ Icc (0 : ℝ) 1,
     quantileMap u ≤ z ↔ u ≤ F z
+  /-- Measurable selected location approximating the quantile map. -/
   selectedPoint : ℝ → ℝ
   selected_measurable : Measurable selectedPoint
   selected_mapsTo : MapsTo selectedPoint (Icc 0 1) (Icc 0 1)
+  /-- Uniform upper bound for the distance from a selected location to its quantile. -/
   withinError : ℝ
   withinError_nonneg : 0 ≤ withinError
   selected_close : ∀ u ∈ Icc (0 : ℝ) 1,
@@ -1667,7 +1679,7 @@ theorem expectedDistance_le {F : ℝ → ℝ} (P : MonotoneQuantilePolicy F)
         (integrableOn_const (C := P.withinError)
           (by simp [Real.volume_Icc]))
         P.quantileDistance_integrable]
-      simp [quantileDistance, Real.volume_Icc]
+      simp [quantileDistance]
     _ = P.withinError + cdfTransportArea (fun z => F z - z) := by
       rw [P.quantileDistance_eq_cdfTransportArea]
 

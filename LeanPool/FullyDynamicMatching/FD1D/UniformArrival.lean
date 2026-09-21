@@ -88,11 +88,11 @@ private theorem piecewiseCDF_constantLeafMass
   | succ L ih =>
       simp only [constantLeafMass, piecewiseCDF]
       by_cases hhalf : z ≤ 1 / 2
-      · rw [if_pos hhalf, ih ⟨by linarith [hz.1], by linarith⟩]
+      · rw [ite_eq_left hhalf, ih ⟨by linarith [hz.1], by linarith⟩]
         rw [pow_succ]
         push_cast
         ring
-      · rw [if_neg hhalf, total_constantLeafMass,
+      · rw [ite_eq_right hhalf, total_constantLeafMass,
           ih ⟨by linarith, by linarith [hz.2]⟩]
         rw [pow_succ]
         push_cast

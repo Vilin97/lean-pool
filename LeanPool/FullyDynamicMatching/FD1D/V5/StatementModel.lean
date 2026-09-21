@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
 
+import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Probability.Kernel.IonescuTulcea.Traj
 import Mathlib.Probability.Kernel.Composition.Prod
 import Mathlib.MeasureTheory.Constructions.UnitInterval
@@ -49,6 +50,7 @@ inventory and current demand. The second measurability field records the exact
 coordinate replacement map used to construct its Markov law.
 -/
 structure OnlinePolicy (m : ℕ) where
+  /-- Selected inventory label as a function of the current state and uniform demand. -/
   select : Inventory m → unitInterval → Fin m
   selectMeasurable :
     Measurable (fun p : Inventory m × unitInterval => select p.1 p.2)
@@ -107,6 +109,7 @@ instance historyKernel_isMarkovKernel (P : OnlinePolicy m) (n : ℕ) :
   infer_instance
 
 /-- The path-space law generated from an arbitrary initial inventory law. -/
+omit [MeasureTheory.IsProbabilityMeasure μ₀] in
 def trajectoryFrom (P : OnlinePolicy m)
     (μ₀ : Measure (Inventory m)) [IsProbabilityMeasure μ₀] :
     Measure (ℕ → ProcessState m) :=

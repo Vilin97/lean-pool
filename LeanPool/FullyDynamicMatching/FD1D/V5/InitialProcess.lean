@@ -69,6 +69,7 @@ private theorem comap_comp_measure_from
 If `μ₀` projects to the finite count law `ν₀`, every later spatial marginal
 projects to the corresponding iterate of the finite count kernel.
 -/
+omit [MeasureTheory.IsProbabilityMeasure μ₀] in
 theorem map_spatialCount_spatialLawFrom
     (μ₀ : Measure (SpatialState m)) [IsProbabilityMeasure μ₀]
     (ν₀ : FiniteLaw (InventoryState (DyadicNode L) m))
@@ -150,6 +151,7 @@ theorem processLawFrom_eq_product
       rw [ih, processKernel_comp_product, spatialLawFrom_succ]
 
 /-- One path-space law for the joint process initialized by `μ₀`. -/
+omit [MeasureTheory.IsProbabilityMeasure μ₀] in
 def trajectoryLawFrom
     (μ₀ : Measure (SpatialState m)) [IsProbabilityMeasure μ₀]
     (a : ℝ) (fallback : Fin m) :

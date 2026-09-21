@@ -257,8 +257,8 @@ theorem bellmanPolynomial_nonnegative_closed
           ring
         have hchart := chartTwo_nonnegative hu hv' hz
         rw [chartTwo] at hchart
-        convert hchart using 1 <;>
-          dsimp [u, v', z, k] <;>
+        convert hchart using 1 ;
+          dsimp [u, v', z, k] ;
           ring
       · have hTwoK : 2 * v ≤ k := le_of_not_ge hkTwo
         let u := k - 2 * v

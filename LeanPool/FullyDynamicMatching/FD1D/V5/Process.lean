@@ -163,18 +163,18 @@ private theorem leafCount_update
   · have hiarrived : i = arrived := harrived.symm
     by_cases hold : C.leaf j = i
     · have hiold : i = C.leaf j := hold.symm
-      rw [if_pos harrived, if_pos hiarrived, if_pos hold, if_pos hiold]
+      rw [ite_eq_left harrived, ite_eq_left hiarrived, ite_eq_left hold, ite_eq_left hiold]
       omega
     · have hiold : i ≠ C.leaf j := fun h => hold h.symm
-      rw [if_pos harrived, if_pos hiarrived, if_neg hold, if_neg hiold]
+      rw [ite_eq_left harrived, ite_eq_left hiarrived, ite_eq_right hold, ite_eq_right hiold]
       omega
   · have hiarrived : i ≠ arrived := fun h => harrived h.symm
     by_cases hold : C.leaf j = i
     · have hiold : i = C.leaf j := hold.symm
-      rw [if_neg harrived, if_neg hiarrived, if_pos hold, if_pos hiold]
+      rw [ite_eq_right harrived, ite_eq_right hiarrived, ite_eq_left hold, ite_eq_left hiold]
       omega
     · have hiold : i ≠ C.leaf j := fun h => hold h.symm
-      rw [if_neg harrived, if_neg hiarrived, if_neg hold, if_neg hiold]
+      rw [ite_eq_right harrived, ite_eq_right hiarrived, ite_eq_right hold, ite_eq_right hiold]
       omega
 
 /--
@@ -226,7 +226,7 @@ theorem actualLeafStep_of_occupied
           · subst j
             simpa using hv
           · simpa [Function.update_of_ne hj] using C.location_mem_cell j } := by
-  rw [actualLeafStep, dif_pos h]
+  rw [actualLeafStep, dite_eq_left h]
 
 /-- The leaf-conditioned spatial update projects exactly to the finite count
 move, including the zero-probability empty-deletion case. -/
@@ -239,7 +239,7 @@ theorem actualLeafStep_countState
       InventoryState.move C.countState deleted arrived := by
   classical
   by_cases h : ∃ j, C.leaf j = deleted
-  · rw [actualLeafStep, dif_pos h]
+  · rw [actualLeafStep, dite_eq_left h]
     have hleaf :
         C.leaf (C.representative fallback deleted) = deleted :=
       C.representative_leaf fallback deleted h
@@ -259,7 +259,7 @@ theorem actualLeafStep_countState
           (if i = deleted then 1 else 0)
     simpa [hleaf] using
       (leafCount_update C (C.representative fallback deleted) arrived i)
-  · rw [actualLeafStep, dif_neg h]
+  · rw [actualLeafStep, dite_eq_right h]
     have hempty : C.countState.1 deleted = 0 := by
       change (Finset.univ.filter fun j : Fin m =>
         C.leaf j = deleted).card = 0
@@ -343,7 +343,7 @@ theorem actualStep_eq_actualLeafStep
         (stateDyadicMass a C.countState).selectedIndex u :=
     ⟨C.representative fallback
       ((stateDyadicMass a C.countState).selectedIndex u), hselected⟩
-  rw [actualLeafStep, dif_pos hoccupied]
+  rw [actualLeafStep, dite_eq_left hoccupied]
   rfl
 
 /-- Pathwise cost of the actual match made in one hierarchical step. -/

@@ -51,9 +51,9 @@ private theorem orderedBias_eq_caps
       min (feedbackCandidate a h x y)
         (min (uniformCandidate h x y) (floorCandidate a p h x y)) := by
   unfold orderedBias
-  rw [if_neg (by omega : x ≠ y)]
-  rw [if_neg (by omega : x + y ≠ 0)]
-  rw [if_neg (by omega : y ≠ 0)]
+  rw [ite_eq_right (by omega : x ≠ y)]
+  rw [ite_eq_right (by omega : x + y ≠ 0)]
+  rw [ite_eq_right (by omega : y ≠ 0)]
 
 private theorem feedbackCandidate_nonneg
     {a h : ℝ} {x y : ℕ}
@@ -102,7 +102,7 @@ theorem orderedBias_nonneg
   by_cases hy : y = 0
   · subst y
     have hx : x ≠ 0 := by omega
-    simp [orderedBias, hx, parentMass, inventory, hh.le]
+    simp [orderedBias, hx, parentMass, inventory]
     positivity
   · have hypos : 0 < y := Nat.pos_of_ne_zero hy
     rw [orderedBias_eq_caps hlt hypos]
@@ -117,7 +117,7 @@ theorem bias_nonneg_of_ordered
     (ha : 0 < a) (hh : 0 < h) (hxy : y ≤ x)
     (ht : discrepancy a p h x y ≤ h / 2) :
     0 ≤ bias a p h x y := by
-  rw [bias, if_pos hxy]
+  rw [bias, ite_eq_left hxy]
   exact orderedBias_nonneg ha hh hxy ht
 
 theorem orderedBias_le_uniform
@@ -199,12 +199,12 @@ private theorem ordered_child_invariants
     have hMR : massRight a p h x 0 = 0 := by
       simp [massRight, hb]
     constructor
-    · rw [rateLeft, if_neg hsum, if_neg (by omega : x ≠ 0), hML]
+    · rw [rateLeft, ite_eq_right hsum, ite_eq_right (by omega : x ≠ 0), hML]
       apply child_regularized_le_rate ha hx
       have hpbound := parent_interval_bound ha ht
       unfold parentMass inventory at *
       nlinarith [mul_nonneg hp.le (Nat.cast_nonneg x)]
-    · rw [rateRight, if_neg hsum, if_pos rfl]
+    · rw [rateRight, ite_eq_right hsum, ite_eq_left rfl]
       unfold regularizedMassRight
       have heq : (p / 2) / ((0 : ℝ) + a / 2) = p / a := by
         field_simp
@@ -217,10 +217,10 @@ private theorem ordered_child_invariants
     have hsum : x + y ≠ 0 := by omega
     have hb0 := bias_nonneg_of_ordered ha hh hxy ht
     have hbU : bias a p h x y ≤ uniformCandidate h x y := by
-      rw [bias, if_pos hxy]
+      rw [bias, ite_eq_left hxy]
       exact orderedBias_le_uniform hxy hypos
     have hbF : bias a p h x y ≤ floorCandidate a p h x y := by
-      rw [bias, if_pos hxy]
+      rw [bias, ite_eq_left hxy]
       by_cases heq : x = y
       · subst x
         simpa [orderedBias] using
@@ -254,9 +254,9 @@ private theorem ordered_child_invariants
       unfold parentMass inventory at hpMul hmassMul
       nlinarith [mul_nonneg hh.le hy']
     constructor
-    · rw [rateLeft, if_neg hsum, if_neg (by omega : x ≠ 0)]
+    · rw [rateLeft, ite_eq_right hsum, ite_eq_right (by omega : x ≠ 0)]
       exact child_regularized_le_rate ha hxpos hMLfloor
-    · rw [rateRight, if_neg hsum, if_neg hy]
+    · rw [rateRight, ite_eq_right hsum, ite_eq_right hy]
       exact child_regularized_le_rate ha hypos hMRfloor
 
 theorem massLeft_eq_count_mul_rateLeft
@@ -272,9 +272,9 @@ theorem massLeft_eq_count_mul_rateLeft
     · subst x
       have hy : y ≠ 0 := by omega
       have hxy : ¬y ≤ 0 := by omega
-      simp [massLeft, rateLeft, bias, orderedBias, hzero, hy, hxy,
+      simp [massLeft, rateLeft, bias, orderedBias, hy, hxy,
         parentMass, inventory]
-    · rw [rateLeft, if_neg hzero, if_neg hx]
+    · rw [rateLeft, ite_eq_right hzero, ite_eq_right hx]
       field_simp
 
 theorem massRight_eq_count_mul_rateRight
@@ -383,18 +383,18 @@ private theorem ordered_child_rate_average_ge
     have hb : bias a p h x 0 = parentMass h x 0 := by
       simp [bias, orderedBias, hxy, hx]
     have hleft : rateLeft a p h x 0 = h := by
-      rw [rateLeft, if_neg hzero, if_neg hx]
+      rw [rateLeft, ite_eq_right hzero, ite_eq_right hx]
       unfold massLeft
       rw [hb]
       simp [parentMass, inventory, hx]
     have hright : rateRight a p h x 0 = max h (p / a) := by
-      rw [rateRight, if_neg hzero, if_pos rfl]
+      rw [rateRight, ite_eq_right hzero, ite_eq_left rfl]
     rw [hleft, hright]
     linarith [le_max_left h (p / a)]
   · have hypos : 0 < y := Nat.pos_of_ne_zero hy
     have hx : x ≠ 0 := by omega
     have hbU : bias a p h x y ≤ uniformCandidate h x y := by
-      rw [bias, if_pos hxy]
+      rw [bias, ite_eq_left hxy]
       exact orderedBias_le_uniform hxy hypos
     have hN : 0 < inventory x y := inventory_pos hzero
     have hx' : 0 < (x : ℝ) := by exact_mod_cast Nat.pos_of_ne_zero hx

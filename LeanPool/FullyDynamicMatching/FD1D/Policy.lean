@@ -507,7 +507,7 @@ private theorem child_denominator_left
     subst y
     simp [hL, hR, V, N]
   · rw [V_eq ha]
-    simp only [hL, if_neg hxy]
+    simp only [hL, ite_eq_right hxy]
     field_simp [D_ne_zero ha hxy]
     unfold D N
     ring
@@ -523,7 +523,7 @@ private theorem child_denominator_right
     subst y
     simp [hL, hR, V, N]
   · rw [V_eq ha]
-    simp only [hR, if_neg hxy]
+    simp only [hR, ite_eq_right hxy]
     field_simp [D_ne_zero ha hxy]
     unfold D N
     ring

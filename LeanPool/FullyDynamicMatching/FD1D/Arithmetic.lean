@@ -32,7 +32,7 @@ theorem sqrt_div_sqrt_six_le_four_div
       _ = (4 / m * Real.sqrt 6) ^ 2 := by
         rw [mul_pow, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 6)]
         field_simp
-        <;> ring
+        ; ring
 
 theorem stationary_sqrt_term_le
     {H m : ℝ} (hm : 0 < m)

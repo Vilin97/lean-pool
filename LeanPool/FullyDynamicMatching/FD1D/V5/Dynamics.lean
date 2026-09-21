@@ -28,7 +28,7 @@ abbrev aggregatedInventory
     (x : InventoryState (DyadicNode L) m) : AggregatedInventory L m :=
   FD1D.HierarchicalDynamics.aggregatedInventory x
 
-@[simp] theorem aggregatedInventory_leaf_count
+theorem aggregatedInventory_leaf_count
     (x : InventoryState (DyadicNode L) m) (w : DyadicNode L) :
     (aggregatedInventory x).count L w = x.1 w :=
   FD1D.HierarchicalDynamics.aggregatedInventory_leaf_count x w
@@ -248,14 +248,17 @@ theorem kernel_expected_nodePotentialChange
 
 /-! ## State observables and exact harmonic drift -/
 
+/-- Aggregated inventory counts viewed as labels on every dyadic level. -/
 def countLabel (x : InventoryState (DyadicNode L) m) :
     ∀ d, DyadicNode d → ℕ :=
   (aggregatedInventory x).count
 
+/-- Deletion mass at every node of the aggregated inventory tree. -/
 def deletionLabel (a : ℝ) (x : InventoryState (DyadicNode L) m) :
     ∀ d, DyadicNode d → ℝ :=
   TreePolicy.deletionMass (aggregatedInventory x) a
 
+/-- Deletion rate at every node of the aggregated inventory tree. -/
 def rateLabel (a : ℝ) (x : InventoryState (DyadicNode L) m) :
     ∀ d, DyadicNode d → ℝ :=
   TreePolicy.rate (aggregatedInventory x) a
@@ -275,10 +278,12 @@ def stateRemainder (a : ℝ)
     (x : InventoryState (DyadicNode L) m) : ℝ :=
   potentialRemainder L (a / 2) (countLabel x) (deletionLabel a x)
 
+/-- Hazard energy of the state rate labels at the selected dyadic level. -/
 def stateRateEnergy (a : ℝ)
     (x : InventoryState (DyadicNode L) m) (d : ℕ) : ℝ :=
   hazardEnergy (rateLabel a x) d
 
+/-- Transport energy of the aggregated inventory state. -/
 def stateTransportEnergy (a : ℝ)
     (x : InventoryState (DyadicNode L) m) : ℝ :=
   TreePolicy.transportEnergy (aggregatedInventory x) a

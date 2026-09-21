@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
 
+import Mathlib.Probability.ProbabilityMassFunction.Integrals
+import Mathlib.Probability.ProbabilityMassFunction.Constructions
+import Mathlib.Probability.Kernel.Basic
 import LeanPool.FullyDynamicMatching.FD1D.FinalArithmetic
 import LeanPool.FullyDynamicMatching.FD1D.InvariantTransport
 import LeanPool.FullyDynamicMatching.FD1D.Realization

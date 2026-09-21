@@ -120,7 +120,7 @@ theorem dL_add_dR {a : ℝ} {x y : ℕ} (ha : 0 < a) :
   by_cases hne : x + y = 0
   · norm_num [dL, dR, hne]
   · have hD := D_ne_zero ha hne
-    simp only [dL, dR, if_neg hne]
+    simp only [dL, dR, ite_eq_right hne]
     field_simp [hD]
     unfold D N
     ring
@@ -141,7 +141,7 @@ theorem q_mul_dL_eq_count_mul_hL {a h qParent : ℝ} {x y : ℕ}
     norm_num [dL, hL, hq, N]
   · have hD := D_ne_zero ha hne
     rw [hq]
-    simp only [dL, hL, if_neg hne]
+    simp only [dL, hL, ite_eq_right hne]
     field_simp [hD]
 
 /-- Algebraic propagation of `q = N h` to the right child. -/
@@ -156,7 +156,7 @@ theorem q_mul_dR_eq_count_mul_hR {a h qParent : ℝ} {x y : ℕ}
     norm_num [dR, hR, hq, N]
   · have hD := D_ne_zero ha hne
     rw [hq]
-    simp only [dR, hR, if_neg hne]
+    simp only [dR, hR, ite_eq_right hne]
     field_simp [hD]
 
 theorem qL_eq_count_mul_hL {a h : ℝ} {x y : ℕ} (ha : 0 < a) :
@@ -174,7 +174,7 @@ theorem hL_pos {a h : ℝ} {x y : ℕ} (ha : 0 < a) (hh : 0 < h) :
   · have hN := N_pos hne
     have hD := D_pos ha hne
     have hya := count_add_a_pos ha y
-    simp only [hL, if_neg hne]
+    simp only [hL, ite_eq_right hne]
     positivity
 
 theorem hR_pos {a h : ℝ} {x y : ℕ} (ha : 0 < a) (hh : 0 < h) :
@@ -184,7 +184,7 @@ theorem hR_pos {a h : ℝ} {x y : ℕ} (ha : 0 < a) (hh : 0 < h) :
   · have hN := N_pos hne
     have hD := D_pos ha hne
     have hxa := count_add_a_pos ha x
-    simp only [hR, if_neg hne]
+    simp only [hR, ite_eq_right hne]
     positivity
 
 /-- Equation `b = -a(h_L-h_R)`, including the empty-node extension. -/
@@ -197,7 +197,7 @@ theorem b_eq_neg_a_mul_hazardDiff {a h : ℝ} {x y : ℕ} (ha : 0 < a) :
     subst y
     simp [b, qL, qR, q, dL, dR, hL, hR, N]
   · have hD := D_ne_zero ha hne
-    simp only [b, qL, qR, q, dL, dR, hL, hR, if_neg hne]
+    simp only [b, qL, qR, q, dL, dR, hL, hR, ite_eq_right hne]
     field_simp [hD, D, N]
     ring
 
@@ -232,7 +232,7 @@ theorem hazardIncrement_eq {a h : ℝ} {x y : ℕ} (ha : 0 < a) :
   · have hD := D_ne_zero ha hne
     have hN := N_ne_zero hne
     have ha0 := ha.ne'
-    simp only [hL, hR, b, qL, qR, q, dL, dR, rho, if_neg hne]
+    simp only [hL, hR, b, qL, qR, q, dL, dR, rho, ite_eq_right hne]
     field_simp [hD, hN, ha0]
     unfold D N
     ring
@@ -282,7 +282,7 @@ theorem V_eq {a h : ℝ} {x y : ℕ} (ha : 0 < a) :
     subst y
     norm_num [V, hL, hR, D, N]
   · have hD := D_ne_zero ha hne
-    simp only [V, hL, hR, if_neg hne]
+    simp only [V, hL, hR, ite_eq_right hne]
     field_simp [hD]
     unfold D N
     ring
@@ -297,7 +297,7 @@ theorem w_eq {a h : ℝ} {x y : ℕ} (ha : 0 < a) :
     subst y
     norm_num [w, hL, hR, D, N]
   · have hD := D_ne_zero ha hne
-    simp only [w, hL, hR, if_neg hne]
+    simp only [w, hL, hR, ite_eq_right hne]
     field_simp [hD]
     ring
 

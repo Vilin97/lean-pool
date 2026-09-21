@@ -22,6 +22,7 @@ open scoped BigOperators
 
 variable {L m : ℕ}
 
+/-- Sum of transport energy and the weighted finest-level rate energy. -/
 def combinedEnergy (a : ℝ)
     (x : InventoryState (DyadicNode L) m) : ℝ :=
   a ^ 2 / 2 * stateRateEnergy a x L + stateTransportEnergy a x

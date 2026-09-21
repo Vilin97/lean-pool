@@ -92,7 +92,7 @@ theorem stateDyadicMassAt_allNonneg
 
 /-- At remaining depth zero, the recursive leaf is the concrete deletion
 probability of that leaf. -/
-@[simp] theorem stateDyadicMassAt_leaf_probability
+theorem stateDyadicMassAt_leaf_probability
     (a : ℝ) (ha : 0 < a) (hm : 0 < m)
     (x : InventoryState (DyadicNode L) m) (w : DyadicNode L) :
     stateDyadicMassAt a x L 0 w =

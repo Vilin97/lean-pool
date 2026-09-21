@@ -199,7 +199,7 @@ def inventoryPerm {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
     (inventoryPerm e x).1 i = x.1 (e.symm i) :=
   rfl
 
-@[simp] theorem inventoryPerm_apply_image_count
+theorem inventoryPerm_apply_image_count
     {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
     (e : Equiv.Perm ι) (x : InventoryState ι m) (i : ι) :
     (inventoryPerm e x).1 (e i) = x.1 i := by
@@ -272,7 +272,7 @@ def stateAggregate {L m : ℕ}
     (x : InventoryState (DyadicNode L) m) : AggregatedInventory L m :=
   (stateLeafInventory x).aggregate
 
-@[simp] theorem stateAggregate_leaf_count {L m : ℕ}
+theorem stateAggregate_leaf_count {L m : ℕ}
     (x : InventoryState (DyadicNode L) m) (w : DyadicNode L) :
     (stateAggregate x).count L w = x.1 w := by
   change ((stateLeafInventory x).aggregate).count L w = x.1 w
@@ -544,7 +544,7 @@ theorem hL_swap_counts (a h : ℝ) (x y : ℕ) :
   · have hyx : y + x = 0 := by omega
     simp [hL, hR, hxy, hyx]
   · have hyx : y + x ≠ 0 := by omega
-    simp only [hL, hR, if_neg hxy, if_neg hyx]
+    simp only [hL, hR, ite_eq_right hxy, ite_eq_right hyx]
     unfold D N
     ring
 
@@ -554,7 +554,7 @@ theorem hR_swap_counts (a h : ℝ) (x y : ℕ) :
   · have hyx : y + x = 0 := by omega
     simp [hL, hR, hxy, hyx]
   · have hyx : y + x ≠ 0 := by omega
-    simp only [hL, hR, if_neg hxy, if_neg hyx]
+    simp only [hL, hR, ite_eq_right hxy, ite_eq_right hyx]
     unfold D N
     ring
 
@@ -1103,7 +1103,7 @@ theorem concrete_kernel_equivariant
 /-! ## Invariant stationary laws for a single permutation -/
 
 /-- Push a finite law forward along a permutation, in pointwise form. -/
-def permuteLaw {α : Type*} [Fintype α] [DecidableEq α]
+def permuteLaw {α : Type*} [Fintype α] 
     (e : Equiv.Perm α) (μ : FiniteLaw α) : FiniteLaw α where
   mass x := μ.mass (e.symm x)
   mass_nonneg x := μ.mass_nonneg _

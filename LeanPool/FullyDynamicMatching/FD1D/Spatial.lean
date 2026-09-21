@@ -185,13 +185,13 @@ theorem selectedLeaf_eq_selectedIndex {L : ℕ} (q : DyadicMass L) (u : ℝ) :
   | @branch L left right ihLeft ihRight =>
       simp only [selectedLeaf, selectedIndex]
       by_cases hu : u ≤ left.total
-      · rw [if_pos hu, if_pos hu, ihLeft]
+      · rw [ite_eq_left hu, ite_eq_left hu, ihLeft]
         simp only [dyadicLeafSumEquiv_inl_val, pow_succ]
         have hpow : (((2 ^ L : ℕ) : ℝ)) ≠ 0 := by
           exact_mod_cast (pow_ne_zero L (by decide : (2 : ℕ) ≠ 0))
         norm_num
         field_simp [hpow]
-      · rw [if_neg hu, if_neg hu, ihRight]
+      · rw [ite_eq_right hu, ite_eq_right hu, ihRight]
         simp only [dyadicLeafSumEquiv_inr_val, pow_succ]
         have hpow : (((2 ^ L : ℕ) : ℝ)) ≠ 0 := by
           exact_mod_cast (pow_ne_zero L (by decide : (2 : ℕ) ≠ 0))
@@ -209,10 +209,10 @@ theorem selectedLeaf_le_quantile {L : ℕ} (q : DyadicMass L)
   | @branch L left right ihLeft ihRight =>
       simp only [selectedLeaf, quantile]
       by_cases hu : u ≤ left.total
-      · rw [if_pos hu, if_pos hu]
+      · rw [ite_eq_left hu, ite_eq_left hu]
         exact div_le_div_of_nonneg_right
           (ihLeft hq.1 hu0 hu) (by norm_num)
-      · rw [if_neg hu, if_neg hu]
+      · rw [ite_eq_right hu, ite_eq_right hu]
         have huLocal0 : 0 ≤ u - left.total := by linarith
         have huLocal1 : u - left.total ≤ right.total := by
           rw [total] at hu1
@@ -242,11 +242,11 @@ theorem selectedIndex_eq_iff_mem_massInterval {L : ℕ} (q : DyadicMass L)
         · intro hsel
           have huLeft : u ≤ left.total := by
             by_contra hnot
-            rw [selectedIndex, if_neg hnot] at hsel
+            rw [selectedIndex, ite_eq_right hnot] at hsel
             have hs := (dyadicLeafSumEquiv L).injective hsel
             simp at hs
           have hlocal : left.selectedIndex u = i := by
-            rw [selectedIndex, if_pos huLeft] at hsel
+            rw [selectedIndex, ite_eq_left huLeft] at hsel
             exact Sum.inl.inj ((dyadicLeafSumEquiv L).injective hsel)
           simpa using (ihLeft hq.1 hu0 huLeft i).mp hlocal
         · intro hmem
@@ -264,7 +264,7 @@ theorem selectedIndex_eq_iff_mem_massInterval {L : ℕ} (q : DyadicMass L)
         · intro hsel
           have huRight : ¬u ≤ left.total := by
             intro huLeft
-            rw [selectedIndex, if_pos huLeft] at hsel
+            rw [selectedIndex, ite_eq_left huLeft] at hsel
             have hs := (dyadicLeafSumEquiv L).injective hsel
             simp at hs
           have huLocal0 : 0 < u - left.total := by linarith
@@ -272,7 +272,7 @@ theorem selectedIndex_eq_iff_mem_massInterval {L : ℕ} (q : DyadicMass L)
             rw [total] at hu1
             linarith
           have hlocal : right.selectedIndex (u - left.total) = i := by
-            rw [selectedIndex, if_neg huRight] at hsel
+            rw [selectedIndex, ite_eq_right huRight] at hsel
             exact Sum.inr.inj ((dyadicLeafSumEquiv L).injective hsel)
           have hinter :=
             (ihRight hq.2 huLocal0 huLocal1 i).mp hlocal
@@ -415,7 +415,9 @@ An exact finite supply configuration: `m` labeled real points, each in the
 unit interval and carrying a certified depth-`L` leaf label.
 -/
 structure SupplyConfiguration (L m : ℕ) where
+  /-- Spatial coordinate of each item in the supply configuration. -/
   location : Fin m → ℝ
+  /-- Dyadic cell containing each item in the supply configuration. -/
   leaf : Fin m → DyadicNode L
   location_mem_unit : ∀ j, location j ∈ Icc (0 : ℝ) 1
   location_mem_cell : ∀ j, location j ∈ dyadicCell (leaf j)
@@ -457,7 +459,7 @@ def representative (C : SupplyConfiguration L m) (fallback : Fin m)
 theorem representative_leaf (C : SupplyConfiguration L m) (fallback : Fin m)
     (i : DyadicNode L) (h : ∃ j, C.leaf j = i) :
     C.leaf (C.representative fallback i) = i := by
-  rw [representative, dif_pos h]
+  rw [representative, dite_eq_left h]
   exact Classical.choose_spec h
 
 /-- Every positive-mass leaf contains an actual configured supply point. -/

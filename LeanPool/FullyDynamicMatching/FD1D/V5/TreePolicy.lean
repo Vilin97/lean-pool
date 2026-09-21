@@ -562,7 +562,7 @@ theorem local_bellman_inequality_separated
       (childAverage (fun d v => rate I a d v ^ 2) d v -
           rate I a d v ^ 2 +
           imbalance I a d v ^ 2 / a ^ 2) / 1000 := by
-            field_simp [ha.ne'] <;> ring
+            field_simp [ha.ne']
     _ ≤ _ := hlocal
 
 /-! ## Deterministic aggregate estimate -/
@@ -597,11 +597,11 @@ theorem bellmanValue_root_eq
     bellmanValue I a 0 dyadicRoot =
       -1 / (2 * (m : ℝ) * ((m : ℝ) + a / 2)) := by
   rw [bellmanValue, discrepancy_root I ha hm, rate_root]
-  simp only [bellman, zero_sub, zero_pow, Nat.ofNat_pos, ne_eq,
-    OfNat.ofNat_ne_zero, not_false_eq_true, div_zero, sub_zero]
+  simp only [bellman, zero_sub, zero_pow, ne_eq,
+    OfNat.ofNat_ne_zero, not_false_eq_true]
   unfold regularizedMass intervalMass inventory
   rw [I.count_root]
-  simp only [nodeMass_root, Nat.cast_ofNat]
+  simp only [nodeMass_root]
   field_simp [show (m : ℝ) ≠ 0 by exact_mod_cast hm.ne']
   ring
 
@@ -764,8 +764,8 @@ theorem deterministic_aggregate_estimate
           501 / (1000 * (m : ℝ) ^ 2) ≤
         restoringDrift I a / a := by
     have hmR : (m : ℝ) ≠ 0 := by exact_mod_cast hm.ne'
-    convert hminus using 1 <;>
-      field_simp [hmR] <;> ring
+    convert hminus using 1 ;
+      field_simp [hmR] ; ring
   have hscaled := (le_div_iff₀ ha).mp hpre
   calc
     a / 1000 * hazardEnergy (rate I a) L +

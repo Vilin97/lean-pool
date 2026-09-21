@@ -29,7 +29,7 @@ variable {α β : Type*} [Fintype α] [Fintype β]
 
 /-- Measures on a finite measurable-singleton space are determined by point masses. -/
 theorem measure_ext_of_singletons [MeasurableSpace α]
-    [MeasurableSingletonClass α] {μ ν : Measure α}
+     {μ ν : Measure α}
     (h : ∀ x, μ ({x} : Set α) = ν ({x} : Set α)) :
     μ = ν :=
   Measure.ext_of_singleton h
@@ -91,14 +91,12 @@ namespace FiniteKernel
 variable {α : Type*} [Fintype α]
 
 /-- A finite kernel's measure-valued row has the prescribed transition mass. -/
-@[simp]
 theorem toKernel_apply_singleton [MeasurableSpace α]
     [MeasurableSingletonClass α] (K : FiniteKernel α) (x y : α) :
     K.toKernel x ({y} : Set α) = ENNReal.ofReal (K x y) := by
   rw [toKernel_apply, FiniteLaw.toMeasure_apply_singleton, rowLaw_mass]
 
 /-- Integrating one finite-kernel row agrees with its elementary weighted sum. -/
-@[simp]
 theorem integral_toKernel [MeasurableSpace α] [MeasurableSingletonClass α]
     (K : FiniteKernel α) (x : α) (f : α → ℝ) :
     ∫ y, f y ∂K.toKernel x = ∑ y, K x y * f y := by

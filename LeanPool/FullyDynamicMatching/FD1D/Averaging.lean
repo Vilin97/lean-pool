@@ -92,6 +92,7 @@ def timeLiftPerm {T : ℕ} (e : Equiv.Perm α) :
     Equiv.Perm (Fin T × α) :=
   (Equiv.refl (Fin T)).prodCongr e
 
+omit [Fintype α] in
 @[simp]
 theorem timeLiftPerm_apply {T : ℕ} (e : Equiv.Perm α)
     (t : Fin T) (x : α) :

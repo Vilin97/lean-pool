@@ -23,11 +23,13 @@ private noncomputable def reachTime
     (K : FiniteKernel α) (hirr : K.Irreducible) (x y : α) : ℕ :=
   Classical.choose (hirr x y)
 
+omit [Nonempty α] in
 private theorem reachTime_spec
     (K : FiniteKernel α) (hirr : K.Irreducible) (x y : α) :
     0 < K.pow (reachTime K hirr x y) x y :=
   Classical.choose_spec (hirr x y)
 
+omit [Nonempty α] in
 private theorem pow_loop_pos
     (K : FiniteKernel α) (hloop : K.HasPositiveLoops)
     (x : α) (n : ℕ) :
@@ -82,10 +84,12 @@ theorem exists_pow_pos
 def lawL1 (μ ν : FiniteLaw α) : ℝ :=
   ∑ x, |μ.mass x - ν.mass x|
 
+omit [DecidableEq α] [Nonempty α] in
 private theorem lawL1_nonneg (μ ν : FiniteLaw α) :
     0 ≤ lawL1 μ ν :=
   Finset.sum_nonneg fun _ _ => abs_nonneg _
 
+omit [Nonempty α] in
 private theorem mass_iterate_sub
     (K : FiniteKernel α) (n : ℕ) (μ ν : FiniteLaw α) (y : α) :
     (K.iterate n μ).mass y - (K.iterate n ν).mass y =
@@ -137,6 +141,7 @@ private theorem exists_minorization
         exact Finset.sum_le_sum fun y _ => hp (x₀, y) (Finset.mem_univ _)
       _ = 1 := K.sum_pow N x₀
 
+omit [DecidableEq α] [Nonempty α] in
 private theorem sum_mass_sub (μ ν : FiniteLaw α) :
     ∑ x, (μ.mass x - ν.mass x) = 0 := by
   rw [Finset.sum_sub_distrib, μ.sum_mass, ν.sum_mass, sub_self]
@@ -196,7 +201,7 @@ private theorem lawL1_blocks_le
   let q := 1 - (Fintype.card α : ℝ) * ε
   induction k with
   | zero =>
-      simp [q]
+      simp
   | succ k ih =>
       have hcontract :=
         lawL1_block_contraction K N ε hε (K.iterate (k * N) μ) π

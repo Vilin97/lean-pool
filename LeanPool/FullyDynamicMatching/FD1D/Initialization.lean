@@ -95,7 +95,6 @@ theorem inventoryStatePerm_count {ι : Type*} [Fintype ι]
     (inventoryStatePerm e x).1 i = x.1 (e.symm i) :=
   rfl
 
-@[simp]
 theorem inventoryStatePerm_image_count {ι : Type*} [Fintype ι]
     {m : ℕ} (e : Equiv.Perm ι) (x : InventoryState ι m) (i : ι) :
     (inventoryStatePerm e x).1 (e i) = x.1 i := by

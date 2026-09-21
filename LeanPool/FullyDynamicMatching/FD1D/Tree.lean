@@ -249,6 +249,7 @@ theorem sum_nodeMass (d : ℕ) :
 
 /-- A leaf inventory vector with a prescribed total inventory `m`. -/
 structure LeafInventory (L m : ℕ) where
+  /-- Number of inventory items in each leaf of the dyadic tree. -/
   count : DyadicNode L → ℕ
   total_count : ∑ v, count v = m
 
@@ -257,7 +258,9 @@ Aggregated counts at every level.  The explicit child equation states exactly
 that each internal count is the sum of the inventory in its two child blocks.
 -/
 structure AggregatedInventory (L m : ℕ) where
+  /-- Inventory at the finest dyadic level. -/
   leaf : LeafInventory L m
+  /-- Aggregated inventory count at each dyadic level and node. -/
   count : ∀ d, DyadicNode d → ℕ
   count_leaf : count L = leaf.count
   count_children : ∀ d, d < L → ∀ v,
@@ -315,8 +318,8 @@ def aggregate {L m : ℕ} (I : LeafInventory L m) :
     funext v
     simp
   count_children d hdL v := by
-    simp only [dif_pos (Nat.le_of_lt hdL),
-      dif_pos (Nat.succ_le_iff.mpr hdL)]
+    simp only [dite_eq_left (Nat.le_of_lt hdL),
+      dite_eq_left (Nat.succ_le_iff.mpr hdL)]
     exact I.nodeCount_children hdL v
   count_root := by
     simp
@@ -328,6 +331,7 @@ An abstract additive tree labeling.  It is useful for `q`, inventory counts,
 or any other quantity whose parent is the sum of its children.
 -/
 structure CoherentTreeLabel (L : ℕ) (A : Type*) [AddCommMonoid A] where
+  /-- Node labels whose parent value is the sum of its child values. -/
   value : ∀ d, DyadicNode d → A
   children : ∀ d, d < L → ∀ v,
     value d v = value (d + 1) (leftChild v) +

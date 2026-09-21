@@ -142,15 +142,15 @@ theorem rateLeft_swap (a p h : ℝ) (x y : ℕ) :
   rw [Nat.add_comm]
   by_cases hzero : x + y = 0
   · simp [hzero]
-  · simp only [if_neg hzero]
+  · simp only [ite_eq_right hzero]
     by_cases hx : x = 0
     · subst x
       simp at hzero
       simp [hzero, massLeft_swap]
     · by_cases hy : y = 0
       · subst y
-        simp [hx]
-      · simp [hx, hy, massLeft_swap]
+        simp
+      · simp [hy, massLeft_swap]
 
 theorem rateRight_swap (a p h : ℝ) (x y : ℕ) :
     rateRight a p h y x = rateLeft a p h x y := by

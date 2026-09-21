@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
 
+import Mathlib.Analysis.Convex.SpecificFunctions.Pow
+import Mathlib.Analysis.SumIntegralComparisons
+import Mathlib.Analysis.Convex.Jensen
 import LeanPool.FullyDynamicMatching.FD1D.Potential
 import LeanPool.FullyDynamicMatching.FD1D.Parameters
 
@@ -61,7 +64,7 @@ theorem harmonicPotential_le_log_one_add {a : ℝ} (ha : 0 < a) (k : ℕ) :
     calc
       (∫ x in (0 : ℝ)..(k : ℝ), (a + x)⁻¹) =
           ∫ x in a..a + k, x⁻¹ := by
-            simpa [add_comm] using
+            simpa only [add_zero] using
               (integral_comp_add_left (fun x : ℝ => x⁻¹) a :
                 (∫ x in (0 : ℝ)..(k : ℝ), (a + x)⁻¹) =
                   ∫ x in a + 0..a + k, x⁻¹)

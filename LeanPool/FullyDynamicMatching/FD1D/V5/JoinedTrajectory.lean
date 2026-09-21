@@ -69,7 +69,7 @@ theorem refresh_coordinateRefreshSupply_countState
   simp [RefreshSupply.countState, spatialCount,
     SupplyConfiguration.countState, SupplyConfiguration.leafCount,
     assignmentState, assignmentCount,
-    refresh_coordinateRefreshSupply_leaf]
+    ]
   rfl
 
 /-- The terminal initialized supply read from the same path used by the main policy. -/
@@ -158,7 +158,6 @@ theorem joinedInitializationStepCost_eq
     initial (coordinateRefreshSupply L (path 0).1) j.isLt]
 
 /-- The joined path's initialization costs sum to the explicit initialization cost. -/
-@[simp]
 theorem sum_joinedInitializationStepCost
     (initial : RefreshSupply L m) (demand : Fin m → ℝ)
     (path : ℕ → ProcessState m) :

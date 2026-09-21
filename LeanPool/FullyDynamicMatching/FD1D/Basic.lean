@@ -4,6 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yash Kanoria
 -/
 
+import Mathlib.Topology.Instances.Matrix
+import Mathlib.LinearAlgebra.Matrix.Stochastic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.MeasureTheory.Integral.Layercake
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.MeasureTheory.Constructions.UnitInterval
+import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Tactic
 
@@ -24,6 +31,7 @@ def policyA (m : ℕ) : ℕ := 200 * ⌈Real.logb 2 (m + 1)⌉₊
 
 /-- A probability mass function on a finite type, represented without quotienting. -/
 structure FiniteLaw (α : Type*) [Fintype α] where
+  /-- Probability mass assigned to each point of the finite state space. -/
   mass : α → ℝ
   mass_nonneg : ∀ x, 0 ≤ mass x
   sum_mass : ∑ x, mass x = 1
@@ -32,6 +40,7 @@ namespace FiniteLaw
 
 variable {α β : Type*} [Fintype α] [Fintype β]
 
+/-- Expectation of a real observable under the finite law. -/
 def expect (μ : FiniteLaw α) (f : α → ℝ) : ℝ :=
   ∑ x, μ.mass x * f x
 

@@ -33,7 +33,7 @@ theorem harmonicPotential_succ (a : ℝ) (k : ℕ) :
     harmonicPotential a (k + 1) =
       harmonicPotential a k + 1 / (k + 1 + a) := by
   rw [harmonicPotential, harmonicPotential, Finset.sum_Icc_succ_top]
-  · simp [add_comm, add_left_comm, add_assoc]
+  · simp [add_comm]
   · omega
 
 /-- Exact drift of one node under an independent deletion and arrival. -/
@@ -81,7 +81,7 @@ theorem node_remainder_le
             exact div_le_div_of_nonneg_right hnum (by positivity)
       _ = p * (p / (N + a)) * (p / (N + a + 1)) := by
             field_simp
-            <;> ring
+
       _ ≤ p * h ^ 2 := by
             have hmul :
                 (p / (N + a)) * (p / (N + a + 1)) ≤ h * h :=
@@ -115,7 +115,7 @@ theorem stationary_hazard_bound
     a / 200 * H ≤ 103 * a / (300 * m ^ 2) := hscaled
     _ = a / 200 * (206 / (3 * m ^ 2)) := by
       field_simp
-      <;> ring
+      ; ring
 
 /-- Algebraic form of the transient averaged hazard estimate (12). -/
 theorem transient_hazard_bound

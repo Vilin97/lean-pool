@@ -67,8 +67,7 @@ theorem map_selectedIndex_volume
   rw [map_coe_volume]
   letI : IsProbabilityMeasure DyadicMass.uniformDemand := by
     rw [← map_coe_volume]
-    exact Measure.isProbabilityMeasure_map
-      measurable_subtype_coe.aemeasurable
+    infer_instance
   apply FiniteLaw.measure_ext_of_singletons
   intro i
   rw [FiniteLaw.toMeasure_apply_singleton]

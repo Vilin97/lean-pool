@@ -123,7 +123,7 @@ theorem statePotential_inventorySwap
           (show d < (d + 1) + r by omega) v =
         FD1D.TreeSymmetry.subtreeSwap v r := by
     unfold FD1D.TreeSymmetry.leafSwap
-    simpa using
+    simp using
       (FD1D.TreeSymmetry.leafSwapWithGap_rfl (n := r) v)
   rw [FD1D.TreeSymmetry.inventorySwap, hleaf]
   exact statePotential_inventoryPerm_subtreeSwap v x a
@@ -185,7 +185,7 @@ def law (L m : ℕ) (a : ℝ) :
         split_ifs <;> ring
       _ = (1 / (S.card : ℝ)) * (S.card : ℝ) := by
         congr 1
-        simpa using
+        simp using
           (Finset.sum_boole
             (R := ℝ) (fun x : InventoryState (DyadicNode L) m => x ∈ S)
             Finset.univ)
@@ -241,7 +241,7 @@ theorem statePotential_le_law_expect
               Dynamics.statePotential a z :=
             le_antisymm (hzmax y) (hymax z)
           rw [heq]
-        · rw [law_mass, if_neg hymem]
+        · rw [law_mass, ite_eq_right hymem]
           simp
       _ = Dynamics.statePotential a z := by
         rw [← Finset.sum_mul, (law L m a).sum_mass, one_mul]

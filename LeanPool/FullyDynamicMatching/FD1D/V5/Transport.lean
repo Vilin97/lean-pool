@@ -88,7 +88,7 @@ theorem stateDyadicMassAt_allNonneg
       exact ⟨ih (d := d + 1) (by omega) (leftChild v),
         ih (d := d + 1) (by omega) (rightChild v)⟩
 
-@[simp] theorem stateDyadicMassAt_leaf_probability
+theorem stateDyadicMassAt_leaf_probability
     (a : ℝ) (ha : 0 < a) (hm : 0 < m)
     (x : InventoryState (DyadicNode L) m) (w : DyadicNode L) :
     stateDyadicMassAt a x L 0 w =
@@ -542,6 +542,7 @@ theorem stationary_expected_haarL2_eq_transportEnergy
 
 /-! ## First-moment quantile cost -/
 
+/-- Expected distance under the quantile policy of the state dyadic mass. -/
 def stateCellCost
     (a : ℝ) (ha : 0 < a) (hm : 0 < m)
     (x : InventoryState (DyadicNode L) m) : ℝ :=

@@ -262,7 +262,7 @@ private theorem quantileEnergyAt_eq
         intro u hu
         dsimp [f]
         simp only [DyadicMass.quantile]
-        rw [if_pos (by
+        rw [ite_eq_left (by
           rw [uIcc_of_le (by linarith)] at hu
           linarith [hu.2])]
         ring_nf
@@ -278,7 +278,7 @@ private theorem quantileEnergyAt_eq
         intro u hu
         dsimp [f]
         simp only [DyadicMass.quantile]
-        rw [if_neg (by linarith [hu.1])]
+        rw [ite_eq_right (by linarith [hu.1])]
         ring_nf
       rw [quantileEnergyAt]
       change (∫ u in C..C + (l.total + r.total), f u) = _
@@ -329,7 +329,7 @@ private theorem spatialEnergyAt_eq_cdfIntegral
         dsimp [f]
         simp only [DyadicMass.piecewiseCDF]
         rw [
-          if_pos (by
+          ite_eq_left (by
             rw [uIcc_of_le (by linarith)] at hz
             apply (div_le_iff₀ hP).2
             linarith [hz.2])]
@@ -346,7 +346,7 @@ private theorem spatialEnergyAt_eq_cdfIntegral
         dsimp [f]
         simp only [DyadicMass.piecewiseCDF]
         rw [
-          if_neg (by
+          ite_eq_right (by
             intro h
             have := (div_le_iff₀ hP).1 h
             linarith [hz.1])]
@@ -394,7 +394,7 @@ theorem quantile_sq_integral_eq_haarL2
   have hspatial :=
     spatialEnergyAt_eq_cdfIntegral q hq.nonneg 0 1 0 (by norm_num)
   simp only [quantileEnergyAt, hq.total_eq_one, zero_add, one_mul,
-    zero_sub, add_zero, spatialEnergyAt] at hquantile
+    zero_sub] at hquantile
   rw [hspatial] at hquantile
   norm_num at hquantile
   have hquantileSet :

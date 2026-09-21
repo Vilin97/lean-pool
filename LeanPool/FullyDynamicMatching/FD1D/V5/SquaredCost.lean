@@ -179,7 +179,7 @@ theorem expectedActualSquaredDistance_le
           2 * w * (∫ u in Icc (0 : ℝ) 1, |d u|) +
           ∫ u in Icc (0 : ℝ) 1, d u ^ 2 := by
         rw [MeasureTheory.integral_const_mul]
-        simp [Real.volume_Icc]
+        simp
       _ = _ := rfl
   let D : ℝ := ∫ u in Icc (0 : ℝ) 1, d u ^ 2
   have hD : 0 ≤ D := integral_nonneg fun _ => sq_nonneg _

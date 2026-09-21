@@ -20,45 +20,55 @@ namespace FD1D
 
 namespace BellmanCertificate
 
+/-- A dense polynomial represented by its coefficient list, in increasing degree order. -/
 structure DPoly (R : Type) where
+  /-- Coefficients in increasing degree order; trailing zero coefficients are permitted. -/
   coeffs : List R
 deriving DecidableEq, Repr
 
 namespace DPoly
 
+/-- The dense representation of a constant polynomial. -/
 def const (a : R) : DPoly R := ⟨[a]⟩
 
+/-- Coefficientwise addition, extending the shorter list by zeros. -/
 def addCoeffs [Add R] : List R → List R → List R
   | [], q => q
   | p, [] => p
   | a :: p, b :: q => (a + b) :: addCoeffs p q
 
+/-- Negation of every coefficient. -/
 def neg [Neg R] (p : DPoly R) : DPoly R :=
   ⟨p.coeffs.map (-·)⟩
 
+/-- Addition of dense polynomials by their coefficient lists. -/
 def add [Add R] (p q : DPoly R) : DPoly R :=
   ⟨addCoeffs p.coeffs q.coeffs⟩
 
+/-- Left multiplication of every coefficient by the given scalar. -/
 def scale [Mul R] (a : R) (p : DPoly R) : DPoly R :=
   ⟨p.coeffs.map (a * ·)⟩
 
+/-- Convolution of coefficient lists for polynomial multiplication. -/
 def mulCoeffs [Zero R] [Add R] [Mul R] : List R → List R → List R
   | [], _ => []
   | a :: p, q =>
       addCoeffs (q.map (a * ·)) (0 :: mulCoeffs p q)
 
+/-- Multiplication of dense polynomials by coefficient convolution. -/
 def mul [Zero R] [Add R] [Mul R] (p q : DPoly R) : DPoly R :=
   ⟨mulCoeffs p.coeffs q.coeffs⟩
 
+/-- Natural powers computed by repeated polynomial multiplication. -/
 def pow [Zero R] [One R] [Add R] [Mul R] (p : DPoly R) : ℕ → DPoly R
   | 0 => const 1
   | n + 1 => mul (pow p n) p
 
-instance [Zero R] : Zero (DPoly R) := ⟨⟨[]⟩⟩
+instance : Zero (DPoly R) := ⟨⟨[]⟩⟩
 instance [One R] : One (DPoly R) := ⟨const 1⟩
 instance [Add R] : Add (DPoly R) := ⟨add⟩
 instance [Neg R] : Neg (DPoly R) := ⟨neg⟩
-instance [Sub R] [Neg R] [Add R] : Sub (DPoly R) := ⟨fun p q => p + -q⟩
+instance [Neg R] [Add R] : Sub (DPoly R) := ⟨fun p q => p + -q⟩
 instance [Zero R] [Add R] [Mul R] : Mul (DPoly R) := ⟨mul⟩
 instance [Zero R] [One R] [Add R] [Mul R] : Pow (DPoly R) Nat := ⟨pow⟩
 instance (n : ℕ) [OfNat R (n + 2)] : OfNat (DPoly R) (n + 2) :=
@@ -74,13 +84,16 @@ instance (n : ℕ) [OfNat R (n + 2)] : OfNat (DPoly R) (n + 2) :=
     (OfNat.ofNat (n + 2) : DPoly R).coeffs =
       [OfNat.ofNat (n + 2)] := rfl
 
+/-- The indeterminate, with coefficient list `[0, 1]`. -/
 def X [Zero R] [One R] : DPoly R := ⟨[0, 1]⟩
 
+/-- Horner evaluation of a coefficient list after applying the coefficient map. -/
 def evalCoeffs [Zero S] [Add S] [Mul S]
     (f : R → S) (x : S) : List R → S
   | [] => 0
   | a :: p => f a + x * evalCoeffs f x p
 
+/-- Evaluation of a dense polynomial using the given coefficient map. -/
 def eval [Zero S] [Add S] [Mul S]
     (f : R → S) (x : S) (p : DPoly R) : S :=
   evalCoeffs f x p.coeffs
@@ -191,25 +204,32 @@ theorem eval_pow [Zero R] [One R] [Add R] [Mul R] [CommRing S]
 
 end DPoly
 
+/-- Integer polynomials in three variables, represented by nested dense polynomials. -/
 abbrev Poly3 := DPoly (DPoly (DPoly ℤ))
 
+/-- The outermost variable of a three-variable polynomial. -/
 def U : Poly3 := DPoly.X
+/-- The middle variable of a three-variable polynomial. -/
 def V : Poly3 := DPoly.const DPoly.X
+/-- The innermost variable of a three-variable polynomial. -/
 def Z : Poly3 := DPoly.const (DPoly.const DPoly.X)
 
+/-- Real evaluation of an integer polynomial at its single argument. -/
 def eval1 (p : DPoly ℤ) (z : ℝ) : ℝ :=
   DPoly.eval (fun c : ℤ => (c : ℝ)) z p
 
+/-- Real evaluation of a nested polynomial at the middle and innermost variables. -/
 def eval2 (p : DPoly (DPoly ℤ)) (v z : ℝ) : ℝ :=
   DPoly.eval (fun q => eval1 q z) v p
 
+/-- Real evaluation of a three-variable integer polynomial. -/
 def eval3 (p : Poly3) (u v z : ℝ) : ℝ :=
   DPoly.eval (fun q => eval2 q v z) u p
 
 @[simp] theorem eval1_zero (z : ℝ) : eval1 0 z = 0 := rfl
 
 @[simp] theorem eval1_one (z : ℝ) : eval1 1 z = 1 := by
-  simp [eval1, DPoly.eval, DPoly.const, DPoly.evalCoeffs]
+  simp [eval1, DPoly.eval, DPoly.evalCoeffs]
 
 @[simp] theorem eval1_add (p q : DPoly ℤ) (z : ℝ) :
     eval1 (p + q) z = eval1 p z + eval1 q z := by
@@ -240,7 +260,7 @@ def eval3 (p : Poly3) (u v z : ℝ) : ℝ :=
 @[simp] theorem eval2_zero (v z : ℝ) : eval2 0 v z = 0 := rfl
 
 @[simp] theorem eval2_one (v z : ℝ) : eval2 1 v z = 1 := by
-  simp [eval2, DPoly.eval, DPoly.const, DPoly.evalCoeffs]
+  simp [eval2, DPoly.eval, DPoly.evalCoeffs]
 
 @[simp] theorem eval2_add (p q : DPoly (DPoly ℤ)) (v z : ℝ) :
     eval2 (p + q) v z = eval2 p v z + eval2 q v z := by
@@ -277,7 +297,7 @@ def eval3 (p : Poly3) (u v z : ℝ) : ℝ :=
 @[simp] theorem eval3_zero (u v z : ℝ) : eval3 0 u v z = 0 := rfl
 
 @[simp] theorem eval3_one (u v z : ℝ) : eval3 1 u v z = 1 := by
-  simp [eval3, DPoly.eval, DPoly.const, DPoly.evalCoeffs]
+  simp [eval3, DPoly.eval, DPoly.evalCoeffs]
 
 @[simp] theorem eval3_add (p q : Poly3) (u v z : ℝ) :
     eval3 (p + q) u v z = eval3 p u v z + eval3 q u v z := by
@@ -384,6 +404,7 @@ def eval3 (p : Poly3) (u v z : ℝ) : ℝ :=
   norm_num [eval3, eval2, eval1, DPoly.eval, DPoly.const,
     DPoly.evalCoeffs]
 
+/-- Polynomial numerator used to certify the Bellman inequality in affine coordinates. -/
 def bellmanAt (s r v : Poly3) : Poly3 :=
   let A := 1 + v
   let S := s + 2
@@ -405,6 +426,7 @@ def bellmanAt (s r v : Poly3) : Poly3 :=
     50 * S * M ^ 5 * dB * bp -
     12 * BB ^ 5 * M ^ 5 * (S * (A ^ 2 - 1) + W0)
 
+/-- Homogenized Bellman polynomial for a rational coordinate with the given denominator. -/
 def projectiveBellmanAt (den s num v : Poly3) : Poly3 :=
   let A := 1 + v
   let S := s + 2
@@ -428,6 +450,7 @@ def projectiveBellmanAt (den s num v : Poly3) : Poly3 :=
     50 * S * M ^ 5 * dB * bp -
     12 * den ^ 5 * BB ^ 5 * M ^ 5 * (S * (A ^ 2 - 1) + W0)
 
+/-- Real-valued expression corresponding to the affine Bellman polynomial. -/
 def bellmanRealAt (s r v : ℝ) : ℝ :=
   let A := 1 + v
   let S := s + 2
@@ -449,6 +472,7 @@ def bellmanRealAt (s r v : ℝ) : ℝ :=
     50 * S * M ^ 5 * dB * bp -
     12 * BB ^ 5 * M ^ 5 * (S * (A ^ 2 - 1) + W0)
 
+/-- Real-valued expression corresponding to the homogenized Bellman polynomial. -/
 def projectiveBellmanRealAt (den s num v : ℝ) : ℝ :=
   let A := 1 + v
   let S := s + 2
@@ -493,36 +517,47 @@ theorem projectiveBellmanRealAt_eq
   dsimp [projectiveBellmanRealAt, bellmanRealAt]
   field_simp [hden]
 
+/-- Bellman certificate in the positive projective chart. -/
 def chartPlus : Poly3 :=
   projectiveBellmanAt (2 * (1 + U)) (2 * V + Z) U V
 
+/-- Bellman certificate after the first negative-coordinate chart substitution. -/
 def chartOne : Poly3 :=
   bellmanAt (2 * U + 2 * V + Z) (-U) (U + V)
 
+/-- Bellman certificate after the second negative-coordinate chart substitution. -/
 def chartTwo : Poly3 :=
   bellmanAt (2 * U + 2 * V + Z) (-2 * U - V) (U + V)
 
+/-- Bellman certificate after the third negative-coordinate chart substitution. -/
 def chartThree : Poly3 :=
   bellmanAt (U + 2 * V + Z) (-U - 2 * V) V
 
+/-- Projective Bellman certificate at the endpoint coordinate `1 / 2`. -/
 def chartEndpoint : Poly3 :=
   projectiveBellmanAt 2 (2 * V + Z) 1 V
 
+/-- Decidable check that every integer coefficient is nonnegative. -/
 def allNonnegative1 (p : DPoly ℤ) : Bool :=
   p.coeffs.all fun c => decide (0 ≤ c)
 
+/-- Decidable check of nonnegativity of every coefficient in two variables. -/
 def allNonnegative2 (p : DPoly (DPoly ℤ)) : Bool :=
   p.coeffs.all allNonnegative1
 
+/-- Decidable check of nonnegativity of every coefficient in three variables. -/
 def allNonnegative3 (p : Poly3) : Bool :=
   p.coeffs.all allNonnegative2
 
+/-- Number of nonzero coefficients in a dense polynomial. -/
 def nonzeroCount1 (p : DPoly ℤ) : Nat :=
   p.coeffs.countP (· ≠ 0)
 
+/-- Number of nonzero integer coefficients in a two-variable polynomial. -/
 def nonzeroCount2 (p : DPoly (DPoly ℤ)) : Nat :=
   (p.coeffs.map nonzeroCount1).sum
 
+/-- Number of nonzero integer coefficients in a three-variable polynomial. -/
 def nonzeroCount3 (p : Poly3) : Nat :=
   (p.coeffs.map nonzeroCount2).sum
 

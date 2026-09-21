@@ -120,7 +120,9 @@ An arbitrary labeled supply configuration at the resolution used by the
 count chain.  No distributional assumption is imposed on the initial supply.
 -/
 structure RefreshSupply (L m : ℕ) where
+  /-- Spatial coordinate of each labeled supply item. -/
   location : Fin m → ℝ
+  /-- Dyadic leaf assigned to each labeled supply item. -/
   leaf : DyadicAssignment L m
   location_mem_unit :
     ∀ j, location j ∈ Set.Icc (0 : ℝ) 1
@@ -130,6 +132,7 @@ Coordinates for every possible replenishment-leaf assignment.  This is the
 coordinate-level parameter used while `Spatial.lean` is unavailable.
 -/
 structure ReplenishmentCoordinates (L m : ℕ) where
+  /-- Replenishment coordinates associated with each dyadic assignment. -/
   location : DyadicAssignment L m → Fin m → ℝ
   location_mem_unit :
     ∀ ω j, location ω j ∈ Set.Icc (0 : ℝ) 1
@@ -204,7 +207,6 @@ theorem refresh_countState {L m : ℕ}
 For every replenishment outcome, the terminal count state is exactly the
 fiber-count state of that outcome.
 -/
-@[simp]
 theorem refresh_countState_at_card {L m : ℕ}
     (initial : RefreshSupply L m) (R : ReplenishmentCoordinates L m)
     (ω : DyadicAssignment L m) :
