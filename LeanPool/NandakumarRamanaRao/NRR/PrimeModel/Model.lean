@@ -18,6 +18,7 @@ namespace NRR
 
 variable {p : ℕ}
 
+/-- A compact prime configuration space with its equivariant configuration and reference maps. -/
 structure PrimeConfigurationModel (hp : Nat.Prime p) where
   /-- The compact metric parameter space of the prime configuration model. -/
   Point : Type

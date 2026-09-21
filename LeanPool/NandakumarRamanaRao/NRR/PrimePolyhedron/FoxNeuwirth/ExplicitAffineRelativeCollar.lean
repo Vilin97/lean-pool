@@ -969,21 +969,33 @@ theorem eval_restrictedGenericityPolynomial
 relative cells. -/
 structure RelativePolynomialAttachment
     (base : Assignment hp C) where
-  /-- The determinant and minor polynomials controlling relative genericity. -/
-  polynomial : RelativeGenericityIndex hp C → MovablePolynomialRing hp C
-  polynomial_eq : polynomial = restrictedGenericityPolynomial hp C base
+  /-- The polynomial family together with its identification with the restricted determinants. -/
+  polynomialData : {f : RelativeGenericityIndex hp C → MovablePolynomialRing hp C //
+    f = restrictedGenericityPolynomial hp C base}
   evaluation : ∀ move i,
-    MvPolynomial.eval move (polynomial i) =
+    MvPolynomial.eval move (polynomialData.1 i) =
       genericityValue hp C (replaceMovable hp C base move) i
 
-attribute [-simp] RelativePolynomialAttachment.mk.injEq
+namespace RelativePolynomialAttachment
+
+variable {hp C} {base : Assignment hp C}
+
+/-- The determinant and minor polynomials carried by the attachment. -/
+def polynomial (A : RelativePolynomialAttachment hp C base) :
+    RelativeGenericityIndex hp C → MovablePolynomialRing hp C :=
+  A.polynomialData.1
+
+theorem polynomial_eq (A : RelativePolynomialAttachment hp C base) :
+    A.polynomial = restrictedGenericityPolynomial hp C base :=
+  A.polynomialData.2
+
+end RelativePolynomialAttachment
 
 /-- Every explicit affine relative cell system carries the audited boundary-restricted determinant
 and minor polynomial attachment. -/
 noncomputable def relativePolynomialAttachment
     (base : Assignment hp C) : RelativePolynomialAttachment hp C base where
-  polynomial := restrictedGenericityPolynomial hp C base
-  polynomial_eq := rfl
+  polynomialData := ⟨restrictedGenericityPolynomial hp C base, rfl⟩
   evaluation := eval_restrictedGenericityPolynomial hp C base
 
 /-- The polynomial attachment exists without any genericity or nontriviality assumption. -/

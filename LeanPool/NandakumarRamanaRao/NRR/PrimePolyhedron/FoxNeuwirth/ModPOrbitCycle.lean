@@ -95,32 +95,51 @@ theorem orientedOrbitBoundaryCoefficient_eq_zero
 
 /-- Proof-carrying orbit-level top-cycle data. -/
 structure ModPOrbitCycleData (hp : Nat.Prime p) where
-  /-- The dimension of the top cells in the modulo-prime orbit cycle. -/
-  topDimension : Nat
-  topDimension_eq : topDimension = p - 1
-  /-- The oriented top-cell coefficient as a function of barred permutations. -/
-  coefficient : BarredPermutation p → ZMod p
-  coefficient_eq : coefficient = orientedTopCoefficient
-  support_iff_top : ∀ b, coefficient b ≠ 0 ↔ b.IsTop
-  /-- The boundary coefficient indexed by a barred permutation and a proper split. -/
-  boundaryCoefficient :
-    BarredPermutation p → ProperSplit p → ZMod p
-  boundaryCoefficient_eq :
-    boundaryCoefficient = orientedOrbitBoundaryCoefficient
-  boundary_zero : ∀ a s, boundaryCoefficient a s = 0
+  /-- The top dimension, identified with one less than the number of labels. -/
+  topDimensionData : {d : Nat // d = p - 1}
+  /-- The coefficient function, identified with the canonical oriented coefficient. -/
+  coefficientData : {f : BarredPermutation p → ZMod p // f = orientedTopCoefficient}
+  support_iff_top : ∀ b, coefficientData.1 b ≠ 0 ↔ b.IsTop
+  /-- The boundary coefficient and its canonical orbit-summed formula. -/
+  boundaryCoefficientData : {f : BarredPermutation p → ProperSplit p → ZMod p //
+    f = orientedOrbitBoundaryCoefficient}
+  boundary_zero : ∀ a s, boundaryCoefficientData.1 a s = 0
 
-attribute [-simp] ModPOrbitCycleData.mk.injEq
+namespace ModPOrbitCycleData
+
+variable {hp : Nat.Prime p}
+
+/-- The top dimension of the orbit cycle. -/
+def topDimension (D : ModPOrbitCycleData hp) : Nat := D.topDimensionData.1
+
+theorem topDimension_eq (D : ModPOrbitCycleData hp) : D.topDimension = p - 1 :=
+  D.topDimensionData.2
+
+/-- The oriented coefficient of a barred permutation. -/
+def coefficient (D : ModPOrbitCycleData hp) : BarredPermutation p → ZMod p :=
+  D.coefficientData.1
+
+theorem coefficient_eq (D : ModPOrbitCycleData hp) : D.coefficient = orientedTopCoefficient :=
+  D.coefficientData.2
+
+/-- The boundary coefficient indexed by a barred permutation and a proper split. -/
+def boundaryCoefficient (D : ModPOrbitCycleData hp) :
+    BarredPermutation p → ProperSplit p → ZMod p :=
+  D.boundaryCoefficientData.1
+
+theorem boundaryCoefficient_eq (D : ModPOrbitCycleData hp) :
+    D.boundaryCoefficient = orientedOrbitBoundaryCoefficient :=
+  D.boundaryCoefficientData.2
+
+end ModPOrbitCycleData
 
 /-- Canonical modulo-prime Fox--Neuwirth orbit cycle. -/
 noncomputable def modPOrbitCycleData
     (hp : Nat.Prime p) : ModPOrbitCycleData hp where
-  topDimension := p - 1
-  topDimension_eq := rfl
-  coefficient := orientedTopCoefficient
-  coefficient_eq := rfl
+  topDimensionData := ⟨p - 1, rfl⟩
+  coefficientData := ⟨orientedTopCoefficient, rfl⟩
   support_iff_top := orientedTopCoefficient_ne_zero_iff hp
-  boundaryCoefficient := orientedOrbitBoundaryCoefficient
-  boundaryCoefficient_eq := rfl
+  boundaryCoefficientData := ⟨orientedOrbitBoundaryCoefficient, rfl⟩
   boundary_zero := orientedOrbitBoundaryCoefficient_eq_zero hp
 
 /-- The orbit-level top chain is a cycle modulo every prime. -/
