@@ -3,7 +3,8 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.Tactic
 import LeanPool.SalemTheorem.PdtSalemCircle
 
 /-!
@@ -365,14 +366,14 @@ lemma reflect_P_eq_Q (alpha : ℝ) (inside : Multiset ℂ) :
           = Polynomial.eval x (SalemCircle.Q alpha inside)} := by
     intro z hz
     have hz0 : z ≠ 0 := by simpa using hz
-    letI : Invertible z⁻¹ := invertibleOfNonzero (inv_ne_zero hz0)
+    let : Invertible z⁻¹ := invertibleOfNonzero (inv_ne_zero hz0)
     have key := Polynomial.eval₂_reflect_mul_pow (RingHom.id ℂ) z⁻¹
       (inside.card + 1) (SalemCircle.P alpha inside)
       (le_of_eq (SalemCircle.P_natDegree alpha inside))
     rw [Polynomial.eval₂_id, Polynomial.eval₂_id, invOf_eq_inv, inv_inv] at key
     have hzp : (z⁻¹) ^ (inside.card + 1) * z ^ (inside.card + 1) = 1 := by
       rw [← mul_pow, inv_mul_cancel₀ hz0, one_pow]
-    show Polynomial.eval z ((SalemCircle.P alpha inside).reflect (inside.card + 1))
+    change Polynomial.eval z ((SalemCircle.P alpha inside).reflect (inside.card + 1))
         = Polynomial.eval z (SalemCircle.Q alpha inside)
     calc Polynomial.eval z ((SalemCircle.P alpha inside).reflect (inside.card + 1))
         = Polynomial.eval z ((SalemCircle.P alpha inside).reflect (inside.card + 1))

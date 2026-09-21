@@ -3,7 +3,7 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.SalemTheorem.PdtPisotLadder
 import LeanPool.SalemTheorem.PdtSalemCircle
 import LeanPool.SalemTheorem.PdtSalemArith
@@ -96,7 +96,7 @@ lemma reflect_eval_eq (W : Polynomial ℝ) {alpha : ℝ} (ha : alpha ≠ 0) (p :
     (hdeg : W.natDegree ≤ p) :
     (W.reflect p).eval alpha = alpha ^ p * W.eval alpha⁻¹ := by
   have hainv : (alpha⁻¹ : ℝ) ≠ 0 := inv_ne_zero ha
-  letI : Invertible (alpha⁻¹ : ℝ) := invertibleOfNonzero hainv
+  let : Invertible (alpha⁻¹ : ℝ) := invertibleOfNonzero hainv
   have key := Polynomial.eval₂_reflect_mul_pow (RingHom.id ℝ) alpha⁻¹ p W hdeg
   rw [Polynomial.eval₂_id, Polynomial.eval₂_id, invOf_eq_inv, inv_inv] at key
   have hp1 : (alpha⁻¹ : ℝ) ^ p * alpha ^ p = 1 := by
@@ -461,13 +461,13 @@ lemma badSet_finite (B : ℝ) : (badSet B).Finite := by
         have h1 : (n : ℝ) < B + 1 := hn ▸ hhigh
         exact_mod_cast le_trans h1.le (Int.le_ceil (B + 1))
       refine Set.mem_biUnion (Set.mem_Icc.mpr ⟨hn2, hnB⟩) ?_
-      show (X ^ 2 - Polynomial.C ((n : ℝ)) * X + 1).eval x = 0
+      change (X ^ 2 - Polynomial.C ((n : ℝ)) * X + 1).eval x = 0
       simp only [Polynomial.eval_add, Polynomial.eval_sub, Polynomial.eval_pow,
         Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_X, Polynomial.eval_one]
       linear_combination x * hn - hxx
     apply Set.Finite.subset
       (Set.Finite.biUnion (Set.finite_Icc (2 : ℤ) ⌈B + 1⌉) fun n _ => ?_) hsub
-    apply Polynomial.finite_setOf_isRoot
+    apply Polynomial.finite_setOfPred_isRoot
     intro hzero
     have h1 := congrArg (fun q : Polynomial ℝ => q.eval 0) hzero
     simp at h1

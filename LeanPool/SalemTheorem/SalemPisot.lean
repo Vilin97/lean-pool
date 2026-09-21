@@ -3,7 +3,7 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.SalemTheorem.PdtPisotLadder
 import LeanPool.SalemTheorem.PdtSalemCircle
 import LeanPool.SalemTheorem.PdtSalemArith

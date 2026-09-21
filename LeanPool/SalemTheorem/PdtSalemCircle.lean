@@ -3,7 +3,11 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib
+import Mathlib.Algebra.Polynomial.Roots
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic
 
 /-!
 # PdtSalemCircle — the circle count
@@ -477,7 +481,7 @@ lemma R_eval_E_eq_zero_iff (alpha : ℝ) (roots : Multiset ℂ) (halpha : 1 < al
 /-! ### Continuity of the phase -/
 
 lemma continuous_E : Continuous E := by
-  show Continuous fun t : ℝ => Complex.exp ((t : ℂ) * Complex.I)
+  change Continuous fun t : ℝ => Complex.exp ((t : ℂ) * Complex.I)
   fun_prop
 
 lemma continuous_arg_alpha {alpha : ℝ} (halpha : 1 < alpha) :
@@ -667,7 +671,7 @@ lemma exists_interior_grid (f : ℝ → ℝ) (hf : Continuous f) (L : ℕ)
   have htf_spec : ∀ j : ℕ, j < L → (0 < tf j ∧ tf j < 2 * Real.pi) ∧
       f (tf j) = Real.pi / 2 + ((k0 : ℝ) + 1 + (j : ℝ)) * Real.pi := by
     intro j hj
-    simp only [htf, dif_pos hj]
+    simp only [htf, dite_eq_left hj]
     exact (hex j hj).choose_spec
   refine ⟨(Finset.range L).image tf, ?_, ?_⟩
   · rw [Finset.card_image_of_injOn, Finset.card_range]

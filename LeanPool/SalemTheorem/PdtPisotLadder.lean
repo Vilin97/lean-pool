@@ -3,7 +3,12 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Polynomial.Basic
+import Mathlib.Topology.Algebra.Polynomial
+import Mathlib.Topology.GDelta.MetrizableSpace
+import Mathlib.Tactic
 
 /-!
 # PdtPisotLadder — the general Pisot ladder
@@ -292,10 +297,10 @@ large the family `R_m = X^m·P + Q` has a canonical root
 increasing; and it tends to `α`.
 
 `halpha` is derivable from `hc` and `hca` (see the module docstring);
-the unused-variable linter is silenced for that one binder. -/
+the hypothesis is retained for interface symmetry with the other ladder result. -/
 theorem pisot_ladder_family
     (P G Q : Polynomial ℝ) (alpha c : ℝ)
-    (halpha : 1 < alpha) (hc : 1 < c) (hca : c < alpha)
+    (_halpha : 1 < alpha) (hc : 1 < c) (hca : c < alpha)
     (hfac : P = (X - C alpha) * G)
     (hG : ∀ x : ℝ, 1 ≤ x → 0 < G.eval x)
     (hQ : ∀ x : ℝ, c ≤ x → x ≤ alpha → 0 < Q.eval x) :

@@ -3,7 +3,7 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.SalemTheorem.PdtSalemCircle
 import LeanPool.SalemTheorem.PdtSalemArith
 import LeanPool.SalemTheorem.PdtSalemMinus
@@ -966,7 +966,7 @@ lemma reflect_eval_eq_C (W : Polynomial ℂ) {z : ℂ} (hz : z ≠ 0) (p : ℕ)
     (hdeg : W.natDegree ≤ p) :
     (W.reflect p).eval z = z ^ p * W.eval z⁻¹ := by
   have hzinv : (z⁻¹ : ℂ) ≠ 0 := inv_ne_zero hz
-  letI : Invertible (z⁻¹ : ℂ) := invertibleOfNonzero hzinv
+  let : Invertible (z⁻¹ : ℂ) := invertibleOfNonzero hzinv
   have key := Polynomial.eval₂_reflect_mul_pow (RingHom.id ℂ) z⁻¹ p W hdeg
   rw [Polynomial.eval₂_id, Polynomial.eval₂_id, invOf_eq_inv, inv_inv] at key
   have hp1 : (z⁻¹ : ℂ) ^ p * z ^ p = 1 := by
@@ -976,6 +976,63 @@ lemma reflect_eval_eq_C (W : Polynomial ℂ) {z : ℂ} (hz : z ≠ 0) (p : ℕ)
     _ = ((W.reflect p).eval z * (z⁻¹ : ℂ) ^ p) * z ^ p := by ring
     _ = W.eval z⁻¹ * z ^ p := by rw [key]
     _ = z ^ p * W.eval z⁻¹ := by ring
+
+private lemma roots_of_pisot_pattern (Pz : Polynomial ℤ) (alpha : ℝ) (inside : Multiset ℂ)
+    (hfacC : Pz.map (Int.castRingHom ℂ) = SalemCircle.P alpha inside) :
+    ∀ z : ℂ, (Pz.map (Int.castRingHom ℂ)).eval z = 0 →
+    z = ((alpha : ℂ)) ∨ z ∈ inside := by
+  intro z hz
+  rw [hfacC, SalemCircle.eval_P] at hz
+  rcases mul_eq_zero.mp hz with h | h
+  · exact Or.inl (sub_eq_zero.mp h)
+  · rw [Multiset.prod_eq_zero_iff] at h
+    obtain ⟨w, hw, hw0⟩ := Multiset.mem_map.mp h
+    have hzw : z = w := sub_eq_zero.mp hw0
+    rw [hzw]
+    exact Or.inr hw
+
+private lemma roots_of_divisor_in_pattern (Pz : Polynomial ℤ) (alpha : ℝ) (inside : Multiset ℂ)
+    (hPzRoots : ∀ z : ℂ, (Pz.map (Int.castRingHom ℂ)).eval z = 0 →
+      z = (alpha : ℂ) ∨ z ∈ inside) : ∀ W : Polynomial ℚ, W ∣ Pz.map (Int.castRingHom ℚ) →
+    ∀ z : ℂ, (W.map (algebraMap ℚ ℂ)).eval z = 0 →
+      z = ((alpha : ℂ)) ∨ z ∈ inside := by
+  intro W hW z hz
+  apply hPzRoots
+  have h1 : W.map (algebraMap ℚ ℂ)
+      ∣ (Pz.map (Int.castRingHom ℚ)).map (algebraMap ℚ ℂ) :=
+    Polynomial.map_dvd _ hW
+  rw [Polynomial.map_map, SalemArith.castQC_triangle] at h1
+  obtain ⟨c, hc⟩ := h1
+  rw [hc, Polynomial.eval_mul, hz, zero_mul]
+
+private lemma eval_reciprocal_reflect_zero :
+    ∀ x : ℝ, x ≠ 0 → ∀ W : Polynomial ℚ, Polynomial.aeval x W = 0 →
+    Polynomial.aeval x⁻¹ (W.reflect W.natDegree) = 0 := by
+  intro x hx W hW
+  rw [SalemArith.aeval_eq_eval_map] at hW ⊢
+  rw [← Polynomial.reflect_map]
+  have hdeg : (W.map (algebraMap ℚ ℝ)).natDegree ≤ W.natDegree :=
+    Polynomial.natDegree_map_le
+  rw [SalemEndgame.reflect_eval_eq (W.map (algebraMap ℚ ℝ)) (inv_ne_zero hx)
+    W.natDegree hdeg, inv_inv, hW, mul_zero]
+
+private lemma monic_reflect_ne_zero : ∀ W : Polynomial ℚ, W.Monic → W.reflect W.natDegree ≠ 0 := by
+  intro W hW h
+  have h1 : (W.reflect W.natDegree).coeff 0 = 1 := by
+    rw [Polynomial.coeff_reflect, Polynomial.revAt_le (Nat.zero_le _), Nat.sub_zero]
+    exact hW.coeff_natDegree
+  rw [h, Polynomial.coeff_zero] at h1
+  exact one_ne_zero h1.symm
+
+private lemma minpoly_map_eval_zero_ne : ∀ x : ℝ, IsIntegral ℚ x → x ≠ 0 →
+    ((minpoly ℚ x).map (algebraMap ℚ ℂ)).eval 0 ≠ 0 := by
+  intro x hx hx0 h
+  have h1 : (algebraMap ℚ ℂ) ((minpoly ℚ x).coeff 0) = 0 := by
+    rw [← Polynomial.coeff_map, Polynomial.coeff_zero_eq_eval_zero]
+    exact h
+  have h2 : (minpoly ℚ x).coeff 0 = 0 :=
+    (algebraMap ℚ ℂ).injective (h1.trans (map_zero _).symm)
+  exact minpoly.coeff_zero_ne_zero hx hx0 h2
 
 /-- **The reduction**: a Pisot-pattern polynomial vanishing at
 `1/alpha` forces `alpha` to be a reciprocal quadratic Pisot unit —
@@ -1015,28 +1072,8 @@ theorem reciprocal_quadratic_of_inv_root
   have hdega_pos : 0 < (minpoly ℚ alpha).natDegree := minpoly.natDegree_pos hQa
   have hdegb_pos : 0 < (minpoly ℚ (alpha⁻¹ : ℝ)).natDegree := minpoly.natDegree_pos hQb
   -- (b) roots of any divisor of `Pz` lie in `{alpha} ∪ inside`
-  have hPzRoots : ∀ z : ℂ, (Pz.map (Int.castRingHom ℂ)).eval z = 0 →
-      z = ((alpha : ℂ)) ∨ z ∈ inside := by
-    intro z hz
-    rw [hfacC, SalemCircle.eval_P] at hz
-    rcases mul_eq_zero.mp hz with h | h
-    · exact Or.inl (sub_eq_zero.mp h)
-    · rw [Multiset.prod_eq_zero_iff] at h
-      obtain ⟨w, hw, hw0⟩ := Multiset.mem_map.mp h
-      have hzw : z = w := sub_eq_zero.mp hw0
-      rw [hzw]
-      exact Or.inr hw
-  have hdvd_roots : ∀ W : Polynomial ℚ, W ∣ Pz.map (Int.castRingHom ℚ) →
-      ∀ z : ℂ, (W.map (algebraMap ℚ ℂ)).eval z = 0 →
-        z = ((alpha : ℂ)) ∨ z ∈ inside := by
-    intro W hW z hz
-    apply hPzRoots
-    have h1 : W.map (algebraMap ℚ ℂ)
-        ∣ (Pz.map (Int.castRingHom ℚ)).map (algebraMap ℚ ℂ) :=
-      Polynomial.map_dvd _ hW
-    rw [Polynomial.map_map, SalemArith.castQC_triangle] at h1
-    obtain ⟨c, hc⟩ := h1
-    rw [hc, Polynomial.eval_mul, hz, zero_mul]
+  have hPzRoots := roots_of_pisot_pattern Pz alpha inside hfacC
+  have hdvd_roots := roots_of_divisor_in_pattern Pz alpha inside hPzRoots
   have hdvd_a : minpoly ℚ alpha ∣ Pz.map (Int.castRingHom ℚ) := by
     apply minpoly.dvd ℚ alpha
     rw [← algebraMap_int_eq, Polynomial.aeval_map_algebraMap,
@@ -1049,15 +1086,7 @@ theorem reciprocal_quadratic_of_inv_root
     exact h0
   -- (c) the two minimal polynomials divide each other's reverse, so
   -- their degrees agree
-  have hrev_root : ∀ x : ℝ, x ≠ 0 → ∀ W : Polynomial ℚ, Polynomial.aeval x W = 0 →
-      Polynomial.aeval x⁻¹ (W.reflect W.natDegree) = 0 := by
-    intro x hx W hW
-    rw [SalemArith.aeval_eq_eval_map] at hW ⊢
-    rw [← Polynomial.reflect_map]
-    have hdeg : (W.map (algebraMap ℚ ℝ)).natDegree ≤ W.natDegree :=
-      Polynomial.natDegree_map_le
-    rw [SalemEndgame.reflect_eval_eq (W.map (algebraMap ℚ ℝ)) (inv_ne_zero hx)
-      W.natDegree hdeg, inv_inv, hW, mul_zero]
+  have hrev_root := eval_reciprocal_reflect_zero
   have hdvd_b_reva : minpoly ℚ (alpha⁻¹ : ℝ)
       ∣ (minpoly ℚ alpha).reflect (minpoly ℚ alpha).natDegree :=
     minpoly.dvd ℚ (alpha⁻¹ : ℝ) (hrev_root alpha ha0 _ (minpoly.aeval ℚ alpha))
@@ -1066,13 +1095,7 @@ theorem reciprocal_quadratic_of_inv_root
     have h1 := hrev_root (alpha⁻¹ : ℝ) hainv0 _ (minpoly.aeval ℚ (alpha⁻¹ : ℝ))
     rw [inv_inv] at h1
     exact minpoly.dvd ℚ alpha h1
-  have hrefl_ne : ∀ W : Polynomial ℚ, W.Monic → W.reflect W.natDegree ≠ 0 := by
-    intro W hW h
-    have h1 : (W.reflect W.natDegree).coeff 0 = 1 := by
-      rw [Polynomial.coeff_reflect, Polynomial.revAt_le (Nat.zero_le _), Nat.sub_zero]
-      exact hW.coeff_natDegree
-    rw [h, Polynomial.coeff_zero] at h1
-    exact one_ne_zero h1.symm
+  have hrefl_ne := monic_reflect_ne_zero
   have hrefl_deg : ∀ W : Polynomial ℚ, (W.reflect W.natDegree).natDegree ≤ W.natDegree :=
     fun W => Polynomial.reverse_natDegree_le W
   have hdeq : (minpoly ℚ alpha).natDegree = (minpoly ℚ (alpha⁻¹ : ℝ)).natDegree :=
@@ -1082,15 +1105,7 @@ theorem reciprocal_quadratic_of_inv_root
       (le_trans (Polynomial.natDegree_le_of_dvd hdvd_b_reva (hrefl_ne _ hmonic_a))
         (hrefl_deg _))
   -- zero is a root of neither complex minimal polynomial
-  have hcoeff0_ne : ∀ x : ℝ, IsIntegral ℚ x → x ≠ 0 →
-      ((minpoly ℚ x).map (algebraMap ℚ ℂ)).eval 0 ≠ 0 := by
-    intro x hx hx0 h
-    have h1 : (algebraMap ℚ ℂ) ((minpoly ℚ x).coeff 0) = 0 := by
-      rw [← Polynomial.coeff_map, Polynomial.coeff_zero_eq_eval_zero]
-      exact h
-    have h2 : (minpoly ℚ x).coeff 0 = 0 :=
-      (algebraMap ℚ ℂ).injective (h1.trans (map_zero _).symm)
-    exact minpoly.coeff_zero_ne_zero hx hx0 h2
+  have hcoeff0_ne := minpoly_map_eval_zero_ne
   -- (d) every complex root of `minpoly ℚ alpha` is `alpha` or `1/alpha`
   have hpair_a : ∀ z : ℂ, ((minpoly ℚ alpha).map (algebraMap ℚ ℂ)).eval z = 0 →
       z = ((alpha : ℂ)) ∨ z = ((alpha : ℂ))⁻¹ := by

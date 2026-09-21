@@ -3,7 +3,7 @@ Copyright (c) 2026 Stephanie Alexander. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephanie Alexander
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.SalemTheorem.PdtSalemCircle
 import LeanPool.SalemTheorem.PdtSalemArith
 
@@ -234,7 +234,7 @@ lemma exists_interior_grid_anchored (f : ℝ → ℝ) (hf : Continuous f) (L : �
   have htf_spec : ∀ j : ℕ, j < L - 1 → (0 < tf j ∧ tf j < 2 * Real.pi) ∧
       f (tf j) = ((k0 : ℝ) + 1 + (j : ℝ)) * Real.pi := by
     intro j hj
-    simp only [htf, dif_pos hj]
+    simp only [htf, dite_eq_left hj]
     exact (hex j hj).choose_spec
   refine ⟨(Finset.range (L - 1)).image tf, ?_, ?_⟩
   · rw [Finset.card_image_of_injOn, Finset.card_range]

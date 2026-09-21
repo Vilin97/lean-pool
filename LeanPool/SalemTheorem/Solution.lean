@@ -14,6 +14,8 @@ PDT.SalemCircle.P.
 -/
 import LeanPool.SalemTheorem.SalemPisot
 
+/-! Completed statement bridges for Salem’s theorem. -/
+
 namespace SalemTheorem
 
 open Polynomial

@@ -19,7 +19,7 @@ import LeanPool.SalemTheorem.Solution
 Source: url:https://github.com/stalex444/salem-theorem
 Authors: Stephanie Alexander
 Status: verified
-Main declarations: `SalemPisot.salem_theorem`, `SalemPisot.salem_construction_two_sided`, `SalemPisot.salem_quadratic_unit`
+Main declarations: `SalemTheorem.salem_theorem`
 Tags: number-theory, pisot-numbers, salem-numbers
 MSC: 11R06, 11R09
 -/

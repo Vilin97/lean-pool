@@ -9982,16 +9982,14 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-    - SalemPisot.salem_theorem
-    - SalemPisot.salem_construction_two_sided
-    - SalemPisot.salem_quadratic_unit
+    - SalemTheorem.salem_theorem
     main_results:
-    - declaration: SalemPisot.salem_theorem
+    - declaration: SalemTheorem.salem_theorem
       informal: Every Pisot number is approached by Salem numbers from both below and above.
-    - declaration: SalemPisot.salem_construction_two_sided
+    - declaration: SalemTheorem.salem_construction_two_sided
       informal: For the nondegenerate Pisot polynomial pattern, reciprocal-family polynomials have Salem
         roots arbitrarily near the Pisot root from either side.
-    - declaration: SalemPisot.salem_quadratic_unit
+    - declaration: SalemTheorem.salem_quadratic_unit
       informal: The quadratic-unit family supplies Salem roots approaching each reciprocal quadratic Pisot
         unit from either side.
     tags:
