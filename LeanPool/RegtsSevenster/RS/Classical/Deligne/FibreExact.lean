@@ -284,7 +284,7 @@ theorem gammaModuleFunctor_map_add
     refine LinearMap.ext fun m => ?_ <;>
     · show m ≫ Mod.Hom.hom f + m ≫ Mod.Hom.hom g =
         m ≫ Mod.Hom.hom h
-      rw [← Preadditive.comp_add, hfg]
+      erw [← Preadditive.comp_add, hfg]
 
 section Splitting
 

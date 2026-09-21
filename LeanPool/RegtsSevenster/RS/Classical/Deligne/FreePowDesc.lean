@@ -332,12 +332,12 @@ private theorem freeLeg_window
             (A ◁ (tensorPowConcat V (a + 2) b).hom)) :=
     (Category.assoc _ _ _).trans
       (whisker_eq _ (freeCollapse_concat_collect A V (a + 2) b))
-  rw [hglue, MonoidalCategory.tensorHom_def]
+  erw [hglue, MonoidalCategory.tensorHom_def]
   simp only [Category.assoc]
-  rw [← MonoidalCategory.comp_whiskerRight_assoc,
+  erw [← MonoidalCategory.comp_whiskerRight_assoc,
     ← MonoidalCategory.comp_whiskerRight_assoc]
-  simp only [Category.assoc]
-  rw [hA]
+  erw [Category.assoc]
+  erw [hA]
   rfl
 
 /-- **The collapse coequalises the slot relations**: a scalar
@@ -353,7 +353,8 @@ theorem freeCollapse_leg
   subst hab
   simp only [powCast_rfl, Category.id_comp, modPowLegM, modPowLegN,
     Category.assoc]
-  show ((tensorPow D (A ⊗ V) a ◁ winLegM A (freeMod A V).X) ▷
+  erw [Category.id_comp]
+  change ((tensorPow D (A ⊗ V) a ◁ winLegM A (freeMod A V).X) ▷
       tensorPow D (A ⊗ V) b) ≫
       modPowGlue (A ⊗ V) a b ≫ freeCollapse A V (a + 2 + b) =
     ((tensorPow D (A ⊗ V) a ◁ winLegN A (freeMod A V).X) ▷

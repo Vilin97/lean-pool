@@ -136,7 +136,7 @@ theorem modTensorAssocCover_cond
     (modTensorLegM A M N ▷ P.X) ≫ modTensorAssocCover A M N P =
       (modTensorLegN A M N ▷ P.X) ≫ modTensorAssocCover A M N P := by
   rw [modTensorLegM, modTensorLegN, modTensorAssocCover]
-  conv_lhs => rw [associator_naturality_left_assoc,
+  conv_lhs => erw [associator_naturality_left_assoc,
     ← whisker_exchange_assoc, modTensor_condition_right,
     associator_naturality_right_assoc,
     ← MonoidalCategory.whiskerLeft_comp_assoc,
@@ -144,7 +144,8 @@ theorem modTensorAssocCover_cond
   conv_rhs => rw [MonoidalCategory.comp_whiskerRight,
     Category.assoc, associator_naturality_middle_assoc]
   simp only [MonoidalCategory.whiskerLeft_comp, Category.assoc]
-  rw [pentagon_hom_hom_inv_hom_hom_assoc]
+  repeat' erw [Category.assoc]
+  erw [pentagon_hom_hom_inv_hom_hom_assoc]
 
 /-- The half-descended associator, on the cover of the outer
 coequalizer of the left-nested side. -/
@@ -205,14 +206,15 @@ theorem modTensorAssocMid_cond
   conv_lhs => rw [← MonoidalCategory.comp_whiskerRight_assoc,
     modTensorπ_actRight]
   simp only [MonoidalCategory.comp_whiskerRight, Category.assoc]
-  conv_lhs => rw [whiskerRight_modTensorπ_assocMid,
+  conv_lhs => erw [whiskerRight_modTensorπ_assocMid,
     modTensorAssocCover, associator_naturality_middle_assoc,
     ← MonoidalCategory.whiskerLeft_comp_assoc, hNP]
   conv_rhs => rw [associator_naturality_left_assoc,
     ← whisker_exchange_assoc, whiskerRight_modTensorπ_assocMid,
     modTensorAssocCover, associator_naturality_right_assoc]
   simp only [MonoidalCategory.whiskerLeft_comp, Category.assoc]
-  rw [pentagon_assoc]
+  repeat' erw [Category.assoc]
+  erw [pentagon_assoc]
 
 /-- **The associator of the tensor product of modules**: the
 descent of the ambient associator to the relative tensors. -/
@@ -268,13 +270,13 @@ theorem modTensorAssocInvCover_cond
       (M.X ◁ modTensorLegN A N P) ≫
         modTensorAssocInvCover A M N P := by
   rw [modTensorLegM, modTensorLegN, modTensorAssocInvCover]
-  conv_lhs => rw [associator_inv_naturality_middle_assoc,
+  conv_lhs => erw [associator_inv_naturality_middle_assoc,
     ← MonoidalCategory.comp_whiskerRight_assoc,
     whiskerLeft_actRight_modTensorπ,
     MonoidalCategory.comp_whiskerRight,
     MonoidalCategory.comp_whiskerRight]
-  simp only [Category.assoc]
-  conv_lhs => rw [modTensor_condition_left,
+  repeat' erw [Category.assoc]
+  conv_lhs => erw [modTensor_condition_left,
     associator_naturality_left_assoc, ← whisker_exchange_assoc]
   conv_rhs => rw [MonoidalCategory.whiskerLeft_comp,
     Category.assoc, associator_inv_naturality_right_assoc]
@@ -332,7 +334,7 @@ theorem modTensorAssocInvMid_cond
       ((α_ M.X A (modTensor A N P)).hom ≫
         (M.X ◁ modTensorAct A N P)) ≫
       modTensorAssocInvMid A M N P
-  conv_lhs => rw [whisker_exchange_assoc,
+  conv_lhs => erw [whisker_exchange_assoc,
     whiskerLeft_modTensorπ_assocInvMid, modTensorAssocInvCover,
     associator_inv_naturality_left_assoc,
     ← MonoidalCategory.comp_whiskerRight_assoc, hMN]
@@ -344,7 +346,8 @@ theorem modTensorAssocInvMid_cond
   conv_rhs => rw [whiskerLeft_modTensorπ_assocInvMid,
     modTensorAssocInvCover,
     associator_inv_naturality_middle_assoc]
-  rw [← pentagon_hom_inv_inv_inv_hom_assoc]
+  repeat' erw [Category.assoc]
+  erw [← pentagon_hom_inv_inv_inv_hom_assoc]
 
 /-- **The inverse associator of the tensor product of modules.** -/
 noncomputable def modTensorAssocInv
@@ -390,10 +393,11 @@ theorem modTensorAssocHom_assocInv
       modTensorAssocInv A M N P =
     (modTensorπ A M N ▷ P.X) ≫
       modTensorπ A (modTensorMod A M N) P
-  rw [whiskerRight_modTensorπ_assocMid_assoc, modTensorAssocCover]
+  erw [whiskerRight_modTensorπ_assocMid_assoc, modTensorAssocCover]
   simp only [Category.assoc]
+  conv_lhs => erw [Category.assoc]
   erw [modTensorπ_assocInv]
-  rw [whiskerLeft_modTensorπ_assocInvMid,
+  erw [whiskerLeft_modTensorπ_assocInvMid,
     modTensorAssocInvCover, Iso.hom_inv_id_assoc]
 
 /-- The inverse associator retracts the associator. -/
@@ -414,11 +418,12 @@ theorem modTensorAssocInv_assocHom
       modTensorAssocHom A M N P =
     (M.X ◁ modTensorπ A N P) ≫
       modTensorπ A M (modTensorMod A N P)
-  rw [whiskerLeft_modTensorπ_assocInvMid_assoc,
+  erw [whiskerLeft_modTensorπ_assocInvMid_assoc,
     modTensorAssocInvCover]
   simp only [Category.assoc]
+  conv_lhs => erw [Category.assoc]
   erw [modTensorπ_assocHom]
-  rw [whiskerRight_modTensorπ_assocMid,
+  erw [whiskerRight_modTensorπ_assocMid,
     modTensorAssocCover, Iso.inv_hom_id_assoc]
 
 /-- **The associator isomorphism of the tensor product of
@@ -476,8 +481,9 @@ theorem modTensorAssocHom_act
         (α_ A M.X (modTensor A N P)).inv ≫
         ((actLeft A M.X ▷ modTensor A N P) ≫
           modTensorπ A M (modTensorMod A N P)) := by
-    rw [modTensorAssocCover]
+    erw [modTensorAssocCover]
     simp only [MonoidalCategory.whiskerLeft_comp, Category.assoc]
+    conv_lhs => arg 2; erw [MonoidalCategory.whiskerLeft_comp, Category.assoc]
     erw [whiskerLeft_modTensorπ_act]
     exact congrArg (CategoryStruct.comp _)
       (congrArg (CategoryStruct.comp _) (Category.assoc _ _ _))
@@ -489,7 +495,7 @@ theorem modTensorAssocHom_act
     ← MonoidalCategory.comp_whiskerRight_assoc,
     whiskerLeft_modTensorπ_act]
   simp only [MonoidalCategory.comp_whiskerRight, Category.assoc]
-  conv_lhs => rw [whiskerRight_modTensorπ_assocMid,
+  conv_lhs => erw [whiskerRight_modTensorπ_assocMid,
     modTensorAssocCover, associator_naturality_left_assoc,
     ← whisker_exchange_assoc]
   conv_rhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc,

@@ -48,7 +48,7 @@ theorem sum_modTensorMapMod
   have hl : modTensorπ R M N ≫
       ∑ i ∈ s, (modTensorMapMod R (g i) (𝟙 N)).hom =
         ∑ i ∈ s, ((g i).hom ▷ N.X) ≫ modTensorπ R M N := by
-    rw [Preadditive.comp_sum]
+    erw [Preadditive.comp_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     refine Eq.trans (modTensorπ_map R (g i) (𝟙 N))
       (eq_whisker ?_ _)

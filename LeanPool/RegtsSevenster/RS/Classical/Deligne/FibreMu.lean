@@ -65,7 +65,7 @@ noncomputable def fibreMu
       gammaPairEven L R (freeMod R V) (freeMod R W)
         (tmulEE _ _ m n) ≫
           (freeModTensorIso R V W).hom.hom := rfl
-  rw [h, gammaPairEven_tmulEE, gpairLin_apply]
+  erw [h, gammaPairEven_tmulEE, gpairLin_apply]
   exact Eq.trans (Category.assoc _ _ _)
     (whisker_eq _ (freeModTensorIso_gpair R V W m n))
 
@@ -88,7 +88,7 @@ noncomputable def fibreMu
       gammaPairEven L R (freeMod R V) (freeMod R W)
         (tmulOO _ _ m n) ≫
           (freeModTensorIso R V W).hom.hom := rfl
-  rw [h, gammaPairEven_tmulOO, gpairLin_apply]
+  erw [h, gammaPairEven_tmulOO, gpairLin_apply]
   exact Eq.trans (Category.assoc _ _ _)
     (whisker_eq _ (freeModTensorIso_gpair R V W m n))
 
@@ -111,7 +111,7 @@ noncomputable def fibreMu
       gammaPairOdd L R (freeMod R V) (freeMod R W)
         (tmulEO _ _ m n) ≫
           (freeModTensorIso R V W).hom.hom := rfl
-  rw [h, gammaPairOdd_tmulEO, gpairLin_apply]
+  erw [h, gammaPairOdd_tmulEO, gpairLin_apply]
   exact Eq.trans (Category.assoc _ _ _)
     (whisker_eq _ (freeModTensorIso_gpair R V W m n))
 
@@ -134,7 +134,7 @@ noncomputable def fibreMu
       gammaPairOdd L R (freeMod R V) (freeMod R W)
         (tmulOE _ _ m n) ≫
           (freeModTensorIso R V W).hom.hom := rfl
-  rw [h, gammaPairOdd_tmulOE, gpairLin_apply]
+  erw [h, gammaPairOdd_tmulOE, gpairLin_apply]
   exact Eq.trans (Category.assoc _ _ _)
     (whisker_eq _ (freeModTensorIso_gpair R V W m n))
 

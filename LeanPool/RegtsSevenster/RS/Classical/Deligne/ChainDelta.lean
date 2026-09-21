@@ -55,7 +55,7 @@ theorem modPowAct_modPowOne
   apply modPow_whiskerLeft_hom_ext A X A 1
   have hπ : modPowπ A X 1 ≫ (modPowOne A X).hom =
       (λ_ X).hom := by
-    rw [modPowOne, Iso.trans_hom, ← Category.assoc]
+    erw [modPowOne, Iso.trans_hom, ← Category.assoc]
     rw [show modPowπ A X 1 ≫ (modPowTriv A X (by omega)).hom =
       𝟙 (tensorPow D X 1) from (modPowTriv A X (by omega)).inv_hom_id]
     rw [Category.id_comp]

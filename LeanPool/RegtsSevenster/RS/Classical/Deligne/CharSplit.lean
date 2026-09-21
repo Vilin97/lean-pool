@@ -186,8 +186,8 @@ theorem shape_e_coeff (P : SchurPackage.{u}) {n : ℕ} (μ : Shape n)
         jtChar μ.val (permCast μ.prop.symm π) := by
   have h1 : (Shape.e P μ).coeff π =
       (P.e μ.val).coeff ((permCast μ.prop).symm π) := by
-    show symCast (le_of_eq μ.prop) (P.e μ.val) π =
-      P.e μ.val ((permCast μ.prop).symm π)
+    change (symCast (le_of_eq μ.prop) (P.e μ.val)).coeff π =
+      (P.e μ.val).coeff ((permCast μ.prop).symm π)
     rw [symCast_apply_of_eq μ.prop (P.e μ.val) π]
   rw [h1, P.e_coeff, P.char_eq_jtChar, permCast_symm]
   rw [show ((μ.val.card.factorial : ℂ)) = (n.factorial : ℂ) from by

@@ -292,7 +292,6 @@ theorem schurKilled_indOf {C : Type v} [SmallCategory C] [MonoidalCategory C]
       (indOf_map_eq_zero_iff (permAlg X μ.card (P.e μ))).mpr
         (hdown.mp h0),
       Limits.zero_comp, Limits.comp_zero]
-    rfl
 
 end AlgebraTransport
 

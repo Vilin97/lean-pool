@@ -79,9 +79,9 @@ private theorem mixTotal
         ((freeModMap R (biproduct.ι (fun k : Fin p ⊕ Fin q =>
       Sum.elim (fun _ => 𝟙_ D) (fun _ => L.obj) k) i)).hom ≫
           e.inv.hom) = _
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   refine Eq.trans (Finset.sum_congr rfl fun i _ => h i) ?_
-  rw [← Preadditive.comp_sum, ← Preadditive.sum_comp]
+  erw [← Preadditive.comp_sum, ← Preadditive.sum_comp]
   refine Eq.trans (whisker_eq _ (eq_whisker
     (freeModMap_biproduct_total R (fun k : Fin p ⊕ Fin q =>
       Sum.elim (fun _ => 𝟙_ D) (fun _ => L.obj) k)) _)) ?_

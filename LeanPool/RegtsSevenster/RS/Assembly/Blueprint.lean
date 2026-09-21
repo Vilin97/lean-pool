@@ -730,7 +730,7 @@ turns the sum into Definition 5.
 
 /- Upstream audit output: 'RS.betaDiag_colouringOfFlip' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/--
+/-
 info: 'RS.EdgeSubset.TransitionSystem.circuitCount_eq_orbitCount_outPerm' depends on axioms: [propext,
  Classical.choice,
  Quot.sound]

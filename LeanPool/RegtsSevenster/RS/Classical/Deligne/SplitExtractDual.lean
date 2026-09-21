@@ -514,7 +514,7 @@ noncomputable def splitDecompDual
   inv := biprod.desc (splitCoevalDual A B φ v d hv)
     (kernel.ι (splitIdemDual A B φ v w d hv hw))
   hom_inv_id := by
-    rw [biprod.lift_desc,
+    erw [biprod.lift_desc,
       splitComplProjDual_ι A B φ v w d hv hw p hp hδ]
     rw [show splitEval A B φ w hw ≫
       splitCoevalDual A B φ v d hv =
@@ -522,7 +522,7 @@ noncomputable def splitDecompDual
     rw [add_sub_cancel]
   inv_hom_id := by
     apply biprod.hom_ext'
-    · rw [biprod.inl_desc_assoc, Category.comp_id]
+    · erw [biprod.inl_desc_assoc, Category.comp_id]
       apply biprod.hom_ext
       · rw [Category.assoc, biprod.lift_fst, biprod.inl_fst,
           splitCoevalDual_splitEval A B φ v w d hv hw p hp hδ]
@@ -545,25 +545,25 @@ noncomputable def splitDecompDual
         rw [splitCoevalDual_splitEval A B φ v w d hv hw
             p hp hδ,
           Category.id_comp, sub_self]
-    · rw [biprod.inr_desc_assoc, Category.comp_id]
+    · erw [biprod.inr_desc_assoc, Category.comp_id]
       apply biprod.hom_ext
-      · rw [Category.assoc, biprod.lift_fst, biprod.inr_fst]
+      · erw [Category.assoc, biprod.lift_fst, biprod.inr_fst]
         haveI : IsSplitMono (splitCoevalDual A B φ v d hv) :=
           IsSplitMono.mk' ⟨splitEval A B φ w hw,
             splitCoevalDual_splitEval A B φ v w d hv hw
               p hp hδ⟩
         refine (cancel_mono
           (splitCoevalDual A B φ v d hv)).mp ?_
-        rw [Limits.zero_comp, Category.assoc]
+        erw [Limits.zero_comp, Category.assoc]
         exact kernel.condition _
-      · rw [Category.assoc, biprod.lift_snd, biprod.inr_snd]
+      · erw [Category.assoc, biprod.lift_snd, biprod.inr_snd]
         refine (cancel_mono (kernel.ι
           (splitIdemDual A B φ v w d hv hw))).mp ?_
         refine Eq.trans (Category.assoc _ _ _) ?_
         refine Eq.trans (whisker_eq _
           (splitComplProjDual_ι A B φ v w d hv hw
             p hp hδ)) ?_
-        rw [Preadditive.comp_sub, Category.comp_id]
+        erw [Preadditive.comp_sub, Category.comp_id]
         have h1 : kernel.ι (splitIdemDual A B φ v w d hv hw) ≫
             splitIdemDual A B φ v w d hv hw = 0 :=
           kernel.condition _

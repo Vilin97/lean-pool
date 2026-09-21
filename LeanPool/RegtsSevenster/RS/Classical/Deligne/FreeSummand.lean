@@ -738,6 +738,20 @@ theorem OddLine.mixEntry_comp
     simp only [mixEntry, Limits.zero_comp, Limits.comp_zero,
       Finset.sum_const_zero, add_zero, zero_add, Matrix.mul_apply]
   · exact sum_smul_id _ _
+  · refine (congrArg₂ (· + ·) ?_ ?_).trans (zero_add 0)
+    · apply Finset.sum_eq_zero
+      intro a _
+      exact Limits.comp_zero
+    · apply Finset.sum_eq_zero
+      intro a _
+      exact Limits.zero_comp
+  · refine (congrArg₂ (· + ·) ?_ ?_).trans (zero_add 0)
+    · apply Finset.sum_eq_zero
+      intro a _
+      exact Limits.zero_comp
+    · apply Finset.sum_eq_zero
+      intro a _
+      exact Limits.comp_zero
   · exact sum_smul_id _ _
 
 /-- Composition of block matrices is matrix multiplication. -/
@@ -801,7 +815,7 @@ theorem OddLine.exists_mixMat
     L.hom_line_scalar hsc
       (biproduct.components e (Sum.inr j) (Sum.inr j'))
   refine ⟨A, B, hom_ext_components _ _ fun j k => ?_⟩
-  rw [components_mixMat]
+  erw [components_mixMat]
   rcases j with i | jj
   · rcases k with i2 | j2
     · exact hA i i2
