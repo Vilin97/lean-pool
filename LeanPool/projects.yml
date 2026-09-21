@@ -9966,3 +9966,35 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - title: Carlson special functions and complex Dirichlet averages
+    summary: Formalizes Carlson special functions through complex Dirichlet averages, with simplex measures,
+      analytic continuation, Euler inversion, Euler–Poisson equations, and quadratic transformations.
+      Includes the complete supporting several-complex-variable and special-function libraries.
+    branch: complex analysis
+    main_declarations:
+    - PalomarSnapshot.r_first_quadratic
+    - PalomarSnapshot.joint_average_continuation
+    main_results:
+    - declaration: PalomarSnapshot.r_first_quadratic
+      informal: The Gamma-regularized Carlson R function satisfies the first quadratic transformation
+        for complex exponent and Dirichlet parameters with positive-real-part unsquared variables.
+    - declaration: PalomarSnapshot.joint_average_continuation
+      informal: Holomorphic averages on convex open scalar domains admit joint entire-parameter continuation.
+    tags:
+    - special-functions
+    - complex-analysis
+    - dirichlet-averages
+    msc:
+    - 33C65
+    - 32A10
+    provenance: AI
+    slug: lean-codes
+    entry_module: LeanPool.CarlsonFunctions
+    authors:
+    - Bastiaan J Braams
+    source:
+      url: https://github.com/bjbraams/lean-codes
+      github_repo: bjbraams/lean-codes
+      commit: fcc2be9a086c1bdd572db91f005e868b80a8d644
+    license: Apache-2.0
+    status: verified
