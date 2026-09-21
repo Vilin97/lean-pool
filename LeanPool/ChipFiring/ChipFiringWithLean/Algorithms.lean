@@ -18,6 +18,8 @@ In particular, the core mathematical statements about $q$-reduced divisors, supe
 and Dhar's algorithm are proved elsewhere in the library.
 -/
 
+namespace ChipFiring
+
 
 namespace CF
 
@@ -293,3 +295,5 @@ noncomputable def dharBurningSetWithOrientation (G : CFGraph) (q : G.V) (c : G.V
   dharBurningSetWithOrientationLoop G c initial_S initial_B initial_O (Fintype.card G.V + 1)
 
 end CF
+
+end ChipFiring

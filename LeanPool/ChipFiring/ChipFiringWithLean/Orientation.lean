@@ -31,6 +31,8 @@ The main results are:
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Theorem 4.8.
 -/
 
+namespace ChipFiring
+
 
 open Multiset Finset
 
@@ -1248,3 +1250,5 @@ theorem orientation_superstable_bijection (G : CFGraph) (q : G.V) :
     exact h_config_eq_target
     -- Proof irrelevance handles the equality of the property components.
   }
+
+end ChipFiring

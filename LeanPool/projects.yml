@@ -9987,13 +9987,13 @@ projects:
     license: Apache-2.0
     status: verified
     main_declarations:
-    - Propositions.riemann_roch
-    - Propositions.clifford
+    - ChipFiring.Propositions.riemann_roch
+    - ChipFiring.Propositions.clifford
     main_results:
-    - declaration: Propositions.riemann_roch
+    - declaration: ChipFiring.Propositions.riemann_roch
       informal: For a finite connected graph, the ranks of a divisor and its canonical complement
         satisfy the graph Riemann–Roch formula.
-    - declaration: Propositions.clifford
+    - declaration: ChipFiring.Propositions.clifford
       informal: For a special divisor on a finite connected graph, its rank is at most half
         its degree.
     tags:

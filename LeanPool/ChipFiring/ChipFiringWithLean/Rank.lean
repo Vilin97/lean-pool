@@ -26,6 +26,8 @@ A divisor $D$ is *maximal unwinnable* if it is unwinnable but $D + \delta_v$ is 
 for every vertex $v$. Such divisors arise in the proof of the Riemann-Roch theorem.
 -/
 
+namespace ChipFiring
+
 
 open Multiset Finset
 
@@ -353,3 +355,5 @@ theorem one_le_apply_of_q_reduced_of_rank_geq_one {G : CFGraph} {q : G.V}
   have hq := heff q
   simp only [Pi.sub_apply, one_chip_apply_v] at hq
   omega
+
+end ChipFiring

@@ -20,6 +20,8 @@ maximal unwinnable divisors:
 - Every maximal unwinnable divisor has degree $g - 1$ (`maximal_unwinnable_deg`).
 -/
 
+namespace ChipFiring
+
 
 open Multiset Finset
 
@@ -540,3 +542,5 @@ theorem rank_degree_inequality
     simp only [_root_.map_add, map_sub]
     linarith
   linarith [degF, moderator_degree M_moderator]
+
+end ChipFiring

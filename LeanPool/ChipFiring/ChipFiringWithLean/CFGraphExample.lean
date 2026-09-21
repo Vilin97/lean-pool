@@ -12,6 +12,8 @@ import Mathlib.LinearAlgebra.Matrix.Symmetric
 Chip firing, graph divisors, and their combinatorial properties.
 -/
 
+namespace ChipFiring
+
 
 open Multiset Finset
 
@@ -193,3 +195,5 @@ private theorem non_q_reduced_example_is_invalid : ¬qReduced exampleGraph Perso
   simpa only [nonQReducedExample, Int.reduceNeg, Int.neg_nonneg, Int.reduceLE]
       using h1' Person.B (by decide)
 }
+
+end ChipFiring

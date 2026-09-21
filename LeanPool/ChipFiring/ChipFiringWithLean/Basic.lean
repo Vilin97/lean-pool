@@ -24,6 +24,8 @@ Many main theorems in this library require connectivity; see `graphConnected`. I
 proof of connectivity must be provided as an additional argument.
 -/
 
+namespace ChipFiring
+
 
 
 universe u
@@ -1753,3 +1755,5 @@ theorem sum_vertex_degree_eq_twice_card_edges (G : CFGraph) :
       rw [sum_card_filter_eq_mul G G.edges (fun v e => e.fst = v ∨ e.snd = v) 2
         (edge_incident_vertices_count G)]
     _ = 2 * ↑(Multiset.card G.edges) := by rw [Nat.cast_mul, Nat.cast_two]
+
+end ChipFiring

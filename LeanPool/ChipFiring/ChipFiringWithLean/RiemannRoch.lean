@@ -13,6 +13,8 @@ The Riemann-Roch theorem for graphs and its main corollaries.
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Chapter 5.
 -/
 
+namespace ChipFiring
+
 
 universe u
 
@@ -369,3 +371,5 @@ def brillNoetherConjecture {G : CFGraph} (_h_conn : graphConnected G) (r d : ℤ
   let g := genus G
   let ρ := g - (r + 1) * (g - d + r)
   0 ≤ ρ → ∃ (D : CFDiv G), rank G D ≥ r ∧ deg D = d
+
+end ChipFiring

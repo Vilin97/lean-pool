@@ -23,6 +23,8 @@ The quantity `outdegS G S v` counts edges from $v$ to vertices outside $S$, and 
 relevant threshold for the superstability condition.
 -/
 
+namespace ChipFiring
+
 
 open Multiset Finset
 
@@ -787,3 +789,5 @@ termination_by L.list.length
 decreasing_by
   rw [h,h']
   simp only [List.length_cons, lt_add_iff_pos_right, Order.lt_one_iff]
+
+end ChipFiring

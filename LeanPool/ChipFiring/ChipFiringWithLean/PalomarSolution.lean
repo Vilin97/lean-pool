@@ -11,6 +11,8 @@ import LeanPool.ChipFiring.ChipFiringWithLean.RiemannRoch
 Chip firing, graph divisors, and their combinatorial properties.
 -/
 
+namespace ChipFiring
+
 namespace Propositions
 
 private lemma rank_eq_rank (G : CFGraph) (D : CFDiv G) (r : ℤ)
@@ -43,3 +45,5 @@ theorem clifford {G : CFGraph} (h_conn : graphConnected G) (D : CFDiv G) :
   exact h_clifford
 
 end Propositions
+
+end ChipFiring
