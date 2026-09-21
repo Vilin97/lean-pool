@@ -35,7 +35,6 @@ variable (eM : ∀ i j : ι, i ≤ j → M i →ₗᵢ[ℝ] M j)
 variable (eN : ∀ i j : ι, i ≤ j → N i →ₗᵢ[ℝ] N j)
 variable [DirectedSystem M (eM · · ·)] [DirectedSystem N (eN · · ·)]
 
-noncomputable local instance : DecidableEq ι := Classical.decEq ι
 
 local instance sourceLinearDirectedSystem :
     DirectedSystem M (NormedDirectLimit.linearMap M eM · · ·) where
@@ -55,14 +54,19 @@ variable (hV : ∀ i j (hij : i ≤ j) x,
 variable (sourceProjection : CoherentRetractionLimit.ProjectionSystem M eM)
 variable (targetProjection : CoherentRetractionLimit.ProjectionSystem N eN)
 
+/-- The completed direct limit of the source stages. -/
 abbrev Source := NormedDirectLimit.CompletedCarrier M eM
+/-- The completed direct limit of the target stages. -/
 abbrev Target := NormedDirectLimit.CompletedCarrier N eN
 
+/-- The continuous extension to completed limits of the compatible nonexpansive stage
+maps. -/
 noncomputable def limitMap
     (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y) :
     Source M eM → Target N eN :=
   CompletedLimitMap.completedMap M N eM eN V hV hLip
 
+omit [∀ (i : ι), CompleteSpace (N i)] in
 /-- The completed limit map preserves the protected scale whenever every
 earlier stage does. -/
 theorem limitMap_preservesUpTo {r : ℝ}

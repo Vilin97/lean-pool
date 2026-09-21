@@ -23,7 +23,7 @@ open ENNReal WithLp
 universe u v
 
 theorem oneSum_dist_eq
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} [NormedAddCommGroup M] 
     (x y : OneSum M) :
     dist x y = dist x.fst y.fst + |x.snd - y.snd| := by
   rw [WithLp.prod_dist_eq_add (by norm_num : 0 < (1 : ℝ≥0∞).toReal)]
@@ -680,6 +680,8 @@ theorem adjunctionPreDist_triangle
       linarith
   | Sum.inr n₀, Sum.inr n₁, Sum.inr n₂ => dist_triangle n₀ n₁ n₂
 
+/-- The gluing pseudometric on the disjoint union of the one-sum source and target, under
+the attachment distance bound. -/
 @[implicit_reducible]
 noncomputable def adjunctionPseudoMetricSpace
     {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
@@ -858,6 +860,7 @@ noncomputable instance
   inferInstanceAs <| MetricSpace <| @SeparationQuotient (OneSum M ⊕ N)
     (adjunctionPseudoMetricSpace V a y H hattach).toUniformSpace.toTopologicalSpace
 
+/-- The canonical map from the one-sum source into the metric adjunction space. -/
 noncomputable def adjunctionSourceMk
     {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
     {N : Type v} [PseudoMetricSpace N]
@@ -876,6 +879,7 @@ noncomputable instance adjunctionSpaceNonempty
     Nonempty (AdjunctionSpace V a y H hattach) :=
   ⟨adjunctionSourceMk V a y H hattach 0⟩
 
+/-- The canonical map from the target into the metric adjunction space. -/
 noncomputable def adjunctionTargetMk
     {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
     {N : Type v} [PseudoMetricSpace N]

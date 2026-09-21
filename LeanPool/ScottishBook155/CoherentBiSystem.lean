@@ -22,7 +22,9 @@ projections. -/
 structure CoherentBiSystem {ι : Type u} [LinearOrder ι]
     (G : ι → Type u)
     [∀ i, NormedAddCommGroup (G i)] [∀ i, NormedSpace ℝ (G i)] where
+  /-- Compatible linear isometric embeddings from earlier stages into later stages. -/
   embed : ∀ i j, i ≤ j → G i →ₗᵢ[ℝ] G j
+  /-- Contractive continuous linear projections from later stages back to earlier stages. -/
   project : ∀ i j, i ≤ j → G j →L[ℝ] G i
   embed_refl : ∀ i x, embed i i le_rfl x = x
   embed_trans : ∀ i j k (hij : i ≤ j) (hjk : j ≤ k) x,

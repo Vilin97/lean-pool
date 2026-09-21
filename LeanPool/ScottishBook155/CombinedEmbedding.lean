@@ -24,7 +24,7 @@ universe u v
 /-- Pair an arbitrary relative coordinate with the quotient Kuratowski
 coordinate used to recover injectivity. -/
 noncomputable def combinedEmbedding
-    {P : Type u} [MetricSpace P] {E : Type v} [PseudoMetricSpace E]
+    {P : Type u} [MetricSpace P] {E : Type v} 
     (relative : P → E) (S : Set P) (base : P) (x : P) :
       E × lp (fun _ : CollapsedQuotient P S ↦ ℝ) ∞ :=
   (relative x, quotientKuratowski S base x)

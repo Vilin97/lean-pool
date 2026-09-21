@@ -25,14 +25,14 @@ abbrev OneSum (M : Type u) := WithLp 1 (M × ℝ)
 
 /-- Parametrization of the base hyperplane together with one elevated point. -/
 noncomputable def attachmentPoint
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} [NormedAddCommGroup M] 
     (a : M) (H : ℝ) : M ⊕ Unit → OneSum M
   | Sum.inl m => toLp 1 (m, 0)
   | Sum.inr _ => toLp 1 (a, H)
 
 /-- The attachment subset of the sum-norm product. -/
 noncomputable def attachmentSet
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} [NormedAddCommGroup M] 
     (a : M) (H : ℝ) : Set (OneSum M) :=
   Set.range (attachmentPoint a H)
 

@@ -101,7 +101,7 @@ equality of the recovered prefixes separates source points.  This is the form
 used after all coordinates larger than the flat recovery band have appeared. -/
 theorem injective_of_eventuallySeparating_recovery
     {X : Type u} {Y : Type v} {A : Type w} {Z : A → Type*}
-    {l : Filter A} [NeBot l]
+    {l : Filter A}
     (f : X → Y) (project : ∀ i, X → Z i) (recover : ∀ i, Y → Z i)
     (hrecover : ∀ x, ∀ᶠ i in l, recover i (f x) = project i x)
     (hseparate : ∀ x y, (∀ᶠ i in l, project i x = project i y) → x = y) :

@@ -22,6 +22,8 @@ open ENNReal WithLp
 
 universe u v
 
+/-- The retractive-envelope embedding of the adjunction space, using its canonical target
+inclusion and retraction. -/
 noncomputable def adjunctionEnvelopeEmbedding
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
     [NormedAddCommGroup N] [NormedSpace ℝ N]

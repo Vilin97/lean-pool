@@ -20,12 +20,16 @@ open ENNReal WithLp
 
 universe u v
 
+/-- The source retraction expressed on the one-sum model of the source and its added real
+coordinate. -/
 noncomputable def sourceRetractionOne
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] 
     [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ) (x : OneSum M) : N :=
   sourceRetraction V a y L H x.fst x.snd
 
+/-- The map on the disjoint union that retracts the source component and fixes the target
+component. -/
 noncomputable def adjunctionRetractionPre
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
     [NormedAddCommGroup N] [NormedSpace ℝ N]

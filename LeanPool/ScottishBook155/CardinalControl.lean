@@ -22,7 +22,6 @@ namespace CardinalControl
 
 open scoped DirectSum
 
-noncomputable local instance {α : Type u} : DecidableEq α := Classical.decEq α
 
 /-- The underlying metric adjunction has no more points than the source and
 target used to generate it. -/

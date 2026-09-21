@@ -22,7 +22,11 @@ private abbrev RI := RecursionIndex.{0}
 
 /-- The exact output required from the transfinite recursion. -/
 structure ScheduledProtectedChain where
+  /-- The protected chain produced by the transfinite construction, with distance scale
+  one half and projection bound one. -/
   chain : ProtectedChain (ι := RI) ((1 : ℝ) / 2) 1
+  /-- An enumeration of each stage target by recursion indices for the processing
+  schedule. -/
   enumerate : ∀ i, RI → (chain.stage i).target
   enumerate_surjective : ∀ i, Function.Surjective (enumerate i)
   processed : ∀ i ξ,
@@ -30,8 +34,11 @@ structure ScheduledProtectedChain where
       (chain.stage (bookkeepingReceivingStage (i, ξ))).map x =
         chain.targetSystem.embed i (bookkeepingReceivingStage (i, ξ))
           (bookkeepingReceivingStage_gt (i, ξ)).le (enumerate i ξ)
+  /-- The index at which the initial bent-map witness is embedded in the protected chain. -/
   seedIndex : RI
+  /-- The isometric embedding of the real-line seed into the scheduled source stage. -/
   seedSource : ℝ →ₗᵢ[ℝ] (chain.stage seedIndex).source
+  /-- The isometric embedding of the bent seed target into the scheduled target stage. -/
   seedTarget : OneSum ℝ →ₗᵢ[ℝ] (chain.stage seedIndex).target
   seedCompatible : ∀ t,
     (chain.stage seedIndex).map (seedSource t) = seedTarget (bentMapL1 t)
@@ -50,9 +57,12 @@ noncomputable local instance targetDirectedSystem :
       (D.chain.targetSystem.embed · · ·) :=
   CoherentBiSystem.directedSystem _ D.chain.targetSystem
 
+/-- The Banach space obtained by completing the direct limit of the source stages. -/
 abbrev FinalSource := D.chain.LimitSource
+/-- The Banach space obtained by completing the direct limit of the target stages. -/
 abbrev FinalTarget := D.chain.LimitTarget
 
+/-- The map induced on completed limits by the compatible protected stage maps. -/
 noncomputable def finalMap : D.FinalSource → D.FinalTarget :=
   D.chain.completedMap (by norm_num)
 

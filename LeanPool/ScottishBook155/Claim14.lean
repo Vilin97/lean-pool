@@ -21,6 +21,7 @@ universe u
 /-- A bundled real Banach space, used so that the source and target types of
 the final existential statement may themselves be chosen by the construction. -/
 structure RealBanachSpace where
+  /-- The underlying type of the bundled real Banach space. -/
   carrier : Type u
   [normedAddCommGroup : NormedAddCommGroup carrier]
   [normedSpace : NormedSpace ℝ carrier]
@@ -39,8 +40,12 @@ def RealBanachSpace.ofType (X : Type u) [NormedAddCommGroup X]
 
 /-- Exact witness asserted by canonical claim 14. -/
 structure Claim14Witness where
+  /-- The real Banach space on which the counterexample map is defined. -/
   source : RealBanachSpace.{u}
+  /-- The real Banach space into which the counterexample map takes values. -/
   target : RealBanachSpace.{u}
+  /-- The map witnessing the failure of global distance preservation at protected scale
+  one quarter. -/
   map : source → target
   isCounterexample : IsCounterexampleAt ((1 : ℝ) / 4) map
 
@@ -49,7 +54,7 @@ def Claim14 : Prop := Nonempty (Claim14Witness.{u})
 
 /-- The stronger construction invariant used in the paper is sufficient for
 the exact claim-14 witness. -/
-def claim14Witness_of_halfScale
+def claim14WitnessOfHalfScale
     (X : RealBanachSpace.{u}) (Y : RealBanachSpace.{u}) (U : X → Y)
     (hbij : Function.Bijective U)
     (hshort : PreservesUpTo ((1 : ℝ) / 2) U)

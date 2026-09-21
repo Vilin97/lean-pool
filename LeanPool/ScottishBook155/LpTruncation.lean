@@ -21,7 +21,6 @@ open ENNReal Filter lp
 
 universe u
 
-noncomputable local instance (ι : Type u) : DecidableEq ι := Classical.decEq ι
 
 /-- Keep exactly the coordinates in a finite set. -/
 noncomputable def lpTruncation {ι : Type u} (s : Finset ι) (f : ℓ^1(ι, ℝ)) :
@@ -29,6 +28,7 @@ noncomputable def lpTruncation {ι : Type u} (s : Finset ι) (f : ℓ^1(ι, ℝ)
   classical
   exact ∑ i ∈ s, lp.single 1 i (f i)
 
+open scoped Classical in
 theorem lpTruncation_apply {ι : Type u} (s : Finset ι) (f : ℓ^1(ι, ℝ)) (i : ι) :
     lpTruncation s f i = if i ∈ s then f i else 0 := by
   classical
@@ -41,24 +41,28 @@ theorem lpTruncation_apply {ι : Type u} (s : Finset ι) (f : ℓ^1(ι, ℝ)) (i
         simp [ha, ih]
       · simp [hia, ih]
 
+open scoped Classical in
 theorem lpTruncation_zero {ι : Type u} (s : Finset ι) :
     lpTruncation s (0 : ℓ^1(ι, ℝ)) = 0 := by
   classical
   ext i
   simp [lpTruncation_apply]
 
+open scoped Classical in
 theorem lpTruncation_add {ι : Type u} (s : Finset ι) (f g : ℓ^1(ι, ℝ)) :
     lpTruncation s (f + g) = lpTruncation s f + lpTruncation s g := by
   classical
   ext i
   by_cases hi : i ∈ s <;> simp [lpTruncation_apply, hi]
 
+open scoped Classical in
 theorem lpTruncation_smul {ι : Type u} (s : Finset ι) (c : ℝ) (f : ℓ^1(ι, ℝ)) :
     lpTruncation s (c • f) = c • lpTruncation s f := by
   classical
   ext i
   by_cases hi : i ∈ s <;> simp [lpTruncation_apply, hi]
 
+open scoped Classical in
 theorem lpTruncation_sub {ι : Type u} (s : Finset ι) (f g : ℓ^1(ι, ℝ)) :
     lpTruncation s (f - g) = lpTruncation s f - lpTruncation s g := by
   classical

@@ -21,8 +21,11 @@ universe u
 
 /-- A coherent chain of protected stages with uniform recovery radius `L`. -/
 structure ProtectedChain {ι : Type u} [LinearOrder ι] (r L : ℝ) where
+  /-- The protected source, target, and map at each index of the chain. -/
   stage : ι → ProtectedStage.{u} r
+  /-- The coherent embeddings and retractions between the source spaces. -/
   sourceSystem : CoherentBiSystem (fun i => (stage i).source)
+  /-- The coherent embeddings and retractions between the target spaces. -/
   targetSystem : CoherentBiSystem (fun i => (stage i).target)
   compatible : ∀ i j (hij : i ≤ j) x,
     (stage j).map (sourceSystem.embed i j hij x) =
@@ -38,6 +41,7 @@ namespace ProtectedChain
 variable {ι : Type u} [LinearOrder ι] [Nonempty ι]
 variable {r L : ℝ} (C : ProtectedChain (ι := ι) r L)
 
+omit [Nonempty ι] in
 /-- Protected chains are determined by their stage family and their two
 bidirectional systems; the remaining fields are propositions. -/
 theorem ext {C D : ProtectedChain (ι := ι) r L}
@@ -52,9 +56,12 @@ theorem ext {C D : ProtectedChain (ι := ι) r L}
   cases eq_of_heq htarget
   rfl
 
+/-- The source Banach space at a specified stage of the chain. -/
 abbrev Source (i : ι) := (C.stage i).source
+/-- The target Banach space at a specified stage of the chain. -/
 abbrev Target (i : ι) := (C.stage i).target
 
+omit [Nonempty ι] in
 /-- Every stage map in a protected chain is nonexpansive at positive protected
 scale. -/
 theorem stage_nonexpansive (hr : 0 < r) (i : ι) (x y : C.Source i) :

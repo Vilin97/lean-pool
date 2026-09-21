@@ -29,7 +29,6 @@ variable (eM : ∀ i j : ι, i ≤ j → M i →ₗᵢ[ℝ] M j)
 variable (eN : ∀ i j : ι, i ≤ j → N i →ₗᵢ[ℝ] N j)
 variable [DirectedSystem M (eM · · ·)] [DirectedSystem N (eN · · ·)]
 
-noncomputable local instance : DecidableEq ι := Classical.decEq ι
 
 local instance sourceLinearDirectedSystem :
     DirectedSystem M (NormedDirectLimit.linearMap M eM · · ·) where
@@ -43,9 +42,13 @@ local instance targetLinearDirectedSystem :
   map_map {k j i} hij hjk x :=
     DirectedSystem.map_map (f := (eN · · ·)) hij hjk x
 
+/-- The normed direct limit of the source spaces before completion. -/
 abbrev Source := NormedDirectLimit.Carrier M eM
+/-- The normed direct limit of the target spaces before completion. -/
 abbrev Target := NormedDirectLimit.Carrier N eN
+/-- The completion of the normed direct limit of the source spaces. -/
 abbrev CompletedSource := NormedDirectLimit.CompletedCarrier M eM
+/-- The completion of the normed direct limit of the target spaces. -/
 abbrev CompletedTarget := NormedDirectLimit.CompletedCarrier N eN
 
 variable (V : ∀ i, M i → N i)

@@ -17,6 +17,7 @@ private abbrev RI := RecursionIndex.{0}
 
 /-- A family of closed prefixes which literally restrict to one another. -/
 structure CompatiblePrefixFamily (j : RI) where
+  /-- The closed protected prefix assigned to each index below the limit. -/
   item : ∀ i : Set.Iio j, ProtectedPrefix i.1
   coherent : ∀ (i k : Set.Iio j) (hik : i.1 ≤ k.1),
     ((item k).restriction hik).chain = (item i).chain
@@ -67,9 +68,9 @@ theorem link_sourceEmbedding_apply (i k : Set.Iio j) (hik : i ≤ k)
       (F.item k).chain.sourceSystem.embed
         ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik
         (ProtectedStage.castSourcePoint (F.stageEq i k hik).symm x) := by
-  simp only [link, ProtectedPrefix.linkOfRestriction,
-    ProtectedLink.castSource_sourceEmbedding]
-  rfl
+  exact ProtectedLink.castSource_sourceEmbedding
+    (F.stageEq i k hik) ((F.item k).chain.link
+      ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) x
 
 theorem link_targetEmbedding_apply (i k : Set.Iio j) (hik : i ≤ k)
     (x : (F.stage i).target) :
@@ -77,9 +78,9 @@ theorem link_targetEmbedding_apply (i k : Set.Iio j) (hik : i ≤ k)
       (F.item k).chain.targetSystem.embed
         ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik
         (ProtectedStage.castTargetPoint (F.stageEq i k hik).symm x) := by
-  simp only [link, ProtectedPrefix.linkOfRestriction,
-    ProtectedLink.castSource_targetEmbedding]
-  rfl
+  exact ProtectedLink.castSource_targetEmbedding
+    (F.stageEq i k hik) ((F.item k).chain.link
+      ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) x
 
 theorem link_sourceProjection_apply (i k : Set.Iio j) (hik : i ≤ k)
     (z : (F.stage k).source) :
@@ -87,9 +88,9 @@ theorem link_sourceProjection_apply (i k : Set.Iio j) (hik : i ≤ k)
       ProtectedStage.castSourcePoint (F.stageEq i k hik)
         ((F.item k).chain.sourceSystem.project
           ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik z) := by
-  simp only [link, ProtectedPrefix.linkOfRestriction,
-    ProtectedLink.castSource_sourceProjection]
-  rfl
+  exact ProtectedLink.castSource_sourceProjection
+    (F.stageEq i k hik) ((F.item k).chain.link
+      ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) z
 
 theorem link_targetProjection_apply (i k : Set.Iio j) (hik : i ≤ k)
     (z : (F.stage k).target) :
@@ -97,9 +98,9 @@ theorem link_targetProjection_apply (i k : Set.Iio j) (hik : i ≤ k)
       ProtectedStage.castTargetPoint (F.stageEq i k hik)
         ((F.item k).chain.targetSystem.project
           ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik z) := by
-  simp only [link, ProtectedPrefix.linkOfRestriction,
-    ProtectedLink.castSource_targetProjection]
-  rfl
+  exact ProtectedLink.castSource_targetProjection
+    (F.stageEq i k hik) ((F.item k).chain.link
+      ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) z
 
 theorem source_cast_embed_eq_later (i k m : Set.Iio j)
     (hik : i ≤ k) (hkm : k ≤ m) (x : (F.stage i).source) :
@@ -129,8 +130,7 @@ theorem source_cast_embed_eq_later (i k m : Set.Iio j)
               E.stage ⟨i.1, hik⟩)
             (F.coherent k m hkm)) x₀ =
         ProtectedStage.castSourcePoint (F.stageEq i k hik).symm x := by
-    dsimp [x₀]
-    rw [ProtectedStage.castSourcePoint_trans]
+    exact ProtectedStage.castSourcePoint_trans _ _ x
   have ht' := ht.trans (congrArg
     ((F.item k).chain.sourceSystem.embed
       ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) hx₀)
@@ -183,8 +183,7 @@ theorem target_cast_embed_eq_later (i k m : Set.Iio j)
               E.stage ⟨i.1, hik⟩)
             (F.coherent k m hkm)) x₀ =
         ProtectedStage.castTargetPoint (F.stageEq i k hik).symm x := by
-    dsimp [x₀]
-    rw [ProtectedStage.castTargetPoint_trans]
+    exact ProtectedStage.castTargetPoint_trans _ _ x
   have ht' := ht.trans (congrArg
     ((F.item k).chain.targetSystem.embed
       ⟨i.1, hik⟩ ⟨k.1, show k.1 ≤ k.1 from le_rfl⟩ hik) hx₀)
@@ -242,7 +241,7 @@ theorem source_cast_project_eq_later (a i k : Set.Iio j)
             (F.coherent i k hik) = F.stageEq i k hik :=
       Subsingleton.elim _ _
     rw [heq]
-    simp
+    exact ProtectedStage.castSourcePoint_apply_symm (F.stageEq i k hik) x
   have ht' := ht.trans (congrArg
     ((F.item i).chain.sourceSystem.project
       ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai) hz)
@@ -315,7 +314,7 @@ theorem target_cast_project_eq_later (a i k : Set.Iio j)
             (F.coherent i k hik) = F.stageEq i k hik :=
       Subsingleton.elim _ _
     rw [heq]
-    simp
+    exact ProtectedStage.castTargetPoint_apply_symm (F.stageEq i k hik) x
   have ht' := ht.trans (congrArg
     ((F.item i).chain.targetSystem.project
       ⟨a.1, hai⟩ ⟨i.1, show i.1 ≤ i.1 from le_rfl⟩ hai) hz)
@@ -470,8 +469,9 @@ theorem openChain_restriction (i : Set.Iio j) :
         (ProtectedStage.castSourcePoint
           (F.stageEq a' i (closedToOpen_le i a)) x)
       rw [h]
-      simp [a', b', closedToOpen]
-      congr
+      exact congrArg ((F.item i).chain.sourceSystem.embed a b hab)
+        (ProtectedStage.castSourcePoint_symm_apply
+          (F.stageEq a' i (closedToOpen_le i a)) x)
     · funext a b hab
       apply ContinuousLinearMap.ext
       intro z
@@ -495,8 +495,11 @@ theorem openChain_restriction (i : Set.Iio j) :
         (ProtectedStage.castSourcePoint
           (F.stageEq b' i (closedToOpen_le i b)) z)
       rw [← h]
-      simp [a', b', closedToOpen]
-      congr
+      exact (ProtectedStage.castSourcePoint_symm_apply
+        (F.stageEq a' i (closedToOpen_le i a)) _).trans
+        (congrArg ((F.item i).chain.sourceSystem.project a b hab)
+          (ProtectedStage.castSourcePoint_symm_apply
+            (F.stageEq b' i (closedToOpen_le i b)) z))
   · apply CoherentBiSystem.ext
     · funext a b hab
       apply LinearIsometry.ext
@@ -521,8 +524,9 @@ theorem openChain_restriction (i : Set.Iio j) :
         (ProtectedStage.castTargetPoint
           (F.stageEq a' i (closedToOpen_le i a)) x)
       rw [h]
-      simp [a', b', closedToOpen]
-      congr
+      exact congrArg ((F.item i).chain.targetSystem.embed a b hab)
+        (ProtectedStage.castTargetPoint_symm_apply
+          (F.stageEq a' i (closedToOpen_le i a)) x)
     · funext a b hab
       apply ContinuousLinearMap.ext
       intro z
@@ -546,8 +550,11 @@ theorem openChain_restriction (i : Set.Iio j) :
         (ProtectedStage.castTargetPoint
           (F.stageEq b' i (closedToOpen_le i b)) z)
       rw [← h]
-      simp [a', b', closedToOpen]
-      congr
+      exact (ProtectedStage.castTargetPoint_symm_apply
+        (F.stageEq a' i (closedToOpen_le i a)) _).trans
+        (congrArg ((F.item i).chain.targetSystem.project a b hab)
+          (ProtectedStage.castTargetPoint_symm_apply
+            (F.stageEq b' i (closedToOpen_le i b)) z))
 
 end CompatiblePrefixFamily
 

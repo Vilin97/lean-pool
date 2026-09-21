@@ -22,6 +22,7 @@ private abbrev RI := RecursionIndex.{0}
 /-- A coherent chain on a closed initial segment, with the cardinal bounds
 needed to enumerate every target stage. -/
 structure ProtectedPrefix (j : RI) where
+  /-- The protected chain on the closed initial segment through the prefix index. -/
   chain : ProtectedChain (ι := Set.Iic j) ((1 : ℝ) / 2) 1
   source_mk_le : ∀ i, Cardinal.mk (chain.stage i).source ≤ stageCardinal
   target_mk_le : ∀ i, Cardinal.mk (chain.stage i).target ≤ stageCardinal

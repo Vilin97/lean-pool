@@ -16,9 +16,12 @@ private abbrev RI := RecursionIndex.{0}
 /-- A protected stage together with the uniform cardinal bounds and the
 enumeration used by bookkeeping. -/
 structure EnumeratedStage where
+  /-- The underlying stage with protected distance scale one half. -/
   stage : ProtectedStage.{0} ((1 : ℝ) / 2)
   source_mk_le : Cardinal.mk stage.source ≤ stageCardinal
   target_mk_le : Cardinal.mk stage.target ≤ stageCardinal
+  /-- A surjective enumeration of the target by recursion indices, used to schedule later
+  extensions. -/
   enumerate : RI → stage.target
   enumerate_surjective : Function.Surjective enumerate
 

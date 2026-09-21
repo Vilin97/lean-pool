@@ -30,8 +30,8 @@ variable [∀ i, NormedAddCommGroup (G i)] [∀ i, NormedSpace ℝ (G i)]
 variable (f : ∀ i j : ι, i ≤ j → G i →ₗᵢ[ℝ] G j)
 variable [DirectedSystem G (f · · ·)]
 
-noncomputable local instance : DecidableEq ι := Classical.decEq ι
 
+/-- The linear map underlying an isometric transition in the direct system. -/
 abbrev linearMap (i j : ι) (h : i ≤ j) : G i →ₗ[ℝ] G j :=
   (f i j h).toLinearMap
 
@@ -43,6 +43,7 @@ local instance linearDirectedSystem : DirectedSystem G (linearMap G f · · ·) 
 /-- The underlying algebraic direct limit. -/
 abbrev Carrier := Module.DirectLimit G (linearMap G f)
 
+omit [Nonempty ι] in
 /-- Equal representatives in an isometric direct system have equal norms. -/
 theorem norm_eq_of_of_eq {i j : ι} {x : G i} {y : G j}
     (h : Module.DirectLimit.of ℝ ι G (linearMap G f) i x =
@@ -73,6 +74,7 @@ noncomputable def reprIndex (z : Carrier G f) : ι :=
 noncomputable def reprValue (z : Carrier G f) : G (reprIndex G f z) :=
   Classical.choose (Classical.choose_spec (Module.DirectLimit.exists_of z))
 
+omit [DirectedSystem G fun x1 x2 x3 => ⇑(f x1 x2 x3)] in
 theorem repr_spec (z : Carrier G f) :
     Module.DirectLimit.of ℝ ι G (linearMap G f) (reprIndex G f z) (reprValue G f z) = z :=
   Classical.choose_spec (Classical.choose_spec (Module.DirectLimit.exists_of z))
@@ -161,6 +163,7 @@ variable (hg : ∀ i j (hij : i ≤ j) x, g j (f i j hij x) = g i x)
 noncomputable def algebraicLiftLinear : Carrier G f →ₗ[ℝ] H :=
   Module.DirectLimit.lift ℝ ι G (linearMap G f) (fun i => (g i).toLinearMap) hg
 
+omit [CompleteSpace H] in
 theorem algebraicLiftLinear_of (i : ι) (x : G i) :
     algebraicLiftLinear G f g hg (of G f i x) = g i x := by
   exact Module.DirectLimit.lift_of (R := ℝ) (ι := ι) (G := G) (f := linearMap G f)
@@ -190,7 +193,6 @@ noncomputable def completedLift (C : ℝ)
   (algebraicLift G f g hg C hC).extend
     (UniformSpace.Completion.toComplL : Carrier G f →L[ℝ] CompletedCarrier G f)
 
-@[simp]
 theorem completedLift_completedOf (C : ℝ)
     (hC : ∀ i x, ‖g i x‖ ≤ C * ‖x‖) (i : ι) (x : G i) :
     completedLift G f g hg C hC (completedOf G f i x) = g i x := by

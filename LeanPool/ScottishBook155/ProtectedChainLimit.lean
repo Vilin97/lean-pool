@@ -34,18 +34,23 @@ noncomputable local instance targetDirectedSystem :
       (C.targetSystem.embed · · ·) :=
   CoherentBiSystem.directedSystem _ C.targetSystem
 
+/-- The completed direct limit of the source spaces in the protected chain. -/
 abbrev LimitSource := NormedDirectLimit.CompletedCarrier
   (fun i => (C.stage i).source) C.sourceSystem.embed
 
+/-- The completed direct limit of the target spaces in the protected chain. -/
 abbrev LimitTarget := NormedDirectLimit.CompletedCarrier
   (fun i => (C.stage i).target) C.targetSystem.embed
 
+/-- The compatible source projections, packaged for extension to the completed limit. -/
 noncomputable def sourceProjectionSystem :=
   CoherentBiSystem.projectionSystem _ C.sourceSystem
 
+/-- The compatible target projections, packaged for extension to the completed limit. -/
 noncomputable def targetProjectionSystem :=
   CoherentBiSystem.projectionSystem _ C.targetSystem
 
+/-- The map between completed limits induced by the uniformly nonexpansive stage maps. -/
 noncomputable def completedMap (hr : 0 < r) : C.LimitSource → C.LimitTarget :=
   DirectedLimitStage.limitMap _ _ C.sourceSystem.embed C.targetSystem.embed
     (fun i => (C.stage i).map) C.compatible (C.stage_nonexpansive hr)

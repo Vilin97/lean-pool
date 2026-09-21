@@ -21,8 +21,11 @@ universe u
 
 /-- A stage map with the two invariants maintained throughout the recursion. -/
 structure ProtectedStage (r : ℝ) where
+  /-- The source real Banach space of the protected stage. -/
   source : RealBanachSpace.{u}
+  /-- The target real Banach space of the protected stage. -/
   target : RealBanachSpace.{u}
+  /-- The injective stage map that preserves distances up to the protected radius. -/
   map : source → target
   injective : Function.Injective map
   preservesUpTo : PreservesUpTo r map
@@ -30,10 +33,17 @@ structure ProtectedStage (r : ℝ) where
 /-- The complete interface of one active successor transition. -/
 structure ProtectedSuccessor {r : ℝ} (S : ProtectedStage.{u} r)
     (L : ℝ) (y : S.target) where
+  /-- The protected stage produced by the active successor extension. -/
   next : ProtectedStage.{u} r
+  /-- The extra-coordinate height at which the successor map reaches the prescribed target
+  point. -/
   height : ℝ
+  /-- The linear isometric identification of the successor source with the old source plus
+  a real coordinate. -/
   sourceEquiv : OneSum S.source ≃ₗᵢ[ℝ] next.source
+  /-- The linear isometric embedding of the old target into the successor target. -/
   targetEmbedding : S.target →ₗᵢ[ℝ] next.target
+  /-- The contractive continuous linear retraction onto the old target. -/
   targetRetraction : next.target →L[ℝ] S.target
   compatible : ∀ m,
     next.map (sourceEquiv (toLp 1 (m, 0))) = targetEmbedding (S.map m)
@@ -123,10 +133,15 @@ theorem ProtectedSuccessor.recovers_of_dist_le
 /-- A uniform successor transition, covering both active protected
 extensions and idle steps. -/
 structure ProtectedTransition {r : ℝ} (S : ProtectedStage.{u} r) (L : ℝ) where
+  /-- The protected stage produced by this successor transition. -/
   next : ProtectedStage.{u} r
+  /-- The linear isometric inclusion of the old source into the next source. -/
   sourceEmbedding : S.source →ₗᵢ[ℝ] next.source
+  /-- The contractive continuous linear projection from the next source to the old source. -/
   sourceProjection : next.source →L[ℝ] S.source
+  /-- The linear isometric inclusion of the old target into the next target. -/
   targetEmbedding : S.target →ₗᵢ[ℝ] next.target
+  /-- The contractive continuous linear projection from the next target to the old target. -/
   targetProjection : next.target →L[ℝ] S.target
   compatible : ∀ x, next.map (sourceEmbedding x) = targetEmbedding (S.map x)
   sourceRetracts : ∀ x, sourceProjection (sourceEmbedding x) = x

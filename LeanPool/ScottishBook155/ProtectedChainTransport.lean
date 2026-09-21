@@ -65,7 +65,6 @@ theorem castSourcePoint_symm_apply {r : ℝ}
   subst B
   simp
 
-@[simp]
 theorem castSourcePoint_apply_symm {r : ℝ}
     {A B : ProtectedStage.{0} r} (h : A = B) (x : B.source) :
     castSourcePoint h (castSourcePoint h.symm x) = x := by
@@ -79,7 +78,6 @@ theorem castTargetPoint_symm_apply {r : ℝ}
   subst B
   simp
 
-@[simp]
 theorem castTargetPoint_apply_symm {r : ℝ}
     {A B : ProtectedStage.{0} r} (h : A = B) (x : B.target) :
     castTargetPoint h (castTargetPoint h.symm x) = x := by
@@ -197,7 +195,7 @@ theorem transportTargetSystem_project {ι : Type} [LinearOrder ι]
 
 /-- Equality of protected chains from equality after transporting the two
 dependent bidirectional systems. -/
-theorem ext_transport {ι : Type} [LinearOrder ι] [Nonempty ι]
+theorem ext_transport {ι : Type} [LinearOrder ι] 
     {r L : ℝ} {C D : ProtectedChain (ι := ι) r L}
     (hstage : C.stage = D.stage)
     (hsource : transportSourceSystem hstage C.sourceSystem = D.sourceSystem)

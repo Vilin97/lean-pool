@@ -28,7 +28,6 @@ variable [∀ i, CompleteSpace (N i)]
 variable (e : ∀ i j : ι, i ≤ j → N i →ₗᵢ[ℝ] N j)
 variable [DirectedSystem N (e · · ·)]
 
-noncomputable local instance : DecidableEq ι := Classical.decEq ι
 
 local instance linearDirectedSystem :
     DirectedSystem N (NormedDirectLimit.linearMap N e · · ·) where
@@ -39,6 +38,8 @@ local instance linearDirectedSystem :
 /-- A projection to a fixed earlier component, defined coherently on every
 component of the directed system. -/
 structure ProjectionFamily (a : ι) where
+  /-- Coherent contractive projections from each component onto the fixed component
+  indexed by `a`. -/
   project : ∀ i, N i →L[ℝ] N a
   coherent : ∀ i j (hij : i ≤ j) x,
     project j (e i j hij x) = project i x
@@ -54,7 +55,6 @@ noncomputable def ProjectionFamily.completedProjection {a : ι}
     intro i x
     simpa using P.contractive i x)
 
-@[simp]
 theorem ProjectionFamily.completedProjection_completedOf {a : ι}
     (P : ProjectionFamily N e a) (i : ι) (x : N i) :
     ProjectionFamily.completedProjection N e P
@@ -85,6 +85,8 @@ theorem ProjectionFamily.completedProjection_norm_le {a : ι}
 the projection index they are the forward embeddings; above it they are the
 specified retractions. -/
 structure ProjectionSystem where
+  /-- Coherent contractive maps between components, equal to forward embeddings below the
+  target index. -/
   project : ∀ a i, N i →L[ℝ] N a
   coherent : ∀ a i j (hij : i ≤ j) x,
     project a j (e i j hij x) = project a i x

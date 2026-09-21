@@ -136,7 +136,7 @@ theorem sourceRetraction_attachment
 
 /-- Metric form of the source-retraction estimate on the sum-norm source. -/
 theorem sourceRetraction_dist_le
-    {M N : Type*} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M N : Type*} [NormedAddCommGroup M] 
     [NormedAddCommGroup N] [NormedSpace ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hV : ∀ m n, dist (V m) (V n) ≤ dist m n)

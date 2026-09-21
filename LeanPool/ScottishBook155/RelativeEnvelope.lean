@@ -32,8 +32,10 @@ universe u v
 along the distinguished map `j : N → P`. -/
 structure RelativeFunctional (P : Type u) (N : Type v) [MetricSpace P]
     [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) where
+  /-- The continuous linear functional on the distinguished target space. -/
   linear : N →L[ℝ] ℝ
   norm_le_one : ‖linear‖ ≤ 1
+  /-- The one-Lipschitz extension of the functional to the ambient metric space. -/
   value : P → ℝ
   lipschitz : LipschitzWith 1 value
   agree : ∀ n, value (j n) = linear n

@@ -33,6 +33,8 @@ noncomputable def protectedSourceBaseLinearIsometry
     have h := oneSum_dist_eq (toLp 1 (m, 0) : OneSum M) 0
     convert h using 1 <;> simp
 
+/-- The protected envelope of the metric adjunction, relative to its original target
+space. -/
 abbrev ProtectedExtensionSpace
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
     [NormedAddCommGroup N] [NormedSpace ℝ N]
@@ -42,6 +44,7 @@ abbrev ProtectedExtensionSpace
   ProtectedEnvelope (AdjunctionSpace V a y H hattach) N
     (adjunctionTargetMk V a y H hattach)
 
+/-- The map from the extended source into the protected envelope of the adjunction. -/
 noncomputable def protectedExtensionSourceEmbedding
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
     [NormedAddCommGroup N] [NormedSpace ℝ N]
@@ -56,6 +59,7 @@ noncomputable def protectedExtensionSourceEmbedding
     (adjunctionRetraction V a y L H hattach hLH hL hV hgap)
     (adjunctionSourceMk V a y H hattach x)
 
+/-- The linear embedding of the original target into the protected extension space. -/
 noncomputable def protectedExtensionTargetLinear
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
     [NormedAddCommGroup N] [NormedSpace ℝ N]
@@ -65,6 +69,8 @@ noncomputable def protectedExtensionTargetLinear
     N →ₗ[ℝ] ProtectedExtensionSpace V a y H hattach :=
   protectedTargetLinear (adjunctionTargetMk V a y H hattach)
 
+/-- The continuous linear projection from the protected extension back to the original
+target. -/
 noncomputable def protectedExtensionProjection
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
     [NormedAddCommGroup N] [NormedSpace ℝ N]

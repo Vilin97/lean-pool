@@ -37,12 +37,14 @@ theorem map_castSourcePoint {r : ℝ} {A B : ProtectedStage.{0} r}
   subst B
   rfl
 
+/-- The linear isometry transporting source points along equality of protected stages. -/
 noncomputable def castSourceLinearIsometry {r : ℝ}
     {A B : ProtectedStage.{0} r} (h : A = B) :
     A.source →ₗᵢ[ℝ] B.source := by
   subst B
   exact LinearIsometry.id
 
+/-- The linear isometry transporting target points along equality of protected stages. -/
 noncomputable def castTargetLinearIsometry {r : ℝ}
     {A B : ProtectedStage.{0} r} (h : A = B) :
     A.target →ₗᵢ[ℝ] B.target := by
@@ -84,9 +86,9 @@ theorem reindex_target_embed_of_eq {ι κ : Type} [LinearOrder ι]
         (ProtectedStage.castTargetPoint (congrArg C.stage ha) x) := by
   subst a'
   subst b'
-  simp only [ProtectedStage.castTargetPoint_rfl]
-  change C.targetSystem.embed (e a) (e b) (e.monotone hab) x = _
-  congr
+  exact (ProtectedStage.castTargetPoint_rfl _ _).trans
+    (congrArg (C.targetSystem.embed (e a) (e b) (e.monotone hab))
+      (ProtectedStage.castTargetPoint_rfl _ x).symm)
 
 end ProtectedChain
 
@@ -201,8 +203,8 @@ theorem successor_link_targetEmbedding {j : RI} (P : ProtectedPrefix j)
     congrArg
       (fun C : ProtectedChain (ι := Set.Iic j) ((1 : ℝ) / 2) 1 =>
         C.stage ⟨j, show j ≤ j from le_rfl⟩) hchain
-  unfold linkOfRestriction
-  rw [ProtectedLink.castSource_targetEmbedding]
+  refine (ProtectedLink.castSource_targetEmbedding hs
+    (Q.chain.link a b (Order.le_succ j)) y).trans ?_
   change Q.chain.targetSystem.embed a b (Order.le_succ j)
       (ProtectedStage.castTargetPoint hs.symm y) = _
   have hQ : Q.chain = Cplus.reindex e := by
@@ -356,7 +358,8 @@ theorem canonicalPrefix_succ (j : RI) :
       (canonicalPrefix j).successor
         ((canonicalPrefix j).scheduledPoint j) := by
   let e : protectedPrefixInductionData.Extension seedPrefix (Order.succ j) :=
-    default
+    show protectedPrefixInductionData.Extension
+      (show protectedPrefixFunctor.obj (op ⊥) from seedPrefix) (Order.succ j) from default
   have h := e.map_succ j
     (Order.lt_succ_of_not_isMax (not_isMax j))
   change e.val =
@@ -373,6 +376,7 @@ theorem canonicalPrefix_succ (j : RI) :
 
 /-- A coherent family of closed prefixes over the whole recursion order. -/
 structure CompatiblePrefixSequence where
+  /-- The closed protected prefix at each index of the complete recursion order. -/
   item : ∀ j : RI, ProtectedPrefix j
   coherent : ∀ (_i _j : RI) (hij : _i ≤ _j),
     ((item _j).restriction hij).chain = (item _i).chain
@@ -392,9 +396,12 @@ noncomputable def below (j : RI) : CompatiblePrefixFamily j where
   item i := G.item i.1
   coherent i k hik := G.coherent i.1 k.1 hik
 
+/-- The top protected stage of the prefix at the specified recursion index. -/
 abbrev stage (i : RI) : ProtectedStage.{0} ((1 : ℝ) / 2) :=
   (G.item i).topStage
 
+/-- The protected link between two stages, obtained from coherence of their closed
+prefixes. -/
 noncomputable def link (i j : RI) (hij : i ≤ j) :
     ProtectedLink (G.stage i) (G.stage j) 1 :=
   (G.item i).linkOfRestriction (G.item j) hij (G.coherent i j hij)

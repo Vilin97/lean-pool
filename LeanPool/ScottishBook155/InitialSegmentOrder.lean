@@ -109,6 +109,7 @@ noncomputable def successorSegmentWithTop (j : J) (hj : ¬ IsMax j) :
   (initialSegmentWithTop (Order.succ j)).trans
     (OrderIso.withTopCongr (openSuccOrderIso j hj))
 
+omit [SuccOrder J] in
 @[simp]
 theorem initialSegmentWithTop_apply_lt (j : J) (i : J) (hij : i < j) :
     initialSegmentWithTop j ⟨i, hij.le⟩ =

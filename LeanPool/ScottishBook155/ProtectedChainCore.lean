@@ -20,9 +20,13 @@ universe u
 later one, with the uniform recovery band retained. -/
 structure ProtectedLink {r : ℝ}
     (A S : ProtectedStage.{u} r) (L : ℝ) where
+  /-- The isometric embedding from the earlier source space into the later source space. -/
   sourceEmbedding : A.source →ₗᵢ[ℝ] S.source
+  /-- The continuous linear retraction from the later source space to the earlier one. -/
   sourceProjection : S.source →L[ℝ] A.source
+  /-- The isometric embedding from the earlier target space into the later target space. -/
   targetEmbedding : A.target →ₗᵢ[ℝ] S.target
+  /-- The continuous linear retraction from the later target space to the earlier one. -/
   targetProjection : S.target →L[ℝ] A.target
   compatible : ∀ x, S.map (sourceEmbedding x) = targetEmbedding (A.map x)
   sourceRetracts : ∀ x, sourceProjection (sourceEmbedding x) = x
