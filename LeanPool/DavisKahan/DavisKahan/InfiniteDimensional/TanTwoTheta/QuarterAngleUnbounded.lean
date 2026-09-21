@@ -60,6 +60,71 @@ universe u
 variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
+/-- An orthogonal reflection is self-adjoint for the Hilbert space inner product. -/
+private theorem reflectionOperator_inner_swap (U : Submodule ℂ E) [U.HasOrthogonalProjection] :
+    ∀ y z : E, ⟪U.reflectionOperator y, z⟫_ℂ = ⟪y, U.reflectionOperator z⟫_ℂ := by
+  intro y z
+  have hU : star U.reflectionOperator = U.reflectionOperator :=
+    TauCeti.DavisKahan.star_reflectionOperator_complex U
+  conv_lhs => rw [← hU]
+  rw [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_inner_left]
+
+/-- A positive operator has strictly positive form when its mixed form controls an injective map. -/
+private theorem form_pos_of_injective_mixed_margin
+    (X G : E →L[ℂ] E) {δ : ℝ} (hδpos : 0 < δ)
+    (hXnonneg : (0 : E →L[ℂ] E) ≤ X) (hGinj : Function.Injective G)
+    (hXadj : ∀ y z : E, ⟪X y, z⟫_ℂ = ⟪y, X z⟫_ℂ)
+    (hXGquant : ∀ y : E, δ * ‖G y‖ ^ 2 ≤ RCLike.re ⟪X (G y), y⟫_ℂ) :
+    ∀ y : E, y ≠ 0 → 0 < RCLike.re ⟪X y, y⟫_ℂ := by
+  have hXnn : ∀ z : E, 0 ≤ RCLike.re ⟪X z, z⟫_ℂ := by
+    intro z
+    have h := ((ContinuousLinearMap.nonneg_iff_isPositive (f := X)).mp hXnonneg).2 z
+    rwa [ContinuousLinearMap.reApplyInnerSelf_apply] at h
+  -- **Pointwise strictness.**  A null vector of the form `⟪X ·, ·⟫` would be
+  -- orthogonal to the whole range of `X`, and in particular would annihilate
+  -- the `δ ‖G y‖²` margin that `hXGquant` keeps.
+  intro y hy
+  rcases (hXnn y).lt_or_eq with hlt | heq
+  · exact hlt
+  · exfalso
+    have hre : ∀ (r : ℝ) (z : ℂ), RCLike.re ((r : ℂ) * z) = r * RCLike.re z := by
+      intro r z
+      simp
+    have hzero : ∀ v : E, RCLike.re ⟪X v, y⟫_ℂ = 0 := by
+      intro v
+      by_contra hne
+      have hquad : ∀ t : ℝ,
+          0 ≤ RCLike.re ⟪X v, v⟫_ℂ + 2 * t * RCLike.re ⟪X v, y⟫_ℂ := by
+        intro t
+        have hexp : ⟪X (v + (t : ℂ) • y), v + (t : ℂ) • y⟫_ℂ
+            = ⟪X v, v⟫_ℂ + (t : ℂ) * ⟪X v, y⟫_ℂ + (t : ℂ) * ⟪X y, v⟫_ℂ
+              + (t : ℂ) * ((t : ℂ) * ⟪X y, y⟫_ℂ) := by
+          simp only [map_add, ContinuousLinearMap.map_smul, inner_add_left,
+            inner_add_right, inner_smul_left, inner_smul_right,
+            Complex.conj_ofReal]
+          ring
+        have hsymm : RCLike.re ⟪X y, v⟫_ℂ = RCLike.re ⟪X v, y⟫_ℂ := by
+          rw [hXadj y v]
+          exact inner_re_symm y (X v)
+        have hb := hXnn (v + (t : ℂ) • y)
+        rw [hexp] at hb
+        simp only [map_add, hre] at hb
+        rw [hsymm, ← heq] at hb
+        simp only [mul_zero, add_zero] at hb
+        linarith
+      have hval : RCLike.re ⟪X v, v⟫_ℂ
+          + 2 * (-(RCLike.re ⟪X v, v⟫_ℂ + 1) / (2 * RCLike.re ⟪X v, y⟫_ℂ))
+            * RCLike.re ⟪X v, y⟫_ℂ = -1 := by
+        field_simp
+        ring
+      linarith [hquad (-(RCLike.re ⟪X v, v⟫_ℂ + 1) / (2 * RCLike.re ⟪X v, y⟫_ℂ)), hval]
+    have hGy : G y ≠ 0 := by
+      intro hcon
+      exact hy (hGinj (by rw [hcon, map_zero]))
+    have hpos : 0 < δ * ‖G y‖ ^ 2 :=
+      mul_pos hδpos (pow_pos (norm_pos_iff.mpr hGy) 2)
+    linarith [hXGquant y, hzero (G y)]
+
 /-- **Davis--Kahan 1970, Theorem 8.1's printed angle conclusion, at unbounded
 ambient scope.**
 
@@ -140,12 +205,7 @@ theorem reflectionProduct_form_pos_of_orderedFormGap_unbounded
     have := congrArg (fun T : E →L[ℂ] E => T y) (Submodule.reflectionOperator_involutive V)
     simpa [hKdef] using this
   have hKadj : ∀ y z : E, ⟪K y, z⟫_ℂ = ⟪y, K z⟫_ℂ := by
-    intro y z
-    have hKsa : star K = K := by
-      rw [hKdef]
-      exact TauCeti.DavisKahan.star_reflectionOperator_complex V
-    conv_lhs => rw [← hKsa]
-    rw [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_inner_left]
+    simpa only [hKdef] using reflectionOperator_inner_swap V
   have hRI : ReflectionIntertwines A Hop V := ReflectionIntertwines.ofReducesSubspace hV
   have hKdom : ∀ x : Aop.domain, K (x : E) ∈ Aop.domain := fun x => hRI.mapsDomain ⟨(x : E), x.2⟩
   have hKcomm : ∀ x : Aop.domain, Aop ⟨K (x : E), hKdom x⟩ = K (Aop x) := by
@@ -209,12 +269,7 @@ theorem reflectionProduct_form_pos_of_orderedFormGap_unbounded
     have := congrArg (fun T : E →L[ℂ] E => T y) (Submodule.reflectionOperator_involutive U)
     simpa [hJdef] using this
   have hJadj : ∀ y z : E, ⟪J y, z⟫_ℂ = ⟪y, J z⟫_ℂ := by
-    intro y z
-    have hJsa : star J = J := by
-      rw [hJdef]
-      exact TauCeti.DavisKahan.star_reflectionOperator_complex U
-    conv_lhs => rw [← hJsa]
-    rw [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_inner_left]
+    simpa only [hJdef] using reflectionOperator_inner_swap U
   have hWadj : ∀ y z : E, ⟪W y, z⟫_ℂ = ⟪y, J (K z)⟫_ℂ := by
     intro y z
     change ⟪K (J y), z⟫_ℂ = _
@@ -297,55 +352,8 @@ theorem reflectionProduct_form_pos_of_orderedFormGap_unbounded
       nlinarith [hXGquant y, sq_nonneg ‖G y‖, hδpos]
   have hXnonneg : (0 : E →L[ℂ] E) ≤ X :=
     TauCeti.ContinuousLinearMap.nonneg_of_lyapunov_nonneg hXsa hGnonneg hGinj hlyap
-  have hXnn : ∀ z : E, 0 ≤ RCLike.re ⟪X z, z⟫_ℂ := by
-    intro z
-    have h := ((ContinuousLinearMap.nonneg_iff_isPositive (f := X)).mp hXnonneg).2 z
-    rwa [ContinuousLinearMap.reApplyInnerSelf_apply] at h
-  -- **Pointwise strictness.**  A null vector of the form `⟪X ·, ·⟫` would be
-  -- orthogonal to the whole range of `X`, and in particular would annihilate
-  -- the `δ ‖G y‖²` margin that `hXGquant` keeps.
-  have hXstrict : ∀ y : E, y ≠ 0 → 0 < RCLike.re ⟪X y, y⟫_ℂ := by
-    intro y hy
-    rcases (hXnn y).lt_or_eq with hlt | heq
-    · exact hlt
-    · exfalso
-      have hre : ∀ (r : ℝ) (z : ℂ), RCLike.re ((r : ℂ) * z) = r * RCLike.re z := by
-        intro r z
-        simp
-      have hzero : ∀ v : E, RCLike.re ⟪X v, y⟫_ℂ = 0 := by
-        intro v
-        by_contra hne
-        have hquad : ∀ t : ℝ,
-            0 ≤ RCLike.re ⟪X v, v⟫_ℂ + 2 * t * RCLike.re ⟪X v, y⟫_ℂ := by
-          intro t
-          have hexp : ⟪X (v + (t : ℂ) • y), v + (t : ℂ) • y⟫_ℂ
-              = ⟪X v, v⟫_ℂ + (t : ℂ) * ⟪X v, y⟫_ℂ + (t : ℂ) * ⟪X y, v⟫_ℂ
-                + (t : ℂ) * ((t : ℂ) * ⟪X y, y⟫_ℂ) := by
-            simp only [map_add, ContinuousLinearMap.map_smul, inner_add_left,
-              inner_add_right, inner_smul_left, inner_smul_right,
-              Complex.conj_ofReal]
-            ring
-          have hsymm : RCLike.re ⟪X y, v⟫_ℂ = RCLike.re ⟪X v, y⟫_ℂ := by
-            rw [hXadj y v]
-            exact inner_re_symm y (X v)
-          have hb := hXnn (v + (t : ℂ) • y)
-          rw [hexp] at hb
-          simp only [map_add, hre] at hb
-          rw [hsymm, ← heq] at hb
-          simp only [mul_zero, add_zero] at hb
-          linarith
-        have hval : RCLike.re ⟪X v, v⟫_ℂ
-            + 2 * (-(RCLike.re ⟪X v, v⟫_ℂ + 1) / (2 * RCLike.re ⟪X v, y⟫_ℂ))
-              * RCLike.re ⟪X v, y⟫_ℂ = -1 := by
-          field_simp
-          ring
-        linarith [hquad (-(RCLike.re ⟪X v, v⟫_ℂ + 1) / (2 * RCLike.re ⟪X v, y⟫_ℂ)), hval]
-      have hGy : G y ≠ 0 := by
-        intro hcon
-        exact hy (hGinj (by rw [hcon, map_zero]))
-      have hpos : 0 < δ * ‖G y‖ ^ 2 :=
-        mul_pos hδpos (pow_pos (norm_pos_iff.mpr hGy) 2)
-      linarith [hXGquant y, hzero (G y)]
+  have hXstrict : ∀ y : E, y ≠ 0 → 0 < RCLike.re ⟪X y, y⟫_ℂ :=
+    form_pos_of_injective_mixed_margin X G hδpos hXnonneg hGinj hXadj hXGquant
   intro y hy
   have hXeq : V.reflectionOperator * U.reflectionOperator
       + U.reflectionOperator * V.reflectionOperator = X := by

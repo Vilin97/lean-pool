@@ -141,6 +141,109 @@ theorem gramBands_disjoint
       nlinarith
     exact (not_lt_of_ge htLeft.1) (htRight.2.trans_lt hsquare)
 
+/-- A repeated approximation value supplies enough dimensions in its Gram spectral band. -/
+private theorem finiteValueFiber_card_le_gramBand_rank
+    (X : E0 →L[ℂ] E1) (count : ℕ) {η : ℝ} (hη0 : 0 < η)
+    (hηa : ∀ i : Fin count, η < X.approximationNumber (i : ℕ))
+    (label : FiniteValueLabel (fun i : Fin count => X.approximationNumber (i : ℕ))) :
+    ((finiteValueFiber (fun i : Fin count => X.approximationNumber (i : ℕ)) label).card :
+      Cardinal) ≤ ((gramSpectralPVM X).proj
+        (Set.Icc ((label.1 - η) ^ 2) ((label.1 + η) ^ 2)) measurableSet_Icc).rank := by
+  classical
+  let a : Fin count → ℝ := fun i => X.approximationNumber (i : ℕ)
+  let P := gramSpectralPVM X
+  let p : ℕ := (finiteValueFirst a label).val
+  let q : ℕ := (finiteValueLast a label).val
+  have hηLabel : η < label.1 := by
+    rcases Finset.mem_image.mp label.2 with ⟨i, _, hi⟩
+    simpa only [hi] using hηa i
+  have hlow0 : 0 ≤ label.1 - η := by linarith
+  have hlowlt :
+      label.1 - η < X.approximationNumber q := by
+    have hqval : X.approximationNumber q = label.1 := by
+      simpa only [a, q] using finiteValueLast_value a label
+    rw [hqval]
+    linarith
+  have huplt :
+      X.approximationNumber p < label.1 + η := by
+    have hpval : X.approximationNumber p = label.1 := by
+      simpa only [a, p] using finiteValueFirst_value a label
+    rw [hpval]
+    linarith
+  have hlowRank : ((q + 1 : ℕ) : Cardinal) ≤
+      (P.proj (Set.Ici ((label.1 - η) ^ 2)) measurableSet_Ici).rank := by
+    simpa only [P] using
+      natCast_succ_le_rank_gramProjection_Ici_of_lt_approximationNumber
+        X q hlow0 hlowlt
+  have hupRank :
+      (P.proj (Set.Ioi ((label.1 + η) ^ 2)) measurableSet_Ioi).rank ≤
+        (p : Cardinal) := by
+    simpa only [P] using
+      rank_gramProjection_Ioi_le_natCast_of_approximationNumber_lt
+        X p (by linarith) huplt
+  have hspanRank : (((q + 1) - p : ℕ) : Cardinal) ≤
+      (P.proj (Set.Icc ((label.1 - η) ^ 2) ((label.1 + η) ^ 2))
+        measurableSet_Icc).rank :=
+    natCast_sub_le_rank_pvm_Icc_of_cutoff_bounds P
+      (by nlinarith : (label.1 - η) ^ 2 ≤ (label.1 + η) ^ 2)
+      p (q + 1) hlowRank hupRank
+  have hcard : (finiteValueFiber a label).card ≤ q + 1 - p := by
+    simpa only [p, q] using finiteValueFiber_card_le_span a label
+  have hcardCast : ((finiteValueFiber a label).card : Cardinal) ≤
+      (((q + 1) - p : ℕ) : Cardinal) := by exact_mod_cast hcard
+  exact hcardCast.trans hspanRank
+
+/-- Labeling indices by their value fibers preserves the complete finite index set. -/
+private noncomputable def finiteValueIndexEquiv {count : ℕ} (a : Fin count → ℝ) :
+    (Σ label : FiniteValueLabel a, {i : Fin count // i ∈ finiteValueFiber a label}) ≃
+      Fin count := by
+  classical
+  let Index := Σ label : FiniteValueLabel a,
+    {i : Fin count // i ∈ finiteValueFiber a label}
+  let toIndex : Index → Fin count := fun z => z.2.1
+  have htoIndex_inj : Function.Injective toIndex := by
+    rintro ⟨leftLabel, i⟩ ⟨rightLabel, j⟩ hij
+    change i.1 = j.1 at hij
+    have hiVal : a i.1 = leftLabel.1 :=
+      (mem_finiteValueFiber a leftLabel i.1).mp i.2
+    have hjVal : a j.1 = rightLabel.1 :=
+      (mem_finiteValueFiber a rightLabel j.1).mp j.2
+    have hlabelValue : leftLabel.1 = rightLabel.1 := by
+      calc
+        leftLabel.1 = a i.1 := hiVal.symm
+        _ = a j.1 := by rw [hij]
+        _ = rightLabel.1 := hjVal
+    have hlabel : leftLabel = rightLabel := Subtype.ext hlabelValue
+    subst rightLabel
+    have hindex : i = j := Subtype.ext hij
+    subst j
+    rfl
+  have htoIndex_surj : Function.Surjective toIndex := by
+    intro i
+    refine ⟨⟨finiteValueLabel a i,
+      -- Unfolding `finiteValueFiber` beats `mem_finiteValueFiber` to the goal and leaves a
+      -- raw `setOf` membership that no longer discharges itself.
+      ⟨i, by simp [finiteValueLabel]⟩⟩, rfl⟩
+  exact Equiv.ofBijective toIndex ⟨htoIndex_inj, htoIndex_surj⟩
+
+/-- If no approximation value exceeds the threshold, the empty family is a band model. -/
+private theorem gramSpectralBandModel_of_leadingCount_eq_zero
+    (X : E0 →L[ℂ] E1) (k : ℕ) (ε : ℝ) (hcount0 : leadingCount X k ε = 0) :
+    Nonempty (GramSpectralBandModel X k ε) := by
+  exact ⟨{
+      count := 0
+      count_le := Nat.zero_le k
+      right := fun i => Fin.elim0 i
+      right_orthonormal := Orthonormal.of_isEmpty _
+      right_mem_polarInitial := fun i => Fin.elim0 i
+      gram_residual := fun i => Fin.elim0 i
+      selected_large := fun i => Fin.elim0 i
+      tail_small := by
+        intro n _ hn
+        exact approximationNumber_le_of_leadingCount_le X k ε
+          (by simpa only [hcount0] using Nat.zero_le n) hn
+    }⟩
+
 /-- Explicit finite PVM band assembly for the strict leading prefix. -/
 theorem exists_gramSpectralBandModel
     (X : E0 →L[ℂ] E1) (k : ℕ) {ε : ℝ} (hε : 0 < ε) :
@@ -158,18 +261,7 @@ theorem exists_gramSpectralBandModel
     intro n hcountn hnk
     exact approximationNumber_le_of_leadingCount_le X k ε hcountn hnk
   by_cases hcount0 : count = 0
-  · exact ⟨{
-      count := 0
-      count_le := Nat.zero_le k
-      right := fun i => Fin.elim0 i
-      right_orthonormal := Orthonormal.of_isEmpty _
-      right_mem_polarInitial := fun i => Fin.elim0 i
-      gram_residual := fun i => Fin.elim0 i
-      selected_large := fun i => Fin.elim0 i
-      tail_small := by
-        intro n _ hn
-        exact htail n (by simpa only [hcount0] using Nat.zero_le n) hn
-    }⟩
+  · exact gramSpectralBandModel_of_leadingCount_eq_zero X k ε hcount0
   · let a : Fin count → ℝ := fun i => X.approximationNumber (i : ℕ)
     have ha : ∀ i, 0 < a i := by
       intro i
@@ -183,46 +275,7 @@ theorem exists_gramSpectralBandModel
         ((finiteValueFiber a label).card : Cardinal) ≤
           (P.proj (band label) measurableSet_Icc).rank := by
       intro label
-      let p : ℕ := (finiteValueFirst a label).val
-      let q : ℕ := (finiteValueLast a label).val
-      have hηLabel : η < label.1 := by
-        rcases Finset.mem_image.mp label.2 with ⟨i, _, hi⟩
-        simpa only [hi] using hηa i
-      have hlow0 : 0 ≤ label.1 - η := by linarith
-      have hlowlt :
-          label.1 - η < X.approximationNumber q := by
-        have hqval : X.approximationNumber q = label.1 := by
-          simpa only [a, q] using finiteValueLast_value a label
-        rw [hqval]
-        linarith
-      have huplt :
-          X.approximationNumber p < label.1 + η := by
-        have hpval : X.approximationNumber p = label.1 := by
-          simpa only [a, p] using finiteValueFirst_value a label
-        rw [hpval]
-        linarith
-      have hlowRank : ((q + 1 : ℕ) : Cardinal) ≤
-          (P.proj (Set.Ici ((label.1 - η) ^ 2)) measurableSet_Ici).rank := by
-        simpa only [P] using
-          natCast_succ_le_rank_gramProjection_Ici_of_lt_approximationNumber
-            X q hlow0 hlowlt
-      have hupRank :
-          (P.proj (Set.Ioi ((label.1 + η) ^ 2)) measurableSet_Ioi).rank ≤
-            (p : Cardinal) := by
-        simpa only [P] using
-          rank_gramProjection_Ioi_le_natCast_of_approximationNumber_lt
-            X p (by linarith) huplt
-      have hspanRank : (((q + 1) - p : ℕ) : Cardinal) ≤
-          (P.proj (Set.Icc ((label.1 - η) ^ 2) ((label.1 + η) ^ 2))
-            measurableSet_Icc).rank :=
-        natCast_sub_le_rank_pvm_Icc_of_cutoff_bounds P
-          (by nlinarith : (label.1 - η) ^ 2 ≤ (label.1 + η) ^ 2)
-          p (q + 1) hlowRank hupRank
-      have hcard : (finiteValueFiber a label).card ≤ q + 1 - p := by
-        simpa only [p, q] using finiteValueFiber_card_le_span a label
-      have hcardCast : ((finiteValueFiber a label).card : Cardinal) ≤
-          (((q + 1) - p : ℕ) : Cardinal) := by exact_mod_cast hcard
-      simpa only [band] using hcardCast.trans hspanRank
+      exact finiteValueFiber_card_le_gramBand_rank X count hη0 hηa label
     have hselect : ∀ label : FiniteValueLabel a,
         ∃ v : Fin (finiteValueFiber a label).card → E0,
           Orthonormal ℂ v ∧
@@ -234,31 +287,7 @@ theorem exists_gramSpectralBandModel
     let Index := Σ label : FiniteValueLabel a,
       {i : Fin count // i ∈ finiteValueFiber a label}
     let toIndex : Index → Fin count := fun z => z.2.1
-    have htoIndex_inj : Function.Injective toIndex := by
-      rintro ⟨leftLabel, i⟩ ⟨rightLabel, j⟩ hij
-      change i.1 = j.1 at hij
-      have hiVal : a i.1 = leftLabel.1 :=
-        (mem_finiteValueFiber a leftLabel i.1).mp i.2
-      have hjVal : a j.1 = rightLabel.1 :=
-        (mem_finiteValueFiber a rightLabel j.1).mp j.2
-      have hlabelValue : leftLabel.1 = rightLabel.1 := by
-        calc
-          leftLabel.1 = a i.1 := hiVal.symm
-          _ = a j.1 := by rw [hij]
-          _ = rightLabel.1 := hjVal
-      have hlabel : leftLabel = rightLabel := Subtype.ext hlabelValue
-      subst rightLabel
-      have hindex : i = j := Subtype.ext hij
-      subst j
-      rfl
-    have htoIndex_surj : Function.Surjective toIndex := by
-      intro i
-      refine ⟨⟨finiteValueLabel a i,
-        -- Unfolding `finiteValueFiber` beats `mem_finiteValueFiber` to the goal and leaves a
-        -- raw `setOf` membership that no longer discharges itself.
-        ⟨i, by simp [finiteValueLabel]⟩⟩, rfl⟩
-    let indexEquiv : Index ≃ Fin count :=
-      Equiv.ofBijective toIndex ⟨htoIndex_inj, htoIndex_surj⟩
+    let indexEquiv : Index ≃ Fin count := finiteValueIndexEquiv a
     let allVec : Index → E0 := fun z =>
       blockVec z.1 ((finiteValueFiber a z.1).equivFin z.2)
     have hallOrtho : Orthonormal ℂ allVec := by
