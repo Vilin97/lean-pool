@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -41,14 +47,14 @@ theorem contMDiffAt_curvatureAux_one (cov : CovariantDerivative I E TM)
     (hX : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% X) x)
     (hY : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Y) x)
     (hZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Z) x) :
-    ContMDiffAt I (I.prod 𝓘(ℝ, E)) 1 (T% (cov.curvatureAux X Y Z)) x := by
+    ContMDiffAt I (I.prod 𝓘(ℝ, E)) 1 (T% (cov.curvatureAuxAlmostSchur X Y Z)) x := by
   letI : IsManifold I (minSmoothness ℝ (3 : ℕ∞)) M :=
     IsManifold.of_le (n := ∞) (by simp only [minSmoothness_of_isRCLikeNormedField]; exact WithTop.coe_le_coe.mpr le_top)
   letI : IsManifold I ((3 : ℕ∞) + 1) M :=
     IsManifold.of_le (n := ∞) (by exact_mod_cast (le_top : (3 + 1 : ℕ∞) ≤ ⊤))
-  have hYZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 2 (T% (cov.along Y Z)) x :=
+  have hYZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 2 (T% (cov.alongAlmostSchur Y Z)) x :=
     contMDiffAt_covariantAlong_of_metric_torsion_two cov hm ht hY hZ
-  have hXZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 2 (T% (cov.along X Z)) x :=
+  have hXZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 2 (T% (cov.alongAlmostSchur X Z)) x :=
     contMDiffAt_covariantAlong_of_metric_torsion_two cov hm ht hX hZ
   have h1 := contMDiffAt_covariantAlong_of_metric_torsion cov hm ht
     (hX.of_le (by norm_num : (2 : ℕ∞ω) ≤ 3)) hYZ
@@ -69,7 +75,7 @@ theorem contMDiffAt_curvatureTensor_apply_one
     (hY : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Y) x)
     (hZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Z) x) :
     ContMDiffAt I (I.prod 𝓘(ℝ, E)) 1
-      (T% (fun y ↦ cov.curvatureTensor y (X y) (Y y) (Z y))) x := by
+      (T% (fun y ↦ cov.curvatureTensorAlmostSchur y (X y) (Y y) (Z y))) x := by
   apply (contMDiffAt_curvatureAux_one cov hm ht hX hY hZ).congr_of_eventuallyEq
   filter_upwards [(contMDiffAt_iff_contMDiffAt_nhds (by norm_num)).mp hX,
     (contMDiffAt_iff_contMDiffAt_nhds (by norm_num)).mp hY,
@@ -83,7 +89,7 @@ theorem contMDiffAt_curvatureTensor_apply_one
 /-- The genuine Ricci-trace endomorphism, now viewed as a continuous linear map. -/
 def ricciTraceEndomorphism (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (Y Z : Π y, TM y) (x : M) : TM x →L[ℝ] TM x :=
-  (cov.ricciEndomorphism x (Y x) (Z x)).toContinuousLinearMap
+  (cov.ricciEndomorphismAlmostSchur x (Y x) (Z x)).toContinuousLinearMap
 
 /-- Full hom-bundle C¹ regularity of the endomorphism whose trace is Ricci. -/
 theorem contMDiffAt_ricciTraceEndomorphism_one
@@ -101,7 +107,7 @@ theorem contMDiffAt_ricciTraceEndomorphism_one
     (contMDiffAt_localFrame_of_mem 3 (trivializationAt E TM x) (Module.finBasis ℝ E) i
       (mem_baseSet_trivializationAt E TM x)) hY hZ
   simpa only [ricciTraceEndomorphism, LinearMap.coe_toContinuousLinearMap',
-    CovariantDerivative.ricciEndomorphism_apply] using hfield
+    CovariantDerivative.ricciEndomorphism_applyAlmostSchur] using hfield
 
 /-- Ricci paired with locally C³ fields is a genuine C¹ scalar function. -/
 theorem contMDiffAt_ricciCurvature_apply_one
@@ -110,7 +116,7 @@ theorem contMDiffAt_ricciCurvature_apply_one
     {Y Z : Π y, TM y} {x : M}
     (hY : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Y) x)
     (hZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Z) x) :
-    ContMDiffAt I 𝓘(ℝ, ℝ) 1 (fun y ↦ cov.ricciCurvature y (Y y) (Z y)) x := by
+    ContMDiffAt I 𝓘(ℝ, ℝ) 1 (fun y ↦ cov.ricciCurvatureAlmostSchur y (Y y) (Z y)) x := by
   let e := trivializationAt E TM x
   let b := Module.finBasis ℝ E
   have hx := mem_baseSet_trivializationAt E TM x

@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -104,7 +110,7 @@ theorem secondBianchiAux_eq_of_germs
     (hZ' : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Z') x)
     (eX : X =ᶠ[𝓝 x] X') (eU : U =ᶠ[𝓝 x] U')
     (eY : Y =ᶠ[𝓝 x] Y') (eZ : Z =ᶠ[𝓝 x] Z') :
-    cov.secondBianchiAux X U Y Z x = cov.secondBianchiAux X' U' Y' Z' x := by
+    cov.secondBianchiAuxAlmostSchur X U Y Z x = cov.secondBianchiAuxAlmostSchur X' U' Y' Z' x := by
   rw [← curvatureDirectionalDerivative_eq_secondBianchiAux cov hm ht hX hU hY hZ,
     ← curvatureDirectionalDerivative_eq_secondBianchiAux cov hm ht hX' hU' hY' hZ']
   have hc {V V' : Π y, TM y}
@@ -113,8 +119,8 @@ theorem secondBianchiAux_eq_of_germs
       (he : V =ᶠ[𝓝 x] V') : cov V x = cov V' x :=
     cov.isCovariantDerivativeOnUniv.congr_of_eventuallyEq
       (hV.mdifferentiableAt (by norm_num)) (hV'.mdifferentiableAt (by norm_num)) (by simp) he
-  have hR : (fun y ↦ cov.curvatureTensor y (U y) (Y y) (Z y)) =ᶠ[𝓝 x]
-      (fun y ↦ cov.curvatureTensor y (U' y) (Y' y) (Z' y)) := by
+  have hR : (fun y ↦ cov.curvatureTensorAlmostSchur y (U y) (Y y) (Z y)) =ᶠ[𝓝 x]
+      (fun y ↦ cov.curvatureTensorAlmostSchur y (U' y) (Y' y) (Z' y)) := by
     filter_upwards [eU, eY, eZ] with y hu hy hz
     rw [hu, hy, hz]
   have hcR := cov.isCovariantDerivativeOnUniv.congr_of_eventuallyEq
@@ -136,7 +142,7 @@ theorem mvfderiv_scalarCurvature_eq_sum_ricciDirectionalDerivative
     [MemTrivializationAtlas e] (hx : x ∈ e.baseSet)
     (o : OrthonormalBasis ι ℝ (TM x)) :
     let b := o.toBasis.map (e.linearEquivAt (R := ℝ) x hx)
-    mvfderiv I cov.scalarCurvature x (X x) =
+    mvfderiv I cov.scalarCurvatureAlmostSchur x (X x) =
       ∑ i, ricciDirectionalDerivative cov X (e.localFrame b i) (e.localFrame b i) x := by
   dsimp only
   rw [mvfderiv_scalarCurvature_eq_contraction cov hm ht X x e
@@ -168,37 +174,37 @@ theorem leviCivita_secondBianchiAux_doubleContraction_localFrame
     (w : Π y, TM y) (hw : ContMDiff I (I.prod 𝓘(ℝ, E)) 3 (T% w)) :
     let cov := leviCivitaConnection (I := I) (M := M)
     let f := (trivializationAt E TM x).localFrame b
-    (∑ i, ∑ k, inner ℝ (cov.secondBianchiAux w (f k) (f i) (f i) x) (f k x)) =
+    (∑ i, ∑ k, inner ℝ (cov.secondBianchiAuxAlmostSchur w (f k) (f i) (f i) x) (f k x)) =
       2 * ∑ i, ∑ k, inner ℝ
-        (cov.secondBianchiAux (f i) (f k) (f i) w x) (f k x) := by
+        (cov.secondBianchiAuxAlmostSchur (f i) (f k) (f i) w x) (f k x) := by
   let cov := leviCivitaConnection (I := I) (M := M)
   let f := (trivializationAt E TM x).localFrame b
-  let s := fun i ↦ CovariantDerivative.smoothExtend I E TM x (f i x)
+  let s := fun i ↦ CovariantDerivative.smoothExtendAlmostSchur I E TM x (f i x)
   have hs i : ContMDiff I (I.prod 𝓘(ℝ, E)) 3 (T% (s i)) :=
-    CovariantDerivative.smoothExtend_contMDiff_three x (f i x)
+    CovariantDerivative.smoothExtend_contMDiff_threeAlmostSchur x (f i x)
   have hf i : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% (f i)) x :=
     contMDiffAt_localFrame_of_mem 3 _ b i (mem_baseSet_trivializationAt E TM x)
   have he i : f i =ᶠ[𝓝 x] s i :=
-    Filter.EventuallyEq.symm (CovariantDerivative.smoothExtend_trivializationAt_localFrame_eventuallyEq
+    Filter.EventuallyEq.symm (CovariantDerivative.smoothExtend_trivializationAt_localFrame_eventuallyEqAlmostSchur
       (I := I) (F := E) (V := TM) b x i)
-  have h1 i k : cov.secondBianchiAux w (f k) (f i) (f i) x =
-      cov.secondBianchiAux w (s k) (s i) (s i) x :=
+  have h1 i k : cov.secondBianchiAuxAlmostSchur w (f k) (f i) (f i) x =
+      cov.secondBianchiAuxAlmostSchur w (s k) (s i) (s i) x :=
     secondBianchiAux_eq_of_germs cov leviCivitaConnection_metricCompatible
       leviCivitaConnection_torsion (hw x) (hf k) (hf i) (hf i)
       (hw x) (hs k x) (hs i x) (hs i x) .rfl (he k) (he i) (he i)
-  have h2 i k : cov.secondBianchiAux (f i) (f k) (f i) w x =
-      cov.secondBianchiAux (s i) (s k) (s i) w x :=
+  have h2 i k : cov.secondBianchiAuxAlmostSchur (f i) (f k) (f i) w x =
+      cov.secondBianchiAuxAlmostSchur (s i) (s k) (s i) w x :=
     secondBianchiAux_eq_of_germs cov leviCivitaConnection_metricCompatible
       leviCivitaConnection_torsion (hf i) (hf k) (hf i) (hw x)
       (hs i x) (hs k x) (hs i x) (hw x) (he i) (he k) (he i) .rfl
-  have core := CovariantDerivative.curvatureCovariantDerivativeInner_doubleContraction_sections
+  have core := CovariantDerivative.curvatureCovariantDerivativeInner_doubleContraction_sectionsAlmostSchur
     cov x leviCivitaConnection_torsion
     (tangentMetricCompatible_to_curvatureVendor cov leviCivitaConnection_metricCompatible)
     s w hs hw
-  change (∑ i, ∑ k, inner ℝ (cov.secondBianchiAux w (f k) (f i) (f i) x) (f k x)) =
-    2 * ∑ i, ∑ k, inner ℝ (cov.secondBianchiAux (f i) (f k) (f i) w x) (f k x)
+  change (∑ i, ∑ k, inner ℝ (cov.secondBianchiAuxAlmostSchur w (f k) (f i) (f i) x) (f k x)) =
+    2 * ∑ i, ∑ k, inner ℝ (cov.secondBianchiAuxAlmostSchur (f i) (f k) (f i) w x) (f k x)
   simp only [h1, h2]
-  simpa only [s, CovariantDerivative.smoothExtend_apply] using core
+  simpa only [s, CovariantDerivative.smoothExtend_applyAlmostSchur] using core
 
 /-- Actual contracted Bianchi: the scalar differential is twice the tangent
 orthonormal contraction of the corrected Ricci differential. The local frame
@@ -211,7 +217,7 @@ theorem leviCivita_contractedBianchi_actual
     let e := trivializationAt E TM x
     let b := o.toBasis.map (e.linearEquivAt (R := ℝ) x (mem_baseSet_trivializationAt E TM x))
     let f := e.localFrame b
-    mvfderiv I cov.scalarCurvature x (w x) =
+    mvfderiv I cov.scalarCurvatureAlmostSchur x (w x) =
       2 * ∑ i, ricciDirectionalDerivative cov (f i) (f i) w x := by
   let cov := leviCivitaConnection (I := I) (M := M)
   let e := trivializationAt E TM x
@@ -225,7 +231,7 @@ theorem leviCivita_contractedBianchi_actual
       (hY : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Y) x)
       (hZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 3 (T% Z) x) :
       ricciDirectionalDerivative cov X Y Z x =
-        ∑ k, inner ℝ (cov.secondBianchiAux X (f k) Y Z x) (f k x) := by
+        ∑ k, inner ℝ (cov.secondBianchiAuxAlmostSchur X (f k) Y Z x) (f k x) := by
     rw [ricciDirectionalDerivative_eq_secondBianchiAux_contraction cov
       leviCivitaConnection_metricCompatible leviCivitaConnection_torsion
       X Y Z x hX hY hZ e b hx]
@@ -234,7 +240,7 @@ theorem leviCivita_contractedBianchi_actual
     rw [localFrameCoeff_map_orthonormalBasis]
     change inner ℝ _ (o k) = inner ℝ _ (e.localFrame b k x)
     rw [localFrame_map_orthonormalBasis]
-  change mvfderiv I cov.scalarCurvature x (w x) =
+  change mvfderiv I cov.scalarCurvatureAlmostSchur x (w x) =
     2 * ∑ i, ricciDirectionalDerivative cov (f i) (f i) w x
   rw [mvfderiv_scalarCurvature_eq_sum_ricciDirectionalDerivative cov
     leviCivitaConnection_metricCompatible leviCivitaConnection_torsion w x e hx o]
@@ -253,14 +259,14 @@ theorem leviCivita_contractedBianchi_tangent (x : M) (v : TM x) :
     let e := trivializationAt E TM x
     let b := o.toBasis.map (e.linearEquivAt (R := ℝ) x (mem_baseSet_trivializationAt E TM x))
     let f := e.localFrame b
-    let W := CovariantDerivative.smoothExtend I E TM x v
-    mvfderiv I cov.scalarCurvature x v = 2 * ∑ i,
-      (mvfderiv I (fun y ↦ cov.ricciCurvature y (f i y) (W y)) x (f i x) -
-        cov.ricciCurvature x (cov (f i) x (f i x)) v -
-        cov.ricciCurvature x (f i x) (cov W x (f i x))) := by
+    let W := CovariantDerivative.smoothExtendAlmostSchur I E TM x v
+    mvfderiv I cov.scalarCurvatureAlmostSchur x v = 2 * ∑ i,
+      (mvfderiv I (fun y ↦ cov.ricciCurvatureAlmostSchur y (f i y) (W y)) x (f i x) -
+        cov.ricciCurvatureAlmostSchur x (cov (f i) x (f i x)) v -
+        cov.ricciCurvatureAlmostSchur x (f i x) (cov W x (f i x))) := by
   have h := leviCivita_contractedBianchi_actual x (stdOrthonormalBasis ℝ (TM x))
-    (CovariantDerivative.smoothExtend I E TM x v)
-    (CovariantDerivative.smoothExtend_contMDiff_three x v)
-  simpa only [ricciDirectionalDerivative, CovariantDerivative.smoothExtend_apply] using h
+    (CovariantDerivative.smoothExtendAlmostSchur I E TM x v)
+    (CovariantDerivative.smoothExtend_contMDiff_threeAlmostSchur x v)
+  simpa only [ricciDirectionalDerivative, CovariantDerivative.smoothExtend_applyAlmostSchur] using h
 
 end AlmostSchur

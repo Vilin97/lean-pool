@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -37,14 +43,14 @@ local instance metricThree : IsContMDiffRiemannianBundle I 3 E TM :=
 /-- The independent smooth-extension commutator is the actual curvature tensor. -/
 theorem curvature_eq (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (x : M) (u v w : TM x) :
-    curvature cov x u v w = cov.curvatureTensor x u v w := by
+    curvature cov x u v w = cov.curvatureTensorAlmostSchur x u v w := by
   rfl
 
 /-- The independent orthonormal contraction is the implementation's Ricci tensor. -/
 theorem ricci_eq (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (x : M) (u v : TM x) :
-    ricci cov x u v = cov.ricciCurvature x u v := by
-  rw [CovariantDerivative.ricciCurvature_apply,
+    ricci cov x u v = cov.ricciCurvatureAlmostSchur x u v := by
+  rw [CovariantDerivative.ricciCurvature_applyAlmostSchur,
     LinearMap.trace_eq_sum_inner _ (stdOrthonormalBasis ℝ (TM x))]
   unfold ricci
   apply Finset.sum_congr rfl
@@ -70,7 +76,7 @@ theorem geometricStatement_proved : geometricStatement (I := I) (M := M) := by
     AlmostSchur.leviCivitaConnection_torsion, ⟨inferInstance⟩, ?_⟩
   intro K hK hdim hRic
   have hRic' : ∀ (x : M) (v : TM x),
-      ((Module.finrank ℝ E : ℝ) - 1) * K * ‖v‖ ^ 2 ≤ cov.ricciCurvature x v v := by
+      ((Module.finrank ℝ E : ℝ) - 1) * K * ‖v‖ ^ 2 ≤ cov.ricciCurvatureAlmostSchur x v v := by
     simpa only [ricci_eq] using hRic
   obtain ⟨μ, hμ, hbound, heigen, hmin, heq⟩ :=
     LichnerowiczObata.lichnerowicz_obata hdim hK hRic'

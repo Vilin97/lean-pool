@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -27,7 +33,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 local notation "TM" => (TangentSpace I : M → Type _)
 
 /-- Metric Leibniz rule, without any regularity or uniqueness conclusion. -/
-def IsMetricCompatibleTangent (cov : CovariantDerivative I E TM) : Prop :=
+def IsMetricCompatibleTangentAlmostSchur (cov : CovariantDerivative I E TM) : Prop :=
   ∀ {x : M} {σ τ : Π x : M, TangentSpace I x},
     MDiffAt (T% σ) x → MDiffAt (T% τ) x →
       ∀ u : TangentSpace I x,

@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -225,29 +231,29 @@ theorem test_contMDiff_hilbertSchmidtSq_selfAdjoint
 
 theorem test_scalarCurvature_nonneg
     (hRic : ∀ (x : M) (v : TM x),
-      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v v) :
-    ∀ x, 0 ≤ (leviCivitaConnection (I := I) (M := M)).scalarCurvature x := by
+      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v) :
+    ∀ x, 0 ≤ (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x := by
   intro x
-  rw [CovariantDerivative.scalarCurvature_eq_sum]
+  rw [CovariantDerivative.scalarCurvature_eq_sumAlmostSchur]
   exact Finset.sum_nonneg (fun i _ => hRic x
     ((stdOrthonormalBasis ℝ (TM x)) i))
 
 theorem test_hessian_contraction
     {f : M → ℝ} (r μ : ℝ)
     (hpoisson : ∀ x, laplacian LC f x =
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r)
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r)
     (hdim : 2 < (Module.finrank ℝ E : ℝ))
     (hμ : (Module.finrank ℝ E : ℝ) - 2 ≠ 0)
     (hμval : μ = 2 * ((Module.finrank ℝ E : ℝ) - 1) /
       ((Module.finrank ℝ E : ℝ) - 2))
     (hT : ∀ x, traceFree (hessianRaisedEndomorphism (I := I) f x) =
       μ • traceFree (ricciRaisedEndomorphism LC x))
-    (hRiczero : ∀ x, (leviCivitaConnection (I := I) (M := M)).ricciCurvature x
+    (hRiczero : ∀ x, (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x
       (gradient (I := I) f x) (gradient (I := I) f x) = 0) :
     ∀ x, hessian LC f x (gradient (I := I) f x)
         (gradient (I := I) f x) =
       (-r / (Module.finrank ℝ E : ℝ) -
-        (leviCivitaConnection (I := I) (M := M)).scalarCurvature x /
+        (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x /
           ((Module.finrank ℝ E : ℝ) - 2)) *
         ‖gradient (I := I) f x‖ ^ 2 := by
   have hd : (Module.finrank ℝ E : ℝ) ≠ 0 := by
@@ -298,13 +304,13 @@ theorem test_mvfderiv_gradient_norm_sq_neg
 
 theorem test_classical_equality_forward
     (hRic_nonneg : ∀ (x : M) (v : TM x),
-      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v v)
+      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 4 f) (r : ℝ)
     (hpoisson : ∀ x, laplacian LC f x =
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r)
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r)
     (hdim : 2 < (Module.finrank ℝ E : ℝ))
     (heq :
-      (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r) ^ 2
+      (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r) ^ 2
         ∂riemannianVolume (I := I)) =
       (4 * (Module.finrank ℝ E : ℝ) *
         ((Module.finrank ℝ E : ℝ) - 1) /
@@ -317,7 +323,7 @@ theorem test_classical_equality_forward
     have : 0 < Module.finrank ℝ E := by
       exact_mod_cast (show (0 : ℝ) < (Module.finrank ℝ E : ℝ) by linarith)
     exact Nat.ne_of_gt this
-  let A : ℝ := ∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r) ^ 2
+  let A : ℝ := ∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r) ^ 2
     ∂riemannianVolume (I := I)
   let B : ℝ := ∫ x, hilbertSchmidtSq
     (traceFree (ricciRaisedEndomorphism LC x)) ∂riemannianVolume (I := I)
@@ -325,7 +331,7 @@ theorem test_classical_equality_forward
     ∂riemannianVolume (I := I)
   let Hess : ℝ := ∫ x, hessianNormSq LC f x
     ∂riemannianVolume (I := I)
-  let Ric : ℝ := ∫ x, (leviCivitaConnection (I := I) (M := M)).ricciCurvature x
+  let Ric : ℝ := ∫ x, (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x
     (gradient (I := I) f x) (gradient (I := I) f x)
     ∂riemannianVolume (I := I)
   let P : ℝ := ∫ x, contractedBianchiPairingIntegrand (I := I) f x
@@ -509,7 +515,7 @@ theorem test_classical_equality_forward
       intro x
       exact sub_eq_zero.mp ((hilbertSchmidtSq_eq_zero_iff _).mp (hDpoint x))
     let hRicfun : M → ℝ := fun x ↦
-      (leviCivitaConnection (I := I) (M := M)).ricciCurvature x
+      (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x
         (gradient (I := I) f x) (gradient (I := I) f x)
     have hRiccont : Continuous hRicfun := by
       dsimp only [hRicfun]
@@ -537,7 +543,7 @@ theorem test_classical_equality_forward
         (I := I) (M := M) (f := f) x]
       exact hTmuR x
     let S : M → ℝ := fun x ↦
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature x
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x
     have hSnonneg : ∀ x, 0 ≤ S x := by
       intro x
       simpa [S] using test_scalarCurvature_nonneg
@@ -602,12 +608,12 @@ theorem test_classical_equality_forward
       have hAzero : A = 0 := by
         dsimp only [A]
         calc
-          (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r) ^ 2
+          (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r) ^ 2
               ∂riemannianVolume (I := I)) =
               (∫ x, (0 : ℝ) ∂riemannianVolume (I := I)) := by
             apply integral_congr_ae
             filter_upwards [] with x
-            have hsx : (leviCivitaConnection (I := I) (M := M)).scalarCurvature x = 0 := by
+            have hsx : (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x = 0 := by
               simpa [S] using hSzero x
             rw [hrzero, hsx]
             norm_num
@@ -751,9 +757,9 @@ theorem exists_classical_weakPoisson_of_smooth_coordinate_forcing
     ∃ g : M → ℝ, ContMDiff I 𝓘(ℝ, ℝ) ∞ g ∧
       (∫ x, g x ∂riemannianVolume (I := I)) = 0 ∧
       ∀ x, laplacian LC g x =
-        (leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+        (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
           riemannianMean (I := I)
-            (leviCivitaConnection (I := I) (M := M)).scalarCurvature := by
+            (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur := by
   let b : OrthonormalBasis (Fin (Module.finrank ℝ E)) ℝ E :=
     stdOrthonormalBasis ℝ E
   let u : M → ℝ := centeredScalarCurvature (I := I) (M := M)
@@ -763,7 +769,7 @@ theorem exists_classical_weakPoisson_of_smooth_coordinate_forcing
   let f : Lp ℝ 2 (riemannianVolume (I := I) (M := M)) :=
     MemLp.toLp u hmem
   have hscalar : ContMDiff I 𝓘(ℝ, ℝ) 1
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature := by
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur := by
     intro x
     exact contMDiffAt_scalarCurvature_one
       (leviCivitaConnection (I := I) (M := M))
@@ -772,7 +778,7 @@ theorem exists_classical_weakPoisson_of_smooth_coordinate_forcing
     rw [integral_congr_ae hmem.coeFn_toLp]
     simpa [u, centeredScalarCurvature] using
       integral_sub_riemannianMean
-        ((leviCivitaConnection (I := I) (M := M)).scalarCurvature)
+        ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur)
         hscalar
   have huf : u =ᵐ[riemannianVolume (I := I) (M := M)] (f : M → ℝ) :=
     hmem.coeFn_toLp.symm
@@ -824,7 +830,7 @@ theorem exists_classical_weakPoisson_of_smooth_coordinate_forcing
     rw [← hsame]
     exact hqa i.1
   let S : M → ℝ :=
-    (leviCivitaConnection (I := I) (M := M)).scalarCurvature
+    (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur
   let r : ℝ := riemannianMean (I := I) S
   let F : M → ℝ := fun x ↦ S x - r
   have hF : Continuous F := by
@@ -848,11 +854,11 @@ theorem exists_classical_weakPoisson_of_smooth_coordinate_forcing
 
 theorem almostSchur_equality_iff
     (hRic_nonneg : ∀ (x : M) (v : TM x),
-      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v v)
+      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v)
     (hd : 2 < (Module.finrank ℝ E : ℝ)) :
-    ((∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+    ((∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
       riemannianMean (I := I)
-        (leviCivitaConnection (I := I) (M := M)).scalarCurvature) ^ 2
+        (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur) ^ 2
       ∂riemannianVolume (I := I)) =
       (4 * (Module.finrank ℝ E : ℝ) *
         ((Module.finrank ℝ E : ℝ) - 1) /
@@ -872,7 +878,7 @@ theorem almostSchur_equality_iff
         exact WithTop.coe_le_coe.mpr
           (show (4 : ℕ∞) ≤ ⊤ from le_top)))
       (riemannianMean (I := I)
-        (leviCivitaConnection (I := I) (M := M)).scalarCurvature) hpoisson hd
+        (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur) hpoisson hd
     exact heq
   · intro hRzero
     have hbound := almostSchur_bound_complete
@@ -894,15 +900,15 @@ theorem almostSchur_equality_iff
             _ = 0 := (hilbertSchmidtSq_eq_zero_iff _).2 rfl
         _ = 0 := by simp
     have hAnonneg : 0 ≤
-        ∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+        ∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
           riemannianMean (I := I)
-            (leviCivitaConnection (I := I) (M := M)).scalarCurvature) ^ 2
+            (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur) ^ 2
           ∂riemannianVolume (I := I) := by
       exact integral_nonneg (fun x ↦ sq_nonneg _)
     rw [hBzero, mul_zero] at hbound
-    have hA : (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+    have hA : (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
         riemannianMean (I := I)
-          (leviCivitaConnection (I := I) (M := M)).scalarCurvature) ^ 2
+          (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur) ^ 2
         ∂riemannianVolume (I := I)) = 0 := le_antisymm hbound hAnonneg
     rw [hA, hBzero]
     simp

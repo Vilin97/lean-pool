@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -54,7 +60,7 @@ local notation "TM" => (TangentSpace I : M → Type _)
 
 section SmoothExtend
 
-noncomputable def smoothExtendBumpData (x : M) :
+noncomputable def smoothExtendBumpDataAlmostSchur (x : M) :
     {φ : SmoothBumpFunction I x // tsupport φ ⊆ (trivializationAt F V x).baseSet} := by
   classical
   let t := trivializationAt F V x
@@ -65,13 +71,13 @@ noncomputable def smoothExtendBumpData (x : M) :
     (SmoothBumpFunction.nhds_basis_tsupport (I := I) (c := x)).mem_iff.mp ht
   exact ⟨Classical.choose hφ, (Classical.choose_spec hφ).2⟩
 
-noncomputable def smoothExtendBump (x : M) : SmoothBumpFunction I x :=
-  (smoothExtendBumpData (I := I) (F := F) (V := V) x).1
+noncomputable def smoothExtendBumpAlmostSchur (x : M) : SmoothBumpFunction I x :=
+  (smoothExtendBumpDataAlmostSchur (I := I) (F := F) (V := V) x).1
 
-lemma tsupport_smoothExtendBump_subset (x : M) :
-    tsupport (smoothExtendBump (I := I) (F := F) (V := V) x) ⊆
+lemma tsupport_smoothExtendBump_subsetAlmostSchur (x : M) :
+    tsupport (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x) ⊆
       (trivializationAt F V x).baseSet :=
-  (smoothExtendBumpData (I := I) (F := F) (V := V) x).2
+  (smoothExtendBumpDataAlmostSchur (I := I) (F := F) (V := V) x).2
 
 private lemma smoothBump_eq_zero_of_not_mem
     {x y : M} (φ : SmoothBumpFunction I x)
@@ -80,7 +86,7 @@ private lemma smoothBump_eq_zero_of_not_mem
   by_contra hφ
   exact hy (hφsupp (subset_closure hφ))
 
-lemma contMDiffOn_extend_baseSet_two {x : M} (v : V x) :
+lemma contMDiffOn_extend_baseSet_twoAlmostSchur {x : M} (v : V x) :
     ContMDiffOn I (I.prod 𝓘(ℝ, F)) 2 (T% (extend F v)) (trivializationAt F V x).baseSet := by
   let t := trivializationAt F V x
   suffices ContMDiffOn I 𝓘(ℝ, F) 2 (fun y ↦ (t ⟨y, extend F v y⟩).2) t.baseSet by
@@ -91,11 +97,11 @@ lemma contMDiffOn_extend_baseSet_two {x : M} (v : V x) :
   have hw : ContMDiffOn I 𝓘(ℝ, F) 2 (fun _y ↦ w) t.baseSet := contMDiffOn_const
   exact hw.congr (fun y hy ↦ by simp [extend, t, w, hy])
 
-lemma contMDiffOn_extend_baseSet_one {x : M} (v : V x) :
+lemma contMDiffOn_extend_baseSet_oneAlmostSchur {x : M} (v : V x) :
     ContMDiffOn I (I.prod 𝓘(ℝ, F)) 1 (T% (extend F v)) (trivializationAt F V x).baseSet :=
-  (contMDiffOn_extend_baseSet_two (I := I) (F := F) (V := V) v).of_le (by simp)
+  (contMDiffOn_extend_baseSet_twoAlmostSchur (I := I) (F := F) (V := V) v).of_le (by simp)
 
-lemma extend_add_of_mem {x : M} (v w : V x) {y : M}
+lemma extend_add_of_memAlmostSchur {x : M} (v w : V x) {y : M}
     (hy : y ∈ (trivializationAt F V x).baseSet) :
     extend F (v + w) y = extend F v y + extend F w y := by
   let t := trivializationAt F V x
@@ -108,7 +114,7 @@ lemma extend_add_of_mem {x : M} (v w : V x) {y : M}
     simpa [t.coe_linearMapAt_of_mem hx] using (t.linearMapAt ℝ x).map_add v w]
   exact (t.symmₗ ℝ y).map_add _ _
 
-lemma extend_smul_of_mem {x : M} (c : ℝ) (v : V x) {y : M}
+lemma extend_smul_of_memAlmostSchur {x : M} (c : ℝ) (v : V x) {y : M}
     (hy : y ∈ (trivializationAt F V x).baseSet) :
     extend F (c • v) y = c • extend F v y := by
   let t := trivializationAt F V x
@@ -123,7 +129,7 @@ lemma extend_smul_of_mem {x : M} (c : ℝ) (v : V x) {y : M}
   exact (t.symmₗ ℝ y).map_smul c _
 
 /-- A canonical smooth global extension of a fibre vector, linear in the fibre input. -/
-noncomputable def smoothExtend
+noncomputable def smoothExtendAlmostSchur
     (I : ModelWithCorners ℝ E H) (F : Type*) [NormedAddCommGroup F] [NormedSpace ℝ F]
     (V : M → Type*) [TopologicalSpace (TotalSpace F V)]
     [∀ x, AddCommGroup (V x)] [∀ x, Module ℝ (V x)]
@@ -131,49 +137,49 @@ noncomputable def smoothExtend
     [∀ x, ContinuousSMul ℝ (V x)] [FiberBundle F V] [VectorBundle ℝ F V]
     [ContMDiffVectorBundle 2 F V I]
     (x : M) (v : V x) : Π y : M, V y :=
-  ((smoothExtendBump (I := I) (F := F) (V := V) x : M → ℝ) • extend F v)
+  ((smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x : M → ℝ) • extend F v)
 
 /-- A smooth extension built from an explicitly supplied bump function.  This is useful when a
 later argument needs a bump with support contained in an additional neighborhood. -/
-noncomputable def smoothExtendWithBump
+noncomputable def smoothExtendWithBumpAlmostSchur
     (x : M) (φ : SmoothBumpFunction I x) (v : V x) : Π y : M, V y :=
   ((φ : M → ℝ) • extend F v)
 
-lemma smoothExtend_apply (x : M) (v : V x) :
-    smoothExtend (I := I) (F := F) (V := V) x v x = v := by
-  simp [smoothExtend]
+lemma smoothExtend_applyAlmostSchur (x : M) (v : V x) :
+    smoothExtendAlmostSchur (I := I) (F := F) (V := V) x v x = v := by
+  simp [smoothExtendAlmostSchur]
 
-lemma smoothExtendWithBump_apply (x : M) (φ : SmoothBumpFunction I x) (v : V x) :
-    smoothExtendWithBump (I := I) (F := F) (V := V) x φ v x = v := by
-  simp [smoothExtendWithBump]
+lemma smoothExtendWithBump_applyAlmostSchur (x : M) (φ : SmoothBumpFunction I x) (v : V x) :
+    smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ v x = v := by
+  simp [smoothExtendWithBumpAlmostSchur]
 
-lemma smoothExtend_eventuallyEq_extend (x : M) (v : V x) :
-    ∀ᶠ y in nhds x, smoothExtend (I := I) (F := F) (V := V) x v y = extend F v y := by
+lemma smoothExtend_eventuallyEq_extendAlmostSchur (x : M) (v : V x) :
+    ∀ᶠ y in nhds x, smoothExtendAlmostSchur (I := I) (F := F) (V := V) x v y = extend F v y := by
   have hφ :
-      (smoothExtendBump (I := I) (F := F) (V := V) x : M → ℝ) =ᶠ[nhds x] 1 :=
-    (smoothExtendBump (I := I) (F := F) (V := V) x).eventuallyEq_one
+      (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x : M → ℝ) =ᶠ[nhds x] 1 :=
+    (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x).eventuallyEq_one
   filter_upwards [hφ] with y hy
-  simp [smoothExtend, hy]
+  simp [smoothExtendAlmostSchur, hy]
 
-lemma smoothExtendWithBump_eventuallyEq_extend
+lemma smoothExtendWithBump_eventuallyEq_extendAlmostSchur
     (x : M) (φ : SmoothBumpFunction I x) (v : V x) :
     ∀ᶠ y in nhds x,
-      smoothExtendWithBump (I := I) (F := F) (V := V) x φ v y = extend F v y := by
+      smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ v y = extend F v y := by
   have hφ : (φ : M → ℝ) =ᶠ[nhds x] 1 := φ.eventuallyEq_one
   filter_upwards [hφ] with y hy
-  simp [smoothExtendWithBump, hy]
+  simp [smoothExtendWithBumpAlmostSchur, hy]
 
-lemma smoothExtendWithBump_eventuallyEq_smoothExtend
+lemma smoothExtendWithBump_eventuallyEq_smoothExtendAlmostSchur
     (x : M) (φ : SmoothBumpFunction I x) (v : V x) :
     ∀ᶠ y in nhds x,
-      smoothExtendWithBump (I := I) (F := F) (V := V) x φ v y =
-        smoothExtend (I := I) (F := F) (V := V) x v y := by
+      smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ v y =
+        smoothExtendAlmostSchur (I := I) (F := F) (V := V) x v y := by
   filter_upwards [
-      smoothExtendWithBump_eventuallyEq_extend (I := I) (F := F) (V := V) x φ v,
-      smoothExtend_eventuallyEq_extend (I := I) (F := F) (V := V) x v] with y hφ hsmooth
+      smoothExtendWithBump_eventuallyEq_extendAlmostSchur (I := I) (F := F) (V := V) x φ v,
+      smoothExtend_eventuallyEq_extendAlmostSchur (I := I) (F := F) (V := V) x v] with y hφ hsmooth
   exact hφ.trans hsmooth.symm
 
-lemma extend_trivializationAt_localFrame_apply_of_mem_baseSet
+lemma extend_trivializationAt_localFrame_apply_of_mem_baseSetAlmostSchur
     {ι : Type*} (b : Module.Basis ι ℝ F) (x : M) {y : M}
     (hy : y ∈ (trivializationAt F V x).baseSet) (i : ι) :
     extend F ((trivializationAt F V x).localFrame b i x) y =
@@ -184,31 +190,31 @@ lemma extend_trivializationAt_localFrame_apply_of_mem_baseSet
   rw [e.localFrame_apply_of_mem_baseSet (b := b) hy]
   simp [extend, Bundle.Trivialization.basisAt, e, hx, hy]
 
-lemma smoothExtend_trivializationAt_localFrame_eventuallyEq
+lemma smoothExtend_trivializationAt_localFrame_eventuallyEqAlmostSchur
     {ι : Type*} (b : Module.Basis ι ℝ F) (x : M) (i : ι) :
     ∀ᶠ y in nhds x,
-      smoothExtend (I := I) (F := F) (V := V) x
+      smoothExtendAlmostSchur (I := I) (F := F) (V := V) x
           ((trivializationAt F V x).localFrame b i x) y =
         (trivializationAt F V x).localFrame b i y := by
   let e := trivializationAt F V x
   have hbase : ∀ᶠ y in nhds x, y ∈ e.baseSet :=
     e.open_baseSet.mem_nhds (FiberBundle.mem_baseSet_trivializationAt F V x)
   filter_upwards [
-      smoothExtend_eventuallyEq_extend (I := I) (F := F) (V := V) x
+      smoothExtend_eventuallyEq_extendAlmostSchur (I := I) (F := F) (V := V) x
         ((trivializationAt F V x).localFrame b i x),
       hbase] with y hsmooth hy
   rw [hsmooth]
-  exact extend_trivializationAt_localFrame_apply_of_mem_baseSet
+  exact extend_trivializationAt_localFrame_apply_of_mem_baseSetAlmostSchur
     (F := F) (V := V) b x hy i
 
-lemma eventually_eq_sum_smoothExtend_trivializationAt_localFrameCoeff_smul
+lemma eventually_eq_sum_smoothExtend_trivializationAt_localFrameCoeff_smulAlmostSchur
     {ι : Type*} [Fintype ι] (b : Module.Basis ι ℝ F)
     (σ : Π x : M, V x) (x : M) :
     ∀ᶠ y in nhds x,
       σ y =
         ∑ i : ι,
           ((trivializationAt F V x).localFrameCoeff I b i y (σ y)) •
-            smoothExtend (I := I) (F := F) (V := V) x
+            smoothExtendAlmostSchur (I := I) (F := F) (V := V) x
               ((trivializationAt F V x).localFrame b i x) y := by
   classical
   let e := trivializationAt F V x
@@ -221,99 +227,99 @@ lemma eventually_eq_sum_smoothExtend_trivializationAt_localFrameCoeff_smul
   have hframes :
       ∀ᶠ y in nhds x,
         ∀ i : ι,
-          smoothExtend (I := I) (F := F) (V := V) x (e.localFrame b i x) y =
+          smoothExtendAlmostSchur (I := I) (F := F) (V := V) x (e.localFrame b i x) y =
             e.localFrame b i y := by
     rw [Filter.eventually_all]
     intro i
-    simpa [e] using smoothExtend_trivializationAt_localFrame_eventuallyEq
+    simpa [e] using smoothExtend_trivializationAt_localFrame_eventuallyEqAlmostSchur
       (I := I) (F := F) (V := V) b x i
   filter_upwards [hsum, hframes] with y hsumy hframey
   calc
     σ y = ∑ i : ι, e.localFrameCoeff I b i y (σ y) • e.localFrame b i y := hsumy
     _ = ∑ i : ι,
           e.localFrameCoeff I b i y (σ y) •
-            smoothExtend (I := I) (F := F) (V := V) x (e.localFrame b i x) y := by
+            smoothExtendAlmostSchur (I := I) (F := F) (V := V) x (e.localFrame b i x) y := by
           refine Finset.sum_congr rfl ?_
           intro i _
           rw [hframey i]
     _ = ∑ i : ι,
           ((trivializationAt F V x).localFrameCoeff I b i y (σ y)) •
-            smoothExtend (I := I) (F := F) (V := V) x
+            smoothExtendAlmostSchur (I := I) (F := F) (V := V) x
               ((trivializationAt F V x).localFrame b i x) y := by
           rfl
 
-lemma smoothExtend_add (x : M) (v w : V x) :
-    smoothExtend (I := I) (F := F) (V := V) x (v + w) =
-      smoothExtend (I := I) (F := F) (V := V) x v +
-        smoothExtend (I := I) (F := F) (V := V) x w := by
+lemma smoothExtend_addAlmostSchur (x : M) (v w : V x) :
+    smoothExtendAlmostSchur (I := I) (F := F) (V := V) x (v + w) =
+      smoothExtendAlmostSchur (I := I) (F := F) (V := V) x v +
+        smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w := by
   funext y
   by_cases hy : y ∈ (trivializationAt F V x).baseSet
-  · simp only [smoothExtend, Pi.add_apply]
-    change (smoothExtendBump (I := I) (F := F) (V := V) x : M → ℝ) y •
+  · simp only [smoothExtendAlmostSchur, Pi.add_apply]
+    change (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x : M → ℝ) y •
         extend F (v + w) y =
-      (smoothExtendBump (I := I) (F := F) (V := V) x : M → ℝ) y • extend F v y +
-        (smoothExtendBump (I := I) (F := F) (V := V) x : M → ℝ) y • extend F w y
-    rw [extend_add_of_mem (F := F) (V := V) v w hy]
+      (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x : M → ℝ) y • extend F v y +
+        (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x : M → ℝ) y • extend F w y
+    rw [extend_add_of_memAlmostSchur (F := F) (V := V) v w hy]
     exact smul_add _ _ _
   · have hφ := smoothBump_eq_zero_of_not_mem
       (I := I) (F := F) (V := V)
-      (smoothExtendBump (I := I) (F := F) (V := V) x)
-      (tsupport_smoothExtendBump_subset (I := I) (F := F) (V := V) x) hy
-    simp [smoothExtend, hφ]
+      (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x)
+      (tsupport_smoothExtendBump_subsetAlmostSchur (I := I) (F := F) (V := V) x) hy
+    simp [smoothExtendAlmostSchur, hφ]
 
-lemma smoothExtend_smul (x : M) (c : ℝ) (v : V x) :
-    smoothExtend (I := I) (F := F) (V := V) x (c • v) =
-      c • smoothExtend (I := I) (F := F) (V := V) x v := by
+lemma smoothExtend_smulAlmostSchur (x : M) (c : ℝ) (v : V x) :
+    smoothExtendAlmostSchur (I := I) (F := F) (V := V) x (c • v) =
+      c • smoothExtendAlmostSchur (I := I) (F := F) (V := V) x v := by
   funext y
   by_cases hy : y ∈ (trivializationAt F V x).baseSet
-  · simp only [smoothExtend, Pi.smul_apply]
-    change (smoothExtendBump (I := I) (F := F) (V := V) x : M → ℝ) y •
+  · simp only [smoothExtendAlmostSchur, Pi.smul_apply]
+    change (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x : M → ℝ) y •
         extend F (c • v) y =
-      c • ((smoothExtendBump (I := I) (F := F) (V := V) x : M → ℝ) y • extend F v y)
-    rw [extend_smul_of_mem (F := F) (V := V) c v hy]
+      c • ((smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x : M → ℝ) y • extend F v y)
+    rw [extend_smul_of_memAlmostSchur (F := F) (V := V) c v hy]
     simp [smul_smul, mul_comm]
   · have hφ := smoothBump_eq_zero_of_not_mem
       (I := I) (F := F) (V := V)
-      (smoothExtendBump (I := I) (F := F) (V := V) x)
-      (tsupport_smoothExtendBump_subset (I := I) (F := F) (V := V) x) hy
-    simp [smoothExtend, hφ]
+      (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x)
+      (tsupport_smoothExtendBump_subsetAlmostSchur (I := I) (F := F) (V := V) x) hy
+    simp [smoothExtendAlmostSchur, hφ]
 
-lemma smoothExtendWithBump_add
+lemma smoothExtendWithBump_addAlmostSchur
     (x : M) (φ : SmoothBumpFunction I x) (v w : V x)
     (hφsupp : tsupport φ ⊆ (trivializationAt F V x).baseSet) :
-    smoothExtendWithBump (I := I) (F := F) (V := V) x φ (v + w) =
-      smoothExtendWithBump (I := I) (F := F) (V := V) x φ v +
-        smoothExtendWithBump (I := I) (F := F) (V := V) x φ w := by
+    smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ (v + w) =
+      smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ v +
+        smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ w := by
   funext y
   by_cases hy : y ∈ (trivializationAt F V x).baseSet
-  · simp only [smoothExtendWithBump, Pi.add_apply]
+  · simp only [smoothExtendWithBumpAlmostSchur, Pi.add_apply]
     change (φ : M → ℝ) y • extend F (v + w) y =
       (φ : M → ℝ) y • extend F v y + (φ : M → ℝ) y • extend F w y
-    rw [extend_add_of_mem (F := F) (V := V) v w hy]
+    rw [extend_add_of_memAlmostSchur (F := F) (V := V) v w hy]
     exact smul_add _ _ _
   · have hφ := smoothBump_eq_zero_of_not_mem (I := I) (F := F) (V := V) φ hφsupp hy
-    simp [smoothExtendWithBump, hφ]
+    simp [smoothExtendWithBumpAlmostSchur, hφ]
 
-lemma smoothExtendWithBump_smul
+lemma smoothExtendWithBump_smulAlmostSchur
     (x : M) (φ : SmoothBumpFunction I x) (c : ℝ) (v : V x)
     (hφsupp : tsupport φ ⊆ (trivializationAt F V x).baseSet) :
-    smoothExtendWithBump (I := I) (F := F) (V := V) x φ (c • v) =
-      c • smoothExtendWithBump (I := I) (F := F) (V := V) x φ v := by
+    smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ (c • v) =
+      c • smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ v := by
   funext y
   by_cases hy : y ∈ (trivializationAt F V x).baseSet
-  · simp only [smoothExtendWithBump, Pi.smul_apply]
+  · simp only [smoothExtendWithBumpAlmostSchur, Pi.smul_apply]
     change (φ : M → ℝ) y • extend F (c • v) y =
       c • ((φ : M → ℝ) y • extend F v y)
-    rw [extend_smul_of_mem (F := F) (V := V) c v hy]
+    rw [extend_smul_of_memAlmostSchur (F := F) (V := V) c v hy]
     simp [smul_smul, mul_comm]
   · have hφ := smoothBump_eq_zero_of_not_mem (I := I) (F := F) (V := V) φ hφsupp hy
-    simp [smoothExtendWithBump, hφ]
+    simp [smoothExtendWithBumpAlmostSchur, hφ]
 
-lemma smoothExtend_contMDiff_two (x : M) (v : V x) :
+lemma smoothExtend_contMDiff_twoAlmostSchur (x : M) (v : V x) :
     ContMDiff I (I.prod 𝓘(ℝ, F)) 2
       (fun y ↦
-        TotalSpace.mk' F y (smoothExtend (I := I) (F := F) (V := V) x v y)) := by
-  let φ : SmoothBumpFunction I x := smoothExtendBump (I := I) (F := F) (V := V) x
+        TotalSpace.mk' F y (smoothExtendAlmostSchur (I := I) (F := F) (V := V) x v y)) := by
+  let φ : SmoothBumpFunction I x := smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x
   have hφ : ContMDiff I 𝓘(ℝ) 2 (φ : M → ℝ) := by
     have hφω : ContMDiff I 𝓘(ℝ) (((⊤ : ℕ∞) : WithTop ℕ∞)) (φ : M → ℝ) := φ.contMDiff
     have hle : (2 : WithTop ℕ∞) ≤ (((⊤ : ℕ∞) : WithTop ℕ∞)) := by
@@ -321,20 +327,20 @@ lemma smoothExtend_contMDiff_two (x : M) (v : V x) :
     exact hφω.of_le hle
   have hv : ContMDiffOn I (I.prod 𝓘(ℝ, F)) 2 (T% (extend F v))
       (trivializationAt F V x).baseSet :=
-    contMDiffOn_extend_baseSet_two (I := I) (F := F) (V := V) v
-  simpa [smoothExtend] using
+    contMDiffOn_extend_baseSet_twoAlmostSchur (I := I) (F := F) (V := V) v
+  simpa [smoothExtendAlmostSchur] using
     ContMDiffOn.smul_section_of_tsupport
       (u := (trivializationAt F V x).baseSet)
-      (n := 2) (ψ := (smoothExtendBump (I := I) (F := F) (V := V) x : M → ℝ))
+      (n := 2) (ψ := (smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x : M → ℝ))
       hφ.contMDiffOn (trivializationAt F V x).open_baseSet
-      (tsupport_smoothExtendBump_subset (I := I) (F := F) (V := V) x) hv
+      (tsupport_smoothExtendBump_subsetAlmostSchur (I := I) (F := F) (V := V) x) hv
 
-lemma smoothExtendWithBump_contMDiff_two_of_tsupport_subset
+lemma smoothExtendWithBump_contMDiff_two_of_tsupport_subsetAlmostSchur
     (x : M) (φ : SmoothBumpFunction I x) (v : V x)
     (hφsupp : tsupport φ ⊆ (trivializationAt F V x).baseSet) :
     ContMDiff I (I.prod 𝓘(ℝ, F)) 2
       (fun y ↦ TotalSpace.mk' F y
-        (smoothExtendWithBump (I := I) (F := F) (V := V) x φ v y)) := by
+        (smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ v y)) := by
   have hφ : ContMDiff I 𝓘(ℝ) 2 (φ : M → ℝ) := by
     have hφω : ContMDiff I 𝓘(ℝ) (((⊤ : ℕ∞) : WithTop ℕ∞)) (φ : M → ℝ) := φ.contMDiff
     have hle : (2 : WithTop ℕ∞) ≤ (((⊤ : ℕ∞) : WithTop ℕ∞)) := by
@@ -342,32 +348,32 @@ lemma smoothExtendWithBump_contMDiff_two_of_tsupport_subset
     exact hφω.of_le hle
   have hv : ContMDiffOn I (I.prod 𝓘(ℝ, F)) 2 (T% (extend F v))
       (trivializationAt F V x).baseSet :=
-    contMDiffOn_extend_baseSet_two (I := I) (F := F) (V := V) v
-  simpa [smoothExtendWithBump] using
+    contMDiffOn_extend_baseSet_twoAlmostSchur (I := I) (F := F) (V := V) v
+  simpa [smoothExtendWithBumpAlmostSchur] using
     ContMDiffOn.smul_section_of_tsupport
       (u := (trivializationAt F V x).baseSet)
       (n := 2) (ψ := (φ : M → ℝ))
       hφ.contMDiffOn (trivializationAt F V x).open_baseSet hφsupp hv
 
-lemma smoothExtend_localFrameCoeff_contMDiff_two
+lemma smoothExtend_localFrameCoeff_contMDiff_twoAlmostSchur
     {ι : Type*} [Fintype ι] (b : Module.Basis ι ℝ F)
     (x : M) (w : V x) (i : ι) :
     ContMDiff I 𝓘(ℝ) 2
       (fun y ↦
         (trivializationAt F V x).localFrameCoeff I b i y
-          (smoothExtend (I := I) (F := F) (V := V) x w y)) := by
+          (smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w y)) := by
   letI := b.finiteDimensional_of_finite
   let e := trivializationAt F V x
-  let φ : SmoothBumpFunction I x := smoothExtendBump (I := I) (F := F) (V := V) x
+  let φ : SmoothBumpFunction I x := smoothExtendBumpAlmostSchur (I := I) (F := F) (V := V) x
   have hbase :
       ContMDiffOn I 𝓘(ℝ) 2
         (fun y ↦ e.localFrameCoeff I b i y
-          (smoothExtend (I := I) (F := F) (V := V) x w y)) e.baseSet := by
+          (smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w y)) e.baseSet := by
     have hs :
         ContMDiffOn I (I.prod 𝓘(ℝ, F)) 2
           (fun y ↦ TotalSpace.mk' F y
-            (smoothExtend (I := I) (F := F) (V := V) x w y)) e.baseSet :=
-      (smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w).contMDiffOn
+            (smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w y)) e.baseSet :=
+      (smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w).contMDiffOn
     simpa [e] using
       contMDiffOn_localFrameCoeff (I := I) (e := e) (b := b)
         (t := e.baseSet) (k := (2 : WithTop ℕ∞))
@@ -375,39 +381,39 @@ lemma smoothExtend_localFrameCoeff_contMDiff_two
   have hcompl :
       ContMDiffOn I 𝓘(ℝ) 2
         (fun y ↦ e.localFrameCoeff I b i y
-          (smoothExtend (I := I) (F := F) (V := V) x w y)) (tsupport φ)ᶜ := by
+          (smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w y)) (tsupport φ)ᶜ := by
     have hzero :
         ContMDiffOn I 𝓘(ℝ) 2 (fun _ : M ↦ (0 : ℝ)) (tsupport φ)ᶜ :=
       contMDiff_const.contMDiffOn
     refine hzero.congr ?_
     intro y hy
     have hφy : (φ : M → ℝ) y = 0 := image_eq_zero_of_notMem_tsupport hy
-    simp [smoothExtend, φ, hφy]
+    simp [smoothExtendAlmostSchur, φ, hφy]
   have hcover : e.baseSet ∪ (tsupport φ)ᶜ = Set.univ := by
     apply Set.eq_univ_iff_forall.mpr
     intro y
     by_cases hy : y ∈ e.baseSet
     · exact Or.inl hy
     · exact Or.inr fun hysupp ↦
-        hy (tsupport_smoothExtendBump_subset (I := I) (F := F) (V := V) x hysupp)
+        hy (tsupport_smoothExtendBump_subsetAlmostSchur (I := I) (F := F) (V := V) x hysupp)
   have hglobal :=
     contMDiff_of_contMDiffOn_union_of_isOpen hbase hcompl hcover e.open_baseSet
       (isOpen_compl_iff.mpr (isClosed_tsupport φ))
   simpa [e] using hglobal
 
-lemma smoothExtend_contMDiff_one (x : M) (v : V x) :
+lemma smoothExtend_contMDiff_oneAlmostSchur (x : M) (v : V x) :
     ContMDiff I (I.prod 𝓘(ℝ, F)) 1
       (fun y ↦
-        TotalSpace.mk' F y (smoothExtend (I := I) (F := F) (V := V) x v y)) :=
-  (smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x v).of_le (by simp)
+        TotalSpace.mk' F y (smoothExtendAlmostSchur (I := I) (F := F) (V := V) x v y)) :=
+  (smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x v).of_le (by simp)
 
-lemma smoothExtendWithBump_contMDiff_one_of_tsupport_subset
+lemma smoothExtendWithBump_contMDiff_one_of_tsupport_subsetAlmostSchur
     (x : M) (φ : SmoothBumpFunction I x) (v : V x)
     (hφsupp : tsupport φ ⊆ (trivializationAt F V x).baseSet) :
     ContMDiff I (I.prod 𝓘(ℝ, F)) 1
       (fun y ↦ TotalSpace.mk' F y
-        (smoothExtendWithBump (I := I) (F := F) (V := V) x φ v y)) :=
-  (smoothExtendWithBump_contMDiff_two_of_tsupport_subset
+        (smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ v y)) :=
+  (smoothExtendWithBump_contMDiff_two_of_tsupport_subsetAlmostSchur
     (I := I) (F := F) (V := V) x φ v hφsupp).of_le (by simp)
 
 end SmoothExtend
@@ -546,7 +552,7 @@ private lemma writtenInExtChartAt_extDerivFun_apply_eventuallyEq_fderivWithin
           rw [hz_eq]
 
 /-- Scalar second derivatives commute up to the Lie bracket. -/
-lemma extDerivFun_lieBracket_commutator
+lemma extDerivFun_lieBracket_commutatorAlmostSchur
     {f : M → ℝ} {X Y : Π x : M, TM x} {x : M}
     (hf : ContMDiff I 𝓘(ℝ) 2 f)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
@@ -689,14 +695,14 @@ private lemma mdifferentiableAt_along_of_contMDiff
     {X : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    MDiffAt (T% (cov.along X σ)) x := by
-  exact ((cov.contMDiff_along (n := 1) hX hσ) x).mdifferentiableAt one_ne_zero
+    MDiffAt (T% (cov.alongAlmostSchur X σ)) x := by
+  exact ((cov.contMDiff_alongAlmostSchur (n := 1) hX hσ) x).mdifferentiableAt one_ne_zero
 
 private lemma mdifferentiableAt_along_of_mdifferentiableAt
     {X : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hX : MDiffAt (T% X) x)
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    MDiffAt (T% (cov.along X σ)) x := by
+    MDiffAt (T% (cov.alongAlmostSchur X σ)) x := by
   let Hcov := (inferInstance : ContMDiffCovariantDerivative cov 1).contMDiff
   have hCovSection :
       ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] F)) 1
@@ -707,7 +713,7 @@ private lemma mdifferentiableAt_along_of_mdifferentiableAt
     exact Hcov.contMDiff (by
       apply contMDiffOn_univ.mpr
       convert hσ using 1 <;> norm_num)
-  simpa [CovariantDerivative.along] using
+  simpa [CovariantDerivative.alongAlmostSchur] using
     ((hCovSection x).mdifferentiableAt one_ne_zero).clm_bundle_apply hX
 private lemma second_derivative_inner_of_metricCompatible
     [RiemannianBundle V] [IsContMDiffRiemannianBundle I 2 F V]
@@ -722,10 +728,10 @@ private lemma second_derivative_inner_of_metricCompatible
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hτ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (τ y))) :
       mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) (fun z ↦ inner ℝ (σ z) (τ z)) y (Y y)) x (X x) =
-        (inner ℝ (cov.along X (cov.along Y σ) x) (τ x) +
-          inner ℝ (cov.along Y σ x) (cov.along X τ x)) +
-        (inner ℝ (cov.along X σ x) (cov.along Y τ x) +
-          inner ℝ (σ x) (cov.along X (cov.along Y τ) x)) := by
+        (inner ℝ (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x) (τ x) +
+          inner ℝ (cov.alongAlmostSchur Y σ x) (cov.alongAlmostSchur X τ x)) +
+        (inner ℝ (cov.alongAlmostSchur X σ x) (cov.alongAlmostSchur Y τ x) +
+          inner ℝ (σ x) (cov.alongAlmostSchur X (cov.alongAlmostSchur Y τ) x)) := by
   let f : M → ℝ := fun y ↦ inner ℝ (σ y) (τ y)
   have hσ₁ : ContMDiff I (I.prod 𝓘(ℝ, F)) 1 (fun y ↦ TotalSpace.mk' F y (σ y)) :=
     hσ.of_le (by norm_num)
@@ -738,39 +744,39 @@ private lemma second_derivative_inner_of_metricCompatible
   have hmetric_along {x0 : M} {Z : Π x : M, TM x} {ρ υ : Π x : M, V x}
       (hρ : MDiffAt (T% ρ) x0) (hυ : MDiffAt (T% υ) x0) :
       mvfderiv (I := I) (fun y ↦ inner ℝ (ρ y) (υ y)) x0 (Z x0) =
-        inner ℝ (cov.along Z ρ x0) (υ x0) +
-          inner ℝ (ρ x0) (cov.along Z υ x0) := by
-    simpa [CovariantDerivative.along] using hmetric (x := x0) hρ hυ (Z x0)
+        inner ℝ (cov.alongAlmostSchur Z ρ x0) (υ x0) +
+          inner ℝ (ρ x0) (cov.alongAlmostSchur Z υ x0) := by
+    simpa [CovariantDerivative.alongAlmostSchur] using hmetric (x := x0) hρ hυ (Z x0)
   have hYσ :
       ContMDiff I (I.prod 𝓘(ℝ, F)) 1
-        (fun y ↦ TotalSpace.mk' F y (cov.along Y σ y)) :=
-    cov.contMDiff_along (n := 1) hY hσ
+        (fun y ↦ TotalSpace.mk' F y (cov.alongAlmostSchur Y σ y)) :=
+    cov.contMDiff_alongAlmostSchur (n := 1) hY hσ
   have hYτ :
       ContMDiff I (I.prod 𝓘(ℝ, F)) 1
-        (fun y ↦ TotalSpace.mk' F y (cov.along Y τ y)) :=
-    cov.contMDiff_along (n := 1) hY hτ
-  have hYσmd : MDiffAt (T% (cov.along Y σ)) x :=
+        (fun y ↦ TotalSpace.mk' F y (cov.alongAlmostSchur Y τ y)) :=
+    cov.contMDiff_alongAlmostSchur (n := 1) hY hτ
+  have hYσmd : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x :=
     cov.mdifferentiableAt_along_of_contMDiff hY hσ
-  have hYτmd : MDiffAt (T% (cov.along Y τ)) x :=
+  have hYτmd : MDiffAt (T% (cov.alongAlmostSchur Y τ)) x :=
     cov.mdifferentiableAt_along_of_contMDiff hY hτ
   have hinnerYστ : MDiffAt
-      (fun y ↦ inner ℝ (cov.along Y σ y) (τ y)) x := by
+      (fun y ↦ inner ℝ (cov.alongAlmostSchur Y σ y) (τ y)) x := by
     have h :
         ContMDiff I 𝓘(ℝ) 1
-          (fun y ↦ inner ℝ (cov.along Y σ y) (τ y)) :=
+          (fun y ↦ inner ℝ (cov.alongAlmostSchur Y σ y) (τ y)) :=
       ContMDiff.inner_bundle (IM := I) (IB := I) (F := F) (E := V) hYσ hτ₁
     exact (h x).mdifferentiableAt one_ne_zero
   have hinnerσYτ : MDiffAt
-      (fun y ↦ inner ℝ (σ y) (cov.along Y τ y)) x := by
+      (fun y ↦ inner ℝ (σ y) (cov.alongAlmostSchur Y τ y)) x := by
     have h :
         ContMDiff I 𝓘(ℝ) 1
-          (fun y ↦ inner ℝ (σ y) (cov.along Y τ y)) :=
+          (fun y ↦ inner ℝ (σ y) (cov.alongAlmostSchur Y τ y)) :=
       ContMDiff.inner_bundle (IM := I) (IB := I) (F := F) (E := V) hσ₁ hYτ
     exact (h x).mdifferentiableAt one_ne_zero
   have hDY_fun :
       (fun y ↦ mvfderiv (I := I) f y (Y y)) =
-        fun y ↦ inner ℝ (cov.along Y σ y) (τ y) +
-          inner ℝ (σ y) (cov.along Y τ y) := by
+        fun y ↦ inner ℝ (cov.alongAlmostSchur Y σ y) (τ y) +
+          inner ℝ (σ y) (cov.alongAlmostSchur Y τ y) := by
     funext y
     have hσy : MDiffAt (T% σ) y :=
       (hσ y).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
@@ -779,12 +785,12 @@ private lemma second_derivative_inner_of_metricCompatible
     simpa [f] using hmetric_along (x0 := y) (Z := Y) hσy hτy
   rw [hDY_fun]
   change mvfderiv (I := I)
-      ((fun y ↦ inner ℝ (cov.along Y σ y) (τ y)) +
-        fun y ↦ inner ℝ (σ y) (cov.along Y τ y)) x (X x) =
-      (inner ℝ (cov.along X (cov.along Y σ) x) (τ x) +
-        inner ℝ (cov.along Y σ x) (cov.along X τ x)) +
-      (inner ℝ (cov.along X σ x) (cov.along Y τ x) +
-        inner ℝ (σ x) (cov.along X (cov.along Y τ) x))
+      ((fun y ↦ inner ℝ (cov.alongAlmostSchur Y σ y) (τ y)) +
+        fun y ↦ inner ℝ (σ y) (cov.alongAlmostSchur Y τ y)) x (X x) =
+      (inner ℝ (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x) (τ x) +
+        inner ℝ (cov.alongAlmostSchur Y σ x) (cov.alongAlmostSchur X τ x)) +
+      (inner ℝ (cov.alongAlmostSchur X σ x) (cov.alongAlmostSchur Y τ x) +
+        inner ℝ (σ x) (cov.alongAlmostSchur X (cov.alongAlmostSchur Y τ) x))
   rw [mvfderiv_add hinnerYστ hinnerσYτ]
   simp only [ContinuousLinearMap.add_apply]
   rw [hmetric_along (x0 := x) (Z := X) hYσmd hτmd,
@@ -792,7 +798,7 @@ private lemma second_derivative_inner_of_metricCompatible
 
 /-- Metric compatibility makes the raw curvature commutator skew-adjoint in the bundle
 inner product. -/
-theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
+theorem curvatureAux_inner_add_eq_zero_of_metricCompatibleAlmostSchur
     [RiemannianBundle V] [IsContMDiffRiemannianBundle I 2 F V]
     (hmetric :
       ∀ {x : M} {σ τ : Π x : M, V x},
@@ -805,8 +811,8 @@ theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hτ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (τ y))) :
-    inner ℝ (cov.curvatureAux X Y σ x) (τ x) +
-      inner ℝ (σ x) (cov.curvatureAux X Y τ x) = 0 := by
+    inner ℝ (cov.curvatureAuxAlmostSchur X Y σ x) (τ x) +
+      inner ℝ (σ x) (cov.curvatureAuxAlmostSchur X Y τ x) = 0 := by
   let f : M → ℝ := fun y ↦ inner ℝ (σ y) (τ y)
   have hσmd : MDiffAt (T% σ) x :=
     (hσ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
@@ -817,58 +823,58 @@ theorem curvatureAux_inner_add_eq_zero_of_metricCompatible
       (ContMDiff.inner_bundle (IM := I) (IB := I) (F := F) (E := V) hσ hτ)
   have hDXY :
       mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) f y (Y y)) x (X x) =
-        (inner ℝ (cov.along X (cov.along Y σ) x) (τ x) +
-          inner ℝ (cov.along Y σ x) (cov.along X τ x)) +
-        (inner ℝ (cov.along X σ x) (cov.along Y τ x) +
-          inner ℝ (σ x) (cov.along X (cov.along Y τ) x)) :=
+        (inner ℝ (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x) (τ x) +
+          inner ℝ (cov.alongAlmostSchur Y σ x) (cov.alongAlmostSchur X τ x)) +
+        (inner ℝ (cov.alongAlmostSchur X σ x) (cov.alongAlmostSchur Y τ x) +
+          inner ℝ (σ x) (cov.alongAlmostSchur X (cov.alongAlmostSchur Y τ) x)) :=
     cov.second_derivative_inner_of_metricCompatible hmetric (X := X) (Y := Y) hY hσ hτ
   have hDYX :
       mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) f y (X y)) x (Y x) =
-        (inner ℝ (cov.along Y (cov.along X σ) x) (τ x) +
-          inner ℝ (cov.along X σ x) (cov.along Y τ x)) +
-        (inner ℝ (cov.along Y σ x) (cov.along X τ x) +
-          inner ℝ (σ x) (cov.along Y (cov.along X τ) x)) :=
+        (inner ℝ (cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x) (τ x) +
+          inner ℝ (cov.alongAlmostSchur X σ x) (cov.alongAlmostSchur Y τ x)) +
+        (inner ℝ (cov.alongAlmostSchur Y σ x) (cov.alongAlmostSchur X τ x) +
+          inner ℝ (σ x) (cov.alongAlmostSchur Y (cov.alongAlmostSchur X τ) x)) :=
     cov.second_derivative_inner_of_metricCompatible hmetric (X := Y) (Y := X) hX hσ hτ
   have hDbr :
       mvfderiv (I := I) f x (VectorField.mlieBracket I X Y x) =
-        inner ℝ (cov.along (VectorField.mlieBracket I X Y) σ x) (τ x) +
-          inner ℝ (σ x) (cov.along (VectorField.mlieBracket I X Y) τ x) := by
-    simpa [f, CovariantDerivative.along] using
+        inner ℝ (cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) (τ x) +
+          inner ℝ (σ x) (cov.alongAlmostSchur (VectorField.mlieBracket I X Y) τ x) := by
+    simpa [f, CovariantDerivative.alongAlmostSchur] using
       hmetric (x := x) hσmd hτmd (VectorField.mlieBracket I X Y x)
   have hcomm :=
-    extDerivFun_lieBracket_commutator (I := I) (f := f) (X := X) (Y := Y)
+    extDerivFun_lieBracket_commutatorAlmostSchur (I := I) (f := f) (X := X) (Y := Y)
       (x := x) hinnerσ hX hY
   rw [hDXY, hDYX, hDbr] at hcomm
   abel_nf at hcomm
-  simpa [CovariantDerivative.curvatureAux, sub_eq_add_neg, inner_add_left, inner_add_right,
+  simpa [CovariantDerivative.curvatureAuxAlmostSchur, sub_eq_add_neg, inner_add_left, inner_add_right,
     inner_sub_left, inner_sub_right, add_assoc, add_left_comm, add_comm] using hcomm
 
 private lemma along_add_right_of_contMDiff
     {X : Π x : M, TM x} {σ τ : Π x : M, V x}
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hτ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (τ y))) :
-    cov.along X (σ + τ) = cov.along X σ + cov.along X τ := by
+    cov.alongAlmostSchur X (σ + τ) = cov.alongAlmostSchur X σ + cov.alongAlmostSchur X τ := by
   funext z
-  exact cov.along_add_right_apply (x := z) (X := X)
+  exact cov.along_add_right_applyAlmostSchur (x := z) (X := X)
     ((hσ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0))
     ((hτ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0))
 
 private lemma along_const_smul_right_apply
     {X : Π x : M, TM x} {σ : Π x : M, V x} {x : M} (c : ℝ)
     (hσ : MDiffAt (T% σ) x) :
-    cov.along X (c • σ) x = c • cov.along X σ x := by
+    cov.alongAlmostSchur X (c • σ) x = c • cov.alongAlmostSchur X σ x := by
   have hfun : (fun _ : M ↦ c) • σ = c • σ := by
     funext y
     rfl
   rw [← hfun]
   simpa [mvfderiv] using
-    (cov.along_smul_right_apply (x := x) (X := X) (f := fun _ ↦ c)
+    (cov.along_smul_right_applyAlmostSchur (x := x) (X := X) (f := fun _ ↦ c)
       mdifferentiableAt_const hσ)
 
 private lemma along_const_smul_right_of_contMDiff
     {X : Π x : M, TM x} {σ : Π x : M, V x} (c : ℝ)
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.along X (c • σ) = c • cov.along X σ := by
+    cov.alongAlmostSchur X (c • σ) = c • cov.alongAlmostSchur X σ := by
   funext z
   exact cov.along_const_smul_right_apply (x := z) c
     ((hσ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0))
@@ -879,133 +885,133 @@ private lemma curvatureAux_add_left_apply
     (hX' : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X' y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.curvatureAux (X + X') Y σ x =
-      cov.curvatureAux X Y σ x + cov.curvatureAux X' Y σ x := by
-  have hYX : MDiffAt (T% (cov.along X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
-  have hY'X : MDiffAt (T% (cov.along X' σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX' hσ
+    cov.curvatureAuxAlmostSchur (X + X') Y σ x =
+      cov.curvatureAuxAlmostSchur X Y σ x + cov.curvatureAuxAlmostSchur X' Y σ x := by
+  have hYX : MDiffAt (T% (cov.alongAlmostSchur X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
+  have hY'X : MDiffAt (T% (cov.alongAlmostSchur X' σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX' hσ
   have hXx : MDiffAt (T% X) x := (hX x).mdifferentiableAt one_ne_zero
   have hX'x : MDiffAt (T% X') x := (hX' x).mdifferentiableAt one_ne_zero
   have h1 :
-      cov.along (X + X') (cov.along Y σ) x =
-        cov.along X (cov.along Y σ) x + cov.along X' (cov.along Y σ) x := by
-    simpa using congrArg (fun s => s x) (cov.along_add_left X X' (cov.along Y σ))
+      cov.alongAlmostSchur (X + X') (cov.alongAlmostSchur Y σ) x =
+        cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X' (cov.alongAlmostSchur Y σ) x := by
+    simpa using congrArg (fun s => s x) (cov.along_add_leftAlmostSchur X X' (cov.alongAlmostSchur Y σ))
   have h2 :
-      cov.along Y (cov.along (X + X') σ) x =
-        cov.along Y (cov.along X σ) x + cov.along Y (cov.along X' σ) x := by
-    rw [cov.along_add_left]
-    exact cov.along_add_right_apply (x := x) (X := Y) hYX hY'X
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur (X + X') σ) x =
+        cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y (cov.alongAlmostSchur X' σ) x := by
+    rw [cov.along_add_leftAlmostSchur]
+    exact cov.along_add_right_applyAlmostSchur (x := x) (X := Y) hYX hY'X
   have h3 :
-      cov.along (VectorField.mlieBracket I (X + X') Y) σ x =
-        cov.along (VectorField.mlieBracket I X Y) σ x +
-          cov.along (VectorField.mlieBracket I X' Y) σ x := by
-    simp [CovariantDerivative.along, VectorField.mlieBracket_add_left hXx hX'x, map_add]
+      cov.alongAlmostSchur (VectorField.mlieBracket I (X + X') Y) σ x =
+        cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+          cov.alongAlmostSchur (VectorField.mlieBracket I X' Y) σ x := by
+    simp [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_add_left hXx hX'x, map_add]
   calc
-    cov.curvatureAux (X + X') Y σ x
-        = cov.along (X + X') (cov.along Y σ) x -
-            cov.along Y (cov.along (X + X') σ) x -
-            cov.along (VectorField.mlieBracket I (X + X') Y) σ x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = (cov.along X (cov.along Y σ) x + cov.along X' (cov.along Y σ) x) -
-          (cov.along Y (cov.along X σ) x + cov.along Y (cov.along X' σ) x) -
-          (cov.along (VectorField.mlieBracket I X Y) σ x +
-            cov.along (VectorField.mlieBracket I X' Y) σ x) := by
+    cov.curvatureAuxAlmostSchur (X + X') Y σ x
+        = cov.alongAlmostSchur (X + X') (cov.alongAlmostSchur Y σ) x -
+            cov.alongAlmostSchur Y (cov.alongAlmostSchur (X + X') σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I (X + X') Y) σ x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X' (cov.alongAlmostSchur Y σ) x) -
+          (cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y (cov.alongAlmostSchur X' σ) x) -
+          (cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+            cov.alongAlmostSchur (VectorField.mlieBracket I X' Y) σ x) := by
               rw [h1, h2, h3]
-    _ = (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) +
-        (cov.along X' (cov.along Y σ) x - cov.along Y (cov.along X' σ) x -
-          cov.along (VectorField.mlieBracket I X' Y) σ x) := by
+    _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) +
+        (cov.alongAlmostSchur X' (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X' σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X' Y) σ x) := by
             simp [sub_eq_add_neg, smul_smul, neg_smul] <;> abel
-    _ = cov.curvatureAux X Y σ x + cov.curvatureAux X' Y σ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = cov.curvatureAuxAlmostSchur X Y σ x + cov.curvatureAuxAlmostSchur X' Y σ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
 private lemma curvatureAux_smul_left_apply
     {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M} (c : ℝ)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.curvatureAux (c • X) Y σ x = c • cov.curvatureAux X Y σ x := by
-  have hYX : MDiffAt (T% (cov.along X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
+    cov.curvatureAuxAlmostSchur (c • X) Y σ x = c • cov.curvatureAuxAlmostSchur X Y σ x := by
+  have hYX : MDiffAt (T% (cov.alongAlmostSchur X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
   have hXx : MDiffAt (T% X) x := (hX x).mdifferentiableAt one_ne_zero
-  have hXsmul : cov.along (c • X) σ = c • cov.along X σ := by
+  have hXsmul : cov.alongAlmostSchur (c • X) σ = c • cov.alongAlmostSchur X σ := by
     have hfun : (fun _ : M ↦ c) • X = c • X := by
       funext y
       rfl
     rw [← hfun]
-    exact cov.along_smul_left (f := fun _ ↦ c) X σ
+    exact cov.along_smul_leftAlmostSchur (f := fun _ ↦ c) X σ
   have h1 :
-      cov.along (c • X) (cov.along Y σ) x = c • cov.along X (cov.along Y σ) x := by
-    simp [CovariantDerivative.along, map_smul]
+      cov.alongAlmostSchur (c • X) (cov.alongAlmostSchur Y σ) x = c • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x := by
+    simp [CovariantDerivative.alongAlmostSchur, map_smul]
   have h2 :
-      cov.along Y (cov.along (c • X) σ) x = c • cov.along Y (cov.along X σ) x := by
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur (c • X) σ) x = c • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x := by
     rw [hXsmul]
     exact cov.along_const_smul_right_apply (x := x) c hYX
   have h3 :
-      cov.along (VectorField.mlieBracket I (c • X) Y) σ x =
-        c • cov.along (VectorField.mlieBracket I X Y) σ x := by
-    simp [CovariantDerivative.along, VectorField.mlieBracket_const_smul_left hXx, map_smul]
+      cov.alongAlmostSchur (VectorField.mlieBracket I (c • X) Y) σ x =
+        c • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
+    simp [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_const_smul_left hXx, map_smul]
   calc
-    cov.curvatureAux (c • X) Y σ x
-        = cov.along (c • X) (cov.along Y σ) x -
-            cov.along Y (cov.along (c • X) σ) x -
-            cov.along (VectorField.mlieBracket I (c • X) Y) σ x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = c • cov.along X (cov.along Y σ) x -
-          c • cov.along Y (cov.along X σ) x -
-          c • cov.along (VectorField.mlieBracket I X Y) σ x := by
+    cov.curvatureAuxAlmostSchur (c • X) Y σ x
+        = cov.alongAlmostSchur (c • X) (cov.alongAlmostSchur Y σ) x -
+            cov.alongAlmostSchur Y (cov.alongAlmostSchur (c • X) σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I (c • X) Y) σ x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = c • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+          c • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          c • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
             rw [h1, h2, h3]
-    _ = c • (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) := by
+    _ = c • (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
             rw [smul_sub, smul_sub]
-    _ = c • cov.curvatureAux X Y σ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = c • cov.curvatureAuxAlmostSchur X Y σ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
-lemma curvatureAux_smul_fun_left_apply
+lemma curvatureAux_smul_fun_left_applyAlmostSchur
     {f : M → ℝ} {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hf : MDiffAt f x)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.curvatureAux (f • X) Y σ x = f x • cov.curvatureAux X Y σ x := by
-  have hYX : MDiffAt (T% (cov.along X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
+    cov.curvatureAuxAlmostSchur (f • X) Y σ x = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
+  have hYX : MDiffAt (T% (cov.alongAlmostSchur X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
   have hXx : MDiffAt (T% X) x := (hX x).mdifferentiableAt one_ne_zero
-  have hXsmul : cov.along (f • X) σ = f • cov.along X σ := by
-    simpa using (cov.along_smul_left f X σ)
+  have hXsmul : cov.alongAlmostSchur (f • X) σ = f • cov.alongAlmostSchur X σ := by
+    simpa using (cov.along_smul_leftAlmostSchur f X σ)
   have h1 :
-      cov.along (f • X) (cov.along Y σ) x = f x • cov.along X (cov.along Y σ) x := by
-    simpa using congrArg (fun s => s x) (cov.along_smul_left f X (cov.along Y σ))
+      cov.alongAlmostSchur (f • X) (cov.alongAlmostSchur Y σ) x = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x := by
+    simpa using congrArg (fun s => s x) (cov.along_smul_leftAlmostSchur f X (cov.alongAlmostSchur Y σ))
   have h2 :
-      cov.along Y (cov.along (f • X) σ) x =
-        f x • cov.along Y (cov.along X σ) x +
-          mvfderiv (I := I) f x (Y x) • cov.along X σ x := by
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur (f • X) σ) x =
+        f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x +
+          mvfderiv (I := I) f x (Y x) • cov.alongAlmostSchur X σ x := by
     rw [hXsmul]
-    exact cov.along_smul_right_apply (x := x) (f := f) (X := Y) (σ := cov.along X σ) hf hYX
+    exact cov.along_smul_right_applyAlmostSchur (x := x) (f := f) (X := Y) (σ := cov.alongAlmostSchur X σ) hf hYX
   have h3 :
-      cov.along (VectorField.mlieBracket I (f • X) Y) σ x =
-        -(mvfderiv (I := I) f x (Y x)) • cov.along X σ x +
-          f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
-    rw [CovariantDerivative.along, VectorField.mlieBracket_smul_left hf hXx, mvfderiv]
-    simp [CovariantDerivative.along, map_add, map_smul]
+      cov.alongAlmostSchur (VectorField.mlieBracket I (f • X) Y) σ x =
+        -(mvfderiv (I := I) f x (Y x)) • cov.alongAlmostSchur X σ x +
+          f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
+    rw [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_smul_left hf hXx, mvfderiv]
+    simp [CovariantDerivative.alongAlmostSchur, map_add, map_smul]
   calc
-    cov.curvatureAux (f • X) Y σ x
-        = cov.along (f • X) (cov.along Y σ) x -
-            cov.along Y (cov.along (f • X) σ) x -
-            cov.along (VectorField.mlieBracket I (f • X) Y) σ x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = f x • cov.along X (cov.along Y σ) x -
-          (f x • cov.along Y (cov.along X σ) x +
-            mvfderiv (I := I) f x (Y x) • cov.along X σ x) -
-          (-(mvfderiv (I := I) f x (Y x)) • cov.along X σ x +
-            f x • cov.along (VectorField.mlieBracket I X Y) σ x) := by
+    cov.curvatureAuxAlmostSchur (f • X) Y σ x
+        = cov.alongAlmostSchur (f • X) (cov.alongAlmostSchur Y σ) x -
+            cov.alongAlmostSchur Y (cov.alongAlmostSchur (f • X) σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I (f • X) Y) σ x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+          (f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x +
+            mvfderiv (I := I) f x (Y x) • cov.alongAlmostSchur X σ x) -
+          (-(mvfderiv (I := I) f x (Y x)) • cov.alongAlmostSchur X σ x +
+            f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
               rw [h1, h2, h3]
-    _ = f x • cov.along X (cov.along Y σ) x -
-          f x • cov.along Y (cov.along X σ) x -
-          f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
+    _ = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+          f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
             simp [sub_eq_add_neg, smul_smul, neg_smul] <;> abel
-    _ = f x • (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) := by
+    _ = f x • (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
             rw [smul_sub, smul_sub]
-    _ = f x • cov.curvatureAux X Y σ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
 private lemma curvatureAux_add_middle_apply
     {X Y Y' : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
@@ -1013,133 +1019,133 @@ private lemma curvatureAux_add_middle_apply
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hY' : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y' y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.curvatureAux X (Y + Y') σ x =
-      cov.curvatureAux X Y σ x + cov.curvatureAux X Y' σ x := by
-  have hYσ : MDiffAt (T% (cov.along Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
-  have hY'σ : MDiffAt (T% (cov.along Y' σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY' hσ
+    cov.curvatureAuxAlmostSchur X (Y + Y') σ x =
+      cov.curvatureAuxAlmostSchur X Y σ x + cov.curvatureAuxAlmostSchur X Y' σ x := by
+  have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
+  have hY'σ : MDiffAt (T% (cov.alongAlmostSchur Y' σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY' hσ
   have hYx : MDiffAt (T% Y) x := (hY x).mdifferentiableAt one_ne_zero
   have hY'x : MDiffAt (T% Y') x := (hY' x).mdifferentiableAt one_ne_zero
   have h1 :
-      cov.along X (cov.along (Y + Y') σ) x =
-        cov.along X (cov.along Y σ) x + cov.along X (cov.along Y' σ) x := by
-    rw [cov.along_add_left]
-    exact cov.along_add_right_apply (x := x) (X := X) hYσ hY'σ
+      cov.alongAlmostSchur X (cov.alongAlmostSchur (Y + Y') σ) x =
+        cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X (cov.alongAlmostSchur Y' σ) x := by
+    rw [cov.along_add_leftAlmostSchur]
+    exact cov.along_add_right_applyAlmostSchur (x := x) (X := X) hYσ hY'σ
   have h2 :
-      cov.along (Y + Y') (cov.along X σ) x =
-        cov.along Y (cov.along X σ) x + cov.along Y' (cov.along X σ) x := by
-    simpa using congrArg (fun s => s x) (cov.along_add_left Y Y' (cov.along X σ))
+      cov.alongAlmostSchur (Y + Y') (cov.alongAlmostSchur X σ) x =
+        cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y' (cov.alongAlmostSchur X σ) x := by
+    simpa using congrArg (fun s => s x) (cov.along_add_leftAlmostSchur Y Y' (cov.alongAlmostSchur X σ))
   have h3 :
-      cov.along (VectorField.mlieBracket I X (Y + Y')) σ x =
-        cov.along (VectorField.mlieBracket I X Y) σ x +
-          cov.along (VectorField.mlieBracket I X Y') σ x := by
-    simp [CovariantDerivative.along, VectorField.mlieBracket_add_right hYx hY'x, map_add]
+      cov.alongAlmostSchur (VectorField.mlieBracket I X (Y + Y')) σ x =
+        cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y') σ x := by
+    simp [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_add_right hYx hY'x, map_add]
   calc
-    cov.curvatureAux X (Y + Y') σ x
-        = cov.along X (cov.along (Y + Y') σ) x -
-            cov.along (Y + Y') (cov.along X σ) x -
-            cov.along (VectorField.mlieBracket I X (Y + Y')) σ x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = (cov.along X (cov.along Y σ) x + cov.along X (cov.along Y' σ) x) -
-          (cov.along Y (cov.along X σ) x + cov.along Y' (cov.along X σ) x) -
-          (cov.along (VectorField.mlieBracket I X Y) σ x +
-            cov.along (VectorField.mlieBracket I X Y') σ x) := by
+    cov.curvatureAuxAlmostSchur X (Y + Y') σ x
+        = cov.alongAlmostSchur X (cov.alongAlmostSchur (Y + Y') σ) x -
+            cov.alongAlmostSchur (Y + Y') (cov.alongAlmostSchur X σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X (Y + Y')) σ x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X (cov.alongAlmostSchur Y' σ) x) -
+          (cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y' (cov.alongAlmostSchur X σ) x) -
+          (cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y') σ x) := by
               rw [h1, h2, h3]
-    _ = (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) +
-        (cov.along X (cov.along Y' σ) x - cov.along Y' (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y') σ x) := by
+    _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) +
+        (cov.alongAlmostSchur X (cov.alongAlmostSchur Y' σ) x - cov.alongAlmostSchur Y' (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y') σ x) := by
             abel_nf
-    _ = cov.curvatureAux X Y σ x + cov.curvatureAux X Y' σ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = cov.curvatureAuxAlmostSchur X Y σ x + cov.curvatureAuxAlmostSchur X Y' σ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
 private lemma curvatureAux_smul_middle_apply
     {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M} (c : ℝ)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.curvatureAux X (c • Y) σ x = c • cov.curvatureAux X Y σ x := by
-  have hYσ : MDiffAt (T% (cov.along Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
+    cov.curvatureAuxAlmostSchur X (c • Y) σ x = c • cov.curvatureAuxAlmostSchur X Y σ x := by
+  have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
   have hYx : MDiffAt (T% Y) x := (hY x).mdifferentiableAt one_ne_zero
-  have hYsmul : cov.along (c • Y) σ = c • cov.along Y σ := by
+  have hYsmul : cov.alongAlmostSchur (c • Y) σ = c • cov.alongAlmostSchur Y σ := by
     have hfun : (fun _ : M ↦ c) • Y = c • Y := by
       funext y
       rfl
     rw [← hfun]
-    exact cov.along_smul_left (f := fun _ ↦ c) Y σ
+    exact cov.along_smul_leftAlmostSchur (f := fun _ ↦ c) Y σ
   have h1 :
-      cov.along X (cov.along (c • Y) σ) x = c • cov.along X (cov.along Y σ) x := by
+      cov.alongAlmostSchur X (cov.alongAlmostSchur (c • Y) σ) x = c • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x := by
     rw [hYsmul]
     exact cov.along_const_smul_right_apply (x := x) c hYσ
   have h2 :
-      cov.along (c • Y) (cov.along X σ) x = c • cov.along Y (cov.along X σ) x := by
-    simp [CovariantDerivative.along, map_smul]
+      cov.alongAlmostSchur (c • Y) (cov.alongAlmostSchur X σ) x = c • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x := by
+    simp [CovariantDerivative.alongAlmostSchur, map_smul]
   have h3 :
-      cov.along (VectorField.mlieBracket I X (c • Y)) σ x =
-        c • cov.along (VectorField.mlieBracket I X Y) σ x := by
-    simp [CovariantDerivative.along, VectorField.mlieBracket_const_smul_right hYx, map_smul]
+      cov.alongAlmostSchur (VectorField.mlieBracket I X (c • Y)) σ x =
+        c • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
+    simp [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_const_smul_right hYx, map_smul]
   calc
-    cov.curvatureAux X (c • Y) σ x
-        = cov.along X (cov.along (c • Y) σ) x -
-            cov.along (c • Y) (cov.along X σ) x -
-            cov.along (VectorField.mlieBracket I X (c • Y)) σ x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = c • cov.along X (cov.along Y σ) x -
-          c • cov.along Y (cov.along X σ) x -
-          c • cov.along (VectorField.mlieBracket I X Y) σ x := by
+    cov.curvatureAuxAlmostSchur X (c • Y) σ x
+        = cov.alongAlmostSchur X (cov.alongAlmostSchur (c • Y) σ) x -
+            cov.alongAlmostSchur (c • Y) (cov.alongAlmostSchur X σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X (c • Y)) σ x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = c • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+          c • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          c • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
             rw [h1, h2, h3]
-    _ = c • (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) := by
+    _ = c • (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
             rw [smul_sub, smul_sub]
-    _ = c • cov.curvatureAux X Y σ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = c • cov.curvatureAuxAlmostSchur X Y σ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
-lemma curvatureAux_smul_fun_middle_apply
+lemma curvatureAux_smul_fun_middle_applyAlmostSchur
     {f : M → ℝ} {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hf : MDiffAt f x)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.curvatureAux X (f • Y) σ x = f x • cov.curvatureAux X Y σ x := by
-  have hYσ : MDiffAt (T% (cov.along Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
+    cov.curvatureAuxAlmostSchur X (f • Y) σ x = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
+  have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
   have hYx : MDiffAt (T% Y) x := (hY x).mdifferentiableAt one_ne_zero
-  have hYsmul : cov.along (f • Y) σ = f • cov.along Y σ := by
-    simpa using (cov.along_smul_left f Y σ)
+  have hYsmul : cov.alongAlmostSchur (f • Y) σ = f • cov.alongAlmostSchur Y σ := by
+    simpa using (cov.along_smul_leftAlmostSchur f Y σ)
   have h1 :
-      cov.along X (cov.along (f • Y) σ) x =
-        f x • cov.along X (cov.along Y σ) x +
-          mvfderiv (I := I) f x (X x) • cov.along Y σ x := by
+      cov.alongAlmostSchur X (cov.alongAlmostSchur (f • Y) σ) x =
+        f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x +
+          mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x := by
     rw [hYsmul]
-    exact cov.along_smul_right_apply (x := x) (f := f) (X := X) (σ := cov.along Y σ) hf hYσ
+    exact cov.along_smul_right_applyAlmostSchur (x := x) (f := f) (X := X) (σ := cov.alongAlmostSchur Y σ) hf hYσ
   have h2 :
-      cov.along (f • Y) (cov.along X σ) x = f x • cov.along Y (cov.along X σ) x := by
-    simpa using congrArg (fun s => s x) (cov.along_smul_left f Y (cov.along X σ))
+      cov.alongAlmostSchur (f • Y) (cov.alongAlmostSchur X σ) x = f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x := by
+    simpa using congrArg (fun s => s x) (cov.along_smul_leftAlmostSchur f Y (cov.alongAlmostSchur X σ))
   have h3 :
-      cov.along (VectorField.mlieBracket I X (f • Y)) σ x =
-        mvfderiv (I := I) f x (X x) • cov.along Y σ x +
-          f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
-    simp [CovariantDerivative.along, VectorField.mlieBracket_smul_right hf hYx, mvfderiv,
+      cov.alongAlmostSchur (VectorField.mlieBracket I X (f • Y)) σ x =
+        mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x +
+          f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
+    simp [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_smul_right hf hYx, mvfderiv,
       map_add, map_smul]
   calc
-    cov.curvatureAux X (f • Y) σ x
-        = cov.along X (cov.along (f • Y) σ) x -
-            cov.along (f • Y) (cov.along X σ) x -
-            cov.along (VectorField.mlieBracket I X (f • Y)) σ x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = (f x • cov.along X (cov.along Y σ) x +
-            mvfderiv (I := I) f x (X x) • cov.along Y σ x) -
-          f x • cov.along Y (cov.along X σ) x -
-          (mvfderiv (I := I) f x (X x) • cov.along Y σ x +
-            f x • cov.along (VectorField.mlieBracket I X Y) σ x) := by
+    cov.curvatureAuxAlmostSchur X (f • Y) σ x
+        = cov.alongAlmostSchur X (cov.alongAlmostSchur (f • Y) σ) x -
+            cov.alongAlmostSchur (f • Y) (cov.alongAlmostSchur X σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X (f • Y)) σ x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = (f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x +
+            mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x) -
+          f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          (mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x +
+            f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
               rw [h1, h2, h3]
-    _ = f x • cov.along X (cov.along Y σ) x -
-          f x • cov.along Y (cov.along X σ) x -
-          f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
+    _ = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+          f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
             simpa [sub_eq_add_neg, smul_smul, add_assoc, add_left_comm, add_comm]
-    _ = f x • (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) := by
+    _ = f x • (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
             rw [smul_sub, smul_sub]
-    _ = f x • cov.curvatureAux X Y σ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
 private lemma curvatureAux_add_right_apply
     {X Y : Π x : M, TM x} {σ τ : Π x : M, V x} {x : M}
@@ -1147,94 +1153,94 @@ private lemma curvatureAux_add_right_apply
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hτ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (τ y))) :
-    cov.curvatureAux X Y (σ + τ) x =
-      cov.curvatureAux X Y σ x + cov.curvatureAux X Y τ x := by
-  have hYσ : MDiffAt (T% (cov.along Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
-  have hYτ : MDiffAt (T% (cov.along Y τ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hτ
-  have hXσ : MDiffAt (T% (cov.along X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
-  have hXτ : MDiffAt (T% (cov.along X τ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hτ
-  have hYadd : cov.along Y (σ + τ) = cov.along Y σ + cov.along Y τ :=
+    cov.curvatureAuxAlmostSchur X Y (σ + τ) x =
+      cov.curvatureAuxAlmostSchur X Y σ x + cov.curvatureAuxAlmostSchur X Y τ x := by
+  have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
+  have hYτ : MDiffAt (T% (cov.alongAlmostSchur Y τ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hτ
+  have hXσ : MDiffAt (T% (cov.alongAlmostSchur X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
+  have hXτ : MDiffAt (T% (cov.alongAlmostSchur X τ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hτ
+  have hYadd : cov.alongAlmostSchur Y (σ + τ) = cov.alongAlmostSchur Y σ + cov.alongAlmostSchur Y τ :=
     cov.along_add_right_of_contMDiff hσ hτ
-  have hXadd : cov.along X (σ + τ) = cov.along X σ + cov.along X τ :=
+  have hXadd : cov.alongAlmostSchur X (σ + τ) = cov.alongAlmostSchur X σ + cov.alongAlmostSchur X τ :=
     cov.along_add_right_of_contMDiff hσ hτ
   have h1 :
-      cov.along X (cov.along Y (σ + τ)) x =
-        cov.along X (cov.along Y σ) x + cov.along X (cov.along Y τ) x := by
+      cov.alongAlmostSchur X (cov.alongAlmostSchur Y (σ + τ)) x =
+        cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X (cov.alongAlmostSchur Y τ) x := by
     rw [hYadd]
-    exact cov.along_add_right_apply (x := x) (X := X) hYσ hYτ
+    exact cov.along_add_right_applyAlmostSchur (x := x) (X := X) hYσ hYτ
   have h2 :
-      cov.along Y (cov.along X (σ + τ)) x =
-        cov.along Y (cov.along X σ) x + cov.along Y (cov.along X τ) x := by
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur X (σ + τ)) x =
+        cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y (cov.alongAlmostSchur X τ) x := by
     rw [hXadd]
-    exact cov.along_add_right_apply (x := x) (X := Y) hXσ hXτ
+    exact cov.along_add_right_applyAlmostSchur (x := x) (X := Y) hXσ hXτ
   have h3 :
-      cov.along (VectorField.mlieBracket I X Y) (σ + τ) x =
-        cov.along (VectorField.mlieBracket I X Y) σ x +
-          cov.along (VectorField.mlieBracket I X Y) τ x := by
-    exact cov.along_add_right_apply (x := x) (X := VectorField.mlieBracket I X Y)
+      cov.alongAlmostSchur (VectorField.mlieBracket I X Y) (σ + τ) x =
+        cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) τ x := by
+    exact cov.along_add_right_applyAlmostSchur (x := x) (X := VectorField.mlieBracket I X Y)
       ((hσ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0))
       ((hτ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0))
   calc
-    cov.curvatureAux X Y (σ + τ) x
-        = cov.along X (cov.along Y (σ + τ)) x -
-            cov.along Y (cov.along X (σ + τ)) x -
-            cov.along (VectorField.mlieBracket I X Y) (σ + τ) x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = (cov.along X (cov.along Y σ) x + cov.along X (cov.along Y τ) x) -
-          (cov.along Y (cov.along X σ) x + cov.along Y (cov.along X τ) x) -
-          (cov.along (VectorField.mlieBracket I X Y) σ x +
-            cov.along (VectorField.mlieBracket I X Y) τ x) := by
+    cov.curvatureAuxAlmostSchur X Y (σ + τ) x
+        = cov.alongAlmostSchur X (cov.alongAlmostSchur Y (σ + τ)) x -
+            cov.alongAlmostSchur Y (cov.alongAlmostSchur X (σ + τ)) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y) (σ + τ) x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X (cov.alongAlmostSchur Y τ) x) -
+          (cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y (cov.alongAlmostSchur X τ) x) -
+          (cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y) τ x) := by
               rw [h1, h2, h3]
-    _ = (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) +
-        (cov.along X (cov.along Y τ) x - cov.along Y (cov.along X τ) x -
-          cov.along (VectorField.mlieBracket I X Y) τ x) := by
+    _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) +
+        (cov.alongAlmostSchur X (cov.alongAlmostSchur Y τ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X τ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) τ x) := by
             abel_nf
-    _ = cov.curvatureAux X Y σ x + cov.curvatureAux X Y τ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = cov.curvatureAuxAlmostSchur X Y σ x + cov.curvatureAuxAlmostSchur X Y τ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
 private lemma curvatureAux_smul_right_apply
     {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M} (c : ℝ)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.curvatureAux X Y (c • σ) x = c • cov.curvatureAux X Y σ x := by
-  have hYσ : MDiffAt (T% (cov.along Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
-  have hXσ : MDiffAt (T% (cov.along X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
-  have hYsmul : cov.along Y (c • σ) = c • cov.along Y σ :=
+    cov.curvatureAuxAlmostSchur X Y (c • σ) x = c • cov.curvatureAuxAlmostSchur X Y σ x := by
+  have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
+  have hXσ : MDiffAt (T% (cov.alongAlmostSchur X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
+  have hYsmul : cov.alongAlmostSchur Y (c • σ) = c • cov.alongAlmostSchur Y σ :=
     cov.along_const_smul_right_of_contMDiff c hσ
-  have hXsmul : cov.along X (c • σ) = c • cov.along X σ :=
+  have hXsmul : cov.alongAlmostSchur X (c • σ) = c • cov.alongAlmostSchur X σ :=
     cov.along_const_smul_right_of_contMDiff c hσ
   have h1 :
-      cov.along X (cov.along Y (c • σ)) x = c • cov.along X (cov.along Y σ) x := by
+      cov.alongAlmostSchur X (cov.alongAlmostSchur Y (c • σ)) x = c • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x := by
     rw [hYsmul]
     exact cov.along_const_smul_right_apply (x := x) c hYσ
   have h2 :
-      cov.along Y (cov.along X (c • σ)) x = c • cov.along Y (cov.along X σ) x := by
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur X (c • σ)) x = c • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x := by
     rw [hXsmul]
     exact cov.along_const_smul_right_apply (x := x) c hXσ
   have h3 :
-      cov.along (VectorField.mlieBracket I X Y) (c • σ) x =
-        c • cov.along (VectorField.mlieBracket I X Y) σ x := by
+      cov.alongAlmostSchur (VectorField.mlieBracket I X Y) (c • σ) x =
+        c • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
     exact cov.along_const_smul_right_apply (x := x) c
       ((hσ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0))
   calc
-    cov.curvatureAux X Y (c • σ) x
-        = cov.along X (cov.along Y (c • σ)) x -
-            cov.along Y (cov.along X (c • σ)) x -
-            cov.along (VectorField.mlieBracket I X Y) (c • σ) x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = c • cov.along X (cov.along Y σ) x -
-          c • cov.along Y (cov.along X σ) x -
-          c • cov.along (VectorField.mlieBracket I X Y) σ x := by
+    cov.curvatureAuxAlmostSchur X Y (c • σ) x
+        = cov.alongAlmostSchur X (cov.alongAlmostSchur Y (c • σ)) x -
+            cov.alongAlmostSchur Y (cov.alongAlmostSchur X (c • σ)) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y) (c • σ) x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = c • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+          c • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          c • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
             rw [h1, h2, h3]
-    _ = c • (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) := by
+    _ = c • (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
             rw [smul_sub, smul_sub]
-    _ = c • cov.curvatureAux X Y σ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = c • cov.curvatureAuxAlmostSchur X Y σ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
-lemma curvatureAux_smul_fun_right_apply_of_commutator
+lemma curvatureAux_smul_fun_right_apply_of_commutatorAlmostSchur
     {f : M → ℝ} {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hf : MDiff f)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
@@ -1246,55 +1252,55 @@ lemma curvatureAux_smul_fun_right_apply_of_commutator
       mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) f y (Y y)) x (X x) -
         mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) f y (X y)) x (Y x) -
         mvfderiv (I := I) f x (VectorField.mlieBracket I X Y x) = 0) :
-    cov.curvatureAux X Y (f • σ) x = f x • cov.curvatureAux X Y σ x := by
+    cov.curvatureAuxAlmostSchur X Y (f • σ) x = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
   let gX : M → ℝ := fun y ↦ mvfderiv (I := I) f y (X y)
   let gY : M → ℝ := fun y ↦ mvfderiv (I := I) f y (Y y)
   have hσx : MDiffAt (T% σ) x := (hσ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
-  have hYσ : MDiffAt (T% (cov.along Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
-  have hXσ : MDiffAt (T% (cov.along X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
-  have hYsmul : cov.along Y (f • σ) = f • cov.along Y σ + gY • σ := by
+  have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
+  have hXσ : MDiffAt (T% (cov.alongAlmostSchur X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
+  have hYsmul : cov.alongAlmostSchur Y (f • σ) = f • cov.alongAlmostSchur Y σ + gY • σ := by
     funext z
     simpa [gY] using
-      (cov.along_smul_right_apply (x := z) (f := f) (X := Y) (σ := σ)
+      (cov.along_smul_right_applyAlmostSchur (x := z) (f := f) (X := Y) (σ := σ)
         (hf z) ((hσ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)))
-  have hXsmul : cov.along X (f • σ) = f • cov.along X σ + gX • σ := by
+  have hXsmul : cov.alongAlmostSchur X (f • σ) = f • cov.alongAlmostSchur X σ + gX • σ := by
     funext z
     simpa [gX] using
-      (cov.along_smul_right_apply (x := z) (f := f) (X := X) (σ := σ)
+      (cov.along_smul_right_applyAlmostSchur (x := z) (f := f) (X := X) (σ := σ)
         (hf z) ((hσ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)))
   have h1 :
-      cov.along X (cov.along Y (f • σ)) x =
-        f x • cov.along X (cov.along Y σ) x +
-          mvfderiv (I := I) f x (X x) • cov.along Y σ x +
-          gY x • cov.along X σ x +
+      cov.alongAlmostSchur X (cov.alongAlmostSchur Y (f • σ)) x =
+        f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x +
+          mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x +
+          gY x • cov.alongAlmostSchur X σ x +
           mvfderiv (I := I) gY x (X x) • σ x := by
     rw [hYsmul]
-    rw [cov.along_add_right_apply (x := x) (X := X)]
-    · rw [cov.along_smul_right_apply (x := x) (f := f) (X := X) (σ := cov.along Y σ)
+    rw [cov.along_add_right_applyAlmostSchur (x := x) (X := X)]
+    · rw [cov.along_smul_right_applyAlmostSchur (x := x) (f := f) (X := X) (σ := cov.alongAlmostSchur Y σ)
         (hf x) hYσ]
-      rw [cov.along_smul_right_apply (x := x) (f := gY) (X := X) (σ := σ) hgY hσx]
+      rw [cov.along_smul_right_applyAlmostSchur (x := x) (f := gY) (X := X) (σ := σ) hgY hσx]
       simp [add_assoc]
     · exact (hf x).smul_section hYσ
     · exact hgY.smul_section hσx
   have h2 :
-      cov.along Y (cov.along X (f • σ)) x =
-        f x • cov.along Y (cov.along X σ) x +
-          mvfderiv (I := I) f x (Y x) • cov.along X σ x +
-          gX x • cov.along Y σ x +
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur X (f • σ)) x =
+        f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x +
+          mvfderiv (I := I) f x (Y x) • cov.alongAlmostSchur X σ x +
+          gX x • cov.alongAlmostSchur Y σ x +
           mvfderiv (I := I) gX x (Y x) • σ x := by
     rw [hXsmul]
-    rw [cov.along_add_right_apply (x := x) (X := Y)]
-    · rw [cov.along_smul_right_apply (x := x) (f := f) (X := Y) (σ := cov.along X σ)
+    rw [cov.along_add_right_applyAlmostSchur (x := x) (X := Y)]
+    · rw [cov.along_smul_right_applyAlmostSchur (x := x) (f := f) (X := Y) (σ := cov.alongAlmostSchur X σ)
         (hf x) hXσ]
-      rw [cov.along_smul_right_apply (x := x) (f := gX) (X := Y) (σ := σ) hgX hσx]
+      rw [cov.along_smul_right_applyAlmostSchur (x := x) (f := gX) (X := Y) (σ := σ) hgX hσx]
       simp [add_assoc]
     · exact (hf x).smul_section hXσ
     · exact hgX.smul_section hσx
   have h3 :
-      cov.along (VectorField.mlieBracket I X Y) (f • σ) x =
-        f x • cov.along (VectorField.mlieBracket I X Y) σ x +
+      cov.alongAlmostSchur (VectorField.mlieBracket I X Y) (f • σ) x =
+        f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
           mvfderiv (I := I) f x (VectorField.mlieBracket I X Y x) • σ x := by
-    exact cov.along_smul_right_apply (x := x) (f := f) (X := VectorField.mlieBracket I X Y)
+    exact cov.along_smul_right_applyAlmostSchur (x := x) (f := f) (X := VectorField.mlieBracket I X Y)
       (σ := σ) (hf x) hσx
   have hcomm' :
       mvfderiv (I := I) gY x (X x) -
@@ -1308,41 +1314,41 @@ lemma curvatureAux_smul_fun_right_apply_of_commutator
     have htmp := congrArg (fun r : ℝ ↦ r • σ x) hcomm'
     simpa [sub_smul] using htmp
   calc
-    cov.curvatureAux X Y (f • σ) x
-        = cov.along X (cov.along Y (f • σ)) x -
-            cov.along Y (cov.along X (f • σ)) x -
-            cov.along (VectorField.mlieBracket I X Y) (f • σ) x := by
-              simp [CovariantDerivative.curvatureAux]
-    _ = (f x • cov.along X (cov.along Y σ) x +
-            mvfderiv (I := I) f x (X x) • cov.along Y σ x +
-            gY x • cov.along X σ x +
+    cov.curvatureAuxAlmostSchur X Y (f • σ) x
+        = cov.alongAlmostSchur X (cov.alongAlmostSchur Y (f • σ)) x -
+            cov.alongAlmostSchur Y (cov.alongAlmostSchur X (f • σ)) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y) (f • σ) x := by
+              simp [CovariantDerivative.curvatureAuxAlmostSchur]
+    _ = (f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x +
+            mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x +
+            gY x • cov.alongAlmostSchur X σ x +
             mvfderiv (I := I) gY x (X x) • σ x) -
-          (f x • cov.along Y (cov.along X σ) x +
-            mvfderiv (I := I) f x (Y x) • cov.along X σ x +
-            gX x • cov.along Y σ x +
+          (f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x +
+            mvfderiv (I := I) f x (Y x) • cov.alongAlmostSchur X σ x +
+            gX x • cov.alongAlmostSchur Y σ x +
             mvfderiv (I := I) gX x (Y x) • σ x) -
-          (f x • cov.along (VectorField.mlieBracket I X Y) σ x +
+          (f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
             mvfderiv (I := I) f x (VectorField.mlieBracket I X Y x) • σ x) := by
               rw [h1, h2, h3]
-    _ = f x • cov.along X (cov.along Y σ) x -
-          f x • cov.along Y (cov.along X σ) x -
-          f x • cov.along (VectorField.mlieBracket I X Y) σ x +
+    _ = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+          f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
           (mvfderiv (I := I) gY x (X x) • σ x -
             mvfderiv (I := I) gX x (Y x) • σ x -
             mvfderiv (I := I) f x (VectorField.mlieBracket I X Y x) • σ x) := by
               dsimp [gX, gY]
               simp [sub_eq_add_neg, smul_smul, neg_smul] <;> abel
-    _ = f x • cov.along X (cov.along Y σ) x -
-          f x • cov.along Y (cov.along X σ) x -
-          f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
+    _ = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+          f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
               rw [hcommσ, add_zero]
-    _ = f x • (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-          cov.along (VectorField.mlieBracket I X Y) σ x) := by
+    _ = f x • (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
             rw [smul_sub, smul_sub]
-    _ = f x • cov.curvatureAux X Y σ x := by
-          simp [CovariantDerivative.curvatureAux]
+    _ = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
+          simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
-lemma curvatureAux_smul_fun_right_apply_of_commutator_contMDiff
+lemma curvatureAux_smul_fun_right_apply_of_commutator_contMDiffAlmostSchur
     {f : M → ℝ} {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hf : ContMDiff I 𝓘(ℝ) 2 f)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
@@ -1352,322 +1358,322 @@ lemma curvatureAux_smul_fun_right_apply_of_commutator_contMDiff
       mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) f y (Y y)) x (X x) -
         mvfderiv (I := I) (fun y ↦ mvfderiv (I := I) f y (X y)) x (Y x) -
         mvfderiv (I := I) f x (VectorField.mlieBracket I X Y x) = 0) :
-    cov.curvatureAux X Y (f • σ) x = f x • cov.curvatureAux X Y σ x := by
+    cov.curvatureAuxAlmostSchur X Y (f • σ) x = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
   have hgX : MDiffAt (fun y ↦ mvfderiv (I := I) f y (X y)) x :=
     mdiffAt_extDerivFun_apply (I := I) (f := f) (X := X) hf hX
   have hgY : MDiffAt (fun y ↦ mvfderiv (I := I) f y (Y y)) x :=
     mdiffAt_extDerivFun_apply (I := I) (f := f) (X := Y) hf hY
-  exact cov.curvatureAux_smul_fun_right_apply_of_commutator
+  exact cov.curvatureAux_smul_fun_right_apply_of_commutatorAlmostSchur
     (fun z ↦ (hf z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0))
     hX hY hσ hgX hgY hcomm
 
-lemma curvatureAux_smul_fun_right_apply
+lemma curvatureAux_smul_fun_right_applyAlmostSchur
     {f : M → ℝ} {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hf : ContMDiff I 𝓘(ℝ) 2 f)
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    cov.curvatureAux X Y (f • σ) x = f x • cov.curvatureAux X Y σ x := by
-  exact cov.curvatureAux_smul_fun_right_apply_of_commutator_contMDiff hf hX hY hσ
-    (extDerivFun_lieBracket_commutator (I := I) (f := f) (X := X) (Y := Y) hf hX hY)
+    cov.curvatureAuxAlmostSchur X Y (f • σ) x = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
+  exact cov.curvatureAux_smul_fun_right_apply_of_commutator_contMDiffAlmostSchur hf hX hY hσ
+    (extDerivFun_lieBracket_commutatorAlmostSchur (I := I) (f := f) (X := X) (Y := Y) hf hX hY)
 
 private theorem curvatureAux_tensorial_left
     {Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    TensorialAt I E (fun X ↦ cov.curvatureAux X Y σ x) x := by
+    TensorialAt I E (fun X ↦ cov.curvatureAuxAlmostSchur X Y σ x) x := by
   refine ⟨?_, ?_⟩
   · intro f X hf hX
-    have hYX : MDiffAt (T% (cov.along X σ)) x :=
+    have hYX : MDiffAt (T% (cov.alongAlmostSchur X σ)) x :=
       cov.mdifferentiableAt_along_of_mdifferentiableAt hX hσ
     have hYx : MDiffAt (T% Y) x := (hY x).mdifferentiableAt one_ne_zero
-    have hXsmul : cov.along (f • X) σ = f • cov.along X σ := by
-      simpa using (cov.along_smul_left f X σ)
+    have hXsmul : cov.alongAlmostSchur (f • X) σ = f • cov.alongAlmostSchur X σ := by
+      simpa using (cov.along_smul_leftAlmostSchur f X σ)
     have h1 :
-        cov.along (f • X) (cov.along Y σ) x = f x • cov.along X (cov.along Y σ) x := by
-      simpa using congrArg (fun s => s x) (cov.along_smul_left f X (cov.along Y σ))
+        cov.alongAlmostSchur (f • X) (cov.alongAlmostSchur Y σ) x = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x := by
+      simpa using congrArg (fun s => s x) (cov.along_smul_leftAlmostSchur f X (cov.alongAlmostSchur Y σ))
     have h2 :
-        cov.along Y (cov.along (f • X) σ) x =
-          f x • cov.along Y (cov.along X σ) x +
-            mvfderiv (I := I) f x (Y x) • cov.along X σ x := by
+        cov.alongAlmostSchur Y (cov.alongAlmostSchur (f • X) σ) x =
+          f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x +
+            mvfderiv (I := I) f x (Y x) • cov.alongAlmostSchur X σ x := by
       rw [hXsmul]
-      exact cov.along_smul_right_apply (x := x) (f := f) (X := Y) (σ := cov.along X σ) hf hYX
+      exact cov.along_smul_right_applyAlmostSchur (x := x) (f := f) (X := Y) (σ := cov.alongAlmostSchur X σ) hf hYX
     have h3 :
-        cov.along (VectorField.mlieBracket I (f • X) Y) σ x =
-          -(mvfderiv (I := I) f x (Y x)) • cov.along X σ x +
-            f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
-      rw [CovariantDerivative.along, VectorField.mlieBracket_smul_left hf hX, mvfderiv]
-      simp [CovariantDerivative.along, map_add, map_smul]
+        cov.alongAlmostSchur (VectorField.mlieBracket I (f • X) Y) σ x =
+          -(mvfderiv (I := I) f x (Y x)) • cov.alongAlmostSchur X σ x +
+            f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
+      rw [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_smul_left hf hX, mvfderiv]
+      simp [CovariantDerivative.alongAlmostSchur, map_add, map_smul]
     calc
-      cov.curvatureAux (f • X) Y σ x
-          = cov.along (f • X) (cov.along Y σ) x -
-              cov.along Y (cov.along (f • X) σ) x -
-              cov.along (VectorField.mlieBracket I (f • X) Y) σ x := by
-                simp [CovariantDerivative.curvatureAux]
-      _ = f x • cov.along X (cov.along Y σ) x -
-            (f x • cov.along Y (cov.along X σ) x +
-              mvfderiv (I := I) f x (Y x) • cov.along X σ x) -
-            (-(mvfderiv (I := I) f x (Y x)) • cov.along X σ x +
-              f x • cov.along (VectorField.mlieBracket I X Y) σ x) := by
+      cov.curvatureAuxAlmostSchur (f • X) Y σ x
+          = cov.alongAlmostSchur (f • X) (cov.alongAlmostSchur Y σ) x -
+              cov.alongAlmostSchur Y (cov.alongAlmostSchur (f • X) σ) x -
+              cov.alongAlmostSchur (VectorField.mlieBracket I (f • X) Y) σ x := by
+                simp [CovariantDerivative.curvatureAuxAlmostSchur]
+      _ = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+            (f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x +
+              mvfderiv (I := I) f x (Y x) • cov.alongAlmostSchur X σ x) -
+            (-(mvfderiv (I := I) f x (Y x)) • cov.alongAlmostSchur X σ x +
+              f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
                 rw [h1, h2, h3]
-      _ = f x • cov.along X (cov.along Y σ) x -
-            f x • cov.along Y (cov.along X σ) x -
-            f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
+      _ = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+            f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+            f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
               simp [sub_eq_add_neg, smul_smul, neg_smul] <;> abel
-      _ = f x • (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-            cov.along (VectorField.mlieBracket I X Y) σ x) := by
+      _ = f x • (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
               rw [smul_sub, smul_sub]
-      _ = f x • cov.curvatureAux X Y σ x := by
-            simp [CovariantDerivative.curvatureAux]
+      _ = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
+            simp [CovariantDerivative.curvatureAuxAlmostSchur]
   · intro X X' hX hX'
-    have hYX : MDiffAt (T% (cov.along X σ)) x :=
+    have hYX : MDiffAt (T% (cov.alongAlmostSchur X σ)) x :=
       cov.mdifferentiableAt_along_of_mdifferentiableAt hX hσ
-    have hY'X : MDiffAt (T% (cov.along X' σ)) x :=
+    have hY'X : MDiffAt (T% (cov.alongAlmostSchur X' σ)) x :=
       cov.mdifferentiableAt_along_of_mdifferentiableAt hX' hσ
     have h1 :
-        cov.along (X + X') (cov.along Y σ) x =
-          cov.along X (cov.along Y σ) x + cov.along X' (cov.along Y σ) x := by
-      simpa using congrArg (fun s => s x) (cov.along_add_left X X' (cov.along Y σ))
+        cov.alongAlmostSchur (X + X') (cov.alongAlmostSchur Y σ) x =
+          cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X' (cov.alongAlmostSchur Y σ) x := by
+      simpa using congrArg (fun s => s x) (cov.along_add_leftAlmostSchur X X' (cov.alongAlmostSchur Y σ))
     have h2 :
-        cov.along Y (cov.along (X + X') σ) x =
-          cov.along Y (cov.along X σ) x + cov.along Y (cov.along X' σ) x := by
-      rw [cov.along_add_left]
-      exact cov.along_add_right_apply (x := x) (X := Y) hYX hY'X
+        cov.alongAlmostSchur Y (cov.alongAlmostSchur (X + X') σ) x =
+          cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y (cov.alongAlmostSchur X' σ) x := by
+      rw [cov.along_add_leftAlmostSchur]
+      exact cov.along_add_right_applyAlmostSchur (x := x) (X := Y) hYX hY'X
     have h3 :
-        cov.along (VectorField.mlieBracket I (X + X') Y) σ x =
-          cov.along (VectorField.mlieBracket I X Y) σ x +
-            cov.along (VectorField.mlieBracket I X' Y) σ x := by
-      simp [CovariantDerivative.along, VectorField.mlieBracket_add_left hX hX', map_add]
+        cov.alongAlmostSchur (VectorField.mlieBracket I (X + X') Y) σ x =
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+            cov.alongAlmostSchur (VectorField.mlieBracket I X' Y) σ x := by
+      simp [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_add_left hX hX', map_add]
     calc
-      cov.curvatureAux (X + X') Y σ x
-          = cov.along (X + X') (cov.along Y σ) x -
-              cov.along Y (cov.along (X + X') σ) x -
-              cov.along (VectorField.mlieBracket I (X + X') Y) σ x := by
-                simp [CovariantDerivative.curvatureAux]
-      _ = (cov.along X (cov.along Y σ) x + cov.along X' (cov.along Y σ) x) -
-            (cov.along Y (cov.along X σ) x + cov.along Y (cov.along X' σ) x) -
-            (cov.along (VectorField.mlieBracket I X Y) σ x +
-              cov.along (VectorField.mlieBracket I X' Y) σ x) := by
+      cov.curvatureAuxAlmostSchur (X + X') Y σ x
+          = cov.alongAlmostSchur (X + X') (cov.alongAlmostSchur Y σ) x -
+              cov.alongAlmostSchur Y (cov.alongAlmostSchur (X + X') σ) x -
+              cov.alongAlmostSchur (VectorField.mlieBracket I (X + X') Y) σ x := by
+                simp [CovariantDerivative.curvatureAuxAlmostSchur]
+      _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X' (cov.alongAlmostSchur Y σ) x) -
+            (cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y (cov.alongAlmostSchur X' σ) x) -
+            (cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+              cov.alongAlmostSchur (VectorField.mlieBracket I X' Y) σ x) := by
                 rw [h1, h2, h3]
-      _ = (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-            cov.along (VectorField.mlieBracket I X Y) σ x) +
-          (cov.along X' (cov.along Y σ) x - cov.along Y (cov.along X' σ) x -
-            cov.along (VectorField.mlieBracket I X' Y) σ x) := by
+      _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) +
+          (cov.alongAlmostSchur X' (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X' σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X' Y) σ x) := by
               abel_nf
-      _ = cov.curvatureAux X Y σ x + cov.curvatureAux X' Y σ x := by
-            simp [CovariantDerivative.curvatureAux]
+      _ = cov.curvatureAuxAlmostSchur X Y σ x + cov.curvatureAuxAlmostSchur X' Y σ x := by
+            simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
 private theorem curvatureAux_tensorial_middle
     {X : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y))) :
-    TensorialAt I E (fun Y ↦ cov.curvatureAux X Y σ x) x := by
+    TensorialAt I E (fun Y ↦ cov.curvatureAuxAlmostSchur X Y σ x) x := by
   refine ⟨?_, ?_⟩
   · intro f Y hf hY
-    have hYσ : MDiffAt (T% (cov.along Y σ)) x :=
+    have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x :=
       cov.mdifferentiableAt_along_of_mdifferentiableAt hY hσ
-    have hYsmul : cov.along (f • Y) σ = f • cov.along Y σ := by
-      simpa using (cov.along_smul_left f Y σ)
+    have hYsmul : cov.alongAlmostSchur (f • Y) σ = f • cov.alongAlmostSchur Y σ := by
+      simpa using (cov.along_smul_leftAlmostSchur f Y σ)
     have h1 :
-        cov.along X (cov.along (f • Y) σ) x =
-          f x • cov.along X (cov.along Y σ) x +
-            mvfderiv (I := I) f x (X x) • cov.along Y σ x := by
+        cov.alongAlmostSchur X (cov.alongAlmostSchur (f • Y) σ) x =
+          f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x +
+            mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x := by
       rw [hYsmul]
-      exact cov.along_smul_right_apply (x := x) (f := f) (X := X) (σ := cov.along Y σ) hf hYσ
+      exact cov.along_smul_right_applyAlmostSchur (x := x) (f := f) (X := X) (σ := cov.alongAlmostSchur Y σ) hf hYσ
     have h2 :
-        cov.along (f • Y) (cov.along X σ) x = f x • cov.along Y (cov.along X σ) x := by
-      simpa using congrArg (fun s => s x) (cov.along_smul_left f Y (cov.along X σ))
+        cov.alongAlmostSchur (f • Y) (cov.alongAlmostSchur X σ) x = f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x := by
+      simpa using congrArg (fun s => s x) (cov.along_smul_leftAlmostSchur f Y (cov.alongAlmostSchur X σ))
     have h3 :
-        cov.along (VectorField.mlieBracket I X (f • Y)) σ x =
-          mvfderiv (I := I) f x (X x) • cov.along Y σ x +
-            f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
-      simp [CovariantDerivative.along, VectorField.mlieBracket_smul_right hf hY, mvfderiv,
+        cov.alongAlmostSchur (VectorField.mlieBracket I X (f • Y)) σ x =
+          mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x +
+            f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
+      simp [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_smul_right hf hY, mvfderiv,
         map_add, map_smul]
     calc
-      cov.curvatureAux X (f • Y) σ x
-          = cov.along X (cov.along (f • Y) σ) x -
-              cov.along (f • Y) (cov.along X σ) x -
-              cov.along (VectorField.mlieBracket I X (f • Y)) σ x := by
-                simp [CovariantDerivative.curvatureAux]
-      _ = (f x • cov.along X (cov.along Y σ) x +
-            mvfderiv (I := I) f x (X x) • cov.along Y σ x) -
-            f x • cov.along Y (cov.along X σ) x -
-            (mvfderiv (I := I) f x (X x) • cov.along Y σ x +
-              f x • cov.along (VectorField.mlieBracket I X Y) σ x) := by
+      cov.curvatureAuxAlmostSchur X (f • Y) σ x
+          = cov.alongAlmostSchur X (cov.alongAlmostSchur (f • Y) σ) x -
+              cov.alongAlmostSchur (f • Y) (cov.alongAlmostSchur X σ) x -
+              cov.alongAlmostSchur (VectorField.mlieBracket I X (f • Y)) σ x := by
+                simp [CovariantDerivative.curvatureAuxAlmostSchur]
+      _ = (f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x +
+            mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x) -
+            f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+            (mvfderiv (I := I) f x (X x) • cov.alongAlmostSchur Y σ x +
+              f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
                 rw [h1, h2, h3]
-      _ = f x • cov.along X (cov.along Y σ) x -
-            f x • cov.along Y (cov.along X σ) x -
-            f x • cov.along (VectorField.mlieBracket I X Y) σ x := by
+      _ = f x • cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x -
+            f x • cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+            f x • cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x := by
               simpa [sub_eq_add_neg, smul_smul, add_assoc, add_left_comm, add_comm]
-      _ = f x • (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-            cov.along (VectorField.mlieBracket I X Y) σ x) := by
+      _ = f x • (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) := by
               rw [smul_sub, smul_sub]
-      _ = f x • cov.curvatureAux X Y σ x := by
-            simp [CovariantDerivative.curvatureAux]
+      _ = f x • cov.curvatureAuxAlmostSchur X Y σ x := by
+            simp [CovariantDerivative.curvatureAuxAlmostSchur]
   · intro Y Y' hY hY'
-    have hYσ : MDiffAt (T% (cov.along Y σ)) x :=
+    have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x :=
       cov.mdifferentiableAt_along_of_mdifferentiableAt hY hσ
-    have hY'σ : MDiffAt (T% (cov.along Y' σ)) x :=
+    have hY'σ : MDiffAt (T% (cov.alongAlmostSchur Y' σ)) x :=
       cov.mdifferentiableAt_along_of_mdifferentiableAt hY' hσ
     have h1 :
-        cov.along X (cov.along (Y + Y') σ) x =
-          cov.along X (cov.along Y σ) x + cov.along X (cov.along Y' σ) x := by
-      rw [cov.along_add_left]
-      exact cov.along_add_right_apply (x := x) (X := X) hYσ hY'σ
+        cov.alongAlmostSchur X (cov.alongAlmostSchur (Y + Y') σ) x =
+          cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X (cov.alongAlmostSchur Y' σ) x := by
+      rw [cov.along_add_leftAlmostSchur]
+      exact cov.along_add_right_applyAlmostSchur (x := x) (X := X) hYσ hY'σ
     have h2 :
-        cov.along (Y + Y') (cov.along X σ) x =
-          cov.along Y (cov.along X σ) x + cov.along Y' (cov.along X σ) x := by
-      simpa using congrArg (fun s => s x) (cov.along_add_left Y Y' (cov.along X σ))
+        cov.alongAlmostSchur (Y + Y') (cov.alongAlmostSchur X σ) x =
+          cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y' (cov.alongAlmostSchur X σ) x := by
+      simpa using congrArg (fun s => s x) (cov.along_add_leftAlmostSchur Y Y' (cov.alongAlmostSchur X σ))
     have h3 :
-        cov.along (VectorField.mlieBracket I X (Y + Y')) σ x =
-          cov.along (VectorField.mlieBracket I X Y) σ x +
-            cov.along (VectorField.mlieBracket I X Y') σ x := by
-      simp [CovariantDerivative.along, VectorField.mlieBracket_add_right hY hY', map_add]
+        cov.alongAlmostSchur (VectorField.mlieBracket I X (Y + Y')) σ x =
+          cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y') σ x := by
+      simp [CovariantDerivative.alongAlmostSchur, VectorField.mlieBracket_add_right hY hY', map_add]
     calc
-      cov.curvatureAux X (Y + Y') σ x
-          = cov.along X (cov.along (Y + Y') σ) x -
-              cov.along (Y + Y') (cov.along X σ) x -
-              cov.along (VectorField.mlieBracket I X (Y + Y')) σ x := by
-                simp [CovariantDerivative.curvatureAux]
-      _ = (cov.along X (cov.along Y σ) x + cov.along X (cov.along Y' σ) x) -
-            (cov.along Y (cov.along X σ) x + cov.along Y' (cov.along X σ) x) -
-            (cov.along (VectorField.mlieBracket I X Y) σ x +
-              cov.along (VectorField.mlieBracket I X Y') σ x) := by
+      cov.curvatureAuxAlmostSchur X (Y + Y') σ x
+          = cov.alongAlmostSchur X (cov.alongAlmostSchur (Y + Y') σ) x -
+              cov.alongAlmostSchur (Y + Y') (cov.alongAlmostSchur X σ) x -
+              cov.alongAlmostSchur (VectorField.mlieBracket I X (Y + Y')) σ x := by
+                simp [CovariantDerivative.curvatureAuxAlmostSchur]
+      _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x + cov.alongAlmostSchur X (cov.alongAlmostSchur Y' σ) x) -
+            (cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x + cov.alongAlmostSchur Y' (cov.alongAlmostSchur X σ) x) -
+            (cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x +
+              cov.alongAlmostSchur (VectorField.mlieBracket I X Y') σ x) := by
                 rw [h1, h2, h3]
-      _ = (cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-            cov.along (VectorField.mlieBracket I X Y) σ x) +
-          (cov.along X (cov.along Y' σ) x - cov.along Y' (cov.along X σ) x -
-            cov.along (VectorField.mlieBracket I X Y') σ x) := by
+      _ = (cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x) +
+          (cov.alongAlmostSchur X (cov.alongAlmostSchur Y' σ) x - cov.alongAlmostSchur Y' (cov.alongAlmostSchur X σ) x -
+            cov.alongAlmostSchur (VectorField.mlieBracket I X Y') σ x) := by
               abel_nf
-      _ = cov.curvatureAux X Y σ x + cov.curvatureAux X Y' σ x := by
-            simp [CovariantDerivative.curvatureAux]
+      _ = cov.curvatureAuxAlmostSchur X Y σ x + cov.curvatureAuxAlmostSchur X Y' σ x := by
+            simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
 private lemma along_eventuallyEq_left_apply
     {X X' : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hXX' : X =ᶠ[nhds x] X') :
-    cov.along X σ x = cov.along X' σ x := by
-  simpa [CovariantDerivative.along_apply] using
+    cov.alongAlmostSchur X σ x = cov.alongAlmostSchur X' σ x := by
+  simpa [CovariantDerivative.along_applyAlmostSchur] using
     congrArg (fun u : TM x => (cov σ x) u) hXX'.self_of_nhds
 
 private lemma along_eventuallyEq_right_apply
     {X : Π x : M, TM x} {σ τ : Π x : M, V x} {x : M}
     (hσ : MDiffAt (T% σ) x) (hτ : MDiffAt (T% τ) x)
     (hστ : ∀ᶠ z in nhds x, σ z = τ z) :
-    cov.along X σ x = cov.along X τ x := by
+    cov.alongAlmostSchur X σ x = cov.alongAlmostSchur X τ x := by
   have hcov :
       cov σ x = cov τ x :=
     IsCovariantDerivativeOn.congr_of_eventuallyEq
       (hcov := cov.isCovariantDerivativeOnUniv) hσ hτ (by simpa) hστ
-  simpa [CovariantDerivative.along_apply] using
+  simpa [CovariantDerivative.along_applyAlmostSchur] using
     congrArg (fun L : TM x →L[ℝ] V x => L (X x)) hcov
 
 /-- The raw curvature commutator is unchanged at `x` when its left tangent-field slot is replaced
 by a `C¹` field that agrees with it near `x`. -/
-lemma curvatureAux_eq_of_eventuallyEq_left_apply
+lemma curvatureAux_eq_of_eventuallyEq_left_applyAlmostSchur
     {X X' Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hX' : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X' y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hXX' : X =ᶠ[nhds x] X') :
-    cov.curvatureAux X Y σ x = cov.curvatureAux X' Y σ x := by
-  have hXσ : MDiffAt (T% (cov.along X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
-  have hX'σ : MDiffAt (T% (cov.along X' σ)) x :=
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X' Y σ x := by
+  have hXσ : MDiffAt (T% (cov.alongAlmostSchur X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
+  have hX'σ : MDiffAt (T% (cov.alongAlmostSchur X' σ)) x :=
     cov.mdifferentiableAt_along_of_contMDiff hX' hσ
   have hAlong :
-      ∀ᶠ z in nhds x, cov.along X σ z = cov.along X' σ z := by
+      ∀ᶠ z in nhds x, cov.alongAlmostSchur X σ z = cov.alongAlmostSchur X' σ z := by
     filter_upwards [hXX'] with z hz
-    simp [CovariantDerivative.along_apply, hz]
+    simp [CovariantDerivative.along_applyAlmostSchur, hz]
   have hBracket :
       VectorField.mlieBracket I X Y =ᶠ[nhds x] VectorField.mlieBracket I X' Y := by
     simpa using hXX'.mlieBracket_vectorField (Filter.EventuallyEq.rfl : Y =ᶠ[nhds x] Y)
   have h1 :
-      cov.along X (cov.along Y σ) x = cov.along X' (cov.along Y σ) x :=
-    cov.along_eventuallyEq_left_apply (σ := cov.along Y σ) hXX'
+      cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x = cov.alongAlmostSchur X' (cov.alongAlmostSchur Y σ) x :=
+    cov.along_eventuallyEq_left_apply (σ := cov.alongAlmostSchur Y σ) hXX'
   have h2 :
-      cov.along Y (cov.along X σ) x = cov.along Y (cov.along X' σ) x :=
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x = cov.alongAlmostSchur Y (cov.alongAlmostSchur X' σ) x :=
     cov.along_eventuallyEq_right_apply (X := Y) hXσ hX'σ hAlong
   have h3 :
-      cov.along (VectorField.mlieBracket I X Y) σ x =
-        cov.along (VectorField.mlieBracket I X' Y) σ x :=
+      cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x =
+        cov.alongAlmostSchur (VectorField.mlieBracket I X' Y) σ x :=
     cov.along_eventuallyEq_left_apply (σ := σ) hBracket
-  rw [CovariantDerivative.curvatureAux_apply, CovariantDerivative.curvatureAux_apply]
+  rw [CovariantDerivative.curvatureAux_applyAlmostSchur, CovariantDerivative.curvatureAux_applyAlmostSchur]
   rw [h1, h2, h3]
 
 /-- The raw curvature commutator depends only on the value of its left tangent-field slot at `x`,
 provided the middle tangent-field slot is `C¹` and the bundle-section slot is `C²`. -/
-lemma curvatureAux_eq_of_eq_left_apply
+lemma curvatureAux_eq_of_eq_left_applyAlmostSchur
     {X X' Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hX : MDiffAt (T% X) x) (hX' : MDiffAt (T% X') x)
     (hXX' : X x = X' x) :
-    cov.curvatureAux X Y σ x = cov.curvatureAux X' Y σ x := by
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X' Y σ x := by
   exact (cov.curvatureAux_tensorial_left (x := x) hY hσ).pointwise hX hX' hXX'
 
 /-- The raw curvature commutator is unchanged at `x` when its middle tangent-field slot is
 replaced by a `C¹` field that agrees with it near `x`. -/
-lemma curvatureAux_eq_of_eventuallyEq_middle_apply
+lemma curvatureAux_eq_of_eventuallyEq_middle_applyAlmostSchur
     {X Y Y' : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hY' : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y' y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hYY' : Y =ᶠ[nhds x] Y') :
-    cov.curvatureAux X Y σ x = cov.curvatureAux X Y' σ x := by
-  have hYσ : MDiffAt (T% (cov.along Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
-  have hY'σ : MDiffAt (T% (cov.along Y' σ)) x :=
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X Y' σ x := by
+  have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
+  have hY'σ : MDiffAt (T% (cov.alongAlmostSchur Y' σ)) x :=
     cov.mdifferentiableAt_along_of_contMDiff hY' hσ
   have hAlong :
-      ∀ᶠ z in nhds x, cov.along Y σ z = cov.along Y' σ z := by
+      ∀ᶠ z in nhds x, cov.alongAlmostSchur Y σ z = cov.alongAlmostSchur Y' σ z := by
     filter_upwards [hYY'] with z hz
-    simp [CovariantDerivative.along_apply, hz]
+    simp [CovariantDerivative.along_applyAlmostSchur, hz]
   have hBracket :
       VectorField.mlieBracket I X Y =ᶠ[nhds x] VectorField.mlieBracket I X Y' := by
     simpa using
       (Filter.EventuallyEq.rfl : X =ᶠ[nhds x] X).mlieBracket_vectorField hYY'
   have h1 :
-      cov.along X (cov.along Y σ) x = cov.along X (cov.along Y' σ) x :=
+      cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x = cov.alongAlmostSchur X (cov.alongAlmostSchur Y' σ) x :=
     cov.along_eventuallyEq_right_apply (X := X) hYσ hY'σ hAlong
   have h2 :
-      cov.along Y (cov.along X σ) x = cov.along Y' (cov.along X σ) x :=
-    cov.along_eventuallyEq_left_apply (σ := cov.along X σ) hYY'
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x = cov.alongAlmostSchur Y' (cov.alongAlmostSchur X σ) x :=
+    cov.along_eventuallyEq_left_apply (σ := cov.alongAlmostSchur X σ) hYY'
   have h3 :
-      cov.along (VectorField.mlieBracket I X Y) σ x =
-        cov.along (VectorField.mlieBracket I X Y') σ x :=
+      cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x =
+        cov.alongAlmostSchur (VectorField.mlieBracket I X Y') σ x :=
     cov.along_eventuallyEq_left_apply (σ := σ) hBracket
-  rw [CovariantDerivative.curvatureAux_apply, CovariantDerivative.curvatureAux_apply]
+  rw [CovariantDerivative.curvatureAux_applyAlmostSchur, CovariantDerivative.curvatureAux_applyAlmostSchur]
   rw [h1, h2, h3]
 
 /-- The raw curvature commutator depends only on the value of its middle tangent-field slot at `x`,
 provided the left tangent-field slot is `C¹` and the bundle-section slot is `C²`. -/
-lemma curvatureAux_eq_of_eq_middle_apply
+lemma curvatureAux_eq_of_eq_middle_applyAlmostSchur
     {X Y Y' : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hY : MDiffAt (T% Y) x) (hY' : MDiffAt (T% Y') x)
     (hYY' : Y x = Y' x) :
-    cov.curvatureAux X Y σ x = cov.curvatureAux X Y' σ x := by
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X Y' σ x := by
   exact (cov.curvatureAux_tensorial_middle (x := x) hX hσ).pointwise hY hY' hYY'
 
 /-- The raw curvature commutator is unchanged at `x` when its bundle-section slot is replaced by a
 `C²` section that agrees with it near `x`. -/
-lemma curvatureAux_eq_of_eventuallyEq_right_apply
+lemma curvatureAux_eq_of_eventuallyEq_right_applyAlmostSchur
     {X Y : Π x : M, TM x} {σ τ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     (hσ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σ y)))
     (hτ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (τ y)))
     (hστ : ∀ᶠ z in nhds x, σ z = τ z) :
-    cov.curvatureAux X Y σ x = cov.curvatureAux X Y τ x := by
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X Y τ x := by
   have hσx : MDiffAt (T% σ) x := (hσ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
   have hτx : MDiffAt (T% τ) x := (hτ x).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
-  have hYσ : MDiffAt (T% (cov.along Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
-  have hYτ : MDiffAt (T% (cov.along Y τ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hτ
-  have hXσ : MDiffAt (T% (cov.along X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
-  have hXτ : MDiffAt (T% (cov.along X τ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hτ
+  have hYσ : MDiffAt (T% (cov.alongAlmostSchur Y σ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hσ
+  have hYτ : MDiffAt (T% (cov.alongAlmostSchur Y τ)) x := cov.mdifferentiableAt_along_of_contMDiff hY hτ
+  have hXσ : MDiffAt (T% (cov.alongAlmostSchur X σ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hσ
+  have hXτ : MDiffAt (T% (cov.alongAlmostSchur X τ)) x := cov.mdifferentiableAt_along_of_contMDiff hX hτ
   have hAlongY :
-      ∀ᶠ z in nhds x, cov.along Y σ z = cov.along Y τ z := by
+      ∀ᶠ z in nhds x, cov.alongAlmostSchur Y σ z = cov.alongAlmostSchur Y τ z := by
     filter_upwards [eventually_eventually_nhds.2 hστ] with z hz
     have hσz : MDiffAt (T% σ) z := (hσ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
     have hτz : MDiffAt (T% τ) z := (hτ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
@@ -1675,10 +1681,10 @@ lemma curvatureAux_eq_of_eventuallyEq_right_apply
         cov σ z = cov τ z :=
       IsCovariantDerivativeOn.congr_of_eventuallyEq
         (hcov := cov.isCovariantDerivativeOnUniv) hσz hτz (by simpa) hz
-    simpa [CovariantDerivative.along_apply] using
+    simpa [CovariantDerivative.along_applyAlmostSchur] using
       congrArg (fun L : TM z →L[ℝ] V z => L (Y z)) hcovz
   have hAlongX :
-      ∀ᶠ z in nhds x, cov.along X σ z = cov.along X τ z := by
+      ∀ᶠ z in nhds x, cov.alongAlmostSchur X σ z = cov.alongAlmostSchur X τ z := by
     filter_upwards [eventually_eventually_nhds.2 hστ] with z hz
     have hσz : MDiffAt (T% σ) z := (hσ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
     have hτz : MDiffAt (T% τ) z := (hτ z).mdifferentiableAt (by simp : (2 : WithTop ℕ∞) ≠ 0)
@@ -1686,23 +1692,23 @@ lemma curvatureAux_eq_of_eventuallyEq_right_apply
         cov σ z = cov τ z :=
       IsCovariantDerivativeOn.congr_of_eventuallyEq
         (hcov := cov.isCovariantDerivativeOnUniv) hσz hτz (by simpa) hz
-    simpa [CovariantDerivative.along_apply] using
+    simpa [CovariantDerivative.along_applyAlmostSchur] using
       congrArg (fun L : TM z →L[ℝ] V z => L (X z)) hcovz
   have h1 :
-      cov.along X (cov.along Y σ) x = cov.along X (cov.along Y τ) x :=
+      cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x = cov.alongAlmostSchur X (cov.alongAlmostSchur Y τ) x :=
     cov.along_eventuallyEq_right_apply (X := X) hYσ hYτ hAlongY
   have h2 :
-      cov.along Y (cov.along X σ) x = cov.along Y (cov.along X τ) x :=
+      cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x = cov.alongAlmostSchur Y (cov.alongAlmostSchur X τ) x :=
     cov.along_eventuallyEq_right_apply (X := Y) hXσ hXτ hAlongX
   have h3 :
-      cov.along (VectorField.mlieBracket I X Y) σ x =
-        cov.along (VectorField.mlieBracket I X Y) τ x :=
+      cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x =
+        cov.alongAlmostSchur (VectorField.mlieBracket I X Y) τ x :=
     cov.along_eventuallyEq_right_apply (X := VectorField.mlieBracket I X Y) hσx hτx hστ
-  rw [CovariantDerivative.curvatureAux_apply, CovariantDerivative.curvatureAux_apply]
+  rw [CovariantDerivative.curvatureAux_applyAlmostSchur, CovariantDerivative.curvatureAux_applyAlmostSchur]
   rw [h1, h2, h3]
 
 /-- Curvature commutes with finite `C²` linear combinations in its bundle-section slot. -/
-lemma curvatureAux_sum_smul_right_apply
+lemma curvatureAux_sum_smul_right_applyAlmostSchur
     {ι : Type*} [DecidableEq ι] {s : Finset ι}
     {X Y : Π x : M, TM x} {f : ι → M → ℝ} {σs : ι → Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
@@ -1710,26 +1716,26 @@ lemma curvatureAux_sum_smul_right_apply
     (hf : ∀ i ∈ s, ContMDiff I 𝓘(ℝ) 2 (f i))
     (hσs : ∀ i ∈ s,
       ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σs i y))) :
-    cov.curvatureAux X Y (fun y ↦ s.sum (fun i ↦ f i y • σs i y)) x =
-      s.sum (fun i ↦ f i x • cov.curvatureAux X Y (σs i) x) := by
+    cov.curvatureAuxAlmostSchur X Y (fun y ↦ s.sum (fun i ↦ f i y • σs i y)) x =
+      s.sum (fun i ↦ f i x • cov.curvatureAuxAlmostSchur X Y (σs i) x) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
-      change cov.curvatureAux X Y (0 : Π y : M, V y) x = 0
+      change cov.curvatureAuxAlmostSchur X Y (0 : Π y : M, V y) x = 0
       have hcov0 : cov (0 : Π y : M, V y) = 0 := CovariantDerivative.zero cov
-      have hY0 : cov.along Y (0 : Π y : M, V y) = 0 := by
+      have hY0 : cov.alongAlmostSchur Y (0 : Π y : M, V y) = 0 := by
         funext y
         have hcov0y : cov (0 : Π y : M, V y) y = 0 := by
           simpa using congrFun hcov0 y
-        simp [CovariantDerivative.along, hcov0y]
-      have hX0 : cov.along X (0 : Π y : M, V y) = 0 := by
+        simp [CovariantDerivative.alongAlmostSchur, hcov0y]
+      have hX0 : cov.alongAlmostSchur X (0 : Π y : M, V y) = 0 := by
         funext y
         have hcov0y : cov (0 : Π y : M, V y) y = 0 := by
           simpa using congrFun hcov0 y
-        simp [CovariantDerivative.along, hcov0y]
+        simp [CovariantDerivative.alongAlmostSchur, hcov0y]
       have hcov0x : cov (0 : Π y : M, V y) x = 0 := by
         simpa using congrFun hcov0 x
-      simp [CovariantDerivative.curvatureAux, hY0, hX0, CovariantDerivative.along, hcov0x]
+      simp [CovariantDerivative.curvatureAuxAlmostSchur, hY0, hX0, CovariantDerivative.alongAlmostSchur, hcov0x]
   | insert a s ha ih =>
       have hterm :
           ContMDiff I (I.prod 𝓘(ℝ, F)) 2
@@ -1743,34 +1749,34 @@ lemma curvatureAux_sum_smul_right_apply
           (hf i (Finset.mem_insert_of_mem hi)).smul_section
             (hσs i (Finset.mem_insert_of_mem hi))
       have hih :
-          cov.curvatureAux X Y (fun y ↦ s.sum (fun i ↦ f i y • σs i y)) x =
-            s.sum (fun i ↦ f i x • cov.curvatureAux X Y (σs i) x) :=
+          cov.curvatureAuxAlmostSchur X Y (fun y ↦ s.sum (fun i ↦ f i y • σs i y)) x =
+            s.sum (fun i ↦ f i x • cov.curvatureAuxAlmostSchur X Y (σs i) x) :=
         ih (fun i hi ↦ hf i (Finset.mem_insert_of_mem hi))
           (fun i hi ↦ hσs i (Finset.mem_insert_of_mem hi))
       calc
-        cov.curvatureAux X Y (fun y ↦ (insert a s).sum (fun i ↦ f i y • σs i y)) x
-            = cov.curvatureAux X Y (f a • σs a + fun y ↦ s.sum (fun i ↦ f i y • σs i y)) x := by
+        cov.curvatureAuxAlmostSchur X Y (fun y ↦ (insert a s).sum (fun i ↦ f i y • σs i y)) x
+            = cov.curvatureAuxAlmostSchur X Y (f a • σs a + fun y ↦ s.sum (fun i ↦ f i y • σs i y)) x := by
                 have hsection :
                     (fun y ↦ (insert a s).sum (fun i ↦ f i y • σs i y)) =
                       (f a • σs a + fun y ↦ s.sum (fun i ↦ f i y • σs i y)) := by
                   funext y
                   simp [Finset.sum_insert, ha, Pi.add_apply]
                 rw [hsection]
-        _ = cov.curvatureAux X Y (f a • σs a) x +
-              cov.curvatureAux X Y (fun y ↦ s.sum (fun i ↦ f i y • σs i y)) x := by
+        _ = cov.curvatureAuxAlmostSchur X Y (f a • σs a) x +
+              cov.curvatureAuxAlmostSchur X Y (fun y ↦ s.sum (fun i ↦ f i y • σs i y)) x := by
                 exact cov.curvatureAux_add_right_apply hX hY hterm hsum
-        _ = f a x • cov.curvatureAux X Y (σs a) x +
-              s.sum (fun i ↦ f i x • cov.curvatureAux X Y (σs i) x) := by
-                rw [cov.curvatureAux_smul_fun_right_apply
+        _ = f a x • cov.curvatureAuxAlmostSchur X Y (σs a) x +
+              s.sum (fun i ↦ f i x • cov.curvatureAuxAlmostSchur X Y (σs i) x) := by
+                rw [cov.curvatureAux_smul_fun_right_applyAlmostSchur
                   (hf a (Finset.mem_insert_self a s)) hX hY
                   (hσs a (Finset.mem_insert_self a s)), hih]
-        _ = (insert a s).sum (fun i ↦ f i x • cov.curvatureAux X Y (σs i) x) := by
+        _ = (insert a s).sum (fun i ↦ f i x • cov.curvatureAuxAlmostSchur X Y (σs i) x) := by
                 rw [Finset.sum_insert ha]
 
 /-- A finite `C²` expansion criterion for replacing the bundle-section slot of the raw curvature
 commutator.  If two sections have local finite expansions in the same smooth sections with
 coefficient functions that agree at the evaluation point, then curvature sees the same right slot. -/
-lemma curvatureAux_eq_of_finite_sum_eq_right_apply
+lemma curvatureAux_eq_of_finite_sum_eq_right_applyAlmostSchur
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     {X Y : Π x : M, TM x} {σ τ : Π x : M, V x}
     {f g : ι → M → ℝ} {σs : ι → Π x : M, V x} {x : M}
@@ -1785,7 +1791,7 @@ lemma curvatureAux_eq_of_finite_sum_eq_right_apply
     (hσsum : ∀ᶠ y in nhds x, σ y = ∑ i : ι, f i y • σs i y)
     (hτsum : ∀ᶠ y in nhds x, τ y = ∑ i : ι, g i y • σs i y)
     (hfg : ∀ i, f i x = g i x) :
-    cov.curvatureAux X Y σ x = cov.curvatureAux X Y τ x := by
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X Y τ x := by
   classical
   let s : Finset ι := Finset.univ
   have hsumf :
@@ -1799,32 +1805,32 @@ lemma curvatureAux_eq_of_finite_sum_eq_right_apply
     simpa [s] using
       (ContMDiff.sum_section (s := s) fun i _ ↦ (hg i).smul_section (hσs i))
   have hsum_eq :
-      (∑ i : ι, f i x • cov.curvatureAux X Y (σs i) x) =
-        ∑ i : ι, g i x • cov.curvatureAux X Y (σs i) x := by
+      (∑ i : ι, f i x • cov.curvatureAuxAlmostSchur X Y (σs i) x) =
+        ∑ i : ι, g i x • cov.curvatureAuxAlmostSchur X Y (σs i) x := by
     refine Finset.sum_congr rfl ?_
     intro i _
     rw [hfg i]
   calc
-    cov.curvatureAux X Y σ x =
-        cov.curvatureAux X Y (fun y ↦ ∑ i : ι, f i y • σs i y) x := by
-          exact cov.curvatureAux_eq_of_eventuallyEq_right_apply hX hY hσ hsumf hσsum
-    _ = ∑ i : ι, f i x • cov.curvatureAux X Y (σs i) x := by
+    cov.curvatureAuxAlmostSchur X Y σ x =
+        cov.curvatureAuxAlmostSchur X Y (fun y ↦ ∑ i : ι, f i y • σs i y) x := by
+          exact cov.curvatureAux_eq_of_eventuallyEq_right_applyAlmostSchur hX hY hσ hsumf hσsum
+    _ = ∑ i : ι, f i x • cov.curvatureAuxAlmostSchur X Y (σs i) x := by
           simpa [s] using
-            cov.curvatureAux_sum_smul_right_apply (s := s) hX hY
+            cov.curvatureAux_sum_smul_right_applyAlmostSchur (s := s) hX hY
               (fun i _ ↦ hf i) (fun i _ ↦ hσs i)
-    _ = ∑ i : ι, g i x • cov.curvatureAux X Y (σs i) x := hsum_eq
-    _ = cov.curvatureAux X Y (fun y ↦ ∑ i : ι, g i y • σs i y) x := by
+    _ = ∑ i : ι, g i x • cov.curvatureAuxAlmostSchur X Y (σs i) x := hsum_eq
+    _ = cov.curvatureAuxAlmostSchur X Y (fun y ↦ ∑ i : ι, g i y • σs i y) x := by
           simpa [s] using
-            (cov.curvatureAux_sum_smul_right_apply (s := s) hX hY
+            (cov.curvatureAux_sum_smul_right_applyAlmostSchur (s := s) hX hY
               (fun i _ ↦ hg i) (fun i _ ↦ hσs i)).symm
-    _ = cov.curvatureAux X Y τ x := by
-          exact (cov.curvatureAux_eq_of_eventuallyEq_right_apply hX hY hτ hsumg hτsum).symm
+    _ = cov.curvatureAuxAlmostSchur X Y τ x := by
+          exact (cov.curvatureAux_eq_of_eventuallyEq_right_applyAlmostSchur hX hY hτ hsumg hτsum).symm
 
 /-- A local-frame version of the finite right-slot replacement criterion.  Around `x`, every
 section expands in the local frame of `trivializationAt F V x`; if the corresponding coefficient
 functions are globally `C²` and agree at `x`, then the raw curvature commutator sees the same
 right slot. -/
-lemma curvatureAux_eq_of_trivializationAt_localFrameCoeff_eq_right_apply
+lemma curvatureAux_eq_of_trivializationAt_localFrameCoeff_eq_right_applyAlmostSchur
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (b : Module.Basis ι ℝ F)
     {X Y : Π x : M, TM x} {σ τ : Π x : M, V x} {x : M}
@@ -1841,21 +1847,21 @@ lemma curvatureAux_eq_of_trivializationAt_localFrameCoeff_eq_right_apply
     (hcoeff_eq : ∀ i : ι,
       (trivializationAt F V x).localFrameCoeff I b i x (σ x) =
         (trivializationAt F V x).localFrameCoeff I b i x (τ x)) :
-    cov.curvatureAux X Y σ x = cov.curvatureAux X Y τ x := by
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X Y τ x := by
   let e := trivializationAt F V x
   let f : ι → M → ℝ := fun i y ↦ e.localFrameCoeff I b i y (σ y)
   let g : ι → M → ℝ := fun i y ↦ e.localFrameCoeff I b i y (τ y)
   let σs : ι → Π y : M, V y :=
-    fun i ↦ smoothExtend (I := I) (F := F) (V := V) x (e.localFrame b i x)
+    fun i ↦ smoothExtendAlmostSchur (I := I) (F := F) (V := V) x (e.localFrame b i x)
   have hσsum :
       ∀ᶠ y in nhds x, σ y = ∑ i : ι, f i y • σs i y := by
     simpa [f, σs, e] using
-      eventually_eq_sum_smoothExtend_trivializationAt_localFrameCoeff_smul
+      eventually_eq_sum_smoothExtend_trivializationAt_localFrameCoeff_smulAlmostSchur
         (I := I) (F := F) (V := V) b σ x
   have hτsum :
       ∀ᶠ y in nhds x, τ y = ∑ i : ι, g i y • σs i y := by
     simpa [g, σs, e] using
-      eventually_eq_sum_smoothExtend_trivializationAt_localFrameCoeff_smul
+      eventually_eq_sum_smoothExtend_trivializationAt_localFrameCoeff_smulAlmostSchur
         (I := I) (F := F) (V := V) b τ x
   have hf : ∀ i : ι, ContMDiff I 𝓘(ℝ) 2 (f i) := by
     intro i
@@ -1867,15 +1873,15 @@ lemma curvatureAux_eq_of_trivializationAt_localFrameCoeff_eq_right_apply
       ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σs i y)) := by
     intro i
     simpa [σs, e] using
-      smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x (e.localFrame b i x)
+      smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x (e.localFrame b i x)
   have hfg : ∀ i : ι, f i x = g i x := by
     intro i
     simpa [f, g, e] using hcoeff_eq i
-  exact cov.curvatureAux_eq_of_finite_sum_eq_right_apply
+  exact cov.curvatureAux_eq_of_finite_sum_eq_right_applyAlmostSchur
     hX hY hσ hτ hf hg hσs hσsum hτsum hfg
 
 /-- Simultaneous locality for the raw curvature commutator in all three slots. -/
-lemma curvatureAux_eq_of_eventuallyEq_apply
+lemma curvatureAux_eq_of_eventuallyEq_applyAlmostSchur
     {X X' Y Y' : Π x : M, TM x} {σ τ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hX' : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X' y)))
@@ -1886,112 +1892,112 @@ lemma curvatureAux_eq_of_eventuallyEq_apply
     (hXX' : X =ᶠ[nhds x] X')
     (hYY' : Y =ᶠ[nhds x] Y')
     (hστ : ∀ᶠ z in nhds x, σ z = τ z) :
-    cov.curvatureAux X Y σ x = cov.curvatureAux X' Y' τ x := by
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X' Y' τ x := by
   calc
-    cov.curvatureAux X Y σ x = cov.curvatureAux X' Y σ x :=
-      cov.curvatureAux_eq_of_eventuallyEq_left_apply hX hX' hY hσ hXX'
-    _ = cov.curvatureAux X' Y' σ x :=
-      cov.curvatureAux_eq_of_eventuallyEq_middle_apply hX' hY hY' hσ hYY'
-    _ = cov.curvatureAux X' Y' τ x :=
-      cov.curvatureAux_eq_of_eventuallyEq_right_apply hX' hY' hσ hτ hστ
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X' Y σ x :=
+      cov.curvatureAux_eq_of_eventuallyEq_left_applyAlmostSchur hX hX' hY hσ hXX'
+    _ = cov.curvatureAuxAlmostSchur X' Y' σ x :=
+      cov.curvatureAux_eq_of_eventuallyEq_middle_applyAlmostSchur hX' hY hY' hσ hYY'
+    _ = cov.curvatureAuxAlmostSchur X' Y' τ x :=
+      cov.curvatureAux_eq_of_eventuallyEq_right_applyAlmostSchur hX' hY' hσ hτ hστ
 
 /-- The bundled curvature tensor, built from canonical smooth extensions of fibre vectors. -/
-noncomputable def curvatureTensor (x : M) :
+noncomputable def curvatureTensorAlmostSchur (x : M) :
     TM x →ₗ[ℝ] TM x →ₗ[ℝ] V x →ₗ[ℝ] V x := by
   refine
     { toFun := fun u ↦
         { toFun := fun v ↦
             { toFun := fun w ↦
-                cov.curvatureAux
-                  (smoothExtend (I := I) (F := E) (V := TM) x u)
-                  (smoothExtend (I := I) (F := E) (V := TM) x v)
-                  (smoothExtend (I := I) (F := F) (V := V) x w) x
+                cov.curvatureAuxAlmostSchur
+                  (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x u)
+                  (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x v)
+                  (smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w) x
               map_add' := by
                 intro w w'
-                simpa [smoothExtend_add] using
+                simpa [smoothExtend_addAlmostSchur] using
                   cov.curvatureAux_add_right_apply
-                    (hX := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u)
-                    (hY := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v)
-                    (hσ := smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w)
-                    (hτ := smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w')
+                    (hX := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u)
+                    (hY := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v)
+                    (hσ := smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w)
+                    (hτ := smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w')
               map_smul' := by
                 intro c w
-                simpa [smoothExtend_smul] using
+                simpa [smoothExtend_smulAlmostSchur] using
                   cov.curvatureAux_smul_right_apply c
-                    (hX := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u)
-                    (hY := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v)
-                    (hσ := smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w) }
+                    (hX := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u)
+                    (hY := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v)
+                    (hσ := smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w) }
           map_add' := by
             intro v v'
             ext w
-            simpa [smoothExtend_add] using
+            simpa [smoothExtend_addAlmostSchur] using
               cov.curvatureAux_add_middle_apply
-                (hX := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u)
-                (hY := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v)
-                (hY' := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v')
-                (hσ := smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w)
+                (hX := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u)
+                (hY := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v)
+                (hY' := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v')
+                (hσ := smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w)
           map_smul' := by
             intro c v
             ext w
-            simpa [smoothExtend_smul] using
+            simpa [smoothExtend_smulAlmostSchur] using
               cov.curvatureAux_smul_middle_apply c
-                (hX := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u)
-                (hY := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v)
-                (hσ := smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w) }
+                (hX := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u)
+                (hY := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v)
+                (hσ := smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w) }
       map_add' := by
         intro u u'
         ext v w
-        simpa [smoothExtend_add] using
+        simpa [smoothExtend_addAlmostSchur] using
           cov.curvatureAux_add_left_apply
-            (hX := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u)
-            (hX' := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u')
-            (hY := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v)
-            (hσ := smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w)
+            (hX := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u)
+            (hX' := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u')
+            (hY := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v)
+            (hσ := smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w)
       map_smul' := by
         intro c u
         ext v w
-        simpa [smoothExtend_smul] using
+        simpa [smoothExtend_smulAlmostSchur] using
           cov.curvatureAux_smul_left_apply c
-            (hX := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u)
-            (hY := smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v)
-            (hσ := smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w) }
+            (hX := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u)
+            (hY := smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v)
+            (hσ := smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w) }
 
 @[simp]
-lemma curvatureTensor_apply (x : M) (u v : TM x) (w : V x) :
-    curvatureTensor (cov := cov) x u v w =
-      cov.curvatureAux
-        (smoothExtend (I := I) (F := E) (V := TM) x u)
-        (smoothExtend (I := I) (F := E) (V := TM) x v)
-        (smoothExtend (I := I) (F := F) (V := V) x w) x := rfl
+lemma curvatureTensor_applyAlmostSchur (x : M) (u v : TM x) (w : V x) :
+    curvatureTensorAlmostSchur (cov := cov) x u v w =
+      cov.curvatureAuxAlmostSchur
+        (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x u)
+        (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x v)
+        (smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w) x := rfl
 
 /-- Metric compatibility makes the bundled tangent curvature tensor skew-adjoint in its
 right two slots. -/
-theorem curvatureTensor_inner_skew_adjoint_of_isMetricCompatibleTangent
+theorem curvatureTensor_inner_skew_adjoint_of_isMetricCompatibleTangentAlmostSchur
     [RiemannianBundle TM] [IsContMDiffRiemannianBundle I 2 E TM]
     (covTM : CovariantDerivative I E TM) [ContMDiffCovariantDerivative covTM 1]
-    (hmetric : covTM.IsMetricCompatibleTangent)
+    (hmetric : covTM.IsMetricCompatibleTangentAlmostSchur)
     (x : M) (u v w z : TM x) :
-    inner ℝ (curvatureTensor (cov := covTM) x u v w) z +
-      inner ℝ w (curvatureTensor (cov := covTM) x u v z) = 0 := by
+    inner ℝ (curvatureTensorAlmostSchur (cov := covTM) x u v w) z +
+      inner ℝ w (curvatureTensorAlmostSchur (cov := covTM) x u v z) = 0 := by
   have hraw :=
-    covTM.curvatureAux_inner_add_eq_zero_of_metricCompatible
+    covTM.curvatureAux_inner_add_eq_zero_of_metricCompatibleAlmostSchur
       (I := I) (F := E) (V := TM)
       (fun {x} {σ τ} hσ hτ u ↦ hmetric (x := x) (σ := σ) (τ := τ) hσ hτ u)
-      (X := smoothExtend (I := I) (F := E) (V := TM) x u)
-      (Y := smoothExtend (I := I) (F := E) (V := TM) x v)
-      (σ := smoothExtend (I := I) (F := E) (V := TM) x w)
-      (τ := smoothExtend (I := I) (F := E) (V := TM) x z)
+      (X := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x u)
+      (Y := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x v)
+      (σ := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x w)
+      (τ := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x z)
       (x := x)
-      (smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u)
-      (smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v)
-      (smoothExtend_contMDiff_two (I := I) (F := E) (V := TM) x w)
-      (smoothExtend_contMDiff_two (I := I) (F := E) (V := TM) x z)
-  simpa [curvatureTensor_apply, smoothExtend_apply] using hraw
+      (smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u)
+      (smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v)
+      (smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := E) (V := TM) x w)
+      (smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := E) (V := TM) x z)
+  simpa [curvatureTensor_applyAlmostSchur, smoothExtend_applyAlmostSchur] using hraw
 
 /-- A computation rule for the bundled curvature tensor from arbitrary smooth representatives:
 the left and middle tangent-field slots may be replaced by their values at `x`, while the
 bundle-section slot may be replaced by a locally equal canonical smooth extension. -/
-lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_right
+lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_rightAlmostSchur
     {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
@@ -1999,20 +2005,20 @@ lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_right
     {u v : TM x} {w : V x}
     (hXu : X x = u) (hYv : Y x = v)
     (hσw : ∀ᶠ y in nhds x, σ y =
-      smoothExtend (I := I) (F := F) (V := V) x w y) :
-    cov.curvatureAux X Y σ x = curvatureTensor (cov := cov) x u v w := by
-  let Xcanon : Π y : M, TM y := smoothExtend (I := I) (F := E) (V := TM) x u
-  let Ycanon : Π y : M, TM y := smoothExtend (I := I) (F := E) (V := TM) x v
-  let σcanon : Π y : M, V y := smoothExtend (I := I) (F := F) (V := V) x w
+      smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w y) :
+    cov.curvatureAuxAlmostSchur X Y σ x = curvatureTensorAlmostSchur (cov := cov) x u v w := by
+  let Xcanon : Π y : M, TM y := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x u
+  let Ycanon : Π y : M, TM y := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x v
+  let σcanon : Π y : M, V y := smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w
   have hXcanon₁ :
       ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Xcanon y)) := by
-    simpa [Xcanon] using smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x u
+    simpa [Xcanon] using smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x u
   have hYcanon₁ :
       ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Ycanon y)) := by
-    simpa [Ycanon] using smoothExtend_contMDiff_one (I := I) (F := E) (V := TM) x v
+    simpa [Ycanon] using smoothExtend_contMDiff_oneAlmostSchur (I := I) (F := E) (V := TM) x v
   have hσcanon₂ :
       ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (σcanon y)) := by
-    simpa [σcanon] using smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w
+    simpa [σcanon] using smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w
   have hXat : MDiffAt (T% X) x := (hX x).mdifferentiableAt one_ne_zero
   have hXcanon_at : MDiffAt (T% Xcanon) x :=
     (hXcanon₁ x).mdifferentiableAt one_ne_zero
@@ -2020,26 +2026,26 @@ lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_right
   have hYcanon_at : MDiffAt (T% Ycanon) x :=
     (hYcanon₁ x).mdifferentiableAt one_ne_zero
   have hXeq : X x = Xcanon x := by
-    simpa [Xcanon, smoothExtend_apply] using hXu
+    simpa [Xcanon, smoothExtend_applyAlmostSchur] using hXu
   have hYeq : Y x = Ycanon x := by
-    simpa [Ycanon, smoothExtend_apply] using hYv
+    simpa [Ycanon, smoothExtend_applyAlmostSchur] using hYv
   have hσeq : ∀ᶠ y in nhds x, σ y = σcanon y := by
     simpa [σcanon] using hσw
   calc
-    cov.curvatureAux X Y σ x = cov.curvatureAux Xcanon Y σ x := by
-      exact cov.curvatureAux_eq_of_eq_left_apply hY hσ hXat hXcanon_at hXeq
-    _ = cov.curvatureAux Xcanon Ycanon σ x := by
-      exact cov.curvatureAux_eq_of_eq_middle_apply hXcanon₁ hσ hYat hYcanon_at hYeq
-    _ = cov.curvatureAux Xcanon Ycanon σcanon x := by
-      exact cov.curvatureAux_eq_of_eventuallyEq_right_apply hXcanon₁ hYcanon₁ hσ hσcanon₂ hσeq
-    _ = curvatureTensor (cov := cov) x u v w := by
-      simp [curvatureTensor_apply, Xcanon, Ycanon, σcanon]
+    cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur Xcanon Y σ x := by
+      exact cov.curvatureAux_eq_of_eq_left_applyAlmostSchur hY hσ hXat hXcanon_at hXeq
+    _ = cov.curvatureAuxAlmostSchur Xcanon Ycanon σ x := by
+      exact cov.curvatureAux_eq_of_eq_middle_applyAlmostSchur hXcanon₁ hσ hYat hYcanon_at hYeq
+    _ = cov.curvatureAuxAlmostSchur Xcanon Ycanon σcanon x := by
+      exact cov.curvatureAux_eq_of_eventuallyEq_right_applyAlmostSchur hXcanon₁ hYcanon₁ hσ hσcanon₂ hσeq
+    _ = curvatureTensorAlmostSchur (cov := cov) x u v w := by
+      simp [curvatureTensor_applyAlmostSchur, Xcanon, Ycanon, σcanon]
 
 /-- A computation rule for the bundled curvature tensor using an explicitly supplied bump in the
 right slot.  The supplied bump can be chosen with support in any convenient neighborhood, while the
 result agrees with the canonical curvature tensor because all such bump extensions equal `extend`
 near the base point. -/
-lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_smoothExtendWithBump_right
+lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_smoothExtendWithBump_rightAlmostSchur
     {X Y : Π x : M, TM x} {x : M}
     (φ : SmoothBumpFunction I x)
     (hφsupp : tsupport φ ⊆ (trivializationAt F V x).baseSet)
@@ -2047,28 +2053,28 @@ lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_smoothExtendWithBu
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
     {u v : TM x} {w : V x}
     (hXu : X x = u) (hYv : Y x = v) :
-    cov.curvatureAux X Y
-        (smoothExtendWithBump (I := I) (F := F) (V := V) x φ w) x =
-      curvatureTensor (cov := cov) x u v w := by
+    cov.curvatureAuxAlmostSchur X Y
+        (smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ w) x =
+      curvatureTensorAlmostSchur (cov := cov) x u v w := by
   have hσ :
       ContMDiff I (I.prod 𝓘(ℝ, F)) 2
         (fun y ↦ TotalSpace.mk' F y
-          (smoothExtendWithBump (I := I) (F := F) (V := V) x φ w y)) :=
-    smoothExtendWithBump_contMDiff_two_of_tsupport_subset
+          (smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ w y)) :=
+    smoothExtendWithBump_contMDiff_two_of_tsupport_subsetAlmostSchur
       (I := I) (F := F) (V := V) x φ w hφsupp
   have hσlocal :
       ∀ᶠ y in nhds x,
-        smoothExtendWithBump (I := I) (F := F) (V := V) x φ w y =
-          smoothExtend (I := I) (F := F) (V := V) x w y :=
-    smoothExtendWithBump_eventuallyEq_smoothExtend (I := I) (F := F) (V := V) x φ w
-  exact cov.curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_right
+        smoothExtendWithBumpAlmostSchur (I := I) (F := F) (V := V) x φ w y =
+          smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w y :=
+    smoothExtendWithBump_eventuallyEq_smoothExtendAlmostSchur (I := I) (F := F) (V := V) x φ w
+  exact cov.curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_rightAlmostSchur
     hX hY hσ hXu hYv hσlocal
 
-/-- Variant of `curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_right`
+/-- Variant of `curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_rightAlmostSchur`
 where the local right-slot representative is the raw trivialization `extend` section.  The
 canonical smooth extension is eventually equal to `extend` because its bump is eventually `1`
 near the base point. -/
-lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_extend_right
+lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_extend_rightAlmostSchur
     {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
     (hX : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (X y)))
     (hY : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (fun y ↦ TotalSpace.mk' E y (Y y)))
@@ -2076,13 +2082,13 @@ lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_exten
     {u v : TM x} {w : V x}
     (hXu : X x = u) (hYv : Y x = v)
     (hσw : ∀ᶠ y in nhds x, σ y = extend F w y) :
-    cov.curvatureAux X Y σ x = curvatureTensor (cov := cov) x u v w := by
+    cov.curvatureAuxAlmostSchur X Y σ x = curvatureTensorAlmostSchur (cov := cov) x u v w := by
   have hσsmooth :
-      ∀ᶠ y in nhds x, σ y = smoothExtend (I := I) (F := F) (V := V) x w y := by
+      ∀ᶠ y in nhds x, σ y = smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w y := by
     filter_upwards [hσw,
-      smoothExtend_eventuallyEq_extend (I := I) (F := F) (V := V) x w] with y hσy hsm
+      smoothExtend_eventuallyEq_extendAlmostSchur (I := I) (F := F) (V := V) x w] with y hσy hsm
     exact hσy.trans hsm.symm
-  exact cov.curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_right
+  exact cov.curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_rightAlmostSchur
     hX hY hσ hXu hYv hσsmooth
 
 /-- A local-frame coefficient criterion for computing the bundled curvature tensor from
@@ -2092,7 +2098,7 @@ The right-slot representative need not be eventually equal to the canonical smoo
 it is enough for its `trivializationAt` frame coefficients to be `C²` and to agree at the
 base point with the coefficients of the target fiber vector.  The canonical extension's
 coefficient regularity is automatic from the bump-supported extension construction. -/
-lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_localFrameCoeff_right
+lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_localFrameCoeff_rightAlmostSchur
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     (b : Module.Basis ι ℝ F)
     {X Y : Π x : M, TM x} {σ : Π x : M, V x} {x : M}
@@ -2107,49 +2113,49 @@ lemma curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_localFrameCoeff_ri
     (hcoeff_eq : ∀ i : ι,
       (trivializationAt F V x).localFrameCoeff I b i x (σ x) =
         (trivializationAt F V x).localFrameCoeff I b i x w) :
-    cov.curvatureAux X Y σ x = curvatureTensor (cov := cov) x u v w := by
-  let τ : Π y : M, V y := smoothExtend (I := I) (F := F) (V := V) x w
+    cov.curvatureAuxAlmostSchur X Y σ x = curvatureTensorAlmostSchur (cov := cov) x u v w := by
+  let τ : Π y : M, V y := smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w
   have hτ : ContMDiff I (I.prod 𝓘(ℝ, F)) 2 (fun y ↦ TotalSpace.mk' F y (τ y)) := by
-    simpa [τ] using smoothExtend_contMDiff_two (I := I) (F := F) (V := V) x w
+    simpa [τ] using smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := F) (V := V) x w
   have hτcoeff : ∀ i : ι,
       ContMDiff I 𝓘(ℝ) 2
         (fun y ↦ (trivializationAt F V x).localFrameCoeff I b i y (τ y)) := by
     intro i
     simpa [τ] using
-      smoothExtend_localFrameCoeff_contMDiff_two
+      smoothExtend_localFrameCoeff_contMDiff_twoAlmostSchur
         (I := I) (F := F) (V := V) b x w i
   have hcoeff_eq' : ∀ i : ι,
       (trivializationAt F V x).localFrameCoeff I b i x (σ x) =
         (trivializationAt F V x).localFrameCoeff I b i x (τ x) := by
     intro i
-    simpa [τ, smoothExtend_apply] using hcoeff_eq i
+    simpa [τ, smoothExtend_applyAlmostSchur] using hcoeff_eq i
   have hright :
-      cov.curvatureAux X Y σ x = cov.curvatureAux X Y τ x :=
-    cov.curvatureAux_eq_of_trivializationAt_localFrameCoeff_eq_right_apply
+      cov.curvatureAuxAlmostSchur X Y σ x = cov.curvatureAuxAlmostSchur X Y τ x :=
+    cov.curvatureAux_eq_of_trivializationAt_localFrameCoeff_eq_right_applyAlmostSchur
       b hX hY hσ hτ hσcoeff hτcoeff hcoeff_eq'
-  have hτlocal : ∀ᶠ y in nhds x, τ y = smoothExtend (I := I) (F := F) (V := V) x w y := by
+  have hτlocal : ∀ᶠ y in nhds x, τ y = smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w y := by
     filter_upwards [] with y
     rfl
   exact hright.trans
-    (cov.curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_right
+    (cov.curvatureAux_eq_curvatureTensor_apply_of_eq_left_middle_eventuallyEq_rightAlmostSchur
       hX hY hτ hXu hYv hτlocal)
 
 @[simp]
-lemma curvatureTensor_swap (x : M) (u v : TM x) (w : V x) :
-    curvatureTensor (cov := cov) x u v w = -curvatureTensor (cov := cov) x v u w := by
-  simpa [curvatureTensor_apply] using
-    congrArg (fun s => s x) <| cov.curvatureAux_swap
-      (X := smoothExtend (I := I) (F := E) (V := TM) x u)
-      (Y := smoothExtend (I := I) (F := E) (V := TM) x v)
-      (σ := smoothExtend (I := I) (F := F) (V := V) x w)
+lemma curvatureTensor_swapAlmostSchur (x : M) (u v : TM x) (w : V x) :
+    curvatureTensorAlmostSchur (cov := cov) x u v w = -curvatureTensorAlmostSchur (cov := cov) x v u w := by
+  simpa [curvatureTensor_applyAlmostSchur] using
+    congrArg (fun s => s x) <| cov.curvatureAux_swapAlmostSchur
+      (X := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x u)
+      (Y := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x v)
+      (σ := smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w)
 
 @[simp]
-lemma curvatureTensor_self (x : M) (u : TM x) (w : V x) :
-    curvatureTensor (cov := cov) x u u w = 0 := by
-  simpa [curvatureTensor_apply] using
-    congrArg (fun s => s x) <| cov.curvatureAux_self
-      (X := smoothExtend (I := I) (F := E) (V := TM) x u)
-      (σ := smoothExtend (I := I) (F := F) (V := V) x w)
+lemma curvatureTensor_selfAlmostSchur (x : M) (u : TM x) (w : V x) :
+    curvatureTensorAlmostSchur (cov := cov) x u u w = 0 := by
+  simpa [curvatureTensor_applyAlmostSchur] using
+    congrArg (fun s => s x) <| cov.curvatureAux_selfAlmostSchur
+      (X := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x u)
+      (σ := smoothExtendAlmostSchur (I := I) (F := F) (V := V) x w)
 
 end CurvatureTensor
 

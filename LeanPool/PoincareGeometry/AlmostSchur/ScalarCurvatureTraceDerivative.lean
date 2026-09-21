@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -11,7 +17,7 @@ public import LeanPool.PoincareGeometry.AlmostSchur.RicciTraceDerivative
 /-! # Differentiating actual scalar curvature via metric-raised Ricci
 
 The raised operator is defined by Riesz duality from the bundled Ricci tensor.
-Its trace is proved to be the existing scalarCurvature, then differentiated
+Its trace is proved to be the existing scalarCurvatureAlmostSchur, then differentiated
 using the moving-frame trace theorem.
 -/
 
@@ -38,12 +44,12 @@ def ricciRaisedEndomorphism (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (x : M) : TM x →L[ℝ] TM x :=
   InnerProductSpace.continuousLinearMapOfBilin
     (((LinearMap.toContinuousLinearMap : (TM x →ₗ[ℝ] ℝ) ≃ₗ[ℝ] (TM x →L[ℝ] ℝ)).toLinearMap.comp
-      (cov.ricciCurvature x)).toContinuousLinearMap)
+      (cov.ricciCurvatureAlmostSchur x)).toContinuousLinearMap)
 
 /-- The raised operator has exactly the prescribed Ricci pairing. -/
 theorem inner_ricciRaisedEndomorphism (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (x : M) (u v : TM x) :
-    inner ℝ (ricciRaisedEndomorphism cov x u) v = cov.ricciCurvature x u v := by
+    inner ℝ (ricciRaisedEndomorphism cov x u) v = cov.ricciCurvatureAlmostSchur x u v := by
   unfold ricciRaisedEndomorphism
   rw [InnerProductSpace.continuousLinearMapOfBilin_apply]
   rfl
@@ -51,12 +57,12 @@ theorem inner_ricciRaisedEndomorphism (cov : CovariantDerivative I E TM)
 /-- The existing scalar curvature is the trace of actual metric-raised Ricci. -/
 theorem scalarCurvature_eq_trace_ricciRaisedEndomorphism
     (cov : CovariantDerivative I E TM) [cov.ContMDiffCovariantDerivative 1] (x : M) :
-    cov.scalarCurvature x = LinearMap.trace ℝ (TM x) (ricciRaisedEndomorphism cov x).toLinearMap := by
+    cov.scalarCurvatureAlmostSchur x = LinearMap.trace ℝ (TM x) (ricciRaisedEndomorphism cov x).toLinearMap := by
   rw [LinearMap.trace_eq_sum_inner _ (stdOrthonormalBasis ℝ (TM x))]
-  unfold CovariantDerivative.scalarCurvature
+  unfold CovariantDerivative.scalarCurvatureAlmostSchur
   apply Finset.sum_congr rfl
   intro i _
-  change cov.ricciCurvature x _ _ = inner ℝ _ (ricciRaisedEndomorphism cov x _)
+  change cov.ricciCurvatureAlmostSchur x _ _ = inner ℝ _ (ricciRaisedEndomorphism cov x _)
   rw [real_inner_comm, inner_ricciRaisedEndomorphism]
 
 /-- The actual raised Ricci operator is a C¹ hom-bundle section. -/
@@ -82,7 +88,7 @@ theorem contMDiffAt_ricciRaisedEndomorphism_one
 theorem contMDiffAt_scalarCurvature_one
     (cov : CovariantDerivative I E TM) [cov.ContMDiffCovariantDerivative 1]
     (hm : tangentMetricCompatible cov) (ht : cov.torsion = 0) (x : M) :
-    ContMDiffAt I 𝓘(ℝ, ℝ) 1 cov.scalarCurvature x := by
+    ContMDiffAt I 𝓘(ℝ, ℝ) 1 cov.scalarCurvatureAlmostSchur x := by
   let e := trivializationAt E TM x
   let b := Module.finBasis ℝ E
   have hx := mem_baseSet_trivializationAt E TM x
@@ -106,11 +112,11 @@ theorem mvfderiv_scalarCurvature_eq_contraction
     {ι : Type} [Fintype ι]
     (e : Trivialization E (TotalSpace.proj : TotalSpace E TM → M))
     [MemTrivializationAtlas e] (b : Module.Basis ι ℝ E) (hx : x ∈ e.baseSet) :
-    mvfderiv I cov.scalarCurvature x (X x) =
+    mvfderiv I cov.scalarCurvatureAlmostSchur x (X x) =
       ∑ i, e.localFrameCoeff I b i x
         (cov (fun y ↦ ricciRaisedEndomorphism cov y (e.localFrame b i y)) x (X x) -
           ricciRaisedEndomorphism cov x (cov (e.localFrame b i) x (X x))) := by
-  have he : cov.scalarCurvature =
+  have he : cov.scalarCurvatureAlmostSchur =
       (fun y ↦ LinearMap.trace ℝ (TM y) (ricciRaisedEndomorphism cov y).toLinearMap) :=
     funext (scalarCurvature_eq_trace_ricciRaisedEndomorphism cov)
   rw [he]

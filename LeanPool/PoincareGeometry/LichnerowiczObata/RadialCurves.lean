@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -34,7 +40,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 local notation "TM" => (TangentSpace I : M → Type _)
 
-/-- Scalar differentiation along an actual manifold integral curve. -/
+/-- Scalar differentiation alongAlmostSchur an actual manifold integral curve. -/
 theorem hasDerivAt_comp_integralCurve
     {q : M → ℝ} {v : Π x : M, TM x} {γ : ℝ → M} {t : ℝ}
     (hq : ContMDiffAt I 𝓘(ℝ, ℝ) 1 q (γ t))

@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -49,7 +55,7 @@ theorem gradient_ne_zero_along_curve {f : M → ℝ}
   have he0 := congrFun he 0
   exact h0 (he0 ▸ hz)
 
-/-- The function value is strictly increasing along every regular complete
+/-- The function value is strictly increasing alongAlmostSchur every regular complete
 gradient curve. -/
 theorem strictMono_gradient_curve {f : M → ℝ}
     (hf : ContMDiff I 𝓘(ℝ, ℝ) 2 f) {γ : ℝ → M}

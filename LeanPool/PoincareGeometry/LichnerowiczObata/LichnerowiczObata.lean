@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -56,7 +62,7 @@ both directions of rigidity are conclusions, not auxiliary assumptions. -/
 theorem lichnerowicz_obata
     (hdim : 2 ≤ n) {K : ℝ} (hK : 0 < K)
     (hRic : ∀ (x : M) (v : TM x),
-      ((n : ℝ) - 1) * K * ‖v‖ ^ 2 ≤ (LC).ricciCurvature x v v) :
+      ((n : ℝ) - 1) * K * ‖v‖ ^ 2 ≤ (LC).ricciCurvatureAlmostSchur x v v) :
     ∃ μ : ℝ, 0 < μ ∧ (n : ℝ) * K ≤ μ ∧
       (∃ f : M → ℝ, ContMDiff I 𝓘(ℝ, ℝ) ∞ f ∧ (∃ x y, f x ≠ f y) ∧
         ∀ x, laplacian LC f x = -μ * f x) ∧

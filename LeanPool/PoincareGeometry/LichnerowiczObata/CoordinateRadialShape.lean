@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -100,7 +106,7 @@ theorem coordinate_obataRadial_shape {K a : ℝ} (hK : 0 < K) (ha : 0 < a)
   simp only [hangular, zero_smul, sub_zero, map_smul,
     (trivializationAt E TM c).continuousLinearMapAt_symmL hx]
 
-/-- The actual metric obeys spherical scaling along a radial coordinate solution
+/-- The actual metric obeys spherical scaling alongAlmostSchur a radial coordinate solution
 and two angular solutions of its linearized equation. -/
 theorem hasDerivAt_coordinate_radial_metric {K a : ℝ} (hK : 0 < K) (ha : 0 < a)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 2 f)

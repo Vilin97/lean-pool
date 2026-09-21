@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -48,7 +54,7 @@ section C3Extension
 
 variable [ContMDiffVectorBundle 3 E (TangentSpace I : M → Type _) I]
 
-lemma contMDiffOn_extend_baseSet_three {x : M} (v : TM x) :
+lemma contMDiffOn_extend_baseSet_threeAlmostSchur {x : M} (v : TM x) :
     ContMDiffOn I (I.prod 𝓘(ℝ, E)) 3 (T% (extend E v))
       (trivializationAt E TM x).baseSet := by
   let t := trivializationAt E TM x
@@ -64,11 +70,11 @@ lemma contMDiffOn_extend_baseSet_three {x : M} (v : TM x) :
     change (t ⟨y, t.symm y w⟩).2 = w
     simpa using congrArg Prod.snd (t.apply_mk_symm hy w))
 
-lemma smoothExtend_contMDiff_three (x : M) (v : TM x) :
+lemma smoothExtend_contMDiff_threeAlmostSchur (x : M) (v : TM x) :
     ContMDiff I (I.prod 𝓘(ℝ, E)) 3
       (fun y ↦ TotalSpace.mk' E y
-        (smoothExtend (I := I) (F := E) (V := TM) x v y)) := by
-  let φ : SmoothBumpFunction I x := smoothExtendBump (I := I) (F := E) (V := TM) x
+        (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x v y)) := by
+  let φ : SmoothBumpFunction I x := smoothExtendBumpAlmostSchur (I := I) (F := E) (V := TM) x
   have hφ : ContMDiff I 𝓘(ℝ) 3 (φ : M → ℝ) := by
     have hφω : ContMDiff I 𝓘(ℝ) (((⊤ : ℕ∞) : WithTop ℕ∞)) (φ : M → ℝ) :=
       φ.contMDiff
@@ -77,13 +83,13 @@ lemma smoothExtend_contMDiff_three (x : M) (v : TM x) :
     exact hφω.of_le hle
   have hv : ContMDiffOn I (I.prod 𝓘(ℝ, E)) 3 (T% (extend E v))
       (trivializationAt E TM x).baseSet :=
-    contMDiffOn_extend_baseSet_three (I := I) (E := E) (M := M) v
-  simpa [smoothExtend] using
+    contMDiffOn_extend_baseSet_threeAlmostSchur (I := I) (E := E) (M := M) v
+  simpa [smoothExtendAlmostSchur] using
     ContMDiffOn.smul_section_of_tsupport
       (u := (trivializationAt E TM x).baseSet)
-      (n := 3) (ψ := (smoothExtendBump (I := I) (F := E) (V := TM) x : M → ℝ))
+      (n := 3) (ψ := (smoothExtendBumpAlmostSchur (I := I) (F := E) (V := TM) x : M → ℝ))
       hφ.contMDiffOn (trivializationAt E TM x).open_baseSet
-      (tsupport_smoothExtendBump_subset (I := I) (F := E) (V := TM) x) hv
+      (tsupport_smoothExtendBump_subsetAlmostSchur (I := I) (F := E) (V := TM) x) hv
 
 end C3Extension
 
@@ -97,39 +103,39 @@ variable (cov : CovariantDerivative I E (TangentSpace I : M → Type _))
   [IsManifold I ((2 : ℕ∞) + 1) M] [IsManifold I ((3 : ℕ∞) + 1) M]
 
 /- The pointwise covariant derivative of the curvature tensor, evaluated using canonical smooth
-extensions.  `secondBianchiAux` is the corrected expression
+extensions.  `secondBianchiAuxAlmostSchur` is the corrected expression
 `∇ₚ(R(a,b)c) - R(∇ₚa,b)c - R(a,∇ₚb)c - R(a,b)∇ₚc`. -/
-noncomputable def curvatureCovariantDerivative (x : M)
+noncomputable def curvatureCovariantDerivativeAlmostSchur (x : M)
     (p a b c : TM x) : TM x :=
-  cov.secondBianchiAux
-    (smoothExtend (I := I) (F := E) (V := TM) x p)
-    (smoothExtend (I := I) (F := E) (V := TM) x a)
-    (smoothExtend (I := I) (F := E) (V := TM) x b)
-    (smoothExtend (I := I) (F := E) (V := TM) x c) x
+  cov.secondBianchiAuxAlmostSchur
+    (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x p)
+    (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x a)
+    (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x b)
+    (smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x c) x
 
-noncomputable def curvatureCovariantDerivativeInner (x : M)
+noncomputable def curvatureCovariantDerivativeInnerAlmostSchur (x : M)
     (p a b c d : TM x) : ℝ :=
-  inner ℝ (curvatureCovariantDerivative (cov := cov) x p a b c) d
+  inner ℝ (curvatureCovariantDerivativeAlmostSchur (cov := cov) x p a b c) d
 
-theorem curvatureCovariantDerivativeInner_secondBianchi (x : M)
+theorem curvatureCovariantDerivativeInner_secondBianchiAlmostSchur (x : M)
     (hT : cov.torsion = 0)
     (p a b c d : TM x) :
-    curvatureCovariantDerivativeInner (cov := cov) x p a b c d +
-        curvatureCovariantDerivativeInner (cov := cov) x a b p c d +
-        curvatureCovariantDerivativeInner (cov := cov) x b p a c d = 0 := by
-  have h := cov.secondBianchiAux_apply_of_torsion_eq_zero
+    curvatureCovariantDerivativeInnerAlmostSchur (cov := cov) x p a b c d +
+        curvatureCovariantDerivativeInnerAlmostSchur (cov := cov) x a b p c d +
+        curvatureCovariantDerivativeInnerAlmostSchur (cov := cov) x b p a c d = 0 := by
+  have h := cov.secondBianchiAux_apply_of_torsion_eq_zeroAlmostSchur
     (hT := hT)
     (x := x)
-    (X := smoothExtend (I := I) (F := E) (V := TM) x p)
-    (Y := smoothExtend (I := I) (F := E) (V := TM) x a)
-    (Z := smoothExtend (I := I) (F := E) (V := TM) x b)
-    (W := smoothExtend (I := I) (F := E) (V := TM) x c)
-    (smoothExtend_contMDiff_two (I := I) (F := E) (V := TM) x p)
-    (smoothExtend_contMDiff_two (I := I) (F := E) (V := TM) x a)
-    (smoothExtend_contMDiff_two (I := I) (F := E) (V := TM) x b)
-    (smoothExtend_contMDiff_three (I := I) (E := E) (M := M) x c)
+    (X := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x p)
+    (Y := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x a)
+    (Z := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x b)
+    (W := smoothExtendAlmostSchur (I := I) (F := E) (V := TM) x c)
+    (smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := E) (V := TM) x p)
+    (smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := E) (V := TM) x a)
+    (smoothExtend_contMDiff_twoAlmostSchur (I := I) (F := E) (V := TM) x b)
+    (smoothExtend_contMDiff_threeAlmostSchur (I := I) (E := E) (M := M) x c)
   have hinner := congrArg (fun z : TM x ↦ inner ℝ z d) h
-  simpa only [curvatureCovariantDerivativeInner, curvatureCovariantDerivative,
+  simpa only [curvatureCovariantDerivativeInnerAlmostSchur, curvatureCovariantDerivativeAlmostSchur,
     inner_add_left, inner_zero_left] using hinner
 
 end ContractedIdentity

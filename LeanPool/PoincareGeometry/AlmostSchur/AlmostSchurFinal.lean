@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -275,16 +281,16 @@ every point, and compactness reduces the resulting cover to a finite (hence
 countable) one. -/
 theorem almostSchur_bound_of_smooth_coordinate_forcing
     (hRic : ∀ (x : M) (v : TM x),
-      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v v)
+      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v)
     (hcoord : ∀ c : M, ContDiffOn ℝ ∞
       (fun z => matrixDensity
           (coordinateMetric (I := I) (stdOrthonormalBasis ℝ E).toBasis c z) *
         centeredScalarCurvature (I := I) (M := M)
           ((extChartAt I c).symm z)) (extChartAt I c).target)
     (hd : 2 < (Module.finrank ℝ E : ℝ)) :
-    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
       riemannianMean (I := I)
-        (leviCivitaConnection (I := I) (M := M)).scalarCurvature) ^ 2
+        (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur) ^ 2
       ∂riemannianVolume (I := I)) ≤
       (4 * (Module.finrank ℝ E : ℝ) *
         ((Module.finrank ℝ E : ℝ) - 1) /
@@ -301,7 +307,7 @@ theorem almostSchur_bound_of_smooth_coordinate_forcing
   let f : Lp ℝ 2 (riemannianVolume (I := I) (M := M)) :=
     MemLp.toLp u hmem
   have hscalar : ContMDiff I 𝓘(ℝ, ℝ) 1
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature := by
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur := by
     intro x
     exact contMDiffAt_scalarCurvature_one
       (leviCivitaConnection (I := I) (M := M))
@@ -310,7 +316,7 @@ theorem almostSchur_bound_of_smooth_coordinate_forcing
     rw [integral_congr_ae hmem.coeFn_toLp]
     simpa [u, centeredScalarCurvature] using
       integral_sub_riemannianMean
-        ((leviCivitaConnection (I := I) (M := M)).scalarCurvature)
+        ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur)
         hscalar
   have huf : u =ᵐ[riemannianVolume (I := I) (M := M)] (f : M → ℝ) :=
     hmem.coeFn_toLp.symm
@@ -378,17 +384,17 @@ theorem smooth_coordinate_forcing
         centeredScalarCurvature (I := I) (M := M)
           ((extChartAt I c).symm z)) (extChartAt I c).target := by
   let cov := leviCivitaConnection (I := I) (M := M)
-  have hscalar : ContMDiff I 𝓘(ℝ, ℝ) ∞ cov.scalarCurvature :=
+  have hscalar : ContMDiff I 𝓘(ℝ, ℝ) ∞ cov.scalarCurvatureAlmostSchur :=
     contMDiffAt_scalarCurvature_infty (I := I) cov
       leviCivitaConnection_metricCompatible leviCivitaConnection_torsion
   have hcenter : ContMDiff I 𝓘(ℝ, ℝ) ∞
       (centeredScalarCurvature (I := I) (M := M)) := by
     change ContMDiff I 𝓘(ℝ, ℝ) ∞
-      (fun x ↦ (leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+      (fun x ↦ (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
         riemannianMean (I := I)
-          (leviCivitaConnection (I := I) (M := M)).scalarCurvature)
+          (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur)
     simpa [cov] using
-      hscalar.sub (contMDiff_const (c := riemannianMean (I := I) cov.scalarCurvature))
+      hscalar.sub (contMDiff_const (c := riemannianMean (I := I) cov.scalarCurvatureAlmostSchur))
   have hcenter_chart : ContDiffOn ℝ ∞
       (fun z => centeredScalarCurvature (I := I) (M := M)
         ((extChartAt I c).symm z)) (extChartAt I c).target := by
@@ -406,11 +412,11 @@ theorem smooth_coordinate_forcing
 geometric hypotheses. -/
 theorem almostSchur_bound_complete
     (hRic : ∀ (x : M) (v : TM x),
-      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v v)
+      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v)
     (hd : 2 < (Module.finrank ℝ E : ℝ)) :
-    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
       riemannianMean (I := I)
-        (leviCivitaConnection (I := I) (M := M)).scalarCurvature) ^ 2
+        (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur) ^ 2
       ∂riemannianVolume (I := I)) ≤
       (4 * (Module.finrank ℝ E : ℝ) *
         ((Module.finrank ℝ E : ℝ) - 1) /

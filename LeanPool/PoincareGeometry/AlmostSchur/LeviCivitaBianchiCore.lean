@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -37,7 +43,7 @@ local notation "TM" => (TangentSpace I : M → Type _)
 Leibniz predicate retained by the attributed curvature core. -/
 theorem tangentMetricCompatible_to_curvatureVendor
     (cov : CovariantDerivative I E TM) (hm : tangentMetricCompatible cov) :
-    cov.IsMetricCompatibleTangent := by
+    cov.IsMetricCompatibleTangentAlmostSchur := by
   intro x σ τ hσ hτ u
   have h := CovariantDerivative.IsMetricCompatible.mvfderiv_inner_eq hm
     (FiberBundle.extend E u) hσ hτ
@@ -59,10 +65,10 @@ constructed LC, with no assumed connection regularity or geometric identities. -
 theorem leviCivita_curvatureDerivative_doubleContraction
     (x : M) {ι : Type*} [Fintype ι] (e : ι → TM x) (w : TM x) :
     let cov := leviCivitaConnection (I := I) (M := M)
-    (∑ i, ∑ k, cov.curvatureCovariantDerivativeInner x w (e k) (e i) (e i) (e k)) =
+    (∑ i, ∑ k, cov.curvatureCovariantDerivativeInnerAlmostSchur x w (e k) (e i) (e i) (e k)) =
       2 * ∑ i, ∑ k,
-        cov.curvatureCovariantDerivativeInner x (e i) (e k) (e i) w (e k) := by
-  exact CovariantDerivative.curvatureCovariantDerivativeInner_doubleContraction
+        cov.curvatureCovariantDerivativeInnerAlmostSchur x (e i) (e k) (e i) w (e k) := by
+  exact CovariantDerivative.curvatureCovariantDerivativeInner_doubleContractionAlmostSchur
     (leviCivitaConnection (I := I) (M := M)) x leviCivitaConnection_torsion
     (tangentMetricCompatible_to_curvatureVendor _ leviCivitaConnection_metricCompatible) e w
 

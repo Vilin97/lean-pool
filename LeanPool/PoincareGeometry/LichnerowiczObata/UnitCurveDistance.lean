@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -25,7 +31,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 omit [FiniteDimensional ℝ E] [IsManifold I ∞ M] [I.Boundaryless] in
 /-- The canonical Riemannian extended distance is bounded by elapsed time
-along a C1 unit-speed curve. -/
+alongAlmostSchur a C1 unit-speed curve. -/
 theorem riemannianEDist_le_of_unit_velocity {γ : ℝ → M} {a b : ℝ} (hab : a ≤ b)
     (hc : ContMDiffOn 𝓘(ℝ, ℝ) I 1 γ (Icc a b))
     (hv : ∀ t ∈ Icc a b, ‖mfderiv 𝓘(ℝ, ℝ) I γ t 1‖ = 1) :

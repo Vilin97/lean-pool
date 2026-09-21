@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -47,29 +53,29 @@ namespace CovariantDerivative
 variable (cov : CovariantDerivative I F V)
 
 /-- The raw curvature commutator associated to a covariant derivative. -/
-abbrev curvatureAux (X Y : Π x : M, TangentSpace I x) (σ : Π x : M, V x) : Π x : M, V x :=
-  cov.along X (cov.along Y σ) - cov.along Y (cov.along X σ) -
-    cov.along (VectorField.mlieBracket I X Y) σ
+abbrev curvatureAuxAlmostSchur (X Y : Π x : M, TangentSpace I x) (σ : Π x : M, V x) : Π x : M, V x :=
+  cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) -
+    cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ
 
 @[simp]
-lemma curvatureAux_apply (X Y : Π x : M, TangentSpace I x) (σ : Π x : M, V x) (x : M) :
-    cov.curvatureAux X Y σ x =
-      cov.along X (cov.along Y σ) x - cov.along Y (cov.along X σ) x -
-        cov.along (VectorField.mlieBracket I X Y) σ x :=
+lemma curvatureAux_applyAlmostSchur (X Y : Π x : M, TangentSpace I x) (σ : Π x : M, V x) (x : M) :
+    cov.curvatureAuxAlmostSchur X Y σ x =
+      cov.alongAlmostSchur X (cov.alongAlmostSchur Y σ) x - cov.alongAlmostSchur Y (cov.alongAlmostSchur X σ) x -
+        cov.alongAlmostSchur (VectorField.mlieBracket I X Y) σ x :=
   rfl
 
-lemma curvatureAux_swap (X Y : Π x : M, TangentSpace I x) (σ : Π x : M, V x) :
-    cov.curvatureAux X Y σ = -cov.curvatureAux Y X σ := by
+lemma curvatureAux_swapAlmostSchur (X Y : Π x : M, TangentSpace I x) (σ : Π x : M, V x) :
+    cov.curvatureAuxAlmostSchur X Y σ = -cov.curvatureAuxAlmostSchur Y X σ := by
   funext x
-  simp only [CovariantDerivative.curvatureAux, Pi.neg_apply, Pi.sub_apply]
-  rw [VectorField.mlieBracket_swap, cov.along_neg_left]
+  simp only [CovariantDerivative.curvatureAuxAlmostSchur, Pi.neg_apply, Pi.sub_apply]
+  rw [VectorField.mlieBracket_swap, cov.along_neg_leftAlmostSchur]
   dsimp
   module
 
 @[simp]
-lemma curvatureAux_self (X : Π x : M, TangentSpace I x) (σ : Π x : M, V x) :
-    cov.curvatureAux X X σ = 0 := by
+lemma curvatureAux_selfAlmostSchur (X : Π x : M, TangentSpace I x) (σ : Π x : M, V x) :
+    cov.curvatureAuxAlmostSchur X X σ = 0 := by
   funext x
-  simp [CovariantDerivative.curvatureAux]
+  simp [CovariantDerivative.curvatureAuxAlmostSchur]
 
 end CovariantDerivative

@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -57,9 +63,9 @@ local instance boundManifoldTwoAddOne : IsManifold I ((2 : ℕ∞) + 1) M :=
   IsManifold.of_le (n := ∞) (by exact_mod_cast (le_top : (2 + 1 : ℕ∞) ≤ ⊤))
 
 private theorem ricciCurvature_symm_LC (x : M) (u v : TM x) :
-    (leviCivitaConnection (I := I) (M := M)).ricciCurvature x u v =
-      (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v u := by
-  exact CovariantDerivative.ricciCurvature_symm_of_metricCompatibleTangent_of_torsion_eq_zero
+    (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x u v =
+      (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v u := by
+  exact CovariantDerivative.ricciCurvature_symm_of_metricCompatibleTangent_of_torsion_eq_zeroAlmostSchur
     (cov := leviCivitaConnection (I := I) (M := M))
     leviCivitaConnection_torsion
     (tangentMetricCompatible_to_curvatureVendor
@@ -72,9 +78,9 @@ theorem ricciRaised_isSelfAdjoint (x : M) :
   intro u v
   calc
     inner ℝ (ricciRaisedEndomorphism LC x u) v =
-        (leviCivitaConnection (I := I) (M := M)).ricciCurvature x u v :=
+        (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x u v :=
       inner_ricciRaisedEndomorphism LC x u v
-    _ = (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v u :=
+    _ = (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v u :=
       ricciCurvature_symm_LC x u v
     _ = inner ℝ (ricciRaisedEndomorphism LC x v) u :=
       (inner_ricciRaisedEndomorphism LC x v u).symm
@@ -313,12 +319,12 @@ theorem traceFree_pairing_cauchy
 
 theorem almostSchur_bound_of_classical_poisson
     (hRic : ∀ (x : M) (v : TM x),
-      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v v)
+      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 4 f) (r : ℝ)
     (hpoisson : ∀ x, laplacian (leviCivitaConnection (I := I) (M := M)) f x =
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r)
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r)
     (hd : 2 < (Module.finrank ℝ E : ℝ)) :
-    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r) ^ 2
+    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r) ^ 2
       ∂riemannianVolume (I := I)) ≤
       (4 * (Module.finrank ℝ E : ℝ) *
         ((Module.finrank ℝ E : ℝ) - 1) /
@@ -330,7 +336,7 @@ theorem almostSchur_bound_of_classical_poisson
     have hnat : 0 < Module.finrank ℝ E := by
       exact_mod_cast (show (0 : ℝ) < (Module.finrank ℝ E : ℝ) by linarith)
     exact Nat.ne_of_gt hnat
-  let A : ℝ := ∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r) ^ 2
+  let A : ℝ := ∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r) ^ 2
     ∂riemannianVolume (I := I)
   let B : ℝ := ∫ x, hilbertSchmidtSq
     (traceFree (ricciRaisedEndomorphism (leviCivitaConnection (I := I) (M := M)) x))
@@ -341,7 +347,7 @@ theorem almostSchur_bound_of_classical_poisson
   let Hess : ℝ := ∫ x, hessianNormSq
     (leviCivitaConnection (I := I) (M := M)) f x
     ∂riemannianVolume (I := I)
-  let Ric : ℝ := ∫ x, (leviCivitaConnection (I := I) (M := M)).ricciCurvature x
+  let Ric : ℝ := ∫ x, (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x
     (gradient (I := I) f x) (gradient (I := I) f x)
     ∂riemannianVolume (I := I)
   let P : ℝ := ∫ x, contractedBianchiPairingIntegrand (I := I) f x
@@ -380,13 +386,13 @@ theorem almostSchur_bound_of_classical_poisson
 
 theorem almostSchur_bound_of_smooth_meanZero_poisson
     (hRic : ∀ (x : M) (v : TM x),
-      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v v)
+      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) ∞ f)
     (_hmean : (∫ x, f x ∂riemannianVolume (I := I)) = 0) (r : ℝ)
     (hpoisson : ∀ x, laplacian (leviCivitaConnection (I := I) (M := M)) f x =
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r)
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r)
     (hd : 2 < (Module.finrank ℝ E : ℝ)) :
-    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r) ^ 2
+    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r) ^ 2
       ∂riemannianVolume (I := I)) ≤
       (4 * (Module.finrank ℝ E : ℝ) *
         ((Module.finrank ℝ E : ℝ) - 1) /
@@ -400,15 +406,15 @@ theorem almostSchur_bound_of_smooth_meanZero_poisson
     hpoisson hd
 
 noncomputable def centeredScalarCurvature : M → ℝ :=
-  fun x ↦ (leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+  fun x ↦ (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
     riemannianMean (I := I)
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur
 
 theorem memLp_centeredScalarCurvature :
     MemLp (centeredScalarCurvature (I := I) (M := M)) 2
       (riemannianVolume (I := I) (M := M)) := by
   have hS : ContMDiff I 𝓘(ℝ, ℝ) 1
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature :=
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur :=
     fun x ↦ contMDiffAt_scalarCurvature_one
       (leviCivitaConnection (I := I) (M := M))
       leviCivitaConnection_metricCompatible leviCivitaConnection_torsion x
@@ -419,7 +425,7 @@ theorem memLp_centeredScalarCurvature :
 theorem almostSchur_bound_of_local_smooth_representatives
     {ι : Type*} [Countable ι]
     (hRic : ∀ (x : M) (v : TM x),
-      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvature x v v)
+      0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v)
     (U : ι → Set M) (hU : ∀ i, IsOpen (U i))
     (hcover : ∀ x, ∃ i, x ∈ U i) (q : ι → M → ℝ)
     (hq : ∀ i, ContMDiffOn I 𝓘(ℝ, ℝ) ∞ (q i) (U i))
@@ -428,9 +434,9 @@ theorem almostSchur_bound_of_local_smooth_representatives
         (MemLp.toLp (centeredScalarCurvature (I := I) (M := M))
           (memLp_centeredScalarCurvature (I := I) (M := M))))) :
     2 < (Module.finrank ℝ E : ℝ) →
-    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvature x -
+    (∫ x, ((leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x -
       riemannianMean (I := I)
-        (leviCivitaConnection (I := I) (M := M)).scalarCurvature) ^ 2
+        (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur) ^ 2
       ∂riemannianVolume (I := I)) ≤
       (4 * (Module.finrank ℝ E : ℝ) *
         ((Module.finrank ℝ E : ℝ) - 1) /
@@ -439,7 +445,7 @@ theorem almostSchur_bound_of_local_smooth_representatives
           (traceFree (ricciRaisedEndomorphism LC x))
           ∂riemannianVolume (I := I)) := by
   intro hd
-  let S : M → ℝ := (leviCivitaConnection (I := I) (M := M)).scalarCurvature
+  let S : M → ℝ := (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur
   let r : ℝ := riemannianMean (I := I) S
   let F : M → ℝ := fun x ↦ S x - r
   have hS : ContMDiff I 𝓘(ℝ, ℝ) 1 S := by
@@ -475,7 +481,7 @@ theorem almostSchur_bound_of_local_smooth_representatives
     exact WithTop.coe_le_coe.mpr
       (show (4 : ENat) ≤ (⊤ : ENat) from le_top))
   have hlap' : ∀ x, laplacian LC g x =
-      (leviCivitaConnection (I := I) (M := M)).scalarCurvature x - r := by
+      (leviCivitaConnection (I := I) (M := M)).scalarCurvatureAlmostSchur x - r := by
     intro x
     simpa [S, r, F] using congrFun hlap x
   simpa [S, r, F] using almostSchur_bound_of_classical_poisson

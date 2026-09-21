@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -10,7 +16,7 @@ public import LeanPool.PoincareGeometry.LichnerowiczObata.GeodesicEnergy
 public import LeanPool.PoincareGeometry.LichnerowiczObata.CoordinateRadialShape
 public import LeanPool.PoincareGeometry.LichnerowiczObata.ScalarOscillator
 
-/-! # Hessian evolution along actual coordinate geodesics -/
+/-! # Hessian evolution alongAlmostSchur actual coordinate geodesics -/
 
 @[expose] public noncomputable section
 open Bundle FiberBundle Set AlmostSchur
@@ -99,7 +105,7 @@ theorem hasDerivAt_coordinate_geodesic_gradient_pairing
   hasDerivAt_coordinate_geodesic_field_pairing cov hm b (gradient (I := I) f) c x hx
     (mdifferentiableAt_gradient (hf x)) hpos hα
 
-/-- The Obata Hessian equation gives the oscillator acceleration along a
+/-- The Obata Hessian equation gives the oscillator acceleration alongAlmostSchur a
 coordinate geodesic, with its actual squared metric speed as coefficient. -/
 theorem hasDerivAt_coordinate_geodesic_obata_pairing
     (cov : CovariantDerivative I E TM) (hm : tangentMetricCompatible cov)
@@ -120,7 +126,7 @@ theorem hasDerivAt_coordinate_geodesic_obata_pairing
   convert hd using 1
   rw [coordinateMetricBilinear_apply, he]
 
-/-- The value of a function along an actual coordinate geodesic has
+/-- The value of a function alongAlmostSchur an actual coordinate geodesic has
 derivative equal to its gradient paired with the velocity. -/
 theorem hasDerivAt_coordinate_geodesic_value
     (cov : CovariantDerivative I E TM)
@@ -184,7 +190,7 @@ theorem hasDerivAt_deriv_coordinate_geodesic_obata
   rw [coordinate_geodesic_energy_eq cov hm b c hT hconn hz hα ht hs₀] at hd
   exact hd.congr_of_eventuallyEq he
 
-/-- From a critical point, the Obata function along an actual geodesic is
+/-- From a critical point, the Obata function alongAlmostSchur an actual geodesic is
 the cosine of time times its curvature-scaled initial metric speed. -/
 theorem coordinate_geodesic_obata_eq_cos
     (cov : CovariantDerivative I E TM) (hm : tangentMetricCompatible cov)
@@ -231,7 +237,7 @@ theorem coordinate_geodesic_obata_eq_cos
   exact scalar_oscillator_eq_cos hT hconn hzero hF hV rfl hvzero ht
 
 /-- A local manifold derivative suffices to differentiate a scalar function
-along a coordinate curve. No global smoothness across critical points is used. -/
+alongAlmostSchur a coordinate curve. No global smoothness across critical points is used. -/
 theorem hasDerivAt_chart_curve_value
     {f : M → ℝ} (c x : M) (hx : x ∈ (chartAt H c).source) (hf : MDiffAt f x)
     {z : ℝ → E} {d : E} {t : ℝ} (hpos : z t = extChartAt I c x)

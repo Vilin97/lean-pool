@@ -1,14 +1,20 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
 
 public import LeanPool.PoincareGeometry.LichnerowiczObata.GeodesicHessian
 
-/-! # The radial parameter along geodesics from the maximum pole -/
+/-! # The radial parameter alongAlmostSchur geodesics from the maximum pole -/
 
 @[expose] public noncomputable section
 open Bundle FiberBundle Set AlmostSchur
@@ -26,7 +32,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 local notation "TM" => (TangentSpace I : M → Type _)
 
-/-- Before the antipodal phase, the radial parameter along a geodesic
+/-- Before the antipodal phase, the radial parameter alongAlmostSchur a geodesic
 from the maximum pole is its initial metric speed times elapsed time. -/
 theorem coordinate_geodesic_obataRadial_eq
     (cov : CovariantDerivative I E TM) (hm : tangentMetricCompatible cov)
@@ -82,7 +88,7 @@ theorem coordinate_geodesic_obata_regular
   simp only [Real.cos_pi, Real.cos_zero] at hlo hhi
   constructor <;> nlinarith [mul_pos ha (sub_pos.mpr hlo), mul_pos ha (sub_pos.mpr hhi)]
 
-/-- At a strictly intermediate positive phase, the radial coordinate along
+/-- At a strictly intermediate positive phase, the radial coordinate alongAlmostSchur
 the geodesic has derivative equal to its constant initial metric speed. -/
 theorem hasDerivAt_coordinate_geodesic_obataRadial
     (cov : CovariantDerivative I E TM) (hm : tangentMetricCompatible cov)

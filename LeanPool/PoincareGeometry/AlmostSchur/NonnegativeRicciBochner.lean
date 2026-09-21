@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -43,7 +49,7 @@ local notation "LC" => (leviCivitaConnection (I := I) (M := M))
 theorem leviCivita_integratedBundledRicciBochner
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 3 f) :
     (∫ x, hessianNormSq LC f x ∂riemannianVolume (I := I)) +
-      (∫ x, CovariantDerivative.ricciCurvature (cov := LC) x (gradient (I := I) f x)
+      (∫ x, CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x (gradient (I := I) f x)
         (gradient (I := I) f x) ∂riemannianVolume (I := I)) =
       ∫ x, (laplacian LC f x) ^ 2 ∂riemannianVolume (I := I) := by
   rw [← leviCivita_integratedRawBochner hf]
@@ -56,9 +62,9 @@ theorem leviCivita_integratedBundledRicciBochner
 contraction nonnegative. -/
 theorem integral_ricciGradient_nonneg
     (hRic : ∀ (x : M) (v : TM x),
-      0 ≤ CovariantDerivative.ricciCurvature (cov := LC) x v v)
+      0 ≤ CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x v v)
     (f : M → ℝ) :
-    0 ≤ ∫ x, CovariantDerivative.ricciCurvature (cov := LC) x (gradient (I := I) f x)
+    0 ≤ ∫ x, CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x (gradient (I := I) f x)
       (gradient (I := I) f x) ∂riemannianVolume (I := I) :=
   integral_nonneg fun x => hRic x (gradient (I := I) f x)
 
@@ -66,7 +72,7 @@ theorem integral_ricciGradient_nonneg
 nonnegative Ricci curvature. -/
 theorem leviCivita_traceFreeHessian_integral_bound
     (hRic : ∀ (x : M) (v : TM x),
-      0 ≤ CovariantDerivative.ricciCurvature (cov := LC) x v v)
+      0 ≤ CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x v v)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 3 f)
     (hdim : Module.finrank ℝ E ≠ 0) :
     (Module.finrank ℝ E : ℝ) *

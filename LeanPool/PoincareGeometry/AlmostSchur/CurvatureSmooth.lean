@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -66,7 +72,7 @@ theorem contMDiffAt_curvatureAux_of_order
     (hY : ContMDiffAt I (I.prod 𝓘(ℝ, E)) (n + 2) (T% Y) x)
     (hZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) (n + 2) (T% Z) x) :
     ContMDiffAt I (I.prod 𝓘(ℝ, E)) n
-      (T% (cov.curvatureAux X Y Z)) x := by
+      (T% (cov.curvatureAuxAlmostSchur X Y Z)) x := by
   letI : IsManifold I (minSmoothness ℝ (2 : ℕ∞)) M :=
     IsManifold.of_le (n := ∞) (by
       simp only [minSmoothness_of_isRCLikeNormedField]
@@ -76,11 +82,11 @@ theorem contMDiffAt_curvatureAux_of_order
       change ((n + 3 : ℕ∞) : ℕ∞ω) ≤ ((⊤ : ℕ∞) : ℕ∞ω)
       exact WithTop.coe_le_coe.mpr (le_top : (n + 3 : ℕ∞) ≤ ⊤))
   have hYZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) (n + 1)
-      (T% (cov.along Y Z)) x :=
+      (T% (cov.alongAlmostSchur Y Z)) x :=
     contMDiffAt_covariantAlong_of_metric_torsion_of_order (I := I) (n + 1)
       cov hm ht hY hZ
   have hXZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) (n + 1)
-      (T% (cov.along X Z)) x :=
+      (T% (cov.alongAlmostSchur X Z)) x :=
     contMDiffAt_covariantAlong_of_metric_torsion_of_order (I := I) (n + 1)
       cov hm ht hX hZ
   have h1 := contMDiffAt_covariantAlong_of_metric_torsion_of_order (I := I) n cov hm ht
@@ -117,7 +123,7 @@ theorem contMDiffAt_curvatureTensor_apply_of_order
     (hY : ContMDiffAt I (I.prod 𝓘(ℝ, E)) (n + 2) (T% Y) x)
     (hZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) (n + 2) (T% Z) x) :
     ContMDiffAt I (I.prod 𝓘(ℝ, E)) n
-      (T% (fun y ↦ cov.curvatureTensor y (X y) (Y y) (Z y))) x := by
+      (T% (fun y ↦ cov.curvatureTensorAlmostSchur y (X y) (Y y) (Z y))) x := by
   have hn : ((n : ℕ∞ω) + 2) ≠ ∞ := by
     change ((n + 2 : ℕ∞) : ℕ∞ω) ≠ ((⊤ : ℕ∞) : ℕ∞ω)
     intro h
@@ -160,7 +166,7 @@ theorem contMDiffAt_ricciTraceEndomorphism_of_order
     (contMDiffAt_localFrame_of_mem (n + 2) (trivializationAt E TM x)
       (Module.finBasis ℝ E) i (mem_baseSet_trivializationAt E TM x)) hY hZ
   simpa only [ricciTraceEndomorphism, LinearMap.coe_toContinuousLinearMap',
-    CovariantDerivative.ricciEndomorphism_apply] using hfield
+    CovariantDerivative.ricciEndomorphism_applyAlmostSchur] using hfield
 
 theorem contMDiffAt_ricciCurvature_apply_of_order
     (n : ℕ) (cov : CovariantDerivative I E TM)
@@ -170,7 +176,7 @@ theorem contMDiffAt_ricciCurvature_apply_of_order
     (hY : ContMDiffAt I (I.prod 𝓘(ℝ, E)) (n + 2) (T% Y) x)
     (hZ : ContMDiffAt I (I.prod 𝓘(ℝ, E)) (n + 2) (T% Z) x) :
     ContMDiffAt I 𝓘(ℝ, ℝ) n
-      (fun y ↦ cov.ricciCurvature y (Y y) (Z y)) x := by
+      (fun y ↦ cov.ricciCurvatureAlmostSchur y (Y y) (Z y)) x := by
   let e := trivializationAt E TM x
   let b := Module.finBasis ℝ E
   have hx := mem_baseSet_trivializationAt E TM x
@@ -209,7 +215,7 @@ theorem contMDiffAt_scalarCurvature_of_order
     (n : ℕ) (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1]
     (hm : tangentMetricCompatible cov) (ht : cov.torsion = 0) (x : M) :
-    ContMDiffAt I 𝓘(ℝ, ℝ) n cov.scalarCurvature x := by
+    ContMDiffAt I 𝓘(ℝ, ℝ) n cov.scalarCurvatureAlmostSchur x := by
   let e := trivializationAt E TM x
   let b := Module.finBasis ℝ E
   have hx := mem_baseSet_trivializationAt E TM x
@@ -228,7 +234,7 @@ theorem contMDiffAt_scalarCurvature_infty
     (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1]
     (hm : tangentMetricCompatible cov) (ht : cov.torsion = 0) :
-    ContMDiff I 𝓘(ℝ, ℝ) ∞ cov.scalarCurvature := by
+    ContMDiff I 𝓘(ℝ, ℝ) ∞ cov.scalarCurvatureAlmostSchur := by
   rw [contMDiff_infty]
   intro n x
   exact contMDiffAt_scalarCurvature_of_order (I := I) n cov hm ht x

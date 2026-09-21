@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -37,7 +43,7 @@ local instance bundledRicciFiniteDimensional (x : M) : FiniteDimensional ℝ (TM
 /-- The two independently defined raw commutators have exactly the same sign. -/
 theorem rawCurvature_eq_curvatureAux (cov : CovariantDerivative I E TM)
     (X Y Z : Π x, TM x) (x : M) :
-    rawCurvature cov X Y Z x = cov.curvatureAux X Y Z x := rfl
+    rawCurvature cov X Y Z x = cov.curvatureAuxAlmostSchur X Y Z x := rfl
 
 /-- Local C³ scalar regularity suffices to identify any chart contraction with
 the actual fibrewise Ricci tensor evaluated twice on the gradient. -/
@@ -48,20 +54,20 @@ theorem chartRawRicciGradient_eq_ricciCurvature
     (e : Trivialization E (TotalSpace.proj : TotalSpace E TM → M))
     [MemTrivializationAtlas e] (b : Module.Basis ι ℝ E) (hx : x ∈ e.baseSet) :
     chartRawRicciGradient cov f e b x =
-      cov.ricciCurvature x (gradient (I := I) f x) (gradient (I := I) f x) := by
+      cov.ricciCurvatureAlmostSchur x (gradient (I := I) f x) (gradient (I := I) f x) := by
   let G := gradient (I := I) f
   have hG : ContMDiffAt I (I.prod 𝓘(ℝ, E)) 2 (T% G) x :=
     contMDiffAt_gradient (I := I) 2 hf
   let A (y : M) : TM y →L[ℝ] TM y :=
-    (cov.ricciEndomorphism y (G y) (G y)).toContinuousLinearMap
-  rw [CovariantDerivative.ricciCurvature_apply]
+    (cov.ricciEndomorphismAlmostSchur y (G y) (G y)).toContinuousLinearMap
+  rw [CovariantDerivative.ricciCurvature_applyAlmostSchur]
   change chartRawRicciGradient cov f e b x = LinearMap.trace ℝ (TM x) (A x).toLinearMap
   rw [trace_eq_sum_localFrameCoeff e b A x hx]
   apply Finset.sum_congr rfl
   intro i _
   apply congrArg (e.localFrameCoeff I b i x)
   change rawCurvature cov (e.localFrame b i) G G x =
-    cov.curvatureTensor x (e.localFrame b i x) (G x) (G x)
+    cov.curvatureTensorAlmostSchur x (e.localFrame b i x) (G x) (G x)
   rw [rawCurvature_eq_curvatureAux]
   exact curvatureAux_eq_curvatureTensor_of_contMDiffAt cov
     (contMDiffAt_localFrame_of_mem 2 e b i hx) hG hG
@@ -72,7 +78,7 @@ theorem rawRicciGradient_eq_ricciCurvature
     (cov : CovariantDerivative I E TM) [cov.ContMDiffCovariantDerivative 1]
     {f : M → ℝ} {x : M} (hf : ContMDiffAt I 𝓘(ℝ, ℝ) 3 f x) :
     rawRicciGradient cov f x =
-      cov.ricciCurvature x (gradient (I := I) f x) (gradient (I := I) f x) :=
+      cov.ricciCurvatureAlmostSchur x (gradient (I := I) f x) (gradient (I := I) f x) :=
   chartRawRicciGradient_eq_ricciCurvature cov hf (trivializationAt E TM x)
     (stdOrthonormalBasis ℝ E).toBasis (mem_baseSet_trivializationAt E TM x)
 
@@ -83,7 +89,7 @@ theorem leviCivita_divergence_bochnerFlux_ricci
     let cov := leviCivitaConnection (I := I) (M := M)
     divergence cov (bochnerFlux cov f) x = (laplacian cov f x) ^ 2 -
       hessianNormSq cov f x -
-      cov.ricciCurvature x (gradient (I := I) f x) (gradient (I := I) f x) := by
+      cov.ricciCurvatureAlmostSchur x (gradient (I := I) f x) (gradient (I := I) f x) := by
   dsimp only
   rw [leviCivita_divergence_bochnerFlux hf x,
     rawRicciGradient_eq_ricciCurvature _ (hf x)]

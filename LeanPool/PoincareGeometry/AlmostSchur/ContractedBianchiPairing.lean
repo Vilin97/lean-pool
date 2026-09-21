@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -43,7 +49,7 @@ def ricciPairingFlux (w : Π x, TM x) (x : M) : TM x :=
   (ricciRaisedEndomorphism LC x).adjoint (w x)
 
 theorem inner_ricciPairingFlux (w : Π x, TM x) (x : M) (v : TM x) :
-    inner ℝ v (ricciPairingFlux w x) = (LC).ricciCurvature x v (w x) := by
+    inner ℝ v (ricciPairingFlux w x) = (LC).ricciCurvatureAlmostSchur x v (w x) := by
   rw [ricciPairingFlux, ContinuousLinearMap.adjoint_inner_right,
     inner_ricciRaisedEndomorphism]
 
@@ -58,7 +64,7 @@ theorem contMDiff_ricciPairingFlux (w : Π x, TM x)
   apply contMDiffAt_section_of_inner_localFrame b x x (mem_chart_source H x)
   intro j
   have he : (fun y ↦ inner ℝ (ricciPairingFlux w y) (e.localFrame b j y)) =
-      fun y ↦ (LC).ricciCurvature y (e.localFrame b j y) (w y) := by
+      fun y ↦ (LC).ricciCurvatureAlmostSchur y (e.localFrame b j y) (w y) := by
     funext y
     rw [real_inner_comm, inner_ricciPairingFlux]
   change ContMDiffAt I 𝓘(ℝ, ℝ) 1
@@ -72,7 +78,7 @@ Hilbert--Schmidt Ricci/derivative pairing, with the factor 2 fixed by Bianchi. -
 theorem two_mul_divergence_ricciPairingFlux (w : Π x, TM x)
     (hw : ContMDiff I (I.prod 𝓘(ℝ, E)) 3 (T% w)) (x : M) :
     2 * divergence LC (ricciPairingFlux w) x =
-      mvfderiv I (LC).scalarCurvature x (w x) +
+      mvfderiv I (LC).scalarCurvatureAlmostSchur x (w x) +
         2 * hilbertSchmidtInner (ricciRaisedEndomorphism LC x) (LC w x) := by
   let o := stdOrthonormalBasis ℝ (TM x)
   let e := trivializationAt E TM x
@@ -95,12 +101,12 @@ theorem two_mul_divergence_ricciPairingFlux (w : Π x, TM x)
     simp only [hfo] at hd
     linarith
   have hb := leviCivita_contractedBianchi_actual x o w hw
-  change mvfderiv I (LC).scalarCurvature x (w x) =
+  change mvfderiv I (LC).scalarCurvatureAlmostSchur x (w x) =
     2 * ∑ i, ricciDirectionalDerivative LC (f i) (f i) w x at hb
   rw [divergence, LinearMap.trace_eq_sum_inner _ o,
     hilbertSchmidtInner_eq_sum_inner _ _ o]
   change 2 * (∑ i, inner ℝ (o i) (LC (ricciPairingFlux w) x (o i))) =
-    mvfderiv I (LC).scalarCurvature x (w x) +
+    mvfderiv I (LC).scalarCurvatureAlmostSchur x (w x) +
       2 * ∑ i, inner ℝ (ricciRaisedEndomorphism LC x (o i)) (LC w x (o i))
   simp_rw [hterm]
   rw [Finset.sum_add_distrib, hb]
@@ -134,8 +140,8 @@ local instance pairingContinuousMetric : IsContinuousRiemannianBundle E TM :=
 /-- Continuity of the genuine scalar differential paired with a C³ field. -/
 theorem continuous_scalarDerivative_pairing (w : Π x, TM x)
     (hw : ContMDiff I (I.prod 𝓘(ℝ, E)) 3 (T% w)) :
-    Continuous (fun x ↦ mvfderiv I (LC).scalarCurvature x (w x)) := by
-  have hR : ContMDiff I 𝓘(ℝ, ℝ) 1 (LC).scalarCurvature :=
+    Continuous (fun x ↦ mvfderiv I (LC).scalarCurvatureAlmostSchur x (w x)) := by
+  have hR : ContMDiff I 𝓘(ℝ, ℝ) 1 (LC).scalarCurvatureAlmostSchur :=
     fun x ↦ contMDiffAt_scalarCurvature_one LC leviCivitaConnection_metricCompatible
       leviCivitaConnection_torsion x
   simpa only [inner_gradient] using
@@ -156,7 +162,7 @@ theorem integrable_ricciDerivative_hilbertSchmidt (w : Π x, TM x)
       (riemannianVolume (I := I)) := by
   have he : (fun x ↦ hilbertSchmidtInner (ricciRaisedEndomorphism LC x) (LC w x)) =
       fun x ↦ divergence LC (ricciPairingFlux w) x -
-        mvfderiv I (LC).scalarCurvature x (w x) / 2 := by
+        mvfderiv I (LC).scalarCurvatureAlmostSchur x (w x) / 2 := by
     funext x
     linarith [two_mul_divergence_ricciPairingFlux w hw x]
   rw [he]
@@ -169,7 +175,7 @@ theorem integrable_ricciDerivative_hilbertSchmidt (w : Π x, TM x)
 the C¹ Ricci flux. The negative sign is from the divergence convention. -/
 theorem integrated_contractedBianchi_field (w : Π x, TM x)
     (hw : ContMDiff I (I.prod 𝓘(ℝ, E)) 3 (T% w)) :
-    (∫ x, mvfderiv I (LC).scalarCurvature x (w x) ∂riemannianVolume (I := I)) =
+    (∫ x, mvfderiv I (LC).scalarCurvatureAlmostSchur x (w x) ∂riemannianVolume (I := I)) =
       -2 * ∫ x, hilbertSchmidtInner (ricciRaisedEndomorphism LC x) (LC w x)
         ∂riemannianVolume (I := I) := by
   have hzero := integral_mul_divergence LC leviCivitaConnection_metricCompatible
@@ -196,7 +202,7 @@ theorem contractedBianchiPairingIntegrand_eq (f : M → ℝ)
     (hdim : Module.finrank ℝ E ≠ 0) (x : M) :
     contractedBianchiPairingIntegrand (I := I) f x =
       hilbertSchmidtInner (ricciRaisedEndomorphism LC x) (LC (gradient (I := I) f) x) -
-        (LC).scalarCurvature x / Module.finrank ℝ E * laplacian LC f x := by
+        (LC).scalarCurvatureAlmostSchur x / Module.finrank ℝ E * laplacian LC f x := by
   have hrank := VectorBundle.finrank_eq ℝ E TM x
   have hn : Module.finrank ℝ (TM x) ≠ 0 := by rwa [hrank]
   rw [contractedBianchiPairingIntegrand, hilbertSchmidtInner_traceFree_parts _ _ hn,
@@ -210,7 +216,7 @@ theorem integrable_contractedBianchiPairingIntegrand {f : M → ℝ}
     Integrable (contractedBianchiPairingIntegrand (I := I) f) (riemannianVolume (I := I)) := by
   have hG : ContMDiff I (I.prod 𝓘(ℝ, E)) 3 (T% (gradient (I := I) f)) :=
     contMDiff_gradient 3 hf
-  have hR : ContMDiff I 𝓘(ℝ, ℝ) 1 (LC).scalarCurvature :=
+  have hR : ContMDiff I 𝓘(ℝ, ℝ) 1 (LC).scalarCurvatureAlmostSchur :=
     fun x ↦ contMDiffAt_scalarCurvature_one LC leviCivitaConnection_metricCompatible
       leviCivitaConnection_torsion x
   have hL := continuous_laplacian LC leviCivitaConnection_metricCompatible
@@ -228,20 +234,20 @@ The Poisson equation uses Δ = div grad and forces the centered scalar field
 to have zero integral; no separate mean assumption or integration bridge is used. -/
 theorem scalar_variance_eq_two_mul_ricciHessian_of_poisson
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 4 f) (r : ℝ)
-    (hpoisson : ∀ x, laplacian LC f x = (LC).scalarCurvature x - r) :
-    (∫ x, ((LC).scalarCurvature x - r) ^ 2 ∂riemannianVolume (I := I)) =
+    (hpoisson : ∀ x, laplacian LC f x = (LC).scalarCurvatureAlmostSchur x - r) :
+    (∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I)) =
       2 * ∫ x, hilbertSchmidtInner (ricciRaisedEndomorphism LC x)
         (LC (gradient (I := I) f) x) ∂riemannianVolume (I := I) := by
-  have hR : ContMDiff I 𝓘(ℝ, ℝ) 1 (LC).scalarCurvature :=
+  have hR : ContMDiff I 𝓘(ℝ, ℝ) 1 (LC).scalarCurvatureAlmostSchur :=
     fun x ↦ contMDiffAt_scalarCurvature_one LC leviCivitaConnection_metricCompatible
       leviCivitaConnection_torsion x
   have hG : ContMDiff I (I.prod 𝓘(ℝ, E)) 3 (T% (gradient (I := I) f)) :=
     contMDiff_gradient 3 hf
   have hgreen := integral_mul_divergence LC leviCivitaConnection_metricCompatible
-    leviCivitaConnection_torsion (fun x ↦ (LC).scalarCurvature x - r)
+    leviCivitaConnection_torsion (fun x ↦ (LC).scalarCurvatureAlmostSchur x - r)
     (gradient (I := I) f) (hR.sub contMDiff_const) (hG.of_le (by norm_num))
-  have hd x : mvfderiv I (fun y ↦ (LC).scalarCurvature y - r) x =
-      mvfderiv I (LC).scalarCurvature x := by
+  have hd x : mvfderiv I (fun y ↦ (LC).scalarCurvatureAlmostSchur y - r) x =
+      mvfderiv I (LC).scalarCurvatureAlmostSchur x := by
     rw [mvfderiv_fun_sub ((hR x).mdifferentiableAt (by norm_num))
       mdifferentiableAt_const, mvfderiv_const, sub_zero]
   simp only [divergence_gradient, hpoisson, ← sq, hd] at hgreen
@@ -254,31 +260,31 @@ trace-free Ricci/Hessian Hilbert--Schmidt pairing. Every integration step and
 integrability premise is proved from the compact geometry and C⁴ solution. -/
 theorem contractedBianchi_pairing_of_poisson
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 4 f) (r : ℝ)
-    (hpoisson : ∀ x, laplacian LC f x = (LC).scalarCurvature x - r)
+    (hpoisson : ∀ x, laplacian LC f x = (LC).scalarCurvatureAlmostSchur x - r)
     (hdim : Module.finrank ℝ E ≠ 0) :
     ((Module.finrank ℝ E : ℝ) - 2) *
-        (∫ x, ((LC).scalarCurvature x - r) ^ 2 ∂riemannianVolume (I := I)) =
+        (∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I)) =
       2 * (Module.finrank ℝ E : ℝ) *
         (∫ x, contractedBianchiPairingIntegrand (I := I) f x ∂riemannianVolume (I := I)) := by
-  have hR : ContMDiff I 𝓘(ℝ, ℝ) 1 (LC).scalarCurvature :=
+  have hR : ContMDiff I 𝓘(ℝ, ℝ) 1 (LC).scalarCurvatureAlmostSchur :=
     fun x ↦ contMDiffAt_scalarCurvature_one LC leviCivitaConnection_metricCompatible
       leviCivitaConnection_torsion x
-  have hc : Continuous (fun x ↦ (LC).scalarCurvature x - r) :=
+  have hc : Continuous (fun x ↦ (LC).scalarCurvatureAlmostSchur x - r) :=
     hR.continuous.sub continuous_const
   have hi := hc.integrable_of_hasCompactSupport (μ := riemannianVolume (I := I))
     isClosed_closure.isCompact
-  have hisq : Integrable (fun x ↦ ((LC).scalarCurvature x - r) ^ 2)
+  have hisq : Integrable (fun x ↦ ((LC).scalarCurvatureAlmostSchur x - r) ^ 2)
       (riemannianVolume (I := I)) :=
     (hc.pow 2).integrable_of_hasCompactSupport isClosed_closure.isCompact
-  have hmean : (∫ x, (LC).scalarCurvature x - r ∂riemannianVolume (I := I)) = 0 := by
+  have hmean : (∫ x, (LC).scalarCurvatureAlmostSchur x - r ∂riemannianVolume (I := I)) = 0 := by
     simpa only [hpoisson] using integral_laplacian_eq_zero LC
       leviCivitaConnection_metricCompatible leviCivitaConnection_torsion f
       (hf.of_le (by norm_num))
-  have hprod : (∫ x, (LC).scalarCurvature x * laplacian LC f x
+  have hprod : (∫ x, (LC).scalarCurvatureAlmostSchur x * laplacian LC f x
       ∂riemannianVolume (I := I)) =
-      ∫ x, ((LC).scalarCurvature x - r) ^ 2 ∂riemannianVolume (I := I) := by
-    have he : (fun x ↦ (LC).scalarCurvature x * laplacian LC f x) =
-        fun x ↦ ((LC).scalarCurvature x - r) ^ 2 + r * ((LC).scalarCurvature x - r) := by
+      ∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I) := by
+    have he : (fun x ↦ (LC).scalarCurvatureAlmostSchur x * laplacian LC f x) =
+        fun x ↦ ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 + r * ((LC).scalarCurvatureAlmostSchur x - r) := by
       funext x
       rw [hpoisson]
       ring
@@ -288,7 +294,7 @@ theorem contractedBianchi_pairing_of_poisson
   have hH := integrable_ricciDerivative_hilbertSchmidt _ hG
   have hL := continuous_laplacian LC leviCivitaConnection_metricCompatible
     leviCivitaConnection_torsion f (hf.of_le (by norm_num))
-  have hQ : Integrable (fun x ↦ ((LC).scalarCurvature x * laplacian LC f x) /
+  have hQ : Integrable (fun x ↦ ((LC).scalarCurvatureAlmostSchur x * laplacian LC f x) /
       (Module.finrank ℝ E : ℝ)) (riemannianVolume (I := I)) :=
     ((hR.continuous.mul hL).div_const (Module.finrank ℝ E : ℝ)).integrable_of_hasCompactSupport
       isClosed_closure.isCompact
@@ -296,11 +302,11 @@ theorem contractedBianchi_pairing_of_poisson
       ∂riemannianVolume (I := I)) =
       (∫ x, hilbertSchmidtInner (ricciRaisedEndomorphism LC x)
         (LC (gradient (I := I) f) x) ∂riemannianVolume (I := I)) -
-      (∫ x, ((LC).scalarCurvature x - r) ^ 2 ∂riemannianVolume (I := I)) /
+      (∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I)) /
         (Module.finrank ℝ E : ℝ) := by
     have he : contractedBianchiPairingIntegrand (I := I) f = fun x ↦
         hilbertSchmidtInner (ricciRaisedEndomorphism LC x) (LC (gradient (I := I) f) x) -
-          ((LC).scalarCurvature x * laplacian LC f x) / (Module.finrank ℝ E : ℝ) := by
+          ((LC).scalarCurvatureAlmostSchur x * laplacian LC f x) / (Module.finrank ℝ E : ℝ) := by
       funext x
       rw [contractedBianchiPairingIntegrand_eq f hdim]
       ring
@@ -316,10 +322,10 @@ and does not need it, since adding a constant to f does not affect the identity.
 theorem contractedBianchi_pairing_of_smooth_meanZero_poisson
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) ∞ f)
     (_hmean : (∫ x, f x ∂riemannianVolume (I := I)) = 0) (r : ℝ)
-    (hpoisson : ∀ x, laplacian LC f x = (LC).scalarCurvature x - r)
+    (hpoisson : ∀ x, laplacian LC f x = (LC).scalarCurvatureAlmostSchur x - r)
     (hdim : Module.finrank ℝ E ≠ 0) :
     ((Module.finrank ℝ E : ℝ) - 2) *
-        (∫ x, ((LC).scalarCurvature x - r) ^ 2 ∂riemannianVolume (I := I)) =
+        (∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I)) =
       2 * (Module.finrank ℝ E : ℝ) *
         (∫ x, contractedBianchiPairingIntegrand (I := I) f x ∂riemannianVolume (I := I)) :=
   contractedBianchi_pairing_of_poisson
@@ -330,13 +336,13 @@ omit [IsContMDiffRiemannianBundle I 3 E TM] in
 decomposition's Laplacian energy with the very same scalar variance A. -/
 theorem poisson_traceFreeHessian_identity
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 4 f) (r : ℝ)
-    (hpoisson : ∀ x, laplacian LC f x = (LC).scalarCurvature x - r)
+    (hpoisson : ∀ x, laplacian LC f x = (LC).scalarCurvatureAlmostSchur x - r)
     (hdim : Module.finrank ℝ E ≠ 0) :
     (Module.finrank ℝ E : ℝ) *
         (∫ x, traceFreeHessianNormSq LC f x ∂riemannianVolume (I := I)) =
       (Module.finrank ℝ E : ℝ) *
           (∫ x, hessianNormSq LC f x ∂riemannianVolume (I := I)) -
-        ∫ x, ((LC).scalarCurvature x - r) ^ 2 ∂riemannianVolume (I := I) := by
+        ∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I) := by
   simpa only [hpoisson] using finrank_mul_integral_traceFreeHessianNormSq LC
     leviCivitaConnection_metricCompatible leviCivitaConnection_torsion
     (hf.of_le (by norm_num : (3 : ℕ∞ω) ≤ 4)) hdim

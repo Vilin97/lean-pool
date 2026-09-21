@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -134,7 +140,7 @@ actual closed connected Riemannian manifold. Global Obata rigidity remains separ
 theorem exists_first_smooth_eigenvalue_with_ricci_bound
     {K : ℝ} (hd : 2 ≤ Module.finrank ℝ E)
     (hRic : ∀ (x : M) (v : TangentSpace I x),
-      ((Module.finrank ℝ E : ℝ) - 1) * K * ‖v‖ ^ 2 ≤ (LC).ricciCurvature x v v) :
+      ((Module.finrank ℝ E : ℝ) - 1) * K * ‖v‖ ^ 2 ≤ (LC).ricciCurvatureAlmostSchur x v v) :
     ∃ μ : ℝ, 0 < μ ∧ (Module.finrank ℝ E : ℝ) * K ≤ μ ∧
       (∃ g : M → ℝ, ContMDiff I 𝓘(ℝ, ℝ) ∞ g ∧ (∃ x y, g x ≠ g y) ∧
         ∀ x, laplacian LC g x = -μ * g x) ∧

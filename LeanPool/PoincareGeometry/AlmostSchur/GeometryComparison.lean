@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -40,13 +46,13 @@ local instance metricThree : IsContMDiffRiemannianBundle I (↑(3 : ℕ)) E TM :
 
 theorem curvature_eq (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (x : M) (u v w : TM x) :
-    curvature cov x u v w = cov.curvatureTensor x u v w := by
+    curvature cov x u v w = cov.curvatureTensorAlmostSchur x u v w := by
   rfl
 
 theorem ricci_eq (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (x : M) (u v : TM x) :
-    ricci cov x u v = cov.ricciCurvature x u v := by
-  rw [CovariantDerivative.ricciCurvature_apply,
+    ricci cov x u v = cov.ricciCurvatureAlmostSchur x u v := by
+  rw [CovariantDerivative.ricciCurvature_applyAlmostSchur,
     LinearMap.trace_eq_sum_inner _ (stdOrthonormalBasis ℝ (TM x))]
   unfold ricci
   apply Finset.sum_congr rfl
@@ -56,8 +62,8 @@ theorem ricci_eq (cov : CovariantDerivative I E TM)
 
 theorem scalar_eq (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (x : M) :
-    scalar cov x = cov.scalarCurvature x := by
-  simp only [scalar, ricci_eq, CovariantDerivative.scalarCurvature]
+    scalar cov x = cov.scalarCurvatureAlmostSchur x := by
+  simp only [scalar, ricci_eq, CovariantDerivative.scalarCurvatureAlmostSchur]
 
 theorem traceFreeRicciSq_eq (cov : CovariantDerivative I E TM)
     [cov.ContMDiffCovariantDerivative 1] (x : M) :
@@ -129,7 +135,7 @@ theorem geometricStatement_proved : geometricStatement (I := I) (M := M) := by
     AlmostSchur.leviCivitaConnection_torsion, ⟨inferInstance⟩,
     riemannianVolume_spec, hvolume.1, hvolume.2, ?_⟩
   intro hRic hd
-  have hRic' : ∀ (x : M) (v : TM x), 0 ≤ cov.ricciCurvature x v v := by
+  have hRic' : ∀ (x : M) (v : TM x), 0 ≤ cov.ricciCurvatureAlmostSchur x v v := by
     simpa only [ricci_eq] using hRic
   have hb := AlmostSchur.almostSchur_bound_complete (I := I) (M := M) hRic' hd
   have he := AlmostSchur.almostSchur_equality_iff (I := I) (M := M) hRic' hd

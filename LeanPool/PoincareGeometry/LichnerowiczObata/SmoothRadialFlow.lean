@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -24,7 +30,7 @@ theorem contDiffAt_obataClock (n : ℕ∞ω) {K a s : ℝ}
   exact (((contDiffAt_const.add contDiffAt_id).log hp).sub
     ((contDiffAt_const.sub contDiffAt_id).log hm)).div_const (2 * K * a)
 
-/-- Resetting the initial point along a radial curve does not change the
+/-- Resetting the initial point alongAlmostSchur a radial curve does not change the
 curve. This is forced by the complete flow law and its attained level. -/
 theorem obataRadialFamily_reset {X : Type*} {K a : ℝ} {f : X → ℝ} {G : X → ℝ → X}
     (hadd : ∀ x s t, G x (s + t) = G (G x t) s) {x : X} {r : ℝ}

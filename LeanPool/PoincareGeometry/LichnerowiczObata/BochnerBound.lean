@@ -1,7 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur Freitas Ramos and coauthors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+/-
+Original copyright notice:
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights
+reserved.
 -/
 
 module
@@ -50,7 +56,7 @@ All differential identities are inherited proved theorems, not hypotheses. -/
 theorem integrated_ricci_le_laplacian
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 3 f)
     (hdim : Module.finrank ℝ E ≠ 0) :
-    n * (∫ x, CovariantDerivative.ricciCurvature (cov := LC) x
+    n * (∫ x, CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x
       (gradient (I := I) f x) (gradient (I := I) f x) ∂ν) ≤
     (n - 1) * (∫ x, (laplacian LC f x) ^ 2 ∂ν) := by
   have hb := leviCivita_integratedBundledRicciBochner hf
@@ -66,7 +72,7 @@ theorem integrated_laplacian_bound
     {K : ℝ} (hdim : 2 ≤ Module.finrank ℝ E)
     (hRic : ∀ (x : M) (v : TM x),
       (n - 1) * K * ‖v‖ ^ 2 ≤
-        CovariantDerivative.ricciCurvature (cov := LC) x v v)
+        CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x v v)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 3 f) :
     n * K * (∫ x, ‖gradient (I := I) f x‖ ^ 2 ∂ν) ≤
       ∫ x, (laplacian LC f x) ^ 2 ∂ν := by
@@ -74,9 +80,9 @@ theorem integrated_laplacian_bound
   have hg : Integrable (fun x => ‖gradient (I := I) f x‖ ^ 2) ν :=
     ((continuous_norm_gradient (hf.of_le (by norm_num))).pow 2).integrable_of_hasCompactSupport
       isClosed_closure.isCompact
-  have hr : Integrable (fun x => CovariantDerivative.ricciCurvature (cov := LC) x
+  have hr : Integrable (fun x => CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x
       (gradient (I := I) f x) (gradient (I := I) f x)) ν := by
-    have heq : (fun x => CovariantDerivative.ricciCurvature (cov := LC) x
+    have heq : (fun x => CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x
         (gradient (I := I) f x) (gradient (I := I) f x)) = rawRicciGradient LC f := by
       funext x
       exact (rawRicciGradient_eq_ricciCurvature LC (hf x)).symm
@@ -118,7 +124,7 @@ theorem eigenvalue_lower_bound [PreconnectedSpace M]
     {K μ : ℝ} (hdim : 2 ≤ Module.finrank ℝ E)
     (hRic : ∀ (x : M) (v : TM x),
       (n - 1) * K * ‖v‖ ^ 2 ≤
-        CovariantDerivative.ricciCurvature (cov := LC) x v v)
+        CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x v v)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 3 f)
     (hnonconst : ∃ x y, f x ≠ f y)
     (heigen : ∀ x, laplacian LC f x = -μ * f x) : n * K ≤ μ := by
@@ -145,7 +151,7 @@ theorem traceFreeHessian_eq_zero_of_equality
     {K : ℝ} (hdim : 2 ≤ Module.finrank ℝ E)
     (hRic : ∀ (x : M) (v : TM x),
       (n - 1) * K * ‖v‖ ^ 2 ≤
-        CovariantDerivative.ricciCurvature (cov := LC) x v v)
+        CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x v v)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 3 f)
     (heq : (∫ x, (laplacian LC f x) ^ 2 ∂ν) =
       n * K * (∫ x, ‖gradient (I := I) f x‖ ^ 2 ∂ν)) :
@@ -158,7 +164,7 @@ theorem traceFreeHessian_eq_zero_of_equality
   have hg : Integrable (fun x => ‖gradient (I := I) f x‖ ^ 2) ν :=
     ((continuous_norm_gradient (hf.of_le (by norm_num))).pow 2).integrable_of_hasCompactSupport
       isClosed_closure.isCompact
-  have hr : Integrable (fun x => CovariantDerivative.ricciCurvature (cov := LC) x
+  have hr : Integrable (fun x => CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x
       (gradient (I := I) f x) (gradient (I := I) f x)) ν := by
     have hraw := integrable_rawRicciGradient LC leviCivitaConnection_metricCompatible
       leviCivitaConnection_torsion hf
@@ -198,7 +204,7 @@ theorem hessian_equation_of_extremal_eigenfunction
     {K : ℝ} (hdim : 2 ≤ Module.finrank ℝ E)
     (hRic : ∀ (x : M) (v : TM x),
       (n - 1) * K * ‖v‖ ^ 2 ≤
-        CovariantDerivative.ricciCurvature (cov := LC) x v v)
+        CovariantDerivative.ricciCurvatureAlmostSchur (cov := LC) x v v)
     {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 3 f)
     (heigen : ∀ x, laplacian LC f x = -(n * K) * f x) :
     ∀ (x : M) (v w : TM x),
