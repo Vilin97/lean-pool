@@ -41,6 +41,18 @@ namespace Nikodym.LowerBound
 
 variable {K K' : Type*} [Field K] [Field K'] [Algebra K K'] {d : ℕ}
 
+/-- Use the specified algebra scalar action without searching quotient module structures. -/
+noncomputable local instance baseChangePolynomialQuotientSMul {k : ℕ}
+    (J : Ideal (MvPolynomial (Fin k) K)) (S : Type*) [CommSemiring S]
+    [Algebra S (MvPolynomial (Fin k) K ⧸ J)] :
+    SMul S (MvPolynomial (Fin k) K ⧸ J) := Algebra.toSMul
+
+/-- Use the given algebra action directly on a polynomial quotient. -/
+noncomputable local instance baseChangePolynomialQuotientModule
+    {k : ℕ} (J : Ideal (MvPolynomial (Fin k) K))
+    (S : Type*) [CommSemiring S] [Algebra S (MvPolynomial (Fin k) K ⧸ J)] :
+    Module S (MvPolynomial (Fin k) K ⧸ J) := Algebra.toModule
+
 namespace BaseChangePrime
 
 variable {σ : Type*}
@@ -49,11 +61,11 @@ variable {σ : Type*}
 `π : K' → K` to a polynomial with coefficients in `K'`. -/
 private noncomputable def coeffProj (π : K' →ₗ[K] K) (g : MvPolynomial σ K') :
     MvPolynomial σ K :=
-  ∑ m ∈ g.support, MvPolynomial.monomial m (π (MvPolynomial.coeff m g))
+  ∑ m ∈ g.support, MvPolynomial.monomial m (π (g.coeff m))
 
 /-- Blueprint TR0 (private version): the coefficients of `coeffProj π g`. -/
 private theorem coeff_coeffProj (π : K' →ₗ[K] K) (m : σ →₀ ℕ) (g : MvPolynomial σ K') :
-    MvPolynomial.coeff m (coeffProj π g) = π (MvPolynomial.coeff m g) := by
+    (coeffProj π g).coeff m = π (g.coeff m) := by
   classical
   rw [coeffProj, MvPolynomial.coeff_sum]
   simp only [MvPolynomial.coeff_monomial]
@@ -66,13 +78,13 @@ private theorem coeff_coeffProj (π : K' →ₗ[K] K) (m : σ →₀ ℕ) (g : M
 private theorem coeffProj_add (π : K' →ₗ[K] K) (g h : MvPolynomial σ K') :
     coeffProj π (g + h) = coeffProj π g + coeffProj π h := by
   ext m
-  simp only [coeff_coeffProj, MvPolynomial.coeff_add, map_add]
+  simp only [coeff_coeffProj, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, map_add]
 
 /-- Blueprint TR0 (private version): `coeffProj π 0 = 0`. -/
 private theorem coeffProj_zero (π : K' →ₗ[K] K) :
     coeffProj π (0 : MvPolynomial σ K') = 0 := by
   ext m
-  simp only [coeff_coeffProj, MvPolynomial.coeff_zero, map_zero]
+  simp only [coeff_coeffProj, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, map_zero]
 
 /-- Blueprint TR0 (private version): `coeffProj` on constants. -/
 private theorem coeffProj_C (π : K' →ₗ[K] K) (c : K') :
@@ -168,10 +180,10 @@ theorem quotDim_map (I : Ideal (MvPolynomial (Fin d) K)) :
   obtain ⟨s, -, g, hginj, hgint⟩ := exists_integral_inj_algHom_of_quotient I hI
   -- the dimension of `P ⧸ I` is `s`
   have hdimI : ringKrullDim (MvPolynomial (Fin d) K ⧸ I) = s := by
-    letI : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin d) K ⧸ I) := g.toRingHom.toAlgebra
-    haveI : Algebra.IsIntegral (MvPolynomial (Fin s) K) (MvPolynomial (Fin d) K ⧸ I) :=
+    let : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin d) K ⧸ I) := g.toRingHom.toAlgebra
+    have : Algebra.IsIntegral (MvPolynomial (Fin s) K) (MvPolynomial (Fin d) K ⧸ I) :=
       ⟨hgint⟩
-    haveI : FaithfulSMul (MvPolynomial (Fin s) K) (MvPolynomial (Fin d) K ⧸ I) :=
+    have : FaithfulSMul (MvPolynomial (Fin s) K) (MvPolynomial (Fin d) K ⧸ I) :=
       (faithfulSMul_iff_algebraMap_injective _ _).mpr hginj
     rw [ringKrullDim_eq_of_isIntegral (R := MvPolynomial (Fin s) K),
       ringKrullDim_mvPolynomial_fin_eq]
@@ -203,16 +215,16 @@ theorem quotDim_map (I : Ideal (MvPolynomial (Fin d) K)) :
       exact coeffProj_mem_of_mem_map π I hq'
     let b := Module.Basis.ofVectorSpace K K'
     ext m
-    rw [MvPolynomial.coeff_zero]
+    rw [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
     refine b.ext_elem_iff.mpr fun j ↦ ?_
     rw [map_zero, Finsupp.zero_apply, ← b.coord_apply, ← coeff_coeffProj, key,
-      MvPolynomial.coeff_zero]
+      AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
   -- `g'` is integral
   have hg'int :
       (g' : MvPolynomial (Fin s) K' →+* MvPolynomial (Fin d) K' ⧸ I.map ι).IsIntegral := by
-    letI : Algebra (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι) :=
+    let : Algebra (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι) :=
       g'.toRingHom.toAlgebra
-    letI : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin d) K ⧸ I) := g.toRingHom.toAlgebra
+    let : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin d) K ⧸ I) := g.toRingHom.toAlgebra
     let ψ : MvPolynomial (Fin d) K ⧸ I →+* MvPolynomial (Fin d) K' ⧸ I.map ι :=
       Ideal.quotientMap (I.map ι) ι Ideal.le_comap_map
     have hcomp : (algebraMap (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι)).comp
@@ -249,11 +261,11 @@ theorem quotDim_map (I : Ideal (MvPolynomial (Fin d) K)) :
       exact hp.mul (hX j)
   -- the dimension of `P' ⧸ I.map ι` is `s`
   have hdim' : ringKrullDim (MvPolynomial (Fin d) K' ⧸ I.map ι) = s := by
-    letI : Algebra (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι) :=
+    let : Algebra (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι) :=
       g'.toRingHom.toAlgebra
-    haveI : Algebra.IsIntegral (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι) :=
+    have : Algebra.IsIntegral (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι) :=
       ⟨hg'int⟩
-    haveI : FaithfulSMul (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι) :=
+    have : FaithfulSMul (MvPolynomial (Fin s) K') (MvPolynomial (Fin d) K' ⧸ I.map ι) :=
       (faithfulSMul_iff_algebraMap_injective _ _).mpr hg'inj
     rw [ringKrullDim_eq_of_isIntegral (R := MvPolynomial (Fin s) K'),
       ringKrullDim_mvPolynomial_fin_eq]
@@ -318,7 +330,7 @@ theorem isPrime_map_ratFunc (I : Ideal (MvPolynomial (Fin d) K)) [hI : I.IsPrime
     congr 1
     refine RingHom.ext fun f ↦ ?_
     rw [RingHom.comp_apply, RingEquiv.coe_toRingHom, eq_comm, RingEquiv.symm_apply_eq, he]
-  haveI : (I.map (Polynomial.C : MvPolynomial (Fin d) K →+* _)).IsPrime :=
+  have : (I.map (Polynomial.C : MvPolynomial (Fin d) K →+* _)).IsPrime :=
     Ideal.isPrime_map_C_of_isPrime
   have hJprime : J.IsPrime := hJ ▸ Ideal.comap_isPrime e _
   -- nonzero constants of `K[X]` avoid `J`

@@ -84,7 +84,6 @@ theorem reduce_gen (r : Fin m → ℕ) {F : Type*} [Field F] (s : Fin m → F)
   simp [reduce, gen]
 
 /-- Blueprint L02: reduction sends integers to themselves. -/
-@[simp]
 theorem reduce_intCast (r : Fin m → ℕ) {F : Type*} [Field F] (s : Fin m → F)
     (hs : ∀ j, s j ^ 2 = (r j : F)) (z : ℤ) :
     reduce r s hs z = z :=

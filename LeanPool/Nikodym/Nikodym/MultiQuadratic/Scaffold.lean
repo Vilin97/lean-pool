@@ -78,7 +78,7 @@ theorem scaffold_of_dvd (hr1 : ∀ j, 1 < r j) (hsq : ∀ j, Squarefree (r j))
     Nikodym.Scaffold (monoBasis hr1 hsq hcop) (fun ε : Fin m → ℤˣ ↦ emb r ε) (reduce r s hs)
       (∏ j, ((ℓ j * ℓ' j : ℕ) : ℝ)) 1 := by
   refine Nikodym.Scaffold.mono_K₀ (scaffold hr1 hsq hcop hp s hs) ?_
-  refine prod_le_prod (fun _ _ ↦ Nat.cast_nonneg _) fun j _ ↦ ?_
+  refine prod_le_prod₀ (fun _ _ ↦ Nat.cast_nonneg _) fun j _ ↦ ?_
   exact_mod_cast Nat.le_of_dvd (hℓ j) (hdvd j)
 
 end

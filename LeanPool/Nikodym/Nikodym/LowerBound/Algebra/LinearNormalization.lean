@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
+import Mathlib.RingTheory.GradedAlgebra.Radical
+import Mathlib.Algebra.Module.Submodule.Union
 import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.DimensionExtra
 
 /-!
@@ -106,7 +108,7 @@ theorem homogeneousComponent_mul_of_isHomogeneous_right {y : MvPolynomial σ R} 
   classical
   ext d
   rw [coeff_homogeneousComponent, coeff_mul, coeff_mul]
-  have key : ∀ x ∈ Finset.HasAntidiagonal.antidiagonal d, coeff x.2 y ≠ 0 →
+  have key : ∀ x ∈ Finset.HasAntidiagonal.antidiagonal d, y.coeff x.2 ≠ 0 →
       (d.degree = m + e ↔ x.1.degree = m) := by
     intro x hx hb
     have hx2 : x.2.degree = e := by
@@ -119,15 +121,15 @@ theorem homogeneousComponent_mul_of_isHomogeneous_right {y : MvPolynomial σ R} 
   split_ifs with hd
   · refine Finset.sum_congr rfl fun x hx ↦ ?_
     rw [coeff_homogeneousComponent]
-    by_cases hb : coeff x.2 y = 0
+    by_cases hb : y.coeff x.2 = 0
     · simp [hb]
-    · rw [if_pos ((key x hx hb).mp hd)]
+    · rw [ite_eq_left ((key x hx hb).mp hd)]
   · symm
     refine Finset.sum_eq_zero fun x hx ↦ ?_
     rw [coeff_homogeneousComponent]
-    by_cases hb : coeff x.2 y = 0
+    by_cases hb : y.coeff x.2 = 0
     · simp [hb]
-    · rw [if_neg (fun h ↦ hd ((key x hx hb).mpr h)), zero_mul]
+    · rw [ite_eq_right (fun h ↦ hd ((key x hx hb).mpr h)), zero_mul]
 
 end Components
 
@@ -136,6 +138,18 @@ end Components
 section LinearNormalization
 
 variable {K : Type*} [Field K] {n : ℕ}
+
+/-- Use the specified algebra scalar action without searching quotient module structures. -/
+noncomputable local instance normalizationPolynomialQuotientSMul {k : ℕ}
+    (J : Ideal (MvPolynomial (Fin k) K)) (S : Type*) [CommSemiring S]
+    [Algebra S (MvPolynomial (Fin k) K ⧸ J)] :
+    SMul S (MvPolynomial (Fin k) K ⧸ J) := Algebra.toSMul
+
+/-- Use the given algebra action directly on a polynomial quotient. -/
+noncomputable local instance normalizationPolynomialQuotientModule
+    {k : ℕ} (J : Ideal (MvPolynomial (Fin k) K))
+    (S : Type*) [CommSemiring S] [Algebra S (MvPolynomial (Fin k) K ⧸ J)] :
+    Module S (MvPolynomial (Fin k) K ⧸ J) := Algebra.toModule
 
 /-! #### A02.b: proper homogeneous ideals lie in `𝔪ₙ` -/
 
@@ -157,7 +171,7 @@ theorem le_idealOfVars_of_isHomogeneous_of_ne_top {J : Ideal (MvPolynomial (Fin 
   intro f hf
   have h0 : homogeneousComponent 0 f ∈ J := homogeneousComponent_mem_of_mem hJh hf 0
   rw [homogeneousComponent_zero] at h0
-  have hc : coeff 0 f = 0 := by
+  have hc : f.coeff 0 = 0 := by
     by_contra hne
     exact hJ (J.eq_top_of_isUnit_mem h0 ((isUnit_iff_ne_zero.mpr hne).map C))
   rw [← pow_one (idealOfVars (Fin n) K), mem_pow_idealOfVars_iff']
@@ -170,7 +184,7 @@ theorem le_idealOfVars_of_isHomogeneous_of_ne_top {J : Ideal (MvPolynomial (Fin 
 theorem eq_idealOfVars_of_quotDim_eq_zero {p : Ideal (MvPolynomial (Fin n) K)} [p.IsPrime]
     (hp : p ≤ idealOfVars (Fin n) K) (h0 : quotDim p = 0) : p = idealOfVars (Fin n) K := by
   by_contra hne
-  haveI := idealOfVars_isPrime (K := K) (n := n)
+  have := idealOfVars_isPrime (K := K) (n := n)
   have h := quotDim_lt_of_lt (lt_of_le_of_ne hp hne)
   rw [h0, quotDim_idealOfVars] at h
   exact lt_irrefl _ h
@@ -240,7 +254,7 @@ theorem pow_idealOfVars_le_of_quotDim_eq_zero {J : Ideal (MvPolynomial (Fin n) K
   refine Ideal.exists_pow_le_of_le_radical_of_fg ?_ (idealOfVars_fg _ _)
   rw [← Ideal.sInf_minimalPrimes, le_sInf_iff]
   intro p hp
-  haveI := hp.1.1
+  have := hp.1.1
   have hph := IsHomogeneous.minimalPrimes_isHomogeneous _ hJh hp
   have hpm : p ≤ idealOfVars (Fin n) K :=
     le_idealOfVars_of_isHomogeneous_of_ne_top hp.1.1.ne_top hph
@@ -263,9 +277,9 @@ theorem quotDim_sup_span_singleton_lt {J : Ideal (MvPolynomial (Fin n) K)} (hJ :
     rwa [Set.range_const] at h
   have hle : quotDim (J ⊔ Ideal.span {y}) ≤ quotDim J - 1 := by
     refine quotDim_le_of_forall_isPrime (fun q hq hJq ↦ ?_) hJ'
-    haveI := hq
+    have := hq
     obtain ⟨p, hp, hpq⟩ := Ideal.exists_minimalPrimes_le (le_sup_left.trans hJq)
-    haveI := hp.1.1
+    have := hp.1.1
     by_cases hpm : p = idealOfVars (Fin n) K
     · have hqm : q = idealOfVars (Fin n) K :=
         (idealOfVars_isMaximal.eq_of_le hq.ne_top (hpm ▸ hpq)).symm
@@ -299,9 +313,9 @@ theorem exists_linear_forms_quotDim_sup_eq_zero [Infinite K] :
         {p | p ∈ J.minimalPrimes ∧ p ≠ idealOfVars (Fin n) K} with hS
       have hfin : S.Finite :=
         (Ideal.finite_minimalPrimes_of_isNoetherianRing _ J).subset fun p hp ↦ hp.1
-      haveI := hfin.to_subtype
+      have := hfin.to_subtype
       obtain ⟨y₀, hy₀1, hy₀⟩ := exists_linear_form_notMem (fun p : S ↦ p.1) fun p hle ↦ by
-        haveI := p.2.1.1.1
+        have := p.2.1.1.1
         have hph := IsHomogeneous.minimalPrimes_isHomogeneous _ hJh p.2.1
         exact p.2.2 (le_antisymm (le_idealOfVars_of_isHomogeneous_of_ne_top p.2.1.1.1.ne_top hph)
           hle)
@@ -403,8 +417,8 @@ theorem span_image_mk_eq_top_of_pow_idealOfVars_le {J : Ideal (MvPolynomial (Fin
           exact ⟨d, Finset.mem_filter.mpr ⟨mem_exponentsLE.mpr (by omega), by omega⟩, rfl⟩
         have hmem : Ideal.Quotient.mk J (monomial d (1 : K)) ∈ M :=
           Submodule.subset_span (Set.mem_image_of_mem _ hmon)
-        have heq : Ideal.Quotient.mk J (monomial d (coeff d F)) =
-            (C (coeff d F) : MvPolynomial (Fin s) K) •
+        have heq : Ideal.Quotient.mk J (monomial d (F.coeff d)) =
+            (C (F.coeff d) : MvPolynomial (Fin s) K) •
               Ideal.Quotient.mk J (monomial d (1 : K)) := by
           rw [Algebra.smul_def, hC, ← map_mul, C_mul_monomial, mul_one]
         rw [heq]
@@ -457,7 +471,7 @@ theorem finite_of_pow_idealOfVars_le {J : Ideal (MvPolynomial (Fin n) K)}
     letI : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
       (MvPolynomial.aeval (R := K) fun i ↦ Ideal.Quotient.mk J (y i)).toRingHom.toAlgebra
     Module.Finite (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) := by
-  letI : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
+  let : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
     (MvPolynomial.aeval (R := K) fun i ↦ Ideal.Quotient.mk J (y i)).toRingHom.toAlgebra
   exact finite_of_pow_idealOfVars_le' hJh hy hN (RingHom.algebraMap_toAlgebra _)
 
@@ -477,10 +491,10 @@ theorem aeval_injective_of_pow_idealOfVars_le {J : Ideal (MvPolynomial (Fin n) K
       MvPolynomial (Fin s) K →ₐ[K] MvPolynomial (Fin n) K ⧸ J) := by
   set g : MvPolynomial (Fin s) K →ₐ[K] MvPolynomial (Fin n) K ⧸ J :=
     MvPolynomial.aeval fun i ↦ Ideal.Quotient.mk J (y i) with hg
-  letI : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) := g.toRingHom.toAlgebra
-  haveI : Module.Finite (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
+  let : Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) := g.toRingHom.toAlgebra
+  have : Module.Finite (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
     finite_of_pow_idealOfVars_le' hJh hy hN (RingHom.algebraMap_toAlgebra _)
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
     Algebra.IsIntegral.of_finite _ _
   set ker := RingHom.ker g.toRingHom with hker
   suffices hbot : ker = ⊥ from
@@ -488,14 +502,14 @@ theorem aeval_injective_of_pow_idealOfVars_le {J : Ideal (MvPolynomial (Fin n) K
   by_contra hne
   obtain ⟨r, hr, hr0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   -- the image `T := S ⧸ ker` and the integral injective map `T → Q ⧸ J`
-  letI : Algebra (MvPolynomial (Fin s) K ⧸ ker) (MvPolynomial (Fin n) K ⧸ J) :=
+  let : Algebra (MvPolynomial (Fin s) K ⧸ ker) (MvPolynomial (Fin n) K ⧸ J) :=
     (RingHom.kerLift g.toRingHom).toAlgebra
-  haveI : IsScalarTower (MvPolynomial (Fin s) K) (MvPolynomial (Fin s) K ⧸ ker)
+  have : IsScalarTower (MvPolynomial (Fin s) K) (MvPolynomial (Fin s) K ⧸ ker)
       (MvPolynomial (Fin n) K ⧸ J) :=
     IsScalarTower.of_algebraMap_eq fun x ↦ (RingHom.kerLift_mk g.toRingHom x).symm
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) K ⧸ ker) (MvPolynomial (Fin n) K ⧸ J) :=
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) K ⧸ ker) (MvPolynomial (Fin n) K ⧸ J) :=
     ⟨fun x ↦ (Algebra.IsIntegral.isIntegral (R := MvPolynomial (Fin s) K) x).tower_top⟩
-  haveI : FaithfulSMul (MvPolynomial (Fin s) K ⧸ ker) (MvPolynomial (Fin n) K ⧸ J) :=
+  have : FaithfulSMul (MvPolynomial (Fin s) K ⧸ ker) (MvPolynomial (Fin n) K ⧸ J) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (RingHom.kerLift_injective _)
   have h1 : ringKrullDim (MvPolynomial (Fin n) K ⧸ J) =
       ringKrullDim (MvPolynomial (Fin s) K ⧸ ker) :=

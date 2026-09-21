@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
 import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
 import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
 import LeanPool.Nikodym.Nikodym.LowerBound.Lines.Basic
@@ -60,8 +62,8 @@ noncomputable def quotDim (I : Ideal (MvPolynomial (Fin d) K)) : ℕ :=
 theorem ringKrullDim_mvPolynomial_fin :
     ringKrullDim (MvPolynomial (Fin d) K) = (d : WithBot ℕ∞) := by
   rw [MvPolynomial.ringKrullDim_of_isNoetherianRing (R := K), ringKrullDim_eq_zero_of_field K,
-    zero_add,
-    Nat.card_eq_fintype_card, Fintype.card_fin]
+    zero_add]
+  simp
 
 /-- Blueprint A01: `dim (P_d ⧸ I) ≤ d` in `WithBot ℕ∞`. -/
 theorem ringKrullDim_quotient_le_natCast (I : Ideal (MvPolynomial (Fin d) K)) :
@@ -71,20 +73,20 @@ theorem ringKrullDim_quotient_le_natCast (I : Ideal (MvPolynomial (Fin d) K)) :
 /-- Blueprint A01: `quotDim` recovers the Krull dimension of a natural-number value. -/
 theorem quotDim_of_ringKrullDim_eq {I : Ideal (MvPolynomial (Fin d) K)} {n : ℕ}
     (h : ringKrullDim (MvPolynomial (Fin d) K ⧸ I) = (n : WithBot ℕ∞)) : quotDim I = n := by
-  rw [quotDim, h, ← WithBot.coe_natCast, WithBot.unbotD_coe, ENat.toNat_coe]
+  rw [quotDim, h, ← WithBot.coe_natCast, WithBot.unbotD_coe, ENat.toNat_natCast]
 
 /-- Blueprint A01: for a proper ideal `I`, `quotDim I` is the Krull dimension of `P_d ⧸ I`
 (no junk value occurs). -/
 theorem coe_quotDim (I : Ideal (MvPolynomial (Fin d) K)) (hI : I ≠ ⊤) :
     (quotDim I : WithBot ℕ∞) = ringKrullDim (MvPolynomial (Fin d) K ⧸ I) := by
-  haveI : Nontrivial (MvPolynomial (Fin d) K ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
+  have : Nontrivial (MvPolynomial (Fin d) K ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
   have h0 : (0 : WithBot ℕ∞) ≤ ringKrullDim (MvPolynomial (Fin d) K ⧸ I) :=
     ringKrullDim_nonneg_of_nontrivial
   have hd := ringKrullDim_quotient_le_natCast I
   obtain ⟨x, hx⟩ := WithBot.ne_bot_iff_exists.mp (ne_bot_of_le_ne_bot WithBot.zero_ne_bot h0)
   rw [← hx] at hd ⊢
   rw [← WithBot.coe_natCast, WithBot.coe_le_coe] at hd
-  have hxtop : x ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top d) hd
+  have hxtop : x ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top d) hd
   obtain ⟨n, rfl⟩ := ENat.ne_top_iff_exists.mp hxtop
   rw [quotDim_of_ringKrullDim_eq (I := I) (n := n) (by rw [← hx, WithBot.coe_natCast])]
   exact WithBot.coe_natCast n
@@ -96,7 +98,7 @@ theorem quotDim_bot : quotDim (⊥ : Ideal (MvPolynomial (Fin d) K)) = d :=
 
 /-- Blueprint A01: `quotDim P_d = 0` (junk value for the zero ring). -/
 theorem quotDim_top : quotDim (⊤ : Ideal (MvPolynomial (Fin d) K)) = 0 := by
-  haveI : Subsingleton (MvPolynomial (Fin d) K ⧸ (⊤ : Ideal (MvPolynomial (Fin d) K))) :=
+  have : Subsingleton (MvPolynomial (Fin d) K ⧸ (⊤ : Ideal (MvPolynomial (Fin d) K))) :=
     Ideal.Quotient.subsingleton_iff.mpr rfl
   rw [quotDim, ringKrullDim_eq_bot_of_subsingleton, WithBot.unbotD_bot, ENat.toNat_zero]
 
@@ -149,7 +151,7 @@ theorem eq_lineIdeal_of_le_of_quotDim_le_one {I : Ideal (MvPolynomial (Fin d) K)
     (hI : quotDim I ≤ 1) {b v : Fin d → K} (hv : v ≠ 0) (hle : I ≤ lineIdeal b v) :
     I = lineIdeal b v := by
   by_contra hne
-  haveI := lineIdeal_isPrime b v
+  have := lineIdeal_isPrime b v
   have h := quotDim_lt_of_lt (lt_of_le_of_ne hle hne)
   rw [quotDim_lineIdeal b hv] at h
   omega
@@ -184,7 +186,7 @@ theorem evPoly_spec (h : ℕ → ℕ)
     (hp : ∃ p : Polynomial ℚ, ∀ᶠ t : ℕ in atTop, (h t : ℚ) = p.eval (t : ℚ)) :
     ∀ᶠ t : ℕ in atTop, (h t : ℚ) = (evPoly h).eval (t : ℚ) := by
   classical
-  rw [evPoly, dif_pos hp]
+  rw [evPoly, dite_eq_left hp]
   exact hp.choose_spec
 
 /-- Blueprint A03: the eventual polynomial is determined by the function. -/
@@ -330,7 +332,7 @@ theorem eq_lineIdeal_of_quotDim_eq_one' :
     ∀ (I : Ideal (MvPolynomial (Fin d) K)), I.IsPrime → quotDim I = 1 → ∀ b v : Fin d → K,
       v ≠ 0 → I ≤ lineIdeal b v → I = lineIdeal b v := by
   intro I hI hdim b v hv hle
-  haveI := hI
+  have := hI
   exact eq_lineIdeal_of_le_of_quotDim_le_one hdim.le hv hle
 
 variable {K}

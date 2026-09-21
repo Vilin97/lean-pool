@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Fin.Tuple.NatAntidiagonal
+import Mathlib.Tactic
 
 /-!
 # Weighted shadow inequality

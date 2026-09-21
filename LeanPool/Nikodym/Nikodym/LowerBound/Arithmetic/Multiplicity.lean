@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Ring.Nat
+import Mathlib.Order.Basic
+import Mathlib.Tactic
 
 /-!
 # Natural-number multiplicity choice

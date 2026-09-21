@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
+import Mathlib.RingTheory.GradedAlgebra.Radical
 import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedLemmas
 import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
 import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
@@ -79,7 +80,7 @@ theorem dehom_X_zero : dehom (X 0 : MvPolynomial (Fin (d + 1)) K) = 1 := by
 theorem dehom_X_succ (i : Fin d) : dehom (X i.succ : MvPolynomial (Fin (d + 1)) K) = X i := by
   simp [dehom]
 
-@[simp]
+
 theorem dehom_C (a : K) : dehom (C a : MvPolynomial (Fin (d + 1)) K) = C a := by
   simp [dehom, algebraMap_eq]
 
@@ -197,7 +198,7 @@ polynomials of degree `≤ t` in `d` variables, as a `K`-linear isomorphism `P̂
 by `dehom` (inverse `homogenizeTo t`). -/
 noncomputable def dehomEquiv (t : ℕ) :
     homogeneousSubmodule (Fin (d + 1)) K t ≃ₗ[K] restrictTotalDegree (Fin d) K t :=
-  LinearEquiv.ofLinear
+  LinearEquiv.ofLinearMap
     ((dehom : MvPolynomial (Fin (d + 1)) K →ₐ[K] MvPolynomial (Fin d) K).toLinearMap.restrict
       fun G hG ↦ show dehom.toLinearMap G ∈ restrictTotalDegree (Fin d) K t from
         dehom_mem_restrictTotalDegree ((mem_homogeneousSubmodule _ _).mp hG))
@@ -429,7 +430,7 @@ theorem ringKrullDim_quotient_homogenization (I : Ideal (MvPolynomial (Fin d) K)
       Ideal.span {Ideal.Quotient.mk (homogenization I) (X 0 - 1)} := by
     rw [comap_dehom_eq, Ideal.map_sup, Ideal.map_quotient_self, bot_sup_eq, Ideal.map_span,
       Set.image_singleton]
-  haveI : ((I.comap dehom).map (Ideal.Quotient.mk (homogenization I))).IsPrime :=
+  have : ((I.comap dehom).map (Ideal.Quotient.mk (homogenization I))).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective
       (by rw [Ideal.mk_ker]; exact homogenization_le_comap I)
   have hmin : (I.comap dehom).map (Ideal.Quotient.mk (homogenization I)) ∈

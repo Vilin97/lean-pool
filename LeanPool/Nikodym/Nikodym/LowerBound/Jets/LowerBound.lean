@@ -232,7 +232,7 @@ theorem jetDim_eq_jetDim_comap_translate (r : ℕ) :
 theorem choose_le_jetDim_of_infinite [Infinite K] (I : Ideal (MvPolynomial (Fin d) K)) [I.IsPrime]
     (x : Fin d → K) (hx : I ≤ pointIdeal x) {r : ℕ} (hr : 1 ≤ r) :
     (r + quotDim I - 1).choose (quotDim I) ≤ jetDim I x r := by
-  haveI : (I.comap (translate x : MvPolynomial (Fin d) K →+* MvPolynomial (Fin d) K)).IsPrime :=
+  have : (I.comap (translate x : MvPolynomial (Fin d) K →+* MvPolynomial (Fin d) K)).IsPrime :=
     Ideal.IsPrime.comap _
   rw [jetDim_eq_jetDim_comap_translate, ← quotDim_comap_translate I x]
   exact choose_le_jetDim_origin _ (comap_translate_le_idealOfVars I x hx) hr

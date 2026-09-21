@@ -154,7 +154,7 @@ theorem card_digitSpace_ge (S : Scaffold b σ φ K₀ K₁) (hK₀ : 0 < K₀) (
         simp_rw [radix_apply, mul_div_right_comm, mul_pow, prod_mul_distrib, prod_const,
           card_univ, Fintype.card_fin, ← pow_mul]
     _ ≤ ∏ i : Fin k, ((S.boxFinset (ρ * radix n q k i)).card : ℝ) :=
-        prod_le_prod (fun i _ ↦ by positivity) (fun i _ ↦ hbox i)
+        prod_le_prod₀ (fun i _ ↦ by positivity) (fun i _ ↦ hbox i)
     _ = ((digitSpace S n q k ρ).card : ℝ) := by rw [card_digitSpace, Nat.cast_prod]
 
 /-! ### Blueprint E01: the energy fiber -/

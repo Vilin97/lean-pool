@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Field.Lemmas
+import Mathlib.Data.Nat.Factorial.BigOperators
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic
 
 /-!
 # Integer binomial gap estimate
@@ -240,7 +244,7 @@ theorem choose_T_le {d q r : ℕ} (hd : 2 ≤ d) (hq : 2 ≤ q) (hr : 8 * d ^ 2 
       _ = q * (r + i) := by ring
   have hprod : ∏ i ∈ range k, (T + 1 + i) ≤ q ^ k * ∏ i ∈ range k, (r + i) := by
     calc
-      ∏ i ∈ range k, (T + 1 + i) ≤ ∏ i ∈ range k, q * (r + i) := prod_le_prod' hfactor
+      ∏ i ∈ range k, (T + 1 + i) ≤ ∏ i ∈ range k, q * (r + i) := prod_le_prod hfactor
       _ = (∏ i ∈ range k, q) * ∏ i ∈ range k, (r + i) := prod_mul_distrib
       _ = q ^ k * ∏ i ∈ range k, (r + i) := by simp [prod_const, card_range]
   have hL : (T + 1).ascFactorial k = k.factorial * (T + k).choose k :=

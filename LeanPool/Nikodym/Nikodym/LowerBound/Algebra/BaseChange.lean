@@ -66,8 +66,11 @@ noncomputable def coeffProj (π : K' →ₗ[K] K) :
   toFun g' := ∑ α ∈ g'.support, monomial α (π (g'.coeff α))
   map_add' g h := by
     ext β
-    rw [coeff_add, coeff_sum_monomial_proj, coeff_sum_monomial_proj, coeff_sum_monomial_proj,
-      coeff_add, map_add]
+    rw [coeff_sum_monomial_proj]
+    change π (g.coeff β + h.coeff β) =
+      (∑ α ∈ g.support, monomial α (π (g.coeff α))).coeff β +
+        (∑ α ∈ h.support, monomial α (π (h.coeff α))).coeff β
+    rw [coeff_sum_monomial_proj, coeff_sum_monomial_proj, map_add]
   map_smul' c g := by
     ext β
     rw [RingHom.id_apply, coeff_smul, coeff_sum_monomial_proj, coeff_sum_monomial_proj,
@@ -254,7 +257,7 @@ theorem finrank_map_inf_restrictTotalDegree (I : Ideal (MvPolynomial (Fin d) K))
     I.restrictScalars K ⊓ restrictTotalDegree (Fin d) K t with hV
   set V' : Submodule K' (MvPolynomial (Fin d) K') :=
     (I.map ι).restrictScalars K' ⊓ restrictTotalDegree (Fin d) K' t with hV'
-  haveI : FiniteDimensional K V := Submodule.finiteDimensional_of_le inf_le_right
+  have : FiniteDimensional K V := Submodule.finiteDimensional_of_le inf_le_right
   let b := Module.Free.chooseBasis K V
   let v : Module.Free.ChooseBasisIndex K V → MvPolynomial (Fin d) K' := fun j ↦ ι (b j : _)
   have hv : ∀ j, v j = ι (b j : MvPolynomial (Fin d) K) := fun j ↦ rfl

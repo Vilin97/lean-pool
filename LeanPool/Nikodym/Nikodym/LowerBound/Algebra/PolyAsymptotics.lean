@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Polynomial.Basic
+import Mathlib.Data.Rat.Star
+import Mathlib.Tactic
 
 /-!
 # Elementary asymptotics of rational polynomials along `ℕ`
@@ -137,19 +140,20 @@ theorem coeff_sub_comp_X_sub_C {p : ℚ[X]} {n : ℕ} (hp : p.natDegree ≤ n + 
     rw [mul_comp, C_comp, X_pow_comp, coeff_sub, coeff_C_mul, coeff_C_mul, coeff_X_pow,
       coeff_X_sub_C_pow']
     rcases lt_trichotomy i n with hlt | rfl | hgt
-    · rw [if_neg hlt.ne', if_neg (by omega), Nat.choose_eq_zero_of_lt hlt]
+    · rw [ite_eq_right hlt.ne', ite_eq_right (by omega), Nat.choose_eq_zero_of_lt hlt]
       simp
     · simp
     · have hi' : i = n + 1 := by omega
       subst hi'
-      rw [if_pos rfl, if_neg (by omega), Nat.add_sub_cancel_left, Nat.choose_succ_self_right]
+      rw [ite_eq_left rfl, ite_eq_right (by omega), Nat.add_sub_cancel_left,
+        Nat.choose_succ_self_right]
       push_cast
       ring
   conv_lhs => rw [p.as_sum_range_C_mul_X_pow' (Nat.lt_succ_of_le hp)]
   rw [← coe_compRingHom_apply, map_sum, ← Finset.sum_sub_distrib, finsetSum_coeff]
   simp only [coe_compRingHom_apply]
   rw [Finset.sum_congr rfl key, Finset.sum_ite_eq' (Finset.range (n + 2)) (n + 1),
-    if_pos (Finset.mem_range.mpr (by omega))]
+    ite_eq_left (Finset.mem_range.mpr (by omega))]
 
 end Polynomial
 

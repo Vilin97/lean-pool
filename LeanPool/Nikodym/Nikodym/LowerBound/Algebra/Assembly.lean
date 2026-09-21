@@ -85,13 +85,13 @@ variable (K d) in
 /-- The A04′ facts bundled for B03. -/
 theorem degreeFacts : DegreeFacts K d where
   natDegree_affineHilbertPoly I hI := by
-    haveI := hI
+    have := hI
     exact natDegree_affineHilbertPoly_of_infinite I
   leadingCoeff_affineHilbertPoly I hI := by
-    haveI := hI
+    have := hI
     exact leadingCoeff_affineHilbertPoly_of_infinite I
   degree_pos I hI := by
-    haveI := hI
+    have := hI
     exact degree_pos_of_infinite I
 
 end Infinite
@@ -101,10 +101,10 @@ variable (K d) in
 theorem algebraInterface : AlgebraInterface K d :=
   algebraInterface_of_infinite
     (fun I hI t ↦ by
-      haveI := hI
+      have := hI
       exact hilbert_le_degree_mul_choose_of_infinite I t)
     (fun I hI hk g T hg hT hne ↦ by
-      haveI := hI
+      have := hI
       exact proper_cut_of_infinite (degreeFacts (RatFunc K) d) I hk g T hg hT hne)
 
 end Nikodym.LowerBound

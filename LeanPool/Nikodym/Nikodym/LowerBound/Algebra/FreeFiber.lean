@@ -99,13 +99,13 @@ theorem span_image_algebraMap_fractionRing_eq_top {T : Set R} (hT : T.Finite)
     exact hVV (Submodule.mul_mem_mul ha hb)
   -- `V` as a subalgebra: finite-dimensional, a domain, hence a field
   set A : Subalgebra (FractionRing S) (FractionRing R) := V.toSubalgebra h1 hmul with hA
-  haveI : Module.Finite (FractionRing S) A := by
+  have : Module.Finite (FractionRing S) A := by
     have : Module.Finite (FractionRing S) V :=
       Module.Finite.span_of_finite (FractionRing S) (hT.image _)
     refine Subalgebra.finiteDimensional_toSubmodule.mp ?_
     rw [hA, Submodule.toSubalgebra_toSubmodule]
     exact this
-  haveI : Algebra.IsIntegral (FractionRing S) A := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsIntegral (FractionRing S) A := Algebra.IsIntegral.of_finite _ _
   have hinjA : Function.Injective (algebraMap (FractionRing S) A) := by
     intro a b hab
     have := congrArg Subtype.val hab
@@ -145,7 +145,7 @@ theorem exists_basis_fractionRing_of_span_eq_top {ι : Type*} [Finite ι] {v : �
     exact span_image_algebraMap_fractionRing_eq_top (Set.finite_range v) hspan
   obtain ⟨κ, a, ha, hsp, hli⟩ := exists_linearIndependent' (FractionRing S) (⇑f ∘ v)
   cases nonempty_fintype ι
-  haveI : Fintype κ := Fintype.ofInjective a ha
+  have : Fintype κ := Fintype.ofInjective a ha
   set e := Fintype.equivFin κ with he
   have hli' : LinearIndependent (FractionRing S) ((⇑f ∘ v) ∘ a ∘ e.symm) := by
     rw [← Function.comp_assoc]
@@ -223,7 +223,18 @@ end FractionRing
 section Setting
 
 variable {K : Type*} [Field K] {n s : ℕ} {J : Ideal (MvPolynomial (Fin n) K)}
-  {y : Fin s → MvPolynomial (Fin n) K}
+
+/-- Use the algebra's scalar action directly in the normalization construction. -/
+noncomputable local instance freeFiberAlgebraSMul {k : ℕ}
+    (J : Ideal (MvPolynomial (Fin k) K)) (S : Type*) [CommSemiring S]
+    [Algebra S (MvPolynomial (Fin k) K ⧸ J)] : SMul S (MvPolynomial (Fin k) K ⧸ J) := Algebra.toSMul
+
+/-- Use the algebra's module structure directly in the normalization construction. -/
+noncomputable local instance freeFiberAlgebraModule {k : ℕ}
+    (J : Ideal (MvPolynomial (Fin k) K)) (S : Type*) [CommSemiring S]
+    [Algebra S (MvPolynomial (Fin k) K ⧸ J)] :
+    Module S (MvPolynomial (Fin k) K ⧸ J) := Algebra.toModule
+variable {y : Fin s → MvPolynomial (Fin n) K}
 
 attribute [local instance] FractionRing.liftAlgebra MvPolynomial.gradedAlgebra
 
@@ -336,7 +347,7 @@ theorem exists_conductor_of_pow_idealOfVars_le [J.IsPrime]
       ∀ i, b i = algebraMap (MvPolynomial (Fin n) K ⧸ J) _ (r i)) :
     ∃ c : MvPolynomial (Fin s) K, c ≠ 0 ∧ ∀ x : MvPolynomial (Fin n) K ⧸ J,
       c • x ∈ Submodule.span (MvPolynomial (Fin s) K) (Set.range r) := by
-  haveI := finite_of_pow_idealOfVars_le' hJh hy hN halg
+  have := finite_of_pow_idealOfVars_le' hJh hy hN halg
   exact exists_conductor hb
 
 /-! ### Optional: a homogeneous conductor
@@ -446,12 +457,12 @@ theorem exists_homogeneous_conductor
     · have hhom : MvPolynomial.aeval y (homogeneousComponent γ c) * F ∈
           homogeneousSubmodule (Fin n) K (1 * γ + t) :=
         ((homogeneousComponent_isHomogeneous γ c).aeval y hy).mul hFt
-      rw [homogeneousComponent_of_mem hhom, if_pos (by omega)]
+      rw [homogeneousComponent_of_mem hhom, ite_eq_left (by omega)]
     · intro δ _ hδ
       have hhom : MvPolynomial.aeval y (homogeneousComponent δ c) * F ∈
           homogeneousSubmodule (Fin n) K (1 * δ + t) :=
         ((homogeneousComponent_isHomogeneous δ c).aeval y hy).mul hFt
-      rw [homogeneousComponent_of_mem hhom, if_neg (by omega)]
+      rw [homogeneousComponent_of_mem hhom, ite_eq_right (by omega)]
     · intro h
       exact absurd hγle h
   rw [h3, map_mul, ← algebraMap_eq_mk_aeval halg, ← Algebra.smul_def] at h2

@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Antidiag.FinsuppEquiv
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic
 
 /-!
 # Degree-bounded polynomial spaces
@@ -101,7 +105,7 @@ theorem restrictTotalDegree_eq_restrictSupport (t : ℕ) :
   rw [restrictTotalDegree]
   congr 1
   ext α
-  simp only [Set.mem_setOf_eq, Finset.mem_coe, mem_exponentsLE]
+  simp only [Set.mem_ofPred_eq, Finset.mem_coe, mem_exponentsLE]
   rfl
 
 /-- Blueprint F01: `P_{d,≤t}` is a finite-dimensional `K`-vector space (this is a Mathlib

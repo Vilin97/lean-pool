@@ -180,17 +180,17 @@ theorem sum_sgn_mul_emb (hr1 : ∀ j, 1 < r j) (hsq : ∀ j, Squarefree (r j))
 theorem one_le_sqrt_prod (hr1 : ∀ j, 1 < r j) (T : Finset (Fin m)) :
     1 ≤ Real.sqrt (∏ j ∈ T, (r j : ℝ)) := by
   rw [Real.one_le_sqrt, ← Nat.cast_prod]
-  exact_mod_cast one_le_prod' fun j _ ↦ (hr1 j).le
+  exact_mod_cast one_le_prod fun j _ ↦ (hr1 j).le
 
 /-- Blueprint K03: `√r_T ≤ r_T ≤ ∏ j, r j`. -/
 theorem sqrt_prod_le_prod (hr1 : ∀ j, 1 < r j) (T : Finset (Fin m)) :
     Real.sqrt (∏ j ∈ T, (r j : ℝ)) ≤ ∏ j, (r j : ℝ) := by
   have h1 : (1 : ℝ) ≤ ∏ j ∈ T, (r j : ℝ) := by
     rw [← Nat.cast_prod]
-    exact_mod_cast one_le_prod' fun j _ ↦ (hr1 j).le
+    exact_mod_cast one_le_prod fun j _ ↦ (hr1 j).le
   have h2 : ∏ j ∈ T, (r j : ℝ) ≤ ∏ j, (r j : ℝ) := by
     rw [← Nat.cast_prod, ← Nat.cast_prod]
-    exact_mod_cast prod_le_prod_of_subset_of_one_le' (subset_univ T) fun j _ _ ↦ (hr1 j).le
+    exact_mod_cast prod_le_prod_of_subset_of_one_le (subset_univ T) fun j _ _ ↦ (hr1 j).le
   calc Real.sqrt (∏ j ∈ T, (r j : ℝ)) ≤ ∏ j ∈ T, (r j : ℝ) := by
         rw [Real.sqrt_le_left (by linarith)]
         nlinarith

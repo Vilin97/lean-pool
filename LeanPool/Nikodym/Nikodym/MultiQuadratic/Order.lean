@@ -4,7 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.MvPolynomial.CommRing
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Data.Int.Order.Units
+import Mathlib.RingTheory.Ideal.Maps
+import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.Tactic
 
 /-!
 # The multiquadratic order
@@ -212,7 +217,6 @@ noncomputable def emb (r : Fin m → ℕ) (ε : Fin m → ℤˣ) : Order r →+*
       fun j => by simpa using units_mul_sqrt_sq (ε j) (r j))
 
 /-- Blueprint K02: `σ_ε` sends integers to themselves. -/
-@[simp]
 theorem emb_intCast (r : Fin m → ℕ) (ε : Fin m → ℤˣ) (z : ℤ) : emb r ε z = z :=
   map_intCast _ _
 
@@ -253,7 +257,6 @@ theorem conj_gen (r : Fin m → ℕ) (ε : Fin m → ℤˣ) (j : Fin m) :
   simp [conj, gen]
 
 /-- Blueprint K02: conjugations fix integers. -/
-@[simp]
 theorem conj_intCast (r : Fin m → ℕ) (ε : Fin m → ℤˣ) (z : ℤ) : conj r ε z = z :=
   map_intCast _ _
 

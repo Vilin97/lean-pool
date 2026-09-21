@@ -107,7 +107,7 @@ their degrees is at most `T · degree I`. -/
 theorem proper_cut_of_infinite [Infinite K] (hF : DegreeFacts K d)
     (I : Ideal (MvPolynomial (Fin d) K)) [I.IsPrime] (hk : 2 ≤ quotDim I)
     (g : MvPolynomial (Fin d) K) (T : ℕ) (hg : g ∉ I) (hT : g.totalDegree ≤ T)
-    (hne : I ⊔ Ideal.span {g} ≠ ⊤) :
+    (_hne : I ⊔ Ideal.span {g} ≠ ⊤) :
     (∀ J ∈ (I ⊔ Ideal.span {g}).minimalPrimes, 0 < degree J) ∧
     ∑ J ∈ (finite_minimalPrimes_sup K I g).toFinset, degree J ≤ T * degree I := by
   refine ⟨fun J hJ ↦ hF.degree_pos J hJ.1.1, ?_⟩
@@ -139,7 +139,7 @@ theorem proper_cut_of_infinite [Infinite K] (hF : DegreeFacts K d)
     intro Q hQ
     obtain ⟨J, hJ, rfl⟩ := Finset.mem_image.mp hQ
     have hJ' := (hmem J).mp hJ
-    haveI : J.IsPrime := hJ'.1.1
+    have : J.IsPrime := hJ'.1.1
     refine ⟨inferInstance, homogenization_isHomogeneous J, ?_, ?_⟩
     · rw [quotDim_homogenization, hdimJ J hJ]
     · refine sup_le (homogenization_mono (le_sup_left.trans hJ'.1.2)) ?_
@@ -165,7 +165,7 @@ theorem proper_cut_of_infinite [Infinite K] (hF : DegreeFacts K d)
       (∑ J ∈ S, (degree J : ℚ)) / (n.factorial : ℚ) := by
     rw [Finset.sum_div]
     refine Finset.sum_congr rfl fun J hJ ↦ ?_
-    haveI : J.IsPrime := ((hmem J).mp hJ).1.1
+    have : J.IsPrime := ((hmem J).mp hJ).1.1
     rw [map_dehom_homogenization, ← hdimJ J hJ, coeff_quotDim_affineHilbertPoly hF J]
   have hR : (affineHilbertPoly I).coeff (n + 1) = (degree I : ℚ) / ((n + 1).factorial : ℚ) := by
     rw [← hn, coeff_quotDim_affineHilbertPoly hF I]

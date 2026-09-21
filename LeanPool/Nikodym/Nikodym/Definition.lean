@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic
 
 /-!
 # Finite field Nikodym sets
@@ -22,7 +25,7 @@ A set `S ⊆ 𝔽_qⁿ` is a Nikodym set if for every point `x ∈ 𝔽_qⁿ` th
 all of whose points other than `x` lie in `S`. Lines are parametrised as `x + t • v` with
 `v ≠ 0`, so the condition reads `x + t • v ∈ S` for all `t ≠ 0`.
 -/
-def IsNikodym {F : Type*} [Field F] [Fintype F] {n : ℕ} (S : Finset (Fin n → F)) : Prop :=
+def IsNikodym {F : Type*} [Field F] {n : ℕ} (S : Finset (Fin n → F)) : Prop :=
   ∀ x, ∃ v, v ≠ 0 ∧ ∀ t : F, t ≠ 0 → x + t • v ∈ S
 
 /--
@@ -33,7 +36,7 @@ theorem isNikodym_univ {F : Type*} [Field F] [Fintype F] {n : ℕ} (hn : 0 < n) 
   ⟨Pi.single ⟨0, hn⟩ 1, by simp, fun _ _ ↦ Finset.mem_univ _⟩
 
 /-- Supersets of Nikodym sets are Nikodym. -/
-theorem IsNikodym.mono {F : Type*} [Field F] [Fintype F] {n : ℕ} {S T : Finset (Fin n → F)}
+theorem IsNikodym.mono {F : Type*} [Field F] {n : ℕ} {S T : Finset (Fin n → F)}
     (hS : IsNikodym S) (hST : S ⊆ T) : IsNikodym T := fun x ↦
   let ⟨v, hv, h⟩ := hS x
   ⟨v, hv, fun t ht ↦ hST (h t ht)⟩

@@ -134,11 +134,11 @@ theorem D_succ_eq_mul (Q : Fin (k + 1) → ℕ) (i : Fin k) :
 theorem D_succ (Q : Fin (k + 1) → ℕ) (i : Fin k) : D Q i.succ = Q 0 * D (Fin.tail Q) i := by
   unfold D
   rw [Finset.prod_filter, Finset.prod_filter, Fin.prod_univ_succ]
-  simp only [Fin.succ_pos, if_true, Fin.succ_lt_succ_iff]
+  simp only [Fin.succ_pos, ite_true, Fin.succ_lt_succ_iff]
   rfl
 
 /-- Blueprint D01: `D (Fin.cons q Q) 0 = 1`. -/
-@[simp] theorem D_cons_zero (q : ℕ) (Q : Fin k → ℕ) : D (Fin.cons q Q) 0 = 1 := D_zero _
+ theorem D_cons_zero (q : ℕ) (Q : Fin k → ℕ) : D (Fin.cons q Q) 0 = 1 := D_zero _
 
 /-- Blueprint D01: `D (Fin.cons q Q) i.succ = q * D Q i`. -/
 @[simp] theorem D_cons_succ (q : ℕ) (Q : Fin k → ℕ) (i : Fin k) :

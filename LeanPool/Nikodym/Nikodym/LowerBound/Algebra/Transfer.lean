@@ -53,9 +53,9 @@ over `I.map ι`. A prime `q` with `I.map ι ≤ q ≤ J.map ι` contracts to a p
 `J`, hence to `J`, so `J.map ι = (q.comap ι).map ι ≤ q`. -/
 theorem map_mem_minimalPrimes_map_ratFunc {I J : Ideal (MvPolynomial (Fin d) K)}
     (hJ : J ∈ I.minimalPrimes) : J.map ι ∈ (I.map ι).minimalPrimes := by
-  haveI : J.IsPrime := hJ.1.1
+  have : J.IsPrime := hJ.1.1
   refine ⟨⟨isPrime_map_ratFunc J, Ideal.map_mono hJ.1.2⟩, fun q hq hqJ ↦ ?_⟩
-  haveI : q.IsPrime := hq.1
+  have : q.IsPrime := hq.1
   have h1 : I ≤ q.comap ι := Ideal.map_le_iff_le_comap.mp hq.2
   have h2 : q.comap ι ≤ J := by
     have h := Ideal.comap_mono (f := ι) hqJ
@@ -73,7 +73,7 @@ theorem minimalPrimes_map_ratFunc (I : Ideal (MvPolynomial (Fin d) K)) :
   constructor
   · intro hq
     have hq' : Minimal (fun p ↦ p.IsPrime ∧ I.map ι ≤ p) q := hq
-    haveI : q.IsPrime := hq.1.1
+    have : q.IsPrime := hq.1.1
     obtain ⟨J, hJ, hJq⟩ := Ideal.exists_minimalPrimes_le (Ideal.map_le_iff_le_comap.mp hq.1.2)
     exact ⟨J, hJ,
       hq'.eq_of_le (map_mem_minimalPrimes_map_ratFunc hJ).1 (Ideal.map_le_iff_le_comap.mpr hJq)⟩
@@ -128,13 +128,13 @@ theorem algebraInterface_of_infinite
   refine AlgebraInterface.mk' ?_ ?_ ?_
   · -- A08
     intro I hI t
-    haveI := hI
+    have := hI
     have h := hA08 (I.map ι) (isPrime_map_ratFunc I) t
     rwa [hilbert_map, degree_map, quotDim_map] at h
   · -- J02
     intro I hI x hx r hr
-    haveI := hI
-    haveI := isPrime_map_ratFunc I
+    have := hI
+    have := isPrime_map_ratFunc I
     have hx' : I.map ι ≤ pointIdeal (fun i ↦ algebraMap K (RatFunc K) (x i)) := by
       rw [← map_pointIdeal]
       exact Ideal.map_mono hx
@@ -142,8 +142,8 @@ theorem algebraInterface_of_infinite
     rwa [jetDim_map I x hr, quotDim_map] at h
   · -- B03
     intro I hI hk g T hg hT hne
-    haveI := hI
-    haveI := isPrime_map_ratFunc I
+    have := hI
+    have := isPrime_map_ratFunc I
     have hmem : ∀ J, J ∈ (finite_minimalPrimes_sup K I g).toFinset ↔
         J ∈ (I ⊔ Ideal.span {g}).minimalPrimes := fun J ↦ Set.Finite.mem_toFinset _
     have hg' : ι g ∉ I.map ι := (mem_map_iff I g).not.mpr hg
@@ -163,7 +163,7 @@ theorem algebraInterface_of_infinite
       rwa [degree_map] at h
     · rw [sum_minimalPrimes_sup_map_ratFunc, degree_map] at hsum
       simpa only [degree_map] using hsum
-    · haveI := hQ
+    · have := hQ
       obtain ⟨J, hJ, hJQ⟩ := exists_minimalPrimes_le K _ hIQ
       exact ⟨J, (hmem J).mpr hJ, hJQ⟩
 

@@ -65,7 +65,7 @@ theorem mul_mem_sup_pow_idealOfVars_of_isHomogeneous {I : Ideal (MvPolynomial (F
   refine (?_ : idealOfVars (Fin d) K ^ i * (I ⊔ idealOfVars (Fin d) K ^ (j + 1)) ≤
     I ⊔ idealOfVars (Fin d) K ^ (i + j + 1)) h1
   rw [Ideal.mul_sup, ← pow_add, add_assoc]
-  exact sup_le_sup_right Ideal.mul_le_left _
+  exact sup_le_sup_right Ideal.mul_le_right _
 
 end IdealOfVars
 

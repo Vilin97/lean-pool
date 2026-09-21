@@ -4,7 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Data.Int.Star
+import Mathlib.Data.Nat.Squarefree
+import Mathlib.NumberTheory.Real.Irrational
+import Mathlib.RingTheory.Algebraic.Integral
+import Mathlib.Tactic
 
 /-!
 # Kummer independence of square roots (blueprint K01)

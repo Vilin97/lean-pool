@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
+import Mathlib.Combinatorics.Pigeonhole
 import LeanPool.Nikodym.Nikodym.Construction.Digits
 import LeanPool.Nikodym.Nikodym.Construction.Parameters
 
@@ -357,7 +358,7 @@ theorem card_colorBox_le (hq : 1 ≤ q) :
   rw [card_colorBox]
   calc ∏ i : Fin k, (Params.D n q (i.val + 2) ^ 2 + 1)
       ≤ ∏ i : Fin k, 2 * Params.D n q (i.val + 2) ^ 2 := by
-        refine Finset.prod_le_prod' fun i _ ↦ ?_
+        refine Finset.prod_le_prod fun i _ ↦ ?_
         have h1 : 1 ≤ Params.D n q (i.val + 2) ^ 2 := Nat.one_le_pow _ _ (Params.D_pos hq _)
         omega
     _ = 2 ^ k * ∏ i : Fin k, Params.D n q (i.val + 2) ^ 2 := by

@@ -95,7 +95,7 @@ noncomputable def homHilbert (J : Ideal (MvPolynomial σ K)) (t : ℕ) : ℕ :=
 
 /-- Blueprint B01/B02: `homHilbert ⊤ t = 0`. -/
 theorem homHilbert_top (t : ℕ) : homHilbert (⊤ : Ideal (MvPolynomial σ K)) t = 0 := by
-  haveI : Subsingleton (MvPolynomial σ K ⧸ (⊤ : Ideal (MvPolynomial σ K))) :=
+  have : Subsingleton (MvPolynomial σ K ⧸ (⊤ : Ideal (MvPolynomial σ K))) :=
     Ideal.Quotient.subsingleton_iff.mpr rfl
   rw [homHilbert]
   exact Module.finrank_zero_of_subsingleton
@@ -159,8 +159,8 @@ theorem homogeneousComponent_mul_of_isHomogeneous {F : MvPolynomial σ K} {m : �
     rw [homogeneousComponent_of_mem (hF.mul (isHomogeneous_monomial c rfl)),
       homogeneousComponent_of_mem (isHomogeneous_monomial c rfl)]
     by_cases h : n = d.degree
-    · rw [if_pos h, if_pos (by rw [h])]
-    · rw [if_neg h, if_neg (by omega), mul_zero]
+    · rw [ite_eq_left h, ite_eq_left (by rw [h])]
+    · rw [ite_eq_right h, ite_eq_right (by omega), mul_zero]
   | add p q hp hq =>
     rw [mul_add, map_add, map_add, hp, hq, mul_add]
 
@@ -261,7 +261,7 @@ theorem le_idealOfVars_of_isHomogeneous {J : Ideal (MvPolynomial σ K)}
   intro x hx
   have h0 := homogeneousComponent_mem_of_mem hJ hx 0
   rw [homogeneousComponent_zero] at h0
-  have hc : coeff 0 x = 0 := by
+  have hc : x.coeff 0 = 0 := by
     by_contra hc
     exact hJ' (eq_top_of_C_mem hc h0)
   rw [← pow_one (idealOfVars σ K), mem_pow_idealOfVars_iff']

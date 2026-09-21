@@ -41,8 +41,28 @@ namespace Nikodym.LowerBound
 open MvPolynomial
 
 attribute [local instance] MvPolynomial.gradedAlgebra
+attribute [local instance] normalizationPolynomialQuotientSMul normalizationPolynomialQuotientModule
 
 /-! ### Part 1: the scaling automorphism `X i ↦ u * X i` -/
+
+/-- The quotient action is the multiplicative action supplied by its algebra structure. -/
+noncomputable local instance gradedNormQuotientMulAction {K : Type*} [Field K] {k : ℕ}
+    (J : Ideal (MvPolynomial (Fin k) K)) (S : Type*) [CommSemiring S]
+    [Algebra S (MvPolynomial (Fin k) K ⧸ J)] :
+    MulAction S (MvPolynomial (Fin k) K ⧸ J) :=
+  (Algebra.toModule : Module S (MvPolynomial (Fin k) K ⧸ J)).toMulAction
+
+/-- Use the algebra's scalar action directly in the normalization construction. -/
+noncomputable local instance gradedNormAlgebraSMul {K : Type*} [Field K] {k : ℕ}
+    (J : Ideal (MvPolynomial (Fin k) K)) (S : Type*) [CommSemiring S]
+    [Algebra S (FractionRing (MvPolynomial (Fin k) K ⧸ J))] :
+    SMul S (FractionRing (MvPolynomial (Fin k) K ⧸ J)) := Algebra.toSMul
+
+/-- Use the algebra's module structure directly in the normalization construction. -/
+noncomputable local instance gradedNormAlgebraModule {K : Type*} [Field K] {k : ℕ}
+    (J : Ideal (MvPolynomial (Fin k) K)) (S : Type*) [CommSemiring S]
+    [Algebra S (FractionRing (MvPolynomial (Fin k) K ⧸ J))] :
+    Module S (FractionRing (MvPolynomial (Fin k) K ⧸ J)) := Algebra.toModule
 
 section ScaleEquiv
 
@@ -143,20 +163,20 @@ theorem isHomogeneous_of_forall_scaleEquiv_eq [Infinite K] {F : MvPolynomial σ 
     exact key
   by_contra hne
   have hcoeff : ∀ u : Kˣ, (u : K) ^ α.degree = (u : K) ^ e := fun u ↦ by
-    have := congrArg (coeff α) (h u)
+    have := congrArg (fun p : MvPolynomial σ K => p.coeff α) (h u)
     rw [coeff_scaleEquiv, coeff_C_mul] at this
     exact mul_right_cancel₀ hα this
   set p : Polynomial K := Polynomial.X ^ α.degree - Polynomial.X ^ e with hp
   have hp0 : p ≠ 0 := fun h0 ↦ by
     have := congrArg (Polynomial.coeff · α.degree) h0
-    simp only [hp, Polynomial.coeff_sub, Polynomial.coeff_X_pow, if_true, Polynomial.coeff_zero,
-      if_neg hne, sub_zero] at this
+    simp only [hp, Polynomial.coeff_sub, Polynomial.coeff_X_pow, ite_true, Polynomial.coeff_zero,
+      ite_eq_right hne, sub_zero] at this
     exact one_ne_zero this
   refine hp0 (Polynomial.eq_zero_of_infinite_isRoot p ?_)
   refine Set.Infinite.mono ?_ ((Set.finite_singleton (0 : K)).infinite_compl)
   intro x hx
   have hx0 : x ≠ 0 := hx
-  simp only [Set.mem_setOf_eq, hp, Polynomial.IsRoot, Polynomial.eval_sub, Polynomial.eval_pow,
+  simp only [Set.mem_ofPred_eq, hp, Polynomial.IsRoot, Polynomial.eval_sub, Polynomial.eval_pow,
     Polynomial.eval_X]
   have hx' := hcoeff (Units.mk0 x hx0)
   rw [Units.val_mk0] at hx'
@@ -229,9 +249,9 @@ theorem finite_fractionRing_of_pow_idealOfVars_le
       (FractionRing (MvPolynomial (Fin n) K ⧸ J))] :
     Module.Finite (FractionRing (MvPolynomial (Fin s) K))
       (FractionRing (MvPolynomial (Fin n) K ⧸ J)) := by
-  haveI hfin : Module.Finite (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
+  have hfin : Module.Finite (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
     finite_of_pow_idealOfVars_le' hJh hy hN halg
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
     Algebra.IsIntegral.of_finite _ _
   obtain ⟨b, hb⟩ := hfin.fg_top
   have inj : Function.Injective
@@ -272,7 +292,7 @@ theorem norm_mem_range_algebraMap
         Algebra.norm (FractionRing (MvPolynomial (Fin s) K))
           (algebraMap (MvPolynomial (Fin n) K ⧸ J)
             (FractionRing (MvPolynomial (Fin n) K ⧸ J)) F) := by
-  haveI : Module.Finite (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
+  have : Module.Finite (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) :=
     finite_of_pow_idealOfVars_le' hJh hy hN halg
   have hF : IsIntegral (MvPolynomial (Fin s) K)
       (algebraMap (MvPolynomial (Fin n) K ⧸ J) (FractionRing (MvPolynomial (Fin n) K ⧸ J)) F) :=
@@ -291,7 +311,7 @@ fraction fields compatibly with `algebraMap (Frac S) (Frac R)`, so
 `isHomogeneous_of_forall_scaleEquiv_eq`. -/
 theorem norm_isHomogeneous [Infinite K]
     (hJh : J.IsHomogeneous (homogeneousSubmodule (Fin n) K)) (hy : ∀ i, (y i).IsHomogeneous 1)
-    [J.IsPrime] [Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J)]
+    [Algebra (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J)]
     (halg : algebraMap (MvPolynomial (Fin s) K) (MvPolynomial (Fin n) K ⧸ J) =
       (MvPolynomial.aeval fun i ↦ Ideal.Quotient.mk J (y i)).toRingHom)
     [Algebra (FractionRing (MvPolynomial (Fin s) K)) (FractionRing (MvPolynomial (Fin n) K ⧸ J))]

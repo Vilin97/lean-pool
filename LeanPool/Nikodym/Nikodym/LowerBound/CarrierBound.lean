@@ -103,7 +103,7 @@ theorem PrivateFamily.carrier_bound (H : AlgebraInterface K d) (hd : 2 ≤ d)
   | base =>
     -- the curve case C08: `L ≤ Δ ≤ C Δ`
     intro E _ P I hI hdim hIP
-    haveI := hI
+    have := hI
     simp only [Nat.sub_self, pow_zero, pow_one, one_mul]
     refine Nat.mul_le_mul_right _ ((P.card_le_degree_of_quotDim_le_one hdim.le hIP).trans ?_)
     exact Nat.le_mul_of_pos_left _ (Nat.succ_pos _)
@@ -148,7 +148,7 @@ theorem PrivateFamily.carrier_bound (H : AlgebraInterface K d) (hd : 2 ≤ d)
       obtain ⟨g, hgI, hgT, hg, -⟩ :=
         P.exists_cut_of_card_pos H hI hd (by omega) hIP hL har hrq (by rw [hdim]; exact hlt)
       -- component assignment and selection C06 + C07
-      haveI : Nonempty E := Fintype.card_pos_iff.mp hL
+      have : Nonempty E := Fintype.card_pos_iff.mp hL
       obtain ⟨J, s, hJ, hJdim, hJdeg, -, hJle, hcard⟩ :=
         P.exists_component_family H hI (by omega) hIP hgI hgT hg
       have hJk : quotDim J = j + 1 := by omega

@@ -137,10 +137,10 @@ theorem mk_mem_span_normalizationGens {J : Ideal (MvPolynomial (Fin N) K)} (hJ :
           (aeval y (monomial (0 : Fin s →₀ ℕ) (1 : K)) * monomial β 1) ∈
             normalizationGens J y r t :=
         mem_normalizationGens (by omega) (by rw [map_zero, zero_add, hdeg])
-      have heq : Ideal.Quotient.mk J (monomial β (coeff β F)) = coeff β F •
+      have heq : Ideal.Quotient.mk J (monomial β (F.coeff β)) = F.coeff β •
           Ideal.Quotient.mk J (aeval y (monomial (0 : Fin s →₀ ℕ) (1 : K)) * monomial β 1) := by
         rw [monomial_zero', C_1, map_one, one_mul]
-        change _ = Ideal.Quotient.mk J (coeff β F • monomial β (1 : K))
+        change _ = Ideal.Quotient.mk J (F.coeff β • monomial β (1 : K))
         rw [smul_monomial, smul_eq_mul, mul_one]
       rw [heq]
       exact Submodule.smul_mem _ _ (Submodule.subset_span hmem)
@@ -183,7 +183,7 @@ theorem homHilbert_le_mul_choose [Infinite K] {J : Ideal (MvPolynomial (Fin N) K
     rw [Submodule.map_le_iff_le_comap]
     intro F hF
     exact mk_mem_span_normalizationGens hJ hJh hy hr t hF
-  haveI : Module.Finite K
+  have : Module.Finite K
       (Submodule.span K (normalizationGens J y r t : Set (MvPolynomial (Fin N) K ⧸ J))) :=
     Module.Finite.span_of_finite K (Finset.finite_toSet _)
   calc homHilbert J t
@@ -219,7 +219,7 @@ theorem quotDim_sup_le_of_ne {Q Q' : Ideal (MvPolynomial (Fin N) K)} [Q.IsPrime]
   · rw [htop, quotDim_top]
     exact Nat.zero_le _
   · refine quotDim_le_of_forall_isPrime (fun q hq hle ↦ ?_) htop
-    haveI := hq
+    have := hq
     exact quotDim_le_of_le_of_le hQ hQ' hne (le_sup_left.trans hle) (le_sup_right.trans hle)
 
 /-- Blueprint B02(iii): **sum over a finset of components.** For `K` infinite and a finset `𝒬` of
@@ -248,11 +248,11 @@ theorem exists_sum_homHilbert_le_homHilbert_inf_add [Infinite K] {m : ℕ}
       · exact ⟨0, fun t ↦ by rw [htop, homHilbert_top]; exact Nat.zero_le _⟩
       · refine homHilbert_le_mul_choose htop (hQh.sup hAh) ?_
         refine quotDim_le_of_forall_isPrime (fun q hq hle ↦ ?_) htop
-        haveI := hq
+        have := hq
         obtain ⟨Q', hQ's, hQ'q⟩ := (Ideal.IsPrime.inf_le' hq).mp (le_sup_right.trans hle)
         obtain ⟨hQ'p, -, hQ'd⟩ := h𝒬 Q' (Finset.mem_insert_of_mem hQ's)
-        haveI := hQp
-        haveI := hQ'p
+        have := hQp
+        have := hQ'p
         have hne : Q ≠ Q' := fun h ↦ hQs (h ▸ hQ's)
         have := quotDim_le_of_le_of_le hQd hQ'd hne (le_sup_left.trans hle) hQ'q
         omega

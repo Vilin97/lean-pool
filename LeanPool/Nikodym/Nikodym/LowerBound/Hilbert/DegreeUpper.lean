@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
+import Mathlib.Algebra.MvPolynomial.Funext
 import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.FreeFiber
 import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedNorm
 import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Homogenization
@@ -331,6 +332,9 @@ end Pieces
 
 /-! ### The shared setting -/
 
+attribute [local instance] normalizationPolynomialQuotientSMul normalizationPolynomialQuotientModule
+attribute [local instance] gradedNormAlgebraSMul gradedNormAlgebraModule gradedNormQuotientMulAction
+
 section Setting
 
 variable {K : Type*} [Field K] {n s : ℕ} {J : Ideal (MvPolynomial (Fin n) K)}
@@ -609,12 +613,12 @@ theorem exists_hilbert_bounds [Infinite K] (I : Ideal (MvPolynomial (Fin d) K)) 
   have hnorm := exists_linear_normalization J hJne hJh
   rw [hdim] at hnorm
   obtain ⟨y, hy, hinj, N, hN⟩ := hnorm
-  letI : Algebra (MvPolynomial (Fin (k + 1)) K) (MvPolynomial (Fin (d + 1)) K ⧸ J) :=
+  let : Algebra (MvPolynomial (Fin (k + 1)) K) (MvPolynomial (Fin (d + 1)) K ⧸ J) :=
     (MvPolynomial.aeval fun i ↦ Ideal.Quotient.mk J (y i)).toRingHom.toAlgebra
   have halg : algebraMap (MvPolynomial (Fin (k + 1)) K) (MvPolynomial (Fin (d + 1)) K ⧸ J) =
       (MvPolynomial.aeval fun i ↦ Ideal.Quotient.mk J (y i)).toRingHom :=
     RingHom.algebraMap_toAlgebra _
-  haveI := faithfulSMul_of_halg halg hinj
+  have := faithfulSMul_of_halg halg hinj
   obtain ⟨Δ, r, e, hr, hli, b, hb⟩ := exists_homogeneous_fraction_basis hJh hy hN halg
   obtain ⟨c, hc0, hc⟩ := exists_conductor_of_pow_idealOfVars_le hJh hy hN halg ⟨b, hb⟩
   obtain ⟨c', γ, hc'0, hc'h, hc'⟩ := exists_homogeneous_conductor hJh hy halg hr hc0 hc

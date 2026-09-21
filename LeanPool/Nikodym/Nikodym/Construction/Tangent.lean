@@ -15,8 +15,8 @@ This file implements blueprint node T01 of `docs/nikodym_construction_lean_bluep
 Everything is parametrised by `k = h - 1` (the number of digits), as in `Fibers.lean`: digit
 vectors are `Fin k → R`, points of `F ^ h` are `Fin (k + 1) → F` built with `Fin.snoc`.
 
-* Definitions: the point `Scaffold.pt φ n q k a w = (φ (a i))_i ⧺ φ (base w)`, the direction
-  `Scaffold.dir φ w = (φ (w i))_i ⧺ 1`, the product family
+* Definitions: the point `Scaffold.pt φ n q k a w = (φ (a i))_i ++ φ (base w)`, the direction
+  `Scaffold.dir φ w = (φ (w i))_i ++ 1`, the product family
   `Scaffold.ptFamily φ n q k A B = (A.image φ, …, A.image φ, B.image (φ ∘ base))` and the
   product set `Scaffold.ptSet φ n q k A B = Fintype.piFinset (ptFamily …)`, so that
   `ptSet = φ(A)^k × φ(b(B))`.
@@ -163,7 +163,7 @@ theorem eq_zero_of_map_eq_zero_of_lt_M (S : Scaffold b σ φ K₀ K₁) (hn : Fi
   have hT0 : 0 ≤ T := (abs_nonneg _).trans (hx (Classical.arbitrary ι))
   have hMq : ((Params.M n q : ℝ)) ^ n ≤ (q : ℝ) := by
     exact_mod_cast Params.M_pow_le hn1 hq1
-  calc ∏ i, |σ i x| ≤ ∏ _i : ι, T := Finset.prod_le_prod (fun _ _ ↦ abs_nonneg _) fun i _ ↦ hx i
+  calc ∏ i, |σ i x| ≤ ∏ _i : ι, T := Finset.prod_le_prod₀ (fun _ _ ↦ abs_nonneg _) fun i _ ↦ hx i
     _ = T ^ n := by rw [Finset.prod_const, Finset.card_univ, hn]
     _ < (Params.M n q : ℝ) ^ n := pow_lt_pow_left₀ hT hT0 (by omega)
     _ ≤ q := hMq

@@ -4,7 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.IntegralClosure.GoingDown
+import Mathlib.RingTheory.KrullDimension.Polynomial
+import Mathlib.RingTheory.NoetherNormalization
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic
 
 /-!
 # Dimension theory of finitely generated domains over a field
@@ -44,7 +53,7 @@ theorem primeSpectrum_comap_strictMono_of_isIntegral [Algebra.IsIntegral R S] :
     StrictMono (PrimeSpectrum.comap (algebraMap R S)) := by
   intro P Q hPQ
   rw [← PrimeSpectrum.asIdeal_lt_asIdeal] at hPQ ⊢
-  exact Ideal.IsIntegral.comap_lt_comap hPQ
+  exact Ideal.IsIntegral.under_lt_under hPQ
 
 /-- Blueprint A01 (1): the Krull dimension does not go up along an integral extension. -/
 theorem ringKrullDim_le_of_isIntegral [Algebra.IsIntegral R S] :
@@ -76,6 +85,7 @@ theorem exists_ltSeries_length_eq_of_isIntegral [Algebra.IsIntegral R S] [Faithf
       rw [← PrimeSpectrum.asIdeal_lt_asIdeal]
       refine lt_of_le_of_ne hLQ fun h ↦ hlt.ne ?_
       have h' := congrArg (Ideal.comap (algebraMap R S)) h
+      change L.last.asIdeal.comap (algebraMap R S) = Q.under R at h'
       rwa [← PrimeSpectrum.comap_asIdeal, hlast, hQx] at h'
     refine ⟨L.snoc ⟨Q, hQ⟩ hLQ', by simp [hlen], ?_⟩
     ext1
@@ -117,7 +127,7 @@ theorem ringKrullDim_mvPolynomial_fin_eq (s : ℕ) :
 theorem height_eq_of_isMaximal_mvPolynomial_fin :
     ∀ (s : ℕ) (𝔫 : Ideal (MvPolynomial (Fin s) K)), 𝔫.IsMaximal → 𝔫.height = s
   | 0, 𝔫, h => by
-    haveI := h
+    have := h
     let e := (MvPolynomial.isEmptyAlgEquiv K (Fin 0)).toRingEquiv
     have hmax : (𝔫.map e).IsMaximal := Ideal.map_isMaximal_of_equiv e
     rcases Ideal.eq_bot_or_top (𝔫.map e) with h0 | h0
@@ -125,12 +135,12 @@ theorem height_eq_of_isMaximal_mvPolynomial_fin :
       simp
     · exact absurd h0 hmax.ne_top
   | s + 1, 𝔫, h => by
-    haveI := h
+    have := h
     let e := (MvPolynomial.finSuccEquiv K s).toRingEquiv
-    haveI : (𝔫.map e).IsMaximal := Ideal.map_isMaximal_of_equiv e
+    have : (𝔫.map e).IsMaximal := Ideal.map_isMaximal_of_equiv e
     have hmax : ((𝔫.map e).under (MvPolynomial (Fin s) K)).IsMaximal :=
       Polynomial.isMaximal_comap_C_of_isJacobsonRing (𝔫.map e)
-    haveI := Ideal.over_under (A := MvPolynomial (Fin s) K) (𝔫.map e)
+    have := Ideal.over_under (A := MvPolynomial (Fin s) K) (𝔫.map e)
     rw [← e.height_map 𝔫, Polynomial.height_eq_height_add_one ((𝔫.map e).under _) (𝔫.map e),
       height_eq_of_isMaximal_mvPolynomial_fin s _ hmax]
     push_cast
@@ -152,9 +162,9 @@ theorem exists_mvPolynomial_algHom_injective_isIntegral :
       (g : MvPolynomial (Fin s) K →+* A).IsIntegral ∧ ringKrullDim A = s := by
   obtain ⟨s, g, hinj, hint⟩ := exists_integral_inj_algHom_of_fg K A
   refine ⟨s, g, hinj, hint, ?_⟩
-  letI : Algebra (MvPolynomial (Fin s) K) A := g.toRingHom.toAlgebra
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) K) A := ⟨hint⟩
-  haveI : FaithfulSMul (MvPolynomial (Fin s) K) A :=
+  let : Algebra (MvPolynomial (Fin s) K) A := g.toRingHom.toAlgebra
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) K) A := ⟨hint⟩
+  have : FaithfulSMul (MvPolynomial (Fin s) K) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
   rw [ringKrullDim_eq_of_isIntegral (R := MvPolynomial (Fin s) K),
     ringKrullDim_mvPolynomial_fin_eq]
@@ -171,7 +181,7 @@ include K in
 theorem finiteRingKrullDim : FiniteRingKrullDim A := by
   obtain ⟨n, hn⟩ := exists_ringKrullDim_eq_natCast K (A := A)
   rw [finiteRingKrullDim_iff_ne_bot_and_top, hn, ← WithBot.coe_natCast, ← WithBot.coe_top]
-  exact ⟨WithBot.coe_ne_bot, fun h ↦ ENat.coe_ne_top n (WithBot.coe_inj.mp h)⟩
+  exact ⟨WithBot.coe_ne_bot, fun h ↦ ENat.natCast_ne_top n (WithBot.coe_inj.mp h)⟩
 
 end AffineDomain
 
@@ -190,9 +200,9 @@ maximal ideal of `A` has height `s`. -/
 private theorem height_eq_of_isMaximal_aux (𝔪 : Ideal A) [𝔪.IsMaximal] : 𝔪.height = s := by
   set S := MvPolynomial (Fin s) K
   set 𝔫 := 𝔪.under S with h𝔫
-  haveI : 𝔫.IsMaximal := Ideal.IsMaximal.under S 𝔪
-  haveI := Ideal.over_under (A := S) 𝔪
-  haveI : (𝔫.map (algebraMap S A)).LiesOver 𝔫 := map_under_liesOver_under 𝔪
+  have : 𝔫.IsMaximal := Ideal.IsMaximal.under S 𝔪
+  have := Ideal.over_under (A := S) 𝔪
+  have : (𝔫.map (algebraMap S A)).LiesOver 𝔫 := map_under_liesOver_under 𝔪
   have hfib : (𝔪.map (Ideal.Quotient.mk (𝔫.map (algebraMap S A)))).height = 0 := by
     have hdim : ringKrullDim (A ⧸ 𝔫.map (algebraMap S A)) ≤ 0 := by
       calc ringKrullDim (A ⧸ 𝔫.map (algebraMap S A))
@@ -213,7 +223,7 @@ private theorem ringKrullDim_quotient_add_one_aux (P : Ideal A) [P.IsPrime] (hP 
     ringKrullDim (A ⧸ P) + 1 = s := by
   set S := MvPolynomial (Fin s) K
   set Q := P.under S with hQ
-  haveI := Ideal.over_under (A := S) P
+  have := Ideal.over_under (A := S) P
   have hQbot : Q ≠ ⊥ := Ideal.under_ne_bot S (Ideal.ne_bot_of_height_eq_one hP)
   have hQ1 : Q.height = 1 := by
     apply le_antisymm
@@ -231,7 +241,7 @@ private theorem ringKrullDim_quotient_add_one_aux (P : Ideal A) [P.IsPrime] (hP 
       (mem_nonZeroDivisors_of_ne_zero hp.ne_zero)
   have h3 : (s : WithBot ℕ∞) ≤ ringKrullDim (S ⧸ Q) + 1 := by
     obtain ⟨𝔫, h𝔫, hQ𝔫⟩ := Q.exists_le_maximal Ideal.IsPrime.ne_top'
-    haveI := h𝔫
+    have := h𝔫
     have h := Ideal.height_le_ringKrullDim_quotient_add_one (p := 𝔫) (r := p) (hQ𝔫 hpQ)
     rwa [height_eq_of_isMaximal_mvPolynomial_fin K s 𝔫 h𝔫, WithBot.coe_natCast, ← hQp] at h
   rw [h1]
@@ -250,12 +260,12 @@ dimension.** -/
 theorem height_eq_ringKrullDim_of_isMaximal (𝔪 : Ideal A) (h𝔪 : 𝔪.IsMaximal) :
     (𝔪.height : WithBot ℕ∞) = ringKrullDim A := by
   obtain ⟨s, g, hinj, hint, hs⟩ := exists_mvPolynomial_algHom_injective_isIntegral K A
-  letI : Algebra (MvPolynomial (Fin s) K) A := g.toRingHom.toAlgebra
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) K) A := ⟨hint⟩
-  haveI : FaithfulSMul (MvPolynomial (Fin s) K) A :=
+  let : Algebra (MvPolynomial (Fin s) K) A := g.toRingHom.toAlgebra
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) K) A := ⟨hint⟩
+  have : FaithfulSMul (MvPolynomial (Fin s) K) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing K A
-  haveI := h𝔪
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing K A
+  have := h𝔪
   rw [height_eq_of_isMaximal_aux K (s := s) 𝔪, hs]
   exact WithBot.coe_natCast s
 
@@ -274,16 +284,16 @@ theorem ringKrullDim_quotient_add_one_of_mem_minimalPrimes {f : A} (hf : f ≠ 0
     (hP : P ∈ (Ideal.span {f}).minimalPrimes) :
     ringKrullDim (A ⧸ P) + 1 = ringKrullDim A := by
   obtain ⟨s, g, hinj, hint, hs⟩ := exists_mvPolynomial_algHom_injective_isIntegral K A
-  letI : Algebra (MvPolynomial (Fin s) K) A := g.toRingHom.toAlgebra
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) K) A := ⟨hint⟩
-  haveI : FaithfulSMul (MvPolynomial (Fin s) K) A :=
+  let : Algebra (MvPolynomial (Fin s) K) A := g.toRingHom.toAlgebra
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) K) A := ⟨hint⟩
+  have : FaithfulSMul (MvPolynomial (Fin s) K) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing K A
-  haveI : P.IsPrime := hP.1.1
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing K A
+  have : P.IsPrime := hP.1.1
   have hfP : f ∈ P := hP.1.2 (Ideal.mem_span_singleton_self f)
   have hPbot : P ≠ ⊥ := fun h ↦ hf ((Submodule.mem_bot A).mp (h ▸ hfP))
   have hP1 : P.height = 1 := by
-    haveI : (Ideal.span {f}).IsPrincipal := ⟨⟨f, rfl⟩⟩
+    have : (Ideal.span {f}).IsPrincipal := ⟨⟨f, rfl⟩⟩
     apply le_antisymm (Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes _ P hP)
     exact Order.one_le_iff_pos.mpr (pos_iff_ne_zero.mpr
       (by rwa [Ne, Ideal.height_eq_zero_iff_eq_bot]))
@@ -339,7 +349,7 @@ theorem height_map_eq_ringKrullDim_of_isMaximal {𝔪 : Ideal (MvPolynomial (Fin
     (h𝔪 : 𝔪.IsMaximal) (hI : I ≤ 𝔪) :
     ((𝔪.map (Ideal.Quotient.mk I)).height : WithBot ℕ∞) =
       ringKrullDim (MvPolynomial (Fin d) K ⧸ I) := by
-  haveI := h𝔪
+  have := h𝔪
   exact height_eq_ringKrullDim_of_isMaximal K _
     (Ideal.IsMaximal.map_of_surjective_of_ker_le Ideal.Quotient.mk_surjective
       (by rwa [Ideal.mk_ker]))

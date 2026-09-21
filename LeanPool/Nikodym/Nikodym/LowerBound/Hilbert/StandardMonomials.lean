@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
+import Mathlib.RingTheory.MvPolynomial.MonomialOrder.DegLex
+import Mathlib.RingTheory.MvPolynomial.MonomialOrder
+import Mathlib.RingTheory.MvPolynomial.Basic
 import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
 import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Shadow
 
@@ -87,7 +90,7 @@ theorem leadingExponents_add_mem {α : Fin d →₀ ℕ} (hα : α ∈ leadingEx
     rw [Ne, monomial_eq_zero]
     exact one_ne_zero
   refine ⟨monomial γ 1 * f, I.mul_mem_left _ hf, mul_ne_zero hm hf0, ?_⟩
-  rw [degree_mul hm hf0, degree_monomial, if_neg one_ne_zero, add_comm]
+  rw [degree_mul hm hf0, degree_monomial, ite_eq_right one_ne_zero, add_comm]
 
 /-- Blueprint H01: the standard exponents are closed under taking divisors. -/
 theorem standardExponents_downClosed (I : Ideal (MvPolynomial (Fin d) K)) :
@@ -246,7 +249,7 @@ theorem mem_standardLE {t : ℕ} {α : Fin d →₀ ℕ} :
 theorem coe_standardLE (I : Ideal (MvPolynomial (Fin d) K)) (t : ℕ) :
     (↑(standardLE I t) : Set (Fin d →₀ ℕ)) = {α ∈ standardExponents I | α.degree ≤ t} := by
   ext α
-  simp only [Finset.mem_coe, mem_standardLE, Set.mem_setOf_eq]
+  simp only [Finset.mem_coe, mem_standardLE, Set.mem_ofPred_eq]
 
 /-- Blueprint H01: `V_I(t)` is spanned by the classes of the standard monomials of degree at most
 `t`. -/

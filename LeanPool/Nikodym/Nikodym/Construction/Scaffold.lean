@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Data.Int.Star
+import Mathlib.Tactic
 
 /-!
 # The scaffold interface
@@ -107,7 +110,7 @@ theorem box_neg {x : R} {T : ℝ} (hx : x ∈ box σ T) : -x ∈ box σ T :=
   fun i ↦ by rw [map_neg, abs_neg]; exact hx i
 
 /-- Blueprint S03: boxes are closed under negation (iff form). -/
-@[simp] theorem neg_mem_box_iff {x : R} {T : ℝ} : -x ∈ box σ T ↔ x ∈ box σ T :=
+ theorem neg_mem_box_iff {x : R} {T : ℝ} : -x ∈ box σ T ↔ x ∈ box σ T :=
   ⟨fun hx ↦ by simpa using box_neg hx, box_neg⟩
 
 /-- Blueprint S03: `box S + box T ⊆ box (S + T)`. -/

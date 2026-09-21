@@ -14,7 +14,7 @@ of `P = MvPolynomial σ K` and a form `G ∉ Q` of degree `e`,
 
   `homHilbert (Q ⊔ (G)) t + homHilbert Q (t - e) = homHilbert Q t`   for `e ≤ t`.
 
-Multiplication by the class `ḡ` of `G` is an injective `K`-linear map of the domain `P ⧸ Q`
+Multiplication by the class `gbar` of `G` is an injective `K`-linear map of the domain `P ⧸ Q`
 (`Q` is prime and `G ∉ Q`) sending the image `V_{t-e}` of `P_{t-e}` into the image `V_t` of `P_t`;
 its image is exactly the kernel of the factor map `V_t → P ⧸ (Q ⊔ (G))`
 (`ker_factor_inf_map_eq_map_mulLeft`): a form `F` of degree `t` in `Q ⊔ (G)` is `q + u * G`, and
@@ -37,7 +37,7 @@ variable {K : Type*} [Field K] {σ : Type*}
 
 /-- Blueprint B01, kernel computation: for a homogeneous ideal `Q`, a form `G` of degree `e ≤ t`,
 the part of the image `V_t` of `P_t` in `P ⧸ Q` killed by the factor map `P ⧸ Q → P ⧸ (Q ⊔ (G))`
-is `ḡ • V_{t-e}`, the image of `V_{t-e}` under multiplication by the class of `G`. -/
+is `gbar • V_{t-e}`, the image of `V_{t-e}` under multiplication by the class of `G`. -/
 theorem ker_factor_inf_map_eq_map_mulLeft {Q : Ideal (MvPolynomial σ K)}
     (hQ : Q.IsHomogeneous (homogeneousSubmodule σ K)) {G : MvPolynomial σ K} {e : ℕ}
     (hG : G.IsHomogeneous e) {t : ℕ} (ht : e ≤ t) :
@@ -92,7 +92,7 @@ theorem homHilbert_sup_span_singleton_add {Q : Ideal (MvPolynomial σ K)} [Q.IsP
     mul_right_injective₀ hg0
   have h1 : homHilbert (Q ⊔ Ideal.span {G}) t = finrank K ((V t).map f) := by
     rw [homHilbert, map_mkₐ_eq_map_factor (le_sup_left : Q ≤ Q ⊔ Ideal.span {G})]
-  haveI : Module.Finite K (V t) := Module.Finite.map _ _
+  have : Module.Finite K (V t) := Module.Finite.map _ _
   have h2 := LinearMap.finrank_range_add_finrank_ker (f ∘ₗ (V t).subtype)
   rw [LinearMap.range_comp, Submodule.range_subtype, LinearMap.ker_comp] at h2
   have h3 : finrank K ((LinearMap.ker f).comap (V t).subtype) =

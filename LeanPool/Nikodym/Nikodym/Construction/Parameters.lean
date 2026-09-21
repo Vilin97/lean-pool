@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Ring.IsFormallyReal
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Tactic
 
 /-!
 # Integer parameters of the construction
@@ -139,13 +142,13 @@ theorem D_succ {i : ℕ} (hi : 1 ≤ i) : D n q (i + 1) = D n q i * Q n q i :=
 
 /-- Blueprint Q01: `D i ≥ 1` for `q ≥ 1`. -/
 theorem D_pos (hq : 1 ≤ q) (i : ℕ) : 1 ≤ D n q i :=
-  one_le_prod' fun j _ ↦ Q_pos hq j
+  one_le_prod fun j _ ↦ Q_pos hq j
 
 /-- Blueprint Q01: `D` is monotone in the index. -/
 theorem D_mono (hq : 1 ≤ q) {j i : ℕ} (hj : 1 ≤ j) (hji : j ≤ i) : D n q j ≤ D n q i := by
   have hunion := prod_Ico_consecutive (Q n q) hj hji
   rw [D, D, ← hunion]
-  exact Nat.le_mul_of_pos_right _ (one_le_prod' fun k _ ↦ Q_pos hq k)
+  exact Nat.le_mul_of_pos_right _ (one_le_prod fun k _ ↦ Q_pos hq k)
 
 /-- Blueprint Q01: `Q j` divides `D i` for `1 ≤ j < i`. -/
 theorem Q_dvd_D {j i : ℕ} (hj : 1 ≤ j) (hji : j < i) : Q n q j ∣ D n q i :=
@@ -177,7 +180,7 @@ theorem D_mul_Q_sq_pow_two_pow (hn : 1 ≤ n) (hq : 1 ≤ q) {i : ℕ} (hi : 1 �
   have hprod :
       (∏ j ∈ Ico 1 i, (Q n q j ^ (n * 2 ^ j)) ^ (2 ^ (i - j))) ≤
         ∏ j ∈ Ico 1 i, q ^ (2 ^ (i - j)) :=
-    prod_le_prod' fun j _ ↦ pow_le_pow_left' (Q_pow_le hn hq j) _
+    prod_le_prod fun j _ ↦ pow_le_pow_left' (Q_pow_le hn hq j) _
   have hQi : (Q n q i ^ (n * 2 ^ i)) ^ 2 ≤ q ^ 2 :=
     pow_le_pow_left' (Q_pow_le hn hq i) _
   have hsum : (∏ j ∈ Ico 1 i, q ^ (2 ^ (i - j))) * q ^ 2 = q ^ (2 ^ i) := by
@@ -213,7 +216,7 @@ theorem D_pow_le (hn : 1 ≤ n) (hq : 1 ≤ q) {i : ℕ} (hi : 1 ≤ i) :
   have hprod :
       (∏ j ∈ Ico 1 i, (Q n q j ^ (n * 2 ^ j)) ^ (2 ^ (i - 1 - j))) ≤
         ∏ j ∈ Ico 1 i, q ^ (2 ^ (i - 1 - j)) :=
-    prod_le_prod' fun j _ ↦ pow_le_pow_left' (Q_pow_le hn hq j) _
+    prod_le_prod fun j _ ↦ pow_le_pow_left' (Q_pow_le hn hq j) _
   calc
     D n q i ^ (n * 2 ^ (i - 1)) = _ := hsplit
     _ ≤ ∏ j ∈ Ico 1 i, q ^ (2 ^ (i - 1 - j)) := hprod
@@ -417,7 +420,7 @@ theorem prod_Q_pow_ge {h : ℕ} (hn : 1 ≤ n) (hh : 2 ≤ h)
       ((q : ℝ) ^ (1 / ((n : ℝ) * 2 ^ i)) / 2) ^ n ≤ (Q n q i : ℝ) ^ n := by
     intro i hi
     exact pow_le_pow_left₀ (by positivity) (hhalf i hi) _
-  have hprod := prod_le_prod (fun i _hi ↦ by positivity) hterm
+  have hprod := prod_le_prod₀ (fun i _hi ↦ by positivity) hterm
   have hdiv :
       ∏ i ∈ Ico 1 h, ((q : ℝ) ^ (1 / ((n : ℝ) * 2 ^ i)) / 2) ^ n =
         (∏ i ∈ Ico 1 h, ((q : ℝ) ^ (1 / ((n : ℝ) * 2 ^ i))) ^ n) /
@@ -465,7 +468,7 @@ theorem prod_D_sq_le {h : ℕ} (hn : 1 ≤ n) (hh : 2 ≤ h)
     intro i hi
     have ⟨hi1, _⟩ := mem_Ico.1 hi
     exact D_sq_le_rpow' hn hq1 hi1
-  have hprod := prod_le_prod (fun _ _ ↦ by positivity) hterm
+  have hprod := prod_le_prod₀ (fun _ _ ↦ by positivity) hterm
   have hcard : #(Ico 1 h) = h - 1 := Nat.card_Ico _ _
   have hq0 : 0 ≤ (q : ℝ) := Nat.cast_nonneg _
   calc

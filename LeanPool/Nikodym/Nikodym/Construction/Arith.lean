@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shengtong Zhang
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.NumberTheory.PrimeCounting
+import Mathlib.Tactic
 
 /-!
 # Exponent arithmetic
@@ -70,7 +73,7 @@ theorem odd_nth_prime {n : ℕ} (hn : 0 < n) : Odd (Nat.nth Nat.Prime n) := by
   refine (Nat.prime_nth_prime n).odd_of_ne_two ?_
   intro h
   have hlt : Nat.nth Nat.Prime 0 < Nat.nth Nat.Prime n :=
-    (Nat.nth_lt_nth Nat.infinite_setOf_prime).2 hn
+    (Nat.nth_lt_nth Nat.infinite_setOfPred_prime).2 hn
   rw [Nat.nth_prime_zero_eq_two, h] at hlt
   exact (lt_irrefl _ hlt).elim
 
@@ -88,12 +91,12 @@ theorem exists_distinct_odd_primes (m : ℕ) :
   · intro j
     exact ⟨Nat.prime_nth_prime _, odd_nth_prime (by omega)⟩
   · intro j
-    exact (Nat.nth_injective Nat.infinite_setOf_prime).ne (by omega)
+    exact (Nat.nth_injective Nat.infinite_setOfPred_prime).ne (by omega)
   · intro j k hjk
     have hjk' : (j : ℕ) ≠ k := fun h ↦ hjk (Fin.ext h)
-    exact ⟨(Nat.nth_injective Nat.infinite_setOf_prime).ne (by omega),
-      (Nat.nth_injective Nat.infinite_setOf_prime).ne (by omega),
-      (Nat.nth_injective Nat.infinite_setOf_prime).ne (by omega)⟩
+    exact ⟨(Nat.nth_injective Nat.infinite_setOfPred_prime).ne (by omega),
+      (Nat.nth_injective Nat.infinite_setOfPred_prime).ne (by omega),
+      (Nat.nth_injective Nat.infinite_setOfPred_prime).ne (by omega)⟩
 
 end Nikodym
 

@@ -62,7 +62,6 @@ theorem lineRes_X (i : Fin d) :
   aeval_X _ i
 
 /-- Blueprint F04: `res_{b,v}` fixes constants. -/
-@[simp]
 theorem lineRes_C (a : K) : lineRes b v (C a) = Polynomial.C a := by
   rw [lineRes, aeval_C, Polynomial.algebraMap_eq]
 

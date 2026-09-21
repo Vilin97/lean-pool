@@ -62,7 +62,7 @@ theorem Z_mem_gridIdeal (g : Fin d → Polynomial K) (i : Fin d) : Z g i ∈ gri
 
 variable {g : Fin d → Polynomial K} {q : ℕ}
 
-/-- Blueprint G01: `Z i = ∑_{k ≤ q} coeff k (g i) • X i ^ k`. -/
+/-- Blueprint G01: `Z i = ∑_{k ≤ q} MvPolynomial.coeff k (g i) • X i ^ k`. -/
 theorem Z_eq_sum (hdeg : ∀ i, (g i).natDegree = q) (i : Fin d) :
     Z g i = ∑ k ∈ range (q + 1), (g i).coeff k • X i ^ k := by
   rw [Z, Polynomial.aeval_eq_sum_range, hdeg]
@@ -141,16 +141,16 @@ theorem exists_bounded_rep_one (hg : ∀ i, (g i).Monic) (hdeg : ∀ i, (g i).na
         rw [hβ, tsub_add_cancel_of_le (Finsupp.single_le_iff.mpr hi)]
       have hβdeg : β.degree + q = α.degree := by
         rw [← hβα, map_add, Finsupp.degree_single]
-      have hsplit : monomial α (coeff α p) =
-          monomial β (coeff α p) * Z g i - monomial β (coeff α p) * (Z g i - X i ^ q) := by
-        rw [mul_sub, sub_sub_cancel, X_pow_eq_monomial, monomial_mul, mul_one, hβα]
+      have hsplit : monomial α (p.coeff α) =
+          monomial β (p.coeff α) * Z g i - monomial β (p.coeff α) * (Z g i - X i ^ q) := by
+        rw [mul_sub, sub_sub_cancel, X_pow_eq_monomial, monomial_mul_monomial, mul_one, hβα]
       rw [hsplit]
       refine Submodule.sub_mem _ (Submodule.mem_sup_right ?_) (ih _ ?_)
       · exact Ideal.mul_mem_left _ _ (Z_mem_gridIdeal g i)
       · rw [mem_restrictTotalDegree_iff]
-        have h1 := totalDegree_mul (monomial β (coeff α p)) (Z g i - X i ^ q)
-        have h2 : (monomial β (coeff α p)).totalDegree ≤ β.degree :=
-          totalDegree_monomial_le β (coeff α p)
+        have h1 := totalDegree_mul (monomial β (p.coeff α)) (Z g i - X i ^ q)
+        have h2 : (monomial β (p.coeff α)).totalDegree ≤ β.degree :=
+          totalDegree_monomial_le β (p.coeff α)
         have h3 := totalDegree_Z_sub_X_pow_lt hg hdeg hq i
         omega
   exact (hS_iff f).mp (hRTD _ f (mem_restrictTotalDegree_iff.mpr le_rfl))

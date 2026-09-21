@@ -111,7 +111,7 @@ theorem eq_zero_of_map_eq_zero (hr1 : ∀ j, 1 < r j) (hsq : ∀ j, Squarefree (
     (hcop : ∀ j k, j ≠ k → Nat.Coprime (r j) (r k)) {F : Type*} [Field F] [Fintype F]
     (hp : (Fintype.card F).Prime) (φ : Order r →+* F) {x : Order r} (hx : φ x = 0)
     (hsmall : ∏ ε : Fin m → ℤˣ, |emb r ε x| < Fintype.card F) : x = 0 := by
-  haveI := charP_of_card_prime hp
+  have := charP_of_card_prime hp
   have hnm : φ (nm r x) = 0 := by
     obtain ⟨y, hy⟩ := dvd_nm r x
     rw [hy, map_mul, hx, zero_mul]
