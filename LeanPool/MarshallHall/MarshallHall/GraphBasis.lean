@@ -99,12 +99,17 @@ The proof is the same unique-lift argument as Mathlib's spanning-tree theorem,
 but keeps the edge type explicit for later core-support statements.
 -/
 
+/-- The root of a spanning tree, viewed as an object of the underlying groupoid. -/
+def spanningTreeRoot {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
+    (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T] : G :=
+  root T
+
 noncomputable def spanningTreeBasis {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G)))
     [Arborescence T] :
     FreeGroupBasis
       ((wideSubquiverEquivSetTotal (wideSubquiverSymmetrify T))ᶜ : Set _)
-      (End (show G from root T)) := by
+      (End (spanningTreeRoot T)) := by
   classical
   let X : Set _ := (wideSubquiverEquivSetTotal (wideSubquiverSymmetrify T))ᶜ
   apply FreeGroupBasis.ofUniqueLift X
@@ -151,7 +156,7 @@ noncomputable def spanningTreeBasis {G : Type u} [Groupoid.{u} G] [IsFreeGroupoi
     change E (IsFreeGroupoid.SpanningTree.loopOfHom T _) = dite _ _ _
     split_ifs with h
     · rw [IsFreeGroupoid.SpanningTree.loopOfHom_eq_id T e h]
-      change E (1 : End (show G from root T)) = 1
+      change E (1 : End (spanningTreeRoot T)) = 1
       exact E.map_one
     · exact hE ⟨⟨a, b, e⟩, h⟩
 

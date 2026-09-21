@@ -132,6 +132,39 @@ theorem loopOfHom_inv {T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators 
   simp [IsFreeGroupoid.SpanningTree.loopOfHom, CategoryTheory.End.mul_def,
     Category.assoc]
 
+private theorem retract_loop_comp
+    {T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))} [Arborescence T]
+    (Y : Set ((wideSubquiverEquivSetTotal (wideSubquiverSymmetrify T))ᶜ :
+      Set (Quiver.Total (IsFreeGroupoid.Generators G))))
+    {a b c : G} (p : a ⟶ b) (q : b ⟶ c)
+    (hp : retractBasisElement (spanningTreeBasis T) Y
+      (IsFreeGroupoid.SpanningTree.loopOfHom T p) =
+        IsFreeGroupoid.SpanningTree.loopOfHom T p)
+    (hq : retractBasisElement (spanningTreeBasis T) Y
+      (IsFreeGroupoid.SpanningTree.loopOfHom T q) =
+        IsFreeGroupoid.SpanningTree.loopOfHom T q) :
+    retractBasisElement (spanningTreeBasis T) Y
+      (IsFreeGroupoid.SpanningTree.loopOfHom T (p ≫ q)) =
+        IsFreeGroupoid.SpanningTree.loopOfHom T (p ≫ q) := by
+  exact (congrArg (retractBasisElement (spanningTreeBasis T) Y) (loopOfHom_comp p q)).trans
+    ((retractBasisElement_mul (spanningTreeBasis T) Y _ _).trans
+      ((congrArg₂ (· * ·) hq hp).trans (loopOfHom_comp p q).symm))
+
+private theorem retract_loop_inv
+    {T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))} [Arborescence T]
+    (Y : Set ((wideSubquiverEquivSetTotal (wideSubquiverSymmetrify T))ᶜ :
+      Set (Quiver.Total (IsFreeGroupoid.Generators G))))
+    {a b : G} (p : a ⟶ b)
+    (hp : retractBasisElement (spanningTreeBasis T) Y
+      (IsFreeGroupoid.SpanningTree.loopOfHom T p) =
+        IsFreeGroupoid.SpanningTree.loopOfHom T p) :
+    retractBasisElement (spanningTreeBasis T) Y
+      (IsFreeGroupoid.SpanningTree.loopOfHom T (inv p)) =
+        IsFreeGroupoid.SpanningTree.loopOfHom T (inv p) := by
+  exact (congrArg (retractBasisElement (spanningTreeBasis T) Y) (loopOfHom_inv p)).trans
+    ((retractBasisElement_inv (spanningTreeBasis T) Y _).trans
+      ((congrArg Inv.inv hp).trans (loopOfHom_inv p).symm))
+
 theorem basis_retraction_loop_of_edge
     {T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))}
     [Arborescence T]
@@ -184,16 +217,12 @@ theorem basis_retraction_loop_of_path
   | cons p e ih =>
       cases e with
       | inl e =>
-          rw [symPathHom.eq_def, loopOfHom_comp]
-          simp only [Sum.recOn]
-          rw [retractBasisElement_mul,
-            basis_retraction_loop_of_edge P e (hp e), ih]
+          exact retract_loop_comp Y (symPathHom p) (IsFreeGroupoid.of e) ih
+            (basis_retraction_loop_of_edge P e (hp e))
       | inr e =>
-          rw [symPathHom.eq_def, loopOfHom_comp]
-          simp only [Sum.recOn]
-          rw [retractBasisElement_mul, loopOfHom_inv,
-            retractBasisElement_inv,
-            basis_retraction_loop_of_edge P e (hp e), ih]
+          exact retract_loop_comp Y (symPathHom p) _ ih
+            (retract_loop_inv Y (IsFreeGroupoid.of e)
+              (basis_retraction_loop_of_edge P e (hp e)))
 
 theorem basis_retraction_loop_of_subquiver_path
     {T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))}
@@ -219,24 +248,15 @@ theorem basis_retraction_loop_of_subquiver_path
       rw [loopOfHom_id]
       exact retractBasisElement_one B Y
   | cons p e ih =>
-      change retractBasisElement B Y
-          (IsFreeGroupoid.SpanningTree.loopOfHom T
-            (symPathHom (forgetSubquiverPath p) ≫ _)) =
-        IsFreeGroupoid.SpanningTree.loopOfHom T (symPathHom (forgetSubquiverPath p) ≫ _)
-      rw [loopOfHom_comp]
       rcases e with ⟨e | e, heQ⟩
-      · have heP : positiveEdgeOfSym (Sum.inl e) ∈ P :=
-            hQ (Sum.inl e) heQ
-        have heP' : ⟨_, _, e⟩ ∈ P := by
-          simpa [positiveEdgeOfSym] using heP
-        rw [retractBasisElement_mul,
-          basis_retraction_loop_of_edge P e heP', ih]
-      · have heP : positiveEdgeOfSym (Sum.inr e) ∈ P :=
-            hQ (Sum.inr e) heQ
-        have heP' : ⟨_, _, e⟩ ∈ P := by
-          simpa [positiveEdgeOfSym] using heP
-        rw [retractBasisElement_mul, loopOfHom_inv,
-          retractBasisElement_inv,
-          basis_retraction_loop_of_edge P e heP', ih]
+      · have heP : positiveEdgeOfSym (Sum.inl e) ∈ P := hQ (Sum.inl e) heQ
+        have heP' : ⟨_, _, e⟩ ∈ P := heP
+        exact retract_loop_comp Y (symPathHom (forgetSubquiverPath p))
+          (IsFreeGroupoid.of e) ih (basis_retraction_loop_of_edge P e heP')
+      · have heP : positiveEdgeOfSym (Sum.inr e) ∈ P := hQ (Sum.inr e) heQ
+        have heP' : ⟨_, _, e⟩ ∈ P := heP
+        exact retract_loop_comp Y (symPathHom (forgetSubquiverPath p)) _ ih
+          (retract_loop_inv Y (IsFreeGroupoid.of e)
+            (basis_retraction_loop_of_edge P e heP'))
 
 end MarshallHall

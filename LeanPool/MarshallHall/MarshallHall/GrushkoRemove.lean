@@ -137,7 +137,7 @@ theorem factorMul_reverse_target (x y : Sum G H)
 
 /-! ### The contracted vertex and edge types -/
 
-def RemovedVertex (v : V) := {x : V // x ≠ v}
+abbrev RemovedVertex (v : V) := {x : V // x ≠ v}
 
 noncomputable instance removedVertexFintype (v : V) :
     Fintype (RemovedVertex (V := V) v) := by
@@ -980,10 +980,9 @@ theorem removeSymmEdgePath_read {v : V}
             (removeQuiver e₀ ha hn) (removeHasReverse e₀ ha hn)
             (removeLabelling L e₀ ha hn color hmono) _ _
             (removeEdgePath e₀ ha hn (Quiver.reverse f))) = _ := h
-      exact hmap.trans (hread.trans (by
-        simp only [BinaryLabelling.symmLabel]
-        rw [L.reverse_label, separatedMap_factorWordInv]
-        ))
+      exact hmap.trans (hread.trans
+        (congrArg (fun z => (removePotential L e₀ color x)⁻¹ * separatedMap z *
+          removePotential L e₀ color y) (L.reverse_label f)))
 
 theorem removeSymmPath_read {v : V}
     (L : BinaryLabelling (G := G) (H := H) (V := V))
@@ -1142,7 +1141,7 @@ theorem removedMarkedGraph_weaklyConnected {n : ℕ}
   obtain ⟨p⟩ := hM w.1
   have hstart : removeVertexMap e₀ ha hn (show V from M.base) =
       (⟨M.base, hbase⟩ : RemovedVertex v) := by
-    simp [removeVertexMap, removeEndpoint_eq_of_ne, hbase]
+    exact removeEndpoint_eq_of_ne _ hbase
   have hend : removeVertexMap e₀ ha hn (show V from w.1) = w := by
     apply Subtype.ext
     simp [removeVertexMap, removeEndpoint_eq_of_ne, w.property]

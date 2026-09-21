@@ -38,7 +38,7 @@ variable {G H : Type v} [Group G] [Group H]
 
 /-- A copy of `a` is added to the original vertex set.  `false` denotes the
 old copy and `true` the new copy. -/
-def UnfoldVertex (a : V) := {x : V // x ≠ a} ⊕ Bool
+abbrev UnfoldVertex (a : V) := {x : V // x ≠ a} ⊕ Bool
 
 noncomputable instance unfoldVertexFintype (a : V) : Fintype (UnfoldVertex a) := by
   classical
@@ -967,9 +967,7 @@ theorem unfoldSymmLiftArrow_read
     unfoldHasReverse L e₀
   cases e with
   | inl f =>
-      simpa [unfoldSymmLiftArrow, BinaryLabelling.pathRead_toPath,
-        BinaryLabelling.symmLabel] using
-        unfoldLiftEdge_read L e₀ f
+      exact (unfoldLiftEdge_read L e₀ f).trans (L.pathRead_toPath f)
   | inr f =>
       rw [unfoldSymmLiftArrow, BinaryLabelling.pathRead_reverse,
         unfoldLiftEdge_read, BinaryLabelling.pathRead_toPath]
@@ -1034,8 +1032,7 @@ def unfoldSymmMonochromaticPath
           have hfmono : L.IsMonochromatic f.toPath color := by
             intro z hz
             have hz' : z = L.label f := by
-              simpa only [BinaryLabelling.pathLabels_toPath,
-                List.mem_singleton] using hz
+              exact List.mem_singleton.mp hz
             rw [hz']
             exact hecolor
           exact @Quiver.Path.comp (UnfoldVertex (allArrowSource e₀))
@@ -1051,8 +1048,7 @@ def unfoldSymmMonochromaticPath
           have hfmono : L.IsMonochromatic f.toPath color := by
             intro z hz
             have hz' : z = L.label f := by
-              simpa only [BinaryLabelling.pathLabels_toPath,
-                List.mem_singleton] using hz
+              exact List.mem_singleton.mp hz
             rw [hz']
             exact hecolor
           exact @Quiver.Path.comp (UnfoldVertex (allArrowSource e₀))
@@ -1101,14 +1097,13 @@ theorem unfoldSymmMonochromaticPath_read
           have hfmono : L.IsMonochromatic f.toPath color := by
             intro z hz
             have hz' : z = L.label f := by
-              simpa only [BinaryLabelling.pathLabels_toPath,
-                List.mem_singleton] using hz
+              exact List.mem_singleton.mp hz
             rw [hz']
             exact hecolor
           rw [unfoldMonochromaticPath_read L e₀ color f.toPath hfmono,
             ← Path.comp_toPath_eq_cons, L.symmPathRead_comp,
-            L.symmPathRead_toPath, L.pathRead_toPath]
-          simp [BinaryLabelling.symmLabel]
+            L.symmPathRead_toPath]
+          exact congrArg (L.symmPathRead p * ·) (L.pathRead_toPath f)
       | inr f =>
           rw [unfoldSymmMonochromaticPath, BinaryLabelling.pathRead_comp,
             ih htail]
@@ -1124,15 +1119,16 @@ theorem unfoldSymmMonochromaticPath_read
           have hfmono : L.IsMonochromatic f.toPath color := by
             intro z hz
             have hz' : z = L.label f := by
-              simpa only [BinaryLabelling.pathLabels_toPath,
-                List.mem_singleton] using hz
+              exact List.mem_singleton.mp hz
             rw [hz']
             exact hecolor
           rw [BinaryLabelling.pathRead_reverse,
             unfoldMonochromaticPath_read L e₀ color f.toPath hfmono,
             ← Path.comp_toPath_eq_cons, L.symmPathRead_comp,
-            L.symmPathRead_toPath, L.pathRead_toPath]
-          simp [BinaryLabelling.symmLabel, separatedMap_factorWordInv]
+            L.symmPathRead_toPath]
+          exact congrArg (L.symmPathRead p * ·)
+            ((congrArg Inv.inv (L.pathRead_toPath f)).trans
+              (separatedMap_factorWordInv (L.label f)).symm)
 
 /-! ### The duplicated edge and its complementary tail -/
 
@@ -1168,9 +1164,9 @@ theorem unfoldDuplicatePath_read
   letI : HasInvolutiveReverse (UnfoldVertex (allArrowSource e₀)) :=
     unfoldHasReverse L e₀
   rw [unfoldDuplicatePath, BinaryLabelling.pathRead_comp,
-    BinaryLabelling.pathRead_toPath,
-    unfoldSymmMonochromaticPath_read]
-  simp [unfoldDuplicateForward, unfoldLabelling, unfoldEdgeLabel]
+    BinaryLabelling.pathRead_toPath]
+  exact congrArg (separatedMap (allArrowLabel L e₀) * ·)
+    (unfoldSymmMonochromaticPath_read L e₀ (unfoldEdgeColor L e₀) q hq)
 
 def unfoldPathEdges
     (L : BinaryLabelling (G := G) (H := H) (V := V))
@@ -1302,8 +1298,7 @@ theorem unfoldSymmMonochromaticPath_edges_original
           have hfmono : L.IsMonochromatic f.toPath color := by
             intro z hz
             have hz' : z = L.label f := by
-              simpa only [BinaryLabelling.pathLabels_toPath,
-                List.mem_singleton] using hz
+              exact List.mem_singleton.mp hz
             rw [hz']
             exact hecolor
           rw [unfoldSymmMonochromaticPath, unfoldPathEdges_comp]
@@ -1325,8 +1320,7 @@ theorem unfoldSymmMonochromaticPath_edges_original
           have hfmono : L.IsMonochromatic f.toPath color := by
             intro z hz
             have hz' : z = L.label f := by
-              simpa only [BinaryLabelling.pathLabels_toPath,
-                List.mem_singleton] using hz
+              exact List.mem_singleton.mp hz
             rw [hz']
             exact hecolor
           rw [unfoldSymmMonochromaticPath, unfoldPathEdges_comp]
@@ -1457,9 +1451,7 @@ theorem unfoldDuplicateFoldPath_read
     Sum.inl (unfoldDuplicateForward L e₀)
   have hD : (unfoldLabelling L e₀).symmPathRead eD.toPath =
       separatedMap (allArrowLabel L e₀) := by
-    rw [BinaryLabelling.symmPathRead_toPath]
-    change separatedMap (unfoldEdgeLabel L e₀ (Sum.inr false)) = _
-    rfl
+    exact (unfoldLabelling L e₀).symmPathRead_toPath eD
   have hmap : (unfoldLabelling L e₀).symmPathRead
         ((@Quiver.Symmetrify.of (UnfoldVertex (allArrowSource e₀))
           (unfoldQuiver L e₀)).mapPath qlift) =
@@ -1469,16 +1461,9 @@ theorem unfoldDuplicateFoldPath_read
       (eD.toPath.comp
         ((@Quiver.Symmetrify.of (UnfoldVertex (allArrowSource e₀))
           (unfoldQuiver L e₀)).mapPath qlift)) = _
-  rw [BinaryLabelling.symmPathRead_comp, hD]
-  congr 1
-  calc
-    (unfoldLabelling L e₀).symmPathRead
-        ((@Quiver.Symmetrify.of (UnfoldVertex (allArrowSource e₀))
-          (unfoldQuiver L e₀)).mapPath qlift) =
-      (unfoldLabelling L e₀).pathRead qlift := hmap
-    _ = L.symmPathRead q :=
-      unfoldSymmMonochromaticPath_read L e₀
-        (unfoldEdgeColor L e₀) q hq
+  exact ((unfoldLabelling L e₀).symmPathRead_comp eD.toPath _).trans
+    (congrArg₂ (· * ·) hD (hmap.trans
+      (unfoldSymmMonochromaticPath_read L e₀ (unfoldEdgeColor L e₀) q hq)))
 
 theorem unfold_duplicate_safe_tail
     (L : BinaryLabelling (G := G) (H := H) (V := V))

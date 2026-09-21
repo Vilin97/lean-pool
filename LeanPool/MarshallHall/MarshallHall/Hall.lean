@@ -18,6 +18,20 @@ variable {α : Type u} [DecidableEq α]
 /-! The finite-core completion argument.  Its conclusion records the actual
 inclusion of the original subgroup into the finite-index subgroup. -/
 
+private theorem loopOfHom_root {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
+    (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T]
+    (p : End (spanningTreeRoot T)) : IsFreeGroupoid.SpanningTree.loopOfHom T p = p := by
+  have ht : IsFreeGroupoid.SpanningTree.treeHom T (spanningTreeRoot T) = 𝟙 _ :=
+    IsFreeGroupoid.SpanningTree.treeHom_root T
+  change IsFreeGroupoid.SpanningTree.treeHom T _ ≫ p ≫
+    inv (IsFreeGroupoid.SpanningTree.treeHom T _) = p
+  have hi := congrArg (fun f : End (spanningTreeRoot T) =>
+    @CategoryTheory.inv G _ _ _ f (@IsIso.of_groupoid G _ _ _ f)) ht
+  exact (congrArg₂ (fun f g : End (spanningTreeRoot T) => f ≫ p ≫ g) ht hi).trans
+    ((Category.id_comp _).trans
+      ((congrArg (fun g : End (spanningTreeRoot T) => p ≫ g)
+        (@CategoryTheory.IsIso.inv_id G _ (spanningTreeRoot T))).trans (Category.comp_id p)))
+
 theorem finite_core_free_factor
     (H : Subgroup (FreeGroup α))
     (A : Set (LeftCosetQuotient H)) [Fintype A]
@@ -37,8 +51,7 @@ theorem finite_core_free_factor
     Nonempty (MarshallHallWitness H) := by
   let O : Set A := MulAction.orbit (FreeGroup α) base
   let baseO : O := ⟨base, MulAction.mem_orbit_self base⟩
-  let V := ActionCategory (FreeGroup α) O
-  letI : IsFreeGroupoid V := freeActionGroupoidIsFree α O
+  letI : IsFreeGroupoid (ActionCategory (FreeGroup α) O) := freeActionGroupoidIsFree α O
   let K : Subgroup (FreeGroup α) := MulAction.stabilizer (FreeGroup α) baseO
   have gen_mem : ∀ s ∈ S, s ∈ K := by
     intro s hs
@@ -70,18 +83,21 @@ theorem finite_core_free_factor
   let r : P := ActionCategory.objEquiv (FreeGroup α) O baseO
   have hroot : @RootedConnected
       (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators V)) P) P.quiver r := by
-    dsimp [P, q, r, V, O, baseO]
+        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r := by
+    dsimp [P, q, r, O, baseO]
     exact goodCore_rootedConnected H A base word_action reach
   letI : @RootedConnected
       (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators V)) P) P.quiver r := hroot
+        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r := hroot
   let T := flatGeodesicSubtree P r
-  let E := End (show V from root T)
+  let E := @End (ActionCategory (FreeGroup α) O)
+    (@Groupoid.toCategory (ActionCategory (FreeGroup α) O) inferInstance).toCategoryStruct
+    (spanningTreeRoot T)
+  letI : Group E := @CategoryTheory.End.group (ActionCategory (FreeGroup α) O) inferInstance (spanningTreeRoot T)
   let eK : K ≃* E := by
-    dsimp [K, E, T, r, P, q, V, O, baseO]
+    dsimp [K, E, T, r, P, q, O, baseO]
     exact ActionCategory.stabilizerIsoEnd (FreeGroup α) baseO
-  let Pgen : Set (Quiver.Total (IsFreeGroupoid.Generators V)) :=
+  let Pgen : Set (Quiver.Total (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) :=
     {e | goodGeneratorEdge H q e.hom}
   let Y := basisSupport (T := T) Pgen
   have hP : ∀ {a b} (e : a ⟶ b), e ∈ P a b →
@@ -112,8 +128,8 @@ theorem finite_core_free_factor
     have heGood : goodGeneratorEdge H q y.1.1.hom := by
       exact hyP
     have hloop := good_loop_of_generator H q P r hP y.1.1.hom heGood
-    have hloopH : (IsFreeGroupoid.SpanningTree.loopOfHom T
-        (IsFreeGroupoid.of y.1.1.hom)).val ∈ H := by
+    have hloopH : (actionScalar (IsFreeGroupoid.SpanningTree.loopOfHom T
+        (IsFreeGroupoid.of y.1.1.hom))) ∈ H := by
       apply (leftCoset_mk_eq_one_iff H _).1
       dsimp at hloop
       have hroot' : (root T).back =
@@ -136,7 +152,7 @@ theorem finite_core_free_factor
     change retractBasisElement (spanningTreeBasis T) Y (eK ks) = eK ks
     obtain ⟨p, hp⟩ := goodCore_path H A base word_action
       s.toWord (hS_core s hs)
-    dsimp [O, baseO, V, P, q] at p hp
+    dsimp [O, baseO, P, q] at p hp
     have hs_fix : (s • baseO : O) = baseO :=
       (MulAction.mem_stabilizer_iff.mp (gen_mem s hs))
     have hmk : FreeGroup.mk s.toWord = s := FreeGroup.mk_toWord
@@ -144,100 +160,71 @@ theorem finite_core_free_factor
       ActionCategory.objEquiv (FreeGroup α) O
         ((FreeGroup.mk s.toWord : FreeGroup α) • baseO)
     let p_main : @Path (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators V)) P) P.quiver r end0 := by
-      simpa [T, V, P, q, O, baseO, end0, r] using p
-    have hroot_eq : (root T : V) = r := by
+        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r end0 := by
+      simpa [T, P, q, O, baseO, end0, r] using p
+    have hroot_eq : (root T : (ActionCategory (FreeGroup α) O)) = r := by
       rfl
-    have hend_eq : (root T : V) = end0 := by
+    have hend_eq : (root T : (ActionCategory (FreeGroup α) O)) = end0 := by
       dsimp [end0]
       rw [hmk, hs_fix]
       rfl
     let p_root : @Path (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators V)) P) P.quiver
+        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver
         (root T) (root T) :=
       p_main.cast hroot_eq.symm hend_eq.symm
     have hpath := basis_retraction_loop_of_subquiver_path
-      (G := V) (T := T) Pgen P hQ p_root
-    let t := IsFreeGroupoid.SpanningTree.treeHom T
-      (root (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators V)) T))
-    have htree_val : t.val = (1 : FreeGroup α) := by
-      dsimp [t]
-      rw [IsFreeGroupoid.SpanningTree.treeHom_eq T
-        (default : Path (root T) (root T))]
-      have hdef : (default : Path (root T) (root T)) =
-          (Path.nil : Path (root T) (root T)) := Subsingleton.elim _ _
-      rw [hdef]
-      rfl
-    have htree_val_single : t.val =
-        (𝟙 (CategoryTheory.SingleObj.star (FreeGroup α))) := by
-      rw [SingleObj.id_as_one]
-      exact htree_val
+      (G := (ActionCategory (FreeGroup α) O)) (T := T) Pgen P hQ p_root
     have hloop :
         IsFreeGroupoid.SpanningTree.loopOfHom T
-            (symPathHom (G := V)
-              (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
+            (symPathHom (G := (ActionCategory (FreeGroup α) O))
+              (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
                 (show T from root T)))
               (forgetSubquiverPath (P := P) p_root)) =
-          symPathHom (G := V)
-            (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
+          symPathHom (G := (ActionCategory (FreeGroup α) O))
+            (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
               (show T from root T)))
             (forgetSubquiverPath (P := P) p_root) := by
-      apply Subtype.ext
-      rw [IsFreeGroupoid.SpanningTree.loopOfHom]
-      simp only [ActionCategory.comp_val]
-      have hinv_val : (inv t).val = (1 : FreeGroup α) := by
-        have h := congrArg (fun f => f.val) (IsIso.hom_inv_id t)
-        rw [ActionCategory.comp_val, ActionCategory.id_val,
-          htree_val_single, SingleObj.id_as_one] at h
-        simpa only [mul_one] using h
-      rw [hinv_val, htree_val]
-      change (1 : FreeGroup α) *
-        (symPathHom (G := V)
-          (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
-            (show T from root T)))
-          (forgetSubquiverPath (P := P) p_root)).val * 1 = _
-      simp only [one_mul, mul_one]
+      exact loopOfHom_root T _
     have hplabel :
-        (symPathHom (G := V)
-          (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
+        (actionScalar (symPathHom (G := (ActionCategory (FreeGroup α) O))
+          (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
             (show T from root T)))
-          (forgetSubquiverPath (P := P) p_root)).val = s := by
+          (forgetSubquiverPath (P := P) p_root))) = s := by
       have hp_main :
-          (symPathHom (G := V)
-            (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
-              (show V from r)))
-            (forgetSubquiverPath (P := P) p_main)).val =
+          (actionScalar (symPathHom (G := (ActionCategory (FreeGroup α) O))
+            (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
+              (show (ActionCategory (FreeGroup α) O) from r)))
+            (forgetSubquiverPath (P := P) p_main))) =
             FreeGroup.mk s.toWord := by
-        simpa [p_main, end0, T, V, P, q, O, baseO, r] using hp
+        simpa [p_main, end0, T, P, q, O, baseO, r] using hp
       have hcast :
-          (show FreeGroup α from (symPathHom (G := V)
-            (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
+          (show FreeGroup α from (actionScalar (symPathHom (G := (ActionCategory (FreeGroup α) O))
+            (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
               (show T from root T)))
-            (forgetSubquiverPath (P := P) p_root)).val) =
-          (show FreeGroup α from (symPathHom (G := V)
-            (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
-              (show V from r)))
-            (forgetSubquiverPath (P := P) p_main)).val) := by
-        let label : ∀ {x y : V},
-            @Quiver.Hom V (CategoryStruct.toQuiver) x y → FreeGroup α :=
-          fun {x y} h => (show FreeGroup α from h.val)
+            (forgetSubquiverPath (P := P) p_root)))) =
+          (show FreeGroup α from (actionScalar (symPathHom (G := (ActionCategory (FreeGroup α) O))
+            (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
+              (show (ActionCategory (FreeGroup α) O) from r)))
+            (forgetSubquiverPath (P := P) p_main)))) := by
+        let label : ∀ {x y : (ActionCategory (FreeGroup α) O)},
+            @Quiver.Hom (ActionCategory (FreeGroup α) O) (CategoryStruct.toQuiver) x y → FreeGroup α :=
+          fun {x y} h => (actionScalar h)
         dsimp [p_root]
         exact symPathHom_forget_cast_apply
-          (G := V) (f := label) p_main hroot_eq.symm hend_eq.symm
+          (G := (ActionCategory (FreeGroup α) O)) (f := label) p_main hroot_eq.symm hend_eq.symm
       change (show FreeGroup α from
-        (symPathHom (G := V)
-          (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
+        (actionScalar (symPathHom (G := (ActionCategory (FreeGroup α) O))
+          (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
             (show T from root T)))
-          (forgetSubquiverPath (P := P) p_root)).val) = s
+          (forgetSubquiverPath (P := P) p_root)))) = s
       rw [hcast, hp_main, hmk]
     have heq : eK ks =
         IsFreeGroupoid.SpanningTree.loopOfHom T
-            (symPathHom (G := V)
-              (a := (show Symmetrify (IsFreeGroupoid.Generators V) from
+            (symPathHom (G := (ActionCategory (FreeGroup α) O))
+              (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
                 (show T from root T)))
               (forgetSubquiverPath (P := P) p_root)) := by
-      apply Subtype.ext
+      apply Functor.Elements.hom_ext
       change s = _
       rw [hloop]
       exact hplabel.symm
@@ -289,7 +276,7 @@ theorem finite_core_free_factor
       rw [hkxi, eK.map_inv, retractBasisElement_inv]
       have hi := congrArg (fun z : E => z⁻¹) ih
       exact hi
-  let X : Set (Quiver.Total (IsFreeGroupoid.Generators V)) :=
+  let X : Set (Quiver.Total (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) :=
     (wideSubquiverEquivSetTotal (wideSubquiverSymmetrify T))ᶜ
   have hHsupport : ∀ h : HE, ∃ w : FreeGroup Y,
       (spanningTreeBasis T).repr (h : E) =

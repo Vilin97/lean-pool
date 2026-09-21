@@ -53,7 +53,10 @@ theorem ordinaryPathOfSymm_read
       (@Quiver.symmetrifyQuiver V qV) a b) :
     L.pathRead (ordinaryPathOfSymm p) = L.symmPathRead p := by
   induction p with
-  | nil => simp [ordinaryPathOfSymm]
+  | nil =>
+      simp only [ordinaryPathOfSymm, BinaryLabelling.symmPathRead_nil]
+      simp only [BinaryLabelling.pathRead, BinaryLabelling.pathLabels,
+        factorWordProd]
   | @cons z y p e ih =>
       simp only [ordinaryPathOfSymm]
       change L.pathRead
@@ -64,8 +67,8 @@ theorem ordinaryPathOfSymm_read
       cases e with
       | inl f => rfl
       | inr f =>
-          simp [symmArrowHom, BinaryLabelling.symmLabel,
-            L.reverse_label, separatedMap_factorWordInv]
+          exact congrArg (L.symmPathRead p * ·)
+            (congrArg separatedMap (L.reverse_label f))
 
 /-! ### Change of basepoint -/
 
@@ -221,8 +224,7 @@ theorem exists_reduced_graph_of_minimal_null_path
   let tOrd : @Quiver.Path V qV M.base (show V from r.source) :=
     ordinaryPathOfSymm t
   have htOrd : M.labeling.pathRead tOrd = 1 := by
-    rw [ordinaryPathOfSymm_read]
-    exact ht
+    exact (ordinaryPathOfSymm_read M.labeling t).trans ht
   let Mroot : MarkedBinaryGraph (G := G) (H := H) (V := V) n :=
     rerootMarkedGraph M tOrd
   have hrootgen : Mroot.IsGenerating := by
