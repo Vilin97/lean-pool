@@ -5667,6 +5667,7 @@ import LeanPool.Odlyzko.TestFunction.TaylorBound
 import LeanPool.Odlyzko.Theta.PoissonSummation
 import LeanPool.Odlyzko.Theta.TraceDualIdeal
 import LeanPool.Odlyzko.Theta.TraceDualLattice
+import LeanPool.OneManifold
 import LeanPool.OrderPQ
 import LeanPool.OrderPQ.Basic
 import LeanPool.OrderPQ.IsCyclic
