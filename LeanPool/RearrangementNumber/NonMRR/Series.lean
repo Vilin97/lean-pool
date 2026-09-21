@@ -36,7 +36,9 @@ theorem hasSum_conditional_iff {a : ℕ → ℝ} {s : ℝ} :
 
 /-- A real series together with its unique natural sum and conditional convergence proofs. -/
 structure ConditionalSeries where
+  /-- The sequence of terms of the series. -/
   term : ℕ → ℝ
+  /-- The sum in the natural ordering of the terms. -/
   sum : ℝ
   converges : HasSum term sum (SummationFilter.conditional ℕ)
   not_absolute : ¬ Summable (fun n ↦ |term n|)

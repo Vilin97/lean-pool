@@ -31,7 +31,7 @@ theorem extend_comp_perm (b : ℕ → ℝ) (l : ℕ → ℕ) (hl : Function.Inje
     Function.extend l b 0 ∘ π = Function.extend (π.symm ∘ l) b 0 := by
   have heq := hl.extend_comp π.symm.injective b (0 : ℕ → ℝ)
   funext i
-  simpa [Function.comp_def] using (congrFun heq i).symm
+  simpa [Function.comp_def, Pi.zero_def] using (congrFun heq i).symm
 
 /-- A small family of permutations cannot rearrange every conditionally
 convergent real series. -/

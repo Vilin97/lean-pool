@@ -92,12 +92,12 @@ theorem binary_ofDigits_image_interior_nonempty
         change i ≤ I.sup id at hle
         dsimp [N]
         omega
-      simpa only [a, if_pos hin] using (hv i hi).2
+      simpa only [a, ite_eq_left hin] using (hv i hi).2
     refine ⟨a, haU, ?_⟩
     have hprefix : ∑ i ∈ range N, Real.ofDigitsTerm a i = c := by
       apply sum_congr rfl
       intro i hi
-      simp only [Real.ofDigitsTerm, a, if_pos (mem_range.mp hi)]
+      simp only [Real.ofDigitsTerm, a, ite_eq_left (mem_range.mp hi)]
     have htail : (fun i ↦ a (i + N)) = tail := by
       funext i
       simp [a]

@@ -42,17 +42,18 @@ theorem exists_perm_unbounded_partialSum (a : ℕ → ℝ)
   have hUopen (k : ℕ) : IsOpen (U k) := by
     have hpartial : IsOpen {f : InjectionSpace |
         ∃ M, (k : ℝ) < |partialSum (a ∘ f.val) M|} := by
-      simp only [Set.setOf_exists]
+      simp only [Set.ofPred_exists]
       exact isOpen_iUnion fun M => isOpen_lt continuous_const
         (continuous_partialSum_on_injections a M).abs
     have hrange : IsOpen {f : InjectionSpace | k ∈ Set.range f.val} := by
       change IsOpen {f : InjectionSpace | ∃ j, f.val j = k}
-      simp only [Set.setOf_exists]
+      simp only [Set.ofPred_exists]
       apply isOpen_iUnion
       intro j
       have hpre : IsOpen ((fun f : InjectionSpace => f.val j) ⁻¹' ({k} : Set ℕ)) :=
         (isOpen_discrete _).preimage ((continuous_apply j).comp continuous_subtype_val)
       convert hpre using 1
+      rfl
     exact hpartial.inter hrange
   have hUdense (k : ℕ) : Dense (U k) := by
     apply dense_injections_of_extension

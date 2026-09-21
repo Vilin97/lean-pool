@@ -67,7 +67,9 @@ theorem exists_eventually_bounds_of_countable {s : Set (ℕ → ℕ)} (hs : s.Co
 theorem aleph0_lt_boundingNumber : ℵ₀ < boundingNumber := by
   obtain ⟨s, hs, hcard⟩ := boundingRelation.exists_dominating_of_norm
   by_contra h
-  have hc : #s ≤ ℵ₀ := by simpa only [hcard] using le_of_not_gt h
+  have hc : #s ≤ ℵ₀ := by
+    rw [hcard]
+    exact le_of_not_gt h
   exact (dominating_boundingRelation_iff s).mp hs
     (exists_eventually_bounds_of_countable (Cardinal.mk_le_aleph0_iff.mp hc))
 

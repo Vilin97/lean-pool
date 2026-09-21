@@ -64,7 +64,7 @@ private theorem freshPair_mem (s : Finset (ℕ × ℕ)) (u : Finset ℕ)
       obtain ⟨p, hp, rfl⟩ := mem_image.1 hx
       exact h p hp
     exact (not_le_of_gt hcard) (card_le_card hsub)
-  simp only [freshPair, dif_pos hex]
+  simp only [freshPair, dite_eq_left hex]
   exact hex.choose_spec.1
 
 private def graphHistory (a : ℕ → ℕ) : ℕ → Finset (ℕ × ℕ)
@@ -122,7 +122,7 @@ private theorem candidateAt_covers (s : Finset ℕ) {a : ℕ} (ha : a ∈ s) :
   let e := s.orderIsoOfFin rfl
   let i := e.symm ⟨a, ha⟩
   refine ⟨i.val, i.isLt, ?_⟩
-  simp only [candidateAt, dif_pos i.isLt]
+  simp only [candidateAt, dite_eq_left i.isLt]
   exact congrArg Subtype.val (e.apply_symm_apply ⟨a, ha⟩)
 
 private def slalomStages (φ : ℕ → Finset ℕ) (x : ℕ) : ℕ :=

@@ -15,14 +15,17 @@ import Mathlib.Logic.Equiv.Fintype
 import Mathlib.Data.Finset.Sort
 import Mathlib.Tactic
 
+/-! Rearranging a conditionally convergent series through Baire category. -/
+
 open Filter Finset Set Topology
-open scoped BigOperators Classical
+open scoped BigOperators
 
 namespace NonMRR
 
 /-- A real family with bounded sums on all finite subsets is absolutely summable. -/
 theorem summable_abs_of_bounded_finite_sums (a : ℕ → ℝ) (c : ℝ)
     (h : ∀ s : Finset ℕ, |∑ i ∈ s, a i| ≤ c) : Summable (fun i => |a i|) := by
+  classical
   have hpos (b : ℕ → ℝ) (hb : ∀ s : Finset ℕ, |∑ i ∈ s, b i| ≤ c) :
       Summable (fun i => max (b i) 0) := by
     apply summable_of_sum_le (fun _ => le_max_right _ _) (c := c)
@@ -49,6 +52,7 @@ theorem summable_abs_of_bounded_finite_sums (a : ℕ → ℝ) (c : ℝ)
 /-- Nonabsolute summability forces arbitrarily large finite sums. -/
 theorem exists_large_finite_sum (a : ℕ → ℝ) (ha : ¬ Summable (fun i => |a i|)) (c : ℝ) :
     ∃ s : Finset ℕ, c < |∑ i ∈ s, a i| := by
+  classical
   by_contra h
   push Not at h
   exact ha (summable_abs_of_bounded_finite_sums a c h)
@@ -57,6 +61,7 @@ theorem exists_large_finite_sum (a : ℕ → ℝ) (ha : ¬ Summable (fun i => |a
 theorem exists_large_finite_sum_disjoint (a : ℕ → ℝ)
     (ha : ¬ Summable (fun i => |a i|)) (F : Finset ℕ) (c : ℝ) :
     ∃ s : Finset ℕ, Disjoint s F ∧ c < |∑ i ∈ s, a i| := by
+  classical
   obtain ⟨s, hs⟩ := exists_large_finite_sum a ha (c + ∑ i ∈ F, |a i|)
   refine ⟨s \ F, sdiff_disjoint, ?_⟩
   have htriangle : |∑ i ∈ s, a i| ≤ |∑ i ∈ s \ F, a i| + ∑ i ∈ F, |a i| := by
@@ -77,6 +82,7 @@ theorem exists_perm_large_partialSum (a : ℕ → ℝ)
     (N : ℕ) (c : ℝ) :
     ∃ π : Equiv.Perm ℕ, (∀ i < N, π i = f i) ∧
       ∃ M, c < |partialSum (a ∘ π) M| := by
+  classical
   classical
   obtain ⟨s, hs, hlarge⟩ := exists_large_finite_sum_disjoint a ha
     ((range N).image f) (c + |∑ i ∈ range N, a (f i)|)
@@ -118,13 +124,15 @@ theorem exists_perm_large_partialSum (a : ℕ → ℝ)
     simp only [neg_add_cancel_left, abs_neg] at htri
     linarith
 
+/-- The space of injective enumerations of natural numbers. -/
 abbrev InjectionSpace := {f : ℕ → ℕ // Function.Injective f}
 
 theorem isClosed_injections : IsClosed {f : ℕ → ℕ | Function.Injective f} := by
+  classical
   have heq : {f : ℕ → ℕ | Function.Injective f} =
       ⋂ i : ℕ, ⋂ j : ℕ, ⋂ (_ : i ≠ j), {f : ℕ → ℕ | f i ≠ f j} := by
     ext f
-    simp only [mem_setOf_eq, mem_iInter]
+    simp only [mem_ofPred_eq, mem_iInter]
     constructor
     · exact fun hf i j hij => fun h => hij (hf h)
     · intro h i j hij
@@ -151,6 +159,7 @@ instance : Nonempty InjectionSpace := ⟨⟨id, Function.injective_id⟩⟩
 theorem dense_injections_of_extension (P : Set InjectionSpace)
     (h : ∀ f : InjectionSpace, ∀ N : ℕ,
       ∃ g ∈ P, ∀ i < N, g.val i = f.val i) : Dense P := by
+  classical
   apply dense_iff_inter_open.mpr
   intro O hO hOne
   obtain ⟨f, hf⟩ := hOne

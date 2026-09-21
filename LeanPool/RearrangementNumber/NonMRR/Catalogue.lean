@@ -56,8 +56,10 @@ theorem blockTolerance_summable : Summable blockTolerance := by
 
 /-- A finite balanced family together with its uniform counting estimate. -/
 structure FiniteBlock (m q : ℕ) where
+  /-- Number of coordinates in each balanced vector. -/
   length : ℕ
   length_pos : 0 < length
+  /-- The entries of the finite family of balanced vectors. -/
   value : Fin m → Fin length → ℝ
   balance : ∀ k, ∑ i, value k i = 0
   abs_value : ∀ k i, |value k i| = 1 / (length : ℝ)
@@ -119,19 +121,19 @@ def catalogueVector (g : ℕ → ℕ) (n k : ℕ) : ℕ → ℝ :=
 
 theorem catalogueVector_support (g : ℕ → ℕ) (n k : ℕ) (hk : k < g n)
     (i : ℕ) (hi : i ∉ blockInterval g n) : catalogueVector g n k i = 0 := by
-  rw [catalogueVector, dif_pos hk]
+  rw [catalogueVector, dite_eq_left hk]
   apply embedVector_eq_zero
   simpa only [blockInterval, map_eq_image] using hi
 
 theorem catalogueVector_balance (g : ℕ → ℕ) (n k : ℕ) (hk : k < g n) :
     ∑ i ∈ blockInterval g n, catalogueVector g n k i = 0 := by
-  simp only [catalogueVector, dif_pos hk, blockInterval, map_eq_image]
+  simp only [catalogueVector, dite_eq_left hk, blockInterval, map_eq_image]
   rw [sum_embedVector]
   exact (chosenBlock g n).balance ⟨k, hk⟩
 
 theorem catalogueVector_mass (g : ℕ → ℕ) (n k : ℕ) (hk : k < g n) :
     1 ≤ ∑ i ∈ blockInterval g n, ‖catalogueVector g n k i‖ := by
-  simp only [catalogueVector, dif_pos hk, blockInterval, map_eq_image]
+  simp only [catalogueVector, dite_eq_left hk, blockInterval, map_eq_image]
   exact (sum_norm_embedVector_eq_one (chosenBlock g n).length_pos
     (blockEmbedding g n) ((chosenBlock g n).value ⟨k, hk⟩)
     ((chosenBlock g n).abs_value ⟨k, hk⟩)).ge
@@ -152,12 +154,12 @@ theorem catalogueVector_bad_card (g : ℕ → ℕ) (π : Equiv.Perm ℕ) (n : �
       obtain ⟨hkg, hbad⟩ := mem_filter.1 hk
       have hkn : k < g n := mem_range.1 hkg
       refine mem_image.2 ⟨⟨k, hkn⟩, mem_filter.2 ⟨mem_univ _, ?_⟩, rfl⟩
-      simpa only [blockTolerance, catalogueVector, dif_pos hkn] using hbad
+      simpa only [blockTolerance, catalogueVector, dite_eq_left hkn] using hbad
     · intro hk
       obtain ⟨i, hi, rfl⟩ := mem_image.1 hk
       apply mem_filter.2
       refine ⟨mem_range.2 i.isLt, ?_⟩
-      simpa only [blockTolerance, catalogueVector, dif_pos i.isLt] using (mem_filter.1 hi).2
+      simpa only [blockTolerance, catalogueVector, dite_eq_left i.isLt] using (mem_filter.1 hi).2
   rw [hs, card_image_of_injective _ Fin.val_injective]
   exact card_bad_embedVector_two_orders_le (blockEmbedding g n)
     (chosenBlock g n).value (chosenBlock g n).bad_card π

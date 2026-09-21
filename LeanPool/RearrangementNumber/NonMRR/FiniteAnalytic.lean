@@ -8,12 +8,14 @@ Copyright (c) 2026 Vinicius de Oliveira Rodrigues.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NormNum
+
+/-! Finite analytic estimates. -/
 
 open scoped BigOperators
 

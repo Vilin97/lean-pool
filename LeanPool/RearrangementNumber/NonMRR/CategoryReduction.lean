@@ -54,9 +54,7 @@ theorem wordEnd_restrictWord {n m : ℕ} (hnm : n ≤ m) (a : ℕ → Bool) :
 theorem wordValue_restrictWord {n m i : ℕ} (hni : n ≤ i) (him : i < m)
     (a : ℕ → Bool) : wordValue n (restrictWord n m a) i = a i := by
   have hlen : i - n < m - n := by omega
-  simp only [wordValue, restrictWord, dif_pos hlen]
-  congr 1
-  omega
+  simp [wordValue, restrictWord, hlen, Nat.add_sub_of_le hni]
 
 /-- The central category reduction: pasting a gap-unbounded family and
 a strong coincidence family yields a nonmeagre set of the expected size. -/

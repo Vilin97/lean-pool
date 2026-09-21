@@ -28,7 +28,9 @@ namespace NonMRR
 
 /-- The concrete finite block data needed by the construction, for every `g`. -/
 structure BlockCatalogue (r : ℕ → ℕ) (b : ℕ → ℝ) where
+  /-- The disjoint finite coordinate block at each stage. -/
   interval : (ℕ → ℕ) → ℕ → Finset ℕ
+  /-- The balanced vectors supported on the stage blocks. -/
   vector : (ℕ → ℕ) → ℕ → ℕ → ℕ → ℝ
   disjoint : ∀ g, Pairwise (fun n m ↦ Disjoint (interval g n) (interval g m))
   support : ∀ g n k, k < g n → ∀ i, i ∉ interval g n → vector g n k i = 0
@@ -74,7 +76,7 @@ theorem candidate_good_of_avoids (C : BlockCatalogue r b)
     (C.balance g) (C.mass g) b hb hbnonneg hinfinite havoid
   refine ⟨⟨?_, ?_⟩, ?_⟩
   · exact hid
-  · simpa only [Real.norm_eq_abs] using habs
+  · simpa only [candidate, Real.norm_eq_abs] using habs
   · exact hπ
 
 /-- The central implication in the morphism: a rearrangement forces infinitely
@@ -90,7 +92,7 @@ theorem catches_of_rearranges (C : BlockCatalogue r b)
     simpa only [Filter.not_frequently] using h
   obtain ⟨hgood, hsum⟩ := C.candidate_good_of_avoids hb hbnonneg e g π hinfinite havoid
   apply hπ
-  simpa only [challengeSeries, dif_pos hgood] using hasSum_conditional_iff.mpr hsum
+  simpa only [challengeSeries, dite_eq_left hgood] using hasSum_conditional_iff.mpr hsum
 
 /-- Images of an unbounded family and a rearranging family dominate the slalom relation. -/
 theorem dominating_response_image (C : BlockCatalogue r b)

@@ -70,25 +70,25 @@ theorem selected_blocks_give_zero_witness
     (selectedBlock u e g) I {n | e n < g n} π hdisjoint
   · intro n i hi
     by_cases hn : e n < g n
-    · exact (if_pos hn).trans (hsupport n (e n) hn i hi)
-    · exact if_neg hn
+    · exact (ite_eq_left hn).trans (hsupport n (e n) hn i hi)
+    · exact ite_eq_right hn
   · intro n
     by_cases hn : e n < g n
-    · simpa only [selectedBlock, if_pos hn] using hbalance n (e n) hn
+    · simpa only [selectedBlock, ite_eq_left hn] using hbalance n (e n) hn
     · simp [selectedBlock, hn]
   · exact Nat.frequently_atTop_iff_infinite.mp hinfinite
   · intro n hn
     change e n < g n at hn
-    simpa only [selectedBlock, if_pos hn] using hmass n (e n) hn
+    simpa only [selectedBlock, ite_eq_left hn] using hmass n (e n) hn
   · exact hb
   · filter_upwards [havoid] with n hn j
     by_cases he : e n < g n
-    · simpa only [rearrangedPartialSum, selectedBlock, if_pos he] using
+    · simpa only [rearrangedPartialSum, selectedBlock, ite_eq_left he] using
         (prefix_bounds_of_not_mem_badValues u g π b n (e n) he hn).1 j
     · simpa [rearrangedPartialSum, selectedBlock, he] using hbnonneg n
   · filter_upwards [havoid] with n hn j
     by_cases he : e n < g n
-    · simpa only [rearrangedPartialSum, selectedBlock, if_pos he] using
+    · simpa only [rearrangedPartialSum, selectedBlock, ite_eq_left he] using
         (prefix_bounds_of_not_mem_badValues u g π b n (e n) he hn).2 j
     · simpa [rearrangedPartialSum, selectedBlock, he] using hbnonneg n
 

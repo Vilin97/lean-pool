@@ -34,7 +34,7 @@ def slalomRelation (r : ℕ → ℕ) (hr : ∀ n, 0 < r n) : Relation where
   total e := by
     refine ⟨⟨fun n ↦ {e n}, ?_⟩, ?_⟩
     · intro n
-      simpa only [Finset.card_singleton] using hr n
+      simpa only [Finset.card_singleton] using Nat.succ_le_of_lt (hr n)
     · exact Filter.Eventually.frequently (Filter.Eventually.of_forall (by simp))
 
 /-- A slalom family is dominating exactly when it has no common eventual avoider. -/

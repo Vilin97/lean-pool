@@ -26,8 +26,11 @@ namespace NonMRR
 
 /-- A relation whose every challenge has a response. -/
 structure Relation where
+  /-- The objects that must be solved. -/
   Challenge : Type u
+  /-- The potential solutions to challenges. -/
   Response : Type u
+  /-- Whether a response solves a challenge. -/
   relates : Challenge → Response → Prop
   total : ∀ x, ∃ y, relates x y
 
@@ -59,7 +62,9 @@ theorem exists_dominating_of_norm (A : Relation.{u}) :
 
 /-- The contravariant challenge map and covariant response map of a morphism. -/
 structure Morphism (A B : Relation.{u}) where
+  /-- Pull a target challenge back to the source relation. -/
   challenge : B.Challenge → A.Challenge
+  /-- Send a source response to the target relation. -/
   response : A.Response → B.Response
   map_rel : ∀ x y, A.relates (challenge x) y → B.relates x (response y)
 

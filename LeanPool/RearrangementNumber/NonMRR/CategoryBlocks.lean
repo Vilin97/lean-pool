@@ -30,9 +30,9 @@ theorem continuous_replacePrefix (n : ℕ) (s : Fin n → Bool) :
   apply continuous_pi
   intro i
   by_cases hi : i < n
-  · simpa only [replacePrefix, dif_pos hi] using
+  · simpa only [replacePrefix, dite_eq_left hi] using
       (continuous_const : Continuous (fun _ : ℕ → Bool => s ⟨i, hi⟩))
-  · simpa only [replacePrefix, dif_neg hi] using
+  · simpa only [replacePrefix, dite_eq_right hi] using
       (continuous_apply i : Continuous (fun x : ℕ → Bool => x i))
 
 /-- Fixing finitely many coordinates pulls a dense set back to a dense set. -/
@@ -49,9 +49,9 @@ theorem dense_preimage_replacePrefix (n : ℕ) (s : Fin n → Bool)
     apply isOpen_set_pi J.finite_toSet
     intro i hi
     by_cases hin : i < n
-    · simp only [v, dif_pos hin]
+    · simp only [v, dite_eq_left hin]
       exact isOpen_discrete _
-    · simp only [v, dif_neg hin]
+    · simp only [v, dite_eq_right hin]
       apply (hu i ?_).1
       have hi' : i ∈ Finset.range n ∪ I := hi
       simpa [Finset.mem_union, Finset.mem_range, hin] using hi'
@@ -63,23 +63,23 @@ theorem dense_preimage_replacePrefix (n : ℕ) (s : Fin n → Bool)
     · have hiI : i ∈ I := by
         have hi' : i ∈ Finset.range n ∪ I := hi
         simpa [Finset.mem_union, Finset.mem_range, hin] using hi'
-      simpa only [replacePrefix, v, dif_neg hin] using (hu i hiI).2
+      simpa only [replacePrefix, v, dite_eq_right hin] using (hu i hiI).2
   obtain ⟨y, hyU, hyV⟩ := hU.exists_mem_open hVopen hVne
   let z : ℕ → Bool := fun i => if i < n then f i else y i
   refine ⟨z, hsub ?_, ?_⟩
   · intro i hi
     by_cases hin : i < n
-    · simpa only [z, if_pos hin] using (hu i hi).2
+    · simpa only [z, ite_eq_left hin] using (hu i hi).2
     · have hy := hyV i (Finset.mem_union_right (Finset.range n) hi)
-      simpa only [z, if_neg hin, v, dif_neg hin] using hy
+      simpa only [z, ite_eq_right hin, v, dite_eq_right hin] using hy
   · have heq : replacePrefix n s z = y := by
       funext i
       by_cases hin : i < n
       · have hy := hyV i (Finset.mem_union_left I (Finset.mem_range.mpr hin))
         have hys : y i = s ⟨i, hin⟩ := by
-          simpa only [v, dif_pos hin, Set.mem_singleton_iff] using hy
-        simp only [replacePrefix, dif_pos hin, hys]
-      · simp only [replacePrefix, dif_neg hin, z, if_neg hin]
+          simpa only [v, dite_eq_left hin, Set.mem_singleton_iff] using hy
+        simp only [replacePrefix, dite_eq_left hin, hys]
+      · simp only [replacePrefix, dite_eq_right hin, z, ite_eq_right hin]
     simpa only [Set.mem_preimage, heq] using hyU
 
 /-- A dense open subset of Cantor space contains a cylinder determined
@@ -106,11 +106,11 @@ theorem exists_tail_block_subset_of_dense_open (n : ℕ)
     apply hsub
     intro i hi
     by_cases hin : i < n
-    · simpa only [z, if_pos hin] using (hu i hi).2
+    · simpa only [z, ite_eq_left hin] using (hu i hi).2
     · have him : i < m := by
         have hle : i ≤ I.sup id := Finset.le_sup (f := id) hi
         exact lt_of_lt_of_le (Nat.lt_succ_of_le hle) (le_max_right _ _)
-      simpa only [z, if_neg hin, hx i (Nat.le_of_not_gt hin) him] using (hu i hi).2
+      simpa only [z, ite_eq_right hin, hx i (Nat.le_of_not_gt hin) him] using (hu i hi).2
   have heq : replacePrefix n (fun i : Fin n => x i) z = x := by
     funext i
     by_cases hin : i < n <;> simp [replacePrefix, z, hin]
@@ -191,15 +191,15 @@ theorem isMeagre_eventually_misses_blocks (g : ℕ → ℕ) (a : ℕ → ℕ →
         have hi' : i ≤ I.sup id := Finset.le_sup (f := id) hi
         have hn' : I.sup id + 1 ≤ n := le_max_right _ _
         omega
-      simpa only [y, hin, false_and, if_false] using (hu i hi).2
+      simpa only [y, hin, false_and, ite_false] using (hu i hi).2
     have hyB : y ∈ B n := by
       intro i hi hig
-      simp only [y, hi, hig, and_self, if_true]
+      simp only [y, hi, hig, and_self, ite_true]
     exact interior_subset hy n (le_max_left _ _) hyB
   have heq : {x : ℕ → Bool | ∀ᶠ n in atTop,
       ¬ (∀ i, n ≤ i → i < g n → x i = a n i)} = ⋃ N, F N := by
     ext x
-    simp only [Set.mem_setOf_eq, eventually_atTop, Set.mem_iUnion, F, B]
+    simp only [Set.mem_ofPred_eq, eventually_atTop, Set.mem_iUnion, F, B]
   rw [heq]
   exact isMeagre_iUnion fun N => (hFnowhere N).isMeagre
 
@@ -236,7 +236,7 @@ theorem exists_pasted_blocks (t : ℕ → ℕ) (ht : StrictMono t)
   intro k hk i hki hig
   have hex : ∃ l, P i l := ⟨k, hk, hki, hig⟩
   have heq : Classical.choose hex = k := huniq (Classical.choose_spec hex) ⟨hk, hki, hig⟩
-  simp only [x, dif_pos hex, heq]
+  simp only [x, dite_eq_left hex, heq]
 
 /-- Infinitely many shared fitting blocks force the pasted point outside
 the meagre set coded by the second collection of blocks. -/

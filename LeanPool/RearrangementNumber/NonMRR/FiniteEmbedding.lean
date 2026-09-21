@@ -12,6 +12,8 @@ import LeanPool.RearrangementNumber.NonMRR.Selection
 import LeanPool.RearrangementNumber.NonMRR.FiniteVectors
 import Mathlib.Data.Finset.Sort
 
+/-! Embedding finite vectors into series. -/
+
 open scoped BigOperators
 open Finset
 
@@ -39,7 +41,9 @@ theorem exists_strictMono_perm {L : ℕ} (f : Fin L → ℕ) (hf : Function.Inje
   have heq (i : Fin L) : f (σ i) = (o i).val :=
     congrArg Subtype.val (e.apply_symm_apply (o i))
   intro i k hik
-  simpa only [Function.comp_apply, heq] using o.strictMono hik
+  change f (σ i) < f (σ k)
+  rw [heq, heq]
+  exact o.strictMono hik
 
 /-- A cut through an increasing finite sequence is an initial segment of its labels. -/
 theorem strictMono_cut {L : ℕ} (f : Fin L → ℕ) (hf : StrictMono f) (j : ℕ) :

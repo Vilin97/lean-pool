@@ -12,6 +12,8 @@ import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.InnerProductSpace.Orthonormal
 import Mathlib.Tactic
 
+/-! Walsh sign families. -/
+
 open scoped BigOperators
 open Finset
 
@@ -41,7 +43,7 @@ private lemma sign_sum_zero {m : ℕ} (k : Fin m) :
   have h := (flipCoord k).sum_comp (fun x : Fin m → Bool => sign (x k))
   have hf : ∀ x, sign ((flipCoord k x) k) = - sign (x k) := by
     intro x
-    simp [flipCoord, sign_not]
+    simp [flipCoord, Function.Involutive.toPerm, sign_not]
   simp_rw [hf, sum_neg_distrib] at h
   linarith
 
@@ -51,7 +53,7 @@ private lemma sign_pair_sum_zero {m : ℕ} {k l : Fin m} (hkl : k ≠ l) :
   have hf : ∀ x, sign ((flipCoord k x) k) * sign ((flipCoord k x) l) =
       -(sign (x k) * sign (x l)) := by
     intro x
-    simp [flipCoord, sign_not, Function.update_of_ne hkl.symm]
+    simp [flipCoord, Function.Involutive.toPerm, sign_not, Function.update_of_ne hkl.symm]
   simp_rw [hf, sum_neg_distrib] at h
   linarith
 

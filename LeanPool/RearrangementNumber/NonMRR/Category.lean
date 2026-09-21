@@ -82,7 +82,9 @@ theorem isMeagre_of_countable {X : Type u} [TopologicalSpace X] [T1Space X]
 theorem aleph0_lt_nonM : ℵ₀ < nonM := by
   obtain ⟨s, hs, hcard⟩ := exists_nonmeagre_minimizer ℝ
   by_contra h
-  have hc : Cardinal.mk s ≤ ℵ₀ := by simpa only [hcard] using le_of_not_gt h
+  have hc : Cardinal.mk s ≤ ℵ₀ := by
+    rw [hcard]
+    exact le_of_not_gt h
   exact hs (isMeagre_of_countable ((Cardinal.mk_le_aleph0_iff).mp hc))
 
 /-- A countable collection of finite slaloms has a common eventual avoider.
@@ -123,6 +125,7 @@ theorem isMeagre_eventually_ne (x : ℕ → ℕ) :
     have hc : IsClosed ((fun f : ℕ → ℕ => f n) ⁻¹' ({x n}ᶜ : Set ℕ)) :=
       IsClosed.preimage (continuous_apply n) (isClosed_discrete _)
     convert hc using 1
+    rfl
   have hnowhere (N : ℕ) : IsNowhereDense (F N) := by
     rw [(hclosed N).isNowhereDense_iff]
     apply Set.eq_empty_iff_forall_notMem.mpr
@@ -145,7 +148,7 @@ theorem isMeagre_eventually_ne (x : ℕ → ℕ) :
     simp at hbad
   have heq : {f : ℕ → ℕ | ∀ᶠ n in atTop, f n ≠ x n} = ⋃ N, F N := by
     ext f
-    simp only [Set.mem_setOf_eq, eventually_atTop, Set.mem_iUnion, F]
+    simp only [Set.mem_ofPred_eq, eventually_atTop, Set.mem_iUnion, F]
   rw [heq]
   exact isMeagre_iUnion (fun N => (hnowhere N).isMeagre)
 
