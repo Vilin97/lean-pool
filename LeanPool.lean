@@ -6625,6 +6625,7 @@ import LeanPool.SpectralPositivity.Operator.Jentzsch
 import LeanPool.SpectralPositivity.Operator.JentzschProof
 import LeanPool.SpectralPositivity.Operator.KernelPositivity
 import LeanPool.SpectralPositivity.Operator.SpectralRadius
+import LeanPool.SpectralTheory
 import LeanPool.SpherePacking
 import LeanPool.SpherePacking.Conclusion
 import LeanPool.SpherePacking.Foundations
