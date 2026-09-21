@@ -158,6 +158,40 @@ theorem adjoin_transcendental_algebraicClosure_eq_bot
   rw [ratFunc_algebraicClosure_eq_bot] at hmap
   simpa only [IntermediateField.map_bot] using hmap.symm
 
+private theorem finiteDimensional_finrank_of_adjoin_eq_top
+    {A L : Type*} [Field A] [Field L] [Algebra A L]
+    (y : L) (hy : IsIntegral A y) (htop : IntermediateField.adjoin A {y} = ⊤) :
+    FiniteDimensional A L ∧ Module.finrank A L = (minpoly A y).natDegree := by
+  let : FiniteDimensional A (IntermediateField.adjoin A {y}) :=
+    IntermediateField.adjoin.finiteDimensional hy
+  let : FiniteDimensional A (⊤ : IntermediateField A L) := by
+    rw [← htop]
+    infer_instance
+  let : FiniteDimensional A L :=
+    IntermediateField.topEquiv.toLinearEquiv.finiteDimensional
+  refine ⟨inferInstance, ?_⟩
+  calc
+    Module.finrank A L = Module.finrank A (⊤ : IntermediateField A L) := by
+      rw [IntermediateField.finrank_top']
+    _ = Module.finrank A (IntermediateField.adjoin A {y}) := by rw [htop]
+    _ = (minpoly A y).natDegree := IntermediateField.adjoin.finrank hy
+
+private theorem algebraMap_surjective_of_equal_finrank
+    {F A L : Type*} [Field F] [Field A] [Field L]
+    [Algebra F A] [Algebra A L] [Algebra F L] [IsScalarTower F A L]
+    [FiniteDimensional F L] [FiniteDimensional A L]
+    (degree : ℕ) (hdegree : 0 < degree)
+    (hA : Module.finrank A L = degree) (hF : Module.finrank F L = degree) :
+    Function.Surjective (algebraMap F A) := by
+  let : FiniteDimensional F A :=
+    FiniteDimensional.of_injective (IsScalarTower.toAlgHom F A L).toLinearMap
+      (RingHom.injective _)
+  have hmul := Module.finrank_mul_finrank F A L
+  have hfinrank : Module.finrank F A = 1 := by
+    rw [hA, hF] at hmul
+    nlinarith
+  exact (Algebra.finrank_eq_one_iff_bijective_algebraMap.mp hfinrank).2
+
 /-- **Exact constant field of an absolutely irreducible plane curve.**
 
 If the defining equation remains irreducible over an algebraic closure and
@@ -178,12 +212,9 @@ theorem planeCurveFunctionField_algebraicClosure_eq_bot
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0) :
     let hf : Irreducible f :=
       irreducible_of_irreducible_map_algebraicClosure habsolute
-    letI := planeCurveCoordinateRing_isDomain hf
+    let _ := planeCurveCoordinateRing_isDomain hf
     algebraicClosure K (PlaneCurveFunctionField f) = ⊥ := by
-  let hf : Irreducible f :=
-    irreducible_of_irreducible_map_algebraicClosure habsolute
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
-    planeCurveCoordinateRing_isDomain hf
+  intro hf domain
   let L := PlaneCurveFunctionField f
   let E : IntermediateField K L := algebraicClosure K L
   let x : L := planeCurveFunction f 0
@@ -225,8 +256,14 @@ theorem planeCurveFunctionField_algebraicClosure_eq_bot
     rw [Set.mem_singleton_iff] at hz
     subst z
     exact IntermediateField.subset_adjoin E {x} (Set.mem_singleton x)
-  letI : Algebra F A := (IntermediateField.inclusion hFA).toAlgebra
-  letI : IsScalarTower F A L :=
+  let : Algebra F A := (IntermediateField.inclusion hFA).toAlgebra
+  let _ : SMul F A := Algebra.toSMul
+  let _ : Module F A := Algebra.toModule
+  let _ : SMul A L := Algebra.toSMul
+  let _ : Module A L := Algebra.toModule
+  let _ : SMul F L := Algebra.toSMul
+  let _ : Module F L := Algebra.toModule
+  let : IsScalarTower F A L :=
     IsScalarTower.of_algebraMap_eq' (R := F) (S := A) (A := L) rfl
   have hpoly : polynomialOverFirstCoordinate f ≠ 0 :=
     polynomialOverFirstCoordinate_ne_zero_of_irreducible hf hdegree
@@ -263,40 +300,19 @@ theorem planeCurveFunctionField_algebraicClosure_eq_bot
       (IntermediateField.adjoin E {x}) {y}).restrictScalars E = ⊤
     rw [IntermediateField.adjoin_adjoin_left]
     simpa only [Set.singleton_union] using hpairE
-  letI : FiniteDimensional A (IntermediateField.adjoin A {y}) :=
-    IntermediateField.adjoin.finiteDimensional hyA
-  letI : FiniteDimensional A (⊤ : IntermediateField A L) := by
-    rw [← htopA]
-    infer_instance
-  letI : FiniteDimensional A L :=
-    IntermediateField.topEquiv.toLinearEquiv.finiteDimensional
-  have hfinA : Module.finrank A L = MvPolynomial.degreeOf 1 f := by
-    calc
-      Module.finrank A L = Module.finrank A
-          (⊤ : IntermediateField A L) := by
-        rw [IntermediateField.finrank_top']
-      _ = Module.finrank A (IntermediateField.adjoin A {y}) := by
-        rw [htopA]
-      _ = (minpoly A y).natDegree :=
-        IntermediateField.adjoin.finrank hyA
-      _ = MvPolynomial.degreeOf 1 f := hminA
-  letI : FiniteDimensional F L :=
+  obtain ⟨finiteDimensionalA, hfinrankA⟩ :=
+    finiteDimensional_finrank_of_adjoin_eq_top y hyA htopA
+  let : FiniteDimensional A L := finiteDimensionalA
+  have hfinA : Module.finrank A L = MvPolynomial.degreeOf 1 f :=
+    hfinrankA.trans hminA
+  let : FiniteDimensional F L :=
     (finiteSeparable_over_firstCoordinate_of_irreducible
       hf hpartialSecond).1
   have hfinF : Module.finrank F L = MvPolynomial.degreeOf 1 f :=
     finrank_over_firstCoordinate_eq_degreeOf_second_of_irreducible
       hf hpartialSecond
-  letI : FiniteDimensional F A :=
-    FiniteDimensional.of_injective
-      (IsScalarTower.toAlgHom F A L).toLinearMap
-      (RingHom.injective _)
-  have hmul : Module.finrank F A * Module.finrank A L =
-      Module.finrank F L := Module.finrank_mul_finrank F A L
-  have hfinFA : Module.finrank F A = 1 := by
-    rw [hfinA, hfinF] at hmul
-    nlinarith
   have hsurj : Function.Surjective (algebraMap F A) :=
-    (Algebra.finrank_eq_one_iff_bijective_algebraMap.mp hfinFA).2
+    algebraMap_surjective_of_equal_finrank (L := L) _ hdegree hfinA hfinF
   have hArestrict : A.restrictScalars K = F := by
     apply le_antisymm
     · intro z hz

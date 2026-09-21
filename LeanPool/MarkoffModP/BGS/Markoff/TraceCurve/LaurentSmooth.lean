@@ -77,7 +77,7 @@ theorem weightedSplitTraceAffineXPreSubmersivePresentation_jacobian
     (fun _ => 0) (fun _ _ _ => Subsingleton.elim _ _)
   let E := weightedSplitTraceAffinePresentationEquiv alpha beta d e
   change (P.ofAlgEquiv E).jacobian = weightedSplitTraceAffinePartialX alpha beta d e
-  rw [Algebra.PreSubmersivePresentation.jacobian_ofAlgEquiv,
+  erw [Algebra.PreSubmersivePresentation.jacobian_ofAlgEquiv,
     Algebra.PreSubmersivePresentation.jacobian_eq_jacobiMatrix_det,
     Matrix.det_unique, Algebra.PreSubmersivePresentation.jacobiMatrix_naive]
   change E (Ideal.Quotient.mk _
@@ -255,7 +255,7 @@ theorem weightedSplitTraceAffineYPreSubmersivePresentation_jacobian
     (fun _ => 1) (fun _ _ _ => Subsingleton.elim _ _)
   let E := weightedSplitTraceAffinePresentationEquiv alpha beta d e
   change (P.ofAlgEquiv E).jacobian = weightedSplitTraceAffinePartialY alpha beta d e
-  rw [Algebra.PreSubmersivePresentation.jacobian_ofAlgEquiv,
+  erw [Algebra.PreSubmersivePresentation.jacobian_ofAlgEquiv,
     Algebra.PreSubmersivePresentation.jacobian_eq_jacobiMatrix_det,
     Matrix.det_unique, Algebra.PreSubmersivePresentation.jacobiMatrix_naive]
   change E (Ideal.Quotient.mk _

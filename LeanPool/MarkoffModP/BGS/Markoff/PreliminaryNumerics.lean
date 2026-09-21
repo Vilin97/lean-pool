@@ -158,13 +158,8 @@ private theorem preliminary_endgame_coefficient_le_cutoff_pow_four :
 
 private theorem preliminary_fixed_pow_eight_le_cutoff :
     100522 ^ 8 ≤ 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 := by
-  calc
-    100522 ^ 8 ≤ (2 ^ 17) ^ 8 := Nat.pow_le_pow_left (by norm_num) _
-    _ = 2 ^ 136 := by
-      rw [show (136 : ℕ) = 17 * 8 by norm_num, pow_mul]
-    _ ≤ 2 ^ 1833 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
-    _ ≤ 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 :=
-      Nat.le_mul_of_pos_right _ (pow_pos (by norm_num) _)
+  decide +kernel
+
 private theorem preliminary_lowOrder_coefficient_eq_cutoff_sq :
     2 ^ 10 * (48 ^ 3 + 1) ^ 20 * preliminaryDivisorMomentConstant ^ 8 =
       (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 2 := by

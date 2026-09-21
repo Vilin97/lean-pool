@@ -60,6 +60,9 @@ theorem planeCurveCoordinateRingBaseChangeAlgEquiv_includeRight
   intro i
   simp [Φ, planeCurveCoordinateRingBaseChangeAlgEquiv,
     planeCurveCoordinateRingMap]
+  erw [Ideal.quotientEquivAlg_mk]
+  simp only [MvPolynomial.algebraTensorAlgEquiv_tmul, one_smul]
+  rfl
 
 theorem planeCurveFunctionFieldBaseChangeAlgHom_function
     (hf : Irreducible f)

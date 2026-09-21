@@ -84,20 +84,24 @@ theorem finiteExtensionOnePointRiemannSpace_zero_moduleFinite
     Module.Finite K (finiteExtensionOnePointRiemannSpace K L P 0) := by
   let Q : FiniteExtensionInfinityPlace K L := Classical.choice
     (inferInstance : Nonempty (FiniteExtensionInfinityPlace K L))
-  letI : Algebra (RatFuncInfinityIntegralClosure K L)
+  let : Algebra (RatFuncInfinityIntegralClosure K L)
       (RatFuncInfinityIntegralClosure K L) :=
     Algebra.id (RatFuncInfinityIntegralClosure K L)
-  letI : Algebra (RatFuncInfinityIntegralClosure K L)
+  let _ : DistribMulAction (RatFuncInfinityIntegralClosure K L)
+      (RatFuncInfinityIntegralClosure K L) :=
+    (Algebra.toModule : Module (RatFuncInfinityIntegralClosure K L)
+      (RatFuncInfinityIntegralClosure K L)).toDistribMulAction
+  let : Algebra (RatFuncInfinityIntegralClosure K L)
       (FiniteExtensionInfinityPlaceLocalRing K L Q) :=
     OreLocalization.instAlgebra
   let R := FiniteExtensionInfinityPlaceLocalRing K L Q
-  letI := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) Q
-  letI := finiteExtensionInfinityPlaceLocalIsFractionRing (K := K) (L := L) Q
-  letI : IsDiscreteValuationRing R :=
+  let := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) Q
+  let := finiteExtensionInfinityPlaceLocalIsFractionRing (K := K) (L := L) Q
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       (RatFuncInfinityIntegralClosure K L)
       (primeOverHeightOne (ratFuncInfinityPlace K) Q).ne_bot R
-  letI : Finite Q.1.ResidueField :=
+  let : Finite Q.1.ResidueField :=
     finiteExtensionInfinityPlace_residueField_finite (K := K) (L := L) Q
   let V := finiteExtensionOnePointRiemannSpace K L P 0
   have hliftExists : ∀ x : V, ∃ r : R,
@@ -107,7 +111,9 @@ theorem finiteExtensionOnePointRiemannSpace_zero_moduleFinite
     apply finiteExtensionInfinityPlace_exists_local_lift_of_orderTop_nonnegative
       (K := K) (L := L) Q x.1
     by_cases hx0 : x.1 = 0
-    · simp [finiteExtensionInfinityPlaceLocalOrderTop, hx0]
+    · simp only [finiteExtensionInfinityPlaceLocalOrderTop, hx0]
+      erw [finitePlaceOrderTop_zero]
+      exact le_top
     · rw [finiteExtensionInfinityPlaceLocalOrderTop_eq_globalOrder Q x.1 hx0]
       have hxmem :=
         (mem_finiteExtensionOnePointRiemannSpace_iff K L P 0 x.1).mp x.2
@@ -135,8 +141,8 @@ theorem finiteExtensionOnePointRiemannSpace_zero_moduleFinite
     by_contra hne
     let r : R := lift x - lift y
     have hrResidue : IsLocalRing.residue R r = 0 := by
-      change IsLocalRing.residue R (lift x) -
-        IsLocalRing.residue R (lift y) = 0
+      dsimp only [r]
+      rw [map_sub]
       exact sub_eq_zero.mpr hxy
     have hrMem : r ∈ IsLocalRing.maximalIdeal R :=
       (IsLocalRing.residue_eq_zero_iff r).mp hrResidue
@@ -197,7 +203,7 @@ theorem finiteExtensionOnePointRiemannSpace_zero_moduleFinite
     have hDegreeZero :=
       finiteExtensionPrincipalDivisorDegreeSum_eq_zero K L (x.1 - y.1) hdNe
     omega
-  letI : Finite V := Finite.of_injective residue hresidueInjective
+  let : Finite V := Finite.of_injective residue hresidueInjective
   change Module.Finite K V
   infer_instance
 

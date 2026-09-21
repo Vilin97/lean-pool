@@ -27,6 +27,12 @@ universe u
 
 variable {K : Type u} [Field K]
 
+local instance affineNormalizationSelfAction (alpha beta : K) (d e : ℕ) :
+    DistribMulAction (WeightedSplitTraceAffineNormalizationRing alpha beta d e)
+      (WeightedSplitTraceAffineNormalizationRing alpha beta d e) :=
+  (Algebra.toModule : Module (WeightedSplitTraceAffineNormalizationRing alpha beta d e)
+    (WeightedSplitTraceAffineNormalizationRing alpha beta d e)).toDistribMulAction
+
 /-- Canonical ring map from an affine trace chart to its integral closure. -/
 def weightedSplitTraceAffineNormalizationRingHom (alpha beta : K) (d e : ℕ) :
     WeightedSplitTraceAffineCoordinateRing alpha beta d e →+*

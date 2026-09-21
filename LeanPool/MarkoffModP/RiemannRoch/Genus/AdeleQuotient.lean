@@ -74,30 +74,13 @@ omit [IsFullConstantField k K] in
 theorem mem_adeleFilt_divisorOfAdele (α : AdeleSpace k K) :
     α ∈ adeleFilt k K (divisorOfAdele k K α) := by
   intro v
-  show placeValuation k K v (α.val v) ≤ WithZero.exp ((divisorOfAdele k K α) v)
-  dsimp [divisorOfAdele, exceptionalPlaces, Finsupp.onFinset_apply]
-  by_cases hv : placeValuation k K v (α.val v) ≤ 1
-  · have hnotlt : ¬1 < placeValuation k K v (α.val v) := not_lt.mpr hv
-    have hnotmem : v ∉ exceptionalPlaces k K α := by
-      intro hmem
-      have hgt := (exceptionalFinite k K α).mem_toFinset.mp (by
-        dsimp [exceptionalPlaces] at hmem ⊢
-        exact hmem)
-      have hnotle : ¬placeValuation k K v (α.val v) ≤ 1 := by simpa using hgt
-      exact absurd hv hnotle
-    split_ifs with hlt
-    · exfalso
-      exact hnotlt hlt
-    · simpa [WithZero.exp_zero] using hv
-  · have hlt : 1 < placeValuation k K v (α.val v) := not_le.mp hv
-    have hmem : v ∈ exceptionalPlaces k K α := by
-      dsimp [exceptionalPlaces]
-      exact (exceptionalFinite k K α).mem_toFinset.mpr (not_le.mpr hlt)
-    have hval : placeValuation k K v (α.val v) ≠ 0 := ne_of_gt (zero_lt_one.trans hlt)
-    split_ifs with hlt'
-    · simp [WithZero.exp_log hval]
-    · exfalso
-      exact hlt' hlt
+  change placeValuation k K v (α.val v) ≤ WithZero.exp ((divisorOfAdele k K α) v)
+  change placeValuation k K v (α.val v) ≤
+    WithZero.exp (if 1 < placeValuation k K v (α.val v) then
+      WithZero.log (placeValuation k K v (α.val v)) else 0)
+  by_cases hlt : 1 < placeValuation k K v (α.val v)
+  · rw [if_pos hlt, WithZero.exp_log (ne_of_gt (zero_lt_one.trans hlt))]
+  · simpa only [if_neg hlt, WithZero.exp_zero] using le_of_not_gt hlt
 
 omit [IsFullConstantField k K] in
 theorem exists_adeleFilt_mem (α : AdeleSpace k K) :
