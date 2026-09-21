@@ -19,7 +19,7 @@ the local Kolmogorov criterion on the compactification
 (`hasLocalKolmogorovMoments_onePointKernelSemigroup_heatResolvent`).
 
 This assembles the regularity data from which the continuous-path process of the compactified
-heat semigroup is formed (`onePointRegular_heatResolvent`), the witness that those data are
+heat semigroup is formed (`onePointRegularHeatResolvent`), the witness that those data are
 available for a genuine example.  Because the heat semigroup is conservative, the compactified
 process started at a live point almost surely never reaches the added point
 (`ae_exitTime_eq_top_heatResolvent`).
@@ -136,7 +136,7 @@ end Moments
 
 /-- **The regularity data of the compactified heat process**: the exhaustion `1 / (1 + |x|)` and
 the Kolmogorov regularity which its metric gives the compactified heat semigroup. -/
-def onePointRegular_heatResolvent : heatResolvent.OnePointRegular where
+def onePointRegularHeatResolvent : heatResolvent.OnePointRegular where
   rho := heatExhaustion
   continuous_rho := continuous_heatExhaustion
   rho_pos := heatExhaustion_pos
@@ -156,13 +156,13 @@ def onePointRegular_heatResolvent : heatResolvent.OnePointRegular where
 semigroup is conservative, so the shift times its kernel resolvent of the constant observable one
 is one, which is the criterion for no escape. -/
 theorem ae_exitTime_eq_top_heatResolvent (x : ℝ) :
-    letI := onePointRegular_heatResolvent.metricSpace
-    letI := onePointRegular_heatResolvent.completeSpace
+    letI := onePointRegularHeatResolvent.metricSpace
+    letI := onePointRegularHeatResolvent.completeSpace
     ∀ᵐ omega ∂SubMarkovKernelSemigroup.IsConservative.continuousProcess
         heatResolvent.onePointKernelSemigroup
         heatResolvent.isConservative_onePointKernelSemigroup (x : OnePoint ℝ),
       ContinuousPath.exitTime (Set.range ((↑) : ℝ → OnePoint ℝ)) omega = ⊤ :=
-  onePointRegular_heatResolvent.ae_exitTime_eq_top one_pos x (by
+  onePointRegularHeatResolvent.ae_exitTime_eq_top one_pos x (by
     rw [kernelSemigroup_heatResolvent]
     exact isConservative_heatSemigroup.ofReal_mul_kernelResolvent_one one_pos x)
 

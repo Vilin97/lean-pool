@@ -51,7 +51,6 @@ variable (S : StronglyContinuousContractionSemigroup E)
 theorem zero : S 0 = ContinuousLinearMap.id ℝ E :=
   S.operator_zero
 
-@[simp]
 theorem zero_apply (x : E) : S 0 x = x := by
   rw [S.zero]
   rfl
@@ -60,7 +59,6 @@ theorem zero_apply (x : E) : S 0 x = x := by
 theorem add (s t : NNReal) : S (s + t) = (S s).comp (S t) :=
   S.operator_add s t
 
-@[simp]
 theorem add_apply (s t : NNReal) (x : E) : S (s + t) x = S s (S t x) := by
   rw [S.add]
   rfl

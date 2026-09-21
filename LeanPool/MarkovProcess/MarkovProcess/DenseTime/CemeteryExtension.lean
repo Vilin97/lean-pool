@@ -112,7 +112,6 @@ theorem cemeteryExtension_alive_singleton_delta (κ : ProbabilityTheory.Kernel �
   rw [hpre, measure_empty]
   simp only [Set.indicator_of_mem, Set.mem_singleton_iff, Pi.one_apply, mul_one, zero_add]
 
-@[simp]
 theorem cemeteryExtension_delta_apply' (κ : ProbabilityTheory.Kernel α α)
     {s : Set (Cemetery α)} (hs : MeasurableSet s) :
     cemeteryExtension κ Cemetery.delta s = s.indicator 1 Cemetery.delta := by
@@ -126,7 +125,6 @@ theorem cemeteryExtension_alive_univ (κ : ProbabilityTheory.Kernel α α)
   rw [add_comm]
   exact tsub_add_cancel_of_le (hκ x)
 
-@[simp]
 theorem cemeteryExtension_delta_univ (κ : ProbabilityTheory.Kernel α α) :
     cemeteryExtension κ Cemetery.delta Set.univ = 1 := by
   rw [cemeteryExtension_delta_apply' κ MeasurableSet.univ]

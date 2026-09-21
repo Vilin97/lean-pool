@@ -96,7 +96,7 @@ theorem exists_coordinateC0Subalgebra_near_compactlySupported
       have hq_le_one : q x ≤ 1 := by
         dsimp only [q]
         simp only [ContinuousMap.prod_apply, coordinate_apply]
-        exact Finset.prod_le_one (fun i _ ↦ (hφrange i (x i)).1)
+        exact Finset.prod_le_one₀ (fun i _ ↦ (hφrange i (x i)).1)
           (fun i _ ↦ (hφrange i (x i)).2)
       have hqf : q x * f x = f x := by
         by_cases hxsupport : x ∈ tsupport f

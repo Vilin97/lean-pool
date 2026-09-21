@@ -99,7 +99,7 @@ theorem orderedPathToFiniteSetHomeomorph_apply
 
 /-- Pull a compactly supported test on finite-set coordinates back to increasing coordinates. -/
 noncomputable def pullbackFiniteSetCompactTest
-    {alpha : Type*} [TopologicalSpace alpha] [T2Space alpha]
+    {alpha : Type*} [TopologicalSpace alpha] 
     (I : Finset NNReal) (f : C_c(I → alpha, ℝ)) : C_c(Fin I.card → alpha, ℝ) :=
   f.comp (orderedPathToFiniteSetHomeomorph I).toCocompactMap
 

@@ -39,7 +39,7 @@ private theorem integrable_coordinateProduct
         ((measurable_pi_apply i).comp heval)).stronglyMeasurable).aestronglyMeasurable
   · filter_upwards [] with omega
     rw [norm_prod]
-    apply Finset.prod_le_prod (fun _ _ ↦ norm_nonneg _)
+    apply Finset.prod_le_prod₀ (fun _ _ ↦ norm_nonneg _)
     intro i _
     simpa only [ZeroAtInftyContinuousMap.norm_toBCF_eq_norm] using!
       (factors i).toBCF.norm_coe_le_norm (eval omega i)

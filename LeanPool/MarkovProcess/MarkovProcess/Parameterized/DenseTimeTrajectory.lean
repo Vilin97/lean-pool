@@ -35,8 +35,8 @@ omit [StandardBorelSpace alpha] [Nonempty alpha] in
 /-- Bridging lemma: `ULift.down` out of the `(n + 1)`-st trajectory coordinate is measurable
 w.r.t. the project's registered `MeasurableSpace (trajectoryCoordinate (n + 1))` instance, not
 just the generic `ULift.instMeasurableSpace` instance that `measurable_down` is stated for. -/
-private theorem measurable_down_trajectoryCoordinate (n : ℕ) :
-    Measurable (ULift.down : trajectoryCoordinate (Theta := Theta) (alpha := alpha) (n + 1) → alpha) := by
+private theorem measurable_down_trajectoryCoordinate :
+    Measurable (ULift.down : ULift.{max uTheta uAlpha} alpha → alpha) := by
   simpa only [trajectoryCoordinate] using! measurable_down
 
 private def historyInitial (n : ℕ)
@@ -251,7 +251,7 @@ private theorem historyEquiv_rawTrajAppend (n : ℕ)
 private theorem transport_traj_step {X H Z Y T : Type*}
     [MeasurableSpace X] [MeasurableSpace H] [MeasurableSpace Z]
     [MeasurableSpace Y] [MeasurableSpace T]
-    (kappa : Kernel X Z) [IsSFiniteKernel kappa]
+    (kappa : Kernel X Z) 
     (eta : Kernel Z Y) [IsSFiniteKernel eta] (E : H ≃ᵐ Z)
     (g : H × Y → T) (hg : Measurable g) (q : Z × Y → T)
     (hcompat : g ∘ Prod.map E.symm id = q) :
@@ -429,7 +429,7 @@ private theorem partialTraj_map_historyEquiv
           have hr_meas : Measurable r :=
             measurable_fst.prodMk ((DenseTimeHistory.splitLast n).symm.measurable.comp
               ((measurable_fst.comp measurable_snd).prodMk
-                ((measurable_down_trajectoryCoordinate n).comp
+                (measurable_down_trajectoryCoordinate.comp
                   (measurable_snd.comp measurable_snd))))
           rw [hq, Kernel.map_comp_right _ MeasurableEquiv.prodAssoc.measurable hr_meas]
           rw [prod_comp_prod_map_prodAssoc]
@@ -445,12 +445,12 @@ private theorem partialTraj_map_historyEquiv
                 (γ := trajectoryCoordinate (Theta := Theta) (alpha := alpha) (n + 1)) ULift.up)
             measurable_id
             ((DenseTimeHistory.splitLast n).symm.measurable.comp
-              (measurable_id.prodMap (measurable_down_trajectoryCoordinate n)))]
+              (measurable_id.prodMap measurable_down_trajectoryCoordinate))]
           rw [Kernel.map_comp_right
             (P.parameterizedDenseTimePrefixKernel e iota n ⊗ₖ
               (P.parameterizedObservationCondKernel hP e iota n).map
                 (γ := trajectoryCoordinate (Theta := Theta) (alpha := alpha) (n + 1)) ULift.up)
-            (measurable_id.prodMap (measurable_down_trajectoryCoordinate n))
+            (measurable_id.prodMap measurable_down_trajectoryCoordinate)
             (DenseTimeHistory.splitLast n).symm.measurable]
           have hcpmud :
               (P.parameterizedDenseTimePrefixKernel e iota n ⊗ₖ

@@ -43,15 +43,15 @@ private theorem ae_integrable_kernel_finite {μ : Measure α} {κ : Kernel α α
     (hp : 1 ≤ p) (f : Lp ℝ (p : ℝ≥0∞) μ) : ∀ᵐ x ∂μ, Integrable f (κ x) := by
   let : IsFiniteKernel κ := hκ.isFiniteKernel
   have hfComp : MemLp f p (κ ∘ₘ μ) := (Lp.memLp f).mono_measure hκμ
-  have hFiberEq := Measure.ae_ae_of_ae_comp hfComp.1.ae_eq_mk
+  have hFiberEq := Measure.ae_ae_of_ae_comp hfComp.aestronglyMeasurable.ae_eq_mk
   have hp0 : (p : ℝ≥0∞) ≠ 0 := by
     exact_mod_cast ne_of_gt (zero_lt_one.trans_le hp)
   have hpowInt := hfComp.integrable_norm_rpow hp0 ENNReal.coe_ne_top
   have hFiberInt := Measure.ae_integrable_of_integrable_comp hpowInt
   filter_upwards [hFiberEq, hFiberInt] with x hxEq hxInt
-  have hxEq' : f =ᵐ[κ x] hfComp.1.mk f := hxEq
+  have hxEq' : f =ᵐ[κ x] hfComp.aestronglyMeasurable.mk f := hxEq
   have hxMeas : AEStronglyMeasurable f (κ x) :=
-    hfComp.1.stronglyMeasurable_mk.aestronglyMeasurable.congr hxEq'.symm
+    hfComp.aestronglyMeasurable.stronglyMeasurable_mk.aestronglyMeasurable.congr hxEq'.symm
   have hxMemLp : MemLp f p (κ x) :=
     (integrable_norm_rpow_iff hxMeas hp0 ENNReal.coe_ne_top).mp hxInt
   exact hxMemLp.integrable (by exact_mod_cast hp)
@@ -60,8 +60,8 @@ private theorem ae_integrable_kernel_top {μ : Measure α} {κ : Kernel α α}
     (hκ : IsSubMarkovKernel κ) (hκμ : κ ∘ₘ μ ≤ μ)
     (f : Lp ℝ ∞ μ) : ∀ᵐ x ∂μ, Integrable f (κ x) := by
   have hCtop : eLpNormEssSup f μ ≠ ∞ := by
-    rw [← eLpNorm_exponent_top]
-    exact (Lp.memLp f).2.ne
+    rw [← eLpNorm_exponent_top (Lp.aestronglyMeasurable f)]
+    exact (Lp.memLp f).eLpNorm_lt_top.ne
   have hCcoe : ((eLpNormEssSup f μ).toNNReal : ℝ≥0∞) = eLpNormEssSup f μ :=
     ENNReal.coe_toNNReal hCtop
   have hFiberEq : ∀ᵐ x ∂μ, f =ᵐ[κ x] (Lp.aestronglyMeasurable f).mk f :=

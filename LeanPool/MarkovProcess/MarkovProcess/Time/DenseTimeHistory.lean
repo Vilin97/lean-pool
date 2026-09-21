@@ -57,7 +57,6 @@ theorem historyEquiv_symm_apply_zero (n : ℕ) (x : α) (path : Fin n → α) :
     (historyEquiv n).symm (x, path) ⟨0, Nat.zero_le n⟩ = x :=
   rfl
 
-@[simp]
 theorem historyEquiv_symm_apply_succ (n : ℕ) (x : α) (path : Fin n → α) (i : Fin n) :
     (historyEquiv n).symm (x, path) ⟨i.succ, i.isLt⟩ = path i :=
   rfl

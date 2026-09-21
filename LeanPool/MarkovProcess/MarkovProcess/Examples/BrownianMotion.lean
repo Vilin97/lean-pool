@@ -62,8 +62,8 @@ private theorem map_prodMk_eq_compProd_of_restrict_map
       (mu.restrict (X ⁻¹' C)).map Y = kappa.comap X hX ∘ₘ (mu.restrict (X ⁻¹' C))) :
     mu.map (fun omega ↦ (X omega, Y omega)) = (mu.map X) ⊗ₘ kappa := by
   have : IsProbabilityMeasure (mu.map (fun omega ↦ (X omega, Y omega))) :=
-    Measure.isProbabilityMeasure_map (hX.prodMk hY).aemeasurable
-  have : IsProbabilityMeasure (mu.map X) := Measure.isProbabilityMeasure_map hX.aemeasurable
+    inferInstance
+  have : IsProbabilityMeasure (mu.map X) := inferInstance
   refine MeasureTheory.ext_of_generate_finite _ generateFrom_prod.symm
     isPiSystem_prod ?_ ?_
   · rintro _ ⟨C, hC, B, hB, rfl⟩
@@ -141,7 +141,7 @@ theorem incrementsMap_eq_cons {n : ℕ} (x : ℝ) (path : Fin (n + 1) → ℝ) :
 theorem measurable_incrementsMap {n : ℕ} :
     Measurable (fun p : ℝ × (Fin n → ℝ) ↦ incrementsMap p.1 p.2) := by
   cases n with
-  | zero => exact measurable_pi_lambda _ fun i ↦ i.elim0
+  | zero => exact Measurable.of_eval fun i ↦ i.elim0
   | succ n =>
     simp_rw [incrementsMap_eq_cons]
     refine measurable_pi_iff.mpr fun i ↦ ?_
@@ -189,7 +189,7 @@ theorem timeIncrements_succ_apply : ∀ {n : ℕ} {s : Fin (n + 1) → NNReal}, 
 theorem measurable_incrementsMap_eval {n : ℕ} (s : Fin n → NNReal) (x : ℝ) :
     Measurable (fun omega : ContinuousPath ℝ ↦ incrementsMap x (fun i ↦ omega (s i))) :=
   measurable_incrementsMap.comp (measurable_const.prodMk
-    (measurable_pi_lambda _ fun i ↦ ContinuousPath.measurable_coordinateProcess (s i)))
+    (Measurable.of_eval fun i ↦ ContinuousPath.measurable_coordinateProcess (s i)))
 
 /-- **The joint law of the increments of Brownian motion is a product of centred Gaussians.**
 Reading the path of `brownianMotion x` at a monotone family of times and taking the increments,
@@ -204,7 +204,7 @@ theorem brownianMotion_map_incrementsMap : ∀ {n : ℕ} {s : Fin n → NNReal},
     intro s _ x
     have : IsProbabilityMeasure ((brownianMotion x).map
         (fun omega ↦ incrementsMap x (fun i ↦ omega (s i)))) :=
-      Measure.isProbabilityMeasure_map (measurable_incrementsMap_eval s x).aemeasurable
+      inferInstance
     exact (Measure.pi_eq fun A _ ↦ by simp).symm
   | succ n ih =>
     intro s hs x
@@ -215,7 +215,7 @@ theorem brownianMotion_map_incrementsMap : ∀ {n : ℕ} {s : Fin n → NNReal},
           (incrementsMap p.1 (fun i : Fin n ↦ p.2 (s i.succ - s 0)))) := by
       refine measurable_finCons.comp ((measurable_fst.sub measurable_const).prodMk ?_)
       exact measurable_incrementsMap.comp (measurable_fst.prodMk
-        (measurable_pi_lambda _ fun i ↦
+        (Measurable.of_eval fun i ↦
           (ContinuousPath.measurable_coordinateProcess (s i.succ - s 0)).comp measurable_snd))
     have hpair : Measurable (fun omega : ContinuousPath ℝ ↦
         (omega (s 0), ContinuousPath.shift (s 0) omega)) :=
@@ -301,7 +301,7 @@ section IndependentIncrements
 /-- Dropping the first coordinate of a finite coordinate path is measurable. -/
 theorem measurable_finTail {n : ℕ} :
     Measurable (Fin.tail : (Fin (n + 1) → ℝ) → (Fin n → ℝ)) :=
-  measurable_pi_lambda _ fun i ↦ measurable_pi_apply i.succ
+  Measurable.of_eval fun i ↦ measurable_pi_apply i.succ
 
 /-- Dropping the first coordinate of a product of probability measures gives the product of the
 remaining ones. -/
@@ -346,7 +346,7 @@ theorem brownianMotion_map_increment (x : ℝ) (a b : NNReal) (hab : a ≤ b) :
   have h := brownianMotion_map_increments (n := 1) (t := ![a, b]) ht x
   have hmeas : Measurable (fun (omega : ContinuousPath ℝ) (i : Fin 1) ↦
       omega ((![a, b] : Fin 2 → NNReal) i.succ) - omega ((![a, b] : Fin 2 → NNReal) i.castSucc)) :=
-    measurable_pi_lambda _ fun i ↦
+    Measurable.of_eval fun i ↦
       (ContinuousPath.measurable_coordinateProcess _).sub
         (ContinuousPath.measurable_coordinateProcess _)
   have hproj := congrArg (fun mu : Measure (Fin 1 → ℝ) ↦ mu.map (Function.eval (0 : Fin 1))) h

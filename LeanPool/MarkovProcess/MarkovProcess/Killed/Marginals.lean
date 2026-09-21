@@ -193,12 +193,12 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
   | succ n ih =>
       have hmeasTimes : Measurable (fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
             LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) :=
-        measurable_pi_lambda _ fun i ↦
+        Measurable.of_eval fun i ↦
           ContinuousPath.measurable_coordinate_killAtExit U hU (times i)
       have hmeasTail : Measurable (fun omega : ContinuousPath alpha ↦ fun i : Fin n ↦
               LifetimePath.coordinate (times.relativeTail i)
                 (ContinuousPath.killAtExit U omega)) :=
-        measurable_pi_lambda _ fun i ↦
+        Measurable.of_eval fun i ↦
           ContinuousPath.measurable_coordinate_killAtExit U hU (times.relativeTail i)
       have hRcons : (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)).IsConservative := isConservative_cemeterySemigroup _
       let : IsMarkovKernel (finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times) :=
@@ -210,7 +210,7 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
       have : IsProbabilityMeasure
           ((IsConservative.continuousProcess P hP (x : alpha)).map (fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
             LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega))) :=
-        Measure.isProbabilityMeasure_map hmeasTimes.aemeasurable
+        inferInstance
       refine MeasureTheory.ext_of_generate_finite _ generateFrom_pi.symm isPiSystem_pi ?_ ?_
       · rintro _ ⟨B, hB, rfl⟩
         have hBmeas : ∀ i : Fin (n + 1), MeasurableSet (B i) := fun i ↦ hB i (Set.mem_univ i)

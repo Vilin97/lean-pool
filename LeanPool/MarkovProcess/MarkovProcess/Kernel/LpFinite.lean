@@ -26,7 +26,7 @@ variable {α : Type*} [MeasurableSpace α]
 /-- On a finite measure of mass at most one, the `L¹` seminorm is bounded by
 every finite `Lᵖ` seminorm with `p ≥ 1`. -/
 theorem eLpNorm_one_le_of_measure_univ_le_one {ν : Measure α} {f : α → ℝ}
-    [IsFiniteMeasure ν] {p : NNReal} (hp : 1 ≤ p) (hν : ν Set.univ ≤ 1)
+     {p : NNReal} (hp : 1 ≤ p) (hν : ν Set.univ ≤ 1)
     (hf : AEStronglyMeasurable f ν) :
     eLpNorm f 1 ν ≤ eLpNorm f p ν := by
   have hcompare := eLpNorm_le_eLpNorm_mul_rpow_measure_univ
@@ -57,12 +57,12 @@ theorem enorm_integral_rpow_le_lintegral_enorm_rpow
   have hnorm : ‖∫ y, f y ∂ν‖ₑ ≤ eLpNorm f p ν := by
     calc
       ‖∫ y, f y ∂ν‖ₑ ≤ ∫⁻ y, ‖f y‖ₑ ∂ν := enorm_integral_le_lintegral_enorm f
-      _ = eLpNorm f 1 ν := eLpNorm_one_eq_lintegral_enorm.symm
-      _ ≤ eLpNorm f p ν := eLpNorm_one_le_of_measure_univ_le_one hp hν hf.1
+      _ = eLpNorm f 1 ν := (eLpNorm_one_eq_lintegral_enorm hf.aestronglyMeasurable).symm
+      _ ≤ eLpNorm f p ν := eLpNorm_one_le_of_measure_univ_le_one hp hν hf.aestronglyMeasurable
   calc
     ‖∫ y, f y ∂ν‖ₑ ^ (p : ℝ) ≤ eLpNorm f p ν ^ (p : ℝ) := by
       exact ENNReal.rpow_le_rpow hnorm (by positivity)
-    _ = ∫⁻ y, ‖f y‖ₑ ^ (p : ℝ) ∂ν := eLpNorm_nnreal_pow_eq_lintegral hp0
+    _ = ∫⁻ y, ‖f y‖ₑ ^ (p : ℝ) ∂ν := eLpNorm_nnreal_pow_eq_lintegral hp0 hf.aestronglyMeasurable
 
 /-- The integrated fibrewise power estimate for a sub-Markov kernel. -/
 theorem lintegral_enorm_kernelIntegral_rpow_le
@@ -74,15 +74,15 @@ theorem lintegral_enorm_kernelIntegral_rpow_le
   let : IsFiniteKernel κ := hκ.isFiniteKernel
   have hfComp : MemLp f p (κ ∘ₘ μ) := hf.mono_measure hκμ
   have hfFiber : ∀ᵐ x ∂μ, MemLp f p (κ x) := by
-    have hFiberEq := Measure.ae_ae_of_ae_comp hfComp.1.ae_eq_mk
+    have hFiberEq := Measure.ae_ae_of_ae_comp hfComp.aestronglyMeasurable.ae_eq_mk
     have hp0 : (p : ℝ≥0∞) ≠ 0 := by
       exact_mod_cast ne_of_gt (zero_lt_one.trans_le hp)
     have hpowInt := hfComp.integrable_norm_rpow hp0 ENNReal.coe_ne_top
     have hFiberInt := Measure.ae_integrable_of_integrable_comp hpowInt
     filter_upwards [hFiberEq, hFiberInt] with x hxEq hxInt
-    have hxEq' : f =ᵐ[κ x] hfComp.1.mk f := hxEq
+    have hxEq' : f =ᵐ[κ x] hfComp.aestronglyMeasurable.mk f := hxEq
     have hxMeas : AEStronglyMeasurable f (κ x) :=
-      hfComp.1.stronglyMeasurable_mk.aestronglyMeasurable.congr hxEq'.symm
+      hfComp.aestronglyMeasurable.stronglyMeasurable_mk.aestronglyMeasurable.congr hxEq'.symm
     exact (integrable_norm_rpow_iff hxMeas hp0 ENNReal.coe_ne_top).mp hxInt
   calc
     ∫⁻ x, ‖kernelIntegral κ f x‖ₑ ^ (p : ℝ) ∂μ
@@ -93,7 +93,7 @@ theorem lintegral_enorm_kernelIntegral_rpow_le
     _ = ∫⁻ y, ‖f y‖ₑ ^ (p : ℝ) ∂(κ ∘ₘ μ) := by
           symm
           exact Measure.lintegral_bind (Kernel.aemeasurable κ)
-            (hfComp.1.enorm.pow_const (p : ℝ))
+            (hfComp.aestronglyMeasurable.enorm.pow_const (p : ℝ))
     _ ≤ ∫⁻ y, ‖f y‖ₑ ^ (p : ℝ) ∂μ :=
       lintegral_mono' hκμ le_rfl
 
@@ -105,7 +105,8 @@ theorem eLpNorm_kernelIntegral_le
     (hp : 1 ≤ p) (hf : MemLp f p μ) :
     eLpNorm (kernelIntegral κ f) p μ ≤ eLpNorm f p μ := by
   have hp0 : p ≠ 0 := ne_of_gt (zero_lt_one.trans_le hp)
-  rw [eLpNorm_nnreal_eq_lintegral hp0, eLpNorm_nnreal_eq_lintegral hp0]
+  rw [eLpNorm_nnreal_eq_lintegral hp0 (AEStronglyMeasurable.kernelIntegral hf.aestronglyMeasurable hκμ),
+    eLpNorm_nnreal_eq_lintegral hp0 hf.aestronglyMeasurable]
   apply ENNReal.rpow_le_rpow
   · exact lintegral_enorm_kernelIntegral_rpow_le hκ hκμ hp hf
   · positivity
@@ -117,7 +118,6 @@ theorem MemLp.kernelIntegral
     (hκμ : κ ∘ₘ μ ≤ μ) {f : α → ℝ} {p : NNReal}
     (hp : 1 ≤ p) (hf : MemLp f p μ) :
     MemLp (kernelIntegral κ f) p μ := by
-  refine ⟨AEStronglyMeasurable.kernelIntegral hf.1 hκμ, ?_⟩
-  exact (eLpNorm_kernelIntegral_le hκ hκμ hp hf).trans_lt hf.2
+  exact (eLpNorm_kernelIntegral_le hκ hκμ hp hf).trans_lt hf.eLpNorm_lt_top
 
 end MarkovProcess

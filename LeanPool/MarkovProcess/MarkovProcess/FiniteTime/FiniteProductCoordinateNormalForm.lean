@@ -23,7 +23,9 @@ variable {I α : Type*} [TopologicalSpace α]
 
 /-- A scalar coefficient together with a finite ordered list of one-coordinate `C₀` factors. -/
 structure CoordinateProductTerm (I α : Type*) [TopologicalSpace α] where
+  /-- The scalar multiplier of the coordinate product. -/
   coefficient : ℝ
+  /-- The coordinate indices and compactly supported factors, in product order. -/
   factors : List (I × C₀(α, ℝ))
 
 /-- The continuous function represented by one coordinate-product term. -/

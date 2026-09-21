@@ -76,13 +76,11 @@ theorem rescale_refl_one (omega : ContinuousPath alpha) :
   simp only [rescale_apply, Homeomorph.refl_apply, id_eq, one_mul]
 
 /-- Rescaling by the identity homeomorphism speeds the path up without touching the state. -/
-@[simp]
 theorem rescale_refl_apply (c : NNReal) (omega : ContinuousPath alpha) (t : NNReal) :
     rescale (Homeomorph.refl alpha) c omega t = omega (c * t) :=
   rfl
 
 /-- Rescaling by the time factor one conjugates the state without touching the time. -/
-@[simp]
 theorem rescale_one_apply (e : alpha ≃ₜ beta) (omega : ContinuousPath alpha) (t : NNReal) :
     rescale e 1 omega t = e (omega t) := by
   simp only [rescale_apply, one_mul]

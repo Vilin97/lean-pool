@@ -135,7 +135,6 @@ theorem eq_emptyPath {α : Type*} (path : Fin 0 → α) : path = emptyPath α :=
   Subsingleton.elim _ _
 
 /-- Restricting any path to an empty index family gives the canonical empty path. -/
-@[simp]
 theorem restrictPath_empty {n : ℕ} (e : Fin 0 ↪o Fin n) {α : Type*}
     (path : Fin n → α) : restrictPath e path = emptyPath α :=
   Subsingleton.elim _ _

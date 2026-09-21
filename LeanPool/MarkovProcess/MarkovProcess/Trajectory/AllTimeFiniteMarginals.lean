@@ -86,7 +86,7 @@ def finiteEvaluation {ι α : Type*} [TopologicalSpace α]
   fun path i ↦ path (τ i)
 
 /-- Simultaneous evaluation at finitely many fixed times is continuous in the path. -/
-theorem continuous_finiteEvaluation {ι α : Type*} [Finite ι]
+theorem continuous_finiteEvaluation {ι α : Type*} 
     [TopologicalSpace α] (τ : ι → NNReal) :
     Continuous (finiteEvaluation (α := α) τ) := by
   apply continuous_pi
@@ -95,7 +95,7 @@ theorem continuous_finiteEvaluation {ι α : Type*} [Finite ι]
 
 /-- If each time in a finite family converges, then simultaneous evaluation along any
 continuous path converges in the finite product topology. -/
-theorem tendsto_finiteEvaluation {ι α : Type*} [Finite ι]
+theorem tendsto_finiteEvaluation {ι α : Type*} 
     [TopologicalSpace α] (τ : ι → NNReal) (q : ℕ → ι → NNReal)
     (hq : ∀ i, Tendsto (fun k ↦ q k i) atTop (nhds (τ i)))
     (path : ContinuousPath α) :
@@ -114,7 +114,7 @@ variable {α : Type*} [MetricSpace α] [MeasurableSpace α] [BorelSpace α]
 
 omit [SecondCountableTopology α] [LocallyCompactSpace α] in
 /-- Simultaneous evaluation at finitely many fixed times is Borel measurable. -/
-theorem ContinuousPath.measurable_finiteEvaluation {ι : Type*} [Finite ι]
+theorem ContinuousPath.measurable_finiteEvaluation {ι : Type*} 
     (τ : ι → NNReal) : Measurable (finiteEvaluation (α := α) τ) := by
   rw [measurable_pi_iff]
   intro i

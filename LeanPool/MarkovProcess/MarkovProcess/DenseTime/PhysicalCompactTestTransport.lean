@@ -98,7 +98,7 @@ theorem pullbackPhysicalSetHomeomorph_apply
 
 /-- Pull a compactly supported test on dense-time labels back to physical-time labels. -/
 noncomputable def pullbackPhysicalSetCompactTest
-    {alpha : Type*} [TopologicalSpace alpha] [T2Space alpha]
+    {alpha : Type*} [TopologicalSpace alpha] 
     (J : Finset DenseTime) (f : C_c(J → alpha, ℝ)) :
     C_c(denseTimePhysicalSet J → alpha, ℝ) :=
   f.comp (pullbackPhysicalSetHomeomorph J).toCocompactMap

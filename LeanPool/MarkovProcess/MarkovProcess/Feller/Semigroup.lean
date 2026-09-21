@@ -33,7 +33,7 @@ def HasContinuousC0Orbits (P : SubMarkovKernelSemigroup α) (hC0 : P.MapsC0) : P
 Feller-semigroup properties when it maps `C₀` into itself and its resulting `C₀` operator orbits
 are continuous in time. Conservativity is not part of this predicate. -/
 def IsFellerKernelSemigroup (P : SubMarkovKernelSemigroup α)
-    [LocallyCompactSpace α] [T2Space α] : Prop :=
+      : Prop :=
   ∃ hC0 : P.MapsC0, P.HasContinuousC0Orbits hC0
 
 variable (P : SubMarkovKernelSemigroup α) (hC0 : P.MapsC0)
@@ -52,7 +52,6 @@ theorem c0Semigroup_operator (hTime : P.HasContinuousC0Orbits hC0) (t : NNReal) 
     (P.c0Semigroup hC0 hTime) t = P.c0Operator hC0 t :=
   rfl
 
-@[simp]
 theorem c0Semigroup_apply (hTime : P.HasContinuousC0Orbits hC0)
     (t : NNReal) (f : C₀(α, ℝ)) :
     (P.c0Semigroup hC0 hTime) t f = P.c0KernelIntegral hC0 t f :=

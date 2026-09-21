@@ -115,14 +115,14 @@ theorem exists_coordinateC0Subalgebra_near_on_isCompact
 /-- Finite algebraic combinations of one-coordinate continuous functions are uniformly dense in
 the continuous real functions on a compact finite product. -/
 theorem coordinateSubalgebra_topologicalClosure_eq_top
-    [Fintype I] [T35Space α] [CompactSpace α] :
+     [T35Space α] [CompactSpace α] :
     (coordinateSubalgebra (I := I) (α := α)).topologicalClosure = ⊤ :=
   ContinuousMap.subalgebra_topologicalClosure_eq_top_of_separatesPoints _
     coordinateSubalgebra_separatesPoints
 
 /-- Epsilon form of finite-product test-function density. -/
 theorem exists_coordinateSubalgebra_near
-    [Fintype I] [T35Space α] [CompactSpace α]
+     [T35Space α] [CompactSpace α]
     (f : C(I → α, ℝ)) {epsilon : ℝ} (hepsilon : 0 < epsilon) :
     ∃ g : coordinateSubalgebra (I := I) (α := α),
       ‖(g : C(I → α, ℝ)) - f‖ < epsilon :=

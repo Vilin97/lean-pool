@@ -58,7 +58,6 @@ noncomputable def shiftedUnitDyadicFloorValue (k : NNRat) (n : ℕ)
     (t : Set.Icc (0 : ℝ) 1) : NNRat :=
   k + unitDyadicFloorValue n t
 
-@[simp]
 theorem timeShift_unitDyadicFloorValue_apply
     (k : NNRat) (X : NNRat → Ω → E) (ω : Ω) (n : ℕ)
     (t : Set.Icc (0 : ℝ) 1) :

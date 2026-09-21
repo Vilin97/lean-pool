@@ -40,7 +40,7 @@ theorem comp {S : F → G} {T : E → F}
 
 /-- A closed set is preserved by the pointwise limit of preserving maps. -/
 theorem of_tendsto {ι : Type*} {l : Filter ι} [l.NeBot]
-    [TopologicalSpace F] [T2Space F] {T : ι → E → F} {S : E → F}
+    [TopologicalSpace F]  {T : ι → E → F} {S : E → F}
     (hD : IsClosed D) (hT : ∀ i, PreservesSet (T i) C D)
     (hlim : ∀ x, Tendsto (fun i ↦ T i x) l (nhds (S x))) :
     PreservesSet S C D := by

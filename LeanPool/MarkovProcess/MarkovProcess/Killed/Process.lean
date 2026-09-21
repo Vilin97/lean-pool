@@ -37,7 +37,7 @@ namespace LifetimePath
 theorem measurable_coordinateFamily {beta : Type*} [TopologicalSpace beta]
     [MeasurableSpace beta] {iota : Type*} (tau : iota → NNReal) :
     Measurable fun omega : LifetimePath beta ↦ fun i ↦ coordinate (tau i) omega :=
-  measurable_pi_lambda _ fun i ↦ measurable_coordinate (tau i)
+  Measurable.of_eval fun i ↦ measurable_coordinate (tau i)
 
 end LifetimePath
 

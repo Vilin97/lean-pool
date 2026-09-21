@@ -99,7 +99,6 @@ theorem IsConservative.isProbabilityMeasure_finiteTimeLaw
 
 /-- The unique coordinate of a singleton finite-time kernel has transition kernel `P` at that
 time. -/
-@[simp]
 theorem finiteTimeKernel_one_map_eval (P : SubMarkovKernelSemigroup α)
     (times : FiniteOrderedTimes 1) :
     (finiteTimeKernel P times).map (fun path ↦ path 0) = P (times 0) := by

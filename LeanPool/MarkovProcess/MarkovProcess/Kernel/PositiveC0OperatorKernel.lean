@@ -90,7 +90,6 @@ theorem isSubMarkovKernel_kernel (hT_norm : ‖T‖ ≤ 1) :
   exact PositiveC0OperatorMeasure.measure_univ_le_one T hT hT_norm x
 
 /-- The kernel represents `T` on compactly supported continuous functions. -/
-@[simp]
 theorem integral_kernel_compactlySupported (hT_norm : ‖T‖ ≤ 1) (x : α)
     (f : C_c(α, ℝ)) :
     ∫ y, f y ∂kernel T hT hT_norm x =

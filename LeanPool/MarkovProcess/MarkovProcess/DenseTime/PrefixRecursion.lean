@@ -20,7 +20,7 @@ namespace ProbabilityTheory.Kernel
 private theorem step_transport {X H Z Y T : Type*}
     [MeasurableSpace X] [MeasurableSpace H] [MeasurableSpace Z]
     [MeasurableSpace Y] [MeasurableSpace T]
-    (κ : Kernel X Z) [IsSFiniteKernel κ]
+    (κ : Kernel X Z) 
     (η : Kernel Z Y) [IsSFiniteKernel η] (E : H ≃ᵐ Z)
     (g : H × Y → T) (hg : Measurable g) (q : Z × Y → T)
     (hcompat : g ∘ Prod.map E.symm id = q) :

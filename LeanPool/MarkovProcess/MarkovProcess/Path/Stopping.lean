@@ -36,12 +36,10 @@ theorem stoppedPath_apply (T : NNReal) (omega : ContinuousPath alpha) (t : NNRea
     stoppedPath T omega t = omega (min t T) :=
   rfl
 
-@[simp]
 theorem stoppedPath_apply_of_le (T : NNReal) (omega : ContinuousPath alpha) (t : NNReal)
     (ht : t ≤ T) : stoppedPath T omega t = omega t := by
   rw [stoppedPath_apply, min_eq_left ht]
 
-@[simp]
 theorem stoppedPath_apply_of_ge (T : NNReal) (omega : ContinuousPath alpha) (t : NNReal)
     (ht : T ≤ t) : stoppedPath T omega t = omega T := by
   rw [stoppedPath_apply, min_eq_right ht]

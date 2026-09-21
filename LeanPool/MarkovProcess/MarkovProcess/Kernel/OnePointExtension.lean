@@ -558,7 +558,7 @@ omit [MeasurableSpace X] [BorelSpace X] [LocallyCompactSpace X] [SecondCountable
       ZeroAtInftyContinuousMap.zero_apply, zero_add]
 
 /-- The compactified semigroup fixes the constants. -/
-@[simp] theorem onePointSemigroup_constant (t : NNReal) (c : ℝ) :
+theorem onePointSemigroup_constant (t : NNReal) (c : ℝ) :
     R.onePointSemigroup t (onePointConstant c) = onePointConstant c := by
   rw [onePointSemigroup_apply, onePointSemigroupAction, onePointConstant,
     onePointRemainder_assemble]

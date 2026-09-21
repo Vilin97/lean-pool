@@ -79,7 +79,7 @@ theorem IsConservative.lintegral_annealedProcess (x : alpha) {g : ContinuousPath
 /-- Annealed expectations of bounded strongly measurable functionals are the averages of the
 quenched expectations: `∫ F d(annealed x) = ∫ (∫ F dQ(theta, x)) mu(dtheta)`. -/
 theorem IsConservative.integral_annealedProcess [IsProbabilityMeasure mu] (x : alpha)
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] 
     (F : ContinuousPath alpha → E) (hF : StronglyMeasurable F) (C : ℝ)
     (hFC : ∀ eta, ‖F eta‖ ≤ C) :
     ∫ omega, F omega ∂(IsConservative.annealedProcess P hP mu x) =

@@ -48,7 +48,6 @@ theorem coordinate_shift_of_lt (S t : NNReal) (ω : LifetimePath α)
   rfl
 
 /-- At and after the shifted lifetime, the shifted coordinate is the cemetery state. -/
-@[simp]
 theorem coordinate_shift_of_le (S t : NNReal) (ω : LifetimePath α)
     (ht : (shift S ω).lifetime ≤ (t : ENNReal)) :
     coordinate t (shift S ω) = Cemetery.delta :=

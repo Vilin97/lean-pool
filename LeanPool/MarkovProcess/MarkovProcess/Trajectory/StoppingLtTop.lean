@@ -398,7 +398,7 @@ integral over that event of a bounded strongly measurable observable of `Y` is t
 it of the `kappa`-expectation of the observable. -/
 theorem setIntegral_integral_kernel_of_restrict_map
     (mu : @Measure Omega mOmega) [IsFiniteMeasure mu]
-    (kappa : @Kernel Omega beta mOmega mBeta) [IsMarkovKernel kappa]
+    (kappa : @Kernel Omega beta mOmega mBeta)
     (Y : Omega → beta) (hY : @Measurable Omega beta mOmega mBeta Y) (A : Set Omega)
     (hJoint : (mu.restrict A).map Y = kappa ∘ₘ (mu.restrict A))
     (F : beta → E) (hF : StronglyMeasurable F) (C : Real) (hFC : ∀ y, ‖F y‖ ≤ C) :

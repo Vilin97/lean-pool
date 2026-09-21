@@ -37,11 +37,11 @@ def increment (grid : OrderedGrid) (n : ℕ) : NNReal :=
 end OrderedGrid
 
 /-- The singleton history at index zero determined by a starting state. -/
-def initialHistory (x : α) : (i : Finset.Iic 0) → α :=
+def initialHistory (x : α) : Finset.Iic 0 → α :=
   fun _ => x
 
 /-- The singleton-history map is measurable. -/
-theorem measurable_initialHistory : Measurable (initialHistory : α → (i : Finset.Iic 0) → α) :=
+theorem measurable_initialHistory : Measurable (initialHistory : α → Finset.Iic 0 → α) :=
   measurable_pi_iff.mpr fun _ => measurable_id
 
 namespace SubMarkovKernelSemigroup

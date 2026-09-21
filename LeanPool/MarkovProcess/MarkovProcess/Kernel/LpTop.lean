@@ -53,9 +53,12 @@ theorem eLpNorm_kernelIntegral_top_le {μ : Measure α}
     {κ : ProbabilityTheory.Kernel α α} (hκ : IsSubMarkovKernel κ)
     (hκμ : κ ∘ₘ μ ≤ μ) (f : α → ℝ) :
     eLpNorm (kernelIntegral κ f) ∞ μ ≤ eLpNorm f ∞ μ := by
-  rw [eLpNorm_exponent_top, eLpNorm_exponent_top]
-  exact eLpNormEssSup_le_of_ae_enorm_bound
-    (enorm_kernelIntegral_ae_le_eLpNormEssSup hκ hκμ f)
+  by_cases hf : AEStronglyMeasurable f μ
+  · rw [eLpNorm_exponent_top (AEStronglyMeasurable.kernelIntegral hf hκμ), eLpNorm_exponent_top hf]
+    exact eLpNormEssSup_le_of_ae_enorm_bound
+      (enorm_kernelIntegral_ae_le_eLpNormEssSup hκ hκμ f)
+  · rw [eLpNorm_of_not_aestronglyMeasurable hf]
+    exact le_top
 
 /-- Integration against a sub-Markov kernel sends `L^∞` functions to
 `L^∞` functions under subinvariance. -/
@@ -63,7 +66,6 @@ theorem MemLp.kernelIntegral_top {μ : Measure α}
     {κ : ProbabilityTheory.Kernel α α} (hκ : IsSubMarkovKernel κ)
     (hκμ : κ ∘ₘ μ ≤ μ) {f : α → ℝ} (hf : MemLp f ∞ μ) :
     MemLp (kernelIntegral κ f) ∞ μ := by
-  refine ⟨AEStronglyMeasurable.kernelIntegral hf.aestronglyMeasurable hκμ, ?_⟩
-  exact (eLpNorm_kernelIntegral_top_le hκ hκμ f).trans_lt hf.2
+  exact (eLpNorm_kernelIntegral_top_le hκ hκμ f).trans_lt hf.eLpNorm_lt_top
 
 end MarkovProcess

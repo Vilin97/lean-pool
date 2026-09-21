@@ -217,11 +217,11 @@ theorem IsConservative.killedProcess_map_killedCoordinates (hUV : U ⊆ V) (hU :
   have hW : IsOpen (Subtype.val ⁻¹' U : Set V) := hU.preimage continuous_subtype_val
   have hm1 : Measurable fun eta : LifetimePath V ↦ fun i ↦
       LifetimePath.killedCoordinate (Subtype.val ⁻¹' U : Set V) (tau i) eta :=
-    measurable_pi_lambda _ fun i ↦
+    Measurable.of_eval fun i ↦
       LifetimePath.measurable_killedCoordinate _ hW (tau i)
   have hm2 : Measurable fun omega : LifetimePath U ↦ fun i ↦
       Sum.map (Set.inclusion hUV) id (LifetimePath.coordinate (tau i) omega) :=
-    measurable_pi_lambda _ fun i ↦
+    Measurable.of_eval fun i ↦
       ((measurable_inclusion hUV).sumMap measurable_id).comp
         (LifetimePath.measurable_coordinate (tau i))
   have hfun : (fun eta : LifetimePath V ↦ fun i ↦
@@ -254,7 +254,7 @@ theorem IsConservative.killedProcess_map_killedFinsetCoordinates
         (fun p ↦ fun i : I ↦ Sum.map (Set.inclusion hUV) id (p i)) := by
   have hmap : Measurable fun p : I → Cemetery U ↦
       fun i : I ↦ Sum.map (Set.inclusion hUV) id (p i) :=
-    measurable_pi_lambda _ fun i ↦
+    Measurable.of_eval fun i ↦
       ((measurable_inclusion hUV).sumMap measurable_id).comp (measurable_pi_apply i)
   rw [IsConservative.killedProcess_map_killedCoordinates P hP U V hUV hU hV x
       (fun i : I ↦ (i : NNReal)),
