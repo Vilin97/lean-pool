@@ -421,37 +421,27 @@ private theorem norm_inner_reflection_sub_le {S T : E →ₗ[𝕜] E} {U : Submo
     _ = ε * (‖v‖ * ‖w‖) := by ring
 
 omit [FiniteDimensional 𝕜 E] [CompleteSpace E] in
-/-- The eigenvector analysis behind the tan 2Θ theorem (plan step G2.2b).  At
-a unit eigenvector `x` of `(P − P̂)²` with eigenvalue `ν`, write `J, Ĵ` for the
-reflections through `U, V` and `c, d` for the midpoint and half-gap.  The
-operator identity `(JĴ)·(Ĵ(S−c)) = J(S−c)` splits into the symmetric part
-`J(T−c)` (coercive with constant `d`, by the vanishing pinch) and the skew
-part `J(S−T)` (of norm at most `ε`), while `Ĵ(S−c)` is itself symmetric and
-`d`-coercive.  Evaluating these forms on the `JĴ`-invariant plane spanned by
-`x` and `y = JĴx` — concretely, on the pairs `(x,x)`, `(w₂,w₂)` and
-`(sx − w₂, sx + w₂)` for `w₂ = y − γx`, `γ = ⟪x, y⟫`, `s = ‖w₂‖` — makes every
-cross-Gram term cancel and yields `μ₀ (s²r₁ + r₂) ≥ 2ds²` and
-`(s²r₁ + r₂)² (s² + ν'²) ≤ 4ε²s⁴` for the `cos 2Θ`-eigenvalue `μ₀ = 1 − 2ν`
-(`ν' = im γ`, `r`'s the diagonal `Ĵ(S−c)`-form values), whence `μ₀ > 0` and
-the sharp tangent bound `d²(1−μ₀²) ≤ ε²μ₀²`.  Auxiliary. -/
-private theorem eigen_cos_two_theta_bound (hT : T.IsSymmetric) (hS : S.IsSymmetric)
+/-- Reflection commutation and perturbation anticommutation yield the doubled forms. -/
+private theorem reflected_doubled_form_identities (hT : T.IsSymmetric) (hS : S.IsSymmetric)
     {U V : Submodule 𝕜 E} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (hUinv : ∀ x ∈ U, T x ∈ U) (hVinv : ∀ x ∈ V, S x ∈ V)
-    {a b ε : ℝ} (hab : a < b)
-    (hUb : ∀ x ∈ U, b * ‖x‖ ^ 2 ≤ RCLike.re ⟪T x, x⟫_𝕜)
-    (hUa : ∀ x ∈ Uᗮ, RCLike.re ⟪T x, x⟫_𝕜 ≤ a * ‖x‖ ^ 2)
-    (hVb : ∀ x ∈ V, b * ‖x‖ ^ 2 ≤ RCLike.re ⟪S x, x⟫_𝕜)
-    (hVa : ∀ x ∈ Vᗮ, RCLike.re ⟪S x, x⟫_𝕜 ≤ a * ‖x‖ ^ 2)
+    {a b : ℝ}
     (hHU : ∀ x ∈ U, ∀ y ∈ U, ⟪x, (S - T) y⟫_𝕜 = 0)
-    (hHUperp : ∀ x ∈ Uᗮ, ∀ y ∈ Uᗮ, ⟪x, (S - T) y⟫_𝕜 = 0)
-    (hε : ∀ x, ‖(S - T) x‖ ≤ ε * ‖x‖)
-    {x : E} {ν : ℝ} (hxn : ‖x‖ = 1)
-    (hYx : (U.starProjection - V.starProjection : E →L[𝕜] E)
-        ((U.starProjection - V.starProjection : E →L[𝕜] E) x) = (ν : 𝕜) • x) :
-    0 < 1 - 2 * ν ∧
-      ((b - a) / 2) ^ 2 * (1 - (1 - 2 * ν) ^ 2) ≤ ε ^ 2 * (1 - 2 * ν) ^ 2 := by
-  have hd : (0 : ℝ) < (b - a) / 2 := by linarith
-  -- commutation, anticommutation, bridges
+    (hHUperp : ∀ x ∈ Uᗮ, ∀ y ∈ Uᗮ, ⟪x, (S - T) y⟫_𝕜 = 0) :
+    (∀ v w,
+      ⟪V.reflection (U.reflection v),
+          V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜
+        + ⟪V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v),
+            V.reflection (U.reflection w)⟫_𝕜
+      = 2 * ⟪v, U.reflection (T w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜) ∧
+    (∀ v w,
+      ⟪V.reflection (U.reflection v),
+          V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜
+        - ⟪V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v),
+            V.reflection (U.reflection w)⟫_𝕜
+      = 2 * ⟪v, U.reflection ((S - T) w)⟫_𝕜) ∧
+    (∀ v w, ⟪V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v), w⟫_𝕜
+      = ⟪v, V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜) := by
   have hJT : ∀ w, U.reflection (T w - (((a + b) / 2 : ℝ) : 𝕜) • w)
       = T (U.reflection w) - (((a + b) / 2 : ℝ) : 𝕜) • U.reflection w := fun w => by
     rw [map_sub, map_smul, reflection_map_comm hT hUinv]
@@ -513,14 +503,6 @@ private theorem eigen_cos_two_theta_bound (hT : T.IsSymmetric) (hS : S.IsSymmetr
       simp only [LinearMap.sub_apply]
       module
     rw [← hbrA, ← hbrB, ← inner_sub_right, hKK, inner_smul_right]
-  have hKb : ∀ v w, ‖⟪v, U.reflection ((S - T) w)⟫_𝕜‖ ≤ ε * (‖v‖ * ‖w‖) :=
-    norm_inner_reflection_sub_le hε
-  have hRform : ∀ w, (b - a) / 2 * ‖w‖ ^ 2
-      ≤ RCLike.re ⟪w, V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜 :=
-    fun w => le_re_inner_reflection_map hS hVinv hVb hVa w
-  have hAform : ∀ w, (b - a) / 2 * ‖w‖ ^ 2
-      ≤ RCLike.re ⟪w, U.reflection (T w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜 :=
-    fun w => le_re_inner_reflection_map hT hUinv hUb hUa w
   have hRsym : ∀ v w, ⟪V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v), w⟫_𝕜
       = ⟪v, V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜 := by
     intro v w
@@ -529,6 +511,317 @@ private theorem eigen_cos_two_theta_bound (hT : T.IsSymmetric) (hS : S.IsSymmetr
     -- the intermediate shape.
     rw [inner_reflection_left_eq_right, hJvS w, inner_sub_left, inner_sub_right,
       inner_smul_left, inner_smul_right, RCLike.conj_ofReal, hS]
+  exact ⟨hAA, hKF, hRsym⟩
+
+omit [FiniteDimensional 𝕜 E] [CompleteSpace E] in
+/-- Bounding the tilted skew form controls the real and imaginary parts of its Gram expression. -/
+private theorem tilted_plane_skew_form_bound
+    {U V : Submodule 𝕜 E} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    {a b ε r₁ r₂ ν' : ℝ} {x w₂ z : E} {γ Q₁ Q₂ G : 𝕜}
+    (hxn : ‖x‖ = 1)
+    (hxw₂ : ⟪x, w₂⟫_𝕜 = 0)
+    (hzdef : z = V.reflection (U.reflection x))
+    (hw' : V.reflection (U.reflection w₂) = ((‖w₂‖ ^ 2 : ℝ) : 𝕜) • x + γ • w₂)
+    (hzw : z = (starRingEnd 𝕜) γ • x - w₂)
+    (hQ₁def : Q₁ = ⟪x, V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x)⟫_𝕜)
+    (hQ₂def : Q₂ = ⟪w₂, V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜)
+    (hGdef : G = ⟪x, V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜)
+    (hF1 : ⟪V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x), x⟫_𝕜 = Q₁)
+    (hF2 : ⟪V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x), w₂⟫_𝕜 = G)
+    (hF3 : ⟪V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂), x⟫_𝕜
+      = (starRingEnd 𝕜) G)
+    (hF4 : ⟪V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂), w₂⟫_𝕜 = Q₂)
+    (hw₂Rx : ⟪w₂, V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x)⟫_𝕜
+      = (starRingEnd 𝕜) G)
+    (hQ₁real : Q₁ = ((r₁ : ℝ) : 𝕜))
+    (hQ₂real : Q₂ = ((r₂ : ℝ) : 𝕜))
+    (hν'def : ν' = RCLike.im γ)
+    (hKF : ∀ v w,
+      ⟪V.reflection (U.reflection v),
+          V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜
+        - ⟪V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v),
+            V.reflection (U.reflection w)⟫_𝕜
+      = 2 * ⟪v, U.reflection ((S - T) w)⟫_𝕜)
+    (hRadd : ∀ v w, V.reflection (S (v + w) - (((a + b) / 2 : ℝ) : 𝕜) • (v + w))
+      = V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v)
+        + V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w))
+    (hRsmul : ∀ (t : ℝ) w, V.reflection (S ((t : 𝕜) • w)
+        - (((a + b) / 2 : ℝ) : 𝕜) • ((t : 𝕜) • w))
+      = (t : 𝕜) • V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w))
+    (hKb : ∀ v w, ‖⟪v, U.reflection ((S - T) w)⟫_𝕜‖ ≤ ε * (‖v‖ * ‖w‖))
+    : (r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (‖w₂‖ ^ 2 + ν' ^ 2)
+      ≤ 4 * (ε ^ 2 * (‖w₂‖ ^ 2) ^ 2) := by
+  have hV2 : (((‖w₂‖ ^ 2 : ℝ) : 𝕜) * Q₁ + Q₂)
+        * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜))
+      = 2 * ⟪((‖w₂‖ : ℝ) : 𝕜) • x - w₂,
+          U.reflection ((S - T) (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))⟫_𝕜 := by
+    rw [← hKF]
+    have harg1 : V.reflection (U.reflection (((‖w₂‖ : ℝ) : 𝕜) • x - w₂))
+        = ((‖w₂‖ : ℝ) : 𝕜) • z - (((‖w₂‖ ^ 2 : ℝ) : 𝕜) • x + γ • w₂) := by
+      rw [map_sub, map_sub, map_smul, map_smul, ← hzdef, hw']
+    have harg2 : V.reflection (S (((‖w₂‖ : ℝ) : 𝕜) • x + w₂)
+          - (((a + b) / 2 : ℝ) : 𝕜) • (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))
+        = ((‖w₂‖ : ℝ) : 𝕜) • V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x)
+          + V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂) := by
+      rw [hRadd, hRsmul]
+    have harg3 : V.reflection (S (((‖w₂‖ : ℝ) : 𝕜) • x - w₂)
+          - (((a + b) / 2 : ℝ) : 𝕜) • (((‖w₂‖ : ℝ) : 𝕜) • x - w₂))
+        = ((‖w₂‖ : ℝ) : 𝕜) • V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x)
+          - V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂) := by
+      have hsub : (((‖w₂‖ : ℝ) : 𝕜) • x - w₂)
+          = (((‖w₂‖ : ℝ) : 𝕜) • x + (-1 : 𝕜) • w₂) := by
+        module
+      have hneg : V.reflection (S ((-1 : 𝕜) • w₂)
+            - (((a + b) / 2 : ℝ) : 𝕜) • ((-1 : 𝕜) • w₂))
+          = (-1 : 𝕜) • V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂) := by
+        rw [← map_smul]
+        congr 1
+        rw [map_smul]
+        module
+      rw [hsub, hRadd, hRsmul, hneg]
+      module
+    have harg4 : V.reflection (U.reflection (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))
+        = ((‖w₂‖ : ℝ) : 𝕜) • z + (((‖w₂‖ ^ 2 : ℝ) : 𝕜) • x + γ • w₂) := by
+      rw [map_add, map_add, map_smul, map_smul, ← hzdef, hw']
+    rw [harg1, harg2, harg3, harg4, hzw]
+    simp only [inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
+      inner_smul_left, inner_smul_right, RCLike.conj_ofReal, RCLike.conj_conj]
+    simp only [hw₂Rx, hF1, hF2, hF3, hF4, ← hQ₁def, ← hQ₂def, ← hGdef]
+    push_cast
+    ring
+  -- norm bound on the tilted skew form
+  have hn1 : ‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ ^ 2 = 2 * ‖w₂‖ ^ 2 := by
+    simp only [norm_sub_sq (𝕜 := 𝕜), inner_smul_left, RCLike.conj_ofReal, hxw₂, mul_zero,
+      norm_smul, RCLike.norm_ofReal, abs_of_nonneg (norm_nonneg w₂), hxn]
+    simp only [map_zero]
+    ring
+  have hn2 : ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖ ^ 2 = 2 * ‖w₂‖ ^ 2 := by
+    simp only [norm_add_sq (𝕜 := 𝕜), inner_smul_left, RCLike.conj_ofReal, hxw₂, mul_zero,
+      norm_smul, RCLike.norm_ofReal, abs_of_nonneg (norm_nonneg w₂), hxn]
+    simp only [map_zero]
+    ring
+  have hV2norm : ‖(((‖w₂‖ ^ 2 : ℝ) : 𝕜) * Q₁ + Q₂)
+        * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜))‖
+      ≤ 2 * (ε * (2 * ‖w₂‖ ^ 2)) := by
+    rw [hV2]
+    have hprod : ‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖
+        = 2 * ‖w₂‖ ^ 2 := by
+      have hnn : (0 : ℝ) ≤ ‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖ :=
+        mul_nonneg (norm_nonneg _) (norm_nonneg _)
+      apply (sq_eq_sq₀ hnn
+        (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) (sq_nonneg ‖w₂‖))).mp
+      calc
+        (‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖) ^ 2
+            = ‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ ^ 2
+                * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖ ^ 2 := by ring
+        _ = (2 * ‖w₂‖ ^ 2) * (2 * ‖w₂‖ ^ 2) := by rw [hn1, hn2]
+        _ = (2 * ‖w₂‖ ^ 2) ^ 2 := by ring
+    calc ‖2 * ⟪((‖w₂‖ : ℝ) : 𝕜) • x - w₂,
+            U.reflection ((S - T) (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))⟫_𝕜‖
+        = 2 * ‖⟪((‖w₂‖ : ℝ) : 𝕜) • x - w₂,
+            U.reflection ((S - T) (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))⟫_𝕜‖ := by
+          rw [norm_mul, RCLike.norm_ofNat]
+      _ ≤ 2 * (ε * (‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖)) := by
+          have := hKb (((‖w₂‖ : ℝ) : 𝕜) • x - w₂) (((‖w₂‖ : ℝ) : 𝕜) • x + w₂)
+          linarith
+      _ = 2 * (ε * (2 * ‖w₂‖ ^ 2)) := by rw [hprod]
+  -- extract the two real components of the tilted skew form
+  have hG2 : (r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (‖w₂‖ ^ 2 + ν' ^ 2)
+      ≤ 4 * (ε ^ 2 * (‖w₂‖ ^ 2) ^ 2) := by
+    have hval : ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * Q₁ + Q₂ = ((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜) := by
+      rw [hQ₁real, hQ₂real]
+      push_cast
+      ring
+    have hre : RCLike.re (((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜)
+          * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜)))
+        = (r₁ * ‖w₂‖ ^ 2 + r₂) * (-(2 * ‖w₂‖)) := by
+      rw [RCLike.re_ofReal_mul, map_sub, map_sub, RCLike.conj_re, RCLike.ofReal_re]
+      ring
+    have him : RCLike.im (((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜)
+          * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜)))
+        = (r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ν') := by
+      simp only [← RCLike.real_smul_eq_coe_mul, RCLike.smul_im, map_sub, map_sub, RCLike.conj_im,
+        RCLike.ofReal_im, ← hν'def]
+      ring
+    have hnormsq : ‖((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜)
+          * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜))‖ ^ 2
+        = ((r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ‖w₂‖)) ^ 2
+          + ((r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ν')) ^ 2 := by
+      rw [← RCLike.normSq_eq_def', RCLike.normSq_apply, hre, him]
+      ring
+    have hbound : ‖((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜)
+          * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜))‖
+        ≤ 2 * (ε * (2 * ‖w₂‖ ^ 2)) := by
+      rw [← hval]
+      exact hV2norm
+    have hbound2 := pow_le_pow_left₀ (norm_nonneg _) hbound 2
+    rw [hnormsq] at hbound2
+    have hscaled :
+        (4 : ℝ) * ((r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (‖w₂‖ ^ 2 + ν' ^ 2))
+          ≤ 4 * (4 * (ε ^ 2 * (‖w₂‖ ^ 2) ^ 2)) := by
+      calc
+        (4 : ℝ) * ((r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (‖w₂‖ ^ 2 + ν' ^ 2))
+            = ((r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ‖w₂‖)) ^ 2
+              + ((r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ν')) ^ 2 := by ring
+        _ ≤ (2 * (ε * (2 * ‖w₂‖ ^ 2))) ^ 2 := hbound2
+        _ = 4 * (4 * (ε ^ 2 * (‖w₂‖ ^ 2) ^ 2)) := by ring
+    exact le_of_mul_le_mul_left hscaled (by norm_num : (0 : ℝ) < 4)
+  exact hG2
+
+/-- Scalar coercivity and skew-form estimates imply the sharp tangent bound on a nonzero plane. -/
+private theorem tangent_bound_of_nondegenerate_plane
+    {d s μ ε r₁ r₂ ν' : ℝ}
+    (hd : 0 < d) (hspos : 0 < s) (hr₁d : d ≤ r₁) (hr₂d : d * s ^ 2 ≤ r₂)
+    (hG1 : 2 * d * s ^ 2 ≤ μ * (r₁ * s ^ 2 + r₂))
+    (hG2 : (r₁ * s ^ 2 + r₂) ^ 2 * (s ^ 2 + ν' ^ 2) ≤ 4 * (ε ^ 2 * (s ^ 2) ^ 2))
+    (hdecomp : s ^ 2 + ν' ^ 2 = 1 - μ ^ 2) :
+    0 < μ ∧ d ^ 2 * (1 - μ ^ 2) ≤ ε ^ 2 * μ ^ 2 := by
+  have hs2pos : (0 : ℝ) < s ^ 2 := by positivity
+  have hApos : (0 : ℝ) < r₁ * s ^ 2 + r₂ := by
+    nlinarith only [hr₁d, hr₂d, hd, hs2pos]
+  have hμpos : 0 < μ := by
+    nlinarith only [hG1, hApos, hd, hs2pos]
+  refine ⟨hμpos, ?_⟩
+  have hG1sq := pow_le_pow_left₀
+    (by positivity : (0 : ℝ) ≤ 2 * (d) * s ^ 2) hG1 2
+  rw [hdecomp] at hG2
+  have hG2scaled := mul_le_mul_of_nonneg_left hG2 (sq_nonneg (d))
+  have hG1sqScaled := mul_le_mul_of_nonneg_left hG1sq (sq_nonneg ε)
+  have hA2pos : (0 : ℝ) < (r₁ * s ^ 2 + r₂) ^ 2 := pow_pos hApos 2
+  have hscaled :
+      (r₁ * s ^ 2 + r₂) ^ 2
+          * ((d) ^ 2 * (1 - (μ) ^ 2))
+        ≤ (r₁ * s ^ 2 + r₂) ^ 2
+          * (ε ^ 2 * (μ) ^ 2) := by
+    calc
+      (r₁ * s ^ 2 + r₂) ^ 2
+            * ((d) ^ 2 * (1 - (μ) ^ 2))
+          = (d) ^ 2
+            * ((r₁ * s ^ 2 + r₂) ^ 2 * (1 - (μ) ^ 2)) := by ring
+      _ ≤ (d) ^ 2 * (4 * (ε ^ 2 * (s ^ 2) ^ 2)) := hG2scaled
+      _ = ε ^ 2 * (2 * (d) * s ^ 2) ^ 2 := by ring
+      _ ≤ ε ^ 2 * ((μ) * (r₁ * s ^ 2 + r₂)) ^ 2 := hG1sqScaled
+      _ = (r₁ * s ^ 2 + r₂) ^ 2 * (ε ^ 2 * (μ) ^ 2) := by ring
+  exact le_of_mul_le_mul_left hscaled hA2pos
+
+omit [FiniteDimensional 𝕜 E] [CompleteSpace E] in
+/-- The two diagonal entries of the doubled form give complementary plane coercivity bounds. -/
+private theorem diagonal_plane_coercivity_bounds
+    {U V : Submodule 𝕜 E} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    {a b ν r₁ r₂ : ℝ} {x w₂ z : E} {γ Q₁ Q₂ G : 𝕜}
+    (hxn : ‖x‖ = 1)
+    (hzdef : z = V.reflection (U.reflection x))
+    (hQ₁real : Q₁ = ((r₁ : ℝ) : 𝕜))
+    (hQ₂real : Q₂ = ((r₂ : ℝ) : 𝕜))
+    (hsumγ : ((2 * (1 - 2 * ν) : ℝ) : 𝕜) = γ + (starRingEnd 𝕜) γ)
+    (hE1 : ⟪z, V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x)⟫_𝕜
+      = γ * Q₁ - (starRingEnd 𝕜) G)
+    (hE2 : ⟪V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x), z⟫_𝕜
+      = (starRingEnd 𝕜) γ * Q₁ - G)
+    (hE3 : ⟪V.reflection (U.reflection w₂),
+        V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜
+      = ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * G + (starRingEnd 𝕜) γ * Q₂)
+    (hE4 : ⟪V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂),
+        V.reflection (U.reflection w₂)⟫_𝕜
+      = ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * (starRingEnd 𝕜) G + γ * Q₂)
+    (hAform : ∀ w, (b - a) / 2 * ‖w‖ ^ 2
+      ≤ RCLike.re ⟪w, U.reflection (T w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜)
+    (hAA : ∀ v w,
+      ⟪V.reflection (U.reflection v),
+          V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜
+        + ⟪V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v),
+            V.reflection (U.reflection w)⟫_𝕜
+      = 2 * ⟪v, U.reflection (T w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜)
+    : ((b - a) / 2 ≤ (1 - 2 * ν) * r₁ - RCLike.re G) ∧ ((b - a) / 2 * ‖w₂‖ ^ 2 ≤ (1 - 2 * ν) * r₂ + ‖w₂‖ ^ 2 * RCLike.re G) := by
+  have hI1 : (b - a) / 2 ≤ (1 - 2 * ν) * r₁ - RCLike.re G := by
+    have hAAxx := hAA x x
+    rw [← hzdef, hE1, hE2] at hAAxx
+    have hL : γ * Q₁ - (starRingEnd 𝕜) G + ((starRingEnd 𝕜) γ * Q₁ - G)
+        = ((2 * (1 - 2 * ν) * r₁ : ℝ) : 𝕜) - (G + (starRingEnd 𝕜) G) := by
+      rw [hQ₁real, show ((2 * (1 - 2 * ν) * r₁ : ℝ) : 𝕜)
+          = (γ + (starRingEnd 𝕜) γ) * ((r₁ : ℝ) : 𝕜) from by rw [← hsumγ]; push_cast; ring]
+      ring
+    rw [hL] at hAAxx
+    have h5 := congrArg RCLike.re hAAxx
+    have hre1 : RCLike.re (((2 * (1 - 2 * ν) * r₁ : ℝ) : 𝕜) - (G + (starRingEnd 𝕜) G))
+        = 2 * (1 - 2 * ν) * r₁ - 2 * RCLike.re G := by
+      rw [map_sub, map_add, RCLike.conj_re, RCLike.ofReal_re]
+      ring
+    have hre2 : RCLike.re (2 * ⟪x, U.reflection (T x - (((a + b) / 2 : ℝ) : 𝕜) • x)⟫_𝕜)
+        = 2 * RCLike.re ⟪x, U.reflection (T x - (((a + b) / 2 : ℝ) : 𝕜) • x)⟫_𝕜 := by
+      rw [two_mul, map_add, two_mul]
+    rw [hre1, hre2] at h5
+    have h9 := hAform x
+    rw [hxn, one_pow, mul_one] at h9
+    linarith
+  -- I2: the (w₂,w₂) coercivity
+  have hI2 : (b - a) / 2 * ‖w₂‖ ^ 2 ≤ (1 - 2 * ν) * r₂ + ‖w₂‖ ^ 2 * RCLike.re G := by
+    have hAAww := hAA w₂ w₂
+    rw [hE3, hE4] at hAAww
+    have hL : ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * G + (starRingEnd 𝕜) γ * Q₂
+          + (((‖w₂‖ ^ 2 : ℝ) : 𝕜) * (starRingEnd 𝕜) G + γ * Q₂)
+        = ((2 * (1 - 2 * ν) * r₂ : ℝ) : 𝕜)
+          + ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * (G + (starRingEnd 𝕜) G) := by
+      rw [hQ₂real, show ((2 * (1 - 2 * ν) * r₂ : ℝ) : 𝕜)
+          = (γ + (starRingEnd 𝕜) γ) * ((r₂ : ℝ) : 𝕜) from by rw [← hsumγ]; push_cast; ring]
+      ring
+    rw [hL] at hAAww
+    have h5 := congrArg RCLike.re hAAww
+    have hre1 : RCLike.re (((2 * (1 - 2 * ν) * r₂ : ℝ) : 𝕜)
+          + ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * (G + (starRingEnd 𝕜) G))
+        = 2 * (1 - 2 * ν) * r₂ + ‖w₂‖ ^ 2 * (2 * RCLike.re G) := by
+      rw [map_add, RCLike.ofReal_re, RCLike.re_ofReal_mul, map_add, RCLike.conj_re]
+      ring
+    have hre2 : RCLike.re (2 * ⟪w₂, U.reflection (T w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜)
+        = 2 * RCLike.re ⟪w₂, U.reflection (T w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜 := by
+      rw [two_mul, map_add, two_mul]
+    rw [hre1, hre2] at h5
+    have h9 := hAform w₂
+    linarith
+  exact ⟨hI1, hI2⟩
+
+omit [FiniteDimensional 𝕜 E] [CompleteSpace E] in
+/-- The eigenvector analysis behind the tan 2Θ theorem (plan step G2.2b).  At
+a unit eigenvector `x` of `(P − P̂)²` with eigenvalue `ν`, write `J, Ĵ` for the
+reflections through `U, V` and `c, d` for the midpoint and half-gap.  The
+operator identity `(JĴ)·(Ĵ(S−c)) = J(S−c)` splits into the symmetric part
+`J(T−c)` (coercive with constant `d`, by the vanishing pinch) and the skew
+part `J(S−T)` (of norm at most `ε`), while `Ĵ(S−c)` is itself symmetric and
+`d`-coercive.  Evaluating these forms on the `JĴ`-invariant plane spanned by
+`x` and `y = JĴx` — concretely, on the pairs `(x,x)`, `(w₂,w₂)` and
+`(sx − w₂, sx + w₂)` for `w₂ = y − γx`, `γ = ⟪x, y⟫`, `s = ‖w₂‖` — makes every
+cross-Gram term cancel and yields `μ₀ (s²r₁ + r₂) ≥ 2ds²` and
+`(s²r₁ + r₂)² (s² + ν'²) ≤ 4ε²s⁴` for the `cos 2Θ`-eigenvalue `μ₀ = 1 − 2ν`
+(`ν' = im γ`, `r`'s the diagonal `Ĵ(S−c)`-form values), whence `μ₀ > 0` and
+the sharp tangent bound `d²(1−μ₀²) ≤ ε²μ₀²`.  Auxiliary. -/
+private theorem eigen_cos_two_theta_bound (hT : T.IsSymmetric) (hS : S.IsSymmetric)
+    {U V : Submodule 𝕜 E} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    (hUinv : ∀ x ∈ U, T x ∈ U) (hVinv : ∀ x ∈ V, S x ∈ V)
+    {a b ε : ℝ} (hab : a < b)
+    (hUb : ∀ x ∈ U, b * ‖x‖ ^ 2 ≤ RCLike.re ⟪T x, x⟫_𝕜)
+    (hUa : ∀ x ∈ Uᗮ, RCLike.re ⟪T x, x⟫_𝕜 ≤ a * ‖x‖ ^ 2)
+    (hVb : ∀ x ∈ V, b * ‖x‖ ^ 2 ≤ RCLike.re ⟪S x, x⟫_𝕜)
+    (hVa : ∀ x ∈ Vᗮ, RCLike.re ⟪S x, x⟫_𝕜 ≤ a * ‖x‖ ^ 2)
+    (hHU : ∀ x ∈ U, ∀ y ∈ U, ⟪x, (S - T) y⟫_𝕜 = 0)
+    (hHUperp : ∀ x ∈ Uᗮ, ∀ y ∈ Uᗮ, ⟪x, (S - T) y⟫_𝕜 = 0)
+    (hε : ∀ x, ‖(S - T) x‖ ≤ ε * ‖x‖)
+    {x : E} {ν : ℝ} (hxn : ‖x‖ = 1)
+    (hYx : (U.starProjection - V.starProjection : E →L[𝕜] E)
+        ((U.starProjection - V.starProjection : E →L[𝕜] E) x) = (ν : 𝕜) • x) :
+    0 < 1 - 2 * ν ∧
+      ((b - a) / 2) ^ 2 * (1 - (1 - 2 * ν) ^ 2) ≤ ε ^ 2 * (1 - 2 * ν) ^ 2 := by
+  have hd : (0 : ℝ) < (b - a) / 2 := by linarith
+  -- commutation, anticommutation, bridges
+  obtain ⟨hAA, hKF, hRsym⟩ :=
+    reflected_doubled_form_identities (a := a) (b := b) hT hS hUinv hVinv hHU hHUperp
+  have hKb : ∀ v w, ‖⟪v, U.reflection ((S - T) w)⟫_𝕜‖ ≤ ε * (‖v‖ * ‖w‖) :=
+    norm_inner_reflection_sub_le hε
+  have hRform : ∀ w, (b - a) / 2 * ‖w‖ ^ 2
+      ≤ RCLike.re ⟪w, V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜 :=
+    fun w => le_re_inner_reflection_map hS hVinv hVb hVa w
+  have hAform : ∀ w, (b - a) / 2 * ‖w‖ ^ 2
+      ≤ RCLike.re ⟪w, U.reflection (T w - (((a + b) / 2 : ℝ) : 𝕜) • w)⟫_𝕜 :=
+    fun w => le_re_inner_reflection_map hT hUinv hUb hUa w
   have hRadd : ∀ v w, V.reflection (S (v + w) - (((a + b) / 2 : ℝ) : 𝕜) • (v + w))
       = V.reflection (S v - (((a + b) / 2 : ℝ) : 𝕜) • v)
         + V.reflection (S w - (((a + b) / 2 : ℝ) : 𝕜) • w) :=
@@ -654,167 +947,12 @@ private theorem eigen_cos_two_theta_bound (hT : T.IsSymmetric) (hS : S.IsSymmetr
     rw [← inner_conj_symm, hE3, map_add, map_mul, map_mul, RCLike.conj_ofReal,
       RCLike.conj_conj, hQ₂conj]
   -- I1: the (x,x) coercivity
-  have hI1 : (b - a) / 2 ≤ (1 - 2 * ν) * r₁ - RCLike.re G := by
-    have hAAxx := hAA x x
-    rw [← hzdef, hE1, hE2] at hAAxx
-    have hL : γ * Q₁ - (starRingEnd 𝕜) G + ((starRingEnd 𝕜) γ * Q₁ - G)
-        = ((2 * (1 - 2 * ν) * r₁ : ℝ) : 𝕜) - (G + (starRingEnd 𝕜) G) := by
-      rw [hQ₁real, show ((2 * (1 - 2 * ν) * r₁ : ℝ) : 𝕜)
-          = (γ + (starRingEnd 𝕜) γ) * ((r₁ : ℝ) : 𝕜) from by rw [← hsumγ]; push_cast; ring]
-      ring
-    rw [hL] at hAAxx
-    have h5 := congrArg RCLike.re hAAxx
-    have hre1 : RCLike.re (((2 * (1 - 2 * ν) * r₁ : ℝ) : 𝕜) - (G + (starRingEnd 𝕜) G))
-        = 2 * (1 - 2 * ν) * r₁ - 2 * RCLike.re G := by
-      rw [map_sub, map_add, RCLike.conj_re, RCLike.ofReal_re]
-      ring
-    have hre2 : RCLike.re (2 * ⟪x, U.reflection (T x - (((a + b) / 2 : ℝ) : 𝕜) • x)⟫_𝕜)
-        = 2 * RCLike.re ⟪x, U.reflection (T x - (((a + b) / 2 : ℝ) : 𝕜) • x)⟫_𝕜 := by
-      rw [two_mul, map_add, two_mul]
-    rw [hre1, hre2] at h5
-    have h9 := hAform x
-    rw [hxn, one_pow, mul_one] at h9
-    linarith
-  -- I2: the (w₂,w₂) coercivity
-  have hI2 : (b - a) / 2 * ‖w₂‖ ^ 2 ≤ (1 - 2 * ν) * r₂ + ‖w₂‖ ^ 2 * RCLike.re G := by
-    have hAAww := hAA w₂ w₂
-    rw [hE3, hE4] at hAAww
-    have hL : ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * G + (starRingEnd 𝕜) γ * Q₂
-          + (((‖w₂‖ ^ 2 : ℝ) : 𝕜) * (starRingEnd 𝕜) G + γ * Q₂)
-        = ((2 * (1 - 2 * ν) * r₂ : ℝ) : 𝕜)
-          + ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * (G + (starRingEnd 𝕜) G) := by
-      rw [hQ₂real, show ((2 * (1 - 2 * ν) * r₂ : ℝ) : 𝕜)
-          = (γ + (starRingEnd 𝕜) γ) * ((r₂ : ℝ) : 𝕜) from by rw [← hsumγ]; push_cast; ring]
-      ring
-    rw [hL] at hAAww
-    have h5 := congrArg RCLike.re hAAww
-    have hre1 : RCLike.re (((2 * (1 - 2 * ν) * r₂ : ℝ) : 𝕜)
-          + ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * (G + (starRingEnd 𝕜) G))
-        = 2 * (1 - 2 * ν) * r₂ + ‖w₂‖ ^ 2 * (2 * RCLike.re G) := by
-      rw [map_add, RCLike.ofReal_re, RCLike.re_ofReal_mul, map_add, RCLike.conj_re]
-      ring
-    have hre2 : RCLike.re (2 * ⟪w₂, U.reflection (T w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜)
-        = 2 * RCLike.re ⟪w₂, U.reflection (T w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜 := by
-      rw [two_mul, map_add, two_mul]
-    rw [hre1, hre2] at h5
-    have h9 := hAform w₂
-    linarith
+  obtain ⟨hI1, hI2⟩ := diagonal_plane_coercivity_bounds
+    hxn hzdef hQ₁real hQ₂real hsumγ hE1 hE2 hE3 hE4 hAform hAA
   -- the skew form on the tilted pair
-  have hV2 : (((‖w₂‖ ^ 2 : ℝ) : 𝕜) * Q₁ + Q₂)
-        * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜))
-      = 2 * ⟪((‖w₂‖ : ℝ) : 𝕜) • x - w₂,
-          U.reflection ((S - T) (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))⟫_𝕜 := by
-    rw [← hKF]
-    have harg1 : V.reflection (U.reflection (((‖w₂‖ : ℝ) : 𝕜) • x - w₂))
-        = ((‖w₂‖ : ℝ) : 𝕜) • z - (((‖w₂‖ ^ 2 : ℝ) : 𝕜) • x + γ • w₂) := by
-      rw [map_sub, map_sub, map_smul, map_smul, ← hzdef, hw']
-    have harg2 : V.reflection (S (((‖w₂‖ : ℝ) : 𝕜) • x + w₂)
-          - (((a + b) / 2 : ℝ) : 𝕜) • (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))
-        = ((‖w₂‖ : ℝ) : 𝕜) • V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x)
-          + V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂) := by
-      rw [hRadd, hRsmul]
-    have harg3 : V.reflection (S (((‖w₂‖ : ℝ) : 𝕜) • x - w₂)
-          - (((a + b) / 2 : ℝ) : 𝕜) • (((‖w₂‖ : ℝ) : 𝕜) • x - w₂))
-        = ((‖w₂‖ : ℝ) : 𝕜) • V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x)
-          - V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂) := by
-      have hsub : (((‖w₂‖ : ℝ) : 𝕜) • x - w₂)
-          = (((‖w₂‖ : ℝ) : 𝕜) • x + (-1 : 𝕜) • w₂) := by
-        module
-      have hneg : V.reflection (S ((-1 : 𝕜) • w₂)
-            - (((a + b) / 2 : ℝ) : 𝕜) • ((-1 : 𝕜) • w₂))
-          = (-1 : 𝕜) • V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂) := by
-        rw [← map_smul]
-        congr 1
-        rw [map_smul]
-        module
-      rw [hsub, hRadd, hRsmul, hneg]
-      module
-    have harg4 : V.reflection (U.reflection (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))
-        = ((‖w₂‖ : ℝ) : 𝕜) • z + (((‖w₂‖ ^ 2 : ℝ) : 𝕜) • x + γ • w₂) := by
-      rw [map_add, map_add, map_smul, map_smul, ← hzdef, hw']
-    rw [harg1, harg2, harg3, harg4, hzw]
-    simp only [inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
-      inner_smul_left, inner_smul_right, RCLike.conj_ofReal, RCLike.conj_conj]
-    simp only [hw₂Rx, hF1, hF2, hF3, hF4, ← hQ₁def, ← hQ₂def, ← hGdef]
-    push_cast
-    ring
-  -- norm bound on the tilted skew form
-  have hn1 : ‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ ^ 2 = 2 * ‖w₂‖ ^ 2 := by
-    simp only [norm_sub_sq (𝕜 := 𝕜), inner_smul_left, RCLike.conj_ofReal, hxw₂, mul_zero,
-      norm_smul, RCLike.norm_ofReal, abs_of_nonneg (norm_nonneg w₂), hxn]
-    simp only [map_zero]
-    ring
-  have hn2 : ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖ ^ 2 = 2 * ‖w₂‖ ^ 2 := by
-    simp only [norm_add_sq (𝕜 := 𝕜), inner_smul_left, RCLike.conj_ofReal, hxw₂, mul_zero,
-      norm_smul, RCLike.norm_ofReal, abs_of_nonneg (norm_nonneg w₂), hxn]
-    simp only [map_zero]
-    ring
-  have hV2norm : ‖(((‖w₂‖ ^ 2 : ℝ) : 𝕜) * Q₁ + Q₂)
-        * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜))‖
-      ≤ 2 * (ε * (2 * ‖w₂‖ ^ 2)) := by
-    rw [hV2]
-    have hprod : ‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖
-        = 2 * ‖w₂‖ ^ 2 := by
-      have hnn : (0 : ℝ) ≤ ‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖ :=
-        mul_nonneg (norm_nonneg _) (norm_nonneg _)
-      apply (sq_eq_sq₀ hnn
-        (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) (sq_nonneg ‖w₂‖))).mp
-      calc
-        (‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖) ^ 2
-            = ‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ ^ 2
-                * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖ ^ 2 := by ring
-        _ = (2 * ‖w₂‖ ^ 2) * (2 * ‖w₂‖ ^ 2) := by rw [hn1, hn2]
-        _ = (2 * ‖w₂‖ ^ 2) ^ 2 := by ring
-    calc ‖2 * ⟪((‖w₂‖ : ℝ) : 𝕜) • x - w₂,
-            U.reflection ((S - T) (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))⟫_𝕜‖
-        = 2 * ‖⟪((‖w₂‖ : ℝ) : 𝕜) • x - w₂,
-            U.reflection ((S - T) (((‖w₂‖ : ℝ) : 𝕜) • x + w₂))⟫_𝕜‖ := by
-          rw [norm_mul, RCLike.norm_ofNat]
-      _ ≤ 2 * (ε * (‖((‖w₂‖ : ℝ) : 𝕜) • x - w₂‖ * ‖((‖w₂‖ : ℝ) : 𝕜) • x + w₂‖)) := by
-          have := hKb (((‖w₂‖ : ℝ) : 𝕜) • x - w₂) (((‖w₂‖ : ℝ) : 𝕜) • x + w₂)
-          linarith
-      _ = 2 * (ε * (2 * ‖w₂‖ ^ 2)) := by rw [hprod]
-  -- extract the two real components of the tilted skew form
-  have hG2 : (r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (‖w₂‖ ^ 2 + ν' ^ 2)
-      ≤ 4 * (ε ^ 2 * (‖w₂‖ ^ 2) ^ 2) := by
-    have hval : ((‖w₂‖ ^ 2 : ℝ) : 𝕜) * Q₁ + Q₂ = ((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜) := by
-      rw [hQ₁real, hQ₂real]
-      push_cast
-      ring
-    have hre : RCLike.re (((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜)
-          * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜)))
-        = (r₁ * ‖w₂‖ ^ 2 + r₂) * (-(2 * ‖w₂‖)) := by
-      rw [RCLike.re_ofReal_mul, map_sub, map_sub, RCLike.conj_re, RCLike.ofReal_re]
-      ring
-    have him : RCLike.im (((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜)
-          * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜)))
-        = (r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ν') := by
-      simp only [← RCLike.real_smul_eq_coe_mul, RCLike.smul_im, map_sub, map_sub, RCLike.conj_im,
-        RCLike.ofReal_im, ← hν'def]
-      ring
-    have hnormsq : ‖((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜)
-          * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜))‖ ^ 2
-        = ((r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ‖w₂‖)) ^ 2
-          + ((r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ν')) ^ 2 := by
-      rw [← RCLike.normSq_eq_def', RCLike.normSq_apply, hre, him]
-      ring
-    have hbound : ‖((r₁ * ‖w₂‖ ^ 2 + r₂ : ℝ) : 𝕜)
-          * (γ - (starRingEnd 𝕜) γ - ((2 * ‖w₂‖ : ℝ) : 𝕜))‖
-        ≤ 2 * (ε * (2 * ‖w₂‖ ^ 2)) := by
-      rw [← hval]
-      exact hV2norm
-    have hbound2 := pow_le_pow_left₀ (norm_nonneg _) hbound 2
-    rw [hnormsq] at hbound2
-    have hscaled :
-        (4 : ℝ) * ((r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (‖w₂‖ ^ 2 + ν' ^ 2))
-          ≤ 4 * (4 * (ε ^ 2 * (‖w₂‖ ^ 2) ^ 2)) := by
-      calc
-        (4 : ℝ) * ((r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (‖w₂‖ ^ 2 + ν' ^ 2))
-            = ((r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ‖w₂‖)) ^ 2
-              + ((r₁ * ‖w₂‖ ^ 2 + r₂) * (2 * ν')) ^ 2 := by ring
-        _ ≤ (2 * (ε * (2 * ‖w₂‖ ^ 2))) ^ 2 := hbound2
-        _ = 4 * (4 * (ε ^ 2 * (‖w₂‖ ^ 2) ^ 2)) := by ring
-    exact le_of_mul_le_mul_left hscaled (by norm_num : (0 : ℝ) < 4)
+  have hG2 := tilted_plane_skew_form_bound
+    hxn hxw₂ hzdef hw' hzw hQ₁def hQ₂def hGdef
+    hF1 hF2 hF3 hF4 hw₂Rx hQ₁real hQ₂real hν'def hKF hRadd hRsmul hKb
   -- the coercivity inequality on the tilted pair
   have hG1 : 2 * ((b - a) / 2) * ‖w₂‖ ^ 2 ≤ (1 - 2 * ν) * (r₁ * ‖w₂‖ ^ 2 + r₂) := by
     have h10 := mul_le_mul_of_nonneg_right hI1 (sq_nonneg ‖w₂‖)
@@ -873,37 +1011,11 @@ private theorem eigen_cos_two_theta_bound (hT : T.IsSymmetric) (hS : S.IsSymmetr
         mul_le_mul_of_nonneg_left hksq (sq_nonneg (1 - 2 * ν)), sq_nonneg ε]
   · -- nondegenerate plane: conclude from `hG1`, `hG2`
     have hspos : (0 : ℝ) < ‖w₂‖ := norm_pos_iff.mpr hw₂0
-    have hs2pos : (0 : ℝ) < ‖w₂‖ ^ 2 := by positivity
-    have hApos : (0 : ℝ) < r₁ * ‖w₂‖ ^ 2 + r₂ := by
-      nlinarith only [hr₁d, hr₂d, hd, hs2pos]
     have hdecomp : ‖w₂‖ ^ 2 + ν' ^ 2 = 1 - (1 - 2 * ν) ^ 2 := by
       have h13 := hγsq
       have h14 := hs2
       linarith
-    have hμpos : 0 < 1 - 2 * ν := by
-      nlinarith only [hG1, hApos, hd, hs2pos]
-    refine ⟨hμpos, ?_⟩
-    have hG1sq := pow_le_pow_left₀
-      (by positivity : (0 : ℝ) ≤ 2 * ((b - a) / 2) * ‖w₂‖ ^ 2) hG1 2
-    rw [hdecomp] at hG2
-    have hG2scaled := mul_le_mul_of_nonneg_left hG2 (sq_nonneg ((b - a) / 2))
-    have hG1sqScaled := mul_le_mul_of_nonneg_left hG1sq (sq_nonneg ε)
-    have hA2pos : (0 : ℝ) < (r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 := pow_pos hApos 2
-    have hscaled :
-        (r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2
-            * (((b - a) / 2) ^ 2 * (1 - (1 - 2 * ν) ^ 2))
-          ≤ (r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2
-            * (ε ^ 2 * (1 - 2 * ν) ^ 2) := by
-      calc
-        (r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2
-              * (((b - a) / 2) ^ 2 * (1 - (1 - 2 * ν) ^ 2))
-            = ((b - a) / 2) ^ 2
-              * ((r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (1 - (1 - 2 * ν) ^ 2)) := by ring
-        _ ≤ ((b - a) / 2) ^ 2 * (4 * (ε ^ 2 * (‖w₂‖ ^ 2) ^ 2)) := hG2scaled
-        _ = ε ^ 2 * (2 * ((b - a) / 2) * ‖w₂‖ ^ 2) ^ 2 := by ring
-        _ ≤ ε ^ 2 * ((1 - 2 * ν) * (r₁ * ‖w₂‖ ^ 2 + r₂)) ^ 2 := hG1sqScaled
-        _ = (r₁ * ‖w₂‖ ^ 2 + r₂) ^ 2 * (ε ^ 2 * (1 - 2 * ν) ^ 2) := by ring
-    exact le_of_mul_le_mul_left hscaled hA2pos
+    exact tangent_bound_of_nondegenerate_plane hd hspos hr₁d hr₂d hG1 hG2 hdecomp
 
 omit [CompleteSpace E] in
 /-- **The subspace Davis–Kahan tan 2Θ theorem (plan step G2.2b).**  `T, S`
