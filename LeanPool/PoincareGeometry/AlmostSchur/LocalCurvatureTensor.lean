@@ -42,6 +42,7 @@ theorem along_eventuallyEq_of_contMDiffAt
     (hZy.mdifferentiableAt (by norm_num)) (hZ'y.mdifferentiableAt (by norm_num))
     (by simp) he
   simp only [CovariantDerivative.along_apply, hc, hXy]
+  rfl
 
 /-- Comparing a local raw commutator with globally regular representatives. -/
 theorem curvatureAux_eq_of_local_germs

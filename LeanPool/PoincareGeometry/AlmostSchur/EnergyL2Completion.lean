@@ -45,7 +45,7 @@ theorem exists_energyToL2_bound : ∃ C : ℝ, 0 < C ∧
   obtain ⟨C, hC, hb⟩ := exists_poincare_constant (I := I) (M := M)
   refine ⟨C, hC, fun f => ?_⟩
   change ‖(memLp_c1_riemannianVolume f.property.1).toLp f.val‖ ≤ _
-  rw [Lp.norm_toLp, toReal_eLpNorm (memLp_c1_riemannianVolume f.property.1).1, energySpace_norm]
+  rw [Lp.norm_toLp, toReal_eLpNorm, energySpace_norm]
   exact hb f.val f.property.1 f.property.2
 
 /-- A chosen proved Poincaré bound for the actual core realization. -/

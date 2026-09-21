@@ -76,8 +76,7 @@ for every `t`.  This is exactly the `hderiv` shape the compact-manifold gauge-fl
 `hasDerivAt_iff_hasFDerivAt` (`toSpanSingleton = (1).smulRight`) and `hasMFDerivAt_iff_hasFDerivAt`. -/
 theorem hasMFDerivAt_of_isIntegralCurve {γ : ℝ → E} (h : IsIntegralCurve γ v) (t : ℝ) :
     HasMFDerivAt 𝓘(ℝ, ℝ) 𝓘(ℝ, E) γ t ((1 : ℝ →L[ℝ] ℝ).smulRight (v t (γ t))) := by
-  rw [ContinuousLinearMap.smulRight_one_eq_toSpanSingleton]
-  exact ((h t).hasFDerivAt).hasMFDerivAt
+  convert ((h t).hasFDerivAt).hasMFDerivAt using 1 <;> rfl
 
 /-- **Within-set manifold ODE derivative form of an integral curve.**  The `HasMFDerivWithinAt`
 (`HasMFDerivAt[s]`) refinement of `hasMFDerivAt_of_isIntegralCurve`, holding for every time set `s`
@@ -716,7 +715,8 @@ theorem hasMFDerivWithinAt_flow_pushforward_of_lipschitz_deriv
     (hlip : ∀ z, ∀ s ∈ Ici t₀, ∀ ξ ∈ segment ℝ (Φ x₀ s) (Φ z s),
       ‖Dv s ξ - A s‖ ≤ L * ‖ξ - Φ x₀ s‖) :
     HasMFDerivWithinAt 𝓘(ℝ, ℝ) 𝓘(ℝ, E)
-      (fun τ => (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀) (Ici t₀) t
+      (fun τ => NormedSpace.fromTangentSpace (Φ x₀ τ)
+        ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀)) (Ici t₀) t
       ((1 : ℝ →L[ℝ] ℝ).smulRight
         (variationalFieldVec A t ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z t) x₀) u₀) : E)) := by
   have hEq : ∀ τ ∈ Ici t₀,
@@ -751,7 +751,8 @@ theorem hasMFDerivAt_flow_pushforward_of_lipschitz_deriv
     (hlip : ∀ z, ∀ s ∈ Ici t₀, ∀ ξ ∈ segment ℝ (Φ x₀ s) (Φ z s),
       ‖Dv s ξ - A s‖ ≤ L * ‖ξ - Φ x₀ s‖) :
     HasMFDerivAt 𝓘(ℝ, ℝ) 𝓘(ℝ, E)
-      (fun τ => (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀) t
+      (fun τ => NormedSpace.fromTangentSpace (Φ x₀ τ)
+        ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀)) t
       ((1 : ℝ →L[ℝ] ℝ).smulRight
         (variationalFieldVec A t ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z t) x₀) u₀) : E)) := by
   have hEq : ∀ τ ∈ Ici t₀,
@@ -785,7 +786,8 @@ theorem mfderiv_flow_pushforward_of_lipschitz_deriv
     (hlip : ∀ z, ∀ s ∈ Ici t₀, ∀ ξ ∈ segment ℝ (Φ x₀ s) (Φ z s),
       ‖Dv s ξ - A s‖ ≤ L * ‖ξ - Φ x₀ s‖) :
     mfderiv 𝓘(ℝ, ℝ) 𝓘(ℝ, E)
-      (fun τ => (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀) t
+      (fun τ => NormedSpace.fromTangentSpace (Φ x₀ τ)
+        ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀)) t
       = (1 : ℝ →L[ℝ] ℝ).smulRight
         (variationalFieldVec A t ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z t) x₀) u₀) : E) :=
   (hasMFDerivAt_flow_pushforward_of_lipschitz_deriv hv hA hΦ' h0' hΦ h0 x₀ u₀ ht0 hderiv hL
@@ -816,7 +818,8 @@ theorem hasMFDerivWithinAt_flow_pushforward_of_field_jet [CompleteSpace E]
     (hDvc : Continuous fun p : ℝ × E => Dv p.1 p.2)
     {L : ℝ≥0} (hDvlip : ∀ s, LipschitzWith L (Dv s)) :
     HasMFDerivWithinAt 𝓘(ℝ, ℝ) 𝓘(ℝ, E)
-      (fun τ => (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀) (Ici t₀) t
+      (fun τ => NormedSpace.fromTangentSpace (Φ x₀ τ)
+        ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀)) (Ici t₀) t
       ((1 : ℝ →L[ℝ] ℝ).smulRight
         (Dv t (Φ x₀ t) ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z t) x₀) u₀))) := by
   have hA : ∀ s, ‖Dv s (Φ x₀ s)‖₊ ≤ K := fun s => by
@@ -847,7 +850,8 @@ theorem hasMFDerivAt_flow_pushforward_of_field_jet [CompleteSpace E]
     (hDvc : Continuous fun p : ℝ × E => Dv p.1 p.2)
     {L : ℝ≥0} (hDvlip : ∀ s, LipschitzWith L (Dv s)) :
     HasMFDerivAt 𝓘(ℝ, ℝ) 𝓘(ℝ, E)
-      (fun τ => (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀) t
+      (fun τ => NormedSpace.fromTangentSpace (Φ x₀ τ)
+        ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀)) t
       ((1 : ℝ →L[ℝ] ℝ).smulRight
         (Dv t (Φ x₀ t) ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z t) x₀) u₀))) := by
   have hA : ∀ s, ‖Dv s (Φ x₀ s)‖₊ ≤ K := fun s => by
@@ -877,7 +881,8 @@ theorem mfderiv_flow_pushforward_of_field_jet [CompleteSpace E]
     (hDvc : Continuous fun p : ℝ × E => Dv p.1 p.2)
     {L : ℝ≥0} (hDvlip : ∀ s, LipschitzWith L (Dv s)) :
     mfderiv 𝓘(ℝ, ℝ) 𝓘(ℝ, E)
-      (fun τ => (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀) t
+      (fun τ => NormedSpace.fromTangentSpace (Φ x₀ τ)
+        ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z τ) x₀) u₀)) t
       = (1 : ℝ →L[ℝ] ℝ).smulRight
         (Dv t (Φ x₀ t) ((mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) (fun z => Φ z t) x₀) u₀)) :=
   (hasMFDerivAt_flow_pushforward_of_field_jet hv hΦ h0 x₀ u₀ ht0 hderiv hDvc hDvlip).mfderiv

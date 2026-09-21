@@ -1126,15 +1126,16 @@ noncomputable def correctionFunctional (cov : CovariantDerivative I E TM) (x : M
     correctionFunctional cov x v u w =
       (cov.metricDefect x v w u + cov.metricDefect x u w v - cov.metricDefect x u v w -
           ⟪cov.torsion x u v, w⟫ + ⟪cov.torsion x v w, u⟫ - ⟪cov.torsion x w u, v⟫) / 2 := by
+  letI : AddCommGroup (TangentSpace I x →L[ℝ] ℝ) := ContinuousLinearMap.addCommGroup
+  letI : Module ℝ (TangentSpace I x →L[ℝ] ℝ) := ContinuousLinearMap.module
+  letI : AddCommGroup (TangentSpace I x →L[ℝ] TangentSpace I x →L[ℝ] ℝ) :=
+    ContinuousLinearMap.addCommGroup
+  letI : Module ℝ (TangentSpace I x →L[ℝ] TangentSpace I x →L[ℝ] ℝ) :=
+    ContinuousLinearMap.module
   simp [correctionFunctional, swapFirstTwoMap, reverseArgs, flipLastTwo,
     torsionInnerFunctional, ContinuousLinearMap.comp_apply, sub_eq_add_neg, smul_eq_mul]
-  change
-    (2⁻¹ : ℝ) *
-      (cov.metricDefect x v w u + cov.metricDefect x u w v - cov.metricDefect x u v w -
-        ⟪cov.torsion x u v, w⟫ + ⟪cov.torsion x v w, u⟫ - ⟪cov.torsion x w u, v⟫) =
-      (cov.metricDefect x v w u + cov.metricDefect x u w v - cov.metricDefect x u v w -
-        ⟪cov.torsion x u v, w⟫ + ⟪cov.torsion x v w, u⟫ - ⟪cov.torsion x w u, v⟫) / 2
-  ring
+  ring_nf
+  rfl
 
 noncomputable def continuousDualBasis {ι : Type*} (b : Module.Basis ι ℝ E) :
     Module.Basis ι ℝ (E →L[ℝ] ℝ) := by
@@ -1235,9 +1236,8 @@ theorem contMDiffOn_correctionFunctional_apply_section
             torsionInnerFunctional (I := I) cov x (τ x) (σ x) (υ x) +
             torsionInnerFunctional (I := I) cov x (σ x) (υ x) (τ x) -
             torsionInnerFunctional (I := I) cov x (υ x) (τ x) (σ x))) u := by
-    simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
-      ((((hterm1.add_section hterm2).sub_section hterm3).sub_section htors1).add_section
-        htors2).sub_section htors3
+    exact ((((hterm1.add_section hterm2).sub_section hterm3).sub_section htors1).add_section
+      htors2).sub_section htors3
   have hcorrectionSection :
       ContMDiffOn I (I.prod 𝓘(ℝ, ℝ)) 1
         (fun x ↦ TotalSpace.mk' ℝ x (correctionFunctional cov x (σ x) (τ x) (υ x))) u := by
@@ -2225,7 +2225,8 @@ lemma torsion_addOneForm_apply
   rw [CovariantDerivative.torsion_apply_eq_extend
       (cov := CovariantDerivative.addOneForm cov A) (x := x) u v]
   rw [CovariantDerivative.torsion_apply_eq_extend (cov := cov) (x := x) u v]
-  simp [CovariantDerivative.addOneForm, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+  simp only [CovariantDerivative.addOneForm, ContinuousLinearMap.add_apply, FiberBundle.extend_apply_self]
+  abel
 
 lemma metricDefect_addOneForm_apply
     (cov : CovariantDerivative I E TM)
@@ -2236,8 +2237,9 @@ lemma metricDefect_addOneForm_apply
   rw [metricDefect_apply
       (cov := CovariantDerivative.addOneForm cov A),
     metricDefect_apply (cov := cov)]
-  simp [CovariantDerivative.addOneForm, inner_add_left, inner_add_right, add_assoc,
-    add_left_comm, add_comm, sub_eq_add_neg]
+  simp only [CovariantDerivative.addOneForm, ContinuousLinearMap.add_apply, FiberBundle.extend_apply_self,
+    inner_add_left, inner_add_right]
+  ring
 
 lemma leviCivitaCorrection_sub_eq_neg_torsion (cov : CovariantDerivative I E TM) (x : M)
     (u v : TangentSpace I x) :

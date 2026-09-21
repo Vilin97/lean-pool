@@ -459,7 +459,7 @@ theorem hasDerivAt_heatSemigroupND_time {n : ℕ} {t : ℝ} (ht : 0 < t)
           = P ^ n * ∏ j : Fin n, Real.exp (-(x j - y j) ^ 2 / (6 * t)) := by
         rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
       rw [← hp]
-      apply Finset.prod_le_prod
+      apply Finset.prod_le_prod₀
       · intro i _
         exact heatKernel1D_nonneg hspos ((x - y) i)
       · intro i _
