@@ -38,7 +38,7 @@ The three mechanisms of the assembly are:
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
-import LeanPool.AsymptoticTrianglePacking.Internal.AdaptiveAssembly
+import LeanPool.AsymptoticTrianglePacking.Internal.CeilingOracle
 import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
 
 open Finset Hypergraph

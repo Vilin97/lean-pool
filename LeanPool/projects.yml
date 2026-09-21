@@ -27,8 +27,9 @@ projects:
       - declaration: LeanPool.AsymptoticTrianglePacking.nearRegularNibbleTheorem
         informal: >-
           For every uniformity and positive error tolerance, sufficiently large finite uniform
-          hypergraphs with bounded codegrees and near-regular degrees outside a small exceptional
-          set admit a matching covering the prescribed fraction of their vertices.
+          hypergraphs with bounded codegrees, near-regular degrees outside a small exceptional
+          set, and a global degree ceiling admit a matching covering the prescribed fraction of
+          their vertices.
         source_ref: Finite near-regular hypergraph nibble theorem used in the Paper III development.
     tags:
       - hypergraph-matching
