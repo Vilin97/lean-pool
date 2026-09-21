@@ -41,13 +41,13 @@ theorem coordinate_axis_mem_smooth_fibre_closure
         (MvPolynomial.vanishingIdeal k (smoothConormalFibreProjection I.asIdeal)) := by
   obtain ⟨K, hK, hAlg, y, xi, hgeneric, hres⟩ :=
     exists_groundConormalAxis_of_prime_coordinate_avoidance hm I havoid
-  letI := hK
-  letI := hAlg
+  let := hK
+  let := hAlg
   intro P hP
   have hfull := fibreLift_mem_vanishingIdeal_equationConormal I.asIdeal I.isPrime P hP
   have hvan : ∀ q ∈ groundEquationConormalLocus (k := k) (K := K) I.asIdeal,
       MvPolynomial.eval₂ (groundLaurentMap (k := k) (K := K)) q (fibreLift P) = 0 := by
-    letI : Algebra k (LaurentSeries K) :=
+    let : Algebra k (LaurentSeries K) :=
       (groundLaurentMap (k := k) (K := K)).toAlgebra
     intro q hq
     exact scalarExtension_vanishing I.asIdeal (fibreLift P) hfull q hq

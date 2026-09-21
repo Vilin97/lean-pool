@@ -149,11 +149,11 @@ theorem retainedComponentEquationPackage
         (fun a ↦ algebraMap (PowerSeries (ResidueField V))
           (LaurentSeries (ResidueField V))
             (retainedToCompletedPowerSeries W (q a)))) := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
   intro q scale hq

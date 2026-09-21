@@ -62,7 +62,7 @@ noncomputable def extendDerivation
 theorem extendDerivation_compAlgebraMap
     (D : Derivation k E K) :
     (extendDerivation k E K D).compAlgebraMap E = D := by
-  letI : Algebra.FormallyEtale E K :=
+  let : Algebra.FormallyEtale E K :=
     Algebra.FormallyEtale.of_isSeparable E K
   apply Derivation.ext
   intro e
@@ -76,7 +76,7 @@ theorem derivation_ext_of_compAlgebraMap_eq
     {D₁ D₂ : Derivation k K K}
     (h : D₁.compAlgebraMap E = D₂.compAlgebraMap E) :
     D₁ = D₂ := by
-  letI : Algebra.FormallyEtale E K :=
+  let : Algebra.FormallyEtale E K :=
     Algebra.FormallyEtale.of_isSeparable E K
   let e := KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale k E K
   have hbase :

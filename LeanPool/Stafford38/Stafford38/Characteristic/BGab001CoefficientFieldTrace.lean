@@ -287,7 +287,7 @@ theorem finite_over_coefficientField [IsArtinianRing R]
     (hcoeff : Function.Surjective
       ((IsLocalRing.residue R).comp (algebraMap K R))) : Module.Finite K R := by
   let m := IsLocalRing.maximalIdeal R
-  letI : Module.Finite K (R ⧸ m) :=
+  let : Module.Finite K (R ⧸ m) :=
     Module.Finite.of_surjective (Algebra.linearMap K (R ⧸ m)) hcoeff
   apply Module.finite_of_surjective_of_ker_le_nilradical
     (Ideal.Quotient.mkₐ K m) Ideal.Quotient.mk_surjective
@@ -318,8 +318,8 @@ theorem artinian_local_commutator_cofactor_mem_maximalIdeal
     (hy : S.modParameter y ∈ IsLocalRing.maximalIdeal R)
     (hxy : x * y - y * x = S.parameter * z) :
     S.modParameter z ∈ IsLocalRing.maximalIdeal R := by
-  letI : Module.Finite K R := finite_over_coefficientField hcoeff
-  letI : Module.Finite K V := Module.Finite.trans R V
+  let : Module.Finite K R := finite_over_coefficientField hcoeff
+  let : Module.Finite K V := Module.Finite.trans R V
   obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero
     (ne_of_gt (Module.finrank_pos (R := K) (M := V)))
   obtain ⟨b, level, hb⟩ :=
@@ -355,10 +355,10 @@ theorem artinian_local_cofactor_mem_maximalIdeal
     S.modParameter z ∈ IsLocalRing.maximalIdeal R := by
   let κ := IsLocalRing.ResidueField R
   obtain ⟨s, hs⟩ := Stafford38.Characteristic.ArtinianCoefficientField.exists_residue_section F R
-  letI : CharZero κ := charZero_of_injective_algebraMap (algebraMap F κ).injective
-  letI : Algebra κ R := s.toRingHom.toAlgebra
-  letI : Module κ V := Module.compHom V (algebraMap κ R)
-  letI : IsScalarTower κ R V := IsScalarTower.of_algebraMap_smul fun _ _ ↦ rfl
+  let : CharZero κ := charZero_of_injective_algebraMap (algebraMap F κ).injective
+  let : Algebra κ R := s.toRingHom.toAlgebra
+  let : Module κ V := Module.compHom V (algebraMap κ R)
+  let : IsScalarTower κ R V := IsScalarTower.of_algebraMap_smul fun _ _ ↦ rfl
   have hcoeff : Function.Surjective
       ((IsLocalRing.residue R).comp (algebraMap κ R)) := fun a ↦ ⟨a, hs a⟩
   exact artinian_local_commutator_cofactor_mem_maximalIdeal

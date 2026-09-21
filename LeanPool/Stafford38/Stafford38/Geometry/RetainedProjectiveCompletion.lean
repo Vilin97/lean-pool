@@ -61,11 +61,11 @@ theorem retainedToCompletedPowerSeries_injective
     letI : Algebra W.coefficientField V :=
       (relativeCoefficientMap W.coefficientField W.place).toAlgebra
     Function.Injective (retainedToCompletedPowerSeries W) := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
     W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   exact W.completedPowerSeriesEquiv.symm.injective.comp
     (adicCompletion_algebraMap_injective (maximalIdeal V)
@@ -85,11 +85,11 @@ theorem retainedToCompletedPowerSeries_constantCoeff_eq_zero_of_nonunit
     ∀ v : ↥V, ¬IsUnit v →
       PowerSeries.constantCoeff (R := ResidueField V)
         (retainedToCompletedPowerSeries W v) = 0 := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
     W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
   intro v hv
@@ -117,7 +117,7 @@ theorem retainedToCompletedPowerSeries_constantCoeff_eq_zero_of_nonunit
   have hzero : Ideal.Quotient.mk ((maximalIdeal V) ^ 1) v = 0 :=
     Ideal.Quotient.eq_zero_iff_mem.mpr hvpow
   rw [hzero] at hlevel
-  letI : Nontrivial (V ⧸ (maximalIdeal V) ^ 1) :=
+  let : Nontrivial (V ⧸ (maximalIdeal V) ^ 1) :=
     Ideal.Quotient.nontrivial_iff.mpr (by
       simpa only [pow_one] using (maximalIdeal.isMaximal V).ne_top)
   exact not_isUnit_zero hlevel
@@ -141,11 +141,11 @@ theorem retainedCompleted_family_properties
       qhat chart = 1 ∧ qhat zero ≠ 0 ∧
         qhat axis = qhat zero *
           retainedToCompletedPowerSeries W W.place.parameter := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
     W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
   intro ι _ q chart zero axis hchart hzero haxis
@@ -176,11 +176,11 @@ theorem retainedCompleted_projective_order_properties
         PowerSeries.constantCoeff (R := ResidueField V) (qhat zero) = 0 ∧
         PowerSeries.constantCoeff (R := ResidueField V) ratio = 0 ∧
         qhat axis = qhat zero * ratio := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
     W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
   intro ι _ q chart zero axis hchart hzero hzero_nonunit haxis

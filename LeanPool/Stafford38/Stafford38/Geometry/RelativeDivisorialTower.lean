@@ -82,7 +82,7 @@ theorem intermediateAdjoin_isAlgebraic_over_algebraAdjoin
   let E := IntermediateField.adjoin k t
   let hRE : R ≤ E.toSubalgebra :=
     IntermediateField.algebra_adjoin_le_adjoin k t
-  letI : Algebra R E := (Subalgebra.inclusion hRE).toAlgebra
+  let : Algebra R E := (Subalgebra.inclusion hRE).toAlgebra
   refine ⟨fun y ↦ ?_⟩
   apply IntermediateField.adjoin_induction k
       (p := fun z hz ↦ IsAlgebraic R (⟨z, hz⟩ : E))
@@ -136,11 +136,11 @@ theorem transcendental_over_coefficientField
   let E := coefficientField k s x
   let hRE : R ≤ E.toSubalgebra :=
     IntermediateField.algebra_adjoin_le_adjoin k (s \ {x})
-  letI : Algebra R E := (Subalgebra.inclusion hRE).toAlgebra
-  letI : Algebra R K := R.val.toRingHom.toAlgebra
-  letI : IsScalarTower R E K :=
+  let : Algebra R E := (Subalgebra.inclusion hRE).toAlgebra
+  let : Algebra R K := R.val.toRingHom.toAlgebra
+  let : IsScalarTower R E K :=
     IsScalarTower.of_algebraMap_eq (fun _ ↦ rfl)
-  letI : Algebra.IsAlgebraic R E :=
+  let : Algebra.IsAlgebraic R E :=
     intermediateAdjoin_isAlgebraic_over_algebraAdjoin k (s \ {x})
   exact htr.extendScalars E
 
@@ -169,7 +169,7 @@ theorem finiteDimensional_over_adjoin_transcendenceBasis
     {s : Set K} (hs : IsTranscendenceBasis k ((↑) : s → K)) :
     FiniteDimensional (IntermediateField.adjoin k s) K := by
   let B : IntermediateField k K := IntermediateField.adjoin k s
-  haveI : Algebra.IsAlgebraic B K := by
+  have : Algebra.IsAlgebraic B K := by
     have halg := hs.isAlgebraic_field
     have hrange : Set.range ((↑) : s → K) = s := Subtype.range_coe
     rw [hrange] at halg
@@ -196,7 +196,7 @@ theorem finiteDimensional_over_adjoin_transcendenceBasis
     (F := B) (E := K) (S := (t : Set K))
     (fun z _ ↦ Algebra.IsAlgebraic.isAlgebraic z)
   rw [hBt] at hfieldAlg
-  letI : Algebra.FiniteType B K := ⟨⟨t, hfieldAlg.symm⟩⟩
+  let : Algebra.FiniteType B K := ⟨⟨t, hfieldAlg.symm⟩⟩
   exact Algebra.IsIntegral.finite
 
 /-- The full relative tower produced from a prescribed transcendental
@@ -227,23 +227,23 @@ theorem exists_relative_finite_tower
     exact restrictScalars_adjoin_coordinate k s x hxs
   have hfinB : FiniteDimensional (IntermediateField.adjoin k s) K :=
     finiteDimensional_over_adjoin_transcendenceBasis k hfg hs
-  letI : FiniteDimensional (IntermediateField.adjoin k s) K := hfinB
+  let : FiniteDimensional (IntermediateField.adjoin k s) K := hfinB
   -- `F` and `k(s)` have the same elements in `K`; use the induced inclusion
   -- tower to transfer algebraicity and finite type to the relative field.
   have hB_le_F : IntermediateField.adjoin k s ≤ F.restrictScalars k := hF.ge
-  letI : Algebra (IntermediateField.adjoin k s) F :=
+  let : Algebra (IntermediateField.adjoin k s) F :=
     (IntermediateField.inclusion hB_le_F).toAlgebra
-  letI : IsScalarTower (IntermediateField.adjoin k s) F K :=
+  let : IsScalarTower (IntermediateField.adjoin k s) F K :=
     IsScalarTower.of_algebraMap_eq (fun _ ↦ rfl)
-  haveI : Algebra.IsAlgebraic (IntermediateField.adjoin k s) K :=
+  have : Algebra.IsAlgebraic (IntermediateField.adjoin k s) K :=
     Algebra.IsAlgebraic.of_finite (IntermediateField.adjoin k s) K
-  haveI : Algebra.IsAlgebraic F K :=
+  have : Algebra.IsAlgebraic F K :=
     Algebra.IsAlgebraic.extendScalars
       (IntermediateField.inclusion_injective hB_le_F)
-  letI : Algebra.FiniteType F K :=
+  let : Algebra.FiniteType F K :=
     Algebra.FiniteType.of_restrictScalars_finiteType
       (IntermediateField.adjoin k s) F K
-  letI : Algebra.IsIntegral F K :=
+  let : Algebra.IsIntegral F K :=
     ⟨fun y ↦ (Algebra.IsAlgebraic.isAlgebraic y).isIntegral⟩
   have hfinF : FiniteDimensional F K := Algebra.IsIntegral.finite
   have hxE : Transcendental E x :=
@@ -272,10 +272,10 @@ theorem exists_relative_finite_separable_tower_of_charZero
       Algebra.IsSeparable F K := by
   obtain ⟨s, E, F, hxs, hs, hE, hFdef, hFrestrict, hxE, hxF, hfin⟩ :=
     exists_relative_finite_tower k hfg x hx
-  letI : FiniteDimensional F K := hfin
-  letI : CharZero F :=
+  let : FiniteDimensional F K := hfin
+  let : CharZero F :=
     charZero_of_injective_algebraMap (algebraMap k F).injective
-  letI : Algebra.IsIntegral F K :=
+  let : Algebra.IsIntegral F K :=
     ⟨fun y ↦ (IsAlgebraic.of_finite F y).isIntegral⟩
   let hsep : Algebra.IsSeparable F K :=
     Algebra.IsSeparable.of_integral F K

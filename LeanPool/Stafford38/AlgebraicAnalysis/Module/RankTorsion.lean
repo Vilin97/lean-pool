@@ -60,7 +60,7 @@ theorem rank_eq_zero_iff_forall_zero :
     Module.rank Q V = 0 ↔ ∀ v : V, v = 0 := by
   constructor
   · intro h v
-    letI : Subsingleton V := (rank_zero_iff.mp h)
+    let : Subsingleton V := (rank_zero_iff.mp h)
     exact Subsingleton.elim v 0
   · intro h
     apply rank_zero_iff.mpr

@@ -148,11 +148,11 @@ theorem kaehler_span_of_isAlgebraic_adjoin
     IntermediateField.adjoin k (Set.range q)
   let qL : ι → L := fun i ↦
     ⟨q i, IntermediateField.subset_adjoin k (Set.range q) ⟨i, rfl⟩⟩
-  letI : Algebra L K := L.toSubalgebra.toAlgebra
-  letI : IsScalarTower k L K :=
+  let : Algebra L K := L.toSubalgebra.toAlgebra
+  let : IsScalarTower k L K :=
     IsScalarTower.of_algebraMap_eq (fun _ ↦ rfl)
-  letI : Algebra.IsAlgebraic L K := halg
-  letI : Algebra.IsSeparable L K := inferInstance
+  let : Algebra.IsAlgebraic L K := halg
+  let : Algebra.IsSeparable L K := inferInstance
   have hgenL : IntermediateField.adjoin k (Set.range qL) = ⊤ := by
     apply top_unique
     rintro ⟨z, hz⟩ -

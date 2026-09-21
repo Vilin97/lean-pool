@@ -259,11 +259,11 @@ def iteratedNormalFormLinearEquiv :
   | zero =>
       rfl
   | succ n ih =>
-      letI : Algebra k (IteratedPairStage k n) :=
+      let : Algebra k (IteratedPairStage k n) :=
         iteratedPairStageAlgebra k n
-      letI : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
+      let : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
         coordinateStageAlgebra
-      letI : Algebra k (PairStage (B := IteratedPairStage k n)) :=
+      let : Algebra k (PairStage (B := IteratedPairStage k n)) :=
         pairStageAlgebra
       let hInner : algebraMap k (CoordinateStage (B := IteratedPairStage k n)) =
           (normalCoefficient zeroDerivation).comp
@@ -299,11 +299,11 @@ to its corresponding commutative symbol variable. -/
       intro i
       exact Sum.elim Fin.elim0 Fin.elim0 i
   | succ n ih =>
-      letI : Algebra k (IteratedPairStage k n) :=
+      let : Algebra k (IteratedPairStage k n) :=
         iteratedPairStageAlgebra k n
-      letI : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
+      let : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
         coordinateStageAlgebra
-      letI : Algebra k (PairStage (B := IteratedPairStage k n)) :=
+      let : Algebra k (PairStage (B := IteratedPairStage k n)) :=
         pairStageAlgebra
       let hInner : algebraMap k (CoordinateStage (B := IteratedPairStage k n)) =
           (normalCoefficient zeroDerivation).comp
@@ -383,11 +383,11 @@ theorem iteratedOrderedMonomial_normal :
       rw [hz]
       simp [MvPolynomial.monomial_zero']
   | succ n ih =>
-      letI : Algebra k (IteratedPairStage k n) :=
+      let : Algebra k (IteratedPairStage k n) :=
         iteratedPairStageAlgebra k n
-      letI : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
+      let : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
         coordinateStageAlgebra
-      letI : Algebra k (PairStage (B := IteratedPairStage k n)) :=
+      let : Algebra k (PairStage (B := IteratedPairStage k n)) :=
         pairStageAlgebra
       let hInner : algebraMap k (CoordinateStage (B := IteratedPairStage k n)) =
           (normalCoefficient zeroDerivation).comp
@@ -429,10 +429,10 @@ theorem iteratedNormalFormLinearEquiv_coefficient_ordered
       MvPolynomial.X (.inr (0 : Fin (n + 1))) ^ p *
         MvPolynomial.X (.inl (0 : Fin (n + 1))) ^ a *
         MvPolynomial.rename oldIndex (iteratedNormalFormLinearEquiv k n z) := by
-  letI : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
-  letI : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
+  let : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
+  let : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
     coordinateStageAlgebra
-  letI : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
+  let : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
   let hInner : algebraMap k (CoordinateStage (B := IteratedPairStage k n)) =
       (normalCoefficient zeroDerivation).comp
         (algebraMap k (IteratedPairStage k n)) :=
@@ -497,10 +497,10 @@ theorem presentedNormalFormLinearEquiv_previous_ordered
         MvPolynomial.X (.inl (0 : Fin (n + 1))) ^ a *
         MvPolynomial.rename oldIndex
           (presentedNormalFormLinearEquiv k n z) := by
-  letI : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
-  letI : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
+  let : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
+  let : Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
     coordinateStageAlgebra
-  letI : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
+  let : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
   rw [presentedCoefficientOrdered]
   rw [presentedNormalFormLinearEquiv, LinearEquiv.trans_apply,
     AlgEquiv.toLinearEquiv_apply]

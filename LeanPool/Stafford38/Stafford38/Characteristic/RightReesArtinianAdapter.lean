@@ -145,7 +145,7 @@ theorem localizedPreArtinianCore_of_exact_finiteLength
     (hnontrivial : Nontrivial (LocalizedModule S G))
     (hlength : IsFiniteLength (Localization S) (LocalizedModule S G)) :
     LocalizedPreArtinianCore D S := by
-  letI : Nontrivial (LocalizedModule S G) := hnontrivial
+  let : Nontrivial (LocalizedModule S G) := hnontrivial
   obtain ⟨q, hq⟩ :=
     exists_maximalIdeal_pow_le_annihilator_of_finiteLength hlength
   exact
@@ -205,12 +205,12 @@ theorem exists_concrete_localizedPreArtinianCore
     Stafford38.Characteristic.AssociatedGradedFinite.exists_minimalPrimeLocalizedExactnessAndFiniteLength
       K I P hP
   refine ⟨h, ?_⟩
-  letI := h
-  letI : CharZero (Localization P.primeCompl) :=
+  let := h
+  let : CharZero (Localization P.primeCompl) :=
     charZero_of_injective_algebraMap
       (FaithfulSMul.algebraMap_injective K
         (Localization P.primeCompl))
-  letI : IsNoetherianRing (Localization P.primeCompl) :=
+  let : IsNoetherianRing (Localization P.primeCompl) :=
     IsLocalization.isNoetherianRing P.primeCompl
       (Localization P.primeCompl) inferInstance
   exact localizedPreArtinianCore_of_exact_finiteLength

@@ -130,7 +130,7 @@ theorem kaehler_span_of_separable_adjoin_eq_top
     Submodule.span K
       (Set.range fun i ↦
         KaehlerDifferential.D k K (algebraMap E K (q i))) = ⊤ := by
-  letI : Algebra.FormallyEtale E K :=
+  let : Algebra.FormallyEtale E K :=
     Algebra.FormallyEtale.of_isSeparable E K
   exact kaehler_span_of_formallyEtale_adjoin_eq_top q hgen
 
@@ -146,12 +146,12 @@ theorem exists_visible_derivation_frame_of_finite_separable_adjoin
         if i = j then 1 else 0 := by
   have hspan := kaehler_span_of_separable_adjoin_eq_top
     (k := k) (E := E) (K := K) q hgen
-  letI : FiniteDimensional K (Ω[K⁄k]) := by
-    letI : FiniteDimensional K
+  let : FiniteDimensional K (Ω[K⁄k]) := by
+    let : FiniteDimensional K
         (Submodule.span K (Set.range fun i ↦
           KaehlerDifferential.D k K (algebraMap E K (q i)))) :=
       FiniteDimensional.span_of_finite K (Set.finite_range _)
-    letI : FiniteDimensional K (⊤ : Submodule K (Ω[K⁄k])) :=
+    let : FiniteDimensional K (⊤ : Submodule K (Ω[K⁄k])) :=
       (LinearEquiv.ofEq _ _ hspan).finiteDimensional
     exact Submodule.topEquiv.finiteDimensional
   exact Stafford38.Geometry.KaehlerVisibleDerivationFrame.exists_visible_derivation_frame_of_kaehler_span

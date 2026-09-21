@@ -255,7 +255,7 @@ theorem sourceEquiv_intertwines_rightMul (n N : ℕ) (d : PresentedWeyl k (n + 1
   | zero => simp
   | of p y =>
     by_cases hp : 0 < p
-    · haveI := zeroPage_source_subsingleton_of_pos k n N p d hd hp
+    · have := zeroPage_source_subsingleton_of_pos k n N p d hd hp
       simp [Subsingleton.elim y 0]
     · let m := (-p).toNat
       have hm : p = -(m : ℤ) := by dsimp [m]; omega
@@ -285,7 +285,7 @@ theorem targetEquiv_intertwines_rightMul (n N : ℕ) (d : PresentedWeyl k (n + 1
   | zero => simp
   | of p y =>
     by_cases hp : 0 < p
-    · haveI := zeroPage_target_subsingleton_of_pos k n N p d hd hp
+    · have := zeroPage_target_subsingleton_of_pos k n N p d hd hp
       simp [Subsingleton.elim y 0]
     · let m := (-p).toNat
       have hm : p = -(m : ℤ) := by dsimp [m]; omega
@@ -367,7 +367,7 @@ theorem totalDrop_zero_intertwines_coordinate (n N : ℕ) (d : PresentedWeyl k (
   | zero => simp
   | of p y =>
     by_cases hp : 0 < p
-    · haveI := zeroPage_source_subsingleton_of_pos k n N p d hd hp
+    · have := zeroPage_source_subsingleton_of_pos k n N p d hd hp
       simp [Subsingleton.elim y 0]
     · let m := (-p).toNat
       have hm : p = -(m : ℤ) := by dsimp [m]; omega

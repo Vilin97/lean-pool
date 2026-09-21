@@ -54,8 +54,8 @@ theorem quotient_power_artinian
   let m := IsLocalRing.maximalIdeal R
   have hp : m ^ q ≠ ⊤ := ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal R).ne_top
     (Ideal.pow_le_self hq.ne')
-  letI : Nontrivial (R ⧸ m ^ q) := Ideal.Quotient.nontrivial_iff.mpr hp
-  letI : IsLocalRing (R ⧸ m ^ q) :=
+  let : Nontrivial (R ⧸ m ^ q) := Ideal.Quotient.nontrivial_iff.mpr hp
+  let : IsLocalRing (R ⧸ m ^ q) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk (m ^ q)) Ideal.Quotient.mk_surjective
   apply (isArtinianRing_iff_isNilpotent_maximalIdeal (R ⧸ m ^ q)).mpr
   refine ⟨q, ?_⟩
@@ -99,22 +99,22 @@ theorem localized_cofactor_mem
     rw [hH]
     exact ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal R).ne_top
       (Ideal.pow_le_self (by omega))
-  letI : Nontrivial Rq := Ideal.Quotient.nontrivial_iff.mpr hproper
-  letI : IsLocalRing Rq := IsLocalRing.of_surjective'
+  let : Nontrivial Rq := Ideal.Quotient.nontrivial_iff.mpr hproper
+  let : IsLocalRing Rq := IsLocalRing.of_surjective'
     (Ideal.Quotient.mk H) Ideal.Quotient.mk_surjective
-  letI : IsArtinianRing Rq := by
+  let : IsArtinianRing Rq := by
     dsimp [Rq]
     rw [hH]
     exact quotient_power_artinian R (q + q) (by omega)
-  letI : Module Rq G := localizedDoubledPowerQuotientModule S q hpow
-  letI : IsScalarTower R Rq G := by
+  let : Module Rq G := localizedDoubledPowerQuotientModule S q hpow
+  let : IsScalarTower R Rq G := by
     constructor
     intro a b v
     induction b using Quotient.inductionOn' with
     | _ b => exact mul_smul a b v
-  letI : Module.Finite Rq G := Module.Finite.of_restrictScalars_finite R Rq G
-  letI : Module (C q) Wₗ := localizedTwoBlockModule D S q hpow
-  letI : SMul (C q) Wₗ :=
+  let : Module.Finite Rq G := Module.Finite.of_restrictScalars_finite R Rq G
+  let : Module (C q) Wₗ := localizedTwoBlockModule D S q hpow
+  let : SMul (C q) Wₗ :=
     (localizedTwoBlockModule D S q hpow).toDistribMulAction.toDistribSMul.toSMul
   let E := concreteLeftPrincipalParameterReduction k I S q
   let rho := localizedDoubledPowerModuleSpecialization D S q hpow
@@ -148,9 +148,9 @@ theorem minimalPrime_isInvolutive
     (hP : P ∈ (Module.annihilator (SymbolRing k n)
       (OrderAssociatedGradedModule k I)).minimalPrimes) : IsInvolutive P := by
   obtain ⟨h, core⟩ := exists_concrete_localizedPreArtinianCore k I P hP
-  letI := h
-  letI : Nontrivial G := core.fibre_nontrivial
-  letI : IsNoetherian R G :=
+  let := h
+  let : Nontrivial G := core.fibre_nontrivial
+  let : IsNoetherian R G :=
     (isFiniteLength_iff_isNoetherian_isArtinian.mp core.fibre_finiteLength).1
   obtain ⟨q, hq⟩ := core.annihilatingPower
   have hpow : IsLocalRing.maximalIdeal R ^ (q + 1) ≤ Module.annihilator R G :=
@@ -220,7 +220,7 @@ theorem associatedGraded_radical_isInvolutive :
   rw [← J.sInf_minimalPrimes]
   apply Ideal.mem_sInf.mpr
   intro P hP
-  letI : P.IsPrime := hP.1.1
+  let : P.IsPrime := hP.1.1
   have hle : J.radical ≤ P := hP.1.1.radical_le_iff.mpr hP.1.2
   exact minimalPrime_isInvolutive k I P hP f (hle hf) g (hle hg)
 

@@ -51,7 +51,7 @@ theorem exists_visible_derivation_frame_of_kaehler_span
       ∀ i j, D j (qbar (rows i)) = if i = j then 1 else 0 := by
   let b := Module.Basis.ofSpan (K := K)
     (s := Set.range fun i ↦ KaehlerDifferential.D k K (qbar i)) hspan.ge
-  letI : Fintype ((linearIndepOn_empty K (id : Ω[K⁄k] → Ω[K⁄k])).extend
+  let : Fintype ((linearIndepOn_empty K (id : Ω[K⁄k] → Ω[K⁄k])).extend
       (Set.empty_subset
         (Set.range fun i ↦ KaehlerDifferential.D k K (qbar i)))) :=
     Fintype.ofFinite _

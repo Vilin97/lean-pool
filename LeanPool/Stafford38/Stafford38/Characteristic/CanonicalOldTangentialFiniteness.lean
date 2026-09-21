@@ -86,28 +86,28 @@ theorem canonical_finite_old_coordinate_kernel_cokernel
   let E := OrderAssociatedGradedModule k
     (canonicalRightIdeal (presentedCoordinate k n) d N)
   let e := oldSymbolTangentialAlgEquiv (k := k) n
-  letI : Algebra T C := e.toRingHom.toAlgebra
-  letI : Module T C := Module.compHom C e.toRingHom
-  letI : Module C E := tangentialCoeffModule (k := k) n E
-  letI : Module T E := oldCoeffModule (k := k) n E
-  letI : IsScalarTower T C E := ⟨by
+  let : Algebra T C := e.toRingHom.toAlgebra
+  let : Module T C := Module.compHom C e.toRingHom
+  let : Module C E := tangentialCoeffModule (k := k) n E
+  let : Module T E := oldCoeffModule (k := k) n E
+  let : IsScalarTower T C E := ⟨by
     intro r c z
     change (((tangentialPolynomialActionHom (k := k) n).comp Polynomial.C)
         (e r * c)) • z =
       (((tangentialPolynomialActionHom (k := k) n).comp Polynomial.C) (e r)) •
         ((((tangentialPolynomialActionHom (k := k) n).comp Polynomial.C) c) • z)
     rw [map_mul, mul_smul]⟩
-  haveI : Module.Finite T C :=
+  have : Module.Finite T C :=
     Module.Finite.of_surjective (Module.compHom.toLinearMap e.toRingHom) e.surjective
   let f := tangentialCoordinateMap (k := k) n E
   have hf : oldCoordinateMap (k := k) n E = f.restrictScalars T := by
     ext z
     exact (oldCoordinateMap_apply n E z).trans (tangentialCoordinateMap_apply n E z).symm
   have hfinite := canonical_orderAssociatedGradedModule_finite_tangential_coordinate hd
-  haveI : Module.Finite C f.ker := hfinite.1
-  haveI : Module.Finite C (E ⧸ f.range) := hfinite.2
-  haveI : Module.Finite T f.ker := Module.Finite.trans C f.ker
-  haveI : Module.Finite T (E ⧸ f.range) := Module.Finite.trans C (E ⧸ f.range)
+  have : Module.Finite C f.ker := hfinite.1
+  have : Module.Finite C (E ⧸ f.range) := hfinite.2
+  have : Module.Finite T f.ker := Module.Finite.trans C f.ker
+  have : Module.Finite T (E ⧸ f.range) := Module.Finite.trans C (E ⧸ f.range)
   change Module.Finite T (oldCoordinateMap (k := k) n E).ker ∧
     Module.Finite T (E ⧸ (oldCoordinateMap (k := k) n E).range)
   rw [hf, LinearMap.ker_restrictScalars, LinearMap.range_restrictScalars]

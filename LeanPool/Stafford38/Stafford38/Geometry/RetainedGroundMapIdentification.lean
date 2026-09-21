@@ -95,13 +95,13 @@ theorem retainedToCompletedPowerSeries_ground
           (retainedComponentCoefficientMap P i W c) =
         PowerSeries.C (R := ResidueField V)
           (algebraMap k (ResidueField V) c) := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
-  letI : Algebra k (ResidueField V) :=
+  let : Algebra k (ResidueField V) :=
     retainedResidueGroundAlgebra P i W
   dsimp only
   intro c
@@ -139,13 +139,13 @@ theorem retainedLaurentCoefficientMap_eq_groundLaurentMap
       retainedResidueGroundAlgebra P i W
     retainedLaurentCoefficientMap P i W =
       groundLaurentMap (k := k) (K := ResidueField V) := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
-  letI : Algebra k (ResidueField V) :=
+  let : Algebra k (ResidueField V) :=
     retainedResidueGroundAlgebra P i W
   apply RingHom.ext
   intro c
@@ -182,13 +182,13 @@ theorem retainedComponentGroundEquationPackage
         (fun a ↦ algebraMap (PowerSeries (ResidueField V))
           (LaurentSeries (ResidueField V))
             (retainedToCompletedPowerSeries W (q a)))) := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
-  letI : Algebra k (ResidueField V) :=
+  let : Algebra k (ResidueField V) :=
     retainedResidueGroundAlgebra P i W
   dsimp only
   intro q scale hq

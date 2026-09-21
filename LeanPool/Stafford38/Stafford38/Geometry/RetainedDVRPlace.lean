@@ -66,8 +66,8 @@ theorem exists_retainedDVRPlace
     (a : A) (ha_ne : a ≠ 0) (ha_nonunit : ¬IsUnit a) :
     Nonempty (RetainedDVRPlace A (L := L) a) := by
   let C : Type w := integralClosure A L
-  letI : IsDedekindDomain C := integralClosure.isDedekindDomain A F L
-  letI : IsFractionRing C L :=
+  let : IsDedekindDomain C := integralClosure.isDedekindDomain A F L
+  let : IsFractionRing C L :=
     IsIntegralClosure.isFractionRing_of_finite_extension A F L C
   have hinjAL : Function.Injective (algebraMap A L) := by
     rw [IsScalarTower.algebraMap_eq A F L]
@@ -82,14 +82,14 @@ theorem exists_retainedDVRPlace
       _ = algebraMap A L y := IsScalarTower.algebraMap_apply A C L y
   let m := maximalIdeal A
   have hm_ne : m ≠ ⊥ := IsDiscreteValuationRing.not_a_field A
-  letI : m.IsPrime := (maximalIdeal.isMaximal A).isPrime
+  let : m.IsPrime := (maximalIdeal.isMaximal A).isPrime
   have hker : RingHom.ker (algebraMap A C) ≤ m := by
     rw [(RingHom.injective_iff_ker_eq_bot _).mp hinjAC]
     exact bot_le
   obtain ⟨Q, hQprime, hQcomap⟩ :=
     Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain
       (R := A) (S := C) m hker
-  letI : Q.IsPrime := hQprime
+  let : Q.IsPrime := hQprime
   have hQ_ne : Q ≠ ⊥ := by
     intro hQ
     apply hm_ne
@@ -104,10 +104,10 @@ theorem exists_retainedDVRPlace
       (R := A) (S := C) Q
     rw [hQcomap]
     exact maximalIdeal.isMaximal A
-  letI : Q.IsMaximal := hQmax
+  let : Q.IsMaximal := hQmax
   let RQ : Type w := Localization.subalgebra.ofField L Q.primeCompl
     Q.primeCompl_le_nonZeroDivisors
-  letI : IsDiscreteValuationRing RQ :=
+  let : IsDiscreteValuationRing RQ :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       C hQ_ne RQ
   let Rsub : Subring L :=
@@ -124,9 +124,9 @@ theorem exists_retainedDVRPlace
   have hVdvr : IsDiscreteValuationRing V.toSubring := by
     change IsDiscreteValuationRing RQ
     infer_instance
-  letI : IsScalarTower A C RQ :=
+  let : IsScalarTower A C RQ :=
     IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
-  letI : IsScalarTower A RQ L :=
+  let : IsScalarTower A RQ L :=
     IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   let factor : A →+* RQ := algebraMap A RQ
   have hfactor : V.toSubring.subtype.comp factor = algebraMap A L := by
@@ -167,12 +167,12 @@ theorem exists_retainedDVRPlace
       algebraMap A L a = (aRQ : L) := haRQ_eq.symm
       _ = ((0 : RQ) : L) := congrArg ((↑) : RQ → L) ha0
       _ = algebraMap A L 0 := by simp
-  letI : Algebra A RQ := factor.toAlgebra
-  letI : IsLocalHom (algebraMap A RQ) := hfactorLocal
-  letI : IsNoetherian A C := IsIntegralClosure.isNoetherian A F L C
-  letI : Module.Finite A C := inferInstance
-  letI : Q.LiesOver m := ⟨hQcomap.symm⟩
-  letI : Module.Finite (A ⧸ m) (C ⧸ Q) := inferInstance
+  let : Algebra A RQ := factor.toAlgebra
+  let : IsLocalHom (algebraMap A RQ) := hfactorLocal
+  let : IsNoetherian A C := IsIntegralClosure.isNoetherian A F L C
+  let : Module.Finite A C := inferInstance
+  let : Q.LiesOver m := ⟨hQcomap.symm⟩
+  let : Module.Finite (A ⧸ m) (C ⧸ Q) := inferInstance
   let sourceResidue : (A ⧸ m) ≃+* ResidueField A :=
     (Ideal.quotEquivOfEq (@IsLocalRing.ker_residue A _ _).symm).trans
       (RingHom.quotientKerEquivOfSurjective

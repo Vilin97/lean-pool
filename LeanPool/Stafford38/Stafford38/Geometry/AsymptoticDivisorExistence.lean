@@ -53,7 +53,7 @@ theorem transcendental_of_not_mem_range_algebraMap
   change ¬IsAlgebraic k x
   intro halg
   let L : IntermediateField k K := IntermediateField.adjoin k {x}
-  letI : Algebra.IsAlgebraic k L :=
+  let : Algebra.IsAlgebraic k L :=
     IntermediateField.isAlgebraic_adjoin (K := k) (L := K) (S := {x}) (by
       intro y hy
       simpa only [Set.mem_singleton_iff] using hy ▸ halg.isIntegral)
@@ -245,7 +245,7 @@ theorem exists_projectiveOrderGap_of_discreteBoundaryRefinement
       u₁ = u₀ * ur ∧
       D.coordinate * D.coordinate = (u₁ : R) * uniformizer ^ b := by
   let R := D.valuation.toSubring
-  letI : IsDiscreteValuationRing R := D.isDiscrete
+  let : IsDiscreteValuationRing R := D.isDiscrete
   obtain ⟨uniformizer, huniformizer⟩ :=
     IsDiscreteValuationRing.exists_irreducible R
   have hvanish : D.coordinate ∈ maximalIdeal R := by
@@ -278,7 +278,7 @@ theorem exists_boundaryValuationSubring
   obtain ⟨D⟩ := exists_boundaryValuationData k x hx
   let V := D.valuation
   let fV : R →+* V.toSubring := D.factor
-  letI hlocalV : IsLocalHom fV := D.factor_isLocal
+  let hlocalV : IsLocalHom fV := D.factor_isLocal
   let xR : R := algebraMap k[X] R Polynomial.X
   have hxR : xR ∈ maximalIdeal R := by
     exact (IsLocalization.AtPrime.to_map_mem_maximal_iff

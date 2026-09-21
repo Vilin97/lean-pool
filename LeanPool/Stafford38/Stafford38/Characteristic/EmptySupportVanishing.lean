@@ -43,10 +43,10 @@ theorem all_graded_subsingleton_of_orderCharacteristicSupport_eq_empty
     ∀ N, Subsingleton (QuotientOrderGradedPiece k I N) := by
   have htop : orderInitialIdeal k I = ⊤ :=
     (orderCharacteristicSupport_eq_empty_iff k I).mp hsupport
-  letI : Subsingleton (OrderCharacteristicModule k I) := by
+  let : Subsingleton (OrderCharacteristicModule k I) := by
     rw [Submodule.Quotient.subsingleton_iff]
     exact htop
-  letI : Subsingleton (QuotientOrderAssociatedGraded k I) :=
+  let : Subsingleton (QuotientOrderAssociatedGraded k I) :=
     (quotientOrderAssociatedGradedAddEquivCharacteristic k I).toEquiv.subsingleton
   intro N
   exact ⟨fun q r => DirectSum.of_injective N (Subsingleton.elim
@@ -68,8 +68,8 @@ theorem all_graded_subsingleton_of_rightQuotient_subsingleton
     (I : RightIdeal (PresentedWeyl k n))
     (hquotient : Subsingleton (RightQuotient I)) :
     ∀ N, Subsingleton (QuotientOrderGradedPiece k I N) := by
-  letI : Subsingleton (RightQuotient I) := hquotient
-  letI : Subsingleton (FilteredRightQuotient k I) :=
+  let : Subsingleton (RightQuotient I) := hquotient
+  let : Subsingleton (FilteredRightQuotient k I) :=
     (filteredRightQuotientEquivRightQuotient k I).toEquiv.subsingleton
   intro N
   constructor
@@ -91,11 +91,11 @@ theorem orderInitialIdeal_eq_top_iff_rightQuotient_subsingleton
     apply rightQuotient_subsingleton_of_orderCharacteristicSupport_eq_empty k I
     exact (orderCharacteristicSupport_eq_empty_iff k I).mpr htop
   · intro hquotient
-    letI : ∀ N, Subsingleton (QuotientOrderGradedPiece k I N) :=
+    let : ∀ N, Subsingleton (QuotientOrderGradedPiece k I N) :=
       all_graded_subsingleton_of_rightQuotient_subsingleton k I hquotient
-    letI : Subsingleton (QuotientOrderAssociatedGraded k I) := by
+    let : Subsingleton (QuotientOrderAssociatedGraded k I) := by
       infer_instance
-    letI : Subsingleton (OrderCharacteristicModule k I) :=
+    let : Subsingleton (OrderCharacteristicModule k I) :=
       (Equiv.subsingleton_congr
         (quotientOrderAssociatedGradedAddEquivCharacteristic k I).toEquiv).mp
           (by infer_instance)

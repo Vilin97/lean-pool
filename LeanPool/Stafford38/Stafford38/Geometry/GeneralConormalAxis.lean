@@ -59,8 +59,8 @@ theorem exists_groundConormalAxis_of_minimalPrime_unit_transcendental
   obtain ⟨K, hK, hAlg, ⟨W⟩⟩ :=
     exists_finiteGradientBoundaryCertificateOver_of_hasVisibleDivisorFrame
       I hI P hP hm hframe
-  letI := hK
-  letI := hAlg
+  let := hK
+  let := hAlg
   obtain ⟨y, xi, hmem, hres⟩ :=
     exists_groundConormalAxis_of_finiteGradientBoundaryCertificateOver hm I W
   exact ⟨K, hK, hAlg, y, xi, hmem, hres⟩

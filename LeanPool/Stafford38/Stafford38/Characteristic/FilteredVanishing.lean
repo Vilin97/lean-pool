@@ -99,7 +99,7 @@ theorem rightQuotient_subsingleton_of_all_graded_subsingleton
     (I : RightIdeal (PresentedWeyl k n))
     (hgraded : ∀ N, Subsingleton (QuotientOrderGradedPiece k I N)) :
     Subsingleton (RightQuotient I) := by
-  letI : Subsingleton (FilteredRightQuotient k I) :=
+  let : Subsingleton (FilteredRightQuotient k I) :=
     filteredRightQuotient_subsingleton_of_all_graded_subsingleton k I hgraded
   constructor
   intro q r

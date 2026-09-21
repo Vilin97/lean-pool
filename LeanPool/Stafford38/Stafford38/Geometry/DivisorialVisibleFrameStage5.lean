@@ -38,10 +38,10 @@ theorem stage5_exists_coefficientField
   classical
   let AV : A →+* V.toSubring :=
     RingHom.codRestrict (Subalgebra.val A).toRingHom V.toSubring hAV
-  letI : Algebra k V.toSubring := (AV.comp (algebraMap k A)).toAlgebra
-  letI : Algebra k (ResidueField V.toSubring) :=
+  let : Algebra k V.toSubring := (AV.comp (algebraMap k A)).toAlgebra
+  let : Algebra k (ResidueField V.toSubring) :=
     ((residue V.toSubring).comp (algebraMap k V.toSubring)).toAlgebra
-  letI : Nontrivial (A ⧸ p) :=
+  let : Nontrivial (A ⧸ p) :=
     Ideal.Quotient.nontrivial_iff.mpr (inferInstance : p.IsPrime).ne_top
   obtain ⟨s, g, hg, hgfin⟩ := exists_finite_inj_algHom_of_fg k (A ⧸ p)
   choose a ha using fun i : Fin s ↦ Ideal.Quotient.mk_surjective (g (MvPolynomial.X i))
@@ -103,7 +103,7 @@ theorem stage5_exists_coefficientField
     rw [hz, div_eq_mul_inv]
     exact V.toSubring.mul_mem (eval_mem r) (inv_eval_mem q)
   refine ⟨E, hEV, ?_⟩
-  letI : Algebra E V.toSubring := (coeffHom E V hEV).toAlgebra
+  let : Algebra E V.toSubring := (coeffHom E V hEV).toAlgebra
   let ρ : A →+* ResidueField V.toSubring := (residue V.toSubring).comp AV
   have hpker : ∀ x ∈ p, ρ x = 0 := by
     intro x hx
@@ -114,11 +114,11 @@ theorem stage5_exists_coefficientField
   have halgebraMap_et (i : Fin s) :
       algebraMap E (ResidueField V.toSubring) (et i) = ρ (a i) := by
     rfl
-  haveI hkEV : IsScalarTower k E V.toSubring :=
+  have hkEV : IsScalarTower k E V.toSubring :=
     IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
-  haveI hEVκ : IsScalarTower E V.toSubring (ResidueField V.toSubring) :=
+  have hEVκ : IsScalarTower E V.toSubring (ResidueField V.toSubring) :=
     IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
-  haveI hkEκ : IsScalarTower k E (ResidueField V.toSubring) :=
+  have hkEκ : IsScalarTower k E (ResidueField V.toSubring) :=
     IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   let ρbarK : (A ⧸ p) →ₐ[k] ResidueField V.toSubring :=
     { toRingHom := ρbar
@@ -127,12 +127,12 @@ theorem stage5_exists_coefficientField
         rw [Ideal.Quotient.lift_mk]
         rfl }
   let P := MvPolynomial (Fin s) k
-  letI : Algebra P (A ⧸ p) := g.toRingHom.toAlgebra
-  letI : Algebra P E := (MvPolynomial.aeval et).toRingHom.toAlgebra
-  letI : Algebra P (ResidueField V.toSubring) :=
+  let : Algebra P (A ⧸ p) := g.toRingHom.toAlgebra
+  let : Algebra P E := (MvPolynomial.aeval et).toRingHom.toAlgebra
+  let : Algebra P (ResidueField V.toSubring) :=
     ((algebraMap E (ResidueField V.toSubring)).comp
       (MvPolynomial.aeval et).toRingHom).toAlgebra
-  haveI hPEκ : IsScalarTower P E (ResidueField V.toSubring) :=
+  have hPEκ : IsScalarTower P E (ResidueField V.toSubring) :=
     IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   have hpoly : ρbarK.comp g =
       (IsScalarTower.toAlgHom k E (ResidueField V.toSubring)).comp
@@ -148,7 +148,7 @@ theorem stage5_exists_coefficientField
       commutes' := fun f ↦ by
         exact congrArg (fun e : MvPolynomial (Fin s) k →ₐ[k]
           ResidueField V.toSubring ↦ e f) hpoly }
-  letI hPB : Module.Finite P (A ⧸ p) := hgfin
+  let hPB : Module.Finite P (A ⧸ p) := hgfin
   have residue_integral (x : A) : IsIntegral E (ρ x) := by
     have hx : IsIntegral P (Ideal.Quotient.mk p x) := IsIntegral.of_finite P _
     have hx' : IsIntegral E (ρbarP (Ideal.Quotient.mk p x)) :=
@@ -187,7 +187,7 @@ theorem stage5_exists_coefficientField
       IsIntegral E z := by
     obtain ⟨x, rfl⟩ := hz
     exact residue_integral x.1
-  letI hfiniteL : Module.Finite E L :=
+  let hfiniteL : Module.Finite E L :=
     IntermediateField.finiteDimensional_adjoin gen_integral
   let e : L ≃ₐ[E] ResidueField V.toSubring :=
     (IntermediateField.equivOfEq hL).trans IntermediateField.topEquiv

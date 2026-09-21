@@ -387,7 +387,7 @@ theorem exists_localizedExactnessFor (S : Submonoid R) :
       LocalizedExactnessFor D S h := by
   obtain ⟨h⟩ := nonempty_oreSet_comap_op D S
   refine ⟨h, ?_⟩
-  letI := h
+  let := h
   exact localized_squareZero_exactness D S
 
 /-- At a minimal prime over the special-fibre annihilator, the localized

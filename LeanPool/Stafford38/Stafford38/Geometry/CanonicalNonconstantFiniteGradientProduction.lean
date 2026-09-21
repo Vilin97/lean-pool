@@ -91,9 +91,9 @@ theorem higherDimensionalCanonicalResidueExtensionConormalAxisProduction_of_nonc
         hP c hc
   · obtain ⟨K, fieldK, algebraK, W⟩ :=
       hnonconstant k n N d hn hdisjoint P hP htranscendental
-    letI : Field K := fieldK
-    letI : Algebra k K := algebraK
-    letI : CharZero K :=
+    let : Field K := fieldK
+    let : Algebra k K := algebraK
+    let : CharZero K :=
       charZero_of_injective_algebraMap (algebraMap k K).injective
     obtain ⟨y, xi, hgeneric, hresidue⟩ :=
       exists_groundConormalAxis_of_finiteGradientBoundaryCertificateOver

@@ -43,10 +43,10 @@ theorem exists_algebraicClosure_zero_of_ne_top
         (J.map (scalarPolynomialMap
           (k := k) (K := AlgebraicClosure k) σ)) := by
   obtain ⟨M, hMmax, hJM⟩ := Ideal.exists_le_maximal J hJ
-  letI : M.IsMaximal := hMmax
+  let : M.IsMaximal := hMmax
   let Q := MvPolynomial σ k ⧸ M
-  letI : Field Q := Ideal.Quotient.field M
-  letI : Module.IsTorsionFree k Q :=
+  let : Field Q := Ideal.Quotient.field M
+  let : Module.IsTorsionFree k Q :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr
       (MvPolynomial.quotient_mk_comp_C_injective σ k M hMmax.ne_top)
   have hIntegral :
@@ -54,8 +54,8 @@ theorem exists_algebraicClosure_zero_of_ne_top
         ((Ideal.Quotient.mk M).comp (MvPolynomial.C : k →+* MvPolynomial σ k)) :=
     MvPolynomial.comp_C_integral_of_surjective_of_isJacobsonRing
       (Ideal.Quotient.mk M) Ideal.Quotient.mk_surjective
-  letI : Algebra.IsIntegral k Q := ⟨hIntegral⟩
-  letI : Algebra.IsAlgebraic k Q := Algebra.IsIntegral.isAlgebraic
+  let : Algebra.IsIntegral k Q := ⟨hIntegral⟩
+  let : Algebra.IsAlgebraic k Q := Algebra.IsIntegral.isAlgebraic
   let φ : Q →ₐ[k] AlgebraicClosure k := IsAlgClosed.lift
   let q : σ → AlgebraicClosure k := fun i => φ (Ideal.Quotient.mk M (MvPolynomial.X i))
   refine ⟨q, (mem_zeroLocus_map_iff J q).2 ?_⟩

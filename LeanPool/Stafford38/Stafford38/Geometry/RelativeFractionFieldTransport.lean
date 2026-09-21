@@ -110,7 +110,7 @@ theorem coordinateLocalFractionEquivAdjoin_X
           (algebraMap (Polynomial E) R Polynomial.X)) :
       IntermediateField.adjoin E ({x} : Set K)) : K)) = x := by
   dsimp only
-  letI : IsScalarTower E (CoordinateZeroLocalRing E)
+  let : IsScalarTower E (CoordinateZeroLocalRing E)
       (FractionRing (Polynomial E)) :=
     IsScalarTower.of_algebraMap_eq fun a => by
       rw [IsScalarTower.algebraMap_apply E (Polynomial E)
@@ -155,19 +155,19 @@ theorem exists_discreteBoundaryRefinement_of_adjoin
   let L := FractionRing R
   let F := IntermediateField.adjoin E ({x} : Set K)
   let e : L ≃ₐ[E] F := coordinateLocalFractionEquivAdjoin E x hx
-  letI : Algebra R F :=
+  let : Algebra R F :=
     (e.toRingEquiv.toRingHom.comp (algebraMap R L)).toAlgebra
   let eR : L ≃ₐ[R] F :=
     { e.toRingEquiv with
       commutes' := fun _ => rfl }
-  letI : IsFractionRing R F :=
+  let : IsFractionRing R F :=
     IsLocalization.isLocalization_of_algEquiv (nonZeroDivisors R) eR
-  letI : Algebra R K :=
+  let : Algebra R K :=
     ((algebraMap F K).comp (algebraMap R F)).toAlgebra
-  letI : IsScalarTower R F K :=
+  let : IsScalarTower R F K :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  letI : FiniteDimensional F K := hfin
-  letI : Algebra.IsSeparable F K := hsep
+  let : FiniteDimensional F K := hfin
+  let : Algebra.IsSeparable F K := hsep
   let q : R := algebraMap (Polynomial E) R Polynomial.X
   have hq_ne : q ≠ 0 := by
     intro hq

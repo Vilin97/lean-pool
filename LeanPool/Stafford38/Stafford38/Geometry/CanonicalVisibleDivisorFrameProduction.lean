@@ -206,7 +206,7 @@ theorem component_kaehler_bridge (P : PrimeSpectrum (MvPolynomial (Fin m) k))
       Stafford38.Geometry.AffineConormalSpan.affineConormalSpace (componentCoordinate P)
         (P.asIdeal.map (MvPolynomial.map
           (algebraMap k (ComponentFractionField P)))) := by
-  haveI : P.asIdeal.IsPrime := P.isPrime
+  have : P.asIdeal.IsPrime := P.isPrime
   exact coordinateCovector_mem_affineConormalSpace_of_kaehler_sum_eq_zero
     (I := P.asIdeal) (F := ComponentFractionField P) xi h
 
@@ -222,13 +222,13 @@ theorem exists_finiteGradientBoundaryCertificateOver_of_hasVisibleDivisorFrame
       Nonempty (FiniteGradientBoundaryCertificateOver (k := k) (K := K) m hm I) := by
   classical
   obtain ⟨W, q, scale, hq0, hq, hratio, D, hQ₀, hQ₁, hQ⟩ := h
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
-  letI : Algebra k (ResidueField V) := retainedResidueGroundAlgebra P ⟨0, hm⟩ W
+  let : Algebra k (ResidueField V) := retainedResidueGroundAlgebra P ⟨0, hm⟩ W
   -- The generic point kills exactly the minimal prime.
   have hy : ∀ f, MvPolynomial.eval (componentCoordinate P)
       (MvPolynomial.map (algebraMap k (ComponentFractionField P)) f) = 0 ↔ f ∈ P.asIdeal := by

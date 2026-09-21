@@ -59,7 +59,7 @@ private theorem rightScalar_module_finite : Module.Finite Bᵐᵒᵖ B := by
 
 private theorem rightScalar_isNoetherian
     [IsNoetherianRing Bᵐᵒᵖ] : IsNoetherian Bᵐᵒᵖ B := by
-  letI : Module.Finite Bᵐᵒᵖ B := rightScalar_module_finite
+  let : Module.Finite Bᵐᵒᵖ B := rightScalar_module_finite
   exact isNoetherian_of_isNoetherianRing_of_finite Bᵐᵒᵖ B
 
 /-- Additive equivalence between coefficient-left polynomials and normal forms. -/
@@ -284,7 +284,7 @@ theorem exists_leadingCoeff_stable
     (D : OreDivisionDerivation B)
     (I : Submodule (NormalOre D)ᵐᵒᵖ (NormalOre D)) :
     ∃ N : ℕ, ∀ n, N ≤ n → leadingCoeffNth D I n = leadingCoeffNth D I N := by
-  letI : IsNoetherian Bᵐᵒᵖ B := rightScalar_isNoetherian
+  let : IsNoetherian Bᵐᵒᵖ B := rightScalar_isNoetherian
   let f := leadingCoeffChain D I
   have hconst : Filter.EventuallyConst
       (f : ℕ → Submodule Bᵐᵒᵖ B) Filter.atTop :=
@@ -335,24 +335,24 @@ theorem rightIdealDegreeLE_fg
     (D : OreDivisionDerivation B)
     (I : Submodule (NormalOre D)ᵐᵒᵖ (NormalOre D)) (n : ℕ) :
     (rightIdealDegreeLE D I n).FG := by
-  letI : Module.Finite Bᵐᵒᵖ (rightCoefficientWindow D (n + 1)) :=
+  let : Module.Finite Bᵐᵒᵖ (rightCoefficientWindow D (n + 1)) :=
     Module.Finite.span_of_finite Bᵐᵒᵖ (Set.finite_range
       (fun j : Fin (n + 1) => normalForm D (Polynomial.X ^ (j : ℕ))))
-  letI : IsNoetherian Bᵐᵒᵖ (rightCoefficientWindow D (n + 1)) :=
+  let : IsNoetherian Bᵐᵒᵖ (rightCoefficientWindow D (n + 1)) :=
     isNoetherian_of_isNoetherianRing_of_finite Bᵐᵒᵖ
       (rightCoefficientWindow D (n + 1))
-  letI : Module.Finite Bᵐᵒᵖ (normalDegreeLE D n) :=
+  let : Module.Finite Bᵐᵒᵖ (normalDegreeLE D n) :=
     Module.Finite.of_injective
       (normalDegreeLEToWindow D n) (by
         intro x y h
         apply Subtype.ext
         exact congrArg
           (fun z : rightCoefficientWindow D (n + 1) => (z : NormalOre D)) h)
-  letI : IsNoetherian Bᵐᵒᵖ (normalDegreeLE D n) :=
+  let : IsNoetherian Bᵐᵒᵖ (normalDegreeLE D n) :=
     isNoetherian_of_isNoetherianRing_of_finite Bᵐᵒᵖ
       (normalDegreeLE D n)
   let incl := normalDegreeIncl D n (rightIdealDegreeLE D I n) inf_le_left
-  letI : Module.Finite Bᵐᵒᵖ (rightIdealDegreeLE D I n) :=
+  let : Module.Finite Bᵐᵒᵖ (rightIdealDegreeLE D I n) :=
     Module.Finite.of_injective incl (by
       intro x y h
       apply Subtype.ext
@@ -541,7 +541,7 @@ theorem normalOre_op_isNoetherian_of_nontrivial
 theorem normalOre_op_isNoetherian_of_subsingleton
     [Subsingleton B] (D : OreDivisionDerivation B) :
     IsNoetherianRing (NormalOre D)ᵐᵒᵖ := by
-  letI : Subsingleton (NormalOre D) :=
+  let : Subsingleton (NormalOre D) :=
     ⟨fun x y => by
       obtain ⟨p, rfl⟩ := normalForm_surjective D x
       obtain ⟨q, rfl⟩ := normalForm_surjective D y
@@ -553,11 +553,11 @@ theorem normalOre_op_isNoetherian_of_subsingleton
 theorem derivationOre_rightHilbertBasis :
     DerivationOreRightHilbertBasis.{u} := by
   intro B _ hB D
-  letI : IsNoetherianRing Bᵐᵒᵖ := hB
+  let : IsNoetherianRing Bᵐᵒᵖ := hB
   by_cases hnt : Nontrivial B
-  · letI : Nontrivial B := hnt
+  · let : Nontrivial B := hnt
     exact normalOre_op_isNoetherian_of_nontrivial D
-  · haveI : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
+  · have : Subsingleton B := not_nontrivial_iff_subsingleton.mp hnt
     exact normalOre_op_isNoetherian_of_subsingleton D
 
 end

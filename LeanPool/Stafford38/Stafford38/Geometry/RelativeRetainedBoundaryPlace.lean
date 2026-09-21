@@ -66,7 +66,7 @@ theorem Data.parameter_eq_coordinate
     {x : K} (W : Data k K x) :
     letI : Algebra (SourceDVR W.coefficientField) K := W.ambientAlgebra
     (W.place.parameter : K) = x := by
-  letI : Algebra (SourceDVR W.coefficientField) K := W.ambientAlgebra
+  let : Algebra (SourceDVR W.coefficientField) K := W.ambientAlgebra
   exact W.place.parameter_eq.trans W.coordinate_eq
 
 /-- Forgetting the retained source map recovers the earlier discrete boundary
@@ -127,37 +127,37 @@ private theorem exists_retained_over_adjoin
   let L := FractionRing R
   let F := IntermediateField.adjoin E ({x} : Set K)
   let e : L ≃ₐ[E] F := coordinateLocalFractionEquivAdjoin E x hxE
-  letI : SMul E L := Algebra.toSMul
-  letI : IsScalarTower E R L :=
+  let : SMul E L := Algebra.toSMul
+  let : IsScalarTower E R L :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   let algRF : Algebra R F :=
     (e.toRingEquiv.toRingHom.comp (algebraMap R L)).toAlgebra
-  letI : Algebra R F := algRF
+  let : Algebra R F := algRF
   let towerERF : IsScalarTower E R F :=
     IsScalarTower.of_algebraMap_eq fun a => by
       change algebraMap E F a = e (algebraMap R L (algebraMap E R a))
       rw [← IsScalarTower.algebraMap_apply E R L]
       exact (e.commutes a).symm
-  letI : IsScalarTower E R F := towerERF
+  let : IsScalarTower E R F := towerERF
   let eR : L ≃ₐ[R] F :=
     { e.toRingEquiv with
       commutes' := fun _ => rfl }
-  letI : IsFractionRing R F :=
+  let : IsFractionRing R F :=
     IsLocalization.isLocalization_of_algEquiv (nonZeroDivisors R) eR
   let algRK : Algebra R K :=
     ((algebraMap F K).comp (algebraMap R F)).toAlgebra
-  letI : Algebra R K := algRK
+  let : Algebra R K := algRK
   let coefficientTower : IsScalarTower E R K :=
     IsScalarTower.of_algebraMap_eq fun a => by
       change algebraMap E K a =
         algebraMap F K (algebraMap R F (algebraMap E R a))
       rw [← IsScalarTower.algebraMap_apply E R F]
       exact IsScalarTower.algebraMap_apply E F K a
-  letI : IsScalarTower E R K := coefficientTower
-  letI : IsScalarTower R F K :=
+  let : IsScalarTower E R K := coefficientTower
+  let : IsScalarTower R F K :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  letI : FiniteDimensional F K := hfin
-  letI : Algebra.IsSeparable F K := hsep
+  let : FiniteDimensional F K := hfin
+  let : Algebra.IsSeparable F K := hsep
   let q : R := algebraMap (Polynomial E) R Polynomial.X
   have hq_ne : q ≠ 0 := by
     intro hq

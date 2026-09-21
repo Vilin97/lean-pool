@@ -169,9 +169,9 @@ theorem first_pages_finite :
     Module.Finite (T k n) ((complex k n N d hd).SourceTotal 1) ∧
       Module.Finite (T k n) ((complex k n N d hd).TargetTotal 1) := by
   have hf := canonical_finite_old_coordinate_kernel_cokernel hd
-  haveI : Module.Finite (T k n)
+  have : Module.Finite (T k n)
       (oldCoordinateMap (k := k) n (Graded k n N d)).ker := hf.1
-  haveI : Module.Finite (T k n)
+  have : Module.Finite (T k n)
       (Graded k n N d ⧸ (oldCoordinateMap (k := k) n (Graded k n N d)).range) := hf.2
   exact ⟨Module.Finite.equiv (firstSourceGradedKernelEquiv k n N d hd).symm,
     Module.Finite.equiv (firstTargetGradedCokernelEquiv k n N d hd).symm⟩

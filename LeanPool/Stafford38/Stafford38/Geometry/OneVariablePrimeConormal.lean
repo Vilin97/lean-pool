@@ -62,7 +62,7 @@ theorem primeComponent_isMaximal_of_axis_avoidance
     exact (havoid (fun _ ↦ 0) hzero) rfl
   let e := finOnePolynomialEquiv k
   let Q : Ideal (Polynomial k) := Ideal.map e P
-  letI : Q.IsPrime := by
+  let : Q.IsPrime := by
     dsimp [Q]
     infer_instance
   have hQne : Q ≠ ⊥ := by

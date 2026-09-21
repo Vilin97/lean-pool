@@ -255,7 +255,7 @@ theorem twoGeneratorQuotient_finite
     [Nontrivial B] (D : OreDivisionDerivation B)
     (H J : Polynomial B) (hH : H.Monic) :
     Module.Finite Bᵐᵒᵖ (TwoGeneratorQuotient D H J) := by
-  letI : Module.Finite Bᵐᵒᵖ (rightCoefficientWindow D H.natDegree) :=
+  let : Module.Finite Bᵐᵒᵖ (rightCoefficientWindow D H.natDegree) :=
     Module.Finite.span_of_finite Bᵐᵒᵖ (Set.finite_range
       (fun j : Fin H.natDegree => normalForm D (X ^ (j : ℕ))))
   exact Module.Finite.of_surjective

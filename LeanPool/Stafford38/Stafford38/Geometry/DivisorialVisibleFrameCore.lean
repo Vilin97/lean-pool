@@ -219,9 +219,9 @@ theorem isDiscreteValuationRing_of_isLocalization_atPrime
     (S : Type*) [CommRing S] [IsDomain S] [Algebra A S]
     [IsLocalization.AtPrime S p] : IsDiscreteValuationRing S := by
   have hpb : p ≠ ⊥ := Ideal.ne_bot_of_height_eq_one h
-  letI : IsLocalRing S := IsLocalization.AtPrime.isLocalRing S p
-  letI : IsNoetherianRing S := IsLocalization.isNoetherianRing p.primeCompl S inferInstance
-  letI : IsIntegrallyClosed S :=
+  let : IsLocalRing S := IsLocalization.AtPrime.isLocalRing S p
+  let : IsNoetherianRing S := IsLocalization.isNoetherianRing p.primeCompl S inferInstance
+  let : IsIntegrallyClosed S :=
     isIntegrallyClosed_of_isLocalization S p.primeCompl p.primeCompl_le_nonZeroDivisors
   have hnf : ¬ IsField S := IsLocalization.AtPrime.not_isField A hpb S
   have hkd : Ring.KrullDimLE 1 S := by
@@ -283,11 +283,11 @@ theorem stage3_exists_height_one_prime_valuation
         Localization.subalgebra.ofField K p.primeCompl
           p.primeCompl_le_nonZeroDivisors := by
   obtain ⟨p, hp, hp1⟩ := exists_height_one_minimal_prime hx0 hxu
-  letI := hp.isPrime
+  let := hp.isPrime
   refine ⟨p, inferInstance, hp1, hp.1.2 (Ideal.mem_span_singleton_self x), ?_⟩
   set S := Localization.subalgebra.ofField K p.primeCompl
     p.primeCompl_le_nonZeroDivisors with hS
-  letI : IsDiscreteValuationRing S :=
+  let : IsDiscreteValuationRing S :=
     isDiscreteValuationRing_of_isLocalization_atPrime p hp1 S
   intro z
   rcases ValuationRing.isInteger_or_isInteger S z with ⟨s, hs⟩ | ⟨s, hs⟩
@@ -345,17 +345,17 @@ theorem stage7_kaehler_finite_ofField
   exact (by
     set S := Localization.subalgebra.ofField K p.primeCompl
       p.primeCompl_le_nonZeroDivisors with hS
-    letI inst : Algebra k S.toSubring := ((algebraMap k K).codRestrict _ hk).toAlgebra
-    haveI : Algebra.EssFiniteType A S := Algebra.EssFiniteType.of_isLocalization S p.primeCompl
-    haveI : IsScalarTower k A S := IsScalarTower.of_algebraMap_eq fun c =>
+    let inst : Algebra k S.toSubring := ((algebraMap k K).codRestrict _ hk).toAlgebra
+    have : Algebra.EssFiniteType A S := Algebra.EssFiniteType.of_isLocalization S p.primeCompl
+    have : IsScalarTower k A S := IsScalarTower.of_algebraMap_eq fun c =>
       Subtype.ext (IsScalarTower.algebraMap_apply k A K c)
-    haveI : Algebra.EssFiniteType k A := Algebra.EssFiniteType.of_finiteType k A
-    haveI h1 : Algebra.EssFiniteType k S := Algebra.EssFiniteType.comp k A S
+    have : Algebra.EssFiniteType k A := Algebra.EssFiniteType.of_finiteType k A
+    have h1 : Algebra.EssFiniteType k S := Algebra.EssFiniteType.comp k A S
     have h2 : inst = (inferInstance : Algebra k S) := by
       apply Algebra.algebra_ext
       intro c
       rfl
-    haveI h3 : Algebra.EssFiniteType k S.toSubring := by
+    have h3 : Algebra.EssFiniteType k S.toSubring := by
       rw [h2]
       exact h1
     exact KaehlerDifferential.finite k S.toSubring)

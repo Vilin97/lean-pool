@@ -59,9 +59,9 @@ theorem canonical_orderAssociatedGradedModule_finite_normalCoeffRing
     (canonicalRightIdeal (presentedCoordinate k n) d N)
   let e := normalSymbolAlgEquiv (k := k) n
   let g : Polynomial R := canonicalNormalPolynomial (k := k) (n := n) (N := N) d
-  letI : Module (Polynomial R) E := normalPolynomialModule (k := k) n E
-  letI : Module R E := normalCoeffModule (k := k) n E
-  letI : IsScalarTower R (Polynomial R) E :=
+  let : Module (Polynomial R) E := normalPolynomialModule (k := k) n E
+  let : Module R E := normalCoeffModule (k := k) n E
+  let : IsScalarTower R (Polynomial R) E :=
     ⟨by
       intro r p z
       change (e.symm (r • p)) • z =
@@ -79,7 +79,7 @@ theorem canonical_orderAssociatedGradedModule_finite_normalCoeffRing
     change e.symm (e P) • generator = z
     rw [e.symm_apply_apply]
     exact hP
-  letI : Module.Finite (Polynomial R) E :=
+  let : Module.Finite (Polynomial R) E :=
     Module.Finite.of_surjective generatorMap hsurj
   apply finite_of_monic_annihilator g
   · exact canonicalNormalPolynomial_monic hd

@@ -190,13 +190,13 @@ theorem normalizedComponentProjectivePoint_zero_nonunit
         scale * componentProjectivePoint P a) →
       ¬IsUnit (q 0) := by
   let F := FractionRing (MvPolynomial (Fin n) k ⧸ P.asIdeal)
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) F :=
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField) F :=
     W.ambientAlgebra
   intro q scale hq
-  letI : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
-  letI : SMul (CoordinateZeroLocalRing W.coefficientField) F := Algebra.toSMul
-  letI : SMul W.coefficientField F := Algebra.toSMul
-  letI : IsScalarTower W.coefficientField
+  let : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
+  let : SMul (CoordinateZeroLocalRing W.coefficientField) F := Algebra.toSMul
+  let : SMul W.coefficientField F := Algebra.toSMul
+  let : IsScalarTower W.coefficientField
       (CoordinateZeroLocalRing W.coefficientField) F := W.coefficientTower
   let V := W.place.valuation.toSubring
   obtain ⟨g, hg⟩ := exists_componentCoordinate_polynomial_inverse
@@ -290,12 +290,12 @@ theorem normalizedComponentProjectivePoint_zero_vanish
         scale * componentProjectivePoint P a) →
       PowerSeries.constantCoeff
         (retainedToCompletedPowerSeries W (q 0)) = 0 := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (FractionRing (MvPolynomial (Fin n) k ⧸ P.asIdeal)) :=
     W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
   intro q scale hq

@@ -469,24 +469,24 @@ def iteratedToPresented :
     (b : IteratedPairStage k n) :
     iteratedToPresented k (n + 1) (stageEmbedding k n b) =
       previousWeylEmbedding k n (iteratedToPresented k n b) := by
-  letI : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
-  letI : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
+  let : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
+  let : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
   change pairLiftAlgHom _ _ _ _ _ _ (pairCoefficient b) = _
   exact pairLiftAlgHom_coefficient _ _ _ _ _ _ b
 
 @[simp] theorem iteratedToPresented_coordinate (n : Nat) :
     iteratedToPresented k (n + 1) (stageCoordinate k n) =
       presentedCoordinate k n := by
-  letI : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
-  letI : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
+  let : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
+  let : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
   change pairLiftAlgHom _ _ _ _ _ _ pairCoordinate = _
   exact pairLiftAlgHom_coordinate _ _ _ _ _ _
 
 @[simp] theorem iteratedToPresented_momentum (n : Nat) :
     iteratedToPresented k (n + 1) (stageMomentum k n) =
       presentedMomentum k n := by
-  letI : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
-  letI : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
+  let : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
+  let : Algebra k (PairStage (B := IteratedPairStage k n)) := pairStageAlgebra
   change pairLiftAlgHom _ _ _ _ _ _ pairMomentum = _
   exact pairLiftAlgHom_momentum _ _ _ _ _ _
 
@@ -530,9 +530,9 @@ theorem presentedToIterated_comp_iteratedToPresented :
       rw [(presentedToIterated k 0).commutes]
       rfl
   | succ n ih =>
-      letI : Algebra k (IteratedPairStage k n) :=
+      let : Algebra k (IteratedPairStage k n) :=
         iteratedPairStageAlgebra k n
-      letI : Algebra k (PairStage (B := IteratedPairStage k n)) :=
+      let : Algebra k (PairStage (B := IteratedPairStage k n)) :=
         pairStageAlgebra
       let f : IteratedPairStage k n →ₐ[k] IteratedPairStage k (n + 1) :=
         stageAlgHom k n

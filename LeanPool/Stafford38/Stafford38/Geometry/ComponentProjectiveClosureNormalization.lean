@@ -140,12 +140,12 @@ theorem retained_eval₂_eq_zero_of_commonScale
         (∀ a, (q a : ComponentFractionField P) =
           scale * componentProjectivePoint P a) →
         MvPolynomial.eval₂ (retainedComponentCoefficientMap P i W) q H = 0 := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
-  letI : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
-  letI : SMul (CoordinateZeroLocalRing W.coefficientField) (ComponentFractionField P) := Algebra.toSMul
-  letI : SMul W.coefficientField (ComponentFractionField P) := Algebra.toSMul
-  letI : IsScalarTower W.coefficientField
+  let : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
+  let : SMul (CoordinateZeroLocalRing W.coefficientField) (ComponentFractionField P) := Algebra.toSMul
+  let : SMul W.coefficientField (ComponentFractionField P) := Algebra.toSMul
+  let : IsScalarTower W.coefficientField
       (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.coefficientTower
   intro H d hhomogeneous hH q scale hq
@@ -225,11 +225,11 @@ theorem retainedCompleted_eval₂_eq_zero_of_commonScale
           scale * componentProjectivePoint P a) →
         MvPolynomial.eval₂ (retainedCompletedCoefficientMap P i W)
           (fun a ↦ retainedToCompletedPowerSeries W (q a)) H = 0 := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
   intro H d hhomogeneous hH q scale hq
@@ -286,11 +286,11 @@ theorem retainedLaurent_eval₂_eq_zero_of_commonScale
           (fun a ↦ algebraMap (PowerSeries (ResidueField V))
             (LaurentSeries (ResidueField V))
               (retainedToCompletedPowerSeries W (q a))) H = 0 := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
   intro H d hhomogeneous hH q scale hq

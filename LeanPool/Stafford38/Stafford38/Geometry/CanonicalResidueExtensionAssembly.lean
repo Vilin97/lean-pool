@@ -175,7 +175,7 @@ theorem false_of_canonical_completedProjectiveBoundaryChartOver
             (canonicalRightIdeal (presentedCoordinate k n) d N)),
         MvPolynomial.eval₂ (groundLaurentMap (k := k) (K := K)) q
           (fibreLift P) = 0) : False := by
-  letI : CharZero K :=
+  let : CharZero K :=
     charZero_of_injective_algebraMap (algebraMap k K).injective
   obtain ⟨y, xi, hgeneric, hresidue⟩ :=
     exists_conormalAxis_of_completedProjectiveBoundaryChartOver
@@ -245,8 +245,8 @@ theorem algebraicallyClosedCanonicalSupportVanishing_of_residueExtension_rankSpl
       obtain ⟨K, fieldK, algebraK, y, xi, hgeneric, hresidue⟩ :=
         hproduction k (n + 1) N d (Nat.zero_lt_succ n)
           hN hd hdisjoint hnonempty
-      letI : Field K := fieldK
-      letI : Algebra k K := algebraK
+      let : Field K := fieldK
+      let : Algebra k K := algebraK
       obtain ⟨P, hP, hvanishes⟩ :=
         hcontrol k K (n + 1) N d hN hd
       exact false_of_ground_fibreOnly_symbol_one_on_residue_and_vanishing

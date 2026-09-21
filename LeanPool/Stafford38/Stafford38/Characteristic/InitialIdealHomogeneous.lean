@@ -67,7 +67,7 @@ private theorem decompose_mul_mem_orderSymbolRelation
     DirectSum.decompose (orderDecomposition (n := n) k) (a * x) N ∈
       orderSymbolRelation k I N := by
   classical
-  letI : ∀ (M : ℕ) (Q : OrderHomogeneous (n := n) k M),
+  let : ∀ (M : ℕ) (Q : OrderHomogeneous (n := n) k M),
       Decidable (Q ≠ 0) :=
     fun _ Q => Classical.propDecidable (Q ≠ 0)
   have hxsum :

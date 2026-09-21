@@ -161,7 +161,7 @@ theorem exists_filtrationAdaptedBasis
   have hspanTop : Submodule.span K data.carrier = ⊤ := data.span_start.trans hzero
   let raw : Module.Basis data.carrier K V :=
     Module.Basis.mk data.independent (by simpa using hspanTop.ge)
-  letI : Fintype data.carrier := FiniteDimensional.fintypeBasisIndex raw
+  let : Fintype data.carrier := FiniteDimensional.fintypeBasisIndex raw
   have hcard : Fintype.card data.carrier = n + 1 := by
     rw [← hdim, ← Module.finrank_eq_card_basis raw]
   let rank : data.carrier ≃ Fin (n + 1) :=
@@ -172,7 +172,7 @@ theorem exists_filtrationAdaptedBasis
     intro i j hij
     apply rank.injective
     exact congrArg (fun z => (ofLex z).2) hij
-  letI : LinearOrder data.carrier := LinearOrder.lift' key hkey
+  let : LinearOrder data.carrier := LinearOrder.lift' key hkey
   let sorted : Fin (n + 1) ≃o data.carrier :=
     Fintype.orderIsoFinOfCardEq data.carrier hcard
   let b : Module.Basis (Fin (n + 1)) K V := raw.reindex sorted.toEquiv.symm

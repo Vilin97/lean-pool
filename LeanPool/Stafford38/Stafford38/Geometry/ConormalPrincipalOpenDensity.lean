@@ -43,7 +43,7 @@ theorem mem_of_vanishes_on_principal_open
       change MvPolynomial.eval y f * MvPolynomial.eval y p = 0
       rw [hp y hy hfy]
       simp
-  letI : I.IsPrime := hI
+  let : I.IsPrime := hI
   have hfpI : f * p ∈ I := by
     rw [MvPolynomial.IsPrime.vanishingIdeal_zeroLocus I] at hfp
     exact hfp

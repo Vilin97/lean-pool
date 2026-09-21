@@ -49,19 +49,19 @@ theorem formallySmooth_fieldExtension_of_charZero
   let K := IntermediateField.adjoin F (Set.range x)
   let P := MvPolynomial ι F
   let L := FractionRing P
-  haveI : Algebra.FormallySmooth F P := inferInstance
-  haveI : Algebra.FormallySmooth P L :=
+  have : Algebra.FormallySmooth F P := inferInstance
+  have : Algebra.FormallySmooth P L :=
     Algebra.FormallySmooth.of_isLocalization (nonZeroDivisors P)
-  haveI : Algebra.FormallySmooth F L :=
+  have : Algebra.FormallySmooth F L :=
     Algebra.FormallySmooth.comp F P L
-  haveI : Algebra.FormallySmooth F K :=
+  have : Algebra.FormallySmooth F K :=
     Algebra.FormallySmooth.of_equiv hx.1.aevalEquivField
-  haveI : Algebra.IsAlgebraic K E := hx.isAlgebraic_field
-  haveI : CharZero K :=
+  have : Algebra.IsAlgebraic K E := hx.isAlgebraic_field
+  have : CharZero K :=
     charZero_of_injective_algebraMap (algebraMap F K).injective
-  haveI : PerfectField K := PerfectField.ofCharZero
-  haveI : Algebra.IsSeparable K E := inferInstance
-  haveI : Algebra.FormallyEtale K E :=
+  have : PerfectField K := PerfectField.ofCharZero
+  have : Algebra.IsSeparable K E := inferInstance
+  have : Algebra.FormallyEtale K E :=
     Algebra.FormallyEtale.of_isSeparable K E
   exact Algebra.FormallySmooth.comp F K E
 
@@ -85,7 +85,7 @@ field. -/
 theorem exists_residue_algHom_section :
     ∃ s : κ →ₐ[F] R,
       (Ideal.Quotient.mkₐ F 𝔪).comp s = AlgHom.id F κ := by
-  letI : Algebra.FormallySmooth F κ :=
+  let : Algebra.FormallySmooth F κ :=
     formallySmooth_fieldExtension_of_charZero F κ
   exact Algebra.FormallySmooth.exists_lift 𝔪
     (maximalIdeal_isNilpotent (R := R)) (AlgHom.id F κ)

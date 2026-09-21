@@ -94,10 +94,10 @@ theorem hasVisibleDivisorFrame_of_compatible_normalized_column
       q (Fin.succ ⟨0, hm⟩) = q 0 * W.place.parameter →
       HasCompatibleVisibleFrame P hm W q →
       HasVisibleDivisorFrame P hm := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
   dsimp only
   intro q scale hq0 hq hratio hframe
   obtain ⟨D, hQ₀, hQ₁, hQ⟩ := hframe
@@ -125,10 +125,10 @@ theorem exists_normalized_column_with_exact_frame_obligation
         (HasCompatibleVisibleFrame P hm W q → HasVisibleDivisorFrame P hm) := by
   obtain ⟨W, chart, q, scale, hscale, hchart, hq0, hq, hratio⟩ :=
     exists_normalizedProjectivePoint_relativeRetainedBoundaryPlace P ⟨0, hm⟩ hi
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
   refine ⟨W, chart, q, scale, hscale, hchart, hq0, hq, hratio, ?_⟩
   exact hasVisibleDivisorFrame_of_compatible_normalized_column P hm W q scale
     hq0 hq hratio
@@ -162,10 +162,10 @@ theorem exists_axisAvoiding_normalized_column_with_exact_frame_obligation
         (HasCompatibleVisibleFrame P hm W q → HasVisibleDivisorFrame P hm) := by
   obtain ⟨W, chart, q, scale, hscale, hchart, hq0, hq, hratio⟩ :=
     exists_normalizedProjectivePoint_relativeRetainedBoundaryPlace P ⟨0, hm⟩ hi
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
   have hq0nonunit : ¬ IsUnit (q 0) :=
     normalizedComponentProjectivePoint_zero_nonunit
       I ⟨0, hm⟩ hdisjoint P hBP W q scale hq

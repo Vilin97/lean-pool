@@ -59,8 +59,8 @@ theorem residue_comp_finiteSeparableSection
     (hnil : IsNilpotent (RingHom.ker residue.toRingHom)) :
     residue.comp (finiteSeparableSection E K R hsep residue hsurj hnil) =
       AlgHom.id E K := by
-  letI : Algebra.IsSeparable E K := hsep
-  letI : Algebra.FormallyEtale E K :=
+  let : Algebra.IsSeparable E K := hsep
+  let : Algebra.FormallyEtale E K :=
     Algebra.FormallyEtale.of_isSeparable E K
   exact Algebra.FormallySmooth.comp_liftOfSurjective
     (AlgHom.id E K) residue hsurj hnil
@@ -75,8 +75,8 @@ theorem finiteSeparableSection_unique
     (lift : K →ₐ[E] R)
     (hlift : residue.comp lift = AlgHom.id E K) :
     lift = finiteSeparableSection E K R hsep residue hsurj hnil := by
-  letI : Algebra.IsSeparable E K := hsep
-  letI : Algebra.FormallyEtale E K :=
+  let : Algebra.IsSeparable E K := hsep
+  let : Algebra.FormallyEtale E K :=
     Algebra.FormallyEtale.of_isSeparable E K
   apply Algebra.FormallyUnramified.lift_unique' residue hnil
   rw [hlift, residue_comp_finiteSeparableSection]

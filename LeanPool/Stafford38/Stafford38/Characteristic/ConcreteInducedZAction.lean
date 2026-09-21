@@ -331,7 +331,7 @@ theorem localizedDoubledPowerModuleSpecialization_action
           (localizedTwoBlockAction D S q hpow a w) =
         localizedTwoBlockSpecialization D S q a •
           localizedDoubledPowerModuleSpecialization D S q hpow w := by
-  letI : Module (A₀ ⧸ localizedDoubledPower S q)
+  let : Module (A₀ ⧸ localizedDoubledPower S q)
       (LocalizedModule S G) :=
     localizedDoubledPowerQuotientModule S q hpow
   induction a using Quotient.inductionOn' with
@@ -452,15 +452,15 @@ theorem exists_localizedFirstOrderSourceActionMatrix
                   (localizedDoubledPowerModuleSpecialization D S q hpow)
                   (localizedDoubledPowerModuleSpecialization_surjective
                     D S q hpow) b) i) := by
-  letI : Module (A₀ ⧸ localizedDoubledPower S q)
+  let : Module (A₀ ⧸ localizedDoubledPower S q)
       (LocalizedModule S G) :=
     localizedDoubledPowerQuotientModule S q hpow
-  letI : Module K (LocalizedModule S G) :=
+  let : Module K (LocalizedModule S G) :=
     Module.compHom _ (algebraMap K (A₀ ⧸ localizedDoubledPower S q))
-  letI : IsScalarTower K (A₀ ⧸ localizedDoubledPower S q)
+  let : IsScalarTower K (A₀ ⧸ localizedDoubledPower S q)
       (LocalizedModule S G) :=
     IsScalarTower.of_algebraMap_smul fun _ _ ↦ rfl
-  letI : Module (C₂ q) Wₗ := localizedTwoBlockModule D S q hpow
+  let : Module (C₂ q) Wₗ := localizedTwoBlockModule D S q hpow
   intro r b
   have haction : ∀ (z : C₂ q) (w : Wₗ),
       localizedDoubledPowerModuleSpecialization D S q hpow (z • w) =
@@ -599,13 +599,13 @@ theorem exists_concreteLocalizedGammaTheta
         LocalizedFirstOrderSourceActionEquation D S q hpow P b y Theta := by
   dsimp only
   let P := concreteLeftPrincipalParameterReduction k I S q
-  letI : Module (A₀ ⧸ localizedDoubledPower S q)
+  let : Module (A₀ ⧸ localizedDoubledPower S q)
       (LocalizedModule S (OrderAssociatedGradedModule k I)) :=
     localizedDoubledPowerQuotientModule S q hpow
-  letI : Module K
+  let : Module K
       (LocalizedModule S (OrderAssociatedGradedModule k I)) :=
     Module.compHom _ (algebraMap K (A₀ ⧸ localizedDoubledPower S q))
-  letI : IsScalarTower K (A₀ ⧸ localizedDoubledPower S q)
+  let : IsScalarTower K (A₀ ⧸ localizedDoubledPower S q)
       (LocalizedModule S (OrderAssociatedGradedModule k I)) :=
     IsScalarTower.of_algebraMap_smul fun _ _ ↦ rfl
   intro r b

@@ -48,11 +48,11 @@ theorem divisorialVisibleFrameExistence : DivisorialVisibleFrameExistence.{u} :=
     stage4_of_verified stage5_of_verified
   obtain ⟨j, s, A, hs, hjs, hnormA, hyA, hAft, hAic, hAfr, haint, hinvA⟩ :=
     S2.stage2 y i hgen hx
-  letI : Algebra.FiniteType k A := hAft
-  letI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing k A
-  letI : IsFractionRing A K := hAfr
-  letI : IsIntegrallyClosedIn A K := hAic
-  letI : IsIntegrallyClosed A :=
+  let : Algebra.FiniteType k A := hAft
+  let : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing k A
+  let : IsFractionRing A K := hAfr
+  let : IsIntegrallyClosedIn A K := hAic
+  let : IsIntegrallyClosed A :=
     (isIntegrallyClosed_iff_isIntegrallyClosedIn K).mpr hAic
   let xA : A := ⟨y i, hyA⟩
   have hy0 : y i ≠ 0 := by
@@ -74,16 +74,16 @@ theorem divisorialVisibleFrameExistence : DivisorialVisibleFrameExistence.{u} :=
     exact z.property
   obtain ⟨p, hp, hpheight, hxp, hplace⟩ :=
     stage3_exists_height_one_prime_valuation A xA hxA0 hxAu
-  letI : p.IsPrime := hp
+  let : p.IsPrime := hp
   let V : ValuationSubring K := placeValuationSubring A p hplace
-  letI : IsLocalization.AtPrime (placeSubalgebra A p) p := by
+  let : IsLocalization.AtPrime (placeSubalgebra A p) p := by
     unfold placeSubalgebra
     infer_instance
   have hVdvr : IsDiscreteValuationRing V.toSubring := by
     change IsDiscreteValuationRing (placeSubalgebra A p).toSubring
     exact isDiscreteValuationRing_of_isLocalization_atPrime p hpheight
       (placeSubalgebra A p)
-  letI : IsLocalRing V.toSubring := hVdvr.toIsLocalRing
+  let : IsLocalRing V.toSubring := hVdvr.toIsLocalRing
   have hAV : ∀ a : A, (a : K) ∈ V.toSubring :=
     fun a => ofField_mem_algebraMap_v A p hplace a
   have hpV : ∀ a : A, (⟨a, hAV a⟩ : V.toSubring) ∈
@@ -99,7 +99,7 @@ theorem divisorialVisibleFrameExistence : DivisorialVisibleFrameExistence.{u} :=
     apply (hpV xA).2
     exact hxp
   obtain ⟨E, hEV, hEfin⟩ := S2.stage5 A p V hAV hpV hsurj
-  letI : Algebra E V.toSubring := (coeffHom E V hEV).toAlgebra
+  let : Algebra E V.toSubring := (coeffHom E V hEV).toAlgebra
   have htrans : Transcendental E (y i) :=
     stage6_transcendental_of_mem_maximalIdeal E V hEV (y i) hy0 hxV hxm
   have hk : ∀ c : k, algebraMap k K c ∈ (placeSubalgebra A p).toSubring :=
@@ -112,7 +112,7 @@ theorem divisorialVisibleFrameExistence : DivisorialVisibleFrameExistence.{u} :=
       exact hAV (algebraMap k A c)
   let cod : Algebra k V.toSubring :=
     ((algebraMap k K).codRestrict _ hk).toAlgebra
-  letI : Algebra k V.toSubring := cod
+  let : Algebra k V.toSubring := cod
   have hkaehlerCod : Module.Finite V.toSubring
       (Ω[V.toSubring⁄k]) := by
     exact stage7_kaehler_finite_ofField A p hk
@@ -122,8 +122,8 @@ theorem divisorialVisibleFrameExistence : DivisorialVisibleFrameExistence.{u} :=
     intro c
     apply Subtype.ext
     rfl
-  letI : Algebra k V.toSubring := ground
-  letI : IsScalarTower k V.toSubring K :=
+  let : Algebra k V.toSubring := ground
+  let : IsScalarTower k V.toSubring K :=
     IsScalarTower.of_algebraMap_eq fun c => by
       change algebraMap k K c = algebraMap k K c
       rfl

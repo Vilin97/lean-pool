@@ -100,7 +100,7 @@ def presentedAssociatedGradedOf {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ)
     presentedAssociatedGradedAlgEquiv k w
         (presentedAssociatedGradedOf k w N z) =
       (presentedAssociatedGradedPieceEquiv k w N z : SymbolRing k n) := by
-  letI := MvPolynomial.weightedDecomposition k w
+  let := MvPolynomial.weightedDecomposition k w
   change presentedAssociatedGradedRawLinearEquiv k w
       (DirectSum.of (fun N => presentedAssociatedGradedPiece k w N) N z) = _
   rw [presentedAssociatedGradedRawLinearEquiv, LinearEquiv.trans_apply]

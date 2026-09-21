@@ -30,7 +30,7 @@ private lemma chart_of_valuation
   classical
   let S : Set (Fin (r + 1)) := {a | Y a ≠ 0}
   have hS : S.Nonempty := ⟨0, by simp [S, hY]⟩
-  letI : LE (Fin (r + 1)) :=
+  let : LE (Fin (r + 1)) :=
     ⟨fun a b => Y b ≠ 0 ∧ Y a / Y b ∈ W.toSubring⟩
   have htrans : IsTrans (Fin (r + 1)) LE.le := by
     constructor
@@ -41,7 +41,7 @@ private lemma chart_of_valuation
     have := W.toSubring.mul_mem hab hbc
     rw [div_eq_mul_inv] at hab hbc ⊢
     simpa [div_eq_mul_inv, mul_assoc, hb] using this
-  letI : IsTrans (Fin (r + 1)) LE.le := htrans
+  let : IsTrans (Fin (r + 1)) LE.le := htrans
   obtain ⟨j, hjS, hjmax⟩ := S.toFinite.exists_maximalFor id S hS
   have hj0 : Y j ≠ 0 := hjS
   let s := (Y j)⁻¹
@@ -167,7 +167,7 @@ theorem stage2_exists_chart_normalization
   have htop : IntermediateField.adjoin k
       (Set.range (fun a : Fin (r + 1) => Y a * s) ∪ {y i}) = ⊤ :=
     normalized_generates_top y i s hs hgen
-  letI hC₀fr : IsFractionRing C₀ K := IsFractionRing.of_field C₀ K fun z => by
+  let hC₀fr : IsFractionRing C₀ K := IsFractionRing.of_field C₀ K fun z => by
     have hz : z ∈ IntermediateField.adjoin k
         (Set.range (fun a : Fin (r + 1) => Y a * s) ∪ {y i}) := by
       rw [htop]
@@ -178,7 +178,7 @@ theorem stage2_exists_chart_normalization
   let A₀ : Subalgebra C₀ K := integralClosure C₀ K
   let A : Subalgebra k K := A₀.restrictScalars k
   have hC₀A : C₀ ≤ A := fun z hz => A₀.algebraMap_mem ⟨z, hz⟩
-  letI : IsIntegrallyClosedIn W.toSubring K :=
+  let : IsIntegrallyClosedIn W.toSubring K :=
     inferInstanceAs (IsIntegrallyClosedIn W K)
   have hA₀W : A₀.toSubring ≤ W.toSubring := by
     change (integralClosure C₀ K).toSubring ≤ W.toSubring
@@ -191,25 +191,25 @@ theorem stage2_exists_chart_normalization
     exact A₀.algebraMap_mem
       ⟨Y a * s, Algebra.subset_adjoin (Set.mem_union_left _ (Set.mem_range_self a))⟩
   have hinvA : (y i)⁻¹ ∉ A := fun h => hxiInvW (hA₀W h)
-  haveI hC₀ft : Algebra.FiniteType k C₀ := Algebra.FiniteType.adjoin_of_finite
+  have hC₀ft : Algebra.FiniteType k C₀ := Algebra.FiniteType.adjoin_of_finite
     (Set.Finite.union (Set.finite_range _) (Set.finite_singleton _))
   let D : Subalgebra C₀ (FractionRing C₀) := integralClosure C₀ (FractionRing C₀)
-  haveI hDfin : Module.Finite C₀ D :=
+  have hDfin : Module.Finite C₀ D :=
     finite_integralClosure_fractionRing k C₀
   let e : FractionRing C₀ ≃ₐ[C₀] K :=
     IsLocalization.algEquiv C₀⁰ (FractionRing C₀) K
-  haveI hA₀fin : Module.Finite C₀ A₀ :=
+  have hA₀fin : Module.Finite C₀ A₀ :=
     Module.Finite.equiv e.mapIntegralClosure.toLinearEquiv
   have hsub : A.toSubring = A₀.toSubring := rfl
   let er : A ≃+* A₀ := RingEquiv.subringCongr hsub
-  letI : Algebra C₀ A :=
+  let : Algebra C₀ A :=
     (er.symm.toRingHom.comp (algebraMap C₀ A₀)).toAlgebra
   let ea : A₀ ≃ₐ[C₀] A := AlgEquiv.ofRingEquiv (f := er.symm) (fun _ => rfl)
-  letI : IsScalarTower k C₀ A := IsScalarTower.of_algebraMap_eq fun _ => by
+  let : IsScalarTower k C₀ A := IsScalarTower.of_algebraMap_eq fun _ => by
     apply Subtype.ext
     rfl
-  letI : IsScalarTower C₀ A K := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI hAfin : Module.Finite C₀ A := Module.Finite.equiv ea.toLinearEquiv
+  let : IsScalarTower C₀ A K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have hAfin : Module.Finite C₀ A := Module.Finite.equiv ea.toLinearEquiv
   have hAft : Algebra.FiniteType k A :=
     Algebra.FiniteType.trans hC₀ft (inferInstance : Algebra.FiniteType C₀ A)
   have hAic : IsIntegrallyClosedIn A K := by

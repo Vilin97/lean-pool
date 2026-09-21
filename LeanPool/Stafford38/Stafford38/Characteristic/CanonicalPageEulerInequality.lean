@@ -44,7 +44,7 @@ private theorem localized_boundary_subsingleton
     (hC0 : IsFiniteLength (Localization S)
       (LocalizedModule S ((complex k n N d hd).TargetTotal 1))) :
     ∃ r, Subsingleton (LocalizedModule S ((complex k n N d hd).TargetTotal (r + 1))) := by
-  letI : IsNoetherian (Localization S)
+  let : IsNoetherian (Localization S)
       (LocalizedModule S ((complex k n N d hd).TargetTotal 1)) :=
     (isFiniteLength_iff_isNoetherian_isArtinian.mp hC0).1
   exact exists_uniform_subsingleton_localized S

@@ -656,8 +656,8 @@ theorem retainedCompletedDVRPowerSeriesMap_injective
     letI : Algebra E D.valuation.toSubring :=
       (relativeCoefficientMap E D).toAlgebra
     Function.Injective (retainedCompletedDVRPowerSeriesMap E D) := by
-  letI : IsDiscreteValuationRing D.valuation.toSubring := D.isDiscrete
-  letI : Algebra E D.valuation.toSubring :=
+  let : IsDiscreteValuationRing D.valuation.toSubring := D.isDiscrete
+  let : Algebra E D.valuation.toSubring :=
     (relativeCoefficientMap E D).toAlgebra
   exact completedDVRPowerSeriesMap_injective E D.valuation.toSubring
     (relativeResidue_isSeparable E D)

@@ -78,7 +78,7 @@ theorem coordinateResidueEquiv_algebraMap
     (E : Type u) [Field E] (e : E) :
     coordinateResidueEquiv E
         (algebraMap E (ResidueField (SourceDVR E)) e) = e := by
-  letI : IsLocalHom (coordinateConstantTerm E) :=
+  let : IsLocalHom (coordinateConstantTerm E) :=
     (coordinateConstantTerm_surjective E).isLocalHom
   change ResidueField.lift (coordinateConstantTerm E)
       (residue (SourceDVR E)
@@ -133,11 +133,11 @@ theorem relativeResidue_finite
     Module.Finite E (ResidueField D.valuation.toSubring) := by
   let A := SourceDVR E
   let V := D.valuation.toSubring
-  letI : IsDiscreteValuationRing V := D.isDiscrete
-  letI : Algebra A V := D.factor.toAlgebra
-  letI : IsLocalHom (algebraMap A V) := D.factor_isLocal
-  letI : Algebra E V := (relativeCoefficientMap E D).toAlgebra
-  letI : IsScalarTower E A V :=
+  let : IsDiscreteValuationRing V := D.isDiscrete
+  let : Algebra A V := D.factor.toAlgebra
+  let : IsLocalHom (algebraMap A V) := D.factor_isLocal
+  let : Algebra E V := (relativeCoefficientMap E D).toAlgebra
+  let : IsScalarTower E A V :=
     IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   have hsourceSurjective :
       Function.Surjective (algebraMap E (ResidueField A)) := by
@@ -149,12 +149,12 @@ theorem relativeResidue_finite
   have hsourceFinite : Module.Finite E (ResidueField A) :=
     Module.Finite.of_surjective
       (Algebra.linearMap E (ResidueField A)) hsourceSurjective
-  letI : Module.Finite E (ResidueField A) := hsourceFinite
+  let : Module.Finite E (ResidueField A) := hsourceFinite
   have htargetFinite :
       Module.Finite (ResidueField A) (ResidueField V) := by
     exact D.residue_finite
-  letI : Module.Finite (ResidueField A) (ResidueField V) := htargetFinite
-  letI : IsScalarTower E (ResidueField A) (ResidueField V) :=
+  let : Module.Finite (ResidueField A) (ResidueField V) := htargetFinite
+  let : IsScalarTower E (ResidueField A) (ResidueField V) :=
     IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   exact Module.Finite.trans (ResidueField A) (ResidueField V)
 
@@ -169,12 +169,12 @@ theorem relativeResidue_isSeparable
     letI : Algebra E D.valuation.toSubring :=
       (relativeCoefficientMap E D).toAlgebra
     Algebra.IsSeparable E (ResidueField D.valuation.toSubring) := by
-  letI : IsDiscreteValuationRing D.valuation.toSubring := D.isDiscrete
-  letI : Algebra E D.valuation.toSubring :=
+  let : IsDiscreteValuationRing D.valuation.toSubring := D.isDiscrete
+  let : Algebra E D.valuation.toSubring :=
     (relativeCoefficientMap E D).toAlgebra
-  letI : Module.Finite E (ResidueField D.valuation.toSubring) :=
+  let : Module.Finite E (ResidueField D.valuation.toSubring) :=
     relativeResidue_finite E D
-  letI : Algebra.IsIntegral E (ResidueField D.valuation.toSubring) :=
+  let : Algebra.IsIntegral E (ResidueField D.valuation.toSubring) :=
     ⟨fun y ↦ (IsAlgebraic.of_finite E y).isIntegral⟩
   exact Algebra.IsSeparable.of_integral E
     (ResidueField D.valuation.toSubring)

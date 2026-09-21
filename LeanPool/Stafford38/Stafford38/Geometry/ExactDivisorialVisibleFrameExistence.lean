@@ -198,11 +198,11 @@ theorem coordinateZeroLocalFactor_residue_finite
   let f := coordinateZeroLocalFactor E V hEV x hxV hxm
   let hf : IsLocalHom f :=
     coordinateZeroLocalFactor_isLocal E V hEV x hxV hxm
-  letI : Algebra E V.toSubring :=
+  let : Algebra E V.toSubring :=
     (Stafford38.Geometry.LaneC.coeffHom E V hEV).toAlgebra
-  letI : Module.Finite E (ResidueField V.toSubring) := hfinite
-  letI : Algebra (CoordinateZeroLocalRing E) V.toSubring := f.toAlgebra
-  letI : IsLocalHom (algebraMap (CoordinateZeroLocalRing E) V.toSubring) := hf
+  let : Module.Finite E (ResidueField V.toSubring) := hfinite
+  let : Algebra (CoordinateZeroLocalRing E) V.toSubring := f.toAlgebra
+  let : IsLocalHom (algebraMap (CoordinateZeroLocalRing E) V.toSubring) := hf
   let e₁ : E ≃+* ResidueField (CoordinateZeroLocalRing E) :=
     (coordinateResidueEquiv E).symm
   let e₂ : ResidueField V.toSubring ≃+* ResidueField V.toSubring :=
@@ -319,25 +319,25 @@ theorem exactDivisorialVisibleFrameExistence :
     Stafford38.Geometry.LaneC.divisorialVisibleFrameExistence
       k K (n + 1) (componentCoordinate P) i
         (componentCoordinate_adjoin_eq_top P) htrans
-  letI : IsLocalRing V.toSubring := hVdvr.toIsLocalRing
-  letI : Algebra E V.toSubring :=
+  let : IsLocalRing V.toSubring := hVdvr.toIsLocalRing
+  let : Algebra E V.toSubring :=
     (Stafford38.Geometry.LaneC.coeffHom E V hEV).toAlgebra
-  letI : Algebra k V.toSubring :=
+  let : Algebra k V.toSubring :=
     (Stafford38.Geometry.LaneC.groundHom E V hEV).toAlgebra
-  letI : Algebra V.toSubring K := V.toSubring.subtype.toAlgebra
+  let : Algebra V.toSubring K := V.toSubring.subtype.toAlgebra
   let : SMul V.toSubring K := V.toSubring.subtype.toAlgebra.toSMul
   let : SMul k V.toSubring :=
     (Stafford38.Geometry.LaneC.groundHom E V hEV).toAlgebra.toSMul
   let : SMul k K := (inferInstance : Algebra k K).toSMul
-  letI : IsScalarTower k V.toSubring K :=
+  let : IsScalarTower k V.toSubring K :=
     IsScalarTower.of_algebraMap_eq fun c => by
       change algebraMap k K c = (algebraMap k E c : K)
       exact IsScalarTower.algebraMap_apply k E K c
-  letI : Module.Finite V.toSubring (Ω[V.toSubring⁄k]) := hkaehler
+  let : Module.Finite V.toSubring (Ω[V.toSubring⁄k]) := hkaehler
   let W : Data k K (componentCoordinate P i) :=
     retainedDataOfValuation E V hEV hVdvr (componentCoordinate P i) hxV
       htransE hxm hEfin
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
     W.ambientAlgebra
   obtain ⟨chart, qraw, scale, hscale, hchartRaw, hqraw⟩ :=
     exists_normalized_projective_lift V (componentProjectivePoint P)

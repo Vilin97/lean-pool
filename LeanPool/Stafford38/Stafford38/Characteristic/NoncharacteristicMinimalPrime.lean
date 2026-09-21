@@ -121,7 +121,7 @@ theorem canonical_minimalPrime_mem_of_normalCoordinate_false
   have hPorder : P ∈ (orderInitialIdeal k
       (canonicalRightIdeal (presentedCoordinate k n) d N)).minimalPrimes := by
     simpa [annihilator_orderAssociatedGradedModule] using hP
-  letI : P.IsPrime := hP.1.1
+  let : P.IsPrime := hP.1.1
   have hInv : IsInvolutive P := minimalPrime_isInvolutive k
     (canonicalRightIdeal (presentedCoordinate k n) d N) P hP
   intro hx

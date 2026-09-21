@@ -109,7 +109,7 @@ private noncomputable def nonpositiveDirectSumLinearEquiv
             congr 1
             exact (e 0).symm_apply_apply (show A (negIndex 0) from x)
         | succ n =>
-            haveI := hpos (Int.ofNat (n + 1)) (by simp)
+            have := hpos (Int.ofNat (n + 1)) (by simp)
             simp [nonpositiveDirectSumToNat, Subsingleton.elim x 0]
     | negSucc n =>
         rw [nonpositiveDirectSumToNat, DirectSum.toModule_lof]

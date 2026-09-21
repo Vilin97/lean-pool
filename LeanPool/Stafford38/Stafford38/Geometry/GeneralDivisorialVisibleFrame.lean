@@ -58,25 +58,25 @@ theorem generalDivisorialVisibleFrameExistence
     Stafford38.Geometry.LaneC.divisorialVisibleFrameExistence
       k K m (componentCoordinate P) i
         (componentCoordinate_adjoin_eq_top P) htrans
-  letI : IsLocalRing V.toSubring := hVdvr.toIsLocalRing
-  letI : Algebra E V.toSubring :=
+  let : IsLocalRing V.toSubring := hVdvr.toIsLocalRing
+  let : Algebra E V.toSubring :=
     (Stafford38.Geometry.LaneC.coeffHom E V hEV).toAlgebra
-  letI : Algebra k V.toSubring :=
+  let : Algebra k V.toSubring :=
     (Stafford38.Geometry.LaneC.groundHom E V hEV).toAlgebra
-  letI : Algebra V.toSubring K := V.toSubring.subtype.toAlgebra
+  let : Algebra V.toSubring K := V.toSubring.subtype.toAlgebra
   let : SMul V.toSubring K := V.toSubring.subtype.toAlgebra.toSMul
   let : SMul k V.toSubring :=
     (Stafford38.Geometry.LaneC.groundHom E V hEV).toAlgebra.toSMul
   let : SMul k K := (inferInstance : Algebra k K).toSMul
-  letI : IsScalarTower k V.toSubring K :=
+  let : IsScalarTower k V.toSubring K :=
     IsScalarTower.of_algebraMap_eq fun c => by
       change algebraMap k K c = (algebraMap k E c : K)
       exact IsScalarTower.algebraMap_apply k E K c
-  letI : Module.Finite V.toSubring (Ω[V.toSubring⁄k]) := hkaehler
+  let : Module.Finite V.toSubring (Ω[V.toSubring⁄k]) := hkaehler
   let W : Data k K (componentCoordinate P i) :=
     retainedDataOfValuation E V hEV hVdvr (componentCoordinate P i) hxV
       htransE hxm hEfin
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField) K :=
     W.ambientAlgebra
   obtain ⟨chart, qraw, scale, hscale, hchartRaw, hqraw⟩ :=
     exists_normalized_projective_lift V (componentProjectivePoint P)
@@ -104,7 +104,7 @@ theorem generalDivisorialVisibleFrameExistence
   have hq0nonunit : ¬ IsUnit (q 0) := by
     obtain ⟨g, hg⟩ := hunit
     let F := K
-    letI : Algebra (CoordinateZeroLocalRing W.coefficientField) F :=
+    let : Algebra (CoordinateZeroLocalRing W.coefficientField) F :=
       W.ambientAlgebra
     let : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) :=
       (inferInstance : Algebra W.coefficientField
@@ -112,7 +112,7 @@ theorem generalDivisorialVisibleFrameExistence
     let : SMul (CoordinateZeroLocalRing W.coefficientField) F := W.ambientAlgebra.toSMul
     let : SMul W.coefficientField F :=
       (inferInstance : Algebra W.coefficientField F).toSMul
-    letI : IsScalarTower W.coefficientField
+    let : IsScalarTower W.coefficientField
         (CoordinateZeroLocalRing W.coefficientField) F := W.coefficientTower
     let phi : MvPolynomial (Fin m) k →+* F :=
       (algebraMap (MvPolynomial (Fin m) k ⧸ P.asIdeal) F).comp

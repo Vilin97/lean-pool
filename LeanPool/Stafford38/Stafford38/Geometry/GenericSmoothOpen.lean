@@ -28,9 +28,9 @@ variable {k A : Type*} {n : ℕ} [Field k] [PerfectField k] [CommRing A]
 
 theorem exists_nonzero_smooth_away
     : ∃ f : A, f ≠ 0 ∧ Algebra.Smooth k (Localization.Away f) := by
-  letI : Algebra.IsSmoothAt k (⊥ : Ideal A) := by
+  let : Algebra.IsSmoothAt k (⊥ : Ideal A) := by
     change Algebra.FormallySmooth k (Localization.AtPrime (⊥ : Ideal A))
-    letI : Field (Localization.AtPrime (⊥ : Ideal A)) :=
+    let : Field (Localization.AtPrime (⊥ : Ideal A)) :=
       IsField.toField (by
         rw [IsLocalRing.isField_iff_maximalIdeal_eq]
         rw [← Localization.AtPrime.map_eq_maximalIdeal]
@@ -46,8 +46,8 @@ theorem exists_nonzero_smooth_away_quotient
     ∃ f : (MvPolynomial (Fin n) k ⧸ P), f ≠ 0 ∧
       Algebra.Smooth k (Localization.Away f) := by
   let A := MvPolynomial (Fin n) k ⧸ P
-  letI : Algebra k A := Ideal.Quotient.algebra k
-  letI : Algebra.FinitePresentation k A := by
+  let : Algebra k A := Ideal.Quotient.algebra k
+  let : Algebra.FinitePresentation k A := by
     dsimp [A]
     exact Algebra.FinitePresentation.quotient P.fg_of_isNoetherianRing
   simpa [A] using (exists_nonzero_smooth_away (k := k) (A := A))

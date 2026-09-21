@@ -63,8 +63,8 @@ theorem no_minimal_coordinate_cokernel_support
   let fC : Module.End C E := LinearMap.lsmul C E x
   have hf : fC.restrictScalars R = oldCoordinateMap (k := k) n E := rfl
   have hfinite := canonical_finite_old_coordinate_kernel_cokernel hd
-  haveI : Module.Finite R (fC.restrictScalars R).ker := hfinite.1
-  haveI : Module.Finite R (E ⧸ (fC.restrictScalars R).range) := hfinite.2
+  have : Module.Finite R (fC.restrictScalars R).ker := hfinite.1
+  have : Module.Finite R (E ⧸ (fC.restrictScalars R).range) := hfinite.2
   have hlength := localized_kernel_and_cokernel_isFiniteLength fC q hqmem hqmin
   let S := q.asIdeal.primeCompl
   let ek := localizedEquiv S (firstSourceGradedKernelEquiv k n N d hd)
@@ -89,10 +89,10 @@ theorem coordinate_cokernel_subsingleton :
       (oldCoordinateMap (k := k) n (Graded k n N d)).range) := by
   let U := Graded k n N d ⧸
     (oldCoordinateMap (k := k) n (Graded k n N d)).range
-  haveI : Module.Finite (T k n) U :=
+  have : Module.Finite (T k n) U :=
     (canonical_finite_old_coordinate_kernel_cokernel hd).2
   by_contra h
-  haveI : Nontrivial U := not_subsingleton_iff_nontrivial.mp h
+  have : Nontrivial U := not_subsingleton_iff_nontrivial.mp h
   obtain ⟨q, hqmem, hqmin⟩ :=
     MinimalSupportExistence.exists_minimal_support_prime (R := T k n) (U := U)
   exact no_minimal_coordinate_cokernel_support k n N d hN hd q hqmem hqmin
@@ -109,7 +109,7 @@ theorem coordinate_quotSMulTop_subsingleton :
   have hf : oldCoordinateMap (k := k) n E = f.restrictScalars (T k n) := rfl
   have hz := coordinate_cokernel_subsingleton k n N d hN hd
   rw [hf, LinearMap.range_restrictScalars] at hz
-  haveI : Subsingleton (E ⧸ f.range) :=
+  have : Subsingleton (E ⧸ f.range) :=
     (Submodule.Quotient.restrictScalarsEquiv (T k n) f.range).toEquiv.subsingleton_congr.mp hz
   have hrange : f.range = x • (⊤ : Submodule C E) := by
     ext z

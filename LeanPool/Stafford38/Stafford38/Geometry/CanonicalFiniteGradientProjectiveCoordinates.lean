@@ -78,15 +78,15 @@ theorem exists_completed_normalized_projective_coordinates
          qhat (Fin.succ i) = qhat 0 * ratio) := by
   have hnormalized := exists_normalizedProjectivePoint_relativeRetainedBoundaryPlace P i hi
   obtain ⟨W, chart, q, scale, hscale, hchart, hzero, hq, hratio⟩ := hnormalized
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   have hzero_nonunit : ¬IsUnit (q 0) :=
     normalizedComponentProjectivePoint_zero_nonunit
       I i hdisjoint P hBP W q scale hq
   refine ⟨W, chart, q, scale, hscale, hchart, hzero, hq, hratio, ?_⟩
   let V := W.place.valuation.toSubring
-  letI : IsDiscreteValuationRing V := W.place.isDiscrete
-  letI : Algebra W.coefficientField V :=
+  let : IsDiscreteValuationRing V := W.place.isDiscrete
+  let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   have h := retainedCompleted_projective_order_properties W (ι := Fin (n + 1))
     (q := q) (chart := chart) (zero := 0) (axis := Fin.succ i)

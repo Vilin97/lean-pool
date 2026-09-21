@@ -45,7 +45,7 @@ theorem canonical_support_avoidance_of_coordinate_cokernel_subsingleton
   let x : R := MvPolynomial.X (.inl (0 : Fin (n + 1)))
   let τ : R →+* R := (symbolTranspositionEquiv k).toRingEquiv.toRingHom
   let qmod := QuotSMulTop x E
-  letI : Subsingleton qmod := hzero
+  let : Subsingleton qmod := hzero
   have hqempty : Module.support R qmod = ∅ := Module.support_eq_empty
   rw [transposedOrderAssociatedGradedSupport_eq_preimage]
   apply Set.disjoint_left.2

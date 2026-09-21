@@ -186,7 +186,7 @@ theorem scalarExtension_vanishing
     have heval := eval₂_finiteGradientSubstitution equations P z
     have hzero := hP (Sum.elim y ξ) ⟨hy, hξ⟩
     simpa [ρ, y, ξ, MvPolynomial.aeval_def] using heval.trans hzero
-  letI : Finite ι := Finite.of_fintype ι
+  let : Finite ι := Finite.of_fintype ι
   have hrad : ρ P ∈ J.radical := by
     rw [← MvPolynomial.vanishingIdeal_zeroLocus_eq_radical (K := k) J]
     exact hvan

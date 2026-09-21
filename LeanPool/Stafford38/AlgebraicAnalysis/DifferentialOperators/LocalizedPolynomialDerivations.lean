@@ -49,7 +49,7 @@ theorem extendDerivation_compAlgebraMap
     (S : Submonoid A) [IsLocalization S B]
     (D : Derivation k A B) :
     (extendDerivation k A B S D).compAlgebraMap A = D := by
-  letI : Algebra.FormallyEtale A B :=
+  let : Algebra.FormallyEtale A B :=
     Algebra.FormallyEtale.of_isLocalization (Rₘ := B) S
   apply Derivation.ext
   intro a
@@ -64,7 +64,7 @@ theorem derivation_ext_of_compAlgebraMap_eq
     {D₁ D₂ : Derivation k B B}
     (h : D₁.compAlgebraMap A = D₂.compAlgebraMap A) :
     D₁ = D₂ := by
-  letI : Algebra.FormallyEtale A B :=
+  let : Algebra.FormallyEtale A B :=
     Algebra.FormallyEtale.of_isLocalization (Rₘ := B) S
   let e := KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale k A B
   have hbase :

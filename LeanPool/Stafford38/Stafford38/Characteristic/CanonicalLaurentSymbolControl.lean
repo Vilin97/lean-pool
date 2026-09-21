@@ -182,7 +182,7 @@ theorem canonicalLaurentSymbolControl_of_geometric_inputs
     (hgabber : CanonicalGeometricBaseRelativePoisson.{u}) :
     CanonicalLaurentSymbolControl.{u} := by
   intro k _ _ _ n N d hN hd
-  letI : CharZero (LaurentSeries k) :=
+  let : CharZero (LaurentSeries k) :=
     charZero_of_injective_algebraMap
       (algebraMap k (LaurentSeries k)).injective
   let W := canonicalRightIdeal (presentedCoordinate k n) d N

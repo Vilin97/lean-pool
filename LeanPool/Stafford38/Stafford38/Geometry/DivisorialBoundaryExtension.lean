@@ -60,9 +60,9 @@ theorem exists_discreteValuationSubring_over_maximalIdeal
         (aV : L) = algebraMap A L a ∧
         aV ≠ 0 ∧ ¬IsUnit aV := by
   let C : Type w := integralClosure A L
-  letI : IsDedekindDomain C :=
+  let : IsDedekindDomain C :=
     integralClosure.isDedekindDomain A F L
-  letI : IsFractionRing C L :=
+  let : IsFractionRing C L :=
     IsIntegralClosure.isFractionRing_of_finite_extension A F L C
   have hinjAL : Function.Injective (algebraMap A L) := by
     rw [IsScalarTower.algebraMap_eq A F L]
@@ -77,7 +77,7 @@ theorem exists_discreteValuationSubring_over_maximalIdeal
       _ = algebraMap A L y := IsScalarTower.algebraMap_apply A C L y
   have hm_ne : maximalIdeal A ≠ ⊥ :=
     IsDiscreteValuationRing.not_a_field A
-  letI : (maximalIdeal A).IsPrime := (maximalIdeal.isMaximal A).isPrime
+  let : (maximalIdeal A).IsPrime := (maximalIdeal.isMaximal A).isPrime
   have hker : RingHom.ker (algebraMap A C) ≤ maximalIdeal A := by
     rw [(RingHom.injective_iff_ker_eq_bot _).mp
       hinjAC]
@@ -85,7 +85,7 @@ theorem exists_discreteValuationSubring_over_maximalIdeal
   obtain ⟨Q, hQprime, hQcomap⟩ :=
     Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain
       (R := A) (S := C) (maximalIdeal A) hker
-  letI : Q.IsPrime := hQprime
+  let : Q.IsPrime := hQprime
   have hQ_ne : Q ≠ ⊥ := by
     intro hQ
     apply hm_ne
@@ -99,7 +99,7 @@ theorem exists_discreteValuationSubring_over_maximalIdeal
   let RQ : Type w :=
     Localization.subalgebra.ofField L Q.primeCompl
       Q.primeCompl_le_nonZeroDivisors
-  letI : IsDiscreteValuationRing RQ :=
+  let : IsDiscreteValuationRing RQ :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       C hQ_ne RQ
   let Rsub : Subring L :=
@@ -164,7 +164,7 @@ theorem exists_discreteValuationSubring_over_maximalIdeal_of_charZero
       ∃ aV : V.toSubring,
         (aV : L) = algebraMap A L a ∧
         aV ≠ 0 ∧ ¬IsUnit aV := by
-  letI : Algebra.IsSeparable F L := inferInstance
+  let : Algebra.IsSeparable F L := inferInstance
   exact exists_discreteValuationSubring_over_maximalIdeal
     (A := A) (F := F) (L := L) a ha_ne ha_nonunit
 
@@ -258,16 +258,16 @@ theorem exists_discreteBoundaryRefinement_of_finiteExtension_of_charZero
         (algebraMap (Polynomial k) (CoordinateZeroLocalRing k)
           (Polynomial.X : Polynomial k)) = x) :
     Nonempty (DiscreteBoundaryRefinement k x) := by
-  letI : CharZero (CoordinateZeroLocalRing k) :=
+  let : CharZero (CoordinateZeroLocalRing k) :=
     charZero_of_injective_algebraMap
       (algebraMap k (CoordinateZeroLocalRing k)).injective
-  letI : CharZero (FractionRing (CoordinateZeroLocalRing k)) :=
+  let : CharZero (FractionRing (CoordinateZeroLocalRing k)) :=
     IsFractionRing.charZero_of_isFractionRing (CoordinateZeroLocalRing k)
-  letI : Algebra.IsIntegral
+  let : Algebra.IsIntegral
       (FractionRing (CoordinateZeroLocalRing k)) K :=
     ⟨fun y ↦ (IsAlgebraic.of_finite
       (FractionRing (CoordinateZeroLocalRing k)) y).isIntegral⟩
-  letI : Algebra.IsSeparable
+  let : Algebra.IsSeparable
       (FractionRing (CoordinateZeroLocalRing k)) K := inferInstance
   exact exists_discreteBoundaryRefinement_of_finiteExtension
     k x hcoordinate

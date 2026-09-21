@@ -66,21 +66,21 @@ theorem finite_normalization_of_fg_domain
     Module.Finite R C := by
   classical
   obtain ⟨s, g, hinj, hfin⟩ := exists_finite_inj_algHom_of_fg k R
-  letI : Algebra (MvPolynomial (Fin s) k) R := g.toRingHom.toAlgebra
-  haveI : Module.Finite (MvPolynomial (Fin s) k) R := hfin
-  haveI : FaithfulSMul (MvPolynomial (Fin s) k) R :=
+  let : Algebra (MvPolynomial (Fin s) k) R := g.toRingHom.toAlgebra
+  have : Module.Finite (MvPolynomial (Fin s) k) R := hfin
+  have : FaithfulSMul (MvPolynomial (Fin s) k) R :=
     (faithfulSMul_iff_algebraMap_injective (MvPolynomial (Fin s) k) R).mpr hinj
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) k) R := inferInstance
-  letI : Algebra (MvPolynomial (Fin s) k) C :=
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) k) R := inferInstance
+  let : Algebra (MvPolynomial (Fin s) k) C :=
     ((algebraMap R C).comp (algebraMap (MvPolynomial (Fin s) k) R)).toAlgebra
-  haveI hARC : IsScalarTower (MvPolynomial (Fin s) k) R C :=
+  have hARC : IsScalarTower (MvPolynomial (Fin s) k) R C :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower (MvPolynomial (Fin s) k) C (FractionRing R) := by
+  have : IsScalarTower (MvPolynomial (Fin s) k) C (FractionRing R) := by
     refine IsScalarTower.of_algebraMap_eq fun x => ?_
     rw [IsScalarTower.algebraMap_apply (MvPolynomial (Fin s) k) R (FractionRing R),
       IsScalarTower.algebraMap_apply (MvPolynomial (Fin s) k) R C,
       IsScalarTower.algebraMap_apply R C (FractionRing R)]
-  haveI : IsIntegralClosure C (MvPolynomial (Fin s) k) (FractionRing R) := by
+  have : IsIntegralClosure C (MvPolynomial (Fin s) k) (FractionRing R) := by
     refine ⟨IsIntegralClosure.algebraMap_injective C R (FractionRing R), fun {x} => ?_⟩
     constructor
     · intro hx
@@ -89,7 +89,7 @@ theorem finite_normalization_of_fg_domain
     · rintro ⟨y, rfl⟩
       exact isIntegral_trans (R := MvPolynomial (Fin s) k) (A := R) _
         (IsIntegralClosure.isIntegral R (FractionRing R) y).algebraMap
-  haveI : Module.Finite (MvPolynomial (Fin s) k) C :=
+  have : Module.Finite (MvPolynomial (Fin s) k) C :=
     IsIntegralClosure.finite (MvPolynomial (Fin s) k) (FractionRing (MvPolynomial (Fin s) k))
       (FractionRing R) C
   exact Module.Finite.of_restrictScalars_finite (MvPolynomial (Fin s) k) R C

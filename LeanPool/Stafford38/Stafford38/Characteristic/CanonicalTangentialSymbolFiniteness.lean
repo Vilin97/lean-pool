@@ -132,12 +132,12 @@ theorem canonical_orderAssociatedGradedModule_finite_tangential_coordinate
   let E := OrderAssociatedGradedModule k
     (canonicalRightIdeal (presentedCoordinate k n) d N)
   let e := normalCoeffTangentialAlgEquiv (k := k) n
-  letI : Module R E := normalCoeffModule (k := k) n E
-  haveI hR : Module.Finite R E :=
+  let : Module R E := normalCoeffModule (k := k) n E
+  have hR : Module.Finite R E :=
     canonical_orderAssociatedGradedModule_finite_normalCoeffRing hd
-  letI : Module (Polynomial T) E := tangentialPolynomialModule (k := k) n E
-  letI : Module T E := tangentialCoeffModule (k := k) n E
-  letI : IsScalarTower T (Polynomial T) E :=
+  let : Module (Polynomial T) E := tangentialPolynomialModule (k := k) n E
+  let : Module T E := tangentialCoeffModule (k := k) n E
+  let : IsScalarTower T (Polynomial T) E :=
     ⟨by
       intro r p z
       rw [Polynomial.smul_eq_C_mul, mul_smul]
@@ -148,7 +148,7 @@ theorem canonical_orderAssociatedGradedModule_finite_tangential_coordinate
         (Polynomial.C (e.symm (e r))) • z =
       (normalSymbolAlgEquiv (k := k) n).symm (Polynomial.C r) • z
     rw [e.symm_apply_apply]
-  haveI : Module.Finite (Polynomial T) E := by
+  have : Module.Finite (Polynomial T) E := by
     rcases hR with ⟨⟨s, hs⟩⟩
     refine ⟨⟨s, top_unique ?_⟩⟩
     intro z hz

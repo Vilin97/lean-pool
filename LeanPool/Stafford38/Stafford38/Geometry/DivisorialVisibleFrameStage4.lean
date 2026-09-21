@@ -82,21 +82,21 @@ theorem stage4_residueField_isAlgebraic_of_isIntegral
       rw [map_mul]
       exact mul_mem ha hb
   let cL : C →+* L := φ.codRestrict L.toSubring hφL
-  letI : Algebra C V.toSubring := cV.toAlgebra
-  letI : Algebra C (ResidueField V.toSubring) := φ.toAlgebra
-  letI : IsScalarTower C V.toSubring K :=
+  let : Algebra C V.toSubring := cV.toAlgebra
+  let : Algebra C (ResidueField V.toSubring) := φ.toAlgebra
+  let : IsScalarTower C V.toSubring K :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  letI : IsScalarTower C V.toSubring (ResidueField V.toSubring) := by
+  let : IsScalarTower C V.toSubring (ResidueField V.toSubring) := by
     constructor
     intro x y z
     change ρ (cV x) * ρ y * z = ρ (cV x) * (ρ y * z)
     exact mul_assoc _ _ _
-  letI : IsScalarTower C C V.toSubring :=
+  let : IsScalarTower C C V.toSubring :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  letI : IsScalarTower C C (ResidueField V.toSubring) :=
+  let : IsScalarTower C C (ResidueField V.toSubring) :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  letI : Algebra C L := cL.toAlgebra
-  letI : IsScalarTower C L (ResidueField V.toSubring) := by
+  let : Algebra C L := cL.toAlgebra
+  let : IsScalarTower C L (ResidueField V.toSubring) := by
     apply IsScalarTower.of_algebraMap_eq
     intro x
     rfl
@@ -133,6 +133,15 @@ theorem stage4_residueField_isAlgebraic_of_isIntegral
   rw [hz]
   exact h_ainv.mul h_binv.inv
 
+
+private theorem isAlgebraic_over_larger_intermediateField
+    {k E : Type*} [Field k] [Field E] [Algebra k E]
+    (L M : IntermediateField k E) (hLM : L ≤ M) [Algebra.IsAlgebraic L E] :
+    Algebra.IsAlgebraic M E := by
+  let : Algebra L M := (IntermediateField.inclusion hLM).toAlgebra
+  let : IsScalarTower L M E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  exact ⟨fun z => (Algebra.IsAlgebraic.isAlgebraic z).extendScalars
+    (IntermediateField.inclusion_injective hLM)⟩
 
 theorem stage4'_isAlgebraic_of_normalized_column
     {k K : Type u} [Field k] [Field K] [Algebra k K]
@@ -221,12 +230,8 @@ theorem stage4'_isAlgebraic_of_normalized_column
     · intro a b _ _ ha hb
       simpa only [map_mul] using Lq.mul_mem ha hb
     · exact hz
-  letI : Algebra Lc Lq := (IntermediateField.inclusion hLcLq).toAlgebra
-  letI : IsScalarTower Lc Lq (ResidueField V.toSubring) :=
-    IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  exact ⟨fun z =>
-    (Algebra.IsAlgebraic.isAlgebraic z).extendScalars
-      (IntermediateField.inclusion_injective hLcLq)⟩
+  exact isAlgebraic_over_larger_intermediateField Lc Lq hLcLq
+
 
 
 end Stafford38.Geometry.DivisorialVisibleFrameStage4

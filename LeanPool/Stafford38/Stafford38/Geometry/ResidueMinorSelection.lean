@@ -39,7 +39,7 @@ theorem exists_selectedMinor_det_ne_zero_of_rank_eq_card
     rw [← Matrix.rank_eq_finrank_span_row B, hrank, Module.finrank_pi]
   have hS : S = ⊤ := Submodule.eq_top_of_finrank_eq hfinrank
   let b := Module.Basis.ofSpan (K := k) (s := Set.range B.row) (hS.ge)
-  letI : Fintype ((linearIndepOn_empty k id).extend
+  let : Fintype ((linearIndepOn_empty k id).extend
       (Set.empty_subset (Set.range B.row))) := Fintype.ofFinite _
   let e : κ ≃ ((linearIndepOn_empty k id).extend
       (Set.empty_subset (Set.range B.row))) :=

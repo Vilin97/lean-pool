@@ -49,8 +49,8 @@ theorem equationConormalClosure_smoothAffine_eq
         (MvPolynomial.vanishingIdeal k
           (restrictedEquationConormalLocus I {y | SmoothAffinePoint I y})) =
       equationConormalClosure I := by
-  letI : I.IsPrime := hI
-  letI : Algebra.FinitePresentation k (MvPolynomial (Fin n) k ⧸ I) :=
+  let : I.IsPrime := hI
+  let : Algebra.FinitePresentation k (MvPolynomial (Fin n) k ⧸ I) :=
     Algebra.FinitePresentation.quotient I.fg_of_isNoetherianRing
   obtain ⟨fbar, hfbar, hsmooth⟩ := exists_nonzero_smooth_away_quotient I
   obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective fbar

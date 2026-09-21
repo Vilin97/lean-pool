@@ -94,7 +94,7 @@ private theorem normalized_relative_place
     ∃ (chart : Fin (m + 1)) (q : Fin (m + 1) → W.place.valuation.toSubring) (scale : K),
       scale ≠ 0 ∧ q chart = 1 ∧ q 0 ≠ 0 ∧
       (∀ a, (q a : K) = scale * p a) ∧ q i.succ = q 0 * W.place.parameter := by
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K := W.ambientAlgebra
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField) K := W.ambientAlgebra
   exact normalized_with_parameter W.place.valuation W.place.parameter
     p hpzero i (hpi.trans W.parameter_eq_coordinate.symm)
 
@@ -133,7 +133,7 @@ theorem exists_discreteBoundaryRefinement_componentCoordinate
     (hi : Transcendental k (componentCoordinate P i)) :
     Nonempty (DiscreteBoundaryRefinement k (componentCoordinate P i)) := by
   let W := (exists_relativeRetainedBoundaryPlace_componentCoordinate P i hi).some
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
+  let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (FractionRing (MvPolynomial (Fin m) k ⧸ P.asIdeal)) :=
     W.ambientAlgebra
   exact ⟨W.toDiscreteBoundaryRefinement⟩

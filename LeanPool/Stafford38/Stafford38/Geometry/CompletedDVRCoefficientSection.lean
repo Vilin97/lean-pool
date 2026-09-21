@@ -188,7 +188,7 @@ theorem completionCoordinateSection_compatible
   cases a with
   | zero =>
       have htop : ((m V) ^ 0 • ⊤ : Ideal V) = ⊤ := by simp
-      letI : Subsingleton (V ⧸ ((m V) ^ 0 • ⊤ : Ideal V)) := by
+      let : Subsingleton (V ⧸ ((m V) ^ 0 • ⊤ : Ideal V)) := by
         rw [htop]
         infer_instance
       exact Subsingleton.elim _ _
@@ -316,8 +316,8 @@ theorem retainedCompletedCoefficientSection_isSection
     (completedResidue E D.valuation.toSubring).comp
         (retainedCompletedCoefficientSection E D) =
       AlgHom.id E (ResidueField D.valuation.toSubring) := by
-  letI : IsDiscreteValuationRing D.valuation.toSubring := D.isDiscrete
-  letI : Algebra E D.valuation.toSubring :=
+  let : IsDiscreteValuationRing D.valuation.toSubring := D.isDiscrete
+  let : Algebra E D.valuation.toSubring :=
     (relativeCoefficientMap E D).toAlgebra
   exact completedResidue_comp_completedCoefficientSection E
     D.valuation.toSubring (relativeResidue_isSeparable E D)
