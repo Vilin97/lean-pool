@@ -9966,3 +9966,40 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: lean-snumbers
+    title: Pietsch s-numbers and the maximal difference theorem
+    summary: Formalizes the five classical s-number sequences, their comparison inequalities, the maximal
+      difference theorem, compact-operator singular value decomposition, John ellipsoids, entropy numbers,
+      and compactness characterizations.
+    branch: functional analysis
+    entry_module: LeanPool.SNumbers
+    authors:
+    - Mario Ullrich
+    source:
+      url: https://github.com/mario-ullrich/lean-snumbers
+      github_repo: mario-ullrich/lean-snumbers
+      commit: d984f39b53eb1579920fe987de10382dcf553f4e
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - SNumbers.approximationNumber_le_e_mul_hilbertNumber
+    - SNumbers.allSNumbers_eq_on_HilbertSpace
+    - John.john_decomposition
+    main_results:
+    - declaration: SNumbers.approximationNumber_le_e_mul_hilbertNumber
+      informal: For a bounded operator, its nth approximation number is at most e times (n+1) times its
+        nth Hilbert number.
+    - declaration: SNumbers.allSNumbers_eq_on_HilbertSpace
+      informal: Every s-number sequence agrees with the approximation numbers on operators between Hilbert
+        spaces.
+    - declaration: John.john_decomposition
+      informal: In John position, the identity decomposes into a positive weighted sum of rank-one operators
+        from contact points.
+    tags:
+    - functional-analysis
+    - operator-theory
+    - s-numbers
+    msc:
+    - 47B06
+    - 46B20
