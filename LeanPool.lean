@@ -3549,6 +3549,7 @@ import LeanPool.MRiscX.Tactics.SpecificationTactics
 import LeanPool.MRiscX.Tactics.SplitLastSeq
 import LeanPool.MRiscX.Tactics.TacticUtil
 import LeanPool.MRiscX.Util.BasicTheorems
+import LeanPool.MarshallHall
 import LeanPool.MassFormula
 import LeanPool.MassFormula.Convergence
 import LeanPool.MassFormula.Defs
