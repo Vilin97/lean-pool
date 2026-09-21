@@ -252,13 +252,13 @@ theorem kerF0_iso_kerBand :
   have hfst : circF0 ≫ HomologicalComplex.homologyMap
       (biprod.fst : (subChainComplex ℤ circleTop ↑circU ⊞ subChainComplex ℤ circleTop ↑circV) ⟶ _) 0
       = HomologicalComplex.homologyMap (mvInclUVU ℤ circU circV) 0 := by
-    change HomologicalComplex.homologyMap (mvLeftChainMap ℤ circU circV circUV_top) 0 ≫ _ = _
+    change HomologicalComplex.homologyMap (mvLeftChainMap ℤ circU circV) 0 ≫ _ = _
     rw [← HomologicalComplex.homologyMap_comp]
     simp [mvLeftChainMap]
   have hsnd : circF0 ≫ HomologicalComplex.homologyMap
       (biprod.snd : (subChainComplex ℤ circleTop ↑circU ⊞ subChainComplex ℤ circleTop ↑circV) ⟶ _) 0
       = -(HomologicalComplex.homologyMap (mvInclUVV ℤ circU circV) 0) := by
-    change HomologicalComplex.homologyMap (mvLeftChainMap ℤ circU circV circUV_top) 0 ≫ _ = _
+    change HomologicalComplex.homologyMap (mvLeftChainMap ℤ circU circV) 0 ≫ _ = _
     rw [← HomologicalComplex.homologyMap_comp]
     simp [mvLeftChainMap, HomologicalComplex.homologyMap_neg]
   have hinjU : Function.Injective (ModuleCat.Hom.hom (subH0aug circleTop (circU : Set circleTop))) :=

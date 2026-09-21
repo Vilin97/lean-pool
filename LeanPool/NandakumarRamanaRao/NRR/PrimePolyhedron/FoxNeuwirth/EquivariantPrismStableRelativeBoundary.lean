@@ -533,7 +533,7 @@ theorem endpointInterpolant_skeletonFree
 /-- Quantitative endpoint closeness needed for the stored zero-free straight-line field. -/
 def EndpointStraightLineSafe
     (hp : Nat.Prime p) (N L : Nat) (s : EndpointSide)
-    {F₀ F₁ : ZeroFreeMap hp} (H : ZeroFreeHomotopy hp F₀ F₁)
+    {F₀ F₁ : ZeroFreeMap hp}
     (a : Assignment hp N L) : Prop :=
   ∀ (q : TopCell hp (N + L)) (w : StandardSimplex (p - 1))
     (u : Set.Icc (0 : Real) 1),
@@ -550,7 +550,7 @@ noncomputable def stableEndpointApproximation
       FacetRegular hp (localVertexMap hp N L a q))
     (hcodim : ∀ q : PrismCell hp N L,
       AvoidsCodimTwoDeviationZero hp (localVertexMap hp N L a q))
-    (hsafe : EndpointStraightLineSafe hp N L s H a) :
+    (hsafe : EndpointStraightLineSafe hp N L s (F₀ := F₀) (F₁ := F₁) a) :
     StableRegularApproximation hp (EndpointSide.zeroFreeMap (hp := hp) (F₀ := F₀) (F₁ := F₁) s).map where
   toRegularApproximation := {
     level := N + L
@@ -610,7 +610,7 @@ theorem endpointStraightLineSafe_of_control
     (a : Assignment hp N L) {r : Real}
     (C : EndpointControl hp N L H a r) :
     ∀ s : EndpointSide,
-      EndpointStraightLineSafe hp N L s H a := by
+      EndpointStraightLineSafe hp N L s (F₀ := F₀) (F₁ := F₁) a := by
   intro s q w u
   exact segment_ne_zero_of_norm_sub_lt
     (C.normLower s q w) (C.close s q w) u

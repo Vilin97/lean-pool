@@ -58,9 +58,9 @@ theorem lowerCollar_lowerPositiveSupportRaySafe
     (P := fun _ _ D b => LowerPositiveSupportRaySafe hp D.cells b)
     rfl (lowerLevel_eq A0 A1 L)
     (positiveWitness hp A0.toRegularApproximation.level
-      (lowerStackIndex A0 A1 L)).collar
-    (build hp A0.toRegularApproximation (lowerStackIndex A0 A1 L)).assignment
-    (build_lowerPositiveSupportRaySafe hp A0 (lowerStackIndex A0 A1 L))
+      (lowerStackIndex A1 L)).collar
+    (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).assignment
+    (build_lowerPositiveSupportRaySafe hp A0 (lowerStackIndex A1 L))
 
 /-- The transported reversed upper stack is upper-support safe. -/
 theorem upperCollar_upperPositiveSupportRaySafe
@@ -76,16 +76,16 @@ theorem upperCollar_upperPositiveSupportRaySafe
     (upperLevel_eq A0 A1 L) rfl
     (reverseEndpointCollar
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar)
+        (upperStackIndex A0 L)).collar)
     (reverseAssignment
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar.cells
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).assignment)
+        (upperStackIndex A0 L)).collar.cells
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).assignment)
     (upperSafe_reverse hp
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar.cells
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).assignment
-      (build_lowerPositiveSupportRaySafe hp A1 (upperStackIndex A0 A1 L)))
+        (upperStackIndex A0 L)).collar.cells
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).assignment
+      (build_lowerPositiveSupportRaySafe hp A1 (upperStackIndex A0 L)))
 
 /-- The lower two regions remain lower-support safe. -/
 theorem lowerMiddleCollar_lowerPositiveSupportRaySafe

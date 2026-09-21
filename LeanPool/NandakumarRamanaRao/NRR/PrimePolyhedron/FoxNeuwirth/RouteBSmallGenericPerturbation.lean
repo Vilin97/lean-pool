@@ -146,7 +146,7 @@ theorem avoidsPositiveRayCodimTwo_of_avoids_all_mixedFaceBadSets
       (localVertexMap hp C
         (assignmentOfMovableParameters hp C base x) q) := by
   intro w i j hij hdev hmean hzeros
-  by_cases hmovable : HasPositiveMovableWitness hp C base x q w i j
+  by_cases hmovable : HasPositiveMovableWitness hp C q w i j
   · obtain ⟨κ, hκ⟩ :=
       mem_mixedFaceBadSet_of_incidence hp C base x q w i j hij
         hzeros.1 hzeros.2 hdev hmean hmovable

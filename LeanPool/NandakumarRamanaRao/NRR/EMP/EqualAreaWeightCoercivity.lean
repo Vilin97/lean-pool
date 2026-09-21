@@ -156,7 +156,6 @@ theorem exists_positive_gauge_lower_bound_on_sphere
 /-- The augmented deviation field on the full Euclidean weight space. -/
 noncomputable def augmentedAreaDeviation
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
-    (hn : 0 < n) (hs : Function.Injective s)
     (w : WeightE n) : WeightE n :=
   (WithLp.equiv 2 (Fin n → Real)).symm fun i =>
     areaDeviation K s (normalizeWeight fun j => w j) i +
@@ -164,16 +163,15 @@ noncomputable def augmentedAreaDeviation
 
 @[simp] lemma augmentedAreaDeviation_apply
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
-    (hn : 0 < n) (hs : Function.Injective s)
     (w : WeightE n) (i : Fin n) :
-    augmentedAreaDeviation K s hn hs w i =
+    augmentedAreaDeviation K s w i =
       areaDeviation K s (normalizeWeight fun j => w j) i +
         weightMean (fun j => w j) := rfl
 
 lemma continuous_augmentedAreaDeviation
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
     (hn : 0 < n) (hs : Function.Injective s) :
-    Continuous (augmentedAreaDeviation K s hn hs) := by
+    Continuous (augmentedAreaDeviation K s) := by
   apply continuous_induced_rng.2
   apply continuous_pi
   intro i
@@ -196,7 +194,7 @@ lemma augmentedPairing_eq
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
     (hn : 0 < n) (hs : Function.Injective s)
     (w : WeightE n) :
-    inner Real w (augmentedAreaDeviation K s hn hs w) =
+    inner Real w (augmentedAreaDeviation K s w) =
       deviationPairing K s (normalizeWeight fun i => w i) +
         (n : Real) * (weightMean fun i => w i) ^ 2 := by
   let u : Fin n → Real := normalizeWeight fun i => w i
@@ -239,7 +237,7 @@ lemma augmentedAreaDeviation_zero_gives_equalArea
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
     (hn : 0 < n) (hs : Function.Injective s)
     (w : WeightE n)
-    (hw : augmentedAreaDeviation K s hn hs w = 0) :
+    (hw : augmentedAreaDeviation K s w = 0) :
     IsEqualAreaWeight K s (normalizeWeight fun i => w i) := by
   have hcoord : ∀ i, areaDeviation K s (normalizeWeight fun j => w j) i +
       weightMean (fun j => w j) = 0 := by
@@ -318,7 +316,7 @@ lemma augmentedPairing_pos_of_gauge_large
       (n : Real) * (powerGapBound K s + 1) +
           (powerGapBound K s * K.area + 1) <
         weightCoercivityGauge (fun i => w i)) :
-    0 < inner Real w (augmentedAreaDeviation K s hn hs w) := by
+    0 < inner Real w (augmentedAreaDeviation K s w) := by
   let u : Fin n → Real := normalizeWeight fun i => w i
   let m : Real := weightMean fun i => w i
   have hu : WeightNormalized u := WeightNormalized_normalizeWeight _ hn
@@ -382,7 +380,7 @@ lemma augmentedAreaDeviation_outward_on_radius
     (hn : 0 < n) (hs : Function.Injective s)
     (x : WeightE' n) (hx : ‖x‖ = 1) :
     0 < inner Real x
-      (augmentedAreaDeviation K s hn hs
+      (augmentedAreaDeviation K s
         (equalAreaOutwardRadius K s hn • x)) := by
   have h_gauge : weightCoercivityGauge (fun i => (equalAreaOutwardRadius K s hn • x) i) > (n : ℝ) * (powerGapBound K s + 1) + (powerGapBound K s * K.area + 1) := by
     have h_gauge_eq : weightCoercivityGauge (fun i => (equalAreaOutwardRadius K s hn • x) i) = (equalAreaOutwardRadius K s hn) * weightCoercivityGauge (fun i => x i) := by

@@ -138,16 +138,15 @@ def baseLevel
 
 /-- Number of one-step layers below a middle prism with additional refinement `L`. -/
 def lowerStackIndex
-    {hp : Nat.Prime p} {F0 F1 : ZeroFreeMap hp}
-    (A0 : StableRegularApproximation hp F0.map)
+    {hp : Nat.Prime p} {F1 : ZeroFreeMap hp}
     (A1 : StableRegularApproximation hp F1.map) (L : Nat) : Nat :=
   A1.toRegularApproximation.level + L
 
 /-- Number of one-step layers above a middle prism with additional refinement `L`. -/
 def upperStackIndex
-    {hp : Nat.Prime p} {F0 F1 : ZeroFreeMap hp}
+    {hp : Nat.Prime p} {F0 : ZeroFreeMap hp}
     (A0 : StableRegularApproximation hp F0.map)
-    (A1 : StableRegularApproximation hp F1.map) (L : Nat) : Nat :=
+    (L : Nat) : Nat :=
   A0.toRegularApproximation.level + L
 
 /-- The lower stack reaches exactly the middle prism level. -/
@@ -155,7 +154,7 @@ theorem lowerLevel_eq
     {hp : Nat.Prime p} {F0 F1 : ZeroFreeMap hp}
     (A0 : StableRegularApproximation hp F0.map)
     (A1 : StableRegularApproximation hp F1.map) (L : Nat) :
-    A0.toRegularApproximation.level + (lowerStackIndex A0 A1 L + 1) = baseLevel A0 A1 + L := by
+    A0.toRegularApproximation.level + (lowerStackIndex A1 L + 1) = baseLevel A0 A1 + L := by
   simp only [baseLevel, lowerStackIndex]
   omega
 
@@ -164,7 +163,7 @@ theorem upperLevel_eq
     {hp : Nat.Prime p} {F0 F1 : ZeroFreeMap hp}
     (A0 : StableRegularApproximation hp F0.map)
     (A1 : StableRegularApproximation hp F1.map) (L : Nat) :
-    A1.toRegularApproximation.level + (upperStackIndex A0 A1 L + 1) = baseLevel A0 A1 + L := by
+    A1.toRegularApproximation.level + (upperStackIndex A0 L + 1) = baseLevel A0 A1 + L := by
   simp only [baseLevel, upperStackIndex]
   omega
 
@@ -216,12 +215,12 @@ noncomputable def lowerCollar
     EndpointIdentifiedRelativeAffineCollar hp
       A0.toRegularApproximation.level (baseLevel A0 A1 + L)
       (positiveWitness hp A0.toRegularApproximation.level
-        (lowerStackIndex A0 A1 L)).commonLevel
+        (lowerStackIndex A1 L)).commonLevel
       (positiveWitness hp A0.toRegularApproximation.level
-        (lowerStackIndex A0 A1 L)).timeLevel :=
+        (lowerStackIndex A1 L)).timeLevel :=
   castEndpointCollar rfl (lowerLevel_eq A0 A1 L)
     (positiveWitness hp A0.toRegularApproximation.level
-      (lowerStackIndex A0 A1 L)).collar
+      (lowerStackIndex A1 L)).collar
 
 /-- Upper endpoint stack, reversed and transported from the common middle level. -/
 noncomputable def upperCollar
@@ -233,13 +232,13 @@ noncomputable def upperCollar
     EndpointIdentifiedRelativeAffineCollar hp
       (baseLevel A0 A1 + L) A1.toRegularApproximation.level
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).commonLevel
+        (upperStackIndex A0 L)).commonLevel
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).timeLevel :=
+        (upperStackIndex A0 L)).timeLevel :=
   castEndpointCollar (upperLevel_eq A0 A1 L) rfl
     (reverseEndpointCollar
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar)
+        (upperStackIndex A0 L)).collar)
 
 /-- The transported lower stack assignment. -/
 noncomputable def lowerAssignment
@@ -251,8 +250,8 @@ noncomputable def lowerAssignment
     Assignment hp (lowerCollar hp A0 A1 L).cells :=
   castEndpointAssignment rfl (lowerLevel_eq A0 A1 L)
     (positiveWitness hp A0.toRegularApproximation.level
-      (lowerStackIndex A0 A1 L)).collar
-    (build hp A0.toRegularApproximation (lowerStackIndex A0 A1 L)).assignment
+      (lowerStackIndex A1 L)).collar
+    (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).assignment
 
 /-- The transported reversed upper stack assignment. -/
 noncomputable def upperAssignment
@@ -265,11 +264,11 @@ noncomputable def upperAssignment
   castEndpointAssignment (upperLevel_eq A0 A1 L) rfl
     (reverseEndpointCollar
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar)
+        (upperStackIndex A0 L)).collar)
     (reverseAssignment
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar.cells
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).assignment)
+        (upperStackIndex A0 L)).collar.cells
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).assignment)
 
 /-- Fine common-level middle prism with all seam data, but without the unnecessary standalone
 horizontal-facet exhaustiveness requirement. -/
@@ -329,9 +328,9 @@ theorem lower_represents
         (vectorValue hp D.cells b))
     rfl (lowerLevel_eq A0 A1 L)
     (positiveWitness hp A0.toRegularApproximation.level
-      (lowerStackIndex A0 A1 L)).collar
-    (build hp A0.toRegularApproximation (lowerStackIndex A0 A1 L)).assignment
-    (build hp A0.toRegularApproximation (lowerStackIndex A0 A1 L)).represents
+      (lowerStackIndex A1 L)).collar
+    (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).assignment
+    (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).represents
 
 /-- The reversed upper stack represents the upper original PL chart map. -/
 theorem upper_represents
@@ -350,17 +349,17 @@ theorem upper_represents
     (upperLevel_eq A0 A1 L) rfl
     (reverseEndpointCollar
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar)
+        (upperStackIndex A0 L)).collar)
     (reverseAssignment
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar.cells
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).assignment)
+        (upperStackIndex A0 L)).collar.cells
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).assignment)
     (reverseAssignment_represents
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar.cells
+        (upperStackIndex A0 L)).collar.cells
       (baseOriginalPLMap hp A1.toRegularApproximation)
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).assignment
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).represents)
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).assignment
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).represents)
 
 /-- At time zero the middle prism represents the lower original PL chart map. -/
 theorem middle_represents_lower
@@ -429,10 +428,10 @@ noncomputable def lowerMiddleCollar
       A0.toRegularApproximation.level (baseLevel A0 A1 + L)
       (max
         (positiveWitness hp A0.toRegularApproximation.level
-          (lowerStackIndex A0 A1 L)).commonLevel
+          (lowerStackIndex A1 L)).commonLevel
         (baseLevel A0 A1 + L))
       ((positiveWitness hp A0.toRegularApproximation.level
-        (lowerStackIndex A0 A1 L)).timeLevel + L + 1) :=
+        (lowerStackIndex A1 L)).timeLevel + L + 1) :=
   describedCollar
     (EndpointDescribedRelativeAffineCollar.ofEndpointIdentified (lowerCollar hp A0 A1 L))
     (middleCollar hp A0 A1 L)
@@ -514,14 +513,14 @@ noncomputable def fullCollar
       (max
         (max
           (positiveWitness hp A0.toRegularApproximation.level
-            (lowerStackIndex A0 A1 L)).commonLevel
+            (lowerStackIndex A1 L)).commonLevel
           (baseLevel A0 A1 + L))
         (positiveWitness hp A1.toRegularApproximation.level
-          (upperStackIndex A0 A1 L)).commonLevel)
+          (upperStackIndex A0 L)).commonLevel)
       (((positiveWitness hp A0.toRegularApproximation.level
-          (lowerStackIndex A0 A1 L)).timeLevel + L + 1) +
+          (lowerStackIndex A1 L)).timeLevel + L + 1) +
         (positiveWitness hp A1.toRegularApproximation.level
-          (upperStackIndex A0 A1 L)).timeLevel + 1) :=
+          (upperStackIndex A0 L)).timeLevel + 1) :=
   ExplicitAffineRelativeCollarComposeDescribed.endpointIdentifiedCollar
     (lowerMiddleCollar hp A0 A1 L)
     (EndpointDescribedRelativeAffineCollar.ofEndpointIdentified (upperCollar hp A0 A1 L))
@@ -559,9 +558,9 @@ theorem lower_avoidsOrigin
       AvoidsOrigin (localVertexMap hp D.cells b q))
     rfl (lowerLevel_eq A0 A1 L)
     (positiveWitness hp A0.toRegularApproximation.level
-      (lowerStackIndex A0 A1 L)).collar
-    (build hp A0.toRegularApproximation (lowerStackIndex A0 A1 L)).assignment
-    (build hp A0.toRegularApproximation (lowerStackIndex A0 A1 L)).avoidsOrigin
+      (lowerStackIndex A1 L)).collar
+    (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).assignment
+    (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).avoidsOrigin
 
 /-- The reversed upper stack avoids the origin cellwise. -/
 theorem upper_avoidsOrigin
@@ -580,16 +579,16 @@ theorem upper_avoidsOrigin
     (upperLevel_eq A0 A1 L) rfl
     (reverseEndpointCollar
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar)
+        (upperStackIndex A0 L)).collar)
     (reverseAssignment
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar.cells
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).assignment)
+        (upperStackIndex A0 L)).collar.cells
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).assignment)
     (reverseAssignment_avoidsOrigin
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar.cells
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).assignment
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).avoidsOrigin)
+        (upperStackIndex A0 L)).collar.cells
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).assignment
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).avoidsOrigin)
 
 /-- The full collar avoids the origin cellwise. -/
 theorem full_avoidsOrigin
@@ -640,9 +639,9 @@ theorem lower_lowerFixed
           A0.toRegularApproximation.map (D.cells.slotPoint s).spatial)
     rfl (lowerLevel_eq A0 A1 L)
     (positiveWitness hp A0.toRegularApproximation.level
-      (lowerStackIndex A0 A1 L)).collar
-    (build hp A0.toRegularApproximation (lowerStackIndex A0 A1 L)).assignment
-    (build hp A0.toRegularApproximation (lowerStackIndex A0 A1 L)).lowerFixed
+      (lowerStackIndex A1 L)).collar
+    (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).assignment
+    (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).lowerFixed
 
 /-- Exact upper endpoint samples on the reversed upper stack. -/
 theorem upper_upperFixed
@@ -665,13 +664,13 @@ theorem upper_upperFixed
     (upperLevel_eq A0 A1 L) rfl
     (reverseEndpointCollar
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar)
+        (upperStackIndex A0 L)).collar)
     (reverseAssignment
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 L)).collar.cells
-      (build hp A1.toRegularApproximation (upperStackIndex A0 A1 L)).assignment)
+        (upperStackIndex A0 L)).collar.cells
+      (build hp A1.toRegularApproximation (upperStackIndex A0 L)).assignment)
     (reverse_build_upperFixed hp A1.toRegularApproximation
-      (upperStackIndex A0 A1 L))
+      (upperStackIndex A0 L))
 
 /-- Exact lower endpoint samples on the full collar. -/
 theorem full_lowerFixed
@@ -729,16 +728,16 @@ noncomputable def fineFullCollarData
     max
       (max
         (positiveWitness hp A0.toRegularApproximation.level
-          (lowerStackIndex A0 A1 (middleRefinement hp F0 F1 H A0 A1))).commonLevel
+          (lowerStackIndex A1 (middleRefinement hp F0 F1 H A0 A1))).commonLevel
         (baseLevel A0 A1 + middleRefinement hp F0 F1 H A0 A1))
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 (middleRefinement hp F0 F1 H A0 A1))).commonLevel
+        (upperStackIndex A0 (middleRefinement hp F0 F1 H A0 A1))).commonLevel
   timeLevel :=
     ((positiveWitness hp A0.toRegularApproximation.level
-        (lowerStackIndex A0 A1 (middleRefinement hp F0 F1 H A0 A1))).timeLevel +
+        (lowerStackIndex A1 (middleRefinement hp F0 F1 H A0 A1))).timeLevel +
         middleRefinement hp F0 F1 H A0 A1 + 1) +
       (positiveWitness hp A1.toRegularApproximation.level
-        (upperStackIndex A0 A1 (middleRefinement hp F0 F1 H A0 A1))).timeLevel + 1
+        (upperStackIndex A0 (middleRefinement hp F0 F1 H A0 A1))).timeLevel + 1
   collar := fullCollar hp A0 A1 (middleRefinement hp F0 F1 H A0 A1)
   assignment := fullAssignment hp F0 F1 H A0 A1 (middleRefinement hp F0 F1 H A0 A1)
   horizontalVertexFixed :=

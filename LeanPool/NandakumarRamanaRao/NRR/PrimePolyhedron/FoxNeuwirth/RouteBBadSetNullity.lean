@@ -110,7 +110,7 @@ theorem no_incidence_with_movableWitness_of_avoids_all_badSets
           (affineValue
             (localVertexMap hp C
               (assignmentOfMovableParameters hp C base x) q) w) ∧
-        HasPositiveMovableWitness hp C base x q w i j := by
+        HasPositiveMovableWitness hp C q w i j := by
   intro h
   have hcase : ∃ κ : MixedFaceCase hp C,
       x ∈ mixedFaceBadSet hp C base κ :=

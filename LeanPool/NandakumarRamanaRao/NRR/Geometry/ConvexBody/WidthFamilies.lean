@@ -23,7 +23,7 @@ partition-cell / perimeter continuity arguments:
 
 * `WidthContinuousFamily.of_support` — a support-function continuous family is width continuous,
 * `WidthContinuousFamily.const` — constant families,
-* `WidthContinuousFamily.translate` — translation by a continuous vector field, and
+* `WidthContinuousFamily.translate` — translation by an arbitrary vector field, and
 * `WidthContinuousFamily.scalePos` — positive scaling by a continuous factor.
 
 ## Design notes
@@ -82,13 +82,11 @@ theorem WidthContinuousFamily.const (K : ConvexBody E) :
     WidthContinuousFamily (fun _ : α => K) :=
   WidthContinuousFamily.of_support (SupportFunctionContinuousFamily.const K)
 
-/-- **Translated family.** Translating a continuous family by a continuous vector field keeps it a
-width continuous family. Since width is translation invariant, the translated family is the same
-function of `(t, u)` as the original; the continuity hypothesis `ha` on the vector field is not
-needed but is included for a uniform interface. -/
+/-- **Translated family.** Translating a width continuous family by an arbitrary vector field
+preserves width continuity, because width is invariant under translations. -/
 theorem WidthContinuousFamily.translate
     {K : α → ConvexBody E} (hK : WidthContinuousFamily K)
-    (a : α → E) (ha : Continuous a) :
+    (a : α → E) :
     WidthContinuousFamily (fun t => (K t).translate (a t)) := by
   unfold WidthContinuousFamily at hK ⊢
   simpa only [widthFunction_translate] using hK

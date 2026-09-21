@@ -110,6 +110,7 @@ theorem signedDistance_right_pos
     0 < S.signedDistance (x, SignedInterval.right) :=
   S.signedDistance_pos_of_mem_upper (S.top_mem_upper x)
 
+omit [Nonempty X] in
 /-- The absolute value of the signed distance is bounded by the distance to any carrier point. -/
 theorem abs_signedDistance_le_dist_of_mem
     (S : TopBottomSeparator X)

@@ -93,7 +93,7 @@ theorem EMP.powerDiagram_equalArea_weights_exists_core
     let R := EMP.equalAreaOutwardRadius K s (by omega : 0 < d + 1)
     let F : EuclideanSpace Real (Fin (d + 1)) →
         EuclideanSpace Real (Fin (d + 1)) := fun x =>
-      EMP.augmentedAreaDeviation K s (by omega) hs (R • x)
+      EMP.augmentedAreaDeviation K s (R • x)
     have hF : Continuous F := by
       have hscale : Continuous (fun x : EuclideanSpace Real (Fin (d + 1)) => R • x) :=
         by fun_prop

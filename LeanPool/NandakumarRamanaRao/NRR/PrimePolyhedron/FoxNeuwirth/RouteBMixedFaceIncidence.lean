@@ -94,7 +94,6 @@ def mixedFaceBadSet
 witness when at least one retained vertex with positive barycentric weight has a
 movable local scalar parameter. -/
 def HasPositiveMovableWitness
-    (base : Assignment hp C) (x : MovableParameterSpace hp C)
     (q : C.Cell) (w : StandardSimplex p)
     (i j : Fin (p + 1)) : Prop :=
   ∃ k : Fin (p + 1), k ≠ i ∧ k ≠ j ∧ 0 < w k ∧
@@ -116,7 +115,7 @@ theorem mem_mixedFaceBadSet_of_incidence
       (affineValue
         (Polynomials.localVertexMap hp C
           (assignmentOfMovableParameters hp C base x) q) w))
-    (hmovable : HasPositiveMovableWitness hp C base x q w i j) :
+    (hmovable : HasPositiveMovableWitness hp C q w i j) :
     ∃ κ : MixedFaceCase hp C, x ∈ mixedFaceBadSet hp C base κ := by
   rcases hmovable with ⟨k, hki, hkj, hkpos, r, hrmovable⟩
   let κ : MixedFaceCase hp C :=
@@ -170,7 +169,7 @@ theorem exists_badCase_iff_incidence_with_movableWitness
           (affineValue
             (Polynomials.localVertexMap hp C
               (assignmentOfMovableParameters hp C base x) q) w) ∧
-        HasPositiveMovableWitness hp C base x q w i j := by
+        HasPositiveMovableWitness hp C q w i j := by
   constructor
   · rintro ⟨κ, hκ⟩
     rcases hκ with ⟨w, h0, h1, hkpos, hdev, hmean⟩

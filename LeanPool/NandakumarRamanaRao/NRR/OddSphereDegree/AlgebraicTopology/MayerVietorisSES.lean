@@ -82,7 +82,7 @@ theorem mvIncl_comp_eq (U V : Opens X) (hUV : U ⊔ V = ⊤) :
   rfl
 
 /-- The signed pair of inclusions from the intersection into the two open sets. -/
-noncomputable def mvLeftChainMap (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+noncomputable def mvLeftChainMap (U V : Opens X) :
     subChainComplex R X ((U : Set X) ∩ (V : Set X)) ⟶
       subChainComplex R X (U : Set X) ⊞ subChainComplex R X (V : Set X) :=
   biprod.lift (mvInclUVU R U V) (-(mvInclUVV R U V))
@@ -94,7 +94,7 @@ noncomputable def mvRightChainMap (U V : Opens X) (hUV : U ⊔ V = ⊤) :
   biprod.desc (mvInclUSmall R U V hUV) (mvInclVSmall R U V hUV)
 
 theorem mvLeft_comp_mvRight (U V : Opens X) (hUV : U ⊔ V = ⊤) :
-    mvLeftChainMap R U V hUV ≫ mvRightChainMap R U V hUV = 0 := by
+    mvLeftChainMap R U V ≫ mvRightChainMap R U V hUV = 0 := by
   rw [mvLeftChainMap, mvRightChainMap, biprod.lift_desc, mvIncl_comp_eq R U V hUV]
   simp [Preadditive.neg_comp]
 
@@ -104,7 +104,7 @@ noncomputable def mvShortComplex (U V : Opens X) (hUV : U ⊔ V = ⊤) :
   X₁ := subChainComplex R X ((U : Set X) ∩ (V : Set X))
   X₂ := subChainComplex R X (U : Set X) ⊞ subChainComplex R X (V : Set X)
   X₃ := twoOpenCoverSmallChains R U V hUV
-  f := mvLeftChainMap R U V hUV
+  f := mvLeftChainMap R U V
   g := mvRightChainMap R U V hUV
   zero := mvLeft_comp_mvRight R U V hUV
 
@@ -342,7 +342,7 @@ noncomputable def mvEvalIso (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
     (Iso.refl _)
     (by
       show 𝟙 _ ≫ biprod.lift ((mvInclUVU R U V).f k) (-(mvInclUVV R U V).f k) =
-           (mvLeftChainMap R U V hUV).f k ≫
+           (mvLeftChainMap R U V).f k ≫
              (HomologicalComplex.biprodXIso (subChainComplex R X ↑U) (subChainComplex R X ↑V) k).hom
       rw [Category.id_comp]
       exact (biprodXIso_lift_f (R := R) (mvInclUVU R U V) (-mvInclUVV R U V) k).symm)
