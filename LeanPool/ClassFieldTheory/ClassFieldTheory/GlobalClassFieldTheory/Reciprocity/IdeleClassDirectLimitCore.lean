@@ -318,13 +318,11 @@ theorem rationalRelativeAdeleEmbedding_comp
         (RelativeIdeleGroup.adeleEmbedding (IntermediateField.inclusion hEF) z) =
       RelativeIdeleGroup.adeleEmbedding
         (IntermediateField.inclusion (hEF.trans hFH)) z := by
-  induction z using TensorProduct.inductionOn with
-  | tmul a x =>
-      simp only [RelativeIdeleGroup.adeleEmbedding,
-        RelativeIdeleGroup.scalarEmbedding_tmul]
-      congr 1
-  | add x y hx hy =>
-      simp only [map_add, hx, hy]
+  exact congrArg (fun f => f z)
+    (Algebra.TensorProduct.map_id_comp
+      (S := NumberField.AdeleRing (𝓞 ℚ) ℚ)
+      (A := NumberField.AdeleRing (𝓞 ℚ) ℚ)
+      (IntermediateField.inclusion hFH) (IntermediateField.inclusion hEF)).symm
 
 /-- Scalar extension of relative idele classes along the identity
 inclusion is the identity. -/

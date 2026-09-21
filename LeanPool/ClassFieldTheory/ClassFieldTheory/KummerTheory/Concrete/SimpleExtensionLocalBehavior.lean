@@ -449,12 +449,9 @@ theorem
     htop, IntermediateField.fixingSubgroup_top]
 
 omit [NumberField K] in
-/-- At an infinite place where the radicand is already an `n`-th
-power, the determinant norm from the simple Kummer tensor algebra is
-surjective.  The proof identifies the decomposition group with the
-trivial group and then uses the canonical local tensor norm theorem. -/
-theorem
-    chosenSimpleKummerExtension_infiniteTensorNormSubgroup_eq_top_of_mem_nthPowerSubgroup
+/-- The local Kummer root forces the infinite decomposition group to be trivial. -/
+private theorem
+    chosenSimpleKummerExtension_infiniteDecompositionGroup_eq_bot_of_mem_nthPowerSubgroup
     (n : ℕ+)
     (hnK : ((n : ℕ) : K) ≠ 0)
     (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
@@ -470,8 +467,10 @@ theorem
       chosenSimpleKummerExtension_finiteDimensional K n hnK b
     letI : IsAbelianGalois K E :=
       chosenSimpleKummerExtension_isAbelianGalois K n hnK hmu b
-    infiniteTensorNormSubgroup
-      (K := K) (L := E) w = ⊤ := by
+    let vK : AbsoluteValue K ℝ := w.1
+    let u : AbsoluteValueExtension vK E :=
+      pullbackAbsoluteValueExtension vK w.isNontrivial IsAlgClosed.lift
+    absoluteValueDecompositionGroup K u.1 = ⊥ := by
   let E := chosenSimpleKummerExtension K n hnK b
   let : FiniteDimensional K E :=
     chosenSimpleKummerExtension_finiteDimensional K n hnK b
@@ -570,6 +569,66 @@ theorem
   have hD : D = ⊥ := by
     rw [← IntermediateField.fixingSubgroup_fixedField D,
       htop, IntermediateField.fixingSubgroup_top]
+  exact hD
+
+omit [NumberField K] in
+/-- At an infinite place where the radicand is already an `n`-th
+power, the determinant norm from the simple Kummer tensor algebra is
+surjective.  The proof identifies the decomposition group with the
+trivial group and then uses the canonical local tensor norm theorem. -/
+theorem
+    chosenSimpleKummerExtension_infiniteTensorNormSubgroup_eq_top_of_mem_nthPowerSubgroup
+    (n : ℕ+)
+    (hnK : ((n : ℕ) : K) ≠ 0)
+    (hmu : (primitiveRoots (n : ℕ) K).Nonempty)
+    (b : Kˣ)
+    (w : InfinitePlace K)
+    (hb :
+      Units.map
+            (algebraMap K w.Completion).toMonoidHom b ∈
+        (powMonoidHom (n : ℕ) :
+          w.Completionˣ →* w.Completionˣ).range) :
+    let E := chosenSimpleKummerExtension K n hnK b
+    letI : FiniteDimensional K E :=
+      chosenSimpleKummerExtension_finiteDimensional K n hnK b
+    letI : IsAbelianGalois K E :=
+      chosenSimpleKummerExtension_isAbelianGalois K n hnK hmu b
+    infiniteTensorNormSubgroup
+      (K := K) (L := E) w = ⊤ := by
+  let E := chosenSimpleKummerExtension K n hnK b
+  let : FiniteDimensional K E :=
+    chosenSimpleKummerExtension_finiteDimensional K n hnK b
+  let : IsAbelianGalois K E :=
+    chosenSimpleKummerExtension_isAbelianGalois K n hnK hmu b
+  let vK : AbsoluteValue K ℝ := w.1
+  let hvK : vK.IsNontrivial := w.isNontrivial
+  let u : AbsoluteValueExtension vK E :=
+    pullbackAbsoluteValueExtension
+      vK hvK IsAlgClosed.lift
+  let hK :=
+    AbsoluteValue.extensionCompletionAlgebra
+      (K := K) u.1
+  let : SMul K u.1.Completion := hK.toSMul
+  let : Algebra vK.Completion u.1.Completion :=
+    AbsoluteValue.completionAlgebra vK u.1 u.2
+  let := localizedCompletionGlobalAlgebra vK u
+  let := localizedCompletionIsScalarTower vK u
+  let C := vK.Completion
+  let F := LocalizedCompletion vK u
+  let eK : w.Completion ≃+* C :=
+    (infinitePlaceCompletionAlgEquiv
+      (K := K) w).toRingEquiv
+  let eC : w.Completionˣ ≃* Cˣ :=
+    Units.mapEquiv eK.toMulEquiv
+  let : FiniteDimensional C F :=
+    localizedCompletionModuleFinite vK hvK u
+  let : IsGalois C F :=
+    HilbertRamification.algebraicLocalization_isGalois vK u
+  let D : Subgroup (E ≃ₐ[K] E) :=
+    absoluteValueDecompositionGroup K u.1
+  have hD : D = ⊥ :=
+    chosenSimpleKummerExtension_infiniteDecompositionGroup_eq_bot_of_mem_nthPowerSubgroup
+      n hnK hmu b w hb
   let eLocal :
       D ≃* (F ≃ₐ[C] F) :=
     decompositionGroupEquivAlgebraicLocalizationAut
