@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
+import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
 import LeanPool.Stafford38.Stafford38.Geometry.RetractionSpecialization
 
 /-!

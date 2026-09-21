@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
+import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.RingTheory.Valuation.ValuationSubring
 import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 import Mathlib.RingTheory.Localization.FractionRing

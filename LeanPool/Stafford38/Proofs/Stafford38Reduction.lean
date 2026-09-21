@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib
+import Mathlib.Algebra.Algebra.Equiv
+import Mathlib.Tactic
 
 /-!
 # Transport of Stafford certificates

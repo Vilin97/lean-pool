@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
+import Mathlib.Algebra.CharZero.Infinite
 import LeanPool.Stafford38.Stafford38.Characteristic.LinearAction
 import Mathlib.RingTheory.MvPolynomial.Homogeneous
 

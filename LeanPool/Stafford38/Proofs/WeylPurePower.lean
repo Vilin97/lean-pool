@@ -4,7 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Polynomial.RingDivision
+import Mathlib.Algebra.Ring.GeomSum
+import Mathlib.Data.Rat.Star
+import Mathlib.RingTheory.Coprime.Lemmas
+import Mathlib.RingTheory.Nilpotent.Defs
+import Mathlib.Tactic
+import Mathlib.Tactic.NoncommRing
 
 /-!
 # Pure-power Weyl certificates

@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib
+import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.Polynomial.Degree.Support
+import Mathlib.LinearAlgebra.Quotient.Defs
+import Mathlib.Tactic
+import Mathlib.Tactic.Abel
 
 /-!
 # Right division in a coefficient-left derivation Ore model
@@ -184,7 +188,7 @@ lemma rightMulMonomial_add_right (p : Polynomial B) (b₁ b₂ : B) (j : ℕ) :
   apply Finset.sum_congr rfl
   intro k hk
   by_cases hEq : i - k + j = n
-  · simp only [if_pos hEq, iterate_add, nsmul_add, mul_add]
+  · simp only [ite_eq_left hEq, iterate_add, nsmul_add, mul_add]
   · simp [hEq]
 
 lemma rightMulMonomial_zero_right (p : Polynomial B) (j : ℕ) :
@@ -275,7 +279,7 @@ lemma rightMulMonomial_coeff_top (p : Polynomial B) (hp : p ≠ 0)
       Nat.ne_of_lt (Nat.sub_lt hNpos hkpos)
     simp [hne_sub]) (by simp)]
   rw [Nat.sub_zero]
-  simp only [if_true, Nat.choose_zero_right, Function.iterate_zero_apply,
+  simp only [ite_true, Nat.choose_zero_right, Function.iterate_zero_apply,
     one_nsmul, one_mul, Polynomial.leadingCoeff]
 
 lemma rightMul_degree_le (d q : Polynomial B) :
@@ -789,7 +793,7 @@ theorem commutator_pow_mul_pow (p x : A)
   intro i hi
   by_cases hir : i ≤ r
   · rw [commutator_iterate_pow p x hpx i r]
-    simp only [if_pos hir]
+    simp only [ite_eq_left hir]
     rw [show k - i = (k - i) by rfl]
     simp [hir, smul_mul_assoc, smul_smul, Nat.mul_comm, Nat.mul_left_comm,
       Nat.mul_assoc, mul_assoc]
@@ -857,7 +861,7 @@ theorem pfree_power_of_le {k A : Type*} [Field k] [Ring A]
     have hzero : Submodule.mkQ (pRightMulRange (k := k) p)
         (x ^ (n - i) * p ^ (u - i)) = 0 :=
       (Submodule.Quotient.mk_eq_zero (pRightMulRange (k := k) p)).2 hmem
-    simp only [if_pos (by omega : i ≤ n), map_nsmul, hzero, smul_zero]
+    simp only [ite_eq_left (by omega : i ≤ n), map_nsmul, hzero, smul_zero]
   · simp
 
 theorem pfree_monic_corner {k A : Type*} [Field k] [Ring A]
@@ -891,7 +895,7 @@ theorem pfree_monic_corner {k A : Type*} [Field k] [Ring A]
     have hzero : Submodule.mkQ (pRightMulRange (k := k) p)
         (x ^ (m + r - i) * p ^ (m - i)) = 0 :=
       (Submodule.Quotient.mk_eq_zero (pRightMulRange (k := k) p)).2 hmem
-    simp only [if_pos (by omega : i ≤ m + r), map_nsmul, hzero, smul_zero]
+    simp only [ite_eq_left (by omega : i ≤ m + r), map_nsmul, hzero, smul_zero]
   · simp
 
 lemma commutatorDerivation_mul_left (p b y : A)
@@ -1071,7 +1075,7 @@ lemma commutatorNormal_degree_le (q : Polynomial B) (j : ℕ) :
   intro i hi
   have hi_le : i ≤ q.natDegree := Polynomial.le_natDegree_of_mem_supp i hi
   by_cases hji : j ≤ i
-  · simp only [if_pos hji]
+  · simp only [ite_eq_left hji]
     change (Polynomial.monomial (i - j)
       (i.descFactorial j • q.coeff i)).coeff n = 0
     rw [Polynomial.coeff_monomial]
@@ -1122,9 +1126,9 @@ theorem commutator_iterate_eval_eq_eval_normal
   apply Finset.sum_congr rfl
   intro i hi
   by_cases hji : j ≤ i
-  · simp only [if_pos hji]
+  · simp only [ite_eq_left hji]
     rw [commutator_iterate_eval_monomial D O p (q.coeff i) i j hpb hDp]
-    rw [if_pos hji]
+    rw [ite_eq_left hji]
     change O.embed (q.coeff i) *
         (i.descFactorial j • O.x ^ (i - j)) =
       eval D O (Polynomial.monomial (i - j)

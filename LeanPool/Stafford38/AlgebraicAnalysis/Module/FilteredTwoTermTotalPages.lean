@@ -56,7 +56,7 @@ def totalDrop (r : ℕ) : K.SourceTotal r →ₗ[k] K.TargetTotal r :=
 
 This compatibility lemma intentionally retains the quotient representative on
 the right-hand side, although the simplifier can reduce it further. -/
-@[simp, nolint simpNF] theorem totalDrop_lof_mk (r : ℕ) (p : ℤ)
+@[simp] theorem totalDrop_lof_mk (r : ℕ) (p : ℤ)
     (x : K.cycles r p) :
     K.totalDrop r
         (DirectSum.lof k ℤ (fun q : ℤ => K.SourcePage r q) p

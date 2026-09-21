@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
+import Mathlib.RingTheory.GradedAlgebra.Radical
 import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
 import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalLaurentSymbolControl
 import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalUnitCoordinatePreimage

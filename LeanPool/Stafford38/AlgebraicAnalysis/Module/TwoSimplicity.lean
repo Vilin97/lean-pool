@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib
+import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Algebra.Ring.Hom.Defs
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Tactic
 
 /-!
 # Abstract two-simplicity transfer

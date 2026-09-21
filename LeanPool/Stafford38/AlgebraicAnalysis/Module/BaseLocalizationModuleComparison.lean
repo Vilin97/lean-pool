@@ -77,7 +77,7 @@ noncomputable def localizedModuleComparison :
       ((LocalizedModule.mkLinearMap SC E).restrictScalars R)).extendScalarsOfIsLocalization
         S (Localization S)
 
-@[simp, nolint simpNF] theorem localizedModuleComparison_mkLinearMap (m : E) :
+@[simp] theorem localizedModuleComparison_mkLinearMap (m : E) :
     localizedModuleComparison S (LocalizedModule.mkLinearMap S E m) =
       LocalizedModule.mkLinearMap SC E m := by
   let : IsLocalizedModule S

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib
+import Mathlib.Algebra.MvPolynomial.PDeriv
+import Mathlib.RingTheory.Ideal.Defs
+import Mathlib.Tactic
 
 /-!
 # Polynomial phase space for characteristic support

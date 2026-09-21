@@ -5,7 +5,9 @@ Authors: Christopher Albert
 -/
 
 import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
-import Mathlib
+import Mathlib.RingTheory.Kaehler.Basic
+import Mathlib.RingTheory.Valuation.LocalSubring
+import Mathlib.Tactic
 
 /-!
 # Divisorial visible-frame construction core

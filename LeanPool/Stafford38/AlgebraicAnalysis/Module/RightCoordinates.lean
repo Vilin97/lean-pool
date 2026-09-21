@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib
+import Mathlib.Algebra.Module.Submodule.Basic
+import Mathlib.Algebra.Module.Submodule.Lattice
+import Mathlib.Data.Finsupp.Pointwise
+import Mathlib.Data.Finsupp.SMul
+import Mathlib.Tactic
 
 /-!
 # The concrete right-coordinate model for a stage
@@ -49,7 +53,7 @@ theorem rightCoordinateAction_add_scalar (v : ι →₀ S) (a b : S) :
   ext i
   simp [rightCoordinateAction, mul_add]
 
-@[simp, nolint simpNF] theorem rightCoordinateAction_one (v : ι →₀ S) :
+@[simp] theorem rightCoordinateAction_one (v : ι →₀ S) :
     rightCoordinateAction v 1 = v := by
   simpa only [rightCoordinateAction_eq_op_smul, MulOpposite.op_one, one_smul]
 

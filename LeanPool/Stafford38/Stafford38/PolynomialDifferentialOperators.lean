@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
+import Mathlib.Algebra.MvPolynomial.PDeriv
 import LeanPool.Stafford38.Stafford38.DifferentialOperators
 import LeanPool.Stafford38.Stafford38.Weyl.Universal
 import LeanPool.Stafford38.Stafford38.Weyl.IteratedEquivalence

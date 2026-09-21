@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib
+import Mathlib.Algebra.GroupWithZero.NonZeroDivisors
+import Mathlib.Algebra.Module.Submodule.Range
+import Mathlib.GroupTheory.OreLocalization.OreSet
+import Mathlib.LinearAlgebra.Quotient.Defs
+import Mathlib.Tactic
 
 /-!
 # Generic denominator clearing and torsion quotients

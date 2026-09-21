@@ -54,7 +54,7 @@ noncomputable def commutingPolynomialAction {σ : Type w}
 /-- Evaluation sends constants to scalar endomorphisms. This named
 compatibility lemma is retained even though generic algebra-hom simplification
 can also discharge its left-hand side. -/
-@[simp, nolint simpNF] theorem commutingPolynomialAction_apply_C {σ : Type w}
+@[simp] theorem commutingPolynomialAction_apply_C {σ : Type w}
     (v : σ → Module.End k V) (hcomm : ∀ i j, Commute (v i) (v j)) (a : k) :
     commutingPolynomialAction v hcomm (MvPolynomial.C a) = algebraMap k (Module.End k V) a := by
   classical

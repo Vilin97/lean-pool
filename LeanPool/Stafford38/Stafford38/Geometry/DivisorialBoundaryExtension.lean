@@ -40,7 +40,6 @@ noncomputable section
 
 universe u v w z
 
-attribute [-instance] instAlgebraAtPrimeFractionRing
 
 /-- A finite separable extension of the fraction field of a DVR has a
 discrete valuation subring above the maximal ideal.
@@ -301,7 +300,6 @@ theorem exists_discreteBoundaryRefinement_of_relativeFiniteExtension_of_charZero
   }⟩
 
 
-attribute [instance] instAlgebraAtPrimeFractionRing
 
 end
 

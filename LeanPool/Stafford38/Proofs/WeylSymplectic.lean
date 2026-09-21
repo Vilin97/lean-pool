@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import Mathlib
+import Mathlib.Algebra.RingQuot
+import Mathlib.LinearAlgebra.SymplecticGroup
+import Mathlib.Tactic
 import LeanPool.Stafford38.AlgebraicAnalysis.Commutator
 
 /-!

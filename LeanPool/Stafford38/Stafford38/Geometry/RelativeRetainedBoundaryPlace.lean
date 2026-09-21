@@ -33,7 +33,6 @@ noncomputable section
 
 universe u
 
-attribute [-instance] instAlgebraAtPrimeFractionRing
 
 private abbrev SourceDVR (E : Type u) [Field E] :=
   CoordinateZeroLocalRing E
@@ -203,7 +202,6 @@ theorem exists_data_of_fg_charZero
   }⟩
 
 
-attribute [instance] instAlgebraAtPrimeFractionRing
 
 end
 

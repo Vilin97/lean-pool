@@ -205,11 +205,11 @@ theorem rightOrePBWBasis_repr_symm_single [Nontrivial B]
       b • rightPBWMonomial D n := by
   rw [(rightOrePBWBasis D).repr_symm_single, rightOrePBWBasis_apply]
 
-@[simp, nolint simpNF] theorem rightPBWMonomial_zero (D : OreDivisionDerivation B) :
+@[simp] theorem rightPBWMonomial_zero (D : OreDivisionDerivation B) :
     rightPBWMonomial D 0 = 1 := by
   simp [rightPBWMonomial, normalForm_one]
 
-@[simp, nolint simpNF] theorem rightPBWMonomial_op_smul
+@[simp] theorem rightPBWMonomial_op_smul
     (D : OreDivisionDerivation B) (b : Bᵐᵒᵖ) (n : ℕ) :
     b • rightPBWMonomial D n =
       normalForm D (Polynomial.X ^ n) * normalCoefficient D b.unop := by
@@ -233,7 +233,7 @@ theorem rightPBWWindow_finite
   exact Module.Finite.span_of_finite Bᵐᵒᵖ
     (Set.finite_range (fun j : Fin n => rightPBWMonomial D (j : ℕ)))
 
-@[simp, nolint simpNF] theorem rightPBWMonomial_apply (D : OreDivisionDerivation B) (n : ℕ) :
+@[simp] theorem rightPBWMonomial_apply (D : OreDivisionDerivation B) (n : ℕ) :
     rightPBWMonomial D n = normalForm D (Polynomial.X ^ n) := rfl
 
 /-- Right multiplication by a PBW monomial has the expected top coefficient.
