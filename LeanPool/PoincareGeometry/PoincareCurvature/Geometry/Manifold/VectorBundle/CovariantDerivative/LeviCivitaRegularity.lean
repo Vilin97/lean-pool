@@ -227,7 +227,7 @@ theorem contMDiffOn_correctionFunctional_apply_section_two
           torsionInnerFunctional (I := I) cov x (τ x) (σ x) (υ x) +
           torsionInnerFunctional (I := I) cov x (σ x) (υ x) (τ x) -
           torsionInnerFunctional (I := I) cov x (υ x) (τ x) (σ x))) u := by
-    simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
+    exact
       ((((hterm1.add_section hterm2).sub_section hterm3).sub_section htors1).add_section
         htors2).sub_section htors3
   have hcorrectionSection : ContMDiffOn I (I.prod 𝓘(ℝ, ℝ)) 2

@@ -57,13 +57,14 @@ theorem hasMFDerivAt_integralCurve_timeChange {v : Π x : M, TangentSpace I x}
     (hτ : HasDerivAt τ c t) :
     HasMFDerivAt 𝓘(ℝ, ℝ) I (γ ∘ τ) t
       ((1 : ℝ →L[ℝ] ℝ).smulRight (c • v (γ (τ t)))) := by
-  convert! (hγ (τ t)).comp t hτ.hasFDerivAt.hasMFDerivAt using 1
-  ext
-  simp only [ContinuousLinearMap.coe_comp, Function.comp_apply,
-    ContinuousLinearMap.smulRight_apply, one_apply_eq_self,
-    ContinuousLinearMap.toSpanSingleton_apply_one, one_smul]
-  change c • v (γ (τ t)) = (1 * c) • v (γ (τ t))
-  rw [one_mul]
+  have hmap :
+      (1 : ℝ →L[ℝ] ℝ).smulRight (c • v (γ (τ t))) =
+        ((1 : ℝ →L[ℝ] ℝ).smulRight (v (γ (τ t)))).comp
+          (ContinuousLinearMap.toSpanSingleton ℝ c) := by
+    ext a
+    simp [smul_smul, mul_comm]
+  rw [hmap]
+  exact (hγ (τ t)).comp t hτ.hasFDerivAt.hasMFDerivAt
 
 /-- The full time-changed curve is an integral curve of the actual radial
 gradient on the entire open radial interval. -/

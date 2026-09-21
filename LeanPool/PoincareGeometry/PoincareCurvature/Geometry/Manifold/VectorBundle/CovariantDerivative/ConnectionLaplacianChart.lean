@@ -28,7 +28,8 @@ open Bundle FiberBundle
 open scoped Manifold ContDiff
 
 namespace CovariantDerivative
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [normedModel : NormedAddCommGroup E]
+  [modelNormedSpace : NormedSpace ℝ E]
   {H : Type*} [TopologicalSpace H] {I : ModelWithCorners ℝ E H}
   {M : Type*} [TopologicalSpace M] [ChartedSpace H M]
   [T2Space M] [FiniteDimensional ℝ E] [CompleteSpace E] [IsManifold I ∞ M]
@@ -100,9 +101,11 @@ theorem mvfderiv_apply_eq_fderivWithin_fixedChart
       fderivWithin ℝ (writtenInExtChartAt I 𝓘(ℝ) p g) (Set.range I) z =
         (((mfderiv% g y).comp (mfderiv[Set.range I] φ.symm z)) :
           E →L[ℝ] ℝ) := by
-    simpa [writtenInExtChartAt, φ, z] using
-      hcomp.hasFDerivWithinAt.fderivWithin
-        (I.uniqueDiffOn.uniqueDiffWithinAt hz_range)
+    have hcompEq := hcomp.mfderivWithin (I.uniqueMDiffOn z hz_range)
+    rw [mfderivWithin_eq_fderivWithin] at hcompEq
+    simp only [writtenInExtChartAt, φ, z, chartAt_self_eq,
+      OpenPartialHomeomorph.refl_apply, mfld_simps] at hcompEq ⊢
+    convert! hcompEq
   have hmp :
       VectorField.mpullbackWithin 𝓘(ℝ, E) I φ.symm X (Set.range I) z =
         (mfderiv[Set.range I] φ.symm z).inverse (X y) := by
@@ -193,7 +196,7 @@ theorem localFirstCovariantComponent_eq_inChart
   simp [localTwoTensorComponentInChart,
     localTwoTensorConnectionCoefficientInChart, localFrameInChart,
     writtenInExtChartAt, hyChart]
-  simp_all only [mfld_simps]
+  simp_all only [mfld_simps, chartAt_self_eq, OpenPartialHomeomorph.refl_apply]
 
 /-- The fixed-chart representative of an induced covariant-three-tensor
 frame-connection coefficient. -/
@@ -317,7 +320,7 @@ theorem localSecondCovariantComponent_eq_inChart
       (hreg y hyFrame input.1)]
   simp [localThreeTensorConnectionCoefficientInChart,
     writtenInExtChartAt]
-  simp_all only [mfld_simps]
+  simp_all only [mfld_simps, chartAt_self_eq, OpenPartialHomeomorph.refl_apply]
 
 /-- The inverse Gram-matrix coefficient of the local tangent frame in a fixed
 manifold chart. -/
@@ -373,7 +376,7 @@ theorem localConnectionLaplacianComponent_eq_inChart
   rw [localSecondCovariantComponent_eq_inChart
     (I := I) cov p e b hreg hyFrame hyChart out j i (hfirst out j)]
   simp [localFrameInverseGramMatrixInChart, writtenInExtChartAt]
-  simp_all only [mfld_simps]
+  simp_all only [mfld_simps, chartAt_self_eq, OpenPartialHomeomorph.refl_apply]
 
 /-- **Actual connection Laplacian in one fixed chart.**  Evaluating the
 intrinsic connection Laplacian on a local tensor-frame vector is exactly the

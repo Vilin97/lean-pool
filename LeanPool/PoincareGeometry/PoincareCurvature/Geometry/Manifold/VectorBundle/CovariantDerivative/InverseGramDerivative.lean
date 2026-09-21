@@ -58,6 +58,7 @@ theorem matrix_inverse_mvfderiv_apply
       mvfderiv (I := I) f x = mvfderiv (I := I) g x := by
     unfold mvfderiv
     rw [hfg.eq_of_nhds, hfg.mfderiv_eq]
+    rfl
   have hvariation : A x * Bdot + Adot * B x = 0 := by
     ext i j
     let term : ι → M → ℝ := fun k y => A y i k * B y k j

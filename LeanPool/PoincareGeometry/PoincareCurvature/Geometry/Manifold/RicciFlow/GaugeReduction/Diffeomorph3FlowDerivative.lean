@@ -858,11 +858,12 @@ theorem Diffeomorph3IntrinsicGaugeFlowDerivativeOn.of_chartDerivativeOn
   refine ⟨hchart.continuousWithinAt_eval_self ht x, ?_⟩
   have h := (hchart t ht x).2.hasFDerivWithinAt
   unfold TangentSpace at h ⊢
-  simpa [TangentSpace, writtenInExtChartAt, extChartAt_model_space_eq_id,
+  simp only [TangentSpace, writtenInExtChartAt, extChartAt_model_space_eq_id,
     Function.comp_def, PartialEquiv.refl_coe, modelWithCornersSelf_coe,
     modelWithCornersSelf_coe_symm, chartAt_self_eq, OpenPartialHomeomorph.refl_apply,
     OpenPartialHomeomorph.coe_toPartialEquiv, range_id, inter_univ, preimage_id_eq, id_eq,
-    ContinuousLinearMap.smulRight_one_eq_toSpanSingleton] using h
+    ContinuousLinearMap.smulRight_one_eq_toSpanSingleton, hasFDerivWithinAt_univ] at h ⊢
+  convert! h
 
 /-- Fixed-chart intrinsic ODE data directly supplies the primitive intrinsic
 manifold derivative data within the same time set. -/
@@ -986,11 +987,12 @@ theorem Diffeomorph3IntrinsicGaugeFlowDerivativeAtOn.of_chartDerivativeAtOn
   refine ⟨hchart.continuousAt_eval_self ht x, ?_⟩
   have h := (hchart t ht x).2.hasFDerivAt
   unfold TangentSpace at h ⊢
-  simpa [TangentSpace, writtenInExtChartAt, extChartAt_model_space_eq_id,
+  simp only [TangentSpace, writtenInExtChartAt, extChartAt_model_space_eq_id,
     Function.comp_def, PartialEquiv.refl_coe, modelWithCornersSelf_coe,
     modelWithCornersSelf_coe_symm, chartAt_self_eq, OpenPartialHomeomorph.refl_apply,
     OpenPartialHomeomorph.coe_toPartialEquiv, range_id, inter_univ, preimage_id_eq, id_eq,
-    ContinuousLinearMap.smulRight_one_eq_toSpanSingleton] using h
+    ContinuousLinearMap.smulRight_one_eq_toSpanSingleton, hasFDerivWithinAt_univ] at h ⊢
+  convert! h
 
 /-- Ordinary fixed-chart intrinsic ODE data directly supplies primitive
 ordinary intrinsic manifold derivative data. -/

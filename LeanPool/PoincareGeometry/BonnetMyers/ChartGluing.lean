@@ -477,10 +477,7 @@ theorem rechartTangent_eq_trivialization_readout_of_coordinateFrameCombination
   have hline : HasDerivAt z (w t) t := by
     change HasDerivAt (fun s ↦ sol.coordinate t + (s - t) • w t) (w t) t
     convert (hasDerivAt_const t (sol.coordinate t)).add
-      (((hasDerivAt_id' t).sub_const t).smul_const (w t)) using 1
-    · funext s
-      rfl
-    · simp
+      (((hasDerivAt_id' t).sub_const t).smul_const (w t)) using 1 <;> simp
   have hφdiff : DifferentiableAt ℝ φ (z t) := by
     change DifferentiableAt ℝ ((extChartAt I c) ∘ (extChartAt I p).symm) (z t)
     rw [hzt]

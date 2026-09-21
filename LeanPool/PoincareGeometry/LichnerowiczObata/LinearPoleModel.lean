@@ -45,9 +45,17 @@ theorem HasRadialPoleModel.precompose_linearIsometry
       change fderiv ℝ L 0 v = L v
       convert congrArg (fun D : P →L[ℝ] V => D v) (L.toContinuousLinearEquiv.fderiv (x := (0 : P)))
         using 1 <;> rfl
+    have he' (a : P) :
+        mfderiv 𝓘(ℝ, P) 𝓘(ℝ, V) L 0 ((NormedSpace.fromTangentSpace (0 : P)).symm a) =
+          (NormedSpace.fromTangentSpace (L (0 : P))).symm (L a) := by
+      convert! he a
+    change inner ℝ
+      (mfderiv 𝓘(ℝ, P) I (χ ∘ L) 0 ((NormedSpace.fromTangentSpace (0 : P)).symm v))
+      (mfderiv 𝓘(ℝ, P) I (χ ∘ L) 0 ((NormedSpace.fromTangentSpace (0 : P)).symm w)) =
+        inner ℝ v w
     rw [mfderiv_comp_apply _ (hc.mdifferentiableAt (by norm_num)) hdL,
       mfderiv_comp_apply _ (hc.mdifferentiableAt (by norm_num)) hdL,
-      he, he, map_zero]
+      he', he', map_zero]
     rw [show (χ ∘ L) (0 : P) = χ (0 : V) by simp only [Function.comp_apply, map_zero]]
     exact (hm (L v) (L w)).trans (L.inner_map_map v w)
   · intro u r hr
