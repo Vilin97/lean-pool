@@ -9290,9 +9290,9 @@ projects:
       Formalizes Levent Alpöge's construction of a complex-analytic atlas on
       the standard six-sphere. The development builds a compact complex
       threefold from torus fibrations with cusp and elliptic fibres, computes
-      its homology and fundamental group, recognizes its underlying smooth
-      manifold as the six-sphere, and transports the complex atlas across the
-      resulting homeomorphism. It adapts Lean developments by Yury G.
+      its homology and fundamental group, proves that its underlying
+      topological space is homeomorphic to the six-sphere, and transports the
+      complex atlas across that homeomorphism. It adapts Lean developments by Yury G.
       Kudryashov and Sebastian Kumar, together with the statement from the
       Formal Conjectures Authors.
     branch: complex geometry and differential topology

@@ -24,8 +24,8 @@ MSC: 32Q55, 57R15
 
 This project formalizes the construction in Levent Alpöge's paper
 *A compact complex threefold fibred by tori over the projective line, and the six-sphere*.
-It constructs a compact complex threefold, identifies its underlying smooth manifold with the
-standard six-sphere, and transports the complex atlas to `unitSphere 6`.
+It constructs a compact complex threefold, proves that its underlying topological space is
+homeomorphic to the standard six-sphere, and transports the complex atlas to `unitSphere 6`.
 
 ## Provenance
 
