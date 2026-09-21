@@ -47,23 +47,23 @@ namespace ShortRotationCounterexample
 open scoped InnerProductSpace
 open Module (finrank)
 
-noncomputable section
+section
 
 /-- The ambient space `ℝ⁴`. -/
-abbrev E4 := EuclideanSpace ℝ (Fin 4)
+noncomputable abbrev E4 := EuclideanSpace ℝ (Fin 4)
 
 /-- Standard basis vector. -/
-abbrev sv (i : Fin 4) : E4 := EuclideanSpace.single i 1
+noncomputable abbrev sv (i : Fin 4) : E4 := EuclideanSpace.single i 1
 
 /-- The competitor matrix `½·H` with `H` a sign matrix of Hadamard type. -/
-def Wmat : Matrix (Fin 4) (Fin 4) ℝ :=
+noncomputable def Wmat : Matrix (Fin 4) (Fin 4) ℝ :=
   (2⁻¹ : ℝ) • !![1, -1, -1, -1; 1, 1, 1, -1; -1, -1, 1, -1; 1, -1, 1, 1]
 
 /-- The competitor as a linear map. -/
-def Wlin : E4 →ₗ[ℝ] E4 := Matrix.toEuclideanLin Wmat
+noncomputable def Wlin : E4 →ₗ[ℝ] E4 := Matrix.toEuclideanLin Wmat
 
 /-- The inverse (transpose) as a linear map. -/
-def Wlin' : E4 →ₗ[ℝ] E4 := Matrix.toEuclideanLin Wmat.transpose
+noncomputable def Wlin' : E4 →ₗ[ℝ] E4 := Matrix.toEuclideanLin Wmat.transpose
 
 private theorem Wlin_apply (x : E4) (i : Fin 4) :
     Wlin x i = ∑ j, Wmat i j * x j := by
@@ -102,7 +102,7 @@ private theorem inner_Wlin_Wlin (x y : E4) : ⟪Wlin x, Wlin y⟫_ℝ = ⟪x, y�
   ring
 
 /-- The competitor as a linear isometry equivalence. -/
-def Wequiv : E4 ≃ₗᵢ[ℝ] E4 :=
+noncomputable def Wequiv : E4 ≃ₗᵢ[ℝ] E4 :=
   (LinearEquiv.ofLinearMap Wlin Wlin' Wlin_comp_Wlin' Wlin'_comp_Wlin).isometryOfInner
     fun x y => inner_Wlin_Wlin x y
 
@@ -116,10 +116,10 @@ private theorem Wlin_adjoint : LinearMap.adjoint Wlin = Wlin' :=
   Wequiv.adjoint_toLinearMap_eq_symm
 
 /-- The source subspace `span{e₀, e₁}`. -/
-def U4 : Submodule ℝ E4 := Submodule.span ℝ {sv 0, sv 1}
+noncomputable def U4 : Submodule ℝ E4 := Submodule.span ℝ {sv 0, sv 1}
 
 /-- The target subspace `W(U)`. -/
-def V4 : Submodule ℝ E4 := U4.map Wequiv.toLinearMap
+noncomputable def V4 : Submodule ℝ E4 := U4.map Wequiv.toLinearMap
 
 private theorem mem_U4 {x : E4} (hx : x ∈ U4) : x = x 0 • sv 0 + x 1 • sv 1 := by
   obtain ⟨a, b, rfl⟩ := Submodule.mem_span_pair.mp hx
@@ -334,7 +334,7 @@ theorem kyFanSum_displacement_R :
 /-! ### The competitor side: `σ(I-W) = (√2, √2, 0, 0)` -/
 
 /-- The rotation-plane orthonormal family `(m₀, m₁, m₀', m₁')`. -/
-def mv : Fin 4 → E4 :=
+noncomputable def mv : Fin 4 → E4 :=
   ![(Real.sqrt 2)⁻¹ • (sv 0 + sv 2), (Real.sqrt 2)⁻¹ • (sv 1 + sv 3),
     (Real.sqrt 2)⁻¹ • (sv 0 - sv 2), (Real.sqrt 2)⁻¹ • (sv 1 - sv 3)]
 
@@ -366,7 +366,7 @@ private theorem orthonormal_mv : Orthonormal ℝ mv := by
           hh]
 
 /-- The family as an orthonormal basis. -/
-def mbasis : OrthonormalBasis (Fin 4) ℝ E4 :=
+noncomputable def mbasis : OrthonormalBasis (Fin 4) ℝ E4 :=
   (basisOfLinearIndependentOfCardEqFinrank orthonormal_mv.linearIndependent
     (by simp [])).toOrthonormalBasis
     (by
@@ -540,10 +540,10 @@ This localizes the source-proof defect independently of the theorem-level
 refutation below. -/
 
 /-- The first principal plane used to test Davis--Kahan equation (4.3). -/
-def omega1 : Submodule ℝ E4 := Submodule.span ℝ {sv 0, sv 3}
+noncomputable def omega1 : Submodule ℝ E4 := Submodule.span ℝ {sv 0, sv 3}
 
 /-- The second principal plane used to test Davis--Kahan equation (4.3). -/
-def omega2 : Submodule ℝ E4 := Submodule.span ℝ {sv 1, sv 2}
+noncomputable def omega2 : Submodule ℝ E4 := Submodule.span ℝ {sv 1, sv 2}
 
 private theorem mem_omega1 {x : E4} (hx : x ∈ omega1) :
     x = x 0 • sv 0 + x 3 • sv 3 := by
@@ -596,11 +596,11 @@ private theorem projection_omega2_coord (x : E4) (i : Fin 4) :
   fin_cases i <;> simp [sv]
 
 /-- The first block `K Ω₁` from the printed equation (4.3), for `K = I-W`. -/
-def equation43Block1 : E4 →ₗ[ℝ] E4 :=
+noncomputable def equation43Block1 : E4 →ₗ[ℝ] E4 :=
   (LinearMap.id - Wlin) ∘ₗ projection omega1
 
 /-- The second block `K Ω₂` from the printed equation (4.3), for `K = I-W`. -/
-def equation43Block2 : E4 →ₗ[ℝ] E4 :=
+noncomputable def equation43Block2 : E4 →ₗ[ℝ] E4 :=
   (LinearMap.id - Wlin) ∘ₗ projection omega2
 
 private theorem gram_equation43Block1 :

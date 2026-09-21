@@ -67,7 +67,7 @@ namespace DavisKahanExt
 
 
 
-noncomputable section
+section
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
   [CompleteSpace H]
@@ -98,7 +98,7 @@ open TauCeti.DavisKahan.RealSpectralRestriction
 open TauCeti.RealComplexification
 open TauCeti.DavisKahan.Foundation.RealComplexification
 
-noncomputable section
+section
 
 universe u v
 

@@ -382,7 +382,7 @@ theorem eigenvalue_notMem_gap_of_diagonal_form (hS : S.IsSymmetric)
     mul_pos (show (0 : ℝ) < b - μ by linarith [hc.2]) hp2]
 
 omit [FiniteDimensional 𝕜 E] [CompleteSpace E] in
-/-- `w ↦ Ĵ(S w − c w)` is additive.
+/-- `w ↦ Jhat(S w − c w)` is additive.
 
 It is a composition of linear maps, so this and `reflectionShift_smul` below hold
 with **no hypothesis on `S`, `V` or the shift at all** -- neither symmetry nor
@@ -399,7 +399,7 @@ private theorem reflectionShift_add (S : E →ₗ[𝕜] E) (V : Submodule 𝕜 E
   abel
 
 omit [FiniteDimensional 𝕜 E] [CompleteSpace E] in
-/-- `w ↦ Ĵ(S w − c w)` is real-homogeneous.  See `reflectionShift_add`. -/
+/-- `w ↦ Jhat(S w − c w)` is real-homogeneous.  See `reflectionShift_add`. -/
 private theorem reflectionShift_smul (S : E →ₗ[𝕜] E) (V : Submodule 𝕜 E)
     [V.HasOrthogonalProjection] (c : ℝ) (t : ℝ) (w : E) :
     V.reflection (S ((t : 𝕜) • w) - ((c : ℝ) : 𝕜) • ((t : 𝕜) • w))
@@ -782,17 +782,17 @@ private theorem diagonal_plane_coercivity_bounds
 
 omit [FiniteDimensional 𝕜 E] [CompleteSpace E] in
 /-- The eigenvector analysis behind the tan 2Θ theorem (plan step G2.2b).  At
-a unit eigenvector `x` of `(P − P̂)²` with eigenvalue `ν`, write `J, Ĵ` for the
+a unit eigenvector `x` of `(P − P̂)²` with eigenvalue `ν`, write `J, Jhat` for the
 reflections through `U, V` and `c, d` for the midpoint and half-gap.  The
-operator identity `(JĴ)·(Ĵ(S−c)) = J(S−c)` splits into the symmetric part
+operator identity `(JJhat)·(Jhat(S−c)) = J(S−c)` splits into the symmetric part
 `J(T−c)` (coercive with constant `d`, by the vanishing pinch) and the skew
-part `J(S−T)` (of norm at most `ε`), while `Ĵ(S−c)` is itself symmetric and
-`d`-coercive.  Evaluating these forms on the `JĴ`-invariant plane spanned by
-`x` and `y = JĴx` — concretely, on the pairs `(x,x)`, `(w₂,w₂)` and
+part `J(S−T)` (of norm at most `ε`), while `Jhat(S−c)` is itself symmetric and
+`d`-coercive.  Evaluating these forms on the `JJhat`-invariant plane spanned by
+`x` and `y = JJhatx` — concretely, on the pairs `(x,x)`, `(w₂,w₂)` and
 `(sx − w₂, sx + w₂)` for `w₂ = y − γx`, `γ = ⟪x, y⟫`, `s = ‖w₂‖` — makes every
 cross-Gram term cancel and yields `μ₀ (s²r₁ + r₂) ≥ 2ds²` and
 `(s²r₁ + r₂)² (s² + ν'²) ≤ 4ε²s⁴` for the `cos 2Θ`-eigenvalue `μ₀ = 1 − 2ν`
-(`ν' = im γ`, `r`'s the diagonal `Ĵ(S−c)`-form values), whence `μ₀ > 0` and
+(`ν' = im γ`, `r`'s the diagonal `Jhat(S−c)`-form values), whence `μ₀ > 0` and
 the sharp tangent bound `d²(1−μ₀²) ≤ ε²μ₀²`.  Auxiliary. -/
 private theorem eigen_cos_two_theta_bound (hT : T.IsSymmetric) (hS : S.IsSymmetric)
     {U V : Submodule 𝕜 E} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
@@ -893,7 +893,7 @@ private theorem eigen_cos_two_theta_bound (hT : T.IsSymmetric) (hS : S.IsSymmetr
         push_cast
         ring]
     module
-  -- fold the scalar entries of the `Ĵ(S−c)`-form
+  -- fold the scalar entries of the `Jhat(S−c)`-form
   set Q₁ : 𝕜 := ⟪x, V.reflection (S x - (((a + b) / 2 : ℝ) : 𝕜) • x)⟫_𝕜 with hQ₁def
   set Q₂ : 𝕜 := ⟪w₂, V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜 with hQ₂def
   set G : 𝕜 := ⟪x, V.reflection (S w₂ - (((a + b) / 2 : ℝ) : 𝕜) • w₂)⟫_𝕜 with hGdef
@@ -1032,7 +1032,7 @@ literature cross-check.
 
 Proof: this is GKMV's sectorial argument (arXiv:1006.3190, Thm 3.1),
 distilled to finite-dimensional elementary form.  With `X := P − P̂` and
-`C := 1 − 2X²` (the `cos 2Θ` operator, `2C = JĴ + ĴJ`), a maximal eigenvector
+`C := 1 − 2X²` (the `cos 2Θ` operator, `2C = JJhat + JhatJ`), a maximal eigenvector
 of `X∘X` bounds `t² = ‖X‖²` by `(1 − μ₀)/2` for its `C`-eigenvalue `μ₀`, and
 `eigen_cos_two_theta_bound` supplies `μ₀ > 0` together with the sharp
 `(b−a)/2 · √(1−μ₀²) ≤ ε μ₀`; monotonicity of `τ ↦ 4τ(1−τ)` on `[0, 1/2]`

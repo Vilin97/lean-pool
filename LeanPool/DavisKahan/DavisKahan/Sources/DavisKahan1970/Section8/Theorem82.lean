@@ -76,11 +76,11 @@ printed hypothesis of Theorem 8.2".  That assertion was wrong, and it was wrong
 about a *printed hypothesis it did not check*.
 
 (3.5), stated at Proposition 3.2 of the transcription as
-`dim(P𝓗 ∩ Q̃𝓗) = dim(P̃𝓗 ∩ Q𝓗)`, is a **standing** hypothesis of the source from
+`dim(P𝓗 ∩ Qtilde𝓗) = dim(Ptilde𝓗 ∩ Q𝓗)`, is a **standing** hypothesis of the source from
 Section 3 onward: the sentence closing that proposition's proof reads "We shall
 assume (3.5) as well as (1.5) except where stated otherwise."  Theorem 8.2 does
 not state otherwise, so (3.5) is in force there exactly as (1.5) is.  In the
-displayed configuration `P𝓗 ∩ Q̃𝓗 = 0` while `P̃𝓗 ∩ Q𝓗 = span {e₀} × 0`, so the
+displayed configuration `P𝓗 ∩ Qtilde𝓗 = 0` while `Ptilde𝓗 ∩ Q𝓗 = span {e₀} × 0`, so the
 two crossed dimensions are `0` and `1` and (3.5) **fails**.  It is therefore not
 a configuration satisfying every printed hypothesis, and it refutes nothing
 about the printed conclusion.
@@ -88,8 +88,8 @@ about the printed conclusion.
 It is, in fact, the paper's own (3.5)-failure example.  The Remark following
 Proposition 3.2 takes `𝓗 = ℓ²(ℤ)`, `P𝓗` the sequences with `a_n = 0` for
 `n < 0`, `Q𝓗` those with `a_n = 0` for `n ≤ 0`, notes that (1.5) holds with the
-bilateral shift as a witness for (1.4), and concludes: "`P Q̃` is the projector
-upon the subspace of sequences with `a_n = 0` for `n ≠ 0`, whereas `P̃ Q = 0`; so
+bilateral shift as a witness for (1.4), and concludes: "`P Qtilde` is the projector
+upon the subspace of sequences with `a_n = 0` for `n ≠ 0`, whereas `Ptilde Q = 0`; so
 (3.5) fails."  That is the displayed configuration with the two subspaces
 interchanged.  It is machine-checked in this repository as
 `Section3.directedGap_asymmetric_coordinateHalfSpace`, together with
@@ -108,7 +108,7 @@ too.  Nothing here should be read as settling the cardinal reading either way.
 **Why the finite form, then, on its own grounds.**  Two, neither of which is a
 counterexample.  First, the paper's own Remark after Proposition 3.2: "Since we
 are assuming (1.5), (3.5) will hold automatically if either `dim P𝓗` or
-`dim P̃𝓗` is finite."  The finite form is thus precisely the regime in which the
+`dim Ptilde𝓗` is finite."  The finite form is thus precisely the regime in which the
 standing hypothesis (3.5) is free, so a statement carrying it assumes nothing
 the source has not already assumed.  Second, it is the checkable form:
 `finrank ℂ P = finrank ℂ Q` is a hypothesis a consumer discharges by counting,

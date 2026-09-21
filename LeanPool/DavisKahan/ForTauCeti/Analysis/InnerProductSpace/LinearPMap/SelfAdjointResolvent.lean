@@ -287,10 +287,10 @@ theorem isSelfAdjoint_resolvent_ofReal {A : E →ₗ.[ℂ] E} (hA : IsSelfAdjoin
     _ = ⟪x, resolvent A (c : ℂ) y⟫_ℂ := by rw [hx]
 
 /-- **The adjoint of the resolvent is the resolvent at the conjugate point:**
-`R(z)⋆ = R(z̄)`.
+`R(z)⋆ = R(conj(z))`.
 
 Both sides are pinned by the two-sided inverse property: writing `u = R(z) x` and
-`v = R(z̄) y`, symmetry of `A` turns `⟪u, (z • I - A) v⟫` into `⟪(z̄ • I - A) u, v⟫`. -/
+`v = R(conj(z)) y`, symmetry of `A` turns `⟪u, (z • I - A) v⟫` into `⟪(conj(z) • I - A) u, v⟫`. -/
 theorem adjoint_resolvent {A : E →ₗ.[ℂ] E} (hA : IsSelfAdjoint A) {z : ℂ}
     (hz : z ∈ resolventSet A) (hzc : (starRingEnd ℂ) z ∈ resolventSet A) :
     ContinuousLinearMap.adjoint (resolvent A z) = resolvent A ((starRingEnd ℂ) z) := by

@@ -262,7 +262,7 @@ NormalizedSymmetricOperatorIdealFamily
         ▼
 NormalizedUnitaryInvariantNorm
         │  toNormalizedSymmetricOperatorIdealFamily
-        └───────────────────────────────────────────► base record
+        └───────────────────────────────────────────→ base record
 ```
 
 The exploration in `DavisKahan/Explorations/SourceUnitaryInvariantNormFanDominance`

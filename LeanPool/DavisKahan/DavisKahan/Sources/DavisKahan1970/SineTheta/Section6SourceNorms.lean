@@ -35,7 +35,7 @@ namespace DavisKahan1970
 open DavisKahan
 open DavisKahan.ExactSinTheta
 
-noncomputable section
+section
 
 universe u v
 
@@ -178,7 +178,7 @@ Only Lemma 6.1 needs them.  Lemma 6.2's premise does not mention a Ky Fan norm,
 so its scalar-generic statement is already free of the capability class and is
 itself source-exact over both fields. -/
 
-noncomputable section FixedScalar
+section FixedScalar
 
 universe v
 

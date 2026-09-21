@@ -306,7 +306,7 @@ theorem canonicalGapCircle_margin_le_realSpectrum
         ‖z - (lam : ℂ)‖ + ‖(lam : ℂ) - (mu : ℂ)‖ := by
       calc
         ‖z - (mu : ℂ)‖ =
-            ‖(z - (lam : ℂ)) + ((lam : ℂ) - (mu : ℂ))‖ := by congr 1 ; ring
+            ‖(z - (lam : ℂ)) + ((lam : ℂ) - (mu : ℂ))‖ := by congr 1; ring
         _ ≤ _ := norm_add_le _ _
     dsimp only [delta, margin]
     linarith
@@ -318,7 +318,7 @@ theorem canonicalGapCircle_margin_le_realSpectrum
         ‖z - (lam : ℂ)‖ + ‖(lam : ℂ) - (mu : ℂ)‖ := by
       calc
         ‖z - (mu : ℂ)‖ =
-            ‖(z - (lam : ℂ)) + ((lam : ℂ) - (mu : ℂ))‖ := by congr 1 ; ring
+            ‖(z - (lam : ℂ)) + ((lam : ℂ) - (mu : ℂ))‖ := by congr 1; ring
         _ ≤ _ := norm_add_le _ _
     dsimp only [delta, margin]
     linarith

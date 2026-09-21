@@ -175,8 +175,8 @@ of the two-sided square-summable sequences:
 * `Q H` is the subspace of those with `aₙ = 0` for `n ≤ 0`.
 
 Then (1.5) holds -- the bilateral shift is a unitary carrying `P H` onto `Q H`,
-so it satisfies (1.4), and (1.5) follows -- while `P H ∩ Q̃ H` is the line of
-sequences supported at `n = 0` and `P̃ H ∩ Q H` is zero, so (3.5) fails.  By
+so it satisfies (1.4), and (1.5) follows -- while `P H ∩ Qtilde H` is the line of
+sequences supported at `n = 0` and `Ptilde H ∩ Q H` is zero, so (3.5) fails.  By
 Proposition 3.2 the pair therefore admits no direct rotation at all.
 
 The Hilbert space is presented as an arbitrary Hilbert space over an `RCLike`

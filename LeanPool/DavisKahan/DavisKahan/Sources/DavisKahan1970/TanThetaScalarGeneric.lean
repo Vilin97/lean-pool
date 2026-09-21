@@ -34,7 +34,7 @@ namespace TanTheta
 open ExactSinTheta
 open TauCeti.ScalarTransport
 
-noncomputable section
+section
 
 universe u v
 
@@ -48,7 +48,7 @@ noncomputable def directedSineBlock
   Vᗮ.starProjection ∘L Z.subtypeL
 
 /-- A directed tangent representative has exactly the singular values `tan θⱼ`. -/
-def HasDirectedTangentApproximationNumbers
+noncomputable def HasDirectedTangentApproximationNumbers
     (Z V : Submodule 𝕜 H) [Z.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (tanTheta0 : Z →L[𝕜] H) : Prop :=
   ∀ n, tanTheta0.approximationNumber n =
@@ -238,7 +238,7 @@ end DavisKahan
 
 namespace DavisKahan1970
 
-noncomputable section
+section
 
 open TauCeti.DavisKahan
 open TauCeti.DavisKahan.ExactSinTheta

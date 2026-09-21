@@ -56,60 +56,60 @@ end SymmetricTwoByTwo
 
 -- every constant below is built from real division and `Real.sqrt`, both of
 -- which are noncomputable
-noncomputable section
+section
 
 /-- The exact coefficient of the lower Ritz value.  We write `sqrt 3 / 3`
 instead of `1 / sqrt 3`; the equality is proved below. -/
-def ritzLowCoefficient : ℝ := (1 - Real.sqrt 3 / 3) / 2
+noncomputable def ritzLowCoefficient : ℝ := (1 - Real.sqrt 3 / 3) / 2
 
 /-- The exact coefficient of the upper Ritz value. -/
-def ritzHighCoefficient : ℝ := (1 + Real.sqrt 3 / 3) / 2
+noncomputable def ritzHighCoefficient : ℝ := (1 + Real.sqrt 3 / 3) / 2
 
 /-- The two Ritz values in equation (9.5). -/
-def ritzLow (ε : ℝ) : ℝ := ε * ritzLowCoefficient
+noncomputable def ritzLow (ε : ℝ) : ℝ := ε * ritzLowCoefficient
 
 /-- The upper Ritz value of equation (9.5).  Stated separately from `ritzLow` so that
 each declaration carries its own documentation. -/
-def ritzHigh (ε : ℝ) : ℝ := ε * ritzHighCoefficient
+noncomputable def ritzHigh (ε : ℝ) : ℝ := ε * ritzHighCoefficient
 
 /-- The residual Gram matrix before Rayleigh--Ritz recentering. -/
-def residualGram (ε : ℝ) : SymmetricTwoByTwo where
+noncomputable def residualGram (ε : ℝ) : SymmetricTwoByTwo where
   a₀₀ := ε ^ 2 / 30 * (11 - Real.sqrt 75)
   a₀₁ := -(ε ^ 2 / 30)
   a₁₁ := ε ^ 2 / 30 * (11 + Real.sqrt 75)
 
 /-- The two eigenvalues of the initial residual Gram matrix. -/
-def residualGramEigenvalueLow (ε : ℝ) : ℝ :=
+noncomputable def residualGramEigenvalueLow (ε : ℝ) : ℝ :=
   ε ^ 2 / 30 * (11 - Real.sqrt 76)
 
 /-- The larger eigenvalue of the initial residual Gram matrix. -/
-def residualGramEigenvalueHigh (ε : ℝ) : ℝ :=
+noncomputable def residualGramEigenvalueHigh (ε : ℝ) : ℝ :=
   ε ^ 2 / 30 * (11 + Real.sqrt 76)
 
 /-- The residual Gram matrix after Rayleigh--Ritz recentering. -/
-def orthogonalResidualGram (ε : ℝ) : SymmetricTwoByTwo where
+noncomputable def orthogonalResidualGram (ε : ℝ) : SymmetricTwoByTwo where
   a₀₀ := ε ^ 2 / 30
   a₀₁ := -(ε ^ 2 / 30)
   a₁₁ := ε ^ 2 / 30
 
 /-- Exact largest singular value of the initial residual. -/
-def residualTopSingularValue (ε : ℝ) : ℝ :=
+noncomputable def residualTopSingularValue (ε : ℝ) : ℝ :=
   |ε| * Real.sqrt ((11 + Real.sqrt 76) / 30)
 
 /-- Exact smaller singular value of the initial residual. -/
-def residualBottomSingularValue (ε : ℝ) : ℝ :=
+noncomputable def residualBottomSingularValue (ε : ℝ) : ℝ :=
   |ε| * Real.sqrt ((11 - Real.sqrt 76) / 30)
 
 /-- Sum of the two singular values of the initial residual. -/
-def residualKyFanTwo (ε : ℝ) : ℝ :=
+noncomputable def residualKyFanTwo (ε : ℝ) : ℝ :=
   residualTopSingularValue ε + residualBottomSingularValue ε
 
 /-- The unique nonzero singular value of the recentered residual. -/
-def orthogonalResidualSingularValue (ε : ℝ) : ℝ :=
+noncomputable def orthogonalResidualSingularValue (ε : ℝ) : ℝ :=
   |ε| * (Real.sqrt 15 / 15)
 
 /-- The norm of either recentered residual column. -/
-def orthogonalResidualColumnNorm (ε : ℝ) : ℝ :=
+noncomputable def orthogonalResidualColumnNorm (ε : ℝ) : ℝ :=
   |ε| * (Real.sqrt 30 / 30)
 
 /-- `(√3)⁻¹ = √3 / 3`.  The radical is kept in the numerator throughout this file, so

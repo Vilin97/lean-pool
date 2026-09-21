@@ -1484,7 +1484,7 @@ Among the unitaries `W` with `W P_U = P_V W`, the direct rotation is exactly the
 two diagonal blocks are positive.  The square identity (3.8) is *not* assumed; it is a
 consequence, obtained here from
 `reflection_conjugate_eq_star_of_intertwines_of_diagonalBlocks_pos` by the paper's own
-computation `U²X = U(UX) = U(XU⁻¹) = UPU⁻¹ - UP̃U⁻¹ = Q - Q̃`. -/
+computation `U²X = U(UX) = U(XU⁻¹) = UPU⁻¹ - UPtildeU⁻¹ = Q - Qtilde`. -/
 theorem spectraDirectRotation_unique_of_diagonalBlocks_pos
     (U V : Submodule ℂ H)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]

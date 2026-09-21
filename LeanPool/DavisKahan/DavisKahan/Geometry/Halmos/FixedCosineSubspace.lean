@@ -432,7 +432,7 @@ theorem fixedCosineSubspace_maximal (c : ℝ) {M : Submodule 𝕜 H}
 
 /-- The predicate actually printed in Proposition 3.5(a)(b)(c): `M` reduces `P`
 and `Q`, every vector of `M ∩ P𝓗` makes the fixed angle with `Q`, and every
-vector of `M ∩ P̃𝓗` makes the fixed angle with `Q̃`.
+vector of `M ∩ Ptilde𝓗` makes the fixed angle with `Qtilde`.
 
 Transcription `prop:3.5`, clauses (a)(b)(c): the two angle conditions are
 indexed by `{M ∩ U, M ∩ Uᗮ}`, not by `{M ∩ U, M ∩ V}`.  The norm form

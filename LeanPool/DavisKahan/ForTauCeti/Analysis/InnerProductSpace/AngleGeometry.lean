@@ -210,7 +210,7 @@ theorem eq_zero_of_directedProjectionGap_lt_one {U V : Submodule 𝕜 E}
 omit [FiniteDimensional 𝕜 E] in
 /-- **The printed Davis–Kahan acute case, as a pair of vanishing intersections.**
 
-Definition 3.2 of the paper reads "`PH ∩ Q̃H` and `P̃H ∩ QH` are zero"; `IsAcute`
+Definition 3.2 of the paper reads "`PH ∩ QtildeH` and `PtildeH ∩ QH` are zero"; `IsAcute`
 is stated pointwise, through the projectors, because that is the form its
 consumers use.  This lemma is the literal restatement, and it is what makes
 `IsAcute` checkable against the printed sentence. -/

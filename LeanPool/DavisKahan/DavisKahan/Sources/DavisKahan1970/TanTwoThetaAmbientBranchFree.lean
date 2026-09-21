@@ -48,7 +48,7 @@ open TauCeti.DavisKahan.ExactSinTheta
 open scoped InnerProductSpace
 open DavisKahan.ExactSinTheta
 
-noncomputable section
+section
 
 variable {𝕜 : Type*} [RCLike 𝕜]
   {E : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
@@ -60,7 +60,7 @@ variable {𝕜 : Type*} [RCLike 𝕜]
 It remains an endomorphism of `E`, so the existing ambient Ky Fan variational
 principle applies directly to the same orthonormal approximate-singular
 families. -/
-def branchFreeResidualCompression (U : Submodule 𝕜 E) [U.HasOrthogonalProjection]
+noncomputable def branchFreeResidualCompression (U : Submodule 𝕜 E) [U.HasOrthogonalProjection]
     (H : E →L[𝕜] E) : E →L[𝕜] E :=
   Uᗮ.starProjection ∘L H ∘L U.starProjection
 
@@ -146,7 +146,7 @@ open TauCeti.DavisKahan.ExactSinTheta
 open scoped InnerProductSpace
 open scoped TauCeti.CompleteSubspace
 
-noncomputable section
+section
 
 universe v
 

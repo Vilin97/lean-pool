@@ -147,12 +147,12 @@ it.  So the existing branch-free representative hypothesis cannot be discharged
 for this corner.
 
 *Through singular pairs of the graph coordinate.*  The failure is not only in
-the sorting.  Take principal angles `θ′ < π/4 < θ″` with
-`tan 2θ′ = −tan 2θ″`, and unit principal vectors `u′, u″ ∈ U`, `v′, v″ ∈ U^⊥`.
-Then `u = (u′ + u″)/√2`, `v = (v′ − v″)/√2` is an *exact* singular pair of the
+the sorting.  Take principal angles `θ' < π/4 < θ''` with
+`tan 2θ' = −tan 2θ''`, and unit principal vectors `u', u'' ∈ U`, `v', v'' ∈ U^⊥`.
+Then `u = (u' + u'')/√2`, `v = (v' − v'')/√2` is an *exact* singular pair of the
 corner — the sign flip is the paper's "choose the sign according to `cos 2θⱼ`"
 — but it is not even an approximate singular pair of `X`, whose two components
-carry the *unequal* positive values `tan θ′ ≠ tan θ″`.  A per-pair estimate for
+carry the *unequal* positive values `tan θ' ≠ tan θ''`.  A per-pair estimate for
 the corner therefore cannot be transported from one for `X`; it has to be
 derived from the invariance of `V` directly.  Doing that with the Sylvester
 identity `A₁ G − G A₀ = σR + Rσ − R` (`G = P_{U^⊥} P_V P_U`, `σ = sin²Θ`, `R`

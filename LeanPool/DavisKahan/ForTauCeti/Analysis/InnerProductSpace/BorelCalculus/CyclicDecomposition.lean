@@ -41,8 +41,8 @@ Insisting on `ℕ` is what drags separability in, and nothing needs `ℕ`.
 
 1. **Invariance passes to the orthogonal complement.**  If `K` is invariant under every
    `borelCalculus ha hf` then so is `Kᗮ`, because
-   `⟪x, f(a) η⟫ = ⟪f(a)⋆ x, η⟫ = ⟪f̄(a) x, η⟫ = 0` for `x ∈ K` — the calculus is
-   `⋆`-preserving (`borelCalculus_conj`) and `f̄(a) x` is back in `K`.  Consequently
+   `⟪x, f(a) η⟫ = ⟪f(a)⋆ x, η⟫ = ⟪conj(f)(a) x, η⟫ = 0` for `x ∈ K` — the calculus is
+   `⋆`-preserving (`borelCalculus_conj`) and `conj(f)(a) x` is back in `K`.  Consequently
    `cyclicSubspace ha η ≤ Kᗮ` whenever `η ∈ Kᗮ`, by minimality of the cyclic subspace.
 2. **Maximality gives totality.**  Zorn produces a maximal set `S` of nonzero vectors with
    pairwise orthogonal cyclic subspaces.  If the closed span of those subspaces were not `⊤`,
@@ -145,7 +145,7 @@ theorem isCalculusInvariant_iSup {ha : IsStarNormal a} {ι : Type*} {K : ι → 
 calculus-invariant.
 
 The two steps are exactly the ones inside `norm_borelCalculus_apply_sq`: the calculus is
-`⋆`-preserving, so `⟪x, f(a) η⟫ = ⟪f̄(a) x, η⟫`, and `f̄(a) x` lies back in `K` by hypothesis,
+`⋆`-preserving, so `⟪x, f(a) η⟫ = ⟪conj(f)(a) x, η⟫`, and `conj(f)(a) x` lies back in `K` by hypothesis,
 so the inner product vanishes for `η ∈ Kᗮ`. -/
 theorem IsCalculusInvariant.orthogonal {ha : IsStarNormal a} {K : Submodule ℂ H}
     (hK : IsCalculusInvariant ha K) : IsCalculusInvariant ha Kᗮ := by

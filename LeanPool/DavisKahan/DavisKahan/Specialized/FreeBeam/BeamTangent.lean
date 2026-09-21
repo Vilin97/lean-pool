@@ -54,12 +54,12 @@ open TauCeti.DavisKahan.TanTheta
 open TauCeti.DavisKahan.TanTheta
 open TauCeti.DavisKahan.ExactSinTheta
 
-noncomputable section
+section
 
 /-! ## The Ritz compression as a bounded self-adjoint block -/
 
 /-- The Rayleigh--Ritz compression of the perturbation to the trial subspace. -/
-def beamRitzCompression (ε : ℝ) : beamTrial →L[ℂ] beamTrial :=
+noncomputable def beamRitzCompression (ε : ℝ) : beamTrial →L[ℂ] beamTrial :=
   beamTrial.orthogonalProjectionOnto ∘L beamResidual ε
 
 /-- The Rayleigh--Ritz compression of the beam operator, in ambient
@@ -95,7 +95,7 @@ theorem beamRitzCompression_isSelfAdjoint (ε : ℝ) :
 /-- **The Rayleigh--Ritz trial block of the Section 9 example.**  The trial subspace
 is the affine plane, the compression is `beamRitzCompression`, and the residual is
 the part of `(A + ε t)|_Z` orthogonal to `Z`. -/
-def beamTrialBlock (ε : ℝ) : BoundedCompressionTrialBlock (beamPerturbed ε) beamTrial where
+noncomputable def beamTrialBlock (ε : ℝ) : BoundedCompressionTrialBlock (beamPerturbed ε) beamTrial where
   domain_le := fun _ hy => beamTrial_le_domain hy
   operator := beamRitzCompression ε
   operator_selfAdjoint := beamRitzCompression_isSelfAdjoint ε
@@ -566,13 +566,13 @@ The two Ritz vectors are `centeredAffineLp trialOne` and `centeredAffineLp trial
 `beamRitz_matrix` gives their Ritz values and `beamResidualGram_matrix` their residual
 column norms. -/
 
-noncomputable section
+section
 
 open DavisKahan1970.Section9
 
 /-- The exact spectral subspace of the perturbed beam at or below `500`: the reducing
 subspace the printed Theorem 6.3 is applied at. -/
-abbrev beamLowFiveHundred (ε : ℝ) : Submodule ℂ BeamL2 :=
+noncomputable abbrev beamLowFiveHundred (ε : ℝ) : Submodule ℂ BeamL2 :=
   selfAdjointSpectralSubspace (beamPerturbed ε) (beamPerturbed_isSelfAdjoint ε)
     (Set.Iic 500) measurableSet_Iic
 
@@ -592,7 +592,7 @@ theorem beamPerturbed_apply_of_mem_beamTrial (ε : ℝ) {x : BeamL2} (hx : x ∈
 
 /-- **The one-dimensional Rayleigh--Ritz trial block at a unit Ritz vector.**  The
 compression is the scalar `a = ⟪v, ε t v⟫` and the residual is the single Ritz column. -/
-def beamColumnBlock (ε : ℝ) (v : BeamL2) (hv : v ∈ beamTrial) (hvnorm : ‖v‖ = 1)
+noncomputable def beamColumnBlock (ε : ℝ) (v : BeamL2) (hv : v ∈ beamTrial) (hvnorm : ‖v‖ = 1)
     (a : ℝ) (hform : ⟪v, beamPerturbation ε v⟫_ℂ = ((a : ℝ) : ℂ)) :
     BoundedCompressionTrialBlock (beamPerturbed ε) (ℂ ∙ v) where
   domain_le := fun _ hx => beamTrial_le_domain (span_singleton_le_beamTrial hv hx)
@@ -691,7 +691,7 @@ theorem beamColumn_tangent_le (ε : ℝ) (v : BeamL2) (hv : v ∈ beamTrial)
 
 /-- The tangent of the angle between a single Ritz vector and the exact low spectral
 subspace of `A + ε t`. -/
-def beamTanPhi (ε : ℝ) (v : BeamL2) : ℝ :=
+noncomputable def beamTanPhi (ε : ℝ) (v : BeamL2) : ℝ :=
   ‖theorem63DirectedTangent (ℂ ∙ v) (beamLowFiveHundred ε)‖
 
 /-! ### The two residual columns

@@ -137,7 +137,7 @@ The paper's `S₀` and `S₁` are the two crossed blocks of the direct rotation,
 3.1(ii) says `S₁ = S₀⋆`; so they have the same norm, and each of the two directed gaps
 `‖P_{Vᗮ} P_U‖`, `‖P_V P_{Uᗮ}‖` equals it.  This is what makes the printed hypothesis
 `C₀² ≥ ½`, which constrains only the `Pℋ` block, force the companion bound `C₁² ≥ ½` on
-`P̃ℋ` -- an implication that is **false** without a unitary intertwiner: `U ⊆ V` with
+`Ptildeℋ` -- an implication that is **false** without a unitary intertwiner: `U ⊆ V` with
 `dim V > dim U` has `C₀² = 1` and `C₁²` with `0` in its numerical range.  Equality of the two
 directed gaps needs acuteness (`Submodule.projectionGap_eq_max_directedProjectionGap` gives
 only the maximum), and this is the acute half of it. -/
@@ -342,7 +342,7 @@ theorem re_inner_halmosCosineSq_sub_half_nonneg_of_directRotation
 Davis and Kahan write `C₀² ≥ ½`, an inequality between operators on `X(E₀) = Pℋ` -- by
 equation (3.7), `C₀² = E₀⋆ Q E₀`, so its quadratic form at `x ∈ Pℋ` is `‖Qx‖²`, and the
 printed inequality is exactly `hcos`.  What the accretivity argument needs is the same bound
-for `cos²Θ` on all of `ℋ`, which adds the companion `C₁² ≥ ½` on `P̃ℋ`; that companion is
+for `cos²Θ` on all of `ℋ`, which adds the companion `C₁² ≥ ½` on `Ptildeℋ`; that companion is
 *not* a consequence of `hcos` for an arbitrary pair, and is one here because the acute case
 supplies a unitary intertwiner whose two crossed blocks are adjoint
 (`norm_projection_apply_le_of_forall_mem_source`). -/

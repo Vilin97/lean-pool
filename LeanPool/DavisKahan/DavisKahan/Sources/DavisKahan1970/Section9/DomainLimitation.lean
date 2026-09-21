@@ -567,7 +567,7 @@ theorem firstEigenvector_mem_diagonalDomain (d : ℕ → ℝ) :
 
 /-- `(1,0,0,…)` really is an eigenvector of the source's operator, with
 eigenvalue `d₀ = 1`.  This is the `λ₁ = 1` against which the source's lower
-bound `α̌₁ ≤ λ₁ = 1` is stated. -/
+bound `alphaCheck₁ ≤ λ₁ = 1` is stated. -/
 theorem diagonalOperator_firstEigenvector (μ : ℝ)
     (h : (firstEigenvector : DomainLimitationSpace)
       ∈ (diagonalOperator (diagonalMultiplier μ)).domain) :
@@ -616,10 +616,10 @@ theorem sin_angle_geometricTrial {μ : ℝ} (hμ0 : 0 < μ) (hμ1 : μ < 1) :
 Residual-based theorems say nothing here: the residual `(A+H)e - e α̂` does not
 exist, because `e` is outside the operator domain
 (`geometricTrial_notMem_diagonalDomain`).  Weinberger's method needs only the
-Rayleigh value `α̂ = 1+μ` and *independent* lower bounds `α̌₁ ≤ λ₁ = 1` and
-`α̌₂ ≤ λ₂ = μ⁻¹`, all of which survive, and it delivers the source's
+Rayleigh value `α̂ = 1+μ` and *independent* lower bounds `alphaCheck₁ ≤ λ₁ = 1` and
+`alphaCheck₂ ≤ λ₂ = μ⁻¹`, all of which survive, and it delivers the source's
 
-`sin²θ ≤ (1 + μ - α̌₁) / (α̌₂ - α̌₁)`.
+`sin²θ ≤ (1 + μ - alphaCheck₁) / (alphaCheck₂ - alphaCheck₁)`.
 
 The energy split fed to `weinberger_sine_sq_le_of_coupled_energy` is the genuine
 one: `geometricTrial_normalizedForm_zero` and
@@ -643,7 +643,7 @@ theorem geometricTrial_weinberger_sin_sq_le {μ αcheck₁ αcheck₂ : ℝ}
     (highEnergy := μ + μ ^ 2) hgap (by ring) (by nlinarith) hhigh'
 
 /-- **The source's best-lower-bound simplification, squared.**  With
-`α̌₁ = λ₁ = 1` and `α̌₂ = λ₂ = μ⁻¹` the estimate reads `sin²θ ≤ μ²/(1-μ)`. -/
+`alphaCheck₁ = λ₁ = 1` and `alphaCheck₂ = λ₂ = μ⁻¹` the estimate reads `sin²θ ≤ μ²/(1-μ)`. -/
 theorem geometricTrial_weinberger_best_sin_sq_le {μ : ℝ} (hμ0 : 0 < μ) (hμ1 : μ < 1) :
     Real.sin (InnerProductGeometry.angle (geometricTrial hμ0.le hμ1)
         (firstEigenvector : DomainLimitationSpace)) ^ 2

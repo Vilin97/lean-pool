@@ -46,7 +46,7 @@ open TauCeti.DavisKahan.ExactSinTheta
 open TauCeti.ApproximationNumber
 open scoped TauCeti.CompleteSubspace
 
-noncomputable section
+section
 
 universe u
 

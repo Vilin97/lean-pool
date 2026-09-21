@@ -12,7 +12,7 @@ eigenvalue concentration for a random Hermitian matrix from
 per-entry second-moment control (the elementary, no-matrix-Bernstein route:
 entrywise Chebyshev + union bound, then entrywise → operator-norm → Weyl).
 
-Formalized by Claude Opus 4.8 (claude-opus-4-8[1m]); prose symbol `Ŝ` → `Shat`
+Formalized by Claude Opus 4.8 (claude-opus-4-8[1m]); prose symbol `Shat` → `Shat`
 (matching the Lean variable, clearing the Mathlib unicode-allowlist linter).
 -/
 module
@@ -102,7 +102,7 @@ theorem measure_exists_entry_gt_le
 
 /-- **The some-entry-far event is measurable.**
 
-It is a finite union over entries of `{η < |Ŝ k l − A k l|}`, each measurable
+It is a finite union over entries of `{η < |Shat k l − A k l|}`, each measurable
 because the entry is.  Both concentration theorems below opened with this same
 seven-line block, differing only in the name they gave the union step. -/
 theorem measurableSet_exists_entry_gt {Shat : Ω → Matrix (Fin n) (Fin n) ℝ}

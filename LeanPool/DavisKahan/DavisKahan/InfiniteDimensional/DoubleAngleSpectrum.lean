@@ -229,7 +229,7 @@ theorem sinTwoTheta_spectrum_defect
       ‖reflectionDefect V A‖ := by
   have hÃsa : IsSelfAdjoint (conjByIsometryEquiv V.reflection A) :=
     isSelfAdjoint_conjByIsometryEquiv V.reflection hA
-  have hŨred : ContinuousLinearMap.Reduces (conjByIsometryEquiv V.reflection A)
+  have hUtildered : ContinuousLinearMap.Reduces (conjByIsometryEquiv V.reflection A)
       (U.map (V.reflection.toLinearEquiv : E →ₗ[ℂ] E)) :=
     hU.map_isometryEquiv V.reflection
   have htrans1 : spectrum ℝ (compressOperator
@@ -246,7 +246,7 @@ theorem sinTwoTheta_spectrum_defect
       spectrum ℝ (compressOperator Uᗮ A) :=
     (spectrum_compressOperator_congr hperp.symm _).trans
       (spectrum_compressOperator_map Uᗮ A V.reflection)
-  have h := sinTheta_spectrum_symmetric hA hÃsa hU hŨred hd hab hab
+  have h := sinTheta_spectrum_symmetric hA hÃsa hU hUtildered hd hab hab
     hUspec
     (by rw [htrans2]; exact hUspec')
     (by rw [htrans1]; exact hUspec)
@@ -331,7 +331,7 @@ theorem sinTwoTheta_spectrum_gauge
       2 * N.gaugeReal (B - A) := by
   have hÃsa : IsSelfAdjoint (conjByIsometryEquiv V.reflection A) :=
     isSelfAdjoint_conjByIsometryEquiv V.reflection hA
-  have hŨred : ContinuousLinearMap.Reduces (conjByIsometryEquiv V.reflection A)
+  have hUtildered : ContinuousLinearMap.Reduces (conjByIsometryEquiv V.reflection A)
       (U.map (V.reflection.toLinearEquiv : E →ₗ[ℂ] E)) :=
     hU.map_isometryEquiv V.reflection
   have hperp : Uᗮ.map (V.reflection.toLinearEquiv : E →ₗ[ℂ] E) =
@@ -376,7 +376,7 @@ theorem sinTwoTheta_spectrum_gauge
         (Submodule.norm_reflectionOperator_le_one V)
     rw [hgaugeAB] at h1 h2
     linarith
-  have hmain := sinTheta_spectrum_gauge N hA hÃsa hU hŨred hd hab
+  have hmain := sinTheta_spectrum_gauge N hA hÃsa hU hUtildered hd hab
     hUspec (by rw [htrans2]; exact hUspec') hMemD
   exact ⟨hmain.1, hmain.2.trans hgaugeD⟩
 

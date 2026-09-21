@@ -461,7 +461,7 @@ private theorem abs_re_inner_map_approx_scaled
     exact hbound
   calc
     |RCLike.re ⟪z, B (x)⟫_ℂ| = |x0| := by rfl
-    _ = |(x0 - c * y0) + c * y0| := by congr 1 ; ring
+    _ = |(x0 - c * y0) + c * y0| := by congr 1; ring
     _ ≤ |x0 - c * y0| + |c * y0| := abs_add_le _ _
     _ ≤ e0 + c * |y0| := by
       gcongr
@@ -635,7 +635,7 @@ theorem reflectionTangent_approximate_pair
       simpa [mul_comm] using hbound
     calc
       |RCLike.re ⟪C1.modulus v, B u⟫_ℂ| = |x1| := by rfl
-      _ = |(x1 - c * y1) + c * y1| := by congr 1 ; ring
+      _ = |(x1 - c * y1) + c * y1| := by congr 1; ring
       _ ≤ |x1 - c * y1| + |c * y1| := abs_add_le _ _
       _ ≤ e1 + c * |y1| := by
         gcongr

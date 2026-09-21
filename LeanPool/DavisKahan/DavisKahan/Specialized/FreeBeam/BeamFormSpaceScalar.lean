@@ -21,7 +21,7 @@ This file inhabits the abstract form method of
 `ShiftedBeamRealization`.  The form space is the closed subspace of
 `WithLp 2 (L² × L²)` of pairs `(u, w)` in which `w` is the weak second derivative of `u`,
 tested against the polynomial bump family of `IntervalWeakSecondDeriv`.  Its inner product is
-exactly the shifted bending form `∫ u v̄ + ∫ u'' v̄''`, so the represented form operator is the
+exactly the shifted bending form `∫ u conj(v) + ∫ u'' conj(v)''`, so the represented form operator is the
 identity and coercivity is trivial.
 
 The three genuinely analytic inputs are all imported:

@@ -66,7 +66,7 @@ namespace FreeBeam
 namespace Model
 
 
-noncomputable section
+section
 
 /-! ## Complex integrals on the unit interval -/
 
@@ -91,7 +91,7 @@ theorem integral_unitIocMeasure_pow (n : ℕ) :
 /-! ## The affine trial subspace -/
 
 /-- The two-dimensional affine trial subspace of the paper's numerical example. -/
-def beamTrial : Submodule ℂ BeamL2 := Submodule.span ℂ {beamOneLp, beamIdLp}
+noncomputable def beamTrial : Submodule ℂ BeamL2 := Submodule.span ℂ {beamOneLp, beamIdLp}
 
 /-- Membership in the beam trial subspace. -/
 theorem mem_beamTrial_iff {x : BeamL2} :
@@ -109,12 +109,12 @@ theorem affineLp_mem_beamTrial (a b : ℂ) : affineLp a b ∈ beamTrial :=
 
 /-- The trial subspace is spanned by two functions, so it is finite
 dimensional. -/
-instance : FiniteDimensional ℂ beamTrial := by
+noncomputable instance : FiniteDimensional ℂ beamTrial := by
   rw [beamTrial]
   exact FiniteDimensional.span_of_finite ℂ (Set.toFinite _)
 
 /-- A finite-dimensional subspace is complete. -/
-instance : CompleteSpace beamTrial := FiniteDimensional.complete ℂ _
+noncomputable instance : CompleteSpace beamTrial := FiniteDimensional.complete ℂ _
 
 /-- The trial subspace lies in the operator's domain: it is the affine kernel
 identified in `BeamSpectrum`. -/
@@ -131,7 +131,7 @@ theorem beamOperator_apply_trial {x : BeamL2} (hx : x ∈ beamTrial)
   exact (beamOperator_affine_mem_and_zero a b).choose_spec
 
 /-- The isometric inclusion of the trial subspace. -/
-def beamTrialIncl : beamTrial →L[ℂ] BeamL2 := beamTrial.subtypeL
+noncomputable def beamTrialIncl : beamTrial →L[ℂ] BeamL2 := beamTrial.subtypeL
 
 /-- Evaluating the trial subspace's inclusion. -/
 @[simp] theorem beamTrialIncl_apply (x : beamTrial) :
@@ -140,7 +140,7 @@ def beamTrialIncl : beamTrial →L[ℂ] BeamL2 := beamTrial.subtypeL
 /-! ## The multiplication perturbation `ε t` -/
 
 /-- The unit-interval coordinate, clamped so that the symbol is globally bounded. -/
-def beamClamp (t : ℝ) : ℝ := max 0 (min t 1)
+noncomputable def beamClamp (t : ℝ) : ℝ := max 0 (min t 1)
 
 /-- The clamping symbol is measurable. -/
 theorem measurable_beamClamp : Measurable beamClamp :=
@@ -158,7 +158,7 @@ theorem beamClamp_eq_self {t : ℝ} (ht : t ∈ Set.Ioc (0 : ℝ) 1) : beamClamp
   rw [beamClamp, min_eq_left ht.2, max_eq_right ht.1.le]
 
 /-- The symbol of the paper's perturbation: `ε` times the clamped coordinate. -/
-def beamSymbol (ε : ℝ) (t : ℝ) : ℂ := ((ε * beamClamp t : ℝ) : ℂ)
+noncomputable def beamSymbol (ε : ℝ) (t : ℝ) : ℂ := ((ε * beamClamp t : ℝ) : ℂ)
 
 /-- The beam symbol is measurable. -/
 theorem measurable_beamSymbol (ε : ℝ) : Measurable (beamSymbol ε) :=
@@ -173,7 +173,7 @@ theorem norm_beamSymbol_le (ε : ℝ) (t : ℝ) : ‖beamSymbol ε t‖ ≤ |ε|
     _ = |ε| := mul_one _
 
 /-- **The Section 9 perturbation**: multiplication by `ε t` on `L²(0,1]`. -/
-def beamPerturbation (ε : ℝ) : BeamL2 →L[ℂ] BeamL2 :=
+noncomputable def beamPerturbation (ε : ℝ) : BeamL2 →L[ℂ] BeamL2 :=
   mulLp unitIocMeasure (measurable_beamSymbol ε) (norm_beamSymbol_le ε)
 
 /-- The beam perturbation, as a function. -/
@@ -347,7 +347,7 @@ positive eigenvalue of the operator itself. -/
 
 /-- The centred quadratic mode `t² - t + 1/6` — the degree-two Legendre polynomial of the
 unit interval, whose zeroth and first moments both vanish. -/
-def beamQuadLp : BeamL2 :=
+noncomputable def beamQuadLp : BeamL2 :=
   contToLp (fun t => (t : ℂ) ^ 2 - (t : ℂ) + 1 / 6) (by fun_prop)
 
 /-- The centred quadratic mode is orthogonal to every affine element: its first two exact
@@ -636,7 +636,7 @@ theorem beamPerturbation_isSelfAdjoint (ε : ℝ) :
 
 /-- **The exact operator of the Section 9 example**: the free beam perturbed by
 multiplication by `ε t`. -/
-def beamPerturbed (ε : ℝ) : BeamL2 →ₗ.[ℂ] BeamL2 :=
+noncomputable def beamPerturbed (ε : ℝ) : BeamL2 →ₗ.[ℂ] BeamL2 :=
   TauCeti.LinearPMap.addBounded beamOperator (beamPerturbation ε)
 
 /-- The perturbed beam operator is self-adjoint. -/
@@ -645,14 +645,14 @@ theorem beamPerturbed_isSelfAdjoint (ε : ℝ) : _root_.IsSelfAdjoint (beamPertu
     (beamPerturbation_isSelfAdjoint ε)
 
 /-- The spectral set that isolates everything above the free-beam gap. -/
-def beamHighSet : Set ℝ := Set.Ici 500
+noncomputable def beamHighSet : Set ℝ := Set.Ici 500
 
 /-- The high spectral set of the beam model is measurable. -/
 theorem measurableSet_beamHighSet : MeasurableSet beamHighSet := measurableSet_Ici
 
 /-- The zero operator on the trial subspace: the compression of the free beam to its
 own kernel, which is the trial subspace itself. -/
-def beamTrialZero : beamTrial →ₗ.[ℂ] beamTrial :=
+noncomputable def beamTrialZero : beamTrial →ₗ.[ℂ] beamTrial :=
   ((0 : beamTrial →L[ℂ] beamTrial).toLinearMap.toPMap ⊤)
 
 /-- The trial-block compression of the unperturbed beam operator is
@@ -664,7 +664,7 @@ theorem beamTrialZero_isSelfAdjoint : _root_.IsSelfAdjoint beamTrialZero :=
 /-- **The largest sine of the angle** between the affine trial subspace and the exact
 low spectral subspace of the perturbed beam: the operator norm of the cross projection
 onto the exact spectral subspace above the gap. -/
-def beamSinTheta (ε : ℝ) : ℝ :=
+noncomputable def beamSinTheta (ε : ℝ) : ℝ :=
   ‖ContinuousLinearMap.adjoint beamTrialIncl ∘L
       selfAdjointSpectralSubspaceInclusion (beamPerturbed ε)
         (beamPerturbed_isSelfAdjoint ε) beamHighSet measurableSet_beamHighSet‖
@@ -763,7 +763,7 @@ theorem beamSinTheta_le (ε : ℝ) :
 /-- The spectral set below the free-beam gap.  The threshold `1001/2 = 500.5` is chosen
 below `4.73⁴ = 500.546…` and above the paper's rounded `500`, so it separates the zero
 modes from the whole positive spectrum with room to spare. -/
-def beamLowSet : Set ℝ := Set.Iic (1001 / 2)
+noncomputable def beamLowSet : Set ℝ := Set.Iic (1001 / 2)
 
 /-- The low spectral set of the beam model is measurable. -/
 theorem measurableSet_beamLowSet : MeasurableSet beamLowSet := measurableSet_Iic
@@ -868,7 +868,7 @@ theorem beamLow_semiboundedAbove :
 
 /-- **The largest sine of twice the angle** between the free beam's zero-mode spectral
 subspace and the low spectral subspace of the perturbed operator. -/
-def beamSinTwoTheta (ε : ℝ) : ℝ :=
+noncomputable def beamSinTwoTheta (ε : ℝ) : ℝ :=
   ‖DavisKahan.Angle.directedSinTwoAngleOperatorC
       (selfAdjointSpectralSubspace beamOperator beamOperator_isSelfAdjoint beamLowSet
         measurableSet_beamLowSet)
@@ -987,7 +987,7 @@ theorem inner_beamPerturbation_affineLp (ε : ℝ) (a b c d : ℂ) :
   ring
 
 /-- The `L²` realization of a centered-affine trial function `c + d (2t - 1)`. -/
-def centeredAffineLp (p : DavisKahan1970.Section9.CenteredAffine) : BeamL2 :=
+noncomputable def centeredAffineLp (p : DavisKahan1970.Section9.CenteredAffine) : BeamL2 :=
   affineLp ((p.fixedValue - p.centered : ℝ) : ℂ) ((2 * p.centered : ℝ) : ℂ)
 
 /-- The centred affine function lies in the beam trial subspace. -/
@@ -1105,7 +1105,7 @@ Ritz values are the compressions computed in `beamRitz_matrix` and
 `exists_five_hundred_lt_mem_realSpectrum_beamOperator`, whose lower bound `500` comes with
 it.  The record no longer takes a spectral point as a hypothesis; the only inputs are the
 paper's two numerical constraints on `ε`. -/
-def beamFiniteDataCertificate (ε : ℝ) (hε : 0 < ε) (hε100 : ε < 100) :
+noncomputable def beamFiniteDataCertificate (ε : ℝ) (hε : 0 < ε) (hε100 : ε < 100) :
     FreeBeamFiniteDataCertificate ε where
   epsilon_pos := hε
   epsilon_lt_hundred := hε100
@@ -1124,11 +1124,11 @@ def beamFiniteDataCertificate (ε : ℝ) (hε : 0 < ε) (hε100 : ε < 100) :
 /-! ## Equation (9.4): the two-term Ky Fan sum -/
 
 /-- The two-term Ky Fan ideal family over `ℂ`, the gauge equation (9.4) is stated in. -/
-def beamKyFanTwo : TauCeti.SymmetricOperatorIdealFamily.{0, 0} ℂ :=
+noncomputable def beamKyFanTwo : TauCeti.SymmetricOperatorIdealFamily.{0, 0} ℂ :=
   kyFanSymmetricIdealFamily (𝕜 := ℂ) 2 (by norm_num)
 
 /-- The two-term Ky Fan family is a complete operator ideal family. -/
-instance : beamKyFanTwo.toOperatorIdealFamily.IsComplete :=
+noncomputable instance : beamKyFanTwo.toOperatorIdealFamily.IsComplete :=
   isComplete_kyFanSymmetricIdealFamily (𝕜 := ℂ) 2 (by norm_num)
 
 /-- The two-term Ky Fan gauge of any bounded operator is at most twice its norm: both
@@ -1155,7 +1155,7 @@ theorem beamKyFanTwo_mem (T : BeamL2 →L[ℂ] BeamL2) : beamKyFanTwo.Mem T :=
 
 /-- **The two-term Ky Fan sum of the double-angle sines** between the free beam's
 zero-mode subspace and the perturbed operator's low subspace. -/
-def beamSinTwoThetaSum (ε : ℝ) : ℝ :=
+noncomputable def beamSinTwoThetaSum (ε : ℝ) : ℝ :=
   beamKyFanTwo.gaugeReal (sinTwoThetaIdealBlock
     (selfAdjointSpectralSubspace beamOperator beamOperator_isSelfAdjoint beamLowSet
       measurableSet_beamLowSet)
@@ -1209,17 +1209,17 @@ which is `(√75 + √76)(√75 - √76) = -1` in disguise.  No shortcut through
 open DavisKahan1970.Section9 in
 /-- The Section 9 residual as an operator: multiplication by `ε t` restricted to
 the affine trial subspace. -/
-def beamResidual (ε : ℝ) : beamTrial →L[ℂ] BeamL2 :=
+noncomputable def beamResidual (ε : ℝ) : beamTrial →L[ℂ] BeamL2 :=
   beamPerturbation ε ∘L beamTrialIncl
 
 open DavisKahan1970.Section9 in
 /-- The first trial vector, as an element of the trial subspace. -/
-def beamTrialVecOne : beamTrial :=
+noncomputable def beamTrialVecOne : beamTrial :=
   ⟨centeredAffineLp trialOne, centeredAffineLp_mem_beamTrial _⟩
 
 open DavisKahan1970.Section9 in
 /-- The second trial vector, as an element of the trial subspace. -/
-def beamTrialVecTwo : beamTrial :=
+noncomputable def beamTrialVecTwo : beamTrial :=
   ⟨centeredAffineLp trialTwo, centeredAffineLp_mem_beamTrial _⟩
 
 open DavisKahan1970.Section9 in
@@ -1324,7 +1324,7 @@ theorem beamResidual_gram (ε : ℝ) :
 
 /-- The top eigendirection coefficient of the residual Gram matrix:
 `c = -(√75 + √76)`, so that `φ₁ + c φ₂` is a top eigenvector. -/
-def beamGramTopCoefficient : ℝ := -(Real.sqrt 75 + Real.sqrt 76)
+noncomputable def beamGramTopCoefficient : ℝ := -(Real.sqrt 75 + Real.sqrt 76)
 
 open DavisKahan1970.Section9 in
 /-- **The radical identity behind equation (9.3).**  Along the direction
@@ -1386,14 +1386,14 @@ theorem beamGramTopDenom_pos : (0 : ℝ) < 1 + beamGramTopCoefficient ^ 2 := by
 open DavisKahan1970.Section9 in
 /-- The top eigenvector of the residual Gram matrix, unnormalised:
 `φ₁ + c φ₂` with `c = -(√75 + √76)`. -/
-def beamGramTopVector : beamTrial :=
+noncomputable def beamGramTopVector : beamTrial :=
   beamTrialVecOne + ((beamGramTopCoefficient : ℝ) : ℂ) • beamTrialVecTwo
 
 open DavisKahan1970.Section9 in
 /-- **The explicit rank-one approximant of the Section 9 residual**: the residual
 composed with the orthogonal projection onto the top eigendirection of the
 residual Gram matrix. -/
-def beamResidualRankOne (ε : ℝ) : beamTrial →L[ℂ] BeamL2 :=
+noncomputable def beamResidualRankOne (ε : ℝ) : beamTrial →L[ℂ] BeamL2 :=
   (innerSL ℂ beamGramTopVector).smulRight
     ((((1 + beamGramTopCoefficient ^ 2 : ℝ) : ℂ)⁻¹) •
       beamResidual ε beamGramTopVector)
@@ -1616,7 +1616,7 @@ theorem kyFanTwo_beamResidual_le (ε : ℝ) :
 open DavisKahan1970.Section9 in
 /-- **The two-term Ky Fan sum of the sines** of the angles between the affine trial
 subspace and the exact low spectral subspace of the perturbed beam. -/
-def beamSinThetaSum (ε : ℝ) : ℝ :=
+noncomputable def beamSinThetaSum (ε : ℝ) : ℝ :=
   beamKyFanTwo.gaugeReal (ContinuousLinearMap.adjoint beamTrialIncl ∘L
     selfAdjointSpectralSubspaceInclusion (beamPerturbed ε)
       (beamPerturbed_isSelfAdjoint ε) beamHighSet measurableSet_beamHighSet)

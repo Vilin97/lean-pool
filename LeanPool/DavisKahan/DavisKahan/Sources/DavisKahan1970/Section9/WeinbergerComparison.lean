@@ -320,13 +320,13 @@ lower arrowhead root.**
 
 Davis--Kahan print, for both `k = 1,2`,
 
-`(ε²/30) / (500 - α̂_k) > α̂_k - α̌_k`.
+`(ε²/30) / (500 - α̂_k) > α̂_k - alphaCheck_k`.
 
 For the lower certified root of the exact three-by-three comparison matrix the
 characteristic equation gives the opposite strict inequality.  This is not a
 numerical-rounding issue: it holds for every `0 < ε < 100`.
 
-Indeed, writing `a = α̂₁`, `b = α̂₂`, `r = α̌₁`, `d = a-r`,
+Indeed, writing `a = α̂₁`, `b = α̂₂`, `r = alphaCheck₁`, `d = a-r`,
 `e = b-r`, and `A = 500-a`, the root equation is
 
 `d e (A+d) = (ε²/30) (e+d)`.

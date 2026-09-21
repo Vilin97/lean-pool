@@ -28,7 +28,7 @@ Section 1 does make three claims, and this file gives them the paper's numbering
 
 The first two are already compiled; this file supplies the source names.  The third is proved
 here, in the quadratic form the paper uses it in: for `u ∈ Pℋ`, `P(Hu)` is `E₀H₀u` and
-`P̃(Hu)` is `E₁Bu`, and both isometries preserve norms, so
+`Ptilde(Hu)` is `E₁Bu`, and both isometries preserve norms, so
 `‖Ru‖² = ‖H₀u‖² + ‖Bu‖²` is exactly the printed operator identity read at `u`.  The norm-square formulation is scalar-generic over `RCLike`, and the coordinate
 isometries `E₀, E₁` are unnecessary for the source identity.
 
@@ -76,7 +76,7 @@ alias equation1_8_eq_perturbation_comp :=
 Stated as the quadratic form of that operator identity, in a form valid over every
 `RCLike` scalar field: `P(Ku)` is the paper's `E₀H₀u` and `Pᗮ(Ku)` is its `E₁Bu`, and `E₀`, `E₁` are
 isometries.  Once `R = KE₀` is known (`equation1_8_eq_perturbation_comp`) this is the
-Pythagorean splitting of `Ku` along `Pℋ ⊕ P̃ℋ`.  The printed identity writes `H₀²` rather
+Pythagorean splitting of `Ku` along `Pℋ ⊕ Ptildeℋ`.  The printed identity writes `H₀²` rather
 than `H₀⋆H₀` because `H₀ = E₀⋆HE₀` is a compression of the self-adjoint `H` and so is itself
 self-adjoint; the statement here is in norms, which needs no such hypothesis, and `K` is
 accordingly an arbitrary bounded operator. -/
