@@ -6666,6 +6666,15 @@ import LeanPool.Sundogcert.SATReductionReverse
 import LeanPool.Sundogcert.Scaling
 import LeanPool.Sundogcert.ThreeDMReindex
 import LeanPool.Sundogcert.VarWheel
+import LeanPool.Superorthogonality
+import LeanPool.Superorthogonality.LeanSuperorthogonality
+import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex
+import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex.MainTheorem
+import LeanPool.Superorthogonality.LeanSuperorthogonality.Codex.PointwiseEstimate
+import LeanPool.Superorthogonality.LeanSuperorthogonality.Defs
+import LeanPool.Superorthogonality.LeanSuperorthogonality.MainTheorem
+import LeanPool.Superorthogonality.LeanSuperorthogonality.PointwiseEstimate
+import LeanPool.Superorthogonality.Solution
 import LeanPool.SyntheticEuclid4
 import LeanPool.SyntheticEuclid4.Axioms
 import LeanPool.SyntheticEuclid4.PermTactics
