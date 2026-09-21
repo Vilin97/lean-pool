@@ -9966,3 +9966,32 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: lean-malliavin
+    title: Malliavin calculus and the Clark–Ocone representation
+    summary: Constructs the Malliavin derivative, Gaussian integration by parts, closability, Wiener chaos,
+      Brownian Itô integration and martingale representation, culminating in Clark–Ocone for a generating
+      pre-Brownian process on an abstract Gaussian Banach space.
+    branch: stochastic analysis
+    entry_module: LeanPool.Malliavin
+    authors:
+    - Ezzeri Esa
+    source:
+      url: https://github.com/savarin/lean-malliavin
+      github_repo: savarin/lean-malliavin
+      commit: a1a6ccc6eedbdf15fc3aebf9146d1fddfa0c8272
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - PalomarClarkOcone.generated_clark_ocone
+    main_results:
+    - declaration: PalomarClarkOcone.generated_clark_ocone
+      informal: A generating pre-Brownian process admits a closed Malliavin time derivative and Itô isometry
+        realizing the Clark–Ocone conditional-expectation representation.
+    tags:
+    - probability
+    - malliavin-calculus
+    - stochastic-analysis
+    msc:
+    - 60H07
+    - 60H05
