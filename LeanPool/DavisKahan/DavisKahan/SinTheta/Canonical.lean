@@ -72,13 +72,17 @@ The lower frame bound permits a non-isometric trial map.
 module docstring for why both exist. -/
 structure FormBoundedGeneralSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℂ)) where
+  /-- The ambient, trial, and complementary operator data for the sine-angle problem. -/
   data : UnboundedSinThetaData (𝕜 := ℂ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace in the orthogonal decomposition. -/
   exactMap : H →L[ℂ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive form gap between the trial operator and the complementary restriction. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound
@@ -132,15 +136,22 @@ branch.  Unlike `FormBoundedGeneralSinThetaProblem.spectral_gap`, this uses the 
 `Spectra` spectrum and does not pass through the ordered half-line engine. -/
 structure FiniteIntervalGeneralSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℂ)) where
+  /-- The ambient, trial, and complementary operator data for the sine-angle problem. -/
   data : UnboundedSinThetaData (𝕜 := ℂ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace in the orthogonal decomposition. -/
   exactMap : H →L[ℂ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The lower endpoint of the interval containing the trial spectrum. -/
   intervalLower : ℝ
+  /-- The upper endpoint of the interval containing the trial spectrum. -/
   intervalUpper : ℝ
+  /-- The positive separation between the trial spectral interval and the complementary
+  spectrum. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   interval_order : intervalLower ≤ intervalUpper
   gap_pos : 0 < gap
@@ -226,13 +237,16 @@ Unlike `SpectralIsometricSinThetaProblem`, which is `ℂ`-only, this package is
 `RCLike`-generic and carries the real-scalar surface in `Real/Canonical.lean`. -/
 structure FormBoundedIsometricSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := 𝕜)) where
+  /-- The ambient, trial, and complementary operator data for the sine-angle problem. -/
   data : UnboundedSinThetaData (𝕜 := 𝕜) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace in the orthogonal decomposition. -/
   exactMap : H →L[𝕜] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   trial_isometry : IsometricEmbedding data.X
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive form gap between the trial operator and the complementary restriction. -/
   gap : ℝ
   gap_pos : 0 < gap
   spectral_gap : FormBoundedSylvesterGap data.A₀ data.Λ₁ gap
@@ -315,13 +329,17 @@ builds it from this one, so `result` here is a corollary of `result` there.
 `SinTheta/Canonical.lean` records the details. -/
 structure SpectralGeneralSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℂ)) where
+  /-- The ambient, trial, and complementary operator data for the sine-angle problem. -/
   data : UnboundedSinThetaData (𝕜 := ℂ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace in the orthogonal decomposition. -/
   exactMap : H →L[ℂ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive spectral separation used in the Sylvester estimate. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound
@@ -389,13 +407,16 @@ This package is `ℂ`-only; `FormBoundedIsometricSinThetaProblem` is the
 `RCLike`-generic form-bounded counterpart. -/
 structure SpectralIsometricSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℂ)) where
+  /-- The ambient, trial, and complementary operator data for the sine-angle problem. -/
   data : UnboundedSinThetaData (𝕜 := ℂ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace in the orthogonal decomposition. -/
   exactMap : H →L[ℂ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   trial_isometry : IsometricEmbedding data.X
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive spectral separation used in the Sylvester estimate. -/
   gap : ℝ
   gap_pos : 0 < gap
   spectral_gap : SpectralSylvesterGap data.A₀ data.Λ₁ gap

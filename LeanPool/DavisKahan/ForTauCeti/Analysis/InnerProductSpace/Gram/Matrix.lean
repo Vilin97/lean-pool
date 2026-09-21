@@ -685,7 +685,7 @@ noncomputable def familyIsometry {v : Fin d → E} (hv : Orthonormal 𝕜 v) :
   rw [familyIsometry, LinearMap.coe_isometryOfInner, familyMap_apply]
 
 /-- It sends the `k`-th standard basis vector to `v k`. -/
-@[simp] theorem familyIsometry_single {v : Fin d → E} (hv : Orthonormal 𝕜 v) (k : Fin d) :
+ theorem familyIsometry_single {v : Fin d → E} (hv : Orthonormal 𝕜 v) (k : Fin d) :
     familyIsometry hv (EuclideanSpace.single k 1) = v k := by
   rw [familyIsometry_apply]
   rw [Finset.sum_eq_single k]

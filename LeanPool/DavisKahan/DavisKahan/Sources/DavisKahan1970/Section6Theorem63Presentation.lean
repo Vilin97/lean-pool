@@ -113,7 +113,7 @@ below therefore carry exactly the printed hypotheses and nothing else. -/
 
 /-- The directed tangent representative of Theorem 6.3, and the proof that it
 has the approximation numbers the theorem asks for. -/
-alias theorem6_3_directedTangent :=
+alias theorem6Point3DirectedTangent :=
   TanTheta.theorem63DirectedTangent
 
 alias theorem6_3_directedTangent_approximationNumbers :=

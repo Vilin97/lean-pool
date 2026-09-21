@@ -361,17 +361,21 @@ The representatives are actual points of the original spectrum.  This is the
 feature that preserves any cross-gap when two such resolutions are formed. -/
 structure FiniteSpectralStep (A : H →L[ℂ] H)
     (hA : A.IsSymmetric) where
+  /-- The number of cells in the finite spectral partition. -/
   n : ℕ
+  /-- The measurable cells covering the real spectrum. -/
   cell : Fin n → Set ℝ
   measurable_cell : ∀ i, MeasurableSet (cell i)
   pairwise_disjoint : Set.PairwiseDisjoint Set.univ cell
   covers_spectrum : realSpectrum A ⊆ ⋃ i, cell i
+  /-- A spectral value representing each cell. -/
   representative : Fin n → ℝ
   representative_mem : ∀ i, representative i ∈ realSpectrum A
-  diameter_le : ℝ
-  diameter_nonneg : 0 ≤ diameter_le
+  /-- A uniform bound on the distance from a cell's spectral points to its representative. -/
+  diameterBound : ℝ
+  diameter_nonneg : 0 ≤ diameterBound
   cell_close : ∀ i, ∀ x ∈ cell i ∩ realSpectrum A,
-    |x - representative i| ≤ diameter_le
+    |x - representative i| ≤ diameterBound
 
 /-- Operator represented by a finite spectral step. -/
 noncomputable def FiniteSpectralStep.operator
@@ -395,7 +399,7 @@ radius. -/
 theorem FiniteSpectralStep.norm_operator_sub_le
     {A : H →L[ℂ] H} {hA : A.IsSymmetric}
     (S : FiniteSpectralStep A hA) :
-    ‖S.operator - A‖ ≤ S.diameter_le := by
+    ‖S.operator - A‖ ≤ S.diameterBound := by
   rcases subsingleton_or_nontrivial H with hsub | hnon
   · -- On a trivial space every operator is zero, so the estimate is `0 ≤ diam`.
     have : S.operator - A = 0 := Subsingleton.elim _ _
@@ -413,7 +417,7 @@ theorem FiniteSpectralStep.norm_operator_sub_le
       exact Finset.single_le_sum (fun j _ => abs_nonneg (S.representative j))
         (Finset.mem_univ _)
     have hclose : ∀ x ∈ realSpectrum A,
-        |chosenFiniteStepSymbol S.cell S.representative x - x| ≤ S.diameter_le := by
+        |chosenFiniteStepSymbol S.cell S.representative x - x| ≤ S.diameterBound := by
       intro x hx
       obtain ⟨i, hxi⟩ := Set.mem_iUnion.mp (S.covers_spectrum hx)
       have hex : ∃ j, x ∈ S.cell j := ⟨i, hxi⟩
@@ -438,7 +442,7 @@ theorem FiniteSpectralStep.norm_operator_sub_le
               boundedSelfAdjointBorelCalculus A hA (fun x => x) measurable_id
                 (identity_boundedOnSpectrum A)‖ := by
             rw [hcalc, boundedSelfAdjointBorelCalculus_id A hA]
-      _ ≤ S.diameter_le :=
+      _ ≤ S.diameterBound :=
             boundedSelfAdjointBorelCalculus_norm_sub_le A hA hf measurable_id hfb
               (identity_boundedOnSpectrum A) S.diameter_nonneg hclose
 
@@ -460,20 +464,20 @@ theorem FiniteSpectralStep.operator_isSelfAdjoint
 theorem FiniteSpectralStep.norm_operator_le
     {A : H →L[ℂ] H} {hA : A.IsSymmetric}
     (S : FiniteSpectralStep A hA) :
-    ‖S.operator‖ ≤ ‖A‖ + S.diameter_le := by
+    ‖S.operator‖ ≤ ‖A‖ + S.diameterBound := by
   have hsub := S.norm_operator_sub_le
   have hsplit : S.operator = A + (S.operator - A) := by abel
   calc
     ‖S.operator‖ = ‖A + (S.operator - A)‖ := by rw [← hsplit]
     _ ≤ ‖A‖ + ‖S.operator - A‖ := norm_add_le _ _
-    _ ≤ ‖A‖ + S.diameter_le := by gcongr
+    _ ≤ ‖A‖ + S.diameterBound := by gcongr
 
 /-- Every bounded self-adjoint operator has finite spectral steps with
 arbitrarily small cells and representatives in its own spectrum. -/
 theorem exists_finiteSpectralStep
     (A : H →L[ℂ] H) (hA : A.IsSymmetric)
     {ε : ℝ} (hε : 0 < ε) :
-    ∃ S : FiniteSpectralStep A hA, S.diameter_le ≤ ε := by
+    ∃ S : FiniteSpectralStep A hA, S.diameterBound ≤ ε := by
   classical
   obtain ⟨t, hts, htfin, hcov⟩ :=
     finite_cover_balls_of_compact (realSpectrum_isCompact A) hε
@@ -726,11 +730,11 @@ theorem separatedSylvester_reconstruction_complex
     intro n
     have hnormA : ‖(SA n).operator‖ ≤ ‖A‖ + 1 := by
       have h1 := (SA n).norm_operator_le
-      have h2 : (SA n).diameter_le ≤ 1 := (hSA n).trans (hone n)
+      have h2 : (SA n).diameterBound ≤ 1 := (hSA n).trans (hone n)
       linarith
     have hnormB : ‖(SB n).operator‖ ≤ ‖B‖ + 1 := by
       have h1 := (SB n).norm_operator_le
-      have h2 : (SB n).diameter_le ≤ 1 := (hSB n).trans (hone n)
+      have h2 : (SB n).diameterBound ≤ 1 := (hSB n).trans (hone n)
       linarith
     calc
       ‖(SA n).operator ∘L X - X ∘L (SB n).operator‖

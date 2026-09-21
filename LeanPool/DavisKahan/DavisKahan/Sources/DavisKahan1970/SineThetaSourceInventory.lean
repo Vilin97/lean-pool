@@ -37,7 +37,7 @@ open DavisKahan.ExactSinTheta
 /-- The dimension-coherent and axiomatic presentations of a normalized symmetric
 norming function are equivalent, so quantifying over the former excludes no norm
 in the source class. -/
-alias symmetricNormingFunction_equiv_axiomatic :=
+alias symmetricNormingFunctionEquivAxiomatic :=
   SymmetricNormingFunction.Axiomatic.equiv
 
 /-- The induced norm is submultiplicative under composition with bounded
@@ -58,9 +58,9 @@ alias sourceNormClass_nonempty := symmetricNormingFunction_nonempty
 alias directedCosineBlock := cosineBlockC
 alias directedSineBlock := sineBlockC
 alias directedCosineOperator := cosineBlockModulusC
-alias directedAngle_complex := directedAngleBlockC
-alias directedSinAngle_complex := directedSinAngleBlockC
-alias directedCosAngle_complex := directedCosAngleBlockC
+alias directedAngleComplex := directedAngleBlockC
+alias directedSinAngleComplex := directedSinAngleBlockC
+alias directedCosAngleComplex := directedCosAngleBlockC
 alias directedCosAngle_eq_modulus := sourceDirectedCosC_eq
 alias directedSinAngle_eq_modulus :=
   directedSinAngleBlockC_eq_sineBlockModulusC
@@ -70,19 +70,19 @@ alias directedAngle_eq_arcsin_sineModulus :=
   sourceDirectedAngleC_eq_arcsin_sineModulus
 alias directedAngle_real_eq_arcsin_sineModulus :=
   sourceDirectedAngleR_eq_arcsin_sineModulus
-alias directedAngle_real := sourceDirectedAngleR
-alias directedSinAngle_real := sourceDirectedSinR
-alias directedCosAngle_real := sourceDirectedCosR
-alias fullAngleCoordinates_complex := fullAngleBlockC
-alias fullSinAngleCoordinates_complex := fullSinAngleBlockC
+alias directedAngleReal := sourceDirectedAngleR
+alias directedSinAngleReal := sourceDirectedSinR
+alias directedCosAngleReal := sourceDirectedCosR
+alias fullAngleCoordinatesComplex := fullAngleBlockC
+alias fullSinAngleCoordinatesComplex := fullSinAngleBlockC
 alias fullSinAngle_singularValues_projectionDifference :=
   sourceFullSin_same_projectionDifference
 alias fullSinAngle_norm_projectionDifference :=
   sourceFullSin_mem_iff_and_gauge_eq
 alias ambientEquivalentAngle := DavisKahan.Angle.angleOperatorC
 alias ambientEquivalentSinAngle := DavisKahan.Angle.sinAngleOperatorC
-alias fullAngleCoordinates_real := sourceFullAngleR
-alias fullSinAngleCoordinates_real := sourceFullSinR
+alias fullAngleCoordinatesReal := sourceFullAngleR
+alias fullSinAngleCoordinatesReal := sourceFullSinR
 
 /-! ## Lemmas 6.1 and 6.2 -/
 
@@ -111,7 +111,7 @@ alias RealIsometricSinThetaPaperData := RealIsometricTheoremData
 alias sinTheta_paperData_real :=
   RealIsometricTheoremData.result_every_unitarilyInvariantNorm_across
 
-alias Theorem6_1Data := Theorem61Data
+alias Theorem6Point1Data := Theorem61Data
 -- **The canonical source theorems are `DavisKahan1970.theorem6_1_complex`
 -- and `..._real`** in `Sources/DavisKahan1970/Theorem61.lean`.  They take the
 -- components -- ambient/trial/complementary operators, coordinate maps, residual,
@@ -121,7 +121,7 @@ alias Theorem6_1Data := Theorem61Data
 -- 2026-09-05: they differed from the canonical names only in case, which the
 -- 2026-09-04 hostile review flagged (F6.2) as a name a reader cannot tell apart
 -- from the theorem it is not.  Cite `Theorem61Data.result_*` for the record form.
-alias Theorem6_1RealData := RealTheorem61Data
+alias Theorem6Point1RealData := RealTheorem61Data
 alias sinTheta_generalized_paperData_complex :=
   Theorem61Data.result_every_unitarilyInvariantNorm_across
 alias sinTheta_generalized_paperData_real :=
@@ -168,27 +168,27 @@ deleted on 2026-09-05 (F6.2), so cite `Theorem62Data.result_across` and
 `RealTheorem62Data.result_across` for the record form. -/
 
 alias PairwiseSpectrumGap := PairwiseSpectrumGap
-alias Theorem6_2Data := Theorem62Data
+alias Theorem6Point2Data := Theorem62Data
 alias Theorem6_2_boundNorm_of_finiteRank :=
   Theorem62Data.operatorNorm_result_across_of_rank_le
-alias Theorem6_2RealData := RealTheorem62Data
+alias Theorem6Point2RealData := RealTheorem62Data
 alias Theorem6_2_real_boundNorm_of_finiteRank :=
   RealTheorem62Data.operatorNorm_result_across_of_rank_le
 
 /-! ## Exact unbounded appendix forms -/
 
 alias CommonDomainSinThetaData := CommonDomainSinThetaData
-alias CommonDomainTheorem6_1Data := CommonDomainTheorem61Data
+alias CommonDomainTheorem6Point1Data := CommonDomainTheorem61Data
 alias theorem6_1_commonDomain :=
   CommonDomainTheorem61Data.result_every_unitarilyInvariantNorm_across
-alias CommonDomainTheorem6_2Data := CommonDomainTheorem62Data
+alias CommonDomainTheorem6Point2Data := CommonDomainTheorem62Data
 alias Theorem6_2_commonDomain := CommonDomainTheorem62Data.result_across
 alias Theorem6_2_commonDomain_boundNorm_of_finiteRank :=
   CommonDomainTheorem62Data.operatorNorm_result_of_rank_le
 -- The Appendix says "the hypotheses of Proposition 6.1 and Theorem 6.1 may be
 -- relaxed similarly".  This is that relaxation of Proposition 6.1: two closed
 -- self-adjoint operators on one dense domain, whose difference there is the
--- paper's bounded `H`.  `proposition6_1_commonDomain_ofBounded` records that the
+-- paper's bounded `H`.  `proposition6Point1CommonDomainOfBounded` records that the
 -- bounded inputs are an instance, so nothing is assumed that Proposition 6.1 did
 -- not already assume.
 alias CommonDomainSymmetricSinThetaProblem :=
@@ -197,7 +197,7 @@ alias proposition6_1_commonDomain :=
   CommonDomainSymmetricSinThetaProblem.result_every_unitarilyInvariantNorm
 alias proposition6_1_commonDomain_kyFan :=
   CommonDomainSymmetricSinThetaProblem.symmetric_all_kyFan
-alias proposition6_1_commonDomain_ofBounded :=
+alias proposition6Point1CommonDomainOfBounded :=
   CommonDomainSymmetricSinThetaProblem.ofBounded
 -- The common-domain Proposition 6.1 is stated over any `RCLike` field.  Its
 -- scalar-generic conclusion is carried by `crossSineSum U V` rather than by
@@ -211,7 +211,7 @@ alias proposition6_1_commonDomain_ofBounded :=
 -- `proposition6_1_commonDomain_sinTheta_singularValues` is the compiled
 -- certificate that this operator carries exactly the paper's whole-space
 -- `sin Theta` sequence.  Over `ℂ` the literal form is `proposition6_1_commonDomain`
--- itself.  `proposition6_1_real_commonDomain_ofBounded` records that the real
+-- itself.  `proposition6Point1RealCommonDomainOfBounded` records that the real
 -- bounded inputs are an instance, so the real form is a relaxation of the real
 -- Proposition 6.1 rather than a statement parallel to it.
 alias proposition6_1_commonDomain_crossSineSum :=
@@ -224,13 +224,13 @@ alias proposition6_1_real_commonDomain :=
   CommonDomainSymmetricSinThetaProblem.result_every_unitarilyInvariantNorm_real
 alias proposition6_1_real_commonDomain_kyFan :=
   CommonDomainSymmetricSinThetaProblem.symmetric_all_kyFan_real
-alias proposition6_1_real_commonDomain_ofBounded :=
+alias proposition6Point1RealCommonDomainOfBounded :=
   CommonDomainSymmetricSinThetaProblem.ofBoundedReal
-alias RealCommonDomainTheorem6_1Data :=
+alias RealCommonDomainTheorem6Point1Data :=
   RealCommonDomainTheorem61Data
 alias theorem6_1_real_commonDomain :=
   RealCommonDomainTheorem61Data.result_every_unitarilyInvariantNorm_across
-alias RealCommonDomainTheorem6_2Data :=
+alias RealCommonDomainTheorem6Point2Data :=
   RealCommonDomainTheorem62Data
 alias theorem6_2_real_commonDomain :=
   RealCommonDomainTheorem62Data.result_across
@@ -243,15 +243,15 @@ alias IsGraphCore := PartialMap.IsGraphCore
 alias CommonCoreResidualData := CommonCoreResidualData
 alias commonCoreResidual_extends_to_domain :=
   CommonCoreResidualData.extends_to_domain
-alias CommonCoreTheorem6_1Data := CommonCoreTheorem61Data
+alias CommonCoreTheorem6Point1Data := CommonCoreTheorem61Data
 alias theorem6_1_commonCore :=
   CommonCoreTheorem61Data.result_every_unitarilyInvariantNorm_across
-alias CommonCoreTheorem6_2Data := CommonCoreTheorem62Data
+alias CommonCoreTheorem6Point2Data := CommonCoreTheorem62Data
 alias Theorem6_2_commonCore := CommonCoreTheorem62Data.result_across
-alias RealCommonCoreTheorem6_1Data := RealCommonCoreTheorem61Data
+alias RealCommonCoreTheorem6Point1Data := RealCommonCoreTheorem61Data
 alias theorem6_1_real_commonCore :=
   RealCommonCoreTheorem61Data.result_every_unitarilyInvariantNorm_across
-alias RealCommonCoreTheorem6_2Data := RealCommonCoreTheorem62Data
+alias RealCommonCoreTheorem6Point2Data := RealCommonCoreTheorem62Data
 alias theorem6_2_real_commonCore :=
   RealCommonCoreTheorem62Data.result_across
 

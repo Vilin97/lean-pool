@@ -701,7 +701,7 @@ noncomputable def expLimit (hA : IsSelfAdjoint A) (t : ℝ) : H →L[ℂ] H :=
 @[simp] theorem expLimit_apply (hA : IsSelfAdjoint A) (t : ℝ) (ψ : H) :
     expLimit hA t ψ = expLimitFun hA t ψ := (rfl)
 /-- Norm preservation, restated for the bundled operator `expLimit`. -/
-@[simp]
+
 theorem norm_expLimit_apply (hA : IsSelfAdjoint A) (t : ℝ) (ψ : H) :
     ‖expLimit hA t ψ‖ = ‖ψ‖ := norm_expLimitFun hA t ψ
 

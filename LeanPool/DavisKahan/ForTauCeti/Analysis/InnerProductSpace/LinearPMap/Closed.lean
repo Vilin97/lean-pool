@@ -428,6 +428,7 @@ theorem reducingRestriction_isSymmetric
 
 /-- A linear map on a submodule has a bounded extension to the ambient space. -/
 structure BoundedExtension (D : Submodule 𝕜 F) (T : D →ₗ[𝕜] E) where
+  /-- The bounded ambient extension agreeing with the specified map on its submodule. -/
   operator : F →L[𝕜] E
   agrees : ∀ x : D, operator (x : F) = T x
 

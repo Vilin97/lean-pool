@@ -118,7 +118,7 @@ theorem centered_isUnit_of_spectrumOutside
       hInvSelf (inv_nonneg.mpr hγ.le) hinvBall
 
 /-- The bounded spectral theorem supplies centered norm/inverse data. -/
-noncomputable def centeredIntervalExteriorWitness_of_gap
+noncomputable def centeredIntervalExteriorWitnessOfGap
     {A : E →L[𝕜] E} {B : F →L[𝕜] F}
     (hA : A.IsSymmetric) (hB : B.IsSymmetric)
     {β α δ : ℝ} (hβα : β ≤ α) (hδ : 0 < δ)
@@ -153,7 +153,7 @@ theorem sylvester_mem_and_gauge_le_of_intervalExteriorGap
   let ρ : ℝ := (α - β) / 2
   have hρ : 0 ≤ ρ := by dsimp [ρ]; linarith
   have hcenter := centered_sylvester_equation A B X C c hEq
-  cases centeredIntervalExteriorWitness_of_gap hA hB hβα hδ hgap with
+  cases centeredIntervalExteriorWitnessOfGap hA hB hβα hδ hgap with
   | intervalOnLeft hAbound hBinv hBinvBound =>
       exact sylvester_mem_and_gauge_le_of_bound_inverse_swapped
         N hBinv

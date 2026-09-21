@@ -51,12 +51,18 @@ variable {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V]
 
 /-- Maximal fourth-order graph space with continuous endpoint traces. -/
 structure FourthOrderTraceModel where
+  /-- The continuous injective embedding of the fourth-order graph space into the ambient space. -/
   embed : V →L[𝕜] H
   embed_injective : Function.Injective embed
+  /-- The continuous operator representing the fourth derivative. -/
   fourth : V →L[𝕜] H
+  /-- The continuous trace of the second derivative at the left endpoint. -/
   traceSecondLeft : V →L[𝕜] 𝕜
+  /-- The continuous trace of the third derivative at the left endpoint. -/
   traceThirdLeft : V →L[𝕜] 𝕜
+  /-- The continuous trace of the second derivative at the right endpoint. -/
   traceSecondRight : V →L[𝕜] 𝕜
+  /-- The continuous trace of the third derivative at the right endpoint. -/
   traceThirdRight : V →L[𝕜] 𝕜
 
 namespace FourthOrderTraceModel
@@ -154,7 +160,7 @@ noncomputable def freeFourthAmbient
 
 omit [CompleteSpace H] [CompleteSpace V] in
 /-- The ambient inverse undoes the free embedding. -/
-@[simp] theorem freeAmbientInverse_freeEmbed
+ theorem freeAmbientInverse_freeEmbed
     (D : FourthOrderTraceModel (𝕜 := 𝕜) (H := H) (V := V))
     (x : D.freeSubspace) :
     D.freeAmbientInverse
@@ -165,7 +171,7 @@ omit [CompleteSpace H] [CompleteSpace V] in
 
 omit [CompleteSpace H] [CompleteSpace V] in
 /-- The ambient fourth-order operator agrees with the model one through the embedding. -/
-@[simp] theorem freeFourthAmbient_freeEmbed
+ theorem freeFourthAmbient_freeEmbed
     (D : FourthOrderTraceModel (𝕜 := 𝕜) (H := H) (V := V))
     (x : D.freeSubspace) :
     D.freeFourthAmbient

@@ -248,7 +248,7 @@ theorem complexify_reflectionOperator :
 omit [CompleteSpace E] in
 /-- Complexification carries the real orthogonal projection to the projection
 onto the complexified subspace. -/
-@[simp]
+
 theorem complexify_projection :
     complexify (U.starProjection) = Submodule.starProjection (complexifySubmodule U) :=
   (starProjection_complexifySubmodule U).symm
@@ -256,7 +256,7 @@ theorem complexify_projection :
 omit [CompleteSpace E] in
 /-- Complexification carries the real complementary projection to the
 complementary projection of the complexified subspace. -/
-@[simp]
+
 theorem complexify_complementaryProjection :
     complexify ((Uᗮ).starProjection) =
       Submodule.starProjection ((complexifySubmodule U)ᗮ) :=

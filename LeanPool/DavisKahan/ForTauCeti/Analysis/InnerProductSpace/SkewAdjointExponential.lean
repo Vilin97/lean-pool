@@ -158,7 +158,7 @@ private theorem hasDerivAt_expTime_sub (B : H →L[ℂ] H) (t s : ℝ) :
   simpa [Function.comp_def] using (hasDerivAt_expTime B (t - s)).scomp s h2
 
 /-- `s ↦ exp(s • B) ψ` differentiates to `(exp(s • B) * B) ψ`. -/
-@[simp]
+
 theorem hasDerivAt_expTime_apply (B : H →L[ℂ] H) (ψ : H) (s : ℝ) :
     HasDerivAt (fun s : ℝ => expTime B s ψ) ((expTime B s * B) ψ) s := by
   have h := ((ContinuousLinearMap.apply ℂ H ψ).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt s

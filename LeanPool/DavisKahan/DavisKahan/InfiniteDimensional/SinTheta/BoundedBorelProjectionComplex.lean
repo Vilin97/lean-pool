@@ -65,7 +65,7 @@ genuine spectral measure of the operator.
 With this instance in scope, `spectralSubspace`, `spectralProjection`,
 `isInvariant_spectralSubspace` and the `sin Θ` estimates built on them are
 unconditional statements about complex Hilbert spaces. -/
-noncomputable instance boundedBorelProjection_complex :
+noncomputable instance boundedBorelProjectionComplex :
     BoundedBorelProjection ℂ H where
   proj A hA s hs := boundedSelfAdjointSpectralProjection A hA s hs
   proj_idem A hA s hs := (boundedSelfAdjointSpectralPVM A hA).proj_idem s hs

@@ -161,8 +161,11 @@ are projections or consequences of this package. -/
 structure LowerFramePolarData
     (X : F →L[𝕜] E) (ε : ℝ)
     (hX : LowerFrameBound X ε) (hε : 0 < ε) where
+  /-- A square root of the trial map’s Gram operator in its polar factorization. -/
   sqrt : F →L[𝕜] F
+  /-- The bounded inverse of the chosen Gram square root. -/
   invSqrt : F →L[𝕜] F
+  /-- Bounded inverse data for the trial map’s Gram operator. -/
   gramInverse : BoundedInverseData (X.adjoint ∘L X)
   invSqrt_sqrt : invSqrt ∘L sqrt = ContinuousLinearMap.id 𝕜 F
   sqrt_invSqrt : sqrt ∘L invSqrt = ContinuousLinearMap.id 𝕜 F

@@ -106,11 +106,6 @@ instance : CoeFun SymmetricGauge fun _ => (ℕ →₀ ℝ≥0) → ℝ≥0 :=
 
 variable (Φ : SymmetricGauge)
 
-/-- The coercion agrees with the underlying field, so `simp` can move between
-`Φ.toFun a` and `Φ a` without unfolding the structure. -/
-@[simp]
-theorem coe_toFun (a : ℕ →₀ ℝ≥0) : Φ.toFun a = Φ a := rfl
-
 /-- The gauge of the zero sequence is zero.  Immediate from homogeneity at `c = 0`,
 and needed before any sum argument can start from an empty support. -/
 @[simp]
@@ -123,7 +118,7 @@ normalization at `0` to an arbitrary index.
 
 This is the first place the `symm` axiom does real work, and it is why
 `normalized` may be stated at the single index `0` rather than for all of them. -/
-@[simp]
+
 theorem single_one (i : ℕ) : Φ (Finsupp.single i 1) = 1 := by
   classical
   -- The transposition swapping `0` and `i` carries `single 0 1` to `single i 1`.

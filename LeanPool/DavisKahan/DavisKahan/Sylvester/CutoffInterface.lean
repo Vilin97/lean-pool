@@ -34,6 +34,7 @@ variable {E : Type v}
 needed from a spectral cutoff family. -/
 structure SpectralCutoffInterface
     (A : E →ₗ.[𝕜] E) (hA : IsSelfAdjoint A) where
+  /-- The family of orthogonal spectral cutoffs preserving the operator domain. -/
   cutoff : ℝ → E →L[𝕜] E
   isOrthogonalProjection : ∀ τ,
     cutoff τ ∘L cutoff τ = cutoff τ ∧ (cutoff τ).IsSymmetric
@@ -48,6 +49,7 @@ structure SpectralCutoffInterface
 structure BoundedTruncationInterface
     (A : E →ₗ.[𝕜] E) (hA : IsSelfAdjoint A)
     (P : SpectralCutoffInterface A hA) where
+  /-- The bounded symmetric truncations agreeing with the operator on each cutoff range. -/
   truncation : ℝ → E →L[𝕜] E
   isSymmetric : ∀ τ, (truncation τ).IsSymmetric
   eq_on_cutoff : ∀ τ x,

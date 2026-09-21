@@ -171,7 +171,7 @@ theorem tanTwoTheta_branchFree_bounded_symmetricNorming_complex
 
 /-- The branch-free double-angle tangent scalar function
 `t ↦ 2t/|1 - t²|`, meaningful on both sides of the quarter turn. -/
-alias tanTwoTheta_absDoubleAngleTangent :=
+alias tanTwoThetaAbsDoubleAngleTangent :=
   DavisKahan.TanTwoTheta.absDoubleAngleTangent
 
 /-- **`cos 2θⱼ ≠ 0` from the spectral gap**: the first of the two moves the

@@ -35,9 +35,13 @@ canonical partial-map representation.  Density, closedness, and
 self-adjointness are explicit properties rather than fields of an operator
 bundle. -/
 structure UnboundedBlockData where
+  /-- The densely defined self-adjoint diagonal operator on the first Hilbert summand. -/
   A0 : E0 →ₗ.[𝕜] E0
+  /-- The densely defined self-adjoint diagonal operator on the second Hilbert summand. -/
   A1 : E1 →ₗ.[𝕜] E1
+  /-- The bounded off-diagonal operator from the second summand to the first. -/
   B01 : E1 →L[𝕜] E0
+  /-- The bounded off-diagonal operator from the first summand to the second. -/
   B10 : E0 →L[𝕜] E1
   dense0 : Dense (A0.domain : Set E0)
   dense1 : Dense (A1.domain : Set E1)

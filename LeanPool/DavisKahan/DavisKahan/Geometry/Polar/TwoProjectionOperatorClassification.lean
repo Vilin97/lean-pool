@@ -103,7 +103,9 @@ structure TwoProjectionOperatorEquivalence
     (U V : Submodule ℂ H) (U' V' : Submodule ℂ H')
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     [U'.HasOrthogonalProjection] [V'.HasOrthogonalProjection] where
+  /-- An isometric identification of the trivial parts of the two Halmos decompositions. -/
   trivialEquiv : halmosTrivialPart U V ≃ₗᵢ[ℂ] halmosTrivialPart U' V'
+  /-- An isometric identification of the generic parts of the two Halmos decompositions. -/
   genericEquiv : halmosGenericPart U V ≃ₗᵢ[ℂ] halmosGenericPart U' V'
   trivial_left :
     (trivialEquiv : halmosTrivialPart U V →L[ℂ] halmosTrivialPart U' V') ∘L

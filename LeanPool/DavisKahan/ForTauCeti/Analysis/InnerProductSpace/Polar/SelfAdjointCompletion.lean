@@ -237,7 +237,7 @@ theorem l2Inl_apply (z : E) :
     (l2Inl : E →L[𝕜] WithLp 2 (E × F)) z = WithLp.toLp 2 (z, (0 : F)) := (rfl)
 
 /-- The first-coordinate inclusion is isometric. -/
-@[simp]
+
 theorem norm_l2Inl_apply (z : E) :
     ‖(l2Inl : E →L[𝕜] WithLp 2 (E × F)) z‖ = ‖z‖ :=
   WithLp.norm_toLp_fst 2 E F z

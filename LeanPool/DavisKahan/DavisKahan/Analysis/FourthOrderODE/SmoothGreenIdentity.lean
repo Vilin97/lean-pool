@@ -44,10 +44,15 @@ noncomputable section
 recorded explicitly so all interval integrals needed by the fundamental theorem
 are immediately available. -/
 structure FourthOrderData where
+  /-- The real-valued function whose first four derivatives are recorded. -/
   f0 : ℝ → ℝ
+  /-- The first derivative of the underlying function. -/
   f1 : ℝ → ℝ
+  /-- The second derivative of the underlying function. -/
   f2 : ℝ → ℝ
+  /-- The third derivative of the underlying function. -/
   f3 : ℝ → ℝ
+  /-- The fourth derivative of the underlying function. -/
   f4 : ℝ → ℝ
   continuous0 : Continuous f0
   continuous1 : Continuous f1

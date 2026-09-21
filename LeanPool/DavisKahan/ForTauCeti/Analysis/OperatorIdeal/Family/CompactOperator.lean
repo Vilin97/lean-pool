@@ -156,7 +156,7 @@ theorem gauge_compactOperatorIdealFamily (A : E →L[𝕜] F) :
       if IsCompactOperator A then ‖A‖ₑ else ⊤ := (rfl)
 
 /-- **Membership in the compact ideal is compactness.** -/
-@[simp]
+
 theorem mem_carrier_compactOperatorIdealFamily {A : E →L[𝕜] F} :
     A ∈ (compactOperatorIdealFamily.{u, v, w} 𝕜).carrier ↔ IsCompactOperator A := by
   classical
@@ -268,7 +268,7 @@ theorem gauge_compactOperatorFamily_of_isCompactOperator
   gauge_compactOperatorIdealFamily_of_isCompactOperator hA
 
 /-- Membership in the symmetric compact family is compactness. -/
-@[simp]
+
 theorem mem_carrier_compactOperatorFamily {A : E →L[𝕜] F} :
     A ∈ (compactOperatorFamily.{u, v} 𝕜).toOperatorIdealFamily.carrier ↔
       IsCompactOperator A :=

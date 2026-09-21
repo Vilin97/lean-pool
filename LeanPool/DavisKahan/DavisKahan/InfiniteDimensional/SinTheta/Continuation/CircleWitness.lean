@@ -27,7 +27,7 @@ module builds one from a circle.
 `CircleContinuationData` packages what a circle has to supply -- a center, a
 radius, a uniform margin, pathwise separation of the real spectrum, and a
 uniform resolvent bound on the circle -- and
-`spectralContinuationWitness_of_circle` turns that into the witness, with the
+`spectralContinuationWitnessOfCircle` turns that into the witness, with the
 endpoint projections identified as the genuine bounded self-adjoint spectral
 projections and the projection variation controlled by the resolvent bound.
 
@@ -80,8 +80,11 @@ structure CircleContinuationData
   hA : A.IsSymmetric
   hE : E.IsSymmetric
   hs : MeasurableSet s
+  /-- The real center of the circle selecting the continued spectral subspace. -/
   center : ℝ
+  /-- The radius of the circle selecting the continued spectral subspace. -/
   radius : ℝ
+  /-- The uniform positive margin used to bound resolvents along the circle. -/
   margin : ℝ
   margin_pos : 0 < margin
   separates : ∀ t (_ht : t ∈ Set.Icc (0 : ℝ) 1),
@@ -109,7 +112,7 @@ witness consumed by the Section 8 branch-selection stack.  The pathwise
 separating contours are the circle contours of `CircleContour`, and the
 uniform margin comes from the common resolvent bound through the
 Neumann-series estimate. -/
-noncomputable def spectralContinuationWitness_of_circle
+noncomputable def spectralContinuationWitnessOfCircle
     (D : CircleContinuationData A E s) :
     SpectralContinuationWitness A E s where
   contour := CircleContour.circleContour (D.center : ℂ) D.radius
@@ -134,10 +137,10 @@ noncomputable def spectralContinuationWitness_of_circle
 bounded self-adjoint spectral projections. -/
 theorem spectralContinuationWitness_of_circle_endpoints
     (D : CircleContinuationData A E s) :
-    (spectralContinuationWitness_of_circle
+    (spectralContinuationWitnessOfCircle
         D).sourceSelectedSpectralSubspace.starProjection =
         boundedSelfAdjointSpectralProjection A D.hA s D.hs ∧
-      (spectralContinuationWitness_of_circle
+      (spectralContinuationWitnessOfCircle
           D).targetSelectedSpectralSubspace.starProjection =
         boundedSelfAdjointSpectralProjection (A + E)
           (D.hA.add D.hE) s D.hs := by
@@ -152,13 +155,13 @@ resolvent bound. -/
 theorem selectedBranchProjectionLipschitzConstant_of_circle
     (D : CircleContinuationData A E s) :
     selectedBranchProjectionLipschitzConstant
-      (spectralContinuationWitness_of_circle D).contour E D.margin ≤
+      (spectralContinuationWitnessOfCircle D).contour E D.margin ≤
         D.radius * ‖E‖ / D.margin ^ 2 := by
   have hr : (0 : ℝ) ≤ D.radius :=
     (D.separates 0 ⟨le_rfl, zero_le_one⟩).radius_pos.le
   apply le_of_eq
   unfold selectedBranchProjectionLipschitzConstant
-  have hlen : (spectralContinuationWitness_of_circle D).contour.contourLength =
+  have hlen : (spectralContinuationWitnessOfCircle D).contour.contourLength =
       2 * Real.pi * D.radius :=
     CircleContour.circleContour_contourLength _ hr
   have hnorm : ‖rieszNormalization‖ = (2 * Real.pi)⁻¹ := by
@@ -485,7 +488,7 @@ theorem exists_spectralContinuationWitness_of_offDiagonal_halfGap
   obtain ⟨left, right, hlr, ⟨D⟩⟩ :=
     exists_circleContinuationData_of_offDiagonal_halfGap
       hA hE hU hoff hd hfinite hsmall
-  exact ⟨left, right, hlr, ⟨spectralContinuationWitness_of_circle D⟩⟩
+  exact ⟨left, right, hlr, ⟨spectralContinuationWitnessOfCircle D⟩⟩
 
 end ContinuationBridge
 

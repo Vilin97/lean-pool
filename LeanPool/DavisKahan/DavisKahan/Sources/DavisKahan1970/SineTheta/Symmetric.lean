@@ -50,16 +50,21 @@ variable {E : Type v}
 /-- Exact bounded inputs of Proposition 6.1.  The two gap hypotheses are the
 paper's two applications of the original sine theorem. -/
 structure SymmetricSinThetaProblem where
+  /-- The first bounded symmetric operator in the complex comparison problem. -/
   A : E →L[ℂ] E
+  /-- The second bounded symmetric operator in the complex comparison problem. -/
   B : E →L[ℂ] E
   selfAdjoint_A : A.IsSymmetric
   selfAdjoint_B : B.IsSymmetric
+  /-- The chosen reducing subspace of the first operator. -/
   U : Submodule ℂ E
+  /-- The chosen reducing subspace of the second operator. -/
   V : Submodule ℂ E
   proj_U : U.HasOrthogonalProjection
   proj_V : V.HasOrthogonalProjection
   reduces_A_U : A.Reduces U
   reduces_B_V : B.Reduces V
+  /-- The common positive form gap for the two opposite subspace comparisons. -/
   gap : ℝ
   gap_pos : 0 < gap
   gap_U_to_Vperp : FormBoundedSylvesterGap

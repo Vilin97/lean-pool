@@ -74,6 +74,7 @@ symmetric gauges.  Its gauge is real and therefore applies unchanged to real
 and complex operators, and to rectangular operators through their singular
 values. -/
 structure SymmetricNormingFunction where
+  /-- The normalized, compatible family of finite-dimensional unitarily invariant seminorms. -/
   finiteNorm : ∀ n : ℕ,
     TauCeti.UnitarilyInvariantSeminorm ℂ (EuclideanSpace ℂ (Fin n)) (EuclideanSpace ℂ (Fin n))
   normalized :

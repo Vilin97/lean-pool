@@ -259,7 +259,7 @@ theorem complexFourierPhase_coe (x : ℝ) :
 
 /-- Fourier phases multiply by adding arguments -- the group law of the circle, in the coerced
 complex form the estimates use. -/
-@[simp]
+
 theorem complexFourierPhase_mul (x y : ℝ) :
     (complexFourierPhase x : ℂ) * (complexFourierPhase y : ℂ) =
       (complexFourierPhase (x + y) : ℂ) := by
@@ -508,7 +508,7 @@ noncomputable def basisDoubledRealRotation
   rfl
 
 /-- Its action on the first summand. -/
-@[simp] theorem basisDoubledRealRotation_apply_first
+ theorem basisDoubledRealRotation_apply_first
     {G ι : Type*} [NormedAddCommGroup G] [InnerProductSpace ℝ G]
     [Fintype ι] [DecidableEq ι]
     (e : OrthonormalBasis ι ℝ G) (theta : ι → ℝ) (i : ι) :
@@ -526,7 +526,7 @@ noncomputable def basisDoubledRealRotation
   simp
 
 /-- Its action on the second summand. -/
-@[simp] theorem basisDoubledRealRotation_apply_second
+ theorem basisDoubledRealRotation_apply_second
     {G ι : Type*} [NormedAddCommGroup G] [InnerProductSpace ℝ G]
     [Fintype ι] [DecidableEq ι]
     (e : OrthonormalBasis ι ℝ G) (theta : ι → ℝ) (i : ι) :

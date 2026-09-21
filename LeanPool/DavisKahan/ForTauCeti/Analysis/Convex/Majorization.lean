@@ -614,6 +614,7 @@ end FiniteVector
 /-- Algebraic interface for a finite symmetric gauge.  These are precisely the
 properties used by the T-transform proof of weak-majorization monotonicity. -/
 structure FiniteSymmetricGauge (n : ℕ) where
+  /-- The real-valued gauge on finite coordinate vectors. -/
   toFun : (Fin n → ℝ) → ℝ
   add_le' : ∀ x y, toFun (x + y) ≤ toFun x + toFun y
   real_smul' : ∀ c x, toFun (c • x) = |c| * toFun x

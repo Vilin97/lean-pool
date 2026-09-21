@@ -85,7 +85,7 @@ variable [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
 
 omit [CompleteSpace F] in
 /-- **`ℓ²` convergence dominates pointwise convergence.** -/
-@[simp]
+
 theorem tendsto_ofLp_apply {α : Type*} {l : Filter α} (b : HilbertBasis ι 𝕜 F)
     (g : α → lp (fun _ : ι => E) 2) (g₀ : lp (fun _ : ι => E) 2)
     (h : Tendsto g l (𝓝 g₀)) (x : F) :
@@ -149,7 +149,7 @@ If `z` is in the domain of the flow's generator and `x` is in the domain of
 
 with `Z` and `C` the operators represented by `z` and by the generator applied
 to `z`.  The domain membership is a *conclusion*, not a hypothesis. -/
-@[simp]
+
 theorem generator_sylvesterGroup_apply
     (z : (generator (sylvesterGroup U V b)).domain) (x : (generator V).domain) :
     ∃ hmem : ofLp b (z : lp (fun _ : ι => E) 2) (x : F) ∈ (generator U).domain,

@@ -37,13 +37,17 @@ variable {E F G H : Type v}
 /-- Complete real input package for the generalized unbounded theorem. -/
 structure RealGeneralSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℝ)) where
+  /-- The ambient, trial, and complementary operator data for the sine-angle problem. -/
   data : UnboundedSinThetaData (𝕜 := ℝ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace in the orthogonal decomposition. -/
   exactMap : H →L[ℝ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive form gap between the trial operator and the complementary restriction. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound

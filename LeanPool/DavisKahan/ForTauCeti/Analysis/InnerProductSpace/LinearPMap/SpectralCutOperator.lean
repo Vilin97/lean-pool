@@ -66,7 +66,7 @@ theorem norm_specCutOp_le {c r : ℝ} (hr : 0 ≤ r) (hcr : ∀ s ∈ B, |s - c|
 /-- **On the spectral range the cut operator is `A - c`.**  This is the form the
 block argument consumes: the left factor of `(A - c) W` is bounded, so the
 Hilbert–Schmidt ideal property applies. -/
-@[simp]
+
 theorem specCutOp_apply {M c r : ℝ} (hbnd : ∀ s ∈ B, |s| ≤ M) (hr : 0 ≤ r)
     (hcr : ∀ s ∈ B, |s - c| ≤ r) {y : H} (hy : y ∈ specRange hA B hB)
     (hmem : y ∈ A.domain) :

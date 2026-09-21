@@ -50,12 +50,17 @@ def PartialMapEigenpair
 
 /-- Classical mode data obtained from regularity of a positive eigenvector. -/
 structure PositiveClassicalModeCertificate (lambda : ℝ) where
+  /-- The positive fourth root of the eigenvalue used in the classical mode formula. -/
   beta : ℝ
   beta_pos : 0 < beta
   eigenvalue_eq : lambda = beta ^ 4
+  /-- First coefficient of the nontrivial free-boundary mode. -/
   a : ℝ
+  /-- Second coefficient of the nontrivial free-boundary mode. -/
   b : ℝ
+  /-- Third coefficient of the nontrivial free-boundary mode. -/
   c : ℝ
+  /-- Fourth coefficient of the nontrivial free-boundary mode. -/
   d : ℝ
   coefficients_nontrivial : a ≠ 0 ∨ b ≠ 0 ∨ c ≠ 0 ∨ d ≠ 0
   free_boundary :
@@ -86,6 +91,7 @@ end PositiveClassicalModeCertificate
 /-- Regularity/classification package for one concrete free-beam operator. -/
 structure PositiveEigenmodeRegularity
     (A : H →ₗ.[ℂ] H) where
+  /-- Classify every positive eigenpair by classical mode coefficients and free-boundary data. -/
   classify : ∀ {lambda : ℝ} {x : A.domain},
     0 < lambda → PartialMapEigenpair A lambda x →
       PositiveClassicalModeCertificate lambda

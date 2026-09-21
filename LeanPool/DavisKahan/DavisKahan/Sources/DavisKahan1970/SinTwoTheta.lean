@@ -74,7 +74,7 @@ every source norm. -/
 
 /-- Equation (7.1): the mirror defect of the exact operator through the
 perturbed subspace. -/
-alias sinTwoTheta_mirrorDefect := DavisKahan.reflectionDefect
+alias sinTwoThetaMirrorDefect := DavisKahan.reflectionDefect
 
 /-- Equation (7.2): when `V` reduces the perturbed operator, the mirror defect
 of `A` is the reflected perturbation defect. -/

@@ -253,6 +253,7 @@ heartbeat blow-up (pending instance syntheses fail, so definitional
 unfolding of the `Submodule` algebra structures takes over).  With them in
 scope the same statements elaborate at ordinary heartbeats. -/
 
+/-- The local C-star algebra structure on bounded endomorphisms of the closed subspace. -/
 noncomputable local instance instCStarAlgebraSubspaceCoordinateGenuineTanTheta
     {G : Type*} [NormedAddCommGroup G] [InnerProductSpace ℂ G]
     [CompleteSpace G]

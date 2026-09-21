@@ -209,11 +209,11 @@ noncomputable def modelTanTwoThetaPerturbation (a b θ : ℝ) :
   simp [e1]
 
 /-- `e0` is normalised. -/
-@[simp] theorem inner_e0_e0 : ⟪e0 (𝕜 := 𝕜), e0⟫_𝕜 = 1 := by
+ theorem inner_e0_e0 : ⟪e0 (𝕜 := 𝕜), e0⟫_𝕜 = 1 := by
   simp [e0]
 
 /-- `e1` is normalised. -/
-@[simp] theorem inner_e1_e1 : ⟪e1 (𝕜 := 𝕜), e1⟫_𝕜 = 1 := by
+ theorem inner_e1_e1 : ⟪e1 (𝕜 := 𝕜), e1⟫_𝕜 = 1 := by
   simp [e1]
 
 /-- `e0` and `e1` are orthogonal. -/

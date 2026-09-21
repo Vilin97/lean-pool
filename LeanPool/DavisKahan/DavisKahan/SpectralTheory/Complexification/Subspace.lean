@@ -101,7 +101,7 @@ theorem range_complexify
 
 omit [CompleteSpace E] in
 /-- Membership criterion for a vector given by its coordinates. -/
-@[simp]
+
 theorem mk_mem_complexifySubmodule_iff (U : Submodule ℝ E) (x y : E) :
     mk x y ∈ complexifySubmodule U ↔ x ∈ U ∧ y ∈ U := by
   rw [mem_complexifySubmodule]
@@ -109,7 +109,7 @@ theorem mk_mem_complexifySubmodule_iff (U : Submodule ℝ E) (x y : E) :
 
 omit [CompleteSpace E] in
 /-- A real vector lies in the complexification exactly when it lies in the original submodule. -/
-@[simp]
+
 theorem ofReal_mem_complexifySubmodule_iff (U : Submodule ℝ E) (x : E) :
     ofReal x ∈ complexifySubmodule U ↔ x ∈ U := by
   rw [mem_complexifySubmodule]
@@ -183,7 +183,7 @@ instance instHasOrthogonalProjectionComplexifySubmodule :
 omit [CompleteSpace E] in
 /-- The orthogonal projection onto a complexified real subspace is exactly the
 coordinatewise complexification of the real orthogonal projection. -/
-@[simp]
+
 theorem starProjection_complexifySubmodule :
     (complexifySubmodule U).starProjection = complexify U.starProjection := by
   apply ContinuousLinearMap.ext
@@ -230,7 +230,7 @@ theorem complexifySubmodule_orthogonal :
 
 omit [CompleteSpace E] in
 /-- Orthogonal-complement projection transport, in projection form. -/
-@[simp]
+
 theorem starProjection_complexifySubmodule_orthogonal :
     (complexifySubmodule U)ᗮ.starProjection = complexify Uᗮ.starProjection := by
   calc

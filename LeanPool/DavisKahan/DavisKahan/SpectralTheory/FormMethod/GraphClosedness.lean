@@ -59,7 +59,7 @@ omit [CompleteSpace H] [CompleteSpace V] in
 omit [CompleteSpace H] [CompleteSpace V] in
 /-- The ambient image of the inverse range equivalence is the original domain
 vector. -/
-@[simp] theorem freeEmbed_freeAmbientInverse
+ theorem freeEmbed_freeAmbientInverse
     (D : FourthOrderTraceModel (𝕜 := 𝕜) (H := H) (V := V))
     (x : D.freeAmbientDomain) :
     D.freeEmbed (D.freeAmbientInverse x) = (x : H) := by

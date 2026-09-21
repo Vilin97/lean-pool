@@ -38,18 +38,26 @@ variable {E F G H : Type v}
 unbounded theorem. -/
 structure BoundedGeneralSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℂ)) where
+  /-- The ambient bounded symmetric operator on the complex Hilbert space. -/
   A : E →L[ℂ] E
+  /-- The bounded symmetric trial operator on its parameter Hilbert space. -/
   A₀ : F →L[ℂ] F
+  /-- The bounded symmetric operator representing the complementary spectral part. -/
   Λ₁ : G →L[ℂ] G
+  /-- The trial map into the ambient Hilbert space, with its specified lower frame bound. -/
   X : F →L[ℂ] E
+  /-- The isometric parametrization of the exact subspace. -/
   F₀ : H →L[ℂ] E
+  /-- The isometric parametrization intertwining the complementary and ambient operators. -/
   F₁ : G →L[ℂ] E
   ambient_symmetric : A.IsSymmetric
   trial_symmetric : A₀.IsSymmetric
   complement_symmetric : Λ₁.IsSymmetric
   exact_decomposition : OrthogonalExactDecomposition F₀ F₁
   intertwines : A ∘L F₁ = F₁ ∘L Λ₁
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound

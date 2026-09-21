@@ -34,12 +34,14 @@ variable {𝕜 : Type*} [RCLike 𝕜]
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace 𝕜 H]
   [CompleteSpace H]
 
+/-- The real algebra structure on bounded operators obtained by restricting scalars. -/
 local instance realAlgebra : Algebra ℝ (H →L[𝕜] H) :=
   ContinuousLinearMap.realAlgebra (𝕜 := 𝕜) (E := H)
 
 local instance realIsScalarTower : IsScalarTower ℝ 𝕜 (H →L[𝕜] H) :=
   ContinuousLinearMap.realIsScalarTower (𝕜 := 𝕜) (E := H)
 
+/-- The operator norm makes the algebra of bounded operators a real normed algebra. -/
 local instance realNormedAlgebra : NormedAlgebra ℝ (H →L[𝕜] H) :=
   { realAlgebra with
     norm_smul_le := by

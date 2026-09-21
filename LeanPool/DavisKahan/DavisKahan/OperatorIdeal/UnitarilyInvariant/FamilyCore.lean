@@ -51,11 +51,13 @@ present the paper's Hilbert--Schmidt classes is a predicate plus a real norm wit
 conditional laws, and rebuilding each of those field-by-field as an unconditional
 `ℝ≥0∞` gauge would repeat the extension argument below once per ideal. -/
 structure Core (𝕜 : Type u) [RCLike 𝕜] where
+  /-- Ideal membership for bounded operators between any two Hilbert spaces in the family. -/
   Mem :
     ∀ {E F : Type v}
       [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
       [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F],
       (E →L[𝕜] F) → Prop
+  /-- The real-valued symmetric ideal gauge for each pair of Hilbert spaces. -/
   gauge :
     ∀ {E F : Type v}
       [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]

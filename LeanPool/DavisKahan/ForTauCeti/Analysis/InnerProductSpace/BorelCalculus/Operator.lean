@@ -388,7 +388,7 @@ noncomputable def borelCalculus (hf : IsBddMeasurable f) : H →L[ℂ] H :=
 @[simp] theorem borelCalculus_apply (hf : IsBddMeasurable f) (ξ : H) :
     borelCalculus ha hf ξ = borelVector ha hf ξ := (rfl)
 /-- **The defining property of the Borel calculus.** -/
-@[simp] theorem inner_borelCalculus (hf : IsBddMeasurable f) (ψ ξ : H) :
+ theorem inner_borelCalculus (hf : IsBddMeasurable f) (ψ ξ : H) :
     ⟪ψ, borelCalculus ha hf ξ⟫_ℂ = pair ha f ψ ξ :=
   inner_borelVector ha hf ψ ξ
 

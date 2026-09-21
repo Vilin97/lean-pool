@@ -61,19 +61,19 @@ variable (U V : Submodule 𝕜 H) [U.HasOrthogonalProjection] [V.HasOrthogonalPr
 scope.** -/
 theorem proposition3_1_separable [TopologicalSpace.SeparableSpace H]
     (hacute : TauCeti.IsAcute U V) :
-    acute_directRotation U V ∈ unitary (H →L[𝕜] H) ∧
-      acute_directRotation U V * U.starProjection =
-        V.starProjection * acute_directRotation U V ∧
-      (U.starProjection * acute_directRotation U V * U.starProjection).IsPositive ∧
-      (Uᗮ.starProjection * acute_directRotation U V * Uᗮ.starProjection).IsPositive ∧
-      Uᗮ.starProjection * acute_directRotation U V * U.starProjection =
-        -star (U.starProjection * acute_directRotation U V * Uᗮ.starProjection) ∧
+    acuteDirectRotation U V ∈ unitary (H →L[𝕜] H) ∧
+      acuteDirectRotation U V * U.starProjection =
+        V.starProjection * acuteDirectRotation U V ∧
+      (U.starProjection * acuteDirectRotation U V * U.starProjection).IsPositive ∧
+      (Uᗮ.starProjection * acuteDirectRotation U V * Uᗮ.starProjection).IsPositive ∧
+      Uᗮ.starProjection * acuteDirectRotation U V * U.starProjection =
+        -star (U.starProjection * acuteDirectRotation U V * Uᗮ.starProjection) ∧
       ∀ W : H →L[𝕜] H,
         W ∈ unitary (H →L[𝕜] H) →
         W * U.starProjection = V.starProjection * W →
         (U.starProjection * W * U.starProjection).IsPositive →
         (Uᗮ.starProjection * W * Uᗮ.starProjection).IsPositive →
-        W = acute_directRotation U V :=
+        W = acuteDirectRotation U V :=
   proposition3_1 U V hacute
 
 end Prop31
@@ -121,10 +121,10 @@ attribute [local instance 100] ContinuousLinearMap.realAlgebra
 ambient scope.** -/
 theorem proposition3_5_commutations_separable [TopologicalSpace.SeparableSpace H]
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
-    Commute (proposition3_5_angleOperator U V) (U.starProjection) ∧
-      Commute (proposition3_5_angleOperator U V) (V.starProjection) ∧
-      Commute (proposition3_5_angleOperator U V) (corollary3_2_nonacuteQuarterTurn U V J) ∧
-      Commute (proposition3_5_angleOperator U V) (nonacuteDirectRotation U V J) :=
+    Commute (proposition3Point5AngleOperator U V) (U.starProjection) ∧
+      Commute (proposition3Point5AngleOperator U V) (V.starProjection) ∧
+      Commute (proposition3Point5AngleOperator U V) (corollary3Point2NonacuteQuarterTurn U V J) ∧
+      Commute (proposition3Point5AngleOperator U V) (nonacuteDirectRotation U V J) :=
   proposition3_5_commutations U V J
 
 /-- **Davis--Kahan 1970, Proposition 3.5, eigenvector angle, at the paper's
@@ -132,7 +132,7 @@ separable ambient scope.** -/
 theorem proposition3_5_eigenvector_angle_separable [TopologicalSpace.SeparableSpace H]
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V)
     {x : H} (hx0 : x ≠ 0) {θ : ℝ}
-    (hx : proposition3_5_angleOperator U V x = ((θ : ℝ) : 𝕜) • x) :
+    (hx : proposition3Point5AngleOperator U V x = ((θ : ℝ) : 𝕜) • x) :
     TauCeti.vectorAngle 𝕜 x (nonacuteDirectRotation U V J x) = θ :=
   proposition3_5_eigenvector_angle U V J hx0 hx
 
@@ -140,22 +140,22 @@ theorem proposition3_5_eigenvector_angle_separable [TopologicalSpace.SeparableSp
 paper's separable ambient scope.** -/
 theorem proposition3_5_angleEigenspace_uniqueMaximal_separable [TopologicalSpace.SeparableSpace H]
     (hacute : TauCeti.IsAcute U V) {θ : ℝ}
-    (hθ : Module.End.HasEigenvalue (proposition3_5_angleOperator U V).toLinearMap
+    (hθ : Module.End.HasEigenvalue (proposition3Point5AngleOperator U V).toLinearMap
       ((θ : ℝ) : 𝕜)) :
     IsPrintedFixedCosineReducingSubspace U V
-        (proposition3_5_angleEigenspace U V θ) (Real.cos θ) ∧
+        (proposition3Point5AngleEigenspace U V θ) (Real.cos θ) ∧
       ∀ M : Submodule 𝕜 H,
         IsPrintedFixedCosineReducingSubspace U V M (Real.cos θ) →
-          M ≤ proposition3_5_angleEigenspace U V θ :=
+          M ≤ proposition3Point5AngleEigenspace U V θ :=
   proposition3_5_angleEigenspace_uniqueMaximal U V hacute hθ
 
 /-- **Davis--Kahan 1970, Corollary 3.2, at the paper's separable ambient
 scope.** -/
 theorem corollary3_2_separable [TopologicalSpace.SeparableSpace H]
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
-    proposition3_5_angleOperator V U = proposition3_5_angleOperator U V ∧
-      corollary3_2_nonacuteQuarterTurn V U (swapCrossedDefectEquiv U V J) =
-        -corollary3_2_nonacuteQuarterTurn U V J ∧
+    proposition3Point5AngleOperator V U = proposition3Point5AngleOperator U V ∧
+      corollary3Point2NonacuteQuarterTurn V U (swapCrossedDefectEquiv U V J) =
+        -corollary3Point2NonacuteQuarterTurn U V J ∧
       nonacuteDirectRotation V U (swapCrossedDefectEquiv U V J) =
         star (nonacuteDirectRotation U V J) :=
   corollary3_2 U V J

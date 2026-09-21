@@ -44,6 +44,7 @@ projection path. -/
 structure ContinuedProjectionDatum
     (A V : H →L[ℂ] H) (Γ : PiecewiseC1ClosedContour)
     (parameterSet : Set ℝ) where
+  /-- A uniform positive distance separating the contour from the path's spectra. -/
   margin : ℝ
   margin_pos : 0 < margin
   selfAdjoint : ∀ t ∈ parameterSet,
@@ -67,6 +68,7 @@ contour. -/
 structure ContinuedSpectralSelection
     (A V : H →L[ℂ] H) (s : Set ℝ)
     (Γ : PiecewiseC1ClosedContour) where
+  /-- A separating contour for the selected spectral set at each path parameter. -/
   separating : ∀ t (_ht : t ∈ Set.Icc (0 : ℝ) 1),
     SpectralSeparatingContour (operatorPath A V t) s
   geometric : ∀ t (ht : t ∈ Set.Icc (0 : ℝ) 1),

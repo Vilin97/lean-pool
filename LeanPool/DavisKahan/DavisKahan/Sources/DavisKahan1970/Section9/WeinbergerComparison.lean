@@ -33,10 +33,15 @@ namespace Section9
 /-- The symmetric three-by-three arrowhead data used in the comparison with
 Weinberger and Lehmann. -/
 structure ArrowheadThreeByThree where
+  /-- The first leading diagonal entry of the arrowhead matrix. -/
   diagonal₀ : ℝ
+  /-- The second leading diagonal entry of the arrowhead matrix. -/
   diagonal₁ : ℝ
+  /-- The trailing diagonal entry coupled to the two leading coordinates. -/
   tail : ℝ
+  /-- The coupling between the first leading coordinate and the tail. -/
   coupling₀ : ℝ
+  /-- The coupling between the second leading coordinate and the tail. -/
   coupling₁ : ℝ
 
 namespace ArrowheadThreeByThree
@@ -75,7 +80,9 @@ lemma weinbergerComparisonMatrix_charAt (ε lam : ℝ) :
 precise boundary replacing the informal fourth-order expansion in the source
 discussion. -/
 structure WeinbergerLowerRootCertificate (ε : ℝ) where
+  /-- The lower of the two ordered comparison roots. -/
   lower₀ : ℝ
+  /-- The upper of the two ordered comparison roots. -/
   lower₁ : ℝ
   ordered : lower₀ ≤ lower₁
   lower₀_is_root : (weinbergerComparisonMatrix ε).charAt lower₀ = 0

@@ -39,16 +39,16 @@ def beamFiniteDataCertificate (ε : ℝ) (hε : 0 < ε) (hε100 : ε < 100) :
     FreeBeamFiniteDataCertificate ε where
   epsilon_pos := hε
   epsilon_lt_hundred := hε100
-  third_eigenvalue := exists_strictMono_range_eq_beamEigenvalues.choose 0
+  thirdEigenvalue := exists_strictMono_range_eq_beamEigenvalues.choose 0
   third_eigenvalue_gt_five_hundred :=
     (exists_strictMono_range_eq_beamEigenvalues.choose_spec.2.2 0).1
-  initial_residual_gram := residualGram ε
+  initialResidualGram := residualGram ε
   initial_residual_gram_eq := rfl
-  ritz_low := ritzLow ε
-  ritz_high := ritzHigh ε
+  ritzLow := ritzLow ε
+  ritzHigh := ritzHigh ε
   ritz_low_eq := rfl
   ritz_high_eq := rfl
-  recentered_residual_gram := orthogonalResidualGram ε
+  recenteredResidualGram := orthogonalResidualGram ε
   recentered_residual_gram_eq := rfl
 
 /-- A compact source-facing summary of the real Section 9 operator model.

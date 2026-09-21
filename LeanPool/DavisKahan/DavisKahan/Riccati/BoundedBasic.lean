@@ -28,9 +28,13 @@ variable {E1 : Type*} [NormedAddCommGroup E1] [InnerProductSpace 𝕜 E1]
 
 /-- Self-adjoint `2 × 2` bounded block operator data. -/
 structure BlockOperatorData where
+  /-- The self-adjoint diagonal block acting on the first Hilbert summand. -/
   A0 : E0 →L[𝕜] E0
+  /-- The self-adjoint diagonal block acting on the second Hilbert summand. -/
   A1 : E1 →L[𝕜] E1
+  /-- The off-diagonal block mapping the second Hilbert summand to the first. -/
   B01 : E1 →L[𝕜] E0
+  /-- The off-diagonal block mapping the first Hilbert summand to the second. -/
   B10 : E0 →L[𝕜] E1
   selfAdjoint0 : A0.IsSymmetric
   selfAdjoint1 : A1.IsSymmetric

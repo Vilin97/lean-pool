@@ -161,7 +161,7 @@ theorem real_freeBeam_eigenvalue_ordering :
   exact ⟨f, hmono, hrange, fun n => by linarith [(hgt n).1]⟩
 
 /-- The exact finite-data certificate for the paper's real Section 9 model. -/
-def real_freeBeam_finiteDataCertificate (ε : ℝ) (hε : 0 < ε) (hε100 : ε < 100) :
+def realFreeBeamFiniteDataCertificate (ε : ℝ) (hε : 0 < ε) (hε100 : ε < 100) :
     FreeBeamFiniteDataCertificate ε :=
   DavisKahan.FreeBeam.Model.Real.beamFiniteDataCertificate ε hε hε100
 

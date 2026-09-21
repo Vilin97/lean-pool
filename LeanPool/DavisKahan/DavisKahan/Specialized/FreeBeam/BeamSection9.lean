@@ -1109,16 +1109,16 @@ noncomputable def beamFiniteDataCertificate (ε : ℝ) (hε : 0 < ε) (hε100 : 
     FreeBeamFiniteDataCertificate ε where
   epsilon_pos := hε
   epsilon_lt_hundred := hε100
-  third_eigenvalue := exists_five_hundred_lt_mem_realSpectrum_beamOperator.choose
+  thirdEigenvalue := exists_five_hundred_lt_mem_realSpectrum_beamOperator.choose
   third_eigenvalue_gt_five_hundred :=
     exists_five_hundred_lt_mem_realSpectrum_beamOperator.choose_spec.1
-  initial_residual_gram := residualGram ε
+  initialResidualGram := residualGram ε
   initial_residual_gram_eq := rfl
-  ritz_low := ritzLow ε
-  ritz_high := ritzHigh ε
+  ritzLow := ritzLow ε
+  ritzHigh := ritzHigh ε
   ritz_low_eq := rfl
   ritz_high_eq := rfl
-  recentered_residual_gram := orthogonalResidualGram ε
+  recenteredResidualGram := orthogonalResidualGram ε
   recentered_residual_gram_eq := rfl
 
 /-! ## Equation (9.4): the two-term Ky Fan sum -/

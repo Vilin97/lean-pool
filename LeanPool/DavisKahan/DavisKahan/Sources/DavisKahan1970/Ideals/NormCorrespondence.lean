@@ -217,6 +217,7 @@ end SymmetricNormingFunction
 /-- A dimension-coherent normalized symmetric norming function, in the exact
 finite-list sense used in the paper. -/
 structure SymmetricNormingFunction.Axiomatic where
+  /-- The symmetric norm gauge on finite real coordinate lists of every length. -/
   gauge : ∀ n : ℕ, (Fin n → ℝ) → ℝ
   nonneg : ∀ {n} (x : Fin n → ℝ), 0 ≤ gauge n x
   definite : ∀ {n} (x : Fin n → ℝ), gauge n x = 0 ↔ x = 0
@@ -382,7 +383,7 @@ noncomputable def toNormingFunction (Φ : SymmetricNormingFunction.Axiomatic) :
     exact Φ.zero_pad x
 
 /-- The transported paper norm has finite gauge, so it lands in the ideal. -/
-@[simp]
+
 theorem toNormingFunction_finiteGauge (Φ : SymmetricNormingFunction.Axiomatic) (n : ℕ)
     (x : Fin n → ℝ) :
     Φ.toNormingFunction.finiteGauge n x = Φ.gauge n x :=

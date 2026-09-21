@@ -32,10 +32,13 @@ variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 /-- A certified measurable spectral selection for a bounded self-adjoint
 operator. -/
 structure BoundedSpectralSelection (A : H →L[ℂ] H) where
+  /-- The measurable subset of the real line selecting the spectral subspace. -/
   carrier : Set ℝ
   measurable_carrier : MeasurableSet carrier
   selfAdjoint : A.IsSymmetric
+  /-- The spectral subspace associated with the selected carrier. -/
   subspace : Submodule ℂ H
+  /-- The orthogonal spectral projection associated with the selected carrier. -/
   projection : H →L[ℂ] H
   subspace_eq : subspace = boundedSelfAdjointSpectralSubspace A selfAdjoint
     carrier measurable_carrier

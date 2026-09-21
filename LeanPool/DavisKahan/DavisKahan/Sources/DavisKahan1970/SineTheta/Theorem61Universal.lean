@@ -46,13 +46,17 @@ variable {E F G H : Type v}
 
 /-- Norm-independent mathematical inputs of Davis--Kahan Theorem 6.1. -/
 structure Theorem61Data where
+  /-- The norm-independent operator and residual inputs for the complex sine theorem. -/
   data : UnboundedSinThetaData (𝕜 := ℂ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace. -/
   exactMap : H →L[ℂ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound
@@ -151,12 +155,15 @@ end Theorem61Data
 
 /-- Norm-independent inputs of the original isometric sine theorem. -/
 structure IsometricTheoremData where
+  /-- The operator and residual inputs for the complex isometric sine theorem. -/
   data : UnboundedSinThetaData (𝕜 := ℂ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace. -/
   exactMap : H →L[ℂ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
   gap_pos : 0 < gap
   trial_isometry : IsometricEmbedding data.X
@@ -216,13 +223,17 @@ variable {E F G H : Type v}
 
 /-- Real norm-independent mathematical inputs of Theorem 6.1. -/
 structure RealTheorem61Data where
+  /-- The norm-independent operator and residual inputs for the real sine theorem. -/
   data : UnboundedSinThetaData (𝕜 := ℝ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace. -/
   exactMap : H →L[ℝ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound
@@ -316,12 +327,15 @@ end RealTheorem61Data
 
 /-- Real norm-independent inputs of the original isometric sine theorem. -/
 structure RealIsometricTheoremData where
+  /-- The operator and residual inputs for the real isometric sine theorem. -/
   data : UnboundedSinThetaData (𝕜 := ℝ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace. -/
   exactMap : H →L[ℝ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
   gap_pos : 0 < gap
   trial_isometry : IsometricEmbedding data.X

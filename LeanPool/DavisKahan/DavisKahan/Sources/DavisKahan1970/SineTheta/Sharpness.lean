@@ -472,7 +472,7 @@ theorem counterexampleTrial_starProjection_apply (x : (PlanarModelSpace ℝ)) :
     norm_counterexampleTrialVector
 
 /-- Value of the trial projection at `e₀`: the `π/4` angle splits it evenly. -/
-@[simp]
+
 theorem counterexampleTrial_starProjection_e0 :
     counterexampleTrial.starProjection (planarModelE0 (𝕜 := ℝ)) =
       (1 / 2 : ℝ) •
@@ -494,7 +494,7 @@ theorem counterexampleTrial_starProjection_e0 :
   rw [hcoeff]
 
 /-- Value of the trial projection at `e₁`: the `π/4` angle splits it evenly. -/
-@[simp]
+
 theorem counterexampleTrial_starProjection_e1 :
     counterexampleTrial.starProjection (planarModelE1 (𝕜 := ℝ)) =
       (-1 / 2 : ℝ) •

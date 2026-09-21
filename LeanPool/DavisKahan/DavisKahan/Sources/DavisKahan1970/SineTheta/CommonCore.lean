@@ -83,6 +83,7 @@ structure CommonCoreResidualData
     (A : E →ₗ.[𝕜] E)
     (A₀ : F →ₗ.[𝕜] F)
     (X : F →L[𝕜] E) (R : F →L[𝕜] E) where
+  /-- A graph core of the trial operator on which the residual identity is specified. -/
   core : Submodule 𝕜 A₀.domain
   graph_core : PartialMap.IsGraphCore A₀ core
   maps_core : ∀ x : core, X (((x : core) : A₀.domain) : F) ∈ A.domain

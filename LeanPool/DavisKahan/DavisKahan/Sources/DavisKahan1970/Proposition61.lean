@@ -265,7 +265,7 @@ relaxation, over `ℂ`.**
 `A`, `V` reduces `B`, and on the common domain `B − A` is the bounded `H`.  The
 conclusion is the same as in the bounded case, on the paper's literal `sin Θ`.
 
-`proposition6_1_commonDomain_ofBounded` records that the bounded inputs are an
+`proposition6Point1CommonDomainOfBounded` records that the bounded inputs are an
 instance, so this is a genuine relaxation rather than a parallel statement. -/
 theorem proposition6_1_commonDomain_complex
     (N : SymmetricNormingFunction)

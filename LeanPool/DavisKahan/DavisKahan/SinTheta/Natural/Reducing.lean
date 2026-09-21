@@ -109,21 +109,27 @@ def unboundedSinThetaDataOfReducingSubspace
 structure NaturalReducingIsometricSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := 𝕜))
     (U : Submodule 𝕜 E) [U.HasOrthogonalProjection] where
+  /-- The ambient densely defined self-adjoint operator reduced by the selected subspace. -/
   A : E →ₗ.[𝕜] E
   A_dense : Dense (A.domain : Set E)
   A_closed : A.IsClosed
   ambient_selfAdjoint : _root_.IsSelfAdjoint A
   reduces : TauCeti.LinearPMap.ReducesSubspace A U
+  /-- The densely defined self-adjoint trial operator. -/
   A₀ : F →ₗ.[𝕜] F
   A₀_dense : Dense (A₀.domain : Set F)
   A₀_closed : A₀.IsClosed
   trial_selfAdjoint : _root_.IsSelfAdjoint A₀
+  /-- The isometric trial map, carrying the trial domain into the ambient domain. -/
   X : F →L[𝕜] E
+  /-- The bounded extension of the residual obtained by comparing the ambient and trial
+  operators. -/
   residual : F →L[𝕜] E
   trial_isometry : IsometricEmbedding X
   X_maps_domain : ∀ x : A₀.domain, X (x : F) ∈ A.domain
   residual_eq : ∀ x : A₀.domain,
     A ⟨X (x : F), X_maps_domain x⟩ - X (A₀ x) = residual (x : F)
+  /-- The positive form gap between the trial operator and the complementary restriction. -/
   gap : ℝ
   gap_pos : 0 < gap
   spectral_gap : FormBoundedSylvesterGap A₀
@@ -150,21 +156,28 @@ subspace. -/
 structure NaturalReducingGeneralSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := 𝕜))
     (U : Submodule 𝕜 E) [U.HasOrthogonalProjection] where
+  /-- The ambient densely defined self-adjoint operator reduced by the selected subspace. -/
   A : E →ₗ.[𝕜] E
   A_dense : Dense (A.domain : Set E)
   A_closed : A.IsClosed
   ambient_selfAdjoint : _root_.IsSelfAdjoint A
   reduces : TauCeti.LinearPMap.ReducesSubspace A U
+  /-- The densely defined self-adjoint trial operator. -/
   A₀ : F →ₗ.[𝕜] F
   A₀_dense : Dense (A₀.domain : Set F)
   A₀_closed : A₀.IsClosed
   trial_selfAdjoint : _root_.IsSelfAdjoint A₀
+  /-- The trial map with a positive lower frame bound, preserving the operator domains. -/
   X : F →L[𝕜] E
+  /-- The bounded extension of the residual obtained by comparing the ambient and trial
+  operators. -/
   residual : F →L[𝕜] E
   X_maps_domain : ∀ x : A₀.domain, X (x : F) ∈ A.domain
   residual_eq : ∀ x : A₀.domain,
     A ⟨X (x : F), X_maps_domain x⟩ - X (A₀ x) = residual (x : F)
+  /-- The positive form gap between the trial operator and the complementary restriction. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound

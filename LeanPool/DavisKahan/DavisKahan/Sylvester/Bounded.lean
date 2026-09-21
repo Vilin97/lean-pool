@@ -30,6 +30,7 @@ variable {E F : Type v}
 
 /-- Explicit bounded two-sided inverse data for an endomorphism. -/
 structure BoundedInverseData (A : E →L[𝕜] E) where
+  /-- The bounded two-sided inverse of the specified endomorphism. -/
   inv : E →L[𝕜] E
   left_inv : inv ∘L A = ContinuousLinearMap.id 𝕜 E
   right_inv : A ∘L inv = ContinuousLinearMap.id 𝕜 E

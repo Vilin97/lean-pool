@@ -36,6 +36,7 @@ variable {E F : Type v}
 /-- Bounded realization of a closed operator on its full domain. -/
 structure BoundedRealization
     (A : E →ₗ.[𝕜] E) where
+  /-- The bounded ambient operator agreeing with the everywhere-defined partial map. -/
   operator : E →L[𝕜] E
   domain_eq_top : A.domain = ⊤
   agrees : ∀ x : A.domain, operator (x : E) = A x

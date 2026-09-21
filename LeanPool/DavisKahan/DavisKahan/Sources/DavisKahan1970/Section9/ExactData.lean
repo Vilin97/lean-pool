@@ -36,8 +36,11 @@ entries.  This small record keeps the numerical layer independent of matrix
 indexing details. -/
 @[ext]
 structure SymmetricTwoByTwo where
+  /-- The first diagonal entry of the real symmetric two-by-two matrix. -/
   a₀₀ : ℝ
+  /-- The common off-diagonal entry of the real symmetric two-by-two matrix. -/
   a₀₁ : ℝ
+  /-- The second diagonal entry of the real symmetric two-by-two matrix. -/
   a₁₁ : ℝ
 
 namespace SymmetricTwoByTwo
@@ -257,16 +260,21 @@ this type. -/
 structure FreeBeamFiniteDataCertificate (ε : ℝ) where
   epsilon_pos : 0 < ε
   epsilon_lt_hundred : ε < 100
-  third_eigenvalue : ℝ
-  third_eigenvalue_gt_five_hundred : 500 < third_eigenvalue
-  initial_residual_gram : SymmetricTwoByTwo
-  initial_residual_gram_eq : initial_residual_gram = residualGram ε
-  ritz_low : ℝ
-  ritz_high : ℝ
-  ritz_low_eq : ritz_low = Section9.ritzLow ε
-  ritz_high_eq : ritz_high = Section9.ritzHigh ε
-  recentered_residual_gram : SymmetricTwoByTwo
-  recentered_residual_gram_eq : recentered_residual_gram = orthogonalResidualGram ε
+  /-- The value used in the third-eigenvalue lower-bound certificate. -/
+  thirdEigenvalue : ℝ
+  third_eigenvalue_gt_five_hundred : 500 < thirdEigenvalue
+  /-- The initial two-by-two residual Gram matrix. -/
+  initialResidualGram : SymmetricTwoByTwo
+  initial_residual_gram_eq : initialResidualGram = residualGram ε
+  /-- The lower Ritz value of the finite beam calculation. -/
+  ritzLow : ℝ
+  /-- The upper Ritz value of the finite beam calculation. -/
+  ritzHigh : ℝ
+  ritz_low_eq : ritzLow = Section9.ritzLow ε
+  ritz_high_eq : ritzHigh = Section9.ritzHigh ε
+  /-- The residual Gram matrix after orthogonal recentering. -/
+  recenteredResidualGram : SymmetricTwoByTwo
+  recentered_residual_gram_eq : recenteredResidualGram = orthogonalResidualGram ε
 
 end Section9
 end DavisKahan1970

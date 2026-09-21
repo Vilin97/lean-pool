@@ -251,7 +251,7 @@ theorem kyFanSymmetricIdealFamily_eq_kyFanIdealFamily (𝕜 : Type u) [RCLike �
   rfl
 
 /-- The real-valued Ky Fan gauge is recovered from the canonical one. -/
-@[simp]
+
 theorem toReal_gauge_kyFanSymmetricIdealFamily
     [ContinuousLinearMap.HasMinMaxLowerBoundEverywhere.{u, v} 𝕜] (k : ℕ) (hk : 0 < k)
     (A : E →L[𝕜] F) :

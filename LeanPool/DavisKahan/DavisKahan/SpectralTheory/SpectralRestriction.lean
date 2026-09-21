@@ -102,7 +102,7 @@ noncomputable def selfAdjointSpectralSubspaceInclusion
   Submodule.subtypeL (selfAdjointSpectralSubspace A hA B hB)
 
 /-- The inclusion of the spectral subspace acts as the underlying vector. -/
-@[simp]
+
 theorem selfAdjointSpectralSubspaceInclusion_apply
     (A : H →ₗ.[ℂ] H) (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)

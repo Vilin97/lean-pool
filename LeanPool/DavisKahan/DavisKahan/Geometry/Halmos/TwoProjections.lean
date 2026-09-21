@@ -188,19 +188,19 @@ noncomputable instance instHasOrthogonalProjectionHalmosExteriorPart
 
 omit [CompleteSpace H] in
 /-- The common part is where both subspaces meet. -/
-@[simp]
+
 theorem mem_halmosCommonPart {U V : Submodule 𝕜 H} {x : H} :
     x ∈ halmosCommonPart U V ↔ x ∈ U ∧ x ∈ V := Iff.rfl
 
 omit [CompleteSpace H] in
 /-- The source defect is the part of `U` missed by `V`. -/
-@[simp]
+
 theorem mem_halmosSourceDefect {U V : Submodule 𝕜 H} {x : H} :
     x ∈ halmosSourceDefect U V ↔ x ∈ U ∧ x ∈ Vᗮ := Iff.rfl
 
 omit [CompleteSpace H] in
 /-- The target defect is the part of `V` missed by `U`. -/
-@[simp]
+
 theorem mem_halmosTargetDefect {U V : Submodule 𝕜 H} {x : H} :
     x ∈ halmosTargetDefect U V ↔ x ∈ Uᗮ ∧ x ∈ V := Iff.rfl
 
@@ -208,7 +208,7 @@ omit [CompleteSpace H] in
 /-- The exterior part is where neither subspace reaches.  With the previous
 three, these are the four *elementary* summands on which both projections act as
 `0` or `1`; everything nontrivial happens on the generic remainder. -/
-@[simp]
+
 theorem mem_halmosExteriorPart {U V : Submodule 𝕜 H} {x : H} :
     x ∈ halmosExteriorPart U V ↔ x ∈ Uᗮ ∧ x ∈ Vᗮ := Iff.rfl
 
@@ -607,7 +607,7 @@ omit [CompleteSpace H] in
 /-- The complementary projection is idempotent.  With the two annihilation
 lemmas above, these are the rewrites the `noncomm_ring` steps in the cosine and
 sine identities run on. -/
-@[simp]
+
 theorem complementaryProjection_sq
     (U : Submodule 𝕜 H) [U.HasOrthogonalProjection] :
     (Uᗮ).starProjection * (Uᗮ).starProjection =

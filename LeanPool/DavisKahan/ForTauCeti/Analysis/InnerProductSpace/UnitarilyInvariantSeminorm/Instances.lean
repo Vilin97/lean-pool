@@ -98,7 +98,7 @@ adjoint to cancel.  Callers that reverse a Sylvester equation land on exactly
 this shape — the reversal introduces the sign — and before 2026-07-30 two proofs
 in `Sylvester/Interval.lean` each carried an eight-line comment explaining the
 failure followed by the same `change`/`map_neg`/`adjoint_adjoint` fix by hand. -/
-@[simp] theorem adjointTransport_neg_adjoint_apply (C : E →ₗ[𝕜] F) :
+ theorem adjointTransport_neg_adjoint_apply (C : E →ₗ[𝕜] F) :
     (adjointTransport N) (-C.adjoint) = N C := by
   change N ((-C.adjoint).adjoint) = N C
   rw [map_neg, LinearMap.adjoint_adjoint, N.apply_neg]

@@ -45,12 +45,15 @@ structure BoundedCompressionTrialBlock
     (A : H →ₗ.[𝕜] H) (Z : Submodule 𝕜 H)
     [Z.HasOrthogonalProjection] [CompleteSpace Z] where
   domain_le : Z ≤ A.domain
+  /-- The bounded self-adjoint compression of the ambient partial operator to the trial
+  subspace. -/
   operator : Z →L[𝕜] Z
   operator_selfAdjoint : IsSelfAdjoint operator
   operator_apply (x : Z) :
     (operator x : H) =
       Z.starProjection
         (A ⟨(x : H), domain_le x.property⟩)
+  /-- The bounded residual between the ambient operator and its trial-space compression. -/
   residual : Z →L[𝕜] H
   residual_apply (x : Z) :
     residual x =

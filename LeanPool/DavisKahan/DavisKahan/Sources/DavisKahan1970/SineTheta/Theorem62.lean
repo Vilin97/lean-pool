@@ -46,13 +46,17 @@ variable {E F G H : Type v}
 
 /-- Exact inputs of Davis--Kahan Theorem 6.2. -/
 structure Theorem62Data where
+  /-- The operator and residual inputs for the complex spectral-distance theorem. -/
   data : UnboundedSinThetaData (𝕜 := ℂ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace. -/
   exactMap : H →L[ℂ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive lower bound on pairwise spectral distances. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound
@@ -282,13 +286,17 @@ variable {E F G H : Type v}
 
 /-- Real exact inputs of Theorem 6.2. -/
 structure RealTheorem62Data where
+  /-- The operator and residual inputs for the real spectral-distance theorem. -/
   data : UnboundedSinThetaData (𝕜 := ℝ) (E := E) (F := F) (G := G)
+  /-- The isometric parametrization of the exact subspace. -/
   exactMap : H →L[ℝ] E
   ambient_selfAdjoint : _root_.IsSelfAdjoint data.A
   trial_selfAdjoint : _root_.IsSelfAdjoint data.A₀
   complement_selfAdjoint : _root_.IsSelfAdjoint data.Λ₁
   exact_decomposition : OrthogonalExactDecomposition exactMap data.F₁
+  /-- The positive lower bound on distances between the two real spectra. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound

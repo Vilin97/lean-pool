@@ -41,10 +41,15 @@ noncomputable section
 
 /-- Classical complex fourth-order derivative data on the real line. -/
 structure ComplexFourthOrderData where
+  /-- The complex-valued function whose first four derivatives are recorded. -/
   f0 : ℝ → ℂ
+  /-- The first derivative of the underlying function. -/
   f1 : ℝ → ℂ
+  /-- The second derivative of the underlying function. -/
   f2 : ℝ → ℂ
+  /-- The third derivative of the underlying function. -/
   f3 : ℝ → ℂ
+  /-- The fourth derivative of the underlying function. -/
   f4 : ℝ → ℂ
   continuous0 : Continuous f0
   continuous1 : Continuous f1

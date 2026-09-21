@@ -47,8 +47,10 @@ variable {V : Type v} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
 /-- Remaining completion data after the graph-space and trace-kernel
 constructions have been automated. -/
 structure BeamFoundationCompletionData where
+  /-- The abstract fourth-order trace model underlying the beam realization. -/
   traceModel : Abstract.FourthOrderTraceModel (𝕜 := ℂ) (H := H) (V := V)
   free_dense : DenseRange traceModel.freeEmbed
+  /-- The positive lower bound controlling the norm by the free graph map. -/
   graphConstant : ℝ
   graphConstant_pos : 0 < graphConstant
   graph_lower_bound : ∀ x : traceModel.freeSubspace,
@@ -63,12 +65,16 @@ structure BeamFoundationCompletionData where
     Abstract.SequentiallyCompactGraphEmbedding
       (traceModel.toPartialMapOfGraphNorm free_dense
         graphConstant_pos graph_lower_bound)
+  /-- An isometric identification of the affine kernel with complex two-dimensional Euclidean
+  space. -/
   affineKernelEquiv :
     EuclideanSpace ℂ (Fin 2) ≃ₗᵢ[ℂ]
       partialMapKernel
         (traceModel.toPartialMapOfGraphNorm free_dense
           graphConstant_pos graph_lower_bound)
+  /-- Localization and minimality data for the first positive characteristic root. -/
   rootLocalization : PositiveRootLocalization
+  /-- The first positive spectral value, equal to the fourth power of the localized root. -/
   firstPositiveSpectralValue : ℝ
   firstPositiveSpectralValue_eq :
     firstPositiveSpectralValue = rootLocalization.firstPositiveRoot ^ 4

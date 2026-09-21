@@ -835,7 +835,7 @@ is false; see `not_davisKahanProposition4_4_Finite`.  The `IsAcute` hypothesis
 is not an extra mathematical restriction: `Θ ≤ π/3` already excludes a right
 principal angle, and acuteness is what the direct-rotation constructor
 consumes. -/
-def DavisKahanProposition4_4_Finite : Prop :=
+def DavisKahanProposition4Point4Finite : Prop :=
   ∀ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [FiniteDimensional ℝ E]
     (U V : Submodule ℝ E)
@@ -860,7 +860,7 @@ Lean cannot quantify over universes, so `¬ P.{0}` is the strongest available
 refutation of the universe-polymorphic `P`; and since a polymorphic `P` holds
 only if it holds at every universe, refuting `P.{0}` refutes `P`. -/
 theorem not_davisKahanProposition4_4_Finite :
-    ¬ DavisKahanProposition4_4_Finite.{0} := by
+    ¬ DavisKahanProposition4Point4Finite.{0} := by
   intro h
   have hN := h E4 U4 V4 acute principalAngle_le Wequiv rfl
     (UnitarilyInvariantSeminorm.kyFan (𝕜 := ℝ) (E := E4) (F := E4) 4)

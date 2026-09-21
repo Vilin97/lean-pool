@@ -159,7 +159,7 @@ private theorem adjoint_orthogonalProjectionOnto_comp_op_subtype
 
 /-- Transporting the rectangular sine embedding on `U` back to the ambient
 square space gives the one-sided sine cross projection `P_{Vᗮ} P_U`. -/
-@[simp]
+
 private theorem domainTransport_sinThetaEmbedding_apply
     (N : UnitarilyInvariantSeminorm 𝕜 E E)
     (U V : Submodule 𝕜 E) [U.HasOrthogonalProjection]

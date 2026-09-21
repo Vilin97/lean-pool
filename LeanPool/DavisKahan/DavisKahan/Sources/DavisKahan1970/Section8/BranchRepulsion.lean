@@ -268,16 +268,16 @@ theorem theorem8_1_selectedBranch_and_spectralRepulsion
     (hsmall : D.radius * ‖E‖ / D.margin ^ 2 < Real.sqrt 2 / 2)
     (hgap : a + delta ≤ b)
     (h0 : SpectrumIn (A + E)
-      (spectralContinuationWitness_of_circle D).targetSelectedSpectralSubspace
+      (spectralContinuationWitnessOfCircle D).targetSelectedSpectralSubspace
       (Set.Iic a))
     (h1 : SpectrumIn (A + E)
-      (spectralContinuationWitness_of_circle D).targetSelectedSpectralSubspaceᗮ
+      (spectralContinuationWitnessOfCircle D).targetSelectedSpectralSubspaceᗮ
       (Set.Ici b)) :
     Theorem81ContinuationConclusion
-      (spectralContinuationWitness_of_circle D) a b delta := by
+      (spectralContinuationWitnessOfCircle D) a b delta := by
   have hsym : (A + E).IsSymmetric := D.hA.add D.hE
   have hsmallC : selectedBranchProjectionLipschitzConstant
-      (spectralContinuationWitness_of_circle D).contour E D.margin <
+      (spectralContinuationWitnessOfCircle D).contour E D.margin <
         Real.sqrt 2 / 2 :=
     lt_of_le_of_lt (selectedBranchProjectionLipschitzConstant_of_circle D)
       hsmall
@@ -305,7 +305,7 @@ theorem perturbationHalfGapBridge_of_circleContinuationData
     (hdelta : 0 < delta) (hsmall : ‖E‖ < delta / 2)
     (hquant : D.radius * ‖E‖ / D.margin ^ 2 < Real.sqrt 2 / 2) :
     DavisKahan1970.Section8.PerturbationHalfGapBridge
-      (spectralContinuationWitness_of_circle D) delta where
+      (spectralContinuationWitnessOfCircle D) delta where
   delta_pos := hdelta
   perturbation_small := hsmall
   contour_selects_quarter_branch :=
@@ -321,7 +321,7 @@ theorem residualHalfGapBridge_of_circleContinuationData
     (hdelta : 0 < delta) (hsmall : ‖R‖ < delta / 2)
     (hquant : D.radius * ‖E‖ / D.margin ^ 2 < Real.sqrt 2 / 2) :
     DavisKahan1970.Section8.ResidualHalfGapBridge
-      (spectralContinuationWitness_of_circle D) R delta where
+      (spectralContinuationWitnessOfCircle D) R delta where
   delta_pos := hdelta
   residual_small := hsmall
   contour_selects_quarter_branch :=
@@ -335,7 +335,7 @@ theorem theorem8_2_perturbationHalfGap_selectedBranch
     (hdelta : 0 < delta) (hsmall : ‖E‖ < delta / 2)
     (hquant : D.radius * ‖E‖ / D.margin ^ 2 < Real.sqrt 2 / 2) :
     DavisKahan1970.Section8.SelectedBranchConclusion
-      (spectralContinuationWitness_of_circle D) :=
+      (spectralContinuationWitnessOfCircle D) :=
   DavisKahan1970.Section8.theorem82_branch_of_perturbationHalfGapBridge _
     (perturbationHalfGapBridge_of_circleContinuationData D hdelta hsmall hquant)
 
@@ -346,7 +346,7 @@ theorem theorem8_2_residualHalfGap_selectedBranch
     (hdelta : 0 < delta) (hsmall : ‖R‖ < delta / 2)
     (hquant : D.radius * ‖E‖ / D.margin ^ 2 < Real.sqrt 2 / 2) :
     DavisKahan1970.Section8.SelectedBranchConclusion
-      (spectralContinuationWitness_of_circle D) :=
+      (spectralContinuationWitnessOfCircle D) :=
   DavisKahan1970.Section8.theorem82_branch_of_residualHalfGapBridge _ R
     (residualHalfGapBridge_of_circleContinuationData D R hdelta hsmall hquant)
 

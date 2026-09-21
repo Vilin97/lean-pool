@@ -689,8 +689,8 @@ finite-dimensional space, every acute pair with first principal angle at most `Ï
 unitary carrying one subspace onto the other and every unitarily invariant seminorm, the direct
 rotation minimizes the full displacement.  It is a definition rather than a theorem because it
 is false. -/
-alias proposition4_4_printedStatement :=
-  DavisKahan.FiniteDimensional.DavisKahanProposition4_4_Finite
+alias proposition4Point4PrintedStatement :=
+  DavisKahan.FiniteDimensional.DavisKahanProposition4Point4Finite
 
 /-- **Proposition 4.4 is false as printed.**  The source-facing name for
 `DavisKahan.FiniteDimensional.not_davisKahanProposition4_4_Finite`. -/

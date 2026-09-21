@@ -2231,7 +2231,7 @@ theorem finiteRankOperatorNormGauge_eq_top_iff
   · rw [finiteRankOperatorNormGauge, ite_eq_right hA]
     simp [hA]
 
-@[simp]
+
 theorem finiteRankOperatorNormGauge_ne_top_iff
     {E F : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
@@ -2252,6 +2252,7 @@ theorem finiteRankOperatorNormGauge_of_finiteRank
 
 /-! ### Probes 19--20: an infinite-rank diagonal below a rank-one Ky Fan profile -/
 
+/-- The complex square-summable sequence space supporting the diagonal Fan-profile example. -/
 abbrev FanCounterexampleSpace := lp (fun _ : ℕ => ℂ) 2
 
 /-- Positive geometric approximation-number profile with total mass one. -/

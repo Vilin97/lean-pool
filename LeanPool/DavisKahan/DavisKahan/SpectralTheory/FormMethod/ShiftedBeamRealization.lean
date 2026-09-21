@@ -54,6 +54,7 @@ variable {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V]
 /-- Coercive shifted form together with its bending-energy decomposition. -/
 structure ShiftedBeamFormData extends
     Abstract.CoerciveFormData (𝕜 := 𝕜) (H := H) (V := V) where
+  /-- The nonnegative bending-energy contribution to the shifted form. -/
   bendingEnergy : V → ℝ
   bending_nonnegative : ∀ u, 0 ≤ bendingEnergy u
   form_energy_decomposition : ∀ u,

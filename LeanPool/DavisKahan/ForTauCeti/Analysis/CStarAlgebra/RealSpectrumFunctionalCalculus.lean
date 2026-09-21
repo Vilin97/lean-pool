@@ -149,7 +149,7 @@ theorem realSpectrumHomeomorph_apply_coe {a : A} (ha : IsSelfAdjoint a) (z : spe
 
 /-- Reading the real part back into `ℂ` returns the original spectral point: the complex
 spectrum of a self-adjoint element is real. -/
-@[simp]
+
 theorem coe_realSpectrumHomeomorph {a : A} (ha : IsSelfAdjoint a) (z : spectrum ℂ a) :
     (((realSpectrumHomeomorph ha z : ℝ) : ℂ)) = (z : ℂ) := by
   rw [realSpectrumHomeomorph_apply_coe]

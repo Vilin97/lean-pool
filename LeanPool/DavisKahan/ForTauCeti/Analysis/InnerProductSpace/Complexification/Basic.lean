@@ -280,7 +280,7 @@ def ofReal [NormedAddCommGroup E] [InnerProductSpace ℝ E] :
     im (ofReal x) = 0 := rfl
 /-- The complex inner product of two real vectors is the real one, coerced -- so the embedding
 `E → RealComplexification E` is isometric. -/
-@[simp] theorem inner_ofReal [NormedAddCommGroup E] [InnerProductSpace ℝ E] (x y : E) :
+ theorem inner_ofReal [NormedAddCommGroup E] [InnerProductSpace ℝ E] (x y : E) :
     ⟪ofReal x, ofReal y⟫_ℂ = (⟪x, y⟫_ℝ : ℂ) := by
   apply Complex.ext <;> simp
 
@@ -479,7 +479,7 @@ theorem complexify_injective [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   simpa using congrArg re hx
 
 /-- A real scalar acts through its complex coercion. -/
-@[simp] theorem coe_real_smul [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+ theorem coe_real_smul [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (r : ℝ) (z : RealComplexification E) : (r : ℂ) • z = r • z := by
   apply RealComplexification.ext
   · simp only [re_complex_smul, Complex.ofReal_re, Complex.ofReal_im, zero_smul, sub_zero]

@@ -74,6 +74,7 @@ theorem characteristic_ne_zero_of_one_lt_product
 
 /-- Exact certificate that a displayed root is the first positive root. -/
 structure FirstPositiveRootCertificate where
+  /-- The smallest positive root of the free-beam characteristic equation. -/
   root : ℝ
   root_pos : 0 < root
   root_equation :
@@ -99,7 +100,7 @@ noncomputable def FirstPositiveRootCertificate.toPositiveRootLocalization
   lower_bound := C.lower_bound
 
 /-- It is enough to exclude roots on `(0, lower]`, then on `(lower, root)`. -/
-noncomputable def firstPositiveRootCertificate_of_split_exclusion
+noncomputable def firstPositiveRootCertificateOfSplitExclusion
     {root lower : ℝ}
     (hroot_pos : 0 < root)
     (hroot : FreeBeam.characteristic root = 0)

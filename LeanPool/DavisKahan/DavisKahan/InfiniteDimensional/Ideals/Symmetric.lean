@@ -89,7 +89,9 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
 /-- A symmetric norm ideal of bounded operators on a Hilbert space. -/
 structure SymmetricNormIdeal where
+  /-- Membership in the symmetric ideal of bounded operators. -/
   mem : (E →L[𝕜] E) → Prop
+  /-- The real-valued norm gauge on the ideal. -/
   gauge : (E →L[𝕜] E) → ℝ
   zero_mem : mem 0
   add_mem : ∀ {A B}, mem A → mem B → mem (A + B)

@@ -121,7 +121,9 @@ inductive StandardSymmetricCompletion where
 /-- A standard symmetric ideal is a coherent source norm together with its
 maximal/Fatou or minimal fully symmetric completion. -/
 structure StandardSymmetricIdeal where
+  /-- The symmetric norming function defining the ideal gauge. -/
   norm : SymmetricNormingFunction
+  /-- The choice of standard completion of the symmetric operator ideal. -/
   completion : StandardSymmetricCompletion
 
 namespace StandardSymmetricIdeal

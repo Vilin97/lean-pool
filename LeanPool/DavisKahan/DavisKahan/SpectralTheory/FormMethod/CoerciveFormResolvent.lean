@@ -54,12 +54,16 @@ variable {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V]
 /-- Data for a coercive symmetric form represented by a bounded operator on a
 form Hilbert space. -/
 structure CoerciveFormData where
+  /-- The continuous, injective, dense embedding of the form space into the ambient Hilbert
+  space. -/
   embed : V →L[𝕜] H
   embed_injective : Function.Injective embed
   embed_dense : DenseRange embed
   embed_adjoint_injective : Function.Injective embed.adjoint
+  /-- The bounded self-adjoint operator representing the coercive form on its Hilbert space. -/
   formOperator : V →L[𝕜] V
   form_selfAdjoint : IsSelfAdjoint formOperator
+  /-- The positive constant in the quadratic coercivity lower bound. -/
   coercivityConstant : ℝ
   coercivity_pos : 0 < coercivityConstant
   coercive : ∀ u : V,
@@ -212,7 +216,7 @@ theorem associatedOperator_isSelfAdjoint
     D.resolvent_nonnegative
 
 /-- The form resolvent is the inverse of the associated operator on its domain. -/
-@[simp] theorem associatedOperator_resolvent
+ theorem associatedOperator_resolvent
     (D : CoerciveFormData (𝕜 := 𝕜) (H := H) (V := V)) (f : H) :
     D.associatedOperator
       ⟨D.resolvent f,

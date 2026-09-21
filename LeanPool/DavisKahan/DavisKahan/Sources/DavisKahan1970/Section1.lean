@@ -58,7 +58,7 @@ respect: `E₀` is an arbitrary bounded map rather than an isometry, and `A₀` 
 operator on its source space rather than one whose eigenvalues approximate the `λⱼ`.  Every
 source-facing consumer instantiates `E₀` at `P.subtypeL` and `A₀` at `compressOperator P A`,
 which is the printed configuration. -/
-alias Equation1_8 := DavisKahan.residual
+alias Equation1Point8 := DavisKahan.residual
 
 /-- **Davis--Kahan 1970, Section 1: the residual is the first block column of the
 perturbation**, `R = HE₀`.

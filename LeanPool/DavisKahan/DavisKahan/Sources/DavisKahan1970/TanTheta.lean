@@ -76,7 +76,7 @@ namespace DavisKahan1970
 
 /-- The source's one-sided interval hypothesis: Ritz spectrum in `[β, α]`,
 unwanted exact spectrum at least `α + δ`. -/
-alias Theorem6_3_intervalGap := DavisKahan.FiniteDimensional.TanThetaIntervalGap
+alias Theorem6Point3IntervalGap := DavisKahan.FiniteDimensional.TanThetaIntervalGap
 
 /-- Transversality is a conclusion of the source placement, not a
 hypothesis. -/

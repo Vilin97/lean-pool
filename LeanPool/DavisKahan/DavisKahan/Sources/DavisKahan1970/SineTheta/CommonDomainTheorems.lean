@@ -41,12 +41,19 @@ structure CommonDomainSinThetaData
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H] where
+  /-- The ambient self-adjoint partially defined operator. -/
   A : E →ₗ.[𝕜] E
+  /-- The self-adjoint partially defined trial operator. -/
   A₀ : F →ₗ.[𝕜] F
+  /-- The self-adjoint operator representing the complementary spectral part. -/
   Λ₁ : G →ₗ.[𝕜] G
+  /-- The bounded trial map preserving the specified operator domains. -/
   E₀ : F →L[𝕜] E
+  /-- The isometric parametrization of the exact subspace. -/
   F₀ : H →L[𝕜] E
+  /-- The isometric parametrization of the complementary subspace. -/
   F₁ : G →L[𝕜] E
+  /-- The bounded residual in the common-domain operator identity. -/
   R : F →L[𝕜] E
   A_selfAdjoint : IsSelfAdjoint A
   A₀_selfAdjoint : IsSelfAdjoint A₀
@@ -101,8 +108,11 @@ variable {E F G H : Type v}
 
 /-- Literal common-domain input for Theorem 6.1. -/
 structure CommonDomainTheorem61Data where
+  /-- The common-domain operator and residual data over complex Hilbert spaces. -/
   source : CommonDomainSinThetaData ℂ E F G H
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   epsilon : ℝ
   gap_pos : 0 < gap
   epsilon_pos : 0 < epsilon
@@ -164,8 +174,11 @@ end CommonDomainTheorem61Data
 
 /-- Literal common-domain input for Theorem 6.2. -/
 structure CommonDomainTheorem62Data where
+  /-- The common-domain operator and residual data over complex Hilbert spaces. -/
   source : CommonDomainSinThetaData ℂ E F G H
+  /-- The positive lower bound on pairwise spectral distances. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   epsilon : ℝ
   gap_pos : 0 < gap
   epsilon_pos : 0 < epsilon
@@ -248,8 +261,11 @@ variable {E F G H : Type v}
 
 /-- Real common-domain input for Theorem 6.1. -/
 structure RealCommonDomainTheorem61Data where
+  /-- The common-domain operator and residual data over real Hilbert spaces. -/
   source : CommonDomainSinThetaData ℝ E F G H
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   epsilon : ℝ
   gap_pos : 0 < gap
   epsilon_pos : 0 < epsilon
@@ -310,8 +326,11 @@ end RealCommonDomainTheorem61Data
 
 /-- Real common-domain input for Theorem 6.2. -/
 structure RealCommonDomainTheorem62Data where
+  /-- The common-domain operator and residual data over real Hilbert spaces. -/
   source : CommonDomainSinThetaData ℝ E F G H
+  /-- The positive lower bound on distances between the two real spectra. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   epsilon : ℝ
   gap_pos : 0 < gap
   epsilon_pos : 0 < epsilon

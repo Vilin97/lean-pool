@@ -40,7 +40,9 @@ variable {E F G H : Type v}
 /-- The literal complex input package for Davis--Kahan Theorem 6.1. -/
 structure GeneralSinThetaRepresentativeProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℂ)) where
+  /-- The underlying complex form-bounded sine-theorem problem. -/
   problem : FormBoundedGeneralSinThetaProblem (E := E) (F := F) (G := G) (H := H) N
+  /-- The selected representative of the canonical directed sine block. -/
   sinTheta₀ : SinThetaRepresentative
     (directedSinThetaOperator problem.data.X problem.exactMap
       problem.lowerFrame problem.frameLowerBound_pos)
@@ -68,8 +70,10 @@ end GeneralSinThetaRepresentativeProblem
 /-- Literal paper representative for the complex isometric theorem. -/
 structure IsometricSinThetaRepresentativeProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℂ)) where
+  /-- The underlying complex form-bounded problem with an isometric trial map. -/
   problem : FormBoundedIsometricSinThetaProblem (𝕜 := ℂ) (E := E) (F := F)
     (G := G) (H := H) N
+  /-- The selected representative of the complementary projection of the trial isometry. -/
   sinTheta₀ : SinThetaRepresentative
     ((ContinuousLinearMap.id ℂ E -
       problem.exactMap ∘L problem.exactMap.adjoint) ∘L problem.data.X)
@@ -105,8 +109,10 @@ variable {E F G H : Type v}
 /-- The literal real input package for Davis--Kahan Theorem 6.1. -/
 structure RealGeneralSinThetaRepresentativeProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℝ)) where
+  /-- The underlying real form-bounded sine-theorem problem. -/
   problem : RealGeneralSinThetaProblem (E := E) (F := F)
     (G := G) (H := H) N
+  /-- The selected representative of the canonical real directed sine block. -/
   sinTheta₀ : SinThetaRepresentative
     (directedSinThetaOperatorReal problem.data.X problem.exactMap
       problem.lowerFrame problem.frameLowerBound_pos)
@@ -131,8 +137,10 @@ end RealGeneralSinThetaRepresentativeProblem
 /-- Literal paper representative for the real isometric theorem. -/
 structure RealIsometricSinThetaRepresentativeProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℝ)) where
+  /-- The underlying real form-bounded problem with an isometric trial map. -/
   problem : FormBoundedIsometricSinThetaProblem (𝕜 := ℝ) (E := E) (F := F)
     (G := G) (H := H) N
+  /-- The selected representative of the complementary projection of the real trial isometry. -/
   sinTheta₀ : SinThetaRepresentative
     ((ContinuousLinearMap.id ℝ E -
       problem.exactMap ∘L problem.exactMap.adjoint) ∘L problem.data.X)

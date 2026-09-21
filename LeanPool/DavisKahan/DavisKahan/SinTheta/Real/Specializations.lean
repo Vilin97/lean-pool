@@ -35,18 +35,26 @@ variable {E F G H : Type v}
 /-- Bounded real source package for the generalized sine theorem. -/
 structure RealBoundedGeneralSinThetaProblem
     (N : KyFanDominantIdealFamily (𝕜 := ℝ)) where
+  /-- The ambient bounded symmetric operator on the real Hilbert space. -/
   A : E →L[ℝ] E
+  /-- The bounded symmetric trial operator on its parameter Hilbert space. -/
   A₀ : F →L[ℝ] F
+  /-- The bounded symmetric operator representing the complementary spectral part. -/
   Λ₁ : G →L[ℝ] G
+  /-- The trial map into the ambient Hilbert space, with its specified lower frame bound. -/
   X : F →L[ℝ] E
+  /-- The isometric parametrization of the exact subspace. -/
   F₀ : H →L[ℝ] E
+  /-- The isometric parametrization intertwining the complementary and ambient operators. -/
   F₁ : G →L[ℝ] E
   ambient_symmetric : A.IsSymmetric
   trial_symmetric : A₀.IsSymmetric
   complement_symmetric : Λ₁.IsSymmetric
   exact_decomposition : OrthogonalExactDecomposition F₀ F₁
   intertwines : A ∘L F₁ = F₁ ∘L Λ₁
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   frameLowerBound : ℝ
   gap_pos : 0 < gap
   frameLowerBound_pos : 0 < frameLowerBound

@@ -39,6 +39,7 @@ variable {X : Type u} {Y : Type v}
 /-- A norm on cross-space bounded operators compatible with contractions on
 both sides, as required in Davis--Kahan Theorem 5.1. -/
 structure CompatibleCrossOperatorNorm where
+  /-- The compatible real-valued norm on operators between the two Hilbert spaces. -/
   toFun : (X →L[𝕜] Y) → ℝ
   nonneg : ∀ T, 0 ≤ toFun T
   eq_zero : ∀ T, toFun T = 0 → T = 0
@@ -59,6 +60,7 @@ onto the (possibly non-complemented) range, so the reusable datum is the left
 inverse itself; on a Hilbert space the spectral-separation lower bound supplies
 it through the closed-range orthogonal projection. -/
 structure BoundedLeftInverseData (A : Y →L[𝕜] Y) (c : ℝ) where
+  /-- The bounded left inverse with the specified operator-norm bound. -/
   leftInverse : Y →L[𝕜] Y
   comp_eq_id : leftInverse ∘L A = ContinuousLinearMap.id 𝕜 Y
   norm_le : ‖leftInverse‖ ≤ c
@@ -66,6 +68,7 @@ structure BoundedLeftInverseData (A : Y →L[𝕜] Y) (c : ℝ) where
 /-- An explicit bounded right inverse with a reciprocal norm bound, used by the
 source's symmetric form of Theorem 5.1. -/
 structure BoundedRightInverseData (B : X →L[𝕜] X) (c : ℝ) where
+  /-- The bounded right inverse with the specified operator-norm bound. -/
   rightInverse : X →L[𝕜] X
   comp_eq_id : B ∘L rightInverse = ContinuousLinearMap.id 𝕜 X
   norm_le : ‖rightInverse‖ ≤ c

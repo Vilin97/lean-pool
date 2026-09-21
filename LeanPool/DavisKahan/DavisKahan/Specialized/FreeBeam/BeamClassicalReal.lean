@@ -175,7 +175,7 @@ def affineV (a b : ℝ) : BeamV :=
     affinePair_mem a b⟩
 
 /-- The inclusion of an affine form-domain element is the affine function. -/
-@[simp] theorem beamEmbed_affineV (a b : ℝ) : beamEmbed (affineV a b) = affineLp a b := by
+ theorem beamEmbed_affineV (a b : ℝ) : beamEmbed (affineV a b) = affineLp a b := by
   rw [show beamEmbed (affineV a b) = pairFst ((affineV a b : BeamV) : BeamPairSpace) from rfl]
   rw [show ((affineV a b : BeamV) : BeamPairSpace) =
     (WithLp.prodContinuousLinearEquiv 2 ℝ BeamL2 BeamL2).symm (affineLp a b, 0) from rfl]
@@ -183,7 +183,7 @@ def affineV (a b : ℝ) : BeamV :=
   simp
 
 /-- An affine form-domain element has vanishing second derivative. -/
-@[simp] theorem beamSnd_affineV (a b : ℝ) : beamSnd (affineV a b) = 0 := by
+ theorem beamSnd_affineV (a b : ℝ) : beamSnd (affineV a b) = 0 := by
   rw [show beamSnd (affineV a b) = pairSnd ((affineV a b : BeamV) : BeamPairSpace) from rfl]
   rw [show ((affineV a b : BeamV) : BeamPairSpace) =
     (WithLp.prodContinuousLinearEquiv 2 ℝ BeamL2 BeamL2).symm (affineLp a b, 0) from rfl]
@@ -328,10 +328,15 @@ theorem beam_pairing_integral {x : beamOperator.domain} {p : BeamV}
 
 /-- A classical representative of a graph point of the real beam operator. -/
 structure ClassicalFreeBeamRepresentative (x y : BeamL2) where
+  /-- A classical function representing the first component of the beam graph point. -/
   u0 : ℝ → ℝ
+  /-- The first derivative in the classical representative's derivative chain. -/
   u1 : ℝ → ℝ
+  /-- The second derivative in the classical representative's derivative chain. -/
   u2 : ℝ → ℝ
+  /-- The third derivative in the classical representative's derivative chain. -/
   u3 : ℝ → ℝ
+  /-- The fourth derivative representing the beam operator's value. -/
   u4 : ℝ → ℝ
   x_ae : (x : ℝ → ℝ) =ᵐ[unitIocMeasure] u0
   y_ae : (y : ℝ → ℝ) =ᵐ[unitIocMeasure] u4
@@ -1079,7 +1084,7 @@ theorem classicalModeLp_smul_identified (beta c a b : ℝ) :
 
 /-- A classical mode satisfying the four free-end boundary equations gives a point of the
 classical fourth-derivative graph, with output `beta^4` times its `L²` class. -/
-def classicalFreeBeamRepresentative_mode
+def classicalFreeBeamRepresentativeMode
     {beta a b c d : ℝ} (hfree : FreeBoundary beta a b c d) :
     ClassicalFreeBeamRepresentative
       (classicalModeLp beta a b c d)
@@ -1122,7 +1127,7 @@ theorem exists_eigenpair_of_characteristic {beta : ℝ} (hbeta : 0 < beta)
   have hu0 : u ≠ 0 := by
     simpa [u] using classicalModeLp_ne_zero_of_identified_coefficients hbeta hab
   have hrep : ClassicalFreeBeamRepresentative u (beta ^ 4 • u) := by
-    simpa [u] using classicalFreeBeamRepresentative_mode hfree
+    simpa [u] using classicalFreeBeamRepresentativeMode hfree
   have hclassical : (u, beta ^ 4 • u) ∈ classicalFreeBeamGraph :=
     (show Nonempty (ClassicalFreeBeamRepresentative u (beta ^ 4 • u)) from ⟨hrep⟩)
   have hgraph : (u, beta ^ 4 • u) ∈

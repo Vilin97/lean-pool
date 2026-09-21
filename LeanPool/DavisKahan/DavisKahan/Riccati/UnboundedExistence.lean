@@ -36,6 +36,7 @@ separate field because it is not a consequence of the ambient graph equality
 alone. -/
 structure ContractiveReducingGraphSelection
     (H : UnboundedBlockData (𝕜 := 𝕜) (E0 := E0) (E1 := E1)) where
+  /-- The strict contraction whose graph reduces the unbounded block operator. -/
   X : E0 →L[𝕜] E1
   preservesDomains : PreservesRiccatiDomains H X
   norm_lt_one : ‖X‖ < 1

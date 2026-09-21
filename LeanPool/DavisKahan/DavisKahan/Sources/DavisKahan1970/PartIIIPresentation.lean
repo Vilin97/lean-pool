@@ -100,7 +100,7 @@ alias bounded_angle_pythagoras :=
   DavisKahan.Angle.directedSinAngleOperatorC_sq_add_directedCosAngleOperatorC_sq
 alias bounded_angle_commute :=
   DavisKahan.Angle.commute_directedSinAngleOperatorC_directedCosAngleOperatorC
-alias bounded_directedSinTwoAngleOperatorC := DavisKahan.Angle.directedSinTwoAngleOperatorC
+alias boundedDirectedSinTwoAngleOperatorC := DavisKahan.Angle.directedSinTwoAngleOperatorC
 alias bounded_directedSinTwoAngleOperatorC_norm_le :=
   DavisKahan.Angle.norm_directedSinTwoAngleOperatorC_le
 alias bounded_cosAngle_coercive :=
@@ -109,15 +109,15 @@ alias bounded_cosAngle_injective_of_acute :=
   DavisKahan.Angle.directedCosAngleOperatorC_eq_zero_imp_of_acute
 alias bounded_cosAngleExtended_invertible :=
   DavisKahan.Angle.cosAngleExtendedC_ker_bot_range_top
-alias bounded_directedTanAngleOperatorC := DavisKahan.Angle.directedTanAngleOperatorC
+alias boundedDirectedTanAngleOperatorC := DavisKahan.Angle.directedTanAngleOperatorC
 alias bounded_tanAngle_defining_identity :=
   DavisKahan.Angle.directedTanAngleOperatorC_comp_cosAngleExtendedC
-alias bounded_cosTwoAngleOperatorC := DavisKahan.Angle.cosTwoAngleOperatorC
+alias boundedCosTwoAngleOperatorC := DavisKahan.Angle.cosTwoAngleOperatorC
 alias bounded_cosTwoAngle_coercive :=
   DavisKahan.Angle.norm_cosTwoAngleOperatorC_apply_ge
 alias bounded_cosTwoAngleExtended_invertible :=
   DavisKahan.Angle.cosTwoAngleExtendedC_ker_bot_range_top
-alias bounded_directedTanTwoAngleOperatorC := DavisKahan.Angle.directedTanTwoAngleOperatorC
+alias boundedDirectedTanTwoAngleOperatorC := DavisKahan.Angle.directedTanTwoAngleOperatorC
 alias bounded_tanTwoAngle_defining_identity :=
   DavisKahan.Angle.directedTanTwoAngleOperatorC_comp_cosTwoAngleExtendedC
 alias bounded_tanAngle_norm_le := DavisKahan.Angle.norm_directedTanAngleOperatorC_le
@@ -126,7 +126,7 @@ alias bounded_sinTwoAngle_norm_eq :=
   DavisKahan.Angle.norm_directedSinTwoAngleOperatorC
 
 /-! ## Direct rotation -/
-alias complex_directRotation :=
+alias complexDirectRotation :=
   DavisKahan.spectraDirectRotation
 alias complex_directRotation_sq :=
   DavisKahan.spectraDirectRotation_sq
@@ -223,7 +223,7 @@ by descent from the complexification: the complexified intertwiner is
 conjugation-fixed, so its modulus is, so the polar factor is, so the direct
 rotation of a complexified pair **is** the complexification of a bounded real
 operator. -/
-alias real_directRotation := DavisKahan.directRotationR
+alias realDirectRotation := DavisKahan.directRotationR
 alias real_directRotation_orthogonal :=
   DavisKahan.directRotationR_mem_unitary
 alias real_directRotation_intertwines :=
@@ -290,7 +290,7 @@ alias bounded_inverse_defect_norm :=
 /-! ## Unbounded and form theorems -/
 alias unbounded_boundedPerturbation_selfAdjoint_spectra :=
   DavisKahan.addBounded_isSelfAdjoint
-alias unbounded_spectralRestriction :=
+alias unboundedSpectralRestriction :=
   DavisKahan.selfAdjointSpectralRestriction
 alias unbounded_spectralRestriction_selfAdjoint :=
   DavisKahan.selfAdjointSpectralRestriction_isSelfAdjoint

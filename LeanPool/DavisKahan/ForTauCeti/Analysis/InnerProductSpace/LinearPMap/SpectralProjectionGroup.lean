@@ -72,7 +72,7 @@ theorem specProjection_comm_expApprox (n : ℕ+) (t : ℝ) :
 
 /-- **Spectral projections commute with the unitary group.**  Commutation with
 the bounded approximants survives the strong limit. -/
-@[simp]
+
 theorem specProjection_expLimit_apply (t : ℝ) (ψ : H) :
     specProjection hA B hB (expLimit hA t ψ) = expLimit hA t (specProjection hA B hB ψ) := by
   have hstep : ∀ n : ℕ+,

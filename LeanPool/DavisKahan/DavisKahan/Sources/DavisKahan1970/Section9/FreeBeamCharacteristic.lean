@@ -245,6 +245,7 @@ theorem four_seventy_three_pow_four_gt_five_hundred :
 spectral realization.  It isolates root localization from the operator-domain
 and self-adjointness campaigns. -/
 structure PositiveRootLocalization where
+  /-- The smallest positive root of the free-beam characteristic equation. -/
   firstPositiveRoot : ℝ
   firstPositiveRoot_pos : 0 < firstPositiveRoot
   firstPositiveRoot_characteristic : characteristic firstPositiveRoot = 0

@@ -38,6 +38,8 @@ exact subspace `V`.  The coordinate equivalence is the restriction of the
 orthogonal projection onto `V`. -/
 structure TrialExactCoordinates
     (Z V : Submodule ℂ H) [V.HasOrthogonalProjection] where
+  /-- The coordinate equivalence obtained by projecting the trial subspace onto the exact
+  subspace. -/
   toExact : Z ≃L[ℂ] V
   toExact_apply (z : Z) :
     (toExact z : H) = V.starProjection (z : H)

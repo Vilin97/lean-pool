@@ -80,7 +80,7 @@ theorem isSymmetric_compression {A : E →ₗ[𝕜] E} (hA : A.IsSymmetric)
   rw [LinearMap.adjoint_inner_left, hA, ← LinearMap.adjoint_inner_right]
 
 /-- The adjoint of an isometric embedding is a left inverse. -/
-@[simp] theorem adjoint_comp_linearIsometry_eq_id (X : F →ₗᵢ[𝕜] E) :
+ theorem adjoint_comp_linearIsometry_eq_id (X : F →ₗᵢ[𝕜] E) :
     X.toLinearMap.adjoint ∘ₗ X.toLinearMap = LinearMap.id := by
   ext x
   refine ext_inner_right 𝕜 fun y => ?_

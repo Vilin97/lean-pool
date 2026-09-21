@@ -417,7 +417,7 @@ theorem gaugeReal_sum_range_sub_le {t : ℕ → E →L[𝕜] F} {c : ℕ → ℝ
 
 /-- Every bounded operator lies in the operator-norm ideal.  In the historical
 record this was `True` by construction; canonically it is finiteness of `‖·‖ₑ`. -/
-@[simp] theorem mem_operatorNormFamily (A : E →L[𝕜] F) :
+ theorem mem_operatorNormFamily (A : E →L[𝕜] F) :
     (operatorNormFamily.{u, v} 𝕜).Mem A := by
   change (operatorNormFamily.{u, v} 𝕜).toOperatorIdealFamily.gauge A ≠ ∞
   rw [gauge_operatorNormFamily]

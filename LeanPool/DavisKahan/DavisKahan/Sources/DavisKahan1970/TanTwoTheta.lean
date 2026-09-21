@@ -120,7 +120,7 @@ namespace DavisKahan1970
 /-! ## The source norm scope: every unitarily invariant norm -/
 
 /-- The double-angle tangent scalar function `t ↦ 2t/(1 - t²)`. -/
-alias tanTwoTheta_doubleAngleTangent := DavisKahan.TanTwoTheta.doubleAngleTangent
+alias tanTwoThetaDoubleAngleTangent := DavisKahan.TanTwoTheta.doubleAngleTangent
 
 /-- **Davis--Kahan 1970, `tan 2Θ` theorem, every rectangular unitarily
 invariant norm** (Section 7, equation (7.6), paired-singular-vector proof;

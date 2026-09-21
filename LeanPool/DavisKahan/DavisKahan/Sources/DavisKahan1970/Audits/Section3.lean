@@ -36,20 +36,20 @@ variable (U V : Submodule ℝ H) [U.HasOrthogonalProjection]
 -- `starProjection` fixes the reading here and simultaneously checks that the
 -- endpoint's projections really are the orthogonal ones.
 example (hacute : TauCeti.IsAcute U V) :
-    Commute (proposition3_5_angleOperator U V) (U.starProjection : H →L[ℝ] H) ∧
-      Commute (proposition3_5_angleOperator U V) (V.starProjection : H →L[ℝ] H) ∧
-      Commute (proposition3_5_angleOperator U V) (proposition3_5_quarterTurn U V) ∧
-      Commute (proposition3_5_angleOperator U V) (proposition3_5_directRotation U V) :=
+    Commute (proposition3Point5AngleOperator U V) (U.starProjection : H →L[ℝ] H) ∧
+      Commute (proposition3Point5AngleOperator U V) (V.starProjection : H →L[ℝ] H) ∧
+      Commute (proposition3Point5AngleOperator U V) (proposition3Point5QuarterTurn U V) ∧
+      Commute (proposition3Point5AngleOperator U V) (proposition3Point5DirectRotation U V) :=
   proposition3_5_commutations_acute U V hacute
 
 -- The printed commutation clause carries no acuteness hypothesis; only a crossed-defect
 -- isometry, which is the paper's matched-crossing condition (3.5).
 example (J : TauCeti.DavisKahan.halmosSourceDefect U V ≃ₗᵢ[ℝ]
       TauCeti.DavisKahan.halmosTargetDefect U V) :
-    Commute (proposition3_5_angleOperator U V) (U.starProjection : H →L[ℝ] H) ∧
-      Commute (proposition3_5_angleOperator U V) (V.starProjection : H →L[ℝ] H) ∧
-      Commute (proposition3_5_angleOperator U V) (corollary3_2_nonacuteQuarterTurn U V J) ∧
-      Commute (proposition3_5_angleOperator U V)
+    Commute (proposition3Point5AngleOperator U V) (U.starProjection : H →L[ℝ] H) ∧
+      Commute (proposition3Point5AngleOperator U V) (V.starProjection : H →L[ℝ] H) ∧
+      Commute (proposition3Point5AngleOperator U V) (corollary3Point2NonacuteQuarterTurn U V J) ∧
+      Commute (proposition3Point5AngleOperator U V)
         (TauCeti.DavisKahan.nonacuteDirectRotation U V J) :=
   proposition3_5_commutations U V J
 
@@ -63,20 +63,20 @@ variable (U V : Submodule ℂ H) [U.HasOrthogonalProjection]
   [V.HasOrthogonalProjection]
 
 example (hacute : TauCeti.IsAcute U V) :
-    Commute (proposition3_5_angleOperator U V) (U.starProjection : H →L[ℂ] H) ∧
-      Commute (proposition3_5_angleOperator U V) (V.starProjection : H →L[ℂ] H) ∧
-      Commute (proposition3_5_angleOperator U V) (proposition3_5_quarterTurn U V) ∧
-      Commute (proposition3_5_angleOperator U V) (proposition3_5_directRotation U V) :=
+    Commute (proposition3Point5AngleOperator U V) (U.starProjection : H →L[ℂ] H) ∧
+      Commute (proposition3Point5AngleOperator U V) (V.starProjection : H →L[ℂ] H) ∧
+      Commute (proposition3Point5AngleOperator U V) (proposition3Point5QuarterTurn U V) ∧
+      Commute (proposition3Point5AngleOperator U V) (proposition3Point5DirectRotation U V) :=
   proposition3_5_commutations_acute U V hacute
 
 -- The printed commutation clause carries no acuteness hypothesis; only a crossed-defect
 -- isometry, which is the paper's matched-crossing condition (3.5).
 example (J : TauCeti.DavisKahan.halmosSourceDefect U V ≃ₗᵢ[ℂ]
       TauCeti.DavisKahan.halmosTargetDefect U V) :
-    Commute (proposition3_5_angleOperator U V) (U.starProjection : H →L[ℂ] H) ∧
-      Commute (proposition3_5_angleOperator U V) (V.starProjection : H →L[ℂ] H) ∧
-      Commute (proposition3_5_angleOperator U V) (corollary3_2_nonacuteQuarterTurn U V J) ∧
-      Commute (proposition3_5_angleOperator U V)
+    Commute (proposition3Point5AngleOperator U V) (U.starProjection : H →L[ℂ] H) ∧
+      Commute (proposition3Point5AngleOperator U V) (V.starProjection : H →L[ℂ] H) ∧
+      Commute (proposition3Point5AngleOperator U V) (corollary3Point2NonacuteQuarterTurn U V J) ∧
+      Commute (proposition3Point5AngleOperator U V)
         (TauCeti.DavisKahan.nonacuteDirectRotation U V J) :=
   proposition3_5_commutations U V J
 

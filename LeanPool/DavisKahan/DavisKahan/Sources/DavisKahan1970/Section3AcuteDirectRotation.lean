@@ -54,7 +54,7 @@ open DavisKahan
 /-- **The direct rotation of an acute pair**: the polar factor of the canonical
 intertwiner `S = P_V P_U + P_Vᗮ P_Uᗮ`.  The object carries no hypothesis; the
 theorems below say what acuteness makes of it. -/
-alias acute_directRotation := DavisKahan.spectraCanonicalPolarFactor
+alias acuteDirectRotation := DavisKahan.spectraCanonicalPolarFactor
 
 section Generic
 
@@ -77,7 +77,7 @@ variable (U V : Submodule 𝕜 H) [U.HasOrthogonalProjection]
 /-- **Proposition 3.1(a) at the printed hypothesis**: the direct rotation of an
 acute pair is unitary. -/
 theorem acute_directRotation_mem_unitary (hacute : TauCeti.IsAcute U V) :
-    acute_directRotation U V ∈ unitary (H →L[𝕜] H) :=
+    acuteDirectRotation U V ∈ unitary (H →L[𝕜] H) :=
   spectraCanonicalPolarFactor_mem_unitary U V
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).1
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).2
@@ -85,14 +85,14 @@ theorem acute_directRotation_mem_unitary (hacute : TauCeti.IsAcute U V) :
 /-- The direct rotation intertwines the two orthogonal projections.  No
 acuteness of any kind is needed for this clause. -/
 theorem acute_directRotation_intertwines :
-    acute_directRotation U V * U.starProjection =
-      V.starProjection * acute_directRotation U V :=
+    acuteDirectRotation U V * U.starProjection =
+      V.starProjection * acuteDirectRotation U V :=
   canonicalPolarFactor_intertwines_general U V
 
 /-- The direct rotation of an acute pair carries `U` onto `V`; membership is
 concluded, not assumed. -/
 theorem acute_directRotation_maps_subspace (hacute : TauCeti.IsAcute U V) :
-    U.map (acute_directRotation U V).toLinearMap = V :=
+    U.map (acuteDirectRotation U V).toLinearMap = V :=
   spectraCanonicalPolarFactor_maps_subspace U V
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).1
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).2
@@ -100,7 +100,7 @@ theorem acute_directRotation_maps_subspace (hacute : TauCeti.IsAcute U V) :
 /-- The source diagonal block of the direct rotation of an acute pair is the
 positive Halmos cosine `|S| P_U`. -/
 theorem acute_directRotation_diagonalBlock (hacute : TauCeti.IsAcute U V) :
-    U.starProjection * acute_directRotation U V * U.starProjection =
+    U.starProjection * acuteDirectRotation U V * U.starProjection =
       ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V) * U.starProjection :=
   projection_mul_spectraCanonicalPolarFactor_mul_projection U V
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).1
@@ -108,7 +108,7 @@ theorem acute_directRotation_diagonalBlock (hacute : TauCeti.IsAcute U V) :
 
 /-- The complementary diagonal block of the direct rotation of an acute pair. -/
 theorem acute_directRotation_complementaryDiagonalBlock (hacute : TauCeti.IsAcute U V) :
-    Uᗮ.starProjection * acute_directRotation U V * Uᗮ.starProjection =
+    Uᗮ.starProjection * acuteDirectRotation U V * Uᗮ.starProjection =
       ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V) * Uᗮ.starProjection :=
   complementaryProjection_mul_spectraCanonicalPolarFactor_mul_complementaryProjection U V
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).1
@@ -117,7 +117,7 @@ theorem acute_directRotation_complementaryDiagonalBlock (hacute : TauCeti.IsAcut
 /-- **Definition 3.1, property (i), for the source block**: the compression of
 the direct rotation of an acute pair to `U` is a positive operator. -/
 theorem acute_directRotation_positiveDiagonalBlock (hacute : TauCeti.IsAcute U V) :
-    (U.starProjection * acute_directRotation U V * U.starProjection).IsPositive :=
+    (U.starProjection * acuteDirectRotation U V * U.starProjection).IsPositive :=
   isPositive_projection_mul_spectraCanonicalPolarFactor_mul_projection U V
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).1
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).2
@@ -125,7 +125,7 @@ theorem acute_directRotation_positiveDiagonalBlock (hacute : TauCeti.IsAcute U V
 /-- **Definition 3.1, property (i), for the complementary block.** -/
 theorem acute_directRotation_positiveComplementaryDiagonalBlock
     (hacute : TauCeti.IsAcute U V) :
-    (Uᗮ.starProjection * acute_directRotation U V * Uᗮ.starProjection).IsPositive :=
+    (Uᗮ.starProjection * acuteDirectRotation U V * Uᗮ.starProjection).IsPositive :=
   isPositive_complementaryProjection_mul_spectraCanonicalPolarFactor U V
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).1
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).2
@@ -139,7 +139,7 @@ theorem acute_directRotation_of_positiveDiagonalBlocks (hacute : TauCeti.IsAcute
     (hint : W * U.starProjection = V.starProjection * W)
     (hblockU : (U.starProjection * W * U.starProjection).IsPositive)
     (hblockUperp : (Uᗮ.starProjection * W * Uᗮ.starProjection).IsPositive) :
-    W = acute_directRotation U V :=
+    W = acuteDirectRotation U V :=
   eq_spectraCanonicalPolarFactor_of_diagonalBlocks_isPositive U V
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).1
     (TauCeti.isAcute_iff_inf_orthogonal_eq_bot.mp hacute).2 W hWunit hint hblockU hblockUperp
@@ -147,7 +147,7 @@ theorem acute_directRotation_of_positiveDiagonalBlocks (hacute : TauCeti.IsAcute
 /-- **Proposition 3.1(c) at the printed hypothesis, as a biconditional.** -/
 theorem acute_directRotation_iff_positiveDiagonalBlocks (hacute : TauCeti.IsAcute U V)
     (W : H →L[𝕜] H) :
-    W = acute_directRotation U V ↔
+    W = acuteDirectRotation U V ↔
       W ∈ unitary (H →L[𝕜] H) ∧
         W * U.starProjection = V.starProjection * W ∧
         (U.starProjection * W * U.starProjection).IsPositive ∧
@@ -182,19 +182,19 @@ hypothesis, equation (3.8), standing dimension assumption (1.5), finite-
 dimensional hypothesis, or scalar-field specialization is present in the
 statement. -/
 theorem proposition3_1 (hacute : TauCeti.IsAcute U V) :
-    acute_directRotation U V ∈ unitary (H →L[𝕜] H) ∧
-      acute_directRotation U V * U.starProjection =
-        V.starProjection * acute_directRotation U V ∧
-      (U.starProjection * acute_directRotation U V * U.starProjection).IsPositive ∧
-      (Uᗮ.starProjection * acute_directRotation U V * Uᗮ.starProjection).IsPositive ∧
-      Uᗮ.starProjection * acute_directRotation U V * U.starProjection =
-        -star (U.starProjection * acute_directRotation U V * Uᗮ.starProjection) ∧
+    acuteDirectRotation U V ∈ unitary (H →L[𝕜] H) ∧
+      acuteDirectRotation U V * U.starProjection =
+        V.starProjection * acuteDirectRotation U V ∧
+      (U.starProjection * acuteDirectRotation U V * U.starProjection).IsPositive ∧
+      (Uᗮ.starProjection * acuteDirectRotation U V * Uᗮ.starProjection).IsPositive ∧
+      Uᗮ.starProjection * acuteDirectRotation U V * U.starProjection =
+        -star (U.starProjection * acuteDirectRotation U V * Uᗮ.starProjection) ∧
       ∀ W : H →L[𝕜] H,
         W ∈ unitary (H →L[𝕜] H) →
         W * U.starProjection = V.starProjection * W →
         (U.starProjection * W * U.starProjection).IsPositive →
         (Uᗮ.starProjection * W * Uᗮ.starProjection).IsPositive →
-        W = acute_directRotation U V := by
+        W = acuteDirectRotation U V := by
   refine ⟨acute_directRotation_mem_unitary U V hacute,
     acute_directRotation_intertwines U V,
     acute_directRotation_positiveDiagonalBlock U V hacute,
@@ -245,7 +245,7 @@ theorem isPositive_compression_iff_forall_mem (W : H →L[ℂ] H) (K : Submodule
 shape the previously compiled complex endpoint used.** -/
 theorem complex_acute_directRotation_iff_positiveDiagonalBlocks
     (hacute : TauCeti.IsAcute U V) (W : H →L[ℂ] H) :
-    W = acute_directRotation U V ↔
+    W = acuteDirectRotation U V ↔
       W ∈ unitary (H →L[ℂ] H) ∧
         W * U.starProjection = V.starProjection * W ∧
         (∀ x ∈ U, 0 ≤ ⟪W x, x⟫_ℂ) ∧
@@ -329,12 +329,12 @@ variable (U V : Submodule ℝ E) [U.HasOrthogonalProjection]
 polar factor.**
 
 `directRotationR` is defined as the real part of the complex direct rotation of
-the complexified pair; the polar factor `acute_directRotation` is built directly
+the complexified pair; the polar factor `acuteDirectRotation` is built directly
 over `ℝ`.  They agree, and the proof is the printed-hypothesis uniqueness clause
 applied to `directRotationR`, using only its *existence*-side properties. -/
 theorem real_directRotation_eq_acute_directRotation
     (hacute : DavisKahan.IsUniformlyAcute U V) :
-    directRotationR U V hacute = acute_directRotation U V :=
+    directRotationR U V hacute = acuteDirectRotation U V :=
   acute_directRotation_of_positiveDiagonalBlocks U V
     (TauCeti.isAcute_of_projectionGap_lt_one hacute) _
     (directRotationR_mem_unitary U V hacute) (directRotationR_intertwines U V hacute)

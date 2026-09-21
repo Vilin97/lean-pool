@@ -75,8 +75,11 @@ structure SobolevTraceFoundation where
     freeFourth x = maximalFourth ⟨x, free_le_maximal x.property⟩
   /-- Endpoint traces of the second and third weak derivatives. -/
   traceSecondLeft : maximalDomain →ₗ[ℂ] ℂ
+  /-- The left endpoint trace of the third weak derivative. -/
   traceThirdLeft : maximalDomain →ₗ[ℂ] ℂ
+  /-- The right endpoint trace of the second weak derivative. -/
   traceSecondRight : maximalDomain →ₗ[ℂ] ℂ
+  /-- The right endpoint trace of the third weak derivative. -/
   traceThirdRight : maximalDomain →ₗ[ℂ] ℂ
   /-- The free domain is exactly the joint kernel of the four endpoint traces. -/
   mem_freeDomain_iff : ∀ x : maximalDomain,

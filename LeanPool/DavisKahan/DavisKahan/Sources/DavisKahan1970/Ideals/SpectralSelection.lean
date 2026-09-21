@@ -46,9 +46,12 @@ variable {E1 : Type v} [NormedAddCommGroup E1] [InnerProductSpace ℂ E1]
 part of the first `k` approximation numbers. -/
 structure ApproximateLeadingSingularFamily
     (X : E0 →L[ℂ] E1) (k : ℕ) (ε : ℝ) where
+  /-- The number of selected approximate singular pairs, at most the requested rank. -/
   count : ℕ
   count_le : count ≤ k
+  /-- The orthonormal right vectors of the approximate singular pairs. -/
   right : Fin count → E0
+  /-- The orthonormal left vectors of the approximate singular pairs. -/
   left : Fin count → E1
   right_orthonormal : Orthonormal ℂ right
   left_orthonormal : Orthonormal ℂ left
@@ -87,8 +90,10 @@ end ApproximateLeadingSingularFamily
 /-- The finite Gram-band data used before applying the polar partial isometry. -/
 structure GramSpectralBandModel
     (X : E0 →L[ℂ] E1) (k : ℕ) (ε : ℝ) where
+  /-- The number of selected Gram spectral vectors, at most the requested rank. -/
   count : ℕ
   count_le : count ≤ k
+  /-- The orthonormal approximate Gram eigenvectors in the polar initial space. -/
   right : Fin count → E0
   right_orthonormal : Orthonormal ℂ right
   right_mem_polarInitial : ∀ i, right i ∈ X.polarInitial

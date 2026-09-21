@@ -45,11 +45,17 @@ the self-adjointness hypotheses, and `IsSelfAdjoint.dense_domain` and
 `IsSelfAdjoint.isClosed` give the other two.  Keeping them out is what lets a
 caller build this record from nothing but the algebra. -/
 structure UnboundedSinThetaData where
+  /-- The ambient partially defined linear operator. -/
   A : E →ₗ.[𝕜] E
+  /-- The partially defined trial operator. -/
   A₀ : F →ₗ.[𝕜] F
+  /-- The partially defined operator representing the complementary part. -/
   Λ₁ : G →ₗ.[𝕜] G
+  /-- The bounded trial map carrying the trial domain into the ambient domain. -/
   X : F →L[𝕜] E
+  /-- The bounded intertwining map from the complementary domain into the ambient domain. -/
   F₁ : G →L[𝕜] E
+  /-- The bounded residual extending the difference between the ambient and trial actions. -/
   residual : F →L[𝕜] E
   X_maps_domain : ∀ x : A₀.domain, X (x : F) ∈ A.domain
   F₁_maps_domain : ∀ y : Λ₁.domain, F₁ (y : G) ∈ A.domain

@@ -45,18 +45,26 @@ structure CommonCoreSinThetaData
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H] where
+  /-- The ambient self-adjoint partially defined operator. -/
   A : E →ₗ.[𝕜] E
+  /-- The self-adjoint partially defined trial operator. -/
   A₀ : F →ₗ.[𝕜] F
+  /-- The self-adjoint operator representing the complementary spectral part. -/
   Λ₁ : G →ₗ.[𝕜] G
+  /-- The bounded trial map into the ambient space. -/
   E₀ : F →L[𝕜] E
+  /-- The isometric parametrization of the exact subspace. -/
   F₀ : H →L[𝕜] E
+  /-- The isometric parametrization of the complementary subspace. -/
   F₁ : G →L[𝕜] E
+  /-- The bounded residual whose identity is initially imposed on the graph core. -/
   R : F →L[𝕜] E
   A_selfAdjoint : IsSelfAdjoint A
   A₀_selfAdjoint : IsSelfAdjoint A₀
   Λ₁_selfAdjoint : IsSelfAdjoint Λ₁
   exact_decomposition : OrthogonalExactDecomposition F₀ F₁
-  core_residual : CommonCoreResidualData A A₀ E₀ R
+  /-- The graph-core data certifying the residual identity. -/
+  coreResidual : CommonCoreResidualData A A₀ E₀ R
   F₁_maps_domain : ∀ y : Λ₁.domain, F₁ (y : G) ∈ A.domain
   F₁_intertwines : ∀ y : Λ₁.domain,
     A ⟨F₁ (y : G), F₁_maps_domain y⟩ =
@@ -76,7 +84,7 @@ noncomputable def toUnboundedSinThetaData
     (P : CommonCoreSinThetaData 𝕜 E F G H) :
     UnboundedSinThetaData (𝕜 := 𝕜) (E := E) (F := F) (G := G) :=
   unboundedSinThetaDataOfCommonCore
-    P.A P.A₀ P.Λ₁ P.E₀ P.F₁ P.R P.core_residual P.A_selfAdjoint.isClosed
+    P.A P.A₀ P.Λ₁ P.E₀ P.F₁ P.R P.coreResidual P.A_selfAdjoint.isClosed
     P.F₁_maps_domain P.F₁_intertwines
 
 /-- The residual of the derived unbounded sine-theta data is the source's residual. -/
@@ -103,8 +111,11 @@ variable {E F G H : Type v}
 
 /-- Theorem 6.1 data with the residual equation supplied only on a graph core. -/
 structure CommonCoreTheorem61Data where
+  /-- The common-core operator and residual data over the complex Hilbert spaces. -/
   source : CommonCoreSinThetaData ℂ E F G H
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   epsilon : ℝ
   gap_pos : 0 < gap
   epsilon_pos : 0 < epsilon
@@ -152,8 +163,11 @@ end CommonCoreTheorem61Data
 
 /-- Theorem 6.2 data with the residual equation supplied only on a graph core. -/
 structure CommonCoreTheorem62Data where
+  /-- The common-core operator and residual data over the complex Hilbert spaces. -/
   source : CommonCoreSinThetaData ℂ E F G H
+  /-- The positive lower bound on pairwise spectral distances. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   epsilon : ℝ
   gap_pos : 0 < gap
   epsilon_pos : 0 < epsilon
@@ -211,8 +225,11 @@ variable {E F G H : Type v}
 
 /-- Real Theorem 6.1 data with the residual equation supplied on a graph core. -/
 structure RealCommonCoreTheorem61Data where
+  /-- The common-core operator and residual data over the real Hilbert spaces. -/
   source : CommonCoreSinThetaData ℝ E F G H
+  /-- The positive form gap between the trial and complementary operators. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   epsilon : ℝ
   gap_pos : 0 < gap
   epsilon_pos : 0 < epsilon
@@ -260,8 +277,11 @@ end RealCommonCoreTheorem61Data
 
 /-- Real Theorem 6.2 data with the residual equation supplied on a graph core. -/
 structure RealCommonCoreTheorem62Data where
+  /-- The common-core operator and residual data over the real Hilbert spaces. -/
   source : CommonCoreSinThetaData ℝ E F G H
+  /-- The positive lower bound on distances between the two real spectra. -/
   gap : ℝ
+  /-- The positive lower frame bound for the trial map. -/
   epsilon : ℝ
   gap_pos : 0 < gap
   epsilon_pos : 0 < epsilon

@@ -177,7 +177,7 @@ theorem polarIsometryOfIsUnitModulus_comp_modulus :
     one_def, comp_id]
 
 /-- The polar identity, pointwise: the polar isometry carries `|M| x` back to `M x`. -/
-@[simp]
+
 theorem polarIsometryOfIsUnitModulus_modulus_apply (x : E) :
     M.polarIsometryOfIsUnitModulus (M.modulus x) = M x := by
   rw [← comp_apply, polarIsometryOfIsUnitModulus_comp_modulus hM]
@@ -188,7 +188,7 @@ Composing the pointwise identity `‖|M| y‖ = ‖M y‖`
 (`ContinuousLinearMap.norm_modulus_apply`) with `y = |M|⁻¹ x` turns the
 right-hand side into `‖M.polarIsometryOfIsUnitModulus x‖` and the left-hand side into
 `‖x‖`. -/
-@[simp]
+
 theorem norm_polarIsometryOfIsUnitModulus_apply (x : E) :
     ‖M.polarIsometryOfIsUnitModulus x‖ = ‖x‖ := by
   rw [polarIsometryOfIsUnitModulus_apply, ← M.norm_modulus_apply, ← comp_apply, ← mul_def,

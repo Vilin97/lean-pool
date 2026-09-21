@@ -315,6 +315,8 @@ structure SinThetaRepresentativeAcross
     [NormedAddCommGroup E₀] [InnerProductSpace 𝕜 E₀] [CompleteSpace E₀]
     [NormedAddCommGroup F₀] [InnerProductSpace 𝕜 F₀] [CompleteSpace F₀]
     (canonical : E →L[𝕜] F) where
+  /-- An operator on the representative spaces with the canonical approximation singular
+  sequence. -/
   operator : E₀ →L[𝕜] F₀
   same_singular_sequence :
     SameApproximationSingularSequence operator canonical
@@ -333,6 +335,8 @@ end SinThetaRepresentativeAcross
 the chosen operator has exactly the complete singular-value sequence of the
 canonical directed sine block. -/
 structure SinThetaRepresentative (canonical : E →L[𝕜] F) where
+  /-- An operator with the same approximation singular values as the canonical directed sine
+  block. -/
   operator : E →L[𝕜] F
   same_singular_values : SameApproximationSingularValues operator canonical
 

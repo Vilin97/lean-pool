@@ -29,19 +29,33 @@ namespace Section9
 /-- Exact theorem outputs required to instantiate every numerical conclusion
 in Section 9. -/
 structure TheoremOutputCertificate (ε : ℝ) where
+  /-- The scalar tracked by the largest sine-angle estimate. -/
   sinTheta₁ : ℝ
+  /-- The scalar tracked by the largest double-angle sine estimate. -/
   sinTwoTheta₁ : ℝ
+  /-- The scalar tracked by the sum-of-sines estimate. -/
   sinThetaSum : ℝ
+  /-- The scalar tracked by the sum of double-angle sines. -/
   sinTwoThetaSum : ℝ
+  /-- The scalar tracked by the largest tangent-angle estimate. -/
   tanTheta₁ : ℝ
+  /-- The scalar tracked by the sum-of-tangents estimate. -/
   tanThetaSum : ℝ
+  /-- The scalar tracked by the largest double-angle tangent estimate. -/
   tanTwoTheta₁ : ℝ
+  /-- The scalar tracked by the sum of double-angle tangents. -/
   tanTwoThetaSum : ℝ
+  /-- The lower individual tangent quantity in the Weinberger comparison. -/
   weinbergerTanPhi₁ : ℝ
+  /-- The upper individual tangent quantity in the Weinberger comparison. -/
   weinbergerTanPhi₂ : ℝ
+  /-- The lower individual tangent quantity in the direct residual bound. -/
   directTanPhi₁ : ℝ
+  /-- The upper individual tangent quantity in the direct residual bound. -/
   directTanPhi₂ : ℝ
+  /-- The lower individual angle quantity in the final numerical estimate. -/
   omega₁ : ℝ
+  /-- The upper individual angle quantity in the final numerical estimate. -/
   omega₂ : ℝ
   sinTheta₁_exact : sinTheta₁ ≤ residualTopSingularValue ε / 500
   sinTwoTheta₁_exact : sinTwoTheta₁ < 2 * ε / 500
@@ -63,24 +77,40 @@ structure TheoremOutputCertificate (ε : ℝ) where
 /-- Full Section 9 package: analytic finite-data certificate plus outputs of the
 perturbation theorems. -/
 structure NumericalExampleCertificate (ε : ℝ) where
+  /-- The finite beam data required by the numerical example. -/
   finiteData : FreeBeamFiniteDataCertificate ε
+  /-- The angle estimates obtained from the perturbation theorems. -/
   theoremOutputs : TheoremOutputCertificate ε
 
 /-- The printed rational bounds, represented without decimal notation. -/
 structure PrintedConclusions (ε : ℝ) where
+  /-- The scalar tracked by the largest sine-angle estimate. -/
   sinTheta₁ : ℝ
+  /-- The scalar tracked by the largest double-angle sine estimate. -/
   sinTwoTheta₁ : ℝ
+  /-- The scalar tracked by the sum-of-sines estimate. -/
   sinThetaSum : ℝ
+  /-- The scalar tracked by the sum of double-angle sines. -/
   sinTwoThetaSum : ℝ
+  /-- The scalar tracked by the largest tangent-angle estimate. -/
   tanTheta₁ : ℝ
+  /-- The scalar tracked by the sum-of-tangents estimate. -/
   tanThetaSum : ℝ
+  /-- The scalar tracked by the largest double-angle tangent estimate. -/
   tanTwoTheta₁ : ℝ
+  /-- The scalar tracked by the sum of double-angle tangents. -/
   tanTwoThetaSum : ℝ
+  /-- The lower individual tangent quantity in the Weinberger comparison. -/
   weinbergerTanPhi₁ : ℝ
+  /-- The upper individual tangent quantity in the Weinberger comparison. -/
   weinbergerTanPhi₂ : ℝ
+  /-- The lower individual tangent quantity in the direct residual bound. -/
   directTanPhi₁ : ℝ
+  /-- The upper individual tangent quantity in the direct residual bound. -/
   directTanPhi₂ : ℝ
+  /-- The lower individual angle quantity in the final numerical estimate. -/
   omega₁ : ℝ
+  /-- The upper individual angle quantity in the final numerical estimate. -/
   omega₂ : ℝ
   bound_9_1 : sinTheta₁ < (811 : ℝ) / 500000 * ε
   bound_9_2 : sinTwoTheta₁ < (1 : ℝ) / 250 * ε

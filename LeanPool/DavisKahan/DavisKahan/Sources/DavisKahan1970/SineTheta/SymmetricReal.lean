@@ -150,16 +150,21 @@ theorem approximationNumber_sourceFullSinR_eq_crossSineSum
 and nothing derived.  The two gap hypotheses are the paper's two applications of
 the original sine theorem. -/
 structure RealSymmetricSinThetaProblem where
+  /-- The first bounded symmetric operator in the real comparison problem. -/
   A : E →L[ℝ] E
+  /-- The second bounded symmetric operator in the real comparison problem. -/
   B : E →L[ℝ] E
   selfAdjoint_A : A.IsSymmetric
   selfAdjoint_B : B.IsSymmetric
+  /-- The chosen reducing subspace of the first operator. -/
   U : Submodule ℝ E
+  /-- The chosen reducing subspace of the second operator. -/
   V : Submodule ℝ E
   proj_U : U.HasOrthogonalProjection
   proj_V : V.HasOrthogonalProjection
   reduces_A_U : A.Reduces U
   reduces_B_V : B.Reduces V
+  /-- The common positive form gap for the two opposite subspace comparisons. -/
   gap : ℝ
   gap_pos : 0 < gap
   gap_U_to_Vperp : FormBoundedSylvesterGap

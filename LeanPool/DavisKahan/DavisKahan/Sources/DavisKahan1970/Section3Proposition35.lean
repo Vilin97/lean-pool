@@ -66,13 +66,13 @@ open DavisKahan.Proposition35
 noncomputable section
 
 /-- The literal operator angle used in Proposition 3.5. -/
-alias proposition3_5_angleOperator := section3AngleOperator
+alias proposition3Point5AngleOperator := section3AngleOperator
 
 /-- The paper's direct rotation in Proposition 3.5. -/
-alias proposition3_5_directRotation := section3DirectRotation
+alias proposition3Point5DirectRotation := section3DirectRotation
 
 /-- The paper's quarter turn `J`, zero on the zero-angle space. -/
-alias proposition3_5_quarterTurn := section3QuarterTurn
+alias proposition3Point5QuarterTurn := section3QuarterTurn
 
 /-! The real functional calculus on `H →L[𝕜] H`, and the two scalar-action facts Mathlib
 pairs it with, are theorems at every `RCLike` field
@@ -87,7 +87,7 @@ attribute [local instance 100] ContinuousLinearMap.realAlgebra
 
 /-- The assembled regular-and-defect quarter-turn candidate for a general pair.
 The two summands act on orthogonal blocks. -/
-noncomputable def corollary3_2_quarterTurn
+noncomputable def corollary3Point2QuarterTurn
     {𝕜 : Type*} [RCLike 𝕜]
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace 𝕜 H]
     [CompleteSpace H]
@@ -98,7 +98,7 @@ noncomputable def corollary3_2_quarterTurn
   section3QuarterTurn U V + crossedDefectQuarterTurn U V J
 
 /-- The spectral eigenspace `Omega({theta}) H` at an angle eigenvalue. -/
-alias proposition3_5_angleEigenspace := section3AngleEigenspace
+alias proposition3Point5AngleEigenspace := section3AngleEigenspace
 
 section Generic
 
@@ -110,7 +110,7 @@ variable (U V : Submodule 𝕜 H) [U.HasOrthogonalProjection]
 
 /-- The paper's quarter turn for a chosen completed nonacute direct rotation.
 It is defined by the same polar construction as on the acute branch. -/
-noncomputable def corollary3_2_nonacuteQuarterTurn
+noncomputable def corollary3Point2NonacuteQuarterTurn
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
     H →L[𝕜] H :=
   section3NonacuteQuarterTurn U V J
@@ -122,7 +122,7 @@ theorem equation1_18_directRotation_exponential
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
     nonacuteDirectRotation U V J =
       NormedSpace.exp
-        (corollary3_2_nonacuteQuarterTurn U V J * proposition3_5_angleOperator U V) := by
+        (corollary3Point2NonacuteQuarterTurn U V J * proposition3Point5AngleOperator U V) := by
   change nonacuteDirectRotation U V J =
     NormedSpace.exp
       (section3NonacuteQuarterTurn U V J * section3AngleOperator U V)
@@ -133,35 +133,35 @@ theorem equation1_18_directRotation_resolution
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
     nonacuteDirectRotation U V J =
       section3CosAngleOperator U V +
-        corollary3_2_nonacuteQuarterTurn U V J ∘L section3SinAngleOperator U V := by
-  simpa [corollary3_2_nonacuteQuarterTurn] using
+        corollary3Point2NonacuteQuarterTurn U V J ∘L section3SinAngleOperator U V := by
+  simpa [corollary3Point2NonacuteQuarterTurn] using
     nonacuteDirectRotation_eq_cos_add_quarterTurn_sin U V J
 
 /-- The defining polar resolution of the quarter turn used by Proposition 3.5:
 `W = cos Theta + J sin Theta`. -/
 theorem proposition3_5_directRotation_resolution (hacute : TauCeti.IsAcute U V) :
-    proposition3_5_directRotation U V =
+    proposition3Point5DirectRotation U V =
       section3CosAngleOperator U V +
-        proposition3_5_quarterTurn U V ∘L section3SinAngleOperator U V :=
+        proposition3Point5QuarterTurn U V ∘L section3SinAngleOperator U V :=
   section3DirectRotation_eq_cos_add_quarterTurn_sin U V hacute
 
 /-- The functional-calculus representation immediately preceding Proposition 3.5:
 `U = exp (J Theta)` for the canonical direct rotation of an acute pair. -/
 theorem proposition3_5_directRotation_exponential (hacute : TauCeti.IsAcute U V) :
-    proposition3_5_directRotation U V =
+    proposition3Point5DirectRotation U V =
       NormedSpace.exp
-        (proposition3_5_quarterTurn U V * proposition3_5_angleOperator U V) :=
+        (proposition3Point5QuarterTurn U V * proposition3Point5AngleOperator U V) :=
   section3DirectRotation_eq_exp_quarterTurn_mul_angleOperator U V hacute
 
 /-- Interchanging the subspaces leaves the arbitrary-dimensional bounded angle unchanged. -/
 theorem corollary3_2_angleOperator_symm :
-    proposition3_5_angleOperator V U = proposition3_5_angleOperator U V :=
+    proposition3Point5AngleOperator V U = proposition3Point5AngleOperator U V :=
   section3AngleOperator_symm U V
 
 /-- On the acute branch, the arbitrary-dimensional quarter turn used in the paper's polar
 resolution changes sign when the subspaces are interchanged. -/
 theorem corollary3_2_quarterTurn_symm :
-    proposition3_5_quarterTurn V U = -proposition3_5_quarterTurn U V :=
+    proposition3Point5QuarterTurn V U = -proposition3Point5QuarterTurn U V :=
   section3QuarterTurn_symm U V
 
 /-- The skew part of every completed nonacute direct rotation has modulus
@@ -177,8 +177,8 @@ theorem corollary3_2_nonacute_directRotation_resolution
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
     nonacuteDirectRotation U V J =
       section3CosAngleOperator U V +
-        corollary3_2_nonacuteQuarterTurn U V J ∘L section3SinAngleOperator U V := by
-  simpa [corollary3_2_nonacuteQuarterTurn] using
+        corollary3Point2NonacuteQuarterTurn U V J ∘L section3SinAngleOperator U V := by
+  simpa [corollary3Point2NonacuteQuarterTurn] using
     nonacuteDirectRotation_eq_cos_add_quarterTurn_sin U V J
 
 
@@ -187,16 +187,16 @@ theorem corollary3_2_nonacute_directRotation_exponential
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
     nonacuteDirectRotation U V J =
       NormedSpace.exp
-        (corollary3_2_nonacuteQuarterTurn U V J * proposition3_5_angleOperator U V) :=
+        (corollary3Point2NonacuteQuarterTurn U V J * proposition3Point5AngleOperator U V) :=
   equation1_18_directRotation_exponential U V J
 
 /-- Reversing the ordered pair and the crossed-defect choice negates the paper's
 quarter turn. -/
 theorem corollary3_2_nonacuteQuarterTurn_symm
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
-    corollary3_2_nonacuteQuarterTurn V U (swapCrossedDefectEquiv U V J) =
-      -corollary3_2_nonacuteQuarterTurn U V J := by
-  rw [corollary3_2_nonacuteQuarterTurn, corollary3_2_nonacuteQuarterTurn,
+    corollary3Point2NonacuteQuarterTurn V U (swapCrossedDefectEquiv U V J) =
+      -corollary3Point2NonacuteQuarterTurn U V J := by
+  rw [corollary3Point2NonacuteQuarterTurn, corollary3Point2NonacuteQuarterTurn,
     section3NonacuteQuarterTurn, section3NonacuteQuarterTurn]
   have hW := nonacuteDirectRotation_swap U V J
   have hC := section3CosAngleOperator_symm U V
@@ -225,9 +225,9 @@ the paper quarter turn changes sign, and the reversed direct rotation is the
 adjoint. -/
 theorem corollary3_2
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
-    proposition3_5_angleOperator V U = proposition3_5_angleOperator U V ∧
-      corollary3_2_nonacuteQuarterTurn V U (swapCrossedDefectEquiv U V J) =
-        -corollary3_2_nonacuteQuarterTurn U V J ∧
+    proposition3Point5AngleOperator V U = proposition3Point5AngleOperator U V ∧
+      corollary3Point2NonacuteQuarterTurn V U (swapCrossedDefectEquiv U V J) =
+        -corollary3Point2NonacuteQuarterTurn U V J ∧
       nonacuteDirectRotation V U (swapCrossedDefectEquiv U V J) =
         star (nonacuteDirectRotation U V J) :=
   ⟨section3AngleOperator_symm U V,
@@ -240,11 +240,11 @@ pair uses the inverse identification.  The operator angle is unchanged and the
 assembled quarter turn changes sign. -/
 theorem corollary3_2_chosenDefect_symmetry
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
-    proposition3_5_angleOperator V U = proposition3_5_angleOperator U V ∧
-      corollary3_2_quarterTurn V U (swapCrossedDefectEquiv U V J) =
-        -corollary3_2_quarterTurn U V J := by
+    proposition3Point5AngleOperator V U = proposition3Point5AngleOperator U V ∧
+      corollary3Point2QuarterTurn V U (swapCrossedDefectEquiv U V J) =
+        -corollary3Point2QuarterTurn U V J := by
   refine ⟨section3AngleOperator_symm U V, ?_⟩
-  rw [corollary3_2_quarterTurn, corollary3_2_quarterTurn,
+  rw [corollary3Point2QuarterTurn, corollary3Point2QuarterTurn,
     section3QuarterTurn_symm U V, crossedDefectQuarterTurn_swap U V J]
   abel
 
@@ -282,10 +282,10 @@ No acuteness: `J` here is the quarter turn of the completed direct rotation sele
 crossed-defect isometry, and the commutations for `P` and `Q` never needed acuteness at all. -/
 theorem proposition3_5_commutations
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V) :
-    Commute (proposition3_5_angleOperator U V) (U.starProjection) ∧
-      Commute (proposition3_5_angleOperator U V) (V.starProjection) ∧
-      Commute (proposition3_5_angleOperator U V) (corollary3_2_nonacuteQuarterTurn U V J) ∧
-      Commute (proposition3_5_angleOperator U V) (nonacuteDirectRotation U V J) :=
+    Commute (proposition3Point5AngleOperator U V) (U.starProjection) ∧
+      Commute (proposition3Point5AngleOperator U V) (V.starProjection) ∧
+      Commute (proposition3Point5AngleOperator U V) (corollary3Point2NonacuteQuarterTurn U V J) ∧
+      Commute (proposition3Point5AngleOperator U V) (nonacuteDirectRotation U V J) :=
   ⟨section3AngleOperator_comm_projection U V,
     section3AngleOperator_comm_projection_right U V,
     section3AngleOperator_comm_nonacuteQuarterTurn U V J,
@@ -295,10 +295,10 @@ theorem proposition3_5_commutations
 Kept for acute-only consumers; see the section note on why this is not a corollary of
 `proposition3_5_commutations`. -/
 theorem proposition3_5_commutations_acute (hacute : TauCeti.IsAcute U V) :
-    Commute (proposition3_5_angleOperator U V) (U.starProjection) ∧
-      Commute (proposition3_5_angleOperator U V) (V.starProjection) ∧
-      Commute (proposition3_5_angleOperator U V) (proposition3_5_quarterTurn U V) ∧
-      Commute (proposition3_5_angleOperator U V) (proposition3_5_directRotation U V) :=
+    Commute (proposition3Point5AngleOperator U V) (U.starProjection) ∧
+      Commute (proposition3Point5AngleOperator U V) (V.starProjection) ∧
+      Commute (proposition3Point5AngleOperator U V) (proposition3Point5QuarterTurn U V) ∧
+      Commute (proposition3Point5AngleOperator U V) (proposition3Point5DirectRotation U V) :=
   ⟨section3AngleOperator_comm_projection U V,
     section3AngleOperator_comm_projection_right U V,
     section3AngleOperator_comm_quarterTurn U V hacute,
@@ -318,7 +318,7 @@ endpoint needs no separate argument. -/
 theorem proposition3_5_eigenvector_angle
     (J : halmosSourceDefect U V ≃ₗᵢ[𝕜] halmosTargetDefect U V)
     {x : H} (hx0 : x ≠ 0) {θ : ℝ}
-    (hx : proposition3_5_angleOperator U V x = ((θ : ℝ) : 𝕜) • x) :
+    (hx : proposition3Point5AngleOperator U V x = ((θ : ℝ) : 𝕜) • x) :
     TauCeti.vectorAngle 𝕜 x (nonacuteDirectRotation U V J x) = θ :=
   vectorAngle_nonacuteDirectRotation_eq_of_angleOperator_apply U V J hx0 hx
 
@@ -327,17 +327,17 @@ consumers; see the section note on why this is not a corollary of
 `proposition3_5_eigenvector_angle`. -/
 theorem proposition3_5_eigenvector_angle_acute (hacute : TauCeti.IsAcute U V)
     {x : H} (hx0 : x ≠ 0) {θ : ℝ}
-    (hx : proposition3_5_angleOperator U V x = ((θ : ℝ) : 𝕜) • x) :
-    TauCeti.vectorAngle 𝕜 x (proposition3_5_directRotation U V x) = θ :=
+    (hx : proposition3Point5AngleOperator U V x = ((θ : ℝ) : 𝕜) • x) :
+    TauCeti.vectorAngle 𝕜 x (proposition3Point5DirectRotation U V x) = θ :=
   vectorAngle_section3DirectRotation_eq_of_angleOperator_apply U V hacute hx0 hx
 
 /-- The actual angle eigenspace is the fixed-cosine Halmos eigenspace used by
 the paper's maximality argument. -/
 theorem proposition3_5_angleEigenspace_eq_fixedCosineSubspace
     (hacute : TauCeti.IsAcute U V) {θ : ℝ}
-    (hθ : Module.End.HasEigenvalue (proposition3_5_angleOperator U V).toLinearMap
+    (hθ : Module.End.HasEigenvalue (proposition3Point5AngleOperator U V).toLinearMap
       ((θ : ℝ) : 𝕜)) :
-    proposition3_5_angleEigenspace U V θ = fixedCosineSubspace U V (Real.cos θ) :=
+    proposition3Point5AngleEigenspace U V θ = fixedCosineSubspace U V (Real.cos θ) :=
   section3AngleEigenspace_eq_fixedCosineSubspace U V hacute hθ
 
 /-- **Davis--Kahan 1970, Proposition 3.5, maximal-eigenspace assertion.**
@@ -346,13 +346,13 @@ printed properties (a)--(c), and every subspace having those printed properties
 is contained in it.  Thus it is the unique maximal such subspace. -/
 theorem proposition3_5_angleEigenspace_uniqueMaximal
     (hacute : TauCeti.IsAcute U V) {θ : ℝ}
-    (hθ : Module.End.HasEigenvalue (proposition3_5_angleOperator U V).toLinearMap
+    (hθ : Module.End.HasEigenvalue (proposition3Point5AngleOperator U V).toLinearMap
       ((θ : ℝ) : 𝕜)) :
     IsPrintedFixedCosineReducingSubspace U V
-        (proposition3_5_angleEigenspace U V θ) (Real.cos θ) ∧
+        (proposition3Point5AngleEigenspace U V θ) (Real.cos θ) ∧
       ∀ M : Submodule 𝕜 H,
         IsPrintedFixedCosineReducingSubspace U V M (Real.cos θ) →
-          M ≤ proposition3_5_angleEigenspace U V θ := by
+          M ≤ proposition3Point5AngleEigenspace U V θ := by
   have h := proposition3_5_angleEigenspace_maximal U V hacute hθ
   exact
     ⟨isPrintedFixedCosineReducingSubspace_of_isFixedCosineReducingSubspace

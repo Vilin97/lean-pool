@@ -212,6 +212,7 @@ abbrev UnboundedBoundedSylvesterEquation
 
 /-- A partial linear map whose inverse is everywhere defined and bounded. -/
 structure HasBoundedEverywhereInverse (A : E →ₗ.[𝕜] E) where
+  /-- The bounded everywhere-defined inverse, whose range lies in the partial operator's domain. -/
   inv : E →L[𝕜] E
   inv_mapsTo_domain : ∀ y, inv y ∈ A.domain
   apply_inv : ∀ y, A ⟨inv y, inv_mapsTo_domain y⟩ = y
