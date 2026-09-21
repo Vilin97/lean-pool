@@ -32,37 +32,37 @@ variable {R : Type u} [Semiring R]
 
 /-- The Laurent image of a polynomial has the same coefficients at natural exponents. -/
 theorem toLaurent_apply_natCast (p : Polynomial R) (n : ℕ) :
-    (Polynomial.toLaurent p) (n : ℤ) = p.coeff n := by
-  rw [Polynomial.toLaurent_apply, Finsupp.mapDomain_apply Nat.cast_injective]
+    (Polynomial.toLaurent p).coeff (n : ℤ) = p.coeff n := by
+  rw [coeff_toLaurent]
+  change (p.toFinsupp.coeff.mapDomain Nat.castEmbedding) (Nat.castEmbedding n) = p.coeff n
+  rw [Finsupp.mapDomain_apply_of_injective Nat.castEmbedding.injective]
   rfl
 
 /-- The Laurent image of a polynomial vanishes at negative exponents. -/
 theorem toLaurent_apply_of_neg (p : Polynomial R) {z : ℤ} (hz : z < 0) :
-    (Polynomial.toLaurent p) z = 0 := by
-  rw [Polynomial.toLaurent_apply]
-  refine Finsupp.mapDomain_notin_range _ _ ?_
+    (Polynomial.toLaurent p).coeff z = 0 := by
+  rw [coeff_toLaurent]
+  refine Finsupp.mapDomain_of_notMem_range _ _ ?_
   rintro ⟨n, rfl⟩
+  change (n : ℤ) < 0 at hz
   omega
 /-- Coefficient extension commutes with the Laurent inclusion. -/
 theorem toLaurent_map {S : Type*} [Semiring S] (f : R →+* S) (p : Polynomial R) :
     Polynomial.toLaurent (p.map f) = AddMonoidAlgebra.mapRingHom ℤ f (Polynomial.toLaurent p) := by
-  refine Finsupp.ext fun z ↦ ?_
+  ext z
   rcases lt_or_ge z 0 with hz | hz
   · rw [toLaurent_apply_of_neg _ hz]
-    change (0 : S) = f ((Polynomial.toLaurent p) z)
+    change (0 : S) = f ((Polynomial.toLaurent p).coeff z)
     rw [toLaurent_apply_of_neg _ hz, map_zero]
   · obtain ⟨n, rfl⟩ := Int.eq_ofNat_of_zero_le hz
     rw [toLaurent_apply_natCast, Polynomial.coeff_map]
-    change f (p.coeff n) = f ((Polynomial.toLaurent p) (n : ℤ))
+    change f (p.coeff n) = f ((Polynomial.toLaurent p).coeff (n : ℤ))
     rw [toLaurent_apply_natCast]
 
 /-- Coefficient extension fixes the Laurent monomials. -/
 theorem mapRingHom_T {S : Type*} [Semiring S] (f : R →+* S) (z : ℤ) :
     AddMonoidAlgebra.mapRingHom ℤ f (LaurentPolynomial.T z) = LaurentPolynomial.T z := by
-  refine Finsupp.ext fun w ↦ ?_
-  change f ((LaurentPolynomial.T z : AddMonoidAlgebra R ℤ) w) = _
-  simp only [LaurentPolynomial.T, Finsupp.single_apply]
-  split_ifs <;> simp
+  simp only [LaurentPolynomial.T, AddMonoidAlgebra.mapRingHom_single, map_one]
 
 section Core
 
@@ -93,14 +93,14 @@ section Shift
 variable {R : Type u} [CommRing R]
 
 private theorem mul_T_apply (f : AddMonoidAlgebra R ℤ) (n : ℤ) (z : ℤ) :
-    ((f * LaurentPolynomial.T n : AddMonoidAlgebra R ℤ)) z = f (z - n) := by
-  rw [show (LaurentPolynomial.T n : AddMonoidAlgebra R ℤ) = Finsupp.single n (1 : R) from rfl,
-    AddMonoidAlgebra.mul_single_apply, mul_one, sub_eq_add_neg]
+    (f * LaurentPolynomial.T n : AddMonoidAlgebra R ℤ).coeff z = f.coeff (z - n) := by
+  simp only [LaurentPolynomial.T, AddMonoidAlgebra.coeff_mul_single_apply,
+    mul_one, sub_eq_add_neg]
 
 /-- Coefficients of a Laurent polynomial read off a polynomial shift, at natural indices. -/
 theorem apply_sub_of_toLaurent_eq_mul_T {f : AddMonoidAlgebra R ℤ} {p : Polynomial R} {n : ℕ}
     (h : Polynomial.toLaurent p = f * LaurentPolynomial.T (n : ℤ)) (j : ℕ) :
-    f ((j : ℤ) - n) = p.coeff j := by
+    f.coeff ((j : ℤ) - n) = p.coeff j := by
   have hj := mul_T_apply f (n : ℤ) (j : ℤ)
   rw [← h, toLaurent_apply_natCast] at hj
   exact hj.symm
@@ -108,7 +108,7 @@ theorem apply_sub_of_toLaurent_eq_mul_T {f : AddMonoidAlgebra R ℤ} {p : Polyno
 /-- Below the shift the Laurent polynomial vanishes. -/
 theorem apply_eq_zero_of_toLaurent_eq_mul_T {f : AddMonoidAlgebra R ℤ} {p : Polynomial R} {n : ℕ}
     (h : Polynomial.toLaurent p = f * LaurentPolynomial.T (n : ℤ)) {z : ℤ} (hz : z + n < 0) :
-    f z = 0 := by
+    f.coeff z = 0 := by
   have hz' := mul_T_apply f (n : ℤ) (z + n)
   simp only [add_sub_cancel_right] at hz'
   rw [← h, toLaurent_apply_of_neg _ hz] at hz'
@@ -123,7 +123,7 @@ theorem exists_scalar_of_mul_eq_map
     (hclosed : Algebra.IsRelativelyAlgebraicallyClosed K L)
     {q r : AddMonoidAlgebra L ℤ} {P : AddMonoidAlgebra K ℤ} (hq : q ≠ 0) (hr : r ≠ 0)
     (hqr : q * r = AddMonoidAlgebra.mapRingHom ℤ (algebraMap K L) P) :
-    ∃ c : L, c ≠ 0 ∧ ∀ z, c * q z ∈ (algebraMap K L).range := by
+    ∃ c : L, c ≠ 0 ∧ ∀ z, c * q.coeff z ∈ (algebraMap K L).range := by
   obtain ⟨n₀, q₀, hq₀⟩ := LaurentPolynomial.exists_T_pow q
   obtain ⟨m₀, r₀, hr₀⟩ := LaurentPolynomial.exists_T_pow r
   obtain ⟨l, P₀, hP₀⟩ := LaurentPolynomial.exists_T_pow P

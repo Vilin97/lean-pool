@@ -110,7 +110,7 @@ theorem approachZeroPlusOne_fullSupport_singleton_counterexample :
   refine ⟨singletonZero_isRelUpperSet_approachZeroPlusOne_support,
     Set.singleton_nonempty 0, ?_, ?_⟩
   · let hsingleton : ({0} : Set ℝ).IsPWO := Set.isPWO_singleton 0
-    letI : WellFoundedLT ({0} : Set ℝ) := ⟨hsingleton.isWF⟩
+    letI : WellFoundedLT ({0} : Set ℝ) := hsingleton.isWF
     calc
       hsingleton.orderType = typeLT ({0} : Set ℝ) :=
         hsingleton.orderType_eq_typeLT_of_orderIso (OrderIso.refl _)

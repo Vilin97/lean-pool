@@ -138,7 +138,8 @@ instance (p : Player) (x : IGame.{u}) : Small.{u} (x.moves p) := x.dest.2 p
 @[simp, game_cmp]
 theorem moves_ofSets (p) (st : Player → Set IGame) [Small.{u} (st left)] [Small.{u} (st right)] :
     !{st}.moves p = st p := by
-  dsimp [ofSets]; ext; rw [moves, QPF.Fix.dest_mk]
+  exact congrArg (fun s : GameFunctor IGame => s.val p)
+    (QPF.Fix.dest_mk ⟨st, by rintro (_ | _) <;> assumption⟩)
 
 @[simp]
 theorem ofSets_moves (x : IGame) : !{x.moves} = x := x.mk_dest
@@ -200,21 +201,24 @@ instance small_subtype_subposition (x : IGame.{u}) : Small.{u} {y // Subposition
   small_transGen' _ x
 
 theorem subposition_wf : WellFounded Subposition := by
+  change WellFounded (Relation.TransGen fun (x y : QPF.Fix GameFunctor) =>
+    x ∈ ⋃ p, (QPF.Fix.dest y).val p)
   refine ⟨fun x => Acc.transGen ?_⟩
   apply QPF.Fix.ind
-  unfold moves
   rintro _ ⟨⟨st, hst⟩, rfl⟩
   constructor
   rintro y hy
-  rw [QPF.Fix.dest_mk, mem_iUnion] at hy
-  obtain ⟨_, ⟨_, h⟩, _, rfl⟩ := hy
-  exact h
+  rw [QPF.Fix.dest_mk] at hy
+  change y ∈ ⋃ p, Subtype.val '' st p at hy
+  obtain ⟨p, hp⟩ := Set.mem_iUnion.mp hy
+  obtain ⟨z, _, rfl⟩ := hp
+  exact z.property
 
 -- We make no use of `IGame`'s definition from a `QPF` after this point.
 attribute [irreducible] IGame
 
-instance : WellFounded _ Subposition := ⟨subposition_wf⟩
-instance : WellFoundedRelation IGame := ⟨Subposition, instIsWellFoundedSubposition.wf⟩
+instance : WellFounded Subposition := subposition_wf
+instance : WellFoundedRelation IGame := ⟨Subposition, subposition_wf⟩
 
 theorem Subposition.irrefl (x : IGame) : ¬Subposition x x := _root_.irrefl x
 
@@ -1024,7 +1028,13 @@ private def mul' (x y : IGame) : IGame :=
   (range fun a : (xᴸ ×ˢ yᴿ ∪ xᴿ ×ˢ yᴸ :) ↦
     mul' a.1.1 y + mul' x a.1.2 - mul' a.1.1 a.1.2)}
 termination_by (x, y)
-decreasing_by all_goals aesop
+decreasing_by
+  all_goals
+    rcases a.property with h | h
+    all_goals
+      first
+      | exact Prod.Lex.left _ _ (Subposition.of_mem_moves h.1)
+      | exact Prod.Lex.right _ (Subposition.of_mem_moves h.2)
 
 #adaptation_note /-- noncomputable is now needed -/ in
 /-- The product of `x = !{s₁ | t₁}` and `y = !{s₂ | t₂}` is

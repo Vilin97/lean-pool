@@ -205,7 +205,6 @@ theorem fibreMap_eq_mk (b : R) : fibreMap 𝒜 b = Submodule.Quotient.mk b := rf
 
 theorem muMulLeft_mk (j : ℕ) (a : 𝒜 (j : NatOrdinal)) (b : R) :
     muMulLeft 𝒜 j a (fibreMap 𝒜 b) = Submodule.Quotient.mk ((a : R) * b) := by
-  rw [fibreMap_eq_mk, muMulLeft, LinearMap.restrictScalars_apply, Submodule.mapQ_apply]
   rfl
 
 /-- The bilinear map `A_j × A/I → A/I_{≥j+1}`, `(B, π(C)) ↦ BC + I_{≥j+1}`. -/
@@ -263,8 +262,7 @@ theorem mapLinear_idealGEQuot_eq_zero_iff (j : ℕ) (g : FunAtZeroMinus R) :
 theorem mu_lTensor_mulLeft (j : ℕ) (B : R) (T : 𝒜 (j : NatOrdinal) ⊗[E] Fibre 𝒜) :
     mu 𝒜 j ((LinearMap.mulLeft E (fibreMap 𝒜 B)).lTensor _ T) =
       mu 𝒜 j T * (Ideal.Quotient.mk (idealGE 𝒜 (j + 1)) B) := by
-  induction T with
-  | zero => simp
+  induction T using TensorProduct.inductionOn with
   | tmul a c =>
     obtain ⟨b, rfl⟩ := fibreMap_surjective 𝒜 c
     rw [LinearMap.lTensor_tmul, LinearMap.mulLeft_apply, ← map_mul, mu_tmul, mu_tmul]
@@ -335,8 +333,7 @@ theorem exists_homogeneous_mu_eq {j : ℕ} {α : NatOrdinal} (hj : j ≤ α.cons
       mu 𝒜 j ((fibreGrade 𝒜 (α.removeNat j)).subtype.lTensor _ T) =
         (Submodule.Quotient.mk G : R ⧸ idealGE 𝒜 (j + 1)) := by
   classical
-  induction T with
-  | zero => exact ⟨0, zero_mem _, zero_mem _, by simp⟩
+  induction T using TensorProduct.inductionOn with
   | tmul a c =>
     obtain ⟨b, hb, hbc⟩ := exists_mem_of_mem_fibreGrade 𝒜 c.2
     refine ⟨(a : R) * b, ?_, Ideal.mul_mem_right _ _ (mem_idealGE_of_mem 𝒜 le_rfl a.2), ?_⟩

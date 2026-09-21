@@ -45,8 +45,8 @@ theorem supportOrderType_restrictDomain_le (f : G ↪o H) (x : R⟦H⟧) :
     intro a b hab
     exact f.strictMono hab
   letI : WellFoundedLT ↑(restrictDomain f x).support :=
-    ⟨(restrictDomain f x).isPWO_support.isWF⟩
-  letI : WellFoundedLT ↑x.support := ⟨x.isPWO_support.isWF⟩
+    (restrictDomain f x).isPWO_support.isWF
+  letI : WellFoundedLT ↑x.support := x.isPWO_support.isWF
   rw [supportOrderType_eq_setOrderType, supportOrderType_eq_setOrderType]
   calc
     (restrictDomain f x).isPWO_support.orderType =
@@ -72,7 +72,7 @@ variable [AddCommMonoid H] [IsOrderedCancelAddMonoid H]
 theorem supportOrderType_embDomainRingEquiv (e : G ≃+o H) (x : R⟦G⟧) :
     (embDomainRingEquiv e x).supportOrderType = x.supportOrderType := by
   rw [supportOrderType_eq_setOrderType, supportOrderType_eq_setOrderType]
-  letI : WellFoundedLT x.support := ⟨x.isWF_support⟩
+  letI : WellFoundedLT x.support := x.isWF_support
   let supportEquiv : (embDomainRingEquiv e x).support ≃o x.support :=
     (OrderIso.setCongr _ (e '' x.support) (support_embDomainRingEquiv e x)).trans
       (StrictMonoOn.orderIso e x.support

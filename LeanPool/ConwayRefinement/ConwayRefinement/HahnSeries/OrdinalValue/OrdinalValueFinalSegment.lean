@@ -203,8 +203,8 @@ theorem ordinalValue_translatedTruncation_le_orderType_of_isRelUpperSet_supportB
   let hshiftedPWO : shifted.IsPWO :=
     ((translatedTruncation b γ : Series K) : K⟦ℝ⟧).isPWO_support.mono
       fun _ hx ↦ (hshifted hx).1.1
-  letI : WellFoundedLT C := ⟨hCPWO.isWF⟩
-  letI : WellFoundedLT shifted := ⟨hshiftedPWO.isWF⟩
+  letI : WellFoundedLT C := hCPWO.isWF
+  letI : WellFoundedLT shifted := hshiftedPWO.isWF
   let f : C → shifted := fun x ↦ ⟨-γ + x.1, x.1, x.2, rfl⟩
   have hf : StrictMono f := by
     intro x y hxy

@@ -46,8 +46,9 @@ private theorem ofIterate_mul (x y : R⟦Γ'⟧⟦Γ⟧) :
     ofIterate (x * y) = ofIterate x * ofIterate y := by
   ext g
   rcases g with ⟨g, g'⟩
-  simp only [ofIterate, coeff_mul]
-  rw [coeff_sum]
+  change ((x * y).coeff g).coeff g' =
+    (ofIterate x * ofIterate y).coeff (toLex (g, g'))
+  rw [coeff_mul, coeff_sum]
   simp only [coeff_mul]
   rw [Finset.sum_sigma']
   apply Finset.sum_bij

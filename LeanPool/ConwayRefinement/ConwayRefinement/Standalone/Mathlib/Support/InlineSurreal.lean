@@ -1,5 +1,10 @@
 /-
 Copyright (c) 2026 Dan Abramov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Dan Abramov
+-/
+/-
+Copyright (c) 2026 Dan Abramov. All rights reserved.
 Copyright (c) 2025 Aaron Liu. All rights reserved.
 Copyright (c) 2025 Violeta Hernández Palacios. All rights reserved.
 Copyright (c) 2025 Yuyang Zhao. All rights reserved.
@@ -304,7 +309,13 @@ noncomputable instance : QPF GameFunctor where
   abs x := ⟨fun p ↦ Set.range (x.2 ∘ .mk p ∘ PLift.up), fun _ ↦ by infer_instance⟩
   repr x := ⟨fun p ↦ Shrink (x.1 p), Sigma.rec (fun _ y ↦ ((equivShrink _).symm y.1).1)⟩
   abs_repr x := by ext; simp [← (equivShrink _).exists_congr_right]
-  abs_map f := by intro ⟨x, f⟩; ext; simp [PFunctor.map, map_def]
+  abs_map f := by
+    intro ⟨x, g⟩
+    apply Subtype.ext
+    funext p
+    change Set.range (f ∘ g ∘ Sigma.mk p ∘ PLift.up) =
+      f '' Set.range (g ∘ Sigma.mk p ∘ PLift.up)
+    exact Set.range_comp f _
 
 end GameFunctor
 
@@ -332,7 +343,9 @@ private theorem small_level (x : α) : ∀ n, Small.{u_inline_2} (level r x n)
     refine @small_sUnion _ _ ?_ ?_
     · have := small_level x n
       exact small_image ..
-    · simp_all
+    · intro ⟨a, ha⟩
+      obtain ⟨b, _, rfl⟩ := ha
+      exact H b
 
 private theorem small_sUnion_level (x : α) : Small.{u_inline_2} (⋃₀ range (level r x)) := by
   refine @small_sUnion _ _ ?_ ?_
@@ -493,7 +506,8 @@ instance (p : Player) (x : IGame.{u_inline_4}) : Small.{u_inline_4} (x.moves p) 
 theorem moves_ofSets (p) (st : Player → Set IGame) [Small.{u_inline_4} (st left)]
     [Small.{u_inline_4} (st right)] :
     !{st}.moves p = st p := by
-  dsimp [ofSets]; ext; rw [moves, QPF.Fix.dest_mk]
+  exact congrArg (fun s : GameFunctor IGame => s.val p)
+    (QPF.Fix.dest_mk ⟨st, by rintro (_ | _) <;> assumption⟩)
 
 @[simp]
 theorem ofSets_moves (x : IGame) : !{x.moves} = x := x.mk_dest
@@ -559,21 +573,24 @@ instance small_subtype_subposition (x : IGame.{u_inline_4}) :
   small_transGen' _ x
 
 theorem subposition_wf : WellFounded Subposition := by
+  change WellFounded (Relation.TransGen fun (x y : QPF.Fix GameFunctor) =>
+    x ∈ ⋃ p, (QPF.Fix.dest y).val p)
   refine ⟨fun x => Acc.transGen ?_⟩
   apply QPF.Fix.ind
-  unfold moves
   rintro _ ⟨⟨st, hst⟩, rfl⟩
   constructor
   rintro y hy
-  rw [QPF.Fix.dest_mk, mem_iUnion] at hy
-  obtain ⟨_, ⟨_, h⟩, _, rfl⟩ := hy
-  exact h
+  rw [QPF.Fix.dest_mk] at hy
+  change y ∈ ⋃ p, Subtype.val '' st p at hy
+  obtain ⟨p, hp⟩ := Set.mem_iUnion.mp hy
+  obtain ⟨z, _, rfl⟩ := hp
+  exact z.property
 
 -- We make no use of `IGame`'s definition from a `QPF` after this point.
 attribute [irreducible] IGame
 
-instance : WellFounded _ Subposition := ⟨subposition_wf⟩
-instance : WellFoundedRelation IGame := ⟨Subposition, instIsWellFoundedSubposition.wf⟩
+instance : WellFounded Subposition := subposition_wf
+instance : WellFoundedRelation IGame := ⟨Subposition, subposition_wf⟩
 
 theorem Subposition.irrefl (x : IGame) : ¬Subposition x x := _root_.irrefl x
 
@@ -1384,7 +1401,13 @@ private def mul' (x y : IGame) : IGame :=
   (range fun a : (xᴸ ×ˢ yᴿ ∪ xᴿ ×ˢ yᴸ :) ↦
     mul' a.1.1 y + mul' x a.1.2 - mul' a.1.1 a.1.2)}
 termination_by (x, y)
-decreasing_by all_goals aesop
+decreasing_by
+  all_goals
+    rcases a.property with h | h
+    all_goals
+      first
+      | exact Prod.Lex.left _ _ (Subposition.of_mem_moves h.1)
+      | exact Prod.Lex.right _ (Subposition.of_mem_moves h.2)
 
 #adaptation_note /-- noncomputable is now needed -/ in
 /-- The product of `x = !{s₁ | t₁}` and `y = !{s₂ | t₂}` is
@@ -2526,7 +2549,7 @@ def ArgsRel :=
 lemma argsRel_wf : WellFounded ArgsRel :=
   InvImage.wf _ (Subrelation.wf (fun h => h.elim fun _ => Subposition.of_mem_moves)
     subposition_wf).cutExpand.transGen
-instance : WellFounded _ ArgsRel := ⟨argsRel_wf⟩
+instance : WellFounded ArgsRel := argsRel_wf
 
 /-- The property that all arguments are numeric is leftward-closed under `ArgsRel`. -/
 lemma ArgsRel.numeric_closed {a' a} : ArgsRel a' a → a.Numeric → a'.Numeric :=

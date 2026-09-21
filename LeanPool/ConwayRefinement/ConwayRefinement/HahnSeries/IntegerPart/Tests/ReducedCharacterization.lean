@@ -5,6 +5,8 @@ Authors: Dan Abramov
 -/
 module
 
+public import Mathlib.Algebra.Order.Archimedean.Basic
+
 public import LeanPool.ConwayRefinement.ConwayRefinement.HahnSeries.IntegerPart.ReducedCharacterization
 
 /-!

@@ -128,22 +128,22 @@ theorem homogeneousMk_aeval_of_isWeightedHomogeneous {G : MvPolynomial σ L} {d 
     ν.homogeneousMk d ⟨aeval x G, hle⟩ = Φ G := by
   classical
   have hdeg : ∀ e ∈ G.support,
-      ν (aeval x (monomial e (coeff e G))) = (d : WithBot M) := fun e he ↦ by
+      ν (aeval x (monomial e (G.coeff e))) = (d : WithBot M) := fun e he ↦ by
     rw [H.degree_aeval_monomial e (mem_support_iff.mp he), hG (mem_support_iff.mp he)]
-  have hmem : ∀ e ∈ G.support, aeval x (monomial e (coeff e G)) ∈ ν.filtrationLE d :=
+  have hmem : ∀ e ∈ G.support, aeval x (monomial e (G.coeff e)) ∈ ν.filtrationLE d :=
     fun e he ↦ (ν.mem_filtrationLE_iff _ _).mpr (hdeg e he).le
   have hsplit : (⟨aeval x G, hle⟩ : ν.filtrationLE d) =
-      ⟨∑ e ∈ G.support, aeval x (monomial e (coeff e G)), (ν.filtrationLE _).sum_mem hmem⟩ := by
+      ⟨∑ e ∈ G.support, aeval x (monomial e (G.coeff e)), (ν.filtrationLE _).sum_mem hmem⟩ := by
     apply Subtype.ext
     change aeval x G = _
     conv_lhs => rw [as_sum G]
     rw [_root_.map_sum]
   rw [hsplit, ν.homogeneousMk_finsetSum _ _ hmem]
   conv_rhs => rw [as_sum G]
-  rw [_root_.map_sum, ← Finset.sum_attach G.support fun e ↦ Φ (monomial e (coeff e G))]
+  rw [_root_.map_sum, ← Finset.sum_attach G.support fun e ↦ Φ (monomial e (G.coeff e))]
   refine Finset.sum_congr rfl fun e _ ↦ ?_
   rw [ν.homogeneousMk_eq_initialForm_of_degree_eq _ (hdeg e.1 e.2)]
-  exact H.initialForm_aeval_monomial e.1 (coeff e.1 G)
+  exact H.initialForm_aeval_monomial e.1 (G.coeff e.1)
 
 variable [OrderBot M]
 

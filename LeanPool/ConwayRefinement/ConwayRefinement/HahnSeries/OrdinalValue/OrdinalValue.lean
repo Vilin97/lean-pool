@@ -163,7 +163,7 @@ private theorem mem_nearConstantSubgroup_of_supportOrderType_le_one
   · have hbTypeOne : (b : K⟦ℝ⟧).supportOrderType = 1 := by
       simpa using hbOne
     letI : WellFoundedLT (b : K⟦ℝ⟧).support :=
-      ⟨(b : K⟦ℝ⟧).isWF_support⟩
+      (b : K⟦ℝ⟧).isWF_support
     have htype : Ordinal.type
         (fun x y : (b : K⟦ℝ⟧).support ↦ x < y) = 1 := by
       rw [← HahnSeries.supportOrderType_eq_typeLT (x := (b : K⟦ℝ⟧))

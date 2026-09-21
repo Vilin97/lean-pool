@@ -11,6 +11,7 @@ public import Mathlib.SetTheory.Ordinal.Exponential
 public import Mathlib.SetTheory.Ordinal.Topology
 
 import Mathlib.Topology.Maps.Basic
+import Mathlib.Topology.Order.IsNormal
 
 /-!
 # Cantor–Bendixson derivatives of ordinals

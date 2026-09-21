@@ -118,7 +118,7 @@ theorem mul_le_orderType_iUnion_of_isSuccLimit
   have block_embedding_exists (i : successorRange l) :
       Nonempty (ρ.ToType ↪o separatedBlock B i.1) := by
     let hblock := block_isPWO i
-    letI : WellFoundedLT (separatedBlock B i.1) := ⟨hblock.isWF⟩
+    letI : WellFoundedLT (separatedBlock B i.1) := hblock.isWF
     have hle : typeLT ρ.ToType ≤ typeLT (separatedBlock B i.1) := by
       calc
         typeLT ρ.ToType = ρ := type_toType ρ
@@ -154,7 +154,7 @@ theorem mul_le_orderType_iUnion_of_isSuccLimit
     change type (Prod.Lex (· < · : successorRange l → successorRange l → Prop)
       (· < · : ρ.ToType → ρ.ToType → Prop)) = ρ * l
     rw [type_prod_lex, type_toType, successorRange_orderType l hl]
-  letI : WellFoundedLT (⋃ i, B i) := ⟨hUnion.isWF⟩
+  letI : WellFoundedLT (⋃ i, B i) := hUnion.isWF
   calc
     ρ * l = typeLT (successorRange l ×ₗ ρ.ToType) := hdomain.symm
     _ ≤ typeLT (⋃ i, B i) := unionEmbedding.ltEmbedding.ordinal_type_le

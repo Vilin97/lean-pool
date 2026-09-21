@@ -258,7 +258,7 @@ theorem finiteSupportFinsuppEquiv_apply
 /-- The finite-support monomial `t^g`, for a nonpositive exponent `g`. -/
 def finiteSupportMonomial (g : exponentMonoid G) :
     (finiteSupportSubring : Subring (Nonpositive G K)) :=
-  ⟨single (g : G) (1 : K) g.2, by
+  ⟨single (g : G) (1 : K) (show (g : G) ≤ 0 from g.2), by
     rw [mem_finiteSupportSubring_iff, coe_single]
     exact Set.Finite.subset (Set.finite_singleton (g : G))
       (HahnSeries.support_single_subset (a := (g : G)) (r := (1 : K)))⟩

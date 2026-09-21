@@ -32,22 +32,23 @@ namespace MvPolynomial
 variable {K : Type u} {A : Type v} {L : Type w} {σ : Type x}
 variable [CommRing K] [CommRing A] [Algebra K A] [CommRing L] [Algebra K L]
 
+/-- Extending polynomial coefficients by a tensor factor on the right, as a `K`-algebra
+ equivalence. -/
+noncomputable def polynomialScalarTensorAlgEquiv :
+    MvPolynomial σ K ⊗[K] L ≃ₐ[K] MvPolynomial σ L :=
+  (Algebra.TensorProduct.comm K _ _).trans
+    ((algebraTensorAlgEquiv (σ := σ) K L).restrictScalars K)
+
 /-- The identification `K[X_i] ⊗_K L ≅ L[X_i]` on a variable tensor. -/
-theorem scalarRTensorAlgEquiv_X_tmul_one [DecidableEq σ] (i : σ) :
-    scalarRTensorAlgEquiv (σ := σ) (R := K) (N := L) (X i ⊗ₜ[K] 1) = X i := by
-  classical
-  refine MvPolynomial.ext _ _ fun d ↦ ?_
-  simp [scalarRTensorAlgEquiv, rTensorAlgEquiv_apply, coeff_rTensorAlgHom_tmul, coeff_map,
-    coeff_X, Algebra.smul_def, mul_one, apply_ite (algebraMap K L)]
+theorem scalarRTensorAlgEquiv_X_tmul_one (i : σ) :
+    polynomialScalarTensorAlgEquiv (σ := σ) (K := K) (L := L) (X i ⊗ₜ[K] 1) = X i := by
+  simp [polynomialScalarTensorAlgEquiv, algebraTensorAlgEquiv_tmul]
 
 /-- The identification `K[X_i] ⊗_K L ≅ L[X_i]` on a scalar tensor. -/
-theorem scalarRTensorAlgEquiv_one_tmul [DecidableEq σ] (l : L) :
-    scalarRTensorAlgEquiv (σ := σ) (R := K) (N := L) (1 ⊗ₜ[K] l) = C l := by
-  classical
-  refine MvPolynomial.ext _ _ fun d ↦ ?_
-  simp [scalarRTensorAlgEquiv, rTensorAlgEquiv_apply, coeff_rTensorAlgHom_tmul, coeff_map,
-    coeff_C, coeff_one, apply_ite]
-  split_ifs with hd <;> simp [hd]
+theorem scalarRTensorAlgEquiv_one_tmul (l : L) :
+    polynomialScalarTensorAlgEquiv (σ := σ) (K := K) (L := L) (1 ⊗ₜ[K] l) = C l := by
+  simp [polynomialScalarTensorAlgEquiv, algebraTensorAlgEquiv_tmul,
+    MvPolynomial.smul_eq_C_mul]
 
 variable (K L) in
 /-- Evaluation `L[X_i] → A ⊗_K L`, `X_i ↦ y i ⊗ 1`, `l ↦ 1 ⊗ l`, as a `K`-algebra
@@ -63,9 +64,9 @@ theorem aevalTmulOne_C (y : σ → A) (l : L) : aevalTmulOne K L y (C l) = (1 : 
 
 /-- Through `K[X_i] ⊗_K L ≅ L[X_i]`, evaluation at the `y i ⊗ 1` is the base change to `L` of
 evaluation at the `y i`. -/
-theorem aevalTmulOne_comp_scalarRTensorAlgEquiv [DecidableEq σ] (y : σ → A) :
+theorem aevalTmulOne_comp_scalarRTensorAlgEquiv (y : σ → A) :
     (aevalTmulOne K L y).comp
-        (scalarRTensorAlgEquiv (σ := σ) (R := K) (N := L)).toAlgHom =
+        (polynomialScalarTensorAlgEquiv (σ := σ) (K := K) (L := L)).toAlgHom =
       Algebra.TensorProduct.map (aeval y : MvPolynomial σ K →ₐ[K] A) (AlgHom.id K L) := by
   refine Algebra.TensorProduct.ext ?_ ?_
   · refine MvPolynomial.algHom_ext fun i ↦ ?_
@@ -96,8 +97,7 @@ theorem aevalTmulOne_surjective {y : σ → A}
     (hy : Function.Surjective (aeval y : MvPolynomial σ K →ₐ[K] A)) :
     Function.Surjective (aevalTmulOne K L y) := by
   intro z
-  induction z using TensorProduct.induction_on with
-  | zero => exact ⟨0, map_zero _⟩
+  induction z using TensorProduct.inductionOn with
   | tmul a l =>
     obtain ⟨G, rfl⟩ := hy a
     refine ⟨C l * map (algebraMap K L) G, ?_⟩
@@ -118,7 +118,7 @@ theorem aevalTmulOne_injective [Module.Flat K L] {y : σ → A}
       (Algebra.TensorProduct.map (aeval y : MvPolynomial σ K →ₐ[K] A) (AlgHom.id K L)) :=
     Module.Flat.rTensor_preserves_injective_linearMap (R := K) (M := L)
       (aeval y : MvPolynomial σ K →ₐ[K] A).toLinearMap hy
-  set e := scalarRTensorAlgEquiv (σ := σ) (R := K) (N := L)
+  set e := polynomialScalarTensorAlgEquiv (σ := σ) (K := K) (L := L)
   have key : ∀ u, aevalTmulOne K L y (e u) =
       Algebra.TensorProduct.map (aeval y : MvPolynomial σ K →ₐ[K] A) (AlgHom.id K L) u :=
     fun u ↦ congrFun (congrArg (fun f : _ →ₐ[K] _ ↦ (f : _ → _))

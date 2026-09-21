@@ -73,7 +73,7 @@ theorem finiteSupportResidueEquiv_apply
       w.residueMap
         (RingEquiv.subringCongr
           (nonpositiveSubring_eq_finiteSupportSubring_of_value_eq_degree w hvalue).symm b) := by
-  simp [finiteSupportResidueEquiv]
+  rfl
 
 /-- Under the RV/homogeneous equivalence, the residue isomorphism is the restriction of `rv`. -/
 theorem coe_rvEquivHomogeneous_rv_eq_residueRingHom_finiteSupportResidueEquiv

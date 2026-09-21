@@ -212,7 +212,7 @@ instance small_setOf_birthday_lt (o : NatOrdinal.{u}) : Small.{u} {x | birthday 
   | isSuccPrelimit o ho ih =>
     convert @small_biUnion _ _ (Iio o) _ (fun i _ => {x : IGame.{u} | x.birthday < i}) ih
     ext x
-    simpa using ho.lt_iff_exists_lt
+    simpa [Set.nonempty_def, and_comm] using ho.lt_iff_exists_lt
 
 /-- Games with a bounded birthday form a small set. -/
 instance small_setOf_birthday_le (o : NatOrdinal.{u}) : Small.{u} {x | birthday x ≤ o} := by
@@ -238,6 +238,7 @@ noncomputable def birthdayFinset : ℕ → Finset IGame.{u}
 theorem mem_birthdayFinset_succ {x : IGame} {n : ℕ} : x ∈ birthdayFinset (n + 1) ↔
     ∃ l r, (l ⊆ birthdayFinset n ∧ r ⊆ birthdayFinset n) ∧ !{l | r} = x := by
   simp [birthdayFinset]
+  rfl
 
 @[simp] theorem birthdayFinset_zero : birthdayFinset 0 = {0} := (rfl)
 
@@ -275,7 +276,7 @@ theorem mem_birthdayFinset {x : IGame} {n : ℕ} : x ∈ birthdayFinset n ↔ x.
 
 theorem strictMono_birthdayFinset : StrictMono birthdayFinset := by
   refine strictMono_nat_of_lt_succ fun n ↦ ⟨fun y hy ↦ ?_, fun h ↦ ?_⟩
-  · rw [SetLike.mem_coe, mem_birthdayFinset] at *
+  · rw [mem_birthdayFinset] at *
     apply hy.trans
     simp
   · have := Finset.card_le_card h

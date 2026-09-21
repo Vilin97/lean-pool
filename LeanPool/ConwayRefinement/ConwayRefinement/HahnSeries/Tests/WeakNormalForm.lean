@@ -69,41 +69,45 @@ def twoOmegaSeries : ℚ⟦ℕ ⊕ₗ ℕ⟧ where
 
 /-- The first `ℕ`-indexed component of `twoOmegaSeries`. -/
 def twoOmegaLower : ℚ⟦ℕ ⊕ₗ ℕ⟧ :=
-  HahnSeries.filter (fun x ↦ x.isLeft) twoOmegaSeries
+  HahnSeries.filter (fun x ↦ (ofLex x).isLeft) twoOmegaSeries
 
 /-- The second `ℕ`-indexed component of `twoOmegaSeries`. -/
 def twoOmegaUpper : ℚ⟦ℕ ⊕ₗ ℕ⟧ :=
-  HahnSeries.filter (fun x ↦ x.isRight) twoOmegaSeries
+  HahnSeries.filter (fun x ↦ (ofLex x).isRight) twoOmegaSeries
 
 private theorem twoOmegaLower_support : twoOmegaLower.support = Set.range Sum.inlₗ := by
   rw [twoOmegaLower, HahnSeries.support_filter]
   ext x
-  rcases x with x | x
-  · constructor
-    · intro _
-      exact ⟨x, rfl⟩
-    · intro _
-      simp [twoOmegaSeries]
-  · constructor
-    · intro h
-      simp at h
-    · rintro ⟨y, h⟩
-      exact ((Sum.Lex.inl_lt_inr y x).ne h).elim
+  induction x using Lex.rec with
+  | h x =>
+    rcases x with x | x
+    · constructor
+      · intro _
+        exact ⟨x, rfl⟩
+      · intro _
+        simp [twoOmegaSeries]
+    · constructor
+      · intro h
+        simp at h
+      · rintro ⟨y, h⟩
+        exact ((Sum.Lex.inl_lt_inr y x).ne h).elim
 
 private theorem twoOmegaUpper_support : twoOmegaUpper.support = Set.range Sum.inrₗ := by
   rw [twoOmegaUpper, HahnSeries.support_filter]
   ext x
-  rcases x with x | x
-  · constructor
-    · intro h
-      simp at h
-    · rintro ⟨y, h⟩
-      exact ((Sum.Lex.inl_lt_inr x y).ne h.symm).elim
-  · constructor
-    · intro _
-      exact ⟨x, rfl⟩
-    · intro _
-      simp [twoOmegaSeries]
+  induction x using Lex.rec with
+  | h x =>
+    rcases x with x | x
+    · constructor
+      · intro h
+        simp at h
+      · rintro ⟨y, h⟩
+        exact ((Sum.Lex.inl_lt_inr x y).ne h.symm).elim
+    · constructor
+      · intro _
+        exact ⟨x, rfl⟩
+      · intro _
+        simp [twoOmegaSeries]
 
 private theorem twoOmegaLower_supportOrderType :
     twoOmegaLower.supportOrderType = Ordinal.omega0 := by
@@ -134,7 +138,9 @@ private theorem twoOmega_supportBelow :
 private theorem twoOmegaLower_add_upper :
     twoOmegaLower + twoOmegaUpper = twoOmegaSeries := by
   ext x
-  rcases x with x | x <;> simp [twoOmegaLower, twoOmegaUpper, twoOmegaSeries]
+  induction x using Lex.rec with
+  | h x =>
+    cases x <;> simp [twoOmegaLower, twoOmegaUpper, twoOmegaSeries]
 
 private theorem twoOmegaLower_isWeaklyPrincipal :
     HahnSeries.IsWeaklyPrincipal twoOmegaLower := by

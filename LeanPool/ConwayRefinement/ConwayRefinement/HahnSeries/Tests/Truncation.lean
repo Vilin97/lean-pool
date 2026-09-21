@@ -181,43 +181,47 @@ def oneAddOmegaSplitSeries : ℚ⟦Unit ⊕ₗ ℕ⟧ where
 
 /-- The singleton first part of `oneAddOmegaSplitSeries`. -/
 def oneAddOmegaLower : ℚ⟦Unit ⊕ₗ ℕ⟧ :=
-  HahnSeries.filter (fun x ↦ x.isLeft) oneAddOmegaSplitSeries
+  HahnSeries.filter (fun x ↦ (ofLex x).isLeft) oneAddOmegaSplitSeries
 
 /-- The `ℕ`-indexed second part of `oneAddOmegaSplitSeries`. -/
 def oneAddOmegaUpper : ℚ⟦Unit ⊕ₗ ℕ⟧ :=
-  HahnSeries.filter (fun x ↦ x.isRight) oneAddOmegaSplitSeries
+  HahnSeries.filter (fun x ↦ (ofLex x).isRight) oneAddOmegaSplitSeries
 
 private theorem oneAddOmegaLower_support : oneAddOmegaLower.support = Set.range Sum.inlₗ := by
   rw [oneAddOmegaLower, HahnSeries.support_filter]
   ext x
-  rcases x with x | x
-  · constructor
-    · intro _
-      exact ⟨x, rfl⟩
-    · intro _
-      simp [oneAddOmegaSplitSeries]
-  · constructor
-    · intro h
-      simp at h
-    · rintro ⟨y, h⟩
-      have hlt : Sum.inlₗ y < Sum.inrₗ x := Sum.Lex.inl_lt_inr y x
-      exact (hlt.ne h).elim
+  induction x using Lex.rec with
+  | h x =>
+    rcases x with x | x
+    · constructor
+      · intro _
+        exact ⟨x, rfl⟩
+      · intro _
+        simp [oneAddOmegaSplitSeries]
+    · constructor
+      · intro h
+        simp at h
+      · rintro ⟨y, h⟩
+        have hlt : Sum.inlₗ y < Sum.inrₗ x := Sum.Lex.inl_lt_inr y x
+        exact (hlt.ne h).elim
 
 private theorem oneAddOmegaUpper_support : oneAddOmegaUpper.support = Set.range Sum.inrₗ := by
   rw [oneAddOmegaUpper, HahnSeries.support_filter]
   ext x
-  rcases x with x | x
-  · constructor
-    · intro h
-      simp at h
-    · rintro ⟨y, h⟩
-      have hlt : Sum.inlₗ x < Sum.inrₗ y := Sum.Lex.inl_lt_inr x y
-      exact (hlt.ne h.symm).elim
-  · constructor
-    · intro _
-      exact ⟨x, rfl⟩
-    · intro _
-      simp [oneAddOmegaSplitSeries]
+  induction x using Lex.rec with
+  | h x =>
+    rcases x with x | x
+    · constructor
+      · intro h
+        simp at h
+      · rintro ⟨y, h⟩
+        have hlt : Sum.inlₗ x < Sum.inrₗ y := Sum.Lex.inl_lt_inr x y
+        exact (hlt.ne h.symm).elim
+    · constructor
+      · intro _
+        exact ⟨x, rfl⟩
+      · intro _
+        simp [oneAddOmegaSplitSeries]
 
 private theorem oneAddOmegaLower_supportOrderType : oneAddOmegaLower.supportOrderType = 1 := by
   rw [HahnSeries.supportOrderType_eq_setOrderType]

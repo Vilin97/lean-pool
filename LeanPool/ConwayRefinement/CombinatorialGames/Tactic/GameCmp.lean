@@ -53,7 +53,7 @@ public section
 variable {α : Type*} {P : α → Prop}
 
 attribute [game_cmp] Set.forall_mem_empty
-@[game_cmp] theorem Set.exists_mem_empty : (∃ x ∈ (∅ : Set α), P x) ↔ False := by simp
+@[game_cmp] theorem Set.gameCmp_exists_mem_empty : (∃ x ∈ (∅ : Set α), P x) ↔ False := by simp
 
 @[game_cmp] theorem Set.forall_singleton {x : α} : (∀ y ∈ ({x} : Set α), P y) ↔ P x := by simp
 @[game_cmp] theorem Set.exists_singleton {x : α} : (∃ y ∈ ({x} : Set α), P y) ↔ P x := by simp

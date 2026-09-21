@@ -14,6 +14,8 @@ public import Mathlib.SetTheory.Cardinal.Rat
 public import Mathlib.Topology.Algebra.Module.Basic
 
 import LeanPool.ConwayRefinement.ConwayRefinement.Blueprint
+import Mathlib.Tactic.NormNum.Inv
+import Mathlib.Tactic.NormNum.Ineq
 
 /-!
 # Supports in closed rational subspaces

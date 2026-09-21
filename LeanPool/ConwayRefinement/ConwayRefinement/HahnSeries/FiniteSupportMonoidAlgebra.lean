@@ -58,7 +58,7 @@ theorem finiteSupportCoefficients_toSeries
     finiteSupportCoefficients (finiteSupportAddMonoidAlgebraToSeries f) =
       AddMonoidAlgebra.coeff f := by
   induction f using AddMonoidAlgebra.induction_on with
-  | hM g =>
+  | of g =>
       rw [AddMonoidAlgebra.of_apply]
       rw [finiteSupportAddMonoidAlgebraToSeries, AddMonoidAlgebra.lift_single]
       rw [one_smul]
@@ -69,10 +69,10 @@ theorem finiteSupportCoefficients_toSeries
         finiteSupportMonomial (K := K) g from rfl]
       rw [finiteSupportCoefficients_monomial]
       rfl
-  | hadd f g hf hg =>
+  | add f g hf hg =>
       rw [map_add, map_add, hf, hg]
       exact (AddMonoidAlgebra.coeff_add f g).symm
-  | hsmul k f hf =>
+  | smul k f hf =>
       rw [map_smul, map_smul, hf]
       exact (AddMonoidAlgebra.coeff_smul k f).symm
 

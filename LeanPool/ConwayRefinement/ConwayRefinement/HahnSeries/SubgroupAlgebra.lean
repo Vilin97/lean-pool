@@ -47,7 +47,7 @@ def subgroupAlgebraHom (H : AddSubgroup G) : AddMonoidAlgebra K H →ₐ[K] K⟦
 
 @[simp]
 theorem subgroupAlgebraHom_single (H : AddSubgroup G) (a : H) (b : K) :
-    subgroupAlgebraHom H (Finsupp.single a b) = single (a : G) b := by
+    subgroupAlgebraHom H (AddMonoidAlgebra.single a b) = single (a : G) b := by
   rw [subgroupAlgebraHom, AddMonoidAlgebra.lift_single]
   ext g
   simp [subgroupMonomialHom, HahnSeries.coeff_single]
@@ -55,7 +55,7 @@ theorem subgroupAlgebraHom_single (H : AddSubgroup G) (a : H) (b : K) :
 open Classical in
 /-- The coefficients of a monomial image. -/
 private theorem coeff_subgroupAlgebraHom_single (H : AddSubgroup G) (a : H) (b : K) (g : G) :
-    (subgroupAlgebraHom H (Finsupp.single a b)).coeff g
+    (subgroupAlgebraHom H (AddMonoidAlgebra.single a b)).coeff g
       = if hg : g ∈ H then (Finsupp.single a b : H →₀ K) ⟨g, hg⟩ else 0 := by
   rw [subgroupAlgebraHom_single, HahnSeries.coeff_single]
   by_cases hg : g ∈ H
@@ -70,17 +70,17 @@ private theorem coeff_subgroupAlgebraHom_single (H : AddSubgroup G) (a : H) (b :
 open Classical in
 /-- The coefficients of the image are the coefficients of the group-ring element. -/
 theorem coeff_subgroupAlgebraHom (H : AddSubgroup G) (f : AddMonoidAlgebra K H) (g : G) :
-    (subgroupAlgebraHom H f).coeff g = if hg : g ∈ H then f ⟨g, hg⟩ else 0 := by
+    (subgroupAlgebraHom H f).coeff g = if hg : g ∈ H then f.coeff ⟨g, hg⟩ else 0 := by
   induction f using AddMonoidAlgebra.induction_on with
-  | hM m =>
+  | of m =>
     have hof : (AddMonoidAlgebra.of K H (Multiplicative.ofAdd m) : AddMonoidAlgebra K H)
-        = Finsupp.single m 1 := rfl
+        = AddMonoidAlgebra.single m 1 := rfl
     rw [hof]
     exact coeff_subgroupAlgebraHom_single H m 1 g
-  | hadd x y hx hy =>
+  | add x y hx hy =>
     rw [map_add, HahnSeries.coeff_add, hx, hy]
     by_cases hg : g ∈ H <;> simp [hg]
-  | hsmul r x hx =>
+  | smul r x hx =>
     rw [map_smul, HahnSeries.coeff_smul, hx]
     by_cases hg : g ∈ H <;> simp [hg]
 
@@ -106,7 +106,7 @@ theorem support_subgroupAlgebraHom_subset (H : AddSubgroup G) (f : AddMonoidAlge
 open Classical in
 theorem support_subgroupAlgebraHom_finite (H : AddSubgroup G) (f : AddMonoidAlgebra K H) :
     (subgroupAlgebraHom H f).support.Finite := by
-  refine Set.Finite.subset ((f.support : Finset H).finite_toSet.image ((↑) : H → G)) ?_
+  refine Set.Finite.subset ((f.coeff.support : Finset H).finite_toSet.image ((↑) : H → G)) ?_
   intro g hg
   rw [HahnSeries.mem_support, coeff_subgroupAlgebraHom] at hg
   by_cases hgH : g ∈ H
@@ -125,11 +125,12 @@ theorem exists_subgroupAlgebraHom_eq
     (fun a ha ↦ hfin.mem_toFinset.mpr ha) with hxf
   have hinj : Set.InjOn ((↑) : H → G) (((↑) : H → G) ⁻¹' xf.support) :=
     fun a _ b _ hab ↦ Subtype.ext hab
-  refine ⟨Finsupp.comapDomain ((↑) : H → G) xf hinj, ?_⟩
+  refine ⟨AddMonoidAlgebra.ofCoeff (Finsupp.comapDomain ((↑) : H → G) xf hinj), ?_⟩
   ext g
   rw [coeff_subgroupAlgebraHom]
   by_cases hgH : g ∈ H
-  · rw [dite_eq_left hgH, Finsupp.comapDomain_apply, hxf, Finsupp.onFinset_apply]
+  · rw [dite_eq_left hgH, AddMonoidAlgebra.coeff_ofCoeff, Finsupp.comapDomain_apply,
+      hxf, Finsupp.onFinset_apply]
   · rw [dite_eq_right hgH]
     by_contra hne
     exact hgH (hsub ((HahnSeries.mem_support _ _).mpr (Ne.symm hne)))
