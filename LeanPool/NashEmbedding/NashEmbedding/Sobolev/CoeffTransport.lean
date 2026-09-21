@@ -144,7 +144,7 @@ theorem stdFourierCoeff_sumSqDeriv (hn : 0 < n) {f : (Fin n → ℝ) → ℂ}
   ring
 
 /-- Real-valued functions have `conjReflect`-fixed coefficients. -/
-theorem conjReflect_stdFourierCoeff_of_real {f : (Fin n → ℝ) → ℂ} (hf : Continuous f)
+theorem conjReflect_stdFourierCoeff_of_real {f : (Fin n → ℝ) → ℂ} 
     (hreal : ∀ x, (f x).im = 0) : conjReflect (stdFourierCoeff n f) = stdFourierCoeff n f := by
   funext m
   have hc : ∀ θ : Fin n → ℝ, (starRingEnd ℂ) (f θ * fourierExp n m θ)

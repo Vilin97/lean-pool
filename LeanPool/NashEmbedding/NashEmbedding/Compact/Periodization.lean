@@ -336,8 +336,8 @@ theorem formMatrix_apply (B : EuclideanSpace ℝ (Fin N) →L[ℝ] EuclideanSpac
     B a b = (⇑a : Fin N → ℝ) ⬝ᵥ (formMatrix B).mulVec (⇑b : Fin N → ℝ) := by
   rw [dotProduct, formMatrix]
   conv_lhs => rw [euclideanSpace_eq_sum_single a, euclideanSpace_eq_sum_single b]
-  simp [map_sum, map_smul, Finset.sum_apply, mulVec, dotProduct, Finset.mul_sum, mul_comm,
-    mul_left_comm]
+  simp only [map_sum, map_smul, _root_.sum_apply, _root_.smul_apply, smul_eq_mul,
+    mulVec, dotProduct, Finset.mul_sum, Matrix.of_apply, mul_comm, mul_left_comm]
   rw [Finset.sum_comm]
 
 /-- **D2.** A symmetric positive-definite form has a positive-definite matrix. -/

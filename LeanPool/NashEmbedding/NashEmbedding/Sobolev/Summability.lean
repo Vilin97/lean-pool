@@ -76,7 +76,7 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
       have h_summable_one_dim : Summable (fun m : ℕ => (m : ℝ) ^ (-2 * s / n)) := by
         exact Real.summable_nat_rpow.2 ( by rw [ div_lt_iff₀ ( by positivity ) ] ; linarith );
       rw [ ← summable_nat_add_iff 1 ] at *;
-      refine' .of_nonneg_of_le ( fun m => Real.rpow_nonneg ( by positivity ) _ ) ( fun m => _ )
+      refine .of_nonneg_of_le ( fun m => Real.rpow_nonneg ( by positivity ) _ ) ( fun m => ?_ )
           h_summable_one_dim;
       rw [ show ( -2 * s / n : ℝ ) = -s / n + -s / n by ring, Real.rpow_add ] <;> norm_num <;>
           try positivity;
@@ -99,16 +99,19 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
     exact ne_of_lt ( add_pos_of_pos_of_nonneg ( lt_of_lt_of_le ( by positivity ) (
         Summable.le_tsum ( h_summable_one_dim ) 0 fun _ _ => by positivity ) ) ( tsum_nonneg fun
         _ => by positivity ) );
-  refine' .of_nonneg_of_le ( fun m => _ ) ( fun m => _ ) ( show Summable ( fun m : Fin n → ℤ =>
-      ∏ i : Fin n, ( 1 + ( m i : ℝ ) ^ 2 ) ^ ( -s / n ) ) from _ );
+  refine .of_nonneg_of_le ( fun m => ?_ ) ( fun m => ?_ ) ( show Summable ( fun m : Fin n → ℤ =>
+      ∏ i : Fin n, ( 1 + ( m i : ℝ ) ^ 2 ) ^ ( -s / n ) ) from ?_ );
   · exact Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ )
       ) _;
   · exact h_comparison m ( by linarith [ show ( n : ℝ ) ≥ 1 by norm_cast ] );
   · have h_prod_summable : ∀ {k : ℕ}, Summable (fun m : Fin k → ℤ => ∏ i : Fin k, (1 + (m i : ℝ)
       ^ 2) ^ (-s / n)) := by
-      intro k; induction' k with k ih <;> simp_all +decide [ Fin.prod_univ_succ ] ;
-      · exact ⟨ _, hasSum_fintype _ ⟩;
-      · have h_prod_summable : Summable (fun m : ℤ × (Fin k → ℤ) => (1 + (m.1 : ℝ) ^ 2) ^ (-s /
+      intro k
+      induction k with
+      | zero => exact ⟨_, hasSum_fintype _⟩
+      | succ k ih =>
+        simp only [Fin.prod_univ_succ]
+        have h_prod_summable : Summable (fun m : ℤ × (Fin k → ℤ) => (1 + (m.1 : ℝ) ^ 2) ^ (-s /
           n) * ∏ i : Fin k, (1 + (m.2 i : ℝ) ^ 2) ^ (-s / n)) := by
           exact .of_norm <| by simpa using Summable.mul_norm ( h_summable_one_dim.norm ) (
               ih.norm ) ;
@@ -131,9 +134,9 @@ theorem summable_norm_of_memSobolev {s : ℝ} (hn : 0 < n)
   -- Since $\sum_m (1 + |m|^2)^{-s}$ converges, we can apply the Cauchy-Schwarz inequality.
   have h_cauchy_schwarz : Summable (fun m : (Fin n → ℤ) => (Real.sqrt (weight n (-s) m)) *
       (Real.sqrt (weight n s m * ‖a m‖ ^ 2))) := by
-    refine' .of_nonneg_of_le ( fun m => mul_nonneg ( Real.sqrt_nonneg _ ) ( Real.sqrt_nonneg _ )
-        ) ( fun m => _ ) ( ( show Summable fun m : Fin n → ℤ => weight n ( -s ) m + weight n s m
-        * ‖a m‖ ^ 2 from _ ) );
+    refine .of_nonneg_of_le ( fun m => mul_nonneg ( Real.sqrt_nonneg _ ) ( Real.sqrt_nonneg _ )
+        ) ( fun m => ?_ ) ( ( show Summable fun m : Fin n → ℤ => weight n ( -s ) m + weight n s m
+        * ‖a m‖ ^ 2 from ?_ ) );
     · nlinarith only [sq_nonneg (Real.sqrt (weight n (-s) m) -
           Real.sqrt (weight n s m * ‖a m‖ ^ 2)),
         Real.mul_self_sqrt (le_of_lt (weight_pos (-s) m)),
@@ -163,9 +166,9 @@ theorem tsum_norm_sq_le {s : ℝ} (hn : 0 < n)
       exact fun N => Finset.sum_mul_sq_le_sq_mul_sq N u v;
     have h_cauchy_schwarz : Filter.Tendsto (fun N : Finset (Fin n → ℤ) => (∑ m ∈ N, u m * v m) ^
         2) Filter.atTop (nhds ((∑' m, u m * v m) ^ 2)) := by
-      refine' Filter.Tendsto.pow _ _;
-      refine' Summable.hasSum _;
-      refine' .of_norm _;
+      refine Filter.Tendsto.pow ?_ _;
+      refine Summable.hasSum ?_;
+      refine .of_norm ?_;
       refine Summable.of_nonneg_of_le (fun m => abs_nonneg _) ?_ (hu.add hv)
       intro m
       rw [Real.norm_eq_abs, abs_mul]
@@ -191,7 +194,7 @@ theorem hasSum_fourierSeries
     {a : (Fin n → ℤ) → ℂ} (ha : Summable (fun m => ‖a m‖))
     (θ : Fin n → ℝ) :
     HasSum (fun m => a m * fourierExp n m θ) (∑' m, a m * fourierExp n m θ) := by
-  refine' Summable.hasSum _;
+  refine Summable.hasSum ?_;
   exact .of_norm <| by simpa [ norm_fourierExp ] using ha;
 
 /-
@@ -204,8 +207,9 @@ theorem continuous_fourierSeries
   -- Since the partial sums are continuous and converge uniformly, the limit is continuous.
   have h_cont : ∀ m, Continuous (fun θ : (Fin n) → ℝ => a m * fourierExp n m θ) := by
     exact fun m => continuous_const.mul <| Complex.continuous_exp.comp <| by continuity;
-  refine' continuous_tsum _ _ _;
-  exacts [ fun m => ‖a m‖, h_cont, ha, fun m x => by simp +decide [ norm_fourierExp ] ]
+  refine continuous_tsum (u := fun m => ‖a m‖) h_cont ha ?_
+  intro m x
+  simp +decide [norm_fourierExp]
 
 /-
 The sup norm of the Fourier series is bounded by the ℓ¹ norm.
@@ -215,7 +219,7 @@ theorem sup_norm_fourierSeries_le
     (ha : Summable (fun m => ‖a m‖))
     (θ : Fin n → ℝ) :
     ‖∑' m : Fin n → ℤ, a m * fourierExp n m θ‖ ≤ ∑' m : Fin n → ℤ, ‖a m‖ := by
-  convert norm_tsum_le_tsum_norm _ using 1;
+  convert norm_tsum_le_tsum_norm ?_ using 1;
   · unfold fourierExp; norm_num [ Complex.norm_exp ] ;
   · simpa [ norm_fourierExp ] using ha
 

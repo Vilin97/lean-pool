@@ -98,8 +98,8 @@ lemma memSobolev_derivCoeff {s : ℝ} {k : ℕ} {α : Fin n → ℕ}
     (hα : multiDeg α ≤ k)
     {a : (Fin n → ℤ) → ℂ} (ha : MemSobolev n (s + k) a) :
     MemSobolev n s (derivCoeff α a) := by
-  refine' .of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg s m ) ( sq_nonneg _ ) ) ( fun m
-      => _ ) ( ha.mul_left ( 1 : ℝ ) );
+  refine .of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg s m ) ( sq_nonneg _ ) ) ( fun m
+      => ?_ ) ( ha.mul_left ( 1 : ℝ ) );
   have hXp : (0 : ℝ) < 1 + ∑ i : Fin n, ((m i : ℝ) ^ 2) :=
     add_pos_of_pos_of_nonneg zero_lt_one (Finset.sum_nonneg fun _ _ => sq_nonneg _)
   have h_weight_split : weight n (s + ↑k) m
@@ -185,7 +185,7 @@ theorem fourierSynthesis_supBound {s : ℝ} {k : ℕ} {α : Fin n → ℕ}
 /-- **Fourier synthesis: 2π-periodicity.** The Fourier synthesis `ǎ` is
 `2π`-periodic in each variable. -/
 theorem fourierSynthesis_periodic
-    {a : (Fin n → ℤ) → ℂ} (ha : Summable (fun m => ‖a m‖))
+    {a : (Fin n → ℤ) → ℂ} 
     (θ : Fin n → ℝ) (j : Fin n) :
     fourierSynthesis n a (Function.update θ j (θ j + 2 * π)) =
       fourierSynthesis n a θ := by
@@ -209,7 +209,7 @@ theorem fourierSynthesis_add
 
 theorem fourierSynthesis_smul
     {a : (Fin n → ℤ) → ℂ} (c : ℂ)
-    (ha : Summable (fun m => ‖a m‖))
+    
     (θ : Fin n → ℝ) :
     fourierSynthesis n (c • a) θ = c * fourierSynthesis n a θ := by
   unfold fourierSynthesis;
@@ -236,7 +236,7 @@ theorem fourierSynthesis_injective
           Complex.exp (Complex.I * (∑ j, ((m j : ℝ) - (m₀ j : ℝ)) * θ j)) = if m = m₀ then (2 *
           Real.pi) ^ n else 0 := by
         split_ifs with h;
-        · simp? +decide [ h, MeasureTheory.measureReal_def ];
+        · simp +decide only [Algebra.mul_smul_comm, mul_one, h, sub_self, zero_mul, Finset.sum_const_zero, ofReal_zero, mul_zero, exp_zero, MeasureTheory.integral_const, MeasureTheory.measureReal_def, MeasurableSet.univ, MeasureTheory.Measure.restrict_apply, Set.univ_inter, real_smul, ofReal_pow, ofReal_mul, ofReal_ofNat];
           erw [ Real.volume_Icc_pi ] ; norm_num [ mul_comm ];
           rw [ ENNReal.toReal_ofReal ( by positivity ) ] ; norm_num;
         · -- Since $m \neq m₀$, there exists some $j$ such that $m_j \neq m₀_j$.
@@ -251,7 +251,7 @@ theorem fourierSynthesis_injective
                 ℝ, (∏ j, (if 0 ≤ θ j ∧ θ j ≤ 2 * Real.pi then Complex.exp (Complex.I * ((m j :
                 ℝ) - (m₀ j : ℝ)) * θ j) else 0)) := by
               rw [ ← MeasureTheory.integral_indicator ] <;> norm_num [ Set.indicator ];
-              congr with θ ; simp? +decide [ Pi.le_def, forall_and ];
+              congr with θ ; simp +decide only [Pi.le_def, Pi.zero_apply, Pi.smul_apply, Pi.ofNat_apply, smul_eq_mul];
               split_ifs <;> simp_all +decide [ mul_assoc, mul_comm, mul_left_comm,
                   Finset.prod_ite ];
               · rw [ ← Complex.exp_sum, Finset.mul_sum _ _ _ ];
@@ -293,19 +293,21 @@ theorem fourierSynthesis_injective
       rw [ MeasureTheory.integral_tsum ];
       · simp +decide only [mul_assoc, MeasureTheory.integral_const_mul];
       · intro m; exact Continuous.aestronglyMeasurable ( by
-          refine' Continuous.mul _ _;
-          · refine' continuous_const.mul _;
+          refine Continuous.mul ?_ ?_;
+          · refine continuous_const.mul ?_;
             exact Complex.continuous_exp.comp <| Continuous.mul continuous_const <|
                 Complex.continuous_ofReal.comp <| continuous_finsetSum _ fun _ _ =>
                 Continuous.mul ( continuous_const ) <| continuous_apply _;
           · exact Complex.continuous_conj.comp ( Complex.continuous_exp.comp <| by continuity ) ) ;
-      · refine' ne_of_lt ( lt_of_le_of_lt ( ENNReal.tsum_le_tsum fun m => _ ) _ );
-        use fun m => ENNReal.ofReal ( ‖a m‖ * ( 2 * Real.pi ) ^ n );
-        · refine' le_trans ( MeasureTheory.lintegral_mono fun x => _ ) _;
-          use fun x => ENNReal.ofReal ( ‖a m‖ );
+      · refine ne_of_lt (lt_of_le_of_lt (ENNReal.tsum_le_tsum
+          (g := fun m => ENNReal.ofReal (‖a m‖ * (2 * Real.pi) ^ n)) (fun m => ?_)) ?_)
+
+        · refine le_trans (MeasureTheory.lintegral_mono
+            (g := fun _ => ENNReal.ofReal ‖a m‖) (fun x => ?_)) ?_
+
           · rw [ ENNReal.le_ofReal_iff_toReal_le ] <;> norm_num [ norm_fourierExp ];
             finiteness;
-          · simp? +decide [ mul_comm, Real.pi_pos.le ];
+          · simp +decide only [mul_comm, Algebra.smul_mul_assoc, one_mul, ofReal_norm, MeasureTheory.lintegral_const, MeasurableSet.univ, MeasureTheory.Measure.restrict_apply, Set.univ_inter, norm_nonneg, ENNReal.ofReal_mul, Nat.ofNat_pos, mul_nonneg_iff_of_pos_right, Real.pi_pos.le, ENNReal.ofReal_pow, ENNReal.ofReal_ofNat];
             erw [ Real.volume_Icc_pi ] ; norm_num [ mul_comm, Real.pi_pos.le ];
         · rw [ ← ENNReal.ofReal_tsum_of_nonneg ] <;> norm_num;
           · exact fun m => mul_nonneg ( norm_nonneg _ ) ( pow_nonneg ( by positivity ) _ );

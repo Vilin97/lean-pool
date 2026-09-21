@@ -10,6 +10,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
+import Mathlib.Geometry.Manifold.Instances.Sphere
 import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Pullback
 
 /-!
@@ -33,7 +34,7 @@ variable (n : ℕ)
 def sphereMetric :
     ContMDiffRiemannianMetric (𝓡 n) ∞ (EuclideanSpace ℝ (Fin n))
       (TangentSpace (𝓡 n) : sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1 → Type _) :=
-  inducedMetric contMDiff_coe_sphere (fun v => mfderiv_coe_sphere_injective v)
+  inducedMetric contMDiff_coe_sphere (fun v => injective_mvfderiv_subtypeVal_sphere v)
 
 /-- **Sⁿ.** Every round sphere isometrically embeds — via `nashCompact`. -/
 theorem sphere_nashCompact :

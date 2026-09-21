@@ -170,7 +170,7 @@ lemma young_l1_l2_bound
 /-
 Summability of the α⋅|b| convolution term at each point.
 -/
-lemma summable_alpha_abs_b {s : ℝ} (hs : 0 ≤ s)
+lemma summable_alpha_abs_b {s : ℝ} 
     {a b : (Fin n → ℤ) → ℂ}
     (ha : MemSobolev n s a) (hb_l1 : Summable (fun m => ‖b m‖))
     (m : Fin n → ℤ) :
@@ -207,7 +207,7 @@ lemma summable_alpha_abs_b {s : ℝ} (hs : 0 ≤ s)
 /-
 Summability of the |a|⋅β convolution term at each point.
 -/
-lemma summable_abs_a_beta {s : ℝ} (hs : 0 ≤ s)
+lemma summable_abs_a_beta {s : ℝ} 
     {a b : (Fin n → ℤ) → ℂ}
     (ha_l1 : Summable (fun m => ‖a m‖)) (hb : MemSobolev n s b)
     (m : Fin n → ℤ) :
@@ -241,15 +241,15 @@ lemma seqConv_unsquared_bound {s : ℝ} (hs : 0 ≤ s)
       (2 : ℝ) ^ s *
         (∑' i, (weight n (s / 2) i * ‖a i‖) * ‖b (m - i)‖ +
          ∑' i, ‖a i‖ * (weight n (s / 2) (m - i) * ‖b (m - i)‖)) := by
-  refine' le_trans ( mul_le_mul_of_nonneg_left ( norm_tsum_le_tsum_norm _ ) ( weight_nonneg _ _
-      ) ) _;
-  · simp? +zetaDelta at *;
+  refine le_trans ( mul_le_mul_of_nonneg_left ( norm_tsum_le_tsum_norm ?_ ) ( weight_nonneg _ _
+      ) ) ?_;
+  · simp +zetaDelta only [Complex.norm_mul] at *;
     exact .of_nonneg_of_le ( fun i => mul_nonneg ( norm_nonneg _ ) ( norm_nonneg _ ) ) ( fun i
         => mul_le_mul_of_nonneg_left ( show ‖b ( m - i )‖ ≤ ∑' j, ‖b j‖ from Summable.le_tsum (
         hb_l1 ) ( m - i ) ( fun _ _ => norm_nonneg _ ) ) ( norm_nonneg _ ) ) ( ha_l1.mul_right _ );
   · rw [ ← Summable.tsum_add ];
     · rw [ ← tsum_mul_left, ← tsum_mul_left ];
-      refine' Summable.tsum_le_tsum _ _ _;
+      refine Summable.tsum_le_tsum ?_ ?_ ?_;
       · intro i
         have h_ineq : weight n (s / 2) m ≤ 2 ^ s * (weight n (s / 2) i + weight n (s / 2) (m -
             i)) := by
@@ -261,13 +261,13 @@ lemma seqConv_unsquared_bound {s : ℝ} (hs : 0 ≤ s)
       · exact Summable.mul_left _ ( Summable.of_nonneg_of_le ( fun _ => by positivity ) ( fun _
           => by simpa [ mul_assoc ] using mul_le_mul_of_nonneg_left ( Summable.le_tsum ( hb_l1 )
           ( m - ‹_› ) ( by norm_num ) ) ( norm_nonneg ( a ‹_› ) ) ) ( ha_l1.mul_right _ ) );
-      · refine' Summable.mul_left _ _;
-        refine' Summable.add _ _;
-        · convert summable_alpha_abs_b hs ha hb_l1 m using 1;
-        · convert summable_abs_a_beta hs ha_l1 hb m using 1;
-    · have := summable_alpha_abs_b hs ha hb_l1 m;
+      · refine Summable.mul_left _ ?_;
+        refine Summable.add ?_ ?_;
+        · convert summable_alpha_abs_b ha hb_l1 m using 1;
+        · convert summable_abs_a_beta ha_l1 hb m using 1;
+    · have := summable_alpha_abs_b ha hb_l1 m;
       convert this using 1;
-    · convert summable_abs_a_beta hs ha_l1 hb m using 1
+    · convert summable_abs_a_beta ha_l1 hb m using 1
 
 /-
 Pointwise bound (squared version).
@@ -391,20 +391,20 @@ theorem second_multiplication_theorem_seq
     have hs_nonneg : 0 ≤ s := by
       have hn_nonneg : (0 : ℝ) ≤ n := Nat.cast_nonneg n
       linarith
-    refine' .of_nonneg_of_le (fun m => mul_nonneg (weight_nonneg _ _) (sq_nonneg _))
+    refine .of_nonneg_of_le (fun m => mul_nonneg (weight_nonneg _ _) (sq_nonneg _))
       (fun m => seqConv_pointwise_bound hs_nonneg
-        (summable_norm_of_memSobolev hn hs ha) (summable_norm_of_memSobolev hn hs hb) ha hb m) _
+        (summable_norm_of_memSobolev hn hs ha) (summable_norm_of_memSobolev hn hs hb) ha hb m) ?_
     exact Summable.mul_left _ (Summable.add (by
       simpa only [mul_assoc, mul_comm, mul_left_comm] using (young_alpha_b_bound hn hs ha hb).1)
       (by
         simpa only [mul_assoc, mul_comm, mul_left_comm] using
           (young_a_beta_bound hn hs ha hb).1))
-  refine' And.intro _ ( _ );
+  refine And.intro ?_ ?_;
   · exact h_summable;
   · have := @seqConv_pointwise_bound n s;
     specialize this ( by linarith [ show ( n : ℝ ) ≥ 1 by norm_cast ] ) (
         summable_norm_of_memSobolev hn hs ha ) ( summable_norm_of_memSobolev hn hs hb ) ha hb;
-    refine' le_trans ( Summable.tsum_le_tsum this _ _ ) _;
+    refine le_trans ( Summable.tsum_le_tsum this ?_ ?_ ) ?_;
     · exact h_summable;
     · exact Summable.mul_left _ ( Summable.add ( young_alpha_b_bound hn hs ha hb |>.1 ) (
         young_a_beta_bound hn hs ha hb |>.1 ) );

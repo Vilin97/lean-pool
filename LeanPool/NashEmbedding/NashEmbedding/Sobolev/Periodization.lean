@@ -87,7 +87,7 @@ def periodicExtension (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (x : Fin n → �
 lemma periodicExtension_isPeriodic2Pi (φ : (Fin n → ℝ) → ℂ) :
     IsPeriodic2Pi (periodicExtension n φ) := by
   unfold periodicExtension; intro x k; symm; simp? +decide [ IsPeriodic2Pi, periodicShift ] ;
-  rw [ ← Equiv.tsum_eq ( Equiv.addLeft k ) ] ; simp +decide [ periodicShift ] ; ring;
+  rw [ ← Equiv.tsum_eq ( Equiv.addLeft k ) ] ; simp +decide only [Equiv.coe_addLeft] ; ring;
   unfold periodicShift; congr; ext; simp +decide [ add_assoc ] ;
   exact congr_arg _ ( by ext; simp +decide [ mul_add ] )
 
@@ -107,7 +107,7 @@ lemma periodicExtension_contDiff {φ : (Fin n → ℝ) → ℂ}
     intro x
     obtain ⟨R, hR⟩ : ∃ R : ℝ, ∀ x : Fin n → ℝ, ‖x‖ ≥ R → φ x = 0 := h_compact_support
     use Metric.ball x 1;
-    refine' ⟨ Metric.isOpen_ball, Metric.mem_ball_self zero_lt_one, _ ⟩;
+    refine ⟨ Metric.isOpen_ball, Metric.mem_ball_self zero_lt_one, ?_ ⟩;
     -- Since $\varphi$ has compact support, there exists $R > 0$ such that $\varphi(x) = 0$
     -- for all $x$ with $\|x\| \geq R$. Therefore, for any $y \in \text{ball}(x, 1)$, we
     -- have $\|y + \text{periodicShift}(n, k)\| \geq R$ implies $\varphi(y +
@@ -157,10 +157,11 @@ lemma periodicExtension_contDiff {φ : (Fin n → ℝ) → ℂ}
     have h_sum_eq : ∑' k : Fin n → ℤ, φ (y + periodicShift n k) = ∑ k ∈ hU_finite.toFinset, φ (y
         + periodicShift n k) := by
       rw [ tsum_eq_sum ];
-      simp? +contextual [ hU_finite.mem_toFinset ];
+      simp +contextual only [ne_eq, hU_finite.mem_toFinset, Set.mem_ofPred_eq, not_exists,
+        not_and, Decidable.not_not];
       exact fun k hk => hk y hy
     exact h_sum_eq;
-  refine' contDiff_iff_contDiffAt.mpr _;
+  refine contDiff_iff_contDiffAt.mpr ?_;
   intro x
   obtain ⟨U, hU_open, hxU, S, hS⟩ := h_locally_finite_sum x
   have h_cont_diff : ContDiffOn ℝ ∞ (fun y => ∑ k ∈ S, φ (y + periodicShift n k)) U := by
@@ -169,13 +170,11 @@ lemma periodicExtension_contDiff {φ : (Fin n → ℝ) → ℂ}
       Filter.eventuallyEq_of_mem ( hU_open.mem_nhds hxU ) fun y hy => hS y hy ▸ rfl )
 
 /-
-If `φ` has compact support and pointwise non-negative real part, then
-    `periodicExtension n φ` has pointwise non-negative real part. The
-    compact-support hypothesis guarantees summability of the locally finite
-    sum defining `periodicExtension`.
+If `φ` has pointwise non-negative real part, its periodic extension does too.
+The nonsummable case follows from the zero convention for `tsum`.
 -/
 lemma periodicExtension_re_nonneg {φ : (Fin n → ℝ) → ℂ}
-    (hsupp : HasCompactSupport φ) (hnn : ∀ x, 0 ≤ (φ x).re) :
+     (hnn : ∀ x, 0 ≤ (φ x).re) :
     ∀ y, 0 ≤ (periodicExtension n φ y).re := by
   intro y
   unfold periodicExtension;
@@ -185,12 +184,12 @@ lemma periodicExtension_re_nonneg {φ : (Fin n → ℝ) → ℂ}
   · rw [ tsum_eq_zero_of_not_summable h ] ; norm_num
 
 /-
-If `φ` has compact support and pointwise zero imaginary part (e.g.\ `φ`
+If `φ` has pointwise zero imaginary part (e.g.\ `φ`
     is `Complex.ofReal ∘ ψ` for real-valued `ψ`), then
     `periodicExtension n φ` has pointwise zero imaginary part.
 -/
 lemma periodicExtension_im_zero {φ : (Fin n → ℝ) → ℂ}
-    (hsupp : HasCompactSupport φ) (him : ∀ x, (φ x).im = 0) :
+     (him : ∀ x, (φ x).im = 0) :
     ∀ y, (periodicExtension n φ y).im = 0 := by
   intro y
   unfold periodicExtension;
@@ -222,7 +221,9 @@ lemma hasDerivAt_fourierExp_update (c : Fin n → ℤ) (θ : Fin n → ℝ) (j :
     HasDerivAt (fun t : ℝ => fourierExp n c (Function.update θ j t))
       (Complex.I * (c j : ℂ) * fourierExp n c θ) (θ j) := by
   unfold fourierExp
-  simp? +decide [ Function.update_apply, Finset.sum_ite, Finset.filter_eq', Finset.filter_ne' ]
+  simp +decide only [Function.update_apply, mul_ite, Finset.sum_ite, Finset.filter_eq',
+    Finset.mem_univ, ↓reduceIte, Finset.sum_singleton, Finset.filter_ne', Finset.sum_erase_eq_sub,
+    ofReal_add, ofReal_mul, ofReal_intCast, ofReal_sub, ofReal_sum]
   convert HasDerivAt.comp ( θ j ) ( Complex.hasDerivAt_exp _ ) ( HasDerivAt.const_mul Complex.I
       <| HasDerivAt.add ( HasDerivAt.const_mul ( c j : ℂ ) <| hasDerivAt_id _ |>
       HasDerivAt.ofReal_comp ) <| hasDerivAt_const _ ((∑ x, ((c x : ℂ) * (θ x : ℂ))) - (c j : ℂ)
@@ -321,7 +322,8 @@ theorem integral_partialDeriv_mul_fourierExp {k : ℕ} {g : (Fin (k+1) → ℝ) 
     · simp
   have hle : (0 : Fin (k+1) → ℝ) ≤ 2 * π • (1 : Fin (k+1) → ℝ) := by
     intro i
-    simp?
+    simp only [Pi.zero_apply, Pi.mul_apply, Pi.ofNat_apply, Pi.smul_apply, Pi.one_apply,
+      smul_eq_mul, mul_one, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left]
     positivity
   have hAc : Continuous (fun θ => partialDeriv j g θ * fourierExp (k+1) c θ) :=
     (partialDeriv_contDiff hg j).continuous.mul (fourierExp_contDiff c).continuous
@@ -553,9 +555,9 @@ lemma memSobolev_of_rapid_decay (hn : 0 < n) {a : (Fin n → ℤ) → ℂ}
     calc weight n s m * ‖a m‖^2
         ≤ C^2 * weight n s m * weight n (-(↑N / 2 : ℝ)) m ^ 2 := h_bound_step
       _ = C^2 * weight n (s - ↑N) m := by rw [h_weight_split]; ring
-  refine' Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) )
-      ( fun m => h_bound m ) _;
-  refine' Summable.mul_left _ _;
+  refine Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) )
+      ( fun m => h_bound m ) ?_;
+  refine Summable.mul_left _ ?_;
   have h_pos : (n : ℝ) < 2 * ((↑N : ℝ) - s) := by linarith
   have h_sum := summable_weight_neg (s := (↑N : ℝ) - s) hn h_pos
   convert h_sum using 1

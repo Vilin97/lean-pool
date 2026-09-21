@@ -30,7 +30,7 @@ namespace NashEmbedding
 /-- A constant map never pulls the Euclidean metric back to a Riemannian metric
   (when the manifold has positive dimension and a point). -/
 theorem not_pullsBackEuclidean_const {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [FiniteDimensional ℝ E] [Nontrivial E]
+     [Nontrivial E]
     {H : Type*} [TopologicalSpace H] {I : ModelWithCorners ℝ E H}
     {M : Type*} [TopologicalSpace M] [ChartedSpace H M] [IsManifold I ∞ M] [Nonempty M]
     (g : ContMDiffRiemannianMetric I ∞ E (TangentSpace I : M → Type _))

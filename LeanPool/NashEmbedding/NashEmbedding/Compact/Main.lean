@@ -11,6 +11,7 @@ Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anth
   — at the request of David Wiygul
 -/
 import Mathlib.Tactic
+import Mathlib.Geometry.Manifold.Riemannian.Basic
 import LeanPool.NashEmbedding.NashEmbedding.Torus.Main
 import LeanPool.NashEmbedding.NashEmbedding.Compact.WhitneyExtension
 import LeanPool.NashEmbedding.NashEmbedding.Compact.AmbientMetric
@@ -143,10 +144,10 @@ theorem exists_immersion_in_cube [T2Space M] [CompactSpace M] [I.Boundaryless] [
   classical
   obtain ⟨ι, f, -⟩ :=
     SmoothBumpCovering.exists_isSubordinate I isClosed_univ (fun (x : M) _ => Filter.univ_mem)
-  haveI := f.fintype
-  haveI : Nonempty ι := ⟨f.ind (Classical.arbitrary M) trivial⟩
-  letI : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
-  letI : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance
+  have := f.fintype
+  have : Nonempty ι := ⟨f.ind (Classical.arbitrary M) trivial⟩
+  let : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
+  let : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance
   set n := Module.finrank ℝ (ι → E × ℝ) with hn
   have hN : 0 < n := Module.finrank_pos
   set eEF : (ι → E × ℝ) ≃L[ℝ] EuclideanSpace ℝ (Fin n) :=
@@ -383,7 +384,7 @@ theorem exists_ambient_metric_of_equiv {E' F : Type*} [NormedAddCommGroup E']
   Smoothness of `formMatrix ∘ G₃ : M → Matrix` is `contDiff_formMatrix.comp_contMDiff`
   applied to S3's `ContMDiff` conclusion; `hext` then needs it as `ContMDiff I 𝓘(ℝ, Matrix …)
       ∞`.) -/
-theorem exists_ambient_matrix_field {N : ℕ} [T2Space M] [CompactSpace M]
+theorem exists_ambient_matrix_field {N : ℕ}  [CompactSpace M]
     (g : ContMDiffRiemannianMetric I ∞ E (TangentSpace I : M → Type _))
     {u : M → EuclideanSpace ℝ (Fin N)} (hu : ContMDiff I 𝓘(ℝ, EuclideanSpace ℝ (Fin N)) ∞ u)
     (hinj : ∀ x, Injective (mfderiv I 𝓘(ℝ, EuclideanSpace ℝ (Fin N)) u x))

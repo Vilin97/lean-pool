@@ -52,7 +52,7 @@ variable {n : ℕ}
 There exists `ψ ∈ C^∞_c(ℝⁿ; ℝ)` with `ψ ≥ 0`, `∫ ψ = 1`, and
     `supp(ψ) ⊂ (-π, π)ⁿ`.
 -/
-lemma mollifier_exists (hn : 0 < n) :
+lemma mollifier_exists  :
     ∃ ψ : (Fin n → ℝ) → ℝ,
       ContDiff ℝ ∞ ψ ∧
       HasCompactSupport ψ ∧
@@ -69,12 +69,12 @@ lemma mollifier_exists (hn : 0 < n) :
     (∀ x, b x ≠ 0 → (∀ j, |x j| < Real.pi)) := by
       -- Use `ContDiffBump` to construct a smooth bump function on ℝⁿ.
       obtain ⟨b, hb⟩ : ∃ b : ContDiffBump (0 : (Fin n) → ℝ), b.rOut < Real.pi := by
-        refine' ⟨ _, _ ⟩;
+        refine ⟨ ?_, ?_ ⟩;
         constructor;
         exact one_half_pos;
         exact show ( 1 / 2 : ℝ ) < 1 by norm_num;
         linarith [ Real.pi_gt_three ];
-      refine' ⟨ fun x => b x, _, _, _, _, _ ⟩;
+      refine ⟨ fun x => b x, ?_, ?_, ?_, ?_, ?_ ⟩;
       · exact ContDiffBump.contDiff b;
       · exact b.hasCompactSupport;
       · exact fun x => ContDiffBump.nonneg b;
@@ -83,7 +83,7 @@ lemma mollifier_exists (hn : 0 < n) :
         have := b.support_eq;
         exact lt_of_le_of_lt ( by simpa using ( norm_le_pi_norm x j ) ) ( lt_of_lt_of_le (
             mem_ball_zero_iff.mp ( this.subset hx ) ) hb.le );
-  refine' ⟨ fun x => b x / ( ∫ x, b x ), _, _, _, _, _, _ ⟩ <;> simp_all +decide [
+  refine ⟨ fun x => b x / ( ∫ x, b x ), ?_, ?_, ?_, ?_, ?_, ?_ ⟩ <;> simp_all +decide [
       MeasureTheory.integral_div ];
   · exact hb.1.div_const _;
   · rw [ hasCompactSupport_iff_eventuallyEq ] at *;

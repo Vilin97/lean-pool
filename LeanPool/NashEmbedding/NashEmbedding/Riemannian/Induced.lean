@@ -113,7 +113,8 @@ theorem inducedForm_trivialization_apply (u : M → E') {x₀ x : M}
       inducedForm (I := I) u x (tcoord I x₀ x a) (tcoord I x₀ x b) := by
   have hb : x ∈ (trivializationAt E (TangentSpace I) x₀).baseSet := by simpa using hx
   rw [hom_trivializationAt_apply, inCoordinates_apply_eq₂ hb hb (Set.mem_univ _)]
-  simp? [tcoord]
+  simp only [Trivial.fiberBundle_trivializationAt', Trivial.linearMapAt_trivialization,
+    LinearMap.id_coe, id_eq, tcoord]
   exact congrArg₂ (fun v w : TangentSpace I x => inducedFormT (I := I) u x v w)
     (Trivialization.symmL_apply (R := ℝ) _ hb a).symm
     (Trivialization.symmL_apply (R := ℝ) _ hb b).symm

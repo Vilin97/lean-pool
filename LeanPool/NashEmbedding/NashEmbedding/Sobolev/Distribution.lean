@@ -88,7 +88,7 @@ lemma fourierExp_inner_eq (m m₀ : Fin n → ℤ) :
       fourierExp n m θ * starRingEnd ℂ (fourierExp n m₀ θ) =
     if m = m₀ then ((2 * π) ^ n : ℝ) else 0 := by
   split_ifs with h;
-  · simp? +decide [ ← h, fourierExp, Complex.exp_ne_zero ];
+  · simp +decide only [Algebra.mul_smul_comm, mul_one, fourierExp, ofReal_sum, ofReal_mul, ofReal_intCast, ← h, ofReal_pow, ofReal_ofNat];
     norm_num [ Complex.mul_conj, Complex.normSq_eq_norm_sq, Complex.norm_exp ];
     erw [ MeasureTheory.measureReal_def ];
     erw [ Real.volume_Icc_pi ] ; norm_num [ mul_comm ];
@@ -159,13 +159,15 @@ lemma fourierSynthesis_inner
     · intro m; apply_rules [ Continuous.aestronglyMeasurable, Continuous.mul, continuous_const ];
       · exact Complex.continuous_exp.comp <| Continuous.mul continuous_const <| by continuity;
       · exact Complex.continuous_conj.comp ( Complex.continuous_exp.comp <| by continuity );
-    · refine' ne_of_lt ( lt_of_le_of_lt ( ENNReal.tsum_le_tsum fun m => _ ) _ );
-      use fun m => ENNReal.ofReal ( ‖a m‖ * ( 2 * Real.pi ) ^ n );
-      · refine' le_trans ( MeasureTheory.lintegral_mono fun x => _ ) _;
-        use fun x => ENNReal.ofReal ( ‖a m‖ );
+    · refine ne_of_lt (lt_of_le_of_lt (ENNReal.tsum_le_tsum
+          (g := fun m => ENNReal.ofReal (‖a m‖ * (2 * Real.pi) ^ n)) (fun m => ?_)) ?_)
+
+      · refine le_trans (MeasureTheory.lintegral_mono
+            (g := fun _ => ENNReal.ofReal ‖a m‖) (fun x => ?_)) ?_
+
         · rw [ ENNReal.le_ofReal_iff_toReal_le ] <;> norm_num [ norm_fourierExp ];
           finiteness;
-        · simp? +decide [ Real.volume_Icc_pi, mul_pow ];
+        · simp +decide only [Algebra.mul_smul_comm, mul_one, ofReal_norm, MeasureTheory.lintegral_const, MeasurableSet.univ, MeasureTheory.Measure.restrict_apply, Set.univ_inter, volume_Icc_pi, Pi.smul_apply, Pi.ofNat_apply, smul_eq_mul, Pi.zero_apply, sub_zero, Finset.prod_const, Finset.card_univ, Fintype.card_fin, mul_pow, norm_nonneg, ENNReal.ofReal_mul, Nat.ofNat_nonneg, pow_nonneg, ENNReal.ofReal_pow, ENNReal.ofReal_ofNat];
           rw [ ENNReal.ofReal_mul ( by positivity ), ENNReal.ofReal_pow ( by positivity ) ] ;
               ring_nf ; norm_num;
       · rw [ ← ENNReal.ofReal_tsum_of_nonneg ] <;> norm_num;
@@ -302,7 +304,7 @@ theorem rellich_compactness_dist {s t : ℝ} (hst : s < t)
   obtain ⟨ ψ, hψ ⟩ := compactInclusion_lp_weighted hst ( fun k => fourierCoeffDistrib ( φseq k )
       ) ( fun k => hmem k ) ( fun k => hbdd k );
   obtain ⟨ b, hb₁, hb₂ ⟩ := hψ.2;
-  refine' ⟨ ψ, hψ.1, seqToDual n b, _, _ ⟩;
+  refine ⟨ ψ, hψ.1, seqToDual n b, ?_, ?_ ⟩;
   · convert hb₁ using 1;
     unfold MemSobolevDistrib;
     rw [ fourierCoeffDistrib_seqToDual ];
@@ -367,7 +369,7 @@ theorem sobolev_embedding_factorization_dist
     {φ : TrigPolyDual n} (hφ : MemSobolevDistrib n (s + k) φ) :
     integrationEmbed n (fourierSynthesis n (fourierCoeffDistrib φ)) = φ := by
   convert seqToDual_fourierCoeffDistrib φ using 1;
-  refine' LinearMap.ext fun x => _;
+  refine LinearMap.ext fun x => ?_;
   convert congr_arg ( fun a => ( Finsupp.linearCombination ℂ ( fun m => a ( -m ) ) ) x ) (
       funext fun m => sobolev_embedding_factorization hn hs hφ m ) using 1
   all_goals rfl
@@ -389,7 +391,7 @@ theorem sobolev_embedding_linear_smul
     (ha : Summable (fun m => ‖a m‖))
     (θ : Fin n → ℝ) :
     fourierSynthesis n (c • a) θ = c * fourierSynthesis n a θ :=
-  fourierSynthesis_smul c ha θ
+  fourierSynthesis_smul c θ
 
 /-- **Sobolev embedding: periodicity.** The Fourier synthesis is `2π`-periodic
 in each variable. -/
@@ -398,7 +400,7 @@ theorem sobolev_embedding_periodic
     (θ : Fin n → ℝ) (j : Fin n) :
     fourierSynthesis n a (Function.update θ j (θ j + 2 * π)) =
       fourierSynthesis n a θ :=
-  fourierSynthesis_periodic ha θ j
+  fourierSynthesis_periodic θ j
 
 /-- **Sobolev embedding: injectivity.** If the Fourier synthesis vanishes
 identically, then the coefficient sequence is zero. -/

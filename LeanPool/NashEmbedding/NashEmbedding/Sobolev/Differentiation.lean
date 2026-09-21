@@ -67,15 +67,16 @@ theorem hasDerivAt_fourierSeries_partial
   have h_deriv_sum : Filter.Tendsto (fun t : ℝ => ∑' m : Fin n → ℤ, (b m * (fourierExp n m
       (Function.update θ j (θ j + t)) - fourierExp n m (Function.update θ j (θ j)))) / t)
       (nhdsWithin 0 {0}ᶜ) (nhds (∑' m : Fin n → ℤ, partialCoeff j b m * fourierExp n m θ)) := by
-    refine' ( tendsto_tsum_of_dominated_convergence _ _ _ );
-    use fun m => ‖partialCoeff j b m‖;
+    refine tendsto_tsum_of_dominated_convergence (bound := fun m => ‖partialCoeff j b m‖)
+      ?_ ?_ ?_
     · exact hbj;
     · intro m;
       have h_deriv : HasDerivAt (fun t : ℝ => fourierExp n m (Function.update θ j t)) (Complex.I
           * (m j : ℂ) * fourierExp n m θ) (θ j) := by
         unfold fourierExp;
-        simp? +decide [ Function.update_apply, Finset.sum_ite, Finset.filter_eq',
-            Finset.filter_ne' ];
+        simp +decide only [Function.update_apply, mul_ite, Finset.sum_ite, Finset.filter_eq',
+          Finset.mem_univ, ↓reduceIte, Finset.sum_singleton, Finset.filter_ne',
+          Finset.sum_erase_eq_sub, ofReal_add, ofReal_mul, ofReal_intCast, ofReal_sub, ofReal_sum];
         convert HasDerivAt.comp ( θ j ) ( Complex.hasDerivAt_exp _ ) ( HasDerivAt.const_mul
             Complex.I <| HasDerivAt.add ( HasDerivAt.const_mul ( m j : ℂ ) <| hasDerivAt_id _ |>
             HasDerivAt.ofReal_comp ) <| hasDerivAt_const _ ((∑ x, ((m x : ℂ) * (θ x : ℂ))) - (m
@@ -101,14 +102,13 @@ theorem hasDerivAt_fourierSeries_partial
         have h_sin_bound : ∀ z : ℝ, |Real.sin z| ≤ |z| := by
           exact fun z => Real.abs_sin_le_abs;
         grind +revert;
-      filter_upwards [ self_mem_nhdsWithin ] with t ht k ; simp_all +decide [ fourierExp,
-          partialCoeff ];
+      filter_upwards [ self_mem_nhdsWithin ] with t ht k ; simp_all +decide only [fourierExp, partialCoeff, Function.update_eq_self, Complex.norm_div, Complex.norm_mul, norm_real, Real.norm_eq_abs];
       rw [ div_le_iff₀ ( abs_pos.mpr ht ) ];
       convert mul_le_mul_of_nonneg_left ( h_exp_diff ( ∑ x : Fin n, ( k x : ℝ ) * (
           Function.update θ j ( θ j + t ) x ) ) ( ∑ x : Fin n, ( k x : ℝ ) * ( θ x ) ) ) (
           norm_nonneg ( b k ) ) using 1 ; norm_num [ Finset.sum_update_of_mem ] ; ring;
-      simp +decide [ Finset.sum_update_of_mem, Function.update_apply ] ; ring;
-      simp +decide [ Finset.sum_ite, Finset.filter_eq', Finset.filter_ne' ] ; ring;
+      simp +decide [Finset.sum_update_of_mem, Function.update_apply]; ring;
+      simp +decide [Finset.sum_ite, Finset.filter_eq', Finset.filter_ne']; ring;
       norm_num [ mul_assoc, mul_comm, mul_left_comm, abs_mul ];
   convert h_deriv_sum using 2;
   rw [ ← Summable.tsum_sub ];

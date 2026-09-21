@@ -321,7 +321,7 @@ lemma gram_pe_bump {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ ∞ χ) (h
   unfold pe
   have him : ∀ ψ : (Fin n → ℝ) → ℝ, HasCompactSupport ψ → ∀ y,
       (periodicExtension n (cplx ψ) y).im = 0 := fun ψ hψ y =>
-    NashEmbedding.Sobolev.periodicExtension_im_zero (cplx_hasCompactSupport hψ) (cplx_im ψ) y
+    NashEmbedding.Sobolev.periodicExtension_im_zero (cplx_im ψ) y
   have hsi : HasCompactSupport (fun y => fderiv ℝ χ y (Pi.single i 1)) := hs.fderiv_apply ℝ _
   have hsj : HasCompactSupport (fun y => fderiv ℝ χ y (Pi.single j 1)) := hs.fderiv_apply ℝ _
   have hmul := periodicExtension_mul (n := n)
@@ -447,7 +447,7 @@ lemma perEntry_residual_bound_c
   have hφ_rd : NashEmbedding.Sobolev.FTRapidDecay n φ := NashEmbedding.Sobolev.cinfty_rapidDecay
       hn hφ_sm hφ_supp
   have h_pe_im : ∀ y, (periodicExtension n φ y).im = 0 :=
-    NashEmbedding.Sobolev.periodicExtension_im_zero hφ_supp hφ_im
+    NashEmbedding.Sobolev.periodicExtension_im_zero hφ_im
   have h_fs_mesh : ∀ k : Fin n → Fin M,
       fourierSynthesis n
         (fourierCoeffDistrib (integrationEmbed n (fun y : (Fin n → ℝ) => (g y : ℂ))))
@@ -634,6 +634,36 @@ def gramDefect (n : ℕ) {N : ℕ} (U : (Fin n → ℝ) → (Fin N → ℝ))
   integrationEmbed n (fun x =>
     ((dotProduct (partialDeriv i U x) (partialDeriv j U x) - G x i j : ℝ) : ℂ))
 
+/-- One scale controls the mollifier errors for all entries of a bump's Gram matrix. -/
+private theorem bump_mollifier_uniform_error {s ηSq : ℝ}
+    {χ : (Fin n → ℝ) → ℝ} {F : Fin n → Fin n → (Fin n → ℝ) → ℝ}
+    {fC : (Fin n → ℝ) → ℂ}
+    (hF_int : ∀ i j, Integrable (cplx (F i j)))
+    (hF_ft0 : ∀ i j, NashEmbedding.Sobolev.ftRn n (cplx (F i j)) 0 = ((gram χ i j : ℝ) : ℂ))
+    (hfC_mem : MemSobolevDistrib n s (integrationEmbed n fC)) (hηSq_pos : 0 < ηSq) :
+    ∃ ε : ℝ, 0 < ε ∧ ε ≤ 1 / 2 ∧ ∀ i j : Fin n,
+      sobolevNormSqDistrib n s
+        (convDistrib n (NashEmbedding.Sobolev.rescale n (cplx (F i j)) ε) (integrationEmbed n fC)
+          - ((gram χ i j : ℝ) : ℂ) • integrationEmbed n fC) < ηSq / 4 := by
+  have h_each : ∀ ij : Fin n × Fin n, ∀ᶠ ε in nhdsWithin (0 : ℝ) (Set.Ioi 0),
+      sobolevNormSqDistrib n s
+        (convDistrib n (NashEmbedding.Sobolev.rescale n (cplx (F ij.1 ij.2)) ε)
+            (integrationEmbed n fC)
+          - ((gram χ ij.1 ij.2 : ℝ) : ℂ) • integrationEmbed n fC) < ηSq / 4 := by
+    rintro ⟨i, j⟩
+    have h := NashEmbedding.Sobolev.mollifier_convergence (cplx (F i j)) (hF_int i j) (hu :=
+        hfC_mem) (s := s)
+    rw [hF_ft0 i j] at h
+    exact h.eventually_lt_const (by positivity)
+  have h_all := Filter.eventually_all.mpr h_each
+  obtain ⟨δ, hδ_pos, hδ⟩ := (nhdsGT_basis (0 : ℝ)).eventually_iff.mp h_all
+  refine ⟨min (δ / 2) (1 / 2), ?_, ?_, ?_⟩
+  · exact lt_min (by linarith) (by norm_num)
+  · exact min_le_right _ _
+  · intro i j
+    exact hδ ⟨lt_min (by linarith) (by norm_num),
+      lt_of_le_of_lt (min_le_left _ _) (by linarith)⟩ ⟨i, j⟩
+
 /-- **Realization of `f·B`** (plan §3): for smooth periodic `f ≥ 0`, PSD `B`, `2s > n`, `η > 0`,
 a smooth periodic `U` whose Gram matrix is within `η` of `f·B` in `H^s` (entrywise
 sum of squared norms). -/
@@ -683,28 +713,7 @@ theorem realize_fB (hn : 0 < n) {f : (Fin n → ℝ) → ℝ} (hf : SmoothPeriod
   have hF_ft0 : ∀ i j, NashEmbedding.Sobolev.ftRn n (cplx (F i j)) 0 = ((gram χ i j : ℝ) : ℂ) := by
     intro i j; rw [ftRn_cplx_zero]; rfl
   -- ── choose ε ∈ (0, 1/2] with small mollifier error on every entry ──
-  have h_ε : ∃ ε : ℝ, 0 < ε ∧ ε ≤ 1 / 2 ∧ ∀ i j : Fin n,
-      sobolevNormSqDistrib n s
-        (convDistrib n (NashEmbedding.Sobolev.rescale n (cplx (F i j)) ε) (integrationEmbed n fC)
-          - ((gram χ i j : ℝ) : ℂ) • integrationEmbed n fC) < ηSq / 4 := by
-    have h_each : ∀ ij : Fin n × Fin n, ∀ᶠ ε in nhdsWithin (0 : ℝ) (Set.Ioi 0),
-        sobolevNormSqDistrib n s
-          (convDistrib n (NashEmbedding.Sobolev.rescale n (cplx (F ij.1 ij.2)) ε)
-              (integrationEmbed n fC)
-            - ((gram χ ij.1 ij.2 : ℝ) : ℂ) • integrationEmbed n fC) < ηSq / 4 := by
-      rintro ⟨i, j⟩
-      have h := NashEmbedding.Sobolev.mollifier_convergence (cplx (F i j)) (hF_int i j) (hu :=
-          hfC_mem) (s := s)
-      rw [hF_ft0 i j] at h
-      exact h.eventually_lt_const (by positivity)
-    have h_all := Filter.eventually_all.mpr h_each
-    obtain ⟨δ, hδ_pos, hδ⟩ := (nhdsGT_basis (0 : ℝ)).eventually_iff.mp h_all
-    refine ⟨min (δ / 2) (1 / 2), ?_, ?_, ?_⟩
-    · exact lt_min (by linarith) (by norm_num)
-    · exact min_le_right _ _
-    · intro i j
-      exact hδ ⟨lt_min (by linarith) (by norm_num),
-        lt_of_le_of_lt (min_le_left _ _) (by linarith)⟩ ⟨i, j⟩
+  have h_ε := bump_mollifier_uniform_error hF_int hF_ft0 hfC_mem hηSq_pos
   obtain ⟨ε, hε_pos, hε_half, hε_bound⟩ := h_ε
   -- ── the rescaled bump and its entry kernels ──
   set χε : (Fin n → ℝ) → ℝ := rescaleBump n χ ε with hχε
@@ -1019,6 +1028,21 @@ lemma concat_dotProduct_partialDeriv
   rw [gram_dot_reindex e hU_sigma_diff]
   exact gram_dot_sigma hU_a_diff _ _ _
 
+/-- The squared Sobolev norm of a finite sum plus a remainder has a cardinality bound. -/
+private theorem sobolevNormSqDistrib_sum_add_le {A : Type*} [Fintype A] (s : ℝ)
+    (v : A → NashEmbedding.Sobolev.TrigPolyDual n) (w : NashEmbedding.Sobolev.TrigPolyDual n)
+    (hv : ∀ a, MemSobolevDistrib n s (v a)) (hw : MemSobolevDistrib n s w) :
+    sobolevNormSqDistrib n s ((∑ a, v a) + w) ≤
+      2 * (Fintype.card A * ∑ a, sobolevNormSqDistrib n s (v a)) +
+        2 * sobolevNormSqDistrib n s w := by
+  have hsum := sobolevNormSqDistrib_finset_sum_le Finset.univ s hv
+  simp only [Finset.card_univ] at hsum
+  have htri := NashEmbedding.Sobolev.sobolevNormSqDistrib_triangle s ((∑ a, v a) + w) w 0
+    (by simpa only [add_sub_cancel_right] using memSobolevDistrib_finset_sum Finset.univ hv)
+    (by simpa only [sub_zero] using hw)
+  simp only [add_sub_cancel_right, sub_zero] at htri
+  linarith
+
 /-- **Theorem A** (`2s > n`): every smooth metric is an `H^s`-limit of realizable ones. -/
 theorem realizable_approx (hn : 0 < n) {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ}
     (hg : IsSmoothMetric g) {s : ℝ} (hs : (n : ℝ) < 2 * s) {η : ℝ} (hη : 0 < η) :
@@ -1162,27 +1186,10 @@ theorem realizable_approx (hn : 0 < n) {g : (Fin n → ℝ) → Matrix (Fin n) (
           ≤ 2 * (Mn * ∑ k : Fin n → Fin M, sobolevNormSqDistrib n s (D k i j))
             + 2 * sobolevNormSqDistrib n s (R i j) := by
       intro i j
-      have hA : sobolevNormSqDistrib n s (∑ k : Fin n → Fin M, D k i j)
-          ≤ Mn * ∑ k : Fin n → Fin M, sobolevNormSqDistrib n s (D k i j) := by
-        have := sobolevNormSqDistrib_finset_sum_le (Finset.univ : Finset (Fin n → Fin M)) s
-          (v := fun k => D k i j) (fun k => hD_mem k i j)
-        rw [hcard] at this
-        exact this
-      have htri : sobolevNormSqDistrib n s (gramDefect n u g i j)
-          ≤ 2 * sobolevNormSqDistrib n s (∑ k : Fin n → Fin M, D k i j)
-            + 2 * sobolevNormSqDistrib n s (R i j) := by
-        have hsub_l : gramDefect n u g i j - R i j = ∑ k : Fin n → Fin M, D k i j := by
-          rw [hsplit i j]; abel
-        have h := NashEmbedding.Sobolev.sobolevNormSqDistrib_triangle s
-          (gramDefect n u g i j) (R i j) 0
-          (by rw [hsub_l]; exact hsum_D_mem i j)
-          (by rw [sub_zero]; exact hR_mem i j)
-        rwa [sub_zero, hsub_l, sub_zero] at h
-      calc sobolevNormSqDistrib n s (gramDefect n u g i j)
-          ≤ 2 * sobolevNormSqDistrib n s (∑ k : Fin n → Fin M, D k i j)
-              + 2 * sobolevNormSqDistrib n s (R i j) := htri
-        _ ≤ 2 * (Mn * ∑ k : Fin n → Fin M, sobolevNormSqDistrib n s (D k i j))
-              + 2 * sobolevNormSqDistrib n s (R i j) := by gcongr
+      rw [hsplit i j]
+      have h := sobolevNormSqDistrib_sum_add_le s (fun k => D k i j) (R i j)
+        (fun k => hD_mem k i j) (hR_mem i j)
+      simpa only [Finset.card_univ] using hcard ▸ h
     have hS : ∑ i : Fin n, ∑ j : Fin n, sobolevNormSqDistrib n s (gramDefect n u g i j)
         ≤ 2 * Mn * ∑ i : Fin n, ∑ j : Fin n,
             (∑ k : Fin n → Fin M, sobolevNormSqDistrib n s (D k i j))

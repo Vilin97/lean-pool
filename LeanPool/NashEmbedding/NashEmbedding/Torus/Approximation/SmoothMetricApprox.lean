@@ -103,7 +103,7 @@ private lemma perEntry_residual_bound
   have hφ_rd : FTRapidDecay n φ := cinfty_rapidDecay hn hφ_sm hφ_supp
   -- Step 1: pointwise equality `positionSpaceRiemann = (convex-combo : ℂ)`.
   have h_pe_im : ∀ y, (periodicExtension n φ y).im = 0 :=
-    periodicExtension_im_zero hφ_supp hφ_im
+    periodicExtension_im_zero hφ_im
   have h_fs_mesh : ∀ k : Fin n → Fin M,
       fourierSynthesis n
         (fourierCoeffDistrib (integrationEmbed n (fun y : (Fin n → ℝ) => (g y : ℂ))))
@@ -205,6 +205,46 @@ private lemma perEntry_residual_bound
 
 /-! ## Theorem A: convex-combination approximation -/
 
+/-- One mollifier scale controls every complexified metric entry. -/
+private theorem metric_mollifier_uniform_error {s ηSq : ℝ}
+    {ψc : (Fin n → ℝ) → ℂ} (hψc_int : Integrable ψc) (hψc_ft0 : ftRn n ψc 0 = 1)
+    {gC : Fin n → Fin n → (Fin n → ℝ) → ℂ}
+    (hgC_memSob : ∀ i j, MemSobolevDistrib n s (integrationEmbed n (gC i j)))
+    (hηSq_pos : 0 < ηSq) :
+    ∃ ε : ℝ, 0 < ε ∧ ε ≤ 1 ∧
+      ∀ i j : Fin n,
+        sobolevNormSqDistrib n s
+          (convDistrib n (rescale n ψc ε) (integrationEmbed n (gC i j))
+            - integrationEmbed n (gC i j)) < ηSq := by
+  have h_each : ∀ (ij : Fin n × Fin n),
+      ∀ᶠ ε in nhdsWithin (0 : ℝ) (Set.Ioi 0),
+        sobolevNormSqDistrib n s
+          (convDistrib n (rescale n ψc ε) (integrationEmbed n (gC ij.1 ij.2))
+            - integrationEmbed n (gC ij.1 ij.2)) < ηSq := by
+    rintro ⟨i, j⟩
+    have h := mollifier_convergence ψc hψc_int (hu := hgC_memSob i j) (s := s)
+    have h' : Filter.Tendsto
+        (fun ε => sobolevNormSqDistrib n s
+          (convDistrib n (rescale n ψc ε) (integrationEmbed n (gC i j))
+            - integrationEmbed n (gC i j)))
+        (nhdsWithin (0 : ℝ) (Set.Ioi 0)) (nhds 0) := by
+      convert h using 2 with ε
+      rw [hψc_ft0, one_smul]
+    exact h'.eventually_lt_const hηSq_pos
+  have h_all : ∀ᶠ ε in nhdsWithin (0 : ℝ) (Set.Ioi 0),
+      ∀ (ij : Fin n × Fin n),
+        sobolevNormSqDistrib n s
+          (convDistrib n (rescale n ψc ε) (integrationEmbed n (gC ij.1 ij.2))
+            - integrationEmbed n (gC ij.1 ij.2)) < ηSq :=
+    Filter.eventually_all.mpr h_each
+  obtain ⟨δ, hδ_pos, hδ⟩ := (nhdsGT_basis (0 : ℝ)).eventually_iff.mp h_all
+  refine ⟨min (δ / 2) 1, ?_, ?_, ?_⟩
+  · exact lt_min (by linarith) (by norm_num)
+  · exact min_le_right _ _
+  · intro i j
+    exact hδ ⟨lt_min (by linarith) (by norm_num),
+              lt_of_le_of_lt (min_le_left _ _) (by linarith)⟩ ⟨i, j⟩
+
 /-- **Theorem A (convex-combination approximation).** -/
 theorem convex_combination_approx (hn : 0 < n)
     {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ}
@@ -225,7 +265,7 @@ theorem convex_combination_approx (hn : 0 < n)
         < η ^ 2 := by
   -- ──── Step 1: extract a mollifier ψ : ℝⁿ → ℝ via `mollifier_exists`. ────
   obtain ⟨ψ, hψ_smooth, hψ_supp, hψ_int, hψ_nn, hψ_cube, hψ_unit⟩ :=
-    mollifier_exists hn
+    mollifier_exists (n := n)
   let ψc : (Fin n → ℝ) → ℂ := fun x => (ψ x : ℂ)
   have hψc_smooth : ContDiff ℝ ∞ ψc :=
     Complex.ofRealCLM.contDiff.comp hψ_smooth
@@ -264,39 +304,7 @@ theorem convex_combination_approx (hn : 0 < n)
   have hηSq_pos : 0 < ηSq :=
     div_pos (pow_pos hη 2) (by positivity)
   -- ──── Step 4: choose ε > 0 via `mollifier_convergence` + finite intersection. ────
-  have h_ε : ∃ ε : ℝ, 0 < ε ∧ ε ≤ 1 ∧
-      ∀ i j : Fin n,
-        sobolevNormSqDistrib n s
-          (convDistrib n (rescale n ψc ε) (integrationEmbed n (gC i j))
-            - integrationEmbed n (gC i j)) < ηSq := by
-    have h_each : ∀ (ij : Fin n × Fin n),
-        ∀ᶠ ε in nhdsWithin (0 : ℝ) (Set.Ioi 0),
-          sobolevNormSqDistrib n s
-            (convDistrib n (rescale n ψc ε) (integrationEmbed n (gC ij.1 ij.2))
-              - integrationEmbed n (gC ij.1 ij.2)) < ηSq := by
-      rintro ⟨i, j⟩
-      have h := mollifier_convergence ψc hψc_int (hu := hgC_memSob i j) (s := s)
-      have h' : Filter.Tendsto
-          (fun ε => sobolevNormSqDistrib n s
-            (convDistrib n (rescale n ψc ε) (integrationEmbed n (gC i j))
-              - integrationEmbed n (gC i j)))
-          (nhdsWithin (0 : ℝ) (Set.Ioi 0)) (nhds 0) := by
-        convert h using 2 with ε
-        rw [hψc_ft0, one_smul]
-      exact h'.eventually_lt_const hηSq_pos
-    have h_all : ∀ᶠ ε in nhdsWithin (0 : ℝ) (Set.Ioi 0),
-        ∀ (ij : Fin n × Fin n),
-          sobolevNormSqDistrib n s
-            (convDistrib n (rescale n ψc ε) (integrationEmbed n (gC ij.1 ij.2))
-              - integrationEmbed n (gC ij.1 ij.2)) < ηSq :=
-      Filter.eventually_all.mpr h_each
-    obtain ⟨δ, hδ_pos, hδ⟩ := (nhdsGT_basis (0 : ℝ)).eventually_iff.mp h_all
-    refine ⟨min (δ / 2) 1, ?_, ?_, ?_⟩
-    · exact lt_min (by linarith) (by norm_num)
-    · exact min_le_right _ _
-    · intro i j
-      exact hδ ⟨lt_min (by linarith) (by norm_num),
-                lt_of_le_of_lt (min_le_left _ _) (by linarith)⟩ ⟨i, j⟩
+  have h_ε := metric_mollifier_uniform_error hψc_int hψc_ft0 hgC_memSob hηSq_pos
   obtain ⟨ε, hε_pos, hε_le_one, hε_bound⟩ := h_ε
   -- ──── Step 5: properties of ψc_ε := rescale n ψc ε (via `rescale_contDiff`,
   -- `rescale_hasCompactSupport`, `rescale_support_in_cube`). ────

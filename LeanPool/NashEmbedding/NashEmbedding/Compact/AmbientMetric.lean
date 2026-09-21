@@ -97,7 +97,8 @@ theorem isInvertible_adjoint_comp_self {L : E →L[ℝ] E'} (hL : Injective L) :
     have h3 : ‖L x‖ ^ 2 = RCLike.re (inner ℝ ((L.adjoint ∘L L) x) x) :=
       ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_left L x
     rw [hx0] at h3
-    simp? at h3
+    simp only [inner_zero_left, RCLike.re_to_real, ne_eq, OfNat.ofNat_ne_zero,
+      not_false_eq_true, pow_eq_zero_iff, norm_eq_zero] at h3
     exact hL (by rw [h3, map_zero])
   have hrange : (L.adjoint ∘L L : E →L[ℝ] E).toLinearMap.range = ⊤ :=
     LinearMap.range_eq_top.mpr
@@ -236,7 +237,8 @@ theorem metric_trivialization_apply
   -- `FiberBundle.mem_baseSet_trivializationAt`-style from `hx`.
   have hb : x ∈ (trivializationAt E (TangentSpace I) x₀).baseSet := by simpa using hx
   rw [hom_trivializationAt_apply, inCoordinates_apply_eq₂ hb hb (Set.mem_univ _)]
-  simp? [metricAt, tcoord]
+  simp only [Trivial.fiberBundle_trivializationAt', Trivial.linearMapAt_trivialization,
+    LinearMap.id_coe, id_eq, metricAt, tcoord]
   exact congrArg₂ (fun u v : TangentSpace I x => g.inner x u v)
     (Trivialization.symmL_apply (R := ℝ) _ hb a).symm
     (Trivialization.symmL_apply (R := ℝ) _ hb b).symm

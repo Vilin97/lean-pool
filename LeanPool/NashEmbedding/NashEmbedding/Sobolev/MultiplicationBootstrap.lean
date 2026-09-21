@@ -99,7 +99,7 @@ lemma refined_weight_case_b {k : ℕ} (hk : 1 ≤ k) (i j : Fin n → ℤ)
   -- Applying the inequality $(1 + \rho)^k \leq 2$ to $\rho$.
   have h_rho : (1 + (2 * (∑ l, (i l : ℝ) * (j l : ℝ)) + (∑ l, ((j l : ℝ) ^ 2))) / (1 + (∑ l, ((i
       l : ℝ) ^ 2)))) ^ k ≤ 2 := by
-    refine' one_add_pow_le_two hk _;
+    refine one_add_pow_le_two hk ?_;
     -- We have $|2 \cdot \sum i_l \cdot j_l| \leq 2 \cdot \sqrt{S_i} \cdot \sqrt{S_j}$
     -- (Cauchy-Schwarz).
     have h_cauchy_schwarz : |2 * ∑ l : Fin n, ((i l : ℝ) * (j l : ℝ))| ≤ 2 * Real.sqrt (∑ l :
@@ -123,7 +123,7 @@ lemma refined_weight_case_b {k : ℕ} (hk : 1 ≤ k) (i j : Fin n → ℤ)
     cases abs_cases ( 2 * ∑ l : Fin n, ( i l : ℝ ) * j l + ∑ l : Fin n, ( j l : ℝ ) ^ 2 ) <;> cases abs_cases ( 2 * ∑ l : Fin n, ( i l : ℝ ) * j l ) <;> nlinarith [ show ( k : ℝ ) ≥ 1 by norm_cast, Real.sqrt_nonneg ( ∑ l : Fin n, ( i l : ℝ ) ^ 2 ), Real.sqrt_nonneg ( ∑ l : Fin n, ( j l : ℝ ) ^ 2 ), Real.mul_self_sqrt ( show 0 ≤ ∑ l : Fin n, ( i l : ℝ ) ^ 2 by exact Finset.sum_nonneg fun _ _ => sq_nonneg _ ), Real.mul_self_sqrt ( show 0 ≤ ∑ l : Fin n, ( j l : ℝ ) ^ 2 by exact Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ]));
   -- By definition of `weight`, we know that `weight n k (i + j) = (1 + ∑ l, (i l + j l : ℝ) ^
   -- 2) ^ k`.
-  simp? [weight];
+  simp only [weight, Pi.add_apply, Int.cast_add, rpow_natCast, ge_iff_le];
   convert mul_le_mul_of_nonneg_right h_rho ( pow_nonneg ( show 0 ≤ 1 + ∑ l : Fin n, ( i l : ℝ ) ^ 2 by exact add_nonneg zero_le_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) k ) using 1
   all_goals (first
     | rfl
@@ -239,7 +239,7 @@ lemma summable_weighted_norm {r : ℝ} (hn : 0 < n) (hr : 1 + (n : ℝ) / 2 < r)
     Summable (fun j => weight n (1 / 2 : ℝ) j * ‖b j‖) := by
   have := @summable_norm_of_memSobolev n ( r - 1 );
   specialize this hn ( by linarith ) ( show MemSobolev n ( r - 1 ) ( fun m => weight n ( 1 / 2 ) m * b m ) from ?_ );
-  · refine' .of_nonneg_of_le ( fun m => _ ) ( fun m => _ ) hb;
+  · refine .of_nonneg_of_le ( fun m => ?_ ) ( fun m => ?_ ) hb;
     · exact mul_nonneg ( le_of_lt ( weight_pos _ _ ) ) ( sq_nonneg _ );
     · norm_num [ weight ];
       rw [ abs_of_nonneg ( by positivity ), mul_pow, ← Real.rpow_natCast _ 2, ← Real.rpow_mul ( by positivity ) ] ; ring_nf ; norm_num;
@@ -277,14 +277,14 @@ lemma tsum_weighted_norm_sq_le {r : ℝ} (hn : 0 < n) (hr : 1 + (n : ℝ) / 2 < 
         | rfl
         | (unfold sobolevNormSq; norm_num [ mul_pow ])
         | (exact h_sobolev_eq)
-        | (refine' .of_nonneg_of_le ( fun m => _ ) ( fun m => _ ) hb
+        | (refine .of_nonneg_of_le ( fun m => ?_ ) ( fun m => ?_ ) hb
            · exact mul_nonneg ( Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg
                fun _ _ => sq_nonneg _ ) ) _ ) ( sq_nonneg _ )
            · norm_num [ weight ]
              rw [ abs_of_nonneg ( by positivity ), mul_pow, ← Real.rpow_natCast, ← Real.rpow_mul ( by positivity ), mul_comm ] ; norm_num
              rw [ show ( 1 + ∑ i : Fin n, ( m i : ℝ ) ^ 2 ) ^ r = ( 1 + ∑ i : Fin n, ( m i : ℝ ) ^ 2 ) ^ ( r - 1 ) * ( 1 + ∑ i : Fin n, ( m i : ℝ ) ^ 2 ) by rw [ ← Real.rpow_add_one ( by exact ne_of_gt <| add_pos_of_pos_of_nonneg zero_lt_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ] ; ring ] ; linarith))
-  simp_all +decide [ mul_pow, mul_assoc, mul_comm, mul_left_comm, tsum_mul_left, tsum_mul_right,
-      norm_mul, norm_pow ];
+  simp_all? +decide [mul_pow, mul_assoc, mul_comm, mul_left_comm, tsum_mul_left,
+    tsum_mul_right, norm_mul, norm_pow];
   convert h_apply_tsum_norm_sq_le using 3
   all_goals (first
     | rfl
@@ -298,7 +298,7 @@ Young bound for S1: ∑ (α^k ⊛ |b|)² ≤ (∑|b|)² · ‖a‖²_{(k)}
 -/
 lemma mt3_young_S1
     {n : ℕ} (hn : 0 < n) {r : ℝ} (hr : 1 + (n : ℝ) / 2 < r)
-    {k : ℕ} (hkr : r ≤ (k : ℝ))
+    {k : ℕ} 
     {a b : (Fin n → ℤ) → ℂ}
     (ha : MemSobolev n (k : ℝ) a) (hb : MemSobolev n r b) :
     Summable (fun m => (∑' i, weight n ((k : ℝ) / 2) i * ‖a i‖ * ‖b (m - i)‖) ^ 2) ∧
@@ -313,7 +313,7 @@ lemma mt3_young_S1
   have := @young_conv_sq_bound n;
   have := @this ( fun m => ‖b m‖ ) ( fun m => weight n ( k / 2 ) m * ‖a m‖ ) ?_ ?_ ?_ ?_ <;>
       norm_num at *;
-  · refine' ⟨ _, _ ⟩;
+  · refine ⟨ ?_, ?_ ⟩;
     · convert this.1 using 1
       all_goals (first | rfl | (ext m; rw [ ← Equiv.tsum_eq ( Equiv.subLeft m ) ]; norm_num [
           mul_assoc, mul_comm, mul_left_comm ]))
@@ -350,7 +350,7 @@ Young bound for S2: ∑ (|a| ⊛ β^k)² ≤ (∑|a|)² · ‖b‖²_{(k)}
 -/
 lemma mt3_young_S2
     {n : ℕ} (hn : 0 < n) {r : ℝ} (hr : 1 + (n : ℝ) / 2 < r)
-    {k : ℕ} (hkr : r ≤ (k : ℝ))
+    {k : ℕ} 
     {a b : (Fin n → ℤ) → ℂ}
     (ha : MemSobolev n r a) (hb : MemSobolev n (k : ℝ) b) :
     Summable (fun m => (∑' i, ‖a i‖ * (weight n ((k : ℝ) / 2) (m - i) * ‖b (m - i)‖)) ^ 2) ∧
@@ -360,7 +360,7 @@ lemma mt3_young_S2
   have := @this ( fun i => ‖a i‖ ) ( fun i => weight n ( k / 2 ) i * ‖b i‖ ) ?_ ?_ ?_ ?_ <;>
       norm_num at *;
   · refine ⟨ this.1, this.2.trans ?_ ⟩;
-    refine' mul_le_mul _ _ _ _;
+    refine mul_le_mul ?_ ?_ ?_ ?_;
     · convert tsum_norm_sq_le hn ( by linarith : ( n : ℝ ) < 2 * r ) ha using 1
       all_goals rfl
     · rw [ sobolevNormSq_half_weight ];
@@ -378,7 +378,7 @@ Young bound for S3: ∑ (α^{k-1} ⊛ β^1)² ≤ (∑ w^{1/2}|b|)² · ‖a‖�
 -/
 lemma mt3_young_S3
     {n : ℕ} (hn : 0 < n) {r : ℝ} (hr : 1 + (n : ℝ) / 2 < r)
-    {k : ℕ} (hkr : r ≤ (k : ℝ))
+    {k : ℕ} 
     {a b : (Fin n → ℤ) → ℂ}
     (ha : MemSobolev n ((k : ℝ) - 1) a) (hb : MemSobolev n r b) :
     Summable (fun m => (∑' i, weight n (((k : ℝ) - 1) / 2) i * ‖a i‖ *
@@ -422,7 +422,7 @@ Young bound for S4: ∑ (α^1 ⊛ β^{k-1})² ≤ (∑ w^{1/2}|a|)² · ‖b‖�
 -/
 lemma mt3_young_S4
     {n : ℕ} (hn : 0 < n) {r : ℝ} (hr : 1 + (n : ℝ) / 2 < r)
-    {k : ℕ} (hkr : r ≤ (k : ℝ))
+    {k : ℕ} 
     {a b : (Fin n → ℤ) → ℂ}
     (ha : MemSobolev n r a) (hb : MemSobolev n ((k : ℝ) - 1) b) :
     Summable (fun m => (∑' i, weight n (1 / 2 : ℝ) i * ‖a i‖ *
@@ -433,13 +433,13 @@ lemma mt3_young_S4
   have := @young_conv_sq_bound;
   specialize @this n ( fun i => weight n ( 1 / 2 ) i * ‖a i‖ ) ( fun i => weight n ( ( k - 1 ) /
       2 ) i * ‖b i‖ ) ; norm_num at *;
-  refine' this ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( norm_nonneg _ ) ) ( fun m =>
-      mul_nonneg ( weight_nonneg _ _ ) ( norm_nonneg _ ) ) _ _ |> fun h => ⟨ h.1, h.2.trans _ ⟩;
+  refine this ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( norm_nonneg _ ) ) ( fun m =>
+      mul_nonneg ( weight_nonneg _ _ ) ( norm_nonneg _ ) ) ?_ ?_ |> fun h => ⟨ h.1, h.2.trans ?_ ⟩;
   · convert summable_weighted_norm hn ( show 1 + ( n : ℝ ) / 2 < r by linarith ) ha using 1;
   · convert hb using 1;
     unfold MemSobolev; norm_num [ mul_pow, weight ] ;
     exact iff_of_eq ( by congr; ext; rw [ ← Real.rpow_natCast, ← Real.rpow_mul ( by exact add_nonneg zero_le_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ] ; ring );
-  · refine' mul_le_mul _ _ _ _;
+  · refine mul_le_mul ?_ ?_ ?_ ?_;
     · convert tsum_weighted_norm_sq_le hn hr ha using 1;
     · rw [ show sobolevNormSq n ( k - 1 ) b = ∑' m : Fin n → ℤ, ( weight n ( ( k - 1 ) / 2 ) m *
         ‖b m‖ ) ^ 2 from ?_ ];
@@ -488,20 +488,20 @@ lemma mt3_unsquared_bound {k : ℕ} (hk : 1 ≤ k)
       i)‖) ∧ Summable (fun i : Fin n → ℤ => weight n (((k : ℝ) - 1) / 2) i * ‖a i‖ * weight n (1
       / 2 : ℝ) (m - i) * ‖b (m - i)‖) ∧ Summable (fun i : Fin n → ℤ => weight n (1 / 2 : ℝ) i *
       ‖a i‖ * weight n (((k : ℝ) - 1) / 2) (m - i) * ‖b (m - i)‖) := by
-    refine' ⟨ _, _, _, _ ⟩;
-    · convert summable_alpha_abs_b ( show 0 ≤ ( k : ℝ ) by positivity ) ha ( summable_norm_of_memSobolev hn ( by linarith ) hb ) m using 1;
-    · convert summable_abs_a_beta ( show 0 ≤ ( k : ℝ ) by positivity ) ( show Summable fun m => ‖a m‖ from ?_ ) ( show MemSobolev n ( k : ℝ ) b from hb ) m using 1;
+    refine ⟨ ?_, ?_, ?_, ?_ ⟩;
+    · convert summable_alpha_abs_b ha ( summable_norm_of_memSobolev hn ( by linarith ) hb ) m using 1;
+    · convert summable_abs_a_beta ( show Summable fun m => ‖a m‖ from ?_ ) ( show MemSobolev n ( k : ℝ ) b from hb ) m using 1;
       · ac_rfl;
       · exact summable_norm_of_memSobolev hn ( by linarith [ show ( k : ℝ ) ≥ 1 by norm_cast ] ) ha;
     · have h_summable : Summable (fun i : Fin n → ℤ => weight n ((k : ℝ) - 1) i * ‖a i‖ ^ 2) ∧
         Summable (fun i : Fin n → ℤ => weight n 1 i * ‖b i‖ ^ 2) := by
         constructor;
-        · refine' Summable.of_nonneg_of_le ( fun i => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ( fun i => mul_le_mul_of_nonneg_right ( weight_mono ( by linarith ) _ ) ( sq_nonneg _ ) ) ha;
-        · refine' hb.of_nonneg_of_le ( fun i => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ( fun i => mul_le_mul_of_nonneg_right ( weight_mono ( show ( 1 : ℝ ) ≤ k by norm_cast ) _ ) ( sq_nonneg _ ) );
+        · refine Summable.of_nonneg_of_le ( fun i => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ( fun i => mul_le_mul_of_nonneg_right ( weight_mono ( by linarith ) _ ) ( sq_nonneg _ ) ) ha;
+        · refine hb.of_nonneg_of_le ( fun i => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ( fun i => mul_le_mul_of_nonneg_right ( weight_mono ( show ( 1 : ℝ ) ≤ k by norm_cast ) _ ) ( sq_nonneg _ ) );
       have h_summable : Summable (fun i : Fin n → ℤ => weight n ((k : ℝ) - 1) i * ‖a i‖ ^ 2 +
           weight n 1 (m - i) * ‖b (m - i)‖ ^ 2) := by
         exact Summable.add h_summable.1 ( h_summable.2.comp_injective ( sub_right_injective ) );
-      refine' .of_nonneg_of_le ( fun i => _ ) ( fun i => _ ) h_summable;
+      refine .of_nonneg_of_le ( fun i => ?_ ) ( fun i => ?_ ) h_summable;
       · exact mul_nonneg ( mul_nonneg ( mul_nonneg ( weight_nonneg _ _ ) ( norm_nonneg _ ) ) (
           weight_nonneg _ _ ) ) ( norm_nonneg _ );
       · have h_weight_prod : weight n ((k : ℝ) - 1) i = weight n ((k - 1) / 2) i * weight n ((k
@@ -617,7 +617,7 @@ theorem third_multiplication_theorem_seq
   -- Apply the second multiplication theorem to get the MemSobolev part.
   have h_mem : MemSobolev n (k : ℝ) (seqConv a b) := by
     exact second_multiplication_theorem_seq hn ( by linarith ) ha hb |>.1;
-  refine' ⟨ h_mem, _ ⟩;
+  refine ⟨ h_mem, ?_ ⟩;
   have h_sum : ∀ m : Fin n → ℤ, weight n (k : ℝ) m * ‖seqConv a b m‖ ^ 2 ≤
     8 * ((∑' i, weight n ((k : ℝ) / 2) i * ‖a i‖ * ‖b (m - i)‖) ^ 2 +
          (∑' i, ‖a i‖ * (weight n ((k : ℝ) / 2) (m - i) * ‖b (m - i)‖)) ^ 2) +
@@ -628,35 +628,35 @@ theorem third_multiplication_theorem_seq
           (weight n (((k : ℝ) - 1) / 2) (m - i) * ‖b (m - i)‖)) ^ 2) := by
             apply mt3_pointwise_sq_bound;
             exacts [ Nat.one_le_iff_ne_zero.mpr ( by rintro rfl; norm_num at *; linarith [ show ( n : ℝ ) ≥ 1 by norm_cast ] ), hn, hr, hkr, ha, hb ];
-  refine' le_trans ( Summable.tsum_le_tsum h_sum _ _ ) _;
+  refine le_trans ( Summable.tsum_le_tsum h_sum ?_ ?_ ) ?_;
   · convert h_mem using 1
     all_goals rfl
-  · refine' Summable.add _ _;
-    · have := mt3_young_S1 hn hr hkr ha ( show MemSobolev n r b from ?_ );
-      · have := mt3_young_S2 hn hr hkr ( show MemSobolev n r a from ?_ ) hb;
+  · refine Summable.add ?_ ?_;
+    · have := mt3_young_S1 hn hr ha ( show MemSobolev n r b from ?_ );
+      · have := mt3_young_S2 hn hr ( show MemSobolev n r a from ?_ ) hb;
         · exact Summable.mul_left _ ( Summable.add ( by tauto ) ( by tauto ) );
         · exact ha.mono ( by linarith );
       · exact hb.mono ( by linarith );
-    · refine' Summable.mul_left _ _;
-      refine' Summable.add _ _;
-      · convert mt3_young_S3 hn hr hkr _ _ |>.1 using 1;
+    · refine Summable.mul_left _ ?_;
+      refine Summable.add ?_ ?_;
+      · convert mt3_young_S3 hn hr _ _ |>.1 using 1;
         · exact ha.mono ( by linarith );
         · exact hb.mono ( by linarith );
-      · convert mt3_young_S4 hn hr hkr _ _ |>.1 using 1;
+      · convert mt3_young_S4 hn hr _ _ |>.1 using 1;
         · exact ha.mono ( by linarith );
         · exact MemSobolev.mono hb ( by linarith );
   · rw [ Summable.tsum_add ];
-    · refine' add_le_add _ _;
+    · refine add_le_add ?_ ?_;
       · rw [ tsum_mul_left, Summable.tsum_add ];
-        · have := mt3_young_S1 hn hr hkr ha ( show MemSobolev n r b from ?_ );
-          · have := mt3_young_S2 hn hr hkr ( show MemSobolev n r a from ?_ ) hb;
+        · have := mt3_young_S1 hn hr ha ( show MemSobolev n r b from ?_ );
+          · have := mt3_young_S2 hn hr ( show MemSobolev n r a from ?_ ) hb;
             · unfold mt3AConstSq; nlinarith;
             · exact ha.mono ( by linarith );
           · exact hb.mono ( by linarith );
-        · have := mt3_young_S1 hn hr hkr ha ( show MemSobolev n r b from ?_ );
+        · have := mt3_young_S1 hn hr ha ( show MemSobolev n r b from ?_ );
           · exact this.1;
           · exact hb.mono ( by linarith );
-        · convert mt3_young_S2 hn hr hkr ( show MemSobolev n r a from ?_ ) ( show MemSobolev n (
+        · convert mt3_young_S2 hn hr ( show MemSobolev n r a from ?_ ) ( show MemSobolev n (
             k : ℝ ) b from ?_ ) |>.1 using 1;
           · exact ha.mono ( by linarith );
           · exact hb;
@@ -666,8 +666,8 @@ theorem third_multiplication_theorem_seq
           rw [ mul_assoc, mul_assoc ];
           gcongr;
           · exact mt3BStar_nonneg ( Nat.one_le_iff_ne_zero.mpr ( by rintro rfl; norm_num at *; linarith [ show ( n : ℝ ) ≥ 1 by norm_cast ] ) );
-          · convert add_le_add ( mt3_young_S3 hn hr hkr ( show MemSobolev n ( ( k : ℝ ) - 1 ) a
-              from ?_ ) ( show MemSobolev n r b from ?_ ) |>.2 ) ( mt3_young_S4 hn hr hkr ( show
+          · convert add_le_add ( mt3_young_S3 hn hr ( show MemSobolev n ( ( k : ℝ ) - 1 ) a
+              from ?_ ) ( show MemSobolev n r b from ?_ ) |>.2 ) ( mt3_young_S4 hn hr ( show
               MemSobolev n r a from ?_ ) ( show MemSobolev n ( ( k : ℝ ) - 1 ) b from ?_ ) |>.2
               ) using 1;
             · ring;
@@ -675,22 +675,22 @@ theorem third_multiplication_theorem_seq
             · exact MemSobolev.mono hb ( by linarith );
             · exact ha.mono ( by linarith );
             · exact MemSobolev.mono hb ( by linarith );
-        · convert mt3_young_S3 hn hr hkr _ _ |>.1 using 1;
+        · convert mt3_young_S3 hn hr _ _ |>.1 using 1;
           · exact ha.mono ( by linarith );
           · exact hb.mono ( by linarith );
-        · convert mt3_young_S4 hn hr hkr _ _ |>.1 using 1;
+        · convert mt3_young_S4 hn hr _ _ |>.1 using 1;
           · exact ha.mono ( by linarith );
           · exact MemSobolev.mono hb ( by linarith );
-    · refine' Summable.mul_left _ _;
-      refine' Summable.add _ _;
-      · have := mt3_young_S1 hn ( by linarith ) ( by linarith ) ha hb;
+    · refine Summable.mul_left _ ?_;
+      refine Summable.add ?_ ?_;
+      · have := mt3_young_S1 hn (by linarith) ha hb;
         exact this.1;
-      · apply (mt3_young_S2 hn hr hkr (by
+      · apply (mt3_young_S2 hn hr (by
         exact ha.mono ( by linarith )) (by
         exact hb)).left;
-    · have := mt3_young_S3 hn hr hkr ( show MemSobolev n ( ( k : ℝ ) - 1 ) a from ?_ ) ( show
+    · have := mt3_young_S3 hn hr ( show MemSobolev n ( ( k : ℝ ) - 1 ) a from ?_ ) ( show
         MemSobolev n r b from ?_ );
-      · have := mt3_young_S4 hn hr hkr ( show MemSobolev n r a from ?_ ) ( show MemSobolev n ( (
+      · have := mt3_young_S4 hn hr ( show MemSobolev n r a from ?_ ) ( show MemSobolev n ( (
           k : ℝ ) - 1 ) b from ?_ );
         · exact Summable.mul_left _ ( Summable.add ( by tauto ) ( by tauto ) );
         · exact ha.mono ( by linarith );

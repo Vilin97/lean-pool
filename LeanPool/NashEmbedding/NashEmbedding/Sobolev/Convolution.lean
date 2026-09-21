@@ -70,10 +70,10 @@ Continuity of the Fourier transform in `ξ`.
 -/
 lemma continuous_ftRn (φ : (Fin n → ℝ) → ℂ) (hφ : Integrable φ) :
     Continuous (ftRn n φ) := by
-      refine' continuous_iff_continuousAt.mpr _;
+      refine continuous_iff_continuousAt.mpr ?_;
       intro ξ;
-      refine' MeasureTheory.tendsto_integral_filter_of_dominated_convergence _ _ _ _ _;
-      refine' fun x => ‖φ x‖;
+      refine MeasureTheory.tendsto_integral_filter_of_dominated_convergence ?_ ?_ ?_ ?_ ?_;
+      refine fun x => ‖φ x‖;
       · exact Filter.Eventually.of_forall fun x => hφ.1.mul ( Continuous.aestronglyMeasurable (
           by continuity ) );
       · norm_num [ Complex.norm_exp ];
@@ -126,8 +126,8 @@ then `φ * u ∈ H^s`.
 theorem memSobolevDistrib_convDistrib (φ : (Fin n → ℝ) → ℂ) (hφ : Integrable φ)
     {s : ℝ} {u : TrigPolyDual n} (hu : MemSobolevDistrib n s u) :
     MemSobolevDistrib n s (convDistrib n φ u) := by
-      refine' .of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg s m ) ( sq_nonneg _ ) ) (
-          fun m => _ ) ( hu.mul_left ( ( ∫ y, ‖φ y‖ ) ^ 2 ) );
+      refine .of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg s m ) ( sq_nonneg _ ) ) (
+          fun m => ?_ ) ( hu.mul_left ( ( ∫ y, ‖φ y‖ ) ^ 2 ) );
       rw [ mul_comm ];
       rw [ mul_left_comm ];
       rw [ mul_comm ];
@@ -214,13 +214,13 @@ theorem mollifier_convergence (φ : (Fin n → ℝ) → ℂ)
             ring
           rw [ Filter.tendsto_congr' ( Filter.eventuallyEq_of_mem self_mem_nhdsWithin fun x hx
               => by rw [ h_fourierCoeffDistrib x hx ] ) ];
-          refine' tendsto_nhdsWithin_of_tendsto_nhds _;
-          refine' Continuous.tendsto' _ _ _ _ <;> norm_num;
+          refine tendsto_nhdsWithin_of_tendsto_nhds ?_;
+          refine Continuous.tendsto' ?_ _ _ ?_ <;> norm_num;
           exact Continuous.mul continuous_const <| Continuous.pow ( Continuous.mul (
               Continuous.norm <| Continuous.sub ( continuous_ftRn _ hφ |> Continuous.comp <|
               continuous_id.smul continuous_const ) continuous_const ) continuous_const ) _;
         case hbound =>
-          refine' Filter.eventually_of_mem self_mem_nhdsWithin fun ε hε => fun m => _;
+          refine Filter.eventually_of_mem self_mem_nhdsWithin fun ε hε => fun m => ?_;
           rw [ fourierCoeffDistrib_sub, fourierCoeffDistrib_convDistrib,
               fourierCoeffDistrib_smul_complex ];
           rw [ show ftRn n ( rescale n φ ε ) ( fun j => ( m j : ℝ ) ) = ftRn n φ ( ε • fun j =>

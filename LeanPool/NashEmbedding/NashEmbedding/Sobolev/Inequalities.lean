@@ -46,7 +46,7 @@ lemma sobolevNormSqDistrib_triangle (s : ℝ) (a b c : TrigPolyDual n)
   unfold sobolevNormSqDistrib;
   unfold sobolevNormSq;
   rw [ ← tsum_mul_left, ← tsum_mul_left, ← Summable.tsum_add ];
-  · refine' Summable.tsum_le_tsum _ _ _;
+  · refine Summable.tsum_le_tsum ?_ ?_ ?_;
     · intro m;
       -- Apply the triangle inequality to the norm of the difference.
       have h_triangle : ‖fourierCoeffDistrib (a - c) m‖ ^ 2 ≤ 2 * ‖fourierCoeffDistrib (a - b)
@@ -73,8 +73,8 @@ lemma sobolevNormSqDistrib_triangle (s : ℝ) (a b c : TrigPolyDual n)
             - c ) m ), norm_add_le ( fourierCoeffDistrib ( a - b ) m ) ( fourierCoeffDistrib ( b
             - c ) m ), sq_nonneg ( ‖fourierCoeffDistrib ( a - b ) m‖ - ‖fourierCoeffDistrib ( b
             - c ) m‖ ) ];
-      refine' Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _
-          ) ) ( fun m => mul_le_mul_of_nonneg_left ( h_ineq m ) ( weight_nonneg _ _ ) ) _;
+      refine Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _
+          ) ) ( fun m => mul_le_mul_of_nonneg_left ( h_ineq m ) ( weight_nonneg _ _ ) ) ?_;
       convert hab.mul_left 2 |> Summable.add <| hbc.mul_left 2 using 2
       all_goals (first | rfl | ring)
     · exact Summable.add ( hab.mul_left _ ) ( hbc.mul_left _ );
@@ -89,7 +89,7 @@ lemma sobolevNormSqDistrib_triangle (s : ℝ) (a b c : TrigPolyDual n)
 lemma MemSobolevDistrib.sub {s : ℝ} {a b : TrigPolyDual n}
     (ha : MemSobolevDistrib n s a) (hb : MemSobolevDistrib n s b) :
     MemSobolevDistrib n s (a - b) := by
-  refine' .of_nonneg_of_le ( fun m => _ ) ( fun m => _ ) ( Summable.add ha hb |>
+  refine .of_nonneg_of_le ( fun m => ?_ ) ( fun m => ?_ ) ( Summable.add ha hb |>
       Summable.mul_left 2 );
   · exact mul_nonneg ( by exact Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg
       fun _ _ => sq_nonneg _ ) ) _ ) ( sq_nonneg _ );

@@ -271,7 +271,7 @@ lemma convexComboScalar_nonneg {φ : (Fin n → ℝ) → ℂ}
   change 0 ≤ (2 * Real.pi / (M : ℝ)) ^ n
         * (periodicExtension n φ (fun j => x j - meshPoint n M k j)).re
   exact mul_nonneg (pow_nonneg hδ_pos.le n)
-    (periodicExtension_re_nonneg hφ_supp hφ_re_nn _)
+    (periodicExtension_re_nonneg hφ_re_nn _)
 
 end NashEmbedding.Sobolev
 

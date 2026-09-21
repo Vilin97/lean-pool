@@ -144,8 +144,7 @@ lemma vcoeff_vrapid (hn : 0 < n) {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu :
 
 lemma vcoeff_vreal {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u) :
     VReal (vcoeff n u) := fun α =>
-  conjReflect_stdFourierCoeff_of_real (smoothPeriodic_ofReal_comp hu α).1.continuous
-    (fun x => by simp)
+  conjReflect_stdFourierCoeff_of_real (fun x => by simp)
 
 /-- The synthesis of a `VReal` sequence is real: `((vsynth v x α : ℝ) : ℂ) = ǎ_α x`. -/
 lemma ofReal_vsynth {v : VecSeq n N} (hr : VReal v) (x : Fin n → ℝ) (α : Fin N) :
@@ -381,7 +380,7 @@ theorem dotConv_eq_Fb_Ub (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (hr :
   linear_combination -hgm
 
 /-- `Ub` is symmetric on the diagonal. -/
-theorem Ub_symm (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (i j : Fin n) :
+theorem Ub_symm  {v : VecSeq n N}  (i j : Fin n) :
     Ub i j v v = Ub j i v v := by
   have hcomm : ∀ a b : VecSeq n N, dotConv a b = dotConv b a := by
     intro a b

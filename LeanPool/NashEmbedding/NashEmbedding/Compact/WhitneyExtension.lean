@@ -12,7 +12,8 @@ Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anth
 -/
 module
 
-public import Mathlib
+public import Mathlib.Tactic
+public import Mathlib.Geometry.Manifold.WhitneyEmbedding
 import all Mathlib.Geometry.Manifold.WhitneyEmbedding
 
 /-!
@@ -111,21 +112,21 @@ public theorem exists_chart_pushforward [I.Boundaryless] (c : M) {g : M → V}
     by_cases hz : z ∈ e.target
     · have hev : (fun z => if z ∈ e.target then g (e.symm z) else 0) =ᶠ[𝓝 z]
           fun z => g (e.symm z) := by
-        filter_upwards [hopen.mem_nhds hz] with w hw using if_pos hw
+        filter_upwards [hopen.mem_nhds hz] with w hw using ite_eq_left hw
       exact (hsmooth.contDiffAt (hopen.mem_nhds hz)).congr_of_eventuallyEq hev
     · have hzK : z ∈ Kᶜ := fun h => hz (hKsub h)
       have hev : (fun z => if z ∈ e.target then g (e.symm z) else 0) =ᶠ[𝓝 z]
           fun _ => (0 : V) := by
         filter_upwards [hKcpt.isClosed.isOpen_compl.mem_nhds hzK] with w hw
         by_cases hwt : w ∈ e.target
-        · rw [if_pos hwt]
+        · rw [ite_eq_left hwt]
           by_contra hne
           exact hw ⟨e.symm w, subset_tsupport _ hne, e.right_inv hwt⟩
-        · rw [if_neg hwt]
+        · rw [ite_eq_right hwt]
       exact contDiffAt_const.congr_of_eventuallyEq hev
   · intro x hx
     have hxs : x ∈ e.source := hsrc ▸ hx
-    simp only [if_pos (e.mapsTo hxs), e.left_inv hxs]
+    simp only [ite_eq_left (e.mapsTo hxs), e.left_inv hxs]
 
 omit [IsManifold I ∞ M] in
 /-- **L3.** For a smooth bump covering of `M`, the interiors of the sets `{f i = 1}`

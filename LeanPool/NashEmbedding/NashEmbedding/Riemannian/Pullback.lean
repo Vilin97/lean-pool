@@ -138,7 +138,8 @@ theorem pullbackForm_trivialization_apply (f : M → N)
       pullbackForm (I := I) (J := J) f h x (tcoord I x₀ x a) (tcoord I x₀ x b) := by
   have hb : x ∈ (trivializationAt E (TangentSpace I) x₀).baseSet := by simpa using hx
   rw [hom_trivializationAt_apply, inCoordinates_apply_eq₂ hb hb (Set.mem_univ _)]
-  simp? [tcoord]
+  simp only [Trivial.fiberBundle_trivializationAt', Trivial.linearMapAt_trivialization,
+    LinearMap.id_coe, id_eq, tcoord]
   exact congrArg₂ (fun v w : TangentSpace I x =>
     pullbackFormT (I := I) (J := J) f h x v w)
     (Trivialization.symmL_apply (R := ℝ) _ hb a).symm
@@ -351,10 +352,10 @@ theorem prodForm_isVonNBounded
     · exact (g'.pos p.2 v.2 h).le
   have hn1 : ‖v.1‖ ≤ C :=
     hC _ (show v.1 ∈ {w : E | metricAt g p.1 w w < 1} from by
-      simp only [Set.mem_setOf_eq]; linarith)
+      simp only [Set.mem_ofPred_eq]; linarith)
   have hn2 : ‖v.2‖ ≤ C' :=
     hC' _ (show v.2 ∈ {w : E' | metricAt g' p.2 w w < 1} from by
-      simp only [Set.mem_setOf_eq]; linarith)
+      simp only [Set.mem_ofPred_eq]; linarith)
   have hC0 : 0 ≤ C := le_trans (norm_nonneg _) hn1
   have hC0' : 0 ≤ C' := le_trans (norm_nonneg _) hn2
   have : ‖v‖ < C + C' + 1 := by

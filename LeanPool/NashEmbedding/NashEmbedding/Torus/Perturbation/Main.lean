@@ -147,7 +147,7 @@ lemma bData_real {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriod
     have hc : Continuous (fun x => ((h x p q : ℝ) : ℂ)) :=
       Complex.continuous_ofReal.comp
         ((continuous_apply q).comp ((continuous_apply p).comp hh.smooth.continuous))
-    exact conjReflect_stdFourierCoeff_of_real hc (fun x => by simp)
+    exact conjReflect_stdFourierCoeff_of_real (fun x => by simp)
 
 /-! ## Smallness: the constant term -/
 
@@ -453,11 +453,11 @@ def Wfun (n : ℕ) (u₀ : (Fin n → ℝ) → (Fin N → ℝ)) (h : (Fin n → 
   fun x => -(∑ i, Ftil n v i x • dualA u₀ i x)
     + ∑ pq ∈ pairs n, ((1 / 2 : ℝ) * (Util n v pq.1 pq.2 x - h x pq.1 pq.2)) • dualB u₀ pq.1 pq.2 x
 
-lemma Ftil_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (hr : VReal v)
+lemma Ftil_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) 
     (i : Fin n) : SmoothPeriodic (Ftil n v i) :=
   ssynth_smoothPeriodic hn (isRapidDecay_Fb hn hv i)
 
-lemma Util_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (hr : VReal v)
+lemma Util_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) 
     (i j : Fin n) : SmoothPeriodic (Util n v i j) :=
   ssynth_smoothPeriodic hn (isRapidDecay_Ub hn hv i j)
 
@@ -473,15 +473,15 @@ private lemma coeff_Util (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (hr :
 
 lemma Util_symm (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (i j : Fin n) :
     Util n v i j = Util n v j i := by
-  unfold Util; rw [Ub_symm hn hv i j]
+  unfold Util; rw [Ub_symm i j]
 
 /-- **Coefficients of `W` are `T v`.** -/
 theorem vcoeff_Wfun (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u₀)
     (hfree : IsFree u₀) {h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ} (hh : SmoothPeriodic h)
     {v : VecSeq n N} (hv : VRapid n N v) (hr : VReal v) :
     vcoeff n (Wfun n u₀ h v) = gC (bData n u₀ h) + gB (bData n u₀ h) v v := by
-  have hF : ∀ i, SmoothPeriodic (Ftil n v i) := fun i => Ftil_smoothPeriodic hn hv hr i
-  have hU : ∀ p q, SmoothPeriodic (Util n v p q) := fun p q => Util_smoothPeriodic hn hv hr p q
+  have hF : ∀ i, SmoothPeriodic (Ftil n v i) := fun i => Ftil_smoothPeriodic hn hv i
+  have hU : ∀ p q, SmoothPeriodic (Util n v p q) := fun p q => Util_smoothPeriodic hn hv p q
   have hA : ∀ i, SmoothPeriodic (dualA u₀ i) := fun i => dualA_smoothPeriodic hu hfree i
   have hB : ∀ p q, SmoothPeriodic (dualB u₀ p q) := fun p q => dualB_smoothPeriodic hu hfree p q
   have hhs : ∀ p q : Fin n, SmoothPeriodic (fun x => h x p q) := fun p q =>
@@ -584,8 +584,8 @@ lemma Wfun_smoothPeriodic (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → �
     (hfree : IsFree u₀) {h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ} (hh : SmoothPeriodic h)
     {v : VecSeq n N} (hv : VRapid n N v) (hr : VReal v) :
     SmoothPeriodic (Wfun n u₀ h v) := by
-  have hF : ∀ i, SmoothPeriodic (Ftil n v i) := fun i => Ftil_smoothPeriodic hn hv hr i
-  have hU : ∀ p q, SmoothPeriodic (Util n v p q) := fun p q => Util_smoothPeriodic hn hv hr p q
+  have hF : ∀ i, SmoothPeriodic (Ftil n v i) := fun i => Ftil_smoothPeriodic hn hv i
+  have hU : ∀ p q, SmoothPeriodic (Util n v p q) := fun p q => Util_smoothPeriodic hn hv p q
   have hA : ∀ i, SmoothPeriodic (dualA u₀ i) := fun i => dualA_smoothPeriodic hu hfree i
   have hB : ∀ p q, SmoothPeriodic (dualB u₀ p q) := fun p q => dualB_smoothPeriodic hu hfree p q
   have hhc : ∀ p q : Fin n, ContDiff ℝ ∞ (fun x => h x p q) := fun p q =>
@@ -613,9 +613,9 @@ theorem pderiv_dot_pderiv_vsynth (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N 
     (hr : VReal v) (i j : Fin n) (x : Fin n → ℝ) :
     pderiv i (vsynth n v) x ⬝ᵥ pderiv j (vsynth n v) x
       = pderiv i (Ftil n v j) x + pderiv j (Ftil n v i) x + Util n v i j x := by
-  have hFi := Ftil_smoothPeriodic hn hv hr i
-  have hFj := Ftil_smoothPeriodic hn hv hr j
-  have hUij := Util_smoothPeriodic hn hv hr i j
+  have hFi := Ftil_smoothPeriodic hn hv i
+  have hFj := Ftil_smoothPeriodic hn hv j
+  have hUij := Util_smoothPeriodic hn hv i j
   have hVsp : SmoothPeriodic (vsynth n v) := vsynth_smoothPeriodic hn hv
   have hL : SmoothPeriodic (fun y => pderiv i (vsynth n v) y ⬝ᵥ pderiv j (vsynth n v) y) :=
     (hVsp.pderiv i).dotProduct (hVsp.pderiv j)

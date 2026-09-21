@@ -112,8 +112,7 @@ For `M ≥ 1`, `∑_{j : Fin M} exp(2πi q j / M) = M` if `M ∣ q`, else `0`.
 lemma geom_sum_exp (M : ℕ) (hM : 0 < M) (q : ℤ) :
     ∑ j : Fin M, exp (↑(2 * π * (q : ℝ) * (j : ℕ) / (M : ℝ)) * I) =
     if (M : ℤ) ∣ q then (M : ℂ) else 0 := by
-  split_ifs with hMq; simp_all +decide [ Complex.exp_ne_zero, mul_assoc, mul_left_comm, mul_comm
-      Real.pi ] ;
+  split_ifs with hMq; simp_all +decide only [ofReal_div, ofReal_mul, ofReal_ofNat, ofReal_intCast, ofReal_natCast] ;
   · obtain ⟨ k, rfl ⟩ := hMq; norm_num [ mul_assoc, mul_comm, mul_left_comm, div_eq_mul_inv,
       hM.ne' ] ;
     calc
@@ -165,7 +164,7 @@ lemma riemannSum_fourierExp (M : ℕ) (hM : 0 < M) (ℓ : Fin n → ℤ) :
   · -- Apply the geometric sum lemma to each term in the product.
     have h_prod : ∏ j : Fin n, ∑ k : Fin M, Complex.exp (↑(2 * π * (ℓ j : ℝ) * (k : ℕ) / (M :
         ℝ)) * I) = 0 := by
-      simp_all +decide [ Finset.prod_eq_zero_iff ];
+      simp_all +decide [Finset.prod_eq_zero_iff];
       obtain ⟨ a, ha ⟩ := h; use a; have := geom_sum_exp M hM ( ℓ a ) ; aesop;
     convert h_prod using 1;
     rw [ Fintype.prod_sum ];
@@ -183,14 +182,13 @@ lemma norm_riemannK_normalized_le {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s
     ‖(((2 * π : ℝ) ^ n : ℝ) : ℂ)⁻¹ * riemannK n u M m‖ ≤
       ∑' k : Fin n → ℤ, ‖fourierCoeffDistrib u k‖ := by
   unfold riemannK;
-  by_cases hM : M = 0 <;> simp_all +decide [ div_eq_mul_inv, mul_pow, mul_assoc, mul_comm,
-      mul_left_comm ];
+  by_cases hM : M = 0 <;> simp_all +decide [div_eq_mul_inv, mul_pow, mul_assoc, mul_comm, mul_left_comm];
   · simp +decide [ hn.ne' ];
     exact tsum_nonneg fun _ => norm_nonneg _;
-  · refine' le_trans ( mul_le_mul_of_nonneg_left ( norm_sum_le _ _ ) ( by positivity ) ) _;
-    refine' le_trans ( mul_le_mul_of_nonneg_left ( Finset.sum_le_sum fun _ _ => _ ) ( by
-        positivity ) ) _;
-    use fun _ => ∑' k : Fin n → ℤ, ‖fourierCoeffDistrib u k‖;
+  · refine le_trans ( mul_le_mul_of_nonneg_left ( norm_sum_le _ _ ) ( by positivity ) ) ?_;
+    refine le_trans (mul_le_mul_of_nonneg_left
+      (Finset.sum_le_sum (g := fun _ => ∑' k : Fin n → ℤ, ‖fourierCoeffDistrib u k‖)
+        (fun _ _ => ?_)) (by positivity)) ?_
     · convert sup_norm_fourierSeries_le _ _ using 1
       all_goals try rfl
       rw [ norm_mul, norm_fourierExp ];
@@ -239,7 +237,7 @@ lemma riemannK_aliasing {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s)
     use fun x => fun j => m j + M * x.val j;
     · intro x y hxy; ext j; replace hxy := congr_fun hxy j; simp_all +decide ;
       exact hxy.resolve_right hM.ne';
-    · intro x hx; simp_all +decide [ Function.support ] ;
+    · intro x hx; simp_all +decide [Function.support] ;
       have hcoord : ∀ j, m j + M * ((x j - m j) / M) = x j := by
         intro j
         rw [mul_comm, Int.ediv_mul_cancel (hx.1 j)]
@@ -256,10 +254,10 @@ private theorem lattice_tail_norm_tendsto_zero (a : (Fin n → ℤ) → ℂ)
      Filter.atTop (nhds 0) := by
   have h_tail_zero : Filter.Tendsto (fun M : ℝ => ∑' k : Fin n → ℤ, ‖a k‖ * (if ∃ j, |k j - m j|
       ≥ M then 1 else 0)) Filter.atTop (nhds (∑' k : Fin n → ℤ, ‖a k‖ * 0)) := by
-    refine' ( tendsto_tsum_of_dominated_convergence _ _ _ );
-    use fun k => ‖a k‖;
+    refine tendsto_tsum_of_dominated_convergence (bound := fun k => ‖a k‖) ?_ ?_ ?_
     · convert ha using 1;
-    · intro k; by_cases hk : ∃ j, |k j - m j| ≥ 0 <;> simp_all +decide ;
+    · intro k
+      simp only [Int.cast_abs, Int.cast_sub, ge_iff_le, mul_ite, mul_one, mul_zero]
       apply tendsto_const_nhds.congr'
       filter_upwards [Filter.eventually_gt_atTop (∑ j : Fin n, |(k j : ℝ) - m j|)] with x hx
       have hnot : ¬ ∃ j, |(k j : ℝ) - m j| ≥ x := by
@@ -280,8 +278,8 @@ private theorem lattice_dilate_tail_norm_le (a : (Fin n → ℤ) → ℂ)
   have h_tail_norm : ‖∑' ℓ : Fin n → ℤ, a (fun j => m j + (M : ℤ) * ℓ j) * (if ℓ ≠ 0 then 1 else
       0)‖ ≤ ∑' ℓ : Fin n → ℤ, ‖a (fun j => m j + (M : ℤ) * ℓ j)‖ * (if ℓ ≠ 0 then 1 else 0) := by
     by_cases h : Summable ( fun ℓ : Fin n → ℤ => a ( fun j => m j + M * ℓ j ) * if ℓ ≠ 0 then 1
-        else 0 ) <;> simp_all +decide [ tsum_eq_zero_of_not_summable ];
-    · convert norm_tsum_le_tsum_norm _ using 1;
+        else 0 ) <;> simp_all +decide [tsum_eq_zero_of_not_summable];
+    · convert norm_tsum_le_tsum_norm ?_ using 1;
       · exact tsum_congr fun x => by split_ifs <;> simp +decide [ * ] ;
       · exact h.norm;
     · exact tsum_nonneg fun _ => by positivity;
@@ -295,23 +293,23 @@ private theorem lattice_dilate_tail_norm_le (a : (Fin n → ℤ) → ℂ)
       any_goals exact { fun j => ( k j - m j ) / M };
       · simp +decide [ hk ];
         grind;
-      · simp? +contextual [ funext_iff ];
+      · simp +contextual only [Finset.mem_singleton, funext_iff, not_forall, mul_ite, mul_one, mul_zero, ne_eq, Pi.zero_apply, ite_eq_right_iff, norm_eq_zero, forall_exists_index];
         intro b x hx y hy h; specialize h x; simp_all +decide [ Int.mul_ediv_cancel_left _ ( by
             positivity : ( M : ℤ ) ≠ 0 ) ] ;
-    · rw [ tsum_eq_single 0 ] <;> simp? +contextual [ hk ];
-      intro b' hb' hk'; contrapose! hk; simp_all +decide [ funext_iff ] ;
+    · rw [ tsum_eq_single 0 ] <;> simp +contextual only [ge_iff_le, hk, ↓reduceIte, mul_zero, Pi.zero_apply, add_zero, mul_ite, mul_one, ne_eq, not_true_eq_false, Std.le_refl, not_false_eq_true, ite_eq_right_iff, norm_eq_zero];
+      intro b' hb' hk'; contrapose! hk; simp_all +decide [funext_iff] ;
       exact ⟨ hb'.choose, le_mul_of_one_le_right ( by positivity ) ( mod_cast abs_pos.mpr
           hb'.choose_spec ) ⟩;
-  refine' le_trans _ ( Summable.tsum_le_tsum h_tail_norm _ _ );
+  refine le_trans ?_ ( Summable.tsum_le_tsum h_tail_norm ?_ ?_ );
   · rw [ ← Summable.tsum_comm ];
-    · refine' le_of_eq _;
-      refine' tsum_congr fun ℓ => _;
+    · refine le_of_eq ?_;
+      refine tsum_congr fun ℓ => ?_;
       rw [ tsum_eq_single ( fun j => m j + M * ℓ j ) ] <;> simp +contextual [ funext_iff ];
     · have h_summable : Summable (fun k : Fin n → ℤ => ‖a k‖) := by
         convert ha using 1;
       rw [ summable_iff_vanishing ] at *;
       intro e he; obtain ⟨ s, hs ⟩ := h_summable e he; use s.image fun x => ( x, fun j => ( x j
-          - m j ) / M ) ; intro t ht; simp_all +decide [ Finset.disjoint_left ] ;
+          - m j ) / M ) ; intro t ht; simp_all +decide [Finset.disjoint_left] ;
       convert hs ( Finset.image ( fun x : ( Fin n → ℤ ) × ( Fin n → ℤ ) => fun j => m j + M *
           x.2 j ) ( t.filter fun x => x.2 ≠ 0 ∧ x.1 = fun j => m j + M * x.2 j ) ) _ using 1;
       · rw [ Finset.sum_image ];
@@ -323,13 +321,13 @@ private theorem lattice_dilate_tail_norm_le (a : (Fin n → ℤ) → ℂ)
             cases h i <;> simp_all +decide [ne_of_gt (zero_lt_one.trans_le hM)]
           · funext i
             cases h i <;> simp_all +decide [ne_of_gt (zero_lt_one.trans_le hM)]
-      · simp? +zetaDelta at *;
+      · simp +zetaDelta only [ne_eq, Finset.mem_image, Finset.mem_filter, Prod.exists, ↓existsAndEq, and_true, forall_exists_index, and_imp] at *;
         intro a x hx hx' hx''; specialize ht _ _ hx _; simp_all +decide [ funext_iff ] ;
         exact fun j => m j + M * x j;
         simp_all +decide [ mul_comm ];
         exact fun ha => ht ha <| funext fun j => by rw [ Int.mul_ediv_cancel _ ( by positivity ) ] ;
-  · refine' Summable.of_nonneg_of_le ( fun k => tsum_nonneg fun ℓ => by positivity ) ( fun k =>
-      h_tail_norm k ) _;
+  · refine Summable.of_nonneg_of_le ( fun k => tsum_nonneg fun ℓ => by positivity ) ( fun k =>
+      h_tail_norm k ) ?_;
     have h_summable : Summable (fun k : Fin n → ℤ => ‖a k‖) := by
       convert ha using 1;
     exact Summable.of_nonneg_of_le ( fun k => mul_nonneg ( norm_nonneg _ ) ( by positivity ) ) (
@@ -367,7 +365,7 @@ lemma riemannK_normalized_tendsto {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s
   have h_eq : ∀ M : ℕ, M ≥ 1 → (((2 * Real.pi : ℝ) ^ n : ℝ) : ℂ)⁻¹ * riemannK n u M m =
       fourierCoeffDistrib u m + ∑' ℓ : Fin n → ℤ, fourierCoeffDistrib u (fun j => m j + (M : ℤ)
       * ℓ j) * (if ℓ ≠ 0 then 1 else 0) := by
-    intro M hM; rw [ halias M hM ] ; rw [ Summable.tsum_eq_add_tsum_ite ] ; simp? +decide ;
+    intro M hM; rw [ halias M hM ] ; rw [ Summable.tsum_eq_add_tsum_ite ] ; simp +decide only [ne_eq, ite_not, mul_ite, mul_zero, mul_one] ;
     congr! 1;
     · norm_num;
     · have := summable_norm_of_memSobolev hn hs hu;
@@ -382,8 +380,8 @@ lemma riemannK_normalized_tendsto {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s
     (summable_norm_of_memSobolev hn hs hu) m
   rw [ Metric.tendsto_nhds ] at *;
   intro ε hε; filter_upwards [ Filter.eventually_ge_atTop 1, h_tail_zero ε hε |> fun h =>
-      h.natCast_atTop ] with M hM₁ hM₂; simp_all +decide [ dist_eq_norm ] ;
-  refine' lt_of_le_of_lt ( h_tail_norm M hM₁ ) _;
+      h.natCast_atTop ] with M hM₁ hM₂; simp_all +decide [dist_eq_norm] ;
+  refine lt_of_le_of_lt ( h_tail_norm M hM₁ ) ?_;
   convert lt_of_abs_lt hM₂ using 1;
   norm_cast
 
@@ -399,10 +397,9 @@ theorem memSobolevDistrib_riemannSumDistrib (φ : (Fin n → ℝ) → ℂ)
     {u : TrigPolyDual n} (hu : MemSobolevDistrib n s u)
     (M : ℕ) :
     MemSobolevDistrib n s (riemannSumDistrib n φ u M) := by
-  refine' .of_nonneg_of_le ( fun m => _ ) ( fun m => _ ) ( hφ s |> Summable.mul_right _ );
+  refine .of_nonneg_of_le ( fun m => ?_ ) ( fun m => ?_ ) (hφ s |>.mul_right ((∑' k : Fin n → ℤ, ‖fourierCoeffDistrib u k‖) ^ 2))
+
   exact mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ );
-  swap;
-  exact ( ∑' k : Fin n → ℤ, ‖fourierCoeffDistrib u k‖ ) ^ 2;
   rw [ mul_assoc ];
   gcongr;
   · exact Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ )

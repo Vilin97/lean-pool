@@ -10,6 +10,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aristotle (Harmonic), Claude Fable 5 (Anthropic), Claude Opus 4.7 (Anthropic)
   — at the request of David Wiygul
 -/
+import Mathlib.Geometry.Manifold.Instances.Sphere
 import LeanPool.NashEmbedding.NashEmbedding.Riemannian.Pullback
 import LeanPool.NashEmbedding.NashEmbedding.Torus.Main
 
@@ -68,10 +69,10 @@ theorem contMDiff_circleCoe : ContMDiff (𝓡 1) 𝓘(ℝ, ℂ) ∞ circleCoe :=
   contMDiff_coe_sphere
 
 /-- **L1.** The coercion `Circle → ℂ` has injective differential everywhere
-  (`mfderiv_coe_sphere_injective` specialized to the ambient inner-product space `ℂ`). -/
+  (`injective_mvfderiv_subtypeVal_sphere` specialized to the ambient inner-product space `ℂ`). -/
 theorem mfderiv_circleCoe_injective (v : Circle) :
     Function.Injective (mfderiv (𝓡 1) 𝓘(ℝ, ℂ) circleCoe v) :=
-  mfderiv_coe_sphere_injective v
+  injective_mvfderiv_subtypeVal_sphere v
 
 /-- The round metric on `Circle ⊂ ℂ`, induced by the inclusion. -/
 def circleMetric :

@@ -145,8 +145,8 @@ lemma ftRn_partialDeriv_single
               (-(Complex.I * ↑(∑ k, ξ k * (Function.update y j t) k))))
               (-(Complex.I * (ξ j : ℂ)) *
                 Complex.exp (-(Complex.I * ↑(∑ k, ξ k * y k)))) (y j)
-      simp +decide [Function.update_apply, Finset.sum_ite,
-                    Finset.filter_eq', Finset.filter_ne']
+      simp? +decide [Function.update_apply, Finset.sum_ite,
+        Finset.filter_eq', Finset.filter_ne']
       -- Mirrors the earlier `hasDerivAt_fourierExp_update` (Periodization.lean),
       -- with an extra outer `.neg` for our sign convention and the coefficient
       -- cast from ℝ to ℂ.
