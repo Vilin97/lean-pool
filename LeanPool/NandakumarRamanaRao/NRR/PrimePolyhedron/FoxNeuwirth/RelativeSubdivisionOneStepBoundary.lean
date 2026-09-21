@@ -244,6 +244,7 @@ theorem facetIncidence_eq_localFullBoundary
       RelativeSubdivisionOneStepCells.coefficient hp N (q, r) *
         ((-1 : ZMod p) ^ j.1) else 0) = _
   simp [RelativeSubdivisionOneStepCells.coefficient]
+  rfl
 
 /-- After applying the local recursive-cylinder theorem, global incidence is the pairing with all
 cone-base facets. -/
@@ -261,7 +262,7 @@ theorem facetIncidence_eq_localBase
   rw [NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderBoundary.fullBoundaryPairing_eq_base]
 
 /-- Quotient-facet Kronecker delta. -/
-noncomputable def quotientIndicator
+noncomputable def quotientIndicator {hp : Nat.Prime p}
     (s t : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) : ZMod p :=
   if t = s then 1 else 0
 
@@ -302,6 +303,7 @@ theorem localBase_eq_globalBase
   rw [htuple, facetOrbitIndicator_occurrence]
   simp [localTupleWeight, quotientIndicator, RelativeSubdivisionOneStepBoundaryBase.baseOccurrence,
     RelativeSubdivisionOneStepCells.coefficient]
+  exact (mul_assoc _ _ _).symm
 
 /-- Pointwise incidence is the global cone-base pairing. -/
 theorem facetIncidence_eq_basePairing
@@ -701,15 +703,79 @@ private theorem sideMapWeight_baseOccurrence_sideCell
     congr 2 <;> simp [orbitFacetIndex, orbitFacetEquiv]
   unfold sideMapWeight quotientIndicator
   rw [htuple, facetOrbitIndicator_occurrence]
-/-- The complete recursive spatial-side part of the one-step cone-base chain vanishes. -/
-theorem sideBasePairing_eq_zero
-    (hp : Nat.Prime p) (N : Nat)
+private theorem fixedSideCell_weighted_sum_eq_zero_dim
+    (d : Nat) (hp : Nat.Prime (d + 2)) (N : Nat)
+    (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet)
+    (r : RelativeSubdivisionCylinderCombinatorics.Cell d) :
+      (∑ c : PrimeOrbitCycle.TopOrbit hp,
+        (PrimeOrbitCycle.orbitCycle hp).coefficient c *
+          ∑ rho : RefinementWord (d + 2) N,
+            RefinedAffineMap.subdivisionSign N rho *
+              ∑ j : Fin (d + 2),
+                SimplicialChain.faceSign j *
+                  sideMapWeight hp N s r
+                    (iteratedFacetMap d N
+                      (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j)) = 0 := by
+  classical
+  have hz := fixedSideCell_sum_eq_zero_dim d hp N s r
+  rw [← hz]
+  apply Finset.sum_congr rfl
+  intro c hc
+  congr 1
+
+open scoped Classical in
+private theorem sidePairing_summand_zero (d : ℕ) (hp : Nat.Prime (d + 2)) (N : ℕ)
+  (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet)
+  (hbridge :
+    ∀ (orbit : PrimeOrbitCycle.TopOrbit hp) (rho : RefinementWord (d + 2) N) (j : Fin (d + 2))
+      (r : RelativeSubdivisionCylinderCombinatorics.Cell d),
+      sideMapWeight hp N s r
+          (iteratedFacetMap d N (⇑(ReferenceAffineOrbitCount.topRepr hp orbit).realizationContinuousMap) rho j) =
+        if
+            (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass
+                (((orbit, rho), RelativeSubdivisionCylinderCombinatorics.sideCell d j r), 0) =
+              s then
+          1
+        else 0)
+  (r : RelativeSubdivisionCylinderCombinatorics.Cell d) :
+  (∑ x : PrimeOrbitCycle.TopOrbit hp,
+      ∑ x_1 : RefinementWord (d + 2) N,
+        ∑ x_2 : Fin (d + 2),
+          coefficient hp N (x, x_1) *
+              ((-1) ^ (x_2 : ℕ) *
+                RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient (ZMod (d + 2)) d (x_2, r).2) *
+            if
+                (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass
+                    (((x, x_1), Sum.inr (Sum.inr (x_2, r))), 0) =
+                  s then
+              1
+            else 0) =
+    0 := by
+  classical
+  have hz' := fixedSideCell_weighted_sum_eq_zero_dim d hp N s r
+  have hz'' := congrArg
+    (fun z => RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient
+      (ZMod (d + 2)) d r * z) hz'
+  rw [mul_zero] at hz''
+  refine Eq.trans ?_ hz''
+  simp only [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro orbit horbit
+  apply Finset.sum_congr rfl
+  intro rho hrho
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [hbridge]
+  simp only [RefinedAffineMap.coefficient, SimplicialChain.faceSign,
+    RelativeSubdivisionCylinderCombinatorics.sideCell]
+  ring
+  rfl
+
+private theorem sideBasePairing_eq_zero_dim
+    (d : Nat) (hp : Nat.Prime (d + 2)) (N : Nat)
     (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) :
     RelativeSubdivisionOneStepBoundaryBase.sideBasePairing hp N (quotientIndicator s) = 0 := by
   classical
-  obtain ⟨d, hd⟩ : ∃ d, p = d + 2 :=
-    ⟨p - 2, (Nat.sub_add_cancel hp.two_le).symm⟩
-  subst p
   unfold RelativeSubdivisionOneStepBoundaryBase.sideBasePairing RelativeSubdivisionOneStepBoundaryBase.IsEndpointCell
   rw [Fintype.sum_prod_type]
   simp [RelativeSubdivisionCylinderCombinatorics.Cell,
@@ -732,8 +798,7 @@ theorem sideBasePairing_eq_zero
         (if (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass
             (((orbit, rho), RelativeSubdivisionCylinderCombinatorics.sideCell d j r), 0) = s
           then 1 else 0) := by
-    simpa [quotientIndicator, RelativeSubdivisionOneStepBoundaryBase.baseOccurrence] using
-      sideMapWeight_baseOccurrence_sideCell d N hp s orbit rho j r
+    exact sideMapWeight_baseOccurrence_sideCell d N hp s orbit rho j r
   conv_lhs =>
     enter [2, orbit]
     enter [2, rho]
@@ -744,30 +809,17 @@ theorem sideBasePairing_eq_zero
   rw [Finset.sum_comm]
   apply Finset.sum_eq_zero
   intro r hr
-  have hz := fixedSideCell_sum_eq_zero_dim d hp N s r
-  have hz' :
-      (∑ c : PrimeOrbitCycle.TopOrbit hp,
-        (PrimeOrbitCycle.orbitCycle hp).coefficient c *
-          ∑ rho : RefinementWord (d + 2) N,
-            RefinedAffineMap.subdivisionSign N rho *
-              ∑ j : Fin (d + 2),
-                SimplicialChain.faceSign j *
-                  sideMapWeight hp N s r
-                    (iteratedFacetMap d N
-                      (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j)) = 0 := by
-    rw [← hz]
-    apply Finset.sum_congr rfl
-    intro c hc
-    congr 1
-  simpa only [hbridge, RelativeSubdivisionCylinderCombinatorics.sideCell,
-    RefinedAffineMap.coefficient, RefinedAffineMap.subdivisionSign,
-    SimplicialChain.faceSign, Finset.mul_sum, mul_assoc, mul_left_comm, mul_comm,
-    mul_ite, one_mul, mul_one, mul_zero, zero_mul, neg_mul, mul_neg, neg_zero] using
-    congrArg
-      (fun z =>
-        -RelativeSubdivisionCylinderCombinatorics.Oriented.coefficient
-          (ZMod (d + 2)) d r * z)
-      hz'
+  exact sidePairing_summand_zero d hp N s hbridge r
+
+/-- The complete recursive spatial-side part of the one-step cone-base chain vanishes. -/
+theorem sideBasePairing_eq_zero
+    (hp : Nat.Prime p) (N : Nat)
+    (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) :
+    RelativeSubdivisionOneStepBoundaryBase.sideBasePairing hp N (quotientIndicator s) = 0 := by
+  obtain ⟨d, hd⟩ : ∃ d, p = d + 2 :=
+    ⟨p - 2, (Nat.sub_add_cancel hp.two_le).symm⟩
+  subst p
+  exact sideBasePairing_eq_zero_dim d hp N s
 
 /-! ## Pointwise collar boundary -/
 

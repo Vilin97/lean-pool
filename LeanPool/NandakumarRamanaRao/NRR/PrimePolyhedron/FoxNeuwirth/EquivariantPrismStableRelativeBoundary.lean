@@ -57,7 +57,11 @@ variable {p : Nat}
 inductive EndpointSide
   | lower
   | upper
-  deriving DecidableEq, Fintype
+  deriving DecidableEq
+
+instance : Fintype EndpointSide where
+  elems := {EndpointSide.lower, EndpointSide.upper}
+  complete := by intro x; cases x <;> simp
 
 namespace EndpointSide
 

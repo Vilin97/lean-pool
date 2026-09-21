@@ -5,7 +5,7 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBVectorFiberElimination
-import Mathlib
+import Mathlib.Tactic
 /-!
 # Route B: finite coordinate split for a selected vector block
 

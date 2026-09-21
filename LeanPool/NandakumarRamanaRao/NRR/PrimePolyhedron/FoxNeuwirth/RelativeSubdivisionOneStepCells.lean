@@ -95,6 +95,15 @@ theorem refinedChart_coordinate_eq_linear
     Simplex.refinedContinuousMap, Simplex.realizationContinuousMap,
     Simplex.realizationPoint, Simplex.chartWeight, StandardSimplex.ofDelta,
     affineCompMap_coe, realizationCoordinateLinear]
+  change (∑ i, if (ReferenceAffineOrbitCount.topRepr hp q.1) i = c then
+    (affineCompMap (p - 1) N (fun k => Simplex.refinementIndexPerm (q.2 k)) w) i else 0) = _
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [show (affineCompMap (p - 1) N
+    (fun k => Simplex.refinementIndexPerm (q.2 k)) w) i =
+    (affineCompLinear (p - 1) N
+      (fun k => Simplex.refinementIndexPerm (q.2 k))) w.val i from
+    congrFun (affineCompMap_coe _ _ _ w) i]
 
 /-- A refined realization chart preserves every finite barycentric combination. -/
 theorem refinedChart_barycentric
@@ -109,13 +118,7 @@ theorem refinedChart_barycentric
   have hxvec : x.1 = ∑ i : Fin (p + 1), w i • (v i).1 := by
     funext r
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-    convert hx r using 1
-    · change x.1 r = x.1 r
-      rfl
-    · apply Finset.sum_congr rfl
-      intro i hi
-      change w i * (v i).1 r = w i * (v i).1 r
-      rfl
+    exact hx r
   rw [hxvec, map_sum]
   apply Finset.sum_congr rfl
   intro i hi

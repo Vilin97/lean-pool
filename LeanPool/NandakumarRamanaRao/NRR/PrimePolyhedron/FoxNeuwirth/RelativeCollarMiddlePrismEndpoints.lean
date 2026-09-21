@@ -26,6 +26,9 @@ namespace FoxNeuwirthOrderComplex
 namespace EquivariantPrismStableRelativeBoundary
 namespace RelativeCollarMiddlePrismEndpoints
 
+noncomputable local instance facetFintype (hp : Nat.Prime p) (N L : Nat) :
+    Fintype (RelativeCollarMiddlePrism.cellSystem hp N L).Facet := Fintype.ofFinite _
+
 open ExplicitAffineRelativeCollar
 open EquivariantPrismGlobalCancellation
 open EquivariantPrismNonhorizontalCancellation
@@ -138,6 +141,7 @@ theorem upperFacet_isUpper
   exact upperOccurrence_isUpper hp N L data.1 data.2
 
 
+open scoped Classical in
 /-- Canonical lower endpoint map evaluated on its actual occurrence is the Kronecker weight of the
 corresponding quotient facet. -/
 theorem facetOrbitIndicator_lowerEndpointMap
@@ -151,6 +155,7 @@ theorem facetOrbitIndicator_lowerEndpointMap
   simpa [lowerFacet] using
     facetOrbitIndicator_occurrence hp N L s (lowerOccurrence hp N L q eta)
 
+open scoped Classical in
 /-- Upper endpoint analogue of `facetOrbitIndicator_lowerEndpointMap`. -/
 theorem facetOrbitIndicator_upperEndpointMap
     (hp : Nat.Prime p) (N L : Nat)

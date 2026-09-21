@@ -313,7 +313,8 @@ noncomputable def sampleVertex (s : VertexSlot hp B) : GlobalVertex hp B :=
 
 @[simp] theorem globalPoint_sampleVertex (s : VertexSlot hp B) :
     globalPoint hp B (sampleVertex hp B s) = slotPoint hp B s := by
-  simp [sampleVertex, globalPoint, coverPoint]
+  change (1 : PrimeSymmetry hp) • slotPoint hp B s = _
+  exact one_smul _ _
 
 /-- Local copies of one geometric collar vertex determine the same global sampled vertex. -/
 theorem sampleVertex_eq_of_slotPoint_eq

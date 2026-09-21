@@ -271,6 +271,7 @@ theorem lowerOccurrence_facetSignature
     endpointSpatialMap_eq_chart, lowerEndpointMap,
     ExplicitAffineRelativeCollar.lowerCylinderPoint, RefinedAffineMap.vertex,
     hindex, CylinderPoint.ofProd]
+  rfl
 
 /-- Vertex-signature form of the upper endpoint identity. -/
 theorem upperOccurrence_facetSignature
@@ -296,6 +297,7 @@ theorem upperOccurrence_facetSignature
     endpointSpatialMap_eq_chart, upperEndpointMap,
     ExplicitAffineRelativeCollar.upperCylinderPoint, RefinedAffineMap.vertex,
     hindex, CylinderPoint.ofProd]
+  rfl
 
 end RelativeCollarMiddlePrismEndpointsCore
 end EquivariantPrismStableRelativeBoundary

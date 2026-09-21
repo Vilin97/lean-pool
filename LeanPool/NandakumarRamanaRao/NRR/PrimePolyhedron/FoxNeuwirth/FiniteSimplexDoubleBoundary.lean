@@ -217,7 +217,8 @@ theorem double_boundary_weighted_zero
   intro z
   rcases z with ⟨⟨a, b⟩, hab⟩
   simp only [swapDeletedVertexPair]
-  dsimp [f, sequentialDeletionEquiv]
+  change f ⟨b, deletedIndex b a hab.symm⟩ = -(f ⟨a, deletedIndex a b hab⟩)
+  dsimp [f]
   have hW :
       W (fun x => sigma
         (cofacePoint (n + 1) a (cofacePoint n (deletedIndex a b hab) x))) =

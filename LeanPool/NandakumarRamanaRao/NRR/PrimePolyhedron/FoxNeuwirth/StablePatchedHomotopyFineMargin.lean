@@ -50,6 +50,11 @@ open EquivariantPrismGenericPerturbation
 
 variable {p : Nat}
 
+noncomputable local instance middleGlobalVertexAction (hp : Nat.Prime p) (N L : Nat) :
+    MulAction (PrimeSymmetry hp)
+      (GlobalVertex hp (RelativeCollarMiddlePrism.cellSystem hp N L)) :=
+  Parameters.globalVertexAction hp (RelativeCollarMiddlePrism.cellSystem hp N L)
+
 /-- Scalar sample of a zero-free homotopy on one relative middle-prism parameter site. -/
 noncomputable def middleHomotopySiteValue
     (hp : Nat.Prime p) (N L : Nat)

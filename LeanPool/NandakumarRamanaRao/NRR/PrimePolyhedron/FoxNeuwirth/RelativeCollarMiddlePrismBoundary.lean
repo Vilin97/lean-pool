@@ -140,6 +140,7 @@ theorem facetOrbitIndicator_translate
       simp [mapVertexSignature_translateFacetMap, hh, mul_smul]
   simp only [hiff]
 
+open scoped Classical in
 /-- On an actual occurrence, the orbit characteristic weight is exactly the Kronecker delta of its
 quotient facet class. -/
 theorem facetOrbitIndicator_occurrence
@@ -349,6 +350,7 @@ theorem occurrencePairing_lower
     simp [lowerEndpointPairing, endpointSpatialMap_succ, endpointSpatialMap,
       endpointRefinementWord, lowerEndpointMap,
       subdivisionSign, permSignCoeff, hlower]
+    rfl
 
 /-- Upper-horizontal part of the arbitrary weighted occurrence pairing. -/
 theorem occurrencePairing_upper
@@ -444,6 +446,7 @@ theorem occurrencePairing_upper
     simp [upperEndpointPairing, endpointSpatialMap_succ, endpointSpatialMap,
       endpointRefinementWord, upperEndpointMap,
       subdivisionSign, permSignCoeff, hupper]
+    rfl
 
 /-- Prime invariance is inherited by the nonhorizontal restriction of a weight. -/
 theorem sideMapWeight_translate

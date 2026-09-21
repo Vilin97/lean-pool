@@ -290,10 +290,10 @@ theorem facetIncidence_eq_sum_slabOccurrencePairing
     (if (StackCells hp N m hm).facetClass ((r, q), k) = s then
         prismCoefficient hp N 0 q * (-1) ^ (k : Nat)
       else 0) =
-      if (StackCells hp N m hm).facetClass ((r, q), k) = s then
-        prismCoefficient hp N 0 q * (-1) ^ (k : Nat)
-      else 0
-  rfl
+      prismCoefficient hp N 0 q * (-1) ^ (k : Nat) *
+        (if (StackCells hp N m hm).facetClass ((r, q), k) = s then 1 else 0)
+  split_ifs <;> simp
+
 
 
 /-! ## Mesh endpoint terms and telescoping -/

@@ -92,7 +92,9 @@ noncomputable def negativeReferenceStableApproximation
         (value hp 0
           (ofCoordinateAffineVertexMap
             (AAK.negativeEquivariantReferenceCoordinateMap hp)) q w) < 0 := by
-      rw [value_zero_ofCoordinateAffineVertexMap]
+      have heq := value_zero_ofCoordinateAffineVertexMap hp
+        (AAK.negativeEquivariantReferenceCoordinateMap hp) q w
+      rw [heq]
       unfold coordinateMean
       haveI : Nonempty (Fin p) := ⟨⟨0, hp.pos⟩⟩
       exact div_neg_of_neg_of_pos
@@ -103,9 +105,7 @@ noncomputable def negativeReferenceStableApproximation
 @[simp] theorem negativeReferenceStableApproximation_zeroCount
     (hp : Nat.Prime p) :
     (negativeReferenceStableApproximation hp).zeroCount = 0 := by
-  simpa [negativeReferenceStableApproximation,
-    StableRegularApproximation.zeroCount] using
-      negativeReferenceApproximation_zeroCount hp
+  exact negativeReferenceApproximation_zeroCount hp
 
 /-- The stable positive reference endpoint together with its nonzero count. -/
 structure PositiveReferenceStableData (hp : Nat.Prime p) where
@@ -159,9 +159,7 @@ noncomputable def positiveReferenceStableApproximation
     (positiveReferenceStableApproximation hp).zeroCount =
       (PrimeOrbitCycle.orbitCycle hp).zeroCount
         (ReferenceAffineOrbitCount.referenceIndex hp) := by
-  simpa [positiveReferenceStableApproximation,
-    StableRegularApproximation.zeroCount] using
-      positiveReferenceApproximation_zeroCount hp
+  exact positiveReferenceApproximation_zeroCount hp
 
 /-- Concrete stable positive-reference endpoint data. -/
 noncomputable def positiveReferenceStableData

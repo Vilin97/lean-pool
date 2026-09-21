@@ -616,8 +616,8 @@ end HorizontalVertexFixed
 /-- Every movable perturbation of the endpoint-adjusted base assignment fixes the two supplied
 endpoint approximations exactly on the horizontal vertices. -/
 theorem horizontalVertexFixed_replaceMovable_endpointAdjustedAssignment
-    {F₀ F₁ : EquivariantCoordinateHomotopy.ZeroFreeMap hp}
     (hp : Nat.Prime p)
+    {F₀ F₁ : EquivariantCoordinateHomotopy.ZeroFreeMap hp}
     (H : EquivariantCoordinateHomotopy.ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : RefinedAffineMap.StableRegularApproximation hp F₀.map)
     (A₁ : RefinedAffineMap.StableRegularApproximation hp F₁.map)

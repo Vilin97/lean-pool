@@ -79,7 +79,7 @@ noncomputable def chart
 
 /-- The existing refined staircase prism supplies a genuine explicit finite cell system whose two
 horizontal triangulations both have combined level `N + L`. -/
-noncomputable def cellSystem
+noncomputable abbrev cellSystem
     (hp : Nat.Prime p) (N L : Nat) :
     RelativeAffineCellSystem hp (N + L) (N + L) (N + L) L where
   lower_le_common := le_rfl

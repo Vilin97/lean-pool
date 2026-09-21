@@ -338,9 +338,21 @@ theorem combined_facetIncidence
   · apply Finset.sum_congr rfl
     intro o ho
     simp [leftIndicator, leftOccurrence, combinedCells, mul_ite, mul_one, mul_zero]
+    change
+      (if (combinedCells C D).facetClass (Sum.inl o.1, o.2) = s then
+          C.coefficient o.1 * RelativeAffineCellSystem.alternatingSign o.2 else 0) =
+        C.coefficient o.1 * RelativeAffineCellSystem.alternatingSign o.2 *
+          (if (combinedCells C D).facetClass (Sum.inl o.1, o.2) = s then 1 else 0)
+    split_ifs <;> simp
   · apply Finset.sum_congr rfl
     intro o ho
     simp [rightIndicator, rightOccurrence, combinedCells, mul_ite, mul_one, mul_zero]
+    change
+      (if (combinedCells C D).facetClass (Sum.inr o.1, o.2) = s then
+          D.coefficient o.1 * RelativeAffineCellSystem.alternatingSign o.2 else 0) =
+        D.coefficient o.1 * RelativeAffineCellSystem.alternatingSign o.2 *
+          (if (combinedCells C D).facetClass (Sum.inr o.1, o.2) = s then 1 else 0)
+    split_ifs <;> simp
 
 end Combined
 

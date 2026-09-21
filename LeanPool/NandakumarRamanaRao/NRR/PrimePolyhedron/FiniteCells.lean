@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Tactic
+import Mathlib.Topology.MetricSpace.Pseudo.Defs
 import LeanPool.NandakumarRamanaRao.NRR.PrimeModel
 
 /-!

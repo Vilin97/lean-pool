@@ -51,7 +51,7 @@ theorem reflectPoint_injective : Function.Injective (@reflectPoint p) :=
     reflectPoint (g • z) = g • reflectPoint z := rfl
 
 /-- Reverse the affine cells and negate their oriented coefficients. -/
-noncomputable def reverseCells
+noncomputable abbrev reverseCells
     (C : RelativeAffineCellSystem hp N₀ N₁ M L) :
     RelativeAffineCellSystem hp N₁ N₀ M L where
   lower_le_common := C.upper_le_common
@@ -141,9 +141,9 @@ theorem reverse_facetIncidence
   have heq : (reverseCells C).facetClass o = s ↔
       C.facetClass o = facetEquiv C s := by
     constructor <;> intro h
-    · simpa using congrArg (facetEquiv C) h
+    · exact congrArg (facetEquiv C) h
     · apply (facetEquiv C).injective
-      simpa using h
+      exact h
   simp only [heq]
   split_ifs <;> simp [reverseCells]
 
@@ -256,20 +256,26 @@ noncomputable def reverseEndpointCollar
     intro q o ho
     have ho' : C.cells.facetClass o = C.upperFacet q := by
       have := congrArg (facetEquiv C.cells) ho
-      simpa using this
+      simp only [Equiv.apply_symm_apply] at this
+      exact this
     obtain ⟨g, hg⟩ := C.upperFacetOccurrenceVertex_eq q o ho'
     refine ⟨g, ?_⟩
     intro i
-    simpa [reverse_facetSignature] using congrArg reflectPoint (hg i)
+    change reflectPoint (C.cells.facetSignature o i) = _
+    simpa only [reflectPoint_smul, reflect_upperCylinderPoint, reflect_lowerCylinderPoint] using
+      congrArg reflectPoint (hg i)
   upperFacetOccurrenceVertex_eq := by
     intro q o ho
     have ho' : C.cells.facetClass o = C.lowerFacet q := by
       have := congrArg (facetEquiv C.cells) ho
-      simpa using this
+      simp only [Equiv.apply_symm_apply] at this
+      exact this
     obtain ⟨g, hg⟩ := C.lowerFacetOccurrenceVertex_eq q o ho'
     refine ⟨g, ?_⟩
     intro i
-    simpa [reverse_facetSignature] using congrArg reflectPoint (hg i)
+    change reflectPoint (C.cells.facetSignature o i) = _
+    simpa only [reflectPoint_smul, reflect_upperCylinderPoint, reflect_lowerCylinderPoint] using
+      congrArg reflectPoint (hg i)
 
 end ExplicitAffineRelativeCollarReverse
 end EquivariantPrismStableRelativeBoundary
