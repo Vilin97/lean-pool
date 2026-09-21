@@ -375,7 +375,7 @@ theorem freeModTensorIso_gpair
     gpair (M := freeMod R V) (N := freeMod R W) m n ≫
         (freeModTensorIso R V W).hom.hom =
       (m ⊗ₘ n) ≫ freeModShuffle R V W := by
-  rw [gpair_def, Category.assoc]
+  erw [gpair_def, Category.assoc]
   exact whisker_eq _ (modTensorπ_freeModTensorIso R V W)
 
 end Iso

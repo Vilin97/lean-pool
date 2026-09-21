@@ -367,8 +367,9 @@ theorem cycleType_permCast {m n : ℕ} (h : m = n)
 /-- `symCast` at a reflexive inequality is the identity. -/
 theorem symCast_le_refl {n : ℕ} (h : n ≤ n) (x : SymGroupAlgebra n) :
     symCast h x = x := by
-  show Finsupp.mapDomain
-    (⇑(Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h))) x = x
+  apply MonoidAlgebra.coeff_injective
+  change Finsupp.mapDomain
+    (⇑(Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h))) x.coeff = x.coeff
   have hid : ∀ σ : Equiv.Perm (Fin n),
       (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h)) σ = σ := by
     intro σ
@@ -389,7 +390,7 @@ theorem symCast_le_refl {n : ℕ} (h : n ≤ n) (x : SymGroupAlgebra n) :
 original, at the relabelled permutation. -/
 theorem symCast_apply_of_eq {m n : ℕ} (h : m = n)
     (x : SymGroupAlgebra m) (g : Equiv.Perm (Fin n)) :
-    symCast (le_of_eq h) x g = x ((permCast h).symm g) := by
+    (symCast (le_of_eq h) x).coeff g = x.coeff ((permCast h).symm g) := by
   subst h
   rw [symCast_le_refl, permCast_rfl]
   rfl
@@ -610,8 +611,8 @@ theorem classFun_eq_zero_of_cycleProd {n : ℕ}
       rw [smul_eq_C_mul, map_mul, eval_C, eval_cycExp]]
     exact hvan t
   intro π₀
-  have hcoeff := congrArg (coeff (cycExp π₀)) hp0
-  rw [hp, coeff_sum, coeff_zero] at hcoeff
+  have hcoeff := congrArg (fun q : MvPolynomial ℕ ℂ => q.coeff (cycExp π₀)) hp0
+  rw [hp, coeff_sum, AddMonoidAlgebra.coeff_zero] at hcoeff
   rw [Finset.sum_congr rfl (fun π _ => coeff_monomial
     (cycExp π₀) (cycExp π) (δ π))] at hcoeff
   rw [Finset.sum_congr rfl (fun π _ => show
@@ -1124,7 +1125,7 @@ theorem shape_e_coeff_one (P : SchurPackage.{u}) {n : ℕ}
     (Shape.e P μ).coeff 1 =
       ((P.dim μ.val : ℂ)) ^ 2 / (n.factorial : ℂ) := by
   have h1 : (Shape.e P μ).coeff 1 = (P.e μ.val).coeff 1 := by
-    show symCast (le_of_eq μ.prop) (P.e μ.val) 1 = P.e μ.val 1
+    change (symCast (le_of_eq μ.prop) (P.e μ.val)).coeff 1 = (P.e μ.val).coeff 1
     rw [symCast_apply_of_eq μ.prop (P.e μ.val) 1,
       permCast_symm, permCast_one]
   have hfac : ((μ.val.card.factorial : ℕ) : ℂ) ≠ 0 :=

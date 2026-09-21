@@ -245,16 +245,20 @@ theorem gammaPairComparison_naturality_aux
   refine hom_ext (fun m n => ?_) (fun m n => ?_) (fun m n => ?_)
     (fun m n => ?_)
   · simp only [comp_evenMap_apply, gammaPairComparison_evenMap,
-      tensorHom_evenMap_tmulEE, gammaPairEven_tmulEE]
+      tensorHom_evenMap_tmulEE]
+    erw [gammaPairEven_tmulEE, gammaPairEven_tmulEE]
     exact gpairLin_naturality R _ f g m n
   · simp only [comp_evenMap_apply, gammaPairComparison_evenMap,
-      tensorHom_evenMap_tmulOO, gammaPairEven_tmulOO]
+      tensorHom_evenMap_tmulOO]
+    erw [gammaPairEven_tmulOO, gammaPairEven_tmulOO]
     exact gpairLin_naturality R _ f g m n
   · simp only [comp_oddMap_apply, gammaPairComparison_oddMap,
-      tensorHom_oddMap_tmulEO, gammaPairOdd_tmulEO]
+      tensorHom_oddMap_tmulEO]
+    erw [gammaPairOdd_tmulEO, gammaPairOdd_tmulEO]
     exact gpairLin_naturality R _ f g m n
   · simp only [comp_oddMap_apply, gammaPairComparison_oddMap,
-      tensorHom_oddMap_tmulOE, gammaPairOdd_tmulOE]
+      tensorHom_oddMap_tmulOE]
+    erw [gammaPairOdd_tmulOE, gammaPairOdd_tmulOE]
     exact gpairLin_naturality R _ f g m n
 
 /-- **The naturality square of the comparison map**, in both

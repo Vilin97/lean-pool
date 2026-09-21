@@ -737,9 +737,10 @@ private theorem rawPair_topSwap
             (M.X ◁ (powPeel M.X n).hom))) ≫
         pairStep A M M' d
           (pairStep A M M' d (rawPair A M M' d n)) := by
-    rw [rawPair_succ_step, rawPair_succ_step,
-      ← pairStep_postcomp, MonoidalCategory.whiskerLeft_comp]
-    simp only [Category.assoc]
+    erw [rawPair_succ_step, rawPair_succ_step,
+      ← pairStep_postcomp]
+    conv_rhs => erw [MonoidalCategory.whiskerLeft_comp]
+    erw [Category.assoc]
     rfl
   have hts : permMor M'.X (n + 1 + 1) topSwap =
       swapTop M'.X n :=
@@ -767,11 +768,10 @@ private theorem rawPair_topSwap
         pairStep A M M' d
           (pairStep A M M' d (rawPair A M M' d n)) :=
     (pairStep_dbl_braid A M M' d (rawPair A M M' d n)).symm
-  rw [hpair, hts, ← whisker_exchange_assoc,
+  erw [hpair, hts, ← whisker_exchange_assoc,
     ← MonoidalCategory.whiskerLeft_comp_assoc, hlow]
-  conv_rhs => rw [MonoidalCategory.whiskerLeft_comp]
-  simp only [Category.assoc]
-  rw [hdbl]
+  conv_rhs => erw [MonoidalCategory.whiskerLeft_comp, Category.assoc]
+  exact congrArg (CategoryStruct.comp _) hdbl.symm
 
 /-- **The exchange law on adjacent transpositions**: the adjacent
 braiding of `M`-slots `a, a + 1` crosses the raw pairing as the
@@ -874,8 +874,8 @@ private theorem rawPair_swap
         rw [hswL, permMor_extPerm]
         exact pairStep_precomp A M M' d _ _
       rw [rawPair_succ_step]
-      rw [← whisker_exchange_assoc, hstep]
-      rw [← MonoidalCategory.whiskerLeft_comp_assoc,
+      erw [← whisker_exchange_assoc, hstep]
+      erw [← MonoidalCategory.whiskerLeft_comp_assoc,
         powPeel_permMor_swap M.X (a + 2 + b) a b rfl,
         MonoidalCategory.whiskerLeft_comp, Category.assoc,
         hpost]
@@ -1027,13 +1027,11 @@ theorem symPowIdem_pairPow
         modPowPerm (A := A) (X := M'.X) n σ := by
     rw [symPowIdem, symmetriser, map_smul, map_sum]
     simp only [modPowAlg_single]
-    rfl
   have hexpR : symPowIdem A M.X n =
       ((n.factorial : ℂ))⁻¹ • ∑ σ : Equiv.Perm (Fin n),
         modPowPerm (A := A) (X := M.X) n σ := by
     rw [symPowIdem, symmetriser, map_smul, map_sum]
     simp only [modPowAlg_single]
-    rfl
   rw [hexpL, hexpR, MonoidalLinear.smul_whiskerRight,
     MonoidalLinear.whiskerLeft_smul, Linear.smul_comp,
     Linear.smul_comp]

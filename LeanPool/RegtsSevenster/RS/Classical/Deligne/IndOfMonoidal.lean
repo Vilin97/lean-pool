@@ -135,12 +135,15 @@ lemma dayCoyonedaIso_hom_rightUnitor [SmallCategory D] [MonoidalCategory D]
         (ρ_ (DayFunctor.mk (coyoneda.obj (op a)) :
           D ⊛⥤ Type v)).hom := by
   apply (dayCoyonedaCorepresentableBy a (𝟙_ D)).homEquiv.injective
-  rw [(dayCoyonedaCorepresentableBy a (𝟙_ D)).homEquiv_comp,
-    dayCoyonedaCorepresentableBy_homEquiv_iso, dayEvaluation_map_apply,
-    dayCoyonedaCorepresentableBy_homEquiv_apply, comp_natTrans,
-    NatTrans.comp_app, CategoryTheory.comp_apply,
-    whiskerLeft_dayUnitIso_inv_app_unitElt,
-    dayRightUnitor_hom_app_unitElt]
+  change (coyoneda.map ((ρ_ a).inv.op)).app (a ⊗ 𝟙_ D)
+      ((dayCoyonedaIso a (𝟙_ D)).hom.natTrans.app (a ⊗ 𝟙_ D)
+        (dayCoyonedaUnitElt a (𝟙_ D))) =
+    (ρ_ (DayFunctor.mk (coyoneda.obj (op a)) : D ⊛⥤ Type v)).hom.natTrans.app
+      (a ⊗ 𝟙_ D)
+      ((DayFunctor.mk (coyoneda.obj (op a)) ◁ (dayUnitIso D).inv).natTrans.app
+        (a ⊗ 𝟙_ D) (dayCoyonedaUnitElt a (𝟙_ D)))
+  rw [dayCoyonedaIso_hom_app_unitElt,
+    whiskerLeft_dayUnitIso_inv_app_unitElt, dayRightUnitor_hom_app_unitElt]
   exact Category.comp_id _
 
 end DayRightUnitCalculus

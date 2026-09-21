@@ -240,6 +240,7 @@ private theorem coeff_det_jtMat_mul {k : ℕ}
       0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
   · rw [if_pos hp, if_pos hp]
   · rw [if_neg hp, if_neg hp, zero_mul, MvPolynomial.coeff_zero]
+    rfl
 
 -- The main algebraic reduction
 open scoped Classical in

@@ -40,7 +40,7 @@ theorem preservesFiniteLimits_of_shortExact
     Limits.PreservesFiniteLimits F :=
   have hboth : Limits.PreservesFiniteLimits F ∧
       Limits.PreservesFiniteColimits F :=
-    ((CategoryTheory.Functor.exact_tfae F).out 0 3).mp h
+    ((CategoryTheory.Functor.exact_tfae F).out 1 4).mp h
   hboth.1
 
 /-- **A functor carrying short exact sequences to short exact
@@ -54,7 +54,7 @@ theorem preservesFiniteColimits_of_shortExact
     Limits.PreservesFiniteColimits F :=
   have hboth : Limits.PreservesFiniteLimits F ∧
       Limits.PreservesFiniteColimits F :=
-    ((CategoryTheory.Functor.exact_tfae F).out 0 3).mp h
+    ((CategoryTheory.Functor.exact_tfae F).out 1 4).mp h
   hboth.2
 
 /-- **A functor carrying short exact sequences to short exact
@@ -67,7 +67,7 @@ theorem preservesHomology_of_shortExact
     (h : ∀ (S : CategoryTheory.ShortComplex C), S.ShortExact →
       (S.map F).ShortExact) :
     F.PreservesHomology :=
-  ((CategoryTheory.Functor.exact_tfae F).out 0 2).mp h
+  ((CategoryTheory.Functor.exact_tfae F).out 1 3).mp h
 
 end General
 

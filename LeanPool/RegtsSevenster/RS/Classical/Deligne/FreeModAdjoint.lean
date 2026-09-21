@@ -216,7 +216,7 @@ noncomputable def freeModAdjunction
         apply Mod.Hom.ext
         show A ◁ (u ≫ g) ≫ actLeft A M.X =
           A ◁ u ≫ A ◁ g ≫ actLeft A M.X
-        rw [MonoidalCategory.whiskerLeft_comp, Category.assoc]
+        erw [MonoidalCategory.whiskerLeft_comp, Category.assoc]
       homEquiv_naturality_right := by
         intro X M M' u v
         exact unit_comp_assoc A X M.X M'.X u.hom v.hom }

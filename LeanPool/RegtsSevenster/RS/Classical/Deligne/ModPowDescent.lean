@@ -83,7 +83,7 @@ theorem sandwichTower_retract
       rw [← modTensorMap_comp, Category.comp_id]
       have hcarrier : ik ≫ rk = 𝟙 M := hk
       rw [hcarrier, modTensorMap_id]
-    rw [Category.assoc]
+    erw [Category.assoc]
     refine Eq.trans (whisker_eq _
       (Category.assoc _ _ _).symm) ?_
     refine Eq.trans (whisker_eq _ (eq_whisker hmid _)) ?_

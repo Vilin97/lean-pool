@@ -75,9 +75,10 @@ theorem stdModel_pow_le_connectionRank {R k ℓ : ℕ}
     ψ.toMonoidHom.comp (MonoidAlgebra.of ℂ _)
   have hρ : ρ.asAlgebraHom = ψ := by
     apply MonoidAlgebra.algHom_ext
-    intro σ
-    rw [Representation.asAlgebraHom_single, one_smul]
-    rfl
+    · intro σ
+      rw [Representation.asAlgebraHom_single, one_smul]
+      rfl
+    · exact Subsingleton.elim _ _
   have hker : ∀ x, skeinRep f n x = 0 → ρ.asAlgebraHom x = 0 := by
     intro x hx
     rw [hρ]

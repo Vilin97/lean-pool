@@ -342,7 +342,7 @@ noncomputable def splitDecomp
   inv := biprod.desc (splitCoeval A B φ w d hw)
     (kernel.ι (splitIdem A B φ v w d hv hw))
   hom_inv_id := by
-    rw [biprod.lift_desc,
+    erw [biprod.lift_desc,
       splitComplProj_ι A B φ v w d hv hw p hp hδ]
     rw [show splitEval A B φ v hv ≫
       splitCoeval A B φ w d hw =
@@ -350,7 +350,7 @@ noncomputable def splitDecomp
     rw [add_sub_cancel]
   inv_hom_id := by
     apply biprod.hom_ext'
-    · rw [biprod.inl_desc_assoc, Category.comp_id]
+    · erw [biprod.inl_desc_assoc, Category.comp_id]
       apply biprod.hom_ext
       · rw [Category.assoc, biprod.lift_fst, biprod.inl_fst,
           splitCoeval_splitEval A B φ v w d hv hw p hp hδ]
@@ -371,23 +371,23 @@ noncomputable def splitDecomp
           (Category.assoc _ _ _).symm]
         rw [splitCoeval_splitEval A B φ v w d hv hw p hp hδ,
           Category.id_comp, sub_self]
-    · rw [biprod.inr_desc_assoc, Category.comp_id]
+    · erw [biprod.inr_desc_assoc, Category.comp_id]
       apply biprod.hom_ext
-      · rw [Category.assoc, biprod.lift_fst, biprod.inr_fst]
+      · erw [Category.assoc, biprod.lift_fst, biprod.inr_fst]
         haveI : IsSplitMono (splitCoeval A B φ w d hw) :=
           IsSplitMono.mk' ⟨splitEval A B φ v hv,
             splitCoeval_splitEval A B φ v w d hv hw p hp hδ⟩
         refine (cancel_mono
           (splitCoeval A B φ w d hw)).mp ?_
-        rw [Limits.zero_comp, Category.assoc]
+        erw [Limits.zero_comp, Category.assoc]
         exact kernel.condition _
-      · rw [Category.assoc, biprod.lift_snd, biprod.inr_snd]
+      · erw [Category.assoc, biprod.lift_snd, biprod.inr_snd]
         refine (cancel_mono (kernel.ι
           (splitIdem A B φ v w d hv hw))).mp ?_
         refine Eq.trans (Category.assoc _ _ _) ?_
         refine Eq.trans (whisker_eq _
           (splitComplProj_ι A B φ v w d hv hw p hp hδ)) ?_
-        rw [Preadditive.comp_sub, Category.comp_id]
+        erw [Preadditive.comp_sub, Category.comp_id]
         have h1 : kernel.ι (splitIdem A B φ v w d hv hw) ≫
             splitIdem A B φ v w d hv hw = 0 :=
           kernel.condition _
