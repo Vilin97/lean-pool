@@ -110,7 +110,7 @@ theorem Ideal.isClosed_of_le_jacobson
 Noetherian rings.** Corollary of `Ideal.isClosed_of_le_jacobson` using
 `IsAdicComplete.le_jacobson_bot`. -/
 theorem Ideal.isClosed_of_isAdicComplete
-    [TopologicalSpace R] 
+    [TopologicalSpace R]
     (I : Ideal R) (hI : IsAdic I) [IsAdicComplete I R]
     (q : Ideal R) : IsClosed (q : Set R) :=
   Ideal.isClosed_of_le_jacobson hI (IsAdicComplete.le_jacobson_bot I) q
