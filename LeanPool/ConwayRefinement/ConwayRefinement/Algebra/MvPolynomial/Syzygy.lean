@@ -75,7 +75,7 @@ theorem exists_eq_sum_monomial_mul_C_of_sum_C_mul_eq_zero (c : B → R₀)
     fun b ↦ ?_⟩
   · have := congrArg ((fun p => AddMonoidAlgebra.coeff p d)) hu
     rw [coeff_sum, AddMonoidAlgebra.coeff_zero] at this
-    simpa only [coeff_C_mul] using this
+    simpa only [coeff_C_mul, Finsupp.zero_apply] using this
   · conv_lhs => rw [(u b).as_sum]
     rw [Finset.sum_subset (Finset.subset_biUnion_of_mem (fun b ↦ (u b).support)
       (Finset.mem_univ b))]

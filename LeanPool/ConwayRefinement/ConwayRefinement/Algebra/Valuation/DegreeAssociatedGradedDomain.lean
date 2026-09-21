@@ -179,7 +179,7 @@ theorem nontrivial_of_associatedGraded_isDomain
             exact congrArg (fun z : ν.filtrationLE m ↦ (z : ν.Component m))
               (Subtype.ext (Subsingleton.elim (x : R) (y : R)))
   have hgraded : (1 : ν.AssociatedGraded) = 0 :=
-    DirectSum.ext ν.Component (fun m ↦ hcomponent m _ _)
+    DFinsupp.ext (fun m ↦ hcomponent m _ _)
   exact one_ne_zero hgraded
 
 variable [WellFoundedLT M]

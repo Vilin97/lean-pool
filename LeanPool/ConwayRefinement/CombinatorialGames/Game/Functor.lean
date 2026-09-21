@@ -81,6 +81,12 @@ noncomputable instance : QPF GameFunctor where
   abs x := ⟨fun p ↦ Set.range (x.2 ∘ .mk p ∘ PLift.up), fun _ ↦ by infer_instance⟩
   repr x := ⟨fun p ↦ Shrink (x.1 p), Sigma.rec (fun _ y ↦ ((equivShrink _).symm y.1).1)⟩
   abs_repr x := by ext; simp [← (equivShrink _).exists_congr_right]
-  abs_map f := by intro ⟨x, f⟩; ext; simp [PFunctor.map, map_def]
+  abs_map f := by
+    intro ⟨x, g⟩
+    apply Subtype.ext
+    funext p
+    change Set.range (f ∘ g ∘ Sigma.mk p ∘ PLift.up) =
+      f '' Set.range (g ∘ Sigma.mk p ∘ PLift.up)
+    exact Set.range_comp f _
 
 end GameFunctor

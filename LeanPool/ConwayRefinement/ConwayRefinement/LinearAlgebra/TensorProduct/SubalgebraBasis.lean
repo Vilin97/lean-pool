@@ -66,8 +66,7 @@ theorem tensorBasisRepr_tmul (g : G) (l : L) :
 /-- The key formula: the coordinates of `j(x) · (B i ⊗ 1)` are `single i x`. -/
 theorem tensorBasisRepr_tensorInclusion_mul (x : S ⊗[K] L) (i : ι) :
     S.tensorBasisRepr B (S.tensorInclusion x * (B i ⊗ₜ[K] 1)) = Finsupp.single i x := by
-  induction x using TensorProduct.induction_on with
-  | zero => rw [map_zero, zero_mul, map_zero, Finsupp.single_zero]
+  induction x using TensorProduct.inductionOn with
   | tmul s l =>
     rw [tensorInclusion_tmul, Algebra.TensorProduct.tmul_mul_tmul, mul_one, tensorBasisRepr_tmul]
     have hsmul : (s : G) * B i = s • B i := rfl

@@ -55,7 +55,6 @@ theorem trailingGrade_eq_top_iff (x : DirectSum ι A) :
     trailingGrade A x = ⊤ ↔ x = 0 := by
   classical
   simp only [trailingGrade, Finset.min_eq_top, DFinsupp.support_eq_empty]
-  rfl
 
 theorem trailingGrade_le_grade {x : DirectSum ι A} {i : ι} (hi : x i ≠ 0) :
     trailingGrade A x ≤ (i : WithTop ι) := by

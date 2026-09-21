@@ -341,8 +341,7 @@ theorem mapLinear_lTensor_funAtZeroMinusTensorId
     (u : U →ₗ[K] FunAtZeroMinus V) (f : E →ₗ[K] E') (T : U ⊗[K] E) :
     Filter.Germ.mapLinear (f.lTensor V) (funAtZeroMinusTensorId u T) =
       funAtZeroMinusTensorId u (f.lTensor U T) := by
-  induction T with
-  | zero => simp
+  induction T using TensorProduct.inductionOn with
   | tmul x e =>
       rw [LinearMap.lTensor_tmul, funAtZeroMinusTensorId_tmul, funAtZeroMinusTensorId_tmul]
       induction u x using Filter.Germ.inductionOn with

@@ -58,13 +58,14 @@ private noncomputable def pullbackNormalizationMonoid (e : A ≃* B)
     [NormalizationMonoid B] : NormalizationMonoid A where
   normUnit a := Units.map e.symm.toMonoidHom (normUnit (e a))
   normUnit_zero := by simp
-  normUnit_mul ha hb := by
-    ext
-    simp [ha, hb]
-  normUnit_coe_units u := by
-    ext
-    change e.symm ↑(normUnit (↑(Units.map e.toMonoidHom u) : B) : Bˣ) = ↑u⁻¹
-    rw [normUnit_coe_units]
+  normUnit_one := by simp
+  normUnit_mul_units {a} u ha := by
+    apply Units.ext
+    have he : e a ≠ 0 := by simpa using ha
+    change e.symm ↑(normUnit (e (a * ↑u))) =
+      ↑(u⁻¹ * Units.map e.symm.toMonoidHom (normUnit (e a)))
+    rw [map_mul, show e ↑u = ↑(Units.map e.toMonoidHom u) from rfl,
+      normUnit_mul_units _ he]
     simp
 
 @[implicit_reducible]
