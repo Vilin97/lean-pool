@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+
+/-!
 # Resolvent mass from the polynomial Cauchy representation
 
 The normalized operator-valued Cauchy representation for every polynomial
@@ -15,7 +18,6 @@ constant polynomial `1` and clear the nonzero scalar `2πi`.
 * `contourIntegral_resolvent_eq_two_pi_I_smul_one_of_polynomial_cauchy` --
   derives the raw resolvent contour identity from polynomial Cauchy data.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
 
 open Complex
 open scoped InnerProductSpace

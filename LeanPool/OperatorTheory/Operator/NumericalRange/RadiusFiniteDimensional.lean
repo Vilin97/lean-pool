@@ -3,14 +3,16 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.NumericalRange.Compact
+import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
+
+/-!
 # Attainment of numerical radius in finite dimension
 
 In a nontrivial finite-dimensional Hilbert space the numerical range is a
 nonempty compact set, so its norm achieves the numerical radius.
 -/
-import LeanPool.OperatorTheory.Operator.NumericalRange.Compact
-import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
 
 open scoped InnerProductSpace
 

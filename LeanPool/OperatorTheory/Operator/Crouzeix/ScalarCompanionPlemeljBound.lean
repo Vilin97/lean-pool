@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ProductBase
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionDecay
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
+
+/-!
 # Quantitative bounds for the regularized Plemelj value
 
 Polynomial division by `X - C xi` factors the cancelled boundary numerator.
@@ -32,9 +37,6 @@ divided-difference term that a sharp boundary argument must control.
 * `norm_crouzeixPolynomialScalarCompanionBoundaryValue_le` -- the resulting
   quantitative bound for the explicit Plemelj boundary value.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductBase
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionDecay
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
 
 open Complex Set
 open scoped Interval Real

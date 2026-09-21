@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.Normed.Operator.Basic
+import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
+
+/-!
 # Boundedness of the numerical range (L1.2)
 
 The numerical range of a continuous linear operator `A` on a complex inner product space is
@@ -21,8 +25,6 @@ contained in the closed disk of radius `‖A‖`: for a unit vector `x`, Cauchy�
 No completeness assumption on `E` is needed. (Recreated in run-003; the original file was not
 recovered after the accidental deletion.)
 -/
-import Mathlib.Analysis.Normed.Operator.Basic
-import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
 
 open scoped InnerProductSpace
 

@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.SpecificLimits.Normed
+import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryMaximum
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
+
+/-!
 # Direct polynomial consequences of the Crouzeix--Palencia theorem
 
 The spectral-set statement is naturally formulated on the closed numerical
@@ -12,9 +17,6 @@ Polynomial sup norms, however, are unchanged by closing a bounded set.  This
 file records the standard norm inequality directly on the numerical range and
 specializes it to powers, centered operators, and the numerical radius.
 -/
-import Mathlib.Analysis.SpecificLimits.Normed
-import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryMaximum
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
 
 open Complex Set
 open scoped InnerProductSpace Polynomial

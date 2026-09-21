@@ -3,14 +3,16 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
+import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryMaximum
+
+/-!
 # Monotonicity of polynomial spectral sets
 
 Polynomial spectral-set estimates persist when the constant is increased or
 when a compact control set is enlarged.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
-import LeanPool.OperatorTheory.Operator.Crouzeix.BoundaryMaximum
 
 open Set
 open scoped InnerProductSpace Polynomial

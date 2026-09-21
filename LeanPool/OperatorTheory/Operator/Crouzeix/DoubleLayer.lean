@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.MeasureTheory.Integral.CircleIntegral
+import Mathlib.Analysis.InnerProductSpace.Positive
+import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
+
+/-!
 # Double-layer positivity of the resolvent kernel (L4.2d)
 
 The symmetrized Crouzeix--Palencia bound `‖p(A) + G⋆‖ ≤ 2 m` rests on one positivity fact:
@@ -31,9 +36,6 @@ Route: for `y = R_A(σ) x` one has `x = σ • y - A y`, hence
 * `isPositive_add_adjoint_smul_resolvent_circleMap` -- the circle kernel in
   positive-operator form.
 -/
-import Mathlib.MeasureTheory.Integral.CircleIntegral
-import Mathlib.Analysis.InnerProductSpace.Positive
-import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
 
 open Complex
 open scoped InnerProductSpace

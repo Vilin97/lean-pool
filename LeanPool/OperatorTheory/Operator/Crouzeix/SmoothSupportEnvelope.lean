@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
+
+/-!
 # Convex envelopes of planar support functions
 
 A real support function determines a closed convex set by intersecting its
@@ -13,7 +16,6 @@ the smooth support-curve construction.  For rounded finite-polytope supports,
 the original convex hull lies in that interior with the explicit rounding
 margin.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
 
 open Complex Metric Set
 open scoped ComplexConjugate

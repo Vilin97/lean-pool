@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanExhaustion
+import Mathlib.Topology.UniformSpace.UniformConvergenceTopology
+
+/-!
 # Complex polynomial approximation on closed disks
 
 This file proves the disk model of the polynomial-approximation input used by
@@ -11,8 +15,6 @@ the Crouzeix--Palencia smooth-exhaustion assembly.  Boundary approximation is
 obtained by radially contracting into the open disk and taking a diagonal
 sequence of Taylor partial sums.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanExhaustion
-import Mathlib.Topology.UniformSpace.UniformConvergenceTopology
 
 open Complex Filter Metric Set
 open scoped Topology

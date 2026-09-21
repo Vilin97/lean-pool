@@ -3,14 +3,16 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
+
+/-!
 # Affine covariance of polynomial spectral sets
 
 An invertible affine change of an operator transports its spectrum and any
 polynomial spectral-set estimate by the same affine map, without changing
 the spectral-set constant.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffinePolynomial
 
 open Set
 open scoped InnerProductSpace Pointwise Polynomial

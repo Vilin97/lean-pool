@@ -3,7 +3,16 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
+import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Topology.ContinuousMap.Compact
+import Mathlib.Topology.Sets.Compacts
+import Mathlib.Analysis.SpecificLimits.Basic
+
+/-!
 # Cauchy's theorem on smooth convex Jordan domains
 
 A function differentiable in a smooth convex Jordan carrier and continuous
@@ -12,13 +21,6 @@ available only in the open carrier, so the proof first integrates along
 strict inward homothetic copies of the boundary.  Compact-uniform convergence
 of their integrands then transports the zero value to the original contour.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
-import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Topology.ContinuousMap.Compact
-import Mathlib.Topology.Sets.Compacts
-import Mathlib.Analysis.SpecificLimits.Basic
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Topology

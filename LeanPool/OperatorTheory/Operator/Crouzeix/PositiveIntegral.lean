@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.InnerProductSpace.Positive
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # Positivity of operator-valued Bochner integrals
 
 The double-layer argument produces a positive continuous-linear-map kernel
@@ -22,9 +27,6 @@ has a positive Bochner integral.
 * `ContinuousLinearMap.intervalIntegral_mono_ae` -- the corresponding result
   on positively oriented intervals.
 -/
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 open MeasureTheory
 open scoped InnerProductSpace

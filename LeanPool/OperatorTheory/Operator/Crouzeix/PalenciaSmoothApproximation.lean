@@ -3,7 +3,17 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.CompactThickeningApprox
+import LeanPool.OperatorTheory.Operator.Crouzeix.GeneralSymmetrized
+import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaExhaustion
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyMass
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCompanionConvergence
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCompanionNormalization
+import LeanPool.OperatorTheory.Operator.Crouzeix.ProductBase
+import LeanPool.OperatorTheory.Operator.NumericalRange.Convex
+
+/-!
 # Crouzeix--Palencia assembly on smooth thickening domains
 
 This file connects the concrete closed-thickening exhaustion to the sharp
@@ -36,14 +46,6 @@ from the set-theoretic approximation alone.
   -- the published-route interface in terms of contractive interior scalar
   companions, uniform polynomial approximation, and calculus identification.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.CompactThickeningApprox
-import LeanPool.OperatorTheory.Operator.Crouzeix.GeneralSymmetrized
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaExhaustion
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCompanionConvergence
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCompanionNormalization
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductBase
-import LeanPool.OperatorTheory.Operator.NumericalRange.Convex
 
 open Complex Filter MeasureTheory Set
 open scoped InnerProductSpace Interval Real

@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximationReduction
+import Mathlib.Analysis.Normed.Affine.Convex
+
+/-!
 # Reducing smooth outer approximation to convex polytopes
 
 Every compact convex subset of a finite-dimensional real normed space can be
@@ -16,8 +20,6 @@ The two half-scale thickenings in the proof compose to the originally
 requested scale.  Consequently the same finite-convex-hull hypothesis reaches
 the exact Crouzeix--Palencia operator bound.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximationReduction
-import Mathlib.Analysis.Normed.Affine.Convex
 
 open Complex Metric Set
 open scoped InnerProductSpace

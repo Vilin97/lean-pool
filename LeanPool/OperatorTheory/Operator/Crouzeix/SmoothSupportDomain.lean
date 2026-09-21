@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveRange
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeTight
+
+/-!
 # Smooth Jordan domains from rounded finite support functions
 
 The rounded log-sum-exp support curve and its open halfspace envelope provide
@@ -12,8 +16,6 @@ uses arbitrarily tight scale choices to discharge the remaining planar outer
 approximation problem, culminating in the exact polynomial
 Crouzeix--Palencia theorem.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurveRange
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeTight
 
 open Complex Metric Set
 open scoped ContDiff InnerProductSpace

@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.AffineDisk
+import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
+import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralAuxiliaryCenter
+import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+
+/-!
 # The scalar Crouzeix companion on a disk
 
 On a circle, conjugating a polynomial turns every positive centered monomial
@@ -31,11 +38,6 @@ for a general smooth convex boundary still require the Plemelj argument.
 * `norm_crouzeixPolynomialScalarCompanion_ball_le_polynomialSupNorm_closedBall`
   -- the centered contraction.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineDisk
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralAuxiliaryCenter
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

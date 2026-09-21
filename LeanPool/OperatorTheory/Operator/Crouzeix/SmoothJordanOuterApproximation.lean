@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyanAssembly
+
+/-!
 # From local smooth outer approximation to a nested exhaustion
 
 An exact realization of every metric thickening by a smooth Jordan domain is
@@ -18,7 +21,6 @@ inside the preceding open carrier, and the next approximation radius is also
 bounded by `1/(n+1)`.  The first bound gives strict nesting; the second makes
 the intersection exactly `K`.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanMergelyanAssembly
 
 open Complex Metric Set
 open scoped InnerProductSpace

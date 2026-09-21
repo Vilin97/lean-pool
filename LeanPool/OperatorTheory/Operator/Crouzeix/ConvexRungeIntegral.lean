@@ -3,15 +3,7 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
-# Polynomial approximation of continuous exterior Cauchy integrals
 
-This file turns the exterior-kernel Runge theorem into an integral theorem.
-A continuous family of kernels is integrated in the Banach space of
-continuous functions on the compact set.  Closed-convex-hull approximation
-gives finite sampled kernel sums, and a diagonal choice of their polynomial
-approximants converges uniformly to the full integral.
--/
 import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeClosure
 import Mathlib.Analysis.Convex.Integral
 import Mathlib.Analysis.Convex.Combination
@@ -20,6 +12,16 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Topology.ContinuousMap.Compact
 import Mathlib.Topology.Sequences
 import Mathlib.Topology.Sets.Compacts
+
+/-!
+# Polynomial approximation of continuous exterior Cauchy integrals
+
+This file turns the exterior-kernel Runge theorem into an integral theorem.
+A continuous family of kernels is integrated in the Banach space of
+continuous functions on the compact set.  Closed-convex-hull approximation
+gives finite sampled kernel sums, and a diagonal choice of their polynomial
+approximants converges uniformly to the full integral.
+-/
 
 open Complex Filter MeasureTheory Set
 open scoped Topology Interval

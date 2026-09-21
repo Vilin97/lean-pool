@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanAffine
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
+
+/-!
 # Similarity transport and normalization of the planar geometry problem
 
 Smooth Jordan outer approximation is invariant under translations and
@@ -16,8 +20,6 @@ normalized: it is enough to treat finite convex hulls containing a closed unit
 disk.  An interior point supplies a small disk, and a homothety expands it to
 unit radius.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanAffine
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
 
 open Complex Metric Set
 open scoped InnerProductSpace

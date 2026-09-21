@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
+import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+
+/-!
 # Constant-polynomial base case for the auxiliary product bound
 
 The recursive product decomposition in `ProductContour.lean` lowers the
@@ -25,8 +29,6 @@ the polynomial sup norm on every nonempty set.
 * `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_le_polynomialSupNorm_sq_of_natDegree_eq_zero`
   -- the sharp L4.2e base case.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real

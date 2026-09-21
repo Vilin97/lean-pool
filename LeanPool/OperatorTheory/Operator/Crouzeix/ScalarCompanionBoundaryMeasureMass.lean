@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.DerivIntegrable
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
+
+/-!
 # Automatic mass of the boundary double-layer density
 
 For an oriented smooth convex Jordan boundary, the double-layer density
@@ -29,11 +36,6 @@ fundamental theorem then gives the mass identity.
 * `crouzeixBoundaryPhaseContractive_of_oriented_carrier_point` -- the same
   geometry gives sharp boundary-phase contractivity for every polynomial.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
-import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.DerivIntegrable
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

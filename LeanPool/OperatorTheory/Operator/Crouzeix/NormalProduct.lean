@@ -3,7 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.AffineAuxiliary
+import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
+import LeanPool.OperatorTheory.Operator.SpectralSet.Normal
+import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
+
+/-!
 # The auxiliary product bound for aligned circles and normal polynomial values
 
 The fixed-domain auxiliary product estimate against the closed numerical
@@ -23,10 +29,6 @@ auxiliary identity.
 * `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_isStarNormal`
   specializes the result to a star-normal operator.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineAuxiliary
-import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
-import LeanPool.OperatorTheory.Operator.SpectralSet.Normal
-import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
 
 open Complex Polynomial Set
 open scoped InnerProductSpace

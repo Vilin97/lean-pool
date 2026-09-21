@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
+import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+
+/-!
 # Polynomial sup-norms on decreasing compact sets
 
 This file supplies the compact-exhaustion transfer needed by approximation
@@ -29,8 +33,6 @@ and nested, hence would have a point in their common intersection.
   approximation principle to the explicit open thickenings from
   `SmoothApprox.lean`.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
 
 open Filter Polynomial Set
 

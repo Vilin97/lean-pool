@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
+import Mathlib.Topology.Algebra.Polynomial
+
+/-!
 # The separated Crouzeix--Palencia product contour
 
 The pointwise polynomial resolvent splitting in `PalenciaSupport.lean` writes
@@ -47,8 +51,6 @@ not by itself a reduction to two attainable norm estimates.
 * `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_le_main_add_remainder`
   -- the corresponding two-term norm reduction.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
-import Mathlib.Topology.Algebra.Polynomial
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real
@@ -107,9 +109,8 @@ private theorem contourIntegral_pow_eq_zero
   · intro t _
     convert (hasDerivAt_pow (n + 1) (Omega.boundaryParam t)).div_const
       ((n + 1 : ℕ) : ℂ) using 1
-    · rfl
-    · field_simp
-      congr 1
+    field_simp
+    congr 1
   · apply ContourIntegrable.of_continuousOn
     · exact Omega.boundaryParam_contDiff.continuous.continuousOn
     · exact (Omega.boundaryParam_contDiff.continuous_deriv (by norm_num)).continuousOn
@@ -268,7 +269,7 @@ theorem crouzeixProductRemainderPolynomial_add_C
     apply Finset.sum_congr rfl
     intro j hj
     have hjpos : 0 < j := lt_of_lt_of_le (Nat.zero_lt_succ i) (Finset.mem_Icc.mp hj).1
-    simp only [Polynomial.coeff_add, Polynomial.coeff_C, if_neg (Nat.ne_of_gt hjpos), add_zero]
+    simp only [Polynomial.coeff_add, Polynomial.coeff_C, ite_eq_right (Nat.ne_of_gt hjpos), add_zero]
   have hintegral (i : ℕ) :
       contourIntegral
           (fun z => star (Polynomial.eval z (p + Polynomial.C a)) *

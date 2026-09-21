@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Algebra.Polynomial.Degree.Lemmas
+import LeanPool.OperatorTheory.Operator.SpectralSet.Basic
+
+/-!
 # Affine changes of variables for complex polynomials
 
 This file records how evaluation, degree, and `polynomialSupNorm` behave when a
@@ -18,8 +22,6 @@ complex polynomial is precomposed with the affine map `z ↦ a * z + b`.
   `Polynomial.natDegree_affineComposition` — the degree bounds, with equality when `a ≠ 0`;
 * `polynomialSupNorm_affineComposition_image` — exact transport of the polynomial sup-norm.
 -/
-import Mathlib.Algebra.Polynomial.Degree.Lemmas
-import LeanPool.OperatorTheory.Operator.SpectralSet.Basic
 
 open scoped Polynomial
 

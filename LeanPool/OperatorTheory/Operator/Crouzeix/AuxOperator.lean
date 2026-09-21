@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
+import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
+import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
+import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+
+/-!
 # The Crouzeix--Palencia auxiliary operator (L4.2c)
 
 This file supplies the kernel-checked contour-integral part of the auxiliary
@@ -39,11 +46,6 @@ theorem from which those identities follow directly.
 * `exists_smoothJordanDomain_norm_bound_crouzeixPolynomialAuxiliaryOperator` --
   the packaged bounded auxiliary-operator construction.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
-import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
-import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
-import Mathlib.Analysis.Normed.Algebra.GelfandFormula
 
 open Complex Set spectrum
 open scoped InnerProductSpace Real Interval

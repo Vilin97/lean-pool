@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
+
+/-!
 # Numerical range of the adjoint (L2.3)
 
 For a continuous linear operator on a complex Hilbert space, the numerical
@@ -14,8 +18,6 @@ range.
 
 * `numericalRange_adjoint` — `W(A†) = conj '' W(A)`.
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
 
 open scoped InnerProductSpace
 open ContinuousLinearMap

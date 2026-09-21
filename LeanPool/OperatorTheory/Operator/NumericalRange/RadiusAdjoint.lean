@@ -3,15 +3,17 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.NumericalRange.Adjoint
+import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
+
+/-!
 # Adjoint and unitary invariance of the numerical radius
 
 The numerical range of the adjoint is obtained by complex conjugation, so its
 radius is unchanged.  Likewise, unitary changes of orthonormal coordinates
 preserve the entire numerical range and hence the numerical radius.
 -/
-import LeanPool.OperatorTheory.Operator.NumericalRange.Adjoint
-import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
 
 open Complex
 open ContinuousLinearMap

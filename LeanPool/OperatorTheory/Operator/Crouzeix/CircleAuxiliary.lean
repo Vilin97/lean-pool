@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
+
+/-!
 # The polynomial auxiliary operator on a centered circle
 
 On the circle `|z| = R`, conjugating a polynomial turns every positive monomial
@@ -17,8 +21,6 @@ the Crouzeix--Palencia polynomial auxiliary operator is simply
 * `crouzeixPolynomialAuxiliaryOperator_ball_eq_eval_zero_smul_one` — the exact centered-circle
   auxiliary identity used by the sharp product bound.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
 
 open Complex ComplexConjugate Polynomial Set
 open scoped InnerProductSpace Interval Real

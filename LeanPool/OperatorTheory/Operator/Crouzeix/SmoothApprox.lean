@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.Convex.Strict
+import Mathlib.Analysis.Normed.Module.Ball.Pointwise
+import Mathlib.Analysis.Normed.Module.RCLike.Real
+import Mathlib.Analysis.Normed.Module.Convex
+import Mathlib.MeasureTheory.Integral.CircleIntegral
+
+/-!
 # Smooth Jordan domains containing compact planar sets
 
 This file supplies the first kernel-checked part of L4.2b.  It packages the
@@ -21,11 +28,6 @@ convex sets, `Ball.Pointwise` identifies closures of metric thickenings,
 `RCLike.Real` identifies the frontier of a complex ball, and `CircleIntegral`
 supplies the smooth regular circle parametrization API.
 -/
-import Mathlib.Analysis.Convex.Strict
-import Mathlib.Analysis.Normed.Module.Ball.Pointwise
-import Mathlib.Analysis.Normed.Module.RCLike.Real
-import Mathlib.Analysis.Normed.Module.Convex
-import Mathlib.MeasureTheory.Integral.CircleIntegral
 
 open Complex Metric Set
 open scoped ContDiff

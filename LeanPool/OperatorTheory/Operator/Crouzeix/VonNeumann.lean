@@ -3,7 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.CStarAlgebra.Spectrum
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+import LeanPool.OperatorTheory.Operator.Dilation.Schaeffer
+import LeanPool.OperatorTheory.Operator.SpectralSet.Basic
+
+/-!
 # Von Neumann's inequality (L4.1)
 
 For a contraction `T` on a complex Hilbert space `E` and a polynomial `p`,
@@ -34,12 +42,6 @@ an inner-product-preserving `V : E →L[ℂ] H` and a unitary `U` on `H` with
 
 Requires `[CompleteSpace E]` (adjoints, the C*-algebra structure on `E →L[ℂ] E`).
 -/
-import Mathlib.Analysis.CStarAlgebra.Spectrum
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import Mathlib.Analysis.Normed.Algebra.GelfandFormula
-import LeanPool.OperatorTheory.Operator.Dilation.Schaeffer
-import LeanPool.OperatorTheory.Operator.SpectralSet.Basic
 
 open Polynomial ContinuousLinearMap
 open scoped InnerProductSpace
@@ -83,14 +85,15 @@ theorem norm_aeval_le_polynomialSupNorm_closedBall_of_mem_unitary {A : Type*} [C
   rcases subsingleton_or_nontrivial A with hA | hA
   · rw [Subsingleton.elim (aeval U p) 0, norm_zero]
     exact polynomialSupNorm_nonneg p _
-  haveI : IsStarNormal U := isStarNormal_of_mem_unitary hU
-  haveI : IsStarNormal (aeval U p) := by
+  have : IsStarNormal U := isStarNormal_of_mem_unitary hU
+  have : IsStarNormal (aeval U p) := by
     rw [← cfc_polynomial p U]
     exact cfc_predicate _ U
   have hM0 : 0 ≤ polynomialSupNorm p (Metric.closedBall (0 : ℂ) 1) :=
     polynomialSupNorm_nonneg p _
   have hbound : spectralRadius ℂ (aeval U p) ≤
       ((polynomialSupNorm p (Metric.closedBall (0 : ℂ) 1)).toNNReal : ENNReal) := by
+    rw [spectralRadius_eq_of_unital]
     refine iSup₂_le fun k hk => ?_
     rw [spectrum.map_polynomial_aeval] at hk
     obtain ⟨z, hz, rfl⟩ := hk

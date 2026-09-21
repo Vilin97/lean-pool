@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRunge
+import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProduct
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
+import LeanPool.OperatorTheory.Operator.NumericalRange.Convex
+import LeanPool.OperatorTheory.Operator.NumericalRange.Nonempty
+
+/-!
 # Universal circle symmetrization implies the normal auxiliary product bound
 
 For any operator, the sharp symmetrized estimate on every polynomial forces
@@ -81,11 +88,6 @@ auxiliary product estimate.
 * `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_isStarNormal_of_forall_symmetrized_bound`
   specializes the sharp estimate to a star-normal operator.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRunge
-import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProduct
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
-import LeanPool.OperatorTheory.Operator.NumericalRange.Convex
-import LeanPool.OperatorTheory.Operator.NumericalRange.Nonempty
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Pointwise
@@ -572,6 +574,7 @@ theorem
       (Polynomial.aeval A p - b • (1 : E →L[ℂ] E)) =
       spectrum ℂ (Polynomial.aeval A p) - ({b} : Set ℂ) := by
     rw [← Algebra.algebraMap_eq_smul_one, ← spectrum.sub_singleton_eq]
+  rw [spectralRadius_eq_of_unital]
   refine iSup₂_le fun w hw => ?_
   rw [hshift] at hw
   obtain ⟨z, hz, b', hb', rfl⟩ := hw
@@ -721,6 +724,7 @@ theorem
       (Polynomial.aeval A p - b • (1 : E →L[ℂ] E)) =
       spectrum ℂ (Polynomial.aeval A p) - ({b} : Set ℂ) := by
     rw [← Algebra.algebraMap_eq_smul_one, ← spectrum.sub_singleton_eq]
+  rw [spectralRadius_eq_of_unital]
   refine iSup₂_le fun w hw => ?_
   rw [hshift] at hw
   obtain ⟨z, hz, b', hb', rfl⟩ := hw

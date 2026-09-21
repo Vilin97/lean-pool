@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
+
+/-!
 # Complex-affine invariance of the boundary double-layer density
 
 A nonconstant complex-affine map `z ↦ a * z + b` carries a smooth strictly
@@ -31,7 +34,6 @@ domain.
   -- sharp phase contractivity on the image from the original probability
   density.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasure
 
 open Complex MeasureTheory Set
 open scoped Interval Real

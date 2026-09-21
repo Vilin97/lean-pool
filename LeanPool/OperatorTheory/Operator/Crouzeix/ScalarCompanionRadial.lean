@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljBound
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionDecay
+import Mathlib.Analysis.Convex.Topology
+
+/-!
 # Inward-chord control for the scalar companion
 
 Full Plemelj continuity at an arbitrary smooth frontier is delicate.  Along
@@ -66,9 +71,6 @@ value.
 * `norm_crouzeixPolynomialScalarCompanionClosedExtension_le_of_boundaryPhaseTransform_radial`
   -- the sharp phase inequality controls that extension on the closure.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemeljBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionDecay
-import Mathlib.Analysis.Convex.Topology
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+import LeanPool.OperatorTheory.Operator.SpectralSet.Normal
+
+/-!
 # Crouzeix--Palencia assembly from auxiliary-operator bounds
 
 This file isolates two algebraic routes to the Crouzeix--Palencia constant.
@@ -52,8 +56,6 @@ formalized below; their distinct analytic hypotheses remain explicit.
   package to the contour operator constructed in `AuxOperator.lean`.
 * `crouzeix_palencia_of_isStarNormal` -- the sharper normal-operator branch.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
-import LeanPool.OperatorTheory.Operator.SpectralSet.Normal
 
 open scoped InnerProductSpace
 
@@ -419,8 +421,8 @@ theorem
     exact polynomialSupNorm_nonneg p S
   have hratio_nonneg (p : Polynomial ℂ) : 0 ≤ ratio p := by
     by_cases hp : m p = 0
-    · simp only [ratio, hp, if_pos, le_rfl]
-    · simp only [ratio, hp, if_false]
+    · simp only [ratio, hp, ite_eq_left, le_rfl]
+    · simp only [ratio, hp, ite_false]
       exact div_nonneg (norm_nonneg _) (hm_nonneg p)
   have hratios_nonempty : ratios.Nonempty := Set.range_nonempty ratio
   have hratios_bdd : BddAbove ratios := by
@@ -428,10 +430,10 @@ theorem
     intro y hy
     obtain ⟨p, rfl⟩ := hy
     by_cases hp : m p = 0
-    · simp only [ratio, hp, if_pos]
+    · simp only [ratio, hp, ite_eq_left]
       exact hK₀
     · have hmp : 0 < m p := lt_of_le_of_ne (hm_nonneg p) (Ne.symm hp)
-      simp only [ratio, hp, if_false]
+      simp only [ratio, hp, ite_false]
       exact (div_le_iff₀ hmp).2 (hcalc₀ p)
   have hratio_le (p : Polynomial ℂ) : ratio p ≤ K := by
     exact le_csSup hratios_bdd (Set.mem_range_self p)
@@ -450,7 +452,7 @@ theorem
       rw [hp, mul_zero, hnorm]
     · have hmp : 0 < m p := lt_of_le_of_ne (hm_nonneg p) (Ne.symm hp)
       apply (div_le_iff₀ hmp).1
-      simpa only [ratio, hp, if_false] using hratio_le p
+      simpa only [ratio, hp, ite_false] using hratio_le p
   let C : ℝ := 2 * K ^ 3 + K ^ 2
   let B : ℝ := Real.sqrt (Real.sqrt C)
   have hC : 0 ≤ C := by
@@ -469,13 +471,13 @@ theorem
     intro y hy
     obtain ⟨p, rfl⟩ := hy
     by_cases hp : m p = 0
-    · simp only [ratio, hp, if_pos]
+    · simp only [ratio, hp, ite_eq_left]
       exact hB
     · have hmp : 0 < m p := lt_of_le_of_ne (hm_nonneg p) (Ne.symm hp)
       have hpow : ratio p ^ 4 ≤ C := by
         calc
           ratio p ^ 4 = ‖Polynomial.aeval A p‖ ^ 4 / m p ^ 4 := by
-            simp only [ratio, hp, if_false, div_pow]
+            simp only [ratio, hp, ite_false, div_pow]
           _ ≤ C := (div_le_iff₀ (pow_pos hmp 4)).2 (hfour K hK hcalc p)
       apply le_of_pow_le_pow_left₀ (n := 4) (by norm_num) hB
       rwa [hBpow]

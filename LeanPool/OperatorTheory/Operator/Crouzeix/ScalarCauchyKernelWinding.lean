@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelConstancy
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
+import Mathlib.Analysis.Convex.Topology
+import Mathlib.Analysis.SpecialFunctions.Complex.Log
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+/-!
 # Winding normalization from oriented convex geometry
 
 For a consistently oriented point `c` of a smooth strictly convex carrier,
@@ -29,11 +36,6 @@ last possibility.  Thus the winding is exactly one.
 * `crouzeixScalarCauchyKernel_eq_one_of_oriented_carrier` -- the normalization
   propagates throughout the carrier.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelConstancy
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanSupport
-import Mathlib.Analysis.Convex.Topology
-import Mathlib.Analysis.SpecialFunctions.Complex.Log
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

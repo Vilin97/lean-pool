@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialBound
+import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusNormal
+import LeanPool.OperatorTheory.Operator.SpectralSet.Normal
+
+/-!
 # Sharp numerical-range bounds for normal operators
 
 For a normal operator, continuous functional calculus improves the general
@@ -11,9 +16,6 @@ For a normal operator, continuous functional calculus improves the general
 fact as a polynomial spectral-set theorem, rewrites the norm bound directly
 on the numerical range, and obtains the classical identity `w(A) = ‖A‖`.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialBound
-import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusNormal
-import LeanPool.OperatorTheory.Operator.SpectralSet.Normal
 
 open Complex Set
 open scoped InnerProductSpace Polynomial

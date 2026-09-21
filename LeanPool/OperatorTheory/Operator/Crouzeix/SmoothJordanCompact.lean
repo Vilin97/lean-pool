@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadial
+
+/-!
 # Boundedness of smooth Jordan domains
 
 The boundary representation in `SmoothJordanDomain`, together with convexity,
@@ -12,8 +16,6 @@ Canonical orientation supplies winding number one throughout the carrier;
 the scalar Cauchy transform then tends to zero at infinity, ruling out an
 unbounded carrier.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadial
 
 open Complex Metric Set
 

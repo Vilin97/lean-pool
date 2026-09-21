@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
+import Mathlib.Analysis.Calculus.LocalExtr.Basic
+import Mathlib.Analysis.Calculus.Deriv.Shift
+import Mathlib.Analysis.LocallyConvex.Separation
+import Mathlib.Topology.Order.IntermediateValue
+
+/-!
 # Supporting normals of smooth convex Jordan domains
 
 At a regular point of a smooth convex boundary, the tangent line is a
@@ -36,11 +43,6 @@ therefore fixes the normal sign on the full frontier.
 * `SmoothJordanDomain.canonicalOrientation` -- a canonical choice between a
   trace and its reversal that has the supporting-normal sign.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothApprox
-import Mathlib.Analysis.Calculus.LocalExtr.Basic
-import Mathlib.Analysis.Calculus.Deriv.Shift
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Topology.Order.IntermediateValue
 
 open Complex Set
 open scoped Real
@@ -298,10 +300,10 @@ noncomputable def SmoothJordanDomain.reverseOrientation
       intro t ht
       by_cases ht0 : t = 0
       · subst t
-        simp only [r, if_pos, mem_Ico, le_refl, true_and]
+        simp only [r, ite_eq_left, mem_Ico, le_refl, true_and]
         positivity
       · have htpos : 0 < t := lt_of_le_of_ne ht.1 (Ne.symm ht0)
-        simp only [r, ht0, if_false, mem_Ico]
+        simp only [r, ht0, ite_false, mem_Ico]
         exact ⟨(sub_pos.mpr ht.2).le, sub_lt_self _ htpos⟩
     have hparam : ∀ t ∈ Ico (0 : ℝ) (2 * Real.pi),
         Omega.boundaryParam (2 * Real.pi - t) =
@@ -309,7 +311,7 @@ noncomputable def SmoothJordanDomain.reverseOrientation
       intro t _ht
       by_cases ht0 : t = 0
       · subst t
-        simp only [sub_zero, r, if_pos]
+        simp only [sub_zero, r, ite_eq_left]
         simpa only [zero_add] using Omega.boundaryParam_periodic 0
       · simp only [ht0, ↓reduceIte, r]
     have hr_eq : r x = r y := by
@@ -320,15 +322,15 @@ noncomputable def SmoothJordanDomain.reverseOrientation
     · by_cases hy0 : y = 0
       · exact hx0.trans hy0.symm
       · subst x
-        simp only [r, if_pos, hy0, if_false] at hr_eq
+        simp only [r, ite_eq_left, hy0, ite_false] at hr_eq
         have : 0 < 2 * Real.pi - y := sub_pos.mpr hy.2
         linarith
     · by_cases hy0 : y = 0
       · subst y
-        simp only [r, hx0, if_false, if_pos] at hr_eq
+        simp only [r, hx0, ite_false, ite_eq_left] at hr_eq
         have : 0 < 2 * Real.pi - x := sub_pos.mpr hx.2
         linarith
-      · simp only [r, hx0, hy0, if_false] at hr_eq
+      · simp only [r, hx0, hy0, ite_false] at hr_eq
         linarith
   boundaryParam_regular := by
     intro t
@@ -401,14 +403,14 @@ theorem SmoothJordanDomain.exists_oriented_point_canonicalOrientation
       ((starRingEnd ℂ) (-I * deriv Omega.boundaryParam 0) *
         (c - Omega.boundaryParam 0)).re ≤ 0
   · have horient : Omega.canonicalOrientation = Omega := by
-      simp only [SmoothJordanDomain.canonicalOrientation, c, hside, if_pos]
+      simp only [SmoothJordanDomain.canonicalOrientation, c, hside, ite_eq_left]
     rw [horient]
     exact ⟨c, hc, hside⟩
   · have hpos : 0 <
         ((starRingEnd ℂ) (-I * deriv Omega.boundaryParam 0) *
           (c - Omega.boundaryParam 0)).re := lt_of_not_ge hside
     have horient : Omega.canonicalOrientation = Omega.reverseOrientation := by
-      simp only [SmoothJordanDomain.canonicalOrientation, c, hside, if_false]
+      simp only [SmoothJordanDomain.canonicalOrientation, c, hside, ite_false]
     rw [horient]
     refine ⟨c, by simpa only [reverseOrientation_carrier] using hc, ?_⟩
     rw [deriv_reverseOrientation_boundaryParam,

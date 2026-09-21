@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.Normed.Operator.Mul
+import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
+
+/-!
 # Algebraic estimates for the numerical radius
 
 The numerical radius is not submultiplicative, but its sharp equivalence
@@ -11,8 +15,6 @@ with the operator norm gives uniform product estimates.  This file records
 those estimates and their immediate commutator and anticommutator
 consequences.
 -/
-import Mathlib.Analysis.Normed.Operator.Mul
-import LeanPool.OperatorTheory.Operator.NumericalRange.Radius
 
 open scoped InnerProductSpace
 

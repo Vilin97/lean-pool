@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureAffine
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCompact
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximation
+
+/-!
 # Controlled inflation of smooth Jordan domains
 
 A bounded smooth convex Jordan domain can be enlarged by an arbitrarily small
@@ -12,9 +17,6 @@ strictly inside the enlarged open carrier, while boundedness controls the
 Hausdorff displacement.  Thus closed smooth Jordan carriers themselves have
 the local outer-approximation property used by the terminal exhaustion.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureAffine
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCompact
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanOuterApproximation
 
 open Complex Metric Set
 

@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelConstancy
+import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
+
+/-!
 # The exterior resolvent Cauchy kernel
 
 The scalar Cauchy kernel vanishes outside a closed convex carrier.  Combining
@@ -15,8 +19,6 @@ operator kernel
 This is the inner-contour calculation needed to identify the scalar companion
 functional calculus with the original conjugate-polynomial auxiliary contour.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelConstancy
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
 
 open Complex Set spectrum
 open scoped InnerProductSpace Interval Real

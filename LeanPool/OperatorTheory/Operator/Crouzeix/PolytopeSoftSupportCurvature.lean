@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupport
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+
+/-!
 # Curvature of finite soft support functions
 
 For the log-sum-exp regularization `h` of a finite directional support
@@ -13,8 +17,6 @@ this radius is nonnegative.  The proof separates into two elementary finite
 inequalities: each exponent is bounded by the log partition, and weighted
 Cauchy--Schwarz makes the velocity variance nonnegative.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupport
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 open Complex Set
 open scoped ContDiff

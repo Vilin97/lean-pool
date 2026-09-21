@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
+import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+import Mathlib.Analysis.Normed.Ring.Units
+import Mathlib.MeasureTheory.Integral.DominatedConvergence
+import Mathlib.Topology.Sets.Compacts
+
+/-!
 # Operator-valued Cauchy formula on a centered circle
 
 This file proves the circle model of the operator-valued Cauchy formula used
@@ -37,11 +44,6 @@ needed for the full Crouzeix--Palencia capstone.
 * `normalized_circleIntegral_eval_smul_resolvent_eq_aeval` -- the polynomial
   operator Cauchy formula.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ContourIntegral
-import Mathlib.Analysis.Normed.Algebra.GelfandFormula
-import Mathlib.Analysis.Normed.Ring.Units
-import Mathlib.MeasureTheory.Integral.DominatedConvergence
-import Mathlib.Topology.Sets.Compacts
 
 open Complex Set spectrum TopologicalSpace
 open scoped Real Interval

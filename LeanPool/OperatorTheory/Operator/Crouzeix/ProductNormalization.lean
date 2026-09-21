@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialSupNormZero
+
+/-!
 # Normalize the Crouzeix product estimate
 
 On an infinite compact control set, a positive-degree polynomial has positive
@@ -16,7 +19,6 @@ Crouzeix--Palencia product estimate to polynomials of unit sup norm.
   transfers the unit-sup-norm product estimate to every positive-degree
   polynomial.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialSupNormZero
 
 open scoped InnerProductSpace
 

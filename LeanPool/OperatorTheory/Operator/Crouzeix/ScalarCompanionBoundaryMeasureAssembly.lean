@@ -3,7 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyFromResolventMass
+import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventContourHomotopy
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureMass
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadialAssembly
+
+/-!
 # L4.2 assembly from the boundary double-layer probability measure
 
 The scalar-companion boundary value is contractive once its explicit
@@ -36,10 +42,6 @@ frontier-sup normalization.
   -- oriented numerical-range support also supplies that basepoint
   normalization, so no separate winding premise remains.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialCauchyFromResolventMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.ResolventContourHomotopy
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionBoundaryMeasureMass
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadialAssembly
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

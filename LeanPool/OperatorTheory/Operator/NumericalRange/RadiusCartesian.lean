@@ -3,14 +3,16 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusAdjoint
+import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusNormal
+
+/-!
 # Cartesian-part bounds from numerical radius
 
 The selfadjoint and skew-adjoint numerators of an operator are each bounded
 in norm by twice its numerical radius.
 -/
-import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusAdjoint
-import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusNormal
 
 open Complex ContinuousLinearMap
 open scoped InnerProductSpace InnerProduct

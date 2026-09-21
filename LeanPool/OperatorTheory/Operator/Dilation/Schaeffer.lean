@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.l2Space
+import Mathlib.Analysis.InnerProductSpace.ProdL2
+import Mathlib.Algebra.Star.Unitary
+import LeanPool.OperatorTheory.Operator.Dilation.Halmos
+
+/-!
 # The Schäffer unitary power dilation
 
 This file proves the Schäffer dilation through a repeated-interaction model on
@@ -13,11 +20,6 @@ The negative sites stay zero, so the system component at site zero evolves as
 `Tⁿ`.  The boundary theorem packages this unitary, its isometric embedding, and
 the resulting power-compression identity.
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.l2Space
-import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.Algebra.Star.Unitary
-import LeanPool.OperatorTheory.Operator.Dilation.Halmos
 
 open scoped ENNReal InnerProductSpace
 

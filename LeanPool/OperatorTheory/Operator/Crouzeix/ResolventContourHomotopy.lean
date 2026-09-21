@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
+import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+
+/-!
 # Affine homotopy invariance of the resolvent contour mass
 
 The contour integral of the operator resolvent is constant along a commuting
@@ -13,9 +18,6 @@ the spectral inclusion `spectrum A ⊆ closure (numericalRange A)` provide that
 resolvent-set condition.  Oriented scalar winding then computes the common
 mass as `2 * pi * I • 1`.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCauchyKernelWinding
-import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
-import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 
 open Complex Filter MeasureTheory Metric Set spectrum
 open scoped InnerProductSpace Interval Pointwise Real
@@ -266,8 +268,7 @@ theorem contourIntegral_const_mul_resolvent_sq_eq_zero
     have hder :=
       ((spectrum.hasDerivAt_resolvent_const_left (hres t)).const_mul D).neg
     convert hder using 1
-    · rfl
-    · simp only [mul_neg, neg_neg]
+    simp only [mul_neg, neg_neg]
   · exact hint
   · simpa only [zero_add] using Omega.boundaryParam_periodic 0
 
@@ -373,10 +374,6 @@ theorem spectrum_affine_smul_one_subset_convex_carrier
     hOmega (spectrum_subset_closure_numericalRange A hlambda)
   convert Omega.strictConvex_carrier.convex hc hlambdaCarrier
     (sub_nonneg.mpr hr.2) hr.1 (by ring) using 1
-  apply Complex.ext <;>
-    simp only [ofReal_sub, ofReal_one, smul_eq_mul, add_re, add_im, mul_re,
-      mul_im, sub_re, one_re, ofReal_re, sub_im, one_im, ofReal_im,
-      sub_self, zero_mul, sub_zero, add_zero, real_smul]
 
 theorem contourIntegral_resolvent_eq_scalar_of_convex_carrier
     [Nontrivial E] (A : E →L[ℂ] E) (Omega : SmoothJordanDomain)

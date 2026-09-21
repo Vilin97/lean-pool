@@ -3,16 +3,18 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.CStarAlgebra.Spectrum
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusSpectrum
+
+/-!
 # Numerical radius of normal operators
 
 For a star-normal operator, the spectral radius equals the operator norm.
 Since the spectrum lies in the closed numerical-range disk, the numerical
 radius therefore equals the operator norm.
 -/
-import Mathlib.Analysis.CStarAlgebra.Spectrum
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusSpectrum
 
 open scoped InnerProductSpace
 

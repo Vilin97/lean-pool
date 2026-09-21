@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.InnerProductSpace.Basic
+
+/-!
 # Numerical range — definition and membership API (L1.1)
 
 The numerical range of a continuous linear operator `A` on a complex inner
@@ -22,7 +25,6 @@ while `σ(A) = {i}`, breaking the spectrum inclusion that later layers need.
 
 No completeness assumption on `E` is needed.
 -/
-import Mathlib.Analysis.InnerProductSpace.Basic
 
 open scoped InnerProductSpace
 

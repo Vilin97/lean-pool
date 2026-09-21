@@ -3,7 +3,17 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.Positive
+import Mathlib.Analysis.InnerProductSpace.StarOrder
+import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
+import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # Contractivity of integration against a positive operator kernel (L4.2d support)
 
 If `K t` is a positive operator for `t ∈ (a, b]` and `∫ t in a..b, K t = c • 1`, then integrating a
@@ -34,14 +44,6 @@ AM–GM inequality `√A * √B ≤ (s * A + B / s) / 2` turns this into an inte
 Requires `[CompleteSpace E]` for the square root of a positive operator and for the operator-valued
 Bochner integrals.
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.InnerProductSpace.Positive
-import Mathlib.Analysis.InnerProductSpace.StarOrder
-import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
-import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 open ContinuousLinearMap MeasureTheory
 open scoped InnerProductSpace
@@ -158,7 +160,7 @@ theorem norm_intervalIntegral_smul_le_of_ae_nonneg {K : ℝ → E →L[ℂ] E} {
       ‖⟪x, (f t • K t) y⟫_ℂ‖ ≤
         M * ((s * RCLike.re ⟪x, K t x⟫_ℂ + RCLike.re ⟪y, K t y⟫_ℂ / s) / 2) := by
     filter_upwards [hpos, hf] with t hKt hft
-    have hKt' : IsPositive (K t) := (nonneg_iff_isPositive _).mp hKt
+    have hKt' : IsPositive (K t) := nonneg_iff_isPositive.mp hKt
     rw [smul_apply, inner_smul_right, norm_mul]
     calc ‖f t‖ * ‖⟪x, K t y⟫_ℂ‖
         ≤ M * (Real.sqrt (RCLike.re ⟪x, K t x⟫_ℂ) * Real.sqrt (RCLike.re ⟪y, K t y⟫_ℂ)) :=

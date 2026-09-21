@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.Complex.AbsMax
+import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
+import LeanPool.OperatorTheory.Operator.Crouzeix.GeneralSymmetrized
+
+/-!
 # Polynomial sup norms on a domain boundary
 
 The maximum-modulus principle identifies the polynomial sup norm on the
@@ -29,9 +34,6 @@ carrier as a field.
 * `polynomialSupNorm_carrier_eq_frontier` -- the direct carrier/frontier
   identity for a bounded smooth Jordan carrier.
 -/
-import Mathlib.Analysis.Complex.AbsMax
-import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
-import LeanPool.OperatorTheory.Operator.Crouzeix.GeneralSymmetrized
 
 open Complex Polynomial Set
 

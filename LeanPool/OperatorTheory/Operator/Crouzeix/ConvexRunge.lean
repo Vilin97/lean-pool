@@ -3,7 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.Complex.Polynomial.Basic
+import Mathlib.Analysis.LocallyConvex.Separation
+import Mathlib.Analysis.SpecificLimits.Normed
+import Mathlib.Topology.UniformSpace.UniformConvergence
+
+/-!
 # Polynomial approximation of exterior Cauchy kernels on convex sets
 
 This file proves the elementary Runge input needed for convex planar compact
@@ -15,10 +21,6 @@ contraction, and its geometric series gives the approximating polynomials.
 underlying affine separator directly for downstream polynomial-hull and
 functional-calculus arguments.
 -/
-import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.SpecificLimits.Normed
-import Mathlib.Topology.UniformSpace.UniformConvergence
 
 open Complex Filter Metric Set
 open scoped Topology
@@ -83,9 +85,9 @@ private theorem exists_affine_contraction
       _ ≤ ‖lam‖ * (R + ‖ζ‖) := by
         apply mul_le_mul_of_nonneg_left _ (norm_nonneg lam)
         apply add_le_add
-        have hz_bound := hR hz
-        simpa only [Metric.mem_closedBall, dist_zero_right] using hz_bound
-        exact le_rfl
+        · have hz_bound := hR hz
+          simpa only [Metric.mem_closedBall, dist_zero_right] using hz_bound
+        · exact le_rfl
       _ = B := rfl
   have hy_re (z : ℂ) (hz : z ∈ K) :
       (lam * (z - ζ)).re < -δ := by

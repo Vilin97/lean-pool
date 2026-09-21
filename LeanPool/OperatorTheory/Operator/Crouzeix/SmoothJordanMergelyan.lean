@@ -3,7 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeIntegral
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCauchyFormula
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanExhaustion
+import Mathlib.Topology.UniformSpace.UniformConvergenceTopology
+
+/-!
 # Polynomial approximation from smooth-Jordan Cauchy formulas
 
 This file converts a normalized scalar Cauchy formula on a compact smooth
@@ -13,10 +19,6 @@ turns each boundary kernel into one whose pole lies strictly outside the
 closed carrier.  `ConvexRungeIntegral` approximates each radialized function,
 and a diagonal selection removes the radial contraction.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ConvexRungeIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanCauchyFormula
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanExhaustion
-import Mathlib.Topology.UniformSpace.UniformConvergenceTopology
 
 open Complex Filter Metric Set
 open scoped Interval Real Topology

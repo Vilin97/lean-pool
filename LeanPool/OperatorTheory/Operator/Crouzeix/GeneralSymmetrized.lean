@@ -3,7 +3,16 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
+import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayer
+import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
+import LeanPool.OperatorTheory.Operator.Crouzeix.PositiveIntegral
+import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
+import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedAuxiliary
+import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedBound
+
+/-!
 # General smooth-domain symmetrized auxiliary bound
 
 This file assembles the sharp L4.2d estimate on a smooth boundary once the
@@ -43,13 +52,6 @@ Cauchy or Plemelj theorem is hidden here.
 * `re_inner_aeval_crouzeixProductRemainderPolynomial_nonneg_of_cauchy_support`
   -- the corresponding accretive quadratic-form statement.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayer
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.PositiveIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
-import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedBound
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

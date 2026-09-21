@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeApproximation
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurve
+
+/-!
 # Arbitrarily tight rounded support envelopes
 
 The quantitative support-envelope estimate becomes an arbitrary open
@@ -11,8 +15,6 @@ neighborhood estimate after choosing the smoothing and rounding scales.  We
 record an explicit choice that remains valid even for one-point finite sets,
 where the logarithmic cardinality term vanishes.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeApproximation
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurve
 
 open Complex Metric Set
 open scoped ContDiff

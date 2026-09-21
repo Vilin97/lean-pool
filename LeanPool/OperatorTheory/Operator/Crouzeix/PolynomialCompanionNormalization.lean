@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialSupNormZero
+
+/-!
 # Normalize approximate polynomial companions
 
 Uniform polynomial approximation naturally gives a scalar sup-norm bound with
@@ -31,7 +34,6 @@ polynomial on an infinite compact control set.
   uniform approximation of a contractive scalar companion with exact
   normalization.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolynomialSupNormZero
 
 open Filter
 
@@ -79,9 +81,7 @@ private theorem
       have hdiv := hnum.div hden (by simpa only [add_zero] using hm.ne')
       change Tendsto (fun j ↦ m / (m + ε j)) atTop (nhds 1)
       convert hdiv using 1
-      · ext j
-        rfl
-      · rw [add_zero, div_self hm.ne']
+      rw [add_zero, div_self hm.ne']
     have haclim : Tendsto (fun j ↦ ((a j : ℝ) : ℂ)) atTop (nhds 1) := by
       change Tendsto (Complex.ofReal ∘ a) atTop (nhds 1)
       simpa only [Complex.ofReal_one] using

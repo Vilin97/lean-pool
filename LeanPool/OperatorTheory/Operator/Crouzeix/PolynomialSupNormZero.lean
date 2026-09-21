@@ -3,7 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
+import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+import Mathlib.Algebra.Polynomial.Roots
+import Mathlib.Topology.DiscreteSubset
+
+/-!
 # The zero case for polynomial sup norms on infinite compact sets
 
 Normalization arguments for the Crouzeix--Palencia auxiliary estimates divide
@@ -25,10 +31,6 @@ principal geometric specialization.
   auxiliary bounds imply the corresponding bounds for every polynomial on a
   nondegenerate closed disk, including the zero sup-norm case.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PalenciaSupport
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
-import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.Topology.DiscreteSubset
 
 open Polynomial ContinuousLinearMap
 

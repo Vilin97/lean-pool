@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionAssembly
+
+/-!
 # Induction through boundary-phase divided differences
 
 At a frontier point `xi`, the sharp scalar-companion boundary estimate for a
@@ -30,7 +33,6 @@ phase step as its phase hypothesis.
 * `crouzeix_palencia_of_convexThickening_cauchy_support_boundaryPhase_induction`
   -- the L4.2 assembly from the remaining positive-degree phase step.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionAssembly
 
 open Complex Filter Set
 open scoped InnerProductSpace Interval Real

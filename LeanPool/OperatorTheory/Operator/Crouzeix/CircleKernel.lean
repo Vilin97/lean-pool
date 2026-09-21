@@ -3,7 +3,14 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.Normed.Algebra.GelfandFormula
+import Mathlib.MeasureTheory.Integral.CircleIntegral
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
+
+/-!
 # The double-layer circle kernel: continuity and integrability (L4.2d support)
 
 For an operator `A` whose numerical range closure lies in the open disk `ball c R`, the circle
@@ -24,11 +31,6 @@ side conditions consumed by the positive-kernel contractivity bound (`PositiveKe
 
 Requires `[CompleteSpace E]` (spectrum, adjoints).
 -/
-import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.Normed.Algebra.GelfandFormula
-import Mathlib.MeasureTheory.Integral.CircleIntegral
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import LeanPool.OperatorTheory.Operator.SpectralSet.SpectrumInNR
 
 open Complex Polynomial spectrum
 open scoped InnerProductSpace

@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelope
+import Mathlib.Analysis.InnerProductSpace.Projection.Minimal
+import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+
+/-!
 # Quantitative approximation by smooth support envelopes
 
 For a nonempty finite point set, the rounded log-sum-exp support envelope is
@@ -12,9 +17,6 @@ metric thickening whose radius is the uniform log-sum-exp overshoot.  The
 proof uses the nearest-point characterization for closed convex sets and the
 direction of the displacement from a nearest point.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelope
-import Mathlib.Analysis.InnerProductSpace.Projection.Minimal
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 
 open Complex Metric Set
 open scoped InnerProductSpace

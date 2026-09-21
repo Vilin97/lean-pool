@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
+
+/-!
 # Smooth planar curves from support functions
 
 For a smooth periodic real support function `h`, let `n(theta)` be the unit
@@ -18,7 +21,6 @@ speed and outward-normal formulas.  These local identities are independent of
 the later global argument identifying the curve with the frontier of its
 support envelope.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.PolytopeSoftSupportCurvature
 
 open Complex Set
 open scoped ContDiff

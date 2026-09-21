@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPhaseInduction
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadial
+
+/-!
 # The boundary double-layer probability density
 
 For a boundary point `xi` and a smooth parametrization `gamma`, the scalar
@@ -32,8 +36,6 @@ those two geometric facts rather than assuming the contraction itself.
 * `crouzeixBoundaryPhaseContractive_of_boundaryDoubleLayerDensity_mass_support`
   -- the sharp invariant from unit mass and oriented support alone.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPhaseInduction
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionRadial
 
 open Complex MeasureTheory Polynomial Set
 open scoped ComplexConjugate Interval Real
@@ -124,9 +126,8 @@ private theorem contourIntegral_pow_eq_zero
   · intro t _
     convert (hasDerivAt_pow (n + 1) (Omega.boundaryParam t)).div_const
       ((n + 1 : ℕ) : ℂ) using 1
-    · rfl
-    · field_simp
-      congr 1
+    field_simp
+    congr 1
   · apply ContourIntegrable.of_continuousOn
     · exact Omega.boundaryParam_contDiff.continuous.continuousOn
     · exact

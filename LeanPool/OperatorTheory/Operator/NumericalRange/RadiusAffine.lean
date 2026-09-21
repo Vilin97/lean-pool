@@ -3,7 +3,15 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.Convex.Function
+import Mathlib.Analysis.Normed.Group.Bounded
+import Mathlib.Topology.MetricSpace.Bounded
+import Mathlib.Topology.Order.Compact
+import LeanPool.OperatorTheory.Operator.NumericalRange.Affine
+import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusAdjoint
+
+/-!
 # Scalar translations of the numerical radius
 
 On a nontrivial Hilbert space, scalar operators have their expected
@@ -11,12 +19,6 @@ numerical radius.  Consequently scalar translation changes numerical radius
 by at most the modulus of the scalar, and centered numerical radii are
 Lipschitz in the center.
 -/
-import Mathlib.Analysis.Convex.Function
-import Mathlib.Analysis.Normed.Group.Bounded
-import Mathlib.Topology.MetricSpace.Bounded
-import Mathlib.Topology.Order.Compact
-import LeanPool.OperatorTheory.Operator.NumericalRange.Affine
-import LeanPool.OperatorTheory.Operator.NumericalRange.RadiusAdjoint
 
 open Filter
 open ContinuousLinearMap

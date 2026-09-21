@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
+import Mathlib.Analysis.Complex.AbsMax
+import Mathlib.Topology.ExtendFrom
+
+/-!
 # Boundary reduction for the scalar Crouzeix companion
 
 The scalar companion is holomorphic in the interior of a smooth Jordan
@@ -32,9 +37,6 @@ closure and the frontier estimate remain explicit hypotheses.
 * `norm_crouzeixPolynomialScalarCompanion_le_of_boundary_tendsto` -- the same
   sharp reduction stated directly in terms of Plemelj boundary limits.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanion
-import Mathlib.Analysis.Complex.AbsMax
-import Mathlib.Topology.ExtendFrom
 
 open Complex Filter Set
 

@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+
+/-!
 # The scalar Crouzeix--Palencia companion
 
 For a polynomial `p` and a smooth Jordan domain `Omega`, the published
@@ -39,8 +43,6 @@ Plemelj boundary-value argument.
 * `hasDerivAt_crouzeixPolynomialScalarCompanion` and
   `analyticOn_crouzeixPolynomialScalarCompanion` -- their interior forms.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
-import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 
 open Complex Filter MeasureTheory Set spectrum
 open scoped Interval Real

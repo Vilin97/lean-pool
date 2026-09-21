@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
+
+/-!
 # Crouzeix--Palencia assembly from approximate auxiliary bounds
 
 Smooth-domain approximation naturally produces auxiliary operators whose
@@ -20,7 +23,6 @@ that error after applying the algebraic Crouzeix--Palencia balance estimate.
   `crouzeix_palencia_of_tendsto_auxiliary_bounds` -- sequence-limit forms
   suited to a smooth exhaustion.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
 
 open Filter
 open scoped InnerProductSpace

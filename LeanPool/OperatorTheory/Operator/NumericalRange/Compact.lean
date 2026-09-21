@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.InnerProductSpace.Continuous
+import Mathlib.Analysis.Normed.Module.FiniteDimension
+import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
+
+/-!
 # Numerical range — compactness in finite dimension
 
 `W(A)` is the image of the unit sphere under the continuous map `x ↦ ⟪x, A x⟫_ℂ`. When `E` is
@@ -18,9 +23,6 @@ In infinite dimension `W(A)` need not be closed (the unilateral shift has `W(S)`
 disk), which is why `spectrum_subset_closure_numericalRange` carries a closure; see
 `spectrum_subset_numericalRange` for the finite-dimensional statement without it.
 -/
-import Mathlib.Analysis.InnerProductSpace.Continuous
-import Mathlib.Analysis.Normed.Module.FiniteDimension
-import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
 
 open scoped InnerProductSpace
 

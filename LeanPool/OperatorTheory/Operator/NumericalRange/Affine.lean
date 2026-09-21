@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.Normed.Module.RCLike.Real
+import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
+
+/-!
 # Affine covariance of the numerical range
 
 Affine changes of an operator induce the same affine changes on its numerical
@@ -11,8 +15,6 @@ range.  The general formula in this file simultaneously covers scalar
 multiplication, translation by a scalar operator, and the centered-rescaled
 operators used in disk normalization arguments.
 -/
-import Mathlib.Analysis.Normed.Module.RCLike.Real
-import LeanPool.OperatorTheory.Operator.NumericalRange.Helpers
 
 open Set
 open scoped InnerProductSpace

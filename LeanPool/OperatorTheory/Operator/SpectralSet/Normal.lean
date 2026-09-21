@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
+import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+
+/-!
 # Polynomials in a normal element — the sup-norm bound
 
 For a normal element `a` of a C*-algebra and a compact set `K ⊇ σ(a)`,
@@ -19,8 +23,6 @@ spectral radius, and `σ(p(a)) = p(σ(a)) ⊆ p(K)` by the spectral mapping theo
 Consumers: unitaries with `K` the closed unit disk (`Crouzeix/VonNeumann.lean`), and normal
 operators on a Hilbert space with `K = closure W(A)` (`Crouzeix/Palencia.lean`).
 -/
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
 
 open Polynomial
 
@@ -35,6 +37,7 @@ theorem norm_aeval_le_polynomialSupNorm_of_isStarNormal_aeval {A : Type*} [CStar
     exact polynomialSupNorm_nonneg p _
   have hM0 : 0 ≤ polynomialSupNorm p K := polynomialSupNorm_nonneg p _
   have hbound : spectralRadius ℂ (aeval a p) ≤ ((polynomialSupNorm p K).toNNReal : ENNReal) := by
+    rw [spectralRadius_eq_of_unital]
     refine iSup₂_le fun k hk => ?_
     rw [spectrum.map_polynomial_aeval] at hk
     obtain ⟨z, hz, rfl⟩ := hk

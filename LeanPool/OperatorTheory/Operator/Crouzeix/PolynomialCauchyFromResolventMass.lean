@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
+
+/-!
 # Polynomial Cauchy representation from resolvent mass
 
 The all-polynomial operator Cauchy formula on a smooth contour follows
@@ -23,7 +26,6 @@ polynomial representation required by the Crouzeix--Palencia assembly.
 * `polynomial_aeval_eq_normalized_contourIntegral_of_resolvent_mass` --
   resolvent mass implies the normalized polynomial operator Cauchy formula.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ProductContour
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real
@@ -44,9 +46,8 @@ private theorem contourIntegral_pow_eq_zero_polynomialCauchy
   · intro t _
     convert (hasDerivAt_pow (n + 1) (Omega.boundaryParam t)).div_const
       ((n + 1 : ℕ) : ℂ) using 1
-    · rfl
-    · field_simp
-      congr 1
+    field_simp
+    congr 1
   · apply ContourIntegrable.of_continuousOn
     · exact Omega.boundaryParam_contDiff.continuous.continuousOn
     · exact

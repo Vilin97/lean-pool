@@ -3,7 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.LocallyConvex.Separation
+import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+
+/-!
 # Constancy of the scalar Cauchy kernel on a convex carrier
 
 For constant boundary data, the scalar Crouzeix companion is the normalized
@@ -29,10 +35,6 @@ need only be checked at one point of each carrier.
 * `crouzeixScalarCauchyKernel_eq_zero_of_not_mem_closure_carrier` -- the
   corresponding exterior winding normalization.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.ScalarCompanionPlemelj
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.LocallyConvex.Separation
-import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
 
 open Complex Set
 open scoped Interval Real
@@ -65,9 +67,8 @@ theorem crouzeixPolynomialScalarCompanionDeriv_C_one_eq_zero_of_mem_carrier
           (Omega.boundaryParam t) := (hasDerivAt_id _).sub_const z
       have hinv := hsub.inv (hne t)
       convert hinv.neg using 1
-      · rfl
-      · rw [inv_pow]
-        ring
+      rw [inv_pow]
+      ring
     · apply ContourIntegrable.of_continuousOn
       · exact Omega.boundaryParam_contDiff.continuous.continuousOn
       · exact

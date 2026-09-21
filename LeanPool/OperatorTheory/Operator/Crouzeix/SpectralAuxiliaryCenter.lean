@@ -3,7 +3,13 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralCauchy
+import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralAuxiliary
+import LeanPool.OperatorTheory.Operator.Crouzeix.AffineAuxiliary
+import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
+
+/-!
 # The disk auxiliary operator at an arbitrary center under spectral enclosure (L4.2 support)
 
 `SpectralAuxiliary.lean` identifies the conjugate-polynomial auxiliary operator of the centered disk
@@ -27,10 +33,6 @@ of the numerical range lies in the open disk `ball c r`.
   same for a closed disk `closure (numericalRange A) ⊆ closedBall c r`, by passing to the limit
   through the open disks `ball c (r + 1/(n+1))` (`ApproximationSupNorm.lean`).
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralCauchy
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.AffineAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.ApproximationSupNorm
 
 open Complex Polynomial spectrum Filter Topology
 open scoped InnerProductSpace Pointwise

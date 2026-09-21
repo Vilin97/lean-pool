@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProduct
+
+/-!
 # Universal symmetrization forces scalar-circle alignment
 
 The off-center scalar-circle example shows that a sharp symmetrized estimate
@@ -22,7 +25,6 @@ theorem gives the literal L4.2e bound for every polynomial.
   derives the actual auxiliary product bound for every polynomial in this
   coupled scalar branch.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.NormalProduct
 
 open Complex Polynomial Set
 open scoped InnerProductSpace

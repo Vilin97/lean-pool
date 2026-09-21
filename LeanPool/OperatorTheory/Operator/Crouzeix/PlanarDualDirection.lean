@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelope
+import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+
+/-!
 # Real dual directions in the complex plane
 
 Every real continuous linear functional on `ℂ` is a dot product with a
@@ -13,8 +17,6 @@ argument of that coefficient vector.  This elementary identification lets
 abstract separating hyperplanes be converted to the angle-indexed support
 halfspaces used by the smooth support-curve construction.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelope
-import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 
 open Complex
 

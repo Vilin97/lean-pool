@@ -3,15 +3,17 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.Analysis.Normed.Module.Normalize
+import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
+
+/-!
 # Nonemptiness of the numerical range
 
 The numerical range is nonempty exactly when the underlying inner-product
 space is nontrivial.  Thus the only empty numerical ranges are those on a
 subsingleton space.
 -/
-import Mathlib.Analysis.Normed.Module.Normalize
-import LeanPool.OperatorTheory.Operator.NumericalRange.Basic
 
 open scoped InnerProductSpace
 

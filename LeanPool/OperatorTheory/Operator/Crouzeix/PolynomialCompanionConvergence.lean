@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
+
+/-!
 # Boundary approximation implies polynomial-companion convergence
 
 For any continuous scalar boundary datum, if polynomials approximate that
@@ -24,7 +27,6 @@ multiple of the same null sequence.
 * `tendsto_aeval_to_crouzeixPolynomialAuxiliaryOperator_of_boundary_approximation`
   -- its conjugate-polynomial specialization.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.AuxOperator
 
 open Complex Filter MeasureTheory Set
 open scoped InnerProductSpace Interval Real

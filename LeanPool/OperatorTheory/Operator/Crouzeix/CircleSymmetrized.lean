@@ -3,7 +3,20 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.CircleKernel
+import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayer
+import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
+import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedBound
+import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
+import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
+import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
+import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedAuxiliary
+import LeanPool.OperatorTheory.Operator.Crouzeix.CircleProduct
+import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
+import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
+
+/-!
 # Circle-model symmetrized Crouzeix–Palencia bound (L4.2d assembly)
 
 Let `A` be an operator whose numerical range closure lies in the open disk `ball c R`, and let
@@ -39,17 +52,6 @@ corollary, and the representation is the polynomial double-layer identity of
   **disk-model Crouzeix–Palencia inequality**: for `‖A‖ < R` and every polynomial `p`,
   `‖p(A)‖ ≤ (1 + √2) * sup_{|z| ≤ R} ‖p(z)‖` (auxiliary-operator value from `CircleAuxiliary.lean`).
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleKernel
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayer
-import LeanPool.OperatorTheory.Operator.Crouzeix.DoubleLayerIntegral
-import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedBound
-import LeanPool.OperatorTheory.Operator.Crouzeix.VonNeumann
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleCauchy
-import LeanPool.OperatorTheory.Operator.NumericalRange.Bounded
-import LeanPool.OperatorTheory.Operator.Crouzeix.SymmetrizedAuxiliary
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleProduct
-import LeanPool.OperatorTheory.Operator.Crouzeix.Palencia
-import LeanPool.OperatorTheory.Operator.Crouzeix.CircleAuxiliary
 
 open Complex Polynomial spectrum
 open scoped InnerProductSpace
@@ -98,7 +100,7 @@ theorem norm_aeval_add_star_le_two_mul_polynomialSupNorm_of_representation (A : 
   refine norm_add_star_le_two_mul_of_doubleLayer_representation (aeval A p) G hrep
     (intervalIntegrable_circleKernel_add_adjoint A hρ hR)
     (intervalIntegrable_eval_smul_circleKernel_add_adjoint A hρ hR p)
-    (fun t _ => (ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+    (fun t _ => ContinuousLinearMap.nonneg_iff_isPositive.mpr
       (isPositive_add_adjoint_smul_resolvent_circleMap A hW' t))
     (intervalIntegral_resolvent_doubleLayer_eq_four_pi_smul_one_of_cauchy A (circleMap c R)
       (intervalIntegrable_deriv_circleMap_smul_resolvent A hρ hR) hCauchy)

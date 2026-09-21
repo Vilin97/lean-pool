@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
+
+/-!
 # Smooth Jordan exhaustions from rounded support envelopes
 
 The finite-polytope construction gives more than the terminal operator
@@ -13,7 +16,6 @@ planar set.  This file exposes that geometric consequence and packages the
 resulting strict nested exhaustion, including the canonical specialization to
 the closed numerical range of an operator.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
 
 open Complex Metric Set
 open scoped InnerProductSpace

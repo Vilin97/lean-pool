@@ -3,7 +3,12 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+
+/-!
 # Smooth support functions for finite planar polytopes
 
 The directional support function of a finite convex hull is a maximum of
@@ -15,9 +20,6 @@ value and exceeds any common upper bound by at most `delta * log(card)`.
 These estimates are the quantitative input for constructing a smooth convex
 support curve around a polygon.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothJordanPolytopeReduction
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 open Complex Set
 open scoped ContDiff

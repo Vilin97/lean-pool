@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralCauchy
+
+/-!
 # The centered-circle auxiliary operator under spectral enclosure
 
 The circle Cauchy formulas in `SpectralCauchy.lean` require only that the
@@ -23,7 +26,6 @@ boundary transform rather than a disk von Neumann inequality.
 * `norm_aeval_add_eval_zero_smul_one_le_two_mul_polynomialSupNorm_closedBall` -- the resulting
   scalar form of the symmetrized estimate when the circle encloses the numerical range.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SpectralCauchy
 
 open Complex ComplexConjugate Polynomial Set spectrum
 open scoped InnerProductSpace Interval Real

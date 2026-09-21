@@ -3,7 +3,11 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurve
+import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeApproximation
+
+/-!
 # Global geometry of smooth support curves
 
 For a smooth periodic support function with positive curvature radius, every
@@ -13,8 +17,6 @@ turns this local derivative calculation into global support-halfspace control,
 uniqueness of the supporting contact, and injectivity on every fundamental
 period.
 -/
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportCurve
-import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportEnvelopeApproximation
 
 open Complex Metric Set
 open scoped ContDiff

@@ -3,7 +3,10 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-/-
+
+import Mathlib.MeasureTheory.Integral.CircleIntegral
+
+/-!
 # Parameterized contour integrals (L4.2a)
 
 Contour integrals along a parameterized closed curve `γ : ℝ → ℂ`, defined as the interval
@@ -31,7 +34,6 @@ contours of the Crouzeix–Palencia argument — become available.
   integrates to the boundary difference, hence to `0` along a closed curve (Cauchy's theorem
   for integrands with a primitive).
 -/
-import Mathlib.MeasureTheory.Integral.CircleIntegral
 
 open scoped Real Interval
 open MeasureTheory Set
