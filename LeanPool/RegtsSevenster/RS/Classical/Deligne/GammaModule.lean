@@ -57,7 +57,6 @@ then by the first. -/
 -- `w` and `w'` are the universes of the even and odd components:
 -- independent by design, and the structure is a pair, so they can
 -- only ever occur together in its type.
-@[nolint checkUnivs]
 structure SuperCommAlgebra.Mod (S : SuperCommAlgebra.{u, u'}) where
   /-- The even component. -/
   even : Type w

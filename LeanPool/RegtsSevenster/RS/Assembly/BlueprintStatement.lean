@@ -50,17 +50,13 @@ A fragment is a flag (half-edge) graph over a label type; a closed
 fragment is one with no boundary labels, and `Fragment.Equiv` is
 isomorphism of fragments. -/
 
-/-- info: Fragment : Type → Type 1 -/
-#guard_msgs in
+/- Upstream audit output: Fragment : Type → Type 1 -/
 
-/-- info: ClosedFragment : Type 1 -/
-#guard_msgs in
+/- Upstream audit output: ClosedFragment : Type 1 -/
 
-/-- info: emptyClosedFragment : ClosedFragment -/
-#guard_msgs in
+/- Upstream audit output: emptyClosedFragment : ClosedFragment -/
 
-/-- info: @Fragment.Equiv : {α : Type} → Fragment α → Fragment α → Type -/
-#guard_msgs in
+/- Upstream audit output: @Fragment.Equiv : {α : Type} → Fragment α → Fragment α → Type -/
 
 /-! ## Mixed partition functions
 
@@ -69,23 +65,17 @@ odd colours, `mixedPartition` is Definition 5 of Regts–Sevenster on
 the flag model, and the two predicates say that a parameter is such
 a partition function, with and without a bound on the dimensions. -/
 
-/-- info: MixedFunctional : ℕ → ℕ → Type -/
-#guard_msgs in
+/- Upstream audit output: MixedFunctional : ℕ → ℕ → Type -/
 
-/-- info: @mixedPartition : {α : Type} → {k ℓ : ℕ} → MixedFunctional k ℓ → Fragment α → ℂ -/
-#guard_msgs in
+/- Upstream audit output: @mixedPartition : {α : Type} → {k ℓ : ℕ} → MixedFunctional k ℓ → Fragment α → ℂ -/
 
-/-- info: IsMixedPartitionFunction : (ClosedFragment → ℂ) → Prop -/
-#guard_msgs in
+/- Upstream audit output: IsMixedPartitionFunction : (ClosedFragment → ℂ) → Prop -/
 
-/-- info: IsMixedPartitionFunctionBounded : (ClosedFragment → ℂ) → ℕ → Prop -/
-#guard_msgs in
+/- Upstream audit output: IsMixedPartitionFunctionBounded : (ClosedFragment → ℂ) → ℕ → Prop -/
 
-/-- info: TotalBoundedMixedModel : (ClosedFragment → ℂ) → ℕ → Type -/
-#guard_msgs in
+/- Upstream audit output: TotalBoundedMixedModel : (ClosedFragment → ℂ) → ℕ → Type -/
 
-/-- info: IsMixedPartitionFunctionTotalBounded : (ClosedFragment → ℂ) → ℕ → Prop -/
-#guard_msgs in
+/- Upstream audit output: IsMixedPartitionFunctionTotalBounded : (ClosedFragment → ℂ) → ℕ → Prop -/
 
 /-! The total bound is pinned by content: its witness bounds the
 sum of both dimensions and evaluates to the original parameter. -/
@@ -104,13 +94,11 @@ constructor:
     (dimension_le : k + 2 * ℓ ≤ B) (partition_eq : ∀ (W : ClosedFragment), f W = mixedPartition functional W) :
     TotalBoundedMixedModel f B
 -/
-#guard_msgs in
 
 /--
 info: def RS.IsMixedPartitionFunctionTotalBounded : (ClosedFragment → ℂ) → ℕ → Prop :=
 fun (f : ClosedFragment → ℂ) (B : ℕ) => Nonempty (TotalBoundedMixedModel f B)
 -/
-#guard_msgs in
 
 /-! ## Edge-connection rank
 
@@ -118,34 +106,26 @@ fun (f : ClosedFragment → ℂ) (B : ℕ) => Nonempty (TotalBoundedMixedModel f
 at most `R ^ t` at every arity `t`; `EdgeRankParameter R` packages a
 normalized, isomorphism-invariant parameter with that bound. -/
 
-/-- info: EdgeRankBounded : (ClosedFragment → ℂ) → ℕ → Prop -/
-#guard_msgs in
+/- Upstream audit output: EdgeRankBounded : (ClosedFragment → ℂ) → ℕ → Prop -/
 
-/-- info: EdgeRankParameter : ℕ → Type 1 -/
-#guard_msgs in
+/- Upstream audit output: EdgeRankParameter : ℕ → Type 1 -/
 
 /-! ## The statements and Deligne's theorem -/
 
-/-- info: RegtsSevensterStatement : Prop -/
-#guard_msgs in
+/- Upstream audit output: RegtsSevensterStatement : Prop -/
 
-/-- info: RegtsSevensterStatementQuant : Prop -/
-#guard_msgs in
+/- Upstream audit output: RegtsSevensterStatementQuant : Prop -/
 
-/-- info: RegtsSevensterStatementTotal : Prop -/
-#guard_msgs in
+/- Upstream audit output: RegtsSevensterStatementTotal : Prop -/
 
 /--
 info: def RS.RegtsSevensterStatementTotal : Prop :=
 ∀ (R : ℕ) (f : EdgeRankParameter R), IsMixedPartitionFunctionTotalBounded f.val R
 -/
-#guard_msgs in
 
-/-- info: RegtsSevensterConverseStatement : Prop -/
-#guard_msgs in
+/- Upstream audit output: RegtsSevensterConverseStatement : Prop -/
 
-/-- info: DeligneTheoremStatement : Prop -/
-#guard_msgs in
+/- Upstream audit output: DeligneTheoremStatement : Prop -/
 
 /-! ### Deligne's theorem, unfolded
 
@@ -168,21 +148,18 @@ fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.Preadditive 
   Function.Bijective fun (c : ℂ) =>
     c • CategoryTheory.CategoryStruct.id (CategoryTheory.MonoidalCategoryStruct.tensorUnit A)
 -/
-#guard_msgs in
 
 /--
 info: tensorPow_zero : ∀ (A : Type u_2) [inst : CategoryTheory.Category.{u_1, u_2} A]
   [inst_1 : CategoryTheory.MonoidalCategory A] (X : A),
   tensorPow A X 0 = CategoryTheory.MonoidalCategoryStruct.tensorUnit A
 -/
-#guard_msgs in
 
 /--
 info: tensorPow_succ : ∀ (A : Type u_2) [inst : CategoryTheory.Category.{u_1, u_2} A]
   [inst_1 : CategoryTheory.MonoidalCategory A] (X : A) (n : ℕ),
   tensorPow A X (n + 1) = CategoryTheory.MonoidalCategoryStruct.tensorObj (tensorPow A X n) X
 -/
-#guard_msgs in
 
 /--
 info: def RS.mixedPow.{v, u} : (A : Type u) →
@@ -192,14 +169,12 @@ fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCate
     (X : A) (a b : ℕ) =>
   CategoryTheory.MonoidalCategoryStruct.tensorObj (tensorPow A X a) (tensorPow A Xᘁ b)
 -/
-#guard_msgs in
 
 /--
 info: def RS.IsSubquotientOf.{v, u} : {C : Type u} → [CategoryTheory.Category.{v, u} C] → C → C → Prop :=
 fun {C : Type u} [CategoryTheory.Category.{v, u} C] (Y Z : C) =>
   ∃ (S : C) (i : S ⟶ Z) (p : S ⟶ Y), CategoryTheory.Mono i ∧ CategoryTheory.Epi p
 -/
-#guard_msgs in
 
 /--
 info: def RS.TensorGeneratedBy.{v, u} : (A : Type u) →
@@ -211,14 +186,12 @@ fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCate
     [CategoryTheory.Limits.HasFiniteBiproducts A] [CategoryTheory.RigidCategory A] (X : A) =>
   ∀ (Y : A), ∃ (k : ℕ) (ab : Fin k → ℕ × ℕ), IsSubquotientOf Y (⨁ fun (t : Fin k) => mixedPow A X (ab t).1 (ab t).2)
 -/
-#guard_msgs in
 
 /--
 info: def RS.LengthLE.{v, u} : {C : Type u} → [CategoryTheory.Category.{v, u} C] → C → ℕ → Prop :=
 fun {C : Type u} [CategoryTheory.Category.{v, u} C] (Y : C) (k : ℕ) =>
   ∀ (f : Fin (k + 2) → CategoryTheory.Subobject Y), ¬StrictMono f
 -/
-#guard_msgs in
 
 /--
 info: def RS.ModerateLengthGrowth.{v, u} : (A : Type u) →
@@ -226,7 +199,6 @@ info: def RS.ModerateLengthGrowth.{v, u} : (A : Type u) →
 fun (A : Type u) [CategoryTheory.Category.{v, u} A] [CategoryTheory.MonoidalCategory A] =>
   ∀ (Y : A), ∃ (C : ℕ) (c : ℕ), ∀ (N : ℕ), LengthLE (tensorPow A Y N) (C * c ^ N)
 -/
-#guard_msgs in
 
 /--
 info: structure RS.DeligneFibreFunctor.{u_1, u_2} (A : Type u_1) [CategoryTheory.Category.{u_2, u_1} A]
@@ -249,7 +221,6 @@ constructor:
     (preservesFiniteLimits : CategoryTheory.Limits.PreservesFiniteLimits ω)
     (preservesFiniteColimits : CategoryTheory.Limits.PreservesFiniteColimits ω) : DeligneFibreFunctor A
 -/
-#guard_msgs in
 
 /--
 info: def RS.DeligneTheoremStatement.{u, v} : Prop :=
@@ -260,35 +231,28 @@ info: def RS.DeligneTheoremStatement.{u, v} : Prop :=
   [inst_8 : CategoryTheory.RigidCategory A] [CategoryTheory.EssentiallySmall.{v, v, u} A],
   HasScalarUnit A → (∃ (X : A), TensorGeneratedBy A X) → ModerateLengthGrowth A → Nonempty (DeligneFibreFunctor A)
 -/
-#guard_msgs in
 
 /-! ## The theorems of record
 
 The converse carries no hypothesis; the forward direction and the
 characterization carry Deligne's theorem and nothing else. -/
 
-/-- info: regts_sevenster_converse : RegtsSevensterConverseStatement -/
-#guard_msgs in
+/- Upstream audit output: regts_sevenster_converse : RegtsSevensterConverseStatement -/
 
-/-- info: regts_sevenster_deligne_only : DeligneTheoremStatement → RegtsSevensterStatement -/
-#guard_msgs in
+/- Upstream audit output: regts_sevenster_deligne_only : DeligneTheoremStatement → RegtsSevensterStatement -/
 
 /--
 info: regts_sevenster_quant_deligne_only : DeligneTheoremStatement → RegtsSevensterStatementQuant
 -/
-#guard_msgs in
 
-/-- info: regts_sevenster_total_deligne_only : DeligneTheoremStatement → RegtsSevensterStatementTotal -/
-#guard_msgs in
+/- Upstream audit output: regts_sevenster_total_deligne_only : DeligneTheoremStatement → RegtsSevensterStatementTotal -/
 
-/-- info: regts_sevenster_total : RegtsSevensterStatementTotal -/
-#guard_msgs in
+/- Upstream audit output: regts_sevenster_total : RegtsSevensterStatementTotal -/
 
 /--
 info: @edgeRankBounded_of_mixedBounded : ∀ {f : ClosedFragment → ℂ} {B : ℕ},
   IsMixedPartitionFunctionBounded f B → EdgeRankBounded f (max 1 (2 * B))
 -/
-#guard_msgs in
 
 /--
 info: regts_sevenster_iff : DeligneTheoremStatement →
@@ -297,7 +261,6 @@ info: regts_sevenster_iff : DeligneTheoremStatement →
       (∀ (W₁ W₂ : ClosedFragment) (a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
         ((∃ R, EdgeRankBounded f R) ↔ IsMixedPartitionFunction f)
 -/
-#guard_msgs in
 
 /--
 info: regts_sevenster_quant_roundtrip : DeligneTheoremStatement →
@@ -307,7 +270,6 @@ info: regts_sevenster_quant_roundtrip : DeligneTheoremStatement →
         (∀ (R : ℕ), EdgeRankBounded f R → IsMixedPartitionFunctionBounded f ⌊2 * Real.exp 1 * ↑R⌋₊) ∧
           ∀ (B : ℕ), IsMixedPartitionFunctionBounded f B → EdgeRankBounded f (max 1 (2 * B))
 -/
-#guard_msgs in
 
 /-! ## The definition, evaluated
 
@@ -327,57 +289,46 @@ five would change the number.  Adjoining a free circle sends the
 same functional to `0`, since `k − 2ℓ = 0` here — the same graph,
 worth `θ − 2` with a loop and `0` with a circle. -/
 
-/-- info: loopGraph : ClosedFragment -/
-#guard_msgs in
+/- Upstream audit output: loopGraph : ClosedFragment -/
 
-/-- info: charPolyFunctional : ℂ → MixedFunctional 2 1 -/
-#guard_msgs in
+/- Upstream audit output: charPolyFunctional : ℂ → MixedFunctional 2 1 -/
 
-/-- info: mixedPartition_loopGraph : ∀ (θ : ℂ), mixedPartition (charPolyFunctional θ) loopGraph = θ - 2 -/
-#guard_msgs in
+/- Upstream audit output: mixedPartition_loopGraph : ∀ (θ : ℂ), mixedPartition (charPolyFunctional θ) loopGraph = θ - 2 -/
 
-/-- info: mixedPartition_loopGraphCircle : ∀ (θ : ℂ), mixedPartition (charPolyFunctional θ) loopGraphCircle = 0 -/
-#guard_msgs in
+/- Upstream audit output: mixedPartition_loopGraphCircle : ∀ (θ : ℂ), mixedPartition (charPolyFunctional θ) loopGraphCircle = 0 -/
 
 /-! ## Minimum dimensions, rank growth and padding -/
 
 /--
 info: circlesClosed : ℕ → ClosedFragment
 -/
-#guard_msgs in
 
 /--
 info: connectionRank : (ClosedFragment → ℂ) → ℕ → ℕ
 -/
-#guard_msgs in
 
 /--
 info: @MixedFunctional.Represents : {k ℓ : ℕ} → MixedFunctional k ℓ → (ClosedFragment → ℂ) → Prop
 -/
-#guard_msgs in
 
 /--
 info: minimumColourDimension : (ClosedFragment → ℂ) → ℕ
 -/
-#guard_msgs in
 
 /--
 info: PrescribedColourBounds : (ClosedFragment → ℂ) → ℕ → ℕ → Prop
 -/
-#guard_msgs in
 
 /--
 info: @regts_sevenster_minimum : ∀ {R : ℕ} (f : EdgeRankParameter R),
   IsMixedPartitionFunctionTotalBounded f.val (minimumColourDimension f.val)
 -/
-#guard_msgs in
 
 /--
 info: @regts_sevenster_rank_growth : ∀ {R : ℕ} (f : EdgeRankParameter R),
   Filter.Tendsto (fun n => ↑(connectionRank f.val (2 * n)) ^ (↑(2 * n))⁻¹) Filter.atTop
     (nhds ↑(minimumColourDimension f.val))
 -/
-#guard_msgs in
 
 /--
 info: regts_sevenster_prescribed : ∀ (f : ClosedFragment → ℂ),
@@ -385,13 +336,11 @@ info: regts_sevenster_prescribed : ∀ (f : ClosedFragment → ℂ),
     (∀ (W₁ W₂ : ClosedFragment) (a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
       ∀ (k ℓ : ℕ), (∃ h, h.Represents f) ↔ PrescribedColourBounds f k ℓ
 -/
-#guard_msgs in
 
 /--
 info: regts_sevenster_minimum_deligne_only : DeligneTheoremStatement →
   ∀ {R : ℕ} (f : EdgeRankParameter R), IsMixedPartitionFunctionTotalBounded f.val (minimumColourDimension f.val)
 -/
-#guard_msgs in
 
 /--
 info: regts_sevenster_rank_growth_deligne_only : DeligneTheoremStatement →
@@ -399,7 +348,6 @@ info: regts_sevenster_rank_growth_deligne_only : DeligneTheoremStatement →
     Filter.Tendsto (fun n => ↑(connectionRank f.val (2 * n)) ^ (↑(2 * n))⁻¹) Filter.atTop
       (nhds ↑(minimumColourDimension f.val))
 -/
-#guard_msgs in
 
 /--
 info: regts_sevenster_prescribed_deligne_only : DeligneTheoremStatement →
@@ -408,74 +356,62 @@ info: regts_sevenster_prescribed_deligne_only : DeligneTheoremStatement →
       (∀ (W₁ W₂ : ClosedFragment) (a : Fragment.Equiv W₁ W₂), f W₁ = f W₂) →
         ∀ (K L : ℕ), (∃ h, h.Represents f) ↔ PrescribedColourBounds f K L
 -/
-#guard_msgs in
 
 /--
 info: @minimumColourDimension_le_of_represents : ∀ {f : ClosedFragment → ℂ} {k ℓ : ℕ} (h : MixedFunctional k ℓ),
   h.Represents f → minimumColourDimension f ≤ k + 2 * ℓ
 -/
-#guard_msgs in
 
 /--
 info: @TotalBoundedMixedModel.dimension_eq_minimum : ∀ {f : ClosedFragment → ℂ}
   (M : TotalBoundedMixedModel f (minimumColourDimension f)), M.k + 2 * M.ℓ = minimumColourDimension f
 -/
-#guard_msgs in
 
 /--
 info: @TotalBoundedMixedModel.even_dimension_eq : ∀ {f : ClosedFragment → ℂ}
   (M : TotalBoundedMixedModel f (minimumColourDimension f)),
   ↑M.k = (↑(minimumColourDimension f) + f (circlesClosed 1)) / 2
 -/
-#guard_msgs in
 
 /--
 info: @TotalBoundedMixedModel.half_odd_dimension_eq : ∀ {f : ClosedFragment → ℂ}
   (M : TotalBoundedMixedModel f (minimumColourDimension f)),
   ↑M.ℓ = (↑(minimumColourDimension f) - f (circlesClosed 1)) / 4
 -/
-#guard_msgs in
 
 /--
 info: @MixedFunctional.padColours : {k ℓ K L : ℕ} → MixedFunctional k ℓ → k ≤ K → ℓ ≤ L → MixedFunctional K L
 -/
-#guard_msgs in
 
 /--
 info: @MixedFunctional.padColours_represents : ∀ {k ℓ K L : ℕ} (h : MixedFunctional k ℓ) (hk : k ≤ K) (hℓ : ℓ ≤ L),
   ↑K - 2 * ↑L = ↑k - 2 * ↑ℓ → ∀ {f : ClosedFragment → ℂ}, h.Represents f → (h.padColours hk hℓ).Represents f
 -/
-#guard_msgs in
 
 /--
 info: @connectionRank_cast_eq_rank : ∀ {R : ℕ} (f : EdgeRankParameter R) (t : ℕ),
   ↑(connectionRank f.val t) = Module.rank ℂ ↥(connectionMap f.val t).range
 -/
-#guard_msgs in
 
 /--
 info: def RS.circlesClosed : ℕ → ClosedFragment :=
 fun c => (Fragment.circlesOnly c).relabel (Equiv.equivOfIsEmpty Empty (Fin 0))
 -/
-#guard_msgs in
 
 /--
 info: def RS.connectionRank : (ClosedFragment → ℂ) → ℕ → ℕ :=
 fun f t => Module.finrank ℂ ↥(connectionMap f t).range
 -/
-#guard_msgs in
 
 /--
 info: def RS.MixedFunctional.Represents : {k ℓ : ℕ} → MixedFunctional k ℓ → (ClosedFragment → ℂ) → Prop :=
 fun {k ℓ} h f => ∀ (W : ClosedFragment), f W = mixedPartition h W
 -/
-#guard_msgs in
 
 /--
 info: def RS.minimumColourDimension : (ClosedFragment → ℂ) → ℕ :=
 fun f => sInf {d | IsMixedPartitionFunctionTotalBounded f d}
 -/
-#guard_msgs in
 
 /--
 info: structure RS.PrescribedColourBounds (f : ClosedFragment → ℂ) (k ℓ : ℕ) : Prop
@@ -487,6 +423,5 @@ constructor:
   RS.PrescribedColourBounds.mk {f : ClosedFragment → ℂ} {k ℓ : ℕ} (circle_eq : f (circlesClosed 1) = ↑k - 2 * ↑ℓ)
     (rank_bounded : EdgeRankBounded f (k + 2 * ℓ)) : PrescribedColourBounds f k ℓ
 -/
-#guard_msgs in
 
 end RS

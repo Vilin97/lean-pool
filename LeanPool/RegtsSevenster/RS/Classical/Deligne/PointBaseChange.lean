@@ -360,7 +360,6 @@ the space of coordinate vectors of its dimension.  The two
 equivalences `RS.toSuperVectEvenEquiv` and `RS.toSuperVectOddEquiv`
 identify the components of the base change with the components of
 this super vector space. -/
-@[nolint unusedArguments]
 noncomputable def toSuperVect (P : SuperPoint S)
     (M : S.Mod.{u, u, u, u})
     [FiniteDimensional ℂ (M.tensor (pointMod P)).even]

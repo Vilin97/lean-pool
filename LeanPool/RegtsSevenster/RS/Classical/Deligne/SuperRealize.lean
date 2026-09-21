@@ -63,7 +63,6 @@ spaces. -/
 -- `u` and `u'` are the universes of the even and odd components:
 -- independent by design, and the structure is a pair, so they can
 -- only ever occur together in its type.
-@[nolint checkUnivs]
 structure SuperCommAlgebra where
   /-- The even component. -/
   even : Type u

@@ -95,7 +95,6 @@ private theorem std_coev_ev (k ℓ : ℕ) :
         (TensorProduct.lid ℂ (Fin k → ℂ)).symm.toLinearMap) ∘ₗ
       ((TensorProduct.rid ℂ (Fin k → ℂ)).toLinearMap ∘ₗ LinearMap.fst ℂ _ _)
     ext x
-    set_option synthInstance.maxHeartbeats 1000000 in
     all_goals simp [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
       stdCopairOddElem,
       mk_sum_split, mk_sum_left, mk_add_left,
@@ -134,7 +133,6 @@ private theorem std_coev_ev (k ℓ : ℕ) :
       ((TensorProduct.rid ℂ (Fin (2 * ℓ) → ℂ)).toLinearMap ∘ₗ LinearMap.snd ℂ _
         _)
     ext x
-    set_option synthInstance.maxHeartbeats 1000000 in
     all_goals simp [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
       stdCopairOddElem,
       mk_sum_split, mk_sum_left, mk_sum_right,
@@ -201,7 +199,6 @@ private theorem std_ev_coev (k ℓ : ℕ) :
         (TensorProduct.rid ℂ (Fin k → ℂ)).symm.toLinearMap) ∘ₗ
       ((TensorProduct.lid ℂ (Fin k → ℂ)).toLinearMap ∘ₗ LinearMap.fst ℂ _ _)
     ext x
-    set_option synthInstance.maxHeartbeats 1000000 in
     all_goals simp [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
       stdCopairOddElem,
       mk_sum_split, mk_sum_left, mk_add_left,
@@ -240,7 +237,6 @@ private theorem std_ev_coev (k ℓ : ℕ) :
       ((TensorProduct.lid ℂ (Fin (2 * ℓ) → ℂ)).toLinearMap ∘ₗ LinearMap.fst ℂ _
         _)
     ext x
-    set_option synthInstance.maxHeartbeats 1000000 in
     all_goals simp [-Prod.mk_add_mk, -Prod.smul_mk, stdCopairEvenElem,
       stdCopairOddElem,
       mk_sum_split, mk_sum_left, mk_sum_right, mk_add_left,

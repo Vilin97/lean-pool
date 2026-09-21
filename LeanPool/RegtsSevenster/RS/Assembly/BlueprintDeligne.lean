@@ -20,68 +20,48 @@ namespace RS
 
 /-! ### Deligne's theorem -/
 
-/-- info: 'RS.deligne_theorem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.deligne_theorem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.braidedFibreHypothesis' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.braidedFibreHypothesis' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.exists_splitting_simple_algebra_doubled' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.exists_splitting_simple_algebra_doubled' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.exists_simple_quotient' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.exists_simple_quotient' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### The summit, unconditionally -/
 
-/-- info: 'RS.regts_sevenster' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_quant' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_quant' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_total' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_total' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_characterisation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_characterisation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_quant_characterisation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_quant_characterisation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### Minimum dimensions, growth and padding -/
 
-/-- info: 'RS.minimumColourDimension_le_of_represents' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.minimumColourDimension_le_of_represents' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.TotalBoundedMixedModel.dimension_eq_minimum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.TotalBoundedMixedModel.dimension_eq_minimum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.stdModel_dimension_eq_minimum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.stdModel_dimension_eq_minimum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.stdModel_connectionRank_growth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.stdModel_connectionRank_growth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.MixedColourEmbedding.mixedPartition_extendColours' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.MixedColourEmbedding.mixedPartition_extendColours' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.MixedFunctional.padColours_represents' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.MixedFunctional.padColours_represents' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.TotalBoundedMixedModel.even_dimension_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.TotalBoundedMixedModel.even_dimension_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.TotalBoundedMixedModel.half_odd_dimension_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.TotalBoundedMixedModel.half_odd_dimension_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_minimum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_minimum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_rank_growth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_rank_growth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_prescribed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_prescribed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 end RS

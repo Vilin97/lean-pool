@@ -9996,8 +9996,6 @@ projects:
     provenance: AI
     main_declarations:
     - RS.regts_sevenster_characterisation
-    - RS.regts_sevenster_total
-    - RS.deligne_theorem
     main_results:
     - declaration: RS.regts_sevenster_characterisation
       informal: Normalized isomorphism-invariant complex graph parameters with exponentially

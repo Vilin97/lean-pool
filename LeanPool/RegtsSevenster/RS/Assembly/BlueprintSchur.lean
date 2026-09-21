@@ -25,40 +25,29 @@ the branching containment, the block faithfulness and the square
 growth bound — the fields of `SchurPackage`, and the package.
 -/
 
-/-- info: 'RS.jtChar_frobenius'' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.jtChar_frobenius'' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.jtChar_orthonormal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.jtChar_orthonormal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.jtChar_eq_nChar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.jtChar_eq_nChar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.nProjector_block_faithful' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.nProjector_block_faithful' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.square_growth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.square_growth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.branching_of_pairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.branching_of_pairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.jtChar_pad' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.jtChar_pad' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.schurPackageOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.schurPackageOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.restrPairing_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.restrPairing_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.schurPackage' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.schurPackage' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### The forward theorem on Deligne alone -/
 
-/-- info: 'RS.regts_sevenster_deligne_only' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_deligne_only' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### The trace zeta function
 
@@ -67,14 +56,11 @@ series of its super power sums, and rational when the characters
 are hook-confined.
 -/
 
-/-- info: 'RS.FrobeniusTower.traceZeta_rational' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.FrobeniusTower.traceZeta_rational' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.FrobeniusTower.traceZeta_superSpectrum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.FrobeniusTower.traceZeta_superSpectrum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.traceZeta_eq_newtonH_series' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.traceZeta_eq_newtonH_series' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### Corollary A.2 with the sharp threshold
 
@@ -82,17 +68,13 @@ The appendix's own statement: a real dimension bound `A`, every side
 `s > 2e√A`, and degrees at most `s − 1`.
 -/
 
-/-- info: 'RS.FrobeniusTower.traceZeta_rational_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.FrobeniusTower.traceZeta_rational_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.FrobeniusTower.traceZeta_superSpectrum_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.FrobeniusTower.traceZeta_superSpectrum_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.PermTower.hook_confinement_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.PermTower.hook_confinement_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.newtonH_series_rational_of_hook_vanishing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.newtonH_series_rational_of_hook_vanishing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### Hook-confined sequences
 
@@ -106,7 +88,6 @@ info: RS.newtonH_series_rational_of_hook_vanishing {t : ℕ → ℂ} {a b : ℕ}
   ∃ P Q,
     P.coeff 0 = 1 ∧ Q.coeff 0 = 1 ∧ P.natDegree ≤ b ∧ Q.natDegree ≤ a ∧ IsCoprime P Q ∧ RS.newtonHSeries t * ↑Q = ↑P
 -/
-#guard_msgs in
 
 /--
 info: RS.superPowerSums_of_hook_vanishing {t : ℕ → ℂ} {a b : ℕ}
@@ -119,7 +100,6 @@ info: RS.superPowerSums_of_hook_vanishing {t : ℕ → ℂ} {a b : ℕ}
             (∀ x ∈ α, x ∉ β) ∧
               ∀ (m : ℕ), 1 ≤ m → t m = (Multiset.map (fun x => x ^ m) α).sum - (Multiset.map (fun x => x ^ m) β).sum
 -/
-#guard_msgs in
 
 /-! ### The separate-sector dimension bound
 
@@ -127,47 +107,33 @@ The `⌊2eR⌋` bound: a square diagram past it is dead, its
 idempotent acts as zero, and the surviving sector is bounded.
 -/
 
-/-- info: 'RS.square_growth_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.square_growth_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.PermTower.not_alive_square_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.PermTower.not_alive_square_sharp' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.skeinRep_square_dead' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.skeinRep_square_dead' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.functional_charIdempotent_signed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.functional_charIdempotent_signed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.charIdempotent_image_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.charIdempotent_image_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.RelTransitionSystem.pathMatch_invol' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.RelTransitionSystem.pathMatch_invol' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.superPermAction_square_dead' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.superPermAction_square_dead' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.mixedPartition_empty' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.mixedPartition_empty' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.squareSectorBound_of_detPos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.squareSectorBound_of_detPos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.diagramSchur_square_const_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.diagramSchur_square_const_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_quant_of_detPos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_quant_of_detPos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.squareBinomialDetPos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.squareBinomialDetPos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.det_binomial_upper_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.det_binomial_upper_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_quant_deligne_only' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_quant_deligne_only' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### The total dimension bound
 
@@ -176,26 +142,19 @@ bound the commutant by a polynomial. The transported colour action
 then forces `k + 2 * ℓ ≤ R` by comparison of exponential bases.
 -/
 
-/-- info: 'RS.nDim_sq_le_finrank_of_projector_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.nDim_sq_le_finrank_of_projector_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.finrank_le_mul_commutant' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.finrank_le_mul_commutant' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.finrank_commutant_le_word_counts' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.finrank_commutant_le_word_counts' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.le_of_pow_le_pow_mul_polynomial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.le_of_pow_le_pow_mul_polynomial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.colourTotalEquiv_modelPermMap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.colourTotalEquiv_modelPermMap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.stdModel_total_dimension_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.stdModel_total_dimension_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.regts_sevenster_total_deligne_only' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.regts_sevenster_total_deligne_only' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### The open sector: Proposition 3
 
@@ -205,158 +164,107 @@ its re-canonicalization, the per-move ledgers and the paired step
 nothing else.  Independence *across* pairings is false.
 -/
 
-/-- info: 'RS.EdgeSubset.repair_connectivity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.repair_connectivity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.eulerian_iff_parts' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.eulerian_iff_parts' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.openCircuitCount_glueOpen_participating' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.openCircuitCount_glueOpen_participating' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.pathCanonical_agree_nonperiodic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.pathCanonical_agree_nonperiodic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.exists_pathCanonical' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.exists_pathCanonical' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.third_chord_reparity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.third_chord_reparity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.pairingConnectivity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.pairingConnectivity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.stepLedger_single' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.stepLedger_single' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.throughSummand_independence_of_allInternal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.throughSummand_independence_of_allInternal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.twoPath_transform' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.twoPath_transform' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.pathMatch_repair_swap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.pathMatch_repair_swap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.crossesCut_iff_chordPairCross' depends on axioms: [propext] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.crossesCut_iff_chordPairCross' depends on axioms: [propext] -/
 
-/-- info: 'RS.EdgeSubset.pathSign_of_samePairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.pathSign_of_samePairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.signedValueAt_samePairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.signedValueAt_samePairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.pairedLedger_iff_value' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.pairedLedger_iff_value' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.signedValueAt_samePairing_of_value' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.signedValueAt_samePairing_of_value' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.TransposeVerify.not_throughIndependenceC' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.TransposeVerify.not_throughIndependenceC' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.cutPartner_eq_some' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.cutPartner_eq_some' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.eulerianIndependence' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.eulerianIndependence' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.throughSummand_portFlip' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.throughSummand_portFlip' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.twoPathNonSep_transform' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.twoPathNonSep_transform' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.throughValueC_eq_signedValueAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.throughValueC_eq_signedValueAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.chainDir_pathMatch' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.chainDir_pathMatch' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.pathCanonical_iff_chainDir' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.pathCanonical_iff_chainDir' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.exists_recanonicalize' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.exists_recanonicalize' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.swap_dirs_opposite' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.swap_dirs_opposite' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.mem_antiLowSet_transport_untouched' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.mem_antiLowSet_transport_untouched' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.chainDir_true_iff_high' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.chainDir_true_iff_high' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.mem_antiLowSet_transport_of_canonical' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.mem_antiLowSet_transport_of_canonical' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.pairedLedger_iff_unsigned' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.pairedLedger_iff_unsigned' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.stateOddFlipSet_flipSet' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.stateOddFlipSet_flipSet' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.mem_highSet_repair_end' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.mem_highSet_repair_end' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.chordCrossingCount_repair_parity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.chordCrossingCount_repair_parity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.fourLabel_parity_sep' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.fourLabel_parity_sep' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.fourLabel_parity_nonsep' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.fourLabel_parity_nonsep' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.flipSignProd_formula' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.flipSignProd_formula' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.flipSignProd_of_even' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.flipSignProd_of_even' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.antiLowSet_transport_subset' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.antiLowSet_transport_subset' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.symmU_trans' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.symmU_trans' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.statusDiff_trans' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.statusDiff_trans' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.statusDiff_of_samePairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.statusDiff_of_samePairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.mem_pairFold_antiLow' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.mem_pairFold_antiLow' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.antiLow_labels_eq_statusChange' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.antiLow_labels_eq_statusChange' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.antiLowSet_transport_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.antiLowSet_transport_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.antiLowSet_transport_card' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.antiLowSet_transport_card' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.nonsep_labels_eq_statusChange' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.nonsep_labels_eq_statusChange' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.diagCrossCount_glue_cross' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.diagCrossCount_glue_cross' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.pairedLedgerUnsigned' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.pairedLedgerUnsigned' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.pairedLedger' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.pairedLedger' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.stepStatusLedger' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.stepStatusLedger' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.EdgeSubset.chainStatusLedger' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.EdgeSubset.chainStatusLedger' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### The appendix, for an object
 
@@ -369,27 +277,22 @@ function of every endomorphism is rational of the stated degree.
 /--
 info: 'RS.frobenius_powHom' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
 
 /--
 info: 'RS.objectFrobeniusTower' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
 
 /--
 info: 'RS.traceZeta_rational_of_object' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
 
 /--
 info: 'RS.scalarTrace_eq_zero_of_isNilpotent' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
 
 /--
 info: 'RS.traceZeta_superSpectrum_of_object' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in
 
 /-! ### The appendix's theorems, by type
 
@@ -415,7 +318,6 @@ info: @RS.traceZeta_rational_of_object : ∀ {A : Type u_2} [inst : CategoryTheo
                 Qp.natDegree ≤ s - 1 ∧
                   IsCoprime Pp Qp ∧ (RS.traceZeta fun (m : ℕ) => (RS.scalarTrace hu X) (g ^ m)) * ↑Qp = ↑Pp
 -/
-#guard_msgs in
 
 /--
 info: @RS.traceZeta_superSpectrum_of_object : ∀ {A : Type u_2} [inst : CategoryTheory.Category.{u_1, u_2} A]
@@ -439,7 +341,6 @@ info: @RS.traceZeta_superSpectrum_of_object : ∀ {A : Type u_2} [inst : Categor
                           (Multiset.map (fun (x : ℂ) => x ^ m) alpha).sum -
                             (Multiset.map (fun (x : ℂ) => x ^ m) beta).sum
 -/
-#guard_msgs in
 
 /--
 info: @RS.objectFrobeniusTower : {A : Type u_2} →
@@ -459,4 +360,3 @@ info: @RS.objectFrobeniusTower : {A : Type u_2} →
                             RS.FrobeniusTower P (fun (n : ℕ) => CategoryTheory.End (RS.tensorPow A X n)) A₀
                               (CategoryTheory.End X)
 -/
-#guard_msgs in

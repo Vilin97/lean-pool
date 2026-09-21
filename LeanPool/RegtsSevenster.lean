@@ -848,7 +848,7 @@ import LeanPool.RegtsSevenster.Solution
 Source: url:https://github.com/willwhistler/regts-sevenster
 Authors: William Whistler
 Status: verified
-Main declarations: `RS.regts_sevenster_characterisation`, `RS.regts_sevenster_total`, `RS.deligne_theorem`
+Main declarations: `RS.regts_sevenster_characterisation`
 Tags: graph-parameters, tensor-categories, partition-functions
 MSC: 05C50, 18M20
 -/

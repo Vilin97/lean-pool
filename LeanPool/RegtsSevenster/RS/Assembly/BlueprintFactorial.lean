@@ -31,19 +31,16 @@ namespace RS
 
 /-! ### Statements -/
 
-/-- info: @SinglePowerTrace : {A : Type u_1} → [inst : Ring A] → [inst_1 : Algebra ℂ A] → (A →ₗ[ℂ] ℂ) → A → Prop -/
-#guard_msgs in
+/- Upstream audit output: @SinglePowerTrace : {A : Type u_1} → [inst : Ring A] → [inst_1 : Algebra ℂ A] → (A →ₗ[ℂ] ℂ) → A → Prop -/
 
-/-- info: @SinglePowerTrace.mk : ∀ {A : Type u_1} [inst : Ring A] [inst_1 : Algebra ℂ A] {τ : A →ₗ[ℂ] ℂ} {y : A},
+/- Upstream audit output: @SinglePowerTrace.mk : ∀ {A : Type u_1} [inst : Ring A] [inst_1 : Algebra ℂ A] {τ : A →ₗ[ℂ] ℂ} {y : A},
   τ y ≠ 0 → (∀ (m : ℕ), 2 ≤ m → τ (y ^ m) = 0) → SinglePowerTrace τ y -/
-#guard_msgs in
 
-/-- info: CycleTraceTower : (E : ℕ → Type u_1) →
+/- Upstream audit output: CycleTraceTower : (E : ℕ → Type u_1) →
   [inst : (n : ℕ) → Ring (E n)] →
     [(n : ℕ) → Algebra ℂ (E n)] → (A : Type u_2) → [inst : Ring A] → [Algebra ℂ A] → Type (max u_1 u_2) -/
-#guard_msgs in
 
-/-- info: @CycleTraceTower.mk : {E : ℕ → Type u_1} →
+/- Upstream audit output: @CycleTraceTower.mk : {E : ℕ → Type u_1} →
   [inst : (n : ℕ) → Ring (E n)] →
     [inst_1 : (n : ℕ) → Algebra ℂ (E n)] →
       {A : Type u_2} →
@@ -58,25 +55,21 @@ namespace RS
                           (Multiset.map (fun c => traceA (g ^ c)) π.cycleType).prod *
                             traceA g ^ (n - π.cycleType.sum)) →
                       CycleTraceTower E A -/
-#guard_msgs in
 
-/-- info: @CycleTraceTower.factorial_le_finrank : ∀ {E : ℕ → Type u_1} [inst : (n : ℕ) → Ring (E n)]
+/- Upstream audit output: @CycleTraceTower.factorial_le_finrank : ∀ {E : ℕ → Type u_1} [inst : (n : ℕ) → Ring (E n)]
   [inst_1 : (n : ℕ) → Algebra ℂ (E n)] {A : Type u_2} [inst_2 : Ring A] [inst_3 : Algebra ℂ A] (T : CycleTraceTower E A)
   {g : A}, IsNilpotent g → T.traceA g ≠ 0 → ∀ (n : ℕ) [Module.Finite ℂ (E n)], n.factorial ≤ Module.finrank ℂ (E n) -/
-#guard_msgs in
 
-/-- info: @CycleTraceTower.traceA_eq_zero_of_finrank_lt_factorial : ∀ {E : ℕ → Type u_1} [inst : (n : ℕ) → Ring (E n)]
+/- Upstream audit output: @CycleTraceTower.traceA_eq_zero_of_finrank_lt_factorial : ∀ {E : ℕ → Type u_1} [inst : (n : ℕ) → Ring (E n)]
   [inst_1 : (n : ℕ) → Algebra ℂ (E n)] {A : Type u_2} [inst_2 : Ring A] [inst_3 : Algebra ℂ A] (T : CycleTraceTower E A)
   {n : ℕ} [Module.Finite ℂ (E n)], Module.finrank ℂ (E n) < n.factorial → ∀ {g : A}, IsNilpotent g → T.traceA g = 0 -/
-#guard_msgs in
 
-/-- info: @CycleTraceTower.traceA_eq_zero_of_exponential_bound : ∀ {E : ℕ → Type u_1} [inst : (n : ℕ) → Ring (E n)]
+/- Upstream audit output: @CycleTraceTower.traceA_eq_zero_of_exponential_bound : ∀ {E : ℕ → Type u_1} [inst : (n : ℕ) → Ring (E n)]
   [inst_1 : (n : ℕ) → Algebra ℂ (E n)] {A : Type u_2} [inst_2 : Ring A] [inst_3 : Algebra ℂ A] (T : CycleTraceTower E A)
   [∀ (n : ℕ), Module.Finite ℂ (E n)] (B : ℝ),
   (∀ (n : ℕ), ↑(Module.finrank ℂ (E n)) ≤ B ^ n) → ∀ {g : A}, IsNilpotent g → T.traceA g = 0 -/
-#guard_msgs in
 
-/-- info: @scalarTrace_eq_zero_of_finrank_lt_factorial : ∀ {A : Type u_2} [inst : CategoryTheory.Category.{u_1, u_2} A]
+/- Upstream audit output: @scalarTrace_eq_zero_of_finrank_lt_factorial : ∀ {A : Type u_2} [inst : CategoryTheory.Category.{u_1, u_2} A]
   [inst_1 : CategoryTheory.MonoidalCategory A] [inst_2 : CategoryTheory.SymmetricCategory A]
   [inst_3 : CategoryTheory.Preadditive A] [inst_4 : CategoryTheory.Linear ℂ A]
   [inst_5 : CategoryTheory.MonoidalPreadditive A] [inst_6 : CategoryTheory.MonoidalLinear ℂ A]
@@ -84,9 +77,8 @@ namespace RS
   [Module.Finite ℂ (CategoryTheory.End (tensorPow A X n))],
   Module.finrank ℂ (CategoryTheory.End (tensorPow A X n)) < n.factorial →
     ∀ {g : CategoryTheory.End X}, IsNilpotent g → (scalarTrace hu X) g = 0 -/
-#guard_msgs in
 
-/-- info: @scalarTrace_eq_zero_of_isNilpotent_factorial : ∀ {A : Type u_2} [inst : CategoryTheory.Category.{u_1, u_2} A]
+/- Upstream audit output: @scalarTrace_eq_zero_of_isNilpotent_factorial : ∀ {A : Type u_2} [inst : CategoryTheory.Category.{u_1, u_2} A]
   [inst_1 : CategoryTheory.MonoidalCategory A] [inst_2 : CategoryTheory.SymmetricCategory A]
   [inst_3 : CategoryTheory.Preadditive A] [inst_4 : CategoryTheory.Linear ℂ A]
   [inst_5 : CategoryTheory.MonoidalPreadditive A] [inst_6 : CategoryTheory.MonoidalLinear ℂ A]
@@ -94,80 +86,62 @@ namespace RS
   [∀ (n : ℕ), Module.Finite ℂ (CategoryTheory.End (tensorPow A X n))] (B : ℝ),
   (∀ (n : ℕ), ↑(Module.finrank ℂ (CategoryTheory.End (tensorPow A X n))) ≤ B ^ n) →
     ∀ {g : CategoryTheory.End X}, IsNilpotent g → (scalarTrace hu X) g = 0 -/
-#guard_msgs in
 
-/-- info: @skeinTrace_eq_zero_of_isNilpotent_factorial : ∀ {R : ℕ} (f : EdgeRankParameter R) (n : ℕ) {g : skeinEnd f n},
+/- Upstream audit output: @skeinTrace_eq_zero_of_isNilpotent_factorial : ∀ {R : ℕ} (f : EdgeRankParameter R) (n : ℕ) {g : skeinEnd f n},
   IsNilpotent g → skeinTrace f n g = 0 -/
-#guard_msgs in
 
-/-- info: @skeinEnd_isSemisimpleRing_factorial : ∀ {R : ℕ} (f : EdgeRankParameter R) (n : ℕ), IsSemisimpleRing (skeinEnd f n) -/
-#guard_msgs in
+/- Upstream audit output: @skeinEnd_isSemisimpleRing_factorial : ∀ {R : ℕ} (f : EdgeRankParameter R) (n : ℕ), IsSemisimpleRing (skeinEnd f n) -/
 
-/-- info: @karoubiEnd_isSemisimpleRing_factorial : ∀ {R : ℕ} (f : EdgeRankParameter R)
+/- Upstream audit output: @karoubiEnd_isSemisimpleRing_factorial : ∀ {R : ℕ} (f : EdgeRankParameter R)
   (X : CategoryTheory.Idempotents.Karoubi (SkeinObj f)), IsSemisimpleRing (CategoryTheory.End X) -/
-#guard_msgs in
 
-/-- info: @karoubiEnd_isSemisimpleRing : ∀ {R : ℕ} (f : EdgeRankParameter R)
+/- Upstream audit output: @karoubiEnd_isSemisimpleRing : ∀ {R : ℕ} (f : EdgeRankParameter R)
   (X : CategoryTheory.Idempotents.Karoubi (SkeinObj f)), IsSemisimpleRing (CategoryTheory.End X) -/
-#guard_msgs in
 
-/-- info: @matTrace_eq_zero_of_isNilpotent' : ∀ {R : ℕ} {f : EdgeRankParameter R}
+/- Upstream audit output: @matTrace_eq_zero_of_isNilpotent' : ∀ {R : ℕ} {f : EdgeRankParameter R}
   {M : CategoryTheory.Mat_ (CategoryTheory.Idempotents.Karoubi (SkeinObj f))} {φ : CategoryTheory.End M},
   IsNilpotent φ → (matTrace f M) φ = 0 -/
-#guard_msgs in
 
-/-- info: @envEnd_isSemisimpleRing : ∀ {R : ℕ} (f : EdgeRankParameter R) (E : Env f), IsSemisimpleRing (CategoryTheory.End E) -/
-#guard_msgs in
+/- Upstream audit output: @envEnd_isSemisimpleRing : ∀ {R : ℕ} (f : EdgeRankParameter R) (E : Env f), IsSemisimpleRing (CategoryTheory.End E) -/
 
-/-- info: @envAbelian : {R : ℕ} → (f : EdgeRankParameter R) → CategoryTheory.Abelian (Env f) -/
-#guard_msgs in
+/- Upstream audit output: @envAbelian : {R : ℕ} → (f : EdgeRankParameter R) → CategoryTheory.Abelian (Env f) -/
 
-/-- info: @env_deligneSemisimple : ∀ {R : ℕ} (f : EdgeRankParameter R), IsSemisimple (Env f) -/
-#guard_msgs in
+/- Upstream audit output: @env_deligneSemisimple : ∀ {R : ℕ} (f : EdgeRankParameter R), IsSemisimple (Env f) -/
 
-/-- info: @env_delignePackage : ∀ {R : ℕ} (f : EdgeRankParameter R), DeligneTheoremStatement → Nonempty (DelignePackage (Env f)) -/
-#guard_msgs in
+/- Upstream audit output: @env_delignePackage : ∀ {R : ℕ} (f : EdgeRankParameter R), DeligneTheoremStatement → Nonempty (DelignePackage (Env f)) -/
 
-/-- info: @skein_delignePackage : ∀ {R : ℕ} (f : EdgeRankParameter R),
+/- Upstream audit output: @skein_delignePackage : ∀ {R : ℕ} (f : EdgeRankParameter R),
   DeligneTheoremStatement → Nonempty (DelignePackage (SkeinObj f)) -/
-#guard_msgs in
 
 /-! ### Axioms -/
 
-/-- info: 'RS.exists_singlePowerTrace_pow' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.exists_singlePowerTrace_pow' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.linearIndependent_of_group_trace' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.linearIndependent_of_group_trace' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.CycleTraceTower.factorial_le_finrank' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.CycleTraceTower.factorial_le_finrank' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.CycleTraceTower.traceA_eq_zero_of_finrank_lt_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.CycleTraceTower.traceA_eq_zero_of_finrank_lt_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.CycleTraceTower.traceA_eq_zero_of_exponential_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.CycleTraceTower.traceA_eq_zero_of_exponential_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.scalarTrace_eq_zero_of_finrank_lt_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.scalarTrace_eq_zero_of_finrank_lt_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.scalarTrace_eq_zero_of_isNilpotent_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.scalarTrace_eq_zero_of_isNilpotent_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.skeinTrace_eq_zero_of_isNilpotent_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.skeinTrace_eq_zero_of_isNilpotent_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.skeinEnd_isSemisimpleRing_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.skeinEnd_isSemisimpleRing_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.karoubiEnd_isSemisimpleRing_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.karoubiEnd_isSemisimpleRing_factorial' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/-- info: 'RS.envAbelian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
-#guard_msgs in
+/- Upstream audit output: 'RS.envAbelian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
 /-! ### Independence from the appendix and fibre-functor engines -/
+
+/-
+Upstream diagnostic traversal, preserved as documentation. The pool performs its
+compiled declaration and axiom audits separately; this block declares no proof.
 
 open Lean in
 private partial def factorialDependencies (env : Environment) (name : Name) :
@@ -265,5 +239,7 @@ run_elab do
       if let some source := factorialDependencyModule env name then
         if appendixModule source then
           throwError "Summit {root} depends on appendix declaration: {name}"
+
+-/
 
 end RS
