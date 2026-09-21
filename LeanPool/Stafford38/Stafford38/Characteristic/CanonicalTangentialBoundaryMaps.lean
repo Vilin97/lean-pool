@@ -23,7 +23,7 @@ open Stafford38.WeylPBWMonicBridge
 
 noncomputable section
 
-variable (k : Type*) [Field k] [Algebra ℚ k]
+variable (k : Type*) [Field k]
 variable (n N : ℕ) (d : PresentedWeyl k (n + 1))
 variable (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
 
@@ -57,7 +57,7 @@ theorem tangentialBoundaryMap_ker_mono :
   exact (complex k n N d).totalBoundaryMap_ker_mono r s hrs hz
 
 include hd in
-theorem tangentialBoundaryMap_eventually_zero
+theorem tangentialBoundaryMap_eventually_zero [Algebra ℚ k]
     (z : (complex k n N d).TargetTotal 1) :
     ∃ r, tangentialBoundaryMap k n N d r z = 0 :=
   (complex k n N d).totalBoundaryMap_eventually_zero

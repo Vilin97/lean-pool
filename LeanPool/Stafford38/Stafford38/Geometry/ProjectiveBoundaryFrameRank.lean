@@ -115,7 +115,7 @@ theorem linearIndependent_chartDehomogenizedTangentColumns
 of the residue matrix. -/
 theorem residueMatrix_mul_eq_one_of_mul_eq_one
     {k : Type u} [Field k] {ι : Type v} {κ : Type w}
-    [Fintype ι]  [DecidableEq κ]
+    [Fintype ι] [DecidableEq κ]
     (C : Matrix κ ι (PowerSeries k)) (B : Matrix ι κ (PowerSeries k))
     (hCB : C * B = 1) :
     residueMatrix C * residueMatrix B = 1 := by

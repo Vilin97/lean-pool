@@ -23,7 +23,7 @@ open Stafford38.Characteristic.TwoTermPageLength
 open Stafford38.WeylPBWMonicBridge
 open Stafford38.WeylIteratedEquivalence
 noncomputable section
-variable (k : Type*) [Field k] [Algebra ℚ k]
+variable (k : Type*) [Field k]
 variable (n N : ℕ) (d : PresentedWeyl k (n + 1))
 variable (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
 variable (S : Submonoid (MvPolynomial (Fin n ⊕ Fin n) k))
@@ -45,7 +45,7 @@ private def targetSuccLocalized (r : ℕ) :
     (localizedCokernelEquiv S (tangentialDrop k n N d (r + 1)))
 
 include hd in
-private theorem localized_boundary_subsingleton
+private theorem localized_boundary_subsingleton [Algebra ℚ k]
     (hC0 : IsFiniteLength (Localization S)
       (LocalizedModule S ((complex k n N d).TargetTotal 1))) :
     ∃ r, Subsingleton (LocalizedModule S ((complex k n N d).TargetTotal (r + 1))) := by
@@ -79,7 +79,7 @@ private theorem page_inequality_of_subsingleton
 
 
 include hd in
-theorem canonicalPage_length_target_le_source : ∀
+theorem canonicalPage_length_target_le_source [Algebra ℚ k] : ∀
     (_hA0 : IsFiniteLength (Localization S)
       (LocalizedModule S ((complex k n N d).SourceTotal 1)))
     (_hC0 : IsFiniteLength (Localization S)

@@ -31,7 +31,7 @@ open Stafford38.WeylQuotientTransport
 
 noncomputable section
 
-variable (k : Type*) [Field k] [Algebra ℚ k]
+variable (k : Type*) [Field k]
 variable (n N : ℕ) (d : PresentedWeyl k (n + 1))
 variable (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
 
@@ -46,7 +46,6 @@ local instance gradedModule : Module (T k n) (Graded k n N d) :=
 
 attribute [local instance] sourceModule targetModule
 
-omit [Algebra ℚ k] in
 theorem graded_C_smul (c : k) (z : Graded k n N d) :
     (MvPolynomial.C c : T k n) • z = c • z := by
   change (((tangentialPolynomialActionHom (k := k) n).comp Polynomial.C).comp

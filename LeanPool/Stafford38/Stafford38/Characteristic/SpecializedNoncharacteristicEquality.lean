@@ -259,7 +259,7 @@ theorem transposedSupport_disjoint_axis_iff_gradedCoordinate_surjective
 /-- Left-module form consumed directly by the missing specialized
 noncharacteristic theorem. -/
 theorem transposedSupport_disjoint_axis_iff_transposedGradedCoordinate_surjective
-    [Algebra ℚ k] (n N : ℕ) (d : PresentedWeyl k (n + 1)) :
+     (n N : ℕ) (d : PresentedWeyl k (n + 1)) :
     Disjoint
         (transposedOrderAssociatedGradedSupport k (CanonicalIdeal k n N d))
         (AxisZeroLocus k n) ↔

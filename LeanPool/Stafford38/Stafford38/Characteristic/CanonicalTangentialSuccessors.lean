@@ -24,7 +24,7 @@ open Stafford38.WeylPBWMonicBridge
 
 noncomputable section
 
-variable (k : Type*) [Field k] [Algebra ℚ k]
+variable (k : Type*) [Field k]
 variable (n N : ℕ) (d : PresentedWeyl k (n + 1))
 
 attribute [local instance] sourceModule targetModule
