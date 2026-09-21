@@ -390,6 +390,70 @@ private lemma tsum_zeroWithMultiplicity_eq_weighted_tsum_of_nonneg
     rw [tsum_fintype, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
   simpa [hinner] using hsigma_tsum
 
+private theorem dyadic_power_quotient (Ccount lam δ : ℝ) (p k : ℕ) :
+    Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p) =
+      ((2 : ℝ) ^ (lam + δ) * Ccount) * ((2 : ℝ) ^ (lam + δ - p)) ^ k := by
+  let q : ℝ := (2 : ℝ) ^ (lam + δ - p)
+  let A : ℝ := (2 : ℝ) ^ (lam + δ) * Ccount
+  have hqk : q ^ k = ((2 : ℝ) ^ k) ^ (lam + δ - p) := by
+    simpa [q] using
+      (Real.rpow_pow_comm (x := (2 : ℝ)) (hx := by positivity) (lam + δ - p) k)
+  have hpow_rat :
+      ((2 : ℝ) ^ k) ^ (lam + δ - p) =
+        ((2 : ℝ) ^ k) ^ (lam + δ) / ((2 : ℝ) ^ k) ^ p := by
+    have hk_pos : 0 < (2 : ℝ) ^ k := by positivity
+    have hsub : lam + δ - p = (lam + δ) - ((p : ℕ) : ℝ) := by
+      norm_num
+    have hnat : ((2 : ℝ) ^ k) ^ p = ((2 : ℝ) ^ k) ^ ((p : ℕ) : ℝ) := by
+      rw [Real.rpow_natCast]
+    rw [hnat, hsub]
+    exact Real.rpow_sub hk_pos (lam + δ) ((p : ℕ) : ℝ)
+  have hrewrite :
+      Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p) =
+        A * q ^ k := by
+    have hpow_succ : (2 : ℝ) ^ (k + 1) = 2 * (2 : ℝ) ^ k := by
+      simp [pow_succ, mul_comm]
+    have hpowk_nonneg : 0 ≤ (2 : ℝ) ^ k := by positivity
+    have h2_nonneg : (0 : ℝ) ≤ 2 := by norm_num
+    calc
+      Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p)
+          =
+            Ccount * ((2 * (2 : ℝ) ^ k) ^ (lam + δ)) *
+              ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p) := by
+              simp [hpow_succ]
+      _ = Ccount * ((2 : ℝ) ^ (lam + δ) * ((2 : ℝ) ^ k) ^ (lam + δ)) *
+            ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p) := by
+              have hsplit :
+                  ((2 : ℝ) * (2 : ℝ) ^ k) ^ (lam + δ) =
+                    (2 : ℝ) ^ (lam + δ) * ((2 : ℝ) ^ k) ^ (lam + δ) := by
+                simpa using
+                  (Real.mul_rpow
+                    (x := (2 : ℝ)) (y := (2 : ℝ) ^ k) (z := lam + δ)
+                    h2_nonneg hpowk_nonneg)
+              simp [hsplit, mul_assoc,
+                -mul_eq_mul_left_iff, -mul_eq_mul_right_iff]
+      _ = (2 : ℝ) ^ (lam + δ) * Ccount *
+            (((2 : ℝ) ^ k) ^ (lam + δ) / ((2 : ℝ) ^ k) ^ p) := by
+              simp [div_eq_mul_inv, mul_assoc, mul_comm,
+                -mul_eq_mul_left_iff, -mul_eq_mul_right_iff]
+      _ = (2 : ℝ) ^ (lam + δ) * Ccount * (((2 : ℝ) ^ k) ^ (lam + δ - p)) := by
+              rw [hpow_rat]
+      _ = A * q ^ k := by
+              simp [A, hqk, mul_assoc, mul_comm]
+  exact hrewrite
+
+private theorem cutoff_finsum_eq_sum {ι : Type*} (s : Finset ι)
+    (P : ι → Prop) [DecidablePred P] (f : ι → ℝ) (hs : ∀ a, a ∈ s ↔ P a) :
+    (∑ᶠ a, if P a then f a else 0) = ∑ a ∈ s, f a := by
+  classical
+  have hsupp : Function.support (fun a => if P a then f a else 0) ⊆ s := by
+    intro a ha
+    by_contra hnot
+    have hp : ¬P a := fun h => hnot ((hs a).2 h)
+    simp [hp, Function.mem_support] at ha
+  rw [finsum_eq_sum_of_support_subset (f := fun a => if P a then f a else 0) (s := s) hsupp]
+  exact Finset.sum_congr rfl fun a ha => ite_eq_left ((hs a).1 ha)
+
 private theorem sum_mult_div_norm_pow_le_rpow_of_two_pow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
@@ -473,36 +537,10 @@ private theorem sum_mult_div_norm_pow_le_rpow_of_two_pow
         (∑ᶠ ρ : Z.Zero, if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0) =
           ∑ ρ ∈ ball (k + 1), w ρ := by
     intro k
-    have hsupp :
-        Function.support
-            (fun ρ : Z.Zero => if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0) ⊆
-          ball (k + 1) := by
-      intro ρ hρ
-      have hne : (if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0) ≠ 0 :=
-        Function.mem_support.1 hρ
-      have hle : ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) := by
-        by_contra hle
-        apply hne
-        simp [hle]
-      exact
-        (Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
-          (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
-          (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) ρ).2 hle
-    have this :=
-      finsum_eq_sum_of_support_subset
-        (f := fun ρ : Z.Zero => if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0)
-        (s := ball (k + 1)) hsupp
-    have hsum_if :
-        (∑ ρ ∈ ball (k + 1), if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0) =
-          ∑ ρ ∈ ball (k + 1), w ρ := by
-      refine Finset.sum_congr rfl ?_
-      intro ρ hρ
-      have hle : ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) :=
-        (Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
-          (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
-          (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) ρ).1 hρ
-      simp [hle]
-    simpa [hsum_if] using this
+    exact cutoff_finsum_eq_sum (ball (k + 1)) (fun ρ => ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1)) w
+      (fun ρ => Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
+        (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
+        (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) ρ)
   refine ⟨n₀, C, hC_nonneg, ?_⟩
   intro n hn
   have hmain :
@@ -566,51 +604,9 @@ private theorem sum_mult_div_norm_pow_le_rpow_of_two_pow
               intro ρ _ _
               positivity [w]
             exact le_trans hdiff_le_ball hsum_ball
-          have hqk : q ^ k = ((2 : ℝ) ^ k) ^ (lam + δ - p) := by
-            simpa [q] using
-              (Real.rpow_pow_comm (x := (2 : ℝ)) (hx := by positivity) (lam + δ - p) k)
-          have hpow_rat :
-              ((2 : ℝ) ^ k) ^ (lam + δ - p) =
-                ((2 : ℝ) ^ k) ^ (lam + δ) / ((2 : ℝ) ^ k) ^ p := by
-            have hk_pos : 0 < (2 : ℝ) ^ k := by positivity
-            have hsub : lam + δ - p = (lam + δ) - ((p : ℕ) : ℝ) := by
-              norm_num
-            have hnat : ((2 : ℝ) ^ k) ^ p = ((2 : ℝ) ^ k) ^ ((p : ℕ) : ℝ) := by
-              rw [Real.rpow_natCast]
-            rw [hnat, hsub]
-            exact Real.rpow_sub hk_pos (lam + δ) ((p : ℕ) : ℝ)
           have hrewrite :
               Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p) =
-                A * q ^ k := by
-            have hpow_succ : (2 : ℝ) ^ (k + 1) = 2 * (2 : ℝ) ^ k := by
-              simp [pow_succ, mul_comm]
-            have hpowk_nonneg : 0 ≤ (2 : ℝ) ^ k := by positivity
-            have h2_nonneg : (0 : ℝ) ≤ 2 := by norm_num
-            calc
-              Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p)
-                  =
-                    Ccount * ((2 * (2 : ℝ) ^ k) ^ (lam + δ)) *
-                      ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p) := by
-                      simp [hpow_succ]
-              _ = Ccount * ((2 : ℝ) ^ (lam + δ) * ((2 : ℝ) ^ k) ^ (lam + δ)) *
-                    ((1 : ℝ) / ((2 : ℝ) ^ k) ^ p) := by
-                      have hsplit :
-                          ((2 : ℝ) * (2 : ℝ) ^ k) ^ (lam + δ) =
-                            (2 : ℝ) ^ (lam + δ) * ((2 : ℝ) ^ k) ^ (lam + δ) := by
-                        simpa using
-                          (Real.mul_rpow
-                            (x := (2 : ℝ)) (y := (2 : ℝ) ^ k) (z := lam + δ)
-                            h2_nonneg hpowk_nonneg)
-                      simp [hsplit, mul_assoc,
-                        -mul_eq_mul_left_iff, -mul_eq_mul_right_iff]
-              _ = (2 : ℝ) ^ (lam + δ) * Ccount *
-                    (((2 : ℝ) ^ k) ^ (lam + δ) / ((2 : ℝ) ^ k) ^ p) := by
-                      simp [div_eq_mul_inv, mul_assoc, mul_comm,
-                        -mul_eq_mul_left_iff, -mul_eq_mul_right_iff]
-              _ = (2 : ℝ) ^ (lam + δ) * Ccount * (((2 : ℝ) ^ k) ^ (lam + δ - p)) := by
-                      rw [hpow_rat]
-              _ = A * q ^ k := by
-                      simp [A, hqk, mul_assoc, mul_comm]
+                A * q ^ k := dyadic_power_quotient Ccount lam δ p k
           calc
             (∑ ρ ∈ diff, w ρ / ‖Z.z ρ‖ ^ p)
                 ≤ ∑ ρ ∈ diff, w ρ / ((2 : ℝ) ^ k) ^ p := hsum_le
@@ -658,6 +654,46 @@ private theorem sum_mult_div_norm_pow_le_rpow_of_two_pow
     simpa [q] using
       (Real.rpow_pow_comm (x := (2 : ℝ)) (hx := by positivity) (lam + δ - p) n)
   simpa [Nat.add_sub_of_le hn, hqpow] using hmain (n - n₀)
+
+private theorem geometric_sum_from_le (q : ℝ) (hq_pos : 0 < q) (hq_lt_one : q < 1)
+    (n t : ℕ) : (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) ≤ q ^ (n + 1) * (1 - q)⁻¹ := by
+  have hsum : Summable (fun i : ℕ => q ^ i) :=
+    summable_geometric_of_lt_one (le_of_lt hq_pos) hq_lt_one
+  have hsum' : Summable (fun i : ℕ => q ^ (n + 1) * q ^ i) :=
+    hsum.mul_left (q ^ (n + 1))
+  have hnonneg : ∀ i : ℕ, 0 ≤ q ^ (n + 1) * q ^ i := by
+    intro i
+    positivity
+  have hle_tsum :
+      (∑ i ∈ Finset.range t, q ^ (n + 1) * q ^ i)
+        ≤ ∑' i : ℕ, q ^ (n + 1) * q ^ i := by
+    refine
+      Summable.sum_le_tsum
+        (s := Finset.range t) (f := fun i : ℕ => q ^ (n + 1) * q ^ i) ?_ hsum'
+    intro i hi
+    exact hnonneg i
+  have hpow_add : ∀ i : ℕ, q ^ (n + 1 + i) = q ^ (n + 1) * q ^ i := by
+    intro i
+    simp [pow_add, mul_assoc]
+  have hsum_eq :
+      (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) =
+        (∑ i ∈ Finset.range t, q ^ (n + 1) * q ^ i) := by
+    refine Finset.sum_congr rfl ?_
+    intro i hi
+    simp [hpow_add i]
+  have htsum_eq :
+      (∑' i : ℕ, q ^ (n + 1) * q ^ i) = (q ^ (n + 1)) * (1 - q)⁻¹ := by
+    have hgeom0 : (∑' i : ℕ, q ^ i) = (1 - q)⁻¹ :=
+      tsum_geometric_of_lt_one (h₁ := le_of_lt hq_pos) (h₂ := hq_lt_one)
+    calc
+      (∑' i : ℕ, q ^ (n + 1) * q ^ i) = (q ^ (n + 1)) * ∑' i : ℕ, q ^ i := by
+          rw [tsum_mul_left]
+      _ = (q ^ (n + 1)) * (1 - q)⁻¹ := by rw [hgeom0]
+  have hle_tsum' :
+      (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) ≤ ∑' i : ℕ, q ^ (n + 1) * q ^ i := by
+    rw [hsum_eq]
+    exact hle_tsum
+  exact le_trans hle_tsum' (by rw [htsum_eq])
 
 private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
@@ -731,36 +767,10 @@ private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
         (∑ᶠ ρ : Z.Zero, if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0) =
           ∑ ρ ∈ ball (k + 1), w ρ := by
     intro k
-    have hsupp :
-        Function.support
-            (fun ρ : Z.Zero => if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0) ⊆
-          ball (k + 1) := by
-      intro ρ hρ
-      have hne : (if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0) ≠ 0 :=
-        Function.mem_support.1 hρ
-      have hle : ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) := by
-        by_contra hle
-        apply hne
-        simp [hle]
-      exact
-        (Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
-          (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
-          (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) ρ).2 hle
-    have this :=
-      finsum_eq_sum_of_support_subset
-        (f := fun ρ : Z.Zero => if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0)
-        (s := ball (k + 1)) hsupp
-    have hsum_if :
-        (∑ ρ ∈ ball (k + 1), if ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) then w ρ else 0) =
-          ∑ ρ ∈ ball (k + 1), w ρ := by
-      refine Finset.sum_congr rfl ?_
-      intro ρ hρ
-      have hle : ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1) :=
-        (Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
-          (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
-          (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) ρ).1 hρ
-      simp [hle]
-    simpa [hsum_if] using this
+    exact cutoff_finsum_eq_sum (ball (k + 1)) (fun ρ => ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1)) w
+      (fun ρ => Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
+        (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
+        (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) ρ)
   refine ⟨n₀, C, hC_nonneg, ?_⟩
   intro n hn
   let g : Z.Zero → ℝ := fun ρ =>
@@ -843,53 +853,11 @@ private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
             intro ρ _ _
             positivity [w]
           exact le_trans hdiff_le_ball hsum_ball
-        have hqk :
-            q ^ k = ((2 : ℝ) ^ k) ^ (lam + δ - ((p : ℝ) + 1)) := by
-          simpa [q] using
-            (Real.rpow_pow_comm (x := (2 : ℝ)) (hx := by positivity)
-              (lam + δ - ((p : ℝ) + 1)) k)
-        have hpow_rat :
-            ((2 : ℝ) ^ k) ^ (lam + δ - ((p : ℝ) + 1)) =
-              ((2 : ℝ) ^ k) ^ (lam + δ) / ((2 : ℝ) ^ k) ^ (p + 1) := by
-          have hk_pos : 0 < (2 : ℝ) ^ k := by positivity
-          have hsub : lam + δ - ((p : ℝ) + 1) = (lam + δ) - ((p + 1 : ℕ) : ℝ) := by
-            norm_num
-          have hnat :
-              ((2 : ℝ) ^ k) ^ (p + 1 : ℕ) = ((2 : ℝ) ^ k) ^ (((p + 1 : ℕ)) : ℝ) := by
-            rw [Real.rpow_natCast]
-          rw [hnat, hsub]
-          exact Real.rpow_sub hk_pos (lam + δ) (((p + 1 : ℕ)) : ℝ)
         have hrewrite :
             Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) =
               A * q ^ k := by
-          have hpow_succ : (2 : ℝ) ^ (k + 1) = 2 * (2 : ℝ) ^ k := by
-              simp [pow_succ, mul_comm]
-          have hpowk_nonneg : 0 ≤ (2 : ℝ) ^ k := by positivity
-          have h2_nonneg : (0 : ℝ) ≤ 2 := by norm_num
-          calc
-            Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1))
-                = Ccount * ((2 * (2 : ℝ) ^ k) ^ (lam + δ)) *
-                    ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) := by
-                      simp [hpow_succ]
-            _ = Ccount * ((2 : ℝ) ^ (lam + δ) * ((2 : ℝ) ^ k) ^ (lam + δ)) *
-                  ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) := by
-                    have hsplit :
-                        ((2 : ℝ) * (2 : ℝ) ^ k) ^ (lam + δ) =
-                          (2 : ℝ) ^ (lam + δ) * ((2 : ℝ) ^ k) ^ (lam + δ) := by
-                      simpa using
-                        (Real.mul_rpow (x := (2 : ℝ)) (y := (2 : ℝ) ^ k) (z := lam + δ)
-                          h2_nonneg hpowk_nonneg)
-                    simp [hsplit, mul_assoc,
-                      -mul_eq_mul_left_iff, -mul_eq_mul_right_iff]
-            _ = (2 : ℝ) ^ (lam + δ) * Ccount *
-                  (((2 : ℝ) ^ k) ^ (lam + δ) / ((2 : ℝ) ^ k) ^ (p + 1)) := by
-                    simp [div_eq_mul_inv, mul_assoc, mul_comm,
-                      -mul_eq_mul_left_iff, -mul_eq_mul_right_iff]
-            _ = (2 : ℝ) ^ (lam + δ) * Ccount *
-                  (((2 : ℝ) ^ k) ^ (lam + δ - ((p : ℝ) + 1))) := by
-                    rw [hpow_rat]
-            _ = A * q ^ k := by
-                    simp [A, hqk, mul_assoc, mul_comm]
+          simpa only [A, q, Nat.cast_add, Nat.cast_one] using
+            dyadic_power_quotient Ccount lam δ (p + 1) k
         have hdiff_simp :
             (∑ ρ ∈ diff, g ρ) = ∑ ρ ∈ diff, w ρ / ‖Z.z ρ‖ ^ (p + 1) := by
           refine Finset.sum_congr rfl ?_
@@ -965,44 +933,8 @@ private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
           (∑ ρ ∈ ball m, g ρ) ≤ A * (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) := by
         simpa [hm_eq, ball] using hind t
       have hgeom_le :
-          (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) ≤ (q ^ (n + 1)) * (1 - q)⁻¹ := by
-        have hsum : Summable (fun i : ℕ => q ^ i) :=
-          summable_geometric_of_lt_one (le_of_lt hq_pos) hq_lt_one
-        have hsum' : Summable (fun i : ℕ => q ^ (n + 1) * q ^ i) :=
-          hsum.mul_left (q ^ (n + 1))
-        have hnonneg : ∀ i : ℕ, 0 ≤ q ^ (n + 1) * q ^ i := by
-          intro i
-          positivity
-        have hle_tsum :
-            (∑ i ∈ Finset.range t, q ^ (n + 1) * q ^ i)
-              ≤ ∑' i : ℕ, q ^ (n + 1) * q ^ i := by
-          refine
-            Summable.sum_le_tsum
-              (s := Finset.range t) (f := fun i : ℕ => q ^ (n + 1) * q ^ i) ?_ hsum'
-          intro i hi
-          exact hnonneg i
-        have hpow_add : ∀ i : ℕ, q ^ (n + 1 + i) = q ^ (n + 1) * q ^ i := by
-          intro i
-          simp [pow_add, mul_assoc]
-        have hsum_eq :
-            (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) =
-              (∑ i ∈ Finset.range t, q ^ (n + 1) * q ^ i) := by
-          refine Finset.sum_congr rfl ?_
-          intro i hi
-          simp [hpow_add i]
-        have htsum_eq :
-            (∑' i : ℕ, q ^ (n + 1) * q ^ i) = (q ^ (n + 1)) * (1 - q)⁻¹ := by
-          have hgeom0 : (∑' i : ℕ, q ^ i) = (1 - q)⁻¹ :=
-            tsum_geometric_of_lt_one (h₁ := le_of_lt hq_pos) (h₂ := hq_lt_one)
-          calc
-            (∑' i : ℕ, q ^ (n + 1) * q ^ i) = (q ^ (n + 1)) * ∑' i : ℕ, q ^ i := by
-                rw [tsum_mul_left]
-            _ = (q ^ (n + 1)) * (1 - q)⁻¹ := by rw [hgeom0]
-        have hle_tsum' :
-            (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) ≤ ∑' i : ℕ, q ^ (n + 1) * q ^ i := by
-          rw [hsum_eq]
-          exact hle_tsum
-        exact le_trans hle_tsum' (by rw [htsum_eq])
+          (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) ≤ (q ^ (n + 1)) * (1 - q)⁻¹ :=
+        geometric_sum_from_le q hq_pos hq_lt_one n t
       have hconst :
           A * (q ^ (n + 1) * (1 - q)⁻¹) =
             C * ((2 : ℝ) ^ n) ^ (lam + δ - ((p : ℝ) + 1)) := by

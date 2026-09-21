@@ -640,6 +640,30 @@ We express this as the sum of divisor values on the same set: for analytic funct
 value at `u` is exactly the vanishing multiplicity of `f` at `u`.
 -/
 
+private theorem circleAverage_log_norm_le_log_max_one_maxModulus
+    (f : ℂ → ℂ) {R : ℝ} (hR : 0 < R) (hf_entire : Differentiable ℂ f) :
+    Real.circleAverage (Real.log ‖f ·‖) 0 R ≤ Real.log (max 1 (maxModulus f R)) := by
+  have hmer : MeromorphicOn f (closedBall (0 : ℂ) |R|) := fun z _ =>
+    (hf_entire.analyticAt z).meromorphicAt
+  have hCircleInt : CircleIntegrable (Real.log ‖f ·‖) 0 R := by
+    apply MeromorphicOn.circleIntegrable_log_norm
+    intro z hz
+    have hz' : z ∈ closedBall (0 : ℂ) |R| := Metric.sphere_subset_closedBall hz
+    exact hmer z hz'
+  refine
+    Real.circleAverage_mono_on_of_le_circle (c := (0 : ℂ)) (R := R)
+      (f := fun z => Real.log ‖f z‖) (a := Real.log (max 1 (maxModulus f R))) hCircleInt ?_
+  intro z hz
+  have hzR : ‖z‖ = R := by simpa [Metric.mem_sphere, dist_eq_norm, abs_of_pos hR] using hz
+  have hnorm : ‖f z‖ ≤ maxModulus f R := norm_le_maxModulus_on_circle f hf_entire.continuous hzR
+  have hnorm' : ‖f z‖ ≤ max 1 (maxModulus f R) := le_trans hnorm (le_max_right _ _)
+  by_cases hfz : f z = 0
+  · have hlogM_nonneg : 0 ≤ Real.log (max 1 (maxModulus f R)) :=
+      Real.log_nonneg (le_max_left _ _)
+    simpa [hfz] using hlogM_nonneg
+  · have hpos : 0 < ‖f z‖ := norm_pos_iff.2 hfz
+    exact Real.log_le_log hpos hnorm'
+
 /-- Jensen-style bound on the sum of divisor weights in the disk `‖u‖ ≤ R/2`.
 
 This is the multiplicity-aware analogue of `card_zeros_le_of_max_one_maxModulus`.
@@ -677,26 +701,7 @@ theorem sum_zeros_multiplicity_le_of_max_one_maxModulus (f : ℂ → ℂ) {R : �
     simpa [hdiv0, htrailing, norm_sub_rev, add_assoc, add_left_comm, add_comm, sub_eq_add_neg]
       using this
   -- Upper-bound the circle average by `log (max 1 (maxModulus f R))`.
-  have hCircleInt : CircleIntegrable (Real.log ‖f ·‖) 0 R := by
-    apply MeromorphicOn.circleIntegrable_log_norm
-    intro z hz
-    have hz' : z ∈ closedBall (0 : ℂ) |R| := Metric.sphere_subset_closedBall hz
-    exact hmer z hz'
-  have havg_le :
-      Real.circleAverage (Real.log ‖f ·‖) 0 R ≤ Real.log (max 1 (maxModulus f R)) := by
-    refine
-      Real.circleAverage_mono_on_of_le_circle (c := (0 : ℂ)) (R := R)
-        (f := fun z => Real.log ‖f z‖) (a := Real.log (max 1 (maxModulus f R))) hCircleInt ?_
-    intro z hz
-    have hzR : ‖z‖ = R := by simpa [Metric.mem_sphere, dist_eq_norm, abs_of_pos hR] using hz
-    have hnorm : ‖f z‖ ≤ maxModulus f R := norm_le_maxModulus_on_circle f hf_entire.continuous hzR
-    have hnorm' : ‖f z‖ ≤ max 1 (maxModulus f R) := le_trans hnorm (le_max_right _ _)
-    by_cases hfz : f z = 0
-    · have hlogM_nonneg : 0 ≤ Real.log (max 1 (maxModulus f R)) :=
-        Real.log_nonneg (le_max_left _ _)
-      simpa [hfz] using hlogM_nonneg
-    · have hpos : 0 < ‖f z‖ := norm_pos_iff.2 hfz
-      exact Real.log_le_log hpos hnorm'
+  have havg_le := circleAverage_log_norm_le_log_max_one_maxModulus f hR hf_entire
   -- Convert Jensen + `havg_le` into an upper bound on the finsum.
   have hsum_le :
       (∑ᶠ u, MeromorphicOn.divisor f (closedBall (0 : ℂ) |R|) u * Real.log (R * ‖u‖⁻¹))

@@ -762,6 +762,149 @@ lemma cauchy_estimate_iteratedDeriv_at_zero
     _ = (n.factorial : ℝ) * M / R ^ n := by
       simp [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
 
+private theorem norm_le_boundaryRealSup_half_radius (g : ℂ → ℂ)
+    (h_entire : Differentiable ℂ g) (R : ℝ) :
+    ∀ z, ‖z‖ = R / 2 →
+      ‖g z‖ ≤ 2 * (LZCBorelCaratheodory.boundaryRealSup g R - (g 0).re) + ‖g 0‖ := by
+  intro z hz
+  -- If R = 0, then z = 0 and the inequality is trivial
+  by_cases hR0 : R = 0
+  · have : z = 0 := by
+      have : ‖z‖ = 0 := by simp [hz, hR0]
+      exact norm_eq_zero.mp this
+    subst this
+    have hsup : LZCBorelCaratheodory.boundaryRealSup g R = (g 0).re := by
+      classical
+      simp [LZCBorelCaratheodory.boundaryRealSup, hR0, norm_eq_zero]
+    have : LZCBorelCaratheodory.boundaryRealSup g R - (g 0).re = 0 := by
+      simp [hsup]
+    simp [this]
+  -- Otherwise R > 0
+  have hR : 0 < R := by
+    have : 0 ≤ R := by
+      -- r_seq tends to +∞, so it's eventually ≥ 0
+      -- For a direct proof: ‖z‖ = R / 2 ≥ 0 implies R ≥ 0
+      have : 0 ≤ ‖z‖ := norm_nonneg z
+      have : 0 ≤ R / 2 := by rw [← hz]; exact this
+      linarith
+    exact lt_of_le_of_ne this (Ne.symm hR0)
+  have : R / 2 < R := by
+    have := half_lt_self hR; simpa [one_div] using this
+  have hhol : ∀ w : ℂ, ‖w‖ ≤ R → DifferentiableAt ℂ g w :=
+    fun _ _ => h_entire.differentiableAt
+  have h_bdd : BddAbove {x | ∃ ζ : ℂ, ‖ζ‖ = R ∧ x = (g ζ).re} := by
+    -- Continuity on the compact circle gives boundedness.
+    have hset_eq :
+        {x : ℝ | ∃ ζ : ℂ, ‖ζ‖ = R ∧ x = (g ζ).re}
+          = ((fun ζ : ℂ => (g ζ).re) '' Metric.sphere (0 : ℂ) R) := by
+      ext x
+      constructor
+      · rintro ⟨ζ, hζ, rfl⟩
+        refine ⟨ζ, ?_, rfl⟩
+        have : dist ζ (0 : ℂ) = R := by
+          simpa [dist_eq_norm] using hζ
+        simpa [Metric.mem_sphere] using this
+      · rintro ⟨ζ, hζ, rfl⟩
+        refine ⟨ζ, ?_, rfl⟩
+        have : dist ζ (0 : ℂ) = R := by
+          simpa [Metric.mem_sphere] using hζ
+        simpa [dist_eq_norm] using this
+    have hK : IsCompact (Metric.sphere (0 : ℂ) R) := isCompact_sphere _ _
+    have hcont : Continuous fun ζ : ℂ => (g ζ).re :=
+      Complex.continuous_re.comp h_entire.continuous
+    have hbdd' : BddAbove ((fun ζ : ℂ => (g ζ).re) '' Metric.sphere (0 : ℂ) R) :=
+      (hK.image hcont).bddAbove
+    simpa [hset_eq] using hbdd'
+  have hbc :=
+    borel_caratheodory_point g R (R / 2) (by exact hR) this hhol h_bdd z
+      (by simp [hz])
+  -- Simplify the geometric factor when r = R/2
+  have hfactor : (2 * (R / 2) / (R - R / 2)) = (2 : ℝ) := by
+    have hR0' : R ≠ 0 := ne_of_gt hR
+    field_simp [hR0']
+    norm_num
+  simpa [hfactor, mul_comm, mul_left_comm, mul_assoc] using hbc
+
+private theorem polynomial_growth_bound_tendsto_zero (g : ℂ → ℂ)
+    (ρ ε : ℝ) (hρ : 0 ≤ ρ) (k : ℕ) (hk : ρ < k) (hκε : ρ + ε < k)
+    (r_seq : ℕ → ℝ) (hr_tendsto : Tendsto r_seq atTop atTop) (hr_pos : ∀ n, 0 < r_seq n) :
+    Tendsto (fun n => (k.factorial : ℝ) *
+      (2 * ((r_seq n) ^ (ρ + ε) - (g 0).re) + ‖g 0‖) / (r_seq n / 2) ^ k) atTop (𝓝 0) := by
+  let B : ℕ → ℝ := fun n => (k.factorial : ℝ)
+    * (2 * ((r_seq n) ^ (ρ + ε) - (g 0).re) + ‖g 0‖) / (r_seq n / 2) ^ k
+  change Tendsto B atTop (𝓝 0)
+  have h1 : Tendsto (fun n => (r_seq n : ℝ) ^ (ρ + ε - k)) atTop (𝓝 0) := by
+    have hy : 0 < (k : ℝ) - (ρ + ε) := by
+      have : ρ + ε < (k : ℝ) := by exact_mod_cast hκε
+      linarith
+    simpa [sub_eq_add_neg, add_assoc, add_comm, add_left_comm, Function.comp_def]
+      using (tendsto_rpow_neg_atTop hy).comp hr_tendsto
+  have h2 : Tendsto (fun n => (r_seq n : ℝ) ^ (-k : ℝ)) atTop (𝓝 0) := by
+    have hk_pos : (0 : ℝ) < k := lt_of_le_of_lt hρ hk
+    simpa [Function.comp_def] using (tendsto_rpow_neg_atTop hk_pos).comp hr_tendsto
+  have hB_eq : ∀ n, B n =
+      (k.factorial : ℝ) * 2 ^ (k + 1) * (r_seq n : ℝ) ^ (ρ + ε - k)
+    + (k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ) := by
+    intro n
+    have hr : 0 < r_seq n := hr_pos n
+    have hden : (r_seq n / 2 : ℝ) ^ k = (r_seq n : ℝ) ^ k / (2 : ℝ) ^ k := by
+      simp [div_eq_mul_inv, mul_pow, inv_pow]
+    calc
+      B n
+          = (k.factorial : ℝ) * (2 * ((r_seq n) ^ (ρ + ε) - (g 0).re) + ‖g 0‖)
+                / (r_seq n ^ k / (2 : ℝ) ^ k) := by
+              simp [B, hden]
+      _ = (k.factorial : ℝ) * (2 * ((r_seq n) ^ (ρ + ε) - (g 0).re) + ‖g 0‖)
+                * (2 : ℝ) ^ k / (r_seq n) ^ k := by
+              simp [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
+      _ = (k.factorial : ℝ) * 2 ^ k * (2 * ((r_seq n) ^ (ρ + ε) - (g 0).re) + ‖g 0‖)
+                / (r_seq n) ^ k := by
+              ring_nf
+      _ = (k.factorial : ℝ) * 2 ^ k * (2 * (r_seq n) ^ (ρ + ε) + (‖g 0‖ - 2 * (g 0).re))
+                / (r_seq n) ^ k := by
+              ring
+      _ = (k.factorial : ℝ) * 2 ^ k
+              * (2 * ((r_seq n : ℝ) ^ (ρ + ε) / (r_seq n : ℝ) ^ k)
+                + (‖g 0‖ - 2 * (g 0).re) / (r_seq n : ℝ) ^ k) := by
+              ring
+      _ = (k.factorial : ℝ) * 2 ^ (k + 1) * (r_seq n : ℝ) ^ (ρ + ε - k)
+          + (k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ) := by
+              have hquot1 :
+                  (r_seq n : ℝ) ^ (ρ + ε) / (r_seq n : ℝ) ^ k =
+                    (r_seq n : ℝ) ^ (ρ + ε - k) := by
+                simpa [Real.rpow_natCast] using (Real.rpow_sub hr (ρ + ε) (k : ℝ)).symm
+              have hquot2 :
+                  (‖g 0‖ - 2 * (g 0).re) / (r_seq n : ℝ) ^ k =
+                    (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ) := by
+                simp [div_eq_mul_inv]
+              simp [hquot1, hquot2]
+              ring_nf
+  have hterm1 :
+      Tendsto (fun n =>
+          (k.factorial : ℝ) * 2 ^ (k + 1) * (r_seq n : ℝ) ^ (ρ + ε - k)) atTop (𝓝 0) := by
+    have :
+        Tendsto (fun n => ((k.factorial : ℝ) * 2 ^ (k + 1)) * (r_seq n : ℝ) ^ (ρ + ε - k))
+          atTop (𝓝 0) := by
+      simpa using (tendsto_const_nhds.mul h1)
+    simpa [mul_assoc] using this
+  have hterm2 :
+      Tendsto (fun n =>
+          (k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ))
+        atTop (𝓝 0) := by
+    have :
+        Tendsto (fun n =>
+            ((k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re)) * (r_seq n : ℝ) ^ (-k : ℝ))
+          atTop (𝓝 0) := by
+      simpa using (tendsto_const_nhds.mul h2)
+    simpa [mul_assoc] using this
+  have hsum :
+      Tendsto (fun n =>
+          (k.factorial : ℝ) * 2 ^ (k + 1) * (r_seq n : ℝ) ^ (ρ + ε - k)
+        + (k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ))
+        atTop (𝓝 0) := by
+    simpa using (hterm1.add hterm2)
+  exact (Filter.Tendsto.congr (fun n => (hB_eq n).symm) hsum)
+
 /-- **Theorem 2.3**: If Re g(z) = O(r^ρ), then g is a polynomial of degree ≤ ρ
 
 Theorem 2.3. Let g: ℂ → ℂ be entire. If for all ε > 0 there exists a sequence
@@ -817,66 +960,9 @@ lemma polynomial_from_growth (g : ℂ → ℂ) (ρ : ℝ) (hρ : 0 ≤ ρ)
       have : (0 : ℝ) < r_seq0 (n + N0) := lt_of_lt_of_le (by norm_num) h1
       simpa [r_seq] using this
     -- Bound on the smaller circle of radius r_n/2 via Borel–Carathéodory
-    have h_small_bound : ∀ n z, ‖z‖ = (r_seq n)/2 →
-        ‖g z‖ ≤ 2 * (LZCBorelCaratheodory.boundaryRealSup g (r_seq n) - (g 0).re) + ‖g 0‖ := by
-      intro n z hz
-      -- If r_seq n = 0, then z = 0 and the inequality is trivial
-      by_cases hR0 : r_seq n = 0
-      · have : z = 0 := by
-          have : ‖z‖ = 0 := by simp [hz, hR0]
-          exact norm_eq_zero.mp this
-        subst this
-        have hsup : LZCBorelCaratheodory.boundaryRealSup g (r_seq n) = (g 0).re := by
-          classical
-          simp [LZCBorelCaratheodory.boundaryRealSup, hR0, norm_eq_zero]
-        have : LZCBorelCaratheodory.boundaryRealSup g (r_seq n) - (g 0).re = 0 := by
-          simp [hsup]
-        simp [this]
-      -- Otherwise r_seq n > 0
-      have hR : 0 < r_seq n := by
-        have : 0 ≤ r_seq n := by
-          -- r_seq tends to +∞, so it's eventually ≥ 0
-          -- For a direct proof: ‖z‖ = r_seq n / 2 ≥ 0 implies r_seq n ≥ 0
-          have : 0 ≤ ‖z‖ := norm_nonneg z
-          have : 0 ≤ r_seq n / 2 := by rw [← hz]; exact this
-          linarith
-        exact lt_of_le_of_ne this (Ne.symm hR0)
-      have : (r_seq n) / 2 < r_seq n := by
-        have := half_lt_self hR; simpa [one_div] using this
-      have hhol : ∀ w : ℂ, ‖w‖ ≤ r_seq n → DifferentiableAt ℂ g w :=
-        fun _ _ => h_entire.differentiableAt
-      have h_bdd : BddAbove {x | ∃ ζ : ℂ, ‖ζ‖ = r_seq n ∧ x = (g ζ).re} := by
-        -- Continuity on the compact circle gives boundedness.
-        have hset_eq :
-            {x : ℝ | ∃ ζ : ℂ, ‖ζ‖ = r_seq n ∧ x = (g ζ).re}
-              = ((fun ζ : ℂ => (g ζ).re) '' Metric.sphere (0 : ℂ) (r_seq n)) := by
-          ext x
-          constructor
-          · rintro ⟨ζ, hζ, rfl⟩
-            refine ⟨ζ, ?_, rfl⟩
-            have : dist ζ (0 : ℂ) = r_seq n := by
-              simpa [dist_eq_norm] using hζ
-            simpa [Metric.mem_sphere] using this
-          · rintro ⟨ζ, hζ, rfl⟩
-            refine ⟨ζ, ?_, rfl⟩
-            have : dist ζ (0 : ℂ) = r_seq n := by
-              simpa [Metric.mem_sphere] using hζ
-            simpa [dist_eq_norm] using this
-        have hK : IsCompact (Metric.sphere (0 : ℂ) (r_seq n)) := isCompact_sphere _ _
-        have hcont : Continuous fun ζ : ℂ => (g ζ).re :=
-          Complex.continuous_re.comp h_entire.continuous
-        have hbdd' : BddAbove ((fun ζ : ℂ => (g ζ).re) '' Metric.sphere (0 : ℂ) (r_seq n)) :=
-          (hK.image hcont).bddAbove
-        simpa [hset_eq] using hbdd'
-      have hbc :=
-        borel_caratheodory_point g (r_seq n) ((r_seq n) / 2) (by exact hR) this hhol h_bdd z
-          (by simp [hz])
-      -- Simplify the geometric factor when r = R/2
-      have hfactor : (2 * ((r_seq n) / 2) / (r_seq n - (r_seq n) / 2)) = (2 : ℝ) := by
-        have hR0' : r_seq n ≠ 0 := ne_of_gt hR
-        field_simp [hR0']
-        norm_num
-      simpa [hfactor, mul_comm, mul_left_comm, mul_assoc] using hbc
+    have h_small_bound : ∀ n z, ‖z‖ = (r_seq n) / 2 →
+        ‖g z‖ ≤ 2 * (LZCBorelCaratheodory.boundaryRealSup g (r_seq n) - (g 0).re) + ‖g 0‖ :=
+      fun n => norm_le_boundaryRealSup_half_radius g h_entire (r_seq n)
     -- Cauchy estimates on radius r_n/2
     have h_cauchy : ∀ n, ‖iteratedDeriv k g 0‖ ≤
         (k.factorial : ℝ)
@@ -942,78 +1028,8 @@ lemma polynomial_from_growth (g : ℂ → ℂ) (ρ : ℝ) (hρ : 0 ≤ ρ)
             (mul_le_mul_of_nonneg_right hnum_le (inv_nonneg.mpr hden_nonneg))
       exact h_cauchy_n.trans (by simpa [B] using hdiv_le)
     -- Show `B n → 0` using `tendsto_rpow_neg_atTop`
-    have hB0 : Tendsto B atTop (𝓝 0) := by
-      have h1 : Tendsto (fun n => (r_seq n : ℝ) ^ (ρ + ε - k)) atTop (𝓝 0) := by
-        have hy : 0 < (k : ℝ) - (ρ + ε) := by
-          have : ρ + ε < (k : ℝ) := by exact_mod_cast hκε
-          linarith
-        simpa [sub_eq_add_neg, add_assoc, add_comm, add_left_comm, Function.comp_def]
-          using (tendsto_rpow_neg_atTop hy).comp hr_tendsto
-      have h2 : Tendsto (fun n => (r_seq n : ℝ) ^ (-k : ℝ)) atTop (𝓝 0) := by
-        have hk_pos : (0 : ℝ) < k := lt_of_le_of_lt hρ hk
-        simpa [Function.comp_def] using (tendsto_rpow_neg_atTop hk_pos).comp hr_tendsto
-      have hB_eq : ∀ n, B n =
-          (k.factorial : ℝ) * 2 ^ (k + 1) * (r_seq n : ℝ) ^ (ρ + ε - k)
-        + (k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ) := by
-        intro n
-        have hr : 0 < r_seq n := hr_pos n
-        have hden : (r_seq n / 2 : ℝ) ^ k = (r_seq n : ℝ) ^ k / (2 : ℝ) ^ k := by
-          simp [div_eq_mul_inv, mul_pow, inv_pow]
-        calc
-          B n
-              = (k.factorial : ℝ) * (2 * ((r_seq n) ^ (ρ + ε) - (g 0).re) + ‖g 0‖)
-                    / (r_seq n ^ k / (2 : ℝ) ^ k) := by
-                  simp [B, hden]
-          _ = (k.factorial : ℝ) * (2 * ((r_seq n) ^ (ρ + ε) - (g 0).re) + ‖g 0‖)
-                    * (2 : ℝ) ^ k / (r_seq n) ^ k := by
-                  simp [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
-          _ = (k.factorial : ℝ) * 2 ^ k * (2 * ((r_seq n) ^ (ρ + ε) - (g 0).re) + ‖g 0‖)
-                    / (r_seq n) ^ k := by
-                  ring_nf
-          _ = (k.factorial : ℝ) * 2 ^ k * (2 * (r_seq n) ^ (ρ + ε) + (‖g 0‖ - 2 * (g 0).re))
-                    / (r_seq n) ^ k := by
-                  ring
-          _ = (k.factorial : ℝ) * 2 ^ k
-                  * (2 * ((r_seq n : ℝ) ^ (ρ + ε) / (r_seq n : ℝ) ^ k)
-                    + (‖g 0‖ - 2 * (g 0).re) / (r_seq n : ℝ) ^ k) := by
-                  ring
-          _ = (k.factorial : ℝ) * 2 ^ (k + 1) * (r_seq n : ℝ) ^ (ρ + ε - k)
-              + (k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ) := by
-                  have hquot1 :
-                      (r_seq n : ℝ) ^ (ρ + ε) / (r_seq n : ℝ) ^ k =
-                        (r_seq n : ℝ) ^ (ρ + ε - k) := by
-                    simpa [Real.rpow_natCast] using (Real.rpow_sub hr (ρ + ε) (k : ℝ)).symm
-                  have hquot2 :
-                      (‖g 0‖ - 2 * (g 0).re) / (r_seq n : ℝ) ^ k =
-                        (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ) := by
-                    simp [div_eq_mul_inv]
-                  simp [hquot1, hquot2]
-                  ring_nf
-      have hterm1 :
-          Tendsto (fun n =>
-              (k.factorial : ℝ) * 2 ^ (k + 1) * (r_seq n : ℝ) ^ (ρ + ε - k)) atTop (𝓝 0) := by
-        have :
-            Tendsto (fun n => ((k.factorial : ℝ) * 2 ^ (k + 1)) * (r_seq n : ℝ) ^ (ρ + ε - k))
-              atTop (𝓝 0) := by
-          simpa using (tendsto_const_nhds.mul h1)
-        simpa [mul_assoc] using this
-      have hterm2 :
-          Tendsto (fun n =>
-              (k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ))
-            atTop (𝓝 0) := by
-        have :
-            Tendsto (fun n =>
-                ((k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re)) * (r_seq n : ℝ) ^ (-k : ℝ))
-              atTop (𝓝 0) := by
-          simpa using (tendsto_const_nhds.mul h2)
-        simpa [mul_assoc] using this
-      have hsum :
-          Tendsto (fun n =>
-              (k.factorial : ℝ) * 2 ^ (k + 1) * (r_seq n : ℝ) ^ (ρ + ε - k)
-            + (k.factorial : ℝ) * 2 ^ k * (‖g 0‖ - 2 * (g 0).re) * (r_seq n : ℝ) ^ (-k : ℝ))
-            atTop (𝓝 0) := by
-        simpa using (hterm1.add hterm2)
-      exact (Filter.Tendsto.congr (fun n => (hB_eq n).symm) hsum)
+    have hB0 : Tendsto B atTop (𝓝 0) :=
+      polynomial_growth_bound_tendsto_zero g ρ ε hρ k hk hκε r_seq hr_tendsto hr_pos
     -- From `‖deriv‖ ≤ B n` for all `n` and `B n → 0`, we deduce the norm is 0
     have : ‖iteratedDeriv k g 0‖ = 0 := by
       have hconst :
