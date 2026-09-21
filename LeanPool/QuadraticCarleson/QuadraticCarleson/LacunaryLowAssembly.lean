@@ -190,7 +190,9 @@ theorem lacunaryLowActionAtLevel_enorm_le_middle_add_verySmall
     _ ≤ ∑' j : ℤ, restrictedCanonicalScaleLowActionEnorm A f k B c m j x :=
       ENNReal.summable.tsum_le_tsum_of_inj (↑) Subtype.val_injective
         (fun _ _ ↦ bot_le) (fun _ ↦ le_rfl) ENNReal.summable
-    _ ≤ verySmallLowContributionAtLevel A f k B c x := ENNReal.le_tsum m
+    _ ≤ verySmallLowContributionAtLevel A f k B c x :=
+      ENNReal.le_tsum (f := fun m' ↦ ∑' j : ℤ,
+        restrictedCanonicalScaleLowActionEnorm A f k B c m' j x) m
 
 theorem lacunaryLowContribution_le_middle_add_verySmall
     {f : ℝ → ℂ} (hf : Measurable f) (hfi : Integrable f)

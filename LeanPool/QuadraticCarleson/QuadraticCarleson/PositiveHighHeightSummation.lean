@@ -53,12 +53,19 @@ theorem highContributionMajorant_eLpNorm_le
   exact (eLpNorm_tsum_two_le (fun k ↦ highHeightMajorant (B k) (b k))
     (fun k ↦ measurable_highHeightMajorant (B k) (hb k))).trans hs
 
+/-- The countable sum of actual high tails is measurable for L² inputs. -/
+theorem measurable_paperHighContribution
+    (B : ℕ → ℕ) {b : ℕ → ℝ → ℂ} (hb : ∀ k, MemLp (b k) 2) :
+    Measurable (paperHighContribution B b) :=
+  Measurable.tsum (fun k ↦ measurable_paperHighHeightTail (B k) (hb k))
+
 theorem paperHighContribution_eLpNorm_le
     (B : ℕ → ℕ) {b : ℕ → ℝ → ℂ} (hb : ∀ k, MemLp (b k) 2) :
     eLpNorm (paperHighContribution B b) 2 ≤
       highHeightTailConstant * ∑' k : ℕ,
         ENNReal.ofReal ((2 : ℝ) ^ (-((B k : ℕ) : ℝ) / 10)) * eLpNorm (b k) 2 := by
   apply (eLpNorm_mono_enorm (f := paperHighContribution B b) (g := highContributionMajorant B b)
+    (measurable_paperHighContribution B hb).aestronglyMeasurable
     (fun x ↦ paperHighContribution_le_majorant B b x)).trans
   exact highContributionMajorant_eLpNorm_le B hb
 
@@ -79,7 +86,7 @@ theorem paperHighContribution_levelSet_le
     simpa only [ENNReal.toReal_ofNat, enorm_eq_self, ENNReal.one_rpow,
       one_mul, one_pow, ENNReal.rpow_two] using mul_meas_ge_le_pow_eLpNorm' volume
       (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞)
-      (measurable_highContributionMajorant B hb).aestronglyMeasurable (1 : ℝ≥0∞)
+      (f := highContributionMajorant B b) (1 : ℝ≥0∞)
   exact hset.trans (hcheb.trans
     (pow_le_pow_left₀ bot_le (highContributionMajorant_eLpNorm_le B hb) 2))
 
@@ -89,7 +96,8 @@ theorem disjointLevelAtomSum_eLpNorm_le {ι : Type*} [Countable ι]
     (hdisj : Pairwise (Disjoint on fun i ↦ centeredInterval (z i) (R i))) :
     eLpNorm (disjointLevelAtomSum A f k z R) 2 ≤
       (ENNReal.ofReal (4 * A k) * magnitudeLevelL1Mass volume A f k) ^ (1 / 2 : ℝ) := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+    (measurable_disjointLevelAtomSum (A := A) hf k z R).aestronglyMeasurable]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
   exact ENNReal.rpow_le_rpow (disjointLevelAtomSum_sq_lintegral_le hf hAk z R hR hdisj)
     (by norm_num)

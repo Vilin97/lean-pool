@@ -801,7 +801,8 @@ theorem eLpNorm_offsetTailMaximalOn_le_root
     rw [← ENNReal.rpow_mul]
     norm_num
   apply (ENNReal.rpow_le_rpow_iff (by norm_num : (0 : ℝ) < 2)).mp
-  rw [hroot, ENNReal.rpow_two, eLpNorm_two_sq_lintegral]
+  rw [hroot, ENNReal.rpow_two, eLpNorm_two_sq_lintegral _
+    (measurable_offsetTailMaximalOn S A scale f.measurable_toFun ell₀ s).aestronglyMeasurable]
   simpa only [enorm_eq_self] using hsq
 
 

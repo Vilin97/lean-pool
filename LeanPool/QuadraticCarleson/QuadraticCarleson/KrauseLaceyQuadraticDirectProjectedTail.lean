@@ -39,7 +39,7 @@ theorem norm_annularProjectionL2_le
     ‖annularProjectionL2 j v‖ ≤ ‖v‖ := by
   have hmult : eLpNorm (annularFourierMultiplier j v) 2 volume ≤
       eLpNorm (⇑(Lp.fourierTransformₗᵢ ℝ ℂ v)) 2 volume := by
-    apply eLpNorm_mono_ae
+    apply eLpNorm_mono_ae (memLp_annularFourierMultiplier j v).aestronglyMeasurable
     filter_upwards with ξ
     unfold annularFourierMultiplier
     rw [norm_mul]
@@ -289,7 +289,7 @@ theorem projectedOffsetResidueTailMax_sq_lintegral_le_projectedSum
 theorem lintegral_enorm_sq_coe_Lp
     (w : Lp (α := ℝ) ℂ 2 volume) :
     (∫⁻ x, ‖w x‖ₑ ^ 2) = ENNReal.ofReal (‖w‖ ^ 2) := by
-  rw [← eLpNorm_two_sq_lintegral, ← Lp.enorm_def w,
+  rw [← eLpNorm_two_sq_lintegral _ (Lp.memLp w).aestronglyMeasurable, ← Lp.enorm_def w,
     ENNReal.ofReal_pow (norm_nonneg w), ofReal_norm]
 
 /-- Annular projection is contractive on the square integral. -/

@@ -1184,7 +1184,7 @@ theorem sum_enorm_zeroHilbertTruncation_boundaryStoppingAtoms_le
           hf hx (hs c hc)
       _ ≤ 8 * M := mul_le_mul' le_rfl
         (centeredHardyLittlewoodMaximal_mono_pointwise
-          (fun y ↦ ENNReal.le_tsum c) x)
+          (fun y ↦ ENNReal.le_tsum (f := fun c' ↦ ‖stoppingHilbertBadAtom f c' y‖ₑ) c) x)
   have hboundary := stoppingBoundaryCells_finite_and_ncard_le_two f
     (ε := ε) hx
   have hcard : s.card ≤ 2 := by
@@ -1643,7 +1643,7 @@ theorem aestronglyMeasurable_stoppingGoodHilbertL2Representative
     AEStronglyMeasurable (stoppingGoodHilbertL2Representative f hf) := by
   change AEStronglyMeasurable
     (⇑(ordinaryHilbertTransformL2 (stoppingGoodPartL2 f hf)) : ℝ → ℂ)
-  exact (Lp.memLp (ordinaryHilbertTransformL2 (stoppingGoodPartL2 f hf))).1
+  exact (Lp.memLp (ordinaryHilbertTransformL2 (stoppingGoodPartL2 f hf))).aestronglyMeasurable
 
 /-- The Fourier Hilbert transform of the stopping good part has the sharp
 operator-norm bound.  A Cotlar inequality relating the sharp truncations to
@@ -1668,7 +1668,8 @@ theorem enorm_stoppingGoodPartL2_sq_eq_lintegral
     ‖stoppingGoodPartL2 f hf‖ₑ ^ 2 =
       ∫⁻ x, ‖stoppingGoodPart f x‖ₑ ^ 2 := by
   unfold stoppingGoodPartL2
-  rw [Lp.enorm_toLp (memLp_two_stoppingGoodPart hf), eLpNorm_two_sq_lintegral]
+  rw [Lp.enorm_toLp (memLp_two_stoppingGoodPart hf),
+    eLpNorm_two_sq_lintegral _ (memLp_two_stoppingGoodPart hf).aestronglyMeasurable]
 
 theorem enorm_stoppingGoodHilbertL2_le
     {f : ℝ → ℂ} (hf : Integrable f) :
@@ -1872,7 +1873,8 @@ theorem ofReal_cotlarPoissonKernel_le_dyadicBallSeries {r t : ℝ}
           then ENNReal.ofReal ((1 / 4 : ℝ) ^ n / r) else 0) := by
       simp [hn'.le]
     rw [hone]
-    exact ENNReal.summable.le_tsum' n)
+    exact ENNReal.le_tsum (f := fun k : ℕ ↦ if |t| ≤ (2 : ℝ) ^ (k + 1) * r
+      then ENNReal.ofReal ((1 / 4 : ℝ) ^ k / r) else 0) n)
 
 /-- Outside its central ball, the sharp-to-Poisson error is bounded by the
 faster dyadic ball series with ratio `1/8`. -/
@@ -1892,7 +1894,8 @@ theorem ofReal_cotlarPoissonErrorMajorant_le_dyadicBallSeries {r t : ℝ}
           then ENNReal.ofReal ((1 / 8 : ℝ) ^ n / r) else 0) := by
       simp [hn'.le]
     rw [hone]
-    exact ENNReal.summable.le_tsum' n)
+    exact ENNReal.le_tsum (f := fun k : ℕ ↦ if |t| ≤ (2 : ℝ) ^ (k + 1) * r
+      then ENNReal.ofReal ((1 / 8 : ℝ) ^ k / r) else 0) n)
 
 /-- A constant multiple of the mass of a centered ball is controlled by the
 centered Hardy--Littlewood maximal function, uniformly in its real radius. -/
@@ -1992,7 +1995,7 @@ theorem lintegral_cotlarDyadicBallSeries_mul_le_maximal
     apply AEMeasurable.mul
     · exact (Measurable.ite
         (measurableSet_le
-          (measurable_const.sub measurable_id).abs measurable_const)
+          (by fun_prop) measurable_const)
         measurable_const measurable_const).aemeasurable
     · exact hG.aemeasurable
 

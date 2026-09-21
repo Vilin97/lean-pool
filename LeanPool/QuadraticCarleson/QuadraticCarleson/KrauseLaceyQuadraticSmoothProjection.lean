@@ -766,16 +766,16 @@ theorem memLp_two_centeredHardyLittlewoodMaximal_enorm
     MemLp (centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ)) 2 volume := by
   let M : ℝ → ℝ≥0∞ :=
     centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ)
-  refine ⟨(measurable_centeredHardyLittlewoodMaximal
-    hfmeas.enorm).aestronglyMeasurable, ?_⟩
+  have hm := (measurable_centeredHardyLittlewoodMaximal hfmeas.enorm)
   have hinput : (∫⁻ x, ‖f x‖ₑ ^ 2) < (⊤ : ℝ≥0∞) := by
-    rw [← eLpNorm_two_sq_lintegral]
+    rw [← eLpNorm_two_sq_lintegral _ hf₂.aestronglyMeasurable]
     exact ENNReal.pow_lt_top hf₂.eLpNorm_lt_top
   have hM : (∫⁻ x, M x ^ 2) < (⊤ : ℝ≥0∞) :=
     (centeredHardyLittlewoodMaximal_sq_lintegral_le hfmeas.enorm).trans_lt
       (ENNReal.mul_lt_top (by norm_num) hinput)
   have hp : eLpNorm M 2 volume ^ 2 < (⊤ : ℝ≥0∞) := by
-    simpa only [eLpNorm_two_sq_lintegral, enorm_eq_self] using hM
+    rw [eLpNorm_two_sq_lintegral M hm.aestronglyMeasurable]
+    simpa only [enorm_eq_self] using hM
   exact (ENNReal.pow_lt_top_iff.mp hp).resolve_right (by norm_num)
 
 theorem memLp_two_lowPassKernelConvolution

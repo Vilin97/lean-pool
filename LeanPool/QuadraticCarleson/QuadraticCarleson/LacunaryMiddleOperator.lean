@@ -385,7 +385,8 @@ theorem enorm_frozenBlockErrorLowAction_le_verySmall
       ENNReal.summable.sum_le_tsum D (fun _ _ ↦ bot_le)
     _ ≤ ∑' m' : ℤ, ∑' j : ℤ,
         restrictedCanonicalScaleLowActionEnorm A f k B c m' j x :=
-      ENNReal.le_tsum m
+      ENNReal.le_tsum (f := fun m' ↦ ∑' j : ℤ,
+        restrictedCanonicalScaleLowActionEnorm A f k B c m' j x) m
     _ = verySmallLowContributionAtLevel A f k B c x := rfl
 
 /-- `L¹` mass of one genuine frozen block input. -/

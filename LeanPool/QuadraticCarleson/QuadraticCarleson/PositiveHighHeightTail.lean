@@ -5,6 +5,10 @@ Authors: Quadratic Carleson formalization contributors
 -/
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveHighHeightEstimate
+import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightL2Stability
+import Mathlib.Analysis.Convolution
+import Mathlib.Analysis.Normed.Group.FunctionSeries
+import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
 
 /-!
 # The paper's strict high-height tail
@@ -129,6 +133,121 @@ theorem highHeightMajorant_eLpNorm_le (B : ℕ) {b : ℝ → ℂ} (hb : MemLp b 
     (fun n : ℕ ↦ paperFixedHeightQuadraticMaximal (B + n + 1) b)
     (fun n ↦ measurable_paperFixedHeightQuadraticMaximal (B + n + 1) hb)).trans hs
 
+/-! ## Continuity of the actual infinite tail
+
+For each fixed modulation, Hölder bounds the convolution at every observation point by
+an interval-supported kernel's L² norm. Its radius doubles at each height, so these uniform
+bounds form a geometric series with ratio `2^(-1/2)`. This proves continuity before taking
+the unrestricted real-modulation supremum.
+-/
+
+private theorem tailKernel_eLpNorm_bound (lam : ℝ) (h : ℕ) (hlam : lam ≠ 0) :
+    eLpNorm (fixedHeightQuadraticKernel lam h hlam) 2 ≤
+      ENNReal.ofReal ((2 * positiveDyadicAmplitudeBound / fixedHeightRadius lam h hlam) *
+        (2 * fixedHeightRadius lam h hlam) ^ (1 / (2 : ℝ))) := by
+  let R := fixedHeightRadius lam h hlam
+  let D := 2 * positiveDyadicAmplitudeBound
+  have hR : 0 < R := fixedHeightRadius_pos lam h hlam
+  have hD : 0 ≤ D := mul_nonneg (by norm_num) positiveDyadicAmplitudeBound_nonneg
+  have hc : AEStronglyMeasurable (fixedHeightQuadraticKernel lam h hlam) volume :=
+    (continuous_fixedHeightQuadraticKernel lam h hlam).aestronglyMeasurable
+  calc
+    _ ≤ eLpNorm ((Icc (-R) R).indicator (fun _ : ℝ ↦ D / R)) 2 := by
+      apply eLpNorm_mono_real hc
+      intro t
+      by_cases ht : t ∈ Icc (-R) R
+      · rw [indicator_of_mem ht]
+        exact norm_fixedHeightQuadraticKernel_le lam h hlam t
+      · rw [indicator_of_notMem ht]
+        have hz := fixedHeightQuadraticKernel_eq_zero_of_radius_lt lam h hlam t
+          (lt_of_not_ge (fun ha ↦ ht (abs_le.mp ha)))
+        simp [hz]
+    _ = ENNReal.ofReal ((D / R) * (2 * R) ^ (1 / (2 : ℝ))) := by
+      rw [eLpNorm_indicator_const measurableSet_Icc.nullMeasurableSet (by norm_num)
+        (by norm_num), Real.volume_Icc]
+      simp only [ENNReal.toReal_ofNat, sub_neg_eq_add, ← two_mul, ← ofReal_norm,
+        Real.norm_eq_abs, abs_of_nonneg (div_nonneg hD hR.le)]
+      rw [ENNReal.ofReal_rpow_of_nonneg (by positivity) (by positivity),
+        ENNReal.ofReal_mul (div_nonneg hD hR.le)]
+
+private theorem tailConvolution_bound (lam : ℝ) (h : ℕ) (hlam : lam ≠ 0)
+    {b : ℝ → ℂ} (hb : MemLp b 2) (x : ℝ) :
+    ‖∫ t, b t * fixedHeightQuadraticKernel lam h hlam (x - t)‖ ≤
+      (‖ContinuousLinearMap.mul ℂ ℂ‖ * (eLpNorm b 2).toReal) *
+        ((2 * positiveDyadicAmplitudeBound / fixedHeightRadius lam h hlam) *
+          (2 * fixedHeightRadius lam h hlam) ^ (1 / (2 : ℝ))) := by
+  have hc : AEStronglyMeasurable (fixedHeightQuadraticKernel lam h hlam) volume :=
+    (continuous_fixedHeightQuadraticKernel lam h hlam).aestronglyMeasurable
+  have hy := enorm_convolution_le (L := ContinuousLinearMap.mul ℂ ℂ)
+    (p := 2) (q := 2) hb.aestronglyMeasurable hc x
+  have hbound := hy.trans (mul_le_mul' le_rfl (tailKernel_eLpNorm_bound lam h hlam))
+  have hfin : ‖ContinuousLinearMap.mul ℂ ℂ‖ₑ * eLpNorm b 2 *
+      ENNReal.ofReal ((2 * positiveDyadicAmplitudeBound / fixedHeightRadius lam h hlam) *
+        (2 * fixedHeightRadius lam h hlam) ^ (1 / (2 : ℝ))) ≠ ∞ := by
+    finiteness
+  have ht := ENNReal.toReal_mono hfin hbound
+  have hn : 0 ≤ (2 * positiveDyadicAmplitudeBound / fixedHeightRadius lam h hlam) *
+        (2 * fixedHeightRadius lam h hlam) ^ (1 / (2 : ℝ)) := by
+    exact mul_nonneg (div_nonneg (mul_nonneg (by norm_num) positiveDyadicAmplitudeBound_nonneg)
+      (fixedHeightRadius_pos lam h hlam).le) (Real.rpow_nonneg (mul_nonneg (by
+        norm_num) (fixedHeightRadius_pos lam h hlam).le) _)
+  simpa only [convolution, ContinuousLinearMap.mul_apply', ENNReal.toReal_mul,
+    toReal_enorm, ENNReal.toReal_ofReal hn] using ht
+
+
+private theorem tailRadius_factor (R D : ℝ) (hR : 0 < R) (n : ℕ) :
+    (D / (R * 2 ^ n)) * (2 * (R * 2 ^ n)) ^ (1 / (2 : ℝ)) =
+      (D / R * (2 * R) ^ (1 / (2 : ℝ))) * ((2 : ℝ) ^ (-(1 / (2 : ℝ)))) ^ n := by
+  have hr : (2 : ℝ) ^ (1 / (2 : ℝ)) / 2 = (2 : ℝ) ^ (-(1 / (2 : ℝ))) := by
+    calc
+      _ = (2 : ℝ) ^ (1 / (2 : ℝ)) / (2 : ℝ) ^ (1 : ℝ) := by rw [Real.rpow_one]
+      _ = (2 : ℝ) ^ (1 / (2 : ℝ) - 1) := (Real.rpow_sub (by norm_num) _ _).symm
+      _ = _ := by norm_num
+  rw [show (2 : ℝ) * (R * 2 ^ n) = (2 * R) * 2 ^ n by ring,
+    Real.mul_rpow (by positivity) (by positivity),
+    ← Real.rpow_natCast_mul (by norm_num : (0 : ℝ) ≤ 2),
+    mul_comm (n : ℝ), Real.rpow_mul_natCast (by norm_num : (0 : ℝ) ≤ 2)]
+  rw [← hr, div_pow]
+  ring
+
+
+private theorem tailRadius_scale (lam : ℝ) (hlam : lam ≠ 0) (B n : ℕ) :
+    fixedHeightRadius lam (B + n) hlam =
+      fixedHeightRadius lam B hlam * (2 : ℝ) ^ n := by
+  unfold fixedHeightRadius
+  rw [oscillatoryScaleIndex_eq_add lam (B + n) hlam,
+    oscillatoryScaleIndex_eq_add lam B hlam]
+  rw [show oscillatoryScaleIndex lam 0 hlam + ((B + n : ℕ) : ℤ) - 1 =
+    (oscillatoryScaleIndex lam 0 hlam + (B : ℤ) - 1) + (n : ℤ) by omega,
+    zpow_add₀ (by norm_num : (2 : ℝ) ≠ 0), zpow_natCast]
+
+/-- The fixed-modulation convolution series from any starting height is continuous
+for every L² input; the geometric bound is uniform in the observation point. -/
+theorem continuous_fixedHeightConvolution_tsum (lam : ℝ) (hlam : lam ≠ 0) (B : ℕ)
+    {b : ℝ → ℂ} (hb : MemLp b 2) :
+    Continuous (fun x ↦ ∑' n : ℕ, ∫ t,
+      b t * fixedHeightQuadraticKernel lam (B + n) hlam (x - t)) := by
+  let R := fixedHeightRadius lam B hlam
+  let q := (2 : ℝ) ^ (-(1 / (2 : ℝ)))
+  let C := (‖ContinuousLinearMap.mul ℂ ℂ‖ * (eLpNorm b 2).toReal) *
+    (2 * positiveDyadicAmplitudeBound / R * (2 * R) ^ (1 / (2 : ℝ)))
+  have hq : 0 ≤ q := Real.rpow_nonneg (by norm_num) _
+  have hq1 : q < 1 := Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by norm_num)
+  apply continuous_tsum (u := fun n : ℕ ↦ C * q ^ n)
+  · intro n
+    have hc := (hasCompactSupport_fixedHeightQuadraticKernel lam (B + n)
+      hlam).continuous_convolution_right
+      (ContinuousLinearMap.mul ℂ ℂ) (hb.locallyIntegrable (by norm_num))
+      (continuous_fixedHeightQuadraticKernel lam (B + n) hlam)
+    change Continuous (fun x ↦ ∫ t,
+      b t * fixedHeightQuadraticKernel lam (B + n) hlam (x - t)) at hc
+    exact hc
+  · exact (summable_geometric_of_lt_one hq hq1).mul_left C
+  · intro n x
+    have h := tailConvolution_bound lam (B + n) hlam hb x
+    rw [tailRadius_scale, tailRadius_factor _ _ (fixedHeightRadius_pos lam B hlam)] at h
+    simpa only [C, R, q, mul_assoc] using h
+
 /-- The actual maximal complex tail, not the sum of the separate maximal
 operators. Its heights are exactly the strict high range. -/
 noncomputable def paperHighHeightTail (B : ℕ) (b : ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
@@ -136,6 +255,29 @@ noncomputable def paperHighHeightTail (B : ℕ) (b : ℝ → ℂ) (x : ℝ) : �
     ∫ t, b (x - t) *
       (dyadicPsi (oscillatoryScaleIndex lam.val (B + n + 1) lam.property) t : ℂ) *
         phase (lam.val * t ^ 2)‖ₑ
+
+/-- The unrestricted modulation supremum is measurable because every modulated tail
+is continuous in the observation point. -/
+theorem measurable_paperHighHeightTail (B : ℕ) {b : ℝ → ℂ} (hb : MemLp b 2) :
+    Measurable (paperHighHeightTail B b) := by
+  apply LowerSemicontinuous.measurable
+  unfold paperHighHeightTail
+  apply lowerSemicontinuous_iSup
+  intro lam
+  have hc : Continuous (fun x ↦ ∑' n : ℕ,
+      ∫ t, b (x - t) *
+        (dyadicPsi (oscillatoryScaleIndex lam.val (B + n + 1) lam.property) t : ℂ) *
+          phase (lam.val * t ^ 2)) := by
+    convert continuous_fixedHeightConvolution_tsum lam.val lam.property (B + 1) hb using 1
+    funext x
+    apply tsum_congr
+    intro n
+    rw [show B + n + 1 = (B + 1) + n by omega,
+      ← fixedHeightQuadraticKernel_integral_eq_paper]
+    apply integral_congr_ae
+    filter_upwards [] with t
+    exact mul_comm _ _
+  exact hc.enorm.lowerSemicontinuous
 
 theorem paperHighHeightTail_le_majorant (B : ℕ) (b : ℝ → ℂ) (x : ℝ) :
     paperHighHeightTail B b x ≤ highHeightMajorant B b x := by
@@ -151,7 +293,8 @@ theorem paperHighHeightTail_le_majorant (B : ℕ) (b : ℝ → ℂ) (x : ℝ) :
 theorem paperHighHeightTail_eLpNorm_le (B : ℕ) {b : ℝ → ℂ} (hb : MemLp b 2) :
     eLpNorm (paperHighHeightTail B b) 2 ≤ highHeightTailConstant *
       ENNReal.ofReal ((2 : ℝ) ^ (-(B : ℝ) / 10)) * eLpNorm b 2 := by
-  apply (eLpNorm_mono_enorm (f := paperHighHeightTail B b) (g := highHeightMajorant B b) ?_
+  apply (eLpNorm_mono_enorm (f := paperHighHeightTail B b) (g := highHeightMajorant B b)
+    (measurable_paperHighHeightTail B hb).aestronglyMeasurable
     (fun x ↦ by simpa only [enorm_eq_self] using paperHighHeightTail_le_majorant B b x)).trans
   exact highHeightMajorant_eLpNorm_le B hb
 

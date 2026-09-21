@@ -105,10 +105,10 @@ theorem measurable_centeredHardyLittlewoodBoundaryOperator (f : L0Infinity) :
   exact Complex.measurable_ofReal.comp
     ((measurable_centeredHardyLittlewoodMaximal f.measurable_toFun.enorm).ennreal_toReal)
 
-private theorem eLpNorm_two_sq_lintegral_boundary {E : Type*} [ENorm E]
-    (F : ℝ → E) :
+private theorem eLpNorm_two_sq_lintegral_boundary {E : Type*} [TopologicalSpace E] [ENorm E]
+    (F : ℝ → E) (hF : AEStronglyMeasurable F volume) :
     eLpNorm F 2 volume ^ 2 = ∫⁻ x, ‖F x‖ₑ ^ (2 : ℕ) := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hF]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
   rw [← ENNReal.rpow_mul_natCast]
   norm_num
@@ -124,14 +124,14 @@ theorem centeredHardyLittlewoodBoundaryOperator_locallyIntegrable
       (Filter.Eventually.of_forall hC)
   have hM2 : MemLp
       (fun x ↦ centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ) x) 2 volume := by
-    refine ⟨(measurable_centeredHardyLittlewoodMaximal
-      f.measurable_toFun.enorm).aestronglyMeasurable, ?_⟩
+    have hm := measurable_centeredHardyLittlewoodMaximal f.measurable_toFun.enorm
     have hle := centeredHardyLittlewoodMaximal_rpow_lintegral_le
       f.measurable_toFun.enorm (fun _y ↦ enorm_ne_top) (p := 2) (by norm_num)
     have hfin : (∫⁻ x, ‖f x‖ₑ ^ (2 : ℝ)) ≠ ∞ := by
       have hp : eLpNorm f 2 volume ^ 2 < ∞ :=
         ENNReal.pow_lt_top (n := 2) hf2.eLpNorm_lt_top
-      simpa only [eLpNorm_two_sq_lintegral_boundary, ENNReal.rpow_two] using hp.ne
+      simpa only [eLpNorm_two_sq_lintegral_boundary _ hf2.aestronglyMeasurable,
+        ENNReal.rpow_two] using hp.ne
     have hsq : (∫⁻ x,
         centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ) x ^ (2 : ℝ)) < ∞ :=
       hle.trans_lt
@@ -139,8 +139,8 @@ theorem centeredHardyLittlewoodBoundaryOperator_locallyIntegrable
     have hp : eLpNorm
         (fun x ↦ centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ) x)
           2 volume ^ 2 < ∞ := by
-      simpa only [eLpNorm_two_sq_lintegral_boundary, enorm_eq_self,
-        ENNReal.rpow_two] using hsq
+      simpa only [eLpNorm_two_sq_lintegral_boundary _ hm.aestronglyMeasurable,
+        enorm_eq_self, ENNReal.rpow_two] using hsq
     exact (ENNReal.pow_lt_top_iff.mp hp).resolve_right (by norm_num)
   have hcomplex : MemLp (centeredHardyLittlewoodBoundaryOperator f) 2 volume := by
     apply hM2.of_le_enorm

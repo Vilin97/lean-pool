@@ -70,7 +70,9 @@ theorem exists_compactSchwartz_lintegral_residual_le
     (memLp_one_iff_integrable.mpr f.integrable) hε
   refine ⟨hg.toSchwartzMap hgs, hg, ?_⟩
   change (∫⁻ x, ‖f x - g x‖ₑ) ≤ ENNReal.ofReal ε
-  simpa only [eLpNorm_one_eq_lintegral_enorm, Pi.sub_apply] using happrox
+  simpa only [eLpNorm_one_eq_lintegral_enorm
+    (f.integrable.aestronglyMeasurable.sub hgs.continuous.aestronglyMeasurable),
+    Pi.sub_apply] using happrox
 
 theorem zeroHilbertTrunc_sub {f g : ℝ → ℂ} (hf : Integrable f) (hg : Integrable g)
     {ε : ℝ} (hε : 0 < ε) (x : ℝ) :

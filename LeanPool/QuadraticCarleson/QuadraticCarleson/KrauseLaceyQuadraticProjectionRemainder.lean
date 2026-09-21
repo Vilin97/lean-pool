@@ -1754,7 +1754,8 @@ theorem lintegral_ofReal_finiteProjectionErrorMajorant_sq_eq
     intro x
     rw [← ofReal_norm, Real.norm_eq_abs, abs_of_nonneg (hF0 x)]
   change (∫⁻ x, ENNReal.ofReal (F x) ^ 2) = _
-  rw [hIntegral, ← eLpNorm_two_sq_lintegral,
+  rw [hIntegral, ← eLpNorm_two_sq_lintegral F
+    (memLp_two_finiteProjectionErrorMajorant hu).aestronglyMeasurable,
     ← Lp.enorm_toLp (memLp_two_finiteProjectionErrorMajorant hu),
     ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
 
@@ -1801,7 +1802,7 @@ theorem norm_finiteProjectionErrorMajorantL2_le
     _ = ∑ n ∈ Finset.range N, ‖(hu n).toLp (u n)‖ := by
       apply Finset.sum_congr rfl
       intro n hn
-      rw [Lp.norm_toLp, Lp.norm_toLp, eLpNorm_norm]
+      rw [Lp.norm_toLp, Lp.norm_toLp, eLpNorm_norm (u n) (hu n).aestronglyMeasurable]
 
 /-- A finite pointwise remainder majorant is controlled in `L²` by the sum
 of the centered-unit-mass bounds for its individual scale outputs.  This is

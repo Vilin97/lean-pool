@@ -67,7 +67,8 @@ theorem stoppingGoodPart_oscillatory_eLpNorm_sq_le {f : ℝ → ℂ} (hf : Integ
       stoppingGoodOscillatoryConstant * ∫⁻ x, ‖f x‖ₑ := by
   have h := pow_le_pow_left₀ bot_le
     (paperOscillatoryMaximal_eLpNorm_le (memLp_stoppingGoodPart hf)) 2
-  rw [mul_pow, eLpNorm_two_sq_lintegral (stoppingGoodPart f)] at h
+  rw [mul_pow, eLpNorm_two_sq_lintegral (stoppingGoodPart f)
+    (memLp_stoppingGoodPart hf).aestronglyMeasurable] at h
   apply h.trans
   apply (mul_le_mul' le_rfl (lintegral_sq_enorm_stoppingGoodPart_le hf)).trans_eq
   unfold stoppingGoodOscillatoryConstant
@@ -94,7 +95,8 @@ theorem stoppingGoodPart_lacunaryOscillatory_eLpNorm_sq_le
       stoppingGoodOscillatoryConstant * ∫⁻ x, ‖f x‖ₑ := by
   have h := pow_le_pow_left₀ bot_le
     (paperLacunaryOscillatoryMaximal_eLpNorm_le (memLp_stoppingGoodPart hf)) 2
-  rw [mul_pow, eLpNorm_two_sq_lintegral (stoppingGoodPart f)] at h
+  rw [mul_pow, eLpNorm_two_sq_lintegral (stoppingGoodPart f)
+    (memLp_stoppingGoodPart hf).aestronglyMeasurable] at h
   apply h.trans
   apply (mul_le_mul' le_rfl (lintegral_sq_enorm_stoppingGoodPart_le hf)).trans_eq
   unfold stoppingGoodOscillatoryConstant

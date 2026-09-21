@@ -38,7 +38,9 @@ theorem fullHighMajorant_sq_lintegral_le_orlicz
     exact ENNReal.tsum_le_tsum (fun k ↦ mul_le_mul' le_rfl
       (disjointLevelAtomSum_eLpNorm_le hf (fullAmplitude_pos k).le z R hR hdisj))
   have hs := pow_le_pow_left₀ bot_le hb 2
-  rw [eLpNorm_two_sq_lintegral] at hs
+  have hm := measurable_highContributionMajorant fullHighCutoff
+    (fun k ↦ memLp_disjointLevelAtomSum hf hfi (fullAmplitude_pos k).le z R hR hdisj)
+  rw [eLpNorm_two_sq_lintegral _ hm.aestronglyMeasurable] at hs
   simp only [enorm_eq_self, mul_pow] at hs
   have hw := weighted_level_sum_sq_le fullAmplitude
     (fun k ↦ (2 : ℝ) ^ (-((fullHighCutoff k : ℕ) : ℝ) / 10)) (fullCutoff 20)

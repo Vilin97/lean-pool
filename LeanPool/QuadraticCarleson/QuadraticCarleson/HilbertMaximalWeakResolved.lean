@@ -35,7 +35,8 @@ theorem lintegral_sq_enorm_goodHilbert_le {f : ℝ → ℂ} (hf : Integrable f) 
       filter_upwards [hae] with x hx
       rw [hx]
     _ = ‖ordinaryHilbertTransformL2 (stoppingGoodPartL2 f hf)‖ₑ ^ 2 := by
-      rw [← eLpNorm_two_sq_lintegral,
+      rw [← eLpNorm_two_sq_lintegral _
+        (aestronglyMeasurable_stoppingGoodHilbertL2Representative hf),
         eLpNorm_stoppingGoodHilbertL2Representative_eq_enorm hf]
     _ ≤ (ENNReal.ofReal Real.pi * ‖stoppingGoodPartL2 f hf‖ₑ) ^ 2 :=
       pow_le_pow_left' (enorm_stoppingGoodHilbertL2_le hf) 2
