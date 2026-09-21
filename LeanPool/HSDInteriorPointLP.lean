@@ -6,11 +6,6 @@ Authors: Makoto Yamashita
 module
 
 public import LeanPool.HSDInteriorPointLP.GeneratedConvergence
-import Mathlib.Algebra.Order.Algebra
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Sym.Sym2.Init
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Homogeneous self-dual interior-point method for linear programming
