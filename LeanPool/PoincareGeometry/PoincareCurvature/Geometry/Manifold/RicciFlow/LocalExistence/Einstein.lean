@@ -121,14 +121,14 @@ theorem isMetricCompatibleTangent_of_inner_eq_const_smul (c : ℝ)
   -- Differentiability of the `g`-inner product of the two sections.
   have hf : MDifferentiableAt I 𝓘(ℝ, ℝ) (fun y ↦ g.inner y (σ y) (τ y)) x := by
     letI : Bundle.RiemannianBundle TM := ⟨g.toRiemannianMetric⟩
-    simpa using CovariantDerivative.mdiffAt_inner_sections
-      (I := I) (E := E) (M := M) (x := x) (σ := σ) (τ := τ) hσ hτ
+    convert CovariantDerivative.mdiffAt_inner_sections
+      (I := I) (E := E) (M := M) (x := x) (σ := σ) (τ := τ) hσ hτ using 1 <;> rfl
   -- The `g`-compatibility Leibniz identity.
   have hcompat :
       mvfderiv (I := I) (fun y ↦ g.inner y (σ y) (τ y)) x u =
         g.inner x (cov σ x u) (τ x) + g.inner x (σ x) (cov τ x u) := by
     letI : Bundle.RiemannianBundle TM := ⟨g.toRiemannianMetric⟩
-    simpa using hcov (σ := σ) (τ := τ) hσ hτ u
+    convert hcov (σ := σ) (τ := τ) hσ hτ u using 1 <;> rfl
   -- Convert the `g'` Leibniz goal to the `g'.inner` form (variable `g'`, cheap defeq).
   change
     mvfderiv (I := I) (fun y ↦ g'.inner y (σ y) (τ y)) x u =
@@ -227,7 +227,7 @@ lemma hasDerivAt_homotheticFactor (lam t₀ t : ℝ) :
     HasDerivAt (homotheticFactor lam t₀) (-(2 * lam)) t := by
   have h : HasDerivAt (fun s : ℝ ↦ 2 * lam * (s - t₀)) (2 * lam) t := by
     simpa using ((hasDerivAt_id t).sub_const t₀).const_mul (2 * lam)
-  simpa [homotheticFactor] using h.const_sub 1
+  convert h.const_sub 1 using 1 <;> rfl
 
 /-- The homothetic metric family `g(t) = (1 - 2λ(t-t₀)) • g₀`, defined as `g₀`
 wherever the scaling factor is non-positive (outside the local existence interval). -/
@@ -330,7 +330,6 @@ theorem ricciCurvature_riemannianBundle_irrelevant
   -- as inputs).  `ricciCurvature` is the trace of the connection-only curvature endomorphism, so
   -- after exposing the trace, the two endomorphisms coincide without reducing the norm structure.
   simp only [CovariantDerivative.ricciCurvature_apply]
-  congr 1
 
 /-- The intrinsic Ricci tensor of the homothetic family is `λ • g₀` for Einstein
 initial data `Ric(cov₀) = λ • g₀`. -/

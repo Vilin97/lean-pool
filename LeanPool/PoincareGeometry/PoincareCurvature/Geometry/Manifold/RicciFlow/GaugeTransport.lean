@@ -1676,11 +1676,8 @@ theorem pushforwardVectorField_mlieBracket_eq
           (φ.pushforwardTangent x u) = u
       exact φ.mfderiv_symm_apply_pushforwardTangent x u
     · ext u
-      convert φ.pushforwardTangent_mfderiv_symm_apply x u using 1 <;>
-        simp [ContinuousLinearMap.comp_apply]
-      have hmap : φ.tangentMap x = mfderiv I I (φ : M → M) x :=
-        φ.pushforwardTangent_eq_mfderiv x
-      exact congrArg (fun f => f ((mfderiv I I (φ.symm : M → M) (φ x)) u)) hmap
+      change φ.pushforwardTangent x ((mfderiv I I (φ.symm : M → M) (φ x)) u) = u
+      exact φ.pushforwardTangent_mfderiv_symm_apply x u
   calc
     (mfderiv I I (φ.symm : M → M) (φ x)).inverse (X (φ.symm (φ x)))
       = φ.pushforwardTangent x (X (φ.symm (φ x))) := by
@@ -2553,10 +2550,9 @@ lemma pushforwardTangent_eq_mfderiv (x : M) :
   rw [mfderiv_congr (I := I) (I' := I)
     (f := (φ.toSmoothSelfDiffeomorph2.symm : M → M)) (f' := (φ.symm : M → M))
     (x := φ x) hinvfun] at h
-  simpa [SmoothSelfDiffeomorph3.pushforwardTangent,
-    SmoothSelfDiffeomorph3.tangentMap,
-    SmoothSelfDiffeomorph3.toSmoothSelfDiffeomorph2_of_symm_eq_symm,
-    SmoothSelfDiffeomorph2.pushforwardTangent_eq_mfderiv] using h
+  rw [SmoothSelfDiffeomorph3.pushforwardTangent_apply,
+    SmoothSelfDiffeomorph3.pushforwardTangent_apply]
+  convert h using 1 <;> rfl
 @[simp] lemma pushforwardTangent_symm_pushforwardTangent (x : M) (u : TM (φ x)) :
     φ.pushforwardTangent x
         (SmoothSelfDiffeomorph3.pushforwardTangent (I := I) (M := M)
@@ -2575,10 +2571,11 @@ lemma pushforwardTangent_eq_mfderiv (x : M) :
   rw [mfderiv_congr (I := I) (I' := I)
     (f := (φ.toSmoothSelfDiffeomorph2.symm : M → M)) (f' := (φ.symm : M → M))
     (x := φ x) hinvfun] at h
-  simpa [SmoothSelfDiffeomorph3.pushforwardTangent,
-    SmoothSelfDiffeomorph3.tangentMap,
-    SmoothSelfDiffeomorph3.toSmoothSelfDiffeomorph2_of_symm_eq_symm,
-    SmoothSelfDiffeomorph2.pushforwardTangent_eq_mfderiv] using h
+  rw [SmoothSelfDiffeomorph3.pushforwardTangent_apply]
+  change φ.pushforwardTangent x ((tangentSpaceCast I (φ.symm (φ x)) x)
+    ((mfderiv I I (φ.symm : M → M) (φ x)) u)) = u
+  rw [SmoothSelfDiffeomorph3.pushforwardTangent_apply]
+  convert h using 1 <;> rfl
 
 @[simp] lemma toSmoothSelfDiffeomorph2_pushforwardTangent
     (x : M) :
