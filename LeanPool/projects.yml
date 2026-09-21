@@ -9904,3 +9904,65 @@ projects:
     msc:
       - "32Q55"
       - "57R15"
+  - slug: goemans-cost-counterexample
+    title: Counterexample to Goemans' unsplittable-flow cost conjecture
+    summary: >-
+      Refutes Goemans' cost conjecture for single-source unsplittable flow,
+      Conjecture 1.3 of Traub, Vargas Koch, and Zenklusen's paper. A simple,
+      loopless, acyclic graph with seven vertices and nine arcs admits a
+      splittable flow of cost 58, but every unsplittable routing within the
+      additive maximum-demand capacity bound costs at least 60, attained
+      by an explicit routing. The development proves completeness of the
+      walk enumeration and transfers the refutation from integers to any
+      linearly ordered commutative ring, including the rationals and reals.
+      Jason Hickey directed Claude's formal verification of the counterexample
+      discovered by Dmitry Rybin with GPT-5.6 Pro; upstream also acknowledges
+      Katherine Schlitz. Planarity is not part of the formalized claim.
+    branch: combinatorial optimization
+    entry_module: LeanPool.GoemansFlow
+    authors:
+      - Jason Hickey
+    source:
+      title: A verified counterexample to Goemans' cost conjecture
+      authors:
+        - Jason Hickey
+      url: https://github.com/jyh/dinitz-verify/tree/ffba3523f0edd14be3460d039f22a6b98c02fd9e
+      github_repo: jyh/dinitz-verify
+      commit: ffba3523f0edd14be3460d039f22a6b98c02fd9e
+      arxiv: '2308.02651'
+      announcement: https://leanprover.zulipchat.com/#narrow/channel/583339-AI-authored-projects/topic/Counterexample.20to.20Dinitz-Garg-Goemans.20conjecture/near/612748998
+      announced_at: '2026-07-25T17:18:11Z'
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GoemansFlow.goemans_cost_conjecture_false
+    main_results:
+      - declaration: GoemansFlow.goemans_cost_conjecture_false
+        informal: >-
+          The rational form of Goemans' cost conjecture is false, even for
+          simple, loopless, acyclic finite digraphs with explicit capacities,
+          positive demands, and distinct terminals different from the source.
+        source_ref: Conjecture 1.3 of arXiv:2308.02651v1
+      - declaration: GoemansFlow.not_GoemansCostConjectureFull
+        informal: >-
+          The same cost conjecture is false over every linearly ordered
+          commutative ring, by transfer of the integer counterexample.
+      - declaration: GoemansFlow.optimum_is_sixty
+        informal: >-
+          On the explicit seven-vertex, nine-arc instance, the minimum cost
+          among unsplittable routings satisfying the additive maximum-demand
+          capacity bound is exactly 60.
+      - declaration: GoemansFlow.fractional_cost
+        informal: The given splittable flow on the counterexample instance costs exactly 58.
+      - declaration: GoemansFlow.path_complete
+        informal: >-
+          For each of the three terminals, the lists of arcs giving a walk
+          from the source are exactly the two explicitly exhibited paths.
+    tags:
+      - network-flows
+      - combinatorial-optimization
+      - counterexamples
+    msc:
+      - '90C35'
+      - '05C21'

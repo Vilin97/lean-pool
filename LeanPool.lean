@@ -1927,6 +1927,9 @@ import LeanPool.GaussianMomentsCounterexamples.MomentDetails
 import LeanPool.GaussianMomentsCounterexamples.RadialMoments
 import LeanPool.GaussianMomentsCounterexamples.RealCoefficients
 import LeanPool.GaussianMomentsCounterexamples.RealMoments
+import LeanPool.GoemansFlow
+import LeanPool.GoemansFlow.Basic
+import LeanPool.GoemansFlow.Counterexample
 import LeanPool.GranvilleMoore
 import LeanPool.GranvilleMoore.BinomPoly
 import LeanPool.GranvilleMoore.CoefficientAnalysis
