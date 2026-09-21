@@ -5,8 +5,6 @@ Authors: ukiyois, OpenCode agent sessions
 -/
 import LeanPool.HardSphereNBC.GraphicMatroid
 
-namespace HsVirial
-
 /-!
   A finite formalization of the finite part of the hard-sphere NBC
   proof.  `points` is a finite configuration ledger, `trees` is a finite list
@@ -22,6 +20,11 @@ namespace HsVirial
   weight sum with Lebesgue integration after this algebraic identity.
 -/
 
+namespace HsVirial
+
+
+
+/-- The recursive sum of a finite list of natural numbers. -/
 def sumNat : List Nat -> Nat
   | [] => 0
   | a :: as => a + sumNat as
@@ -105,21 +108,26 @@ theorem sumNat_swap {X Y : Type} (xs : List X) (ys : List Y)
           intro y
           rfl
 
+/-- Keep a natural-number weight exactly when the Boolean predicate holds. -/
 def indicator (p : Bool) (a : Nat) : Nat :=
   if p then a else 0
 
+/-- Count the listed tree regions containing the point, including repeated tree entries. -/
 def nbcMultiplicity {X T : Type} (trees : List T)
     (region : T -> X -> Bool) (x : X) : Nat :=
   sumNat (trees.map (fun t => indicator (region t x) 1))
 
+/-- Sum point weights over one tree region. -/
 def nbcRegionWeight {X T : Type} (points : List X) (weight : X -> Nat)
     (region : T -> X -> Bool) (t : T) : Nat :=
   sumNat (points.map (fun x => indicator (region t x) (weight x)))
 
+/-- Sum point weights multiplied by the number of tree regions containing the point. -/
 def pointwiseNbcWeight {X T : Type} (points : List X) (trees : List T)
     (weight : X -> Nat) (region : T -> X -> Bool) : Nat :=
   sumNat (points.map (fun x => weight x * nbcMultiplicity trees region x))
 
+/-- Sum the weighted sizes of all listed tree regions. -/
 def nbcVolumeSum {X T : Type} (points : List X) (trees : List T)
     (weight : X -> Nat) (region : T -> X -> Bool) : Nat :=
   sumNat (trees.map (nbcRegionWeight points weight region))
@@ -176,10 +184,12 @@ theorem nbc_multiplicity_is_region_sum {X T : Type}
       sumNat (trees.map (nbcRegionWeight points weight region)) := by
   exact nbc_volume_identity points trees weight region
 
+/-- The recursive sum of a finite list of integers. -/
 def sumInt : List Int -> Int
   | [] => 0
   | a :: as => a + sumInt as
 
+/-- The alternating integer sign associated with a natural-number size. -/
 def paritySign : Nat -> Int
   | 0 => 1
   | n + 1 => -paritySign n
@@ -191,20 +201,24 @@ def paritySign : Nat -> Int
   parity sign of the number of edges.
 -/
 
+/-- Check that every edge in a list is active. -/
 def allActive {E : Type} (active : E -> Bool) : List E -> Bool
   | [] => true
   | e :: es => if active e then allActive active es else false
 
+/-- The parity contribution of a connected edge list with every edge active. -/
 def signedMayerTerm {E : Type} (connected : List E -> Bool)
     (active : E -> Bool) (edges : List E) : Int :=
   if connected edges then
     if allActive active edges then paritySign edges.length else 0
   else 0
 
+/-- Sum signed Mayer terms over a list of candidate edge sets. -/
 def signedMayerSum {E : Type} (graphs : List (List E))
     (connected : List E -> Bool) (active : E -> Bool) : Int :=
   sumInt (graphs.map (signedMayerTerm connected active))
 
+/-- Restrict the graph list to active edge sets before summing connected contributions. -/
 def activeGraphSum {E : Type} (graphs : List (List E))
     (connected : List E -> Bool) (active : E -> Bool) : Int :=
   sumInt ((graphs.filter (allActive active)).map (fun edges =>
@@ -220,12 +234,13 @@ theorem signed_mayer_restriction {E : Type}
   | cons graph rest ih =>
       cases h : allActive active graph with
       | false =>
-          simp [signedMayerSum, activeGraphSum, signedMayerTerm,
-            sumInt, h]
+          simp only [signedMayerSum, List.map_cons, signedMayerTerm, h, Bool.false_eq_true,
+            ↓reduceIte, ite_self, sumInt, zero_add, activeGraphSum, not_false_eq_true,
+            List.filter_cons_of_neg]
           exact ih
       | true =>
-          simp [signedMayerSum, activeGraphSum, signedMayerTerm,
-            sumInt, h]
+          simp only [signedMayerSum, List.map_cons, signedMayerTerm, h, ↓reduceIte, sumInt,
+            activeGraphSum, List.filter_cons_of_pos, add_right_inj]
           exact ih
 
 /-!
@@ -237,6 +252,7 @@ theorem signed_mayer_restriction {E : Type}
   disappears.
 -/
 
+/-- The sum of parity signs for the sizes of a list of objects. -/
 def signedList {A : Type} (xs : List A) (size : A -> Nat) : Int :=
   sumInt (xs.map (fun a => paritySign (size a)))
 
@@ -299,11 +315,17 @@ theorem sumInt_pair_zero {A : Type} (pairs : List (A × A))
   | cons p ps ih =>
        simp [sumInt, opposite, ih]
 
+/-- A decomposition into surviving objects and pairs with opposite parity contributions. -/
 structure NBCPairing (A : Type) where
+  /-- The full list before cancellation. -/
   all : List A
+  /-- The surviving list of no-broken-circuit objects. -/
   good : List A
+  /-- Pairs whose signed contributions cancel. -/
   badPairs : List (A × A)
+  /-- The size determining the parity sign of each object. -/
   size : A -> Nat
+  /-- The common size of the surviving objects. -/
   rank : Nat
   decomposition :
     all = good ++ badPairs.flatMap (fun p => [p.1, p.2])
@@ -333,10 +355,12 @@ theorem signed_sum_of_nbc_pairing {A : Type} (P : NBCPairing A) :
   signed connected-subgraph sum and `good` is exactly the unpaired NBC-tree
   list.  No external combinatorial theorem is used by this composition.
 -/
+/-- The alternating signed count of the listed connected subgraphs. -/
 def signedConnectedLedger {A : Type} (connectedSubgraphs : List A)
     (size : A -> Nat) : Int :=
   signedList connectedSubgraphs size
 
+/-- The alternating signed count of the listed no-broken-circuit trees. -/
 def nbcTreeLedger {A : Type} (nbcTrees : List A) (size : A -> Nat) : Int :=
   signedList nbcTrees size
 
@@ -346,6 +370,7 @@ theorem signed_connected_ledger_eq_nbc_tree_ledger {A : Type}
       nbcTreeLedger P.good P.size := by
   exact signed_sum_of_nbc_pairing P
 
+/-- The number of listed surviving trees multiplied by the common rank-parity sign. -/
 def nbcSignedCount {A : Type} (trees : List A) (rank : Nat) : Int :=
   sumInt (trees.map (fun _ => paritySign rank))
 

@@ -6,6 +6,12 @@ Authors: ukiyois, OpenCode agent sessions
 import LeanPool.HardSphereNBC.HardSphereFork
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
+/-!
+# HardSphereGeometry
+
+Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
+-/
+
 namespace HsVirial
 
 open Set

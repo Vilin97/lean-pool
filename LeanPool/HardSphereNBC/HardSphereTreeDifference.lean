@@ -7,6 +7,8 @@ import LeanPool.HardSphereNBC.HardSphereTree
 import LeanPool.HardSphereNBC.HardSphereGeometry
 import Mathlib.LinearAlgebra.Matrix.Block
 
+/-! ### Triangular difference maps -/
+
 namespace HsVirial
 
 open Set
@@ -16,9 +18,10 @@ open scoped BigOperators ENNReal
 
 noncomputable section
 
-/-! ### Triangular difference maps -/
 
-def hardSphereParentDifferenceLinearMap {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+/-- Subtract each coordinate's parent coordinate, retaining root coordinates unchanged. -/
+def hardSphereParentDifferenceLinearMap {ι : Type*}
     (parent : ι → Option ι) :
     (ι → ℝ) →ₗ[ℝ] (ι → ℝ) :=
   { toFun := fun x i => match parent i with
@@ -38,8 +41,7 @@ def hardSphereParentDifferenceLinearMap {ι : Type*} [Fintype ι] [DecidableEq �
       | some p => simp [h]; ring }
 
 lemma hardSphereParentDifferenceLinearMap_apply
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (parent : ι → Option ι) (x : ι → ℝ) (i : ι) :
+    {ι : Type*} (parent : ι → Option ι) (x : ι → ℝ) (i : ι) :
     hardSphereParentDifferenceLinearMap parent x i = match parent i with
       | none => x i
       | some p => x i - x p := by
@@ -52,7 +54,7 @@ lemma hardSphereParentDifferenceLinearMap_toMatrix_lower
     (LinearMap.toMatrix'
       (hardSphereParentDifferenceLinearMap parent)).BlockTriangular
         (⇑OrderDual.toDual) := by
-  letI := ord
+  let := ord
   intro i j hij
   change i < j at hij
   rw [LinearMap.toMatrix'_apply]
@@ -70,7 +72,7 @@ lemma hardSphereParentDifferenceLinearMap_toMatrix_diag
     (hlt : ∀ i p, parent i = some p → @LT.lt ι ord.toLT p i) (i : ι) :
     LinearMap.toMatrix'
       (hardSphereParentDifferenceLinearMap parent) i i = 1 := by
-  letI := ord
+  let := ord
   rw [LinearMap.toMatrix'_apply]
   cases hpi : parent i with
   | none => simp [hardSphereParentDifferenceLinearMap, hpi]
@@ -79,23 +81,24 @@ lemma hardSphereParentDifferenceLinearMap_toMatrix_diag
       simp [hardSphereParentDifferenceLinearMap, hpi, ne_of_lt hp]
 
 lemma hardSphereParentDifferenceLinearMap_det
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (parent : ι → Option ι) (ord : LinearOrder ι)
+    {ι : Type*} [Finite ι] (parent : ι → Option ι) (ord : LinearOrder ι)
     (hlt : ∀ i p, parent i = some p → @LT.lt ι ord.toLT p i) :
     LinearMap.det (hardSphereParentDifferenceLinearMap parent) = 1 := by
-  letI := ord
+  classical
+  let := Fintype.ofFinite ι
+  let := ord
   rw [← LinearMap.det_toMatrix']
-  rw [Matrix.det_of_lowerTriangular _
+  rw [Matrix.det_of_isLowerTriangular _
     (hardSphereParentDifferenceLinearMap_toMatrix_lower parent ord hlt)]
   simp_rw [hardSphereParentDifferenceLinearMap_toMatrix_diag parent ord hlt]
   simp
 
 lemma measurePreserving_hardSphereParentDifferenceLinearMap
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (parent : ι → Option ι) (ord : LinearOrder ι)
+    {ι : Type*} [Fintype ι] (parent : ι → Option ι) (ord : LinearOrder ι)
     (hlt : ∀ i p, parent i = some p → @LT.lt ι ord.toLT p i) :
     MeasurePreserving (hardSphereParentDifferenceLinearMap parent)
       (volume : Measure (ι → ℝ)) (volume : Measure (ι → ℝ)) := by
+  classical
   have hdet : LinearMap.det (hardSphereParentDifferenceLinearMap parent) ≠ 0 := by
     rw [hardSphereParentDifferenceLinearMap_det parent ord hlt]
     norm_num
@@ -107,6 +110,7 @@ lemma measurePreserving_hardSphereParentDifferenceLinearMap
 
 /-! ### Rooted tree coordinates -/
 
+/-- The parent's free index, or no index when the parent is the anchored particle. -/
 def hardSphereTreeParentFreeIndex {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k))
@@ -116,12 +120,14 @@ def hardSphereTreeParentFreeIndex {k : Nat} [NeZero k]
   else
     some (hardSphereFreeIndex (hardSphereTreeParent hT i) hp)
 
+/-- Lift the particle-parent relation to each scalar spatial coordinate. -/
 def hardSphereTreeFlatParent {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k))
     (q : Fin (k - 1) × Fin 3) : Option (Fin (k - 1) × Fin 3) :=
   (hardSphereTreeParentFreeIndex hT q.1).map (fun p => (p, q.2))
 
+/-- Order flattened spatial coordinates compatibly with the rooted-tree order. -/
 @[instance_reducible]
 noncomputable def hardSphereTreeFlatIndexOrder {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
@@ -129,9 +135,9 @@ noncomputable def hardSphereTreeFlatIndexOrder {k : Nat} [NeZero k]
     LinearOrder (Fin (k - 1) × Fin 3) := by
   let treeOrd : LinearOrder (Fin (k - 1)) :=
     hardSphereTreeIndexOrder (k := k) T hT
-  letI : LinearOrder (Fin (k - 1)) := treeOrd
-  letI : LT (Fin (k - 1)) := treeOrd.toLT
-  letI : LE (Fin (k - 1)) := treeOrd.toLE
+  let : LinearOrder (Fin (k - 1)) := treeOrd
+  let : LT (Fin (k - 1)) := treeOrd.toLT
+  let : LE (Fin (k - 1)) := treeOrd.toLE
   let lexOrd : LinearOrder ((Fin (k - 1)) ×ₗ (Fin 3)) :=
     @Prod.Lex.instLinearOrder (Fin (k - 1)) (Fin 3) treeOrd inferInstance
   exact @LinearOrder.lift' (Fin (k - 1) × Fin 3)
@@ -147,6 +153,7 @@ noncomputable def hardSphereTreeFlatIndexOrder {k : Nat} [NeZero k]
             (ofLex p).2) h
       exact h')
 
+/-- The linear transformation from scalar positions to scalar tree differences. -/
 def hardSphereTreeFlatDifferenceLinearMap {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k)) :
@@ -160,9 +167,9 @@ lemma hardSphereTreeFlatParent_lt {k : Nat} [NeZero k]
       @LT.lt _ (hardSphereTreeFlatIndexOrder hT).toLT p q := by
   let treeOrd : LinearOrder (Fin (k - 1)) :=
     hardSphereTreeIndexOrder (k := k) T hT
-  letI : LinearOrder (Fin (k - 1)) := treeOrd
-  letI : LT (Fin (k - 1)) := treeOrd.toLT
-  letI : LE (Fin (k - 1)) := treeOrd.toLE
+  let : LinearOrder (Fin (k - 1)) := treeOrd
+  let : LT (Fin (k - 1)) := treeOrd.toLT
+  let : LE (Fin (k - 1)) := treeOrd.toLE
   let lexOrd : LinearOrder ((Fin (k - 1)) ×ₗ (Fin 3)) :=
     @Prod.Lex.instLinearOrder (Fin (k - 1)) (Fin 3) treeOrd inferInstance
   intro q p hqp
@@ -170,7 +177,7 @@ lemma hardSphereTreeFlatParent_lt {k : Nat} [NeZero k]
   cases hparent : hardSphereTreeParentFreeIndex hT q.1 with
   | none => simp [hparent] at hqp
   | some parent =>
-    simp [hparent] at hqp
+    simp only [hparent, Option.map_some, Option.some.injEq] at hqp
     obtain rfl := hqp
     have hroot : hardSphereTreeParent hT q.1 ≠ 0 := by
       intro hzero
@@ -194,15 +201,16 @@ lemma measurePreserving_hardSphereTreeFlatDifferenceLinearMap
       (volume : Measure (Fin (k - 1) × Fin 3 → ℝ)) := by
   let treeOrd : LinearOrder (Fin (k - 1)) :=
     hardSphereTreeIndexOrder (k := k) T hT
-  letI : LinearOrder (Fin (k - 1)) := treeOrd
-  letI : LT (Fin (k - 1)) := treeOrd.toLT
-  letI : LE (Fin (k - 1)) := treeOrd.toLE
-  letI : LinearOrder (Fin (k - 1) × Fin 3) := hardSphereTreeFlatIndexOrder hT
+  let : LinearOrder (Fin (k - 1)) := treeOrd
+  let : LT (Fin (k - 1)) := treeOrd.toLT
+  let : LE (Fin (k - 1)) := treeOrd.toLE
+  let : LinearOrder (Fin (k - 1) × Fin 3) := hardSphereTreeFlatIndexOrder hT
   exact measurePreserving_hardSphereParentDifferenceLinearMap _
     (hardSphereTreeFlatIndexOrder hT) (hardSphereTreeFlatParent_lt hT)
 
 /-! ### Product-coordinate volume -/
 
+/-- Flatten an anchored three-dimensional configuration into scalar coordinates. -/
 def hardSphereCoordinateEquiv (k : Nat) :
     HardSphereConfiguration k 3 ≃ᵐ (Fin (k - 1) × Fin 3 → ℝ) :=
   let e₁ := MeasurableEquiv.piCongrRight
@@ -232,6 +240,7 @@ lemma measurePreserving_hardSphereCoordinateEquiv (k : Nat) :
   change MeasurePreserving (e₁.trans e₂) volume volume
   exact h₁.trans h₂
 
+/-- Flattened position arrays with every three-dimensional block in the unit ball. -/
 def hardSphereFlatProductBallRegion (n : Nat) :
     Set (Fin n × Fin 3 → ℝ) :=
   {x | ∀ i, (MeasurableEquiv.toLp 2 (Fin 3 → ℝ)) (fun a => x (i, a)) ∈
@@ -252,11 +261,13 @@ lemma measurableSet_hardSphereFlatProductBallRegion (n : Nat) :
     apply MeasurableSet.preimage measurableSet_ball
     fun_prop)
 
+/-- Arrays of three-coordinate blocks lying in the unit ball. -/
 def hardSphereBlockBallRegion (n : Nat) :
     Set (Fin n → Fin 3 → ℝ) :=
   {x | ∀ i, (MeasurableEquiv.toLp 2 (Fin 3 → ℝ)) (x i) ∈
     Metric.ball (0 : HSPosition 3) 1}
 
+/-- Identify three-coordinate blocks with Euclidean positions, measurably. -/
 def hardSphereBlockToPositionEquiv (n : Nat) :
     (Fin n → Fin 3 → ℝ) ≃ᵐ (Fin n → HSPosition 3) :=
   MeasurableEquiv.piCongrRight
@@ -364,6 +375,7 @@ lemma hardSphereFlatProductBallRegion_volume (n : Nat) :
 
 /-! ### The separated two-member block -/
 
+/-- Pairs of unit-ball positions separated by distance at least one. -/
 def hardSphereSeparatedPairRegion : Set (HSPosition 3 × HSPosition 3) :=
   {p | p.1 ∈ ball (0 : HSPosition 3) 1 ∧
     p.2 ∈ ball (0 : HSPosition 3) 1 ∧
@@ -380,7 +392,7 @@ lemma measurableSet_hardSphereSeparatedPairRegion :
       (Prod.snd ⁻¹' ball (0 : HSPosition 3) 1) ∩
         ((fun p : HSPosition 3 × HSPosition 3 => ‖p.1 - p.2‖) ⁻¹' Ici 1) by
     ext p
-    simp [Set.mem_setOf_eq, and_assoc]
+    simp [Set.mem_ofPred_eq, and_assoc]
   ]
   have hfst : MeasurableSet
       (Prod.fst ⁻¹' ball (0 : HSPosition 3) 1) :=
@@ -400,6 +412,7 @@ lemma measurableSet_hardSphereSeparatedPairRegion :
 
 /-! ### Relative coordinates for a separated pair -/
 
+/-- Flatten a pair of three-dimensional Euclidean positions. -/
 def hardSpherePairCoordinateEquiv :
     (HSPosition 3 × HSPosition 3) ≃ᵐ (Fin 2 × Fin 3 → ℝ) :=
   (MeasurableEquiv.finTwoArrow (α := HSPosition 3)).symm.trans
@@ -472,6 +485,7 @@ lemma hardSpherePairCoordinateEquiv_preimage_flatProductBallRegion :
       rw [hardSpherePairCoordinate_block_one]
       exact h1
 
+/-- The separated-pair region in flattened scalar coordinates. -/
 def hardSphereSeparatedPairFlatRegion : Set (Fin 2 × Fin 3 → ℝ) :=
   hardSphereFlatProductBallRegion 2 ∩
     {x | 1 ≤ ‖(MeasurableEquiv.toLp 2 (Fin 3 → ℝ))
@@ -531,6 +545,7 @@ lemma hardSphereSeparatedPairRegion_flatten_volume_eq_flat :
         hardSphereSeparatedPairFlatRegion := by
   rw [hardSpherePairCoordinateEquiv_image_separatedPairRegion]
 
+/-- Pairs of unit-ball positions separated by distance less than one. -/
 def hardSphereClosePairRegion : Set (HSPosition 3 × HSPosition 3) :=
   {p | p.1 ∈ ball (0 : HSPosition 3) 1 ∧
     p.2 ∈ ball (0 : HSPosition 3) 1 ∧
@@ -547,7 +562,7 @@ lemma measurableSet_hardSphereClosePairRegion :
       (Prod.snd ⁻¹' ball (0 : HSPosition 3) 1) ∩
         ((fun p : HSPosition 3 × HSPosition 3 => ‖p.1 - p.2‖) ⁻¹' Iio 1) by
     ext p
-    simp [Set.mem_setOf_eq, and_assoc]]
+    simp [Set.mem_ofPred_eq, and_assoc]]
   have hfst : MeasurableSet
       (Prod.fst ⁻¹' ball (0 : HSPosition 3) 1) :=
     MeasurableSet.preimage
@@ -570,7 +585,7 @@ lemma hardSphereSeparatedPairRegion_eq_product_sdiff_close :
         hardSphereClosePairRegion := by
   ext p
   simp only [hardSphereSeparatedPairRegion, hardSphereClosePairRegion,
-    mem_sdiff, mem_prod, mem_ball, dist_zero_right, Set.mem_setOf_eq]
+    mem_sdiff, mem_prod, mem_ball, dist_zero_right, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hp1, hp2, hsep⟩
     refine ⟨⟨hp1, hp2⟩, ?_⟩
@@ -633,9 +648,11 @@ lemma hardSphereSeparatedPairRegion_real_add_close_volume :
     rfl
   exact h.trans htotal
 
+/-- The parent relation implementing the difference of the second position from the first. -/
 def hardSpherePairParent (q : Fin 2 × Fin 3) : Option (Fin 2 × Fin 3) :=
   if q.1 = 0 then none else some (0, q.2)
 
+/-- The lexicographic order on particle and spatial indices for a pair. -/
 @[instance_reducible]
 noncomputable def hardSpherePairIndexOrder : LinearOrder (Fin 2 × Fin 3) := by
   let lexOrd : LinearOrder ((Fin 2) ×ₗ (Fin 3)) :=
@@ -667,6 +684,7 @@ lemma hardSpherePairParent_lt : ∀ q p, hardSpherePairParent q = some p →
     left
     exact hqpos
 
+/-- The linear parent-difference map on a flattened pair of positions. -/
 def hardSpherePairDifferenceLinearMap :
     ((Fin 2 × Fin 3) → ℝ) →ₗ[ℝ] ((Fin 2 × Fin 3) → ℝ) :=
   hardSphereParentDifferenceLinearMap hardSpherePairParent
@@ -676,6 +694,7 @@ lemma measurePreserving_hardSpherePairDifferenceLinearMap :
   exact measurePreserving_hardSphereParentDifferenceLinearMap hardSpherePairParent
     hardSpherePairIndexOrder hardSpherePairParent_lt
 
+/-- The two leaf positions relative to the common center of a fork. -/
 def hardSphereForkRelativePair {k : Nat} [NeZero k]
     (r : HardSphereConfiguration k 3) (a b c : Fin k) :
     HSPosition 3 × HSPosition 3 :=
@@ -703,7 +722,7 @@ lemma hardSphere_nbc_region_mem_separatedPair
     intro hbc
     exact hardSphere_nbc_region_excludes_fork_chord r hr hf hbc
   rw [hardSphereForkRelativePair, hardSphereSeparatedPairRegion]
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   rw [show (hardSpherePosition r b - hardSpherePosition r a) -
       (hardSpherePosition r c - hardSpherePosition r a) =
       hardSpherePosition r b - hardSpherePosition r c by abel]
@@ -713,6 +732,7 @@ lemma hardSphere_nbc_region_mem_separatedPair
   · rw [mem_ball_iff_norm]
     simpa [sub_zero] using hacnorm
 
+/-- Families of separated pairs, each lying in the unit ball. -/
 def hardSphereSeparatedPairProductRegion (m : Nat) :
     Set (Fin m → (HSPosition 3 × HSPosition 3)) :=
   {x | ∀ i, x i ∈ hardSphereSeparatedPairRegion}
@@ -739,6 +759,7 @@ lemma hardSphereSeparatedPairProductRegion_volume (m : Nat) :
   rw [hset, volume_pi_pi, ENNReal.toReal_prod]
   simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin, Measure.real]
 
+/-- A product of separated-pair regions and unconstrained unit-ball positions. -/
 def hardSphereSeparatedBlockProductRegion (m q : Nat) :
     Set ((Fin m → (HSPosition 3 × HSPosition 3)) ×
       (Fin q → HSPosition 3)) :=
@@ -767,6 +788,7 @@ lemma hardSphereSeparatedBlockProductRegion_volume (m q : Nat) :
 
 /-! ### Canonical separated-block coordinates -/
 
+/-- Split a position array into paired blocks and remaining single positions. -/
 def hardSphereBlockCoordinateEquiv (m q : Nat) :
     (Fin (m * 2 + q) → HSPosition 3) ≃ᵐ
       ((Fin m → (HSPosition 3 × HSPosition 3)) ×
@@ -887,6 +909,7 @@ lemma hardSphereBlockCoordinateEquiv_preimage_separatedBlockProductRegion_volume
           hardSphereSeparatedPairRegion) ^ m * hardSphereKappa ^ q :=
       hardSphereSeparatedBlockProductRegion_volume m q
 
+/-- Reindex a position array before separating paired and single blocks. -/
 def hardSphereReindexedBlockCoordinateEquiv
     {n m q : Nat} (e : Fin (m * 2 + q) ≃ Fin n) :
     (Fin n → HSPosition 3) ≃ᵐ
@@ -946,7 +969,7 @@ lemma hardSphereReindexedBlockCoordinateEquiv_preimage_separatedBlockProductRegi
 /-! ### The tree region in difference coordinates -/
 
 lemma hardSphereCoordinateEquiv_apply {k : Nat}
-    [NeZero k] (r : HardSphereConfiguration k 3)
+     (r : HardSphereConfiguration k 3)
     (i : Fin (k - 1)) (a : Fin 3) :
     hardSphereCoordinateEquiv k r (i, a) = r i a := by
   rfl
@@ -993,6 +1016,7 @@ lemma hardSphereTreeRegion_subset_flatDifferencePreimage {k : Nat} [NeZero k]
   rw [hblock]
   simpa [sub_zero] using hardSphereTreeDifference_norm_lt_one hT hr i
 
+/-- Send an anchored configuration to its flattened tree-difference coordinates. -/
 def hardSphereTreeFlatDifferenceMap {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k)) :
@@ -1015,6 +1039,7 @@ lemma measurePreserving_hardSphereTreeFlatDifferenceMap {k : Nat} [NeZero k]
   rw [← Measure.map_map hdiff.measurable hcoord.measurable,
     hcoord.map_eq, hdiff.map_eq]
 
+/-- Send an anchored configuration to the Euclidean differences along tree edges. -/
 def hardSphereTreeDifferencePositionMap {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k)) :

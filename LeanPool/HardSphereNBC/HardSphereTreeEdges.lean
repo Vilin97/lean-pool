@@ -5,6 +5,12 @@ Authors: ukiyois, OpenCode agent sessions
 -/
 import LeanPool.HardSphereNBC.HardSphereTreeDifference
 
+/-!
+# HardSphereTreeEdges
+
+Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
+-/
+
 namespace HsVirial
 
 open Set
@@ -50,6 +56,7 @@ lemma hardSphereTreeParentEdge_injective {k : Nat} [NeZero k]
     rw [← hcross.2] at hj
     omega
 
+/-- The edges joining each free particle to its rooted-tree parent. -/
 def hardSphereTreeParentEdgeFinset {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k)) : Finset (Sym2 (Fin k)) :=
@@ -72,7 +79,7 @@ lemma hardSphereTreeParentEdgeFinset_card {k : Nat} [NeZero k]
   rw [Finset.card_image_of_injective _ (hardSphereTreeParentEdge_injective hT)]
   simp
 
-lemma hardSphereTreeEdgeFinset_eq {k : Nat} [NeZero k]
+lemma hardSphereTreeEdgeFinset_eq {k : Nat}
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k)) :
     graphEdgeFinset (hardSphereTreeGraph T) = T := by
@@ -85,11 +92,10 @@ lemma hardSphereTreeEdgeFinset_eq {k : Nat} [NeZero k]
   unfold hardSphereTreeGraph
   exact graphEdgeFinset_fromEdgeSet hground
 
-lemma hardSphereTreeEdgeFinset_card {k : Nat} [NeZero k]
-    {T : Finset (Sym2 (Fin k))}
+lemma hardSphereTreeEdgeFinset_card {k : Nat} {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k)) :
     T.card = k - 1 := by
-  letI : Fintype (hardSphereTreeGraph T).edgeSet := Fintype.ofFinite _
+  let : Fintype (hardSphereTreeGraph T).edgeSet := Fintype.ofFinite _
   have hcard := (hardSphereTreeGraph_isTree hT).card_edgeFinset
   have hnative : graphEdgeFinset (hardSphereTreeGraph T) =
       (hardSphereTreeGraph T).edgeFinset := by

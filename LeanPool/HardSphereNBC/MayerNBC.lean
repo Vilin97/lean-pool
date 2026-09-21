@@ -10,13 +10,6 @@ import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
-namespace HsVirial
-
-open Set
-open SimpleGraph
-open MeasureTheory
-open scoped BigOperators ENNReal
-
 /-!
   This file is the finite Mayer/NBC bridge.  The graph part is completely
   discrete.  The measure part is stated for an arbitrary configuration space;
@@ -24,28 +17,42 @@ open scoped BigOperators ENNReal
   occur in the finite tree sum.
 -/
 
+namespace HsVirial
+
+open Set
+open SimpleGraph
+open MeasureTheory
+open scoped BigOperators ENNReal
+
+
+
 noncomputable section
 
 variable {V : Type*} [Fintype V] [DecidableEq V] [LinearOrder (Sym2 V)]
 
 /-! ### The finite graph ledger -/
 
+/-- The finite collection of edge subsets inducing a connected graph. -/
 def connectedEdgeSubsets (G : SimpleGraph V) : Finset (Finset (Sym2 V)) :=
   (graphEdgeFinset G).powerset.filter
     (fun A => (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).Connected)
 
+/-- The alternating sum of connected spanning edge subsets. -/
 def m (G : SimpleGraph V) : Int :=
   ∑ A ∈ connectedEdgeSubsets G, matroidParitySign A.card
 
+/-- An edge of the complete graph marked active by the overlap data. -/
 def activeEdge (x : Sym2 V → Bool) (e : Sym2 V) : Prop :=
   e ∈ graphEdgeFinset (completeGraph V) ∧ x e = true
 
+/-- The finite set of active edges. -/
 noncomputable def activeEdgeFinset (x : Sym2 V → Bool) : Finset (Sym2 V) := by
   classical
   exact Finset.univ.filter (activeEdge x)
 
 /- The overlap graph is deliberately built with `fromEdgeSet`, rather than
    by hiding the active relation in an abstract graph structure. -/
+/-- The graph whose edges are precisely the active overlaps. -/
 def overlapGraph (x : Sym2 V → Bool) : SimpleGraph V :=
   SimpleGraph.fromEdgeSet (activeEdgeFinset x : Set (Sym2 V))
 
@@ -61,9 +68,9 @@ omit [DecidableEq V] [LinearOrder (Sym2 V)] in
 lemma graphEdgeFinset_overlapGraph (x : Sym2 V → Bool) :
     graphEdgeFinset (overlapGraph x) = activeEdgeFinset x := by
   apply graphEdgeFinset_fromEdgeSet
-  intro e he
-  exact mem_graphEdgeFinset.mp
-    (activeEdgeFinset_subset_complete x (by simpa using he))
+  · intro e he
+    exact mem_graphEdgeFinset.mp
+      (activeEdgeFinset_subset_complete x (by simpa using he))
 
 omit [DecidableEq V] [LinearOrder (Sym2 V)] in
 lemma edgeSet_overlapGraph (x : Sym2 V → Bool) :
@@ -78,13 +85,16 @@ lemma matroidParitySign_eq_neg_one_pow (n : Nat) :
       rw [matroidParitySign_succ, ih, pow_succ]
       ring
 
+/-- The Mayer bond: minus one for an active edge and zero otherwise. -/
 noncomputable def bond (x : Sym2 V → Bool) (e : Sym2 V) : Int := by
   classical
   exact if activeEdge x e then -1 else 0
 
+/-- The connected spanning edge subsets of the complete graph. -/
 def completeConnectedEdgeSubsets : Finset (Finset (Sym2 V)) :=
   connectedEdgeSubsets (completeGraph V)
 
+/-- Sum the products of Mayer bonds over connected spanning edge sets. -/
 def mayerKernel (x : Sym2 V → Bool) : Int :=
   ∑ A ∈ completeConnectedEdgeSubsets,
     ∏ e ∈ A, bond x e
@@ -176,33 +186,40 @@ lemma mayerKernel_eq_m (x : Sym2 V → Bool) :
 
 /-! ### Concrete NBC bases of the graphic matroid -/
 
+/-- An edge completing a broken circuit already contained in the specified edge set. -/
 def IsGraphCircuitNBCandidate (G : SimpleGraph V)
     (A : Finset (Sym2 V)) (e : Sym2 V) : Prop :=
   ∃ C : Finset (Sym2 V),
     IsGraphCircuit G C ∧ e ∈ C ∧ (∀ f ∈ C, graphEdgeLE f e) ∧
       ((C.erase e : Finset (Sym2 V)) : Set (Sym2 V)) ⊆ (A : Set (Sym2 V))
 
+/-- The edge set contains a broken circuit in the circuit-based formulation. -/
 def IsGraphCircuitNBCBad (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   ∃ e, IsGraphCircuitNBCandidate G A e
 
+/-- A spanning forest containing no broken circuit. -/
 def IsExplicitNBCBase (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   IsGraphForest G A ∧ IsGraphSpanning G A ∧ ¬IsGraphCircuitNBCBad G A
 
+/-- A connected spanning forest containing no broken circuit. -/
 def IsExplicitNBCTree (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   IsGraphForest G A ∧
     (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).Connected ∧
     ¬IsGraphCircuitNBCBad G A
 
+/-- Enumerate the no-broken-circuit bases of the graph. -/
 noncomputable def graphNBCBaseSubsets (G : SimpleGraph V) :
     Finset (Finset (Sym2 V)) := by
   classical
   exact (graphEdgeFinset G).powerset.filter (IsExplicitNBCBase G)
 
+/-- Enumerate the no-broken-circuit spanning trees of the graph. -/
 noncomputable def graphNBCTreeSubsets (G : SimpleGraph V) :
     Finset (Finset (Sym2 V)) := by
   classical
   exact (graphEdgeFinset G).powerset.filter (IsExplicitNBCTree G)
 
+/-- The number of no-broken-circuit spanning trees. -/
 def NBC (G : SimpleGraph V) : Nat :=
   (graphNBCTreeSubsets G).card
 
@@ -305,7 +322,7 @@ lemma graphSpanning_iff_connected_of_connected
       (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).Connected := by
   constructor
   · intro hAspan
-    letI : Nonempty V := hG.nonempty
+    let : Nonempty V := hG.nonempty
     have hpre :
         (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).Preconnected := by
       intro u v
@@ -389,6 +406,7 @@ lemma nbcBaseSubsets_graphic_eq_graphNBCBaseSubsets
         heC, hmax, hsub⟩
     exact Finset.mem_filter.mpr ⟨hspanSub, hnotbad⟩
 
+/-- The finite collection of spanning trees on the ambient vertex set. -/
 noncomputable def treeUniverse : Finset (Finset (Sym2 V)) := by
   classical
   exact (graphEdgeFinset (completeGraph V)).powerset.filter
@@ -447,7 +465,7 @@ lemma m_eq_signed_NBC_of_connected
     have htree : (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).IsTree := by
       exact ⟨(graphSpanning_iff_connected_of_connected hG hAground').mp hspanA,
         hforest.2⟩
-    letI : Fintype (SimpleGraph.fromEdgeSet
+    let : Fintype (SimpleGraph.fromEdgeSet
         (A : Set (Sym2 V))).edgeSet := Fintype.ofFinite _
     have hcard := htree.card_edgeFinset
     have hnative : graphEdgeFinset
@@ -483,6 +501,7 @@ lemma m_eq_signed_NBC_of_connected
 
 /-! ### Pointwise finite tree decomposition -/
 
+/-- Configurations whose overlap graph has the specified no-broken-circuit spanning tree. -/
 def nbcRegion {X : Type*} (active : X → Sym2 V → Bool)
     (T : Finset (Sym2 V)) : Set X :=
   {x | IsExplicitNBCTree (overlapGraph (active x)) T}
@@ -574,6 +593,7 @@ lemma graphNBC_zero_of_not_connected {G : SimpleGraph V}
     exact (hA'.2).1.1 he.1
   exact hG ((hA'.2).2.1.mono hle)
 
+/-- The absolute value of an integer as an extended nonnegative real. -/
 def intMagnitude (z : Int) : ℝ≥0∞ := z.natAbs
 
 lemma intMagnitude_signed_nat (n q : Nat) :
@@ -604,9 +624,11 @@ lemma abs_mayerKernel_eq_nbc (x : Sym2 V → Bool) :
 
 /-! ### Arbitrary measure spaces -/
 
+/-- The absolute value of the configuration's Mayer kernel. -/
 def absMayerIntegrand {X : Type*} (active : X → Sym2 V → Bool) (x : X) : ℝ≥0∞ :=
   intMagnitude (mayerKernel (active x))
 
+/-- The integral of the absolute Mayer kernel, normalized by the vertex factorial. -/
 def absClusterCoefficient {X : Type*} [MeasurableSpace X] (μ : Measure X)
     (active : X → Sym2 V → Bool) : ℝ≥0∞ :=
   ((Fintype.card V).factorial : ℝ≥0∞)⁻¹ *
@@ -677,10 +699,12 @@ theorem factorial_mul_absClusterCoefficient
 /- The normalized nonnegative coefficient is the `|b_k|` representative used
    by the volume identity.  The signed pointwise theorem above supplies its
    Mayer interpretation without introducing a non-measurable real integral. -/
+/-- The absolute cluster coefficient in the notation of the volume identity. -/
 abbrev absBk {X : Type*} [MeasurableSpace X] (μ : Measure X)
     (active : X → Sym2 V → Bool) : ℝ≥0∞ :=
   absClusterCoefficient μ active
 
+/-- The measure of a no-broken-circuit tree region. -/
 abbrev nbcRegionVolume {X : Type*} [MeasurableSpace X]
     (μ : Measure X) (active : X → Sym2 V → Bool)
     (T : Finset (Sym2 V)) : ℝ≥0∞ :=
@@ -696,11 +720,14 @@ theorem factorial_mul_absBk_eq_nbcVolumeSum
 
 /-! ### Hard-sphere activity, with no geometric factorization claim -/
 
+/-- Euclidean position space in the specified dimension. -/
 abbrev HSPosition (d : Nat) := EuclideanSpace ℝ (Fin d)
 
+/-- Particle configurations whose distinguished particle is fixed at zero. -/
 def AnchoredHSConfiguration (k d : Nat) :=
   {r : Fin (k + 1) → HSPosition d // r 0 = 0}
 
+/-- The overlap indicators of an explicitly anchored configuration. -/
 def hardSphereActive {k d : Nat}
     (r : AnchoredHSConfiguration k d) : Sym2 (Fin (k + 1)) → Bool :=
   Sym2.lift ⟨fun i j => decide (‖r.1 i - r.1 j‖ < (1 : ℝ)), by
@@ -715,7 +742,6 @@ def hardSphereActive {k d : Nat}
   rfl
 
 theorem hardSphere_mayerKernel_bridge {k d : Nat}
-    [LinearOrder (Sym2 (Fin (k + 1)))]
     (r : AnchoredHSConfiguration k d) :
     mayerKernel (hardSphereActive r) =
       m (overlapGraph (hardSphereActive r)) :=

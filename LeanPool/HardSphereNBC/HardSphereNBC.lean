@@ -10,6 +10,8 @@ import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.MeasureTheory.Integral.Bochner.Set
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
+/-! ### The canonical particle and edge conventions -/
+
 namespace HsVirial
 
 open Set
@@ -20,11 +22,13 @@ open scoped BigOperators ENNReal
 
 noncomputable section
 
-/-! ### The canonical particle and edge conventions -/
 
+
+/-- The lexicographic key given by the smaller and larger endpoints of an edge. -/
 def hardSphereEdgeKey {k : Nat} (e : Sym2 (Fin k)) : Fin k ×ₗ Fin k :=
   toLex (e.inf, e.sup)
 
+/-- Order unordered edges lexicographically by their sorted endpoints. -/
 @[instance_reducible]
 noncomputable def hardSphereEdgeLinearOrder (k : Nat) :
     LinearOrder (Sym2 (Fin k)) :=
@@ -40,17 +44,21 @@ noncomputable def hardSphereEdgeLinearOrder (k : Nat) :
 noncomputable instance hardSphereEdgeOrder (k : Nat) :
     LinearOrder (Sym2 (Fin k)) := hardSphereEdgeLinearOrder k
 
+/-- Positions of the free particles, with the distinguished particle anchored at zero. -/
 abbrev HardSphereConfiguration (k d : Nat) :=
   Fin (k - 1) → HSPosition d
 
+/-- The zero-based coordinate index of a particle other than the anchored particle. -/
 def hardSphereFreeIndex {k : Nat} [NeZero k]
     (i : Fin k) (hi : i ≠ 0) : Fin (k - 1) :=
   ⟨i.val - 1, by omega⟩
 
+/-- The particle label corresponding to a free coordinate. -/
 def hardSphereFreeParticleIndex {k : Nat}
     (i : Fin (k - 1)) : Fin k :=
   ⟨i.val + 1, by omega⟩
 
+/-- Recover a particle position, assigning zero to the anchored particle. -/
 def hardSpherePosition {k d : Nat} [NeZero k]
     (r : HardSphereConfiguration k d) (i : Fin k) : HSPosition d :=
   if hi : i = 0 then 0 else r (hardSphereFreeIndex i hi)
@@ -88,6 +96,7 @@ lemma continuous_hardSpherePosition {k d : Nat} [NeZero k]
         simp [hardSpherePosition, j, hi]]
     exact continuous_apply j
 
+/-- Record whether the two endpoint positions of an edge are less than one unit apart. -/
 def hardSphereActiveExact {k d : Nat} [NeZero k]
     (r : HardSphereConfiguration k d) : Sym2 (Fin k) → Bool :=
   Sym2.lift ⟨fun i j =>
@@ -127,7 +136,7 @@ lemma measurable_hardSphereActiveExact_edge {k d : Nat} [NeZero k]
     simpa [Set.preimage, Set.mem_singleton_iff] using hset
 
 lemma measurable_finite_bool_comp {X E Y : Type*}
-    [MeasurableSpace X] [Fintype E] [DecidableEq E]
+    [MeasurableSpace X] [Finite E]
     [MeasurableSpace Y]
     (active : X → E → Bool)
     (hactive : ∀ e, Measurable (fun x => active x e))
@@ -165,6 +174,7 @@ lemma measurable_hardSphereNBCRegion {k d : Nat} [NeZero k]
       hactive (fun p : Sym2 (Fin k) → Bool => IsExplicitNBCTree (overlapGraph p) T)
   simpa [nbcRegion] using hq (measurableSet_singleton True)
 
+/-- The distance between the endpoints of an unordered edge. -/
 def hardSphereEdgeDistance {V : Type*} {d : Nat}
     (position : V → HSPosition d) (e : Sym2 V) : ℝ :=
   Sym2.lift ⟨fun i j => ‖position i - position j‖, by
@@ -178,7 +188,7 @@ lemma hardSphereEdgeDistance_mk {V : Type*} {d : Nat}
     hardSphereEdgeDistance position s(i, j) = ‖position i - position j‖ := by
   rfl
 
-lemma norm_sub_le_walk_length {V : Type*} {d : Nat} [Fintype V]
+lemma norm_sub_le_walk_length {V : Type*} {d : Nat}
     {G : SimpleGraph V} {position : V → HSPosition d} {u v : V}
     (p : G.Walk u v)
     (hedge : ∀ e ∈ p.edges, hardSphereEdgeDistance position e < (1 : ℝ)) :
@@ -265,14 +275,17 @@ lemma hardSphereMayerKernel_zero_of_not_connected
     simpa [intMagnitude] using h
   exact Int.natAbs_eq_zero.mp hz
 
+/-- The signed Mayer graph sum evaluated at the configuration's overlap graph. -/
 def hardSphereOmega {k d : Nat} [NeZero k]
     (r : HardSphereConfiguration k d) : ℝ :=
   (mayerKernel (hardSphereActiveExact r) : ℝ)
 
+/-- The hard-sphere cluster integral normalized by the factorial of the particle count. -/
 def hardSphereBk {k d : Nat} [NeZero k] : ℝ :=
   (k.factorial : ℝ)⁻¹ *
     ∫ r : HardSphereConfiguration k d, hardSphereOmega r
 
+/-- The volume of configurations assigned to a fixed no-broken-circuit tree. -/
 def hardSphereNBCVolume {k d : Nat} [NeZero k]
     (T : Finset (Sym2 (Fin k))) : ℝ :=
   (volume : Measure (HardSphereConfiguration k d)).real
@@ -319,8 +332,8 @@ lemma hardSphereNBCRegion_measure_ne_top {k d : Nat} [NeZero k]
     (isCompact_closedBall (0 : HardSphereConfiguration k d) (k : ℝ)).measure_lt_top
   exact (lt_of_le_of_lt (measure_mono hsubset) hball).ne
 
-lemma norm_bond_le_one {V : Type*} [Fintype V] [DecidableEq V]
-    [LinearOrder (Sym2 V)] (x : Sym2 V → Bool) (e : Sym2 V) :
+lemma norm_bond_le_one {V : Type*} [Fintype V]
+     (x : Sym2 V → Bool) (e : Sym2 V) :
     ‖(bond x e : ℝ)‖ ≤ 1 := by
   classical
   by_cases h : activeEdge x e
@@ -328,7 +341,7 @@ lemma norm_bond_le_one {V : Type*} [Fintype V] [DecidableEq V]
   · simp [bond, h]
 
 lemma norm_mayerKernel_real_le_card {V : Type*} [Fintype V] [DecidableEq V]
-    [LinearOrder (Sym2 V)] (x : Sym2 V → Bool) :
+     (x : Sym2 V → Bool) :
     ‖(mayerKernel x : ℝ)‖ ≤
       (completeConnectedEdgeSubsets (V := V)).card := by
   have hterm : ∀ A : Finset (Sym2 V),
@@ -392,7 +405,7 @@ lemma integrable_hardSphereNBC_indicator {k d : Nat} [NeZero k]
       (measurable_hardSphereNBCRegion T)
 
 lemma real_abs_mayerKernel_eq_intMagnitude
-    {V : Type*} [Fintype V] [DecidableEq V] [LinearOrder (Sym2 V)]
+    {V : Type*} [Fintype V] [DecidableEq V]
     (x : Sym2 V → Bool) :
     |(mayerKernel x : ℝ)| = (mayerKernel x).natAbs := by
   simp [Int.cast_abs]

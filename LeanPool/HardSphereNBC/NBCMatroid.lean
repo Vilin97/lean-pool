@@ -8,11 +8,6 @@ import Mathlib.Combinatorics.Matroid.Rank.Finite
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Finset.Max
 
-namespace HsVirial
-
-open Set
-open scoped BigOperators
-
 /-!
   The NBC cancellation is first proved at the level of a finite matroid.  The
   graphic specialization only needs the standard cycle-matroid interface:
@@ -21,8 +16,16 @@ open scoped BigOperators
   avoids hiding it behind a library theorem.
  -/
 
+namespace HsVirial
+
+open Set
+open scoped BigOperators
+
+
+
 variable {α : Type*} [Fintype α] [DecidableEq α] [LinearOrder α]
 
+/-- The ground set of a matroid on a finite ambient type, as a finite set. -/
 noncomputable def matroidGround (M : Matroid α) : Finset α := by
   classical
   exact Finset.univ.filter (fun e => e ∈ M.E)
@@ -32,6 +35,7 @@ lemma mem_matroidGround (M : Matroid α) (e : α) :
     e ∈ matroidGround M ↔ e ∈ M.E := by
   simp [matroidGround]
 
+/-- An element completing a circuit whose other elements lie in the specified set. -/
 def IsNBCandidate (M : Matroid α) (A : Finset α) (e : α) : Prop :=
   ∃ C : Finset α,
     M.IsCircuit (C : Set α) ∧
@@ -39,10 +43,12 @@ def IsNBCandidate (M : Matroid α) (A : Finset α) (e : α) : Prop :=
     (∀ f ∈ C, f ≤ e) ∧
     ((C.erase e : Finset α) : Set α) ⊆ (A : Set α)
 
+/-- The possible circuit-completing elements used by the cancellation involution. -/
 noncomputable def nbcCandidates (M : Matroid α) (A : Finset α) : Finset α := by
   classical
   exact (matroidGround M).filter (IsNBCandidate M A)
 
+/-- The set has at least one broken-circuit witness. -/
 def IsNBCBad (M : Matroid α) (A : Finset α) : Prop :=
   Finset.Nonempty (nbcCandidates M A)
 
@@ -57,6 +63,7 @@ lemma mem_nbcCandidates {M : Matroid α} {A : Finset α} {e : α} :
   classical
   simp [nbcCandidates]
 
+/-- The least circuit-completing element, chosen to define the cancellation pairing. -/
 noncomputable def leastNBCandidate (M : Matroid α) (A : Finset α)
     (h : IsNBCBad M A) : α :=
   (nbcCandidates M A).min' h
@@ -77,6 +84,7 @@ lemma leastNBCandidate_le {M : Matroid α} {A : Finset α}
   apply Finset.min'_le
   exact (mem_nbcCandidates.mpr ⟨nbcCandidate_mem_ground he, he⟩)
 
+/-- Remove an element if present and insert it otherwise. -/
 def toggleEdge (A : Finset α) (e : α) : Finset α :=
   if e ∈ A then A.erase e else insert e A
 
@@ -129,8 +137,8 @@ lemma candidate_smaller_toggle_iff {M : Matroid α} {A : Finset α}
     by_cases heA : e ∈ A
     · simpa [toggleEdge, heA, hxe] using hxt
     · rcases (by simpa [toggleEdge, heA] using hxt) with hxeq | hxa
-      exact (False.elim (hxe hxeq))
-      exact hxa
+      · exact (False.elim (hxe hxeq))
+      · exact hxa
   · intro h
     rcases h with ⟨C, hC, hfC, hmax, hsub⟩
     refine ⟨C, hC, hfC, hmax, ?_⟩
@@ -181,6 +189,7 @@ lemma leastNBCandidate_toggle_eq {M : Matroid α} {A : Finset α}
     le_antisymm hle₁ hle₂
   simp [e, heq]
 
+/-- The alternating sign determined by a natural-number cardinality. -/
 def matroidParitySign : Nat -> Int
   | 0 => 1
   | n + 1 => -matroidParitySign n
@@ -201,14 +210,17 @@ lemma toggleEdge_sign {A : Finset α} {e : α} :
       simp [toggleEdge, h]
     rw [hcard, matroidParitySign_succ]
 
+/-- Enumerate the spanning subsets of the matroid ground set. -/
 noncomputable def spanningSubsets (M : Matroid α) : Finset (Finset α) := by
   classical
   exact (matroidGround M).powerset.filter (fun A => M.Spanning (A : Set α))
 
+/-- Enumerate spanning subsets with a broken-circuit witness. -/
 noncomputable def badSpanningSubsets (M : Matroid α) : Finset (Finset α) := by
   classical
   exact (spanningSubsets M).filter (IsNBCBad M)
 
+/-- Enumerate the bases of the matroid. -/
 noncomputable def baseSubsets (M : Matroid α) : Finset (Finset α) := by
   classical
   exact (matroidGround M).powerset.filter (fun A => M.IsBase (A : Set α))
@@ -353,6 +365,7 @@ lemma spanning_not_nbcBad_isIndependent {M : Matroid α} {A : Finset α}
   have hc : IsNBCandidate M A e := ⟨C', hC', heC, hmax, hsub⟩
   exact hbad ⟨e, mem_nbcCandidates.mpr ⟨nbcCandidate_mem_ground hc, hc⟩⟩
 
+/-- Enumerate spanning sets with no broken circuit, which are the surviving bases. -/
 noncomputable def nbcBaseSubsets (M : Matroid α) : Finset (Finset α) := by
   classical
   exact (spanningSubsets M).filter (fun A => ¬IsNBCBad M A)
@@ -369,9 +382,11 @@ lemma nbcBase_isBase {M : Matroid α} {A : Finset α}
   exact (spanning_not_nbcBad_isIndependent h.1 h.2).isBase_of_spanning
     (mem_spanningSubsets h.1)
 
+/-- The sum of cardinality-parity signs over all spanning subsets. -/
 noncomputable def signedSpanningSum (M : Matroid α) : Int :=
   ∑ A ∈ spanningSubsets M, matroidParitySign A.card
 
+/-- The sum of cardinality-parity signs over the surviving no-broken-circuit sets. -/
 noncomputable def signedNBCSum (M : Matroid α) : Int :=
   ∑ A ∈ nbcBaseSubsets M, matroidParitySign A.card
 

@@ -9,6 +9,12 @@ import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
+/-!
+# HardSphereClosePair
+
+Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
+-/
+
 namespace HsVirial
 
 open Set
@@ -18,9 +24,12 @@ open scoped BigOperators ENNReal
 
 noncomputable section
 
+/-- Three-dimensional Euclidean position space. -/
 abbrev HS3 := HSPosition 3
+/-- Two-dimensional Euclidean position space used for planar sections. -/
 abbrev HS2 := HSPosition 2
 
+/-- The measurable separation of the axial coordinate from the two transverse coordinates. -/
 def testSplit3 : HS3 ≃ᵐ (ℝ × HS2) := by
   let e0 := (MeasurableEquiv.toLp 2 (Fin 3 → ℝ)).symm
   let e1 := MeasurableEquiv.piFinSuccAbove (fun _ : Fin 3 => ℝ) 0
@@ -45,15 +54,20 @@ lemma testMeasurePreserving_split3 : MeasurePreserving testSplit3 := by
   change MeasurePreserving (e0.trans (e1.trans e2)) volume volume
   exact h0.trans (h1.trans h2)
 
+/-- Reassemble a position from one axial and two transverse coordinates. -/
 def testAxis3 (s : ℝ) (y : HS2) : HS3 := testSplit3.symm (s, y)
 
 lemma testAxis3_apply (s : ℝ) (y : HS2) :
     testAxis3 s y = MeasurableEquiv.toLp 2 (Fin 3 → ℝ)
       (fun i => if i = 0 then s else
         (MeasurableEquiv.toLp 2 (Fin 2 → ℝ)).symm y (Fin.predAbove 0 i)) := by
-  simp [testAxis3, testSplit3, MeasurableEquiv.trans_apply,
-    MeasurableEquiv.piFinSuccAbove, MeasurableEquiv.prodCongr,
-    Fin.consEquiv]
+  simp only [testAxis3, testSplit3, Nat.reduceAdd, MeasurableEquiv.piFinSuccAbove, Fin.isValue,
+    Fin.zero_succAbove, Fin.insertNthEquiv_zero, Fin.consEquiv, Equiv.symm_mk,
+    MeasurableEquiv.prodCongr, MeasurableEquiv.refl_toEquiv, MeasurableEquiv.trans_symm,
+    MeasurableEquiv.symm_mk, Equiv.prodCongr_symm, Equiv.refl_symm, MeasurableEquiv.symm_symm,
+    MeasurableEquiv.trans_apply, MeasurableEquiv.coe_mk, Equiv.prodCongr_apply, Equiv.coe_refl,
+    MeasurableEquiv.coe_toEquiv_symm, Prod.map_apply, id_eq, MeasurableEquiv.toLp_symm_apply,
+    Equiv.coe_fn_mk, MeasurableEquiv.toLp_apply, WithLp.toLp.injEq]
   funext i
   fin_cases i <;> rfl
 
@@ -85,6 +99,7 @@ lemma testAxis3_sub_axis (t s : ℝ) (y : HS2) :
   rw [testAxis3_apply, testAxis3_apply, testAxis3_apply]
   fin_cases i <;> simp
 
+/-- Two unit balls, separated along the axis, expressed in axial coordinates. -/
 def testAxisIntersection (s : ℝ) : Set (ℝ × HS2) :=
   {p | p.1 ^ 2 + ‖p.2‖ ^ 2 < 1 ∧
     (p.1 - s) ^ 2 + ‖p.2‖ ^ 2 < 1}
@@ -104,6 +119,7 @@ lemma measurableSet_testAxisIntersection (s : ℝ) :
   exact (MeasurableSet.preimage measurableSet_Iio h0).inter
     (MeasurableSet.preimage measurableSet_Iio h1)
 
+/-- The smaller radius of the two ball sections at the specified axial coordinate. -/
 def testSectionRadius (s t : ℝ) : ℝ :=
   min (Real.sqrt (max 0 (1 - t ^ 2)))
     (Real.sqrt (max 0 (1 - (t - s) ^ 2)))
@@ -538,9 +554,11 @@ lemma testBallIntersection_real_volume_eq_lens_norm (d : HS3)
       exact testAxisIntersection_volume_real_eq_lens ‖d‖
         (norm_nonneg d) hd
 
+/-- Read one three-dimensional position from flattened two-particle coordinates. -/
 def testPairBlock (x : Fin 2 × Fin 3 → ℝ) (i : Fin 2) : HS3 :=
   MeasurableEquiv.toLp 2 (Fin 3 → ℝ) (fun a => x (i, a))
 
+/-- The difference-coordinate transformation used to integrate pairs of positions. -/
 def testPairDifferencePositionMap (p : HS3 × HS3) : HS3 × HS3 :=
   Prod.swap (hardSpherePairCoordinateEquiv.symm
     (hardSpherePairDifferenceLinearMap (hardSpherePairCoordinateEquiv p)))
@@ -586,8 +604,9 @@ lemma testPairDifferencePositionMap_apply (p : HS3 × HS3) :
               (hardSpherePairCoordinateEquiv (p, q)) (1, a)) = q - p := by
       unfold hardSpherePairDifferenceLinearMap
       simp only [hardSphereParentDifferenceLinearMap_apply]
-      simp [hardSpherePairParent, hardSpherePairCoordinateEquiv_apply_zero,
-        hardSpherePairCoordinateEquiv_apply_one]
+      simp only [hardSpherePairParent, Fin.isValue, one_ne_zero, ↓reduceIte,
+        hardSpherePairCoordinateEquiv_apply_one, hardSpherePairCoordinateEquiv_apply_zero,
+        MeasurableEquiv.toLp_apply]
       apply PiLp.ext
       intro a
       rfl
@@ -614,6 +633,7 @@ lemma testPairDifferencePositionMap_apply (p : HS3 × HS3) :
       simp [hardSpherePairParent, hardSpherePairCoordinateEquiv_apply_zero]
     exact houtput.trans hdiff_zero
 
+/-- Pairs in the unit ball whose sum is also in the unit ball. -/
 def testClosePairDifferenceRegion : Set (HS3 × HS3) :=
   {p | p.1 ∈ ball (0 : HS3) 1 ∧ p.2 ∈ ball (0 : HS3) 1 ∧
     p.1 + p.2 ∈ ball (0 : HS3) 1}
@@ -654,7 +674,7 @@ lemma testPairDifferencePositionMap_preimage_close :
   have hadd : (p.2 - p.1) + p.1 = p.2 := by abel
   rw [hadd]
   simp only [hardSphereClosePairRegion,
-    Set.mem_setOf_eq, mem_ball_iff_norm, sub_zero]
+    Set.mem_ofPred_eq, mem_ball_iff_norm, sub_zero]
   rw [norm_sub_rev]
   tauto
 

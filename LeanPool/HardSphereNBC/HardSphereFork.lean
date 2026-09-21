@@ -7,6 +7,8 @@ import LeanPool.HardSphereNBC.HardSphereMeasure
 import Mathlib.Combinatorics.SimpleGraph.Acyclic
 import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 
+/-! ### Concrete tree and fork regions -/
+
 namespace HsVirial
 
 open Set
@@ -45,10 +47,10 @@ lemma hardSphereEdgeLE_fork_member {k : Nat} {a b c : Fin k}
   exact Or.inl hab
 
 lemma isGraphForest_of_card_le_two
-    {V : Type*} [Fintype V] [DecidableEq V]
-    {G : SimpleGraph V} {A : Finset (Sym2 V)}
+    {V : Type*} [Fintype V] {G : SimpleGraph V} {A : Finset (Sym2 V)}
     (hA : A ⊆ graphEdgeFinset G) (hcard : A.card ≤ 2) :
     IsGraphForest G A := by
+  classical
   refine ⟨?_, ?_⟩
   · intro e he
     exact mem_graphEdgeFinset.mp (hA he)
@@ -176,11 +178,11 @@ lemma hardSphere_nbc_region_excludes_fork_chord
   apply hr.2.2
   exact ⟨s(b, c), C, hC, by simp [C], hmax, hsub⟩
 
-/-! ### Concrete tree and fork regions -/
+
 
 /-- The volume of the open unit ball in the three-dimensional position space. -/
 def hardSphereKappa : ℝ :=
-  letI : Fintype (Fin 3) := Fin.fintype 3
+  let : Fintype (Fin 3) := Fin.fintype 3
   (volume : Measure (HSPosition 3)).real (ball (0 : HSPosition 3) 1)
 
 lemma hardSphereKappa_eq : hardSphereKappa = 4 * Real.pi / 3 := by

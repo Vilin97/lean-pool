@@ -9,6 +9,12 @@ import Mathlib.Combinatorics.SimpleGraph.Acyclic
 import Mathlib.Combinatorics.SimpleGraph.Connectivity.Finite
 import Mathlib.Combinatorics.SimpleGraph.Finite
 
+/-!
+# GraphicMatroid
+
+Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
+-/
+
 namespace HsVirial
 
 open Set
@@ -19,6 +25,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 
 noncomputable section
 
+/-- The finite edge set of a connected component. -/
 def componentEdgeFinset {H : SimpleGraph V}
     (c : H.ConnectedComponent) : Finset (Sym2 c) :=
   (Set.toFinite c.toSimpleGraph.edgeSet).toFinset
@@ -29,6 +36,7 @@ lemma mem_componentEdgeFinset {H : SimpleGraph V} {c : H.ConnectedComponent}
     {e : Sym2 c} : e ∈ componentEdgeFinset c ↔ e ∈ c.toSimpleGraph.edgeSet := by
   simp [componentEdgeFinset]
 
+/-- The inclusion of unordered pairs from a vertex subset into the ambient vertex set. -/
 def sym2SubtypeEmbedding {S : Set V} : Sym2 S ↪ Sym2 V where
   toFun := Sym2.map (fun x : S => (x : V))
   inj' := Sym2.map.injective Subtype.val_injective
@@ -92,11 +100,11 @@ lemma component_edge_card_bij (H : SimpleGraph V) [DecidableRel H.Adj] :
       · rfl
 
 omit [DecidableEq V] in
-lemma component_edge_card_add_one (H : SimpleGraph V) [DecidableRel H.Adj]
+lemma component_edge_card_add_one (H : SimpleGraph V)
     (hH : H.IsAcyclic) (c : H.ConnectedComponent) :
     (componentEdgeFinset c).card + 1 = Nat.card c := by
-  letI : Fintype c := Fintype.ofFinite c
-  letI : Fintype c.toSimpleGraph.edgeSet := Fintype.ofFinite _
+  let : Fintype c := Fintype.ofFinite c
+  let : Fintype c.toSimpleGraph.edgeSet := Fintype.ofFinite _
   rw [Nat.card_eq_fintype_card]
   rw [componentEdgeFinset, Set.Finite.card_toFinset]
   simpa only [SimpleGraph.edgeFinset_card] using
@@ -126,10 +134,12 @@ lemma forest_edge_formula (H : SimpleGraph V) [DecidableRel H.Adj] (hH : H.IsAcy
       simp_rw [hplus]
     _ = Fintype.card V := componentVerts_card H
 
+/-- An edge subset of the graph whose induced graph is acyclic. -/
 def IsGraphForest (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   (A : Set (Sym2 V)) ⊆ G.edgeSet ∧
     (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).IsAcyclic
 
+/-- A nonforest edge subset that becomes a forest after deleting any edge. -/
 def IsGraphCircuit (G : SimpleGraph V) (C : Finset (Sym2 V)) : Prop :=
   C ⊆ graphEdgeFinset G ∧
     ¬IsGraphForest G C ∧
@@ -193,6 +203,7 @@ lemma IsGraphForest.insert_of_mem_forest {G F : SimpleGraph V} {A : Finset (Sym2
         rw [SimpleGraph.edgeSet_fromEdgeSet]
         exact ⟨by simpa [hxe] using hxA, G.not_isDiag_of_mem_edgeSet (hA.1 hxA)⟩)
 
+/-- Identification of components for graphs with the same reachability relation. -/
 def connectedComponentEquivOfReachableEq {G H : SimpleGraph V}
     (h : G.Reachable = H.Reachable) :
     G.ConnectedComponent ≃ H.ConnectedComponent where
@@ -230,20 +241,23 @@ lemma graphEdgeFinset_subset_of_le_fromEdgeSet_union
   rw [SimpleGraph.edgeSet_fromEdgeSet] at he'
   simpa only [Finset.mem_union, Finset.mem_coe] using he'.1
 
+omit [DecidableEq V] in
 lemma graphEdgeFinset_card_eq_of_reachable_eq {F H : SimpleGraph V}
-    [DecidableRel F.Adj] [DecidableRel H.Adj]
     (hF : F.IsAcyclic) (hH : H.IsAcyclic)
     (hreach : F.Reachable = H.Reachable) :
     (graphEdgeFinset F).card = (graphEdgeFinset H).card := by
+  classical
   have hFcard := forest_edge_formula F hF
   have hHcard := forest_edge_formula H hH
   have hcomp := connectedComponent_card_eq_of_reachable_eq hreach
   omega
 
-lemma IsGraphForest.augment {G : SimpleGraph V} {I J : Finset (Sym2 V)}
+omit [Fintype V] in
+lemma IsGraphForest.augment [Finite V] {G : SimpleGraph V} {I J : Finset (Sym2 V)}
     (hI : IsGraphForest G I) (hJ : IsGraphForest G J) (hcard : I.card < J.card) :
     ∃ e ∈ J, e ∉ I ∧ IsGraphForest G (insert e I) := by
   classical
+  let := Fintype.ofFinite V
   let GI := SimpleGraph.fromEdgeSet (I : Set (Sym2 V))
   let GJ := SimpleGraph.fromEdgeSet (J : Set (Sym2 V))
   let K := SimpleGraph.fromEdgeSet ((I ∪ J : Finset (Sym2 V)) : Set (Sym2 V))
@@ -301,6 +315,7 @@ lemma IsGraphForest.augment {G : SimpleGraph V} {I J : Finset (Sym2 V)}
   exact IsGraphForest.insert_of_mem_forest hI hIF hFacyc e
     (mem_graphEdgeFinset.mp heF) heG heI
 
+/-- The matroid whose independent edge sets are the forests of the graph. -/
 def graphicMatroid (G : SimpleGraph V) : Matroid (Sym2 V) :=
   (IndepMatroid.ofFinset
     (E := G.edgeSet)

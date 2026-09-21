@@ -5,6 +5,12 @@ Authors: ukiyois, OpenCode agent sessions
 -/
 import LeanPool.HardSphereNBC.HardSphereClosePair
 
+/-!
+# HardSphereForkPackingCoordinates
+
+Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
+-/
+
 namespace HsVirial
 
 open Set
@@ -83,6 +89,7 @@ def hardSphereForkMemberVertex {k : Nat}
     (f : HardSphereForkTriple k) (j : Fin 2) : Fin k :=
   if j = 0 then f.2.1 else f.2.2
 
+/-- Choose one of the two center-to-leaf edges of a fork. -/
 def hardSphereForkMemberEdge {k : Nat}
     (f : HardSphereForkTriple k) (j : Fin 2) : Sym2 (Fin k) :=
   if j = 0 then s(f.1, f.2.1) else s(f.1, f.2.2)
@@ -93,7 +100,7 @@ lemma hardSphereForkMemberEdge_eq {k : Nat}
       s(f.1, hardSphereForkMemberVertex f j) := by
   fin_cases j <;> rfl
 
-lemma hardSphereForkMemberEdge_mem {k : Nat} [NeZero k]
+lemma hardSphereForkMemberEdge_mem {k : Nat}
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
     (hP : hardSphereForkPacking T P)
@@ -103,6 +110,7 @@ lemma hardSphereForkMemberEdge_mem {k : Nat} [NeZero k]
   · simpa [hardSphereForkMemberEdge] using (hP.1 f hf).2.2.1
   · simpa [hardSphereForkMemberEdge] using (hP.1 f hf).2.2.2
 
+/-- The tree-difference coordinate corresponding to a fork edge. -/
 noncomputable def hardSphereForkMemberIndex {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k))
@@ -120,6 +128,7 @@ lemma hardSphereTreeParentEdge_hardSphereForkMemberIndex {k : Nat} [NeZero k]
       hardSphereForkMemberEdge f j := by
   exact hardSphereTreeParentEdge_hardSphereTreeEdgeIndex hT _ he
 
+/-- Whether the tree orientation of a fork edge opposes its center-to-leaf orientation. -/
 noncomputable def hardSphereForkMemberReversed {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k))
@@ -167,6 +176,7 @@ lemma hardSphereForkMember_oriented_difference {k : Nat} [NeZero k]
     simp [hardSphereForkMemberReversed, hparent, hne,
       hardSphereTreeDifference, hchild]
 
+/-- Assign tree-difference coordinates to the two members of each packed fork. -/
 noncomputable def hardSphereForkPackingMemberIndex {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -218,6 +228,7 @@ lemma hardSphereForkPackingMemberIndex_injective {k : Nat} [NeZero k]
       · exact hnot (by simp [hardSphereForkSupport, h.1])
       · exact hnot (by simp [hardSphereForkSupport, h.1])
 
+/-- Index packed fork members using the finite enumeration of the packing. -/
 noncomputable def hardSphereForkPackingMemberIndexFin {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -227,6 +238,7 @@ noncomputable def hardSphereForkPackingMemberIndexFin {k : Nat} [NeZero k]
   fun z => hardSphereForkPackingMemberIndex hT hP
     (P.equivFin.symm z.1, z.2)
 
+/-- The orientation correction for an enumerated packed fork edge. -/
 noncomputable def hardSphereForkPackingMemberReversed {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -272,6 +284,7 @@ lemma hardSphereForkPackingMemberIndexFin_injective {k : Nat} [NeZero k]
   · simpa using congrArg P.equivFin (congrArg Prod.fst h')
   · simpa using congrArg Prod.snd h'
 
+/-- Flatten the two coordinate indices per packed fork into one finite index. -/
 noncomputable def hardSphereForkPackingFlatMemberIndex {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -295,6 +308,7 @@ lemma hardSphereForkPackingFlatMemberIndex_injective {k : Nat} [NeZero k]
   have h' := hardSphereForkPackingMemberIndexFin_injective (hT := hT) hP h
   exact (@finProdFinEquiv P.card 2).symm.injective h'
 
+/-- The set of tree coordinates used by the fork packing. -/
 noncomputable def hardSphereForkPackingSelectedIndices {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -314,6 +328,7 @@ lemma hardSphereForkPackingSelectedIndices_card {k : Nat} [NeZero k]
     (hardSphereForkPackingFlatMemberIndex_injective (hT := hT) hP)]
   simp
 
+/-- The bijection from packed edge indices to their selected tree coordinates. -/
 noncomputable def hardSphereForkPackingSelectedEquiv {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -332,6 +347,7 @@ noncomputable def hardSphereForkPackingSelectedEquiv {k : Nat} [NeZero k]
     refine ⟨i, ?_⟩
     exact Subtype.ext hix
 
+/-- The number of tree coordinates not used by the fork packing. -/
 noncomputable def hardSphereForkPackingComplementCard {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -355,6 +371,7 @@ lemma hardSphereForkPackingComplementCard_eq {k : Nat} [NeZero k]
       (hardSphereForkPackingSelectedIndices hT hP).card by simp,
     hardSphereForkPackingSelectedIndices_card (hT := hT) hP]
 
+/-- Reindex tree coordinates with packed fork edges first and unused edges last. -/
 noncomputable def hardSphereForkPackingIndexEquiv {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -394,11 +411,12 @@ lemma hardSphereForkPackingIndexEquiv_member {k : Nat} [NeZero k]
   have hmod : (@finProdFinEquiv P.card 2 (i, j)).modNat = j := by
     change (@finProdFinEquiv P.card 2 (i, j)).modNat = j at hsecond
     exact hsecond
-  simp [hardSphereForkPackingIndexEquiv,
-    hardSphereForkPackingSelectedEquiv,
-    hardSphereForkPackingSelectedIndices, Equiv.sumCongr, Equiv.sumCompl, Equiv.ofBijective,
-    hardSphereForkPackingFlatMemberIndex,
-    hardSphereForkPackingMemberIndexFin]
+  simp only [hardSphereForkPackingIndexEquiv, hardSphereForkPackingSelectedIndices,
+    Equiv.sumCongr, hardSphereForkPackingSelectedEquiv, Equiv.ofBijective,
+    hardSphereForkPackingFlatMemberIndex, hardSphereForkPackingMemberIndexFin,
+    finProdFinEquiv_symm_apply, Equiv.symm_mk, Equiv.sumCompl, Finset.mem_image, Finset.mem_univ,
+    true_and, Equiv.trans_apply, finSumFinEquiv_symm_apply_castAdd, Equiv.coe_fn_mk, Sum.map_inl,
+    Sum.elim_inl]
   change hardSphereForkPackingMemberIndex hT hP
       (P.equivFin.symm (@finProdFinEquiv P.card 2 (i, j)).divNat,
         (@finProdFinEquiv P.card 2 (i, j)).modNat) = _
@@ -426,14 +444,17 @@ lemma hardSphereForkPackingIndexEquiv_complement_not_mem {k : Nat} [NeZero k]
     hardSphereForkPackingIndexEquiv hT hP
         (Fin.natAdd (P.card * 2) i) ∉
       hardSphereForkPackingSelectedIndices hT hP := by
-  simp [hardSphereForkPackingIndexEquiv, hardSphereForkPackingSelectedEquiv,
-    hardSphereForkPackingSelectedIndices, Equiv.sumCongr, Equiv.sumCompl, Equiv.ofBijective]
+  simp only [hardSphereForkPackingSelectedIndices, hardSphereForkPackingIndexEquiv,
+    Equiv.sumCongr, hardSphereForkPackingSelectedEquiv, Equiv.ofBijective, Equiv.symm_mk,
+    Equiv.sumCompl, Finset.mem_image, Finset.mem_univ, true_and, Equiv.trans_apply,
+    finSumFinEquiv_symm_apply_natAdd, Equiv.coe_fn_mk, Sum.map_inr, Sum.elim_inr, not_exists]
   intro x hx
   have hnot := ((Fintype.equivFin {x : Fin (k - 1) //
       x ∉ hardSphereForkPackingSelectedIndices hT hP}).symm i).property
   apply hnot
   exact Finset.mem_image.mpr ⟨x, Finset.mem_univ _, hx⟩
 
+/-- Group tree-difference coordinates into packed pairs and remaining single coordinates. -/
 noncomputable def hardSphereForkPackingRawBlockMap {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -481,6 +502,7 @@ lemma hardSphereForkPackingRawBlockMap_flat_apply {k : Nat} [NeZero k]
           (hardSphereTreeDifferencePositionMap hT r)) i = _
   rw [hardSphereReindexedBlockCoordinateEquiv_symm_apply]
 
+/-- Negate a position exactly when the orientation flag requests reversal. -/
 def hardSphereApplyReversal (reverse : Bool) (x : HSPosition 3) : HSPosition 3 :=
   if reverse then -x else x
 
@@ -494,6 +516,7 @@ lemma measurePreserving_hardSphereApplyReversal (reverse : Bool) :
   · change MeasurePreserving (fun x : HSPosition 3 => -x) volume volume
     exact Measure.measurePreserving_neg volume
 
+/-- The orientation reversal flag for a flattened packed coordinate. -/
 noncomputable def hardSphereForkPackingFlatReversed {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -506,6 +529,7 @@ noncomputable def hardSphereForkPackingFlatReversed {k : Nat} [NeZero k]
   else
     false
 
+/-- Apply all orientation corrections to the flattened tree coordinates. -/
 noncomputable def hardSphereForkPackingFlatSignMap {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -530,7 +554,7 @@ lemma hardSphereForkPackingFlatReversed_member {k : Nat} [NeZero k]
       (Fin.castAdd (hardSphereForkPackingComplementCard hT hP)
           (@finProdFinEquiv P.card 2 (i, j))).val < P.card * 2 := by
     exact (@finProdFinEquiv P.card 2 (i, j)).isLt
-  rw [dif_pos hi]
+  rw [dite_eq_left hi]
   dsimp
   rw [(@finProdFinEquiv P.card 2).symm_apply_apply]
 
@@ -543,7 +567,7 @@ lemma hardSphereForkPackingFlatReversed_complement {k : Nat} [NeZero k]
     hardSphereForkPackingFlatReversed hT hP
         (Fin.natAdd (P.card * 2) i) = false := by
   unfold hardSphereForkPackingFlatReversed
-  rw [dif_neg]
+  rw [dite_eq_right]
   simp [Fin.natAdd]
 
 lemma measurePreserving_hardSphereForkPackingFlatSignMap {k : Nat} [NeZero k]
@@ -564,6 +588,7 @@ lemma measurePreserving_hardSphereForkPackingFlatSignMap {k : Nat} [NeZero k]
     measurePreserving_hardSphereApplyReversal
       (hardSphereForkPackingFlatReversed hT hP i))
 
+/-- Group the orientation-corrected coordinates into fork pairs and single positions. -/
 noncomputable def hardSphereForkPackingSignedBlockMap {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -672,6 +697,7 @@ lemma hardSphereForkPackingSignedBlockMap_complement_apply {k : Nat} [NeZero k]
   rw [hardSphereBlockCoordinateEquiv_complement_apply]
   rfl
 
+/-- The configuration-to-block map used for the simultaneous fork volume estimate. -/
 noncomputable def hardSphereForkPackingBlockMap {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     {P : Finset (HardSphereForkTriple k)}
@@ -758,7 +784,7 @@ lemma hardSphereForkPackingBlockMap_mem_separatedBlockProductRegion {k : Nat}
   · rw [hardSphereSeparatedPairProductRegion]
     intro i
     rw [hardSphereSeparatedPairRegion]
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [hardSphereForkPackingBlockMap_fst_member_apply,
       hardSphereForkPackingBlockMap_snd_member_apply]
     simpa [hardSphereForkRelativePair, hardSphereSeparatedPairRegion,

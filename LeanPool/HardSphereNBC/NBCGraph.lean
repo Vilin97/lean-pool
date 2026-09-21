@@ -8,12 +8,6 @@ import Mathlib.Combinatorics.SimpleGraph.Paths
 import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
-namespace HsVirial
-
-open Set
-open SimpleGraph
-open scoped BigOperators
-
 /-!
   Concrete graph data for the NBC layer.
 
@@ -25,10 +19,19 @@ open scoped BigOperators
   presentations.
  -/
 
+namespace HsVirial
+
+open Set
+open SimpleGraph
+open scoped BigOperators
+
+
+
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
 /-! ### Finite edge and cycle sets -/
 
+/-- The graph's edge set as a finite set of unordered vertex pairs. -/
 noncomputable def graphEdgeFinset (G : SimpleGraph V) : Finset (Sym2 V) := by
   classical
   exact Finset.univ.filter (fun e => e ∈ G.edgeSet)
@@ -47,6 +50,7 @@ lemma coe_graphEdgeFinset (G : SimpleGraph V) :
   ext e
   simp
 
+/-- The finite edge set traversed by a closed walk. -/
 def cycleEdgeFinset {G : SimpleGraph V} {v : V} (c : G.Walk v v) : Finset (Sym2 V) :=
   c.edges.toFinset
 
@@ -83,6 +87,7 @@ lemma cycleEdgeFinset_nonempty {G : SimpleGraph V} {v : V} {c : G.Walk v v}
   on a chosen walk.  Different orientations or starting points of one cycle
   consequently describe the same circuit candidate.
  -/
+/-- An edge set realized by a simple graph cycle. -/
 def IsGraphCycle (G : SimpleGraph V) (C : Finset (Sym2 V)) : Prop :=
   ∃ (v : V) (c : G.Walk v v), c.IsCycle ∧ C = cycleEdgeFinset c
 
@@ -104,10 +109,12 @@ variable [LinearOrder (Sym2 V)]
 /- The direct `Sym2` order is only partial.  These relations make every
    graph-side comparison use the supplied linear edge order, just as the
    generic NBC definitions do. -/
+/-- The chosen non-strict comparison of graph edges. -/
 def graphEdgeLE (a b : Sym2 V) : Prop :=
   @LE.le (Sym2 V)
     ((inferInstance : LinearOrder (Sym2 V)).toPartialOrder.toPreorder.toLE) a b
 
+/-- The chosen strict comparison of graph edges. -/
 def graphEdgeLT (a b : Sym2 V) : Prop :=
   @LT.lt (Sym2 V)
     ((inferInstance : LinearOrder (Sym2 V)).toPartialOrder.toPreorder.toLT) a b
@@ -123,6 +130,7 @@ lemma graphEdgeLT_not_graphEdgeLE {a b : Sym2 V} (h : graphEdgeLT a b) :
     ¬graphEdgeLE b a := by
   exact (graphEdgeLT_iff.mp h).2
 
+/-- An edge set obtained by deleting the greatest edge from a cycle. -/
 def IsGraphBrokenCircuit (G : SimpleGraph V) (B : Finset (Sym2 V)) : Prop :=
   ∃ (C : Finset (Sym2 V)) (e : Sym2 V),
     IsGraphCycle G C ∧ e ∈ C ∧ (∀ f ∈ C, graphEdgeLE f e) ∧ B = C.erase e
@@ -133,6 +141,7 @@ lemma IsGraphBrokenCircuit.subset_ground {G : SimpleGraph V} {B : Finset (Sym2 V
   intro f hf
   exact hC.subset_ground (Finset.mem_of_mem_erase hf)
 
+/-- An edge whose insertion completes a cycle with the remaining edges already present. -/
 def IsGraphNBCandidate (G : SimpleGraph V) (A : Finset (Sym2 V)) (e : Sym2 V) : Prop :=
   ∃ (C : Finset (Sym2 V)),
     IsGraphCycle G C ∧
@@ -287,17 +296,21 @@ lemma graph_candidate_toggle_of_generic
 
 /-! ### Graph-side signed cancellation -/
 
+/-- The edge set induces the same reachability relation as the ambient graph. -/
 def IsGraphSpanning (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).Reachable = G.Reachable
 
+/-- There exists an edge witnessing a broken circuit in the given edge set. -/
 def IsGraphNBCBad (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   ∃ e, IsGraphNBCandidate G A e
 
+/-- Enumerate edge subsets preserving the graph's connected components. -/
 noncomputable def graphSpanningSubsets (G : SimpleGraph V) :
     Finset (Finset (Sym2 V)) := by
   classical
   exact (graphEdgeFinset G).powerset.filter (IsGraphSpanning G)
 
+/-- The spanning edge subsets that contain no broken circuit. -/
 noncomputable def graphNBCSpanningSubsets (G : SimpleGraph V) :
     Finset (Finset (Sym2 V)) := by
   classical

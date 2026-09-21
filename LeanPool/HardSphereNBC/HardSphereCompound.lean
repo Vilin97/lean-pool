@@ -5,6 +5,12 @@ Authors: ukiyois, OpenCode agent sessions
 -/
 import LeanPool.HardSphereNBC.HardSphereTreeEdges
 
+/-!
+# HardSphereCompound
+
+Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
+-/
+
 namespace HsVirial
 
 open Set
@@ -145,7 +151,7 @@ lemma hardSphere_treeRegion_mem_separatedPair_of_not_forkEvent
     apply havoid
     exact ⟨hr, hbc⟩
   rw [hardSphereForkRelativePair, hardSphereSeparatedPairRegion]
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   rw [show (hardSpherePosition r b - hardSpherePosition r a) -
       (hardSpherePosition r c - hardSpherePosition r a) =
       hardSpherePosition r b - hardSpherePosition r c by abel]

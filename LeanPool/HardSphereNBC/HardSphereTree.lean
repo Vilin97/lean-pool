@@ -7,6 +7,8 @@ import LeanPool.HardSphereNBC.HardSphereFork
 import Mathlib.LinearAlgebra.Matrix.Transvection
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
+/-! ### Elementary tree-coordinate shears -/
+
 namespace HsVirial
 
 open Set
@@ -17,6 +19,7 @@ open scoped BigOperators ENNReal
 
 noncomputable section
 
+/-- The graph induced by a finite set of particle edges. -/
 def hardSphereTreeGraph {k : Nat}
     (T : Finset (Sym2 (Fin k))) : SimpleGraph (Fin k) :=
   SimpleGraph.fromEdgeSet (T : Set (Sym2 (Fin k)))
@@ -67,6 +70,7 @@ lemma hardSphereTree_parent_exists {k : Nat} [NeZero k]
   rw [hlast] at hdrop
   simpa using hdrop
 
+/-- The parent of a free particle in the tree rooted at the anchored particle. -/
 noncomputable def hardSphereTreeParent {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k))
@@ -119,6 +123,7 @@ lemma hardSphereFreeParticleIndex_freeIndex {k : Nat} [NeZero k]
   simp [hardSphereFreeParticleIndex, hardSphereFreeIndex]
   omega
 
+/-- An order of free particles compatible with their rooted-tree depth. -/
 @[instance_reducible]
 noncomputable def hardSphereTreeIndexOrder {k : Nat} [NeZero k]
     (T : Finset (Sym2 (Fin k))) (_hT : T ∈ treeUniverse (V := Fin k)) :
@@ -217,7 +222,7 @@ lemma measurableSet_hardSphereTreeDifferenceRegion {k : Nat} [NeZero k]
       (continuous_hardSpherePosition
         (k := k) (d := 3) (hardSphereTreeParent hT i))).measurable)
 
-/-! ### Elementary tree-coordinate shears -/
+
 
 /-- Subtract the parent scalar coordinate from a child scalar coordinate. -/
 def hardSphereScalarShear {ι : Type*} [Fintype ι] [DecidableEq ι]

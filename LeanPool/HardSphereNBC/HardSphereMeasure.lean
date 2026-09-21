@@ -7,6 +7,12 @@ import LeanPool.HardSphereNBC.HardSphereNBC
 import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
+/-!
+# HardSphereMeasure
+
+Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
+-/
+
 namespace HsVirial
 
 open Set
