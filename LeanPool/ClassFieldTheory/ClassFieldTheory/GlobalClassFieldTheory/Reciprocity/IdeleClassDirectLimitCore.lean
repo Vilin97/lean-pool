@@ -352,14 +352,16 @@ theorem rationalRelativeIdeleClassEmbedding_comp
         (RelativeIdeleGroup.classEmbedding (IntermediateField.inclusion hEF) c) =
       RelativeIdeleGroup.classEmbedding
         (IntermediateField.inclusion (hEF.trans hFH)) c := by
-  refine QuotientGroup.induction_on c ?_
-  intro a
-  exact congrArg
-    (QuotientGroup.mk'
-      (RelativeIdeleGroup.principalSubgroup ℚ H))
-    (Units.ext
-      (rationalRelativeAdeleEmbedding_comp hEF hFH
-        (a : RelativeAdeleRing ℚ E)))
+  have hinc : (IntermediateField.inclusion hFH).comp (IntermediateField.inclusion hEF) =
+      IntermediateField.inclusion (hEF.trans hFH) := by
+    ext x
+    rfl
+  calc
+    _ = RelativeIdeleGroup.classEmbedding
+        ((IntermediateField.inclusion hFH).comp (IntermediateField.inclusion hEF)) c :=
+      RelativeIdeleGroup.classEmbedding_comp (K := ℚ) (L := E) (M := F) (N := H)
+        (IntermediateField.inclusion hFH) (IntermediateField.inclusion hEF) c
+    _ = _ := congrArg (fun f => RelativeIdeleGroup.classEmbedding f c) hinc
 
 private noncomputable instance :
     DirectedSystem
@@ -440,6 +442,10 @@ noncomputable instance
       (SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)
       rationalIdeleClassDirectLimit :=
   DirectLimit.instMulDistribMulActionOfMulActionHomClass
+    (R := SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ)
+    (G := fun E : FiniteGaloisIntermediateField ℚ (SeparableClosure ℚ) =>
+      RelativeIdeleGroup.ClassGroup ℚ E)
+    (f := fun _ _ h => rationalRelativeIdeleClassTransition h)
 
 /-- The scalar action underlying the canonical absolute Galois action on
 the rational idele-class direct limit. -/

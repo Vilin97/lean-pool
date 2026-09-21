@@ -63,6 +63,21 @@ theorem classEmbedding_mk
         (RelativeIdeleGroup.ideleEmbedding f a) :=
   rfl
 
+omit [FiniteDimensional K L] [FiniteDimensional K M] in
+/-- Scalar extension on relative idele classes respects composition. -/
+theorem classEmbedding_comp {N : Type*} [Field N] [Algebra K N]
+    (g : M →ₐ[K] N) (f : L →ₐ[K] M)
+    (c : RelativeIdeleGroup.ClassGroup K L) :
+    classEmbedding g (classEmbedding f c) = classEmbedding (g.comp f) c := by
+  refine QuotientGroup.induction_on c ?_
+  intro a
+  apply congrArg (QuotientGroup.mk' (RelativeIdeleGroup.principalSubgroup K N))
+  apply Units.ext
+  exact congrArg (fun h => h (a : RelativeAdeleRing K L))
+    (Algebra.TensorProduct.map_id_comp
+      (S := NumberField.AdeleRing (𝓞 K) K)
+      (A := NumberField.AdeleRing (𝓞 K) K) g f).symm
+
 /-- The Galois product formula after descent to relative idele classes. -/
 theorem classInclusion_ideleClassNorm_eq_prod_conjugates
     [IsGalois K L]

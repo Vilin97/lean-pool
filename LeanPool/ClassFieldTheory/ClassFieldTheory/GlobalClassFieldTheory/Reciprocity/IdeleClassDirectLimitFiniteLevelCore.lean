@@ -112,6 +112,13 @@ noncomputable def rationalIntermediateIdeleClassToDirectLimit
       (rationalNormalClosure K)).comp
     (rationalIntermediateIdeleClassToNormalClosure K)
 
+private theorem monoidHom_comp_equiv_symm_apply
+    {A B C D : Type*} [Monoid A] [Monoid B] [Monoid C] [Monoid D]
+    (f : C →* D) (g : B →* C) (e : B ≃* A) (b : B) :
+    (f.comp (g.comp e.symm.toMonoidHom)) (e b) = f (g b) := by
+  change f (g (e.symm (e b))) = f (g b)
+  rw [e.symm_apply_apply]
+
 /-- Passing from the relative presentation of a finite rational
 intermediate field to its ordinary idele class group commutes with the
 canonical map to the absolute direct limit. -/
@@ -126,21 +133,11 @@ theorem
       rationalRelativeIdeleClassToDirectLimit
         (rationalNormalClosure K)
         (RelativeIdeleGroup.classEmbedding (IntermediateField.inclusion (IntermediateField.le_normalClosure K)) c) := by
-  simp only [rationalIntermediateIdeleClassToDirectLimit,
-    rationalIntermediateIdeleClassToNormalClosure]
-  change
-    rationalRelativeIdeleClassToDirectLimit
-        (rationalNormalClosure K)
-        (RelativeIdeleGroup.classEmbedding (IntermediateField.inclusion (IntermediateField.le_normalClosure K))
-          ((_root_.relativeIdeleClassBaseChangeMulEquiv
-            (K := ℚ) (L := K)).symm
-            (_root_.relativeIdeleClassBaseChangeMulEquiv
-              (K := ℚ) (L := K) c))) =
-      rationalRelativeIdeleClassToDirectLimit
-        (rationalNormalClosure K)
-        (RelativeIdeleGroup.classEmbedding (IntermediateField.inclusion (IntermediateField.le_normalClosure K)) c)
-  rw [(_root_.relativeIdeleClassBaseChangeMulEquiv
-    (K := ℚ) (L := K)).symm_apply_apply]
+  exact monoidHom_comp_equiv_symm_apply
+    (rationalRelativeIdeleClassToDirectLimit (rationalNormalClosure K))
+    (RelativeIdeleGroup.classEmbedding
+      (IntermediateField.inclusion (IntermediateField.le_normalClosure K)))
+    (_root_.relativeIdeleClassBaseChangeMulEquiv (K := ℚ) (L := K)) c
 
 /-- At a finite Galois rational intermediate field, the ordinary
 idele-class comparison followed by the absolute direct-limit map is the

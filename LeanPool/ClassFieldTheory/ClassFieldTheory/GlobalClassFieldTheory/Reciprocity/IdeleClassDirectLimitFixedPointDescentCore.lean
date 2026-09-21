@@ -77,7 +77,9 @@ theorem rationalTowerRelativeIdeleClass_fixed_of_directLimit_fixed
       _ = y :=
         h_algebraMap yK
   have hzσ := hz_fixed σ hσK
-  rw [hzU, DirectLimit.smul_def] at hzσ
+  rw [hzU] at hzσ
+  change (⟦⟨U, (AlgEquiv.restrictNormalHom U σ) • d⟩⟧ : rationalIdeleClassDirectLimit) =
+    ⟦⟨U, d⟩⟧ at hzσ
   have hdQ :
       (AlgEquiv.restrictNormalHom U σ) • d = d :=
     (rationalRelativeIdeleClassToDirectLimit_injective U) hzσ
