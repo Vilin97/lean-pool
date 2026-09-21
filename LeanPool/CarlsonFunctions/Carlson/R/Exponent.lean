@@ -52,7 +52,8 @@ theorem hasDerivAt_regCarlsonRIntegral_exponent (t : ℂ) {b z : ι → ℂ}
         continuous_fst.continuousOn (fun p hp ↦ carlsonAffineForm_mem_slitPlane hz hp.2)
     · exact hlog.comp continuous_snd.continuousOn (fun _ hp ↦ hp.2)
   obtain ⟨C, hC⟩ := bddAbove_def.mp
-    (((isCompact_closedBall t 1).prod (Convexity.StdSimplex.isCompact_coordinateSet ℝ ι)).bddAbove_image hjoint.norm)
+    (((isCompact_closedBall t 1).prod (Convexity.StdSimplex.isCompact_coordinateSet ℝ
+      ι)).bddAbove_image hjoint.norm)
   have hdens : Integrable (regDirichletDensity b) μ := by
     simpa only [mul_one, IntegrableOn, μ, K] using integrableOn_regDirichletDensity_mul b hb
       (continuousOn_const : ContinuousOn (fun _ : ι → ℝ ↦ (1 : ℂ)) K)

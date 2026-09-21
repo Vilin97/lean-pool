@@ -30,7 +30,7 @@ open scoped Topology
 @[expose] public noncomputable section
 
 /-- Differentiation in the evaluation point raises the order of the circle Cauchy kernel. -/
-theorem hasDerivAt_circleIntegral_sub_zpow_mul
+theorem hasDerivAt_circleIntegral_sub_zpow_mulCarlson
     {c w : ℂ} {R : ℝ} (hR : 0 ≤ R) (hw : w ∈ ball c R)
     {f : ℂ → ℂ} (hf : ContinuousOn f (sphere c R)) (n : ℕ) :
     HasDerivAt (fun w => ∮ s in C(c, R), (s - w) ^ (-(n + 1 : ℤ)) * f s)
@@ -48,7 +48,7 @@ theorem hasDerivAt_circleIntegral_sub_zpow_mul
       (ball c R ×ˢ Icc 0 (2 * Real.pi)) :=
     hf.comp ((continuous_circleMap c R).comp continuous_snd).continuousOn
       (fun p _ => circleMap_mem_sphere c hR p.2)
-  have h := hasDerivAt_integral_of_continuousOn_compact
+  have h := hasDerivAt_integral_of_continuousOn_compactCarlson
     (μ := volume) (K := Icc 0 (2 * Real.pi))
     (F := fun w θ => deriv (circleMap c R) θ *
       ((circleMap c R θ - w) ^ (-(n + 1 : ℤ)) * f (circleMap c R θ)))
@@ -72,7 +72,7 @@ theorem hasDerivAt_circleIntegral_sub_zpow_mul
 
 /-- Cauchy's formula for every derivative at any point inside the circle. The function
 need only be holomorphic in the open disk and continuous on its closure. -/
-theorem DiffContOnCl.iteratedDeriv_eq_circleIntegral_sub_zpow_mul
+theorem DiffContOnCl.iteratedDeriv_eq_circleIntegral_sub_zpow_mulCarlson
     {c : ℂ} {R : ℝ} {f : ℂ → ℂ} (hf : DiffContOnCl ℂ f (ball c R))
     (hR : 0 < R) (n : ℕ) {w : ℂ} (hw : w ∈ ball c R) :
     iteratedDeriv n f w = (n.factorial : ℂ) * (2 * (Real.pi : ℂ) * I)⁻¹ *
@@ -88,7 +88,7 @@ theorem DiffContOnCl.iteratedDeriv_eq_circleIntegral_sub_zpow_mul
       filter_upwards [isOpen_ball.mem_nhds hw] with v hv
       exact ih hv
     rw [iteratedDeriv_succ, heq.deriv_eq]
-    rw [((hasDerivAt_circleIntegral_sub_zpow_mul hR.le hw
+    rw [((hasDerivAt_circleIntegral_sub_zpow_mulCarlson hR.le hw
       (hf.continuousOn_ball.mono sphere_subset_closedBall) n).const_mul
       ((n.factorial : ℂ) * (2 * (Real.pi : ℂ) * I)⁻¹)).deriv]
     simp only [Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]

@@ -97,7 +97,7 @@ theorem hasDerivAt_carlsonRecurrencePoint_eval (p : MvPolynomial (Option (ι ⊕
     (a : ℂ) (b z : ι → ℂ) :
     HasDerivAt (fun s => p.eval (carlsonRecurrencePoint s b z))
       ((MvPolynomial.pderiv none p).eval (carlsonRecurrencePoint a b z)) a := by
-  have h := p.hasDerivAt_eval_update (carlsonRecurrencePoint a b z) none a
+  have h := p.hasDerivAt_eval_updateCarlson (carlsonRecurrencePoint a b z) none a
   convert h using 1
   · funext s
     congr 2

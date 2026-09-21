@@ -50,7 +50,8 @@ theorem eq_of_forall_monomial_integral_eq_of_restrict_stdSimplex
     obtain ⟨k, hk⟩ := not_forall.mp (mt funext hxy)
     refine ⟨(coord k : (α → ℝ) → ℝ), ?_, hk⟩
     exact ⟨coord k, ⟨MvPolynomial.X k, MvPolynomial.aeval_X coord k⟩, rfl⟩
-  have hK : IsCompact (Convexity.StdSimplex.coordinateSet ℝ α) := Convexity.StdSimplex.isCompact_coordinateSet ℝ α
+  have hK : IsCompact (Convexity.StdSimplex.coordinateSet ℝ α) :=
+    Convexity.StdSimplex.isCompact_coordinateSet ℝ α
   have hae_μ : ∀ᵐ x ∂μ, x ∈ Convexity.StdSimplex.coordinateSet ℝ α := by
     rw [ae_iff]
     change μ (Convexity.StdSimplex.coordinateSet ℝ α)ᶜ = 0

@@ -24,7 +24,7 @@ Cauchy estimate. `PolydiscTaylor` uses these coefficients for convergent Taylor 
 open Complex Filter Function MeasureTheory Metric Set
 open scoped Real Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {d : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
@@ -53,7 +53,7 @@ def multiIndexList (m : Fin d → ℕ) : List (Fin d) :=
 /-- The mixed coordinate derivative of multi-index `m`, in canonical coordinate order.
 For holomorphic maps, permutation invariance makes the choice of order immaterial. -/
 def multiIndexDeriv (m : Fin d → ℕ) (f : (Fin d → ℂ) → E) : (Fin d → ℂ) → E :=
-  iteratedPartialDeriv (multiIndexList m) f
+  iteratedPartialDerivCarlson (multiIndexList m) f
 
 /-- Separate-radius coefficients recover the original equal-radius coefficients. -/
 theorem polydiscCauchyCoeffWithRadii_const (f : (Fin d → ℂ) → E) (c : Fin d → ℂ)
@@ -167,7 +167,8 @@ theorem hasDerivAt_cauchyTransform_update {f : (Fin d → ℂ) → E}
     intro j hj
     apply ContinuousOn.pow
     apply ContinuousOn.inv₀
-    · exact ((((continuous_apply j).comp (continuous_torusMapWithRadii c R)).comp continuous_snd).sub
+    · exact ((((continuous_apply j).comp (continuous_torusMapWithRadii c R)).comp
+      continuous_snd).sub
         ((continuous_apply j).comp hu)).continuousOn
     · intro p hp
       exact sub_ne_zero.mpr (cauchyKernel_ne_zero_on_torusWithRadii hR
@@ -190,7 +191,7 @@ theorem hasDerivAt_cauchyTransform_update {f : (Fin d → ℂ) → E}
     simpa only [G, G', Pi.smul_def, smul_smul, mul_assoc, mul_left_comm] using!
       ((hasDerivAt_cauchyKernel_update m w (torusMap c R θ) i a hp).smul_const
         (f (torusMap c R θ))).const_smul (J θ)
-  have H := (hasDerivAt_integral_of_continuousOn_compact (μ := volume)
+  have H := (hasDerivAt_integral_of_continuousOn_compactCarlson (μ := volume)
     (show IsCompact K from isCompact_Icc) hV hwi hG hG' hd).const_smul
       (((2 * π * I : ℂ) ^ d)⁻¹)
   have hval : (∫ θ in K, G' (w i) θ) = (m i + 1 : ℂ) •
@@ -237,19 +238,19 @@ theorem iteratedPartialDeriv_cauchyTransform_zero {f : (Fin d → ℂ) → E}
     {c w : Fin d → ℂ} {R : Fin d → ℝ} (hR : ∀ i, 0 < R i)
     (hfc : ContinuousOn f (closedPolydiscWithRadii c R))
     (hw : w ∈ polydiscWithRadii c R) (is : List (Fin d)) :
-    iteratedPartialDeriv is (cauchyTransform f c R 0) w =
+    iteratedPartialDerivCarlson is (cauchyTransform f c R 0) w =
       (∏ j, ((is.count j).factorial : ℂ)) • cauchyTransform f c R (fun j => is.count j) w := by
   induction is generalizing w with
-  | nil => simp [iteratedPartialDeriv, Pi.zero_def]
+  | nil => simp [iteratedPartialDerivCarlson, Pi.zero_def]
   | cons i is ih =>
-    change partialDeriv i (iteratedPartialDeriv is (cauchyTransform f c R 0)) w = _
-    have heq : partialDeriv i (iteratedPartialDeriv is (cauchyTransform f c R 0)) w =
-        partialDeriv i (fun v => (∏ j, ((is.count j).factorial : ℂ)) •
+    change partialDerivCarlson i (iteratedPartialDerivCarlson is (cauchyTransform f c R 0)) w = _
+    have heq : partialDerivCarlson i (iteratedPartialDerivCarlson is (cauchyTransform f c R 0)) w =
+        partialDerivCarlson i (fun v => (∏ j, ((is.count j).factorial : ℂ)) •
           cauchyTransform f c R (fun j => is.count j) v) w := by
       apply partialDeriv_congr
       filter_upwards [(isOpen_polydiscWithRadii c R).eventually_mem hw] with v hv
       exact ih hv
-    rw [heq, partialDeriv]
+    rw [heq, partialDerivCarlson]
     have H := (hasDerivAt_cauchyTransform_update hR hfc hw (fun j => is.count j) i).const_smul
       (∏ j, ((is.count j).factorial : ℂ))
     have HD := H.deriv
@@ -292,7 +293,7 @@ theorem polydiscCauchyCoeffWithRadii_eq_multiIndexDeriv {f : (Fin d → ℂ) →
 theorem iteratedPartialDeriv_eq_multiIndexDeriv {U : Set (Fin d → ℂ)}
     {f : (Fin d → ℂ) → E} (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U)
     {z : Fin d → ℂ} (hz : z ∈ U) {is : List (Fin d)} {m : Fin d → ℕ}
-    (hm : ∀ i, is.count i = m i) : iteratedPartialDeriv is f z = multiIndexDeriv m f z := by
+    (hm : ∀ i, is.count i = m i) : iteratedPartialDerivCarlson is f z = multiIndexDeriv m f z := by
   apply iteratedPartialDeriv_perm hf hU _ hz
   apply List.perm_iff_count.mpr
   simpa using hm
@@ -324,6 +325,6 @@ theorem norm_multiIndexDeriv_le {f : (Fin d → ℂ) → E} {c : Fin d → ℂ}
     mul_le_mul_of_nonneg_left (norm_polydiscCauchyCoeffWithRadii_le hR hM m)
       (norm_nonneg (∏ i, ((m i).factorial : ℂ)))
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

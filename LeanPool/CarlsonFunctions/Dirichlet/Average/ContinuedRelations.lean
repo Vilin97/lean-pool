@@ -33,7 +33,8 @@ theorem analyticAt_addDirichletUnit (i : ι) (b : ι → ℂ) :
 /-- Entire-parameter version of Carlson's relation 5.6-1(4). -/
 theorem IsRegCarlsonContinuation.sum_shift {f : ℂ → ℂ} {z : ι → ℂ}
     {G : (ι → ℂ) → ℂ} (hG : IsRegCarlsonContinuation f z G)
-    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ ι))
+    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ
+      ι))
     (b : ι → ℂ) : G b = ∑ i, b i * G (addDirichletUnit b i) := by
   apply congrFun (analyticOnNhd_eq_of_eqOn_mvBetaConvergent hG.1 ?_ ?_) b
   · intro c _
@@ -117,7 +118,8 @@ theorem IsRegCarlsonContinuation.three_node
 sum of parameter shifts, on the native integral domain. -/
 theorem regCarlsonDirichletAverage_mul_arg {b z : ι → ℂ}
     (hb : b ∈ mvBetaConvergent) (f : ℂ → ℂ)
-    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ ι)) :
+    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ
+      ι)) :
     regCarlsonDirichletAverage b z (fun w => w * f w) =
       ∑ i, z i * (b i * regCarlsonDirichletAverage (addDirichletUnit b i) z f) := by
   simp_rw [regCarlsonDirichletAverage, mul_regDirichletIntegral_addDirichletUnit hb,
@@ -142,7 +144,8 @@ theorem regCarlsonDirichletAverage_mul_arg {b z : ι → ℂ}
 theorem IsRegCarlsonContinuation.mul_arg {f : ℂ → ℂ} {z : ι → ℂ}
     {G H : (ι → ℂ) → ℂ} (hG : IsRegCarlsonContinuation f z G)
     (hH : IsRegCarlsonContinuation (fun w => w * f w) z H)
-    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ ι))
+    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ
+      ι))
     (b : ι → ℂ) : H b = ∑ i, z i * (b i * G (addDirichletUnit b i)) := by
   apply congrFun (analyticOnNhd_eq_of_eqOn_mvBetaConvergent hH.1 ?_ ?_) b
   · intro c _
@@ -166,10 +169,12 @@ theorem IsRegCarlsonContinuation.associated
     (b : ι → ℂ) (i : ι) :
     G b = H (addDirichletUnit b i) - z i * D (addDirichletUnit b i) +
       (∑ j, b j) * G (addDirichletUnit b i) := by
-  have hc : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ ι) :=
+  have hc : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet
+    ℝ ι) :=
     hf.continuousOn.comp (continuous_carlsonAffineForm z).continuousOn
       (fun _ hu => convexHull_min hz hΩconv (carlsonAffineForm_mem_convexHull z hu))
-  have hdc : ContinuousOn (fun u => deriv f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ ι) :=
+  have hdc : ContinuousOn (fun u => deriv f (carlsonAffineForm z u))
+    (Convexity.StdSimplex.coordinateSet ℝ ι) :=
     hf.deriv.continuousOn.comp (continuous_carlsonAffineForm z).continuousOn
       (fun _ hu => convexHull_min hz hΩconv (carlsonAffineForm_mem_convexHull z hu))
   have ht (j : ι) : (z j - z i) *

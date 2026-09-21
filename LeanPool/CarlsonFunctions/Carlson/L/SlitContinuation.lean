@@ -39,7 +39,8 @@ def carlsonLSlit (t : ℂ) (b z : ι → ℂ) : ℂ :=
 theorem hasDerivAt_regCarlsonRSlit_L (t : ℂ) (b : ι → ℂ) {z : ι → ℂ}
     (hz : z ∈ carlsonRSlitDomain) :
     HasDerivAt (fun s => regCarlsonRSlit s b z) (regCarlsonLSlit t b z) t :=
-  (analyticAt_regCarlsonRSlit_comp analyticAt_id analyticAt_const analyticAt_const hz).differentiableAt.hasDerivAt
+  (analyticAt_regCarlsonRSlit_comp analyticAt_id analyticAt_const analyticAt_const
+    hz).differentiableAt.hasDerivAt
 
 /-- Carlson (1987), (2.1): full joint holomorphy, with no parameter exceptions after
 Gamma regularization. The coordinates are exponent, parameters, then nodes. -/
@@ -47,15 +48,15 @@ theorem analyticOnNhd_regCarlsonLSlit_joint :
     AnalyticOnNhd ℂ (fun p : Option (ι ⊕ ι) → ℂ =>
       regCarlsonLSlit (p none) (fun i => p (some (.inl i))) (fun i => p (some (.inr i))))
       {p | (fun i => p (some (.inr i))) ∈ carlsonRSlitDomain} := by
-  have h := analyticOnNhd_regCarlsonRSlit_joint (ι := ι) |>.partialDeriv
+  have h := analyticOnNhd_regCarlsonRSlit_joint (ι := ι) |>.partialDerivCarlson
     (isOpen_carlsonRSlitDomain.preimage (by fun_prop)) none
-  have heq : SeveralComplexVariables.partialDeriv none
+  have heq : CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson none
       (fun p : Option (ι ⊕ ι) → ℂ => regCarlsonRSlit (p none)
         (fun i => p (some (.inl i))) (fun i => p (some (.inr i)))) =
       (fun p => regCarlsonLSlit (p none)
         (fun i => p (some (.inl i))) (fun i => p (some (.inr i)))) := by
     funext p
-    simp only [SeveralComplexVariables.partialDeriv, regCarlsonLSlit,
+    simp only [CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson, regCarlsonLSlit,
       Function.update_self, Function.update_of_ne (Option.some_ne_none _)]
   rwa [heq] at h
 

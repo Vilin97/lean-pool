@@ -76,7 +76,8 @@ theorem exists_joint_regCarlsonResolvent (n : ℕ) :
         analyticAt_fst rfl
     · apply Finset.analyticAt_fun_sum
       intro i _
-      exact (((ContinuousLinearMap.proj (some i) : (Option ι → ℂ) →L[ℂ] ℂ).analyticAt p.1).comp_of_eq
+      exact (((ContinuousLinearMap.proj (some i) : (Option ι → ℂ) →L[ℂ] ℂ).analyticAt
+        p.1).comp_of_eq
         analyticAt_fst rfl).mul
         (((ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ).analyticAt p.2).comp_of_eq
           analyticAt_snd rfl)

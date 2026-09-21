@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -30,8 +30,11 @@ absolutely. -/
 def mvBetaConvergent : Set (ι → ℂ) :=
   {b | ∀ i, 0 < (b i).re}
 
+omit [Fintype ι] in
 /-- The ordinary Dirichlet convergence region is open. -/
-theorem isOpen_mvBetaConvergent : IsOpen (mvBetaConvergent : Set (ι → ℂ)) := by
+theorem isOpen_mvBetaConvergent [Finite ι] : IsOpen (mvBetaConvergent : Set (ι → ℂ)) := by
+  classical
+  let _ := Fintype.ofFinite ι
   rw [show (mvBetaConvergent : Set (ι → ℂ)) =
       ⋂ i, {b : ι → ℂ | 0 < (b i).re} by
     ext b

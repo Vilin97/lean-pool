@@ -72,7 +72,8 @@ does not change that affine form. -/
     Equiv.sum_comp σ (fun i ↦ (u i : ℂ) * z i)
 
 /-- The affine form of a constant parameter vector is constant on the standard simplex. -/
-theorem carlsonAffineForm_const {u : ι → ℝ} (hu : u ∈ Convexity.StdSimplex.coordinateSet ℝ ι) (w : ℂ) :
+theorem carlsonAffineForm_const {u : ι → ℝ} (hu : u ∈ Convexity.StdSimplex.coordinateSet ℝ ι) (w :
+  ℂ) :
     carlsonAffineForm (fun _ ↦ w) u = w := by
   rw [carlsonAffineForm, ← Finset.sum_mul]
   have hsum : ∑ i, (u i : ℂ) = 1 := by exact_mod_cast hu.2

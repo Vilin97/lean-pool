@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -469,7 +469,8 @@ theorem integral_posSimplex_inner_slice
     · congr <;> funext q <;> apply Subsingleton.elim
     · let _ : Nonempty {q : ι // q ≠ i} := ⟨jj⟩
       rw [integral_stdSimplex_eq_integral_freeCoords jj]
-      convert MeasureTheory.integral_congr_ae (μ := volume.restrict (stdSimplexFreeCoords jj)) ?_ using 1
+      convert MeasureTheory.integral_congr_ae (μ := volume.restrict (stdSimplexFreeCoords jj)) ?_
+        using 1
       · congr <;> funext q <;> apply Subsingleton.elim
       filter_upwards [] with x
       apply congrArg f
@@ -591,7 +592,8 @@ public theorem integral_stdSimplex_split_at
   ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, f u ∂stdSimplexMeasure =
     ∫ t in Set.Icc (0 : ℝ) 1,
       ((1 - t) ^ (card ι - 2)) •
-      ∫ v in Convexity.StdSimplex.coordinateSet ℝ {j // j ≠ i}, f (stdSimplexCoordMap i (fun j ↦ (1 - t) * v j))
+      ∫ v in Convexity.StdSimplex.coordinateSet ℝ {j // j ≠ i}, f (stdSimplexCoordMap i (fun j ↦
+        (1 - t) * v j))
         ∂stdSimplexMeasure := by
   obtain ⟨j, hji⟩ := exists_ne i
   have hg : IntegrableOn (fun x => f (stdSimplexCoordMap j x))

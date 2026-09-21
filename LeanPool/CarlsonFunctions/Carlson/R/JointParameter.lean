@@ -34,7 +34,8 @@ private theorem locallyBounded_regCarlsonRIntegral_exponent_parameters
   | inl hι =>
     let _ := hι
     exact ⟨0, Eventually.of_forall (fun q => by
-      simp [regCarlsonRIntegral, regCarlsonDirichletAverage, regDirichletIntegral, stdSimplexMeasure_empty])⟩
+      simp [regCarlsonRIntegral, regCarlsonDirichletAverage, regDirichletIntegral,
+        stdSimplexMeasure_empty])⟩
   | inr hι =>
     let _ := hι
     let K := Convexity.StdSimplex.coordinateSet ℝ ι
@@ -66,7 +67,8 @@ private theorem locallyBounded_regCarlsonRIntegral_exponent_parameters
       filter_upwards [hevent] with q hq
       apply norm_integral_le_of_norm_le ((integrableOn_mvBetaMonomial a ha).norm.mul_const _)
       filter_upwards [self_mem_ae_restrict (μ := stdSimplexMeasure)
-        (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet, ae_zero_lt_of_mem_stdSimplex (ι := ι)] with u hu hupos
+        (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet,
+          ae_zero_lt_of_mem_stdSimplex (ι := ι)] with u hu hupos
       have hm : ‖∏ i, (u i : ℂ) ^ (q (some i) - 1)‖ ≤ ‖∏ i, (u i : ℂ) ^ (a i - 1)‖ := by
         simp only [norm_prod]
         apply Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
@@ -83,11 +85,13 @@ private theorem locallyBounded_regCarlsonRIntegral_exponent_parameters
     let B : ℝ := ‖∏ i, (Gamma (p (some i)))⁻¹‖ + 1
     have hproj : ContinuousAt (fun q : Option ι → ℂ => fun i => q (some i)) p :=
       continuousAt_pi.mpr fun i => (continuous_apply (some i)).continuousAt
-    have hB := ((analyticOnNhd_prod_invGamma _ (mem_univ _)).continuousAt.comp hproj).norm.eventually_lt_const
+    have hB := ((analyticOnNhd_prod_invGamma _ (mem_univ _)).continuousAt.comp
+      hproj).norm.eventually_lt_const
       (lt_add_one ‖∏ i, (Gamma (p (some i)))⁻¹‖)
     refine ⟨B * max D 0, ?_⟩
     filter_upwards [hB, hD] with q hq hqD
-    rw [regCarlsonRIntegral, regCarlsonDirichletAverage, regDirichletIntegral_eq_prod_invGamma_mul, norm_mul]
+    rw [regCarlsonRIntegral, regCarlsonDirichletAverage,
+      regDirichletIntegral_eq_prod_invGamma_mul, norm_mul]
     exact mul_le_mul hq.le (hqD.trans (le_max_left _ _)) (norm_nonneg _) (by dsimp [B]; positivity)
 
 open scoped Classical in
@@ -97,7 +101,7 @@ theorem analyticOnNhd_regCarlsonRIntegral_exponent_parameters {z : ι → ℂ}
     AnalyticOnNhd ℂ (fun p : Option ι → ℂ =>
       regCarlsonRIntegral (p none) (fun i => p (some i)) z)
       {p | (fun i => p (some i)) ∈ mvBetaConvergent} := by
-  apply SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
+  apply CarlsonFunctions.SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
     (isOpen_mvBetaConvergent.preimage (by fun_prop))
   · intro p hp k
     cases k with
@@ -105,11 +109,12 @@ theorem analyticOnNhd_regCarlsonRIntegral_exponent_parameters {z : ι → ℂ}
       have H := analyticOnNhd_regCarlsonRIntegral_exponent hp hz (p none) (mem_univ _)
       simpa only [Function.update_self, Function.update_of_ne (Option.some_ne_none _)] using H
     | some i =>
-      have hcont : ContinuousOn (fun u => carlsonAffineForm z u ^ p none) (Convexity.StdSimplex.coordinateSet ℝ ι) :=
+      have hcont : ContinuousOn (fun u => carlsonAffineForm z u ^ p none)
+        (Convexity.StdSimplex.coordinateSet ℝ ι) :=
         (continuous_carlsonAffineForm z).continuousOn.cpow_const
           (fun _ hu => carlsonAffineForm_mem_slitPlane hz hu)
       have H := (isOpen_mvBetaConvergent.analyticOn_iff_analyticOnNhd.mp
-        (regDirichletIntegral_analyticOn hcont)).analyticAt_update hp i
+        (regDirichletIntegral_analyticOn hcont)).analyticAt_updateCarlson hp i
       change AnalyticAt ℂ (fun w => regCarlsonRIntegral (p none)
         (Function.update (fun j => p (some j)) i w) z) (p (some i)) at H
       have hup (v : ι → ℂ) (w : ℂ) : Function.update v i w = fun j => if j = i then w else v j := by
@@ -170,7 +175,8 @@ theorem analyticAt_regCarlsonRContinued_comp
         · subst j
           simp only [addDirichletUnit, Function.update_self]
           exact ((analyticAt_pi_iff.mp hb) i).add analyticAt_const
-        · simpa only [b', addDirichletUnit, Function.update_of_ne hji] using (analyticAt_pi_iff.mp hb) j
+        · simpa only [b', addDirichletUnit, Function.update_of_ne hji] using (analyticAt_pi_iff.mp
+          hb) j
       have hpos' : (fun j => b' p j + n' j) ∈ mvBetaConvergent := by
         have heq : (fun j => b' p j + (n' j : ℂ)) = (fun j => b p j + (n j : ℂ)) := by
           ext j

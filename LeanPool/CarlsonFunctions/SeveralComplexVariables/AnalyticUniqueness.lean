@@ -25,7 +25,7 @@ open scoped Topology
 
 /-- Local one-variable uniqueness from agreement on a real germ.  This is the form useful when
 the functions are only analytic on a connected continuation domain rather than entire. -/
-theorem AnalyticOnNhd.eqOn_of_eventuallyEq_ofReal {U : Set ℂ} {F G : ℂ → ℂ}
+theorem AnalyticOnNhd.eqOn_of_eventuallyEq_ofRealCarlson {U : Set ℂ} {F G : ℂ → ℂ}
     {x₀ : ℝ} (hF : AnalyticOnNhd ℂ F U) (hG : AnalyticOnNhd ℂ G U)
     (hU : IsPreconnected U) (hx₀ : (x₀ : ℂ) ∈ U)
     (hEq : ∀ᶠ x : ℝ in 𝓝 x₀, F (x : ℂ) = G (x : ℂ)) : Set.EqOn F G U := by
@@ -51,19 +51,19 @@ theorem AnalyticOnNhd.eqOn_of_eventuallyEq_ofReal {U : Set ℂ} {F G : ℂ → �
 
 /-- Two entire functions of one complex variable which agree at every positive real number agree
 everywhere. -/
-theorem analyticOnNhd_eq_of_eqOn_posReal {F G : ℂ → ℂ}
+theorem analyticOnNhd_eq_of_eqOn_posRealCarlson {F G : ℂ → ℂ}
     (hF : AnalyticOnNhd ℂ F univ) (hG : AnalyticOnNhd ℂ G univ)
     (hEq : ∀ x : ℝ, 0 < x → F (x : ℂ) = G (x : ℂ)) : F = G := by
   have hEq' : ∀ᶠ x : ℝ in 𝓝 1, F (x : ℂ) = G (x : ℂ) := by
     filter_upwards [eventually_gt_nhds (show (0 : ℝ) < 1 by norm_num)] with x hx
     exact hEq x hx
-  have h := hF.eqOn_of_eventuallyEq_ofReal hG isPreconnected_univ (Set.mem_univ _) hEq'
+  have h := hF.eqOn_of_eventuallyEq_ofRealCarlson hG isPreconnected_univ (Set.mem_univ _) hEq'
   exact funext fun z => h (Set.mem_univ z)
 
 /-- Two entire functions of finitely many complex variables which agree on all vectors of
 strictly positive real parameters agree everywhere.  No complex-open agreement hypothesis is
 needed. -/
-theorem analyticOnNhd_eq_of_eqOn_posReal_pi {ι : Type*} [Fintype ι]
+theorem analyticOnNhd_eq_of_eqOn_posReal_piCarlson {ι : Type*} [Fintype ι]
     {F G : (ι → ℂ) → ℂ} (hF : AnalyticOnNhd ℂ F univ)
     (hG : AnalyticOnNhd ℂ G univ)
     (hEq : ∀ b : ι → ℝ, (∀ i, 0 < b i) →
@@ -98,7 +98,7 @@ theorem analyticOnNhd_eq_of_eqOn_posReal_pi {ι : Type*} [Fintype ι]
           · simpa [L, hia] using
               (analyticAt_const : AnalyticAt ℂ (fun _ : ℂ ↦ b i) w)
         have hslices : (fun w ↦ F (L w)) = (fun w ↦ G (L w)) := by
-          apply analyticOnNhd_eq_of_eqOn_posReal
+          apply analyticOnNhd_eq_of_eqOn_posRealCarlson
           · intro w _
             exact (hF (L w) (mem_univ _)).comp_of_eq (hL w (mem_univ _)) rfl
           · intro w _

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -51,11 +51,14 @@ namespace Convexity.StdSimplex
 variable {κ R : Type*} [Fintype κ]
 variable [Semiring R] [PartialOrder R] [IsStrictOrderedRing R]
 
+omit [Fintype κ] in
 /-- Mapping an intrinsic standard-simplex point and then reading its weights agrees with
 aggregation of its finite coordinate function. -/
-theorem weights_map_eq_stdSimplexAggregate (f : ι → κ) (s : StdSimplex R ι) :
+theorem weights_map_eq_stdSimplexAggregate [Finite κ] (f : ι → κ) (s : StdSimplex R ι) :
     (fun k ↦ (s.map f).weights k) =
       stdSimplexAggregate f (fun i ↦ s.weights i) := by
+  classical
+  let _ := Fintype.ofFinite κ
   change ⇑(Finsupp.mapDomain f s.weights) =
     FunOnFinite.map f (fun i ↦ s.weights i)
   rw [FunOnFinite.map, Finsupp.equivFunOnFinite_symm_coe]

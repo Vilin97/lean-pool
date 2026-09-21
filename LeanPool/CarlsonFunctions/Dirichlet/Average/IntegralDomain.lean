@@ -48,31 +48,41 @@ theorem range_subset_of_mem_carlsonIntegralNodeDomain {D : Set ℂ} {z : ι → 
     (hz : z ∈ carlsonIntegralNodeDomain D) : Set.range z ⊆ D :=
   (subset_convexHull ℝ (Set.range z)).trans hz
 
+omit [Fintype ι] in
 /-- Compactness of the simplex gives openness without requiring convexity of `D`. -/
-theorem isOpen_carlsonIntegralNodeDomain {D : Set ℂ} (hD : IsOpen D) :
+theorem isOpen_carlsonIntegralNodeDomain [Finite ι] {D : Set ℂ} (hD : IsOpen D) :
     IsOpen (carlsonIntegralNodeDomain (ι := ι) D) := by
+  classical
+  let _ := Fintype.ofFinite ι
   apply isOpen_iff_mem_nhds.mpr
   intro z hz
   have hc : Continuous (fun p : (ι → ℂ) × (ι → ℝ) => carlsonAffineForm p.1 p.2) := by
     unfold carlsonAffineForm
     fun_prop
-  have h := (Convexity.StdSimplex.isCompact_coordinateSet ℝ ι).eventually_forall_of_forall_eventually
+  have h := (Convexity.StdSimplex.isCompact_coordinateSet ℝ
+    ι).eventually_forall_of_forall_eventually
     (x₀ := z) (P := fun w u => carlsonAffineForm w u ∈ D)
     (fun u hu => (hD.preimage hc).eventually_mem
       (mem_carlsonIntegralNodeDomain_iff.mp hz u hu))
   exact h.mono fun _ hw => mem_carlsonIntegralNodeDomain_iff.mpr hw
 
+omit [Fintype ι] in
 /-- Constant node tuples belong whenever their common value belongs. -/
-theorem const_mem_carlsonIntegralNodeDomain {D : Set ℂ} {c : ℂ} (hc : c ∈ D) :
+theorem const_mem_carlsonIntegralNodeDomain [Finite ι] {D : Set ℂ} {c : ℂ} (hc : c ∈ D) :
     (fun _ : ι => c) ∈ carlsonIntegralNodeDomain D := by
+  classical
+  let _ := Fintype.ofFinite ι
   apply mem_carlsonIntegralNodeDomain_iff.mpr
   intro u hu
   simpa only [carlsonAffineForm_const hu] using hc
 
+omit [Fintype ι] in
 /-- Star-convexity passes from the scalar domain to the admissible node tuples. -/
-theorem starConvex_carlsonIntegralNodeDomain {D : Set ℂ} {c : ℂ}
+theorem starConvex_carlsonIntegralNodeDomain [Finite ι] {D : Set ℂ} {c : ℂ}
     (hD : StarConvex ℝ c D) :
     StarConvex ℝ (fun _ : ι => c) (carlsonIntegralNodeDomain D) := by
+  classical
+  let _ := Fintype.ofFinite ι
   intro z hz a b ha hb hab
   apply mem_carlsonIntegralNodeDomain_iff.mpr
   intro u hu
@@ -85,11 +95,14 @@ theorem starConvex_carlsonIntegralNodeDomain {D : Set ℂ} {c : ℂ}
   rw [heq]
   exact hD (mem_carlsonIntegralNodeDomain_iff.mp hz u hu) ha hb hab
 
+omit [Fintype ι] in
 /-- The admissible node domain is connected for a nonempty star-convex scalar domain. -/
-theorem isConnected_carlsonIntegralNodeDomain {D : Set ℂ} {c : ℂ}
+theorem isConnected_carlsonIntegralNodeDomain [Finite ι] {D : Set ℂ} {c : ℂ}
     (hD : StarConvex ℝ c D) (hc : c ∈ D) :
-    IsConnected (carlsonIntegralNodeDomain (ι := ι) D) :=
-  ((starConvex_carlsonIntegralNodeDomain hD).isPathConnected
+    IsConnected (carlsonIntegralNodeDomain (ι := ι) D) := by
+  classical
+  let _ := Fintype.ofFinite ι
+  exact ((starConvex_carlsonIntegralNodeDomain hD).isPathConnected
     (const_mem_carlsonIntegralNodeDomain hc)).isConnected
 
 /-- Joint entire-parameter continuation over the native node domain of any open
@@ -100,6 +113,7 @@ theorem exists_joint_isRegCarlsonContinuation_on_integralDomain
       AnalyticOnNhd ℂ G (univ ×ˢ carlsonIntegralNodeDomain D) ∧
       ∀ z ∈ carlsonIntegralNodeDomain D,
         IsRegCarlsonContinuation f z (fun b => G (b, z)) := by
+  classical
   let A := fun p : (ι → ℂ) × (ι → ℂ) => ∑ i, p.1 i * p.2 i
   have hA : AnalyticOnNhd ℂ A univ := by
     intro p _

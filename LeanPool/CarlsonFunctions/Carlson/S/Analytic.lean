@@ -57,7 +57,7 @@ convergence of the R-polynomial expansion. A sum index encodes the two vectors. 
 theorem analyticOnNhd_regCarlsonSSeries_joint :
     AnalyticOnNhd ℂ (fun q : Sum ι ι → ℂ =>
       regCarlsonSSeries (fun i => q (.inr i)) (fun i => q (.inl i))) Set.univ :=
-  hasSumLocallyUniformlyOn_regCarlsonSSeries_joint.analyticOnNhd_pi
+  hasSumLocallyUniformlyOn_regCarlsonSSeries_joint.analyticOnNhd_piCarlson
     analyticOnNhd_regCarlsonSTerm_joint isOpen_univ
 
 /-- Carlson's finite exponential sums are jointly entire in parameters and nodes. -/
@@ -84,7 +84,7 @@ theorem hasSumLocallyUniformlyOn_carlsonIteratedPartialDeriv_regCarlsonSSeries_j
       (carlsonIteratedPartialDeriv is (fun q : Sum ι ι → ℂ =>
         regCarlsonSSeries (fun i => q (.inr i)) (fun i => q (.inl i)))) Set.univ := by
   simp only [carlsonIteratedPartialDeriv_eq_iteratedPartialDeriv]
-  exact hasSumLocallyUniformlyOn_regCarlsonSSeries_joint.iteratedPartialDeriv
+  exact hasSumLocallyUniformlyOn_regCarlsonSSeries_joint.iteratedPartialDerivCarlson
     analyticOnNhd_regCarlsonSTerm_joint isOpen_univ is
 
 /-- All mixed parameter/node derivatives of the partial sums converge locally uniformly. -/
@@ -95,7 +95,7 @@ theorem tendstoLocallyUniformlyOn_carlsonIteratedPartialDeriv_regCarlsonSPartial
       (carlsonIteratedPartialDeriv is (fun q : Sum ι ι → ℂ =>
         regCarlsonSSeries (fun i => q (.inr i)) (fun i => q (.inl i)))) Filter.atTop Set.univ := by
   simp only [carlsonIteratedPartialDeriv_eq_iteratedPartialDeriv]
-  exact tendstoLocallyUniformlyOn_regCarlsonSPartialSum_joint.iteratedPartialDeriv
+  exact tendstoLocallyUniformlyOn_regCarlsonSPartialSum_joint.iteratedPartialDerivCarlson
     (Filter.Eventually.of_forall analyticOnNhd_regCarlsonSPartialSum_joint) isOpen_univ is
 
 /-- The iterated Fréchet derivatives of the partial sums converge in multilinear operator
@@ -105,7 +105,7 @@ theorem tendstoLocallyUniformlyOn_iteratedFDeriv_regCarlsonSPartialSum_joint (k 
       (fun q : Sum ι ι → ℂ => regCarlsonSPartialSum N (fun i => q (.inr i)) (fun i => q (.inl i))))
       (iteratedFDeriv ℂ k (fun q : Sum ι ι → ℂ =>
         regCarlsonSSeries (fun i => q (.inr i)) (fun i => q (.inl i)))) Filter.atTop Set.univ :=
-  tendstoLocallyUniformlyOn_regCarlsonSPartialSum_joint.iteratedFDeriv_pi
+  tendstoLocallyUniformlyOn_regCarlsonSPartialSum_joint.iteratedFDeriv_piCarlson
     (Filter.Eventually.of_forall analyticOnNhd_regCarlsonSPartialSum_joint) isOpen_univ k
 
 /-- The continued S-function is entire in its node vector. -/

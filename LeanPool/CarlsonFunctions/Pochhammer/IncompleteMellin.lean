@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -255,7 +255,8 @@ theorem continuousOn_mellinPeanoRemainder {N : ℕ} (hN : 0 < N) {a : ℝ} (ha :
       have hevent :
           (fun x =>
               (x ^ N)⁻¹ • (K x - taylorWithinEval K N (Icc 0 a) 0 x) +
-                (N.factorial : ℝ)⁻¹ • iteratedDerivWithin N K (Icc 0 a) 0) =ᶠ[nhdsWithin 0 (Icc 0 a \ {0})]
+                (N.factorial : ℝ)⁻¹ • iteratedDerivWithin N K (Icc 0 a) 0) =ᶠ[nhdsWithin 0 (Icc 0
+                  a \ {0})]
             mellinPeanoRemainder N a K := by
         filter_upwards [self_mem_nhdsWithin] with x hx
         exact (heq x hx).symm

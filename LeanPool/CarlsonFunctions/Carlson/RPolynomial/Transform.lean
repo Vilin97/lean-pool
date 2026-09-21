@@ -142,11 +142,14 @@ private lemma carlsonRTransformParameters_addDirichletUnit
     · simp [carlsonRTransformParameters, addDirichletUnit, hki, hkj]
 
 open scoped Classical in
+omit [Fintype ι] in
 /-- If changing any coordinate other than `i` leaves a function unchanged, it agrees
 with its value at the constant vector whose entries are `z i`. -/
-private lemma eq_const_of_update_eq (f : (ι → ℂ) → ℂ) (i : ι)
+private lemma eq_const_of_update_eq [Finite ι] (f : (ι → ℂ) → ℂ) (i : ι)
     (hf : ∀ j, j ≠ i → ∀ z w, f (Function.update z j w) = f z) (z : ι → ℂ) :
     f z = f (fun _ => z i) := by
+  classical
+  let _ := Fintype.ofFinite ι
   have H (s : Finset ι) : ∀ v : ι → ℂ, (∀ k ∉ s, v k = z i) →
       (∀ k ∈ s, k ≠ i) → f v = f (fun _ => z i) := by
     induction s using Finset.induction_on with

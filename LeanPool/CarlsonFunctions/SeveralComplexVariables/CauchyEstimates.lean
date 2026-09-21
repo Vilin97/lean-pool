@@ -19,7 +19,7 @@ public section
 
 open Complex Function Metric Set
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
@@ -40,7 +40,7 @@ theorem norm_partialDeriv_le_of_slice {f : (ι → ℂ) → F} {z : ι → ℂ}
     (i : ι) {r M : ℝ} (hr : 0 < r)
     (hf : DifferentiableOn ℂ (fun w => f (update z i w)) (closedBall (z i) r))
     (hM : ∀ w ∈ sphere (z i) r, ‖f (update z i w)‖ ≤ M) :
-    ‖partialDeriv i f z‖ ≤ M / r :=
+    ‖partialDerivCarlson i f z‖ ≤ M / r :=
   Complex.norm_deriv_le_of_forall_mem_sphere_norm_le hr
     (hf.diffContOnCl_ball Subset.rfl) hM
 
@@ -49,7 +49,7 @@ open scoped Classical in
 theorem norm_partialDeriv_le {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
     (hf : AnalyticOnNhd ℂ f U) {z : ι → ℂ} (i : ι) {r M : ℝ} (hr : 0 < r)
     (hball : closedBall z r ⊆ U) (hM : ∀ w ∈ closedBall z r, ‖f w‖ ≤ M) :
-    ‖partialDeriv i f z‖ ≤ M / r := by
+    ‖partialDerivCarlson i f z‖ ≤ M / r := by
   apply norm_partialDeriv_le_of_slice i hr
   · intro w hw
     exact ((hf _ (hball (update_mem_closedBall hr.le hw))).differentiableAt.comp w
@@ -57,6 +57,6 @@ theorem norm_partialDeriv_le {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
   · intro w hw
     exact hM _ (update_mem_closedBall hr.le (sphere_subset_closedBall hw))
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

@@ -31,7 +31,10 @@ theorem carlsonRVariableDomain_subset_slitDomain :
     (carlsonRVariableDomain : Set (ι → ℂ)) ⊆ carlsonRSlitDomain :=
   fun _ hz i => carlsonRightHalfPlane_subset_slitPlane (hz i)
 
-theorem isOpen_carlsonRSlitDomain : IsOpen (carlsonRSlitDomain : Set (ι → ℂ)) := by
+omit [Fintype ι] in
+theorem isOpen_carlsonRSlitDomain [Finite ι] : IsOpen (carlsonRSlitDomain : Set (ι → ℂ)) := by
+  classical
+  let _ := Fintype.ofFinite ι
   rw [show carlsonRSlitDomain (ι := ι) =
     ⋂ i, {z : ι → ℂ | z i ∈ slitPlane} by ext z; simp [carlsonRSlitDomain]]
   exact isOpen_iInter_of_finite fun i => isOpen_slitPlane.preimage (continuous_apply i)
@@ -69,6 +72,9 @@ theorem carlsonRSlitDomain_inv {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain) 
   have hn := normSq_pos.mpr (slitPlane_ne_zero (hz i))
   rcases mem_slitPlane_iff.mp (hz i) with h | h
   · exact mem_slitPlane_iff.mpr (Or.inl (by rw [inv_re]; exact div_pos h hn))
-  · exact mem_slitPlane_iff.mpr (Or.inr (by rw [inv_im]; exact div_ne_zero (neg_ne_zero.mpr h) hn.ne'))
+  · apply mem_slitPlane_iff.mpr
+    right
+    rw [inv_im]
+    exact div_ne_zero (neg_ne_zero.mpr h) hn.ne'
 
 end DirichletTransform

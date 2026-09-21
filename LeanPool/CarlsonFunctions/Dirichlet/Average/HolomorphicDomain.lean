@@ -43,9 +43,12 @@ def IsJointRegCarlsonContinuationOn (D : Set ℂ) (f : ℂ → ℂ)
       Set.EqOn (fun b => G (b, z))
         (fun b => regCarlsonDirichletAverage b z f) mvBetaConvergent
 
+omit [Fintype ι] in
 /-- A finite tuple of points in an open scalar domain varies in an open set. -/
-theorem isOpen_carlsonNodeDomain {D : Set ℂ} (hD : IsOpen D) :
+theorem isOpen_carlsonNodeDomain [Finite ι] {D : Set ℂ} (hD : IsOpen D) :
     IsOpen {z : ι → ℂ | Set.range z ⊆ D} := by
+  classical
+  let _ := Fintype.ofFinite ι
   simp only [Set.range_subset_iff, Set.ofPred_forall]
   exact isOpen_iInter_of_finite fun i => hD.preimage (continuous_apply i)
 

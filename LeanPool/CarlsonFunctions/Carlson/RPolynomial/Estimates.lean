@@ -170,13 +170,18 @@ theorem exists_summable_norm_regCarlsonR_div_factorial_bounded_variables
     have H' : ‖carlsonRPolynomialNumerator n b z‖ ≤ (B + n) ^ n * Z ^ n :=
       H.trans (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (by positivity) hz n) (by positivity))
     change ‖(n.factorial : ℂ)⁻¹ * regCarlsonRPolynomial n b z‖ ≤ _
-    rw [regCarlsonRPolynomial_eq_numerator_mul_one_div_Gamma, norm_mul, norm_mul, norm_inv, Complex.norm_natCast]
+    rw [regCarlsonRPolynomial_eq_numerator_mul_one_div_Gamma, norm_mul, norm_mul, norm_inv,
+      Complex.norm_natCast]
     calc
       _ ≤ (n.factorial : ℝ)⁻¹ * (((B + n) ^ n * Z ^ n) * ‖(Gamma (S b + n))⁻¹‖) := by
         gcongr
       _ = _ := by ring
   by_cases hnm : n < m
-  · exact hraw.trans (by dsimp [M]; rw [ite_eq_left hnm]; gcongr; exact (hD n b hb).trans (le_max_left _ _))
+  · apply hraw.trans
+    dsimp [M]
+    rw [ite_eq_left hnm]
+    gcongr
+    exact (hD n b hb).trans (le_max_left _ _)
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le (Nat.le_of_not_gt hnm)
   rw [Nat.add_comm m k] at hraw ⊢
   have hpow := Real.pow_div_factorial_le_exp (B + (k + m : ℕ)) (by positivity) (k + m)

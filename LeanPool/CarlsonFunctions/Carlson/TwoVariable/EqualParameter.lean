@@ -254,7 +254,8 @@ theorem isCarlsonGammaRegular_neg_nat_add_half (n : ℕ) :
 including at `β = 0, -1, -2, ...`. -/
 @[simp] theorem equalRContinued_zero (β x y : ℂ) (hz : pair x y ∈ carlsonRVariableDomain)
     (hβ : IsCarlsonGammaRegular (β + 2⁻¹)) : equalRContinued 0 x y hz β = 1 := by
-  rw [equalRContinued, regEqualRContinued_zero, mul_inv_cancel₀ (Gamma_ne_zero hβ)]
+  rw [equalRContinued, regEqualRContinued_zero]
+  simpa only [one_div] using mul_inv_cancel₀ (Gamma_ne_zero hβ)
 
 /-- Carlson 6.9-3 on the full common parameter domain of the ordinary functions. -/
 theorem equalRContinued_firstQuadratic (t β x y : ℂ) (hz : FirstQuadraticDomain x y)

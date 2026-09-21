@@ -49,16 +49,20 @@ theorem carlsonAffineForm_aggregate (q : ι → κ) (z : κ → ℂ) (u : ι →
     _ = _ := Finset.sum_fiberwise Finset.univ q _
 
 open scoped Classical in
-private lemma aggregate_ofReal (q : ι → κ) (b : ι → ℝ) :
+omit [Fintype κ] in
+private lemma aggregate_ofReal [Finite κ] (q : ι → κ) (b : ι → ℝ) :
     stdSimplexAggregate q (fun i => (b i : ℂ)) =
       fun k => ((stdSimplexAggregate (R := ℝ) q b k : ℝ) : ℂ) := by
+  classical
+  let _ := Fintype.ofFinite κ
   ext k
   simp [stdSimplexAggregate, FunOnFinite.linearMap_apply_apply]
 
 /-- Real Dirichlet averages respect any surjective grouping of equal nodes. -/
 theorem realCarlsonDirichletAverage_aggregate {q : ι → κ} (hq : Function.Surjective q)
     {b : ι → ℝ} (hb : b ∈ mvRealBetaDomain) (z : κ → ℂ) (f : ℂ → ℂ)
-    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ κ)) :
+    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ
+      κ)) :
     realCarlsonDirichletAverage b (z ∘ q) f =
       realCarlsonDirichletAverage (stdSimplexAggregate q b) z f := by
   have hmap := (measurePreserving_stdSimplexAggregate_dirichletMeasure hq hb).map_eq
@@ -77,7 +81,8 @@ theorem IsRegCarlsonContinuation.aggregate
     {q : ι → κ} (hq : Function.Surjective q) {f : ℂ → ℂ} {z : κ → ℂ}
     {G : (ι → ℂ) → ℂ} {H : (κ → ℂ) → ℂ}
     (hG : IsRegCarlsonContinuation f (z ∘ q) G) (hH : IsRegCarlsonContinuation f z H)
-    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ κ))
+    (hf : ContinuousOn (fun u => f (carlsonAffineForm z u)) (Convexity.StdSimplex.coordinateSet ℝ
+      κ))
     (b : ι → ℂ) : G b = H (stdSimplexAggregate q b) := by
   have hA : AnalyticOnNhd ℂ (stdSimplexAggregate (R := ℂ) q) univ := by
     intro c _

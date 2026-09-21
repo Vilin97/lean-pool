@@ -156,7 +156,7 @@ open scoped Classical in
 /-- After splitting the source at one fibre, coordinate aggregation consists of summing that
 fibre and aggregating the complementary coordinates. -/
 private theorem linearMap_piEquivPiSubtypeProd_eq
-    {α β : Type*} [Fintype α] [Fintype β] (f : α → β) (k : β) :
+    {α β : Type*} [Fintype α] [Finite β] (f : α → β) (k : β) :
     let p : α → Prop := fun a => f a = k
     let e := MeasurableEquiv.piEquivPiSubtypeProd (fun _ : α => ℝ) p
     let β' := {j : β // j ≠ k}
@@ -166,6 +166,7 @@ private theorem linearMap_piEquivPiSubtypeProd_eq
     ∀ q, FunOnFinite.linearMap ℝ ℝ f (e.symm q) =
       assemble (∑ i, q.1 i) (FunOnFinite.linearMap ℝ ℝ f' q.2) := by
   classical
+  let _ := Fintype.ofFinite β
   dsimp only
   intro q
   let _ : Fintype {a : α // f a = k} := Fintype.ofFinite _
@@ -258,7 +259,8 @@ theorem lintegral_posSimplex_comp_aggregate_of_isEmpty
     simp [posSimplex, hr]
   rw [hα, hβ, Measure.restrict_univ, Measure.volume_pi_eq_dirac,
     Measure.volume_pi_eq_dirac, lintegral_dirac]
-  simp [Measure.restrict_univ, posSimplexAggregateDensity]
+  simp only [Measure.restrict_univ, lintegral_dirac, posSimplexAggregateDensity,
+    Finset.prod_of_isEmpty, mul_one]
   congr 1
   funext b
   exact isEmptyElim b

@@ -21,7 +21,7 @@ public section
 open Complex Function MeasureTheory Set
 open scoped Real
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {ι κ F : Type*} [Fintype ι] [Fintype κ]
   [NormedAddCommGroup F] [NormedSpace ℂ F]
@@ -30,7 +30,7 @@ omit [Fintype ι] [Fintype κ] in
 open scoped Classical in
 /-- Renaming coordinates renames a coordinate derivative by the inverse equivalence. -/
 theorem partialDeriv_reindex (e : κ ≃ ι) (f : (κ → ℂ) → F) (z : ι → ℂ) (i : ι) :
-    partialDeriv i (fun w => f (w ∘ e)) z = partialDeriv (e.symm i) f (z ∘ e) := by
+    partialDerivCarlson i (fun w => f (w ∘ e)) z = partialDerivCarlson (e.symm i) f (z ∘ e) := by
   change deriv (fun w => f (update z i w ∘ e)) (z i) =
     deriv (fun w => f (update (z ∘ e) (e.symm i) w)) ((z ∘ e) (e.symm i))
   simp only [update_comp_equiv, comp_apply, e.apply_symm_apply]
@@ -39,14 +39,14 @@ omit [Fintype ι] [Fintype κ] in
 /-- All iterated coordinate derivatives are natural under coordinate reindexing. -/
 theorem iteratedPartialDeriv_reindex (e : κ ≃ ι) (f : (κ → ℂ) → F) (is : List ι)
     (z : ι → ℂ) :
-    iteratedPartialDeriv is (fun w => f (w ∘ e)) z =
-      iteratedPartialDeriv (is.map e.symm) f (z ∘ e) := by
+    iteratedPartialDerivCarlson is (fun w => f (w ∘ e)) z =
+      iteratedPartialDerivCarlson (is.map e.symm) f (z ∘ e) := by
   induction is generalizing z with
   | nil => rfl
   | cons i is ih =>
-    simp only [iteratedPartialDeriv, List.map_cons]
-    rw [show iteratedPartialDeriv is (fun w => f (w ∘ e)) =
-      fun w => iteratedPartialDeriv (is.map e.symm) f (w ∘ e) by funext w; exact ih w]
+    simp only [iteratedPartialDerivCarlson, List.map_cons]
+    rw [show iteratedPartialDerivCarlson is (fun w => f (w ∘ e)) =
+      fun w => iteratedPartialDerivCarlson (is.map e.symm) f (w ∘ e) by funext w; exact ih w]
     exact partialDeriv_reindex e _ z i
 
 variable [CompleteSpace F]
@@ -79,6 +79,6 @@ theorem polydisc_cauchy_reindex {n : ℕ} (e : Fin n ≃ ι)
       (c := c ∘ e) (w := w ∘ e) (R := R ∘ e) (fun i => hR (e i))
       (fun i => hw (e i)) hc ha
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

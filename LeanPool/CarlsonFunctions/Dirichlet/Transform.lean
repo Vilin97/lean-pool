@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -56,9 +56,12 @@ variable {ι : Type*} [Fintype ι]
 def dirichletConvergenceRegion (N : ℕ) : Set (ι → ℂ) :=
   {b | ∀ i, -(N : ℝ) < (b i).re}
 
+omit [Fintype ι] in
 /-- Dirichlet convergence regions are open. -/
-theorem isOpen_dirichletConvergenceRegion (N : ℕ) :
+theorem isOpen_dirichletConvergenceRegion [Finite ι] (N : ℕ) :
     IsOpen (dirichletConvergenceRegion (ι := ι) N) := by
+  classical
+  let _ := Fintype.ofFinite ι
   rw [show dirichletConvergenceRegion (ι := ι) N =
       ⋂ i, {b : ι → ℂ | -(N : ℝ) < (b i).re} by
     ext b
@@ -110,7 +113,8 @@ theorem exists_regDirichletContinuation_of_unique [Unique ι]
     have hones : ones ∈ Convexity.StdSimplex.coordinateSet ℝ ι := by
       simp [ones, Convexity.StdSimplex.coordinateSet]
     change f ones * (Gamma (b default))⁻¹ =
-      ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, regDirichletDensity b u * f u ∂Measure.stdSimplexMeasure
+      ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, regDirichletDensity b u * f u
+        ∂Measure.stdSimplexMeasure
     rw [hdirac]
     have hinter : ones ∈ stdSimplexInterior :=
       ⟨hones, fun _ => by simp [ones]⟩
@@ -246,7 +250,8 @@ theorem regDirichletIntegral_split_at [Nontrivial ι] (i : ι)
             (1 - t : ℂ) ^ (∑ q : {j : ι // j ≠ i}, (b q - 1))) *
               ((∏ q, (v q : ℂ) ^ (b q - 1)) * stdSimplexSlice i t f v)
             ∂stdSimplexMeasure := by
-          apply setIntegral_congr_fun (Convexity.StdSimplex.isClosed_coordinateSet ℝ _).measurableSet
+          apply setIntegral_congr_fun (Convexity.StdSimplex.isClosed_coordinateSet ℝ
+            _).measurableSet
           intro v hv
           change
             (∏ k, ((stdSimplexCoordMap i (fun q ↦ (1 - t) * v q) k : ℝ) : ℂ) ^
@@ -507,7 +512,8 @@ theorem exists_regDirichletContinuation_of_contDiffNear {N : ℕ}
             have hj := hb j
             linarith
         have hp : AnalyticAt ℂ (fun b : ι → ℂ => (ascPochhammer ℂ M).eval (b i)) b :=
-          ((AnalyticOnNhd.eval_polynomial (𝕜 := ℂ) (ascPochhammer ℂ M)) (b i) (mem_univ _)).comp_of_eq
+          ((AnalyticOnNhd.eval_polynomial (𝕜 := ℂ) (ascPochhammer ℂ M)) (b i) (mem_univ
+            _)).comp_of_eq
             ((ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ).analyticAt b) rfl
         exact hp.mul (((analyticOnNhd_shiftedDirichletIntegral i (shiftList i N) (hgl i))
           _ hbi).comp_of_eq (analyticAt_id.add analyticAt_const) rfl)

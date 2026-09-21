@@ -26,7 +26,7 @@ variable {α ι : Type*} [MeasurableSpace α] [Fintype ι]
 
 /-- A locally dominated holomorphic integrand has a holomorphic integral. The derivative
 measurability assumption is often obtained from continuity on the integration domain. -/
-theorem analyticOnNhd_integral_of_locally_dominated
+theorem analyticOnNhd_integral_of_locally_dominatedCarlson
     {μ : Measure α} {U : Set (ι → ℂ)} {F : (ι → ℂ) → α → ℂ}
     (hU : IsOpen U)
     (hmeas : ∀ x ∈ U, AEStronglyMeasurable (F x) μ)
@@ -37,7 +37,7 @@ theorem analyticOnNhd_integral_of_locally_dominated
       s ∈ nhds x ∧ Integrable bound μ ∧
       ∀ᵐ a ∂μ, ∀ y ∈ s, ‖F y a‖ ≤ bound a) :
     AnalyticOnNhd ℂ (fun x => ∫ a, F x a ∂μ) U := by
-  apply analyticOnNhd_integral_of_dominated_of_fderiv_le hU
+  apply analyticOnNhd_integral_of_dominated_of_fderiv_leCarlson hU
   intro x hx
   obtain ⟨s, bound, hs, hboundInt, hbound⟩ := hdom x hx
   obtain ⟨ε, hε, hball⟩ := Metric.mem_nhds_iff.mp (inter_mem hs (hU.mem_nhds hx))

@@ -19,7 +19,7 @@ on the closed polydisc. It does not depend on the several-variable Osgood theore
 open Complex Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Real Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 
@@ -28,7 +28,8 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E
 omit [CompleteSpace E] in
 /-- The vector-valued Cauchy kernel of a continuous function is integrable on a torus whenever
 the evaluation point lies in the interior polydisc. -/
-lemma torusIntegrable_cauchyKernelWithRadii {n : ℕ} {f : (Fin n → ℂ) → E} {c w : Fin n → ℂ} {R : Fin n → ℝ}
+lemma torusIntegrable_cauchyKernelWithRadii {n : ℕ} {f : (Fin n → ℂ) → E} {c w : Fin n → ℂ} {R :
+  Fin n → ℝ}
     (hR : ∀ i, 0 < R i) (hw : ∀ i, ‖w i - c i‖ < R i)
     (hfc : ContinuousOn f (closedPolydiscWithRadii c R)) :
     TorusIntegrable (fun z => (∏ i, (z i - w i)⁻¹) • f z) c R := by
@@ -180,6 +181,6 @@ theorem polydisc_cauchy {n : ℕ} {f : (Fin n → ℂ) → E} {c w : Fin n → �
       torusIntegral (fun z => (∏ i, (z i - w i)⁻¹) • f z) c (fun _ => R) = f w :=
   polydisc_cauchyWithRadii (fun _ => hR) hw hfc hfa
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

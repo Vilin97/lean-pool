@@ -140,10 +140,12 @@ theorem analyticOnNhd_regCarlsonRSlit_joint :
   · exact fun p _ => (ContinuousLinearMap.proj none : (Option (ι ⊕ ι) → ℂ) →L[ℂ] ℂ).analyticAt p
   · intro p _
     exact analyticAt_pi_iff.mpr fun i =>
-      (ContinuousLinearMap.proj (some (Sum.inl i : ι ⊕ ι)) : (Option (ι ⊕ ι) → ℂ) →L[ℂ] ℂ).analyticAt p
+      (ContinuousLinearMap.proj (some (Sum.inl i : ι ⊕ ι)) : (Option (ι ⊕ ι) → ℂ) →L[ℂ]
+        ℂ).analyticAt p
   · intro p _
     exact analyticAt_pi_iff.mpr fun i =>
-      (ContinuousLinearMap.proj (some (Sum.inr i : ι ⊕ ι)) : (Option (ι ⊕ ι) → ℂ) →L[ℂ] ℂ).analyticAt p
+      (ContinuousLinearMap.proj (some (Sum.inr i : ι ⊕ ι)) : (Option (ι ⊕ ι) → ℂ) →L[ℂ]
+        ℂ).analyticAt p
   · exact fun _ hp => hp
 
 /-- At any fixed slit-plane node vector, regularization makes `R` entire jointly in

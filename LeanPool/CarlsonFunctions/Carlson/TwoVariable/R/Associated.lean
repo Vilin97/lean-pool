@@ -78,7 +78,8 @@ theorem regCarlsonRSlit_pair_three_term (t u v : ℂ) {x y : ℂ}
       ((u + t) * x + (v + t) * y) * regCarlsonRSlit t (pair u v) (pair x y) +
       t * x * y * regCarlsonRSlit (t - 1) (pair u v) (pair x y) = 0 := by
   have he₂ : (MvPolynomial.esymm (Fin 2) ℂ 2).eval (pair x y) = x * y := by
-    simpa [carlsonElementarySymmetric, Fin.prod_univ_two] using carlsonElementarySymmetric_card (pair x y)
+    simpa [carlsonElementarySymmetric, Fin.prod_univ_two] using carlsonElementarySymmetric_card
+      (pair x y)
   have h := sum_carlsonAssociatedRecurrencePolynomial_mul_rSlit (-t - 1) (pair u v) hz
   norm_num [Finset.sum_range_succ, carlsonAssociatedRecurrencePolynomial,
     MvPolynomial.esymm_one, Fin.sum_univ_two, he₂, pair_zero, pair_one] at h

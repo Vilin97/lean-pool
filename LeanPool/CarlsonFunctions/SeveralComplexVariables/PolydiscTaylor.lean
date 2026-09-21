@@ -24,7 +24,7 @@ Scalar Taylor coefficients also define an element of Mathlib's `MvPowerSeries`.
 open Complex Filter Function MeasureTheory Metric Set
 open scoped Real Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {d : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 
@@ -297,10 +297,10 @@ theorem hasSumLocallyUniformlyOn_iteratedPartialDeriv_polydiscTaylor
       AnalyticAt ℂ (fun v => f (update z i v)) (z i))
     (hM : ∀ z ∈ closedPolydiscWithRadii c R, ‖f z‖ ≤ M) (is : List (Fin d)) :
     HasSumLocallyUniformlyOn
-      (fun m : Fin d → ℕ => iteratedPartialDeriv is
+      (fun m : Fin d → ℕ => iteratedPartialDerivCarlson is
         (fun h => (∏ i, h i ^ m i) • polydiscCauchyCoeffWithRadii f c R m))
-      (iteratedPartialDeriv is (fun h => f (c + h))) (polydiscWithRadii 0 R) := by
-  apply (hasSumLocallyUniformlyOn_polydiscTaylor hR hfc hfa hM).iteratedPartialDeriv
+      (iteratedPartialDerivCarlson is (fun h => f (c + h))) (polydiscWithRadii 0 R) := by
+  apply (hasSumLocallyUniformlyOn_polydiscTaylor hR hfc hfa hM).iteratedPartialDerivCarlson
     _ (isOpen_polydiscWithRadii 0 R) is
   intro m z hz
   apply AnalyticAt.smul
@@ -308,6 +308,6 @@ theorem hasSumLocallyUniformlyOn_iteratedPartialDeriv_polydiscTaylor
       ((ContinuousLinearMap.proj i : (Fin d → ℂ) →L[ℂ] ℂ).analyticAt z).pow (m i))
   · exact analyticAt_const
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

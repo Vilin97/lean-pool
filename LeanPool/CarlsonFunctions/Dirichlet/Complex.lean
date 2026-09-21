@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -88,7 +88,8 @@ theorem regDirichletIntegral_normalization (b : ι → ℂ) (hb : b ∈ mvBetaCo
         Finset.prod_ne_zero_iff.mpr (fun i _ ↦ hgamma i)
       have hae := ae_zero_lt_of_mem_stdSimplex (ι := ι)
       have hfun :
-          regDirichletDensity b =ᵐ[stdSimplexMeasure.restrict (Convexity.StdSimplex.coordinateSet ℝ ι)]
+          regDirichletDensity b =ᵐ[stdSimplexMeasure.restrict (Convexity.StdSimplex.coordinateSet
+            ℝ ι)]
             fun u ↦ (∏ i, (u i : ℂ) ^ (b i - 1)) / ∏ i, Gamma (b i) := by
         have hmem := self_mem_ae_restrict
           (μ := stdSimplexMeasure) (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet
@@ -114,8 +115,7 @@ theorem integrableOn_regDirichletDensity_mul
   | inl hι =>
       let _ := hι
       rw [stdSimplexMeasure_empty]
-      simpa [IntegrableOn] using
-        (integrable_zero_measure (f := fun u => regDirichletDensity b u * f u))
+      simp [IntegrableOn]
   | inr hι =>
     let _ := hι
     let K := Convexity.StdSimplex.coordinateSet ℝ ι
@@ -164,7 +164,8 @@ def regDirichletIntegral (b : ι → ℂ) (f : (ι → ℝ) → ℂ) : ℂ :=
 Outside the absolute-convergence domain this is a totalized Bochner integral, not an
 analytic continuation. -/
 def complexDirichletIntegral (b : ι → ℂ) (f : (ι → ℝ) → ℂ) : ℂ :=
-  ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, complexDirichletDensity b u * f u ∂stdSimplexMeasure
+  ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, complexDirichletDensity b u * f u
+    ∂stdSimplexMeasure
 
 /-- Native normalization and regularization differ by the Gamma factor of the total
 parameter. No assertion of analytic continuation is involved. -/

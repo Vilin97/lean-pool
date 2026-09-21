@@ -69,7 +69,7 @@ private lemma hasFDerivAt_singleIntegralKernel
     refine h.congr_fderiv ?_
     apply ContinuousLinearMap.ext
     intro v
-    simp [p, neg_mul, smul_smul]
+    simp [p, neg_mul]
   exact HasFDerivAt.finsetProd (u := (Finset.univ : Finset ι))
     (fun i hi => hpow i)
 
@@ -165,7 +165,7 @@ theorem analyticOnNhd_carlsonRUnitIntervalIntegral_slit
   have hU := isOpen_carlsonRSlitDomain (ι := ι)
   have hanalytic : AnalyticOnNhd ℂ (fun z => ∫ u, F z u ∂μ)
       carlsonRSlitDomain := by
-    refine analyticOnNhd_integral_of_dominated_of_fderiv_le hU ?_
+    refine analyticOnNhd_integral_of_dominated_of_fderiv_leCarlson hU ?_
     intro z hz
     obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp hU z hz
     let r : ℝ := ε / 2

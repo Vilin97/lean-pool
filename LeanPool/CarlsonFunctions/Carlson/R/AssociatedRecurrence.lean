@@ -69,7 +69,8 @@ theorem analyticOnNhd_carlsonAssociatedRecurrenceResidual_parameters (a : ℂ)
   refine (analyticAt_carlsonAssociatedRecurrencePolynomial_eval analyticAt_const
     (hsum.sub analyticAt_const)
     (fun i ↦ (ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ).analyticAt b) n z).mul ?_
-  have hpow : ContinuousOn (fun u ↦ carlsonAffineForm z u ^ (-a - n)) (Convexity.StdSimplex.coordinateSet ℝ ι) :=
+  have hpow : ContinuousOn (fun u ↦ carlsonAffineForm z u ^ (-a - n))
+    (Convexity.StdSimplex.coordinateSet ℝ ι) :=
     (continuous_carlsonAffineForm z).continuousOn.cpow_const
       (fun _ hu ↦ carlsonAffineForm_mem_slitPlane hz hu)
   exact (isOpen_mvBetaConvergent.analyticOn_iff_analyticOnNhd.mp
@@ -100,7 +101,8 @@ theorem carlsonAssociatedRecurrenceResidual_eq_zero_of_strip [Nonempty ι]
         (Complex.continuous_re.comp (continuous_const.sub continuous_id))).eventually_mem hc₀
       filter_upwards [hpos, hsum] with w hw hcw
       exact hstrip w c hc hw hcw
-    have heq := (analyticOnNhd_carlsonAssociatedRecurrenceResidual_exponent hc hz).eq_of_eventuallyEq
+    have heq := (analyticOnNhd_carlsonAssociatedRecurrenceResidual_exponent hc
+      hz).eq_of_eventuallyEq
       analyticOnNhd_const hlocal
     intro w
     exact congrFun heq w
@@ -109,7 +111,8 @@ theorem carlsonAssociatedRecurrenceResidual_eq_zero_of_strip [Nonempty ι]
     have hev : ∀ᶠ c : ι → ℂ in nhds (fun _ ↦ 2), ∀ i, 1 < (c i).re := by
       apply Filter.eventually_all.mpr
       intro i
-      exact (isOpen_lt continuous_const (Complex.continuous_re.comp (continuous_apply i))).eventually_mem
+      exact (isOpen_lt continuous_const (Complex.continuous_re.comp (continuous_apply
+        i))).eventually_mem
         (by norm_num)
     filter_upwards [hev] with c hc
     apply hlarge c (fun i ↦ lt_trans zero_lt_one (hc i)) _ a
@@ -117,7 +120,8 @@ theorem carlsonAssociatedRecurrenceResidual_eq_zero_of_strip [Nonempty ι]
       (f := fun _ : ι ↦ (1 : ℝ)) (g := fun i ↦ (c i).re)
       (fun i _ ↦ (hc i).le) (by obtain ⟨i⟩ := ‹Nonempty ι›; exact ⟨i, Finset.mem_univ i, hc i⟩)
     simpa using hsum
-  exact (analyticOnNhd_carlsonAssociatedRecurrenceResidual_parameters a hz).eqOn_of_preconnected_of_eventuallyEq
+  exact (analyticOnNhd_carlsonAssociatedRecurrenceResidual_parameters a
+    hz).eqOn_of_preconnected_of_eventuallyEq
     analyticOnNhd_const
     (by simpa using isPreconnected_dirichletConvergenceRegion (ι := ι) 0)
     (z₀ := fun _ ↦ 2) (by intro i; norm_num) hlocal hb
@@ -344,7 +348,8 @@ theorem carlsonAssociatedRecurrenceResidual_eq_zero_in_strip [Nonempty ι]
       (integral_carlsonAssociatedRecurrenceKernel_derivative_eq_zero hz ha ha')
   unfold carlsonAssociatedRecurrenceResidual
   simp_rw [Finset.sum_congr rfl (fun n hn =>
-    carlsonAssociatedRecurrence_term_eq_mellin (Nat.le_of_lt_succ (Finset.mem_range.mp hn)) hb hz ha ha')]
+    carlsonAssociatedRecurrence_term_eq_mellin (Nat.le_of_lt_succ (Finset.mem_range.mp hn)) hb hz
+      ha ha')]
   rw [← Finset.mul_sum]
   change _ * (∑ n ∈ Finset.range (Fintype.card ι + 1),
     D n * mellin (carlsonRayProduct (fun i => -b i) z) (a + n)) = 0

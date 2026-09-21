@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -58,9 +58,11 @@ theorem integrableOn_mvBetaMonomial
             intro i _
             exact (Complex.continuous_ofReal.comp (continuous_apply i)).continuousOn.cpow_const
               (fun _ hu ↦ ofReal_mem_slitPlane.2 (hu.2 i))
-          · exact (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet.inter hPopen.measurableSet
+          · exact (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet.inter
+              hPopen.measurableSet
         · filter_upwards [self_mem_ae_restrict (μ := stdSimplexMeasure)
-              ((Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet.inter hPopen.measurableSet)] with u hu
+              ((Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet.inter
+                hPopen.measurableSet)] with u hu
           simp only [Set.mem_inter_iff] at hu
           simp only [norm_prod]
           apply le_of_eq
@@ -208,7 +210,8 @@ theorem prod_cpow_stdSimplexCoordMap_scale
 /-- The absolutely convergent simplex integral representation of the multivariate Beta
 function. -/
 theorem mvBeta_eq_integral {b : ι → ℂ} (hb : b ∈ mvBetaConvergent) :
-    mvBeta b = ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, ∏ i, (u i : ℂ) ^ (b i - 1) ∂stdSimplexMeasure := by
+    mvBeta b = ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, ∏ i, (u i : ℂ) ^ (b i - 1)
+      ∂stdSimplexMeasure := by
   classical
   induction hn : Fintype.card ι using Nat.strong_induction_on generalizing ι with
   | h n ih =>
@@ -256,7 +259,8 @@ theorem mvBeta_eq_integral {b : ι → ℂ} (hb : b ∈ mvBetaConvergent) :
                       ((t : ℂ) ^ (b i - 1) *
                         (1 - t : ℂ) ^ (∑ q : {j : ι // j ≠ i}, (b q - 1))) *
                         ∏ q, (v q : ℂ) ^ (b q - 1) ∂stdSimplexMeasure := by
-                          apply setIntegral_congr_fun (Convexity.StdSimplex.isClosed_coordinateSet ℝ _).measurableSet
+                          apply setIntegral_congr_fun (Convexity.StdSimplex.isClosed_coordinateSet
+                            ℝ _).measurableSet
                           intro v hv
                           exact prod_cpow_stdSimplexCoordMap_scale i b ht hv
                   _ = ((t : ℂ) ^ (b i - 1) *

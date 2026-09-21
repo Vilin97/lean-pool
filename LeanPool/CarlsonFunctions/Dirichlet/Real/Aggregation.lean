@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -30,15 +30,19 @@ variable {ι : Type*} [Fintype ι]
 /-- Aggregating a Dirichlet parameter vector along a surjection stays in the
 positive parameter domain. -/
 theorem mem_mvRealBetaDomain_stdSimplexAggregate
-    {κ : Type*} [Fintype κ] {f : ι → κ} (hf : Function.Surjective f)
+    {κ : Type*} [Finite κ] {f : ι → κ} (hf : Function.Surjective f)
     {b : ι → ℝ} (hb : b ∈ mvRealBetaDomain) :
-    stdSimplexAggregate f b ∈ mvRealBetaDomain :=
-  stdSimplexAggregate_pos hf hb
+    stdSimplexAggregate f b ∈ mvRealBetaDomain := by
+  classical
+  let _ := Fintype.ofFinite κ
+  exact stdSimplexAggregate_pos hf hb
 
 /-- Coordinate aggregation is continuous, as a linear map on a finite product. -/
-theorem continuous_stdSimplexAggregate {κ : Type*} [Fintype κ] (f : ι → κ) :
-    Continuous (stdSimplexAggregate (R := ℝ) f) :=
-  _root_.continuous_stdSimplexAggregate f
+theorem continuous_stdSimplexAggregate {κ : Type*} [Finite κ] (f : ι → κ) :
+    Continuous (stdSimplexAggregate (R := ℝ) f) := by
+  classical
+  let _ := Fintype.ofFinite κ
+  exact _root_.continuous_stdSimplexAggregate f
 
 /-- Pushing a Dirichlet monomial forward under coordinate aggregation yields the
 Dirichlet monomial for the aggregated parameters. This is the moment form of the
@@ -224,7 +228,8 @@ theorem measurePreserving_stdSimplexAggregate_dirichletMeasure
           (Convexity.StdSimplex.coordinateSet ℝ κ)ᶜ = 0
         rw [Measure.map_apply hT.measurable
           (Convexity.StdSimplex.isClosed_coordinateSet ℝ κ).measurableSet.compl]
-        have hsub : Convexity.StdSimplex.coordinateSet ℝ ι ⊆ stdSimplexAggregate f ⁻¹' Convexity.StdSimplex.coordinateSet ℝ κ := by
+        have hsub : Convexity.StdSimplex.coordinateSet ℝ ι ⊆ stdSimplexAggregate f ⁻¹'
+          Convexity.StdSimplex.coordinateSet ℝ κ := by
           intro u hu
           exact stdSimplexAggregate_mem_stdSimplex hu
         refine measure_mono_null (fun u hu huι => hu (hsub huι)) ?_

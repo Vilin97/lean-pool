@@ -196,7 +196,8 @@ private lemma rIntegral_secondQuadratic_near_one (t β : ℂ)
     (show ContinuousAt (fun w : ℂ => ‖2 * w / (1 + w ^ 2)‖) 0 by
       fun_prop (disch := norm_num)).eventually_lt_const (by simp)
   have hs : ∀ᶠ w : ℂ in 𝓝 0, 4 * (‖-t‖ + 1) * ‖w‖ < 1 / 2 :=
-    (show ContinuousAt (fun w : ℂ => 4 * (‖-t‖ + 1) * ‖w‖) 0 by fun_prop).eventually_lt_const (by simp)
+    (show ContinuousAt (fun w : ℂ => 4 * (‖-t‖ + 1) * ‖w‖) 0 by fun_prop).eventually_lt_const (by
+      simp)
   filter_upwards [hw, hd, hv, hs] with w hw hd hv hs
   let d := 1 + w ^ 2
   let v := 2 * w / d

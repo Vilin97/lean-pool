@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -32,7 +32,7 @@ open scoped Classical in
 in the parameter vector. -/
 theorem analyticOnNhd_prod_invGamma :
     AnalyticOnNhd ℂ (fun b : ι → ℂ ↦ ∏ i, (Gamma (b i))⁻¹) Set.univ := by
-  apply DifferentiableOn.analyticOnNhd_pi _ isOpen_univ
+  apply DifferentiableOn.analyticOnNhd_piCarlson _ isOpen_univ
   intro b _
   apply DifferentiableAt.differentiableWithinAt
   induction (Finset.univ : Finset ι) using Finset.induction_on with
@@ -103,7 +103,7 @@ theorem regDirichletIntegral_analyticOn {f : (ι → ℝ) → ℂ}
     let G : (ι → ℂ) → ℂ := fun b ↦
       ∫ u, (∏ i, (u i : ℂ) ^ (b i - 1)) * f u ∂μ
     have hG : AnalyticOnNhd ℂ G mvBetaConvergent := by
-      refine analyticOnNhd_integral_of_dominated_of_fderiv_le
+      refine analyticOnNhd_integral_of_dominated_of_fderiv_leCarlson
         (μ := μ) (U := mvBetaConvergent) (F := fun b u ↦
           (∏ i, (u i : ℂ) ^ (b i - 1)) * f u)
         Complex.isOpen_mvBetaConvergent ?_
@@ -150,9 +150,10 @@ theorem regDirichletIntegral_analyticOn {f : (ι → ℝ) → ℂ}
         have hscal : AEStronglyMeasurable
             (fun u ↦ Complex.log (u i : ℂ) * (∏ j, (u j : ℂ) ^ (b j - 1)) * f u) μ :=
           (hmono.mul hfmeas).congr <| Eventually.of_forall fun u ↦ by
-            simp [mul_assoc, mul_left_comm, mul_comm]
+            simp [mul_comm]
         exact hscal.smul_const _
-      · filter_upwards [self_mem_ae_restrict (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet,
+      · filter_upwards [self_mem_ae_restrict (Convexity.StdSimplex.isClosed_coordinateSet ℝ
+        ι).measurableSet,
             ae_zero_lt_of_mem_stdSimplex (ι := ι)] with u hu hupos
         intro c hc
         have hui i : 0 < u i := hupos i
@@ -186,12 +187,13 @@ theorem regDirichletIntegral_analyticOn {f : (ι → ℝ) → ℂ}
               ‖∏ j, (u j : ℂ) ^ (a j - 1)‖ * C := by
             gcongr <;> first | exact hmon | exact hf_le u hu
           _ = C * ∑ i, ‖(∏ j, (u j : ℂ) ^ (a j - 1)) * Complex.log (u i : ℂ)‖ := by
-            simp [norm_mul, mul_comm, mul_left_comm, Finset.mul_sum]
+            simp [mul_comm, mul_left_comm, Finset.mul_sum]
           _ = bound u := rfl
       · have hterm i := (integrableOn_mvBetaMonomial_mul_log a ha i).norm
         have hsum := integrable_finsetSum (s := Finset.univ) fun i _ ↦ hterm i
         simpa [bound] using hsum.const_mul C
-      · filter_upwards [self_mem_ae_restrict (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet,
+      · filter_upwards [self_mem_ae_restrict (Convexity.StdSimplex.isClosed_coordinateSet ℝ
+        ι).measurableSet,
             ae_zero_lt_of_mem_stdSimplex (ι := ι)] with u hu hupos
         intro c hc
         have hmon := hasFDerivAt_mvBetaMonomial hupos c
@@ -205,7 +207,7 @@ theorem regDirichletIntegral_analyticOn {f : (ι → ℝ) → ℂ}
           rw [Finset.smul_sum]
           refine Finset.sum_congr rfl fun i _ ↦ ?_
           rw [smul_smul]
-          simp [F', p, mul_assoc, mul_left_comm, mul_comm]
+          simp [p, mul_comm]
         refine hmul.congr_fderiv ?_
         have hz : ((∏ i, (u i : ℂ) ^ (c i - 1)) • (0 : (ι → ℂ) →L[ℂ] ℂ)) = 0 := by
           ext v; simp

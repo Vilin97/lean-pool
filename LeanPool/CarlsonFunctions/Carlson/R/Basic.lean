@@ -31,8 +31,11 @@ theorem carlsonRIntegral_eq_Gamma_mul_reg (t : ℂ) (b z : ι → ℂ) :
 def carlsonRVariableDomain : Set (ι → ℂ) :=
   {z | ∀ i, z i ∈ carlsonRightHalfPlane}
 
+omit [Fintype ι] in
 /-- Carlson's right-half-plane variable domain is open. -/
-theorem isOpen_carlsonRVariableDomain : IsOpen (carlsonRVariableDomain : Set (ι → ℂ)) := by
+theorem isOpen_carlsonRVariableDomain [Finite ι] : IsOpen (carlsonRVariableDomain : Set (ι → ℂ)) := by
+  classical
+  let _ := Fintype.ofFinite ι
   rw [show carlsonRVariableDomain (ι := ι) =
       ⋂ i, {z : ι → ℂ | z i ∈ carlsonRightHalfPlane} by ext z; simp [carlsonRVariableDomain]]
   exact isOpen_iInter_of_finite fun i ↦

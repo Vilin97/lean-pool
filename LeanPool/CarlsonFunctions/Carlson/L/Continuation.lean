@@ -39,7 +39,8 @@ theorem hasDerivAt_regCarlsonRContinued_L (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRVariableDomain) :
     HasDerivAt (fun s => regCarlsonRContinued s z hz b)
       (regCarlsonLContinued t z hz b) t :=
-  (analyticAt_regCarlsonRContinued_comp hz analyticAt_id analyticAt_const).differentiableAt.hasDerivAt
+  (analyticAt_regCarlsonRContinued_comp hz analyticAt_id
+    analyticAt_const).differentiableAt.hasDerivAt
 
 /-- Joint entireness in the exponent and the Dirichlet parameters, including
 nonpositive integral parameters and totals. -/
@@ -47,13 +48,13 @@ theorem analyticOnNhd_regCarlsonLContinued_exponent_parameters {z : ι → ℂ}
     (hz : z ∈ carlsonRVariableDomain) :
     AnalyticOnNhd ℂ (fun p : Option ι → ℂ =>
       regCarlsonLContinued (p none) z hz (fun i => p (some i))) Set.univ := by
-  have h := (analyticOnNhd_regCarlsonRContinued_exponent_parameters hz).partialDeriv
+  have h := (analyticOnNhd_regCarlsonRContinued_exponent_parameters hz).partialDerivCarlson
     isOpen_univ none
-  have heq : SeveralComplexVariables.partialDeriv none
+  have heq : CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson none
       (fun p : Option ι → ℂ => regCarlsonRContinued (p none) z hz (fun i => p (some i))) =
       (fun p : Option ι → ℂ => regCarlsonLContinued (p none) z hz (fun i => p (some i))) := by
     funext p
-    simp only [SeveralComplexVariables.partialDeriv, regCarlsonLContinued,
+    simp only [CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson, regCarlsonLContinued,
       Function.update_self, Function.update_of_ne (Option.some_ne_none _)]
   rwa [heq] at h
 

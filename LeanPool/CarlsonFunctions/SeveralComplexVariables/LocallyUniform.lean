@@ -49,7 +49,7 @@ variable {ι κ F : Type*} [Fintype ι]
 open scoped Classical in
 /-- **Weierstrass convergence theorem, finite-coordinate form.** A locally uniform limit of
 analytic maps on an open subset of a finite complex coordinate space is analytic. -/
-theorem TendstoLocallyUniformlyOn.analyticOnNhd_pi
+theorem TendstoLocallyUniformlyOn.analyticOnNhd_piCarlson
     {U : Set (ι → ℂ)} {l : Filter κ} [l.NeBot]
     {f : κ → (ι → ℂ) → F} {g : (ι → ℂ) → F}
     (hlim : TendstoLocallyUniformlyOn f g l U)
@@ -57,7 +57,7 @@ theorem TendstoLocallyUniformlyOn.analyticOnNhd_pi
     AnalyticOnNhd ℂ g U := by
   have hg : ContinuousOn g U :=
     hlim.continuousOn (hf.frequently.mono fun _ hn => hn.continuousOn)
-  apply SeveralComplexVariables.analyticOnNhd_pi_of_analyticOnNhd_update hU hg
+  apply CarlsonFunctions.SeveralComplexVariables.analyticOnNhd_pi_of_analyticOnNhd_update hU hg
   intro z hz i
   let update : ℂ → (ι → ℂ) := fun w ↦ Function.update z i w
   let V : Set ℂ := update ⁻¹' U
@@ -81,18 +81,18 @@ theorem TendstoLocallyUniformlyOn.analyticOnNhd_pi
 
 /-- A locally uniformly convergent sum of analytic maps on an open finite complex coordinate
 space is analytic. -/
-theorem HasSumLocallyUniformlyOn.analyticOnNhd_pi
+theorem HasSumLocallyUniformlyOn.analyticOnNhd_piCarlson
     {U : Set (ι → ℂ)} {f : κ → (ι → ℂ) → F} {g : (ι → ℂ) → F}
     (hsum : HasSumLocallyUniformlyOn f g U)
     (hf : ∀ n, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) :
     AnalyticOnNhd ℂ g U := by
-  apply TendstoLocallyUniformlyOn.analyticOnNhd_pi hsum _ hU
+  apply TendstoLocallyUniformlyOn.analyticOnNhd_piCarlson hsum _ hU
   filter_upwards with s
   exact Finset.analyticOnNhd_fun_sum s fun n _ ↦ hf n
 
 /-- A series of analytic maps is analytic when its terms admit a summable uniform majorant on
 every compact subset of the domain. -/
-theorem analyticOnNhd_tsum_of_summable_norm_on_compacts
+theorem analyticOnNhd_tsum_of_summable_norm_on_compactsCarlson
     {U : Set (ι → ℂ)} {f : κ → (ι → ℂ) → F}
     (hU : IsOpen U) (hf : ∀ n, AnalyticOnNhd ℂ (f n) U)
     (hmajorant : ∀ K ⊆ U, IsCompact K → ∃ M : κ → ℝ,
@@ -100,18 +100,19 @@ theorem analyticOnNhd_tsum_of_summable_norm_on_compacts
     AnalyticOnNhd ℂ (fun x ↦ ∑' n, f n x) U := by
   have hs : SummableLocallyUniformlyOn f U :=
     SummableLocallyUniformlyOn_of_locally_bounded hU hmajorant
-  exact hs.hasSumLocallyUniformlyOn.analyticOnNhd_pi hf hU
+  exact hs.hasSumLocallyUniformlyOn.analyticOnNhd_piCarlson hf hU
 
 /-- Locally uniform convergence of holomorphic maps implies locally uniform convergence
 of each coordinate derivative. The Cauchy estimate is applied on a compact thickening. -/
-theorem TendstoLocallyUniformlyOn.partialDeriv
+theorem TendstoLocallyUniformlyOn.partialDerivCarlson
     {U : Set (ι → ℂ)} {l : Filter κ} [l.NeBot]
     {f : κ → (ι → ℂ) → F} {g : (ι → ℂ) → F}
     (hlim : TendstoLocallyUniformlyOn f g l U)
     (hf : ∀ᶠ n in l, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) (i : ι) :
-    TendstoLocallyUniformlyOn (fun n => SeveralComplexVariables.partialDeriv i (f n))
-      (SeveralComplexVariables.partialDeriv i g) l U := by
-  have hg := hlim.analyticOnNhd_pi hf hU
+    TendstoLocallyUniformlyOn (fun n =>
+      CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson i (f n))
+      (CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson i g) l U := by
+  have hg := hlim.analyticOnNhd_piCarlson hf hU
   rw [tendstoLocallyUniformlyOn_iff_forall_isCompact hU]
   intro K hKU hK
   obtain ⟨δ, hδ, hKδ⟩ := hK.exists_cthickening_subset_open hU hKU
@@ -122,31 +123,32 @@ theorem TendstoLocallyUniformlyOn.partialDeriv
   filter_upwards [hf, hc (ε * δ / 2) (by positivity)] with n hn hbound z hz
   have hball : Metric.closedBall z δ ⊆ Metric.cthickening δ K :=
     Metric.closedBall_subset_cthickening hz δ
-  have hnorm := SeveralComplexVariables.norm_partialDeriv_le (hg.sub hn) i hδ
+  have hnorm := CarlsonFunctions.SeveralComplexVariables.norm_partialDeriv_le (hg.sub hn) i hδ
     (hball.trans hKδ) (M := ε * δ / 2) (fun w hw => by
       exact le_of_lt (by simpa [dist_eq_norm] using hbound w (hball hw)))
-  rw [SeveralComplexVariables.partialDeriv_sub (hg z (hKU hz)).differentiableAt
+  rw [CarlsonFunctions.SeveralComplexVariables.partialDeriv_sub (hg z (hKU hz)).differentiableAt
     (hn z (hKU hz)).differentiableAt i] at hnorm
   rw [dist_eq_norm]
   exact hnorm.trans_lt ((div_lt_iff₀ hδ).mpr (by nlinarith [mul_pos hε hδ]))
 
 /-- All mixed coordinate derivatives converge locally uniformly on the original domain. -/
-theorem TendstoLocallyUniformlyOn.iteratedPartialDeriv
+theorem TendstoLocallyUniformlyOn.iteratedPartialDerivCarlson
     {U : Set (ι → ℂ)} {l : Filter κ} [l.NeBot]
     {f : κ → (ι → ℂ) → F} {g : (ι → ℂ) → F}
     (hlim : TendstoLocallyUniformlyOn f g l U)
     (hf : ∀ᶠ n in l, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) (is : List ι) :
-    TendstoLocallyUniformlyOn (fun n => SeveralComplexVariables.iteratedPartialDeriv is (f n))
-      (SeveralComplexVariables.iteratedPartialDeriv is g) l U := by
+    TendstoLocallyUniformlyOn (fun n =>
+      CarlsonFunctions.SeveralComplexVariables.iteratedPartialDerivCarlson is (f n))
+      (CarlsonFunctions.SeveralComplexVariables.iteratedPartialDerivCarlson is g) l U := by
   induction is with
   | nil => exact hlim
   | cons i is ih =>
-      exact ih.partialDeriv (hf.mono fun n hn => hn.iteratedPartialDeriv hU is) hU i
+      exact ih.partialDerivCarlson (hf.mono fun n hn => hn.iteratedPartialDerivCarlson hU is) hU i
 
 open scoped Classical in
 /-- Locally uniform convergence of holomorphic maps gives locally uniform convergence
 of their Fréchet derivatives in operator norm. -/
-theorem TendstoLocallyUniformlyOn.fderiv_pi
+theorem TendstoLocallyUniformlyOn.fderiv_piCarlson
     {U : Set (ι → ℂ)} {l : Filter κ} [l.NeBot]
     {f : κ → (ι → ℂ) → F} {g : (ι → ℂ) → F}
     (hlim : TendstoLocallyUniformlyOn f g l U)
@@ -155,25 +157,28 @@ theorem TendstoLocallyUniformlyOn.fderiv_pi
   let L (i : ι) : F →L[ℂ] ((ι → ℂ) →L[ℂ] F) :=
     ContinuousLinearMap.smulRightL ℂ (ι → ℂ) F (ContinuousLinearMap.proj i)
   have hi (i : ι) := (L i).uniformContinuous.comp_tendstoLocallyUniformlyOn
-    (hlim.partialDeriv hf hU i)
+    (hlim.partialDerivCarlson hf hU i)
   have hs (s : Finset ι) : TendstoLocallyUniformlyOn
-      (fun n z => ∑ i ∈ s, L i (SeveralComplexVariables.partialDeriv i (f n) z))
-      (fun z => ∑ i ∈ s, L i (SeveralComplexVariables.partialDeriv i g z)) l U := by
+      (fun n z => ∑ i ∈ s, L i (CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson i (f
+        n) z))
+      (fun z => ∑ i ∈ s, L i (CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson i g z))
+        l U := by
     induction s using Finset.induction_on with
     | empty =>
       simpa using (tendsto_const_nhds.tendstoUniformlyOn_const U).tendstoLocallyUniformlyOn
     | @insert i s his ih =>
       simpa only [Finset.sum_insert his, Function.comp_def] using (hi i).fun_add ih
   have heq {a : (ι → ℂ) → F} {z : ι → ℂ} (ha : DifferentiableAt ℂ a z) :
-      (∑ i, L i (SeveralComplexVariables.partialDeriv i a z)) = fderiv ℂ a z := by
+      (∑ i, L i (CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson i a z)) = fderiv ℂ a
+        z := by
     ext v
-    simpa [L] using (SeveralComplexVariables.fderiv_eq_sum_partialDeriv ha v).symm
+    simpa [L] using (CarlsonFunctions.SeveralComplexVariables.fderiv_eq_sum_partialDeriv ha v).symm
   have h := (hs Finset.univ).congr_inseparable (hf.mono fun n hn z hz =>
     Inseparable.of_eq (heq (hn z hz).differentiableAt))
-  exact h.congr_right fun z hz => heq ((hlim.analyticOnNhd_pi hf hU) z hz).differentiableAt
+  exact h.congr_right fun z hz => heq ((hlim.analyticOnNhd_piCarlson hf hU) z hz).differentiableAt
 
 /-- All iterated Fréchet derivatives converge locally uniformly in multilinear operator norm. -/
-theorem TendstoLocallyUniformlyOn.iteratedFDeriv_pi
+theorem TendstoLocallyUniformlyOn.iteratedFDeriv_piCarlson
     {U : Set (ι → ℂ)} {l : Filter κ} [l.NeBot]
     {f : κ → (ι → ℂ) → F} {g : (ι → ℂ) → F}
     (hlim : TendstoLocallyUniformlyOn f g l U)
@@ -183,38 +188,42 @@ theorem TendstoLocallyUniformlyOn.iteratedFDeriv_pi
   induction k with
   | zero =>
     simpa only [iteratedFDeriv_zero_eq_comp] using
-      (continuousMultilinearCurryFin0 ℂ (ι → ℂ) F).symm.isometry.uniformContinuous.comp_tendstoLocallyUniformlyOn hlim
+      (continuousMultilinearCurryFin0 ℂ (ι → ℂ)
+        F).symm.isometry.uniformContinuous.comp_tendstoLocallyUniformlyOn hlim
   | succ k ih =>
-    have hd := ih.fderiv_pi (hf.mono fun n hn => hn.iteratedFDeriv_of_isOpen hU k) hU
+    have hd := ih.fderiv_piCarlson (hf.mono fun n hn => hn.iteratedFDeriv_of_isOpen hU k) hU
     simpa only [iteratedFDeriv_succ_eq_comp_left] using
-      (continuousMultilinearCurryLeftEquiv ℂ (fun _ : Fin (k + 1) => ι → ℂ) F).symm.isometry.uniformContinuous.comp_tendstoLocallyUniformlyOn hd
+      (continuousMultilinearCurryLeftEquiv ℂ (fun _ : Fin (k + 1) => ι → ℂ)
+        F).symm.isometry.uniformContinuous.comp_tendstoLocallyUniformlyOn hd
 
 /-- A locally uniformly convergent holomorphic series may be differentiated term by term
 any finite number of times, with locally uniform convergence of the differentiated series. -/
-theorem HasSumLocallyUniformlyOn.iteratedPartialDeriv
+theorem HasSumLocallyUniformlyOn.iteratedPartialDerivCarlson
     {U : Set (ι → ℂ)} {f : κ → (ι → ℂ) → F} {g : (ι → ℂ) → F}
     (hsum : HasSumLocallyUniformlyOn f g U)
     (hf : ∀ n, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) (is : List ι) :
-    HasSumLocallyUniformlyOn (fun n => SeveralComplexVariables.iteratedPartialDeriv is (f n))
-      (SeveralComplexVariables.iteratedPartialDeriv is g) U := by
-  have h := TendstoLocallyUniformlyOn.iteratedPartialDeriv hsum
+    HasSumLocallyUniformlyOn (fun n =>
+      CarlsonFunctions.SeveralComplexVariables.iteratedPartialDerivCarlson is (f n))
+      (CarlsonFunctions.SeveralComplexVariables.iteratedPartialDerivCarlson is g) U := by
+  have h := TendstoLocallyUniformlyOn.iteratedPartialDerivCarlson hsum
     (Eventually.of_forall fun t => Finset.analyticOnNhd_fun_sum t fun n _ => hf n) hU is
   exact h.congr_inseparable (Eventually.of_forall fun t z hz => Inseparable.of_eq
-    (SeveralComplexVariables.iteratedPartialDeriv_finset_sum t (fun n _ => hf n) hU is hz))
+    (CarlsonFunctions.SeveralComplexVariables.iteratedPartialDeriv_finset_sum t (fun n _ => hf n)
+      hU is hz))
 
 section FiniteDimensional
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [FiniteDimensional ℂ E]
 
 /-- The Weierstrass convergence theorem on any finite-dimensional complex normed domain. -/
-theorem TendstoLocallyUniformlyOn.analyticOnNhd_finiteDimensional
+theorem TendstoLocallyUniformlyOn.analyticOnNhd_finiteDimensionalCarlson
     {U : Set E} {l : Filter κ} [l.NeBot] {f : κ → E → F} {g : E → F}
     (hlim : TendstoLocallyUniformlyOn f g l U)
     (hf : ∀ᶠ n in l, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) :
     AnalyticOnNhd ℂ g U := by
   let e := (Module.finBasis ℂ E).equivFunL
   have hc := hlim.comp e.symm (fun _ hx => hx) e.symm.continuous.continuousOn
-  have ha := hc.analyticOnNhd_pi (hf.mono fun n hn =>
+  have ha := hc.analyticOnNhd_piCarlson (hf.mono fun n hn =>
     hn.comp (e.symm.toContinuousLinearMap.analyticOnNhd _) (fun _ hx => hx))
     (hU.preimage e.symm.continuous)
   intro x hx
@@ -224,14 +233,14 @@ theorem TendstoLocallyUniformlyOn.analyticOnNhd_finiteDimensional
 
 /-- Locally uniform convergence of the Fréchet derivatives, without a choice of coordinates
 in the statement. The target carries the operator norm. -/
-theorem TendstoLocallyUniformlyOn.fderiv_finiteDimensional
+theorem TendstoLocallyUniformlyOn.fderiv_finiteDimensionalCarlson
     {U : Set E} {l : Filter κ} [l.NeBot] {f : κ → E → F} {g : E → F}
     (hlim : TendstoLocallyUniformlyOn f g l U)
     (hf : ∀ᶠ n in l, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) :
     TendstoLocallyUniformlyOn (fun n => fderiv ℂ (f n)) (fderiv ℂ g) l U := by
   let e := (Module.finBasis ℂ E).equivFunL
   have hc := hlim.comp e.symm (fun _ hx => hx) e.symm.continuous.continuousOn
-  have hd := hc.fderiv_pi (hf.mono fun n hn =>
+  have hd := hc.fderiv_piCarlson (hf.mono fun n hn =>
     hn.comp (e.symm.toContinuousLinearMap.analyticOnNhd _) (fun _ hx => hx))
     (hU.preimage e.symm.continuous)
   let L := (ContinuousLinearMap.compL ℂ E (Fin (Module.finrank ℂ E) → ℂ) F).flip
@@ -247,11 +256,11 @@ theorem TendstoLocallyUniformlyOn.fderiv_finiteDimensional
   have H' := H.congr_inseparable (hf.mono fun n hn x hx =>
     Inseparable.of_eq (heq (hn x hx).differentiableAt))
   exact H'.congr_right fun x hx => heq
-    ((hlim.analyticOnNhd_finiteDimensional hf hU) x hx).differentiableAt
+    ((hlim.analyticOnNhd_finiteDimensionalCarlson hf hU) x hx).differentiableAt
 
 /-- All iterated Fréchet derivatives converge locally uniformly on a finite-dimensional
 complex domain, in multilinear operator norm. -/
-theorem TendstoLocallyUniformlyOn.iteratedFDeriv_finiteDimensional
+theorem TendstoLocallyUniformlyOn.iteratedFDeriv_finiteDimensionalCarlson
     {U : Set E} {l : Filter κ} [l.NeBot] {f : κ → E → F} {g : E → F}
     (hlim : TendstoLocallyUniformlyOn f g l U)
     (hf : ∀ᶠ n in l, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) (k : ℕ) :
@@ -260,12 +269,14 @@ theorem TendstoLocallyUniformlyOn.iteratedFDeriv_finiteDimensional
   induction k with
   | zero =>
     simpa only [iteratedFDeriv_zero_eq_comp] using
-      (continuousMultilinearCurryFin0 ℂ E F).symm.isometry.uniformContinuous.comp_tendstoLocallyUniformlyOn hlim
+      (continuousMultilinearCurryFin0 ℂ E
+        F).symm.isometry.uniformContinuous.comp_tendstoLocallyUniformlyOn hlim
   | succ k ih =>
-    have hd := ih.fderiv_finiteDimensional
+    have hd := ih.fderiv_finiteDimensionalCarlson
       (hf.mono fun n hn => hn.iteratedFDeriv_of_isOpen hU k) hU
     simpa only [iteratedFDeriv_succ_eq_comp_left] using
-      (continuousMultilinearCurryLeftEquiv ℂ (fun _ : Fin (k + 1) => E) F).symm.isometry.uniformContinuous.comp_tendstoLocallyUniformlyOn hd
+      (continuousMultilinearCurryLeftEquiv ℂ (fun _ : Fin (k + 1) => E)
+        F).symm.isometry.uniformContinuous.comp_tendstoLocallyUniformlyOn hd
 
 end FiniteDimensional
 

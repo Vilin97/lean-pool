@@ -75,8 +75,8 @@ theorem measurePreserving_piFinSnoc {n : ℕ} {α : Fin (n + 1) → Type*}
   refine ⟨(MeasurableEquiv.piFinSnoc α).measurable, (pi_eq fun s _ ↦ ?_).symm⟩
   rw [MeasurableEquiv.map_apply, Fin.prod_univ_castSucc, ← pi_pi, ← prod_prod]
   congr 1 with p
-  simp [Set.mem_prod, Fin.forall_iff_castSucc, MeasurableEquiv.piFinSnoc_apply,
-    Fin.snoc_last, Fin.snoc_castSucc]
+  simp only [Set.mem_preimage, MeasurableEquiv.piFinSnoc_apply, Set.mem_pi, Set.mem_univ,
+    forall_const, Set.mem_prod, Fin.forall_iff_castSucc, Fin.snoc_last, Fin.snoc_castSucc]
   exact and_comm
 
 /-- Last-coordinate splitting preserves product volume. -/

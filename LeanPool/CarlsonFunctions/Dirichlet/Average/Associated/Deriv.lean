@@ -39,7 +39,8 @@ theorem hasDerivAt_regCarlsonDirichletAverage_update_of_bound
         (fun u ↦ (u i : ℂ) * f' (carlsonAffineForm z u)))
       (z i) := by
   let μ : Measure (ι → ℝ) :=
-    (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict (Convexity.StdSimplex.coordinateSet ℝ ι)
+    (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict
+      (Convexity.StdSimplex.coordinateSet ℝ ι)
   let F : ℂ → (ι → ℝ) → ℂ := fun w u ↦
     regDirichletDensity b u * f (carlsonAffineForm (Function.update z i w) u)
   let F' : ℂ → (ι → ℝ) → ℂ := fun w u ↦
@@ -49,7 +50,8 @@ theorem hasDerivAt_regCarlsonDirichletAverage_update_of_bound
   have hzi : z i ∈ s := mem_of_mem_nhds hs
   have hf_comp (w : ℂ) (hw : w ∈ s) :
       ContinuousOn (fun u : ι → ℝ ↦
-        f (carlsonAffineForm (Function.update z i w) u)) (Convexity.StdSimplex.coordinateSet ℝ ι) := by
+        f (carlsonAffineForm (Function.update z i w) u)) (Convexity.StdSimplex.coordinateSet ℝ ι)
+          := by
     have hfon : ContinuousOn f
         (carlsonAffineForm (Function.update z i w) '' Convexity.StdSimplex.coordinateSet ℝ ι) := by
       intro y hy
@@ -157,7 +159,7 @@ theorem hasDerivAt_regCarlsonDirichletAverage_update_of_analyticOnNhd
   have hKcompact : IsCompact K := (Set.finite_range z).isCompact_convexHull ℝ
   have hKΩ : K ⊆ Ω := convexHull_min hz hΩconv
   obtain ⟨δ, hδ, hδΩ, C, hCnonneg, hC⟩ :=
-    hf.exists_cthickening_deriv_bound hΩopen hKcompact hKΩ
+    hf.exists_cthickening_deriv_boundCarlson hΩopen hKcompact hKΩ
   have hderivCont : ContinuousOn (deriv f) Ω := hf.deriv.continuousOn
   let s : Set ℂ := Metric.ball (z i) δ
   have hs : s ∈ nhds (z i) := Metric.ball_mem_nhds _ hδ
@@ -170,7 +172,8 @@ theorem hasDerivAt_regCarlsonDirichletAverage_update_of_analyticOnNhd
     rw [carlsonAffineForm_update, dist_eq_norm]
     simp only [add_sub_cancel_left]
     rw [norm_mul, norm_real, Real.norm_eq_abs, abs_of_nonneg (hu.1 i)]
-    exact (mul_le_of_le_one_left (norm_nonneg _) (Convexity.StdSimplex.mem_Icc_of_mem_coordinateSet hu i).2).trans hwi.le
+    exact (mul_le_of_le_one_left (norm_nonneg _)
+      (Convexity.StdSimplex.mem_Icc_of_mem_coordinateSet hu i).2).trans hwi.le
   apply hasDerivAt_regCarlsonDirichletAverage_update_of_bound hb i hs
   · intro w hw u hu
     exact (hf _ (hδΩ (hnear hw hu))).differentiableAt.hasDerivAt

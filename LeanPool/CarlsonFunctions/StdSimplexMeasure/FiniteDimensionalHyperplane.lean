@@ -45,7 +45,7 @@ private theorem weightedHyperplane_insertNth_section {n : ℕ}
   ext t
   simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
   rw [i.sum_univ_succAbove]
-  simp [Fin.insertNth_apply_same, Fin.insertNth_apply_succAbove]
+  simp only [Fin.insertNth_apply_same, Fin.insertNth_apply_succAbove]
   constructor
   · intro h
     exact (eq_div_iff hi).2 (by linarith)

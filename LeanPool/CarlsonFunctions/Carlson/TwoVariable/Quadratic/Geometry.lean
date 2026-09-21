@@ -60,7 +60,8 @@ theorem FirstQuadraticDomain.affine {x y : ℂ} (hz : FirstQuadraticDomain x y)
     {r : ℝ} (hr : r ∈ Set.Icc 0 1) :
     FirstQuadraticDomain (1 - (r : ℂ) + r * x) (1 - (r : ℂ) + r * y) := by
   have hpos {v : ℂ} (hv : 0 < v.re) : 0 < (1 - (r : ℂ) + r * v).re := by
-    have H := convex_carlsonRightHalfPlane (by norm_num [carlsonRightHalfPlane] : (1 : ℂ) ∈ carlsonRightHalfPlane)
+    have H := convex_carlsonRightHalfPlane (by norm_num [carlsonRightHalfPlane] : (1 : ℂ) ∈
+      carlsonRightHalfPlane)
       hv (sub_nonneg.mpr hr.2) hr.1 (by ring : 1 - r + r = 1)
     simpa [Complex.real_smul, carlsonRightHalfPlane] using H
   have hm : 0 < ((x + y) / 2).re := by

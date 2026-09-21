@@ -25,7 +25,7 @@ space. No continuity or analyticity at the boundary of the domain is asserted.
 open Filter Set
 open scoped Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
@@ -81,12 +81,15 @@ abbrev HolomorphicMap (U : TopologicalSpace.Opens (ι → ℂ)) (F : Type*)
 variable [CompleteSpace F]
 
 omit [NormedSpace ℂ F] [CompleteSpace F] in
+omit [Fintype ι] in
 /-- Convergence in the continuous-map space is exactly locally uniform convergence of the
 ambient extensions on the open domain. -/
-theorem tendsto_iff_openExtension {U : TopologicalSpace.Opens (ι → ℂ)}
+theorem tendsto_iff_openExtension [Finite ι] {U : TopologicalSpace.Opens (ι → ℂ)}
     {κ : Type*} {l : Filter κ} {f : κ → C(U, F)} {g : C(U, F)} :
     Tendsto f l (𝓝 g) ↔
       TendstoLocallyUniformlyOn (fun n => openExtension U (f n)) (openExtension U g) l U := by
+  classical
+  let _ := Fintype.ofFinite ι
   let := U.isOpen.locallyCompactSpace
   rw [ContinuousMap.tendsto_iff_tendstoLocallyUniformly,
     tendstoLocallyUniformlyOn_iff_tendstoLocallyUniformly_comp_coe]
@@ -99,7 +102,7 @@ theorem isClosed_holomorphicSubmodule (U : TopologicalSpace.Opens (ι → ℂ)) 
   rw [isClosed_iff_forall_filter]
   intro f l hl hmem hlim
   have hc : Tendsto (fun g : C(U, F) => g) l (𝓝 f) := hlim
-  exact (tendsto_iff_openExtension.mp hc).analyticOnNhd_pi
+  exact (tendsto_iff_openExtension.mp hc).analyticOnNhd_piCarlson
     (le_principal_iff.mp hmem) U.isOpen
 
 /-- The compact-open uniform space of holomorphic maps into a Banach space is complete. -/
@@ -123,8 +126,8 @@ theorem holomorphicMap_tendsto_iff {U : TopologicalSpace.Opens (ι → ℂ)}
 /-- Coordinate differentiation as an operator on holomorphic maps. -/
 def holomorphicPartialDeriv (U : TopologicalSpace.Opens (ι → ℂ)) (i : ι)
     (f : HolomorphicMap U F) : HolomorphicMap U F := by
-  have ha := f.property.partialDeriv U.isOpen i
-  refine ⟨⟨fun z => partialDeriv i (openExtension U f.val) z,
+  have ha := f.property.partialDerivCarlson U.isOpen i
+  refine ⟨⟨fun z => partialDerivCarlson i (openExtension U f.val) z,
     ha.continuousOn.domRestrict⟩, ?_⟩
   apply AnalyticOnNhd.congr U.isOpen ha
   intro z hz
@@ -140,7 +143,7 @@ theorem continuous_holomorphicPartialDeriv (U : TopologicalSpace.Opens (ι → �
   rw [holomorphicMap_tendsto_iff]
   have hlim := (holomorphicMap_tendsto_iff (f := fun g : HolomorphicMap U F => g)).mp
     (tendsto_id : Tendsto (fun g : HolomorphicMap U F => g) (𝓝 f) (𝓝 f))
-  have hd := hlim.partialDeriv (Eventually.of_forall fun g => g.property) U.isOpen i
+  have hd := hlim.partialDerivCarlson (Eventually.of_forall fun g => g.property) U.isOpen i
   apply (hd.congr (fun g z hz => ?_)).congr_right (fun z hz => ?_)
   all_goals
     rw [openExtension_apply U _ hz]
@@ -167,6 +170,6 @@ theorem continuous_holomorphicRestrict {U V : TopologicalSpace.Opens (ι → ℂ
     ⟨fun z : V => (⟨z, hVU z.property⟩ : U), continuous_subtype_val.subtype_mk _⟩).comp
       continuous_subtype_val
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

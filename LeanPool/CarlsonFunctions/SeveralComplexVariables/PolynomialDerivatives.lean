@@ -20,7 +20,7 @@ variable {ι : Type*}
 open scoped Classical in
 /-- Formal partial differentiation agrees with differentiating a coordinate slice.
 No finiteness assumption on the variable type is needed. -/
-theorem hasDerivAt_eval_update (p : MvPolynomial ι ℂ) (z : ι → ℂ) (i : ι) (x : ℂ) :
+theorem hasDerivAt_eval_updateCarlson (p : MvPolynomial ι ℂ) (z : ι → ℂ) (i : ι) (x : ℂ) :
     HasDerivAt (fun w => p.eval (Function.update z i w))
       ((pderiv i p).eval (Function.update z i x)) x := by
   induction p using MvPolynomial.induction_on with
@@ -33,8 +33,10 @@ theorem hasDerivAt_eval_update (p : MvPolynomial ι ℂ) (z : ι → ℂ) (i : �
     · simpa [pderiv_mul, h, Ne.symm h, mul_comm] using! hp.mul (hasDerivAt_const x (z j))
 
 /-- Coordinate differentiation of a polynomial is evaluation of its formal derivative. -/
-theorem partialDeriv_eval  (p : MvPolynomial ι ℂ) (z : ι → ℂ) (i : ι) :
-    SeveralComplexVariables.partialDeriv i (fun w => p.eval w) z = (pderiv i p).eval z := by
-  simpa [SeveralComplexVariables.partialDeriv] using (p.hasDerivAt_eval_update z i (z i)).deriv
+theorem partialDeriv_evalCarlson  (p : MvPolynomial ι ℂ) (z : ι → ℂ) (i : ι) :
+    CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson i (fun w => p.eval w) z = (pderiv
+      i p).eval z := by
+  simpa [CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson] using
+    (p.hasDerivAt_eval_updateCarlson z i (z i)).deriv
 
 end MvPolynomial

@@ -23,7 +23,7 @@ public section
 open Complex Filter Function Metric Set
 open scoped Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace F]
 
@@ -53,7 +53,7 @@ theorem equicontinuous_of_holomorphic_bounded_on_compacts
   have ha : ∀ z ∈ closedBall (c : ι → ℂ) (2 * r), ∀ i,
       AnalyticAt ℂ (fun v => openExtension U f.val.val (update z i v)) (z i) := by
     intro z hz i
-    exact f.val.property.analyticAt_update (hRU (by simpa only [htwo] using hz)) i
+    exact f.val.property.analyticAt_updateCarlson (hRU (by simpa only [htwo] using hz)) i
   have hbound : ∀ z ∈ closedBall (c : ι → ℂ) (2 * r),
       ‖openExtension U f.val.val z‖ ≤ max M 0 := by
     intro z hz
@@ -96,6 +96,6 @@ theorem isCompact_closure_of_holomorphic_bounded_on_compacts
     have h := (hM f hf z (mem_singleton _)).trans (le_max_left M 0)
     simpa using h
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

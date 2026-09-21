@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -78,9 +78,7 @@ private abbrev mvBetaIntegrand {n : ℕ} (b₀ : ℂ) (b : Fin n → ℂ) (x : F
 private theorem mvBetaIntegral_zero {b₀ : ℂ} (hb₀ : 0 < b₀.re) :
     mvBetaIntegral (n := 0) b₀ Fin.elim0 = mvBeta (Fin.cons b₀ Fin.elim0) := by
   have hG : Gamma b₀ ≠ 0 := Gamma_ne_zero_of_re_pos hb₀
-  simp [mvBetaIntegral, mvBetaSimplex, mvBeta, hG, measureReal_def]
-  rw [volume_pi]
-  simp
+  simp [mvBetaIntegral, mvBetaSimplex, mvBeta, hG, measureReal_def, volume_pi]
 
 /-- The solid-simplex Dirichlet monomial is measurable. -/
 private theorem measurable_mvBetaIntegrand {n : ℕ} (b₀ : ℂ) (b : Fin n → ℂ) :
@@ -147,7 +145,7 @@ private theorem mvBeta_cons_mul_betaIntegral {n : ℕ} {b₀ : ℂ} {b : Fin (n 
   have hβ := betaIntegral_eq_Gamma_mul_div (b (Fin.last n)) b₀ hbl hb₀
   simp only [mvBeta, hβ]
   rw [Fin.prod_univ_succ, Fin.sum_univ_succ, Fin.prod_univ_succ, Fin.sum_univ_succ]
-  simp [Fin.cons_zero, Fin.cons_succ]
+  simp only [Fin.cons_zero, Fin.cons_succ]
   rw [Fin.prod_univ_castSucc (fun i => Gamma (b i)), Fin.sum_univ_castSucc b]
   have hcomm : b₀ + b (Fin.last n) = b (Fin.last n) + b₀ := add_comm _ _
   have hadd : b₀ + b (Fin.last n) + ∑ i : Fin n, b (Fin.castSucc i) =
@@ -307,7 +305,8 @@ private theorem mvBetaIntegral_eq_mvBeta_aux {n : ℕ} {b₀ : ℂ} {b : Fin n �
         ring
       have hslice (y : Fin n → ℝ) :
           Integrable fun t : ℝ =>
-            (piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1)).indicator (f ∘ piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ)) (y, t) := by
+            (piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1)).indicator (f ∘
+              piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ)) (y, t) := by
         change Integrable fun t : ℝ =>
           (piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1)).indicator
             (mvBetaIntegrand b₀ b ∘ piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ)) (y, t)
@@ -316,7 +315,8 @@ private theorem mvBetaIntegral_eq_mvBeta_aux {n : ℕ} {b₀ : ℂ} {b : Fin n �
           (piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1)) volume := by
         rw [Measure.volume_eq_prod]
         have hASM : AEStronglyMeasurable
-            ((piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1)).indicator (f ∘ piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ)))
+            ((piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1)).indicator (f ∘
+              piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ)))
             (volume.prod volume) :=
           (hfmeas.comp hmp.measurable).aestronglyMeasurable.indicator hRmeas
         refine (integrable_indicator_iff hRmeas).1 ?_
@@ -343,7 +343,8 @@ private theorem mvBetaIntegral_eq_mvBeta_aux {n : ℕ} {b₀ : ℂ} {b : Fin n �
             ext y
             simp
           have hEq :
-              (fun y => ∫ t, ‖(piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1)).indicator
+              (fun y => ∫ t, ‖(piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n +
+                1)).indicator
                   (f ∘ piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ)) (y, t)‖) =ᵐ[volume]
                 (mvBetaSimplex n).indicator (fun y => C * ‖f' y‖) := by
             filter_upwards [hsum0, hcoord0] with y hsum hcoord
@@ -361,12 +362,14 @@ private theorem mvBetaIntegral_eq_mvBeta_aux {n : ℕ} {b₀ : ℂ} {b : Fin n �
                         ((1 - ∑ i, y i - t : ℝ) : ℂ) ^ (b₀ - 1)‖) := by
                 funext t
                 by_cases ht : t ∈ Set.Icc 0 (1 - ∑ i, y i)
-                · have hmem : (y, t) ∈ piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1) := by
+                · have hmem : (y, t) ∈ piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n +
+                  1) := by
                     rw [hR]; exact ⟨hy, ht⟩
                   rw [Set.indicator_of_mem hmem, Set.indicator_of_mem ht]
                   simp only [Function.comp_apply, hf_comp, norm_mul]
                   ring
-                · have hnmem : (y, t) ∉ piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1) := by
+                · have hnmem : (y, t) ∉ piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n +
+                  1) := by
                     rw [hR]; exact fun h => ht h.2
                   simp [Set.indicator_of_notMem hnmem, Set.indicator_of_notMem ht]
               have hI :
@@ -406,7 +409,8 @@ private theorem mvBetaIntegral_eq_mvBeta_aux {n : ℕ} {b₀ : ℂ} {b : Fin n �
       have hFubini :=
         (hmp.setIntegral_preimage_emb hme f (mvBetaSimplex (n + 1))).symm
       have hprod :
-          ∫ p in piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1), f (piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) p) =
+          ∫ p in piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) ⁻¹' mvBetaSimplex (n + 1), f (piFinSnoc (fun
+            _ : Fin (n + 1) ↦ ℝ) p) =
             ∫ y in mvBetaSimplex n, ∫ t in Set.Icc 0 (1 - ∑ i, y i),
               f (piFinSnoc (fun _ : Fin (n + 1) ↦ ℝ) (y, t)) := by
         rw [hR]

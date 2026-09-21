@@ -39,12 +39,14 @@ theorem hasSum_regCarlsonDirichletAverage
     (hg : ∀ n, ContinuousOn (fun u : ι → ℝ ↦ g n (carlsonAffineForm z u))
       (Convexity.StdSimplex.coordinateSet ℝ ι))
     (hM : Summable M)
-    (hbound : ∀ n u, u ∈ Convexity.StdSimplex.coordinateSet ℝ ι → ‖g n (carlsonAffineForm z u)‖ ≤ M n)
+    (hbound : ∀ n u, u ∈ Convexity.StdSimplex.coordinateSet ℝ ι → ‖g n (carlsonAffineForm z u)‖ ≤
+      M n)
     (hsum : ∀ u, u ∈ Convexity.StdSimplex.coordinateSet ℝ ι →
       HasSum (fun n ↦ g n (carlsonAffineForm z u)) (f (carlsonAffineForm z u))) :
     HasSum (fun n ↦ regCarlsonDirichletAverage b z (g n))
       (regCarlsonDirichletAverage b z f) := by
-  let μ := (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict (Convexity.StdSimplex.coordinateSet ℝ ι)
+  let μ := (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict
+    (Convexity.StdSimplex.coordinateSet ℝ ι)
   let F : ℕ → (ι → ℝ) → ℂ := fun n u ↦
     regDirichletDensity b u * g n (carlsonAffineForm z u)
   let G : (ι → ℝ) → ℂ := fun u ↦

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -14,7 +14,8 @@ public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.CoordinateRealization
 
 import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Measure.Dirac
+import Mathlib.MeasureTheory.Measure.Dirac.Basic
+import Mathlib.MeasureTheory.Measure.Dirac.Def
 import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Basic
 
 /-! # The ambient affine-hyperplane coordinate measure -/
@@ -278,7 +279,8 @@ theorem stdSimplexMeasure_restrict_stdSimplexAffineSet :
       rw [hp, Measure.restrict_univ]
 
 /-- The coordinate Lebesgue measure is finite on the standard simplex. -/
-instance : IsFiniteMeasure (stdSimplexMeasure.restrict (Convexity.StdSimplex.coordinateSet ℝ ι)) := by
+instance : IsFiniteMeasure (stdSimplexMeasure.restrict (Convexity.StdSimplex.coordinateSet ℝ ι))
+  := by
   refine ⟨?_⟩
   cases isEmpty_or_nonempty ι with
   | inl h =>

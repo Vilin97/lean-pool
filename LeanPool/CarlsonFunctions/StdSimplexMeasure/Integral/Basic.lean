@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -130,9 +130,11 @@ theorem integral_stdSimplex_unique
   ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, f u ∂stdSimplexMeasure = f (fun _ ↦ 1) := by
   classical
   rw [stdSimplexMeasure_unique]
-  change ∫ u, f u ∂(dirac (fun _ : ι => (1 : ℝ))).restrict (Convexity.StdSimplex.coordinateSet ℝ ι) = _
+  change ∫ u, f u ∂(dirac (fun _ : ι => (1 : ℝ))).restrict (Convexity.StdSimplex.coordinateSet ℝ
+    ι) = _
   rw [MeasureTheory.restrict_dirac' (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet]
-  have hmem : (fun _ : ι => (1 : ℝ)) ∈ Convexity.StdSimplex.coordinateSet ℝ ι := by simp [Convexity.StdSimplex.coordinateSet]
+  have hmem : (fun _ : ι => (1 : ℝ)) ∈ Convexity.StdSimplex.coordinateSet ℝ ι := by simp
+    [Convexity.StdSimplex.coordinateSet]
   rw [ite_eq_left hmem]
   exact MeasureTheory.integral_dirac f (fun _ : ι => (1 : ℝ))
 

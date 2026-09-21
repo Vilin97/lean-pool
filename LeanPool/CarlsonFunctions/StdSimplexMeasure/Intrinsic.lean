@@ -40,7 +40,7 @@ theorem mem_coordinateSet {u : ι → R} :
 
 theorem coordinates_mem (s : StdSimplex R ι) : coordinates s ∈ coordinateSet R ι := by
   refine ⟨s.nonneg, ?_⟩
-  simpa [coordinates, Finsupp.sum_fintype] using s.total
+  simp [coordinates, Finsupp.sum_fintype]
 
 /-- Recover an intrinsic point from its ambient coordinates and membership proof. -/
 def ofCoordinates (u : ι → R) (hu : u ∈ coordinateSet R ι) : StdSimplex R ι where
@@ -111,13 +111,19 @@ variable {R : Type*} [Ring R] [PartialOrder R] [IsStrictOrderedRing R]
 variable [TopologicalSpace R] [IsTopologicalRing R]
 variable {ι : Type*} [Fintype ι]
 
-theorem isEmbedding_coordinates :
-    Topology.IsEmbedding (coordinates (R := R) (ι := ι)) :=
-  isEmbedding_toFun_comp_weights R ι
+omit [Fintype ι] in
+theorem isEmbedding_coordinates [Finite ι] :
+    Topology.IsEmbedding (coordinates (R := R) (ι := ι)) := by
+  classical
+  let _ := Fintype.ofFinite ι
+  exact isEmbedding_toFun_comp_weights R ι
 
-@[fun_prop] theorem continuous_coordinates :
-    Continuous (coordinates (R := R) (ι := ι)) :=
-  isEmbedding_coordinates.continuous
+omit [Fintype ι] in
+@[fun_prop] theorem continuous_coordinates [Finite ι] :
+    Continuous (coordinates (R := R) (ι := ι)) := by
+  classical
+  let _ := Fintype.ofFinite ι
+  exact isEmbedding_coordinates.continuous
 
 /-- The intrinsic simplex and its coordinate realization have the same topology. -/
 def coordinateHomeomorph : StdSimplex R ι ≃ₜ coordinateSet R ι where
@@ -127,16 +133,22 @@ def coordinateHomeomorph : StdSimplex R ι ≃ₜ coordinateSet R ι where
     apply isEmbedding_coordinates.isInducing.continuous_iff.mpr
     exact continuous_subtype_val
 
-theorem isClosedEmbedding_coordinates [OrderClosedTopology R] :
-    Topology.IsClosedEmbedding (coordinates (R := R) (ι := ι)) :=
-  isClosedEmbedding_toFun_comp_weights R ι
+omit [Fintype ι] in
+theorem isClosedEmbedding_coordinates [Finite ι] [OrderClosedTopology R] :
+    Topology.IsClosedEmbedding (coordinates (R := R) (ι := ι)) := by
+  classical
+  let _ := Fintype.ofFinite ι
+  exact isClosedEmbedding_toFun_comp_weights R ι
 
-instance : MeasurableSpace (StdSimplex ℝ ι) := borel _
-instance : BorelSpace (StdSimplex ℝ ι) := ⟨rfl⟩
+instance instMeasurableSpaceRealCarlson : MeasurableSpace (StdSimplex ℝ ι) := borel _
+instance instBorelSpaceRealCarlson : BorelSpace (StdSimplex ℝ ι) := ⟨rfl⟩
 
-theorem measurableEmbedding_coordinates :
-    MeasurableEmbedding (coordinates (R := ℝ) (ι := ι)) :=
-  isClosedEmbedding_coordinates.measurableEmbedding
+omit [Fintype ι] in
+theorem measurableEmbedding_coordinates [Finite ι] :
+    MeasurableEmbedding (coordinates (R := ℝ) (ι := ι)) := by
+  classical
+  let _ := Fintype.ofFinite ι
+  exact isClosedEmbedding_coordinates.measurableEmbedding
 
 end Convexity.StdSimplex
 end

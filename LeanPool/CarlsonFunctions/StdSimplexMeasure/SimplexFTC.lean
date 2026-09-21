@@ -129,7 +129,8 @@ theorem integral_posSimplexFin_snoc {E : Type*} [NormedAddCommGroup E] [NormedSp
         Fin.snoc_castSucc, Fin.snoc_last]
       constructor
       · intro h
-        exact ⟨by simpa using h.1 (Fin.last n), by simpa using (show t ≤ 1 - ∑ k, v k by linarith [h.2])⟩
+        exact ⟨by simpa using h.1 (Fin.last n), by simpa using (show t ≤ 1 - ∑ k, v k by linarith
+          [h.2])⟩
       · intro h
         refine ⟨?_, by simpa using (show (∑ k, v k) + t ≤ 1 by linarith [h.2])⟩
         intro k

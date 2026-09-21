@@ -34,18 +34,18 @@ theorem analyticOnNhd_carlsonPartialDeriv_regCarlsonRSlit_joint (i : ι) :
       carlsonPartialDeriv i (regCarlsonRSlit (p none) (fun j => p (some (.inl j))))
         (fun j => p (some (.inr j))))
       {p | (fun j => p (some (.inr j))) ∈ carlsonRSlitDomain} := by
-  have h := analyticOnNhd_regCarlsonRSlit_joint (ι := ι) |>.partialDeriv
+  have h := analyticOnNhd_regCarlsonRSlit_joint (ι := ι) |>.partialDerivCarlson
     (isOpen_carlsonRSlitDomain.preimage (by fun_prop)) (some (Sum.inr i))
-  have heq : SeveralComplexVariables.partialDeriv (some (Sum.inr i))
+  have heq : CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson (some (Sum.inr i))
       (fun p : Option (ι ⊕ ι) → ℂ => regCarlsonRSlit (p none)
         (fun j => p (some (.inl j))) (fun j => p (some (.inr j)))) =
       (fun p => carlsonPartialDeriv i (regCarlsonRSlit (p none)
         (fun j => p (some (.inl j)))) (fun j => p (some (.inr j)))) := by
     funext p
-    unfold SeveralComplexVariables.partialDeriv carlsonPartialDeriv
+    unfold CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson carlsonPartialDeriv
     congr 1
     funext w
-    simp [Function.update_apply]
+    simp only [ne_eq, reduceCtorEq, not_false_eq_true, Function.update_of_ne, Option.some.injEq]
     congr 1
     funext j
     simp [Function.update_apply]
@@ -97,7 +97,7 @@ private theorem partialDeriv_regCarlsonRSlit_of_right (t : ℂ) (b : ι → ℂ)
   have hevent : regCarlsonRSlit t b =ᶠ[nhds z] regCarlsonRIntegral t b := by
     filter_upwards [isOpen_carlsonRVariableDomain.mem_nhds hz] with w hw
     exact regCarlsonRSlit_eq_integral t hb hw
-  have hD := SeveralComplexVariables.partialDeriv_congr hevent i
+  have hD := CarlsonFunctions.SeveralComplexVariables.partialDeriv_congr hevent i
   change carlsonPartialDeriv i (regCarlsonRSlit t b) z =
     carlsonPartialDeriv i (regCarlsonRIntegral t b) z at hD
   change carlsonPartialDeriv i (regCarlsonRSlit t b) z =
@@ -111,7 +111,7 @@ theorem carlsonPartialDeriv_regCarlsonRSlit (t : ℂ) (b : ι → ℂ)
     carlsonPartialDeriv i (regCarlsonRSlit t b) z =
       t * b i * regCarlsonRSlit (t - 1) (addDirichletUnit b i) z := by
   have hleft : AnalyticOnNhd ℂ (carlsonPartialDeriv i (regCarlsonRSlit t b)) carlsonRSlitDomain :=
-    (analyticOnNhd_regCarlsonRSlit t b).partialDeriv isOpen_carlsonRSlitDomain i
+    (analyticOnNhd_regCarlsonRSlit t b).partialDerivCarlson isOpen_carlsonRSlitDomain i
   have hright : AnalyticOnNhd ℂ (fun w =>
       t * b i * regCarlsonRSlit (t - 1) (addDirichletUnit b i) w) carlsonRSlitDomain :=
     analyticOnNhd_const.mul (analyticOnNhd_regCarlsonRSlit (t - 1) _)
@@ -124,7 +124,8 @@ theorem hasDerivAt_regCarlsonRSlit_update (t : ℂ) (b : ι → ℂ)
     {z : ι → ℂ} (hz : z ∈ carlsonRSlitDomain) (i : ι) :
     HasDerivAt (fun w => regCarlsonRSlit t b (Function.update z i w))
       (t * b i * regCarlsonRSlit (t - 1) (addDirichletUnit b i) z) (z i) := by
-  have h := ((analyticOnNhd_regCarlsonRSlit t b).analyticAt_update hz i).differentiableAt.hasDerivAt
+  have h := ((analyticOnNhd_regCarlsonRSlit t b).analyticAt_updateCarlson hz
+    i).differentiableAt.hasDerivAt
   change HasDerivAt _ (carlsonPartialDeriv i (regCarlsonRSlit t b) z) (z i) at h
   rwa [carlsonPartialDeriv_regCarlsonRSlit t b hz i] at h
 
@@ -140,9 +141,11 @@ theorem carlsonPartialDeriv_carlsonPartialDeriv_regCarlsonRSlit
     filter_upwards [isOpen_carlsonRSlitDomain.mem_nhds hz] with w hw
     exact carlsonPartialDeriv_regCarlsonRSlit t b hw j
   rw [carlsonPartialDeriv_eq_partialDeriv,
-    SeveralComplexVariables.partialDeriv_congr heq i]
-  have h := (hasDerivAt_regCarlsonRSlit_update (t - 1) (addDirichletUnit b j) hz i).const_mul (t * b j)
-  simpa only [SeveralComplexVariables.partialDeriv, show t - 1 - 1 = t - 2 by ring] using! h.deriv
+    CarlsonFunctions.SeveralComplexVariables.partialDeriv_congr heq i]
+  have h := (hasDerivAt_regCarlsonRSlit_update (t - 1) (addDirichletUnit b j) hz i).const_mul (t *
+    b j)
+  simpa only [CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson, show t - 1 - 1 = t - 2
+    by ring] using! h.deriv
 
 /-- The translation differential identity of Theorem 5.9-2 on the full domain. -/
 theorem sum_carlsonPartialDeriv_regCarlsonRSlit (t : ℂ) (b : ι → ℂ)
@@ -173,7 +176,7 @@ theorem hasDerivAt_regCarlsonRSlit_translate (t : ℂ) (b z : ι → ℂ) {x : �
     hasDerivAt_pi.mpr fun i => (hasDerivAt_id x).add_const (z i)
   have h := hd.hasFDerivAt.comp_hasDerivAt x hvec
   apply h.congr_deriv
-  rw [SeveralComplexVariables.fderiv_eq_sum_partialDeriv hd]
+  rw [CarlsonFunctions.SeveralComplexVariables.fderiv_eq_sum_partialDeriv hd]
   simpa only [one_smul, ← carlsonPartialDeriv_eq_partialDeriv] using
     sum_carlsonPartialDeriv_regCarlsonRSlit t b hx
 

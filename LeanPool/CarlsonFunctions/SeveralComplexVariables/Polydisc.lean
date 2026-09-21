@@ -20,7 +20,7 @@ these are not Euclidean balls.
 open Complex Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Real Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 
@@ -188,6 +188,6 @@ lemma cauchyKernel_ne_zero_on_torus {n : ℕ} {c w : Fin n → ℂ} {R : ℝ} {�
   rw [h] at this
   exact hw.not_ge this.ge
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

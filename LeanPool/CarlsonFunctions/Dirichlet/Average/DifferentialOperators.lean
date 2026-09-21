@@ -95,7 +95,8 @@ omit [Fintype ι] in
 open scoped Classical in
 /-- Carlson's coordinate derivative is the scalar specialization of the SCV derivative. -/
 theorem carlsonPartialDeriv_eq_partialDeriv (i : ι) (G : (ι → ℂ) → ℂ) :
-    carlsonPartialDeriv i G = SeveralComplexVariables.partialDeriv i G := rfl
+    carlsonPartialDeriv i G = CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson i G :=
+      rfl
 
 /-- The partial derivative of a Carlson kernel is the derivative of the univariate function
 times the corresponding simplex coordinate.  This is the pointwise form of Carlson's
@@ -136,7 +137,8 @@ omit [Fintype ι] in
 /-- Carlson and SCV use the same order convention for repeated coordinate differentiation. -/
 theorem carlsonIteratedPartialDeriv_eq_iteratedPartialDeriv (is : List ι)
     (G : (ι → ℂ) → ℂ) :
-    carlsonIteratedPartialDeriv is G = SeveralComplexVariables.iteratedPartialDeriv is G := by
+    carlsonIteratedPartialDeriv is G =
+      CarlsonFunctions.SeveralComplexVariables.iteratedPartialDerivCarlson is G := by
   induction is with
   | nil => rfl
   | cons i is ih =>
@@ -149,7 +151,7 @@ theorem carlsonIteratedPartialDeriv_perm {U : Set (ι → ℂ)} {G : (ι → ℂ
     (hG : AnalyticOnNhd ℂ G U) (hU : IsOpen U) {is js : List ι} (h : is.Perm js) :
     Set.EqOn (carlsonIteratedPartialDeriv is G) (carlsonIteratedPartialDeriv js G) U := by
   simp only [carlsonIteratedPartialDeriv_eq_iteratedPartialDeriv]
-  exact SeveralComplexVariables.iteratedPartialDeriv_perm hG hU h
+  exact CarlsonFunctions.SeveralComplexVariables.iteratedPartialDeriv_perm hG hU h
 
 /-- Iterated partial differentiation of a Carlson kernel introduces the corresponding product
 of simplex coordinates.  This is the pointwise core of Carlson's formula (5.3-2). -/
@@ -186,7 +188,8 @@ def carlsonTotalDeriv (G : (ι → ℂ) → ℂ) (z : ι → ℂ) : ℂ :=
 averaged function, because simplex coordinates sum to one. -/
 theorem carlsonTotalDeriv_comp_carlsonAffineForm
     {f : ℂ → ℂ} {f' : ℂ} {z : ι → ℂ} {u : ι → ℝ}
-    (hu : u ∈ Convexity.StdSimplex.coordinateSet ℝ ι) (hf : HasDerivAt f f' (carlsonAffineForm z u)) :
+    (hu : u ∈ Convexity.StdSimplex.coordinateSet ℝ ι) (hf : HasDerivAt f f' (carlsonAffineForm z
+      u)) :
     carlsonTotalDeriv (fun z => f (carlsonAffineForm z u)) z = f' := by
   simp_rw [carlsonTotalDeriv, carlsonPartialDeriv_comp_carlsonAffineForm _ hf,
     ← Finset.sum_mul]

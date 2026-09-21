@@ -38,7 +38,8 @@ theorem regCarlsonLSlit_aggregate {κ : Type*} [Fintype κ]
     apply analyticAt_regCarlsonLSlit_comp analyticAt_const analyticAt_const _ (fun i => hw (q i))
     exact analyticAt_pi_iff.mpr fun i =>
       (ContinuousLinearMap.proj (q i) : (κ → ℂ) →L[ℂ] ℂ).analyticAt w
-  apply eqOn_carlsonRSlitDomain_of_eqOn_rightHalfPlane hleft (analyticOnNhd_regCarlsonLSlit t _) ?_ hz
+  apply eqOn_carlsonRSlitDomain_of_eqOn_rightHalfPlane hleft (analyticOnNhd_regCarlsonLSlit t _)
+    ?_ hz
   intro w hw
   change regCarlsonLSlit t b (w ∘ q) = regCarlsonLSlit t (stdSimplexAggregate q b) w
   dsimp only [Function.comp_def]
@@ -56,7 +57,8 @@ theorem regCarlsonLSlit_option_zero [Nonempty ι] (t : ℂ)
     apply analyticAt_regCarlsonLSlit_comp analyticAt_const analyticAt_const _ (fun i => hw (some i))
     exact analyticAt_pi_iff.mpr fun i =>
       (ContinuousLinearMap.proj (some i) : (Option ι → ℂ) →L[ℂ] ℂ).analyticAt w
-  apply eqOn_carlsonRSlitDomain_of_eqOn_rightHalfPlane (analyticOnNhd_regCarlsonLSlit t b) hright ?_ hz
+  apply eqOn_carlsonRSlitDomain_of_eqOn_rightHalfPlane (analyticOnNhd_regCarlsonLSlit t b) hright
+    ?_ hz
   intro w hw
   change regCarlsonLSlit t b w = regCarlsonLSlit t (b ∘ some) (w ∘ some)
   dsimp only [Function.comp_def]
@@ -73,7 +75,8 @@ theorem regCarlsonLSlit_perm (t : ℂ) (b : ι → ℂ) {z : ι → ℂ}
     apply analyticAt_regCarlsonLSlit_comp analyticAt_const analyticAt_const _ (fun i => hw (σ i))
     exact analyticAt_pi_iff.mpr fun i =>
       (ContinuousLinearMap.proj (σ i) : (ι → ℂ) →L[ℂ] ℂ).analyticAt w
-  apply eqOn_carlsonRSlitDomain_of_eqOn_rightHalfPlane hleft (analyticOnNhd_regCarlsonLSlit t b) ?_ hz
+  apply eqOn_carlsonRSlitDomain_of_eqOn_rightHalfPlane hleft (analyticOnNhd_regCarlsonLSlit t b)
+    ?_ hz
   intro w hw
   change regCarlsonLSlit t (b ∘ σ) (w ∘ σ) = regCarlsonLSlit t b w
   dsimp only [Function.comp_def]

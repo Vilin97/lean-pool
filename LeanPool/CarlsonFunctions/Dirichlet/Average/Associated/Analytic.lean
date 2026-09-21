@@ -33,18 +33,19 @@ theorem analyticOnNhd_regCarlsonDirichletAverage_nodes
       ext z
       simp [U, Set.range_subset_iff]]
     exact isOpen_set_pi Set.finite_univ fun _ _ => hΩopen
-  let μ := (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict (Convexity.StdSimplex.coordinateSet ℝ ι)
+  let μ := (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict
+    (Convexity.StdSimplex.coordinateSet ℝ ι)
   let F : (ι → ℂ) → (ι → ℝ) → ℂ := fun z u =>
     regDirichletDensity b u * f (carlsonAffineForm z u)
   let L : (ι → ℝ) → ((ι → ℂ) →L[ℂ] ℂ) := carlsonAffineFormCLM
-  refine analyticOnNhd_integral_of_dominated_of_fderiv_le
+  refine analyticOnNhd_integral_of_dominated_of_fderiv_leCarlson
     (μ := μ) (U := U) (F := F) hU ?_
   intro z hz
   let K : Set ℂ := convexHull ℝ (Set.range z)
   have hKcompact : IsCompact K := (Set.finite_range z).isCompact_convexHull ℝ
   have hKΩ : K ⊆ Ω := convexHull_min hz hΩconv
   obtain ⟨δ, hδ, hδΩ, C, hCnonneg, hC⟩ :=
-    hf.exists_cthickening_deriv_bound hΩopen hKcompact hKΩ
+    hf.exists_cthickening_deriv_boundCarlson hΩopen hKcompact hKΩ
   have hderivCont : ContinuousOn (deriv f) Ω := hf.deriv.continuousOn
   let s : Set (ι → ℂ) := Metric.ball z δ
   have hs : s ∈ nhds z := Metric.ball_mem_nhds z hδ
@@ -55,7 +56,8 @@ theorem analyticOnNhd_regCarlsonDirichletAverage_nodes
     change IntegrableOn (fun u => regDirichletDensity b u)
       (Convexity.StdSimplex.coordinateSet ℝ ι) MeasureTheory.Measure.stdSimplexMeasure
     simpa only [mul_one] using integrableOn_regDirichletDensity_mul b hb
-      (continuousOn_const : ContinuousOn (fun _ : ι → ℝ => (1 : ℂ)) (Convexity.StdSimplex.coordinateSet ℝ ι))
+      (continuousOn_const : ContinuousOn (fun _ : ι → ℝ => (1 : ℂ))
+        (Convexity.StdSimplex.coordinateSet ℝ ι))
   refine ⟨s, bound, F', hs, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · filter_upwards [hs] with y hy
     have hyU : Set.range y ⊆ Ω := by
@@ -68,7 +70,8 @@ theorem analyticOnNhd_regCarlsonDirichletAverage_nodes
       apply hδΩ
       exact Metric.mem_cthickening_of_dist_le (y i) (z i) δ K hiK
         ((dist_le_pi_dist y z i).trans (le_of_lt hy'))
-    have hcont : ContinuousOn (fun u => f (carlsonAffineForm y u)) (Convexity.StdSimplex.coordinateSet ℝ ι) :=
+    have hcont : ContinuousOn (fun u => f (carlsonAffineForm y u))
+      (Convexity.StdSimplex.coordinateSet ℝ ι) :=
       hf.continuousOn.comp (continuous_carlsonAffineForm y).continuousOn fun u hu =>
         (convexHull_min hyU hΩconv) (carlsonAffineForm_mem_convexHull y hu)
     exact (integrableOn_regDirichletDensity_mul b hb hcont).aestronglyMeasurable
@@ -144,7 +147,8 @@ theorem locallyBounded_regCarlsonDirichletAverage_parameters_nodes
     exact ⟨0, Filter.Eventually.of_forall (fun q => by
       simp [regCarlsonDirichletAverage, regDirichletIntegral, stdSimplexMeasure_empty])⟩
   let := hι
-  let μ := (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict (Convexity.StdSimplex.coordinateSet ℝ ι)
+  let μ := (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict
+    (Convexity.StdSimplex.coordinateSet ℝ ι)
   let K := convexHull ℝ (Set.range p.2)
   have hK : IsCompact K := (Set.finite_range p.2).isCompact_convexHull ℝ
   have hKΩ : K ⊆ Ω := convexHull_min hz hΩconv
@@ -181,7 +185,8 @@ theorem locallyBounded_regCarlsonDirichletAverage_parameters_nodes
     filter_upwards [hevent] with q hq
     apply norm_integral_le_of_norm_le ((integrableOn_mvBetaMonomial a ha).norm.mul_const _)
     filter_upwards [self_mem_ae_restrict (μ := MeasureTheory.Measure.stdSimplexMeasure)
-      (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet, ae_zero_lt_of_mem_stdSimplex (ι := ι)] with u hu hupos
+      (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet,
+        ae_zero_lt_of_mem_stdSimplex (ι := ι)] with u hu hupos
     have hm : ‖∏ i, (u i : ℂ) ^ (q.1 i - 1)‖ ≤ ‖∏ i, (u i : ℂ) ^ (a i - 1)‖ := by
       simp only [norm_prod]
       apply Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
@@ -223,7 +228,7 @@ theorem analyticOnNhd_regCarlsonDirichletAverage_parameters_nodes
     exact (isOpen_mvBetaConvergent.preimage (continuous_fst.comp L.continuous)).inter
       (hzopen.preimage (continuous_snd.comp L.continuous))
   have hG : AnalyticOnNhd ℂ G U := by
-    apply SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded hU
+    apply CarlsonFunctions.SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded hU
     · intro q hq k
       have hupdate (v : ι → ℂ) (i : ι) (w : ℂ) :
           Function.update v i w = fun j => if j = i then w else v j := by
@@ -231,18 +236,20 @@ theorem analyticOnNhd_regCarlsonDirichletAverage_parameters_nodes
         simp only [Function.update_apply]
       cases k with
       | inl i =>
-        have hcont : ContinuousOn (fun u => f (carlsonAffineForm (L q).2 u)) (Convexity.StdSimplex.coordinateSet ℝ ι) :=
+        have hcont : ContinuousOn (fun u => f (carlsonAffineForm (L q).2 u))
+          (Convexity.StdSimplex.coordinateSet ℝ ι) :=
           hf.continuousOn.comp (continuous_carlsonAffineForm _).continuousOn
             (fun u hu => convexHull_min hq.2 hΩconv (carlsonAffineForm_mem_convexHull _ hu))
         have H := (isOpen_mvBetaConvergent.analyticOn_iff_analyticOnNhd.mp
-          (regDirichletIntegral_analyticOn hcont)).analyticAt_update hq.1 i
+          (regDirichletIntegral_analyticOn hcont)).analyticAt_updateCarlson hq.1 i
         change AnalyticAt ℂ (fun w => regCarlsonDirichletAverage
           (Function.update (fun j => q (.inl j)) i w) (fun j => q (.inr j)) f) (q (.inl i)) at H
         dsimp only [G]
         simp only [hLapply]
         simpa only [hupdate, Function.update_apply, Sum.inl.injEq, reduceCtorEq, ite_false] using! H
       | inr i =>
-        have H := (analyticOnNhd_regCarlsonDirichletAverage_nodes hΩopen hΩconv hf hq.1).analyticAt_update
+        have H := (analyticOnNhd_regCarlsonDirichletAverage_nodes hΩopen hΩconv hf
+          hq.1).analyticAt_updateCarlson
           hq.2 i
         change AnalyticAt ℂ (fun w => regCarlsonDirichletAverage
           (fun j => q (.inl j)) (Function.update (fun j => q (.inr j)) i w) f) (q (.inr i)) at H

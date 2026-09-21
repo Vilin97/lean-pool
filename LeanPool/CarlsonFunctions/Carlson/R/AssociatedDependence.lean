@@ -43,6 +43,7 @@ local instance : Module (MvPolynomial ι ℂ)
   Module.compHom _ (RingHom.pi
     (fun z : {z : ι → ℂ // z ∈ carlsonRVariableDomain} => MvPolynomial.eval z.1))
 
+omit [Fintype ι] in
 private theorem polynomial_smul_apply (p : MvPolynomial ι ℂ)
     (f : CarlsonVariableFunctions ι) (z : {z : ι → ℂ // z ∈ carlsonRVariableDomain}) :
     (p • f) z = p.eval z.1 * f z := rfl

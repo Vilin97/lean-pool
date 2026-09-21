@@ -83,7 +83,7 @@ theorem carlsonUnweightedAverage_perm (z : ι → ℂ) (f : ℂ → ℂ)
   }
   have hg : MeasurePreserving g (dirichletMeasure b) (dirichletMeasure b) := by
     convert measurePreserving_dirichletMeasure_perm b σ.symm using 1 <;>
-      simp [g, b, Function.comp_def]
+      simp [b, Function.comp_def]
   unfold carlsonUnweightedAverage realCarlsonDirichletAverage
   rw [← hg.integral_comp' (fun u ↦ f (carlsonAffineForm z u))]
   apply integral_congr_ae
@@ -108,7 +108,8 @@ def carlsonDividedDifference (n : ℕ) (f : ℂ → ℂ) (z : Fin (n + 1) → �
 /-- Unweighted probability normalization in finite coordinates. -/
 theorem carlsonUnweightedAverage_eq_factorial_integral (z : Fin (n + 1) → ℂ) (f : ℂ → ℂ) :
     carlsonUnweightedAverage z f = (n.factorial : ℂ) *
-      ∫ u in Convexity.StdSimplex.coordinateSet ℝ (Fin (n + 1)), f (carlsonAffineForm z u) ∂Measure.stdSimplexMeasure := by
+      ∫ u in Convexity.StdSimplex.coordinateSet ℝ (Fin (n + 1)), f (carlsonAffineForm z u)
+        ∂Measure.stdSimplexMeasure := by
   unfold carlsonUnweightedAverage realCarlsonDirichletAverage
   change (∫ u, f (carlsonAffineForm z u) ∂dirichletMeasureUniform 1) = _
   rw [dirichletMeasureUniform_one, integral_smul_measure]
@@ -308,7 +309,7 @@ def newtonPrefix {p : ℕ} (z : Fin p → ℂ) (n : Fin p) : Fin (n + 1) → ℂ
 /-- **Carlson 5.5-1.** Divided differences defined by unweighted Dirichlet averages satisfy
 the usual first-order recurrence, including at coincident nodes. -/
 theorem carlsonDividedDifference_sub
-    {Ω : Set ℂ} (hΩopen : IsOpen Ω) (hΩconv : Convex ℝ Ω)
+    {Ω : Set ℂ} (hΩconv : Convex ℝ Ω)
     {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω)
     (z : Fin n → ℂ) (hz : Set.range z ⊆ Ω) {x y : ℂ} (hx : x ∈ Ω) (hy : y ∈ Ω) :
     carlsonDividedDifference n f (Fin.snoc z x) -
@@ -321,7 +322,7 @@ theorem carlsonDividedDifference_sub
 
 /-- **Carlson 5.5-2.** The finite Newton expansion with its Dirichlet-average remainder. -/
 theorem newtonTaylor_sum_add_remainder
-    {Ω : Set ℂ} (hΩopen : IsOpen Ω) (hΩconv : Convex ℝ Ω)
+    {Ω : Set ℂ} (hΩconv : Convex ℝ Ω)
     {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω)
     (z : Fin p → ℂ) (hz : Set.range z ⊆ Ω) {x : ℂ} (hx : x ∈ Ω) :
     f x =
@@ -330,12 +331,12 @@ theorem newtonTaylor_sum_add_remainder
       carlsonDividedDifference p f (Fin.snoc z x) * newtonBasis z x := by
   induction p with
   | zero =>
-      simpa [newtonBasis, carlsonDividedDifference_zero, Fin.snoc]
+      simp [newtonBasis, carlsonDividedDifference_zero, Fin.snoc]
   | succ p ih =>
       let z₀ : Fin p → ℂ := Fin.init z
       let a : ℂ := z (Fin.last p)
       have hza : z = Fin.snoc z₀ a := by
-        simpa [z₀, a] using (Fin.snoc_init_self z).symm
+        simp [z₀, a]
       have hz₀ : Set.range z₀ ⊆ Ω := by
         rintro w ⟨i, rfl⟩
         exact hz ⟨Fin.castSucc i, rfl⟩
@@ -348,14 +349,14 @@ theorem newtonTaylor_sum_add_remainder
         newtonPrefix_last, newtonPrecedingNodes_last, Fin.init_snoc,
         Fin.val_castSucc, Fin.val_last]
       rw [newtonBasis_snoc]
-      have hrec := carlsonDividedDifference_sub hΩopen hΩconv hf z₀ hz₀ hx ha
+      have hrec := carlsonDividedDifference_sub hΩconv hf z₀ hz₀ hx ha
       rw [carlsonDividedDifference_snoc_snoc_comm] at hrec
       linear_combination newtonBasis z₀ x * hrec
 
 /-- Taylor's formula with Carlson's unweighted-average remainder, obtained from the
 Newton--Taylor formula by coalescing all interpolation nodes. -/
 theorem taylor_sum_add_carlsonRemainder
-    {Ω : Set ℂ} (hΩopen : IsOpen Ω) (hΩconv : Convex ℝ Ω)
+    {Ω : Set ℂ} (hΩconv : Convex ℝ Ω)
     {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω)
     {a x : ℂ} (ha : a ∈ Ω) (hx : x ∈ Ω) (p : ℕ) :
     f x =
@@ -364,7 +365,7 @@ theorem taylor_sum_add_carlsonRemainder
   have hz : Set.range (fun _ : Fin p => a) ⊆ Ω := by
     rintro y ⟨i, rfl⟩
     exact ha
-  have h := newtonTaylor_sum_add_remainder hΩopen hΩconv hf
+  have h := newtonTaylor_sum_add_remainder hΩconv hf
     (fun _ : Fin p => a) hz hx
   have hprefix (n : Fin p) : newtonPrefix (fun _ : Fin p => a) n = fun _ => a := by
     funext i
@@ -442,7 +443,8 @@ private lemma coalescedSimplexIntegral_succ
     simp only [Fin.sum_univ_castSucc, Fin.snoc_castSucc, Fin.snoc_last, Pi.smul_apply,
       smul_eq_mul, ← Finset.mul_sum, ofReal_sub, ofReal_one, ofReal_add, ofReal_mul]
     ring
-  rw [hs, integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le (by norm_num : (0 : ℝ) ≤ 1)]
+  rw [hs, integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le (by norm_num : (0 : ℝ) ≤
+    1)]
   have H := intervalIntegral.integral_comp_sub_left
     (fun t : ℝ => (t : ℂ) ^ n * ∫ v in posSimplexFin n 1,
       f (a + ((1 - ∑ k, v k : ℝ) : ℂ) * ((a + (t : ℂ) * (x - a)) - a))) 1
@@ -459,7 +461,8 @@ private lemma carlsonRepeatedIntegral_eq_coalesced
       rw [Measure.volume_pi_eq_dirac]
       simp [posSimplexFin]
   | succ n ih =>
-      rw [carlsonRepeatedIntegral_succ, carlsonSegmentIntegral, coalescedSimplexIntegral_succ hΩconv hf ha hx]
+      rw [carlsonRepeatedIntegral_succ, carlsonSegmentIntegral, coalescedSimplexIntegral_succ
+        hΩconv hf ha hx]
       rw [← intervalIntegral.integral_const_mul, ← intervalIntegral.integral_const_mul]
       apply intervalIntegral.integral_congr
       intro t ht
@@ -477,7 +480,7 @@ private lemma carlsonRepeatedIntegral_eq_coalesced
 /-- Carlson's equation 5.5(10): an `n`-fold repeated integral is an unweighted Dirichlet
 average with `n` nodes coalesced at the base point and one node at the endpoint. -/
 theorem carlsonRepeatedIntegral_eq_unweightedAverage
-    {Ω : Set ℂ} (hΩopen : IsOpen Ω) (hΩconv : Convex ℝ Ω)
+    {Ω : Set ℂ} (hΩconv : Convex ℝ Ω)
     {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω)
     {a x : ℂ} (ha : a ∈ Ω) (hx : x ∈ Ω) (n : ℕ) :
     carlsonRepeatedIntegral n a f x =

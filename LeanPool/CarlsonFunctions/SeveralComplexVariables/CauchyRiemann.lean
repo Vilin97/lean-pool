@@ -27,7 +27,7 @@ coordinates and relate the real derivative to the existing `partialDeriv` interf
 open Complex Filter Function Set
 open scoped Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
@@ -42,13 +42,16 @@ def conjWirtingerDeriv (i : ι) (f : (ι → ℂ) → F) (z : ι → ℂ) : F :=
   (1 / 2 : ℂ) • (fderiv ℝ f z (Pi.single i 1) + I • fderiv ℝ f z (Pi.single i I))
 
 open scoped Classical in
+omit [Fintype ι] in
 /-- The real derivative of a coordinate slice is the restriction of the real derivative
 to that coordinate's complex plane. -/
-theorem hasFDerivAt_update_real {f : (ι → ℂ) → F} (z : ι → ℂ) (i : ι) (w : ℂ)
+theorem hasFDerivAt_update_real [Finite ι] {f : (ι → ℂ) → F} (z : ι → ℂ) (i : ι) (w : ℂ)
     (hf : DifferentiableAt ℝ f (update z i w)) :
     HasFDerivAt (fun v => f (update z i v))
       ((fderiv ℝ f (update z i w)).comp
         ((ContinuousLinearMap.single ℂ (fun _ : ι => ℂ) i).restrictScalars ℝ)) w := by
+  classical
+  let _ := Fintype.ofFinite ι
   have hs : HasFDerivAt (update z i)
       ((ContinuousLinearMap.single ℂ (fun _ : ι => ℂ) i).restrictScalars ℝ) w := by
     convert! (hasDerivAt_update z i w).hasFDerivAt.restrictScalars ℝ using 1
@@ -92,7 +95,7 @@ theorem analyticOnNhd_iff_differentiableAt_real_cauchyRiemann
 
 open scoped Classical in
 /-- The antiholomorphic Wirtinger derivative vanishes for a holomorphic function. -/
-theorem _root_.AnalyticOnNhd.conjWirtingerDeriv_eq_zero {U : Set (ι → ℂ)}
+theorem _root_.AnalyticOnNhd.conjWirtingerDeriv_eq_zeroCarlson {U : Set (ι → ℂ)}
     {f : (ι → ℂ) → F} (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U)
     {z : ι → ℂ} (hz : z ∈ U) (i : ι) : conjWirtingerDeriv i f z = 0 := by
   have hCR := (analyticOnNhd_iff_differentiableAt_real_cauchyRiemann hU).mp hf |>.2 z hz i
@@ -100,9 +103,9 @@ theorem _root_.AnalyticOnNhd.conjWirtingerDeriv_eq_zero {U : Set (ι → ℂ)}
 
 /-- For holomorphic functions the holomorphic Wirtinger derivative agrees with the
 complex coordinate derivative `partialDeriv`. -/
-theorem _root_.AnalyticOnNhd.wirtingerDeriv_eq_partialDeriv {U : Set (ι → ℂ)}
+theorem _root_.AnalyticOnNhd.wirtingerDeriv_eq_partialDerivCarlson {U : Set (ι → ℂ)}
     {f : (ι → ℂ) → F} (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U)
-    {z : ι → ℂ} (hz : z ∈ U) (i : ι) : wirtingerDeriv i f z = partialDeriv i f z := by
+    {z : ι → ℂ} (hz : z ∈ U) (i : ι) : wirtingerDeriv i f z = partialDerivCarlson i f z := by
   have hCR := (analyticOnNhd_iff_differentiableAt_real_cauchyRiemann hU).mp hf |>.2 z hz i
   rw [wirtingerDeriv, hCR, smul_smul, I_mul_I, neg_one_smul, sub_neg_eq_add,
     ← two_smul ℂ, smul_smul]
@@ -111,6 +114,6 @@ theorem _root_.AnalyticOnNhd.wirtingerDeriv_eq_partialDeriv {U : Set (ι → ℂ
     (hf z hz).differentiableAt.fderiv_restrictScalars ℝ]
   rfl
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

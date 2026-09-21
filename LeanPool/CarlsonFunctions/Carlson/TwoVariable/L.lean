@@ -54,7 +54,7 @@ theorem sub_mul_regAverage_deriv {f : ℂ → ℂ}
     (hf : AnalyticOnNhd ℂ f carlsonRightHalfPlane) (x y : ℂ)
     (hz : pair x y ∈ carlsonRVariableDomain) :
     (x - y) * regCarlsonDirichletAverage (pair 1 1) (pair x y) (deriv f) = f x - f y := by
-  have h := carlsonDividedDifference_sub isOpen_carlsonRightHalfPlane
+  have h := carlsonDividedDifference_sub
     convex_carlsonRightHalfPlane hf (Fin.elim0 : Fin 0 → ℂ)
     (by rintro _ ⟨i, _⟩; exact Fin.elim0 i) (hz 0) (hz 1)
   have hp : Fin.snoc (Fin.snoc (Fin.elim0 : Fin 0 → ℂ) x) y = pair x y := by

@@ -71,7 +71,7 @@ theorem analyticOnNhd_continuedRegCarlsonCauchyRepresentation (n : ℕ)
     simp only [Set.range_subset_iff, Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => isOpen_ball.preimage
       ((continuous_apply i).comp continuous_snd)
-  exact analyticOnNhd_const.mul (analyticOnNhd_circleIntegral_kernel_mul hU hH hR hf
+  exact analyticOnNhd_const.mul (analyticOnNhd_circleIntegral_kernel_mulCarlson hU hH hR hf
     (fun _ hp _ hs => mem_carlsonResolventDomain_of_mem_sphere hp hs))
 
 /-- The circle expression recovers the native average on its convergence region. -/

@@ -51,8 +51,8 @@ def carlsonRGeneratingKernel (b z : ι → ℂ) (t : ℂ) : ℂ :=
   ∏ i, 1 / (1 - t * z i) ^ (b i)
 
 open scoped Classical in
-/-- One antidiagonal slice of the Cauchy product for a `cons` generating coefficient. -/
 omit [Fintype ι] in
+/-- One antidiagonal slice of the Cauchy product for a `cons` generating coefficient. -/
 theorem carlsonGeneratingCoeff_cons_antidiag {s : Finset ι} {i : ι} (hi : i ∉ s)
     (b z : ι → ℂ) (t : ℂ) {k l n : ℕ} (hkl : k + l = n) :
     ∑ m ∈ piAntidiag s l,
@@ -146,6 +146,7 @@ theorem carlsonGeneratingCoeff_cons_antidiag {s : Finset ι} {i : ι} (hi : i �
   · simp [sum_mul]
 
 open scoped Classical in
+omit [Fintype ι] in
 /-- Adjoining one Carlson coordinate corresponds to the Cauchy product of generating
 series. -/
 theorem carlsonGeneratingCoeff_cons {s : Finset ι} {i : ι} (hi : i ∉ s)
@@ -178,8 +179,8 @@ theorem carlsonGeneratingCoeff_cons {s : Finset ι} {i : ι} (hi : i ∉ s)
   · simp [carlsonGeneratingCoeff]
 
 open scoped Classical in
-/-- The empty generating series is the constant series `1`. -/
 omit [Fintype ι] in
+/-- The empty generating series is the constant series `1`. -/
 theorem carlsonGeneratingCoeff_empty (b z : ι → ℂ) (n : ℕ) :
     carlsonGeneratingCoeff (∅ : Finset ι) b z n = if n = 0 then 1 else 0 := by
   unfold carlsonGeneratingCoeff
@@ -187,14 +188,17 @@ theorem carlsonGeneratingCoeff_empty (b z : ι → ℂ) (n : ℕ) :
   | zero => simp [Nat.multinomial_empty]
   | succ n => simp [piAntidiag_empty_of_ne_zero (Nat.succ_ne_zero n)]
 
+omit [Fintype ι] in
 /-- The generating series attached to a subset of the Carlson coordinates. -/
-theorem hasSum_carlsonGeneratingCoeff (s : Finset ι) (b z : ι → ℂ) (t : ℂ)
+theorem hasSum_carlsonGeneratingCoeff [Finite ι] (s : Finset ι) (b z : ι → ℂ) (t : ℂ)
     (ht : ∀ i ∈ s, ‖t * z i‖ < 1) :
     HasSum (fun n : ℕ =>
       carlsonGeneratingCoeff s b z n / (n.factorial : ℂ) * t ^ n)
       (∏ i ∈ s, 1 / (1 - t * z i) ^ (b i)) ∧
     Summable (fun n : ℕ =>
       ‖carlsonGeneratingCoeff s b z n / (n.factorial : ℂ) * t ^ n‖) := by
+  classical
+  let _ := Fintype.ofFinite ι
   induction s using Finset.cons_induction with
   | empty =>
       have hterm : ∀ n : ℕ,

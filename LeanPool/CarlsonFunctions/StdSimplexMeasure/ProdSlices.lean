@@ -140,7 +140,7 @@ private theorem prod_Icc_slice_preimage (s : Set α) (lo hi : α → ℝ) (x : �
 
 /-- Tonelli's theorem for the region between two graphs, in the closed-interval convention.
 This is the `Icc` companion of `regionBetween`; see `measurableSet_region_between_cc`. -/
-theorem setLIntegral_prod_Icc_slice {μ : Measure α} [SFinite μ]
+theorem setLIntegral_prod_Icc_slice {μ : Measure α}
     {s : Set α} (hs : MeasurableSet s)
     {lo hi : α → ℝ} (hlo : Measurable lo) (hhi : Measurable hi)
     (f : α × ℝ → ENNReal)

@@ -29,10 +29,13 @@ open scoped Classical in
   unfold addDirichletUnit
   rw [Fintype.sum_eq_add_sum_subtype_ne (Function.update b i (b i + 1)) i,
     Fintype.sum_eq_add_sum_subtype_ne b i]
-  simp [add_assoc, add_comm, add_left_comm]
-  apply Finset.sum_congr rfl
-  intro j _
-  exact Function.update_of_ne j.property _ _
+  have hsum : (∑ j : {j : ι // j ≠ i}, Function.update b i (b i + 1) j) =
+      ∑ j : {j : ι // j ≠ i}, b j := by
+    apply Finset.sum_congr rfl
+    intro j _
+    exact Function.update_of_ne j.property _ _
+  rw [Function.update_self, hsum]
+  ring
 
 omit [Fintype ι] in
 /-- A positive unit shift preserves the native convergence region. -/

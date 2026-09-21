@@ -46,9 +46,10 @@ variable {ι F : Type*} [Fintype ι]
 open scoped Classical in
 /-- A complex Fréchet-differentiable map on an open subset of a finite complex coordinate
 space is analytic there. -/
-theorem DifferentiableOn.analyticOnNhd_pi {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
+theorem DifferentiableOn.analyticOnNhd_piCarlson {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
     (hf : DifferentiableOn ℂ f U) (hU : IsOpen U) : AnalyticOnNhd ℂ f U := by
-  apply SeveralComplexVariables.analyticOnNhd_pi_of_analyticOnNhd_update hU hf.continuousOn
+  apply CarlsonFunctions.SeveralComplexVariables.analyticOnNhd_pi_of_analyticOnNhd_update hU
+    hf.continuousOn
   intro z hz i
   let V : Set ℂ := {w | Function.update z i w ∈ U}
   have hupdate : Continuous (fun w : ℂ ↦ Function.update z i w) := by fun_prop
@@ -63,9 +64,9 @@ theorem DifferentiableOn.analyticOnNhd_pi {U : Set (ι → ℂ)} {f : (ι → �
 
 /-- On an open subset of a finite complex coordinate space, complex Fréchet differentiability
 and analyticity are equivalent. -/
-theorem differentiableOn_iff_analyticOnNhd_pi {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
+theorem differentiableOn_iff_analyticOnNhd_piCarlson {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
     (hU : IsOpen U) : DifferentiableOn ℂ f U ↔ AnalyticOnNhd ℂ f U :=
-  ⟨fun hf ↦ hf.analyticOnNhd_pi hU, fun hf ↦ hf.differentiableOn⟩
+  ⟨fun hf ↦ hf.analyticOnNhd_piCarlson hU, fun hf ↦ hf.differentiableOn⟩
 
 end Coordinates
 
@@ -76,12 +77,12 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 /-- Complex differentiability on an open finite-dimensional domain implies analyticity.
 No choice of coordinates occurs in the statement. -/
-theorem DifferentiableOn.analyticOnNhd_finiteDimensional {U : Set E} {f : E → F}
+theorem DifferentiableOn.analyticOnNhd_finiteDimensionalCarlson {U : Set E} {f : E → F}
     (hf : DifferentiableOn ℂ f U) (hU : IsOpen U) : AnalyticOnNhd ℂ f U := by
   let e := (Module.finBasis ℂ E).equivFunL
   have hg : DifferentiableOn ℂ (f ∘ e.symm) (e.symm ⁻¹' U) :=
     hf.comp e.symm.differentiable.differentiableOn (fun _ hx => hx)
-  have ha := hg.analyticOnNhd_pi (hU.preimage e.symm.continuous)
+  have ha := hg.analyticOnNhd_piCarlson (hU.preimage e.symm.continuous)
   intro x hx
   have hmem : e x ∈ e.symm ⁻¹' U := by simpa using hx
   simpa [Function.comp_def] using
@@ -89,14 +90,14 @@ theorem DifferentiableOn.analyticOnNhd_finiteDimensional {U : Set E} {f : E → 
 
 /-- On an open finite-dimensional domain, holomorphy may be expressed using either
 complex Fréchet differentiability or Mathlib's analytic predicate. -/
-theorem differentiableOn_iff_analyticOnNhd_finiteDimensional {U : Set E} {f : E → F}
+theorem differentiableOn_iff_analyticOnNhd_finiteDimensionalCarlson {U : Set E} {f : E → F}
     (hU : IsOpen U) : DifferentiableOn ℂ f U ↔ AnalyticOnNhd ℂ f U :=
-  ⟨fun hf => hf.analyticOnNhd_finiteDimensional hU, fun hf => hf.differentiableOn⟩
+  ⟨fun hf => hf.analyticOnNhd_finiteDimensionalCarlson hU, fun hf => hf.differentiableOn⟩
 
 /-- An everywhere complex-differentiable map on a finite-dimensional space is entire. -/
-theorem Differentiable.analyticOnNhd_finiteDimensional {f : E → F}
+theorem Differentiable.analyticOnNhd_finiteDimensionalCarlson {f : E → F}
     (hf : Differentiable ℂ f) : AnalyticOnNhd ℂ f Set.univ :=
-  hf.differentiableOn.analyticOnNhd_finiteDimensional isOpen_univ
+  hf.differentiableOn.analyticOnNhd_finiteDimensionalCarlson isOpen_univ
 
 end FiniteDimensional
 

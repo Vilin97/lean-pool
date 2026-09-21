@@ -95,7 +95,7 @@ theorem analyticOnNhd_eq_of_eqOn_realDirichletDomain
     (hH : AnalyticOnNhd ℂ H Set.univ)
     (hEq : ∀ b : ι → ℝ, b ∈ mvRealBetaDomain →
       G (fun i ↦ (b i : ℂ)) = H (fun i ↦ (b i : ℂ))) : G = H := by
-  apply analyticOnNhd_eq_of_eqOn_posReal_pi hG hH
+  apply analyticOnNhd_eq_of_eqOn_posReal_piCarlson hG hH
   intro b hb
   exact hEq b hb
 

@@ -22,7 +22,7 @@ public section
 open Complex Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Real Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 
@@ -100,6 +100,6 @@ theorem analyticOnNhd_pi_of_analyticOnNhd_update
       (hg (L.symm z) hzV)
   simpa [g, Function.comp_def] using hcomp
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

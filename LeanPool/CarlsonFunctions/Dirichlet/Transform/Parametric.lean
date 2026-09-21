@@ -182,7 +182,8 @@ theorem exists_joint_regDirichletContinuation_kernel
     ∃ F : ((ι → ℂ) × (κ → ℂ)) → ℂ,
       AnalyticOnNhd ℂ F (dirichletConvergenceRegion N ×ˢ U) ∧
       ∀ z ∈ U, Set.EqOn (fun b => F (b, z))
-        (fun b => regDirichletIntegral b (fun u => H (z, fun i => (u i : ℂ)))) mvBetaConvergent := by
+        (fun b => regDirichletIntegral b (fun u => H (z, fun i => (u i : ℂ)))) mvBetaConvergent :=
+          by
   rcases isEmpty_or_nonempty ι with hι | hι
   · refine ⟨fun _ => 0, analyticOnNhd_const, ?_⟩
     intro z hz b hb
@@ -226,7 +227,8 @@ theorem exists_joint_regDirichletContinuation_kernel
     have hpoly : AnalyticAt ℂ (fun p : (ι → ℂ) × (κ → ℂ) =>
         (ascPochhammer ℂ M).eval (p.1 i)) p :=
       ((AnalyticOnNhd.eval_polynomial (𝕜 := ℂ) (ascPochhammer ℂ M)) _ (mem_univ _)).comp_of_eq
-        (((ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ).analyticAt p.1).comp_of_eq analyticAt_fst rfl) rfl
+        (((ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ).analyticAt p.1).comp_of_eq analyticAt_fst
+          rfl) rfl
     exact hpoly.mul (((analyticOnNhd_shiftedComplexKernelIntegral hU hJ hVK i (shiftList i N))
       (p.1 + Pi.single i (M : ℂ), p.2) ⟨hbi, hp.2⟩).comp_of_eq
         ((analyticAt_fst.add analyticAt_const).prod analyticAt_snd) rfl)
@@ -287,7 +289,8 @@ theorem exists_entire_joint_regDirichletContinuation_kernel
     ∃ F : ((ι → ℂ) × (κ → ℂ)) → ℂ,
       AnalyticOnNhd ℂ F (univ ×ˢ U) ∧
       ∀ z ∈ U, Set.EqOn (fun b => F (b, z))
-        (fun b => regDirichletIntegral b (fun u => H (z, fun i => (u i : ℂ)))) mvBetaConvergent := by
+        (fun b => regDirichletIntegral b (fun u => H (z, fun i => (u i : ℂ)))) mvBetaConvergent :=
+          by
   choose Φ hΦ using fun N => exists_joint_regDirichletContinuation_kernel N hU hWo hH hW
   have hexists (b : ι → ℂ) : ∃ N, b ∈ dirichletConvergenceRegion N := by
     choose n hn using fun i => exists_nat_gt (-(b i).re)

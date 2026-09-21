@@ -121,7 +121,8 @@ theorem hasSum_regCarlsonR_div_factorial_eq_regCarlsonSIntegral
     (z : ι → ℂ) {b : ι → ℂ} (hb : b ∈ mvBetaConvergent) :
     HasSum (fun n : ℕ ↦ (Nat.factorial n : ℂ)⁻¹ * regCarlsonR n z b)
       (regCarlsonSIntegral b z) := by
-  let μ := (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict (Convexity.StdSimplex.coordinateSet ℝ ι)
+  let μ := (MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict
+    (Convexity.StdSimplex.coordinateSet ℝ ι)
   let C : ℝ := ∑ i, ‖z i‖
   let M : ℕ → ℝ := fun n ↦ C ^ n / Nat.factorial n
   let F : ℕ → (ι → ℝ) → ℂ := fun n u ↦
@@ -209,7 +210,7 @@ theorem analyticOnNhd_regCarlsonSSeries (z : ι → ℂ) :
       (Nat.factorial n : ℂ)⁻¹ * regCarlsonR n z b by
     funext b
     exact regCarlsonSSeries_eq_tsum_regCarlsonR z b]
-  apply analyticOnNhd_tsum_of_summable_norm_on_compacts isOpen_univ
+  apply analyticOnNhd_tsum_of_summable_norm_on_compactsCarlson isOpen_univ
   · intro n
     exact analyticOnNhd_const.mul (analyticOnNhd_regCarlsonR n z)
   · intro K hKuniv hK

@@ -278,7 +278,8 @@ theorem regCarlsonRIntegral_eq_regCarlsonRLaplaceIntegral
         MeasureTheory.Measure.stdSimplexMeasure_empty]
   | inr hι =>
     let _ := hι
-    let μu := MeasureTheory.Measure.stdSimplexMeasure.restrict (Convexity.StdSimplex.coordinateSet ℝ ι)
+    let μu := MeasureTheory.Measure.stdSimplexMeasure.restrict (Convexity.StdSimplex.coordinateSet
+      ℝ ι)
     let μy := volume.restrict (Set.Ioi (0 : ℝ))
     let s : Finset ℝ := Finset.univ.image (fun i => (z i).re)
     have hs : s.Nonempty := Finset.image_nonempty.mpr Finset.univ_nonempty
@@ -310,7 +311,8 @@ theorem regCarlsonRIntegral_eq_regCarlsonRLaplaceIntegral
         change IntegrableOn (regDirichletDensity b) (Convexity.StdSimplex.coordinateSet ℝ ι)
           MeasureTheory.Measure.stdSimplexMeasure
         simpa only [mul_one] using integrableOn_regDirichletDensity_mul b hb
-          (continuousOn_const : ContinuousOn (fun _ : ι → ℝ => (1 : ℂ)) (Convexity.StdSimplex.coordinateSet ℝ ι))
+          (continuousOn_const : ContinuousOn (fun _ : ι → ℝ => (1 : ℂ))
+            (Convexity.StdSimplex.coordinateSet ℝ ι))
       simpa [G, μy] using hy.mul_prod hu
     have hFmeas : AEStronglyMeasurable F (μy.prod μu) := by
       have hk : ContinuousOn (fun p : ℝ × (ι → ℝ) =>

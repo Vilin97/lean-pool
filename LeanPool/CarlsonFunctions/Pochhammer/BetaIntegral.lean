@@ -178,7 +178,8 @@ theorem integral_Icc_rpow_mul_one_sub_rpow
 /-- The scaled real Euler beta integral in set-integral form. -/
 theorem integral_Icc_rpow_mul_sub_rpow
     {a c s : ℝ} (ha : 0 < a) (hc : 0 < c) (hs : 0 < s) :
-    ∫ t in Set.Icc (0 : ℝ) s, t ^ (a - 1) * (s - t) ^ (c - 1) = s ^ (a + c - 1) * ProbabilityTheory.beta a c := by
+    ∫ t in Set.Icc (0 : ℝ) s, t ^ (a - 1) * (s - t) ^ (c - 1) = s ^ (a + c - 1) *
+      ProbabilityTheory.beta a c := by
   rw [integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le hs.le]
   have hchange := intervalIntegral.smul_integral_comp_mul_left
     (f := fun t : ℝ => t ^ (a - 1) * (s - t) ^ (c - 1)) (a := 0) (b := 1) s

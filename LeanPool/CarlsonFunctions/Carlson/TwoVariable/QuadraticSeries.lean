@@ -112,7 +112,8 @@ private lemma quadraticSeriesCoeff_eq_binomial (a c : ℂ) (hc : 0 < c.re) (m k 
         ((2 * m + k).choose k : ℂ) * 4 ^ m *
         ((ascPochhammer ℂ m).eval (1 / 2) / (ascPochhammer ℂ m).eval c) * (-1) ^ k := by
   have hfac : ((2 * m + k).choose k : ℂ) * ((2 * m).factorial : ℂ) * k.factorial =
-      (2 * m + k).factorial := by exact_mod_cast Nat.add_choose_mul_factorial_mul_factorial (2 * m) k
+      (2 * m + k).factorial := by
+    exact_mod_cast Nat.add_choose_mul_factorial_mul_factorial (2 * m) k
   have hdouble : ((2 * m).factorial : ℂ) =
       4 ^ m * (ascPochhammer ℂ m).eval (1 / 2) * (m.factorial : ℂ) := by
     have H := ascPochhammer_eval_double (1 / 2 : ℂ) m

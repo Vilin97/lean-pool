@@ -189,7 +189,8 @@ theorem carlsonAssociatedRecurrenceCoeff_zero [Nonempty ι]
   field_simp
 
 /-- The division-free polynomial coefficient in Carlson's recurrence for a nonempty index
-type, including its removable-singularity values. The endpoint formulas are used separately because the
+type, including its removable-singularity values. The endpoint formulas are used separately
+because the
 corresponding factors cancel against the expression involving the symmetric polynomial. -/
 def carlsonAssociatedRecurrencePolynomial
     (n : ℕ) (a a' : ℂ) (b : ι → ℂ) : MvPolynomial ι ℂ :=

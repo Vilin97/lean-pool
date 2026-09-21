@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -31,9 +31,11 @@ variable [Semiring R] [PartialOrder R]
 /-- The coordinate realization of the standard simplex is invariant under precomposition by a
 permutation of its coordinates. -/
 @[simp] theorem preimage_stdSimplex_perm (σ : Equiv.Perm ι) :
-    (fun u : ι → R => u ∘ σ) ⁻¹' Convexity.StdSimplex.coordinateSet R ι = Convexity.StdSimplex.coordinateSet R ι := by
+    (fun u : ι → R => u ∘ σ) ⁻¹' Convexity.StdSimplex.coordinateSet R ι =
+      Convexity.StdSimplex.coordinateSet R ι := by
   ext u
-  simp only [Set.mem_preimage, Convexity.StdSimplex.coordinateSet, Set.mem_ofPred_eq, Function.comp_apply,
+  simp only [Set.mem_preimage, Convexity.StdSimplex.coordinateSet, Set.mem_ofPred_eq,
+    Function.comp_apply,
     Equiv.sum_comp σ u]
   exact ⟨fun ⟨h1, h2⟩ => ⟨fun i => by simpa using h1 (σ.symm i), h2⟩,
     fun ⟨h1, h2⟩ => ⟨fun i => h1 (σ i), h2⟩⟩
@@ -49,7 +51,8 @@ variable [CommRing R] [PartialOrder R] [IsOrderedRing R]
 @[simp] theorem preimage_stdSimplexCoordMap (i : ι) :
     stdSimplexCoordMap i ⁻¹' Convexity.StdSimplex.coordinateSet R ι = stdSimplexFreeCoords i := by
   ext x
-  simp only [Set.mem_preimage, Convexity.StdSimplex.coordinateSet, stdSimplexFreeCoords, Set.mem_ofPred_eq]
+  simp only [Set.mem_preimage, Convexity.StdSimplex.coordinateSet, stdSimplexFreeCoords,
+    Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hpos, hsum⟩
     refine ⟨?_, ?_⟩
@@ -73,7 +76,8 @@ variable [CommRing R] [PartialOrder R] [IsOrderedRing R]
 /-- Pointwise form of `preimage_stdSimplexCoordMap`. -/
 @[simp] theorem stdSimplexCoordMap_mem_stdSimplex_iff
     (i : ι) (x : {j : ι // j ≠ i} → R) :
-    stdSimplexCoordMap i x ∈ Convexity.StdSimplex.coordinateSet R ι ↔ x ∈ stdSimplexFreeCoords i := by
+    stdSimplexCoordMap i x ∈ Convexity.StdSimplex.coordinateSet R ι ↔ x ∈ stdSimplexFreeCoords i
+      := by
   change x ∈ stdSimplexCoordMap i ⁻¹' Convexity.StdSimplex.coordinateSet R ι ↔ _
   rw [preimage_stdSimplexCoordMap]
 
@@ -99,10 +103,13 @@ section IntrinsicAggregation
 variable {κ : Type*} [Fintype κ]
 variable [Semiring R] [PartialOrder R] [IsStrictOrderedRing R]
 
+omit [Fintype κ] in
 /-- Intrinsic aggregation is realized by summing ambient coordinates over fibers. -/
-@[simp] theorem coordinates_map (f : ι → κ) (s : StdSimplex R ι) :
-    coordinates (s.map f) = stdSimplexAggregate f (coordinates s) :=
-  weights_map_eq_stdSimplexAggregate f s
+@[simp] theorem coordinates_map [Finite κ] (f : ι → κ) (s : StdSimplex R ι) :
+    coordinates (s.map f) = stdSimplexAggregate f (coordinates s) := by
+  classical
+  let _ := Fintype.ofFinite κ
+  exact weights_map_eq_stdSimplexAggregate f s
 
 end IntrinsicAggregation
 

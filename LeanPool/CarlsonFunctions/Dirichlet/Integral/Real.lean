@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -62,7 +62,8 @@ private theorem prod_rpow_stdSimplexCoordMap_scale
 to the Bochner integral. -/
 theorem lintegral_dirichletMonomial_eq_mvRealBeta {b : ι → ℝ}
     (hb : b ∈ mvRealBetaDomain) :
-    ∫⁻ u in Convexity.StdSimplex.coordinateSet ℝ ι, ENNReal.ofReal (∏ i, u i ^ (b i - 1)) ∂stdSimplexMeasure =
+    ∫⁻ u in Convexity.StdSimplex.coordinateSet ℝ ι, ENNReal.ofReal (∏ i, u i ^ (b i - 1))
+      ∂stdSimplexMeasure =
       ENNReal.ofReal (mvRealBeta b) := by
   classical
   induction hn : Fintype.card ι using Nat.strong_induction_on generalizing ι with
@@ -107,7 +108,8 @@ theorem lintegral_dirichletMonomial_eq_mvRealBeta {b : ι → ℝ}
                           (1 - t) ^ (∑ q : {j : ι // j ≠ i}, (b q - 1))) *
                             ∏ q : {j : ι // j ≠ i}, v q ^ (b q - 1))
                           ∂stdSimplexMeasure := by
-                        apply setLIntegral_congr_fun (Convexity.StdSimplex.isClosed_coordinateSet ℝ _).measurableSet
+                        apply setLIntegral_congr_fun (Convexity.StdSimplex.isClosed_coordinateSet
+                          ℝ _).measurableSet
                         intro v hv
                         change ENNReal.ofReal
                           (∏ k, stdSimplexCoordMap i (fun q ↦ (1 - t) * v q) k ^
@@ -123,7 +125,8 @@ theorem lintegral_dirichletMonomial_eq_mvRealBeta {b : ι → ℝ}
                         · apply lintegral_congr
                           intro v
                           rw [← ENNReal.ofReal_mul (mul_nonneg
-                            (Real.rpow_nonneg ht.1 _) (Real.rpow_nonneg (sub_nonneg.mpr ht.2.le) _))]
+                            (Real.rpow_nonneg ht.1 _) (Real.rpow_nonneg (sub_nonneg.mpr ht.2.le)
+                              _))]
                         · fun_prop
                   _ = _ := by rw [hih rfl]
               have hrest_nonempty : Nonempty {j : ι // j ≠ i} := by

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -350,8 +350,7 @@ open scoped Classical in
   rw [Finset.sum_add_distrib, sum_stdSimplexFreeCoordSwapLinear]
   have hc : (∑ q : {q : ι // q ≠ i}, if q = (⟨j, Ne.symm hij⟩ : {q : ι // q ≠ i})
       then (1 : R) else 0) = 1 := by
-    simpa using Finset.sum_ite_eq' Finset.univ (⟨j, Ne.symm hij⟩ : {q : ι // q ≠ i})
-      (fun _ => (1 : R))
+    simp
   rw [hc]
   ring
 
@@ -414,7 +413,8 @@ variable [CommRing R] [PartialOrder R] [IsOrderedRing R]
 
 open scoped Classical in
 /-- The filled `(card ι - 1)`-dimensional simplex of free coordinates corresponding to
-points of `Convexity.StdSimplex.coordinateSet R ι`. (Not to be confused with `Convexity.StdSimplex.coordinateSet R {j // j ≠ i}`.) -/
+points of `Convexity.StdSimplex.coordinateSet R ι`. (Not to be confused with
+`Convexity.StdSimplex.coordinateSet R {j // j ≠ i}`.) -/
 def stdSimplexFreeCoords (i : ι) :
     Set ({j : ι // j ≠ i} → R) :=
   {x | (∀ j, 0 ≤ x j) ∧ ∑ j, x j ≤ 1}
@@ -452,7 +452,7 @@ def equivFreeCoords (i : ι) :
     ⟨stdSimplexCoordProj i (fun j ↦ s.weights j), by
       refine ⟨fun j ↦ s.nonneg j, ?_⟩
       have hs : ∑ j, s.weights j = 1 := by
-        simpa [Finsupp.sum_fintype] using s.total
+        simp [Finsupp.sum_fintype]
       rw [← hs, Fintype.sum_eq_add_sum_subtype_ne (fun j ↦ s.weights j) i]
       exact le_add_of_nonneg_left (s.nonneg i)⟩
   left_inv x := by
@@ -465,7 +465,7 @@ def equivFreeCoords (i : ι) :
     change stdSimplexCoordMap i (stdSimplexCoordProj i (fun q ↦ s.weights q)) j = s.weights j
     exact congrFun (stdSimplexCoordMap_coordProj i <|
       mem_fintypeAffineCoords_iff_sum.mpr <| by
-        simpa [Finsupp.sum_fintype] using s.total) j
+        simp [Finsupp.sum_fintype]) j
 
 open scoped Classical in
 /-- The weights of the intrinsic simplex point associated to free coordinates are the

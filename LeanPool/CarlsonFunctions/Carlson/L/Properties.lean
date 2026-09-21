@@ -83,7 +83,8 @@ theorem regCarlsonLContinued_const (t w : ℂ) (hw : w ∈ carlsonRightHalfPlane
 
 /-- The all-one node vector gives zero for every exponent and parameter. -/
 @[simp] theorem regCarlsonLContinued_one (t : ℂ) (b : ι → ℂ) :
-    regCarlsonLContinued t (fun _ : ι => 1) (fun _ => by norm_num [carlsonRightHalfPlane]) b = 0 := by
+    regCarlsonLContinued t (fun _ : ι => 1) (fun _ => by norm_num [carlsonRightHalfPlane]) b = 0
+      := by
   simpa using regCarlsonLContinued_const t 1 (by norm_num [carlsonRightHalfPlane]) b
 
 /-- The empty-index native integral vanishes. -/

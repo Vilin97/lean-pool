@@ -48,7 +48,8 @@ theorem exists_joint_isRegCarlsonContinuation
     intro i _
     exact (((ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ).analyticAt p.2).comp_of_eq
       analyticAt_snd rfl).mul
-      (((ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ).analyticAt p.1).comp_of_eq analyticAt_fst rfl)
+      (((ContinuousLinearMap.proj i : (ι → ℂ) →L[ℂ] ℂ).analyticAt p.1).comp_of_eq analyticAt_fst
+        rfl)
   have hWo : IsOpen (A ⁻¹' Ω) := hΩopen.preimage (continuousOn_univ.mp hA.continuousOn)
   have hH : AnalyticOnNhd ℂ (fun p => f (A p)) (A ⁻¹' Ω) :=
     fun p hp => (hf (A p) hp).comp_of_eq (hA p (mem_univ _)) rfl
@@ -85,7 +86,8 @@ theorem exists_joint_isRegCarlsonContinuation_iteratedDeriv
     {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω) (n : ℕ) :
     ∃ G : ((ι → ℂ) × (ι → ℂ)) → ℂ,
       AnalyticOnNhd ℂ G {p | Set.range p.2 ⊆ Ω} ∧
-      ∀ z, Set.range z ⊆ Ω → IsRegCarlsonContinuation (iteratedDeriv n f) z (fun b => G (b, z)) := by
+      ∀ z, Set.range z ⊆ Ω → IsRegCarlsonContinuation (iteratedDeriv n f) z (fun b => G (b, z)) :=
+        by
   apply exists_joint_isRegCarlsonContinuation hΩopen hΩconv
   induction n with
   | zero => simpa using hf

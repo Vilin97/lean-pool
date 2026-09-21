@@ -50,12 +50,12 @@ theorem analyticOnNhd_regEqualLContinued_joint (x y : ℂ)
       (fun p : Fin 2 → ℂ => regEqualRContinued (p 0) x y hz (p 1)) univ :=
     fun p _ => analyticAt_regEqualRContinued_comp hz
       ((analyticAt_pi_iff.mp analyticAt_id) 0) ((analyticAt_pi_iff.mp analyticAt_id) 1)
-  have h := ha.partialDeriv isOpen_univ 0
-  have heq : SeveralComplexVariables.partialDeriv 0
+  have h := ha.partialDerivCarlson isOpen_univ 0
+  have heq : CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson 0
       (fun p : Fin 2 → ℂ => regEqualRContinued (p 0) x y hz (p 1)) =
       (fun p => regEqualLContinued (p 0) x y hz (p 1)) := by
     funext p
-    simp [SeveralComplexVariables.partialDeriv, regEqualLContinued]
+    simp [CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson, regEqualLContinued]
   rwa [heq] at h
 
 /-- Analytic substitutions in the exponent and equal parameter. -/

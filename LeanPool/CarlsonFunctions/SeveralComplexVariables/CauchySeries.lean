@@ -30,7 +30,7 @@ expansion, its uniform convergence and remainder estimates are in `PolydiscTaylo
 open Complex Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Real Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 
@@ -637,6 +637,6 @@ theorem polydiscCauchySeries_diag_eq_iteratedFDeriv {d : ℕ}
   rw [← h.factorial_smul v n, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul,
     inv_mul_cancel₀ (Nat.cast_ne_zero.mpr n.factorial_ne_zero), one_smul]
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

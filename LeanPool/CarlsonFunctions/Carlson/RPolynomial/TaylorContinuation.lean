@@ -43,7 +43,7 @@ theorem isRegCarlsonContinuation_taylor_of_geometric_bound
     exists_summable_norm_carlsonTaylor_bounded_variables hK hC hq
       (norm_nonneg (fun i => z i - A)) hqr ha
   refine ⟨?_, ?_⟩
-  · apply analyticOnNhd_tsum_of_summable_norm_on_compacts isOpen_univ
+  · apply analyticOnNhd_tsum_of_summable_norm_on_compactsCarlson isOpen_univ
     · intro n
       exact analyticOnNhd_const.mul (analyticOnNhd_regCarlsonR n _)
     · intro K _ hK
@@ -108,7 +108,7 @@ theorem isRegCarlsonContinuation_taylor {A : ℂ} {R : ℝ}
   let r' : ℝ≥0 := ⟨r, hr.le⟩
   have hfull := DifferentiableOn.hasFPowerSeriesOnBall (R := r')
     (hf.differentiableOn.mono (Metric.closedBall_subset_ball hrR)) (show 0 < r' from hr)
-  have hlocal := (hf A (by simp; exact (norm_nonneg _).trans_lt hz)).hasFPowerSeriesAt
+  have hlocal := (hf A (by simp only [Metric.mem_ball, dist_self]; exact (norm_nonneg _).trans_lt hz)).hasFPowerSeriesAt
   have heq := hfull.hasFPowerSeriesAt.eq_formalMultilinearSeries hlocal
   rw [heq] at hfull
   exact isRegCarlsonContinuation_of_hasFPowerSeriesOnBall hfull hzr
@@ -132,7 +132,7 @@ private lemma exists_taylor_geometric_bound {A : ℂ} {R r : ℝ}
   let s' : ℝ≥0 := ⟨s, hs.le⟩
   have hfull := DifferentiableOn.hasFPowerSeriesOnBall (R := s')
     (hf.differentiableOn.mono (Metric.closedBall_subset_ball hsR)) (show 0 < s' from hs)
-  have hlocal := (hf A (by simp; exact hr.trans_lt hrR)).hasFPowerSeriesAt
+  have hlocal := (hf A (by simp only [Metric.mem_ball, dist_self]; exact hr.trans_lt hrR)).hasFPowerSeriesAt
   rw [hfull.hasFPowerSeriesAt.eq_formalMultilinearSeries hlocal] at hfull
   obtain ⟨ρ, hrρ, hρs⟩ := exists_between hrs
   have hρ : 0 < ρ := hr.trans_lt hrρ
@@ -213,7 +213,7 @@ theorem analyticOnNhd_regCarlsonTaylorSeries_joint {A : ℂ} {R : ℝ}
         (fun n => iteratedDeriv n f A / n.factorial)
         (fun i => p (.inr i)) (fun i => p (.inl i)))
       {p : Sum ι ι → ℂ | ‖fun i => p (.inr i) - A‖ < R} := by
-  apply (hasSumLocallyUniformlyOn_regCarlsonTaylorSeries_joint hf).analyticOnNhd_pi
+  apply (hasSumLocallyUniformlyOn_regCarlsonTaylorSeries_joint hf).analyticOnNhd_piCarlson
   · intro n p _
     exact analyticAt_const.mul (analyticAt_regCarlsonR_comp
       (b := fun p : Sum ι ι → ℂ => fun i => p (.inl i))

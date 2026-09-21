@@ -42,7 +42,7 @@ open scoped Topology
 
 /-- The derivative of a holomorphic function is uniformly bounded on a sufficiently small
 closed thickening of any compact subset of its open domain. -/
-theorem AnalyticOnNhd.exists_cthickening_deriv_bound
+theorem AnalyticOnNhd.exists_cthickening_deriv_boundCarlson
     {Ω K : Set ℂ} {f : ℂ → ℂ} (hf : AnalyticOnNhd ℂ f Ω)
     (hΩopen : IsOpen Ω) (hK : IsCompact K) (hKΩ : K ⊆ Ω) :
     ∃ δ : ℝ, 0 < δ ∧ Metric.cthickening δ K ⊆ Ω ∧
@@ -66,7 +66,7 @@ variable {α E : Type*} [MeasurableSpace α]
 parameter, its pointwise Fréchet derivatives have an integrable uniform bound. The hypotheses
 are grouped pointwise so that the dominating function and neighborhood may depend on the base
 parameter. -/
-theorem analyticOnNhd_integral_of_dominated_of_fderiv_le
+theorem analyticOnNhd_integral_of_dominated_of_fderiv_leCarlson
     {P : Type*} [NormedAddCommGroup P] [NormedSpace ℂ P] [FiniteDimensional ℂ P]
     {μ : Measure α} {U : Set P} {F : P → α → E}
     (hU : IsOpen U)
@@ -78,7 +78,7 @@ theorem analyticOnNhd_integral_of_dominated_of_fderiv_le
       (∀ᵐ a ∂μ, ∀ y ∈ s, ‖F' y a‖ ≤ bound a) ∧ Integrable bound μ ∧
       (∀ᵐ a ∂μ, ∀ y ∈ s, HasFDerivAt (F · a) (F' y a) y)) :
     AnalyticOnNhd ℂ (fun x ↦ ∫ a, F x a ∂μ) U := by
-  apply DifferentiableOn.analyticOnNhd_finiteDimensional _ hU
+  apply DifferentiableOn.analyticOnNhd_finiteDimensionalCarlson _ hU
   intro x hx
   obtain ⟨s, bound, F', hs, hmeas, hint, hF'meas, hbound, hboundInt, hdiff⟩ := hdom x hx
   exact (hasFDerivAt_integral_of_dominated_of_fderiv_le hs hmeas hint hF'meas
@@ -87,7 +87,7 @@ theorem analyticOnNhd_integral_of_dominated_of_fderiv_le
 omit [CompleteSpace E] in
 /-- Differentiation under an integral over a compact set when the integrand and its
 pointwise complex derivative are jointly continuous. Compactness supplies domination. -/
-theorem hasDerivAt_integral_of_continuousOn_compact
+theorem hasDerivAt_integral_of_continuousOn_compactCarlson
     [TopologicalSpace α] [BorelSpace α] [T2Space α]
     {μ : Measure α} [IsLocallyFiniteMeasure μ] {K : Set α} (hK : IsCompact K)
     {U : Set ℂ} (hU : IsOpen U) {x : ℂ} (hx : x ∈ U)
@@ -122,7 +122,7 @@ theorem hasDerivAt_integral_of_continuousOn_compact
 /-- A fixed integrable scalar weight can be included in compact-domain differentiation.
 Only the kernel and its derivative must be jointly continuous; the weight may be singular
 on the boundary of the integration domain. -/
-theorem hasDerivAt_integral_mul_of_continuousOn_compact
+theorem hasDerivAt_integral_mul_of_continuousOn_compactCarlson
     [TopologicalSpace α] [BorelSpace α] [T2Space α]
     {μ : Measure α} {K : Set α} (hK : IsCompact K)
     {g : α → ℂ} (hg : IntegrableOn g K μ)

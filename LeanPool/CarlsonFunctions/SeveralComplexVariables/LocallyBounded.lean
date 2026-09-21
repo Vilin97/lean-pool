@@ -21,7 +21,7 @@ public section
 open Complex Filter Function Metric Set
 open scoped NNReal Topology
 
-namespace SeveralComplexVariables
+namespace CarlsonFunctions.SeveralComplexVariables
 
 variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
 
@@ -91,7 +91,7 @@ theorem norm_sub_le_of_separately_analytic_bounded {f : (ι → ℂ) → F}
         (fun a ha => (hdiff (update z i v) i a
           (hball (update_mem_closedBall hr.le ha))).differentiableWithinAt)
         (fun a ha => hM _ (hball (update_mem_closedBall hr.le (sphere_subset_closedBall ha))))
-      simpa only [partialDeriv, update_idem, update_self] using hslice
+      simpa only [partialDerivCarlson, update_idem, update_self] using hslice
     have hzi : z i ∈ closedBall (c i) r := (dist_pi_le_iff hr.le).mp (mem_closedBall.mp hz) i
     simpa only [update_eq_self] using
       (convex_closedBall (c i) r).norm_image_sub_le_of_norm_deriv_le
@@ -148,6 +148,6 @@ theorem analyticOnNhd_of_separately_analytic_locally_bounded
     hU hf hc (hb c hc)
   exact hC.continuousOn.continuousAt (closedBall_mem_nhds _ hr)
 
-end SeveralComplexVariables
+end CarlsonFunctions.SeveralComplexVariables
 
 end

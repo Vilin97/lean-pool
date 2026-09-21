@@ -27,8 +27,9 @@ theorem carlsonPartialDeriv_regCarlsonSSeries (i : ι) (z b : ι → ℂ) :
   have hF : AnalyticOnNhd ℂ F Set.univ := analyticOnNhd_regCarlsonSSeries_joint
   have hpartial (b : ι → ℂ) :
       carlsonPartialDeriv i (fun z => regCarlsonSSeries z b) z =
-        SeveralComplexVariables.partialDeriv (.inr i) F (Sum.elim b z) := by
-    simp only [carlsonPartialDeriv_eq_partialDeriv, SeveralComplexVariables.partialDeriv,
+        CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson (.inr i) F (Sum.elim b z) := by
+    simp only [carlsonPartialDeriv_eq_partialDeriv,
+      CarlsonFunctions.SeveralComplexVariables.partialDerivCarlson,
       Sum.elim_inr]
     congr 1
     funext w
@@ -44,7 +45,7 @@ theorem carlsonPartialDeriv_regCarlsonSSeries (i : ι) (z b : ι → ℂ) :
       cases k with
       | inl j => exact (ContinuousLinearMap.proj (R := ℂ) j).analyticAt b
       | inr j => exact analyticAt_const
-    exact ((hF.partialDeriv isOpen_univ (.inr i)) _ (Set.mem_univ _)).comp_of_eq hmap rfl
+    exact ((hF.partialDerivCarlson isOpen_univ (.inr i)) _ (Set.mem_univ _)).comp_of_eq hmap rfl
   have hright : AnalyticOnNhd ℂ
       (fun b => b i * regCarlsonSSeries z (addDirichletUnit b i)) Set.univ := by
     intro b _

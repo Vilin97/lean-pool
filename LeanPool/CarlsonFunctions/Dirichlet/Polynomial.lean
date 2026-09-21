@@ -83,10 +83,12 @@ theorem regDirichletIntegral_monomial_mul
   have hae := MeasureTheory.Measure.ae_zero_lt_of_mem_stdSimplex (ι := ι)
   have hfun :
       (fun u : ι → ℝ ↦ regDirichletDensity b u * ∏ i, (u i : ℂ) ^ m i)
-        =ᵐ[(MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict (Convexity.StdSimplex.coordinateSet ℝ ι)]
+        =ᵐ[(MeasureTheory.Measure.stdSimplexMeasure (ι := ι)).restrict
+          (Convexity.StdSimplex.coordinateSet ℝ ι)]
       fun u ↦ mvPochhammer b m * regDirichletDensity b' u := by
     have hmem := self_mem_ae_restrict
-      (μ := MeasureTheory.Measure.stdSimplexMeasure) (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet
+      (μ := MeasureTheory.Measure.stdSimplexMeasure) (Convexity.StdSimplex.isClosed_coordinateSet
+        ℝ ι).measurableSet
     filter_upwards [hmem, hae] with u hu hupos
     have hinter : u ∈ stdSimplexInterior := ⟨hu, hupos⟩
     rw [regDirichletDensity, regDirichletDensity,

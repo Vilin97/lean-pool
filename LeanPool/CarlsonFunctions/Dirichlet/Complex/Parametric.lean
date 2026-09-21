@@ -61,7 +61,7 @@ theorem analyticOnNhd_regDirichletIntegral_kernel
     hc.comp (continuous_const.prodMk continuous_id).continuousOn (fun u hu => ⟨hz, hu⟩)
   change AnalyticOnNhd ℂ (fun z => ∫ u, regDirichletDensity b u *
     H (z, fun i => (u i : ℂ)) ∂μ) U
-  apply analyticOnNhd_integral_of_dominated_of_fderiv_le
+  apply analyticOnNhd_integral_of_dominated_of_fderiv_leCarlson
     (μ := μ) (F := fun z u => regDirichletDensity b u * H (z, fun i => (u i : ℂ))) hU
   intro z hz
   obtain ⟨r, hr, hball⟩ := nhds_basis_closedBall.mem_iff.mp (hU.mem_nhds hz)
@@ -87,15 +87,18 @@ theorem analyticOnNhd_regDirichletIntegral_kernel
         (hasFDerivAt_prodMk_left (𝕜 := ℂ) y (fun i => (u i : ℂ)))
     exact hcomp.const_mul (regDirichletDensity b u)
 
+omit [Fintype κ] in
 /-- Compactness of the kernel and a common Dirichlet majorant give local boundedness
 simultaneously in Dirichlet and auxiliary parameters. -/
-theorem locallyBounded_regDirichletIntegral_kernel
+theorem locallyBounded_regDirichletIntegral_kernel [Finite κ]
     {U : Set (κ → ℂ)} (hU : IsOpen U)
     {F : (κ → ℂ) → (ι → ℝ) → ℂ}
     (hF : ContinuousOn (fun p : (κ → ℂ) × (ι → ℝ) => F p.1 p.2)
       (U ×ˢ Convexity.StdSimplex.coordinateSet ℝ ι))
     {p : (ι → ℂ) × (κ → ℂ)} (hb : p.1 ∈ mvBetaConvergent) (hz : p.2 ∈ U) :
     ∃ M : ℝ, ∀ᶠ q in nhds p, ‖regDirichletIntegral q.1 (F q.2)‖ ≤ M := by
+  classical
+  let _ := Fintype.ofFinite κ
   rcases isEmpty_or_nonempty ι with hι | hι
   · exact ⟨0, Filter.Eventually.of_forall (fun q => by
       simp [regDirichletIntegral, stdSimplexMeasure_empty])⟩
@@ -164,7 +167,7 @@ theorem analyticOnNhd_regDirichletIntegral_kernel_joint
   have hV : IsOpen V := (isOpen_mvBetaConvergent.prod hU).preimage L.continuous
   have hc := continuousOn_complexSimplexKernel hH.continuousOn hW
   have hG : AnalyticOnNhd ℂ G V := by
-    apply SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded hV
+    apply CarlsonFunctions.SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded hV
     · intro q hq k
       have hupdateB (v : ι → ℂ) (i : ι) (w : ℂ) :
           Function.update v i w = fun j => if j = i then w else v j := by
@@ -180,7 +183,7 @@ theorem analyticOnNhd_regDirichletIntegral_kernel_joint
             (Convexity.StdSimplex.coordinateSet ℝ ι) :=
           hc.comp (continuous_const.prodMk continuous_id).continuousOn (fun u hu => ⟨hq.2, hu⟩)
         have h := (isOpen_mvBetaConvergent.analyticOn_iff_analyticOnNhd.mp
-          (regDirichletIntegral_analyticOn hcont)).analyticAt_update hq.1 i
+          (regDirichletIntegral_analyticOn hcont)).analyticAt_updateCarlson hq.1 i
         change AnalyticAt ℂ (fun w => regDirichletIntegral
           (Function.update (fun j => q (.inl j)) i w)
           (fun u => H ((fun j => q (.inr j)), fun j => (u j : ℂ)))) (q (.inl i)) at h
@@ -189,7 +192,8 @@ theorem analyticOnNhd_regDirichletIntegral_kernel_joint
         simpa only [hupdateB, Function.update_apply, Sum.inl.injEq,
           reduceCtorEq, ite_false] using! h
       | inr i =>
-        have h := (analyticOnNhd_regDirichletIntegral_kernel hU hH hW hq.1).analyticAt_update hq.2 i
+        have h := (analyticOnNhd_regDirichletIntegral_kernel hU hH hW
+          hq.1).analyticAt_updateCarlson hq.2 i
         change AnalyticAt ℂ (fun w => regDirichletIntegral (fun j => q (.inl j))
           (fun u => H (Function.update (fun j => q (.inr j)) i w,
             fun j => (u j : ℂ)))) (q (.inr i)) at h

@@ -286,7 +286,8 @@ theorem analyticAt_regCarlsonR_comp
         (Set.mem_univ _)).comp (hb i))
   · have hsum : AnalyticAt ℂ (fun y => (∑ i, b y i) + n) x :=
       (Finset.analyticAt_fun_sum _ (fun i _ => hb i)).add analyticAt_const
-    exact (Complex.differentiable_one_div_Gamma.analyticAt (z := (∑ i, b x i) + n)).comp_of_eq hsum rfl
+    exact (Complex.differentiable_one_div_Gamma.analyticAt (z := (∑ i, b x i) + n)).comp_of_eq
+      hsum rfl
 
 end DirichletTransform
 end CarlsonRPolynomial

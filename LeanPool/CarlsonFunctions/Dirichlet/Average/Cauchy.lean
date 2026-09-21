@@ -112,7 +112,7 @@ theorem hasDerivAt_regCarlsonResolvent (n : ℕ) {b : ι → ℂ}
     simpa only [mul_one] using integrableOn_regDirichletDensity_mul b hb
       (continuousOn_const : ContinuousOn (fun _ : ι → ℝ => (1 : ℂ))
         (Convexity.StdSimplex.coordinateSet ℝ ι))
-  have h := hasDerivAt_integral_mul_of_continuousOn_compact
+  have h := hasDerivAt_integral_mul_of_continuousOn_compactCarlson
     (F := fun w u => carlsonCauchyKernel n z u w)
     (F' := fun w u => -((n : ℂ) + 1) * carlsonCauchyKernel (n + 1) z u w)
     (Convexity.StdSimplex.isCompact_coordinateSet ℝ ι) hd
@@ -259,7 +259,7 @@ theorem regCarlsonDirichletAverage_iteratedDeriv_eq_circleIntegral
   apply setIntegral_congr_fun (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet
   intro u hu
   dsimp only
-  rw [hf.iteratedDeriv_eq_circleIntegral_sub_zpow_mul hR n
+  rw [hf.iteratedDeriv_eq_circleIntegral_sub_zpow_mulCarlson hR n
     (convexHull_min hz (convex_ball c R) (carlsonAffineForm_mem_convexHull z hu))]
   simp only [carlsonCauchyKernel]
   ring

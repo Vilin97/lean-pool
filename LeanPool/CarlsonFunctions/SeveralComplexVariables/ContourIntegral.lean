@@ -31,7 +31,7 @@ variable {E α : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 /-- Holomorphic dependence of a compact weighted integral of a jointly
 holomorphic kernel. Only the parametrization, not the weight, must be continuous. -/
-theorem analyticOnNhd_integral_mul_compact_kernel
+theorem analyticOnNhd_integral_mul_compact_kernelCarlson
     {μ : Measure α} {K : Set α} (hK : IsCompact K)
     {g : α → ℂ} (hg : IntegrableOn g K μ)
     {γ : α → ℂ} (hγ : ContinuousOn γ K)
@@ -52,7 +52,7 @@ theorem analyticOnNhd_integral_mul_compact_kernel
       (fun p hp => hW p.1 hp.1 p.2 hp.2)).clm_comp continuousOn_const
   have hslice {x : E} (hx : x ∈ U) : ContinuousOn (fun t => H (x, γ t)) K :=
     hc.comp (continuous_const.prodMk continuous_id).continuousOn (fun t ht => ⟨hx, ht⟩)
-  apply DifferentiableOn.analyticOnNhd_finiteDimensional _ hU
+  apply DifferentiableOn.analyticOnNhd_finiteDimensionalCarlson _ hU
   intro x hx
   obtain ⟨r, hr, hball⟩ := nhds_basis_closedBall.mem_iff.mp (hU.mem_nhds hx)
   obtain ⟨M, hM⟩ := ((isCompact_closedBall x r).prod hK).bddAbove_image
@@ -79,7 +79,7 @@ theorem analyticOnNhd_integral_mul_compact_kernel
 omit [MeasurableSpace α] [TopologicalSpace α] [BorelSpace α] [T2Space α] in
 /-- Integrating a holomorphic parameter-dependent kernel against a continuous
 boundary function on a fixed circle preserves holomorphy in all parameters. -/
-theorem analyticOnNhd_circleIntegral_kernel_mul
+theorem analyticOnNhd_circleIntegral_kernel_mulCarlson
     {U : Set E} (hU : IsOpen U) {W : Set (E × ℂ)}
     {H : E × ℂ → ℂ} (hH : AnalyticOnNhd ℂ H W)
     {c : ℂ} {R : ℝ} (hR : 0 ≤ R) {f : ℂ → ℂ}
@@ -94,7 +94,7 @@ theorem analyticOnNhd_circleIntegral_kernel_mul
       fun_prop
     · exact hf.comp (continuous_circleMap c R).continuousOn
         (fun t _ => circleMap_mem_sphere c hR t)
-  have h := analyticOnNhd_integral_mul_compact_kernel (μ := volume) isCompact_Icc
+  have h := analyticOnNhd_integral_mul_compact_kernelCarlson (μ := volume) isCompact_Icc
     (hg.integrableOn_compact isCompact_Icc) (continuous_circleMap c R).continuousOn hU hH
     (fun x hx t _ => hW x hx _ (circleMap_mem_sphere c hR t))
   simpa only [circleIntegral_def_Icc, smul_eq_mul, mul_assoc, mul_left_comm, mul_comm] using h

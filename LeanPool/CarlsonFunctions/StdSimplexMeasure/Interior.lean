@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -41,7 +41,8 @@ theorem measurableSet_stdSimplexInterior :
 /-- Permuting coordinates preserves the positive-coordinate simplex interior. -/
 theorem mem_stdSimplexInterior_perm (σ : Equiv.Perm ι) (u : ι → ℝ) :
     (u ∘ σ) ∈ stdSimplexInterior ↔ u ∈ stdSimplexInterior := by
-  have hsimp : (u ∘ σ) ∈ Convexity.StdSimplex.coordinateSet ℝ ι ↔ u ∈ Convexity.StdSimplex.coordinateSet ℝ ι := by
+  have hsimp : (u ∘ σ) ∈ Convexity.StdSimplex.coordinateSet ℝ ι ↔ u ∈
+    Convexity.StdSimplex.coordinateSet ℝ ι := by
     change u ∈ (fun v ↦ v ∘ σ) ⁻¹' Convexity.StdSimplex.coordinateSet ℝ ι ↔ _
     rw [preimage_stdSimplex_perm]
   constructor
@@ -62,7 +63,8 @@ theorem ae_mem_stdSimplexInterior :
   | inr hι =>
       let _ := hι
       filter_upwards [MeasureTheory.self_mem_ae_restrict
-        (μ := MeasureTheory.Measure.stdSimplexMeasure) (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet,
+        (μ := MeasureTheory.Measure.stdSimplexMeasure)
+          (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet,
         MeasureTheory.Measure.ae_zero_lt_of_mem_stdSimplex (ι := ι)] with u hu hp
       exact ⟨hu, hp⟩
 
@@ -74,9 +76,13 @@ variable {ι : Type*} [Fintype ι]
 /-- The positive-coordinate interior as a set of intrinsic simplex points. -/
 def positiveInterior : Set (StdSimplex ℝ ι) := {s | ∀ i, 0 < s.weights i}
 
-theorem isOpen_positiveInterior : IsOpen (positiveInterior (ι := ι)) := by
+omit [Fintype ι] in
+theorem isOpen_positiveInterior [Finite ι] : IsOpen (positiveInterior (ι := ι)) := by
+  classical
+  let _ := Fintype.ofFinite ι
   have hset : positiveInterior (ι := ι) =
-      ⋂ i, {s : StdSimplex ℝ ι | 0 < s.coordinates i} := by ext; simp [positiveInterior, coordinates]
+      ⋂ i, {s : StdSimplex ℝ ι | 0 < s.coordinates i} := by ext; simp [positiveInterior,
+        coordinates]
   rw [hset]
   exact isOpen_iInter_of_finite (fun i => isOpen_lt continuous_const
     ((continuous_apply i).comp continuous_coordinates))

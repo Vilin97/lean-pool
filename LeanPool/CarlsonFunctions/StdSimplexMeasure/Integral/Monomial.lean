@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -39,7 +39,8 @@ theorem integral_stdSimplex_explicit_monomial_succ [Nontrivial ι] (i : ι) (m :
   ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, (∏ j, u j ^ m j) ∂stdSimplexMeasure =
     (Nat.factorial (m i) * Nat.factorial (card ι + (∑ j, m j) - 2 - m i)
       / Nat.factorial (card ι + ∑ j, m j - 1) : ℝ)
-      * ∫ u in Convexity.StdSimplex.coordinateSet ℝ {j : ι // j ≠ i}, (∏ j, u j ^ m j.val) ∂stdSimplexMeasure := by
+      * ∫ u in Convexity.StdSimplex.coordinateSet ℝ {j : ι // j ≠ i}, (∏ j, u j ^ m j.val)
+        ∂stdSimplexMeasure := by
   have hf : IntegrableOn (fun u : ι → ℝ => ∏ j, u j ^ m j)
       (Convexity.StdSimplex.coordinateSet ℝ ι) stdSimplexMeasure := by
     apply ContinuousOn.integrableOn_stdSimplex
@@ -79,7 +80,8 @@ theorem integral_stdSimplex_explicit_monomial_succ [Nontrivial ι] (i : ι) (m :
     rw [← integral_const_mul]
     apply integral_congr_ae
     filter_upwards [self_mem_ae_restrict
-      (μ := stdSimplexMeasure) (Convexity.StdSimplex.isClosed_coordinateSet ℝ _).measurableSet] with v hv
+      (μ := stdSimplexMeasure) (Convexity.StdSimplex.isClosed_coordinateSet ℝ _).measurableSet]
+        with v hv
     exact hfactor t v hv
   simp_rw [hinner]
   simp only [smul_eq_mul]
@@ -153,7 +155,7 @@ theorem integral_stdSimplex_explicit_monomial (m : ι → ℕ) [Nonempty ι] :
           have hsum : ∑ j, a j = a i + ∑ q : {j : α // j ≠ i}, a q.val :=
             Fintype.sum_eq_add_sum_subtype_ne a i
           have hcardsub : card {j : α // j ≠ i} = card α - 1 := by
-            simpa using card_subtype_compl (fun j : α => j = i)
+            simp
           have hidx : card {j : α // j ≠ i} +
               (∑ q : {j : α // j ≠ i}, a q.val) - 1 =
               card α + (∑ j, a j) - 2 - a i := by

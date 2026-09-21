@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -18,7 +18,8 @@ import all LeanPool.CarlsonFunctions.StdSimplexMeasure.Measure.Basic
 # Real normalized Dirichlet measure on the standard simplex
 
 The multivariate Dirichlet measure [KBJ00, Ch 49] is defined on the standard simplex in
-symmetric variables, i.e. `Convexity.StdSimplex.coordinateSet ℝ ι`, or $E^{k-1}$ embedded in $ℝ^k$ where
+symmetric variables, i.e. `Convexity.StdSimplex.coordinateSet ℝ ι`, or $E^{k-1}$ embedded in $ℝ^k$
+where
 `k = card ι`.
 
 This file constructs the density and the probability measure, and records permutation
@@ -155,17 +156,20 @@ theorem dirichletMeasure_stdSimplex
     filter_upwards [hmem, hae] with u hu hpos
     simp [dirichletPdfReal, stdSimplexInterior, hu, hpos, p]
   have hd_integral :
-      ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, dirichletPdfReal b u ∂stdSimplexMeasure = 1 := by
+      ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, dirichletPdfReal b u ∂stdSimplexMeasure = 1
+        := by
     have hae := ae_zero_lt_of_mem_stdSimplex (ι := ι)
     have hmem := self_mem_ae_restrict
       (μ := stdSimplexMeasure) (Convexity.StdSimplex.isClosed_coordinateSet ℝ ι).measurableSet
     calc
       ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, dirichletPdfReal b u ∂stdSimplexMeasure =
-          ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, (1 / mvRealBeta b) * p u ∂stdSimplexMeasure := by
+          ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, (1 / mvRealBeta b) * p u
+            ∂stdSimplexMeasure := by
             apply integral_congr_ae
             filter_upwards [hmem, hae] with u hu hpos
             simp [dirichletPdfReal, stdSimplexInterior, hu, hpos, p]
-      _ = (1 / mvRealBeta b) * ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, p u ∂stdSimplexMeasure := by
+      _ = (1 / mvRealBeta b) * ∫ u in Convexity.StdSimplex.coordinateSet ℝ ι, p u
+        ∂stdSimplexMeasure := by
         rw [MeasureTheory.integral_const_mul]
       _ = 1 := by
         rw [← mvRealBeta_eq_integral hb]
@@ -254,7 +258,8 @@ theorem dirichletMeasureUniform_one :
       rw [← dirichletMeasure_restrict b]
       unfold dirichletMeasure
       rw [restrict_withDensity hs]
-      have hd : dirichletPdf b =ᵐ[stdSimplexMeasure.restrict (Convexity.StdSimplex.coordinateSet ℝ ι)]
+      have hd : dirichletPdf b =ᵐ[stdSimplexMeasure.restrict (Convexity.StdSimplex.coordinateSet ℝ
+        ι)]
           fun _ => ENNReal.ofReal (1 / mvRealBeta b) := by
         have hmem := self_mem_ae_restrict (μ := stdSimplexMeasure) hs
         have hpos := ae_zero_lt_of_mem_stdSimplex (ι := ι)

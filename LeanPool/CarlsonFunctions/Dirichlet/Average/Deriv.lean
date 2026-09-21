@@ -76,7 +76,8 @@ theorem regCarlsonDirichletAverage_tangent
       mvBetaConvergent := by
     intro b hb
     exact analyticAt_const.mul (((ha _ hdc) _
-      (addDirichletUnit_mem_mvBetaConvergent (addDirichletUnit_mem_mvBetaConvergent hb j) i)).comp_of_eq
+      (addDirichletUnit_mem_mvBetaConvergent (addDirichletUnit_mem_mvBetaConvergent hb j)
+        i)).comp_of_eq
         ((hs i _).comp_of_eq (hs j b) rfl) rfl)
   have hright : AnalyticOnNhd ℂ (fun b =>
       regCarlsonDirichletAverage (addDirichletUnit b i) z f -
@@ -90,7 +91,8 @@ theorem regCarlsonDirichletAverage_tangent
   have hev : ∀ᶠ b : ι → ℂ in nhds (fun _ => 3), ∀ k, 2 < (b k).re := by
     apply Filter.eventually_all.mpr
     intro k
-    exact (isOpen_lt continuous_const (Complex.continuous_re.comp (continuous_apply k))).eventually_mem
+    exact (isOpen_lt continuous_const (Complex.continuous_re.comp (continuous_apply
+      k))).eventually_mem
       (by norm_num)
   filter_upwards [hev] with b hb
   let q := addDirichletUnit (addDirichletUnit b j) i
@@ -107,7 +109,8 @@ theorem regCarlsonDirichletAverage_tangent
   have hdiff : ∀ u ∈ Convexity.StdSimplex.coordinateSet ℝ ι,
       DifferentiableAt ℝ (fun u => f (carlsonAffineForm z u)) u := by
     intro u hu
-    have hd := (hf _ (convexHull_min hz hΩconv (carlsonAffineForm_mem_convexHull z hu))).differentiableAt
+    have hd := (hf _ (convexHull_min hz hΩconv (carlsonAffineForm_mem_convexHull z
+      hu))).differentiableAt
     exact (hd.restrictScalars ℝ).comp u (hasFDerivAt_carlsonSimplex z u).differentiableAt
   have heq {u : ι → ℝ} (hu : u ∈ Convexity.StdSimplex.coordinateSet ℝ ι) :=
     carlson_tangent_fderiv hΩconv hf hz i j hu

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Bastiaan J Braams.
+Authors: Bastiaan J Braams
 -/
 module
 
@@ -14,7 +14,8 @@ public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 public import LeanPool.CarlsonFunctions.StdSimplexMeasure.CoordinateRealization
 
 import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Measure.Dirac
+import Mathlib.MeasureTheory.Measure.Dirac.Basic
+import Mathlib.MeasureTheory.Measure.Dirac.Def
 import LeanPool.CarlsonFunctions.StdSimplexMeasure.PositiveSimplex.Aggregation
 
 /-! # Aggregation pushforward of simplex coordinate measure -/
@@ -82,7 +83,8 @@ theorem map_stdSimplexMeasure_restrict_stdSimplex_aggregate_of_unique
   rw [MeasureTheory.setLIntegral_dirac' hd hs]
   by_cases hmem : (fun _ : κ => (1 : ℝ)) ∈ s
   · rw [ite_eq_left hmem]
-    have hpre : stdSimplexAggregate f ⁻¹' s ∩ Convexity.StdSimplex.coordinateSet ℝ ι = Convexity.StdSimplex.coordinateSet ℝ ι := by
+    have hpre : stdSimplexAggregate f ⁻¹' s ∩ Convexity.StdSimplex.coordinateSet ℝ ι =
+      Convexity.StdSimplex.coordinateSet ℝ ι := by
       ext u
       simp only [Set.mem_inter_iff]
       constructor
@@ -324,7 +326,8 @@ theorem map_stdSimplexMeasure_restrict_stdSimplex_aggregate
             rfl
           have hright :
               ∫⁻ u, g u ∂((stdSimplexMeasure (ι := κ)).restrict
-                  (Convexity.StdSimplex.coordinateSet ℝ κ)).withDensity (stdSimplexAggregateDensity f) =
+                  (Convexity.StdSimplex.coordinateSet ℝ κ)).withDensity
+                    (stdSimplexAggregateDensity f) =
               ∫⁻ z in posSimplex {j : κ // j ≠ k} 1,
                 stdSimplexAggregateDensity f (stdSimplexCoordMap k z) *
                   g (stdSimplexCoordMap k z) := by

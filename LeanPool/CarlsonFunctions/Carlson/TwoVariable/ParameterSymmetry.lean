@@ -85,7 +85,8 @@ private theorem parameterSymmetry_near_one (a u v y : ℂ) (hy : ‖y‖ < 1) :
   have hB (p : Fin 3 → ℂ) : AnalyticAt ℂ B p := by
     apply analyticAt_pi_iff.mpr
     intro i; fin_cases i
-    · exact ((analyticAt_coordinate p 1).add (analyticAt_coordinate p 2)).sub (analyticAt_coordinate p 0)
+    · exact ((analyticAt_coordinate p 1).add (analyticAt_coordinate p 2)).sub
+        (analyticAt_coordinate p 0)
     · exact analyticAt_coordinate p 0
   have hb (p : Fin 3 → ℂ) : AnalyticAt ℂ (fun q => pair (q 1) (q 2)) p := by
     apply analyticAt_pi_iff.mpr

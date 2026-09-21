@@ -167,9 +167,12 @@ theorem exists_isRegCarlsonTContinuation {z : ι → ℂ}
   intro b hb
   exact hEq hb
 
+omit [Fintype ι] in
 /-- The intrinsic T-variable domain is open. -/
-theorem isOpen_carlsonTVariableDomain :
+theorem isOpen_carlsonTVariableDomain [Finite ι] :
     IsOpen (carlsonTVariableDomain : Set (ι → ℂ)) := by
+  classical
+  let _ := Fintype.ofFinite ι
   rw [← isClosed_compl_iff]
   let π : (ι → ℂ) × Convexity.StdSimplex ℝ ι → ι → ℂ := Prod.fst
   have hcont : Continuous (fun p : (ι → ℂ) × Convexity.StdSimplex ℝ ι =>

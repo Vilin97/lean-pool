@@ -43,7 +43,8 @@ theorem ContDiffNearStdSimplex.of_le {N M : ℕ} (hNM : N ≤ M)
 
 /-- Finite differentiability on a neighborhood implies continuity on the closed simplex. -/
 theorem ContDiffNearStdSimplex.continuousOn {N : ℕ} {f : (ι → ℝ) → ℂ}
-    (hf : ContDiffNearStdSimplex N f) : ContinuousOn f (Convexity.StdSimplex.coordinateSet ℝ ι) := by
+    (hf : ContDiffNearStdSimplex N f) : ContinuousOn f (Convexity.StdSimplex.coordinateSet ℝ ι) :=
+      by
   obtain ⟨U, hU, hsub, hf⟩ := hf
   exact hf.continuousOn.mono hsub
 
@@ -163,7 +164,7 @@ theorem stdSimplexCoordMap_scale_eq_line (i : ι) (t : ℝ)
     rw [stdSimplexCoordMap_apply_self, Pi.add_apply, Pi.smul_apply, Pi.smul_apply,
       Pi.single_eq_same, stdSimplexCoordMap_apply_self]
     rw [← Finset.mul_sum, hv, mul_one]
-    simp [hv]
+    simp
   · rw [stdSimplexCoordMap_apply_of_ne i j hji, Pi.add_apply, Pi.smul_apply, Pi.smul_apply,
       Pi.single_eq_of_ne hji, stdSimplexCoordMap_apply_of_ne i j hji]
     simp
@@ -184,7 +185,7 @@ theorem hasDerivAt_stdSimplexCoordMap_scale (i : ι) (t : ℝ)
   have hderiv :
       (1 : ℝ) • Pi.single i (1 : ℝ) + (-1 : ℝ) • stdSimplexCoordMap i v =
         Pi.single i (1 : ℝ) - stdSimplexCoordMap i v := by
-    simp [one_smul, neg_one_smul, sub_eq_add_neg]
+    simp [one_smul, sub_eq_add_neg]
   rw [← hderiv]
   exact (hid.smul_const _).add (h1.smul_const _)
 
@@ -210,7 +211,8 @@ theorem ContDiffNearStdSimplex.slice {N : ℕ} {f : (ι → ℝ) → ℂ}
       fun_prop
   refine ⟨V, hU.preimage (hmap.continuous), ?_, ?_⟩
   · intro v hv
-    have : stdSimplexCoordMap i (fun j => (1 - t) * v j) ∈ Convexity.StdSimplex.coordinateSet ℝ ι := by
+    have : stdSimplexCoordMap i (fun j => (1 - t) * v j) ∈ Convexity.StdSimplex.coordinateSet ℝ ι
+      := by
       rw [stdSimplexCoordMap_mem_stdSimplex_iff]
       refine ⟨fun j => mul_nonneg (sub_nonneg.mpr ht.2) (hv.1 j), ?_⟩
       rw [← Finset.mul_sum, hv.2, mul_one]
@@ -222,7 +224,8 @@ open scoped Classical in
 /-- Affine slices of a continuous simplex function remain continuous on the opposite face. -/
 theorem continuousOn_stdSimplexSlice (i : ι) {t : ℝ} (ht : t ∈ Icc (0 : ℝ) 1)
     {f : (ι → ℝ) → ℂ} (hf : ContinuousOn f (Convexity.StdSimplex.coordinateSet ℝ ι)) :
-    ContinuousOn (stdSimplexSlice i t f) (Convexity.StdSimplex.coordinateSet ℝ {j : ι // j ≠ i}) := by
+    ContinuousOn (stdSimplexSlice i t f) (Convexity.StdSimplex.coordinateSet ℝ {j : ι // j ≠ i})
+      := by
   have hmap : Continuous
       (fun v : {j : ι // j ≠ i} → ℝ =>
         stdSimplexCoordMap i (fun q => (1 - t) * v q)) := by

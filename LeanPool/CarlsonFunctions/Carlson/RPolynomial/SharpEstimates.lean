@@ -112,7 +112,8 @@ theorem exists_summable_norm_carlsonTaylor_bounded_variables
   have hS : Continuous (fun b : ι → ℂ => ∑ i, b i) := by fun_prop
   have hD (n : ℕ) : ∃ D : ℝ, 0 ≤ D ∧ ∀ b ∈ K,
       ‖(Gamma ((∑ i, b i) + n))⁻¹‖ ≤ D := by
-    have hc := differentiable_one_div_Gamma.continuous.comp (hS.add (continuous_const (y := (n : ℂ))))
+    have hc := differentiable_one_div_Gamma.continuous.comp (hS.add (continuous_const (y := (n :
+      ℂ))))
     obtain ⟨D, hD⟩ := hK.bddAbove_image hc.norm.continuousOn
     exact ⟨max D 0, le_max_right _ _, fun b hb =>
       (hD (mem_image_of_mem _ hb)).trans (le_max_left _ _)⟩

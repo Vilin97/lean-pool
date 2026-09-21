@@ -79,7 +79,7 @@ theorem analyticOnNhd_carlsonRUnitIntervalIntegral_comp
       (show ContinuousAt (fun v : ℝ => (p, (v : ℂ))) u by fun_prop) rfl).clm_comp
         continuousAt_const).continuousWithinAt
   change AnalyticOnNhd ℂ (fun p => ∫ u, F p u ∂volume.restrict (Ioo 0 1)) U
-  apply analyticOnNhd_integral_of_locally_dominated hU
+  apply analyticOnNhd_integral_of_locally_dominatedCarlson hU
     (fun p hp => (hFcont p hp).aestronglyMeasurable measurableSet_Ioo)
     (fun p hp => (hDcont p hp).aestronglyMeasurable measurableSet_Ioo)
   · filter_upwards [self_mem_ae_restrict measurableSet_Ioo] with u hu
