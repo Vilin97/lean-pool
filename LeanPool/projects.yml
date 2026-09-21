@@ -9935,7 +9935,7 @@ projects:
         informal: >-
           The planar threshold is at least one half, witnessed by Besicovitch's purely unrectifiable
           example.
-      - declaration: LeanPool.Besicovitch.weightedGeometricBound_gram
+      - declaration: LeanPool.Besicovitch.weightedPairScore_le_of_separated
         informal: >-
           Thirty exact rational Gram certificates prove the weighted six-point score is at most
           -1/2000 for every separated admissible pair in the unit ball.
