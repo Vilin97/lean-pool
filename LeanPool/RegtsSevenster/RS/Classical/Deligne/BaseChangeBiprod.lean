@@ -148,7 +148,8 @@ private lemma map_inl_snd
   rw [modTensorπ_map_assoc, modTensorπ_map]
   simp only [Mod.id_hom', modBiprodInl_hom, modBiprodSnd_hom,
     MonoidalCategory.id_tensorHom]
-  rw [← MonoidalCategory.whiskerLeft_comp_assoc]
+  repeat' erw [MonoidalCategory.id_tensorHom]
+  erw [← MonoidalCategory.whiskerLeft_comp_assoc]
   show B ◁ ((biprod.inl : M.X ⟶ M.X ⊞ N.X) ≫ biprod.snd) ≫
       modTensorπ A (restrictRegular φ) N =
     modTensorπ A (restrictRegular φ) M ≫ 0
@@ -169,7 +170,8 @@ private lemma map_inr_fst
   rw [modTensorπ_map_assoc, modTensorπ_map]
   simp only [Mod.id_hom', modBiprodInr_hom, modBiprodFst_hom,
     MonoidalCategory.id_tensorHom]
-  rw [← MonoidalCategory.whiskerLeft_comp_assoc]
+  repeat' erw [MonoidalCategory.id_tensorHom]
+  erw [← MonoidalCategory.whiskerLeft_comp_assoc]
   show B ◁ ((biprod.inr : N.X ⟶ M.X ⊞ N.X) ≫ biprod.fst) ≫
       modTensorπ A (restrictRegular φ) M =
     modTensorπ A (restrictRegular φ) N ≫ 0
@@ -187,17 +189,17 @@ theorem baseChangeBiprodBwd_fwd
       𝟙 (baseChange φ M ⊞ baseChange φ N) := by
   unfold baseChangeBiprodBwd baseChangeBiprodFwd
   apply biprod.hom_ext'
-  · rw [Category.comp_id, biprod.inl_desc_assoc]
+  · erw [Category.comp_id, biprod.inl_desc_assoc]
     apply biprod.hom_ext
-    · rw [Category.assoc, biprod.lift_fst, biprod.inl_fst]
+    · erw [Category.assoc, biprod.lift_fst, biprod.inl_fst]
       exact map_inl_fst A B φ M N
-    · rw [Category.assoc, biprod.lift_snd, biprod.inl_snd]
+    · erw [Category.assoc, biprod.lift_snd, biprod.inl_snd]
       exact map_inl_snd A B φ M N
-  · rw [Category.comp_id, biprod.inr_desc_assoc]
+  · erw [Category.comp_id, biprod.inr_desc_assoc]
     apply biprod.hom_ext
-    · rw [Category.assoc, biprod.lift_fst, biprod.inr_fst]
+    · erw [Category.assoc, biprod.lift_fst, biprod.inr_fst]
       exact map_inr_fst A B φ M N
-    · rw [Category.assoc, biprod.lift_snd, biprod.inr_snd]
+    · erw [Category.assoc, biprod.lift_snd, biprod.inr_snd]
       exact map_inr_snd A B φ M N
 
 /-- The forward map followed by the backward map is the
@@ -210,7 +212,7 @@ theorem baseChangeBiprodFwd_bwd
     baseChangeBiprodFwd A B φ M N ≫ baseChangeBiprodBwd A B φ M N =
       𝟙 (baseChange φ (modBiprod A M N)) := by
   unfold baseChangeBiprodFwd baseChangeBiprodBwd
-  rw [biprod.lift_desc]
+  erw [biprod.lift_desc]
   apply modTensor_hom_ext
   show modTensorπ A (restrictRegular φ) (modBiprod A M N) ≫
       (modTensorMap A (𝟙 (restrictRegular φ))
@@ -229,7 +231,8 @@ theorem baseChangeBiprodFwd_bwd
   simp only [Mod.id_hom', modBiprodFst_hom, modBiprodInl_hom,
     modBiprodSnd_hom, modBiprodInr_hom,
     MonoidalCategory.id_tensorHom]
-  rw [← MonoidalCategory.whiskerLeft_comp_assoc,
+  repeat' erw [MonoidalCategory.id_tensorHom]
+  erw [← MonoidalCategory.whiskerLeft_comp_assoc,
     ← MonoidalCategory.whiskerLeft_comp_assoc,
     ← Preadditive.add_comp,
     ← MonoidalPreadditive.whiskerLeft_add]

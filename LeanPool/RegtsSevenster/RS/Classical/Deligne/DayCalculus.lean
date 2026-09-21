@@ -102,9 +102,8 @@ def dayCoyonedaCorepresentableBy [SmallCategory D] [MonoidalCategory D]
       (η (DayFunctor.mk (coyoneda.obj (Opposite.op a)))
           (DayFunctor.mk (coyoneda.obj (Opposite.op b))) ≫
         Functor.whiskerLeft (tensor D) (f ≫ g).natTrans) = _
-    rw [comp_natTrans, Functor.whiskerLeft_comp, ← Category.assoc,
+    erw [comp_natTrans, Functor.whiskerLeft_comp, ← Category.assoc,
       coyonedaEquiv_comp]
-    rfl
 
 /-- Day convolution of corepresentables: the Day tensor of the
 corepresentable functors at `a` and `b` is the corepresentable functor

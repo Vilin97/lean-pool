@@ -134,8 +134,7 @@ theorem preservesCoproduct_of_finite_and_filtered
         apply Sigma.hom_ext
         intro x
         erw [Sigma.ι_desc_assoc, ι_comp_sigmaComparison,
-          stage_ι_comp_assoc, ← G.map_comp, Sigma.ι_desc]
-        rfl }
+          stage_ι_comp_assoc, ← G.map_comp, Sigma.ι_desc] }
   haveI : IsIso m := hD2.hom_isIso hD' m
   haveI : IsIso (sigmaComparison G f) := by
     have : IsIso ((Cocone.forget _).map m) := inferInstance

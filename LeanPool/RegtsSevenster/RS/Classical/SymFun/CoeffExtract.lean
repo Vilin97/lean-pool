@@ -44,9 +44,9 @@ theorem prod_pow_eq_monomial (c : Fin k → ℕ) :
 injective exponents is `1`. -/
 theorem alternant_coeff (e : Fin k → ℕ)
     (hinj : Function.Injective e) :
-    MvPolynomial.coeff (∑ i, Finsupp.single i (e i))
-      ((Matrix.of fun i j : Fin k =>
-        (X j : MvPolynomial (Fin k) ℂ) ^ (e i)).det) = 1 := by
+    ((Matrix.of fun i j : Fin k =>
+      (X j : MvPolynomial (Fin k) ℂ) ^ (e i)).det).coeff
+        (∑ i, Finsupp.single i (e i)) = 1 := by
   classical
   rw [Matrix.det_apply']
   rw [Finset.sum_congr rfl

@@ -35,7 +35,7 @@ theorem hasSubst_psLog (t : ℕ → ℂ) : HasSubst (psLog t) :=
 /-- The derivative of the power-sum logarithm is the power-sum
 series. -/
 theorem derivative_psLog (t : ℕ → ℂ) :
-    d⁄dX ℂ (psLog t) = powerSumSeries t := by
+    (PowerSeries.derivative (R := ℂ)) (psLog t) = powerSumSeries t := by
   ext n
   rw [coeff_derivative, psLog, coeff_mk, if_neg (by omega)]
   rw [show coeff n (powerSumSeries t) = t (n + 1) from by
@@ -63,7 +63,7 @@ theorem traceZeta_eq_newtonH_series (t : ℕ → ℂ) :
       exact constantCoeff_exp
     · rw [coeff_zero_eq_constantCoeff, map_pow,
         constantCoeff_psLog, zero_pow hd, smul_zero]
-  · rw [traceZeta, derivative_subst _ (hasSubst_psLog t),
+  · rw [traceZeta, derivative_subst (hasSubst_psLog t),
       derivative_exp, derivative_psLog]
     rw [mul_comm]
 

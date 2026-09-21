@@ -112,14 +112,14 @@ private theorem key_poly_identity (p q : ℕ) :
     (C (q : ℂ) * (1 - X)) * one_add_X_mul_alt
 
 private theorem one_sub_X_mul_derivative_pow (p : ℕ) :
-    (1 - X) * d⁄dX ℂ ((1 - X : ℂ⟦X⟧) ^ p) =
+    (1 - X) * (PowerSeries.derivative (R := ℂ)) ((1 - X : ℂ⟦X⟧) ^ p) =
       -(C (p : ℂ)) * (1 - X) ^ p := by
   induction p with
   | zero =>
       rw [pow_zero, Derivation.map_one_eq_zero, mul_zero, Nat.cast_zero,
         map_zero, neg_zero, zero_mul]
   | succ m ih =>
-      have hD : d⁄dX ℂ (1 - X : ℂ⟦X⟧) = -1 := by
+      have hD : (PowerSeries.derivative (R := ℂ)) (1 - X : ℂ⟦X⟧) = -1 := by
         rw [Derivation.map_sub, derivative_X, Derivation.map_one_eq_zero,
           zero_sub]
       have hC : ((m + 1 : ℕ) : ℂ) = (m : ℂ) + 1 := by push_cast; ring
@@ -128,15 +128,15 @@ private theorem one_sub_X_mul_derivative_pow (p : ℕ) :
       linear_combination (1 - X) * ih
 
 private theorem superSeries_ode (p q : ℕ) :
-    (1 + X) * d⁄dX ℂ ((1 - X) ^ p * newtonHSeries (superPS p q)) =
+    (1 + X) * (PowerSeries.derivative (R := ℂ)) ((1 - X) ^ p * newtonHSeries (superPS p q)) =
       C (q : ℂ) * ((1 - X) ^ p * newtonHSeries (superPS p q)) := by
   have hunit : IsUnit (1 - X : ℂ⟦X⟧) :=
     IsUnit.of_mul_eq_one _ one_sub_X_mul_geom
   refine hunit.mul_right_inj.mp ?_
-  have hprod : d⁄dX ℂ ((1 - X) ^ p * newtonHSeries (superPS p q)) =
+  have hprod : (PowerSeries.derivative (R := ℂ)) ((1 - X) ^ p * newtonHSeries (superPS p q)) =
       (1 - X) ^ p *
           (powerSumSeries (superPS p q) * newtonHSeries (superPS p q)) +
-        newtonHSeries (superPS p q) * d⁄dX ℂ ((1 - X : ℂ⟦X⟧) ^ p) := by
+        newtonHSeries (superPS p q) * (PowerSeries.derivative (R := ℂ)) ((1 - X : ℂ⟦X⟧) ^ p) := by
     rw [Derivation.leibniz, smul_eq_mul, smul_eq_mul, newtonH_derivative]
   rw [hprod]
   linear_combination
@@ -154,7 +154,7 @@ coefficient `1` has coefficients `C(q, n)`, by the coefficient
 recursion `(n + 1) · F_{n+1} = (q − n) · F_n`. -/
 private theorem coeff_eq_choose_of_ode {q : ℕ} {F : ℂ⟦X⟧}
     (h0 : constantCoeff F = 1)
-    (hode : (1 + X) * d⁄dX ℂ F = C (q : ℂ) * F) :
+    (hode : (1 + X) * (PowerSeries.derivative (R := ℂ)) F = C (q : ℂ) * F) :
     ∀ n, coeff n F = (q.choose n : ℂ) := by
   intro n
   induction n with
@@ -164,7 +164,7 @@ private theorem coeff_eq_choose_of_ode {q : ℕ} {F : ℂ⟦X⟧}
   | succ m ih =>
       have h := congrArg (coeff m) hode
       rw [add_mul, one_mul, map_add, coeff_derivative, coeff_C_mul] at h
-      have hX : coeff m (X * d⁄dX ℂ F) = (m : ℂ) * coeff m F := by
+      have hX : coeff m (X * (PowerSeries.derivative (R := ℂ)) F) = (m : ℂ) * coeff m F := by
         cases m with
         | zero => rw [coeff_zero_X_mul, Nat.cast_zero, zero_mul]
         | succ k =>

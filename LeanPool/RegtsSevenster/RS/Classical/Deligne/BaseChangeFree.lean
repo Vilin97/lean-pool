@@ -166,9 +166,9 @@ lemma baseChangeFree_retract
           modTensorπ A (restrictRegular φ) (freeMod A V)) =
       modTensorπ A (restrictRegular φ) (freeMod A V) := by
   simp only [Category.assoc]
-  rw [← whisker_exchange_assoc, baseChangeFree_balance]
-  simp only [Category.assoc]
-  rw [associator_naturality_right_assoc, Iso.inv_hom_id_assoc,
+  erw [← whisker_exchange_assoc, baseChangeFree_balance]
+  repeat' erw [Category.assoc]
+  erw [associator_naturality_right_assoc, Iso.inv_hom_id_assoc,
     ← whiskerLeft_comp_assoc, whiskerLeft_one_mul,
     MonoidalCategory.whiskerLeft_id, Category.id_comp]
 

@@ -272,7 +272,7 @@ theorem coend_hom_ext_of_preserves
       G.map
         (colimit.ι (multispanIndexCoend F).multispan (.left a)) ≫
           g
-    rw [← hw, Functor.map_comp, Category.assoc, Category.assoc]
+    erw [← hw, Functor.map_comp, Category.assoc, Category.assoc]
     exact congrArg (fun t => G.map
       ((multispanIndexCoend F).multispan.map
         (Limits.WalkingMultispan.Hom.fst a)) ≫ t) hf
@@ -307,7 +307,7 @@ theorem tensorLeft_coend_hom_ext
           f =
       (tensorLeft W).map
         (colimit.ι (multispanIndexCoend F).multispan (.left a)) ≫ g
-    rw [← hw, Functor.map_comp, Category.assoc, Category.assoc]
+    erw [← hw, Functor.map_comp, Category.assoc, Category.assoc]
     exact congrArg (fun t => (tensorLeft W).map
       ((multispanIndexCoend F).multispan.map
         (Limits.WalkingMultispan.Hom.fst a)) ≫ t) hf
@@ -339,7 +339,7 @@ theorem tensorRight_coend_hom_ext
           f =
       (tensorRight W).map
         (colimit.ι (multispanIndexCoend F).multispan (.left a)) ≫ g
-    rw [← hw, Functor.map_comp, Category.assoc, Category.assoc]
+    erw [← hw, Functor.map_comp, Category.assoc, Category.assoc]
     exact congrArg (fun t => (tensorRight W).map
       ((multispanIndexCoend F).multispan.map
         (Limits.WalkingMultispan.Hom.fst a)) ≫ t) hf
@@ -1401,7 +1401,7 @@ theorem lambdaMul_unit_left
   show (𝟙_ D ◁ lambdaStage α β Y) ≫
       (lambdaUnit α β ▷ lambdaObj α β) ≫ lambdaMul α β =
     (𝟙_ D ◁ lambdaStage α β Y) ≫ (λ_ (lambdaObj α β)).hom
-  rw [lambdaUnit, comp_whiskerRight, comp_whiskerRight]
+  erw [lambdaUnit, comp_whiskerRight, comp_whiskerRight]
   simp only [Category.assoc]
   show (𝟙_ D ◁ lambdaStage α β Y) ≫
       ((λ_ (𝟙_ D)).inv ▷ lambdaObj α β) ≫
@@ -1411,7 +1411,7 @@ theorem lambdaMul_unit_left
       lambdaMul α β =
     (𝟙_ D ◁ lambdaStage α β Y) ≫ (λ_ (lambdaObj α β)).hom
   erw [stage_whiskerRight_lambdaMul]
-  rw [whisker_exchange_assoc, whisker_exchange_assoc]
+  erw [whisker_exchange_assoc, whisker_exchange_assoc]
   erw [whiskerLeft_stage_lambdaMulLeft]
   erw [lambdaMulStage_unit_left]
   rw [leftUnitor_naturality]
@@ -1495,7 +1495,7 @@ theorem lambdaMul_unit_right
     (lambdaStage α β X ▷ 𝟙_ D) ≫ (ρ_ (lambdaObj α β)).hom
   rw [← whisker_exchange_assoc]
   erw [stage_whiskerRight_lambdaMul]
-  rw [lambdaUnit, MonoidalCategory.whiskerLeft_comp,
+  erw [lambdaUnit, MonoidalCategory.whiskerLeft_comp,
     MonoidalCategory.whiskerLeft_comp]
   simp only [Category.assoc]
   erw [whiskerLeft_stage_lambdaMulLeft]

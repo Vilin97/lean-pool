@@ -479,7 +479,7 @@ theorem superPowerSums_of_recurrence {t : ℕ → ℂ} {a b : ℕ}
       linear_combination
         (PowerSeries.C (P₀.coeff 0)) * X_mul_coe_derivative_prod β
     -- Leibniz rule applied to ↑Q₀ * H, then rewritten
-    have hleib := (d⁄dX ℂ).leibniz (a := (↑Q₀ : ℂ⟦X⟧)) (b := newtonHSeries t)
+    have hleib := ((PowerSeries.derivative (R := ℂ))).leibniz (a := (↑Q₀ : ℂ⟦X⟧)) (b := newtonHSeries t)
     simp only [smul_eq_mul] at hleib
     rw [hQ0H, PowerSeries.derivative_coe, PowerSeries.derivative_coe,
         newtonH_derivative] at hleib

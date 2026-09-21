@@ -87,7 +87,7 @@ private theorem sigmaCongrRight_eq_noncommProd
           (disjoint_sigmaCongrRight_mulSingle σ hij).commute) := by
   have h := Finset.noncommProd_mulSingle σ
   apply_fun (sigmaCongrRightHom β) at h
-  rw [Finset.map_noncommProd] at h
+  erw [Finset.map_noncommProd] at h
   exact h.symm
 
 /-- A fibrewise permutation's cycle type is the sum of the fibres':

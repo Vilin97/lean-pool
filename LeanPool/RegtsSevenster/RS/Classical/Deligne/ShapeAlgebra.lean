@@ -26,7 +26,7 @@ namespace RS
 theorem symCast_injective {m n : ℕ} (h : m ≤ n) :
     Function.Injective (symCast (m := m) (n := n) h) := by
   intro x y hxy
-  exact Finsupp.mapDomain_injective
+  exact MonoidAlgebra.mapDomain_injective
     (Equiv.Perm.viaEmbeddingHom_injective (Fin.castLEEmb h)) hxy
 
 /-- The central idempotent of a shape of size `n`, recast into the

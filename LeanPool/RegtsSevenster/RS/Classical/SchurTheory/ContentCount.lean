@@ -78,8 +78,7 @@ theorem content_eq_exists_perm (f g : Fin n → Fin N)
   show f ((Tuple.sort f) ((Tuple.sort g)⁻¹ i)) = g i
   have := congrFun heq ((Tuple.sort g).symm i)
   simp only [Function.comp_apply, Equiv.apply_symm_apply] at this
-  convert this using 1
-  simp [Equiv.Perm.inv_def]
+  exact this
 
 /-! ### Existence of colourings with prescribed content -/
 

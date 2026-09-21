@@ -158,7 +158,6 @@ theorem atomScalar_add {S : Karoubi (SkeinObj f)}
       atomScalar hS x + atomScalar hS y := by
   refine atomScalar_unique hS ?_
   rw [add_smul, ← atomScalar_spec, ← atomScalar_spec]
-  rfl
 
 /-- Extraction is multiplicative: composition of atom
 endomorphisms is multiplication of scalars.  This is what lets the
@@ -465,7 +464,7 @@ theorem AtomResolution.B_comp (φ ψ : End M) :
           Finset.induction_on with
         | empty =>
             rw [Finset.sum_empty, Finset.sum_empty]
-            exact atomScalar_unique _ (by rw [zero_smul]; rfl)
+            exact atomScalar_unique _ (by rw [zero_smul])
         | insert a s ha ih =>
             rw [Finset.sum_insert ha, Finset.sum_insert ha,
               atomScalar_add, ih]) ?_

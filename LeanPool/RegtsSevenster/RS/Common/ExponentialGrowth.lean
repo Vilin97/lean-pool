@@ -72,10 +72,10 @@ theorem tendsto_even_root_of_polynomial_bounds
     ring
   have hlowerLimit : Filter.Tendsto (fun n => (d : ℝ) / p n)
       Filter.atTop (nhds (d : ℝ)) := by
-    convert (tendsto_const_nhds (x := (d : ℝ))).div
-      hpoly (by norm_num) using 1
-    · rfl
-    · simp
+    have hlim := (tendsto_const_nhds (x := (d : ℝ))).div hpoly (by norm_num)
+    change Filter.Tendsto (fun n ↦ (d : ℝ) / p n) Filter.atTop
+      (nhds ((d : ℝ) / 1)) at hlim
+    simpa only [div_one] using hlim
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le'
     hlowerLimit tendsto_const_nhds
   · filter_upwards [Filter.eventually_ge_atTop 1] with n hn

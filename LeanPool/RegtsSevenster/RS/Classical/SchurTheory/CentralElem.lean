@@ -56,7 +56,7 @@ theorem classElem_mul_comm [Group G] [Fintype G] [DecidableEq G]
     (y : MonoidAlgebra ℂ G) :
     classElem c * y = y * classElem c := by
   induction y using MonoidAlgebra.induction_on with
-  | hM m =>
+  | of m =>
     refine MonoidAlgebra.coeff_injective ?_
     ext k
     show (classElem c * MonoidAlgebra.of ℂ G m).coeff k =
@@ -73,7 +73,7 @@ theorem classElem_mul_comm [Group G] [Fintype G] [DecidableEq G]
     have := hc (k * m⁻¹) m⁻¹
     rw [show m⁻¹ * (k * m⁻¹) * m⁻¹⁻¹ = m⁻¹ * k from by group] at this
     exact this.symm
-  | hadd a b ha hb => rw [mul_add, add_mul, ha, hb]
-  | hsmul r a ha => rw [mul_smul_comm, smul_mul_assoc, ha]
+  | add a b ha hb => rw [mul_add, add_mul, ha, hb]
+  | smul r a ha => rw [mul_smul_comm, smul_mul_assoc, ha]
 
 end RS

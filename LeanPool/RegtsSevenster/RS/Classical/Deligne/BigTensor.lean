@@ -286,11 +286,12 @@ lemma inclFilter_of_forall
     (p : ι → Bool) :
     ∀ (l : List ι) (h : ∀ i ∈ l, p i),
       inclFilter B p l = eqToHom (by rw [List.filter_eq_self.mpr h])
-  | [], _ => by simp
+  | [], _ => by rfl
   | i :: l, h => by
     rw [inclFilter_cons_pos B p l (h i (by simp)),
       inclFilter_of_forall B p l (fun j hj => h j (by simp [hj]))]
-    simp
+    simp only [whiskerLeft_eqToHom]
+    repeat' erw [eqToHom_trans]
 
 /-- The composition law for insertions: inserting the units of
 `l.filter q` past `p` and then those of `l` past `q` is the
@@ -303,7 +304,7 @@ lemma inclFilter_inclFilter
       inclFilter B p (l.filter q) ≫ inclFilter B q l =
         eqToHom (by rw [List.filter_filter]) ≫
           inclFilter B (fun i => p i && q i) l
-  | [] => by simp
+  | [] => by rfl
   | i :: l => by
     have IH := inclFilter_inclFilter B p q l
     by_cases hq : q i
@@ -728,7 +729,7 @@ lemma bigTensor_tensorRight_hom_ext
     (preservesColimitIso (tensorRight X) (finTensorDiagram B)).inv).mp
   apply colimit.hom_ext
   intro s
-  rw [ι_preservesColimitIso_inv_assoc, ι_preservesColimitIso_inv_assoc]
+  erw [ι_preservesColimitIso_inv_assoc, ι_preservesColimitIso_inv_assoc]
   exact w s
 
 /-- Maps out of `X ⊗ bigTensor B` are determined by their
@@ -745,7 +746,7 @@ lemma tensorLeft_bigTensor_hom_ext
     (preservesColimitIso (tensorLeft X) (finTensorDiagram B)).inv).mp
   apply colimit.hom_ext
   intro t
-  rw [ι_preservesColimitIso_inv_assoc, ι_preservesColimitIso_inv_assoc]
+  erw [ι_preservesColimitIso_inv_assoc, ι_preservesColimitIso_inv_assoc]
   exact w t
 
 /-- Left compatibility of the merge-then-stage maps. -/
@@ -821,7 +822,7 @@ lemma stage_bigTensorMulStage
   show (tensorRight (finTensor B t)).map
       (colimit.ι (finTensorDiagram B) s) ≫ bigTensorMulStage B t =
     finTensorMul B s t ≫ bigTensorStage B (s ∪ t)
-  rw [bigTensorMulStage, ι_preservesColimitIso_hom_assoc]
+  erw [bigTensorMulStage, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (bigTensorMulCocone B t) s
 
 /-- The partial multiplications are natural in the stage. -/
@@ -885,7 +886,7 @@ lemma stage_bigTensorMul_right
   show (tensorLeft (bigTensor B)).map
       (colimit.ι (finTensorDiagram B) t) ≫ bigTensorMul B =
     bigTensorMulStage B t
-  rw [bigTensorMul, ι_preservesColimitIso_hom_assoc]
+  erw [bigTensorMul, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (bigTensorMulTotalCocone B) t
 
 /-- The multiplication restricted to a pair of stages is the
@@ -917,7 +918,7 @@ lemma bigTensor_sandwich_hom_ext
     (tensorRight Y ⋙ tensorLeft X) (finTensorDiagram B)).inv).mp
   apply colimit.hom_ext
   intro t
-  rw [ι_preservesColimitIso_inv_assoc, ι_preservesColimitIso_inv_assoc]
+  erw [ι_preservesColimitIso_inv_assoc, ι_preservesColimitIso_inv_assoc]
   exact w t
 
 /-- Maps out of `bigTensor B ⊗ bigTensor B` are determined by
@@ -989,7 +990,7 @@ lemma stage_bigTensorMulStageL
   show (tensorLeft (finTensor B s)).map
       (colimit.ι (finTensorDiagram B) t) ≫ bigTensorMulStageL B s =
     finTensorMul B s t ≫ bigTensorStage B (s ∪ t)
-  rw [bigTensorMulStageL, ι_preservesColimitIso_hom_assoc]
+  erw [bigTensorMulStageL, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (bigTensorMulLCocone B s) t
 
 /-- On a stage in the first variable, the multiplication is the

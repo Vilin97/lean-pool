@@ -54,7 +54,7 @@ i.e. `H' = T · H` where `H = ∑ h_n X^n` and `T = ∑ t_{n+1} X^n`.
 This is a direct restatement of the Newton recursion at the level of
 formal power series. -/
 theorem newtonH_derivative (t : ℕ → ℂ) :
-    d⁄dX ℂ (newtonHSeries t) = powerSumSeries t * newtonHSeries t := by
+    d⁄dX (newtonHSeries t) = powerSumSeries t * newtonHSeries t := by
   ext n
   rw [coeff_derivative]
   rw [coeff_mul]

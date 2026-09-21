@@ -35,8 +35,8 @@ cancellation. -/
 theorem powerSeries_ode_unique {F G S : PowerSeries ℂ}
     (hF0 : constantCoeff F = 1)
     (hG0 : constantCoeff G = 1)
-    (hF : d⁄dX ℂ F = S * F)
-    (hG : d⁄dX ℂ G = S * G) : F = G := by
+    (hF : (PowerSeries.derivative (R := ℂ)) F = S * F)
+    (hG : (PowerSeries.derivative (R := ℂ)) G = S * G) : F = G := by
   ext n
   induction n using Nat.strongRecOn with
   | _ n ih =>
@@ -45,8 +45,8 @@ theorem powerSeries_ode_unique {F G S : PowerSeries ℂ}
       rw [coeff_zero_eq_constantCoeff_apply, hF0,
           coeff_zero_eq_constantCoeff_apply, hG0]
     | n + 1 =>
-      have hFn : coeff n (d⁄dX ℂ F) = coeff n (S * F) := congr_arg (coeff n) hF
-      have hGn : coeff n (d⁄dX ℂ G) = coeff n (S * G) := congr_arg (coeff n) hG
+      have hFn : coeff n ((PowerSeries.derivative (R := ℂ)) F) = coeff n (S * F) := congr_arg (coeff n) hF
+      have hGn : coeff n ((PowerSeries.derivative (R := ℂ)) G) = coeff n (S * G) := congr_arg (coeff n) hG
       rw [coeff_derivative] at hFn hGn
       rw [coeff_mul] at hFn hGn
       have heq : ∑ p ∈ antidiagonal n, coeff p.1 S * coeff p.2 F =
@@ -65,7 +65,7 @@ theorem powerSeries_ode_unique {F G S : PowerSeries ℂ}
 `d⁄dX (newtonHSeries t) = powerSumSeries t * newtonHSeries t`.
 This is a re-export of `newtonH_derivative`. -/
 theorem newtonH_series_ode (t : ℕ → ℂ) :
-    d⁄dX ℂ (newtonHSeries t) = powerSumSeries t * newtonHSeries t :=
+    (PowerSeries.derivative (R := ℂ)) (newtonHSeries t) = powerSumSeries t * newtonHSeries t :=
   newtonH_derivative t
 
 /-! ### The zeta characterization -/
@@ -75,7 +75,7 @@ differential equation is the Newton series: the trace zeta function
 IS the complete homogeneous generating function. -/
 theorem eq_newtonH_series_of_ode {t : ℕ → ℂ} {F : PowerSeries ℂ}
     (hF0 : constantCoeff F = 1)
-    (hF : d⁄dX ℂ F = powerSumSeries t * F) :
+    (hF : (PowerSeries.derivative (R := ℂ)) F = powerSumSeries t * F) :
     F = newtonHSeries t :=
   powerSeries_ode_unique hF0 (newtonH_series_constantCoeff t) hF
     (newtonH_series_ode t)
