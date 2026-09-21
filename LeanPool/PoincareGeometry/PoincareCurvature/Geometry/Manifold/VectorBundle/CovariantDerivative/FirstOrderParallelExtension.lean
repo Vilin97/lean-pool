@@ -86,6 +86,11 @@ theorem hasMFDerivAt_tangentBasisChartDisplacementCoordinate
     HasMFDerivAt I 𝓘(ℝ)
       (tangentBasisChartDisplacementCoordinate (I := I) x b i)
       x (LinearMap.toContinuousLinearMap (b.coord i)) := by
+  change HasMFDerivAt I 𝓘(ℝ)
+    (tangentBasisChartDisplacementCoordinate (I := I) x b i) x
+      ((NormedSpace.fromTangentSpace
+        (tangentBasisChartDisplacementCoordinate (I := I) x b i x)).symm.toContinuousLinearMap.comp
+          (LinearMap.toContinuousLinearMap (b.coord i)))
   let D : TM x →L[ℝ] E := mfderiv I 𝓘(ℝ, E) (extChartAt I x) x
   let T : E →L[ℝ] TM x := tangentOfCenteredCoordinate (I := I) x
   let L : TM x →L[ℝ] ℝ := LinearMap.toContinuousLinearMap (b.coord i)
@@ -100,7 +105,16 @@ theorem hasMFDerivAt_tangentBasisChartDisplacementCoordinate
   have hB : HasMFDerivAt 𝓘(ℝ, E) 𝓘(ℝ) B
       ((extChartAt I x) x - (extChartAt I x) x) B :=
     B.hasFDerivAt.hasMFDerivAt
-  have hcomp := hB.comp x hsub
+  have hsub' : HasMFDerivAt I 𝓘(ℝ, E)
+      (fun y ↦ (extChartAt I x) y - (extChartAt I x) x) x D := by
+    unfold HasMFDerivAt at hsub ⊢
+    refine ⟨hsub.1, ?_⟩
+    convert! hsub.2 using 1
+    ext u
+    change D _ = D _ - 0
+    simp only [sub_zero]
+    rfl
+  have hcomp := hB.comp x hsub'
   have hderiv : B.comp D = L := by
     ext u
     simp only [ContinuousLinearMap.comp_apply]
@@ -110,12 +124,16 @@ theorem hasMFDerivAt_tangentBasisChartDisplacementCoordinate
     rw [← centeredTangentCoordinate_eq_mfderiv_extChartAt (I := I) x]
     exact congrArg L
       ((centeredTangentCoordinate (I := I) x).symm_apply_apply u)
-  simp only [sub_zero] at hcomp
-  rw [hderiv] at hcomp
-  convert hcomp using 1
-  · funext y
-    simp [tangentBasisChartDisplacementCoordinate, B, L, T, Function.comp_def]
-  · rfl
+  have hfun : tangentBasisChartDisplacementCoordinate (I := I) x b i =
+      B ∘ (fun y ↦ (extChartAt I x) y - (extChartAt I x) x) := rfl
+  rw [hfun]
+  unfold HasMFDerivAt at hcomp ⊢
+  refine ⟨hcomp.1, ?_⟩
+  convert! hcomp.2 using 1
+  ext u
+  change L _ = (B.comp D) _
+  rw [hderiv]
+
 
 variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
   {V : M → Type*} [TopologicalSpace (TotalSpace F V)]

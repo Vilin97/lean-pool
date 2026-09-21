@@ -161,6 +161,27 @@ lemma standardDeTurckCorrection_eq_metricComp_add_flip
   congr 1
   exact (g t).symm x u _
 
+local instance standardDeTurckDualContinuousAdd (x : M) :
+    ContinuousAdd (TM x →L[ℝ] ℝ) := inferInstance
+
+/-- The standard metric correction packaged as a continuous bilinear form in each tangent fibre. -/
+def standardDeTurckCorrectionBilinear
+    (g : MetricFamily (I := I) (M := M))
+    (background : ConnectionFamily (I := I) (M := M)) (t : ℝ) (x : M) :
+    _root_.Bundle.BilinearFormBundle (V := TM) x :=
+  let C : _root_.Bundle.BilinearFormBundle (V := TM) x := ((g t).inner x).comp
+    ((chosenLeviCivitaFamily (I := I) (M := M) g t)
+      (standardDeTurckVectorField (I := I) (M := M) g background t) x)
+  C + (show _root_.Bundle.BilinearFormBundle (V := TM) x from C.flip)
+
+@[simp] theorem standardDeTurckCorrectionBilinear_apply
+    (g : MetricFamily (I := I) (M := M))
+    (background : ConnectionFamily (I := I) (M := M))
+    (t : ℝ) (x : M) (u v : TM x) :
+    standardDeTurckCorrectionBilinear g background t x u v =
+      standardDeTurckCorrection g background t x u v :=
+  (standardDeTurckCorrection_eq_metricComp_add_flip g background t x u v).symm
+
 /-- For a `C¹` background connection slice, the corrected standard DeTurck
 term is a continuous bilinear-form-bundle section. -/
 theorem standardDeTurckCorrection_contMDiff_zero
@@ -170,7 +191,7 @@ theorem standardDeTurckCorrection_contMDiff_zero
     ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E →L[ℝ] ℝ)) 0
       (fun x ↦ TotalSpace.mk' (E →L[ℝ] E →L[ℝ] ℝ)
         (E := _root_.Bundle.BilinearFormBundle (V := TM)) x
-        (standardDeTurckCorrection (I := I) (M := M) g background t x)) := by
+        (standardDeTurckCorrectionBilinear (I := I) (M := M) g background t x)) := by
   let C : Π x : M, _root_.Bundle.BilinearFormBundle (V := TM) x :=
     fun x ↦ ((g t).inner x).comp
       ((chosenLeviCivitaFamily (I := I) (M := M) g t)
@@ -181,11 +202,6 @@ theorem standardDeTurckCorrection_contMDiff_zero
     metricComp_standardDeTurckVectorField_covariantDerivative_contMDiff_zero
       (I := I) (M := M) g background t hbackground
   have hflip := standardDeTurck_contMDiff_flipBilinearFormSection_tangent_zero hC
-  refine (hC.add_section hflip).congr ?_
-  intro x
-  congr 1
-  ext u v
-  exact (standardDeTurckCorrection_eq_metricComp_add_flip
-    (I := I) (M := M) g background t x u v).symm
+  exact hC.add_section hflip
 
 end RicciFlow

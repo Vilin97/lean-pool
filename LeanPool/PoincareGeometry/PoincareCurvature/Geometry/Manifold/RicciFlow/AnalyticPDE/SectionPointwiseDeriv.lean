@@ -180,6 +180,7 @@ theorem hasDerivAt_scalarEval_of_hasDerivAt
     {t : ℝ} (hf : HasDerivAt f f' t)
     (x : M) (u v : TM x) :
     HasDerivAt (fun τ : ℝ ↦ f τ x u v) (f' x u v) t := by
+  letI : ∀ y : M, ContinuousAdd (TM y →L[ℝ] ℝ) := fun y => inferInstance
   obtain ⟨i, hi⟩ : ∃ i, x ∈ (Kc i : Set M) :=
     Set.mem_iUnion.mp (by rw [hcover]; exact Set.mem_univ x)
   have hcomp : HasDerivAt
