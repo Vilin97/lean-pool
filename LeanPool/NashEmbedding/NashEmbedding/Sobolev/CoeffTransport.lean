@@ -61,7 +61,8 @@ private lemma integrableOn_mul_fourierExp {f : (Fin n → ℝ) → ℂ} (hf : Co
   (hf.mul ((fourierExp_contDiff (-m)).continuous)).continuousOn.integrableOn_compact isCompact_Icc
 
 lemma stdFourierCoeff_add {f g : (Fin n → ℝ) → ℂ} (hf : Continuous f) (hg : Continuous g) :
-    stdFourierCoeff n (fun x => f x + g x) = fun m => stdFourierCoeff n f m + stdFourierCoeff n g m := by
+    stdFourierCoeff n (fun x => f x + g x) = fun m => stdFourierCoeff n f m + stdFourierCoeff n
+        g m := by
   funext m
   unfold stdFourierCoeff
   simp only [add_mul]
@@ -69,7 +70,8 @@ lemma stdFourierCoeff_add {f g : (Fin n → ℝ) → ℂ} (hf : Continuous f) (h
     (integrableOn_mul_fourierExp hg m), mul_add]
 
 lemma stdFourierCoeff_sub {f g : (Fin n → ℝ) → ℂ} (hf : Continuous f) (hg : Continuous g) :
-    stdFourierCoeff n (fun x => f x - g x) = fun m => stdFourierCoeff n f m - stdFourierCoeff n g m := by
+    stdFourierCoeff n (fun x => f x - g x) = fun m => stdFourierCoeff n f m - stdFourierCoeff n
+        g m := by
   funext m
   unfold stdFourierCoeff
   simp only [sub_mul]
@@ -105,7 +107,8 @@ periodic factors): `f = (f̂)ˇ`, `g = (ĝ)ˇ` by Fourier inversion, `f g = (f̂
 the coefficients of a synthesis of a rapidly decaying sequence are that sequence. -/
 theorem stdFourierCoeff_mul (hn : 0 < n) {f g : (Fin n → ℝ) → ℂ}
     (hf : ContDiff ℝ ∞ f) (hfp : IsPeriodic2Pi f) (hg : ContDiff ℝ ∞ g) (hgp : IsPeriodic2Pi g) :
-    stdFourierCoeff n (fun x => f x * g x) = seqConv (stdFourierCoeff n f) (stdFourierCoeff n g) := by
+    stdFourierCoeff n (fun x => f x * g x) = seqConv (stdFourierCoeff n f) (stdFourierCoeff n g)
+        := by
   have hsa : Summable (fun m => ‖stdFourierCoeff n f m‖) :=
     (isRapidDecay_stdFourierCoeff hn hf hfp).summable_norm hn
   have hsb : Summable (fun m => ‖stdFourierCoeff n g m‖) :=
@@ -166,13 +169,15 @@ theorem eq_of_stdFourierCoeff_eq (hn : 0 < n) {f g : (Fin n → ℝ) → ℂ}
 
 lemma fourierSynthesis_add' {a b : (Fin n → ℤ) → ℂ}
     (ha : Summable (fun m => ‖a m‖)) (hb : Summable (fun m => ‖b m‖)) :
-    fourierSynthesis n (fun m => a m + b m) = fun θ => fourierSynthesis n a θ + fourierSynthesis n b θ := by
+    fourierSynthesis n (fun m => a m + b m) = fun θ => fourierSynthesis n a θ + fourierSynthesis
+        n b θ := by
   funext θ
   exact fourierSynthesis_add ha hb θ
 
 lemma fourierSynthesis_sub {a b : (Fin n → ℤ) → ℂ}
     (ha : Summable (fun m => ‖a m‖)) (hb : Summable (fun m => ‖b m‖)) :
-    fourierSynthesis n (fun m => a m - b m) = fun θ => fourierSynthesis n a θ - fourierSynthesis n b θ := by
+    fourierSynthesis n (fun m => a m - b m) = fun θ => fourierSynthesis n a θ - fourierSynthesis
+        n b θ := by
   funext θ
   unfold fourierSynthesis
   rw [← Summable.tsum_sub]
@@ -196,7 +201,8 @@ lemma fourierSynthesis_neg (a : (Fin n → ℤ) → ℂ) :
 
 lemma fourierSynthesis_finset_sum {ι : Type*} (S : Finset ι) {a : ι → (Fin n → ℤ) → ℂ}
     (ha : ∀ i ∈ S, Summable (fun m => ‖a i m‖)) :
-    fourierSynthesis n (fun m => ∑ i ∈ S, a i m) = fun θ => ∑ i ∈ S, fourierSynthesis n (a i) θ := by
+    fourierSynthesis n (fun m => ∑ i ∈ S, a i m) = fun θ => ∑ i ∈ S, fourierSynthesis n (a i) θ
+        := by
   funext θ
   unfold fourierSynthesis
   rw [show (fun m : Fin n → ℤ => (∑ i ∈ S, a i m) * fourierExp n m θ)

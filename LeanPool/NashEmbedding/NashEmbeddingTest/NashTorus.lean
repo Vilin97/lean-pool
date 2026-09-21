@@ -69,7 +69,7 @@ lemma bumpyMetric_isPosDefSmoothMetric {n : ℕ} (hn : 0 < n) :
         contDiff_const.add (Real.contDiff_sin.comp (contDiff_apply ℝ ℝ (⟨0, hn⟩ : Fin n)))
       exact hs.smul contDiff_const
     · intro x k
-      show (2 + Real.sin ((x + periodicShift n k) ⟨0, hn⟩)) • (1 : Matrix (Fin n) (Fin n) ℝ)
+      change (2 + Real.sin ((x + periodicShift n k) ⟨0, hn⟩)) • (1 : Matrix (Fin n) (Fin n) ℝ)
           = (2 + Real.sin (x ⟨0, hn⟩)) • 1
       have h : (x + periodicShift n k) ⟨0, hn⟩
           = x ⟨0, hn⟩ + (k ⟨0, hn⟩ : ℝ) * (2 * Real.pi) := by

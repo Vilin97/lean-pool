@@ -82,7 +82,7 @@ lemma injRealizable_pos_smul {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ
       have hhfa : HasFDerivAt (fun y => Real.sqrt t • u y)
           (Real.sqrt t • fderiv ℝ u x) x :=
         hdiff.hasFDerivAt.const_smul (Real.sqrt t)
-      show fderiv ℝ (fun y => Real.sqrt t • u y) x (Pi.single i 1)
+      change fderiv ℝ (fun y => Real.sqrt t • u y) x (Pi.single i 1)
         = Real.sqrt t • fderiv ℝ u x (Pi.single i 1)
       rw [hhfa.fderiv]
       rfl
@@ -101,12 +101,12 @@ lemma injRealizable_pos_smul {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ
       have hhfa : HasFDerivAt (fun y => Real.sqrt t • u y)
           (Real.sqrt t • fderiv ℝ u x) x :=
         hdiff.hasFDerivAt.const_smul (Real.sqrt t)
-      show fderiv ℝ (fun y => Real.sqrt t • u y) x (Pi.single i 1)
+      change fderiv ℝ (fun y => Real.sqrt t • u y) x (Pi.single i 1)
         = Real.sqrt t • fderiv ℝ u x (Pi.single i 1)
       rw [hhfa.fderiv]
       rfl
     rw [hpd i, hpd j, smul_dotProduct, dotProduct_smul, hu_r x i j]
-    show Real.sqrt t * (Real.sqrt t * g x i j) = (t • g) x i j
+    change Real.sqrt t * (Real.sqrt t * g x i j) = (t • g) x i j
     rw [show (t • g) x i j = t * g x i j from by
       simp [Pi.smul_apply, Matrix.smul_apply, smul_eq_mul]]
     rw [← mul_assoc, Real.mul_self_sqrt ht.le]
@@ -116,7 +116,7 @@ lemma injRealizable_pos_smul {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ
 /-- Real positive-definite matrices are symmetric. -/
 lemma isSymm_of_posDef {A : Matrix (Fin n) (Fin n) ℝ} (h : A.PosDef) : A.IsSymm := by
   have hH : A.IsHermitian := h.1
-  show Aᵀ = A
+  change Aᵀ = A
   ext i j
   have h1 : Aᴴ i j = A i j := congrFun (congrFun hH i) j
   simp only [Matrix.conjTranspose_apply, star_trivial] at h1
@@ -136,11 +136,12 @@ lemma smoothPeriodic_smul_sub_matrix {A B : (Fin n → ℝ) → Matrix (Fin n) (
     (hA : SmoothPeriodic A) (hB : SmoothPeriodic B) (c : ℝ) :
     SmoothPeriodic (c • (A - B)) := by
   refine ⟨?_, ?_⟩
-  · show ContDiff ℝ ∞ (fun y => c • (A y - B y))
+  · change ContDiff ℝ ∞ (fun y => c • (A y - B y))
     refine contDiff_matrix fun i j => ?_
-    exact contDiff_const.mul (((contDiff_apply _ _ j).comp ((contDiff_apply _ _ i).comp (hA.smooth.sub hB.smooth))))
+    exact contDiff_const.mul (((contDiff_apply _ _ j).comp ((contDiff_apply _ _ i).comp
+        (hA.smooth.sub hB.smooth))))
   · intro x k
-    show c • (A (x + periodicShift n k) - B (x + periodicShift n k))
+    change c • (A (x + periodicShift n k) - B (x + periodicShift n k))
         = c • (A x - B x)
     rw [hA.periodic x k, hB.periodic x k]
 
@@ -150,7 +151,7 @@ lemma smoothPeriodic_add_pointwise {V : Type*} [NormedAddCommGroup V] [NormedSpa
     SmoothPeriodic (u + v) := by
   refine ⟨hu.smooth.add hv.smooth, ?_⟩
   intro x k
-  show u (x + periodicShift n k) + v (x + periodicShift n k) = u x + v x
+  change u (x + periodicShift n k) + v (x + periodicShift n k) = u x + v x
   rw [hu.periodic x k, hv.periodic x k]
 
 /-! ## Nash for `𝕋ⁿ` -/
@@ -174,7 +175,7 @@ theorem nashTorus (hn : 0 < n) {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) �
   have hflat_sp : SmoothPeriodic (flatMetric n) :=
     flatMetric_isPosDefSmoothMetric.smoothPeriodic
   have hflat_symm : ∀ x, (flatMetric n x).IsSymm := fun _ => by
-    show ((1 : Matrix (Fin n) (Fin n) ℝ)).IsSymm
+    change ((1 : Matrix (Fin n) (Fin n) ℝ)).IsSymm
     ext i j; simp [transpose_apply, Matrix.one_apply, eq_comm]
   -- Step 1: split off a bit of the flat metric.
   obtain ⟨δ', hδ'_pos, hg₁⟩ := exists_delta_posDef_sub hg hflat_sp hflat_symm
@@ -226,7 +227,7 @@ theorem nashTorus (hn : 0 < n) {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) �
         < (1/δ)^2 * η^2 :=
       mul_lt_mul_of_pos_left hu_A_bound (by positivity)
     have h_key : (1/δ)^2 * η^2 = ε / 4 := by
-      show (1/δ)^2 * (δ * Real.sqrt ε / 2)^2 = ε / 4
+      change (1/δ)^2 * (δ * Real.sqrt ε / 2)^2 = ε / 4
       have hε_sq : Real.sqrt ε ^ 2 = ε := Real.sq_sqrt hε_pos.le
       field_simp
       nlinarith [hε_sq]
@@ -237,7 +238,7 @@ theorem nashTorus (hn : 0 < n) {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) �
   -- Step 8: gramMetric(u₀+v) = g₀ + h, so g₁ = δ • gramMetric(u₀+v) + gramMetric u_A.
   have h_uv_gram : gramMetric (u₀ + v) = g₀ + h := by
     funext x i j
-    show pderiv i (u₀ + v) x ⬝ᵥ pderiv j (u₀ + v) x = g₀ x i j + h x i j
+    change pderiv i (u₀ + v) x ⬝ᵥ pderiv j (u₀ + v) x = g₀ x i j + h x i j
     exact hv_realize x i j
   have hg₁_eq : g₁ = δ • gramMetric (u₀ + v) + g_uA := by
     have hδ_ne : δ ≠ 0 := hδ_pos.ne'
@@ -245,10 +246,10 @@ theorem nashTorus (hn : 0 < n) {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) �
     ext x i j
     -- Goal: g₁ x i j = δ · (g₀ + h) x i j + g_uA x i j
     have hh_val : h x i j = (1 / δ) * (g_res x i j - g_uA x i j) := by
-      show ((1 / δ) • (g_res - g_uA)) x i j = _
+      change ((1 / δ) • (g_res - g_uA)) x i j = _
       simp [Pi.smul_apply, Matrix.smul_apply, Pi.sub_apply, Matrix.sub_apply, smul_eq_mul]
     have hg_res_val : g_res x i j = g₁ x i j - δ * g₀ x i j := by
-      show (g₁ - δ • g₀) x i j = _
+      change (g₁ - δ • g₀) x i j = _
       simp [Pi.sub_apply, Pi.smul_apply, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul]
     simp only [Pi.add_apply, Pi.smul_apply, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
     rw [hh_val, hg_res_val]
@@ -266,7 +267,7 @@ theorem nashTorus (hn : 0 < n) {g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) �
     injRealizable_pos_smul flatTorusEmb_injRealizes hδ'_pos
   -- g = δ' • flatMetric + g₁, so IsInjRealizable g via injRealizable_promotion.
   have hg_eq : g = δ' • flatMetric n + g₁ := by
-    show g = δ' • flatMetric n + (g - δ' • flatMetric n)
+    change g = δ' • flatMetric n + (g - δ' • flatMetric n)
     ext x i j
     simp [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, Matrix.add_apply, Matrix.sub_apply,
       Matrix.smul_apply]

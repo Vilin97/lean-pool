@@ -49,19 +49,32 @@ lemma sobolevNormSqDistrib_triangle (s : ℝ) (a b c : TrigPolyDual n)
   · refine' Summable.tsum_le_tsum _ _ _;
     · intro m;
       -- Apply the triangle inequality to the norm of the difference.
-      have h_triangle : ‖fourierCoeffDistrib (a - c) m‖ ^ 2 ≤ 2 * ‖fourierCoeffDistrib (a - b) m‖ ^ 2 + 2 * ‖fourierCoeffDistrib (b - c) m‖ ^ 2 := by
-        have h_triangle : ‖fourierCoeffDistrib (a - c) m‖ ≤ ‖fourierCoeffDistrib (a - b) m‖ + ‖fourierCoeffDistrib (b - c) m‖ := by
-          exact IsAbsoluteValue.abv_sub_le Norm.norm (a fun₀ | -m => 1) (b fun₀ | -m => 1) (c fun₀ | -m => 1);
-        nlinarith only [ sq_nonneg ( ‖fourierCoeffDistrib ( a - b ) m‖ - ‖fourierCoeffDistrib ( b - c ) m‖ ), h_triangle, norm_nonneg ( fourierCoeffDistrib ( a - c ) m ), norm_nonneg ( fourierCoeffDistrib ( a - b ) m ), norm_nonneg ( fourierCoeffDistrib ( b - c ) m ) ];
-      nlinarith [ show 0 ≤ weight n s m by exact Real.rpow_nonneg ( add_nonneg zero_le_one <| Finset.sum_nonneg fun _ _ => sq_nonneg _ ) _ ];
+      have h_triangle : ‖fourierCoeffDistrib (a - c) m‖ ^ 2 ≤ 2 * ‖fourierCoeffDistrib (a - b)
+          m‖ ^ 2 + 2 * ‖fourierCoeffDistrib (b - c) m‖ ^ 2 := by
+        have h_triangle : ‖fourierCoeffDistrib (a - c) m‖ ≤ ‖fourierCoeffDistrib (a - b) m‖ +
+            ‖fourierCoeffDistrib (b - c) m‖ := by
+          exact IsAbsoluteValue.abv_sub_le Norm.norm (a fun₀ | -m => 1) (b fun₀ | -m => 1) (c
+              fun₀ | -m => 1);
+        nlinarith only [ sq_nonneg ( ‖fourierCoeffDistrib ( a - b ) m‖ - ‖fourierCoeffDistrib (
+            b - c ) m‖ ), h_triangle, norm_nonneg ( fourierCoeffDistrib ( a - c ) m ),
+            norm_nonneg ( fourierCoeffDistrib ( a - b ) m ), norm_nonneg ( fourierCoeffDistrib (
+            b - c ) m ) ];
+      nlinarith [ show 0 ≤ weight n s m by exact Real.rpow_nonneg ( add_nonneg zero_le_one <|
+          Finset.sum_nonneg fun _ _ => sq_nonneg _ ) _ ];
     · -- By definition of `fourierCoeffDistrib`, we have `fourierCoeffDistrib (a - c) = fourierCoeffDistrib (a - b) + fourierCoeffDistrib (b - c)`.
-      have h_fourierCoeffDistrib : fourierCoeffDistrib (a - c) = fourierCoeffDistrib (a - b) + fourierCoeffDistrib (b - c) := by
+      have h_fourierCoeffDistrib : fourierCoeffDistrib (a - c) = fourierCoeffDistrib (a - b) +
+          fourierCoeffDistrib (b - c) := by
         ext m; simp [fourierCoeffDistrib];
       -- Apply the inequality $|x + y|^2 \leq 2|x|^2 + 2|y|^2$ to each term in the sum.
-      have h_ineq : ∀ m : Fin n → ℤ, ‖fourierCoeffDistrib (a - c) m‖ ^ 2 ≤ 2 * ‖fourierCoeffDistrib (a - b) m‖ ^ 2 + 2 * ‖fourierCoeffDistrib (b - c) m‖ ^ 2 := by
+      have h_ineq : ∀ m : Fin n → ℤ, ‖fourierCoeffDistrib (a - c) m‖ ^ 2 ≤ 2 *
+          ‖fourierCoeffDistrib (a - b) m‖ ^ 2 + 2 * ‖fourierCoeffDistrib (b - c) m‖ ^ 2 := by
         intro m; rw [ h_fourierCoeffDistrib ] ; norm_num;
-        nlinarith only [ norm_nonneg ( fourierCoeffDistrib ( a - b ) m + fourierCoeffDistrib ( b - c ) m ), norm_add_le ( fourierCoeffDistrib ( a - b ) m ) ( fourierCoeffDistrib ( b - c ) m ), sq_nonneg ( ‖fourierCoeffDistrib ( a - b ) m‖ - ‖fourierCoeffDistrib ( b - c ) m‖ ) ];
-      refine' Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ( fun m => mul_le_mul_of_nonneg_left ( h_ineq m ) ( weight_nonneg _ _ ) ) _;
+        nlinarith only [ norm_nonneg ( fourierCoeffDistrib ( a - b ) m + fourierCoeffDistrib ( b
+            - c ) m ), norm_add_le ( fourierCoeffDistrib ( a - b ) m ) ( fourierCoeffDistrib ( b
+            - c ) m ), sq_nonneg ( ‖fourierCoeffDistrib ( a - b ) m‖ - ‖fourierCoeffDistrib ( b
+            - c ) m‖ ) ];
+      refine' Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _
+          ) ) ( fun m => mul_le_mul_of_nonneg_left ( h_ineq m ) ( weight_nonneg _ _ ) ) _;
       convert hab.mul_left 2 |> Summable.add <| hbc.mul_left 2 using 2
       all_goals (first | rfl | ring)
     · exact Summable.add ( hab.mul_left _ ) ( hbc.mul_left _ );
@@ -76,14 +89,19 @@ lemma sobolevNormSqDistrib_triangle (s : ℝ) (a b c : TrigPolyDual n)
 lemma MemSobolevDistrib.sub {s : ℝ} {a b : TrigPolyDual n}
     (ha : MemSobolevDistrib n s a) (hb : MemSobolevDistrib n s b) :
     MemSobolevDistrib n s (a - b) := by
-  refine' .of_nonneg_of_le ( fun m => _ ) ( fun m => _ ) ( Summable.add ha hb |> Summable.mul_left 2 );
-  · exact mul_nonneg ( by exact Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ) _ ) ( sq_nonneg _ );
+  refine' .of_nonneg_of_le ( fun m => _ ) ( fun m => _ ) ( Summable.add ha hb |>
+      Summable.mul_left 2 );
+  · exact mul_nonneg ( by exact Real.rpow_nonneg ( add_nonneg zero_le_one ( Finset.sum_nonneg
+      fun _ _ => sq_nonneg _ ) ) _ ) ( sq_nonneg _ );
   · -- Apply the triangle inequality to the norm of the difference.
-    have h_triangle : ‖fourierCoeffDistrib (a - b) m‖ ^ 2 ≤ 2 * (‖fourierCoeffDistrib a m‖ ^ 2 + ‖fourierCoeffDistrib b m‖ ^ 2) := by
-      have h_bound : ‖fourierCoeffDistrib (a - b) m‖ ≤ ‖fourierCoeffDistrib a m‖ + ‖fourierCoeffDistrib b m‖ := by
+    have h_triangle : ‖fourierCoeffDistrib (a - b) m‖ ^ 2 ≤ 2 * (‖fourierCoeffDistrib a m‖ ^ 2 +
+        ‖fourierCoeffDistrib b m‖ ^ 2) := by
+      have h_bound : ‖fourierCoeffDistrib (a - b) m‖ ≤ ‖fourierCoeffDistrib a m‖ +
+          ‖fourierCoeffDistrib b m‖ := by
         convert norm_sub_le ( fourierCoeffDistrib a m ) ( fourierCoeffDistrib b m ) using 2
         all_goals rfl
-      exact le_trans ( pow_le_pow_left₀ ( norm_nonneg _ ) h_bound 2 ) ( by linarith [ sq_nonneg ( ‖fourierCoeffDistrib a m‖ - ‖fourierCoeffDistrib b m‖ ) ] );
+      apply le_trans (pow_le_pow_left₀ (norm_nonneg _) h_bound 2)
+      linarith [sq_nonneg (‖fourierCoeffDistrib a m‖ - ‖fourierCoeffDistrib b m‖)]
     nlinarith [ show 0 ≤ weight n s m by exact le_of_lt ( weight_pos s m ) ]
 
 /-! ## `integrationEmbed` linearity (subject to continuity)
@@ -154,7 +172,7 @@ private lemma seqToDual_add (a b : (Fin n → ℤ) → ℂ) :
     seqToDual n (a + b) = seqToDual n a + seqToDual n b := by
   refine LinearMap.ext fun u => ?_
   simp only [LinearMap.add_apply]
-  show (Finsupp.linearCombination ℂ (fun m => (a + b) (-m))) u
+  change (Finsupp.linearCombination ℂ (fun m => (a + b) (-m))) u
      = (Finsupp.linearCombination ℂ (fun m => a (-m))) u
      + (Finsupp.linearCombination ℂ (fun m => b (-m))) u
   simp only [Finsupp.linearCombination_apply, Pi.add_apply, smul_add]
@@ -165,7 +183,7 @@ private lemma seqToDual_neg (a : (Fin n → ℤ) → ℂ) :
     seqToDual n (-a) = -seqToDual n a := by
   refine LinearMap.ext fun u => ?_
   simp only [LinearMap.neg_apply]
-  show (Finsupp.linearCombination ℂ (fun m => (-a) (-m))) u
+  change (Finsupp.linearCombination ℂ (fun m => (-a) (-m))) u
      = -(Finsupp.linearCombination ℂ (fun m => a (-m))) u
   simp only [Finsupp.linearCombination_apply, Pi.neg_apply, smul_neg]
   rw [Finsupp.sum, Finsupp.sum, ← Finset.sum_neg_distrib]

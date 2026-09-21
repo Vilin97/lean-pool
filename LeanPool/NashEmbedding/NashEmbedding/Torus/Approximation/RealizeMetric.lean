@@ -54,7 +54,8 @@ lemma exists_finset_periodicExtension {φ : (Fin n → ℝ) → ℂ} (hsupp : Ha
     obtain ⟨ R, hR ⟩ := hsupp.exists_pos_le_norm;
     exact ⟨ R, hR.2 ⟩;
   obtain ⟨R, hR⟩ := h_compact_support
-  have h_bound : ∀ k : Fin n → ℤ, (∃ y ∈ Metric.ball x 1, φ (y + NashEmbedding.Sobolev.periodicShift n k) ≠ 0) →
+  have h_bound : ∀ k : Fin n → ℤ, (∃ y ∈ Metric.ball x 1, φ (y +
+      NashEmbedding.Sobolev.periodicShift n k) ≠ 0) →
       ∀ i : Fin n, |(k i : ℝ)| ≤ (R + ‖x‖ + 1) / (2 * Real.pi) := by
     intros k hk i
     obtain ⟨y, hy_ball, hy_nonzero⟩ := hk
@@ -66,12 +67,16 @@ lemma exists_finset_periodicExtension {φ : (Fin n → ℝ) → ℂ} (hsupp : Ha
       have h_bound : |y i - x i| ≤ ‖y - x‖ := by
         exact norm_le_pi_norm ( y - x ) i;
       exact abs_le.mpr ⟨ by linarith [ abs_le.mp h_bound, abs_le.mp ( norm_le_pi_norm x i ), abs_le.mp ( norm_le_pi_norm ( y - x ) i ), show ‖y - x‖ < 1 from by rw [← dist_eq_norm]; exact hy_ball ], by linarith [ abs_le.mp h_bound, abs_le.mp ( norm_le_pi_norm x i ), abs_le.mp ( norm_le_pi_norm ( y - x ) i ), show ‖y - x‖ < 1 from by rw [← dist_eq_norm]; exact hy_ball ] ⟩;
-    rw [ le_div_iff₀ ] <;> cases abs_cases ( k i : ℝ ) <;> cases abs_cases ( y i + 2 * Real.pi * ( k i : ℝ ) ) <;> cases abs_cases ( y i ) <;> nlinarith [ Real.pi_gt_three ];
-  have h_finite_k : Set.Finite {k : Fin n → ℤ | ∀ i : Fin n, |(k i : ℝ)| ≤ (R + ‖x‖ + 1) / (2 * Real.pi)} := by
-    have h_finite_k : ∀ i : Fin n, Set.Finite {k : ℤ | |(k : ℝ)| ≤ (R + ‖x‖ + 1) / (2 * Real.pi)} := by
+    rw [ le_div_iff₀ ] <;> cases abs_cases ( k i : ℝ ) <;> cases abs_cases ( y i + 2 * Real.pi *
+        ( k i : ℝ ) ) <;> cases abs_cases ( y i ) <;> nlinarith [ Real.pi_gt_three ];
+  have h_finite_k : Set.Finite {k : Fin n → ℤ | ∀ i : Fin n, |(k i : ℝ)| ≤ (R + ‖x‖ + 1) / (2 *
+      Real.pi)} := by
+    have h_finite_k : ∀ i : Fin n, Set.Finite {k : ℤ | |(k : ℝ)| ≤ (R + ‖x‖ + 1) / (2 *
+        Real.pi)} := by
       exact fun i => Set.Finite.subset ( Set.finite_Icc ( -⌈ ( R + ‖x‖ + 1 ) / ( 2 * Real.pi ) ⌉ ) ⌈ ( R + ‖x‖ + 1 ) / ( 2 * Real.pi ) ⌉ ) fun k hk => ⟨ neg_le_of_abs_le <| by exact_mod_cast hk.out.trans <| Int.le_ceil _, le_of_abs_le <| by exact_mod_cast hk.out.trans <| Int.le_ceil _ ⟩;
     exact Set.Finite.subset ( Set.Finite.pi fun i => h_finite_k i ) fun k hk => by simpa using hk;
-  have hfin : Set.Finite {k : Fin n → ℤ | ∃ y ∈ Metric.ball x 1, φ (y + NashEmbedding.Sobolev.periodicShift n k) ≠ 0} :=
+  have hfin : Set.Finite {k : Fin n → ℤ | ∃ y ∈ Metric.ball x 1, φ (y +
+      NashEmbedding.Sobolev.periodicShift n k) ≠ 0} :=
     h_finite_k.subset fun k hk => h_bound k hk
   refine ⟨Metric.ball x 1, hfin.toFinset, Metric.isOpen_ball, Metric.mem_ball_self zero_lt_one, ?_⟩
   intro y hy k hk
@@ -108,9 +113,10 @@ lemma partialDeriv_periodicExtension {φ : (Fin n → ℝ) → ℂ}
   unfold periodicExtension
   rw [tsum_eq_sum (s := S)]
   intro k hk
-  show fderiv ℝ φ (x + NashEmbedding.Sobolev.periodicShift n k) (Pi.single j 1) = 0
+  change fderiv ℝ φ (x + NashEmbedding.Sobolev.periodicShift n k) (Pi.single j 1) = 0
   -- φ ∘ (· + shift k) vanishes on the open set U ∋ x, so its derivative vanishes at x
-  have hz : (fun y => φ (y + NashEmbedding.Sobolev.periodicShift n k)) =ᶠ[nhds x] fun _ => (0 : ℂ) := by
+  have hz : (fun y => φ (y + NashEmbedding.Sobolev.periodicShift n k)) =ᶠ[nhds x] fun _ => (0 :
+      ℂ) := by
     filter_upwards [hU.mem_nhds hxU] with y hy
     exact hS y hy k hk
   rw [← fderiv_comp_add_right, hz.fderiv_eq]
@@ -141,7 +147,8 @@ lemma periodicExtension_mul {φ ψ : (Fin n → ℝ) → ℂ}
     periodicExtension n φ x * periodicExtension n ψ x
       = periodicExtension n (fun y => φ y * ψ y) x := by
   unfold periodicExtension
-  by_cases hex : ∃ k₀ : Fin n → ℤ, ∀ j : Fin n, |(x + NashEmbedding.Sobolev.periodicShift n k₀) j| < π
+  by_cases hex : ∃ k₀ : Fin n → ℤ, ∀ j : Fin n, |(x + NashEmbedding.Sobolev.periodicShift n k₀)
+      j| < π
   · obtain ⟨k₀, hk₀⟩ := hex
     have hφ0 : ∀ k ≠ k₀, φ (x + NashEmbedding.Sobolev.periodicShift n k) = 0 := by
       intro k hk; by_contra h
@@ -151,7 +158,8 @@ lemma periodicExtension_mul {φ ψ : (Fin n → ℝ) → ℂ}
       exact hk (periodicShift_unique (hψ _ h) hk₀)
     rw [tsum_eq_single k₀ hφ0, tsum_eq_single k₀ hψ0,
       tsum_eq_single k₀ (fun k hk => by
-        show φ (x + NashEmbedding.Sobolev.periodicShift n k) * ψ (x + NashEmbedding.Sobolev.periodicShift n k) = 0
+        change φ (x + NashEmbedding.Sobolev.periodicShift n k) * ψ (x +
+            NashEmbedding.Sobolev.periodicShift n k) = 0
         rw [hφ0 k hk, zero_mul])]
   · push Not at hex
     have hφ0 : ∀ k, φ (x + NashEmbedding.Sobolev.periodicShift n k) = 0 := by
@@ -168,7 +176,8 @@ def rescaleBump (n : ℕ) (χ : (Fin n → ℝ) → ℝ) (ε : ℝ) (x : Fin n �
 lemma rescaleBump_fderiv_mul {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ ∞ χ) {ε : ℝ} (hε : 0 < ε)
     (i j : Fin n) (x : Fin n → ℝ) :
     fderiv ℝ (rescaleBump n χ ε) x (Pi.single i 1) * fderiv ℝ (rescaleBump n χ ε) x (Pi.single j 1)
-      = (ε⁻¹) ^ n * (fderiv ℝ χ (ε⁻¹ • x) (Pi.single i 1) * fderiv ℝ χ (ε⁻¹ • x) (Pi.single j 1)) := by
+      = (ε⁻¹) ^ n * (fderiv ℝ χ (ε⁻¹ • x) (Pi.single i 1) * fderiv ℝ χ (ε⁻¹ • x) (Pi.single j
+          1)) := by
   set c : ℝ := ε ^ (1 - (n : ℝ) / 2) with hc
   have hd : ∀ v : Fin n → ℝ, fderiv ℝ (rescaleBump n χ ε) x v
       = c * (ε⁻¹ * fderiv ℝ χ (ε⁻¹ • x) v) := by
@@ -192,9 +201,11 @@ lemma rescaleBump_fderiv_mul {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ 
     congr 1; push_cast; ring
   calc c * (ε⁻¹ * fderiv ℝ χ (ε⁻¹ • x) (Pi.single i 1)) *
         (c * (ε⁻¹ * fderiv ℝ χ (ε⁻¹ • x) (Pi.single j 1)))
-      = (c * ε⁻¹) ^ 2 * (fderiv ℝ χ (ε⁻¹ • x) (Pi.single i 1) * fderiv ℝ χ (ε⁻¹ • x) (Pi.single j 1)) := by
+      = (c * ε⁻¹) ^ 2 * (fderiv ℝ χ (ε⁻¹ • x) (Pi.single i 1) * fderiv ℝ χ (ε⁻¹ • x) (Pi.single
+          j 1)) := by
         ring
-    _ = (ε⁻¹) ^ n * (fderiv ℝ χ (ε⁻¹ • x) (Pi.single i 1) * fderiv ℝ χ (ε⁻¹ • x) (Pi.single j 1)) := by
+    _ = (ε⁻¹) ^ n * (fderiv ℝ χ (ε⁻¹ • x) (Pi.single i 1) * fderiv ℝ χ (ε⁻¹ • x) (Pi.single j
+        1)) := by
         rw [hcε, hsq]
 
 /-! ## Gram of a concatenation; the translated periodized bump -/
@@ -226,7 +237,8 @@ lemma cplx_ne_zero_iff (χ : (Fin n → ℝ) → ℝ) (x : Fin n → ℝ) : cplx
   simp [cplx]
 
 lemma partialDeriv_cplx {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ ∞ χ) (j : Fin n) :
-    NashEmbedding.Sobolev.partialDeriv j (cplx χ) = cplx (fun x => fderiv ℝ χ x (Pi.single j 1)) := by
+    NashEmbedding.Sobolev.partialDeriv j (cplx χ) = cplx (fun x => fderiv ℝ χ x (Pi.single j 1))
+        := by
   funext x
   unfold NashEmbedding.Sobolev.partialDeriv
   have h := (Complex.ofRealCLM.hasFDerivAt (x := χ x)).comp x
@@ -262,21 +274,24 @@ def pe (n : ℕ) (χ : (Fin n → ℝ) → ℝ) (x : Fin n → ℝ) : ℝ :=
 lemma pe_contDiff {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ ∞ χ) (hs : HasCompactSupport χ) :
     ContDiff ℝ ∞ (pe n χ) :=
   Complex.reCLM.contDiff.comp
-    (NashEmbedding.Sobolev.periodicExtension_contDiff (cplx_contDiff hχ) (cplx_hasCompactSupport hs))
+    (NashEmbedding.Sobolev.periodicExtension_contDiff (cplx_contDiff hχ) (cplx_hasCompactSupport
+        hs))
 
 /-- `∂ⱼ (pe χ) = pe (∂ⱼ χ)`. -/
 lemma fderiv_pe {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ ∞ χ) (hs : HasCompactSupport χ)
     (j : Fin n) (y : Fin n → ℝ) :
     fderiv ℝ (pe n χ) y (Pi.single j 1) = pe n (fun x => fderiv ℝ χ x (Pi.single j 1)) y := by
   have hF : Differentiable ℝ (periodicExtension n (cplx χ)) :=
-    (NashEmbedding.Sobolev.periodicExtension_contDiff (cplx_contDiff hχ) (cplx_hasCompactSupport hs))
+    (NashEmbedding.Sobolev.periodicExtension_contDiff (cplx_contDiff hχ) (cplx_hasCompactSupport
+        hs))
       |>.differentiable NashEmbedding.Sobolev.infty_ne_zero
   have h := (Complex.reCLM.hasFDerivAt (x := periodicExtension n (cplx χ) y)).comp y
     (hF y).hasFDerivAt
   have heq : pe n χ = ⇑Complex.reCLM ∘ periodicExtension n (cplx χ) := rfl
   rw [heq, h.fderiv]
   simp only [ContinuousLinearMap.comp_apply, Complex.reCLM_apply]
-  have h1 := congrFun (partialDeriv_periodicExtension (cplx_contDiff hχ) (cplx_hasCompactSupport hs) j) y
+  have h1 := congrFun (partialDeriv_periodicExtension (cplx_contDiff hχ) (cplx_hasCompactSupport
+      hs) j) y
   unfold NashEmbedding.Sobolev.partialDeriv at h1
   have h2 := partialDeriv_cplx hχ j
   unfold NashEmbedding.Sobolev.partialDeriv at h2
@@ -289,8 +304,10 @@ lemma gram_pe_bump {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ ∞ χ) (h
     (i j : Fin n) (x : Fin n → ℝ) :
     fderiv ℝ (fun x => a * pe n χ (x - z)) x (Pi.single i 1)
       * fderiv ℝ (fun x => a * pe n χ (x - z)) x (Pi.single j 1)
-      = a ^ 2 * pe n (fun y => fderiv ℝ χ y (Pi.single i 1) * fderiv ℝ χ y (Pi.single j 1)) (x - z) := by
-  have hpe : Differentiable ℝ (pe n χ) := (pe_contDiff hχ hs).differentiable NashEmbedding.Sobolev.infty_ne_zero
+      = a ^ 2 * pe n (fun y => fderiv ℝ χ y (Pi.single i 1) * fderiv ℝ χ y (Pi.single j 1)) (x -
+          z) := by
+  have hpe : Differentiable ℝ (pe n χ) := (pe_contDiff hχ hs).differentiable
+      NashEmbedding.Sobolev.infty_ne_zero
   -- derivative of the translate
   have hd : ∀ v : Fin n → ℝ, fderiv ℝ (fun x => a * pe n χ (x - z)) x v
       = a * fderiv ℝ (pe n χ) (x - z) v := by
@@ -348,7 +365,8 @@ lemma gram_bumpFamily {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ ∞ χ)
       = (2 * π / (M : ℝ)) ^ n * ∑ k : Fin n → Fin M,
           pe n (fun y => fderiv ℝ χ y (Pi.single i 1) * fderiv ℝ χ y (Pi.single j 1))
             (x - meshPoint n M k) * f (meshPoint n M k) := by
-  have hpe : Differentiable ℝ (pe n χ) := (pe_contDiff hχ hs).differentiable NashEmbedding.Sobolev.infty_ne_zero
+  have hpe : Differentiable ℝ (pe n χ) := (pe_contDiff hχ hs).differentiable
+      NashEmbedding.Sobolev.infty_ne_zero
   have hu : ∀ k : Fin n → Fin M, Differentiable ℝ
       (fun x => Real.sqrt ((2 * π / (M : ℝ)) ^ n * f (meshPoint n M k))
         * pe n χ (x - meshPoint n M k)) :=
@@ -420,13 +438,14 @@ lemma perEntry_residual_bound_c
     Complex.ofRealCLM.contDiff.comp hg_sm
   have hgC_per : IsPeriodic2Pi (fun y : (Fin n → ℝ) => (g y : ℂ)) := by
     intro x k
-    show ((g (x + NashEmbedding.Sobolev.periodicShift n k) : ℝ) : ℂ) = ((g x : ℝ) : ℂ)
+    change ((g (x + NashEmbedding.Sobolev.periodicShift n k) : ℝ) : ℂ) = ((g x : ℝ) : ℂ)
     rw [hg_per x k]
   have hgC_memSob : MemSobolevDistrib n s (integrationEmbed n (fun y : (Fin n → ℝ) => (g y : ℂ))) :=
     NashEmbedding.Sobolev.smooth_periodic_memSobolevDistrib hn hgC_sm hgC_per s
   have hφ_int : Integrable φ :=
     hφ_sm.continuous.integrable_of_hasCompactSupport hφ_supp
-  have hφ_rd : NashEmbedding.Sobolev.FTRapidDecay n φ := NashEmbedding.Sobolev.cinfty_rapidDecay hn hφ_sm hφ_supp
+  have hφ_rd : NashEmbedding.Sobolev.FTRapidDecay n φ := NashEmbedding.Sobolev.cinfty_rapidDecay
+      hn hφ_sm hφ_supp
   have h_pe_im : ∀ y, (periodicExtension n φ y).im = 0 :=
     NashEmbedding.Sobolev.periodicExtension_im_zero hφ_supp hφ_im
   have h_fs_mesh : ∀ k : Fin n → Fin M,
@@ -436,7 +455,8 @@ lemma perEntry_residual_bound_c
       = ((g (meshPoint n M k) : ℝ) : ℂ) := by
     intro k
     rw [fourierCoeffDistrib_integrationEmbed]
-    exact NashEmbedding.Sobolev.fourierSynthesis_stdFourierCoeff_of_smoothPeriodic hn hgC_sm hgC_per _
+    exact NashEmbedding.Sobolev.fourierSynthesis_stdFourierCoeff_of_smoothPeriodic hn hgC_sm
+        hgC_per _
   have h_psr_pt : ∀ x : (Fin n → ℝ),
       positionSpaceRiemann n φ
         (integrationEmbed n (fun y : (Fin n → ℝ) => (g y : ℂ))) M x
@@ -540,7 +560,8 @@ lemma gram_dot_reindex {ι : Type*} [Fintype ι] {N : ℕ} (e : ι ≃ Fin N)
       ((ContinuousLinearMap.proj k).comp (fderiv ℝ U x)) x :=
     hasFDerivAt_pi'.mp (hU x).hasFDerivAt
   have hf : HasFDerivAt (fun x m => U x (e.symm m))
-      (ContinuousLinearMap.pi fun m => (ContinuousLinearMap.proj (e.symm m)).comp (fderiv ℝ U x)) x :=
+      (ContinuousLinearMap.pi fun m => (ContinuousLinearMap.proj (e.symm m)).comp (fderiv ℝ U
+          x)) x :=
     hasFDerivAt_pi.mpr fun m => hcomp (e.symm m)
   rw [hf.fderiv]
   unfold dotProduct
@@ -608,7 +629,8 @@ lemma ftRn_cplx_zero {F : (Fin n → ℝ) → ℝ} :
 
 /-- Entrywise Sobolev discrepancy between the Gram of `U` and a target matrix function. -/
 def gramDefect (n : ℕ) {N : ℕ} (U : (Fin n → ℝ) → (Fin N → ℝ))
-    (G : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) (i j : Fin n) : NashEmbedding.Sobolev.TrigPolyDual n :=
+    (G : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) (i j : Fin n) :
+        NashEmbedding.Sobolev.TrigPolyDual n :=
   integrationEmbed n (fun x =>
     ((dotProduct (partialDeriv i U x) (partialDeriv j U x) - G x i j : ℝ) : ℂ))
 
@@ -649,7 +671,8 @@ theorem realize_fB (hn : 0 < n) {f : (Fin n → ℝ) → ℝ} (hf : SmoothPeriod
   obtain ⟨χ, hχ_sm, hχ_supp, hχ_cube, hχ_gram⟩ := exists_bump_gram_approx hB hK_pos
   set F : Fin n → Fin n → (Fin n → ℝ) → ℝ :=
     fun i j y => fderiv ℝ χ y (Pi.single i 1) * fderiv ℝ χ y (Pi.single j 1) with hF
-  have hχ_d : ContDiff ℝ ∞ (fun y => fderiv ℝ χ y) := hχ_sm.fderiv_right NashEmbedding.Sobolev.infty_add_one_le
+  have hχ_d : ContDiff ℝ ∞ (fun y => fderiv ℝ χ y) := hχ_sm.fderiv_right
+      NashEmbedding.Sobolev.infty_add_one_le
   have hF_sm : ∀ i j, ContDiff ℝ ∞ (F i j) := fun i j =>
     (hχ_d.clm_apply contDiff_const).mul (hχ_d.clm_apply contDiff_const)
   have hF_supp : ∀ i j, HasCompactSupport (F i j) := fun i j =>
@@ -666,10 +689,12 @@ theorem realize_fB (hn : 0 < n) {f : (Fin n → ℝ) → ℝ} (hf : SmoothPeriod
           - ((gram χ i j : ℝ) : ℂ) • integrationEmbed n fC) < ηSq / 4 := by
     have h_each : ∀ ij : Fin n × Fin n, ∀ᶠ ε in nhdsWithin (0 : ℝ) (Set.Ioi 0),
         sobolevNormSqDistrib n s
-          (convDistrib n (NashEmbedding.Sobolev.rescale n (cplx (F ij.1 ij.2)) ε) (integrationEmbed n fC)
+          (convDistrib n (NashEmbedding.Sobolev.rescale n (cplx (F ij.1 ij.2)) ε)
+              (integrationEmbed n fC)
             - ((gram χ ij.1 ij.2 : ℝ) : ℂ) • integrationEmbed n fC) < ηSq / 4 := by
       rintro ⟨i, j⟩
-      have h := NashEmbedding.Sobolev.mollifier_convergence (cplx (F i j)) (hF_int i j) (hu := hfC_mem) (s := s)
+      have h := NashEmbedding.Sobolev.mollifier_convergence (cplx (F i j)) (hF_int i j) (hu :=
+          hfC_mem) (s := s)
       rw [hF_ft0 i j] at h
       exact h.eventually_lt_const (by positivity)
     have h_all := Filter.eventually_all.mpr h_each
@@ -694,7 +719,8 @@ theorem realize_fB (hn : 0 < n) {f : (Fin n → ℝ) → ℝ} (hf : SmoothPeriod
     simp only [cplx, hFε, hF, NashEmbedding.Sobolev.rescale]
     rw [rescaleBump_fderiv_mul hχ_sm hε_pos i j y]
     push_cast; ring
-  have hχε_d : ContDiff ℝ ∞ (fun y => fderiv ℝ χε y) := hχε_sm.fderiv_right NashEmbedding.Sobolev.infty_add_one_le
+  have hχε_d : ContDiff ℝ ∞ (fun y => fderiv ℝ χε y) := hχε_sm.fderiv_right
+      NashEmbedding.Sobolev.infty_add_one_le
   have hFε_sm : ∀ i j, ContDiff ℝ ∞ (cplx (Fε i j)) := fun i j =>
     cplx_contDiff ((hχε_d.clm_apply contDiff_const).mul (hχε_d.clm_apply contDiff_const))
   have hFε_supp : ∀ i j, HasCompactSupport (cplx (Fε i j)) := fun i j =>
@@ -729,7 +755,8 @@ theorem realize_fB (hn : 0 < n) {f : (Fin n → ℝ) → ℝ} (hf : SmoothPeriod
   set e : (Fin n → Fin M) ≃ Fin (Fintype.card (Fin n → Fin M)) := Fintype.equivFin _ with he
   set U0 : (Fin n → ℝ) → ((Fin n → Fin M) → ℝ) := bumpFamily n χε f M with hU0
   have hU0_sp : SmoothPeriodic U0 := bumpFamily_smoothPeriodic hχε_sm hχε_supp f M
-  have hU0_d : Differentiable ℝ U0 := hU0_sp.smooth.differentiable NashEmbedding.Sobolev.infty_ne_zero
+  have hU0_d : Differentiable ℝ U0 := hU0_sp.smooth.differentiable
+      NashEmbedding.Sobolev.infty_ne_zero
   set U : (Fin n → ℝ) → (Fin (Fintype.card (Fin n → Fin M)) → ℝ) :=
     fun x m => U0 x (e.symm m) with hU
   -- the defect function, entrywise
@@ -801,7 +828,8 @@ theorem realize_fB (hn : 0 < n) {f : (Fin n → ℝ) → ℝ} (hf : SmoothPeriod
       have hmemB : MemSobolevDistrib n s (((B i j : ℝ) : ℂ) • integrationEmbed n fC) :=
         memSobolevDistrib_smul hfC_mem _
       have hC' : sobolevNormSqDistrib n s
-          (((gram χ i j : ℝ) : ℂ) • integrationEmbed n fC - ((B i j : ℝ) : ℂ) • integrationEmbed n fC)
+          (((gram χ i j : ℝ) : ℂ) • integrationEmbed n fC - ((B i j : ℝ) : ℂ) • integrationEmbed
+              n fC)
           ≤ K ^ 2 * Nf := by
         rw [← sub_smul, sobolevNormSqDistrib_smul]
         have h1 : ‖((gram χ i j : ℝ) : ℂ) - ((B i j : ℝ) : ℂ)‖ ≤ K := by
@@ -862,12 +890,14 @@ lemma integrationEmbed_finset_sum {ι : Type*} (t : Finset ι) (F : ι → (Fin 
 lemma memSobolevDistrib_zero (s : ℝ) : MemSobolevDistrib n s
     (0 : NashEmbedding.Sobolev.TrigPolyDual n) := by
   unfold NashEmbedding.Sobolev.MemSobolevDistrib NashEmbedding.Sobolev.MemSobolev
-  have : ∀ m, NashEmbedding.Sobolev.weight n s m * ‖fourierCoeffDistrib (0 : NashEmbedding.Sobolev.TrigPolyDual n) m‖ ^ 2 = 0 := by
+  have : ∀ m, NashEmbedding.Sobolev.weight n s m * ‖fourierCoeffDistrib (0 :
+      NashEmbedding.Sobolev.TrigPolyDual n) m‖ ^ 2 = 0 := by
     intro m; simp [NashEmbedding.Sobolev.fourierCoeffDistrib]
   simp_rw [this]; exact summable_zero
 
 lemma memSobolevDistrib_add {s : ℝ} {a b : NashEmbedding.Sobolev.TrigPolyDual n}
-    (ha : MemSobolevDistrib n s a) (hb : MemSobolevDistrib n s b) : MemSobolevDistrib n s (a + b) := by
+    (ha : MemSobolevDistrib n s a) (hb : MemSobolevDistrib n s b) : MemSobolevDistrib n s (a +
+        b) := by
   have hnb : MemSobolevDistrib n s (0 - b) := (memSobolevDistrib_zero s).sub hb
   rw [zero_sub] at hnb
   have := ha.sub hnb
@@ -909,7 +939,8 @@ lemma sobolevNormSqDistrib_finset_sum_le {ι : Type*} (t : Finset ι) (s : ℝ)
             NashEmbedding.Sobolev.weight n s m * ‖fourierCoeffDistrib (v a) m‖ ^ 2 := by
     intro m
     rw [hfc]
-    have hw : (0 : ℝ) ≤ NashEmbedding.Sobolev.weight n s m := NashEmbedding.Sobolev.weight_nonneg s m
+    have hw : (0 : ℝ) ≤ NashEmbedding.Sobolev.weight n s m :=
+        NashEmbedding.Sobolev.weight_nonneg s m
     have hnorm : ‖∑ a ∈ t, fourierCoeffDistrib (v a) m‖
         ≤ ∑ a ∈ t, ‖fourierCoeffDistrib (v a) m‖ := norm_sum_le _ _
     have hsq : ‖∑ a ∈ t, fourierCoeffDistrib (v a) m‖ ^ 2
@@ -1104,7 +1135,7 @@ theorem realizable_approx (hn : 0 < n) {g : (Fin n → ℝ) → Matrix (Fin n) (
             f k x * B k i j) : ℝ) : ℂ))
         = D k i j := by
       intro k
-      show integrationEmbed n _ = gramDefect n (U_k k) (fun y => f k y • B k) i j
+      change integrationEmbed n _ = gramDefect n (U_k k) (fun y => f k y • B k) i j
       unfold gramDefect
       congr 1
     simp_rw [h_D_form]

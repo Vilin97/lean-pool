@@ -100,7 +100,8 @@ def PullsBackEuclidean (g : ContMDiffRiemannianMetric I ∞ E (TangentSpace I : 
 
 /-! ### Assembly lemmas (S5)
 
-  The reduction to `nashTorus`, in four steps.  `equivE N : EuclideanSpace ℝ (Fin N) ≃L[ℝ] (Fin N → ℝ)`
+  The reduction to `nashTorus`, in four steps.  `equivE N : EuclideanSpace ℝ (Fin N) ≃L[ℝ] (Fin
+      N → ℝ)`
   is `EuclideanSpace.equiv`. -/
 
 /-- **S5-1 (Whitney immersion into the cube, with extension).**  A compact boundaryless
@@ -127,7 +128,8 @@ instance instChartedSpaceMatrixSelf {N : ℕ} :
               (NashEmbedding.matrixNormedAddCommGroup N)))))
       (Matrix (Fin N) (Fin N) ℝ)
       (@instTopologicalSpaceMatrix (Fin N) (Fin N) ℝ
-        (@UniformSpace.toTopologicalSpace ℝ (@PseudoMetricSpace.toUniformSpace ℝ Real.pseudoMetricSpace))) :=
+        (@UniformSpace.toTopologicalSpace ℝ (@PseudoMetricSpace.toUniformSpace ℝ
+            Real.pseudoMetricSpace))) :=
   @chartedSpaceSelf (Matrix (Fin N) (Fin N) ℝ) _
 
 theorem exists_immersion_in_cube [T2Space M] [CompactSpace M] [I.Boundaryless] [Nonempty M] :
@@ -210,7 +212,7 @@ theorem exists_immersion_in_cube [T2Space M] [CompactSpace M] [I.Boundaryless] [
     refine ⟨fun y => F₀ (eEF.symm (eps⁻¹ • y)), ?_, ?_⟩
     · exact hF₀.comp (eEF.symm.contDiff.comp (contDiff_id.const_smul eps⁻¹))
     · intro x
-      show F₀ (eEF.symm (eps⁻¹ • (eps • Phi x))) = h x
+      change F₀ (eEF.symm (eps⁻¹ • (eps • Phi x))) = h x
       rw [inv_smul_smul₀ hepsne, hPhi]
       simp only [ContinuousLinearEquiv.symm_apply_apply]
       exact hF₀eq x
@@ -379,7 +381,8 @@ theorem exists_ambient_metric_of_equiv {E' F : Type*} [NormedAddCommGroup E']
   pull back to `g`.  (S3 `exists_ambient_metric` + `formMatrix` + extension + `symmetrize`
   + cutoff `ψ` from `exists_cutoff_compact` on `W := {quadForm pos} ∩ openCube`.
   Smoothness of `formMatrix ∘ G₃ : M → Matrix` is `contDiff_formMatrix.comp_contMDiff`
-  applied to S3's `ContMDiff` conclusion; `hext` then needs it as `ContMDiff I 𝓘(ℝ, Matrix …) ∞`.) -/
+  applied to S3's `ContMDiff` conclusion; `hext` then needs it as `ContMDiff I 𝓘(ℝ, Matrix …)
+      ∞`.) -/
 theorem exists_ambient_matrix_field {N : ℕ} [T2Space M] [CompactSpace M]
     (g : ContMDiffRiemannianMetric I ∞ E (TangentSpace I : M → Type _))
     {u : M → EuclideanSpace ℝ (Fin N)} (hu : ContMDiff I 𝓘(ℝ, EuclideanSpace ℝ (Fin N)) ∞ u)
@@ -402,7 +405,7 @@ theorem exists_ambient_matrix_field {N : ℕ} [T2Space M] [CompactSpace M]
   have hco : ∀ z : EuclideanSpace ℝ (Fin N), eN z = z.ofLp := fun z => rfl
   have hmsymm : ∀ x, (formMatrix (G₃ x)).IsSymm := by
     intro x
-    show (formMatrix (G₃ x))ᵀ = formMatrix (G₃ x)
+    change (formMatrix (G₃ x))ᵀ = formMatrix (G₃ x)
     ext i j
     simp [formMatrix, Matrix.transpose_apply, hG₃symm x]
   have hhs : ContMDiff I 𝓘(ℝ, Matrix (Fin N) (Fin N) ℝ) ∞ (fun x => formMatrix (G₃ x)) :=
@@ -437,7 +440,7 @@ theorem exists_ambient_matrix_field {N : ℕ} [T2Space M] [CompactSpace M]
   have hKW : K ⊆ W := by
     rintro _ ⟨x, -, rfl⟩
     refine ⟨?_, hcube x⟩
-    show ∀ v, v ≠ 0 → 0 < v ⬝ᵥ (G₁ (eN (u x))).mulVec v
+    change ∀ v, v ≠ 0 → 0 < v ⬝ᵥ (G₁ (eN (u x))).mulVec v
     rw [hkey x]
     exact hquad x
   obtain ⟨ψ, hψ, hψ1, hψ0, hψI⟩ := exists_cutoff_compact hKcpt hWopen hKW
@@ -524,7 +527,7 @@ theorem inner_mfderiv_comp_realizes {N q : ℕ}
       (L.comp (mfderiv I 𝓘(ℝ, EuclideanSpace ℝ (Fin N)) u x)) :=
     hfd.hasMFDerivAt.comp x hux
   rw [hw.mfderiv]
-  show inner ℝ (eQ.symm (fderiv ℝ v (eN (u x)) (eN (diff (I := I) u x a))))
+  change inner ℝ (eQ.symm (fderiv ℝ v (eN (u x)) (eN (diff (I := I) u x a))))
       (eQ.symm (fderiv ℝ v (eN (u x)) (eN (diff (I := I) u x b)))) = _
   rw [show ∀ p p' : Fin q → ℝ, inner ℝ (eQ.symm p) (eQ.symm p') = p ⬝ᵥ p' from fun p p' => by
     simp [heQ, PiLp.inner_apply, dotProduct, mul_comm]]
@@ -590,7 +593,8 @@ theorem nashCompact [T2Space M] [CompactSpace M] [I.Boundaryless]
   set gT : (Fin N → ℝ) → Matrix (Fin N) (Fin N) ℝ := periodicMatrixExt N G with hgT
   have hgT_metric : IsPosDefSmoothMetric gT :=
     ⟨periodicMatrixExt_smoothPeriodic hG hGcpt,
-     periodicMatrixExt_posDef hGsupp (fun y => posDef_of_isSymm_of_quadForm_pos (hGsymm y) (hGpos y))⟩
+     periodicMatrixExt_posDef hGsupp (fun y => posDef_of_isSymm_of_quadForm_pos (hGsymm y)
+         (hGpos y))⟩
   obtain ⟨q, v, hvemb, hvreal⟩ := nashTorus hN hgT_metric
   -- Step 4: the embedding.
   let eN := EuclideanSpace.equiv (Fin N) ℝ
@@ -685,7 +689,7 @@ example : ∃ (q : ℕ) (w : Pt → EuclideanSpace ℝ (Fin q)),
   have hz : ∀ a b : EuclideanSpace ℝ (Fin 0), inner ℝ a b = (0 : ℝ) := fun a b => by
     rw [Subsingleton.elim a (0 : EuclideanSpace ℝ (Fin 0))]
     exact inner_zero_left _
-  show inner ℝ (v : Pt) (v' : Pt) = _
+  change inner ℝ (v : Pt) (v' : Pt) = _
   rw [hz]
   exact hz _ _
 

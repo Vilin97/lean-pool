@@ -248,7 +248,7 @@ lemma convexComboScalar_isPeriodic2Pi (φ : (Fin n → ℝ) → ℂ) (M : ℕ)
     (k : Fin n → Fin M) :
     IsPeriodic2Pi (convexComboScalar n φ M k) := by
   intro x kk
-  show (2 * Real.pi / (M : ℝ)) ^ n
+  change (2 * Real.pi / (M : ℝ)) ^ n
         * (periodicExtension n φ
             (fun j => (x + periodicShift n kk) j - meshPoint n M k j)).re
     = (2 * Real.pi / (M : ℝ)) ^ n
@@ -268,7 +268,7 @@ lemma convexComboScalar_nonneg {φ : (Fin n → ℝ) → ℂ}
     {M : ℕ} (hM : 0 < M) (k : Fin n → Fin M) (x : Fin n → ℝ) :
     0 ≤ convexComboScalar n φ M k x := by
   have hδ_pos : (0 : ℝ) < 2 * Real.pi / (M : ℝ) := by positivity
-  show 0 ≤ (2 * Real.pi / (M : ℝ)) ^ n
+  change 0 ≤ (2 * Real.pi / (M : ℝ)) ^ n
         * (periodicExtension n φ (fun j => x j - meshPoint n M k j)).re
   exact mul_nonneg (pow_nonneg hδ_pos.le n)
     (periodicExtension_re_nonneg hφ_supp hφ_re_nn _)

@@ -159,7 +159,8 @@ private lemma sum_abs_le_weight (m : Fin n → ℤ) :
 
 private lemma weight_half_pow (k : ℕ) (m : Fin n → ℤ) :
     weight n (1 / 2 : ℝ) m ^ k = weight n (k / 2 : ℝ) m := by
-  rw [weight, weight, ← Real.rpow_natCast (((1 : ℝ) + ∑ i : Fin n, ((m i : ℝ)) ^ 2) ^ (1 / 2 : ℝ)) k,
+  rw [weight, weight, ← Real.rpow_natCast (((1 : ℝ) + ∑ i : Fin n, ((m i : ℝ)) ^ 2) ^ (1 / 2 :
+      ℝ)) k,
     ← Real.rpow_mul (le_trans zero_le_one (one_le_weight_base m))]
   ring_nf
 

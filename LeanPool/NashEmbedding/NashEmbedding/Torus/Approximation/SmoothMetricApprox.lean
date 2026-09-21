@@ -94,7 +94,7 @@ private lemma perEntry_residual_bound
     Complex.ofRealCLM.contDiff.comp hg_sm
   have hgC_per : IsPeriodic2Pi (fun y : (Fin n → ℝ) => (g y : ℂ)) := by
     intro x k
-    show ((g (x + periodicShift n k) : ℝ) : ℂ) = ((g x : ℝ) : ℂ)
+    change ((g (x + periodicShift n k) : ℝ) : ℂ) = ((g x : ℝ) : ℂ)
     rw [hg_per x k]
   have hgC_memSob : MemSobolevDistrib n s (integrationEmbed n (fun y : (Fin n → ℝ) => (g y : ℂ))) :=
     smooth_periodic_memSobolevDistrib hn hgC_sm hgC_per s
@@ -237,10 +237,11 @@ theorem convex_combination_approx (hn : 0 < n)
     intro x hx j; apply hψ_cube; intro h0; apply hx; simp [ψc, h0]
   have hψc_ft0 : ftRn n ψc 0 = 1 := by
     rw [ftRn_at_zero]
-    show ∫ y, ((ψ y : ℝ) : ℂ) = 1
+    change ∫ y, ((ψ y : ℝ) : ℂ) = 1
     rw [integral_complex_ofReal, hψ_unit]
     simp
-  -- ──── Step 2: complexified entries of g lie in H^s_* via `smooth_periodic_memSobolevDistrib`. ────
+  -- ──── Step 2: complexified entries of g lie in H^s_* via
+  -- `smooth_periodic_memSobolevDistrib`. ────
   let gC : Fin n → Fin n → (Fin n → ℝ) → ℂ :=
     fun i j x => ((g x i j : ℝ) : ℂ)
   have hgC_smooth : ∀ i j, ContDiff ℝ ∞ (gC i j) := by
@@ -297,7 +298,8 @@ theorem convex_combination_approx (hn : 0 < n)
       exact hδ ⟨lt_min (by linarith) (by norm_num),
                 lt_of_le_of_lt (min_le_left _ _) (by linarith)⟩ ⟨i, j⟩
   obtain ⟨ε, hε_pos, hε_le_one, hε_bound⟩ := h_ε
-  -- ──── Step 5: properties of ψc_ε := rescale n ψc ε (via `rescale_contDiff`, `rescale_hasCompactSupport`, `rescale_support_in_cube`). ────
+  -- ──── Step 5: properties of ψc_ε := rescale n ψc ε (via `rescale_contDiff`,
+  -- `rescale_hasCompactSupport`, `rescale_support_in_cube`). ────
   let ψc_ε : (Fin n → ℝ) → ℂ := rescale n ψc ε
   have hψc_ε_smooth : ContDiff ℝ ∞ ψc_ε :=
     rescale_contDiff hψc_smooth ε
@@ -308,9 +310,9 @@ theorem convex_combination_approx (hn : 0 < n)
   -- `ψc_ε` is the complex cast of a real-valued function, made explicit:
   have h_ψc_ε_eq : ∀ z, ψc_ε z = ((ε⁻¹ ^ n * ψ (ε⁻¹ • z) : ℝ) : ℂ) := by
     intro z
-    show rescale n ψc ε z = _
+    change rescale n ψc ε z = _
     unfold rescale
-    show (((ε⁻¹ ^ n : ℝ) : ℂ) * ((ψ (ε⁻¹ • z) : ℝ) : ℂ)) = _
+    change (((ε⁻¹ ^ n : ℝ) : ℂ) * ((ψ (ε⁻¹ • z) : ℝ) : ℂ)) = _
     push_cast; ring
   have hψc_ε_re_nn : ∀ x, 0 ≤ (ψc_ε x).re := fun z => by
     rw [h_ψc_ε_eq z, Complex.ofReal_re]
@@ -375,7 +377,7 @@ theorem convex_combination_approx (hn : 0 < n)
         exact (h_f_smooth k).mul contDiff_const
       exact Complex.ofRealCLM.contDiff.comp (h_sum.sub h_g_entry)
     · intro x kk
-      show (((∑ k : Fin n → Fin M, f k (x + periodicShift n kk) * B k i j)
+      change (((∑ k : Fin n → Fin M, f k (x + periodicShift n kk) * B k i j)
               - g (x + periodicShift n kk) i j : ℝ) : ℂ)
         = (((∑ k : Fin n → Fin M, f k x * B k i j) - g x i j : ℝ) : ℂ)
       congr 1
@@ -404,7 +406,7 @@ theorem convex_combination_approx (hn : 0 < n)
           ((contDiff_apply ℝ (Fin n → ℝ) i).comp hg.smoothPeriodic.smooth))
       have hg_ij_per : IsPeriodic2Pi (fun x : (Fin n → ℝ) => g x i j) := by
         intro x kk
-        show g (x + periodicShift n kk) i j = g x i j
+        change g (x + periodicShift n kk) i j = g x i j
         rw [hg.smoothPeriodic.periodic x kk]
       have h_form : (fun x : (Fin n → ℝ) =>
             (((∑ k : Fin n → Fin M, f k x * B k i j) - g x i j : ℝ) : ℂ))
@@ -418,7 +420,7 @@ theorem convex_combination_approx (hn : 0 < n)
         congr 2
         rw [Finset.mul_sum]
         refine Finset.sum_congr rfl (fun k _ => ?_)
-        show convexComboScalar n ψc_ε M k x * g (meshPoint n M k) i j = _
+        change convexComboScalar n ψc_ε M k x * g (meshPoint n M k) i j = _
         unfold convexComboScalar
         ring
       rw [h_form]
@@ -449,7 +451,7 @@ theorem convex_combination_approx (hn : 0 < n)
       exact h_per_strict i j
     have h_sum_eq : (∑ i : Fin n, ∑ j : Fin n, (4 * ηSq : ℝ)) = η ^ 2 := by
       simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-      show (n : ℝ) * ((n : ℝ) * (4 * (η ^ 2 / (4 * (n : ℝ) ^ 2)))) = η ^ 2
+      change (n : ℝ) * ((n : ℝ) * (4 * (η ^ 2 / (4 * (n : ℝ) ^ 2)))) = η ^ 2
       have hnR_ne : (n : ℝ) ≠ 0 := ne_of_gt hnR_pos
       field_simp
     linarith

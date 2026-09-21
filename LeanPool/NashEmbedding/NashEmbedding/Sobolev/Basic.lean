@@ -50,7 +50,8 @@ def weight (n : ℕ) (s : ℝ) (m : Fin n → ℤ) : ℝ :=
   (1 + ∑ i : Fin n, ((m i : ℝ) ^ 2)) ^ s
 
 lemma weight_pos (s : ℝ) (m : Fin n → ℤ) : 0 < weight n s m := by
-  exact Real.rpow_pos_of_pos ( add_pos_of_pos_of_nonneg zero_lt_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ) _
+  exact Real.rpow_pos_of_pos ( add_pos_of_pos_of_nonneg zero_lt_one ( Finset.sum_nonneg fun _ _
+      => sq_nonneg _ ) ) _
 
 lemma weight_nonneg (s : ℝ) (m : Fin n → ℤ) : 0 ≤ weight n s m :=
   le_of_lt (weight_pos s m)
@@ -74,7 +75,8 @@ lemma weight_zero (m : Fin n → ℤ) : weight n 0 m = 1 := by
 lemma weight_mul (s t : ℝ) (m : Fin n → ℤ) :
     weight n s m * weight n t m = weight n (s + t) m := by
   unfold weight;
-  rw [ Real.rpow_add ( by exact add_pos_of_pos_of_nonneg zero_lt_one ( Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ) ]
+  rw [ Real.rpow_add ( by exact add_pos_of_pos_of_nonneg zero_lt_one ( Finset.sum_nonneg fun _ _
+      => sq_nonneg _ ) ) ]
 
 /-
 For `s ≤ t`, `weight n s m ≤ weight n t m`.
@@ -110,7 +112,8 @@ If `a ∈ ℓ²_(t)` and `s ≤ t`, then `a ∈ ℓ²_(s)`.
 -/
 lemma MemSobolev.mono {s t : ℝ} {a : (Fin n → ℤ) → ℂ}
     (ha : MemSobolev n t a) (hst : s ≤ t) : MemSobolev n s a := by
-  exact .of_nonneg_of_le ( fun _ => by exact mul_nonneg ( weight_nonneg s _ ) ( sq_nonneg _ ) ) ( fun m => by exact mul_le_mul_of_nonneg_right ( weight_mono hst m ) ( sq_nonneg _ ) ) ha
+  exact .of_nonneg_of_le ( fun _ => by exact mul_nonneg ( weight_nonneg s _ ) ( sq_nonneg _ ) )
+      ( fun m => by exact mul_le_mul_of_nonneg_right ( weight_mono hst m ) ( sq_nonneg _ ) ) ha
 
 /-
 Sobolev norm monotonicity: if `s ≤ t` then `‖a‖²_(s) ≤ ‖a‖²_(t)`.
@@ -118,7 +121,8 @@ Sobolev norm monotonicity: if `s ≤ t` then `‖a‖²_(s) ≤ ‖a‖²_(t)`.
 lemma sobolevNormSq_mono {s t : ℝ} {a : (Fin n → ℤ) → ℂ}
     (ha : MemSobolev n t a) (hst : s ≤ t) :
     sobolevNormSq n s a ≤ sobolevNormSq n t a := by
-  exact Summable.tsum_le_tsum ( fun m => mul_le_mul_of_nonneg_right ( weight_mono hst m ) ( sq_nonneg _ ) ) ( MemSobolev.mono ha hst ) ha
+  exact Summable.tsum_le_tsum ( fun m => mul_le_mul_of_nonneg_right ( weight_mono hst m ) (
+      sq_nonneg _ ) ) ( MemSobolev.mono ha hst ) ha
 
 /-! ## Smoothness helpers -/
 

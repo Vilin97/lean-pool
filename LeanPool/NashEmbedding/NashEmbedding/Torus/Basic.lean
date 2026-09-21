@@ -34,7 +34,8 @@ noncomputable section
 -- (topology, uniformity, scalar actions); without it, TC cannot reconcile the
 -- norm-derived chain with e.g. `instTopologicalSpaceMatrix` or synthesize
 -- `IsScalarTower ℝ ℝ (Matrix _ _ ℝ)` through this instance.
-instance NashEmbedding.matrixNormedAddCommGroup (n : ℕ) : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℝ) :=
+instance NashEmbedding.matrixNormedAddCommGroup (n : ℕ) : NormedAddCommGroup (Matrix (Fin n)
+    (Fin n) ℝ) :=
   fast_instance% Pi.normedAddCommGroup
 instance NashEmbedding.matrixNormedSpace (n : ℕ) : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℝ) :=
   fast_instance% Pi.normedSpace

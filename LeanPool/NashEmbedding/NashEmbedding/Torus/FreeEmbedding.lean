@@ -191,9 +191,11 @@ lemma pderiv_freeEmb₀ (n : ℕ) (a : Fin n) (x : Fin n → ℝ) :
       | Sum.inl i => -(if a = i then 1 else 0) * Real.sin (x i)
       | Sum.inr (Sum.inl i) => (if a = i then 1 else 0) * Real.cos (x i)
       | Sum.inr (Sum.inr (Sum.inl p)) =>
-          -((if a = p.1.1 then 1 else 0) + (if a = p.1.2 then 1 else 0)) * Real.sin (x p.1.1 + x p.1.2)
+          -((if a = p.1.1 then 1 else 0) + (if a = p.1.2 then 1 else 0)) * Real.sin (x p.1.1 + x
+              p.1.2)
       | Sum.inr (Sum.inr (Sum.inr p)) =>
-          ((if a = p.1.1 then 1 else 0) + (if a = p.1.2 then 1 else 0)) * Real.cos (x p.1.1 + x p.1.2) := by
+          ((if a = p.1.1 then 1 else 0) + (if a = p.1.2 then 1 else 0)) * Real.cos (x p.1.1 + x
+              p.1.2) := by
   funext k
   rcases k with i | i | p | p
   · exact pderiv_cos_coord a i x
@@ -209,36 +211,38 @@ lemma pderiv_pderiv_freeEmb₀ (n : ℕ) (a b : Fin n) (x : Fin n → ℝ) :
       | Sum.inr (Sum.inl i) => -(if a = i then 1 else 0) * (if b = i then 1 else 0) * Real.sin (x i)
       | Sum.inr (Sum.inr (Sum.inl p)) =>
           -((if a = p.1.1 then 1 else 0) + (if a = p.1.2 then 1 else 0))
-            * ((if b = p.1.1 then 1 else 0) + (if b = p.1.2 then 1 else 0)) * Real.cos (x p.1.1 + x p.1.2)
+            * ((if b = p.1.1 then 1 else 0) + (if b = p.1.2 then 1 else 0)) * Real.cos (x p.1.1
+                + x p.1.2)
       | Sum.inr (Sum.inr (Sum.inr p)) =>
           -((if a = p.1.1 then 1 else 0) + (if a = p.1.2 then 1 else 0))
-            * ((if b = p.1.1 then 1 else 0) + (if b = p.1.2 then 1 else 0)) * Real.sin (x p.1.1 + x p.1.2) := by
+            * ((if b = p.1.1 then 1 else 0) + (if b = p.1.2 then 1 else 0)) * Real.sin (x p.1.1
+                + x p.1.2) := by
   funext k
   rcases k with i | i | p | p
   · have h : pderiv b (fun y : Fin n → ℝ => Real.cos (y i))
         = fun y => -(if b = i then 1 else 0) * Real.sin (y i) :=
       funext fun y => pderiv_cos_coord b i y
-    show pderiv a (pderiv b (fun y : Fin n → ℝ => Real.cos (y i))) x = _
+    change pderiv a (pderiv b (fun y : Fin n → ℝ => Real.cos (y i))) x = _
     rw [h, pderiv_const_mul _ (hasFDerivAt_sin_coord i x) a, pderiv_sin_coord]
     ring
   · have h : pderiv b (fun y : Fin n → ℝ => Real.sin (y i))
         = fun y => (if b = i then 1 else 0) * Real.cos (y i) :=
       funext fun y => pderiv_sin_coord b i y
-    show pderiv a (pderiv b (fun y : Fin n → ℝ => Real.sin (y i))) x = _
+    change pderiv a (pderiv b (fun y : Fin n → ℝ => Real.sin (y i))) x = _
     rw [h, pderiv_const_mul _ (hasFDerivAt_cos_coord i x) a, pderiv_cos_coord]
     ring
   · have h : pderiv b (fun y : Fin n → ℝ => Real.cos (y p.1.1 + y p.1.2))
         = fun y => -((if b = p.1.1 then 1 else 0) + (if b = p.1.2 then 1 else 0))
             * Real.sin (y p.1.1 + y p.1.2) :=
       funext fun y => pderiv_cos_coord_add b p.1.1 p.1.2 y
-    show pderiv a (pderiv b (fun y : Fin n → ℝ => Real.cos (y p.1.1 + y p.1.2))) x = _
+    change pderiv a (pderiv b (fun y : Fin n → ℝ => Real.cos (y p.1.1 + y p.1.2))) x = _
     rw [h, pderiv_const_mul _ (hasFDerivAt_sin_coord_add p.1.1 p.1.2 x) a, pderiv_sin_coord_add]
     ring
   · have h : pderiv b (fun y : Fin n → ℝ => Real.sin (y p.1.1 + y p.1.2))
         = fun y => ((if b = p.1.1 then 1 else 0) + (if b = p.1.2 then 1 else 0))
             * Real.cos (y p.1.1 + y p.1.2) :=
       funext fun y => pderiv_sin_coord_add b p.1.1 p.1.2 y
-    show pderiv a (pderiv b (fun y : Fin n → ℝ => Real.sin (y p.1.1 + y p.1.2))) x = _
+    change pderiv a (pderiv b (fun y : Fin n → ℝ => Real.sin (y p.1.1 + y p.1.2))) x = _
     rw [h, pderiv_const_mul _ (hasFDerivAt_cos_coord_add p.1.1 p.1.2 x) a, pderiv_cos_coord_add]
     ring
 
@@ -476,11 +480,11 @@ theorem freeEmb_isFree (n : ℕ) : IsFree (freeEmb n) := by
   rw [← h]
   refine Finset.sum_congr rfl fun k _ => ?_
   rcases k with a | pq
-  · show _ = g (Sum.inl a) * pderiv a (freeEmb n) x _
+  · change _ = g (Sum.inl a) * pderiv a (freeEmb n) x _
     rw [pderiv_freeEmb_apply]
     exact congrArg (fun j => g (Sum.inl a) * pderiv a (fun y => freeEmb₀ n y j) x)
       (e.symm_apply_apply m).symm
-  · show _ = g (Sum.inr pq) * pderiv pq.1.1 (pderiv pq.1.2 (freeEmb n)) x _
+  · change _ = g (Sum.inr pq) * pderiv pq.1.1 (pderiv pq.1.2 (freeEmb n)) x _
     rw [pderiv_pderiv_freeEmb_apply]
     exact congrArg (fun j => g (Sum.inr pq) *
       pderiv pq.1.1 (pderiv pq.1.2 (fun y => freeEmb₀ n y j)) x)

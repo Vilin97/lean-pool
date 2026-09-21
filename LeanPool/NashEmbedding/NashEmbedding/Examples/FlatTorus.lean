@@ -216,7 +216,7 @@ theorem torus2Wrap_pullback (θ : Fin 2 → ℝ) (v v' : Fin 2 → ℝ) :
       ((mfderiv 𝓘(ℝ, Fin 2 → ℝ) ((𝓡 1).prod (𝓡 1)) torus2Wrap θ v' :
           EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1))) = dotProduct v v' := by
     erw [prodMetric_inner, mfderiv_torus2Wrap_apply, mfderiv_torus2Wrap_apply]
-    show (inner ℝ (mfderiv (𝓡 1) 𝓘(ℝ, ℂ) circleCoe (Circle.exp (θ 0))
+    change (inner ℝ (mfderiv (𝓡 1) 𝓘(ℝ, ℂ) circleCoe (Circle.exp (θ 0))
           (mfderiv 𝓘(ℝ, ℝ) (𝓡 1) Circle.exp (θ 0) (v 0)))
         (mfderiv (𝓡 1) 𝓘(ℝ, ℂ) circleCoe (Circle.exp (θ 0))
           (mfderiv 𝓘(ℝ, ℝ) (𝓡 1) Circle.exp (θ 0) (v' 0))) : ℝ) +

@@ -260,7 +260,8 @@ theorem exists_fixed_point {r : ℕ} {c : VecSeq n N} {B : VecSeq n N → VecSeq
     · exact hvmem.mono (by exact_mod_cast hk.le)
   · -- fixed point: `T vᵖ → T v` in `H^r`, and `T vᵖ = vᵖ⁺¹ → v` coefficientwise
     have hTmem : VMem n N r (c + B v v) := (h.c_mem r).add (h.B_mem r le_rfl _ _ hvmem hvmem)
-    have hTconv : Tendsto (fun p => vecNormSq n N r (iter c B (p + 1) - (c + B v v))) atTop (𝓝 0) := by
+    have hTconv : Tendsto (fun p => vecNormSq n N r (iter c B (p + 1) - (c + B v v))) atTop (𝓝
+        0) := by
       have hbnd : ∀ p, vecNormSq n N r (iter c B (p + 1) - (c + B v v))
           ≤ 4 * A * ρ * vecNormSq n N r (iter c B p - v) := by
         intro p

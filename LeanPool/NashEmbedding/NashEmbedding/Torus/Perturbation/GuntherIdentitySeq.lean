@@ -70,7 +70,7 @@ lemma isPeriodic2Pi_pderiv {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V
     {f : (Fin n → ℝ) → V} (hf : IsPeriodic2Pi f) (i : Fin n) : IsPeriodic2Pi (pderiv i f) := by
   intro x k
   have h : (fun y => f (y + periodicShift n k)) = f := funext fun y => hf y k
-  show fderiv ℝ f (x + periodicShift n k) (Pi.single i 1) = fderiv ℝ f x (Pi.single i 1)
+  change fderiv ℝ f (x + periodicShift n k) (Pi.single i 1) = fderiv ℝ f x (Pi.single i 1)
   rw [← fderiv_comp_add_right (f := f) (x := x) (periodicShift n k), h]
 
 lemma SmoothPeriodic.pderiv {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -81,7 +81,7 @@ lemma SmoothPeriodic.sumSqDeriv {V : Type*} [NormedAddCommGroup V] [NormedSpace 
     {f : (Fin n → ℝ) → V} (hf : SmoothPeriodic f) : SmoothPeriodic (sumSqDeriv f) := by
   refine ⟨sumSqDeriv_contDiff hf.smooth, ?_⟩
   intro x k
-  show (∑ a, NashEmbedding.pderiv a (NashEmbedding.pderiv a f) (x + periodicShift n k))
+  change (∑ a, NashEmbedding.pderiv a (NashEmbedding.pderiv a f) (x + periodicShift n k))
       = ∑ a, NashEmbedding.pderiv a (NashEmbedding.pderiv a f) x
   exact Finset.sum_congr rfl fun a _ =>
     isPeriodic2Pi_pderiv (isPeriodic2Pi_pderiv hf.periodic a) a x k
@@ -118,7 +118,7 @@ lemma pderiv_ofReal {f : (Fin n → ℝ) → ℝ} (hf : ContDiff ℝ ∞ f) (i :
   have h : HasFDerivAt (fun y => ((f y : ℝ) : ℂ))
       (Complex.ofRealCLM.comp (fderiv ℝ f x)) x :=
     Complex.ofRealCLM.hasFDerivAt.comp x hd.hasFDerivAt
-  show fderiv ℝ (fun y => ((f y : ℝ) : ℂ)) x (Pi.single i 1) = _
+  change fderiv ℝ (fun y => ((f y : ℝ) : ℂ)) x (Pi.single i 1) = _
   rw [h.fderiv]
   rfl
 
@@ -133,13 +133,14 @@ lemma pderiv_ofReal_comp {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu : ContDif
         (((ContinuousLinearMap.proj α : (Fin N → ℝ) →L[ℝ] ℝ)).comp (fderiv ℝ u x))) x :=
     Complex.ofRealCLM.hasFDerivAt.comp x
       (((ContinuousLinearMap.proj α : (Fin N → ℝ) →L[ℝ] ℝ)).hasFDerivAt.comp x hd.hasFDerivAt)
-  show fderiv ℝ (fun y => ((u y α : ℝ) : ℂ)) x (Pi.single i 1) = _
+  change fderiv ℝ (fun y => ((u y α : ℝ) : ℂ)) x (Pi.single i 1) = _
   rw [h.fderiv]
   rfl
 
 lemma vcoeff_vrapid (hn : 0 < n) {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u) :
     VRapid n N (vcoeff n u) := fun α =>
-  isRapidDecay_stdFourierCoeff hn (smoothPeriodic_ofReal_comp hu α).1 (smoothPeriodic_ofReal_comp hu α).2
+  isRapidDecay_stdFourierCoeff hn (smoothPeriodic_ofReal_comp hu α).1
+      (smoothPeriodic_ofReal_comp hu α).2
 
 lemma vcoeff_vreal {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u) :
     VReal (vcoeff n u) := fun α =>
@@ -160,7 +161,7 @@ lemma vsynth_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) :
     exact Complex.reCLM.contDiff.comp (fourierSynthesis_contDiff hn (hv α))
   · intro x k
     funext α
-    show (fourierSynthesis n (v α) (x + periodicShift n k)).re = _
+    change (fourierSynthesis n (v α) (x + periodicShift n k)).re = _
     rw [fourierSynthesis_isPeriodic2Pi x k]
     rfl
 
@@ -187,7 +188,7 @@ lemma vsynth_vcoeff (hn : 0 < n) {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu :
 lemma vcoeff_pderiv (hn : 0 < n) {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u)
     (i : Fin n) : vcoeff n (pderiv i u) = vpartial i (vcoeff n u) := by
   funext α
-  show stdFourierCoeff n (fun x => ((pderiv i u x α : ℝ) : ℂ))
+  change stdFourierCoeff n (fun x => ((pderiv i u x α : ℝ) : ℂ))
       = partialCoeff i (stdFourierCoeff n (fun x => ((u x α : ℝ) : ℂ)))
   rw [← pderiv_ofReal_comp hu.smooth i α]
   exact stdFourierCoeff_partialDeriv' hn (smoothPeriodic_ofReal_comp hu α).1
@@ -206,12 +207,12 @@ lemma vcoeff_sumSqDeriv (hn : 0 < n) {u : (Fin n → ℝ) → (Fin N → ℝ)} (
     funext x
     simp only [hc]
     have hsum : sumSqDeriv u x α = ∑ k, pderiv k (pderiv k u) x α := by
-      show (∑ k, pderiv k (pderiv k u) x) α = _
+      change (∑ k, pderiv k (pderiv k u) x) α = _
       simp [Finset.sum_apply]
     rw [hsum]
     push_cast
     rfl
-  show stdFourierCoeff n (fun x => ((sumSqDeriv u x α : ℝ) : ℂ)) = _
+  change stdFourierCoeff n (fun x => ((sumSqDeriv u x α : ℝ) : ℂ)) = _
   rw [h]
   exact stdFourierCoeff_sumSqDeriv hn (smoothPeriodic_ofReal_comp hu α).1
     (smoothPeriodic_ofReal_comp hu α).2
@@ -223,7 +224,7 @@ lemma stdFourierCoeff_dotProduct (hn : 0 < n) {u w : (Fin n → ℝ) → (Fin N 
   have h : (fun x => ((u x ⬝ᵥ w x : ℝ) : ℂ))
       = fun x => ∑ α : Fin N, ((u x α : ℝ) : ℂ) * ((w x α : ℝ) : ℂ) := by
     funext x
-    show ((∑ α : Fin N, u x α * w x α : ℝ) : ℂ) = _
+    change ((∑ α : Fin N, u x α * w x α : ℝ) : ℂ) = _
     push_cast
     rfl
   rw [h, stdFourierCoeff_finset_sum'
@@ -258,7 +259,7 @@ lemma stdFourierCoeff_sumSqDeriv_ofReal (hn : 0 < n) {f : (Fin n → ℝ) → �
       = fun x => ∑ k, pderiv k (pderiv k (fun y => ((f y : ℝ) : ℂ))) x := by
     funext x
     simp only [hc]
-    show ((∑ k, pderiv k (pderiv k f) x : ℝ) : ℂ) = _
+    change ((∑ k, pderiv k (pderiv k f) x : ℝ) : ℂ) = _
     push_cast
     rfl
   rw [h]
@@ -323,9 +324,11 @@ theorem gunther_identity_seq (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (
     rw [stdFourierCoeff_dotProduct hn (hdd i k) (hdd j k),
       vcoeff_pderiv hn (hd k) i, vcoeff_pderiv hn (hd k) j, vcoeff_pderiv hn hV k, hvc]
   -- continuity of the pieces
-  have cA : Continuous (fun x => ((pderiv i (fun y => sumSqDeriv V y ⬝ᵥ pderiv j V y) x : ℝ) : ℂ)) :=
+  have cA : Continuous (fun x => ((pderiv i (fun y => sumSqDeriv V y ⬝ᵥ pderiv j V y) x : ℝ) :
+      ℂ)) :=
     (smoothPeriodic_ofReal_scalar ((hL.dotProduct (hd j)).pderiv i)).1.continuous
-  have cB : Continuous (fun x => ((pderiv j (fun y => sumSqDeriv V y ⬝ᵥ pderiv i V y) x : ℝ) : ℂ)) :=
+  have cB : Continuous (fun x => ((pderiv j (fun y => sumSqDeriv V y ⬝ᵥ pderiv i V y) x : ℝ) :
+      ℂ)) :=
     (smoothPeriodic_ofReal_scalar ((hL.dotProduct (hd i)).pderiv j)).1.continuous
   have cC : Continuous (fun x => ((sumSqDeriv V x ⬝ᵥ pderiv i (pderiv j V) x : ℝ) : ℂ)) :=
     (smoothPeriodic_ofReal_scalar (hL.dotProduct (hdd i j))).1.continuous

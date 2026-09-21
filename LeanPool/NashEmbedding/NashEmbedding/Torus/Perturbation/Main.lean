@@ -168,7 +168,8 @@ lemma vmem_smulSeq (hn : 0 < n) {s : ℝ} (hs : (n : ℝ) < 2 * s) {f : Seq n}
 
 lemma mt2Const_nonneg (n : ℕ) (s : ℝ) : 0 ≤ mt2Const n s := by
   unfold mt2Const sobolevEmbedConstSq
-  exact mul_nonneg (mul_nonneg (by norm_num) (by positivity)) (tsum_nonneg fun _ => weight_nonneg _ _)
+  exact mul_nonneg (mul_nonneg (by norm_num) (by positivity)) (tsum_nonneg fun _ =>
+      weight_nonneg _ _)
 
 /-- The constant controlling `‖c‖²_(r)` in terms of `hSize`: depends on `u₀` only. -/
 def cConst (n N : ℕ) (u₀ : (Fin n → ℝ) → (Fin N → ℝ)) : ℝ :=
@@ -193,25 +194,31 @@ lemma gC_bound (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu : S
   have hterm : ∀ pq ∈ pairs n,
       vecNormSq n N (bLevel n) (smulSeq (fun m => (1 / 2 : ℂ) * (bData n u₀ h).h pq.1 pq.2 m)
         ((bData n u₀ h).b pq.1 pq.2))
-      ≤ (mt2Const n (bLevel n) / 4) * hSize n h * vecNormSq n N (bLevel n) ((bData n u₀ h).b pq.1 pq.2) := by
+      ≤ (mt2Const n (bLevel n) / 4) * hSize n h * vecNormSq n N (bLevel n) ((bData n u₀ h).b
+          pq.1 pq.2) := by
     intro pq _
     have hf : MemSobolev n (bLevel n) (fun m => (1 / 2 : ℂ) * (bData n u₀ h).h pq.1 pq.2 m) :=
       (hds.h_mem pq.1 pq.2 (bLevel n)).smul _
     have h1 := vecNormSq_smulSeq_le hn hr hf (hds.b_mem pq.1 pq.2 (bLevel n))
     rw [sobolevNormSq_smul] at h1
-    have hh2 : (bData n u₀ h).h pq.1 pq.2 = stdFourierCoeff n (fun x => ((h x pq.1 pq.2 : ℝ) : ℂ)) := rfl
+    have hh2 : (bData n u₀ h).h pq.1 pq.2 = stdFourierCoeff n (fun x => ((h x pq.1 pq.2 : ℝ) :
+        ℂ)) := rfl
     rw [hh2] at h1
-    have h2 : sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x pq.1 pq.2 : ℝ) : ℂ))) ≤ hSize n h := by
+    have h2 : sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x pq.1 pq.2 : ℝ) :
+        ℂ))) ≤ hSize n h := by
       unfold hSize
       obtain ⟨p, q⟩ := pq
       calc sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x p q : ℝ) : ℂ)))
           ≤ ∑ j, sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x p j : ℝ) : ℂ))) :=
             Finset.single_le_sum
-              (f := fun j => sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x p j : ℝ) : ℂ))))
+              (f := fun j => sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x p j :
+                  ℝ) : ℂ))))
               (fun j _ => sobolevNormSq_nonneg _ _) (Finset.mem_univ q)
-        _ ≤ ∑ i, ∑ j, sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x i j : ℝ) : ℂ))) :=
+        _ ≤ ∑ i, ∑ j, sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x i j : ℝ) :
+            ℂ))) :=
             Finset.single_le_sum
-              (f := fun i => ∑ j, sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x i j : ℝ) : ℂ))))
+              (f := fun i => ∑ j, sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x
+                  i j : ℝ) : ℂ))))
               (fun i _ => Finset.sum_nonneg fun j _ => sobolevNormSq_nonneg _ _) (Finset.mem_univ p)
     have hnorm : ‖(1 / 2 : ℂ)‖ ^ 2 = 1 / 4 := by norm_num
     rw [hnorm] at h1
@@ -221,17 +228,22 @@ lemma gC_bound (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu : S
         ≤ mt2Const n (bLevel n) / 4 * hSize n h := by nlinarith
     exact le_trans h1 (mul_le_mul_of_nonneg_right h3 hb0)
   have hmem : ∀ pq ∈ pairs n, VMem n N (bLevel n)
-      (smulSeq (fun m => (1 / 2 : ℂ) * (bData n u₀ h).h pq.1 pq.2 m) ((bData n u₀ h).b pq.1 pq.2)) :=
-    fun pq _ => vmem_smulSeq hn hr ((hds.h_mem pq.1 pq.2 (bLevel n)).smul _) (hds.b_mem pq.1 pq.2 (bLevel n))
+      (smulSeq (fun m => (1 / 2 : ℂ) * (bData n u₀ h).h pq.1 pq.2 m) ((bData n u₀ h).b pq.1
+          pq.2)) :=
+    fun pq _ => vmem_smulSeq hn hr ((hds.h_mem pq.1 pq.2 (bLevel n)).smul _) (hds.b_mem pq.1
+        pq.2 (bLevel n))
   unfold gC
   rw [vecNormSq_neg]
-  calc vecNormSq n N (bLevel n) (∑ pq ∈ pairs n, smulSeq (fun m => (1 / 2 : ℂ) * (bData n u₀ h).h pq.1 pq.2 m)
+  calc vecNormSq n N (bLevel n) (∑ pq ∈ pairs n, smulSeq (fun m => (1 / 2 : ℂ) * (bData n u₀
+      h).h pq.1 pq.2 m)
           ((bData n u₀ h).b pq.1 pq.2))
       ≤ (pairs n).card * ∑ pq ∈ pairs n, vecNormSq n N (bLevel n)
-          (smulSeq (fun m => (1 / 2 : ℂ) * (bData n u₀ h).h pq.1 pq.2 m) ((bData n u₀ h).b pq.1 pq.2)) :=
+          (smulSeq (fun m => (1 / 2 : ℂ) * (bData n u₀ h).h pq.1 pq.2 m) ((bData n u₀ h).b pq.1
+              pq.2)) :=
         vecNormSq_finset_sum_le _ hmem
     _ ≤ (pairs n).card * ∑ pq ∈ pairs n,
-          (mt2Const n (bLevel n) / 4) * hSize n h * vecNormSq n N (bLevel n) ((bData n u₀ h).b pq.1 pq.2) := by
+          (mt2Const n (bLevel n) / 4) * hSize n h * vecNormSq n N (bLevel n) ((bData n u₀ h).b
+              pq.1 pq.2) := by
         gcongr with pq hpq
         exact hterm pq hpq
     _ = cConst n N u₀ * hSize n h := by
@@ -291,20 +303,20 @@ private lemma conjReflect_seqConv_of_fixed {a b : Seq n} (ha : conjReflect a = a
 
 private lemma vreal_vpartial {v : VecSeq n N} (hv : VReal v) (i : Fin n) :
     VReal (vpartial i v) := fun α => by
-  show conjReflect (partialCoeff i (v α)) = partialCoeff i (v α)
+  change conjReflect (partialCoeff i (v α)) = partialCoeff i (v α)
   rw [conjReflect_partialCoeff, hv α]
 
 private lemma vreal_vlap {v : VecSeq n N} (hv : VReal v) : VReal (vlap v) := fun α => by
-  show conjReflect (fun m => -(laplacianCoeff (v α) m)) = _
+  change conjReflect (fun m => -(laplacianCoeff (v α) m)) = _
   rw [conjReflect_neg', conjReflect_laplacianCoeff, hv α]
   rfl
 
 private lemma conjReflect_dotConv {v w : VecSeq n N} (hv : VReal v) (hw : VReal w) :
     conjReflect (dotConv v w) = dotConv v w := by
-  show conjReflect (fun m => ∑ α, seqConv (v α) (w α) m) = _
+  change conjReflect (fun m => ∑ α, seqConv (v α) (w α) m) = _
   rw [conjReflect_finset_sum]
   funext m
-  show ∑ α, conjReflect (seqConv (v α) (w α)) m = ∑ α, seqConv (v α) (w α) m
+  change ∑ α, conjReflect (seqConv (v α) (w α)) m = ∑ α, seqConv (v α) (w α) m
   exact Finset.sum_congr rfl fun α _ =>
     congrFun (conjReflect_seqConv_of_fixed (hv α) (hw α)) m
 
@@ -314,7 +326,7 @@ private lemma conjReflect_resolvent_dotConv {v w : VecSeq n N} (hv : VReal v) (h
 
 private lemma conjReflect_Fb {v : VecSeq n N} (hv : VReal v) (i : Fin n) :
     conjReflect (Fb i v v) = Fb i v v := by
-  show conjReflect (fun m => -(resolventCoeff (dotConv (vlap v) (vpartial i v)) m)) = _
+  change conjReflect (fun m => -(resolventCoeff (dotConv (vlap v) (vpartial i v)) m)) = _
   rw [conjReflect_neg', conjReflect_resolvent_dotConv (vreal_vlap hv) (vreal_vpartial hv i)]
   rfl
 
@@ -334,7 +346,7 @@ private lemma conjReflect_Ub {v : VecSeq n N} (hv : VReal v) (i j : Fin n) :
       (conjReflect_resolvent_dotConv (vreal_vpartial (vreal_vpartial hv k) i)
         (vreal_vpartial (vreal_vpartial hv k) j)) m
   have h4 := conjReflect_const_mul_of_real hc2 h3
-  show conjReflect (fun m => (resolventCoeff (dotConv (vpartial i v) (vpartial j v)) m
+  change conjReflect (fun m => (resolventCoeff (dotConv (vpartial i v) (vpartial j v)) m
       + (2 : ℂ) * resolventCoeff (dotConv (vlap v) (vpartial i (vpartial j v))) m)
       - (2 : ℂ) * ∑ k, resolventCoeff
           (dotConv (vpartial i (vpartial k v)) (vpartial j (vpartial k v))) m) = _
@@ -426,7 +438,7 @@ private lemma continuous_ofReal_of_contDiff {f : (Fin n → ℝ) → ℝ} (hf : 
 
 private lemma isPeriodic2Pi_const_mul {f : (Fin n → ℝ) → ℂ} (hf : IsPeriodic2Pi f) (c : ℂ) :
     IsPeriodic2Pi (fun x => c * f x) := fun x k => by
-  show c * f (x + periodicShift n k) = c * f x
+  change c * f (x + periodicShift n k) = c * f x
   rw [hf x k]
 
 /-- The position-space `F̃ᵢ`. -/
@@ -543,7 +555,7 @@ theorem vcoeff_Wfun (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (h
       (((1 / 2 : ℂ) * ((Util n v pq.1 pq.2 x : ℝ) : ℂ)) * ((dualB u₀ pq.1 pq.2 x α : ℝ) : ℂ)
         - ((1 / 2 : ℂ) * ((h x pq.1 pq.2 : ℝ) : ℂ)) * ((dualB u₀ pq.1 pq.2 x α : ℝ) : ℂ))) :=
     continuous_finsetSum _ fun pq _ => (ctU pq).sub (ctH pq)
-  show stdFourierCoeff n (fun x => ((Wfun n u₀ h v x α : ℝ) : ℂ)) = _
+  change stdFourierCoeff n (fun x => ((Wfun n u₀ h v x α : ℝ) : ℂ)) = _
   rw [hfun, stdFourierCoeff_add ctN ctS2, stdFourierCoeff_neg,
     stdFourierCoeff_finset_sum' _ (fun i _ => ctA i),
     stdFourierCoeff_finset_sum' (f := fun pq x =>
@@ -557,7 +569,7 @@ theorem vcoeff_Wfun (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (h
   rw [Finset.sum_congr rfl (fun i (_ : i ∈ Finset.univ) => congrFun (cA i) m)]
   rw [Finset.sum_congr rfl (fun pq (_ : pq ∈ pairs n) => by
     rw [stdFourierCoeff_sub (ctU pq) (ctH pq)]
-    show stdFourierCoeff n _ m - stdFourierCoeff n _ m = _
+    change stdFourierCoeff n _ m - stdFourierCoeff n _ m = _
     rw [cU2 pq, cH2 pq] :
     ∀ pq ∈ pairs n, stdFourierCoeff n (fun x =>
       ((1 / 2 : ℂ) * ((Util n v pq.1 pq.2 x : ℝ) : ℂ)) * ((dualB u₀ pq.1 pq.2 x α : ℝ) : ℂ)
@@ -612,7 +624,7 @@ theorem pderiv_dot_pderiv_vsynth (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N 
     constructor
     · exact ((pderiv_contDiff hFj.smooth i).add (pderiv_contDiff hFi.smooth j)).add hUij.smooth
     · intro y k
-      show pderiv i (Ftil n v j) (y + periodicShift n k)
+      change pderiv i (Ftil n v j) (y + periodicShift n k)
           + pderiv j (Ftil n v i) (y + periodicShift n k) + Util n v i j (y + periodicShift n k)
         = pderiv i (Ftil n v j) y + pderiv j (Ftil n v i) y + Util n v i j y
       rw [(hFj.pderiv i).periodic y k, (hFi.pderiv j).periodic y k, hUij.periodic y k]
@@ -709,7 +721,8 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
       (∀ x, (h x).IsSymm) → hSize n h < ε →
       ∃ v : (Fin n → ℝ) → (Fin N → ℝ), SmoothPeriodic v ∧
         ∀ (x : Fin n → ℝ) (i j : Fin n),
-          pderiv i (u₀ + v) x ⬝ᵥ pderiv j (u₀ + v) x = pderiv i u₀ x ⬝ᵥ pderiv j u₀ x + h x i j := by
+          pderiv i (u₀ + v) x ⬝ᵥ pderiv j (u₀ + v) x = pderiv i u₀ x ⬝ᵥ pderiv j u₀ x + h x i j
+              := by
   -- constants from the tame estimates (they depend on `u₀` only: the data `a, b`)
   set r := bLevel n with hr_def
   have hr2 : 1 + (n : ℝ) / 2 < (r : ℝ) - 2 := bLevel_gt n
@@ -765,11 +778,13 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
     have h1 : vcoeff n V = vcoeff n (Wfun n u₀ h v) := by
       rw [hV, vcoeff_vsynth hn hvrapid hvreal, vcoeff_Wfun hn hu hfree hh hvrapid hvreal, ← hvfix]
     have h2 := congrArg (vsynth n) h1
-    rwa [vsynth_vcoeff hn hVsp, vsynth_vcoeff hn (Wfun_smoothPeriodic hn hu hfree hh hvrapid hvreal)] at h2
+    rwa [vsynth_vcoeff hn hVsp, vsynth_vcoeff hn (Wfun_smoothPeriodic hn hu hfree hh hvrapid
+        hvreal)] at h2
   -- the ansatz, pointwise
   have hans1 : ∀ i x, V x ⬝ᵥ pderiv i u₀ x = -Ftil n v i x := by
     intro i x; rw [hVW]; exact Wfun_dot_pderiv hfree h v i x
-  have hans2 : ∀ i j x, V x ⬝ᵥ pderiv i (pderiv j u₀) x = (1 / 2 : ℝ) * (Util n v i j x - h x i j) := by
+  have hans2 : ∀ i j x, V x ⬝ᵥ pderiv i (pderiv j u₀) x = (1 / 2 : ℝ) * (Util n v i j x - h x i
+      j) := by
     intro i j x
     rcases le_or_gt i j with hij | hij
     · rw [hVW]; exact Wfun_dot_pderiv_pderiv hfree h v hij x
@@ -783,10 +798,10 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
   have hus := hu.smooth
   -- `∂ᵢ(u₀ + V) = ∂ᵢu₀ + ∂ᵢV`
   have hdi : pderiv i (u₀ + V) x = pderiv i u₀ x + pderiv i V x := by
-    show pderiv i (fun y => u₀ y + V y) x = _
+    change pderiv i (fun y => u₀ y + V y) x = _
     rw [pderiv_add hus hVs]
   have hdj : pderiv j (u₀ + V) x = pderiv j u₀ x + pderiv j V x := by
-    show pderiv j (fun y => u₀ y + V y) x = _
+    change pderiv j (fun y => u₀ y + V y) x = _
     rw [pderiv_add hus hVs]
   -- product rule: `∂ᵢ(V · ∂ⱼu₀) = ∂ᵢV · ∂ⱼu₀ + V · ∂ᵢ∂ⱼu₀`
   have hpr_i : pderiv i (fun y => V y ⬝ᵥ pderiv j u₀ y) x
@@ -796,8 +811,10 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
       = pderiv j V x ⬝ᵥ pderiv i u₀ x + V x ⬝ᵥ pderiv j (pderiv i u₀) x :=
     pderiv_dotProduct hVs (pderiv_contDiff hus i) j x
   -- `V · ∂ⱼu₀ = -F̃ⱼ` as functions, hence for their derivatives
-  have hfun_j : (fun y => V y ⬝ᵥ pderiv j u₀ y) = fun y => -Ftil n v j y := funext fun y => hans1 j y
-  have hfun_i : (fun y => V y ⬝ᵥ pderiv i u₀ y) = fun y => -Ftil n v i y := funext fun y => hans1 i y
+  have hfun_j : (fun y => V y ⬝ᵥ pderiv j u₀ y) = fun y => -Ftil n v j y := funext fun y =>
+      hans1 j y
+  have hfun_i : (fun y => V y ⬝ᵥ pderiv i u₀ y) = fun y => -Ftil n v i y := funext fun y =>
+      hans1 i y
   rw [hfun_j, pderiv_neg (Ftil n v j)] at hpr_i
   rw [hfun_i, pderiv_neg (Ftil n v i)] at hpr_j
   simp only at hpr_i hpr_j

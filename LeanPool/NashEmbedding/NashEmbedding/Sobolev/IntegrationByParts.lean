@@ -60,7 +60,7 @@ compact support (for smooth functions). -/
 lemma partialDeriv_hasCompactSupport {g : (Fin n → ℝ) → ℂ}
     (hg_supp : HasCompactSupport g) (j : Fin n) :
     HasCompactSupport (partialDeriv j g) := by
-  show HasCompactSupport (fun θ => fderiv ℝ g θ (Pi.single j 1))
+  change HasCompactSupport (fun θ => fderiv ℝ g θ (Pi.single j 1))
   exact HasCompactSupport.fderiv_apply (𝕜 := ℝ) hg_supp (Pi.single j 1)
 
 /-- Companion to `laplacian_contDiff`: the Laplacian preserves compact
@@ -141,7 +141,7 @@ lemma ftRn_partialDeriv_single
       hasDerivAt_update_of_hasFDerivAt hd j
     have hexp : HasDerivAt (fun t : ℝ => E (Function.update y j t))
                 (-(Complex.I * (ξ j : ℂ)) * E y) (y j) := by
-      show HasDerivAt (fun t : ℝ => Complex.exp
+      change HasDerivAt (fun t : ℝ => Complex.exp
               (-(Complex.I * ↑(∑ k, ξ k * (Function.update y j t) k))))
               (-(Complex.I * (ξ j : ℂ)) *
                 Complex.exp (-(Complex.I * ↑(∑ k, ξ k * y k)))) (y j)
@@ -169,7 +169,8 @@ lemma ftRn_partialDeriv_single
   have hIBP : ∫ y, E y * fderiv ℝ φ y (Pi.single j 1)
               = - ∫ y, fderiv ℝ E y (Pi.single j 1) * φ y :=
     integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable
-      hdE_phi_int hE_dphi_int hEφ_int (fun x _ => hE_diff.differentiableAt) (fun x _ => hφ_diff.differentiableAt)
+      hdE_phi_int hE_dphi_int hEφ_int (fun x _ => hE_diff.differentiableAt) (fun x _ =>
+          hφ_diff.differentiableAt)
   -- LHS is ftRn (partialDeriv j φ) ξ up to mul_comm.
   have hLHS : (∫ y, E y * fderiv ℝ φ y (Pi.single j 1))
               = ftRn n (partialDeriv j φ) ξ := by
@@ -210,7 +211,7 @@ lemma ftRn_finset_sum {ι : Type*} (s : Finset ι)
   set E : (Fin n → ℝ) → ℂ :=
     fun y => Complex.exp (-(Complex.I * ↑(∑ k, ξ k * y k))) with hE_def
   have hE_ct : Continuous E := by
-    show Continuous (fun y : (Fin n → ℝ) => Complex.exp _)
+    change Continuous (fun y : (Fin n → ℝ) => Complex.exp _)
     refine Complex.continuous_exp.comp ?_
     refine ((continuous_const.mul ?_).neg)
     refine Complex.continuous_ofReal.comp ?_
@@ -219,7 +220,7 @@ lemma ftRn_finset_sum {ι : Type*} (s : Finset ι)
   induction s using Finset.induction_on with
   | empty =>
     intro _ _
-    show (∫ _, (0 : ℂ) * _) = 0
+    change (∫ _, (0 : ℂ) * _) = 0
     simp
   | @insert i₀ s₀ hi_notin ih =>
     intro hf_ct hf_supp
@@ -230,7 +231,7 @@ lemma ftRn_finset_sum {ι : Type*} (s : Finset ι)
     have hf_supp_s : ∀ j ∈ s₀, HasCompactSupport (f j) :=
       fun j hj => hf_supp j (hs_sub j hj)
     have ih' := ih hf_ct_s hf_supp_s
-    show (∫ y, (∑ j ∈ insert i₀ s₀, f j y) * E y)
+    change (∫ y, (∑ j ∈ insert i₀ s₀, f j y) * E y)
        = ∑ j ∈ insert i₀ s₀, ftRn n (f j) ξ
     simp only [Finset.sum_insert hi_notin, add_mul]
     -- Compact support is on the LEFT factor (`f i₀`, then `∑ j ∈ s₀, f j`),

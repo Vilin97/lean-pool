@@ -148,7 +148,7 @@ theorem isOpen_quadForm_pos :
 theorem posDef_of_isSymm_of_quadForm_pos {A : Matrix (Fin N) (Fin N) ℝ} (hA : A.IsSymm)
     (hpos : ∀ x, x ≠ 0 → 0 < x ⬝ᵥ A.mulVec x) : A.PosDef := by
   refine Matrix.posDef_iff_dotProduct_mulVec.mpr ⟨?_, fun x hx => by simpa using hpos x hx⟩
-  show Aᴴ = A
+  change Aᴴ = A
   rw [Matrix.conjTranspose_eq_transpose_of_trivial]
   exact hA
 
@@ -164,7 +164,7 @@ def symmetrize (A : Matrix (Fin N) (Fin N) ℝ) : Matrix (Fin N) (Fin N) ℝ :=
 /-- **B3.** `symmetrize A` is symmetric, equals `A` when `A` is symmetric, has the same
   quadratic form as `A`, and `symmetrize` is smooth. -/
 theorem symmetrize_isSymm (A : Matrix (Fin N) (Fin N) ℝ) : (symmetrize A).IsSymm := by
-  show (symmetrize A)ᵀ = symmetrize A
+  change (symmetrize A)ᵀ = symmetrize A
   simp [symmetrize, Matrix.transpose_add, add_comm]
 
 theorem symmetrize_eq_self {A : Matrix (Fin N) (Fin N) ℝ} (hA : A.IsSymm) : symmetrize A = A := by
@@ -189,7 +189,7 @@ theorem quadForm_symmetrize (A : Matrix (Fin N) (Fin N) ℝ) (x : Fin N → ℝ)
 theorem contDiff_symmetrize :
     ContDiff ℝ ∞ (symmetrize : Matrix (Fin N) (Fin N) ℝ → Matrix (Fin N) (Fin N) ℝ) := by
   refine contDiff_pi.2 fun i => contDiff_pi.2 fun j => ?_
-  show ContDiff ℝ ∞ fun A : Matrix (Fin N) (Fin N) ℝ => (1 / 2 : ℝ) * (A i j + A j i)
+  change ContDiff ℝ ∞ fun A : Matrix (Fin N) (Fin N) ℝ => (1 / 2 : ℝ) * (A i j + A j i)
   have := ((contDiff_matrix_entry (N := N) i j).add (contDiff_matrix_entry j i)).const_smul
     (1 / 2 : ℝ)
   simpa [smul_eq_mul] using this
@@ -299,7 +299,7 @@ theorem periodicMatrixExt_eq_of_mem {G : (Fin N → ℝ) → Matrix (Fin N) (Fin
     refine periodicExtR_eq_self_of_mem (fun y hy => hsupp y fun h0 => hy ?_) hx
     rw [h0]
     simp
-  show (1 : Matrix (Fin N) (Fin N) ℝ) i j + periodicExtR N (fun y => (G y - 1) i j) x = G x i j
+  change (1 : Matrix (Fin N) (Fin N) ℝ) i j + periodicExtR N (fun y => (G y - 1) i j) x = G x i j
   rw [h, Matrix.sub_apply]
   ring
 
@@ -345,7 +345,7 @@ theorem formMatrix_posDef (B : EuclideanSpace ℝ (Fin N) →L[ℝ] EuclideanSpa
     (hsymm : ∀ a b, B a b = B b a) (hpos : ∀ a, a ≠ 0 → 0 < B a a) :
     (formMatrix B).PosDef := by
   refine Matrix.posDef_iff_dotProduct_mulVec.mpr ⟨?_, ?_⟩
-  · show (formMatrix B)ᴴ = formMatrix B
+  · change (formMatrix B)ᴴ = formMatrix B
     rw [Matrix.conjTranspose_eq_transpose_of_trivial]
     ext i j
     simp [formMatrix, Matrix.transpose_apply, hsymm]
@@ -360,7 +360,7 @@ theorem contDiff_formMatrix :
     ContDiff ℝ ∞ (formMatrix : (EuclideanSpace ℝ (Fin N) →L[ℝ] EuclideanSpace ℝ (Fin N) →L[ℝ] ℝ) →
       Matrix (Fin N) (Fin N) ℝ) := by
   refine contDiff_pi.2 fun i => contDiff_pi.2 fun j => ?_
-  show ContDiff ℝ ∞ fun B : EuclideanSpace ℝ (Fin N) →L[ℝ] EuclideanSpace ℝ (Fin N) →L[ℝ] ℝ =>
+  change ContDiff ℝ ∞ fun B : EuclideanSpace ℝ (Fin N) →L[ℝ] EuclideanSpace ℝ (Fin N) →L[ℝ] ℝ =>
     B (EuclideanSpace.single i 1) (EuclideanSpace.single j 1)
   exact (contDiff_id.clm_apply contDiff_const).clm_apply contDiff_const
 

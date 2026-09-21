@@ -85,7 +85,7 @@ independent at every point). -/
 lemma gramMetric_posDef_of_free {u : (Fin n → ℝ) → (Fin N → ℝ)} (hfree : IsFree u) (x : Fin n → ℝ) :
     (gramMetric u x).PosDef := by
   refine Matrix.PosDef.of_dotProduct_mulVec_pos ?_ ?_
-  · show (gramMetric u x)ᴴ = gramMetric u x
+  · change (gramMetric u x)ᴴ = gramMetric u x
     rw [Matrix.conjTranspose_eq_transpose_of_trivial]
     exact gramMetric_symm u x
   · intro v hv
@@ -97,7 +97,8 @@ lemma gramMetric_posDef_of_free {u : (Fin n → ℝ) → (Fin N → ℝ)} (hfree
       congr 1
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [dotProduct_comm, mul_comm]
-    have hR : v ⬝ᵥ (gramMetric u x).mulVec v = ∑ i, v i * ∑ j, (pderiv i u x ⬝ᵥ pderiv j u x) * v j := by
+    have hR : v ⬝ᵥ (gramMetric u x).mulVec v = ∑ i, v i * ∑ j, (pderiv i u x ⬝ᵥ pderiv j u x) *
+        v j := by
       simp only [mulVec, dotProduct, gramMetric]
     have hw0 : w ≠ 0 := by
       intro h0
@@ -179,15 +180,16 @@ theorem exists_delta_posDef_sub {g g₀ : (Fin n → ℝ) → Matrix (Fin n) (Fi
   set h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ := fun x => (-δ) • g₀ x with hhdef
   have hcont : Continuous h := by
     refine continuous_matrix fun i j => ?_
-    exact ((continuous_apply j).comp ((continuous_apply i).comp hg₀.smooth.continuous)).const_smul (-δ)
+    exact ((continuous_apply j).comp ((continuous_apply i).comp
+        hg₀.smooth.continuous)).const_smul (-δ)
   have hper : IsPeriodic2Pi h := fun x k => by simp only [hhdef, hg₀.periodic x k]
   have hherm : ∀ x, (h x).IsHermitian := by
     intro x
-    show ((-δ) • g₀ x)ᴴ = (-δ) • g₀ x
+    change ((-δ) • g₀ x)ᴴ = (-δ) • g₀ x
     rw [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_smul, (hsymm x).eq]
   have hnorm : ∀ x, matOpNorm (h x) < η := by
     intro x
-    show matOpNorm ((-δ) • g₀ x) < η
+    change matOpNorm ((-δ) • g₀ x) < η
     rw [matOpNorm_smul, abs_neg, abs_of_pos hδ]
     have h1 : δ * matOpNorm (g₀ x) ≤ δ * M := mul_le_mul_of_nonneg_left (hM x) hδ.le
     have h2 : δ * (M + 1) = η := by
@@ -197,15 +199,16 @@ theorem exists_delta_posDef_sub {g g₀ : (Fin n → ℝ) → Matrix (Fin n) (Fi
   refine ⟨δ, hδ, ⟨⟨?_, ?_⟩, ?_⟩⟩
   · have hdiff : ContDiff ℝ ∞ (fun x => δ • g₀ x) := by
       refine contDiff_matrix fun i j => ?_
-      exact contDiff_const.mul ((contDiff_apply _ _ j).comp ((contDiff_apply _ _ i).comp hg₀.smooth))
+      exact contDiff_const.mul ((contDiff_apply _ _ j).comp ((contDiff_apply _ _ i).comp
+          hg₀.smooth))
     exact hg.smoothPeriodic.smooth.sub hdiff
   · intro x k
-    show g (x + periodicShift n k) - δ • g₀ (x + periodicShift n k) = g x - δ • g₀ x
+    change g (x + periodicShift n k) - δ • g₀ (x + periodicShift n k) = g x - δ • g₀ x
     rw [hg.smoothPeriodic.periodic x k, hg₀.periodic x k]
   · intro x
     have := hposdef x
     have heq : g x + h x = (g - δ • g₀) x := by
-      show g x + (-δ) • g₀ x = g x - δ • g₀ x
+      change g x + (-δ) • g₀ x = g x - δ • g₀ x
       rw [neg_smul, ← sub_eq_add_neg]
     rwa [heq] at this
 

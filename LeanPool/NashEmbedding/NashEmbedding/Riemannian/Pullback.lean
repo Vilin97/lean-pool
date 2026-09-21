@@ -138,7 +138,7 @@ theorem pullbackForm_trivialization_apply (f : M → N)
       pullbackForm (I := I) (J := J) f h x (tcoord I x₀ x a) (tcoord I x₀ x b) := by
   have hb : x ∈ (trivializationAt E (TangentSpace I) x₀).baseSet := by simpa using hx
   rw [hom_trivializationAt_apply, inCoordinates_apply_eq₂ hb hb (Set.mem_univ _)]
-  simp [tcoord]
+  simp? [tcoord]
   exact congrArg₂ (fun v w : TangentSpace I x =>
     pullbackFormT (I := I) (J := J) f h x v w)
     (Trivialization.symmL_apply (R := ℝ) _ hb a).symm
@@ -164,7 +164,7 @@ omit [FiniteDimensional ℝ E] [FiniteDimensional ℝ F] in
 theorem inTangentCoordinates_mfderiv_eq'' {f : M → N} (x₀ x : M) :
     inTangentCoordinates I J id f (mfderiv I J f) x₀ x =
       tcoordInv J (f x₀) (f x) ∘L mdiff (I := I) (J := J) f x ∘L tcoord I x₀ x := by
-  show ContinuousLinearMap.inCoordinates E (TangentSpace I) F (TangentSpace J) x₀ x
+  change ContinuousLinearMap.inCoordinates E (TangentSpace I) F (TangentSpace J) x₀ x
       (f x₀) (f x) (mfderiv I J f x) = _
   rw [ContinuousLinearMap.inCoordinates]
   rfl
@@ -214,7 +214,7 @@ theorem pullbackForm_contMDiff {f : M → N}
     inTangentCoordinates_mfderiv_eq'' x₀ x
   ext a b
   rw [pullbackForm_trivialization_apply f h hx, pullbackForm_apply]
-  show _ = ht (f x) (Lt x a) (Lt x b)
+  change _ = ht (f x) (Lt x a) (Lt x b)
   rw [htdef, metric_trivialization_apply h hfx, hLtx]
   simp only [ContinuousLinearMap.coe_comp, Function.comp_apply]
   rw [tcoord_tcoordInv hfx, tcoord_tcoordInv hfx]

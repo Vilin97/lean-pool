@@ -75,7 +75,7 @@ lemma pderiv_comm {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
         = (ContinuousLinearMap.apply ℝ V w).comp (fderiv ℝ (fderiv ℝ f) y) :=
     fun w y => ((ContinuousLinearMap.apply ℝ V w).hasFDerivAt.comp y (hgd y).hasFDerivAt).fderiv
   funext x
-  show fderiv ℝ (fun y => fderiv ℝ f y (Pi.single j 1)) x (Pi.single i 1)
+  change fderiv ℝ (fun y => fderiv ℝ f y (Pi.single j 1)) x (Pi.single i 1)
       = fderiv ℝ (fun y => fderiv ℝ f y (Pi.single i 1)) x (Pi.single j 1)
   rw [key, key]
   simpa using
@@ -87,7 +87,7 @@ lemma pderiv_finset_sum {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     {ι : Type*} (s : Finset ι) {f : ι → (Fin n → ℝ) → V}
     (hf : ∀ k ∈ s, ContDiff ℝ ∞ (f k)) (i : Fin n) (x : Fin n → ℝ) :
     pderiv i (fun y => ∑ k ∈ s, f k y) x = ∑ k ∈ s, pderiv i (f k) x := by
-  show fderiv ℝ _ x _ = _
+  change fderiv ℝ _ x _ = _
   rw [fderiv_fun_sum (fun k hk => ((hf k hk).differentiable (by simp)) x)]
   simp [pderiv]
 
@@ -96,7 +96,7 @@ lemma pderiv_add {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     {f g : (Fin n → ℝ) → V} (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (i : Fin n) (x : Fin n → ℝ) :
     pderiv i (fun y => f y + g y) x = pderiv i f x + pderiv i g x := by
-  show fderiv ℝ _ x _ = _
+  change fderiv ℝ _ x _ = _
   rw [fderiv_fun_add (hf.differentiable (by simp) x) (hg.differentiable (by simp) x)]
   simp [pderiv]
 
@@ -105,7 +105,7 @@ lemma pderiv_sub {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     {f g : (Fin n → ℝ) → V} (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)
     (i : Fin n) (x : Fin n → ℝ) :
     pderiv i (fun y => f y - g y) x = pderiv i f x - pderiv i g x := by
-  show fderiv ℝ _ x _ = _
+  change fderiv ℝ _ x _ = _
   rw [fderiv_fun_sub (hf.differentiable (by simp) x) (hg.differentiable (by simp) x)]
   simp [pderiv]
 
@@ -113,7 +113,7 @@ lemma pderiv_sub {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 lemma pderiv_const_smul {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     {f : (Fin n → ℝ) → V} (hf : ContDiff ℝ ∞ f) (c : ℝ) (i : Fin n) (x : Fin n → ℝ) :
     pderiv i (fun y => c • f y) x = c • pderiv i f x := by
-  show fderiv ℝ _ x _ = _
+  change fderiv ℝ _ x _ = _
   rw [fderiv_fun_const_smul (hf.differentiable (by simp) x) c]
   simp [pderiv]
 
@@ -154,7 +154,7 @@ lemma pderiv_dotProduct {N : ℕ} {u v : (Fin n → ℝ) → (Fin N → ℝ)}
   rw [h1, pderiv_finset_sum _ (fun k _ => (hcomp hu k).mul (hcomp hv k))]
   simp only [dotProduct, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl (fun k _ => ?_)
-  show fderiv ℝ (fun y => u y k * v y k) x _ = _
+  change fderiv ℝ (fun y => u y k * v y k) x _ = _
   rw [fderiv_fun_mul ((hcomp hu k).differentiable (by simp) x)
     ((hcomp hv k).differentiable (by simp) x)]
   simp only [_root_.add_apply, _root_.smul_apply, smul_eq_mul,
@@ -205,7 +205,7 @@ theorem gunther_identity {N : ℕ} {v : (Fin n → ℝ) → (Fin N → ℝ)} (hv
   rw [pderiv_dotProduct hL (hd j), pderiv_dotProduct hL (hd i), hLa i, hLa j,
     pderiv_comm hv j i]
   -- expand the left-hand side
-  show ∑ k : Fin n, pderiv k (pderiv k (fun y => pderiv i v y ⬝ᵥ pderiv j v y)) x = _
+  change ∑ k : Fin n, pderiv k (pderiv k (fun y => pderiv i v y ⬝ᵥ pderiv j v y)) x = _
   simp only [h2, Finset.sum_add_distrib, sum_dotProduct, ← Finset.mul_sum]
   simp only [sumSqDeriv]
   have hsym : ∀ k, pderiv k (pderiv i v) x ⬝ᵥ pderiv k (pderiv j v) x

@@ -75,7 +75,7 @@ example {n : ℕ} (hn : 0 < n) :
     expNegInvGlue.contDiff.comp
       (Real.contDiff_sin.comp (contDiff_apply ℝ ℝ (⟨0, hn⟩ : Fin n)))
   periodic := fun x k => by
-    show expNegInvGlue (Real.sin ((x + periodicShift n k) ⟨0, hn⟩)) =
+    change expNegInvGlue (Real.sin ((x + periodicShift n k) ⟨0, hn⟩)) =
          expNegInvGlue (Real.sin (x ⟨0, hn⟩))
     congr 1
     have h : (x + periodicShift n k) ⟨0, hn⟩

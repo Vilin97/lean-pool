@@ -114,7 +114,8 @@ lemma etaDerivMass_pos (n : ℕ) : 0 < etaDerivMass n := by
   have hnc : ∃ t, deriv (eta n) t ≠ 0 := by
     by_contra h
     push Not at h
-    have hdiff : Differentiable ℝ (eta n) := (eta_contDiff n).differentiable NashEmbedding.Sobolev.infty_ne_zero
+    have hdiff : Differentiable ℝ (eta n) := (eta_contDiff n).differentiable
+        NashEmbedding.Sobolev.infty_ne_zero
     have hconst := is_const_of_deriv_eq_zero hdiff h
     have h1 := hconst 0 (bumpRadius n)
     rw [eta_zero, eta_eq_zero_of_le (by rw [abs_of_pos (bumpRadius_pos n)])] at h1
@@ -179,7 +180,8 @@ lemma integral_deriv_dil_sq (n : ℕ) {β : ℝ} (hβ : 0 < β) :
 
 lemma integral_dil_mul_deriv (n : ℕ) {β : ℝ} (hβ : 0 < β) :
     ∫ t, dil n β t * deriv (dil n β) t = 0 := by
-  have hd : Differentiable ℝ (dil n β) := (dil_contDiff n β).differentiable NashEmbedding.Sobolev.infty_ne_zero
+  have hd : Differentiable ℝ (dil n β) := (dil_contDiff n β).differentiable
+      NashEmbedding.Sobolev.infty_ne_zero
   have hint : ∀ f g : ℝ → ℝ, Continuous f → Continuous g → HasCompactSupport g →
       Integrable (fun t => f t * g t) := fun f g hf hg hgs =>
     (hf.mul hg).integrable_of_hasCompactSupport (hgs.mul_left)
@@ -251,7 +253,8 @@ lemma fderiv_prodBump_single (β : Fin n → ℝ) (y : Fin n → ℝ) (i : Fin n
   have h2 : HasDerivAt (fun t => prodBump n β (Function.update y i t))
       (deriv (dil n (β i)) (y i) * ∏ k ∈ Finset.univ.erase i, dil n (β k) (y k)) (y i) := by
     simp_rw [prodBump_update]
-    exact ((dil_contDiff n (β i)).differentiable NashEmbedding.Sobolev.infty_ne_zero (y i)).hasDerivAt.mul_const _
+    exact ((dil_contDiff n (β i)).differentiable NashEmbedding.Sobolev.infty_ne_zero (y
+        i)).hasDerivAt.mul_const _
   rw [h1.unique h2, ← Finset.mul_prod_erase Finset.univ (fun k => factor n β i k (y k))
     (Finset.mem_univ i)]
   simp only [factor, ite_true]
@@ -362,7 +365,8 @@ def prodBumpPD (n : ℕ) (β : Fin n → ℝ) (k : Fin n) (y : Fin n → ℝ) : 
   fderiv ℝ (prodBump n β) y (Pi.single k 1)
 
 lemma prodBumpPD_continuous (β : Fin n → ℝ) (k : Fin n) : Continuous (prodBumpPD n β k) :=
-  ((prodBump_contDiff β).continuous_fderiv NashEmbedding.Sobolev.infty_ne_zero).clm_apply continuous_const
+  ((prodBump_contDiff β).continuous_fderiv NashEmbedding.Sobolev.infty_ne_zero).clm_apply
+      continuous_const
 
 lemma prodBumpPD_hasCompactSupport {β : Fin n → ℝ} (hβ : ∀ k, 1 ≤ β k) (k : Fin n) :
     HasCompactSupport (prodBumpPD n β k) :=
@@ -388,12 +392,14 @@ theorem gram_rotBump {β : Fin n → ℝ} (hβ : ∀ k, 1 ≤ β k) {M : Matrix 
     simp only [prodBumpPD]; ring
   simp_rw [hsum]
   have hint : ∀ k l : Fin n, Integrable
-      (fun x => M k i * M l j * (fun y => prodBumpPD n β k y * prodBumpPD n β l y) (M.mulVec x)) := by
+      (fun x => M k i * M l j * (fun y => prodBumpPD n β k y * prodBumpPD n β l y) (M.mulVec x))
+          := by
     intro k l
     refine Integrable.const_mul ?_ _
     refine integrable_comp_mulVec hdet
       ((prodBumpPD_continuous β k).mul (prodBumpPD_continuous β l)) ?_
-    exact ((prodBumpPD_continuous β k).mul (prodBumpPD_continuous β l)).integrable_of_hasCompactSupport
+    exact ((prodBumpPD_continuous β k).mul (prodBumpPD_continuous β
+        l)).integrable_of_hasCompactSupport
       ((prodBumpPD_hasCompactSupport hβ l).mul_left)
   rw [integral_finsetSum _ (fun k _ => integrable_finsetSum _ (fun l _ => hint k l))]
   simp_rw [integral_finsetSum _ (fun l _ => hint _ l), integral_const_mul]
@@ -540,7 +546,8 @@ theorem exists_bump_gram_approx {B : Matrix (Fin n) (Fin n) ℝ} (hB : B.PosSemi
     have hsq : (bumpRadius n * Real.sqrt n) ^ 2 = n * bumpRadius n ^ 2 := by
       rw [mul_pow, Real.sq_sqrt (Nat.cast_nonneg n)]; ring
     have hxj2 : x j ^ 2 < (bumpRadius n * Real.sqrt n) ^ 2 := by rw [hsq]; linarith
-    have hpos : 0 ≤ bumpRadius n * Real.sqrt n := mul_nonneg (bumpRadius_pos n).le (Real.sqrt_nonneg _)
+    have hpos : 0 ≤ bumpRadius n * Real.sqrt n := mul_nonneg (bumpRadius_pos n).le
+        (Real.sqrt_nonneg _)
     calc |x j| = Real.sqrt (x j ^ 2) := (Real.sqrt_sq_eq_abs _).symm
       _ < Real.sqrt ((bumpRadius n * Real.sqrt n) ^ 2) :=
           Real.sqrt_lt_sqrt (sq_nonneg _) hxj2
@@ -572,7 +579,8 @@ theorem exists_bump_gram_approx {B : Matrix (Fin n) (Fin n) ℝ} (hB : B.PosSemi
       rw [hβsq, hAsq]
       field_simp
     rw [hg, hspec i j, ← Finset.sum_sub_distrib]
-    have hterm : ∀ k, U i k * U j k * d k - U i k * U j k * lam k = U i k * U j k * (d k - lam k) := by
+    have hterm : ∀ k, U i k * U j k * d k - U i k * U j k * lam k = U i k * U j k * (d k - lam
+        k) := by
       intro k; ring
     simp_rw [hterm]
     calc |∑ k, U i k * U j k * (d k - lam k)|

@@ -74,7 +74,8 @@ lemma continuous_ftRn (φ : (Fin n → ℝ) → ℂ) (hφ : Integrable φ) :
       intro ξ;
       refine' MeasureTheory.tendsto_integral_filter_of_dominated_convergence _ _ _ _ _;
       refine' fun x => ‖φ x‖;
-      · exact Filter.Eventually.of_forall fun x => hφ.1.mul ( Continuous.aestronglyMeasurable ( by continuity ) );
+      · exact Filter.Eventually.of_forall fun x => hφ.1.mul ( Continuous.aestronglyMeasurable (
+          by continuity ) );
       · norm_num [ Complex.norm_exp ];
       · exact hφ.norm;
       · exact Filter.Eventually.of_forall fun x => Continuous.tendsto ( by continuity ) _
@@ -125,12 +126,16 @@ then `φ * u ∈ H^s`.
 theorem memSobolevDistrib_convDistrib (φ : (Fin n → ℝ) → ℂ) (hφ : Integrable φ)
     {s : ℝ} {u : TrigPolyDual n} (hu : MemSobolevDistrib n s u) :
     MemSobolevDistrib n s (convDistrib n φ u) := by
-      refine' .of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg s m ) ( sq_nonneg _ ) ) ( fun m => _ ) ( hu.mul_left ( ( ∫ y, ‖φ y‖ ) ^ 2 ) );
+      refine' .of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg s m ) ( sq_nonneg _ ) ) (
+          fun m => _ ) ( hu.mul_left ( ( ∫ y, ‖φ y‖ ) ^ 2 ) );
       rw [ mul_comm ];
       rw [ mul_left_comm ];
       rw [ mul_comm ];
       rw [ fourierCoeffDistrib_convDistrib ];
-      exact mul_le_mul_of_nonneg_left ( by rw [ norm_mul, mul_pow ] ; exact mul_le_mul_of_nonneg_right ( pow_le_pow_left₀ ( norm_nonneg _ ) ( ftRn_norm_le φ hφ _ ) 2 ) ( sq_nonneg _ ) ) ( weight_nonneg s m )
+      apply mul_le_mul_of_nonneg_left _ (weight_nonneg s m)
+      rw [norm_mul, mul_pow]
+      exact mul_le_mul_of_nonneg_right
+        (pow_le_pow_left₀ (norm_nonneg _) (ftRn_norm_le φ hφ _) 2) (sq_nonneg _)
 
 /-! ## ℂ-linearity in u (Lemma) -/
 
@@ -167,7 +172,8 @@ lemma ftRn_rescale (φ : (Fin n → ℝ) → ℂ) (_hφ : Integrable φ)
       unfold ftRn rescale;
       -- Apply the change of variables $z = \epsilon^{-1} y$ to the integral.
       have h_change : ∀ {f : (Fin n → ℝ) → ℂ}, ∫ y, f y = ∫ z, f (ε • z) * ε ^ n := by
-        intro f; rw [ MeasureTheory.integral_mul_const ] ; rw [ MeasureTheory.Measure.integral_comp_smul ] ; norm_num [ hε.ne' ] ;
+        intro f; rw [ MeasureTheory.integral_mul_const ] ; rw [
+            MeasureTheory.Measure.integral_comp_smul ] ; norm_num [ hε.ne' ] ;
         rw [ abs_of_pos hε, inv_mul_eq_div, div_mul_cancel₀ _ ( by norm_cast; positivity ) ];
       convert h_change using 3 ; norm_num [ hε.ne', mul_assoc, mul_left_comm, mul_comm ]
 
@@ -199,28 +205,40 @@ theorem mollifier_convergence (φ : (Fin n → ℝ) → ℂ)
         case hab =>
           intro m;
           -- By definition of $fourierCoeffDistrib$, we know that
-          have h_fourierCoeffDistrib : ∀ x > 0, fourierCoeffDistrib (convDistrib n (rescale n φ x) u - ftRn n φ 0 • u) m = (ftRn n φ (x • (fun j => (m j : ℝ))) - ftRn n φ 0) * fourierCoeffDistrib u m := by
+          have h_fourierCoeffDistrib : ∀ x > 0, fourierCoeffDistrib (convDistrib n (rescale n φ
+              x) u - ftRn n φ 0 • u) m = (ftRn n φ (x • (fun j => (m j : ℝ))) - ftRn n φ 0) *
+              fourierCoeffDistrib u m := by
             intro x hx
             rw [fourierCoeffDistrib_sub, fourierCoeffDistrib_convDistrib,
               fourierCoeffDistrib_smul_complex, ftRn_rescale _ hφ hx]
             ring
-          rw [ Filter.tendsto_congr' ( Filter.eventuallyEq_of_mem self_mem_nhdsWithin fun x hx => by rw [ h_fourierCoeffDistrib x hx ] ) ];
+          rw [ Filter.tendsto_congr' ( Filter.eventuallyEq_of_mem self_mem_nhdsWithin fun x hx
+              => by rw [ h_fourierCoeffDistrib x hx ] ) ];
           refine' tendsto_nhdsWithin_of_tendsto_nhds _;
           refine' Continuous.tendsto' _ _ _ _ <;> norm_num;
-          exact Continuous.mul continuous_const <| Continuous.pow ( Continuous.mul ( Continuous.norm <| Continuous.sub ( continuous_ftRn _ hφ |> Continuous.comp <| continuous_id.smul continuous_const ) continuous_const ) continuous_const ) _;
+          exact Continuous.mul continuous_const <| Continuous.pow ( Continuous.mul (
+              Continuous.norm <| Continuous.sub ( continuous_ftRn _ hφ |> Continuous.comp <|
+              continuous_id.smul continuous_const ) continuous_const ) continuous_const ) _;
         case hbound =>
           refine' Filter.eventually_of_mem self_mem_nhdsWithin fun ε hε => fun m => _;
-          rw [ fourierCoeffDistrib_sub, fourierCoeffDistrib_convDistrib, fourierCoeffDistrib_smul_complex ];
-          rw [ show ftRn n ( rescale n φ ε ) ( fun j => ( m j : ℝ ) ) = ftRn n φ ( ε • fun j => ( m j : ℝ ) ) from ftRn_rescale _ hφ hε _ ];
+          rw [ fourierCoeffDistrib_sub, fourierCoeffDistrib_convDistrib,
+              fourierCoeffDistrib_smul_complex ];
+          rw [ show ftRn n ( rescale n φ ε ) ( fun j => ( m j : ℝ ) ) = ftRn n φ ( ε • fun j =>
+              ( m j : ℝ ) ) from ftRn_rescale _ hφ hε _ ];
           -- Apply the triangle inequality to the norm.
-          have h_triangle : ‖ftRn n φ (ε • fun j => (m j : ℝ)) * fourierCoeffDistrib u m - ftRn n φ 0 * fourierCoeffDistrib u m‖ ≤ (2 * ∫ y, ‖φ y‖) * ‖fourierCoeffDistrib u m‖ := by
-            have h_triangle : ‖ftRn n φ (ε • fun j => (m j : ℝ)) - ftRn n φ 0‖ ≤ 2 * ∫ y, ‖φ y‖ := by
-              have h_triangle : ‖ftRn n φ (ε • fun j => (m j : ℝ))‖ ≤ ∫ y, ‖φ y‖ ∧ ‖ftRn n φ 0‖ ≤ ∫ y, ‖φ y‖ := by
+          have h_triangle : ‖ftRn n φ (ε • fun j => (m j : ℝ)) * fourierCoeffDistrib u m - ftRn
+              n φ 0 * fourierCoeffDistrib u m‖ ≤ (2 * ∫ y, ‖φ y‖) * ‖fourierCoeffDistrib u m‖ := by
+            have h_triangle : ‖ftRn n φ (ε • fun j => (m j : ℝ)) - ftRn n φ 0‖ ≤ 2 * ∫ y, ‖φ y‖
+                := by
+              have h_triangle : ‖ftRn n φ (ε • fun j => (m j : ℝ))‖ ≤ ∫ y, ‖φ y‖ ∧ ‖ftRn n φ 0‖
+                  ≤ ∫ y, ‖φ y‖ := by
                 exact ⟨ ftRn_norm_le _ hφ _, ftRn_norm_le _ hφ _ ⟩;
               exact le_trans ( norm_sub_le _ _ ) ( by linarith );
-            simpa only [ ← sub_mul ] using by rw [ norm_mul ] ; exact mul_le_mul_of_nonneg_right h_triangle ( norm_nonneg _ ) ;
+            rw [← sub_mul, norm_mul]
+            exact mul_le_mul_of_nonneg_right h_triangle (norm_nonneg _)
           rw [ Real.norm_of_nonneg ( by exact mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ];
-          simpa only [ mul_pow, mul_assoc ] using mul_le_mul_of_nonneg_left ( pow_le_pow_left₀ ( norm_nonneg _ ) h_triangle 2 ) ( weight_nonneg _ _ )
+          simpa only [ mul_pow, mul_assoc ] using mul_le_mul_of_nonneg_left ( pow_le_pow_left₀ (
+              norm_nonneg _ ) h_triangle 2 ) ( weight_nonneg _ _ )
 
 end NashEmbedding.Sobolev
 

@@ -97,7 +97,7 @@ theorem isInvertible_adjoint_comp_self {L : E →L[ℝ] E'} (hL : Injective L) :
     have h3 : ‖L x‖ ^ 2 = RCLike.re (inner ℝ ((L.adjoint ∘L L) x) x) :=
       ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_left L x
     rw [hx0] at h3
-    simp at h3
+    simp? at h3
     exact hL (by rw [h3, map_zero])
   have hrange : (L.adjoint ∘L L : E →L[ℝ] E).toLinearMap.range = ⊤ :=
     LinearMap.range_eq_top.mpr
@@ -142,7 +142,7 @@ theorem pinv_comp_equiv {F : Type*} [NormedAddCommGroup F] [InnerProductSpace �
       (S : F →L[ℝ] E).adjoint ∘L ((L.adjoint ∘L L) ∘L (S : F →L[ℝ] E)) := by
     rw [ContinuousLinearMap.adjoint_comp]
     simp [ContinuousLinearMap.comp_assoc]
-  show ContinuousLinearMap.inverse _ ∘L _ = _
+  change ContinuousLinearMap.inverse _ ∘L _ = _
   rw [key, hSadj.inverse_comp_of_left, hS.inverse_comp_of_right,
     ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.inverse_equiv]
   simp only [ContinuousLinearMap.comp_assoc]
@@ -195,7 +195,7 @@ theorem inTangentCoordinates_mfderiv_eq {u : M → E'} {x₀ x : M}
     (_hx : x ∈ (chartAt H x₀).source) :
     inTangentCoordinates I 𝓘(ℝ, E') id u (mfderiv I 𝓘(ℝ, E') u) x₀ x =
       diff (I := I) u x ∘L tcoord I x₀ x := by
-  show ContinuousLinearMap.inCoordinates E (TangentSpace I) E' (TangentSpace 𝓘(ℝ, E')) x₀ x
+  change ContinuousLinearMap.inCoordinates E (TangentSpace I) E' (TangentSpace 𝓘(ℝ, E')) x₀ x
       (u x₀) (u x) (mfderiv I 𝓘(ℝ, E') u x) = _
   rw [ContinuousLinearMap.inCoordinates]
   simp only [TangentBundle.continuousLinearMapAt_model_space, ContinuousLinearMap.one_def]
@@ -236,7 +236,7 @@ theorem metric_trivialization_apply
   -- `FiberBundle.mem_baseSet_trivializationAt`-style from `hx`.
   have hb : x ∈ (trivializationAt E (TangentSpace I) x₀).baseSet := by simpa using hx
   rw [hom_trivializationAt_apply, inCoordinates_apply_eq₂ hb hb (Set.mem_univ _)]
-  simp [metricAt, tcoord]
+  simp? [metricAt, tcoord]
   exact congrArg₂ (fun u v : TangentSpace I x => g.inner x u v)
     (Trivialization.symmL_apply (R := ℝ) _ hb a).symm
     (Trivialization.symmL_apply (R := ℝ) _ hb b).symm
@@ -319,7 +319,8 @@ theorem exists_ambient_metric (g : ContMDiffRiemannianMetric I ∞ E (TangentSpa
   --   `metricAt g x = (trivialized metric).bilinearComp (tcoord)⁻¹ (tcoord)⁻¹` (L7'),
   -- so `ambientMetric g u x = (trivialized metric x).bilinearComp (pinv (Lt x)) (pinv (Lt x))
   --   + (innerBilin E').bilinearComp (1 - Lt x ∘L pinv (Lt x)) (…)`, a smooth expression in
-  -- the smooth `Lt x` (L6), the smooth trivialized metric (L7), and `pinv` (L4, `ContDiff.comp_contMDiff`);
+  -- the smooth `Lt x` (L6), the smooth trivialized metric (L7), and `pinv` (L4,
+  -- `ContDiff.comp_contMDiff`);
   -- conclude with `ContMDiffAt.congr_of_eventuallyEq` on the chart source.
   have hinj' : ∀ x, Injective (diff (I := I) u x) := hinj
   have happ : ∀ (x : M) (a b : E'), ambientMetric g u x a b =

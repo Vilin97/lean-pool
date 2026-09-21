@@ -246,7 +246,8 @@ structure VecTame (n N r : ℕ) (Q : VecSeq n N → VecSeq n N → VecSeq n N) (
 
 lemma ScalarTame.add {r : ℕ} {Q₁ Q₂ : VecSeq n N → VecSeq n N → Seq n} {A₁ A₂ : ℝ} {B₁ B₂ : ℕ → ℝ}
     (h₁ : ScalarTame n N r Q₁ A₁ B₁) (h₂ : ScalarTame n N r Q₂ A₂ B₂) :
-    ScalarTame n N r (fun v w m => Q₁ v w m + Q₂ v w m) (2 * (A₁ + A₂)) (fun k => 2 * (B₁ k + B₂ k)) := by
+    ScalarTame n N r (fun v w m => Q₁ v w m + Q₂ v w m) (2 * (A₁ + A₂)) (fun k => 2 * (B₁ k + B₂
+        k)) := by
   refine ⟨by linarith [h₁.A'_nonneg, h₂.A'_nonneg], fun k => by
     linarith [h₁.Bk_nonneg k, h₂.Bk_nonneg k], ?_, ?_, ?_, ?_⟩
   · intro k hk v w hv hw
@@ -284,7 +285,8 @@ lemma ScalarTame.const_mul {r : ℕ} {Q : VecSeq n N → VecSeq n N → Seq n} {
     exact (h.mem k hk v w hv hw).smul (c : ℂ)
   · intro k hk v w hv hw
     have hb := h.bound k hk v w hv hw
-    have heq : sobolevNormSq n k (fun m => (c : ℂ) * Q v w m) = c ^ 2 * sobolevNormSq n k (Q v w) := by
+    have heq : sobolevNormSq n k (fun m => (c : ℂ) * Q v w m) = c ^ 2 * sobolevNormSq n k (Q v
+        w) := by
       rw [sobolevNormSq_smul, hnorm]
     rw [heq]
     nlinarith [mul_le_mul_of_nonneg_left hb hc2]
@@ -611,20 +613,20 @@ theorem ScalarTame.smulSeq (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) / 2 < r)
       linarith only [mul_nonneg hP hF1, mul_nonneg hR hF2, mul_nonneg hS hF3, mul_nonneg hT hF3,
         mul_nonneg hU hF0, mul_nonneg hV hF0]
     have hfinal := mul_le_mul_of_nonneg_right hbracket hlow0
-    show vecNormSq n N (k : ℝ) (NashEmbedding.smulSeq (Q v w) a) ≤ _
+    change vecNormSq n N (k : ℝ) (NashEmbedding.smulSeq (Q v w) a) ≤ _
     unfold smulTopConst
     linarith only [hsum, e1, e2, e3, e4, hfinal]
   · intro v v' w hv hv' hw
     have hQ := h.sub_left v v' w hv hv' hw
     funext α
-    show seqConv (Q (v - v') w) (a α) = _
+    change seqConv (Q (v - v') w) (a α) = _
     rw [hQ, seqConv_sub_left (s := (r : ℝ)) hn h2r (h.mem r le_rfl v w hv hw)
       (h.mem r le_rfl v' w hv' hw) (ha r α)]
     rfl
   · intro v w w' hv hw hw'
     have hQ := h.sub_right v w w' hv hw hw'
     funext α
-    show seqConv (Q v (w - w')) (a α) = _
+    change seqConv (Q v (w - w')) (a α) = _
     rw [hQ, seqConv_sub_left (s := (r : ℝ)) hn h2r (h.mem r le_rfl v w hv hw)
       (h.mem r le_rfl v w' hv hw') (ha r α)]
     rfl
@@ -858,7 +860,7 @@ theorem scalarTame_resolvent_dotConv (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) 
     have hdot : dotConv (D₁ (v - v')) (D₂ w)
         = fun m => dotConv (D₁ v) (D₂ w) m - dotConv (D₁ v') (D₂ w) m := by
       funext m
-      show ∑ α, seqConv ((D₁ (v - v')) α) (D₂ w α) m = _
+      change ∑ α, seqConv ((D₁ (v - v')) α) (D₂ w α) m = _
       rw [hD]
       have hcv : ∀ α : Fin N, seqConv ((D₁ v - D₁ v') α) (D₂ w α)
           = fun m => seqConv (D₁ v α) (D₂ w α) m - seqConv (D₁ v' α) (D₂ w α) m := fun α =>
@@ -878,7 +880,7 @@ theorem scalarTame_resolvent_dotConv (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) 
     have hdot : dotConv (D₁ v) (D₂ (w - w'))
         = fun m => dotConv (D₁ v) (D₂ w) m - dotConv (D₁ v) (D₂ w') m := by
       funext m
-      show ∑ α, seqConv (D₁ v α) ((D₂ (w - w')) α) m = _
+      change ∑ α, seqConv (D₁ v α) ((D₂ (w - w')) α) m = _
       rw [hD]
       have hcv : ∀ α : Fin N, seqConv (D₁ v α) ((D₂ w - D₂ w') α)
           = fun m => seqConv (D₁ v α) (D₂ w α) m - seqConv (D₁ v α) (D₂ w' α) m := fun α =>
@@ -902,7 +904,8 @@ def Fb (i : Fin n) (v w : VecSeq n N) : Seq n :=
 def Ub (i j : Fin n) (v w : VecSeq n N) : Seq n :=
   fun m => resolventCoeff (dotConv (vpartial i v) (vpartial j w)) m
     + (2 : ℂ) * resolventCoeff (dotConv (vlap v) (vpartial i (vpartial j w))) m
-    - (2 : ℂ) * ∑ k, resolventCoeff (dotConv (vpartial i (vpartial k v)) (vpartial j (vpartial k w))) m
+    - (2 : ℂ) * ∑ k, resolventCoeff (dotConv (vpartial i (vpartial k v)) (vpartial j (vpartial k
+        w))) m
 
 /-- The index set of the second-derivative frame: pairs `p ≤ q`. -/
 def pairs (n : ℕ) : Finset (Fin n × Fin n) := Finset.univ.filter fun pq => pq.1 ≤ pq.2
@@ -910,8 +913,11 @@ def pairs (n : ℕ) : Finset (Fin n × Fin n) := Finset.univ.filter fun pq => pq
 /-- The data of the Günther operator on the momentum side: the dual frame `a i`, `b p q`
 (only `p ≤ q` is used) and the metric perturbation `h p q`, all as coefficient sequences. -/
 structure GuntherData (n N : ℕ) where
+  /-- Fourier coefficients of the dual fields for the first derivatives. -/
   a : Fin n → VecSeq n N
+  /-- Fourier coefficients of the dual fields for the second derivatives. -/
   b : Fin n → Fin n → VecSeq n N
+  /-- Fourier coefficients of the prescribed metric perturbation. -/
   h : Fin n → Fin n → Seq n
 
 /-- The bilinear part: `B v w = -∑ᵢ Fb i v w · aᵢ + ∑_{p≤q} ½ Ub p q v w · b_{pq}`. -/
@@ -934,6 +940,7 @@ structure GuntherData.Smooth (d : GuntherData n N) : Prop where
 
 /-- Tame constants of `Fb i`. -/
 def FbTop (n N r : ℕ) : ℝ := baseTopConst n N r
+/-- Lower-order tame constant for the bilinear term `Fb` at Sobolev level `k`. -/
 def FbLow (n N r : ℕ) (k : ℕ) : ℝ := baseLowConst n N r k
 
 theorem scalarTame_Fb (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) / 2 < (r : ℝ) - 2) (i : Fin n) :
@@ -944,6 +951,7 @@ theorem scalarTame_Fb (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) / 2 < (r : ℝ)
 /-- Tame constants of `Ub i j` (generous). -/
 def UbTop (n N r : ℕ) : ℝ := 2 * (2 * (baseTopConst n N r + 4 * baseTopConst n N r)
   + 4 * (n * (n * baseTopConst n N r)))
+/-- Lower-order tame constant for the bilinear term `Ub` at Sobolev level `k`. -/
 def UbLow (n N r : ℕ) (k : ℕ) : ℝ := 2 * (2 * (baseLowConst n N r k + 4 * baseLowConst n N r k)
   + 4 * (n * (n * baseLowConst n N r k)))
 
@@ -989,11 +997,14 @@ theorem scalarTame_Ub (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) / 2 < (r : ℝ)
 /-- Tame constants of `gB` (generous). -/
 def gBTop (n N r : ℕ) (d : GuntherData n N) : ℝ :=
   2 * (n * ∑ i, smulTopConst n N r (d.a i) (FbTop n N r)
-    + (pairs n).card * ∑ pq ∈ pairs n, smulTopConst n N r (d.b pq.1 pq.2) ((1 / 2) ^ 2 * UbTop n N r))
+    + (pairs n).card * ∑ pq ∈ pairs n, smulTopConst n N r (d.b pq.1 pq.2) ((1 / 2) ^ 2 * UbTop n
+        N r))
+/-- Lower-order tame constant for the complete bilinear Günther operator. -/
 def gBLow (n N r : ℕ) (d : GuntherData n N) (k : ℕ) : ℝ :=
   2 * (n * ∑ i, smulLowConst n N r (d.a i) (FbTop n N r) (FbLow n N r) k
     + (pairs n).card * ∑ pq ∈ pairs n,
-        smulLowConst n N r (d.b pq.1 pq.2) ((1 / 2) ^ 2 * UbTop n N r) (fun k => (1 / 2) ^ 2 * UbLow n N r k) k)
+        smulLowConst n N r (d.b pq.1 pq.2) ((1 / 2) ^ 2 * UbTop n N r) (fun k => (1 / 2) ^ 2 *
+            UbLow n N r k) k)
 
 theorem vecTame_gB (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) / 2 < (r : ℝ) - 2)
     (d : GuntherData n N) (hd : d.Smooth) :

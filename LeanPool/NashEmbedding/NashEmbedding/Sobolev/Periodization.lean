@@ -86,7 +86,7 @@ def periodicExtension (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (x : Fin n → �
 -/
 lemma periodicExtension_isPeriodic2Pi (φ : (Fin n → ℝ) → ℂ) :
     IsPeriodic2Pi (periodicExtension n φ) := by
-  unfold periodicExtension; intro x k; symm; simp +decide [ IsPeriodic2Pi, periodicShift ] ;
+  unfold periodicExtension; intro x k; symm; simp? +decide [ IsPeriodic2Pi, periodicShift ] ;
   rw [ ← Equiv.tsum_eq ( Equiv.addLeft k ) ] ; simp +decide [ periodicShift ] ; ring;
   unfold periodicShift; congr; ext; simp +decide [ add_assoc ] ;
   exact congr_arg _ ( by ext; simp +decide [ mul_add ] )
@@ -100,40 +100,64 @@ lemma periodicExtension_contDiff {φ : (Fin n → ℝ) → ℂ}
   have h_compact_support : ∃ R : ℝ, ∀ x : Fin n → ℝ, ‖x‖ ≥ R → φ x = 0 := by
     obtain ⟨ R, hR ⟩ := hsupp.exists_pos_le_norm;
     exact ⟨ R, hR.2 ⟩;
-  -- Since the sum is locally finite, we can apply the fact that a locally finite sum of smooth functions is smooth.
-  have h_locally_finite : ∀ x : Fin n → ℝ, ∃ U : Set (Fin n → ℝ), IsOpen U ∧ x ∈ U ∧ Set.Finite {k : Fin n → ℤ | ∃ y ∈ U, φ (y + periodicShift n k) ≠ 0} := by
+  -- Since the sum is locally finite, we can apply the fact that a locally finite sum of
+  -- smooth functions is smooth.
+  have h_locally_finite : ∀ x : Fin n → ℝ, ∃ U : Set (Fin n → ℝ), IsOpen U ∧ x ∈ U ∧ Set.Finite
+      {k : Fin n → ℤ | ∃ y ∈ U, φ (y + periodicShift n k) ≠ 0} := by
     intro x
     obtain ⟨R, hR⟩ : ∃ R : ℝ, ∀ x : Fin n → ℝ, ‖x‖ ≥ R → φ x = 0 := h_compact_support
     use Metric.ball x 1;
     refine' ⟨ Metric.isOpen_ball, Metric.mem_ball_self zero_lt_one, _ ⟩;
-    -- Since $\varphi$ has compact support, there exists $R > 0$ such that $\varphi(x) = 0$ for all $x$ with $\|x\| \geq R$. Therefore, for any $y \in \text{ball}(x, 1)$, we have $\|y + \text{periodicShift}(n, k)\| \geq R$ implies $\varphi(y + \text{periodicShift}(n, k)) = 0$.
-    have h_bound : ∀ k : Fin n → ℤ, (∃ y ∈ Metric.ball x 1, φ (y + periodicShift n k) ≠ 0) → ∀ i : Fin n, |(k i : ℝ)| ≤ (R + ‖x‖ + 1) / (2 * Real.pi) := by
+    -- Since $\varphi$ has compact support, there exists $R > 0$ such that $\varphi(x) = 0$
+    -- for all $x$ with $\|x\| \geq R$. Therefore, for any $y \in \text{ball}(x, 1)$, we
+    -- have $\|y + \text{periodicShift}(n, k)\| \geq R$ implies $\varphi(y +
+    -- \text{periodicShift}(n, k)) = 0$.
+    have h_bound : ∀ k : Fin n → ℤ, (∃ y ∈ Metric.ball x 1, φ (y + periodicShift n k) ≠ 0) → ∀ i
+        : Fin n, |(k i : ℝ)| ≤ (R + ‖x‖ + 1) / (2 * Real.pi) := by
       intros k hk i
       obtain ⟨y, hy_ball, hy_nonzero⟩ := hk
       have h_bound : ‖y + periodicShift n k‖ < R := by
         exact lt_of_not_ge fun h => hy_nonzero <| hR _ h;
       have h_bound : |(y i + 2 * Real.pi * (k i : ℝ))| ≤ R := by
-        exact le_trans ( by simpa [Pi.add_apply, periodicShift] using norm_le_pi_norm ( y + periodicShift n k ) i ) h_bound.le;
+        exact le_trans ( by simpa [Pi.add_apply, periodicShift] using norm_le_pi_norm ( y +
+            periodicShift n k ) i ) h_bound.le;
       have h_bound : |y i| ≤ ‖x‖ + 1 := by
         have h_bound : |y i - x i| ≤ ‖y - x‖ := by
           exact norm_le_pi_norm ( y - x ) i;
-        exact abs_le.mpr ⟨ by linarith [ abs_le.mp h_bound, abs_le.mp ( norm_le_pi_norm x i ), abs_le.mp ( norm_le_pi_norm ( y - x ) i ), show ‖y - x‖ < 1 from by rw [← dist_eq_norm]; exact hy_ball ], by linarith [ abs_le.mp h_bound, abs_le.mp ( norm_le_pi_norm x i ), abs_le.mp ( norm_le_pi_norm ( y - x ) i ), show ‖y - x‖ < 1 from by rw [← dist_eq_norm]; exact hy_ball ] ⟩;
-      rw [ le_div_iff₀ ] <;> cases abs_cases ( k i : ℝ ) <;> cases abs_cases ( y i + 2 * Real.pi * ( k i : ℝ ) ) <;> cases abs_cases ( y i ) <;> nlinarith [ Real.pi_gt_three ];
+        have hdist : ‖y - x‖ < 1 := by
+          rw [← dist_eq_norm]
+          exact hy_ball
+        have hx := abs_le.mp (norm_le_pi_norm x i)
+        exact abs_le.mpr ⟨by linarith [(abs_le.mp h_bound).1],
+          by linarith [(abs_le.mp h_bound).2]⟩
+      rw [ le_div_iff₀ ] <;> cases abs_cases ( k i : ℝ ) <;> cases abs_cases ( y i + 2 * Real.pi
+          * ( k i : ℝ ) ) <;> cases abs_cases ( y i ) <;> nlinarith [ Real.pi_gt_three ];
     -- Since $|k_i| \leq \frac{R + \|x\| + 1}{2\pi}$ for all $i$, the set of such $k$ is finite.
-    have h_finite_k : Set.Finite {k : Fin n → ℤ | ∀ i : Fin n, |(k i : ℝ)| ≤ (R + ‖x‖ + 1) / (2 * Real.pi)} := by
-      have h_finite_k : ∀ i : Fin n, Set.Finite {k : ℤ | |(k : ℝ)| ≤ (R + ‖x‖ + 1) / (2 * Real.pi)} := by
-        exact fun i => Set.Finite.subset ( Set.finite_Icc ( -⌈ ( R + ‖x‖ + 1 ) / ( 2 * Real.pi ) ⌉ ) ⌈ ( R + ‖x‖ + 1 ) / ( 2 * Real.pi ) ⌉ ) fun k hk => ⟨ neg_le_of_abs_le <| by exact_mod_cast hk.out.trans <| Int.le_ceil _, le_of_abs_le <| by exact_mod_cast hk.out.trans <| Int.le_ceil _ ⟩;
+    have h_finite_k : Set.Finite {k : Fin n → ℤ | ∀ i : Fin n, |(k i : ℝ)| ≤ (R + ‖x‖ + 1) / (2
+        * Real.pi)} := by
+      have h_finite_k : ∀ i : Fin n, Set.Finite {k : ℤ | |(k : ℝ)| ≤ (R + ‖x‖ + 1) / (2 *
+          Real.pi)} := by
+        intro i
+        apply (Set.finite_Icc (-⌈(R + ‖x‖ + 1) / (2 * Real.pi)⌉)
+          ⌈(R + ‖x‖ + 1) / (2 * Real.pi)⌉).subset
+        intro k hk
+        have hkceil : |k| ≤ ⌈(R + ‖x‖ + 1) / (2 * Real.pi)⌉ := by
+          exact_mod_cast hk.out.trans (Int.le_ceil _)
+        exact ⟨neg_le_of_abs_le hkceil, le_of_abs_le hkceil⟩
       exact Set.Finite.subset ( Set.Finite.pi fun i => h_finite_k i ) fun k hk => by simpa using hk;
     exact h_finite_k.subset fun k hk => h_bound k hk;
-  have h_locally_finite_sum : ∀ x : Fin n → ℝ, ∃ U : Set (Fin n → ℝ), IsOpen U ∧ x ∈ U ∧ ∃ S : Finset (Fin n → ℤ), ∀ y ∈ U, ∑' k : Fin n → ℤ, φ (y + periodicShift n k) = ∑ k ∈ S, φ (y + periodicShift n k) := by
+  have h_locally_finite_sum : ∀ x : Fin n → ℝ, ∃ U : Set (Fin n → ℝ), IsOpen U ∧ x ∈ U ∧ ∃ S :
+      Finset (Fin n → ℤ), ∀ y ∈ U, ∑' k : Fin n → ℤ, φ (y + periodicShift n k) = ∑ k ∈ S, φ (y +
+      periodicShift n k) := by
     intro x
     obtain ⟨U, hU_open, hxU, hU_finite⟩ := h_locally_finite x
     use U, hU_open, hxU
     use hU_finite.toFinset
     intro y hy
-    have h_sum_eq : ∑' k : Fin n → ℤ, φ (y + periodicShift n k) = ∑ k ∈ hU_finite.toFinset, φ (y + periodicShift n k) := by
+    have h_sum_eq : ∑' k : Fin n → ℤ, φ (y + periodicShift n k) = ∑ k ∈ hU_finite.toFinset, φ (y
+        + periodicShift n k) := by
       rw [ tsum_eq_sum ];
-      simp +contextual [ hU_finite.mem_toFinset ];
+      simp? +contextual [ hU_finite.mem_toFinset ];
       exact fun k hk => hk y hy
     exact h_sum_eq;
   refine' contDiff_iff_contDiffAt.mpr _;
@@ -141,7 +165,8 @@ lemma periodicExtension_contDiff {φ : (Fin n → ℝ) → ℂ}
   obtain ⟨U, hU_open, hxU, S, hS⟩ := h_locally_finite_sum x
   have h_cont_diff : ContDiffOn ℝ ∞ (fun y => ∑ k ∈ S, φ (y + periodicShift n k)) U := by
     exact ContDiffOn.sum fun k hk => hsmooth.comp_contDiffOn ( contDiffOn_id.add contDiffOn_const );
-  exact h_cont_diff.contDiffAt ( hU_open.mem_nhds hxU ) |> fun h => h.congr_of_eventuallyEq ( Filter.eventuallyEq_of_mem ( hU_open.mem_nhds hxU ) fun y hy => hS y hy ▸ rfl )
+  exact h_cont_diff.contDiffAt ( hU_open.mem_nhds hxU ) |> fun h => h.congr_of_eventuallyEq (
+      Filter.eventuallyEq_of_mem ( hU_open.mem_nhds hxU ) fun y hy => hS y hy ▸ rfl )
 
 /-
 If `φ` has compact support and pointwise non-negative real part, then
@@ -155,7 +180,8 @@ lemma periodicExtension_re_nonneg {φ : (Fin n → ℝ) → ℂ}
   intro y
   unfold periodicExtension;
   by_cases h : Summable ( fun k : Fin n → ℤ => φ ( y + periodicShift n k ) );
-  · convert Complex.re_tsum h |> fun h' => h'.symm ▸ tsum_nonneg fun k => hnn ( y + periodicShift n k ) using 1;
+  · convert Complex.re_tsum h |> fun h' => h'.symm ▸ tsum_nonneg fun k => hnn ( y +
+      periodicShift n k ) using 1;
   · rw [ tsum_eq_zero_of_not_summable h ] ; norm_num
 
 /-
@@ -169,7 +195,8 @@ lemma periodicExtension_im_zero {φ : (Fin n → ℝ) → ℂ}
   intro y
   unfold periodicExtension;
   by_cases h : Summable ( fun k : Fin n → ℤ => φ ( y + periodicShift n k ) );
-  · have h_im_zero : Complex.im (∑' k : Fin n → ℤ, φ (y + periodicShift n k)) = ∑' k : Fin n → ℤ, Complex.im (φ (y + periodicShift n k)) := by
+  · have h_im_zero : Complex.im (∑' k : Fin n → ℤ, φ (y + periodicShift n k)) = ∑' k : Fin n →
+      ℤ, Complex.im (φ (y + periodicShift n k)) := by
       convert Complex.im_tsum h;
     aesop;
   · rw [ tsum_eq_zero_of_not_summable h ] ; norm_num
@@ -195,8 +222,11 @@ lemma hasDerivAt_fourierExp_update (c : Fin n → ℤ) (θ : Fin n → ℝ) (j :
     HasDerivAt (fun t : ℝ => fourierExp n c (Function.update θ j t))
       (Complex.I * (c j : ℂ) * fourierExp n c θ) (θ j) := by
   unfold fourierExp
-  simp +decide [ Function.update_apply, Finset.sum_ite, Finset.filter_eq', Finset.filter_ne' ]
-  convert HasDerivAt.comp ( θ j ) ( Complex.hasDerivAt_exp _ ) ( HasDerivAt.const_mul Complex.I <| HasDerivAt.add ( HasDerivAt.const_mul ( c j : ℂ ) <| hasDerivAt_id _ |> HasDerivAt.ofReal_comp ) <| hasDerivAt_const _ ((∑ x, ((c x : ℂ) * (θ x : ℂ))) - (c j : ℂ) * (θ j : ℂ)) ) using 1
+  simp? +decide [ Function.update_apply, Finset.sum_ite, Finset.filter_eq', Finset.filter_ne' ]
+  convert HasDerivAt.comp ( θ j ) ( Complex.hasDerivAt_exp _ ) ( HasDerivAt.const_mul Complex.I
+      <| HasDerivAt.add ( HasDerivAt.const_mul ( c j : ℂ ) <| hasDerivAt_id _ |>
+      HasDerivAt.ofReal_comp ) <| hasDerivAt_const _ ((∑ x, ((c x : ℂ) * (θ x : ℂ))) - (c j : ℂ)
+      * (θ j : ℂ)) ) using 1
   all_goals (first
     | rfl
     | (simp only [Pi.add_apply, id_eq]; push_cast; ring))
@@ -291,7 +321,7 @@ theorem integral_partialDeriv_mul_fourierExp {k : ℕ} {g : (Fin (k+1) → ℝ) 
     · simp
   have hle : (0 : Fin (k+1) → ℝ) ≤ 2 * π • (1 : Fin (k+1) → ℝ) := by
     intro i
-    simp
+    simp?
     positivity
   have hAc : Continuous (fun θ => partialDeriv j g θ * fourierExp (k+1) c θ) :=
     (partialDeriv_contDiff hg j).continuous.mul (fourierExp_contDiff c).continuous
@@ -503,13 +533,16 @@ lemma memSobolev_of_rapid_decay (hn : 0 < n) {a : (Fin n → ℤ) → ℂ}
   obtain ⟨N, hN⟩ : ∃ N : ℕ, N / 2 > s + n / 2 := by
     exact ⟨ ⌊s * 2 + n⌋₊ + 1, by push_cast; linarith [ Nat.lt_floor_add_one ( s * 2 + n ) ] ⟩;
   -- By hypothesis, there exists a constant C such that ‖a m‖ ≤ C * weight n (-(N / 2)) m for all m.
-  obtain ⟨C, hC_pos, hC⟩ : ∃ C : ℝ, 0 < C ∧ ∀ m : Fin n → ℤ, ‖a m‖ ≤ C * weight n (-(N / 2 : ℝ)) m := by
+  obtain ⟨C, hC_pos, hC⟩ : ∃ C : ℝ, 0 < C ∧ ∀ m : Fin n → ℤ, ‖a m‖ ≤ C * weight n (-(N / 2 : ℝ))
+      m := by
     exact h N;
   -- Then weight n s m * ‖a m‖^2 ≤ C^2 * weight n (s - N) m.
   have h_bound : ∀ m : Fin n → ℤ, weight n s m * ‖a m‖^2 ≤ C^2 * weight n (s - N) m := by
     intro m
-    have h_bound_step : weight n s m * ‖a m‖^2 ≤ C^2 * weight n s m * weight n (-(N / 2 : ℝ)) m^2 := by
-      convert mul_le_mul_of_nonneg_left ( pow_le_pow_left₀ ( norm_nonneg _ ) ( hC m ) 2 ) ( show 0 ≤ weight n s m by exact le_of_lt ( weight_pos s m ) ) using 1
+    have h_bound_step : weight n s m * ‖a m‖^2 ≤ C^2 * weight n s m * weight n (-(N / 2 : ℝ))
+        m^2 := by
+      convert mul_le_mul_of_nonneg_left ( pow_le_pow_left₀ ( norm_nonneg _ ) ( hC m ) 2 ) ( show
+          0 ≤ weight n s m by exact le_of_lt ( weight_pos s m ) ) using 1
       all_goals (first | rfl | ring)
     have hXp : (0 : ℝ) < 1 + ∑ i : Fin n, ((m i : ℝ) ^ 2) :=
       add_pos_of_pos_of_nonneg zero_lt_one (Finset.sum_nonneg fun _ _ => sq_nonneg _)
@@ -520,7 +553,8 @@ lemma memSobolev_of_rapid_decay (hn : 0 < n) {a : (Fin n → ℤ) → ℂ}
     calc weight n s m * ‖a m‖^2
         ≤ C^2 * weight n s m * weight n (-(↑N / 2 : ℝ)) m ^ 2 := h_bound_step
       _ = C^2 * weight n (s - ↑N) m := by rw [h_weight_split]; ring
-  refine' Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) ) ( fun m => h_bound m ) _;
+  refine' Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) )
+      ( fun m => h_bound m ) _;
   refine' Summable.mul_left _ _;
   have h_pos : (n : ℝ) < 2 * ((↑N : ℝ) - s) := by linarith
   have h_sum := summable_weight_neg (s := (↑N : ℝ) - s) hn h_pos
@@ -545,7 +579,8 @@ lemma exists_out_toUnitTorus_eq (x : Fin n → ℝ) :
     ∃ k : Fin n → ℤ, ∀ i, Quotient.out (toUnitTorus n x i) = x i - k i := by
   have h : ∀ i, ∃ k : ℤ, Quotient.out (toUnitTorus n x i) = x i - k := by
     intro i
-    have h1 : ((Quotient.out (toUnitTorus n x i) : ℝ) : AddCircle (1 : ℝ)) = ((x i : ℝ) : AddCircle (1:ℝ)) :=
+    have h1 : ((Quotient.out (toUnitTorus n x i) : ℝ) : AddCircle (1 : ℝ)) = ((x i : ℝ) :
+        AddCircle (1:ℝ)) :=
       QuotientAddGroup.out_eq' _
     rw [QuotientAddGroup.eq, AddSubgroup.mem_zmultiples_iff] at h1
     obtain ⟨k, hk⟩ := h1
@@ -558,7 +593,7 @@ lemma exists_out_toUnitTorus_eq (x : Fin n → ℝ) :
 /-- `mFourier` at `toUnitTorus ((2π)⁻¹ • θ)` is `fourierExp n m θ`. -/
 lemma mFourier_toUnitTorus (m : Fin n → ℤ) (θ : Fin n → ℝ) :
     UnitAddTorus.mFourier m (toUnitTorus n ((2 * π)⁻¹ • θ)) = fourierExp n m θ := by
-  show ∏ i, fourier (m i) (((((2 * π)⁻¹ • θ) i : ℝ)) : AddCircle (1:ℝ)) = _
+  change ∏ i, fourier (m i) (((((2 * π)⁻¹ • θ) i : ℝ)) : AddCircle (1:ℝ)) = _
   simp only [fourier_coe_apply, Pi.smul_apply, smul_eq_mul]
   rw [← Complex.exp_sum]
   unfold fourierExp
@@ -627,7 +662,8 @@ lemma integral_toUnitTorus (G : UnitAddTorus (Fin n) → ℂ) (hG : Continuous G
 
 lemma integral_cube_scale (h : (Fin n → ℝ) → ℂ) :
     ∫ x in Set.pi Set.univ (fun _ : Fin n => Set.Ioc (0 : ℝ) 1), h ((2 * π) • x)
-      = ((2 * π) ^ n)⁻¹ • ∫ y in Set.pi Set.univ (fun _ : Fin n => Set.Ioc (0 : ℝ) (2 * π)), h y := by
+      = ((2 * π) ^ n)⁻¹ • ∫ y in Set.pi Set.univ (fun _ : Fin n => Set.Ioc (0 : ℝ) (2 * π)), h y
+          := by
   have hS : MeasurableSet (Set.pi Set.univ (fun _ : Fin n => Set.Ioc (0 : ℝ) 1)) :=
     MeasurableSet.univ_pi fun _ => measurableSet_Ioc
   have hS' : MeasurableSet (Set.pi Set.univ (fun _ : Fin n => Set.Ioc (0 : ℝ) (2 * π))) :=
@@ -666,14 +702,15 @@ lemma integral_Ioc_cube_eq_Icc (h : (Fin n → ℝ) → ℂ) :
 lemma mFourierCoeff_toUnitTorusCM {f : (Fin n → ℝ) → ℂ} (hf : Continuous f)
     (hper : IsPeriodic2Pi f) (m : Fin n → ℤ) :
     UnitAddTorus.mFourierCoeff (⇑(toUnitTorusCM n f hf hper)) m = stdFourierCoeff n f m := by
-  show ∫ z, UnitAddTorus.mFourier (-m) z • toUnitTorusFun n f z
+  change ∫ z, UnitAddTorus.mFourier (-m) z • toUnitTorusFun n f z
       ∂(Measure.pi fun _ : Fin n => AddCircle.haarAddCircle) = _
   rw [integral_toUnitTorus (fun z => UnitAddTorus.mFourier (-m) z • toUnitTorusFun n f z)
     (by
       have hc := (UnitAddTorus.mFourier (-m)).continuous.smul
         (continuous_toUnitTorusFun hf hper)
       exact hc)]
-  have hpt : ∀ x, UnitAddTorus.mFourier (-m) (toUnitTorus n x) • toUnitTorusFun n f (toUnitTorus n x)
+  have hpt : ∀ x, UnitAddTorus.mFourier (-m) (toUnitTorus n x) • toUnitTorusFun n f (toUnitTorus
+      n x)
       = (fun y => f y * fourierExp n (-m) y) ((2 * π) • x) := by
     intro x
     rw [toUnitTorusFun_toUnitTorus hper, smul_eq_mul, mul_comm]
@@ -731,7 +768,7 @@ lemma integral_periodCube_eq_torus {g : (Fin n → ℝ) → ℂ} (hg : Continuou
     mul_inv_cancel₀ (by positivity), one_smul]
 
 /-- Integers witnessing equality in `AddCircle 1`. -/
-lemma exists_int_of_coe_eq {x y : ℝ} (h : ((x : ℝ) : AddCircle (1 : ℝ)) = (y : AddCircle (1:ℝ))) :
+lemma exists_int_of_coe_eq {x y : ℝ} (h : ((x : ℝ) : AddCircle (1 : ℝ)) = (y : AddCircle (1 : ℝ))) :
     ∃ k : ℤ, y = x + k := by
   rw [QuotientAddGroup.eq, AddSubgroup.mem_zmultiples_iff] at h
   obtain ⟨k, hk⟩ := h
@@ -771,7 +808,7 @@ lemma integral_periodCube_add_right {g : (Fin n → ℝ) → ℂ} (hg : Continuo
       = ∫ θ in Set.Icc (0 : Fin n → ℝ) (2 * π • (1 : Fin n → ℝ)), g θ := by
   have hper' : IsPeriodic2Pi (fun θ => g (θ + a)) := by
     intro x k
-    show g (x + periodicShift n k + a) = g (x + a)
+    change g (x + periodicShift n k + a) = g (x + a)
     rw [add_right_comm, hper]
   rw [integral_periodCube_eq_torus (g := fun θ => g (θ + a))
     (hg.comp (continuous_id.add continuous_const)) hper', integral_periodCube_eq_torus hg hper]
@@ -793,7 +830,8 @@ lemma summable_stdFourierCoeff_of_smoothPeriodic (hn : 0 < n) {f : (Fin n → �
     (hsmooth : ContDiff ℝ ∞ f) (hper : IsPeriodic2Pi f) :
     Summable (stdFourierCoeff n f) := by
   obtain ⟨C, _, hbound⟩ := stdFourierCoeff_rapid_decay hn hsmooth hper (n + 1)
-  refine Summable.of_norm_bounded (g := fun m => C * weight n (-(((n + 1 : ℕ) : ℝ) / 2)) m) ?_ hbound
+  refine Summable.of_norm_bounded (g := fun m => C * weight n (-(((n + 1 : ℕ) : ℝ) / 2)) m) ?_
+      hbound
   refine Summable.mul_left C ?_
   apply summable_weight_neg hn
   push_cast
@@ -817,7 +855,7 @@ lemma fourierSynthesis_stdFourierCoeff_of_smoothPeriodic
     (toUnitTorus n ((2 * π)⁻¹ • y))
   rw [heq] at hx
   have hval : (toUnitTorusCM n f hf hper) (toUnitTorus n ((2 * π)⁻¹ • y)) = f y := by
-    show toUnitTorusFun n f (toUnitTorus n ((2 * π)⁻¹ • y)) = f y
+    change toUnitTorusFun n f (toUnitTorus n ((2 * π)⁻¹ • y)) = f y
     rw [toUnitTorusFun_toUnitTorus hper, smul_smul, mul_inv_cancel₀ (by positivity), one_smul]
   rw [hval] at hx
   simp_rw [mFourier_toUnitTorus, smul_eq_mul] at hx

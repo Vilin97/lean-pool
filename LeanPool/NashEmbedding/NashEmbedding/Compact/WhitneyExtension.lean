@@ -209,7 +209,8 @@ public theorem _root_.SmoothBumpCovering.embPiTan_injective_mfderiv
   boundaryless manifold extends smoothly along the bump-covering embedding
   `Φ = f.embPiTan : M → (ι → E × ℝ)`, the public wrapper around Mathlib's
   `embeddingPiTangent`. -/
-public theorem _root_.SmoothBumpCovering.exists_extension [T2Space M] [CompactSpace M] [I.Boundaryless]
+public theorem _root_.SmoothBumpCovering.exists_extension [T2Space M] [CompactSpace M]
+    [I.Boundaryless]
     [Fintype ι] (f : SmoothBumpCovering ι I M) {h : M → V}
     (hh : ContMDiff I 𝓘(ℝ, V) ∞ h) :
     ∃ F : (ι → E × ℝ) → V, ContDiff ℝ ∞ F ∧ ∀ x, F (f.embPiTan x) = h x := by
