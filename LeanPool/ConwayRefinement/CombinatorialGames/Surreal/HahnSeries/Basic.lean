@@ -41,7 +41,7 @@ public noncomputable section
 
 attribute [aesop simp] Pi.single_apply
 
-theorem Set.IsWF.to_subtype {α : Type*} [LT α] {s : Set α} (h : IsWF s) : WellFoundedLT s := ⟨h⟩
+theorem Set.IsWF.to_subtype {α : Type*} [LT α] {s : Set α} (h : IsWF s) : WellFoundedLT s := h
 
 /-- This is like `RelIso.cast` with better def-eqs. -/
 def RelIso.subrel {α : Type*} (r : α → α → Prop) {p q : α → Prop} (H : ∀ x, p x ↔ q x) :
@@ -382,7 +382,8 @@ theorem typein_support {x : SurrealHahnSeries.{u}} (i : x.support) :
   rw [typein, RelEmbedding.ofMonotone_coe, ← lift_id'.{u, u + 1} (type _)]
   apply RelIso.ordinal_lift_type_eq
   use Equiv.subtypeEquiv (equivShrink _) (fun a ↦ (orderIsoShrink _).toRelIsoLT.map_rel_iff.symm)
-  simp
+  intro a b
+  exact (orderIsoShrink x.support).lt_iff_lt
 
 /-! #### `coeffIdx` -/
 
@@ -409,8 +410,8 @@ theorem coeff_exp (x : SurrealHahnSeries) (i) : x.coeff (x.exp i) = x.coeffIdx i
 
 @[simp]
 theorem coeffIdx_symm_exp (x : SurrealHahnSeries) (i) : x.coeffIdx (x.exp.symm i) = x.coeff i := by
-  rw [coeffIdx_of_lt (by simp)]
-  simp
+  rw [coeffIdx_of_lt (x.exp.symm i).property]
+  exact congrArg (fun a : x.support ↦ x.coeff a) (x.exp.apply_symm_apply i)
 
 @[simp]
 theorem coeffIdx_eq_zero_iff {x : SurrealHahnSeries} {i : Ordinal} :
@@ -453,8 +454,8 @@ theorem trunc_exp (x : SurrealHahnSeries) (i) : x.trunc (x.exp i) = x.truncIdx i
 
 @[simp]
 theorem truncIdx_symm_exp (x : SurrealHahnSeries) (i) : x.truncIdx (x.exp.symm i) = x.trunc i := by
-  rw [truncIdx_of_lt (by simp)]
-  simp
+  rw [truncIdx_of_lt (x.exp.symm i).property]
+  exact congrArg (fun a : x.support ↦ x.trunc a) (x.exp.apply_symm_apply i)
 
 theorem support_truncIdx_ssubset {x : SurrealHahnSeries} {i : Ordinal} (h : i < x.length) :
     support (truncIdx x i) ⊂ support x := by

@@ -40,7 +40,7 @@ namespace Berarducci
 
 public noncomputable section
 
-variable {K : Type v} [Field K] [CharZero K]
+variable {K : Type v} [Field K]
 
 variable (K) in
 private def principalSubringTensorLinearEquiv :
@@ -63,7 +63,6 @@ def principalSubringTensorComponent (α : NatOrdinal) :
       (TensorProduct.directSumLeft K K (PrincipalComponent K)
         (FiniteSupportRing (K := K))).toLinearMap
 
-omit [CharZero K] in
 /-- The tensor component of a pure tensor is the tensor of the corresponding principal
 component. -/
 @[simp]
@@ -95,7 +94,6 @@ def finiteSupportGradedEmbedding :
     rw [degreeFiniteSupportResidueEquiv_scalar,
       degreeGraded_algebraMap_apply]
 
-omit [CharZero K] in
 /-- The finite-support embedding places the degree residue class in grade zero. -/
 @[simp]
 theorem finiteSupportGradedEmbedding_apply (p : FiniteSupportRing (K := K)) :
@@ -104,7 +102,6 @@ theorem finiteSupportGradedEmbedding_apply (p : FiniteSupportRing (K := K)) :
         (HahnSeries.Nonpositive.degreeFiniteSupportResidueEquiv K p) :=
   (rfl)
 
-omit [CharZero K] in
 /-- Multiplication by the grade-zero finite-support embedding is the residue-ring scalar action
 on each homogeneous component. -/
 theorem finiteSupportGradedEmbedding_mul_of (p : FiniteSupportRing (K := K)) (α : NatOrdinal)
@@ -117,7 +114,6 @@ theorem finiteSupportGradedEmbedding_mul_of (p : FiniteSupportRing (K := K)) (α
         (HahnSeries.Nonpositive.degreeFiniteSupportResidueEquiv K p • x) := by
   rw [finiteSupportGradedEmbedding_apply, ← DirectSum.of_zero_smul]
 
-omit [CharZero K] in
 variable (K) in
 /-- The grade-zero finite-support embedding is injective. -/
 theorem finiteSupportGradedEmbedding_injective :
@@ -128,7 +124,7 @@ theorem finiteSupportGradedEmbedding_injective :
 
 variable (K) in
 /-- Multiplication of the two canonical graded embeddings induces the global tensor map. -/
-def principalSubringTensorMap :
+def principalSubringTensorMap [CharZero K] :
     PrincipalSubring K ⊗[K] FiniteSupportRing (K := K) →ₐ[K]
       DegreeGraded K :=
   Algebra.TensorProduct.productMap
@@ -136,13 +132,12 @@ def principalSubringTensorMap :
     (finiteSupportGradedEmbedding K)
 
 /-- On a pure tensor, the global tensor map is multiplication of the two embedded factors. -/
-theorem principalSubringTensorMap_tmul (x : PrincipalSubring K) (p : FiniteSupportRing (K := K)) :
+theorem principalSubringTensorMap_tmul [CharZero K] (x : PrincipalSubring K) (p : FiniteSupportRing (K := K)) :
     principalSubringTensorMap K (x ⊗ₜ p) =
       principalSubringEmbedding K x *
         finiteSupportGradedEmbedding K p :=
   (rfl)
 
-omit [CharZero K] in
 private theorem degreeGraded_of_zero_mul
     (a : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
     (x : DegreeGraded K) :
@@ -158,7 +153,7 @@ private theorem degreeGraded_of_zero_mul
         α).map_smul a x
   | add x y hx hy => rw [mul_add, smul_add, hx, hy]
 
-private theorem principalSubringTensorMap_eq_linearEquiv
+private theorem principalSubringTensorMap_eq_linearEquiv [CharZero K]
     (z : PrincipalSubring K ⊗[K] FiniteSupportRing (K := K)) :
     principalSubringTensorMap K z =
       principalSubringTensorLinearEquiv K z := by
@@ -187,7 +182,7 @@ private theorem principalSubringTensorMap_eq_linearEquiv
 
 variable (K) in
 /-- The multiplication-induced global tensor map is bijective. -/
-theorem principalSubringTensorMap_bijective :
+theorem principalSubringTensorMap_bijective [CharZero K] :
     Function.Bijective (principalSubringTensorMap K) := by
   have hfunctions :
       (principalSubringTensorMap K :
@@ -220,7 +215,7 @@ variable (K) in
   components, so their direct sum is an algebra homomorphism.  Every element has finite degree
   support; applying the inverse component maps degree by degree proves bijectivity.
   -/)]
-def principalSubringTensorEquiv :
+def principalSubringTensorEquiv [CharZero K] :
     PrincipalSubring K ⊗[K] FiniteSupportRing (K := K) ≃ₐ[K]
       DegreeGraded K :=
   AlgEquiv.ofBijective (principalSubringTensorMap K)
@@ -228,14 +223,14 @@ def principalSubringTensorEquiv :
 
 /-- The graded tensor equivalence has the multiplication-induced tensor map as its forward map. -/
 @[simp]
-theorem principalSubringTensorEquiv_apply
+theorem principalSubringTensorEquiv_apply [CharZero K]
     (z : PrincipalSubring K ⊗[K] FiniteSupportRing (K := K)) :
     principalSubringTensorEquiv K z =
       principalSubringTensorMap K z :=
   (rfl)
 
 /-- The graded tensor equivalence multiplies the images of a pure tensor's two factors. -/
-theorem principalSubringTensorEquiv_tmul
+theorem principalSubringTensorEquiv_tmul [CharZero K]
     (x : PrincipalSubring K) (p : FiniteSupportRing (K := K)) :
     principalSubringTensorEquiv K (x ⊗ₜ p) =
       principalSubringEmbedding K x *
@@ -244,7 +239,7 @@ theorem principalSubringTensorEquiv_tmul
 
 /-- On a pure tensor, each homogeneous projection of the global equivalence is the corresponding
 homogeneous-component equivalence. -/
-theorem principalSubringTensorEquiv_tmul_apply
+theorem principalSubringTensorEquiv_tmul_apply [CharZero K]
     (x : PrincipalSubring K) (p : FiniteSupportRing (K := K))
     (α : NatOrdinal) :
     principalSubringTensorEquiv K (x ⊗ₜ p) α =
@@ -255,7 +250,7 @@ theorem principalSubringTensorEquiv_tmul_apply
 
 /-- On an arbitrary tensor, every homogeneous projection of the global equivalence is the
 corresponding homogeneous-component equivalence applied to the canonical tensor component. -/
-theorem principalSubringTensorEquiv_component
+theorem principalSubringTensorEquiv_component [CharZero K]
     (z : PrincipalSubring K ⊗[K] FiniteSupportRing (K := K))
     (α : NatOrdinal) :
     principalSubringTensorEquiv K z α =
@@ -273,7 +268,7 @@ theorem principalSubringTensorEquiv_component
 homogeneous-component
 equivalence of that homogeneous component. -/
 @[simp]
-theorem principalSubringTensorComponent_symm_apply
+theorem principalSubringTensorComponent_symm_apply [CharZero K]
     (y : DegreeGraded K) (α : NatOrdinal) :
     principalSubringTensorComponent K α
         ((principalSubringTensorEquiv K).symm y) =
@@ -284,21 +279,21 @@ theorem principalSubringTensorComponent_symm_apply
 
 /-- Restricting the global equivalence to the finite-support factor gives its grade-zero
 embedding. -/
-theorem principalSubringTensorEquiv_one_tmul (p : FiniteSupportRing (K := K)) :
+theorem principalSubringTensorEquiv_one_tmul [CharZero K] (p : FiniteSupportRing (K := K)) :
     principalSubringTensorEquiv K (1 ⊗ₜ p) =
       finiteSupportGradedEmbedding K p := by
   rw [principalSubringTensorEquiv_tmul, map_one, one_mul]
 
 /-- Restricting the global equivalence to the principal graded factor gives its canonical
 embedding. -/
-theorem principalSubringTensorEquiv_tmul_one (x : PrincipalSubring K) :
+theorem principalSubringTensorEquiv_tmul_one [CharZero K] (x : PrincipalSubring K) :
     principalSubringTensorEquiv K (x ⊗ₜ 1) =
       principalSubringEmbedding K x := by
   rw [principalSubringTensorEquiv_tmul, map_one, mul_one]
 
 /-- The inverse global tensor equivalence sends the finite-support embedding to the corresponding
 pure tensor. -/
-theorem principalSubringTensorEquiv_symm_finiteSupportGradedEmbedding
+theorem principalSubringTensorEquiv_symm_finiteSupportGradedEmbedding [CharZero K]
     (p : FiniteSupportRing (K := K)) :
     (principalSubringTensorEquiv K).symm
         (finiteSupportGradedEmbedding K p) = 1 ⊗ₜ p := by
@@ -308,13 +303,12 @@ theorem principalSubringTensorEquiv_symm_finiteSupportGradedEmbedding
 /-- The inverse global tensor equivalence sends the principal graded embedding to the
 corresponding pure tensor. -/
 @[simp]
-theorem principalSubringTensorEquiv_symm_principalGradedEmbedding (x : PrincipalSubring K) :
+theorem principalSubringTensorEquiv_symm_principalGradedEmbedding [CharZero K] (x : PrincipalSubring K) :
     (principalSubringTensorEquiv K).symm
         (principalSubringEmbedding K x) = x ⊗ₜ 1 := by
   apply (principalSubringTensorEquiv K).injective
   rw [AlgEquiv.apply_symm_apply, principalSubringTensorEquiv_tmul_one]
 
-omit [CharZero K] in
 /-- A nonzero finite-support series has degree zero. -/
 theorem degreeValuation_finiteSupport_eq_zero (p : FiniteSupportRing (K := K)) (hp : p ≠ 0) :
     HahnSeries.Nonpositive.degreeValuation K (p : Series K) = 0 := by
@@ -331,13 +325,11 @@ def finiteSupportFiltrationRepresentative (p : FiniteSupportRing (K := K)) :
       simp
     · rw [degreeValuation_finiteSupport_eq_zero p hp, WithBot.coe_zero])⟩
 
-omit [CharZero K] in
 @[simp]
 theorem coe_finiteSupportFiltrationRepresentative (p : FiniteSupportRing (K := K)) :
     (finiteSupportFiltrationRepresentative p : Series K) = (p : Series K) :=
   (rfl)
 
-omit [CharZero K] in
 /-- The finite-support embedding sends a series to its grade-zero homogeneous class. -/
 theorem finiteSupportGradedEmbedding_eq_homogeneousMk (p : FiniteSupportRing (K := K)) :
     finiteSupportGradedEmbedding K p =
@@ -353,7 +345,6 @@ theorem finiteSupportGradedEmbedding_eq_homogeneousMk (p : FiniteSupportRing (K 
   rw [(HahnSeries.Nonpositive.degreeValuation K).coe_nonpositiveEquivFiltrationLEZero,
     RingEquiv.coe_subringCongr_apply, coe_finiteSupportFiltrationRepresentative]
 
-omit [CharZero K] in
 /-- The finite-support embedding sends a series to its initial form. -/
 theorem finiteSupportGradedEmbedding_eq_initialForm (p : FiniteSupportRing (K := K)) :
     finiteSupportGradedEmbedding K p =

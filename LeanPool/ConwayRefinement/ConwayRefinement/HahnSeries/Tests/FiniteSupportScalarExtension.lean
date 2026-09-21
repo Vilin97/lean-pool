@@ -31,7 +31,7 @@ public noncomputable section
 
 /-- The nonpositive exponent `-1` used by the coefficient-extension fixtures. -/
 def negativeOne : HahnSeries.Nonpositive.exponentMonoid ℤ :=
-  ⟨-1, by norm_num⟩
+  ⟨-1, show (-1 : ℤ) ≤ 0 by norm_num⟩
 
 /-- A finite-support integer series with coefficients `3` at `0` and `2` at `-1`. -/
 def integerFixture :
@@ -65,7 +65,7 @@ theorem rationalFixture_negativeOne_coeff :
     ← HahnSeries.Nonpositive.smul_finiteSupport_eq_scalar_mul,
     map_add, map_smul]
   simp [HahnSeries.Nonpositive.finiteSupportCoefficients_apply,
-    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne]
+    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne, Finsupp.single_apply, Subtype.ext_iff]
 
 /-- The constant coefficient survives scalar extension and is mapped to `3 : ℚ`. -/
 theorem rationalFixture_zero_coeff :
@@ -75,7 +75,7 @@ theorem rationalFixture_zero_coeff :
     ← HahnSeries.Nonpositive.smul_finiteSupport_eq_scalar_mul,
     map_add, map_smul]
   simp [HahnSeries.Nonpositive.finiteSupportCoefficients_apply,
-    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne]
+    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne, Finsupp.single_apply, Subtype.ext_iff]
 
 /-- The scalar-extended integer fixture belongs to the image by construction. -/
 theorem rationalFixture_mem_range :
@@ -98,7 +98,7 @@ theorem rationalOutside_negativeOne_coeff :
     ← HahnSeries.Nonpositive.smul_finiteSupport_eq_scalar_mul,
     map_add, map_smul]
   simp [HahnSeries.Nonpositive.finiteSupportCoefficients_apply,
-    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne]
+    HahnSeries.Nonpositive.coe_finiteSupportScalarHom, negativeOne, Finsupp.single_apply, Subtype.ext_iff]
 
 /-- A nonintegral coefficient prevents membership in the image of integer scalar extension. -/
 theorem rationalOutside_not_mem_range :

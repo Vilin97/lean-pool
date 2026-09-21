@@ -45,10 +45,10 @@ private theorem approachZeroPrincipalComponent_ne_zero :
   exact lt_irrefl _
 
 /-- The exponent zero in the nonpositive real cone. -/
-def tensorExponentZero : {g : ℝ // g ≤ 0} := ⟨0, le_rfl⟩
+def tensorExponentZero : HahnSeries.Nonpositive.exponentMonoid ℝ := ⟨0, le_rfl⟩
 
 /-- The exponent negative one in the nonpositive real cone. -/
-def tensorExponentNegOne : {g : ℝ // g ≤ 0} := ⟨-1, by norm_num⟩
+def tensorExponentNegOne : HahnSeries.Nonpositive.exponentMonoid ℝ := ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 /-- A tensor with nonzero coordinates at the two distinct exponents `0` and `-1`. -/
 def approachZeroTwoExponentTensor :

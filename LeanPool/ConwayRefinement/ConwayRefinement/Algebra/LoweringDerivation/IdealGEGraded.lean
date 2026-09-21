@@ -314,10 +314,7 @@ theorem exists_idealGETensorHom_rTensor_eq (j : ℕ) (T : 𝒜 (j : NatOrdinal) 
     ∃ x, ∃ hx : x ∈ idealGE 𝒜 j,
       mu 𝒜 j T = (Submodule.Quotient.mk x : R ⧸ idealGE 𝒜 (j + 1)) ∧
         idealGETensorHom 𝒜 ((natInclusion 𝒜 j).rTensor _ T) = idealGEMk 𝒜 j hx := by
-  induction T with
-  | zero =>
-    exact ⟨0, zero_mem _, by rw [map_zero, Submodule.Quotient.mk_zero],
-      by rw [map_zero, map_zero, idealGEMk_zero]⟩
+  induction T using TensorProduct.inductionOn with
   | tmul a c =>
     obtain ⟨b, rfl⟩ := fibreMap_surjective 𝒜 c
     exact ⟨(a : R) * b, Ideal.mul_mem_right _ _ (mem_idealGE_of_mem 𝒜 le_rfl a.2),

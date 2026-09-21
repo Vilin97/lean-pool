@@ -291,7 +291,7 @@ theorem exists_linear_part (hwt : ∀ i, 1 ≤ wt i) (hmem : ∀ i, x i ∈ A (w
     {F : MvPolynomial ι K} {n : ℕ} (hn : 1 ≤ n) (hF : IsWeightedHomogeneous wt F n) :
     ∃ c : ι →₀ K, (∀ i ∈ c.support, wt i = n) ∧
       aeval x F - Finsupp.linearCombination K x c ∈ decomposable A n ∧
-      ∀ i, c i = coeff (Finsupp.single i 1) F := by
+      ∀ i, c i = F.coeff (Finsupp.single i 1) := by
   obtain ⟨c, hcwt, hc, hcoeff⟩ := OrdinalGraded.exists_linear_part
     (fun i ↦ Nat.cast_ne_zero.mpr (Nat.one_le_iff_ne_zero.mp (hwt i))) hmem
     (Nat.cast_ne_zero.mpr (Nat.one_le_iff_ne_zero.mp hn))
@@ -370,7 +370,7 @@ variable {Δ : Derivation K R (Germ l R)}
 omit [GradedAlgebra A] in
 /-- Polynomials homogeneous of degree zero (for `deg X_i = wt i ≥ 1`) are constants. -/
 theorem eq_C_of_isWeightedHomogeneous_zero (hwt : ∀ i, 1 ≤ wt i) {p : MvPolynomial ι K}
-    (hp : IsWeightedHomogeneous wt p 0) : p = C (coeff 0 p) :=
+    (hp : IsWeightedHomogeneous wt p 0) : p = C (p.coeff 0) :=
   OrdinalGraded.eq_C_of_isWeightedHomogeneous_zero (wt := fun i ↦ (wt i : NatOrdinal.{0}))
     (fun i ↦ Nat.cast_ne_zero.mpr (Nat.one_le_iff_ne_zero.mp (hwt i)))
     ((isWeightedHomogeneous_natCast_comp_iff (M := NatOrdinal.{0}) wt).mpr hp)
@@ -452,7 +452,7 @@ theorem eq_zero_of_eventually_mkDerivation_eq_zero [CharZero K] (hwt : ∀ i, 1 
     have hpos : 0 < D * wt x₀ := Nat.mul_pos hD1 hn1
     exact hcD (ih _ (by omega) (c D) (by omega) (hchom D) hcD0)
   have hw0 : w - D * wt x₀ = 0 := by omega
-  set a := coeff 0 (c D) with ha
+  set a := (c D).coeff 0 with ha
   have hcDa : c D = C a := eq_C_of_isWeightedHomogeneous_zero hwt (hw0 ▸ hchom D)
   have ha0 : a ≠ 0 := fun h ↦ hcD (by rw [hcDa, h, map_zero])
   -- the coefficient of `(X x₀)^(D-1)`: `h := c_(D-1) + D a X x₀` has degree `wt x₀`, `∂_γ h = 0`
@@ -493,7 +493,7 @@ theorem eq_zero_of_eventually_mkDerivation_eq_zero [CharZero K] (hwt : ∀ i, 1 
   obtain ⟨cf, hcfw, hcf, hcfcoeff⟩ := exists_linear_part hwt hmem hn1 hhhom
   rw [haeval, zero_sub, neg_mem_iff] at hcf
   have hcx := hcfcoeff x₀
-  rw [hind (wt x₀) cf hcfw hcf, Finsupp.coe_zero, Pi.zero_apply, hh, coeff_add, hc, coeff_xCoeff,
+  rw [hind (wt x₀) cf hcfw hcf, Finsupp.coe_zero, Pi.zero_apply, hh, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hc, coeff_xCoeff,
     ite_eq_right (by simp), zero_add, C_mul_X_eq_monomial, coeff_monomial, ite_eq_left rfl] at hcx
   exact ha0 ((mul_eq_zero.mp hcx.symm).resolve_left (Nat.cast_ne_zero.mpr (by omega)))
 

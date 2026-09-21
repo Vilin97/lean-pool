@@ -39,7 +39,7 @@ variable (H : AddSubgroup ℝ) {K : Type v} [Field K]
 def finiteSupportToReal :
     FiniteSupportRing (G := H) (K := K) →+*
       FiniteSupportRing (G := ℝ) (K := K) :=
-  mapDomainFiniteSupport H.subtype Subtype.val_injective fun _ _ ↦ Iff.rfl
+  mapDomainFiniteSupport H.subtype H.subtype_injective fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩
 
 /-- The underlying nonpositive series of `finiteSupportToReal` is `mapDomainToReal`. -/
 @[simp]

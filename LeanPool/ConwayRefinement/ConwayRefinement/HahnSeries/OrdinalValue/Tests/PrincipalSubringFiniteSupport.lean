@@ -52,7 +52,7 @@ theorem outsideCoefficient_not_mem_coefficientMap_range :
 
 /-- The nonpositive real exponent `-1`. -/
 def negativeOne : HahnSeries.Nonpositive.exponentMonoid ℝ :=
-  ⟨-1, by norm_num⟩
+  ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 /-- A nonconstant finite-support series over `ℚ`, with coefficients one at `0` and `-1`. -/
 def sourceBinomial :
@@ -69,7 +69,7 @@ theorem extendedBinomial_negativeOne_coeff :
         extendedBinomial negativeOne = 1 := by
   rw [extendedBinomial,
     Berarducci.principalSubringFractionScalarExtension_coeff]
-  simp [sourceBinomial, negativeOne,
+  simp [sourceBinomial, negativeOne, Finsupp.single_apply, Subtype.ext_iff,
     HahnSeries.Nonpositive.finiteSupportCoefficients_apply]
 
 /-- The constant term survives coefficient extension. -/
@@ -78,7 +78,7 @@ theorem extendedBinomial_zero_coeff :
         extendedBinomial 0 = 1 := by
   rw [extendedBinomial,
     Berarducci.principalSubringFractionScalarExtension_coeff]
-  simp [sourceBinomial, negativeOne,
+  simp [sourceBinomial, negativeOne, Finsupp.single_apply, Subtype.ext_iff,
     HahnSeries.Nonpositive.finiteSupportCoefficients_apply]
 
 /-- The extended binomial lies in the embedded coefficient-series subring. -/
