@@ -1,0 +1,405 @@
+/-
+Copyright (c) 2026 Dmitrii Zakharov. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Dmitrii Zakharov
+-/
+
+import LeanPool.ErdosGinzburgZiv.EGZ.Convex.FaceCombinations
+import LeanPool.ErdosGinzburgZiv.EGZ.ConvexFlag.Basic
+
+/-!
+# The canonical face flag of a rational polytope
+
+Every nonempty exposed face is a node.  All fibres use the ambient
+coordinates, transition maps are identities, and the lattice at a face is
+the affine integer span of the generators on that face.  A physical point is
+represented at its least containing face.
+
+The order-theoretic least-face formulation makes the construction independent
+of the analytic characterization by relative interior.  That characterization
+is only needed when the final centerpoint is stated as lying in a relative
+interior.
+-/
+
+open scoped BigOperators
+
+namespace EGZ
+
+/-- The face flag as a presentation of the points of a working polytope. -/
+structure FaceFlagModel {d : ℕ} (P : RationalPolytope d) where
+  flag : ConvexFlag
+  proper : flag.ProperPointSet
+  properEquiv :
+    {q : flag.Point // q ∈ proper} ≃ {x : RealCoord d // x ∈ P.carrier}
+
+namespace FaceFlagModel
+
+/-- The physical point represented by a proper flag point. -/
+def physical {d : ℕ} {P : RationalPolytope d} (A : FaceFlagModel P)
+    (q : A.flag.Point) (hq : q ∈ A.proper) : RealCoord d :=
+  (A.properEquiv ⟨q, hq⟩).1
+
+/-- The proper flag point based at the least face containing a physical point. -/
+def lift {d : ℕ} {P : RationalPolytope d} (A : FaceFlagModel P)
+    (q : RealCoord d) (hq : q ∈ P.carrier) : A.flag.Point :=
+  (A.properEquiv.symm ⟨q, hq⟩).1
+
+theorem lift_proper {d : ℕ} {P : RationalPolytope d} (A : FaceFlagModel P)
+    (q : RealCoord d) (hq : q ∈ P.carrier) : A.lift q hq ∈ A.proper :=
+  (A.properEquiv.symm ⟨q, hq⟩).2
+
+@[simp]
+theorem physical_lift {d : ℕ} {P : RationalPolytope d} (A : FaceFlagModel P)
+    (q : RealCoord d) (hq : q ∈ P.carrier) :
+    A.physical (A.lift q hq) (A.lift_proper q hq) = q := by
+  exact congrArg Subtype.val (A.properEquiv.apply_symm_apply ⟨q, hq⟩)
+
+end FaceFlagModel
+
+/-- Compatibility of physical convex combinations with a face-flag model.
+
+The second field records that an affine-integer-span certificate on the
+positive support makes the resulting flag point integral. -/
+structure FaceFlagCombinationLaws {d : ℕ} {P : RationalPolytope d}
+    (A : FaceFlagModel P) where
+  combination_of_physical :
+    ∀ {n : ℕ} (points : Fin n → A.flag.Point)
+      (hproper : ∀ i, points i ∈ A.proper)
+      (weight : Fin n → ℝ) (result : A.flag.Point)
+      (hresult : result ∈ A.proper),
+      (∀ i, 0 ≤ weight i) →
+      (∑ i, weight i) = 1 →
+      A.physical result hresult =
+        ∑ i, weight i • A.physical (points i) (hproper i) →
+      ConvexFlag.ConvexCombination points weight result
+  integral_of_activeSpan :
+    ∀ {n : ℕ} (points : Fin n → A.flag.Point)
+      (hproper : ∀ i, points i ∈ A.proper)
+      (_hintegral : ∀ i, (points i).IsIntegral)
+      (weight : Fin n → ℝ) (result : A.flag.Point)
+      (hresult : result ∈ A.proper),
+      ConvexFlag.ConvexCombination points weight result →
+      A.physical result hresult ∈
+        affineIntSpan
+          ((fun i ↦ A.physical (points i) (hproper i)) ''
+            {i | 0 < weight i}) →
+      result.IsIntegral
+
+namespace RationalPolytope.Face
+
+/-- Restrict a face of `P` to a subpolytope `Q`. -/
+def restrict {d : ℕ} {P Q : RationalPolytope d} (F : P.Face)
+    (hQP : Q.carrier ⊆ P.carrier)
+    (hnonempty : (Q.carrier ∩ F.carrier).Nonempty) : Q.Face where
+  carrier := Q.carrier ∩ F.carrier
+  is_exposed := by
+    obtain ⟨functional, level, hle, hcarrier⟩ := F.is_exposed
+    refine ⟨functional, level, ?_, ?_⟩
+    · intro q hq
+      exact hle q (hQP hq)
+    · ext q
+      rw [hcarrier]
+      constructor
+      · rintro ⟨hqQ, _hqP, hqlevel⟩
+        exact ⟨hqQ, hqlevel⟩
+      · rintro ⟨hqQ, hqlevel⟩
+        exact ⟨hqQ, hQP hqQ, hqlevel⟩
+  nonempty := hnonempty
+
+@[simp]
+theorem restrict_carrier {d : ℕ} {P Q : RationalPolytope d}
+    (F : P.Face) (hQP : Q.carrier ⊆ P.carrier)
+    (hnonempty : (Q.carrier ∩ F.carrier).Nonempty) :
+    (F.restrict hQP hnonempty).carrier = Q.carrier ∩ F.carrier := rfl
+
+/-- A face, regarded as a rational polytope in the ambient coordinates. -/
+noncomputable def asPolytope {d : ℕ} {P : RationalPolytope d}
+    (F : P.Face) : RationalPolytope d :=
+  RationalPolytope.ofFiniteConvexHull
+    (F.generatorFinset : Set (RealCoord d))
+    F.generatorFinset.finite_toSet (by
+      simpa using F.generatorFinset_nonempty)
+    (by
+      intro q hq
+      exact P.generators_rational q
+        (F.generatorFinset_subset (by simpa using hq)))
+
+@[simp]
+theorem asPolytope_carrier {d : ℕ} {P : RationalPolytope d}
+    (F : P.Face) : F.asPolytope.carrier = F.carrier := by
+  rw [asPolytope, RationalPolytope.ofFiniteConvexHull_carrier,
+    F.carrier_eq_convexHull_generatorFinset]
+
+/-- The affine lattice generated by the vertices of a face. -/
+noncomputable def generatorLattice {d : ℕ} {P : RationalPolytope d}
+    (F : P.Face) : AffineLattice d :=
+  AffineLattice.span (F.generatorFinset : Set (RealCoord d))
+    F.generatorFinset.finite_toSet (by
+      simpa using F.generatorFinset_nonempty)
+    (by
+      intro q hq
+      exact P.generators_rational q
+        (F.generatorFinset_subset (by simpa using hq)))
+
+@[simp]
+theorem generatorLattice_carrier {d : ℕ} {P : RationalPolytope d}
+    (F : P.Face) : F.generatorLattice.carrier =
+      affineIntSpan (F.generatorFinset : Set (RealCoord d)) := rfl
+
+end RationalPolytope.Face
+
+/-- The canonical constant-rank flag indexed by the faces of `P`. -/
+noncomputable abbrev faceFlag {d : ℕ} (P : RationalPolytope d) : ConvexFlag := by
+  classical
+  exact {
+    Node := P.Face
+    nodeFintype := inferInstance
+    nodeSemilatticeSup := inferInstance
+    nodeOrderTop := inferInstance
+    rank := fun _ ↦ d
+    polytope := fun F ↦ F.asPolytope
+    lattice := fun F ↦ F.generatorLattice
+    transition := fun _ ↦ IntegralAffineMap.id d
+    transition_mem := by
+      intro F G h q hq
+      have hqF : q ∈ F.carrier := by simpa using hq
+      have hqG : q ∈ G.carrier := h hqF
+      simpa using hqG
+    transition_lattice := by
+      intro F G h q hq
+      change q ∈ affineIntSpan (F.generatorFinset : Set (RealCoord d)) at hq
+      change q ∈ affineIntSpan (G.generatorFinset : Set (RealCoord d))
+      apply affineIntSpan_mono _ hq
+      intro x hx
+      have hx' := Finset.mem_filter.mp hx
+      exact Finset.mem_filter.mpr ⟨hx'.1, h hx'.2⟩
+    transition_refl := by intro; rfl
+    transition_trans := by intros; rfl }
+
+@[simp]
+theorem faceFlag_rank {d : ℕ} {P : RationalPolytope d} (F : P.Face) :
+    (faceFlag P).rank F = d := rfl
+
+@[simp]
+theorem faceFlag_polytope_carrier {d : ℕ} {P : RationalPolytope d}
+    (F : P.Face) : ((faceFlag P).polytope F).carrier = F.carrier := by
+  exact F.asPolytope_carrier
+
+@[simp]
+theorem faceFlag_lattice_carrier {d : ℕ} {P : RationalPolytope d}
+    (F : P.Face) : ((faceFlag P).lattice F).carrier =
+      affineIntSpan (F.generatorFinset : Set (RealCoord d)) := rfl
+
+@[simp]
+theorem faceFlag_coord {d : ℕ} {P : RationalPolytope d}
+    (q : (faceFlag P).Point) {F : P.Face} (h : q.base ≤ F) :
+    q.coord h = q.val := rfl
+
+private theorem sum_eq_sum_pos_subtype {I E : Type*} [Fintype I]
+    [AddCommGroup E] [Module ℝ E] (weight : I → ℝ) (points : I → E)
+    (hweight0 : ∀ i, 0 ≤ weight i) :
+    (∑ i, weight i • points i) =
+      ∑ i : {i // 0 < weight i}, weight i • points i := by
+  classical
+  have hinactive :
+      (∑ i : {i : I // ¬ 0 < weight i}, weight i • points i) = 0 := by
+    apply Finset.sum_eq_zero
+    intro i _
+    have hi : weight i = 0 :=
+      le_antisymm (le_of_not_gt i.property) (hweight0 i)
+    simp [hi]
+  calc
+    (∑ i, weight i • points i) =
+        (∑ i : {i // 0 < weight i}, weight i • points i) +
+          ∑ i : {i // ¬ 0 < weight i}, weight i • points i := by
+      exact (Fintype.sum_subtype_add_sum_subtype _ _).symm
+    _ = ∑ i : {i // 0 < weight i}, weight i • points i := by
+      rw [hinactive, add_zero]
+
+/-- Proper points are based at their order-theoretic least containing face. -/
+def faceProperCarrier {d : ℕ} (P : RationalPolytope d) :
+    Set (faceFlag P).Point :=
+  {q | RationalPolytope.Face.IsLeastFaceAt P q.val q.base}
+
+/-- Least-face points form a proper-point set for the canonical face flag. -/
+noncomputable abbrev faceProper {d : ℕ} (P : RationalPolytope d) :
+    (faceFlag P).ProperPointSet where
+  carrier := faceProperCarrier P
+  convex_closed := by
+    rintro result ⟨n, points, weight, hpoints, hcomb⟩
+    change RationalPolytope.Face.IsLeastFaceAt P result.val result.base
+    have hresultFace : result.val ∈ result.base.carrier := by
+      have hrmem := result.val_mem
+      change result.val ∈ result.base.asPolytope.carrier at hrmem
+      rw [RationalPolytope.Face.asPolytope_carrier] at hrmem
+      exact hrmem
+    refine ⟨hresultFace, ?_⟩
+    intro G hresultG
+    apply hcomb.base_isLUB.2
+    intro i hi
+    have hpointP : ∀ j, (points j).val ∈ P.carrier := by
+      intro j
+      exact (hpoints j).1 |> (points j).base.subset_polytope
+    have hbary : result.val = ∑ j, weight j • (points j).val := by
+      calc
+        result.val = ∑ j : {j // 0 < weight j},
+            weight j • (points j).val := by
+          rw [hcomb.val_eq]
+          apply Fintype.sum_congr
+          intro j
+          rfl
+        _ = ∑ j, weight j • (points j).val :=
+          (sum_eq_sum_pos_subtype (I := Fin n) (E := RealCoord d)
+            weight (fun j ↦ (points j).val) hcomb.nonnegative).symm
+    have hpointG : (points i).val ∈ G.carrier :=
+      G.mem_of_pos_of_eq_convexCombination
+        (fun j ↦ (points j).val) weight result.val hpointP
+        hcomb.nonnegative hcomb.sum_eq_one hbary hresultG hi
+    exact (hpoints i).2 G hpointG
+
+private def facePhysical {d : ℕ} (P : RationalPolytope d)
+    (q : {q : (faceFlag P).Point // q ∈ faceProper P}) :
+    {x : RealCoord d // x ∈ P.carrier} := by
+  refine ⟨q.1.val, ?_⟩
+  have hq := q.property
+  change RationalPolytope.Face.IsLeastFaceAt P q.1.val q.1.base at hq
+  exact q.1.base.subset_polytope hq.1
+
+private noncomputable def facePhysicalEquiv {d : ℕ} (P : RationalPolytope d) :
+    {q : (faceFlag P).Point // q ∈ faceProper P} ≃
+      {x : RealCoord d // x ∈ P.carrier} :=
+  Equiv.ofBijective (facePhysical P) (by
+    constructor
+    · rintro ⟨q, hq⟩ ⟨r, hr⟩ hqr
+      apply Subtype.ext
+      change RationalPolytope.Face.IsLeastFaceAt P q.val q.base at hq
+      change RationalPolytope.Face.IsLeastFaceAt P r.val r.base at hr
+      have hval : q.val = r.val := congrArg Subtype.val hqr
+      have hbase : q.base = r.base := by
+        apply le_antisymm
+        · exact hq.2 r.base (by simpa [hval] using hr.1)
+        · exact hr.2 q.base (by simpa [hval] using hq.1)
+      cases q with
+      | mk qb qv hqv =>
+        cases r with
+        | mk rb rv hrv =>
+          dsimp at hval hbase ⊢
+          subst rb
+          subst rv
+          rfl
+    · intro x
+      obtain ⟨F, hF⟩ :=
+        RationalPolytope.Face.exists_isLeastFaceAt P x.property
+      let q : (faceFlag P).Point :=
+        { base := F
+          val := x.1
+          val_mem := by
+            change x.1 ∈ F.asPolytope.carrier
+            rw [F.asPolytope_carrier]
+            exact hF.1 }
+      have hqproper : q ∈ faceProper P := hF
+      refine ⟨⟨q, hqproper⟩, ?_⟩
+      apply Subtype.ext
+      rfl)
+
+/-- The canonical face-flag presentation of a rational polytope. -/
+noncomputable abbrev canonicalFaceFlagModel {d : ℕ} (P : RationalPolytope d) :
+    FaceFlagModel P where
+  flag := faceFlag P
+  proper := faceProper P
+  properEquiv := facePhysicalEquiv P
+
+@[simp]
+theorem canonicalFaceFlagModel_physical {d : ℕ} {P : RationalPolytope d}
+    (q : (faceFlag P).Point) (hq : q ∈ faceProper P) :
+    (canonicalFaceFlagModel P).physical q hq = q.val := rfl
+
+private theorem sum_pos_subtype {I : Type*} [Fintype I]
+    (weight : I → ℝ) (hweight0 : ∀ i, 0 ≤ weight i) :
+    (∑ i : {i // 0 < weight i}, weight i) = ∑ i, weight i := by
+  classical
+  have hinactive : (∑ i : {i : I // ¬ 0 < weight i}, weight i) = 0 := by
+    apply Finset.sum_eq_zero
+    intro i _
+    exact le_antisymm (le_of_not_gt i.property) (hweight0 i)
+  calc
+    (∑ i : {i // 0 < weight i}, weight i) =
+        (∑ i : {i // 0 < weight i}, weight i) +
+          ∑ i : {i // ¬ 0 < weight i}, weight i := by rw [hinactive, add_zero]
+    _ = ∑ i, weight i := Fintype.sum_subtype_add_sum_subtype _ _
+
+/-- The canonical face flag respects physical convex combinations and its
+face lattices absorb every active affine-integer-span certificate. -/
+theorem canonicalFaceFlagCombinationLaws {d : ℕ} (P : RationalPolytope d) :
+    FaceFlagCombinationLaws (canonicalFaceFlagModel P) where
+  combination_of_physical := by
+    intro n points hproper weight result hresult hweight0 hweightsum hbary
+    have hpointP : ∀ i, (points i).val ∈ P.carrier := by
+      intro i
+      have hi := hproper i
+      change RationalPolytope.Face.IsLeastFaceAt P (points i).val
+        (points i).base at hi
+      exact (points i).base.subset_polytope hi.1
+    have hresultLeast : RationalPolytope.Face.IsLeastFaceAt P
+        result.val result.base := hresult
+    have hbary' : result.val = ∑ i, weight i • (points i).val := by
+      have hbary' := hbary
+      change result.val = ∑ i, weight i • (points i).val at hbary'
+      exact hbary'
+    refine {
+      nonnegative := hweight0
+      sum_eq_one := hweightsum
+      base_isLUB := ?_
+      val_eq := ?_ }
+    · constructor
+      · intro i hi
+        have hpointResult : (points i).val ∈ result.base.carrier :=
+          result.base.mem_of_pos_of_eq_convexCombination
+            (fun j ↦ (points j).val) weight result.val hpointP hweight0
+            hweightsum hbary' hresultLeast.1 hi
+        exact (hproper i).2 result.base hpointResult
+      · intro G hG
+        apply hresultLeast.2 G
+        have hsumactive : (∑ i : {i // 0 < weight i}, weight i) = 1 :=
+          (sum_pos_subtype weight hweight0).trans hweightsum
+        have hbaryActive : result.val =
+            ∑ i : {i // 0 < weight i}, weight i • (points i).val :=
+          hbary'.trans (sum_eq_sum_pos_subtype
+            (I := Fin n) (E := RealCoord d) weight
+            (fun i ↦ (points i).val) hweight0)
+        rw [hbaryActive]
+        apply G.convex.sum_mem
+        · intro i _
+          exact hweight0 i
+        · simpa using hsumactive
+        · intro i _
+          exact hG i i.property ((hproper i).1)
+    · have hbaryActive : result.val =
+          ∑ i : {i // 0 < weight i}, weight i • (points i).val :=
+        hbary'.trans (sum_eq_sum_pos_subtype
+          (I := Fin n) (E := RealCoord d) weight
+          (fun i ↦ (points i).val) hweight0)
+      exact hbaryActive.trans (by
+        apply Fintype.sum_congr
+        intro i
+        rfl)
+  integral_of_activeSpan := by
+    intro n points hproper hintegral weight result hresult hcomb hspan
+    have hspan' : result.val ∈ affineIntSpan
+        ((fun i ↦ (points i).val) '' {i | 0 < weight i}) := by
+      have hspan' := hspan
+      change result.val ∈ affineIntSpan
+        ((fun i ↦ (points i).val) '' {i | 0 < weight i}) at hspan'
+      exact hspan'
+    change result.val ∈ (faceFlag P).lattice result.base
+    apply ((faceFlag P).lattice result.base).affineIntSpan_closed
+    apply affineIntSpan_mono _ hspan'
+    rintro x ⟨i, hi, rfl⟩
+    have hcoord := (points i).isIntegral_coord (hintegral i)
+      (hcomb.base_isLUB.1 i hi)
+    change (points i).coord (hcomb.base_isLUB.1 i hi) ∈
+      (faceFlag P).lattice result.base at hcoord
+    change (points i).val ∈ (faceFlag P).lattice result.base at hcoord
+    exact hcoord
+
+end EGZ
