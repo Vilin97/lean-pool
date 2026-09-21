@@ -8,10 +8,6 @@ module
 public import LeanPool.HSDInteriorPointLP.LocalNeighborhoodEstimates
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Algebra.Order.Algebra
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Sym.Sym2.Init
-import Mathlib.Tactic.NormNum.GCD
 import Mathlib.Tactic.Positivity.Finset
 
 /-!
@@ -211,22 +207,38 @@ theorem predictor_weighted_relative_norm_identity {n : Nat}
 theorem neighborhood_component_product_lower_tight {n : Nat}
     (w : HSState n) (hneigh : HSDNeighborhood ytmBetaTight w) (i : Fin n) :
     (3 / 4 : ℝ) * mu w ≤ w.x i * w.s i := by
-  have hdev := neighborhood_component_dev_sq_le_bound ytmBetaTight w hneigh i
-  have hmu : 0 < mu w := mu_pos_of_neighborhood ytmBetaTight w hneigh
-  unfold ytmBetaTight at hdev
-  have hs : 0 ≤ (w.x i * w.s i - (3 / 4 : ℝ) * mu w) ^ 2 := sq_nonneg _
-  nlinarith
+  have hlower := product_lower_of_deviation_sq
+    (mul_nonneg hneigh.2.1.le (mu_pos_of_neighborhood ytmBetaTight w hneigh).le)
+    (neighborhood_component_dev_sq_le_bound ytmBetaTight w hneigh i)
+  norm_num only [ytmBetaTight, show (1 : ℝ) - 1 / 4 = 3 / 4 by norm_num] at hlower
+  exact hlower
+
 
 /-- Step 5, scalar part: tight-neighborhood lower bound `3μ/4 ≤ τκ`. -/
 theorem neighborhood_scalar_product_lower_tight {n : Nat}
     (w : HSState n) (hneigh : HSDNeighborhood ytmBetaTight w) :
     (3 / 4 : ℝ) * mu w ≤ w.tau * w.kappa := by
-  have hdev := neighborhood_scalar_dev_sq_le_bound ytmBetaTight w hneigh
-  have hmu : 0 < mu w := mu_pos_of_neighborhood ytmBetaTight w hneigh
-  unfold ytmBetaTight at hdev
-  have hs : 0 ≤ (w.tau * w.kappa - (3 / 4 : ℝ) * mu w) ^ 2 := sq_nonneg _
-  nlinarith
+  have hlower := product_lower_of_deviation_sq
+    (mul_nonneg hneigh.2.1.le (mu_pos_of_neighborhood ytmBetaTight w hneigh).le)
+    (neighborhood_scalar_dev_sq_le_bound ytmBetaTight w hneigh)
+  norm_num only [ytmBetaTight, show (1 : ℝ) - 1 / 4 = 3 / 4 by norm_num] at hlower
+  exact hlower
 
+
+/-- Cancel the positive duality measure once for either quotient-square estimate. -/
+theorem quotient_square_bounds_of_weighted_bound {μ z D u v : ℝ}
+    (hμ : 0 < μ) (hz : (3 / 4 : ℝ) * μ ≤ z)
+    (hweighted : z * (u ^ 2 + v ^ 2) ≤ D * μ) :
+    u ^ 2 ≤ (4 / 3 : ℝ) * D ∧ v ^ 2 ≤ (4 / 3 : ℝ) * D := by
+  have hscaled := (mul_le_mul_of_nonneg_right hz
+    (add_nonneg (sq_nonneg u) (sq_nonneg v))).trans hweighted
+  have hcancel : (3 / 4 : ℝ) * (u ^ 2 + v ^ 2) ≤ D := by
+    apply (mul_le_mul_iff_left₀ hμ).mp
+    calc
+      (3 / 4 : ℝ) * (u ^ 2 + v ^ 2) * μ =
+          ((3 / 4 : ℝ) * μ) * (u ^ 2 + v ^ 2) := by ring
+      _ ≤ D * μ := hscaled
+  constructor <;> linarith only [hcancel, sq_nonneg u, sq_nonneg v]
 
 /-- Step 6, vector part: the weighted identity gives componentwise quotient-square bounds. -/
 theorem predictor_component_quotient_square_bounds {n : Nat}
@@ -259,42 +271,14 @@ theorem predictor_component_quotient_square_bounds {n : Nat}
     exact Finset.single_le_sum (fun j _ => hterm_nonneg j) (by simp)
   have hterm_le_total : termVec i ≤ hdim n * mu w := by
     calc
-      termVec i ≤ (∑ j : Fin n, termVec j) + termScalar := by nlinarith
+      termVec i ≤ (∑ j : Fin n, termVec j) + termScalar :=
+        hsingle.trans (le_add_of_nonneg_right hscalar_nonneg)
       _ = hdim n * mu w := by
           dsimp [termVec, termScalar]
           exact hweighted
-  have hprod_lower := neighborhood_component_product_lower_tight w hneigh i
-  have hprod_nonneg : 0 ≤ w.x i * w.s i := by
-    exact mul_nonneg (le_of_lt (hxpos i)) (le_of_lt (hspos i))
-  have hxpart_le_term :
-      (w.x i * w.s i) * (d.dx i / w.x i) ^ 2 ≤ termVec i := by
-    dsimp [termVec]
-    have hextra : 0 ≤ (w.x i * w.s i) * (d.ds i / w.s i) ^ 2 := by
-      exact mul_nonneg hprod_nonneg (sq_nonneg _)
-    nlinarith
-  have hspart_le_term :
-      (w.x i * w.s i) * (d.ds i / w.s i) ^ 2 ≤ termVec i := by
-    dsimp [termVec]
-    have hextra : 0 ≤ (w.x i * w.s i) * (d.dx i / w.x i) ^ 2 := by
-      exact mul_nonneg hprod_nonneg (sq_nonneg _)
-    nlinarith
-  constructor
-  · have hmain :
-        ((3 / 4 : ℝ) * mu w) * (d.dx i / w.x i) ^ 2 ≤ hdim n * mu w := by
-      have hlow_mul :
-          ((3 / 4 : ℝ) * mu w) * (d.dx i / w.x i) ^ 2 ≤
-            (w.x i * w.s i) * (d.dx i / w.x i) ^ 2 := by
-        exact mul_le_mul_of_nonneg_right hprod_lower (sq_nonneg _)
-      exact le_trans hlow_mul (le_trans hxpart_le_term hterm_le_total)
-    nlinarith
-  · have hmain :
-        ((3 / 4 : ℝ) * mu w) * (d.ds i / w.s i) ^ 2 ≤ hdim n * mu w := by
-      have hlow_mul :
-          ((3 / 4 : ℝ) * mu w) * (d.ds i / w.s i) ^ 2 ≤
-            (w.x i * w.s i) * (d.ds i / w.s i) ^ 2 := by
-        exact mul_le_mul_of_nonneg_right hprod_lower (sq_nonneg _)
-      exact le_trans hlow_mul (le_trans hspart_le_term hterm_le_total)
-    nlinarith
+  exact quotient_square_bounds_of_weighted_bound hmu
+    (neighborhood_component_product_lower_tight w hneigh i) hterm_le_total
+
 
 /-- Step 6, scalar part: quotient-square bounds for `τ` and `κ`. -/
 theorem predictor_scalar_quotient_square_bounds {n : Nat}
@@ -320,42 +304,14 @@ theorem predictor_scalar_quotient_square_bounds {n : Nat}
         (add_nonneg (sq_nonneg _) (sq_nonneg _)))
   have hscalar_le_total : termScalar ≤ hdim n * mu w := by
     calc
-      termScalar ≤ (∑ j : Fin n, termVec j) + termScalar := by nlinarith
+      termScalar ≤ (∑ j : Fin n, termVec j) + termScalar :=
+        le_add_of_nonneg_left hvec_nonneg
       _ = hdim n * mu w := by
           dsimp [termVec, termScalar]
           exact hweighted
-  have hprod_lower := neighborhood_scalar_product_lower_tight w hneigh
-  have hprod_nonneg : 0 ≤ w.tau * w.kappa := by
-    exact mul_nonneg (le_of_lt htpos) (le_of_lt hkpos)
-  have htpart_le_term :
-      (w.tau * w.kappa) * (d.dtau / w.tau) ^ 2 ≤ termScalar := by
-    dsimp [termScalar]
-    have hextra : 0 ≤ (w.tau * w.kappa) * (d.dkappa / w.kappa) ^ 2 := by
-      exact mul_nonneg hprod_nonneg (sq_nonneg _)
-    nlinarith
-  have hkpart_le_term :
-      (w.tau * w.kappa) * (d.dkappa / w.kappa) ^ 2 ≤ termScalar := by
-    dsimp [termScalar]
-    have hextra : 0 ≤ (w.tau * w.kappa) * (d.dtau / w.tau) ^ 2 := by
-      exact mul_nonneg hprod_nonneg (sq_nonneg _)
-    nlinarith
-  constructor
-  · have hmain :
-        ((3 / 4 : ℝ) * mu w) * (d.dtau / w.tau) ^ 2 ≤ hdim n * mu w := by
-      have hlow_mul :
-          ((3 / 4 : ℝ) * mu w) * (d.dtau / w.tau) ^ 2 ≤
-            (w.tau * w.kappa) * (d.dtau / w.tau) ^ 2 := by
-        exact mul_le_mul_of_nonneg_right hprod_lower (sq_nonneg _)
-      exact le_trans hlow_mul (le_trans htpart_le_term hscalar_le_total)
-    nlinarith
-  · have hmain :
-        ((3 / 4 : ℝ) * mu w) * (d.dkappa / w.kappa) ^ 2 ≤ hdim n * mu w := by
-      have hlow_mul :
-          ((3 / 4 : ℝ) * mu w) * (d.dkappa / w.kappa) ^ 2 ≤
-            (w.tau * w.kappa) * (d.dkappa / w.kappa) ^ 2 := by
-        exact mul_le_mul_of_nonneg_right hprod_lower (sq_nonneg _)
-      exact le_trans hlow_mul (le_trans hkpart_le_term hscalar_le_total)
-    nlinarith
+  exact quotient_square_bounds_of_weighted_bound hmu
+    (neighborhood_scalar_product_lower_tight w hneigh) hscalar_le_total
+
 
 /-- A convenient stronger numerical bound for the fixed YTM constant. -/
 theorem ytmStepConstant_le_half : ytmStepConstant ≤ (1 / 2 : ℝ) := by
@@ -604,44 +560,35 @@ theorem predictor_center_two_square_constant_bound {n : Nat} (μ : ℝ)
     2 * (1 - predictorFixedAlpha n) ^ 2 * ((ytmBetaTight * μ) ^ 2) +
       2 * ((predictorFixedAlpha n) ^ 2) ^ 2 * ((hdim n * μ / 2) ^ 2) ≤
       (ytmBetaWide * ((1 - predictorFixedAlpha n) * μ)) ^ 2 := by
-  let α : ℝ := predictorFixedAlpha n
-  let c : ℝ := ytmStepConstant
-  have hα_le : α ≤ (1 / 2 : ℝ) := by
-    dsimp [α]
-    exact predictor_fixed_alpha_le_half n
-  have hα_nonneg : 0 ≤ α := by
-    dsimp [α, predictorFixedAlpha]
-    exact le_of_lt (predictor_alpha_fixed_pos n)
-  have ha_ge : (1 / 2 : ℝ) ≤ 1 - α := by nlinarith
-  have ha_sq_ge : (1 / 4 : ℝ) ≤ (1 - α) ^ 2 := by
-    nlinarith [sq_nonneg ((1 - α) - (1 / 2 : ℝ))]
-  have hc_nonneg : 0 ≤ c := by
-    dsimp [c]
-    exact le_of_lt ytmStepConstant_pos
-  have hc_le : c ≤ (1 / 2 : ℝ) := by
-    dsimp [c]
-    exact ytmStepConstant_le_half
-  have hc_sq_le_quarter : c ^ 2 ≤ (1 / 4 : ℝ) := by
-    nlinarith [sq_nonneg (c - (1 / 2 : ℝ))]
-  have hc_four_le : (c ^ 2) ^ 2 ≤ (1 / 16 : ℝ) := by
-    nlinarith [sq_nonneg (c ^ 2 - (1 / 4 : ℝ))]
-  have hcancel : α ^ 2 * hdim n = c ^ 2 := by
-    dsimp [α, c]
-    exact predictor_fixed_alpha_sq_mul_hdim n
-  have hq_rewrite :
-      2 * (α ^ 2) ^ 2 * ((hdim n * μ / 2) ^ 2) =
-        ((c ^ 2) ^ 2 * μ ^ 2) / 2 := by
-    calc
-      2 * (α ^ 2) ^ 2 * ((hdim n * μ / 2) ^ 2)
-          = ((α ^ 2 * hdim n) ^ 2 * μ ^ 2) / 2 := by ring
-      _ = ((c ^ 2) ^ 2 * μ ^ 2) / 2 := by rw [hcancel]
-  unfold ytmBetaTight ytmBetaWide
-  dsimp [α] at *
-  rw [hq_rewrite]
-  have hμsq : 0 ≤ μ ^ 2 := sq_nonneg μ
-  have hq_margin : ((c ^ 2) ^ 2 * μ ^ 2) / 2 ≤ ((1 - predictorFixedAlpha n) ^ 2 * μ ^ 2) / 8 := by
-    nlinarith
-  nlinarith
+  let α := predictorFixedAlpha n
+  let c := ytmStepConstant
+  have halower : (1 / 2 : ℝ) ≤ 1 - α := by
+    have h := predictor_fixed_alpha_le_half n
+    linarith only [h]
+  have hasquare : (1 / 4 : ℝ) ≤ (1 - α) ^ 2 := by
+    convert pow_le_pow_left₀ (show (0 : ℝ) ≤ 1 / 2 by norm_num) halower 2 using 1
+    norm_num
+  have hcsquare : c ^ 2 ≤ (1 / 2 : ℝ) ^ 2 :=
+    pow_le_pow_left₀ ytmStepConstant_pos.le ytmStepConstant_le_half 2
+  have hcfour : (c ^ 2) ^ 2 ≤ (1 / 16 : ℝ) := by
+    convert pow_le_pow_left₀ (sq_nonneg c) hcsquare 2 using 1
+    norm_num
+  have hcoefficient : (c ^ 2) ^ 2 / 2 ≤ (1 - α) ^ 2 / 8 := by
+    linarith only [hasquare, hcfour]
+  have hcancel : α ^ 2 * hdim n = c ^ 2 := predictor_fixed_alpha_sq_mul_hdim n
+  calc
+    2 * (1 - α) ^ 2 * ((ytmBetaTight * μ) ^ 2) +
+        2 * (α ^ 2) ^ 2 * ((hdim n * μ / 2) ^ 2)
+        = ((1 - α) ^ 2 / 8 + (α ^ 2 * hdim n) ^ 2 / 2) * μ ^ 2 := by
+      unfold ytmBetaTight
+      ring
+    _ = ((1 - α) ^ 2 / 8 + (c ^ 2) ^ 2 / 2) * μ ^ 2 := by rw [hcancel]
+    _ ≤ ((1 - α) ^ 2 / 8 + (1 - α) ^ 2 / 8) * μ ^ 2 :=
+      mul_le_mul_of_nonneg_right (add_le_add le_rfl hcoefficient) (sq_nonneg μ)
+    _ = (ytmBetaWide * ((1 - α) * μ)) ^ 2 := by
+      unfold ytmBetaWide
+      ring
+
 
 /-- Steps 9--12 combined: the fixed predictor residual is inside the wide center
 radius. -/
