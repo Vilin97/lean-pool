@@ -9966,3 +9966,31 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: lean-scottish-book-155
+    title: A counterexample to Scottish Book Problem 155
+    summary: A Lean proof that there are real Banach spaces X and Y and a bijection U from X
+      to Y which preserves every pairwise distance on every closed ball of radius one quarter
+      while failing to be a global isometry. This gives a counterexample to Scottish Book Problem
+      155.
+    branch: functional analysis
+    entry_module: LeanPool.ScottishBook155
+    authors:
+    - Yoshito Ishiki
+    source:
+      url: https://github.com/yoshito-ishiki-math/lean-scottish-book-155
+      github_repo: yoshito-ishiki-math/lean-scottish-book-155
+      commit: 233eff4af7901eadee7927a1eb1f814ad0f3c118
+    license: MIT
+    status: verified
+    main_declarations:
+    - ScottishBook155.claim14
+    main_results:
+    - declaration: ScottishBook155.claim14
+      informal: There exist real Banach spaces and a bijection between them that preserves all
+        pairwise distances on each closed ball of radius one quarter but is not a global isometry.
+    tags:
+    - functional-analysis
+    msc:
+    - 46B20
+    - 54E40
+    provenance: AI
