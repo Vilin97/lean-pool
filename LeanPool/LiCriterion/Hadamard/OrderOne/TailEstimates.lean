@@ -13,6 +13,7 @@ import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Max
 import Mathlib.Data.Set.Card
 import Mathlib.Topology.Algebra.InfiniteSum.Real
+import LeanPool.LiCriterion.Hadamard.DyadicBounds
 import LeanPool.LiCriterion.Hadamard.OrderOne.CofiniteControl
 import LeanPool.LiCriterion.Hadamard.OrderOne.ZeroCountingBounds
 
@@ -26,7 +27,7 @@ namespace Hadamard
 
 namespace OrderOne
 
-open Real
+open Real Hadamard.DyadicBounds
 
 /-- The finite set of indices with `‖Z.z ρ‖ ≤ 2^n`. -/
 theorem zerosBallFinite {f : ℂ → ℂ} (Z : ZeroSet f)
@@ -653,135 +654,17 @@ theorem tsum_invNorm_sq_tail_le_rpow_of_two_pow
             (∑ ρ ∈ ball (k + 1) \ ball k, g ρ)
               ≤ (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount * q ^ k := by
         intro k hk
-        let diff : Finset Z.Zero := ball (k + 1) \ ball k
-        have hk_pow_le : (2 : ℝ) ^ (n + 1) ≤ (2 : ℝ) ^ k :=
-          pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hk
-        have hdiff_simp :
-            (∑ ρ ∈ diff, g ρ) = ∑ ρ ∈ diff, (1 : ℝ) / ‖Z.z ρ‖ ^ 2 := by
-          refine Finset.sum_congr rfl ?_
-          intro ρ hρ
-          have hnot : ¬ ‖Z.z ρ‖ ≤ (2 : ℝ) ^ k := by
-            intro hle
-            have : ρ ∈ ball k :=
-              (mem_zerosBallFinset_iff Z h_z_ne_zero h_summable k ρ).2 hle
-            exact (Finset.mem_sdiff.1 hρ).2 this
-          have hlt : (2 : ℝ) ^ k < ‖Z.z ρ‖ := lt_of_not_ge hnot
-          have hcond : (2 : ℝ) ^ (n + 1) < ‖Z.z ρ‖ :=
-            lt_of_lt_of_le (hk_pow_le.trans_lt hlt) (le_rfl)
-          simp [g, hcond]
-        have hterm_le :
-            ∀ ρ, ρ ∈ diff → (1 : ℝ) / ‖Z.z ρ‖ ^ 2 ≤ (1 : ℝ) / ((2 : ℝ) ^ k) ^ 2 := by
-          intro ρ hρ
-          have hnot : ¬ ‖Z.z ρ‖ ≤ (2 : ℝ) ^ k := by
-            intro hle
-            have : ρ ∈ ball k :=
-              (mem_zerosBallFinset_iff Z h_z_ne_zero h_summable k ρ).2 hle
-            exact (Finset.mem_sdiff.1 hρ).2 this
-          have hk_le_norm : (2 : ℝ) ^ k ≤ ‖Z.z ρ‖ := le_of_lt (lt_of_not_ge hnot)
-          have hk2_pos : 0 < ((2 : ℝ) ^ k) ^ 2 := by positivity
-          have hk2_le : ((2 : ℝ) ^ k) ^ 2 ≤ ‖Z.z ρ‖ ^ 2 :=
-            pow_le_pow_left₀ (by positivity : (0 : ℝ) ≤ (2 : ℝ) ^ k) hk_le_norm 2
-          simpa [one_div, inv_pow] using (one_div_le_one_div_of_le hk2_pos hk2_le)
-        have hsum_le_card :
-            (∑ ρ ∈ diff, (1 : ℝ) / ‖Z.z ρ‖ ^ 2)
-              ≤ (diff.card : ℝ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ 2) := by
-          have hsum_le :
-              (∑ ρ ∈ diff, (1 : ℝ) / ‖Z.z ρ‖ ^ 2)
-                ≤ ∑ ρ ∈ diff, (1 : ℝ) / ((2 : ℝ) ^ k) ^ 2 :=
-            Finset.sum_le_sum hterm_le
-          calc
-            (∑ ρ ∈ diff, (1 : ℝ) / ‖Z.z ρ‖ ^ 2)
-                ≤ ∑ ρ ∈ diff, (1 : ℝ) / ((2 : ℝ) ^ k) ^ 2 := hsum_le
-            _ = (diff.card : ℝ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ 2) := by simp
         have hRcount_le : Rcount ≤ (2 : ℝ) ^ (k + 1) := by
-          have hRcount_le_R0 : Rcount ≤ R0 := le_max_left _ _
-          have hn0_le_k : n₀ ≤ k := le_trans hn (le_trans (Nat.le_succ n) hk)
-          have hn0_le_k1 : n₀ ≤ k + 1 := Nat.le_succ_of_le hn0_le_k
-          have hpow : (2 : ℝ) ^ n₀ ≤ (2 : ℝ) ^ (k + 1) :=
-            pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hn0_le_k1
-          exact le_trans (le_trans hRcount_le_R0 hn₀) hpow
-        have hcount_ball :
-            (({ρ : Z.Zero | ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1)} : Set Z.Zero).ncard : ℝ)
-              ≤ Ccount * ((2 : ℝ) ^ (k + 1)) ^ ((1 : ℝ) + ε) :=
-          hN_le ((2 : ℝ) ^ (k + 1)) hRcount_le
-        have hcard_ball :
-            ((ball (k + 1)).card : ℝ)
-              = (({ρ : Z.Zero | ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (k + 1)} : Set Z.Zero).ncard : ℝ) := by
-          exact_mod_cast (card_zerosBallFinset Z h_z_ne_zero h_summable (n := k + 1))
-        have hdiff_card_le :
-            (diff.card : ℝ) ≤ Ccount * ((2 : ℝ) ^ (k + 1)) ^ ((1 : ℝ) + ε) := by
-          have hdiff_card_le_ball : (diff.card : ℝ) ≤ ((ball (k + 1)).card : ℝ) := by
-            exact_mod_cast (Finset.card_le_card (Finset.sdiff_subset : diff ⊆ ball (k + 1)))
-          have hball_le :
-              ((ball (k + 1)).card : ℝ) ≤ Ccount * ((2 : ℝ) ^ (k + 1)) ^ ((1 : ℝ) + ε) := by
-            simpa [hcard_ball] using hcount_ball
-          exact le_trans hdiff_card_le_ball hball_le
-        have hqk : q ^ k = ((2 : ℝ) ^ k) ^ (ε - 1) := by
-          simpa [q] using
-            (Real.rpow_pow_comm (x := (2 : ℝ)) (hx := by positivity) (ε - 1) k)
-        have hdiv :
-            ((2 : ℝ) ^ k) ^ (ε - 1)
-              = ((2 : ℝ) ^ k) ^ ((1 : ℝ) + ε) / ((2 : ℝ) ^ k) ^ (2 : ℕ) := by
-          have hk_pos : 0 < (2 : ℝ) ^ k := by positivity
-          have hsub : ((1 : ℝ) + ε) - (2 : ℝ) = ε - 1 := by ring
-          simpa [hsub, (Real.rpow_natCast ((2 : ℝ) ^ k) 2)] using
-            (Real.rpow_sub hk_pos ((1 : ℝ) + ε) (2 : ℝ))
-        have hrewrite :
-            Ccount * ((2 : ℝ) ^ (k + 1)) ^ ((1 : ℝ) + ε) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ 2)
-              = (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount * q ^ k := by
-          have hpow_succ : (2 : ℝ) ^ (k + 1) = (2 : ℝ) ^ k * 2 := by
-            simp [pow_succ]
-          have hpowk_nonneg : 0 ≤ (2 : ℝ) ^ k := by positivity
-          have h2_nonneg : 0 ≤ (2 : ℝ) := by norm_num
-          calc
-            Ccount * ((2 : ℝ) ^ (k + 1)) ^ ((1 : ℝ) + ε) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ 2)
-                = Ccount * (((2 : ℝ) ^ k * 2) ^ ((1 : ℝ) + ε)) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ 2) := by
-                      simp [hpow_succ]
-            _ = Ccount * (((2 : ℝ) ^ k) ^ ((1 : ℝ) + ε) * (2 : ℝ) ^ ((1 : ℝ) + ε)) *
-                    ((1 : ℝ) / ((2 : ℝ) ^ k) ^ 2) := by
-                      have hsplit :
-                          ((2 : ℝ) ^ k * 2) ^ ((1 : ℝ) + ε)
-                            = ((2 : ℝ) ^ k) ^ ((1 : ℝ) + ε) * (2 : ℝ) ^ ((1 : ℝ) + ε) := by
-                        simpa using
-                          (Real.mul_rpow (x := (2 : ℝ) ^ k) (y := (2 : ℝ)) (z := (1 : ℝ) + ε)
-                            hpowk_nonneg h2_nonneg)
-                      have hsplit' :
-                          ((2 : ℝ) * (2 : ℝ) ^ k) ^ ((1 : ℝ) + ε)
-                            = (2 : ℝ) ^ ((1 : ℝ) + ε) * ((2 : ℝ) ^ k) ^ ((1 : ℝ) + ε) := by
-                        have h2_nonneg' : 0 ≤ (2 : ℝ) := by norm_num
-                        have hpowk_nonneg' : 0 ≤ (2 : ℝ) ^ k := by positivity
-                        simpa using
-                          (Real.mul_rpow (x := (2 : ℝ)) (y := (2 : ℝ) ^ k) (z := (1 : ℝ) + ε)
-                            h2_nonneg' hpowk_nonneg')
-                      -- avoid simp-canceling `Ccount`
-                      simp [hsplit', mul_assoc, mul_comm,
-                        -mul_eq_mul_left_iff, -mul_eq_mul_right_iff]
-            _ = (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount *
-                    (((2 : ℝ) ^ k) ^ ((1 : ℝ) + ε) / ((2 : ℝ) ^ k) ^ (2 : ℕ)) := by
-                      -- Rearrange and rewrite `a * (1 / b)` as `a / b`,
-                      -- but avoid simp-canceling `Ccount`.
-                      simp [div_eq_mul_inv, mul_assoc, mul_comm,
-                        -mul_eq_mul_left_iff, -mul_eq_mul_right_iff]
-            _ = (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount * (((2 : ℝ) ^ k) ^ (ε - 1)) := by
-                      -- `x^(ε-1) = x^(1+ε) / x^2`
-                      simpa [mul_assoc] using
-                        congrArg
-                          (fun t => (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount * t)
-                          hdiv.symm
-            _ = (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount * q ^ k := by
-                      simp [hqk]
-        have hcalc :
-            (∑ ρ ∈ diff, g ρ)
-              ≤ (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount * q ^ k := by
-          calc
-            (∑ ρ ∈ diff, g ρ) = ∑ ρ ∈ diff, (1 : ℝ) / ‖Z.z ρ‖ ^ 2 := hdiff_simp
-            _ ≤ (diff.card : ℝ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ 2) := hsum_le_card
-            _ ≤ (Ccount * ((2 : ℝ) ^ (k + 1)) ^ ((1 : ℝ) + ε)) *
-                  ((1 : ℝ) / ((2 : ℝ) ^ k) ^ 2) := by
-                    gcongr
-            _ = (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount * q ^ k := by
-                    simpa [mul_assoc, mul_left_comm, mul_comm] using hrewrite
-        simpa [diff] using hcalc
+          exact hRcount_le_pow.trans
+            (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) (by omega))
+        have hcount : (∑ _ρ ∈ ball (k + 1), (1 : ℝ)) ≤
+            Ccount * ((2 : ℝ) ^ (k + 1)) ^ (1 + ε) := by
+          simpa [ball, card_zerosBallFinset] using hN_le ((2 : ℝ) ^ (k + 1)) hRcount_le
+        have h := dyadic_shell_sum_bound Z.z (fun _ => (1 : ℝ)) (fun _ => by norm_num)
+          ball (fun j ρ => mem_zerosBallFinset_iff Z h_z_ne_zero h_summable j ρ)
+          1 n k hk Ccount 1 ε hcount
+        simpa only [g, q, Nat.cast_one, Nat.reduceAdd,
+          show (1 : ℝ) + ε - (1 + 1) = ε - 1 by ring] using h
       let t : ℕ := m - (n + 1)
       have hm_eq : n + 1 + t = m := Nat.add_sub_of_le (Nat.le_of_lt hm_ge)
       have hind :
@@ -850,40 +733,8 @@ theorem tsum_invNorm_sq_tail_le_rpow_of_two_pow
                 (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) := by
         simpa [hm_eq, ball] using hind t
       have hgeom_le :
-          (∑ i ∈ Finset.range t, q ^ (n + 1 + i))
-            ≤ (q ^ (n + 1)) * (1 - q)⁻¹ := by
-        have hsum : Summable (fun i : ℕ => q ^ i) :=
-          summable_geometric_of_lt_one (le_of_lt hq_pos) hq_lt_one
-        have hsum' : Summable (fun i : ℕ => q ^ (n + 1) * q ^ i) :=
-          hsum.mul_left (q ^ (n + 1))
-        have hnonneg : ∀ i : ℕ, 0 ≤ q ^ (n + 1) * q ^ i := by
-          intro i
-          positivity
-        have hle_tsum :
-            (∑ i ∈ Finset.range t, q ^ (n + 1) * q ^ i) ≤ ∑' i : ℕ, q ^ (n + 1) * q ^ i := by
-          refine
-            Summable.sum_le_tsum
-              (s := Finset.range t) (f := fun i : ℕ => q ^ (n + 1) * q ^ i) ?_ hsum'
-          intro i hi
-          exact hnonneg i
-        have hpow_add : ∀ i : ℕ, q ^ (n + 1 + i) = q ^ (n + 1) * q ^ i := by
-          intro i
-          simp [pow_add, mul_assoc]
-        have hsum_eq :
-            (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) =
-              (∑ i ∈ Finset.range t, q ^ (n + 1) * q ^ i) := by
-          refine Finset.sum_congr rfl ?_
-          intro i hi
-          simp [hpow_add i]
-        have htsum_eq :
-            (∑' i : ℕ, q ^ (n + 1) * q ^ i) = (q ^ (n + 1)) * (1 - q)⁻¹ := by
-          have hgeom0 : (∑' i : ℕ, q ^ i) = (1 - q)⁻¹ :=
-            tsum_geometric_of_lt_one (h₁ := le_of_lt hq_pos) (h₂ := hq_lt_one)
-          simp [tsum_mul_left, hgeom0]
-        have : (∑ i ∈ Finset.range t, q ^ (n + 1 + i))
-            ≤ (q ^ (n + 1)) * (1 - q)⁻¹ := by
-          exact le_trans (by simpa [hsum_eq] using hle_tsum) (by simp [htsum_eq])
-        exact this
+          (∑ i ∈ Finset.range t, q ^ (n + 1 + i)) ≤ q ^ (n + 1) * (1 - q)⁻¹ :=
+        geometric_sum_from_le q hq_pos hq_lt_one n t
       have hq_pow_comm : q ^ n = ((2 : ℝ) ^ n) ^ (ε - 1) := by
         simpa [q] using
           (Real.rpow_pow_comm (x := (2 : ℝ)) (hx := by positivity) (ε - 1) n)
@@ -903,25 +754,10 @@ theorem tsum_invNorm_sq_tail_le_rpow_of_two_pow
         _ ≤ (2 : ℝ) ^ ((1 : ℝ) + ε) * Ccount * ((q ^ (n + 1)) * (1 - q)⁻¹) := by
               gcongr
         _ = C * ((2 : ℝ) ^ n) ^ (ε - 1) := hconst
-  have hfinset :
-      ∀ t : Finset Z.Zero,
-        (∑ ρ ∈ t, g ρ) ≤ C * ((2 : ℝ) ^ n) ^ (ε - 1) := by
-    classical
-    intro t
-    obtain ⟨m, hm⟩ := cofinal_zerosBallFinset Z h_z_ne_zero h_summable t
-    have hle_ball :
-        (∑ ρ ∈ t, g ρ) ≤ ∑ ρ ∈ zerosBallFinset Z h_z_ne_zero h_summable m, g ρ := by
-      refine Finset.sum_le_sum_of_subset_of_nonneg hm ?_
-      intro ρ hρ hρnot
-      exact hg_nonneg ρ
-    exact le_trans hle_ball (hball m)
-  have ht_nonneg : 0 ≤ C * ((2 : ℝ) ^ n) ^ (ε - 1) := by
-    have : 0 ≤ ((2 : ℝ) ^ n) ^ (ε - 1) :=
-      Real.rpow_nonneg (by positivity : (0 : ℝ) ≤ (2 : ℝ) ^ n) _
-    exact mul_nonneg hC_nonneg this
   have htsum_g :
       (∑' ρ : Z.Zero, g ρ) ≤ C * ((2 : ℝ) ^ n) ^ (ε - 1) :=
-    tsum_le_of_sum_le' ht_nonneg hfinset
+    tsum_le_of_cofinal_finset_bound (zerosBallFinset Z h_z_ne_zero h_summable) g
+      (by positivity) hg_nonneg (cofinal_zerosBallFinset Z h_z_ne_zero h_summable) hball
   have hsub :
       (∑' ρ : ({ρ : Z.Zero | (2 : ℝ) ^ (n + 1) < ‖Z.z ρ‖} : Set Z.Zero),
           (‖Z.z ρ.val‖ ^ 2)⁻¹)
