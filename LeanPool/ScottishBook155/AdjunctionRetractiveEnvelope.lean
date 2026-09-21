@@ -25,8 +25,7 @@ universe u v
 /-- The retractive-envelope embedding of the adjunction space, using its canonical target
 inclusion and retraction. -/
 noncomputable def adjunctionEnvelopeEmbedding
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -37,8 +36,7 @@ noncomputable def adjunctionEnvelopeEmbedding
     (adjunctionRetraction V a y L H hattach hLH hL hV hgap) p
 
 theorem adjunctionEnvelopeEmbedding_target
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -52,8 +50,7 @@ theorem adjunctionEnvelopeEmbedding_target
   exact adjunctionRetraction_target V a y L H hattach hLH hL hV hgap
 
 theorem adjunctionEnvelopeEmbedding_dist_le
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -67,8 +64,7 @@ theorem adjunctionEnvelopeEmbedding_dist_le
   exact adjunctionRetraction_dist_le V a y L H hattach hLH hL hV hgap
 
 theorem adjunctionEnvelopeProjection_recovery
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))

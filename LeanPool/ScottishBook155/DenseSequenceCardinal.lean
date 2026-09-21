@@ -3,7 +3,10 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.RCLike.Basic
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Tactic
 
 /-!
 # Cardinal control from a dense range

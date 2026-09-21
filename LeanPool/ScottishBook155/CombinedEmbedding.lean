@@ -24,21 +24,19 @@ universe u v
 /-- Pair an arbitrary relative coordinate with the quotient Kuratowski
 coordinate used to recover injectivity. -/
 noncomputable def combinedEmbedding
-    {P : Type u} [MetricSpace P] {E : Type v} 
-    (relative : P → E) (S : Set P) (base : P) (x : P) :
+    {P : Type u} [MetricSpace P] {E : Type v} (relative : P → E) (S : Set P) (base : P) (x : P) :
       E × lp (fun _ : CollapsedQuotient P S ↦ ℝ) ∞ :=
   (relative x, quotientKuratowski S base x)
 
 theorem combinedEmbedding_of_mem
-    {P : Type u} [MetricSpace P] {E : Type v} [PseudoMetricSpace E]
-    {relative : P → E} {S : Set P} {base x : P}
+    {P : Type u} [MetricSpace P] {E : Type v} {relative : P → E} {S : Set P} {base x : P}
     (hbase : base ∈ S) (hx : x ∈ S) :
     combinedEmbedding relative S base x = (relative x, 0) := by
   simp [combinedEmbedding, quotientKuratowski_of_mem hbase hx]
 
 theorem combinedEmbedding_eq_iff
-    {P : Type u} [MetricSpace P] {E : Type v} [PseudoMetricSpace E]
-    {relative : P → E} {S : Set P} (hne : S.Nonempty) (hclosed : IsClosed S)
+    {P : Type u} [MetricSpace P] {E : Type v} {relative : P → E} {S : Set P}
+    (hne : S.Nonempty) (hclosed : IsClosed S)
     (base x y : P) :
     combinedEmbedding relative S base x = combinedEmbedding relative S base y ↔
       relative x = relative y ∧ (x = y ∨ (x ∈ S ∧ y ∈ S)) := by
@@ -55,8 +53,8 @@ theorem combinedEmbedding_eq_iff
 /-- The second coordinate separates all pairs except pairs in `S`; hence
 injectivity of the first coordinate on `S` implies global injectivity. -/
 theorem combinedEmbedding_injective
-    {P : Type u} [MetricSpace P] {E : Type v} [PseudoMetricSpace E]
-    {relative : P → E} {S : Set P} (hne : S.Nonempty) (hclosed : IsClosed S)
+    {P : Type u} [MetricSpace P] {E : Type v} {relative : P → E} {S : Set P}
+    (hne : S.Nonempty) (hclosed : IsClosed S)
     (hrelative : Set.InjOn relative S) (base : P) :
     Function.Injective (combinedEmbedding relative S base) := by
   intro x y hxy

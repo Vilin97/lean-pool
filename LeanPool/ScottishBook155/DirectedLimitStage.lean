@@ -38,14 +38,14 @@ variable [DirectedSystem M (eM · · ·)] [DirectedSystem N (eN · · ·)]
 
 local instance sourceLinearDirectedSystem :
     DirectedSystem M (NormedDirectLimit.linearMap M eM · · ·) where
-  map_self {i} x := DirectedSystem.map_self (f := (eM · · ·)) x
-  map_map {k j i} hij hjk x :=
+  map_self {_i} x := DirectedSystem.map_self (f := (eM · · ·)) x
+  map_map {_k _j _i} hij hjk x :=
     DirectedSystem.map_map (f := (eM · · ·)) hij hjk x
 
 local instance targetLinearDirectedSystem :
     DirectedSystem N (NormedDirectLimit.linearMap N eN · · ·) where
-  map_self {i} x := DirectedSystem.map_self (f := (eN · · ·)) x
-  map_map {k j i} hij hjk x :=
+  map_self {_i} x := DirectedSystem.map_self (f := (eN · · ·)) x
+  map_map {_k _j _i} hij hjk x :=
     DirectedSystem.map_map (f := (eN · · ·)) hij hjk x
 
 variable (V : ∀ i, M i → N i)
@@ -61,11 +61,11 @@ abbrev Target := NormedDirectLimit.CompletedCarrier N eN
 
 /-- The continuous extension to completed limits of the compatible nonexpansive stage
 maps. -/
-noncomputable def limitMap
-    (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y) :
+noncomputable def limitMap :
     Source M eM → Target N eN :=
-  CompletedLimitMap.completedMap M N eM eN V hV hLip
+  CompletedLimitMap.completedMap M N eM eN V
 
+include hV in
 omit [∀ (i : ι), CompleteSpace (N i)] in
 /-- The completed limit map preserves the protected scale whenever every
 earlier stage does. -/
@@ -74,11 +74,11 @@ theorem limitMap_preservesUpTo {r : ℝ}
     (stagePreserves : ∀ i, PreservesUpTo r (V i))
     (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y) :
     PreservesUpTo r
-      (limitMap M N eM eN V hV hLip) := by
+      (limitMap M N eM eN V) := by
   intro x y hxy
   let sourceApprox := fun a z =>
     CoherentRetractionLimit.ProjectionSystem.approx M eM sourceProjection a z
-  let f := limitMap M N eM eN V hV hLip
+  let f := limitMap M N eM eN V
   have hx : Tendsto (fun a => sourceApprox a x) atTop (nhds x) :=
     CoherentRetractionLimit.ProjectionSystem.approx_tendsto M eM sourceProjection x
   have hy : Tendsto (fun a => sourceApprox a y) atTop (nhds y) :=
@@ -101,9 +101,9 @@ theorem limitMap_preservesUpTo {r : ℝ}
       dist (NormedDirectLimit.completedOf M eM a Px)
         (NormedDirectLimit.completedOf M eM a Py)
     change dist
-        (CompletedLimitMap.completedMap M N eM eN V hV hLip
+        (CompletedLimitMap.completedMap M N eM eN V
           (NormedDirectLimit.completedOf M eM a Px))
-        (CompletedLimitMap.completedMap M N eM eN V hV hLip
+        (CompletedLimitMap.completedMap M N eM eN V
           (NormedDirectLimit.completedOf M eM a Py)) =
       dist (NormedDirectLimit.completedOf M eM a Px)
         (NormedDirectLimit.completedOf M eM a Py)
@@ -129,16 +129,15 @@ theorem limitMap_preservesUpTo {r : ℝ}
 limit map injective. -/
 theorem limitMap_injective
     (stageInjective : ∀ i, Function.Injective (V i))
-    (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y)
     (eventualRecovery : ∀ x : Source M eM, ∀ᶠ a in atTop,
       CoherentRetractionLimit.ProjectionFamily.completedProjection N eN
           (CoherentRetractionLimit.ProjectionSystem.family N eN targetProjection a)
-          (limitMap M N eM eN V hV hLip x) =
+          (limitMap M N eM eN V x) =
         V a (CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
           (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x)) :
-    Function.Injective (limitMap M N eM eN V hV hLip) := by
+    Function.Injective (limitMap M N eM eN V) := by
   apply injective_of_eventual_stage_recovery (l := (atTop : Filter ι))
-    (limitMap M N eM eN V hV hLip) V stageInjective
+    (limitMap M N eM eN V) V stageInjective
     (fun a x => CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
       (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x)
     (fun a x => NormedDirectLimit.completedOf M eM a x)
@@ -152,19 +151,18 @@ theorem limitMap_injective
 needed for injectivity. -/
 theorem eventualRecovery_of_bounded
     {L : ℝ} (hL : 0 < L)
-    (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y)
     (boundedRecovery : ∀ (a : ι) (x : Source M eM),
       dist x (CoherentRetractionLimit.ProjectionSystem.approx M eM
         sourceProjection a x) ≤ L →
       CoherentRetractionLimit.ProjectionFamily.completedProjection N eN
           (CoherentRetractionLimit.ProjectionSystem.family N eN targetProjection a)
-          (limitMap M N eM eN V hV hLip x) =
+          (limitMap M N eM eN V x) =
         V a (CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
           (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x)) :
     ∀ x : Source M eM, ∀ᶠ a in atTop,
       CoherentRetractionLimit.ProjectionFamily.completedProjection N eN
           (CoherentRetractionLimit.ProjectionSystem.family N eN targetProjection a)
-          (limitMap M N eM eN V hV hLip x) =
+          (limitMap M N eM eN V x) =
         V a (CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
           (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x) := by
   intro x
@@ -175,19 +173,18 @@ theorem eventualRecovery_of_bounded
 /-- Open-band version of `eventualRecovery_of_bounded`. -/
 theorem eventualRecovery_of_bounded_lt
     {L : ℝ} (hL : 0 < L)
-    (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y)
     (boundedRecovery : ∀ (a : ι) (x : Source M eM),
       dist x (CoherentRetractionLimit.ProjectionSystem.approx M eM
         sourceProjection a x) < L →
       CoherentRetractionLimit.ProjectionFamily.completedProjection N eN
           (CoherentRetractionLimit.ProjectionSystem.family N eN targetProjection a)
-          (limitMap M N eM eN V hV hLip x) =
+          (limitMap M N eM eN V x) =
         V a (CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
           (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x)) :
     ∀ x : Source M eM, ∀ᶠ a in atTop,
       CoherentRetractionLimit.ProjectionFamily.completedProjection N eN
           (CoherentRetractionLimit.ProjectionSystem.family N eN targetProjection a)
-          (limitMap M N eM eN V hV hLip x) =
+          (limitMap M N eM eN V x) =
         V a (CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
           (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x) := by
   intro x
@@ -203,15 +200,15 @@ noncomputable def toProtectedStage {r : ℝ}
     (eventualRecovery : ∀ x : Source M eM, ∀ᶠ a in atTop,
       CoherentRetractionLimit.ProjectionFamily.completedProjection N eN
           (CoherentRetractionLimit.ProjectionSystem.family N eN targetProjection a)
-          (limitMap M N eM eN V hV hLip x) =
+          (limitMap M N eM eN V x) =
         V a (CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
           (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x)) :
     ProtectedStage.{u} r where
   source := RealBanachSpace.ofType (Source M eM)
   target := RealBanachSpace.ofType (Target N eN)
-  map := limitMap M N eM eN V hV hLip
-  injective := limitMap_injective M N eM eN V hV sourceProjection targetProjection
-    stageInjective hLip eventualRecovery
+  map := limitMap M N eM eN V
+  injective := limitMap_injective M N eM eN V sourceProjection targetProjection
+    stageInjective eventualRecovery
   preservesUpTo := limitMap_preservesUpTo M N eM eN V hV sourceProjection
     stagePreserves hLip
 
@@ -226,14 +223,14 @@ noncomputable def toProtectedStageOfBounded {r L : ℝ} (hL : 0 < L)
         sourceProjection a x) ≤ L →
       CoherentRetractionLimit.ProjectionFamily.completedProjection N eN
           (CoherentRetractionLimit.ProjectionSystem.family N eN targetProjection a)
-          (limitMap M N eM eN V hV hLip x) =
+          (limitMap M N eM eN V x) =
         V a (CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
           (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x)) :
     ProtectedStage.{u} r :=
   toProtectedStage M N eM eN V hV sourceProjection targetProjection
     stageInjective stagePreserves hLip
-    (eventualRecovery_of_bounded M N eM eN V hV sourceProjection targetProjection
-      hL hLip boundedRecovery)
+    (eventualRecovery_of_bounded M N eM eN V sourceProjection targetProjection
+      hL boundedRecovery)
 
 /-- Version of `toProtectedStage` for an open uniform recovery band. -/
 noncomputable def toProtectedStageOfBoundedLt {r L : ℝ} (hL : 0 < L)
@@ -245,14 +242,14 @@ noncomputable def toProtectedStageOfBoundedLt {r L : ℝ} (hL : 0 < L)
         sourceProjection a x) < L →
       CoherentRetractionLimit.ProjectionFamily.completedProjection N eN
           (CoherentRetractionLimit.ProjectionSystem.family N eN targetProjection a)
-          (limitMap M N eM eN V hV hLip x) =
+          (limitMap M N eM eN V x) =
         V a (CoherentRetractionLimit.ProjectionFamily.completedProjection M eM
           (CoherentRetractionLimit.ProjectionSystem.family M eM sourceProjection a) x)) :
     ProtectedStage.{u} r :=
   toProtectedStage M N eM eN V hV sourceProjection targetProjection
     stageInjective stagePreserves hLip
-    (eventualRecovery_of_bounded_lt M N eM eN V hV sourceProjection targetProjection
-      hL hLip boundedRecovery)
+    (eventualRecovery_of_bounded_lt M N eM eN V sourceProjection targetProjection
+      hL boundedRecovery)
 
 end DirectedLimitStage
 

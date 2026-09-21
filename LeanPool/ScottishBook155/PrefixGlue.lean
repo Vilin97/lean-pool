@@ -572,7 +572,7 @@ theorem ofLimit_restriction {j : RI} (hj : Order.IsSuccLimit j)
   apply ProtectedPrefix.ext
   unfold ofLimit restriction
   dsimp
-  letI : Nonempty (Set.Iio j) := ⟨i⟩
+  let : Nonempty (Set.Iio j) := ⟨i⟩
   let hr : (0 : ℝ) < 1 / 2 := by norm_num
   let hL : (0 : ℝ) < 1 := by norm_num
   let e := (initialSegmentWithTop j).toOrderEmbedding

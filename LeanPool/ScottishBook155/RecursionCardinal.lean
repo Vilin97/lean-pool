@@ -3,6 +3,7 @@ Copyright (c) 2026 Yoshito Ishiki. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yoshito Ishiki
 -/
+import Mathlib.Analysis.Real.Cardinality
 import LeanPool.ScottishBook155.CardinalControl
 
 /-!
@@ -71,7 +72,8 @@ theorem mk_recursionIndex : Cardinal.mk RecursionIndex = recursionCardinal := by
 
 theorem initialSegment_mk_lt (i : RecursionIndex) :
     Cardinal.mk (Set.Iio i) < recursionCardinal := by
-  exact Cardinal.mk_Iio_toType_ord_lt i
+  simpa only [mk_recursionIndex] using
+    Cardinal.mk_Iio_lt i (by rw [mk_recursionIndex, Ordinal.type_toType])
 
 theorem initialSegment_mk_le_stageCardinal (i : RecursionIndex) :
     Cardinal.mk (Set.Iio i) ≤ stageCardinal := by

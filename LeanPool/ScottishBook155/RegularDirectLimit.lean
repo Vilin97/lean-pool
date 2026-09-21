@@ -23,21 +23,22 @@ private abbrev RI := RecursionIndex.{0}
 /-- A countable family of recursion indices has a strict upper bound. -/
 theorem recursionIndex_nat_bounded (a : ℕ → RI) :
     ∃ j : RI, ∀ n, a n < j := by
-  letI : IsWellOrder RI ((· < ·) : RI → RI → Prop) := isWellOrder_lt
+  let : IsWellOrder RI ((· < ·) : RI → RI → Prop) := isWellOrder_lt
   let f : ℕ → Ordinal := fun n =>
     Ordinal.typein ((· < ·) : RI → RI → Prop) (a n)
-  have hsmall : Ordinal.lsub f < recursionCardinal.ord := by
-    apply Cardinal.lsub_lt_ord_of_isRegular recursionCardinal_isRegular
-    · simpa using aleph0_lt_recursionCardinal
+  have hsmall : (⨆ n, f n + 1) < recursionCardinal.ord := by
+    apply Ordinal.iSup_add_one_lt_of_lt_cof
+    · simpa only [Cardinal.mk_nat, recursionCardinal_isRegular.cof_ord] using
+        aleph0_lt_recursionCardinal
     · intro n
       exact Ordinal.typein_lt_self (a n)
-  have hsmall' : Ordinal.lsub f <
+  have hsmall' : (⨆ n, f n + 1) <
       Ordinal.type ((· < ·) : RI → RI → Prop) := by
     simpa only [Ordinal.type_toType] using hsmall
   obtain ⟨j, hj⟩ := Ordinal.typein_surj (α := RI) (· < ·) hsmall'
   refine ⟨j, fun n => ?_⟩
   rw [← Ordinal.typein_lt_typein (r := (· < ·))]
-  exact (Ordinal.lt_lsub f n).trans_eq hj.symm
+  exact (Ordinal.lt_iSup_add_one f n).trans_eq hj.symm
 
 namespace RegularDirectLimit
 

@@ -51,9 +51,47 @@ noncomputable def targetProjectionSystem :=
   CoherentBiSystem.projectionSystem _ C.targetSystem
 
 /-- The map between completed limits induced by the uniformly nonexpansive stage maps. -/
-noncomputable def completedMap (hr : 0 < r) : C.LimitSource → C.LimitTarget :=
+noncomputable def completedMap : C.LimitSource → C.LimitTarget :=
   DirectedLimitStage.limitMap _ _ C.sourceSystem.embed C.targetSystem.embed
-    (fun i => (C.stage i).map) C.compatible (C.stage_nonexpansive hr)
+    (fun i => (C.stage i).map)
+
+private theorem stage_recovery_band (a k : ι) (hak : a ≤ k)
+    (xk : (C.stage k).source)
+    (hlt : dist (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)
+      (CoherentRetractionLimit.ProjectionSystem.approx _ C.sourceSystem.embed
+        C.sourceProjectionSystem a
+        (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)) < L) :
+    dist xk (C.sourceSystem.embed a k hak (C.sourceSystem.project a k hak xk)) < L := by
+  rw [CoherentRetractionLimit.ProjectionSystem.approx] at hlt
+  change dist (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)
+      (NormedDirectLimit.completedOf _ C.sourceSystem.embed a
+        (CoherentRetractionLimit.ProjectionFamily.completedProjection _
+          C.sourceSystem.embed
+          (CoherentRetractionLimit.ProjectionSystem.family _
+            C.sourceSystem.embed C.sourceProjectionSystem a)
+          (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk))) < L
+    at hlt
+  have hsproj :
+      CoherentRetractionLimit.ProjectionFamily.completedProjection _
+          C.sourceSystem.embed
+          (CoherentRetractionLimit.ProjectionSystem.family _
+            C.sourceSystem.embed C.sourceProjectionSystem a)
+          (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk) =
+        CoherentBiSystem.totalProject _ C.sourceSystem a k xk := by
+    rw [CoherentRetractionLimit.ProjectionFamily.completedProjection_completedOf]
+    rfl
+  rw [hsproj] at hlt
+  change dist (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)
+      (NormedDirectLimit.completedOf _ C.sourceSystem.embed a
+        (CoherentBiSystem.totalProject _ C.sourceSystem a k xk)) < L at hlt
+  rw [CoherentBiSystem.totalProject_of_ge _ C.sourceSystem hak] at hlt
+  change dist (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)
+      (NormedDirectLimit.completedOf _ C.sourceSystem.embed a
+        (C.sourceSystem.project a k hak xk)) < L at hlt
+  rw [← NormedDirectLimit.completedOf_f _ C.sourceSystem.embed hak] at hlt
+  simpa only [
+    (NormedDirectLimit.completedOf _ C.sourceSystem.embed k).isometry.dist_eq]
+    using hlt
 
 /-- Recovery to a fixed component extends from the algebraic direct limit to
 the completed limit throughout the open recovery band. -/
@@ -65,7 +103,7 @@ theorem completed_recovery_of_dist_lt (hr : 0 < r) (a : ι)
         C.targetSystem.embed
         (CoherentRetractionLimit.ProjectionSystem.family _
           C.targetSystem.embed C.targetProjectionSystem a)
-        (C.completedMap hr x) =
+        (C.completedMap x) =
       (C.stage a).map
         (CoherentRetractionLimit.ProjectionFamily.completedProjection _
           C.sourceSystem.embed
@@ -84,7 +122,7 @@ theorem completed_recovery_of_dist_lt (hr : 0 < r) (a : ι)
       C.sourceSystem.embed
       (CoherentRetractionLimit.ProjectionSystem.family _ C.sourceSystem.embed
         C.sourceProjectionSystem a)
-  let f := C.completedMap hr
+  let f := C.completedMap
   have hsApprox : Continuous sApprox :=
     (NormedDirectLimit.completedOf _ C.sourceSystem.embed a).continuous.comp
       (CoherentRetractionLimit.ProjectionFamily.completedProjection _
@@ -98,7 +136,8 @@ theorem completed_recovery_of_dist_lt (hr : 0 < r) (a : ι)
   have ht : Continuous (fun z => tProject (f z)) := tProject.continuous.comp hf
   have hstage : Continuous (C.stage a).map :=
     (LipschitzWith.of_dist_le_mul (K := 1) fun p q => by
-      convert C.stage_nonexpansive hr a p q using 1 <;> norm_num).continuous
+      convert C.stage_nonexpansive hr a p q using 1
+      norm_num).continuous
   have hs : Continuous (fun z => (C.stage a).map (sProject z)) :=
     hstage.comp sProject.continuous
   let P : C.LimitSource → Prop := fun z =>
@@ -133,40 +172,8 @@ theorem completed_recovery_of_dist_lt (hr : 0 < r) (a : ι)
     · exact Or.inl hband
     · right
       have hstageBand : dist xk
-          (C.sourceSystem.embed a k hak
-            (C.sourceSystem.project a k hak xk)) < L := by
-        have hlt := lt_of_not_ge hband
-        dsimp [sApprox] at hlt
-        rw [CoherentRetractionLimit.ProjectionSystem.approx] at hlt
-        change dist (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)
-            (NormedDirectLimit.completedOf _ C.sourceSystem.embed a
-              (CoherentRetractionLimit.ProjectionFamily.completedProjection _
-                C.sourceSystem.embed
-                (CoherentRetractionLimit.ProjectionSystem.family _
-                  C.sourceSystem.embed C.sourceProjectionSystem a)
-                (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk))) < L
-          at hlt
-        have hsproj :
-            CoherentRetractionLimit.ProjectionFamily.completedProjection _
-                C.sourceSystem.embed
-                (CoherentRetractionLimit.ProjectionSystem.family _
-                  C.sourceSystem.embed C.sourceProjectionSystem a)
-                (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk) =
-              CoherentBiSystem.totalProject _ C.sourceSystem a k xk := by
-          rw [CoherentRetractionLimit.ProjectionFamily.completedProjection_completedOf]
-          rfl
-        rw [hsproj] at hlt
-        change dist (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)
-            (NormedDirectLimit.completedOf _ C.sourceSystem.embed a
-              (CoherentBiSystem.totalProject _ C.sourceSystem a k xk)) < L at hlt
-        rw [CoherentBiSystem.totalProject_of_ge _ C.sourceSystem hak] at hlt
-        change dist (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)
-            (NormedDirectLimit.completedOf _ C.sourceSystem.embed a
-              (C.sourceSystem.project a k hak xk)) < L at hlt
-        rw [← NormedDirectLimit.completedOf_f _ C.sourceSystem.embed hak] at hlt
-        simpa only [
-          (NormedDirectLimit.completedOf _ C.sourceSystem.embed k).isometry.dist_eq]
-          using hlt
+          (C.sourceSystem.embed a k hak (C.sourceSystem.project a k hak xk)) < L :=
+        C.stage_recovery_band a k hak xk (lt_of_not_ge hband)
       dsimp [tProject, sProject, f, ProtectedChain.completedMap]
       unfold DirectedLimitStage.limitMap
       change
@@ -175,8 +182,7 @@ theorem completed_recovery_of_dist_lt (hr : 0 < r) (a : ι)
             (CoherentRetractionLimit.ProjectionSystem.family _
               C.targetSystem.embed C.targetProjectionSystem a)
             (CompletedLimitMap.completedMap _ _ C.sourceSystem.embed
-              C.targetSystem.embed (fun i => (C.stage i).map) C.compatible
-              (C.stage_nonexpansive hr)
+              C.targetSystem.embed (fun i => (C.stage i).map)
               (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk)) =
           (C.stage a).map
             (CoherentRetractionLimit.ProjectionFamily.completedProjection _
@@ -186,8 +192,7 @@ theorem completed_recovery_of_dist_lt (hr : 0 < r) (a : ι)
               (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk))
       have hfcomp :
           CompletedLimitMap.completedMap _ _ C.sourceSystem.embed
-              C.targetSystem.embed (fun i => (C.stage i).map) C.compatible
-              (C.stage_nonexpansive hr)
+              C.targetSystem.embed (fun i => (C.stage i).map)
               (NormedDirectLimit.completedOf _ C.sourceSystem.embed k xk) =
             NormedDirectLimit.completedOf _ C.targetSystem.embed k
               ((C.stage k).map xk) := by
@@ -256,7 +261,7 @@ noncomputable def toLimitLink (hr : 0 < r) (hL : 0 < L) (a : ι) :
       (CoherentRetractionLimit.ProjectionSystem.family _ C.targetSystem.embed
         C.targetProjectionSystem a)
   compatible x := by
-    change C.completedMap hr
+    change C.completedMap
         (NormedDirectLimit.completedOf _ C.sourceSystem.embed a x) =
       NormedDirectLimit.completedOf _ C.targetSystem.embed a ((C.stage a).map x)
     exact CompletedLimitMap.completedMap_completedOf _ _ C.sourceSystem.embed

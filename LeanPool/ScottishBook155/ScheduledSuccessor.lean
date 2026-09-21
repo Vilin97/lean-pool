@@ -33,10 +33,10 @@ theorem scheduledSuccessor_hits
       (scheduledSuccessor S y).next.map x =
         (scheduledSuccessor S y).targetEmbedding y := by
   by_cases hy : y ∈ Set.range S.map
-  · rw [scheduledSuccessor, dif_pos hy]
+  · rw [scheduledSuccessor, dite_eq_left hy]
     change ∃ x, S.map x = y
     exact hy
-  · rw [scheduledSuccessor, dif_neg hy]
+  · rw [scheduledSuccessor, dite_eq_right hy]
     let P := protectedSuccessor half_pos one_pos S y hy
     change ∃ x : P.next.source,
       P.next.map x = P.targetEmbedding y
@@ -48,9 +48,9 @@ theorem scheduledSuccessor_source_mk_le
     (hM : Cardinal.mk S.source ≤ stageCardinal) :
     Cardinal.mk (scheduledSuccessor S y).next.source ≤ stageCardinal := by
   by_cases hy : y ∈ Set.range S.map
-  · rw [scheduledSuccessor, dif_pos hy]
+  · rw [scheduledSuccessor, dite_eq_left hy]
     simpa [idleTransition] using hM
-  · rw [scheduledSuccessor, dif_neg hy]
+  · rw [scheduledSuccessor, dite_eq_right hy]
     change Cardinal.mk
       ((protectedSuccessor half_pos one_pos S y hy).next.source) ≤ stageCardinal
     exact protectedSuccessor_source_mk_le half_pos one_pos S y hy hM
@@ -61,9 +61,9 @@ theorem scheduledSuccessor_target_mk_le
     (hN : Cardinal.mk S.target ≤ stageCardinal) :
     Cardinal.mk (scheduledSuccessor S y).next.target ≤ stageCardinal := by
   by_cases hy : y ∈ Set.range S.map
-  · rw [scheduledSuccessor, dif_pos hy]
+  · rw [scheduledSuccessor, dite_eq_left hy]
     simpa [idleTransition] using hN
-  · rw [scheduledSuccessor, dif_neg hy]
+  · rw [scheduledSuccessor, dite_eq_right hy]
     change Cardinal.mk
       ((protectedSuccessor half_pos one_pos S y hy).next.target) ≤ stageCardinal
     exact protectedSuccessor_target_mk_le half_pos one_pos S y hy hM hN

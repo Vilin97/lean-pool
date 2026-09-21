@@ -233,8 +233,7 @@ theorem protectedEnvelopeEmbedding_injective {P : Type u} {N : Type v}
   apply (combinedEmbedding_injective (Set.range_nonempty j)
     hj.isClosedEmbedding.isClosed_range (base := j 0) ?_) hxy'
   intro x hx y hy hxy
-  ·
-    rcases hx with ⟨n, rfl⟩
+  · rcases hx with ⟨n, rfl⟩
     rcases hy with ⟨m, rfl⟩
     rw [retractiveEmbedding_target j R hR n,
       retractiveEmbedding_target j R hR m] at hxy

@@ -32,14 +32,14 @@ variable [DirectedSystem M (eM · · ·)] [DirectedSystem N (eN · · ·)]
 
 local instance sourceLinearDirectedSystem :
     DirectedSystem M (NormedDirectLimit.linearMap M eM · · ·) where
-  map_self {i} x := DirectedSystem.map_self (f := (eM · · ·)) x
-  map_map {k j i} hij hjk x :=
+  map_self {_i} x := DirectedSystem.map_self (f := (eM · · ·)) x
+  map_map {_k _j _i} hij hjk x :=
     DirectedSystem.map_map (f := (eM · · ·)) hij hjk x
 
 local instance targetLinearDirectedSystem :
     DirectedSystem N (NormedDirectLimit.linearMap N eN · · ·) where
-  map_self {i} x := DirectedSystem.map_self (f := (eN · · ·)) x
-  map_map {k j i} hij hjk x :=
+  map_self {_i} x := DirectedSystem.map_self (f := (eN · · ·)) x
+  map_map {_k _j _i} hij hjk x :=
     DirectedSystem.map_map (f := (eN · · ·)) hij hjk x
 
 /-- The normed direct limit of the source spaces before completion. -/
@@ -145,10 +145,7 @@ theorem algebraicMap_lipschitz
 
 /-- The coherent nonexpansive map extended to the completed normed direct
 limits. -/
-noncomputable def completedMap
-    (hV : ∀ i j (hij : i ≤ j) x,
-      V j (eM i j hij x) = eN i j hij (V i x))
-    (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y) :
+noncomputable def completedMap :
     CompletedSource M eM → CompletedTarget N eN :=
   UniformSpace.Completion.extension
     (((↑) : Target N eN → CompletedTarget N eN) ∘
@@ -158,9 +155,9 @@ theorem completedMap_lipschitz
     (hV : ∀ i j (hij : i ≤ j) x,
       V j (eM i j hij x) = eN i j hij (V i x))
     (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y) :
-    LipschitzWith 1 (completedMap M N eM eN V hV hLip) := by
+    LipschitzWith 1 (completedMap M N eM eN V) := by
   simpa only [completedMap, one_mul] using
-    (UniformSpace.Completion.coe_isometry.lipschitz.comp
+    (UniformSpace.Completion.coe_isometry.lipschitzWith.comp
       (algebraicMap_lipschitz M N eM eN V hV hLip)).completion_extension
 
 theorem completedMap_completedOf
@@ -168,7 +165,7 @@ theorem completedMap_completedOf
       V j (eM i j hij x) = eN i j hij (V i x))
     (hLip : ∀ i x y, dist (V i x) (V i y) ≤ dist x y)
     (i : ι) (x : M i) :
-    completedMap M N eM eN V hV hLip
+    completedMap M N eM eN V
         (NormedDirectLimit.completedOf M eM i x) =
       NormedDirectLimit.completedOf N eN i (V i x) := by
   change UniformSpace.Completion.extension
@@ -177,7 +174,7 @@ theorem completedMap_completedOf
       (↑(NormedDirectLimit.of M eM i x)) =
     (↑(NormedDirectLimit.of N eN i (V i x)))
   rw [UniformSpace.Completion.extension_coe
-    (UniformSpace.Completion.coe_isometry.lipschitz.comp
+    (UniformSpace.Completion.coe_isometry.lipschitzWith.comp
       (algebraicMap_lipschitz M N eM eN V hV hLip)).uniformContinuous]
   exact congrArg ((↑) : Target N eN → CompletedTarget N eN)
     (algebraicMap_of M N eM eN V hV i x)

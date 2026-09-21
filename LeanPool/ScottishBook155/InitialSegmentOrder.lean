@@ -32,7 +32,7 @@ private theorem initialSegment_leftInverse (j : J) :
     simp [initialSegmentToWithTop, initialSegmentFromWithTop, hx]
   · apply Subtype.ext
     have hxj : x.1 = j := le_antisymm x.2 (le_of_not_gt hx)
-    simp [initialSegmentToWithTop, initialSegmentFromWithTop, hx, hxj]
+    simp [initialSegmentToWithTop, initialSegmentFromWithTop, hxj]
 
 private theorem initialSegment_rightInverse (j : J) :
     Function.RightInverse (initialSegmentFromWithTop j)
@@ -43,7 +43,7 @@ private theorem initialSegment_rightInverse (j : J) :
   | coe x =>
       change initialSegmentToWithTop j ⟨x.1, x.2.le⟩ = (x : WithTop (Set.Iio j))
       have hx : (⟨x.1, x.2.le⟩ : Set.Iic j).1 < j := x.2
-      rw [initialSegmentToWithTop, dif_pos hx]
+      rw [initialSegmentToWithTop, dite_eq_left hx]
 
 private theorem initialSegmentToWithTop_monotone (j : J) :
     Monotone (initialSegmentToWithTop j) := by
@@ -63,7 +63,7 @@ private theorem initialSegmentFromWithTop_monotone (j : J) :
       exact (initialSegmentFromWithTop j x).2
   | coe y =>
       induction x using WithTop.recTopCoe with
-      | top => exact False.elim (by simpa using hxy)
+      | top => exact False.elim (by simp at hxy)
       | coe x =>
           change x.1 ≤ y.1
           have h : x ≤ y := WithTop.coe_le_coe.mp hxy

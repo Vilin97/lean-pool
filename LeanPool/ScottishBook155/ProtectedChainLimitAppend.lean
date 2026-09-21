@@ -47,7 +47,7 @@ noncomputable def appendLimitLink (hr : 0 < r) (hL : 0 < L)
       | coe i => exact C.toLimitLink hr hL i
   | coe j =>
       induction i using WithTop.recTopCoe with
-      | top => exact False.elim (by simpa using hij)
+      | top => exact False.elim (by simp at hij)
       | coe i => exact C.link i j (by simpa using hij)
 
 /-- Adjoin the completed direct limit as one new top stage. -/
@@ -70,7 +70,7 @@ noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
           | top => rfl
           | coe j =>
               induction i using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hij)
+              | top => exact False.elim (by simp at hij)
               | coe i =>
                   change NormedDirectLimit.completedOf _ C.sourceSystem.embed j
                       (C.sourceSystem.embed i j (by simpa using hij) x) =
@@ -79,10 +79,10 @@ noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
                     (by simpa using hij) x
       | coe k =>
           induction j using WithTop.recTopCoe with
-          | top => exact False.elim (by simpa using hjk)
+          | top => exact False.elim (by simp at hjk)
           | coe j =>
               induction i using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hij)
+              | top => exact False.elim (by simp at hij)
               | coe i =>
                   exact C.sourceSystem.embed_trans i j k
                     (by simpa using hij) (by simpa using hjk) x
@@ -97,7 +97,7 @@ noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
               | coe a => rfl
           | coe i =>
               induction a using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hai)
+              | top => exact False.elim (by simp at hai)
               | coe a =>
                   change (C.stage i).source at x
                   change CoherentRetractionLimit.ProjectionFamily.completedProjection _
@@ -112,10 +112,10 @@ noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
                     (by simpa using hai)]
       | coe j =>
           induction i using WithTop.recTopCoe with
-          | top => exact False.elim (by simpa using hij)
+          | top => exact False.elim (by simp at hij)
           | coe i =>
               induction a using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hai)
+              | top => exact False.elim (by simp at hai)
               | coe a =>
                   exact C.sourceSystem.project_embed a i j
                     (by simpa using hai) (by simpa using hij) x
@@ -139,7 +139,7 @@ noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
           | top => rfl
           | coe j =>
               induction i using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hij)
+              | top => exact False.elim (by simp at hij)
               | coe i =>
                   change NormedDirectLimit.completedOf _ C.targetSystem.embed j
                       (C.targetSystem.embed i j (by simpa using hij) x) =
@@ -148,10 +148,10 @@ noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
                     (by simpa using hij) x
       | coe k =>
           induction j using WithTop.recTopCoe with
-          | top => exact False.elim (by simpa using hjk)
+          | top => exact False.elim (by simp at hjk)
           | coe j =>
               induction i using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hij)
+              | top => exact False.elim (by simp at hij)
               | coe i =>
                   exact C.targetSystem.embed_trans i j k
                     (by simpa using hij) (by simpa using hjk) x
@@ -166,7 +166,7 @@ noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
               | coe a => rfl
           | coe i =>
               induction a using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hai)
+              | top => exact False.elim (by simp at hai)
               | coe a =>
                   change (C.stage i).target at x
                   change CoherentRetractionLimit.ProjectionFamily.completedProjection _
@@ -181,10 +181,10 @@ noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
                     (by simpa using hai)]
       | coe j =>
           induction i using WithTop.recTopCoe with
-          | top => exact False.elim (by simpa using hij)
+          | top => exact False.elim (by simp at hij)
           | coe i =>
               induction a using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hai)
+              | top => exact False.elim (by simp at hai)
               | coe a =>
                   exact C.targetSystem.project_embed a i j
                     (by simpa using hai) (by simpa using hij) x

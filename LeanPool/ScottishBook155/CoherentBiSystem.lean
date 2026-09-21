@@ -72,7 +72,7 @@ theorem totalProject_of_le (B : CoherentBiSystem G)
     {i a : ι} (hia : i ≤ a) (x : G i) :
     totalProject G B a i x = B.embed i a hia x := by
   rw [totalProject]
-  split_ifs with h
+  split_ifs
   rfl
 
 theorem totalProject_of_ge (B : CoherentBiSystem G)

@@ -31,8 +31,8 @@ variable [DirectedSystem N (e · · ·)]
 
 local instance linearDirectedSystem :
     DirectedSystem N (NormedDirectLimit.linearMap N e · · ·) where
-  map_self {i} x := DirectedSystem.map_self (f := (e · · ·)) x
-  map_map {k j i} hij hjk x :=
+  map_self {_i} x := DirectedSystem.map_self (f := (e · · ·)) x
+  map_map {_k _j _i} hij hjk x :=
     DirectedSystem.map_map (f := (e · · ·)) hij hjk x
 
 /-- A projection to a fixed earlier component, defined coherently on every

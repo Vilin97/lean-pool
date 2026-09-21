@@ -61,8 +61,8 @@ maps satisfying local isometry, injectivity, extension, point-hitting, linear
 retraction, and collar recovery. -/
 theorem exists_protectedExtension
     {M : Type u} {N : Type v}
-    [NormedAddCommGroup M] [NormedSpace ℝ M] 
-    [NormedAddCommGroup N] [NormedSpace ℝ N] [CompleteSpace N]
+    [NormedAddCommGroup M] [NormedSpace ℝ M] [NormedAddCommGroup N] [NormedSpace ℝ N]
+    [CompleteSpace N]
     {V : M → N} {y : N} {L r : ℝ}
     (hL : 0 < L) (hr : 0 < r) (hinj : Function.Injective V)
     (hshort : PreservesUpTo r V) (hy : y ∉ Set.range V) :

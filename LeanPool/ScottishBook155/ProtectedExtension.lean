@@ -122,8 +122,7 @@ theorem sourceRetraction_base
 /-- The source retraction agrees with the prescribed attachment map on the
 whole attachment set. -/
 theorem sourceRetraction_attachment
-    {M N : Type*} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [AddCommGroup N] [Module ℝ N]
+    {M N : Type*} [AddCommGroup N] [Module ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hL : 0 ≤ L) (p : M ⊕ Unit) :
     sourceRetraction V a y L H (attachmentPoint a H p).fst
@@ -136,8 +135,7 @@ theorem sourceRetraction_attachment
 
 /-- Metric form of the source-retraction estimate on the sum-norm source. -/
 theorem sourceRetraction_dist_le
-    {M N : Type*} [NormedAddCommGroup M] 
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M N : Type*} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hV : ∀ m n, dist (V m) (V n) ≤ dist m n)
     (hgap : dist y (V a) ≤ H - L) (x z : OneSum M) :

@@ -58,7 +58,7 @@ noncomputable def appendLink
       | coe i => exact (C.link i ⊤ le_top).extend T
   | coe j =>
       induction i using WithTop.recTopCoe with
-      | top => exact False.elim (by simpa using hij)
+      | top => exact False.elim (by simp at hij)
       | coe i => exact C.link i j (by simpa using hij)
 
 @[simp]
@@ -98,7 +98,7 @@ noncomputable def append
           | top => rfl
           | coe j =>
               induction i using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hij)
+              | top => exact False.elim (by simp at hij)
               | coe i =>
                   change T.sourceEmbedding
                       (C.sourceSystem.embed j ⊤ le_top
@@ -106,13 +106,12 @@ noncomputable def append
                     T.sourceEmbedding (C.sourceSystem.embed i ⊤ le_top x)
                   exact congrArg T.sourceEmbedding
                     (C.sourceSystem.embed_trans i j ⊤ (by simpa using hij) le_top x)
-
       | coe k =>
           induction j using WithTop.recTopCoe with
-          | top => exact False.elim (by simpa using hjk)
+          | top => exact False.elim (by simp at hjk)
           | coe j =>
               induction i using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hij)
+              | top => exact False.elim (by simp at hij)
               | coe i =>
                   exact C.sourceSystem.embed_trans i j k
                     (by simpa using hij) (by simpa using hjk) x
@@ -127,7 +126,7 @@ noncomputable def append
               | coe a => rfl
           | coe i =>
               induction a using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hai)
+              | top => exact False.elim (by simp at hai)
               | coe a =>
                   change C.sourceSystem.project a ⊤ le_top
                       (T.sourceProjection
@@ -139,10 +138,10 @@ noncomputable def append
                     (by simpa using hai) le_top x
       | coe j =>
           induction i using WithTop.recTopCoe with
-          | top => exact False.elim (by simpa using hij)
+          | top => exact False.elim (by simp at hij)
           | coe i =>
               induction a using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hai)
+              | top => exact False.elim (by simp at hai)
               | coe a =>
                   exact C.sourceSystem.project_embed a i j
                     (by simpa using hai) (by simpa using hij) x
@@ -165,7 +164,7 @@ noncomputable def append
           | top => rfl
           | coe j =>
               induction i using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hij)
+              | top => exact False.elim (by simp at hij)
               | coe i =>
                   change T.targetEmbedding
                       (C.targetSystem.embed j ⊤ le_top
@@ -175,10 +174,10 @@ noncomputable def append
                     (C.targetSystem.embed_trans i j ⊤ (by simpa using hij) le_top x)
       | coe k =>
           induction j using WithTop.recTopCoe with
-          | top => exact False.elim (by simpa using hjk)
+          | top => exact False.elim (by simp at hjk)
           | coe j =>
               induction i using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hij)
+              | top => exact False.elim (by simp at hij)
               | coe i =>
                   exact C.targetSystem.embed_trans i j k
                     (by simpa using hij) (by simpa using hjk) x
@@ -193,7 +192,7 @@ noncomputable def append
               | coe a => rfl
           | coe i =>
               induction a using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hai)
+              | top => exact False.elim (by simp at hai)
               | coe a =>
                   change C.targetSystem.project a ⊤ le_top
                       (T.targetProjection
@@ -205,10 +204,10 @@ noncomputable def append
                     (by simpa using hai) le_top x
       | coe j =>
           induction i using WithTop.recTopCoe with
-          | top => exact False.elim (by simpa using hij)
+          | top => exact False.elim (by simp at hij)
           | coe i =>
               induction a using WithTop.recTopCoe with
-              | top => exact False.elim (by simpa using hai)
+              | top => exact False.elim (by simp at hai)
               | coe a =>
                   exact C.targetSystem.project_embed a i j
                     (by simpa using hai) (by simpa using hij) x

@@ -64,7 +64,7 @@ abbrev FinalTarget := D.chain.LimitTarget
 
 /-- The map induced on completed limits by the compatible protected stage maps. -/
 noncomputable def finalMap : D.FinalSource → D.FinalTarget :=
-  D.chain.completedMap (by norm_num)
+  D.chain.completedMap
 
 theorem finalMap_completedOf (i : RI) (x : (D.chain.stage i).source) :
     D.finalMap (NormedDirectLimit.completedOf _ D.chain.sourceSystem.embed i x) =

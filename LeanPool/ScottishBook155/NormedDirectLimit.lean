@@ -36,8 +36,8 @@ abbrev linearMap (i j : ι) (h : i ≤ j) : G i →ₗ[ℝ] G j :=
   (f i j h).toLinearMap
 
 local instance linearDirectedSystem : DirectedSystem G (linearMap G f · · ·) where
-  map_self {i} x := DirectedSystem.map_self (f := (f · · ·)) x
-  map_map {k j i} hij hjk x :=
+  map_self {_i} x := DirectedSystem.map_self (f := (f · · ·)) x
+  map_map {_k _j _i} hij hjk x :=
     DirectedSystem.map_map (f := (f · · ·)) hij hjk x
 
 /-- The underlying algebraic direct limit. -/
@@ -108,7 +108,7 @@ noncomputable def addGroupNorm : AddGroupNorm (Carrier G f) where
     intro i x hx
     rw [limitNorm_of] at hx
     rw [norm_eq_zero] at hx
-    simpa [hx]
+    simp [hx]
 
 noncomputable instance normedAddCommGroup : NormedAddCommGroup (Carrier G f) :=
   (addGroupNorm G f).toNormedAddCommGroup
@@ -169,6 +169,7 @@ theorem algebraicLiftLinear_of (i : ι) (x : G i) :
   exact Module.DirectLimit.lift_of (R := ℝ) (ι := ι) (G := G) (f := linearMap G f)
     (fun i => (g i).toLinearMap) hg x
 
+omit [CompleteSpace H] in
 /-- A uniform componentwise bound descends to the algebraic direct limit. -/
 theorem algebraicLiftLinear_norm_le (C : ℝ)
     (hC : ∀ i x, ‖g i x‖ ≤ C * ‖x‖) (z : Carrier G f) :

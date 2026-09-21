@@ -25,15 +25,13 @@ abbrev OneSum (M : Type u) := WithLp 1 (M × ℝ)
 
 /-- Parametrization of the base hyperplane together with one elevated point. -/
 noncomputable def attachmentPoint
-    {M : Type u} [NormedAddCommGroup M] 
-    (a : M) (H : ℝ) : M ⊕ Unit → OneSum M
+    {M : Type u} (a : M) (H : ℝ) : M ⊕ Unit → OneSum M
   | Sum.inl m => toLp 1 (m, 0)
   | Sum.inr _ => toLp 1 (a, H)
 
 /-- The attachment subset of the sum-norm product. -/
 noncomputable def attachmentSet
-    {M : Type u} [NormedAddCommGroup M] 
-    (a : M) (H : ℝ) : Set (OneSum M) :=
+    {M : Type u} (a : M) (H : ℝ) : Set (OneSum M) :=
   Set.range (attachmentPoint a H)
 
 /-- The map prescribed on the attachment set before taking the metric
@@ -44,16 +42,14 @@ def attachmentMap {M : Type u} {N : Type v}
   | Sum.inr _ => y
 
 theorem dist_attachmentPoint_base_base
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a m n : M) (H : ℝ) :
+    {M : Type u} [NormedAddCommGroup M] (a m n : M) (H : ℝ) :
     dist (attachmentPoint a H (Sum.inl m)) (attachmentPoint a H (Sum.inl n)) =
       dist m n := by
   simp [attachmentPoint,
     WithLp.prod_dist_eq_add (by norm_num : 0 < (1 : ℝ≥0∞).toReal)]
 
 theorem dist_attachmentPoint_base_top
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a m : M) {H : ℝ} (hH : 0 ≤ H) :
+    {M : Type u} [NormedAddCommGroup M] (a m : M) {H : ℝ} (hH : 0 ≤ H) :
     dist (attachmentPoint a H (Sum.inl m)) (attachmentPoint a H (Sum.inr ())) =
       dist m a + H := by
   simp [attachmentPoint,
@@ -61,8 +57,7 @@ theorem dist_attachmentPoint_base_top
     Real.dist_eq, abs_of_nonneg hH]
 
 theorem attachmentSet_eq
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a : M) (H : ℝ) :
+    {M : Type u} (a : M) (H : ℝ) :
     attachmentSet a H =
       {x : OneSum M | x.snd = 0} ∪ {toLp 1 (a, H)} := by
   ext x
@@ -81,8 +76,7 @@ theorem attachmentSet_eq
 
 /-- The attachment set is closed in `M ⊕₁ ℝ`. -/
 theorem isClosed_attachmentSet
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a : M) (H : ℝ) :
+    {M : Type u} [NormedAddCommGroup M] (a : M) (H : ℝ) :
     IsClosed (attachmentSet a H) := by
   rw [attachmentSet_eq]
   apply IsClosed.union
@@ -90,14 +84,12 @@ theorem isClosed_attachmentSet
   · exact isClosed_singleton
 
 theorem attachmentPoint_mem_attachmentSet
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a : M) (H : ℝ) (p : M ⊕ Unit) :
+    {M : Type u} (a : M) (H : ℝ) (p : M ⊕ Unit) :
     attachmentPoint a H p ∈ attachmentSet a H :=
   ⟨p, rfl⟩
 
 theorem dist_to_attachmentBase
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a m : M) (H s : ℝ) :
+    {M : Type u} [NormedAddCommGroup M] (a m : M) (H s : ℝ) :
     dist (toLp 1 (m, s) : OneSum M) (attachmentPoint a H (Sum.inl m)) = |s| := by
   simp [attachmentPoint,
     WithLp.prod_dist_eq_add (by norm_num : 0 < (1 : ℝ≥0∞).toReal)]
@@ -105,8 +97,7 @@ theorem dist_to_attachmentBase
 /-- The vertical route to the base hyperplane gives the elementary upper
 bound on distance to the attachment set used in the collar argument. -/
 theorem infDist_attachmentSet_le_abs
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a m : M) (H s : ℝ) :
+    {M : Type u} [NormedAddCommGroup M] (a m : M) (H s : ℝ) :
     Metric.infDist (toLp 1 (m, s) : OneSum M) (attachmentSet a H) ≤ |s| := by
   calc
     Metric.infDist (toLp 1 (m, s) : OneSum M) (attachmentSet a H) ≤
@@ -117,8 +108,7 @@ theorem infDist_attachmentSet_le_abs
 /-- Exact distance from a point to the union of the base hyperplane and the
 single elevated attachment point. -/
 theorem infDist_attachmentSet_eq_min
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a m : M) (H s : ℝ) :
+    {M : Type u} [NormedAddCommGroup M] (a m : M) (H s : ℝ) :
     Metric.infDist (toLp 1 (m, s) : OneSum M) (attachmentSet a H) =
       min |s| (dist m a + |s - H|) := by
   have hne : (attachmentSet a H).Nonempty :=
@@ -157,8 +147,7 @@ theorem infDist_attachmentSet_eq_min
 /-- In the complementary two-point case, a height above `2r` forces both
 nearest attachment routes to use the base hyperplane. -/
 theorem abs_add_abs_lt_dist_of_infDist_add_lt
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a m₀ m₁ : M) {H r s₀ s₁ : ℝ} (hr : 0 < r) (hH : 2 * r < H)
+    {M : Type u} [NormedAddCommGroup M] (a m₀ m₁ : M) {H r s₀ s₁ : ℝ} (hr : 0 < r) (hH : 2 * r < H)
     (hd : dist (toLp 1 (m₀, s₀) : OneSum M) (toLp 1 (m₁, s₁)) ≤ r)
     (hfar : Metric.infDist (toLp 1 (m₀, s₀) : OneSum M) (attachmentSet a H) +
       Metric.infDist (toLp 1 (m₁, s₁) : OneSum M) (attachmentSet a H) <
@@ -220,8 +209,7 @@ theorem abs_add_abs_lt_dist_of_infDist_add_lt
     linarith
 
 theorem abs_lt_of_infDist_add_lt
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a m₀ m₁ : M) {H r s₀ s₁ : ℝ} (hr : 0 < r) (hH : 2 * r < H)
+    {M : Type u} [NormedAddCommGroup M] (a m₀ m₁ : M) {H r s₀ s₁ : ℝ} (hr : 0 < r) (hH : 2 * r < H)
     (hd : dist (toLp 1 (m₀, s₀) : OneSum M) (toLp 1 (m₁, s₁)) ≤ r)
     (hfar : Metric.infDist (toLp 1 (m₀, s₀) : OneSum M) (attachmentSet a H) +
       Metric.infDist (toLp 1 (m₁, s₁) : OneSum M) (attachmentSet a H) <
@@ -231,8 +219,7 @@ theorem abs_lt_of_infDist_add_lt
   constructor <;> linarith [abs_nonneg s₀, abs_nonneg s₁]
 
 theorem attachmentPoint_injective
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (a : M) {H : ℝ} (hH : H ≠ 0) :
+    {M : Type u} (a : M) {H : ℝ} (hH : H ≠ 0) :
     Function.Injective (attachmentPoint a H) := by
   intro p q hpq
   cases p with
@@ -277,8 +264,7 @@ theorem attachmentMap_injective
 /-- The prescribed attachment map is nonexpansive with respect to the ambient
 sum-norm distance on its parametrized attachment set. -/
 theorem attachmentMap_dist_le
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     {V : M → N} (hV : ∀ m n, dist (V m) (V n) ≤ dist m n)
     (a : M) (y : N) {H : ℝ} (hgap : dist (V a) y < H) (p q : M ⊕ Unit) :
     dist (attachmentMap V y p) (attachmentMap V y q) ≤

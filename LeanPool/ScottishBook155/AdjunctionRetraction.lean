@@ -23,31 +23,27 @@ universe u v
 /-- The source retraction expressed on the one-sum model of the source and its added real
 coordinate. -/
 noncomputable def sourceRetractionOne
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] 
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ) (x : OneSum M) : N :=
   sourceRetraction V a y L H x.fst x.snd
 
 /-- The map on the disjoint union that retracts the source component and fixes the target
 component. -/
 noncomputable def adjunctionRetractionPre
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ) : OneSum M ⊕ N → N
   | Sum.inl x => sourceRetractionOne V a y L H x
   | Sum.inr n => n
 
 theorem sourceRetractionOne_attachment
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup N] [NormedSpace ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hL : 0 ≤ L) (p : M ⊕ Unit) :
     sourceRetractionOne V a y L H (attachmentPoint a H p) = attachmentMap V y p := by
   exact sourceRetraction_attachment hLH hL p
 
 theorem sourceRetractionOne_dist_le
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hV : ∀ m n, dist (V m) (V n) ≤ dist m n)
     (hgap : dist y (V a) ≤ H - L) (x z : OneSum M) :
@@ -56,8 +52,7 @@ theorem sourceRetractionOne_dist_le
   sourceRetraction_dist_le hLH hV hgap x z
 
 theorem sourceRetractionOne_dist_le_excursionCost
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hL : 0 ≤ L)
     (hV : ∀ m n, dist (V m) (V n) ≤ dist m n)
@@ -92,8 +87,7 @@ theorem sourceRetractionOne_dist_le_excursionCost
       linarith
 
 theorem sourceRetractionOne_dist_le_sourceAdjunctionDist
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hL : 0 ≤ L)
     (hV : ∀ m n, dist (V m) (V n) ≤ dist m n)
@@ -105,8 +99,7 @@ theorem sourceRetractionOne_dist_le_sourceAdjunctionDist
     sourceRetractionOne_dist_le_excursionCost hLH hL hV hgap x₀ x₁⟩
 
 theorem sourceRetractionOne_dist_le_attachmentTargetCost
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hL : 0 ≤ L)
     (hV : ∀ m n, dist (V m) (V n) ≤ dist m n)
@@ -130,8 +123,7 @@ theorem sourceRetractionOne_dist_le_attachmentTargetCost
       exact add_le_add hsource le_rfl
 
 theorem adjunctionRetractionPre_dist_le
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     {V : M → N} {a : M} {y : N} {L H : ℝ}
     (hLH : L < H) (hL : 0 ≤ L)
     (hV : ∀ m n, dist (V m) (V n) ≤ dist m n)
@@ -153,8 +145,7 @@ theorem adjunctionRetractionPre_dist_le
 /-- The pointed nonexpansive retraction from the metric adjunction to the old
 target. -/
 noncomputable def adjunctionRetraction
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -176,8 +167,7 @@ noncomputable def adjunctionRetraction
   exact le_antisymm hle dist_nonneg
 
 theorem adjunctionRetraction_source
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -188,8 +178,7 @@ theorem adjunctionRetraction_source
       (adjunctionSourceMk V a y H hattach x) = sourceRetractionOne V a y L H x := rfl
 
 theorem adjunctionRetraction_target
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -201,8 +190,7 @@ theorem adjunctionRetraction_target
 
 /-- The descended retraction is nonexpansive for the metric-quotient distance. -/
 theorem adjunctionRetraction_dist_le
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))

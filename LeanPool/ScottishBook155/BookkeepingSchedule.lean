@@ -45,8 +45,8 @@ theorem exists_bookkeepingSchedule :
       Function.Injective s ∧ ∀ p, p.1 < s p := by
   obtain ⟨orderP, wfP, htype⟩ :=
     Cardinal.exists_ord_eq_type_lt Requirement
-  letI : LinearOrder Requirement := orderP
-  letI : WellFoundedLT Requirement := wfP
+  let : LinearOrder Requirement := orderP
+  let : WellFoundedLT Requirement := wfP
   have hprior (p : Requirement) :
       Cardinal.mk (Set.Iio p) < recursionCardinal := by
     exact (Cardinal.mk_Iio_lt p htype).trans_eq requirements_mk
@@ -58,7 +58,7 @@ theorem exists_bookkeepingSchedule :
     have hused : Cardinal.mk (Set.range g) < recursionCardinal :=
       Cardinal.mk_range_le.trans_lt (hprior p)
     by_contra hnone
-    push_neg at hnone
+    push Not at hnone
     have hsubset : Set.Ioi p.stage ⊆ Set.range g := by
       intro i hi
       rcases hnone i hi with ⟨q, hq, heq⟩

@@ -195,8 +195,7 @@ theorem transportTargetSystem_project {ι : Type} [LinearOrder ι]
 
 /-- Equality of protected chains from equality after transporting the two
 dependent bidirectional systems. -/
-theorem ext_transport {ι : Type} [LinearOrder ι] 
-    {r L : ℝ} {C D : ProtectedChain (ι := ι) r L}
+theorem ext_transport {ι : Type} [LinearOrder ι] {r L : ℝ} {C D : ProtectedChain (ι := ι) r L}
     (hstage : C.stage = D.stage)
     (hsource : transportSourceSystem hstage C.sourceSystem = D.sourceSystem)
     (htarget : transportTargetSystem hstage C.targetSystem = D.targetSystem) :

@@ -36,8 +36,7 @@ noncomputable def protectedSourceBaseLinearIsometry
 /-- The protected envelope of the metric adjunction, relative to its original target
 space. -/
 abbrev ProtectedExtensionSpace
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) :=
@@ -46,8 +45,7 @@ abbrev ProtectedExtensionSpace
 
 /-- The map from the extended source into the protected envelope of the adjunction. -/
 noncomputable def protectedExtensionSourceEmbedding
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -61,8 +59,7 @@ noncomputable def protectedExtensionSourceEmbedding
 
 /-- The linear embedding of the original target into the protected extension space. -/
 noncomputable def protectedExtensionTargetLinear
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) :
@@ -72,8 +69,7 @@ noncomputable def protectedExtensionTargetLinear
 /-- The continuous linear projection from the protected extension back to the original
 target. -/
 noncomputable def protectedExtensionProjection
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) :
@@ -81,8 +77,7 @@ noncomputable def protectedExtensionProjection
   protectedEnvelopeProjection (adjunctionTargetMk V a y H hattach)
 
 theorem protectedExtensionTargetLinear_norm
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) (n : N) :
@@ -92,8 +87,7 @@ theorem protectedExtensionTargetLinear_norm
 
 /-- The assembled old-target map is a linear isometric embedding. -/
 noncomputable def protectedExtensionTargetLinearIsometry
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) :
@@ -102,8 +96,7 @@ noncomputable def protectedExtensionTargetLinearIsometry
   norm_map' := protectedExtensionTargetLinear_norm V a y H hattach
 
 theorem protectedExtensionProjection_norm_le
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -112,8 +105,7 @@ theorem protectedExtensionProjection_norm_le
   protectedEnvelopeProjection_norm_le _ z
 
 theorem protectedExtensionProjection_target
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) (n : N) :
@@ -121,8 +113,7 @@ theorem protectedExtensionProjection_target
       (protectedExtensionTargetLinear V a y H hattach n) = n := rfl
 
 theorem protectedExtensionSourceEmbedding_dist_le
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -141,8 +132,8 @@ theorem protectedExtensionSourceEmbedding_dist_le
     _ ≤ dist x z := sourceAdjunctionDist_le V a y H x z
 
 theorem protectedExtensionSourceEmbedding_injective
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N] [CompleteSpace N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
+    [CompleteSpace N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -207,8 +198,7 @@ theorem protectedExtensionSourceEmbedding_preservesUpTo
     hV hgap hr hH hshort x.fst z.fst hd
 
 theorem protectedExtensionSourceEmbedding_base
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -225,8 +215,7 @@ theorem protectedExtensionSourceEmbedding_base
     (adjunctionRetraction_target V a y L H hattach hLH hL hV hgap) (V m)
 
 theorem protectedExtensionSourceEmbedding_hits
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -243,8 +232,7 @@ theorem protectedExtensionSourceEmbedding_hits
     (adjunctionRetraction_target V a y L H hattach hLH hL hV hgap) y
 
 theorem protectedExtensionProjection_source
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -259,8 +247,7 @@ theorem protectedExtensionProjection_source
     adjunctionRetraction_source V a y L H hattach hLH hL hV hgap]
 
 theorem protectedExtensionProjection_source_of_le
-    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    [NormedAddCommGroup N] [NormedSpace ℝ N]
+    {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))

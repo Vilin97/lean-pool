@@ -23,8 +23,7 @@ open ENNReal WithLp
 universe u v
 
 theorem oneSum_dist_eq
-    {M : Type u} [NormedAddCommGroup M] 
-    (x y : OneSum M) :
+    {M : Type u} [NormedAddCommGroup M] (x y : OneSum M) :
     dist x y = dist x.fst y.fst + |x.snd - y.snd| := by
   rw [WithLp.prod_dist_eq_add (by norm_num : 0 < (1 : ℝ≥0∞).toReal)]
   simp [Real.dist_eq]
@@ -32,8 +31,7 @@ theorem oneSum_dist_eq
 /-- Length of the cheapest source--target--source excursion in the proposed
 metric adjunction. -/
 noncomputable def attachmentExcursionCost
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) : ℝ :=
   ⨅ p : M ⊕ Unit, ⨅ q : M ⊕ Unit,
     dist x₀ (attachmentPoint a H p) +
@@ -43,15 +41,13 @@ noncomputable def attachmentExcursionCost
 /-- The manuscript's source--source adjunction distance formula, before the
 ambient quotient space is constructed. -/
 noncomputable def sourceAdjunctionDist
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) : ℝ :=
   min (dist x₀ x₁) (attachmentExcursionCost V a y H x₀ x₁)
 
 /-- Distance candidate from a source point to an old-target point. -/
 noncomputable def attachmentTargetCost
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x : OneSum M) (n : N) : ℝ :=
   ⨅ p : M ⊕ Unit,
     dist x (attachmentPoint a H p) + dist (attachmentMap V y p) n
@@ -60,8 +56,7 @@ noncomputable def attachmentTargetCost
 and old target.  The remaining construction step is to prove its triangle
 inequality and take its metric separation quotient. -/
 noncomputable def adjunctionPreDist
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) :
       OneSum M ⊕ N → OneSum M ⊕ N → ℝ
   | Sum.inl x₀, Sum.inl x₁ => sourceAdjunctionDist V a y H x₀ x₁
@@ -70,8 +65,7 @@ noncomputable def adjunctionPreDist
   | Sum.inr n, Sum.inl x => attachmentTargetCost V a y H x n
 
 theorem attachmentTargetCost_nonneg
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x : OneSum M) (n : N) :
     0 ≤ attachmentTargetCost V a y H x n := by
   rw [attachmentTargetCost]
@@ -80,8 +74,7 @@ theorem attachmentTargetCost_nonneg
   positivity
 
 theorem attachmentTargetCost_le
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x : OneSum M) (n : N)
     (p : M ⊕ Unit) :
     attachmentTargetCost V a y H x n ≤
@@ -91,8 +84,7 @@ theorem attachmentTargetCost_le
   exact ⟨0, Set.forall_mem_range.2 fun q => by positivity⟩
 
 theorem infDist_attachmentSet_le_attachmentTargetCost
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x : OneSum M) (n : N) :
     Metric.infDist x (attachmentSet a H) ≤ attachmentTargetCost V a y H x n := by
   rw [attachmentTargetCost]
@@ -162,8 +154,7 @@ theorem attachmentTargetCost_eq_collar
         linarith
 
 theorem attachmentExcursionCost_nonneg
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) :
     0 ≤ attachmentExcursionCost V a y H x₀ x₁ := by
   rw [attachmentExcursionCost]
@@ -174,8 +165,7 @@ theorem attachmentExcursionCost_nonneg
   positivity
 
 theorem attachmentExcursionCost_le
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M)
     (p q : M ⊕ Unit) :
     attachmentExcursionCost V a y H x₀ x₁ ≤
@@ -201,8 +191,7 @@ theorem attachmentExcursionCost_le
   exact ciInf_le_of_le houter p (ciInf_le (hinner p) q)
 
 theorem attachmentExcursionCost_comm
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) :
     attachmentExcursionCost V a y H x₀ x₁ =
       attachmentExcursionCost V a y H x₁ x₀ := by
@@ -243,8 +232,7 @@ theorem attachmentExcursionCost_comm
         ring
 
 theorem infDist_attachmentSet_le_excursionCost_left
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) :
     Metric.infDist x₀ (attachmentSet a H) ≤
       attachmentExcursionCost V a y H x₀ x₁ := by
@@ -264,8 +252,7 @@ theorem infDist_attachmentSet_le_excursionCost_left
       linarith
 
 theorem infDist_attachmentSet_le_excursionCost_right
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) :
     Metric.infDist x₁ (attachmentSet a H) ≤
       attachmentExcursionCost V a y H x₀ x₁ := by
@@ -286,8 +273,7 @@ theorem infDist_attachmentSet_le_excursionCost_right
       linarith
 
 theorem dist_attachmentMap_le_excursionCost
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [MetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [MetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -308,8 +294,7 @@ theorem dist_attachmentMap_le_excursionCost
 /-- Zero excursion cost forces equal source points when the prescribed
 attachment map is injective. -/
 theorem eq_of_attachmentExcursionCost_eq_zero
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [MetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [MetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -339,8 +324,7 @@ theorem eq_of_attachmentExcursionCost_eq_zero
   exact congrArg (attachmentPoint a H) (hinj (dist_eq_zero.mp hmapzero))
 
 theorem eq_of_sourceAdjunctionDist_eq_zero
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [MetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [MetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -354,16 +338,14 @@ theorem eq_of_sourceAdjunctionDist_eq_zero
     simpa [sourceAdjunctionDist, min_eq_right (le_of_not_ge hdirect)] using hzero
 
 theorem sourceAdjunctionDist_comm
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) :
     sourceAdjunctionDist V a y H x₀ x₁ = sourceAdjunctionDist V a y H x₁ x₀ := by
   rw [sourceAdjunctionDist, sourceAdjunctionDist, dist_comm x₀ x₁,
     attachmentExcursionCost_comm V a y H x₀ x₁]
 
 theorem sourceAdjunctionDist_le_excursion
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M)
     (p q : M ⊕ Unit) :
     sourceAdjunctionDist V a y H x₀ x₁ ≤
@@ -375,8 +357,7 @@ theorem sourceAdjunctionDist_le_excursion
 /-- One mixed triangle inequality: moving inside the old target after entering
 it cannot make the source--target cost larger than the corresponding sum. -/
 theorem attachmentTargetCost_triangle_target
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (x : OneSum M) (n₀ n₁ : N) :
     attachmentTargetCost V a y H x n₁ ≤
@@ -395,8 +376,7 @@ theorem attachmentTargetCost_triangle_target
 /-- A target point may serve as the middle vertex of a source--source
 triangle. -/
 theorem sourceAdjunctionDist_triangle_target
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (x₀ x₁ : OneSum M) (n : N) :
     sourceAdjunctionDist V a y H x₀ x₁ ≤
@@ -419,8 +399,7 @@ theorem sourceAdjunctionDist_triangle_target
 /-- If the attachment map is nonexpansive, a source point may serve as the
 middle vertex of an old-target triangle. -/
 theorem dist_triangle_attachmentTargetCost
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -438,7 +417,7 @@ theorem dist_triangle_attachmentTargetCost
   linarith
 
 theorem adjunctionPreDist_triangle_middle_target
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} [NormedAddCommGroup M]
     {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (z₀ z₁ : OneSum M ⊕ N) (n : N) :
@@ -463,8 +442,7 @@ theorem adjunctionPreDist_triangle_middle_target
 /-- Mixed triangle inequality with a source point in the middle.  The proof
 splits according to which branch of the source--source minimum is active. -/
 theorem attachmentTargetCost_triangle_source
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -503,8 +481,7 @@ theorem attachmentTargetCost_triangle_source
         linarith
 
 theorem adjunctionPreDist_triangle_target_source_target
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -515,8 +492,7 @@ theorem adjunctionPreDist_triangle_target_source_target
   dist_triangle_attachmentTargetCost V a y H hattach n₀ n₁ x
 
 theorem adjunctionPreDist_triangle_source_source_target
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -527,8 +503,7 @@ theorem adjunctionPreDist_triangle_source_source_target
   attachmentTargetCost_triangle_source V a y H hattach x₀ x₁ n
 
 theorem sourceAdjunctionDist_triangle_direct_left
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ x₂ : OneSum M) :
     sourceAdjunctionDist V a y H x₀ x₂ ≤
       dist x₀ x₁ + sourceAdjunctionDist V a y H x₁ x₂ := by
@@ -558,7 +533,7 @@ theorem sourceAdjunctionDist_triangle_direct_left
         linarith [dist_triangle x₀ x₁ (attachmentPoint a H p)]
 
 theorem sourceAdjunctionDist_triangle_direct_right
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} [NormedAddCommGroup M]
     {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ x₂ : OneSum M) :
     sourceAdjunctionDist V a y H x₀ x₂ ≤
@@ -569,7 +544,7 @@ theorem sourceAdjunctionDist_triangle_direct_right
   linarith
 
 theorem sourceAdjunctionDist_triangle
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} [NormedAddCommGroup M]
     {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
@@ -621,24 +596,21 @@ theorem sourceAdjunctionDist_triangle
           linarith
 
 theorem sourceAdjunctionDist_self
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x : OneSum M) :
     sourceAdjunctionDist V a y H x x = 0 := by
   rw [sourceAdjunctionDist, dist_self, min_eq_left]
   exact attachmentExcursionCost_nonneg V a y H x x
 
 theorem adjunctionPreDist_self
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) :
     ∀ z : OneSum M ⊕ N, adjunctionPreDist V a y H z z = 0
   | Sum.inl x => sourceAdjunctionDist_self V a y H x
   | Sum.inr n => dist_self n
 
 theorem adjunctionPreDist_comm
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) :
     ∀ z₀ z₁ : OneSum M ⊕ N,
       adjunctionPreDist V a y H z₀ z₁ = adjunctionPreDist V a y H z₁ z₀
@@ -648,8 +620,7 @@ theorem adjunctionPreDist_comm
   | Sum.inr n₀, Sum.inr n₁ => dist_comm n₀ n₁
 
 theorem adjunctionPreDist_triangle
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) :
@@ -684,7 +655,7 @@ theorem adjunctionPreDist_triangle
 the attachment distance bound. -/
 @[implicit_reducible]
 noncomputable def adjunctionPseudoMetricSpace
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} [NormedAddCommGroup M]
     {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
@@ -696,8 +667,7 @@ noncomputable def adjunctionPseudoMetricSpace
   dist_triangle := adjunctionPreDist_triangle V a y H hattach
 
 theorem attachmentTargetCost_glued
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (p : M ⊕ Unit) :
     attachmentTargetCost V a y H (attachmentPoint a H p) (attachmentMap V y p) = 0 := by
   apply le_antisymm
@@ -712,23 +682,20 @@ theorem attachmentTargetCost_glued
   · exact attachmentTargetCost_nonneg V a y H _ _
 
 theorem adjunctionPreDist_glued
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (p : M ⊕ Unit) :
     adjunctionPreDist V a y H (Sum.inl (attachmentPoint a H p))
       (Sum.inr (attachmentMap V y p)) = 0 :=
   attachmentTargetCost_glued V a y H p
 
 theorem adjunctionPreDist_target
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (n₀ n₁ : N) :
     adjunctionPreDist V a y H (Sum.inr n₀) (Sum.inr n₁) = dist n₀ n₁ :=
   rfl
 
 theorem sourceAdjunctionDist_le
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) :
     sourceAdjunctionDist V a y H x₀ x₁ ≤ dist x₀ x₁ :=
   min_le_left _ _
@@ -842,8 +809,7 @@ theorem adjunctionPreDist_source_eq_of_short
 /-- The metric separation quotient realizing the asymmetric metric
 adjunction. -/
 noncomputable def AdjunctionSpace
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) : Type (max u v) :=
@@ -851,7 +817,7 @@ noncomputable def AdjunctionSpace
     (adjunctionPseudoMetricSpace V a y H hattach).toUniformSpace.toTopologicalSpace
 
 noncomputable instance
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    {M : Type u} [NormedAddCommGroup M]
     {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
@@ -862,8 +828,7 @@ noncomputable instance
 
 /-- The canonical map from the one-sum source into the metric adjunction space. -/
 noncomputable def adjunctionSourceMk
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -871,8 +836,7 @@ noncomputable def adjunctionSourceMk
   Quotient.mk'' (Sum.inl x)
 
 noncomputable instance adjunctionSpaceNonempty
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) :
@@ -881,8 +845,7 @@ noncomputable instance adjunctionSpaceNonempty
 
 /-- The canonical map from the target into the metric adjunction space. -/
 noncomputable def adjunctionTargetMk
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -890,8 +853,7 @@ noncomputable def adjunctionTargetMk
   Quotient.mk'' (Sum.inr n)
 
 theorem dist_adjunctionTargetMk
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -912,8 +874,7 @@ theorem dist_adjunctionSourceMk_targetMk_eq_collar
   attachmentTargetCost_eq_collar hr hH hshort m hs n
 
 theorem adjunctionTargetMk_isometry
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) :
@@ -921,8 +882,7 @@ theorem adjunctionTargetMk_isometry
   Isometry.of_dist_eq (dist_adjunctionTargetMk V a y H hattach)
 
 theorem adjunctionMk_glued
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
@@ -935,8 +895,7 @@ theorem adjunctionMk_glued
 /-- Distance from a source point to the embedded old target is exactly its
 distance to the source attachment set. -/
 theorem infDist_adjunctionTarget_range_eq_attachmentSet
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [PseudoMetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) (x : OneSum M) :
@@ -981,8 +940,7 @@ theorem dist_adjunctionSourceMk_of_short
   adjunctionPreDist_source_eq_of_short hr hH hshort hd
 
 theorem adjunctionSourceMk_injective
-    {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    {N : Type v} [MetricSpace N]
+    {M : Type u} [NormedAddCommGroup M] {N : Type v} [MetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q))
