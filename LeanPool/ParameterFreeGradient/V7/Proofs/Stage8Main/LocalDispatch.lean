@@ -18,6 +18,7 @@ They depend only on public runtime data and the cached exact observation.
 
 namespace V7.Stage8Main
 
+/-- A below-two local trial selected from the proved existence theorem. -/
 noncomputable def belowTrialFor (p : ℝ) (hp : 1 < p) (hp2 : p < 2)
     (eps M D : ℝ) (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : LocalTrial d :=
@@ -41,6 +42,7 @@ theorem belowTrialFor_spec (p : ℝ) (hp : 1 < p) (hp2 : p < 2)
           (4 / Real.sqrt (p - 1) + 2) * Real.sqrt (M * D / eps) :=
   Classical.choose_spec (V7.belowTrial p hp hp2 d eps M D heps hM hD x0 cached)
 
+/-- The universal query-bound constant selected for the Euclidean local trial. -/
 noncomputable def euclideanConstant : ℝ := Classical.choose V7.euclideanTrial
 
 theorem euclideanConstant_pos : 0 < euclideanConstant :=
@@ -64,17 +66,20 @@ private theorem euclideanTrial_exists (eps M D : ℝ)
         (report.calls : ℝ) ≤ euclideanConstant * Real.sqrt (M * D / eps) :=
   (Classical.choose_spec V7.euclideanTrial).2 d eps M D heps hM hD x0 cached
 
+/-- The selected horizon of the Euclidean gap-reduction phase. -/
 noncomputable def euclideanM (eps M D : ℝ)
     (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : ℕ :=
   Classical.choose (euclideanTrial_exists eps M D heps hM hD x0 cached)
 
+/-- The selected horizon of the Euclidean OGM-G phase. -/
 noncomputable def euclideanN (eps M D : ℝ)
     (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : ℕ :=
   Classical.choose (Classical.choose_spec
     (euclideanTrial_exists eps M D heps hM hD x0 cached))
 
+/-- A Euclidean local trial selected with its certified two-phase horizons. -/
 noncomputable def euclideanTrialFor (eps M D : ℝ)
     (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : LocalTrial d :=
@@ -112,6 +117,7 @@ theorem euclideanTrialFor_spec (eps M D : ℝ)
     (Classical.choose_spec
       (euclideanTrial_exists eps M D heps hM hD x0 cached)).choose_spec.choose_spec.2.2⟩
 
+/-- The exponent-dependent query-bound constant for an above-two local trial. -/
 noncomputable def aboveConstant (p : ℝ) (hp : 2 < p) : ℝ :=
   Classical.choose (V7.aboveTrial p hp)
 
@@ -135,6 +141,7 @@ private theorem aboveTrial_exists (p : ℝ) (hp : 2 < p)
           aboveConstant p hp * (M * D / eps) ^ (p / (p + 2)) :=
   (Classical.choose_spec (V7.aboveTrial p hp)).2 d eps M D heps hM hD x0 cached
 
+/-- An above-two local trial selected from the proved existence theorem. -/
 noncomputable def aboveTrialFor (p : ℝ) (hp : 2 < p)
     (eps M D : ℝ) (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
     (x0 : Point d) (cached : CachedPair d) : LocalTrial d :=

@@ -20,6 +20,7 @@ inequalities alone.
 namespace O3
 namespace Stage3Anchor
 
+/-- The objective restricted to the affine line from `x` to `y`. -/
 noncomputable def objectiveLine {d : ℕ} (f : Vec d → ℝ)
     (x y : Vec d) (t : ℝ) : ℝ :=
   f (AffineMap.lineMap x y t)
@@ -61,12 +62,15 @@ theorem firstOrderConvex_of_coordinateGradient {d : ℕ} {f : Vec d → ℝ}
     AffineMap.lineMap_apply_one] at htangent
   linarith
 
+/-- The objective along a line after subtracting its initial linear model and smoothness
+quadratic. -/
 noncomputable def smoothPathRemainder {d : ℕ} (p L : ℝ)
     (f : Vec d → ℝ) (grad : Vec d → Vec d) (x y : Vec d) (t : ℝ) : ℝ :=
   let h := y - x
   objectiveLine f x y t - t * pairing (grad x) h -
     (L / 2) * t ^ (2 : ℕ) * (lpNorm p h) ^ (2 : ℕ)
 
+/-- The directional derivative of the objective's smoothness remainder. -/
 noncomputable def smoothPathRemainderDeriv {d : ℕ} (p L : ℝ)
     (grad : Vec d → Vec d) (x y : Vec d) (t : ℝ) : ℝ :=
   let h := y - x
@@ -88,7 +92,8 @@ lemma hasDerivAt_smoothPathRemainder {d : ℕ} {p L : ℝ}
   have hquad : HasDerivAt
       (fun s : ℝ ↦ (L / 2) * s ^ (2 : ℕ) * (lpNorm p h) ^ (2 : ℕ))
       (L * t * (lpNorm p h) ^ (2 : ℕ)) t := by
-    simp [id_eq] at hquadRaw
+    simp only [Pi.pow_apply, id_eq, Nat.cast_ofNat, Nat.add_one_sub_one, pow_one,
+      mul_one] at hquadRaw
     have heq : (L / 2) * (2 * t) * (lpNorm p h) ^ (2 : ℕ) =
         L * t * (lpNorm p h) ^ (2 : ℕ) := by ring
     rw [← heq]

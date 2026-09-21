@@ -6,12 +6,19 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.BaseGradient
 
+/-!
+The completed resisting objective has a controlled, symmetry-invariant distance to its
+minimizers.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open scoped BigOperators
 open Stage5AboveTwoLower
 open Stage5AboveTwoLower.S5AFinalRepair
 
+/-- The vector with common signed magnitude on the coordinates used by the resisting
+construction. -/
 noncomputable def uniformSignedPoint (data : LowerCompletionData p d T)
     (a : ℝ) : Point d :=
   (Finset.range T).sum fun i =>
@@ -78,6 +85,7 @@ lemma lpPower_uniformSignedPoint (data : LowerCompletionData p d T)
         rw [hxi] <;> norm_num
     _ = (T : ℝ) * |a| ^ r := by simp
 
+/-- The average of the signed coordinate directions used by the resisting construction. -/
 noncomputable def averageDirection (data : LowerCompletionData p d T) : Point d :=
   uniformSignedPoint data (1 / T)
 
@@ -108,13 +116,13 @@ lemma lpNorm_averageDirection (data : LowerCompletionData p d T)
       (T : ℝ) * (T : ℝ) ^ (-q) =
           (T : ℝ) ^ (1 : ℝ) * (T : ℝ) ^ (-q) := by rw [Real.rpow_one]
       _ = (T : ℝ) ^ ((1 : ℝ) + (-q)) := (Real.rpow_add hTreal 1 (-q)).symm
-      _ = (T : ℝ) ^ (1 - q) := by congr 1 <;> ring
+      _ = (T : ℝ) ^ (1 - q) := by congr 1
   rw [hmul, ← Real.rpow_mul hTreal.le]
   have hexp : (1 - q) * (1 / q) = -1 / p := by
     change (1 - p / (p - 1)) * (1 / (p / (p - 1))) = -1 / p
     have hp0 : p ≠ 0 := by linarith
     have hp1 : p - 1 ≠ 0 := by linarith
-    field_simp [hp0, hp1] <;> ring
+    field_simp [hp0, hp1]; ring
   rw [hexp]
 
 lemma real_sum_range_id (T : ℕ) :
@@ -134,7 +142,7 @@ lemma real_sum_range_id (T : ℕ) :
 
 lemma pairing_averageDirection (data : LowerCompletionData p d T)
     (hsteps : ∀ t < T, ∀ s < t, data.sigma s ≠ data.sigma t)
-    (hT : 1 ≤ T) (x : Point d) :
+     (x : Point d) :
     O3.pairing (averageDirection data) x =
       (1 / T) * (Finset.range T).sum
         (fun i => data.xi i * x (data.sigma i)) := by
@@ -192,7 +200,7 @@ lemma partialG_final_average_lower (data : LowerCompletionData p d T)
           (by omega : i ≤ T - 1)
       _ = (T : ℝ) * data.partialG (T - 1) x := by simp
   have hpair := pairing_averageDirection data
-    (fun t ht => (hsteps t ht).1) hT x
+    (fun t ht => (hsteps t ht).1) x
   have hsumId := real_sum_range_id T
   have hsumExpand : (Finset.range T).sum (fun i =>
       data.xi i * x (data.sigma i) - (i : ℝ) * data.delta) =
@@ -324,6 +332,7 @@ lemma minimizerDistance_range (data : LowerObjectiveData p d T)
     rw [hsub] at hupper
     linarith
 
+/-- The embedding of iteration indices into their distinct selected coordinates. -/
 def completionSigmaEmbedding (data : LowerCompletionData p d T)
     (hdistinct : ∀ t < T, ∀ s < t, data.sigma s ≠ data.sigma t) :
     Fin T ↪ Fin d where
@@ -333,6 +342,7 @@ def completionSigmaEmbedding (data : LowerCompletionData p d T)
     apply Fin.ext
     exact sigma_injective_below data hdistinct i.isLt j.isLt hij
 
+/-- A coordinate permutation matching the selected coordinates of two completions. -/
 noncomputable def completionPerm
     (data₁ data₂ : LowerCompletionData p d T)
     (hdistinct₁ : ∀ t < T, ∀ s < t, data₁.sigma s ≠ data₁.sigma t)
@@ -357,6 +367,8 @@ lemma completionPerm_spec
     (completionSigmaEmbedding data₁ hdistinct₁).injective
     (completionSigmaEmbedding data₂ hdistinct₂).injective) i
 
+/-- The coordinate signs matching two resisting completions, extended by one on unused
+coordinates. -/
 noncomputable def completionSign
     (data₁ data₂ : LowerCompletionData p d T) (k : Fin d) : ℝ :=
   if h : ∃ i : Fin T, data₂.sigma i.val = k then
@@ -371,7 +383,7 @@ lemma completionSign_at_used
       data₁.xi i.val * data₂.xi i.val := by
   classical
   unfold completionSign
-  rw [dif_pos ⟨i, rfl⟩]
+  rw [dite_eq_left ⟨i, rfl⟩]
   let j := Classical.choose (show ∃ j : Fin T,
     data₂.sigma j.val = data₂.sigma i.val from ⟨i, rfl⟩)
   have hj := Classical.choose_spec (show ∃ j : Fin T,
@@ -398,6 +410,7 @@ lemma completionSign_sq
       rcases hxi₂ i.val hi with h2 | h2 <;> rw [h1, h2] <;> norm_num
   · norm_num
 
+/-- The signed coordinate permutation transporting one resisting completion to another. -/
 noncomputable def completionQ
     (data₁ data₂ : LowerCompletionData p d T)
     (hdistinct₁ : ∀ t < T, ∀ s < t, data₁.sigma s ≠ data₁.sigma t)

@@ -7,6 +7,11 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
 import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 
+/-!
+Compatibility and soundness of the current observable guards and the original analytic
+inequalities.
+-/
+
 namespace V7
 
 theorem upperModelGuard_of_scale_ge {p L M : ℝ} (hp : 1 < p)

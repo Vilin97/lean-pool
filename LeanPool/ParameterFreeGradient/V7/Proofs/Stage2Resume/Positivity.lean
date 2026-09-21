@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Controller
 
+/-!
+Positive constants and endpoint estimates for geometric trial amortization.
+-/
+
 namespace V7
 namespace Stage2Resume
 
@@ -50,6 +54,7 @@ theorem localCostExponent_eq_above {p : ℝ} (hp : 2 < p) :
     localCostExponent p = p / (p + 2) := by
   simp [localCostExponent, not_le_of_gt hp]
 
+/-- The constant bounding the sum of costs along the realized geometric controller path. -/
 noncomputable def amortizationConstant (a : ℝ) : ℝ :=
   1 + 4 / (1 - (2 : ℝ) ^ (-a)) ^ (2 : ℕ)
 

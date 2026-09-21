@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.GuardAdapters
 import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
 
+/-!
+The anchor-search theorem transported to the current positive secant interface.
+-/
+
 namespace V7
 
 private noncomputable def toAdmissibleInstance (p : ℝ) (hp : 1 < p)
@@ -155,9 +159,9 @@ theorem anchor : AnchorStatement := by
       rfl
     have hDaEq : Dfun accepted = oldResult.acceptedRadius := by
       rw [hradiusEq]
-      simp [P, cfg, toAdmissibleInstance, O3.AdmissibleInstance.anchorConfig,
+      simp [P, toAdmissibleInstance, O3.AdmissibleInstance.anchorConfig,
         Dfun, G, hMaEq]
-    refine ⟨hMaPos, by simp [run, Dfun, Mfun, G, hcacheGrad], ?_, ?_,
+    refine ⟨hMaPos, by simp [run, Dfun, Mfun, G], ?_, ?_,
       mapped_anchor_trace_exact inst.oracle yfun accepted, ?_⟩
     · simpa [run, accepted, hMaEq, P, toAdmissibleInstance] using hscaleLt
     · simpa [run, accepted, hDaEq, P, toAdmissibleInstance,

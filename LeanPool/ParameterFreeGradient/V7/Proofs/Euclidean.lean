@@ -8,6 +8,10 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Anchor
 import LeanPool.ParameterFreeGradient.O3.Stage8EuclideanGap
 import LeanPool.ParameterFreeGradient.O3.Stage9FiniteDataOGMG
 
+/-!
+Euclidean gap reduction and finite OGM-G guarantees in the current interface.
+-/
+
 open scoped BigOperators
 
 namespace V7
@@ -56,7 +60,6 @@ private theorem euclidean_weights_eq_source (data : EuclideanGapData d m)
 private theorem euclidean_data_eq_source (data : EuclideanGapData d m)
     (P : O3.AdmissibleInstance d 2)
     (horacle : P.oracle = data.inst.oracle) (hx0P : P.x0 = data.x0)
-    (hMP : P.L = data.inst.L) (heps : P.eps = 1)
     (hdyn : EuclideanGapDynamics data) :
     (∀ k ≤ m,
       data.x k = (O3.euclideanEstimateState P data.M k).accelerated ∧
@@ -236,7 +239,7 @@ private theorem ogmg_data_eq_source (data : OGMGData d n)
             htheta (k + 1) (by omega)]
           rfl
         · simp only [Nat.succ_ne_zero, ↓reduceIte, Nat.add_sub_cancel]
-          simpa [hv] using (O3.ogmgState_succ_previousV cfg k).symm
+          simp [hv]
   dsimp only
   constructor
   · intro i hi
@@ -333,7 +336,7 @@ theorem euclideanGap : EuclideanGapStatement := by
             Real.conjExponent],
           O3.secantScale_pos hzx hz⟩ }
     have horacle : P.oracle = data.inst.oracle := rfl
-    have hmap := euclidean_data_eq_source data P horacle rfl rfl rfl hdyn
+    have hmap := euclidean_data_eq_source data P horacle rfl hdyn
     have haccept : O3.EuclideanEstimateAccepted P data.M m := by
       intro k hk
       have hg := hguards k hk
@@ -355,7 +358,7 @@ theorem euclideanGap : EuclideanGapStatement := by
       have hp := (data.inst.coordinateGradient xstar).2
         (data.inst.oracle.gradient xstar)
       rw [hfd] at hp
-      simp only [ContinuousLinearMap.zero_apply] at hp
+      simp only [zero_apply] at hp
       have hpair : pairing (data.inst.oracle.gradient xstar)
           (data.inst.oracle.gradient xstar) = 0 := hp.symm
       have hsq : (lpNorm 2 (data.inst.oracle.gradient xstar)) ^ (2 : ℕ) = 0 := by

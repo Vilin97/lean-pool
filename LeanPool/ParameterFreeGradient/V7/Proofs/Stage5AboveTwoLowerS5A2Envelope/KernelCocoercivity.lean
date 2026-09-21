@@ -8,6 +8,10 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.
 import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
+/-!
+A positive semidefinite Hessian bound yields cocoercivity of the kernel gradient.
+-/
+
 open scoped Interval
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
@@ -57,7 +61,7 @@ quadratic Hessian bound. -/
 theorem kernelGradient_cocoercive_on_unit_of_hessian_bound
     {p r theta M : ℝ}
     (hp : 1 < p) (hr : 2 < r) (htheta : 1 < theta)
-    (htr : 2 * theta < r) (hM : 0 ≤ M) {d : ℕ}
+    (htr : 2 * theta < r) {d : ℕ}
     (hbound : ∀ z e : Point d, lpNorm p z ≤ 1 →
       O3.pairing e (kernelHessian r theta z e) ≤
         M * lpNorm p e ^ (2 : ℕ)) :

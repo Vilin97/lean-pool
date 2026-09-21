@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Semantics
 
+/-!
+The Euclidean source execution connected to the analytic gap and terminal-gradient estimates.
+-/
+
 namespace V7
 namespace Stage1E03
 
@@ -41,7 +45,7 @@ theorem positive_fstar_eq_sInf_range (inst : PositiveInstance p d x0) :
     · exact ⟨xstar, rfl⟩
 
 theorem source_current_analytic_bridge (inst : PositiveInstance 2 d x0)
-    (eps M D : ℝ) (n : ℕ) (hM : 0 < M) (hn : 1 ≤ n)
+    (M D : ℝ) (n : ℕ) (hM : 0 < M) (hn : 1 ≤ n)
     (hDR : inst.R ≤ D) (report : TrialReport d)
     (hall : ∀ check ∈ report.checkedGuards, CheckHolds 2 M check)
     (hguards : report.checkedGuards = sourceGuardSchedule inst M n) :
@@ -131,14 +135,14 @@ theorem source_current_analytic_bridge (inst : PositiveInstance 2 d x0)
 current frozen E01/E02 carriers rather than from the legacy Stage-10
 composition theorem. -/
 theorem source_current_gradient_bound (inst : PositiveInstance 2 d x0)
-    (eps M D : ℝ) (n : ℕ) (hM : 0 < M) (hD : 0 < D) (hn : 1 ≤ n)
+    (M D : ℝ) (n : ℕ) (hM : 0 < M) (hD : 0 < D) (hn : 1 ≤ n)
     (hDR : inst.R ≤ D) (report : TrialReport d)
     (hall : ∀ check ∈ report.checkedGuards, CheckHolds 2 M check)
     (hguards : report.checkedGuards = sourceGuardSchedule inst M n) :
     lpNorm 2 (inst.oracle.gradient
         ((sourcePhaseBData inst M n (sourceU inst M n)).u n)) ≤
       2 * Real.sqrt 2 * M * D / (((n : ℝ) + 1) * ((n : ℝ) + 1)) := by
-  have hbridge := source_current_analytic_bridge inst eps M D n hM hn hDR
+  have hbridge := source_current_analytic_bridge inst M D n hM hn hDR
     report hall hguards
   let phaseA := sourcePhaseAData inst M D n
   let phaseB := sourcePhaseBData inst M n (sourceU inst M n)

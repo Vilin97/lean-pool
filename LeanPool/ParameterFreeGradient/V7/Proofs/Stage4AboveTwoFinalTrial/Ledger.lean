@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Semantics
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Ledger
 
+/-!
+Above-two reports have complete consecutive guard ledgers and bounded call counts.
+-/
+
 namespace V7.Stage4AboveTwoFinalTrial
 
 variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}

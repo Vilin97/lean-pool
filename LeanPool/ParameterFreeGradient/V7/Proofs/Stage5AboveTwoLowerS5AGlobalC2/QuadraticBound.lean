@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.Calculus
 
+/-!
+The kernel Hessian satisfies the explicit quadratic-form upper bound.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage5AboveTwoLower.S5AGlobalC2

@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.EnvelopeDerivative
 
+/-!
+Assembly of the selected envelope oracle and its coordinate-gradient and smoothness proofs.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower
@@ -14,10 +18,12 @@ open Stage5AboveTwoLower.S5AFinalRepair
 open Stage5AboveTwoLower.S5AGlobalC2
 open Stage5AboveTwoLowerResume
 
+/-- The explicit curvature bound for the constructed smoothing kernel. -/
 noncomputable def repairMpd (p : ℝ) (d : ℕ) : ℝ :=
   if p ≤ 3 * Real.log d then 5 * p
   else 15 * Real.exp (2 / 3) * Real.log d
 
+/-- The constant zero oracle used in the preliminary kernel data. -/
 noncomputable def dormantOracle (d : ℕ) : PairOracle d :=
   { value := fun _ ↦ 0, gradient := fun _ ↦ 0 }
 
@@ -31,6 +37,7 @@ noncomputable def repairKernelBase (p : ℝ) (d : ℕ) :
     Mpd := repairMpd p d
     smooth := fun _ _ ↦ dormantOracle d }
 
+/-- The infimal smoothing value paired with the selected envelope gradient. -/
 noncomputable def repairSelectedOracle (p : ℝ) (d : ℕ)
     (chi : ℝ) (ell : Point d → ℝ) : PairOracle d :=
   { value := localSmoothingValue (repairKernelBase p d) chi ell

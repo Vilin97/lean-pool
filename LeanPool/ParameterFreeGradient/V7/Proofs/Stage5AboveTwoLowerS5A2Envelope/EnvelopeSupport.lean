@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelConvexity
 
+/-!
+Minimizing displacements give global supporting inequalities for the smoothing envelope.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower

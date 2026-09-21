@@ -30,10 +30,15 @@ function is kept explicit here so the execution algebra can also be reused by
 the coefficient auditor; the source run below instantiates it by the frozen
 backward theta sequence. -/
 structure OGMGExecutionConfig (d : ℕ) where
+  /-- The number of iterations in the OGM-G execution. -/
   horizon : ℕ
+  /-- The value-gradient oracle queried by the execution. -/
   oracle : PairOracle d
+  /-- The smoothness estimate used to scale the gradient steps. -/
   M : ℝ
+  /-- The starting point of the OGM-G execution. -/
   U : Vec d
+  /-- The momentum coefficient sequence supplied to the execution. -/
   theta : ℕ → ℝ
 
 /-- The source-exact configuration: no theta sequence is supplied by the
@@ -57,7 +62,9 @@ noncomputable def stage9ExecutionConfig {d : ℕ} (n : ℕ)
 /-- At the beginning of iteration `i`, `current` is `u_i` and `previousV` is
 `v_(i-1)`.  Thus the initial previous point is literally `v_(-1)=U`. -/
 structure OGMGExecutionState (d : ℕ) where
+  /-- The current query point `u_i` at the beginning of an iteration. -/
   current : Vec d
+  /-- The previous gradient-step point `v_(i-1)`, initialized at the starting point. -/
   previousV : Vec d
 
 /-- One literal source step. -/
@@ -289,9 +296,11 @@ algebraic certificate.  These are definitions, not freely supplied arrays. -/
 noncomputable def ogmgFunctionValue (cfg : OGMGExecutionConfig d) (i : ℕ) : ℝ :=
   (ogmgObservation cfg i).value
 
+/-- The squared Euclidean norm of the gradient at an execution query. -/
 noncomputable def ogmgGradientSq (cfg : OGMGExecutionConfig d) (i : ℕ) : ℝ :=
   (lpNorm 2 (ogmgGradient cfg i)) ^ (2 : ℕ)
 
+/-- The gradient at query `j` paired with the difference of gradient-step points `i` and `j`. -/
 noncomputable def ogmgPairTerm (cfg : OGMGExecutionConfig d)
     (i j : ℕ) : ℝ :=
   pairing (ogmgGradient cfg j) (ogmgV cfg i - ogmgV cfg j)

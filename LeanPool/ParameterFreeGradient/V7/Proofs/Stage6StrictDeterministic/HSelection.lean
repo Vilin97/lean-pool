@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.AffineTrace
 
+/-!
+Selection of a hard-family scale beyond every query and output in a finite transcript.
+-/
+
 namespace V7.Stage6StrictDeterministic
 
 /-- Oriented finite displacement maximum, with zero included explicitly. -/

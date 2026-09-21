@@ -7,8 +7,14 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.AnchorSplice
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Amortization
 
+/-!
+The controller preserves valid reports, chronological paths, and terminal correctness
+certificates.
+-/
+
 namespace V7.Stage8Main
 
+/-- The allowed change of estimates after a radius or scale failure. -/
 def VisitTransition (G : ℝ) (current next : ControllerVisit)
     (report : TrialReport d) : Prop :=
   match report.outcome with
@@ -78,6 +84,7 @@ theorem controllerPath_append (G Ma Da : ℝ)
       subst next
       exact hlast current report hcOld hrOld
 
+/-- A report has complete guards, valid trial certificates, and the required local cost bound. -/
 def ValidReport (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)
     (visit : ControllerVisit) (report : TrialReport d) : Prop :=
@@ -103,6 +110,7 @@ private theorem forall₂_append_singleton {R : α → β → Prop}
   | nil => exact .cons hxy .nil
   | cons hab htail ih => exact .cons hab ih
 
+/-- The validity and path conditions maintained before the next controller trial. -/
 structure ReadyInvariant (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)
     (state : RuntimeControllerState d) : Prop where
@@ -119,7 +127,7 @@ theorem initial_readyInvariant (data : RuntimeData d)
   intro report
   refine ⟨by simp [initialRuntimeControllerState],
     by simp [initialRuntimeControllerState, RuntimeControllerState.M,
-      RuntimeControllerState.D, controllerConfig], ?_⟩
+      RuntimeControllerState.D], ?_⟩
   intro i current next prior hi
   simp [initialRuntimeControllerState] at hi
 
@@ -179,6 +187,7 @@ theorem readyInvariant_nextRadius (data : RuntimeData d)
       RuntimeControllerState.D, pow_succ]
     ring
 
+/-- The path, report validity, and terminal certificate of a successful controller execution. -/
 structure FinishInvariant (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)
     (finish : RuntimeFinish d) : Prop where
@@ -212,7 +221,8 @@ theorem runController_invariant (data : RuntimeData d)
       rw [runController, hreport] at hrun
       cases hout : spec.report.outcome with
       | success terminal =>
-          simp [controllerStep, hout] at hrun
+          simp only [controllerStep, hout, scale_eq_config, radius_eq_config,
+            RuntimeControllerRunResult.success.injEq] at hrun
           subst finish
           refine ⟨hinv.pathWithNext spec.report,
             forall₂_append_singleton hinv.valid
@@ -225,10 +235,10 @@ theorem runController_invariant (data : RuntimeData d)
             rw [← hgrad]
             exact hs.2.2.2
       | scale failed =>
-          simp [controllerStep, hout] at hrun
+          simp only [controllerStep, hout] at hrun
           exact ih (readyInvariant_nextScale data inst state spec failed hout hinv) hrun
       | radius terminal =>
-          simp [controllerStep, hout] at hrun
+          simp only [controllerStep, hout] at hrun
           exact ih (readyInvariant_nextRadius data inst state spec terminal hout hinv) hrun
 
 end V7.Stage8Main

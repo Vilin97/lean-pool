@@ -7,11 +7,17 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
 import Mathlib.Analysis.Complex.ExponentialBounds
 
+/-!
+Explicit exponents and dimension-dependent Hessian constants for the smoothing kernel.
+-/
+
 namespace V7.Stage5AboveTwoLower
 
+/-- The kernel coordinate exponent, capped by three times the logarithm of the dimension. -/
 noncomputable def kernelR0 (p : ℝ) (d : ℕ) : ℝ :=
   min p (3 * Real.log d)
 
+/-- The kernel power parameter chosen strictly between one and half the coordinate exponent. -/
 noncomputable def kernelTheta (p : ℝ) (d : ℕ) : ℝ :=
   1 + (kernelR0 p d - 2) / (4 * kernelR0 p d)
 
@@ -84,11 +90,11 @@ lemma kernel_hessian_coefficient_explicit_bound {p : ℝ} {d : ℕ}
        else 15 * Real.exp (2 / 3) * Real.log d) := by
   have hcoeff := kernel_hessian_coefficient_lt_five_mul_r0 hp hd
   by_cases hregime : p ≤ 3 * Real.log d
-  · rw [if_pos hregime]
+  · rw [ite_eq_left hregime]
     rw [kernelR0, min_eq_left hregime] at hcoeff
     rw [kernelR0, min_eq_left hregime]
     exact hcoeff.le
-  · rw [if_neg hregime]
+  · rw [ite_eq_right hregime]
     have hr0 : kernelR0 p d = 3 * Real.log d := by
       rw [kernelR0, min_eq_right (le_of_not_ge hregime)]
     rw [hr0] at hcoeff

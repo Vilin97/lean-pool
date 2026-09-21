@@ -6,6 +6,11 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03
 
+/-!
+Cocoercivity guards hold above the true smoothness scale, so failure certifies a smaller
+estimate.
+-/
+
 namespace V7
 namespace Stage2
 

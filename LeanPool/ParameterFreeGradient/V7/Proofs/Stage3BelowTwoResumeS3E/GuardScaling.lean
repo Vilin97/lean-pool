@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Dual
 
+/-!
+Observable below-two guards transported through the trial's affine normalization.
+-/
+
 namespace V7
 
 /-! Dependency-pure R2 proof of the physical/normalized cocoercivity guard. -/

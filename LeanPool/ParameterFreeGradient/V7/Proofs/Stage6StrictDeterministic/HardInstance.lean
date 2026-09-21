@@ -6,12 +6,19 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.ScalarHard
 
+/-!
+The one-dimensional hard family has a unique minimizer and exact smoothness and radius
+constants.
+-/
+
 namespace V7.Stage6StrictDeterministic
 
+/-- The one-dimensional hard objective paired with its exact derivative oracle. -/
 noncomputable def hardOracle (eps : ℝ) (x0 : StrictPoint) (H : ℝ) : PairOracle 1 :=
   { value := strictHardFamily eps x0 H
     gradient := strictHardDerivative eps x0 H }
 
+/-- The minimizer located a distance `2 * H` to the right of the initial point. -/
 def hardMinimizer (x0 : StrictPoint) (H : ℝ) : StrictPoint :=
   fun _ ↦ x0 0 + 2 * H
 
@@ -31,6 +38,7 @@ theorem strictHardDerivative_apply (eps : ℝ) (x0 : StrictPoint) (H : ℝ)
     (x : StrictPoint) (i : Fin 1) :
     strictHardDerivative eps x0 H x i = hardSlope eps H (x 0 - x0 0) := rfl
 
+/-- The continuous linear functional multiplying the unique coordinate by `a`. -/
 noncomputable def scalarPairingCLM (a : ℝ) : StrictPoint →L[ℝ] ℝ :=
   (ContinuousLinearMap.toSpanSingleton ℝ a).comp
     (ContinuousLinearMap.proj 0 : StrictPoint →L[ℝ] ℝ)
@@ -140,7 +148,7 @@ theorem strictHard_exactLipschitz {eps H : ℝ} (x0 : StrictPoint)
     change |hardSlope eps H (x 0 - x0 0) - hardSlope eps H (y 0 - x0 0)| ≤
       (2 * eps / H) * |x 0 - y 0|
     have hs := hardSlope_lipschitz heps hH (x 0 - x0 0) (y 0 - x0 0)
-    convert hs using 1 <;> ring
+    convert hs using 1; ring
   · intro L' hL'
     let xH : StrictPoint := fun _ ↦ x0 0 + H
     let x2H : StrictPoint := fun _ ↦ x0 0 + 2 * H

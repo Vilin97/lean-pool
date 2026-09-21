@@ -6,15 +6,21 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.History
 
+/-!
+Regime-specific local trial costs combine with geometric path amortization.
+-/
+
 namespace V7.Stage8Main
 
 open scoped BigOperators
 
+/-- A universal constant selected from the geometric trial amortization theorem. -/
 noncomputable def amortUniversal : ℝ := Classical.choose V7.geometricTrialAmortization
 
 theorem amortUniversal_pos : 0 < amortUniversal :=
   (Classical.choose_spec V7.geometricTrialAmortization).1
 
+/-- The exponent-dependent constant selected from the geometric trial amortization theorem. -/
 noncomputable def amortFor (p : ℝ) (hp : 1 < p) : ℝ :=
   Classical.choose ((Classical.choose_spec V7.geometricTrialAmortization).2 p hp)
 
@@ -22,6 +28,7 @@ theorem amortFor_pos (p : ℝ) (hp : 1 < p) : 0 < amortFor p hp :=
   (Classical.choose_spec
     ((Classical.choose_spec V7.geometricTrialAmortization).2 p hp)).1
 
+/-- The universal amortization constant at exponent two and the regime constant otherwise. -/
 noncomputable def selectedAmort (p : ℝ) (hp : 1 < p) : ℝ :=
   if p = 2 then amortUniversal else amortFor p hp
 
@@ -36,7 +43,7 @@ theorem runtimeCoefficient_pos (data : RuntimeData d) :
   by_cases hp2 : data.input.p < 2
   · have hsub : 0 < data.input.p - 1 := by linarith [data.hp]
     have hsqrt : 0 < Real.sqrt (data.input.p - 1) := Real.sqrt_pos.2 hsub
-    simp [runtimeCoefficient, hp2]
+    simp only [runtimeCoefficient, hp2, ↓reduceDIte, gt_iff_lt]
     positivity
   · by_cases heq : data.input.p = 2
     · simpa [runtimeCoefficient, hp2, heq] using euclideanConstant_pos
@@ -63,10 +70,8 @@ private theorem indexedLedger (data : RuntimeData d)
   let report := finish.reports[i]
   have hv := hinv.valid.get hiv hi
   refine ⟨visit, report, report.checkedGuards, ?_, ?_, ?_, hv.1, hv.2.1, hv.2.2.1⟩
-  · simpa [VisitAt, List.head?_drop, visit] using
-      (List.getElem?_eq_getElem hiv)
-  · simpa [ReportAt, List.head?_drop, report] using
-      (List.getElem?_eq_getElem hi)
+  · simp [VisitAt, List.head?_drop, visit]
+  · simp [ReportAt, List.head?_drop, report]
   · rw [List.head?_drop]
     rw [List.getElem?_map]
     simp [List.getElem?_eq_getElem hi, report]
@@ -85,10 +90,8 @@ private theorem indexedCost (data : RuntimeData d)
   let report := finish.reports[i]
   have hv := hinv.valid.get hiv hi
   refine ⟨visit, report, ?_, ?_, hv.2.2.2⟩
-  · simpa [VisitAt, List.head?_drop, visit] using
-      (List.getElem?_eq_getElem hiv)
-  · simpa [ReportAt, List.head?_drop, report] using
-      (List.getElem?_eq_getElem hi)
+  · simp [VisitAt, List.head?_drop, visit]
+  · simp [ReportAt, List.head?_drop, report]
 
 theorem reportCalls_bound (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)

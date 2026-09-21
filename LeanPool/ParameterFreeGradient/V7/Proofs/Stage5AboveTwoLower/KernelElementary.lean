@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.Parameters
 import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
 
+/-!
+Elementary positivity, normalization, and norm-power identities for the smoothing kernel.
+-/
+
 namespace V7.Stage5AboveTwoLower
 
 lemma lowerKernelPhi_eq_norm_power {r0 theta : ℝ} (hr0 : r0 ≠ 0)

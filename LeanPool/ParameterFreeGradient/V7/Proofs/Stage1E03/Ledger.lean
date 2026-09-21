@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Machine
 
+/-!
+The ordered guard evaluator records exactly the accepted prefix and first failure.
+-/
+
 namespace V7
 namespace Stage1E03
 

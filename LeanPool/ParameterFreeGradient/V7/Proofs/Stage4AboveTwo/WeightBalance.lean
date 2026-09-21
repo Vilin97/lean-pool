@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Constants
 
+/-!
+The above-two weight scale balances accumulated residual error against terminal weight growth.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage4AboveTwo
@@ -18,15 +22,14 @@ private theorem plateau_increment_formula (gamma : ℝ) (n k : ℕ)
     u k - (if k = 0 then 0 else u (k - 1)) =
       gamma * (2 * (k : ℝ) + 1) := by
   dsimp
-  rw [if_pos hk]
+  rw [ite_eq_left hk]
   by_cases hk0 : k = 0
   · subst k
     norm_num
-  · rw [if_neg hk0]
+  · rw [ite_eq_right hk0]
     have hpred : k - 1 < n := by omega
-    rw [if_pos hpred]
+    rw [ite_eq_left hpred]
     have hkone : 1 ≤ k := Nat.one_le_iff_ne_zero.mpr hk0
-    push_cast
     have hkcast : ((k - 1 : ℕ) : ℝ) = (k : ℝ) - 1 := by
       rw [Nat.cast_sub hkone]
       norm_num
@@ -42,13 +45,13 @@ private theorem increment_ratio_le (gamma : ℝ) (hgamma : 0 < gamma)
     0 ≤ (dw k) ^ (2 : ℕ) / u k ∧
       (dw k) ^ (2 : ℕ) / u k ≤ 4 * gamma := by
   dsimp
-  rw [if_pos hk]
+  rw [ite_eq_left hk]
   have hdw : gamma * ((k : ℝ) + 1) ^ (2 : ℕ) -
       (if k = 0 then 0
        else if k - 1 < n then gamma * (((k - 1 : ℕ) : ℝ) + 1) ^ (2 : ℕ)
        else gamma * (n : ℝ) ^ (2 : ℕ)) =
       gamma * (2 * (k : ℝ) + 1) := by
-    simpa only [if_pos hk] using plateau_increment_formula gamma n k hk
+    simpa only [ite_eq_left hk] using plateau_increment_formula gamma n k hk
   rw [hdw]
   have hk0 : 0 ≤ (k : ℝ) := by positivity
   have hkp : 0 < (k : ℝ) + 1 := by positivity
@@ -167,7 +170,7 @@ theorem aboveWeightErrorBalance : AboveWeightErrorBalanceStatement := by
               exact_mod_cast (Nat.zero_lt_of_lt hn)
             field_simp [hB.ne', hnpos.ne']
   · dsimp [u]
-    rw [if_neg (lt_irrefl n)]
+    rw [ite_eq_right (lt_irrefl n)]
     exact Stage4AboveTwo.gamma_endpoint_identity hp heta hn
 
 end V7

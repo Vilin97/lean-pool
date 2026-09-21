@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.AnalyticBridge
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
 
+/-!
+Every above-two report shape supplies correctness and exact guard certificates.
+-/
+
 namespace V7.Stage4AboveTwoFinalTrial
 
 variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}

@@ -59,7 +59,7 @@ lemma pairing_dualityMap_self {p : ℝ} (hp : 1 < p) {d : ℕ} (x : Point d) :
     simp [dualityMap, lpNorm_zero (by linarith : 0 < p), pairing]
   · have hnpos : 0 < lpNorm p x := lpNorm_pos_of_ne_zero hx
     have hnpow := lpNorm_rpow_eq_lpPower (p := p) (by linarith : p ≠ 0) x
-    rw [dualityMap, if_neg hnpos.ne']
+    rw [dualityMap, ite_eq_right hnpos.ne']
     simp only [pairing]
     rw [show (∑ i, lpNorm p x ^ (2 - p) * (|x i| ^ (p - 2) * x i) * x i) =
         lpNorm p x ^ (2 - p) * (∑ i, |x i| ^ (p - 2) * x i * x i) by
@@ -134,7 +134,7 @@ lemma pairing_dualityMap_eq_powerSum_factor {p : ℝ} (hp : 0 < p) {d : ℕ}
     pairing (dualityMap p z) h =
       (lpPower p z) ^ (2 / p - 1) * pairing (powerDualityMap p z) h := by
   have hn : 0 < lpNorm p z := lpNorm_pos_of_ne_zero hz
-  rw [dualityMap, if_neg hn.ne']
+  rw [dualityMap, ite_eq_right hn.ne']
   simp only [pairing, powerDualityMap]
   rw [show (∑ i, lpNorm p z ^ (2 - p) * (|z i| ^ (p - 2) * z i) * h i) =
       lpNorm p z ^ (2 - p) * (∑ i, |z i| ^ (p - 2) * z i * h i) by
@@ -238,7 +238,7 @@ lemma deriv_squaredLpEnergy_line_of_eq_zero {p : ℝ} (hp : 1 < p) {d : ℕ}
   have hd := (((hasDerivAt_id t).sub_const t).pow 2).mul_const (squaredLpEnergy p h)
   rw [hxt, dualityMap_zero (by linarith : 0 < p)]
   simp only [pairing, Pi.zero_apply, zero_mul, Finset.sum_const_zero]
-  simpa using hd.deriv
+  simp
 
 /-- The explicit finite-dimensional squared `ell_p` energy has normalized
 duality-map directional derivative everywhere, including zero coordinates and
@@ -313,7 +313,7 @@ lemma abs_dualityMap_coordinate {p : ℝ} (hp : 1 < p) {d : ℕ}
     |dualityMap p x i| =
       (lpNorm p x) ^ (2 - p) * |x i| ^ (p - 1) := by
   have hn : 0 < lpNorm p x := lpNorm_pos_of_ne_zero hx
-  rw [dualityMap, if_neg hn.ne']
+  rw [dualityMap, ite_eq_right hn.ne']
   rw [abs_mul, abs_of_nonneg (Real.rpow_nonneg hn.le _),
     abs_powerDuality_coordinate hp]
 
@@ -411,10 +411,10 @@ theorem dualityMap_conjugate_comp {p : ℝ} (hp : 1 < p) {d : ℕ} (x : Point d)
       have := congrArg (lpNorm (conjugateExponent p)) hzero
       rw [hJuNorm, lpNorm_zero (lt_trans zero_lt_one (one_lt_conjugateExponent hp))] at this
       exact hn.ne' this
-    rw [dualityMap, if_neg (lpNorm_pos_of_ne_zero hJu).ne']
+    rw [dualityMap, ite_eq_right (lpNorm_pos_of_ne_zero hJu).ne']
     funext i
     rw [hJuNorm]
-    rw [dualityMap, if_neg hn.ne']
+    rw [dualityMap, ite_eq_right hn.ne']
     let c : ℝ := lpNorm p x ^ (2 - p)
     let b : ℝ := |x i| ^ (p - 2) * x i
     have hc : 0 < c := Real.rpow_pos_of_pos hn _

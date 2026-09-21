@@ -8,6 +8,10 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.Par
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.KernelElementary
 import LeanPool.ParameterFreeGradient.O3.Stage2RouteA
 
+/-!
+First and second derivatives of the power kernel restricted to affine lines.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage5AboveTwoLower.S5ARepair

@@ -7,21 +7,29 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.AnalyticPrefix
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
 
+/-!
+The above-two trial coefficients satisfy recurrence, support, and row-sum assumptions.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage4AboveTwoFinalTrial
 
+/-- The terminal-plateau weight sequence used by the above-two trial. -/
 noncomputable def weight (p eta : ℝ) (n : ℕ) : ScalarSeq :=
   Stage4AboveTwoDualPhase.plateauU p eta n
 
+/-- The increments of the above-two trial's weight sequence. -/
 noncomputable def increment (p eta : ℝ) (n : ℕ) : ScalarSeq :=
   Stage4AboveTwoDualPhase.plateauDw p eta n
 
+/-- The subdiagonal matrix selecting weighted gradient increments in an above-two phase. -/
 noncomputable def alpha (p eta : ℝ) (n : ℕ) : ScalarMatrix := fun row i =>
-  if h : 0 < row ∧ row ≤ n then
+  if 0 < row ∧ row ≤ n then
     if i = row - 1 then increment p eta n (row - 1) else 0
   else 0
 
+/-- The recursive coefficients expressing above-two primal iterates in mirror iterates. -/
 noncomputable def coeffC (p eta : ℝ) (n : ℕ) : ScalarMatrix
   | 0, i => if i = 0 then 1 else 0
   | k + 1, i =>
@@ -31,6 +39,7 @@ noncomputable def coeffC (p eta : ℝ) (n : ℕ) : ScalarMatrix
       (increment p eta n k / weight p eta n (k + 1)) *
         (if i = k then 1 else 0)
 
+/-- The differences of successive above-two primal coefficient rows. -/
 noncomputable def coeffB (p eta : ℝ) (n : ℕ) : ScalarMatrix
   | 0, i => if i = 0 then -1 else 0
   | k + 1, i => coeffC p eta n k i - coeffC p eta n (k + 1) i
@@ -43,22 +52,21 @@ noncomputable def coeffB (p eta : ℝ) (n : ℕ) : ScalarMatrix
     weight p eta n n = aboveGamma p eta n * (n : ℝ) ^ (2 : ℕ) := by
   simp [weight, Stage4AboveTwoDualPhase.plateauU]
 
-@[simp] theorem increment_of_lt {p eta : ℝ} {n k : ℕ} (hk : k < n) :
+theorem increment_of_lt {p eta : ℝ} {n k : ℕ} :
     increment p eta n k = weight p eta n k -
       (if k = 0 then 0 else weight p eta n (k - 1)) := by
-  simp [increment, Stage4AboveTwoDualPhase.plateauDw, weight, hk]
+  simp [increment, Stage4AboveTwoDualPhase.plateauDw, weight]
 
 @[simp] theorem increment_at {p eta : ℝ} {n : ℕ} (hn : 1 ≤ n) :
     increment p eta n n = 0 := by
-  simp only [increment, Stage4AboveTwoDualPhase.plateauDw, weight,
-    Stage4AboveTwoDualPhase.plateauU, lt_irrefl, if_false,
-    show n ≠ 0 by omega, show 0 < n by omega, if_pos]
+  simp only [increment, Stage4AboveTwoDualPhase.plateauDw,
+    Stage4AboveTwoDualPhase.plateauU, lt_irrefl, ite_false,
+    show n ≠ 0 by omega]
   have hcast : (((n - 1 : ℕ) : ℝ) + 1) = (n : ℝ) := by
     rw [Nat.cast_sub hn, Nat.cast_one]
-    push_cast
     ring
   rw [hcast]
-  rw [if_pos (show n - 1 < n by omega)]
+  rw [ite_eq_left (show n - 1 < n by omega)]
   ring
 
 theorem gamma_pos {p eta : ℝ} {n : ℕ} (hp : 2 < p)
@@ -77,13 +85,13 @@ theorem weight_pos {p eta : ℝ} {n k : ℕ} (hp : 2 < p)
     exact mul_pos (gamma_pos hp heta hn) (sq_pos_of_pos (by
       exact_mod_cast (Nat.zero_lt_of_lt hn)))
 
-theorem weight_succ_relation {p eta : ℝ} {n k : ℕ} (hp : 2 < p)
-    (heta : 0 < eta) (hn : 1 ≤ n) (hk : k < n) :
+theorem weight_succ_relation {p eta : ℝ} {n k : ℕ}
+     (hn : 1 ≤ n) (hk : k < n) :
     weight p eta n (k + 1) =
       weight p eta n k + increment p eta n (k + 1) := by
   by_cases hs : k + 1 < n
-  · rw [increment_of_lt hs]
-    simp only [show k + 1 ≠ 0 by omega, if_false, Nat.add_sub_cancel]
+  · rw [increment_of_lt]
+    simp only [show k + 1 ≠ 0 by omega, ite_false, Nat.add_sub_cancel]
     ring
   · have heq : k + 1 = n := by omega
     rw [heq, increment_at hn]
@@ -159,7 +167,7 @@ theorem coeffC_row_sum (p eta : ℝ) (n : ℕ) (hp : 2 < p)
       rw [hfirst]
       simp [hsupport]
       field_simp [hune]
-      have hrel := weight_succ_relation hp heta hn hkn
+      have hrel := weight_succ_relation (p := p) (eta := eta) hn hkn
       linarith
 
 theorem coeffB_row_sum (p eta : ℝ) (n : ℕ) (hp : 2 < p)
@@ -184,17 +192,16 @@ theorem coefficient_assumptions (p eta : ℝ) (n : ℕ) (hp : 2 < p)
   · rw [weight_at, weight_of_lt (show n - 1 < n by omega)]
     have hcast : (((n - 1 : ℕ) : ℝ) + 1) = (n : ℝ) := by
       rw [Nat.cast_sub hn, Nat.cast_one]
-      push_cast
       ring
     rw [hcast]
   · intro k hk
-    refine ⟨weight_pos hp heta hn (by omega), ?_, increment_of_lt hk,
+    refine ⟨weight_pos hp heta hn (by omega), ?_, increment_of_lt,
       fun i => alpha_row hk⟩
-    rw [weight_succ_relation hp heta hn hk]
+    rw [weight_succ_relation hn hk]
     have hinc : 0 ≤ increment p eta n (k + 1) := by
       by_cases hsucc : k + 1 < n
-      · rw [increment_of_lt hsucc]
-        simp only [show k + 1 ≠ 0 by omega, if_false, Nat.add_sub_cancel]
+      · rw [increment_of_lt]
+        simp only [show k + 1 ≠ 0 by omega, ite_false, Nat.add_sub_cancel]
         rw [weight_of_lt hsucc, weight_of_lt hk]
         have hg : 0 < aboveGamma p eta n := gamma_pos hp heta hn
         push_cast

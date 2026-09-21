@@ -21,26 +21,37 @@ namespace O3
 
 /-- Inputs known to the outer controller after the anchor phase. -/
 structure ControllerConfig where
+  /-- The scale estimate at the controller's initial epoch. -/
   initialScale : ℝ
+  /-- The initial gradient size used to convert scale levels into radii. -/
   gradientSizeAtStart : ℝ
+  /-- The requested upper bound on the terminal gradient norm. -/
   eps : ℝ
   /-- Counted prefix calls (initial query and anchor probes). -/
   prefixCalls : ℕ
 
+/-- The scale estimate after the specified number of dyadic doublings. -/
 def ControllerConfig.scaleAt (cfg : ControllerConfig) (s : ℕ) : ℝ :=
   (2 : ℝ) ^ s * cfg.initialScale
 
+/-- The radius at a given scale epoch and radius-doubling level. -/
 noncomputable def ControllerConfig.radiusAt (cfg : ControllerConfig) (s j : ℕ) : ℝ :=
   (2 : ℝ) ^ j * cfg.gradientSizeAtStart / cfg.scaleAt s
 
 /-- A running state.  Every report in `history` is a rejected trial. -/
 structure ControllerState (d : ℕ) where
+  /-- The current number of scale doublings. -/
   scaleEpoch : ℕ
+  /-- The current number of radius doublings within the scale epoch. -/
   radiusLevel : ℕ
+  /-- The total number of counted calls, including initialization. -/
   totalCalls : ℕ
+  /-- The calls spent on trials already rejected by the controller. -/
   rejectedCalls : ℕ
+  /-- The reports of all trials rejected before the current state. -/
   history : List (TrialReport d)
 
+/-- Initialize both search levels at zero and retain the counted initialization cost. -/
 def initialControllerState (cfg : ControllerConfig) : ControllerState d :=
   { scaleEpoch := 0
     radiusLevel := 0
@@ -48,9 +59,11 @@ def initialControllerState (cfg : ControllerConfig) : ControllerState d :=
     rejectedCalls := 0
     history := [] }
 
+/-- The scale estimate selected by the current controller state. -/
 def ControllerState.scale (cfg : ControllerConfig) (state : ControllerState d) : ℝ :=
   cfg.scaleAt state.scaleEpoch
 
+/-- The radius selected by the current controller state. -/
 noncomputable def ControllerState.radius (cfg : ControllerConfig) (state : ControllerState d) : ℝ :=
   cfg.radiusAt state.scaleEpoch state.radiusLevel
 
@@ -59,12 +72,18 @@ abbrev TrialRoutine (d : ℕ) := ℝ → ℝ → TrialReport d
 
 /-- Terminal controller data; it contains no correctness proposition. -/
 structure ControllerFinish (d : ℕ) where
+  /-- The point returned by the successful terminal trial. -/
   point : Vec d
+  /-- The total counted calls when the controller terminates. -/
   totalCalls : ℕ
+  /-- The portion of the total cost spent on rejected trials. -/
   rejectedCalls : ℕ
+  /-- The calls used by the successful terminal trial. -/
   terminalCalls : ℕ
+  /-- The trial reports retained in the completed controller execution. -/
   history : List (TrialReport d)
 
+/-- One controller transition either produces another running state or a completed result. -/
 inductive ControllerStep (d : ℕ) where
   | next (state : ControllerState d)
   | done (finish : ControllerFinish d)
@@ -96,10 +115,12 @@ def controllerStep (_cfg : ControllerConfig) (state : ControllerState d)
           rejectedCalls := state.rejectedCalls + calls
           history := state.history ++ [report] }
 
+/-- Run the local trial routine at the current scale and radius. -/
 noncomputable def currentTrial (routine : TrialRoutine d) (cfg : ControllerConfig)
     (state : ControllerState d) : TrialReport d :=
   routine (state.scale cfg) (state.radius cfg)
 
+/-- A bounded controller execution either exhausts its fuel or returns a successful result. -/
 inductive ControllerRunResult (d : ℕ) where
   | exhausted (state : ControllerState d)
   | success (finish : ControllerFinish d)
@@ -118,6 +139,7 @@ def ControllerState.Accounting (cfg : ControllerConfig)
     (state : ControllerState d) : Prop :=
   state.totalCalls = cfg.prefixCalls + state.rejectedCalls
 
+/-- The total cost splits into initialization, rejected trials, and the terminal trial. -/
 def ControllerFinish.Accounting (cfg : ControllerConfig)
     (finish : ControllerFinish d) : Prop :=
   finish.totalCalls =
@@ -223,7 +245,9 @@ noncomputable def ControllerNext (routine : TrialRoutine d) (cfg : ControllerCon
 
 /-- Finite numerical caps for the two geometric searches. -/
 structure ControllerCaps (cfg : ControllerConfig) (L R : ℝ) where
+  /-- A scale epoch beyond which the guessed scale dominates the true smoothness scale. -/
   scaleCap : ℕ
+  /-- A radius level sufficient to dominate the minimizer distance within the relevant epochs. -/
   radiusCap : ℕ
   scaleDominates : ∀ s, scaleCap ≤ s → L ≤ cfg.scaleAt s
   radiusDominates : ∀ s j, s ≤ scaleCap → radiusCap ≤ j → R ≤ cfg.radiusAt s j
@@ -303,7 +327,7 @@ theorem controllerNext_rank_lt
         by_contra hnot
         have hcaps : caps.scaleCap ≤ s := Nat.le_of_not_gt hnot
         exact (not_lt_of_ge (caps.scaleDominates s hcaps)) hML
-      simp [controllerStep, hout] at hnext
+      simp only [controllerStep, hout, ControllerStep.next.injEq] at hnext
       subst state'
       have hsub : caps.scaleCap - s = caps.scaleCap - (s + 1) + 1 := by omega
       simp only [controllerRank]
@@ -318,7 +342,7 @@ theorem controllerNext_rank_lt
         by_contra hnot
         have hcaps : caps.radiusCap ≤ j := Nat.le_of_not_gt hnot
         exact (not_lt_of_ge (caps.radiusDominates s j hs hcaps)) hDR
-      simp [controllerStep, hout] at hnext
+      simp only [controllerStep, hout, ControllerStep.next.injEq] at hnext
       subst state'
       have hsub : caps.radiusCap - j = caps.radiusCap - (j + 1) + 1 := by omega
       simp only [controllerRank]
@@ -355,7 +379,7 @@ theorem controllerStep_done_queried
       gradientSize (oracle.gradient finish.point) ≤ cfg.eps := by
   cases hout : report.outcome with
   | success x =>
-      simp [controllerStep, hout] at hdone
+      simp only [controllerStep, hout, ControllerStep.done.injEq] at hdone
       subst finish
       exact ⟨by simpa [TrialReport.OutcomeRecorded, hout] using hvalid.2.1,
         by simpa [TrialValid, hout] using hvalid.2.2⟩
@@ -438,7 +462,7 @@ theorem guardedControllerWithCaps
                   subst state'
                   simpa using (Nat.succ_le_iff.mpr hslt)
               | radius x =>
-                  simp [controllerStep, hout] at hstep
+                  simp only [controllerStep, hout, ControllerStep.next.injEq] at hstep
                   subst state'
                   exact hs
             have hj' : state'.radiusLevel ≤ caps.radiusCap := by
@@ -447,7 +471,7 @@ theorem guardedControllerWithCaps
               cases hout : r.outcome with
               | success x => simp [controllerStep, hout] at hstep
               | scale kind =>
-                  simp [controllerStep, hout] at hstep
+                  simp only [controllerStep, hout, ControllerStep.next.injEq] at hstep
                   subst state'
                   exact Nat.zero_le _
               | radius x =>
@@ -469,10 +493,10 @@ theorem guardedControllerWithCaps
     hterminate (initialControllerState cfg) (by simp [initialControllerState])
       (by simp [initialControllerState])
   refine ⟨fuel, finish, hrun, ?_, ?_, terminalReport, hmem, hgood⟩
-  have hacc := runController_accounting routine cfg
-    (fuel := fuel) (state := initialControllerState cfg)
-    (initialControllerState_accounting cfg (d := d))
-  simpa [hrun] using hacc
+  · have hacc := runController_accounting routine cfg
+      (fuel := fuel) (state := initialControllerState cfg)
+      (initialControllerState_accounting cfg (d := d))
+    simpa [hrun] using hacc
   have hhist := runController_historyAccounting routine cfg
     (fuel := fuel) (state := initialControllerState cfg)
     (initialControllerState_historyAccounting cfg (d := d))

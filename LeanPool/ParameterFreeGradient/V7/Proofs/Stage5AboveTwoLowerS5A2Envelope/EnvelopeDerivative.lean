@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.DimensionControl
 
+/-!
+Selection of minimizing displacements and differentiation of the resulting envelope.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Asymptotics
@@ -32,9 +36,10 @@ lemma selectedDisplacement_spec (kernel : SmoothingKernelData p d)
         (selectedDisplacement kernel chi ell x) ∧
       lpNorm p (selectedDisplacement kernel chi ell x) ≤ chi - chi / 4 := by
   classical
-  rw [selectedDisplacement, dif_pos hex]
+  rw [selectedDisplacement, dite_eq_left hex]
   exact Classical.choose_spec hex
 
+/-- The envelope gradient obtained from a selected minimizing displacement. -/
 noncomputable def selectedEnvelopeGradient
     (kernel : SmoothingKernelData p d) (chi : ℝ)
     (ell : Point d → ℝ) (x : Point d) : Point d :=

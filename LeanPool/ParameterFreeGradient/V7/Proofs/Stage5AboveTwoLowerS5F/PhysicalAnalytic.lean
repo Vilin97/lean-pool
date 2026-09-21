@@ -5,13 +5,18 @@ Authors: Yuning Yang
 -/
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PhysicalScaling
-import Mathlib.Data.Real.Pointwise
+import Mathlib.Basic.Real.Pointwise
+
+/-!
+Physical rescaling preserves convexity, gradients, smoothness, and the prescribed minimizer
+distance.
+-/
 
 namespace V7.Stage5AboveTwoLowerS5F
 
 open scoped Pointwise
 
-lemma physicalOracle_coordinateGradient {p : ℝ} {d : ℕ} (x0 : Point d)
+lemma physicalOracle_coordinateGradient {d : ℕ} (x0 : Point d)
     {L R rT : ℝ} (hL : 0 < L) (hR : 0 < R) (hrT : 0 < rT)
     (bar : PairOracle d) (hgrad : O3.IsCoordinateGradient bar.value bar.gradient) :
     O3.IsCoordinateGradient (physicalOracle x0 L R rT bar).value
@@ -32,7 +37,6 @@ lemma physicalOracle_coordinateGradient {p : ℝ} {d : ℕ} (x0 : Point d)
   have hAB : A * a = B := by
     dsimp [A, a, B]
     field_simp [hR.ne', hrT.ne']
-    <;> ring
   constructor
   · simpa [physicalOracle, A, z] using hscaled.differentiableAt
   · intro h
@@ -43,7 +47,7 @@ lemma physicalOracle_coordinateGradient {p : ℝ} {d : ℕ} (x0 : Point d)
         (A • fderiv ℝ bar.value z ∘L
           (a • ContinuousLinearMap.id ℝ (Point d))) h by
       simpa [physicalOracle, A, z, Function.comp_apply] using heq]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+    simp only [smul_apply, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.id_apply, smul_eq_mul]
     rw [(hgrad z).2]
     rw [O3.Stage2RouteD.pairing_smul_right]
@@ -120,7 +124,7 @@ lemma physicalOracle_smooth {p : ℝ} {d : ℕ} (hp : 2 < p) (x0 : Point d)
     _ = L * lpNorm p (x - y) := by
       dsimp [B]
       field_simp [hR.ne', hrT.ne']
-      <;> ring
+
 
 lemma physical_minimizer_iff (x0 : Point d) {L R rT : ℝ}
     (hL : 0 < L) (hR : 0 < R) (hrT : 0 < rT)

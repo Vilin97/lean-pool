@@ -20,11 +20,13 @@ open scoped BigOperators
 
 namespace O3
 
+/-- The scalar OGM-G potential instantiated with an actual oracle execution. -/
 noncomputable def stage9ActualPsi (cfg : OGMGExecutionConfig d)
     (fstar : ℝ) (i : ℕ) : ℝ :=
   Stage9Certificate.ogmgPsi cfg.M fstar
     (ogmgFunctionValue cfg) (ogmgGradientSq cfg) i
 
+/-- The two-point interpolation certificate instantiated with an actual oracle execution. -/
 noncomputable def stage9ActualI (cfg : OGMGExecutionConfig d)
     (fstar : ℝ) (i j : ℕ) : ℝ :=
   Stage9Certificate.ogmgI (stage9ActualPsi cfg fstar)

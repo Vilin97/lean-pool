@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Normalization
 import Mathlib.Topology.MetricSpace.HausdorffDistance
 
+/-!
+The completed below-two phases imply the requested physical terminal-gradient bound.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
 private abbrev LpSpace (p : ℝ) (d : ℕ) :=
@@ -96,6 +100,46 @@ theorem cocoPairHolds_exact_iff (p M : ℝ) (oracle : PairOracle d)
     cocoPairHolds p M (oracle.observe x) (oracle.observe y) ↔
       CocoercivityGuard p M oracle x y := by
   rfl
+
+/-- The prescribed horizon makes the reciprocal terminal weight fit the gradient budget. -/
+private lemma horizon_inverse_weight_le_budget (p eps M D : ℝ) (hp : 1 < p)
+    (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
+    (n : ℕ) (hn : n = horizon p eps M D) : 1 / ((p - 1) * weight n n) ≤ eps / (M * D) := by
+  subst n
+  let n := horizon p eps M D
+  have hsigma : 0 < p - 1 := sub_pos.mpr hp
+  rw [weight_at]
+  have hnreal := horizon_ge p eps M D
+  have hratio : 0 ≤ M * D / ((p - 1) * eps) := by positivity
+  have hsqrtSq := Real.sq_sqrt hratio
+  have hn0 : 0 ≤ (n : ℝ) := by positivity
+  have hcore : 4 * M * D ≤ (p - 1) * eps * (n : ℝ) ^ 2 := by
+    change 2 * Real.sqrt (M * D / ((p - 1) * eps)) ≤ (n : ℝ) at hnreal
+    have hsqrt0 : 0 ≤ Real.sqrt (M * D / ((p - 1) * eps)) :=
+      Real.sqrt_nonneg _
+    have hsqbound :
+        (2 * Real.sqrt (M * D / ((p - 1) * eps))) ^ (2 : ℕ) ≤
+          (n : ℝ) ^ (2 : ℕ) :=
+      (sq_le_sq₀ (by positivity) hn0).2 hnreal
+    have hid : 4 * M * D = (p - 1) * eps *
+        (2 * Real.sqrt (M * D / ((p - 1) * eps))) ^ (2 : ℕ) := by
+      calc
+        4 * M * D = 4 * ((p - 1) * eps) *
+            (M * D / ((p - 1) * eps)) := by
+          field_simp [hsigma.ne', heps.ne']
+        _ = 4 * ((p - 1) * eps) *
+            (Real.sqrt (M * D / ((p - 1) * eps))) ^ (2 : ℕ) := by
+          rw [hsqrtSq]
+        _ = _ := by ring
+    rw [hid]
+    exact mul_le_mul_of_nonneg_left hsqbound (by positivity)
+  have hden : 0 < (p - 1) * ((n : ℝ) ^ 2 / 4) := by
+    have hnpos : 0 < (n : ℝ) := by
+      exact_mod_cast one_le_horizon hp heps hM hD
+    positivity
+  have hMD : 0 < M * D := mul_pos hM hD
+  rw [div_le_div_iff₀ hden hMD]
+  nlinarith
 
 theorem terminal_gradient_le (p eps M D : ℝ) (hp : 1 < p) (hp2 : p < 2)
     (heps : 0 < eps) (hM : 0 < M) (hD : 0 < D)
@@ -216,7 +260,7 @@ theorem terminal_gradient_le (p eps M D : ℝ) (hp : 1 < p) (hp2 : p < 2)
     have hdyn := dual_dynamics p n (one_le_horizon hp heps hM hD) oracle₂
     refine ⟨hdyn, normalized_convex inst center hM hD,
       normalized_coordinateGradient inst center hM hD,
-      normalized_bddBelow inst center hM hD,
+      normalized_bddBelow inst center hM,
       coefficient_assumptions n (one_le_horizon hp heps hM hD),
       dual_trace_exact p n oracle₂, dual_trace_length p n oracle₂,
       (fun k hk => dual_queried_at p n oracle₂ k hk), (fun k hk => rfl),
@@ -282,39 +326,7 @@ theorem terminal_gradient_le (p eps M D : ℝ) (hp : 1 < p) (hp2 : p < 2)
           (1 / ((p - 1) * weight n n)) ^ (2 : ℕ) := by
       exact (mul_le_mul_iff_left₀ hc).mp (by simpa [mul_comm] using hsq)
     exact (sq_le_sq₀ hg0 hrhs).mp hsqraw
-  have hbudget : 1 / ((p - 1) * weight n n) ≤ eps / (M * D) := by
-    rw [weight_at]
-    have hnreal := horizon_ge p eps M D
-    have hratio : 0 ≤ M * D / ((p - 1) * eps) := by positivity
-    have hsqrtSq := Real.sq_sqrt hratio
-    have hn0 : 0 ≤ (n : ℝ) := by positivity
-    have hcore : 4 * M * D ≤ (p - 1) * eps * (n : ℝ) ^ 2 := by
-      change 2 * Real.sqrt (M * D / ((p - 1) * eps)) ≤ (n : ℝ) at hnreal
-      have hsqrt0 : 0 ≤ Real.sqrt (M * D / ((p - 1) * eps)) :=
-        Real.sqrt_nonneg _
-      have hsqbound :
-          (2 * Real.sqrt (M * D / ((p - 1) * eps))) ^ (2 : ℕ) ≤
-            (n : ℝ) ^ (2 : ℕ) :=
-        (sq_le_sq₀ (by positivity) hn0).2 hnreal
-      have hid : 4 * M * D = (p - 1) * eps *
-          (2 * Real.sqrt (M * D / ((p - 1) * eps))) ^ (2 : ℕ) := by
-        calc
-          4 * M * D = 4 * ((p - 1) * eps) *
-              (M * D / ((p - 1) * eps)) := by
-            field_simp [hsigma.ne', heps.ne']
-          _ = 4 * ((p - 1) * eps) *
-              (Real.sqrt (M * D / ((p - 1) * eps))) ^ (2 : ℕ) := by
-            rw [hsqrtSq]
-          _ = _ := by ring
-      rw [hid]
-      exact mul_le_mul_of_nonneg_left hsqbound (by positivity)
-    have hden : 0 < (p - 1) * ((n : ℝ) ^ 2 / 4) := by
-      have hnpos : 0 < (n : ℝ) := by
-        exact_mod_cast one_le_horizon hp heps hM hD
-      positivity
-    have hMD : 0 < M * D := mul_pos hM hD
-    rw [div_le_div_iff₀ hden hMD]
-    nlinarith
+  have hbudget := horizon_inverse_weight_le_budget p eps M D hp heps hM hD n rfl
   have hnormNorm := hnormF.trans hbudget
   have hscale : lpNorm (conjugateExponent p)
       (oracle₂.gradient (dualQ p n oracle₂ n)) =

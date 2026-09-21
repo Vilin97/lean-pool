@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.LocalityBridge
 import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
 
+/-!
+Stable interior minimizing displacements imply locality of the infimal-convolution value.
+-/
+
 namespace V7.Stage5AboveTwoLower.S5ARepair
 
 private lemma lpNorm_add_le {p : ℝ} (hp : 1 ≤ p) (u v : Point d) :
@@ -48,10 +52,12 @@ lemma eventually_lpNorm_sub_lt {p eta : ℝ} (hp : 1 ≤ p)
     exact Iio_mem_nhds heta
   exact hc hmem
 
+/-- The objective value plus the rescaled kernel penalty at a displacement. -/
 noncomputable def smoothingCost (kernel : SmoothingKernelData p d)
     (chi : ℝ) (ell : Point d → ℝ) (x v : Point d) : ℝ :=
   ell (x + v) + chi * kernel.phi ((1 / chi) • v)
 
+/-- The displacement globally minimizes the infimal-convolution cost. -/
 def IsInfimalMinimizer (kernel : SmoothingKernelData p d)
     (chi : ℝ) (ell : Point d → ℝ) (x v : Point d) : Prop :=
   ∀ w, smoothingCost kernel chi ell x v ≤ smoothingCost kernel chi ell x w

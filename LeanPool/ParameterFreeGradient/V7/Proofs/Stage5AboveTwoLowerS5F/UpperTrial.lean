@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperAnalytic
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Proof
 
+/-!
+The explicit above-two trial supplied to the known-parameter upper-bound argument.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
 open V7.Stage4AboveTwoFinalTrial

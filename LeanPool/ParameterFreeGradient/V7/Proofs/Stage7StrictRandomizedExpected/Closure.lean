@@ -6,6 +6,11 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Transfer
 
+/-!
+The strict-oracle scale-identification impossibility theorem and its deterministic and
+randomized forms.
+-/
+
 namespace V7
 
 /-- The exact frozen four-part scale-identification impossibility carrier. -/

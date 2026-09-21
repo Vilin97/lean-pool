@@ -6,14 +6,18 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.PathShape
 
+/-!
+Observable trial outcomes certify success or an insufficient scale or radius estimate.
+-/
+
 namespace V7
 namespace Stage2
 
 open scoped BigOperators
 
 private theorem indexed_visit_bounds {p eps G Ma Da L R : ℝ}
-    (hp : 1 < p) (heps : 0 < eps) (hG : 0 < G) (hMa : 0 < Ma)
-    (hDa : 0 < Da) (hDaEq : Da = G / Ma) (hMaBound : Ma < 2 * L)
+      (hG : 0 < G) (hMa : 0 < Ma)
+    (hDa : 0 < Da) (hMaBound : Ma < 2 * L)
     (hDaBound : Da ≤ 2 * R) (cached : CachedPair d) (oracle : PairOracle d)
     (visits : List ControllerVisit) (reports : List (TrialReport d))
     (schedules : List (List (ObservableGuardCheck d)))
@@ -52,20 +56,17 @@ private theorem indexed_visit_bounds {p eps G Ma Da L R : ℝ}
       subst visit
       subst report
       have hvisitNext : VisitAt visits (i + 1) visits[i + 1] := by
-        simpa [VisitAt, List.head?_drop] using
-          (List.getElem?_eq_getElem hi)
+        simp [VisitAt, List.head?_drop]
       have hstep := hpath.2.2 i visits[i] visits[i + 1] reports[i]
         (by simpa using hi)
-        (by simpa [VisitAt, List.head?_drop] using
-          (List.getElem?_eq_getElem hiPrev)) hvisitNext
-        (by simpa [ReportAt, List.head?_drop] using
-          (List.getElem?_eq_getElem hiReport))
+        (by simp [VisitAt, List.head?_drop]) hvisitNext
+        (by simp [ReportAt, List.head?_drop])
       obtain ⟨hMpos, hDpos, hMbound, hDbound⟩ := ih hiPrev
       rcases hcert with ⟨htrace, hdata, hexhaustive, hsuccess, hscale, hradius⟩
       cases houtcome : reports[i].outcome with
       | success terminal => simp [houtcome] at hstep
       | radius terminal =>
-          simp [houtcome] at hstep
+          simp only [houtcome] at hstep
           have hrad := hradius terminal houtcome
           refine ⟨?_, ?_, ?_, ?_⟩
           · rw [hstep.1]; exact hMpos
@@ -74,7 +75,7 @@ private theorem indexed_visit_bounds {p eps G Ma Da L R : ℝ}
           · rw [hstep.2]
             linarith [hrad.2.2.2.2]
       | scale failed =>
-          simp [houtcome] at hstep
+          simp only [houtcome] at hstep
           have hsc := hscale failed houtcome
           have hprevML : visits[i].M < L := hsc.2.2.2.2
           have hhalf : G / visits[i + 1].M = (G / visits[i].M) / 2 := by
@@ -125,7 +126,7 @@ private theorem path_geometric_sums {eps G Ma R : ℝ}
 theorem trialOutcomeCertification : TrialOutcomeCertificationStatement := by
   intro p hp d eps G Ma Da L R heps hG hMa hDa hDaEq hMaBound hDaBound
     cached oracle visits reports schedules hpath hschedules hledger
-  have hb := indexed_visit_bounds hp heps hG hMa hDa hDaEq hMaBound hDaBound
+  have hb := indexed_visit_bounds hG hMa hDa hMaBound hDaBound
     cached oracle visits reports schedules hpath hledger
   have hR : 0 ≤ R := by linarith
   refine ⟨?_, ?_, ?_⟩

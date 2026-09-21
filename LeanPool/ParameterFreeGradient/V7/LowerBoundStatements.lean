@@ -8,6 +8,10 @@ import Mathlib.Analysis.Calculus.ContDiff.Basic
 import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
 import LeanPool.ParameterFreeGradient.V7.StrictModel
 
+/-!
+Smoothing kernels, resisting oracle completions, and known-parameter lower-bound statements.
+-/
+
 open scoped BigOperators
 
 namespace V7
@@ -15,36 +19,49 @@ namespace V7
 /-- Causal deterministic exact-pair algorithm for the known-parameter lower
 bound.  No inverse-gradient or unqueried-output channel is present. -/
 structure DeterministicExactPairAlgorithm (d : ℕ) where
+  /-- The next query determined by the initial point and observation history. -/
   nextQuery : Point d → List (Observation d) → Point d
+  /-- The output determined by the initial point and observation history. -/
   output : Point d → List (Observation d) → Point d
 
+/-- Each trace point is the deterministic algorithm's query for the preceding history. -/
 def GeneratedBy (algorithm : DeterministicExactPairAlgorithm d) (x0 : Point d)
     (trace : List (Observation d)) : Prop :=
   ∀ (t : ℕ) (ht : t < trace.length),
     (trace.get ⟨t, ht⟩).point =
       if t = 0 then x0 else algorithm.nextQuery x0 (trace.take t)
 
+/-- A smoothing potential, its derivatives, curvature bound, and induced oracle transformation. -/
 structure SmoothingKernelData (p : ℝ) (d : ℕ) where
+  /-- The convex potential used to regularize the nonsmooth objective. -/
   phi : Point d → ℝ
+  /-- The coordinate gradient of the smoothing potential. -/
   gradPhi : Point d → Point d
+  /-- The derivative of the kernel gradient, viewed as a continuous linear map. -/
   hessian : Point d → (Point d →L[ℝ] Point d)
+  /-- The dimension- and exponent-dependent curvature bound for the kernel. -/
   Mpd : ℝ
+  /-- The oracle obtained by smoothing an objective at a given scale. -/
   smooth : ℝ → (Point d → ℝ) → PairOracle d
 
+/-- The infimal convolution of the objective with the rescaled smoothing potential. -/
 noncomputable def localSmoothingValue (kernel : SmoothingKernelData p d)
     (chi : ℝ) (ell : Point d → ℝ) (x : Point d) : ℝ :=
   sInf {r : ℝ | ∃ v : Point d,
     r = ell (x + v) + chi * kernel.phi ((1 / chi) • v)}
 
+/-- The objective is one-Lipschitz with respect to the `ℓp` norm. -/
 def IsOneLipschitz (p : ℝ) (f : Point d → ℝ) : Prop :=
   ∀ x y, |f x - f y| ≤ lpNorm p (x - y)
 
+/-- The primal and dual transformations preserve their norms and mutual pairing. -/
 def SignedLpSymmetry (p : ℝ) (Q Qdual : Point d → Point d) : Prop :=
   (∀ x, lpNorm p (Q x) = lpNorm p x) ∧
   (∀ s, lpNorm (conjugateExponent p) (Qdual s) =
     lpNorm (conjugateExponent p) s) ∧
   (∀ s x, pairing (Qdual s) (Q x) = pairing s x)
 
+/-- The regularity, curvature, normalization, and smoothing properties required of a kernel. -/
 def SmoothingKernelAssumptions (kernel : SmoothingKernelData p d) : Prop :=
   0 < kernel.Mpd ∧
   O3.IsConvexObjective kernel.phi ∧
@@ -84,9 +101,11 @@ def SmoothingKernelAssumptions (kernel : SmoothingKernelData p d) : Prop :=
       (kernel.smooth chi (fun z => ell (Q z))).value x =
         (kernel.smooth chi ell).value (Q x)
 
+/-- The signed-coordinate-invariant power kernel used in the lower-bound construction. -/
 noncomputable def lowerKernelPhi (r0 theta : ℝ) (x : Point d) : ℝ :=
   2 * (∑ j, |x j| ^ r0) ^ (2 * theta / r0)
 
+/-- A smoothing kernel exists with the prescribed power formula and dimension-dependent bounds. -/
 noncomputable def SmoothingKernelConstructionStatement : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (p : ℝ), 2 < p → ∀ (d : ℕ), 2 ≤ d →
     ∃ (r0 theta : ℝ) (kernel : SmoothingKernelData p d),
@@ -101,22 +120,38 @@ noncomputable def SmoothingKernelConstructionStatement : Prop :=
         else 15 * Real.exp (2 / 3) * Real.log d) ∧
       kernel.Mpd ≤ C * min p (Real.log d)
 
+/-- The adaptive partial objectives, queries, and final oracle in the resisting construction. -/
 structure LowerCompletionData (p : ℝ) (d T : ℕ) where
+  /-- The deterministic algorithm against which the resisting oracle is constructed. -/
   algorithm : DeterministicExactPairAlgorithm d
+  /-- The initial query point. -/
   x0 : Point d
+  /-- The kernel used to smooth the resisting maxima. -/
   kernel : SmoothingKernelData p d
+  /-- The main separation scale in the resisting construction. -/
   Delta : ℝ
+  /-- The offset between successive affine pieces of the resisting maximum. -/
   delta : ℝ
+  /-- The smoothing scale of the partial objectives. -/
   chi : ℝ
+  /-- The coefficient of the added norm regularization. -/
   beta : ℝ
+  /-- The successive maxima of signed coordinate affine functions. -/
   partialG : ℕ → Point d → ℝ
+  /-- The successive regularized nonsmooth objectives. -/
   partialH : ℕ → Point d → ℝ
+  /-- The smooth oracle for each partial objective. -/
   partialOracle : ℕ → PairOracle d
+  /-- The final oracle that preserves the earlier observations. -/
   completedOracle : PairOracle d
+  /-- The queries generated against the successive partial oracles. -/
   queries : ℕ → Point d
+  /-- The coordinate selected at each resisting step. -/
   sigma : ℕ → Fin d
+  /-- The sign selected for each resisting coordinate. -/
   xi : ℕ → ℝ
 
+/-- The partial objective is exactly the maximum of the affine pieces selected through `t`. -/
 def ResistingMaximumAt (data : LowerCompletionData p d T) (t : ℕ) : Prop :=
   ∀ x,
     (∀ i ≤ t,
@@ -126,6 +161,8 @@ def ResistingMaximumAt (data : LowerCompletionData p d T) (t : ℕ) : Prop :=
       data.partialG t x =
         data.xi i * x (data.sigma i) - (i : ℝ) * data.delta
 
+/-- The scales, fresh coordinates, oracle consistency, and adaptive queries of the resisting
+construction. -/
 def LowerCompletionAssumptions (data : LowerCompletionData p d T) : Prop :=
   2 < p ∧ 2 ≤ d ∧ 1 ≤ T ∧ T ≤ d ∧
   data.x0 = 0 ∧
@@ -166,13 +203,16 @@ def AboveLowerExactPairCompletionStatement : Prop :=
       data.completedOracle.observe (data.queries t) =
         (data.partialOracle t).observe (data.queries t)
 
+/-- The completed resisting construction viewed as lower-bound objective data. -/
 structure LowerObjectiveData (p : ℝ) (d T : ℕ)
     extends LowerCompletionData p d T
 
+/-- The objective eventually exceeds every real bound outside a sufficiently large `ℓp` ball. -/
 def IsCoerciveLp (p : ℝ) (f : Point d → ℝ) : Prop :=
   ∀ B : ℝ, ∃ radius : ℝ, 0 ≤ radius ∧
     ∀ x, radius ≤ lpNorm p x → B ≤ f x
 
+/-- The completion conditions together with convexity and the exact coordinate gradient. -/
 def LowerObjectiveAssumptions (data : LowerObjectiveData p d T) : Prop :=
   LowerCompletionAssumptions data.toLowerCompletionData ∧
   O3.IsConvexObjective data.completedOracle.value ∧
@@ -220,6 +260,7 @@ noncomputable def AboveLowerOptimizerRadiusStatement : Prop :=
         data.kernel = kernel → LowerObjectiveAssumptions data →
         rT = minimizerDistance p data.completedOracle data.x0
 
+/-- An exact deterministic run with a nonempty trace charging its initial query. -/
 def ChargedKnownParameterRun (algorithm : DeterministicExactPairAlgorithm d)
     (x0 : Point d) (oracle : PairOracle d) (trace : List (Observation d)) : Prop :=
   GeneratedBy algorithm x0 trace ∧ TraceExact oracle trace ∧

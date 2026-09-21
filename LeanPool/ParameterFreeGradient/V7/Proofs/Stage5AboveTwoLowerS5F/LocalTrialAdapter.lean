@@ -6,8 +6,14 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.LowerTheorem
 
+/-!
+A causal local trial induces a deterministic exact-pair algorithm with its cached query
+charged.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
+/-- The trial state obtained by replaying a recorded observation list. -/
 def replayTrial (trial : LocalTrial d) : trial.State → List (Observation d) → trial.State
   | state, [] => state
   | state, obs :: rest =>
@@ -15,12 +21,14 @@ def replayTrial (trial : LocalTrial d) : trial.State → List (Observation d) �
       | .query _ next => replayTrial trial (next obs) rest
       | .finish _ _ => state
 
+/-- The next point requested by a trial state, or a fallback if the trial has finished. -/
 def trialActionPoint (trial : LocalTrial d) (state : trial.State) (fallback : Point d) :
     Point d :=
   match trial.action state with
   | .query point _ => point
   | .finish _ _ => fallback
 
+/-- The deterministic algorithm induced by a local trial with its cached query charged. -/
 noncomputable def chargedTrialAlgorithm (p : ℝ) (trial : LocalTrial d) (M D eps : ℝ) :
     DeterministicExactPairAlgorithm d :=
   { nextQuery := fun x0 history =>
@@ -35,6 +43,7 @@ noncomputable def chargedTrialAlgorithm (p : ℝ) (trial : LocalTrial d) (M D ep
         (Classical.choose h).point
       else x0 }
 
+/-- The observation list follows the query actions of the trial from the supplied state. -/
 def TrialGeneratedFrom (trial : LocalTrial d) :
     trial.State → List (Observation d) → Prop
   | _, [] => True
@@ -134,6 +143,6 @@ lemma chargedTrial_output_spec (trial : LocalTrial d) (M D : ℝ) {eps : ℝ}
   change (if h : ∃ o ∈ history,
       lpNorm (conjugateExponent p) o.gradient ≤ eps then
       (Classical.choose h).point else x0) = obs.point
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
 
 end V7.Stage5AboveTwoLowerS5F

@@ -179,6 +179,7 @@ noncomputable def scalarOgmgNext (theta thetaNext u v vPrev : ℝ) : ℝ :=
       (theta * (2 * theta - 1))) * (v - vPrev) +
     ((2 * thetaNext - 1) / (2 * theta - 1)) * (v - u)
 
+/-- A scalar sequence supported at indices zero and one for the one-step certificate audit. -/
 def auditTwo (x0 x1 : ℝ) : ℕ → ℝ
   | 0 => x0
   | 1 => x1

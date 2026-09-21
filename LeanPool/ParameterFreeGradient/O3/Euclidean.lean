@@ -17,6 +17,7 @@ a certificate field.
 
 namespace O3
 
+/-- The positive quadratic root used to update the Euclidean acceleration weight. -/
 noncomputable def euclideanWeight (A : ℝ) : ℝ :=
   (1 + Real.sqrt (1 + 4 * A)) / 2
 
@@ -31,9 +32,11 @@ theorem euclideanWeight_equation {A : ℝ} (hA : 0 ≤ A) :
   unfold euclideanWeight
   nlinarith
 
+/-- The standard accelerated theta update with discriminant `1 + 4 t²`. -/
 noncomputable def thetaStep (t : ℝ) : ℝ :=
   (1 + Real.sqrt (1 + 4 * t ^ 2)) / 2
 
+/-- The modified terminal theta update with discriminant `1 + 8 t²`. -/
 noncomputable def thetaZeroStep (t : ℝ) : ℝ :=
   (1 + Real.sqrt (1 + 8 * t ^ 2)) / 2
 

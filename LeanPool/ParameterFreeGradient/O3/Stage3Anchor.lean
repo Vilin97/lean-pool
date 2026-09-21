@@ -142,7 +142,7 @@ theorem runAnchor_some_add_fuel {d : ℕ} (oracle : PairOracle d)
       let y := anchorProbePoint cfg.q cfg.x₀ cfg.g₀ cfg.G cfg.M₀ start
       by_cases hnow : oracle.value y ≤ cfg.f₀ - cfg.G * D / 2
       · dsimp only [D, y] at hnow
-        simp [hnow] at hrun ⊢
+        simp only [hnow, ↓reduceIte, Option.some.injEq] at hrun ⊢
         exact hrun
       · dsimp only [D, y] at hnow
         simp only [hnow, ↓reduceIte] at hrun ⊢

@@ -6,10 +6,15 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelLineCalculus
 
+/-!
+The ambient Fréchet derivative and coordinate gradient of the power kernel away from zero.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage5AboveTwoLower.S5ARepair
 
+/-- The continuous linear functional given by pairing with a fixed vector. -/
 noncomputable def pairingCLM (g : Point d) : Point d →L[ℝ] ℝ :=
   ∑ i : Fin d, (g i) • ContinuousLinearMap.proj i
 
@@ -17,6 +22,7 @@ noncomputable def pairingCLM (g : Point d) : Point d →L[ℝ] ℝ :=
     pairingCLM g h = O3.pairing g h := by
   simp [pairingCLM, O3.pairing]
 
+/-- The Fréchet derivative formula for the sum of coordinate absolute powers. -/
 noncomputable def lpPowerFDeriv (r : ℝ) (x : Point d) : Point d →L[ℝ] ℝ :=
   r • pairingCLM (O3.powerDualityMap r x)
 
@@ -43,17 +49,19 @@ lemma hasFDerivAt_lpPower {r : ℝ} (hr : 1 < r) (x : Point d) :
     (lpPowerFDeriv r x) x
   apply hsum.congr_fderiv
   ext h
-  simp [coordDeriv, lpPowerFDeriv, pairingCLM, O3.powerDualityMap,
-    O3.Experimental.scalarJ,
-    ContinuousLinearMap.toSpanSingleton_apply, Finset.mul_sum]
+  simp only [O3.Experimental.scalarJ, sum_apply, ContinuousLinearMap.comp_apply,
+    ContinuousLinearMap.proj_apply, ContinuousLinearMap.toSpanSingleton_apply, smul_eq_mul,
+    lpPowerFDeriv, pairingCLM, O3.powerDualityMap, smul_apply, Finset.mul_sum, coordDeriv]
   apply Finset.sum_congr rfl
   intro i _
   ring
 
+/-- The explicit coordinate gradient of the power smoothing kernel. -/
 noncomputable def kernelGradientVector (r theta : ℝ) (x : Point d) : Point d :=
   (4 * theta * (O3.lpPower r x) ^ (2 * theta / r - 1)) •
     O3.powerDualityMap r x
 
+/-- The kernel gradient represented as a continuous linear functional. -/
 noncomputable def kernelFDeriv (r theta : ℝ) (x : Point d) :
     Point d →L[ℝ] ℝ := pairingCLM (kernelGradientVector r theta x)
 

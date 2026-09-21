@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Ledger
 
+/-!
+Convexity, coordinate gradients, and lower bounds survive affine oracle normalization.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
 theorem normalized_coordinateGradient (inst : PositiveInstance p d x0)
@@ -40,7 +44,7 @@ theorem normalized_coordinateGradient (inst : PositiveInstance p d x0)
       ((1 / (M * D ^ (2 : ℕ))) • fderiv ℝ inst.oracle.value (c + D • y) ∘L
         (D • ContinuousLinearMap.id ℝ (Point d))) h by
           simpa [Function.comp_apply] using heq]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+    simp only [smul_apply, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.id_apply, smul_eq_mul]
     rw [(inst.coordinateGradient (c + D • y)).2]
     rw [O3.Stage2RouteD.pairing_smul_right,
@@ -81,7 +85,7 @@ theorem normalized_convex (inst : PositiveInstance p d x0)
   exact sub_le_sub_right hconv (inst.oracle.value c)
 
 theorem normalized_bddBelow (inst : PositiveInstance p d x0)
-    (c : Point d) {M D : ℝ} (hM : 0 < M) (hD : 0 < D) :
+    (c : Point d) {M D : ℝ} (hM : 0 < M) :
     BddBelow (Set.range (normalizedPairOracle c M D inst.oracle).value) := by
   obtain ⟨xstar, hxstar⟩ := inst.minimizerNonempty
   refine ⟨(inst.oracle.value xstar - inst.oracle.value c) /

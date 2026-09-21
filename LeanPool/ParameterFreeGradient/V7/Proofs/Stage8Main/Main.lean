@@ -7,8 +7,13 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.MainExecution
 import LeanPool.ParameterFreeGradient.V7.MainStatement
 
+/-!
+The completed runtime satisfies the parameter-free main rate in all exponent regimes.
+-/
+
 namespace V7.Stage8Main
 
+/-- The universal constant combining initialization, anchor search, and Euclidean trial costs. -/
 noncomputable def universalMainConstant : ℝ :=
   1 + O3.anchorLogConstant + euclideanConstant * amortUniversal
 
@@ -30,6 +35,7 @@ theorem universalMainConstant_anchor :
   unfold universalMainConstant
   linarith
 
+/-- The exponent-dependent constant combining anchor and non-Euclidean trial costs. -/
 noncomputable def regimeMainConstant (p : ℝ) (hp : 1 < p) : ℝ :=
   if hp2 : p < 2 then
     1 + O3.anchorLogConstant +
@@ -48,7 +54,7 @@ theorem regimeMainConstant_pos (p : ℝ) (hp : 1 < p) :
     simp [regimeMainConstant, hp2]
     nlinarith [mul_pos hcoeff (amortFor_pos p hp), O3.anchorLogConstant_pos]
   · by_cases heq : p = 2
-    · simp [regimeMainConstant, hp2, heq]
+    · simp [regimeMainConstant, heq]
     · have habove : 2 < p := lt_of_le_of_ne (le_of_not_gt hp2) (Ne.symm heq)
       have hproduct := mul_pos (aboveConstant_pos p habove) (amortFor_pos p hp)
       simp [regimeMainConstant, hp2, heq]

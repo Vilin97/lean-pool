@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Positivity
 
+/-!
+Transport of sums over the realized geometric visits into chronological report-call bounds.
+-/
+
 namespace V7
 namespace Stage2Resume
 

@@ -61,9 +61,12 @@ An observable guard is stored through its scalar margin.  The convention is
 that the checked inequality passes exactly when `0 ≤ margin`.
 -/
 structure GuardCheck where
+  /-- The analytic condition tested by this observable guard. -/
   kind : GuardKind
+  /-- The signed slack of the tested inequality, with nonnegative values denoting success. -/
   margin : ℝ
 
+/-- The guard's inequality holds exactly when its signed margin is nonnegative. -/
 def GuardCheck.Holds (check : GuardCheck) : Prop := 0 ≤ check.margin
 
 /-- Margin for `f(y) ≤ f(x) + linear + (M/2) * stepSq`. -/
@@ -100,9 +103,11 @@ theorem interpolationGuard_holds_iff (fi fj pairing gradDiffSq M : ℝ) :
       0 ≤ fi - fj - pairing - gradDiffSq / (2 * M) := by
   rfl
 
+/-- Every guard recorded in the list has a nonnegative margin. -/
 def allGuardsPass (guards : List GuardCheck) : Prop :=
   ∀ check ∈ guards, check.Holds
 
+/-- The list contains a failed guard of the specified kind. -/
 def HasFailedGuard (guards : List GuardCheck) (kind : GuardKind) : Prop :=
   ∃ check ∈ guards, check.kind = kind ∧ ¬ check.Holds
 
@@ -117,10 +122,14 @@ Finite data emitted by a local trial.  `calls` is deliberately not a free
 field: it is the length of the exact observation trace.
 -/
 structure TrialReport (d : ℕ) where
+  /-- The chronological oracle responses obtained during the local trial. -/
   observations : OracleTrace d
+  /-- The observable inequality checks performed by the local trial. -/
   guards : List GuardCheck
+  /-- The trial's success or rejection outcome. -/
   outcome : TrialOutcome d
 
+/-- The number of counted pair-oracle calls in the trial report. -/
 def TrialReport.calls (report : TrialReport d) : ℕ :=
   oracleCallCount report.observations
 
@@ -134,8 +143,11 @@ inductive TrialMachineAction (d : ℕ) (State : Type) where
 
 /-- A deterministic guarded-trial state-machine component, parameterized by `M,D`. -/
 structure GuardedTrialMachine (d : ℕ) where
+  /-- The internal states of the interactive guarded trial. -/
   State : Type
+  /-- Initialize a local trial from its proposed scale and radius. -/
   initial : ℝ → ℝ → State
+  /-- Select the next query or terminal report from a local-trial state. -/
   action : State → TrialMachineAction d State
 
 /--
@@ -153,6 +165,7 @@ def GuardedTrialMachine.runFuel {d : ℕ} (machine : GuardedTrialMachine d)
           let obs := oracle.observe x
           machine.runFuel oracle fuel (next obs) (history ++ [obs])
 
+/-- Execute the guarded trial from its initial state with the given scale, radius, and fuel. -/
 def GuardedTrialMachine.run {d : ℕ} (machine : GuardedTrialMachine d)
     (oracle : PairOracle d) (M D : ℝ) (fuel : ℕ) : Option (TrialReport d) :=
   machine.runFuel oracle fuel (machine.initial M D) []
@@ -169,11 +182,11 @@ theorem GuardedTrialMachine.runFuel_traceExact {d : ℕ}
       rw [GuardedTrialMachine.runFuel] at hrun
       cases haction : machine.action state with
       | finish guards outcome =>
-          simp [haction] at hrun
+          simp only [haction, Option.some.injEq] at hrun
           subst report
           exact hhistory
       | query x next =>
-          simp [haction] at hrun
+          simp only [haction] at hrun
           apply ih (traceExact_append hhistory ?_) hrun
           intro o ho
           simp at ho

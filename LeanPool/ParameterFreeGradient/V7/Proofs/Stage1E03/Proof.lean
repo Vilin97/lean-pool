@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Certificate
 
+/-!
+Existence of a certified Euclidean two-phase local trial with its query bound.
+-/
+
 namespace V7
 
 open Stage1E03

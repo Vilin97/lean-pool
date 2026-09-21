@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.PrimalResidual
 import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 
+/-!
+The above-two primal potential identity and terminal objective-gap estimate.
+-/
+
 
 namespace V7.Stage4AboveTwoPrimalRepair
 
@@ -172,6 +176,7 @@ private lemma primal_abel (n : ℕ) (u dw : ScalarSeq)
   rw [hrhs]
   ring
 
+/-- The primal mirror potential after subtracting the accumulated Bregman and smoothness gaps. -/
 noncomputable def primalPotential (p : ℝ) (n : ℕ)
     (data : AbovePrimalPhaseData p d n) (z : Point d) : ℝ :=
   aboveH p z -
@@ -194,6 +199,7 @@ noncomputable def primalPotential (p : ℝ) (n : ℕ)
         aboveUniformConstant p *
           (lpNorm p (data.v (k + 1) - data.v k)) ^ p))
 
+/-- The accumulated gradient, mirror, and mixed-pairing residual of the actual primal trajectory. -/
 noncomputable def primalResidual (p : ℝ) (n : ℕ)
     (data : AbovePrimalPhaseData p d n) : ℝ :=
   ∑ k ∈ Finset.range n,
@@ -253,7 +259,7 @@ private lemma increment_succ_nonneg (n : ℕ) (u dw : ScalarSeq)
   intro k hk
   by_cases hnext : k + 1 < n
   · rw [(hweights (k + 1) hnext).2.2.1]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     exact sub_nonneg.mpr (hweights k hk).2.1
   · have heq : k + 1 = n := by omega
     rw [heq, hdwn]
@@ -357,6 +363,141 @@ theorem primalResidual_lower (p : ℝ) (hp : 2 < p) (n : ℕ)
   rw [heq] at hbase
   exact hbase
 
+/-- Weighted oracle values telescope when increments are successive weight differences. -/
+private lemma weightedOracleValues_telescope
+    {p : ℝ} (n : ℕ) (data : AbovePrimalPhaseData p d n)
+    (hdw_succ : ∀ k < n, data.dw (k + 1) = data.u (k + 1) - data.u k) :
+      data.u 0 * data.oracle.value (data.x 0) +
+          (∑ k ∈ Finset.range n,
+            data.dw (k + 1) * data.oracle.value (data.x (k + 1))) +
+          (∑ k ∈ Finset.range n,
+            data.u k *
+              (data.oracle.value (data.x (k + 1)) - data.oracle.value (data.x k))) =
+        data.u n * data.oracle.value (data.x n) := by
+  rw [add_assoc, ← Finset.sum_add_distrib]
+  have hpoint : ∀ k ∈ Finset.range n,
+      data.dw (k + 1) * data.oracle.value (data.x (k + 1)) +
+          data.u k * (data.oracle.value (data.x (k + 1)) -
+            data.oracle.value (data.x k)) =
+        data.u (k + 1) * data.oracle.value (data.x (k + 1)) -
+          data.u k * data.oracle.value (data.x k) := by
+    intro k hk
+    rw [hdw_succ k (Finset.mem_range.mp hk)]
+    ring
+  have hsumPoint :
+      (∑ k ∈ Finset.range n,
+        (data.dw (k + 1) * data.oracle.value (data.x (k + 1)) +
+          data.u k * (data.oracle.value (data.x (k + 1)) -
+            data.oracle.value (data.x k)))) =
+      ∑ k ∈ Finset.range n,
+        (data.u (k + 1) * data.oracle.value (data.x (k + 1)) -
+          data.u k * data.oracle.value (data.x k)) := by
+    apply Finset.sum_congr rfl
+    intro k hk
+    exact hpoint k hk
+  rw [hsumPoint]
+  have ht := sum_succ_sub n
+    (fun k ↦ data.u k * data.oracle.value (data.x k))
+  rw [ht]
+  ring
+
+/-- The accumulated gradient pairing equals the negative terminal dual pairing. -/
+private lemma gradientPairing_sum_eq_neg
+    {p : ℝ} (n : ℕ) (data : AbovePrimalPhaseData p d n) (A : VectorSeq d)
+    (hs0 : data.s 0 = 0)
+    (hsdiff : ∀ k < n, data.s k - data.s (k + 1) = data.dw k • A k) :
+      (∑ k ∈ Finset.range n, data.dw k * O3.pairing (A k) z) =
+        -O3.pairing (data.s n) z := by
+  have hsumSvec :
+      (∑ k ∈ Finset.range n, data.dw k • A k) = -data.s n := by
+    have htel := sum_succ_sub n data.s
+    have hflip : (∑ k ∈ Finset.range n,
+        (data.s k - data.s (k + 1))) =
+        -(∑ k ∈ Finset.range n, (data.s (k + 1) - data.s k)) := by
+      rw [← Finset.sum_neg_distrib]
+      apply Finset.sum_congr rfl
+      intro k hk
+      abel
+    calc
+      _ = ∑ k ∈ Finset.range n, (data.s k - data.s (k + 1)) := by
+        apply Finset.sum_congr rfl
+        intro k hk
+        exact (hsdiff k (Finset.mem_range.mp hk)).symm
+      _ = -(∑ k ∈ Finset.range n, (data.s (k + 1) - data.s k)) := hflip
+      _ = -(data.s n - data.s 0) := by rw [htel]
+      _ = -data.s n := by rw [hs0]; simp
+  calc
+    _ = ∑ k ∈ Finset.range n,
+        O3.pairing (data.dw k • A k) z := by
+      apply Finset.sum_congr rfl
+      intro k hk
+      rw [pairing_smul_left]
+    _ = O3.pairing (∑ k ∈ Finset.range n, data.dw k • A k) z :=
+      (pairing_finset_sum_left (Finset.range n) (fun k ↦ data.dw k • A k) z).symm
+    _ = _ := by rw [hsumSvec]; simp [O3.pairing]
+
+/-- Discrete summation by parts rewrites the weighted gradient-position pairings. -/
+private lemma weightedGradientPairings_telescope
+    {p : ℝ} (n : ℕ) (data : AbovePrimalPhaseData p d n) (A : VectorSeq d)
+    (hdw_succ : ∀ k < n, data.dw (k + 1) = data.u (k + 1) - data.u k)
+    (hAn : A (n + 1) = 0) :
+      -data.u 0 * O3.pairing (A 0) (data.x 0) -
+          (∑ k ∈ Finset.range n,
+            data.dw (k + 1) * O3.pairing (A (k + 1)) (data.x (k + 1))) +
+          (∑ k ∈ Finset.range n,
+            data.u k * O3.pairing (A (k + 1)) (data.x k - data.x (k + 1))) =
+        -(∑ k ∈ Finset.range (n + 1),
+          data.u k * O3.pairing (A k - A (k + 1)) (data.x k)) := by
+  have hdiag := sum_shift_end n
+    (fun k ↦ data.u k * O3.pairing (A k) (data.x k))
+  rw [Finset.sum_range_succ]
+  simp_rw [pairing_sub_left, pairing_sub_right]
+  have hsumCoeff :
+      (∑ k ∈ Finset.range n,
+        data.dw (k + 1) * O3.pairing (A (k + 1)) (data.x (k + 1))) +
+      (∑ k ∈ Finset.range n,
+        data.u k * O3.pairing (A (k + 1)) (data.x (k + 1))) =
+      ∑ k ∈ Finset.range n,
+        data.u (k + 1) * O3.pairing (A (k + 1)) (data.x (k + 1)) := by
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro k hk
+    rw [hdw_succ k (Finset.mem_range.mp hk)]
+    ring
+  simp_rw [mul_sub]
+  repeat' rw [Finset.sum_sub_distrib]
+  rw [hAn, show O3.pairing (0 : Point d) (data.x n) = 0 by simp [O3.pairing]]
+  linarith [hdiag, hsumCoeff]
+
+/-- The dual mirror-potential differences telescope from the zero initial dual vector. -/
+private lemma mirrorPotential_telescope
+    (p : ℝ) (hp : 2 < p) (n : ℕ) (data : AbovePrimalPhaseData p d n)
+    (hs0 : data.s 0 = 0) :
+      -(∑ k ∈ Finset.range n,
+        (aboveHstar p (data.s k) - aboveHstar p (data.s (k + 1)))) =
+        aboveHstar p (data.s n) := by
+  have ht := sum_succ_sub n (fun k ↦ aboveHstar p (data.s k))
+  have hzero : aboveHstar p (data.s 0) = 0 := by
+    rw [hs0, aboveHstar]
+    have hp1 : 1 < p := by linarith
+    have hqpos : 0 < O3.conjugateExponent p :=
+      lt_trans zero_lt_one (O3.one_lt_conjugateExponent hp1)
+    change 1 / O3.conjugateExponent p *
+      O3.lpNorm (O3.conjugateExponent p) 0 ^ O3.conjugateExponent p = 0
+    rw [O3.lpNorm_zero hqpos]
+    rw [Real.zero_rpow hqpos.ne']
+    ring
+  have hflip : (∑ k ∈ Finset.range n,
+      (aboveHstar p (data.s k) - aboveHstar p (data.s (k + 1)))) =
+      -(∑ k ∈ Finset.range n,
+        (aboveHstar p (data.s (k + 1)) - aboveHstar p (data.s k))) := by
+    rw [← Finset.sum_neg_distrib]
+    apply Finset.sum_congr rfl
+    intro k hk
+    ring
+  rw [hflip, ht, hzero]
+  ring
+
 theorem primalPotential_identity (p : ℝ) (hp : 2 < p)
     (n : ℕ) (data : AbovePrimalPhaseData p d n)
     (hass : AbovePrimalPhaseAssumptions data) (z : Point d) :
@@ -414,40 +555,7 @@ theorem primalPotential_identity (p : ℝ) (hp : 2 < p)
     ring
   have habel := primal_abel n data.u data.dw A data.v data.x data.s
     hx0 hv0 hAn hdwn hsdiff hxweighted
-  have hfun :
-      data.u 0 * data.oracle.value (data.x 0) +
-          (∑ k ∈ Finset.range n,
-            data.dw (k + 1) * data.oracle.value (data.x (k + 1))) +
-          (∑ k ∈ Finset.range n,
-            data.u k *
-              (data.oracle.value (data.x (k + 1)) - data.oracle.value (data.x k))) =
-        data.u n * data.oracle.value (data.x n) := by
-    rw [add_assoc, ← Finset.sum_add_distrib]
-    have hpoint : ∀ k ∈ Finset.range n,
-        data.dw (k + 1) * data.oracle.value (data.x (k + 1)) +
-            data.u k * (data.oracle.value (data.x (k + 1)) -
-              data.oracle.value (data.x k)) =
-          data.u (k + 1) * data.oracle.value (data.x (k + 1)) -
-            data.u k * data.oracle.value (data.x k) := by
-      intro k hk
-      rw [hdw_succ k (Finset.mem_range.mp hk)]
-      ring
-    have hsumPoint :
-        (∑ k ∈ Finset.range n,
-          (data.dw (k + 1) * data.oracle.value (data.x (k + 1)) +
-            data.u k * (data.oracle.value (data.x (k + 1)) -
-              data.oracle.value (data.x k)))) =
-        ∑ k ∈ Finset.range n,
-          (data.u (k + 1) * data.oracle.value (data.x (k + 1)) -
-            data.u k * data.oracle.value (data.x k)) := by
-      apply Finset.sum_congr rfl
-      intro k hk
-      exact hpoint k hk
-    rw [hsumPoint]
-    have ht := sum_succ_sub n
-      (fun k ↦ data.u k * data.oracle.value (data.x k))
-    rw [ht]
-    ring
+  have hfun := weightedOracleValues_telescope n data hdw_succ
   have hzweights :
       data.u 0 * O3.pairing (A 0) z +
           (∑ k ∈ Finset.range n,
@@ -464,94 +572,14 @@ theorem primalPotential_identity (p : ℝ) (hp : 2 < p)
           (fun j ↦ data.dw j * O3.pairing (A j) z) (k + 1) := by rfl
     rw [hsum]
     exact hshift
-  have hsumSvec :
-      (∑ k ∈ Finset.range n, data.dw k • A k) = -data.s n := by
-    have htel := sum_succ_sub n data.s
-    have hflip : (∑ k ∈ Finset.range n,
-        (data.s k - data.s (k + 1))) =
-        -(∑ k ∈ Finset.range n, (data.s (k + 1) - data.s k)) := by
-      rw [← Finset.sum_neg_distrib]
-      apply Finset.sum_congr rfl
-      intro k hk
-      abel
-    calc
-      _ = ∑ k ∈ Finset.range n, (data.s k - data.s (k + 1)) := by
-        apply Finset.sum_congr rfl
-        intro k hk
-        exact (hsdiff k (Finset.mem_range.mp hk)).symm
-      _ = -(∑ k ∈ Finset.range n, (data.s (k + 1) - data.s k)) := hflip
-      _ = -(data.s n - data.s 0) := by rw [htel]
-      _ = -data.s n := by rw [hs0]; simp
-  have hzpair :
-      (∑ k ∈ Finset.range n, data.dw k * O3.pairing (A k) z) =
-        -O3.pairing (data.s n) z := by
-    calc
-      _ = ∑ k ∈ Finset.range n,
-          O3.pairing (data.dw k • A k) z := by
-        apply Finset.sum_congr rfl
-        intro k hk
-        rw [pairing_smul_left]
-      _ = O3.pairing (∑ k ∈ Finset.range n, data.dw k • A k) z :=
-        (pairing_finset_sum_left (Finset.range n) (fun k ↦ data.dw k • A k) z).symm
-      _ = _ := by rw [hsumSvec]; simp [O3.pairing]
+  have hzpair := gradientPairing_sum_eq_neg (z := z) n data A hs0 hsdiff
   have hz :
       data.u 0 * O3.pairing (A 0) z +
           (∑ k ∈ Finset.range n,
             data.dw (k + 1) * O3.pairing (A (k + 1)) z) =
         -O3.pairing (data.s n) z := hzweights.trans hzpair
-  have hxpair :
-      -data.u 0 * O3.pairing (A 0) (data.x 0) -
-          (∑ k ∈ Finset.range n,
-            data.dw (k + 1) * O3.pairing (A (k + 1)) (data.x (k + 1))) +
-          (∑ k ∈ Finset.range n,
-            data.u k * O3.pairing (A (k + 1)) (data.x k - data.x (k + 1))) =
-        -(∑ k ∈ Finset.range (n + 1),
-          data.u k * O3.pairing (A k - A (k + 1)) (data.x k)) := by
-    have hdiag := sum_shift_end n
-      (fun k ↦ data.u k * O3.pairing (A k) (data.x k))
-    rw [Finset.sum_range_succ]
-    simp_rw [pairing_sub_left, pairing_sub_right]
-    have hsumCoeff :
-        (∑ k ∈ Finset.range n,
-          data.dw (k + 1) * O3.pairing (A (k + 1)) (data.x (k + 1))) +
-        (∑ k ∈ Finset.range n,
-          data.u k * O3.pairing (A (k + 1)) (data.x (k + 1))) =
-        ∑ k ∈ Finset.range n,
-          data.u (k + 1) * O3.pairing (A (k + 1)) (data.x (k + 1)) := by
-      rw [← Finset.sum_add_distrib]
-      apply Finset.sum_congr rfl
-      intro k hk
-      rw [hdw_succ k (Finset.mem_range.mp hk)]
-      ring
-    simp_rw [mul_sub]
-    repeat' rw [Finset.sum_sub_distrib]
-    rw [hAn, show O3.pairing (0 : Point d) (data.x n) = 0 by simp [O3.pairing]]
-    linarith [hdiag, hsumCoeff]
-  have hhstar :
-      -(∑ k ∈ Finset.range n,
-        (aboveHstar p (data.s k) - aboveHstar p (data.s (k + 1)))) =
-        aboveHstar p (data.s n) := by
-    have ht := sum_succ_sub n (fun k ↦ aboveHstar p (data.s k))
-    have hzero : aboveHstar p (data.s 0) = 0 := by
-      rw [hs0, aboveHstar]
-      have hp1 : 1 < p := by linarith
-      have hqpos : 0 < O3.conjugateExponent p :=
-        lt_trans zero_lt_one (O3.one_lt_conjugateExponent hp1)
-      change 1 / O3.conjugateExponent p *
-        O3.lpNorm (O3.conjugateExponent p) 0 ^ O3.conjugateExponent p = 0
-      rw [O3.lpNorm_zero hqpos]
-      rw [Real.zero_rpow hqpos.ne']
-      ring
-    have hflip : (∑ k ∈ Finset.range n,
-        (aboveHstar p (data.s k) - aboveHstar p (data.s (k + 1)))) =
-        -(∑ k ∈ Finset.range n,
-          (aboveHstar p (data.s (k + 1)) - aboveHstar p (data.s k))) := by
-      rw [← Finset.sum_neg_distrib]
-      apply Finset.sum_congr rfl
-      intro k hk
-      ring
-    rw [hflip, ht, hzero]
-    ring
+  have hxpair := weightedGradientPairings_telescope n data A hdw_succ hAn
+  have hhstar := mirrorPotential_telescope p hp n data hs0
   have habelActual :
       (∑ k ∈ Finset.range n,
           O3.pairing (data.s k - data.s (k + 1)) (data.v (k + 1))) -

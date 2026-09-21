@@ -12,9 +12,11 @@ import LeanPool.ParameterFreeGradient.O3.Stage10EuclideanGuards
 namespace V7
 namespace Stage1E03
 
+/-- Classical proposition decisions used locally to evaluate observable guards. -/
 noncomputable local instance e03PropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
+/-- The selected observable inequality evaluated solely from its recorded observations. -/
 noncomputable def CheckHolds (p M : ℝ) (check : ObservableGuardCheck d) : Prop :=
   match check.kind with
   | .upperModel =>
@@ -38,17 +40,21 @@ noncomputable def CheckHolds (p M : ℝ) (check : ObservableGuardCheck d) : Prop
       check.yPair.value ≤ check.xPair.value -
         (lpNorm 2 check.xPair.gradient) ^ (2 : ℕ) / (2 * M)
 
+/-- An upper-model guard formed from the query and proposed next-point observations. -/
 noncomputable def upperCheck (oy ox : Observation d) : ObservableGuardCheck d :=
   ⟨.upperModel, oy, ox⟩
 
+/-- A Euclidean interpolation guard formed from two observations. -/
 noncomputable def interpolationCheck (oi oj : Observation d) :
     ObservableGuardCheck d :=
   ⟨.interpolation, oi, oj⟩
 
+/-- A terminal-descent guard formed from the final query and gradient-step observations. -/
 noncomputable def terminalCheck (on ov : Observation d) :
     ObservableGuardCheck d :=
   ⟨.terminalDescent, on, ov⟩
 
+/-- The ordered list of interpolation checks for every pair through horizon `n`. -/
 noncomputable def allInterpolationChecks (n : ℕ)
     (obsAt : ℕ → Observation d) : List (ObservableGuardCheck d) :=
   (List.range (n + 1)).flatMap fun i =>
@@ -76,14 +82,17 @@ inductive Program (d : ℕ) : ℕ → Type where
   | finish {fuel : ℕ} (guards : List (ObservableGuardCheck d))
       (outcome : TrialOutcome d) : Program d fuel
 
+/-- A finite query program paired with its remaining query bound. -/
 abbrev PackedProgram (d : ℕ) := (fuel : ℕ) × Program d fuel
 
+/-- The next local-trial action exposed by a packed finite program. -/
 noncomputable def Program.action : PackedProgram d →
     LocalTrialAction d (PackedProgram d)
   | ⟨_, .finish guards outcome⟩ => .finish guards outcome
   | ⟨fuel + 1, .query point next⟩ =>
       .query point fun obs => ⟨fuel, next obs⟩
 
+/-- The report obtained by evaluating a finite query program against an oracle. -/
 noncomputable def Program.eval (oracle : PairOracle d) :
     (fuel : ℕ) → Program d fuel → List (Observation d) → TrialReport d
   | _, .finish guards outcome, history => ⟨history, guards, outcome⟩
@@ -91,6 +100,7 @@ noncomputable def Program.eval (oracle : PairOracle d) :
       let obs := oracle.observe point
       Program.eval oracle fuel (next obs) (history ++ [obs])
 
+/-- The local trial whose state is a packed finite query program. -/
 noncomputable def programTrial
     (initial : ℝ → ℝ → CachedPair d → PackedProgram d) : LocalTrial d where
   State := PackedProgram d
@@ -127,6 +137,7 @@ theorem programTrial_executes (oracle : PairOracle d)
   exact Program.runFuel_eq_eval oracle initial (initial M D cached).1
       (initial M D cached).2 []
 
+/-- The ceiling of the Euclidean trial's accuracy-dependent iteration horizon. -/
 noncomputable def horizon (eps M D : ℝ) : ℕ :=
   Nat.ceil (2 * Real.sqrt (M * D / eps))
 
@@ -176,6 +187,7 @@ theorem horizon_gradient_budget {eps M D : ℝ}
   exact (div_le_iff₀ hs2).2 (by
     simpa only [kappa, n, s] using hnum)
 
+/-- The next accelerated estimate state after receiving a query observation. -/
 noncomputable def nextEstimateState (M : ℝ) (x0 : Point d) (k : ℕ)
     (state : O3.EuclideanEstimateState d) (oy : Observation d) :
     O3.EuclideanEstimateState d :=
@@ -185,6 +197,8 @@ noncomputable def nextEstimateState (M : ℝ) (x0 : Point d) (k : ℕ)
   let zNext := O3.Stage8EuclideanMinimizer.euclideanPsiMinimizer M x0 sNext
   ⟨O3.euclideanBarycenter A a state.accelerated zNext, sNext⟩
 
+/-- The estimate-sequence query formed from the current accelerated point and quadratic
+minimizer. -/
 noncomputable def estimateQuery (M : ℝ) (x0 : Point d) (k : ℕ)
     (state : O3.EuclideanEstimateState d) : Point d :=
   O3.euclideanBarycenter (O3.euclideanA k)
@@ -192,6 +206,7 @@ noncomputable def estimateQuery (M : ℝ) (x0 : Point d) (k : ℕ)
     (O3.Stage8EuclideanMinimizer.euclideanPsiMinimizer M x0
       state.cumulativeGradient)
 
+/-- One OGM-G state update using the observed gradient and prescribed momentum coefficients. -/
 noncomputable def ogmgStep (n : ℕ) (M : ℝ) (i : ℕ)
     (state : O3.OGMGExecutionState d) (oi : Observation d) :
     O3.OGMGExecutionState d :=
@@ -204,6 +219,7 @@ noncomputable def ogmgStep (n : ℕ) (M : ℝ) (i : ℕ)
       (2 * O3.stage9Theta n i - 1)
   ⟨v + momentum • (v - state.previousV) + correction • (v - state.current), v⟩
 
+/-- The final one-query program checking descent and selecting the terminal outcome. -/
 noncomputable def terminalProgram (eps M : ℝ) (n : ℕ)
     (obsAt : ℕ → Observation d) (exec : O3.OGMGExecutionState d)
     (guards : List (ObservableGuardCheck d)) : Program d 1 :=
@@ -218,6 +234,7 @@ noncomputable def terminalProgram (eps M : ℝ) (n : ℕ)
       else .finish allGuards (.radius on)
     else .finish allGuards (.scale terminal)
 
+/-- The finite OGM-G query program followed by interpolation and terminal-descent checks. -/
 noncomputable def phaseBProgram (eps M : ℝ) (n i : ℕ)
     (exec : O3.OGMGExecutionState d) (obsAt : ℕ → Observation d)
     (guards : List (ObservableGuardCheck d)) :
@@ -233,10 +250,12 @@ noncomputable def phaseBProgram (eps M : ℝ) (n i : ℕ)
         phaseBProgram eps M n (i + 1) next
           (fun j => if j = i + 1 then oi else obsAt j) guards fuel
 
+/-- The query bound for the remaining estimate phase and the following OGM-G phase. -/
 def phaseABudget (n : ℕ) : ℕ → ℕ
   | 0 => n + 1
   | fuel + 1 => phaseABudget n fuel + 2
 
+/-- The estimate-phase query program, which checks each upper model before continuing. -/
 noncomputable def phaseAProgram (eps M : ℝ) (x0 : Point d) (n k : ℕ)
     (estimate : O3.EuclideanEstimateState d)
     (last : Option (Observation d))
@@ -260,6 +279,7 @@ noncomputable def phaseAProgram (eps M : ℝ) (x0 : Point d) (n k : ℕ)
               (guards ++ [check]) fuel
           else .finish (guards ++ [check]) (.scale check)
 
+/-- The Euclidean local trial with a fixed planned horizon. -/
 noncomputable def euclideanLocalTrial (eps : ℝ) (x0 : Point d) (n : ℕ) :
     LocalTrial d :=
   programTrial fun M _D _cached =>

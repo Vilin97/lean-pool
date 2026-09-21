@@ -6,16 +6,24 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.CompletionData
 
+/-!
+The normalized completion is a convex objective with the stated coordinate gradient.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
 open Stage5AboveTwoLower
 open Stage5AboveTwoLower.S5ARepair
 open Stage5AboveTwoLowerS5A2Envelope
 
+/-- The normalized separation scale `T ^ (-1 / p)`. -/
 noncomputable def unitDelta (p : ℝ) (T : ℕ) : ℝ := (T : ℝ) ^ (-1 / p)
+/-- The affine-piece offset used in the normalized resisting construction. -/
 noncomputable def unitDeltaStep (p : ℝ) (T : ℕ) : ℝ := unitDelta p T / (2 * T)
+/-- The smoothing scale, equal to half the normalized affine-piece offset. -/
 noncomputable def unitChi (p : ℝ) (T : ℕ) : ℝ := unitDeltaStep p T / 2
 
+/-- The explicit kernel and scales initializing the normalized resisting construction. -/
 noncomputable def unitParameters (p : ℝ) (d T : ℕ)
     (algorithm : DeterministicExactPairAlgorithm d) (hT : 1 ≤ T) (hTd : T ≤ d) :
     PrefixParameters p d T :=
@@ -45,6 +53,7 @@ lemma unitBeta_pos {p : ℝ} {d T : ℕ} (hp : 2 < p) (hd : 2 ≤ d) (hT : 1 ≤
     0 < unitChi p T / repairMpd p d :=
   div_pos (unitChi_pos hT) (repairMpd_pos hp hd)
 
+/-- The complete normalized resisting data for a deterministic algorithm. -/
 noncomputable def unitCompletionData (p : ℝ) (d T : ℕ)
     (algorithm : DeterministicExactPairAlgorithm d) (hT : 1 ≤ T) (hTd : T ≤ d) :
     LowerCompletionData p d T :=
@@ -113,6 +122,7 @@ lemma coordinateGradient_const_mul (f : Point d → ℝ) (g : Point d → Point 
   rw [hderiv]
   exact (O3.Stage2RouteD.pairing_smul_left c (g x) h).symm
 
+/-- The normalized completed resisting data viewed as objective data. -/
 noncomputable def unitObjectiveData (p : ℝ) (d T : ℕ)
     (algorithm : DeterministicExactPairAlgorithm d) (hT : 1 ≤ T) (hTd : T ≤ d) :
     LowerObjectiveData p d T :=

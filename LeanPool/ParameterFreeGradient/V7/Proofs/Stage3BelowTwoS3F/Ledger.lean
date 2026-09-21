@@ -6,8 +6,13 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Semantics
 
+/-!
+Consecutive below-two guard checks match the cached observation and the two phase traces.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
+/-- The cocoercivity checks between consecutive observations, starting from a cached observation. -/
 noncomputable def chainChecks (first : Observation d) : List (Observation d) →
     List (ObservableGuardCheck d)
   | [] => []

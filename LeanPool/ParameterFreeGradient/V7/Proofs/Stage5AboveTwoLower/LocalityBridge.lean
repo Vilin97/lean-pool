@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
 
+/-!
+Neighborhood equality of smooth objective values determines the complete exact oracle pair.
+-/
+
 namespace V7.Stage5AboveTwoLower
 
 /-- Once two differentiable smoothing values agree on a neighbourhood, their
@@ -44,6 +48,8 @@ def LocalSmoothingNeighborhoodStability (kernel : SmoothingKernelData p d) : Pro
       (kernel.smooth chi ell₁).value =ᶠ[nhds x]
         (kernel.smooth chi ell₂).value
 
+/-- Smoothing a convex one-Lipschitz objective produces an oracle with the exact coordinate
+gradient. -/
 def SmoothingCoordinateGradientCore (kernel : SmoothingKernelData p d) : Prop :=
   ∀ (chi : ℝ), 0 < chi → ∀ ell : Point d → ℝ,
     O3.IsConvexObjective ell → IsOneLipschitz p ell →

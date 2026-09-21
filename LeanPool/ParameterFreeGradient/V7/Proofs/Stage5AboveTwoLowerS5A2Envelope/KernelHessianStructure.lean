@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.ConditionalSmoothness
 import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 
+/-!
+Symmetry, positivity, and Cauchy-Schwarz estimates for the kernel Hessian.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower

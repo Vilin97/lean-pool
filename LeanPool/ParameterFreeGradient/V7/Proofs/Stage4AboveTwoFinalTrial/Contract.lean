@@ -6,11 +6,16 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Ledger
 
+/-!
+The concrete above-two phase trajectories satisfy the operational trial contract.
+-/
+
 namespace V7.Stage4AboveTwoFinalTrial
 
 variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}
   {report : TrialReport d} {cached : CachedPair d}
 
+/-- The concrete above-two trajectories and budgets packaged as an operational witness. -/
 noncomputable def shapeWitness (p eps M D : ℝ) (x0 : Point d)
     (oracle : PairOracle d) (m₁ m₂ : ℕ) : AboveTrialWitness p d where
   nF := nF p eps M D

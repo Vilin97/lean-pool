@@ -77,7 +77,7 @@ lemma anchorNormingVector_eq_inv_smul_dualityMap {q : ℝ} (hq : 1 < q)
     {d : ℕ} (g : Vec d) (hg : g ≠ 0) :
     anchorNormingVector q g = (lpNorm q g)⁻¹ • dualityMap q g := by
   have hn : 0 < lpNorm q g := lpNorm_pos_of_ne_zero hg
-  rw [dualityMap, if_neg hn.ne']
+  rw [dualityMap, ite_eq_right hn.ne']
   funext i
   simp only [anchorNormingVector, Pi.smul_apply, smul_eq_mul]
   rw [sign_mul_abs_rpow_sub_one hq]

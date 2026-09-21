@@ -6,8 +6,13 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.RuntimeMachine
 
+/-!
+Selection and certification of the local trial for each runtime exponent regime.
+-/
+
 namespace V7.Stage8Main
 
+/-- The local query-cost coefficient for the runtime's exponent regime. -/
 noncomputable def runtimeCoefficient (data : RuntimeData d) : ℝ :=
   if hp2 : data.input.p < 2 then
     4 / Real.sqrt (data.input.p - 1) + 2
@@ -32,9 +37,11 @@ theorem RuntimeControllerState.D_ge_base (data : RuntimeData d)
       simp only [RuntimeControllerState.D]
       ring
 
+/-- A local report together with its execution, correctness, guard, and query-cost certificates. -/
 structure LocalRunSpec (data : RuntimeData d)
     (state : RuntimeControllerState d)
     (inst : PositiveInstance data.input.p d data.input.x0) where
+  /-- The report produced by the certified local run. -/
   report : TrialReport d
   executes : (runtimeTrial data state).Executes (state.M data) (state.D data)
     data.cached inst.oracle report
@@ -56,10 +63,10 @@ private theorem report_trace_nonempty_of_accounting
   cases hout : report.outcome with
   | success terminal =>
       have hmem := (hsuccess terminal hout).1
-      simpa [hnil] using hmem
+      simp [hnil] at hmem
   | radius terminal =>
       have hmem := (hradius terminal hout).1
-      simpa [hnil] using hmem
+      simp [hnil] at hmem
   | scale failed =>
       have hmem := (hscale failed hout).1
       have hlen : report.checkedGuards.length = 0 := by
@@ -67,7 +74,7 @@ private theorem report_trace_nonempty_of_accounting
           TrialReport.calls, hnil] using haccount
       have hne : report.checkedGuards ≠ [] := by
         intro hg
-        simpa [hg] using hmem
+        simp [hg] at hmem
       have hpos : 0 < report.checkedGuards.length := by
         apply Nat.pos_of_ne_zero
         intro hz
@@ -90,31 +97,31 @@ private theorem euclidean_contract_trace_nonempty
       have hlen : 0 < report.trace.length := by
         rw [htrace]
         simp [euclideanPlannedTrace]
-      simpa [hnil] using hlen
+      simp [hnil] at hlen
   | radius terminal =>
       have htrace := (hradius terminal hout).1
       have hlen : 0 < report.trace.length := by
         rw [htrace]
         simp [euclideanPlannedTrace]
-      simpa [hnil] using hlen
+      simp [hnil] at hlen
   | scale failed =>
       rcases hstop failed hout with hupper | hinterp | hterminal
       · rcases hupper with ⟨_, k, hk, _, htrace⟩
         have hlen : 0 < report.trace.length := by
           rw [htrace]
           simp [euclideanPlannedTrace]
-        simpa [hnil] using hlen
+        simp [hnil] at hlen
       · have htrace := hinterp.2
         have hlen : 0 < report.trace.length := by
           rw [htrace]
           simp [euclideanPlannedTrace, hn]
           omega
-        simpa [hnil] using hlen
+        simp [hnil] at hlen
       · have htrace := hterminal.2.2
         have hlen : 0 < report.trace.length := by
           rw [htrace]
           simp [euclideanPlannedTrace]
-        simpa [hnil] using hlen
+        simp [hnil] at hlen
 
 private theorem coco_complete {p : ℝ} (hp2 : p ≠ 2)
     {report : TrialReport d}

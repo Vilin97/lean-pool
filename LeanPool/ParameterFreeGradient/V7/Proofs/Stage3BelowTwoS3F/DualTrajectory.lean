@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.DualRecursion
 
+/-!
+The below-two dual trajectory has the required dynamics and exact chronological observations.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
 @[simp] theorem dualQ_zero (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
@@ -33,10 +37,10 @@ theorem dualR_succ (p : ℝ) (n k : ℕ) (oracle : PairOracle d) :
   intro i hi
   have hilt : i < k + 2 := Finset.mem_range.mp hi
   by_cases hlt : i < k + 1
-  · rw [dif_pos hlt]
+  · rw [ite_eq_left hlt]
   · have hieq : i = k + 1 := by omega
     subst i
-    rw [dif_neg (by omega), if_pos rfl, dualQ_succ]
+    rw [ite_eq_right (by omega), ite_eq_left rfl, dualQ_succ]
 
 theorem antiDiagonal_alpha (n k : ℕ) (hk : k < n) (Z : VectorSeq d) :
     weightedSum (k + 1) (fun i => alpha n (n - i) (n - 1 - k)) Z =
@@ -56,10 +60,12 @@ theorem antiDiagonal_alpha (n k : ℕ) (hk : k < n) (Z : VectorSeq d) :
     simp [alpha, hrowpos, hrowle, hneq]
   · simp
 
+/-- The exact observations at all normalized dual queries through the horizon. -/
 noncomputable def dualTrace (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
     List (Observation d) :=
   (List.range (n + 1)).map fun k => oracle.observe (dualQ p n oracle k)
 
+/-- The concrete dual trajectories and coefficients packaged as below-two phase data. -/
 noncomputable def dualData (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
     BelowDualData p d n where
   oracle := oracle

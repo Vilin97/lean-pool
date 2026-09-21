@@ -8,11 +8,16 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.LinearAlgebra.Basis.Basic
 
+/-!
+Norm- and pairing-preserving transformations are linear, using the dual image basis.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open scoped BigOperators
 open Stage5AboveTwoLower.S5ARepair
 
+/-- The vector equal to one at coordinate `i` and zero elsewhere. -/
 def coordinateUnit (i : Fin d) : Point d := fun j ↦ if j = i then 1 else 0
 
 lemma pairing_coordinateUnit (x : Point d) (i : Fin d) :
@@ -57,6 +62,7 @@ lemma signedLpSymmetry_dual_linearIndependent {p : ℝ}
   simp_rw [hcoord'] at hpair
   simpa using hpair
 
+/-- The basis formed by the dual symmetry images of coordinate unit vectors. -/
 noncomputable def signedLpDualBasis {p : ℝ}
     (Q Qdual : Point d → Point d) (hsym : SignedLpSymmetry p Q Qdual) :
     Module.Basis (Fin d) ℝ (Point d) :=
@@ -136,7 +142,7 @@ lemma signedLpSymmetry_Q_smul {p : ℝ}
       O3.pairing (Qdual (coordinateUnit i)) (Q (a • x)) -
         a * O3.pairing (Qdual (coordinateUnit i)) (Q x) := by
     simp [O3.pairing, Finset.sum_sub_distrib, Finset.mul_sum, mul_sub,
-      mul_assoc, mul_left_comm]
+      mul_left_comm]
   rw [hlin]
   change pairing (Qdual (coordinateUnit i)) (Q (a • x)) -
     a * pairing (Qdual (coordinateUnit i)) (Q x) = 0

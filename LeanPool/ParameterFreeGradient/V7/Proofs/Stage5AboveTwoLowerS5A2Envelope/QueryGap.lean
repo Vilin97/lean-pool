@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.ExactPairCompletion
 
+/-!
+A persistent query gap and existence of a global minimizer for the completed hard objective.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open scoped BigOperators
@@ -13,6 +17,7 @@ open Stage5AboveTwoLower
 open Stage5AboveTwoLower.S5AFinalRepair
 open Stage5AboveTwoLowerResume
 
+/-- The comparison point with negative signed separation on each selected coordinate. -/
 noncomputable def adversarialPoint (data : LowerCompletionData p d T) : Point d :=
   (Finset.range T).sum fun i =>
     (-data.Delta * data.xi i) • coordinateUnit (data.sigma i)
@@ -149,7 +154,7 @@ lemma partialH_final_adversarialPoint_le (data : LowerCompletionData p d T)
     linarith
 
 lemma partialH_query_lower (data : LowerCompletionData p d T)
-    {t : ℕ} (ht : t < T)
+    {t : ℕ}
     (hstep : (data.xi t = 1 ∨ data.xi t = -1) ∧
       data.xi t * data.queries t (data.sigma t) =
         |data.queries t (data.sigma t)| ∧
@@ -202,7 +207,7 @@ lemma lower_gap_constant_identity {p Delta chi delta beta M : ℝ} {T : ℕ}
   have hcombine : (T : ℝ) ^ (-2 / p) *
       (T : ℝ) ^ (1 + 2 / p) = (T : ℝ) := by
     rw [← Real.rpow_add hTreal]
-    convert Real.rpow_one (T : ℝ) using 2 <;> ring
+    convert Real.rpow_one (T : ℝ) using 2; ring
   have hcore : ((T : ℝ) ^ (-1 / p)) ^ (2 : ℕ) *
       (T : ℝ) ^ (1 + 2 / p) = (T : ℝ) := by
     rw [hpow]
@@ -277,7 +282,7 @@ theorem _root_.V7.aboveLowerQueryGap : AboveLowerQueryGapStatement := by
     (hsteps t ht).2.2.2.2.2.2.1
   have hsmoothT := hsmooth base.chi hchiPos (base.partialH t)
     hpartialT.1 hpartialT.2
-  have hHquery := partialH_query_lower base ht
+  have hHquery := partialH_query_lower base
     ⟨(hsteps t ht).2.2.2.1, (hsteps t ht).2.2.2.2.1,
       (hsteps t ht).2.2.2.2.2.1, (hsteps t ht).2.2.2.2.2.2.1⟩
   have hqueryLower : base.beta * (-(t : ℝ) * base.delta / 2 - base.chi) ≤

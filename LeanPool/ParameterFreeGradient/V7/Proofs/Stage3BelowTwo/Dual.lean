@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Identity
 
+/-!
+The below-two dual phase terminal gradient bound from the residual identity.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage3BelowTwo
@@ -114,7 +118,7 @@ private lemma coefficient_u_pos (n : ℕ) (hn : 1 ≤ n) (u dw : ScalarSeq)
     rw [hieq, hcoeff.2.1, (hcoeff.2.2.2.2.2.1 (n - 1) (by omega)).1]
     positivity
 
-private lemma coefficient_dw_and_det (n : ℕ) (hn : 1 ≤ n)
+private lemma coefficient_dw_and_det (n : ℕ)
     (u dw : ScalarSeq) (alpha c b : ScalarMatrix)
     (hcoeff : BelowCoefficientAssumptions n u dw alpha c b) :
     ∀ k < n,
@@ -125,16 +129,15 @@ private lemma coefficient_dw_and_det (n : ℕ) (hn : 1 ≤ n)
   by_cases hk0 : k = 0
   · subst k
     have hd0 := hkrow.2.1
-    simp only [if_pos rfl, sub_zero] at hd0
+    simp only [] at hd0
     rw [hd0, hkrow.1]
     norm_num
   · have hkpos : 0 < k := Nat.pos_of_ne_zero hk0
     have hpred : k - 1 < n := by omega
     have hkpred := hcoeff.2.2.2.2.2.1 (k - 1) hpred
     have hd := hkrow.2.1
-    simp only [if_neg hk0] at hd
+    simp only [ite_eq_right hk0] at hd
     rw [hd, hkrow.1, hkpred.1]
-    push_cast
     have hkcast : ((k - 1 : ℕ) : ℝ) = (k : ℝ) - 1 := by
       rw [Nat.cast_sub (by omega : 1 ≤ k), Nat.cast_one]
     rw [hkcast]
@@ -202,10 +205,10 @@ private lemma coefficient_X_weighted_step (n : ℕ) (hn : 1 ≤ n)
     by_cases hi1 : i = k + 1 <;> by_cases hi0 : i = k
     · omega
     · subst i
-      simp [hi0] at hci ⊢
+      simp [] at hci ⊢
       linear_combination (B (k + 1) j) * hci
     · subst i
-      simp [hi1] at hci ⊢
+      simp [] at hci ⊢
       linear_combination (B k j) * hci
     · simp [hi1, hi0] at hci ⊢
       linear_combination (B i j) * hci
@@ -403,7 +406,7 @@ private lemma free_primal_residual_nonneg (p : ℝ) (hp : 1 < p)
   let BY := lpNorm p (B (k + 1) - B k)
   have hGX : 0 ≤ GX := O3.lpNorm_nonneg _ _
   have hBY : 0 ≤ BY := O3.lpNorm_nonneg _ _
-  have hdform := (coefficient_dw_and_det n hn u dw alpha c b hcoeff k hkn)
+  have hdform := (coefficient_dw_and_det n u dw alpha c b hcoeff k hkn)
   have hd : 0 ≤ dw k := by rw [hdform.1]; positivity
   have hdet : 0 ≤ u k - (dw k) ^ (2 : ℕ) := by rw [hdform.2]; positivity
   have hholder := O3.abs_pairing_le_lpNorm_mul
@@ -462,11 +465,11 @@ private lemma dual_residual_nonneg (p : ℝ) (hp : 1 < p) (hp2 : p < 2)
   have hmap' : BelowResidualMap n u A' B C D := by
     refine ⟨?_, ?_, hmap.2.2⟩
     · dsimp [A']
-      rw [if_pos le_rfl]
+      rw [ite_eq_left le_rfl]
       exact hmap.1
     · intro i hi
       dsimp [A']
-      rw [if_pos (by omega), if_pos (by omega)]
+      rw [ite_eq_left (by omega), ite_eq_left (by omega)]
       exact hmap.2.1 i hi
   have hAn : A' (n + 1) = 0 := by simp [A']
   have hX := freeX_recurrence n b B
@@ -701,7 +704,7 @@ private lemma belowHstar_zero (p : ℝ) (hp : 1 < p) (d : ℕ) :
   ring
 
 private lemma mirror_block_identity (p : ℝ) (hp : 1 < p) (n : ℕ)
-    (u : ScalarSeq) (b : ScalarMatrix) (G r : VectorSeq d)
+     (b : ScalarMatrix) (G r : VectorSeq d)
     (hr0 : r 0 = -(b n n) • G 0)
     (hr : ∀ k < n,
       r (k + 1) = r k -
@@ -782,7 +785,7 @@ private lemma mirror_block_identity (p : ℝ) (hp : 1 < p) (n : ℕ)
   have hbasepair : pairing (belowMirrorMap p (r 0)) (-r 0) =
       -O3.pairing (r 0) (belowMirrorMap p (r 0)) := by
     rw [O3.pairing_comm]
-    simp [O3.pairing, Finset.sum_neg_distrib]
+    simp [O3.pairing]
   simp only [zero_sub]
   rw [hbasepair]
   ring
@@ -829,7 +832,7 @@ theorem belowTerminalGradient : BelowTerminalGradientStatement := by
     n hn data.u data.alpha data.oracle data.G data.q Z hG
     (fun k hk => (hupdates k hk).1)
   have hmirror := Stage3BelowTwo.mirror_block_identity
-    p hp n data.u data.b data.G data.r hr0 (fun k hk => (hupdates k hk).2)
+    p hp n data.b data.G data.r hr0 (fun k hk => (hupdates k hk).2)
   have hfirst := O3.Stage3Anchor.firstOrderConvex_of_coordinateGradient hconv hcoord
   have hbreg : ∀ x y : Point d,
       0 ≤ FunctionBregman data.oracle.value data.oracle.gradient x y := by

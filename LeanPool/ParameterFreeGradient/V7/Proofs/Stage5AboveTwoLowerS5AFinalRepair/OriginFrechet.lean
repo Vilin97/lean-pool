@@ -9,6 +9,10 @@ import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
 import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
 import Mathlib.Analysis.InnerProductSpace.NormPow
 
+/-!
+The kernel gradient is Fréchet differentiable at the origin with zero derivative.
+-/
+
 open scoped BigOperators
 open Asymptotics
 
@@ -140,7 +144,7 @@ lemma norm_kernelGradientVector_le {r theta : ℝ} (hr : 2 < r)
 /-- For any normed real vector space, a real power of the norm with exponent
 strictly larger than one is little-o of the identity at the origin. -/
 lemma norm_rpow_isLittleO_id {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] {a : ℝ} (ha : 1 < a) :
+     {a : ℝ} (ha : 1 < a) :
     (fun x : E ↦ ‖x‖ ^ a) =o[nhds 0] (fun x : E ↦ x) := by
   have hpos : 0 < a - 1 := sub_pos.mpr ha
   calc

@@ -7,6 +7,11 @@ Authors: Yuning Yang
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Displacement
 
+/-!
+A single normalized hard instance makes finite-horizon randomized success arbitrarily
+unlikely.
+-/
+
 open MeasureTheory
 
 namespace V7.Stage7StrictRandomizedExpected
@@ -82,7 +87,7 @@ theorem querySuccessEvent_measurable
         |oracle.gradient obs.point 0| ≤ (method ω).eps} := by
   intro n
   induction n with
-  | zero => simpa using (MeasurableSet.empty : MeasurableSet (∅ : Set Ω))
+  | zero => simp
   | succ n ih =>
       have htrace := causalTrace_measurable method x0 oracle hobserve n
       have hquery := causalQuery_measurable method x0 n htrace
@@ -129,7 +134,7 @@ theorem hardSuccessEvent_measurable
   have hu := hquery.union houtput
   convert hu using 1
   ext ω
-  simp only [StrictSuccessThrough, Set.mem_setOf_eq, Set.mem_union]
+  simp only [StrictSuccessThrough, Set.mem_ofPred_eq, Set.mem_union]
   rw [show (causalTrace method x0 oracle N ω).take N =
       causalTrace method x0 oracle N ω by
         rw [List.take_eq_self_iff]
@@ -176,7 +181,7 @@ theorem probability_success_le_delta
     {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
     {good success : Set Ω} (hgood : MeasurableSet good)
     (hsubset : success ⊆ goodᶜ) {delta : ℝ}
-    (hdelta0 : 0 < delta) (hdelta1 : delta < 1)
+     (hdelta1 : delta < 1)
     (hmass : ENNReal.ofReal (1 - delta) ≤ μ good) :
     μ success ≤ ENNReal.ofReal delta := by
   calc
@@ -214,7 +219,7 @@ theorem randomizedFiniteHorizonImpossibility :
     have hM : Measurable M := finiteDisplacementBound_measurable method x0
       (strictAffineOracle eps x0) (strictAffineObserve_measurable eps x0) N
     obtain ⟨H, hH, hmass⟩ :=
-      exists_deterministic_threshold μ M hM hdelta0 hdelta1
+      exists_deterministic_threshold μ M hM hdelta0
     have hmassGood : ENNReal.ofReal (1 - delta) ≤ μ {ω |
         (∀ obs ∈ affineTraces ω, obs.point 0 - x0 0 < H) ∧
         (method ω).output N (affineTraces ω) 0 - x0 0 < H} := by
@@ -242,9 +247,9 @@ theorem randomizedFiniteHorizonImpossibility :
     · refine probability_success_le_delta μ
         (boundedDisplacementEvent_measurable method x0
           (strictAffineOracle eps x0) (strictAffineObserve_measurable eps x0) N hH)
-        ?_ hdelta0 hdelta1 hmassGood
+        ?_ hdelta1 hmassGood
       intro ω hsuccess
-      simp only [Set.mem_compl_iff, Set.mem_setOf_eq]
+      simp only [Set.mem_compl_iff, Set.mem_ofPred_eq]
       intro hgood
       exact success_impossible_on_bounded_affine_event method x0 eps H heps heqeps hx0 N ω
         hgood (by simpa [oracle, hardTraces] using hsuccess)

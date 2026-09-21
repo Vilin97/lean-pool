@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Transport
 
+/-!
+The total local trial cost is bounded by the endpoint costs of the realized controller path.
+-/
+
 namespace V7
 namespace Stage2Resume
 
@@ -75,7 +79,7 @@ private theorem currentRaggedMainBound {p eps G L R Ma : ℝ}
   let den := 1 - (2 : ℝ) ^ (-a)
   let factor := (2 : ℝ) ^ a / den
   let Kbar := max 1 (L * R / eps)
-  have ha : 0 < a := V7.Stage2.localCostExponent_pos hp
+  have ha : 0 < a := V7.Stage2.localCostExponent_pos (p := p)
   have hale : a ≤ 1 := localCostExponent_le_one hp
   have hden : 0 < den := V7.Stage2.one_sub_two_neg_rpow_pos ha
   have hfactor : 0 ≤ factor := div_nonneg (Real.rpow_nonneg (by norm_num) _) hden.le
@@ -184,7 +188,7 @@ theorem geometricTrialAmortization : GeometricTrialAmortizationStatement := by
   intro p hp
   let a := localCostExponent p
   let Cp := amortizationConstant a
-  refine ⟨Cp, amortizationConstant_pos (V7.Stage2.localCostExponent_pos hp), ?_⟩
+  refine ⟨Cp, amortizationConstant_pos (V7.Stage2.localCostExponent_pos (p := p)), ?_⟩
   intro eps G L R Ma Da heps hepsG hL hR hMa hMaBound hDaEq hDaBound
     S lastRadius d visits reports
   dsimp only
@@ -225,7 +229,7 @@ theorem geometricTrialAmortization : GeometricTrialAmortizationStatement := by
     _ ≤ amortizationConstant a *
         (amortizationConstant a * (max 1 (L * R / eps)) ^ a) :=
       mul_le_mul_of_nonneg_left hmain
-        (amortizationConstant_pos (V7.Stage2.localCostExponent_pos hp)).le
+        (amortizationConstant_pos (V7.Stage2.localCostExponent_pos (p := p))).le
     _ = amortizationConstant a ^ (2 : ℕ) *
         (max 1 (L * R / eps)) ^ a := by ring
 

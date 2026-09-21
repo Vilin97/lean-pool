@@ -7,6 +7,11 @@ Authors: Yuning Yang
 import Mathlib.MeasureTheory.Measure.Typeclasses.Probability
 import LeanPool.ParameterFreeGradient.V7.StrictModel
 
+/-!
+Finite-horizon, expected-time, and scale-identification impossibility statements for strict
+methods.
+-/
+
 open MeasureTheory
 
 namespace V7

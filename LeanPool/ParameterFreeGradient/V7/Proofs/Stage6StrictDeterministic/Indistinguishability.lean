@@ -6,6 +6,11 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.HardInstance
 
+/-!
+Finite affine transcripts are indistinguishable from a sufficiently distant hard-family
+instance.
+-/
+
 namespace V7.Stage6StrictDeterministic
 
 /-- On the whole pre-transition half-line, both exact oracle fields coincide. -/

@@ -7,8 +7,13 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Refinement
 import LeanPool.ParameterFreeGradient.V7.Proofs.Anchor
 
+/-!
+Initialization and anchor search splice into the causal controller execution.
+-/
+
 namespace V7.Stage8Main
 
+/-- The runtime data assembled from valid primitive inputs and an accepted anchor search. -/
 def runtimeDataFromAnchor (input : MethodInput d) (hp : 1 < input.p)
     (heps : 0 < input.eps) (hM0 : 0 < input.M0) (cached : CachedPair d)
     (G : ℝ) (hGdef : G = lpNorm (conjugateExponent input.p)
@@ -38,7 +43,6 @@ theorem currentMethod_early_run (oracle : PairOracle d) (input : MethodInput d)
 theorem currentMethod_anchor_splice (oracle : PairOracle d)
     (input : MethodInput d) (hp : 1 < input.p) (heps : 0 < input.eps)
     (hM0 : 0 < input.M0) (cached : CachedPair d)
-    (hcached : cached.observation = oracle.observe input.x0)
     (G : ℝ) (hGdef : G = lpNorm (conjugateExponent input.p)
       cached.observation.gradient) (hG : 0 < G) :
     ∀ {anchorFuel epoch : ℕ} {anchorHistory : List (Observation d)}
@@ -119,7 +123,7 @@ theorem currentMethod_full_splice (oracle : PairOracle d)
   let cached : CachedPair d := ⟨oracle.observe input.x0⟩
   have hcached : cached.observation = oracle.observe input.x0 := rfl
   obtain ⟨methodFuel, hmethod⟩ := currentMethod_anchor_splice oracle input
-    hp heps hM0 cached hcached
+    hp heps hM0 cached
     (lpNorm (conjugateExponent input.p) (oracle.gradient input.x0))
     (by simp [cached, O3.PairOracle.observe]) (heps.trans hlarge)
     (publicPrefix := [oracle.observe input.x0]) hrun htail

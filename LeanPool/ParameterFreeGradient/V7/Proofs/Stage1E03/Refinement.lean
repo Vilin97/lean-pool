@@ -6,17 +6,24 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.SourceData
 
+/-!
+The finite Euclidean query programs evaluate to the literal source reports.
+-/
+
 namespace V7
 namespace Stage1E03
 
+/-- Classical proposition decisions used locally in the program refinement proof. -/
 noncomputable local instance refinementPropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
+/-- A report with earlier observations and checked guards prepended. -/
 def prependReport (history : List (Observation d))
     (guards : List (ObservableGuardCheck d)) (tail : TrialReport d) :
     TrialReport d :=
   ⟨history ++ tail.trace, guards ++ tail.checkedGuards, tail.outcome⟩
 
+/-- The source terminal-query report, determined by the descent guard and gradient accuracy. -/
 noncomputable def sourceTerminalReport (inst : PositiveInstance 2 d x0)
     (eps M : ℝ) (n : ℕ) (U : Point d) : TrialReport d :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M U
@@ -29,6 +36,7 @@ noncomputable def sourceTerminalReport (inst : PositiveInstance 2 d x0)
     else ⟨[ov], [terminal], .radius on⟩
   else ⟨[ov], [terminal], .scale terminal⟩
 
+/-- The source phase-B suffix that checks interpolation before terminal descent. -/
 noncomputable def sourcePhaseBSuffix (inst : PositiveInstance 2 d x0)
     (eps M : ℝ) (n : ℕ) (U : Point d) : TrialReport d :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M U
@@ -38,6 +46,7 @@ noncomputable def sourcePhaseBSuffix (inst : PositiveInstance 2 d x0)
   | .error (prior, failed) => ⟨[], prior, .scale failed⟩
   | .ok passed => prependReport [] passed (sourceTerminalReport inst eps M n U)
 
+/-- The source OGM-G report with its new observations and concluding checks. -/
 noncomputable def sourcePhaseBReport (inst : PositiveInstance 2 d x0)
     (eps M : ℝ) (n : ℕ) (U : Point d) : TrialReport d :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M U
@@ -45,6 +54,7 @@ noncomputable def sourcePhaseBReport (inst : PositiveInstance 2 d x0)
     inst.oracle.observe (O3.ogmgState cfg (j + 1)).current
   prependReport newTrace [] (sourcePhaseBSuffix inst eps M n U)
 
+/-- The recursively assembled source report for the remaining estimate phase and OGM-G. -/
 noncomputable def sourcePhaseAReport (inst : PositiveInstance 2 d x0)
     (eps M : ℝ) (n : ℕ) : ℕ → ℕ → TrialReport d
   | _, 0 => sourcePhaseBReport inst eps M n
@@ -141,7 +151,7 @@ theorem eval_phaseB_eq_source (inst : PositiveInstance 2 d x0)
       subst i
       subst exec
       have hchecks := allInterpolationChecks_eq_source inst M n U obsAt hobs
-      simp only [phaseBProgram, Program.eval, List.range_zero, List.map_nil,
+      simp only [phaseBProgram, List.range_zero, List.map_nil,
         prependReport, List.nil_append]
       rw [hchecks]
       unfold sourcePhaseBSuffix
@@ -151,11 +161,11 @@ theorem eval_phaseB_eq_source (inst : PositiveInstance 2 d x0)
             (O3.ogmgState (O3.stage9ExecutionConfig n inst.oracle M U) i).current) with
       | error err =>
           rcases err with ⟨prior, failed⟩
-          simp only [heval]
+          simp only []
           change (⟨history, guards ++ prior, .scale failed⟩ : TrialReport d) = _
           simp
       | ok passed =>
-          simp only [heval]
+          simp only []
           rw [eval_terminal_eq_source inst eps M n U _ history
             (guards ++ passed) (hobs n (le_refl n))]
           simp [prependReport, List.append_assoc]
@@ -182,12 +192,12 @@ theorem eval_phaseB_eq_source (inst : PositiveInstance 2 d x0)
           (List.range (fuel + 1)).map (fun j => inst.oracle.observe
             (O3.ogmgState cfg (i + j + 1)).current) := by
         rw [List.range_succ_eq_map]
-        simp only [List.map_cons, List.map_map, Function.comp_apply,
+        simp only [List.map_cons, List.map_map,
           Nat.add_zero]
         congr 1
         apply List.map_congr_left
         intro a ha
-        congr 3 <;> omega
+        congr 3; omega
       simp only [phaseBProgram, Program.eval]
       have hoi := hobs i (by omega)
       rw [hoi, ogmgStep_eq_source]
@@ -261,12 +271,12 @@ theorem eval_phaseA_eq_source (inst : PositiveInstance 2 d x0)
               (nextEstimateState M x0 k (sourceEstimateState inst.oracle M x0 k)
                 (inst.oracle.observe (estimateQuery M x0 k
                   (sourceEstimateState inst.oracle M x0 k)))).accelerated))
-      · rw [if_pos hcheck]
+      · rw [ite_eq_left hcheck]
         simp only [hcheck, ↓reduceIte]
         simp only [List.append_assoc, List.singleton_append]
         rw [htail']
         simp [prependReport, List.append_assoc]
-      · rw [if_neg hcheck]
+      · rw [ite_eq_right hcheck]
         simp only [hcheck, ↓reduceIte]
         rw [Program.eval]
         simp [prependReport, List.append_assoc]

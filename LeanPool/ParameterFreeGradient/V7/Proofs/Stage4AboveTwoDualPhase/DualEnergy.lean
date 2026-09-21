@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoPrimalRepair.Closure
 import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 
+/-!
+The above-two dual trajectory satisfies the terminal row, query, and energy identities.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage4AboveTwoDualPhase
@@ -117,7 +121,7 @@ private lemma coefficient_u_pos (n : ℕ) (hn : 1 ≤ n) (u dw : ScalarSeq)
     rw [hieq, hun]
     exact (hweights (n - 1) (by omega)).1
 
-private lemma coefficient_u_mono (n : ℕ) (hn : 1 ≤ n)
+private lemma coefficient_u_mono (n : ℕ)
     (u dw : ScalarSeq) (alpha c b : ScalarMatrix)
     (hcoeff : AboveCoefficientAssumptions n u dw alpha c b) :
     ∀ i < n, u i ≤ u (i + 1) := by
@@ -126,7 +130,7 @@ private lemma coefficient_u_mono (n : ℕ) (hn : 1 ≤ n)
   intro i hi
   exact (hweights i hi).2.1
 
-private lemma coefficient_dw_nonneg (n : ℕ) (hn : 1 ≤ n)
+private lemma coefficient_dw_nonneg (n : ℕ)
     (u dw : ScalarSeq) (alpha c b : ScalarMatrix)
     (hcoeff : AboveCoefficientAssumptions n u dw alpha c b) :
     ∀ k < n, 0 ≤ dw k := by
@@ -208,10 +212,10 @@ private lemma coefficient_X_weighted_step (n : ℕ) (hn : 1 ≤ n)
     by_cases hi1 : i = k + 1 <;> by_cases hi0 : i = k
     · omega
     · subst i
-      simp [hi0] at hci ⊢
+      simp [] at hci ⊢
       linear_combination (B (k + 1) j) * hci
     · subst i
-      simp [hi1] at hci ⊢
+      simp [] at hci ⊢
       linear_combination (B k j) * hci
     · simp [hi1, hi0] at hci ⊢
       linear_combination (B i j) * hci
@@ -438,11 +442,11 @@ theorem dualResidual_lower (p : ℝ) (hp : 2 < p)
   have hmap' : BelowResidualMap n u A' B C D := by
     refine ⟨?_, ?_, hmap.2.2⟩
     · dsimp [A']
-      rw [if_pos le_rfl]
+      rw [ite_eq_left le_rfl]
       exact hmap.1
     · intro i hi
       dsimp [A']
-      rw [if_pos (by omega), if_pos (by omega)]
+      rw [ite_eq_left (by omega), ite_eq_left (by omega)]
       exact hmap.2.1 i hi
   have hAn : A' (n + 1) = 0 := by simp [A']
   have hX := freeX_recurrence n b B
@@ -452,7 +456,7 @@ theorem dualResidual_lower (p : ℝ) (hp : 2 < p)
   have hmix := Stage4AboveTwo.aboveMixedResidual_lower p hp n u dw
     A' (fun k ↦ -B k)
     (fun k hk ↦ coefficient_u_pos n hn u dw alpha c b hcoeff k (by omega))
-    (coefficient_dw_nonneg n hn u dw alpha c b hcoeff)
+    (coefficient_dw_nonneg n u dw alpha c b hcoeff)
   rw [← heq, hprimal]
   exact hmix
 
@@ -769,7 +773,7 @@ private lemma mirror_block_identity (p : ℝ) (hp : 2 < p) (n : ℕ)
   have hbasepair : pairing (aboveMirrorMap p (r 0)) (-r 0) =
       -O3.pairing (r 0) (aboveMirrorMap p (r 0)) := by
     rw [O3.pairing_comm]
-    simp [O3.pairing, Finset.sum_neg_distrib]
+    simp [O3.pairing]
   simp only [zero_sub]
   rw [hbasepair]
   ring
@@ -787,6 +791,37 @@ theorem terminalRowAndQuery (p : ℝ) (n : ℕ)
     data.G data.r hr0 (fun k hk ↦ (hupdates k hk).2.1),
     (hqueried n le_rfl).1, (hqueried n le_rfl).2⟩
 
+/-- Uniform convexity bounds the sum of dual mirror gaps along an arbitrary sequence. -/
+private lemma mirror_gap_nonnegative (p : ℝ) (hp : 2 < p) (n : ℕ) (r : VectorSeq d) :
+    0 ≤ ∑ k ∈ Finset.range n,
+      (FunctionBregman (aboveHstar p) (aboveMirrorMap p) (r k) (r (k + 1)) -
+        aboveUniformConstant p *
+          lpNorm p (aboveMirrorMap p (r k) - aboveMirrorMap p (r (k + 1))) ^ p) := by
+  let Z : VectorSeq d := fun i ↦ aboveMirrorMap p (r i)
+  let Omega : Point d → ℝ := fun y ↦ aboveUniformConstant p * lpNorm p y ^ p
+  change 0 ≤ ∑ k ∈ Finset.range n,
+    (FunctionBregman (aboveHstar p) (aboveMirrorMap p) (r k) (r (k + 1)) -
+      Omega (Z k - Z (k + 1)))
+  apply Finset.sum_nonneg
+  intro k hk
+  have hconj := (V7.aboveGeometry p hp d).2.2.2
+    (r k) (r (k + 1))
+  have huni := (V7.aboveGeometry p hp d).2.2.1
+    (aboveMirrorMap p (r (k + 1)))
+    (aboveMirrorMap p (r k))
+  have hnorm : lpNorm p (Z k - Z (k + 1)) =
+      lpNorm p (Z (k + 1) - Z k) := by
+    dsimp [Z]
+    rw [show aboveMirrorMap p (r k) - aboveMirrorMap p (r (k + 1)) =
+      -(aboveMirrorMap p (r (k + 1)) - aboveMirrorMap p (r k)) by
+        abel]
+    change O3.lpNorm p (-_) = O3.lpNorm p _
+    rw [O3.lpNorm_neg]
+  rw [hconj]
+  dsimp [Omega]
+  rw [hnorm]
+  exact sub_nonneg.mpr (by simpa [aboveUniformConstant] using huni)
+
 theorem dualTerminalEnergy (p : ℝ) (hp : 2 < p) (n : ℕ)
     (data : AboveDualPhaseData p d n)
     (hass : AboveDualPhaseAssumptions data) :
@@ -802,7 +837,7 @@ theorem dualTerminalEnergy (p : ℝ) (hp : 2 < p) (n : ℕ)
   have hu_pos := coefficient_u_pos
     n hn data.u data.dw data.alpha data.c data.b hcoeff
   have hu_mono := coefficient_u_mono
-    n hn data.u data.dw data.alpha data.c data.b hcoeff
+    n data.u data.dw data.alpha data.c data.b hcoeff
   have hterminal := terminal_row
     n hn data.u data.dw data.alpha data.c data.b hcoeff data.G data.r hr0
       (fun k hk ↦ (hupdates k hk).2.1)
@@ -922,30 +957,7 @@ theorem dualTerminalEnergy (p : ℝ) (hp : 2 < p) (n : ℕ)
       rw [heq]
       exact hguard_sum
     linarith
-  have hmirror_gap : 0 ≤
-      ∑ k ∈ Finset.range n,
-        (FunctionBregman (aboveHstar p) (aboveMirrorMap p)
-            (data.r k) (data.r (k + 1)) -
-          Omega (Z k - Z (k + 1))) := by
-    apply Finset.sum_nonneg
-    intro k hk
-    have hconj := (V7.aboveGeometry p hp d).2.2.2
-      (data.r k) (data.r (k + 1))
-    have huni := (V7.aboveGeometry p hp d).2.2.1
-      (aboveMirrorMap p (data.r (k + 1)))
-      (aboveMirrorMap p (data.r k))
-    have hnorm : lpNorm p (Z k - Z (k + 1)) =
-        lpNorm p (Z (k + 1) - Z k) := by
-      dsimp [Z]
-      rw [show aboveMirrorMap p (data.r k) - aboveMirrorMap p (data.r (k + 1)) =
-        -(aboveMirrorMap p (data.r (k + 1)) - aboveMirrorMap p (data.r k)) by
-          abel]
-      change O3.lpNorm p (-_) = O3.lpNorm p _
-      rw [O3.lpNorm_neg]
-    rw [hconj]
-    dsimp [Omega]
-    rw [hnorm]
-    exact sub_nonneg.mpr (by simpa [aboveUniformConstant] using huni)
+  have hmirror_gap := mirror_gap_nonnegative p hp n data.r
   have hmirror0 : 0 ≤
       FunctionBregman (aboveHstar p) (aboveMirrorMap p) 0 (data.r 0) := by
     have hconj := (V7.aboveGeometry p hp d).2.2.2

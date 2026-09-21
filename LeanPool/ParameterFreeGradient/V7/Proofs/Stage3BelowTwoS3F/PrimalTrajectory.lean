@@ -6,13 +6,22 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Coefficients
 
+/-!
+The literal below-two primal trajectory has the required dynamics and exact observations.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
+/-- The dual accumulator, mirror point, and query point of a primal iteration. -/
 structure PrimalState (d : ℕ) where
+  /-- The accumulated dual vector. -/
   s : Point d
+  /-- The mirror-map image of the dual accumulator. -/
   v : Point d
+  /-- The current primal query point. -/
   x : Point d
 
+/-- The literal below-two primal trajectory starting at the zero normalized state. -/
 noncomputable def primalState (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
     ℕ → PrimalState d
   | 0 => ⟨0, 0, 0⟩
@@ -40,10 +49,12 @@ theorem primalState_succ (p : ℝ) (n k : ℕ) (oracle : PairOracle d) :
         (increment n k / weight n (k + 1)) • (vNext - old.v)
       ⟨sNext, vNext, xNext⟩ := rfl
 
+/-- The exact observations of the primal trajectory through the horizon. -/
 noncomputable def primalTrace (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
     List (Observation d) :=
   (List.range (n + 1)).map fun k => oracle.observe (primalState p n oracle k).x
 
+/-- The concrete primal trajectory packaged with a comparison minimizer and minimum value. -/
 noncomputable def primalData (p : ℝ) (n : ℕ) (oracle : PairOracle d)
     (z : Point d) (fstar : ℝ) : BelowPrimalData p d n where
   oracle := oracle
@@ -67,7 +78,6 @@ theorem primal_dynamics (p : ℝ) (n : ℕ) (hn : 1 ≤ n)
     rw [weight_at, weight_of_lt (show n - 1 < n by omega)]
     have hcast : (((n - 1 : ℕ) : ℝ) + 1) = (n : ℝ) := by
       rw [Nat.cast_sub (by omega : 1 ≤ n), Nat.cast_one]
-      push_cast
       ring
     rw [hcast]
   · intro k hk

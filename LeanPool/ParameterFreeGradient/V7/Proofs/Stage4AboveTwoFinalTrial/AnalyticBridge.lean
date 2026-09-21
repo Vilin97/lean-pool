@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Contract
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
 
+/-!
+The completed above-two phases imply the requested physical terminal-gradient accuracy.
+-/
+
 namespace V7.Stage4AboveTwoFinalTrial
 
 open V7.Stage3BelowTwoS3F
@@ -135,7 +139,7 @@ theorem terminal_gradient_le (p eps M D : ℝ) (hp : 2 < p)
       (etaD_pos hp heps hM hD) hnd oracle2
     refine ⟨hdyn, normalized_convex inst center hM hD,
       normalized_coordinateGradient inst center hM hD,
-      normalized_bddBelow inst center hM hD,
+      normalized_bddBelow inst center hM,
       dual_trace_exact p (etaD p eps M D) nd oracle2,
       dual_trace_length p (etaD p eps M D) nd oracle2,
       (fun k hk => ⟨dual_queried_at p (etaD p eps M D) nd oracle2 k hk,

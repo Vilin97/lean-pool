@@ -27,7 +27,7 @@ lemma dualityMap_two {d : ℕ} (u : Point d) : dualityMap 2 u = u := by
   · subst u
     exact Stage2RouteB.dualityMap_zero (by norm_num)
   · have hn : lpNorm 2 u ≠ 0 := (lpNorm_pos_of_ne_zero hu).ne'
-    rw [dualityMap, if_neg hn]
+    rw [dualityMap, ite_eq_right hn]
     funext i
     norm_num [powerDualityMap]
 
@@ -85,11 +85,13 @@ lemma hasDerivAt_squaredLpEnergy_line {q : ℝ} (hq : 1 < q) {d : ℕ}
       (pairing (dualityMap q (u + t • h)) h) t
     exact Stage2RouteA.hasDerivAt_lineEnergy_of_ne_zero hq u h t hz
 
+/-- The squared norm along a line after subtracting its smoothness quadratic. -/
 noncomputable def smoothRemainder (q : ℝ) {d : ℕ}
     (u h : Point d) (t : ℝ) : ℝ :=
   squaredLpEnergy q (u + t • h) -
     ((q - 1) / 2) * t ^ (2 : ℕ) * (lpNorm q h) ^ (2 : ℕ)
 
+/-- The directional derivative of the smoothness remainder along a line. -/
 noncomputable def smoothRemainderDeriv (q : ℝ) {d : ℕ}
     (u h : Point d) (t : ℝ) : ℝ :=
   pairing (dualityMap q (u + t • h)) h -
@@ -104,7 +106,7 @@ lemma hasDerivAt_smoothRemainder {q : ℝ} (hq : 1 < q) {d : ℕ}
       ((q - 1) * t * (lpNorm q h) ^ (2 : ℕ)) t := by
     have hraw := (((hasDerivAt_id t).pow 2).const_mul ((q - 1) / 2)).mul_const
       ((lpNorm q h) ^ (2 : ℕ))
-    simp [id_eq] at hraw
+    simp only [Pi.pow_apply, id_eq, Nat.cast_ofNat, Nat.add_one_sub_one, pow_one, mul_one] at hraw
     have heq : ((q - 1) / 2) * (2 * t) * (lpNorm q h) ^ (2 : ℕ) =
         (q - 1) * t * (lpNorm q h) ^ (2 : ℕ) := by ring
     rw [← heq]

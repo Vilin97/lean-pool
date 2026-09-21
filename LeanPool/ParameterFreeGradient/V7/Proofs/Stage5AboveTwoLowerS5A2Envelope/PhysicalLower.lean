@@ -6,10 +6,15 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.OptimizerRadius
 
+/-!
+Fresh maximizing coordinates and signs for the finite resisting construction.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower
 
+/-- The first `T` coordinates of the ambient dimension. -/
 def horizonCoordinates (d T : ℕ) (hTd : T ≤ d) : Finset (Fin d) :=
   (Finset.univ : Finset (Fin T)).image (Fin.castLEEmb hTd)
 
@@ -70,6 +75,7 @@ lemma exists_unused_max_coordinate {d T t : ℕ} (hTd : T ≤ d) (ht : t < T)
     rcases Finset.mem_image.mp hkUsed with ⟨s, hs, hsEq⟩
     exact hkunused s (Finset.mem_range.mp hs) hsEq
 
+/-- A sign whose product with the input is its absolute value, choosing one at zero. -/
 noncomputable def resistingSign (a : ℝ) : ℝ := if 0 ≤ a then 1 else -1
 
 lemma resistingSign_spec (a : ℝ) :

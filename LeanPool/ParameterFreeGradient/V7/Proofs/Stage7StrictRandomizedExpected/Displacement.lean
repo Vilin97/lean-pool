@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.MeasurableTrace
 
+/-!
+Measurable finite displacement bounds admit a deterministic threshold with high probability.
+-/
+
 open MeasureTheory Filter
 
 namespace V7.Stage7StrictRandomizedExpected
@@ -45,7 +49,7 @@ theorem causalTraceDisplacementBound_measurable
       traceDisplacementBound x0 (causalTrace method x0 oracle n ω)) := by
   intro n
   induction n with
-  | zero => simpa [causalTrace_zero] using (measurable_const : Measurable (fun _ : Ω => (0 : ℝ)))
+  | zero => simp [causalTrace_zero]
   | succ n ih =>
       have htrace := causalTrace_measurable method x0 oracle hobserve n
       have hquery := causalQuery_measurable method x0 n htrace
@@ -107,7 +111,7 @@ threshold carrying any prescribed probability strictly below one. -/
 theorem exists_deterministic_threshold
     {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
     (M : Ω → ℝ) (hM : Measurable M) {delta : ℝ}
-    (hdelta0 : 0 < delta) (hdelta1 : delta < 1) :
+    (hdelta0 : 0 < delta) :
     ∃ H : ℝ, 0 < H ∧
       ENNReal.ofReal (1 - delta) ≤ μ {ω | M ω < H} := by
   let S : ℕ → Set Ω := fun n => {ω | M ω < ((n + 1 : ℕ) : ℝ)}
@@ -119,7 +123,7 @@ theorem exists_deterministic_threshold
     exact lt_of_lt_of_le hω (by exact_mod_cast Nat.add_le_add_right hmn 1)
   have hUnion : (⋃ n, S n) = Set.univ := by
     ext ω
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [Set.mem_iUnion, Set.mem_univ, iff_true]
     obtain ⟨n, hn⟩ := exists_nat_gt (M ω)
     exact ⟨n, hn.trans_le (by exact_mod_cast Nat.le_add_right n 1)⟩
   have hlim : Tendsto (fun n => μ (S n)) atTop (nhds 1) := by

@@ -6,11 +6,16 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.ObjectiveData
 
+/-!
+The completed normalized resisting trace is exact, causal, and charges its initial query.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
 open Stage5AboveTwoLower
 open Stage5AboveTwoLowerS5A2Envelope
 
+/-- The finite exact trace of the normalized completed resisting oracle. -/
 noncomputable def unitTrace (p : ℝ) (d T : ℕ)
     (algorithm : DeterministicExactPairAlgorithm d) (hT : 1 ≤ T) (hTd : T ≤ d) :
     List (Observation d) :=
@@ -60,7 +65,7 @@ lemma unitTrace_generated {p : ℝ} {d T : ℕ}
   let data := unitCompletionData p d T algorithm hT hTd
   have hget : ((unitTrace p d T algorithm hT hTd).get ⟨t, ht⟩).point =
       data.queries t := by
-    simp [unitTrace, data, htT, O3.PairOracle.observe]
+    simp [unitTrace, data, O3.PairOracle.observe]
   rw [hget]
   change query P t = if t = 0 then 0 else
     algorithm.nextQuery 0 ((unitTrace p d T algorithm hT hTd).take t)

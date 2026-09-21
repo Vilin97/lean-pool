@@ -6,9 +6,15 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.PrimalTrajectory
 
+/-!
+The mutually recursive normalized query and gradient-accumulator trajectories of the below-two
+dual phase.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
 mutual
+  /-- The recursively generated normalized query points of the below-two dual phase. -/
   noncomputable def dualQ (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
       ℕ → Point d
     | 0 => 0
@@ -17,6 +23,7 @@ mutual
           increment n (n - 1 - k) • belowMirrorMap p (dualR p n oracle k)
     termination_by k => k
 
+  /-- The recursively accumulated dual vectors in the below-two dual phase. -/
   noncomputable def dualR (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
       ℕ → Point d
     | 0 => -(coeffB n n n) • oracle.gradient 0
@@ -25,7 +32,7 @@ mutual
           dualQ p n oracle k -
             increment n (n - 1 - k) • belowMirrorMap p (dualR p n oracle k)
         let G : VectorSeq d := fun i =>
-          if hi : i < k + 1 then oracle.gradient (dualQ p n oracle i)
+          if i < k + 1 then oracle.gradient (dualQ p n oracle i)
           else if i = k + 1 then oracle.gradient qNext else 0
         dualR p n oracle k -
           weightedSum (k + 2) (fun i => coeffB n (n - i) (n - 1 - k)) G

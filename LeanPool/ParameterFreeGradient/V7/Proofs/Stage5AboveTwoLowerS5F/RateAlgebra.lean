@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UnitInstance
 
+/-!
+The algebraic conversion from the hard-instance query gap to the lower-bound complexity rate.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
 lemma rate_power_implication {p T A K eps : ℝ}

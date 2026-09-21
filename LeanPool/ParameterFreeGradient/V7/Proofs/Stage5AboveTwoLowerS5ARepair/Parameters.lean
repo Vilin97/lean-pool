@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.Parameters
 
+/-!
+Refined kernel parameters satisfying the required exponent and Hessian bounds.
+-/
+
 namespace V7.Stage5AboveTwoLower.S5ARepair
 
 /-- A parameter choice close enough to one to leave quantitative room for the

@@ -6,12 +6,18 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Refinement
 
+/-!
+The early-failure and complete shapes of source Euclidean reports.
+-/
+
 namespace V7
 namespace Stage1E03
 
+/-- Classical proposition decisions used locally in the report-shape proofs. -/
 noncomputable local instance shapesPropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
+/-- The alternating query and accelerated-point observations of an estimate-phase segment. -/
 noncomputable def phaseATraceFrom (inst : PositiveInstance 2 d x0)
     (M : ℝ) (k fuel : ℕ) : List (Observation d) :=
   (List.range fuel).flatMap fun j =>
@@ -20,6 +26,7 @@ noncomputable def phaseATraceFrom (inst : PositiveInstance 2 d x0)
      inst.oracle.observe
       (sourceEstimateState inst.oracle M x0 (k + j + 1)).accelerated]
 
+/-- The upper-model guards corresponding to an estimate-phase segment. -/
 noncomputable def phaseAGuardsFrom (inst : PositiveInstance 2 d x0)
     (M : ℝ) (k fuel : ℕ) : List (ObservableGuardCheck d) :=
   (List.range fuel).map fun j =>
@@ -64,7 +71,7 @@ theorem phaseAGuardsFrom_succ (inst : PositiveInstance 2 d x0)
       phaseAGuardsFrom inst M (k + 1) fuel := by
   unfold phaseAGuardsFrom
   rw [List.range_succ_eq_map]
-  simp only [List.map_cons, List.map_map, Function.comp_apply, Nat.add_zero]
+  simp only [List.map_cons, List.map_map, Nat.add_zero]
   congr 1
   apply List.map_congr_left
   intro a ha
@@ -86,6 +93,7 @@ theorem phaseAGuardsFrom_succ (inst : PositiveInstance 2 d x0)
     (phaseAGuardsFrom inst M k fuel).length = fuel := by
   simp [phaseAGuardsFrom]
 
+/-- The report records precisely the first failed guard after a prefix of accepted guards. -/
 def FailureLedger (p M : ℝ) (report : TrialReport d)
     (failed : ObservableGuardCheck d) : Prop :=
   report.outcome = .scale failed ∧
@@ -93,6 +101,7 @@ def FailureLedger (p M : ℝ) (report : TrialReport d)
   (∀ check ∈ report.checkedGuards.dropLast, CheckHolds p M check) ∧
   ¬ CheckHolds p M failed
 
+/-- Every observation used in a checked guard occurs in the report's trace. -/
 def GuardPairsInTrace (report : TrialReport d) : Prop :=
   ∀ check ∈ report.checkedGuards,
     check.xPair ∈ report.trace ∧ check.yPair ∈ report.trace
@@ -206,7 +215,7 @@ theorem sourcePhaseAReport_shape (inst : PositiveInstance 2 d x0)
             · exact hg
             · exact hall q hq
           · rw [heq, phaseATraceFrom_succ, phaseAGuardsFrom_succ]
-            simp [prependReport, List.append_assoc]
+            simp [prependReport]
       · dsimp only [g] at hg
         simp only [hg, ↓reduceIte]
         left
@@ -261,7 +270,7 @@ theorem sourcePhaseBReport_shape (inst : PositiveInstance 2 d x0)
         (O3.ogmgState (O3.stage9ExecutionConfig n inst.oracle M U) i).current) with
   | error err =>
       rcases err with ⟨prior, failed⟩
-      simp only [heval]
+      simp only []
       left
       refine ⟨failed, ?_, Or.inl ?_⟩
       · have hc := evaluateChecks_error_characterization 2 M _ prior failed heval
@@ -294,37 +303,39 @@ theorem sourcePhaseBReport_shape (inst : PositiveInstance 2 d x0)
             (O3.ogmgState (O3.stage9ExecutionConfig n inst.oracle M U) n).current).gradient ≤ eps
         · right; left
           dsimp only [terminal] at ht ⊢
-          simp only [heval, ht, hs, ↓reduceIte]
+          simp only [ht, hs, ↓reduceIte]
           refine ⟨_, ?_, rfl, ?_, ?_, ?_, hs⟩
           · simp [prependReport]
-          · simp [prependReport, ht, hs]
-          · simp [prependReport, ht, hs, terminal]
+          · simp [prependReport]
+          · simp [prependReport]
           · intro check hmem
-            simp [prependReport] at hmem
+            simp only [prependReport, List.nil_append, List.mem_append, List.mem_cons,
+              List.not_mem_nil, or_false] at hmem
             rcases hmem with hc | hc
             · exact hall check hc
             · subst check
               exact ht
         · right; right
           dsimp only [terminal] at ht ⊢
-          simp only [heval, ht, hs, ↓reduceIte]
+          simp only [ht, hs, ↓reduceIte]
           refine ⟨_, ?_, rfl, ?_, ?_, ?_, lt_of_not_ge hs⟩
           · simp [prependReport]
-          · simp [prependReport, ht, hs]
-          · simp [prependReport, ht, hs, terminal]
+          · simp [prependReport]
+          · simp [prependReport]
           · intro check hmem
-            simp [prependReport] at hmem
+            simp only [prependReport, List.nil_append, List.mem_append, List.mem_cons,
+              List.not_mem_nil, or_false] at hmem
             rcases hmem with hc | hc
             · exact hall check hc
             · subst check
               exact ht
       · left
         dsimp only [terminal] at ht ⊢
-        simp only [heval, ht, ↓reduceIte]
+        simp only [ht, ↓reduceIte]
         refine ⟨terminal, ?_, Or.inr ?_⟩
         · refine ⟨?_, ?_, ?_, ht⟩
-          · simp [prependReport, ht, terminal]
-          · simp [prependReport, ht, terminal]
+          · simp [prependReport, terminal]
+          · simp [prependReport, terminal]
           · intro check hmem
             simp only [prependReport] at hmem
             simp only [List.nil_append] at hmem
@@ -334,11 +345,11 @@ theorem sourcePhaseBReport_shape (inst : PositiveInstance 2 d x0)
                   (O3.stage9ExecutionConfig n inst.oracle M U) n).current)
                 (inst.oracle.observe (O3.ogmgV
                   (O3.stage9ExecutionConfig n inst.oracle M U) n))] ≠ [])] at hmem
-            simp at hmem
+            simp only [List.dropLast_singleton, List.append_nil] at hmem
             exact hall check hmem
         · refine ⟨rfl, ?_, ?_⟩
-          · simp [prependReport, ht, terminal]
-          · simp [prependReport, ht, terminal]
+          · simp [prependReport]
+          · simp [prependReport]
 
 end Stage1E03
 end V7

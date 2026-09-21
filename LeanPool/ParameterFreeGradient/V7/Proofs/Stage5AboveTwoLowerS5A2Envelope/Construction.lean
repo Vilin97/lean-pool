@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryEquivariance
 
+/-!
+Construction of the smoothing kernel with its explicit regularity and curvature guarantees.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower

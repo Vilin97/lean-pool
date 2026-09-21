@@ -6,6 +6,11 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.Indistinguishability
 
+/-!
+No strict deterministic method has a uniform finite query horizon on the normalized hard
+family.
+-/
+
 namespace V7
 
 open Stage6StrictDeterministic

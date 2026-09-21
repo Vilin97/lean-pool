@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.Closure
 
+/-!
+Joint measurability and exactness of randomized causal queries, transcripts, and outputs.
+-/
+
 open MeasureTheory
 
 namespace V7.Stage7StrictRandomizedExpected
@@ -27,15 +31,13 @@ theorem measurable_strictTranscript_of_fixedLength
   intro s hs
   rcases hs with ⟨m, rfl⟩ | ⟨k, B, hB, rfl⟩
   · by_cases hnm : n = m
-    · simpa [Set.preimage_setOf_eq, hlen, hnm] using
-        (MeasurableSet.univ : MeasurableSet (Set.univ : Set Ω))
-    · simpa [Set.preimage_setOf_eq, hlen, hnm] using
-        (MeasurableSet.empty : MeasurableSet (∅ : Set Ω))
+    · simp [Set.preimage_ofPred_eq, hlen, hnm]
+    · simp [Set.preimage_ofPred_eq, hlen, hnm]
   · by_cases hk : k < n
     · have hm := (hcoord k hk) hB
       convert hm using 1
       ext ω
-      rw [Set.mem_preimage, Set.mem_setOf_eq, List.head?_drop,
+      rw [Set.mem_preimage, Set.mem_ofPred_eq, List.head?_drop,
         List.getElem?_eq_getElem (by simpa [hlen ω] using hk)]
       simp
     · have hnone : ∀ ω, (trace ω)[k]? = none := by
@@ -44,7 +46,7 @@ theorem measurable_strictTranscript_of_fixedLength
         simpa [hlen ω] using hk
       have hempty : trace ⁻¹' {tr | ∃ obs ∈ B, (tr.drop k).head? = some obs} = ∅ := by
         ext ω
-        rw [Set.mem_preimage, Set.mem_setOf_eq, List.head?_drop, hnone ω]
+        rw [Set.mem_preimage, Set.mem_ofPred_eq, List.head?_drop, hnone ω]
         simp
       rw [hempty]
       exact MeasurableSet.empty
@@ -188,7 +190,7 @@ theorem causalQuery_measurable {Ω : Type*} [MeasurableSpace Ω]
     Measurable (fun ω => causalQuery method x0 ω n (trace ω)) := by
   by_cases hn : n = 0
   · simp [causalQuery, hn]
-  · simp only [causalQuery, hn, if_false]
+  · simp only [causalQuery, hn, ite_false]
     convert method.joint_nextQuery_measurable.comp (measurable_id.prodMk htrace) using 1
     funext ω
     rfl

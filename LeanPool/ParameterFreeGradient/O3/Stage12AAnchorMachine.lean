@@ -363,7 +363,7 @@ theorem runAnchor_acceptedPoint_queried (oracle : PairOracle d)
       let y := anchorProbePoint cfg.q cfg.x₀ cfg.g₀ cfg.G cfg.M₀ epoch
       by_cases hpass : oracle.value y ≤ cfg.f₀ - cfg.G * D / 2
       · dsimp only [D, y] at hpass
-        simp [hpass] at hrun
+        simp only [hpass, ↓reduceIte, Option.some.injEq] at hrun
         subst ar
         refine ⟨oracle.observe y, ?_, rfl⟩
         simp [y]

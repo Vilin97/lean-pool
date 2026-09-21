@@ -6,8 +6,13 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.KernelAmbientNonzero
 
+/-!
+The explicit ambient Hessian of the power kernel away from the origin.
+-/
+
 namespace V7.Stage5AboveTwoLower.S5ARepair
 
+/-- One coordinate of the explicit kernel Hessian as a continuous linear functional. -/
 noncomputable def kernelHessianCoord (r theta : ℝ) (x : Point d) (i : Fin d) :
     Point d →L[ℝ] ℝ :=
   (4 * theta * O3.Experimental.scalarJ r (x i)) •
@@ -17,6 +22,7 @@ noncomputable def kernelHessianCoord (r theta : ℝ) (x : Point d) (i : Fin d) :
       ((r - 1) * |x i| ^ (r - 2)) •
         (ContinuousLinearMap.proj i : Point d →L[ℝ] ℝ)
 
+/-- The explicit kernel Hessian assembled from its coordinate functionals. -/
 noncomputable def kernelHessian (r theta : ℝ) (x : Point d) :
     Point d →L[ℝ] Point d :=
   ContinuousLinearMap.pi (fun i ↦ kernelHessianCoord r theta x i)

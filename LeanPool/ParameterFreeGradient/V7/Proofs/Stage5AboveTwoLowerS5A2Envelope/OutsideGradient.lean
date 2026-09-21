@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.QueryGap
 
+/-!
+The completed resisting objective's gradient remains large outside the central region.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower
@@ -112,7 +116,7 @@ lemma supporting_vector_eq_coordinate_gradient
   have hzero := hlocal.hasFDerivAt_eq_zero hder
   funext i
   have happ := congrArg (fun L : Point d →L[ℝ] ℝ => L (coordinateUnit i)) hzero
-  simp only [sub_apply, pairingCLM_apply, ContinuousLinearMap.zero_apply] at happ
+  simp only [sub_apply, pairingCLM_apply, zero_apply] at happ
   simp [O3.pairing, coordinateUnit] at happ
   linarith
 
@@ -243,7 +247,7 @@ lemma coordinateGradient_eq_zero_of_global_minimizer
   have hzero := hlocal.hasFDerivAt_eq_zero hfder
   funext i
   have happ := congrArg (fun L : Point d →L[ℝ] ℝ => L (coordinateUnit i)) hzero
-  simp only [pairingCLM_apply, ContinuousLinearMap.zero_apply] at happ
+  simp only [pairingCLM_apply, zero_apply] at happ
   simpa [O3.pairing, coordinateUnit] using happ
 
 /-- Frozen S5-D outside-gradient and optimizer-interiority package. -/

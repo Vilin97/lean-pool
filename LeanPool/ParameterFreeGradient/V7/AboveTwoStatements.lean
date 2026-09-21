@@ -6,17 +6,27 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.BelowTwoStatements
 
+/-!
+The geometry, residual identities, phase bounds, and operational contracts for exponents above
+two.
+-/
+
 namespace V7
 
+/-- The power mirror potential `‖x‖ₚ^p / p` used for exponents above two. -/
 noncomputable def aboveH (p : ℝ) (x : Point d) : ℝ :=
   (1 / p) * (lpNorm p x) ^ p
 
+/-- The conjugate power potential with the Hölder-conjugate exponent. -/
 noncomputable def aboveHstar (p : ℝ) (s : Point d) : ℝ :=
   (1 / conjugateExponent p) * (lpNorm (conjugateExponent p) s) ^ (conjugateExponent p)
 
+/-- The power duality map at the Hölder-conjugate exponent. -/
 noncomputable def aboveMirrorMap (p : ℝ) (s : Point d) : Point d :=
   O3.powerDualityMap (conjugateExponent p) s
 
+/-- The conjugacy, gradient, uniform convexity, and Bregman identities for the above-two
+geometry. -/
 noncomputable def AboveGeometryStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d : ℕ),
     (∀ s : Point d, FenchelConjugate (aboveH p) s = aboveHstar p s) ∧
@@ -32,28 +42,39 @@ noncomputable def AboveGeometryStatement : Prop :=
         FunctionBregman (aboveH p) (fun z => O3.powerDualityMap p z)
           (aboveMirrorMap p t) (aboveMirrorMap p s)
 
+/-- The uniform convexity constant of the power mirror potential. -/
 noncomputable def aboveUniformConstant (p : ℝ) : ℝ := 2 ^ (2 - p) / p
+/-- The exponent in the accumulated above-two residual error. -/
 noncomputable def aboveErrorPower (p : ℝ) : ℝ := p / (p - 2)
+/-- The coefficient of the error bound obtained from the above-two mixed residual. -/
 noncomputable def aboveErrorConstant (p : ℝ) : ℝ :=
   (p - 2) / (2 * p) * (p * aboveUniformConstant p) ^ (-2 / (p - 2))
+/-- The error constant after bounding the squared weight increments by their growth rate. -/
 noncomputable def aboveBudgetConstant (p : ℝ) : ℝ :=
   4 ^ (aboveErrorPower p) * aboveErrorConstant p
+/-- The exponent relating an above-two error budget to the coefficient scale. -/
 noncomputable def aboveBudgetExponent (p : ℝ) : ℝ := (p - 2) / p
+/-- The coefficient of the terminal weight in terms of the error budget and horizon. -/
 noncomputable def aboveGrowthConstant (p : ℝ) : ℝ :=
   (2 * aboveBudgetConstant p) ^ (-aboveBudgetExponent p)
+/-- The exponent-dependent constant used to choose the primal trial horizon. -/
 noncomputable def aboveHp (p : ℝ) : ℝ :=
   3 * p ^ (aboveBudgetExponent p) / (2 * p * aboveGrowthConstant p)
+/-- The exponent-dependent constant used to choose the dual trial horizon. -/
 noncomputable def aboveJp (p : ℝ) : ℝ :=
   2 * (conjugateExponent p) ^ (1 + aboveBudgetExponent p) /
     aboveGrowthConstant p
+/-- The weight scale chosen from the error budget and iteration horizon. -/
 noncomputable def aboveGamma (p eta : ℝ) (n : ℕ) : ℝ :=
   (eta / (2 * aboveBudgetConstant p * n)) ^ (aboveBudgetExponent p)
 
+/-- The accumulated above-two residual error for a weight sequence and its increments. -/
 noncomputable def aboveErrorSum (p : ℝ) (n : ℕ)
     (u dw : ScalarSeq) : ℝ :=
   aboveErrorConstant p *
     ∑ k ∈ Finset.range n, ((dw k) ^ (2 : ℕ) / u k) ^ (aboveErrorPower p)
 
+/-- Quadratic trial weights meet the error budget and have the stated terminal growth. -/
 noncomputable def AboveWeightErrorBalanceStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (n : ℕ), 1 ≤ n → ∀ (eta : ℝ), 0 < eta →
     let gamma := aboveGamma p eta n
@@ -65,16 +86,20 @@ noncomputable def AboveWeightErrorBalanceStatement : Prop :=
     u n = aboveGrowthConstant p * eta ^ (aboveBudgetExponent p) *
       (n : ℝ) ^ ((p + 2) / p)
 
+/-- The primal residual for above-two geometry, expressed through the common residual formula. -/
 noncomputable def AbovePrimalResidual (p : ℝ) (n : ℕ)
     (u : ScalarSeq) (alpha : ScalarMatrix) (A B X : VectorSeq d)
     (Omega : Point d → ℝ) : ℝ :=
   BelowPrimalResidual p n u (fun _ => 0) alpha A B X Omega
 
+/-- The dual residual for above-two geometry, expressed through the common residual formula. -/
 noncomputable def AboveDualResidual (p : ℝ) (n : ℕ)
     (u : ScalarSeq) (alpha b : ScalarMatrix) (C D : VectorSeq d)
     (Omega : Point d → ℝ) : ℝ :=
   BelowDualResidual p n u alpha b C D Omega
 
+/-- The weight, increment, matrix recurrence, row-sum, and support conditions for an above-two
+phase. -/
 def AboveCoefficientAssumptions (n : ℕ) (u dw : ScalarSeq)
     (alpha c b : ScalarMatrix) : Prop :=
   0 < u 0 ∧ u n = u (n - 1) ∧ dw n = 0 ∧ c 0 0 = 1 ∧ b 0 0 = -1 ∧
@@ -109,19 +134,32 @@ noncomputable def AbovePointwiseResidualIdentityStatement : Prop :=
       AbovePrimalResidual p n u alpha A B X Omega =
         AboveDualResidual p n u alpha b C D Omega
 
+/-- Oracle, coefficients, iterates, and observations of an above-two primal phase. -/
 structure AbovePrimalPhaseData (p : ℝ) (d n : ℕ) where
+  /-- The value-gradient oracle used by the primal phase. -/
   oracle : PairOracle d
+  /-- The proposed minimum value of the objective. -/
   fstar : ℝ
+  /-- The cumulative weights of the primal phase. -/
   u : ScalarSeq
+  /-- The successive weight increments, with zero terminal increment. -/
   dw : ScalarSeq
+  /-- The matrix selecting the weighted gradient contribution at each step. -/
   alpha : ScalarMatrix
+  /-- The coefficients expressing each primal iterate in the mirror iterates. -/
   c : ScalarMatrix
+  /-- The successive differences of the primal coefficient rows. -/
   b : ScalarMatrix
+  /-- The accumulated dual vectors updated by weighted gradients. -/
   s : VectorSeq d
+  /-- The mirror-map images of the accumulated dual vectors. -/
   v : VectorSeq d
+  /-- The primal query iterates. -/
   x : VectorSeq d
+  /-- The chronological value-gradient observations of the phase. -/
   trace : List (Observation d)
 
+/-- The above-two primal coefficient conditions, initial state, and step recurrences. -/
 def AbovePrimalPhaseDynamics (data : AbovePrimalPhaseData p d n) : Prop :=
   1 ≤ n ∧ AboveCoefficientAssumptions n data.u data.dw data.alpha data.c data.b ∧
   data.s 0 = 0 ∧ data.v 0 = 0 ∧ data.x 0 = 0 ∧
@@ -133,6 +171,7 @@ def AbovePrimalPhaseDynamics (data : AbovePrimalPhaseData p d n) : Prop :=
       (data.dw (k + 1) / data.u (k + 1)) • data.v (k + 1) +
       (data.dw k / data.u (k + 1)) • (data.v (k + 1) - data.v k)
 
+/-- The primal dynamics, convex gradient oracle, attained minimum, guards, and exact query trace. -/
 def AbovePrimalPhaseAssumptions (data : AbovePrimalPhaseData p d n) : Prop :=
   AbovePrimalPhaseDynamics data ∧ O3.IsConvexObjective data.oracle.value ∧
   O3.IsCoordinateGradient data.oracle.value data.oracle.gradient ∧
@@ -157,18 +196,30 @@ def AbovePrimalPhaseAssumptions (data : AbovePrimalPhaseData p d n) : Prop :=
   data.trace.length = n + 1 ∧
   ∀ k ≤ n, QueriedAt data.trace k (data.x k)
 
+/-- Oracle, coefficients, iterates, and observations of an above-two dual phase. -/
 structure AboveDualPhaseData (p : ℝ) (d n : ℕ) where
+  /-- The value-gradient oracle used by the dual phase. -/
   oracle : PairOracle d
+  /-- The cumulative weights underlying the reversed dual recurrence. -/
   u : ScalarSeq
+  /-- The weight increments underlying the reversed dual recurrence. -/
   dw : ScalarSeq
+  /-- The coefficient matrix used for the dual query updates. -/
   alpha : ScalarMatrix
+  /-- The primal coefficient matrix associated with the dual phase. -/
   c : ScalarMatrix
+  /-- The coefficient-row differences used to accumulate dual gradients. -/
   b : ScalarMatrix
+  /-- The gradients observed at the dual query points. -/
   G : VectorSeq d
+  /-- The accumulated vectors to which the dual mirror map is applied. -/
   r : VectorSeq d
+  /-- The dual phase query points. -/
   q : VectorSeq d
+  /-- The chronological value-gradient observations of the dual phase. -/
   trace : List (Observation d)
 
+/-- The above-two coefficient conditions and reversed dual query and gradient recurrences. -/
 def AboveDualPhaseDynamics (data : AboveDualPhaseData p d n) : Prop :=
   1 ≤ n ∧ AboveCoefficientAssumptions n data.u data.dw data.alpha data.c data.b ∧
   data.r 0 = -(data.b n n) • data.G 0 ∧
@@ -179,6 +230,7 @@ def AboveDualPhaseDynamics (data : AboveDualPhaseData p d n) : Prop :=
     data.r (k + 1) = data.r k -
       weightedSum (k + 2) (fun i => data.b (n - i) (n - 1 - k)) data.G
 
+/-- The dual dynamics, convex gradient oracle, lower bound, accepted guards, and exact trace. -/
 def AboveDualPhaseAssumptions (data : AboveDualPhaseData p d n) : Prop :=
   AboveDualPhaseDynamics data ∧ O3.IsConvexObjective data.oracle.value ∧
   O3.IsCoordinateGradient data.oracle.value data.oracle.gradient ∧
@@ -199,19 +251,32 @@ def AboveDualPhaseAssumptions (data : AboveDualPhaseData p d n) : Prop :=
       (1 / 2) * (lpNorm (conjugateExponent p)
         (data.G k - data.G (k + 1))) ^ (2 : ℕ)
 
+/-- The two phase executions and numerical parameters witnessing an above-two trial. -/
 structure AboveTrialWitness (p : ℝ) (d : ℕ) where
+  /-- The planned number of primal phase iterations. -/
   nF : ℕ
+  /-- The planned number of dual phase iterations. -/
   nD : ℕ
+  /-- The number of primal iterations actually completed. -/
   completedF : ℕ
+  /-- The number of dual iterations actually completed. -/
   completedD : ℕ
+  /-- The primal phase error budget. -/
   etaF : ℝ
+  /-- The dual phase error budget. -/
   etaD : ℝ
+  /-- The scale of the primal phase weights. -/
   gammaF : ℝ
+  /-- The scale of the dual phase weights. -/
   gammaD : ℝ
+  /-- The recorded primal phase execution. -/
   phaseOne : AbovePrimalPhaseData p d nF
+  /-- The recorded dual phase execution. -/
   phaseTwo : AboveDualPhaseData p d nD
+  /-- The center used to translate the dual phase back to physical coordinates. -/
   phaseTwoCenter : Point d
 
+/-- The horizon, normalization, phase execution, and report requirements of an above-two trial. -/
 def AboveTrialOperationalContract (p eps M D : ℝ) (x0 : Point d)
     (cached : CachedPair d) (oracle : PairOracle d)
     (report : TrialReport d) (w : AboveTrialWitness p d) : Prop :=

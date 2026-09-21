@@ -9,8 +9,13 @@ import Mathlib.Analysis.InnerProductSpace.NormPow
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import LeanPool.ParameterFreeGradient.O3.Geometry
 
+/-!
+Scalar and vector uniform convexity for the power mirror geometry.
+-/
+
 namespace O3.Experimental
 
+/-- The scalar power-duality map `u ↦ |u|^(p - 2) u`. -/
 noncomputable def scalarJ (p u : ℝ) : ℝ := |u| ^ (p - 2) * u
 
 lemma scalarJ_nonneg {p u : ℝ} (hp : 2 < p) (hu : 0 ≤ u) :
@@ -139,6 +144,7 @@ lemma powerDualityMap_strongMonotone {p : ℝ} (hp : 2 < p) {d : ℕ}
   simpa only [lpPower, pairing, powerDualityMap, scalarJ, Pi.sub_apply,
     Finset.mul_sum] using hsum
 
+/-- The scalar power energy whose derivative is the power-duality map. -/
 noncomputable def scalarEnergy (p x : ℝ) : ℝ := |x| ^ p / p
 
 lemma hasDerivAt_scalarEnergy {p : ℝ} (hp : 2 < p) (x : ℝ) :

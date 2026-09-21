@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Identity
 
+/-!
+Lower bounds for the mixed gradient and mirror residual in above-two geometry.
+-/
+
 namespace V7.Stage4AboveTwo
 
 private noncomputable def scalarYoungConstant (p : ℝ) : ℝ :=
@@ -156,7 +160,7 @@ theorem scalar_power_deficit_le {p t y : ℝ} (hp : 2 < p)
           _ = (p - 2) * t ^ (p / (p - 2)) := by rw [htpower]
 
 theorem mixedResidual_lower {p u d x y : ℝ} (hp : 2 < p)
-    (hu : 0 < u) (hd : 0 ≤ d) (hx : 0 ≤ x) (hy : 0 ≤ y) :
+    (hu : 0 < u) (hy : 0 ≤ y) :
     u / 2 * x ^ (2 : ℕ) + aboveUniformConstant p * y ^ p - d * x * y ≥
       -(aboveErrorConstant p * (d ^ (2 : ℕ) / u) ^ (aboveErrorPower p)) := by
   let t := d ^ (2 : ℕ) / u
@@ -183,9 +187,10 @@ theorem mixedVectorResidual_lower {p u d : ℝ} (hp : 2 < p)
   have hdPair := mul_le_mul_of_nonneg_left hpair hd
   have hmix := mixedResidual_lower (p := p) (u := u) (d := d)
     (x := lpNorm (conjugateExponent p) a) (y := lpNorm p b)
-    hp hu hd (O3.lpNorm_nonneg _ _) (O3.lpNorm_nonneg _ _)
+    hp hu (O3.lpNorm_nonneg _ _)
   linarith
 
+/-- The sum of quadratic gradient, power mirror, and mixed-pairing residual terms. -/
 noncomputable def aboveMixedResidual (p : ℝ) (n : ℕ)
     (u dw : ScalarSeq) (A B : VectorSeq d) : ℝ :=
   ∑ k ∈ Finset.range n,

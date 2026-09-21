@@ -8,8 +8,13 @@ import LeanPool.ParameterFreeGradient.V7.StrictStatements
 import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
 import LeanPool.ParameterFreeGradient.V7.ControllerStatements
 
+/-!
+The regime-dependent query rate and the main parameter-free convergence statement.
+-/
+
 namespace V7
 
+/-- The regime-dependent main complexity rate, including the logarithmic smoothness-search cost. -/
 noncomputable def CurrentMainRate (p Cp C Kbar L M0 : ℝ) : ℝ :=
   if p < 2 then
     Cp * Kbar ^ (1 / 2 : ℝ) + Cp * Real.log (Real.exp 1 + L / M0)

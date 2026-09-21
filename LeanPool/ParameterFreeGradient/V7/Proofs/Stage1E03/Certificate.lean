@@ -6,9 +6,14 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.AnalyticBridge
 
+/-!
+Correctness certificates for all possible reports of the Euclidean local trial.
+-/
+
 namespace V7
 namespace Stage1E03
 
+/-- Classical proposition decisions used locally by the trace certificate. -/
 noncomputable local instance certificatePropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
@@ -20,7 +25,7 @@ theorem sourcePlannedTrace_exact (inst : PositiveInstance 2 d x0)
   · rcases hpre with hA | hB
     · simp only [phaseATraceFrom, List.mem_flatMap] at hA
       rcases hA with ⟨k, hk, hpair⟩
-      simp only [List.mem_cons, List.mem_singleton] at hpair
+      simp only [List.mem_cons] at hpair
       rcases hpair with hfirst | hsecond
       · subst obs; rfl
       · rcases hsecond with hsecond | hnil
@@ -58,8 +63,8 @@ theorem fullShape_guard_data (inst : PositiveInstance 2 d x0)
     · exact Or.inr hpairs.1
     · exact Or.inr hpairs.2
 
-theorem fullShape_outcome_exhaustive (inst : PositiveInstance 2 d x0)
-    (eps M : ℝ) (n : ℕ) (report : TrialReport d) :
+theorem fullShape_outcome_exhaustive
+      (report : TrialReport d) :
     TrialOutcomeExhaustive report := by
   cases h : report.outcome with
   | success obs => exact Or.inl ⟨obs, h⟩
@@ -246,7 +251,7 @@ theorem fullShape_radius_lt (inst : PositiveInstance 2 d x0)
     have hDRV7 : inst.R ≤ D := by
       dsimp only [P] at hDR
       simpa using hDR
-    have hbound := source_current_gradient_bound inst eps M D n hM hD hn
+    have hbound := source_current_gradient_bound inst M D n hM hD hn
       hDRV7 report hall hguards
     have hbudget := horizon_gradient_budget heps hM hD hkappa
     have hgood : lpNorm 2 on.gradient ≤ eps := by
@@ -271,7 +276,7 @@ theorem source_trial_certificate (inst : PositiveInstance 2 d x0)
     TrialCertificate eps 2 M D inst.L inst.R cached inst.oracle report := by
   have htrace := fullShape_trace_exact inst eps M n report hshape
   have hdata := fullShape_guard_data inst eps M n cached hcached report hshape
-  refine ⟨htrace, hdata, fullShape_outcome_exhaustive inst eps M n report,
+  refine ⟨htrace, hdata, fullShape_outcome_exhaustive report,
     ?_, ?_, ?_⟩
   · intro terminal hout
     rcases hshape with hA | hI | hT | hS | hR

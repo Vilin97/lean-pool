@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume.InfimalAttainment
 import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 
+/-!
+First-order optimality of an infimal-convolution minimizer gives a supporting inequality.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope

@@ -6,11 +6,16 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Certificate
 
+/-!
+The above-two trial's total query count obeys its regime-dependent rate.
+-/
+
 namespace V7.Stage4AboveTwoFinalTrial
 
 variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}
   {report : TrialReport d} {cached : CachedPair d}
 
+/-- The exponent-dependent constant bounding the total queries of both above-two phases. -/
 noncomputable def trialConstant (p : ℝ) : ℝ :=
   aboveHp p ^ (p / (p + 2)) + aboveJp p ^ (p / (p + 2)) + 2
 

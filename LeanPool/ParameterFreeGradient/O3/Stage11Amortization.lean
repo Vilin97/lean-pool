@@ -29,7 +29,7 @@ structure DoublingWeight (w : ℝ → ℝ) (ratio : ℝ) : Prop where
 noncomputable def WrapperExponent (p : ℝ) : ℝ :=
   if p ≤ 2 then (1 / 2 : ℝ) else aboveAlpha p
 
-theorem wrapperExponent_pos {p : ℝ} (hp : 1 < p) :
+theorem wrapperExponent_pos {p : ℝ} :
     0 < WrapperExponent p := by
   unfold WrapperExponent
   split_ifs with h
@@ -92,8 +92,11 @@ theorem scale_geometric_sum_le_endpoint {a k0 : ℝ}
       geometricAmortizationConstant a * (((2 : ℝ) ^ S * k0) ^ a) :=
   radius_geometric_sum_le_endpoint ha hk0 S
 
+/-- The square-root cost weight used in the Euclidean controller analysis. -/
 noncomputable def euclideanWrapperWeight (x : ℝ) : ℝ := Real.sqrt x
+/-- The power-law cost weight used for exponents above two. -/
 noncomputable def aboveWrapperWeight (a x : ℝ) : ℝ := x ^ a
+/-- The square-root logarithmic cost weight used for exponents below two. -/
 noncomputable def belowWrapperWeight (x : ℝ) : ℝ :=
   Real.sqrt x * Real.log (Real.exp 1 + x)
 

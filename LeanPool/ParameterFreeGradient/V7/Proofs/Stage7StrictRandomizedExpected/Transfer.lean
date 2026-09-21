@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Expected
 
+/-!
+The one-dimensional strict-oracle lower bounds transfer to every interior `ℓp` exponent.
+-/
+
 namespace V7.Stage7StrictRandomizedExpected
 
 /-- Direct derivation from the literal finite-sum definition: on `Fin 1`,

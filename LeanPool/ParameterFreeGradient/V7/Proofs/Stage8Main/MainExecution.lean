@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Accounting
 
+/-!
+The successful runtime produces a causal exact query trace and valid output.
+-/
+
 namespace V7.Stage8Main
 
 private noncomputable def toAdmissible (input : MethodInput d)
@@ -41,11 +45,11 @@ theorem run_traceExact (method : O3.FirstOrderMethod d)
       rw [O3.FirstOrderMethod.runFuel] at hrun
       cases haction : method.action state with
       | done x =>
-          simp [haction] at hrun
+          simp only [haction, Option.some.injEq] at hrun
           subst result
           exact hhistory
       | query x next =>
-          simp [haction] at hrun
+          simp only [haction] at hrun
           apply ih (O3.traceExact_append hhistory ?_) hrun
           intro obs hobs
           simp at hobs
@@ -99,7 +103,7 @@ theorem currentExecution (input : MethodInput d)
     have hmethod := currentMethod_early_run inst.oracle input hp heps hM0 hsmall
     have hK : 1 ≤ conditionBar inst input.eps := le_max_left _ _
     have ha : 0 < localCostExponent input.p :=
-      V7.Stage2.localCostExponent_pos hp
+      V7.Stage2.localCostExponent_pos
     have hKpow : 1 ≤ conditionBar inst input.eps ^ localCostExponent input.p := by
       exact Real.one_le_rpow hK ha.le
     have hlog := one_le_log_ratio hM0 hM0L
@@ -197,7 +201,7 @@ theorem currentExecution (input : MethodInput d)
         (1 + O3.anchorLogConstant) *
           Real.log (Real.exp 1 + inst.L / input.M0) := by
       norm_num
-      show (1 : ℝ) + anchorResult.observations.length ≤
+      change (1 : ℝ) + anchorResult.observations.length ≤
         (1 + O3.anchorLogConstant) *
           Real.log (Real.exp 1 + inst.L / input.M0)
       nlinarith [hprefixAnchor]

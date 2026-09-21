@@ -186,15 +186,22 @@ theorem belowWeight_eq {M tau : ℝ} (htau : tau ≠ 1) :
 
 /-- One below-two accelerated iteration adds exactly its two pair responses. -/
 structure BelowPhaseState (d : ℕ) where
+  /-- The number of primal iterations recorded in this phase. -/
   iteration : ℕ
+  /-- The current accelerated primal point. -/
   accelerated : Vec d
+  /-- The current minimizer of the phase's estimate function. -/
   estimateMinimizer : Vec d
+  /-- The cumulative acceleration weight at the current iteration. -/
   weight : ℝ
+  /-- The chronological oracle responses accumulated by this phase. -/
   queries : List (Observation d)
 
+/-- The number of oracle responses recorded by the phase. -/
 def BelowPhaseState.callCount (state : BelowPhaseState d) : ℕ :=
   state.queries.length
 
+/-- Advance the phase state and append the two observations from one primal iteration. -/
 def BelowPhaseState.recordIteration
     (state : BelowPhaseState d) (accelerated estimateMinimizer : Vec d)
     (weight : ℝ) (atY atAccelerated : Observation d) : BelowPhaseState d :=

@@ -8,14 +8,21 @@ import Mathlib.Analysis.Calculus.Deriv.Pow
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic.HSelection
 import Mathlib.Analysis.Convex.Deriv
 
+/-!
+Calculus, convexity, minimizers, and growth of the scalar affine-quadratic-affine hard
+objective.
+-/
+
 namespace V7.Stage6StrictDeterministic
 
+/-- The piecewise linear-quadratic hard objective in displacement coordinates. -/
 noncomputable def hardValue (eps H z : ℝ) : ℝ :=
   let g := 2 * eps
   if z ≤ H then -g * z
   else if z ≤ 3 * H then -g * z + (g / (2 * H)) * (z - H) ^ 2
   else g * z - 4 * g * H
 
+/-- The continuous piecewise affine slope of the hard objective. -/
 noncomputable def hardSlope (eps H z : ℝ) : ℝ :=
   let g := 2 * eps
   if z ≤ H then -g else if z ≤ 3 * H then g * (z / H - 2) else g
@@ -121,7 +128,7 @@ theorem hardValue_hasDerivAt {eps H : ℝ} (hH : 0 < H) (z : ℝ) :
       intro y hy
       by_cases hyH : y = H
       · subst y
-        simp [hardValue, hH.le]
+        simp [hardValue]
       · exact hardValue_of_middle (lt_of_le_of_ne hy.1 (Ne.symm hyH)) hy.2
     have hu := hleft.union hmiddle
     have hset : Set.Iic H ∪ (Set.Ici H ∩ Set.Iic (3 * H)) = Set.Iic (3 * H) := by
@@ -165,7 +172,7 @@ theorem hardValue_hasDerivAt {eps H : ℝ} (hH : 0 < H) (z : ℝ) :
         intro y hy
         by_cases hyH : y = H
         · subst y
-          simp [hardValue, hH.le]
+          simp [hardValue]
         · exact hardValue_of_middle (lt_of_le_of_ne hy.1 (Ne.symm hyH)) hy.2
       have hright : HasDerivWithinAt (hardValue eps H) (2 * eps)
           (Set.Ici (3 * H)) (3 * H) := by
@@ -214,6 +221,7 @@ theorem deriv_hardValue {eps H : ℝ} (hH : 0 < H) (z : ℝ) :
     deriv (hardValue eps H) z = hardSlope eps H z :=
   (hardValue_hasDerivAt hH z).deriv
 
+/-- The scaled displacement clipped to the interval from minus one to one. -/
 noncomputable def clippedCoordinate (H z : ℝ) : ℝ :=
   min 1 (max (-1) (z / H - 2))
 

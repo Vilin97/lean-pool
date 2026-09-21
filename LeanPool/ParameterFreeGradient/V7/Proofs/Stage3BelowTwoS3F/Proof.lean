@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Bounds
 
+/-!
+Existence of the certified below-two local trial with its complete operational contract.
+-/
+
 namespace V7
 
 open Stage3BelowTwoS3F

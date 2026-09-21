@@ -6,13 +6,19 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoDualPhase.DualEnergy
 
+/-!
+The prescribed primal and dual horizons imply objective-gap and terminal-gradient bounds.
+-/
+
 namespace V7.Stage4AboveTwoDualPhase
 
+/-- The scaled quadratic weight sequence held constant from the terminal index onward. -/
 noncomputable def plateauU (p eta : ℝ) (n : ℕ) : ScalarSeq :=
   fun k ↦ if k < n then
     aboveGamma p eta n * ((k : ℝ) + 1) ^ (2 : ℕ)
   else aboveGamma p eta n * (n : ℝ) ^ (2 : ℕ)
 
+/-- The increments of the scaled quadratic weight sequence with terminal plateau. -/
 noncomputable def plateauDw (p eta : ℝ) (n : ℕ) : ScalarSeq :=
   fun k ↦ plateauU p eta n k -
     (if k = 0 then 0 else plateauU p eta n (k - 1))

@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Geometric
 
+/-!
+The realized controller path has the prescribed geometric sequence of scales and radii.
+-/
+
 namespace V7
 namespace Stage2
 
@@ -15,14 +19,18 @@ private theorem controllerVisit_ext {v w : ControllerVisit}
   cases w
   simp_all
 
+/-- The dyadic smoothness estimate at scale index `s`. -/
 def pathScale (Ma : ℝ) (s : ℕ) : ℝ := (2 : ℝ) ^ s * Ma
 
+/-- The dyadic radius at scale index `s` and radius index `j`. -/
 noncomputable def pathRadius (G Ma : ℝ) (s j : ℕ) : ℝ :=
   (2 : ℝ) ^ j * G / pathScale Ma s
 
+/-- The controller visit associated with the two geometric indices. -/
 noncomputable def pathVisit (G Ma : ℝ) (s j : ℕ) : ControllerVisit :=
   ⟨pathScale Ma s, pathRadius G Ma s j⟩
 
+/-- The chronological path through each scale's realized initial segment of radii. -/
 noncomputable def pathGrid (G Ma : ℝ) (S : ℕ) (lastRadius : ℕ → ℕ) :
     List ControllerVisit :=
   (List.range (S + 1)).flatMap fun s =>
@@ -143,14 +151,11 @@ private theorem visit_eq_foldl_of_controllerPath {G Ma Da : ℝ}
       have hiPrev : i < visits.length := by omega
       have hiReport : i < reports.length := by rw [← hpath.1]; exact hiPrev
       have hvisitCurrent : VisitAt visits i visits[i] := by
-        simpa [VisitAt, List.head?_drop] using
-          (List.getElem?_eq_getElem hiPrev)
+        simp [VisitAt, List.head?_drop]
       have hvisitNext : VisitAt visits (i + 1) visits[i + 1] := by
-        simpa [VisitAt, List.head?_drop, Nat.succ_eq_add_one] using
-          (List.getElem?_eq_getElem hi)
+        simp [VisitAt, List.head?_drop]
       have hreportAt : ReportAt reports i reports[i] := by
-        simpa [ReportAt, List.head?_drop] using
-          (List.getElem?_eq_getElem hiReport)
+        simp [ReportAt, List.head?_drop]
       have hstep := hpath.2.2 i visits[i] visits[i + 1] reports[i]
         (by simpa [Nat.succ_eq_add_one] using hi) hvisitCurrent hvisitNext hreportAt
       have hfold := ih hiPrev
@@ -160,10 +165,10 @@ private theorem visit_eq_foldl_of_controllerPath {G Ma Da : ℝ}
       cases houtcome : reports[i].outcome with
       | success terminal => simp [houtcome] at hstep
       | radius terminal =>
-          simp [advanceVisit, houtcome] at hstep ⊢
+          simp only [houtcome, advanceVisit] at hstep ⊢
           exact controllerVisit_ext hstep.1 hstep.2
       | scale failed =>
-          simp [advanceVisit, houtcome] at hstep ⊢
+          simp only [houtcome, advanceVisit] at hstep ⊢
           apply controllerVisit_ext hstep.1
           rw [← hstep.1]
           exact hstep.2
@@ -214,14 +219,11 @@ private theorem controllerPath_transition_reports {G Ma Da : ℝ}
     exact hgetDrop
   subst report
   have hvisitCurrent : VisitAt visits i.val visits[i.val] := by
-    simpa [VisitAt, List.head?_drop] using
-      (List.getElem?_eq_getElem (by omega : i.val < visits.length))
+    simp [VisitAt, List.head?_drop]
   have hvisitNext : VisitAt visits (i.val + 1) visits[i.val + 1] := by
-    simpa [VisitAt, List.head?_drop] using
-      (List.getElem?_eq_getElem hiNext)
+    simp [VisitAt, List.head?_drop]
   have hreportAt : ReportAt reports i.val reports[i.val] := by
-    simpa [ReportAt, List.head?_drop] using
-      (List.getElem?_eq_getElem hiReports)
+    simp [ReportAt, List.head?_drop]
   have hstep := hpath.2.2 i.val visits[i.val] visits[i.val + 1]
     reports[i.val] hiNext hvisitCurrent hvisitNext hreportAt
   cases houtcome : reports[i.val].outcome with

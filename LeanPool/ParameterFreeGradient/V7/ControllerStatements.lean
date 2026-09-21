@@ -7,19 +7,31 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.EuclideanStatements
 import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
 
+/-!
+Observable trial certification and amortized query bounds along the realized controller path.
+-/
+
 namespace V7
 
+/-- The accepted index, trial estimates, points, and observations of the anchor search. -/
 structure AnchorRunData (d : ℕ) where
+  /-- The index of the first accepted anchor test. -/
   acceptedIndex : ℕ
+  /-- The smoothness estimates examined by the anchor search. -/
   M : ℕ → ℝ
+  /-- The distances examined by the anchor search. -/
   D : ℕ → ℝ
+  /-- The candidate anchor points. -/
   y : ℕ → Point d
+  /-- The chronological oracle observations of the anchor search. -/
   trace : List (Observation d)
 
+/-- The normalized signed power vector that attains the dual norm pairing. -/
 noncomputable def normingDirection (q : ℝ) (g : Point d) : Point d :=
   fun i => ((SignType.sign (g i) : ℝ) * |g i| ^ (q - 1)) /
     (lpNorm q g) ^ (q - 1)
 
+/-- The norming direction has unit primal norm and attains the gradient's dual norm. -/
 noncomputable def NormingDirectionStatement : Prop :=
   ∀ (p : ℝ), 1 < p → ∀ (d : ℕ) (g : Point d),
     0 < lpNorm (conjugateExponent p) g →
@@ -27,6 +39,7 @@ noncomputable def NormingDirectionStatement : Prop :=
     pairing g (normingDirection (conjugateExponent p) g) =
       lpNorm (conjugateExponent p) g
 
+/-- The candidate anchor achieves the required decrease from the initial point. -/
 def AnchorTest (oracle : PairOracle d) (x0 : Point d) (G D : ℝ)
     (y : Point d) : Prop :=
   oracle.value y ≤ oracle.value x0 - G * D / 2
@@ -70,18 +83,24 @@ noncomputable def AnchorStatement : Prop :=
         (run.trace.length : ℝ) ≤
           1 + ⌈Real.log (inst.L / input.M0) / Real.log 2⌉
 
+/-- The smoothness and distance estimates at a controller visit. -/
 structure ControllerVisit where
+  /-- The smoothness estimate at this visit. -/
   M : ℝ
+  /-- The distance estimate at this visit. -/
   D : ℝ
 
+/-- The specified visit occupies index `i` in the chronological controller path. -/
 def VisitAt (visits : List ControllerVisit) (i : ℕ)
     (visit : ControllerVisit) : Prop :=
   (visits.drop i).head? = some visit
 
+/-- The specified trial report occupies index `i` in the report list. -/
 def ReportAt (reports : List (TrialReport d)) (i : ℕ)
     (report : TrialReport d) : Prop :=
   (reports.drop i).head? = some report
 
+/-- The initial visit and successive controller transitions agree with their trial reports. -/
 def ControllerPath (G Ma Da : ℝ) (visits : List ControllerVisit)
     (reports : List (TrialReport d)) : Prop :=
   visits.length = reports.length ∧
@@ -94,6 +113,7 @@ def ControllerPath (G Ma Da : ℝ) (visits : List ControllerVisit)
     | .radius _ => next.M = current.M ∧ next.D = 2 * current.D
     | .scale _ => next.M = 2 * current.M ∧ next.D = G / next.M
 
+/-- The realized visits form the permitted geometric sequence of scales and radii. -/
 def RealizedPathGeometricallyDominated (eps G Ma R : ℝ)
     (visits : List ControllerVisit) : Prop :=
   ∃ (S : ℕ) (lastRadius : ℕ → ℕ),
@@ -110,6 +130,7 @@ def RealizedPathGeometricallyDominated (eps G Ma R : ℝ)
       (∑ s ∈ Finset.range (S + 1), (Ms s * R / eps) ^ a ≤
         (Ms S * R / eps) ^ a / (1 - (2 : ℝ) ^ (-a)))
 
+/-- The observable guard kind is available in the selected exponent regime. -/
 def GuardAllowedInRegime (p : ℝ) (kind : ObservableGuardKind) : Prop :=
   if p = 2 then
     kind = .upperModel ∨ kind = .interpolation ∨ kind = .terminalDescent
@@ -149,6 +170,7 @@ noncomputable def TrialOutcomeCertificationStatement : Prop :=
       (∀ visit ∈ visits, visit.D ≤ 2 * R) ∧
       RealizedPathGeometricallyDominated eps G Ma R visits
 
+/-- The trial complexity exponent: one half below two, and `p / (p + 2)` above two. -/
 noncomputable def localCostExponent (p : ℝ) : ℝ :=
   if p ≤ 2 then 1 / 2 else p / (p + 2)
 

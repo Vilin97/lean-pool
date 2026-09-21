@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.SymmetryLinearization
 
+/-!
+Pairing-preserving `ℓp` symmetries preserve every coordinate-power norm.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open scoped BigOperators
@@ -119,6 +123,7 @@ lemma signedLpSymmetry_column_ne_zero {p : ℝ} (hp : 2 < p)
   rw [hz, O3.lpNorm_zero (by linarith), lpNorm_coordinateUnit (by linarith) i] at hn
   norm_num at hn
 
+/-- A nonzero coordinate in the image of a coordinate unit under an `ℓp` symmetry. -/
 noncomputable def signedLpColumnIndex {p : ℝ} (hp : 2 < p)
     (Q Qdual : Point d → Point d) (hsym : SignedLpSymmetry p Q Qdual)
     (i : Fin d) : Fin d :=
@@ -190,6 +195,7 @@ lemma signedLpSymmetry_column_abs_at_index {p : ℝ} (hp : 2 < p)
   exact (Real.rpow_left_inj (abs_nonneg _) zero_le_one
     (by linarith : p ≠ 0)).mp (by simpa [honepow] using hsingle)
 
+/-- The primal symmetry bundled as a real linear map. -/
 def signedLpLinearMap {p : ℝ}
     (Q Qdual : Point d → Point d) (hsym : SignedLpSymmetry p Q Qdual) :
     Point d →ₗ[ℝ] Point d where

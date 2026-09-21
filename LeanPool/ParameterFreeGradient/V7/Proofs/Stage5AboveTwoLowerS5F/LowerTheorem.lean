@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.RateAlgebra
 
+/-!
+The normalized resisting construction yields the physical known-parameter query lower bound.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
 open Stage5AboveTwoLower
@@ -89,7 +93,7 @@ theorem physical_charged_run {p : ℝ} {d T : ℕ}
       (unitTrace_exact normAlg hT hTd)
   · intro hnil
     have hlen := congrArg List.length hnil
-    simp [physicalTrace, barTrace, unitTrace] at hlen
+    simp [physicalTrace, unitTrace] at hlen
     omega
   · exact physicalTrace_head_point x0 barTrace
       (unitTrace_head_point normAlg hT hTd)
@@ -117,7 +121,7 @@ theorem _root_.V7.knownParameterAboveTwoLower :
     { oracle := physicalOracle x0 L R rT data.completedOracle
       L := L
       L_pos := hL
-      coordinateGradient := physicalOracle_coordinateGradient (p := p) x0 hL hR hrT
+      coordinateGradient := physicalOracle_coordinateGradient x0 hL hR hrT
         data.completedOracle hassum.2.2
       convex := physicalOracle_convex x0 hL hR hrT data.completedOracle hassum.2.1
       minimizerNonempty := physical_minimizerNonempty x0 hL hR hrT
@@ -171,7 +175,7 @@ theorem _root_.V7.knownParameterAboveTwoLower :
       have hK : 0 < 512 * C * min p (Real.log d) := by positivity
       have hpower' : (T : ℝ) <
           (L * R / ((512 * C * min p (Real.log d)) * eps)) ^ (p / (p + 2)) := by
-        convert hpower using 1 <;> ring
+        convert hpower using 1; ring
       have hepsSmall := rate_power_implication hp (by positivity : (0 : ℝ) < T)
         (mul_pos hL hR) hK heps hpower'
       have hMbound : repairMpd p d ≤ C * min p (Real.log d) :=
@@ -198,7 +202,7 @@ theorem _root_.V7.knownParameterAboveTwoLower :
         (mul_pos hL hR) hK heps hpower
       have hMbound : repairMpd p d ≤ 5 * p := by
         unfold repairMpd
-        rw [if_pos hpLog]
+        rw [ite_eq_left hpLog]
       have hdenT : 0 < (T : ℝ) ^ (1 + 2 / p) := by positivity
       have hthreshold : L * R / (2560 * p * (T : ℝ) ^ (1 + 2 / p)) ≤
         L * R / (512 * repairMpd p d * (T : ℝ) ^ (1 + 2 / p)) := by

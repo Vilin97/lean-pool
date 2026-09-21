@@ -6,22 +6,30 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Shapes
 
+/-!
+The source Euclidean guard schedule and its operational report contract.
+-/
+
 namespace V7
 namespace Stage1E03
 
+/-- Classical proposition decisions used locally by the Euclidean correctness proof. -/
 noncomputable local instance correctnessPropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
+/-- The accelerated endpoint passed from the estimate phase to OGM-G. -/
 noncomputable def sourceU (inst : PositiveInstance 2 d x0) (M : ℝ)
     (n : ℕ) : Point d :=
   (sourceEstimateState inst.oracle M x0 n).accelerated
 
+/-- The new OGM-G observations after its reused initial query. -/
 noncomputable def sourceNewTrace (inst : PositiveInstance 2 d x0)
     (M : ℝ) (n : ℕ) : List (Observation d) :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M (sourceU inst M n)
   (List.range n).map fun j =>
     inst.oracle.observe (O3.ogmgState cfg (j + 1)).current
 
+/-- All pairwise interpolation checks for the OGM-G observations. -/
 noncomputable def sourceInterpolationSchedule
     (inst : PositiveInstance 2 d x0) (M : ℝ) (n : ℕ) :
     List (ObservableGuardCheck d) :=
@@ -29,11 +37,13 @@ noncomputable def sourceInterpolationSchedule
   allInterpolationChecks n fun i =>
     inst.oracle.observe (O3.ogmgState cfg i).current
 
+/-- The oracle observation at the terminal OGM-G gradient-step point. -/
 noncomputable def sourceTerminalObservation
     (inst : PositiveInstance 2 d x0) (M : ℝ) (n : ℕ) : Observation d :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M (sourceU inst M n)
   inst.oracle.observe (O3.ogmgV cfg n)
 
+/-- The descent check between the final OGM-G query and its gradient step. -/
 noncomputable def sourceTerminalGuard
     (inst : PositiveInstance 2 d x0) (M : ℝ) (n : ℕ) :
     ObservableGuardCheck d :=
@@ -41,11 +51,13 @@ noncomputable def sourceTerminalGuard
   terminalCheck (inst.oracle.observe (O3.ogmgState cfg n).current)
     (inst.oracle.observe (O3.ogmgV cfg n))
 
+/-- The complete planned trace of both Euclidean phases and the terminal query. -/
 noncomputable def sourcePlannedTrace (inst : PositiveInstance 2 d x0)
     (M : ℝ) (n : ℕ) : List (Observation d) :=
   phaseATraceFrom inst M 0 n ++ sourceNewTrace inst M n ++
     [sourceTerminalObservation inst M n]
 
+/-- The complete planned guard schedule of the Euclidean trial. -/
 noncomputable def sourceGuardSchedule (inst : PositiveInstance 2 d x0)
     (M : ℝ) (n : ℕ) : List (ObservableGuardCheck d) :=
   phaseAGuardsFrom inst M 0 n ++ sourceInterpolationSchedule inst M n ++
@@ -120,6 +132,7 @@ theorem source_schedule_pairs (inst : PositiveInstance 2 d x0)
     · simp [sourceTerminalGuard, sourceTerminalObservation,
         sourcePlannedTrace, terminalCheck]
 
+/-- The possible early-failure and completed-report shapes of the Euclidean trial. -/
 def FullReportShape (inst : PositiveInstance 2 d x0) (eps M : ℝ)
     (n : ℕ) (report : TrialReport d) : Prop :=
   (∃ r < n, ∃ failed,
@@ -193,8 +206,8 @@ theorem sourceFullReport_shape (inst : PositiveInstance 2 d x0)
           have hp := source_preterminal_pairs inst M n hn check hsched
           simpa [prependReport, htrace, sourceNewTrace, sourceU,
             List.append_assoc] using hp
-        · simp [prependReport, sourcePlannedTrace, sourceNewTrace, sourceU,
-            htrace, List.append_assoc]
+        · simp [prependReport, sourceNewTrace, sourceU,
+            htrace]
         · rcases hguards with ⟨rest, hrest⟩
           refine ⟨rest ++ [sourceTerminalGuard inst M n], ?_⟩
           simp only [prependReport, sourceGuardSchedule]
@@ -202,7 +215,7 @@ theorem sourceFullReport_shape (inst : PositiveInstance 2 d x0)
           congr 1
           rw [← List.append_assoc]
           rw [hrest]
-          simp [sourceInterpolationSchedule, sourceU, List.append_assoc]
+          simp [sourceInterpolationSchedule, sourceU]
       · right; right; left
         rcases hterminal with ⟨hkind, htrace, hguards⟩
         refine ⟨failed, prepend_failureLedger 2 M _ _ _ failed hallA hledger,
@@ -213,8 +226,9 @@ theorem sourceFullReport_shape (inst : PositiveInstance 2 d x0)
             rcases hmem with hA | hB
             · apply List.mem_append_left
               exact List.mem_append_left _ hA
-            · simp [sourceGuardSchedule, sourceInterpolationSchedule,
-                sourceTerminalGuard, sourceU, hguards] at hB ⊢
+            · simp only [hguards, List.mem_append, List.mem_cons, List.not_mem_nil, or_false,
+                sourceGuardSchedule, sourceInterpolationSchedule, sourceU, sourceTerminalGuard,
+                List.append_assoc] at hB ⊢
               exact Or.inr hB
           have hp := source_schedule_pairs inst M n hn check hsched
           simpa [prependReport, sourcePlannedTrace, sourceNewTrace,

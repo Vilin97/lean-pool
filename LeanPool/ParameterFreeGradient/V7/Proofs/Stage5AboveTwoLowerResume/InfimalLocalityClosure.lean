@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume.InfimalAttainment
 
+/-!
+Locality of the infimal smoothing value and its exact value-gradient observations.
+-/
+
 namespace V7.Stage5AboveTwoLowerResume
 
 open Stage5AboveTwoLower

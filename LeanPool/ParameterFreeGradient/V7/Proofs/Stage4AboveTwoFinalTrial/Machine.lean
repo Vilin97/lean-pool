@@ -6,13 +6,19 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Trajectory
 
+/-!
+Finite causal query programs implementing the above-two primal and dual phases.
+-/
+
 namespace V7.Stage4AboveTwoFinalTrial
 
 open V7.Stage3BelowTwoS3F
 
+/-- Classical proposition decisions used locally by the above-two trial machine. -/
 noncomputable local instance machinePropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
+/-- The above-two dual query program with early accuracy or guard-failure termination. -/
 noncomputable def dualProgram (p eps M D eta : ℝ) (n k : ℕ)
     (center : Point d) (q r : Point d) (G : VectorSeq d)
     (previous : Observation d) (guards : List (ObservableGuardCheck d)) :
@@ -35,10 +41,12 @@ noncomputable def dualProgram (p eps M D eta : ℝ) (n k : ℕ)
               guardsNext fuel
           else .finish guardsNext (.scale check)
 
+/-- The remaining primal query budget plus the prescribed dual horizon. -/
 def phaseOneBudget (nD : ℕ) : ℕ → ℕ
   | 0 => nD
   | fuel + 1 => phaseOneBudget nD fuel + 1
 
+/-- The above-two primal query program that initializes the dual phase at its endpoint. -/
 noncomputable def phaseOneProgram (p eps M D eta₁ eta₂ : ℝ)
     (x0 : Point d) (n₁ n₂ k : ℕ) (state : PrimalState d)
     (previous : Observation d) (guards : List (ObservableGuardCheck d)) :
@@ -68,6 +76,7 @@ noncomputable def phaseOneProgram (p eps M D eta₁ eta₂ : ℝ)
               ⟨sNext, vNext, xNext⟩ obs guardsNext fuel
           else .finish guardsNext (.scale check)
 
+/-- The complete above-two local trial with its primal and dual horizons. -/
 noncomputable def aboveLocalTrial (p eps : ℝ) (x0 : Point d)
     (nf nd : ℕ) : LocalTrial d :=
   programTrial fun M D cached =>

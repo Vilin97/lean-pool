@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Geometry
 
+/-!
+Positivity of the constants and scales used by the above-two phases.
+-/
+
 namespace V7.Stage4AboveTwo
 
 theorem uniformConstant_pos {p : ℝ} (hp : 2 < p) :

@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExpected.Randomized
 
+/-!
+Finite-horizon failure probabilities force an unbounded worst-case expected hitting time.
+-/
+
 open MeasureTheory
 
 namespace V7.Stage7StrictRandomizedExpected
@@ -149,7 +153,7 @@ theorem strictHittingTime_eq_iInf (method : StrictLocalMethod)
   · apply le_iInf
     intro N
     by_cases hN : StrictSuccessThrough method oracle (traces N) N
-    · rw [if_pos hN]
+    · rw [ite_eq_left hN]
       exact sInf_le ⟨N, rfl, hN⟩
     · simp [hN]
   · apply le_sInf
@@ -235,7 +239,7 @@ theorem infiniteWorstCaseExpectedHittingTime :
   let B : Ω → ℝ := allHorizonDisplacementBound method x0 eps N
   have hB : Measurable B := allHorizonDisplacementBound_measurable method x0 eps N
   obtain ⟨H, hH, hmass⟩ := exists_deterministic_threshold μ B hB
-    (delta := (1 / 2 : ℝ)) (by norm_num) (by norm_num)
+    (delta := (1 / 2 : ℝ)) (by norm_num)
   let oracle := hardOracle eps x0 H
   let traces : Ω → ℕ → StrictTranscript := fun ω n => causalTrace method x0 oracle n ω
   let T : Ω → ENNReal := fun ω => strictHittingTime (method ω) oracle (traces ω)

@@ -6,17 +6,25 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.DualTrajectory
 
+/-!
+Finite causal query programs implementing the below-two primal and dual phases.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
+/-- Classical proposition decisions used locally by the below-two trial machine. -/
 noncomputable local instance machinePropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
+/-- The observed physical gradient rescaled into normalized trial coordinates. -/
 noncomputable def normalizedGradient (M D : ℝ) (obs : Observation d) : Point d :=
   (1 / (M * D)) • obs.gradient
 
+/-- The cocoercivity guard formed from consecutive observations. -/
 noncomputable def cocoCheck (before after : Observation d) :
     ObservableGuardCheck d := ⟨.cocoercivity, before, after⟩
 
+/-- The cocoercivity inequality reconstructed from a guard's two recorded observations. -/
 noncomputable def checkHolds (p M : ℝ) (check : ObservableGuardCheck d) : Prop :=
   BregmanRemainder
       { value := fun x => if x = check.xPair.point then check.xPair.value
@@ -35,19 +43,23 @@ noncomputable def cocoPairHolds (p M : ℝ) (before after : Observation d) : Pro
     (lpNorm (conjugateExponent p) (before.gradient - after.gradient)) ^ (2 : ℕ) /
       (2 * M)
 
+/-- A finite oracle-query program indexed by an upper bound on its remaining queries. -/
 inductive Program (d : ℕ) : ℕ → Type where
   | query {fuel : ℕ} (point : Point d)
       (next : Observation d → Program d fuel) : Program d (fuel + 1)
   | finish {fuel : ℕ} (guards : List (ObservableGuardCheck d))
       (outcome : TrialOutcome d) : Program d fuel
 
+/-- A finite query program paired with its query bound. -/
 abbrev PackedProgram (d : ℕ) := (fuel : ℕ) × Program d fuel
 
+/-- The next local-trial action exposed by a packed finite program. -/
 noncomputable def Program.action : PackedProgram d →
     LocalTrialAction d (PackedProgram d)
   | ⟨_, .finish guards outcome⟩ => .finish guards outcome
   | ⟨fuel + 1, .query point next⟩ => .query point fun obs => ⟨fuel, next obs⟩
 
+/-- The report obtained by evaluating the finite program against an oracle. -/
 noncomputable def Program.eval (oracle : PairOracle d) :
     (fuel : ℕ) → Program d fuel → List (Observation d) → TrialReport d
   | _, .finish guards outcome, history => ⟨history, guards, outcome⟩
@@ -55,6 +67,7 @@ noncomputable def Program.eval (oracle : PairOracle d) :
       let obs := oracle.observe point
       Program.eval oracle fuel (next obs) (history ++ [obs])
 
+/-- The local trial induced by a family of initial finite query programs. -/
 noncomputable def programTrial
     (initial : ℝ → ℝ → CachedPair d → PackedProgram d) : LocalTrial d where
   State := PackedProgram d
@@ -67,7 +80,7 @@ theorem Program.runFuel_eq_eval (oracle : PairOracle d)
     (programTrial initial).runFuel oracle (fuel + 1) ⟨fuel, program⟩ history =
       some (Program.eval oracle fuel program history) := by
   induction fuel generalizing history with
-  | zero => cases program <;> rfl
+  | zero => cases program; rfl
   | succ fuel ih =>
       cases program with
       | finish guards outcome => rfl
@@ -87,6 +100,7 @@ theorem programTrial_executes (oracle : PairOracle d)
   exact Program.runFuel_eq_eval oracle initial (initial M D cached).1
     (initial M D cached).2 []
 
+/-- The below-two dual query program with early accuracy or guard-failure termination. -/
 noncomputable def dualProgram (p eps M D : ℝ) (n k : ℕ)
     (center : Point d) (q r : Point d) (G : VectorSeq d)
     (previous : Observation d) (guards : List (ObservableGuardCheck d)) :
@@ -109,10 +123,12 @@ noncomputable def dualProgram (p eps M D : ℝ) (n k : ℕ)
               guardsNext fuel
           else .finish guardsNext (.scale check)
 
+/-- The remaining primal query budget plus the complete dual query budget. -/
 def phaseOneBudget (n : ℕ) : ℕ → ℕ
   | 0 => n
   | fuel + 1 => phaseOneBudget n fuel + 1
 
+/-- The below-two primal query program that passes its endpoint to the dual phase. -/
 noncomputable def phaseOneProgram (p eps M D : ℝ) (x0 : Point d) (n k : ℕ)
     (state : PrimalState d) (previous : Observation d)
     (guards : List (ObservableGuardCheck d)) :
@@ -141,6 +157,7 @@ noncomputable def phaseOneProgram (p eps M D : ℝ) (x0 : Point d) (n k : ℕ)
               obs guardsNext fuel
           else .finish guardsNext (.scale check)
 
+/-- The complete below-two local trial initialized with the cached starting observation. -/
 noncomputable def belowLocalTrial (p eps : ℝ) (x0 : Point d) (n : ℕ) :
     LocalTrial d :=
   programTrial fun M D cached =>

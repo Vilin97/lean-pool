@@ -6,8 +6,13 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Controller
 
+/-!
+The explicit causal state machine refines the certified finite controller execution.
+-/
+
 namespace V7.Stage8Main
 
+/-- The chronological observation list obtained by concatenating the trial reports. -/
 def reportsTrace (reports : List (TrialReport d)) : List (Observation d) :=
   reports.flatMap TrialReport.trace
 
@@ -22,7 +27,7 @@ theorem reportsTrace_length (reports : List (TrialReport d)) :
   induction reports with
   | nil => simp [reportsTrace]
   | cons report reports ih =>
-      simp [reportsTrace, TrialReport.calls, ih]
+      simp [reportsTrace, TrialReport.calls]
 
 theorem first_action_query_of_exec_nonempty (trial : LocalTrial d)
     (oracle : PairOracle d) (M D : ℝ) (cached : CachedPair d)
@@ -37,7 +42,7 @@ theorem first_action_query_of_exec_nonempty (trial : LocalTrial d)
       cases haction : trial.action (trial.initial M D cached) with
       | query x next => exact ⟨x, next, rfl⟩
       | finish guards outcome =>
-          simp [haction] at hrun
+          simp only [haction, Option.some.injEq] at hrun
           have hempty : report.trace = [] := by rw [← hrun]
           exact (hne hempty).elim
 
@@ -74,8 +79,10 @@ theorem localTrial_run_to_done (oracle : PairOracle d)
           cases hout : outcome with
           | success terminal =>
               refine ⟨1, ?_⟩
-              simp [O3.FirstOrderMethod.runFuel, currentMethod, currentMethodAction,
-                continueLocalAction, trial, haction, controllerStep, hout] at hstep ⊢
+              simp only [controllerStep, hout, scale_eq_config, radius_eq_config,
+                RuntimeControllerRunResult.success.injEq, O3.FirstOrderMethod.runFuel,
+                currentMethod, currentMethodAction, continueLocalAction, haction,
+                Option.some.injEq, O3.RunResult.mk.injEq, and_true, trial] at hstep ⊢
               cases hstep
               rfl
           | scale failed => simp [controllerStep, hout] at hstep

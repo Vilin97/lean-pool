@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Primal
 
+/-!
+The pointwise primal-dual residual identity for the below-two coefficient recurrences.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage3BelowTwo
@@ -308,6 +312,7 @@ private lemma alpha_weighted_dual (n : ℕ) (u dw : ScalarSeq)
     simp [hne]
   · simp
 
+/-- The reciprocal-weight combination of reversed dual gradients used in the residual identity. -/
 noncomputable def dualP (n : ℕ) (u : ScalarSeq)
     (C : VectorSeq d) (k : ℕ) : Point d :=
   (1 / u (n - (k + 1))) • C (k + 1) -
@@ -335,7 +340,7 @@ private lemma dualP_map (n : ℕ) (hn : 1 ≤ n) (u dw : ScalarSeq)
     have hnleft : n - (n - 1) = 1 := by omega
     have hnright : n - (n - 1) - 1 = 0 := by omega
     have hnA : n - 1 + 1 = n := by omega
-    simp only [hnleft, hnright, hnA] at hm
+    simp only [hnleft, hnA] at hm
     have hnsub : n - (0 + 1) = n - 1 := by omega
     rw [dualP, hnsub]
     ext j
@@ -464,7 +469,7 @@ private lemma alpha_block (n : ℕ) (hn : 1 ≤ n) (u dw : ScalarSeq)
       rw [hidx, hBidx]
       simp only [Nat.succ_sub_one]
 
-private lemma b_block (n : ℕ) (hn : 1 ≤ n) (u : ScalarSeq)
+private lemma b_block (n : ℕ) (u : ScalarSeq)
     (b : ScalarMatrix) (A B C D X : VectorSeq d)
     (hb00 : b 0 0 = -1) (hAn : A (n + 1) = 0)
     (hX : BelowXRecurrence n b B X)
@@ -483,13 +488,13 @@ private lemma b_block (n : ℕ) (hn : 1 ≤ n) (u : ScalarSeq)
     · have hm := hmap.2.1 k hkn
       have hsub : n - (k + 1) = n - k - 1 := by omega
       dsimp [Y]
-      rw [if_pos hk, if_pos (by omega), hsub]
+      rw [ite_eq_left hk, ite_eq_left (by omega), hsub]
       exact hm.symm
     · have hkeq : k = n := by omega
       subst k
       dsimp [Y]
-      simp only [le_refl, ↓reduceIte, Nat.sub_self, Nat.le_add_right,
-        if_false, sub_zero, hAn]
+      simp only [le_refl, ↓reduceIte, Nat.sub_self,
+        sub_zero, hAn]
       simpa using hmap.1.symm
   have hYlast : Y (n + 1) = 0 := by simp [Y]
   have hYzero : Y 0 = C n := by simp [Y]
@@ -574,7 +579,7 @@ private lemma b_block (n : ℕ) (hn : 1 ≤ n) (u : ScalarSeq)
           have hrn : r ≤ n := by omega
           rw [pairing_weightedSum_right]
           dsimp [Y]
-          rw [if_pos hrn]
+          rw [ite_eq_left hrn]
       _ = ∑ j ∈ Finset.range (n + 1),
           ∑ l ∈ Finset.range (n - j + 1),
             b (j + l) j * O3.pairing (C (n - (j + l))) (B j) := by
@@ -648,7 +653,7 @@ theorem belowPointwiseResidualIdentity : BelowPointwiseResidualIdentityStatement
     have halpha := Stage3BelowTwo.alpha_block
       n hn u dw alpha c b hcoeff A B C D hmap
     have hb := Stage3BelowTwo.b_block
-      n hn u b A B C D X hcoeff.2.2.2.2.1 hAn hX hmap
+      n u b A B C D X hcoeff.2.2.2.2.1 hAn hX hmap
     unfold BelowPrimalResidual BelowDualResidual
     change
       (∑ k ∈ Finset.range n,

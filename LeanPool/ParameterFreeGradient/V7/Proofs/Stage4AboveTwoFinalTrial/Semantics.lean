@@ -6,10 +6,15 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.Shapes
 
+/-!
+The above-two query programs produce exactly the permitted report shapes.
+-/
+
 namespace V7.Stage4AboveTwoFinalTrial
 
 open V7.Stage3BelowTwoS3F
 
+/-- Classical proposition decisions used locally in the above-two program semantics. -/
 noncomputable local instance semanticsPropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
@@ -139,20 +144,20 @@ theorem eval_dual_shape (p eps M D : ℝ) (x0 : Point d)
       rw [hobs]
       by_cases hsmall : lpNorm (conjugateExponent p)
           (phaseTwoObs p eps M D x0 oracle (k + 1)).gradient ≤ eps
-      · rw [if_pos hsmall]
+      · rw [ite_eq_left hsmall]
         refine ⟨nF p eps M D, k + 1, ?_⟩
         simpa [Program.eval, phaseTwoTrace_succ, allChecks, phaseTwoChecks_succ,
           Nat.add_sub_cancel] using FullShape.dualSuccess (p := p) (eps := eps)
             (M := M) (D := D) (x0 := x0) (oracle := oracle) (k + 1)
             (by omega) (by omega) hP (by
               intro j hj; exact hQ j (by omega)) hsmall
-      · rw [if_neg hsmall]
+      · rw [ite_eq_right hsmall]
         have hlargeNext : eps < lpNorm (conjugateExponent p)
             (phaseTwoObs p eps M D x0 oracle (k + 1)).gradient := lt_of_not_ge hsmall
         by_cases hguard : cocoPairHolds p M
             (phaseTwoObs p eps M D x0 oracle k)
             (phaseTwoObs p eps M D x0 oracle (k + 1))
-        · rw [if_pos hguard]
+        · rw [ite_eq_left hguard]
           let GNext : VectorSeq d := fun i => if i = k + 1 then
             normalizedGradient M D (phaseTwoObs p eps M D x0 oracle (k + 1)) else G i
           have hGNext : ∀ i ≤ k + 1, GNext i = oracle₂.gradient
@@ -182,7 +187,7 @@ theorem eval_dual_shape (p eps M D : ℝ) (x0 : Point d)
           have hrec := ih (k + 1) GNext (by omega) hQnext hGNext hlargeNext
           simpa [dualQ_succ, GNext, hrNext, phaseTwoTrace_succ, allChecks,
             phaseTwoChecks_succ, List.append_assoc, eta, nd, oracle₂] using hrec
-        · rw [if_neg hguard]
+        · rw [ite_eq_right hguard]
           refine ⟨nF p eps M D, k + 1, ?_⟩
           simpa [Program.eval, phaseTwoTrace_succ, allChecks, phaseTwoChecks_succ,
             List.append_assoc, Nat.add_sub_cancel] using
@@ -222,7 +227,7 @@ theorem eval_phaseOne_shape (p eps M D : ℝ) (x0 : Point d)
         subst i
         simp [G, G0, phaseTwoGradient_zero]
       have hdual := eval_dual_shape p eps M D x0 oracle 0
-        (nD p eps M D) G (by omega) hP (by simp) hG0 (by simpa using hlarge)
+        (nD p eps M D) G (by omega) hP (by simp) hG0 (by simpa)
       simpa [phaseOneProgram, phaseOneBudget, G, G0, allChecks,
         phaseTwoNewTrace, phaseTwoChecks, phaseTwoObs_zero, dualQ_zero, dualR_zero,
         phaseTwoGradient_zero, phaseTwoCenter] using hdual
@@ -249,20 +254,20 @@ theorem eval_phaseOne_shape (p eps M D : ℝ) (x0 : Point d)
       rw [hobs]
       by_cases hsmall : lpNorm (conjugateExponent p)
           (phaseOneObs p eps M D x0 oracle (k + 1)).gradient ≤ eps
-      · rw [if_pos hsmall]
+      · rw [ite_eq_left hsmall]
         refine ⟨k + 1, 0, ?_⟩
         simpa [Program.eval, phaseOneTrace_succ, phaseOneChecks_succ,
           Nat.add_sub_cancel] using
           FullShape.primalSuccess (p := p) (eps := eps) (M := M) (D := D)
             (x0 := x0) (oracle := oracle) (k + 1) (by omega) (by omega)
             hsmall (by intro j hj; exact hP j (by omega))
-      · rw [if_neg hsmall]
+      · rw [ite_eq_right hsmall]
         have hlargeNext : eps < lpNorm (conjugateExponent p)
             (phaseOneObs p eps M D x0 oracle (k + 1)).gradient := lt_of_not_ge hsmall
         by_cases hguard : cocoPairHolds p M
             (phaseOneObs p eps M D x0 oracle k)
             (phaseOneObs p eps M D x0 oracle (k + 1))
-        · rw [if_pos hguard]
+        · rw [ite_eq_left hguard]
           have hPnext : ∀ j < k + 1, cocoPairHolds p M
               (phaseOneObs p eps M D x0 oracle j)
               (phaseOneObs p eps M D x0 oracle (j + 1)) := by
@@ -273,7 +278,7 @@ theorem eval_phaseOne_shape (p eps M D : ℝ) (x0 : Point d)
           have hrec := ih (k + 1) (by omega) hPnext hlargeNext
           simpa [phaseOneState_succ, phaseOneTrace_succ, phaseOneChecks_succ]
             using hrec
-        · rw [if_neg hguard]
+        · rw [ite_eq_right hguard]
           refine ⟨k + 1, 0, ?_⟩
           simpa [Program.eval, phaseOneTrace_succ, phaseOneChecks_succ,
             Nat.add_sub_cancel] using

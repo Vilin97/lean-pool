@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperTheorem
 
+/-!
+The matching known-parameter upper and lower bounds establish above-two optimality.
+-/
+
 namespace V7
 
 theorem knownParameterAboveTwoOptimality :

@@ -6,9 +6,15 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Correctness
 
+/-!
+Compatibility of source Euclidean states and recorded checks with the original analytic
+execution.
+-/
+
 namespace V7
 namespace Stage1E03
 
+/-- Classical proposition decisions used locally in the source semantics proof. -/
 noncomputable local instance semanticsPropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
@@ -20,7 +26,7 @@ theorem minimizer_gradient_zero (inst : PositiveInstance 2 d x0)
   have hfd := hlocal.fderiv_eq_zero
   have hp := (inst.coordinateGradient xstar).2 (inst.oracle.gradient xstar)
   rw [hfd] at hp
-  simp only [ContinuousLinearMap.zero_apply] at hp
+  simp only [zero_apply] at hp
   have hpair : pairing (inst.oracle.gradient xstar)
       (inst.oracle.gradient xstar) = 0 := hp.symm
   have hsq : (lpNorm 2 (inst.oracle.gradient xstar)) ^ (2 : ℕ) = 0 := by
@@ -30,6 +36,7 @@ theorem minimizer_gradient_zero (inst : PositiveInstance 2 d x0)
   have hnorm : lpNorm 2 (inst.oracle.gradient xstar) = 0 := by nlinarith
   exact (O3.lpNorm_eq_zero_iff (by norm_num)).mp hnorm
 
+/-- The current positive instance expressed in the original admissible-instance interface. -/
 noncomputable def legacyInstance (inst : PositiveInstance 2 d x0)
     (eps : ℝ) (heps : 0 < eps)
     (hG : eps < lpNorm 2 (inst.oracle.gradient x0)) :
@@ -105,7 +112,7 @@ noncomputable def legacyInstance (inst : PositiveInstance 2 d x0)
     (hG : eps < lpNorm 2 (inst.oracle.gradient x0)) :
     (legacyInstance inst eps heps hG).radius = inst.R := rfl
 
-@[simp] theorem sourceEstimateState_eq_legacy
+theorem sourceEstimateState_eq_legacy
     (inst : PositiveInstance 2 d x0) (eps M : ℝ) (heps : 0 < eps)
     (hG : eps < lpNorm 2 (inst.oracle.gradient x0)) (k : ℕ) :
     sourceEstimateState inst.oracle M x0 k =

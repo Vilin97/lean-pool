@@ -36,7 +36,7 @@ lemma hasDerivAt_abs_affine_rpow {p a b t : ℝ} (hp : 1 < p) :
   have haff : HasDerivAt (fun s : ℝ ↦ a + s * b) b t := by
     convert ((hasDerivAt_id t).mul_const b).const_add a using 1 <;>
       first | rfl | ring
-  convert hbase.comp t haff using 1 <;> rfl
+  convert hbase.comp t haff using 1; rfl
 
 lemma hasDerivAt_linePower {p : ℝ} (hp : 1 < p) {d : ℕ}
     (x h : Point d) (t : ℝ) :
@@ -95,7 +95,7 @@ lemma hasDerivAt_lineEnergy_of_ne_zero {p : ℝ} (hp : 1 < p) {d : ℕ}
   have hpair : pairing (dualityMap p (x + t • h)) h =
       (1 / 2 : ℝ) * (linePowerDerivative p x h t * (2 / p) *
         linePower p x h t ^ (2 / p - 1)) := by
-    rw [dualityMap, if_neg hnorm, linePowerDerivative, linePower,
+    rw [dualityMap, ite_eq_right hnorm, linePowerDerivative, linePower,
       lpPower_rpow_two_div_sub_one_eq hp0 hz]
     unfold pairing powerDualityMap
     have hfactor :
@@ -329,7 +329,7 @@ lemma lineGradientFormula_eq_duality_pair {p : ℝ} (hp : p ≠ 0) {d : ℕ}
     lineGradientFormula p x h t = pairing (dualityMap p (x + t • h)) h := by
   have hnorm : lpNorm p (x + t • h) ≠ 0 :=
     (lpNorm_pos_of_ne_zero hz).ne'
-  rw [lineGradientFormula, dualityMap, if_neg hnorm,
+  rw [lineGradientFormula, dualityMap, ite_eq_right hnorm,
     linePower, lpPower_rpow_two_div_sub_one_eq hp hz, linePowerPair]
   unfold pairing powerDualityMap
   rw [Finset.mul_sum]

@@ -87,9 +87,11 @@ lemma pairing_dualityMap_self {p : ℝ} (hp : 1 < p) {d : ℕ} (u : Point d) :
     rw [← Real.rpow_add hnorm]
     norm_num
 
+/-- Coordinate weights with exponent `q - 2` in the squared norm Hessian estimate. -/
 noncomputable def weightVector (q : ℝ) {d : ℕ} (z : Point d) : Point d :=
   fun i ↦ |z i| ^ (q - 2)
 
+/-- The coordinatewise square of a direction vector. -/
 noncomputable def squareVector {d : ℕ} (h : Point d) : Point d :=
   fun i ↦ (h i) ^ (2 : ℕ)
 

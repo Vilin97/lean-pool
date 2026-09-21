@@ -8,6 +8,10 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARepair.Inf
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AFinalRepair.OriginFrechet
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.Calculus
 
+/-!
+Attainment and interior-radius bounds for the kernel's infimal-convolution minimizers.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage5AboveTwoLowerResume

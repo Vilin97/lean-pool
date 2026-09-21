@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Contract
 
+/-!
+The below-two trial's query count is bounded by its accuracy-dependent horizon.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
 variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}

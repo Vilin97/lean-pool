@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.UpperTrial
 
+/-!
+A certified above-two local trial yields the known-parameter upper query bound.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
 open V7.Stage4AboveTwoFinalTrial

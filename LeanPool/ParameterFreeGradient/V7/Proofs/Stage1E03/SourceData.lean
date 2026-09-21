@@ -6,11 +6,16 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Ledger
 
+/-!
+The literal Euclidean trajectories packaged with their dynamics and exact traces.
+-/
+
 open scoped BigOperators
 
 namespace V7
 namespace Stage1E03
 
+/-- The literal recursive estimate state driven by an arbitrary value-gradient oracle. -/
 noncomputable def sourceEstimateState (oracle : PairOracle d) (M : ℝ)
     (x0 : Point d) : ℕ → O3.EuclideanEstimateState d
   | 0 => ⟨x0, 0⟩
@@ -18,15 +23,18 @@ noncomputable def sourceEstimateState (oracle : PairOracle d) (M : ℝ)
       nextEstimateState M x0 k (sourceEstimateState oracle M x0 k)
         (oracle.observe (estimateQuery M x0 k (sourceEstimateState oracle M x0 k)))
 
+/-- The quadratic potential minimizer associated with the source estimate state. -/
 noncomputable def sourceEstimateMinimizer (oracle : PairOracle d) (M : ℝ)
     (x0 : Point d) (k : ℕ) : Point d :=
   O3.Stage8EuclideanMinimizer.euclideanPsiMinimizer M x0
     (sourceEstimateState oracle M x0 k).cumulativeGradient
 
+/-- The source estimate-weight increment, extended by zero at index zero. -/
 noncomputable def sourcePhaseAWeight : ℕ → ℝ
   | 0 => 0
   | k + 1 => O3.euclideanWeight (O3.euclideanA k)
 
+/-- The literal source estimate execution packaged as Euclidean gap-phase data. -/
 noncomputable def sourcePhaseAData (inst : PositiveInstance 2 d x0)
     (M D : ℝ) (m : ℕ) : EuclideanGapData d m where
   x0 := x0
@@ -43,6 +51,7 @@ noncomputable def sourcePhaseAData (inst : PositiveInstance 2 d x0)
       (sourceEstimateState inst.oracle M x0 k)),
      inst.oracle.observe (sourceEstimateState inst.oracle M x0 (k + 1)).accelerated]
 
+/-- The literal source OGM-G execution packaged as finite phase data. -/
 noncomputable def sourcePhaseBData (inst : PositiveInstance 2 d x0)
     (M : ℝ) (n : ℕ) (U : Point d) : OGMGData d n :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M U

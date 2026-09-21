@@ -55,7 +55,7 @@ theorem stage9Theta_pos (n i : ℕ) : 0 < stage9Theta n i := by
   · subst i
     rw [stage9Theta_zero, ogmgThetaZero]
     exact thetaZeroStep_pos _
-  · rw [stage9Theta, if_neg hi]
+  · rw [stage9Theta, ite_eq_right hi]
     exact ogmgThetaTail_pos _
 
 /-- In particular every denominator `theta_i` used by OGM-G is positive. -/
@@ -70,7 +70,7 @@ theorem stage9_two_mul_theta_sub_one_pos (n i : ℕ) :
     rw [stage9Theta_zero, ogmgThetaZero]
     have h := thetaZeroStep_gt_half (ogmgThetaTail (n - 1))
     linarith
-  · rw [stage9Theta, if_neg hi]
+  · rw [stage9Theta, ite_eq_right hi]
     cases hdist : n - i with
     | zero =>
         simp [ogmgThetaTail]
@@ -142,7 +142,7 @@ theorem stage9Kappa_nonneg (n i : ℕ) : 0 ≤ stage9Kappa n i := by
   by_cases hi : i = 0
   · subst i
     simp
-  · rw [stage9Kappa, if_neg hi]
+  · rw [stage9Kappa, ite_eq_right hi]
     positivity
 
 /-- The constant product used at the quadratic telescoping endpoint. -/

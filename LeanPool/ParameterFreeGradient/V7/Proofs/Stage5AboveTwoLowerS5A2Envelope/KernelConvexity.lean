@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.PrimalOptimality
 import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 
+/-!
+Convexity of the finite-dimensional norm and the power smoothing kernel.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower

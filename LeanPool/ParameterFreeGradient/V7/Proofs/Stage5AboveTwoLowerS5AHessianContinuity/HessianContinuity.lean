@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AFinalRepair.OriginFrechet
 
+/-!
+Ambient norm estimates imply continuity of the kernel Hessian at the origin.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage5AboveTwoLower.S5AHessianContinuity
@@ -59,6 +63,7 @@ lemma abs_lpPowerFDeriv_apply_le {r : ℝ} (hr : 2 < r) {d : ℕ}
         (lpAmbientConstant r d * ‖h‖)) := by gcongr
     _ = r * O3.lpNorm r x ^ (r - 1) * lpAmbientConstant r d * ‖h‖ := by ring
 
+/-- The coefficient in the coordinatewise bound for the kernel Hessian. -/
 noncomputable def hessianCoordConstant (r theta : ℝ) (d : ℕ) : ℝ :=
   4 * theta *
     (|2 * theta / r - 1| * r * lpAmbientConstant r d + (r - 1))
@@ -222,6 +227,7 @@ lemma norm_kernelHessian_le_lpNorm_rpow {r theta : ℝ}
     simpa only [kernelHessian_apply, Real.norm_eq_abs] using
       abs_kernelHessianCoord_apply_le hr htheta x h hx i
 
+/-- The coefficient in the ambient norm bound for the kernel Hessian. -/
 noncomputable def hessianAmbientConstant (r theta : ℝ) (d : ℕ) : ℝ :=
   hessianCoordConstant r theta d * lpAmbientConstant r d ^ (2 * theta - 2)
 

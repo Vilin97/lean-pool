@@ -314,6 +314,7 @@ def abovePhaseTrace {d N : ℕ} (oracle : PairOracle d)
   (List.finRange N).flatMap fun i =>
     [oracle.observe (y i), oracle.observe (accelerated i)]
 
+/-- Every recorded response equals the oracle's exact value-gradient pair at its query point. -/
 def AboveObservationTraceExact {d : ℕ} (oracle : PairOracle d)
     (trace : List (Observation d)) : Prop :=
   ∀ observation ∈ trace, observation = oracle.observe observation.point

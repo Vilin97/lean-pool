@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.PrefixState
 
+/-!
+The resisting prefix states synchronize their stored coordinates, signs, and observations.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
 lemma obsPrefix_succ (P : PrefixParameters p d T) (t : ℕ) :

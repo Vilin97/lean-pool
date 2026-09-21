@@ -105,19 +105,30 @@ noncomputable def anchorProbePoint {d : ℕ} (q : ℝ) (x₀ g₀ : Vec d)
 
 /-- Inputs already available after the counted query at `x₀`. -/
 structure AnchorConfig (d : ℕ) where
+  /-- The exponent used to normalize the anchor search direction. -/
   q : ℝ
+  /-- The initial point from which anchor probes are taken. -/
   x₀ : Vec d
+  /-- The observed objective value at the initial point. -/
   f₀ : ℝ
+  /-- The observed gradient at the initial point. -/
   g₀ : Vec d
+  /-- The initial gradient size used to set probe radii. -/
   G : ℝ
+  /-- The initial scale estimate for the dyadic anchor search. -/
   M₀ : ℝ
 
 /-- Data returned by the first accepted probe; no correctness claim is a field. -/
 structure AnchorResult (d : ℕ) where
+  /-- The dyadic epoch at which the anchor probe was accepted. -/
   epoch : ℕ
+  /-- The scale estimate associated with the accepted anchor probe. -/
   acceptedScale : ℝ
+  /-- The radius associated with the accepted anchor probe. -/
   acceptedRadius : ℝ
+  /-- The point returned by the accepted anchor probe. -/
   acceptedPoint : Vec d
+  /-- All pair-oracle responses collected during the anchor search. -/
   observations : OracleTrace d
 
 /--
@@ -228,7 +239,7 @@ theorem runAnchor_result_valid {d : ℕ} (oracle : PairOracle d) (cfg : AnchorCo
       let y := anchorProbePoint cfg.q cfg.x₀ cfg.g₀ cfg.G cfg.M₀ start
       by_cases hnow : oracle.value y ≤ cfg.f₀ - cfg.G * D / 2
       · dsimp only [D, y] at hnow
-        simp [hnow] at hrun
+        simp only [hnow, ↓reduceIte, Option.some.injEq] at hrun
         subst result
         exact ⟨rfl, rfl, rfl, hnow⟩
       · dsimp only [D, y] at hnow
@@ -255,7 +266,7 @@ theorem runAnchor_traceExact {d : ℕ} (oracle : PairOracle d) (cfg : AnchorConf
         rfl
       by_cases hnow : oracle.value y ≤ cfg.f₀ - cfg.G * D / 2
       · dsimp only [D, y] at hnow
-        simp [hnow] at hrun
+        simp only [hnow, ↓reduceIte, Option.some.injEq] at hrun
         subst result
         exact hnext
       · dsimp only [D, y] at hnow
@@ -273,7 +284,7 @@ theorem runAnchor_epoch_lt {d : ℕ} (oracle : PairOracle d) (cfg : AnchorConfig
       by_cases hnow :
           oracle.value (anchorProbePoint cfg.q cfg.x₀ cfg.g₀ cfg.G cfg.M₀ start) ≤
             cfg.f₀ - cfg.G * anchorRadius cfg.G cfg.M₀ start / 2
-      · simp [hnow] at hrun
+      · simp only [hnow, ↓reduceIte, Option.some.injEq] at hrun
         subst result
         change start < start + (fuel + 1)
         omega

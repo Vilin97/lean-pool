@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AHessianContinuity.HessianContinuity
 import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 
+/-!
+The global coordinate-gradient and Hessian formulas for the power smoothing kernel.
+-/
+
 open scoped BigOperators
 open Asymptotics
 

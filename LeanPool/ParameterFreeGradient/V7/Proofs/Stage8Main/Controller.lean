@@ -8,8 +8,13 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.LocalSpec
 import LeanPool.ParameterFreeGradient.O3.Controller
 import LeanPool.ParameterFreeGradient.O3.Stage4AlgebraRadius
 
+/-!
+Finite scale and radius caps give a decreasing rank and controller termination.
+-/
+
 namespace V7.Stage8Main
 
+/-- A certified local trial execution selected for the current controller state. -/
 noncomputable def controllerLocalSpec (data : RuntimeData d)
     (state : RuntimeControllerState d)
     (inst : PositiveInstance data.input.p d data.input.x0)
@@ -18,6 +23,7 @@ noncomputable def controllerLocalSpec (data : RuntimeData d)
       (inst.oracle.gradient data.input.x0)) : LocalRunSpec data state inst :=
   Classical.choice (runtimeTrial_spec data state inst hcached hlarge)
 
+/-- The report of the selected certified local trial execution. -/
 noncomputable def controllerReport (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)
     (hcached : data.cached.observation = inst.oracle.observe data.input.x0)
@@ -26,15 +32,21 @@ noncomputable def controllerReport (data : RuntimeData d)
     (state : RuntimeControllerState d) : TrialReport d :=
   (controllerLocalSpec data state inst hcached hlarge).report
 
+/-- The returned point and chronological visits and reports of a successful controller run. -/
 structure RuntimeFinish (d : ℕ) where
+  /-- The point returned by the successful final trial. -/
   returned : Point d
+  /-- The chronological sequence of visited smoothness and radius estimates. -/
   visits : List ControllerVisit
+  /-- The chronological sequence of local trial reports. -/
   reports : List (TrialReport d)
 
+/-- A controller run either exhausts its fuel or returns a successful execution record. -/
 inductive RuntimeControllerRunResult (d : ℕ) where
   | exhausted (state : RuntimeControllerState d)
   | success (finish : RuntimeFinish d)
 
+/-- The controller transition determined by a local trial's success, radius, or scale outcome. -/
 noncomputable def controllerStep (data : RuntimeData d)
     (state : RuntimeControllerState d) (report : TrialReport d) :
     RuntimeControllerRunResult d :=
@@ -46,6 +58,7 @@ noncomputable def controllerStep (data : RuntimeData d)
   | .scale _ => .exhausted (nextScale data state report)
   | .radius _ => .exhausted (nextRadius data state report)
 
+/-- The finite-fuel controller execution driven by certified local trial reports. -/
 noncomputable def runController (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)
     (hcached : data.cached.observation = inst.oracle.observe data.input.x0)
@@ -59,6 +72,7 @@ noncomputable def runController (data : RuntimeData d)
       | .success finish => .success finish
       | .exhausted state' => runController data inst hcached hlarge fuel state'
 
+/-- The underlying controller configuration, including the initialization and anchor call count. -/
 noncomputable def controllerConfig (data : RuntimeData d) : O3.ControllerConfig :=
   { initialScale := data.Ma
     gradientSizeAtStart := data.G
@@ -74,6 +88,7 @@ noncomputable def controllerConfig (data : RuntimeData d) : O3.ControllerConfig 
     state.D data = (controllerConfig data).radiusAt
       state.scaleEpoch state.radiusLevel := rfl
 
+/-- Finite scale and radius caps selected from the instance's smoothness and minimizer distance. -/
 noncomputable def runtimeCaps (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0) :
     O3.ControllerCaps (controllerConfig data) inst.L inst.R :=
@@ -83,6 +98,7 @@ noncomputable def runtimeCaps (data : RuntimeData d)
         O3.minimizerDistance_nonneg_of_nonempty (p := data.input.p)
           (x0 := data.input.x0) inst.minimizerNonempty))
 
+/-- The lexicographic termination rank induced by the finite scale and radius caps. -/
 def runtimeRank {data : RuntimeData d} {L R : ℝ}
     (caps : O3.ControllerCaps (controllerConfig data) L R)
     (state : RuntimeControllerState d) : ℕ :=
@@ -113,7 +129,7 @@ private theorem next_rank_lt (data : RuntimeData d)
         by_contra hnot
         have hdom := caps.scaleDominates state.scaleEpoch (Nat.le_of_not_gt hnot)
         exact (not_lt_of_ge (by simpa using hdom)) hML
-      simp [controllerStep, hout] at hstep
+      simp only [controllerStep, hout, RuntimeControllerRunResult.exhausted.injEq] at hstep
       subst state'
       simp only [runtimeRank, nextScale]
       have hsub : caps.scaleCap - state.scaleEpoch =
@@ -127,7 +143,7 @@ private theorem next_rank_lt (data : RuntimeData d)
         have hdom := caps.radiusDominates state.scaleEpoch state.radiusLevel hs
           (Nat.le_of_not_gt hnot)
         exact (not_lt_of_ge (by simpa using hdom)) hDR
-      simp [controllerStep, hout] at hstep
+      simp only [controllerStep, hout, RuntimeControllerRunResult.exhausted.injEq] at hstep
       subst state'
       simp only [runtimeRank, nextRadius]
       have hsub : caps.radiusCap - state.radiusLevel =
@@ -190,7 +206,8 @@ theorem controller_terminates (data : RuntimeData d)
                   subst state'
                   simpa [nextScale] using (Nat.succ_le_iff.mpr hslt)
               | radius terminal =>
-                  simp [controllerStep, hout] at hstep
+                  simp only [controllerStep, hout, RuntimeControllerRunResult.exhausted.injEq]
+                    at hstep
                   subst state'
                   exact hs
             have hj' : state'.radiusLevel ≤ caps.radiusCap := by
@@ -201,7 +218,8 @@ theorem controller_terminates (data : RuntimeData d)
               cases hout : spec.report.outcome with
               | success terminal => simp [controllerStep, hout] at hstep
               | scale failed =>
-                  simp [controllerStep, hout] at hstep
+                  simp only [controllerStep, hout, RuntimeControllerRunResult.exhausted.injEq]
+                    at hstep
                   subst state'
                   exact Nat.zero_le _
               | radius terminal =>

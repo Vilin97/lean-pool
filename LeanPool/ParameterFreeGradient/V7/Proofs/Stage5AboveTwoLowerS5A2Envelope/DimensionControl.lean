@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.KernelCocoercivity
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlobalC2.QuadraticBound
 
+/-!
+Dimension-dependent norm comparisons yield the kernel Hessian and cocoercivity bounds.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower
@@ -17,7 +21,7 @@ open Stage5AboveTwoLower.S5AGlobalC2
 /-- The explicit ambient comparison constant is the expected real power. -/
 lemma lpAmbientConstant_eq_rpow {s : ℝ} (hs : 0 < s) {d : ℕ} :
     lpAmbientConstant s d = (d : ℝ) ^ (1 / s) := by
-  simp [lpAmbientConstant, ENNReal.toReal_div,
+  simp [lpAmbientConstant,
     ENNReal.toReal_ofReal hs.le, NNReal.coe_rpow]
 
 /-- In the logarithmic regime the finite-dimensional norm conversion costs
@@ -113,7 +117,7 @@ theorem repair_kernelHessian_unit_bound {p : ℝ} {d : ℕ}
      else 15 * Real.exp (2 / 3) * Real.log d) *
       lpNorm p e ^ (2 : ℕ)
   by_cases hregime : p ≤ 3 * Real.log d
-  · rw [if_pos hregime]
+  · rw [ite_eq_left hregime]
     have hrp : r = p := by simp [r, kernelR0, min_eq_left hregime]
     have ha : 0 ≤ 2 * theta - 2 := by linarith
     have hzpow : lpNorm r z ^ (2 * theta - 2) ≤ 1 := by
@@ -139,7 +143,7 @@ theorem repair_kernelHessian_unit_bound {p : ℝ} {d : ℕ}
       _ = (4 * theta * (p - 1)) * lpNorm p e ^ (2 : ℕ) := by ring
       _ ≤ 5 * p * lpNorm p e ^ (2 : ℕ) :=
         mul_le_mul_of_nonneg_right hcoeffp heNonneg
-  · rw [if_neg hregime]
+  · rw [ite_eq_right hregime]
     let K : ℝ := Real.exp (1 / 3)
     have hKpos : 0 < K := Real.exp_pos _
     have hzconv := lpNorm_kernelR0_le_exp_mul_lpNorm hp hd hregime z
@@ -220,7 +224,7 @@ theorem repair_kernelGradient_cocoercive {p : ℝ} {d : ℕ}
       positivity
   exact kernelGradient_cocoercive_on_unit_of_hessian_bound
     (by linarith) (two_lt_kernelR0 hp hd) (one_lt_repairTheta hp hd)
-    (two_mul_repairTheta_lt_kernelR0 hp hd) hM
+    (two_mul_repairTheta_lt_kernelR0 hp hd)
     (repair_kernelHessian_unit_bound hp hd)
 
 end V7.Stage5AboveTwoLowerS5A2Envelope

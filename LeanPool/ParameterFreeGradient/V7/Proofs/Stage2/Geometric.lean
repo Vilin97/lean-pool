@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
 
+/-!
+Positivity and geometric-sum estimates for the local complexity exponent.
+-/
+
 namespace V7
 namespace Stage2
 
@@ -35,7 +39,7 @@ theorem one_sub_two_neg_rpow_pos {a : ℝ} (ha : 0 < a) :
   have h := two_rpow_gt_one ha
   exact sub_pos.mpr (inv_lt_one_of_one_lt₀ h)
 
-theorem localCostExponent_pos {p : ℝ} (hp : 1 < p) :
+theorem localCostExponent_pos {p : ℝ} :
     0 < localCostExponent p := by
   unfold localCostExponent
   split_ifs with h
@@ -43,7 +47,7 @@ theorem localCostExponent_pos {p : ℝ} (hp : 1 < p) :
   · have hp2 : 2 < p := lt_of_not_ge h
     exact div_pos (by linarith) (by linarith)
 
-private theorem geometric_coefficient_eq {a : ℝ} (ha : 0 < a) :
+private theorem geometric_coefficient_eq {a : ℝ} :
     (2 : ℝ) ^ a / ((2 : ℝ) ^ a - 1) =
       1 / (1 - (2 : ℝ) ^ (-a)) := by
   rw [Real.rpow_neg (by norm_num : (0 : ℝ) ≤ 2)]
@@ -86,7 +90,7 @@ theorem dyadic_geometric_sum_le_endpoint {a beta : ℝ}
           (beta ^ a * ((2 : ℝ) ^ a) ^ J) := by rw [pow_succ]; ring
     _ = (beta ^ a * ((2 : ℝ) ^ a) ^ J) /
           (1 - (2 : ℝ) ^ (-a)) := by
-      rw [geometric_coefficient_eq ha]
+      rw [geometric_coefficient_eq]
       ring
 
 end Stage2

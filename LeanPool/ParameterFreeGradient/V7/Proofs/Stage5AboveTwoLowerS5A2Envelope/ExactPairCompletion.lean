@@ -6,6 +6,10 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2Envelope.Construction
 
+/-!
+The completed resisting oracle preserves all earlier exact value-gradient observations.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
 open Stage5AboveTwoLower
@@ -282,8 +286,7 @@ theorem _root_.V7.aboveLowerExactPairCompletion : AboveLowerExactPairCompletionS
   refine ⟨rfl, ?_, ?_⟩
   · rw [hcompletedValue, (hsteps t ht).2.2.2.2.2.2.2.1]
     exact congrArg (fun z : ℝ => data.beta * z) hsmoothValue
-  ·
-    rw [hcompletedGradient, (hsteps t ht).2.2.2.2.2.2.2.2]
+  · rw [hcompletedGradient, (hsteps t ht).2.2.2.2.2.2.2.2]
     exact congrArg (fun z : Point d => data.beta • z) hsmoothGradient
 
 end V7.Stage5AboveTwoLowerS5A2Envelope

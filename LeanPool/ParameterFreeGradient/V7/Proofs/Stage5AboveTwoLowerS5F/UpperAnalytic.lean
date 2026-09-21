@@ -8,6 +8,10 @@ import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.LocalTria
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Semantics
 
+/-!
+The initial gradient is bounded by smoothness times the distance to the minimizer set.
+-/
+
 namespace V7.Stage5AboveTwoLowerS5F
 
 theorem minimizer_gradient_zero (inst : PositiveInstance p d x0)

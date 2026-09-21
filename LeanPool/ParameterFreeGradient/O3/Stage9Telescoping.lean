@@ -20,6 +20,7 @@ open scoped BigOperators
 
 namespace O3
 
+/-- The sum of gradients before index `k`, weighted by the certificate increments. -/
 noncomputable def stage9WeightedGradient {d : ℕ}
     (delta : ℕ → ℝ) (g : ℕ → Vec d) (k : ℕ) : Vec d :=
   ∑ j ∈ Finset.range k, delta j • g j

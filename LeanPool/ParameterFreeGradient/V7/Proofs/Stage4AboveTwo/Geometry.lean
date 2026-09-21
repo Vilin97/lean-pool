@@ -8,6 +8,10 @@ import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
 import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
 import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
 
+/-!
+Conjugacy, gradients, and uniform convexity of the above-two power mirror geometry.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage4AboveTwo
@@ -90,7 +94,7 @@ private lemma power_map_inverse {p : ℝ} (hp : 2 < p) (s : Point d) :
   let q := conjugateExponent p
   have hq : 1 < q := conjugate_gt_one hp
   by_cases hs : s i = 0
-  · simp [hs, show p ≠ 0 by linarith, show q ≠ 0 by linarith]
+  · simp [hs]
   · have ha : 0 < |s i| := abs_pos.mpr hs
     have hinner : |s i| ^ (q - 2) * s i = |s i| ^ (q - 1) * (s i / |s i|) := by
       calc
@@ -183,9 +187,9 @@ private lemma hstar_gradient {p : ℝ} (hp : 2 < p) :
       HasFDerivAt.fun_sum (fun i _ => hcoord i)
     apply hraw.congr_fderiv
     ext h
-    simp [coordDeriv, pairingCLM, aboveMirrorMap, O3.powerDualityMap,
-      O3.Experimental.scalarJ, O3.pairing,
-      ContinuousLinearMap.toSpanSingleton_apply]
+    simp only [O3.Experimental.scalarJ, sum_apply, ContinuousLinearMap.comp_apply,
+      ContinuousLinearMap.proj_apply, ContinuousLinearMap.toSpanSingleton_apply, smul_eq_mul,
+      pairingCLM, aboveMirrorMap, O3.powerDualityMap, smul_apply, coordDeriv]
     apply Finset.sum_congr rfl
     intro i _
     dsimp [q]

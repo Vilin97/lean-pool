@@ -78,7 +78,7 @@ theorem belowWeight_four_condition_le (P : AdmissibleInstance d p) :
   have hpoly : Real.exp 1 + 4 * P.conditionBar ≤
       (Real.exp 1 + P.conditionBar) ^ 2 := by
     have he : 2 < Real.exp 1 := by
-      convert Real.add_one_lt_exp (show (1 : ℝ) ≠ 0 by norm_num) using 1 <;>
+      convert Real.add_one_lt_exp (show (1 : ℝ) ≠ 0 by norm_num) using 1;
         norm_num
     nlinarith [one_le_conditionBar P]
   have hleft : 0 < Real.exp 1 + 4 * P.condition := by positivity
@@ -177,6 +177,7 @@ theorem admissible_log_overhead_ge_one (P : AdmissibleInstance d p) :
       Real.strictMonoOn_log.monotoneOn (Real.exp_pos 1)
         (add_pos (Real.exp_pos 1) hx) (by linarith)
 
+/-- The positive constant accounting for the initial query and logarithmic anchor overhead. -/
 noncomputable def anchorPrefixConstant : ℝ := 1 + anchorLogConstant
 
 theorem anchorPrefixConstant_pos : 0 < anchorPrefixConstant := by

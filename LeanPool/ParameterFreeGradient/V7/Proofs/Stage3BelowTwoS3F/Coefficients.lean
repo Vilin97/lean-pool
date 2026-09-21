@@ -6,23 +6,32 @@ Authors: Yuning Yang
 
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoResumeS3E.GuardScaling
 
+/-!
+The explicit below-two coefficient matrices satisfy recurrence, support, and row-sum
+conditions.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage3BelowTwoS3F
 
+/-- The quadratic below-two weights, constant at the terminal index and zero beyond it. -/
 noncomputable def weight (n k : ℕ) : ℝ :=
   if k < n then (((k : ℝ) + 1) ^ (2 : ℕ)) / 4
   else if k = n then ((n : ℝ) ^ (2 : ℕ)) / 4
   else 0
 
+/-- The below-two weight increments, set to zero from the terminal index onward. -/
 noncomputable def increment (n k : ℕ) : ℝ :=
   if k < n then weight n k - (if k = 0 then 0 else weight n (k - 1)) else 0
 
+/-- The subdiagonal coefficient matrix selecting each weighted gradient increment. -/
 noncomputable def alpha (n : ℕ) : ScalarMatrix := fun row i =>
-  if h : 0 < row ∧ row ≤ n then
+  if 0 < row ∧ row ≤ n then
     if i = row - 1 then increment n (row - 1) else 0
   else 0
 
+/-- The recursive coefficients expressing primal iterates as combinations of mirror iterates. -/
 noncomputable def coeffC (n : ℕ) : ScalarMatrix
   | 0, i => if i = 0 then 1 else 0
   | k + 1, i =>
@@ -31,13 +40,14 @@ noncomputable def coeffC (n : ℕ) : ScalarMatrix
         (if i = k + 1 then 1 else 0) -
       (increment n k / weight n (k + 1)) * (if i = k then 1 else 0)
 
+/-- The differences of successive primal coefficient rows, with the prescribed initial row. -/
 noncomputable def coeffB (n : ℕ) : ScalarMatrix
   | 0, i => if i = 0 then -1 else 0
   | k + 1, i => coeffC n k i - coeffC n (k + 1) i
 
 @[simp] theorem weight_of_lt {n k : ℕ} (hk : k < n) :
     weight n k = (((k : ℝ) + 1) ^ (2 : ℕ)) / 4 := by
-  simp [weight, hk, Nat.ne_of_lt hk]
+  simp [weight, hk]
 
 @[simp] theorem weight_at {n : ℕ} :
     weight n n = ((n : ℝ) ^ (2 : ℕ)) / 4 := by
@@ -66,10 +76,9 @@ theorem increment_formula {n k : ℕ} (hk : k < n) :
   by_cases hk0 : k = 0
   · subst k
     norm_num
-  · simp [hk0]
+  · simp only [hk0, ↓reduceIte]
     have hpred : k - 1 < n := by omega
     rw [weight_of_lt hpred]
-    push_cast
     have hcast : ((k - 1 : ℕ) : ℝ) = (k : ℝ) - 1 := by
       rw [Nat.cast_sub (by omega : 1 ≤ k), Nat.cast_one]
     rw [hcast]
@@ -78,14 +87,13 @@ theorem increment_formula {n k : ℕ} (hk : k < n) :
 theorem weight_sub_increment_sq {n k : ℕ} (hk : k < n) :
     weight n k - (increment n k) ^ (2 : ℕ) = ((4 : ℝ) * k + 3) / 16 := by
   rw [weight_of_lt hk, increment_formula hk]
-  push_cast
   ring
 
-theorem weight_succ_relation {n k : ℕ} (hn : 1 ≤ n) (hk : k < n) :
+theorem weight_succ_relation {n k : ℕ} (hk : k < n) :
     weight n (k + 1) = weight n k + increment n (k + 1) := by
   by_cases hs : k + 1 < n
   · rw [increment_of_lt hs]
-    simp only [show k + 1 ≠ 0 by omega, if_false, Nat.add_sub_cancel]
+    simp only [show k + 1 ≠ 0 by omega, ite_false, Nat.add_sub_cancel]
     ring
   · have heq : k + 1 = n := by omega
     rw [heq, increment_at]
@@ -151,7 +159,7 @@ theorem coeffC_row_sum (n : ℕ) (hn : 1 ≤ n) :
       rw [hfirst]
       simp [hsupport]
       field_simp [hune]
-      have hrel := weight_succ_relation hn hkn
+      have hrel := weight_succ_relation hkn
       linarith
 
 theorem coeffB_row_sum (n : ℕ) (hn : 1 ≤ n) :
@@ -173,7 +181,6 @@ theorem coefficient_assumptions (n : ℕ) (hn : 1 ≤ n) :
   · rw [weight_at, weight_of_lt (show n - 1 < n by omega)]
     have hcast : (((n - 1 : ℕ) : ℝ) + 1) = (n : ℝ) := by
       rw [Nat.cast_sub (by omega : 1 ≤ n), Nat.cast_one]
-      push_cast
       ring
     rw [hcast]
   · intro k hk

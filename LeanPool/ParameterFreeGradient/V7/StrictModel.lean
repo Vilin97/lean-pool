@@ -7,12 +7,20 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Foundation
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 
+/-!
+Strict deterministic and randomized oracle models, exact transcripts, and normalized hard
+instances.
+-/
+
 open MeasureTheory
 
 namespace V7
 
+/-- The one-dimensional real point space used for strict-oracle lower bounds. -/
 abbrev StrictPoint := Point 1
+/-- An exact value-gradient observation in one dimension. -/
 abbrev StrictObservation := Observation 1
+/-- A finite chronological list of one-dimensional exact observations. -/
 abbrev StrictTranscript := List StrictObservation
 
 /-- Natural Borel structure on one exact value-gradient observation. -/
@@ -34,9 +42,13 @@ instance : MeasurableSpace StrictTranscript := strictTranscriptMeasurableSpace
 /-- A deterministic strict-local method sees only the supplied accuracy,
 initial point, and its finite exact-pair transcript. -/
 structure StrictLocalMethod where
+  /-- The gradient accuracy requested from the strict local method. -/
   eps : ℝ
+  /-- The initial point of the strict local method. -/
   x0 : StrictPoint
+  /-- The next query determined solely by the exact observation transcript. -/
   nextQuery : StrictTranscript → StrictPoint
+  /-- The proposed output after a given finite query budget and transcript. -/
   output : ℕ → StrictTranscript → StrictPoint
   nextQuery_measurable : Measurable nextQuery
   output_measurable : ∀ N, Measurable (output N)
@@ -45,6 +57,7 @@ structure StrictLocalMethod where
 methods.  The adversarial instance is quantified after this whole family,
 not separately for each seed. -/
 structure RandomizedStrictLocalMethod (Ω : Type*) [MeasurableSpace Ω] where
+  /-- The strict deterministic method associated with each random seed. -/
   run : Ω → StrictLocalMethod
   joint_nextQuery_measurable : Measurable
     (fun z : Ω × StrictTranscript => (run z.1).nextQuery z.2)
@@ -54,32 +67,39 @@ structure RandomizedStrictLocalMethod (Ω : Type*) [MeasurableSpace Ω] where
 instance [MeasurableSpace Ω] : CoeFun (RandomizedStrictLocalMethod Ω)
     (fun _ => Ω → StrictLocalMethod) := ⟨RandomizedStrictLocalMethod.run⟩
 
+/-- Every transcript entry is the exact observation of the one-dimensional oracle. -/
 def StrictTranscriptExact (oracle : PairOracle 1) (trace : StrictTranscript) : Prop :=
   TraceExact oracle trace
 
+/-- The transcript contains `N` queries, all with gradient magnitude above the target accuracy. -/
 def StrictAllFirstNQueriesFail (eps : ℝ) (oracle : PairOracle 1)
     (trace : StrictTranscript) (N : ℕ) : Prop :=
   trace.length = N ∧
   ∀ obs ∈ trace, eps < |oracle.gradient obs.point 0|
 
+/-- The method's finite-budget output has gradient magnitude above its target accuracy. -/
 def StrictFiniteOutputFails (method : StrictLocalMethod) (oracle : PairOracle 1)
     (trace : StrictTranscript) (N : ℕ) : Prop :=
   method.eps < |oracle.gradient (method.output N trace) 0|
 
+/-- Some query before budget `N`, or the corresponding output, meets the gradient accuracy. -/
 def StrictSuccessThrough (method : StrictLocalMethod) (oracle : PairOracle 1)
     (trace : StrictTranscript) (N : ℕ) : Prop :=
   (∃ obs ∈ trace.take N, |oracle.gradient obs.point 0| ≤ method.eps) ∨
   |oracle.gradient (method.output N trace) 0| ≤ method.eps
 
+/-- The constant bounds every gradient difference and is the least such bound. -/
 def ExactGradientLipschitzConstant (oracle : PairOracle 1) (L : ℝ) : Prop :=
   (∀ x y, |oracle.gradient x 0 - oracle.gradient y 0| ≤ L * |x 0 - y 0|) ∧
   ∀ L' : ℝ,
     (∀ x y, |oracle.gradient x 0 - oracle.gradient y 0| ≤ L' * |x 0 - y 0|) →
     L ≤ L'
 
+/-- The one-dimensional objective tends above every bound outside a sufficiently large interval. -/
 def IsCoerciveReal (f : StrictPoint → ℝ) : Prop :=
   ∀ B : ℝ, ∃ R : ℝ, 0 ≤ R ∧ ∀ x, R ≤ |x 0| → B ≤ f x
 
+/-- The specified point is a global minimizer and is the only point attaining its value. -/
 def UniqueMinimizer (f : StrictPoint → ℝ) (xstar : StrictPoint) : Prop :=
   (∀ x, f xstar ≤ f x) ∧ ∀ x, f x = f xstar → x = xstar
 
@@ -92,6 +112,7 @@ noncomputable def strictHardFamily (eps : ℝ) (x0 : StrictPoint) (H : ℝ)
   else if z ≤ 3 * H then -g * z + (g / (2 * H)) * (z - H) ^ 2
   else g * z - 4 * g * H
 
+/-- The exact piecewise derivative of the affine-quadratic-affine hard family. -/
 noncomputable def strictHardDerivative (eps : ℝ) (x0 : StrictPoint) (H : ℝ)
     (x : StrictPoint) : StrictPoint :=
   fun _ =>
@@ -99,6 +120,8 @@ noncomputable def strictHardDerivative (eps : ℝ) (x0 : StrictPoint) (H : ℝ)
     let z := x 0 - x0 0
     if z ≤ H then -g else if z ≤ 3 * H then g * (z / H - 2) else g
 
+/-- The hard-family oracle has the required convexity, minimizer, and exact normalization
+properties. -/
 def StrictHardInstance (eps : ℝ) (x0 : StrictPoint) (H L R : ℝ)
     (oracle : PairOracle 1) (xstar : StrictPoint) : Prop :=
   0 < H ∧
@@ -111,10 +134,12 @@ def StrictHardInstance (eps : ℝ) (x0 : StrictPoint) (H L R : ℝ)
   ExactGradientLipschitzConstant oracle L ∧
   0 < L ∧ R = |xstar 0 - x0 0| ∧ L * R / eps = 4
 
+/-- The affine oracle matching the left tail of every hard-family instance. -/
 noncomputable def strictAffineOracle (eps : ℝ) (x0 : StrictPoint) : PairOracle 1 :=
   { value := fun x => -(2 * eps) * (x 0 - x0 0)
     gradient := fun _ _ => -(2 * eps) }
 
+/-- A convex coercive exact-gradient instance with unique minimizer and condition number four. -/
 def StrictNormalizedInstance (eps : ℝ) (x0 : StrictPoint) (L R : ℝ)
     (oracle : PairOracle 1) (xstar : StrictPoint) : Prop :=
   O3.IsConvexObjective oracle.value ∧ IsCoerciveReal oracle.value ∧
@@ -130,6 +155,7 @@ noncomputable def strictHittingTime (method : StrictLocalMethod)
   sInf {t : ENNReal | ∃ N : ℕ, t = (N : ENNReal) ∧
     StrictSuccessThrough method oracle (traces N) N}
 
+/-- The exact transcript follows the strict method's causal query rule. -/
 def StrictRunConsistent (method : StrictLocalMethod) (oracle : PairOracle 1)
     (trace : StrictTranscript) : Prop :=
   StrictTranscriptExact oracle trace ∧

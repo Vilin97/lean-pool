@@ -7,6 +7,10 @@ Authors: Yuning Yang
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.AnalyticBridge
 import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
 
+/-!
+Every below-two report shape supplies the required correctness and guard certificates.
+-/
+
 namespace V7.Stage3BelowTwoS3F
 
 variable {d : ℕ} {eps : ℝ} {oracle : PairOracle d}

@@ -12,6 +12,10 @@ import Mathlib.Analysis.Calculus.FDeriv.Prod
 import Mathlib.Analysis.InnerProductSpace.NormPow
 import Mathlib.Analysis.Normed.Operator.Asymptotics
 
+/-!
+Conjugacy, gradients, and Bregman geometry of the scaled squared norms below exponent two.
+-/
+
 open scoped BigOperators
 
 namespace V7.Stage3BelowTwo
@@ -79,7 +83,7 @@ private lemma dualityMap_pos_smul {p a : ℝ} (hp : 1 < p) (ha : 0 < a)
   · have hax : a • x ≠ 0 := smul_ne_zero ha.ne' hx
     have hnx : 0 < O3.lpNorm p x := O3.lpNorm_pos_of_ne_zero hx
     have hnax : 0 < O3.lpNorm p (a • x) := O3.lpNorm_pos_of_ne_zero hax
-    rw [O3.dualityMap, if_neg hnax.ne', O3.dualityMap, if_neg hnx.ne']
+    rw [O3.dualityMap, ite_eq_right hnax.ne', O3.dualityMap, ite_eq_right hnx.ne']
     have hnorm : O3.lpNorm p (a • x) = a * O3.lpNorm p x := by
       change O3.lpNorm p (fun i ↦ a * x i) = a * O3.lpNorm p x
       rw [O3.Stage2RouteB.lpNorm_scalar_mul (by linarith : 0 < p)]
