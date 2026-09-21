@@ -488,6 +488,51 @@ theorem sq_eq_one_of_prod_eq_one {u v w : ℝ} (hu1 : -1 ≤ u) (hu2 : u ≤ 1) 
     le_antisymm hvv (habc _ _ _ hv0 hu0 hw0 huu hww (by linear_combination hsq)),
     le_antisymm hww (habc _ _ _ hw0 hu0 hv0 huu hvv (by linear_combination hsq))⟩
 
+private theorem triangleModel_mixed_moment (M : TriangleModel) (φ ψ χ : Bool → ℝ) :
+  (∑ w : ThreeBit, φ w.1 * ψ w.2.1 * χ w.2.2 * M.law w)
+    = ∑ x : M.X, ∑ y : M.Y, ∑ z : M.Z, M.μX x * M.μY y * M.μZ z *
+        ((∑ β : Bool, φ β * respMass (M.f (x, z)) β) *
+         (∑ β : Bool, ψ β * respMass (M.g (x, y)) β) *
+         (∑ β : Bool, χ β * respMass (M.h (z, y)) β))
+ := by
+  -- the three-bit sum factorizes over coordinates
+  have factor : ∀ F G H : Bool → ℝ,
+      (∑ w : ThreeBit, F w.1 * G w.2.1 * H w.2.2)
+        = (∑ β : Bool, F β) * (∑ β : Bool, G β) * (∑ β : Bool, H β) := by
+    intro F G H
+    simp [Fintype.sum_prod_type]
+    ring
+  conv_lhs => simp only [TriangleModel.law, Finset.mul_sum]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun y _ => ?_
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun z _ => ?_
+  have e : ∀ w : ThreeBit,
+      φ w.1 * ψ w.2.1 * χ w.2.2 * (M.μX x * M.μY y * M.μZ z *
+        respMass (M.f (x, z)) w.1 * respMass (M.g (x, y)) w.2.1 * respMass (M.h (z, y)) w.2.2)
+        = (M.μX x * M.μY y * M.μZ z) *
+          ((fun β => φ β * respMass (M.f (x, z)) β) w.1 *
+           (fun β => ψ β * respMass (M.g (x, y)) β) w.2.1 *
+           (fun β => χ β * respMass (M.h (z, y)) β) w.2.2) := by
+    intro w; simp only; ring
+  rw [Finset.sum_congr rfl fun w _ => e w, ← Finset.mul_sum]
+  congr 1
+  exact factor (fun β => φ β * respMass (M.f (x, z)) β)
+    (fun β => ψ β * respMass (M.g (x, y)) β) (fun β => χ β * respMass (M.h (z, y)) β)
+
+private theorem triangleModel_total_mass (M : TriangleModel)
+    (hμX : IsLaw M.μX) (hμY : IsLaw M.μY) (hμZ : IsLaw M.μZ) :
+    (∑ x : M.X, ∑ y : M.Y, ∑ z : M.Z, M.μX x * M.μY y * M.μZ z) = 1 := by
+  have : ∀ x : M.X, (∑ y : M.Y, ∑ z : M.Z, M.μX x * M.μY y * M.μZ z) = M.μX x := by
+    intro x
+    have : ∀ y : M.Y, (∑ z : M.Z, M.μX x * M.μY y * M.μZ z) = M.μX x * M.μY y := by
+      intro y
+      rw [← Finset.mul_sum, hμZ.2, mul_one]
+    rw [Finset.sum_congr rfl fun y _ => this y, ← Finset.mul_sum, hμY.2, mul_one]
+  rw [Finset.sum_congr rfl fun x _ => this x, hμX.2]
+
 /-- AUDIT-NOTES A5, exact parity rigidity for the triangle. A compatible three-bit law
 supported on the even-parity outcomes has `E[A] E[B] E[C] ≥ 0`. (Absorb the seeds, fix `y₀`,
 put `S = B(·,y₀)`, `T = C(·,y₀)`; then `A = ST`, `B = SU`, `C = TU` for a sign `U` of the
@@ -507,13 +552,6 @@ theorem parity_rigidity (P : ThreeBit → ℝ) (hP : IsLaw P)
     intro x y; rw [hbdef]; constructor <;> [linarith [(hgb (x, y)).1]; linarith [(hgb (x, y)).2]]
   have hcbnd : ∀ z y, -1 ≤ c z y ∧ c z y ≤ 1 := by
     intro z y; rw [hcdef]; constructor <;> [linarith [(hhb (z, y)).1]; linarith [(hhb (z, y)).2]]
-  -- the three-bit sum factorizes over coordinates
-  have factor : ∀ F G H : Bool → ℝ,
-      (∑ w : ThreeBit, F w.1 * G w.2.1 * H w.2.2)
-        = (∑ β : Bool, F β) * (∑ β : Bool, G β) * (∑ β : Bool, H β) := by
-    intro F G H
-    simp [Fintype.sum_prod_type]
-    ring
   have hrm1 : ∀ r : ℝ, (∑ β : Bool, respMass r β) = 1 := by
     intro r; simp [respMass]
   have hrms : ∀ r : ℝ, (∑ β : Bool, sgn β * respMass r β) = 2 * r - 1 := by
@@ -526,25 +564,7 @@ theorem parity_rigidity (P : ThreeBit → ℝ) (hP : IsLaw P)
              (∑ β : Bool, χ β * respMass (M.h (z, y)) β)) := by
     intro φ ψ χ
     rw [← hlaw]
-    conv_lhs => simp only [TriangleModel.law, Finset.mul_sum]
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun x _ => ?_
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun y _ => ?_
-    rw [Finset.sum_comm]
-    refine Finset.sum_congr rfl fun z _ => ?_
-    have e : ∀ w : ThreeBit,
-        φ w.1 * ψ w.2.1 * χ w.2.2 * (M.μX x * M.μY y * M.μZ z *
-          respMass (M.f (x, z)) w.1 * respMass (M.g (x, y)) w.2.1 * respMass (M.h (z, y)) w.2.2)
-          = (M.μX x * M.μY y * M.μZ z) *
-            ((fun β => φ β * respMass (M.f (x, z)) β) w.1 *
-             (fun β => ψ β * respMass (M.g (x, y)) β) w.2.1 *
-             (fun β => χ β * respMass (M.h (z, y)) β) w.2.2) := by
-      intro w; simp only; ring
-    rw [Finset.sum_congr rfl fun w _ => e w, ← Finset.mul_sum]
-    congr 1
-    exact factor (fun β => φ β * respMass (M.f (x, z)) β)
-      (fun β => ψ β * respMass (M.g (x, y)) β) (fun β => χ β * respMass (M.h (z, y)) β)
+    exact triangleModel_mixed_moment M φ ψ χ
   -- the three means and the parity moment
   have hA : triMeanA P = ∑ x : M.X, ∑ y : M.Y, ∑ z : M.Z,
       M.μX x * M.μY y * M.μZ z * a x z := by
@@ -595,14 +615,8 @@ theorem parity_rigidity (P : ThreeBit → ℝ) (hP : IsLaw P)
     rw [e, ← h]
     exact hone
   -- parity perfectness forces the responses to be deterministic on the support
-  have htot : (∑ x : M.X, ∑ y : M.Y, ∑ z : M.Z, M.μX x * M.μY y * M.μZ z) = 1 := by
-    have : ∀ x : M.X, (∑ y : M.Y, ∑ z : M.Z, M.μX x * M.μY y * M.μZ z) = M.μX x := by
-      intro x
-      have : ∀ y : M.Y, (∑ z : M.Z, M.μX x * M.μY y * M.μZ z) = M.μX x * M.μY y := by
-        intro y
-        rw [← Finset.mul_sum, hμZ.2, mul_one]
-      rw [Finset.sum_congr rfl fun y _ => this y, ← Finset.mul_sum, hμY.2, mul_one]
-    rw [Finset.sum_congr rfl fun x _ => this x, hμX.2]
+  have htot : (∑ x : M.X, ∑ y : M.Y, ∑ z : M.Z, M.μX x * M.μY y * M.μZ z) = 1 :=
+    triangleModel_total_mass M hμX hμY hμZ
   have hzero : (∑ x : M.X, ∑ y : M.Y, ∑ z : M.Z,
       M.μX x * M.μY y * M.μZ z * (1 - a x z * b x y * c z y)) = 0 := by
     have e : ∀ x y z, M.μX x * M.μY y * M.μZ z * (1 - a x z * b x y * c z y)
