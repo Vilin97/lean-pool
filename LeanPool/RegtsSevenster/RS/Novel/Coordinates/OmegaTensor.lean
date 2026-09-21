@@ -124,12 +124,12 @@ of the image vectors. -/
 theorem omegaVec_tensor {a b : ℕ}
     (p : (SkeinObj.mk 0 : SkeinObj f) ⟶ SkeinObj.mk a)
     (q : (SkeinObj.mk 0 : SkeinObj f) ⟶ SkeinObj.mk b) :
-    letI := P.braided
-    omegaVec f P (p ⊗ₘ q) =
+    let _ := P.braided
+    omegaVec f P (d := a + b) (HomSpace.tensor f 0 a 0 b p q) =
       ((μ P.ω (SkeinObj.mk a) (SkeinObj.mk b)) :
         SuperVect.Hom _ _).evenMap
         (evenPair (omegaVec f P p) (omegaVec f P q)) := by
-  letI := P.braided
+  let _ := P.braided
   have hskein : ((λ_ (𝟙_ (SkeinObj f))).inv ≫ (p ⊗ₘ q) :
       𝟙_ (SkeinObj f) ⟶
         SkeinObj.mk a ⊗ SkeinObj.mk b) = p ⊗ₘ q := by

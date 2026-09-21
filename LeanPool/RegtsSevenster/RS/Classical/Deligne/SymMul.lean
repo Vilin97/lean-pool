@@ -120,13 +120,14 @@ theorem tensorPowConcat_assoc [Category.{v} D] [MonoidalCategory D] (X : D)
           ((tensorPowConcat X p (q + r)).hom ▷ X)) ≫
         powCast X (by omega : p + (q + (r + 1)) = p + q + (r + 1))
     rw [hcast, powExpose, powExpose, powExpose]
-    simp only [Category.assoc] at hstep ⊢
+    repeat' erw [Category.assoc] at hstep
+    repeat' erw [Category.assoc]
     rw [MonoidalCategory.associator_inv_naturality_left_assoc,
       ← MonoidalCategory.comp_whiskerRight,
       tensorPowConcat_assoc X p q r]
     simp only [MonoidalCategory.whiskerLeft_comp,
       MonoidalCategory.comp_whiskerRight, Category.assoc] at hstep ⊢
-    rw [reassoc_of% hstep]
+    erw [reassoc_of% hstep]
     rfl
 
 /-- Concatenation with an empty first block is the left unitor, up
@@ -315,6 +316,7 @@ theorem modPowLeg_concat_fst
       powCast X (by omega : a + 2 + (b + n) = a + 2 + b + n))
     (tensorPowConcat_assoc X (a + 2) b n)
   simp only [modPowGlue, midConcatFst, Category.assoc] at h0 ⊢
+  repeat' erw [Category.assoc]
   exact h0
 
 /-- The core of the right-block embedding, at general objects. -/
@@ -398,6 +400,7 @@ theorem modPowLeg_concat_snd
       powCast X (by omega : m + (a + 2) + b = m + (a + 2 + b)))
     hshift
   simp only [modPowGlue, midConcatSnd, Category.assoc] at h0 ⊢
+  repeat' erw [Category.assoc]
   exact h0
 
 end SlotEmbed
@@ -846,9 +849,9 @@ theorem modPowMul_alg
         modPowMul A X m n =
       modPowMul A X m n ≫ modPowAlg A X (m + n) (blockAlgEmbed x y) := by
   induction x using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     induction y using MonoidAlgebra.induction_on with
-    | hM τ =>
+    | of τ =>
       rw [show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin m))) σ =
           MonoidAlgebra.single σ (1 : ℂ) from rfl,
         show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin n))) τ =
@@ -856,16 +859,16 @@ theorem modPowMul_alg
         blockAlgEmbed_single, one_mul, modPowAlg_single,
         modPowAlg_single, modPowAlg_single]
       exact modPowMul_perm A X m n σ τ
-    | hadd y₁ y₂ hy₁ hy₂ =>
+    | add y₁ y₂ hy₁ hy₂ =>
       rw [blockAlgEmbed_add_snd, map_add, map_add]
       exact tensor_add_glue hy₁ hy₂
-    | hsmul r y' hy =>
+    | smul r y' hy =>
       rw [blockAlgEmbed_smul_snd, map_smul, map_smul]
       exact tensor_smul_glue r hy
-  | hadd x₁ x₂ hx₁ hx₂ =>
+  | add x₁ x₂ hx₁ hx₂ =>
     rw [blockAlgEmbed_add_fst, map_add, map_add]
     exact add_tensor_glue hx₁ hx₂
-  | hsmul r x' hx =>
+  | smul r x' hx =>
     rw [blockAlgEmbed_smul_fst, map_smul, map_smul]
     exact smul_tensor_glue r hx
 
@@ -1606,7 +1609,7 @@ theorem tensorPowConcat_braiding_exists
             permMor X (n + m) σ) ▷ X) := by
       conv_lhs => rw [MonoidalCategory.comp_whiskerRight,
         reassoc_of% g4, ← comm_beta_expand X m n, hτ]
-      simp only [Category.assoc]
+      repeat' erw [Category.assoc]
       rfl
     have hw : ((powCast X (by omega : m + n = n + m) ≫
         permMor X (n + m) σ) ▷ X) =
@@ -1653,8 +1656,15 @@ theorem tensorPowConcat_braiding_exists
                 (by omega : m + (n + 1) = n + (m + 1))).permCongr
                 (blockEmbed 1 τ)) := by
       rw [(tensorPowConcat_permMor_snd X m (n + 1) τ).symm]
+      erw [hw]
+      change (α_ (tensorPow D X m) X (tensorPow D X n)).hom ≫
+        (tensorPow D X m ◁ (powPeel X n).inv) ≫
+        ((tensorPowConcat X m (n + 1)).hom ≫
+          permMor X (m + (n + 1)) (blockEmbed 1 τ)) ≫
+        powCast X (by omega : m + (n + 1) = n + (m + 1)) ≫
+        permMor X (n + (m + 1)) (extPerm σ) = _
       simp only [Category.assoc]
-      rw [reassoc_of% (comm_head X m n), hw]
+      rw [reassoc_of% (comm_head X m n)]
       exact hfinal
     exact g1.trans (g2.trans (e3a.trans e3b))
 

@@ -1237,7 +1237,7 @@ theorem gradedSignRep_asAlgebraHom (p q n : ℕ)
     (gradedSignRep p q n).asAlgebraHom z =
       tot (permAlg (stdSuper p q) n z) := by
   induction z using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
       show (gradedSignRep p q n).asAlgebraHom
           (MonoidAlgebra.single σ (1 : ℂ)) =
         tot (permAlg (stdSuper p q) n
@@ -1245,11 +1245,11 @@ theorem gradedSignRep_asAlgebraHom (p q n : ℕ)
       rw [Representation.asAlgebraHom_single, one_smul,
         gradedSignRep_apply]
       exact congrArg tot (permAlg_single _ _ σ).symm
-  | hadd a b ha hb =>
+  | add a b ha hb =>
       rw [map_add, map_add, ha, hb]
       exact (tot_add (permAlg (stdSuper p q) n a)
         (permAlg (stdSuper p q) n b)).symm
-  | hsmul r a ha =>
+  | smul r a ha =>
       rw [map_smul, map_smul, ha]
       exact (tot_smul r (permAlg (stdSuper p q) n a)).symm
 

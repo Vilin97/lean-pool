@@ -37,18 +37,16 @@ theorem t_identity (v : Fin k → ℕ)
             ((Equiv.Perm.sign σ : ℤ) : ℂ) *
               (if ∀ i : Fin k,
                   0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
-                then MvPolynomial.coeff (diagExp v - stairShift τ)
-                  (∏ i, hSub (Finset.univ : Finset (Fin k))
+                then (∏ i, hSub (Finset.univ : Finset (Fin k))
                     (((v i : ℤ) + ((σ i : Fin k) : ℕ) -
-                      (i : ℕ)).toNat))
+                      (i : ℕ)).toNat)).coeff (diagExp v - stairShift τ)
                 else 0)
           else 0)) = 1 := by
   classical
-  have h1 : MvPolynomial.coeff (diagExp v) ((powMat v).det) = 1 :=
+  have h1 : ((powMat v).det).coeff (diagExp v) = 1 :=
     alternant_coeff (fun i : Fin k => v i + ((k - 1) - (i : ℕ)))
       hinj
-  have h2 : MvPolynomial.coeff (diagExp v)
-      ((jtMat v).det * (powMat (fun _ : Fin k => 0)).det) = 1 := by
+  have h2 : ((jtMat v).det * (powMat (fun _ : Fin k => 0)).det).coeff (diagExp v) = 1 := by
     rw [← bialternant]
     exact h1
   rw [coeff_mul_alternant] at h2

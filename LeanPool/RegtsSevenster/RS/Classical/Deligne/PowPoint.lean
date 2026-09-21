@@ -33,7 +33,7 @@ theorem swapTop_unit [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     (n : ℕ) :
     swapTop (𝟙_ D) n = 𝟙 (tensorPow D (𝟙_ D) (n + 2)) := by
   unfold swapTop
-  rw [braiding_unit_self, MonoidalCategory.whiskerLeft_id,
+  erw [braiding_unit_self, MonoidalCategory.whiskerLeft_id,
     Category.id_comp, Iso.hom_inv_id]
 
 /-- Every adjacent transposition acts trivially on a power of the
@@ -219,45 +219,15 @@ theorem tensorPowPoint_concat
       monoidal
     refine Eq.trans ?_ (whisker_eq (λ_ (𝟙_ D)).hom
       (tensorPowPoint_succ (pt := pt) (m + n)).symm)
-    calc (tensorPowPoint pt m ⊗ₘ tensorPowPoint pt (n + 1)) ≫
-        (tensorPowConcat Y m (n + 1)).hom
-        = (tensorPowPoint pt m ⊗ₘ
-            ((ρ_ (𝟙_ D)).inv ≫
-              (tensorPowPoint pt n ⊗ₘ pt))) ≫
-            (α_ (tensorPow D Y m) (tensorPow D Y n) Y).inv ≫
-            ((tensorPowConcat Y m n).hom ▷ Y) := by
-          rw [hsucc]
-          rfl
-      _ = ((𝟙 (𝟙_ D)) ⊗ₘ (ρ_ (𝟙_ D)).inv) ≫
-            ((tensorPowPoint pt m ⊗ₘ
-              (tensorPowPoint pt n ⊗ₘ pt)) ≫
-              (α_ (tensorPow D Y m) (tensorPow D Y n) Y).inv) ≫
-            ((tensorPowConcat Y m n).hom ▷ Y) := by
-          rw [hdec]
-          simp only [Category.assoc]
-      _ = ((𝟙 (𝟙_ D)) ⊗ₘ (ρ_ (𝟙_ D)).inv) ≫
-            (α_ (𝟙_ D) (𝟙_ D) (𝟙_ D)).inv ≫
-            (((tensorPowPoint pt m ⊗ₘ
-              tensorPowPoint pt n) ⊗ₘ pt) ≫
-              ((tensorPowConcat Y m n).hom ▷ Y)) := by
-          rw [hα]
-          simp only [Category.assoc]
-      _ = ((𝟙 (𝟙_ D)) ⊗ₘ (ρ_ (𝟙_ D)).inv) ≫
-            (α_ (𝟙_ D) (𝟙_ D) (𝟙_ D)).inv ≫
-            (((λ_ (𝟙_ D)).hom ≫ tensorPowPoint pt (m + n)) ⊗ₘ
-              pt) := by
-          rw [hIH]
-      _ = ((𝟙 (𝟙_ D)) ⊗ₘ (ρ_ (𝟙_ D)).inv) ≫
-            (α_ (𝟙_ D) (𝟙_ D) (𝟙_ D)).inv ≫
-            ((λ_ (𝟙_ D)).hom ▷ (𝟙_ D)) ≫
-            (tensorPowPoint pt (m + n) ⊗ₘ pt) := by
-          rw [← MonoidalCategory.tensorHom_id
-            ((λ_ (𝟙_ D)).hom),
-            MonoidalCategory.tensorHom_comp_tensorHom,
-            Category.id_comp]
-      _ = (λ_ (𝟙_ D)).hom ≫ (ρ_ (𝟙_ D)).inv ≫
-            (tensorPowPoint pt (m + n) ⊗ₘ pt) := by
-          rw [reassoc_of% hcoh]
+    rw [hsucc]
+    change (tensorPowPoint pt m ⊗ₘ
+      ((ρ_ (𝟙_ D)).inv ≫ (tensorPowPoint pt n ⊗ₘ pt))) ≫
+      (α_ (tensorPow D Y m) (tensorPow D Y n) Y).inv ≫
+      ((tensorPowConcat Y m n).hom ▷ Y) = _
+    erw [hdec, Category.assoc, reassoc_of% hα, hIH,
+      ← MonoidalCategory.whiskerRight_comp_tensorHom,
+      reassoc_of% hcoh]
+    rfl
 
 variable {Y} in
 /-- **The permutation action fixes point powers**: naturality

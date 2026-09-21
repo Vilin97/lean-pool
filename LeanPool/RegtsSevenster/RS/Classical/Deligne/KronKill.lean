@@ -103,9 +103,9 @@ theorem extImages_comm {n : ℕ} (x y : SymGroupAlgebra n) :
         MonoidAlgebra.mapDomainAlgHom ℂ ℂ (extFstHom n) x := by
   classical
   induction x using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     induction y using MonoidAlgebra.induction_on with
-    | hM τ =>
+    | of τ =>
       have hL : MonoidAlgebra.mapDomainAlgHom ℂ ℂ (extFstHom n)
           (MonoidAlgebra.single σ 1) =
           MonoidAlgebra.single
@@ -126,13 +126,13 @@ theorem extImages_comm {n : ℕ} (x y : SymGroupAlgebra n) :
       rw [hL, hR, MonoidAlgebra.single_mul_single,
         MonoidAlgebra.single_mul_single]
       congr 1
-    | hadd y y' hy hy' =>
+    | add y y' hy hy' =>
       rw [map_add, mul_add, add_mul, hy, hy']
-    | hsmul r y hy =>
+    | smul r y hy =>
       rw [map_smul, mul_smul_comm, smul_mul_assoc, hy]
-  | hadd x x' hx hx' =>
+  | add x x' hx hx' =>
     rw [map_add, add_mul, mul_add, hx, hx']
-  | hsmul r x hx =>
+  | smul r x hx =>
     rw [map_smul, smul_mul_assoc, mul_smul_comm, hx]
 
 /-- The external product is multiplicative in the two slots
@@ -200,9 +200,9 @@ theorem extProd_apply_pair {n : ℕ} (x y : SymGroupAlgebra n)
     extProd x y (σ, τ) = x σ * y τ := by
   classical
   induction x using MonoidAlgebra.induction_on with
-  | hM σ₀ =>
+  | of σ₀ =>
     induction y using MonoidAlgebra.induction_on with
-    | hM τ₀ =>
+    | of τ₀ =>
       simp only [MonoidAlgebra.of_apply]
       rw [extProd_single]
       by_cases hcase : σ₀ = σ ∧ τ₀ = τ
@@ -215,16 +215,16 @@ theorem extProd_apply_pair {n : ℕ} (x y : SymGroupAlgebra n)
         rcases not_and_or.mp hcase with hσ | hτ
         · simp [MonoidAlgebra.single_apply, hne, hσ]
         · simp [MonoidAlgebra.single_apply, hne, hτ]
-    | hadd y y' hy hy' =>
+    | add y y' hy hy' =>
       rw [extProd_add_snd, ma_add_apply, hy, hy', ma_add_apply,
         mul_add]
-    | hsmul r y hy =>
+    | smul r y hy =>
       rw [extProd_smul_snd, ma_smul_apply, hy, ma_smul_apply]
       ring
-  | hadd x x' hx hx' =>
+  | add x x' hx hx' =>
     rw [extProd_add_fst, ma_add_apply, hx, hx', ma_add_apply,
       add_mul]
-  | hsmul r x hx =>
+  | smul r x hx =>
     rw [extProd_smul_fst, ma_smul_apply, hx, ma_smul_apply]
     ring
 

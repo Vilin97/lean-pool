@@ -94,18 +94,18 @@ theorem isIrredRep_rhoS
         m ∈ p → y • m ∈ p := by
       intro y
       induction y using MonoidAlgebra.induction_on with
-      | hM g =>
+      | of g =>
         intro m hm
         have := hp g m hm
         rw [rhoS_apply] at this
         rw [show MonoidAlgebra.of ℂ G g =
           MonoidAlgebra.single g (1 : ℂ) from rfl]
         exact this
-      | hadd a b ha hb =>
+      | add a b ha hb =>
         intro m hm
         rw [add_smul]
         exact p.add_mem (ha m hm) (hb m hm)
-      | hsmul r a ha =>
+      | smul r a ha =>
         intro m hm
         rw [smul_assoc]
         exact p.smul_mem r (ha m hm)

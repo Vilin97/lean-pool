@@ -276,9 +276,7 @@ theorem diagramSchur_injective {lam mu : YoungDiagram}
       show altDet (eVec mu k) = (powMat vm).det from rfl,
       bialternant vl, bialternant vm, hdet]
   -- extract the diagonal coefficient of the `lam` alternant
-  have h1 : MvPolynomial.coeff
-      (∑ i, Finsupp.single i (eVec lam k i))
-      (altDet (eVec lam k)) = 1 := by
+  have h1 : (altDet (eVec lam k)).coeff (∑ i, Finsupp.single i (eVec lam k i)) = 1 := by
     rw [alternant_coeff_strict _ _ (eVec_strict lam k)
       (eVec_strict lam k), if_pos rfl]
   rw [halt, alternant_coeff_strict _ _ (eVec_strict mu k)

@@ -86,9 +86,8 @@ private theorem inner_sum_eq {m n k : ℕ} (h : m ≤ n)
         (colourChar α
           (Equiv.Perm.viaEmbeddingHom (Fin.castLEEmb h) σ) : ℂ)) =
     (m.factorial : ℂ) *
-      MvPolynomial.coeff (∑ a, Finsupp.single a (α a))
-        ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β i)) *
-          (∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ (n - m)) := by
+      ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β i)) *
+          (∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ (n - m)).coeff (∑ a, Finsupp.single a (α a)) := by
   set r := n - m
   set P := ∏ i, hSub (Finset.univ : Finset (Fin k)) (β i)
   set Q := (∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r
@@ -216,14 +215,13 @@ private theorem inner_sum_eq {m n k : ℕ} (h : m ≤ n)
 open scoped Classical in
 private theorem coeff_det_jtMat_mul {k : ℕ}
     (v : Fin k → ℕ) (Q : MvPolynomial (Fin k) ℂ) (w : Fin k →₀ ℕ) :
-    MvPolynomial.coeff w ((jtMat v).det * Q) =
+    ((jtMat v).det * Q).coeff w =
       ∑ σ : Equiv.Perm (Fin k),
         ((Equiv.Perm.sign σ : ℤ) : ℂ) *
           (if ∀ i : Fin k,
               0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
-            then MvPolynomial.coeff w
-              ((∏ i, hSub (Finset.univ : Finset (Fin k))
-                (((v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)).toNat)) * Q)
+            then ((∏ i, hSub (Finset.univ : Finset (Fin k))
+                (((v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)).toNat)) * Q).coeff w
             else 0) := by
   rw [det_jtMat_expand]
   rw [Finset.sum_congr rfl
@@ -269,10 +267,8 @@ private theorem pairing_eq_factorial_coeff
     (hsum_mu : ∑ i : Fin k, mu.rowLen (i : ℕ) = n) :
     restrPairing lam mu h =
       (m.factorial : ℂ) *
-        MvPolynomial.coeff
-          (∑ i : Fin k, Finsupp.single i (eVec mu k i))
-          ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r *
-            altDet (eVec lam k)) := by
+        ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r *
+            altDet (eVec lam k)).coeff (∑ i : Fin k, Finsupp.single i (eVec mu k i)) := by
   classical
   set Q := (∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r
   set vl : Fin k → ℕ := fun i => lam.rowLen (i : ℕ) with hvl_def
@@ -288,13 +284,11 @@ private theorem pairing_eq_factorial_coeff
     ∀ i : Fin k, 0 ≤ (vm i : ℤ) + ((τ i : Fin k) : ℕ) - (i : ℕ)
   -- ═══════ STAGE 1: THE COEFFICIENT AS A DOUBLE SUM ═══════
   have rhs_chain :
-      MvPolynomial.coeff (∑ i : Fin k, Finsupp.single i (eVec mu k i))
-        (Q * altDet (eVec lam k)) =
+      (Q * altDet (eVec lam k)).coeff (∑ i : Fin k, Finsupp.single i (eVec mu k i)) =
       ∑ τ : Equiv.Perm (Fin k), ∑ σ' : Equiv.Perm (Fin k),
         ((Equiv.Perm.sign τ : ℤ) : ℂ) * ((Equiv.Perm.sign σ' : ℤ) : ℂ) *
           (if guard_mu τ ∧ guard_lam σ'
-            then MvPolynomial.coeff (∑ a, Finsupp.single a (α τ a))
-              ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q)
+            then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a, Finsupp.single a (α τ a))
             else 0) := by
     -- eVec finsupp = diagExp vm
     have heVec : (∑ i : Fin k, Finsupp.single i (eVec mu k i)) =
@@ -323,8 +317,7 @@ private theorem pairing_eq_factorial_coeff
       have hsum_zero : (∑ σ' : Equiv.Perm (Fin k),
           ((Equiv.Perm.sign τ : ℤ) : ℂ) * ((Equiv.Perm.sign σ' : ℤ) : ℂ) *
             (if guard_mu τ ∧ guard_lam σ'
-              then MvPolynomial.coeff (∑ a, Finsupp.single a (α τ a))
-                ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q)
+              then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a, Finsupp.single a (α τ a))
               else 0)) = 0 := by
         apply Finset.sum_eq_zero; intro σ' _
         rw [if_neg (fun ⟨h, _⟩ => hguard_mu_neg h)]; ring
@@ -336,8 +329,7 @@ private theorem pairing_eq_factorial_coeff
         ∑ σ' : Equiv.Perm (Fin k), ∑ τ : Equiv.Perm (Fin k),
           ((Equiv.Perm.sign σ' : ℤ) : ℂ) * ((Equiv.Perm.sign τ : ℤ) : ℂ) *
             (if guard_lam σ' ∧ guard_mu τ
-              then MvPolynomial.coeff (∑ a, Finsupp.single a (α τ a))
-                ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q)
+              then ((∏ i, hSub (Finset.univ : Finset (Fin k)) (β σ' i)) * Q).coeff (∑ a, Finsupp.single a (α τ a))
               else 0) := by
     -- Expand restrPairing
     unfold restrPairing

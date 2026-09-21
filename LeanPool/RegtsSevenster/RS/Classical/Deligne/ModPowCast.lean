@@ -141,15 +141,15 @@ theorem modPowπ_permAlg
     modPowπ A X n ≫ modPowAlg A X n x =
       permAlg X n x ≫ modPowπ A X n := by
   induction x using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
       rw [show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin n))) σ =
           MonoidAlgebra.single σ (1 : ℂ) from rfl,
         modPowAlg_single, permAlg_single]
       exact modPowπ_perm n σ
-  | hadd x₁ x₂ h₁ h₂ =>
+  | add x₁ x₂ h₁ h₂ =>
       rw [map_add, map_add]
       exact add_pass h₁ h₂
-  | hsmul r y hy =>
+  | smul r y hy =>
       rw [map_smul, map_smul]
       exact smul_pass r hy
 

@@ -601,15 +601,15 @@ theorem modPowMap_alg
       (modPowAlg A X n z : End (modPow A X n)) ≫
         modPowMap A f n := by
   induction z using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     rw [show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin n))) σ =
         MonoidAlgebra.single σ (1 : ℂ) from rfl, modPowAlg_single,
       modPowAlg_single]
     exact modPowMap_perm A f n σ
-  | hadd z₁ z₂ h₁ h₂ =>
+  | add z₁ z₂ h₁ h₂ =>
     rw [map_add, map_add]
     exact (intertwine_add h₁.symm h₂.symm).symm
-  | hsmul r z h =>
+  | smul r z h =>
     rw [map_smul, map_smul]
     exact (intertwine_smul r h.symm).symm
 

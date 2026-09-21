@@ -277,8 +277,7 @@ lemma eta_comp_dayCoyonedaIso_hom
   apply (coyonedaEquiv (C := D × D) (X := ((a, b) : D × D))
     (F := tensor D ⋙ coyoneda.obj (op (a ⊗ b)))).injective
   refine h.trans ?_
-  rw [coyonedaEquiv_apply, coyonedaEquiv_apply]
-  show 𝟙 (a ⊗ b) = 𝟙 a ⊗ₘ 𝟙 b
+  change 𝟙 (a ⊗ b) = 𝟙 a ⊗ₘ 𝟙 b
   simp
 
 /-- Naturality of `RS.dayCoyonedaIso` in the right variable. -/

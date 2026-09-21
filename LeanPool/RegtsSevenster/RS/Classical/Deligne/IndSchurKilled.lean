@@ -236,15 +236,15 @@ theorem permAlg_indOf_conj_scalarUnit
   letI := linearOfScalarUnit (indScalarUnit ψ)
   haveI := indOf_additive (C := C)
   induction x using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     rw [MonoidAlgebra.of_apply, permAlg_single, permAlg_single]
     exact indOfPowIso_permMor X n σ
-  | hadd p q hp hq =>
+  | add p q hp hq =>
     rw [map_add, map_add]
     exact (sum_pass hp hq).trans
       (congrArg (fun m => (indOfPowIso X n).hom ≫ m)
         (Functor.map_add (F := indOf (C := C))).symm)
-  | hsmul c p hp =>
+  | smul c p hp =>
     rw [map_smul, map_smul]
     exact (scale_pass c hp).trans
       (congrArg (fun m => (indOfPowIso X n).hom ≫ m)

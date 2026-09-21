@@ -59,15 +59,15 @@ theorem freeCollapse_permAlg
         (A ◁ (permAlg V n z : tensorPow D V n ⟶
           tensorPow D V n)) := by
   induction z using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     rw [show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin n))) σ =
         MonoidAlgebra.single σ (1 : ℂ) from rfl, permAlg_single,
       permAlg_single]
     exact freeCollapse_permMor A V n σ
-  | hadd z₁ z₂ h₁ h₂ =>
+  | add z₁ z₂ h₁ h₂ =>
     rw [map_add, map_add]
     exact add_pass_free h₁ h₂
-  | hsmul r z h =>
+  | smul r z h =>
     rw [map_smul, map_smul]
     exact smul_pass_free r h
 

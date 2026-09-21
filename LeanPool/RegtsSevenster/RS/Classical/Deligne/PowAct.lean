@@ -1015,14 +1015,14 @@ theorem modPowAct_alg
           End (modPow A X (n + 1)))) ≫
         modPowAct A X n := by
   induction z using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     rw [show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin (n + 1)))) σ =
         MonoidAlgebra.single σ (1 : ℂ) from rfl, modPowAlg_single]
     exact modPowAct_perm A X n σ
-  | hadd z₁ z₂ h₁ h₂ =>
+  | add z₁ z₂ h₁ h₂ =>
     rw [map_add]
     exact whisker_act_add (modPowAct A X n) h₁ h₂
-  | hsmul r z' h =>
+  | smul r z' h =>
     rw [map_smul]
     exact whisker_act_smul (modPowAct A X n) r h
 

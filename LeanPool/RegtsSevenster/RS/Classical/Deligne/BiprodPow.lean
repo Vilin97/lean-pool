@@ -477,7 +477,7 @@ private theorem comp_cast_end₂ [Category.{v} A]
     {P Q R : A} {f : P ⟶ R} {g₁ : P ⟶ Q}
     {g₂ : Q ⟶ R} (H : R = R) (hfg : f = g₁ ≫ g₂) :
     f = g₁ ≫ g₂ ≫ eqToHom H := by
-  rw [show H = rfl from rfl, eqToHom_refl, Category.comp_id, hfg]
+  erw [show H = rfl from rfl, eqToHom_refl, Category.comp_id, hfg]
 
 /-- A transport and its inverse cancel across a decomposition of
 the middle morphism.  Stated at general objects and applied by
@@ -575,7 +575,7 @@ private theorem inl_pow_cast
     (H : tensorPow A X m = tensorPow A X (m + 0)) :
     eqToHom H ≫ tensorPowMap (biprod.inl : X ⟶ X ⊞ Y) (m + 0) =
       tensorPowMap (biprod.inl : X ⟶ X ⊞ Y) m := by
-  rw [show H = rfl from rfl, eqToHom_refl, Category.id_comp]
+  erw [show H = rfl from rfl, eqToHom_refl, Category.id_comp]
   rfl
 
 end Base
@@ -818,7 +818,7 @@ private theorem insertTop_cast
     (eqToHom H ▷ Z) ≫ insertTop Z b k =
       insertTop Z a k ≫ (eqToHom H ▷ Z) := by
   subst hab
-  rw [show H = rfl from rfl, eqToHom_refl,
+  erw [show H = rfl from rfl, eqToHom_refl,
     MonoidalCategory.id_whiskerRight, Category.id_comp]
   exact (Category.comp_id _).symm
 
@@ -833,7 +833,7 @@ private theorem cast_then_cast_whisker [Category.{v} A] [MonoidalCategory A]
     eqToHom H₁ ≫ (eqToHom H₂ ▷ Z) = eqToHom H₃ := by
   subst hbn
   subst hab
-  rw [show H₁ = rfl from rfl, show H₂ = rfl from rfl,
+  erw [show H₁ = rfl from rfl, show H₂ = rfl from rfl,
     show H₃ = rfl from rfl, eqToHom_refl, eqToHom_refl,
     MonoidalCategory.id_whiskerRight, Category.id_comp]
   rfl
@@ -942,7 +942,7 @@ theorem base_insert_true
       eqToHom (congrArg (tensorPow A (X ⊞ Y))
         (Nat.succ_add_eq_add_succ p m)) := by
   rw [tensor_split_last]
-  simp only [Category.assoc]
+  repeat' erw [Category.assoc]
   rw [concat_whisker_insert, insertTop_full,
     MonoidalCategory.associator_naturality_assoc,
     tensor_then_whiskerLeft_assoc,
@@ -1257,7 +1257,7 @@ private theorem comp_cast_end₃ [Category.{v} A]
     {g₁ : P ⟶ Q} {g₂ : Q ⟶ R} {g₃ : R ⟶ S} (H : S = S)
     (hfg : f = g₁ ≫ g₂ ≫ g₃) :
     f = g₁ ≫ g₂ ≫ g₃ ≫ eqToHom H := by
-  rw [show H = rfl from rfl, eqToHom_refl, Category.comp_id, hfg]
+  erw [show H = rfl from rfl, eqToHom_refl, Category.comp_id, hfg]
 
 /-- Renaming the block sizes of a sorting square: the data and the
 square transport along equalities of the two sizes. -/

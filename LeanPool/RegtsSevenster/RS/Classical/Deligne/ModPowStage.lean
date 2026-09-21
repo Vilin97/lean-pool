@@ -156,7 +156,7 @@ private theorem slot_whiskerRight
     (tensorPow D X b) X).inv).1 ?_
   rw [MonoidalCategory.comp_whiskerRight,
     MonoidalCategory.comp_whiskerRight, powCast_whiskerRight]
-  simp only [Category.assoc]
+  repeat' erw [Category.assoc]
   exact ((Category.assoc _ _ _).symm.trans key).trans
     (Category.assoc _ _ _)
 
@@ -170,12 +170,14 @@ theorem modPow_condition_succ
     (n : ℕ) :
     (modPowLegFst A X n ▷ X) ≫ modPowπ A X (n + 1) =
       (modPowLegSnd A X n ▷ X) ≫ modPowπ A X (n + 1) := by
-  rw [modPowLegFst, modPowLegSnd, desc_whiskerRight,
+  erw [modPowLegFst, modPowLegSnd, desc_whiskerRight,
     desc_whiskerRight, Preadditive.sum_comp, Preadditive.sum_comp]
   refine Finset.sum_congr rfl fun i _ => ?_
-  simp only [Category.assoc]
-  exact whisker_eq _ (slot_whiskerRight A X i.val (n - 2 - i.val)
-    (slot_decomp i))
+  repeat' erw [Category.assoc]
+  have hslot := slot_whiskerRight A X i.val (n - 2 - i.val) (slot_decomp i)
+  simp only [modPowLegM, modPowLegN, modPowGlue, Category.assoc] at hslot
+  repeat' erw [Category.assoc] at hslot
+  exact whisker_eq _ hslot
 
 /-- **The stage map**: the projection at arity `n + 1` factors
 through the projection at arity `n` whiskered by one letter. -/

@@ -24,13 +24,12 @@ open scoped Classical in
 /-- **The guarded pointwise convolution.** -/
 theorem coeff_mul_split (P Q : MvPolynomial (Fin k) ℂ)
     (α : Fin k → ℕ) (n : ℕ) (hn : ∀ a, α a ≤ n) :
-    MvPolynomial.coeff (∑ a, Finsupp.single a (α a)) (P * Q) =
+    (P * Q).coeff (∑ a, Finsupp.single a (α a)) =
     ∑ w ∈ Fintype.piFinset
         (fun _ : Fin k => Finset.range (n + 1)),
       (if ∀ a, w a ≤ α a
-        then MvPolynomial.coeff
-            (∑ a, Finsupp.single a (α a - w a)) P *
-          MvPolynomial.coeff (∑ a, Finsupp.single a (w a)) Q
+        then P.coeff (∑ a, Finsupp.single a (α a - w a)) *
+          Q.coeff (∑ a, Finsupp.single a (w a))
         else 0) := by
   classical
   rw [MvPolynomial.coeff_mul]

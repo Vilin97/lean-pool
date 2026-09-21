@@ -1394,9 +1394,6 @@ private theorem phiSum (hd : SegData κ κ' o o' S v P Q R T)
 
 end SegData
 
--- Raised budget: the parametric core carries the segment data,
--- both orientations and the boundary state through one
--- elaboration.
 /-- The parametric core of the flipped-segment ledger. -/
 private theorem throughSummand_seg_core [LinearOrder α]
     (hM : MixedFunctional k ℓ) (st : GenBoundaryState k ℓ α)
@@ -1407,7 +1404,7 @@ private theorem throughSummand_seg_core [LinearOrder α]
     F.throughSummand hM st hbnd o' n =
       F.throughSummand hM st hbnd o n := by
   unfold EdgeSubset.throughSummand
-  congr 1
+  apply congrArg (fun z : ℂ => ((-1 : ℂ) ^ n) * F.throughProduct st * z)
   refine Finset.sum_congr rfl (fun ψ _ => ?_)
   exact if_congr Iff.rfl (hd.phiSum hM st (F.evenColoursAt ψ)) rfl
 
