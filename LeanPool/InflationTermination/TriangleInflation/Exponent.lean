@@ -22,7 +22,8 @@ namespace TriangleInflation
 
 open Finset
 
-noncomputable section
+noncomputable
+section
 
 /-- `σ = ½ ε^{2/3}`, so that `P_ε = Q(ε, 1 - σ)` (paper Proposition 5.13). -/
 def sigmaEps (ε : ℝ) : ℝ := ε ^ ((2 : ℝ) / 3) / 2

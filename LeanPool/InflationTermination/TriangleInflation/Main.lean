@@ -23,7 +23,8 @@ namespace TriangleInflation
 
 open Finset
 
-noncomputable section
+noncomputable
+section
 
 /-! ## Auxiliary facts
 

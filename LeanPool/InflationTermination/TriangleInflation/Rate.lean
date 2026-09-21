@@ -23,7 +23,8 @@ namespace TriangleInflation
 
 open Finset
 
-noncomputable section
+noncomputable
+section
 
 /-- The squared Euclidean norm of a weight function on three bits. -/
 def sqNorm (w : ThreeBit → ℝ) : ℝ := ∑ x : ThreeBit, w x ^ 2

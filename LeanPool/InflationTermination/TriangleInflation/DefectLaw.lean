@@ -45,7 +45,8 @@ private theorem allFalse_congr {ι : Type*} (S : Finset ι) {x y : ι → Bool}
   · rw [← h u hu]; exact H u hu
   · rw [h u hu]; exact H u hu
 
-noncomputable section
+noncomputable
+section
 
 private theorem pushforward_comp {α β γ : Type*} [Fintype α] [Fintype β] [DecidableEq β]
     [DecidableEq γ] (w : α → ℝ) (F : α → β) (G : β → γ) :
@@ -483,7 +484,8 @@ end DefectLawAux
 
 open DefectLawAux
 
-noncomputable section
+noncomputable
+section
 
 /-! ## The law of a copied triangle (Lemma 5.5) -/
 

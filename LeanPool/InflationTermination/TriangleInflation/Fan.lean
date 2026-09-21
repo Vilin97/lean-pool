@@ -93,7 +93,8 @@ theorem fan_pointwise (t : ℕ) (a : Bool) (b c : Fin t → Bool) :
       exact Nat.mul_le_mul hB hC
     omega
 
-noncomputable section
+noncomputable
+section
 
 /-! ### Real-valued indicators -/
 

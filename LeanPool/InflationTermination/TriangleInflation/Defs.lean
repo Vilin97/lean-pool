@@ -260,7 +260,8 @@ at least two coordinates equal to `l` (paper equation (eq:Rl)). -/
 def inDiagRegion {t : ℕ} (l : Fin t) (c : Cell t) : Bool :=
   onLine (Obs.A l l) c || onLine (Obs.B l l) c || onLine (Obs.C l l) c
 
-noncomputable section
+noncomputable
+section
 
 /-! ## The paper's explicit laws -/
 

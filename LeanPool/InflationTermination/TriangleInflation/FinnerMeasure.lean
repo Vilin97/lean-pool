@@ -61,7 +61,8 @@ namespace TriangleInflation
 
 open MeasureTheory
 
-noncomputable section
+noncomputable
+section
 
 /-! ## Triangle models with arbitrary latent probability spaces -/
 

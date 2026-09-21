@@ -40,7 +40,8 @@ namespace TriangleInflation
 
 open Finset
 
-noncomputable section
+noncomputable
+section
 
 /-- Total variation distance between two three-bit weight functions: half the `ℓ¹`
 distance. -/

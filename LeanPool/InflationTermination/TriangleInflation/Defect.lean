@@ -20,7 +20,8 @@ namespace TriangleInflation
 
 open Finset
 
-noncomputable section
+noncomputable
+section
 
 /-! ## Independence under a product weight
 

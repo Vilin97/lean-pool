@@ -268,7 +268,8 @@ theorem sub_mid_union (X Y Z : Finset (GObs Γ t)) : Z ⊆ X ∪ Y ∪ Z := Fins
 
 theorem sub_mid_left (X Z : Finset (GObs Γ t)) : Z ⊆ X ∪ Z := Finset.subset_union_right
 
-noncomputable section
+noncomputable
+section
 
 /-- The glued law of Wolfe–Spekkens–Fritz Definition 7:
 `μ(x,y,z) = μ₁(x,z) μ₂(y,z) / μ_Z(z)` when the common `Z`-marginal `μ_Z(z)` is positive, and
@@ -496,7 +497,8 @@ target on `Γ.V → Bool` it is the noisy target of AUDIT-NOTES A7; applied to a
 def flipLaw {ι : Type} [Fintype ι] [DecidableEq ι] (η : ℝ) (P : (ι → Bool) → ℝ) :
     (ι → Bool) → ℝ := fun y => ∑ x, P x * flipKernel η x y
 
-noncomputable section
+noncomputable
+section
 
 /-- The total variation distance, half the `ℓ¹` distance. -/
 def dTV {α : Type*} [Fintype α] (P Q : α → ℝ) : ℝ := (1 / 2) * ∑ a, |P a - Q a|

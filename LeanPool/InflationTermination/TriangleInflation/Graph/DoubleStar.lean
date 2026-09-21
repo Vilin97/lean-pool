@@ -604,7 +604,8 @@ abbrev DSLat (Γ : PairGraph) : Type := ((Γ.V → Bool) → (Γ.V → Bool)) ×
 /-- The table that unsupported arguments are sent to. -/
 def dfltTable (Γ : PairGraph) : (Γ.V → Bool) → (Γ.V → Bool) := fun _ _ => false
 
-noncomputable section
+noncomputable
+section
 
 /-- The one-vertex marginal of the target. -/
 def vMarg (P : GTarget Γ) (v : Γ.V) (β : Bool) : ℝ := blockMarg {v} P (Function.const Γ.V β)
@@ -689,7 +690,8 @@ end
 
 /-! ### One-vertex marginals and the listed arrays -/
 
-noncomputable section
+noncomputable
+section
 
 theorem vMarg_eq (P : GTarget Γ) (v : Γ.V) (β : Bool) :
     vMarg P v β = ∑ u : Γ.V → Bool, if u v = β then P u else 0 := by

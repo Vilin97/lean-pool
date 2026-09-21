@@ -21,7 +21,8 @@ namespace TriangleInflation
 
 open Finset
 
-noncomputable section
+noncomputable
+section
 
 /-! ## Basic normalization facts -/
 
