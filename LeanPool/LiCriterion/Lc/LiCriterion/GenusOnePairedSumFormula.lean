@@ -334,7 +334,7 @@ theorem paired_sum_formula_of_mtest_and_cauchy
       exact hWithin.differentiableAt (Metric.isOpen_ball.mem_nhds hz)
     -- Use the (mathlib) finite-product log-derivative identity.
     simpa [term, fac, logDeriv_eq_rootLogDeriv] using
-      (_root_.logDeriv_prod (s := T k) (f := fac) (x := z) hfac_ne hfac_diff)
+      (_root_.logDeriv_fun_prod (s := T k) (f := fac) (x := z) hfac_ne hfac_diff)
   -- The ξ² factorization identifies the limit log-derivative with the `tsum` of `term`.
   have h_limit_eq : Set.EqOn
       (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
@@ -899,7 +899,7 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
         (xiPairedLinearFactor_phi_differentiableOn_ball (r := r) hr_lt_one i.1) z hz
       exact hWithin.differentiableAt (Metric.isOpen_ball.mem_nhds hz)
     simpa [term, fac, logDeriv_eq_rootLogDeriv] using
-      (_root_.logDeriv_prod (s := T k) (f := fac) (x := z) hfac_ne hfac_diff)
+      (_root_.logDeriv_fun_prod (s := T k) (f := fac) (x := z) hfac_ne hfac_diff)
   have h_limit_eq : Set.EqOn
       (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
       (fun z => ∑' i : XiZeroWithMultiplicity, term i z) K := by

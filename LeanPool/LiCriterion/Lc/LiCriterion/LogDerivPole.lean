@@ -237,8 +237,8 @@ theorem tendsto_norm_logDeriv_of_analyticAt_of_eq_zero {f : ℂ → ℂ} {z0 : �
     have hmul :
         _root_.logDeriv (fun w => (w - z0) ^ n * g w) z =
           _root_.logDeriv (fun w : ℂ => (w - z0) ^ n) z + _root_.logDeriv g z := by
-      simpa [mul_comm, mul_left_comm, mul_assoc] using
-        (_root_.logDeriv_mul (f := fun w : ℂ => (w - z0) ^ n) (g := g) (x := z)
+      exact
+        (_root_.logDeriv_fun_mul (f := fun w : ℂ => (w - z0) ^ n) (g := g) (x := z)
           hzpow hzgn hdf hzdiff)
     have hlin : _root_.logDeriv (fun w : ℂ => (w - z0) ^ n) z = (n : ℂ) / (z - z0) := by
       by_cases hn0 : n = 0
