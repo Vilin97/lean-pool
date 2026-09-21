@@ -81,18 +81,18 @@ namespace AffineForm
 /-- Integral scalar multiplication, kept explicit to make the generated data
 grammar independent of typeclass inference. -/
 def scale (scalar : ℤ) (form : AffineForm m) : AffineForm m where
-  fixedValue := scalar * form.constant
+  fixedValue := scalar * form.fixedValue
   coefficient := fun coordinate => scalar * form.coefficient coordinate
 
 /-- Difference of two integral affine forms. -/
 def sub (left right : AffineForm m) : AffineForm m where
-  fixedValue := left.constant - right.constant
+  fixedValue := left.fixedValue - right.fixedValue
   coefficient := fun coordinate =>
     left.coefficient coordinate - right.coefficient coordinate
 
 /-- The strict-integral positivity row `form(point) - 1 >= 0`. -/
 def positive (form : AffineForm m) : AffineForm m where
-  fixedValue := form.constant - 1
+  fixedValue := form.fixedValue - 1
   coefficient := form.coefficient
 
 @[simp] theorem eval_scale (scalar : ℤ) (form : AffineForm m)
@@ -100,15 +100,15 @@ def positive (form : AffineForm m) : AffineForm m where
     (scale scalar form).eval point = scalar * form.eval point := by
   simp only [scale, AffineCover.AffineForm.eval]
   calc
-    scalar * form.constant +
+    scalar * form.fixedValue +
         ∑ x, scalar * form.coefficient x * point x =
-      scalar * form.constant +
+      scalar * form.fixedValue +
         ∑ x, scalar * (form.coefficient x * point x) := by
           congr 1
           apply Finset.sum_congr rfl
           intro x _hx
           ring
-    _ = scalar * (form.constant +
+    _ = scalar * (form.fixedValue +
         ∑ x, form.coefficient x * point x) := by
           rw [mul_add]
           congr 1

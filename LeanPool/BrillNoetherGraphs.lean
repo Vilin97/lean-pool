@@ -300,7 +300,7 @@ import LeanPool.BrillNoetherGraphs.LowGenus.Highlights
 import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.CoreRelabelingClosed
 import LeanPool.BrillNoetherGraphs.LowGenus.Infrastructure.TrivalentExpansionClosed
 import LeanPool.BrillNoetherGraphs.LowGenus.LowGenusExistence
-import LeanPool.BrillNoetherGraphs.Research.genus-five-specialization-audit
+import LeanPool.BrillNoetherGraphs.Research.GenusFiveSpecializationAudit
 import LeanPool.BrillNoetherGraphs.TreewidthGonality
 import LeanPool.BrillNoetherGraphs.TreewidthGonality.Gonality.BrambleGonality
 import LeanPool.BrillNoetherGraphs.TreewidthGonality.Gonality.TreewidthGonality

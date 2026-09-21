@@ -88,7 +88,7 @@ this avoids asking `Decidable` to construct an equality proof between two
 function-valued coefficient fields while a large generated certificate is
 being reduced by the kernel. -/
 def equal (left right : AffineForm m) : Bool :=
-  decide (left.constant = right.constant) &&
+  decide (left.fixedValue = right.fixedValue) &&
     allFin fun coordinate =>
       decide (left.coefficient coordinate = right.coefficient coordinate)
 
@@ -123,7 +123,7 @@ def mem (form : AffineForm m) (forms : List (AffineForm m)) : Bool :=
 
 /-- Evaluation of an integral affine form at an integral point. -/
 def eval (form : AffineForm m) (point : Fin m → ℤ) : ℤ :=
-  form.constant + ∑ i, form.coefficient i * point i
+  form.fixedValue + ∑ i, form.coefficient i * point i
 
 /-- The closed integral inequality represented by an affine form. -/
 def Holds (form : AffineForm m) (point : Fin m → ℤ) : Prop :=
@@ -134,7 +134,7 @@ def Holds (form : AffineForm m) (point : Fin m → ℤ) : Prop :=
 If `a(x) >= 0` fails and `a(x)` is integral, then `a(x) <= -1`, equivalently
 `-a(x)-1 >= 0`. -/
 def violation (form : AffineForm m) : AffineForm m where
-  fixedValue := -form.constant - 1
+  fixedValue := -form.fixedValue - 1
   coefficient := fun i => -form.coefficient i
 
 @[simp] theorem eval_zero (point : Fin m → ℤ) :
@@ -157,7 +157,7 @@ def violation (form : AffineForm m) : AffineForm m where
 
 /-- Rational evaluation, used only in the proof of Farkas soundness. -/
 def evalRat (form : AffineForm m) (point : Fin m → ℤ) : ℚ :=
-  (form.constant : ℚ) +
+  (form.fixedValue : ℚ) +
     ∑ i, (form.coefficient i : ℚ) * (point i : ℚ)
 
 @[simp] theorem evalRat_eq_cast_eval (form : AffineForm m)
@@ -200,7 +200,7 @@ def rowAt (rows : List (AffineForm m)) (index : ℕ) : AffineForm m :=
 /-- Sum of the constant coefficients in the proposed Farkas combination. -/
 def constantSum (data : FarkasData) (rows : List (AffineForm m)) : ℚ :=
   (data.terms.map fun term =>
-    term.weight * ((rowAt rows term.row).constant : ℚ)).sum
+    term.weight * ((rowAt rows term.row).fixedValue : ℚ)).sum
 
 /-- Sum of one variable coefficient in the proposed Farkas combination. -/
 def coefficientSum (data : FarkasData) (rows : List (AffineForm m))
@@ -235,7 +235,7 @@ def coefficientSumInt (data : FarkasData)
 /-- Integer constant sum used by the kernel-reduction fast path. -/
 def constantSumInt (data : FarkasData) (rows : List (AffineForm m)) : ℤ :=
   (data.terms.map fun term =>
-    term.weight.num * (rowAt rows term.row).constant).sum
+    term.weight.num * (rowAt rows term.row).fixedValue).sum
 
 /-- Proof-free arithmetic replay for a leaf whose multipliers have denominator
 one.  Unlike rational multiplication and addition, these integer operations
@@ -280,9 +280,9 @@ private theorem constantSumInt_aux
     (terms : List FarkasTerm) (rows : List (AffineForm m))
     (hIntegral : ∀ term ∈ terms, term.weight.den = 1) :
     (terms.map fun term =>
-      term.weight * ((rowAt rows term.row).constant : ℚ)).sum =
+      term.weight * ((rowAt rows term.row).fixedValue : ℚ)).sum =
     ((terms.map fun term =>
-      term.weight.num * (rowAt rows term.row).constant).sum : ℚ) := by
+      term.weight.num * (rowAt rows term.row).fixedValue).sum : ℚ) := by
   induction terms with
   | nil => simp
   | cons term terms inductionHypothesis =>
@@ -414,7 +414,7 @@ private theorem weighted_eval_expansion
     (terms.map fun term =>
       term.weight * (rowAt rows term.row).evalRat point).sum =
       (terms.map fun term =>
-        term.weight * ((rowAt rows term.row).constant : ℚ)).sum +
+        term.weight * ((rowAt rows term.row).fixedValue : ℚ)).sum +
       ∑ coordinate : Fin m,
         (terms.map fun term =>
           term.weight *
@@ -448,7 +448,7 @@ private theorem weighted_eval_eq_constantSum
 
 /-- A valid Farkas leaf proves that its current affine region is empty. -/
 theorem not_formsHold_of_valid
-    (data : FarkasData) (rows : List (AffineForm m))
+    (data : FarkasData) (rows : List (AffineForm m)) {point : Fin m → ℤ}
     (hValid : data.Valid rows) :
     ¬FormsHold rows point := by
   intro hRows

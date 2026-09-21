@@ -176,7 +176,7 @@ def certificate (core : ExplicitPotential.Core n p)
     (certificate core segment cone).cone = cone := rfl
 
 private theorem affineForm_eq_zero {k : ℕ} (form : ExplicitPotential.AffineForm k)
-    (hConstant : form.constant = 0)
+    (hConstant : form.fixedValue = 0)
     (hCoefficient : ∀ coordinate, form.coefficient coordinate = 0) :
     form = 0 := by
   obtain ⟨fixedValue, coefficient⟩ := form

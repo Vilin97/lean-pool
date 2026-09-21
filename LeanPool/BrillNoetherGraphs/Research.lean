@@ -4,6 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathan Pflueger
 -/
 
-import LeanPool.BrillNoetherGraphs.Research.genus-five-specialization-audit
+import LeanPool.BrillNoetherGraphs.Research.GenusFiveSpecializationAudit
 
 /-! Supporting modules for Brill–Noether theory and gonality of finite graphs. -/
