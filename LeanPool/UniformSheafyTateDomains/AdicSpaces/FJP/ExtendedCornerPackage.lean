@@ -57,7 +57,7 @@ theorem exists_flattenPP (n m : ℕ) :
     ∃ e : (P (P E n) m ≃+* P E (n + m)), ∀ f, ‖e f‖ = ‖f‖ := by
   induction m with
   | zero =>
-    exact ⟨foo (P E n) (fun _ : Fin 0 => (1 : ℝ)), fun f => foo_norm_map f⟩
+    exact ⟨restrictedFinZeroEquiv (P E n) (fun _ : Fin 0 => (1 : ℝ)), fun f => foo_norm_map f⟩
   | succ m ih =>
     obtain ⟨eIH, hIH⟩ := ih
     refine ⟨(UnitDiscExample.finSuccOne (P E n) m).trans

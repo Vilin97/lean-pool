@@ -24,6 +24,7 @@ import LeanPool.UniformSheafyTateDomains.AdicSpaces.Vendored.CoramMvGaussNorm
 
 variable {R : Type*} {σ : Type*} (c : σ → ℝ)
 
+/-- Every coordinate of the given radius vector is strictly positive. -/
 class StrongPos (c : σ → ℝ) : Prop where pos : ∀ i, 0 < c i
 
 lemma StrongPos_pos [StrongPos c] : ∀ i, 0 < c i := fun i => StrongPos.pos i
@@ -40,6 +41,7 @@ lemma StrongPos_unit_iff (c : ℝ) : StrongPos (fun _ : Unit ↦ c) ↔ 0 < c :=
 namespace MvRestricted
 
 variable (R) in
+/-- The weighted Gauss norm of a multivariate restricted power series. -/
 noncomputable
 abbrev gaussNorm [NormedRing R] [IsUltrametricDist R] (f : MvPowerSeries.Restricted R c) : ℝ :=
   MvPowerSeries.gaussNorm (norm : R → ℝ) c f.1
@@ -47,6 +49,7 @@ abbrev gaussNorm [NormedRing R] [IsUltrametricDist R] (f : MvPowerSeries.Restric
 lemma hasGaussNorm [NormedRing R] [IsUltrametricDist R] (f : MvPowerSeries.Restricted R c) :
   MvPowerSeries.HasGaussNorm norm c f.1 := Filter.Tendsto.bddAbove_range_of_cofinite f.2
 
+/-- The Gauss ring norm on multivariate restricted power series with positive radii. -/
 noncomputable
 def isRingNorm [NormedRing R] [IsUltrametricDist R] [StrongPos c] :
     RingNorm (MvPowerSeries.Restricted R c) where
@@ -74,12 +77,13 @@ noncomputable
 instance isNormedRing [NormedRing R] [IsUltrametricDist R] [StrongPos c] :
   NormedRing (MvPowerSeries.Restricted R c) := RingNorm.toNormedRing (isRingNorm c)
 
-lemma norm_eq [NormedRing R] [IsUltrametricDist R] [StrongPos c] (f : MvPowerSeries.Restricted R c) :
+lemma norm_eq [NormedRing R] [IsUltrametricDist R] [StrongPos c] (f : MvPowerSeries.Restricted R
+  c) :
     ‖f‖ = MvPowerSeries.gaussNorm (norm : R → ℝ) c f.1 := by rfl
 
 variable (R) in
-noncomputable
-def isNonarchimedean [NormedRing R] [IsUltrametricDist R] [StrongPos c] :
+/-- The weighted Gauss norm satisfies the nonarchimedean triangle inequality. -/
+theorem isNonarchimedean [NormedRing R] [IsUltrametricDist R] [StrongPos c] :
     IsNonarchimedean (R := ℝ) (α := MvPowerSeries.Restricted R c) norm :=
   fun f g => MvPowerSeries.gaussNorm_add_le_max norm c f.1 g.1 (StrongLT.le (StrongPos_pos c))
     norm_nonneg IsUltrametricDist.norm_add_le_max (hasGaussNorm c f) (hasGaussNorm c g)
@@ -93,7 +97,7 @@ instance isUltrametricDist
 
 section AbsoluteValue
 
-private lemma foo (hc : ∀ i, 0 ≤ c i) (t : σ →₀ ℕ) : 0 ≤ t.prod (c · ^ ·) :=
+private lemma restrictedFinZeroEquiv (hc : ∀ i, 0 ≤ c i) (t : σ →₀ ℕ) : 0 ≤ t.prod (c · ^ ·) :=
   Finset.prod_nonneg (fun i _ ↦ pow_nonneg (hc i) (t i))
 
 lemma gaussNorm_achieved [NormedRing R] [IsUltrametricDist R] (hc : 0 ≤ c)
@@ -104,19 +108,21 @@ lemma gaussNorm_achieved [NormedRing R] [IsUltrametricDist R] (hc : 0 ≤ c)
   · use 0
     have := MvPowerSeries.le_gaussNorm norm c f.1 (hasGaussNorm c f) 0
     simp only [hG] at this ⊢
-    exact le_antisymm this (mul_nonneg (norm_nonneg _) (foo c hc 0))
+    exact le_antisymm this (mul_nonneg (norm_nonneg _) (restrictedFinZeroEquiv c hc 0))
   · have hpos : 0 < gaussNorm R c f :=
       (MvPowerSeries.gaussNorm_nonneg norm c f.1 norm_nonneg).lt_of_ne' hG
-    have hfin : {t | gaussNorm R c f / 2 ≤ ‖MvPowerSeries.coeff t f.1‖ * t.prod (c · ^ ·)}.Finite := by
+    have hfin : {t | gaussNorm R c f / 2 ≤ ‖MvPowerSeries.coeff t f.1‖ * t.prod (c · ^
+      ·)}.Finite := by
       have : MvPowerSeries.IsRestrictedGauss c f.1 := f.2
       simp_rw [MvPowerSeries.IsRestrictedGauss, NormedAddGroup.tendsto_nhds_zero] at this
       have := this (gaussNorm R c f / 2) (by aesop)
       simp only [norm_mul, Real.norm_eq_abs, Filter.eventually_cofinite, not_lt, abs_norm] at this
       have habs : ∀ t : σ →₀ ℕ, |t.prod (c · ^ ·)| = t.prod (c · ^ ·) :=
-        fun t => abs_of_nonneg (foo c hc t)
+        fun t => abs_of_nonneg (restrictedFinZeroEquiv c hc t)
       simp only [habs] at this
       exact this
-    have hne : {t | gaussNorm R c f / 2 ≤ ‖MvPowerSeries.coeff t f.1‖ * t.prod (c · ^ ·)}.Nonempty := by
+    have hne : {t | gaussNorm R c f / 2 ≤ ‖MvPowerSeries.coeff t f.1‖ * t.prod (c · ^
+      ·)}.Nonempty := by
       by_contra hemp
       rw [Set.not_nonempty_iff_eq_empty] at hemp
       have hlt : gaussNorm R c f ≤ gaussNorm R c f / 2 := by
@@ -142,13 +148,14 @@ lemma achievingPoints_finite [NormedRing R] [IsUltrametricDist R] (hc : 0 ≤ c)
   simp_rw [MvPowerSeries.AchievesGaussNorm]
   have hpos : 0 < gaussNorm R c f :=
       (MvPowerSeries.gaussNorm_nonneg norm c f.1 norm_nonneg).lt_of_ne' h
-  have hfin : {t | gaussNorm R c f / 2 ≤ ‖MvPowerSeries.coeff t f.1‖ * t.prod (c · ^ ·)}.Finite := by
+  have hfin : {t | gaussNorm R c f / 2 ≤ ‖MvPowerSeries.coeff t f.1‖ * t.prod (c · ^ ·)}.Finite
+    := by
       have : MvPowerSeries.IsRestrictedGauss c f.1 := f.2
       simp_rw [MvPowerSeries.IsRestrictedGauss, NormedAddGroup.tendsto_nhds_zero] at this
       have := this (gaussNorm R c f / 2) (by aesop)
       simp only [norm_mul, Real.norm_eq_abs, Filter.eventually_cofinite, not_lt, abs_norm] at this
       have habs : ∀ t : σ →₀ ℕ, |t.prod (c · ^ ·)| = t.prod (c · ^ ·) :=
-        fun t => abs_of_nonneg (foo c hc t)
+        fun t => abs_of_nonneg (restrictedFinZeroEquiv c hc t)
       simp only [habs] at this
       exact this
   refine Set.Finite.subset hfin ?_
@@ -194,7 +201,7 @@ lemma bar [NormedRing R] [IsUltrametricDist R] [LinearOrder σ] (hc : ∀ i, 0 <
   -- one component is lexicographically strictly above its maximum achiever
   have hcase : toLex i < toLex p.1 ∨ toLex j < toLex p.2 := by
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     obtain ⟨h1, h2⟩ := hcon
     rcases lt_or_eq_of_le h1 with h1' | h1'
     · have hstrict : toLex (p.1 + p.2) < toLex (i + j) := by
@@ -273,8 +280,8 @@ lemma bar [NormedRing R] [IsUltrametricDist R] [LinearOrder σ] (hc : ∀ i, 0 <
           (i.prod (c · ^ ·) * j.prod (c · ^ ·)) := by ring
   exact lt_of_le_of_lt (norm_mul_le _ _) hkey
 
-noncomputable
-def isAbsoluteValue [NormedRing R] [IsUltrametricDist R] [LinearOrder σ] [StrongPos c]
+/-- A multiplicative coefficient norm induces a multiplicative Gauss absolute value. -/
+theorem isAbsoluteValue [NormedRing R] [IsUltrametricDist R] [LinearOrder σ] [StrongPos c]
     (hnorm : ∀ a b : R, norm (a * b) = norm a * norm b) : IsAbsoluteValue (gaussNorm R c) where
   abv_nonneg' g := MvPowerSeries.gaussNorm_nonneg norm c g.1 norm_nonneg
   abv_eq_zero' := by
@@ -288,10 +295,10 @@ def isAbsoluteValue [NormedRing R] [IsUltrametricDist R] [LinearOrder σ] [Stron
     (MvPowerSeries.gaussNorm_nonneg norm c _ norm_nonneg))
   abv_mul' f g := by
     by_cases h1 : gaussNorm R c f = 0
-    · simp? [h1]
+    · simp only [h1, zero_mul]
       suffices f * g = 0 by
         rw [this]
-        show MvPowerSeries.gaussNorm norm c ((0 : MvPowerSeries.Restricted R c)).1 = 0
+        change MvPowerSeries.gaussNorm norm c ((0 : MvPowerSeries.Restricted R c)).1 = 0
         rw [show ((0 : MvPowerSeries.Restricted R c)).1 = (0 : MvPowerSeries σ R) from rfl]
         exact MvPowerSeries.gaussNorm_zero norm c norm_zero
       suffices f = 0 by
@@ -300,10 +307,10 @@ def isAbsoluteValue [NormedRing R] [IsUltrametricDist R] [LinearOrder σ] [Stron
         (StrongPos_pos c) (hasGaussNorm c f)).mp h1
       exact ⟨fun h => by rw [h]; rfl, fun h => Subtype.ext h⟩
     by_cases h2 : gaussNorm R c g = 0
-    · simp? [h2]
+    · simp only [h2, mul_zero]
       suffices f * g = 0 by
         rw [this]
-        show MvPowerSeries.gaussNorm norm c ((0 : MvPowerSeries.Restricted R c)).1 = 0
+        change MvPowerSeries.gaussNorm norm c ((0 : MvPowerSeries.Restricted R c)).1 = 0
         rw [show ((0 : MvPowerSeries.Restricted R c)).1 = (0 : MvPowerSeries σ R) from rfl]
         exact MvPowerSeries.gaussNorm_zero norm c norm_zero
       suffices g = 0 by
@@ -321,14 +328,15 @@ end MvRestricted
 
 section MvPolynomial
 
-lemma MvPolynomial.IsRestrictedGauss [NormedCommRing R] [IsUltrametricDist R] (f : MvPolynomial σ R) :
+lemma MvPolynomial.IsRestrictedGauss [NormedCommRing R] (f : MvPolynomial σ R) :
     MvPowerSeries.IsRestrictedGauss c f.toMvPowerSeries := by
   suffices {t | ¬ (‖(MvPowerSeries.coeff t) f.toMvPowerSeries‖ * t.prod (c · ^ ·) = 0)}.Finite by
     exact tendsto_nhds_of_eventually_eq this
   simp only [coeff_coe, mul_eq_zero, norm_eq_zero, not_or, ← mem_support_iff]
   exact Set.Finite.sep (Finset.finite_toSet _) _
 
-def MvPolynomial.toMvRestricted [NormedCommRing R] [IsUltrametricDist R] [StrongPos c]
+/-- View a polynomial as a restricted power series for the given radii. -/
+def MvPolynomial.toMvRestricted [NormedCommRing R] [IsUltrametricDist R]
     (f : MvPolynomial σ R) : MvPowerSeries.Restricted R c :=
   ⟨f.toMvPowerSeries, MvPolynomial.IsRestrictedGauss c f⟩
 

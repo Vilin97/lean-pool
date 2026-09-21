@@ -194,7 +194,7 @@ theorem mem_span_C_pow_of_coeff_norm_le {t : E} (htu : IsUnit t) (ht1 : ‖t‖ 
 `Fin 0` is the isometric copy of `E`). -/
 noncomputable instance : CompleteSpace (P E m) := by
   cases m with
-  | zero => exact IsometryEquiv.completeSpace (foo_isom (R := E) (fun _ : Fin 0 => (1 : ℝ)))
+  | zero => exact IsometryEquiv.completeSpace (restrictedFinZeroIsometry (R := E) (fun _ : Fin 0 => (1 : ℝ)))
   | succ k => infer_instance
 
 section AdicBridge

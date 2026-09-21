@@ -52,7 +52,7 @@ omit [IsNoetherianRing R] in
 /-- Characterization of closure in the `I`-adic topology: `x ∈ closure q`
 iff `x ∈ q + I^n` for every `n`. -/
 theorem mem_closure_iff_of_isAdic
-    [TopologicalSpace R] [IsTopologicalRing R]
+    [TopologicalSpace R]
     {I : Ideal R} (hI : IsAdic I) (q : Ideal R) (x : R) :
     x ∈ closure (q : Set R) ↔ ∀ n : ℕ, x ∈ (q + I ^ n : Ideal R) := by
   rw [mem_closure_iff_nhds]
@@ -77,7 +77,7 @@ theorem mem_closure_iff_of_isAdic
 hypothesis.** For a Noetherian commutative ring `R` equipped with the `I`-adic
 topology and `I ⊆ Jacobson(⊥)`, every ideal `q ⊆ R` is closed. -/
 theorem Ideal.isClosed_of_le_jacobson
-    [TopologicalSpace R] [IsTopologicalRing R]
+    [TopologicalSpace R]
     {I : Ideal R} (hI : IsAdic I)
     (h_jac : I ≤ Ideal.jacobson ⊥)
     (q : Ideal R) : IsClosed (q : Set R) := by
@@ -110,7 +110,7 @@ theorem Ideal.isClosed_of_le_jacobson
 Noetherian rings.** Corollary of `Ideal.isClosed_of_le_jacobson` using
 `IsAdicComplete.le_jacobson_bot`. -/
 theorem Ideal.isClosed_of_isAdicComplete
-    [TopologicalSpace R] [IsTopologicalRing R]
+    [TopologicalSpace R] 
     (I : Ideal R) (hI : IsAdic I) [IsAdicComplete I R]
     (q : Ideal R) : IsClosed (q : Set R) :=
   Ideal.isClosed_of_le_jacobson hI (IsAdicComplete.le_jacobson_bot I) q
@@ -128,7 +128,7 @@ rings typically have `Ideal.jacobson ⊥ ⊊ Ideal.jacobson q` for specific
 containment fails in degenerate `locSubring` cases but the pointwise
 containment at prime extensions holds unconditionally. -/
 theorem Ideal.isClosed_of_le_jacobson_pointwise
-    [TopologicalSpace R] [IsTopologicalRing R]
+    [TopologicalSpace R]
     {I : Ideal R} (hI : IsAdic I)
     (q : Ideal R) (h_jac : I ≤ Ideal.jacobson q) :
     IsClosed (q : Set R) := by
@@ -208,7 +208,7 @@ omit [IsNoetherianRing R] in
 /-- **In an `I`-adic topology, every element of `I` is topologically nilpotent.**
 No completeness or Hausdorff hypothesis needed. -/
 theorem isTopologicallyNilpotent_of_mem_of_isAdic
-    [TopologicalSpace R] [IsTopologicalRing R]
+    [TopologicalSpace R]
     {I : Ideal R} (hI : IsAdic I) {x : R} (hx : x ∈ I) :
     IsTopologicallyNilpotent x := by
   intro U hU

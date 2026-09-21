@@ -949,7 +949,7 @@ theorem PrincipalPairOfDefinition.pi_mem_I {A : Type*}
 /-- The generator `π` of a principal pair is topologically nilpotent
 in `A`. -/
 theorem PrincipalPairOfDefinition.pi_topologicallyNilpotent
-    {A : Type*} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A]
+    {A : Type*} [CommRing A] [TopologicalSpace A]
     (P : PrincipalPairOfDefinition A) :
     IsTopologicallyNilpotent ((P.π : A)) :=
   P.toPairOfDefinition.isTopologicallyNilpotent_of_mem P.pi_mem_I
@@ -968,7 +968,7 @@ theorem PrincipalPairOfDefinition.exists_pow_mul_mem_A₀
   have h_open : IsOpen {x : A | x * a ∈ P.toPairOfDefinition.A₀} :=
     P.toPairOfDefinition.isOpen.preimage h_cont
   have h_zero : (0 : A) ∈ {x : A | x * a ∈ P.toPairOfDefinition.A₀} := by
-    simp only [Set.mem_setOf_eq, zero_mul, P.toPairOfDefinition.A₀.zero_mem]
+    simp only [Set.mem_ofPred_eq, zero_mul, P.toPairOfDefinition.A₀.zero_mem]
   have h_nhds : {x : A | x * a ∈ P.toPairOfDefinition.A₀} ∈
       nhds (0 : A) :=
     h_open.mem_nhds h_zero

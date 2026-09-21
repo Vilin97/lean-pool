@@ -147,8 +147,8 @@ theorem koszulDifferential_apply (r : Fin m → R) (q : ℕ) (x : KoszulTerm R m
   simp only [koszulDifferential, LinearMap.pi_apply, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases hi : i ∈ J.1
-  · rw [dif_pos hi, dif_pos hi, LinearMap.zero_apply]
-  · rw [dif_neg hi, dif_neg hi, LinearMap.smul_apply, LinearMap.proj_apply, smul_eq_mul,
+  · rw [dite_eq_left hi, dite_eq_left hi, LinearMap.zero_apply]
+  · rw [dite_eq_right hi, dite_eq_right hi, LinearMap.smul_apply, LinearMap.proj_apply, smul_eq_mul,
       mul_assoc]
 
 /-! ### `d ∘ d = 0`
@@ -166,7 +166,7 @@ one. -/
 theorem card_filter_lt_insert_of_lt {J : Finset (Fin m)} {i j : Fin m} (hji : j < i)
     (hj : j ∉ J) :
     ((insert j J).filter (· < i)).card = (J.filter (· < i)).card + 1 := by
-  rw [Finset.filter_insert, if_pos hji,
+  rw [Finset.filter_insert, ite_eq_left hji,
     Finset.card_insert_of_notMem fun h => hj (Finset.mem_of_mem_filter j h)]
 
 /-- Inserting an element `i` that is not below `j` leaves the count of elements below
@@ -174,7 +174,7 @@ theorem card_filter_lt_insert_of_lt {J : Finset (Fin m)} {i j : Fin m} (hji : j 
 theorem card_filter_lt_insert_of_not_lt {J : Finset (Fin m)} {i j : Fin m}
     (hij : ¬i < j) :
     ((insert i J).filter (· < j)).card = (J.filter (· < j)).card := by
-  rw [Finset.filter_insert, if_neg hij]
+  rw [Finset.filter_insert, ite_eq_right hij]
 
 /-- The `(i, j)`-summand of the twice-iterated Koszul differential at `J`: first insert
 `i` into `J`, then `j`. -/
@@ -194,22 +194,22 @@ private theorem comp_apply_eq_sum_pairTerm (r : Fin m → R) (q : ℕ)
   simp only [koszulDifferential_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases hi : i ∈ J.1
-  · rw [dif_pos hi]
-    exact (Finset.sum_eq_zero fun j _ => by simp only [pairTerm]; rw [dif_pos hi]).symm
-  · rw [dif_neg hi, Finset.mul_sum, Finset.mul_sum]
+  · rw [dite_eq_left hi]
+    exact (Finset.sum_eq_zero fun j _ => by simp only [pairTerm]; rw [dite_eq_left hi]).symm
+  · rw [dite_eq_right hi, Finset.mul_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
     simp only [pairTerm]
-    rw [dif_neg hi]
+    rw [dite_eq_right hi]
     by_cases hj : j ∈ insert i J.1
-    · rw [dif_pos hj, dif_pos hj, mul_zero, mul_zero]
-    · rw [dif_neg hj, dif_neg hj]
+    · rw [dite_eq_left hj, dite_eq_left hj, mul_zero, mul_zero]
+    · rw [dite_eq_right hj, dite_eq_right hj]
 
 private theorem pairTerm_self (r : Fin m → R) (q : ℕ) (x : KoszulTerm R m (q + 1 + 1))
     (J : KoszulIndex m q) (i : Fin m) : pairTerm r q x J i i = 0 := by
   simp only [pairTerm]
   by_cases hi : i ∈ J.1
-  · rw [dif_pos hi]
-  · rw [dif_neg hi, dif_pos (Finset.mem_insert_self i J.1)]
+  · rw [dite_eq_left hi]
+  · rw [dite_eq_right hi, dite_eq_left (Finset.mem_insert_self i J.1)]
 
 /-- The ordered-case cancellation: for `j < i` both outside `J`, the `(i, j)`- and
 `(j, i)`-summands carry opposite signs. -/
@@ -226,7 +226,7 @@ private theorem pairTerm_add_swap_of_lt {r : Fin m → R} {q : ℕ}
     · exact lt_irrefl i hji
     · exact hi h
   simp only [pairTerm]
-  rw [dif_neg hi, dif_neg hj', dif_neg hj, dif_neg hi',
+  rw [dite_eq_right hi, dite_eq_right hj', dite_eq_right hj, dite_eq_right hi',
     koszulTerm_index_congr x (Finset.insert_comm i j J.1),
     card_filter_lt_insert_of_not_lt hji.asymm, card_filter_lt_insert_of_lt hji hj,
     pow_succ]
@@ -236,18 +236,18 @@ private theorem pairTerm_add_swap (r : Fin m → R) (q : ℕ) (x : KoszulTerm R 
     (J : KoszulIndex m q) (i j : Fin m) :
     pairTerm r q x J i j + pairTerm r q x J j i = 0 := by
   by_cases hi : i ∈ J.1
-  · have h1 : pairTerm r q x J i j = 0 := by simp only [pairTerm]; rw [dif_pos hi]
+  · have h1 : pairTerm r q x J i j = 0 := by simp only [pairTerm]; rw [dite_eq_left hi]
     have h2 : pairTerm r q x J j i = 0 := by
       simp only [pairTerm]
       by_cases hj : j ∈ J.1
-      · rw [dif_pos hj]
-      · rw [dif_neg hj, dif_pos (Finset.mem_insert_of_mem hi)]
+      · rw [dite_eq_left hj]
+      · rw [dite_eq_right hj, dite_eq_left (Finset.mem_insert_of_mem hi)]
     rw [h1, h2, add_zero]
   · by_cases hj : j ∈ J.1
     · have h1 : pairTerm r q x J i j = 0 := by
         simp only [pairTerm]
-        rw [dif_neg hi, dif_pos (Finset.mem_insert_of_mem hj)]
-      have h2 : pairTerm r q x J j i = 0 := by simp only [pairTerm]; rw [dif_pos hj]
+        rw [dite_eq_right hi, dite_eq_left (Finset.mem_insert_of_mem hj)]
+      have h2 : pairTerm r q x J j i = 0 := by simp only [pairTerm]; rw [dite_eq_left hj]
       rw [h1, h2, add_zero]
     · rcases lt_trichotomy i j with hij | rfl | hji
       · rw [add_comm]
@@ -291,8 +291,8 @@ theorem koszulDifferential_map {S : Type*} [CommRing S] (φ : R →+* S) (r : Fi
   simp only [koszulDifferential_apply, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases hi : i ∈ J.1
-  · simp only [dif_pos hi, map_zero]
-  · simp only [dif_neg hi, map_mul, map_pow, map_neg, map_one]
+  · simp only [dite_eq_left hi, map_zero]
+  · simp only [dite_eq_right hi, map_mul, map_pow, map_neg, map_one]
 
 /-- Rescaling the sequence rescales the differential: every summand contains exactly one
 `r`-factor. -/
@@ -304,8 +304,8 @@ theorem koszulDifferential_smul_sequence (c : R) (r : Fin m → R) (q : ℕ)
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases hi : i ∈ J.1
-  · rw [dif_pos hi, dif_pos hi, mul_zero]
-  · rw [dif_neg hi, dif_neg hi]
+  · rw [dite_eq_left hi, dite_eq_left hi, mul_zero]
+  · rw [dite_eq_right hi, dite_eq_right hi]
     ring
 
 /-- The differential of the zero sequence is zero. -/
@@ -315,8 +315,8 @@ theorem koszulDifferential_zero (q : ℕ) :
   simp only [koszulDifferential_apply, LinearMap.zero_apply, Pi.zero_apply]
   refine Finset.sum_eq_zero fun i _ => ?_
   by_cases hi : i ∈ J.1
-  · rw [dif_pos hi]
-  · rw [dif_neg hi, zero_mul, mul_zero]
+  · rw [dite_eq_left hi]
+  · rw [dite_eq_right hi, zero_mul, mul_zero]
 
 /-- Degenerate degrees: for `q ≥ m` the source `KoszulTerm R m (q + 1)` is a
 subsingleton, so the differential is the zero map. -/
@@ -339,9 +339,9 @@ theorem koszulDifferential_continuous [TopologicalSpace R] [IsTopologicalRing R]
   simp only [koszulDifferential_apply]
   refine continuous_finsetSum _ fun i _ => ?_
   by_cases hi : i ∈ J.1
-  · simp only [dif_pos hi]
+  · simp only [dite_eq_left hi]
     exact continuous_const
-  · simp only [dif_neg hi]
+  · simp only [dite_eq_right hi]
     exact ((continuous_apply _).const_mul _).const_mul _
 
 end Differential
@@ -396,7 +396,8 @@ example (r : Fin 2 → R) (x : KoszulTerm R 2 1) :
       r 0 * x ⟨{0}, Finset.card_singleton 0⟩ + r 1 * x ⟨{1}, Finset.card_singleton 1⟩ := by
   rw [koszulTermZeroEquiv_apply]
   simp only [koszulDifferential_apply]
-  rw [Fin.sum_univ_two, dif_neg (Finset.notMem_empty 0), dif_neg (Finset.notMem_empty 1)]
+  rw [Fin.sum_univ_two, dite_eq_right (Finset.notMem_empty 0), dite_eq_right
+    (Finset.notMem_empty 1)]
   simp [Finset.filter_empty]
 
 /-- `m = 2`, degree 1, coefficient of `e₀` in `d(c · e₀∧e₁)`: the sign is `−r₁`. -/
@@ -404,8 +405,8 @@ example (r : Fin 2 → R) (c : R) :
     koszulTermOneEquiv (koszulDifferential r 1 fun _ => c) 0 = -(r 1 * c) := by
   rw [koszulTermOneEquiv_apply]
   simp only [koszulDifferential_apply]
-  rw [Fin.sum_univ_two, dif_pos (Finset.mem_singleton_self 0),
-    dif_neg (Finset.notMem_singleton.mpr (by decide : (1 : Fin 2) ≠ 0))]
+  rw [Fin.sum_univ_two, dite_eq_left (Finset.mem_singleton_self 0),
+    dite_eq_right (Finset.notMem_singleton.mpr (by decide : (1 : Fin 2) ≠ 0))]
   simp [Finset.filter_singleton]
 
 /-- `m = 2`, degree 1, coefficient of `e₁` in `d(c · e₀∧e₁)`: the sign is `+r₀`. -/
@@ -413,8 +414,8 @@ example (r : Fin 2 → R) (c : R) :
     koszulTermOneEquiv (koszulDifferential r 1 fun _ => c) 1 = r 0 * c := by
   rw [koszulTermOneEquiv_apply]
   simp only [koszulDifferential_apply]
-  rw [Fin.sum_univ_two, dif_pos (Finset.mem_singleton_self 1),
-    dif_neg (Finset.notMem_singleton.mpr (by decide : (0 : Fin 2) ≠ 1))]
+  rw [Fin.sum_univ_two, dite_eq_left (Finset.mem_singleton_self 1),
+    dite_eq_right (Finset.notMem_singleton.mpr (by decide : (0 : Fin 2) ≠ 1))]
   simp [Finset.filter_singleton]
 
 /-- `m = 3`, degree 1, evaluated at `{1}`: `d(e_i ∧ e_j) = r_i e_j − r_j e_i` reads
@@ -426,9 +427,9 @@ example (r : Fin 3 → R) (x : KoszulTerm R 3 2) :
   rw [koszulTermOneEquiv_apply]
   simp only [koszulDifferential_apply]
   rw [Fin.sum_univ_three,
-    dif_neg (Finset.notMem_singleton.mpr (by decide : (0 : Fin 3) ≠ 1)),
-    dif_pos (Finset.mem_singleton_self 1),
-    dif_neg (Finset.notMem_singleton.mpr (by decide : (2 : Fin 3) ≠ 1)),
+    dite_eq_right (Finset.notMem_singleton.mpr (by decide : (0 : Fin 3) ≠ 1)),
+    dite_eq_left (Finset.mem_singleton_self 1),
+    dite_eq_right (Finset.notMem_singleton.mpr (by decide : (2 : Fin 3) ≠ 1)),
     koszulTerm_index_congr x (by decide : (insert 2 {1} : Finset (Fin 3)) = {1, 2}),
     show (({1} : Finset (Fin 3)).filter (· < 0)).card = 0 by decide,
     show (({1} : Finset (Fin 3)).filter (· < 2)).card = 1 by decide,

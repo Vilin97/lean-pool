@@ -32,13 +32,14 @@ localization `Localization.Away π`.
 
 @[expose] public section
 
-open scoped Classical
 
 section GDomain
 
 variable {B : Type*} [CommRing B] [IsDomain B] [IsNoetherianRing B]
 variable {π : B}
 
+omit [IsNoetherianRing B] in
+open Classical in
 /-- Primes avoiding `π` collapse to `⊥` when `B[1/π]` is a field: a nonzero
 element of such a prime becomes a unit in the field, so a power of `π` lands
 in the prime. -/
@@ -85,6 +86,7 @@ theorem Ideal.eq_bot_of_isPrime_of_notMem_of_isField_away
     exact Ideal.mul_mem_right _ _ hx
   exact hπq (hq.mem_of_pow_mem _ hmem)
 
+open Classical in
 /-- **The G-domain lemma, minimal-prime form**: every nonzero prime of a
 noetherian domain with field localization `B[1/π]` is a minimal prime of
 `(π)` (Krull's principal ideal theorem + the height pinch + finite prime
@@ -152,7 +154,7 @@ theorem Ideal.mem_minimalPrimes_span_of_isPrime_of_ne_bot_of_isField_away
   -- 𝔭 is contained in the union; prime avoidance picks one
   obtain ⟨x₀, hx₀p, hx₀0⟩ : ∃ x ∈ 𝔭, x ≠ (0 : B) := by
     by_contra hall
-    push_neg at hall
+    push Not at hall
     exact hp0 ((Submodule.eq_bot_iff _).mpr hall)
   obtain ⟨𝔯₀, hr₀min, hx₀r, hr₀p⟩ := hxmem x₀ hx₀p hx₀0
   have hFprime : ∀ 𝔮 ∈ hfin.toFinset, 𝔮.IsPrime := by
@@ -183,6 +185,7 @@ theorem Ideal.mem_minimalPrimes_span_of_isPrime_of_ne_bot_of_isField_away
   rw [heq]
   exact hr₀min
 
+open Classical in
 /-- **The G-domain lemma, maximality form**: every nonzero prime is maximal
 (minimal primes of `(π)` form an antichain containing every nonzero prime). -/
 theorem Ideal.isMaximal_of_isPrime_of_ne_bot_of_isField_away

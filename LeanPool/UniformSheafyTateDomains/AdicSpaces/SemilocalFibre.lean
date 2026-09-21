@@ -23,34 +23,42 @@ and `AdicCompletion.semilocalSplit` applies.
 
 @[expose] public section
 
-open scoped Classical
 
 section SemilocalFibre
 
 variable {C : Type*} [CommRing C] (Q : Ideal C) [IsArtinianRing (C ⧸ Q)]
 
+open Classical in
 /-- The (finite) index of maximal ideals of the fibre. -/
 noncomputable def fibreMaximals : Type _ :=
   {J : Ideal (C ⧸ Q) // J.IsMaximal}
 
+open Classical in
 noncomputable instance : Fintype (fibreMaximals Q) :=
-  (IsArtinianRing.setOf_isMaximal_finite (R := C ⧸ Q)).fintype
+  (IsArtinianRing.setOfPred_isMaximal_finite (R := C ⧸ Q)).fintype
 
+open Classical in
 /-- The maximal ideals of `C` over `Q`, indexed by the fibre maximals. -/
 noncomputable def overMaximal (𝔫 : fibreMaximals Q) : Ideal C :=
   Ideal.comap (Ideal.Quotient.mk Q) 𝔫.1
 
+omit [IsArtinianRing (C ⧸ Q)] in
+open Classical in
 theorem overMaximal_isMaximal (𝔫 : fibreMaximals Q) :
     (overMaximal Q 𝔫).IsMaximal :=
   haveI := 𝔫.2
   Ideal.comap_isMaximal_of_surjective _ Ideal.Quotient.mk_surjective
 
+omit [IsArtinianRing (C ⧸ Q)] in
+open Classical in
 theorem le_overMaximal (𝔫 : fibreMaximals Q) : Q ≤ overMaximal Q 𝔫 := by
   intro x hx
-  show Ideal.Quotient.mk Q x ∈ 𝔫.1
+  change Ideal.Quotient.mk Q x ∈ 𝔫.1
   rw [Ideal.Quotient.eq_zero_iff_mem.mpr hx]
   exact 𝔫.1.zero_mem
 
+omit [IsArtinianRing (C ⧸ Q)] in
+open Classical in
 theorem overMaximal_injective :
     Function.Injective (overMaximal Q) := by
   intro a b hab
@@ -60,6 +68,8 @@ theorem overMaximal_injective :
     fun J => Ideal.map_comap_of_surjective _ Ideal.Quotient.mk_surjective _
   rw [← h1 a, ← h1 b, hab]
 
+omit [IsArtinianRing (C ⧸ Q)] in
+open Classical in
 theorem pairwise_coprime_overMaximal :
     Pairwise fun a b : fibreMaximals Q =>
       IsCoprime (overMaximal Q a) (overMaximal Q b) := by
@@ -68,6 +78,7 @@ theorem pairwise_coprime_overMaximal :
     ((overMaximal_isMaximal Q a).coprime_of_ne (overMaximal_isMaximal Q b)
       (fun h => hab (overMaximal_injective Q h)))
 
+open Classical in
 /-- Nilpotence of the intersection modulo `Q` (Jacobson radical of the
 Artinian fibre). -/
 theorem exists_pow_iInf_overMaximal_le :
@@ -97,9 +108,10 @@ theorem exists_pow_iInf_overMaximal_le :
         rw [hjac]
         ext x
         rw [Ideal.mem_comap]
-        show Ideal.Quotient.mk Q x ∈ (⊥ : Ideal (C ⧸ Q)) ↔ x ∈ Q
+        change Ideal.Quotient.mk Q x ∈ (⊥ : Ideal (C ⧸ Q)) ↔ x ∈ Q
         rw [Ideal.mem_bot, Ideal.Quotient.eq_zero_iff_mem]
 
+open Classical in
 /-- **The fibre splitting of the adic completion**: the `Q`-adic completion
 is the product of the completions at the maximal ideals over `Q`. -/
 noncomputable def AdicCompletion.fibreSplit :
@@ -115,6 +127,7 @@ section MapLevelwise
 
 variable {A B : Type*} [CommRing A] [CommRing B]
 
+open Classical in
 /-- **Completion homomorphism from levelwise data**: a compatible family of
 homomorphisms of power quotients induces a homomorphism of adic
 completions. -/
@@ -137,28 +150,29 @@ noncomputable def AdicCompletion.mapLevelwise (I : Ideal A) (J : Ideal B)
     rw [x.2 hab] at h4
     rw [← h4]⟩
   map_one' := Subtype.ext (funext fun r => by
-    show (AdicCompletion.levelEquiv J r).symm
+    change (AdicCompletion.levelEquiv J r).symm
       (g r (AdicCompletion.levelEquiv I r ((1 : AdicCompletion I A).1 r))) = _
     rw [show ((1 : AdicCompletion I A)).1 r = 1 from rfl, map_one, map_one]
     exact map_one _)
   map_mul' x y := Subtype.ext (funext fun r => by
-    show (AdicCompletion.levelEquiv J r).symm
+    change (AdicCompletion.levelEquiv J r).symm
       (g r (AdicCompletion.levelEquiv I r ((x * y).1 r))) = _
     rw [show (x * y).1 r = x.1 r * y.1 r from rfl, map_mul, map_mul, map_mul]
     rfl)
   map_zero' := Subtype.ext (funext fun r => by
-    show (AdicCompletion.levelEquiv J r).symm
+    change (AdicCompletion.levelEquiv J r).symm
       (g r (AdicCompletion.levelEquiv I r ((0 : AdicCompletion I A).1 r))) =
       ((0 : AdicCompletion J B)).1 r
     rw [show ((0 : AdicCompletion I A)).1 r = 0 from rfl,
       show ((0 : AdicCompletion J B)).1 r = 0 from rfl,
       _root_.map_zero, _root_.map_zero, _root_.map_zero])
   map_add' x y := Subtype.ext (funext fun r => by
-    show (AdicCompletion.levelEquiv J r).symm
+    change (AdicCompletion.levelEquiv J r).symm
       (g r (AdicCompletion.levelEquiv I r ((x + y).1 r))) = _
     rw [show (x + y).1 r = x.1 r + y.1 r from rfl, map_add, map_add, map_add]
     rfl)
 
+open Classical in
 theorem AdicCompletion.mapLevelwise_injective (I : Ideal A) (J : Ideal B)
     (g : ∀ r : ℕ, A ⧸ I ^ r →+* B ⧸ J ^ r)
     (hcompat : ∀ {a b : ℕ} (hab : a ≤ b) (x : A ⧸ I ^ b),
@@ -176,6 +190,7 @@ theorem AdicCompletion.mapLevelwise_injective (I : Ideal A) (J : Ideal B)
   have h2 := (AdicCompletion.levelEquiv J r).symm.injective h1'
   exact (AdicCompletion.levelEquiv I r).injective (hinj r h2)
 
+open Classical in
 /-- **Reducedness descends along levelwise-injective completion maps.** -/
 theorem AdicCompletion.isReduced_of_levelwise_injective (I : Ideal A)
     (J : Ideal B) (g : ∀ r : ℕ, A ⧸ I ^ r →+* B ⧸ J ^ r)
@@ -188,6 +203,7 @@ theorem AdicCompletion.isReduced_of_levelwise_injective (I : Ideal A)
   isReduced_of_injective (AdicCompletion.mapLevelwise I J g hcompat)
     (AdicCompletion.mapLevelwise_injective I J g hcompat hinj)
 
+open Classical in
 /-- **Injectivity from cofinal levelwise kernels**: if kernel elements at a
 cofinal level die under the transition maps, the induced completion map is
 injective. -/
@@ -228,6 +244,7 @@ theorem AdicCompletion.mapLevelwise_injective_of_cofinal (I : Ideal A)
   rw [h8]
   rfl
 
+open Classical in
 /-- **Reducedness from a cofinally injective levelwise map.** -/
 theorem AdicCompletion.isReduced_of_levelwise_cofinal (I : Ideal A)
     (J : Ideal B) (g : ∀ r : ℕ, A ⧸ I ^ r →+* B ⧸ J ^ r)
@@ -248,6 +265,7 @@ section MapLevelwisePi
 variable {A : Type*} [CommRing A] {ι : Type*}
 variable {B : ι → Type*} [∀ i, CommRing (B i)]
 
+open Classical in
 /-- **Completion homomorphism into a product from levelwise data.** -/
 noncomputable def AdicCompletion.mapLevelwisePi (I : Ideal A)
     (J : ∀ i, Ideal (B i))
@@ -269,18 +287,18 @@ noncomputable def AdicCompletion.mapLevelwisePi (I : Ideal A)
     rw [x.2 hab] at h4
     rw [← h4]⟩
   map_one' := funext fun i => Subtype.ext (funext fun r => by
-    show (AdicCompletion.levelEquiv (J i) r).symm
+    change (AdicCompletion.levelEquiv (J i) r).symm
       (g r (AdicCompletion.levelEquiv I r
         ((1 : AdicCompletion I A).1 r)) i) =
       ((1 : AdicCompletion (J i) (B i))).1 r
     rw [show ((1 : AdicCompletion I A)).1 r = 1 from rfl,
       show ((1 : AdicCompletion (J i) (B i))).1 r = 1 from rfl,
       map_one, map_one]
-    show (AdicCompletion.levelEquiv (J i) r).symm
+    change (AdicCompletion.levelEquiv (J i) r).symm
       ((1 : ∀ j, B j ⧸ (J j) ^ r) i) = 1
     rw [show (1 : ∀ j, B j ⧸ (J j) ^ r) i = 1 from rfl, map_one])
   map_mul' x y := funext fun i => Subtype.ext (funext fun r => by
-    show (AdicCompletion.levelEquiv (J i) r).symm
+    change (AdicCompletion.levelEquiv (J i) r).symm
       (g r (AdicCompletion.levelEquiv I r ((x * y).1 r)) i) = _
     rw [show (x * y).1 r = x.1 r * y.1 r from rfl, map_mul, map_mul]
     rw [show (g r (AdicCompletion.levelEquiv I r (x.1 r)) *
@@ -289,18 +307,18 @@ noncomputable def AdicCompletion.mapLevelwisePi (I : Ideal A)
         g r (AdicCompletion.levelEquiv I r (y.1 r)) i from rfl, map_mul]
     rfl)
   map_zero' := funext fun i => Subtype.ext (funext fun r => by
-    show (AdicCompletion.levelEquiv (J i) r).symm
+    change (AdicCompletion.levelEquiv (J i) r).symm
       (g r (AdicCompletion.levelEquiv I r
         ((0 : AdicCompletion I A).1 r)) i) =
       ((0 : AdicCompletion (J i) (B i))).1 r
     rw [show ((0 : AdicCompletion I A)).1 r = 0 from rfl,
       show ((0 : AdicCompletion (J i) (B i))).1 r = 0 from rfl,
       _root_.map_zero, _root_.map_zero]
-    show (AdicCompletion.levelEquiv (J i) r).symm
+    change (AdicCompletion.levelEquiv (J i) r).symm
       ((0 : ∀ j, B j ⧸ (J j) ^ r) i) = 0
     rw [show (0 : ∀ j, B j ⧸ (J j) ^ r) i = 0 from rfl, _root_.map_zero])
   map_add' x y := funext fun i => Subtype.ext (funext fun r => by
-    show (AdicCompletion.levelEquiv (J i) r).symm
+    change (AdicCompletion.levelEquiv (J i) r).symm
       (g r (AdicCompletion.levelEquiv I r ((x + y).1 r)) i) = _
     rw [show (x + y).1 r = x.1 r + y.1 r from rfl, map_add, map_add]
     rw [show (g r (AdicCompletion.levelEquiv I r (x.1 r)) +
@@ -309,6 +327,7 @@ noncomputable def AdicCompletion.mapLevelwisePi (I : Ideal A)
         g r (AdicCompletion.levelEquiv I r (y.1 r)) i from rfl, map_add]
     rfl)
 
+open Classical in
 theorem AdicCompletion.mapLevelwisePi_injective_of_cofinal (I : Ideal A)
     (J : ∀ i, Ideal (B i))
     (g : ∀ r : ℕ, A ⧸ I ^ r →+* ∀ i, B i ⧸ (J i) ^ r)
@@ -350,6 +369,7 @@ theorem AdicCompletion.mapLevelwisePi_injective_of_cofinal (I : Ideal A)
   rw [h8]
   rfl
 
+open Classical in
 /-- **Reducedness from a cofinally injective levelwise map into a product of
 completions.** -/
 theorem AdicCompletion.isReduced_of_levelwisePi_cofinal (I : Ideal A)

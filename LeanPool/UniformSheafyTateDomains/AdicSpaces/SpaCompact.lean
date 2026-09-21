@@ -29,29 +29,29 @@ closed in `Spv A` in general: each `{v | v.vle a 1}` equals the **open** set
 "closed-in-compact" route does not work directly through the `Spv A` topology.
 
 We therefore proceed through the Bool Huber embedding
-`ιSpv_bool : Spv A → (A × A → Bool)`. In the discrete Bool product:
+`ιSpvBool : Spv A → (A × A → Bool)`. In the discrete Bool product:
 
 * each coordinate condition `{r | r(a, 1) = true}` is clopen;
-* `range ιSpv_bool` is closed (from `ValuationSpectrumCompact`);
+* `range ιSpvBool` is closed (from `ValuationSpectrumCompact`);
 * under `[DiscreteTopology A]` the continuity condition `v ∈ Cont A` is
   automatic (`Cont A = univ`, `cont_eq_univ_of_discreteTopology`);
 
-hence `ιSpv_bool '' Spa A A⁺ = range ιSpv_bool ∩ ⋂_{a ∈ A⁺} {r | r(a, 1) = true}`
+hence `ιSpvBool '' Spa A A⁺ = range ιSpvBool ∩ ⋂_{a ∈ A⁺} {r | r(a, 1) = true}`
 is closed in the compact Hausdorff space `(A × A → Bool)`, so is compact. The
-factorisation `ιSpv = (fun r p => boolToProp (r p)) ∘ ιSpv_bool` transfers this to
+factorisation `ιSpv = (fun r p => boolToProp (r p)) ∘ ιSpvBool` transfers this to
 compactness of `ιSpv '' Spa A A⁺` (continuous image), and finally
 `ιSpv_isEmbedding.isCompact_iff` yields `IsCompact (Spa A A⁺ : Set (Spv A))` and
 the `CompactSpace ↥(Spa A A⁺)` instance.
 
 ## Main results
 
-* `image_spa_ιSpv_bool` : Characterisation of `ιSpv_bool '' Spa A A⁺` in the
-  discrete case as `range ιSpv_bool ∩ ⋂_{a ∈ A⁺} {r | r(a, 1) = true}`.
+* `image_spa_ιSpv_bool` : Characterisation of `ιSpvBool '' Spa A A⁺` in the
+  discrete case as `range ιSpvBool ∩ ⋂_{a ∈ A⁺} {r | r(a, 1) = true}`.
 * `isClosed_image_spa_ιSpv_bool` : The above image is closed in the Bool product.
 * `isCompact_spa` : `Spa A A⁺` is a compact subset of `Spv A` (discrete case).
 * `instCompactSpace_spa` : `CompactSpace ↥(Spa A A⁺)` (discrete case).
 * `isCompact_spa_of_isClosed_image` : Abstract compactness criterion — given any
-  closed subset `S` of `(A × A → Bool)` equal to `ιSpv_bool '' Spa A A⁺` (up to
+  closed subset `S` of `(A × A → Bool)` equal to `ιSpvBool '' Spa A A⁺` (up to
   intersection with the range), `Spa A A⁺` is compact.
 * `isCompact_spa_of_tate_pseudouniformizer` : Compactness of `Spa A A⁺` for Tate
   rings with an explicit pseudo-uniformizer `π` generating the ideal of
@@ -82,15 +82,15 @@ variable {A : Type*} [CommRing A] [TopologicalSpace A] [PlusSubring A]
 
 /-! ### Bool-embedding description of `Spa A A⁺` under `[DiscreteTopology A]` -/
 
-/-- **Image of `Spa A A⁺` under `ιSpv_bool` (discrete case).**
+/-- **Image of `Spa A A⁺` under `ιSpvBool` (discrete case).**
 
 Under `[DiscreteTopology A]`, the image of the adic spectrum under the Bool Huber
-embedding is exactly the intersection of `range ιSpv_bool` with the coordinate
+embedding is exactly the intersection of `range ιSpvBool` with the coordinate
 cylinders `{r | r (a, 1) = true}` for `a ∈ A⁺`. The continuity condition is
 automatic in the discrete setting (`cont_eq_univ_of_discreteTopology`). -/
 lemma image_spa_ιSpv_bool [DiscreteTopology A] :
-    (ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
-      Set.range (ιSpv_bool : Spv A → (A × A → Bool)) ∩
+    (ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
+      Set.range (ιSpvBool : Spv A → (A × A → Bool)) ∩
         ⋂ (a : A) (_ : a ∈ A⁺), {r : A × A → Bool | r (a, 1) = true} := by
   ext r
   simp only [Set.mem_image, Set.mem_inter_iff, Set.mem_iInter, Set.mem_range,
@@ -106,14 +106,14 @@ lemma image_spa_ιSpv_bool [DiscreteTopology A] :
     simp only [ιSpv_bool_apply, @decide_eq_true_iff _ (Classical.dec _)] at h
     exact h.1
 
-/-- **Closedness of `ιSpv_bool '' Spa A A⁺` (discrete case).**
+/-- **Closedness of `ιSpvBool '' Spa A A⁺` (discrete case).**
 
 In the discrete Bool product `A × A → Bool`, the image of `Spa A A⁺` under
-`ιSpv_bool` is closed: it is the intersection of the closed range of
-`ιSpv_bool` (from `ValuationSpectrumCompact`) with the coordinate conditions
+`ιSpvBool` is closed: it is the intersection of the closed range of
+`ιSpvBool` (from `ValuationSpectrumCompact`) with the coordinate conditions
 `{r | r(a, 1) = true}`, each clopen in the discrete product. -/
 lemma isClosed_image_spa_ιSpv_bool [DiscreteTopology A] :
-    IsClosed ((ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺)) := by
+    IsClosed ((ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺)) := by
   rw [image_spa_ιSpv_bool]
   exact isClosed_range_ιSpv_bool.inter
     (isClosed_iInter fun a ↦ isClosed_iInter fun _ ↦ isClosed_coord_true (a, 1))
@@ -124,9 +124,9 @@ lemma isClosed_image_spa_ιSpv_bool [DiscreteTopology A] :
 
 We route compactness through the Sierpinski Huber embedding
 `ιSpv : Spv A → (A × A → Prop)` (an embedding, see `ιSpv_isEmbedding`) and the
-Bool embedding `ιSpv_bool` (with closed range). The factorisation
-`ιSpv = (boolToProp ∘ ·) ∘ ιSpv_bool` lets us transfer compactness of
-`ιSpv_bool '' Spa` — which is closed in the compact Bool product — into
+Bool embedding `ιSpvBool` (with closed range). The factorisation
+`ιSpv = (boolToProp ∘ ·) ∘ ιSpvBool` lets us transfer compactness of
+`ιSpvBool '' Spa` — which is closed in the compact Bool product — into
 compactness of `ιSpv '' Spa`, hence of `Spa` itself via the embedding.
 
 **Hypothesis:** `[DiscreteTopology A]`. Under this, `Cont A = univ` and the
@@ -136,17 +136,17 @@ theorem isCompact_spa [DiscreteTopology A] :
     IsCompact ((Spa A A⁺) : Set (Spv A)) := by
   refine (ιSpv_isEmbedding.isCompact_iff (s := Spa A A⁺)).mpr ?_
   -- Factor `ιSpv '' Spa` as the continuous image under `boolToProp_pi` of
-  -- `ιSpv_bool '' Spa`. The latter is closed in the compact Bool product,
+  -- `ιSpvBool '' Spa`. The latter is closed in the compact Bool product,
   -- hence compact; continuous image of compact is compact.
   have hfactor :
       (ιSpv : Spv A → (A × A → Prop)) '' (Spa A A⁺) =
         (fun r : A × A → Bool ↦ fun p ↦ boolToProp (r p)) ''
-          ((ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺)) := by
+          ((ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺)) := by
     ext s
     simp only [Set.mem_image]
     refine ⟨?_, ?_⟩
     · rintro ⟨v, hv, rfl⟩
-      exact ⟨ιSpv_bool v, ⟨v, hv, rfl⟩, (ιSpv_eq_boolToProp_comp_ιSpv_bool v).symm⟩
+      exact ⟨ιSpvBool v, ⟨v, hv, rfl⟩, (ιSpv_eq_boolToProp_comp_ιSpv_bool v).symm⟩
     · rintro ⟨r, ⟨v, hv, rfl⟩, rfl⟩
       exact ⟨v, hv, ιSpv_eq_boolToProp_comp_ιSpv_bool v⟩
   rw [hfactor]
@@ -168,36 +168,36 @@ instance instCompactSpace_spa [DiscreteTopology A] :
 /-! ### Abstract compactness criterion via closed Bool cylinders
 
 The discrete-case proof relies only on two facts: (i) the image
-`ιSpv_bool '' Spa A A⁺` is closed in the Bool product, and (ii) the continuous
-factorisation `ιSpv = boolToProp ∘ ιSpv_bool` transfers compactness from Bool
+`ιSpvBool '' Spa A A⁺` is closed in the Bool product, and (ii) the continuous
+factorisation `ιSpv = boolToProp ∘ ιSpvBool` transfers compactness from Bool
 to the Sierpinski target, so `ιSpv_isEmbedding.isCompact_iff` gives compactness
 of `Spa A A⁺` itself.
 
 We factor out this route: given **any** closed subset `S` of `(A × A → Bool)`
-such that `ιSpv_bool '' Spa A A⁺ = (range ιSpv_bool) ∩ S`, the same argument
+such that `ιSpvBool '' Spa A A⁺ = (range ιSpvBool) ∩ S`, the same argument
 yields `IsCompact (Spa A A⁺)` and `CompactSpace ↥(Spa A A⁺)`. In the discrete
 case `S = ⋂_{a ∈ A⁺} {r | r(a,1) = true}`; for Tate rings we will instantiate
 `S` with an additional cylinder capturing the continuity condition
 `v(π) < 1`. -/
 
 /-- **Abstract compactness criterion.** Given a closed subset `S` of
-`(A × A → Bool)` whose intersection with `range ιSpv_bool` equals
-`ιSpv_bool '' Spa A A⁺`, the adic spectrum `Spa A A⁺` is compact in `Spv A`. -/
+`(A × A → Bool)` whose intersection with `range ιSpvBool` equals
+`ιSpvBool '' Spa A A⁺`, the adic spectrum `Spa A A⁺` is compact in `Spv A`. -/
 theorem isCompact_spa_of_isClosed_image
     {S : Set (A × A → Bool)} (hS : IsClosed S)
-    (hEq : (ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
-      Set.range (ιSpv_bool : Spv A → (A × A → Bool)) ∩ S) :
+    (hEq : (ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
+      Set.range (ιSpvBool : Spv A → (A × A → Bool)) ∩ S) :
     IsCompact ((Spa A A⁺) : Set (Spv A)) := by
   refine (ιSpv_isEmbedding.isCompact_iff (s := Spa A A⁺)).mpr ?_
   have hfactor :
       (ιSpv : Spv A → (A × A → Prop)) '' (Spa A A⁺) =
         (fun r : A × A → Bool ↦ fun p ↦ boolToProp (r p)) ''
-          ((ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺)) := by
+          ((ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺)) := by
     ext s
     simp only [Set.mem_image]
     refine ⟨?_, ?_⟩
     · rintro ⟨v, hv, rfl⟩
-      exact ⟨ιSpv_bool v, ⟨v, hv, rfl⟩, (ιSpv_eq_boolToProp_comp_ιSpv_bool v).symm⟩
+      exact ⟨ιSpvBool v, ⟨v, hv, rfl⟩, (ιSpv_eq_boolToProp_comp_ιSpv_bool v).symm⟩
     · rintro ⟨r, ⟨v, hv, rfl⟩, rfl⟩
       exact ⟨v, hv, ιSpv_eq_boolToProp_comp_ιSpv_bool v⟩
   rw [hfactor, hEq]
@@ -206,8 +206,8 @@ theorem isCompact_spa_of_isClosed_image
 /-- **Abstract compactness criterion (instance form).** -/
 theorem instCompactSpace_spa_of_isClosed_image
     {S : Set (A × A → Bool)} (hS : IsClosed S)
-    (hEq : (ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
-      Set.range (ιSpv_bool : Spv A → (A × A → Bool)) ∩ S) :
+    (hEq : (ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
+      Set.range (ιSpvBool : Spv A → (A × A → Bool)) ∩ S) :
     CompactSpace ↥(Spa A A⁺) :=
   isCompact_iff_compactSpace.mp (isCompact_spa_of_isClosed_image hS hEq)
 
@@ -220,25 +220,25 @@ for `t ∈ insert s T`. Each `basicOpen` is OPEN but **not closed** in the
 
 **The correct route** uses the Bool Huber embedding: for each `(t, s)`
 the cylinder `{r | r(t, s) = true}` IS clopen in the discrete Bool product
-(`isClosed_coord_true`), and `v ∈ basicOpen t s ↔ ιSpv_bool v (t, s) = true`.
+(`isClosed_coord_true`), and `v ∈ basicOpen t s ↔ ιSpvBool v (t, s) = true`.
 Hence
-  `ιSpv_bool '' rationalOpen T s = (ιSpv_bool '' Spa A A⁺) ∩ ⋂_{t ∈ insert s T} {r | r(t,s)=true}`
-stays closed whenever `ιSpv_bool '' Spa A A⁺` is; closed in compact Bool
+  `ιSpvBool '' rationalOpen T s = (ιSpvBool '' Spa A A⁺) ∩ ⋂_{t ∈ insert s T} {r | r(t,s)=true}`
+stays closed whenever `ιSpvBool '' Spa A A⁺` is; closed in compact Bool
 gives compact, which transfers back via `continuous_boolToProp_pi` +
 `ιSpv_isEmbedding.isCompact_iff`. -/
 
 /-- **Bool image of a rational open.** Assuming an abstract closed
-description `ιSpv_bool '' Spa A A⁺ = range ιSpv_bool ∩ S`, the image of
+description `ιSpvBool '' Spa A A⁺ = range ιSpvBool ∩ S`, the image of
 `rationalOpen T s` is obtained by intersecting with the clopen cylinder
 `{r | r(s, s) = true}` (encoding `¬ v.vle s 0`) and, for each `t ∈ T`,
 the cylinder `{r | r(t, s) = true}` (encoding `v.vle t s`). -/
 lemma image_ιSpv_bool_rationalOpen
     {S : Set (A × A → Bool)}
-    (hEq : (ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
-      Set.range (ιSpv_bool : Spv A → (A × A → Bool)) ∩ S)
+    (hEq : (ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
+      Set.range (ιSpvBool : Spv A → (A × A → Bool)) ∩ S)
     (T : Finset A) (s : A) :
-    (ιSpv_bool : Spv A → (A × A → Bool)) '' (rationalOpen T s) =
-      (Set.range (ιSpv_bool : Spv A → (A × A → Bool)) ∩ S) ∩
+    (ιSpvBool : Spv A → (A × A → Bool)) '' (rationalOpen T s) =
+      (Set.range (ιSpvBool : Spv A → (A × A → Bool)) ∩ S) ∩
         ({r : A × A → Bool | r (s, s) = true} ∩
           ⋂ (t : A) (_ : t ∈ T), {r : A × A → Bool | r (t, s) = true}) := by
   rw [← hEq]
@@ -261,18 +261,18 @@ lemma image_ιSpv_bool_rationalOpen
     exact hcell.1
 
 /-- **Quasi-compactness of rational opens (abstract form).** From any
-closed description `ιSpv_bool '' Spa A A⁺ = range ιSpv_bool ∩ S`, the
+closed description `ιSpvBool '' Spa A A⁺ = range ιSpvBool ∩ S`, the
 rational open `rationalOpen T s` is quasi-compact in `Spv A`. Specialise
 via `image_spa_ιSpv_bool` (discrete case) or
 `image_spa_ιSpv_bool_of_tate` (Tate case). -/
 theorem isCompact_rationalOpen_of_isClosed_image
     {S : Set (A × A → Bool)} (hS : IsClosed S)
-    (hEq : (ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
-      Set.range (ιSpv_bool : Spv A → (A × A → Bool)) ∩ S)
+    (hEq : (ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
+      Set.range (ιSpvBool : Spv A → (A × A → Bool)) ∩ S)
     (T : Finset A) (s : A) :
     IsCompact (rationalOpen T s : Set (Spv A)) := by
   have hBoolCompact :
-      IsCompact ((ιSpv_bool : Spv A → (A × A → Bool)) '' (rationalOpen T s)) := by
+      IsCompact ((ιSpvBool : Spv A → (A × A → Bool)) '' (rationalOpen T s)) := by
     rw [image_ιSpv_bool_rationalOpen hEq T s]
     refine IsClosed.isCompact ?_
     refine (isClosed_range_ιSpv_bool.inter hS).inter ?_
@@ -282,12 +282,12 @@ theorem isCompact_rationalOpen_of_isClosed_image
   have hfactor :
       (ιSpv : Spv A → (A × A → Prop)) '' (rationalOpen T s) =
         (fun r : A × A → Bool ↦ fun p ↦ boolToProp (r p)) ''
-          ((ιSpv_bool : Spv A → (A × A → Bool)) '' (rationalOpen T s)) := by
+          ((ιSpvBool : Spv A → (A × A → Bool)) '' (rationalOpen T s)) := by
     ext p
     simp only [Set.mem_image]
     refine ⟨?_, ?_⟩
     · rintro ⟨v, hv, rfl⟩
-      exact ⟨ιSpv_bool v, ⟨v, hv, rfl⟩, (ιSpv_eq_boolToProp_comp_ιSpv_bool v).symm⟩
+      exact ⟨ιSpvBool v, ⟨v, hv, rfl⟩, (ιSpv_eq_boolToProp_comp_ιSpv_bool v).symm⟩
     · rintro ⟨r, ⟨v, hv, rfl⟩, rfl⟩
       exact ⟨v, hv, ιSpv_eq_boolToProp_comp_ιSpv_bool v⟩
   rw [hfactor]
@@ -298,8 +298,8 @@ Since `rationalOpen T s ⊆ Spa A A⁺`, the preimage under `Subtype.val` is a
 compact subset of the adic spectrum when the ambient Bool image is closed. -/
 theorem isCompact_preimage_rationalOpen_of_isClosed_image
     {S : Set (A × A → Bool)} (hS : IsClosed S)
-    (hEq : (ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
-      Set.range (ιSpv_bool : Spv A → (A × A → Bool)) ∩ S)
+    (hEq : (ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
+      Set.range (ιSpvBool : Spv A → (A × A → Bool)) ∩ S)
     (T : Finset A) (s : A) :
     IsCompact (Subtype.val ⁻¹' rationalOpen T s : Set ↥(Spa A A⁺)) := by
   have hEmb : Topology.IsEmbedding (Subtype.val : ↥(Spa A A⁺) → Spv A) :=
@@ -346,7 +346,7 @@ clopen cylinder conditions:
   `π ∈ A×` — so `¬ v.vle π 0` — simplifies to `¬ v.vle 1 π`).
 
 Combined with the `A⁺`-cylinders `{r | r(a, 1) = true}` for `a ∈ A⁺`, we
-obtain a closed description of `ιSpv_bool '' Spa A A⁺` in the compact
+obtain a closed description of `ιSpvBool '' Spa A A⁺` in the compact
 Bool product. -/
 
 namespace ValuationSpectrum
@@ -452,9 +452,9 @@ omit [IsLinearTopology A A] in
 /-- **Bool-image characterisation of `Spa A A⁺` for Tate rings** with pseudo-
 uniformizer, under the MulArchimedean assumption on all valuations.
 
-The image of `Spa A A⁺` under `ιSpv_bool` is the intersection of:
+The image of `Spa A A⁺` under `ιSpvBool` is the intersection of:
 
-* `range ιSpv_bool` (the set of Bool valuation characteristics);
+* `range ιSpvBool` (the set of Bool valuation characteristics);
 * the coordinate cylinders `{r | r(a, 1) = true}` for each `a ∈ A⁺`;
 * the single coordinate `{r | r(1, π) = false}`, capturing `v(π) < 1` (the
   cylinder `r(π, 1) = true` is subsumed because `π ∈ A⁺`). -/
@@ -466,8 +466,8 @@ lemma image_spa_ιSpv_bool_of_tate
     (hArch : ∀ v : Spv A,
         letI : ValuativeRel A := v.toValuativeRel
         MulArchimedean (ValuativeRel.ValueGroupWithZero A)) :
-    (ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
-      Set.range (ιSpv_bool : Spv A → (A × A → Bool)) ∩
+    (ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺) =
+      Set.range (ιSpvBool : Spv A → (A × A → Bool)) ∩
         (⋂ (a : A) (_ : a ∈ A⁺), {r : A × A → Bool | r (a, 1) = true}) ∩
         {r : A × A → Bool | r (1, P.A₀.subtype π) = false} := by
   ext r
@@ -524,7 +524,7 @@ lemma isClosed_image_spa_ιSpv_bool_of_tate
     (hArch : ∀ v : Spv A,
         letI : ValuativeRel A := v.toValuativeRel
         MulArchimedean (ValuativeRel.ValueGroupWithZero A)) :
-    IsClosed ((ιSpv_bool : Spv A → (A × A → Bool)) '' (Spa A A⁺)) := by
+    IsClosed ((ιSpvBool : Spv A → (A × A → Bool)) '' (Spa A A⁺)) := by
   rw [image_spa_ιSpv_bool_of_tate P hA₀_le π hI hπ_tn hπ_unit hArch]
   exact (isClosed_range_ιSpv_bool.inter
       (isClosed_iInter fun a ↦ isClosed_iInter fun _ ↦

@@ -4,4 +4,5 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
 
+/-- The upstream Lake starter string, retained with the complete source inventory. -/
 def hello := "world"

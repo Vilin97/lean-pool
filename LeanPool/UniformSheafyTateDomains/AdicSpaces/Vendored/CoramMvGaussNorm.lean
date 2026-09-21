@@ -36,7 +36,7 @@ section Semiring
 variable [Semiring R]
 
 -- this is a weakening of `exists_norm_finset_prod_le_of_nonempty`
-lemma exists_map_finset_prod_le_of_nonempty {α S : Type*} [Semiring S] [LinearOrder S]
+lemma exists_map_finset_prod_le_of_nonempty {α S : Type*} [LinearOrder S]
     [AddCommMonoid α] (g : α → S) {ι : Type*} {t : Finset ι} (ht : t.Nonempty) (f : ι → α)
     (Ultra : ∀ a b, g (a + b) ≤ max (g a) (g b)) : ∃ i ∈ t, g (∑ j ∈ t, f j) ≤ g (f i) := by
   simpa [Finset.le_sup'_iff] using Finset.Nonempty.map_sum_le_sup'_map g ht f Ultra
@@ -57,7 +57,7 @@ variable [Ring R]
 
 -- this is a version of Fabrizio's apply_sum_eq_of_lt (in Algebra/Order/Ring/IsNonarchimedean)
 -- but in our generality of function f + hypothesis
-lemma apply_sum_eq_of_lt {α β S : Type*} [Semiring S] [LinearOrder S]
+lemma apply_sum_eq_of_lt {α β S : Type*} [LinearOrder S]
     [AddCommGroup α] (f : α → S) (Ultra : ∀ a b, f (a + b) ≤ max (f a) (f b)) {s : Finset β}
     {l : β → α} (Neg : ∀ a, f a = f (-a)) {k : β} (hk : k ∈ s)
     (hmax : ∀ j ∈ s, j ≠ k → f (l j) < f (l k)) :

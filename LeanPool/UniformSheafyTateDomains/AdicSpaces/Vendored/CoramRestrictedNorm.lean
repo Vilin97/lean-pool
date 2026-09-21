@@ -58,13 +58,14 @@ lemma gaussNorm_pos (hf : f ≠ 0) (vZero : v 0 = 0) (vNonneg : ∀ a, v a ≥ 0
     (gaussNorm_nonneg v c f vNonneg))
 
 
-lemma gaussNorm_neg [Ring R] (vNeg : ∀ x, v (-x) = v x) :
-    gaussNorm v c (-f) = gaussNorm v c f  :=
-  MvPowerSeries.gaussNorm_neg v (fun _ ↦ c) vNeg f
 
 end Semiring
 
 variable [Ring R] (f : PowerSeries R)
+
+lemma gaussNorm_neg (vNeg : ∀ x, v (-x) = v x) :
+    gaussNorm v c (-f) = gaussNorm v c f :=
+  MvPowerSeries.gaussNorm_neg v (fun _ ↦ c) vNeg f
 
 lemma gaussNorm_mul_le (f g : PowerSeries R) (hc : 0 ≤ c) (vNonneg : ∀ a, v a ≥ 0)
     (vMul : ∀ a b, v (a * b) ≤ v a * v b) (vUltra : ∀ a b, v (a + b) ≤ max (v a) (v b))
@@ -75,6 +76,7 @@ lemma gaussNorm_mul_le (f g : PowerSeries R) (hc : 0 ≤ c) (vNonneg : ∀ a, v 
 
 section absoluteValue
 
+/-- The weighted coefficient of the given degree attains the Gauss norm. -/
 abbrev achievesGaussNorm (i : ℕ) : Prop :=
   MvPowerSeries.AchievesGaussNorm v (fun _ ↦ c) f (Finsupp.single () i)
 
@@ -126,7 +128,7 @@ lemma gaussNorm_mul_eq_mul (f g : PowerSeries R)
     (hf : HasGaussNorm v c f) (hg : HasGaussNorm v c g) (hfg : HasGaussNorm v c (f * g))
     (vNonneg : ∀ a, v a ≥ 0) (vZero : v 0 = 0) (vNA : IsNonarchimedean v)
     (vMulEq : ∀ (a b : R), v (a * b) = v a * v b) (vNeg : ∀ (a : R), v (-a) = v a)
-    (h_eq_zero : ∀ (x : R), v x = 0 → x = 0) (hc :  0 < c)
+    (h_eq_zero : ∀ (x : R), v x = 0 → x = 0) (hc : 0 < c)
     (hdom : ∃ i j, achievesGaussNorm v c f i ∧ achievesGaussNorm v c g j ∧
       ∀ p ∈ Finset.antidiagonal (i + j), p ≠ (i, j) → v (coeff p.1 f * coeff p.2 g) <
       v (coeff i f) * v (coeff j g)) :
@@ -143,6 +145,7 @@ namespace PowerSeries
 
 variable {R : Type*} [NormedRing R] (c : ℝ)
 
+/-- The additive subgroup of power series whose weighted coefficients tend to zero. -/
 def isAddSubgroup (c : ℝ) : AddSubgroup (PowerSeries R) where
   carrier := IsRestricted c
   zero_mem' := IsRestricted.zero c
@@ -152,7 +155,7 @@ def isAddSubgroup (c : ℝ) : AddSubgroup (PowerSeries R) where
 variable [IsUltrametricDist R]
 
 /-- Ring structure on `MvPowerSeries σ R`. -/
-def isSubring (c : ℝ) :  Subring (PowerSeries R) where
+def isSubring (c : ℝ) : Subring (PowerSeries R) where
   __ := isAddSubgroup c
   one_mem' := IsRestricted.one c
   mul_mem' := IsRestricted.mul c
@@ -161,6 +164,7 @@ variable (R) in
 /-- The type of restricted `MvPowerSeries σ R`. -/
 def Restricted (c : ℝ) : Type _ := isSubring (R := R) c
 
+/-- A coefficient viewed as a constant restricted power series. -/
 noncomputable
 def Restricted.C (c : ℝ) (a : R) : Restricted R c :=
   ⟨PowerSeries.C a, IsRestricted.C c a⟩
@@ -190,10 +194,12 @@ open Filter Topology
 variable {R : Type*} [NormedRing R] [IsUltrametricDist R] (c : ℝ)
 
 variable (R) in
+/-- The Gauss norm on univariate restricted power series. -/
 noncomputable
 abbrev gaussNorm (f : PowerSeries.Restricted R c) : ℝ :=
   PowerSeries.gaussNorm (norm : R → ℝ) c f.1
 
+omit [IsUltrametricDist R] in
 /-- Merged mathlib states `PowerSeries.IsRestricted` via `atTop`; on `ℕ` this is the
 cofinite filter. -/
 lemma isRestricted_iff_cofinite {f : PowerSeries R} :
@@ -211,11 +217,12 @@ variable [StrongPos (fun _ : Unit ↦ c)]
 
 lemma c_pos : (0 : ℝ) < c := StrongPos_pos (fun _ : Unit ↦ c) ()
 
+/-- The Gauss ring norm on restricted power series of positive radius. -/
 noncomputable
 def isRingNorm : RingNorm (PowerSeries.Restricted R c) where
   toFun f := gaussNorm R c f
   map_zero' := by
-    show PowerSeries.gaussNorm norm c ((0 : PowerSeries.Restricted R c)).1 = 0
+    change PowerSeries.gaussNorm norm c ((0 : PowerSeries.Restricted R c)).1 = 0
     rw [show ((0 : PowerSeries.Restricted R c)).1 = (0 : PowerSeries R) from rfl]
     exact PowerSeries.gaussNorm_zero norm c norm_zero
   add_le' f g := by
@@ -224,7 +231,7 @@ def isRingNorm : RingNorm (PowerSeries.Restricted R c) where
     refine h.trans (max_le_add_of_nonneg ?_ ?_)
     all_goals exact PowerSeries.gaussNorm_nonneg norm c _ norm_nonneg
   neg' f := by
-    show PowerSeries.gaussNorm norm c ((-f).1) = PowerSeries.gaussNorm norm c f.1
+    change PowerSeries.gaussNorm norm c ((-f).1) = PowerSeries.gaussNorm norm c f.1
     rw [show ((-f).1) = -(f.1) from rfl]
     exact PowerSeries.gaussNorm_neg norm c (f := f.1) norm_neg
   mul_le' f g := PowerSeries.gaussNorm_mul_le norm c f.1 g.1 (c_pos c).le
@@ -269,7 +276,7 @@ instance isCompleteSpace [CompleteSpace R] : CompleteSpace (PowerSeries.Restrict
       ‖PowerSeries.coeff n f.1 - PowerSeries.coeff n g.1‖ * c ^ n ≤ ‖f - g‖ := fun f g n => by
     have heq : PowerSeries.coeff n f.1 - PowerSeries.coeff n g.1 =
         PowerSeries.coeff n (f - g).1 := by
-      show _ = PowerSeries.coeff n (f.1 - g.1)
+      change _ = PowerSeries.coeff n (f.1 - g.1)
       exact (map_sub _ _ _).symm
     rw [heq]
     exact PowerSeries.le_gaussNorm norm c (f - g).1 (hasGaussNorm c (f - g)) n
@@ -312,7 +319,7 @@ instance isCompleteSpace [CompleteSpace R] : CompleteSpace (PowerSeries.Restrict
     have h_uN1' := h_uN1 (ε / 2) (by linarith)
     rw [Filter.eventually_cofinite] at h_uN1' ⊢
     refine h_uN1'.subset fun n hn => ?_
-    simp only [Set.mem_setOf_eq, dist_zero_right, Real.norm_eq_abs, not_lt] at hn ⊢
+    simp only [Set.mem_ofPred_eq, dist_zero_right, Real.norm_eq_abs, not_lt] at hn ⊢
     rw [coeff_f] at hn
     have hp1 : 0 ≤ ‖a n‖ * c ^ n := mul_nonneg (norm_nonneg _) (hcn n).le
     have hp2 : 0 ≤ ‖PowerSeries.coeff n (u N₁).1‖ * c ^ n :=
@@ -345,15 +352,15 @@ instance isCompleteSpace [CompleteSpace R] : CompleteSpace (PowerSeries.Restrict
   obtain ⟨N, hN⟩ := unif_conv (ε / 2) (by linarith)
   refine ⟨N, fun i hi => ?_⟩
   rw [dist_eq_norm]
-  show MvPowerSeries.gaussNorm norm (fun _ ↦ c) (u i - z).1 < ε
+  change MvPowerSeries.gaussNorm norm (fun _ ↦ c) (u i - z).1 < ε
   have hdiff : ∀ n, PowerSeries.coeff n (u i - z).1 =
       PowerSeries.coeff n (u i).1 - a n := fun n => by
-    show PowerSeries.coeff n ((u i).1 - f) = _
+    change PowerSeries.coeff n ((u i).1 - f) = _
     rw [map_sub, coeff_f]
   have hbd : ∀ n, ‖PowerSeries.coeff n (u i - z).1‖ * c ^ n ≤ ε / 2 := fun n => by
     rw [hdiff]; exact hN i hi n
   have h_gauss_le : MvPowerSeries.gaussNorm norm (fun _ : Unit ↦ c) (u i - z).1 ≤ ε / 2 := by
-    show PowerSeries.gaussNorm norm c (u i - z).1 ≤ ε / 2
+    change PowerSeries.gaussNorm norm c (u i - z).1 ≤ ε / 2
     rw [PowerSeries.gaussNorm_eq]
     exact ciSup_le hbd
   linarith

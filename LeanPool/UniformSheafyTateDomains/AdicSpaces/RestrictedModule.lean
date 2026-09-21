@@ -60,7 +60,7 @@ def MvPowerSeries.IsRestrictedModule {M : Type*} [Zero M] [TopologicalSpace M]
 /-- The submodule `M⟨X⟩` of restricted `M`-valued power series over a nonarchimedean ring `A`.
 An element of `MvPowerSeries (Fin 1) M` is restricted if its coefficients tend to `0`
 along the cofinite filter on multi-indices. -/
-def restrictedModule (A : Type u) [CommRing A] [TopologicalSpace A] [NonarchimedeanRing A]
+def restrictedModule (A : Type u) [CommRing A]
     (M : Type v) [AddCommGroup M] [Module A M] [TopologicalSpace M]
     [IsTopologicalAddGroup M] [ContinuousConstSMul A M] :
     Submodule A (MvPowerSeries (Fin 1) M) where
@@ -97,6 +97,8 @@ def restrictedModule.map
   map_smul' a g := by
     apply Subtype.ext; funext s; exact map_smul f a (g.1 s)
 
+omit [NonarchimedeanRing A] in
+omit [TopologicalSpace A] in
 /-- The induced map is compatible with function composition. -/
 theorem restrictedModule.map_comp
     {M : Type*} [AddCommGroup M] [Module A M] [TopologicalSpace M]
@@ -121,7 +123,7 @@ section SurjectionLifting
 `W`, if `b` lies in `f '' (W n)` for every `n`, then `b = 0`. Choose `mₙ ∈ W n` with
 `f(mₙ) = b`; then `mₙ → 0`, so `b = f(mₙ) → f(0) = 0` by continuity. -/
 private theorem eq_zero_of_mem_image_all
-    {M : Type*} [AddCommGroup M] [TopologicalSpace M] [T2Space M]
+    {M : Type*} [AddCommGroup M] [TopologicalSpace M]
     {N : Type*} [AddCommGroup N] [TopologicalSpace N] [T2Space N]
     (f : M →+ N) (hf_cont : Continuous f)
     (W : ℕ → OpenAddSubgroup M)
@@ -137,6 +139,8 @@ private theorem eq_zero_of_mem_image_all
     exact hfc.congr (fun n ↦ by simp only [Function.comp_apply]; exact hm_eq n)
   exact tendsto_const_nhds_iff.mp this
 
+omit [NonarchimedeanRing A] in
+omit [TopologicalSpace A] in
 /-- **Surjection lifting for restricted modules.** If `f : M →ₗ[A] N` is surjective,
 continuous, and open, then the induced map `M⟨X⟩ → N⟨X⟩` is surjective.
 
@@ -150,8 +154,8 @@ of open additive subgroups of `M` and `g = ∑ bₛ Xˢ ∈ N⟨X⟩`:
 Follows Wedhorn's *Adic Spaces*. -/
 theorem restrictedModule_map_surjective
     {M : Type v} [AddCommGroup M] [Module A M] [TopologicalSpace M]
-    [IsTopologicalAddGroup M] [ContinuousConstSMul A M] [NonarchimedeanAddGroup M]
-    [FirstCountableTopology M] [T2Space M]
+     [ContinuousConstSMul A M] [NonarchimedeanAddGroup M]
+    [FirstCountableTopology M]
     {N : Type w} [AddCommGroup N] [Module A N] [TopologicalSpace N]
     [IsTopologicalAddGroup N] [ContinuousConstSMul A N] [T2Space N]
     (f : M →ₗ[A] N) (hf_cont : Continuous f) (hf_surj : Function.Surjective f)
@@ -208,7 +212,7 @@ theorem restrictedModule_map_surjective
     rw [eventually_cofinite]
     apply (hS_fin n).subset
     intro s hs
-    simp only [Set.mem_setOf_eq] at hs ⊢
+    simp only [Set.mem_ofPred_eq] at hs ⊢
     intro hgs; apply hs; clear hs
     simp only [h]
     split_ifs with hall hk0

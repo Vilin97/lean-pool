@@ -442,14 +442,14 @@ theorem cechDiff_comp_cechDiff (F : AbPresheaf X)
   · rintro ⟨j, k⟩ _
     dsimp only [inv]
     by_cases h1 : (k : ℕ) < (j : ℕ)
-    · simp only [h1, dif_pos, Fin.val_mk]
-      rw [dif_neg (by omega)]
+    · simp only [h1, dite_eq_left, Fin.val_mk]
+      rw [dite_eq_right (by omega)]
       exact Prod.ext (Fin.ext (by dsimp; omega))
         (Fin.ext rfl)
     · push Not at h1
       have h2 : ¬ (k : ℕ) < (j : ℕ) := by omega
-      rw [dif_neg h2,
-        dif_pos (show (j : ℕ) < (k : ℕ) + 1 by omega)]
+      rw [dite_eq_right h2,
+        dite_eq_left (show (j : ℕ) < (k : ℕ) + 1 by omega)]
       exact Prod.ext (Fin.ext rfl)
         (Fin.ext (by dsimp))
 
@@ -631,7 +631,7 @@ def cechDiffHom (F : AbPresheaf X)
   toFun := cechDiff F U q
   map_zero' := by
     ext σ
-    show cechDiff F U q 0 σ = 0
+    change cechDiff F U q 0 σ = 0
     simp only [cechDiff]
     refine Finset.sum_eq_zero fun j _ => ?_
     have h0 : (0 : CechCochain F U q)

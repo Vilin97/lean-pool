@@ -23,13 +23,13 @@ level-one splitting — so the adic completions agree.
 
 @[expose] public section
 
-open scoped Classical
 
 section FlatCompletion
 
 variable {A B : Type*} [CommRing A] [CommRing B] [Algebra A B]
 variable (I : Ideal A)
 
+open Classical in
 /-- The induced map on power quotients. -/
 noncomputable def levelMap (n : ℕ) :
     A ⧸ I ^ n →+* B ⧸ (I.map (algebraMap A B)) ^ n :=
@@ -37,11 +37,13 @@ noncomputable def levelMap (n : ℕ) :
     rw [← Ideal.map_pow]
     exact Ideal.le_comap_map)
 
+open Classical in
 theorem levelMap_mk (n : ℕ) (a : A) :
     levelMap (B := B) I n (Ideal.Quotient.mk _ a) =
       Ideal.Quotient.mk _ (algebraMap A B a) :=
   Ideal.quotientMap_mk
 
+open Classical in
 /-- Injectivity of every level map, from faithful flatness. -/
 theorem levelMap_injective [Module.FaithfullyFlat A B] (n : ℕ) :
     Function.Injective (levelMap (B := B) I n) := by
@@ -54,6 +56,7 @@ variable {I}
 variable (h1 : Function.Surjective (levelMap (B := B) I 1))
 
 include h1 in
+open Classical in
 /-- Level-one surjectivity, unpacked: every element of `B` is congruent to an
 image modulo `IB`. -/
 theorem exists_sub_mem_of_levelOne (b : B) :
@@ -67,6 +70,7 @@ theorem exists_sub_mem_of_levelOne (b : B) :
   exact (Ideal.neg_mem_iff _).mp (by simpa using h2)
 
 include h1 in
+open Classical in
 /-- **The refinement step**: an element of `(IB)ᵏ` is congruent to the image
 of an element of `Iᵏ` modulo `(IB)^(k+1)`. -/
 theorem exists_sub_mem_pow_succ {k : ℕ} {x : B}
@@ -148,6 +152,7 @@ theorem exists_sub_mem_pow_succ {k : ℕ} {x : B}
       exact h10
 
 include h1 in
+open Classical in
 /-- The telescoped congruence: every element of `B` is congruent to an image
 modulo `(IB)ⁿ`. -/
 theorem exists_sub_mem_pow (b : B) (n : ℕ) :
@@ -165,6 +170,7 @@ theorem exists_sub_mem_pow (b : B) (n : ℕ) :
       exact hc
 
 include h1 in
+open Classical in
 theorem levelMap_surjective (n : ℕ) :
     Function.Surjective (levelMap (B := B) I n) := by
   intro z
@@ -176,6 +182,7 @@ theorem levelMap_surjective (n : ℕ) :
 
 end Surjectivity
 
+open Classical in
 /-- **Adic completions along a faithfully flat map with trivial special
 fibre**: if `A/I → B/IB` is surjective and `B` is faithfully flat, the adic
 completions agree. -/
@@ -189,7 +196,7 @@ noncomputable def adicCompletionEquivOfFaithfullyFlat
         Function.Bijective (levelMap (B := B) I n)))
     (fun {a b} hab x => by
       obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
-      show Ideal.Quotient.factor (Ideal.pow_le_pow_right hab)
+      change Ideal.Quotient.factor (Ideal.pow_le_pow_right hab)
           (levelMap (B := B) I b (Ideal.Quotient.mk _ y)) =
         levelMap (B := B) I a (Ideal.Quotient.factor
           (Ideal.pow_le_pow_right hab) (Ideal.Quotient.mk _ y))

@@ -72,8 +72,8 @@ theorem mapMonoidWithZeroHom_apply_zero (f : α →* β) :
     mapMonoidWithZeroHom f 0 = 0 :=
   WithZero.map_bot f
 
-theorem mapMonoidWithZeroHom_monotone [LinearOrder α] [IsOrderedMonoid α]
-    [LinearOrder β] [IsOrderedMonoid β] (f : α →* β) (hf : Monotone f) :
+theorem mapMonoidWithZeroHom_monotone [LinearOrder α]
+    [LinearOrder β] (f : α →* β) (hf : Monotone f) :
     Monotone (mapMonoidWithZeroHom f) := by
   intro x y hxy
   cases x with

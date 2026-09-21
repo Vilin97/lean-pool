@@ -62,9 +62,9 @@ theorem adicCompletion_shortExact
     {R : Type u} [CommRing R] [IsNoetherianRing R]
     {I : Ideal R}
     {K M N : Type u}
-    [AddCommGroup K] [Module R K] [Module.Finite R K]
+    [AddCommGroup K] [Module R K]
     [AddCommGroup M] [Module R M] [Module.Finite R M]
-    [AddCommGroup N] [Module R N] [Module.Finite R N]
+    [AddCommGroup N] [Module R N]
     (f : K →ₗ[R] M) (g : M →ₗ[R] N)
     (hf : Function.Injective f)
     (hg : Function.Surjective g)

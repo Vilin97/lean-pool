@@ -1308,7 +1308,7 @@ Wedhorn's proof of Spv(A,I) spectral (p.58 last paragraph) uses:
 
 -- T-Spv.2.a REMOVED (audit 2026-05-17): the constructible-topology compactness
 -- of Wedhorn 3.23 is ALREADY realized in the project's
--- `ValuationSpectrumCompact.lean` via `ιSpv_bool` + closed-range in Tychonoff
+-- `ValuationSpectrumCompact.lean` via `ιSpvBool` + closed-range in Tychonoff
 -- cube. The Spv(A,I) spectrality proof can reference that existing
 -- infrastructure directly (via importing `ValuationSpectrumCompact`); no
 -- separate T-Spv.2.a wrapper is needed.
@@ -1426,7 +1426,7 @@ NOTE on topology choice. The project's `Prop` carries the *Sierpinski*
 topology (`generateFrom {{True}}`), in which the range counterexample
 recorded in `ValuationSpectrumCompact.lean` (Phase 2 note, l. ≈441–451)
 shows the closedness claim is genuinely subtle. Wedhorn-faithful closure
-proofs go through the auxiliary discrete Bool ambient (`ιSpv_bool`) for
+proofs go through the auxiliary discrete Bool ambient (`ιSpvBool`) for
 which the project already proves `isClosed_range_ιSpv_bool`; the Sierpinski
 sub-leaves below capture the per-axiom Sierpinski-closedness obligations
 that finish the closed-embedding statement. They are stated honestly as

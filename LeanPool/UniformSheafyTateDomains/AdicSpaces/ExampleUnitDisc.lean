@@ -241,9 +241,9 @@ theorem exists_flatten' (B : Type*) [NormedCommRing B] [IsUltrametricDist B]
       ∀ f, ‖e f‖ = ‖f‖ := by
   induction m with
   | zero =>
-    refine ⟨(foo B (fun _ : Fin 0 => (1 : ℝ))).trans HB, fun f => ?_⟩
+    refine ⟨(restrictedFinZeroEquiv B (fun _ : Fin 0 => (1 : ℝ))).trans HB, fun f => ?_⟩
     rw [RingEquiv.trans_apply, hHB]
-    exact (foo_isom' B (fun _ : Fin 0 => (1 : ℝ))).norm_map (x := f)
+    exact (restrictedFinZeroRingHomIsometric B (fun _ : Fin 0 => (1 : ℝ))).norm_map (x := f)
   | succ m ih =>
     obtain ⟨eIH, hIH⟩ := ih
     refine ⟨(finSuccOne B m).trans

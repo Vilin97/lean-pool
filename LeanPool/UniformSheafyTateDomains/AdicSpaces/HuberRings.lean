@@ -199,7 +199,7 @@ theorem mem_powerBoundedSubring (P : PairOfDefinition A) {a : A} (ha : a ∈ P.A
 /-- A pair of definition makes `A` a non-archimedean additive group: the images of the powers
 `Iⁿ` of the ideal of definition form an open additive-subgroup basis at `0`
 (Corollary 6.4(1) of Wedhorn). -/
-def nonarchimedeanAddGroup (P : PairOfDefinition A) : NonarchimedeanAddGroup A where
+theorem nonarchimedeanAddGroup (P : PairOfDefinition A) : NonarchimedeanAddGroup A where
   is_nonarchimedean := by
     intro U hU
     obtain ⟨n, -, hn⟩ := P.hasBasis_nhds_zero.mem_iff.mp hU
@@ -292,7 +292,7 @@ instance IsHuberRing.firstCountableTopology {A : Type*} [CommRing A]
     [TopologicalSpace A] [IsHuberRing A] : FirstCountableTopology A := by
   obtain ⟨P⟩ := ‹IsHuberRing A›.exists_pairOfDefinition
   let : IsTopologicalRing A := IsHuberRing.toIsTopologicalRing
-  let : IsTopologicalAddGroup A := IsTopologicalRing.to_topologicalAddGroup
+  let : IsTopologicalAddGroup A := IsTopologicalRing.isTopologicalAddGroup
   let h0 : (nhds (0 : A)).IsCountablyGenerated :=
     P.hasBasis_nhds_zero.isCountablyGenerated
   refine ⟨fun a => ?_⟩
@@ -332,7 +332,7 @@ theorem IsTateRing.isOpen_topologicallyNilpotentElements :
   have heq : TopologicalRing.topologicallyNilpotentElements A
       = ((topologicalNilradical A : Ideal A) : Set A) := by
     ext a
-    simp only [TopologicalRing.topologicallyNilpotentElements, Set.mem_setOf_eq, SetLike.mem_coe,
+    simp only [TopologicalRing.topologicallyNilpotentElements, Set.mem_ofPred_eq, SetLike.mem_coe,
       IsTopologicallyNilpotent.mem_topologicalNilradical_iff]
   rw [heq]
   exact IsTateRing.isOpen_topologicalNilradical (A := A)
@@ -351,7 +351,7 @@ theorem IsTateRing.isOpen_topologicallyNilpotentElements_nonarch :
   have hsub : (u : A) • (P.A₀ : Set A) ⊆
       (TopologicalRing.topNilpAddSubgroup A : Set A) := by
     rintro _ ⟨a, ha, rfl⟩
-    show IsTopologicallyNilpotent ((u : A) • a)
+    change IsTopologicallyNilpotent ((u : A) • a)
     rw [smul_eq_mul, mul_comm]
     exact (P.mem_powerBoundedSubring ha).isTopologicallyNilpotent_mul hu
   have hopen : IsOpen ((TopologicalRing.topNilpAddSubgroup A : AddSubgroup A) : Set A) :=
@@ -528,7 +528,7 @@ definition refines to a principal pair with the SAME ring of definition
 (`withPrincipal` keeps `A₀`; the generator is a power of the topologically nilpotent
 unit, landed in `A₀` by openness). -/
 theorem PairOfDefinition.exists_principal_same_A₀
-    {A : Type*} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A] [IsTateRing A]
+    {A : Type*} [CommRing A] [TopologicalSpace A] [IsTateRing A]
     (P : PairOfDefinition A) :
     ∃ (P' : PairOfDefinition A) (π : P'.A₀),
       P'.A₀ = P.A₀ ∧ P'.I = Ideal.span {π} ∧ IsUnit ((π : A)) := by
@@ -616,16 +616,14 @@ section AdjoinFinset
 
 open Filter Topology Pointwise
 
-variable {A : Type*} [CommRing A] [TopologicalSpace A] [IsTopologicalRing A]
+variable {A : Type*} [CommRing A] [TopologicalSpace A]
 
-omit [IsTopologicalRing A] in
 /-- The inclusion `P.A₀ ≤ Subring.closure (↑P.A₀ ∪ ↑T)`, used to construct the
 ring homomorphism `P.A₀ →+* Subring.closure (↑P.A₀ ∪ ↑T)`. -/
 theorem PairOfDefinition.le_adjoin_A₀ (P : PairOfDefinition A) (T : Finset A) :
     P.A₀ ≤ Subring.closure ((P.A₀ : Set A) ∪ ↑T) :=
   fun _ ha ↦ Subring.subset_closure (Set.subset_union_left ha)
 
-omit [IsTopologicalRing A] in
 /-- In a nonarchimedean topological ring, `AddSubgroup.closure` of a bounded set is bounded.
 Given open additive subgroup `G ⊆ U` and `V` with `S * V ⊆ G`, we use
 `AddSubgroup.closure_induction` (which has no multiplication case) to show
@@ -760,7 +758,7 @@ def PairOfDefinition.adjoin (P : PairOfDefinition A) (T : Finset A)
     constructor
     · -- Part 1: Each I'^n is open in B₀ (subspace topology)
       intro n
-      apply AddSubgroup.isOpen_of_mem_nhds (I' ^ n).toAddSubgroup
+      apply AddSubgroup.isOpen_of_mem_nhds (I' ^ n).toAddSubgroup (g := 0)
       rw [Submodule.coe_toAddSubgroup]
       -- I'^n ⊇ incl(I^n), and incl(I^n) maps to an open set in A
       have h_nhds : Subtype.val ⁻¹' (Subtype.val '' ((P.I ^ n : Ideal P.A₀) : Set P.A₀)) ∈
@@ -866,7 +864,7 @@ theorem PairOfDefinition.isPowerBounded_of_monic_powerBounded_eval
   have hint : IsIntegral (↥B') x := by
     refine ⟨p.toSubring B' hcoeffs, ?_, ?_⟩
     · rw [Polynomial.monic_toSubring]; exact hp_monic
-    · show Polynomial.eval₂ (algebraMap (↥B') A) x (p.toSubring B' hcoeffs) = 0
+    · change Polynomial.eval₂ (algebraMap (↥B') A) x (p.toSubring B' hcoeffs) = 0
       rw [Polynomial.eval₂_eq_eval_map,
         show (algebraMap (↥B') A) = B'.subtype from rfl, Polynomial.map_toSubring]
       exact hp_eval
@@ -888,7 +886,7 @@ def PairOfDefinition.restrictRingHom (PA : PairOfDefinition A) (PB : PairOfDefin
 
 /-- A ring homomorphism between Huber rings is **adic** if compatible pairs of
 definition have ideals with equal radicals (Definition 6.23 of Wedhorn). -/
-def IsAdicHom [IsHuberRing A] [IsHuberRing B] (φ : A →+* B) : Prop :=
+def IsAdicHom (φ : A →+* B) : Prop :=
   ∃ (PA : PairOfDefinition A) (PB : PairOfDefinition B)
     (h : ∀ a ∈ PA.A₀, φ a ∈ PB.A₀),
     (Ideal.map (PA.restrictRingHom PB φ h) PA.I).radical = PB.I.radical
@@ -965,6 +963,7 @@ private theorem nilpotentUnit_principalData {C : Type*} [CommRing C] [Topologica
     Subtype.ext (Units.val_pow_eq_pow_val u K)] at hm
   exact ⟨K, N, hK_pos, Nat.succ_pos N₀, hu_K, hN_mem, m, hm⟩
 
+omit [IsTopologicalRing A] [IsTopologicalRing B] in
 /-- **Proposition 6.25 of Wedhorn**: a continuous ring homomorphism
 from a Tate ring is adic. -/
 theorem IsTateRing.isAdicHom_of_continuous_with_pairs [IsTateRing A] [IsHuberRing B]
@@ -989,10 +988,9 @@ theorem IsTateRing.isAdicHom_of_continuous_with_pairs [IsTateRing A] [IsHuberRin
   have h_agree : a ^ (L * M) = (vL ^ M) ^ (K * N) :=
     Subtype.ext (by
       simp only [a, PairOfDefinition.restrictRingHom, uK, vL,
-        SubmonoidClass.coe_pow, 
-         
+        SubmonoidClass.coe_pow,
          map_pow, ← pow_mul]
-      show (φ (↑u ^ K)) ^ (N * (L * M)) = (φ ↑u) ^ (L * (M * (K * N)))
+      change (φ (↑u ^ K)) ^ (N * (L * M)) = (φ ↑u) ^ (L * (M * (K * N)))
       rw [map_pow, ← pow_mul]
       congr 1
       ring)

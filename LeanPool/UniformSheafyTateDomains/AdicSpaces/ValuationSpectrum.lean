@@ -107,7 +107,7 @@ lemma comap_ofValuation {Γ₀ : Type*} [LinearOrderedCommGroupWithZero Γ₀]
 lemma comap_preimage_basicOpen (φ : A →+* B) (f s : A) :
     comap φ ⁻¹' basicOpen f s = basicOpen (φ f) (φ s) := by
   ext v
-  simp only [Set.mem_preimage, basicOpen, Set.mem_setOf_eq, comap_vle, map_zero]
+  simp only [Set.mem_preimage, basicOpen, Set.mem_ofPred_eq, comap_vle, map_zero]
 
 /-- `Spv(φ)` is continuous (Remark 4.3 of Wedhorn). -/
 lemma comap_continuous (φ : A →+* B) : Continuous (comap φ) :=
@@ -199,7 +199,7 @@ lemma quotientLift_comap (w : Spv (A ⧸ 𝔞)) :
 lemma comap_quotient_range :
     Set.range (comap (Ideal.Quotient.mk 𝔞)) = { v : Spv A | 𝔞 ≤ v.supp } := by
   ext v
-  simp only [Set.mem_range, Set.mem_setOf_eq]
+  simp only [Set.mem_range, Set.mem_ofPred_eq]
   exact ⟨fun ⟨w, hw⟩ ↦ hw ▸ ideal_le_supp_comap_mk 𝔞 w,
     fun h ↦ ⟨quotientLift 𝔞 v h, comap_quotientLift 𝔞 v h⟩⟩
 
@@ -211,7 +211,7 @@ lemma comap_quotient_isEmbedding :
     simp only [instTopologicalSpace, induced_generateFrom_eq]
     congr 1
     ext U
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨f', s', rfl⟩
       obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective f'
@@ -267,7 +267,7 @@ lemma submonoid_le_supp_primeCompl_comap_algebraMap (w : Spv B) :
 lemma comap_localization_range :
     Set.range (comap (algebraMap A B)) = { v : Spv A | S ≤ v.supp.primeCompl } := by
   ext v
-  simp only [Set.mem_range, Set.mem_setOf_eq]
+  simp only [Set.mem_range, Set.mem_ofPred_eq]
   exact ⟨fun ⟨w, hw⟩ ↦ hw ▸ submonoid_le_supp_primeCompl_comap_algebraMap S B w,
     fun h ↦ ⟨localizationLift S B v h, comap_localizationLift S B v h⟩⟩
 

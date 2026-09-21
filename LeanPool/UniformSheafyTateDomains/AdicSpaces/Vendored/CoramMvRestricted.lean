@@ -140,7 +140,7 @@ def isAddSubgroup (c : σ → ℝ) : AddSubgroup (MvPowerSeries σ R) where
 variable [IsUltrametricDist R]
 
 /-- Ring structure on `MvPowerSeries σ R`. -/
-def isSubring (c : σ → ℝ) :  Subring (MvPowerSeries σ R) where
+def isSubring (c : σ → ℝ) : Subring (MvPowerSeries σ R) where
   __ := isAddSubgroup c
   one_mem' := isRestrictedGauss_one c
   mul_mem' := isRestrictedGauss.mul c

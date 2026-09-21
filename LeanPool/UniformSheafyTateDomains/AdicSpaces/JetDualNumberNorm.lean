@@ -76,7 +76,7 @@ noncomputable def isRingNorm : RingNorm (DualNumber R) where
       le_antisymm (hx ▸ le_max_right _ _) (norm_nonneg _)
     exact TrivSqZeroExt.ext (norm_eq_zero.mp h1) (norm_eq_zero.mp h2)
 
-noncomputable instance : NormedCommRing (DualNumber R) where
+noncomputable instance instNormedCommRingDualNumber : NormedCommRing (DualNumber R) where
   toNormedRing := RingNorm.toNormedRing isRingNorm
   mul_comm := mul_comm
 
@@ -86,7 +86,7 @@ theorem norm_def (x : DualNumber R) : ‖x‖ = max ‖x.fst‖ ‖x.snd‖ := r
   rw [norm_def, TrivSqZeroExt.fst_inl, TrivSqZeroExt.snd_inl, norm_zero]
   exact max_eq_left (norm_nonneg a)
 
-@[simp] theorem norm_eps_smul [NormOneClass R] (a : R) :
+theorem norm_eps_smul (a : R) :
     ‖(TrivSqZeroExt.inr a : DualNumber R)‖ = ‖a‖ := by
   rw [norm_def, TrivSqZeroExt.fst_inr, TrivSqZeroExt.snd_inr, norm_zero]
   exact max_eq_right (norm_nonneg a)
@@ -151,6 +151,7 @@ instance [CompleteSpace R] : CompleteSpace (DualNumber R) := by
   · have := hN₂ n (le_of_max_le_right hn)
     rwa [dist_eq_norm] at this
 
+omit [IsUltrametricDist R] in
 /-- The jet-power formula `(f + εg)ⁿ = fⁿ + n f^(n-1) ε g` ([FJP] (5.2), verbatim:
 "`(f + Qg)ⁿ = fⁿ + n f^(n-1) Q g` is bounded independently of `n`"). -/
 theorem pow_eq (a b : R) (n : ℕ) :
@@ -164,7 +165,7 @@ theorem pow_eq (a b : R) (n : ℕ) :
       TrivSqZeroExt.snd_inr, TrivSqZeroExt.fst_add, TrivSqZeroExt.fst_inl,
       TrivSqZeroExt.fst_inr, TrivSqZeroExt.snd_add, TrivSqZeroExt.snd_inl,
       TrivSqZeroExt.snd_inr, add_zero, zero_add, zero_add]
-    show (n : ℕ) • (a ^ (n - 1) • b) = (n : R) * a ^ (n - 1) * b
+    change (n : ℕ) • (a ^ (n - 1) • b) = (n : R) * a ^ (n - 1) * b
     rw [smul_eq_mul, nsmul_eq_mul, mul_assoc]
 
 /-! ### Componentwise functoriality -/
@@ -176,37 +177,39 @@ def mapHom (φ : R →+* S) : DualNumber R →+* DualNumber S where
   toFun x := ⟨φ x.fst, φ x.snd⟩
   map_one' := by
     refine TrivSqZeroExt.ext ?_ ?_
-    · show φ (1 : DualNumber R).fst = _
+    · change φ (1 : DualNumber R).fst = _
       rw [TrivSqZeroExt.fst_one, map_one, TrivSqZeroExt.fst_one]
-    · show φ (1 : DualNumber R).snd = _
+    · change φ (1 : DualNumber R).snd = _
       rw [TrivSqZeroExt.snd_one, map_zero, TrivSqZeroExt.snd_one]
   map_mul' x y := by
     refine TrivSqZeroExt.ext ?_ ?_
-    · show φ (x * y).fst = _
+    · change φ (x * y).fst = _
       rw [TrivSqZeroExt.fst_mul, map_mul]
       rfl
-    · show φ (x * y).snd = _
+    · change φ (x * y).snd = _
       rw [TrivSqZeroExt.snd_mul]
       show φ (x.fst • y.snd + MulOpposite.op y.fst • x.snd) = _
       rw [smul_eq_mul, op_smul_eq_mul, map_add, map_mul, map_mul]
       rfl
   map_zero' := by
     refine TrivSqZeroExt.ext ?_ ?_
-    · show φ (0 : DualNumber R).fst = _
+    · change φ (0 : DualNumber R).fst = _
       rw [TrivSqZeroExt.fst_zero, map_zero, TrivSqZeroExt.fst_zero]
-    · show φ (0 : DualNumber R).snd = _
+    · change φ (0 : DualNumber R).snd = _
       rw [TrivSqZeroExt.snd_zero, map_zero, TrivSqZeroExt.snd_zero]
   map_add' x y := by
     refine TrivSqZeroExt.ext ?_ ?_
-    · show φ (x + y).fst = _
+    · change φ (x + y).fst = _
       rw [TrivSqZeroExt.fst_add, map_add]
       rfl
-    · show φ (x + y).snd = _
+    · change φ (x + y).snd = _
       rw [TrivSqZeroExt.snd_add, map_add]
       rfl
 
+omit [IsUltrametricDist R] [IsUltrametricDist S] in
 @[simp] theorem mapHom_fst (φ : R →+* S) (x : DualNumber R) : (mapHom φ x).fst = φ x.fst := rfl
 
+omit [IsUltrametricDist R] [IsUltrametricDist S] in
 @[simp] theorem mapHom_snd (φ : R →+* S) (x : DualNumber R) : (mapHom φ x).snd = φ x.snd := rfl
 
 /-- `mapHom` of a norm-preserving homomorphism preserves the jet norm. -/
@@ -214,6 +217,7 @@ theorem norm_mapHom (φ : R →+* S) (hφ : ∀ a, ‖φ a‖ = ‖a‖) (x : Du
     ‖mapHom φ x‖ = ‖x‖ := by
   rw [norm_def, norm_def, mapHom_fst, mapHom_snd, hφ, hφ]
 
+omit [IsUltrametricDist R] [IsUltrametricDist S] in
 theorem mapHom_injective (φ : R →+* S) (hφ : Function.Injective φ) :
     Function.Injective (mapHom φ) := by
   intro x y hxy

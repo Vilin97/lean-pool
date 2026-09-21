@@ -242,7 +242,7 @@ The sigma-compactness hypothesis is satisfied in all applications (e.g.,
 complete metrizable groups are sigma-compact). -/
 theorem AddMonoidHom.isOpenMap_of_complete_countable
     {G H : Type*} [AddCommGroup G] [UniformSpace G] [IsUniformAddGroup G]
-    [CompleteSpace G] [SigmaCompactSpace G]
+     [SigmaCompactSpace G]
     [AddCommGroup H] [TopologicalSpace H] [IsTopologicalAddGroup H]
     [BaireSpace H] [T2Space H]
     (f : G →+ H) (hf : Function.Surjective f) (hf_cont : Continuous f) :
@@ -399,7 +399,7 @@ We inline the proof here (rather than importing the parallel statement
 to keep the dependency chain clean. -/
 private theorem isClosed_ideal_of_adicComplete_noetherian
     {R : Type*} [CommRing R] [UniformSpace R] [IsUniformAddGroup R]
-    [IsTopologicalRing R] [T2Space R] [CompleteSpace R] [IsNoetherianRing R]
+     [T2Space R] [CompleteSpace R] [IsNoetherianRing R]
     {I : Ideal R} (hadic : IsAdic I) (J : Ideal R) :
     IsClosed (J : Set R) := by
   let : IsAdicComplete I R := hadic.isAdicComplete_iff.mpr ⟨‹_›, ‹_›⟩
@@ -467,7 +467,7 @@ factors through `P.A₀`'s closure — this only needs the *abstract* existence 
 topologically nilpotent unit and `P.A₀` being open. -/
 theorem Wedhorn.isClosed_ideal_of_noetherian
     {A : Type*} [CommRing A] [UniformSpace A] [IsUniformAddGroup A]
-    [IsTopologicalRing A] [T2Space A] [CompleteSpace A] [IsTateRing A]
+     [T2Space A] [CompleteSpace A] [IsTateRing A]
     (P : PairOfDefinition A) [IsNoetherianRing ↥P.A₀]
     (J : Ideal A) : IsClosed (J : Set A) := by
   -- Step 1: A₀ is closed in A (open subring of an additive topological group).

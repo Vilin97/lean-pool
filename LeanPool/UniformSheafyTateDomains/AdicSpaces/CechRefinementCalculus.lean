@@ -63,7 +63,7 @@ theorem cochainMap_comp {W : FiniteCover X μ} {V : FiniteCover X κ}
     (F : AbPresheaf X) (q : ℕ) (f : CechCochain F U q) :
     (s.comp r).cochainMap F q f = s.cochainMap F q (r.cochainMap F q f) := by
   funext σ
-  show F.res _ (f ((r.map ∘ s.map) ∘ σ)) =
+  change F.res _ (f ((r.map ∘ s.map) ∘ σ)) =
     F.res _ (F.res _ (f (r.map ∘ (s.map ∘ σ))))
   rw [F.res_comp]
   rfl
@@ -73,7 +73,7 @@ theorem cochainMap_cechAug {V : FiniteCover X κ} {U : FiniteCover X ι}
     (r : Refinement V U) (F : AbPresheaf X) (x : F.obj Set.univ) :
     r.cochainMap F 0 (cechAug F U x) = cechAug F V x := by
   funext σ
-  show F.res _ (F.res _ x) = F.res _ x
+  change F.res _ (F.res _ x) = F.res _ x
   rw [F.res_comp]
 
 end Refinement

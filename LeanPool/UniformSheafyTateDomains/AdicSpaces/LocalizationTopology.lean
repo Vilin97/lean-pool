@@ -254,7 +254,7 @@ theorem locNhd_leftMul (P : PairOfDefinition A) (T : Finset A) (s : A)
       exact hj₁ (locNhd_invS_step P T s N hN j₁ _ hy)
 
 /-- The `RingSubgroupsBasis` for the localization topology on `Aₛ`. -/
-noncomputable def locBasis (P : PairOfDefinition A) (T : Finset A) (s : A)
+theorem locBasis (P : PairOfDefinition A) (T : Finset A) (s : A)
     (hopen : ∃ N : ℕ, ∀ b : P.A₀, b ∈ P.I ^ N →
       divByS (↑b : A) s ∈ locSubring P T s) :
     RingSubgroupsBasis (locNhd P T s) :=
@@ -306,7 +306,7 @@ theorem locSubring_topology_eq_adic (P : PairOfDefinition A) (T : Finset A)
           @nhds _ (locTopology P T s hopen) 0 :=
         (locBasis P T s hopen).hasBasis_nhds_zero.mem_of_mem (i := n) trivial
       let : @IsTopologicalAddGroup _ (locTopology P T s hopen) _ :=
-        @IsTopologicalRing.to_topologicalAddGroup _ _
+        @IsTopologicalRing.isTopologicalAddGroup _ _
           (locTopology P T s hopen)
           (locBasis P T s hopen).toRingFilterBasis.isTopologicalRing
       exact (locNhd P T s n).isOpen_of_mem_nhds hmem
@@ -364,7 +364,7 @@ The proof is split into three private helpers below, culminating in
 `locTopology_continuous_lift`. -/
 
 theorem locTopology_continuous_lift {B : Type*} [CommRing B] [TopologicalSpace B]
-    [IsTopologicalRing B] [NonarchimedeanRing B]
+     [NonarchimedeanRing B]
     (P : PairOfDefinition A) (T : Finset A) (s : A)
     (hopen : ∃ N : ℕ, ∀ b : P.A₀, b ∈ P.I ^ N →
       divByS (↑b : A) s ∈ locSubring P T s)
@@ -724,7 +724,7 @@ theorem isPowerBounded_algebraMap_of_isPowerBounded [IsTopologicalRing A]
       exact ⟨a ^ n, ⟨n, rfl⟩, map_pow _ a n⟩
     · rintro ⟨_, ⟨n, rfl⟩, rfl⟩
       exact ⟨n, (map_pow _ a n).symm⟩
-  show TopologicalRing.IsBounded
+  change TopologicalRing.IsBounded
     (Set.range ((algebraMap A (Localization.Away s) a) ^ · : ℕ → Localization.Away s))
   rw [h]
   exact isBounded_image_algebraMap_of_isBounded P T s hopen ha

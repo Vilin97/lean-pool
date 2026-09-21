@@ -26,9 +26,9 @@ Remark 7.6):
   of `v` to its `W(T/s)`-profile (`W(T/s) = { w ∈ Spv A ; ∀ t ∈ T, w(t) ≤ w(s) ≠ 0 }`).
 * **Wedhorn 7.5(iii)** (`wedhorn.txt:2862-2872`): for `T` finite with `I ⊆ √(T·A)`,
   `W(T/s) = r⁻¹(Spv(A,I)(T/s))` where `r` is the 7.1.2 retraction. Hence
-  `rhoR '' (range ιSpv_bool) = ιSpvR '' SpvAI A I`: the `R`-profile image of `Spv A`
+  `rhoR '' (range ιSpvBool) = ιSpvR '' SpvAI A I`: the `R`-profile image of `Spv A`
   IS the `R`-profile image of `Spv(A, I)` — quasi-compactness of the latter as a
-  continuous image of the (proven) compact `range ιSpv_bool` (7.5(iv),
+  continuous image of the (proven) compact `range ιSpvBool` (7.5(iv),
   `wedhorn.txt:2873-2884`).
 * **Theorem 7.10** (`wedhorn.txt:2908-2926`): `Cont A = { v ∈ Spv(A,I) ; v(a) < 1 ∀ a ∈ I }`
   — inside the profile cube these are clopen coordinate conditions.
@@ -59,7 +59,7 @@ def RCoord (A : Type*) [CommRing A] (I : Ideal A) : Type _ :=
   {p : Finset A × A // I ≤ (Ideal.span (p.1 : Set A)).radical}
 
 /-- The profile map between Boolean cubes: from the `basicOpen`-profile
-`x = ιSpv_bool v` to the `W(T/s)`-profile. The `(T, s)`-coordinate is the finite
+`x = ιSpvBool v` to the `W(T/s)`-profile. The `(T, s)`-coordinate is the finite
 Boolean formula `(∀ t ∈ T, x (t, s)) ∧ x (s, s)`; note `x (t, s)` already encodes
 `v(t) ≤ v(s) ≠ 0` and `x (s, s)` encodes `v(s) ≠ 0` (covering `T = ∅`). -/
 noncomputable def rhoR (I : Ideal A) (x : A × A → Bool) : RCoord A I → Bool :=
@@ -82,15 +82,15 @@ theorem continuous_rhoR (I : Ideal A) : Continuous (rhoR (A := A) I) := by
 
 /-- The `W(T/s)`-profile of a point of `Spv A`. -/
 noncomputable def ιSpvR (I : Ideal A) (v : Spv A) : RCoord A I → Bool :=
-  rhoR I (ιSpv_bool v)
+  rhoR I (ιSpvBool v)
 
 @[simp]
-theorem rhoR_ιSpv_bool (I : Ideal A) (v : Spv A) : rhoR I (ιSpv_bool v) = ιSpvR I v := rfl
+theorem rhoR_ιSpv_bool (I : Ideal A) (v : Spv A) : rhoR I (ιSpvBool v) = ιSpvR I v := rfl
 
 /-- Coordinate semantics of the `W(T/s)`-profile. -/
 theorem ιSpvR_eq_true_iff (I : Ideal A) (v : Spv A) (p : RCoord A I) :
     ιSpvR I v p = true ↔ (∀ t ∈ p.1.1, v.vle t p.1.2) ∧ ¬ v.vle p.1.2 0 := by
-  unfold ιSpvR rhoR ιSpv_bool
+  unfold ιSpvR rhoR ιSpvBool
   simp only [Bool.and_eq_true, List.all_eq_true, decide_eq_true_iff]
   constructor
   · rintro ⟨hT, -, hs0⟩
@@ -405,11 +405,11 @@ theorem ιSpvR_retractionSingle_eq (g : A) (I : Ideal A) (hIg : I = Ideal.span {
 To avoid quantifying images over non-side-condition coordinates, define the compact
 carrier as the FULL `rhoR`-image of the (proven compact) `basicOpen`-profile range. -/
 
-/-- The `W`-profile carrier: image of the compact `range ιSpv_bool` under the continuous
+/-- The `W`-profile carrier: image of the compact `range ιSpvBool` under the continuous
 `rhoR`. Compact by construction; equals the profile image of `Spv(A, I)` by 7.5(iii). -/
 noncomputable def profileCarrier (A : Type*) [CommRing A] (I : Ideal A) :
     Set (RCoord A I → Bool) :=
-  rhoR I '' Set.range (ιSpv_bool : Spv A → A × A → Bool)
+  rhoR I '' Set.range (ιSpvBool : Spv A → A × A → Bool)
 
 theorem isCompact_profileCarrier (I : Ideal A) : IsCompact (profileCarrier A I) :=
   (isCompact_range_ιSpv_bool).image (continuous_rhoR I)
@@ -488,7 +488,7 @@ theorem image_ιSpvR_spa_eq [IsTopologicalRing A] (P : PairOfDefinition A) {π :
     P.isTopologicallyNilpotent_of_mem (hπ ▸ Ideal.mem_span_singleton_self π)
   apply Set.Subset.antisymm
   · rintro y ⟨v, hv, rfl⟩
-    refine ⟨⟨ιSpv_bool v, ⟨v, rfl⟩, rfl⟩, ?_, ?_⟩
+    refine ⟨⟨ιSpvBool v, ⟨v, rfl⟩, rfl⟩, ?_, ?_⟩
     · -- `v(π) < 1` for continuous `v` (forward 7.10, via topological nilpotence).
       rw [Bool.eq_false_iff]
       intro htrue

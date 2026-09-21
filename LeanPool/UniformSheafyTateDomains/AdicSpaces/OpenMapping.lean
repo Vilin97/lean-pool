@@ -98,9 +98,9 @@ section StrictExactPackage
 /-- Strict exactness package: embedding, openness, and closed kernel for a short exact
 sequence of topological groups. -/
 theorem strictExact_package {M₁ M₂ M₃ : Type*}
-    [AddCommGroup M₁] [TopologicalSpace M₁] [IsTopologicalAddGroup M₁]
-    [AddCommGroup M₂] [TopologicalSpace M₂] [IsTopologicalAddGroup M₂]
-    [AddCommGroup M₃] [TopologicalSpace M₃] [IsTopologicalAddGroup M₃] [T1Space M₃]
+    [AddCommGroup M₁] [TopologicalSpace M₁]
+    [AddCommGroup M₂] [TopologicalSpace M₂]
+    [AddCommGroup M₃] [TopologicalSpace M₃] [T1Space M₃]
     (f : M₁ →+ M₂) (g : M₂ →+ M₃) (hf_inj : Function.Injective f)
     (hf_cont : Continuous f) (hf_strict : IsStrictMap f) (hg_cont : Continuous g)
     (_hg_surj : Function.Surjective g) (hg_open : IsOpenMap g) :

@@ -415,7 +415,7 @@ theorem locNhd_leftMul (P : PairOfDefinition A) (T : Finset A) (s : A) (hopen : 
       exact hj₁ (locNhd_invS_step P T s N hN j₁ _ hy)
 
 /-- The `RingSubgroupsBasis` giving the localisation topology on `Aₛ`. -/
-noncomputable def locBasis (P : PairOfDefinition A) (T : Finset A) (s : A)
+theorem locBasis (P : PairOfDefinition A) (T : Finset A) (s : A)
     (hopen : LocOpen P T s) : RingSubgroupsBasis (locNhd P T s) :=
   .of_comm _ (fun i j ↦ ⟨max i j, le_inf (locNhd_antitone P T s (le_max_left i j))
     (locNhd_antitone P T s (le_max_right i j))⟩) (locNhd_mul P T s) (locNhd_leftMul P T s hopen)
@@ -426,8 +426,6 @@ noncomputable def locBasis (P : PairOfDefinition A) (T : Finset A) (s : A)
   (locBasis P T s hopen).topology
 
 /-! ## 6. Rational localisation data and the structure presheaf (Wedhorn §8.1) -/
-
-variable [IsTopologicalRing A]
 
 /-- A **rational localisation datum**: a pair of definition, a finite set `T`, an element
 `s`, and the openness condition making the localisation topology on `Aₛ` well behaved
@@ -454,19 +452,23 @@ namespace RationalLocData
     TopologicalSpace (Localization.Away D.s) :=
   locTopology D.P D.T D.s D.hopen
 
-@[reducible] noncomputable def isTopologicalRing (D : RationalLocData A) :
+/-- The ring operations are continuous for the rational localization topology. -/
+theorem isTopologicalRing (D : RationalLocData A) :
     @IsTopologicalRing (Localization.Away D.s) D.topology _ :=
   (locBasis D.P D.T D.s D.hopen).toRingFilterBasis.isTopologicalRing
 
-@[reducible] noncomputable def isTopologicalAddGroup (D : RationalLocData A) :
+/-- The rational localization is a topological additive group. -/
+theorem isTopologicalAddGroup (D : RationalLocData A) :
     @IsTopologicalAddGroup (Localization.Away D.s) D.topology _ :=
-  @IsTopologicalRing.to_topologicalAddGroup _ _ D.topology D.isTopologicalRing
+  @IsTopologicalRing.isTopologicalAddGroup _ _ D.topology D.isTopologicalRing
 
+/-- The additive uniformity induced by the rational localization topology. -/
 @[reducible] noncomputable def uniformSpace (D : RationalLocData A) :
     UniformSpace (Localization.Away D.s) :=
   @IsTopologicalAddGroup.rightUniformSpace _ _ D.topology D.isTopologicalAddGroup
 
-@[reducible] noncomputable def isUniformAddGroup (D : RationalLocData A) :
+/-- The rational localization additive operations respect its canonical uniformity. -/
+theorem isUniformAddGroup (D : RationalLocData A) :
     @IsUniformAddGroup (Localization.Away D.s) D.uniformSpace _ :=
   @isUniformAddGroup_of_addCommGroup _ _ D.topology D.isTopologicalAddGroup
 
@@ -477,10 +479,12 @@ localisation topology (Wedhorn §8.1, equation 8.1.1). -/
 noncomputable def presheafValue (D : RationalLocData A) : Type _ :=
   @UniformSpace.Completion (Localization.Away D.s) D.uniformSpace
 
-noncomputable instance presheafValue.instCommRing (D : RationalLocData A) : CommRing (presheafValue D) :=
+noncomputable instance presheafValue.instCommRing (D : RationalLocData A) : CommRing
+  (presheafValue D) :=
   @UniformSpace.Completion.commRing _ _ D.uniformSpace D.isUniformAddGroup D.isTopologicalRing
 
-noncomputable instance presheafValue.instUniformSpace (D : RationalLocData A) : UniformSpace (presheafValue D) :=
+noncomputable instance presheafValue.instUniformSpace (D : RationalLocData A) : UniformSpace
+  (presheafValue D) :=
   @UniformSpace.Completion.uniformSpace (Localization.Away D.s) D.uniformSpace
 
 noncomputable instance presheafValue.instTopologicalSpace (D : RationalLocData A) :
@@ -493,7 +497,8 @@ noncomputable instance presheafValue.instIsTopologicalRing (D : RationalLocData 
   @UniformSpace.Completion.topologicalRing _ _ D.uniformSpace
     D.isTopologicalRing D.isUniformAddGroup
 
-instance presheafValue.instCompleteSpace (D : RationalLocData A) : CompleteSpace (presheafValue D) :=
+instance presheafValue.instCompleteSpace (D : RationalLocData A) : CompleteSpace (presheafValue
+  D) :=
   @UniformSpace.Completion.completeSpace _ D.uniformSpace
 
 instance presheafValue.instT0Space (D : RationalLocData A) : T0Space (presheafValue D) :=
@@ -657,15 +662,18 @@ variable {R : Type u} [NormedCommRing R] [IsUltrametricDist R] {G : Type} [AddCo
 noncomputable def gauss (x : AddMonoidAlgebra R G) : ℝ≥0 :=
   x.coeff.support.sup fun m => ‖x.coeff m‖₊
 
+omit [IsUltrametricDist R] [AddCommMonoid G] in
 theorem nnnorm_coeff_le_gauss (x : AddMonoidAlgebra R G) (m : G) : ‖x.coeff m‖₊ ≤ gauss x := by
   by_cases h : m ∈ x.coeff.support
   · exact Finset.le_sup (f := fun m => ‖x.coeff m‖₊) h
   · rw [Finsupp.notMem_support_iff.mp h, nnnorm_zero]; exact zero_le
 
+omit [IsUltrametricDist R] [AddCommMonoid G] in
 theorem gauss_le_iff {x : AddMonoidAlgebra R G} {C : ℝ≥0} :
     gauss x ≤ C ↔ ∀ m, ‖x.coeff m‖₊ ≤ C :=
   ⟨fun h m => (nnnorm_coeff_le_gauss x m).trans h, fun h => Finset.sup_le fun m _ => h m⟩
 
+omit [IsUltrametricDist R] in
 theorem gauss_eq_zero_iff {x : AddMonoidAlgebra R G} : gauss x = 0 ↔ x = 0 := by
   refine ⟨fun h => AddMonoidAlgebra.coeff_injective (Finsupp.ext fun m => ?_), ?_⟩
   · simpa using gauss_le_iff.mp h.le m
@@ -677,6 +685,7 @@ theorem gauss_add_le (x y : AddMonoidAlgebra R G) : gauss (x + y) ≤ max (gauss
     exact (IsUltrametricDist.nnnorm_add_le_max _ _).trans
       (max_le_max (nnnorm_coeff_le_gauss x m) (nnnorm_coeff_le_gauss y m))
 
+omit [IsUltrametricDist R] [AddCommMonoid G] in
 theorem gauss_neg (x : AddMonoidAlgebra R G) : gauss (-x) = gauss x := by
   simp [gauss, AddMonoidAlgebra.coeff_neg]
 
@@ -694,6 +703,7 @@ theorem gauss_mul_le (x y : AddMonoidAlgebra R G) : gauss (x * y) ≤ gauss x * 
           (NNReal.coe_le_coe.mpr (nnnorm_coeff_le_gauss y m₂)) (norm_nonneg _) (by positivity)
   · simp only [norm_zero]; positivity
 
+/-- The maximum coefficient norm defines an additive group norm on the monoid algebra. -/
 noncomputable def gaussGroupNorm : AddGroupNorm (AddMonoidAlgebra R G) where
   toFun x := gauss x
   map_zero' := by simp [gauss]
@@ -716,7 +726,8 @@ noncomputable instance gaussNormedCommRing : NormedCommRing (AddMonoidAlgebra R 
     norm_mul_le := fun x y => by exact_mod_cast gauss_mul_le x y }
 
 instance gaussIsUltrametricDist : IsUltrametricDist (AddMonoidAlgebra R G) :=
-  IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm fun x y => by exact_mod_cast gauss_add_le x y
+  IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm fun x y => by
+    exact_mod_cast gauss_add_le x y
 
 -- Pinned at high priority so the statements elaborate identically in every environment (see
 -- the module docstring); it is the same instance. All instances here are named explicitly,
@@ -734,7 +745,7 @@ instance gaussNormOneClass [NormOneClass R] : NormOneClass (AddMonoidAlgebra R G
     · simpa using nnnorm_coeff_le_gauss (1 : AddMonoidAlgebra R G) 0
 
 /-- Scaling by a field constant scales the Gauss norm exactly. -/
-theorem gauss_smul {K : Type u} [NormedField K] [IsUltrametricDist K] (c : K)
+theorem gauss_smul {K : Type u} [NormedField K] (c : K)
     (x : AddMonoidAlgebra K G) : gauss (c • x) = ‖c‖₊ * gauss x := by
   have key : ∀ (c : K) (x : AddMonoidAlgebra K G), gauss (c • x) ≤ ‖c‖₊ * gauss x :=
     fun c x => gauss_le_iff.mpr fun m => by
@@ -792,11 +803,13 @@ noncomputable def unitBall : Subring E where
   zero_mem' := by simp
   one_mem' := norm_one.le
   add_mem' ha hb := (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
-  neg_mem' ha := by simpa only [Set.mem_setOf_eq, norm_neg] using ha
-  mul_mem' ha hb := (norm_mul_le _ _).trans (mul_le_one₀ ha (norm_nonneg _) hb)
+  neg_mem' ha := by simpa only [Set.mem_ofPred_eq, norm_neg] using ha
+  mul_mem' ha hb := (norm_mul_le _ _).trans ((mul_le_mul_of_nonneg_right ha (norm_nonneg
+    _)).trans (by
+    simpa using hb))
 
 theorem isOpen_unitBall : IsOpen (unitBall E : Set E) := by
-  show IsOpen {x : E | ‖x‖ ≤ 1}
+  change IsOpen {x : E | ‖x‖ ≤ 1}
   simpa only [Metric.closedBall, dist_zero_right] using
     IsUltrametricDist.isOpen_closedBall (0 : E) one_ne_zero
 
@@ -865,7 +878,7 @@ theorem isTateRing_of_scale (t : E) (htu : IsUnit t) (ht1 : ‖t‖ < 1) (ht0 : 
     (hscale : ∀ x : E, ‖t * x‖ = ‖t‖ * ‖x‖) : IsTateRing E := by
   have _ : IsHuberRing E := ⟨⟨unitBallPod t htu ht1 ht0 hscale⟩⟩
   refine ⟨⟨htu.unit, ?_⟩⟩
-  show Filter.Tendsto (fun n : ℕ => ((htu.unit : Eˣ) : E) ^ n) Filter.atTop (𝓝 0)
+  change Filter.Tendsto (fun n : ℕ => ((htu.unit : Eˣ) : E) ^ n) Filter.atTop (𝓝 0)
   simp only [IsUnit.unit_spec]
   rw [tendsto_zero_iff_norm_tendsto_zero]
   have hnorm : ∀ n : ℕ, ‖t ^ n‖ = ‖t‖ ^ n := fun n => by
@@ -888,11 +901,12 @@ def jetPolys : Subring (AddMonoidAlgebra K (ℤ × ℕ)) where
   carrier := {p | ∀ (a : ℤ) (q : ℕ), q ≤ 1 → a < 0 → p.coeff (a, q) = 0}
   zero_mem' _ _ _ _ := rfl
   one_mem' a q _ ha := by
-    rw [AddMonoidAlgebra.one_def, AddMonoidAlgebra.coeff_single, Finsupp.single_apply, if_neg]
+    rw [AddMonoidAlgebra.one_def, AddMonoidAlgebra.coeff_single, Finsupp.single_apply, ite_eq_right]
     rintro ⟨⟩; exact ha.ne rfl
   add_mem' hp hq a q h1 h2 := by
     rw [AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp a q h1 h2, hq a q h1 h2, add_zero]
-  neg_mem' hp a q h1 h2 := by rw [AddMonoidAlgebra.coeff_neg, Finsupp.neg_apply, hp a q h1 h2, neg_zero]
+  neg_mem' hp a q h1 h2 := by
+    rw [AddMonoidAlgebra.coeff_neg, Finsupp.neg_apply, hp a q h1 h2, neg_zero]
   mul_mem' {p q} hp hq a k hk ha := by
     rw [AddMonoidAlgebra.coeff_mul]
     simp only [Finsupp.sum]
@@ -918,7 +932,7 @@ noncomputable def C : K →+* JetA K :=
   (UniformSpace.Completion.coeRingHom.comp (algebraMap K (AddMonoidAlgebra K (ℤ × ℕ)))).codRestrict
     (jetSubring K) fun c => Subring.le_topologicalClosure _ ⟨algebraMap K _ c, fun a q _ ha => by
       rw [AddMonoidAlgebra.coe_algebraMap, Function.comp_apply, AddMonoidAlgebra.coeff_single,
-        Finsupp.single_apply, if_neg]
+        Finsupp.single_apply, ite_eq_right]
       rintro ⟨⟩; exact ha.ne rfl, rfl⟩
 
 omit [CompleteSpace K] in

@@ -94,7 +94,7 @@ theorem wpWeight_add_le (w : ℕ → ℕ) (s t : ℕ →₀ ℕ) :
     have ht' := Nat.mod_two_eq_zero_or_one (t n)
     rcases hs with hs | hs <;> rcases ht' with ht' | ht' <;>
       simp only [hmod, h0, ne_eq, not_false_iff, and_true] <;>
-      split_ifs <;> subst_vars <;> omega
+      split_ifs <;> omega
 
 /-- Disjoint-support additivity of the parity weight (used silently by
 [WP] eq:parity-factorization and eq:tail-multiplication). -/
@@ -120,7 +120,7 @@ theorem wpWeight_add_of_disjoint (w : ℕ → ℕ) {s t : ℕ →₀ ℕ}
   classical
   by_cases hk : k = 0
   · simp [hk]
-  · rw [wpWeight, Finsupp.support_single_ne_zero n hk, Finset.sum_singleton,
+  · rw [wpWeight, Finsupp.support_single n hk, Finset.sum_singleton,
       Finsupp.single_eq_same]
 
 /-- The parity weight ignores the value at index `0`. -/
@@ -134,7 +134,7 @@ theorem wpWeight_update_zero (w : ℕ → ℕ) (t : ℕ →₀ ℕ) (k : ℕ) :
   refine Finset.sum_congr rfl fun n _ => ?_
   by_cases h0 : n = 0
   · simp [h0]
-  · rw [Finsupp.update_apply, if_neg h0]
+  · rw [Finsupp.update_apply, ite_eq_right h0]
 
 /-! ### The support monoid `S` -/
 
@@ -170,12 +170,12 @@ theorem wpMem_single_add_single (w : ℕ → ℕ) (n : ℕ) :
         (Finsupp.single n 1).support := by
       by_cases hw0 : w n = 0
       · simp [hw0]
-      · rw [Finsupp.support_single_ne_zero _ hw0,
-          Finsupp.support_single_ne_zero _ (one_ne_zero)]
+      · rw [Finsupp.support_single _ hw0,
+          Finsupp.support_single _ (one_ne_zero)]
         simpa using fun h => h0 h.symm
     unfold WPMem
     rw [wpWeight_add_of_disjoint w hdisj]
-    simp [Finsupp.add_apply,  h0, Ne.symm h0]
+    simp [Finsupp.add_apply, h0, Ne.symm h0]
 
 /-- Even pure-`U` exponents are in `S` ([WP] `Z_n = U_n²`). -/
 theorem wpMem_two_nsmul_single (w : ℕ → ℕ) (n : ℕ) (k : ℕ) :
@@ -250,7 +250,7 @@ theorem wpMem_tailShift (w : ℕ → ℕ) {N : ℕ} (μ : TailIdx N) :
   have hdisj : Disjoint (Finsupp.single 0 (wpWeight w μ.1)).support μ.1.support := by
     by_cases hw0 : wpWeight w μ.1 = 0
     · simp [hw0]
-    · rw [Finsupp.support_single_ne_zero _ hw0]
+    · rw [Finsupp.support_single _ hw0]
       simp [ hμ0]
   unfold WPMem tailShift
   rw [wpWeight_add_of_disjoint w hdisj]
@@ -266,7 +266,7 @@ noncomputable def headPart (w : ℕ → ℕ) (N : ℕ) (t : ℕ →₀ ℕ) : �
 noncomputable def tailPart (N : ℕ) (t : ℕ →₀ ℕ) : TailIdx N :=
   ⟨t.filter fun n => N < n, fun n hn => by
     classical
-    rw [Finsupp.filter_apply, if_neg (by omega)]⟩
+    rw [Finsupp.filter_apply, ite_eq_right (by omega)]⟩
 
 /-- The filter split of the parity weight:
 `ω(t) = ω(t restricted to [0,N]) + ω(t restricted to (N,∞))`. -/
@@ -291,15 +291,15 @@ theorem headMem_headPart {w : ℕ → ℕ} {N : ℕ} {t : ℕ →₀ ℕ} (ht : 
   classical
   constructor
   · unfold WPMem headPart
-    rw [wpWeight_update_zero, Finsupp.update_apply, if_pos rfl]
+    rw [wpWeight_update_zero, Finsupp.update_apply, ite_eq_left rfl]
     have hsplit := wpWeight_filter_split w N t
     have := ht
     unfold WPMem at this
     omega
   · intro n hn
     unfold headPart
-    rw [Finsupp.update_apply, if_neg (by omega), Finsupp.filter_apply,
-      if_neg (by omega)]
+    rw [Finsupp.update_apply, ite_eq_right (by omega), Finsupp.filter_apply,
+      ite_eq_right (by omega)]
 
 /-- The head/tail reconstruction: every allowed exponent splits uniquely as
 (head exponent) + (tail-basis exponent) ([WP] eq:tail-decomposition at the level of
@@ -322,7 +322,7 @@ theorem tailPart_of_headMem_add {w : ℕ → ℕ} {N : ℕ} {h : ℕ →₀ ℕ}
   classical
   apply Subtype.ext
   ext n
-  show ((h + tailShift w μ).filter fun n => N < n) n = μ.1 n
+  change ((h + tailShift w μ).filter fun n => N < n) n = μ.1 n
   by_cases hN : N < n
   · have hh0 : h n = 0 := hh.2 n hN
     simp only [Finsupp.filter_apply, Finsupp.add_apply, tailShift,
@@ -330,7 +330,7 @@ theorem tailPart_of_headMem_add {w : ℕ → ℕ} {N : ℕ} {h : ℕ →₀ ℕ}
     split_ifs <;> subst_vars <;> omega
   · have hμ0 : μ.1 n = 0 := μ.prop n (by omega)
     simp only [Finsupp.filter_apply, hμ0]
-    split_ifs <;> subst_vars <;> omega
+    split_ifs; omega
 
 theorem headPart_of_headMem_add {w : ℕ → ℕ} {N : ℕ} {h : ℕ →₀ ℕ} (hh : HeadMem w N h)
     (μ : TailIdx N) : headPart w N (h + tailShift w μ) = h := by
@@ -375,6 +375,6 @@ only at index `0`, which `wpWeight` ignores). -/
   by_cases h0 : n = 0
   · simp [h0]
   · have : ¬ n ≤ 0 := by omega
-    simp only [shiftWeight, if_neg this, Nat.sub_zero]
+    simp only [shiftWeight, ite_eq_right this, Nat.sub_zero]
 
 end WeightedParity

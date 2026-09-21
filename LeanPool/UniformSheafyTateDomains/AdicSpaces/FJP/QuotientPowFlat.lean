@@ -45,12 +45,12 @@ theorem levelOnePlainEquiv_mk
     (h1 : Function.Bijective (levelMap (B := B) I 1)) (a : A) :
     levelOnePlainEquiv I h1 (Ideal.Quotient.mk I a) =
       Ideal.Quotient.mk (I.map (algebraMap A B)) (algebraMap A B a) := by
-  show (Ideal.quotEquivOfEq (pow_one (I.map (algebraMap A B))))
+  change (Ideal.quotEquivOfEq (pow_one (I.map (algebraMap A B))))
     ((RingEquiv.ofBijective _ h1)
       ((Ideal.quotEquivOfEq (pow_one I).symm)
         (Ideal.Quotient.mk I a))) = _
   rw [Ideal.quotEquivOfEq_mk]
-  show (Ideal.quotEquivOfEq (pow_one (I.map (algebraMap A B))))
+  change (Ideal.quotEquivOfEq (pow_one (I.map (algebraMap A B))))
     (levelMap (B := B) I 1 (Ideal.Quotient.mk (I ^ 1) a)) = _
   rw [levelMap_mk, Ideal.quotEquivOfEq_mk]
 
@@ -125,7 +125,7 @@ theorem mem_pow_succ_of_flat [Module.Flat A B]
     (TensorProduct.lid A B).toLinearMap.comp (f.rTensor B) with hφdef
   have hφinj : Function.Injective φ := by
     rw [hφdef]
-    show Function.Injective
+    change Function.Injective
       (⇑(TensorProduct.lid A B).toLinearMap ∘ ⇑(f.rTensor B))
     exact Function.Injective.comp (TensorProduct.lid A B).injective
       (Module.Flat.rTensor_preserves_injective_linearMap f
@@ -135,9 +135,9 @@ theorem mem_pow_succ_of_flat [Module.Flat A B]
   set u : (↥(I ^ n : Ideal A)) ⊗[A] B := ⟨a, han⟩ ⊗ₜ[A] 1 with hudef
   have hφu : φ u = algebraMap A B a := by
     rw [hudef, hφdef]
-    show (TensorProduct.lid A B) ((f.rTensor B) (⟨a, han⟩ ⊗ₜ[A] 1)) = _
+    change (TensorProduct.lid A B) ((f.rTensor B) (⟨a, han⟩ ⊗ₜ[A] 1)) = _
     rw [LinearMap.rTensor_tmul, TensorProduct.lid_tmul]
-    show a • (1 : B) = _
+    change a • (1 : B) = _
     rw [Algebra.smul_def, mul_one]
   have hsurj : ∀ y ∈ ((I.map (algebraMap A B)) ^ (n + 1) : Ideal B),
       ∃ w ∈ LinearMap.range (ι.rTensor B), φ w = y := by
@@ -152,10 +152,10 @@ theorem mem_pow_succ_of_flat [Module.Flat A B]
         ((⟨r, hr⟩ : ↥(I ^ (n + 1) : Ideal A)) ⊗ₜ[A] b),
         LinearMap.mem_range_self _ _, ?_⟩
       rw [LinearMap.rTensor_tmul, hφdef]
-      show (TensorProduct.lid A B)
+      change (TensorProduct.lid A B)
         ((f.rTensor B) ((ι ⟨r, hr⟩) ⊗ₜ[A] b)) = _
       rw [LinearMap.rTensor_tmul, TensorProduct.lid_tmul]
-      show r • b = _
+      change r • b = _
       rfl
     · rintro x y ⟨wx, hwx, hφx⟩ ⟨wy, hwy, hφy⟩
       exact ⟨wx + wy, Submodule.add_mem _ hwx hwy, by
@@ -181,7 +181,7 @@ theorem mem_pow_succ_of_flat [Module.Flat A B]
         Submodule.Quotient.mk (r • x) := by
     intro x r
     rw [hg₃def]
-    show (TensorProduct.tensorQuotEquivQuotSMul _ I)
+    change (TensorProduct.tensorQuotEquivQuotSMul _ I)
       (x ⊗ₜ[A] (Ideal.Quotient.mk I r)) = _
     rw [TensorProduct.tensorQuotEquivQuotSMul, LinearEquiv.trans_apply,
       TensorProduct.comm_tmul,
@@ -189,20 +189,20 @@ theorem mem_pow_succ_of_flat [Module.Flat A B]
   have hψu : ψ u =
       Submodule.Quotient.mk (⟨a, han⟩ : ↥(I ^ n : Ideal A)) := by
     rw [hψdef, hudef]
-    show g₃ (g₂ (g₁ (⟨a, han⟩ ⊗ₜ[A] 1))) = _
+    change g₃ (g₂ (g₁ (⟨a, han⟩ ⊗ₜ[A] 1))) = _
     rw [hg₁def, LinearMap.lTensor_tmul, hg₂def, LinearMap.lTensor_tmul]
     have h9 : (levelOneSymmLin I h1)
         ((Ideal.Quotient.mkₐ A (I.map (algebraMap A B))).toLinearMap
           (1 : B)) = Ideal.Quotient.mk I 1 := by
-      show (levelOnePlainEquiv I h1).symm
+      change (levelOnePlainEquiv I h1).symm
         (Ideal.Quotient.mkₐ A (I.map (algebraMap A B)) 1) = _
       rw [map_one, map_one, map_one]
     rw [h9, hg₃tmul, one_smul]
   have hψW : ψ.comp (ι.rTensor B) = 0 := by
     refine TensorProduct.ext' fun x b => ?_
-    show ψ ((ι.rTensor B) (x ⊗ₜ[A] b)) = 0
+    change ψ ((ι.rTensor B) (x ⊗ₜ[A] b)) = 0
     rw [LinearMap.rTensor_tmul, hψdef]
-    show g₃ (g₂ (g₁ ((ι x) ⊗ₜ[A] b))) = 0
+    change g₃ (g₂ (g₁ ((ι x) ⊗ₜ[A] b))) = 0
     rw [hg₁def, LinearMap.lTensor_tmul, hg₂def, LinearMap.lTensor_tmul]
     obtain ⟨r, hr⟩ := Ideal.Quotient.mk_surjective
       ((levelOneSymmLin I h1)
@@ -272,7 +272,7 @@ noncomputable def adicCompletionEquivOfFlatOfLevelOne [Module.Flat A B]
       (levelMap_bijective_of_flat_of_levelOne I h1 n))
     (fun {a b} hab x => by
       obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective x
-      show Ideal.Quotient.factor (Ideal.pow_le_pow_right hab)
+      change Ideal.Quotient.factor (Ideal.pow_le_pow_right hab)
         (levelMap (B := B) I b (Ideal.Quotient.mk _ c)) =
         levelMap (B := B) I a
           (Ideal.Quotient.factor (Ideal.pow_le_pow_right hab)

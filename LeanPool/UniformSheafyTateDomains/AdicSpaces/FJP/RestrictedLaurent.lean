@@ -1169,13 +1169,13 @@ theorem restrictedCongr_norm {A B : Type*} [NormedCommRing A] [IsUltrametricDist
   rw [coeff_restrictedCongr, he]
 
 /-- v4.33 (reducible-well-typed coe form): norm-preservation of the `Fin 0`-collapse
-`foo`, stated at the `RingEquiv` coercion — the syntactic shape `restrictedCongr`'s
+`restrictedFinZeroEquiv`, stated at the `RingEquiv` coercion — the syntactic shape `restrictedCongr`'s
 `he`-argument expects. (The bare `RingHomIsometric.norm_map (σ := ….toRingHom)` proof
 carries the `RingHom`-coe type, which types only at default transparency and makes
 `kabstract` choke on goals carrying `innerToSeries`.) -/
 theorem foo_norm_map (x : MvPowerSeries.Restricted R (fun _ : Fin 0 => (1 : ℝ))) :
-    ‖foo R (fun _ : Fin 0 => (1 : ℝ)) x‖ = ‖x‖ :=
-  RingHomIsometric.norm_map (σ := (foo R (fun _ : Fin 0 => (1 : ℝ))).toRingHom)
+    ‖restrictedFinZeroEquiv R (fun _ : Fin 0 => (1 : ℝ)) x‖ = ‖x‖ :=
+  RingHomIsometric.norm_map (σ := (restrictedFinZeroEquiv R (fun _ : Fin 0 => (1 : ℝ))).toRingHom)
 
 /-- The one-variable restricted ring in `Fin 1`-indexed form, identified with the
 univariate form. -/
@@ -1183,7 +1183,7 @@ noncomputable def innerToSeries :
     MvPowerSeries.Restricted R (fun _ : Fin 1 => (1 : ℝ)) ≃+*
       PowerSeries.Restricted R (1 : ℝ) :=
   (UnitDiscExample.finSuccOne R 0).trans
-    (restrictedCongr (foo R (fun _ : Fin 0 => (1 : ℝ)))
+    (restrictedCongr (restrictedFinZeroEquiv R (fun _ : Fin 0 => (1 : ℝ)))
       (fun x => foo_norm_map x))
 
 theorem innerToSeries_norm (f : MvPowerSeries.Restricted R (fun _ : Fin 1 => (1 : ℝ))) :

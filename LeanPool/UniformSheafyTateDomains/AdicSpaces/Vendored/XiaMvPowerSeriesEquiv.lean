@@ -39,7 +39,7 @@ variable [Semiring R]
 
 variable (m n : σ →₀ ℕ) (φ ψ : MvPowerSeries σ R)
 
-variable {S T : Type*}  [Semiring S] [Semiring T]
+variable {S T : Type*} [Semiring S] [Semiring T]
 variable (f : R →+* S) (g : S →+* T)
 
 open Function
@@ -249,9 +249,9 @@ private lemma sumToIterFun_monomial (x : σ ⊕ τ →₀ ℕ) (r : R) :
   simp only [coeff_sumToIterFun, coeff_monomial, Finsupp.ext_iff, coe_sumElim, Sum.forall,
     Sum.elim_inl, Sum.elim_inr, comapDomain_apply]
   split_ifs
-  · rw [coeff_monomial, if_pos (by ext; grind [comapDomain_apply])]
+  · rw [coeff_monomial, ite_eq_left (by ext; grind [comapDomain_apply])]
   · grind
-  · rw [coeff_monomial, if_neg (by simp [Finsupp.ext_iff]; grind)]
+  · rw [coeff_monomial, ite_eq_right (by simp [Finsupp.ext_iff]; grind)]
   · simp
 
 open Finset in
@@ -343,10 +343,10 @@ theorem sumAlgEquiv_comp_rename_inr : (sumAlgEquiv σ τ R).toAlgHom.comp
       (MvPowerSeries σ (MvPowerSeries τ R)) := by
   classical
   ext p x y
-  simp only [ AlgHom.coe_comp,  comp_apply,
+  simp only [ AlgHom.coe_comp, comp_apply,
     IsScalarTower.coe_toAlgHom', algebraMap_apply,
     Algebra.algebraMap_self, RingHom.id_apply, coeff_C]
-  show (coeff y) ((coeff x) (sumToIter σ τ R ((rename ⇑Embedding.inr) p))) =
+  change (coeff y) ((coeff x) (sumToIter σ τ R ((rename ⇑Embedding.inr) p))) =
     (coeff y) (if x = 0 then p else 0)
   rw [coeff_sumToIter]
   split_ifs with h
@@ -361,18 +361,18 @@ theorem sumAlgEquiv_comp_rename_inl : (sumAlgEquiv σ τ R).toAlgHom.comp
     (rename Embedding.inl) = mapAlgHom (Algebra.ofId ..) := by
   classical
   ext p x y
-  simp only [ AlgHom.coe_comp,  comp_apply,
+  simp only [ AlgHom.coe_comp, comp_apply,
     show (coeff x) ((mapAlgHom (Algebra.ofId R (MvPowerSeries τ R))) p) = C (coeff x p) from rfl]
-  show (coeff y) ((coeff x) (sumToIter σ τ R ((rename ⇑Embedding.inl) p))) =
+  change (coeff y) ((coeff x) (sumToIter σ τ R ((rename ⇑Embedding.inl) p))) =
     (coeff y) (C ((coeff x) p))
   rw [coeff_sumToIter]
   by_cases h : y = 0
   · subst h
-    rw [← Finsupp.embDomain_inl, coeff_embDomain_rename, coeff_C, if_pos rfl]
+    rw [← Finsupp.embDomain_inl, coeff_embDomain_rename, coeff_C, ite_eq_left rfl]
   · have : x.sumElim y ∉ Set.range (mapDomain Embedding.inl) := by
       rw [mem_range_mapDomain_iff _ (Embedding.injective _)]
       revert h; simp [Finsupp.ext_iff]
-    rw [coeff_rename_eq_zero _ _ this, coeff_C, if_neg h]
+    rw [coeff_rename_eq_zero _ _ this, coeff_C, ite_eq_right h]
 
 variable (R σ τ) in
 /-- The algebra isomorphism between multivariable power series in variables `σ` of multivariable
@@ -612,7 +612,7 @@ theorem finSuccEquiv_X_zero : finSuccEquiv R n (X 0) = .X := by
     simp [h1.left]
   · grind [cons_eq_single_zero_iff]
   · rw [cons_eq_single_zero_iff, not_and'] at h1
-    rw [coeff_one, if_neg (h1 h3)]
+    rw [coeff_one, ite_eq_right (h1 h3)]
   · rw [coeff_zero]
 
 theorem finSuccEquiv_X_succ {j : Fin n} : finSuccEquiv R n (X j.succ) = .C (X j) := by
@@ -623,7 +623,7 @@ theorem finSuccEquiv_X_succ {j : Fin n} : finSuccEquiv R n (X j.succ) = .C (X j)
     simp [h1.left]
   · grind [cons_eq_single_succ_iff]
   · rw [cons_eq_single_succ_iff, not_and'] at h1
-    rw [coeff_X, if_neg (h1 h3)]
+    rw [coeff_X, ite_eq_right (h1 h3)]
   · rw [coeff_zero]
 
 theorem finSuccEquiv_comp_C : (MvPowerSeries.finSuccEquiv R n).symm.toRingHom.comp
@@ -658,7 +658,7 @@ lemma finSuccEquiv_renameEquiv_finSuccEquiv (e : σ ≃ Fin n) (p) :
     (_root_.finSuccEquiv n).symm.toEmbedding) ((x.mapDomain e.symm).optionElim k) := by
     rw [embDomain_eq_mapDomain, ← Equiv.trans_toEmbedding, Equiv.coe_toEmbedding,
       ← equivMapDomain_eq_mapDomain, ← equivCongrLeft_apply, eq_comm,
-      Equiv.apply_eq_iff_eq_symm_apply]
+      ← Equiv.eq_symm_apply]
     ext a; cases a <;> simp
   have aux' : x = embDomain e.toEmbedding (x.mapDomain e.symm) := by
     rw [embDomain_eq_mapDomain, Equiv.coe_toEmbedding, ← mapDomain_comp,

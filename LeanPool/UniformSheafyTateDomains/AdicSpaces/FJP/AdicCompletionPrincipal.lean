@@ -79,7 +79,7 @@ def truncEvalMk (n : ℕ) : R⟦X⟧ →+* R ⧸ Ideal.span {a} ^ n where
       Ideal.Quotient.mk_eq_mk_iff_sub_mem, ← Polynomial.eval_mul]
     exact Polynomial.eval_sub_eval_mem_span_singleton_pow
       (fun d hd ↦ by
-        rw [coeff_trunc, if_pos hd, coeff_mul_eq_coeff_trunc_mul_trunc f g hd,
+        rw [coeff_trunc, ite_eq_left hd, coeff_mul_eq_coeff_trunc_mul_trunc f g hd,
           ← Polynomial.coe_mul, Polynomial.coeff_coe]) a
   map_zero' := by simp
   map_add' f g := by simp
@@ -162,7 +162,7 @@ theorem ofPowerSeries_surjective : Function.Surjective (ofPowerSeries a) := by
       linear_combination -hc 0
     | succ m ih =>
       rw [trunc_succ, Polynomial.eval_add, ih, Polynomial.eval_monomial]
-      simp only [map_add, coeff_C, Nat.succ_ne_zero, if_false, coeff_mk, zero_add]
+      simp only [map_add, coeff_C, Nat.succ_ne_zero, ite_false, coeff_mk, zero_add]
       linear_combination -hc (m + 1)
   rw [hsum n]
 

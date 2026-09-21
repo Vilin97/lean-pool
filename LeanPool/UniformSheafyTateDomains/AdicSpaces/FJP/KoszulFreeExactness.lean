@@ -159,7 +159,7 @@ theorem koszulDifferential_insertion_cancel (r : Fin m → R) (j : Fin m) (q : �
       by_cases hijeq : i = j
       · -- diagonal term: reproduces `r j * x J` with the opposite sign
         subst hijeq
-        rw [dif_pos hjJ, dif_neg (by simp [hJer]), if_pos rfl, mul_zero]
+        rw [dite_eq_left hjJ, dite_eq_right (by simp [hJer]), ite_eq_left rfl, mul_zero]
         have hidx : x ⟨insert i Jer.1, by
               rw [Finset.card_insert_of_notMem (by simp [hJer]), Jer.2]⟩ = x J := by
           have : insert i Jer.1 = J.1 := by
@@ -172,11 +172,11 @@ theorem koszulDifferential_insertion_cancel (r : Fin m → R) (j : Fin m) (q : �
         linear_combination (r i * x J) * neg_one_pow_mul_self (R := R) (J.1.filter (· < i)).card
       · by_cases hiJ : i ∈ J.1
         · -- `i` already in `J`: both sides vanish
-          rw [dif_pos hiJ, dif_pos (by simp [hJer, Finset.mem_erase, hijeq, hiJ]),
-            if_neg hijeq, mul_zero, mul_zero, add_zero]
+          rw [dite_eq_left hiJ, dite_eq_left (by simp [hJer, Finset.mem_erase, hijeq, hiJ]),
+            ite_eq_right hijeq, mul_zero, mul_zero, add_zero]
         · -- fresh `i ≠ j`: the four-sign identity
           have hiJer : i ∉ Jer.1 := fun h => hiJ (Finset.mem_of_mem_erase h)
-          rw [dif_neg hiJ, dif_neg hiJer, if_neg hijeq, add_zero]
+          rw [dite_eq_right hiJ, dite_eq_right hiJer, ite_eq_right hijeq, add_zero]
           have hjins : j ∈ (insert i J.1) := Finset.mem_insert_of_mem hjJ
           have h1 := hw1 ⟨insert i J.1, by rw [Finset.card_insert_of_notMem hiJ, J.2]⟩ hjins
           have hidx : x ⟨(insert i J.1).erase j, by
@@ -207,7 +207,7 @@ theorem koszulDifferential_insertion_cancel (r : Fin m → R) (j : Fin m) (q : �
           simp
   · -- `j ∉ J`: the sum collapses to the `i = j` term
     rw [koszulDifferential_apply,
-      Finset.sum_eq_single_of_mem j (Finset.mem_univ j) (fun i _ hij => ?_), dif_neg hjJ]
+      Finset.sum_eq_single_of_mem j (Finset.mem_univ j) (fun i _ hij => ?_), dite_eq_right hjJ]
     · have h1 := hw1 ⟨insert j J.1, by rw [Finset.card_insert_of_notMem hjJ, J.2]⟩
         (Finset.mem_insert_self j J.1)
       have hidx : x ⟨(insert j J.1).erase j, by
@@ -222,8 +222,8 @@ theorem koszulDifferential_insertion_cancel (r : Fin m → R) (j : Fin m) (q : �
         (((-1 : R) ^ ((J.1.filter (· < j)).card)) * r j) * h1 +
           (r j * x J) * neg_one_pow_mul_self (R := R) (J.1.filter (· < j)).card
     · by_cases hiJ : i ∈ J.1
-      · rw [dif_pos hiJ]
-      · rw [dif_neg hiJ,
+      · rw [dite_eq_left hiJ]
+      · rw [dite_eq_right hiJ,
           hw0 _ (fun h => (Finset.mem_insert.mp h).elim (fun h' => hij h'.symm)
             fun h' => hjJ h'), mul_zero, mul_zero]
 
@@ -242,9 +242,9 @@ theorem koszulDifferential_exact_of_isUnit {r : Fin m → R} {j : Fin m}
       else 0, ?_⟩
     funext J
     refine hj.mul_left_cancel ?_
-    rw [koszulDifferential_insertion_cancel r j q y _ hy (fun J hJ => dif_neg hJ)
+    rw [koszulDifferential_insertion_cancel r j q y _ hy (fun J hJ => dite_eq_right hJ)
       (fun J hJ => ?_) J]
-    rw [dif_pos hJ, mul_left_comm (r j), ← mul_assoc (r j), IsUnit.mul_val_inv hj, one_mul]
+    rw [dite_eq_left hJ, mul_left_comm (r j), ← mul_assoc (r j), IsUnit.mul_val_inv hj, one_mul]
   · rintro ⟨x, rfl⟩
     exact koszulDifferential_koszulDifferential r q x
 
@@ -336,7 +336,7 @@ theorem sum_koszulComponent {n : ℕ} (x : KoszulTerm (MvPolynomial (Fin m) A) m
       Finsupp.ext fun k => by simpa [Finsupp.add_apply] using DFunLike.congr_fun h k
     rw [Finset.sum_image hinj.injOn]
     rw [Finset.sum_congr rfl fun d hd => ?_, support_sum_monomial_coeff (x J)]
-    simp only [koszulComponent, if_pos (self_le_add_right (indexDegree J.1) d),
+    simp only [koszulComponent, ite_eq_left (self_le_add_right (indexDegree J.1) d),
       add_tsub_cancel_left]
   · simp only [koszulComponent]
     split_ifs with h
@@ -401,11 +401,11 @@ theorem koszulComponent_differential (μ : Fin m →₀ ℕ) (q : ℕ)
   funext J
   simp only [koszulComponent, koszulDifferential_apply]
   by_cases hJ : indexDegree J.1 ≤ μ
-  · rw [if_pos hJ, coeff_sum, map_sum]
+  · rw [ite_eq_left hJ, coeff_sum, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     by_cases hiJ : i ∈ J.1
-    · simp only [dif_pos hiJ, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, monomial_zero]
-    · rw [dif_neg hiJ, dif_neg hiJ]
+    · simp only [dite_eq_left hiJ, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, monomial_zero]
+    · rw [dite_eq_right hiJ, dite_eq_right hiJ]
       have hsgn : ((-1 : MvPolynomial (Fin m) A) ^ (J.1.filter (· < i)).card) =
           C ((-1 : A) ^ (J.1.filter (· < i)).card) := by
         rw [map_pow, map_neg, map_one]
@@ -416,16 +416,17 @@ theorem koszulComponent_differential (μ : Fin m →₀ ℕ) (q : ℕ)
         intro ν c
         rw [monomial_single_add, pow_one]
       by_cases hins : indexDegree (insert i J.1) ≤ μ
-      · rw [if_pos ((indexDegree_insert_le_iff hiJ hJ).mp hins), if_pos hins,
+      · rw [ite_eq_left ((indexDegree_insert_le_iff hiJ hJ).mp hins), ite_eq_left hins,
           tsub_indexDegree_insert hiJ, hXmono, single_add_tsub_indexDegree hiJ hins,
           C_mul_monomial]
-      · rw [if_neg fun h => hins ((indexDegree_insert_le_iff hiJ hJ).mpr h), if_neg hins,
+      · rw [ite_eq_right fun h => hins ((indexDegree_insert_le_iff hiJ hJ).mpr h), ite_eq_right
+          hins,
           mul_zero, mul_zero, mul_zero, monomial_zero]
-  · rw [if_neg hJ]
+  · rw [ite_eq_right hJ]
     refine (Finset.sum_eq_zero fun i _ => ?_).symm
     by_cases hiJ : i ∈ J.1
-    · rw [dif_pos hiJ]
-    · rw [dif_neg hiJ, if_neg fun h => hJ ?_, mul_zero, mul_zero]
+    · rw [dite_eq_left hiJ]
+    · rw [dite_eq_right hiJ, ite_eq_right fun h => hJ ?_, mul_zero, mul_zero]
       calc indexDegree J.1 ≤ indexDegree (insert i J.1) := by
             rw [indexDegree_insert hiJ]; exact self_le_add_left _ _
         _ ≤ μ := h
@@ -464,16 +465,16 @@ theorem koszulDifferential_coordinate_exact (A : Type*) [CommRing A] (m q : ℕ)
         funext J
         refine (isRegular_X (n := j)).left ?_
         refine koszulDifferential_insertion_cancel _ j q (koszulComponent μ y) _ (hcomp μ)
-          (fun J hJ => dif_neg fun hc => hJ hc.1) (fun J hJ => ?_) J
+          (fun J hJ => dite_eq_right fun hc => hJ hc.1) (fun J hJ => ?_) J
         by_cases herase : indexDegree (J.1.erase j) ≤ μ
         · have hXmono : ∀ (ν : Fin m →₀ ℕ) (c : A),
               (X j : MvPolynomial (Fin m) A) * monomial ν c =
                 monomial (Finsupp.single j 1 + ν) c := by
             intro ν c
             rw [monomial_single_add, pow_one]
-          rw [dif_pos ⟨hJ, herase⟩, koszulComponent, if_pos herase, mul_left_comm, hXmono,
+          rw [dite_eq_left ⟨hJ, herase⟩, koszulComponent, ite_eq_left herase, mul_left_comm, hXmono,
             add_tsub_cancel_of_le (single_le_tsub_of_notMem (Finset.notMem_erase j J.1) hμj)]
-        · rw [dif_neg fun hc => herase hc.2, koszulComponent, if_neg herase,
+        · rw [dite_eq_right fun hc => herase hc.2, koszulComponent, ite_eq_right herase,
             mul_zero, mul_zero]
     choose W hW using hstep
     refine ⟨∑ μ ∈ (koszulDegrees y).attach, W μ.1 μ.2, ?_⟩

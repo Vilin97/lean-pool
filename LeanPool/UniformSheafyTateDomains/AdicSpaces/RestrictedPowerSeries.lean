@@ -98,7 +98,7 @@ def restrictedMvPowerSeriesSubring (k : ℕ) (A : Type*) [CommRing A] [Topologic
     simp only [Set.mem_compl_iff, Set.mem_preimage] at hs
     simp only [Set.mem_singleton_iff]
     by_contra h
-    exact hs (by rw [MvPowerSeries.coeff_one, if_neg h]; exact h0U)
+    exact hs (by rw [MvPowerSeries.coeff_one, ite_eq_right h]; exact h0U)
   add_mem' {f g} hf hg := by
     change Tendsto _ cofinite (nhds 0)
     have : Tendsto (fun s => MvPowerSeries.coeff s f + MvPowerSeries.coeff s g)
@@ -176,7 +176,7 @@ def restrictedMvPowerSeriesSubring (k : ℕ) (A : Type*) [CommRing A] [Topologic
     simp only [Set.mem_compl_iff, Set.mem_preimage] at hn
     by_contra hnB
     apply hn; clear hn
-    simp only [B, Set.mem_union, Set.mem_setOf_eq, not_or, not_exists, not_and] at hnB
+    simp only [B, Set.mem_union, Set.mem_ofPred_eq, not_or, not_exists, not_and] at hnB
     obtain ⟨hnB1, hnB2⟩ := hnB
     apply hVU
     rw [SetLike.mem_coe]
@@ -200,9 +200,9 @@ def restrictedMvPowerSeriesSubring (k : ℕ) (A : Type*) [CommRing A] [Topologic
           rw [ha_eq]; exact not_not.mp (hnB2 b (hSg.mem_toFinset.mpr hbS) hb_le)
         exact SetLike.mem_coe.mp (hT_right b (hSg.mem_toFinset.mpr hbS) _ hfT_a)
       · have haW : MvPowerSeries.coeff a f ∈ (W : Set A) := by
-          simp only [Sf, Set.mem_setOf_eq, not_not] at haS; exact haS
+          simp only [Sf, Set.mem_ofPred_eq, not_not] at haS; exact haS
         have hbW : MvPowerSeries.coeff b g ∈ (W : Set A) := by
-          simp only [Sg, Set.mem_setOf_eq, not_not] at hbS; exact hbS
+          simp only [Sg, Set.mem_ofPred_eq, not_not] at hbS; exact hbS
         exact SetLike.mem_coe.mp (hWV ⟨_, haW, _, hbW, rfl⟩)
 
 /-! ### Algebra instance -/
@@ -221,7 +221,8 @@ theorem MvPowerSeries.IsRestricted_algebraMap {k : ℕ} {A : Type*} [CommRing A]
   simp only [Set.mem_compl_iff, Set.mem_preimage] at hs
   simp only [Set.mem_singleton_iff]
   by_contra h
-  exact hs (by rw [MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, if_neg h]; exact h0U)
+  exact hs (by
+    rw [MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, ite_eq_right h]; exact h0U)
 
 /-- The restricted power series subring inherits an `A`-algebra structure from the
 `MvPowerSeries` algebra instance, since constant power series are restricted. -/
@@ -239,7 +240,8 @@ noncomputable instance restrictedMvPowerSeriesSubring.instAlgebra (k : ℕ) (A :
 /-! ### Strongly noetherian rings -/
 
 /-- A topological ring `A` is **strongly noetherian** if the ring of restricted power series
-`A⟨T₁, …, Tₖ⟩` is noetherian for all `k ≥ 0` (Proposition & Definition 6.36 of Wedhorn, stated here with `A`-level restricted
+`A⟨T₁, …, Tₖ⟩` is noetherian for all `k ≥ 0` (Proposition & Definition 6.36 of Wedhorn, stated
+  here with `A`-level restricted
   series; Definition 6.36(i) verbatim is the condition on the completion `Â` — see
   `SheafyRing.lean`'s scope notes).
 
@@ -266,7 +268,7 @@ theorem IsStronglyNoetherian.isNoetherianRing (A : Type*) [CommRing A]
       (restrictedMvPowerSeriesSubring 0 A).subtype) ?_
   intro a
   refine ⟨⟨MvPowerSeries.C (σ := Fin 0) (R := A) a, ?_⟩, ?_⟩
-  · show Filter.Tendsto _ _ _
+  · change Filter.Tendsto _ _ _
     rw [Filter.cofinite_eq_bot]
     exact Filter.tendsto_bot
   · simp [MvPowerSeries.constantCoeff_C]

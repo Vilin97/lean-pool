@@ -340,9 +340,9 @@ SpaCompact preamble notes `{v | v.vle a 1} = basicOpen a 1` is
 opens in a spectral space, not clopen.
 
 **Correct route (landed)**: via the Bool Huber embedding
-`ιSpv_bool : Spv A → (A × A → Bool)`. In the discrete Bool product,
+`ιSpvBool : Spv A → (A × A → Bool)`. In the discrete Bool product,
 each cylinder `{r | r(t, s) = true}` IS clopen, and
-`v ∈ basicOpen t s ↔ ιSpv_bool v (t, s) = true`. The theorems
+`v ∈ basicOpen t s ↔ ιSpvBool v (t, s) = true`. The theorems
 `image_ιSpv_bool_rationalOpen`, `isCompact_rationalOpen_of_isClosed_image`,
 `isCompact_preimage_rationalOpen_of_isClosed_image` (all in
 `SpaCompact.lean`, all axiom-clean) give the quasi-compactness.

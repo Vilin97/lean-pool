@@ -44,7 +44,7 @@ stronger conditions `basicOpen f s = {v | v.vle f s ∧ ¬ v.vle s 0}`.
 
 The fix is to take the coordinate to be the conjunction directly:
 
-  `ιSpv v (f, s) := v.vle f s ∧ ¬ v.vle s 0`,  i.e. `v ∈ basicOpen f s`.
+  `ιSpv v (f, s) := v.vle f s ∧ ¬ v.vle s 0`, i.e. `v ∈ basicOpen f s`.
 
 With this choice, the Sierpinski sub-basic pullback at coordinate `(f, s)` is exactly
 `basicOpen f s`, which is open in `Spv A` by definition of the topology; conversely every
@@ -177,7 +177,7 @@ lemma ιSpv_isInducing : Topology.IsInducing (ιSpv : Spv A → (A × A → Prop
   unfold ValuationSpectrum.instTopologicalSpace
   congr 1
   ext U
-  simp only [Set.mem_iUnion, Set.mem_singleton_iff, Set.mem_setOf_eq, Prod.exists]
+  simp only [Set.mem_iUnion, Set.mem_singleton_iff, Set.mem_ofPred_eq, Prod.exists]
 
 /-- **Huber embedding — Phase 1 main result.** The map `ιSpv : Spv A → (A × A → Prop)`
 is a topological embedding (injective + induced topology agrees).
@@ -396,7 +396,7 @@ theorem isValuationChar_iff_mem_range (r : A × A → Prop) :
 theorem range_ιSpv :
     Set.range (ιSpv : Spv A → (A × A → Prop)) = {r | IsValuationChar r} := by
   ext r
-  simp only [Set.mem_range, Set.mem_setOf_eq]
+  simp only [Set.mem_range, Set.mem_ofPred_eq]
   exact (isValuationChar_iff_mem_range r).symm
 
 /-! ### Sierpinski coordinate sub-basics
@@ -556,9 +556,9 @@ Alternative routes that do not depend on this extension theory:
 * Embed into a discrete power `(A × A → Bool)` (compact by Tychonoff + `Finite Bool`)
   with the image characterised as a closed subset by clopen cylinder conditions for
   each `ValuativeRel` axiom, then transfer compactness through `ιSpv_isEmbedding`.
-  This route is scaffolded below (`ιSpv_bool`, `boolToProp`, and the factorisation
+  This route is scaffolded below (`ιSpvBool`, `boolToProp`, and the factorisation
   `ιSpv_eq_boolToProp_comp_ιSpv_bool`) so that the remaining obligation is exactly
-  `IsClosed (Set.range ιSpv_bool)` — an intersection of ≤ 7 closed cylinder
+  `IsClosed (Set.range ιSpvBool)` — an intersection of ≤ 7 closed cylinder
   families, one per `IsValuationChar` field. Completing this step would yield
   `CompactSpace (Spv A)` via `ιSpv_isEmbedding.isCompact_iff`.
 
@@ -571,17 +571,17 @@ ultrafilter-style proof. -/
 
 We expose the Bool-valued version of the Huber embedding,
 
-  `ιSpv_bool : Spv A → (A × A → Bool)`,  `v ↦ fun p => decide (v ∈ basicOpen p.1 p.2)`,
+  `ιSpvBool : Spv A → (A × A → Bool)`, `v ↦ fun p => decide (v ∈ basicOpen p.1 p.2)`,
 
 together with the coordinate-wise conversion `boolToProp : Bool → Prop`, so that
-`ιSpv = boolToProp ∘ ιSpv_bool`. The target space `(A × A → Bool)` carries the
+`ιSpv = boolToProp ∘ ιSpvBool`. The target space `(A × A → Bool)` carries the
 product of the discrete topology on `Bool`; it is compact by Tychonoff and `Finite
 Bool`. Finishing the compactness proof reduces to showing `IsClosed (Set.range
-ιSpv_bool)` in this discrete product — a closed-cylinder argument on the
+ιSpvBool)` in this discrete product — a closed-cylinder argument on the
 `IsValuationChar` axioms. -/
 
 /-- **Bool-valued Huber embedding.** Encodes `v ∈ basicOpen p.1 p.2` as a Bool. -/
-noncomputable def ιSpv_bool (v : Spv A) : A × A → Bool := fun p ↦
+noncomputable def ιSpvBool (v : Spv A) : A × A → Bool := fun p ↦
   @decide (v.vle p.1 p.2 ∧ ¬ v.vle p.2 0) (Classical.dec _)
 
 -- (We state the decidability explicitly via `Classical.dec` rather than relying on
@@ -590,7 +590,7 @@ noncomputable def ιSpv_bool (v : Spv A) : A × A → Bool := fun p ↦
 
 @[simp]
 lemma ιSpv_bool_apply (v : Spv A) (f s : A) :
-    ιSpv_bool v (f, s) = (@decide _ (Classical.dec (v.vle f s ∧ ¬ v.vle s 0))) := rfl
+    ιSpvBool v (f, s) = (@decide _ (Classical.dec (v.vle f s ∧ ¬ v.vle s 0))) := rfl
 
 /-- Pointwise conversion `Bool → Prop`: `true ↦ True`, `false ↦ False` (via equality).
 -/
@@ -601,18 +601,18 @@ omit [CommRing A] in
 lemma boolToProp_decide {p : Prop} (hp : Decidable p) : boolToProp (decide p) ↔ p :=
   decide_eq_true_iff
 
-/-- **Factorisation:** `ιSpv = (boolToProp ∘ ·) ∘ ιSpv_bool`. In particular, the
+/-- **Factorisation:** `ιSpv = (boolToProp ∘ ·) ∘ ιSpvBool`. In particular, the
 Sierpinski-valued embedding is the continuous image of the Bool-valued one under
 the coordinate-wise `boolToProp` map. -/
 lemma ιSpv_eq_boolToProp_comp_ιSpv_bool (v : Spv A) :
-    ιSpv v = fun p ↦ boolToProp (ιSpv_bool v p) := by
+    ιSpv v = fun p ↦ boolToProp (ιSpvBool v p) := by
   funext p
-  simp only [ιSpv, ιSpv_bool, boolToProp]
+  simp only [ιSpv, ιSpvBool, boolToProp]
   exact propext (@decide_eq_true_iff _ (Classical.dec _)).symm
 
-/-- `ιSpv_bool` is injective. Follows from `ιSpv_injective` via the factorisation,
+/-- `ιSpvBool` is injective. Follows from `ιSpv_injective` via the factorisation,
 since `boolToProp` is injective on `Bool`. -/
-lemma ιSpv_bool_injective : Function.Injective (ιSpv_bool : Spv A → _) := by
+lemma ιSpv_bool_injective : Function.Injective (ιSpvBool : Spv A → _) := by
   intro v₁ v₂ h
   apply ιSpv_injective
   rw [ιSpv_eq_boolToProp_comp_ιSpv_bool, ιSpv_eq_boolToProp_comp_ιSpv_bool, h]
@@ -641,15 +641,15 @@ lemma continuous_boolToProp_pi :
     exact continuous_of_discreteTopology
   exact h2.comp h1
 
-/-! ### Closedness of `range ιSpv_bool` in the discrete Bool product
+/-! ### Closedness of `range ιSpvBool` in the discrete Bool product
 
 We now carry out the closed-cylinder argument: each `IsValuationChar` axiom,
 evaluated at `fun p => r p = true` for `r : A × A → Bool`, is an intersection of
 clopen cylinder sets in `(A × A → Bool)` (with the discrete product topology).
-The arbitrary intersection of clopens is closed, so `range ιSpv_bool` is closed.
+The arbitrary intersection of clopens is closed, so `range ιSpvBool` is closed.
 
 Combined with the ambient `CompactSpace (A × A → Bool)` and the factorisation
-`ιSpv = (boolToProp ∘ ·) ∘ ιSpv_bool` plus continuity of the coordinate-wise
+`ιSpv = (boolToProp ∘ ·) ∘ ιSpvBool` plus continuity of the coordinate-wise
 `boolToProp` map, this gives `IsCompact (range ιSpv)`, which via
 `ιSpv_isEmbedding.isCompact_iff Set.univ` yields `CompactSpace (Spv A)`. -/
 
@@ -824,9 +824,9 @@ lemma isClosed_mul_vle_mul_left_bool :
       ⋂ (x : A), ⋂ (y : A), ⋂ (z : A),
         {r | vleOfBool r x y → vleOfBool r (x * z) (y * z)} by
     ext r; constructor
-    · intro h; simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    · intro h; simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       intro x y z hxy; exact h x y hxy z
-    · intro h x y hxy z; simp only [Set.mem_iInter, Set.mem_setOf_eq] at h
+    · intro h x y hxy z; simp only [Set.mem_iInter, Set.mem_ofPred_eq] at h
       exact h x y z hxy]
   refine isClosed_iInter fun x ↦ isClosed_iInter fun y ↦ isClosed_iInter fun z ↦ ?_
   have rewriteEq :
@@ -1002,7 +1002,7 @@ lemma isClosed_isValuationCharBool :
       {r : A × A → Bool |
         ∀ f s : A, (r (f, s) = true) ↔ vleOfBool r f s ∧ ¬ vleOfBool r s 0} := by
     ext r
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff]
     rw [isValuationCharBool_iff]
     tauto
   rw [hEq]
@@ -1011,21 +1011,21 @@ lemma isClosed_isValuationCharBool :
     isClosed_vle_mul_cancel_bool).inter isClosed_not_vle_one_zero_bool).inter
     isClosed_apply_iff_bool)
 
-/-! #### Range of `ιSpv_bool` equals the set of Bool valuation characteristics -/
+/-! #### Range of `ιSpvBool` equals the set of Bool valuation characteristics -/
 
-/-- **Main range identity (Bool version).** The image of `ιSpv_bool` is exactly the
+/-- **Main range identity (Bool version).** The image of `ιSpvBool` is exactly the
 set of Bool valuation characteristics. -/
 theorem range_ιSpv_bool :
-    Set.range (ιSpv_bool : Spv A → (A × A → Bool)) = {r | IsValuationCharBool r} := by
+    Set.range (ιSpvBool : Spv A → (A × A → Bool)) = {r | IsValuationCharBool r} := by
   ext r
   constructor
   · rintro ⟨v, rfl⟩
-    -- ιSpv_bool v is a Bool valuation characteristic: transport IsValuationChar via the
-    -- factorisation ιSpv v = fun p => ιSpv_bool v p = true.
-    change IsValuationCharBool (ιSpv_bool v)
-    change IsValuationChar (fun p ↦ ιSpv_bool v p = true)
-    -- Convert ιSpv v to `fun p => ιSpv_bool v p = true` pointwise.
-    have hconv : (fun p ↦ ιSpv_bool v p = true) = ιSpv v := by
+    -- ιSpvBool v is a Bool valuation characteristic: transport IsValuationChar via the
+    -- factorisation ιSpv v = fun p => ιSpvBool v p = true.
+    change IsValuationCharBool (ιSpvBool v)
+    change IsValuationChar (fun p ↦ ιSpvBool v p = true)
+    -- Convert ιSpv v to `fun p => ιSpvBool v p = true` pointwise.
+    have hconv : (fun p ↦ ιSpvBool v p = true) = ιSpv v := by
       funext p
       have := ιSpv_eq_boolToProp_comp_ιSpv_bool v
       rw [this]; rfl
@@ -1033,14 +1033,14 @@ theorem range_ιSpv_bool :
     exact ιSpv_mem_isValuationChar v
   · intro hr
     -- From IsValuationChar (fun p => r p = true), construct v = hr'.toSpv where
-    -- hr' : IsValuationChar (fun p => r p = true). Then ιSpv_bool v = r.
+    -- hr' : IsValuationChar (fun p => r p = true). Then ιSpvBool v = r.
     have hr' : IsValuationChar (fun p ↦ r p = true) := hr
     refine ⟨hr'.toSpv, ?_⟩
-    -- Show ιSpv_bool hr'.toSpv = r.
+    -- Show ιSpvBool hr'.toSpv = r.
     have key : ιSpv hr'.toSpv = fun p ↦ r p = true := ιSpv_toSpv hr'
     funext p
-    show ιSpv_bool hr'.toSpv p = r p
-    simp only [ιSpv_bool]
+    show ιSpvBool hr'.toSpv p = r p
+    simp only [ιSpvBool]
     have hιSpv_p : ιSpv hr'.toSpv p = (hr'.toSpv.vle p.1 p.2 ∧ ¬ hr'.toSpv.vle p.2 0) := rfl
     by_cases hb : r p = true
     · rw [hb]
@@ -1051,39 +1051,39 @@ theorem range_ιSpv_bool :
       simp only [decide_eq_false_iff_not]
       rw [← hιSpv_p, key]; exact hb
 
-/-- **Closedness of the range of `ιSpv_bool`.** -/
+/-- **Closedness of the range of `ιSpvBool`.** -/
 theorem isClosed_range_ιSpv_bool :
-    IsClosed (Set.range (ιSpv_bool : Spv A → (A × A → Bool))) := by
+    IsClosed (Set.range (ιSpvBool : Spv A → (A × A → Bool))) := by
   rw [range_ιSpv_bool]
   exact isClosed_isValuationCharBool
 
 /-! ### Conclusion: `CompactSpace (Spv A)` -/
 
-/-- `Set.range ιSpv_bool` is compact (closed subset of the compact space
+/-- `Set.range ιSpvBool` is compact (closed subset of the compact space
 `A × A → Bool`). -/
 lemma isCompact_range_ιSpv_bool :
-    IsCompact (Set.range (ιSpv_bool : Spv A → (A × A → Bool))) :=
+    IsCompact (Set.range (ιSpvBool : Spv A → (A × A → Bool))) :=
   isClosed_range_ιSpv_bool.isCompact
 
-/-- `Set.range ιSpv` equals the image of `range ιSpv_bool` under the pointwise
+/-- `Set.range ιSpv` equals the image of `range ιSpvBool` under the pointwise
 `boolToProp` map. -/
 lemma range_ιSpv_eq_image_boolToProp :
     Set.range (ιSpv : Spv A → (A × A → Prop)) =
       (fun r : A × A → Bool ↦ fun p ↦ boolToProp (r p)) ''
-        Set.range (ιSpv_bool : Spv A → (A × A → Bool)) := by
+        Set.range (ιSpvBool : Spv A → (A × A → Bool)) := by
   ext s
   constructor
   · rintro ⟨v, rfl⟩
-    refine ⟨ιSpv_bool v, ⟨v, rfl⟩, ?_⟩
-    change (fun p ↦ boolToProp (ιSpv_bool v p)) = _
+    refine ⟨ιSpvBool v, ⟨v, rfl⟩, ?_⟩
+    change (fun p ↦ boolToProp (ιSpvBool v p)) = _
     exact (ιSpv_eq_boolToProp_comp_ιSpv_bool v).symm
   · rintro ⟨r, ⟨v, rfl⟩, rfl⟩
     refine ⟨v, ?_⟩
-    change _ = (fun p ↦ boolToProp (ιSpv_bool v p))
+    change _ = (fun p ↦ boolToProp (ιSpvBool v p))
     exact ιSpv_eq_boolToProp_comp_ιSpv_bool v
 
 /-- `Set.range ιSpv` is compact in the Sierpinski product topology: it is the
-continuous image of the closed range `range ιSpv_bool` in the discrete Bool
+continuous image of the closed range `range ιSpvBool` in the discrete Bool
 product. -/
 lemma isCompact_range_ιSpv :
     IsCompact (Set.range (ιSpv : Spv A → (A × A → Prop))) := by
@@ -1094,10 +1094,10 @@ lemma isCompact_range_ιSpv :
 Huber 1993, Lemma 2.1 / Thm 3.1).** The valuation spectrum `Spv A` of a
 commutative ring `A` is compact.
 
-Proof: the Bool-valued Huber embedding `ιSpv_bool : Spv A → (A × A → Bool)` has
+Proof: the Bool-valued Huber embedding `ιSpvBool : Spv A → (A × A → Bool)` has
 closed image (each of the seven `IsValuationChar` axioms is a closed cylinder
 condition; their intersection is closed). `(A × A → Bool)` is compact (Tychonoff +
-`Finite Bool`), so `range ιSpv_bool` is compact. The pointwise conversion map
+`Finite Bool`), so `range ιSpvBool` is compact. The pointwise conversion map
 `boolToProp : Bool → Prop` is continuous, giving `IsCompact (range ιSpv)`. By
 `ιSpv_isEmbedding.isCompact_iff Set.univ`, this transfers back to compactness of
 `Spv A`. -/

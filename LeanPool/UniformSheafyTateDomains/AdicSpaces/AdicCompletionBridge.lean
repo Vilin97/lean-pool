@@ -97,7 +97,7 @@ private theorem pi_coord_mem_uniformity (n : ℕ) :
   exact ⟨{p | p.1 = p.2}, Filter.mem_principal_self _, fun ⟨_, _⟩ h => h⟩
 
 /-- `{(x,y) | eval n x = eval n y}` is in the subtype uniformity of AdicCompletion. -/
-private theorem eval_entourage_mem [UniformSpace R] (n : ℕ) :
+private theorem eval_entourage_mem (n : ℕ) :
     {p : AdicCompletion I R × AdicCompletion I R |
       AdicCompletion.eval I R n p.1 =
         AdicCompletion.eval I R n p.2} ∈
@@ -139,7 +139,7 @@ private theorem adicCompletionSet_isClosed : IsClosed (adicCompletionSet I) := b
   rw [show adicCompletionSet I =
       ⋂ (p : ℕ × ℕ) (_ : p.1 ≤ p.2),
         {g | (AdicCompletion.transitionMap I R ‹p.1 ≤ p.2›) (g p.2) = g p.1} from by
-    ext g; simp only [adicCompletionSet, Set.mem_setOf_eq, Set.mem_iInter]
+    ext g; simp only [adicCompletionSet, Set.mem_ofPred_eq, Set.mem_iInter]
     exact ⟨fun h p hp => h hp, fun h m n hmn => h ⟨m, n⟩ hmn⟩]
   exact isClosed_iInter fun ⟨m, n⟩ => isClosed_iInter fun hmn =>
     isClosed_eq (continuous_of_discreteTopology.comp (continuous_apply n))
@@ -204,7 +204,7 @@ theorem of_isUniformInducing (hadic : IsAdic I) :
         AdicCompletion.eval I R n p.2}, eval_entourage_mem I n, ?_⟩
       intro ⟨a, b⟩ hab
       apply hn; change b - a ∈ (I ^ n : Ideal R)
-      simp only [Set.mem_preimage, Set.mem_setOf_eq] at hab
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hab
       rw [AdicCompletion.eval_of, AdicCompletion.eval_of] at hab
       have hmem := (Submodule.Quotient.eq (I ^ n • ⊤)).mp hab
       rw [ideal_smul_top_eq_self] at hmem
@@ -631,10 +631,11 @@ whole `presheafValue` adic-structure chain is a tool-choice artifact, not a math
   * **Step 1** `ker(evalₐ n) ≤ range(map I (subtype (Iⁿ•⊤)))`: for `x = mk c ∈ ker`, `c_n ∈ Iⁿ•⊤`,
     so `c_m ∈ Iⁿ•⊤` for all `m ≥ n` (Cauchy). The **shifted** sequence `d_m := c_{m+n} ∈ Iⁿ•⊤` is
     `IsAdicCauchy` *in the submodule* `Iⁿ•⊤` because `d_m − d_{m'} ∈ I^{m+n}•⊤ = Iᵐ•(Iⁿ•⊤)`
-    (ideal-smul composes — NO Artin-Rees). Then `x̃ := mk_{Iⁿ•⊤} d` satisfies
-    `map I subtype x̃ = x`.
+    (ideal-smul composes — NO Artin-Rees). Then `xLift := mk_{Iⁿ•⊤} d` satisfies
+    `map I subtype xLift = x`.
   * **Step 2** `range(map I subtype) ≤ Iⁿ·Â`: `map_surjective_of_surjective` on the corestriction
-    `Rʳ ↠ Iⁿ•⊤` (gens of `Iⁿ`) writes `x̃ = map I ψ' η`, so `x = map I (subtype∘ψ') η = map I ψ η`,
+    `Rʳ ↠ Iⁿ•⊤` (gens of `Iⁿ`) writes `xLift = map I ψ' η`, so `x = map I (subtype∘ψ') η = map I
+      ψ η`,
     and `map I ψ` is `R`-linear in `ψ = Σ gᵢ•projᵢ`, so `x = Σ gᵢ•(…) ∈ Iⁿ·Â`. -/
 theorem ker_evalₐ_eq_of_fg {R : Type*} [CommRing R] (I : Ideal R) (hI : I.FG) (n : ℕ) :
     RingHom.ker (AdicCompletion.evalₐ I n) =

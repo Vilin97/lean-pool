@@ -121,7 +121,7 @@ theorem ideal_le_total (I J : Ideal A) : I ≤ J ∨ J ≤ I :=
 /-- In a valuation ring, prime ideals are totally ordered by inclusion.
 
 This follows immediately from the total ordering of all ideals. -/
-theorem prime_le_total (P Q : Ideal A) [P.IsPrime] [Q.IsPrime] :
+theorem prime_le_total (P Q : Ideal A) :
     P ≤ Q ∨ Q ≤ P :=
   ideal_le_total A P Q
 
@@ -173,7 +173,7 @@ any minimal prime over an ideal. -/
 
 The nontrivial content is in establishing EXISTENCE of such a `P` containing
 a given ideal, which requires the prime-convex correspondence. -/
-theorem height_one_no_prime_between {P : Ideal A} [P.IsPrime]
+theorem height_one_no_prime_between {P : Ideal A}
     (hht1 : ∀ (Q : Ideal A) [Q.IsPrime], Q < P → Q = ⊥) :
     ∀ (Q : Ideal A) [Q.IsPrime], ⊥ < Q → Q < P → False := by
   intro Q _ hQ_bot hQP
