@@ -26,7 +26,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E
 
 /-! ### Closed polydiscs -/
 
-/-- The closed polydisc of equal radii.  For `0 ≤ R` this coincides with the closed ball for the
+/-- The closed polydisc of equal radii. For `0 ≤ R` this coincides with the closed ball for the
 sup-norm. -/
 def closedPolydisc {ι : Type*} (c : ι → ℂ) (R : ℝ) : Set (ι → ℂ) :=
   Set.pi univ fun i => closedBall (c i) R

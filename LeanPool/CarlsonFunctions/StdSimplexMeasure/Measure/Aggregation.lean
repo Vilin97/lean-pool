@@ -141,24 +141,24 @@ private theorem stdSimplexAggregate_coordMap_split
     rw [FunOnFinite.linearMap_apply_apply, FunOnFinite.linearMap_apply_apply]
     rw [Finset.sum_subtype (p := fun a : ι ↦ f a = j)
       (Finset.univ.filter fun a : ι ↦ f a = j) (by simp)]
-    rw [Finset.sum_subtype
-      (p := fun a : {a : {q : ι // q ≠ i} // p a} ↦ f' a = ⟨j, hj⟩)
-      (Finset.univ.filter fun a : {a : {q : ι // q ≠ i} // p a} ↦
-        f' a = ⟨j, hj⟩) (by simp)]
-    let E : {a : ι // f a = j} ≃
-        {a : {a : {q : ι // q ≠ i} // p a} // f' a = ⟨j, hj⟩} :=
-      { toFun := fun a =>
-          ⟨⟨⟨a, fun hai => hj (a.property.symm.trans ((congrArg f hai).trans hi))⟩,
-              fun hak => hj (a.property.symm.trans hak)⟩,
-            Subtype.ext a.property⟩
-        invFun := fun a => ⟨a.1.1.1, congrArg Subtype.val a.property⟩
-        left_inv := fun a => by ext; rfl
-        right_inv := fun a => by ext; rfl }
-    apply Fintype.sum_equiv E
-    intro a
-    rw [stdSimplexCoordMap_apply_of_ne i a
-      (fun hai => hj (a.property.symm.trans ((congrArg f hai).trans hi)))]
-    simp [e, p, E]
+    · rw [Finset.sum_subtype
+        (p := fun a : {a : {q : ι // q ≠ i} // p a} ↦ f' a = ⟨j, hj⟩)
+        (Finset.univ.filter fun a : {a : {q : ι // q ≠ i} // p a} ↦
+          f' a = ⟨j, hj⟩) (by simp)]
+      · let E : {a : ι // f a = j} ≃
+            {a : {a : {q : ι // q ≠ i} // p a} // f' a = ⟨j, hj⟩} :=
+          { toFun := fun a =>
+              ⟨⟨⟨a, fun hai => hj (a.property.symm.trans ((congrArg f hai).trans hi))⟩,
+                  fun hak => hj (a.property.symm.trans hak)⟩,
+                Subtype.ext a.property⟩
+            invFun := fun a => ⟨a.1.1.1, congrArg Subtype.val a.property⟩
+            left_inv := fun a => by ext; rfl
+            right_inv := fun a => by ext; rfl }
+        apply Fintype.sum_equiv E
+        intro a
+        rw [stdSimplexCoordMap_apply_of_ne i a
+          (fun hai => hj (a.property.symm.trans ((congrArg f hai).trans hi)))]
+        simp [e, p, E]
   funext j
   by_cases hj : j = k
   · subst j
@@ -231,7 +231,7 @@ private theorem stdSimplexAggregateDensity_coordMap_split
   congr 1
   apply Fintype.prod_congr
   intro j
-  letI (a : {a : {q : ι // q ≠ i} // p a}) : Decidable (f' a = j) :=
+  let (a : {a : {q : ι // q ≠ i} // p a}) : Decidable (f' a = j) :=
     Classical.propDecidable _
   rw [stdSimplexCoordMap_apply_of_ne k j j.property]
   have hjcard : stdSimplexAggregateFiberCard f j =

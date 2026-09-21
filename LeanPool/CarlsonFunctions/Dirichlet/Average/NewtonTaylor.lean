@@ -14,8 +14,8 @@ import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 /-!
 # Newton--Taylor formulas from Carlson's Dirichlet averages
 
-This file develops Carlson's Section 5.5.  The unweighted Dirichlet average is isolated first,
-and divided differences are defined from averages of iterated derivatives.  Canonical finite
+This file develops Carlson's Section 5.5. The unweighted Dirichlet average is isolated first,
+and divided differences are defined from averages of iterated derivatives. Canonical finite
 index types are used for lists of interpolation nodes; permutation invariance can subsequently
 remove any dependence on their chosen ordering.
 
@@ -82,8 +82,8 @@ theorem carlsonUnweightedAverage_perm (z : ι → ℂ) (f : ℂ → ℂ)
     measurable_invFun := continuous_pi (fun i ↦ continuous_apply (σ i)) |>.measurable
   }
   have hg : MeasurePreserving g (dirichletMeasure b) (dirichletMeasure b) := by
-    convert measurePreserving_dirichletMeasure_perm b σ.symm using 1 <;>
-      simp [b, Function.comp_def]
+    convert measurePreserving_dirichletMeasure_perm b σ.symm using 1
+    simp [b, Function.comp_def]
   unfold carlsonUnweightedAverage realCarlsonDirichletAverage
   rw [← hg.integral_comp' (fun u ↦ f (carlsonAffineForm z u))]
   apply integral_congr_ae
@@ -380,7 +380,7 @@ def carlsonSegmentIntegral (a x : ℂ) (f : ℂ → ℂ) : ℂ :=
   (x - a) * ∫ t in (0 : ℝ)..1, f (a + (t : ℂ) * (x - a))
 
 /-- Carlson's repeated integration operator based at `a`, defined recursively by segment
-integration.  This is the operator in equations 5.5(9) and 5.5(12). -/
+integration. This is the operator in equations 5.5(9) and 5.5(12). -/
 def carlsonRepeatedIntegral : ℕ → ℂ → (ℂ → ℂ) → ℂ → ℂ
   | 0, _, f, x => f x
   | n + 1, a, f, x => carlsonSegmentIntegral a x (carlsonRepeatedIntegral n a f)

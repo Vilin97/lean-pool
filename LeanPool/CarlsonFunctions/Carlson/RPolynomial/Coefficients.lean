@@ -24,7 +24,7 @@ namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
 /-- The coefficient form of the multinomial theorem for Carlson's homogeneous power
-polynomial.  This is the algebraic core of Carlson's representation 6.2-1. -/
+polynomial. This is the algebraic core of Carlson's representation 6.2-1. -/
 theorem coeff_carlsonPowerPolynomial (n : ℕ) (z : ι → ℂ) (m : ι →₀ ℕ) :
     (carlsonPowerPolynomial n z).coeff m =
       if m.sum (fun _ e ↦ e) = n then
@@ -75,7 +75,7 @@ theorem regCarlsonRPolynomial_eq_pochhammer_sum (n : ℕ) (b z : ι → ℂ) :
 /-- The Pochhammer numerator of Carlson's degree-`n` R-polynomial.
 
 Carlson's usual polynomial is obtained by dividing this expression by
-`(∑ i, b i)ₙ`.  Keeping the numerator separate makes transformation identities valid
+`(∑ i, b i)ₙ`. Keeping the numerator separate makes transformation identities valid
 without exclusions at zeros of that Pochhammer symbol. -/
 def carlsonRPolynomialNumerator (n : ℕ) (b z : ι → ℂ) : ℂ :=
   ∑ m ∈ (carlsonPowerPolynomial n z).support,
@@ -126,14 +126,14 @@ theorem carlsonRPolynomialNumerator_one (b z : ι → ℂ) :
         change (Finsupp.single (Finsupp.single i 1) (z i)).sum
           (fun m c => c * ∏ j, (ascPochhammer ℂ (m j)).eval (b j)) = b i * z i
         rw [Finsupp.sum_single_index]
-        have hp : (∏ j, (ascPochhammer ℂ ((Finsupp.single i 1) j)).eval (b j)) = b i := by
-          rw [Finset.prod_eq_single i]
-          · simp
-          · intro j _ hji
-            simp [hji.symm]
-          · simp
-        rw [hp]
-        ring
+        · have hp : (∏ j, (ascPochhammer ℂ ((Finsupp.single i 1) j)).eval (b j)) = b i := by
+            rw [Finset.prod_eq_single i]
+            · simp
+            · intro j _ hji
+              simp [hji.symm]
+            · simp
+          rw [hp]
+          ring
         simp
       · intro m
         simp
@@ -178,9 +178,13 @@ theorem regCarlsonRPolynomial_eq_numerator_mul_one_div_Gamma
 /-- The regularized Carlson polynomial of degree zero is the reciprocal Gamma factor. -/
 @[simp] theorem regCarlsonRPolynomial_zero (b z : ι → ℂ) :
     regCarlsonRPolynomial 0 b z = (Gamma (∑ i, b i))⁻¹ := by
-  simp [regCarlsonRPolynomial, regDirichletMvPolynomialTransform]
-  change regDirichletMonomialTransform (fun _ ↦ 0) b = (Gamma (∑ i, b i))⁻¹
-  exact regDirichletMonomialTransform_zero b
+  calc
+    regCarlsonRPolynomial 0 b z = regDirichletMonomialTransform (fun _ ↦ 0) b := by
+      simp only [regCarlsonRPolynomial, carlsonPowerPolynomial_zero,
+        regDirichletMvPolynomialTransform, MvPolynomial.support_one, Finset.sum_singleton,
+        AddMonoidAlgebra.coeff_one_zero, one_mul, Finsupp.coe_zero]
+      rfl
+    _ = (Gamma (∑ i, b i))⁻¹ := regDirichletMonomialTransform_zero b
 
 /-- If all Carlson variables vanish, every positive-degree Carlson polynomial vanishes. -/
 @[simp] theorem regCarlsonRPolynomial_zero_variables (b : ι → ℂ) {n : ℕ} (hn : n ≠ 0) :

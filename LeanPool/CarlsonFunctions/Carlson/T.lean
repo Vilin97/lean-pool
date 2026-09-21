@@ -13,11 +13,11 @@ import Mathlib.Topology.Maps.Proper.Basic
 # Carlson's multivariate T-function
 
 Carlson's Definition 5.12-1 defines `T(b,z)` as the Dirichlet average of
-`w ↦ exp (1 / w)`.  Carlson immediately turns to a limiting two-variable case; this file keeps
+`w ↦ exp (1 / w)`. Carlson immediately turns to a limiting two-variable case; this file keeps
 the short general multivariate theory separate from that specialization.
 
 The intrinsic variable domain used here says that the convex hull of the variables avoids
-zero.  Carlson's assumption that all variables lie in a common open half-plane not containing
+zero. Carlson's assumption that all variables lie in a common open half-plane not containing
 zero implies this condition.
 
 ## References
@@ -43,7 +43,7 @@ def carlsonTVariableDomain : Set (ι → ℂ) :=
 
 omit [Fintype ι] in
 /-- Any convex zero-avoiding set containing all variables certifies membership in the
-intrinsic T-variable domain.  Carlson applies this with an open half-plane not containing
+intrinsic T-variable domain. Carlson applies this with an open half-plane not containing
 zero. -/
 theorem mem_carlsonTVariableDomain_of_range_subset {H : Set ℂ}
     (hH : Convex ℝ H) (hzero : (0 : ℂ) ∉ H) {z : ι → ℂ}

@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 /-!
 # Averages of uniformly summable series
 
-This file supplies the dominated-convergence form of Carlson's Representation 5.7-2.  A
+This file supplies the dominated-convergence form of Carlson's Representation 5.7-2. A
 summable numerical majorant, uniform on the standard simplex, permits termwise application of
 the regularized Carlson Dirichlet average.
 
@@ -31,7 +31,7 @@ namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
 /-- A uniformly summably dominated series may be averaged term by term with respect to the
-regularized Dirichlet density.  This is the general analytic core of Carlson's
+regularized Dirichlet density. This is the general analytic core of Carlson's
 Representation 5.7-2. -/
 theorem hasSum_regCarlsonDirichletAverage
     {b : ι → ℂ} (hb : b ∈ mvBetaConvergent) (z : ι → ℂ)

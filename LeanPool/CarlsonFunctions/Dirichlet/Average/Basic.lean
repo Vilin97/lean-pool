@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Complex.Convex
 # Carlson's Dirichlet averages: basic definitions
 
 This file specializes the regularized Dirichlet integral to a univariate function evaluated
-at the affine form `∑ i, u i * z i`.  It contains the algebraic and convex-geometric material
+at the affine form `∑ i, u i * z i`. It contains the algebraic and convex-geometric material
 used by both the native integral theory of Carlson's Chapter 5 and its analytic continuation
 in Chapter 6.
 
@@ -80,7 +80,7 @@ theorem carlsonAffineForm_const {u : ι → ℝ} (hu : u ∈ Convexity.StdSimple
   rw [hsum, one_mul]
 
 /-- Simultaneous permutation of the Dirichlet parameters and the variables leaves the native
-regularized Carlson average unchanged.  This is the regularized form of Carlson's
+regularized Carlson average unchanged. This is the regularized form of Carlson's
 Theorem 5.2-3. -/
 theorem regCarlsonDirichletAverage_perm (b z : ι → ℂ) (f : ℂ → ℂ)
     (σ : Equiv.Perm ι) :
@@ -129,7 +129,7 @@ theorem carlsonAffineForm_affine {u : ι → ℝ} (hu : u ∈ Convexity.StdSimpl
     _ = a * ∑ i, (u i : ℂ) * z i + t := by rw [hsum, one_mul]
 
 /-- Precomposing the averaged function by an affine map is equivalent to applying the same
-affine map to every variable.  This is Carlson's Theorem 5.2-6. -/
+affine map to every variable. This is Carlson's Theorem 5.2-6. -/
 theorem regCarlsonDirichletAverage_comp_affine (b z : ι → ℂ) (f : ℂ → ℂ) (a t : ℂ) :
     regCarlsonDirichletAverage b z (fun w ↦ f (a * w + t)) =
       regCarlsonDirichletAverage b (fun i ↦ a * z i + t) f := by

@@ -40,7 +40,7 @@ def carlsonRTransformParameters (n : ℕ) (i : ι) (b : ι → ℂ) : ι → ℂ
   Function.update b i (1 - (∑ j, b j) - n)
 
 open scoped Classical in
-/-- Carlson's transformed variables for Relation 6.5-3.  The distinguished variable stays
+/-- Carlson's transformed variables for Relation 6.5-3. The distinguished variable stays
 fixed and every other variable is replaced by its difference from that variable. -/
 def carlsonRTransformVariables (i : ι) (z : ι → ℂ) : ι → ℂ :=
   fun j => if j = i then z i else z i - z j
@@ -177,11 +177,11 @@ private lemma eq_const_of_update_eq [Finite ι] (f : (ι → ℂ) → ℂ) (i : 
 open scoped Classical in
 /-- Division-free form of Carlson's multivariate linear transformation 6.5-3.
 
-Using the Pochhammer numerator avoids hypotheses excluding exceptional parameters.  Carlson's
+Using the Pochhammer numerator avoids hypotheses excluding exceptional parameters. Carlson's
 usual identity follows after division by the relevant total-parameter Pochhammer symbols.
 
 Induction on the degree shows that the difference has zero derivative in every node except
-the distinguished one.  At a constant node vector, Pochhammer reflection makes it zero. -/
+the distinguished one. At a constant node vector, Pochhammer reflection makes it zero. -/
 theorem carlsonRPolynomialNumerator_transform (n : ℕ) (i : ι) (b z : ι → ℂ) :
     carlsonRPolynomialNumerator n b z =
       (-1 : ℂ) ^ n * carlsonRPolynomialNumerator n

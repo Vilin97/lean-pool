@@ -16,7 +16,7 @@ import Mathlib.Analysis.Analytic.Uniqueness
 # Analytic continuation of Carlson's Dirichlet averages
 
 This file develops Carlson's regularized Dirichlet average as an entire function of the
-Dirichlet parameters.  It contains the abstract continuation predicate, the polynomial
+Dirichlet parameters. It contains the abstract continuation predicate, the polynomial
 construction, and the native resolvent average. R-polynomial Taylor-series constructions
 are developed in `Carlson.RPolynomial.PowerSeries`.
 
@@ -65,7 +65,7 @@ theorem IsRegCarlsonContinuation.eq_native {f : ℂ → ℂ} {z : ι → ℂ}
   hG.2 hb
 
 /-- Two entire functions of the Dirichlet parameters that agree throughout the ordinary
-convergence region agree everywhere.  This is the common continuation step for the identities
+convergence region agree everywhere. This is the common continuation step for the identities
 proved from Carlson's native integral. -/
 theorem analyticOnNhd_eq_of_eqOn_mvBetaConvergent
     {G H : (ι → ℂ) → ℂ} (hG : AnalyticOnNhd ℂ G Set.univ)
@@ -88,7 +88,7 @@ theorem IsRegCarlsonContinuation.eq {f : ℂ → ℂ} {z : ι → ℂ}
   exact (hG.2 hb).trans (hH.2 hb).symm
 
 /-- Two entire candidates which agree for every strictly positive real Dirichlet parameter
-agree globally.  This is the uniqueness principle used to lift probability identities without
+agree globally. This is the uniqueness principle used to lift probability identities without
 first proving them on the full complex convergence region. -/
 theorem analyticOnNhd_eq_of_eqOn_realDirichletDomain
     {G H : (ι → ℂ) → ℂ} (hG : AnalyticOnNhd ℂ G Set.univ)
@@ -112,7 +112,7 @@ theorem IsRegCarlsonContinuation.mk_of_eqOn_realDirichletDomain
   exact hH
 
 /-- An entire candidate which has the probability-average values on positive real parameters
-is a Carlson continuation, provided one continuation is already known to exist.  The reference
+is a Carlson continuation, provided one continuation is already known to exist. The reference
 continuation is used only for uniqueness. -/
 theorem IsRegCarlsonContinuation.mk_of_eq_realCarlsonDirichletAverage [Nonempty ι]
     {f : ℂ → ℂ} {z : ι → ℂ} {G H : (ι → ℂ) → ℂ}

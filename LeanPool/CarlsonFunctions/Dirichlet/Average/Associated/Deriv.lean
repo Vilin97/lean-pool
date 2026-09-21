@@ -140,8 +140,8 @@ theorem hasDerivAt_regCarlsonDirichletAverage_update
       (z i) := by
   apply hasDerivAt_regCarlsonDirichletAverage_update_of_bound hb i Filter.univ_mem
     (fun w hw u hu ↦ hf _) (fun w hw ↦ hf'_continuous.continuousOn)
-  intro w hw u hu
-  exact hf'_bound _
+  · intro w hw u hu
+    exact hf'_bound _
 open scoped Classical in
 /-- Differentiation under a regularized Carlson average when the averaged function is
 holomorphic on a convex neighborhood of all the nodes. -/
@@ -359,7 +359,7 @@ theorem carlsonPartialDeriv_carlsonDirichletAverage_of_analyticOnNhd
   field_simp [hc]
 
 open scoped Classical in
-/-- Carlson's relation 5.6-1(5) in its original normalization.  The coefficient is the
+/-- Carlson's relation 5.6-1(5) in its original normalization. The coefficient is the
 weight `b i / ∑ j, b j`. -/
 theorem carlsonPartialDeriv_carlsonDirichletAverage [Nonempty ι]
     {b z : ι → ℂ} (hb : b ∈ mvBetaConvergent) (i : ι)

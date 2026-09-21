@@ -525,7 +525,7 @@ theorem exists_regDirichletContinuation_of_contDiffNear {N : ℕ}
       let b₀ : ι → ℂ := fun _ => (L + 3 : ℕ)
       have hb₀ : b₀ ∈ mvBetaConvergent := by
         intro i
-        simp [b₀]
+        change 0 < ((L + 3 : ℕ) : ℝ)
         positivity
       apply hFb.eqOn_of_preconnected_of_eventuallyEq hnative
         (by simpa using isPreconnected_dirichletConvergenceRegion (ι := ι) 0) hb₀

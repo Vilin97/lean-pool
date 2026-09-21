@@ -232,7 +232,7 @@ theorem analyticOnNhd_carlsonRUnitIntervalIntegral
   (analyticOnNhd_carlsonRUnitIntervalIntegral_slit a a' b ha ha').mono
     carlsonRVariableDomain_subset_slitDomain
 
-/-- Carlson's Theorem 6.8-1 in unit-interval form.  The homogeneity relation
+/-- Carlson's Theorem 6.8-1 in unit-interval form. The homogeneity relation
 `a + a' = ∑ i, b i` supplies the exponent at the endpoint `u = 1`. -/
 theorem carlsonRUnitIntervalIntegral_eq
     {a a' : ℂ} {b z : ι → ℂ}

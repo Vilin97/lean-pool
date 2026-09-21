@@ -18,7 +18,7 @@ import LeanPool.CarlsonFunctions.Pochhammer.BinomialSeries
 /-!
 # Generating functions of Carlson's R-polynomials
 
-This file develops [Carl77, Section 6.6].  The scalar binomial series
+This file develops [Carl77, Section 6.6]. The scalar binomial series
 `∑ (a)_n t^n / n! = (1-t)^{-a}` is `Complex.hasSum_ascPochhammer_mul_pow_div_factorial`
 in `Pochhammer.BinomialSeries`.
 -/
@@ -260,7 +260,7 @@ theorem hasSum_carlsonGeneratingCoeff [Finite ι] (s : Finset ι) (b z : ι → 
 /-- Carlson's generating relation 6.6-1 in the division-free Pochhammer-numerator
 normalization.
 
-The hypothesis puts every scalar binomial series inside its disk of convergence.  The
+The hypothesis puts every scalar binomial series inside its disk of convergence. The
 coefficient of `t ^ n` is the Pochhammer numerator divided by `n!`; consequently this
 statement continues to make sense at exceptional values of the total parameter. -/
 theorem hasSum_carlsonRPolynomialNumerator_div_factorial (b z : ι → ℂ) (t : ℂ)

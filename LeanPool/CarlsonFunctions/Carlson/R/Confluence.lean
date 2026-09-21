@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 /-!
 # Confluence of Carlson's R-function to the S-function
 
-This file formalizes the confluence limit of [Carl77, Section 5.10].  Natural exponents are
+This file formalizes the confluence limit of [Carl77, Section 5.10]. Natural exponents are
 used first: this is the branch-independent form of Carlson's limit and is directly supported by
 Mathlib's theorem `Complex.tendsto_one_add_div_pow_exp`.
 

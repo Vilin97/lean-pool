@@ -242,7 +242,10 @@ theorem exists_joint_regDirichletContinuation_kernel
   have hnative := isOpen_mvBetaConvergent.analyticOn_iff_analyticOnNhd.mp
     (regDirichletIntegral_analyticOn hf.continuousOn)
   let b₀ : ι → ℂ := fun _ => (L + 3 : ℕ)
-  have hb₀ : b₀ ∈ mvBetaConvergent := by intro i; simp [b₀]; positivity
+  have hb₀ : b₀ ∈ mvBetaConvergent := by
+    intro i
+    change 0 < ((L + 3 : ℕ) : ℝ)
+    positivity
   apply hFb.eqOn_of_preconnected_of_eventuallyEq hnative
     (by simpa using isPreconnected_dirichletConvergenceRegion (ι := ι) 0) hb₀
   have hev : ∀ᶠ b : ι → ℂ in nhds b₀, ∀ i, (L : ℝ) + 2 < (b i).re := by

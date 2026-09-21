@@ -29,7 +29,7 @@ variable {ι : Type*} [Fintype ι]
 def shiftCarlsonVariables (A : ℂ) (z : ι → ℂ) : ι → ℂ :=
   fun i ↦ z i - A
 
-/-- Carlson's Representation 5.7-2 in regularized form.  The hypotheses state uniform
+/-- Carlson's Representation 5.7-2 in regularized form. The hypotheses state uniform
 summable domination and pointwise summation of the scalar power series on the convex hull of
 the supplied variables. -/
 theorem hasSum_regCarlsonR_of_powerSeries

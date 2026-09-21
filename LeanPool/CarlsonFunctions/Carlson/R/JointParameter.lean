@@ -23,6 +23,8 @@ open Complex ProbabilityTheory MeasureTheory MeasureTheory.Measure Filter Set
 open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
+
+open CarlsonFunctions.SeveralComplexVariables
 variable {ι : Type*} [Fintype ι]
 
 private theorem locallyBounded_regCarlsonRIntegral_exponent_parameters
@@ -101,7 +103,7 @@ theorem analyticOnNhd_regCarlsonRIntegral_exponent_parameters {z : ι → ℂ}
     AnalyticOnNhd ℂ (fun p : Option ι → ℂ =>
       regCarlsonRIntegral (p none) (fun i => p (some i)) z)
       {p | (fun i => p (some i)) ∈ mvBetaConvergent} := by
-  apply CarlsonFunctions.SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
+  apply analyticOnNhd_of_separately_analytic_locally_bounded
     (isOpen_mvBetaConvergent.preimage (by fun_prop))
   · intro p hp k
     cases k with

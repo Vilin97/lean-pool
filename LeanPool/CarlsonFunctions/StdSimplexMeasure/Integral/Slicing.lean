@@ -564,10 +564,10 @@ public theorem lintegral_stdSimplex_split_at
       exact heq.mpr htIcc
     convert lintegral_posSimplex_inner_slice i j hji.symm t htIco f using 1
     congr
-    funext q
-    apply Subsingleton.elim
-    funext q
-    apply Subsingleton.elim
+    · funext q
+      apply Subsingleton.elim
+    · funext q
+      apply Subsingleton.elim
     funext y
     congr
     funext a b

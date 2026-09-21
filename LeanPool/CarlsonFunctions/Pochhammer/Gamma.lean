@@ -12,7 +12,7 @@ public import LeanPool.CarlsonFunctions.Pochhammer.Identities
 # Pochhammer identities for the Gamma function
 
 This file is a temporary home for identities connecting Mathlib's Gamma function and ascending
-Pochhammer polynomials.  The reciprocal formulation remains valid at the poles of `Gamma`.
+Pochhammer polynomials. The reciprocal formulation remains valid at the poles of `Gamma`.
 -/
 
 open Finset Polynomial
@@ -21,7 +21,7 @@ public noncomputable section
 
 namespace Complex
 
-/-- The natural-shift recurrence for reciprocal Gamma, valid at every complex argument.  This is
+/-- The natural-shift recurrence for reciprocal Gamma, valid at every complex argument. This is
 the pole-free counterpart of expressing an ascending Pochhammer symbol as a quotient of Gamma
 functions. -/
 theorem one_div_Gamma_eq_ascPochhammer_mul_one_div_Gamma_add_nat (z : ℂ) (n : ℕ) :

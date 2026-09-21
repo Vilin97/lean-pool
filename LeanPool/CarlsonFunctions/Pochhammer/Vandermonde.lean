@@ -34,7 +34,7 @@ variable {R : Type*}
 
 /-- **Chu–Vandermonde identity** for the rising factorial.
 
-This is the ascending counterpart of `Ring.descPochhammer_smeval_add`.  In Appell's notation
+This is the ascending counterpart of `Ring.descPochhammer_smeval_add`. In Appell's notation
 it is \((r+s,k)=\sum_m \binom{k}{m}(r,m)(s,k-m)\). -/
 theorem ascPochhammer_eval_add [CommSemiring R] (r s : R) (k : ℕ) :
     (ascPochhammer R k).eval (r + s) =

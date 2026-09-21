@@ -69,7 +69,7 @@ zero. -/
 def mvBetaIntegralOne {n : ℕ} (b : Fin n → ℂ) : ℂ :=
   ∫ x in mvBetaSimplex n, ∏ i, (x i : ℂ) ^ (b i - 1)
 
-/-- The integrand occurring in the solid-coordinate multivariate Beta integral.  This private
+/-- The integrand occurring in the solid-coordinate multivariate Beta integral. This private
 name keeps the slicing proofs readable without enlarging the public API. -/
 private abbrev mvBetaIntegrand {n : ℕ} (b₀ : ℂ) (b : Fin n → ℂ) (x : Fin n → ℝ) : ℂ :=
   ((1 - ∑ i, x i : ℝ) : ℂ) ^ (b₀ - 1) * ∏ i, (x i : ℂ) ^ (b i - 1)
@@ -120,7 +120,7 @@ private theorem interior_mvBetaSimplex_subset (n : ℕ) :
           linarith
         have hymem : y ∈ mvBetaSimplex n.succ := hε hydist
         have hsum : ∑ i, y i = 1 + ε / 2 := by
-          simp [y, Finset.sum_add_distrib, Pi.smul_apply, hs1]
+          simp only [y, Pi.add_apply, Finset.sum_add_distrib, Pi.smul_apply, smul_eq_mul, hs1]
           rw [← Finset.mul_sum, Finset.sum_eq_single (0 : Fin (n + 1))]
           · simp
           · intro i _ hi
@@ -170,7 +170,7 @@ private theorem piFinSnoc_preimage_mvBetaSimplex (n : ℕ) :
     exact ⟨hy, ht, hsum⟩
 
 /-- For fixed leading coordinates, the last-coordinate section of the solid-simplex
-Dirichlet integrand is integrable.  Inside the smaller solid simplex this is a scaled Euler
+Dirichlet integrand is integrable. Inside the smaller solid simplex this is a scaled Euler
 Beta kernel; outside it the section vanishes. -/
 private theorem integrable_mvBetaIntegrand_snoc_slice {n : ℕ} {b₀ : ℂ}
     {b : Fin (n + 1) → ℂ} (hb₀ : 0 < b₀.re) (hbl : 0 < (b (Fin.last n)).re)

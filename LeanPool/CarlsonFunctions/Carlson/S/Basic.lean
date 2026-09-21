@@ -45,7 +45,7 @@ theorem hasDerivAt_exp_carlsonAffineForm_update
     (Complex.hasDerivAt_exp (carlsonAffineForm z u))
 
 open scoped Classical in
-/-- Coordinate differentiation of the native regularized `S` integral.  This is the
+/-- Coordinate differentiation of the native regularized `S` integral. This is the
 specialization of Carlson's differentiation formula to the exponential kernel. -/
 theorem hasDerivAt_regCarlsonSIntegral_update
     {b z : ι → ℂ} (hb : b ∈ mvBetaConvergent) (i : ι) :
@@ -75,7 +75,7 @@ theorem iteratedDeriv_cexp_eq (n : ℕ) :
   simpa using iteratedDeriv_cexp_const_mul n 1
 
 /-- Carlson's Theorem 5.8-2 in regularized integral form: replacing the averaged exponential
-by any of its iterated derivatives does not change the `S` integral.  Carlson denotes the
+by any of its iterated derivatives does not change the `S` integral. Carlson denotes the
 left-hand side by `S⁽ⁿ⁾` and writes `S⁽ⁿ⁾ = S`. -/
 theorem regCarlsonDirichletAverage_iteratedDeriv_exp
     (n : ℕ) (b z : ι → ℂ) :
@@ -84,7 +84,7 @@ theorem regCarlsonDirichletAverage_iteratedDeriv_exp
   rw [iteratedDeriv_cexp_eq]
   rfl
 
-/-- Carlson's native, unregularized `S` integral.  Its intended integral interpretation
+/-- Carlson's native, unregularized `S` integral. Its intended integral interpretation
 requires `b ∈ Complex.mvBetaConvergent`. -/
 def carlsonSIntegral (b z : ι → ℂ) : ℂ :=
   Gamma (∑ i, b i) * regCarlsonSIntegral b z

@@ -361,7 +361,7 @@ theorem carlsonAssociatedRecurrenceResidual_eq_zero [Nonempty ι]
     (hb : b ∈ mvBetaConvergent) (hz : z ∈ carlsonRVariableDomain) :
     carlsonAssociatedRecurrenceResidual a b z = 0 :=
   carlsonAssociatedRecurrenceResidual_eq_zero_of_strip hz
-    (fun _ c hc hw hc' =>
+    (fun _ _ hc hw hc' =>
       carlsonAssociatedRecurrenceResidual_eq_zero_in_strip hc hz hw hc') a hb
 
 /-- Polynomial form of Relation 8.4-1, including the removable-singularity values

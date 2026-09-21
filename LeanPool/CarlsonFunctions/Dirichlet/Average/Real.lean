@@ -11,7 +11,7 @@ public import LeanPool.CarlsonFunctions.Dirichlet.Average.Kernel
 /-!
 # Carlson's Dirichlet average with real positive parameters
 
-This file provides the probability-theoretic form of Carlson's average.  Its parameters are
+This file provides the probability-theoretic form of Carlson's average. Its parameters are
 strictly positive real numbers and integration is against `dirichletMeasure`.
 -/
 

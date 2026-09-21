@@ -16,6 +16,8 @@ open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory Filter Set
 open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
+
+open CarlsonFunctions.SeveralComplexVariables
 variable {ι : Type*} [Fintype ι]
 
 /-- **Carlson 5.3-3, node-variable part.** On a convex domain of holomorphy, a regularized
@@ -228,7 +230,7 @@ theorem analyticOnNhd_regCarlsonDirichletAverage_parameters_nodes
     exact (isOpen_mvBetaConvergent.preimage (continuous_fst.comp L.continuous)).inter
       (hzopen.preimage (continuous_snd.comp L.continuous))
   have hG : AnalyticOnNhd ℂ G U := by
-    apply CarlsonFunctions.SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded hU
+    apply analyticOnNhd_of_separately_analytic_locally_bounded hU
     · intro q hq k
       have hupdate (v : ι → ℂ) (i : ι) (w : ℂ) :
           Function.update v i w = fun j => if j = i then w else v j := by

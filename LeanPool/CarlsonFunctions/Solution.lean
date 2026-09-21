@@ -207,7 +207,7 @@ theorem r_second_quadratic (t β x y : ℂ) (hx : 0 < x.re) (hy : 0 < y.re) :
   exact DirichletTransform.TwoVariable.regRSlit_secondQuadratic t β x y hx hy
 
 /-- Carlson 1987, (2.1): L is jointly holomorphic on the same full parameter and slit-node domain.
-  -/
+-/
 theorem l_joint :
     AnalyticOnNhd ℂ (fun p : Option (ι ⊕ ι) → ℂ =>
       regL (p none) (fun i => p (some (.inl i))) (fun i => p (some (.inr i))))

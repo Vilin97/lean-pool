@@ -24,7 +24,7 @@ namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
 open scoped Classical in
-/-- Carlson's first associated-function relation 5.9-5, in regularized form.  Gamma
+/-- Carlson's first associated-function relation 5.9-5, in regularized form. Gamma
 regularization absorbs Carlson's weights and leaves the coefficients `b i`. -/
 theorem regCarlsonRIntegral_eq_sum_update_add_one (t : ℂ) {b z : ι → ℂ}
     (hb : b ∈ mvBetaConvergent) (hz : z ∈ carlsonRVariableDomain) :

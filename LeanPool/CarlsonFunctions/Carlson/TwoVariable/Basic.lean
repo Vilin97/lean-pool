@@ -7,7 +7,7 @@ Authors: Bastiaan J Braams
 /- Copyright (c) 2026 Bastiaan J Braams. All rights reserved. -/
 module
 
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 public import Mathlib.LinearAlgebra.Matrix.Notation
 public import Mathlib.Algebra.BigOperators.Fin
 

@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 /-!
 # Dependence of Carlson's R-function on a small variable
 
-This file develops [Carl77, Section 8.3].  Its core result identifies the sectorial limit as
+This file develops [Carl77, Section 8.3]. Its core result identifies the sectorial limit as
 one variable tends to zero with deletion of that variable and a beta-factor correction.
 
 `tendsto_regCarlsonRContinued_update_zero_of_pos` allows arbitrary individual
@@ -33,7 +33,7 @@ namespace DirichletTransform
 variable {ι : Type*} [Fintype ι]
 
 /-- A closed right-half-plane subsector used when a native R-integral variable approaches
-zero.  Carlson's wider slit-plane sector is recovered only after continuation in the
+zero. Carlson's wider slit-plane sector is recovered only after continuation in the
 variables. -/
 def carlsonSmallVariableSector (δ r : ℝ) : Set ℂ :=
   {w | ‖w‖ ≤ r ∧ (w = 0 ∨ |arg w| ≤ Real.pi / 2 - δ)}

@@ -79,7 +79,7 @@ theorem integral_dirichletMeasure_power_product {b : ι → ℝ} (hb : b ∈ mvR
       field_simp
 
 /-- The integral of a monomial against the Dirichlet measure. -/
-/- The `[Nonempty ι]` hypothesis is essential.  For an empty index type the left side is
+/- The `[Nonempty ι]` hypothesis is essential. For an empty index type the left side is
 zero, while the empty products and the degree-zero rising factorial make the right side one. -/
 theorem integral_dirichletMeasure_monomial [Nonempty ι]
     {b : ι → ℝ} (hb : b ∈ mvRealBetaDomain)

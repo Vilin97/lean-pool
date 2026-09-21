@@ -13,7 +13,7 @@ public import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 /-!
 # Evaluation of Euler-type integrals by Carlson R-functions
 
-This file is the home for the general integral evaluations of [Carl77, Section 8.1].  We
+This file is the home for the general integral evaluations of [Carl77, Section 8.1]. We
 first use the unit-interval parameterization; oriented complex line-segment versions can be
 derived from it without building phase choices into the basic definition.
 -/
@@ -111,7 +111,7 @@ theorem carlsonEulerSegmentIntegral_eq_rIntegral
       dsimp only [P]
       ring
 
-/-- The ray integral underlying Carlson's Formulas 8.1-2 and 8.1-3.  The choice of endpoint
+/-- The ray integral underlying Carlson's Formulas 8.1-2 and 8.1-3. The choice of endpoint
 values `p` and ray directions `w` accommodates either orientation. -/
 def carlsonEulerRayIntegral (a : ℂ) (b p w : ι → ℂ) : ℂ :=
   ∫ s : ℝ in Set.Ioi 0,

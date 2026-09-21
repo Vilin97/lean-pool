@@ -72,7 +72,7 @@ theorem intervalIntegrable_betaKernel_scaled {u v : ℂ}
   rw [h1, h2, mul_mul_mul_comm, ← mul_assoc, ← cpow_add _ _ ha0]
   ring
 
-/-- Scaling identity for the `L¹` norm of the complex Beta kernel.  Unlike integrability of the
+/-- Scaling identity for the `L¹` norm of the complex Beta kernel. Unlike integrability of the
 kernel, this pointwise change-of-scale identity needs no conditions on the real parts of the
 parameters. -/
 theorem integral_norm_betaKernel_scaled (u v : ℂ) {a : ℝ} (ha : 0 < a) :

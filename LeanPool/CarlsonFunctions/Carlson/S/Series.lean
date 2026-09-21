@@ -44,7 +44,7 @@ theorem IsRegCarlsonSContinuation.eq {z : ι → ℂ} {G H : (ι → ℂ) → �
     (hG : IsRegCarlsonSContinuation z G) (hH : IsRegCarlsonSContinuation z H) : G = H :=
   IsRegCarlsonContinuation.eq hG hH
 
-/-- The series defining the entire regularized Carlson `S` function.  This is the
+/-- The series defining the entire regularized Carlson `S` function. This is the
 exponential specialization of Carlson's regularized Taylor construction. -/
 def regCarlsonSSeries (z b : ι → ℂ) : ℂ :=
   regCarlsonTaylorSeries 0 (fun n ↦ (Nat.factorial n : ℂ)⁻¹) z b
@@ -89,7 +89,7 @@ theorem analyticOnNhd_regCarlsonSPartialSum (N : ℕ) (z : ι → ℂ) :
   exact analyticAt_const.mul
     (analyticOnNhd_regCarlsonR n z b (Set.mem_univ b))
 
-/-- The partial-sum consequence of summability.  The unconditional version for all complex
+/-- The partial-sum consequence of summability. The unconditional version for all complex
 parameters and nodes is `tendsto_regCarlsonSPartialSum_all`. -/
 theorem tendsto_regCarlsonSPartialSum (z b : ι → ℂ)
     (h : Summable fun n : ℕ ↦ (Nat.factorial n : ℂ)⁻¹ * regCarlsonR n z b) :
@@ -115,7 +115,7 @@ theorem hasSum_exp_carlsonAffineForm (z : ι → ℂ) (u : ι → ℝ) :
       (NormedSpace.expSeries_div_hasSum_exp (carlsonAffineForm z u))
 
 /-- On the native convergence region, Carlson's exponential series is summable and its sum
-is the regularized `S` integral.  This is the integral form of the power-series construction
+is the regularized `S` integral. This is the integral form of the power-series construction
 in Sections 5.7--5.8. -/
 theorem hasSum_regCarlsonR_div_factorial_eq_regCarlsonSIntegral
     (z : ι → ℂ) {b : ι → ℂ} (hb : b ∈ mvBetaConvergent) :
@@ -201,7 +201,7 @@ theorem regCarlsonSSeries_eq_regCarlsonSIntegral
   rw [regCarlsonSSeries_eq_tsum_regCarlsonR]
   exact (hasSum_regCarlsonR_div_factorial_eq_regCarlsonSIntegral z hb).tsum_eq
 
-/-- Carlson's series construction is entire in all Dirichlet parameters.  This is the
+/-- Carlson's series construction is entire in all Dirichlet parameters. This is the
 analytic assertion in Corollary 6.3-3; its proof is the locally uniform version of the
 coefficient estimate used above for pointwise summability. -/
 theorem analyticOnNhd_regCarlsonSSeries (z : ι → ℂ) :

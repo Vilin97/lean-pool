@@ -70,7 +70,7 @@ theorem hasDerivAt_carlsonAffineForm_update (z : ι → ℂ) (u : ι → ℝ) (i
 
 open scoped Classical in
 /-- Differentiating a composed Carlson kernel with respect to `z i` introduces the factor
-`u i`.  This is the pointwise identity underlying Carlson's formula (5.3-2). -/
+`u i`. This is the pointwise identity underlying Carlson's formula (5.3-2). -/
 theorem HasDerivAt.comp_carlsonAffineForm_update {f : ℂ → ℂ} {f' : ℂ}
     {z : ι → ℂ} {u : ι → ℝ} (i : ι)
     (hf : HasDerivAt f f' (carlsonAffineForm z u)) :
@@ -99,7 +99,7 @@ theorem carlsonPartialDeriv_eq_partialDeriv (i : ι) (G : (ι → ℂ) → ℂ) 
       rfl
 
 /-- The partial derivative of a Carlson kernel is the derivative of the univariate function
-times the corresponding simplex coordinate.  This is the pointwise form of Carlson's
+times the corresponding simplex coordinate. This is the pointwise form of Carlson's
 formula (5.3-2). -/
 theorem carlsonPartialDeriv_comp_carlsonAffineForm {f : ℂ → ℂ} {f' : ℂ}
     {z : ι → ℂ} {u : ι → ℝ} (i : ι)
@@ -128,7 +128,7 @@ theorem carlsonPartialDeriv_carlsonPartialDeriv_comp_carlsonAffineForm
   simpa [mul_assoc, mul_left_comm] using (hcomp.const_mul (u j : ℂ)).deriv
 
 /-- Successive Carlson partial derivatives, in the order specified by a list of coordinate
-indices.  The head of the list is applied last. -/
+indices. The head of the list is applied last. -/
 def carlsonIteratedPartialDeriv : List ι → ((ι → ℂ) → ℂ) → (ι → ℂ) → ℂ
   | [], G, z => G z
   | i :: is, G, z => carlsonPartialDeriv i (fun w => carlsonIteratedPartialDeriv is G w) z
@@ -154,7 +154,7 @@ theorem carlsonIteratedPartialDeriv_perm {U : Set (ι → ℂ)} {G : (ι → ℂ
   exact CarlsonFunctions.SeveralComplexVariables.iteratedPartialDeriv_perm hG hU h
 
 /-- Iterated partial differentiation of a Carlson kernel introduces the corresponding product
-of simplex coordinates.  This is the pointwise core of Carlson's formula (5.3-2). -/
+of simplex coordinates. This is the pointwise core of Carlson's formula (5.3-2). -/
 theorem carlsonIteratedPartialDeriv_comp_carlsonAffineForm
     {f : ℂ → ℂ}
     (hf : ∀ n w, HasDerivAt (iteratedDeriv n f) (iteratedDeriv (n + 1) f w) w)
@@ -200,7 +200,7 @@ theorem carlsonTotalDeriv_comp_carlsonAffineForm
 def carlsonDirectionalDeriv (a : ι → ℂ) (G : (ι → ℂ) → ℂ) (z : ι → ℂ) : ℂ :=
   ∑ i, a i * carlsonPartialDeriv i G z
 
-/-- Evaluation of a constant-coefficient directional derivative on a Carlson kernel.  This is
+/-- Evaluation of a constant-coefficient directional derivative on a Carlson kernel. This is
 the first-order pointwise identity behind Carlson's more general formula (5.3-4). -/
 theorem carlsonDirectionalDeriv_comp_carlsonAffineForm
     (a : ι → ℂ) {f : ℂ → ℂ} {f' : ℂ} {z : ι → ℂ} {u : ι → ℝ}
@@ -215,7 +215,7 @@ theorem carlsonDirectionalDeriv_comp_carlsonAffineForm
   ring
 
 /-- Carlson's Euler--Poisson differential expression for a twice differentiable function of
-the variables `z`.  The equation in Theorem 5.4-1 asserts that this expression vanishes. -/
+the variables `z`. The equation in Theorem 5.4-1 asserts that this expression vanishes. -/
 def carlsonEulerPoissonOperator (i j : ι) (b z : ι → ℂ)
     (G : (ι → ℂ) → ℂ) : ℂ :=
   (z i - z j) * carlsonPartialDeriv i (carlsonPartialDeriv j G) z +
@@ -239,7 +239,7 @@ omit [Fintype ι] in
     carlsonEulerPoissonOperator i i b z G = 0 := by
   simp [carlsonEulerPoissonOperator]
 
-/-- Evaluation of the Euler--Poisson operator on a Carlson kernel.  The integral of this
+/-- Evaluation of the Euler--Poisson operator on a Carlson kernel. The integral of this
 expression is the quantity killed by Carlson's integration-by-parts argument in the proof of
 Theorem 5.4-1. -/
 theorem carlsonEulerPoissonOperator_comp_carlsonAffineForm

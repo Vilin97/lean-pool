@@ -42,7 +42,7 @@ theorem analyticOnNhd_cpow_carlsonAffineForm (t : ℂ) (u : ι → ℝ)
   exact hpow.comp_of_eq haffine rfl
 
 open scoped Classical in
-/-- The coordinate derivative of Carlson's power kernel.  This is the pointwise form of
+/-- The coordinate derivative of Carlson's power kernel. This is the pointwise form of
 Relation 5.9-6, equation (9). -/
 theorem hasDerivAt_cpow_carlsonAffineForm_update (t : ℂ) {z : ι → ℂ}
     (hz : z ∈ carlsonRVariableDomain) {u : ι → ℝ}

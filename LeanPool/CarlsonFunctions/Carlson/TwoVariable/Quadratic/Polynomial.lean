@@ -214,7 +214,7 @@ theorem secondQuadratic_unsquared_counterexample :
 
 /-- Division-free polynomial form of Carlson's involutive transformation 6.10-3.
 Both transformed nodes must be squared: both sides are homogeneous of degree `2 * n`
-in `x,y`.  Omitting the squares gives the false identity refuted above. -/
+in `x,y`. Omitting the squares gives the false identity refuted above. -/
 theorem carlsonRPolynomialNumerator₂_secondQuadratic
     (n : ℕ) (β x y : ℂ) :
     (ascPochhammer ℂ n).eval (1 - 2 * β - 2 * n) *

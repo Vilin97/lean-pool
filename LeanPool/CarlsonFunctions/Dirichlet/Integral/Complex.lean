@@ -84,7 +84,7 @@ theorem integrableOn_mvBetaMonomial
 
 open scoped Classical in
 /-- Multiplying one factor of a convergent Dirichlet monomial by the logarithm of its
-coordinate preserves integrability.  This is the basic domination estimate needed when
+coordinate preserves integrability. This is the basic domination estimate needed when
 differentiating a simplex Mellin integral with respect to a parameter. -/
 theorem integrableOn_mvBetaMonomial_mul_log
     (b : ι → ℂ) (hb : b ∈ mvBetaConvergent) (i : ι) :

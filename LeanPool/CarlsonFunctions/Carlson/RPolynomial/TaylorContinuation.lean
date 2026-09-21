@@ -108,7 +108,9 @@ theorem isRegCarlsonContinuation_taylor {A : ℂ} {R : ℝ}
   let r' : ℝ≥0 := ⟨r, hr.le⟩
   have hfull := DifferentiableOn.hasFPowerSeriesOnBall (R := r')
     (hf.differentiableOn.mono (Metric.closedBall_subset_ball hrR)) (show 0 < r' from hr)
-  have hlocal := (hf A (by simp only [Metric.mem_ball, dist_self]; exact (norm_nonneg _).trans_lt hz)).hasFPowerSeriesAt
+  have hA : A ∈ Metric.ball A R := by
+    simpa only [Metric.mem_ball, dist_self] using (norm_nonneg _).trans_lt hz
+  have hlocal := (hf A hA).hasFPowerSeriesAt
   have heq := hfull.hasFPowerSeriesAt.eq_formalMultilinearSeries hlocal
   rw [heq] at hfull
   exact isRegCarlsonContinuation_of_hasFPowerSeriesOnBall hfull hzr
@@ -132,7 +134,9 @@ private lemma exists_taylor_geometric_bound {A : ℂ} {R r : ℝ}
   let s' : ℝ≥0 := ⟨s, hs.le⟩
   have hfull := DifferentiableOn.hasFPowerSeriesOnBall (R := s')
     (hf.differentiableOn.mono (Metric.closedBall_subset_ball hsR)) (show 0 < s' from hs)
-  have hlocal := (hf A (by simp only [Metric.mem_ball, dist_self]; exact hr.trans_lt hrR)).hasFPowerSeriesAt
+  have hA : A ∈ Metric.ball A R := by
+    simpa only [Metric.mem_ball, dist_self] using hr.trans_lt hrR
+  have hlocal := (hf A hA).hasFPowerSeriesAt
   rw [hfull.hasFPowerSeriesAt.eq_formalMultilinearSeries hlocal] at hfull
   obtain ⟨ρ, hrρ, hρs⟩ := exists_between hrs
   have hρ : 0 < ρ := hr.trans_lt hrρ

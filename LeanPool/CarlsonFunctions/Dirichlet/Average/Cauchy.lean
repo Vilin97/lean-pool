@@ -15,8 +15,8 @@ public import Mathlib.MeasureTheory.Integral.Prod
 /-!
 # Averages of Cauchy's integral formula
 
-This file develops the foundational part of [Carl77, Section 5.11].  We use Mathlib's circle
-integral formulation of Cauchy's theorem.  Carlson works more generally with positively
+This file develops the foundational part of [Carl77, Section 5.11]. We use Mathlib's circle
+integral formulation of Cauchy's theorem. Carlson works more generally with positively
 oriented rectifiable Jordan curves.
 
 The integer resolvent kernel and its regularized integral are analytic away from the convex
@@ -68,7 +68,7 @@ theorem sub_carlsonAffineForm_ne_zero_of_mem_compl_convexHull
   sub_carlsonAffineForm_ne_zero hs hu
 
 /-- For a fixed simplex point, Carlson's integer Cauchy kernel is analytic in `s` outside
-the convex hull of the variables.  Integer powers make this statement branch-independent. -/
+the convex hull of the variables. Integer powers make this statement branch-independent. -/
 theorem analyticOnNhd_carlsonCauchyKernel (n : ℕ) (z : ι → ℂ)
     {u : ι → ℝ} (hu : u ∈ Convexity.StdSimplex.coordinateSet ℝ ι) :
     AnalyticOnNhd ℂ (carlsonCauchyKernel n z u)

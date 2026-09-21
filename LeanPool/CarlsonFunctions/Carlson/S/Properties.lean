@@ -24,7 +24,7 @@ theorem regCarlsonSIntegral_perm (b z : ι → ℂ) (σ : Equiv.Perm ι) :
   regCarlsonDirichletAverage_perm b z exp σ
 
 /-- Translating every variable by `a` multiplies the native regularized `S` integral by
-`exp a`.  This is Carlson's exponential translation identity. -/
+`exp a`. This is Carlson's exponential translation identity. -/
 theorem regCarlsonSIntegral_add_const (b z : ι → ℂ) (a : ℂ) :
     regCarlsonSIntegral b (fun i ↦ z i + a) = exp a * regCarlsonSIntegral b z := by
   unfold regCarlsonSIntegral
@@ -37,7 +37,7 @@ theorem regCarlsonSIntegral_add_const (b z : ι → ℂ) (a : ℂ) :
   rw [one_mul, exp_add]
   ring
 
-/-- Translation of all variables for Carlson's analytically continued `S` function.  This
+/-- Translation of all variables for Carlson's analytically continued `S` function. This
 global identity follows from the native integral identity and uniqueness of continuation in
 the Dirichlet parameters. -/
 theorem regCarlsonSSeries_add_const (z b : ι → ℂ) (a : ℂ) :

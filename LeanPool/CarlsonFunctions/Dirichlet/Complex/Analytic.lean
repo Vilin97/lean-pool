@@ -185,7 +185,7 @@ theorem regDirichletIntegral_analyticOn {f : (ι → ℝ) → ℂ}
               ‖∏ j, (u j : ℂ) ^ (c j - 1)‖ * ‖f u‖ ≤
             ∑ i, ‖Complex.log (u i : ℂ)‖ *
               ‖∏ j, (u j : ℂ) ^ (a j - 1)‖ * C := by
-            gcongr <;> first | exact hmon | exact hf_le u hu
+            gcongr; first | exact hmon | exact hf_le u hu
           _ = C * ∑ i, ‖(∏ j, (u j : ℂ) ^ (a j - 1)) * Complex.log (u i : ℂ)‖ := by
             simp [mul_comm, mul_left_comm, Finset.mul_sum]
           _ = bound u := rfl

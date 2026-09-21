@@ -33,7 +33,8 @@ def carlsonRVariableDomain : Set (ι → ℂ) :=
 
 omit [Fintype ι] in
 /-- Carlson's right-half-plane variable domain is open. -/
-theorem isOpen_carlsonRVariableDomain [Finite ι] : IsOpen (carlsonRVariableDomain : Set (ι → ℂ)) := by
+theorem isOpen_carlsonRVariableDomain [Finite ι] :
+    IsOpen (carlsonRVariableDomain : Set (ι → ℂ)) := by
   classical
   let _ := Fintype.ofFinite ι
   rw [show carlsonRVariableDomain (ι := ι) =

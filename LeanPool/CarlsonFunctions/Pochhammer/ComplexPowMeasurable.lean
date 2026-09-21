@@ -13,7 +13,7 @@ public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
 # Measurability of complex powers with a real base
 
 This file is a temporary home for a measurability result intended for the Mathlib theory of
-complex powers.  It is independent of the multivariate Beta function.
+complex powers. It is independent of the multivariate Beta function.
 -/
 
 public noncomputable section

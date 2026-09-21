@@ -14,7 +14,7 @@ import Mathlib.Analysis.SpecificLimits.Basic
 # Analytic uniqueness from positive real parameters
 
 This file records uniqueness principles for holomorphic functions whose values are known only
-on the positive real locus.  They are useful for transporting certain identities proved using
+on the positive real locus. They are useful for transporting certain identities proved using
 real probability measures to their complex analytic continuations.
 -/
 
@@ -23,7 +23,7 @@ open scoped Topology
 
 @[expose] public noncomputable section AnalyticUniqueness
 
-/-- Local one-variable uniqueness from agreement on a real germ.  This is the form useful when
+/-- Local one-variable uniqueness from agreement on a real germ. This is the form useful when
 the functions are only analytic on a connected continuation domain rather than entire. -/
 theorem AnalyticOnNhd.eqOn_of_eventuallyEq_ofRealCarlson {U : Set ℂ} {F G : ℂ → ℂ}
     {x₀ : ℝ} (hF : AnalyticOnNhd ℂ F U) (hG : AnalyticOnNhd ℂ G U)
@@ -61,7 +61,7 @@ theorem analyticOnNhd_eq_of_eqOn_posRealCarlson {F G : ℂ → ℂ}
   exact funext fun z => h (Set.mem_univ z)
 
 /-- Two entire functions of finitely many complex variables which agree on all vectors of
-strictly positive real parameters agree everywhere.  No complex-open agreement hypothesis is
+strictly positive real parameters agree everywhere. No complex-open agreement hypothesis is
 needed. -/
 theorem analyticOnNhd_eq_of_eqOn_posReal_piCarlson {ι : Type*} [Fintype ι]
     {F G : (ι → ℂ) → ℂ} (hF : AnalyticOnNhd ℂ F univ)

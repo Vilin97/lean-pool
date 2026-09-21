@@ -73,7 +73,7 @@ theorem eval_carlsonPowerPolynomial_affine (n : ℕ) (a t : ℂ) (z : ι → ℂ
   rw [eval_carlsonPowerPolynomial, carlsonAffineForm_affine hu]
 
 /-- Carlson's degree-`n` regularized R-polynomial is homogeneous in its variables on the
-native convergence domain.  This is the homogeneous-polynomial observation following
+native convergence domain. This is the homogeneous-polynomial observation following
 Definition 5.7-1. -/
 theorem regCarlsonR_smul_of_mem_mvBetaConvergent (n : ℕ) (a : ℂ) (z : ι → ℂ)
     {b : ι → ℂ} (hb : b ∈ mvBetaConvergent) :

@@ -8,7 +8,7 @@ Authors: Bastiaan J Braams
 module
 
 public import Mathlib.Algebra.MvPolynomial.Eval
-public import Mathlib.Data.Complex.Basic
+public import Mathlib.Basic.Complex.Basic
 
 /-! # Associated shifts and rational coefficient data -/
 

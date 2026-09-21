@@ -383,8 +383,8 @@ theorem regCarlsonRIntegral_eq_regCarlsonRLaplaceIntegral
         simp [mul_comm]]
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
       apply mul_le_mul_of_nonneg_right _ (Real.rpow_nonneg _ _)
-      have hyp : 0 < p.1 := hp.1
-      exact Real.exp_le_exp.mpr (by nlinarith [hWlower hp.2])
+      · have hyp : 0 < p.1 := hp.1
+        exact Real.exp_le_exp.mpr (by nlinarith [hWlower hp.2])
       all_goals exact hp.1.le
     have hF : Integrable F (μy.prod μu) := Integrable.mono' hG.norm hFmeas hFle
     have houter_eq_F :

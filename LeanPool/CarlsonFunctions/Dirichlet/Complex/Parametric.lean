@@ -22,6 +22,8 @@ open Complex MeasureTheory MeasureTheory.Measure ProbabilityTheory Filter Set Me
 open scoped Topology
 @[expose] public noncomputable section
 namespace DirichletTransform
+
+open CarlsonFunctions.SeveralComplexVariables
 variable {ι κ : Type*} [Fintype ι] [Fintype κ]
 
 omit [Fintype κ] in
@@ -167,7 +169,7 @@ theorem analyticOnNhd_regDirichletIntegral_kernel_joint
   have hV : IsOpen V := (isOpen_mvBetaConvergent.prod hU).preimage L.continuous
   have hc := continuousOn_complexSimplexKernel hH.continuousOn hW
   have hG : AnalyticOnNhd ℂ G V := by
-    apply CarlsonFunctions.SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded hV
+    apply analyticOnNhd_of_separately_analytic_locally_bounded hV
     · intro q hq k
       have hupdateB (v : ι → ℂ) (i : ι) (w : ℂ) :
           Function.update v i w = fun j => if j = i then w else v j := by

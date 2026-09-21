@@ -249,15 +249,15 @@ private lemma rIntegral_secondQuadratic_near_one (t β : ℂ)
       ext i; fin_cases i <;> simp [pair]
     simp only [hnodes, neg_neg] at H
     convert! H using 1
-    ext n
-    have hp : Gamma ((2 * β + t) + (1 / 2 - β - t)) *
-        regRPolynomial n (2 * β + t) (1 / 2 - β - t) 0 (w ^ 2) =
-        (ascPochhammer ℂ n).eval (1 / 2 - β - t) * (w ^ 2) ^ n /
-          (ascPochhammer ℂ n).eval (β + 1 / 2) := by
-      rw [Gamma_mul_regRPolynomial _ _ _ _ _ (by rwa [hsum]), hsum,
-        ← carlsonRPolynomialNumerator₂_swap, numerator₂_zero_right]
-    rw [show -t + 1 - (β + 1 / 2) = 1 / 2 - β - t by ring, pow_mul]
-    linear_combination -(ascPochhammer ℂ n).eval (-t) / (n.factorial : ℂ) * hp
+    · ext n
+      have hp : Gamma ((2 * β + t) + (1 / 2 - β - t)) *
+          regRPolynomial n (2 * β + t) (1 / 2 - β - t) 0 (w ^ 2) =
+          (ascPochhammer ℂ n).eval (1 / 2 - β - t) * (w ^ 2) ^ n /
+            (ascPochhammer ℂ n).eval (β + 1 / 2) := by
+        rw [Gamma_mul_regRPolynomial _ _ _ _ _ (by rwa [hsum]), hsum,
+          ← carlsonRPolynomialNumerator₂_swap, numerator₂_zero_right]
+      rw [show -t + 1 - (β + 1 / 2) = 1 / 2 - β - t by ring, pow_mul]
+      linear_combination -(ascPochhammer ℂ n).eval (-t) / (n.factorial : ℂ) * hp
     all_goals simp only [rIntegral, carlsonRIntegral, sum_pair]
   rw [← hrows.tsum_eq, tsum_quadraticSeries_eq (-t) (β + 1 / 2) w hc' hs]
   exact hright.tsum_eq

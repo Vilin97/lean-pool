@@ -26,7 +26,7 @@ public import Mathlib.RingTheory.Polynomial.Pochhammer
 # Regularized incomplete Mellin transforms
 
 The regularized incomplete Mellin transform of a `C^N` integrand on a compact interval `[0, a]`
-continues holomorphically from `{0 < re α}` to `{-(N : ℝ) < re α}`.  This is the one-variable
+continues holomorphically from `{0 < re α}` to `{-(N : ℝ) < re α}`. This is the one-variable
 engine for finite-order continuation of regularized Dirichlet integrals.
 -/
 

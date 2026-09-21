@@ -34,9 +34,9 @@ to a measure-theory namespace.
 * `Convexity.StdSimplex.equivFreeCoords`: the corresponding parametrization of Mathlib's
   intrinsic standard simplex.
 
-The affine hyperplane is identified with Mathlib's `fintypeAffineCoords`.  The standard
+The affine hyperplane is identified with Mathlib's `fintypeAffineCoords`. The standard
 vertices form an affine basis of this hyperplane, and its barycentric coordinates are the
-ordinary ambient coordinates.  We nevertheless retain the explicit omitted-coordinate chart:
+ordinary ambient coordinates. We nevertheless retain the explicit omitted-coordinate chart:
 its computational formulas are used by the measure and integral theory.
 -/
 
@@ -53,7 +53,7 @@ section Ring
 variable [CommRing R]
 
 /-- The affine hyperplane `{x | ∑ j, x j = 1}` (the affine hull of the standard simplex),
-viewed as a plain set.  This is the carrier of Mathlib's `fintypeAffineCoords`. -/
+viewed as a plain set. This is the carrier of Mathlib's `fintypeAffineCoords`. -/
 abbrev stdSimplexAffineSet : Set (ι → R) :=
   fintypeAffineCoords ι R
 
@@ -452,7 +452,7 @@ def equivFreeCoords (i : ι) :
     ⟨stdSimplexCoordProj i (fun j ↦ s.weights j), by
       refine ⟨fun j ↦ s.nonneg j, ?_⟩
       have hs : ∑ j, s.weights j = 1 := by
-        simp [Finsupp.sum_fintype]
+        simp
       rw [← hs, Fintype.sum_eq_add_sum_subtype_ne (fun j ↦ s.weights j) i]
       exact le_add_of_nonneg_left (s.nonneg i)⟩
   left_inv x := by
@@ -465,7 +465,7 @@ def equivFreeCoords (i : ι) :
     change stdSimplexCoordMap i (stdSimplexCoordProj i (fun q ↦ s.weights q)) j = s.weights j
     exact congrFun (stdSimplexCoordMap_coordProj i <|
       mem_fintypeAffineCoords_iff_sum.mpr <| by
-        simp [Finsupp.sum_fintype]) j
+        simp) j
 
 open scoped Classical in
 /-- The weights of the intrinsic simplex point associated to free coordinates are the

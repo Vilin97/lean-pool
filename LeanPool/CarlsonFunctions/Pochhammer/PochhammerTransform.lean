@@ -165,7 +165,6 @@ private theorem sum_signedStirlingSecond_mul_ascPochhammer (n : ℕ) :
         ]
         simp [signedStirlingSecond,
           Nat.stirlingSecond_eq_zero_of_lt n.lt_succ_self]
-
       rw [
         Finset.sum_range_succ'
           (fun k =>
@@ -377,7 +376,7 @@ theorem ascPochhammerTransform_injective :
     Function.Injective (ascPochhammerTransform R) := by
   intro p q hpq
   by_contra hne
-  letI : Nontrivial R :=
+  let : Nontrivial R :=
     Polynomial.Nontrivial.of_polynomial_ne hne
   have hpq0 : p - q ≠ 0 := sub_ne_zero.mpr hne
   have hmap :

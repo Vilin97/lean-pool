@@ -150,7 +150,8 @@ private theorem map_dirichletMeasure_fin_two_direct (a b : ℝ) :
   filter_upwards [hmem] with u hu
   by_cases hus : u ∈ (fun u : Fin 2 → ℝ => u 0) ⁻¹' s
   · simp only [Set.mem_preimage] at hus
-    simp [hus]
+    have hus' : u ∈ (fun u : Fin 2 → ℝ => u 0) ⁻¹' s := hus
+    simp only [Set.indicator_of_mem hus, Set.indicator_of_mem hus']
     have hu1 : u 1 = 1 - u 0 := by
       have hsum : ∑ i, u i = 1 := mem_fintypeAffineCoords_iff_sum.mp hu
       simpa [Fin.sum_univ_two] using congrArg (fun x => x - u 0) hsum

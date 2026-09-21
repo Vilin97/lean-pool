@@ -14,7 +14,7 @@ public import LeanPool.CarlsonFunctions.Carlson.T
 # The two-variable Carlson T-function
 
 This file specializes the multivariate T-function of Carlson's Definition 5.12-1 to two
-variables.  Later files may develop Carlson's singular limit in which one variable tends to
+variables. Later files may develop Carlson's singular limit in which one variable tends to
 zero; special-function identifications do not belong here.
 -/
 

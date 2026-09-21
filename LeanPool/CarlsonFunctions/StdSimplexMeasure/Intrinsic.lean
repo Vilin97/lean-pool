@@ -40,7 +40,7 @@ theorem mem_coordinateSet {u : ι → R} :
 
 theorem coordinates_mem (s : StdSimplex R ι) : coordinates s ∈ coordinateSet R ι := by
   refine ⟨s.nonneg, ?_⟩
-  simp [coordinates, Finsupp.sum_fintype]
+  simp [coordinates]
 
 /-- Recover an intrinsic point from its ambient coordinates and membership proof. -/
 def ofCoordinates (u : ι → R) (hu : u ∈ coordinateSet R ι) : StdSimplex R ι where

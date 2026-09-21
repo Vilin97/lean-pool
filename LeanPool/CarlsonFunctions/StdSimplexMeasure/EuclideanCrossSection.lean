@@ -16,7 +16,7 @@ This file contains one temporary support theorem adapted from mathlib PR #37910 
 https://github.com/leanprover-community/mathlib4/pull/37910
 
 The theorem extends the existing full-dimensional Hausdorff-measure slicing formula to a set
-contained in a lower-dimensional affine subspace.  This is the form needed for the standard
+contained in a lower-dimensional affine subspace. This is the form needed for the standard
 simplex, whose affine hull is a hyperplane in its ambient coordinate space.
 
 TODO: If PR #37910 is merged into Mathlib, remove this file and replace uses of
