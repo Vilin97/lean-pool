@@ -406,7 +406,7 @@ import LeanPool.UniformSheafyTateDomains.Solution
 Source: url:https://github.com/cbirkbeck/uniform-sheafy-tate-domains-lean
 Authors: Christopher Birkbeck, Alex Torzewski
 Status: verified
-Main declarations: `FiniteJetOver.finiteJet_isSheafyComplete_of_dvr`, `FiniteJetOver.finiteJet_not_stablyUniform_of_dvr`, `WeightedParity.weightedParity_isSheafyComplete_of_dvr`, `WeightedParity.weightedParity_not_stablyUniform_of_dvr`
+Main declarations: `FiniteJetOver.finiteJet_not_stablyUniform_of_dvr`
 Tags: adic-spaces, tate-algebras, sheaf-theory
 MSC: 14G22
 -/

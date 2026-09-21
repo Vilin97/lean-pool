@@ -10008,10 +10008,7 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-    - FiniteJetOver.finiteJet_isSheafyComplete_of_dvr
     - FiniteJetOver.finiteJet_not_stablyUniform_of_dvr
-    - WeightedParity.weightedParity_isSheafyComplete_of_dvr
-    - WeightedParity.weightedParity_not_stablyUniform_of_dvr
     main_results:
     - declaration: FiniteJetOver.finiteJet_isSheafyComplete_of_dvr
       informal: The finite-jet pinching algebra is sheafy over the stated complete discretely
