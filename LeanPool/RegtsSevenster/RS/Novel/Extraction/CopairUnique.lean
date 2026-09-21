@@ -214,9 +214,18 @@ theorem formOddBlock_stdForm (k ℓ : ℕ) (x y : Fin (2 * ℓ) → ℂ) :
 
 /-! ### Uniqueness -/
 
--- Raised budget: instantiating the abstract contraction families at
--- the standard model crosses the reduced and unreduced type
--- presentations, so the definitional unification is heavy.
+private theorem eq_of_contraction_family {M : Type*} [AddCommGroup M] [Module ℂ M]
+    [FiniteDimensional ℂ M] (B : BilinForm ℂ M) (hB : B.Nondegenerate)
+    (t t₀ : M ⊗[ℂ] M) (S : Finset (M × M))
+    (hS : t = ∑ i ∈ S, i.1 ⊗ₜ[ℂ] i.2)
+    (hI : ∀ x, ∑ i ∈ S, B x i.1 • i.2 = x)
+    (h₀ : ∀ x, contractionMap B t₀ x = x) : t = t₀ := by
+  apply contractionMap_injective B hB
+  ext x
+  rw [hS, map_sum, LinearMap.sum_apply]
+  simp only [contractionMap_tmul]
+  exact (hI x).trans (h₀ x).symm
+
 open MonoidalCategory in
 /-- **Uniqueness of the copairing** (accompanying paper §5.2): any
 copairing satisfying the snake identities against the standard
@@ -241,33 +250,23 @@ theorem stdCopair_unique (k ℓ : ℕ)
   obtain ⟨S, T, hS, hT, hi, _, hiii, _⟩ :=
     exists_contraction_families (stdForm k ℓ) C' h1 h2
   have he : ((formCoevMap C') 1).1 = stdCopairEvenElem k := by
-    refine contractionMap_injective (stdFormEvenBilin k)
-      (stdFormEvenBilin_nondegenerate k) (LinearMap.ext fun x => ?_)
-    exact ((DFunLike.congr_fun
-        ((congrArg (contractionMap (stdFormEvenBilin k)) hS).trans
-          (map_sum (contractionMap (stdFormEvenBilin k))
-            (fun i => i.1 ⊗ₜ[ℂ] i.2) S)) x).trans
-      ((LinearMap.sum_apply S _ x).trans
-        ((Finset.sum_congr rfl fun i _ =>
-          (contractionMap_tmul _ i.1 i.2 x).trans
-            (congrArg (· • i.2)
-              (formEvenBlock_stdForm k ℓ x i.1).symm)).trans
-          (hi x)))).trans
-      (contractionMap_stdCopairEvenElem k x).symm
+    apply eq_of_contraction_family (stdFormEvenBilin k)
+      (stdFormEvenBilin_nondegenerate k) _ _ S hS
+    · intro x
+      refine Eq.trans ?_ (hi x)
+      apply Finset.sum_congr rfl
+      intro i _
+      exact congrArg (· • i.2) (formEvenBlock_stdForm k ℓ x i.1).symm
+    · exact contractionMap_stdCopairEvenElem k
   have ho : ((formCoevMap C') 1).2 = stdCopairOddElem ℓ := by
-    refine contractionMap_injective (stdFormOddBilin ℓ)
-      (stdFormOddBilin_nondegenerate ℓ) (LinearMap.ext fun x => ?_)
-    exact ((DFunLike.congr_fun
-        ((congrArg (contractionMap (stdFormOddBilin ℓ)) hT).trans
-          (map_sum (contractionMap (stdFormOddBilin ℓ))
-            (fun i => i.1 ⊗ₜ[ℂ] i.2) T)) x).trans
-      ((LinearMap.sum_apply T _ x).trans
-        ((Finset.sum_congr rfl fun i _ =>
-          (contractionMap_tmul _ i.1 i.2 x).trans
-            (congrArg (· • i.2)
-              (formOddBlock_stdForm k ℓ x i.1).symm)).trans
-          (hiii x)))).trans
-      (contractionMap_stdCopairOddElem ℓ x).symm
+    apply eq_of_contraction_family (stdFormOddBilin ℓ)
+      (stdFormOddBilin_nondegenerate ℓ) _ _ T hT
+    · intro x
+      refine Eq.trans ?_ (hiii x)
+      apply Finset.sum_congr rfl
+      intro i _
+      exact congrArg (· • i.2) (formOddBlock_stdForm k ℓ x i.1).symm
+    · exact contractionMap_stdCopairOddElem ℓ
   apply SuperVect.Hom.ext
   · have hval : formCoevMap C' = formCoevMap (stdCopair k ℓ) := by
       apply LinearMap.ext_ring

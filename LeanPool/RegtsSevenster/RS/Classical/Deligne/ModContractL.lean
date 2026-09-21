@@ -131,7 +131,7 @@ theorem contract3LFold_boundary_cond
       ((modTensorπ A M' M ≫ p) ▷ (N.X ⊗ 𝟙_ D)) ≫
       ((α_ A N.X (𝟙_ D)).inv ≫ (actLeft A N.X ▷ (𝟙_ D))) ≫
       modMultiπ A [N]
-  simp only [Category.assoc]
+  repeat' erw [Category.assoc]
   have hrel : (M'.X ◁ actLeft A M.X) ≫ modTensorπ A M' M =
       (α_ M'.X A M.X).inv ≫ (actRight A M'.X ▷ M.X) ≫
         modTensorπ A M' M := by
@@ -175,7 +175,7 @@ theorem contract3LFold_boundary_cond
     MonoidalCategory.comp_whiskerRight, Category.assoc,
     Category.assoc, associator_inv_naturality_left_assoc,
     associator_inv_naturality_left_assoc]
-  conv_rhs => rw [MonoidalCategory.comp_whiskerRight,
+  conv_rhs => erw [MonoidalCategory.comp_whiskerRight,
     Category.assoc, associator_naturality_middle,
     MonoidalCategory.whiskerLeft_comp,
     MonoidalCategory.whiskerLeft_comp, Category.assoc,

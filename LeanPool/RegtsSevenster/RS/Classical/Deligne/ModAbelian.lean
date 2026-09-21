@@ -586,12 +586,13 @@ noncomputable def kerLift [Category.{v} D] [MonoidalCategory D] [Preadditive D]
   Mod.Hom.mk'
     (kernel.lift f.hom k.hom (by simpa using congrArg Mod.Hom.hom hk))
     (by
-      show actLeft A W.X ≫ kernel.lift f.hom k.hom _
-        = A ◁ kernel.lift f.hom k.hom _ ≫ kerAct A f
+      change actLeft A W.X ≫ kernel.lift f.hom k.hom (by simpa using congrArg Mod.Hom.hom hk)
+        = A ◁ kernel.lift f.hom k.hom (by simpa using congrArg Mod.Hom.hom hk) ≫ kerAct A f
       refine (cancel_mono (kernel.ι f.hom)).1 ?_
       rw [Category.assoc, kernel.lift_ι, Category.assoc, kerAct_ι,
         ← MonoidalCategory.whiskerLeft_comp_assoc, kernel.lift_ι,
-        actLeft_natural A W.X M.X k.hom])
+        actLeft_natural A W.X M.X k.hom]
+      all_goals simpa using congrArg Mod.Hom.hom hk)
 
 /-- The lift through the kernel recovers the given map. -/
 theorem kerLift_comp [Category.{v} D] [MonoidalCategory D] [Preadditive D]
@@ -792,13 +793,14 @@ noncomputable def cokerDesc
   Mod.Hom.mk'
     (cokernel.desc f.hom k.hom (by simpa using congrArg Mod.Hom.hom hk))
     (by
-      show cokerAct A f ≫ cokernel.desc f.hom k.hom _
-        = A ◁ cokernel.desc f.hom k.hom _ ≫ actLeft A W.X
+      change cokerAct A f ≫ cokernel.desc f.hom k.hom (by simpa using congrArg Mod.Hom.hom hk)
+        = A ◁ cokernel.desc f.hom k.hom (by simpa using congrArg Mod.Hom.hom hk) ≫ actLeft A W.X
       haveI := epi_whiskerLeft_cokernelπ A f.hom
       refine (cancel_epi (A ◁ cokernel.π f.hom)).1 ?_
       rw [← Category.assoc, π_cokerAct, Category.assoc,
         cokernel.π_desc, ← MonoidalCategory.whiskerLeft_comp_assoc,
-        cokernel.π_desc, actLeft_natural A N.X W.X k.hom])
+        cokernel.π_desc, actLeft_natural A N.X W.X k.hom]
+      all_goals simpa using congrArg Mod.Hom.hom hk)
 
 /-- The descent through the cokernel recovers the given map. -/
 theorem cokerProj_desc [Category.{v} D] [MonoidalCategory D] [Preadditive D]

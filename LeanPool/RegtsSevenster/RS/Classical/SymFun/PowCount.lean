@@ -21,8 +21,7 @@ open scoped Classical in
 /-- A coefficient of a power of the first power sum counts the
 functions with the prescribed fibre sizes. -/
 theorem coeff_p1_pow {k : ℕ} (T : Type) [Fintype T] (w : Fin k →₀ ℕ) :
-    MvPolynomial.coeff w
-      ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ Fintype.card T) =
+    ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ Fintype.card T).coeff w =
     ((Finset.univ.filter (fun t : T → Fin k =>
       ∀ a : Fin k,
         (Finset.univ.filter (fun i : T => t i = a)).card = w a)).card : ℂ) := by

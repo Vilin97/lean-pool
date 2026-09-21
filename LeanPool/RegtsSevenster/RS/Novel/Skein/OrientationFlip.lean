@@ -802,8 +802,6 @@ end Diff
 /-! ## The orientation-invariance theorems -/
 
 open Classical in
--- Raised budget: invariance is proved over all internal flags at
--- once, so the summand unfolds for both orientations.
 /-- **Invariance under circuit flips**: for a fixed relative
 transition system,
 the corrected constrained summand is invariant under changing the
@@ -822,7 +820,7 @@ theorem throughSummand_orientation_invariant [LinearOrder α]
     F.throughSummand h st hbnd o c =
       F.throughSummand h st hbnd o' c := by
   unfold EdgeSubset.throughSummand
-  congr 1
+  apply congrArg (fun z : ℂ => ((-1 : ℂ) ^ c) * F.throughProduct st * z)
   refine Finset.sum_congr rfl (fun ψ _ => ?_)
   exact if_congr Iff.rfl
     (phiSum_flip h st o o' hpair (F.evenColoursAt ψ)).symm rfl

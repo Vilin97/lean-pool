@@ -70,12 +70,10 @@ instance evenEmbedLaxMonoidal
     intro X Y f X'
     ext
     · simp [evenEmbedTensorIso, isoBiprodZero]
-    · exact (isZero_zero A).eq_of_tgt _ _
   μ_natural_right := by
     intro X Y X' f
     ext
     · simp [evenEmbedTensorIso, isoBiprodZero]
-    · exact (isZero_zero A).eq_of_tgt _ _
   associativity := by
     intro X Y Z
     ext
@@ -84,21 +82,16 @@ instance evenEmbedLaxMonoidal
           -comp_whiskerRight, -MonoidalCategory.whiskerLeft_comp,
           ← comp_whiskerRight_assoc,
           ← MonoidalCategory.whiskerLeft_comp]
-    · exact (isZero_zero A).eq_of_tgt _ _
   left_unitality := by
     intro X
     ext
     · apply biprod.hom_ext' <;>
         simp [evenEmbedTensorIso, isoBiprodZero, leftUnitorComp]
-      rfl
-    · exact (isZero_zero A).eq_of_tgt _ _
   right_unitality := by
     intro X
     ext
     · apply biprod.hom_ext' <;>
         simp [evenEmbedTensorIso, isoBiprodZero, rightUnitorComp]
-      rfl
-    · exact (isZero_zero A).eq_of_tgt _ _
 
 /-- The even embedding is strong monoidal: both comparisons are
 isomorphisms by construction. -/

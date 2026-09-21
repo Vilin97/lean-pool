@@ -39,8 +39,8 @@ alternant are natural numbers: no cancellation into negatives. -/
 theorem coeff_pow_p1_altDet_natCast {k : ℕ} (r : ℕ) (w : Fin k → ℕ)
     (hw : ∀ i j : Fin k, i < j → w j < w i) :
     ∀ e : Fin k → ℕ, (∀ i j : Fin k, i < j → e j < e i) →
-    ∃ N : ℕ, MvPolynomial.coeff (∑ i, Finsupp.single i (w i))
-      ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r * altDet e) = N := by
+    ∃ N : ℕ, ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r * altDet e).coeff
+      (∑ i, Finsupp.single i (w i)) = N := by
   induction r with
   | zero =>
     intro e he
@@ -54,9 +54,8 @@ theorem coeff_pow_p1_altDet_natCast {k : ℕ} (r : ℕ) (w : Fin k → ℕ)
       MvPolynomial.coeff_sum]
     -- Each summand is a natural-number cast
     have hterm : ∀ i₀ : Fin k, ∃ N : ℕ,
-        MvPolynomial.coeff (∑ j, Finsupp.single j (w j))
-          ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r *
-            altDet (Function.update e i₀ (e i₀ + 1))) = ↑N := by
+        ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r *
+            altDet (Function.update e i₀ (e i₀ + 1))).coeff (∑ j, Finsupp.single j (w j)) = ↑N := by
       intro i₀
       by_cases hrep : ∃ a : Fin k, a ≠ i₀ ∧ e a = e i₀ + 1
       · -- Repeat: altDet vanishes
@@ -65,7 +64,7 @@ theorem coeff_pow_p1_altDet_natCast {k : ℕ} (r : ℕ) (w : Fin k → ℕ)
           altDet_eq_zero_of_repeat _ hai (by
             rw [Function.update_of_ne hai _ _, Function.update_self]
             exact hae)
-        rw [hzero, mul_zero, MvPolynomial.coeff_zero]
+        rw [hzero, mul_zero, AddMonoidAlgebra.coeff_zero]
         exact ⟨0, Nat.cast_zero.symm⟩
       · -- No repeat: the bumped vector is still strictly decreasing
         push Not at hrep
@@ -97,9 +96,8 @@ theorem coeff_chain_pos {k : ℕ} (lam mu : YoungDiagram)
     (hle : lam ≤ mu) (r : ℕ) (hcard : mu.card = lam.card + r)
     (hk : mu.colLen 0 ≤ k) :
     ∃ N : ℕ, 0 < N ∧
-      MvPolynomial.coeff (∑ i, Finsupp.single i (eVec mu k i))
-        ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r *
-          altDet (eVec lam k)) = N := by
+      ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r *
+          altDet (eVec lam k)).coeff (∑ i, Finsupp.single i (eVec mu k i)) = N := by
   induction r generalizing lam with
   | zero =>
     have heq : lam = mu := YoungDiagram.ext
@@ -147,10 +145,9 @@ theorem coeff_chain_pos {k : ℕ} (lam mu : YoungDiagram)
         MvPolynomial.coeff_sum]
     -- Each summand is a ℕ-cast
     have hterm : ∀ i : Fin k, ∃ N : ℕ,
-        MvPolynomial.coeff (∑ j, Finsupp.single j (eVec mu k j))
-          ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r *
+        ((∑ l : Fin k, (X l : MvPolynomial (Fin k) ℂ)) ^ r *
             altDet (Function.update (eVec lam k) i
-              (eVec lam k i + 1))) = ↑N := by
+              (eVec lam k i + 1))).coeff (∑ j, Finsupp.single j (eVec mu k j)) = ↑N := by
       intro i
       by_cases hrep : ∃ a : Fin k, a ≠ i ∧
           eVec lam k a = eVec lam k i + 1
@@ -158,7 +155,7 @@ theorem coeff_chain_pos {k : ℕ} (lam mu : YoungDiagram)
         rw [altDet_eq_zero_of_repeat _ hai (by
               rw [Function.update_of_ne hai _ _, Function.update_self]
               exact hae),
-            mul_zero, MvPolynomial.coeff_zero]
+            mul_zero, AddMonoidAlgebra.coeff_zero]
         exact ⟨0, Nat.cast_zero.symm⟩
       · push Not at hrep
         exact coeff_pow_p1_altDet_natCast r (eVec mu k)

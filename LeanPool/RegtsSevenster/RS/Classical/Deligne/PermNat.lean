@@ -300,15 +300,15 @@ theorem permAlg_natural
     permAlg X n x ≫ tensorPowMap f n =
       tensorPowMap f n ≫ permAlg Y n x := by
   induction x using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     rw [show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin n))) σ =
         MonoidAlgebra.single σ (1 : ℂ) from rfl,
       permAlg_single, permAlg_single]
     exact permMor_natural f n σ
-  | hadd x y hx hy =>
+  | add x y hx hy =>
     rw [map_add, map_add]
     exact intertwine_add hx hy
-  | hsmul r x hx =>
+  | smul r x hx =>
     rw [map_smul, map_smul]
     exact intertwine_smul r hx
 

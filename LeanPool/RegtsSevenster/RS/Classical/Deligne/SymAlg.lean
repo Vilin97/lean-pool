@@ -214,7 +214,7 @@ theorem tensorPowConcat_peel [Category.{v} D] [MonoidalCategory D] (X : D)
   | q + 1 => by
     rw [tensorPowConcat_succ_hom X p (q + 1), tensorPowConcat_peel X p q]
     simp only [MonoidalCategory.comp_whiskerRight]
-    rw [powCast_whiskerRight, reassoc_of% (concat_peel_step X p q)]
+    erw [powCast_whiskerRight, reassoc_of% (concat_peel_step X p q)]
     exact (Category.assoc _ _ _).trans (congrArg
       (fun z => (tensorPow D X p ◁ (powPeel X (q + 1)).hom) ≫ z)
       (Category.assoc _ _ _))
@@ -879,7 +879,8 @@ private theorem adjSwap_rel_above
     conv_lhs => rw [reassoc_of% hcast]
     rw [modPowGlue]
     simp only [Category.assoc]
-    rw [reassoc_of% (ctx_above_aux A X
+    repeat' erw [Category.assoc]
+    erw [reassoc_of% (ctx_above_aux A X
       (tensorPowConcat X (a + 2) (j + 2 + b₀)) w
       (adjSwapMor X j b₀) _ hE)]
   rw [modPowLegM, modPowLegN, hM (winLegM A X), hM (winLegN A X),
@@ -945,7 +946,8 @@ private theorem adjSwap_rel_below
     conv_lhs => rw [reassoc_of% hcast]
     rw [modPowGlue]
     simp only [Category.assoc]
-    rw [reassoc_of% (ctx_below_aux A X
+    repeat' erw [Category.assoc]
+    erw [reassoc_of% (ctx_below_aux A X
       (tensorPowConcat X (a₀ + 2 + j + 2) b) w
       (adjSwapMor X a₀ j) _ hE)]
   rw [modPowLegM, modPowLegN, hM (winLegM A X), hM (winLegN A X),
@@ -1287,7 +1289,8 @@ private theorem legUpper_frame
     ((tensorPowConcat X (a + 1 + 2) q).hom ≫ powCast X h12 ≫ k)
   simp only [modPowGlue, winFrame, winFromUpper,
     whiskerRightIso_hom, Category.assoc] at h0 ⊢
-  exact h0
+  simpa only [tensorPow, tensorPowConcat, Iso.trans_inv, whiskerRightIso_inv,
+    Iso.symm_inv, winAssemble, Category.assoc] using! h0
 
 /-- The lower legs enter the frame; at general objects, against a
 peeled upper context. -/
@@ -1358,6 +1361,7 @@ private theorem legLower_frame
   simp only [modPowGlue, winFrame, winFromLower, Iso.trans_hom,
     whiskerLeftIso_hom, Iso.symm_hom, whiskerRightIso_hom,
     Category.assoc] at h0 ⊢
+  repeat' erw [Category.assoc] at h0 ⊢
   exact h0
 
 /-- The upper-pair braiding conjugated through the frame; at
@@ -1418,7 +1422,8 @@ private theorem winFrame_adjSwap_high
       Category.comp_id _)
   simp only [winFrame, winAssemble, adjSwapMor, swapTop,
     Category.assoc] at h0 ⊢
-  exact h0
+  simpa only [tensorPow, tensorPowConcat, Iso.trans_inv, whiskerRightIso_inv,
+    Iso.symm_inv, winAssemble, Category.assoc] using! h0
 
 /-- The lower-pair braiding conjugated through the frame; at
 general objects, against a peeled upper context. -/
@@ -1488,6 +1493,9 @@ private theorem winFrame_adjSwap_low
     (tensorPowConcat X (a + 2) (q + 1)) hCb
   simp only [winFrame, winAssemble, adjSwapMor, swapTop,
     Category.assoc] at h0 ⊢
+  simp only [tensorPow, tensorPowConcat, Iso.trans_inv, whiskerRightIso_inv,
+    Iso.symm_inv, winAssemble, Category.assoc] at h0 ⊢
+  repeat' erw [Category.assoc] at h0
   exact h0
 
 variable {A X} in

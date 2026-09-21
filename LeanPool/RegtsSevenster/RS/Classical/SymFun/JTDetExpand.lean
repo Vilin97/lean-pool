@@ -59,13 +59,13 @@ theorem jt_term_guard (v : Fin k → ℕ) (σ : Equiv.Perm (Fin k)) :
 /-- **Coefficient of the Jacobi–Trudi determinant**: signed
 guarded sum of coefficients of complete homogeneous products. -/
 theorem coeff_det_jtMat (v : Fin k → ℕ) (w : Fin k →₀ ℕ) :
-    MvPolynomial.coeff w ((jtMat v).det) =
+    ((jtMat v).det).coeff w =
       ∑ σ : Equiv.Perm (Fin k),
         ((Equiv.Perm.sign σ : ℤ) : ℂ) *
           (if ∀ i : Fin k,
               0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
-            then MvPolynomial.coeff w (∏ i, hSub (Finset.univ : Finset (Fin k))
-              (((v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)).toNat))
+            then (∏ i, hSub (Finset.univ : Finset (Fin k))
+              (((v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)).toNat)).coeff w
             else 0) := by
   classical
   rw [det_jtMat_expand]
@@ -80,6 +80,7 @@ theorem coeff_det_jtMat (v : Fin k → ℕ) (w : Fin k →₀ ℕ) :
   by_cases hp : ∀ i : Fin k,
       0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
   · rw [if_pos hp, if_pos hp]
-  · rw [if_neg hp, if_neg hp, MvPolynomial.coeff_zero]
+  · rw [if_neg hp, if_neg hp, AddMonoidAlgebra.coeff_zero]
+    rfl
 
 end RS

@@ -67,10 +67,7 @@ noncomputable def indOfCoyonedaIso [SmallCategory C]
           (Ind.inclusion C).map (f ≫ h) ≫ 𝟙 _ =
         ((Ind.yonedaCompInclusion.app X).inv ≫
           (Ind.inclusion C).map f ≫ 𝟙 _) ≫ (Ind.inclusion C).map h
-      simp
-      -- The residue is the definitional identification of the two
-      -- `TypeCat` hom-coercion routes through `Functor.comp`.
-      rfl)
+      simp)
 
 /-- **Objects of `C` are compact in `Ind C`**: the hom functor out
 of an embedded object preserves filtered colimits of any given small

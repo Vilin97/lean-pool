@@ -29,7 +29,7 @@ theorem intertwiner_comp_asAlgebraHom [Group G]
       (σ g : W →ₗ[ℂ] W) ∘ₗ f) (y : MonoidAlgebra ℂ G) :
     f ∘ₗ ρ.asAlgebraHom y = σ.asAlgebraHom y ∘ₗ f := by
   induction y using MonoidAlgebra.induction_on with
-  | hM g =>
+  | of g =>
     rw [show MonoidAlgebra.of ℂ G g =
       MonoidAlgebra.single g (1 : ℂ) from rfl]
     rw [show (ρ.asAlgebraHom (MonoidAlgebra.single g 1) :
@@ -39,10 +39,10 @@ theorem intertwiner_comp_asAlgebraHom [Group G]
         W →ₗ[ℂ] W) = (σ g : W →ₗ[ℂ] W) from by
       rw [Representation.asAlgebraHom_single, one_smul]]
     exact hf g
-  | hadd a b ha hb =>
+  | add a b ha hb =>
     rw [map_add, map_add, LinearMap.comp_add, LinearMap.add_comp,
       ha, hb]
-  | hsmul r a ha =>
+  | smul r a ha =>
     rw [map_smul, map_smul, LinearMap.comp_smul,
       LinearMap.smul_comp, ha]
 

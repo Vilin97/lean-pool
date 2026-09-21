@@ -157,7 +157,8 @@ theorem catTrace_blockCycles
         (l.map (fun c => catTrace (g ^ c))).prod
   | [], _ => by
       show catTrace (permMor X 0 1 ≫ powHom X g 0) = 1
-      rw [permMor_one, powHom_zero, Category.id_comp]
+      rw [permMor_one, powHom_zero]
+      erw [Category.id_comp]
       exact (catTrace_id _).trans catDim_unit
   | c :: rest, hmem => by
       obtain ⟨m, rfl⟩ : ∃ m, c = m + 1 :=
@@ -170,7 +171,6 @@ theorem catTrace_blockCycles
       rw [catTrace_permMor_blockSum, catTrace_permMor_finRotate,
         catTrace_blockCycles X g rest hrest, List.map_cons,
         List.prod_cons]
-      rfl
 
 /-! ## An arbitrary permutation -/
 
