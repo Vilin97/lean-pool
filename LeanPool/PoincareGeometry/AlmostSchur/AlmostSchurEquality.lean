@@ -302,6 +302,265 @@ theorem test_mvfderiv_gradient_norm_sq_neg
         (gradient (I := I) f x) := real_inner_comm _ _
   linarith [hm, hcomm]
 
+private theorem gradientNormSq_contMDiff_one {f : M → ℝ}
+    (hf : ContMDiff I 𝓘(ℝ, ℝ) 4 f) :
+    ContMDiff I 𝓘(ℝ, ℝ) 1
+      (fun x ↦ inner ℝ (gradient (I := I) f x) (gradient (I := I) f x)) := by
+  have hgrad1 : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (T% (gradient (I := I) f)) :=
+    contMDiff_gradient 1 (hf.of_le (by norm_num))
+  exact @ContMDiff.inner_bundle E _ _ H _ I (1 : ℕ∞ω) M _ _ E _ _ TM _
+    (fun y ↦ inferInstance) (fun y ↦ inferInstance) _ _ E _ _ H _ I M _ _ _
+    (fun y ↦ y) (gradient (I := I) f) (gradient (I := I) f) hgrad1 hgrad1
+
+private theorem gradient_eq_zero_of_hessian_contraction
+    {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 4 f) (r : ℝ) (hr_pos : 0 < r)
+    (hdim : 2 < (Module.finrank ℝ E : ℝ)) (S : M → ℝ) (hSnonneg : ∀ x, 0 ≤ S x)
+    (hcontract : ∀ x, hessian LC f x (gradient (I := I) f x)
+        (gradient (I := I) f x) =
+      (-r / (Module.finrank ℝ E : ℝ) - S x /
+        ((Module.finrank ℝ E : ℝ) - 2)) * ‖gradient (I := I) f x‖ ^ 2) :
+    ∀ x, gradient (I := I) f x = 0 := by
+  let F : M → ℝ := fun x ↦ inner ℝ
+    (gradient (I := I) f x) (gradient (I := I) f x)
+  have hgrad1 : ContMDiff I (I.prod 𝓘(ℝ, E)) 1 (T% (gradient (I := I) f)) :=
+    contMDiff_gradient 1 (hf.of_le (by norm_num))
+  have hFmd := gradientNormSq_contMDiff_one (I := I) hf
+  have hFcont : Continuous F := by
+    simpa [F] using hFmd.continuous
+  have hFnonneg : ∀ x, 0 ≤ F x := by
+    intro x
+    simpa [F, real_inner_self_eq_norm_sq] using
+      sq_nonneg ‖gradient (I := I) f x‖
+  obtain ⟨xmax, hxmax, hmax⟩ :=
+    (isCompact_univ : IsCompact (Set.univ : Set M)).exists_isMaxOn
+      Set.univ_nonempty hFcont.continuousOn
+  have hFzero : F xmax = 0 := by
+    by_contra hne
+    have hFpos : 0 < F xmax :=
+      lt_of_le_of_ne (hFnonneg xmax) (Ne.symm hne)
+    have hv : CMDiffAt 1
+        (fun x ↦ (⟨x, (-gradient (I := I) f x)⟩ : TangentBundle I M)) xmax := by
+      exact (hgrad1 xmax).neg_section
+    obtain ⟨γ, hγ0, hγ⟩ :=
+      exists_isMIntegralCurveAt_of_contMDiffAt_boundaryless
+        (I := I) (M := M) (t₀ := (0 : ℝ)) (x₀ := xmax)
+        (v := fun x ↦ -gradient (I := I) f x) hv
+    have hFlocal : IsLocalMax F xmax := hmax.isLocalMax (by simp)
+    have hFlocal' : IsLocalMax F (γ 0) := by simpa [hγ0] using hFlocal
+    have hGlocal : IsLocalMax (F ∘ γ) 0 :=
+      hFlocal'.comp_continuous hγ.continuousAt
+    have hder := test_hasDerivAt_gradient_norm_sq
+      (I := I) (M := M) (f := f) (hf.of_le (by norm_num)) hγ
+    rw [hγ0, test_mvfderiv_gradient_norm_sq_neg
+      (I := I) (M := M) (f := f) (hf.of_le (by norm_num)) xmax] at hder
+    have hder' : HasDerivAt (F ∘ γ) (-2 * hessian LC f xmax
+        (gradient (I := I) f xmax) (gradient (I := I) f xmax)) 0 := by
+      simpa [F] using hder
+    have hzero := hGlocal.hasDerivAt_eq_zero hder'
+    have hdpos : 0 < (Module.finrank ℝ E : ℝ) := by
+      linarith
+    have hdminus2pos : 0 < (Module.finrank ℝ E : ℝ) - 2 := by
+      linarith
+    have hcoef : -r / (Module.finrank ℝ E : ℝ) -
+        S xmax / ((Module.finrank ℝ E : ℝ) - 2) < 0 := by
+      have hfirst : 0 < r / (Module.finrank ℝ E : ℝ) :=
+        div_pos hr_pos hdpos
+      have hsecond : 0 ≤ S xmax /
+          ((Module.finrank ℝ E : ℝ) - 2) :=
+        div_nonneg (hSnonneg xmax) (le_of_lt hdminus2pos)
+      calc
+        -r / (Module.finrank ℝ E : ℝ) -
+            S xmax / ((Module.finrank ℝ E : ℝ) - 2) =
+            -(r / (Module.finrank ℝ E : ℝ)) -
+              S xmax / ((Module.finrank ℝ E : ℝ) - 2) := by ring
+        _ < 0 := by linarith
+    have hF_norm : ‖gradient (I := I) f xmax‖ ^ 2 = F xmax := by
+      simp [F, real_inner_self_eq_norm_sq]
+    rw [hcontract xmax] at hzero
+    rw [hF_norm] at hzero
+    have hprod : (-r / (Module.finrank ℝ E : ℝ) -
+        S xmax / ((Module.finrank ℝ E : ℝ) - 2)) * F xmax = 0 := by
+      nlinarith [hzero]
+    have hprodneg : (-r / (Module.finrank ℝ E : ℝ) -
+        S xmax / ((Module.finrank ℝ E : ℝ) - 2)) * F xmax < 0 :=
+      mul_neg_of_neg_of_pos hcoef hFpos
+    exact (ne_of_lt hprodneg) hprod
+  have hFall : ∀ x, F x = 0 := by
+    intro x
+    have hxle : F x ≤ F xmax := (isMaxOn_iff.mp hmax) x (mem_univ x)
+    have hxle0 : F x ≤ 0 := by simpa [hFzero] using hxle
+    exact le_antisymm hxle0 (hFnonneg x)
+  have hgradzero : ∀ x, gradient (I := I) f x = 0 := by
+    intro x
+    have hnormsq : ‖gradient (I := I) f x‖ ^ 2 = 0 := by
+      simpa [F, real_inner_self_eq_norm_sq] using hFall x
+    have hnorm : ‖gradient (I := I) f x‖ = 0 := by
+      nlinarith [norm_nonneg (gradient (I := I) f x)]
+    exact norm_eq_zero.mp hnorm
+  exact hgradzero
+
+private theorem equality_traceFreeHessian_proportional
+    {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) 4 f) (r : ℝ)
+    (hdim : 2 < (Module.finrank ℝ E : ℝ)) (hdim0 : Module.finrank ℝ E ≠ 0)
+    (hH : (Module.finrank ℝ E : ℝ) * (∫ x, traceFreeHessianNormSq LC f x ∂riemannianVolume (I := I)) = ((Module.finrank ℝ E : ℝ) - 1) * (∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I)))
+    (hscale : ((Module.finrank ℝ E : ℝ) - 2) * (∫ x, contractedBianchiPairingIntegrand (I := I) f x
+      ∂riemannianVolume (I := I)) = 2 * ((Module.finrank ℝ E : ℝ) - 1) * (∫ x, hilbertSchmidtSq (traceFree (ricciRaisedEndomorphism LC x))
+      ∂riemannianVolume (I := I)))
+    (heq : (∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I)) = (4 * (Module.finrank ℝ E : ℝ) * ((Module.finrank ℝ E : ℝ) - 1) /
+      ((Module.finrank ℝ E : ℝ) - 2) ^ 2) * (∫ x, hilbertSchmidtSq (traceFree (ricciRaisedEndomorphism LC x))
+      ∂riemannianVolume (I := I))) :
+    ∀ x, traceFree (LC (gradient (I := I) f) x) =
+      (2 * ((Module.finrank ℝ E : ℝ) - 1) / ((Module.finrank ℝ E : ℝ) - 2)) •
+        traceFree (ricciRaisedEndomorphism LC x) := by
+  let A : ℝ := (∫ x, ((LC).scalarCurvatureAlmostSchur x - r) ^ 2 ∂riemannianVolume (I := I))
+  let B : ℝ := (∫ x, hilbertSchmidtSq (traceFree (ricciRaisedEndomorphism LC x))
+      ∂riemannianVolume (I := I))
+  let Henergy : ℝ := (∫ x, traceFreeHessianNormSq LC f x ∂riemannianVolume (I := I))
+  let P : ℝ := (∫ x, contractedBianchiPairingIntegrand (I := I) f x
+      ∂riemannianVolume (I := I))
+  change (Module.finrank ℝ E : ℝ) * Henergy = ((Module.finrank ℝ E : ℝ) - 1) * A at hH
+  change ((Module.finrank ℝ E : ℝ) - 2) * P = 2 * ((Module.finrank ℝ E : ℝ) - 1) * B at hscale
+  let μ : ℝ := 2 * ((Module.finrank ℝ E : ℝ) - 1) /
+    ((Module.finrank ℝ E : ℝ) - 2)
+  let R : ∀ x, TM x →L[ℝ] TM x := fun x ↦
+    traceFree (ricciRaisedEndomorphism LC x)
+  let T : ∀ x, TM x →L[ℝ] TM x := fun x ↦
+    traceFree (LC (gradient (I := I) f) x)
+  let D : M → ℝ := fun x ↦ hilbertSchmidtSq (T x - μ • R x)
+  have hRsec : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 1
+      (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y (R y)) := by
+    simpa [R] using contMDiff_traceFree_ricci_one
+      (I := I) (M := M)
+  have hgrad3 : ContMDiff I (I.prod 𝓘(ℝ, E)) 3
+      (T% (gradient (I := I) f)) :=
+    contMDiff_gradient 3 (hf.of_le (by norm_num))
+  have hTraw : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 2
+      (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y
+        (LC (gradient (I := I) f) y)) := by
+    intro x
+    exact contMDiffAt_covariantDerivative_of_metric_torsion_two LC
+      leviCivitaConnection_metricCompatible leviCivitaConnection_torsion
+      (hgrad3 x)
+  have hTsec : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 1
+      (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y (T y)) := by
+    have h := contMDiffAt_traceFree_endomorphism_one
+      (I := I) (M := M)
+      (fun y ↦ LC (gradient (I := I) f) y) (hTraw.of_le (by norm_num))
+    intro x
+    simpa [T] using h x
+  have hRself : ∀ x, IsSelfAdjoint (R x) := by
+    intro x
+    simpa [R] using traceFree_ricci_isSelfAdjoint (I := I) (M := M) x
+  have hTself : ∀ x, IsSelfAdjoint (T x) := by
+    intro x
+    have h := test_traceFree_hessian_isSelfAdjoint
+      (I := I) (M := M) (f := f) (hf.of_le (by norm_num)) x
+    change IsSelfAdjoint (traceFree (LC (gradient (I := I) f) x))
+    rw [← test_hessianRaised_eq_covariantDerivative_gradient
+      (I := I) (M := M) (f := f) x]
+    exact h
+  have hμRsec : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 1
+      (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y (μ • R y)) := by
+    have hc : ContMDiff I 𝓘(ℝ, ℝ) 1 (fun _ : M ↦ μ) := contMDiff_const
+    simpa using hc.smul_section hRsec
+  have hDsec : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 1
+      (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y (T y - μ • R y)) :=
+    hTsec.sub_section hμRsec
+  have hDself : ∀ x, IsSelfAdjoint (T x - μ • R x) := by
+    intro x
+    exact (hTself x).sub ((IsSelfAdjoint.all μ).smul (hRself x))
+  have hDcont : Continuous D := by
+    have h := test_contMDiff_hilbertSchmidtSq_selfAdjoint
+      (I := I) (M := M) (fun y ↦ T y - μ • R y) hDsec hDself
+    simpa [D] using h.continuous
+  have hDnonneg : ∀ x, 0 ≤ D x := by
+    intro x
+    exact hilbertSchmidtSq_nonneg _
+  have hT_eq : (fun x ↦ hilbertSchmidtSq (T x)) =
+      traceFreeHessianNormSq LC f := by
+    funext x
+    simp [T, traceFreeHessianNormSq]
+  have hR_eq : (fun x ↦ hilbertSchmidtSq (R x)) =
+      (fun x ↦ hilbertSchmidtSq
+        (traceFree (ricciRaisedEndomorphism LC x))) := by
+    rfl
+  have hP_eq : (fun x ↦ hilbertSchmidtInner (R x) (T x)) =
+      contractedBianchiPairingIntegrand (I := I) f := by
+    funext x
+    rfl
+  have hTint : Integrable (fun x ↦ hilbertSchmidtSq (T x))
+      (riemannianVolume (I := I)) := by
+    rw [hT_eq]
+    exact integrable_traceFreeHessianNormSq
+      (I := I) (M := M) LC leviCivitaConnection_metricCompatible
+      leviCivitaConnection_torsion (hf.of_le (by norm_num)) hdim0
+  have hRint : Integrable (fun x ↦ hilbertSchmidtSq (R x))
+      (riemannianVolume (I := I)) := by
+    rw [hR_eq]
+    exact integrable_traceFreeRicciNormSq (I := I) (M := M)
+  have hPint : Integrable (fun x ↦ hilbertSchmidtInner (R x) (T x))
+      (riemannianVolume (I := I)) := by
+    rw [hP_eq]
+    exact integrable_contractedBianchiPairingIntegrand
+      (I := I) (M := M) (hf.of_le (by norm_num)) hdim0
+  have hD_eq : D = fun x ↦ hilbertSchmidtSq (T x) -
+      2 * μ * hilbertSchmidtInner (R x) (T x) +
+      μ ^ 2 * hilbertSchmidtSq (R x) := by
+    funext x
+    simpa [D] using hilbertSchmidtSq_sub_smul (T x) (R x) μ
+  have hDint : Integrable D (riemannianVolume (I := I)) := by
+    rw [hD_eq]
+    exact (hTint.sub (hPint.const_mul (2 * μ))).add
+      (hRint.const_mul (μ ^ 2))
+  have hDzero : (∫ x, D x ∂riemannianVolume (I := I)) = 0 := by
+    have hformula : (∫ x, D x ∂riemannianVolume (I := I)) =
+        Henergy - 2 * μ * P + μ ^ 2 * B := by
+      rw [hD_eq]
+      change (∫ x, (hilbertSchmidtSq (T x) -
+        2 * μ * hilbertSchmidtInner (R x) (T x) +
+        μ ^ 2 * hilbertSchmidtSq (R x))
+        ∂riemannianVolume (I := I)) = _
+      calc
+        (∫ x, (hilbertSchmidtSq (T x) -
+            2 * μ * hilbertSchmidtInner (R x) (T x) +
+            μ ^ 2 * hilbertSchmidtSq (R x))
+            ∂riemannianVolume (I := I)) =
+            (∫ x, hilbertSchmidtSq (T x) -
+              2 * μ * hilbertSchmidtInner (R x) (T x)
+              ∂riemannianVolume (I := I)) +
+            (∫ x, μ ^ 2 * hilbertSchmidtSq (R x)
+              ∂riemannianVolume (I := I)) := by
+          exact integral_add (hTint.sub (hPint.const_mul (2 * μ)))
+            (hRint.const_mul (μ ^ 2))
+        _ = ((∫ x, hilbertSchmidtSq (T x)
+              ∂riemannianVolume (I := I)) -
+            (∫ x, 2 * μ * hilbertSchmidtInner (R x) (T x)
+              ∂riemannianVolume (I := I))) +
+            (∫ x, μ ^ 2 * hilbertSchmidtSq (R x)
+              ∂riemannianVolume (I := I)) := by
+          rw [integral_sub hTint (hPint.const_mul (2 * μ))]
+        _ = Henergy - 2 * μ * P + μ ^ 2 * B := by
+          rw [integral_const_mul, integral_const_mul, hT_eq, hP_eq, hR_eq]
+    rw [hformula]
+    dsimp [μ]
+    have heqAB : A =
+        (4 * (Module.finrank ℝ E : ℝ) *
+          ((Module.finrank ℝ E : ℝ) - 1) /
+          ((Module.finrank ℝ E : ℝ) - 2) ^ 2) * B := by
+      simpa [A, B] using heq
+    field_simp [show (Module.finrank ℝ E : ℝ) - 2 ≠ 0 by linarith] at hH hscale heqAB ⊢
+    apply mul_left_cancel₀ (show (Module.finrank ℝ E : ℝ) ≠ 0 by linarith)
+    linear_combination
+      ((Module.finrank ℝ E : ℝ) - 2) ^ 2 * hH +
+        ((Module.finrank ℝ E : ℝ) - 1) * heqAB -
+        4 * (Module.finrank ℝ E : ℝ) * ((Module.finrank ℝ E : ℝ) - 1) * hscale
+  have hDpoint := test_integral_zero_continuous
+    (I := I) (M := M) hDcont hDnonneg hDint hDzero
+  have hTmuR : ∀ x, T x = μ • R x := by
+    intro x
+    exact sub_eq_zero.mp ((hilbertSchmidtSq_eq_zero_iff _).mp (hDpoint x))
+  exact hTmuR
+
 theorem test_classical_equality_forward
     (hRic_nonneg : ∀ (x : M) (v : TM x),
       0 ≤ (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x v v)
@@ -385,135 +644,11 @@ theorem test_classical_equality_forward
       traceFree (ricciRaisedEndomorphism LC x)
     let T : ∀ x, TM x →L[ℝ] TM x := fun x ↦
       traceFree (LC (gradient (I := I) f) x)
-    let D : M → ℝ := fun x ↦ hilbertSchmidtSq (T x - μ • R x)
-    have hRsec : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 1
-        (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y (R y)) := by
-      simpa [R] using contMDiff_traceFree_ricci_one
-        (I := I) (M := M)
+    have hTmuR : ∀ x, T x = μ • R x :=
+      equality_traceFreeHessian_proportional (I := I) hf r hdim hdim0 hH hscale heq
     have hgrad3 : ContMDiff I (I.prod 𝓘(ℝ, E)) 3
         (T% (gradient (I := I) f)) :=
       contMDiff_gradient 3 (hf.of_le (by norm_num))
-    have hTraw : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 2
-        (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y
-          (LC (gradient (I := I) f) y)) := by
-      intro x
-      exact contMDiffAt_covariantDerivative_of_metric_torsion_two LC
-        leviCivitaConnection_metricCompatible leviCivitaConnection_torsion
-        (hgrad3 x)
-    have hTsec : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 1
-        (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y (T y)) := by
-      have h := contMDiffAt_traceFree_endomorphism_one
-        (I := I) (M := M)
-        (fun y ↦ LC (gradient (I := I) f) y) (hTraw.of_le (by norm_num))
-      intro x
-      simpa [T] using h x
-    have hRself : ∀ x, IsSelfAdjoint (R x) := by
-      intro x
-      simpa [R] using traceFree_ricci_isSelfAdjoint (I := I) (M := M) x
-    have hTself : ∀ x, IsSelfAdjoint (T x) := by
-      intro x
-      have h := test_traceFree_hessian_isSelfAdjoint
-        (I := I) (M := M) (f := f) (hf.of_le (by norm_num)) x
-      change IsSelfAdjoint (traceFree (LC (gradient (I := I) f) x))
-      rw [← test_hessianRaised_eq_covariantDerivative_gradient
-        (I := I) (M := M) (f := f) x]
-      exact h
-    have hμRsec : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 1
-        (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y (μ • R y)) := by
-      have hc : ContMDiff I 𝓘(ℝ, ℝ) 1 (fun _ : M ↦ μ) := contMDiff_const
-      simpa using hc.smul_section hRsec
-    have hDsec : ContMDiff I (I.prod 𝓘(ℝ, E →L[ℝ] E)) 1
-        (fun y ↦ TotalSpace.mk' (E →L[ℝ] E) y (T y - μ • R y)) :=
-      hTsec.sub_section hμRsec
-    have hDself : ∀ x, IsSelfAdjoint (T x - μ • R x) := by
-      intro x
-      exact (hTself x).sub ((IsSelfAdjoint.all μ).smul (hRself x))
-    have hDcont : Continuous D := by
-      have h := test_contMDiff_hilbertSchmidtSq_selfAdjoint
-        (I := I) (M := M) (fun y ↦ T y - μ • R y) hDsec hDself
-      simpa [D] using h.continuous
-    have hDnonneg : ∀ x, 0 ≤ D x := by
-      intro x
-      exact hilbertSchmidtSq_nonneg _
-    have hT_eq : (fun x ↦ hilbertSchmidtSq (T x)) =
-        traceFreeHessianNormSq LC f := by
-      funext x
-      simp [T, traceFreeHessianNormSq]
-    have hR_eq : (fun x ↦ hilbertSchmidtSq (R x)) =
-        (fun x ↦ hilbertSchmidtSq
-          (traceFree (ricciRaisedEndomorphism LC x))) := by
-      rfl
-    have hP_eq : (fun x ↦ hilbertSchmidtInner (R x) (T x)) =
-        contractedBianchiPairingIntegrand (I := I) f := by
-      funext x
-      rfl
-    have hTint : Integrable (fun x ↦ hilbertSchmidtSq (T x))
-        (riemannianVolume (I := I)) := by
-      rw [hT_eq]
-      exact integrable_traceFreeHessianNormSq
-        (I := I) (M := M) LC leviCivitaConnection_metricCompatible
-        leviCivitaConnection_torsion (hf.of_le (by norm_num)) hdim0
-    have hRint : Integrable (fun x ↦ hilbertSchmidtSq (R x))
-        (riemannianVolume (I := I)) := by
-      rw [hR_eq]
-      exact integrable_traceFreeRicciNormSq (I := I) (M := M)
-    have hPint : Integrable (fun x ↦ hilbertSchmidtInner (R x) (T x))
-        (riemannianVolume (I := I)) := by
-      rw [hP_eq]
-      exact integrable_contractedBianchiPairingIntegrand
-        (I := I) (M := M) (hf.of_le (by norm_num)) hdim0
-    have hD_eq : D = fun x ↦ hilbertSchmidtSq (T x) -
-        2 * μ * hilbertSchmidtInner (R x) (T x) +
-        μ ^ 2 * hilbertSchmidtSq (R x) := by
-      funext x
-      simpa [D] using hilbertSchmidtSq_sub_smul (T x) (R x) μ
-    have hDint : Integrable D (riemannianVolume (I := I)) := by
-      rw [hD_eq]
-      exact (hTint.sub (hPint.const_mul (2 * μ))).add
-        (hRint.const_mul (μ ^ 2))
-    have hDzero : (∫ x, D x ∂riemannianVolume (I := I)) = 0 := by
-      have hformula : (∫ x, D x ∂riemannianVolume (I := I)) =
-          Henergy - 2 * μ * P + μ ^ 2 * B := by
-        rw [hD_eq]
-        change (∫ x, (hilbertSchmidtSq (T x) -
-          2 * μ * hilbertSchmidtInner (R x) (T x) +
-          μ ^ 2 * hilbertSchmidtSq (R x))
-          ∂riemannianVolume (I := I)) = _
-        calc
-          (∫ x, (hilbertSchmidtSq (T x) -
-              2 * μ * hilbertSchmidtInner (R x) (T x) +
-              μ ^ 2 * hilbertSchmidtSq (R x))
-              ∂riemannianVolume (I := I)) =
-              (∫ x, hilbertSchmidtSq (T x) -
-                2 * μ * hilbertSchmidtInner (R x) (T x)
-                ∂riemannianVolume (I := I)) +
-              (∫ x, μ ^ 2 * hilbertSchmidtSq (R x)
-                ∂riemannianVolume (I := I)) := by
-            exact integral_add (hTint.sub (hPint.const_mul (2 * μ)))
-              (hRint.const_mul (μ ^ 2))
-          _ = ((∫ x, hilbertSchmidtSq (T x)
-                ∂riemannianVolume (I := I)) -
-              (∫ x, 2 * μ * hilbertSchmidtInner (R x) (T x)
-                ∂riemannianVolume (I := I))) +
-              (∫ x, μ ^ 2 * hilbertSchmidtSq (R x)
-                ∂riemannianVolume (I := I)) := by
-            rw [integral_sub hTint (hPint.const_mul (2 * μ))]
-          _ = Henergy - 2 * μ * P + μ ^ 2 * B := by
-            rw [integral_const_mul, integral_const_mul, hT_eq, hP_eq, hR_eq]
-      rw [hformula]
-      dsimp [μ]
-      have heqAB : A =
-          (4 * (Module.finrank ℝ E : ℝ) *
-            ((Module.finrank ℝ E : ℝ) - 1) /
-            ((Module.finrank ℝ E : ℝ) - 2) ^ 2) * B := by
-        simpa [A, B] using heq
-      field_simp [show (Module.finrank ℝ E : ℝ) - 2 ≠ 0 by linarith] at hH hscale heqAB ⊢
-      nlinarith [hH, hscale, heqAB]
-    have hDpoint := test_integral_zero_continuous
-      (I := I) (M := M) hDcont hDnonneg hDint hDzero
-    have hTmuR : ∀ x, T x = μ • R x := by
-      intro x
-      exact sub_eq_zero.mp ((hilbertSchmidtSq_eq_zero_iff _).mp (hDpoint x))
     let hRicfun : M → ℝ := fun x ↦
       (leviCivitaConnection (I := I) (M := M)).ricciCurvatureAlmostSchur x
         (gradient (I := I) f x) (gradient (I := I) f x)
@@ -619,88 +754,8 @@ theorem test_classical_equality_forward
             norm_num
           _ = 0 := by simp
       linarith [hApos, hAzero]
-    let F : M → ℝ := fun x ↦ inner ℝ
-      (gradient (I := I) f x) (gradient (I := I) f x)
-    have hgrad1 : ContMDiff I (I.prod 𝓘(ℝ, E)) 1
-        (T% (gradient (I := I) f)) :=
-      contMDiff_gradient 1 (hf.of_le (by norm_num))
-    have hFmd : ContMDiff I 𝓘(ℝ, ℝ) 1 (fun x ↦ inner ℝ
-        (gradient (I := I) f x) (gradient (I := I) f x)) := by
-      exact @ContMDiff.inner_bundle E _ _ H _ I (1 : ℕ∞ω) M _ _ E _ _ TM _
-        (fun y ↦ inferInstance) (fun y ↦ inferInstance) _ _ E _ _ H _ I M _ _ _
-        (fun y ↦ y) (gradient (I := I) f) (gradient (I := I) f) hgrad1 hgrad1
-    have hFcont : Continuous F := by
-      simpa [F] using hFmd.continuous
-    have hFnonneg : ∀ x, 0 ≤ F x := by
-      intro x
-      simpa [F, real_inner_self_eq_norm_sq] using
-        sq_nonneg ‖gradient (I := I) f x‖
-    obtain ⟨xmax, hxmax, hmax⟩ :=
-      (isCompact_univ : IsCompact (Set.univ : Set M)).exists_isMaxOn
-        Set.univ_nonempty hFcont.continuousOn
-    have hFzero : F xmax = 0 := by
-      by_contra hne
-      have hFpos : 0 < F xmax :=
-        lt_of_le_of_ne (hFnonneg xmax) (Ne.symm hne)
-      have hv : CMDiffAt 1
-          (fun x ↦ (⟨x, (-gradient (I := I) f x)⟩ : TangentBundle I M)) xmax := by
-        exact (hgrad1 xmax).neg_section
-      obtain ⟨γ, hγ0, hγ⟩ :=
-        exists_isMIntegralCurveAt_of_contMDiffAt_boundaryless
-          (I := I) (M := M) (t₀ := (0 : ℝ)) (x₀ := xmax)
-          (v := fun x ↦ -gradient (I := I) f x) hv
-      have hFlocal : IsLocalMax F xmax := hmax.isLocalMax (by simp)
-      have hFlocal' : IsLocalMax F (γ 0) := by simpa [hγ0] using hFlocal
-      have hGlocal : IsLocalMax (F ∘ γ) 0 :=
-        hFlocal'.comp_continuous hγ.continuousAt
-      have hder := test_hasDerivAt_gradient_norm_sq
-        (I := I) (M := M) (f := f) (hf.of_le (by norm_num)) hγ
-      rw [hγ0, test_mvfderiv_gradient_norm_sq_neg
-        (I := I) (M := M) (f := f) (hf.of_le (by norm_num)) xmax] at hder
-      have hder' : HasDerivAt (F ∘ γ) (-2 * hessian LC f xmax
-          (gradient (I := I) f xmax) (gradient (I := I) f xmax)) 0 := by
-        simpa [F] using hder
-      have hzero := hGlocal.hasDerivAt_eq_zero hder'
-      have hdpos : 0 < (Module.finrank ℝ E : ℝ) := by
-        linarith
-      have hdminus2pos : 0 < (Module.finrank ℝ E : ℝ) - 2 := by
-        linarith
-      have hcoef : -r / (Module.finrank ℝ E : ℝ) -
-          S xmax / ((Module.finrank ℝ E : ℝ) - 2) < 0 := by
-        have hfirst : 0 < r / (Module.finrank ℝ E : ℝ) :=
-          div_pos hr_pos hdpos
-        have hsecond : 0 ≤ S xmax /
-            ((Module.finrank ℝ E : ℝ) - 2) :=
-          div_nonneg (hSnonneg xmax) (le_of_lt hdminus2pos)
-        calc
-          -r / (Module.finrank ℝ E : ℝ) -
-              S xmax / ((Module.finrank ℝ E : ℝ) - 2) =
-              -(r / (Module.finrank ℝ E : ℝ)) -
-                S xmax / ((Module.finrank ℝ E : ℝ) - 2) := by ring
-          _ < 0 := by linarith
-      have hF_norm : ‖gradient (I := I) f xmax‖ ^ 2 = F xmax := by
-        simp [F, real_inner_self_eq_norm_sq]
-      rw [hcontract xmax] at hzero
-      rw [hF_norm] at hzero
-      have hprod : (-r / (Module.finrank ℝ E : ℝ) -
-          S xmax / ((Module.finrank ℝ E : ℝ) - 2)) * F xmax = 0 := by
-        nlinarith [hzero]
-      have hprodneg : (-r / (Module.finrank ℝ E : ℝ) -
-          S xmax / ((Module.finrank ℝ E : ℝ) - 2)) * F xmax < 0 :=
-        mul_neg_of_neg_of_pos hcoef hFpos
-      exact (ne_of_lt hprodneg) hprod
-    have hFall : ∀ x, F x = 0 := by
-      intro x
-      have hxle : F x ≤ F xmax := (isMaxOn_iff.mp hmax) x (mem_univ x)
-      have hxle0 : F x ≤ 0 := by simpa [hFzero] using hxle
-      exact le_antisymm hxle0 (hFnonneg x)
-    have hgradzero : ∀ x, gradient (I := I) f x = 0 := by
-      intro x
-      have hnormsq : ‖gradient (I := I) f x‖ ^ 2 = 0 := by
-        simpa [F, real_inner_self_eq_norm_sq] using hFall x
-      have hnorm : ‖gradient (I := I) f x‖ = 0 := by
-        nlinarith [norm_nonneg (gradient (I := I) f x)]
-      exact norm_eq_zero.mp hnorm
+    have hgradzero := gradient_eq_zero_of_hessian_contraction
+      (I := I) hf r hr_pos hdim S hSnonneg hcontract
     have hgradfunzero : gradient (I := I) f = 0 := by
       funext x
       exact hgradzero x
