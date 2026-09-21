@@ -3,8 +3,10 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — Module A1 + A2 : hypergraph foundations and the handshake identity
+import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — hypergraph foundations and the handshake identity
 
 Standalone, Mathlib-only. Destined for a Mathlib PR. Foundation for the Rödl-nibble project.
 A `r`-uniform hypergraph on a vertex type `V` is modelled as a `Finset (Finset V)` all of whose
@@ -16,7 +18,6 @@ Goals of this module:
 
 Everything here must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 
 open Finset
 
@@ -41,7 +42,8 @@ structure IsMatching (H M : Finset (Finset V)) : Prop where
 
 /-- **A2 — handshake identity.** For an `r`-uniform hypergraph,
 `∑_v degree v = r * |H|`. Proof idea: double count the set of incidences
-`{(v, e) : v ∈ e ∈ H}`; summing over `v` gives `∑ degree`, summing over `e` gives `∑_{e} |e| = r|H|`. -/
+`{(v, e) : v ∈ e ∈ H}`; summing over `v` gives `∑ degree`, while summing over
+`e` gives `∑_{e} |e| = r|H|`. -/
 theorem sum_degree (H : Finset (Finset V)) {r : ℕ} (hr : IsUniform H r) :
     ∑ v : V, degree H v = r * H.card := by
   have hdeg (v : V) : degree H v = ∑ e ∈ H, if v ∈ e then 1 else 0 := by
@@ -77,7 +79,7 @@ theorem sum_codegree (H : Finset (Finset V)) {r : ℕ} (hr : IsUniform H r) :
         apply sum_congr rfl
         intro x hx
         by_cases hxe : x ∈ e
-        · simp only [hxe, true_and, if_true]
+        · simp only [hxe, true_and, ite_true]
           rw [← sum_filter]
           simp
         · simp [hxe]

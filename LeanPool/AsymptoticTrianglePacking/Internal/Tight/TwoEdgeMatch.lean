@@ -78,7 +78,7 @@ theorem prob_retain_avoid {H : Finset (Finset V)} {p : ℝ}
     intro i _
     simp only [hG]
     by_cases hi : i ∈ T
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact MeasurableSpace.measurableSet_generateFrom (Set.mem_singleton _)
     · simp only [hi, if_false]
       exact (MeasurableSpace.measurableSet_generateFrom (Set.mem_singleton _)).compl)
@@ -87,7 +87,7 @@ theorem prob_retain_avoid {H : Finset (Finset V)} {p : ℝ}
   rw [hindeps, hS, Finset.prod_union hTC]
   have h1 : ∏ e ∈ T, (ℙ : Measure Ω) (G e) = ENNReal.ofReal p ^ T.card := by
     rw [Finset.prod_congr rfl (fun e he => by
-      simp only [hG, he, if_true]; exact ρ.prob e (hT he))]
+      simp only [hG, he, ite_true]; exact ρ.prob e (hT he))]
     simp
   have h2 : ∏ e ∈ C, (ℙ : Measure Ω) (G e) = ENNReal.ofReal (1 - p) ^ C.card := by
     rw [Finset.prod_congr rfl (fun e he => by
