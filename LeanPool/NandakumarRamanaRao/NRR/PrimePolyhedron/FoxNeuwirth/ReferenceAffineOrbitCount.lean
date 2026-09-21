@@ -666,7 +666,7 @@ theorem selectedSimplex_smul
         (stageRank (selectedCode sigma) (stageIndex hp i) (tau.symm x)).1 <
           (stageRank (selectedCode sigma) (stageIndex hp i) (tau.symm y)).1
     rw [stageRank_lt_iff, stageRank_lt_iff]
-    congr 1 ;
+    congr 1;
       simp [stageKey, stageBlock, selectedCode, sigma', tau, retainedBars,
         removedBefore]
     rfl

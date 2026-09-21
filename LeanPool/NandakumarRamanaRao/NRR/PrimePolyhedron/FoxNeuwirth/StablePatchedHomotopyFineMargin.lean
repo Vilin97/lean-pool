@@ -50,11 +50,6 @@ open EquivariantPrismGenericPerturbation
 
 variable {p : Nat}
 
-noncomputable local instance middleGlobalVertexAction (hp : Nat.Prime p) (N L : Nat) :
-    MulAction (PrimeSymmetry hp)
-      (GlobalVertex hp (RelativeCollarMiddlePrism.cellSystem hp N L)) :=
-  Parameters.globalVertexAction hp (RelativeCollarMiddlePrism.cellSystem hp N L)
-
 /-- Scalar sample of a zero-free homotopy on one relative middle-prism parameter site. -/
 noncomputable def middleHomotopySiteValue
     (hp : Nat.Prime p) (N L : Nat)
@@ -264,7 +259,7 @@ theorem avoidsOrigin_of_assignmentClose_half_margin
   have hretainedRaw := retain_localAffineCoordinateNormMargin hp C
     perturbed base hbase hclose
   have hretained : LocalAffineCoordinateNormMargin hp C perturbed (margin / 2) := by
-    convert hretainedRaw using 1 ; ring
+    convert hretainedRaw using 1; ring
   intro q
   exact avoidsOrigin_of_localAffineCoordinateNormMargin hp C
     perturbed (half_pos hmargin) hretained q

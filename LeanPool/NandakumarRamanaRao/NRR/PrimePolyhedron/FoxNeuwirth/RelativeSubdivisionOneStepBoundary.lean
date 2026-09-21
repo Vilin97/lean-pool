@@ -376,108 +376,20 @@ private def sideRefinementCast (hp : Nat.Prime p)
       omega))
   e.trans (rho.trans e.symm)
 
-/-- Dimension-normalized form of fixed-side cancellation. -/
-private theorem fixedSideCell_sum_eq_zero_dim
-    (d : Nat) (hp : Nat.Prime (d + 2)) (N : Nat)
-    (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet)
-    (r : RelativeSubdivisionCylinderCombinatorics.Cell d) :
-    (∑ c : PrimeOrbitCycle.TopOrbit hp,
-      (PrimeOrbitCycle.orbitCycle hp).coefficient c *
-        ∑ rho : RefinementWord (d + 2) N,
-          RefinedAffineMap.subdivisionSign N rho *
-            ∑ k : Fin (d + 2),
-              SimplicialChain.faceSign
-                  (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k) *
-                sideMapWeight hp N s r
-                  (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
-                    (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
-                    (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) = 0 := by
+/-- The prime-orbit boundary pairing vanishes for each fixed refinement word. -/
+private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2)) (N : ℕ)
+  (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) (r : RelativeSubdivisionCylinderCombinatorics.Cell d)
+  (theta : Fin N → Equiv.Perm (Fin (d + 1))) :
+  ∑ x,
+      ∑ x_1,
+        (PrimeOrbitCycle.orbitCycle hp).coefficient x *
+          (SimplicialChain.faceSign x_1 *
+            (iteratedSign (ZMod (d + 2)) N theta *
+              sideMapWeight hp N s r
+                (iteratedBoundaryMap d N (⇑(ReferenceAffineOrbitCount.topRepr hp x).realizationContinuousMap) x_1
+                  theta))) =
+    0 := by
   classical
-  simp only [
-    RefinedAffineMap.subdivisionSign,
-    EquivariantPrismNonhorizontalCancellation.iteratedSign,
-    permSignCoeff
-  ]
-  have hreindex (c : PrimeOrbitCycle.TopOrbit hp) :
-      (∑ rho : RefinementWord (d + 2) N,
-        RefinedAffineMap.subdivisionSign N rho *
-          ∑ k : Fin (d + 2),
-            SimplicialChain.faceSign
-                (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k) *
-              sideMapWeight hp N s r
-                (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
-                  (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
-                  (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) =
-        ∑ rho : RefinementWord (d + 2) N,
-          RefinedAffineMap.subdivisionSign N rho *
-            ∑ j : Fin (d + 2), SimplicialChain.faceSign j *
-              sideMapWeight hp N s r
-                (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
-                  (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j) := by
-    apply Finset.sum_congr rfl
-    intro rho hrho
-    exact congrArg (fun z => RefinedAffineMap.subdivisionSign N rho * z)
-      ((Equiv.sum_comp
-        (EquivariantPrismNonhorizontalCancellation.orbitFacetEquiv hp)
-        (fun j => SimplicialChain.faceSign j *
-          sideMapWeight hp N s r
-            (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
-              (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j))).symm)
-  change (∑ c : PrimeOrbitCycle.TopOrbit hp,
-      (PrimeOrbitCycle.orbitCycle hp).coefficient c *
-        ∑ rho : RefinementWord (d + 2) N,
-          RefinedAffineMap.subdivisionSign N rho *
-            ∑ k : Fin (d + 2),
-              SimplicialChain.faceSign
-                  (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k) *
-                sideMapWeight hp N s r
-                  (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
-                    (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
-                    (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) = 0
-  rw [show (∑ c : PrimeOrbitCycle.TopOrbit hp,
-      (PrimeOrbitCycle.orbitCycle hp).coefficient c *
-        ∑ rho : RefinementWord (d + 2) N,
-          RefinedAffineMap.subdivisionSign N rho *
-            ∑ k : Fin (d + 2),
-              SimplicialChain.faceSign
-                  (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k) *
-                sideMapWeight hp N s r
-                  (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
-                    (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
-                    (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) = _ by
-    apply Finset.sum_congr rfl
-    intro c hc
-    rw [hreindex c]]
-  rw [show (∑ c : PrimeOrbitCycle.TopOrbit hp,
-      (PrimeOrbitCycle.orbitCycle hp).coefficient c *
-        ∑ rho : RefinementWord (d + 2) N,
-          RefinedAffineMap.subdivisionSign N rho *
-            ∑ j : Fin (d + 2), SimplicialChain.faceSign j *
-              sideMapWeight hp N s r
-                (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
-                  (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j)) =
-      ∑ c : PrimeOrbitCycle.TopOrbit hp,
-        (PrimeOrbitCycle.orbitCycle hp).coefficient c *
-          ∑ j : Fin (d + 2), SimplicialChain.faceSign j *
-            ∑ eta : Fin N → Equiv.Perm (Fin (d + 1)),
-              EquivariantPrismNonhorizontalCancellation.iteratedSign (ZMod (d + 2)) N eta *
-                sideMapWeight hp N s r
-                  (EquivariantPrismNonhorizontalCancellation.iteratedBoundaryMap d N
-                    (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap j eta) by
-    apply Finset.sum_congr rfl
-    intro c hc
-    congr 1
-    exact EquivariantPrismNonhorizontalCancellation.iterated_weighted_boundary
-      (R := ZMod (d + 2)) d N
-      (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap
-      (sideMapWeight hp N s r)]
-  simp_rw [Finset.mul_sum]
-  conv_lhs =>
-    enter [2, c]
-    rw [Finset.sum_comm]
-  rw [Finset.sum_comm]
-  apply Finset.sum_eq_zero
-  intro theta htheta
   let W : Simplex (d + 2) d → ZMod (d + 2) :=
     fun f => sideMapWeight hp N s r
       (fun x => f.realizationPoint
@@ -634,6 +546,110 @@ private theorem fixedSideCell_sum_eq_zero_dim
 
     _ = 0 := by
       simpa only [hz, mul_zero]
+
+/-- Dimension-normalized form of fixed-side cancellation. -/
+private theorem fixedSideCell_sum_eq_zero_dim
+    (d : Nat) (hp : Nat.Prime (d + 2)) (N : Nat)
+    (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet)
+    (r : RelativeSubdivisionCylinderCombinatorics.Cell d) :
+    (∑ c : PrimeOrbitCycle.TopOrbit hp,
+      (PrimeOrbitCycle.orbitCycle hp).coefficient c *
+        ∑ rho : RefinementWord (d + 2) N,
+          RefinedAffineMap.subdivisionSign N rho *
+            ∑ k : Fin (d + 2),
+              SimplicialChain.faceSign
+                  (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k) *
+                sideMapWeight hp N s r
+                  (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
+                    (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
+                    (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) = 0 := by
+  classical
+  simp only [
+    RefinedAffineMap.subdivisionSign,
+    EquivariantPrismNonhorizontalCancellation.iteratedSign,
+    permSignCoeff
+  ]
+  have hreindex (c : PrimeOrbitCycle.TopOrbit hp) :
+      (∑ rho : RefinementWord (d + 2) N,
+        RefinedAffineMap.subdivisionSign N rho *
+          ∑ k : Fin (d + 2),
+            SimplicialChain.faceSign
+                (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k) *
+              sideMapWeight hp N s r
+                (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
+                  (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
+                  (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) =
+        ∑ rho : RefinementWord (d + 2) N,
+          RefinedAffineMap.subdivisionSign N rho *
+            ∑ j : Fin (d + 2), SimplicialChain.faceSign j *
+              sideMapWeight hp N s r
+                (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
+                  (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j) := by
+    apply Finset.sum_congr rfl
+    intro rho hrho
+    exact congrArg (fun z => RefinedAffineMap.subdivisionSign N rho * z)
+      ((Equiv.sum_comp
+        (EquivariantPrismNonhorizontalCancellation.orbitFacetEquiv hp)
+        (fun j => SimplicialChain.faceSign j *
+          sideMapWeight hp N s r
+            (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
+              (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j))).symm)
+  change (∑ c : PrimeOrbitCycle.TopOrbit hp,
+      (PrimeOrbitCycle.orbitCycle hp).coefficient c *
+        ∑ rho : RefinementWord (d + 2) N,
+          RefinedAffineMap.subdivisionSign N rho *
+            ∑ k : Fin (d + 2),
+              SimplicialChain.faceSign
+                  (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k) *
+                sideMapWeight hp N s r
+                  (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
+                    (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
+                    (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) = 0
+  rw [show (∑ c : PrimeOrbitCycle.TopOrbit hp,
+      (PrimeOrbitCycle.orbitCycle hp).coefficient c *
+        ∑ rho : RefinementWord (d + 2) N,
+          RefinedAffineMap.subdivisionSign N rho *
+            ∑ k : Fin (d + 2),
+              SimplicialChain.faceSign
+                  (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k) *
+                sideMapWeight hp N s r
+                  (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
+                    (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho
+                    (EquivariantPrismNonhorizontalCancellation.orbitFacetIndex hp k))) = _ by
+    apply Finset.sum_congr rfl
+    intro c hc
+    rw [hreindex c]]
+  rw [show (∑ c : PrimeOrbitCycle.TopOrbit hp,
+      (PrimeOrbitCycle.orbitCycle hp).coefficient c *
+        ∑ rho : RefinementWord (d + 2) N,
+          RefinedAffineMap.subdivisionSign N rho *
+            ∑ j : Fin (d + 2), SimplicialChain.faceSign j *
+              sideMapWeight hp N s r
+                (EquivariantPrismNonhorizontalCancellation.iteratedFacetMap d N
+                  (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap rho j)) =
+      ∑ c : PrimeOrbitCycle.TopOrbit hp,
+        (PrimeOrbitCycle.orbitCycle hp).coefficient c *
+          ∑ j : Fin (d + 2), SimplicialChain.faceSign j *
+            ∑ eta : Fin N → Equiv.Perm (Fin (d + 1)),
+              EquivariantPrismNonhorizontalCancellation.iteratedSign (ZMod (d + 2)) N eta *
+                sideMapWeight hp N s r
+                  (EquivariantPrismNonhorizontalCancellation.iteratedBoundaryMap d N
+                    (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap j eta) by
+    apply Finset.sum_congr rfl
+    intro c hc
+    congr 1
+    exact EquivariantPrismNonhorizontalCancellation.iterated_weighted_boundary
+      (R := ZMod (d + 2)) d N
+      (ReferenceAffineOrbitCount.topRepr hp c).realizationContinuousMap
+      (sideMapWeight hp N s r)]
+  simp_rw [Finset.mul_sum]
+  conv_lhs =>
+    enter [2, c]
+    rw [Finset.sum_comm]
+  rw [Finset.sum_comm]
+  apply Finset.sum_eq_zero
+  intro theta htheta
+  exact fixed_side_refinement_cancels d hp N s r theta
 
 /-- For one fixed recursive side cell, the signed side contribution of the refined orbit cycle
 vanishes. -/

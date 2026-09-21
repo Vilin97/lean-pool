@@ -953,7 +953,7 @@ theorem exists_controlled_generic_perturbation
     have hz : m ≤ ‖z‖ := by
       have hy_le : ‖y‖ ≤ ‖z - y‖ + ‖z‖ := by
         calc
-          ‖y‖ = ‖-(z - y) + z‖ := by congr 1 ; module
+          ‖y‖ = ‖-(z - y) + z‖ := by congr 1; module
           _ ≤ ‖-(z - y)‖ + ‖z‖ := norm_add_le _ _
           _ = ‖z - y‖ + ‖z‖ := by rw [norm_neg]
       dsimp [m]

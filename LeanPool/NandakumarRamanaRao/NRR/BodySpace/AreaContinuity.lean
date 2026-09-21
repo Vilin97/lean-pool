@@ -102,7 +102,7 @@ theorem continuousAt_area (C₀ : ConvexSubbody K) :
     · convert ConvexSubbody.tendsto_indicator_ae _;
       exact Filter.tendsto_id;
   convert h_dominated using 1;
-  rw [ show ( fun C : ConvexSubbody K => C.area ) = fun C => ∫ x, ( C.body : Set Plane ).indicator ( fun _ => ( 1 : ℝ ) ) x ∂volume from funext fun _ => ConvexSubbody.area_eq_integral_indicator _ ] ; rw [ ContinuousAt ] ;
+  rw [ show ( fun C : ConvexSubbody K => C.area ) = fun C => ∫ x, ( C.body : Set Plane ).indicator ( fun _ => ( 1 : ℝ ) ) x ∂volume from funext fun _ => ConvexSubbody.area_eq_integral_indicator _ ]; rw [ ContinuousAt ];
 
 /-- **Filter-level area convergence.** Along any Hausdorff-convergent family of subbodies, the
 areas converge. -/

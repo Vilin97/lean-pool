@@ -137,7 +137,7 @@ theorem exists_zero_closedBall_of_inner_pos_on_sphere
       apply Subtype.ext
       simp [Hmap, V, radialNormalizeMap, radialNormalize]
 
-  let o : SphereOrientationPos := sphereOrientationPos_unconditional
+  let o : SphereOrientationPos := sphereOrientationPosUnconditional
   have hdeg_id : degreePos o hd boundaryMap = 1 := by
     rw [degreePos_homotopy o hd hboundary_id]
     exact degreePos_id o hd

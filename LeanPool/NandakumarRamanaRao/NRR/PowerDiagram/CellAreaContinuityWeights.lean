@@ -84,8 +84,8 @@ theorem bodyCellSet_eq_finiteHalfspaceIntersection_offDiag
         (fun j : {j : Fin n // j ≠ i} => sepNormal s i j.1)
         (fun j : {j : Fin n // j ≠ i} => sepOffset s w i j.1) := by
   convert Set.ext _;
-  intro x; simp +decide [ finiteHalfspaceIntersection ] ;
-  intro hx; constructor <;> intro h <;> intro j <;> by_cases hj : j = i <;> simp_all +decide [ powerDist_le_iff_halfspace ] ;
+  intro x; simp +decide [ finiteHalfspaceIntersection ];
+  intro hx; constructor <;> intro h <;> intro j <;> by_cases hj : j = i <;> simp_all +decide [ powerDist_le_iff_halfspace ];
 
 /-- **Fixed‑site weight‑continuity of the restricted power‑cell area.** With sites `s` fixed and
 pairwise distinct from `s i` (`hs`), the restricted cell area `w ↦ bodyCellArea K s w i` is

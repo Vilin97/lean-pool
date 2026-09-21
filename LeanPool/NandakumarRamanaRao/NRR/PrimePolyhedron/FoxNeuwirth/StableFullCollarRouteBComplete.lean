@@ -83,7 +83,7 @@ theorem safePerturbationBall_affinePullback
     (baseData_allRestrictedFacetPolynomialsNonzero hp F₀ F₁ H A₀ A₁)
 
 /-- A canonical safe perturbation ball, selected noncomputably from Item 3.2. -/
-noncomputable def chosenSafePerturbationBall_affinePullback
+noncomputable def chosenSafePerturbationBallAffinePullback
     (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)
     (H : ZeroFreeHomotopy hp F₀ F₁)
@@ -105,9 +105,9 @@ theorem chosenSafePerturbationBall_affinePullback_radius_pos
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map)
     {eps : Real} (heps : 0 < eps) :
-    0 < (chosenSafePerturbationBall_affinePullback
+    0 < (chosenSafePerturbationBallAffinePullback
       hp F₀ F₁ H A₀ A₁ heps).radius :=
-  (chosenSafePerturbationBall_affinePullback
+  (chosenSafePerturbationBallAffinePullback
     hp F₀ F₁ H A₀ A₁ heps).radius_pos
 
 /-- Every point in the selected Item 3.2 neighborhood reconstructs an
@@ -122,9 +122,9 @@ theorem chosenSafePerturbationBall_affinePullback_closeToBase
     (x : MovableParameterSpace hp
       (baseData hp F₀ F₁ H A₀ A₁).collar.cells)
     (hx : x ∈ Metric.ball
-      (chosenSafePerturbationBall_affinePullback
+      (chosenSafePerturbationBallAffinePullback
         hp F₀ F₁ H A₀ A₁ heps).center
-      (chosenSafePerturbationBall_affinePullback
+      (chosenSafePerturbationBallAffinePullback
         hp F₀ F₁ H A₀ A₁ heps).radius) :
     AssignmentClose
       (assignmentOfMovableParameters hp
@@ -133,7 +133,7 @@ theorem chosenSafePerturbationBall_affinePullback_closeToBase
       (baseData hp F₀ F₁ H A₀ A₁).assignment
       (perturbationControlRadius eps
         (baseData hp F₀ F₁ H A₀ A₁).margin) :=
-  (chosenSafePerturbationBall_affinePullback
+  (chosenSafePerturbationBallAffinePullback
     hp F₀ F₁ H A₀ A₁ heps).closeToBase x hx
 
 /-- Every point in the selected Item 3.2 neighborhood is facet-regular on all
@@ -148,14 +148,14 @@ theorem chosenSafePerturbationBall_affinePullback_facetRegular
     (x : MovableParameterSpace hp
       (baseData hp F₀ F₁ H A₀ A₁).collar.cells)
     (hx : x ∈ Metric.ball
-      (chosenSafePerturbationBall_affinePullback
+      (chosenSafePerturbationBallAffinePullback
         hp F₀ F₁ H A₀ A₁ heps).center
-      (chosenSafePerturbationBall_affinePullback
+      (chosenSafePerturbationBallAffinePullback
         hp F₀ F₁ H A₀ A₁ heps).radius) :
     AllCellsFacetRegular hp
       (baseData hp F₀ F₁ H A₀ A₁).collar.cells
       (baseData hp F₀ F₁ H A₀ A₁).assignment x :=
-  (chosenSafePerturbationBall_affinePullback
+  (chosenSafePerturbationBallAffinePullback
     hp F₀ F₁ H A₀ A₁ heps).facetRegular x hx
 
 /-- The concrete affine-pullback collar supplies every geometric input required by Route B. -/

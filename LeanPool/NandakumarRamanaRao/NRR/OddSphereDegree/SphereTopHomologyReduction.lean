@@ -134,7 +134,7 @@ open Limits
 
 /-- `H₀(S⁰; ℤ)` is the categorical coproduct of one copy of `ℤ` per point of the
 two-point space `S⁰`, via Mathlib's totally-disconnected computation. -/
-noncomputable def sphere0_H0_iso_coprod :
+noncomputable def sphere0H0IsoCoprod :
     sphereTopHomologyℤ 0 ≅ ∐ (fun _ : (TopCat.sphere.{0} 0 : Type) ↦ ModuleCat.of ℤ ℤ) :=
   singularHomologyFunctorZeroOfTotallyDisconnectedSpace
     (ModuleCat.{0} ℤ) (ModuleCat.of ℤ ℤ) (TopCat.sphere.{0} 0)
@@ -149,7 +149,7 @@ theorem card_topCatSphere_zero :
     rw [ Nat.card_eq_two_iff ];
     refine' ⟨ ⟨ EuclideanSpace.single 0 1, _ ⟩, ⟨ -EuclideanSpace.single 0 1, _ ⟩, _, _ ⟩ <;> norm_num [ Set.ext_iff ];
     · exact ne_of_apply_ne ( fun x => x 0 ) ( by norm_num );
-    · intro a ha; rw [ EuclideanSpace.norm_eq ] at ha; simp_all +decide [ Fin.eq_zero ] ;
+    · intro a ha; rw [ EuclideanSpace.norm_eq ] at ha; simp_all +decide [ Fin.eq_zero ];
       exact Or.imp ( fun h => by ext i; fin_cases i; aesop ) ( fun h => by ext i; fin_cases i; aesop ) ha;
   convert h_card using 1;
   fapply Nat.card_congr;
@@ -167,7 +167,7 @@ theorem finrank_sphereTopHomologyℤ_zero :
     Finite.of_injective _ (topCatSphereHomeomorph 0).injective
   letI : Fintype (TopCat.sphere.{0} 0 : Type) := Fintype.ofFinite _
   -- `H₀(S⁰; ℤ)` is `ℤ`-linearly isomorphic to `⨁_{x ∈ S⁰} ℤ`.
-  have e := (sphere0_H0_iso_coprod ≪≫
+  have e := (sphere0H0IsoCoprod ≪≫
       ModuleCat.coprodIsoDirectSum (fun _ : (TopCat.sphere.{0} 0 : Type) ↦
         ModuleCat.of ℤ ℤ)).toLinearEquiv
   rw [e.finrank_eq, Module.finrank_directSum]

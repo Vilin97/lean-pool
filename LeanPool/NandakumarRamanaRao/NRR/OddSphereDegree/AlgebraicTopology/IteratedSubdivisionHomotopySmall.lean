@@ -106,7 +106,7 @@ theorem singularChainMap_mem_smallChainSubmodule (R : Type) [CommRing R]
   have h_span : c ∈ Submodule.span R (Set.range (chainGenerator R Y n)) := by
     exact chainGenerator_span_top R n ▸ Submodule.mem_top
   generalize_proofs at *; (
-  refine' Submodule.span_induction _ _ _ _ h_span <;> aesop ( simp_config := { singlePass := true } ) ;))
+  refine' Submodule.span_induction _ _ _ _ h_span <;> aesop ( simp_config := { singlePass := true } );))
 
 /-! ## 2. The one-step homotopy preserves small chains -/
 
@@ -146,7 +146,7 @@ theorem iteratedSubdivisionHomotopy_preserves_smallChains (R : Type) [CommRing R
         ∈ smallChainSubmodule R X 𝒰 (n + 1) := by
   induction' N with N ih generalizing n;
   · simp +decide [ barycentricSubdivisionIterHomotopyLinearMap ];
-  · intro c hc; rw [ barycentricSubdivisionIterHomotopyLinearMap_succ ] ; exact Submodule.add_mem _ ( ih n c hc ) ( barycentricSubdivisionIter_maps_smallChainSubmodule R 𝒰 N ( n + 1 ) _ ( subdivisionHomotopy_preserves_smallChains R 𝒰 n c hc ) ) ;
+  · intro c hc; rw [ barycentricSubdivisionIterHomotopyLinearMap_succ ]; exact Submodule.add_mem _ ( ih n c hc ) ( barycentricSubdivisionIter_maps_smallChainSubmodule R 𝒰 N ( n + 1 ) _ ( subdivisionHomotopy_preserves_smallChains R 𝒰 n c hc ) );
 
 /-! ## 4. Existence theorems combining shrinking and carrier control -/
 

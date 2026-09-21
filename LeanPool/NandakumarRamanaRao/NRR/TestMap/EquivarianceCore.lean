@@ -32,8 +32,8 @@ theorem PowerDiagram.cell_relabel
     PowerDiagram.cell (fun j => t (σ.symm j)) (fun j => u (σ.symm j)) i
       = PowerDiagram.cell t u (σ.symm i) := by
   convert Set.ext _;
-  intro x; constructor <;> intro hx <;> simp_all +decide [ cell, PowerDiagram.powerDist ] ;
-  exact fun j => by simpa using hx ( σ j ) ;
+  intro x; constructor <;> intro hx <;> simp_all +decide [ cell, PowerDiagram.powerDist ];
+  exact fun j => by simpa using hx ( σ j );
 
 /--
 **Restricted power cell relabeling.** The restricted cell (intersection with the body `K`)
@@ -68,7 +68,7 @@ theorem EMP.normalizedWeight_relabel
     generalize_proofs at *;
     exact PowerDiagram.cell_relabel σ s.pts _ _ ▸ rfl;
   · rw [ EMP.WeightNormalized_iff ];
-    rw [ Equiv.sum_comp σ.symm ] ; exact EMP.normalizedWeight_normalized K s.pts hn s.injective_pts;
+    rw [ Equiv.sum_comp σ.symm ]; exact EMP.normalizedWeight_normalized K s.pts hn s.injective_pts;
 
 /--
 **Power-partition perimeter-vector relabelling.** The canonical equal-area power-partition

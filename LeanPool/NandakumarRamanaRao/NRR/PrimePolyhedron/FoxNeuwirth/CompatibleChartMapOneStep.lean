@@ -301,8 +301,10 @@ theorem upper_sample_refine
   · have hlast :
         Fin.snoc (α := fun _ => Equiv.Perm (Fin (m + 1))) q.2 pi (Fin.natAdd N 0) = pi :=
       Fin.snoc_last (α := fun _ => Equiv.Perm (Fin (m + 1))) pi q.2
+    apply Subtype.ext
+    dsimp only
     rw [hlast]
-    exact (affineSubdivMap_vertex m pi i).symm
+    exact congrArg Subtype.val (affineSubdivMap_vertex m pi i).symm
 
 end CompatibleChartMapOneStep
 end EquivariantPrismStableRelativeBoundary

@@ -47,7 +47,7 @@ small-chain homology `H_*(C_*^{U,V}(X))` by the singular homology `H_*(X)`.
 * `SphereOddDegree.mvHomologyIso` — the singular Mayer–Vietoris connecting
  isomorphism `H_i(X) ≅ H_j(U ∩ V)` (with `i = j + 1`), obtained by composing the
  small-simplices quasi-isomorphism with `mvConnectingIso`.
-* `SphereOddDegree.mvHomologyIso_succ` — the special case `H_{n+1}(X) ≅
+* `SphereOddDegree.mvHomologyIsoSucc` — the special case `H_{n+1}(X) ≅
  H_n(U ∩ V)`, the sphere-ready corollary.
 -/
 
@@ -182,14 +182,14 @@ noncomputable def mvHomologyIso (U V : Opens X) (hUV : U ⊔ V = ⊤)
     (hVj : IsZero ((subChainComplex R X (V : Set X)).homology j)) :
     (singularChainComplex R X).homology i
       ≅ (subChainComplex R X ((U : Set X) ∩ (V : Set X))).homology j :=
-  (smallChains_homologyIso R X (twoSetCover U V hUV) i).symm
+  (smallChainsHomologyIso R X (twoSetCover U V hUV) i).symm
     ≪≫ mvConnectingIso R U V hUV i j hij hUi hVi hUj hVj
 
 /-- **Sphere-ready corollary.** `H_{n+1}(X) ≅ H_n(U ∩ V)` whenever the homology of
 `C_*(U)` and `C_*(V)` vanishes in degrees `n + 1` and `n` (which holds, for
 instance, when `U` and `V` are contractible and `1 ≤ n`). This is the form used
 in the inductive computation of sphere homology. -/
-noncomputable def mvHomologyIso_succ (U V : Opens X) (hUV : U ⊔ V = ⊤) (n : ℕ)
+noncomputable def mvHomologyIsoSucc (U V : Opens X) (hUV : U ⊔ V = ⊤) (n : ℕ)
     (hUi : IsZero ((subChainComplex R X (U : Set X)).homology (n + 1)))
     (hVi : IsZero ((subChainComplex R X (V : Set X)).homology (n + 1)))
     (hUj : IsZero ((subChainComplex R X (U : Set X)).homology n))

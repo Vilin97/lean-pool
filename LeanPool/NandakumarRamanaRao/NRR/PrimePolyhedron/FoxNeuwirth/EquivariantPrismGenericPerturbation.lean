@@ -408,7 +408,7 @@ theorem exists_generic_perturbation
       LocalAffineCoordinateNormMargin hp N L a (m / 2) := by
     have := retain_localAffineCoordinateNormMargin hp N L a
       (homotopyAssignment hp N L H) hmargin hclose
-    convert this using 1 ; ring
+    convert this using 1; ring
   have hregular : ∀ q : PrismCell hp N L,
       AffinePositiveRayBoundary.VertexMap.FacetRegular hp (localVertexMap hp N L a q) :=
     fun q => facetRegular_of_generic hp N L a hgeneric q

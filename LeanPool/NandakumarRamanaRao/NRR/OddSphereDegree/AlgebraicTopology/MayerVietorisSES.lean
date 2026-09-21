@@ -48,25 +48,25 @@ noncomputable def twoOpenCoverSmallChains (R : Type) [CommRing R]
     ChainComplex (ModuleCat.{0} R) ℕ :=
   smallChainComplex R X (twoSetCover U V hUV)
 
-noncomputable def mvInclUV_U (U V : Opens X) :
+noncomputable def mvInclUVU (U V : Opens X) :
     subChainComplex R X ((U : Set X) ∩ (V : Set X)) ⟶ subChainComplex R X (U : Set X) :=
   subChainInclusion _ _ Set.inter_subset_left
 
-noncomputable def mvInclUV_V (U V : Opens X) :
+noncomputable def mvInclUVV (U V : Opens X) :
     subChainComplex R X ((U : Set X) ∩ (V : Set X)) ⟶ subChainComplex R X (V : Set X) :=
   subChainInclusion _ _ Set.inter_subset_right
 
-noncomputable def mvInclU_small (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+noncomputable def mvInclUSmall (U V : Opens X) (hUV : U ⊔ V = ⊤) :
     subChainComplex R X (U : Set X) ⟶ twoOpenCoverSmallChains R U V hUV :=
   subChainToSmall (twoSetCover U V hUV) _ (twoSetCover_memU U V hUV)
 
-noncomputable def mvInclV_small (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+noncomputable def mvInclVSmall (U V : Opens X) (hUV : U ⊔ V = ⊤) :
     subChainComplex R X (V : Set X) ⟶ twoOpenCoverSmallChains R U V hUV :=
   subChainToSmall (twoSetCover U V hUV) _ (twoSetCover_memV U V hUV)
 
 theorem mvIncl_comp_eq (U V : Opens X) (hUV : U ⊔ V = ⊤) :
-    mvInclUV_U R U V ≫ mvInclU_small R U V hUV
-      = mvInclUV_V R U V ≫ mvInclV_small R U V hUV := by
+    mvInclUVU R U V ≫ mvInclUSmall R U V hUV
+      = mvInclUVV R U V ≫ mvInclVSmall R U V hUV := by
   apply HomologicalComplex.hom_ext
   intro k
   apply ModuleCat.hom_ext
@@ -78,12 +78,12 @@ theorem mvIncl_comp_eq (U V : Opens X) (hUV : U ⊔ V = ⊤) :
 noncomputable def mvLeftChainMap (U V : Opens X) (hUV : U ⊔ V = ⊤) :
     subChainComplex R X ((U : Set X) ∩ (V : Set X)) ⟶
       subChainComplex R X (U : Set X) ⊞ subChainComplex R X (V : Set X) :=
-  biprod.lift (mvInclUV_U R U V) (-(mvInclUV_V R U V))
+  biprod.lift (mvInclUVU R U V) (-(mvInclUVV R U V))
 
 noncomputable def mvRightChainMap (U V : Opens X) (hUV : U ⊔ V = ⊤) :
     subChainComplex R X (U : Set X) ⊞ subChainComplex R X (V : Set X) ⟶
       twoOpenCoverSmallChains R U V hUV :=
-  biprod.desc (mvInclU_small R U V hUV) (mvInclV_small R U V hUV)
+  biprod.desc (mvInclUSmall R U V hUV) (mvInclVSmall R U V hUV)
 
 theorem mvLeft_comp_mvRight (U V : Opens X) (hUV : U ⊔ V = ⊤) :
     mvLeftChainMap R U V hUV ≫ mvRightChainMap R U V hUV = 0 := by
@@ -186,7 +186,7 @@ theorem keepHom_PV_eq_zero_of_mem_U (U V : Opens X) (k : ℕ)
   · intro a x hx hx'; rw [map_smul, hx', smul_zero]
 
 theorem mvInclU_small_comp_routeU (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
-    (mvInclU_small R U V hUV).f k ≫ routeU R U V hUV k = 𝟙 _ := by
+    (mvInclUSmall R U V hUV).f k ≫ routeU R U V hUV k = 𝟙 _ := by
   apply ModuleCat.hom_ext
   apply LinearMap.ext
   rintro ⟨c, hc⟩
@@ -196,7 +196,7 @@ theorem mvInclU_small_comp_routeU (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ
   exact keepHom_eq_self_of_mem hc
 
 theorem mvInclU_small_comp_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
-    (mvInclU_small R U V hUV).f k ≫ routeV R U V hUV k = 0 := by
+    (mvInclUSmall R U V hUV).f k ≫ routeV R U V hUV k = 0 := by
   apply ModuleCat.hom_ext
   apply LinearMap.ext
   rintro ⟨c, hc⟩
@@ -206,8 +206,8 @@ theorem mvInclU_small_comp_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ
   exact keepHom_PV_eq_zero_of_mem_U R U V k c hc
 
 theorem mvInclV_small_comp_routeU (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
-    (mvInclV_small R U V hUV).f k ≫ routeU R U V hUV k
-      = projVtoUV R U V k ≫ (mvInclUV_U R U V).f k := by
+    (mvInclVSmall R U V hUV).f k ≫ routeU R U V hUV k
+      = projVtoUV R U V k ≫ (mvInclUVU R U V).f k := by
   apply ModuleCat.hom_ext
   apply LinearMap.ext
   rintro ⟨c, hc⟩
@@ -221,7 +221,7 @@ theorem keepHom_split_subV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
   exact keepHom_split_small R U V hUV k c (subChainSubmodule_le_smallChainSubmodule (twoSetCover_memV U V hUV) k hc)
 
 theorem mvInclUV_V_comp_projVtoUV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
-    (mvInclUV_V R U V).f k ≫ projVtoUV R U V k = 𝟙 _ := by
+    (mvInclUVV R U V).f k ≫ projVtoUV R U V k = 𝟙 _ := by
   apply ModuleCat.hom_ext
   apply LinearMap.ext
   rintro ⟨c, hc⟩
@@ -231,10 +231,10 @@ theorem mvInclUV_V_comp_projVtoUV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ
   exact keepHom_eq_self_of_mem (subChainSubmodule_mono Set.inter_subset_left k hc)
 
 theorem projVtoUV_inclUV_V_add_inclV_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
-    ((projVtoUV R U V k ≫ (mvInclUV_V R U V).f k :
+    ((projVtoUV R U V k ≫ (mvInclUVV R U V).f k :
         (subChainComplex R X (V : Set X)).X k
           ⟶ (subChainComplex R X (V : Set X)).X k)
-      + ((mvInclV_small R U V hUV).f k ≫ routeV R U V hUV k :
+      + ((mvInclVSmall R U V hUV).f k ≫ routeV R U V hUV k :
         (subChainComplex R X (V : Set X)).X k
           ⟶ (subChainComplex R X (V : Set X)).X k))
       = 𝟙 ((subChainComplex R X (V : Set X)).X k) := by
@@ -249,12 +249,12 @@ theorem projVtoUV_inclUV_V_add_inclV_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤
 noncomputable abbrev mvSplitSC (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
     ShortComplex (ModuleCat.{0} R) :=
   ShortComplex.mk
-    (biprod.lift ((mvInclUV_U R U V).f k) (-(mvInclUV_V R U V).f k))
-    (biprod.desc ((mvInclU_small R U V hUV).f k) ((mvInclV_small R U V hUV).f k))
+    (biprod.lift ((mvInclUVU R U V).f k) (-(mvInclUVV R U V).f k))
+    (biprod.desc ((mvInclUSmall R U V hUV).f k) ((mvInclVSmall R U V hUV).f k))
     (by
       rw [biprod.lift_desc]
-      have : (mvInclUV_U R U V).f k ≫ (mvInclU_small R U V hUV).f k
-          = (mvInclUV_V R U V).f k ≫ (mvInclV_small R U V hUV).f k := by
+      have : (mvInclUVU R U V).f k ≫ (mvInclUSmall R U V hUV).f k
+          = (mvInclUVV R U V).f k ≫ (mvInclVSmall R U V hUV).f k := by
         apply ModuleCat.hom_ext
         apply LinearMap.ext
         rintro ⟨c, hc⟩
@@ -267,13 +267,13 @@ noncomputable def mvSplitting (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
   r := biprod.desc 0 (-projVtoUV R U V k)
   s := biprod.lift (routeU R U V hUV k) (routeV R U V hUV k)
   f_r := by
-    change biprod.lift ((mvInclUV_U R U V).f k) (-(mvInclUV_V R U V).f k) ≫
+    change biprod.lift ((mvInclUVU R U V).f k) (-(mvInclUVV R U V).f k) ≫
            biprod.desc 0 (-projVtoUV R U V k) = 𝟙 _
     rw [biprod.lift_desc, comp_zero, Preadditive.neg_comp, Preadditive.comp_neg, neg_neg, zero_add]
     exact mvInclUV_V_comp_projVtoUV R U V hUV k
   s_g := by
     change biprod.lift (routeU R U V hUV k) (routeV R U V hUV k) ≫
-           biprod.desc ((mvInclU_small R U V hUV).f k) ((mvInclV_small R U V hUV).f k) = 𝟙 _
+           biprod.desc ((mvInclUSmall R U V hUV).f k) ((mvInclVSmall R U V hUV).f k) = 𝟙 _
     rw [biprod.lift_desc]
     apply ModuleCat.hom_ext
     apply LinearMap.ext
@@ -284,8 +284,8 @@ noncomputable def mvSplitting (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
     exact keepHom_split_small R U V hUV k c hc
   id := by
     change biprod.desc 0 (-projVtoUV R U V k) ≫
-           biprod.lift ((mvInclUV_U R U V).f k) (-(mvInclUV_V R U V).f k) +
-           biprod.desc ((mvInclU_small R U V hUV).f k) ((mvInclV_small R U V hUV).f k) ≫
+           biprod.lift ((mvInclUVU R U V).f k) (-(mvInclUVV R U V).f k) +
+           biprod.desc ((mvInclUSmall R U V hUV).f k) ((mvInclVSmall R U V hUV).f k) ≫
            biprod.lift (routeU R U V hUV k) (routeV R U V hUV k) = 𝟙 _
     apply biprod.hom_ext'
     · apply biprod.hom_ext
@@ -324,17 +324,17 @@ noncomputable def mvEvalIso (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
     (HomologicalComplex.biprodXIso (subChainComplex R X (U : Set X)) (subChainComplex R X (V : Set X)) k)
     (Iso.refl _)
     (by
-      show 𝟙 _ ≫ biprod.lift ((mvInclUV_U R U V).f k) (-(mvInclUV_V R U V).f k) =
+      show 𝟙 _ ≫ biprod.lift ((mvInclUVU R U V).f k) (-(mvInclUVV R U V).f k) =
            (mvLeftChainMap R U V hUV).f k ≫
              (HomologicalComplex.biprodXIso (subChainComplex R X ↑U) (subChainComplex R X ↑V) k).hom
       rw [Category.id_comp]
-      exact (biprodXIso_lift_f (R := R) (mvInclUV_U R U V) (-mvInclUV_V R U V) k).symm)
+      exact (biprodXIso_lift_f (R := R) (mvInclUVU R U V) (-mvInclUVV R U V) k).symm)
     (by
       show (HomologicalComplex.biprodXIso (subChainComplex R X ↑U) (subChainComplex R X ↑V) k).hom ≫
-             biprod.desc ((mvInclU_small R U V hUV).f k) ((mvInclV_small R U V hUV).f k) =
+             biprod.desc ((mvInclUSmall R U V hUV).f k) ((mvInclVSmall R U V hUV).f k) =
            (mvRightChainMap R U V hUV).f k ≫ 𝟙 _
       rw [Category.comp_id]
-      exact biprodXIso_desc_f (R := R) (mvInclU_small R U V hUV) (mvInclV_small R U V hUV) k)
+      exact biprodXIso_desc_f (R := R) (mvInclUSmall R U V hUV) (mvInclVSmall R U V hUV) k)
 
 theorem mvShortComplex_degreewise_shortExact (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
     ((HomologicalComplex.eval (ModuleCat.{0} R) (ComplexShape.down ℕ) k).mapShortComplex.obj

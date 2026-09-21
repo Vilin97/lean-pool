@@ -48,7 +48,7 @@ theorem cell_inter_subset_bisector (s : Fin n → E2) (w : Fin n → ℝ) {i j :
   intro x hx;
   simp_all +decide [ cell, powerDist, sepNormal, sepOffset ];
   have := hx.1 j; have := hx.2 i; norm_num [ EuclideanSpace.norm_eq, Real.sq_sqrt <| add_nonneg ( sq_nonneg _ ) ( sq_nonneg _ ) ] at *;
-  norm_num [ two_smul, inner ] ; linarith!;
+  norm_num [ two_smul, inner ]; linarith!;
 
 /-- Pairwise overlaps of distinct nondegenerate cells are Lebesgue‑null: the overlap lies in a
 hyperplane with nonzero normal, which is null. -/

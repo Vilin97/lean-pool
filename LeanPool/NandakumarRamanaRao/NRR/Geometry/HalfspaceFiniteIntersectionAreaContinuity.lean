@@ -110,7 +110,7 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Fintype ι]
   have h_dominated : ∀ᵐ x ∂volume, ContinuousAt (fun f : ι → ℝ => (K.finiteHalfspaceIntersection u f).indicator (fun _ => (1 : ℝ)) x) f₀ := by
     refine' MeasureTheory.measure_mono_null _ _;
     exact ⋃ i, { x : Plane | ⟪u i, x⟫ = f₀ i };
-    · intro x hx; contrapose! hx; simp_all +decide [ ContinuousAt ] ;
+    · intro x hx; contrapose! hx; simp_all +decide [ ContinuousAt ];
       by_cases hxK : x ∈ (K : Set Plane) <;> simp_all +decide [ NRR.Geometry.ConvexBody.finiteHalfspaceIntersection ];
       by_cases h : ∀ i, ⟪u i, x⟫ ≤ f₀ i <;> simp_all +decide;
       · exact fun i => Filter.eventually_of_mem ( IsOpen.mem_nhds ( isOpen_lt ( continuous_const ) ( continuous_apply i ) ) ( lt_of_le_of_ne ( h i ) ( hx i ) ) ) fun f hf => hf.le;
@@ -122,7 +122,7 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Fintype ι]
     · simp +decide [ K.isCompact.measure_lt_top ];
     · exact K.isCompact.measurableSet;
   have h_dominated : ∀ᵐ x ∂volume, ∀ f : ι → ℝ, |(K.finiteHalfspaceIntersection u f).indicator (fun _ => (1 : ℝ)) x| ≤ (K : Set Plane).indicator (fun _ => (1 : ℝ)) x := by
-    filter_upwards [ ] with x f ; by_cases hx : x ∈ K.carrier <;> simp +decide [ hx ];
+    filter_upwards [ ] with x f; by_cases hx : x ∈ K.carrier <;> simp +decide [ hx ];
     · by_cases h : x ∈ K.finiteHalfspaceIntersection u f <;> simp +decide [ h ];
     · exact fun h => hx h.1;
   have h_cont : ContinuousAt (fun f : ι → ℝ => ∫ x, (K.finiteHalfspaceIntersection u f).indicator (fun _ => (1 : ℝ)) x ∂volume) f₀ := by
@@ -130,7 +130,7 @@ theorem continuous_finiteHalfspaceIntersectionArea_pi [Fintype ι]
     · exact Filter.Eventually.of_forall fun f => Measurable.aestronglyMeasurable ( by exact Measurable.indicator measurable_const ( by exact measurableSet_finiteHalfspaceIntersection K u f ) );
     · exact Filter.Eventually.of_forall fun f => h_dominated.mono fun x hx => hx f;
   convert h_cont using 1;
-  ext f; rw [ MeasureTheory.integral_indicator ( measurableSet_finiteHalfspaceIntersection K u f ) ] ; simp +decide [ finiteHalfspaceIntersectionArea ] ;
+  ext f; rw [ MeasureTheory.integral_indicator ( measurableSet_finiteHalfspaceIntersection K u f ) ]; simp +decide [ finiteHalfspaceIntersectionArea ];
   rfl
 
 /-- **Continuity of the finite fixed-normal moving-halfspace intersection area.** For fixed

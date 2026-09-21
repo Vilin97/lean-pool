@@ -388,7 +388,7 @@ theorem exists_refinement_avoidsOrigin
       (StandardSimplex.ofDelta (affineCompMap p L q.2 (StandardSimplex.toDelta w)))
   have hy_le : ‖y‖ ≤ ‖z - y‖ + ‖z‖ := by
     calc
-      ‖y‖ = ‖-(z - y) + z‖ := by congr 1 ; module
+      ‖y‖ = ‖-(z - y) + z‖ := by congr 1; module
       _ ≤ ‖-(z - y)‖ + ‖z‖ := norm_add_le _ _
       _ = ‖z - y‖ + ‖z‖ := by rw [norm_neg]
   have hz : 0 < ‖z‖ := by linarith

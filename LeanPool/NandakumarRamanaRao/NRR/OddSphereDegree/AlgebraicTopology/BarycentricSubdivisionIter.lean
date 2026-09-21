@@ -127,14 +127,14 @@ theorem barycentricSubdivisionIterHomotopyBoundaryTerm_succ_iter
 
 /-- **Every iterate of barycentric subdivision is chain-homotopic to the
 identity.** -/
-noncomputable def barycentricSubdivisionIter_chainHomotopic_id
+noncomputable def barycentricSubdivisionIterChainHomotopicId
     (R : Type) [CommRing R] (X : TopCat.{0}) (N : ℕ) :
     Homotopy (barycentricSubdivisionIterChainMap R X N)
       (𝟙 (singularChainComplex R X)) := by
   induction N with
   | zero => exact Homotopy.refl _
   | succ N ih =>
-    exact (Homotopy.comp (barycentricSubdivision_chainHomotopic_id R X) ih).trans
+    exact (Homotopy.comp (barycentricSubdivisionChainHomotopicId R X) ih).trans
       (Homotopy.ofEq (Category.id_comp _))
 
 /-- **`sd^N` induces the identity on homology.** -/
@@ -142,7 +142,7 @@ theorem barycentricSubdivisionIter_induces_identity_on_homology
     (R : Type) [CommRing R] (X : TopCat.{0}) (N n : ℕ) :
     HomologicalComplex.homologyMap (barycentricSubdivisionIterChainMap R X N) n
       = 𝟙 ((singularChainComplex R X).homology n) := by
-  rw [(barycentricSubdivisionIter_chainHomotopic_id R X N).homologyMap_eq n,
+  rw [(barycentricSubdivisionIterChainHomotopicId R X N).homologyMap_eq n,
     HomologicalComplex.homologyMap_id]
 
 /--

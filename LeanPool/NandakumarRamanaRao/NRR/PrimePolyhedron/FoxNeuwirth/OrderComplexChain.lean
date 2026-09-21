@@ -20,6 +20,8 @@ modulo the prime.  Its simplicial boundary is expressed as an actual chain on th
 by the boundary-cancellation theorems.
 -/
 
+noncomputable section
+
 namespace NRR
 
 open scoped BigOperators
@@ -48,7 +50,7 @@ abbrev SimplicialChain (R : Type*) (p d : Nat) :=
 
 namespace SimplicialChain
 
-noncomputable section
+section
 
 variable {R : Type*} [CommRing R]
 
@@ -168,7 +170,7 @@ end SimplicialChain
 
 namespace FoxNeuwirthChain
 
-noncomputable section
+section
 
 /-- Auxiliary incidence-product coefficient for comparison with the determinant orientation.
 

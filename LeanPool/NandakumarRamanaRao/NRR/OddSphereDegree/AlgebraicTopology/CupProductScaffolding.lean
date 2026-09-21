@@ -62,7 +62,7 @@ convention as the chain case. -/
 /-- The `ComplexShape.TensorSigns` instance for the cochain shape
 `ComplexShape.up ℕ`, using the sign `ε n = (-1)^n`. This instance makes `HomologicalComplex.monoidalCategory` apply to
 `CochainComplex (ModuleCat R) ℕ`. -/
-instance tensorSigns_up_nat : (ComplexShape.up ℕ).TensorSigns where
+instance tensorSignsUpNat : (ComplexShape.up ℕ).TensorSigns where
   ε' := {
     toFun := fun (i : Multiplicative ℕ) => (-1 : ℤˣ) ^ (Multiplicative.toAdd i)
     map_one' := rfl

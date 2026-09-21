@@ -60,7 +60,7 @@ theorem exists_separating_unit {D : Set Plane} (hconv : Convex ℝ D)
       · rw [ Metric.infDist_eq_iInf ];
         simp +decide only [dist_eq_norm];
     simp_all +decide [ inner_sub_left, inner_sub_right, inner_smul_right ];
-    intro y hy; rw [ mul_le_mul_iff_right₀ ( inv_pos.mpr ( norm_pos_iff.mpr ( sub_ne_zero.mpr <| by aesop ) ) ) ] ; simp_all +decide [ real_inner_comm ] ;
+    intro y hy; rw [ mul_le_mul_iff_right₀ ( inv_pos.mpr ( norm_pos_iff.mpr ( sub_ne_zero.mpr <| by aesop ) ) ) ]; simp_all +decide [ real_inner_comm ];
     nlinarith [ h_var y hy, norm_nonneg ( x - p ), norm_sub_sq_real x p, real_inner_self_eq_norm_sq x, real_inner_self_eq_norm_sq p, real_inner_comm x p ]
 
 /-
@@ -162,7 +162,7 @@ theorem eventually_not_mem_of_not_mem
   obtain ⟨d, hd_pos, hd⟩ : ∃ d > 0, Metric.infDist x (C₀.body : Set Plane) = d := by
     refine' ⟨ _, _, rfl ⟩;
     contrapose! hx;
-    exact C₀.isCompact.isClosed.closure_subset_iff.mpr ( Set.Subset.refl _ ) ( Metric.mem_closure_iff.mpr fun ε εpos => by have := Metric.infDist_lt_iff ( C₀.nonempty ) |>.1 ( lt_of_le_of_lt hx εpos ) ; tauto );
+    exact C₀.isCompact.isClosed.closure_subset_iff.mpr ( Set.Subset.refl _ ) ( Metric.mem_closure_iff.mpr fun ε εpos => by have := Metric.infDist_lt_iff ( C₀.nonempty ) |>.1 ( lt_of_le_of_lt hx εpos ); tauto );
   have h_dist : Tendsto (fun a => Metric.hausdorffDist ((C a).body : Set Plane) (C₀.body : Set Plane)) l (𝓝 0) := by
     convert ConvexSubbody.tendsto_hausdorffDist_zero hC using 1;
   filter_upwards [ h_dist.eventually ( gt_mem_nhds hd_pos ) ] with a ha;

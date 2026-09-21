@@ -500,7 +500,7 @@ noncomputable def endpointIdentifiedCollar
 
 /-- The unrefined common-level staircase prism is therefore already a complete
 endpoint-identified collar. -/
-noncomputable def endpointIdentifiedCollar_zero
+noncomputable def endpointIdentifiedCollarZero
     (hp : Nat.Prime p) (N : Nat) :
     EndpointIdentifiedRelativeAffineCollar hp N N N 0 := by
   simpa using endpointIdentifiedCollar hp N 0 (horizontalFacetExhaustive_zero hp N)

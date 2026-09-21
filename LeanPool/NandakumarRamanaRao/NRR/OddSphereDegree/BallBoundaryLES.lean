@@ -33,7 +33,7 @@ singular homology, by the library's unconditional homotopy invariance. The two
 maps are the homologies of `e.toFun` and `e.invFun`; the round-trip identities
 hold because `e.invFun ∘ e.toFun` (resp. `e.toFun ∘ e.invFun`) is homotopic to the
 identity. -/
-noncomputable def singularHomologyℤ_isoOfHomotopyEquivSpace (k : ℕ)
+noncomputable def singularHomologyℤIsoOfHomotopyEquivSpace (k : ℕ)
     {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y]
     (e : ContinuousMap.HomotopyEquiv X Y) :
     (singularHomologyℤ k).obj (TopCat.of X) ≅ (singularHomologyℤ k).obj (TopCat.of Y) where
@@ -68,7 +68,7 @@ theorem isZero_singularHomologyℤ_of_contractibleSpace (k : ℕ) (hk : 1 ≤ k)
     (X : Type) [TopologicalSpace X] [ContractibleSpace X] :
     IsZero ((singularHomologyℤ k).obj (TopCat.of X)) := by
   obtain ⟨e⟩ := ContractibleSpace.hequiv_unit X
-  apply IsZero.of_iso _ (singularHomologyℤ_isoOfHomotopyEquivSpace k e)
+  apply IsZero.of_iso _ (singularHomologyℤIsoOfHomotopyEquivSpace k e)
   exact isZero_singularHomologyFunctor_of_totallyDisconnectedSpace
     (ModuleCat.{0} ℤ) k (ModuleCat.of ℤ ℤ) (TopCat.of Unit) (by omega)
 

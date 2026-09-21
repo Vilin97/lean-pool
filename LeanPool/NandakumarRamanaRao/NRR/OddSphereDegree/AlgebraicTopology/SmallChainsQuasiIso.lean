@@ -36,7 +36,7 @@ an isomorphism of `ModuleCat`-modules, hence the chain map is a quasi-isomorphis
  degree-`n` homology is bijective.
 * `SphereOddDegree.smallChains_inclusion_homology_iso` — the degreewise statement:
  the induced homology map `HomologicalComplex.homologyMap` is an isomorphism.
-* `SphereOddDegree.smallChains_homologyIso` — the explicit module isomorphism in
+* `SphereOddDegree.smallChainsHomologyIso` — the explicit module isomorphism in
  every degree.
 * `SphereOddDegree.smallChains_inclusion_quasiIso` — the official **small-simplices
  theorem**: `smallChainsInclusion R X 𝒰` is a quasi-isomorphism.
@@ -67,7 +67,7 @@ theorem smallChains_inclusion_homology_iso
 
 /-- The explicit isomorphism of homology modules in degree `n` induced by the
 inclusion of small chains. -/
-noncomputable def smallChains_homologyIso
+noncomputable def smallChainsHomologyIso
     (R : Type) [CommRing R] (X : TopCat.{0}) (𝒰 : OpenCoverData X) (n : ℕ) :
     (smallChainComplex R X 𝒰).homology n ≅ (singularChainComplex R X).homology n :=
   haveI : IsIso (HomologicalComplex.homologyMap (smallChainsInclusion R X 𝒰) n) :=

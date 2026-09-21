@@ -39,7 +39,7 @@ theorem simplestRoute_actualBoundaryReduction
 
 /-- The finite shuffle-cardinality theorem is sufficient to construct the genuine cellular
 incidence cycle. -/
-noncomputable def simplestRoute_cellularCycle
+noncomputable def simplestRouteCellularCycle
     (hp : Nat.Prime p)
     (H : FoxNeuwirth.FacetShuffleCardinality hp) :
     FiniteIncidenceCycle (ZMod p) :=
@@ -96,7 +96,7 @@ def SimplestRouteObstructionTheorem : Prop :=
 
 /-- A locally constant obstruction on the order-complex model produces a model-independent
 prime-refinement step. -/
-noncomputable def simplestRoute_step
+noncomputable def simplestRouteStep
     (H : SimplestRouteObstructionTheorem)
     (p : Nat) (hp : Nat.Prime p)
     (K : Geometry.ConvexBody Plane) (A : Real) (hA : 0 < A)
@@ -121,7 +121,7 @@ theorem simplestRoute_implies_flexiblePrimeRefinement
     (H : SimplestRouteObstructionTheorem) :
     FlexiblePrimeRefinementTheorem := by
   intro p hp K A hA _ phi
-  exact ⟨simplestRoute_step H p hp K A hA phi⟩
+  exact ⟨simplestRouteStep H p hp K A hA phi⟩
 
 /-- The locally constant obstruction theorem and the model-independent prime-factor iteration yield the full arbitrary-number conclusion. -/
 theorem avvakumov_akopyan_karasev_of_simplestRoute

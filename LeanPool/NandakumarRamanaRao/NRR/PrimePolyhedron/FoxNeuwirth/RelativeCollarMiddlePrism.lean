@@ -119,6 +119,11 @@ noncomputable abbrev cellSystem
     simpa [vertex] using
       EquivariantPrismGenericityNonzero.prism_vertex_orbit_injective hp N L q g i j hij
 
+/-- The generic quotient action specialized to the explicit middle-prism carrier. -/
+noncomputable instance middleGlobalVertexAction (hp : Nat.Prime p) (N L : Nat) :
+    MulAction (PrimeSymmetry hp) (Parameters.GlobalVertex hp (cellSystem hp N L)) :=
+  Parameters.globalVertexAction hp (cellSystem hp N L)
+
 end RelativeCollarMiddlePrism
 end EquivariantPrismStableRelativeBoundary
 end FoxNeuwirthOrderComplex

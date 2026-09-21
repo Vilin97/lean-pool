@@ -28,7 +28,7 @@ variable {p : Nat}
 
 /-- Concrete quantitative origin-margin data attached to the affine-pullback
 full collar. -/
-noncomputable def fullCollarOriginMarginData_affinePullback
+noncomputable def fullCollarOriginMarginDataAffinePullback
     (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)
     (H : ZeroFreeHomotopy hp F₀ F₁)
@@ -47,7 +47,7 @@ theorem fullCollarOriginMargin_affinePullback :
       (A₁ : StableRegularApproximation hp F₁.map),
         Nonempty (FullCollarOriginMarginData hp H A₀ A₁) := by
   intro p hp F₀ F₁ H A₀ A₁
-  exact ⟨fullCollarOriginMarginData_affinePullback hp F₀ F₁ H A₀ A₁⟩
+  exact ⟨fullCollarOriginMarginDataAffinePullback hp F₀ F₁ H A₀ A₁⟩
 
 /-- The concrete collar has a positive coordinate norm margin. -/
 theorem affinePullback_margin_pos
@@ -56,8 +56,8 @@ theorem affinePullback_margin_pos
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) :
-    0 < (fullCollarOriginMarginData_affinePullback hp F₀ F₁ H A₀ A₁).margin :=
-  (fullCollarOriginMarginData_affinePullback hp F₀ F₁ H A₀ A₁).margin_pos
+    0 < (fullCollarOriginMarginDataAffinePullback hp F₀ F₁ H A₀ A₁).margin :=
+  (fullCollarOriginMarginDataAffinePullback hp F₀ F₁ H A₀ A₁).margin_pos
 
 end StableFullCollarOriginMarginAffinePullback
 end EquivariantPrismStableRelativeBoundary

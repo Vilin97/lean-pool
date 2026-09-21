@@ -146,7 +146,7 @@ theorem perturbedAssignment_positiveRayGeneralPosition
 
 /-- The concrete Route B perturbation, packaged with exact endpoints and cellwise positive-ray
  general position. -/
-noncomputable def exactRelativeStableCollarGeneralPositionData_affinePullback
+noncomputable def exactRelativeStableCollarGeneralPositionDataAffinePullback
     (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)
     (H : ZeroFreeHomotopy hp F₀ F₁)
@@ -163,14 +163,14 @@ noncomputable def exactRelativeStableCollarGeneralPositionData_affinePullback
     perturbedAssignment_positiveRayGeneralPosition hp F₀ F₁ H A₀ A₁
 
 /-- Exact local-Stokes collar data obtained from the positive-ray-general-position package. -/
-noncomputable def exactRelativeStableCollarData_affinePullback
+noncomputable def exactRelativeStableCollarDataAffinePullback
     (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) :
     ExactRelativeStableCollarData hp H A₀ A₁ :=
-  (exactRelativeStableCollarGeneralPositionData_affinePullback hp F₀ F₁ H A₀ A₁).toExactRelativeStableCollarData
+  (exactRelativeStableCollarGeneralPositionDataAffinePullback hp F₀ F₁ H A₀ A₁).toExactRelativeStableCollarData
 
 /-- The exact certificate retains the endpoint assignments literally. -/
 theorem exactRelativeStableCollarData_affinePullback_horizontalVertexFixed
@@ -180,9 +180,9 @@ theorem exactRelativeStableCollarData_affinePullback_horizontalVertexFixed
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) :
     HorizontalVertexFixed hp A₀ A₁
-      (exactRelativeStableCollarData_affinePullback hp F₀ F₁ H A₀ A₁).collar
-      (exactRelativeStableCollarData_affinePullback hp F₀ F₁ H A₀ A₁).assignment :=
-  (exactRelativeStableCollarData_affinePullback hp F₀ F₁ H A₀ A₁).horizontalVertexFixed
+      (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).collar
+      (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).assignment :=
+  (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).horizontalVertexFixed
 
 /-- The exact certificate supplies the local positive-ray Stokes identity on every cell. -/
 theorem exactRelativeStableCollarData_affinePullback_localPositiveRayStokes
@@ -191,9 +191,9 @@ theorem exactRelativeStableCollarData_affinePullback_localPositiveRayStokes
     (H : ZeroFreeHomotopy hp F₀ F₁)
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) :
-    (exactRelativeStableCollarData_affinePullback hp F₀ F₁ H A₀ A₁).collar.toFoxNeuwirthRelativeAffineCollar.LocalPositiveRayStokes hp
-        (exactRelativeStableCollarData_affinePullback hp F₀ F₁ H A₀ A₁).assignment :=
-  (exactRelativeStableCollarData_affinePullback hp F₀ F₁ H A₀ A₁).localPositiveRayStokes
+    (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).collar.toFoxNeuwirthRelativeAffineCollar.LocalPositiveRayStokes hp
+        (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).assignment :=
+  (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).localPositiveRayStokes
 
 /-- The exact certificate identifies the two stable endpoint counts. -/
 theorem exactRelativeStableCollarData_affinePullback_zeroCount_eq
@@ -203,14 +203,14 @@ theorem exactRelativeStableCollarData_affinePullback_zeroCount_eq
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) :
     A₀.zeroCount = A₁.zeroCount :=
-  (exactRelativeStableCollarData_affinePullback hp F₀ F₁ H A₀ A₁).zeroCount_eq
+  (exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁).zeroCount_eq
 
 /-- The exact relative stable-collar construction proposition is inhabited by the concrete
  affine-pullback collar followed by the unconditional Route B perturbation. -/
 theorem exactRelativeStableCollarConstruction_affinePullback :
     ExactRelativeStableCollarConstructionTheorem := by
   intro p hp F₀ F₁ H A₀ A₁
-  exact ⟨exactRelativeStableCollarData_affinePullback hp F₀ F₁ H A₀ A₁⟩
+  exact ⟨exactRelativeStableCollarDataAffinePullback hp F₀ F₁ H A₀ A₁⟩
 
 /-- Immediate stable-homotopy invariance consequence of the exact collar construction. -/
 theorem stableHomotopyInvariance_affinePullback :

@@ -379,7 +379,7 @@ theorem sidePairing_tupleBoundaryWeight
   rw [← Finset.sum_neg_distrib]
   apply Finset.sum_congr rfl
   intro j hj
-  ring_nf ; rfl
+  ring_nf; rfl
 
 /-- Expanding the remaining negative weighted recursive-side sum produces exactly the
 codimension-two side-side sum. -/
@@ -409,7 +409,7 @@ theorem neg_weighted_sidePairing_eq_recursive_side_side
   rw [← Finset.sum_neg_distrib]
   apply Finset.sum_congr rfl
   intro q hq
-  ring_nf ; rfl
+  ring_nf; rfl
 
 /-- The triangulated boundary chain of the recursive cylinder is closed in every dimension. -/
 theorem baseChainClosed

@@ -63,11 +63,11 @@ theorem singularSimplex_hasLebesgueNumber_for_openCover
       have := @lebesgue_number_lemma_of_metric;
       convert this hs ( fun i : { U : Set X // U ∈ 𝒰.sets } => h_open _ i.2 ) _;
       · exact ⟨ fun ⟨ U, hU₁, hU₂ ⟩ => ⟨ ⟨ U, hU₁ ⟩, hU₂ ⟩, fun ⟨ ⟨ U, hU₁ ⟩, hU₂ ⟩ => ⟨ U, hU₁, hU₂ ⟩ ⟩;
-      · exact fun x hx => by rcases Set.mem_iUnion₂.mp ( h_cover hx ) with ⟨ U, hU, hxU ⟩ ; exact Set.mem_iUnion.mpr ⟨ ⟨ U, hU ⟩, hxU ⟩ ;
+      · exact fun x hx => by rcases Set.mem_iUnion₂.mp ( h_cover hx ) with ⟨ U, hU, hxU ⟩; exact Set.mem_iUnion.mpr ⟨ ⟨ U, hU ⟩, hxU ⟩;
     convert h_lebesgue isCompact_univ _ _;
     · aesop;
     · exact fun U hU => IsOpen.preimage ( mvSimplexMap σ |>.continuous ) ( 𝒰.isOpen_mem U hU );
-    · exact fun x _ => by rcases 𝒰.covers ( mvSimplexMap σ x ) with ⟨ U, hU₁, hU₂ ⟩ ; exact Set.mem_iUnion₂.mpr ⟨ U, hU₁, hU₂ ⟩ ;
+    · exact fun x _ => by rcases 𝒰.covers ( mvSimplexMap σ x ) with ⟨ U, hU₁, hU₂ ⟩; exact Set.mem_iUnion₂.mpr ⟨ U, hU₁, hU₂ ⟩;
   refine' ⟨ δ, hδ_pos, fun A hA => _ ⟩;
   by_cases hA_empty : A.Nonempty;
   · obtain ⟨ x, hx ⟩ := hA_empty;

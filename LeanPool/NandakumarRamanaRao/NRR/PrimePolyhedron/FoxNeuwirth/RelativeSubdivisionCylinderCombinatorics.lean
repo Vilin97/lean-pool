@@ -730,11 +730,11 @@ theorem vertex_eq_lowerBoundaryVertex_of_time_eq_zero :
     · exact fun h => absurd h <| ne_of_gt <| Subtype.mk_lt_mk.mpr <| by norm_num;
     · unfold upperBoundaryVertex; aesop;
   · intro q i hi; rcases q with ( _ | _ | q ) <;> rcases i with ( _ | i ) <;> norm_num [ NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderCombinatorics.vertex ] at hi ⊢;
-    · exact absurd hi ( by erw [ Subtype.mk_eq_mk ] ; norm_num );
+    · exact absurd hi ( by erw [ Subtype.mk_eq_mk ]; norm_num );
     · exact absurd hi ( by exact ne_of_gt ( by exact Subtype.mk_lt_mk.mpr ( by norm_num ) ) );
     · unfold upperBoundaryVertex at hi; norm_num at hi;
-    · exact absurd hi ( by erw [ Subtype.mk_eq_mk ] ; norm_num );
+    · exact absurd hi ( by erw [ Subtype.mk_eq_mk ]; norm_num );
     · obtain ⟨ j, hj ⟩ := ih q.2 ⟨ i, by linarith ⟩ ( by simpa using congr_arg Subtype.val hi );
-      use q.1.succAbove j; simp +decide [ hj, sidePoint, lowerBoundaryVertex ] ;
+      use q.1.succAbove j; simp +decide [ hj, sidePoint, lowerBoundaryVertex ];
 
 end NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderCombinatorics

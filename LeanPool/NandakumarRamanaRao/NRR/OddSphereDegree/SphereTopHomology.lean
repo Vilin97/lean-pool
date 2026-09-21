@@ -84,7 +84,7 @@ abbrev SphereTopHomologyIso (n : ℕ) : Type :=
 
 /-- Transport an identification `Hₙ(Sⁿ) ≅ ℤ` from the raw `Sphere n` model to the
 categorical `TopCat.sphere n` model, through the homology model bridge. -/
-def sphereTopHomologyIso_of_modelIso {n : ℕ}
+def sphereTopHomologyIsoOfModelIso {n : ℕ}
     (e : (singularHomologyℤ n).obj (TopCat.of (Sphere n)) ≅ ModuleCat.of ℤ ℤ) :
     SphereTopHomologyIso n :=
   (sphereModelHomologyIso n n).trans e
@@ -92,7 +92,7 @@ def sphereTopHomologyIso_of_modelIso {n : ℕ}
 /-- Transport an identification `Hₙ(Sⁿ) ≅ ℤ` from the categorical
 `TopCat.sphere n` model to the raw `Sphere n` model, through the homology model
 bridge. -/
-def modelIso_of_sphereTopHomologyIso {n : ℕ} (e : SphereTopHomologyIso n) :
+def modelIsoOfSphereTopHomologyIso {n : ℕ} (e : SphereTopHomologyIso n) :
     (singularHomologyℤ n).obj (TopCat.of (Sphere n)) ≅ ModuleCat.of ℤ ℤ :=
   (sphereModelHomologyIso n n).symm.trans e
 

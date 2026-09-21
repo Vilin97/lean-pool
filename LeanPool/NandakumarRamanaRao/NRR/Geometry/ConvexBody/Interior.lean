@@ -13,7 +13,7 @@ import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Topology
 This module develops focused interior lemmas for `ConvexBody`, especially the ones needed
 later for halfspace cuts and affine transformations. It provides:
 
-* basic access to an interior point (`exists_interior_point`, `choose_interior_point`);
+* basic access to an interior point (`exists_interior_point`, `chooseInteriorPoint`);
 * existence of an open (resp. closed) metric ball inside the body
  (`exists_ball_subset`, `exists_closedBall_subset`, `exists_point_strictly_inside_ball`);
 * stability of nonempty interior under supersets (`interior_nonempty_of_superset`).
@@ -44,12 +44,12 @@ theorem exists_interior_point (K : ConvexBody E) :
 
 open Classical in
 /-- A chosen interior point of a convex body. -/
-noncomputable def choose_interior_point (K : ConvexBody E) : E :=
+noncomputable def chooseInteriorPoint (K : ConvexBody E) : E :=
   K.exists_interior_point.choose
 
 /-- The chosen interior point indeed lies in the interior of the body. -/
 theorem choose_interior_point_mem_interior (K : ConvexBody E) :
-    K.choose_interior_point ∈ interior (K : Set E) :=
+    K.chooseInteriorPoint ∈ interior (K : Set E) :=
   K.exists_interior_point.choose_spec
 
 /-- If a convex body is contained in a set `s`, then `s` has nonempty interior. -/

@@ -37,7 +37,7 @@ theorem exists_siteRadius
     have h_cont : Continuous (fun x => (sites x).pts i) := by
       exact Continuous.comp ( continuous_apply i ) ( NRR.Config.continuous_pts.comp sites.continuous )
     exact h_cont.norm;
-  exact ⟨ ∑ i, ( SupSet.sSup ( Set.range fun x => ‖ ( sites x |> Config.pts ) i‖ ) ), Finset.sum_nonneg fun _ _ => by apply_rules [ Real.sSup_nonneg ] ; rintro - ⟨ x, rfl ⟩ ; positivity, fun x i => by exact le_trans ( by exact le_csSup ( by exact IsCompact.bddAbove ( isCompact_range ( h_cont_pts i ) ) ) ( Set.mem_range_self x ) ) ( Finset.single_le_sum ( fun i _ => by exact ( show 0 ≤ SupSet.sSup ( Set.range fun x => ‖ ( sites x |> Config.pts ) i‖ ) from by apply_rules [ Real.sSup_nonneg ] ; rintro - ⟨ x, rfl ⟩ ; positivity ) ) ( Finset.mem_univ i ) ) ⟩
+  exact ⟨ ∑ i, ( SupSet.sSup ( Set.range fun x => ‖ ( sites x |> Config.pts ) i‖ ) ), Finset.sum_nonneg fun _ _ => by apply_rules [ Real.sSup_nonneg ]; rintro - ⟨ x, rfl ⟩; positivity, fun x i => by exact le_trans ( by exact le_csSup ( by exact IsCompact.bddAbove ( isCompact_range ( h_cont_pts i ) ) ) ( Set.mem_range_self x ) ) ( Finset.single_le_sum ( fun i _ => by exact ( show 0 ≤ SupSet.sSup ( Set.range fun x => ‖ ( sites x |> Config.pts ) i‖ ) from by apply_rules [ Real.sSup_nonneg ]; rintro - ⟨ x, rfl ⟩; positivity ) ) ( Finset.mem_univ i ) ) ⟩
 
 /-- **Parent radius.** The fixed planar parent body, being compact, is contained in a ball. -/
 theorem exists_parentRadius

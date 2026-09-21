@@ -48,7 +48,7 @@ noncomputable abbrev baseData
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map) :
     FullCollarOriginMarginData hp H A₀ A₁ :=
-  fullCollarOriginMarginData_affinePullback hp F₀ F₁ H A₀ A₁
+  fullCollarOriginMarginDataAffinePullback hp F₀ F₁ H A₀ A₁
 
 /-- Exact geometric input still required to run Route B on the concrete collar.  The safe ball is
 not stored: it is constructed from `facetPolynomialsNonzero` by the open-neighborhood

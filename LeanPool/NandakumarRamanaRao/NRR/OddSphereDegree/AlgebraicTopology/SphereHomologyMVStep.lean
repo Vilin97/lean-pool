@@ -11,13 +11,13 @@ import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
 /-!
 # The Mayer–Vietoris recursive step for sphere homology
 
-For `n ≥ 1` we prove `Hₙ₊₁(Sⁿ⁺¹; ℤ) ≅ Hₙ(Sⁿ; ℤ)` (`sphereTopHomology_step_MV`),
+For `n ≥ 1` we prove `Hₙ₊₁(Sⁿ⁺¹; ℤ) ≅ Hₙ(Sⁿ; ℤ)` (`sphereTopHomologyStepMV`),
 the recursive `step` of `SphereSuspensionTower`.
 
 Cover `Sⁿ⁺¹` by the two punctured spheres `U = Sⁿ⁺¹ \ {north}` and
 `V = Sⁿ⁺¹ \ {south}`. Both are contractible (stereographic projection), so their
 positive homology vanishes, and the Mayer–Vietoris connecting isomorphism
-(`mvHomologyIso_succ`) gives `Hₙ₊₁(Sⁿ⁺¹) ≅ Hₙ(U ∩ V)`. The intersection
+(`mvHomologyIsoSucc`) gives `Hₙ₊₁(Sⁿ⁺¹) ≅ Hₙ(U ∩ V)`. The intersection
 `U ∩ V` is the equatorial band, homotopy equivalent to `Sⁿ`; the subspace bridge
 (`subspaceHomologyIsoℤ`) and homotopy invariance then identify its homology with
 `Hₙ(Sⁿ)`.
@@ -197,14 +197,14 @@ theorem gFun_mem_sphere (y : Sphere n) :
     gFun n y ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 2))) 1 := by
       simp +decide [ gFun, EuclideanSpace.norm_eq ];
       convert y.2 using 1;
-      rw [ mem_sphere_zero_iff_norm, EuclideanSpace.norm_eq ] ; norm_num [ Fin.sum_univ_succ ]
+      rw [ mem_sphere_zero_iff_norm, EuclideanSpace.norm_eq ]; norm_num [ Fin.sum_univ_succ ]
 
 theorem gFun_mem_band (y : Sphere n) :
     (⟨gFun n y, gFun_mem_sphere n y⟩ : Sphere (n + 1)) ∈ sphereBand n := by
       constructor <;> intro h <;> simp_all +decide [ sphereBand ];
-      · injection h with h ; replace h := congr_arg ( fun z => z 0 ) h ; simp_all +decide [ gFun, northPole ];
-        exact absurd h ( by erw [ PiLp.single_apply ] ; norm_num );
-      · injection h with h ; have := congr_arg ( fun x => x 0 ) h ; norm_num [ southPole ] at this;
+      · injection h with h; replace h := congr_arg ( fun z => z 0 ) h; simp_all +decide [ gFun, northPole ];
+        exact absurd h ( by erw [ PiLp.single_apply ]; norm_num );
+      · injection h with h; have := congr_arg ( fun x => x 0 ) h; norm_num [ southPole ] at this;
         simp +decide [ gFun, northVec ] at this
 
 theorem continuous_gFun :
@@ -214,7 +214,7 @@ theorem continuous_gFun :
         -- The function y ↦ Fin.cons 0 (fun i => y.val i) is continuous because it is a composition of continuous functions.
         have h_cont : Continuous (fun y : Sphere n => Fin.cons 0 (fun i => y.val i) : Sphere n → Fin (n + 2) → ℝ) := by
           refine' continuous_pi_iff.mpr _;
-          intro i; induction i using Fin.inductionOn <;> simp_all +decide [ Fin.cons ] ;
+          intro i; induction i using Fin.inductionOn <;> simp_all +decide [ Fin.cons ];
           · exact continuous_const;
           · fun_prop;
         convert h_cont using 1;
@@ -227,7 +227,7 @@ def sphereToBand : C(Sphere n, ↥(sphereBand n)) :=
 theorem bandToSphere_comp_sphereToBand :
     (bandToSphere n).comp (sphereToBand n) = ContinuousMap.id (Sphere n) := by
       ext i; simp [bandToSphere, sphereToBand, fFun, gFun];
-      rw [ eqNormSq_eq ] ; norm_num [ Fin.sum_univ_succ ]
+      rw [ eqNormSq_eq ]; norm_num [ Fin.sum_univ_succ ]
 
 /-- The straight-line-on-the-sphere homotopy from `sphereToBand ∘ bandToSphere` to the
 identity of the band. -/
@@ -240,7 +240,7 @@ theorem bandHomotopyFun_ne_zero (p : unitInterval × ↥(sphereBand n)) :
       obtain ⟨i, hi⟩ : ∃ i : Fin (n + 1), p.2.val.val i.succ ≠ 0 := by
         have h_pos : 0 < ∑ i : Fin (n + 1), (p.2.val.val i.succ) ^ 2 := by
           exact eqNormSq_pos n p.2.2;
-        exact not_forall.mp fun h => h_pos.ne' <| Finset.sum_eq_zero fun i _ => by simp +decide [ h i ] ;
+        exact not_forall.mp fun h => h_pos.ne' <| Finset.sum_eq_zero fun i _ => by simp +decide [ h i ];
       intro h; have := congr_arg ( fun x => x i.succ ) h; norm_num [ hi, sphereToBand, bandToSphere, fFun, gFun ] at this;
       by_cases h : p.1.val = 0 <;> simp_all +decide [ div_eq_mul_inv, mul_assoc, mul_comm, mul_left_comm ];
       · exact absurd this ( ne_of_gt ( Real.sqrt_pos.mpr ( eqNormSq_pos n p.2.2 ) ) );
@@ -313,7 +313,7 @@ theorem bandHomotopy_zero (x : ↥(sphereBand n)) :
       = (sphereToBand n).comp (bandToSphere n) x := by
         -- Since $t = 0$, we have $bandHomotopyFun n (0, x) = gfx$ by definition.
         have h_bandHomotopy_zero : bandHomotopyFun n (0, x) = (sphereToBand n (bandToSphere n x)).val.val := by
-          unfold bandHomotopyFun; norm_num [ sphereToBand, bandToSphere, fFun, gFun ] ;
+          unfold bandHomotopyFun; norm_num [ sphereToBand, bandToSphere, fFun, gFun ];
         simp +decide [ h_bandHomotopy_zero ]
 
 theorem bandHomotopy_one (x : ↥(sphereBand n)) :
@@ -369,15 +369,15 @@ def bandHomologyIso :
       sphereTopHomologyℤ n :=
   subspaceHomologyIsoℤ (sphereSpace n)
       ((upperOpens n : Set (sphereSpace n)) ∩ (lowerOpens n : Set (sphereSpace n))) n
-    ≪≫ singularHomologyℤ_isoOfHomotopyEquivSpace n (sphereBandHomotopyEquiv n)
+    ≪≫ singularHomologyℤIsoOfHomotopyEquivSpace n (sphereBandHomotopyEquiv n)
     ≪≫ (sphereModelHomologyIso n n).symm
 
 /-- **The Mayer–Vietoris recursive step.** For `n ≥ 1`,
 `Hₙ₊₁(Sⁿ⁺¹; ℤ) ≅ Hₙ(Sⁿ; ℤ)`. -/
-def sphereTopHomology_step_MV (hn : 1 ≤ n) :
+def sphereTopHomologyStepMV (hn : 1 ≤ n) :
     sphereTopHomologyℤ (n + 1) ≅ sphereTopHomologyℤ n :=
   sphereModelHomologyIso (n + 1) (n + 1)
-    ≪≫ mvHomologyIso_succ ℤ (upperOpens n) (lowerOpens n) (upperOpens_sup_lowerOpens n) n
+    ≪≫ mvHomologyIsoSucc ℤ (upperOpens n) (lowerOpens n) (upperOpens_sup_lowerOpens n) n
         (isZero_subChainComplex_homology_of_contractible _ _ (n + 1) (by omega))
         (isZero_subChainComplex_homology_of_contractible _ _ (n + 1) (by omega))
         (isZero_subChainComplex_homology_of_contractible _ _ n hn)

@@ -61,7 +61,7 @@ theorem continuous_cutAreaLower_fixedNormal
   -- Apply the dominated convergence theorem to show that the integral is continuous.
   have h_int_cont : Continuous (fun c : ℝ => ∫ x in K.carrier, (if ⟪u, x⟫ ≤ c then 1 else 0 : ℝ) ∂volume) := by
     refine' continuous_iff_continuousAt.mpr _;
-    intro c₀; apply_rules [ MeasureTheory.continuousAt_of_dominated, continuousAt_const ] ;
+    intro c₀; apply_rules [ MeasureTheory.continuousAt_of_dominated, continuousAt_const ];
     any_goals exact fun _ => 1;
     · exact Filter.Eventually.of_forall fun x => Measurable.aestronglyMeasurable ( by exact Measurable.ite ( measurableSet_le ( measurable_const.inner measurable_id' ) measurable_const ) measurable_const measurable_const );
     · exact Filter.Eventually.of_forall fun x => Filter.Eventually.of_forall fun y => by split_ifs <;> norm_num;
@@ -69,7 +69,7 @@ theorem continuous_cutAreaLower_fixedNormal
     · refine' MeasureTheory.ae_restrict_of_ae _;
       refine' MeasureTheory.measure_mono_null _ _;
       exact { x : Plane | ⟪u, x⟫ = c₀ };
-      · intro x hx; contrapose! hx; simp_all +decide [ ContinuousAt ] ;
+      · intro x hx; contrapose! hx; simp_all +decide [ ContinuousAt ];
         cases lt_or_gt_of_ne hx <;> split_ifs <;> norm_num at *;
         · exact tendsto_const_nhds.congr' ( by filter_upwards [ lt_mem_nhds ‹_› ] with y hy; split_ifs <;> linarith );
         · linarith;
@@ -77,8 +77,8 @@ theorem continuous_cutAreaLower_fixedNormal
         · exact tendsto_const_nhds.congr' ( by filter_upwards [ Iio_mem_nhds ‹_› ] with y hy; split_ifs <;> linarith [ hy.out ] );
       · exact NRR.Halfspace.hyperplane_null hu c₀;
   convert h_int_cont using 1;
-  ext c; simp +decide [ ConvexBody.cutAreaLower ] ;
-  erw [ MeasureTheory.integral_indicator ( show MeasurableSet ( lowerClosedHalfspace u c ) from lowerClosedHalfspace_isClosed u c |> IsClosed.measurableSet ) ] ; norm_num [ lowerClosedHalfspace ];
+  ext c; simp +decide [ ConvexBody.cutAreaLower ];
+  erw [ MeasureTheory.integral_indicator ( show MeasurableSet ( lowerClosedHalfspace u c ) from lowerClosedHalfspace_isClosed u c |> IsClosed.measurableSet ) ]; norm_num [ lowerClosedHalfspace ];
   rw [ MeasureTheory.measureReal_def, MeasureTheory.Measure.restrict_apply' ];
   · rw [ Set.inter_comm ];
   · exact K.isCompact.measurableSet

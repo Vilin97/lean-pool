@@ -394,7 +394,7 @@ theorem exists_smallGenericPerturbation
     (assignmentOfMovableParameters hp C base x) base hbaseMargin hcloseHalf
   have hretained : LocalAffineCoordinateNormMargin hp C
       (assignmentOfMovableParameters hp C base x) (margin / 2) := by
-    convert hretainedRaw using 1 ; ring
+    convert hretainedRaw using 1; ring
   have horigin : ∀ q : C.Cell,
       AvoidsOrigin
         (localVertexMap hp C

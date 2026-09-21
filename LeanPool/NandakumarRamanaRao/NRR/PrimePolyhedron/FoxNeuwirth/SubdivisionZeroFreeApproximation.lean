@@ -304,7 +304,7 @@ theorem exists_regularApproximation
             mul_lt_mul_of_pos_right htE hB0
           _ < (m / (16 * (B + m + 1))) * (2 * (B + m + 1)) :=
             mul_lt_mul_of_pos_left hBaux (by positivity)
-          _ = m / 8 := by field_simp [ne_of_gt hden] ; ring
+          _ = m / 8 := by field_simp [ne_of_gt hden]; ring
       exact lt_of_le_of_lt (mul_le_mul_of_nonneg_left hvalueBound (le_of_lt ht0)) htSmall
     have hclose : ‖value hp N G q w - F x‖ < m / 2 := by
       calc

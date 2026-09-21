@@ -683,7 +683,7 @@ theorem exists_relativeGeneric_perturbation
       (replaceMovable hp C base move) (m / 2) := by
     have h := retain_localAffineCoordinateNormMargin hp C
       (replaceMovable hp C base move) base hmargin hfullClose
-    convert h using 1 ; ring
+    convert h using 1; ring
   refine ⟨{
     move := move
     closeToBase := hfullClose

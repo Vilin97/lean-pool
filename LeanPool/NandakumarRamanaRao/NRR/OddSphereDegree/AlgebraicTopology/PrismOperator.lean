@@ -212,7 +212,7 @@ along the end inclusion. -/
 theorem cylinder_sect_one {X Y : TopCat.{0}} {f g : X ⟶ Y}
     (H : ContinuousMap.Homotopy f.hom g.hom) :
     sect X 1 ≫ cylinder H = TopCat.toSSet.map g := by
-  unfold sect cylinder; simp +decide [ ← Category.assoc ] ;
+  unfold sect cylinder; simp +decide [ ← Category.assoc ];
   convert congr_arg ( fun x => x ≫ TopCat.toSSet.map ( homotopyMap H ) ) ( lift_const_comp_iso_inv X 1 ) using 1;
   · rw [ edge_vtx_one ];
   · rw [ ← Functor.map_comp, homotopyMap_one ]

@@ -141,7 +141,7 @@ theorem baseData_frozenPositiveSupportRaySafe
     ExplicitAffineRelativeCollar.RouteB.FrozenPositiveSupportRaySafe hp
       (baseData hp F0 F1 H A0 A1).collar.cells
       (baseData hp F0 F1 H A0 A1).assignment := by
-  simpa [baseData, fullCollarOriginMarginData_affinePullback,
+  simpa [baseData, fullCollarOriginMarginDataAffinePullback,
     FullCollarOriginMarginData.ofFineFullCollarData] using
     fineFullCollarData_frozenPositiveSupportRaySafe hp F0 F1 H A0 A1
 

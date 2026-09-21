@@ -251,7 +251,7 @@ theorem affine_selectedEndpointValue_eq_value
       fun c => ∑ i : Fin ((p - 1 + 1) + 1), w' i *
         A.map (RefinedAffineMap.vertex hp A.level q (localLastIndex (p - 1) r i)) c := by
     funext c
-    apply Fintype.sum_equiv (finCongr hcard) ; intro i
+    apply Fintype.sum_equiv (finCongr hcard); intro i
     have hwi : w i = w' (Fin.cast hcard i) := by
       change w i = w (Fin.cast hcard.symm (Fin.cast hcard i))
       congr 1

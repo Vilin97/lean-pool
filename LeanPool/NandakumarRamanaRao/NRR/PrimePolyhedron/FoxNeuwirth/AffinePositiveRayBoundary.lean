@@ -844,7 +844,7 @@ theorem lowerEndpoint_coordinate_eq_zero
   have hc : cofactorDirection hp V (lowerEndpointIndex hp V hregular w) ≠ 0 :=
     cofactorDirection_ne_zero hp V hregular _
   rw [lineCoordinate, lowerParameter_eq_threshold]
-  field_simp [hc] ; ring
+  field_simp [hc]; ring
 
 /-- The chosen upper-endpoint coordinate vanishes. -/
 theorem upperEndpoint_coordinate_eq_zero
@@ -855,7 +855,7 @@ theorem upperEndpoint_coordinate_eq_zero
   have hc : cofactorDirection hp V (upperEndpointIndex hp V hregular w) ≠ 0 :=
     cofactorDirection_ne_zero hp V hregular _
   rw [lineCoordinate, upperParameter_eq_threshold]
-  field_simp [hc] ; ring
+  field_simp [hc]; ring
 
 /-- A feasible line parameter gives a barycentric point of the standard simplex. -/
 noncomputable def lineSimplexPoint
@@ -1092,7 +1092,7 @@ theorem exists_affine_zero_between_of_opposite_signs
     · apply le_of_lt
       apply (div_lt_iff₀ hb).2
       linarith
-    · field_simp [ne_of_gt hb] ; ring
+    · field_simp [ne_of_gt hb]; ring
   · have hb : b < 0 := by
       by_contra h
       have hbnonneg : 0 ≤ b := le_of_not_gt h
@@ -1106,7 +1106,7 @@ theorem exists_affine_zero_between_of_opposite_signs
     · apply le_of_lt
       apply (div_lt_iff_of_neg hb).2
       linarith
-    · field_simp [ne_of_lt hb] ; ring
+    · field_simp [ne_of_lt hb]; ring
 
 /-- Along an ordered pair of feasible parameters, origin avoidance forces the mean to have the
 same positive/nonpositive classification at both points. -/
@@ -2316,7 +2316,7 @@ noncomputable def rayBoundaryCertificate
 
 /-- Construct the finite positive-ray boundary certificate from the weaker
 positive-ray-relative general-position hypotheses. -/
-noncomputable def rayBoundaryCertificate_of_positiveRayGeneralPosition
+noncomputable def rayBoundaryCertificateOfPositiveRayGeneralPosition
     (hp : Nat.Prime p) (V : VertexMap p)
     (hgp : PositiveRayGeneralPosition hp V) : RayBoundaryCertificate hp V := by
   classical
@@ -2417,7 +2417,7 @@ theorem alternating_facetIndex_sum_eq_zero_of_positiveRayGeneralPosition
     (hgp : PositiveRayGeneralPosition hp V) :
     ∑ k : Fin (p + 1), facetIndex hp V k = 0 :=
   alternating_facetIndex_sum_eq_zero_of_certificate hp V
-    (rayBoundaryCertificate_of_positiveRayGeneralPosition hp V hgp)
+    (rayBoundaryCertificateOfPositiveRayGeneralPosition hp V hgp)
 
 /-- Local affine Stokes, reduced to the finite line-geometry theorem. -/
 theorem alternating_facetIndex_sum_eq_zero

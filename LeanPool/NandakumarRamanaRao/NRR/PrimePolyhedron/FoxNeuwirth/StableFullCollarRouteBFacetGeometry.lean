@@ -187,7 +187,7 @@ theorem baseData_allFacetRegularityWitnesses
       (baseData hp F0 F1 H A0 A1).collar.cells
       (baseData hp F0 F1 H A0 A1).assignment := by
   apply allFacetRegularityWitnesses_of_frozenFacetTargets
-  simpa [baseData, fullCollarOriginMarginData_affinePullback,
+  simpa [baseData, fullCollarOriginMarginDataAffinePullback,
     FullCollarOriginMarginData.ofFineFullCollarData] using
     fineFullCollarData_frozenFacetTargets hp F0 F1 H A0 A1
 

@@ -81,12 +81,12 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
     (prefixBarycenter n π k).val = stepVertices n (stdVerts n) π k := by
   unfold prefixBarycenter stepVertices;
   ext j; simp +decide [ stdSimplex.map, stdSimplex.barycenter, prefixVertex, stdVerts ];
-  unfold FunOnFinite.linearMap; simp +decide [ Finset.mul_sum _ _ _, mul_comm ] ;
+  unfold FunOnFinite.linearMap; simp +decide [ Finset.mul_sum _ _ _, mul_comm ];
   simp +decide [ Finsupp.mapDomain, Finsupp.linearEquivFunOnFinite, Pi.single_apply ];
   simp +decide [ Finsupp.sum_fintype, prefixVertex ];
   rw [ ← Finset.sum_subset ( show Finset.image ( fun x : Fin ( k.val + 1 ) => ⟨ x, by linarith [ Fin.is_lt x, Fin.is_lt k ] ⟩ ) Finset.univ ⊆ Finset.Iic k from ?_ ) ];
   · rw [ Finset.sum_image ] <;> norm_num;
-    · exact Finset.sum_congr rfl fun _ _ => by rw [ Finsupp.single_apply ] ; aesop;
+    · exact Finset.sum_congr rfl fun _ _ => by rw [ Finsupp.single_apply ]; aesop;
     · exact fun x y h => by simpa [ Fin.ext_iff ] using h;
   · simp +decide [ Fin.ext_iff ];
     exact fun x hx₁ hx₂ hx₃ => False.elim <| hx₂ ⟨ x, by linarith [ Fin.is_lt x, Fin.is_lt k, show ( x : ℕ ) ≤ k from hx₁ ] ⟩ rfl;
@@ -95,7 +95,7 @@ theorem prefixBarycenter_val_eq_stepVertices (n : ℕ) (π : Equiv.Perm (Fin (n 
 theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) :
     affineSubdivLinear n π (stdVerts n k) = stepVertices n (stdVerts n) π k := by
-  ext j; simp +decide [ affineSubdivLinear_apply, stdVerts, Pi.single_apply, Finset.sum_ite_eq ] ;
+  ext j; simp +decide [ affineSubdivLinear_apply, stdVerts, Pi.single_apply, Finset.sum_ite_eq ];
   exact congr_fun ( prefixBarycenter_val_eq_stepVertices n π k ) j
 
 noncomputable def affineCompLinear (n : ℕ) :
@@ -161,7 +161,7 @@ theorem range_affineCompMap_val (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (n 
   have h_range : Set.range (fun x : Delta n => (affineCompMap n N ρs x).val) = (affineCompLinear n N ρs) '' (stdSimplex ℝ (Fin (n + 1))) := by
     ext; simp [affineCompMap_coe];
   convert h_range using 1;
-  · exact Set.ext fun x => ⟨ by rintro ⟨ y, ⟨ z, rfl ⟩, rfl ⟩ ; exact ⟨ z, rfl ⟩, by rintro ⟨ z, rfl ⟩ ; exact ⟨ _, ⟨ z, rfl ⟩, rfl ⟩ ⟩;
+  · exact Set.ext fun x => ⟨ by rintro ⟨ y, ⟨ z, rfl ⟩, rfl ⟩; exact ⟨ z, rfl ⟩, by rintro ⟨ z, rfl ⟩; exact ⟨ _, ⟨ z, rfl ⟩, rfl ⟩ ⟩;
   · rw [ show stdSimplex ℝ ( Fin ( n + 1 ) ) = convexHull ℝ ( Set.range ( stdVerts n ) ) from by
           have := (convexHull_rangle_single_eq_stdSimplex ℝ (Fin (n + 1))).symm
           exact this ];

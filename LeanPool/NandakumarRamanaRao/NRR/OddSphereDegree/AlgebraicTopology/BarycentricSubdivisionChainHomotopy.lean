@@ -106,7 +106,7 @@ theorem barycentricSubdivisionChainHomotopy_comm
 
 A `Homotopy` between the barycentric subdivision chain map and the identity chain
 map of the singular chain complex, built from the homotopy operator `-H`. -/
-noncomputable def barycentricSubdivision_chainHomotopic_id
+noncomputable def barycentricSubdivisionChainHomotopicId
     (R : Type) [CommRing R] (X : TopCat.{0}) :
     Homotopy (barycentricSubdivisionChainMap R X) (𝟙 (singularChainComplex R X)) where
   hom := barycentricSubdivisionChainHomotopyHom R X
@@ -123,7 +123,7 @@ theorem barycentricSubdivision_induces_identity_on_homology
     (R : Type) [CommRing R] (X : TopCat.{0}) (n : ℕ) :
     HomologicalComplex.homologyMap (barycentricSubdivisionChainMap R X) n
       = 𝟙 ((singularChainComplex R X).homology n) := by
-  rw [(barycentricSubdivision_chainHomotopic_id R X).homologyMap_eq n,
+  rw [(barycentricSubdivisionChainHomotopicId R X).homologyMap_eq n,
     HomologicalComplex.homologyMap_id]
 
 /-- **Induced map on homology is the identity (alias).** Same statement as

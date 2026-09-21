@@ -27,7 +27,7 @@ maps of `h ≫ f` and `h ≫ g`.
 
 This is `Homotopy.compLeft` repackaged through the functoriality
 `singularChainℤ.map_comp`. -/
-noncomputable def singularChainHomotopy_precomp (h : X ⟶ Y) {f g : Y ⟶ Z}
+noncomputable def singularChainHomotopyPrecomp (h : X ⟶ Y) {f g : Y ⟶ Z}
     (H : Homotopy (singularChainℤ.map f) (singularChainℤ.map g)) :
     Homotopy (singularChainℤ.map (h ≫ f)) (singularChainℤ.map (h ≫ g)) := by
   rw [singularChainℤ.map_comp, singularChainℤ.map_comp]
@@ -39,7 +39,7 @@ continuous map `h : Y ⟶ Z`, yielding a chain homotopy between the singular cha
 maps of `f ≫ h` and `g ≫ h`.
 
 This is `Homotopy.compRight` repackaged through `singularChainℤ.map_comp`. -/
-noncomputable def singularChainHomotopy_postcomp (h : Y ⟶ Z) {f g : X ⟶ Y}
+noncomputable def singularChainHomotopyPostcomp (h : Y ⟶ Z) {f g : X ⟶ Y}
     (H : Homotopy (singularChainℤ.map f) (singularChainℤ.map g)) :
     Homotopy (singularChainℤ.map (f ≫ h)) (singularChainℤ.map (g ≫ h)) := by
   rw [singularChainℤ.map_comp, singularChainℤ.map_comp]
@@ -51,7 +51,7 @@ noncomputable def singularChainHomotopy_postcomp (h : Y ⟶ Z) {f g : X ⟶ Y}
 theorem singularHomologyℤ_map_eq_precomp (h : X ⟶ Y) {f g : Y ⟶ Z}
     (H : Homotopy (singularChainℤ.map f) (singularChainℤ.map g)) (n : ℕ) :
     (singularHomologyℤ n).map (h ≫ f) = (singularHomologyℤ n).map (h ≫ g) :=
-  singularHomologyMap_eq_of_singularChainHomotopy (singularChainHomotopy_precomp h H) n
+  singularHomologyMap_eq_of_singularChainHomotopy (singularChainHomotopyPrecomp h H) n
 
 /-- **Homology naturality (postcomposition).** If the singular chain maps of
 `f, g : X ⟶ Y` are chain-homotopic, then for any `h : Y ⟶ Z` the induced maps of
@@ -59,7 +59,7 @@ theorem singularHomologyℤ_map_eq_precomp (h : X ⟶ Y) {f g : Y ⟶ Z}
 theorem singularHomologyℤ_map_eq_postcomp (h : Y ⟶ Z) {f g : X ⟶ Y}
     (H : Homotopy (singularChainℤ.map f) (singularChainℤ.map g)) (n : ℕ) :
     (singularHomologyℤ n).map (f ≫ h) = (singularHomologyℤ n).map (g ≫ h) :=
-  singularHomologyMap_eq_of_singularChainHomotopy (singularChainHomotopy_postcomp h H) n
+  singularHomologyMap_eq_of_singularChainHomotopy (singularChainHomotopyPostcomp h H) n
 
 /-- **Symmetry of the consumer.** The equality on singular homology produced by a
 chain homotopy is symmetric: a chain homotopy between the singular chain maps of
@@ -80,7 +80,7 @@ complex). Like the rest of this file it takes the chain-level equivalence as a
 hypothesis: it is the homology-isomorphism consumer that homotopy invariance will
 feed once the prism operator upgrades a topological homotopy equivalence to a
 chain homotopy equivalence. -/
-noncomputable def singularHomologyℤ_isoOfHomotopyEquiv
+noncomputable def singularHomologyℤIsoOfHomotopyEquiv
     (e : HomotopyEquiv ((singularChainℤ).obj X) ((singularChainℤ).obj Y)) (n : ℕ) :
     (singularHomologyℤ n).obj X ≅ (singularHomologyℤ n).obj Y :=
   e.toHomologyIso n
