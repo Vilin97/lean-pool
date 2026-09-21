@@ -35,7 +35,9 @@ theorem exists_bernoulliRetention {V : Type u} [Fintype V] [DecidableEq V]
       IsProbabilityMeasure (@MeasureSpace.volume Ω mΩ) ∧
         Nonempty (@BernoulliRetention V _ Ω mΩ H p) := by
   let q : NNReal := ⟨p, hp0⟩
-  have hq : q ≤ 1 := by simpa [q] using hp1
+  have hq : q ≤ 1 := by
+    change (⟨p, hp0⟩ : NNReal) ≤ 1
+    exact_mod_cast hp1
   let μ : Measure Bool := (PMF.bernoulli q hq).toMeasure
   let Ω := Finset V → Bool
   let mΩ : MeasureSpace Ω := ⟨Measure.pi (fun _ => μ)⟩
@@ -55,14 +57,16 @@ theorem exists_bernoulliRetention {V : Type u} [Fintype V] [DecidableEq V]
           (fun _ => measurable_id.aemeasurable))
     have hpred : iIndepFun (fun e (ω : Ω) => ω e = true)
         (Measure.pi (fun _ : Finset V => μ)) := by
-      simpa only [Function.comp_apply] using
-        hfun.comp (fun _ b => b = true) (fun _ => Measurable.of_discrete)
+      change iIndepFun (fun e => (fun b => b = true) ∘ fun ω : Ω => ω e)
+        (Measure.pi (fun _ : Finset V => μ))
+      exact hfun.comp (fun _ b => b = true) (fun _ => Measurable.of_discrete)
     have hind : iIndepSet A (Measure.pi (fun _ : Finset V => μ)) := by
       rw [← iIndep_comap_mem_iff]
       apply (iIndepFun_iff_iIndep _ _ _).1
       simpa [A] using hpred
     refine ⟨⟨A, hmeas, ?_, ?_⟩⟩
-    · simpa [mΩ] using hind
+    · change iIndepSet A (Measure.pi (fun _ : Finset V => μ))
+      exact hind
     · intro e he
       rw [show (ℙ : Measure Ω) = Measure.pi (fun _ : Finset V => μ) by rfl]
       rw [show A e = Function.eval e ⁻¹' ({true} : Set Bool) by rfl]

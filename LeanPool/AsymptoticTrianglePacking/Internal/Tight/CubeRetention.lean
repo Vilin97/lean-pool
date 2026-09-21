@@ -146,7 +146,10 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 noncomputable def cubeRetention (H : Finset (Finset V)) {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
     @BernoulliRetention V _ (Finset V → Bool) (cubeSpace p) H p :=
   @BernoulliRetention.mk V _ (Finset V → Bool) (cubeSpace p) H p
-    (fun e => {ω : Finset V → Bool | ω e = true}) (fun _ => MeasurableSet.of_discrete)
+    (fun e => {ω : Finset V → Bool | ω e = true})
+    (fun e => by
+      change MeasurableSet ((fun ω : Finset V → Bool => ω e) ⁻¹' ({true} : Set Bool))
+      exact (measurable_pi_apply e) (measurableSet_singleton true))
     (iIndepSet_cubeCoord hp0 hp1) (fun e _ => cubeMeasure_coord hp0 hp1 e)
 
 theorem retainedSet_cubeRetention (H : Finset (Finset V)) {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1)
@@ -154,6 +157,6 @@ theorem retainedSet_cubeRetention (H : Finset (Finset V)) {p : ℝ} (hp0 : 0 ≤
     @retainedSet V _ (Finset V → Bool) (cubeSpace p) H p (cubeRetention H hp0 hp1) ω
       = H.filter (fun e => ω e = true) := by
   ext e
-  simp [retainedSet, cubeRetention]
+  simp only [retainedSet, cubeRetention, Finset.mem_filter, Set.mem_setOf_eq]
 
 end LeanPool.AsymptoticTrianglePacking.Internal
