@@ -141,7 +141,7 @@ theorem ι_chainMulHetStage [Category.{v} E] [MonoidalCategory E]
       (smallNatEquiv.functor.obj i)) ≫
       chainMulHetStage B C F δB δF mu hδl j =
     mu i j ≫ chainColimitι F δF (i + 1 + j)
-  rw [chainMulHetStage, ι_preservesColimitIso_hom_assoc]
+  erw [chainMulHetStage, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (chainMulHetCocone B C F δB δF mu hδl j)
     (smallNatEquiv.functor.obj i)
 
@@ -235,7 +235,7 @@ theorem whiskerLeft_ι_chainColimitMulHet [Category.{v} E] [MonoidalCategory E]
         (smallNatEquiv.functor.obj j)) ≫
       chainColimitMulHet B C F δB δC δF mu hδl hδr =
     chainMulHetStage B C F δB δF mu hδl j
-  rw [chainColimitMulHet, ι_preservesColimitIso_hom_assoc]
+  erw [chainColimitMulHet, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc
     (chainMulHetTotalCocone B C F δB δC δF mu hδl hδr)
     (smallNatEquiv.functor.obj j)

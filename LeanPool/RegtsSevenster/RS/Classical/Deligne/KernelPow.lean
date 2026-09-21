@@ -285,7 +285,7 @@ theorem wordMap_append
       (wordMap f g (a + b) (wordAppend wa (wb ∘ Fin.castSucc)) ⊗ₘ
         letterMap f g (wb (Fin.last b)))
       hsplit).trans ?_
-    rw [Category.assoc]
+    erw [Category.assoc]
     exact concat_step_glue
       (wordPowConcatIso U V wa b (wb ∘ Fin.castSucc)).inv
       (wordMap f g (a + b) (wordAppend wa (wb ∘ Fin.castSucc)))

@@ -130,7 +130,7 @@ theorem unitBaseDatum_zigzag
     rw [show η[𝟙_ D] ≫ (unitBaseDatum X Y).copair =
       η_ X Y ≫ (modTensorUnitBase (unitMod X)
         (unitMod Y)).inv from Category.id_comp _]
-    rw [MonoidalCategory.comp_whiskerRight, Category.assoc]
+    erw [MonoidalCategory.comp_whiskerRight, Category.assoc]
     refine Eq.trans (whisker_eq _ (whisker_eq _
       (h1.trans h4))) ?_
     have hzz : η_ X Y ▷ X ≫ (α_ X Y X).hom ≫
@@ -171,7 +171,7 @@ theorem unitBaseDatum_zigzag
     rw [show η[𝟙_ D] ≫ (unitBaseDatum X Y).copair =
       η_ X Y ≫ (modTensorUnitBase (unitMod X)
         (unitMod Y)).inv from Category.id_comp _]
-    rw [MonoidalCategory.whiskerLeft_comp, Category.assoc]
+    erw [MonoidalCategory.whiskerLeft_comp, Category.assoc]
     refine Eq.trans (whisker_eq _ (whisker_eq _
       (h1.trans h4))) ?_
     have hzz : Y ◁ η_ X Y ≫ (α_ Y X Y).inv ≫

@@ -77,12 +77,12 @@ theorem colourTotalEquiv_modelPermMap
     · rw [dif_pos hc]
       change (colourSwapWord k ℓ (adjWord σ)).evenMap
         (fun a => v a.val) ⟨c, hc⟩ = _
-      rw [colourSwapWord_evenMap, wordSign_eq_oddInversions,
+      erw [colourSwapWord_evenMap, wordSign_eq_oddInversions,
         wordPerm_adjWord]
     · rw [dif_neg hc]
       change (colourSwapWord k ℓ (adjWord σ)).oddMap
         (fun a => v a.val) ⟨c, hc⟩ = _
-      rw [colourSwapWord_oddMap, wordSign_eq_oddInversions,
+      erw [colourSwapWord_oddMap, wordSign_eq_oddInversions,
         wordPerm_adjWord]
 
 end

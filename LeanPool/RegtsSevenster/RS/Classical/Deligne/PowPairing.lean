@@ -375,7 +375,7 @@ private theorem leg_step_snd_eq [Category.{v} D] [MonoidalCategory D]
       (tensorPowConcat X (a + 2 + 1) b).hom) ≫
     powCast X (by omega : a + 2 + 1 + b = a + 2 + b + 1) ≫
     (powPeel X (a + 2 + b)).hom = _
-  simp only [Category.assoc]
+  repeat' erw [Category.assoc]
   refine Eq.trans (congrArg (fun t =>
     ((tensorPow D X (a + 1) ◁ w) ▷ tensorPow D X b) ≫
       ((α_ (tensorPow D X (a + 1)) X X).inv ▷
@@ -918,7 +918,7 @@ private theorem leg_head_snd_eq [Category.{v} D] [MonoidalCategory D] (A : D)
       (tensorPowConcat X (0 + 2) b).hom) ≫
     powCast X (by omega : 0 + 2 + b = b + 1 + 1) ≫
     (powPeel X (b + 1)).hom ≫ (X ◁ (powPeel X b).hom) = _
-  simp only [Category.assoc]
+  erw [Category.assoc]
   rw [show powCast X (by omega : 0 + 2 + b = b + 1 + 1) =
     powCast X (by omega : 0 + 2 + b = 1 + b + 1) ≫
     powCast X (by omega : 1 + b + 1 = b + 1 + 1) from
@@ -1147,7 +1147,9 @@ theorem rawPair_rel_fst_top
         tensorPow D M.X (a + 1 + 1)) ≫
       rawPair A M M' d (a + 1 + 1)
   rw [rawPair_succ_step]
-  simp only [comp_whiskerRight, Category.assoc, cancel_epi]
+  simp only [comp_whiskerRight]
+  repeat' erw [Category.assoc]
+  rw [cancel_epi]
   show ((tensorPow D M'.X a ◁ winLegM A M'.X) ▷
       tensorPow D M.X (a + 1 + 1)) ≫
     ((α_ (tensorPow D M'.X a) M'.X M'.X).inv ▷
@@ -1189,9 +1191,9 @@ private theorem leg_step_eq
     (α_ ((tensorPow D M'.X a ⊗ M'.X) ⊗ M'.X) (tensorPow D M'.X b)
       M'.X).inv ≫
     ((tensorPowConcat M'.X (a + 2) b).hom ▷ M'.X) = _
-  rw [associator_inv_naturality_left_assoc,
+  erw [associator_inv_naturality_left_assoc,
     associator_inv_naturality_left_assoc]
-  simp only [comp_whiskerRight]
+  conv_rhs => erw [comp_whiskerRight, comp_whiskerRight]
   rfl
 
 /-- **The first slot relations of the power pairing**: at every
@@ -1232,7 +1234,9 @@ theorem rawPair_rel_fst
         (modPowLegN A M'.X a b ▷ M'.X)) ▷
           tensorPow D M.X (a + 2 + b + 1)) ≫
         rawPair A M M' d (a + 2 + b + 1)
-    simp only [comp_whiskerRight, Category.assoc, cancel_epi]
+    simp only [comp_whiskerRight]
+    repeat' erw [Category.assoc]
+    rw [cancel_epi]
     rw [rawPair_succ_step]
     show ((modPowLegM A M'.X a b ▷ M'.X) ▷
         tensorPow D M.X (a + 2 + b + 1)) ≫
@@ -1266,7 +1270,7 @@ theorem rawPair_rel_snd
   | 0, m, h => by
     subst h
     rw [rawPair_cast A M M' d (by omega : 0 + 2 + b = b + 1 + 1)]
-    rw [rawPair_succ_step, rawPair_succ_step,
+    erw [rawPair_succ_step, rawPair_succ_step,
       ← pairStep_postcomp]
     rw [powCast_rfl, Category.comp_id, Category.comp_id]
     rw [whisker_exchange_assoc, whisker_exchange_assoc]
@@ -1352,15 +1356,15 @@ theorem rawPair_rel_snd
           tensorPow D M.X b) ≫ modPowGlue M.X a b))) ≫
       pairStep A M M' d (rawPair A M M' d (a + 2 + b)) := by
       intro w
-      rw [← MonoidalCategory.whiskerLeft_comp_assoc,
-        ← MonoidalCategory.whiskerLeft_comp_assoc]
-      conv_lhs => simp only [Category.assoc]
-      rw [leg_step_snd_eq w a b]
-      rw [MonoidalCategory.whiskerLeft_comp,
-        MonoidalCategory.whiskerLeft_comp,
-        MonoidalCategory.whiskerLeft_comp]
-      simp only [Category.assoc]
-      rfl
+      have h := congrArg (fun t => (tensorPow D M'.X (a + 2 + b + 1) ◁ t) ≫
+        pairStep A M M' d (rawPair A M M' d (a + 2 + b)))
+        (leg_step_snd_eq w a b)
+      simp only [modPowGlue, tensorPow, MonoidalCategory.whiskerLeft_comp,
+        Category.assoc] at h ⊢
+      erw [MonoidalCategory.whiskerLeft_comp _
+        (powCast M.X (by omega : a + 1 + 2 + b = a + 2 + b + 1))
+        (powPeel M.X (a + 2 + b)).hom] at h
+      simpa only [Category.assoc] using! h
     refine ((hstep (winLegM A M.X)).trans ?_).trans
       (hstep (winLegN A M.X)).symm
     refine congrArg (CategoryStruct.comp _) ?_
@@ -1481,10 +1485,10 @@ theorem rawPair_actTail
       rw [braiding_tensorUnit_right]
       monoidal
     rw [rawPair_succ_step]
-    conv_lhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc,
+    conv_lhs => erw [← MonoidalCategory.whiskerLeft_comp_assoc,
       hact]
-    conv_lhs => simp only [MonoidalCategory.whiskerLeft_comp,
-      Category.assoc]
+    conv_lhs => simp only [MonoidalCategory.whiskerLeft_comp]
+    conv_lhs => erw [Category.assoc, Category.assoc]
     show ((tensorPow D M'.X 0 ⊗ M'.X) ◁
         (A ◁ (powPeel M.X 0).hom)) ≫
       ((tensorPow D M'.X 0 ⊗ M'.X) ◁
@@ -1496,7 +1500,7 @@ theorem rawPair_actTail
       (tensorPow D M'.X 0 ⊗ M'.X)
       (α_ A M.X (tensorPow D M.X 0)).inv]
     rw [pairStep_actHead]
-    conv_rhs => rw [comp_whiskerRight]
+    conv_rhs => erw [comp_whiskerRight]
     conv_rhs => simp only [Category.assoc]
     conv_rhs => rw [← associator_inv_naturality_middle_assoc,
       ← MonoidalCategory.whiskerLeft_comp_assoc,
@@ -1507,17 +1511,17 @@ theorem rawPair_actTail
           (A ◁ (powPeel M.X 0).hom)) =
         ((tensorPow D M'.X 0 ⊗ M'.X) ◁
           (A ◁ (powPeel M.X 0).hom)) from rfl]
-    conv_rhs => simp only [Category.assoc]
+    conv_rhs => erw [Category.assoc]
     refine congrArg (CategoryStruct.comp
       ((tensorPow D M'.X 0 ⊗ M'.X) ◁
         (A ◁ (powPeel M.X 0).hom))) ?_
     monoidal
   | n + 1 => by
     rw [rawPair_succ_step]
-    conv_lhs => rw [← MonoidalCategory.whiskerLeft_comp_assoc,
+    conv_lhs => erw [← MonoidalCategory.whiskerLeft_comp_assoc,
       powTailAct_peel A]
-    conv_lhs => simp only [MonoidalCategory.whiskerLeft_comp,
-      Category.assoc]
+    conv_lhs => simp only [MonoidalCategory.whiskerLeft_comp]
+    conv_lhs => erw [Category.assoc, Category.assoc]
     show ((tensorPow D M'.X (n + 1) ⊗ M'.X) ◁
         (A ◁ (powPeel M.X (n + 1)).hom)) ≫
       ((tensorPow D M'.X (n + 1) ⊗ M'.X) ◁
@@ -1528,7 +1532,7 @@ theorem rawPair_actTail
     rw [pairStep_postcomp]
     rw [rawPair_actTail A M M' d n]
     rw [pairStep_ext]
-    conv_rhs => rw [comp_whiskerRight]
+    conv_rhs => erw [comp_whiskerRight]
     conv_rhs => simp only [Category.assoc]
     conv_rhs => rw [← associator_inv_naturality_middle_assoc,
       ← MonoidalCategory.whiskerLeft_comp_assoc,
@@ -1539,7 +1543,7 @@ theorem rawPair_actTail
           (A ◁ (powPeel M.X (n + 1)).hom)) =
         ((tensorPow D M'.X (n + 1) ⊗ M'.X) ◁
           (A ◁ (powPeel M.X (n + 1)).hom)) from rfl]
-    conv_rhs => simp only [Category.assoc]
+    conv_rhs => erw [Category.assoc]
     refine congrArg (CategoryStruct.comp
       ((tensorPow D M'.X (n + 1) ⊗ M'.X) ◁
         (A ◁ (powPeel M.X (n + 1)).hom))) ?_
@@ -1831,7 +1835,7 @@ theorem pairPow_middle_cond
         rawPair A M M' d (n + 1) := by
     intro Y Y' f g
     refine (hstage1 (f ≫ g)).trans ?_
-    rw [comp_whiskerRight, Category.assoc]
+    erw [comp_whiskerRight, Category.assoc]
     rfl
   refine Eq.trans (congrArg (fun t =>
     (α_ (tensorPow D M'.X (n + 1)) A

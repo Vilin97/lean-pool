@@ -461,7 +461,7 @@ theorem modPowGlue_natural [Category.{v} D] [MonoidalCategory D] {X : D} {Y : D}
     ((tensorPowMap f a ⊗ₘ (f ⊗ₘ f)) ⊗ₘ tensorPowMap f b) ≫
         modPowGlue Y a b =
       modPowGlue X a b ≫ tensorPowMap f (a + 2 + b) := by
-  rw [modPowGlue, modPowGlue, ← Category.assoc, tensor_comp_whisker,
+  erw [modPowGlue, modPowGlue, ← Category.assoc, tensor_comp_whisker,
     MonoidalCategory.associator_inv_naturality,
     ← whisker_comp_tensor, Category.assoc, Category.assoc]
   exact congrArg (CategoryStruct.comp _)

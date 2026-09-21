@@ -140,7 +140,7 @@ theorem freeSlideTop_modPowπ
     freeSlideWin_modPowπ A V k 0 (rfl : k + 2 + 0 = k + 2)
   rw [modPowGlue, tensorPowConcat_zero, powCast_rfl,
     Category.id_comp] at hrel
-  simp only [Category.assoc] at hrel
+  repeat' erw [Category.assoc] at hrel
   rw [← MonoidalCategory.comp_whiskerRight_assoc] at hrel
   have hA : ((tensorPow D (A ⊗ V) k ◁ freeSlideWin A V) ≫
       (α_ (tensorPow D (A ⊗ V) k) (A ⊗ V) (A ⊗ V)).inv) ≫
@@ -150,7 +150,7 @@ theorem freeSlideTop_modPowπ
     refine (cancel_epi (ρ_ (tensorPow D (A ⊗ V) k ⊗
       (A ⊗ V) ⊗ (A ⊗ V))).hom).mp ?_
     exact Eq.trans (hnat _ _).symm (Eq.trans hrel (hnat _ _))
-  rw [freeSlideTop, Category.assoc]
+  erw [freeSlideTop, Category.assoc]
   exact (whisker_eq _ hA).trans (Iso.hom_inv_id_assoc _ _)
 
 end RS

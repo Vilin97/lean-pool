@@ -89,8 +89,7 @@ lemma dayUnitIso_hom_app_nu [SmallCategory D] [MonoidalCategory D] :
       (coyonedaDayCorepresentableBy (𝟙_ D)) = dayUnitIso D
     from rfl] at h
   refine h.trans ?_
-  dsimp [coyonedaDayCorepresentableBy]
-  rw [coyonedaEquiv_apply]
+  change coyonedaEquiv (𝟙 (coyoneda.obj (op (𝟙_ D)))) = 𝟙 (𝟙_ D)
   rfl
 
 /-- The inverse of the Day unit comparison carries the identity to
@@ -177,13 +176,14 @@ lemma dayCoyonedaIso_hom_leftUnitor [SmallCategory D] [MonoidalCategory D]
           DayFunctor.mk (coyoneda.obj (op (𝟙_ D ⊗ a))) ⟶
             DayFunctor.mk (coyoneda.obj (op a))) := by
     apply (dayCoyonedaCorepresentableBy (𝟙_ D) a).homEquiv.injective
-    rw [(dayCoyonedaCorepresentableBy (𝟙_ D) a).homEquiv_comp,
-      (dayCoyonedaCorepresentableBy (𝟙_ D) a).homEquiv_comp,
-      dayCoyonedaCorepresentableBy_homEquiv_iso,
-      dayEvaluation_map_apply, dayEvaluation_map_apply,
-      dayCoyonedaCorepresentableBy_homEquiv_apply,
-      whiskerRight_dayUnitIso_inv_app_unitElt,
-      day_leftUnitor_hom_app_eta]
+    change (λ_ (DayFunctor.mk (coyoneda.obj (op a)))).hom.natTrans.app (𝟙_ D ⊗ a)
+        (((dayUnitIso D).inv ▷ DayFunctor.mk (coyoneda.obj (op a))).natTrans.app
+          (𝟙_ D ⊗ a) (dayCoyonedaUnitElt (𝟙_ D) a)) =
+      (coyoneda.map ((λ_ a).inv.op)).app (𝟙_ D ⊗ a)
+        ((dayCoyonedaIso (𝟙_ D) a).hom.natTrans.app (𝟙_ D ⊗ a)
+          (dayCoyonedaUnitElt (𝟙_ D) a))
+    rw [dayCoyonedaIso_hom_app_unitElt,
+      whiskerRight_dayUnitIso_inv_app_unitElt, day_leftUnitor_hom_app_eta]
     show 𝟙 a ≫ (λ_ a).inv = (λ_ a).inv ≫ 𝟙 (𝟙_ D ⊗ a)
     rw [Category.id_comp, Category.comp_id]
   rw [← aux, ← Category.assoc, ← MonoidalCategory.comp_whiskerRight,
@@ -242,7 +242,7 @@ lemma dayYonedaIso_hom_leftUnitor [SmallCategory C] [MonoidalCategory C]
         (dayMkIso (Coyoneda.objOpOp x).symm).hom) ≫
       ((dayUnitIso Cᵒᵖ).hom ▷
         DayFunctor.mk (coyoneda.obj (op (op x)))) := by
-    rw [← MonoidalCategory.tensorHom_id,
+    erw [← MonoidalCategory.tensorHom_id,
       MonoidalCategory.tensorHom_comp_tensorHom, Category.id_comp,
       Category.assoc, comp_dayMkIso_hom_symm_hom,
       MonoidalCategory.tensorHom_def']
@@ -287,7 +287,7 @@ lemma indOf_leftUnitor_hom [SmallCategory C] [MonoidalCategory C]
         (indToDay (C := C)).obj (indOf.obj X)) ≫
         ((indToDayIndOfIso (𝟙_ C)).hom ⊗ₘ (indToDayIndOfIso X).hom) =
       DayFunctor.mk (yoneda.obj (𝟙_ C)) ◁ (indToDayIndOfIso X).hom := by
-    rw [← MonoidalCategory.tensorHom_id,
+    erw [← MonoidalCategory.tensorHom_id,
       MonoidalCategory.tensorHom_comp_tensorHom, Iso.inv_hom_id,
       Category.id_comp, MonoidalCategory.id_tensorHom]
   have hB : ((dayUnitIso Cᵒᵖ).hom ▷
@@ -468,7 +468,7 @@ theorem schurKilled_indOf_iff
     show permAlg (indOf.obj X) μ.card (P.e μ) = 0
     rw [hconj, (schurKilled_iff_indOf_map_permAlg_eq_zero P X μ).mp h0,
       zero_comp, comp_zero]
-    rfl
+
 
 /-- `RS.schurKilled_indOf_iff`, instantiated at the scalar unit of
 a category whose unit endomorphisms are exactly the scalars. -/

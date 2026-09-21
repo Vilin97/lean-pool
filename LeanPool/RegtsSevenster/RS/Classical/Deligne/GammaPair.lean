@@ -888,14 +888,14 @@ theorem gammaPairEven_actEE
           ((gammaModule D L R M.X).actEE x m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actEE x
           (gammaPairEven L R M N (tmulEE _ _ m n))
-      rw [gammaPairEven_tmulEE, gammaPairEven_tmulEE]
+      erw [gammaPairEven_tmulEE, gammaPairEven_tmulEE]
       exact (gpair_act_eee M N x m n).symm
     · intro m n
       show gammaPairEven L R M N (tmulOO _ _
           ((gammaModule D L R M.X).actEO x m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actEE x
           (gammaPairEven L R M N (tmulOO _ _ m n))
-      rw [gammaPairEven_tmulOO, gammaPairEven_tmulOO]
+      erw [gammaPairEven_tmulOO, gammaPairEven_tmulOO]
       exact (gpair_act_eoo L M N x m n).symm
   exact LinearMap.congr_fun key t
 
@@ -926,14 +926,14 @@ theorem gammaPairOdd_actEO
           ((gammaModule D L R M.X).actEE x m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actEO x
           (gammaPairOdd L R M N (tmulEO _ _ m n))
-      rw [gammaPairOdd_tmulEO, gammaPairOdd_tmulEO]
+      erw [gammaPairOdd_tmulEO, gammaPairOdd_tmulEO]
       exact (gpair_act_eeo L M N x m n).symm
     · intro m n
       show gammaPairOdd L R M N (tmulOE _ _
           ((gammaModule D L R M.X).actEO x m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actEO x
           (gammaPairOdd L R M N (tmulOE _ _ m n))
-      rw [gammaPairOdd_tmulOE, gammaPairOdd_tmulOE]
+      erw [gammaPairOdd_tmulOE, gammaPairOdd_tmulOE]
       exact (gpair_act_eoe L M N x m n).symm
   exact LinearMap.congr_fun key t
 
@@ -965,14 +965,14 @@ theorem gammaPairOdd_actOE
           ((gammaModule D L R M.X).actOE u m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actOE u
           (gammaPairEven L R M N (tmulEE _ _ m n))
-      rw [gammaPairOdd_tmulOE, gammaPairEven_tmulEE]
+      erw [gammaPairOdd_tmulOE, gammaPairEven_tmulEE]
       exact (gpair_act_oee L M N u m n).symm
     · intro m n
       show gammaPairOdd L R M N (tmulEO _ _
           ((gammaModule D L R M.X).actOO u m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actOE u
           (gammaPairEven L R M N (tmulOO _ _ m n))
-      rw [gammaPairOdd_tmulEO, gammaPairEven_tmulOO]
+      erw [gammaPairOdd_tmulEO, gammaPairEven_tmulOO]
       exact (gpair_act_ooo L M N u m n).symm
   exact LinearMap.congr_fun key t
 
@@ -1004,14 +1004,14 @@ theorem gammaPairEven_actOO
           ((gammaModule D L R M.X).actOE u m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actOO u
           (gammaPairOdd L R M N (tmulEO _ _ m n))
-      rw [gammaPairEven_tmulOO, gammaPairOdd_tmulEO]
+      erw [gammaPairEven_tmulOO, gammaPairOdd_tmulEO]
       exact (gpair_act_oeo L M N u m n).symm
     · intro m n
       show gammaPairEven L R M N (tmulEE _ _
           ((gammaModule D L R M.X).actOO u m) n) =
         (gammaModule D L R (modTensorMod R M N).X).actOO u
           (gammaPairOdd L R M N (tmulOE _ _ m n))
-      rw [gammaPairEven_tmulEE, gammaPairOdd_tmulOE]
+      erw [gammaPairEven_tmulEE, gammaPairOdd_tmulOE]
       exact (gpair_act_ooe L M N u m n).symm
   exact LinearMap.congr_fun key t
 

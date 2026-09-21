@@ -174,8 +174,8 @@ theorem interchange_legM
   have hcov' := congrArg (fun t => t ≫
     modTensorπ A (modTensorMod A N₁ P₁)
       (modTensorMod A N₂ P₂)) hcov
-  simp only [Category.assoc] at hcov'
-  conv_rhs => rw [hcov', midArrange]
+  repeat' erw [Category.assoc] at hcov'
+  conv_rhs => erw [hcov', midArrange]
   conv_rhs => simp only [Category.assoc]
   refine congrArg (CategoryStruct.comp
     (tensorμ (N₁.X ⊗ A) N₂.X P₁.X P₂.X)) ?_
@@ -225,7 +225,7 @@ theorem interchange_legN
   conv_lhs => rw [modTensorLegN, rawInterchangeπ,
     rawInterchange, comp_whiskerRight, Category.assoc,
     reassoc_of% h1]
-  conv_lhs => rw [reassoc_of% hml (actLeft A N₂.X ▷ P₂.X)
+  conv_lhs => erw [reassoc_of% hml (actLeft A N₂.X ▷ P₂.X)
     (modTensorπ A N₁ P₁) (modTensorπ A N₂ P₂)]
   have hassoc := associator_naturality (modTensorπ A N₁ P₁)
     (𝟙 A) (modTensorπ A N₂ P₂)
@@ -266,10 +266,10 @@ theorem interchange_legN
         ((actLeft A N₂.X ▷ P₂.X) ≫ modTensorπ A N₂ P₂)) ≫
       modTensorπ A (modTensorMod A N₁ P₁)
         (modTensorMod A N₂ P₂) := by
-    rw [← Category.assoc, hcov]
+    erw [← Category.assoc, hcov]
     exact (Category.assoc _ _ _).trans
       (congrArg (CategoryStruct.comp _) (Category.assoc _ _ _))
-  conv_rhs => rw [hcov', midArrange]
+  conv_rhs => erw [hcov', midArrange]
   conv_rhs => rw [Category.assoc]
   have hc := legN_core A (actLeft A N₂.X)
     (modTensorπ A N₁ P₁) (modTensorπ A N₂ P₂)
@@ -383,8 +383,8 @@ theorem interchange_legMP
   have hcov' := congrArg (fun t => t ≫
     modTensorπ A (modTensorMod A N₁ P₁)
       (modTensorMod A N₂ P₂)) hcov
-  simp only [Category.assoc] at hcov'
-  conv_rhs => rw [hcov', midArrangeP]
+  repeat' erw [Category.assoc] at hcov'
+  conv_rhs => erw [hcov', midArrangeP]
   conv_rhs => simp only [Category.assoc]
   refine congrArg (CategoryStruct.comp
     (tensorμ N₁.X N₂.X (P₁.X ⊗ A) P₂.X)) ?_
@@ -497,7 +497,7 @@ theorem interchange_legNP
   conv_lhs => rw [modTensorLegN, rawInterchangeπ,
     rawInterchange, MonoidalCategory.whiskerLeft_comp,
     Category.assoc, reassoc_of% h1]
-  conv_lhs => rw [reassoc_of% hml (N₂.X ◁ actLeft A P₂.X)
+  conv_lhs => erw [reassoc_of% hml (N₂.X ◁ actLeft A P₂.X)
     (modTensorπ A N₁ P₁) (modTensorπ A N₂ P₂)]
   have hassoc := associator_naturality (modTensorπ A N₁ P₁)
     (𝟙 A) (modTensorπ A N₂ P₂)
@@ -538,7 +538,7 @@ theorem interchange_legNP
         ((actLeft A N₂.X ▷ P₂.X) ≫ modTensorπ A N₂ P₂)) ≫
       modTensorπ A (modTensorMod A N₁ P₁)
         (modTensorMod A N₂ P₂) := by
-    rw [← Category.assoc, hcov]
+    erw [← Category.assoc, hcov]
     exact (Category.assoc _ _ _).trans
       (congrArg (CategoryStruct.comp _) (Category.assoc _ _ _))
   conv_rhs => rw [hcov', midArrangeP]

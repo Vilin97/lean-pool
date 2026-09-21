@@ -71,9 +71,11 @@ def actRestrict [AddCommGroup A] [Module ℂ A] [AddCommGroup E] [Module ℂ E]
   map_add' a b := by
     refine LinearMap.ext fun e => Subtype.ext ?_
     simp
+    rfl
   map_smul' c a := by
     refine LinearMap.ext fun e => Subtype.ext ?_
     simp
+    rfl
 
 @[simp]
 theorem actRestrict_coe

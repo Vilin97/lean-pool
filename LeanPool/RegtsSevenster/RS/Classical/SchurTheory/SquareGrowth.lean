@@ -64,8 +64,7 @@ theorem square_D_le (s : ℕ) (_hs : 1 ≤ s) :
         ((2 * s) ^ s *
           (((squareDiagram s).rowLens.length - 1) -
             (i : ℕ)).factorial) := by
-        refine Finset.prod_le_prod (fun _ _ => Nat.zero_le _)
-          (fun i _ => ?_)
+        refine Finset.prod_le_prod (fun i _ => ?_)
         rw [eStair_square s i]
         have hi := i.isLt
         rw [show ((squareDiagram s).rowLens.length - 1) -

@@ -211,7 +211,7 @@ theorem splitSeed_mu_right
       (splitStage Y i ◁ splitSeed Y pt) ≫ symMul (𝟙_ D) Y (i + 1) 1
   have hk : symPowCast (𝟙_ D) Y
       (by omega : i + 1 + (0 + 1) = i + 1 + 0 + 1) = 𝟙 _ := rfl
-  rw [hk, Category.comp_id, Iso.hom_inv_id_assoc]
+  erw [hk, Category.comp_id, Iso.hom_inv_id_assoc]
 
 /-- Associativity of the symmetric multiplication with all four
 arity transports abstracted, spelt uniformly in the powers. -/
