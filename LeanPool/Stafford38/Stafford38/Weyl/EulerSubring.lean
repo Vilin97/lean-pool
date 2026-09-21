@@ -165,6 +165,48 @@ theorem coordinate_mul_eulerPolynomial
       eulerPolynomialEval_mem_eulerSubring C x p hscalar f⟩
   exact coordinate_normal_eulerSubring C x p hweyl hcomm r
 
+/-- An ordered monomial with more coordinates than momenta has a right coordinate factor
+whose cofactor lies in the Euler subring. -/
+theorem orderedMonomial_eq_eulerSubring_mul_coordinate
+    (C : Subring A) (x p : A) (hweyl : p * x = x * p + 1)
+    (hcomm : ∀ c : C, x * (c : A) = (c : A) * x)
+    (hscalar : ∀ q : ℚ, algebraMap ℚ A q ∈ C)
+    (b : C) (a j : ℕ) (hja : j < a) :
+    ∃ U : eulerSubring C x p, (b : A) * x ^ a * p ^ j = (U : A) * x := by
+  obtain ⟨f, hf⟩ := Stafford.exists_eulerPolynomial_x_pow_mul_d_pow
+    (A := A) x p hweyl j
+  obtain ⟨s, hs⟩ := coordinate_mul_eulerPolynomial
+    C x p hweyl hcomm hscalar f
+  have hb : (b : A) ∈ eulerSubring C x p :=
+    coefficient_mem_eulerSubring C x p b
+  have hx : x ^ (a - j - 1) ∈ eulerSubring C x p :=
+    (eulerSubring C x p).pow_mem
+      (coordinate_mem_eulerSubring C
+        x p) (a - j - 1)
+  let U : eulerSubring C x p :=
+    ⟨(b : A) * x ^ (a - j - 1) * (s : A),
+      (eulerSubring C x p).mul_mem ((eulerSubring C x p).mul_mem hb hx) s.property⟩
+  refine ⟨U, ?_⟩
+  change (b : A) * x ^ a * p ^ j =
+    ((b : A) * x ^ (a - j - 1) *
+      (s : A)) * x
+  calc
+    (b : A) * x ^ a * p ^ j =
+        (b : A) * x ^ (a - j - 1) *
+          (x * (x ^ j * p ^ j)) := by
+      have ha : a = (a - j - 1) + 1 + j := by omega
+      conv_lhs => rw [ha, pow_add, pow_add]
+      simp only [pow_one]
+      simp only [mul_assoc]
+    _ = (b : A) * x ^ (a - j - 1) *
+          (x * Stafford.eulerPolynomialEval
+            x p f) := by rw [hf]
+    _ = (b : A) * x ^ (a - j - 1) *
+          ((s : A) * x) := by rw [hs]
+    _ = ((b : A) * x ^ (a - j - 1) *
+          (s : A)) * x := by
+      simp only [mul_assoc]
+
 end RationalEulerPolynomials
 
 section PairStage
@@ -241,43 +283,10 @@ theorem pairOrderedMonomial_eq_eulerSubring_mul_coordinate
     ∃ U : pairEulerSubring B,
       pairCoefficient b * pairCoordinate ^ a * pairMomentum ^ j =
         (U : PairStage (B := B)) * pairCoordinate := by
-  obtain ⟨f, hf⟩ := Stafford.exists_eulerPolynomial_x_pow_mul_d_pow
-    (A := PairStage (B := B)) pairCoordinate pairMomentum
-    pairMomentum_mul_coordinate j
-  obtain ⟨s, hs⟩ := coordinate_mul_eulerPolynomial
-    (pairOldSubring B) pairCoordinate pairMomentum
-    pairMomentum_mul_coordinate (pairOldSubring_commutes_coordinate B)
-    (rational_mem_pairOldSubring B) f
-  have hb : pairCoefficient b ∈ pairEulerSubring B :=
-    coefficient_mem_eulerSubring (pairOldSubring B) pairCoordinate pairMomentum
-      ⟨pairCoefficient b, ⟨b, rfl⟩⟩
-  have hx : pairCoordinate ^ (a - j - 1) ∈ pairEulerSubring B :=
-    (pairEulerSubring B).pow_mem
-      (coordinate_mem_eulerSubring (pairOldSubring B)
-        pairCoordinate pairMomentum) (a - j - 1)
-  let U : pairEulerSubring B :=
-    ⟨pairCoefficient b * pairCoordinate ^ (a - j - 1) * (s : PairStage (B := B)),
-      (pairEulerSubring B).mul_mem ((pairEulerSubring B).mul_mem hb hx) s.property⟩
-  refine ⟨U, ?_⟩
-  change pairCoefficient b * pairCoordinate ^ a * pairMomentum ^ j =
-    (pairCoefficient b * pairCoordinate ^ (a - j - 1) *
-      (s : PairStage (B := B))) * pairCoordinate
-  calc
-    pairCoefficient b * pairCoordinate ^ a * pairMomentum ^ j =
-        pairCoefficient b * pairCoordinate ^ (a - j - 1) *
-          (pairCoordinate * (pairCoordinate ^ j * pairMomentum ^ j)) := by
-      have ha : a = (a - j - 1) + 1 + j := by omega
-      conv_lhs => rw [ha, pow_add, pow_add]
-      simp only [pow_one]
-      simp only [mul_assoc]
-    _ = pairCoefficient b * pairCoordinate ^ (a - j - 1) *
-          (pairCoordinate * Stafford.eulerPolynomialEval
-            pairCoordinate pairMomentum f) := by rw [hf]
-    _ = pairCoefficient b * pairCoordinate ^ (a - j - 1) *
-          ((s : PairStage (B := B)) * pairCoordinate) := by rw [hs]
-    _ = (pairCoefficient b * pairCoordinate ^ (a - j - 1) *
-          (s : PairStage (B := B))) * pairCoordinate := by
-      simp only [mul_assoc]
+  exact orderedMonomial_eq_eulerSubring_mul_coordinate (pairOldSubring B)
+    pairCoordinate pairMomentum pairMomentum_mul_coordinate
+    (pairOldSubring_commutes_coordinate B) (rational_mem_pairOldSubring B)
+    ⟨pairCoefficient b, ⟨b, rfl⟩⟩ a j hja
 
 
 end PairStage

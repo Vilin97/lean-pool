@@ -52,7 +52,7 @@ theorem eval_symbolLinearAlgHom {n : ℕ}
 theorem homogeneous_unit_eq_monomial {N : ℕ}
     (P : MvPolynomial Unit k) (hP : P.IsHomogeneous N) :
     P = MvPolynomial.monomial (Finsupp.single () N)
-      (MvPolynomial.coeff (Finsupp.single () N) P) := by
+      (P.coeff (Finsupp.single () N)) := by
   ext d
   by_cases hd : d = Finsupp.single () N
   · subst d
@@ -105,7 +105,7 @@ theorem eval_axis_eq_eval_axisPolynomial_one {n : ℕ}
 theorem eval_axis_eq_pureCoefficient {n N : ℕ}
     (t : PhaseVar n) {P : SymbolRing k n} (hP : P.IsHomogeneous N) :
     MvPolynomial.eval (axisPoint k t) P =
-      MvPolynomial.coeff (Finsupp.single () N) (axisPolynomial k t P) := by
+      (axisPolynomial k t P).coeff (Finsupp.single () N) := by
   rw [eval_axis_eq_eval_axisPolynomial_one]
   rw [homogeneous_unit_eq_monomial k (axisPolynomial k t P)
     (axisPolynomial_isHomogeneous k t hP)]
@@ -141,8 +141,7 @@ theorem eval_symbolLinearAlgHom_axis {n : ℕ}
 theorem pureCoefficient_symbolLinearAlgHom {n N : ℕ}
     (M : Matrix (PhaseVar n) (PhaseVar n) k)
     (t : PhaseVar n) {P : SymbolRing k n} (hP : P.IsHomogeneous N) :
-    MvPolynomial.coeff (Finsupp.single () N)
-        (axisPolynomial k t (symbolLinearAlgHom k M P)) =
+    (axisPolynomial k t (symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) =
       MvPolynomial.eval (fun i => M i t) P := by
   rw [← eval_axis_eq_pureCoefficient k t
     (symbolLinearAlgHom_isHomogeneous k M hP)]
@@ -157,8 +156,7 @@ example [CharZero k] {n N : ℕ} {P : SymbolRing k n}
 example {n N : ℕ}
     (M : Matrix (PhaseVar n) (PhaseVar n) k)
     (t : PhaseVar n) {P : SymbolRing k n} (hP : P.IsHomogeneous N) :
-    MvPolynomial.coeff (Finsupp.single () N)
-        (axisPolynomial k t (symbolLinearAlgHom k M P)) =
+    (axisPolynomial k t (symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) =
       MvPolynomial.eval (fun i => M i t) P :=
   pureCoefficient_symbolLinearAlgHom k M t hP
 

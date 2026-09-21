@@ -127,7 +127,7 @@ theorem isDiscreteValuationRing_localization_of_height_eq_one
       ⟨IsLocalRing.isField_iff_maximalIdeal_eq.not.mp hnf, inferInstance⟩, ?_⟩
     rintro P ⟨hPb, hPp⟩
     exact IsLocalRing.eq_maximalIdeal (hPp.isMaximal_of_ne_bot hPb)
-  exact ((IsDiscreteValuationRing.TFAE (Localization.AtPrime p) hnf).out 3 0).mp h3
+  exact ((IsDiscreteValuationRing.TFAE (Localization.AtPrime p) hnf).out 4 1).mp h3
 
 /-- Contraction along an integral extension does not lower height. -/
 theorem height_le_height_under_of_isIntegral

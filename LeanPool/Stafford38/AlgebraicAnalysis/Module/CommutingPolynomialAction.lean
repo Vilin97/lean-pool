@@ -37,7 +37,9 @@ noncomputable def commutingPolynomialAction {σ : Type w}
     MvPolynomial σ k →ₐ[k] Module.End k V := by
   let S : Subalgebra k (Module.End k V) := Algebra.adjoin k (Set.range v)
   letI : IsMulCommutative S :=
-    Algebra.isMulCommutative_adjoin k (range_commutative v hcomm)
+    Algebra.isMulCommutative_adjoin k (by
+      intro x hx y hy _
+      exact range_commutative v hcomm x hx y hy)
   exact
     (S.val).comp
       (MvPolynomial.aeval (fun i =>

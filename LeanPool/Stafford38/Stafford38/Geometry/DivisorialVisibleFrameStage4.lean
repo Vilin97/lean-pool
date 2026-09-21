@@ -106,7 +106,7 @@ theorem stage4_residueField_isAlgebraic_of_isIntegral
     have haK : IsIntegral C (a : K) := by simpa [C] using hint a
     have haV : IsIntegral C av := by
       apply (isIntegral_algebraMap_iff (R := C) (A := V.toSubring)
-        (B := K) (fun x y h => Subtype.ext h)).mp
+        (B := K)).mp
       change IsIntegral C (a : K)
       exact haK
     let f : V.toSubring →ₐ[C] ResidueField V.toSubring :=
