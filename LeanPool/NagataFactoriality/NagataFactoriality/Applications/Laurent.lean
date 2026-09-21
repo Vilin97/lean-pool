@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira. All rights reserved.
+Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
@@ -9,6 +9,12 @@ import Mathlib.RingTheory.Localization.Ideal
 import Mathlib.RingTheory.Polynomial.UniqueFactorization
 import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Lemmas
 import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Theorem
+
+/-!
+# Laurent
+
+Supporting results for Nagata’s factoriality theorem.
+-/
 
 namespace NagataFactoriality
 
@@ -23,7 +29,7 @@ theorem polynomial_prime_X {R : Type*} [CommRing R] [IsDomain R] :
     Prime (Polynomial.X : R[X]) :=
   (Polynomial.prime_X : Prime (Polynomial.X : R[X]))
 
-theorem polynomial_toLaurent_prime_of_not_dvd_X {R : Type*} [CommRing R] [IsDomain R]
+theorem polynomial_toLaurent_prime_of_not_dvd_X {R : Type*} [CommRing R]
     {p : R[X]} (hp : Prime p) (hX : ¬ p ∣ X) : Prime (Polynomial.toLaurent p) := by
   let M : Submonoid R[X] := Submonoid.powers X
   have hspanPrime : (Ideal.span ({p} : Set R[X])).IsPrime :=
@@ -46,7 +52,7 @@ theorem polynomial_toLaurent_prime_of_not_dvd_X {R : Type*} [CommRing R] [IsDoma
 
 theorem laurentPolynomial_uniqueFactorizationMonoid {R : Type*} [CommRing R] [IsDomain R]
     [UniqueFactorizationMonoid R] : UniqueFactorizationMonoid R[T;T⁻¹] := by
-  letI : UniqueFactorizationMonoid R[X] := inferInstance
+  let : UniqueFactorizationMonoid R[X] := inferInstance
   rw [UniqueFactorizationMonoid.iff_exists_prime_factors]
   intro f hf
   obtain ⟨n, p, hpLaurent⟩ := LaurentPolynomial.exists_T_pow f
@@ -85,7 +91,8 @@ theorem laurentPolynomial_uniqueFactorizationMonoid {R : Type*} [CommRing R] [Is
     have hpqAssoc : Associated (Polynomial.toLaurent p) (Polynomial.toLaurent q) := by
       rw [hpq', map_mul, Polynomial.toLaurent_X_pow]
       simpa [LaurentPolynomial.T_mul] using
-        (associated_mul_unit_left (Polynomial.toLaurent q) (LaurentPolynomial.T (p.rootMultiplicity 0))
+        (associated_mul_unit_left (Polynomial.toLaurent q)
+          (LaurentPolynomial.T (p.rootMultiplicity 0))
           (LaurentPolynomial.isUnit_T (p.rootMultiplicity 0)))
     exact hmapassoc.trans (hfp.trans hpqAssoc).symm
 
@@ -95,19 +102,20 @@ theorem polynomial_uniqueFactorizationMonoid_of_laurent {R : Type*} [CommRing R]
   let S : Submonoid R[X] := Submonoid.powers X
   have hS : PrimeGenerated S := by
     simpa [S] using (primeGenerated_powers (p := (X : R[X])) (polynomial_prime_X (R := R)))
-  letI : _root_.IsLocalization S R[T;T⁻¹] := by
-    simpa [S] using (laurentPolynomial_isLocalization R : _root_.IsLocalization.Away (X : R[X]) R[T;T⁻¹])
+  let : _root_.IsLocalization S R[T;T⁻¹] := by
+    simpa [S] using (laurentPolynomial_isLocalization R :
+      _root_.IsLocalization.Away (X : R[X]) R[T;T⁻¹])
   exact nagata_theorem_isLocalization (R := R[X]) (T := R[T;T⁻¹]) S hS inferInstance
 
 theorem polynomial_uniqueFactorizationMonoid_via_nagata {R : Type*} [CommRing R] [IsDomain R]
     [IsNoetherianRing R] [UniqueFactorizationMonoid R] : UniqueFactorizationMonoid R[X] := by
-  letI : UniqueFactorizationMonoid R[T;T⁻¹] := laurentPolynomial_uniqueFactorizationMonoid (R := R)
+  let : UniqueFactorizationMonoid R[T;T⁻¹] := laurentPolynomial_uniqueFactorizationMonoid (R := R)
   exact polynomial_uniqueFactorizationMonoid_of_laurent (R := R)
 
 theorem iterated_polynomial_uniqueFactorizationMonoid_via_nagata
     {R : Type*} [CommRing R] [IsDomain R] [IsNoetherianRing R]
     [UniqueFactorizationMonoid R] : UniqueFactorizationMonoid (Polynomial (Polynomial R)) := by
-  letI : UniqueFactorizationMonoid R[X] :=
+  let : UniqueFactorizationMonoid R[X] :=
     polynomial_uniqueFactorizationMonoid_via_nagata (R := R)
   simpa using polynomial_uniqueFactorizationMonoid_via_nagata (R := R[X])
 

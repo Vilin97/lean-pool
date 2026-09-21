@@ -1,10 +1,16 @@
 /-
-Copyright (c) 2026 Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira. All rights reserved.
+Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
 import Mathlib.RingTheory.Localization.Basic
 import LeanPool.NagataFactoriality.NagataFactoriality.Localization.MultSet
+
+/-!
+# IsLocalization
+
+Supporting results for Nagata’s factoriality theorem.
+-/
 
 namespace NagataFactoriality
 
@@ -13,7 +19,7 @@ namespace IsLocalization
 variable {α β : Type*} [CommRing α] [CommRing β] {S : Submonoid α}
 variable [Algebra α β] [_root_.IsLocalization S β]
 
-@[simp] theorem mk'_mul_map (a s : α) (hs : s ∈ S) :
+theorem mk'_mul_map (a s : α) (hs : s ∈ S) :
     _root_.IsLocalization.mk' β a ⟨s, hs⟩ * algebraMap α β s = algebraMap α β a := by
   exact _root_.IsLocalization.mk'_spec_mk (M := S) (S := β) a s hs
 
@@ -23,7 +29,7 @@ variable [Algebra α β] [_root_.IsLocalization S β]
   simpa using (_root_.IsLocalization.mul_mk'_eq_mk'_of_mul (M := S) (S := β) a b ⟨s, hs⟩)
 
 theorem surj (z : β) : ∃ a s, ∃ hs : s ∈ S, z = _root_.IsLocalization.mk' β a ⟨s, hs⟩ := by
-  obtain ⟨a, s, hs⟩ := _root_.IsLocalization.mk'_surjective (M := S) (S := β) z
+  obtain ⟨⟨a, s⟩, hs⟩ := _root_.IsLocalization.mk'_surjective (M := S) (S := β) z
   exact ⟨a, s, s.property, hs.symm⟩
 
 section Nonzero
@@ -36,7 +42,8 @@ theorem algebraMap_injective (S : Submonoid α) [Fact ((0 : α) ∉ S)] [_root_.
   _root_.IsLocalization.injective (M := S) (S := β) hle
 
 theorem mk'_eq_iff {a b s t : α} (hs : s ∈ S) (ht : t ∈ S) :
-    _root_.IsLocalization.mk' β a ⟨s, hs⟩ = _root_.IsLocalization.mk' β b ⟨t, ht⟩ ↔ a * t = b * s := by
+    _root_.IsLocalization.mk' β a ⟨s, hs⟩ = _root_.IsLocalization.mk' β b ⟨t, ht⟩ ↔
+      a * t = b * s := by
   constructor
   · intro h
     have h' := (_root_.IsLocalization.mk'_eq_iff_eq' (M := S) (S := β)).1 h
@@ -55,7 +62,7 @@ theorem mk'_eq_zero_iff {a s : α} (hs : s ∈ S) :
   have h := mk'_eq_iff (S := S) (β := β) (a := a) (b := 0) (s := s) (t := 1) hs S.one_mem
   simpa using h
 
-@[simp] theorem map_eq_zero_iff (S : Submonoid α) [Fact ((0 : α) ∉ S)] [_root_.IsLocalization S β]
+theorem map_eq_zero_iff (S : Submonoid α) [Fact ((0 : α) ∉ S)] [_root_.IsLocalization S β]
     (a : α) : algebraMap α β a = 0 ↔ a = 0 := by
   let hle : S ≤ nonZeroDivisors α := NagataFactoriality.Submonoid.le_nonZeroDivisors
   exact _root_.IsLocalization.to_map_eq_zero_iff (M := S) (S := β) (x := a) hle
@@ -87,7 +94,8 @@ theorem dvd_map_iff {a b : α} :
       _ = _root_.IsLocalization.mk' β b ⟨1, S.one_mem⟩ := by
         apply (mk'_eq_iff (S := S) (β := β) (hs := hs) (ht := S.one_mem)).2
         simpa [mul_assoc, mul_left_comm, mul_comm] using hc.symm
-      _ = algebraMap α β b := by simpa using (_root_.IsLocalization.mk'_one (S := β) b)
+      _ = algebraMap α β b := by
+        convert (_root_.IsLocalization.mk'_one (M := S) (S := β) b) using 1
 
 end Nonzero
 

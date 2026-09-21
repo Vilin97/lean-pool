@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira. All rights reserved.
+Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
@@ -38,6 +38,8 @@ with `R[T;T⁻¹]`.
   then `R[X]` is a UFD, proved by localizing at constant primes and using Nagata's theorem.
 -/
 
+noncomputable section
+
 namespace NagataFactoriality
 
 open Polynomial
@@ -71,6 +73,7 @@ private theorem constPrimeSubmonoid_le_nzdMapC :
 
 variable {R}
 
+omit [IsDomain R] in
 /-- In a UFD, `C(r)` for nonzero `r` maps to a unit in the localization at constant primes,
 because `r` factors into primes and each constant prime becomes invertible. -/
 private theorem isUnit_algebraMap_C_of_ne_zero (r : R) (hr : r ≠ 0) :
@@ -124,21 +127,21 @@ theorem polynomial_uniqueFactorizationMonoid_via_fractionField
     [IsNoetherianRing R] : UniqueFactorizationMonoid R[X] := by
   let S := constPrimeSubmonoid R
   have hS : PrimeGenerated S := constPrimeSubmonoid_primeGenerated R
-  letI : Fact ((0 : R[X]) ∉ S) := ⟨zero_notMem_of_primeGenerated hS⟩
+  let : Fact ((0 : R[X]) ∉ S) := ⟨zero_notMem_of_primeGenerated hS⟩
   -- Set up the algebra structure on (FractionRing R)[X] over R[X]
-  letI : Algebra R[X] (FractionRing R)[X] :=
+  let : Algebra R[X] (FractionRing R)[X] :=
     (Polynomial.mapRingHom (algebraMap R (FractionRing R))).toAlgebra
   -- (FractionRing R)[X] is a localization of R[X] at nzdMapC
-  letI : IsLocalization (nzdMapC R) (FractionRing R)[X] :=
+  let : IsLocalization (nzdMapC R) (FractionRing R)[X] :=
     Polynomial.isLocalization (nonZeroDivisors R) (FractionRing R)
   -- The localization at constPrimeSubmonoid is also a localization at nzdMapC
-  letI : IsLocalization (nzdMapC R) (_root_.Localization S) :=
+  let : IsLocalization (nzdMapC R) (_root_.Localization S) :=
     isLocalization_nzdMapC_localization R
   -- Build the algebra equivalence between (FractionRing R)[X] and Localization S
   let e := IsLocalization.algEquiv (nzdMapC R)
     (Polynomial (FractionRing R)) (_root_.Localization S)
   -- (FractionRing R)[X] is a UFD: FractionRing R is a field, hence a UFD
-  haveI : UniqueFactorizationMonoid (FractionRing R)[X] := inferInstance
+  have : UniqueFactorizationMonoid (FractionRing R)[X] := inferInstance
   -- Transfer UFD across the algebra equivalence
   have hUFDLoc : UniqueFactorizationMonoid (_root_.Localization S) :=
     MulEquiv.uniqueFactorizationMonoid e.toMulEquiv inferInstance

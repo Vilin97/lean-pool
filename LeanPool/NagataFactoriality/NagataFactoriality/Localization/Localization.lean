@@ -1,27 +1,37 @@
 /-
-Copyright (c) 2026 Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira. All rights reserved.
+Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
 import Mathlib.RingTheory.Localization.Basic
 import LeanPool.NagataFactoriality.NagataFactoriality.Localization.MultSet
 
+/-!
+# Localization
+
+Supporting results for Nagata’s factoriality theorem.
+-/
+
 namespace NagataFactoriality
 
+/-- Localization of a commutative ring at a multiplicative submonoid. -/
 abbrev Localization {α : Type*} [CommRing α] (S : Submonoid α) := _root_.Localization S
 
 namespace Localization
 
 variable {α : Type*} [CommRing α] {S : Submonoid α}
 
+/-- The fraction with the given numerator and denominator in the submonoid. -/
 def mk (a s : α) (hs : s ∈ S) : Localization S :=
   _root_.Localization.mk a ⟨s, hs⟩
 
+/-- The canonical map from the ring into its localization. -/
 def of (a : α) : Localization S :=
   algebraMap α (Localization S) a
 
 @[simp] theorem mk_one (a : α) : mk (S := S) a 1 S.one_mem = of (S := S) a := by
-  simpa [mk, of] using (_root_.Localization.mk_one_eq_algebraMap (M := S) a)
+  unfold mk of
+  convert (_root_.Localization.mk_one_eq_algebraMap (M := S) a) using 1
 
 @[simp] theorem of_zero : of (S := S) (0 : α) = 0 := by
   simp [of]
@@ -49,7 +59,7 @@ def of (a : α) : Localization S :=
   exact mk_mul_den (S := S) a s hs
 
 theorem surj (z : Localization S) : ∃ a s, ∃ hs : s ∈ S, z = mk (S := S) a s hs := by
-  obtain ⟨a, s, hs⟩ := IsLocalization.mk'_surjective (M := S) (S := Localization S) z
+  obtain ⟨⟨a, s⟩, hs⟩ := IsLocalization.mk'_surjective (M := S) (S := Localization S) z
   exact ⟨a, s, s.property, by
     simpa [mk, _root_.Localization.mk_eq_mk'_apply] using hs.symm⟩
 
@@ -92,7 +102,7 @@ theorem mk_eq_zero_iff {a s : α} (hs : s ∈ S) : mk (S := S) a s hs = 0 ↔ a 
   simpa [of] using h
 
 @[simp] theorem of_eq_zero_iff (a : α) : of (S := S) a = 0 ↔ a = 0 := by
-  show algebraMap α (Localization S) a = 0 ↔ a = 0
+  change algebraMap α (Localization S) a = 0 ↔ a = 0
   exact IsLocalization.to_map_eq_zero_iff (M := S) (S := Localization S) (x := a)
     (Submonoid.le_nonZeroDivisors (S := S))
 

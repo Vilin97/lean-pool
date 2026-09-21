@@ -1,10 +1,16 @@
 /-
-Copyright (c) 2026 Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira. All rights reserved.
+Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
 import Mathlib.RingTheory.UniqueFactorizationDomain.Basic
 import LeanPool.NagataFactoriality.NagataFactoriality.Basic.Noetherian
+
+/-!
+# UFD
+
+Supporting results for Nagata’s factoriality theorem.
+-/
 
 namespace NagataFactoriality
 
@@ -13,20 +19,20 @@ theorem ufd_iff_factorization_and_irreducibles_prime {α : Type*} [CommRing α] 
   constructor
   · intro h
     refine ⟨?_, ?_⟩
-    · letI : UniqueFactorizationMonoid α := h
+    · let : UniqueFactorizationMonoid α := h
       exact (inferInstance : WfDvdMonoid α)
     · intro p hp
-      letI : UniqueFactorizationMonoid α := h
+      let : UniqueFactorizationMonoid α := h
       exact (UniqueFactorizationMonoid.irreducible_iff_prime).mp hp
   · rintro ⟨hfac, hprime⟩
     exact UniqueFactorizationMonoid.of_exists_prime_factors (fun a ha => by
-      letI : WfDvdMonoid α := hfac
+      let : WfDvdMonoid α := hfac
       obtain ⟨f, hf, hassoc⟩ := WfDvdMonoid.exists_factors a ha
       refine ⟨f, ?_, hassoc⟩
       intro b hb
       exact hprime b (hf b hb))
 
-theorem prime_iff_irreducible_of_ufd {α : Type*} [CommRing α] [IsDomain α]
+theorem prime_iff_irreducible_of_ufd {α : Type*} [CommRing α]
     [UniqueFactorizationMonoid α] {p : α} : Prime p ↔ Irreducible p :=
   UniqueFactorizationMonoid.irreducible_iff_prime.symm
 
@@ -51,7 +57,7 @@ theorem factorization_unique {α : Type*} [CommRing α] [IsDomain α]
     (hg : ∀ x ∈ g, Irreducible x)
     (hfg : Associated f.prod g.prod) :
     FactorizationEquivalent f g := by
-  letI : UniqueFactorizationMonoid α := ufd_of_factorization_and_primes hfac hprime
+  let : UniqueFactorizationMonoid α := ufd_of_factorization_and_primes hfac hprime
   exact UniqueFactorizationMonoid.factors_unique hf hg hfg
 
 theorem factors_unique {α : Type*} [CommRing α] [IsDomain α]
@@ -60,9 +66,9 @@ theorem factors_unique {α : Type*} [CommRing α] [IsDomain α]
     {a : α} (ha : a ≠ 0) {f : Multiset α}
     (hf : ∀ x ∈ f, Irreducible x)
     (hfa : Associated f.prod a) :
-    letI : UniqueFactorizationMonoid α := ufd_of_factorization_and_primes hfac hprime
+    let : UniqueFactorizationMonoid α := ufd_of_factorization_and_primes hfac hprime
     FactorizationEquivalent f (UniqueFactorizationMonoid.factors a) := by
-  letI : UniqueFactorizationMonoid α := ufd_of_factorization_and_primes hfac hprime
+  let : UniqueFactorizationMonoid α := ufd_of_factorization_and_primes hfac hprime
   exact UniqueFactorizationMonoid.factors_unique hf UniqueFactorizationMonoid.irreducible_of_factor
     (hfa.trans (UniqueFactorizationMonoid.factors_prod ha).symm)
 

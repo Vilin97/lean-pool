@@ -1,15 +1,22 @@
 /-
-Copyright (c) 2026 Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira. All rights reserved.
+Copyright (c) 2026 the authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
 import Mathlib.RingTheory.Noetherian.UniqueFactorizationDomain
 import LeanPool.NagataFactoriality.NagataFactoriality.Basic.Ring
 
+/-!
+# Divisibility
+
+Supporting results for Nagata’s factoriality theorem.
+-/
+
 namespace NagataFactoriality
 
 open scoped BigOperators
 
+/-- The product of a finite list, defined recursively. -/
 def listProd {α : Type*} [CommMonoid α] : List α → α
   | [] => 1
   | a :: as => a * listProd as
@@ -70,11 +77,11 @@ theorem prime_irreducible {α : Type*} [CommRing α] [IsDomain α] {p : α} (hp 
     Irreducible p :=
   hp.irreducible
 
-theorem associated_of_irreducible_of_dvd {α : Type*} [CommRing α] [IsDomain α] {p q : α}
+theorem associated_of_irreducible_of_dvd {α : Type*} [CommRing α] {p q : α}
     (hp : Irreducible p) (hq : Irreducible q) (hdiv : p ∣ q) : Associated p q := by
   exact (hp.dvd_irreducible_iff_associated hq).mp hdiv
 
-theorem prime_of_associated {α : Type*} [CommRing α] [IsDomain α] {p q : α}
+theorem prime_of_associated {α : Type*} [CommRing α] {p q : α}
     (hp : Prime p) (hassoc : Associated p q) : Prime q := by
   exact (hassoc.prime_iff).mp hp
 
