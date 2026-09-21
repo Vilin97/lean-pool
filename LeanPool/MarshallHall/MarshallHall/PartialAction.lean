@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -9,6 +9,12 @@ import Mathlib.Algebra.Group.Action.Hom
 import Mathlib.GroupTheory.GroupAction.Basic
 import Mathlib.GroupTheory.Index
 import Mathlib.Logic.Equiv.Fintype
+
+/-!
+The right action of a group on the quotient by the right-coset relation is
+available even when the subgroup is not normal.  We record it explicitly
+because this is the finite-state action used by the Hall construction.
+-/
 
 open Function
 
@@ -20,18 +26,17 @@ universe u
 
 variable {G : Type u} [Group G]
 
-/-!
-The right action of a group on the quotient by the right-coset relation is
-available even when the subgroup is not normal.  We record it explicitly
-because this is the finite-state action used by the Hall construction.
--/
 
+
+/-- The quotient by the subgroup's right-coset relation. -/
 abbrev RightCosetQuotient (H : Subgroup G) :=
   Quotient (QuotientGroup.rightRel H)
 
+/-- The quotient by the subgroup's left-coset relation. -/
 abbrev LeftCosetQuotient (H : Subgroup G) :=
   Quotient (QuotientGroup.leftRel H)
 
+/-- Left multiplication acting on left cosets of a subgroup. -/
 def leftMul (H : Subgroup G) (a : G) : LeftCosetQuotient H → LeftCosetQuotient H :=
   Quotient.lift (fun x : G => Quotient.mk'' (a * x)) (by
     intro x y hxy
@@ -44,6 +49,7 @@ def leftMul (H : Subgroup G) (a : G) : LeftCosetQuotient H → LeftCosetQuotient
 theorem leftMul_mk (H : Subgroup G) (a x : G) :
     leftMul H a (Quotient.mk'' x) = Quotient.mk'' (a * x) := rfl
 
+/-- Left multiplication as a permutation of the left-coset space. -/
 def leftMulEquiv (H : Subgroup G) (a : G) :
     LeftCosetQuotient H ≃ LeftCosetQuotient H where
   toFun := leftMul H a
@@ -101,6 +107,8 @@ section Restricted
 
 variable {Q : Type u} (A : Set Q) (e : Q ≃ Q)
 
+/-- The equivalence between points whose image remains in a subset and their image within that
+subset. -/
 def restrictedEquiv :
     {x : A // e x.1 ∈ A} ≃
       {y : A // ∃ x : A, e x.1 ∈ A ∧ e x.1 = y.1} where
@@ -127,6 +135,7 @@ theorem restrictedEquiv_apply (x : {x : A // e x.1 ∈ A}) :
 
 end Restricted
 
+/-- Right multiplication acting on right cosets of a subgroup. -/
 def rightMul (H : Subgroup G) (a : G) : RightCosetQuotient H → RightCosetQuotient H :=
   Quotient.lift (fun x : G => Quotient.mk'' (x * a)) (by
     intro x y hxy
@@ -139,6 +148,7 @@ def rightMul (H : Subgroup G) (a : G) : RightCosetQuotient H → RightCosetQuoti
 theorem rightMul_mk (H : Subgroup G) (a x : G) :
     rightMul H a (Quotient.mk'' x) = Quotient.mk'' (x * a) := rfl
 
+/-- Right multiplication as a permutation of the right-coset space. -/
 def rightMulEquiv (H : Subgroup G) (a : G) :
     RightCosetQuotient H ≃ RightCosetQuotient H where
   toFun := rightMul H a

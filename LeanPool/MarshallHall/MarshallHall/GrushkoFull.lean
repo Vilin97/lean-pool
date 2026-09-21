@@ -1,11 +1,10 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 import LeanPool.MarshallHall.MarshallHall.GrushkoReductionChain
 import LeanPool.MarshallHall.MarshallHall.GrushkoUnsafe
-
 
 /-!
 ## The full arbitrary-factor reduction
@@ -15,6 +14,9 @@ strong induction needed for the Grushko--Neumann theorem.  The first layer is
 the change-of-basepoint transport used when the monochromatic run begins away
 from the marked base.
 -/
+
+
+
 
 open Function Monoid.Coprod Quiver
 
@@ -32,6 +34,7 @@ variable {G H : Type u} [Group G] [Group H]
 
 /-! ### Forgetting orientations of symmetrized paths -/
 
+/-- Turns a formal reverse arrow into the actual reverse in an involutive quiver. -/
 def symmArrowHom {a b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a b) :
     @Quiver.Hom V qV (show V from a) (show V from b) :=
@@ -39,6 +42,7 @@ def symmArrowHom {a b : Symmetrify V}
   | Sum.inl f => f
   | Sum.inr f => Quiver.reverse f
 
+/-- Forgets formal symmetrization by replacing reversed arrows with their actual reverses. -/
 def ordinaryPathOfSymm : ∀ {a b : Symmetrify V},
     @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a b →
       @Quiver.Path V qV (show V from a) (show V from b)
@@ -46,6 +50,7 @@ def ordinaryPathOfSymm : ∀ {a b : Symmetrify V},
   | _, _, Path.cons p e =>
       (ordinaryPathOfSymm p).comp (symmArrowHom e).toPath
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem ordinaryPathOfSymm_read
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     {a b : Symmetrify V}
@@ -72,6 +77,7 @@ theorem ordinaryPathOfSymm_read
 
 /-! ### Change of basepoint -/
 
+/-- Moves the base vertex of a marked graph along a chosen path. -/
 def rerootMarkedGraph {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {r : V} (t : @Quiver.Path V qV M.base r) :
@@ -80,6 +86,7 @@ def rerootMarkedGraph {n : ℕ}
     labeling := M.labeling
     loops := fun i => t.reverse.comp ((M.loops i).comp t) }
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem rerootMarkedGraph_read {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {r : V} (t : @Quiver.Path V qV M.base r)
@@ -95,6 +102,7 @@ theorem rerootMarkedGraph_read {n : ℕ}
     M.labeling.pathRead (M.loops i)
   rfl
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem rerootMarkedGraph_isGenerating {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {r : V} (t : @Quiver.Path V qV M.base r)
@@ -104,6 +112,7 @@ theorem rerootMarkedGraph_isGenerating {n : ℕ}
   rw [rerootMarkedGraph_read M t ht]
   exact hgen
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem rerootMarkedGraph_weaklyConnected {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {r : V} (t : @Quiver.Path V qV M.base r)
@@ -116,10 +125,12 @@ theorem rerootMarkedGraph_weaklyConnected {n : ℕ}
 
 /-! ### The reduction package used by the global induction -/
 
+/-- Every generating connected marked graph with a reduced null run admits the required reducing
+fold. -/
 def HasReducedNullFold : Prop :=
   ∀ (n : ℕ) (W : Type) [Fintype W] [qW : Quiver.{0, 0} W]
-    [hW : HasInvolutiveReverse W]
-    [hHomW : ∀ a b : W, Fintype (@Quiver.Hom W qW a b)]
+    [_hW : HasInvolutiveReverse W]
+    [_hHomW : ∀ a b : W, Fintype (@Quiver.Hom W qW a b)]
     (M : MarkedBinaryGraph (G := G) (H := H) (V := W) n),
     ReverseFree (V := W) → M.IsGenerating → M.WeaklyConnected →
       Fintype.card (AllArrow (V := W)) ≤
@@ -141,6 +152,17 @@ def HasReducedNullFold : Prop :=
           @MarkedBinaryGraph.WeaklyConnected n G H U _ _ qU hU N ∧
           Fintype.card (@AllArrow U qU) ≤
             2 * (n + Fintype.card U - 1)
+
+private theorem null_path_tail_read
+    {V : Type} [qV : Quiver.{0, 0} V] [HasInvolutiveReverse V]
+    (L : BinaryLabelling (G := G) (H := H) (V := V))
+    {a b c : Symmetrify V} (e : a ⟶ b) (q : Path b c)
+    (h : L.symmPathRead (e.toPath.comp q) = 1) :
+    L.symmPathRead q = (separatedMap (allArrowLabel L (symmOrientedArrow e)))⁻¹ := by
+  rw [L.symmPathRead_comp] at h
+  have hq := eq_inv_of_mul_eq_one_right h
+  rw [L.symmPathRead_toPath] at hq
+  simpa [symmLabel_eq_allArrowLabel_oriented] using hq
 
 theorem exists_reduced_graph_of_minimal_null_path
     {V : Type} [Fintype V] [qV : Quiver.{0, 0} V]
@@ -184,14 +206,8 @@ theorem exists_reduced_graph_of_minimal_null_path
         exact (@Path.eq_of_length_zero (Symmetrify V)
           (@Quiver.symmetrifyQuiver V qV) M.base v p hzero).symm)
       hp hminimal
-  have hfirst : ∃ c : Symmetrify V,
-      ∃ e : @Quiver.Hom (Symmetrify V)
-        (@Quiver.symmetrifyQuiver V qV) r.source c,
-      ∃ q : @Quiver.Path (Symmetrify V)
-        (@Quiver.symmetrifyQuiver V qV) c r.target,
-        r.path = e.toPath.comp q :=
+  obtain ⟨c, e, q, hsplit⟩ :=
     BinaryLabelling.exists_first_edge_comp (V := V) r.path r.nonempty
-  obtain ⟨c, e, q, hsplit⟩ := hfirst
   have hecolor : binarySumIndex (G := G) (H := H)
       (M.labeling.symmLabel e) = r.color := by
     apply r.monochromatic
@@ -202,23 +218,9 @@ theorem exists_reduced_graph_of_minimal_null_path
     apply r.monochromatic z
     rw [hsplit, M.labeling.symmPathLabels_comp]
     exact List.mem_append.mpr (Or.inr hz)
-  have hprod : M.labeling.symmPathRead e.toPath *
-      M.labeling.symmPathRead q = 1 := by
-    calc
-      M.labeling.symmPathRead e.toPath *
-          M.labeling.symmPathRead q =
-          M.labeling.symmPathRead (e.toPath.comp q) :=
-        (M.labeling.symmPathRead_comp e.toPath q).symm
-      _ = M.labeling.symmPathRead r.path := by rw [hsplit]
-      _ = 1 := hrread
   have hqread : M.labeling.symmPathRead q =
-      (separatedMap (allArrowLabel M.labeling
-        (symmOrientedArrow e)))⁻¹ := by
-    have hqread' : M.labeling.symmPathRead q =
-        (M.labeling.symmPathRead e.toPath)⁻¹ :=
-      eq_inv_of_mul_eq_one_right hprod
-    rw [M.labeling.symmPathRead_toPath] at hqread'
-    simpa [symmLabel_eq_allArrowLabel_oriented] using hqread'
+      (separatedMap (allArrowLabel M.labeling (symmOrientedArrow e)))⁻¹ :=
+    null_path_tail_read M.labeling e q (by rw [← hsplit]; exact hrread)
   obtain ⟨t, ht⟩ := M.exists_null_path hgen
     (hconn (show V from r.source))
   let tOrd : @Quiver.Path V qV M.base (show V from r.source) :=
@@ -281,35 +283,35 @@ theorem exists_reduced_graph_of_minimal_null_path
     (M := Mroot) e₀ ha₀ q₀ hb₀ hq₀ hread₀ hrootgen hrootconn
   dsimp only at hs
   obtain ⟨e₁, ha₁, q₁, hq₁, hgen₁, hconn₁, hcard₁⟩ := hs
-  letI : Fintype (UnfoldVertex (allArrowSource e₀)) :=
+  let : Fintype (UnfoldVertex (allArrowSource e₀)) :=
     unfoldVertexFintype (allArrowSource e₀)
-  letI : Quiver (UnfoldVertex (allArrowSource e₀)) :=
+  let : Quiver (UnfoldVertex (allArrowSource e₀)) :=
     unfoldQuiver Mroot.labeling e₀
-  letI : HasInvolutiveReverse (UnfoldVertex (allArrowSource e₀)) :=
+  let : HasInvolutiveReverse (UnfoldVertex (allArrowSource e₀)) :=
     unfoldHasReverse Mroot.labeling e₀
-  letI (x y : UnfoldVertex (allArrowSource e₀)) : Fintype (x ⟶ y) :=
+  let (x y : UnfoldVertex (allArrowSource e₀)) : Fintype (x ⟶ y) :=
     unfoldQuiverHomFintype Mroot.labeling e₀ x y
-  letI : Fintype (foldVertex (unfoldNew (allArrowSource e₀))
+  let : Fintype (foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
         (show V from r.target) (unfoldEdgeColor Mroot.labeling e₀))) :=
     foldVertexFintype (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
         (show V from r.target) (unfoldEdgeColor Mroot.labeling e₀))
-  letI : Quiver (foldVertex (unfoldNew (allArrowSource e₀))
+  let : Quiver (foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
         (show V from r.target) (unfoldEdgeColor Mroot.labeling e₀))) :=
     foldQuiver e₁
-  letI : HasInvolutiveReverse (foldVertex (unfoldNew (allArrowSource e₀))
+  let : HasInvolutiveReverse (foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
         (show V from r.target) (unfoldEdgeColor Mroot.labeling e₀))) :=
     foldHasReverse e₁
-  letI (x y : foldVertex (unfoldNew (allArrowSource e₀))
+  let (x y : foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
         (show V from r.target) (unfoldEdgeColor Mroot.labeling e₀))) :
       Fintype (x ⟶ y) :=
     foldQuiverHomFintype e₁ x y
   have hrem := exists_removed_of_unfold_fold
-    (M := Mroot) e₀ ha₀ hb₀ e₁ hcard₁ hfree hEuler
+    (M := Mroot) e₀ ha₀ hb₀ e₁ hfree hEuler
   dsimp only at hrem
   have hrem' := hrem ha₁ q₁ hq₁ hgen₁ hconn₁
   unfold HasRemovedMarkedGraph at hrem'
@@ -352,8 +354,8 @@ theorem exists_reduced_graph_of_minimal_null_path
     exact foldVertexMk_eq_of_not_eq h
       (unfoldOld_ne_new (allArrowSource e₀)) holdb
   refine ⟨RemovedVertex vFold, removedVertexFintype vFold,
-    removeQuiver eₐ haₐ hnₐ, removeHasReverse eₐ haₐ hnₐ,
-    (fun x y => removeQuiverHomFintype eₐ haₐ hnₐ x y), ?_⟩
+    removeQuiver eₐ hnₐ, removeHasReverse eₐ hnₐ,
+    (fun x y => removeQuiverHomFintype eₐ hnₐ x y), ?_⟩
   refine ⟨removedMarkedGraph Nfold hbaseFold eₐ haₐ hnₐ
       (unfoldEdgeColor Mroot.labeling e₀)
       (by
@@ -397,10 +399,10 @@ theorem separated_generators_of_hasReducedNullFold
           obtain ⟨U, hFU, qU, hU, hHomU, hpack⟩ :=
             hred n V M hfree hgen hconn hEuler htwo
           obtain ⟨N, hcardN, hfreeN, hgenN, hconnN, hEulerN⟩ := hpack
-          letI : Fintype U := hFU
-          letI : Quiver.{0, 0} U := qU
-          letI : HasInvolutiveReverse U := hU
-          letI (a b : U) : Fintype (a ⟶ b) := hHomU a b
+          let : Fintype U := hFU
+          let : Quiver.{0, 0} U := qU
+          let : HasInvolutiveReverse U := hU
+          let (a b : U) : Fintype (a ⟶ b) := hHomU a b
           have hcard' : Fintype.card U < k := by
             simpa [hcard] using hcardN
           exact ih (V := U) (Fintype.card U) hcard' n N rfl
@@ -408,18 +410,18 @@ theorem separated_generators_of_hasReducedNullFold
   intro n x hx
   let V : Type := RoseVertex (fun i =>
     binaryReducedLetters (G := G) (H := H) (x i))
-  letI : Fintype V := by
+  let : Fintype V := by
     dsimp [V]
     infer_instance
-  letI : Quiver V := by
+  let : Quiver V := by
     dsimp [V]
     exact roseQuiver (fun i =>
       binaryReducedLetters (G := G) (H := H) (x i))
-  letI : HasInvolutiveReverse V := by
+  let : HasInvolutiveReverse V := by
     dsimp [V]
     exact roseHasReverse (fun i =>
       binaryReducedLetters (G := G) (H := H) (x i))
-  letI (a b : V) : Fintype (a ⟶ b) := by
+  let (a b : V) : Fintype (a ⟶ b) := by
     dsimp [V]
     exact roseHomFintype _ _ _
   let M : MarkedBinaryGraph (G := G) (H := H) (V := V) n :=

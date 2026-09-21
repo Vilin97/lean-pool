@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -19,6 +19,8 @@ This file establishes that bound for the initial rose and records the exact
 cardinalities needed to transport it through a fold.
 -/
 
+
+
 open Function Monoid.Coprod Quiver
 
 noncomputable section
@@ -30,6 +32,7 @@ universe u
 
 variable {G H : Type u} [Group G] [Group H]
 
+/-- Identifies packaged arrows of a rose with its explicitly indexed oriented edges. -/
 def roseAllArrowEquiv {n : ℕ} (w : Fin n → List (Sum G H)) :
     AllArrow (V := RoseVertex w) ≃ RoseEdge w :=
   { toFun := fun e => e.2.2.1
@@ -50,6 +53,7 @@ def roseAllArrowEquiv {n : ℕ} (w : Fin n → List (Sum G H)) :
       intro e
       rfl }
 
+/-- Indexes rose edges by a petal, a letter position, and an orientation flag. -/
 def roseEdgeSigmaEquiv {n : ℕ} (w : Fin n → List (Sum G H)) :
     RoseEdge w ≃ Σ i : Fin n, Fin ((w i).length) × Bool :=
   { toFun := fun e => ⟨e.i, e.k, e.forward⟩
@@ -81,6 +85,7 @@ noncomputable instance roseAllArrowFintype {n : ℕ}
       (RoseVertex w) (roseQuiver w) a b) := roseHomFintype w a b
   exact allArrowFintype
 
+omit [Group G] [Group H] in
 theorem roseEdge_card {n : ℕ} (w : Fin n → List (Sum G H)) :
     Fintype.card (RoseEdge w) =
       2 * ∑ i : Fin n, (w i).length := by
@@ -90,6 +95,7 @@ theorem roseEdge_card {n : ℕ} (w : Fin n → List (Sum G H)) :
   rw [Finset.mul_sum]
   simp [Nat.mul_comm]
 
+omit [Group G] [Group H] in
 theorem roseVertex_card {n : ℕ} (w : Fin n → List (Sum G H)) :
     Fintype.card (RoseVertex w) =
       1 + ∑ i : Fin n, ((w i).length - 1) := by
@@ -97,6 +103,7 @@ theorem roseVertex_card {n : ℕ} (w : Fin n → List (Sum G H)) :
   rw [Fintype.card_option, Fintype.card_sigma]
   simp [Nat.add_comm]
 
+omit [Group G] [Group H] in
 theorem roseWords_length_le {n : ℕ} (w : Fin n → List (Sum G H)) :
     (∑ i : Fin n, (w i).length) ≤
       n + ∑ i : Fin n, ((w i).length - 1) := by
@@ -107,11 +114,13 @@ theorem roseWords_length_le {n : ℕ} (w : Fin n → List (Sum G H)) :
     _ = n + ∑ i : Fin n, ((w i).length - 1) := by
       simp [Finset.sum_add_distrib]
 
+omit [Group G] [Group H] in
 theorem roseAllArrow_card_eq_roseEdge_card {n : ℕ}
     (w : Fin n → List (Sum G H)) :
     Fintype.card (AllArrow (V := RoseVertex w)) = Fintype.card (RoseEdge w) := by
   exact Fintype.card_congr (roseAllArrowEquiv w)
 
+omit [Group G] [Group H] in
 theorem roseAllArrow_card_le_euler {n : ℕ}
     (w : Fin n → List (Sum G H)) :
     Fintype.card (AllArrow (V := RoseVertex w)) ≤

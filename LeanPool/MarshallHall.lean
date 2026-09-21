@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -36,7 +36,7 @@ import LeanPool.MarshallHall.Solution
 Source: url:https://github.com/arthur742ramos/marshallhalltheorem
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 Status: verified
-Main declarations: `MarshallHall.marshallHall`, `LERFChallenge.freeGroup_finite_permutation_separator`, `MarshallHall.rank_freeProduct_eq_add`
+Main declarations: `MarshallHall.marshallHall`, `MarshallHall.rank_freeProduct_eq_add`
 Tags: group-theory
 MSC: 20E07, 20F65, 05C25
 -/

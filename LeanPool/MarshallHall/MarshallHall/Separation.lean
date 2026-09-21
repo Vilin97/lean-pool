@@ -1,10 +1,12 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 import LeanPool.MarshallHall.MarshallHall.FiniteCore
 import Mathlib.GroupTheory.Finiteness
+
+/-! The finite state set used in the separation argument. -/
 
 open Set Function
 
@@ -16,8 +18,9 @@ universe u
 
 variable {α : Type u}
 
-/-! The finite state set used in the separation argument. -/
 
+
+/-- The finite-core points viewed as states in the subgroup's left-coset space. -/
 def coreStateSet [DecidableEq α] (H : Subgroup (FreeGroup α))
     (S : Finset (FreeGroup α)) (g : FreeGroup α) :
     Set (LeftCosetQuotient H) :=
@@ -47,29 +50,155 @@ base state but the element does not.  This is the explicit finite quotient
 surface behind subgroup separability; the older existential finite-index
 subgroup statement is derived from its basepoint stabilizer below. -/
 
+/-- A finite permutation representation fixing the subgroup at a base state and moving that state
+by `g`. -/
 structure FinitePermutationSeparator
     (H : Subgroup (FreeGroup α)) (g : FreeGroup α) where
+  /-- The finite state type of the separating permutation representation. -/
   State : Type u
+  /-- The finite enumeration of the representation's states. -/
   [stateFintype : Fintype State]
+  /-- The free-group action on states as a homomorphism into their permutation group. -/
   representation : FreeGroup α →* Equiv.Perm State
+  /-- The state fixed by the subgroup and moved by the element being separated. -/
   base : State
   fixes_subgroup : ∀ h : H, representation (h : FreeGroup α) base = base
   separates : representation g base ≠ base
 
+/-- A permutation representation agrees with left multiplication along every word staying in
+its finite core, provided its generator permutations extend the corresponding partial actions. -/
+theorem word_action_of_generator_extensions {α : Type*}
+    (H : Subgroup (FreeGroup α)) (A : Set (LeftCosetQuotient H)) (base : A)
+    (hbase : base.1 = Quotient.mk'' (1 : FreeGroup α))
+    (genPerm : α → Equiv.Perm A) (rho : FreeGroup α →* Equiv.Perm A)
+    (genPerm_apply : ∀ {a : α} {z : A}
+      (hz : leftMulEquiv H (FreeGroup.of a) z.1 ∈ A),
+      genPerm a z = ⟨leftMulEquiv H (FreeGroup.of a) z.1, hz⟩)
+    (genPerm_inv_apply : ∀ {a : α} {z : A}
+      (hz : leftMulEquiv H (FreeGroup.of a)⁻¹ z.1 ∈ A),
+      (genPerm a).symm z = ⟨leftMulEquiv H (FreeGroup.of a)⁻¹ z.1, hz⟩)
+    (rho_singleton : ∀ x : α × Bool, rho (FreeGroup.mk [x]) =
+      if x.2 then genPerm x.1 else (genPerm x.1).symm) :
+    ∀ w : List (α × Bool),
+      (∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
+        (Quotient.mk'' x : LeftCosetQuotient H) ∈ A) →
+      ((rho (FreeGroup.mk w)) base : A).1 =
+        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) := by
+  classical
+  intro w
+  induction w with
+  | nil =>
+      intro hcore
+      change ((rho 1) base : A).1 = Quotient.mk'' 1
+      rw [map_one]
+      exact hbase
+  | cons x w ih =>
+      rcases x with ⟨a, b⟩
+      cases b with
+      | false =>
+          intro hcore
+          have htail : ∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
+              (Quotient.mk'' x : LeftCosetQuotient H) ∈ A := by
+            intro u hu x hx
+            apply hcore u (by
+              simp only [List.tails, List.mem_cons]
+              exact Or.inr hu) x hx
+          have hi := ih htail
+          have hwfinal :
+              (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
+            exact hcore w (by simp [List.tails]) _ (wordValue_mem_actionStates w)
+          have hi' : rho (FreeGroup.mk w) base =
+              ⟨Quotient.mk'' (wordValue w), hwfinal⟩ := by
+            apply Subtype.ext
+            exact hi
+          have hfinal :
+              (Quotient.mk'' (wordValue ((a, false) :: w)) :
+                LeftCosetQuotient H) ∈ A := by
+            exact hcore ((a, false) :: w) (by simp [List.tails]) _
+              (wordValue_mem_actionStates ((a, false) :: w))
+          have htarget :
+              leftMulEquiv H (FreeGroup.of a)⁻¹
+                  (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
+            rw [leftMulEquiv_mk]
+            simpa [wordValue, signedLetter] using hfinal
+          calc
+            ((rho (FreeGroup.mk ((a, false) :: w))) base : A).1 =
+                ((rho (FreeGroup.mk [(a, false)]))
+                  (rho (FreeGroup.mk w) base) : A).1 := by
+              rw [show FreeGroup.mk ((a, false) :: w) =
+                  FreeGroup.mk [(a, false)] * FreeGroup.mk w by
+                rw [FreeGroup.mul_mk]
+                rfl, rho.map_mul, Equiv.Perm.mul_apply]
+            _ = ((genPerm a).symm
+                  ⟨Quotient.mk'' (wordValue w), hwfinal⟩ : A).1 := by
+              rw [hi', rho_singleton]
+              rfl
+            _ = (leftMulEquiv H (FreeGroup.of a)⁻¹
+                  (Quotient.mk'' (wordValue w) : LeftCosetQuotient H)) := by
+              rw [genPerm_inv_apply htarget]
+            _ = (Quotient.mk'' (wordValue ((a, false) :: w)) :
+                  LeftCosetQuotient H) := by
+              rw [leftMulEquiv_mk]
+              simp [wordValue, signedLetter]
+      | true =>
+          intro hcore
+          have htail : ∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
+              (Quotient.mk'' x : LeftCosetQuotient H) ∈ A := by
+            intro u hu x hx
+            apply hcore u (by
+              simp only [List.tails, List.mem_cons]
+              exact Or.inr hu) x hx
+          have hi := ih htail
+          have hwfinal :
+              (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
+            exact hcore w (by simp [List.tails]) _ (wordValue_mem_actionStates w)
+          have hi' : rho (FreeGroup.mk w) base =
+              ⟨Quotient.mk'' (wordValue w), hwfinal⟩ := by
+            apply Subtype.ext
+            exact hi
+          have hfinal :
+              (Quotient.mk'' (wordValue ((a, true) :: w)) :
+                LeftCosetQuotient H) ∈ A := by
+            exact hcore ((a, true) :: w) (by simp [List.tails]) _
+              (wordValue_mem_actionStates ((a, true) :: w))
+          have htarget :
+              leftMulEquiv H (FreeGroup.of a)
+                  (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
+            rw [leftMulEquiv_mk]
+            simpa [wordValue, signedLetter] using hfinal
+          calc
+            ((rho (FreeGroup.mk ((a, true) :: w))) base : A).1 =
+                ((rho (FreeGroup.mk [(a, true)]))
+                  (rho (FreeGroup.mk w) base) : A).1 := by
+              rw [show FreeGroup.mk ((a, true) :: w) =
+                  FreeGroup.mk [(a, true)] * FreeGroup.mk w by
+                rw [FreeGroup.mul_mk]
+                rfl, rho.map_mul, Equiv.Perm.mul_apply]
+            _ = (genPerm a
+                  ⟨Quotient.mk'' (wordValue w), hwfinal⟩ : A).1 := by
+              rw [hi', rho_singleton]
+              rfl
+            _ = (leftMulEquiv H (FreeGroup.of a)
+                  (Quotient.mk'' (wordValue w) : LeftCosetQuotient H)) := by
+              rw [genPerm_apply htarget]
+            _ = (Quotient.mk'' (wordValue ((a, true) :: w)) :
+                  LeftCosetQuotient H) := by
+              rw [leftMulEquiv_mk]
+              simp [wordValue, signedLetter]
+
 theorem freeGroup_finite_permutation_separator_proved
-    {α : Type*} [Finite α]
-    (H : Subgroup (FreeGroup α))
+    {α : Type*} (H : Subgroup (FreeGroup α))
     [Group.FG H]
     (g : FreeGroup α)
     (hg : g ∉ H) :
     Nonempty (FinitePermutationSeparator H g) := by
   classical
-  letI : DecidableEq α := Classical.decEq α
+  let : DecidableEq α := Classical.decEq α
   obtain ⟨S, hS⟩ := (Group.fg_iff_subgroup_fg H).mp (inferInstance : Group.FG H)
   let A : Set (LeftCosetQuotient H) := coreStateSet H S g
   have hAfin : A.Finite := by
     exact coreStateSet_finite H S g
-  letI : Fintype A := hAfin.fintype
+  let : Fintype A := hAfin.fintype
   let q0 : LeftCosetQuotient H := Quotient.mk'' (1 : FreeGroup α)
   have hq0 : q0 ∈ A := by
     exact one_mem_coreStateSet H S g
@@ -77,7 +206,7 @@ theorem freeGroup_finite_permutation_separator_proved
   let genPerm : α → Equiv.Perm A := fun a =>
     Equiv.extendSubtype (restrictedEquiv A (leftMulEquiv H (FreeGroup.of a)))
   let rho : FreeGroup α →* Equiv.Perm A := FreeGroup.lift genPerm
-  letI : MulAction (FreeGroup α) A := MulAction.compHom A rho
+  let : MulAction (FreeGroup α) A := MulAction.compHom A rho
   have genPerm_apply {a : α} {z : A}
       (hz : leftMulEquiv H (FreeGroup.of a) z.1 ∈ A) :
       genPerm a z = ⟨leftMulEquiv H (FreeGroup.of a) z.1, hz⟩ := by
@@ -113,106 +242,9 @@ theorem freeGroup_finite_permutation_separator_proved
       (∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
         (Quotient.mk'' x : LeftCosetQuotient H) ∈ A) →
       ((rho (FreeGroup.mk w)) base : A).1 =
-        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) := by
-    intro w
-    induction w with
-    | nil =>
-        intro hcore
-        simp [rho, wordValue, q0, base]
-    | cons x w ih =>
-        rcases x with ⟨a, b⟩
-        cases b with
-        | false =>
-            intro hcore
-            have htail : ∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
-                (Quotient.mk'' x : LeftCosetQuotient H) ∈ A := by
-              intro u hu x hx
-              apply hcore u (by
-                simp only [List.tails, List.mem_cons]
-                exact Or.inr hu) x hx
-            have hi := ih htail
-            have hwfinal :
-                (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
-              exact hcore w (by simp [List.tails]) _ (wordValue_mem_actionStates w)
-            have hi' : rho (FreeGroup.mk w) base =
-                ⟨Quotient.mk'' (wordValue w), hwfinal⟩ := by
-              apply Subtype.ext
-              exact hi
-            have hfinal :
-                (Quotient.mk'' (wordValue ((a, false) :: w)) :
-                  LeftCosetQuotient H) ∈ A := by
-              exact hcore ((a, false) :: w) (by simp [List.tails]) _
-                (wordValue_mem_actionStates ((a, false) :: w))
-            have htarget :
-                leftMulEquiv H (FreeGroup.of a)⁻¹
-                    (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
-              rw [leftMulEquiv_mk]
-              simpa [wordValue, signedLetter] using hfinal
-            calc
-              ((rho (FreeGroup.mk ((a, false) :: w))) base : A).1 =
-                  ((rho (FreeGroup.mk [(a, false)]))
-                    (rho (FreeGroup.mk w) base) : A).1 := by
-                rw [show FreeGroup.mk ((a, false) :: w) =
-                    FreeGroup.mk [(a, false)] * FreeGroup.mk w by
-                  rw [FreeGroup.mul_mk]
-                  rfl, rho.map_mul, Equiv.Perm.mul_apply]
-              _ = ((genPerm a).symm
-                    ⟨Quotient.mk'' (wordValue w), hwfinal⟩ : A).1 := by
-                rw [hi', rho_singleton]
-                rfl
-              _ = (leftMulEquiv H (FreeGroup.of a)⁻¹
-                    (Quotient.mk'' (wordValue w) : LeftCosetQuotient H)) := by
-                rw [genPerm_inv_apply htarget]
-              _ = (Quotient.mk'' (wordValue ((a, false) :: w)) :
-                    LeftCosetQuotient H) := by
-                rw [leftMulEquiv_mk]
-                simp [wordValue, signedLetter]
-        | true =>
-            intro hcore
-            have htail : ∀ u ∈ List.tails w, ∀ x ∈ actionStates u,
-                (Quotient.mk'' x : LeftCosetQuotient H) ∈ A := by
-              intro u hu x hx
-              apply hcore u (by
-                simp only [List.tails, List.mem_cons]
-                exact Or.inr hu) x hx
-            have hi := ih htail
-            have hwfinal :
-                (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
-              exact hcore w (by simp [List.tails]) _ (wordValue_mem_actionStates w)
-            have hi' : rho (FreeGroup.mk w) base =
-                ⟨Quotient.mk'' (wordValue w), hwfinal⟩ := by
-              apply Subtype.ext
-              exact hi
-            have hfinal :
-                (Quotient.mk'' (wordValue ((a, true) :: w)) :
-                  LeftCosetQuotient H) ∈ A := by
-              exact hcore ((a, true) :: w) (by simp [List.tails]) _
-                (wordValue_mem_actionStates ((a, true) :: w))
-            have htarget :
-                leftMulEquiv H (FreeGroup.of a)
-                    (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
-              rw [leftMulEquiv_mk]
-              simpa [wordValue, signedLetter] using hfinal
-            calc
-              ((rho (FreeGroup.mk ((a, true) :: w))) base : A).1 =
-                  ((rho (FreeGroup.mk [(a, true)]))
-                    (rho (FreeGroup.mk w) base) : A).1 := by
-                rw [show FreeGroup.mk ((a, true) :: w) =
-                    FreeGroup.mk [(a, true)] * FreeGroup.mk w by
-                  rw [FreeGroup.mul_mk]
-                  rfl, rho.map_mul, Equiv.Perm.mul_apply]
-              _ = (genPerm a
-                    ⟨Quotient.mk'' (wordValue w), hwfinal⟩ : A).1 := by
-                rw [hi', rho_singleton]
-                rfl
-              _ = (leftMulEquiv H (FreeGroup.of a)
-                    (Quotient.mk'' (wordValue w) : LeftCosetQuotient H)) := by
-                rw [genPerm_apply htarget]
-              _ = (Quotient.mk'' (wordValue ((a, true) :: w)) :
-                    LeftCosetQuotient H) := by
-                rw [leftMulEquiv_mk]
-                simp [wordValue, signedLetter]
-
+        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) :=
+    word_action_of_generator_extensions H A base rfl genPerm rho
+      genPerm_apply genPerm_inv_apply rho_singleton
   let K : Subgroup (FreeGroup α) := MulAction.stabilizer (FreeGroup α) base
   have gen_mem : ∀ s ∈ S, s ∈ K := by
     intro s hs
@@ -284,16 +316,15 @@ base state, so the finite-index witness is still tied to the actual
 permutation representation. -/
 
 theorem freeGroup_subgroup_separable_proved
-    {α : Type*} [Finite α]
-    (H : Subgroup (FreeGroup α))
+    {α : Type*} (H : Subgroup (FreeGroup α))
     [Group.FG H]
     (g : FreeGroup α)
     (hg : g ∉ H) :
     ∃ K : Subgroup (FreeGroup α),
       H ≤ K ∧ K.index ≠ 0 ∧ g ∉ K := by
   obtain ⟨s⟩ := freeGroup_finite_permutation_separator_proved H g hg
-  letI : Fintype s.State := s.stateFintype
-  letI : MulAction (FreeGroup α) s.State :=
+  let : Fintype s.State := s.stateFintype
+  let : MulAction (FreeGroup α) s.State :=
     MulAction.compHom s.State s.representation
   let K : Subgroup (FreeGroup α) :=
     MulAction.stabilizer (FreeGroup α) s.base

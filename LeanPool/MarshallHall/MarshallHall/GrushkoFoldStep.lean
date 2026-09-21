@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -15,6 +15,8 @@ non-loop and removes the corresponding geometric edge.  This file starts the
 construction at the type level.  The path substitution and its label theorem
 will be added on top of these finite quotient and deletion primitives.
 -/
+
+
 
 open Function Monoid.Coprod Quiver
 
@@ -135,8 +137,7 @@ theorem deletedEdge_card_add_two_eq (E : Type v) [Fintype E]
     by_cases hz₁ : z = e₀'
     · exact ⟨Sum.inr 1, by simp [f, hz₁]
       ⟩
-    · exact ⟨Sum.inl ⟨z, hz₀, hz₁⟩, by simp [f, hz₀, hz₁]
-      ⟩
+    · exact ⟨Sum.inl ⟨z, hz₀, hz₁⟩, rfl⟩
   have hc : Fintype.card E ≤
       Fintype.card (deletedEdge E e₀ e₀' ⊕ Fin 2) :=
     Fintype.card_le_of_surjective f hsurj
@@ -159,77 +160,106 @@ noncomputable instance allArrowFintype : Fintype (AllArrow (V := V)) := by
   classical
   infer_instance
 
+/-- Packages an arrow together with its source and target. -/
 def allArrowOf {a b : V} (e : a ⟶ b) : AllArrow (V := V) := ⟨a, b, e⟩
 
+/-- The source vertex of a packaged arrow. -/
 def allArrowSource : AllArrow (V := V) → V
-  | ⟨a, b, e⟩ => a
+  | ⟨a, _b, _e⟩ => a
 
+/-- The target vertex of a packaged arrow. -/
 def allArrowTarget : AllArrow (V := V) → V
-  | ⟨a, b, e⟩ => b
+  | ⟨_a, b, _e⟩ => b
 
+/-- The underlying arrow between the packaged source and target. -/
 def allArrowHom (e : AllArrow (V := V)) :
     allArrowSource e ⟶ allArrowTarget e :=
   e.2.2
 
-@[simp] theorem allArrowSource_of {a b : V} (e : a ⟶ b) :
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem allArrowSource_of {a b : V} (e : a ⟶ b) :
     allArrowSource (allArrowOf e) = a :=
   rfl
 
-@[simp] theorem allArrowTarget_of {a b : V} (e : a ⟶ b) :
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem allArrowTarget_of {a b : V} (e : a ⟶ b) :
     allArrowTarget (allArrowOf e) = b :=
   rfl
 
-@[simp] theorem allArrowHom_of {a b : V} (e : a ⟶ b) :
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem allArrowHom_of {a b : V} (e : a ⟶ b) :
     allArrowHom (allArrowOf e) = e :=
   rfl
 
+/-- Reverses an arrow and exchanges its packaged endpoints. -/
 def allArrowReverse : AllArrow (V := V) → AllArrow (V := V)
   | ⟨a, b, e⟩ => ⟨b, a, Quiver.reverse e⟩
 
-@[simp] theorem allArrowOf_reverse {a b : V} (e : a ⟶ b) :
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem allArrowOf_reverse {a b : V} (e : a ⟶ b) :
     allArrowOf (Quiver.reverse e) = allArrowReverse (allArrowOf e) :=
   rfl
 
-@[simp] theorem allArrowSource_reverse (e : AllArrow (V := V)) :
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem allArrowSource_reverse (e : AllArrow (V := V)) :
     allArrowSource (allArrowReverse e) = allArrowTarget e := by
   cases e
   rfl
 
-@[simp] theorem allArrowTarget_reverse (e : AllArrow (V := V)) :
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem allArrowTarget_reverse (e : AllArrow (V := V)) :
     allArrowTarget (allArrowReverse e) = allArrowSource e := by
   cases e
   rfl
 
-@[simp] theorem allArrowReverse_reverse (e : AllArrow (V := V)) :
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem allArrowReverse_reverse (e : AllArrow (V := V)) :
     allArrowReverse (allArrowReverse e) = e := by
   cases e
   simp only [allArrowReverse, Quiver.reverse_reverse]
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem allArrowReverse_injective : Function.Injective
     (allArrowReverse (V := V)) := by
   intro e₁ e₂ h
   simpa using congrArg (allArrowReverse (V := V)) h
 
+/-- The vertex quotient identifying the two vertices involved in a fold. -/
 def foldVertex (a b : V) := Quotient (foldSetoid a b)
 
 noncomputable instance foldVertexFintype (a b : V) : Fintype (foldVertex a b) := by
   change Fintype (Quotient (foldSetoid a b))
   infer_instance
 
+/-- Codes the identified vertices by `none` and every other vertex by its surviving
+representative. -/
 noncomputable def foldCode (a b v : V) : Option (deletedEdge V a b) := by
   classical
   exact if h : v = a ∨ v = b then none
     else some ⟨v, fun hva => h (Or.inl hva), fun hvb => h (Or.inr hvb)⟩
 
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+omit [qV : Quiver V] in
 theorem foldCode_rel {a b x y : V} (hxy : x = a ∧ y = b) :
     foldCode a b x = foldCode a b y := by
   simp [foldCode, hxy.1, hxy.2]
 
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+omit [qV : Quiver V] in
 theorem foldCode_eq_none_iff {a b v : V} :
     foldCode a b v = none ↔ v = a ∨ v = b := by
   classical
   by_cases h : v = a ∨ v = b <;> simp [foldCode, h]
 
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+omit [qV : Quiver V] in
 theorem foldCode_eq_some_iff {a b v : V} (e : deletedEdge V a b) :
     foldCode a b v = some e ↔ e.1 = v := by
   classical
@@ -242,7 +272,7 @@ theorem foldCode_eq_some_iff {a b v : V} (e : deletedEdge V a b) :
       have hev' :
           (⟨v, fun hva => h (Or.inl hva), fun hvb => h (Or.inr hvb)⟩ :
             deletedEdge V a b) = e := by
-        simp only [foldCode, dif_neg h] at hev
+        simp only [foldCode, dite_eq_right h] at hev
         exact Option.some.inj hev
       exact (congrArg Subtype.val hev').symm
     · intro hev
@@ -256,9 +286,10 @@ theorem foldCode_eq_some_iff {a b v : V} (e : deletedEdge V a b) :
           (⟨v, hve.1, hve.2⟩ : deletedEdge V a b) = e := by
         apply Subtype.ext
         exact hev.symm
-      simp only [foldCode, dif_neg h]
+      simp only [foldCode, dite_eq_right h]
       exact congrArg (fun z : deletedEdge V a b => some z) hev'
 
+/-- The vertex code descended to the quotient defining a fold. -/
 noncomputable def foldCodeQuotient (a b : V) :
     foldVertex a b → Option (deletedEdge V a b) :=
   Quotient.lift (foldCode a b) (by
@@ -270,10 +301,14 @@ noncomputable def foldCodeQuotient (a b : V) :
     | symm x y h ih => exact ih.symm
     | trans x y z hxy hyz ihxy ihyz => exact ihxy.trans ihyz)
 
-@[simp] theorem foldCodeQuotient_mk (a b v : V) :
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+omit [qV : Quiver V] in
+@[simp]
+theorem foldCodeQuotient_mk (a b v : V) :
     foldCodeQuotient a b (Quotient.mk (foldSetoid a b) v) = foldCode a b v :=
   rfl
 
+/-- Identifies the folded vertex set with the surviving vertices plus the identified vertex. -/
 noncomputable def foldQuotientCodeEquiv {a b : V} (hab : a ≠ b) :
     foldVertex a b ≃ Option (deletedEdge V a b) := by
   classical
@@ -318,6 +353,8 @@ noncomputable def foldQuotientCodeEquiv {a b : V} (hab : a ≠ b) :
         rw [foldCodeQuotient_mk]
         exact (foldCode_eq_some_iff (a := a) (b := b) (v := e.1) e).mpr rfl
 
+omit [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+omit [qV : Quiver V] in
 theorem foldQuotient_card_add_one_eq {a b : V} (hab : a ≠ b) :
     Fintype.card (foldVertex a b) + 1 = Fintype.card V := by
   have hq := Fintype.card_congr (foldQuotientCodeEquiv hab)
@@ -325,30 +362,38 @@ theorem foldQuotient_card_add_one_eq {a b : V} (hab : a ≠ b) :
   simp only [Fintype.card_option] at hq
   omega
 
-abbrev FoldEdge (a b : V) (e₀ : AllArrow (V := V)) :=
+/-- The arrows surviving deletion of the folded arrow and its reverse. -/
+abbrev FoldEdge (e₀ : AllArrow (V := V)) :=
   deletedEdge (AllArrow (V := V)) e₀ (allArrowReverse e₀)
 
+/-- The canonical map from original vertices to folded vertices. -/
 def foldVertexMk {a b : V} (v : V) : foldVertex a b :=
   Quotient.mk (foldSetoid a b) v
 
+/-- The source of a surviving arrow in the folded vertex quotient. -/
 def foldEdgeSource {a b : V} (e₀ : AllArrow (V := V))
-    (e : FoldEdge a b e₀) : foldVertex a b :=
+    (e : FoldEdge e₀) : foldVertex a b :=
   foldVertexMk (a := a) (b := b) (allArrowSource e.1)
 
+/-- The target of a surviving arrow in the folded vertex quotient. -/
 def foldEdgeTarget {a b : V} (e₀ : AllArrow (V := V))
-    (e : FoldEdge a b e₀) : foldVertex a b :=
+    (e : FoldEdge e₀) : foldVertex a b :=
   foldVertexMk (a := a) (b := b) (allArrowTarget e.1)
 
-@[reducible] def foldQuiver {a b : V} (e₀ : AllArrow (V := V)) :
+/-- The quiver on folded vertices whose arrows are the surviving original arrows. -/
+@[reducible]
+def foldQuiver {a b : V} (e₀ : AllArrow (V := V)) :
     Quiver (foldVertex a b) where
-  Hom x y := {e : FoldEdge a b e₀ //
+  Hom x y := {e : FoldEdge e₀ //
     foldEdgeSource e₀ e = x ∧ foldEdgeTarget e₀ e = y}
 
+/-- A finite enumeration of arrows between two vertices in the folded quiver. -/
+@[instance_reducible]
 noncomputable def foldQuiverHomFintype {a b : V}
     (e₀ : AllArrow (V := V)) (x y : foldVertex a b) :
     Fintype (@Quiver.Hom (foldVertex a b) (foldQuiver e₀) x y) := by
   classical
-  change Fintype {e : FoldEdge a b e₀ //
+  change Fintype {e : FoldEdge e₀ //
     foldEdgeSource e₀ e = x ∧ foldEdgeTarget e₀ e = y}
   infer_instance
 
@@ -363,10 +408,12 @@ noncomputable instance foldAllArrowFintype {a b : V}
 
 /-! ### Oriented-edge bookkeeping for a fold -/
 
+/-- Forgets the quotient endpoints of a folded arrow and recovers its original arrow. -/
 def foldAllArrowToAllArrow {a b : V} (e₀ : AllArrow (V := V)) :
     @AllArrow (foldVertex a b) (foldQuiver e₀) → AllArrow (V := V) :=
   fun e => e.2.2.1.1
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldAllArrowToAllArrow_injective {a b : V}
     (e₀ : AllArrow (V := V)) :
     Function.Injective (foldAllArrowToAllArrow (a := a) (b := b) e₀) := by
@@ -401,11 +448,13 @@ theorem foldAllArrowToAllArrow_injective {a b : V}
           cases hf
           rfl
 
+/-- Identifies a folded arrow with an original arrow outside the deleted reversal pair. -/
 def foldAllArrowToDeletedEdge {a b : V} (e₀ : AllArrow (V := V)) :
     @AllArrow (foldVertex a b) (foldQuiver e₀) →
       deletedEdge (AllArrow (V := V)) e₀ (allArrowReverse e₀) :=
   fun e => ⟨e.2.2.1.1, e.2.2.1.2.1, e.2.2.1.2.2⟩
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldAllArrowToDeletedEdge_injective {a b : V}
     (e₀ : AllArrow (V := V)) :
     Function.Injective (foldAllArrowToDeletedEdge (a := a) (b := b) e₀) := by
@@ -416,7 +465,7 @@ theorem foldAllArrowToDeletedEdge_injective {a b : V}
 theorem foldAllArrow_card_le {a b : V} (e₀ : AllArrow (V := V)) :
     Fintype.card (@AllArrow (foldVertex a b) (foldQuiver e₀)) ≤
       Fintype.card (AllArrow (V := V)) := by
-  letI (x y : foldVertex a b) :
+  let (x y : foldVertex a b) :
       Fintype (@Quiver.Hom (foldVertex a b) (foldQuiver e₀) x y) :=
     foldQuiverHomFintype e₀ x y
   exact Fintype.card_le_of_injective
@@ -437,6 +486,7 @@ theorem foldAllArrow_card_add_two_le {a b : V} (e₀ : AllArrow (V := V))
     (fun h => hfree h.symm)
   omega
 
+/-- Reverses a surviving arrow in the folded quiver. -/
 def foldReverseArrow {a b : V} (e₀ : AllArrow (V := V)) {x y : foldVertex a b}
     (e : @Quiver.Hom (foldVertex a b) (foldQuiver e₀) x y) :
     @Quiver.Hom (foldVertex a b) (foldQuiver e₀) y x := by
@@ -459,6 +509,8 @@ def foldReverseArrow {a b : V} (e₀ : AllArrow (V := V)) {x y : foldVertex a b}
     rw [allArrowTarget_reverse]
     exact e.2.1
 
+/-- The involutive reversal operation inherited by the folded quiver. -/
+@[instance_reducible]
 def foldHasReverse {a b : V} (e₀ : AllArrow (V := V)) :
     @Quiver.HasInvolutiveReverse (foldVertex a b)
       (foldQuiver (V := V) (a := a) (b := b) e₀) :=
@@ -476,19 +528,14 @@ def foldHasReverse {a b : V} (e₀ : AllArrow (V := V)) :
       apply Subtype.ext
       exact allArrowReverse_reverse e.1.1)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem fold_allArrow_reverse_ne {a b : V} (e₀ : AllArrow (V := V))
     (hfree : ∀ e : AllArrow (V := V), allArrowReverse e ≠ e) :
-    letI : Fintype (foldVertex a b) := foldVertexFintype a b
     letI : Quiver (foldVertex a b) := foldQuiver e₀
     letI : HasInvolutiveReverse (foldVertex a b) := foldHasReverse e₀
-    letI (x y : foldVertex a b) : Fintype (x ⟶ y) :=
-      foldQuiverHomFintype e₀ x y
     ∀ e : AllArrow (V := foldVertex a b), allArrowReverse e ≠ e := by
-  letI : Fintype (foldVertex a b) := foldVertexFintype a b
-  letI : Quiver (foldVertex a b) := foldQuiver e₀
-  letI : HasInvolutiveReverse (foldVertex a b) := foldHasReverse e₀
-  letI (x y : foldVertex a b) : Fintype (x ⟶ y) :=
-    foldQuiverHomFintype e₀ x y
+  let : Quiver (foldVertex a b) := foldQuiver e₀
+  let : HasInvolutiveReverse (foldVertex a b) := foldHasReverse e₀
   intro e he
   apply hfree (foldAllArrowToAllArrow (a := a) (b := b) e₀ e)
   have he' := congrArg (foldAllArrowToAllArrow (a := a) (b := b) e₀) he
@@ -496,10 +543,12 @@ theorem fold_allArrow_reverse_ne {a b : V} (e₀ : AllArrow (V := V))
       foldAllArrowToAllArrow (a := a) (b := b) e₀ e at he'
   exact he'
 
+/-- Reads the factor label of a packaged arrow. -/
 def allArrowLabel (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e : AllArrow (V := V)) : Sum G H :=
   L.label (allArrowHom e)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem pathRead_mem_closure_allArrowLabels
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     {a b : V} (p : @Quiver.Path V qV a b) :
@@ -516,6 +565,7 @@ theorem pathRead_mem_closure_allArrowLabels
       apply Subgroup.subset_closure
       exact ⟨allArrowOf e, rfl⟩
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem allArrowLabels_closure_eq_top_of_markedGraph {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     (hgen : M.IsGenerating) :
@@ -558,6 +608,7 @@ theorem exists_separated_generators_of_markedGraph {n : ℕ}
   rw [hrange]
   exact allArrowLabels_closure_eq_top_of_markedGraph M hgen
 
+/-- The original factor labelling restricted to the arrows surviving a fold. -/
 def foldLabelling (L : BinaryLabelling (G := G) (H := H) (V := V))
     {a b : V} (e₀ : AllArrow (V := V)) :
       @BinaryLabelling G H (foldVertex a b) _ _
@@ -583,6 +634,7 @@ def foldPathAvoid (e₀ : AllArrow (V := V)) :
       foldPathAvoid e₀ p ∧ allArrowOf e ≠ e₀ ∧
         allArrowOf e ≠ allArrowReverse e₀
 
+/-- Maps an original arrow outside the deleted pair to its folded arrow. -/
 def foldOrdinaryEdge {a b : V} (e₀ : AllArrow (V := V))
     {x y : V} (e : x ⟶ y) (he₀ : allArrowOf e ≠ e₀)
     (her : allArrowOf e ≠ allArrowReverse e₀) :
@@ -591,6 +643,7 @@ def foldOrdinaryEdge {a b : V} (e₀ : AllArrow (V := V))
       (foldVertexMk (a := a) (b := b) y) :=
   ⟨⟨allArrowOf e, he₀, her⟩, rfl, rfl⟩
 
+/-- Maps a path avoiding the deleted reversal pair into the folded quiver. -/
 def foldOrdinaryPath {a b : V} (e₀ : AllArrow (V := V)) :
     ∀ {x y : V} (p : @Quiver.Path V _ x y),
       foldPathAvoid e₀ p →
@@ -610,6 +663,7 @@ def foldOrdinaryPath {a b : V} (e₀ : AllArrow (V := V)) :
           (foldOrdinaryPath (a := a) (b := b) e₀ p hp'.1)
           (foldOrdinaryEdge (a := a) (b := b) e₀ e hp'.2.1 hp'.2.2)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldPathAvoid_comp (e₀ : AllArrow (V := V))
     {x y z : V} (p : @Quiver.Path V _ x y)
     (q : @Quiver.Path V _ y z) :
@@ -620,6 +674,7 @@ theorem foldPathAvoid_comp (e₀ : AllArrow (V := V))
   | cons q e ih =>
       simp only [Path.comp_cons, foldPathAvoid, ih, and_assoc]
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldPathAvoid_reverse (e₀ : AllArrow (V := V))
     {x y : V} (p : @Quiver.Path V _ x y) (hp : foldPathAvoid e₀ p) :
     foldPathAvoid e₀ p.reverse := by
@@ -652,6 +707,7 @@ theorem foldPathAvoid_reverse (e₀ : AllArrow (V := V))
             allArrowOf (Quiver.reverse e) ≠ allArrowReverse e₀ from
           ⟨True.intro, havoid.1, havoid.2⟩)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldOrdinaryPath_labels {a b : V} (L : BinaryLabelling (G := G)
     (H := H) (V := V)) (e₀ : AllArrow (V := V))
     {x y : V} (p : @Quiver.Path V _ x y) (hp : foldPathAvoid e₀ p) :
@@ -671,6 +727,7 @@ theorem foldOrdinaryPath_labels {a b : V} (L : BinaryLabelling (G := G)
       rw [ih hp'.1]
       rfl
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldOrdinaryPath_read {a b : V} (L : BinaryLabelling (G := G)
     (H := H) (V := V)) (e₀ : AllArrow (V := V))
     {x y : V} (p : @Quiver.Path V _ x y) (hp : foldPathAvoid e₀ p) :
@@ -742,6 +799,7 @@ def foldEdgePath {a b : V} (e₀ : AllArrow (V := V))
     · exact @Quiver.Hom.toPath (foldVertex a b) (foldQuiver e₀) _ _
         (foldOrdinaryEdge (a := a) (b := b) e₀ e h h')
 
+/-- Maps arbitrary paths through a fold by replacing the deleted arrow with the specified detour. -/
 def foldMapPath {a b : V} (e₀ : AllArrow (V := V))
     (ha : allArrowSource e₀ = a)
     (q : @Quiver.Path V _ (allArrowTarget e₀) b)
@@ -757,6 +815,8 @@ def foldMapPath {a b : V} (e₀ : AllArrow (V := V))
         (foldMapPath e₀ ha q hq p)
         (foldEdgePath e₀ ha e q hq)
 
+/-- Maps a symmetrized arrow through a fold using the replacement detour in the appropriate
+orientation. -/
 def foldSymmArrowPath {a b : V} (e₀ : AllArrow (V := V))
     (ha : allArrowSource e₀ = a)
     (q : @Quiver.Path V _ (allArrowTarget e₀) b)
@@ -784,6 +844,7 @@ def foldSymmArrowPath {a b : V} (e₀ : AllArrow (V := V))
           (@Quiver.Symmetrify.of (foldVertex a b) (foldQuiver e₀)) _ _
           (foldEdgePath e₀ ha f q hq))
 
+/-- Extends the fold map from symmetrized arrows to symmetrized paths. -/
 def foldSymmPath {a b : V} (e₀ : AllArrow (V := V))
     (ha : allArrowSource e₀ = a)
     (q : @Quiver.Path V _ (allArrowTarget e₀) b)
@@ -805,6 +866,8 @@ def foldSymmPath {a b : V} (e₀ : AllArrow (V := V))
 
 /-! ### The same construction for paths that use either orientation -/
 
+/-- Forgets the formal orientation of a symmetrized arrow and records its underlying original
+arrow. -/
 def symmAllArrow {x y : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y) :
     AllArrow (V := V) :=
@@ -812,38 +875,49 @@ def symmAllArrow {x y : Symmetrify V}
   | Sum.inl f => allArrowOf f
   | Sum.inr f => allArrowOf f
 
-@[simp] theorem symmAllArrow_inl {x y : Symmetrify V} (f : x ⟶ y) :
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem symmAllArrow_inl {x y : Symmetrify V} (f : x ⟶ y) :
     symmAllArrow (Sum.inl f) = allArrowOf f :=
   rfl
 
-@[simp] theorem symmAllArrow_inr {x y : Symmetrify V} (f : y ⟶ x) :
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem symmAllArrow_inr {x y : Symmetrify V} (f : y ⟶ x) :
     symmAllArrow (Sum.inr f) = allArrowOf f :=
   rfl
 
-@[simp] theorem symmAllArrow_reverse {x y : Symmetrify V}
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+theorem symmAllArrow_reverse {x y : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y) :
     symmAllArrow (Quiver.reverse e) = symmAllArrow e := by
   cases e <;> rfl
 
 /-- The oriented graph edge represented by a symmetrized arrow.  Unlike
 `symmAllArrow`, this remembers whether the arrow is forward or backward. -/
-@[reducible] def symmOrientedArrow {x y : Symmetrify V}
+@[reducible]
+def symmOrientedArrow {x y : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y) :
     AllArrow (V := V) :=
   match e with
   | Sum.inl f => allArrowOf f
   | Sum.inr f => allArrowReverse (allArrowOf f)
 
-@[simp] theorem symmOrientedArrow_source {x y : Symmetrify V}
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem symmOrientedArrow_source {x y : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y) :
     allArrowSource (symmOrientedArrow e) = (show V from x) := by
   cases e <;> rfl
 
-@[simp] theorem symmOrientedArrow_target {x y : Symmetrify V}
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem symmOrientedArrow_target {x y : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y) :
     allArrowTarget (symmOrientedArrow e) = (show V from y) := by
   cases e <;> rfl
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem symmAllArrow_eq_oriented_or_reverse {x y : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y) :
     symmAllArrow e = symmOrientedArrow e ∨
@@ -856,6 +930,7 @@ theorem symmAllArrow_eq_oriented_or_reverse {x y : Symmetrify V}
         allArrowReverse (allArrowReverse (allArrowOf f))
       rw [allArrowReverse_reverse]
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem symmLabel_eq_allArrowLabel_oriented
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     {x y : Symmetrify V}
@@ -867,6 +942,7 @@ theorem symmLabel_eq_allArrowLabel_oriented
       change factorWordInv (L.label f) = L.label (Quiver.reverse f)
       exact (L.reverse_label f).symm
 
+/-- A symmetrized path avoids both orientations of the deleted edge. -/
 def foldSymmPathAvoid (e₀ : AllArrow (V := V)) :
     ∀ {x y : Symmetrify V},
       @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y → Prop
@@ -887,16 +963,21 @@ def symmPathEdges {a : Symmetrify V} :
   | _, Path.nil => []
   | _, Path.cons p e => symmPathEdges p ++ [symmAllArrow e]
 
-@[simp] theorem symmPathEdges_nil {a : Symmetrify V} :
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem symmPathEdges_nil {a : Symmetrify V} :
     symmPathEdges (qV := qV)
       (@Quiver.Path.nil (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a) = [] :=
   rfl
 
-@[simp] theorem symmPathEdges_toPath {a b : Symmetrify V}
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+@[simp]
+theorem symmPathEdges_toPath {a b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a b) :
     symmPathEdges (qV := qV) e.toPath = [symmAllArrow e] := by
   rfl
 
+omit [Fintype V] hV [(a b : V) → Fintype (a ⟶ b)] in
 theorem symmPathEdges_comp {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a b) :
     ∀ {c : Symmetrify V}
@@ -908,17 +989,22 @@ theorem symmPathEdges_comp {a b : Symmetrify V}
       simp only [Path.comp_cons, symmPathEdges]
       rw [symmPathEdges_comp p q, List.append_assoc]
 
+/-- A path is geometrically simple when it never repeats an edge in either orientation. -/
 def GeometricallySimple {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a b) : Prop :=
   (symmPathEdges (qV := qV) p).Pairwise (fun e f =>
     e ≠ f ∧ e ≠ allArrowReverse f)
 
-theorem foldSymmPathAvoid_of_geometricallySimple
+omit [Fintype V] in
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+theorem foldSymmPathAvoid_of_geometricallySimple [Finite V]
     {a c b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a c)
     (q : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) c b)
     (hsimple : GeometricallySimple (qV := qV) (e.toPath.comp q)) :
     foldSymmPathAvoid (symmOrientedArrow e) q := by
+  classical
+  let := Fintype.ofFinite V
   let e₀ := symmOrientedArrow e
   have hsimple' : List.Pairwise (fun x y : AllArrow (V := V) =>
       x ≠ y ∧ x ≠ allArrowReverse y)
@@ -980,6 +1066,7 @@ theorem foldSymmPathAvoid_of_geometricallySimple
   intro z hz
   exact hfirst' z hz
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmPathAvoid_cast {e₀ : AllArrow (V := V)}
     {x y x' y' : Symmetrify V} (hx : x = x') (hy : y = y')
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y) :
@@ -987,6 +1074,7 @@ theorem foldSymmPathAvoid_cast {e₀ : AllArrow (V := V)}
   subst_vars
   rfl
 
+/-- Maps a symmetrized arrow outside the deleted reversal pair into the folded quiver. -/
 def foldSymmOrdinaryArrowPath {a b : V} (e₀ : AllArrow (V := V))
     {x y : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y)
@@ -1005,6 +1093,7 @@ def foldSymmOrdinaryArrowPath {a b : V} (e₀ : AllArrow (V := V))
         (@Quiver.Hom.toPath (foldVertex a b) (foldQuiver e₀) _ _
           (foldOrdinaryEdge (a := a) (b := b) e₀ f he₀ her))
 
+/-- Maps a symmetrized path avoiding the deleted reversal pair into the folded quiver. -/
 def foldSymmOrdinaryPath {a b : V} (e₀ : AllArrow (V := V)) :
     ∀ {x y : Symmetrify V}
       (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y),
@@ -1023,6 +1112,7 @@ def foldSymmOrdinaryPath {a b : V} (e₀ : AllArrow (V := V)) :
           (foldSymmOrdinaryPath e₀ p hp'.1)
           (foldSymmOrdinaryArrowPath e₀ e hp'.2.1 hp'.2.2)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmPathAvoid_comp (e₀ : AllArrow (V := V))
     {x y z : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y)
@@ -1040,6 +1130,7 @@ theorem foldSymmPathAvoid_comp (e₀ : AllArrow (V := V))
   | cons q e ih =>
       simp only [Path.comp_cons, foldSymmPathAvoid, ih, and_assoc]
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmPathAvoid_reverse (e₀ : AllArrow (V := V))
     {x y : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y)
@@ -1059,6 +1150,7 @@ theorem foldSymmPathAvoid_reverse (e₀ : AllArrow (V := V))
             symmAllArrow e ≠ allArrowReverse e₀ from
           ⟨True.intro, hp'.2.1, hp'.2.2⟩)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmOrdinaryArrowPath_read {a b : V}
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V))
@@ -1084,6 +1176,7 @@ theorem foldSymmOrdinaryArrowPath_read {a b : V}
         separatedMap (factorWordInv (L.label f))
       rw [← separatedMap_factorWordInv]
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmOrdinaryPath_read {a b : V}
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V))
@@ -1131,6 +1224,7 @@ theorem foldSymmOrdinaryPath_read {a b : V}
 
 /-! ### Substitution for an arbitrary symmetrized complementary path -/
 
+/-- Maps a symmetrized edge through a fold using a symmetrized replacement path. -/
 def foldSymmEdgePath {a b : V} (e₀ : AllArrow (V := V))
     (ha : allArrowSource e₀ = a)
     {x y : Symmetrify V}
@@ -1241,6 +1335,7 @@ def foldSymmEdgePath {a b : V} (e₀ : AllArrow (V := V))
               (foldSymmPathAvoid_reverse e₀ q hq))
         · exact foldSymmOrdinaryArrowPath e₀ (Sum.inr f) h h'
 
+/-- Maps symmetrized paths through a fold with the chosen symmetrized detour. -/
 def foldSymmMapPath {a b : V} (e₀ : AllArrow (V := V))
     (ha : allArrowSource e₀ = a)
     (q : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV)
@@ -1259,6 +1354,7 @@ def foldSymmMapPath {a b : V} (e₀ : AllArrow (V := V))
         (foldSymmMapPath e₀ ha q hq p)
         (foldSymmEdgePath e₀ ha e q hq)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmEdgePath_read {a b : V}
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V))
@@ -1280,7 +1376,7 @@ theorem foldSymmEdgePath_read {a b : V}
   cases e with
   | inl f =>
       by_cases h : allArrowOf f = e₀
-      · simp only [foldSymmEdgePath, dif_pos h,
+      · simp only [foldSymmEdgePath, dite_eq_left h,
           BinaryLabelling.pathRead_cast]
         have hordinary := foldSymmOrdinaryPath_read (a := a) (b := b)
           L e₀ q.reverse (foldSymmPathAvoid_reverse e₀ q hq)
@@ -1295,7 +1391,7 @@ theorem foldSymmEdgePath_read {a b : V}
           _ = separatedMap (L.label f) := by rw [hlabel]
           _ = separatedMap (L.symmLabel (Sum.inl f)) := by rfl
       · by_cases h' : allArrowOf f = allArrowReverse e₀
-        · simp only [foldSymmEdgePath, dif_neg h, dif_pos h',
+        · simp only [foldSymmEdgePath, dite_eq_right h, dite_eq_left h',
             BinaryLabelling.pathRead_cast]
           have hordinary := foldSymmOrdinaryPath_read (a := a) (b := b)
             L e₀ q hq
@@ -1316,11 +1412,11 @@ theorem foldSymmEdgePath_read {a b : V}
               rw [separatedMap_factorWordInv]
             _ = separatedMap (L.label f) := by rw [hlabel]
             _ = separatedMap (L.symmLabel (Sum.inl f)) := by rfl
-        · simpa only [foldSymmEdgePath, dif_neg h, dif_neg h'] using
+        · simpa only [foldSymmEdgePath, dite_eq_right h, dite_eq_right h'] using
             (foldSymmOrdinaryArrowPath_read L e₀ (Sum.inl f) h h')
   | inr f =>
       by_cases h : allArrowOf f = e₀
-      · simp only [foldSymmEdgePath, dif_pos h,
+      · simp only [foldSymmEdgePath, dite_eq_left h,
           BinaryLabelling.pathRead_cast]
         have hordinary := foldSymmOrdinaryPath_read (a := a) (b := b)
           L e₀ q hq
@@ -1336,7 +1432,7 @@ theorem foldSymmEdgePath_read {a b : V}
           _ = separatedMap (factorWordInv (L.label f)) := by rw [hlabel]
           _ = separatedMap (L.symmLabel (Sum.inr f)) := by rfl
       · by_cases h' : allArrowOf f = allArrowReverse e₀
-        · simp only [foldSymmEdgePath, dif_neg h, dif_pos h',
+        · simp only [foldSymmEdgePath, dite_eq_right h, dite_eq_left h',
             BinaryLabelling.pathRead_cast]
           have hordinary := foldSymmOrdinaryPath_read (a := a) (b := b)
             L e₀ q.reverse (foldSymmPathAvoid_reverse e₀ q hq)
@@ -1358,9 +1454,10 @@ theorem foldSymmEdgePath_read {a b : V}
               rw [hlabel]
               simp
             _ = separatedMap (L.symmLabel (Sum.inr f)) := by rfl
-        · simpa only [foldSymmEdgePath, dif_neg h, dif_neg h'] using
+        · simpa only [foldSymmEdgePath, dite_eq_right h, dite_eq_right h'] using
             (foldSymmOrdinaryArrowPath_read L e₀ (Sum.inr f) h h')
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmMapPath_read {a b : V}
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V))
@@ -1408,6 +1505,7 @@ theorem foldSymmMapPath_read {a b : V}
           rw [← Path.comp_toPath_eq_cons, L.symmPathRead_comp,
             L.symmPathRead_toPath]
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldEdgePath_read {a b : V} (L : BinaryLabelling (G := G)
     (H := H) (V := V)) (e₀ : AllArrow (V := V))
     (ha : allArrowSource e₀ = a) {x y : V} (e : x ⟶ y)
@@ -1422,7 +1520,7 @@ theorem foldEdgePath_read {a b : V} (L : BinaryLabelling (G := G)
       (foldEdgePath e₀ ha e q hq)) = L.pathRead e.toPath := by
   classical
   by_cases h : allArrowOf e = e₀
-  · simp only [foldEdgePath, dif_pos h, BinaryLabelling.pathRead_cast]
+  · simp only [foldEdgePath, dite_eq_left h, BinaryLabelling.pathRead_cast]
     rw [foldOrdinaryPath_read L e₀ q.reverse (foldPathAvoid_reverse e₀ q hq)]
     rw [BinaryLabelling.pathRead_reverse L q, hread, inv_inv]
     rw [L.pathRead_toPath]
@@ -1432,7 +1530,7 @@ theorem foldEdgePath_read {a b : V} (L : BinaryLabelling (G := G)
         _ = allArrowLabel L e₀ := congrArg (allArrowLabel L) h
     exact congrArg separatedMap hlabel.symm
   · by_cases h' : allArrowOf e = allArrowReverse e₀
-    · simp only [foldEdgePath, dif_neg h, dif_pos h',
+    · simp only [foldEdgePath, dite_eq_right h, dite_eq_left h',
         BinaryLabelling.pathRead_cast]
       rw [foldOrdinaryPath_read L e₀ q hq, hread]
       rw [L.pathRead_toPath]
@@ -1445,9 +1543,10 @@ theorem foldEdgePath_read {a b : V} (L : BinaryLabelling (G := G)
               factorWordInv (L.label (allArrowHom e₀))
             exact L.reverse_label (allArrowHom e₀)
       rw [hlabel, separatedMap_factorWordInv]
-    · simp only [foldEdgePath, dif_neg h, dif_neg h']
+    · simp only [foldEdgePath, dite_eq_right h, dite_eq_right h']
       rfl
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldMapPath_read {a b : V} (L : BinaryLabelling (G := G)
     (H := H) (V := V)) (e₀ : AllArrow (V := V))
     (ha : allArrowSource e₀ = a)
@@ -1491,6 +1590,7 @@ theorem foldMapPath_read {a b : V} (L : BinaryLabelling (G := G)
 
 /-! ### Marked graphs after one safe fold -/
 
+/-- The marked graph obtained by folding and transporting its marking paths. -/
 def foldedMarkedGraph {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (e₀ : AllArrow (V := V))
@@ -1505,6 +1605,7 @@ def foldedMarkedGraph {n : ℕ}
     (foldLabelling M.labeling e₀)
     (fun i => foldMapPath e₀ ha q hq (M.loops i))
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldedMarkedGraph_read {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (e₀ : AllArrow (V := V))
@@ -1524,6 +1625,7 @@ theorem foldedMarkedGraph_read {n : ℕ}
     M.labeling.pathRead (M.loops i)
   exact foldMapPath_read M.labeling e₀ ha q hq hread (M.loops i)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldedMarkedGraph_isGenerating {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (e₀ : AllArrow (V := V))
@@ -1546,6 +1648,7 @@ theorem foldedMarkedGraph_isGenerating {n : ℕ}
 path.  The marked loops are first viewed in the symmetrized quiver, then
 mapped edge-by-edge through the fold. -/
 
+/-- The marked graph obtained by folding with a symmetrized replacement path. -/
 def foldedMarkedGraphSymm {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (e₀ : AllArrow (V := V))
@@ -1563,6 +1666,7 @@ def foldedMarkedGraphSymm {n : ℕ}
     (fun i => foldSymmMapPath e₀ ha q hq
       ((@Quiver.Symmetrify.of V qV).mapPath (M.loops i)))
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldedMarkedGraphSymm_read {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (e₀ : AllArrow (V := V))
@@ -1591,6 +1695,7 @@ theorem foldedMarkedGraphSymm_read {n : ℕ}
     _ = M.labeling.pathRead (M.loops i) :=
       M.labeling.symmPathRead_map_of (M.loops i)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldedMarkedGraphSymm_isGenerating {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (e₀ : AllArrow (V := V))
@@ -1611,6 +1716,7 @@ theorem foldedMarkedGraphSymm_isGenerating {n : ℕ}
   rw [foldedMarkedGraphSymm_read M e₀ ha q hq hread]
   exact hM
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldedMarkedGraphSymm_weaklyConnected {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (e₀ : AllArrow (V := V))
@@ -1633,6 +1739,7 @@ theorem foldedMarkedGraphSymm_weaklyConnected {n : ℕ}
     (@Quiver.symmetrifyQuiver (foldVertex a b) (foldQuiver e₀))
     (@Quiver.Symmetrify.of (foldVertex a b) (foldQuiver e₀)) _ _ r⟩
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldedMarkedGraph_weaklyConnected {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (e₀ : AllArrow (V := V))
@@ -1649,15 +1756,12 @@ theorem foldedMarkedGraph_weaklyConnected {n : ℕ}
   obtain ⟨p⟩ := hM v
   exact ⟨foldSymmPath e₀ ha q hq p⟩
 
-theorem foldedMarkedGraph_card_lt {n : ℕ}
-    (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
-    {a b : V} (e₀ : AllArrow (V := V))
-    (ha : allArrowSource e₀ = a)
-    (hab : a ≠ b)
-    (q : @Quiver.Path V _ (allArrowTarget e₀) b)
-    (hq : foldPathAvoid e₀ q) :
-    Fintype.card (foldVertex a b) < Fintype.card V := by
-  exact foldQuotient_card_lt hab
+omit [(a b : V) → Fintype (a ⟶ b)] in
+omit [hV : Quiver.HasInvolutiveReverse V] in
+omit [qV : Quiver V] in
+theorem foldedMarkedGraph_card_lt {a b : V} (hab : a ≠ b) :
+    Fintype.card (foldVertex a b) < Fintype.card V :=
+  foldQuotient_card_lt hab
 
 /-! ### The exact obstruction to a safe fold -/
 
@@ -1676,6 +1780,7 @@ def SymmEdgeOccurrence (e₀ : AllArrow (V := V))
         (symmAllArrow e = e₀ ∨
           symmAllArrow e = allArrowReverse e₀)
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldSymmPathAvoid_or_occurrence (e₀ : AllArrow (V := V))
     {x y : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) x y) :
@@ -1700,6 +1805,7 @@ theorem foldSymmPathAvoid_or_occurrence (e₀ : AllArrow (V := V))
           rw [← Path.comp_toPath_eq_cons, hps]
           simp only [Path.comp_assoc], hf⟩
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem exists_safe_or_reused_fold_data
     {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a b)
@@ -1719,6 +1825,7 @@ theorem exists_safe_or_reused_fold_data
 
 /-! ### Extracting a safe fold from a null path -/
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem safeFoldData_of_nullPath {a b : V}
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (p : @Quiver.Path V _ a b) (hp : L.pathRead p = 1)
@@ -1743,6 +1850,7 @@ theorem safeFoldData_of_nullPath {a b : V}
 
 /-! ### The corresponding safe-data extraction for symmetrized paths -/
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem safeSymmFoldData_of_nullPath
     {a b : V}
     (L : BinaryLabelling (G := G) (H := H) (V := V))
@@ -1776,6 +1884,7 @@ theorem safeSymmFoldData_of_nullPath
   exact hq'.trans (congrArg Inv.inv ((L.symmPathRead_toPath e).trans
     (congrArg separatedMap (symmLabel_eq_allArrowLabel_oriented L e))))
 
+omit [(a b : V) → Fintype (a ⟶ b)] in
 theorem exists_safe_folded_marked_graph {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (hab : a ≠ b)
@@ -1825,6 +1934,7 @@ theorem exists_safe_folded_marked_graph {n : ℕ}
   · exact foldedMarkedGraphSymm_weaklyConnected M e₀ ha q' hqavoid' hconn
   · exact foldQuotient_card_lt hab
 
+omit [(a b : V) → Fintype (a ⟶ b)] in
 theorem exists_safe_folded_marked_graph_of_geometrically_simple {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {a b : V} (hab : a ≠ b)

@@ -1,10 +1,19 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 import LeanPool.MarshallHall.MarshallHall.GrushkoReduction
 import Mathlib.Data.List.SplitBy
+
+/-! ### Alternating runs in a factor word
+
+The graph-fold proof uses the following elementary normal-form fact.  If a
+labelled path has trivial total label, then one of its maximal monochromatic
+runs has trivial label.  We first package the list-theoretic part of that
+argument.  The proof is deliberately phrased using `List.splitBy`, so the
+maximality and the alternating boundary conditions are explicit.
+-/
 
 open Function Monoid.Coprod
 
@@ -17,30 +26,28 @@ universe u
 
 variable {G H : Type u} [Group G] [Group H]
 
-/-! ### Alternating runs in a factor word
 
-The graph-fold proof uses the following elementary normal-form fact.  If a
-labelled path has trivial total label, then one of its maximal monochromatic
-runs has trivial label.  We first package the list-theoretic part of that
-argument.  The proof is deliberately phrased using `List.splitBy`, so the
-maximality and the alternating boundary conditions are explicit.
--/
 
+/-- Tests whether two labels belong to the same factor of the free product. -/
 def sameBinaryFactor (a b : Sum G H) : Bool :=
   decide (binarySumIndex (G := G) (H := H) a =
     binarySumIndex (G := G) (H := H) b)
 
+/-- Splits a word into maximal consecutive runs of labels from the same factor. -/
 def binaryRuns (u : List (Sum G H)) : List (List (Sum G H)) :=
   u.splitBy (sameBinaryFactor (G := G) (H := H))
 
+omit [Group G] [Group H] in
 theorem binaryRuns_flatten (u : List (Sum G H)) :
     (binaryRuns (G := G) (H := H) u).flatten = u := by
   exact List.flatten_splitBy (sameBinaryFactor (G := G) (H := H)) u
 
+omit [Group G] [Group H] in
 theorem binaryRuns_ne_nil {u : List (Sum G H)} {v : List (Sum G H)}
     (hv : v ∈ binaryRuns (G := G) (H := H) u) : v ≠ [] := by
   exact List.ne_nil_of_mem_splitBy hv
 
+omit [Group G] [Group H] in
 theorem binaryRuns_isChain {u : List (Sum G H)}
     {v : List (Sum G H)} (hv : v ∈ binaryRuns (G := G) (H := H) u) :
     v.IsChain (fun a b => binarySumIndex (G := G) (H := H) a =
@@ -49,6 +56,7 @@ theorem binaryRuns_isChain {u : List (Sum G H)}
     intro a b hab
     simpa [sameBinaryFactor] using hab)
 
+omit [Group G] [Group H] in
 theorem binaryRuns_boundary (u : List (Sum G H)) :
     (binaryRuns (G := G) (H := H) u).IsChain (fun v w =>
       v ∈ binaryRuns (G := G) (H := H) u ∧
@@ -62,6 +70,7 @@ theorem binaryRuns_boundary (u : List (Sum G H)) :
   refine ⟨hv, hw, hv', hw', ?_⟩
   simpa [sameBinaryFactor] using h
 
+omit [Group G] [Group H] in
 theorem binaryRun_allSame {v : List (Sum G H)} (hv : v ≠ [])
     (hc : v.IsChain (fun a b => binarySumIndex (G := G) (H := H) a =
       binarySumIndex (G := G) (H := H) b)) :
@@ -75,6 +84,7 @@ theorem binaryRun_allSame {v : List (Sum G H)} (hv : v ≠ [])
       exact hab.symm.trans ha)
     (initial := by intro; rfl)
 
+omit [Group G] [Group H] in
 theorem exists_map_inl_of_idx_false {v : List (Sum G H)}
     (hv : ∀ a ∈ v, binarySumIndex (G := G) (H := H) a = false) :
     ∃ l : List G, v = l.map Sum.inl := by
@@ -93,6 +103,7 @@ theorem exists_map_inl_of_idx_false {v : List (Sum G H)}
           simp only [binarySumIndex_inr] at ha
           cases ha
 
+omit [Group G] [Group H] in
 theorem exists_map_inr_of_idx_true {v : List (Sum G H)}
     (hv : ∀ a ∈ v, binarySumIndex (G := G) (H := H) a = true) :
     ∃ l : List H, v = l.map Sum.inr := by
@@ -138,11 +149,13 @@ theorem factorWordProd_eq_prod (u : List (Sum G H)) :
       simp only [factorWordProd, List.map_cons, List.prod_cons]
       rw [ih]
 
+/-- Multiplies a nonempty monochromatic run and tags its value by its initial factor. -/
 def binaryRunTag (v : List (Sum G H)) (hv : v ≠ []) : Sum G H :=
-  match h : v.head hv with
+  match _h : v.head hv with
   | Sum.inl _ => Sum.inl (Monoid.Coprod.fst (factorWordProd v))
   | Sum.inr _ => Sum.inr (Monoid.Coprod.snd (factorWordProd v))
 
+/-- The value of a run, with an empty run represented by the left-factor identity. -/
 def binaryRunTag' (v : List (Sum G H)) : Sum G H :=
   if hv : v = [] then Sum.inl 1 else binaryRunTag v hv
 
@@ -150,9 +163,7 @@ theorem binaryRunTag'_eq (v : List (Sum G H)) (hv : v ≠ []) :
     binaryRunTag' (G := G) (H := H) v = binaryRunTag v hv := by
   simp [binaryRunTag', hv]
 
-theorem binaryRunTag_index {v : List (Sum G H)} (hv : v ≠ [])
-    (hc : v.IsChain (fun a b => binarySumIndex (G := G) (H := H) a =
-      binarySumIndex (G := G) (H := H) b)) :
+theorem binaryRunTag_index {v : List (Sum G H)} (hv : v ≠ []) :
     binarySumIndex (G := G) (H := H) (binaryRunTag v hv) =
       binarySumIndex (G := G) (H := H) (v.head hv) := by
   unfold binaryRunTag
@@ -202,6 +213,7 @@ theorem factorWordProd_flatten (l : List (List (Sum G H))) :
       rw [List.flatten_cons, factorWordProd_append, ih]
       simp
 
+/-- The sequence of factor-tagged products of the monochromatic runs of a word. -/
 def binaryRunTags (u : List (Sum G H)) : List (Sum G H) :=
   (binaryRuns (G := G) (H := H) u).map binaryRunTag'
 
@@ -213,8 +225,8 @@ theorem binaryRunTags_chain (u : List (Sum G H)) :
   apply (binaryRuns_boundary (G := G) (H := H) u).imp
   rintro v w ⟨hv_mem, hw_mem, hv, hw, hboundary⟩
   rw [binaryRunTag'_eq v hv, binaryRunTag'_eq w hw]
-  rw [binaryRunTag_index hv (binaryRuns_isChain hv_mem),
-    binaryRunTag_index hw (binaryRuns_isChain hw_mem)]
+  rw [binaryRunTag_index hv,
+    binaryRunTag_index hw]
   have hlast : binarySumIndex (G := G) (H := H) (v.getLast hv) =
       binarySumIndex (G := G) (H := H) (v.head hv) :=
     binaryRun_allSame hv (binaryRuns_isChain hv_mem) _ (List.getLast_mem hv)
@@ -268,7 +280,7 @@ theorem exists_null_binary_run (u : List (Sum G H))
     apply hu
     simpa [binaryRuns] using hruns
   have htags : binaryRunTags (G := G) (H := H) u ≠ [] := by
-    simpa [binaryRunTags, hruns]
+    simp [binaryRunTags, hruns]
   have hne : factorWordProd (G := G) (H := H)
       (binaryRunTags (G := G) (H := H) u) ≠ 1 :=
     factorWordProd_ne_one_of_reduced htags_ne

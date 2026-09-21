@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -15,6 +15,8 @@ from each geometric edge.  This file packages that finite involution
 argument, including the cardinality bound needed to pad a terminal marking
 back to its original length.
 -/
+
+
 
 open Function Monoid.Coprod Quiver
 
@@ -37,25 +39,22 @@ identifying a self-reversing quiver arrow with a geometric edge pair. -/
 def ReverseFree : Prop :=
   ∀ e : AllArrow (V := V), allArrowReverse e ≠ e
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldReverseFree {a b : V} (e₀ : AllArrow (V := V))
     (hfree : ReverseFree (V := V)) :
-    letI : Fintype (foldVertex a b) := foldVertexFintype a b
     letI : Quiver (foldVertex a b) := foldQuiver e₀
     letI : HasInvolutiveReverse (foldVertex a b) := foldHasReverse e₀
-    letI (x y : foldVertex a b) : Fintype (x ⟶ y) :=
-      foldQuiverHomFintype e₀ x y
     ReverseFree (V := foldVertex a b) := by
-  letI : Fintype (foldVertex a b) := foldVertexFintype a b
-  letI : Quiver (foldVertex a b) := foldQuiver e₀
-  letI : HasInvolutiveReverse (foldVertex a b) := foldHasReverse e₀
-  letI (x y : foldVertex a b) : Fintype (x ⟶ y) :=
-    foldQuiverHomFintype e₀ x y
+  let : Quiver (foldVertex a b) := foldQuiver e₀
+  let : HasInvolutiveReverse (foldVertex a b) := foldHasReverse e₀
   exact fold_allArrow_reverse_ne e₀ hfree
 
+/-- A finite index used to choose one orientation of each geometric edge. -/
 noncomputable def allArrowIndex (e : AllArrow (V := V)) :
     Fin (Fintype.card (AllArrow (V := V))) :=
   Fintype.equivFin (AllArrow (V := V)) e
 
+/-- The orientation of each edge with the smaller index than its reverse. -/
 def EdgeRepresentative :=
   {e : AllArrow (V := V) //
     (allArrowIndex e).val <
@@ -71,12 +70,13 @@ noncomputable instance edgeRepresentativeFintype :
   simp
 
 theorem edgeRepresentative_lt_reverse
-    (hfree : ReverseFree (V := V)) (e : EdgeRepresentative (V := V)) :
+    (e : EdgeRepresentative (V := V)) :
     (allArrowIndex e.1).val <
       (allArrowIndex (allArrowReverse e.1)).val :=
   e.2
 
-noncomputable def reverse_mem_edgeRepresentative
+/-- Chooses the reversed orientation when the given arrow is not the chosen representative. -/
+noncomputable def reverseEdgeRepresentative
     (hfree : ReverseFree (V := V)) (e : AllArrow (V := V))
     (hne : ¬ (allArrowIndex e).val <
       (allArrowIndex (allArrowReverse e)).val) :
@@ -106,7 +106,7 @@ theorem edgeRepresentativeOrientation_reverse
   cases b <;> simp [edgeRepresentativeOrientation]
 
 theorem edgeRepresentativeOrientation_injective
-    (hfree : ReverseFree (V := V)) :
+     :
     Function.Injective
       (fun p : EdgeRepresentative (V := V) × Bool =>
         edgeRepresentativeOrientation p.1 p.2) := by
@@ -119,8 +119,8 @@ theorem edgeRepresentativeOrientation_injective
     cases q
     simp_all
   · exfalso
-    have hlt₁ := edgeRepresentative_lt_reverse hfree p
-    have hlt₂ := edgeRepresentative_lt_reverse hfree q
+    have hlt₁ := edgeRepresentative_lt_reverse p
+    have hlt₂ := edgeRepresentative_lt_reverse q
     change p.1 = allArrowReverse q.1 at hpq
     have hrev : allArrowReverse q.1 = p.1 := hpq.symm
     have hidx : (allArrowIndex q.1).val < (allArrowIndex p.1).val := by
@@ -132,8 +132,8 @@ theorem edgeRepresentativeOrientation_injective
       simpa only [hrev'] using hlt₁
     omega
   · exfalso
-    have hlt₁ := edgeRepresentative_lt_reverse hfree p
-    have hlt₂ := edgeRepresentative_lt_reverse hfree q
+    have hlt₁ := edgeRepresentative_lt_reverse p
+    have hlt₂ := edgeRepresentative_lt_reverse q
     change allArrowReverse p.1 = q.1 at hpq
     have hrev : p.1 = allArrowReverse q.1 := by
       simpa only [allArrowReverse_reverse] using
@@ -149,6 +149,7 @@ theorem edgeRepresentativeOrientation_injective
     cases q
     simp_all
 
+/-- Identifies oriented arrows with a geometric edge representative and an orientation flag. -/
 noncomputable def edgeRepresentativeOrientationEquiv
     (hfree : ReverseFree (V := V)) :
     EdgeRepresentative (V := V) × Bool ≃ AllArrow (V := V) := by
@@ -157,14 +158,14 @@ noncomputable def edgeRepresentativeOrientationEquiv
     (fun p : EdgeRepresentative (V := V) × Bool =>
       edgeRepresentativeOrientation p.1 p.2)
   constructor
-  · exact edgeRepresentativeOrientation_injective hfree
+  · exact edgeRepresentativeOrientation_injective
   · intro e
     by_cases hlt : (allArrowIndex e).val <
         (allArrowIndex (allArrowReverse e)).val
     · refine ⟨(⟨e, hlt⟩, false), ?_⟩
       rfl
     · let er : EdgeRepresentative (V := V) :=
-        reverse_mem_edgeRepresentative hfree e hlt
+        reverseEdgeRepresentative hfree e hlt
       refine ⟨(er, true), ?_⟩
       change allArrowReverse (allArrowReverse e) = e
       simp
@@ -178,11 +179,13 @@ theorem edgeRepresentative_card_mul_two
 
 /-! ### Labels of one representative per geometric edge -/
 
+/-- The factor label carried by a chosen geometric edge representative. -/
 def edgeRepresentativeLabel
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e : EdgeRepresentative (V := V)) : Sum G H :=
   allArrowLabel L e.1
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem allArrowLabel_reverse
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e : AllArrow (V := V)) :
@@ -208,7 +211,7 @@ theorem edgeRepresentativeLabels_closure_eq_top_of_markedGraph {n : ℕ}
         (allArrowIndex (allArrowReverse e)).val
     · exact Subgroup.subset_closure ⟨⟨e, hlt⟩, rfl⟩
     · let er : EdgeRepresentative (V := V) :=
-        reverse_mem_edgeRepresentative hfree e hlt
+        reverseEdgeRepresentative hfree e hlt
       have hlabel : allArrowLabel M.labeling e =
           factorWordInv (edgeRepresentativeLabel M.labeling er) := by
         change allArrowLabel M.labeling e =
@@ -224,31 +227,33 @@ theorem edgeRepresentativeLabels_closure_eq_top_of_markedGraph {n : ℕ}
 
 /-! ### Padding a smaller separated family -/
 
-def padSeparated {m n : ℕ} (h : m ≤ n) (s : Fin m → Sum G H) :
+/-- Extends a shorter list of separated generators by identity labels from the left factor. -/
+def padSeparated {m n : ℕ} (s : Fin m → Sum G H) :
     Fin n → Sum G H := fun i =>
   if hi : i.val < m then s ⟨i.val, hi⟩ else Sum.inl 1
 
+omit [Group H] in
 theorem padSeparated_contains_original {m n : ℕ} (h : m ≤ n)
     (s : Fin m → Sum G H) (i : Fin m) :
-    padSeparated h s ⟨i.val, lt_of_lt_of_le i.isLt h⟩ = s i := by
+    padSeparated (n := n) s ⟨i.val, lt_of_lt_of_le i.isLt h⟩ = s i := by
   simp [padSeparated]
 
 theorem padSeparated_closure_eq_top {m n : ℕ} (h : m ≤ n)
     (s : Fin m → Sum G H)
     (hs : Subgroup.closure (Set.range (separatedMap ∘ s)) = ⊤) :
     Subgroup.closure (Set.range
-      (separatedMap ∘ padSeparated h s)) = ⊤ := by
+      (separatedMap ∘ padSeparated (n := n) s)) = ⊤ := by
   apply top_unique
   intro z hz
   have hle : Subgroup.closure (Set.range (separatedMap ∘ s)) ≤
-      Subgroup.closure (Set.range (separatedMap ∘ padSeparated h s)) := by
+      Subgroup.closure (Set.range (separatedMap ∘ padSeparated (n := n) s)) := by
     apply (Subgroup.closure_le _).mpr
     rintro y ⟨i, rfl⟩
     refine Subgroup.subset_closure ⟨⟨i.val, lt_of_lt_of_le i.isLt h⟩, ?_⟩
     change separatedMap
-      (padSeparated h s ⟨i.val, lt_of_lt_of_le i.isLt h⟩) =
+      (padSeparated (n := n) s ⟨i.val, lt_of_lt_of_le i.isLt h⟩) =
       separatedMap (s i)
-    rw [padSeparated_contains_original]
+    rw [padSeparated_contains_original h]
   exact hle ((hs ▸ hz))
 
 theorem exists_separated_generators_of_edge_bound {n : ℕ}
@@ -278,7 +283,7 @@ theorem exists_separated_generators_of_edge_bound {n : ℕ}
         exact ⟨eS e, by simp [s₀]⟩
     rw [hrange]
     exact edgeRepresentativeLabels_closure_eq_top_of_markedGraph M hfree hgen
-  refine ⟨padSeparated hcardm s₀, padSeparated_closure_eq_top hcardm s₀ hs₀⟩
+  refine ⟨padSeparated s₀, padSeparated_closure_eq_top hcardm s₀ hs₀⟩
 
 theorem exists_separated_generators_of_euler_bound {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)

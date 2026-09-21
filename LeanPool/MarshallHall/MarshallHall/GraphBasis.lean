@@ -1,20 +1,11 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 import Mathlib.CategoryTheory.Action
 import Mathlib.GroupTheory.FreeGroup.NielsenSchreier
 import Mathlib.Tactic
-
-open Set Function
-open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup
-
-noncomputable section
-
-namespace MarshallHall
-
-universe u
 
 /-!
 ## The labelled Schreier graph and its spanning-tree basis
@@ -25,6 +16,18 @@ the core construction uses; the generic Nielsen--Schreier instance instead
 uses the whole free group as a generator synonym.
 -/
 
+open Set Function
+open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup
+
+noncomputable section
+
+namespace MarshallHall
+
+universe u
+
+
+
+/-- The objects of the action groupoid serving as vertices of the covering graph. -/
 abbrev CoverVertex (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :=
   ActionCategory (FreeGroup α) A
 
@@ -34,7 +37,9 @@ instance coverQuiver (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :
 
 /-! The action groupoid is free for this explicit labelled generating quiver. -/
 
-@[reducible] def freeActionGroupoidIsFree (α : Type u) (A : Type u)
+/-- The free-group action groupoid is free on its generator-labelled covering quiver. -/
+@[reducible]
+def freeActionGroupoidIsFree (α : Type u) (A : Type u)
     [MulAction (FreeGroup α) A] :
     IsFreeGroupoid (ActionCategory (FreeGroup α) A) where
   quiverGenerators :=
@@ -104,6 +109,8 @@ def spanningTreeRoot {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T] : G :=
   root T
 
+/-- The free basis of the root endomorphism group indexed by generator edges outside the spanning
+tree. -/
 noncomputable def spanningTreeBasis {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G)))
     [Arborescence T] :
@@ -128,7 +135,8 @@ noncomputable def spanningTreeBasis {G : Type u} [Groupoid.{u} G] [IsFreeGroupoi
         _ = f' e := hF' a b e
         _ = _ := dite_eq_right h
     intro x y q
-    suffices ∀ {a : G} (p : Path (root T) a), F'.map (IsFreeGroupoid.SpanningTree.homOfPath T p) = 1 by
+    suffices ∀ {a : G} (p : Path (root T) a), F'.map (IsFreeGroupoid.SpanningTree.homOfPath T p)
+        = 1 by
       simp only [this, IsFreeGroupoid.SpanningTree.treeHom, comp_as_mul, inv_as_inv,
         IsFreeGroupoid.SpanningTree.loopOfHom, inv_one, mul_one, one_mul, Functor.map_inv,
         Functor.map_comp]

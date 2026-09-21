@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -25,6 +25,8 @@ repository also contains the LERF consequence, the binary and finite-indexed
 free-group Grushko rank calculations, and the factorwise infrastructure for
 the arbitrary-factor theorem.
 -/
+
+
 
 universe u
 
@@ -53,7 +55,7 @@ finite-quotient formulation; the stabilizer formulation is its existential
 finite-index corollary. -/
 
 theorem freeGroup_finite_permutation_separator
-    {α : Type*} [Finite α]
+    {α : Type*}
     (H : Subgroup (FreeGroup α))
     [Group.FG H]
     (g : FreeGroup α)
@@ -62,7 +64,7 @@ theorem freeGroup_finite_permutation_separator
   MarshallHall.freeGroup_finite_permutation_separator_proved H g hg
 
 theorem freeGroup_subgroup_separable
-    {α : Type*} [Finite α]
+    {α : Type*}
     (H : Subgroup (FreeGroup α))
     [Group.FG H]
     (g : FreeGroup α)

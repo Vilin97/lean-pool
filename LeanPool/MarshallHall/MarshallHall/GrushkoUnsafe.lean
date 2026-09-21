@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -15,6 +15,8 @@ source.  After the subsequent safe fold, the old copy remains a
 monochromatic vertex and can be contracted explicitly.  This file contains
 the bridge from that local construction to the removal operation.
 -/
+
+
 
 open Function Monoid.Coprod Quiver
 
@@ -32,6 +34,8 @@ variable {G H : Type u} [Group G] [Group H]
 
 /-! ### A quotient-class test for a vertex away from the fold pair -/
 
+omit [Fintype V] [hV : Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
+omit [qV : Quiver V] in
 theorem foldVertexMk_eq_of_not_eq {a b x y : V}
     (hxy : foldVertexMk (a := a) (b := b) x =
       foldVertexMk (a := a) (b := b) y)
@@ -65,6 +69,7 @@ theorem foldVertexMk_eq_of_not_eq {a b x y : V}
 endpoint.  This lets the contraction choose its anchor from the graph's
 actual connectivity, rather than from a special edge of the unfold. -/
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem exists_nonloop_incident_of_symm_path
     {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a b)
@@ -103,34 +108,31 @@ theorem exists_nonloop_incident_of_symm_path
       · refine ⟨e', Or.inr (by simpa [e'] using
           (symmOrientedArrow_target e)), hloop⟩
 
+/-- A generating connected marked graph admits the prescribed removal of a monochromatic vertex. -/
 def HasRemovedMarkedGraph {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {v : V} (hbase : M.base ≠ v) (color : Bool)
-    (hmono : MonochromaticVertex M.labeling v color)
-    (hgen : M.IsGenerating) (hconn : M.WeaklyConnected)
-    (hfree : ReverseFree (V := V))
-    (hEuler : Fintype.card (AllArrow (V := V)) ≤
-      2 * (n + Fintype.card V - 1)) : Prop :=
+    (hmono : MonochromaticVertex M.labeling v color) : Prop :=
   ∃ e₀ : AllArrow (V := V),
     ∃ ha : allArrowSource e₀ = v,
       ∃ hn : allArrowTarget e₀ ≠ v,
         letI : Fintype (RemovedVertex v) := removedVertexFintype v
-        letI : Quiver (RemovedVertex v) := removeQuiver e₀ ha hn
+        letI : Quiver (RemovedVertex v) := removeQuiver e₀ hn
         letI : HasInvolutiveReverse (RemovedVertex v) :=
-          removeHasReverse e₀ ha hn
+          removeHasReverse e₀ hn
         letI (x y : RemovedVertex v) :
             Fintype (@Quiver.Hom (RemovedVertex v)
-              (removeQuiver e₀ ha hn) x y) :=
-          removeQuiverHomFintype e₀ ha hn x y
+              (removeQuiver e₀ hn) x y) :=
+          removeQuiverHomFintype e₀ hn x y
         @MarkedBinaryGraph.IsGenerating n G H (RemovedVertex v) _ _
-            (removeQuiver e₀ ha hn) (removeHasReverse e₀ ha hn)
+            (removeQuiver e₀ hn) (removeHasReverse e₀ hn)
             (removedMarkedGraph M hbase e₀ ha hn color hmono) ∧
           @MarkedBinaryGraph.WeaklyConnected n G H (RemovedVertex v) _ _
-            (removeQuiver e₀ ha hn) (removeHasReverse e₀ ha hn)
+            (removeQuiver e₀ hn) (removeHasReverse e₀ hn)
             (removedMarkedGraph M hbase e₀ ha hn color hmono) ∧
           ReverseFree (V := RemovedVertex v) ∧
           Fintype.card (@AllArrow (RemovedVertex v)
-            (removeQuiver e₀ ha hn)) ≤
+            (removeQuiver e₀ hn)) ≤
             2 * (n + Fintype.card (RemovedVertex v) - 1) ∧
           Fintype.card (RemovedVertex v) < Fintype.card V
 
@@ -142,7 +144,7 @@ theorem exists_removed_marked_graph_of_connected {n : ℕ}
     (hfree : ReverseFree (V := V))
     (hEuler : Fintype.card (AllArrow (V := V)) ≤
       2 * (n + Fintype.card V - 1)) :
-    HasRemovedMarkedGraph M hbase color hmono hgen hconn hfree hEuler := by
+    HasRemovedMarkedGraph M hbase color hmono := by
   unfold HasRemovedMarkedGraph
   obtain ⟨p⟩ := hconn v
   obtain ⟨e₀, hinc, hne⟩ :=
@@ -167,22 +169,22 @@ theorem exists_removed_marked_graph_of_connected {n : ℕ}
           _ = allArrowTarget e₀ := by simp
   obtain ⟨eₐ, ha, hn⟩ := hexanchor
   refine ⟨eₐ, ha, hn, ?_⟩
-  letI : Fintype (RemovedVertex v) := removedVertexFintype v
-  letI : Quiver (RemovedVertex v) := removeQuiver eₐ ha hn
-  letI : HasInvolutiveReverse (RemovedVertex v) :=
-    removeHasReverse eₐ ha hn
-  letI (x y : RemovedVertex v) :
+  let : Fintype (RemovedVertex v) := removedVertexFintype v
+  let : Quiver (RemovedVertex v) := removeQuiver eₐ hn
+  let : HasInvolutiveReverse (RemovedVertex v) :=
+    removeHasReverse eₐ hn
+  let (x y : RemovedVertex v) :
       Fintype (@Quiver.Hom (RemovedVertex v)
-        (removeQuiver eₐ ha hn) x y) :=
-    removeQuiverHomFintype eₐ ha hn x y
+        (removeQuiver eₐ hn) x y) :=
+    removeQuiverHomFintype eₐ hn x y
   have hgen' := removedMarkedGraph_isGenerating
     M hbase eₐ ha hn color hmono hgen
   have hconn' := removedMarkedGraph_weaklyConnected
     M hbase eₐ ha hn color hmono hconn
   have hfree' : ReverseFree (V := RemovedVertex v) :=
-    removeReverseFree eₐ ha hn hfree
+    removeReverseFree eₐ hn hfree
   have hEuler' := removedMarkedGraph_euler_bound
-    M hbase eₐ ha hn hfree hEuler
+    eₐ hn hfree hEuler
   have hcard' : Fintype.card (RemovedVertex v) < Fintype.card V := by
     have hcard := removedVertex_card_add_one v
     omega
@@ -190,6 +192,7 @@ theorem exists_removed_marked_graph_of_connected {n : ℕ}
 
 /-! ### The old unfolded source stays monochromatic after a fold -/
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
 theorem foldedUnfoldOld_incident_color {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     (e₀ : AllArrow (V := V))
@@ -202,9 +205,6 @@ theorem foldedUnfoldOld_incident_color {n : ℕ}
       unfoldQuiver M.labeling e₀
     letI : HasInvolutiveReverse (UnfoldVertex (allArrowSource e₀)) :=
       unfoldHasReverse M.labeling e₀
-    letI (x y : UnfoldVertex (allArrowSource e₀)) :
-        Fintype (x ⟶ y) :=
-      unfoldQuiverHomFintype M.labeling e₀ x y
     ∀ (e : @AllArrow
       (foldVertex (unfoldNew (allArrowSource e₀))
         (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
@@ -221,13 +221,10 @@ theorem foldedUnfoldOld_incident_color {n : ℕ}
             (foldLabelling
               (unfoldedMarkedGraphNew M e₀ ha).labeling e₁) e) =
         unfoldEdgeColor M.labeling e₀ := by
-  letI : Quiver (UnfoldVertex (allArrowSource e₀)) :=
+  let : Quiver (UnfoldVertex (allArrowSource e₀)) :=
     unfoldQuiver M.labeling e₀
-  letI : HasInvolutiveReverse (UnfoldVertex (allArrowSource e₀)) :=
+  let : HasInvolutiveReverse (UnfoldVertex (allArrowSource e₀)) :=
     unfoldHasReverse M.labeling e₀
-  letI (x y : UnfoldVertex (allArrowSource e₀)) :
-      Fintype (x ⟶ y) :=
-    unfoldQuiverHomFintype M.labeling e₀ x y
   intro e hinc
   let a : UnfoldVertex (allArrowSource e₀) :=
     unfoldNew (allArrowSource e₀)
@@ -290,6 +287,16 @@ theorem foldedUnfoldOld_incident_color {n : ℕ}
 /-! The fold produced by the unfold can now enter the generic contraction
 branch. -/
 
+omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
+private theorem unfoldOld_ne_vertexAt_of_ne_source
+    (L : BinaryLabelling (G := G) (H := H) (V := V))
+    (e₀ : AllArrow (V := V)) {b : V} (hb : b ≠ allArrowSource e₀) :
+    unfoldOld (allArrowSource e₀) ≠
+      unfoldVertexAt L (allArrowSource e₀) e₀ b (unfoldEdgeColor L e₀) := by
+  rw [unfoldVertexAt_of_ne L b (unfoldEdgeColor L e₀) hb]
+  intro h
+  cases h
+
 theorem exists_removed_of_unfold_fold {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     (e₀ : AllArrow (V := V))
@@ -298,11 +305,6 @@ theorem exists_removed_of_unfold_fold {n : ℕ}
     (hb : (show V from b) ≠ allArrowSource e₀)
     (e₁ : @AllArrow (UnfoldVertex (allArrowSource e₀))
       (unfoldQuiver M.labeling e₀))
-    (hcard₁ :
-      Fintype.card (foldVertex (unfoldNew (allArrowSource e₀))
-        (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
-          (show V from b) (unfoldEdgeColor M.labeling e₀))) <
-        Fintype.card (UnfoldVertex (allArrowSource e₀)))
     (hfree : ReverseFree (V := V))
     (hEuler : Fintype.card (AllArrow (V := V)) ≤
       2 * (n + Fintype.card V - 1)) :
@@ -359,11 +361,8 @@ theorem exists_removed_of_unfold_fold {n : ℕ}
       unfoldNew_ne_vertexAt_of_ne_source M.labeling e₀ hb
     let holdb : unfoldOld (allArrowSource e₀) ≠
         unfoldVertexAt M.labeling (allArrowSource e₀) e₀
-          (show V from b) (unfoldEdgeColor M.labeling e₀) := by
-      rw [unfoldVertexAt_of_ne M.labeling (show V from b)
-        (unfoldEdgeColor M.labeling e₀) hb]
-      intro h
-      cases h
+          (show V from b) (unfoldEdgeColor M.labeling e₀) :=
+      unfoldOld_ne_vertexAt_of_ne_source M.labeling e₀ hb
     let hbaseN : N.base ≠ foldVertexMk (unfoldOld (allArrowSource e₀)) := by
       dsimp [N]
       intro h
@@ -379,7 +378,7 @@ theorem exists_removed_of_unfold_fold {n : ℕ}
     let hfreeU : ∀ e : @AllArrow (UnfoldVertex (allArrowSource e₀))
         (unfoldQuiver M.labeling e₀), allArrowReverse e ≠ e :=
       unfold_allArrow_reverse_ne M.labeling e₀ hfree
-    let hfreeN : ReverseFree (V :=
+    let _hfreeN : ReverseFree (V :=
         foldVertex (unfoldNew (allArrowSource e₀))
           (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
             (show V from b) (unfoldEdgeColor M.labeling e₀))) :=
@@ -389,7 +388,7 @@ theorem exists_removed_of_unfold_fold {n : ℕ}
           (unfoldQuiver M.labeling e₀)) ≤
           2 * (n + Fintype.card (UnfoldVertex (allArrowSource e₀)) - 1) :=
       unfold_euler_bound M.labeling e₀ hEuler
-    let hEulerN :
+    let _hEulerN :
         Fintype.card (@AllArrow
           (foldVertex (unfoldNew (allArrowSource e₀))
             (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
@@ -399,44 +398,44 @@ theorem exists_removed_of_unfold_fold {n : ℕ}
             (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
               (show V from b) (unfoldEdgeColor M.labeling e₀)) ) - 1) :=
       foldAllArrow_card_le_euler e₁ hab hfreeU hEulerU
-    ∀ (hgen₁ :
+    ∀ (_hgen₁ :
       @MarkedBinaryGraph.IsGenerating n G H
         (foldVertex (unfoldNew (allArrowSource e₀))
           (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
             (show V from b) (unfoldEdgeColor M.labeling e₀))) _ _
         (foldQuiver e₁) (foldHasReverse e₁) N)
-    (hconn₁ :
+    (_hconn₁ :
       @MarkedBinaryGraph.WeaklyConnected n G H
         (foldVertex (unfoldNew (allArrowSource e₀))
           (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
             (show V from b) (unfoldEdgeColor M.labeling e₀))) _ _
         (foldQuiver e₁) (foldHasReverse e₁) N),
       HasRemovedMarkedGraph N hbaseN (unfoldEdgeColor M.labeling e₀)
-        hmonoN hgen₁ hconn₁ hfreeN hEulerN := by
-  letI : Fintype (UnfoldVertex (allArrowSource e₀)) :=
+        hmonoN := by
+  let : Fintype (UnfoldVertex (allArrowSource e₀)) :=
     unfoldVertexFintype (allArrowSource e₀)
-  letI : Quiver (UnfoldVertex (allArrowSource e₀)) :=
+  let : Quiver (UnfoldVertex (allArrowSource e₀)) :=
     unfoldQuiver M.labeling e₀
-  letI : HasInvolutiveReverse (UnfoldVertex (allArrowSource e₀)) :=
+  let : HasInvolutiveReverse (UnfoldVertex (allArrowSource e₀)) :=
     unfoldHasReverse M.labeling e₀
-  letI (x y : UnfoldVertex (allArrowSource e₀)) :
+  let (x y : UnfoldVertex (allArrowSource e₀)) :
       Fintype (x ⟶ y) :=
     unfoldQuiverHomFintype M.labeling e₀ x y
-  letI : Fintype (foldVertex (unfoldNew (allArrowSource e₀))
+  let : Fintype (foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
         (show V from b) (unfoldEdgeColor M.labeling e₀))) :=
     foldVertexFintype (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
         (show V from b) (unfoldEdgeColor M.labeling e₀))
-  letI : Quiver (foldVertex (unfoldNew (allArrowSource e₀))
+  let : Quiver (foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
         (show V from b) (unfoldEdgeColor M.labeling e₀))) :=
     foldQuiver e₁
-  letI : HasInvolutiveReverse (foldVertex (unfoldNew (allArrowSource e₀))
+  let : HasInvolutiveReverse (foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
         (show V from b) (unfoldEdgeColor M.labeling e₀))) :=
     foldHasReverse e₁
-  letI (x y : foldVertex (unfoldNew (allArrowSource e₀))
+  let (x y : foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt M.labeling (allArrowSource e₀) e₀
         (show V from b) (unfoldEdgeColor M.labeling e₀))) :
       Fintype (x ⟶ y) :=
@@ -455,11 +454,8 @@ theorem exists_removed_of_unfold_fold {n : ℕ}
     unfoldNew_ne_vertexAt_of_ne_source M.labeling e₀ hb
   let holdb : unfoldOld (allArrowSource e₀) ≠
       unfoldVertexAt M.labeling (allArrowSource e₀) e₀
-        (show V from b) (unfoldEdgeColor M.labeling e₀) := by
-    rw [unfoldVertexAt_of_ne M.labeling (show V from b)
-      (unfoldEdgeColor M.labeling e₀) hb]
-    intro h
-    cases h
+        (show V from b) (unfoldEdgeColor M.labeling e₀) :=
+    unfoldOld_ne_vertexAt_of_ne_source M.labeling e₀ hb
   let hbaseN : N.base ≠ foldVertexMk (unfoldOld (allArrowSource e₀)) := by
     dsimp [N]
     intro h

@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -18,6 +18,8 @@ therefore use these operations without introducing a second, informal notion
 of path evaluation.
 -/
 
+
+
 open Function Monoid.Coprod Quiver
 
 noncomputable section
@@ -30,6 +32,7 @@ universe u v
 variable {G H : Type u} {V : Type v} [Group G] [Group H] [Quiver V]
   [HasInvolutiveReverse V]
 
+omit [Quiver.HasInvolutiveReverse V] in
 theorem path_length_cast {a b a' b' : V} (ha : a = a') (hb : b = b')
     (p : Path a b) : (p.cast ha hb).length = p.length := by
   subst_vars
@@ -37,6 +40,7 @@ theorem path_length_cast {a b a' b' : V} (ha : a = a') (hb : b = b')
 
 /-- An oriented-edge labelling by the two factors, compatible with reversal. -/
 structure BinaryLabelling where
+  /-- Assigns each oriented edge a label from one of the two group factors. -/
   label : ∀ {a b : V}, (a ⟶ b) → Sum G H
   reverse_label : ∀ {a b : V} (e : a ⟶ b),
     label (Quiver.reverse e) = factorWordInv (G := G) (H := H) (label e)
@@ -59,11 +63,13 @@ def IsMonochromatic {a b : V} (p : Path a b) (color : Bool) : Prop :=
   ∀ z ∈ L.pathLabels p,
     binarySumIndex (G := G) (H := H) z = color
 
-@[simp] theorem pathLabels_nil {a : V} :
+@[simp]
+theorem pathLabels_nil {a : V} :
     L.pathLabels (Path.nil : Path a a) = [] :=
   rfl
 
-@[simp] theorem pathLabels_toPath {a b : V} (e : a ⟶ b) :
+@[simp]
+theorem pathLabels_toPath {a b : V} (e : a ⟶ b) :
     L.pathLabels e.toPath = [L.label e] := by
   rfl
 
@@ -84,13 +90,15 @@ theorem pathRead_cast {a b a' b' : V} (ha : a = a') (hb : b = b')
     L.pathRead (p.cast ha hb) = L.pathRead p := by
   simp only [pathRead, pathLabels_cast]
 
-@[simp] theorem pathRead_nil {a : V} :
+@[simp]
+theorem pathRead_nil {a : V} :
     L.pathRead (Path.nil : Path a a) = 1 := by
   simp [pathRead, pathLabels, factorWordProd]
 
-@[simp] theorem pathRead_toPath {a b : V} (e : a ⟶ b) :
+@[simp]
+theorem pathRead_toPath {a b : V} (e : a ⟶ b) :
     L.pathRead e.toPath = separatedMap (L.label e) := by
-  simp [pathRead, pathLabels, factorWordProd, separatedMap]
+  simp [pathRead, factorWordProd, separatedMap]
 
 theorem pathLabels_comp {a b : V} (p : Path a b) :
     ∀ {c : V} (q : Path b c), L.pathLabels (p.comp q) =
@@ -108,6 +116,7 @@ theorem pathRead_comp {a b : V} (p : Path a b) :
 
 /-! ### Reading paths in the symmetrized graph -/
 
+/-- Extends edge labels to symmetrized arrows by inverting the label on a formal reverse. -/
 def symmLabel {a b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) :
     Sum G H :=
@@ -115,6 +124,7 @@ def symmLabel {a b : Symmetrify V}
   | Sum.inl f => L.label f
   | Sum.inr f => factorWordInv (L.label f)
 
+/-- The ordered list of factor labels along a symmetrized path. -/
 def symmPathLabels {a : Symmetrify V} :
     ∀ {b : Symmetrify V},
       @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b →
@@ -122,6 +132,7 @@ def symmPathLabels {a : Symmetrify V} :
   | _, Path.nil => []
   | _, Path.cons p e => symmPathLabels p ++ [L.symmLabel e]
 
+/-- The free-product element read along a symmetrized path. -/
 def symmPathRead {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) :
   G ∗ H :=
@@ -140,22 +151,26 @@ theorem symmPathRead_cast {a b a' b' : Symmetrify V}
     L.symmPathRead (p.cast ha hb) = L.symmPathRead p := by
   simp only [symmPathRead, symmPathLabels_cast]
 
-@[simp] theorem symmPathLabels_nil {a : Symmetrify V} :
+@[simp]
+theorem symmPathLabels_nil {a : Symmetrify V} :
     L.symmPathLabels
       (@Quiver.Path.nil (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a) = [] :=
   rfl
 
-@[simp] theorem symmPathLabels_toPath {a b : Symmetrify V}
+@[simp]
+theorem symmPathLabels_toPath {a b : Symmetrify V}
   (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) :
     L.symmPathLabels e.toPath = [L.symmLabel e] := by
   rfl
 
-@[simp] theorem symmPathRead_nil {a : Symmetrify V} :
+@[simp]
+theorem symmPathRead_nil {a : Symmetrify V} :
     L.symmPathRead
       (@Quiver.Path.nil (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a) = 1 := by
   simp [symmPathRead, symmPathLabels, factorWordProd]
 
-@[simp] theorem symmPathRead_toPath {a b : Symmetrify V}
+@[simp]
+theorem symmPathRead_toPath {a b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) :
     L.symmPathRead e.toPath = separatedMap (L.symmLabel e) := by
   change factorWordProd [L.symmLabel e] = separatedMap (L.symmLabel e)
@@ -219,13 +234,15 @@ theorem symmPathRead_map_of {a b : V}
       simp [symmLabel]
       rfl
 
+/-- Every label along the symmetrized path belongs to the specified factor. -/
 def symmIsMonochromatic {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b)
     (color : Bool) : Prop :=
   ∀ z ∈ L.symmPathLabels p,
     binarySumIndex (G := G) (H := H) z = color
 
-@[simp] theorem symmIsMonochromatic_nil {a : Symmetrify V} (color : Bool) :
+@[simp]
+theorem symmIsMonochromatic_nil {a : Symmetrify V} (color : Bool) :
     L.symmIsMonochromatic
       (@Quiver.Path.nil (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a) color := by
   simp [symmIsMonochromatic]
@@ -269,17 +286,24 @@ theorem symmPathRead_mono_true {a b : Symmetrify V}
   refine ⟨l.prod, ?_⟩
   rw [symmPathRead, hl, factorWordProd_map_inr]
 
+/-- A nonempty monochromatic piece of a symmetrized path, with its endpoints and factor recorded. -/
 structure SymmRunPiece where
+  /-- The starting vertex of the monochromatic path piece. -/
   source : Symmetrify V
+  /-- The ending vertex of the monochromatic path piece. -/
   target : Symmetrify V
+  /-- The nonempty path underlying the monochromatic piece. -/
   path : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) source target
+  /-- The factor containing every label of the path piece. -/
   color : Bool
   monochromatic : L.symmIsMonochromatic path color
   nonempty : path.length ≠ 0
 
 namespace SymmRunPiece
 
-@[reducible] def single {a b : Symmetrify V}
+/-- The monochromatic path piece consisting of one symmetrized arrow. -/
+@[reducible]
+def single {a b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) :
     SymmRunPiece L :=
   { source := a
@@ -289,7 +313,9 @@ namespace SymmRunPiece
     monochromatic := L.symmIsMonochromatic_toPath e
     nonempty := by simp }
 
-@[reducible] def extend {c : Symmetrify V} (r : SymmRunPiece L)
+/-- Appends an arrow of the same factor to a monochromatic path piece. -/
+@[reducible]
+def extend {c : Symmetrify V} (r : SymmRunPiece L)
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V _)
       r.target c)
     (hcolor : binarySumIndex (G := G) (H := H) (L.symmLabel e) = r.color) :
@@ -311,6 +337,7 @@ namespace SymmRunPiece
 
 end SymmRunPiece
 
+/-- The factor-tagged free-product value of a monochromatic path piece. -/
 def symmRunTag (r : SymmRunPiece L) : Sum G H :=
   match r.color with
   | false => Sum.inl (Monoid.Coprod.fst (L.symmPathRead r.path))
@@ -332,28 +359,33 @@ theorem separatedMap_symmRunTag (r : SymmRunPiece L) :
       simp only [symmRunTag, hc, hh, separatedMap]
       rfl
 
+/-- A composable chain of nonempty monochromatic path pieces. -/
 inductive SymmRunChain (L : BinaryLabelling (G := G) (H := H) (V := V)) :
     Symmetrify V → Symmetrify V → Type (max v 1)
   | nil (a : Symmetrify V) : SymmRunChain L a a
   | cons {a : Symmetrify V} (r : SymmRunPiece L)
       (rest : SymmRunChain L a r.source) : SymmRunChain L a r.target
 
+/-- Concatenates the monochromatic pieces into their underlying path. -/
 def SymmRunChain.path : ∀ {a b : Symmetrify V},
     SymmRunChain L a b →
       @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b
   | _, _, .nil _ => Path.nil
   | _, _, .cons r rest => (SymmRunChain.path rest).comp r.path
 
+/-- The factors of the chain's pieces, listed from the final piece backwards. -/
 def SymmRunChain.colors : ∀ {a b : Symmetrify V},
     SymmRunChain L a b → List Bool
   | _, _, .nil _ => []
   | _, _, .cons r rest => r.color :: SymmRunChain.colors rest
 
+/-- The monochromatic pieces of the chain in path order. -/
 def SymmRunChain.pieces : ∀ {a b : Symmetrify V},
     SymmRunChain L a b → List (SymmRunPiece L)
   | _, _, .nil _ => []
   | _, _, .cons r rest => SymmRunChain.pieces rest ++ [r]
 
+/-- The factors of the chain's pieces in path order. -/
 def SymmRunChain.pieceColors : ∀ {a b : Symmetrify V},
     SymmRunChain L a b → List Bool
   | _, _, .nil _ => []
@@ -439,7 +471,7 @@ theorem SymmRunChain.exists_path_split_at_run
         refine ⟨p, q.comp r₀.path, ?_⟩
         simp [SymmRunChain.path, hsplit, Path.comp_assoc]
       · refine ⟨SymmRunChain.path L rest, Path.nil, ?_⟩
-        simp [SymmRunChain.path, Path.comp_assoc]
+        simp [SymmRunChain.path]
 
 theorem exists_shorter_null_path_of_null_loop_run
     {a b : Symmetrify V} (c : SymmRunChain L a b)
@@ -508,12 +540,15 @@ theorem exists_null_piece_of_null_chain
   rw [← SymmRunChain.pathRead_eq_factorWordProd_tags L c]
   exact hread
 
+/-- A decomposition of a path into monochromatic pieces with alternating factors. -/
 structure SymmRunDecomposition {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) where
+  /-- The chain of monochromatic pieces composing the given path. -/
   chain : SymmRunChain L a b
   path_eq : chain.path = p
   alternating : (chain.colors).IsChain (fun x y => x ≠ y)
 
+/-- Splits a symmetrized path into maximal monochromatic pieces. -/
 def symmRunDecomposition {a b : Symmetrify V} :
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) →
       SymmRunDecomposition (L := L) p
@@ -583,6 +618,7 @@ theorem exists_null_monochromatic_run_of_null_path
     exists_null_piece_of_null_chain L d.chain d.alternating hpieces hchainread
   exact ⟨r, hr, hrread⟩
 
+omit [Quiver.HasInvolutiveReverse V] in
 theorem exists_first_edge_comp
     {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b)
@@ -680,6 +716,7 @@ The fundamental-group part of a fold changes a marked family of based loops by
 permuting loops, reversing a loop, or concatenating two loops.  These are the
 path-level counterparts of the algebraic Nielsen generators. -/
 
+/-- An elementary Nielsen move on a tuple of based loops. -/
 inductive LoopNielsenStep {b : V} {n : ℕ}
     (x y : Fin n → Path b b) : Prop
   | perm (e : Fin n ≃ Fin n) (h : y = x ∘ e) : LoopNielsenStep x y
@@ -689,10 +726,12 @@ inductive LoopNielsenStep {b : V} {n : ℕ}
       (h : y = Function.update x i ((x i).comp (x j))) :
       LoopNielsenStep x y
 
+/-- Two loop tuples are connected by finitely many elementary Nielsen moves. -/
 def LoopNielsenEquivalent {b : V} {n : ℕ}
     (x y : Fin n → Path b b) : Prop :=
   Relation.ReflTransGen (fun u v : Fin n → Path b b => LoopNielsenStep u v) x y
 
+/-- Reads a tuple of based loops as a tuple of free-product elements. -/
 def loopRead {b : V} {n : ℕ} (x : Fin n → Path b b) : Fin n → G ∗ H :=
   fun i => L.pathRead (x i)
 
@@ -749,21 +788,28 @@ separate from the fold operation: it records exactly the data needed to state
 that the labelled loops generate the free product, while the path lemmas above
 prove how that data behaves under a graph-level Nielsen move. -/
 
+/-- A graph labelled by two factors and marked by a finite tuple of based loops. -/
 structure MarkedBinaryGraph (n : ℕ) where
+  /-- The common base vertex of the marking loops. -/
   base : V
+  /-- The factor labelling assigned to the graph's edges. -/
   labeling : BinaryLabelling (G := G) (H := H) (V := V)
+  /-- The finite tuple of loops marking the graph. -/
   loops : Fin n → Path base base
 
 namespace MarkedBinaryGraph
 
 variable (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
 
+/-- The free-product elements read along the marking loops. -/
 def read : Fin n → G ∗ H :=
   M.labeling.loopRead M.loops
 
+/-- The marking loops read a generating tuple of the free product. -/
 def IsGenerating : Prop :=
   Subgroup.closure (Set.range M.read) = ⊤
 
+/-- Every vertex can be reached from the base after allowing formal reverse edges. -/
 def WeaklyConnected : Prop :=
   ∀ v : V, Nonempty (@Path (Symmetrify V) _ M.base v)
 
@@ -791,6 +837,7 @@ The marked loops generate the target group, so every target element is read by
 some based loop.  This is the small algebraic bridge needed to append a loop to
 a path whose endpoints are different. -/
 
+/-- The subgroup consisting of all elements read by loops at the marked base. -/
 def loopReadSubgroup : Subgroup (G ∗ H) where
   carrier := {g | ∃ p : Path M.base M.base, M.labeling.pathRead p = g}
   one_mem' := by
@@ -848,7 +895,7 @@ theorem exists_null_nonloop_path [Fintype V] (hgen : M.IsGenerating)
       intro v
       by_contra hv
       exact h ⟨v, hv⟩
-    letI : Subsingleton V := ⟨fun x y => (hall x).trans (hall y).symm⟩
+    let : Subsingleton V := ⟨fun x y => (hall x).trans (hall y).symm⟩
     have hle : Fintype.card V ≤ 1 :=
       Fintype.card_le_one_iff_subsingleton.mpr inferInstance
     omega

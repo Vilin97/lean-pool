@@ -1,10 +1,9 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 import LeanPool.MarshallHall.MarshallHall.GrushkoInvariant
-
 
 /-!
 ## Termination of the safe-fold reduction
@@ -16,6 +15,9 @@ existence of a safe complementary path at every non-terminal stage.  Thus the
 remaining combinatorial issue is isolated precisely to the unfold case of
 the classical proof.
 -/
+
+
+
 
 open Function Monoid.Coprod Quiver
 
@@ -37,8 +39,8 @@ null path whose first edge can be folded without reusing either orientation
 in the complementary path. -/
 def HasSafeNullFold : Prop :=
   ∀ (n : ℕ) (V : Type) [Fintype V] [qV : Quiver.{0, 0} V]
-    [hV : HasInvolutiveReverse V]
-    [hHom : ∀ a b : V, Fintype (a ⟶ b)]
+    [_hV : HasInvolutiveReverse V]
+    [_hHom : ∀ a b : V, Fintype (a ⟶ b)]
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n),
     ReverseFree (V := V) → M.IsGenerating → M.WeaklyConnected →
       Fintype.card (AllArrow (V := V)) ≤
@@ -66,8 +68,8 @@ The complementary-path reuse case is exactly the part that still needs the
 classical unfold construction. -/
 def HasGeometricallySimpleNullPath : Prop :=
   ∀ (n : ℕ) (V : Type) [Fintype V] [qV : Quiver.{0, 0} V]
-    [hV : HasInvolutiveReverse V]
-    [hHom : ∀ a b : V, Fintype (a ⟶ b)]
+    [_hV : HasInvolutiveReverse V]
+    [_hHom : ∀ a b : V, Fintype (a ⟶ b)]
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n),
     M.IsGenerating → M.WeaklyConnected →
       1 < Fintype.card V →
@@ -202,12 +204,12 @@ theorem separated_generators_of_hasSafeNullFold
             (G := G) (H := H) (V := V) (qV := qV) (v := v)
             M hfree hgen hconn hEuler
             hv p hp hdecomp
-          letI : Fintype (foldVertex M.base v) := foldVertexFintype _ _
-          letI : Quiver.{0, 0} (foldVertex M.base v) :=
+          let : Fintype (foldVertex M.base v) := foldVertexFintype _ _
+          let : Quiver.{0, 0} (foldVertex M.base v) :=
             foldQuiver (a := M.base) (b := v) e₀
-          letI : HasInvolutiveReverse (foldVertex M.base v) :=
+          let : HasInvolutiveReverse (foldVertex M.base v) :=
             foldHasReverse (a := M.base) (b := v) e₀
-          letI (x y : foldVertex M.base v) : Fintype (x ⟶ y) :=
+          let (x y : foldVertex M.base v) : Fintype (x ⟶ y) :=
             foldQuiverHomFintype e₀ x y
           have hcard'' : Fintype.card (foldVertex M.base v) < k := by
             simpa [hcard] using hcard'
@@ -218,18 +220,18 @@ theorem separated_generators_of_hasSafeNullFold
   intro n x hx
   let V : Type := RoseVertex (fun i =>
     binaryReducedLetters (G := G) (H := H) (x i))
-  letI : Fintype V := by
+  let : Fintype V := by
     dsimp [V]
     infer_instance
-  letI : Quiver V := by
+  let : Quiver V := by
     dsimp [V]
     exact roseQuiver (fun i =>
       binaryReducedLetters (G := G) (H := H) (x i))
-  letI : HasInvolutiveReverse V := by
+  let : HasInvolutiveReverse V := by
     dsimp [V]
     exact roseHasReverse (fun i =>
       binaryReducedLetters (G := G) (H := H) (x i))
-  letI (a b : V) : Fintype (a ⟶ b) := by
+  let (a b : V) : Fintype (a ⟶ b) := by
     dsimp [V]
     exact roseHomFintype _ _ _
   let M : MarkedBinaryGraph (G := G) (H := H) (V := V) n :=

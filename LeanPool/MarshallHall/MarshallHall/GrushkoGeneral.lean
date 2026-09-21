@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -22,6 +22,8 @@ two factors can be projected back to each factor.  The remaining, genuinely
 Grushko-specific step is to reduce an arbitrary generating tuple to this
 separated form without increasing its length.
 -/
+
+
 
 open Function Set
 open Monoid.Coprod
@@ -90,17 +92,21 @@ def separatedMap : Sum G H → G ∗ H := fun x => match x with
   | Sum.inl g => inl g
   | Sum.inr h => inr h
 
+/-- The indices whose separated generator lies in the left factor. -/
 def leftIndex {n : ℕ} (s : Fin n → Sum G H) :=
   {i : Fin n // ∃ g : G, s i = Sum.inl g}
 
+/-- The indices whose separated generator lies in the right factor. -/
 def rightIndex {n : ℕ} (s : Fin n → Sum G H) :=
   {i : Fin n // ¬ ∃ g : G, s i = Sum.inl g}
 
+/-- Extracts the left-factor value at an index known to carry a left label. -/
 def leftValue {n : ℕ} (s : Fin n → Sum G H) (i : leftIndex s) : G :=
   match s i.1 with
   | Sum.inl g => g
   | Sum.inr _ => 1
 
+/-- Extracts the right-factor value at an index known to carry a right label. -/
 def rightValue {n : ℕ} (s : Fin n → Sum G H) (i : rightIndex s) : H :=
   match s i.1 with
   | Sum.inl _ => 1
@@ -120,10 +126,12 @@ noncomputable instance leftIndexFintype {n : ℕ} (s : Fin n → Sum G H) :
 noncomputable instance rightIndexFintype {n : ℕ} (s : Fin n → Sum G H) :
     Fintype (rightIndex s) := Fintype.ofFinite _
 
+/-- The finite set of left-factor generators occurring in a separated generating tuple. -/
 noncomputable def leftGenerators {n : ℕ} (s : Fin n → Sum G H) : Finset G := by
   classical
   exact Finset.univ.image (leftValue s)
 
+/-- The finite set of right-factor generators occurring in a separated generating tuple. -/
 noncomputable def rightGenerators {n : ℕ} (s : Fin n → Sum G H) : Finset H := by
   classical
   exact Finset.univ.image (rightValue s)
@@ -409,15 +417,17 @@ theorem rank_coprod_eq_add_of_nielsen_separated_reduction
 group on the disjoint union of the bases.  This is the finite-family version
 of the binary free-group calculation in `MarshallHall.Grushko`. -/
 noncomputable def coprodIFreeGroupEquiv {ι : Type*} (α : ι → Type*)
-    [∀ i, Fintype (α i)] :
+    :
     Monoid.CoprodI (fun i => FreeGroup (α i)) ≃*
       FreeGroup (Σ i, α i) :=
   (Monoid.CoprodI.FreeGroupBasis.coprodI
     (fun i => FreeGroupBasis.ofFreeGroup (α i))).repr
 
-noncomputable instance coprodI_freeGroup_fg {ι : Type*} [Fintype ι]
-    (α : ι → Type*) [∀ i, Fintype (α i)] :
+noncomputable instance coprodI_freeGroup_fg {ι : Type*} [Finite ι]
+    (α : ι → Type*) [∀ i, Finite (α i)] :
     Group.FG (Monoid.CoprodI (fun i => FreeGroup (α i))) := by
+  let := Fintype.ofFinite ι
+  let (i : ι) := Fintype.ofFinite (α i)
   exact Group.fg_of_surjective
     (f := (coprodIFreeGroupEquiv α).symm.toMonoidHom)
     (coprodIFreeGroupEquiv α).symm.surjective
@@ -474,6 +484,7 @@ theorem factorWordProd_surjective :
       refine ⟨Sum.inr h :: u, ?_⟩
       simp [factorWordProd, separatedMap, hu]
 
+/-- An element has a factor-word representation of the specified length. -/
 def factorWordRepresented (x : G ∗ H) (n : ℕ) : Prop :=
   ∃ u : List (Sum G H), u.length = n ∧ factorWordProd u = x
 
@@ -498,14 +509,16 @@ theorem factorWordLength_wordProd_le (u : List (Sum G H)) :
   classical
   exact Nat.find_min' (factorWordRepresented_exists (factorWordProd u)) ⟨u, rfl, rfl⟩
 
-@[simp] theorem factorWordLength_one :
+@[simp]
+theorem factorWordLength_one :
     factorWordLength (1 : G ∗ H) = 0 := by
   classical
   apply Nat.eq_zero_of_le_zero
   simpa [factorWordProd] using
     (factorWordLength_wordProd_le (G := G) (H := H) ([] : List (Sum G H)))
 
-@[simp] theorem factorWordLength_eq_zero_iff {x : G ∗ H} :
+@[simp]
+theorem factorWordLength_eq_zero_iff {x : G ∗ H} :
     factorWordLength x = 0 ↔ x = 1 := by
   classical
   constructor

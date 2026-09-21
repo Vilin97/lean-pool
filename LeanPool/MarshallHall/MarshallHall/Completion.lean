@@ -1,19 +1,10 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 import LeanPool.MarshallHall.MarshallHall.CoreSupport
 import LeanPool.MarshallHall.MarshallHall.FiniteCore
-
-open Set Function
-open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup
-
-noncomputable section
-namespace MarshallHall
-
-universe u
-variable {α : Type u} [DecidableEq α]
 
 /-!
 ## The finite core as an embedded labelled graph
@@ -25,20 +16,34 @@ left-coset action.  The resulting graph is the finite core used in the
 completion argument.
 -/
 
+open Set Function
+open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup
+
+noncomputable section
+namespace MarshallHall
+
+universe u
+variable {α : Type u} [DecidableEq α]
+
+
+
 /-- The group element underlying a morphism in the action groupoid. -/
 def actionScalar {O : Type u} [MulAction (FreeGroup α) O]
     {a b : ActionCategory (FreeGroup α) O}
     (f : Functor.Elements.Hom (F := actionAsFunctor (FreeGroup α) O) a b) : FreeGroup α :=
   f.hom
 
+/-- A generator edge whose scalar action agrees with the prescribed map to left cosets. -/
 def goodGeneratorEdge (H : Subgroup (FreeGroup α)) {O : Type u}
     [MulAction (FreeGroup α) O]
     [IsFreeGroupoid (ActionCategory (FreeGroup α) O)]
     (q : O → LeftCosetQuotient H)
     {a b : IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)}
     (e : a ⟶ b) : Prop :=
-  leftMulEquiv H (actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)) (q a.back) = q b.back
+  leftMulEquiv H (actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)) (q
+      a.back) = q b.back
 
+/-- The coset-compatibility condition for a generator edge or its formal reverse. -/
 def goodSymmetricEdge (H : Subgroup (FreeGroup α)) {O : Type u}
     [MulAction (FreeGroup α) O]
     [IsFreeGroupoid (ActionCategory (FreeGroup α) O)]
@@ -49,17 +54,19 @@ def goodSymmetricEdge (H : Subgroup (FreeGroup α)) {O : Type u}
     (fun f => goodGeneratorEdge H q f)
     (fun f => goodGeneratorEdge H q f)
 
+/-- The wide subquiver consisting of coset-compatible edges and their formal reverses. -/
 def goodSymmetricSubquiver (H : Subgroup (FreeGroup α)) {O : Type u}
     [MulAction (FreeGroup α) O]
     [IsFreeGroupoid (ActionCategory (FreeGroup α) O)]
     (q : O → LeftCosetQuotient H) :
     WideSubquiver (Symmetrify (IsFreeGroupoid.Generators
       (ActionCategory (FreeGroup α) O))) :=
-  fun a b => {e | goodSymmetricEdge H q e}
+  fun _a _b => {e | goodSymmetricEdge H q e}
 
 /-! A shortest-path tree in a rooted connected partial graph, flattened back
 to the full edge type so that it can be used by the explicit Schreier basis. -/
 
+/-- The shortest-path tree of a rooted subquiver, viewed as edges of the ambient quiver. -/
 def flatGeodesicSubtree {V : Type u} [Quiver V]
     (P : WideSubquiver V) (r : P)
     [RootedConnected r] : WideSubquiver V :=
@@ -88,17 +95,20 @@ instance flatGeodesicArborescence {V : Type u} [Quiver V]
     · exact Or.inl rfl
     · exact Or.inr ⟨_, ⟨e.1, ⟨e.2, p, hp⟩⟩⟩
 
+/-- Every action state of every tail of the word maps to a coset in the chosen core. -/
 def coreCondition {H : Subgroup (FreeGroup α)}
     (A : Set (LeftCosetQuotient H)) (u : List (α × Bool)) : Prop :=
   ∀ v ∈ List.tails u, ∀ x ∈ actionStates v,
     (Quotient.mk'' x : LeftCosetQuotient H) ∈ A
 
+omit [DecidableEq α] in
 theorem coreCondition_tail {H : Subgroup (FreeGroup α)}
     {A : Set (LeftCosetQuotient H)} {x : α × Bool} {u : List (α × Bool)}
     (h : coreCondition A (x :: u)) : coreCondition A u := by
   intro v hv y hy
   exact h v (by simp only [List.tails, List.mem_cons]; exact Or.inr hv) y hy
 
+omit [DecidableEq α] in
 theorem goodCore_rootedConnected
     (H : Subgroup (FreeGroup α))
     (A : Set (LeftCosetQuotient H)) (base : A)
@@ -123,7 +133,7 @@ theorem goodCore_rootedConnected
   let O : Set A := MulAction.orbit (FreeGroup α) base
   let baseO : O := ⟨base, MulAction.mem_orbit_self base⟩
   let V := ActionCategory (FreeGroup α) O
-  letI : IsFreeGroupoid V := freeActionGroupoidIsFree α O
+  let : IsFreeGroupoid V := freeActionGroupoidIsFree α O
   let P := goodSymmetricSubquiver H (fun z : O => (z.1 : A).1)
   let r : P := ActionCategory.objEquiv (FreeGroup α) O baseO
   have corePath : ∀ (w : List (α × Bool)), coreCondition A w →
@@ -258,15 +268,18 @@ theorem goodCore_rootedConnected
 path.  This is the bridge from a subgroup word to the corresponding loop in
 the completed covering graph. -/
 
+omit [DecidableEq α] in
 private theorem action_inv_hom {O : Type u} [MulAction (FreeGroup α) O]
     {a b : ActionCategory (FreeGroup α) O}
     (f : Functor.Elements.Hom (F := actionAsFunctor (FreeGroup α) O) a b) :
     (actionScalar (@CategoryTheory.inv (ActionCategory (FreeGroup α) O) _ a b f
-      (@IsIso.of_groupoid (ActionCategory (FreeGroup α) O) _ a b f))) = ((actionScalar f) : FreeGroup α)⁻¹ := by
+      (@IsIso.of_groupoid (ActionCategory (FreeGroup α) O) _ a b f))) = ((actionScalar f) :
+          FreeGroup α)⁻¹ := by
   have hi := @CategoryTheory.Groupoid.inv_eq_inv (ActionCategory (FreeGroup α) O)
     _ a b f
   exact (congrArg actionScalar hi).symm.trans (by rfl)
 
+omit [DecidableEq α] in
 theorem goodCore_path
     (H : Subgroup (FreeGroup α))
     (A : Set (LeftCosetQuotient H)) (base : A)
@@ -292,7 +305,7 @@ theorem goodCore_path
   let O : Set A := MulAction.orbit (FreeGroup α) base
   let baseO : O := ⟨base, MulAction.mem_orbit_self base⟩
   let V := ActionCategory (FreeGroup α) O
-  letI : IsFreeGroupoid V := freeActionGroupoidIsFree α O
+  let : IsFreeGroupoid V := freeActionGroupoidIsFree α O
   let P := goodSymmetricSubquiver H (fun z : O => (z.1 : A).1)
   let r : P := ActionCategory.objEquiv (FreeGroup α) O baseO
   have corePath : ∀ (w : List (α × Bool)), coreCondition A w →
@@ -365,14 +378,14 @@ theorem goodCore_path
             obtain ⟨hp, hhp⟩ := ih htail
             refine ⟨Path.cons hp ⟨Sum.inr e, heP⟩, ?_⟩
             change ((actionScalar (@CategoryTheory.inv (ActionCategory (FreeGroup α) O) _ _ _
-              (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e) (@IsIso.of_groupoid (ActionCategory (FreeGroup α) O)
-                _ _ _ (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)))) : FreeGroup α) *
+              (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e) (@IsIso.of_groupoid
+                  (ActionCategory (FreeGroup α) O)
+                _ _ _ (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)))) : FreeGroup
+                    α) *
               (actionScalar (symPathHom (forgetSubquiverPath hp))) = _
             rw [action_inv_hom]
             change (FreeGroup.of a)⁻¹ * (actionScalar (symPathHom (forgetSubquiverPath hp))) = _
             apply (congrArg ((FreeGroup.of a)⁻¹ * ·) hhp).trans
-            change (FreeGroup.of a)⁻¹ * FreeGroup.mk w =
-              FreeGroup.mk ((a, false) :: w)
             have hmk : FreeGroup.mk [(a, false)] = (FreeGroup.of a)⁻¹ := by
               rw [← wordValue_eq_freeGroup_mk]
               simp [wordValue, signedLetter]
@@ -431,8 +444,6 @@ theorem goodCore_path
             refine ⟨Path.cons hp ⟨Sum.inl e, heP⟩, ?_⟩
             change FreeGroup.of a * (actionScalar (symPathHom (forgetSubquiverPath hp))) = _
             apply (congrArg (FreeGroup.of a * ·) hhp).trans
-            change FreeGroup.of a * FreeGroup.mk w =
-              FreeGroup.mk ((a, true) :: w)
             have hmk : FreeGroup.mk [(a, true)] = FreeGroup.of a := by
               rw [← wordValue_eq_freeGroup_mk]
               simp [wordValue, signedLetter]
@@ -444,6 +455,7 @@ theorem goodCore_path
               _ = FreeGroup.mk ((a, true) :: w) := rfl
   exact corePath w hw
 
+omit [DecidableEq α] in
 theorem good_tree_path
     (H : Subgroup (FreeGroup α)) {O : Type u}
     [MulAction (FreeGroup α) O]
@@ -465,14 +477,17 @@ theorem good_tree_path
       exact leftMulEquiv_one H _
   | @cons b c p e ih =>
       rcases e with ⟨e | e, heT⟩
-      · change leftMulEquiv H ((actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)) *
+      · change leftMulEquiv H ((actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup
+          α) O) e)) *
           (actionScalar (IsFreeGroupoid.SpanningTree.homOfPath T p))) _ = _
         exact (leftMulEquiv_mul H _ _ _).trans
-          ((congrArg (leftMulEquiv H (actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e))) ih).trans
+          ((congrArg (leftMulEquiv H (actionScalar (IsFreeGroupoid.of (G := ActionCategory
+              (FreeGroup α) O) e))) ih).trans
             (hT (Sum.inl e) heT))
       · change leftMulEquiv H
           (((actionScalar (@CategoryTheory.inv (ActionCategory (FreeGroup α) O) _ _ _
-            (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e) (@IsIso.of_groupoid (ActionCategory (FreeGroup α) O)
+            (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e) (@IsIso.of_groupoid
+                (ActionCategory (FreeGroup α) O)
               _ _ _ (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)))) : FreeGroup α) *
             (actionScalar (IsFreeGroupoid.SpanningTree.homOfPath T p))) _ = _
         apply (congrArg (fun g : FreeGroup α =>
@@ -480,11 +495,14 @@ theorem good_tree_path
             (q (root T).back))
           (action_inv_hom (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e))).trans
         rw [leftMulEquiv_mul, ih]
-        have heP : leftMulEquiv H (actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)) (q c.back) = q b.back :=
+        have heP : leftMulEquiv H (actionScalar (IsFreeGroupoid.of (G := ActionCategory
+            (FreeGroup α) O) e)) (q c.back) = q b.back :=
           hT (Sum.inr e) heT
-        have h := congrArg (leftMulEquiv H (actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e))⁻¹) heP
+        have h := congrArg (leftMulEquiv H (actionScalar (IsFreeGroupoid.of (G := ActionCategory
+            (FreeGroup α) O) e))⁻¹) heP
         exact (leftMulEquiv_inv_apply H _ _).symm.trans h |>.symm
 
+omit [DecidableEq α] in
 theorem good_loop_of_generator
     {O : Type u} [MulAction (FreeGroup α) O]
     [IsFreeGroupoid (ActionCategory (FreeGroup α) O)]
@@ -501,7 +519,8 @@ theorem good_loop_of_generator
     let T := flatGeodesicSubtree P r
     leftMulEquiv H
         (actionScalar (IsFreeGroupoid.SpanningTree.loopOfHom T
-          (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e))) (q (root T).back) = q (root T).back := by
+          (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e))) (q (root T).back) = q
+              (root T).back := by
   let T := flatGeodesicSubtree P r
   have hT : ∀ {a b} (f : a ⟶ b), f ∈ T a b →
       goodSymmetricEdge H q f := by
@@ -539,7 +558,8 @@ theorem good_loop_of_generator
         (IsFreeGroupoid.SpanningTree.treeHom T b)
         (@IsIso.of_groupoid (ActionCategory (FreeGroup α) O) _ _ _
           (IsFreeGroupoid.SpanningTree.treeHom T b)))) : FreeGroup α) *
-      (actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)) * (actionScalar (IsFreeGroupoid.SpanningTree.treeHom T a))) _ = _
+      (actionScalar (IsFreeGroupoid.of (G := ActionCategory (FreeGroup α) O) e)) * (actionScalar
+          (IsFreeGroupoid.SpanningTree.treeHom T a))) _ = _
   rw [leftMulEquiv_mul, leftMulEquiv_mul, ha, he, hinv]
 
 end MarshallHall

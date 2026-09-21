@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -15,6 +15,8 @@ reduction argument.  In particular, the reduced-word object below is tied to
 the actual inclusions `Monoid.Coprod.inl` and `Monoid.Coprod.inr`.
 -/
 
+
+
 open Function Monoid.Coprod
 
 noncomputable section
@@ -26,6 +28,7 @@ universe u
 
 variable {G H : Type u} [Group G] [Group H]
 
+/-- The two group factors represented as a Boolean-indexed family. -/
 abbrev binaryFamily (G H : Type u) : Bool → Type u
   | false => G
   | true => H
@@ -44,37 +47,46 @@ noncomputable instance binaryFamilyDecidableEq (G H : Type u) :
   intro b
   cases b <;> exact Classical.decEq _
 
+/-- The free product of the two factors represented as a Boolean-indexed family. -/
 abbrev binaryIndexedProduct :=
   Monoid.CoprodI (binaryFamily G H)
 
+/-- The inclusion of the left factor in the Boolean-indexed free product. -/
 def indexedLeft : G →* binaryIndexedProduct (G := G) (H := H) :=
   Monoid.CoprodI.of (M := binaryFamily G H) (i := false)
 
+/-- The inclusion of the right factor in the Boolean-indexed free product. -/
 def indexedRight : H →* binaryIndexedProduct (G := G) (H := H) :=
   Monoid.CoprodI.of (M := binaryFamily G H) (i := true)
 
+/-- Converts the binary free product to the Boolean-indexed presentation. -/
 def binaryToIndexed : G ∗ H →* binaryIndexedProduct (G := G) (H := H) :=
   Monoid.Coprod.lift (indexedLeft (G := G) (H := H))
     (indexedRight (G := G) (H := H))
 
+/-- The factor inclusions defining a map from the Boolean-indexed presentation. -/
 def indexedToBinaryFamily :
     (b : Bool) → binaryFamily G H b →* G ∗ H
   | false => Monoid.Coprod.inl
   | true => Monoid.Coprod.inr
 
+/-- Converts the Boolean-indexed free product to the binary presentation. -/
 def indexedToBinary : binaryIndexedProduct (G := G) (H := H) →* G ∗ H :=
   Monoid.CoprodI.lift (M := binaryFamily G H)
     (indexedToBinaryFamily (G := G) (H := H))
 
-@[simp] theorem binaryToIndexed_inl (g : G) :
+@[simp]
+theorem binaryToIndexed_inl (g : G) :
     binaryToIndexed (G := G) (H := H) (Monoid.Coprod.inl g) = indexedLeft g := by
   rfl
 
-@[simp] theorem binaryToIndexed_inr (h : H) :
+@[simp]
+theorem binaryToIndexed_inr (h : H) :
     binaryToIndexed (G := G) (H := H) (Monoid.Coprod.inr h) = indexedRight h := by
   rfl
 
-@[simp] theorem indexedToBinary_left (g : G) :
+@[simp]
+theorem indexedToBinary_left (g : G) :
     indexedToBinary (G := G) (H := H) (indexedLeft g) = Monoid.Coprod.inl g := by
   change (Monoid.CoprodI.lift (M := binaryFamily G H)
       (indexedToBinaryFamily (G := G) (H := H)))
@@ -83,7 +95,8 @@ def indexedToBinary : binaryIndexedProduct (G := G) (H := H) →* G ∗ H :=
   rw [Monoid.CoprodI.lift_of]
   rfl
 
-@[simp] theorem indexedToBinary_right (h : H) :
+@[simp]
+theorem indexedToBinary_right (h : H) :
     indexedToBinary (G := G) (H := H) (indexedRight h) = Monoid.Coprod.inr h := by
   change (Monoid.CoprodI.lift (M := binaryFamily G H)
       (indexedToBinaryFamily (G := G) (H := H)))
@@ -121,6 +134,7 @@ theorem binaryToIndexed_comp_indexedToBinary :
     change binaryToIndexed (indexedToBinary (indexedRight h)) = indexedRight h
     rw [indexedToBinary_right, binaryToIndexed_inr]
 
+/-- The equivalence between binary and Boolean-indexed free-product presentations. -/
 def binaryIndexedEquiv : (G ∗ H) ≃* binaryIndexedProduct (G := G) (H := H) :=
   { toFun := binaryToIndexed
     invFun := indexedToBinary
@@ -137,6 +151,7 @@ def binaryIndexedEquiv : (G ∗ H) ≃* binaryIndexedProduct (G := G) (H := H) :
       exact h
     map_mul' := map_mul binaryToIndexed }
 
+/-- The reduced word representing an element of the binary free product. -/
 def binaryReducedWord (x : G ∗ H) :
     Monoid.CoprodI.Word (binaryFamily G H) := by
   classical
@@ -153,12 +168,14 @@ theorem binaryReducedWord_prod (x : G ∗ H) :
   exact (Monoid.CoprodI.Word.equiv (M := binaryFamily G H)).symm_apply_apply
     (binaryToIndexed x)
 
-@[simp] theorem binaryReducedWord_one :
+@[simp]
+theorem binaryReducedWord_one :
     binaryReducedWord (G := G) (H := H) (1 : G ∗ H) =
       Monoid.CoprodI.Word.empty := by
   classical
   simp [binaryReducedWord, Monoid.CoprodI.Word.equiv]
 
+/-- Includes a factor-tagged letter in the Boolean-indexed free product. -/
 def binaryLetterToIndexed : Sum G H → binaryIndexedProduct (G := G) (H := H)
   | Sum.inl g => indexedLeft g
   | Sum.inr h => indexedRight h
@@ -174,15 +191,18 @@ theorem binaryToIndexed_factorWordProd (u : List (Sum G H)) :
 
 /-! Reversing an oriented labelled path reverses the order and inverts every
 label.  This is the algebraic operation used by the graph-fold bookkeeping. -/
+/-- Inverts a letter while retaining its factor tag. -/
 def factorWordInv : Sum G H → Sum G H
   | Sum.inl g => Sum.inl g⁻¹
   | Sum.inr h => Sum.inr h⁻¹
 
-@[simp] theorem factorWordInv_factorWordInv (a : Sum G H) :
+@[simp]
+theorem factorWordInv_factorWordInv (a : Sum G H) :
     factorWordInv (factorWordInv (G := G) (H := H) a) = a := by
   cases a <;> simp [factorWordInv]
 
-@[simp] theorem separatedMap_factorWordInv (a : Sum G H) :
+@[simp]
+theorem separatedMap_factorWordInv (a : Sum G H) :
     separatedMap (factorWordInv (G := G) (H := H) a) =
       (separatedMap (G := G) (H := H) a)⁻¹ := by
   cases a <;> rfl
@@ -215,9 +235,9 @@ theorem word_pair_tail_length_le {b : Bool}
     exact (Monoid.CoprodI.Word.equivPair b).symm_apply_apply w
   change p.tail.toList.length ≤ w.toList.length
   by_cases hp : p.head = 1
-  · rw [Monoid.CoprodI.Word.rcons, dif_pos hp] at hrcons
+  · rw [Monoid.CoprodI.Word.rcons, dite_eq_left hp] at hrcons
     simp [hrcons]
-  · rw [Monoid.CoprodI.Word.rcons, dif_neg hp] at hrcons
+  · rw [Monoid.CoprodI.Word.rcons, dite_eq_right hp] at hrcons
     have hlen : w.toList.length = p.tail.toList.length + 1 := by
       calc
         w.toList.length =
@@ -260,10 +280,12 @@ theorem word_length_mul_left_le {b : Bool} (a : binaryFamily G H b)
   exact (word_length_rcons_le (G := G) (H := H) q).trans
     (Nat.add_le_add_right htail' 1)
 
+/-- The number of letters in the reduced free-product normal form. -/
 def binaryReducedLength (x : G ∗ H) : ℕ :=
   (binaryReducedWord (G := G) (H := H) x).toList.length
 
-@[simp] theorem binaryToIndexed_separatedMap (a : Sum G H) :
+@[simp]
+theorem binaryToIndexed_separatedMap (a : Sum G H) :
     binaryToIndexed (G := G) (H := H) (separatedMap a) =
       binaryLetterToIndexed (G := G) (H := H) a := by
   cases a <;> simp [separatedMap, binaryLetterToIndexed]
@@ -306,17 +328,20 @@ theorem binaryReducedLength_factorWordProd_le (u : List (Sum G H)) :
           exact (word_length_mul_left_le (G := G) (H := H) (b := true) h _).trans
             (Nat.succ_le_succ ih)
 
+/-- Converts a Boolean-indexed factor element to a disjoint-union label. -/
 def binarySigmaToSum : Sigma (binaryFamily G H) → Sum G H
   | ⟨false, g⟩ => Sum.inl g
   | ⟨true, h⟩ => Sum.inr h
 
-@[simp] theorem binaryLetterToIndexed_sigma (z : Sigma (binaryFamily G H)) :
+@[simp]
+theorem binaryLetterToIndexed_sigma (z : Sigma (binaryFamily G H)) :
     binaryLetterToIndexed (G := G) (H := H) (binarySigmaToSum z) =
       Monoid.CoprodI.of z.2 := by
   cases z with
   | mk b z =>
       cases b <;> rfl
 
+/-- The reduced normal form as a list of factor-tagged letters. -/
 def binaryReducedLetters (x : G ∗ H) : List (Sum G H) :=
   (binaryReducedWord (G := G) (H := H) x).toList.map binarySigmaToSum
 
@@ -382,18 +407,25 @@ def binarySumIndex : Sum G H → Bool
   | Sum.inl _ => false
   | Sum.inr _ => true
 
-@[simp] theorem binarySumIndex_inl (g : G) :
+omit [Group G] [Group H] in
+@[simp]
+theorem binarySumIndex_inl (g : G) :
     binarySumIndex (G := G) (H := H) (Sum.inl g) = false := rfl
 
-@[simp] theorem binarySumIndex_inr (h : H) :
+omit [Group G] [Group H] in
+@[simp]
+theorem binarySumIndex_inr (h : H) :
     binarySumIndex (G := G) (H := H) (Sum.inr h) = true := rfl
 
-@[simp] theorem binarySumIndex_factorWordInv (a : Sum G H) :
+@[simp]
+theorem binarySumIndex_factorWordInv (a : Sum G H) :
     binarySumIndex (factorWordInv (G := G) (H := H) a) =
       binarySumIndex a := by
   cases a <;> rfl
 
-@[simp] theorem binarySumIndex_sigma (z : Sigma (binaryFamily G H)) :
+omit [Group G] [Group H] in
+@[simp]
+theorem binarySumIndex_sigma (z : Sigma (binaryFamily G H)) :
     binarySumIndex (G := G) (H := H) (binarySigmaToSum z) = z.1 := by
   cases z with
   | mk b z => cases b <;> rfl
@@ -647,21 +679,30 @@ theorem word_length_factor_mul_eq_tail_add_one_of_mul_ne_one {b : Bool}
   rw [word_cons_of_factor_mul_ne_one a x h]
   simp [Monoid.CoprodI.Word.cons]
 
+/-- Converts a disjoint-union label to a Boolean-indexed factor element. -/
 def sumToSigma : Sum G H → Sigma (binaryFamily G H)
   | Sum.inl g => ⟨false, g⟩
   | Sum.inr h => ⟨true, h⟩
 
-@[simp] theorem binarySigmaToSum_sumToSigma (a : Sum G H) :
+omit [Group G] [Group H] in
+@[simp]
+theorem binarySigmaToSum_sumToSigma (a : Sum G H) :
     binarySigmaToSum (G := G) (H := H) (sumToSigma (G := G) (H := H) a) = a := by
   cases a <;> rfl
 
-@[simp] theorem sumToSigma_snd_inl (g : G) :
+omit [Group G] [Group H] in
+@[simp]
+theorem sumToSigma_snd_inl (g : G) :
     (sumToSigma (G := G) (H := H) (Sum.inl g)).2 = g := rfl
 
-@[simp] theorem sumToSigma_snd_inr (h : H) :
+omit [Group G] [Group H] in
+@[simp]
+theorem sumToSigma_snd_inr (h : H) :
     (sumToSigma (G := G) (H := H) (Sum.inr h)).2 = h := rfl
 
-@[simp] theorem sumToSigma_fst (a : Sum G H) :
+omit [Group G] [Group H] in
+@[simp]
+theorem sumToSigma_fst (a : Sum G H) :
     (sumToSigma (G := G) (H := H) a).1 =
       binarySumIndex (G := G) (H := H) a := by
   cases a <;> rfl
@@ -858,9 +899,11 @@ def NielsenReduced {n : ℕ} (x : Fin n → G ∗ H) : Prop :=
       factorWordLength (x i) ≤ factorWordLength (x i * (x j)⁻¹) ∧
       factorWordLength (x i) ≤ factorWordLength (x j * x i)
 
+/-- A Nielsen-equivalent tuple realizes the specified total factor-word length. -/
 def NielsenLengthRepresented {n : ℕ} (x : Fin n → G ∗ H) (k : ℕ) : Prop :=
   ∃ y, NielsenEquivalent x y ∧ tupleFactorLength y = k
 
+/-- The least total factor-word length among Nielsen-equivalent tuples. -/
 noncomputable def nielsenMinLength {n : ℕ} (x : Fin n → G ∗ H) : ℕ := by
   classical
   exact Nat.find (show ∃ k, NielsenLengthRepresented x k from
@@ -999,11 +1042,11 @@ theorem nielsenEquivalent_symm {A : Type*} [Group A] {n : ℕ}
           funext k
           by_cases hki : k = i
           · subst k
-            simp [hij, hij.symm]
+            simp [hij.symm]
           · by_cases hkj : k = j
             · subst k
-              simp [hki, hij, hij.symm]
-            · simp [hEq, hki, hkj]
+              simp [hki]
+            · simp [hki]
         rw [hEqBack] at hback
         exact hback
   induction h using Relation.ReflTransGen.trans_induction_on with
@@ -1072,8 +1115,8 @@ theorem nielsenEquivalent_conjugate {A : Type*} [Group A] {n : ℕ}
     funext k
     by_cases hki : k = i
     · subst k
-      simp [y, hij, hij.symm, mul_assoc]
-    · simp [y, hki, hij]
+      simp [y, hij.symm, mul_assoc]
+    · simp [y, hki]
   rw [hEq] at hxyz
   exact hxyz
 

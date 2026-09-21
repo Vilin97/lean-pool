@@ -9992,7 +9992,6 @@ projects:
     status: verified
     main_declarations:
     - MarshallHall.marshallHall
-    - LERFChallenge.freeGroup_finite_permutation_separator
     - MarshallHall.rank_freeProduct_eq_add
     main_results:
     - declaration: MarshallHall.marshallHall

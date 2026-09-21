@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
@@ -11,14 +11,6 @@ import Mathlib.LinearAlgebra.Dimension.Finite
 import Mathlib.LinearAlgebra.Dimension.Constructions
 import Mathlib.Tactic
 
-universe u
-
-noncomputable section
-
-open Monoid.Coprod
-
-namespace MarshallHall
-
 /-!
 ## Binary free products and the Grushko rank calculation
 
@@ -28,18 +20,33 @@ calculation is obtained from abelianization, so the result is not merely a
 cardinality calculation transported through an unproved presentation.
 -/
 
+universe u
+
+noncomputable section
+
+open Monoid.Coprod
+
+namespace MarshallHall
+
+
+
+/-- The free product of the free groups on the two given generator types. -/
 abbrev BinaryFreeProduct (α β : Type u) := FreeGroup α ∗ FreeGroup β
 
+/-- The canonical inclusion of the left free-group factor into the binary free product. -/
 def factorInclusionLeft {α β : Type u} : FreeGroup α →* BinaryFreeProduct α β :=
   Monoid.Coprod.inl
 
+/-- The canonical inclusion of the right free group into the binary free product. -/
 def factorInclusionRight {α β : Type u} : FreeGroup β →* BinaryFreeProduct α β :=
   Monoid.Coprod.inr
 
+/-- Maps the two free factors into the free group on their disjoint union of generators. -/
 def binaryFreeProductToFree {α β : Type u} :
     BinaryFreeProduct α β →* FreeGroup (α ⊕ β) :=
   Monoid.Coprod.lift (FreeGroup.map Sum.inl) (FreeGroup.map Sum.inr)
 
+/-- Splits generators from the disjoint union into the corresponding free-product factors. -/
 def freeToBinaryFreeProduct {α β : Type u} :
     FreeGroup (α ⊕ β) →* BinaryFreeProduct α β :=
   FreeGroup.lift (fun x => match x with
@@ -102,6 +109,7 @@ theorem binaryFreeProduct_comp_right {α β : Type u} :
       rw [MonoidHom.comp_apply, MonoidHom.id_apply]
       rw [freeToBinaryFreeProduct_right, binaryFreeProductToFree_right]
 
+/-- The free product of two free groups is free on the disjoint union of their generators. -/
 def binaryFreeProductEquiv {α β : Type u} :
     BinaryFreeProduct α β ≃* FreeGroup (α ⊕ β) :=
   MulEquiv.ofBijective (binaryFreeProductToFree (α := α) (β := β)) ⟨
@@ -136,6 +144,7 @@ theorem binaryFreeProductEquiv_inl {α β : Type u} (x : FreeGroup α) :
   change binaryFreeProductToFree (factorInclusionLeft x) = FreeGroup.map Sum.inl x
   exact congrArg (fun f : FreeGroup α →* FreeGroup (α ⊕ β) => f x) hmap
 
+/-- The image of a free-group element in the free abelian group on its generators. -/
 def abelianizedValue {α : Type u} (x : FreeGroup α) : FreeAbelianGroup α :=
   Additive.ofMul (Abelianization.of x)
 
@@ -169,7 +178,7 @@ theorem rank_freeGroup_finite (α : Type u) [Fintype α] :
   let S₀ : Finset (FreeGroup α) := Finset.univ.image FreeGroup.of
   have hS₀ : Subgroup.closure (S₀ : Set (FreeGroup α)) = ⊤ := by
     rw [Finset.coe_image]
-    simpa using (FreeGroup.closure_range_of α)
+    simp [FreeGroup.closure_range_of]
   have hup : Group.rank (FreeGroup α) ≤ Fintype.card α := by
     apply (Group.rank_le hS₀).trans_eq
     rw [show S₀.card = (Finset.univ : Finset α).card by
@@ -222,9 +231,11 @@ theorem rank_freeGroup_finite (α : Type u) [Fintype α] :
     exact hfin'.trans hT
   exact le_antisymm hup (by simpa [hcard] using hlow)
 
-instance binaryFreeProduct_fg {α β : Type u} [Fintype α] [Fintype β] :
-    Group.FG (BinaryFreeProduct α β) :=
-  Group.fg_iff_monoid_fg.mpr
+instance binaryFreeProduct_fg {α β : Type u} [Finite α] [Finite β] :
+    Group.FG (BinaryFreeProduct α β) := by
+  let := Fintype.ofFinite α
+  let := Fintype.ofFinite β
+  exact Group.fg_iff_monoid_fg.mpr
     (Monoid.fg_of_surjective (binaryFreeProductEquiv (α := α) (β := β)).symm.toMonoidHom
       (binaryFreeProductEquiv (α := α) (β := β)).symm.surjective)
 

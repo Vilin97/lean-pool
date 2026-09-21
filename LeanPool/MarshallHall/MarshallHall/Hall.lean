@@ -1,10 +1,13 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 import LeanPool.MarshallHall.MarshallHall.Completion
 import LeanPool.MarshallHall.MarshallHall.Separation
+
+/-! The finite-core completion argument.  Its conclusion records the actual
+inclusion of the original subgroup into the finite-index subgroup. -/
 
 open Set Function
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup
@@ -15,8 +18,7 @@ namespace MarshallHall
 universe u
 variable {α : Type u} [DecidableEq α]
 
-/-! The finite-core completion argument.  Its conclusion records the actual
-inclusion of the original subgroup into the finite-index subgroup. -/
+
 
 private theorem loopOfHom_root {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T]
@@ -32,9 +34,121 @@ private theorem loopOfHom_root {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
       ((congrArg (fun g : End (spanningTreeRoot T) => p ≫ g)
         (@CategoryTheory.IsIso.inv_id G _ (spanningTreeRoot T))).trans (Category.comp_id p)))
 
+omit [DecidableEq α] in
+/-- Fixed generators of a basis retraction provide the free-factor witness in a finite-index
+supergroup. -/
+private theorem witness_of_fixed_basis_generators
+    (H K : Subgroup (FreeGroup α)) (S : Finset (FreeGroup α))
+    (hS : Subgroup.closure (S : Set (FreeGroup α)) = H)
+    (gen_mem : ∀ s ∈ S, s ∈ K) (hHK : H ≤ K) (hKindex : K.index ≠ 0)
+    {E X : Type u} [Group E] (eK : K ≃* E) (B : FreeGroupBasis X E) (Y : Set X)
+    (hY : ∀ y : Y, B y ∈ Subgroup.map (eK : K →* E) (Subgroup.comap K.subtype H))
+    (hgen_retract : ∀ (s : FreeGroup α) (hs : s ∈ S),
+      retractBasisElement B Y (eK ⟨s, gen_mem s hs⟩) = eK ⟨s, gen_mem s hs⟩) :
+    Nonempty (MarshallHallWitness H) := by
+  classical
+  let HKH : Subgroup K := Subgroup.comap K.subtype H
+  let HE : Subgroup E := Subgroup.map (eK : K →* E) HKH
+  have hfix : ∀ (g : FreeGroup α) (hg : g ∈ H),
+      retractBasisElement B Y
+          (eK ⟨g, hHK hg⟩) = eK ⟨g, hHK hg⟩ := by
+    intro g hg
+    have hg' : g ∈ Subgroup.closure (S : Set (FreeGroup α)) := by
+      rw [hS]
+      exact hg
+    refine Subgroup.closure_induction
+      (p := fun x hx =>
+        retractBasisElement B Y
+            (eK ⟨x, hHK (by rw [← hS]; exact hx)⟩) =
+          eK ⟨x, hHK (by rw [← hS]; exact hx)⟩) ?_ ?_ ?_ ?_ hg'
+    · intro x hx
+      simpa using hgen_retract x hx
+    · change retractBasisElement B Y
+        (eK (1 : K)) = eK (1 : K)
+      rw [eK.map_one]
+      exact retractBasisElement_one B Y
+    · intro x y hx hy ihx ihy
+      have hxH : x ∈ H := by rw [← hS]; exact hx
+      have hyH : y ∈ H := by rw [← hS]; exact hy
+      have hxy : x * y ∈ Subgroup.closure (S : Set (FreeGroup α)) :=
+        mul_mem hx hy
+      have hxyH : x * y ∈ H := by rw [← hS]; exact hxy
+      have hkxy : (⟨x * y, hHK hxyH⟩ : K) =
+          (⟨x, hHK hxH⟩ : K) * ⟨y, hHK hyH⟩ := by rfl
+      change retractBasisElement B Y
+          (eK (⟨x * y, hHK hxyH⟩ : K)) =
+        eK (⟨x * y, hHK hxyH⟩ : K)
+      rw [hkxy, eK.map_mul, retractBasisElement_mul]
+      have hm := congrArg₂ (fun a b => a * b) ihx ihy
+      exact hm
+    · intro x hx ih
+      have hxH : x ∈ H := by rw [← hS]; exact hx
+      have hxi : x⁻¹ ∈ Subgroup.closure (S : Set (FreeGroup α)) :=
+        inv_mem hx
+      have hxiH : x⁻¹ ∈ H := by rw [← hS]; exact hxi
+      have hkxi : (⟨x⁻¹, hHK hxiH⟩ : K) =
+          (⟨x, hHK hxH⟩ : K)⁻¹ := by rfl
+      change retractBasisElement B Y
+          (eK (⟨x⁻¹, hHK hxiH⟩ : K)) =
+        eK (⟨x⁻¹, hHK hxiH⟩ : K)
+      rw [hkxi, eK.map_inv, retractBasisElement_inv]
+      have hi := congrArg (fun z : E => z⁻¹) ih
+      exact hi
+  have hHsupport : ∀ h : HE, ∃ w : FreeGroup Y,
+      B.repr (h : E) =
+        FreeGroup.map (fun y : Y => (y : X)) w := by
+    intro h
+    have hm : (h : E) ∈ Subgroup.map (eK : K →* E) HKH := h.2
+    rcases Subgroup.mem_map.mp hm with ⟨k, hk, hkh⟩
+    have hkH : (k : FreeGroup α) ∈ H := by
+      exact hk
+    have hfix_h :
+        retractBasisElement B Y (h : E) = h := by
+      rw [← hkh]
+      simpa using hfix k.val hkH
+    let w : FreeGroup Y :=
+      basisRetraction Y (B.repr (h : E))
+    refine ⟨w, ?_⟩
+    have hret :
+        ((subsetBasisHom B Y w :
+          generatedByBasis B Y) : E) = h := by
+      simpa [retractBasisElement, w] using hfix_h
+    calc
+      B.repr (h : E) =
+          B.repr
+            ((subsetBasisHom B Y w :
+              generatedByBasis B Y) : E) := by
+        exact congrArg B.repr hret.symm
+      _ = FreeGroup.map (fun y : Y => (y : X)) w :=
+        repr_subsetBasisHom B Y w
+  have hHEfactor : IsFreeFactor HE :=
+    isFreeFactor_of_basis_support HE B Y hY hHsupport
+  obtain ⟨wE⟩ := hHEfactor
+  let wK : FreeFactorWitness HKH :=
+    FreeFactorWitness.pullback eK (eK.subgroupMap HKH) wE (by
+      intro k
+      rfl)
+  let : Group wK.complement := wK.complementGroup
+  let equivH : Monoid.Coprod (H : Type u) wK.complement ≃* (K : Type u) :=
+    (MulEquiv.coprodCongr (subgroupComapEquiv H K hHK)
+      (MulEquiv.refl wK.complement)).trans wK.equiv
+  exact ⟨{
+    K := K
+    hHK := hHK
+    finiteIndex := hKindex
+    complement := wK.complement
+    equiv := equivH
+    inclusion := by
+      intro h
+      change wK.equiv (Monoid.Coprod.inl
+        (subgroupComapEquiv H K hHK h)) = ⟨h.1, hHK h.2⟩
+      rw [wK.inclusion]
+      rfl
+  }⟩
+
 theorem finite_core_free_factor
     (H : Subgroup (FreeGroup α))
-    (A : Set (LeftCosetQuotient H)) [Fintype A]
+    (A : Set (LeftCosetQuotient H)) [Finite A]
     (base : A)
     (hbase : base.1 = Quotient.mk'' (1 : FreeGroup α))
     [MulAction (FreeGroup α) A]
@@ -49,9 +163,11 @@ theorem finite_core_free_factor
         (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) =
           (z.1 : A).1) :
     Nonempty (MarshallHallWitness H) := by
+  classical
+  let := Fintype.ofFinite ↑A
   let O : Set A := MulAction.orbit (FreeGroup α) base
   let baseO : O := ⟨base, MulAction.mem_orbit_self base⟩
-  letI : IsFreeGroupoid (ActionCategory (FreeGroup α) O) := freeActionGroupoidIsFree α O
+  let : IsFreeGroupoid (ActionCategory (FreeGroup α) O) := freeActionGroupoidIsFree α O
   let K : Subgroup (FreeGroup α) := MulAction.stabilizer (FreeGroup α) baseO
   have gen_mem : ∀ s ∈ S, s ∈ K := by
     intro s hs
@@ -83,17 +199,20 @@ theorem finite_core_free_factor
   let r : P := ActionCategory.objEquiv (FreeGroup α) O baseO
   have hroot : @RootedConnected
       (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r := by
+        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r
+            := by
     dsimp [P, q, r, O, baseO]
     exact goodCore_rootedConnected H A base word_action reach
-  letI : @RootedConnected
+  let : @RootedConnected
       (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r := hroot
+        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r
+            := hroot
   let T := flatGeodesicSubtree P r
   let E := @End (ActionCategory (FreeGroup α) O)
     (@Groupoid.toCategory (ActionCategory (FreeGroup α) O) inferInstance).toCategoryStruct
     (spanningTreeRoot T)
-  letI : Group E := @CategoryTheory.End.group (ActionCategory (FreeGroup α) O) inferInstance (spanningTreeRoot T)
+  let : Group E := @CategoryTheory.End.group (ActionCategory (FreeGroup α) O) inferInstance
+      (spanningTreeRoot T)
   let eK : K ≃* E := by
     dsimp [K, E, T, r, P, q, O, baseO]
     exact ActionCategory.stabilizerIsoEnd (FreeGroup α) baseO
@@ -160,7 +279,8 @@ theorem finite_core_free_factor
       ActionCategory.objEquiv (FreeGroup α) O
         ((FreeGroup.mk s.toWord : FreeGroup α) • baseO)
     let p_main : @Path (WideSubquiver.toType
-        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r end0 := by
+        (Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) P) P.quiver r
+            end0 := by
       simpa [T, P, q, O, baseO, end0, r] using p
     have hroot_eq : (root T : (ActionCategory (FreeGroup α) O)) = r := by
       rfl
@@ -177,7 +297,8 @@ theorem finite_core_free_factor
     have hloop :
         IsFreeGroupoid.SpanningTree.loopOfHom T
             (symPathHom (G := (ActionCategory (FreeGroup α) O))
-              (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
+              (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α)
+                  O)) from
                 (show T from root T)))
               (forgetSubquiverPath (P := P) p_root)) =
           symPathHom (G := (ActionCategory (FreeGroup α) O))
@@ -207,7 +328,8 @@ theorem finite_core_free_factor
               (show (ActionCategory (FreeGroup α) O) from r)))
             (forgetSubquiverPath (P := P) p_main)))) := by
         let label : ∀ {x y : (ActionCategory (FreeGroup α) O)},
-            @Quiver.Hom (ActionCategory (FreeGroup α) O) (CategoryStruct.toQuiver) x y → FreeGroup α :=
+            @Quiver.Hom (ActionCategory (FreeGroup α) O) (CategoryStruct.toQuiver) x y →
+                FreeGroup α :=
           fun {x y} h => (actionScalar h)
         dsimp [p_root]
         exact symPathHom_forget_cast_apply
@@ -221,7 +343,8 @@ theorem finite_core_free_factor
     have heq : eK ks =
         IsFreeGroupoid.SpanningTree.loopOfHom T
             (symPathHom (G := (ActionCategory (FreeGroup α) O))
-              (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O)) from
+              (a := (show Symmetrify (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α)
+                  O)) from
                 (show T from root T)))
               (forgetSubquiverPath (P := P) p_root)) := by
       apply Functor.Elements.hom_ext
@@ -230,105 +353,8 @@ theorem finite_core_free_factor
       exact hplabel.symm
     rw [heq]
     exact hpath
-  have hfix : ∀ (g : FreeGroup α) (hg : g ∈ H),
-      retractBasisElement (spanningTreeBasis T) Y
-          (eK ⟨g, hHK hg⟩) = eK ⟨g, hHK hg⟩ := by
-    intro g hg
-    have hg' : g ∈ Subgroup.closure (S : Set (FreeGroup α)) := by
-      rw [hS]
-      exact hg
-    refine Subgroup.closure_induction
-      (p := fun x hx =>
-        retractBasisElement (spanningTreeBasis T) Y
-            (eK ⟨x, hHK (by rw [← hS]; exact hx)⟩) =
-          eK ⟨x, hHK (by rw [← hS]; exact hx)⟩) ?_ ?_ ?_ ?_ hg'
-    · intro x hx
-      simpa using hgen_retract x hx
-    · change retractBasisElement (spanningTreeBasis T) Y
-        (eK (1 : K)) = eK (1 : K)
-      rw [eK.map_one]
-      exact retractBasisElement_one (spanningTreeBasis T) Y
-    · intro x y hx hy ihx ihy
-      have hxH : x ∈ H := by rw [← hS]; exact hx
-      have hyH : y ∈ H := by rw [← hS]; exact hy
-      have hxy : x * y ∈ Subgroup.closure (S : Set (FreeGroup α)) :=
-        mul_mem hx hy
-      have hxyH : x * y ∈ H := by rw [← hS]; exact hxy
-      have hkxy : (⟨x * y, hHK hxyH⟩ : K) =
-          (⟨x, hHK hxH⟩ : K) * ⟨y, hHK hyH⟩ := by rfl
-      change retractBasisElement (spanningTreeBasis T) Y
-          (eK (⟨x * y, hHK hxyH⟩ : K)) =
-        eK (⟨x * y, hHK hxyH⟩ : K)
-      rw [hkxy, eK.map_mul, retractBasisElement_mul]
-      have hm := congrArg₂ (fun a b => a * b) ihx ihy
-      change _ ≫ _ = _ ≫ _
-      exact hm
-    · intro x hx ih
-      have hxH : x ∈ H := by rw [← hS]; exact hx
-      have hxi : x⁻¹ ∈ Subgroup.closure (S : Set (FreeGroup α)) :=
-        inv_mem hx
-      have hxiH : x⁻¹ ∈ H := by rw [← hS]; exact hxi
-      have hkxi : (⟨x⁻¹, hHK hxiH⟩ : K) =
-          (⟨x, hHK hxH⟩ : K)⁻¹ := by rfl
-      change retractBasisElement (spanningTreeBasis T) Y
-          (eK (⟨x⁻¹, hHK hxiH⟩ : K)) =
-        eK (⟨x⁻¹, hHK hxiH⟩ : K)
-      rw [hkxi, eK.map_inv, retractBasisElement_inv]
-      have hi := congrArg (fun z : E => z⁻¹) ih
-      exact hi
-  let X : Set (Quiver.Total (IsFreeGroupoid.Generators (ActionCategory (FreeGroup α) O))) :=
-    (wideSubquiverEquivSetTotal (wideSubquiverSymmetrify T))ᶜ
-  have hHsupport : ∀ h : HE, ∃ w : FreeGroup Y,
-      (spanningTreeBasis T).repr (h : E) =
-        FreeGroup.map (fun y : Y => (y : X)) w := by
-    intro h
-    have hm : (h : E) ∈ Subgroup.map (eK : K →* E) HKH := h.2
-    rcases Subgroup.mem_map.mp hm with ⟨k, hk, hkh⟩
-    have hkH : (k : FreeGroup α) ∈ H := by
-      exact hk
-    have hfix_h :
-        retractBasisElement (spanningTreeBasis T) Y (h : E) = h := by
-      rw [← hkh]
-      simpa using hfix k.val hkH
-    let w : FreeGroup Y :=
-      basisRetraction Y ((spanningTreeBasis T).repr (h : E))
-    refine ⟨w, ?_⟩
-    have hret :
-        ((subsetBasisHom (spanningTreeBasis T) Y w :
-          generatedByBasis (spanningTreeBasis T) Y) : E) = h := by
-      simpa [retractBasisElement, w] using hfix_h
-    calc
-      (spanningTreeBasis T).repr (h : E) =
-          (spanningTreeBasis T).repr
-            ((subsetBasisHom (spanningTreeBasis T) Y w :
-              generatedByBasis (spanningTreeBasis T) Y) : E) := by
-        exact congrArg (spanningTreeBasis T).repr hret.symm
-      _ = FreeGroup.map (fun y : Y => (y : X)) w :=
-        repr_subsetBasisHom (spanningTreeBasis T) Y w
-  have hHEfactor : IsFreeFactor HE :=
-    isFreeFactor_of_basis_support HE (spanningTreeBasis T) Y hY hHsupport
-  obtain ⟨wE⟩ := hHEfactor
-  let wK : FreeFactorWitness HKH :=
-    FreeFactorWitness.pullback eK (eK.subgroupMap HKH) wE (by
-      intro k
-      rfl)
-  letI : Group wK.complement := wK.complementGroup
-  let equivH : Monoid.Coprod (H : Type u) wK.complement ≃* (K : Type u) :=
-    (MulEquiv.coprodCongr (subgroupComapEquiv H K hHK)
-      (MulEquiv.refl wK.complement)).trans wK.equiv
-  exact ⟨{
-    K := K
-    hHK := hHK
-    finiteIndex := hKindex
-    complement := wK.complement
-    equiv := equivH
-    inclusion := by
-      intro h
-      change wK.equiv (Monoid.Coprod.inl
-        (subgroupComapEquiv H K hHK h)) = ⟨h.1, hHK h.2⟩
-      rw [wK.inclusion]
-      rfl
-  }⟩
+  exact witness_of_fixed_basis_generators H K S hS gen_mem hHK hKindex eK
+    (spanningTreeBasis T) Y hY hgen_retract
 
 /-! The finite-state action supplies the hypotheses of the completion theorem.
 
@@ -338,19 +364,19 @@ the identity coset; the generating-set states make the subgroup loops lie in
 the finite core. -/
 
 theorem marshallHall
-    {α : Type u} [finite : Finite α]
+    {α : Type u}
     (H : Subgroup (FreeGroup α))
     [fg : Group.FG H] :
     Nonempty (MarshallHallWitness H) := by
   classical
-  letI : DecidableEq α := Classical.decEq α
+  let : DecidableEq α := Classical.decEq α
   obtain ⟨S, hS⟩ := (Group.fg_iff_subgroup_fg H).mp
     (inferInstance : Group.FG H)
   let A : Set (LeftCosetQuotient H) :=
     coreStateSet H S (1 : FreeGroup α)
   have hAfin : A.Finite := by
     exact coreStateSet_finite H S 1
-  letI : Fintype A := hAfin.fintype
+  let : Fintype A := hAfin.fintype
   let q0 : LeftCosetQuotient H := Quotient.mk'' (1 : FreeGroup α)
   have hq0 : q0 ∈ A := by
     exact one_mem_coreStateSet H S 1
@@ -358,7 +384,7 @@ theorem marshallHall
   let genPerm : α → Equiv.Perm A := fun a =>
     Equiv.extendSubtype (restrictedEquiv A (leftMulEquiv H (FreeGroup.of a)))
   let rho : FreeGroup α →* Equiv.Perm A := FreeGroup.lift genPerm
-  letI : MulAction (FreeGroup α) A := MulAction.compHom A rho
+  let : MulAction (FreeGroup α) A := MulAction.compHom A rho
   have genPerm_apply {a : α} {z : A}
       (hz : leftMulEquiv H (FreeGroup.of a) z.1 ∈ A) :
       genPerm a z = ⟨leftMulEquiv H (FreeGroup.of a) z.1, hz⟩ := by
@@ -393,105 +419,9 @@ theorem marshallHall
   have word_action : ∀ (w : List (α × Bool)),
       coreCondition A w →
       ((rho (FreeGroup.mk w)) base : A).1 =
-        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) := by
-    intro w
-    induction w with
-    | nil =>
-        intro hcore
-        simp [rho, wordValue, q0, base]
-    | cons x w ih =>
-        rcases x with ⟨a, b⟩
-        cases b with
-        | false =>
-            intro hcore
-            have htail : coreCondition A w := by
-              intro u hu x hx
-              exact hcore u (by
-                simp only [List.tails, List.mem_cons]
-                exact Or.inr hu) x hx
-            have hi := ih htail
-            have hwfinal :
-                (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
-              exact hcore w (by simp [List.tails]) _
-                (wordValue_mem_actionStates w)
-            have hi' : rho (FreeGroup.mk w) base =
-                ⟨Quotient.mk'' (wordValue w), hwfinal⟩ := by
-              apply Subtype.ext
-              exact hi
-            have hfinal :
-                (Quotient.mk'' (wordValue ((a, false) :: w)) :
-                  LeftCosetQuotient H) ∈ A := by
-              exact hcore ((a, false) :: w) (by simp [List.tails]) _
-                (wordValue_mem_actionStates ((a, false) :: w))
-            have htarget :
-                leftMulEquiv H (FreeGroup.of a)⁻¹
-                    (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
-              rw [leftMulEquiv_mk]
-              simpa [wordValue, signedLetter] using hfinal
-            calc
-              ((rho (FreeGroup.mk ((a, false) :: w))) base : A).1 =
-                  ((rho (FreeGroup.mk [(a, false)]))
-                    (rho (FreeGroup.mk w) base) : A).1 := by
-                rw [show FreeGroup.mk ((a, false) :: w) =
-                    FreeGroup.mk [(a, false)] * FreeGroup.mk w by
-                  rw [FreeGroup.mul_mk]
-                  rfl, rho.map_mul, Equiv.Perm.mul_apply]
-              _ = ((genPerm a).symm
-                    ⟨Quotient.mk'' (wordValue w), hwfinal⟩ : A).1 := by
-                rw [hi', rho_singleton]
-                rfl
-              _ = (leftMulEquiv H (FreeGroup.of a)⁻¹
-                    (Quotient.mk'' (wordValue w) : LeftCosetQuotient H)) := by
-                rw [genPerm_inv_apply htarget]
-              _ = (Quotient.mk'' (wordValue ((a, false) :: w)) :
-                    LeftCosetQuotient H) := by
-                rw [leftMulEquiv_mk]
-                simp [wordValue, signedLetter]
-        | true =>
-            intro hcore
-            have htail : coreCondition A w := by
-              intro u hu x hx
-              exact hcore u (by
-                simp only [List.tails, List.mem_cons]
-                exact Or.inr hu) x hx
-            have hi := ih htail
-            have hwfinal :
-                (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
-              exact hcore w (by simp [List.tails]) _
-                (wordValue_mem_actionStates w)
-            have hi' : rho (FreeGroup.mk w) base =
-                ⟨Quotient.mk'' (wordValue w), hwfinal⟩ := by
-              apply Subtype.ext
-              exact hi
-            have hfinal :
-                (Quotient.mk'' (wordValue ((a, true) :: w)) :
-                  LeftCosetQuotient H) ∈ A := by
-              exact hcore ((a, true) :: w) (by simp [List.tails]) _
-                (wordValue_mem_actionStates ((a, true) :: w))
-            have htarget :
-                leftMulEquiv H (FreeGroup.of a)
-                    (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) ∈ A := by
-              rw [leftMulEquiv_mk]
-              simpa [wordValue, signedLetter] using hfinal
-            calc
-              ((rho (FreeGroup.mk ((a, true) :: w))) base : A).1 =
-                  ((rho (FreeGroup.mk [(a, true)]))
-                    (rho (FreeGroup.mk w) base) : A).1 := by
-                rw [show FreeGroup.mk ((a, true) :: w) =
-                    FreeGroup.mk [(a, true)] * FreeGroup.mk w by
-                  rw [FreeGroup.mul_mk]
-                  rfl, rho.map_mul, Equiv.Perm.mul_apply]
-              _ = (genPerm a
-                    ⟨Quotient.mk'' (wordValue w), hwfinal⟩ : A).1 := by
-                rw [hi', rho_singleton]
-                rfl
-              _ = (leftMulEquiv H (FreeGroup.of a)
-                    (Quotient.mk'' (wordValue w) : LeftCosetQuotient H)) := by
-                rw [genPerm_apply htarget]
-              _ = (Quotient.mk'' (wordValue ((a, true) :: w)) :
-                    LeftCosetQuotient H) := by
-                rw [leftMulEquiv_mk]
-                simp [wordValue, signedLetter]
+        (Quotient.mk'' (wordValue w) : LeftCosetQuotient H) :=
+    word_action_of_generator_extensions H A base rfl genPerm rho
+      genPerm_apply genPerm_inv_apply rho_singleton
   have hS_core : ∀ s ∈ S, coreCondition A s.toWord := by
     intro s hs u hu x hx
     change (Quotient.mk'' x : LeftCosetQuotient H) ∈

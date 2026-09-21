@@ -1,10 +1,19 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Arthur F. Ramos, David Barros Hulak, Ruy J.G.B. de Queiroz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
 -/
 import LeanPool.MarshallHall.MarshallHall.PartialAction
 import Mathlib.GroupTheory.FreeGroup.Reduce
+
+/-!
+## Finite word states
+
+When a word is read by a left action, its tail is applied first.  The finite
+state set therefore records suffix products.  This is the same finite core
+that appears in the usual folded covering-graph proof, but expressed directly
+in the free group.
+-/
 
 open Function
 
@@ -17,44 +26,46 @@ universe u
 variable {α : Type u}
 variable [DecidableEq α]
 
-/-!
-## Finite word states
 
-When a word is read by a left action, its tail is applied first.  The finite
-state set therefore records suffix products.  This is the same finite core
-that appears in the usual folded covering-graph proof, but expressed directly
-in the free group.
--/
 
+/-- The free-group element represented by a letter, with `true` denoting the positive sign. -/
 def signedLetter (x : α × Bool) : FreeGroup α :=
   if x.2 then FreeGroup.of x.1 else (FreeGroup.of x.1)⁻¹
 
+/-- The product in the free group represented by a list of signed letters. -/
 def wordValue : List (α × Bool) → FreeGroup α
   | [] => 1
   | x :: w => signedLetter x * wordValue w
 
+/-- The successive states obtained by evaluating the word from its rightmost letter. -/
 def actionStates : List (α × Bool) → List (FreeGroup α)
   | [] => [1]
   | x :: w => actionStates w ++ [signedLetter x * wordValue w]
 
+/-- The finite set of action states collected from the word and all of its tails. -/
 def allActionStates : List (α × Bool) → Finset (FreeGroup α)
   | [] => (actionStates []).toFinset
   | x :: w => allActionStates w ∪ (actionStates (x :: w)).toFinset
 
+omit [DecidableEq α] in
 @[simp]
 theorem wordValue_nil : wordValue ([] : List (α × Bool)) = 1 := rfl
 
+omit [DecidableEq α] in
 @[simp]
 theorem wordValue_cons (x : α × Bool) (w : List (α × Bool)) :
     wordValue (x :: w) = signedLetter x * wordValue w := rfl
 
+omit [DecidableEq α] in
 @[simp]
 theorem actionStates_nil : actionStates ([] : List (α × Bool)) = [1] := rfl
 
+omit [DecidableEq α] in
 @[simp]
 theorem actionStates_cons (x : α × Bool) (w : List (α × Bool)) :
     actionStates (x :: w) = actionStates w ++ [signedLetter x * wordValue w] := rfl
 
+omit [DecidableEq α] in
 @[simp]
 theorem wordValue_eq_freeGroup_mk (w : List (α × Bool)) :
     wordValue w = FreeGroup.mk w := by
@@ -72,6 +83,7 @@ theorem wordValue_eq_freeGroup_mk (w : List (α × Bool)) :
         _ = FreeGroup.mk ([x] ++ w) := FreeGroup.mul_mk
         _ = FreeGroup.mk (x :: w) := rfl
 
+omit [DecidableEq α] in
 theorem wordValue_mem_actionStates (w : List (α × Bool)) :
     wordValue w ∈ actionStates w := by
   induction w with
@@ -80,6 +92,7 @@ theorem wordValue_mem_actionStates (w : List (α × Bool)) :
       simp only [actionStates_cons, List.mem_append, List.mem_singleton]
       exact Or.inr rfl
 
+omit [DecidableEq α] in
 theorem one_mem_actionStates (w : List (α × Bool)) :
     (1 : FreeGroup α) ∈ actionStates w := by
   induction w with
@@ -128,6 +141,7 @@ construction.  The following finite union is the set of all suffix states of
 the finitely many words under consideration.
 -/
 
+/-- The finite core containing action states of the subgroup generators and the separating word. -/
 def corePoints [DecidableEq (FreeGroup α)] (S : Finset (FreeGroup α)) (g : FreeGroup α) :
     Finset (FreeGroup α) :=
   S.biUnion (fun s => (allActionStates s.toWord)) ∪ allActionStates g.toWord
@@ -157,6 +171,7 @@ theorem mem_corePoints_of_separating_suffix [DecidableEq (FreeGroup α)]
   exact mem_corePoints_of_separating
     (allActionStates_tail_mem g.toWord u hu x hx)
 
+omit [DecidableEq α] in
 theorem exists_wordValue_of_mem_actionStates (u : List (α × Bool))
     {x : FreeGroup α} (hx : x ∈ actionStates u) :
     ∃ v ∈ List.tails u, x = wordValue v := by
