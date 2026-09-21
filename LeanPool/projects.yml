@@ -9966,3 +9966,31 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: rr-equals-nonmeager-paper
+    title: The nonmeagre lower bound for the rearrangement number
+    summary: Formalizes the inequality non(M) ≤ rr in ZFC via relational systems, category and slalom bounds,
+      finite-vector constructions, and rearrangements of conditionally convergent real series. The reverse
+      inequality from the accompanying manuscript is outside the upstream Lean formalization.
+    branch: set theory
+    entry_module: LeanPool.RearrangementNumber
+    authors:
+    - Vinicius de Oliveira Rodrigues
+    source:
+      url: https://github.com/vo-rodrigues/rr-equals-nonmeager-paper
+      github_repo: vo-rodrigues/rr-equals-nonmeager-paper
+      commit: a8e74a91fe0b9f3534194910172349c9926e3b3b
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - NonMRR.nonM_le_rr
+    main_results:
+    - declaration: NonMRR.nonM_le_rr
+      informal: The uniformity of the meagre ideal is at most the rearrangement number.
+    tags:
+    - set-theory
+    - cardinal-characteristics
+    - series
+    msc:
+    - 03E17
+    - 40A05
