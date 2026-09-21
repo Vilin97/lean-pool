@@ -488,6 +488,57 @@ theorem boundary_form_eq_zero {lam : ℝ} {x : beamOperator.domain} {p : BeamV}
 
 /-! ## The eigenvalue classification -/
 
+/-- Four Hermite test cubics force the free boundary values to vanish. -/
+private theorem free_boundary_values_of_cubic_tests (wbar u3 : ℝ → ℂ)
+    (hB : ∀ c0 c1 c2 c3 : ℝ,
+      wbar 1 * (cubicD1 c0 c1 c2 c3 1 : ℂ) -
+        wbar 0 * (cubicD1 c0 c1 c2 c3 0 : ℂ) -
+        (u3 1 * (cubic c0 c1 c2 c3 1 : ℂ) - u3 0 * (cubic c0 c1 c2 c3 0 : ℂ)) = 0) :
+    u3 0 = 0 ∧ wbar 0 = 0 ∧ u3 1 = 0 ∧ wbar 1 = 0 := by
+  have hu30 : u3 0 = 0 := by
+    have h := hB 1 0 (-3) 2
+    simp only [cubic, cubicD1] at h
+    norm_num at h
+    linear_combination h
+  have hw0 : wbar 0 = 0 := by
+    have h := hB 0 1 (-2) 1
+    simp only [cubic, cubicD1] at h
+    norm_num at h
+    linear_combination h
+  have hu31 : u3 1 = 0 := by
+    have h := hB 0 0 3 (-2)
+    simp only [cubic, cubicD1] at h
+    norm_num at h
+    linear_combination h
+  have hw1 : wbar 1 = 0 := by
+    have h := hB 0 0 (-1) 1
+    simp only [cubic, cubicD1] at h
+    norm_num at h
+    linear_combination h
+  exact ⟨hu30, hw0, hu31, hw1⟩
+
+/-- Taking a real coordinate preserves the complex derivative identity. -/
+private theorem beam_hre_at : ∀ {f : ℝ → ℂ} {dv : ℂ} {t : ℝ}, HasDerivAt f dv t →
+    HasDerivAt (fun s => (f s).re) dv.re t := fun hf =>
+  Complex.reCLM.hasFDerivAt.comp_hasDerivAt _ hf
+
+/-- Taking an imaginary coordinate preserves the complex derivative identity. -/
+private theorem beam_him_at : ∀ {f : ℝ → ℂ} {dv : ℂ} {t : ℝ}, HasDerivAt f dv t →
+    HasDerivAt (fun s => (f s).im) dv.im t := fun hf =>
+  Complex.imCLM.hasFDerivAt.comp_hasDerivAt _ hf
+
+/-- Taking a real coordinate preserves the complex derivative identity. -/
+private theorem beam_hre_within : ∀ {f : ℝ → ℂ} {dv : ℂ} {t : ℝ},
+    HasDerivWithinAt f dv (Set.Icc 0 1) t →
+    HasDerivWithinAt (fun s => (f s).re) dv.re (Set.Icc 0 1) t := fun hf =>
+  Complex.reCLM.hasFDerivAt.comp_hasDerivWithinAt _ hf
+
+/-- Taking an imaginary coordinate preserves the complex derivative identity. -/
+private theorem beam_him_within : ∀ {f : ℝ → ℂ} {dv : ℂ} {t : ℝ},
+    HasDerivWithinAt f dv (Set.Icc 0 1) t →
+    HasDerivWithinAt (fun s => (f s).im) dv.im (Set.Icc 0 1) t := fun hf =>
+  Complex.imCLM.hasFDerivAt.comp_hasDerivWithinAt _ hf
+
 /-- **Every positive eigenvalue of the free-beam operator is the fourth power of a
 characteristic root.**  The bootstrap: the eigen-identity plus the representation theorem
 produce continuous representatives with a full fourth-order derivative chain within `[0,1]`;
@@ -606,26 +657,7 @@ theorem exists_characteristic_of_eigen {lam : ℝ} (hlam : 0 < lam)
     hucont hwcont hd3 hu3cont hd4 (cubic c0 c1 c2 c3) (cubicD1 c0 c1 c2 c3)
     (cubicD2 c0 c1 c2 c3) (continuous_cubic _ _ _ _) (continuous_cubicD1 _ _ _ _)
     (continuous_cubicD2 _ _ _ _) (hasDerivAt_cubic _ _ _ _) (hasDerivAt_cubicD1 _ _ _ _)
-  have hu30 : u3 0 = 0 := by
-    have h := hB 1 0 (-3) 2
-    simp only [cubic, cubicD1] at h
-    norm_num at h
-    linear_combination h
-  have hw0 : wbar 0 = 0 := by
-    have h := hB 0 1 (-2) 1
-    simp only [cubic, cubicD1] at h
-    norm_num at h
-    linear_combination h
-  have hu31 : u3 1 = 0 := by
-    have h := hB 0 0 3 (-2)
-    simp only [cubic, cubicD1] at h
-    norm_num at h
-    linear_combination h
-  have hw1 : wbar 1 = 0 := by
-    have h := hB 0 0 (-1) 1
-    simp only [cubic, cubicD1] at h
-    norm_num at h
-    linear_combination h
+  obtain ⟨hu30, hw0, hu31, hw1⟩ := free_boundary_values_of_cubic_tests wbar u3 hB
   -- the fourth root of the eigenvalue
   set beta : ℝ := lam ^ ((1 : ℝ) / 4) with hbeta
   have hβpos : 0 < beta := Real.rpow_pos_of_pos hlam _
@@ -633,20 +665,6 @@ theorem exists_characteristic_of_eigen {lam : ℝ} (hlam : 0 < lam)
     rw [hbeta, ← Real.rpow_natCast (lam ^ ((1 : ℝ) / 4)) 4, ← Real.rpow_mul hlam.le]
     norm_num
   -- real and imaginary chains and their mode classifications
-  have hre_at : ∀ {f : ℝ → ℂ} {dv : ℂ} {t : ℝ}, HasDerivAt f dv t →
-      HasDerivAt (fun s => (f s).re) dv.re t := fun hf =>
-    Complex.reCLM.hasFDerivAt.comp_hasDerivAt _ hf
-  have him_at : ∀ {f : ℝ → ℂ} {dv : ℂ} {t : ℝ}, HasDerivAt f dv t →
-      HasDerivAt (fun s => (f s).im) dv.im t := fun hf =>
-    Complex.imCLM.hasFDerivAt.comp_hasDerivAt _ hf
-  have hre_within : ∀ {f : ℝ → ℂ} {dv : ℂ} {t : ℝ},
-      HasDerivWithinAt f dv (Set.Icc 0 1) t →
-      HasDerivWithinAt (fun s => (f s).re) dv.re (Set.Icc 0 1) t := fun hf =>
-    Complex.reCLM.hasFDerivAt.comp_hasDerivWithinAt _ hf
-  have him_within : ∀ {f : ℝ → ℂ} {dv : ℂ} {t : ℝ},
-      HasDerivWithinAt f dv (Set.Icc 0 1) t →
-      HasDerivWithinAt (fun s => (f s).im) dv.im (Set.Icc 0 1) t := fun hf =>
-    Complex.imCLM.hasFDerivAt.comp_hasDerivWithinAt _ hf
   have hmulre : ∀ z : ℂ, ((lam : ℂ) * z).re = beta ^ 4 * z.re := by
     intro z
     rw [hβ4]
@@ -659,21 +677,21 @@ theorem exists_characteristic_of_eigen {lam : ℝ} (hlam : 0 < lam)
     exists_mode_eqOn_of_fourth_deriv_within beta hβpos.ne'
       (u := fun s => (ubar s).re) (u1 := fun s => (u1 s).re)
       (u2 := fun s => (wbar s).re) (u3 := fun s => (u3 s).re)
-      (fun t ht => hre_within (hd1 t).hasDerivWithinAt)
-      (fun t ht => hre_within (hd2 t ht))
-      (fun t ht => hre_within (hd3 t).hasDerivWithinAt)
+      (fun t ht => beam_hre_within (hd1 t).hasDerivWithinAt)
+      (fun t ht => beam_hre_within (hd2 t ht))
+      (fun t ht => beam_hre_within (hd3 t).hasDerivWithinAt)
       (fun t ht => by
-        have h := hre_within (hd4 t ht)
+        have h := beam_hre_within (hd4 t ht)
         rwa [hmulre] at h)
   obtain ⟨aI, bI, cI, dI, hIm0, hIm1, hIm2, hIm3⟩ :=
     exists_mode_eqOn_of_fourth_deriv_within beta hβpos.ne'
       (u := fun s => (ubar s).im) (u1 := fun s => (u1 s).im)
       (u2 := fun s => (wbar s).im) (u3 := fun s => (u3 s).im)
-      (fun t ht => him_within (hd1 t).hasDerivWithinAt)
-      (fun t ht => him_within (hd2 t ht))
-      (fun t ht => him_within (hd3 t).hasDerivWithinAt)
+      (fun t ht => beam_him_within (hd1 t).hasDerivWithinAt)
+      (fun t ht => beam_him_within (hd2 t ht))
+      (fun t ht => beam_him_within (hd3 t).hasDerivWithinAt)
       (fun t ht => by
-        have h := him_within (hd4 t ht)
+        have h := beam_him_within (hd4 t ht)
         rwa [hmulim] at h)
   have h0mem : (0 : ℝ) ∈ Set.Icc (0 : ℝ) 1 := by norm_num
   have h1mem : (1 : ℝ) ∈ Set.Icc (0 : ℝ) 1 := by norm_num

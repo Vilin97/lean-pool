@@ -146,6 +146,74 @@ theorem norm_comp_boundedPVM_proj_sub_smul_le (hT : IsSelfAdjoint T)
     rw [hind0, mul_zero, mul_zero, add_zero, norm_zero]
     exact hr
 
+/-- The equal-width half-open bands cover every point in the open interval. -/
+private theorem mem_uniform_interval (R d : ℝ) {m : ℕ}
+    (hd : 0 < d) (hmd : (m : ℝ) * d = 2 * R) {t : ℝ}
+    (htR : -R < t ∧ t < R) :
+    ∃ j : Fin m, t ∈ Set.Ico (-R + (j : ℕ) * d) (-R + ((j : ℕ) + 1) * d) := by
+  have hnn : (0 : ℝ) ≤ (t + R) / d := by
+    apply div_nonneg _ hd.le
+    linarith [htR.1]
+  have hlt : ⌊(t + R) / d⌋₊ < m := by
+    rw [Nat.floor_lt hnn, div_lt_iff₀ hd]
+    have h2R : t + R < 2 * R := by linarith [htR.2]
+    linarith [hmd]
+  refine ⟨⟨⌊(t + R) / d⌋₊, hlt⟩, ?_⟩
+  have hfl : (⌊(t + R) / d⌋₊ : ℝ) ≤ (t + R) / d := Nat.floor_le hnn
+  have hfu : (t + R) / d < (⌊(t + R) / d⌋₊ : ℝ) + 1 := Nat.lt_floor_add_one _
+  have hl : (⌊(t + R) / d⌋₊ : ℝ) * d ≤ t + R := by
+    rw [← le_div_iff₀ hd]
+    exact hfl
+  have hu : t + R < ((⌊(t + R) / d⌋₊ : ℝ) + 1) * d := by
+    rw [← div_lt_iff₀ hd]
+    exact hfu
+  simp only [Set.mem_Ico]
+  constructor <;> [linarith; linarith]
+
+/-- Spectral projections for a measurable disjoint cover sum to the identity. -/
+private theorem sum_boundedPVM_proj_eq_id (hT : IsSelfAdjoint T) {m : ℕ}
+    (I : Fin m → Set ℝ) (hImeas : ∀ j, MeasurableSet (I j))
+    (hIdisj : ∀ i j : Fin m, i ≠ j → Disjoint (I i) (I j))
+    (hcover : ∀ w : spectrum ℂ T, ∃ j : Fin m, reCoord (T := T) w ∈ I j) :
+    (∑ j : Fin m, (boundedPVM hT).proj (I j) (hImeas j)) =
+      ContinuousLinearMap.id ℂ H := by
+  classical
+  let p : Fin m → (H →L[ℂ] H) := fun j => (boundedPVM hT).proj (I j) (hImeas j)
+  change (∑ j : Fin m, p j) = ContinuousLinearMap.id ℂ H
+  refine op_ext_of_inner_self fun ξ => ?_
+  rw [sum_apply, inner_sum]
+  have hterm : ∀ j ∈ Finset.univ (α := Fin m),
+      ⟪ξ, p j ξ⟫_ℂ = ((((boundedPVM hT).diag ξ) (I j)).toReal : ℂ) :=
+    fun j _ => (boundedPVM hT).inner_proj (I j) (hImeas j) ξ
+  rw [Finset.sum_congr rfl hterm]
+  have hU : MeasurableSet (⋃ j ∈ Finset.univ (α := Fin m), I j) :=
+    Finset.measurableSet_biUnion _ fun j _ => hImeas j
+  have hmeasU : ((boundedPVM hT).diag ξ) (⋃ j ∈ Finset.univ (α := Fin m), I j) =
+      ∑ j : Fin m, ((boundedPVM hT).diag ξ) (I j) := by
+    refine measure_biUnion_finset ?_ fun j _ => hImeas j
+    intro i _ j _ hij
+    exact hIdisj i j hij
+  have hUc : ((boundedPVM hT).diag ξ) (⋃ j ∈ Finset.univ (α := Fin m), I j)ᶜ = 0 := by
+    rw [boundedPVM_diag hT ξ, Measure.map_apply (measurable_reCoord (T := T)) hU.compl]
+    have hpre : reCoord (T := T) ⁻¹' (⋃ j ∈ Finset.univ (α := Fin m), I j)ᶜ =
+        (∅ : Set (spectrum ℂ T)) := by
+      ext w
+      simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_empty_iff_false,
+        iff_false, not_not]
+      obtain ⟨j, hj⟩ := hcover w
+      exact Set.mem_biUnion (Finset.mem_univ j) hj
+    rw [hpre]
+    exact measure_empty
+  have hUuniv : ((boundedPVM hT).diag ξ) (⋃ j ∈ Finset.univ (α := Fin m), I j) =
+      ((boundedPVM hT).diag ξ) Set.univ := by
+    rw [← measure_add_measure_compl hU, hUc, add_zero]
+  have huniv : ⟪ξ, ContinuousLinearMap.id ℂ H ξ⟫_ℂ =
+      ((((boundedPVM hT).diag ξ) Set.univ).toReal : ℂ) := by
+    have h := (boundedPVM hT).inner_proj Set.univ MeasurableSet.univ ξ
+    rwa [(boundedPVM hT).proj_univ] at h
+  rw [huniv, ← hUuniv, hmeasU, ENNReal.toReal_sum (fun j _ => measure_ne_top _ _),
+    Complex.ofReal_sum]
+
 /-- **Almost-invariant finite-dimensional enlargement.**  Every finite-dimensional
 subspace of a complex Hilbert space is contained in a finite-dimensional subspace that a
 given bounded self-adjoint operator leaves invariant up to a prescribed tolerance: for
@@ -244,59 +312,10 @@ theorem exists_finiteDimensional_le_almostInvariant (hT : IsSelfAdjoint T)
       rw [abs_le] at habs
       constructor <;> [simp only [hR_def]; simp only [hR_def]] <;>
         linarith [habs.1, habs.2]
-    have hnn : (0 : ℝ) ≤ (t + R) / d := by
-      apply div_nonneg _ hd.le
-      linarith [htR.1]
-    have hlt : ⌊(t + R) / d⌋₊ < m := by
-      rw [Nat.floor_lt hnn, div_lt_iff₀ hd]
-      have h2R : t + R < 2 * R := by linarith [htR.2]
-      linarith [hmd]
-    refine ⟨⟨⌊(t + R) / d⌋₊, hlt⟩, ?_⟩
-    have hfl : (⌊(t + R) / d⌋₊ : ℝ) ≤ (t + R) / d := Nat.floor_le hnn
-    have hfu : (t + R) / d < (⌊(t + R) / d⌋₊ : ℝ) + 1 := Nat.lt_floor_add_one _
-    have hl : (⌊(t + R) / d⌋₊ : ℝ) * d ≤ t + R := by
-      rw [← le_div_iff₀ hd]
-      exact hfl
-    have hu : t + R < ((⌊(t + R) / d⌋₊ : ℝ) + 1) * d := by
-      rw [← div_lt_iff₀ hd]
-      exact hfu
-    simp only [hI_def, Set.mem_Ico]
-    constructor <;> [linarith; linarith]
+    exact mem_uniform_interval R d hd hmd htR
   -- The band projections sum to the identity.
-  have hsum : (∑ j : Fin m, p j) = ContinuousLinearMap.id ℂ H := by
-    refine op_ext_of_inner_self fun ξ => ?_
-    rw [sum_apply, inner_sum]
-    have hterm : ∀ j ∈ Finset.univ (α := Fin m),
-        ⟪ξ, p j ξ⟫_ℂ = ((((boundedPVM hT).diag ξ) (I j)).toReal : ℂ) :=
-      fun j _ => (boundedPVM hT).inner_proj (I j) (hImeas j) ξ
-    rw [Finset.sum_congr rfl hterm]
-    have hU : MeasurableSet (⋃ j ∈ Finset.univ (α := Fin m), I j) :=
-      Finset.measurableSet_biUnion _ fun j _ => hImeas j
-    have hmeasU : ((boundedPVM hT).diag ξ) (⋃ j ∈ Finset.univ (α := Fin m), I j) =
-        ∑ j : Fin m, ((boundedPVM hT).diag ξ) (I j) := by
-      refine measure_biUnion_finset ?_ fun j _ => hImeas j
-      intro i _ j _ hij
-      exact hIdisj i j hij
-    have hUc : ((boundedPVM hT).diag ξ) (⋃ j ∈ Finset.univ (α := Fin m), I j)ᶜ = 0 := by
-      rw [boundedPVM_diag hT ξ, Measure.map_apply (measurable_reCoord (T := T)) hU.compl]
-      have hpre : reCoord (T := T) ⁻¹' (⋃ j ∈ Finset.univ (α := Fin m), I j)ᶜ =
-          (∅ : Set (spectrum ℂ T)) := by
-        ext w
-        simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_empty_iff_false,
-          iff_false, not_not]
-        obtain ⟨j, hj⟩ := hcover w
-        exact Set.mem_biUnion (Finset.mem_univ j) hj
-      rw [hpre]
-      exact measure_empty
-    have hUuniv : ((boundedPVM hT).diag ξ) (⋃ j ∈ Finset.univ (α := Fin m), I j) =
-        ((boundedPVM hT).diag ξ) Set.univ := by
-      rw [← measure_add_measure_compl hU, hUc, add_zero]
-    have huniv : ⟪ξ, ContinuousLinearMap.id ℂ H ξ⟫_ℂ =
-        ((((boundedPVM hT).diag ξ) Set.univ).toReal : ℂ) := by
-      have h := (boundedPVM hT).inner_proj Set.univ MeasurableSet.univ ξ
-      rwa [(boundedPVM hT).proj_univ] at h
-    rw [huniv, ← hUuniv, hmeasU, ENNReal.toReal_sum (fun j _ => measure_ne_top _ _),
-      Complex.ofReal_sum]
+  have hsum : (∑ j : Fin m, p j) = ContinuousLinearMap.id ℂ H :=
+    sum_boundedPVM_proj_eq_id hT I hImeas hIdisj hcover
   -- The enlargement.
   obtain ⟨s, hs⟩ : F₀.FG := (Submodule.fg_iff_finiteDimensional F₀).mpr inferInstance
   set G : Set H := ⋃ j : Fin m, (p j) '' (↑s : Set H) with hG_def

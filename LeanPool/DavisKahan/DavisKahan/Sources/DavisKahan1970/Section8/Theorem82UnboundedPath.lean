@@ -183,6 +183,30 @@ theorem norm_sinTwoAngle_path_le
 
 /-! ### Theorem 8.2's perturbation branch at unbounded scope -/
 
+/-- A uniform scaled Lipschitz estimate gives continuity along the unit interval. -/
+private theorem continuousOn_unitInterval_of_gap_bound (f : ℝ → ℝ) {gam d : ℝ}
+    (hgam0 : 0 ≤ gam) (hd : 0 < d)
+    (hlip : ∀ s t : ℝ, s ∈ Set.Icc (0 : ℝ) 1 → t ∈ Set.Icc (0 : ℝ) 1 →
+      |f s - f t| ≤ |s - t| * gam / d) : ContinuousOn f (Set.Icc 0 1) := by
+  rw [Metric.continuousOn_iff]
+  intro t ht ε hε
+  refine ⟨ε * d / (gam + 1), by positivity, fun s hs hst => ?_⟩
+  have h1 := hlip s t hs ht
+  have h2 : |s - t| < ε * d / (gam + 1) := by
+    simpa [Real.dist_eq] using hst
+  have hgp : (0 : ℝ) < gam + 1 := by linarith
+  have h3 : |s - t| * gam / d < ε := by
+    rw [div_lt_iff₀ hd]
+    have h4 : |s - t| * gam ≤ (ε * d / (gam + 1)) * gam := by
+      nlinarith [abs_nonneg (s - t), h2, hgam0]
+    have h5 : (ε * d / (gam + 1)) * gam < ε * d := by
+      rw [div_mul_eq_mul_div, div_lt_iff₀ hgp]
+      nlinarith [hε, hd, hgam0]
+    linarith
+  calc dist (f s) (f t) = |f s - f t| := Real.dist_eq _ _
+    _ ≤ |s - t| * gam / d := h1
+    _ < ε := h3
+
 /-- **Davis--Kahan 1970, Theorem 8.2, perturbation alternative, at unbounded
 ambient scope, in its directed form.**
 
@@ -284,25 +308,8 @@ theorem theorem8_2_perturbationHalfGap_unbounded_complex
       exact DavisKahan.abs_directedGap_sub_directedGap_le _ _ _
     rw [le_div_iff₀ hd]
     nlinarith [hcomp, hband', hd]
-  have hcont : ContinuousOn f (Set.Icc 0 1) := by
-    rw [Metric.continuousOn_iff]
-    intro t ht ε hε
-    refine ⟨ε * d / (gam + 1), by positivity, fun s hs hst => ?_⟩
-    have h1 := hlip s t hs ht
-    have h2 : |s - t| < ε * d / (gam + 1) := by
-      simpa [Real.dist_eq] using hst
-    have hgp : (0 : ℝ) < gam + 1 := by linarith
-    have h3 : |s - t| * gam / d < ε := by
-      rw [div_lt_iff₀ hd]
-      have h4 : |s - t| * gam ≤ (ε * d / (gam + 1)) * gam := by
-        nlinarith [abs_nonneg (s - t), h2, hgam0]
-      have h5 : (ε * d / (gam + 1)) * gam < ε * d := by
-        rw [div_mul_eq_mul_div, div_lt_iff₀ hgp]
-        nlinarith [hε, hd, hgam0]
-      linarith
-    calc dist (f s) (f t) = |f s - f t| := Real.dist_eq _ _
-      _ ≤ |s - t| * gam / d := h1
-      _ < ε := h3
+  have hcont : ContinuousOn f (Set.Icc 0 1) :=
+    continuousOn_unitInterval_of_gap_bound f hgam0 hd hlip
   -- the two endpoints
   have hextsub : bandExterior beta alpha delta ⊆ bandExterior l r d := by
     rintro x (hx | hx)

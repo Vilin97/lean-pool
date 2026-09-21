@@ -1241,6 +1241,7 @@ on complementary summands of one space, so their sum `T` is a single nonnegative
 with `T² B = B T²` for `B` the off-diagonal block, and `T B = B T` is
 `TauCeti.commute_of_commute_mul_self`. -/
 
+omit [CompleteSpace H] in
 private theorem projectedBlock_nonneg
     (U : Submodule ℂ H) [U.HasOrthogonalProjection] (W : H →L[ℂ] H)
     (hblock : ∀ x ∈ U, 0 ≤ ⟪W x, x⟫_ℂ) :
@@ -1728,6 +1729,14 @@ private theorem unitaryOperator_bijective (A : H →L[ℂ] H)
     simpa only [mul_apply_eq_comp, one_apply_eq_self] using h
   exact ⟨hAinj, hAsurj⟩
 
+omit [CompleteSpace H] in
+private theorem commute_orthogonal_projection
+    (U : Submodule ℂ H) [U.HasOrthogonalProjection]
+    (T : H →L[ℂ] H) (hT : Commute T U.starProjection) :
+    Commute T Uᗮ.starProjection := by
+  rw [commute_iff_eq, Submodule.starProjection_orthogonal']
+  rw [mul_sub, mul_one, sub_mul, one_mul, hT.eq]
+
 /-- Operator-norm minimality of the acute direct rotation among unitaries
 transporting the source projection to the target projection.
 
@@ -1788,13 +1797,8 @@ theorem spectraDirectRotation_minimal
       _ = P * A := by simp only [A]; rw [mul_assoc]
   -- Commuting with `P` is the same as commuting with its complement, and both `A` and `C`
   -- need it below; the six lines were written out twice.
-  have hcommPc : ∀ T : H →L[ℂ] H, Commute T P → Commute T Pc := by
-    intro T hT
-    rw [commute_iff_eq]
-    change T * Uᗮ.starProjection = Uᗮ.starProjection * T
-    rw [Submodule.starProjection_orthogonal']
-    change T * (1 - P) = (1 - P) * T
-    rw [mul_sub, mul_one, sub_mul, one_mul, hT.eq]
+  have hcommPc : ∀ T : H →L[ℂ] H, Commute T P → Commute T Pc :=
+    commute_orthogonal_projection U
   have hAcommc : Commute A Pc := hcommPc A hAcomm
   have hWeq : W = D * A := by
     calc

@@ -314,6 +314,19 @@ private theorem principalSquareRoot_sum_eq_modulus (T : H →L[ℂ] H)
     _ = CFC.sqrt ((A + A) * (A + A)) := by rw [hsqeq]
     _ = A + A := CFC.sqrt_unique rfl h2A_nonneg
 
+private theorem re_inner_nonneg_of_nonneg_sum (T : H →L[ℂ] H)
+    (hTpos : (0 : H →L[ℂ] H) ≤ T + star T) :
+    ∀ y : H, 0 ≤ RCLike.re ⟪T y, y⟫_ℂ := by
+  intro y
+  have hp := (ContinuousLinearMap.nonneg_iff_isPositive (f := (T + star T))).mp hTpos
+  have hy := hp.re_inner_nonneg_left y
+  rw [add_apply, inner_add_left, map_add] at hy
+  have hstar : RCLike.re ⟪star T y, y⟫_ℂ = RCLike.re ⟪T y, y⟫_ℂ := by
+    rw [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_inner_left]
+    exact inner_re_symm (𝕜 := ℂ) y (T y)
+  rw [hstar] at hy
+  linarith
+
 open scoped ComplexOrder in
 /-- Davis--Kahan 1970, Proposition 3.3, converse direction.  The crossed
 intersection mapping condition selects the correct square root on the
@@ -334,16 +347,8 @@ theorem proposition3_3_principalSquareRoot_converse
   have hTpos : (0 : H →L[ℂ] H) ≤ T + star T :=
     principalSquareRoot_nonneg_sum U V T hroot
   -- accretive quadratic form
-  have haccr : ∀ y : H, 0 ≤ RCLike.re ⟪T y, y⟫_ℂ := by
-    intro y
-    have hp := (ContinuousLinearMap.nonneg_iff_isPositive (f := (T + star T))).mp hTpos
-    have hy := hp.re_inner_nonneg_left y
-    rw [add_apply, inner_add_left, map_add] at hy
-    have hstar : RCLike.re ⟪star T y, y⟫_ℂ = RCLike.re ⟪T y, y⟫_ℂ := by
-      rw [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_inner_left]
-      exact inner_re_symm (𝕜 := ℂ) y (T y)
-    rw [hstar] at hy
-    linarith
+  have haccr : ∀ y : H, 0 ≤ RCLike.re ⟪T y, y⟫_ℂ :=
+    re_inner_nonneg_of_nonneg_sum T hTpos
   -- (2) T + star T = A + A
   have hkey : T + star T = A + A := principalSquareRoot_sum_eq_modulus U V T hroot
   -- (3) T * A = S

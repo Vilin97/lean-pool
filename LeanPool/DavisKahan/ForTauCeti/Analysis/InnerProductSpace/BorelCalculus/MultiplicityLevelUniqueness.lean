@@ -368,6 +368,67 @@ theorem spectralGeneratedLE_mulLp_datumSymbol (E : MultiplicityDatum ℂ) {S : S
   · rw [h3 hp, mul_zero]
   · rw [Set.indicator_of_notMem hp, zero_mul, map_zero, zero_mul]
 
+/-- The measurable unit defect direction has exactly the mass of its supporting level. -/
+private theorem defect_vector_mass (D : MultiplicityDatum ℂ) {S : Set ℂ} {k : ℕ}
+    (hS'm : MeasurableSet (S ∩ D.level k)) (w₀ : ℂ → Fin (k + 1) → ℂ)
+    (hw₀m : ∀ j, Measurable fun z => w₀ z j)
+    (hw₀unit : ∀ z, ∑ j, ‖w₀ z j‖ ^ 2 = 1)
+    (W : ℂ × ℕ → ℂ) (hWm : Measurable W)
+    (hWval : ∀ (z : ℂ) (n : ℕ) (hn : n < k + 1),
+      W (z, n) = (S ∩ D.level k).indicator (fun z => w₀ z ⟨n, hn⟩) z)
+    (hWval' : ∀ (z : ℂ) (n : ℕ), k < n → W (z, n) = 0) :
+    ∫⁻ p, ‖W p‖ₑ ^ 2 ∂D.measure = D.base (S ∩ D.level k) := by
+  classical
+  have hrestr : ∀ j : Fin (k + 1),
+      (D.base.restrict (D.level (j : ℕ))).restrict (S ∩ D.level k)
+        = D.base.restrict (S ∩ D.level k) := by
+    intro j
+    rw [Measure.restrict_restrict hS'm]
+    congr 1
+    refine Set.inter_eq_self_of_subset_left fun z hz => ?_
+    have hjk : (j : ℕ) ≤ k := by
+      have := j.isLt
+      omega
+    exact D.antitone_level hjk hz.2
+  rw [MultiplicityDatum.measure_def, lintegral_sliceSum _ (hWm.enorm.pow_const 2)]
+  have hterm : ∀ j : Fin (k + 1),
+      ∫⁻ z, ‖W (z, (j : ℕ))‖ₑ ^ 2 ∂(D.base.restrict (D.level (j : ℕ)))
+        = ∫⁻ z, ‖w₀ z j‖ₑ ^ 2 ∂(D.base.restrict (S ∩ D.level k)) := by
+    intro j
+    have hpt : ∀ z, ‖W (z, (j : ℕ))‖ₑ ^ 2
+        = (S ∩ D.level k).indicator (fun z => ‖w₀ z j‖ₑ ^ 2) z := by
+      intro z
+      rw [hWval z (j : ℕ) j.isLt, Fin.eta]
+      by_cases hz : z ∈ S ∩ D.level k
+      · rw [Set.indicator_of_mem hz, Set.indicator_of_mem hz]
+      · rw [Set.indicator_of_notMem hz, Set.indicator_of_notMem hz, enorm_zero]
+        simp
+    rw [lintegral_congr hpt, lintegral_indicator hS'm, ← hrestr j]
+  rw [tsum_eq_sum (s := Finset.range (k + 1)) ?_, ← Fin.sum_univ_eq_sum_range]
+  · have hstep : ∀ j : Fin (k + 1),
+        ∫⁻ z, ‖W (z, (j : ℕ))‖ₑ ^ 2 ∂(D.base.restrict (D.level (j : ℕ)))
+          = ∫⁻ z, ‖w₀ z j‖ₑ ^ 2 ∂(D.base.restrict (S ∩ D.level k)) := hterm
+    rw [Finset.sum_congr rfl fun j _ => hstep j, ← lintegral_finsetSum _
+      (fun j _ => (hw₀m j).enorm.pow_const 2)]
+    have hone : ∀ z, (∑ j : Fin (k + 1), ‖w₀ z j‖ₑ ^ 2) = 1 := by
+      intro z
+      have h2 : ∀ j : Fin (k + 1), ‖w₀ z j‖ₑ ^ 2 = ENNReal.ofReal (‖w₀ z j‖ ^ 2) := by
+        intro j
+        rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+      rw [Finset.sum_congr rfl fun j _ => h2 j,
+        ← ENNReal.ofReal_sum_of_nonneg fun j _ => by positivity, hw₀unit z,
+        ENNReal.ofReal_one]
+    rw [lintegral_congr hone, setLIntegral_one]
+  · intro n hn
+    have hkn : k < n := by
+      simp only [Finset.mem_range, not_lt] at hn
+      omega
+    have hzero : ∀ z : ℂ, ‖W (z, n)‖ₑ ^ 2 = 0 := by
+      intro z
+      rw [hWval' z n hkn]
+      simp
+    rw [lintegral_congr hzero, lintegral_zero]
+
 /-- **The lower bound: on the `k`-th level set, `k` generators never suffice.**
 
 If `S` meets `level k` in a set of positive measure, no `k` vectors generate the range of the
@@ -453,45 +514,8 @@ theorem not_spectralGeneratedLE_mulLp_datumSymbol (D : MultiplicityDatum ℂ) {S
       have := j.isLt
       omega
     exact D.antitone_level hjk hz.2
-  have hlint : ∫⁻ p, ‖W p‖ₑ ^ 2 ∂D.measure = D.base (S ∩ D.level k) := by
-    rw [MultiplicityDatum.measure_def, lintegral_sliceSum _ (hWm.enorm.pow_const 2)]
-    have hterm : ∀ j : Fin (k + 1),
-        ∫⁻ z, ‖W (z, (j : ℕ))‖ₑ ^ 2 ∂(D.base.restrict (D.level (j : ℕ)))
-          = ∫⁻ z, ‖w₀ z j‖ₑ ^ 2 ∂(D.base.restrict (S ∩ D.level k)) := by
-      intro j
-      have hpt : ∀ z, ‖W (z, (j : ℕ))‖ₑ ^ 2
-          = (S ∩ D.level k).indicator (fun z => ‖w₀ z j‖ₑ ^ 2) z := by
-        intro z
-        rw [hWval z (j : ℕ) j.isLt, Fin.eta]
-        by_cases hz : z ∈ S ∩ D.level k
-        · rw [Set.indicator_of_mem hz, Set.indicator_of_mem hz]
-        · rw [Set.indicator_of_notMem hz, Set.indicator_of_notMem hz, enorm_zero]
-          simp
-      rw [lintegral_congr hpt, lintegral_indicator hS'm, ← hrestr j]
-    rw [tsum_eq_sum (s := Finset.range (k + 1)) ?_, ← Fin.sum_univ_eq_sum_range]
-    · have hstep : ∀ j : Fin (k + 1),
-          ∫⁻ z, ‖W (z, (j : ℕ))‖ₑ ^ 2 ∂(D.base.restrict (D.level (j : ℕ)))
-            = ∫⁻ z, ‖w₀ z j‖ₑ ^ 2 ∂(D.base.restrict (S ∩ D.level k)) := hterm
-      rw [Finset.sum_congr rfl fun j _ => hstep j, ← lintegral_finsetSum _
-        (fun j _ => (hw₀m j).enorm.pow_const 2)]
-      have hone : ∀ z, (∑ j : Fin (k + 1), ‖w₀ z j‖ₑ ^ 2) = 1 := by
-        intro z
-        have h2 : ∀ j : Fin (k + 1), ‖w₀ z j‖ₑ ^ 2 = ENNReal.ofReal (‖w₀ z j‖ ^ 2) := by
-          intro j
-          rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
-        rw [Finset.sum_congr rfl fun j _ => h2 j,
-          ← ENNReal.ofReal_sum_of_nonneg fun j _ => by positivity, hw₀unit z,
-          ENNReal.ofReal_one]
-      rw [lintegral_congr hone, setLIntegral_one]
-    · intro n hn
-      have hkn : k < n := by
-        simp only [Finset.mem_range, not_lt] at hn
-        omega
-      have hzero : ∀ z : ℂ, ‖W (z, n)‖ₑ ^ 2 = 0 := by
-        intro z
-        rw [hWval' z n hkn]
-        simp
-      rw [lintegral_congr hzero, lintegral_zero]
+  have hlint : ∫⁻ p, ‖W p‖ₑ ^ 2 ∂D.measure = D.base (S ∩ D.level k) :=
+    defect_vector_mass D hS'm w₀ hw₀m hw₀unit W hWm hWval hWval'
   have hW2 : MemLp W 2 D.measure := by
     rw [MemLp, eLpNorm_two_lt_top_iff_lintegral _ _ hWm.aestronglyMeasurable, hlint]
     exact measure_lt_top _ _
