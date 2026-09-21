@@ -169,7 +169,7 @@ theorem coordinateZeroLocalFactor_isLocal
     (hxm : (⟨x, hxV⟩ : V.toSubring) ∈ maximalIdeal V.toSubring) :
     IsLocalHom (coordinateZeroLocalFactor E V hEV x hxV hxm) := by
   let f := coordinateZeroLocalFactor E V hEV x hxV hxm
-  apply (IsLocalRing.local_hom_TFAE f).out 3 0 |>.mp
+  apply (IsLocalRing.local_hom_TFAE f).out 4 1 |>.mp
   intro z hz
   rw [coordinateZeroLocal_maximalIdeal_eq_span,
     Ideal.mem_span_singleton] at hz

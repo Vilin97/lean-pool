@@ -58,11 +58,11 @@ theorem presentedPrincipalComponent_eq_zero_iff_mem_strictLower
         apply (presentedNormalFormLinearEquiv k n).injective
         ext m
         have hle := (mem_presentedWeightPiece k w 0 z).mp hz
-        have hpc := congrArg (MvPolynomial.coeff m) hp
+        have hpc := congrArg (fun f : MvPolynomial _ _ => f.coeff m) hp
         rw [coeff_presentedPrincipalComponent,
           MvPolynomial.coeff_zero] at hpc
         by_cases hc :
-            MvPolynomial.coeff m (presentedNormalFormLinearEquiv k n z) = 0
+            (presentedNormalFormLinearEquiv k n z).coeff m = 0
         · rw [hc]
           simp
         · have hw : monomialWeight w m = 0 := Nat.eq_zero_of_le_zero (hle m hc)
@@ -71,7 +71,7 @@ theorem presentedPrincipalComponent_eq_zero_iff_mem_strictLower
         rw [presentedStrictLowerPiece, mem_presentedWeightPiece]
         intro m hm
         have hle := (mem_presentedWeightPiece k w (N + 1) z).mp hz m hm
-        have hpc := congrArg (MvPolynomial.coeff m) hp
+        have hpc := congrArg (fun f : MvPolynomial _ _ => f.coeff m) hp
         rw [coeff_presentedPrincipalComponent,
           MvPolynomial.coeff_zero] at hpc
         by_contra hnot

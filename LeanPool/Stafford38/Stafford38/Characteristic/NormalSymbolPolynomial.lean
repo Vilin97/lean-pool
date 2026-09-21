@@ -53,7 +53,7 @@ theorem normalSymbolAlgEquiv_otherVariable (n : ℕ)
 theorem optionEquivLeft_monic_of_isHomogeneous
     {S : Type*} [Finite S] (P : MvPolynomial (Option S) k) (N : ℕ)
     (hP : P.IsHomogeneous N)
-    (hlead : MvPolynomial.coeff (Finsupp.single none N) P = 1) :
+    (hlead : P.coeff (Finsupp.single none N) = 1) :
     (MvPolynomial.optionEquivLeft k S P).Monic := by
   classical
   apply Polynomial.monic_of_natDegree_le_of_coeff_eq_one N
@@ -64,7 +64,7 @@ theorem optionEquivLeft_monic_of_isHomogeneous
     by_cases hm : m = 0
     · subst m
       simpa using hlead
-    · have hzero : MvPolynomial.coeff (m.optionElim N) P = 0 := by
+    · have hzero : P.coeff (m.optionElim N) = 0 := by
         by_contra hcoeff
         have hcoeffHomogeneous :
             ((MvPolynomial.optionEquivLeft k S P).coeff N).IsHomogeneous 0 := by
@@ -79,8 +79,7 @@ theorem optionEquivLeft_monic_of_isHomogeneous
               simpa [Finsupp.weight_apply] using hdegree
             omega
           exact hzero
-        have hcoeff' : MvPolynomial.coeff m
-            ((MvPolynomial.optionEquivLeft k S P).coeff N) ≠ 0 := by
+        have hcoeff' : ((MvPolynomial.optionEquivLeft k S P).coeff N).coeff m ≠ 0 := by
           rwa [MvPolynomial.optionEquivLeft_coeff_coeff]
         have hdegree := hcoeffHomogeneous hcoeff'
         rw [Finsupp.weight_apply] at hdegree
@@ -99,9 +98,8 @@ theorem canonicalNormalPolynomial_monic {n N : ℕ}
     (canonicalNormalPolynomial (k := k) (n := n) (N := N) d).Monic := by
   apply optionEquivLeft_monic_of_isHomogeneous
   · exact (canonical_orderPrincipalComponent_isHomogeneous n N hd).rename_isHomogeneous
-  · change MvPolynomial.coeff (Finsupp.single none N)
-        (MvPolynomial.rename (normalVariableEquiv n).symm
-          (presentedPrincipalComponent k orderWeight N d)) = 1
+  · change (MvPolynomial.rename (normalVariableEquiv n).symm
+          (presentedPrincipalComponent k orderWeight N d)).coeff (Finsupp.single none N) = 1
     have hsingle : (Finsupp.single (.inr (0 : Fin (n + 1))) N).mapDomain
         (normalVariableEquiv n).symm = Finsupp.single none N := by
       simp [normalVariableEquiv]

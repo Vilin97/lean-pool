@@ -48,7 +48,7 @@ private theorem iterPderiv_mem_of_involutive
 private theorem iterPderiv_eq_factorial_of_homogeneous
     (i : PhaseVar (n + 1)) (f : SymbolRing k (n + 1))
     (hf : f.IsHomogeneous N)
-    (hc : MvPolynomial.coeff (Finsupp.single i N) f = 1) :
+    (hc : f.coeff (Finsupp.single i N) = 1) :
     iterPderiv i N f = MvPolynomial.C (N.factorial : k) := by
   have hhom : ∀ r, (iterPderiv i r f).IsHomogeneous (N - r) := by
     intro r
@@ -58,8 +58,8 @@ private theorem iterPderiv_eq_factorial_of_homogeneous
         simpa [iterPderiv, Function.iterate_succ_apply', Nat.sub_sub] using
           (MvPolynomial.IsHomogeneous.pderiv ihr)
   have hcoeff : ∀ r m,
-      MvPolynomial.coeff (Finsupp.single i m) (iterPderiv i r f) =
-        MvPolynomial.coeff (Finsupp.single i (m + r)) f *
+      (iterPderiv i r f).coeff (Finsupp.single i m) =
+        f.coeff (Finsupp.single i (m + r)) *
           ((m + r).descFactorial r : k) := by
     intro r
     induction r with
@@ -92,8 +92,7 @@ private theorem iterPderiv_eq_factorial_of_homogeneous
         rw [hcarg]
         ring
   have hzero : iterPderiv i N f =
-      MvPolynomial.C (MvPolynomial.coeff (0 : PhaseVar (n + 1) →₀ ℕ)
-        (iterPderiv i N f)) := by
+      MvPolynomial.C ((iterPderiv i N f).coeff (0 : PhaseVar (n + 1) →₀ ℕ)) := by
     calc
       iterPderiv i N f = MvPolynomial.homogeneousComponent 0
           (iterPderiv i N f) := by
@@ -102,8 +101,8 @@ private theorem iterPderiv_eq_factorial_of_homogeneous
       _ = _ := MvPolynomial.homogeneousComponent_zero _
   rw [hzero]
   have hzeroCoeff :
-      MvPolynomial.coeff (0 : PhaseVar (n + 1) →₀ ℕ) (iterPderiv i N f) =
-        MvPolynomial.coeff (Finsupp.single i 0) (iterPderiv i N f) := by
+      (iterPderiv i N f).coeff (0 : PhaseVar (n + 1) →₀ ℕ) =
+        (iterPderiv i N f).coeff (Finsupp.single i 0) := by
     congr 1
     ext q
     by_cases hq : q = i <;> simp [hq]

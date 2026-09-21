@@ -37,8 +37,8 @@ variable (k : Type u) [Field k]
 
 theorem coeff_axisPolynomial {n : ℕ} (t : PhaseVar n)
     (P : SymbolRing k n) (N : ℕ) :
-    MvPolynomial.coeff (Finsupp.single () N) (axisPolynomial k t P) =
-      MvPolynomial.coeff (Finsupp.single t N) P := by
+    (axisPolynomial k t P).coeff (Finsupp.single () N) =
+      P.coeff (Finsupp.single t N) := by
   induction P using MvPolynomial.induction_on' with
   | monomial m c =>
       by_cases hsub : ∀ i ∈ m.support, i = t
@@ -84,24 +84,21 @@ theorem coeff_axisPolynomial {n : ℕ} (t : PhaseVar n)
 
 theorem coeff_principal_pure_eq_normalForm {n N : ℕ}
     (t : PhaseVar n) (d : PresentedWeyl k n) :
-    MvPolynomial.coeff (Finsupp.single t N)
-        (presentedPrincipalComponent k (@bernsteinWeight n) N d) =
-      MvPolynomial.coeff (Finsupp.single t N)
-        (presentedNormalFormLinearEquiv k n d) := by
+    (presentedPrincipalComponent k (@bernsteinWeight n) N d).coeff (Finsupp.single t N) =
+      (presentedNormalFormLinearEquiv k n d).coeff (Finsupp.single t N) := by
   rw [coeff_presentedPrincipalComponent]
   simp [monomialWeight, bernsteinWeight]
 
 def IsPBWMonicAt {n : ℕ} (t : PhaseVar n) (N : ℕ)
     (d : PresentedWeyl k n) : Prop :=
   d ∈ bernsteinPiece k n N ∧
-    MvPolynomial.coeff (Finsupp.single t N)
-      (presentedNormalFormLinearEquiv k n d) = 1
+    (presentedNormalFormLinearEquiv k n d).coeff (Finsupp.single t N) = 1
 
 theorem coeff_normalForm_eq_zero_of_exponent_gt {n N : ℕ}
     {t : PhaseVar n} {d : PresentedWeyl k n}
     (hd : d ∈ bernsteinPiece k n N) {m : PhaseVar n →₀ ℕ}
     (hmt : N < m t) :
-    MvPolynomial.coeff m (presentedNormalFormLinearEquiv k n d) = 0 := by
+    (presentedNormalFormLinearEquiv k n d).coeff m = 0 := by
   by_contra hcoeff
   have hweight := (mem_presentedWeightPiece k (@bernsteinWeight n) N d).mp
     hd m hcoeff
@@ -121,9 +118,8 @@ structure NormalizedPBWChartData {n : ℕ} (t : PhaseVar n) (N : ℕ)
   hNM : Ninv * M = 1
   hc : c ≠ 0
   mem_piece : normalizedSymplecticImage k M hM c d ∈ bernsteinPiece k n N
-  pure_coeff : MvPolynomial.coeff (Finsupp.single t N)
-      (presentedNormalFormLinearEquiv k n
-        (normalizedSymplecticImage k M hM c d)) = 1
+  pure_coeff : (presentedNormalFormLinearEquiv k n
+        (normalizedSymplecticImage k M hM c d)).coeff (Finsupp.single t N) = 1
 
 theorem HasNormalizedSymplecticChart.toNormalizedPBWChartData
     {n N : ℕ} {t : PhaseVar n} {d : PresentedWeyl k n}
@@ -148,31 +144,28 @@ theorem HasNormalizedSymplecticChart.purePBWCoefficient
 /- Exact statement pins for the coefficient bridge and retained chart data. -/
 theorem coeff_axisPolynomial_statement {n : ℕ} (t : PhaseVar n)
     (P : SymbolRing k n) (N : ℕ) :
-    MvPolynomial.coeff (Finsupp.single () N) (axisPolynomial k t P) =
-      MvPolynomial.coeff (Finsupp.single t N) P :=
+    (axisPolynomial k t P).coeff (Finsupp.single () N) =
+      P.coeff (Finsupp.single t N) :=
   coeff_axisPolynomial k t P N
 
 theorem isPBWMonicAt_statement {n : ℕ} (t : PhaseVar n) (N : ℕ)
     (d : PresentedWeyl k n) :
     IsPBWMonicAt k t N d ↔
       d ∈ bernsteinPiece k n N ∧
-        MvPolynomial.coeff (Finsupp.single t N)
-          (presentedNormalFormLinearEquiv k n d) = 1 :=
+        (presentedNormalFormLinearEquiv k n d).coeff (Finsupp.single t N) = 1 :=
   Iff.rfl
 
 theorem coeff_principal_pure_eq_normalForm_statement {n N : ℕ}
     (t : PhaseVar n) (d : PresentedWeyl k n) :
-    MvPolynomial.coeff (Finsupp.single t N)
-        (presentedPrincipalComponent k (@bernsteinWeight n) N d) =
-      MvPolynomial.coeff (Finsupp.single t N)
-        (presentedNormalFormLinearEquiv k n d) :=
+    (presentedPrincipalComponent k (@bernsteinWeight n) N d).coeff (Finsupp.single t N) =
+      (presentedNormalFormLinearEquiv k n d).coeff (Finsupp.single t N) :=
   coeff_principal_pure_eq_normalForm k t d
 
 theorem coeff_normalForm_eq_zero_of_exponent_gt_statement {n N : ℕ}
     {t : PhaseVar n} {d : PresentedWeyl k n}
     (hd : d ∈ bernsteinPiece k n N) {m : PhaseVar n →₀ ℕ}
     (hmt : N < m t) :
-    MvPolynomial.coeff m (presentedNormalFormLinearEquiv k n d) = 0 :=
+    (presentedNormalFormLinearEquiv k n d).coeff m = 0 :=
   coeff_normalForm_eq_zero_of_exponent_gt k hd hmt
 
 theorem normalizedPBWChartData_fields {n N : ℕ} {t : PhaseVar n}
@@ -181,9 +174,8 @@ theorem normalizedPBWChartData_fields {n N : ℕ} {t : PhaseVar n}
       D.Ninv * standardForm k n * Matrix.transpose D.Ninv = standardForm k n ∧
       D.M * D.Ninv = 1 ∧ D.Ninv * D.M = 1 ∧ D.c ≠ 0 ∧
       normalizedSymplecticImage k D.M D.hM D.c d ∈ bernsteinPiece k n N ∧
-      MvPolynomial.coeff (Finsupp.single t N)
-        (presentedNormalFormLinearEquiv k n
-          (normalizedSymplecticImage k D.M D.hM D.c d)) = 1 :=
+      (presentedNormalFormLinearEquiv k n
+          (normalizedSymplecticImage k D.M D.hM D.c d)).coeff (Finsupp.single t N) = 1 :=
   ⟨D.hM, D.hNinv, D.hMN, D.hNM, D.hc, D.mem_piece, D.pure_coeff⟩
 
 theorem normalizedPBWChartData_statement

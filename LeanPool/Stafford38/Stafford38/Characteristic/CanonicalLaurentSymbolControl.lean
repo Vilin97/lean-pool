@@ -58,7 +58,7 @@ theorem exists_fibreLift_eq_of_isFibreOnly
   change i ∈ Q.vars at hi
   rw [MvPolynomial.mem_vars] at hi
   rcases hi with ⟨m, hm, him⟩
-  have hcoeff : MvPolynomial.coeff m Q ≠ 0 :=
+  have hcoeff : Q.coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
   rcases i with i | i
   · have hzero := hQ m hcoeff i

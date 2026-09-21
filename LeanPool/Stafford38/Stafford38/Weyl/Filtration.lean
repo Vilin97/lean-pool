@@ -52,10 +52,10 @@ theorem monomialWeight_mono {n : ℕ} {w₁ w₂ : PhaseVar n → ℕ}
 /-- Symbols supported on monomials of weighted degree at most `N`. -/
 def symbolWeightPiece {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
     Submodule k (SymbolRing k n) where
-  carrier := {f | ∀ m, MvPolynomial.coeff m f ≠ 0 → monomialWeight w m ≤ N}
+  carrier := {f | ∀ m, f.coeff m ≠ 0 → monomialWeight w m ≤ N}
   zero_mem' m hm := by simp at hm
   add_mem' {f g} hf hg m hm := by
-    by_cases hfm : MvPolynomial.coeff m f = 0
+    by_cases hfm : f.coeff m = 0
     · apply hg m
       simpa [MvPolynomial.coeff_add, hfm] using hm
     · exact hf m hfm
@@ -68,7 +68,7 @@ def symbolWeightPiece {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
 @[simp] theorem mem_symbolWeightPiece {n : ℕ} (w : PhaseVar n → ℕ)
     (N : ℕ) (f : SymbolRing k n) :
     f ∈ symbolWeightPiece k w N ↔
-      ∀ m, MvPolynomial.coeff m f ≠ 0 → monomialWeight w m ≤ N :=
+      ∀ m, f.coeff m ≠ 0 → monomialWeight w m ≤ N :=
   Iff.rfl
 
 theorem symbolWeightPiece_mono {n : ℕ} (w : PhaseVar n → ℕ)
@@ -120,7 +120,7 @@ def presentedWeightPiece {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
 @[simp] theorem mem_presentedWeightPiece {n : ℕ} (w : PhaseVar n → ℕ)
     (N : ℕ) (a : PresentedWeyl k n) :
     a ∈ presentedWeightPiece k w N ↔
-      ∀ m, MvPolynomial.coeff m (presentedNormalFormLinearEquiv k n a) ≠ 0 →
+      ∀ m, (presentedNormalFormLinearEquiv k n a).coeff m ≠ 0 →
         monomialWeight w m ≤ N :=
   Iff.rfl
 
@@ -165,14 +165,14 @@ theorem presentedWeightPiece_eq_span {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ
     let f := presentedNormalFormLinearEquiv k n a
     have hreconstruct :
         a = ∑ m ∈ f.support,
-          MvPolynomial.coeff m f • presentedPBWBasis k n m := by
+          f.coeff m • presentedPBWBasis k n m := by
       apply (presentedNormalFormLinearEquiv k n).injective
       simp only [map_sum, map_smul,
         presentedNormalFormLinearEquiv_basis]
       change f = _
       calc
         f = ∑ m ∈ f.support,
-            MvPolynomial.monomial m (MvPolynomial.coeff m f) :=
+            MvPolynomial.monomial m (f.coeff m) :=
           MvPolynomial.as_sum f
         _ = _ := by
           apply Finset.sum_congr rfl

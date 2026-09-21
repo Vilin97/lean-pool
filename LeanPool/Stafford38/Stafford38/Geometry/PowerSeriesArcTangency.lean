@@ -319,11 +319,11 @@ theorem residueFrameVector_coefficient_mem_zariskiTangentSpace_of_eval₂_eq_zer
 theorem derivative_eval_map
     {m : ℕ} (f : MvPolynomial (Fin m) k)
     (q : Fin m → PowerSeries k) :
-    PowerSeries.derivative k
+    PowerSeries.derivative
         (MvPolynomial.eval q (MvPolynomial.map (PowerSeries.C) f)) =
       ∑ i, MvPolynomial.eval q
           (MvPolynomial.map (PowerSeries.C) (MvPolynomial.pderiv i f)) *
-        PowerSeries.derivative k (q i) := by
+        PowerSeries.derivative (q i) := by
   induction f using MvPolynomial.induction_on with
   | C a => simp
   | add f g hf hg =>
@@ -340,7 +340,7 @@ theorem derivative_eval_map
 
 /-- The velocity of a power-series arc at its constant term. -/
 def arcVelocity {m : ℕ} (q : Fin m → PowerSeries k) : Fin m → k :=
-  fun i ↦ PowerSeries.constantCoeff (PowerSeries.derivative k (q i))
+  fun i ↦ PowerSeries.constantCoeff (PowerSeries.derivative (q i))
 
 @[simp]
 theorem arcVelocity_eq_residueFrameVector
@@ -369,7 +369,7 @@ theorem differentialCovector_arcVelocity_eq_zero_of_eval_eq_zero
               (MvPolynomial.map (PowerSeries.C)
                 (MvPolynomial.pderiv i f))) *
           PowerSeries.constantCoeff
-            (PowerSeries.derivative k (q i)) := by
+            (PowerSeries.derivative (q i)) := by
     simpa only [map_zero, map_sum, map_mul] using
       congrArg (PowerSeries.constantCoeff) hderiv
   simp_rw [residue_eval_map] at hconst

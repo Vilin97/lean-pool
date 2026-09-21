@@ -133,6 +133,12 @@ end Pivot
 
 open Stafford38.Geometry.NormalizationHeightOne
 
+private theorem finite_integralClosure_fractionRing
+    (k R : Type u) [Field k] [CharZero k] [CommRing R] [IsDomain R]
+    [Algebra k R] [Algebra.FiniteType k R] :
+    Module.Finite R (integralClosure R (FractionRing R)) :=
+  finite_normalization_of_fg_domain k R (integralClosure R (FractionRing R))
+
 theorem stage2_exists_chart_normalization
     {k K : Type u} [Field k] [CharZero k] [Field K] [Algebra k K]
     {r : ℕ} (y : Fin r → K) (i : Fin r)
@@ -188,7 +194,7 @@ theorem stage2_exists_chart_normalization
     (Set.Finite.union (Set.finite_range _) (Set.finite_singleton _))
   let D : Subalgebra C₀ (FractionRing C₀) := integralClosure C₀ (FractionRing C₀)
   haveI hDfin : Module.Finite C₀ D :=
-    finite_normalization_of_fg_domain k C₀ D
+    finite_integralClosure_fractionRing k C₀
   let e : FractionRing C₀ ≃ₐ[C₀] K :=
     IsLocalization.algEquiv C₀⁰ (FractionRing C₀) K
   haveI hA₀fin : Module.Finite C₀ A₀ :=

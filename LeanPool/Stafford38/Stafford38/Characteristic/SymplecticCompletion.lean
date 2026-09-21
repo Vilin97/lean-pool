@@ -268,15 +268,14 @@ theorem exists_symplectic_pureCoefficient_ne_zero [CharZero k]
     (hP : P.IsHomogeneous N) (hne : P ≠ 0) (hN : 0 < N) :
     ∃ M : Matrix (PhaseVar n) (PhaseVar n) k,
       M ∈ Matrix.symplecticGroup (Fin n) k ∧
-      MvPolynomial.coeff (Finsupp.single () N)
-          (axisPolynomial k t
-            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)) ≠ 0 := by
+      (axisPolynomial k t
+            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠ 0 := by
   rcases exists_eval_ne_zero_of_homogeneous k hP hne with ⟨v, hv⟩
   have hvne : v ≠ 0 := by
     intro hvzero
     subst v
     apply hv
-    have hc : MvPolynomial.coeff 0 P = 0 :=
+    have hc : P.coeff 0 = 0 :=
       hP.coeff_eq_zero (by simpa using Nat.ne_of_lt hN)
     simpa [hc]
   rcases exists_symplectic_column_eq k t hvne with ⟨M, hM, hcol⟩
@@ -292,9 +291,8 @@ theorem exists_symplectic_chart_matrices [CharZero k]
       M * standardForm k n * Matrix.transpose M = standardForm k n ∧
       Ninv * standardForm k n * Matrix.transpose Ninv = standardForm k n ∧
       M * Ninv = 1 ∧ Ninv * M = 1 ∧
-      MvPolynomial.coeff (Finsupp.single () N)
-          (axisPolynomial k t
-            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)) ≠ 0 := by
+      (axisPolynomial k t
+            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠ 0 := by
   rcases exists_symplectic_pureCoefficient_ne_zero k t hP hne hN with
     ⟨M, hM, hcoeff⟩
   let A : Matrix.symplecticGroup (Fin n) k := ⟨M, hM⟩
@@ -325,9 +323,8 @@ theorem symplectic_pureCoefficient_statement [CharZero k]
     (hP : P.IsHomogeneous N) (hne : P ≠ 0) (hN : 0 < N) :
     ∃ M : Matrix (PhaseVar n) (PhaseVar n) k,
       M ∈ Matrix.symplecticGroup (Fin n) k ∧
-      MvPolynomial.coeff (Finsupp.single () N)
-          (axisPolynomial k t
-            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)) ≠ 0 :=
+      (axisPolynomial k t
+            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠ 0 :=
   exists_symplectic_pureCoefficient_ne_zero k t hP hne hN
 
 theorem symplectic_chart_matrices_statement [CharZero k]
@@ -337,9 +334,8 @@ theorem symplectic_chart_matrices_statement [CharZero k]
       M * standardForm k n * Matrix.transpose M = standardForm k n ∧
       Ninv * standardForm k n * Matrix.transpose Ninv = standardForm k n ∧
       M * Ninv = 1 ∧ Ninv * M = 1 ∧
-      MvPolynomial.coeff (Finsupp.single () N)
-          (axisPolynomial k t
-            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)) ≠ 0 :=
+      (axisPolynomial k t
+            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠ 0 :=
   exists_symplectic_chart_matrices k t hP hne hN
 
 

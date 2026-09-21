@@ -45,7 +45,7 @@ theorem weightedHomogeneousComponent_weightedTotalDegree_ne_zero
   rcases Finset.exists_mem_eq_sup f.support hs (Finsupp.weight w) with
     ⟨m, hm, hmax⟩
   intro hzero
-  have hc := congrArg (MvPolynomial.coeff m) hzero
+  have hc := congrArg (fun f : MvPolynomial _ _ => f.coeff m) hzero
   rw [MvPolynomial.coeff_weightedHomogeneousComponent] at hc
   have hw : Finsupp.weight w m = MvPolynomial.weightedTotalDegree w f := by
     simpa [MvPolynomial.weightedTotalDegree] using hmax.symm
@@ -90,13 +90,13 @@ theorem eq_algebraMap_of_mem_bernsteinPiece_zero {n : ℕ}
     {d : PresentedWeyl k n} (hd : d ∈ bernsteinPiece k n 0) :
     ∃ c : k, d = algebraMap k (PresentedWeyl k n) c := by
   let f := presentedNormalFormLinearEquiv k n d
-  let c := MvPolynomial.coeff 0 f
+  let c := f.coeff 0
   have hf : f = MvPolynomial.C c := by
     ext m
     by_cases hm : m = 0
     · subst m
       simp [c]
-    · have hcoeff : MvPolynomial.coeff m f = 0 := by
+    · have hcoeff : f.coeff m = 0 := by
         by_contra hne
         have hle := (mem_presentedWeightPiece k (@bernsteinWeight n) 0 d).mp hd m hne
         have hdeg : m.degree = 0 := by
@@ -148,10 +148,9 @@ def HasNormalizedSymplecticChart {n : ℕ} (t : PhaseVar n) (N : ℕ)
     Ninv * standardForm k n * Matrix.transpose Ninv = standardForm k n ∧
     M * Ninv = 1 ∧ Ninv * M = 1 ∧ c ≠ 0 ∧
     normalizedSymplecticImage k M hM c d ∈ bernsteinPiece k n N ∧
-    MvPolynomial.coeff (Finsupp.single () N)
-        (axisPolynomial k t
+    (axisPolynomial k t
           (presentedPrincipalComponent k (@bernsteinWeight n) N
-            (normalizedSymplecticImage k M hM c d))) = 1
+            (normalizedSymplecticImage k M hM c d))).coeff (Finsupp.single () N) = 1
 
 theorem exists_normalized_symplectic_image [CharZero k]
     {n N : ℕ} (t : PhaseVar n) {d : PresentedWeyl k n}
@@ -162,10 +161,9 @@ theorem exists_normalized_symplectic_image [CharZero k]
     HasNormalizedSymplecticChart k t N d := by
   rcases exists_symplectic_chart_matrices k t hP hPne hN with
     ⟨M, Ninv, hM, hNinv, hMN, hNM, hc⟩
-  let c : k := MvPolynomial.coeff (Finsupp.single () N)
-    (axisPolynomial k t
+  let c : k := (axisPolynomial k t
       (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M
-        (presentedPrincipalComponent k (@bernsteinWeight n) N d)))
+        (presentedPrincipalComponent k (@bernsteinWeight n) N d))).coeff (Finsupp.single () N)
   have hc' : c ≠ 0 := hc
   refine ⟨M, Ninv, c, hM, hNinv, hMN, hNM, hc', ?_, ?_⟩
   · exact (bernsteinPiece k n N).smul_mem _

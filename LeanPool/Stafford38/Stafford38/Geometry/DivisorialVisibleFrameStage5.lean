@@ -19,6 +19,11 @@ def coeffHom {k K : Type u} [Field k] [Field K] [Algebra k K]
     (hEV : ∀ z : E, (z : K) ∈ V.toSubring) : E →+* V.toSubring :=
   RingHom.codRestrict (IntermediateField.val E).toRingHom V.toSubring hEV
 
+private theorem integral_image {R S T : Type*} [CommRing R] [Ring S] [Ring T]
+    [Algebra R S] [Algebra R T] (f : S →ₐ[R] T) {x : S} (hx : IsIntegral R x) :
+    IsIntegral R (f x) :=
+  hx.map f
+
 theorem stage5_exists_coefficientField
     {k K : Type u} [Field k] [Field K] [Algebra k K]
     (A : Subalgebra k K) [Algebra.FiniteType k A] (p : Ideal A) [p.IsPrime]
@@ -147,7 +152,8 @@ theorem stage5_exists_coefficientField
   have residue_integral (x : A) : IsIntegral E (ρ x) := by
     have hx : IsIntegral P (Ideal.Quotient.mk p x) := IsIntegral.of_finite P _
     have hx' : IsIntegral E (ρbarP (Ideal.Quotient.mk p x)) :=
-      (hx.map ρbarP).tower_top
+      IsIntegral.tower_top (R := P) (A := E)
+        (integral_image ρbarP hx)
     convert hx' using 1
     change ρbar (Ideal.Quotient.mk p x) = ρ x
     exact Ideal.Quotient.lift_mk p ρ hpker

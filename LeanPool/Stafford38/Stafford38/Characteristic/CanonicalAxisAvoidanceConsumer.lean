@@ -186,9 +186,8 @@ theorem coe_coordinate_order_symbol (n : ℕ) :
       SymbolRing k (n + 1)) =
       MvPolynomial.X (.inl (0 : Fin (n + 1))) := by
   ext m
-  change MvPolynomial.coeff m
-      (presentedPrincipalComponent k orderWeight 0
-        (presentedCoordinate k n)) = _
+  change (presentedPrincipalComponent k orderWeight 0
+        (presentedCoordinate k n)).coeff m = _
   rw [coeff_presentedPrincipalComponent, presentedCoordinate,
     presentedNormalFormLinearEquiv_generator, MvPolynomial.coeff_X']
   by_cases hm : Finsupp.single (.inl (0 : Fin (n + 1))) 1 = m

@@ -58,19 +58,17 @@ theorem bernsteinDegree_eq_of_piece_of_principal_ne_zero
     intro m hm
     exact (hp m (MvPolynomial.mem_support_iff.mp hm))
   rcases MvPolynomial.support_nonempty.mpr hP with ⟨m, hm⟩
-  have hm : MvPolynomial.coeff m
-      (presentedPrincipalComponent k (@bernsteinWeight n) N d) ≠ 0 :=
+  have hm : (presentedPrincipalComponent k (@bernsteinWeight n) N d).coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
   have hcoeff := hm
   rw [coeff_presentedPrincipalComponent] at hcoeff
   have hweight : monomialWeight (@bernsteinWeight n) m = N := by
     by_contra hne
-    have hz : MvPolynomial.coeff m
-        (presentedPrincipalComponent k (@bernsteinWeight n) N d) = 0 := by
+    have hz : (presentedPrincipalComponent k (@bernsteinWeight n) N d).coeff m = 0 := by
       rw [coeff_presentedPrincipalComponent]
       simp [hne]
     exact hm hz
-  have hfd : MvPolynomial.coeff m f ≠ 0 := by
+  have hfd : f.coeff m ≠ 0 := by
     rw [if_pos hweight] at hcoeff
     simpa [f] using hcoeff
   have hge : N ≤ bernsteinDegree k d := by

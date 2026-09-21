@@ -159,9 +159,7 @@ theorem canonical_bernsteinCharacteristicSupport_subset_principal_zeroLocus
 theorem canonical_principalComponent_pureMomentumCoefficient
     (n N : ℕ) {d : PresentedWeyl k (n + 1)}
     (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :
-    MvPolynomial.coeff
-        (Finsupp.single (.inr (0 : Fin (n + 1))) N)
-        (presentedPrincipalComponent k bernsteinWeight N d) = 1 := by
+    (presentedPrincipalComponent k bernsteinWeight N d).coeff (Finsupp.single (.inr (0 : Fin (n + 1))) N) = 1 := by
   rw [coeff_principal_pure_eq_normalForm]
   exact hd.2
 
@@ -258,7 +256,7 @@ theorem coordinateExponent_eq_zero_of_order_eq_of_bernstein_le
 /-- A symbol uses only fibre variables when every monomial carrying a
 coordinate exponent has zero coefficient. -/
 def IsFibreOnly {n : ℕ} (P : SymbolRing k n) : Prop :=
-  ∀ m, MvPolynomial.coeff m P ≠ 0 →
+  ∀ m, P.coeff m ≠ 0 →
     ∀ i : Fin n, m (.inl i) = 0
 
 theorem orderPrincipalComponent_mem_initialIdeal {n N : ℕ}
@@ -304,9 +302,7 @@ theorem canonical_orderCharacteristicSupport_subset_principal_zeroLocus
 theorem canonical_orderPrincipalComponent_pureMomentumCoefficient
     (n N : ℕ) {d : PresentedWeyl k (n + 1)}
     (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :
-    MvPolynomial.coeff
-        (Finsupp.single (.inr (0 : Fin (n + 1))) N)
-        (presentedPrincipalComponent k orderWeight N d) = 1 := by
+    (presentedPrincipalComponent k orderWeight N d).coeff (Finsupp.single (.inr (0 : Fin (n + 1))) N) = 1 := by
   rw [coeff_presentedPrincipalComponent]
   have hweight : monomialWeight (@orderWeight (n + 1))
       (Finsupp.single (.inr (0 : Fin (n + 1))) N) = N := by

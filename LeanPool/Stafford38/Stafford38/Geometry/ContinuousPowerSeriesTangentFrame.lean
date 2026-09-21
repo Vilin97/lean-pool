@@ -127,7 +127,7 @@ theorem continuous_coefficientwiseDerivation
 along `k → K → K[[t]]`. -/
 noncomputable def uniformizerDerivation :
     Derivation k (PowerSeries K) (PowerSeries K) :=
-  (PowerSeries.derivative K).restrictScalars k
+  (PowerSeries.derivative (R := K)).restrictScalars k
 
 @[simp]
 theorem uniformizerDerivation_C (a : K) :

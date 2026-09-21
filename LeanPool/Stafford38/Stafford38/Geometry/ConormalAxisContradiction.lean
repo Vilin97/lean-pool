@@ -76,7 +76,7 @@ that axis. -/
 theorem eval_axis_eq_one_of_pureCoefficient_one
     (t : PhaseVar n) {P : SymbolRing k n}
     (hP : P.IsHomogeneous N)
-    (hpure : MvPolynomial.coeff (Finsupp.single t N) P = 1) :
+    (hpure : P.coeff (Finsupp.single t N) = 1) :
     MvPolynomial.eval (axisPoint k t) P = 1 := by
   classical
   rw [MvPolynomial.eval_eq]
@@ -88,7 +88,7 @@ theorem eval_axis_eq_one_of_pureCoefficient_one
     · rw [Finsupp.support_single_ne_zero t hN]
       simp [axisPoint]
   · intro m hm hne
-    have hmcoeff : MvPolynomial.coeff m P ≠ 0 :=
+    have hmcoeff : P.coeff m ≠ 0 :=
       MvPolynomial.mem_support_iff.mp hm
     have hexists : ∃ i ∈ m.support, i ≠ t := by
       by_contra hnot
@@ -117,7 +117,7 @@ axis membership contradicts homogeneity and pure coefficient one. -/
 theorem false_of_axis_mem_of_subset_principal_zeroLocus
     (t : PhaseVar n) {P : SymbolRing k n}
     (hP : P.IsHomogeneous N)
-    (hpure : MvPolynomial.coeff (Finsupp.single t N) P = 1)
+    (hpure : P.coeff (Finsupp.single t N) = 1)
     {S : Set (PhaseVar n → k)}
     (hS : S ⊆ MvPolynomial.zeroLocus k (Ideal.span ({P} : Set (SymbolRing k n))))
     (haxis : axisPoint k t ∈ S) : False := by

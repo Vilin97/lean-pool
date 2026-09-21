@@ -139,7 +139,7 @@ theorem canonical_unrestricted_coordinate_preimages_of_monic
 
 private theorem degree_eq_one_of_order_one_of_fibreOnly
     {n : ℕ} {P : SymbolRing k n} {m : PhaseVar n →₀ ℕ}
-    (hm : MvPolynomial.coeff m P ≠ 0)
+    (hm : P.coeff m ≠ 0)
     (hhom : MvPolynomial.IsWeightedHomogeneous (@orderWeight n) P 1)
     (hfibre : IsFibreOnly k P) :
     m.degree = 1 := by
@@ -162,7 +162,7 @@ private theorem degree_eq_one_of_order_one_of_fibreOnly
 private theorem exponent_eq_selected_of_order_one_of_selected_ne_zero
     {n : ℕ} {P : SymbolRing k n} {m : PhaseVar n →₀ ℕ}
     (t : Fin n)
-    (hm : MvPolynomial.coeff m P ≠ 0)
+    (hm : P.coeff m ≠ 0)
     (hhom : MvPolynomial.IsWeightedHomogeneous (@orderWeight n) P 1)
     (hfibre : IsFibreOnly k P)
     (hmt : m (.inr t) ≠ 0) :
@@ -187,7 +187,7 @@ theorem pderiv_eq_one_of_order_one_fibreOnly
     {n : ℕ} (t : Fin n) (P : SymbolRing k n)
     (hhom : MvPolynomial.IsWeightedHomogeneous (@orderWeight n) P 1)
     (hfibre : IsFibreOnly k P)
-    (hcoeff : MvPolynomial.coeff (Finsupp.single (.inr t) 1) P = 1) :
+    (hcoeff : P.coeff (Finsupp.single (.inr t) 1) = 1) :
     MvPolynomial.pderiv (.inr t) P = 1 := by
   classical
   let Q := P - MvPolynomial.X (.inr t)
@@ -195,7 +195,7 @@ theorem pderiv_eq_one_of_order_one_fibreOnly
     intro ht
     rw [MvPolynomial.mem_vars] at ht
     obtain ⟨m, hmQ, htm⟩ := ht
-    have hmQne : MvPolynomial.coeff m Q ≠ 0 :=
+    have hmQne : Q.coeff m ≠ 0 :=
       MvPolynomial.mem_support_iff.mp hmQ
     have hmt : m (.inr t) ≠ 0 := Finsupp.mem_support_iff.mp htm
     by_cases hm : m = Finsupp.single (.inr t) 1
@@ -203,13 +203,12 @@ theorem pderiv_eq_one_of_order_one_fibreOnly
       dsimp [Q] at hmQne
       rw [MvPolynomial.coeff_sub, hcoeff, MvPolynomial.coeff_X] at hmQne
       simp at hmQne
-    · have hPzero : MvPolynomial.coeff m P = 0 := by
+    · have hPzero : P.coeff m = 0 := by
         by_contra hP
         exact hm
           (exponent_eq_selected_of_order_one_of_selected_ne_zero
             k t hP hhom hfibre hmt)
-      have hXzero : MvPolynomial.coeff m
-          (MvPolynomial.X (.inr t) : SymbolRing k n) = 0 := by
+      have hXzero : (MvPolynomial.X (.inr t) : SymbolRing k n).coeff m = 0 := by
         rw [MvPolynomial.coeff_X]
         simp [Ne.symm hm]
       dsimp [Q] at hmQne
@@ -243,8 +242,7 @@ theorem coordinate_commutator_eq_neg_one_degree_one
   have hfibre : IsFibreOnly k P :=
     canonical_orderPrincipalComponent_isFibreOnly k n 1 hd
   have hcoeff :
-      MvPolynomial.coeff
-          (Finsupp.single (.inr (0 : Fin (n + 1))) 1) P = 1 :=
+      P.coeff (Finsupp.single (.inr (0 : Fin (n + 1))) 1) = 1 :=
     canonical_orderPrincipalComponent_pureMomentumCoefficient k n 1 hd
   have hpderiv :
       MvPolynomial.pderiv (.inr (0 : Fin (n + 1))) P = 1 :=

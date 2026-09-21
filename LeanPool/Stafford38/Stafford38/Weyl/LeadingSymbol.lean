@@ -45,9 +45,9 @@ def presentedPrincipalComponent {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
 theorem coeff_presentedPrincipalComponent {n : ℕ}
     (w : PhaseVar n → ℕ) (N : ℕ) (z : PresentedWeyl k n)
     (m : PhaseVar n →₀ ℕ) :
-    MvPolynomial.coeff m (presentedPrincipalComponent k w N z) =
+    (presentedPrincipalComponent k w N z).coeff m =
       if monomialWeight w m = N then
-        MvPolynomial.coeff m (presentedNormalFormLinearEquiv k n z)
+        (presentedNormalFormLinearEquiv k n z).coeff m
       else 0 := by
   rw [presentedPrincipalComponent, LinearMap.comp_apply,
     MvPolynomial.coeff_weightedHomogeneousComponent,
@@ -63,7 +63,7 @@ theorem presentedPrincipalComponent_eq_zero_of_mem_of_lt {n L T : ℕ}
   by_cases hm : monomialWeight w m = T
   · rw [if_pos hm]
     have hcoeff :
-        MvPolynomial.coeff m (presentedNormalFormLinearEquiv k n z) = 0 := by
+        (presentedNormalFormLinearEquiv k n z).coeff m = 0 := by
       by_contra hne
       have hle := (mem_presentedWeightPiece k w L z).mp hz m hne
       omega

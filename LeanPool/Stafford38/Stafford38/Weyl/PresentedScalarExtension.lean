@@ -267,12 +267,10 @@ theorem symbolScalarExtension_weightedHomogeneousComponent (n : Nat)
         (symbolScalarExtension (k := k) (K := K) n f) := by
   classical
   ext m
-  change MvPolynomial.coeff m
-      (MvPolynomial.map (algebraMap k K)
-        (MvPolynomial.weightedHomogeneousComponent w N f)) =
-    MvPolynomial.coeff m
-      (MvPolynomial.weightedHomogeneousComponent w N
-        (MvPolynomial.map (algebraMap k K) f))
+  change (MvPolynomial.map (algebraMap k K)
+        (MvPolynomial.weightedHomogeneousComponent w N f)).coeff m =
+    (MvPolynomial.weightedHomogeneousComponent w N
+        (MvPolynomial.map (algebraMap k K) f)).coeff m
   rw [MvPolynomial.coeff_map,
     MvPolynomial.coeff_weightedHomogeneousComponent,
     MvPolynomial.coeff_weightedHomogeneousComponent]
@@ -336,15 +334,13 @@ theorem presentedWeylScalarExtension_isPBWMonicAt (n : Nat)
       (presentedWeylScalarExtension (k := k) (K := K) (n + 1) z) := by
   refine ⟨presentedWeylScalarExtension_mem_bernsteinPiece
     (k := k) (K := K) (n + 1) N hz.1, ?_⟩
-  change MvPolynomial.coeff (Finsupp.single (.inr (0 : Fin (n + 1))) N)
-      (presentedNormalFormLinearEquiv K (n + 1)
-        (presentedWeylScalarExtension (k := k) (K := K) (n + 1) z)) = 1
+  change (presentedNormalFormLinearEquiv K (n + 1)
+        (presentedWeylScalarExtension (k := k) (K := K) (n + 1) z)).coeff (Finsupp.single (.inr (0 : Fin (n + 1))) N) = 1
   have hnorm := presentedNormalFormLinearEquiv_scalarExtension
     (k := k) (K := K) (n + 1) z
   rw [hnorm]
-  change MvPolynomial.coeff (Finsupp.single (.inr (0 : Fin (n + 1))) N)
-      (MvPolynomial.map (algebraMap k K)
-        (presentedNormalFormLinearEquiv k (n + 1) z)) = 1
+  change (MvPolynomial.map (algebraMap k K)
+        (presentedNormalFormLinearEquiv k (n + 1) z)).coeff (Finsupp.single (.inr (0 : Fin (n + 1))) N) = 1
   rw [MvPolynomial.coeff_map]
   simp [hz.2]
 
@@ -440,13 +436,13 @@ theorem target_mem_scalarImageSpan (n : Nat) (z : PresentedWeyl K n) :
   let f := presentedNormalFormLinearEquiv K n z
   have hreconstruct :
       z = ∑ m ∈ f.support,
-        MvPolynomial.coeff m f • presentedPBWBasis K n m := by
+        f.coeff m • presentedPBWBasis K n m := by
     apply (presentedNormalFormLinearEquiv K n).injective
     simp only [map_sum, map_smul, presentedNormalFormLinearEquiv_basis]
     change f = _
     calc
       f = ∑ m ∈ f.support,
-          MvPolynomial.monomial m (MvPolynomial.coeff m f) :=
+          MvPolynomial.monomial m (f.coeff m) :=
         MvPolynomial.as_sum f
       _ = _ := by
         apply Finset.sum_congr rfl
