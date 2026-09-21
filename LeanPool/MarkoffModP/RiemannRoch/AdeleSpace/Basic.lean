@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Yuma Mizuno. All rights reserved.
+Copyright (c) 2026 Guanghao Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yuma Mizuno
+Authors: Guanghao Li
 -/
 
 module
@@ -158,7 +158,6 @@ theorem adeleFilt_mono {D D' : DivisorA k K} (h : D ≤ D') :
   exact (ha v).trans (WithZero.exp_le_exp.mpr (h v))
 
 /-- `A(D)` as a submodule of `A(D')`, for `D ≤ D'`. -/
-@[nolint unusedArguments]
 def adeleFiltWithin {D D' : DivisorA k K} (_h : D ≤ D') :
     Submodule k (adeleFilt k K D') :=
   Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)
@@ -172,7 +171,6 @@ noncomputable def finrankAdeleFiltDiff (D D' : DivisorA k K) : ℕ := by
       Submodule.comap (adeleFilt k K D').subtype (adeleFilt k K D)
 
 /-- Rank of `(A(D') + K̃) ⧸ (A(D) + K̃)` from the sandwich bookkeeping. -/
-@[nolint unusedArguments]
 noncomputable def sandwichRank (D D' : DivisorA k K) (_h : D ≤ D') : ℤ :=
   by
   letI : AddCommGroup (adeleFilt k K D' + diagonalSubmodule k K) :=

@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Yuma Mizuno. All rights reserved.
+Copyright (c) 2026 University of Washington Math AI Lab. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yuma Mizuno
+Authors: Bianca Viray, Bryan Boehnke, Grant Yang, George Peykanu, Tianshuo Wang
 -/
 
 import Mathlib.RingTheory.LocalRing.Etale

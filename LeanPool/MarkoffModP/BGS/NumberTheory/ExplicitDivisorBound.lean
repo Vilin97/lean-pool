@@ -91,7 +91,7 @@ theorem card_divisors_pow_le_explicit_constant_mul
 /-- Sealed data for the closed factorization constant.  The subtype equation
 lets downstream proofs rewrite the value without asking the kernel to
 repeatedly normalize its enormous exponentiation. -/
-opaque explicitDivisorConstantData :
+@[irreducible] def explicitDivisorConstantData :
     {n : ℕ // n = (32 ^ 32) ^ (2 ^ 32)} :=
   ⟨(32 ^ 32) ^ (2 ^ 32), rfl⟩
 

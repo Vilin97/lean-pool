@@ -32,7 +32,7 @@ theorem preliminaryDivisorMomentConstant_pos :
   positivity
 
 /-- Sealed data for the elementary preliminary-route cutoff. -/
-opaque preliminaryStrongApproximationCutoffData :
+@[irreducible] def preliminaryStrongApproximationCutoffData :
     {n : ℕ // n = 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1} :=
   ⟨2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1, rfl⟩
 

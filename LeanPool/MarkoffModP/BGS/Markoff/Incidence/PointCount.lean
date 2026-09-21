@@ -86,24 +86,24 @@ theorem sum_quadraticChar_two_linear_factors
       -quadraticChar F (A * B) := by
   let L : F := A * B
   let center : F := (A * D + B * C) / (2 * L)
-  let constant : F := (A * D - B * C) ^ 2 / (4 * L)
+  let constantTerm : F := (A * D - B * C) ^ 2 / (4 * L)
   have h2 : (2 : F) ≠ 0 := Ring.two_ne_zero hF
   have h4 : (4 : F) ≠ 0 := by
     rw [show (4 : F) = 2 ^ 2 by norm_num]
     exact pow_ne_zero 2 h2
   have hL : L ≠ 0 := mul_ne_zero hA hB
-  have hconstant : constant ≠ 0 := by
+  have hconstant : constantTerm ≠ 0 := by
     exact div_ne_zero (pow_ne_zero 2 (sub_ne_zero.mpr hcross)) (mul_ne_zero h4 hL)
   let e : F ≃ F := Equiv.addRight center
   calc
     ∑ x : F, quadraticChar F ((A * x - C) * (B * x - D)) =
         ∑ x : F, quadraticChar F ((A * (e x) - C) * (B * (e x) - D)) := by
       exact (e.sum_comp fun x ↦ quadraticChar F ((A * x - C) * (B * x - D))).symm
-    _ = ∑ x : F, quadraticChar F (L * x ^ 2 - constant) := by
+    _ = ∑ x : F, quadraticChar F (L * x ^ 2 - constantTerm) := by
       apply sum_congr rfl
       intro x _
       congr 1
-      dsimp [e, center, constant, L]
+      dsimp [e, center, constantTerm, L]
       field_simp [h2, hA, hB]
       ring
     _ = -quadraticChar F L :=

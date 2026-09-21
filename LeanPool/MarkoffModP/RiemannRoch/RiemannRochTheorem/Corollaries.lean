@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Yuma Mizuno. All rights reserved.
+Copyright (c) 2026 Guanghao Li. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Yuma Mizuno
+Authors: Guanghao Li
 -/
 
 module

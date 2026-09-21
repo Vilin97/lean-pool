@@ -23,7 +23,7 @@ open scoped Topology
 namespace Legacy
 
 /-- Sealed data for the deliberately conservative project cutoff. -/
-opaque explicitStrongApproximationCutoffData :
+@[irreducible] def explicitStrongApproximationCutoffData :
     {n : ℕ // n = BGS.NumberTheory.explicitDivisorConstant + 1} :=
   ⟨BGS.NumberTheory.explicitDivisorConstant + 1, rfl⟩
 
@@ -150,7 +150,7 @@ end Legacy
 
 /-- The coefficient in the simultaneous ninth-moment bound for the divisor
 counts of `p - 1` and `p + 1`. -/
-opaque explicitDivisorMomentConstantData :
+@[irreducible] def explicitDivisorMomentConstantData :
     {n : ℕ // n = 2 ^ 9 * (9 ^ 9) ^ (2 ^ 9)} :=
   ⟨2 ^ 9 * (9 ^ 9) ^ (2 ^ 9), rfl⟩
 
@@ -167,7 +167,7 @@ theorem explicitDivisorMomentConstant_pos :
   positivity
 
 /-- Sealed data for the improved project cutoff. -/
-opaque explicitStrongApproximationCutoffData :
+@[irreducible] def explicitStrongApproximationCutoffData :
     {n : ℕ // n =
       2 ^ 9 * (48 ^ 3 + 1) ^ 18 * explicitDivisorMomentConstant ^ 8 + 1} :=
   ⟨2 ^ 9 * (48 ^ 3 + 1) ^ 18 * explicitDivisorMomentConstant ^ 8 + 1, rfl⟩
