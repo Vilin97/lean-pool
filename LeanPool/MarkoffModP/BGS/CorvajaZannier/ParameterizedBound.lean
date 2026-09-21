@@ -439,12 +439,13 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
             ring
       have hNumerical' :
           G ≤ ((H + 2 * K) / N) * A + (K / N) * B + ((N - 1) / 2) * C := by
-        simpa [H, K, N, A, B, C, Nat.cast_add, Nat.cast_mul] using hNumerical
+        simpa only [H, K, N, A, B, C, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat] using hNumerical
       calc
         G ≤ ((H + 2 * K) / N) * A + (K / N) * B + ((N - 1) / 2) * C :=
           hNumerical'
         _ ≤ (3 / t) * baseRoot + (1 / t) * baseRoot +
-            (t ^ 2 / 2) * baseRoot := by linarith
+            (t ^ 2 / 2) * baseRoot :=
+          add_le_add (add_le_add hFirstTerm hSecondTerm) hThirdTerm
         _ = (4 / t + t ^ 2 / 2) * baseRoot := by ring
         _ = (4 / t + t ^ 2 / 2) *
             ((a : ℝ) * (b : ℝ) * (chi : ℝ)) ^ ((1 : ℝ) / 3) := by

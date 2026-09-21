@@ -326,6 +326,68 @@ private theorem factorization_succ_pow_ten_le
                               exact
                                 (pow_ten_le_base_oneThousandTwentyFour a).trans <|
                                   Nat.pow_le_pow_left hpLower a
+
+-- Separate closed computations keep each kernel check within the default limit.
+private def preliminaryPrimePenaltyBlock (k : ℕ) : ℕ :=
+  ∑ p ∈ Finset.range 64, if Nat.Prime (k * 64 + p) then preliminaryPrimePenalty (k * 64 + p) else 0
+private theorem preliminaryPrimePenaltyBlock_value_0 : preliminaryPrimePenaltyBlock 0 = 165 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_1 : preliminaryPrimePenaltyBlock 1 = 52 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_2 : preliminaryPrimePenaltyBlock 2 = 36 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_3 : preliminaryPrimePenaltyBlock 3 = 33 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_4 : preliminaryPrimePenaltyBlock 4 = 24 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_5 : preliminaryPrimePenaltyBlock 5 = 20 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_6 : preliminaryPrimePenaltyBlock 6 = 20 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_7 : preliminaryPrimePenaltyBlock 7 = 22 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_8 : preliminaryPrimePenaltyBlock 8 = 8 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_9 : preliminaryPrimePenaltyBlock 9 = 10 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_10 : preliminaryPrimePenaltyBlock 10 = 11 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_11 : preliminaryPrimePenaltyBlock 11 = 9 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_12 : preliminaryPrimePenaltyBlock 12 = 10 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_13 : preliminaryPrimePenaltyBlock 13 = 9 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_14 : preliminaryPrimePenaltyBlock 14 = 8 := by
+  decide +kernel
+
+private theorem preliminaryPrimePenaltyBlock_value_15 : preliminaryPrimePenaltyBlock 15 = 10 := by
+  decide +kernel
+
+private theorem sum_preliminaryPrimePenalty_blocks (k : ℕ) :
+    (∑ p ∈ Finset.range (k * 64), if Nat.Prime p then preliminaryPrimePenalty p else 0) =
+      ∑ i ∈ Finset.range k, preliminaryPrimePenaltyBlock i := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    rw [Nat.succ_mul, Finset.sum_range_add, ih]
+    rw [Finset.sum_range_succ (f := preliminaryPrimePenaltyBlock)]
+    rfl
+
 private theorem sum_preliminaryPrimePenalty_le (n : ℕ) :
     ∑ p ∈ n.primeFactors, preliminaryPrimePenalty p ≤ 447 := by
   let smallFactors :=
@@ -355,7 +417,26 @@ private theorem sum_preliminaryPrimePenalty_le (n : ℕ) :
       (fun _ _ _ ↦ Nat.zero_le _)
   have htotal :
       (∑ p ∈ allSmallPrimes, preliminaryPrimePenalty p) ≤ 447 := by
-    decide
+    apply le_of_eq
+    rw [Finset.sum_filter]
+    change (∑ p ∈ Finset.range (16 * 64), if Nat.Prime p then preliminaryPrimePenalty p else 0) = _
+    rw [sum_preliminaryPrimePenalty_blocks]
+    simp only [Finset.sum_range_succ, Finset.sum_range_zero]
+    rw [preliminaryPrimePenaltyBlock_value_0, preliminaryPrimePenaltyBlock_value_1,
+      preliminaryPrimePenaltyBlock_value_2,
+      preliminaryPrimePenaltyBlock_value_3,
+      preliminaryPrimePenaltyBlock_value_4,
+      preliminaryPrimePenaltyBlock_value_5,
+      preliminaryPrimePenaltyBlock_value_6,
+      preliminaryPrimePenaltyBlock_value_7,
+      preliminaryPrimePenaltyBlock_value_8,
+      preliminaryPrimePenaltyBlock_value_9,
+      preliminaryPrimePenaltyBlock_value_10,
+      preliminaryPrimePenaltyBlock_value_11,
+      preliminaryPrimePenaltyBlock_value_12,
+      preliminaryPrimePenaltyBlock_value_13,
+      preliminaryPrimePenaltyBlock_value_14,
+      preliminaryPrimePenaltyBlock_value_15]
   rw [← hsumEq]
   exact hle.trans htotal
 
@@ -369,7 +450,7 @@ theorem card_divisors_pow_ten_le_preliminary_constant_mul
     (∏ p ∈ n.primeFactors, (n.factorization p + 1) ^ 10) ≤
         ∏ p ∈ n.primeFactors,
           (2 ^ preliminaryPrimePenalty p * p ^ n.factorization p) :=
-      Finset.prod_le_prod (fun _ _ ↦ Nat.zero_le _)
+      Finset.prod_le_prod
         (fun p hp ↦ factorization_succ_pow_ten_le
           (Nat.prime_of_mem_primeFactors hp))
     _ = 2 ^ (∑ p ∈ n.primeFactors, preliminaryPrimePenalty p) * n := by

@@ -58,13 +58,13 @@ theorem dvd_exponent_of_pderiv_eq_zero
     exact Finsupp.sub_add_single_one_cancel hi
   have hni : n i + 1 = m i := by
     simpa [n] using congrArg (fun v : σ →₀ ℕ => v i) hn
-  have hcoeff : coeff m f ≠ 0 := by
+  have hcoeff : f.coeff m ≠ 0 := by
     simpa [mem_support_iff] using hm
   have hcast : (m i : R) ≠ 0 := by
     exact (CharP.cast_eq_zero_iff R p (m i)).not.mpr hnot
-  have hz := congrArg (coeff n) hderiv
+  have hz := congrArg (fun g : MvPolynomial σ R ↦ g.coeff n) hderiv
   rw [coeff_pderiv] at hz
-  simp only [coeff_zero] at hz
+  simp only [AddMonoidAlgebra.coeff_zero] at hz
   rw [hn] at hz
   have hfactor : ((n i : R) + 1) = (m i : R) := by
     simpa only [Nat.cast_add, Nat.cast_one] using
@@ -92,12 +92,12 @@ theorem exists_pow_eq_of_forall_pderiv_eq_zero
   let g : MvPolynomial σ R :=
     ∑ m ∈ f.support,
       monomial (divideExponents p m)
-        ((frobeniusEquiv R p).symm (coeff m f))
+        ((frobeniusEquiv R p).symm (f.coeff m))
   refine ⟨g, ?_⟩
   rw [← map_frobenius_expand p]
   calc
     map (frobenius R p) (expand p g) =
-        ∑ m ∈ f.support, monomial m (coeff m f) := by
+        ∑ m ∈ f.support, monomial m (f.coeff m) := by
       simp only [g, map_sum, map_monomial, expand_monomial]
       apply Finset.sum_congr rfl
       intro m hm

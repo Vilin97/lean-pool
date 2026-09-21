@@ -750,7 +750,7 @@ theorem quadraticNormFiberPoint_parameter
     quadraticNormFiberPoint p t ht ht0 w
         (quadraticNormFiberParameter p t ht ht0 w htrace hw x) = x := by
   apply algebraMapNormalizedPoint_injective p
-  rw [algebraMap_quadraticNormFiberPoint p t ht ht0 w htrace]
+  erw [algebraMap_quadraticNormFiberPoint p t ht ht0 w htrace]
   let extensionPoint := algebraMapNormalizedFiberPoint p t w htrace x
   have htraceExtension :
       splitTorusTrace (w : (quadraticFiniteField p)ˣ) ≠ 0 := by
@@ -795,7 +795,7 @@ theorem normalizedRotate1_quadraticNormFiberPoint
   apply algebraMapNormalizedPoint_injective p
   rw [algebraMapNormalizedPoint_normalizedRotate1]
   rw [algebraMap_quadraticNormFiberPoint p t ht ht0 w htrace s]
-  rw [algebraMap_quadraticNormFiberPoint p t ht ht0 w htrace]
+  erw [algebraMap_quadraticNormFiberPoint p t ht ht0 w htrace]
   rw [normalizedRotate1_splitFiberPoint]
   rfl
 
@@ -846,12 +846,14 @@ theorem iterate_normalizedRotate1_quadraticNormFiberPoint
         (quadraticNormFiberMulNormOne p (quadraticFiberProductUnit p t ht ht0) s (w ^ n)) := by
   induction n with
   | zero =>
-      simp [quadraticNormFiberMulNormOne_one]
+      simp only [Function.iterate_zero, id_eq, pow_zero]
+      congr 1
+      exact (quadraticNormFiberMulNormOne_one p _ s).symm
   | succ n ih =>
-      rw [Function.iterate_succ_apply', ih,
+      erw [Function.iterate_succ_apply', ih,
         normalizedRotate1_quadraticNormFiberPoint p t ht ht0 w htrace]
       congr 1
-      rw [quadraticNormFiberMulNormOne_assoc, pow_succ]
+      erw [quadraticNormFiberMulNormOne_assoc, pow_succ]
 
 theorem iterate_normalizedRotate1_quadraticNormFiberPoint_eq_self_iff
     (t : ZMod p) (ht : t ^ 2 ≠ 4) (ht0 : t ≠ 0)
@@ -870,7 +872,7 @@ theorem iterate_normalizedRotate1_quadraticNormFiberPoint_eq_self_iff
     apply Subtype.ext
     exact mul_left_cancel hunit
   · intro hpower
-    rw [hpower, quadraticNormFiberMulNormOne_one]
+    erw [hpower, quadraticNormFiberMulNormOne_one]
 
 /-- One full nonsplit rotation cycle, represented in the base-field conic. -/
 noncomputable def quadraticNormFiberRotationCycle

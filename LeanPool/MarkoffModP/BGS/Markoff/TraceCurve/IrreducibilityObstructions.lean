@@ -102,7 +102,7 @@ theorem exists_splitTraceCoverPolynomial_normalized_frobenius_factorization
           (splitTraceCoverPolynomial (1 : K) tau d e) ^ p := by
   obtain ⟨tau, htau⟩ := surjective_frobenius K p sigma
   have htauPow : tau ^ p = sigma := by
-    simpa [frobenius] using htau
+    exact htau
   refine ⟨tau, ?_, ?_⟩
   · exact htauPow
   · rw [← htauPow]

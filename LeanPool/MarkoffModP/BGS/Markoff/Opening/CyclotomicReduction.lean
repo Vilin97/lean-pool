@@ -81,7 +81,7 @@ theorem openingCyclotomicRoot_isPrimitive (n : ℕ) [NeZero n] :
   letI : NeZero (n : ℚ) := ⟨neZero_ratCast n⟩
   letI : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
     CyclotomicField.isCyclotomicExtension n ℚ
-  simp [openingCyclotomicRoot]
+  exact IsCyclotomicExtension.zeta_spec n ℚ (OpeningCyclotomicField n)
 
 /-- The canonical cyclotomic root, regarded as an algebraic integer. -/
 noncomputable def openingCyclotomicIntegerRoot (n : ℕ) [NeZero n] :
@@ -116,10 +116,11 @@ private theorem primitiveRoot_isRoot_integralPowerBasis_minpoly
   letI : NeZero (n : ℚ) := ⟨neZero_ratCast n⟩
   letI : IsCyclotomicExtension {n} ℚ (OpeningCyclotomicField n) :=
     CyclotomicField.isCyclotomicExtension n ℚ
-  simpa [openingCyclotomicIntegralPowerBasis,
-    ← NumberField.RingOfIntegers.minpoly_coe,
-    ← cyclotomic_eq_minpoly (openingCyclotomicRoot_isPrimitive n) (NeZero.pos n)] using
-      hrootCyclotomic
+  rw [openingCyclotomicIntegralPowerBasis_gen]
+  rw [← NumberField.RingOfIntegers.minpoly_coe]
+  change aeval ω (minpoly ℤ (openingCyclotomicRoot n)) = 0
+  erw [← cyclotomic_eq_minpoly (openingCyclotomicRoot_isPrimitive n) (NeZero.pos n)]
+  exact hrootCyclotomic
 
 /-- The compatible reduction homomorphism determined by the prescribed primitive root `ω`. -/
 noncomputable def openingCyclotomicReduction

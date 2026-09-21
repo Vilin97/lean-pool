@@ -209,8 +209,9 @@ theorem finiteExtensionInfinityPlace_inertiaDeg_eq_one
   letI hLocalAlg :=
     Localization.AtPrime.algebraOfLiesOver
       (ratFuncInfinityPlace K).asIdeal P.1
-  letI : Localization.AtPrime.IsLiesOverAlgebra
-      (ratFuncInfinityPlace K).asIdeal P.1 := ⟨rfl⟩
+  let : IsScalarTower (RatFuncInfinityIntegers K)
+      (Localization.AtPrime (ratFuncInfinityPlace K).asIdeal) (Localization.AtPrime P.1) :=
+    inferInstance
   letI : IsAlgClosed (ratFuncInfinityPlace K).asIdeal.ResidueField :=
     IsAlgClosed.of_ringEquiv K
       (ratFuncInfinityPlace K).asIdeal.ResidueField

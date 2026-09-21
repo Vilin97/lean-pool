@@ -122,6 +122,8 @@ theorem finrank_over_adjoin_pow_le_mul
     change Module.finrank AK L ≤ d
     rw [hA]
     exact hdegree
+  have : Module.Free A L := Module.Free.of_divisionRing A L
+  have : Module.Free E0 A := Module.Free.of_divisionRing E0 A
   calc
     Module.finrank E0 L = Module.finrank E0 A * Module.finrank A L := by
       rw [Module.finrank_mul_finrank]
@@ -698,7 +700,7 @@ theorem poweredCoordinateImageRelation_irreducible
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m)
-      ((planeCurveFunction f 1) ^ n) := Algebra.IsIntegral.isIntegral _
+      ((planeCurveFunction f 1) ^ n) := IsIntegral.of_finite _ _
   change Irreducible (primitiveClearedMinpolyRelation
     ((planeCurveFunction f 0) ^ m)
     (firstPoweredCoordinate_transcendental hf hpartialSecond m hm)
@@ -720,7 +722,7 @@ theorem evalBivariate_poweredCoordinateImageRelation_eq_zero
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m)
-      ((planeCurveFunction f 1) ^ n) := Algebra.IsIntegral.isIntegral _
+      ((planeCurveFunction f 1) ^ n) := IsIntegral.of_finite _ _
   change evalBivariate ((planeCurveFunction f 0) ^ m)
     ((planeCurveFunction f 1) ^ n)
     (primitiveClearedMinpolyRelation
@@ -745,7 +747,7 @@ theorem poweredCoordinateImageRelation_natDegree_eq_finrank
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m)
-      ((planeCurveFunction f 1) ^ n) := Algebra.IsIntegral.isIntegral _
+      ((planeCurveFunction f 1) ^ n) := IsIntegral.of_finite _ _
   calc
     (poweredCoordinateImageRelation hf hpartialSecond m hm n).natDegree =
         (minpoly (FirstPoweredCoordinateSubfield f m)
@@ -778,7 +780,7 @@ theorem poweredCoordinateImageRelation_transpose_natDegree_eq_finrank
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_secondPoweredCoordinate hf hpartialFirst n hn
   have hu : IsIntegral (SecondPoweredCoordinateSubfield f n)
-      ((planeCurveFunction f 0) ^ m) := Algebra.IsIntegral.isIntegral _
+      ((planeCurveFunction f 0) ^ m) := IsIntegral.of_finite _ _
   have hdegree := transposeBivariate_natDegree_eq_minpoly
     ((planeCurveFunction f 0) ^ m) ((planeCurveFunction f 1) ^ n)
     (secondPoweredCoordinate_transcendental hf hpartialFirst n hn)
@@ -851,7 +853,7 @@ theorem poweredCoordinateImageRelation_natDegree_pos
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield f m)
-      ((planeCurveFunction f 1) ^ n) := Algebra.IsIntegral.isIntegral _
+      ((planeCurveFunction f 1) ^ n) := IsIntegral.of_finite _ _
   rw [poweredCoordinateImageRelation_natDegree_eq_finrank
     hf hpartialSecond m hm n, IntermediateField.adjoin.finrank hv]
   exact minpoly.natDegree_pos hv

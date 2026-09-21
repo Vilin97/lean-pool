@@ -182,8 +182,11 @@ lemma norm_splitTraceBaseRoot
   let hIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
   letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
   let pb := AdjoinRoot.powerBasis hIrred.ne_zero
+  have hdim : pb.dim = 2 := by
+    change (splitTraceBaseKummerPolynomial sigma).natDegree = 2
+    simp [splitTraceBaseKummerPolynomial]
   change Algebra.norm (RatFunc K) pb.gen = -splitTraceRadicand sigma
-  rw [Algebra.PowerBasis.norm_gen_eq_coeff_zero_minpoly,
+  rw [Algebra.PowerBasis.norm_gen_eq_coeff_zero_minpoly, hdim,
     AdjoinRoot.minpoly_powerBasis_gen_of_monic]
   · simp [pb, splitTraceBaseKummerPolynomial]
   · exact monic_X_pow_sub_C _ (by norm_num)
@@ -271,6 +274,7 @@ lemma splitTraceBaseFunctionField_finrank
   let hIrred := splitTraceBaseKummerPolynomial_irreducible sigma hsigma
   letI : Fact (Irreducible (splitTraceBaseKummerPolynomial sigma)) := ⟨hIrred⟩
   rw [PowerBasis.finrank (AdjoinRoot.powerBasis hIrred.ne_zero)]
+  change (splitTraceBaseKummerPolynomial sigma).natDegree = 2
   simp [splitTraceBaseKummerPolynomial]
 
 /-- The norm of `u * v` has rational-function degree one.  This is the second independent divisor
@@ -322,6 +326,7 @@ lemma splitTraceEtaFunctionField_finrank
   let hEtaIrred := splitTraceEtaKummerPolynomial_irreducible' sigma hsigma e heOdd
   letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   rw [PowerBasis.finrank (AdjoinRoot.powerBasis hEtaIrred.ne_zero)]
+  change (splitTraceEtaKummerPolynomial sigma e).natDegree = e
   simp [splitTraceEtaKummerPolynomial]
 
 /-- The second Kummer radicand, corresponding to `xi^d = u * v`. -/
@@ -538,6 +543,7 @@ lemma splitTraceXiFunctionField_finrank
     splitTraceXiKummerPolynomial_irreducible sigma hsigma e d heOdd hdOdd hde
   letI : Fact (Irreducible (splitTraceXiKummerPolynomial sigma e d)) := ⟨hXiIrred⟩
   rw [PowerBasis.finrank (AdjoinRoot.powerBasis hXiIrred.ne_zero)]
+  change (splitTraceXiKummerPolynomial sigma e d).natDegree = d
   simp [splitTraceXiKummerPolynomial]
 
 /-- The iterated Kummer function-field tower for the odd, coprime split trace power cover is a

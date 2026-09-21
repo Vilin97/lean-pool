@@ -151,20 +151,24 @@ theorem biquadraticPrimitiveQuartic_irreducible
     norm_num [secondZero, secondOne] at this
   have hfirst0 : firstBasis firstZero = 1 := by
     change (AdjoinRoot.powerBasis' hqfMonic).basis firstZero = 1
-    rw [(AdjoinRoot.powerBasis' hqfMonic).basis_eq_pow]
-    simp [firstZero]
+    simp only [PowerBasis.coe_basis]
+    change AdjoinRoot.root qf ^ 0 = 1
+    exact pow_zero _
   have hfirst1 : firstBasis firstOne = AdjoinRoot.root qf := by
     change (AdjoinRoot.powerBasis' hqfMonic).basis firstOne = AdjoinRoot.root qf
-    rw [(AdjoinRoot.powerBasis' hqfMonic).basis_eq_pow]
-    simp [firstOne]
+    simp only [PowerBasis.coe_basis]
+    change AdjoinRoot.root qf ^ 1 = AdjoinRoot.root qf
+    exact pow_one _
   have hsecond0 : secondBasis secondZero = 1 := by
     change (AdjoinRoot.powerBasis' hqgMonic).basis secondZero = 1
-    rw [(AdjoinRoot.powerBasis' hqgMonic).basis_eq_pow]
-    simp [secondZero]
+    simp only [PowerBasis.coe_basis]
+    change AdjoinRoot.root qg ^ 0 = 1
+    exact pow_zero _
   have hsecond1 : secondBasis secondOne = AdjoinRoot.root qg := by
     change (AdjoinRoot.powerBasis' hqgMonic).basis secondOne = AdjoinRoot.root qg
-    rw [(AdjoinRoot.powerBasis' hqgMonic).basis_eq_pow]
-    simp [secondOne]
+    simp only [PowerBasis.coe_basis]
+    change AdjoinRoot.root qg ^ 1 = AdjoinRoot.root qg
+    exact pow_one _
   have hpowers : LinearIndependent F (fun i : Fin 4 ↦ z ^ (i : ℕ)) := by
     refine Fintype.linearIndependent_iff.mpr ?_
     intro c hc i

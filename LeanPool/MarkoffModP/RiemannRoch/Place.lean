@@ -183,10 +183,9 @@ theorem orderMonoidIso_withZeroMulInt_eq_refl (e : ℤᵐ⁰ ≃*o ℤᵐ⁰) :
     by_cases hx : x = 0
     · simp [hx]
     · rw [← WithZero.exp_log hx]
-      apply WithZero.exp_injective
-      have ht := congrArg WithZero.exp
-        (DFunLike.congr_fun h (WithZero.log x))
-      simpa [withZeroMulIntLogAddEquiv] using ht
+      have ht := DFunLike.congr_fun h (WithZero.log x)
+      change WithZero.log (e (WithZero.exp (WithZero.log x))) = WithZero.log x at ht
+      simpa using congrArg WithZero.exp ht
   · have hle := hmono (show (0 : ℤ) ≤ 1 by omega)
     rw [h] at hle
     norm_num at hle
@@ -487,10 +486,7 @@ instance finiteDimensionalResidueFieldInfinite
   letI : FiniteDimensional k (A ⧸ p) := by
     rw [hp]
     exact inftyValuationSubring.finiteDimensionalResidueField k
-  letI : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := by
-    have hfin := Ideal.inertiaDeg'_pos p v.asIdeal
-    rw [Ideal.inertiaDeg'_algebraMap] at hfin
-    exact FiniteDimensional.of_finrank_pos hfin
+  letI : FiniteDimensional (A ⧸ p) (S ⧸ v.asIdeal) := inferInstance
   letI : IsScalarTower k (A ⧸ p) (S ⧸ v.asIdeal) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact FiniteDimensional.trans k (A ⧸ p) (S ⧸ v.asIdeal)
@@ -521,7 +517,7 @@ theorem principalDivisorA_apply_finite (x : Additive Kˣ)
     Finsupp.mapDomain Sum.inr
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x)
         (Sum.inl v) = _
-  rw [Finsupp.mapDomain_apply Sum.inl_injective]
+  rw [Finsupp.mapDomain_apply_of_injective Sum.inl_injective]
   rw [Finsupp.mapDomain_notin_range]
   · simp
   · rintro ⟨w, h⟩
@@ -539,7 +535,7 @@ theorem principalDivisorA_apply_infinite (x : Additive Kˣ)
     Finsupp.mapDomain Sum.inr
       (FractionalIdeal.principalDivisor (R := infiniteIntegers k K) (K := K) x)
         (Sum.inr v) = _
-  rw [Finsupp.mapDomain_apply Sum.inr_injective]
+  rw [Finsupp.mapDomain_apply_of_injective Sum.inr_injective]
   rw [Finsupp.mapDomain_notin_range]
   · simp
   · rintro ⟨w, h⟩

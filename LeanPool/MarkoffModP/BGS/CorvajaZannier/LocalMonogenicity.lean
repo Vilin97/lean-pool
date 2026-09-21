@@ -160,8 +160,8 @@ lemma Ideal.pow_le_span_pow_sup {I J : Ideal S} {π : S}
     rw [pow_succ]
     refine (Ideal.mul_mono ih h.le).trans ?_
     rw [Ideal.sup_mul, Ideal.mul_sup, Ideal.mul_sup]
-    refine sup_le (sup_le ?_ (Ideal.mul_le_left.trans le_sup_right))
-      (sup_le (Ideal.mul_le_right.trans le_sup_right)
+    refine sup_le (sup_le ?_ (Ideal.mul_le_right.trans le_sup_right))
+      (sup_le (Ideal.mul_le_left.trans le_sup_right)
         (Ideal.mul_le_left.trans le_sup_right))
     rw [Ideal.span_singleton_mul_span_singleton, pow_succ]
     exact le_sup_left

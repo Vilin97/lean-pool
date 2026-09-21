@@ -71,11 +71,17 @@ def constantOpenGlueData
   toGlueData := CategoryTheory.GlueData.ofGlueData'
     (constantOpenGlueDataAux U V f t t_id t_comp)
   f_open i j := by
-    dsimp [CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f']
-    split_ifs
+    change J at i j
+    have hf : AlgebraicGeometry.IsOpenImmersion (f i) := inferInstance
+    dsimp [CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f',
+      constantOpenGlueDataAux]
+    split_ifs with hij
     · infer_instance
     · change AlgebraicGeometry.IsOpenImmersion (eqToHom _ ≫ f i)
-      infer_instance
+      refine @AlgebraicGeometry.IsOpenImmersion.comp _ (V i) (U i)
+        (eqToHom _) (f i) ?_ hf
+      refine @AlgebraicGeometry.IsOpenImmersion.of_isIso _ _ (eqToHom _) ?_
+      exact (eqToIso (if_neg hij)).isIso_hom
 
 /-- Glue schemes whose overlap in each chart is identified with one common scheme.  The transition
 from chart `i` to chart `j` is induced by passing through the common target, so identity and
@@ -126,7 +132,7 @@ def constantOpenGlueDataOfCommonTargetMap
     change J at i j
     by_cases hij : i = j
     · subst j
-      rw [D.t_id]
+      erw [D.t_id]
       simp
     · dsimp only [D, constantOpenGlueDataOfCommonTarget, constantOpenGlueData,
         CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f',
@@ -157,8 +163,9 @@ theorem constantOpenGlueDataOfCommonTargetMap_chart
         constantOpenGlueDataOfCommonTargetMap U V U' V' f f' W W' s s' g q h =
       g i ≫ (constantOpenGlueDataOfCommonTarget U' V' f' W' s').ι i := by
   dsimp [constantOpenGlueDataOfCommonTargetMap]
-  unfold CategoryTheory.GlueData.ι
-  rw [Multicoequalizer.π_desc]
+  unfold AlgebraicGeometry.Scheme.GlueData.ι
+  exact Multicoequalizer.π_desc
+    (constantOpenGlueDataOfCommonTarget U V f W s).toGlueData.diagram _ _ _ i
 
 end
 

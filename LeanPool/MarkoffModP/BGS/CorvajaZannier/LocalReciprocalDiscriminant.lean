@@ -76,7 +76,8 @@ theorem sylvester_reflect (f g : R[X]) (m n : ℕ) :
       simp only [coeff_reflect]
       split_ifs <;> simp_all [revAt] <;> try omega
       congr 1
-      rw [if_pos (by omega)]
+      change revAtFun n ((i : ℕ) - j) = _
+      rw [revAtFun, if_pos (by omega)]
       exact (reflected_row_sub_reflected_shift m n i j i.isLt j.isLt
         (by omega) (by omega)).symm
   | right j =>
@@ -87,7 +88,8 @@ theorem sylvester_reflect (f g : R[X]) (m n : ℕ) :
       simp only [coeff_reflect]
       split_ifs <;> simp_all [revAt] <;> try omega
       congr 1
-      rw [if_pos (by omega)]
+      change revAtFun m ((i : ℕ) - j) = _
+      rw [revAtFun, if_pos (by omega)]
       simpa [Nat.add_comm] using
         (reflected_row_sub_reflected_shift n m i j (by omega) j.isLt
           (by omega) (by omega)).symm
