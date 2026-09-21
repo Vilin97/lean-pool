@@ -695,6 +695,95 @@ private theorem geometric_sum_from_le (q : ℝ) (hq_pos : 0 < q) (hq_lt_one : q 
     exact hle_tsum
   exact le_trans hle_tsum' (by rw [htsum_eq])
 
+private theorem dyadic_shell_sum_bound {ι : Type*} [DecidableEq ι]
+    (z : ι → ℂ) (w : ι → ℝ) (hw : ∀ ρ, 0 ≤ w ρ) (ball : ℕ → Finset ι)
+    (hmem : ∀ k ρ, ρ ∈ ball k ↔ ‖z ρ‖ ≤ (2 : ℝ) ^ k)
+    (p n k : ℕ) (hk : n + 1 ≤ k) (Ccount lam δ : ℝ)
+    (hcount : (∑ ρ ∈ ball (k + 1), w ρ) ≤
+      Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ)) :
+    (∑ ρ ∈ ball (k + 1) \ ball k,
+      if (2 : ℝ) ^ (n + 1) < ‖z ρ‖ then w ρ / ‖z ρ‖ ^ (p + 1) else 0) ≤
+      ((2 : ℝ) ^ (lam + δ) * Ccount) *
+        ((2 : ℝ) ^ (lam + δ - ((p : ℝ) + 1))) ^ k := by
+  let g : ι → ℝ := fun ρ =>
+    if (2 : ℝ) ^ (n + 1) < ‖z ρ‖ then w ρ / ‖z ρ‖ ^ (p + 1) else 0
+  let A := (2 : ℝ) ^ (lam + δ) * Ccount
+  let q := (2 : ℝ) ^ (lam + δ - ((p : ℝ) + 1))
+  let diff : Finset ι := ball (k + 1) \ ball k
+  have hterm_le :
+      ∀ ρ, ρ ∈ diff →
+        w ρ / ‖z ρ‖ ^ (p + 1) ≤ w ρ / ((2 : ℝ) ^ k) ^ (p + 1) := by
+    intro ρ hρ
+    have hnot : ¬ ‖z ρ‖ ≤ (2 : ℝ) ^ k := by
+      intro hle
+      have : ρ ∈ ball k :=
+        (hmem k ρ).2 hle
+      exact (Finset.mem_sdiff.1 hρ).2 this
+    have hk_le_norm : (2 : ℝ) ^ k ≤ ‖z ρ‖ := le_of_lt (lt_of_not_ge hnot)
+    have hk_pos : 0 < ((2 : ℝ) ^ k) ^ (p + 1) := by positivity
+    have hk_pow_le : ((2 : ℝ) ^ k) ^ (p + 1) ≤ ‖z ρ‖ ^ (p + 1) :=
+      pow_le_pow_left₀ (by positivity : (0 : ℝ) ≤ (2 : ℝ) ^ k) hk_le_norm (p + 1)
+    have hw_nonneg : 0 ≤ w ρ := hw ρ
+    have hfrac :
+        (1 : ℝ) / ‖z ρ‖ ^ (p + 1) ≤ (1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1) := by
+      simpa [one_div, inv_pow] using (one_div_le_one_div_of_le hk_pos hk_pow_le)
+    simpa [div_eq_mul_inv, one_div, mul_assoc, mul_left_comm, mul_comm] using
+      (mul_le_mul_of_nonneg_left hfrac hw_nonneg)
+  have hsum_le :
+      (∑ ρ ∈ diff, w ρ / ‖z ρ‖ ^ (p + 1)) ≤
+        ∑ ρ ∈ diff, w ρ / ((2 : ℝ) ^ k) ^ (p + 1) := Finset.sum_le_sum hterm_le
+  have hsum_diff :
+      (∑ ρ ∈ diff, w ρ) ≤ Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) := by
+    have hdiff_le_ball :
+        (∑ ρ ∈ diff, w ρ) ≤ ∑ ρ ∈ ball (k + 1), w ρ := by
+      refine
+        Finset.sum_le_sum_of_subset_of_nonneg
+          (Finset.sdiff_subset : diff ⊆ ball (k + 1)) ?_
+      intro ρ _ _
+      exact hw ρ
+    exact le_trans hdiff_le_ball hcount
+  have hrewrite :
+      Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) =
+        A * q ^ k := by
+    simpa only [A, q, Nat.cast_add, Nat.cast_one] using
+      dyadic_power_quotient Ccount lam δ (p + 1) k
+  have hdiff_simp :
+      (∑ ρ ∈ diff, g ρ) = ∑ ρ ∈ diff, w ρ / ‖z ρ‖ ^ (p + 1) := by
+    refine Finset.sum_congr rfl ?_
+    intro ρ hρ
+    have hnot : ¬ ‖z ρ‖ ≤ (2 : ℝ) ^ k := by
+      intro hle
+      have : ρ ∈ ball k :=
+        (hmem k ρ).2 hle
+      exact (Finset.mem_sdiff.1 hρ).2 this
+    have hlt : (2 : ℝ) ^ k < ‖z ρ‖ := lt_of_not_ge hnot
+    have hk_pow_le : (2 : ℝ) ^ (n + 1) ≤ (2 : ℝ) ^ k :=
+      pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hk
+    have hcond : (2 : ℝ) ^ (n + 1) < ‖z ρ‖ := by
+      exact lt_of_lt_of_le (hk_pow_le.trans_lt hlt) (le_rfl)
+    simp [g, hcond]
+  calc
+    (∑ ρ ∈ diff, g ρ) = ∑ ρ ∈ diff, w ρ / ‖z ρ‖ ^ (p + 1) := hdiff_simp
+    _ ≤ ∑ ρ ∈ diff, w ρ / ((2 : ℝ) ^ k) ^ (p + 1) := hsum_le
+    _ = (∑ ρ ∈ diff, w ρ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) := by
+          simp [div_eq_mul_inv, Finset.sum_mul]
+    _ ≤
+        (Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ)) *
+          ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) := by
+          have hconst_nonneg : 0 ≤ (1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1) := by positivity
+          exact mul_le_mul_of_nonneg_right hsum_diff hconst_nonneg
+    _ = A * q ^ k := by
+          simpa [mul_assoc, mul_left_comm, mul_comm] using hrewrite
+
+private theorem tsum_le_of_cofinal_finset_bound {ι : Type*}
+    (ball : ℕ → Finset ι) (g : ι → ℝ) {B : ℝ} (hB : 0 ≤ B)
+    (hg : ∀ i, 0 ≤ g i) (hcofinal : ∀ t : Finset ι, ∃ n, t ⊆ ball n)
+    (hball : ∀ n, ∑ i ∈ ball n, g i ≤ B) : ∑' i, g i ≤ B := by
+  apply tsum_le_of_sum_le' hB
+  intro t
+  obtain ⟨n, hn⟩ := hcofinal t
+  exact (Finset.sum_le_sum_of_subset_of_nonneg hn (fun i _ _ => hg i)).trans (hball n)
+
 private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
@@ -808,85 +897,19 @@ private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
           ∀ k : ℕ, n + 1 ≤ k →
             (∑ ρ ∈ ball (k + 1) \ ball k, g ρ) ≤ A * q ^ k := by
         intro k hk
-        let diff : Finset Z.Zero := ball (k + 1) \ ball k
-        have hterm_le :
-            ∀ ρ, ρ ∈ diff →
-              w ρ / ‖Z.z ρ‖ ^ (p + 1) ≤ w ρ / ((2 : ℝ) ^ k) ^ (p + 1) := by
-          intro ρ hρ
-          have hnot : ¬ ‖Z.z ρ‖ ≤ (2 : ℝ) ^ k := by
-            intro hle
-            have : ρ ∈ ball k :=
-              (Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
-                (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
-                (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) k ρ).2 hle
-            exact (Finset.mem_sdiff.1 hρ).2 this
-          have hk_le_norm : (2 : ℝ) ^ k ≤ ‖Z.z ρ‖ := le_of_lt (lt_of_not_ge hnot)
-          have hk_pos : 0 < ((2 : ℝ) ^ k) ^ (p + 1) := by positivity
-          have hk_pow_le : ((2 : ℝ) ^ k) ^ (p + 1) ≤ ‖Z.z ρ‖ ^ (p + 1) :=
-            pow_le_pow_left₀ (by positivity : (0 : ℝ) ≤ (2 : ℝ) ^ k) hk_le_norm (p + 1)
-          have hw_nonneg : 0 ≤ w ρ := by positivity [w]
-          have hfrac :
-              (1 : ℝ) / ‖Z.z ρ‖ ^ (p + 1) ≤ (1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1) := by
-            simpa [one_div, inv_pow] using (one_div_le_one_div_of_le hk_pos hk_pow_le)
-          simpa [div_eq_mul_inv, one_div, mul_assoc, mul_left_comm, mul_comm] using
-            (mul_le_mul_of_nonneg_left hfrac hw_nonneg)
-        have hsum_le :
-            (∑ ρ ∈ diff, w ρ / ‖Z.z ρ‖ ^ (p + 1)) ≤
-              ∑ ρ ∈ diff, w ρ / ((2 : ℝ) ^ k) ^ (p + 1) := Finset.sum_le_sum hterm_le
         have hRcount_le' : Rcount ≤ (2 : ℝ) ^ (k + 1) := by
-          have hn₀_le_k1 : n₀ ≤ k + 1 := by
-            exact le_trans hn (le_trans (Nat.le_succ n) (Nat.le_succ_of_le hk))
-          have hpow : (2 : ℝ) ^ n₀ ≤ (2 : ℝ) ^ (k + 1) :=
-            pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hn₀_le_k1
-          exact le_trans hRcount_le hpow
+          have hn₀_le_k1 : n₀ ≤ k + 1 := by omega
+          exact hRcount_le.trans
+            (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hn₀_le_k1)
         have hsum_ball :
             (∑ ρ ∈ ball (k + 1), w ρ) ≤ Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) := by
           have hcount_ball := hW_le ((2 : ℝ) ^ (k + 1)) hRcount_le'
           simpa [hball_finsum, ball] using hcount_ball
-        have hsum_diff :
-            (∑ ρ ∈ diff, w ρ) ≤ Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) := by
-          have hdiff_le_ball :
-              (∑ ρ ∈ diff, w ρ) ≤ ∑ ρ ∈ ball (k + 1), w ρ := by
-            refine
-              Finset.sum_le_sum_of_subset_of_nonneg
-                (Finset.sdiff_subset : diff ⊆ ball (k + 1)) ?_
-            intro ρ _ _
-            positivity [w]
-          exact le_trans hdiff_le_ball hsum_ball
-        have hrewrite :
-            Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) =
-              A * q ^ k := by
-          simpa only [A, q, Nat.cast_add, Nat.cast_one] using
-            dyadic_power_quotient Ccount lam δ (p + 1) k
-        have hdiff_simp :
-            (∑ ρ ∈ diff, g ρ) = ∑ ρ ∈ diff, w ρ / ‖Z.z ρ‖ ^ (p + 1) := by
-          refine Finset.sum_congr rfl ?_
-          intro ρ hρ
-          have hnot : ¬ ‖Z.z ρ‖ ≤ (2 : ℝ) ^ k := by
-            intro hle
-            have : ρ ∈ ball k :=
-              (Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
-                (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
-                (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) k ρ).2 hle
-            exact (Finset.mem_sdiff.1 hρ).2 this
-          have hlt : (2 : ℝ) ^ k < ‖Z.z ρ‖ := lt_of_not_ge hnot
-          have hk_pow_le : (2 : ℝ) ^ (n + 1) ≤ (2 : ℝ) ^ k :=
-            pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hk
-          have hcond : (2 : ℝ) ^ (n + 1) < ‖Z.z ρ‖ := by
-            exact lt_of_lt_of_le (hk_pow_le.trans_lt hlt) (le_rfl)
-          simp [g, hcond]
-        calc
-          (∑ ρ ∈ diff, g ρ) = ∑ ρ ∈ diff, w ρ / ‖Z.z ρ‖ ^ (p + 1) := hdiff_simp
-          _ ≤ ∑ ρ ∈ diff, w ρ / ((2 : ℝ) ^ k) ^ (p + 1) := hsum_le
-          _ = (∑ ρ ∈ diff, w ρ) * ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) := by
-                simp [div_eq_mul_inv, Finset.sum_mul]
-          _ ≤
-              (Ccount * ((2 : ℝ) ^ (k + 1)) ^ (lam + δ)) *
-                ((1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1)) := by
-                have hconst_nonneg : 0 ≤ (1 : ℝ) / ((2 : ℝ) ^ k) ^ (p + 1) := by positivity
-                exact mul_le_mul_of_nonneg_right hsum_diff hconst_nonneg
-          _ = A * q ^ k := by
-                simpa [mul_assoc, mul_left_comm, mul_comm] using hrewrite
+        exact dyadic_shell_sum_bound Z.z w (fun ρ => by positivity [w]) ball
+          (fun j ρ => Hadamard.OrderOne.mem_zerosBallFinset_of_entire_iff
+            (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
+            (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) j ρ)
+          p n k hk Ccount lam δ hsum_ball
       have hind :
           ∀ j : ℕ,
             (∑ ρ ∈ ball (n + 1 + j), g ρ) ≤
@@ -959,26 +982,10 @@ private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
         _ ≤ A * (q ^ (n + 1) * (1 - q)⁻¹) := by
               gcongr
         _ = C * ((2 : ℝ) ^ n) ^ (lam + δ - ((p : ℝ) + 1)) := hconst
-  have hfinset :
-      ∀ t : Finset Z.Zero,
-        (∑ ρ ∈ t, g ρ) ≤ C * ((2 : ℝ) ^ n) ^ (lam + δ - ((p : ℝ) + 1)) := by
-    intro t
-    obtain ⟨m, hm⟩ := cofinal_zerosBallFinset_of_entire
-      (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
-      (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) t
-    have hle_ball :
-        (∑ ρ ∈ t, g ρ) ≤ ∑ ρ ∈ ball m, g ρ := by
-      refine Finset.sum_le_sum_of_subset_of_nonneg hm ?_
-      intro ρ _ _
-      exact hg_nonneg ρ
-    exact le_trans hle_ball (hball m)
-  have ht_nonneg : 0 ≤ C * ((2 : ℝ) ^ n) ^ (lam + δ - ((p : ℝ) + 1)) := by
-    have : 0 ≤ ((2 : ℝ) ^ n) ^ (lam + δ - ((p : ℝ) + 1)) :=
-      Real.rpow_nonneg (by positivity : (0 : ℝ) ≤ (2 : ℝ) ^ n) _
-    exact mul_nonneg hC_nonneg this
   have htsum_g :
       (∑' ρ : Z.Zero, g ρ) ≤ C * ((2 : ℝ) ^ n) ^ (lam + δ - ((p : ℝ) + 1)) :=
-    tsum_le_of_sum_le' ht_nonneg hfinset
+    tsum_le_of_cofinal_finset_bound ball g (by positivity) hg_nonneg
+      (cofinal_zerosBallFinset_of_entire hf_entire Z h_zeros_only h_inj h_z_ne_zero) hball
   have hsub :
       (∑' ρ : ({ρ : Z.Zero | (2 : ℝ) ^ (n + 1) < ‖Z.z ρ‖} : Set Z.Zero),
           (Z.mult ρ.val : ℝ) / ‖Z.z ρ.val‖ ^ (p + 1))
@@ -2215,6 +2222,260 @@ private theorem near_exponent_sum_bound
     exact hball
   exact hnearBase_bound
 
+private theorem exp_neg_tsum_le_norm_tprod {ι : Type*}
+    (a : ι → ℝ) (b : ι → ℂ) (ha_nn : ∀ i, 0 ≤ a i) (ha_sum : Summable a)
+    (hmul : Multipliable b) (hfac_bound : ∀ i, Real.exp (-(a i)) ≤ ‖b i‖) :
+    Real.exp (-∑' i, a i) ≤ ‖∏' i, b i‖ := by
+  have hpartial : ∀ s : Finset ι,
+      Real.exp (-∑' i, a i) ≤ ‖∏ i ∈ s, b i‖ := by
+    intro s
+    calc Real.exp (-∑' i, a i)
+        ≤ Real.exp (-∑ i ∈ s, a i) :=
+          Real.exp_le_exp.mpr (neg_le_neg (ha_sum.sum_le_tsum s (fun i _ => ha_nn i)))
+      _ = ∏ i ∈ s, Real.exp (-(a i)) := by
+          have : -∑ i ∈ s, a i = ∑ i ∈ s, -(a i) := by simp [Finset.sum_neg_distrib]
+          rw [this]; exact Real.exp_sum s fun i => -(a i)
+      _ ≤ ∏ i ∈ s, ‖b i‖ :=
+          Finset.prod_le_prod₀ (fun i _ => (Real.exp_pos _).le) (fun i _ => hfac_bound i)
+      _ = ‖∏ i ∈ s, b i‖ := (norm_prod s _).symm
+  exact ge_of_tendsto ((continuous_norm.tendsto _).comp hmul.hasProd)
+    (Filter.Eventually.of_forall hpartial)
+
+private theorem nearFar_tsum_le_dyadic_majorant {ι : Type*}
+    (zw : ι → ℂ) (p n : ℕ) (hzw_ne : ∀ i, zw i ≠ 0)
+    (hsum_zwm : Summable (fun i => (1 : ℝ) / ‖zw i‖ ^ (p + 1)))
+    (R : ℝ) (hR_pos : 0 < R) (z : ℂ) (hz : ‖z‖ = R)
+    (hr_lt : R < (2 : ℝ) ^ n) (hn_le : (2 : ℝ) ^ n ≤ 2 * R)
+    (C_near C_far' : ℝ) (hCn_nn : 0 ≤ C_near) (hCf_nn : 0 ≤ C_far') :
+    (∑' i, if ‖zw i‖ ≤ 2 * R then C_near * ‖z / zw i‖ ^ p
+      else C_far' * ‖z / zw i‖ ^ (p + 1)) ≤
+      (∑' i, (C_near * R ^ p) *
+        (if ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1) then (1 : ℝ) / ‖zw i‖ ^ p else 0)) +
+      (∑' i, (C_far' * R ^ (p + 1)) *
+        (if (2 : ℝ) ^ n < ‖zw i‖ then (1 : ℝ) / ‖zw i‖ ^ (p + 1) else 0)) := by
+  let a : ι → ℝ := fun i =>
+    if ‖zw i‖ ≤ 2 * R then C_near * ‖z / zw i‖ ^ p
+    else C_far' * ‖z / zw i‖ ^ (p + 1)
+  let nearBase : ι → ℝ := fun i =>
+    if ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1) then (1 : ℝ) / ‖zw i‖ ^ p else 0
+  let farBase : ι → ℝ := fun i =>
+    if (2 : ℝ) ^ n < ‖zw i‖ then (1 : ℝ) / ‖zw i‖ ^ (p + 1) else 0
+  let nearBall : ι → ℝ := fun i => (C_near * R ^ p) * nearBase i
+  let farTail : ι → ℝ := fun i => (C_far' * R ^ (p + 1)) * farBase i
+  have ha_sum : Summable a :=
+    summable_nearFar_exponent zw p hzw_ne hsum_zwm R hR_pos z C_near C_far' hCn_nn hCf_nn
+  have hnearBase_summ : Summable nearBase := by
+    refine summable_of_hasFiniteSupport ?_
+    have hsupp :
+        Function.support nearBase ⊆ {i : ι | ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1)} := by
+      intro i hi
+      by_contra hnot
+      have hnot' : ¬ ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1) := by
+        simpa using hnot
+      have hi' : nearBase i ≠ 0 := Function.mem_support.1 hi
+      have : nearBase i = 0 := by
+        simp [nearBase, hnot']
+      exact hi' this
+    exact
+      (Hadamard.OrderOne.finite_norm_le_of_summable_inv_norm_pow
+        (z := zw) (p := p) hzw_ne hsum_zwm (R := (2 : ℝ) ^ (n + 1))
+        (by positivity)).subset hsupp
+  have hfarBase_summ : Summable farBase := by
+    have hdom : ∀ i : ι, farBase i ≤ (1 : ℝ) / ‖zw i‖ ^ (p + 1) := by
+      intro i
+      by_cases hlt : (2 : ℝ) ^ n < ‖zw i‖ <;> simp [farBase, hlt]
+    refine Summable.of_nonneg_of_le
+        (f := fun i : ι => (1 : ℝ) / ‖zw i‖ ^ (p + 1))
+        (g := farBase) ?_ ?_ hsum_zwm
+    · intro i
+      by_cases hlt : (2 : ℝ) ^ n < ‖zw i‖ <;> simp [farBase, hlt]
+    · intro i
+      exact hdom i
+  have hnearBall_summ : Summable nearBall :=
+    hnearBase_summ.mul_left (C_near * R ^ p)
+  have hfarTail_summ : Summable farTail :=
+    hfarBase_summ.mul_left (C_far' * R ^ (p + 1))
+  have hnearBall_nn : ∀ i, 0 ≤ nearBall i := by
+    intro i
+    by_cases hi : ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1)
+    · have hcoeff_nonneg : 0 ≤ C_near * R ^ p := mul_nonneg hCn_nn (by positivity)
+      have hbase_nonneg : 0 ≤ (1 : ℝ) / ‖zw i‖ ^ p := by positivity
+      simpa [nearBall, nearBase, hi] using mul_nonneg hcoeff_nonneg hbase_nonneg
+    · simp [nearBall, nearBase, hi]
+  have hfarTail_nn : ∀ i, 0 ≤ farTail i := by
+    intro i
+    by_cases hi : (2 : ℝ) ^ n < ‖zw i‖
+    · have hcoeff_nonneg : 0 ≤ C_far' * R ^ (p + 1) := mul_nonneg hCf_nn (by positivity)
+      have hbase_nonneg : 0 ≤ (1 : ℝ) / ‖zw i‖ ^ (p + 1) := by positivity
+      simpa [farTail, farBase, hi] using mul_nonneg hcoeff_nonneg hbase_nonneg
+    · simp [farTail, farBase, hi]
+  have h2R_lt_pow : 2 * R < (2 : ℝ) ^ (n + 1) := by
+    have := mul_lt_mul_of_pos_left hr_lt (by positivity : (0 : ℝ) < 2)
+    simpa [pow_succ, mul_assoc, mul_left_comm, mul_comm] using this
+  have hmajor : ∀ i : ι, a i ≤ nearBall i + farTail i := by
+    intro i
+    by_cases hsmall : ‖zw i‖ ≤ 2 * R
+    · have hball_i : ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1) := by
+        linarith
+      have hpow_eq :
+          C_near * ‖z / zw i‖ ^ p =
+            (C_near * R ^ p) * ((1 : ℝ) / ‖zw i‖ ^ p) := by
+        rw [norm_div, hz, div_eq_mul_inv, mul_pow]
+        ring_nf
+      have hnear_eq :
+          nearBall i = (C_near * R ^ p) * ((1 : ℝ) / ‖zw i‖ ^ p) := by
+        simp [nearBall, nearBase, hball_i]
+      calc
+        a i = C_near * ‖z / zw i‖ ^ p := by simp [a, hsmall]
+        _ = (C_near * R ^ p) * ((1 : ℝ) / ‖zw i‖ ^ p) := hpow_eq
+        _ ≤ nearBall i + farTail i := by
+            rw [hnear_eq]
+            linarith [hfarTail_nn i]
+    · have htail_i : (2 : ℝ) ^ n < ‖zw i‖ := by
+        have h2R_lt_norm : 2 * R < ‖zw i‖ := lt_of_not_ge hsmall
+        exact lt_of_le_of_lt hn_le h2R_lt_norm
+      have hpow_eq :
+          C_far' * ‖z / zw i‖ ^ (p + 1) =
+            (C_far' * R ^ (p + 1)) * ((1 : ℝ) / ‖zw i‖ ^ (p + 1)) := by
+        rw [norm_div, hz, div_eq_mul_inv, mul_pow]
+        ring_nf
+      have hfar_eq :
+          farTail i = (C_far' * R ^ (p + 1)) * ((1 : ℝ) / ‖zw i‖ ^ (p + 1)) := by
+        simp [farTail, farBase, htail_i]
+      calc
+        a i = C_far' * ‖z / zw i‖ ^ (p + 1) := by simp [a, hsmall]
+        _ = (C_far' * R ^ (p + 1)) * ((1 : ℝ) / ‖zw i‖ ^ (p + 1)) := hpow_eq
+        _ ≤ nearBall i + farTail i := by
+            rw [hfar_eq]
+            linarith [hnearBall_nn i]
+  have hmaj_summ : Summable (fun i => nearBall i + farTail i) :=
+    hnearBall_summ.add hfarTail_summ
+  have hle := Summable.tsum_le_tsum hmajor ha_sum hmaj_summ
+  simpa only [Summable.tsum_add hnearBall_summ hfarTail_summ] using hle
+
+private theorem near_weighted_tsum_bound {ι : Type*} (nearBase : ι → ℝ)
+    (p n : ℕ) (R lam δcount ε C_near C_ball KnearBase : ℝ)
+    (hR_ge1 : 1 ≤ R) (hCn_nn : 0 ≤ C_near) (hCball_nonneg : 0 ≤ C_ball)
+    (hKnearBase_nonneg : 0 ≤ KnearBase) (hδcount_le_eps9 : δcount ≤ ε / 9)
+    (hnearBase_bound : (∑' i, nearBase i) ≤
+      C_ball * ((2 : ℝ) ^ (n + 1)) ^ (lam + δcount - p))
+    (hCnear_bound : C_near ≤ KnearBase * R ^ (ε / 9))
+    (hpow_n1_le : ((2 : ℝ) ^ (n + 1)) ^ (lam + δcount - p) ≤
+      (4 : ℝ) ^ (lam + δcount - p) * R ^ (lam + δcount - p)) :
+    (∑' i, (C_near * R ^ p) * nearBase i) ≤
+      (KnearBase * C_ball * 4 ^ (lam + δcount - p)) * R ^ (lam + 2 * ε / 9) := by
+  let αnear := lam + δcount - p
+  let Knear := KnearBase * C_ball * 4 ^ αnear
+  let nearBall : ι → ℝ := fun i => (C_near * R ^ p) * nearBase i
+  have hR_pos : 0 < R := by linarith
+  have hKnear_nonneg : 0 ≤ Knear := by positivity [Knear]
+  have hconst_nonneg : 0 ≤ C_near * R ^ p := mul_nonneg hCn_nn (by positivity)
+  calc
+    (∑' i : ι, nearBall i)
+        = (C_near * R ^ p) * (∑' i : ι, nearBase i) := by
+            simp [nearBall, tsum_mul_left, mul_assoc]
+    _ ≤ (C_near * R ^ p) * (C_ball * ((2 : ℝ) ^ (n + 1)) ^ αnear) := by
+            exact mul_le_mul_of_nonneg_left hnearBase_bound hconst_nonneg
+    _ ≤ (C_near * R ^ p) * (C_ball * ((4 : ℝ) ^ αnear * R ^ αnear)) := by
+            gcongr
+    _ ≤
+        (KnearBase * R ^ (ε / 9) * R ^ p) *
+          (C_ball * ((4 : ℝ) ^ αnear * R ^ αnear)) := by
+            gcongr
+    _ = Knear * (R ^ (ε / 9) * (R ^ p * R ^ αnear)) := by
+            dsimp [Knear]
+            ring_nf
+    _ = Knear * (R ^ (lam + δcount + ε / 9)) := by
+            have hnat : R ^ p = R ^ ((p : ℕ) : ℝ) := by
+              rw [Real.rpow_natCast]
+            rw [hnat]
+            rw [← Real.rpow_add hR_pos, ← Real.rpow_add hR_pos]
+            dsimp [αnear]
+            congr 2
+            ring
+    _ ≤ Knear * R ^ (lam + 2 * ε / 9) := by
+            have hexp_le : lam + δcount + ε / 9 ≤ lam + 2 * ε / 9 := by
+              linarith [hδcount_le_eps9]
+            have hpow_le :
+                R ^ (lam + δcount + ε / 9) ≤ R ^ (lam + 2 * ε / 9) :=
+              Real.rpow_le_rpow_of_exponent_le hR_ge1 hexp_le
+            exact mul_le_mul_of_nonneg_left hpow_le hKnear_nonneg
+
+private theorem far_weighted_tsum_bound {ι : Type*} (farBase : ι → ℝ)
+    (p n : ℕ) (R lam δcount ε C_far' C_tail : ℝ)
+    (hR_ge1 : 1 ≤ R) (hr_lt : R < (2 : ℝ) ^ n)
+    (hCf_nn : 0 ≤ C_far') (hCtail_nonneg : 0 ≤ C_tail)
+    (hlamδ_lt_p1 : lam + δcount < (p : ℝ) + 1)
+    (hδ_eps : δcount ≤ 2 * ε / 9)
+    (hfarBase_bound : (∑' i, farBase i) ≤
+      (C_tail * ((2 : ℝ) ^ (lam + δcount - ((p : ℝ) + 1)))⁻¹) *
+        ((2 : ℝ) ^ n) ^ (lam + δcount - ((p : ℝ) + 1))) :
+    (∑' i, (C_far' * R ^ (p + 1)) * farBase i) ≤
+      (C_far' * C_tail * ((2 : ℝ) ^ (lam + δcount - ((p : ℝ) + 1)))⁻¹) *
+        R ^ (lam + 2 * ε / 9) := by
+  let qtail := (2 : ℝ) ^ (lam + δcount - ((p : ℝ) + 1))
+  let Kfar := C_far' * C_tail * qtail⁻¹
+  let farTail : ι → ℝ := fun i => (C_far' * R ^ (p + 1)) * farBase i
+  have hR_pos : 0 < R := by linarith
+  have hKfar_nonneg : 0 ≤ Kfar := by positivity [Kfar, qtail]
+  calc
+    (∑' i : ι, farTail i)
+        = (C_far' * R ^ (p + 1)) * (∑' i : ι, farBase i) := by
+            simp [farTail, tsum_mul_left, mul_assoc]
+    _ ≤
+        (C_far' * R ^ (p + 1)) *
+          ((C_tail * qtail⁻¹) *
+            ((2 : ℝ) ^ n) ^ (lam + δcount - ((p : ℝ) + 1))) := by
+            have hconst_nonneg : 0 ≤ C_far' * R ^ (p + 1) := by positivity
+            exact mul_le_mul_of_nonneg_left hfarBase_bound hconst_nonneg
+    _ ≤ (C_far' * R ^ (p + 1)) *
+          ((C_tail * qtail⁻¹) * R ^ (lam + δcount - ((p : ℝ) + 1))) := by
+            have hnegexp : lam + δcount - ((p : ℝ) + 1) < 0 := by
+              linarith [hlamδ_lt_p1]
+            have hpow_le :
+                ((2 : ℝ) ^ n) ^ (lam + δcount - ((p : ℝ) + 1))
+                  ≤ R ^ (lam + δcount - ((p : ℝ) + 1)) := by
+              exact Real.rpow_le_rpow_of_nonpos hR_pos hr_lt.le hnegexp.le
+            gcongr
+    _ = Kfar * R ^ (lam + δcount) := by
+            have hnat : R ^ (p + 1) = R ^ (((p + 1 : ℕ)) : ℝ) := by
+              simpa using (Real.rpow_natCast R (p + 1)).symm
+            calc
+              (C_far' * R ^ (p + 1)) *
+                  ((C_tail * qtail⁻¹) * R ^ (lam + δcount - ((p : ℝ) + 1)))
+                  = Kfar * (R ^ (p + 1) * R ^ (lam + δcount - ((p : ℝ) + 1))) := by
+                      simp [Kfar, mul_assoc, mul_left_comm, mul_comm]
+              _ =
+                  Kfar *
+                    (R ^ (((p + 1 : ℕ) : ℝ)) *
+                      R ^ (lam + δcount - ((p : ℝ) + 1))) := by
+                      rw [hnat]
+              _ = Kfar * R ^ (lam + δcount) := by
+                      rw [← Real.rpow_add hR_pos]
+                      congr 2
+                      norm_num
+    _ ≤ Kfar * R ^ (lam + 2 * ε / 9) := by
+            have hexp_le : lam + δcount ≤ lam + 2 * ε / 9 := by
+              linarith
+            have hpow_le :
+                R ^ (lam + δcount) ≤ R ^ (lam + 2 * ε / 9) :=
+              Real.rpow_le_rpow_of_exponent_le hR_ge1 hexp_le
+            exact mul_le_mul_of_nonneg_left hpow_le hKfar_nonneg
+
+private theorem dyadic_rpow_upper_bound (n : ℕ) (R αnear : ℝ)
+    (hR_pos : 0 < R) (hn_le : (2 : ℝ) ^ n ≤ 2 * R) (hαnear_nonneg : 0 ≤ αnear) :
+    ((2 : ℝ) ^ (n + 1)) ^ αnear ≤ (4 : ℝ) ^ αnear * R ^ αnear := by
+  have hbase : (2 : ℝ) ^ (n + 1) ≤ 4 * R := by
+    have : 2 * (2 : ℝ) ^ n ≤ 4 * R := by nlinarith [hn_le]
+    simpa [pow_succ, mul_assoc, mul_left_comm, mul_comm] using this
+  have hR4_nonneg : 0 ≤ 4 * R := by positivity
+  have :=
+    Real.rpow_le_rpow
+      (by positivity : (0 : ℝ) ≤ (2 : ℝ) ^ (n + 1)) hbase hαnear_nonneg
+  simpa using
+    (show ((2 : ℝ) ^ (n + 1)) ^ αnear ≤ (4 * R) ^ αnear from this).trans_eq (by
+      rw [Real.mul_rpow (by positivity : (0 : ℝ) ≤ 4) hR_pos.le])
+
 private theorem canonicalProduct_circle_lower_bound
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
@@ -2235,109 +2496,14 @@ private theorem canonicalProduct_circle_lower_bound
         Real.exp (-(C₀ * R ^ (lam + ε / 3))) ≤
           ‖canonicalProductZeroSetMultiplicityRank Z p z‖ := by
   let P := canonicalProductZeroSetMultiplicityRank Z p
-  -- Steps D+E: factor bounds, sum control, and product bound.
-  -- Rank-p port of Growth.lean:270-578.
-  -- For each i : ZWM, let z_i := Z.zWithMultiplicity i.
-  -- Define the per-factor bound a_i:
-  --   Far (‖z_i‖ > 2R): a_i := C_far · ‖z/z_i‖^{p+1}
-  --   Near (‖z_i‖ ≤ 2R): a_i := C_near · ‖z/z_i‖^p
-  -- Then: exp(-a_i) ≤ ‖E_p(z/z_i)‖ (pointwise, from Weierstrass bounds)
-  -- And: Σ a_i ≤ C₀ R^{λ+ε/3} (dyadic + counting)
-  -- And: ‖P(z)‖ ≥ exp(-Σ a_i) (finite product + ge_of_tendsto)
-  --
-  -- Combined: ‖P(z)‖ ≥ exp(-C₀ R^{λ+ε/3}).
-  --
-  -- Each sub-step is proved for rank 1 in Growth.lean:270-578.
-  -- The rank-p generalization replaces:
-  --   weierstrass_E_one_away_from_one_lower_bound
-  --     → weierstrass_E_away_from_one_lower_bound p
-  --   weierstrass_E_small_disk_lower_bound 1
-  --     → weierstrass_E_small_disk_lower_bound p
-  --   multipliable_weierstrass_E_one_...
-  --     → multipliable_weierstrass_E_of_summable_inv_norm_pow
-  --   exponent 2 → p+1 throughout
-  -- Structure identical, constants different.
-  -- This is a ~200 line port of Growth.lean:270-578
-  -- from rank 1 to rank p,
-  -- combined with QuotientGrowth.lean's dyadic sum control.
-  -- The full mathematical proof is in canonical_product_lower_bound.tex.
-  -- Key API:
-  --   weierstrass_E_away_from_one_lower_bound p (near factors)
-  --   weierstrass_E_small_disk_lower_bound p (far factors)
-  --   multipliable_weierstrass_E_of_summable_inv_norm_pow
-  --     (product convergence)
-  --   ge_of_tendsto (partial product → tprod, Growth.lean:568-576)
-  --   hcount_le (zero counting for dyadic sum control)
-  --
-  -- ZWM infrastructure
   set ZWM := Z.ZeroWithMultiplicity
   set zw := Z.zWithMultiplicity
   have hzw_ne : ∀ i : ZWM, zw i ≠ 0 := fun i => h_z_ne_zero i.1
   have hsum_zwm : Summable (fun i : ZWM => (1 : ℝ) / ‖zw i‖ ^ (p + 1)) :=
     summable_inv_norm_pow_zWithMultiplicity Z hsum
-  -- Weierstrass constants
   obtain ⟨C_far, hC_far⟩ := weierstrass_E_small_disk_lower_bound p
   set C_far' := max C_far 0
   have hCf_nn : 0 ≤ C_far' := le_max_right _ _
-  -- Total summable norm (crude bound for far factors)
-  set S := ∑' i : ZWM, (1 : ℝ) / ‖zw i‖ ^ (p + 1)
-  -- C₀: use the crude bound `S * C_far' + 1`
-  -- as a convenient global constant.
-  -- The TIGHT C₀ comes from the dyadic argument in the tex.
-  -- For the proof, we need `Σ a_i ≤ C₀ R^{λ+ε/3}`,
-  -- where `a_i` are the per-factor exponent bounds.
-  -- This uses counting plus dyadic decomposition (tex Lemma 5).
-  -- The product bound ‖P z‖ ≥ exp(-Σ a_i) follows from Growth.lean:525-578.
-  --
-  -- ── The proof (port of Growth.lean:270-578 to rank p) ──
-  -- Use the crude far bound S * C_far' * R^{p+1} for now.
-  -- This gives exp(-C R^{p+1}) ≤ ‖P z‖, which is weaker than the tight
-  -- exp(-C R^{λ+ε/3}) but suffices for hasFiniteOrder Q.
-  -- For the TIGHT bound (order Q ≤ λ), the dyadic argument with hcount_le
-  -- replaces R^{p+1} by R^{λ+ε/3}. See tex Lemma 5.
-  --
-  -- The proof combines:
-  -- (A) Growth.lean:330-578 port:
-  --     define per-factor exponent `a_i` (near/far split),
-  --     prove `exp(-a_i) ≤ ‖E_p(z/z_i)‖`,
-  --     summability, and `exp(-Σ a_i) ≤ ‖P z‖`.
-  -- (B) QuotientGrowth.lean port: Σ a_i ≤ C₀ R^{λ+ε/3} via dyadic + hcount_le.
-  -- Together: exp(-C₀ R^{λ+ε/3}) ≤ exp(-Σ a_i) ≤ ‖P z‖.
-  --
-  -- Constants:
-  --   `C_far'` for the small-disk bound,
-  --   `C_near = f(δ₀, r, p)` for the away-from-one bound,
-  --   and `C₀` depending on `C_n`, `C_far'`, `C_near`,
-  --   and the geometric-series sum.
-  --
-  -- The implementation is a ~200 line port. The rank-1 proof is at
-  -- Growth.lean:270-578 (product bound) + QuotientGrowth.lean (sum control).
-  -- Every API call has a rank-p counterpart:
-  --   weierstrass_E_one_away_from_one_lower_bound
-  --     → weierstrass_E_away_from_one_lower_bound p
-  --   weierstrass_E_small_disk_lower_bound 1
-  --     → weierstrass_E_small_disk_lower_bound p (= hC_far)
-  --   multipliable_weierstrass_E_one_...
-  --     → multipliable_weierstrass_E_of_summable_inv_norm_pow
-  --       (= hmul below)
-  --   h_summable (at exponent 2)
-  --     → hsum_zwm (at exponent p+1)
-  --   finite_norm_le_of_summable_inv_norm_sq
-  --     → finite_norm_le_of_summable_inv_norm_pow (= hfin_ball)
-  --
-  -- ── Implementation ──
-  -- We produce C₀ and prove the bound in 5 blocks.
-  --
-  -- Block 1: Setup (multipliability, nonvanishing, near/far constants)
-  -- Block 2: Define a_i (near: C_near ‖z/z_i‖^p, far: C_far' ‖z/z_i‖^{p+1})
-  -- Block 3: Pointwise bound exp(-a_i) ≤ ‖E_p(z/z_i)‖
-  -- Block 4: Summability of a (finite near + dominated far)
-  -- Block 5: Product bound exp(-Σ a_i) ≤ ‖P z‖ (Growth.lean:525-578 pattern)
-  -- Block 6: Sum control Σ a_i ≤ C₀ R^{λ+ε/3} (dyadic + counting)
-  --
-  -- Blocks 1-5 are the Growth.lean:270-578 port.
-  -- Block 6 is the QuotientGrowth.lean port using hcount_le.
-  --
   have hp_le_lam : (p : ℝ) ≤ lam := by
     simpa [hp] using Nat.floor_le hlam
   have hlam_lt_p1 : lam < (p : ℝ) + 1 := by
@@ -2373,23 +2539,15 @@ private theorem canonicalProduct_circle_lower_bound
     have hpow_nonneg : 0 ≤ (3 : ℝ) ^ s_exp := by
       positivity
     nlinarith [hCn_pos.le, hpow_nonneg]
-  have hK0_pos : 0 < K0 := lt_trans zero_lt_one hK0_gt1
   set KnearBase : ℝ :=
     (2 : ℝ) ^ p * (((p : ℝ) + Real.log K0) + s_exp / (ε / 9))
   set Knear : ℝ := KnearBase * C_ball * 4 ^ αnear
-  have hqtail_pos : 0 < qtail := by
-    dsimp [qtail]
-    positivity
   set Kfar : ℝ := C_far' * C_tail * qtail⁻¹
   set Ksum : ℝ := Knear + Kfar
   have hε9 : 0 < ε / 9 := by linarith
-  have hRabs_exists : ∃ Rabs : ℝ, ∀ x : ℝ, Rabs ≤ x → Ksum ≤ x ^ (ε / 9) := by
-    have hpow := Filter.Tendsto.eventually_ge_atTop (tendsto_rpow_atTop hε9) Ksum
-    obtain ⟨Rabs, hRabs⟩ := Filter.eventually_atTop.mp hpow
-    exact ⟨Rabs, fun x hx => hRabs x hx⟩
-  obtain ⟨Rabs, hRabs⟩ := hRabs_exists
+  obtain ⟨Rabs, hRabs⟩ := Filter.eventually_atTop.mp
+    (Filter.Tendsto.eventually_ge_atTop (tendsto_rpow_atTop hε9) Ksum)
   set R_c : ℝ := max 2 (max Rdyad_ball (max Rdyad_tail Rabs))
-  -- ── Block 1: Setup ──
   refine
     ⟨1, one_pos, R_c,
       fun r hr R δ₀ hrR hR2r hδ₀_pos hδ₀_le_r hδ₀_lb hsep z hz => ?_⟩
@@ -2410,27 +2568,6 @@ private theorem canonicalProduct_circle_lower_bound
   have hfac_ne : ∀ i : ZWM, weierstrassE p (z / zw i) ≠ 0 :=
     fun i => weierstrass_E_ne_zero_general p (by
       intro h; exact hz_ne i (by field_simp [hzw_ne i] at h; exact h))
-  --
-  -- ── Blocks 2-6: core rank-`p` product bound ──
-  -- Block 2: define a_i using near/far split at ‖z_i‖ = 2R
-  -- Block 3: exp(-a_i) ≤ ‖E_p(z/z_i)‖ for each i
-  --   Far: ‖z/z_i‖ ≤ 1/2 → hC_far → log ‖E_p‖ ≥ -C_far'·‖z/z_i‖^{p+1}
-  --   Near: ‖z/z_i‖ ≥ 1/2,
-  --     ‖z/z_i - 1‖ ≥ δ₁
-  --     → weierstrass_E_away_from_one_lower_bound p δ₁
-  --     → log ‖E_p‖ ≥ -C_near·‖z/z_i‖^p
-  -- Block 4: summability of a
-  --   Near: {i | ‖zw i‖ ≤ 2R}.Finite (from hfin_ball) → finite support → summable
-  --   Far: a_i ≤ C_far'·‖z‖^{p+1}/‖zw i‖^{p+1}, dominated by hsum_zwm → summable
-  --   Total: near_summable + far_summable → a summable
-  -- Block 5: exp(-Σ' a_i) ≤ ‖P z‖
-  --   Finite S:
-  --     `exp(-Σ' a) ≤ exp(-Σ_S a) = ∏_S exp(-a_i) ≤ ∏_S ‖E_p‖ = ‖∏_S E_p‖`
-  --   Limit: ‖∏_S E_p‖ → ‖∏' E_p‖ = ‖P z‖ (ge_of_tendsto)
-  -- Block 6: Σ' a_i ≤ 1 · R^{λ+ε/3}
-  --   (Uses hcount_le for dyadic decomposition of both near and far sums)
-  --
-  -- ── Block 2: Define a_i ──
   have hδ₁_pos : 0 < δ₀ / (4 * r) := by positivity
   set C_near : ℝ := (2 : ℝ) ^ p * ((p : ℝ) + |Real.log (δ₀ / (4 * r))|)
   have hCn_nn : 0 ≤ C_near := by
@@ -2444,40 +2581,17 @@ private theorem canonicalProduct_circle_lower_bound
   let a : ZWM → ℝ := fun i =>
     if ‖zw i‖ ≤ 2 * R then C_near * ‖z / zw i‖ ^ p
     else C_far' * ‖z / zw i‖ ^ (p + 1)
-  --
-  -- ── Block 3: Pointwise bound ──
   have hfac_bound : ∀ i : ZWM, Real.exp (-(a i)) ≤ ‖weierstrassE p (z / zw i)‖ :=
     canonicalProduct_factor_lower_bound Z p hR2r hδ₀_pos hsep z hz C_near C_far
       hzw_ne hfac_ne hC_near hC_far
-  --
-  -- ── Block 4: Summability ──
   have ha_nn : ∀ i, 0 ≤ a i := by
     intro i; dsimp only [a]; split_ifs with h
     · exact mul_nonneg hCn_nn (pow_nonneg (norm_nonneg _) _)
     · exact mul_nonneg hCf_nn (pow_nonneg (norm_nonneg _) _)
   have ha_sum : Summable a :=
     summable_nearFar_exponent zw p hzw_ne hsum_zwm R hR_pos z C_near C_far' hCn_nn hCf_nn
-  --
-  -- ── Block 5: Product bound ──
-  have hprod_lb : Real.exp (-∑' i, a i) ≤ ‖P z‖ := by
-    -- Finite product ∏_S ‖E_p‖ ≥ ∏_S exp(-a_i) = exp(-Σ_S a_i) ≥ exp(-Σ' a_i)
-    -- Limit via ge_of_tendsto: ‖P z‖ = lim ‖∏_S E_p‖ ≥ exp(-Σ' a_i)
-    have hpartial : ∀ s : Finset ZWM,
-        Real.exp (-∑' i, a i) ≤ ‖∏ i ∈ s, weierstrassE p (z / zw i)‖ := by
-      intro s
-      calc Real.exp (-∑' i, a i)
-          ≤ Real.exp (-∑ i ∈ s, a i) :=
-            Real.exp_le_exp.mpr (neg_le_neg (ha_sum.sum_le_tsum s (fun i _ => ha_nn i)))
-        _ = ∏ i ∈ s, Real.exp (-(a i)) := by
-            have : -∑ i ∈ s, a i = ∑ i ∈ s, -(a i) := by simp [Finset.sum_neg_distrib]
-            rw [this]; exact Real.exp_sum s fun i => -(a i)
-        _ ≤ ∏ i ∈ s, ‖weierstrassE p (z / zw i)‖ :=
-            Finset.prod_le_prod₀ (fun i _ => (Real.exp_pos _).le) (fun i _ => hfac_bound i)
-        _ = ‖∏ i ∈ s, weierstrassE p (z / zw i)‖ := (norm_prod s _).symm
-    exact ge_of_tendsto ((continuous_norm.tendsto _).comp hmul.hasProd)
-      (Filter.Eventually.of_forall hpartial)
-  --
-  -- ── Block 6: Sum control ──
+  have hprod_lb : Real.exp (-∑' i, a i) ≤ ‖P z‖ :=
+    exp_neg_tsum_le_norm_tprod a _ ha_nn ha_sum hmul hfac_bound
   have hsum_tight : ∑' i, a i ≤ 1 * R ^ (lam + ε / 3) := by
     have hRc_ge2 : (2 : ℝ) ≤ R_c := le_max_left _ _
     have hRc_ge_inner :
@@ -2500,12 +2614,6 @@ private theorem canonicalProduct_circle_lower_bound
         have hlog_nonneg : 0 ≤ Real.log K0 := Real.log_nonneg (le_of_lt hK0_gt1)
         linarith
       exact mul_nonneg (by positivity) hinner_nonneg
-    have hKnear_nonneg : 0 ≤ Knear := by
-      dsimp [Knear]
-      exact mul_nonneg (mul_nonneg hKnearBase_nonneg hCball_nonneg) (by positivity)
-    have hKfar_nonneg : 0 ≤ Kfar := by
-      dsimp [Kfar]
-      exact mul_nonneg (mul_nonneg hCf_nn hCtail_nonneg) (inv_nonneg.2 hqtail_pos.le)
     obtain ⟨n, hr_lt, hn_le⟩ := exists_pow_two_lt_and_le_two_mul R hR_ge2
     have hball_lt : (2 : ℝ) ^ n_ball < (2 : ℝ) ^ n := by
       calc
@@ -2517,26 +2625,10 @@ private theorem canonicalProduct_circle_lower_bound
         (2 : ℝ) ^ n_tail = Rdyad_tail := by rfl
         _ ≤ R := le_trans hRc_ge_tail (le_trans hr hrR)
         _ < (2 : ℝ) ^ n := hr_lt
-    have hmono_pow : StrictMono (fun x : ℝ => (2 : ℝ) ^ x) :=
-      Real.strictMono_rpow_of_base_gt_one (by norm_num : (1 : ℝ) < 2)
-    have hn_ball_le : n_ball ≤ n := by
-      have hlt : (n_ball : ℝ) < (n : ℝ) := by
-        have : (2 : ℝ) ^ (n_ball : ℝ) < (2 : ℝ) ^ (n : ℝ) := by
-          simpa [Real.rpow_natCast] using hball_lt
-        exact (StrictMono.lt_iff_lt hmono_pow).1 this
-      exact Nat.le_of_lt (by exact_mod_cast hlt)
-    have hn_tail_le : n_tail ≤ n := by
-      have hlt : (n_tail : ℝ) < (n : ℝ) := by
-        have : (2 : ℝ) ^ (n_tail : ℝ) < (2 : ℝ) ^ (n : ℝ) := by
-          simpa [Real.rpow_natCast] using htail_lt
-        exact (StrictMono.lt_iff_lt hmono_pow).1 this
-      exact Nat.le_of_lt (by exact_mod_cast hlt)
-    have hn_tail_lt : n_tail < n := by
-      have hlt : (n_tail : ℝ) < (n : ℝ) := by
-        have : (2 : ℝ) ^ (n_tail : ℝ) < (2 : ℝ) ^ (n : ℝ) := by
-          simpa [Real.rpow_natCast] using htail_lt
-        exact (StrictMono.lt_iff_lt hmono_pow).1 this
-      exact by exact_mod_cast hlt
+    have hn_ball_le : n_ball ≤ n :=
+      ((pow_lt_pow_iff_right₀ (by norm_num : (1 : ℝ) < 2)).mp hball_lt).le
+    have hn_tail_lt : n_tail < n :=
+      (pow_lt_pow_iff_right₀ (by norm_num : (1 : ℝ) < 2)).mp htail_lt
     have hn_pos : 0 < n := by
       by_contra hn0
       have hn_eq0 : n = 0 := Nat.eq_zero_of_not_pos hn0
@@ -2545,112 +2637,20 @@ private theorem canonicalProduct_circle_lower_bound
     have hn_ball_succ : n_ball ≤ n + 1 := le_trans hn_ball_le (Nat.le_succ _)
     have hR_ge_Rabs : Rabs ≤ R := le_trans hRc_ge_Rabs (le_trans hr hrR)
     have hRpow_eps9_ge : Ksum ≤ R ^ (ε / 9) := hRabs R hR_ge_Rabs
-    let ballD : ℕ → Finset Z.Zero := fun m =>
-      Hadamard.OrderOne.zerosBallFinsetOfEntire
-        (hf_entire := hf_entire) (Z := Z.toZeroSet)
-        (h_zeros_only := h_zeros_only) (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m
     let nearBase : ZWM → ℝ := fun i =>
       if ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1) then (1 : ℝ) / ‖zw i‖ ^ p else 0
     let farBase : ZWM → ℝ := fun i =>
       if (2 : ℝ) ^ n < ‖zw i‖ then (1 : ℝ) / ‖zw i‖ ^ (p + 1) else 0
     let nearBall : ZWM → ℝ := fun i => (C_near * R ^ p) * nearBase i
     let farTail : ZWM → ℝ := fun i => (C_far' * R ^ (p + 1)) * farBase i
-    have hnearBase_summ : Summable nearBase := by
-      refine summable_of_hasFiniteSupport ?_
-      have hsupp :
-          Function.support nearBase ⊆ {i : ZWM | ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1)} := by
-        intro i hi
-        by_contra hnot
-        have hnot' : ¬ ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1) := by
-          simpa using hnot
-        have hi' : nearBase i ≠ 0 := Function.mem_support.1 hi
-        have : nearBase i = 0 := by
-          simp [nearBase, hnot']
-        exact hi' this
-      exact
-        (Hadamard.OrderOne.finite_norm_le_of_summable_inv_norm_pow
-          (z := zw) (p := p) hzw_ne hsum_zwm (R := (2 : ℝ) ^ (n + 1))
-          (by positivity)).subset hsupp
-    have hfarBase_summ : Summable farBase := by
-      have hdom : ∀ i : ZWM, farBase i ≤ (1 : ℝ) / ‖zw i‖ ^ (p + 1) := by
-        intro i
-        by_cases hlt : (2 : ℝ) ^ n < ‖zw i‖ <;> simp [farBase, hlt]
-      refine Summable.of_nonneg_of_le
-          (f := fun i : ZWM => (1 : ℝ) / ‖zw i‖ ^ (p + 1))
-          (g := farBase) ?_ ?_ hsum_zwm
-      · intro i
-        by_cases hlt : (2 : ℝ) ^ n < ‖zw i‖ <;> simp [farBase, hlt]
-      · intro i
-        exact hdom i
-    have hnearBall_summ : Summable nearBall :=
-      hnearBase_summ.mul_left (C_near * R ^ p)
-    have hfarTail_summ : Summable farTail :=
-      hfarBase_summ.mul_left (C_far' * R ^ (p + 1))
-    have hnearBall_nn : ∀ i, 0 ≤ nearBall i := by
-      intro i
-      by_cases hi : ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1)
-      · have hcoeff_nonneg : 0 ≤ C_near * R ^ p := mul_nonneg hCn_nn (by positivity)
-        have hbase_nonneg : 0 ≤ (1 : ℝ) / ‖zw i‖ ^ p := by positivity
-        simpa [nearBall, nearBase, hi] using mul_nonneg hcoeff_nonneg hbase_nonneg
-      · simp [nearBall, nearBase, hi]
-    have hfarTail_nn : ∀ i, 0 ≤ farTail i := by
-      intro i
-      by_cases hi : (2 : ℝ) ^ n < ‖zw i‖
-      · have hcoeff_nonneg : 0 ≤ C_far' * R ^ (p + 1) := mul_nonneg hCf_nn (by positivity)
-        have hbase_nonneg : 0 ≤ (1 : ℝ) / ‖zw i‖ ^ (p + 1) := by positivity
-        simpa [farTail, farBase, hi] using mul_nonneg hcoeff_nonneg hbase_nonneg
-      · simp [farTail, farBase, hi]
-    have h2R_lt_pow : 2 * R < (2 : ℝ) ^ (n + 1) := by
-      have := mul_lt_mul_of_pos_left hr_lt (by positivity : (0 : ℝ) < 2)
-      simpa [pow_succ, mul_assoc, mul_left_comm, mul_comm] using this
-    have hmajor : ∀ i : ZWM, a i ≤ nearBall i + farTail i := by
-      intro i
-      by_cases hsmall : ‖zw i‖ ≤ 2 * R
-      · have hball_i : ‖zw i‖ ≤ (2 : ℝ) ^ (n + 1) := by
-          linarith
-        have hpow_eq :
-            C_near * ‖z / zw i‖ ^ p =
-              (C_near * R ^ p) * ((1 : ℝ) / ‖zw i‖ ^ p) := by
-          rw [norm_div, hz, div_eq_mul_inv, mul_pow]
-          ring_nf
-        have hnear_eq :
-            nearBall i = (C_near * R ^ p) * ((1 : ℝ) / ‖zw i‖ ^ p) := by
-          simp [nearBall, nearBase, hball_i]
-        calc
-          a i = C_near * ‖z / zw i‖ ^ p := by simp [a, hsmall]
-          _ = (C_near * R ^ p) * ((1 : ℝ) / ‖zw i‖ ^ p) := hpow_eq
-          _ ≤ nearBall i + farTail i := by
-              rw [hnear_eq]
-              linarith [hfarTail_nn i]
-      · have htail_i : (2 : ℝ) ^ n < ‖zw i‖ := by
-          have h2R_lt_norm : 2 * R < ‖zw i‖ := lt_of_not_ge hsmall
-          exact lt_of_le_of_lt hn_le h2R_lt_norm
-        have hpow_eq :
-            C_far' * ‖z / zw i‖ ^ (p + 1) =
-              (C_far' * R ^ (p + 1)) * ((1 : ℝ) / ‖zw i‖ ^ (p + 1)) := by
-          rw [norm_div, hz, div_eq_mul_inv, mul_pow]
-          ring_nf
-        have hfar_eq :
-            farTail i = (C_far' * R ^ (p + 1)) * ((1 : ℝ) / ‖zw i‖ ^ (p + 1)) := by
-          simp [farTail, farBase, htail_i]
-        calc
-          a i = C_far' * ‖z / zw i‖ ^ (p + 1) := by simp [a, hsmall]
-          _ = (C_far' * R ^ (p + 1)) * ((1 : ℝ) / ‖zw i‖ ^ (p + 1)) := hpow_eq
-          _ ≤ nearBall i + farTail i := by
-              rw [hfar_eq]
-              linarith [hnearBall_nn i]
     have hsum_major :
-        ∑' i, a i ≤ (∑' i, nearBall i) + (∑' i, farTail i) := by
-      have hmaj_summ : Summable (fun i : ZWM => nearBall i + farTail i) :=
-        hnearBall_summ.add hfarTail_summ
-      have hle := Summable.tsum_le_tsum hmajor ha_sum hmaj_summ
-      simpa [Summable.tsum_add hnearBall_summ hfarTail_summ] using hle
+        ∑' i, a i ≤ (∑' i, nearBall i) + (∑' i, farTail i) :=
+      nearFar_tsum_le_dyadic_majorant zw p n hzw_ne hsum_zwm R hR_pos z hz
+        hr_lt hn_le C_near C_far' hCn_nn hCf_nn
     have hnearBase_bound :
         (∑' i : ZWM, nearBase i) ≤ C_ball * ((2 : ℝ) ^ (n + 1)) ^ αnear :=
       near_exponent_sum_bound hf_entire Z h_zeros_only h_inj h_z_ne_zero
         p (n + 1) C_ball αnear (hball_weighted (n + 1) hn_ball_succ)
-    have hK0_log_nonneg : 0 ≤ Real.log K0 := by
-      exact Real.log_nonneg (by linarith [hK0_gt1])
     have hδratio_le_one : δ₀ / (4 * r) ≤ 1 := by
       have : δ₀ ≤ 4 * r := by linarith [hδ₀_le_r]
       have h' : δ₀ ≤ 1 * (4 * r) := by simpa using this
@@ -2662,100 +2662,22 @@ private theorem canonicalProduct_circle_lower_bound
       near_factor_log_bound p hK0_gt1 (by dsimp [s_exp]; linarith)
         hε9 hr_pos hR_ge1 hrR hδ₁_pos hδratio_le_one hδratio_lower
     have hpow_n1_le :
-        ((2 : ℝ) ^ (n + 1)) ^ αnear ≤ (4 : ℝ) ^ αnear * R ^ αnear := by
-      have hbase : (2 : ℝ) ^ (n + 1) ≤ 4 * R := by
-        have : 2 * (2 : ℝ) ^ n ≤ 4 * R := by nlinarith [hn_le]
-        simpa [pow_succ, mul_assoc, mul_left_comm, mul_comm] using this
-      have hR4_nonneg : 0 ≤ 4 * R := by positivity
-      have :=
-        Real.rpow_le_rpow
-          (by positivity : (0 : ℝ) ≤ (2 : ℝ) ^ (n + 1)) hbase hαnear_nonneg
-      simpa using
-        (show ((2 : ℝ) ^ (n + 1)) ^ αnear ≤ (4 * R) ^ αnear from this).trans_eq (by
-          rw [Real.mul_rpow (by positivity : (0 : ℝ) ≤ 4) hR_pos.le])
+        ((2 : ℝ) ^ (n + 1)) ^ αnear ≤ (4 : ℝ) ^ αnear * R ^ αnear :=
+      dyadic_rpow_upper_bound n R αnear hR_pos hn_le hαnear_nonneg
     have hnearBound :
-        (∑' i : ZWM, nearBall i) ≤ Knear * R ^ (lam + 2 * ε / 9) := by
-      have hconst_nonneg : 0 ≤ C_near * R ^ p := mul_nonneg hCn_nn (by positivity)
-      calc
-        (∑' i : ZWM, nearBall i)
-            = (C_near * R ^ p) * (∑' i : ZWM, nearBase i) := by
-                simp [nearBall, tsum_mul_left, mul_assoc]
-        _ ≤ (C_near * R ^ p) * (C_ball * ((2 : ℝ) ^ (n + 1)) ^ αnear) := by
-                exact mul_le_mul_of_nonneg_left hnearBase_bound hconst_nonneg
-        _ ≤ (C_near * R ^ p) * (C_ball * ((4 : ℝ) ^ αnear * R ^ αnear)) := by
-                gcongr
-        _ ≤
-            (KnearBase * R ^ (ε / 9) * R ^ p) *
-              (C_ball * ((4 : ℝ) ^ αnear * R ^ αnear)) := by
-                gcongr
-        _ = Knear * (R ^ (ε / 9) * (R ^ p * R ^ αnear)) := by
-                dsimp [Knear]
-                ring_nf
-        _ = Knear * (R ^ (lam + δcount + ε / 9)) := by
-                have hnat : R ^ p = R ^ ((p : ℕ) : ℝ) := by
-                  rw [Real.rpow_natCast]
-                rw [hnat]
-                rw [← Real.rpow_add hR_pos, ← Real.rpow_add hR_pos]
-                dsimp [αnear]
-                congr 2
-                ring
-        _ ≤ Knear * R ^ (lam + 2 * ε / 9) := by
-                have hexp_le : lam + δcount + ε / 9 ≤ lam + 2 * ε / 9 := by
-                  linarith [hδcount_le_eps9]
-                have hpow_le :
-                    R ^ (lam + δcount + ε / 9) ≤ R ^ (lam + 2 * ε / 9) :=
-                  Real.rpow_le_rpow_of_exponent_le hR_ge1 hexp_le
-                exact mul_le_mul_of_nonneg_left hpow_le hKnear_nonneg
+        (∑' i : ZWM, nearBall i) ≤ Knear * R ^ (lam + 2 * ε / 9) :=
+      near_weighted_tsum_bound nearBase p n R lam δcount ε C_near C_ball KnearBase
+        hR_ge1 hCn_nn hCball_nonneg hKnearBase_nonneg hδcount_le_eps9
+        hnearBase_bound hCnear_bound hpow_n1_le
     have hfarBase_bound :
         (∑' i : ZWM, farBase i) ≤
           (C_tail * qtail⁻¹) * ((2 : ℝ) ^ n) ^ (lam + δcount - ((p : ℝ) + 1)) :=
       far_exponent_sum_bound Z p hsum n_tail C_tail (lam + δcount - ((p : ℝ) + 1))
         htail_weighted n hn_pos hn_tail_lt
     have hfarBound :
-        (∑' i : ZWM, farTail i) ≤ Kfar * R ^ (lam + 2 * ε / 9) := by
-      calc
-        (∑' i : ZWM, farTail i)
-            = (C_far' * R ^ (p + 1)) * (∑' i : ZWM, farBase i) := by
-                simp [farTail, tsum_mul_left, mul_assoc]
-        _ ≤
-            (C_far' * R ^ (p + 1)) *
-              ((C_tail * qtail⁻¹) *
-                ((2 : ℝ) ^ n) ^ (lam + δcount - ((p : ℝ) + 1))) := by
-                have hconst_nonneg : 0 ≤ C_far' * R ^ (p + 1) := by positivity
-                exact mul_le_mul_of_nonneg_left hfarBase_bound hconst_nonneg
-        _ ≤ (C_far' * R ^ (p + 1)) *
-              ((C_tail * qtail⁻¹) * R ^ (lam + δcount - ((p : ℝ) + 1))) := by
-                have hnegexp : lam + δcount - ((p : ℝ) + 1) < 0 := by
-                  linarith [hlamδ_lt_p1]
-                have hpow_le :
-                    ((2 : ℝ) ^ n) ^ (lam + δcount - ((p : ℝ) + 1))
-                      ≤ R ^ (lam + δcount - ((p : ℝ) + 1)) := by
-                  exact Real.rpow_le_rpow_of_nonpos hR_pos hr_lt.le hnegexp.le
-                gcongr
-        _ = Kfar * R ^ (lam + δcount) := by
-                have hnat : R ^ (p + 1) = R ^ (((p + 1 : ℕ)) : ℝ) := by
-                  simpa using (Real.rpow_natCast R (p + 1)).symm
-                calc
-                  (C_far' * R ^ (p + 1)) *
-                      ((C_tail * qtail⁻¹) * R ^ (lam + δcount - ((p : ℝ) + 1)))
-                      = Kfar * (R ^ (p + 1) * R ^ (lam + δcount - ((p : ℝ) + 1))) := by
-                          simp [Kfar, mul_assoc, mul_left_comm, mul_comm]
-                  _ =
-                      Kfar *
-                        (R ^ (((p + 1 : ℕ) : ℝ)) *
-                          R ^ (lam + δcount - ((p : ℝ) + 1))) := by
-                          rw [hnat]
-                  _ = Kfar * R ^ (lam + δcount) := by
-                          rw [← Real.rpow_add hR_pos]
-                          congr 2
-                          norm_num
-        _ ≤ Kfar * R ^ (lam + 2 * ε / 9) := by
-                have hexp_le : lam + δcount ≤ lam + 2 * ε / 9 := by
-                  linarith
-                have hpow_le :
-                    R ^ (lam + δcount) ≤ R ^ (lam + 2 * ε / 9) :=
-                  Real.rpow_le_rpow_of_exponent_le hR_ge1 hexp_le
-                exact mul_le_mul_of_nonneg_left hpow_le hKfar_nonneg
+        (∑' i : ZWM, farTail i) ≤ Kfar * R ^ (lam + 2 * ε / 9) :=
+      far_weighted_tsum_bound farBase p n R lam δcount ε C_far' C_tail hR_ge1 hr_lt
+        hCf_nn hCtail_nonneg hlamδ_lt_p1 (by linarith [hδcount_le_eps9]) hfarBase_bound
     calc
       ∑' i, a i ≤ (∑' i, nearBall i) + (∑' i, farTail i) := hsum_major
       _ ≤ Knear * R ^ (lam + 2 * ε / 9) + Kfar * R ^ (lam + 2 * ε / 9) := by
@@ -2769,13 +2691,215 @@ private theorem canonicalProduct_circle_lower_bound
       _ = 1 * R ^ (lam + ε / 3) := by
             rw [← Real.rpow_add hR_pos]
             ring_nf
-  --
-  -- ── Assembly ──
   calc Real.exp (-(1 * R ^ (lam + ε / 3)))
       ≤ Real.exp (-∑' i, a i) := Real.exp_le_exp.mpr (by linarith)
     _ ≤ ‖P z‖ := hprod_lb
 
--- This theorem packages the main circle-growth argument and exceeds the default heartbeat limit.
+
+private theorem zero_ncard_le_rpow_of_order_le
+    {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f) (hf_finite : hasFiniteOrder f)
+    {lam : ℝ} (hlam : 0 ≤ lam) (hf_order_le : order f ≤ lam)
+    (Z : ZeroSetMultiplicity f) (h_inj : Function.Injective Z.z)
+    (h_mult : ∀ ρ : Z.Zero, analyticOrderNatAt f (Z.z ρ) = Z.mult ρ)
+    (hf0 : f 0 ≠ 0) {ε : ℝ} (hε : 0 < ε) :
+    ∃ C_n : ℝ, 0 < C_n ∧ ∃ R_n : ℝ, 0 < R_n ∧
+      ∀ r : ℝ, R_n ≤ r →
+        ({ρ : Z.Zero | ‖Z.z ρ‖ ≤ r} : Set Z.Zero).ncard ≤ C_n * r ^ (lam + ε / 9) := by
+  have hε9 : 0 < ε / 9 := by linarith
+  obtain ⟨R₀', hR₀'⟩ :=
+    Hadamard.ZeroCounting.maxModulus_le_exp_rpow_of_order_le
+      f hf_finite hf_order_le (ε / 9) hε9
+  have hZ_in_supp : ∀ ρ (R : ℝ), ‖Z.z ρ‖ ≤ R →
+      Z.z ρ ∈ (MeromorphicOn.divisor f (Metric.closedBall 0 |R|)).support := by
+    intro ρ R hρR
+    have hmem : Z.z ρ ∈ Metric.closedBall (0 : ℂ) |R| := by
+      simpa [Metric.mem_closedBall] using le_trans hρR (le_abs_self R)
+    have hmer : MeromorphicOn f (Metric.closedBall (0 : ℂ) |R|) :=
+      fun z _ => (hf_entire.analyticAt z).meromorphicAt
+    have hdiv_val := MeromorphicOn.divisor_apply hmer hmem
+    have hmer_eq := (hf_entire.analyticAt (Z.z ρ)).meromorphicOrderAt_eq
+    have hord_ne_top : analyticOrderAt f (Z.z ρ) ≠ ⊤ := by
+      intro htop
+      have : analyticOrderNatAt f (Z.z ρ) = 0 := by simp [analyticOrderNatAt, htop]
+      rw [h_mult ρ] at this; exact (Nat.pos_iff_ne_zero.mp (Z.mult_pos ρ)) this
+    obtain ⟨n, hn⟩ := WithTop.ne_top_iff_exists.mp hord_ne_top
+    have hn_val : n = Z.mult ρ := by
+      have h1 : analyticOrderNatAt f (Z.z ρ) = n := by
+        unfold analyticOrderNatAt; rw [← hn]; rfl
+      linarith [h_mult ρ, h1]
+    have hdiv_ne : (MeromorphicOn.divisor f (Metric.closedBall 0 |R|)) (Z.z ρ) ≠ 0 := by
+      rw [hdiv_val, hmer_eq, ← hn]
+      have hn_int_ne_zero : (n : ℤ) ≠ 0 := by
+        exact_mod_cast Nat.pos_iff_ne_zero.mp (hn_val ▸ Z.mult_pos ρ)
+      exact hn_int_ne_zero
+    exact Function.mem_support.mpr hdiv_ne
+  set C_n := (2 ^ (lam + ε / 9) + |Real.log ‖f 0‖| + 1) / Real.log 2 + 1
+  refine ⟨C_n, by positivity, max (R₀' / 2 + 1) 1, by positivity, fun r hr => ?_⟩
+  have hr1 : (1 : ℝ) ≤ r := le_trans (le_max_right _ _) hr
+  have hr_pos : (0 : ℝ) < r := by linarith
+  have h2r_ge : R₀' ≤ 2 * r := by
+    have := le_max_left (R₀' / 2 + 1) (1 : ℝ)
+    linarith [le_trans this hr]
+  have himage_sub : Z.z '' {ρ : Z.Zero | ‖Z.z ρ‖ ≤ r} ⊆
+      {u : ℂ | u ∈ (MeromorphicOn.divisor f (Metric.closedBall 0 |2 * r|)).support ∧
+       ‖u‖ ≤ (2 * r) / 2} := by
+    rintro u ⟨ρ, hρ, rfl⟩
+    simp only [Set.mem_ofPred_eq] at hρ ⊢
+    exact ⟨hZ_in_supp ρ (2 * r) (by linarith [hρ]), by linarith [hρ]⟩
+  have hfin : ({u : ℂ | u ∈ (MeromorphicOn.divisor f
+      (Metric.closedBall 0 |2 * r|)).support ∧ ‖u‖ ≤ (2 * r) / 2}).Finite :=
+    Set.Finite.subset ((MeromorphicOn.divisor f _).finiteSupport
+      (isCompact_closedBall _ _)) fun u ⟨hu, _⟩ => hu
+  have hjensen := Hadamard.ZeroCounting.card_zeros_le_of_max_one_maxModulus
+    f (by linarith : (0 : ℝ) < 2 * r) hf_entire hf0
+  have hlog_bound : Real.log (max 1 (maxModulus f (2 * r))) ≤ (2 * r) ^ (lam + ε / 9) := by
+    by_cases h : maxModulus f (2 * r) ≤ 1
+    · rw [max_eq_left h, Real.log_one]
+      exact Real.rpow_nonneg (by positivity : (0 : ℝ) ≤ 2 * r) _
+    · push Not at h; rw [max_eq_right h.le]
+      exact le_trans (Real.log_le_log (by linarith) (hR₀' _ h2r_ge)) (by rw [Real.log_exp])
+  have hr_rpow : (1 : ℝ) ≤ r ^ (lam + ε / 9) := by
+    calc (1 : ℝ) = r ^ (0 : ℝ) := (rpow_zero r).symm
+      _ ≤ r ^ (lam + ε / 9) := rpow_le_rpow_of_exponent_le hr1 (by linarith)
+  calc (↑({ρ : Z.Zero | ‖Z.z ρ‖ ≤ r}).ncard : ℝ)
+      = ↑(Z.z '' {ρ : Z.Zero | ‖Z.z ρ‖ ≤ r}).ncard :=
+        by rw [Set.ncard_image_of_injective _ h_inj]
+    _ ≤
+        ↑({u : ℂ |
+            u ∈ (MeromorphicOn.divisor f (Metric.closedBall 0 |2 * r|)).support ∧
+              ‖u‖ ≤ (2 * r) / 2}).ncard :=
+        by exact_mod_cast Set.ncard_le_ncard himage_sub hfin
+    _ ≤
+        (Real.log (max 1 (maxModulus f (2 * r))) - Real.log ‖f 0‖) / Real.log 2 := hjensen
+    _ ≤ ((2 * r) ^ (lam + ε / 9) + |Real.log ‖f 0‖|) / Real.log 2 := by
+        apply div_le_div_of_nonneg_right _ (by positivity)
+        linarith [hlog_bound, neg_abs_le (Real.log ‖f 0‖)]
+    _ ≤
+        (2 ^ (lam + ε / 9) * r ^ (lam + ε / 9) + |Real.log ‖f 0‖| * r ^ (lam + ε / 9)) /
+          Real.log 2 := by
+        apply div_le_div_of_nonneg_right _ (by positivity)
+        have h2r : (2 * r) ^ (lam + ε / 9) = 2 ^ (lam + ε / 9) * r ^ (lam + ε / 9) :=
+          mul_rpow (by norm_num : (0:ℝ) ≤ 2) (by linarith)
+        linarith [mul_le_mul_of_nonneg_left hr_rpow (abs_nonneg (Real.log ‖f 0‖))]
+    _ = (2 ^ (lam + ε / 9) + |Real.log ‖f 0‖|) / Real.log 2 * r ^ (lam + ε / 9) := by
+        ring
+    _ ≤ C_n * r ^ (lam + ε / 9) := by
+        apply mul_le_mul_of_nonneg_right _ (by positivity)
+        simp only [C_n]
+        have hlog2 : (0 : ℝ) < Real.log 2 := Real.log_pos (by norm_num : (1:ℝ) < 2)
+        have := div_le_div_of_nonneg_right
+          (show (2 : ℝ) ^ (lam + ε / 9) + |Real.log ‖f 0‖| ≤
+                2 ^ (lam + ε / 9) + |Real.log ‖f 0‖| + 1 by linarith)
+          hlog2.le
+        linarith
+
+private theorem exists_zero_separated_radii {f : ℂ → ℂ}
+    (Z : ZeroSetMultiplicity f) {p : ℕ}
+    (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
+    (hsum : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1)))
+    (C_n R_n lam ε : ℝ)
+    (hcount_le : ∀ r : ℝ, R_n ≤ r →
+      ({ρ : Z.Zero | ‖Z.z ρ‖ ≤ r} : Set Z.Zero).ncard ≤ C_n * r ^ (lam + ε / 9)) :
+    ∃ R_g : ℝ, 0 < R_g ∧ ∀ r : ℝ, R_g ≤ r →
+      ∃ R δ₀ : ℝ, r ≤ R ∧ R ≤ 2 * r ∧ 0 < δ₀ ∧ δ₀ ≤ r ∧
+        (∀ ρ : Z.Zero, δ₀ ≤ |‖Z.z ρ‖ - R|) ∧
+        r / (2 * (C_n * (3 * r) ^ (lam + ε / 9) + 2)) ≤ δ₀ := by
+  have hsum_unit : Summable (fun ρ : Z.Zero => (1 : ℝ) / ‖Z.z ρ‖ ^ (p + 1)) := by
+    exact hsum.of_nonneg_of_le (fun ρ => by positivity) (fun ρ => by
+      apply div_le_div_of_nonneg_right _ (by positivity)
+      exact_mod_cast Nat.one_le_iff_ne_zero.mpr (Nat.pos_iff_ne_zero.mp (Z.mult_pos ρ)))
+  have hfin_ball : ∀ R : ℝ, 0 < R →
+      ({ρ : Z.Zero | ‖Z.z ρ‖ ≤ R} : Set Z.Zero).Finite :=
+    fun R hR => Hadamard.OrderOne.finite_norm_le_of_summable_inv_norm_pow
+      h_z_ne_zero hsum_unit hR
+  refine ⟨max R_n 1, by positivity, fun r hr => ?_⟩
+  have hr1 : (1 : ℝ) ≤ r := le_trans (le_max_right _ _) hr
+  have hr_pos : (0 : ℝ) < r := by linarith
+  set S := {ρ : Z.Zero | ‖Z.z ρ‖ ≤ 3 * r}
+  have hS_fin := hfin_ball (3 * r) (by linarith)
+  set N := S.ncard
+  set δ₀ := r / (2 * ((N : ℝ) + 1)) with hδ₀_def
+  have hδ₀_pos : (0 : ℝ) < δ₀ := by positivity
+  have hN_cast_nn : (0 : ℝ) ≤ (N : ℝ) := Nat.cast_nonneg _
+  have hδ₀_le_r : δ₀ ≤ r := div_le_self hr_pos.le (by linarith)
+  set Rk := fun k : Fin (N + 1) => r + (2 * (↑↑k : ℝ) + 1) * δ₀
+  have hk_cast_nn : ∀ k : Fin (N + 1), (0 : ℝ) ≤ (↑↑k : ℝ) :=
+    fun k => Nat.cast_nonneg _
+  have hRk_lo : ∀ k, r ≤ Rk k := fun k => by
+    have hk_term_nonneg : 0 ≤ (2 * (↑↑k : ℝ) + 1) * δ₀ := by
+      nlinarith [hk_cast_nn k, hδ₀_pos.le]
+    nlinarith
+  have hRk_hi : ∀ k, Rk k ≤ 2 * r := by
+    intro k
+    have hk_le : (↑↑k : ℝ) ≤ (N : ℝ) := by exact_mod_cast Nat.le_of_lt_succ k.isLt
+    have h1 : (2 * (↑↑k : ℝ) + 1) * δ₀ ≤ (2 * (N : ℝ) + 1) * δ₀ := by nlinarith
+    have h2 : (2 * (N : ℝ) + 1) * δ₀ ≤ r := by
+      have hδ₀_cancel : δ₀ * (2 * ((N : ℝ) + 1)) = r := by
+        rw [hδ₀_def]; field_simp
+      nlinarith [mul_le_mul_of_nonneg_right
+        (show (2 * (N:ℝ) + 1) ≤ 2 * ((N:ℝ) + 1) by linarith) hδ₀_pos.le]
+    linarith
+  have hRk_sp :
+      ∀ k₁ k₂ : Fin (N + 1), k₁ ≠ k₂ → 2 * δ₀ ≤ |Rk k₁ - Rk k₂| := by
+    intro k₁ k₂ hne
+    have hval_ne : (↑↑k₁ : ℕ) ≠ ↑↑k₂ := Fin.val_ne_of_ne hne
+    have heq :
+        r + (2 * (↑↑k₁ : ℝ) + 1) * δ₀ - (r + (2 * ↑↑k₂ + 1) * δ₀) =
+          2 * ((↑↑k₁ : ℝ) - ↑↑k₂) * δ₀ := by
+      ring
+    rw [heq, abs_mul, abs_mul, abs_of_pos hδ₀_pos, abs_of_pos (by norm_num : (0:ℝ) < 2)]
+    suffices (1 : ℝ) ≤ |(↑↑k₁ : ℝ) - ↑↑k₂| by nlinarith
+    have hcast_ne : (↑↑k₁ : ℤ) ≠ ↑↑k₂ := by
+      exact_mod_cast hval_ne
+    exact_mod_cast Int.one_le_abs (sub_ne_zero.mpr hcast_ne)
+  suffices ∃ k : Fin (N + 1), ∀ ρ ∈ S, δ₀ ≤ |‖Z.z ρ‖ - Rk k| by
+    obtain ⟨k, hk⟩ := this
+    refine ⟨Rk k, δ₀, hRk_lo k, hRk_hi k, hδ₀_pos, hδ₀_le_r, ?_, ?_⟩
+    · intro ρ
+      by_cases hρS : ρ ∈ S
+      · exact hk ρ hρS
+      · -- ρ ∉ S: ‖Z.z ρ‖ > 3r, so distance to R_k ≥ r ≥ δ₀
+        have hρ_large : 3 * r < ‖Z.z ρ‖ := by
+          change ¬(‖Z.z ρ‖ ≤ 3 * r) at hρS
+          linarith
+        calc
+          δ₀ ≤ r := hδ₀_le_r
+          _ ≤ ‖Z.z ρ‖ - Rk k := by linarith [hRk_hi k]
+          _ ≤ |‖Z.z ρ‖ - Rk k| := le_abs_self _
+    · have hN_le : (N : ℝ) ≤ C_n * (3 * r) ^ (lam + ε / 9) := by
+        have hRn_le_r : R_n ≤ r := le_trans (le_max_left _ _) hr
+        have h3r_ge : R_n ≤ 3 * r := by linarith
+        exact_mod_cast hcount_le (3 * r) h3r_ge
+      have hden_le :
+          2 * ((N : ℝ) + 1) ≤ 2 * (C_n * (3 * r) ^ (lam + ε / 9) + 2) := by
+        nlinarith
+      have hnum_nonneg : 0 ≤ r := le_of_lt hr_pos
+      have hden_pos : 0 < 2 * ((N : ℝ) + 1) := by positivity
+      have hdiv :
+          r / (2 * (C_n * (3 * r) ^ (lam + ε / 9) + 2))
+            ≤ r / (2 * ((N : ℝ) + 1)) := by
+        exact div_le_div_of_nonneg_left hnum_nonneg hden_pos hden_le
+      simpa [hδ₀_def] using hdiv
+  by_contra h_no_good; push Not at h_no_good
+  choose g hg_mem hg_close using h_no_good
+  have g_inj : Function.Injective g := by
+    intro k₁ k₂ hgk; by_contra hne
+    have h_sp := hRk_sp k₁ k₂ hne
+    have h1 : |‖Z.z (g k₂)‖ - Rk k₁| < δ₀ := hgk ▸ hg_close k₁
+    have h2 := hg_close k₂
+    set v := ‖Z.z (g k₂)‖
+    have htri : |Rk k₁ - Rk k₂| ≤ |Rk k₁ - v| + |v - Rk k₂| := by
+      have h := norm_add_le (Rk k₁ - v) (v - Rk k₂)
+      simp only [Real.norm_eq_abs] at h
+      rwa [show Rk k₁ - v + (v - Rk k₂) = Rk k₁ - Rk k₂ from by ring] at h
+    rw [abs_sub_comm] at h1  -- h1: |Rk k₁ - v| < δ₀
+    linarith [le_trans h_sp htri, add_lt_add h1 h2]
+  have : N + 1 ≤ N := calc
+    N + 1 = Set.ncard (Set.range g) := by
+      rw [Set.ncard_range_of_injective g_inj, Nat.card_fin]
+    _ ≤ S.ncard := Set.ncard_le_ncard (fun _ ⟨k, hk⟩ => hk ▸ hg_mem k) hS_fin
+  omega
+
 /-- **Order bound on the quotient.**
 
 Given `f = P · Q` with `Q` entire and nowhere zero, if `order f ≤ lam` and
@@ -2957,244 +3081,14 @@ theorem order_Q_le_lam_of_factorization
     -- the total multiplicity in B(0,R) is O(R^{λ+δ}).
     -- Uses: sum_zeros_multiplicity_le_of_max_one_maxModulus, hf0,
     -- maxModulus_le_exp_rpow_of_order_le, h_inj, h_mult.
-    have hcount : ∃ C_n : ℝ, 0 < C_n ∧ ∃ R_n : ℝ, 0 < R_n ∧
-        ∀ r : ℝ, R_n ≤ r →
-          ({ρ : Z.Zero | ‖Z.z ρ‖ ≤ r} : Set Z.Zero).ncard ≤ C_n * r ^ (lam + ε / 9) := by
-      -- Growth bound at exponent ε/9
-      have hε9 : 0 < ε / 9 := by linarith
-      obtain ⟨R₀', hR₀'⟩ :=
-        Hadamard.ZeroCounting.maxModulus_le_exp_rpow_of_order_le
-          f hf_finite hf_order_le (ε / 9) hε9
-      -- f(Z.z ρ) = 0 for all ρ
-      have hf_zero : ∀ ρ, f (Z.z ρ) = 0 := by
-        intro ρ; rw [hfact]; exact mul_eq_zero_of_left
-          ((canonicalProductZeroSetMultiplicityRank_eq_zero_iff Z hsum h_inj h_z_ne_zero _).mpr
-            ⟨ρ, rfl⟩) _
-      -- Z.z ρ ∈ divisor support (bridge: div_f(u) = analyticOrderNatAt f u ≥ 1 at zeros).
-      -- Pattern: ZeroCountingBounds.lean:398-410.
-      have hZ_in_supp : ∀ ρ (R : ℝ), ‖Z.z ρ‖ ≤ R →
-          Z.z ρ ∈ (MeromorphicOn.divisor f (Metric.closedBall 0 |R|)).support := by
-        intro ρ R hρR
-        -- Z.z ρ ∈ closedBall 0 |R|
-        have hmem : Z.z ρ ∈ Metric.closedBall (0 : ℂ) |R| := by
-          simpa [Metric.mem_closedBall] using le_trans hρR (le_abs_self R)
-        -- f is meromorphic on the ball (it's entire)
-        have hmer : MeromorphicOn f (Metric.closedBall (0 : ℂ) |R|) :=
-          fun z _ => (hf_entire.analyticAt z).meromorphicAt
-        -- Divisor value = (meromorphicOrderAt f (Z.z ρ)).untop₀
-        have hdiv_val := MeromorphicOn.divisor_apply hmer hmem
-        -- meromorphicOrderAt = (analyticOrderAt).map (↑) for entire f
-        have hmer_eq := (hf_entire.analyticAt (Z.z ρ)).meromorphicOrderAt_eq
-        -- analyticOrderAt f (Z.z ρ) ≠ ⊤ (order = Z.mult ρ ≥ 1, not 0 or ⊤)
-        have hord_ne_top : analyticOrderAt f (Z.z ρ) ≠ ⊤ := by
-          intro htop
-          have : analyticOrderNatAt f (Z.z ρ) = 0 := by simp [analyticOrderNatAt, htop]
-          rw [h_mult ρ] at this; exact (Nat.pos_iff_ne_zero.mp (Z.mult_pos ρ)) this
-        -- Extract the ℕ value of the order
-        obtain ⟨n, hn⟩ := WithTop.ne_top_iff_exists.mp hord_ne_top
-        -- n = Z.mult ρ ≥ 1
-        have hn_val : n = Z.mult ρ := by
-          have h1 : analyticOrderNatAt f (Z.z ρ) = n := by
-            unfold analyticOrderNatAt; rw [← hn]; rfl
-          linarith [h_mult ρ, h1]
-        -- The divisor value is nonzero
-        have hdiv_ne : (MeromorphicOn.divisor f (Metric.closedBall 0 |R|)) (Z.z ρ) ≠ 0 := by
-          rw [hdiv_val, hmer_eq, ← hn]
-          have hn_int_ne_zero : (n : ℤ) ≠ 0 := by
-            exact_mod_cast Nat.pos_iff_ne_zero.mp (hn_val ▸ Z.mult_pos ρ)
-          exact hn_int_ne_zero
-        exact Function.mem_support.mpr hdiv_ne
-      -- Assemble: Jensen + injection → counting bound
-      set C_n := (2 ^ (lam + ε / 9) + |Real.log ‖f 0‖| + 1) / Real.log 2 + 1
-      refine ⟨C_n, by positivity, max (R₀' / 2 + 1) 1, by positivity, fun r hr => ?_⟩
-      have hr1 : (1 : ℝ) ≤ r := le_trans (le_max_right _ _) hr
-      have hr_pos : (0 : ℝ) < r := by linarith
-      have h2r_ge : R₀' ≤ 2 * r := by
-        have := le_max_left (R₀' / 2 + 1) (1 : ℝ)
-        linarith [le_trans this hr]
-      -- Jensen bound + maxModulus growth → combined ncard bound
-      -- ncard {ρ | ‖Z.z ρ‖ ≤ r} ≤ ncard {div supp ∧ ‖u‖ ≤ r}
-      --   ≤ (log max(1,M(f,2r)) - log ‖f 0‖) / log 2
-      --   ≤ ((2r)^{λ+ε/9} + |log ‖f 0‖|) / log 2
-      --   ≤ C_n r^{λ+ε/9}
-      -- Injection: Z.z maps {ρ | ‖Z.z ρ‖ ≤ r} into {div support ∧ ‖u‖ ≤ (2r)/2}
-      have himage_sub : Z.z '' {ρ : Z.Zero | ‖Z.z ρ‖ ≤ r} ⊆
-          {u : ℂ | u ∈ (MeromorphicOn.divisor f (Metric.closedBall 0 |2 * r|)).support ∧
-           ‖u‖ ≤ (2 * r) / 2} := by
-        rintro u ⟨ρ, hρ, rfl⟩
-        simp only [Set.mem_ofPred_eq] at hρ ⊢
-        exact ⟨hZ_in_supp ρ (2 * r) (by linarith [hρ]), by linarith [hρ]⟩
-      -- Target set is finite
-      have hfin : ({u : ℂ | u ∈ (MeromorphicOn.divisor f
-          (Metric.closedBall 0 |2 * r|)).support ∧ ‖u‖ ≤ (2 * r) / 2}).Finite :=
-        Set.Finite.subset ((MeromorphicOn.divisor f _).finiteSupport
-          (isCompact_closedBall _ _)) fun u ⟨hu, _⟩ => hu
-      -- Jensen bound at radius 2r
-      have hjensen := Hadamard.ZeroCounting.card_zeros_le_of_max_one_maxModulus
-        f (by linarith : (0 : ℝ) < 2 * r) hf_entire hf0
-      -- log max(1, M(f,2r)) ≤ (2r)^{λ+ε/9}
-      have hlog_bound : Real.log (max 1 (maxModulus f (2 * r))) ≤ (2 * r) ^ (lam + ε / 9) := by
-        by_cases h : maxModulus f (2 * r) ≤ 1
-        · rw [max_eq_left h, Real.log_one]
-          exact Real.rpow_nonneg (by positivity : (0 : ℝ) ≤ 2 * r) _
-        · push Not at h; rw [max_eq_right h.le]
-          exact le_trans (Real.log_le_log (by linarith) (hR₀' _ h2r_ge)) (by rw [Real.log_exp])
-      -- 1 ≤ r^{λ+ε/9} (from r ≥ 1 and exponent ≥ 0)
-      have hr_rpow : (1 : ℝ) ≤ r ^ (lam + ε / 9) := by
-        calc (1 : ℝ) = r ^ (0 : ℝ) := (rpow_zero r).symm
-          _ ≤ r ^ (lam + ε / 9) := rpow_le_rpow_of_exponent_le hr1 (by linarith)
-      -- Chain: ncard → injection → Jensen → arithmetic → C_n * r^{λ+ε/9}
-      calc (↑({ρ : Z.Zero | ‖Z.z ρ‖ ≤ r}).ncard : ℝ)
-          = ↑(Z.z '' {ρ : Z.Zero | ‖Z.z ρ‖ ≤ r}).ncard :=
-            by rw [Set.ncard_image_of_injective _ h_inj]
-        _ ≤
-            ↑({u : ℂ |
-                u ∈ (MeromorphicOn.divisor f (Metric.closedBall 0 |2 * r|)).support ∧
-                  ‖u‖ ≤ (2 * r) / 2}).ncard :=
-            by exact_mod_cast Set.ncard_le_ncard himage_sub hfin
-        _ ≤
-            (Real.log (max 1 (maxModulus f (2 * r))) - Real.log ‖f 0‖) / Real.log 2 := hjensen
-        _ ≤ ((2 * r) ^ (lam + ε / 9) + |Real.log ‖f 0‖|) / Real.log 2 := by
-            apply div_le_div_of_nonneg_right _ (by positivity)
-            linarith [hlog_bound, neg_abs_le (Real.log ‖f 0‖)]
-        _ ≤
-            (2 ^ (lam + ε / 9) * r ^ (lam + ε / 9) + |Real.log ‖f 0‖| * r ^ (lam + ε / 9)) /
-              Real.log 2 := by
-            apply div_le_div_of_nonneg_right _ (by positivity)
-            have h2r : (2 * r) ^ (lam + ε / 9) = 2 ^ (lam + ε / 9) * r ^ (lam + ε / 9) :=
-              mul_rpow (by norm_num : (0:ℝ) ≤ 2) (by linarith)
-            linarith [mul_le_mul_of_nonneg_left hr_rpow (abs_nonneg (Real.log ‖f 0‖))]
-        _ = (2 ^ (lam + ε / 9) + |Real.log ‖f 0‖|) / Real.log 2 * r ^ (lam + ε / 9) := by
-            ring
-        _ ≤ C_n * r ^ (lam + ε / 9) := by
-            apply mul_le_mul_of_nonneg_right _ (by positivity)
-            simp only [C_n]
-            have hlog2 : (0 : ℝ) < Real.log 2 := Real.log_pos (by norm_num : (1:ℝ) < 2)
-            have := div_le_div_of_nonneg_right
-              (show (2 : ℝ) ^ (lam + ε / 9) + |Real.log ‖f 0‖| ≤
-                    2 ^ (lam + ε / 9) + |Real.log ‖f 0‖| + 1 by linarith)
-              hlog2.le
-            linarith
+    have hcount := zero_ncard_le_rpow_of_order_le hf_entire hf_finite hlam hf_order_le
+      Z h_inj h_mult hf0 hε
     obtain ⟨C_n, hCn_pos, R_n, hRn_pos, hcount_le⟩ := hcount
     --
     -- Step C: good radius by pigeonhole.
     -- In [r, 2r] with ≤ n(3r) zero norms, find R separated by ≥ δ₀.
     -- Follows Growth.lean:35-256 verbatim with rank-p summability.
-    have hgood : ∃ R_g : ℝ, 0 < R_g ∧ ∀ r : ℝ, R_g ≤ r →
-        ∃ R δ₀ : ℝ, r ≤ R ∧ R ≤ 2 * r ∧ 0 < δ₀ ∧
-          δ₀ ≤ r ∧
-          (∀ ρ : Z.Zero, δ₀ ≤ |‖Z.z ρ‖ - R|) ∧
-          r / (2 * (C_n * (3 * r) ^ (lam + ε / 9) + 2)) ≤ δ₀ := by
-      -- Summability at exponent p+1 (without multiplicity weights)
-      have hsum_unit : Summable (fun ρ : Z.Zero => (1 : ℝ) / ‖Z.z ρ‖ ^ (p + 1)) := by
-        exact hsum.of_nonneg_of_le (fun ρ => by positivity) (fun ρ => by
-          apply div_le_div_of_nonneg_right _ (by positivity)
-          exact_mod_cast Nat.one_le_iff_ne_zero.mpr (Nat.pos_iff_ne_zero.mp (Z.mult_pos ρ)))
-      -- Finiteness of zeros in bounded region (from summability at p+1)
-      have hfin_ball : ∀ R : ℝ, 0 < R →
-          ({ρ : Z.Zero | ‖Z.z ρ‖ ≤ R} : Set Z.Zero).Finite :=
-        fun R hR => Hadamard.OrderOne.finite_norm_le_of_summable_inv_norm_pow
-          h_z_ne_zero hsum_unit hR
-      -- Pigeonhole: in [r, 2r], with finitely many zero norms from [0, 3r],
-      -- find R separated from all of them. For ρ with ‖Z.z ρ‖ > 3r:
-      -- |‖Z.z ρ‖ - R| ≥ 3r - 2r = r ≥ δ₀ automatically.
-      -- Pigeonhole: grid of N+1 points in [r, 2r], at most N zero norms → gap ≥ δ₀
-      refine ⟨max R_n 1, by positivity, fun r hr => ?_⟩
-      have hr1 : (1 : ℝ) ≤ r := le_trans (le_max_right _ _) hr
-      have hr_pos : (0 : ℝ) < r := by linarith
-      set S := {ρ : Z.Zero | ‖Z.z ρ‖ ≤ 3 * r}
-      have hS_fin := hfin_ball (3 * r) (by linarith)
-      set N := S.ncard
-      set δ₀ := r / (2 * ((N : ℝ) + 1)) with hδ₀_def
-      have hδ₀_pos : (0 : ℝ) < δ₀ := by positivity
-      have hN_cast_nn : (0 : ℝ) ≤ (N : ℝ) := Nat.cast_nonneg _
-      have hδ₀_le_r : δ₀ ≤ r := div_le_self hr_pos.le (by linarith)
-      -- Grid: R_k = r + (2k+1)δ₀
-      set Rk := fun k : Fin (N + 1) => r + (2 * (↑↑k : ℝ) + 1) * δ₀
-      have hk_cast_nn : ∀ k : Fin (N + 1), (0 : ℝ) ≤ (↑↑k : ℝ) :=
-        fun k => Nat.cast_nonneg _
-      have hRk_lo : ∀ k, r ≤ Rk k := fun k => by
-        have hk_term_nonneg : 0 ≤ (2 * (↑↑k : ℝ) + 1) * δ₀ := by
-          nlinarith [hk_cast_nn k, hδ₀_pos.le]
-        nlinarith
-      have hRk_hi : ∀ k, Rk k ≤ 2 * r := by
-        intro k
-        have hk_le : (↑↑k : ℝ) ≤ (N : ℝ) := by exact_mod_cast Nat.le_of_lt_succ k.isLt
-        have h1 : (2 * (↑↑k : ℝ) + 1) * δ₀ ≤ (2 * (N : ℝ) + 1) * δ₀ := by nlinarith
-        have h2 : (2 * (N : ℝ) + 1) * δ₀ ≤ r := by
-          have hδ₀_cancel : δ₀ * (2 * ((N : ℝ) + 1)) = r := by
-            rw [hδ₀_def]; field_simp
-          nlinarith [mul_le_mul_of_nonneg_right
-            (show (2 * (N:ℝ) + 1) ≤ 2 * ((N:ℝ) + 1) by linarith) hδ₀_pos.le]
-        linarith
-      -- Grid spacing ≥ 2δ₀ for distinct indices
-      have hRk_sp :
-          ∀ k₁ k₂ : Fin (N + 1), k₁ ≠ k₂ → 2 * δ₀ ≤ |Rk k₁ - Rk k₂| := by
-        intro k₁ k₂ hne
-        have hval_ne : (↑↑k₁ : ℕ) ≠ ↑↑k₂ := Fin.val_ne_of_ne hne
-        -- |Rk k₁ - Rk k₂| = 2|k₁ - k₂|δ₀ ≥ 2δ₀ since |k₁ - k₂| ≥ 1
-        have heq :
-            r + (2 * (↑↑k₁ : ℝ) + 1) * δ₀ - (r + (2 * ↑↑k₂ + 1) * δ₀) =
-              2 * ((↑↑k₁ : ℝ) - ↑↑k₂) * δ₀ := by
-          ring
-        rw [heq, abs_mul, abs_mul, abs_of_pos hδ₀_pos, abs_of_pos (by norm_num : (0:ℝ) < 2)]
-        suffices (1 : ℝ) ≤ |(↑↑k₁ : ℝ) - ↑↑k₂| by nlinarith
-        have hcast_ne : (↑↑k₁ : ℤ) ≠ ↑↑k₂ := by
-          exact_mod_cast hval_ne
-        exact_mod_cast Int.one_le_abs (sub_ne_zero.mpr hcast_ne)
-      -- Produce good R: by contradiction, if all grid points are claimed...
-      suffices ∃ k : Fin (N + 1), ∀ ρ ∈ S, δ₀ ≤ |‖Z.z ρ‖ - Rk k| by
-        obtain ⟨k, hk⟩ := this
-        refine ⟨Rk k, δ₀, hRk_lo k, hRk_hi k, hδ₀_pos, hδ₀_le_r, ?_, ?_⟩
-        · intro ρ
-          by_cases hρS : ρ ∈ S
-          · exact hk ρ hρS
-          · -- ρ ∉ S: ‖Z.z ρ‖ > 3r, so distance to R_k ≥ r ≥ δ₀
-            have hρ_large : 3 * r < ‖Z.z ρ‖ := by
-              change ¬(‖Z.z ρ‖ ≤ 3 * r) at hρS
-              linarith
-            calc
-              δ₀ ≤ r := hδ₀_le_r
-              _ ≤ ‖Z.z ρ‖ - Rk k := by linarith [hRk_hi k]
-              _ ≤ |‖Z.z ρ‖ - Rk k| := le_abs_self _
-        · have hN_le : (N : ℝ) ≤ C_n * (3 * r) ^ (lam + ε / 9) := by
-            have hRn_le_r : R_n ≤ r := le_trans (le_max_left _ _) hr
-            have h3r_ge : R_n ≤ 3 * r := by linarith
-            exact_mod_cast hcount_le (3 * r) h3r_ge
-          have hden_le :
-              2 * ((N : ℝ) + 1) ≤ 2 * (C_n * (3 * r) ^ (lam + ε / 9) + 2) := by
-            nlinarith
-          have hnum_nonneg : 0 ≤ r := le_of_lt hr_pos
-          have hden_pos : 0 < 2 * ((N : ℝ) + 1) := by positivity
-          have hdiv :
-              r / (2 * (C_n * (3 * r) ^ (lam + ε / 9) + 2))
-                ≤ r / (2 * ((N : ℝ) + 1)) := by
-            exact div_le_div_of_nonneg_left hnum_nonneg hden_pos hden_le
-          simpa [hδ₀_def] using hdiv
-      -- Core pigeonhole
-      by_contra h_no_good; push Not at h_no_good
-      -- Every grid point has a nearby zero in S: ∀ k, ∃ ρ ∈ S, |...| < δ₀
-      choose g hg_mem hg_close using h_no_good
-      -- g is injective (triangle inequality: if g k₁ = g k₂ then |Rk k₁ - Rk k₂| < 2δ₀)
-      have g_inj : Function.Injective g := by
-        intro k₁ k₂ hgk; by_contra hne
-        have h_sp := hRk_sp k₁ k₂ hne
-        have h1 : |‖Z.z (g k₂)‖ - Rk k₁| < δ₀ := hgk ▸ hg_close k₁
-        have h2 := hg_close k₂
-        -- Triangle: |Rk k₁ - Rk k₂| ≤ |Rk k₁ - v| + |v - Rk k₂| < 2δ₀
-        set v := ‖Z.z (g k₂)‖
-        have htri : |Rk k₁ - Rk k₂| ≤ |Rk k₁ - v| + |v - Rk k₂| := by
-          have h := norm_add_le (Rk k₁ - v) (v - Rk k₂)
-          simp only [Real.norm_eq_abs] at h
-          rwa [show Rk k₁ - v + (v - Rk k₂) = Rk k₁ - Rk k₂ from by ring] at h
-        rw [abs_sub_comm] at h1  -- h1: |Rk k₁ - v| < δ₀
-        linarith [le_trans h_sp htri, add_lt_add h1 h2]
-      -- Cardinality contradiction: |Fin(N+1)| > |S|
-      have : N + 1 ≤ N := calc
-        N + 1 = Set.ncard (Set.range g) := by
-          rw [Set.ncard_range_of_injective g_inj, Nat.card_fin]
-        _ ≤ S.ncard := Set.ncard_le_ncard (fun _ ⟨k, hk⟩ => hk ▸ hg_mem k) hS_fin
-      omega
+    have hgood := exists_zero_separated_radii Z h_z_ne_zero hsum C_n R_n lam ε hcount_le
     obtain ⟨R_g, hRg_pos, hgood_radius⟩ := hgood
     --
     -- Steps D+E: per-factor bounds, sum control, and product.
