@@ -229,9 +229,11 @@ theorem lintegral_energyStandardSourceTail_pairing_le
   have h := ENNReal.lintegral_mul_le_Lp_mul_Lq volume Real.HolderConjugate.two_two
     (aemeasurable_energyStandardSourceTailMaximal S hf I₀ k₀ s scale N).enorm
     hgi.aestronglyMeasurable.enorm
-  simpa only [Pi.mul_apply, eLpNorm_eq_lintegral_rpow_enorm_toReal
-    (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞),
-    ENNReal.toReal_ofNat] using h
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+      (aemeasurable_energyStandardSourceTailMaximal S hf I₀ k₀ s scale N).aestronglyMeasurable,
+    eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+      hgi.aestronglyMeasurable]
+  simpa only [Pi.mul_apply, ENNReal.toReal_ofNat] using h
 
 theorem eLpNorm_energyStandardSourceTailMaximal_le
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
@@ -247,7 +249,9 @@ theorem eLpNorm_energyStandardSourceTailMaximal_le
           intervalL1Average f I₀ / (2 : ℝ) ^ (kmin + 2)) * ∫ x, ‖f x‖))) ) := by
   calc
     _ ≤ eLpNorm ((2 : ℝ) • energyStandardGenerationPrefixMaximal S f I₀ k₀ s scale N)
-        2 volume := eLpNorm_mono fun x ↦ ?_
+        2 volume := eLpNorm_mono
+          (aemeasurable_energyStandardSourceTailMaximal S hf I₀ k₀ s scale N).aestronglyMeasurable
+          fun x ↦ ?_
     _ = ENNReal.ofReal 2 *
         eLpNorm (energyStandardGenerationPrefixMaximal S f I₀ k₀ s scale N) 2 volume := by
       rw [eLpNorm_const_smul, show ‖(2 : ℝ)‖ₑ = ENNReal.ofReal 2 by

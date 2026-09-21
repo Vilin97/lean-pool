@@ -41,7 +41,8 @@ theorem eLpNorm_tsum_two_le {ι : Type*} [Countable ι]
     eLpNorm (fun x ↦ ∑' i, F i x) 2 ≤ ∑' i, eLpNorm (F i) 2 := by
   classical
   apply (ENNReal.rpow_le_rpow_iff (by norm_num : (0 : ℝ) < 2)).mp
-  rw [ENNReal.rpow_two, ENNReal.rpow_two, eLpNorm_two_sq_lintegral]
+  rw [ENNReal.rpow_two, ENNReal.rpow_two,
+    eLpNorm_two_sq_lintegral _ (Measurable.tsum hF).aestronglyMeasurable]
   simp only [enorm_eq_self]
   simp_rw [ENNReal.tsum_eq_iSup_sum, ENNReal.iSup_pow]
   rw [lintegral_iSup_directed_of_measurable]
@@ -49,9 +50,10 @@ theorem eLpNorm_tsum_two_le {ι : Type*} [Countable ι]
     intro s
     apply le_iSup_of_le s
     have hs := eLpNorm_sum_le (μ := volume) (s := s) (f := F)
-      (fun i _ ↦ (hF i).aestronglyMeasurable) (by norm_num : (1 : ℝ≥0∞) ≤ 2)
+      (by norm_num : (1 : ℝ≥0∞) ≤ 2)
     have hp := pow_le_pow_left₀ bot_le hs 2
-    rw [eLpNorm_two_sq_lintegral] at hp
+    rw [eLpNorm_two_sq_lintegral _
+      (Finset.aestronglyMeasurable_sum s (fun i _ ↦ (hF i).aestronglyMeasurable))] at hp
     simpa only [Finset.sum_apply, enorm_eq_self] using hp
   · intro s
     exact (Finset.measurable_fun_sum s (fun i _ ↦ hF i)).pow_const 2
@@ -149,7 +151,7 @@ theorem paperHighHeightTail_le_majorant (B : ℕ) (b : ℝ → ℂ) (x : ℝ) :
 theorem paperHighHeightTail_eLpNorm_le (B : ℕ) {b : ℝ → ℂ} (hb : MemLp b 2) :
     eLpNorm (paperHighHeightTail B b) 2 ≤ highHeightTailConstant *
       ENNReal.ofReal ((2 : ℝ) ^ (-(B : ℝ) / 10)) * eLpNorm b 2 := by
-  apply (eLpNorm_mono_enorm (f := paperHighHeightTail B b) (g := highHeightMajorant B b)
+  apply (eLpNorm_mono_enorm (f := paperHighHeightTail B b) (g := highHeightMajorant B b) ?_
     (fun x ↦ by simpa only [enorm_eq_self] using paperHighHeightTail_le_majorant B b x)).trans
   exact highHeightMajorant_eLpNorm_le B hb
 

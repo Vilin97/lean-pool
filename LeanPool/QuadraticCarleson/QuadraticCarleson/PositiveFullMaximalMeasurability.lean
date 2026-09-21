@@ -119,7 +119,7 @@ theorem quadraticHilbertTrunc_eq_zero_add_difference
   unfold quadraticHilbertTrunc
   simp only [zero_mul, phase_zero, mul_one]
   rw [← integral_add hzero hdiff]
-  apply setIntegral_congr_fun (measurableSet_lt measurable_const measurable_id.abs)
+  apply setIntegral_congr_fun (measurableSet_lt measurable_const measurable_norm)
   intro t ht
   unfold quadraticDifferenceKernel
   ring

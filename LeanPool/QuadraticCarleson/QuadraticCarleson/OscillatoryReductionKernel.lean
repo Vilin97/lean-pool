@@ -108,8 +108,8 @@ noncomputable def smallPhaseKernel (lam ε ρ t : ℝ) : ℂ :=
 theorem measurable_smallPhaseKernel (lam ε ρ : ℝ) : Measurable (smallPhaseKernel lam ε ρ) := by
   unfold smallPhaseKernel
   apply Measurable.ite
-    ((measurableSet_lt measurable_const measurable_id.abs).inter
-      (measurableSet_le measurable_id.abs measurable_const))
+    ((measurableSet_lt measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const))
   · unfold phase
     fun_prop
   · exact measurable_const

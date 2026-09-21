@@ -89,6 +89,7 @@ theorem eLpNorm_badSubcollectionPrefixMaximal_le_of_ae_overlapCount_le
   apply le_trans _ (eLpNorm_badSubcollectionPrefixMaximal_le hf I₀ k₀ s hk₀ hs scale
     hlam hparent hsub N hN M)
   apply eLpNorm_mono
+    (memLp_badSubcollectionPrefixMaximal S f hf I₀ k₀ s scale N L).aestronglyMeasurable
   intro x
   rw [Real.norm_of_nonneg (badSubcollectionPrefixMaximal_nonneg S f I₀ k₀ s scale N L x),
     Real.norm_of_nonneg (badSubcollectionPrefixMaximal_nonneg S f I₀ k₀ s scale N M x)]
@@ -372,6 +373,7 @@ theorem eLpNorm_pruned_badLengthTailMaximal_le
       eLpNorm (fun x ↦ (2 : ℝ) • badSubcollectionPrefixMaximal S f I₀ k₀ s scale P P.card x)
         2 volume := by
     apply eLpNorm_mono
+      (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale P).aestronglyMeasurable
     intro x
     rw [Real.norm_of_nonneg (badLengthTailMaximal_nonneg f I₀ k₀ s scale hlam P hP x),
       smul_eq_mul, Real.norm_of_nonneg (mul_nonneg (by norm_num)
@@ -577,7 +579,8 @@ theorem eLpNorm_removed_badLengthTailMaximal_sq_le
     Finset.sdiff_subset.trans ((activeBadIntervals_subset S f I₀ k₀ s scale N).trans hN)
   have heq : eLpNorm (badLengthTailMaximal S f I₀ k₀ s scale R) 2 volume ^ 2 =
       ∫⁻ x, ‖badLengthTailMaximal S f I₀ k₀ s scale R x‖ₑ ^ 2 := by
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+      (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale R).aestronglyMeasurable]
     simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
     rw [← ENNReal.rpow_mul_natCast]
     norm_num
@@ -684,6 +687,7 @@ theorem eLpNorm_nonstandard_badLengthTailMaximal_le
     _ ≤ eLpNorm (badLengthTailMaximal S f I₀ k₀ s scale P +
         badLengthTailMaximal S f I₀ k₀ s scale R) 2 volume := by
       apply eLpNorm_mono
+        (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale N).aestronglyMeasurable
       intro x
       simp only [Pi.add_apply]
       rw [Real.norm_of_nonneg (badLengthTailMaximal_nonneg f I₀ k₀ s scale hlam N hN x),
@@ -693,8 +697,7 @@ theorem eLpNorm_nonstandard_badLengthTailMaximal_le
       exact badLengthTailMaximal_le_pruned_add_removed f I₀ k₀ s scale hlam N hN _ x
     _ ≤ eLpNorm (badLengthTailMaximal S f I₀ k₀ s scale P) 2 volume +
         eLpNorm (badLengthTailMaximal S f I₀ k₀ s scale R) 2 volume :=
-      eLpNorm_add_le (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale P).aestronglyMeasurable
-        (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale R).aestronglyMeasurable (by norm_num)
+      eLpNorm_add_le (by norm_num)
     _ ≤ ENNReal.ofReal ((4 * (s : ℝ) + 12) * Real.sqrt (nonstandardSignedEnergyBudget f I₀ s)) +
         ENNReal.ofReal (Real.sqrt (badRemovedEnergyBudget f I₀ s)) :=
       add_le_add (eLpNorm_exponentiallyPruned_badLengthTailMaximal_le hf I₀ k₀ s hk₀

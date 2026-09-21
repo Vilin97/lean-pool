@@ -52,13 +52,21 @@ theorem lintegral_enorm_rpow_le_linf_mul_sq
         exact ENNReal.ofReal_le_ofReal (hbound x)
       · linarith
 
-private theorem eLpNorm_two_sq_lintegral_source {E : Type*} [ENorm E]
-    (F : ℝ → E) :
+private theorem eLpNorm_two_sq_lintegral_source {E : Type*} [ENorm E] [TopologicalSpace E]
+    (F : ℝ → E) (hF : AEStronglyMeasurable F volume) :
     eLpNorm F 2 volume ^ 2 = ∫⁻ x, ‖F x‖ₑ ^ (2 : ℕ) := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hF]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
   rw [← ENNReal.rpow_mul_natCast]
   norm_num
+
+private theorem aestronglyMeasurable_sourceAction
+    (S : Finset RealInterval) (f : ℝ → ℂ) (hf : Integrable f)
+    (I₀ : RealInterval) (k₀ : ℤ) (scale : RealInterval → ℤ)
+    (R : Finset ℤ) (N : ℤ → Finset RealInterval) :
+    AEStronglyMeasurable (energyStandardFixedPhysicalSourceAction S f I₀ k₀ scale R N) volume :=
+  (Lp.aestronglyMeasurable (energyStandardFixedPhysicalSourceLp S f hf I₀ k₀ scale R N)).congr
+    (energyStandardFixedPhysicalSourceLp_ae_eq S f hf I₀ k₀ scale R N)
 
 /-- The `Lp`-valued squared estimate transferred to the actual pointwise
 fixed-physical-scale source action. -/
@@ -76,7 +84,8 @@ theorem energyStandardFixedPhysicalSourceAction_sq_lintegral_le
       ENNReal.ofReal ((R.card : ℝ) *
         ((2560 * positiveDyadicAmplitudeBound ^ 2 * intervalL1Average f I₀ /
           (2 : ℝ) ^ j) * ∫ x, ‖f x‖)) := by
-  rw [← eLpNorm_two_sq_lintegral_source]
+  rw [← eLpNorm_two_sq_lintegral_source _
+    (aestronglyMeasurable_sourceAction S f hf I₀ k₀ scale _ N)]
   rw [eLpNorm_congr_ae
     (energyStandardFixedPhysicalSourceLp_ae_eq S f hf I₀ k₀ scale R N).symm]
   rw [← MeasureTheory.Lp.enorm_def]
@@ -136,7 +145,8 @@ theorem eLpNorm_energyStandardFixedPhysicalSourceAction_le
   have hqne : ENNReal.ofReal q ≠ 0 := by
     simp only [ne_eq, ENNReal.ofReal_eq_zero]
     exact not_le.mpr hq0
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hqne ENNReal.ofReal_ne_top,
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hqne ENNReal.ofReal_ne_top
+      (aestronglyMeasurable_sourceAction S f hf I₀ k₀ scale _ N),
     ENNReal.toReal_ofReal hq0.le]
   exact ENNReal.rpow_le_rpow
     (energyStandardFixedPhysicalSourceAction_rpow_lintegral_le
@@ -162,7 +172,8 @@ theorem energyStandardFixedPhysicalSourceAction_sq_lintegral_le_j_mul
       ENNReal.ofReal ((j : ℝ) *
         ((2560 * positiveDyadicAmplitudeBound ^ 2 * intervalL1Average f I₀ /
           (2 : ℝ) ^ j) * ∫ x, ‖f x‖)) := by
-  rw [← eLpNorm_two_sq_lintegral_source]
+  rw [← eLpNorm_two_sq_lintegral_source _
+    (aestronglyMeasurable_sourceAction S f hf I₀ k₀ scale _ N)]
   rw [eLpNorm_congr_ae (energyStandardFixedPhysicalSourceLp_ae_eq S f hf I₀ k₀ scale
     (standardSourceGaps k₀ j) N).symm]
   rw [← MeasureTheory.Lp.enorm_def]
@@ -227,7 +238,8 @@ theorem eLpNorm_energyStandardFixedPhysicalSourceAction_le_j_mul
   have hqne : ENNReal.ofReal q ≠ 0 := by
     simp only [ne_eq, ENNReal.ofReal_eq_zero]
     exact not_le.mpr hq0
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hqne ENNReal.ofReal_ne_top,
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal hqne ENNReal.ofReal_ne_top
+      (aestronglyMeasurable_sourceAction S f hf I₀ k₀ scale _ N),
     ENNReal.toReal_ofReal hq0.le]
   exact ENNReal.rpow_le_rpow
     (energyStandardFixedPhysicalSourceAction_rpow_lintegral_le_j_mul

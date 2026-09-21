@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
 
+import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+import Mathlib.MeasureTheory.Group.Integral
 import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 import Mathlib.Analysis.Calculus.BumpFunction.Normed
 

@@ -5,6 +5,7 @@ Authors: Quadratic Carleson formalization contributors
 -/
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragingFinite
+import Mathlib.Analysis.Calculus.Deriv.Star
 
 /-!
 # Annular amplitude products in the fixed-height quadratic correlation

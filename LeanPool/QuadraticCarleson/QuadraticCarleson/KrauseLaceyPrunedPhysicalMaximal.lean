@@ -128,6 +128,7 @@ theorem eLpNorm_pruned_badLengthTailMaximal_le
       eLpNorm (fun x ↦ (2 : ℝ) • badSubcollectionPrefixMaximal S f I₀ k₀ s scale P P.card x)
         2 volume := by
     apply eLpNorm_mono
+      (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale P).aestronglyMeasurable
     intro x
     rw [Real.norm_of_nonneg (badLengthTailMaximal_nonneg f I₀ k₀ s scale hlam P hP x),
       smul_eq_mul, Real.norm_of_nonneg (mul_nonneg (by norm_num)

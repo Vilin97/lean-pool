@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
 
+import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
 import Mathlib.Algebra.Order.Archimedean.Basic
 import Mathlib.Analysis.Calculus.BumpFunction.Basic

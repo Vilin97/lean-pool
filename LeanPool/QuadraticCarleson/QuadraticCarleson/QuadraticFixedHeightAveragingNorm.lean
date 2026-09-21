@@ -66,9 +66,10 @@ theorem fixedHeightL2DecayConstant_sq_ge :
   unfold fixedHeightL2DecayConstant
   nlinarith [positiveDyadicAmplitudeBound_nonneg, sq_nonneg positiveDyadicAmplitudeBound]
 
-theorem eLpNorm_two_sq_lintegral {ε : Type*} [ENorm ε] (f : ℝ → ε) :
+theorem eLpNorm_two_sq_lintegral {ε : Type*} [ENorm ε] [TopologicalSpace ε]
+    (f : ℝ → ε) (hf : AEStronglyMeasurable f volume) :
     eLpNorm f 2 ^ 2 = ∫⁻ x, ‖f x‖ₑ ^ 2 := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hf]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
   rw [← ENNReal.rpow_mul_natCast]
   norm_num
@@ -82,8 +83,9 @@ theorem paperFixedHeightQuadraticMaximal_eLpNorm_decay
         (2 : ℝ) ^ (-(height : ℝ) / 10)) * eLpNorm f 2 := by
   apply (ENNReal.rpow_le_rpow_iff (by norm_num : (0 : ℝ) < 2)).mp
   rw [ENNReal.rpow_two, ENNReal.rpow_two, mul_pow,
-    eLpNorm_two_sq_lintegral (paperFixedHeightQuadraticMaximal height f),
-    eLpNorm_two_sq_lintegral f]
+    eLpNorm_two_sq_lintegral (paperFixedHeightQuadraticMaximal height f)
+      (measurable_paperFixedHeightQuadraticMaximal height hf).aestronglyMeasurable,
+    eLpNorm_two_sq_lintegral f hf.aestronglyMeasurable]
   simp only [enorm_eq_self]
   rw [← ENNReal.ofReal_pow (by positivity [fixedHeightL2DecayConstant_pos])]
   apply (paperFixedHeightQuadraticMaximal_sq_lintegral_rpow_decay height hf).trans
@@ -100,8 +102,7 @@ theorem paperFixedHeightQuadraticMaximal_eLpNorm_decay
 theorem memLp_paperFixedHeightQuadraticMaximal
     (height : ℕ) {f : ℝ → ℂ} (hf : MemLp f 2) :
     MemLp (paperFixedHeightQuadraticMaximal height f) 2 := by
-  refine ⟨(measurable_paperFixedHeightQuadraticMaximal height hf).aestronglyMeasurable,
-    (paperFixedHeightQuadraticMaximal_eLpNorm_decay height hf).trans_lt ?_⟩
+  apply (paperFixedHeightQuadraticMaximal_eLpNorm_decay height hf).trans_lt
   exact ENNReal.mul_lt_top (by finiteness) hf.eLpNorm_lt_top
 
 end QuadraticCarleson

@@ -130,6 +130,7 @@ theorem eLpNorm_nonstandard_badLengthTailMaximal_le
     _ ≤ eLpNorm (badLengthTailMaximal S f I₀ k₀ s scale P +
         badLengthTailMaximal S f I₀ k₀ s scale R) 2 volume := by
       apply eLpNorm_mono
+        (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale N).aestronglyMeasurable
       intro x
       simp only [Pi.add_apply]
       rw [Real.norm_of_nonneg (badLengthTailMaximal_nonneg f I₀ k₀ s scale hlam N hN x),
@@ -139,8 +140,7 @@ theorem eLpNorm_nonstandard_badLengthTailMaximal_le
       exact badLengthTailMaximal_le_pruned_add_removed f I₀ k₀ s scale hlam N hN _ x
     _ ≤ eLpNorm (badLengthTailMaximal S f I₀ k₀ s scale P) 2 volume +
         eLpNorm (badLengthTailMaximal S f I₀ k₀ s scale R) 2 volume :=
-      eLpNorm_add_le (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale P).aestronglyMeasurable
-        (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale R).aestronglyMeasurable (by norm_num)
+      eLpNorm_add_le (by norm_num)
     _ ≤ ENNReal.ofReal ((4 * (s : ℝ) + 12) * Real.sqrt (nonstandardSignedEnergyBudget f I₀ s)) +
         ENNReal.ofReal (Real.sqrt (badRemovedEnergyBudget f I₀ s)) :=
       add_le_add (eLpNorm_exponentiallyPruned_badLengthTailMaximal_le hf I₀ k₀ s hk₀

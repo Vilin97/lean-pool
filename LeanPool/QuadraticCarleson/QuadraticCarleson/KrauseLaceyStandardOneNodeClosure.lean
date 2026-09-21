@@ -58,6 +58,19 @@ private theorem integrable_energyStandardPhysicalLayerAction
   exact integrable_krauseLaceyLocalizedPiece _ _
     (integrable_badScaleInput S hf I₀ k₀ _)
 
+private theorem aestronglyMeasurable_standardPhysicalTailMaximal
+    (S : Finset RealInterval) {f : ℝ → ℂ} (hf : Integrable f)
+    (I₀ : RealInterval) (k₀ : ℤ) (scale : RealInterval → ℤ) :
+    AEStronglyMeasurable (energyStandardPhysicalTailMaximal S f I₀ k₀ scale) volume := by
+  apply AEMeasurable.aestronglyMeasurable
+  apply AEMeasurable.iSup
+  intro ell
+  apply AEStronglyMeasurable.aemeasurable
+  apply AEStronglyMeasurable.norm
+  apply Finset.aestronglyMeasurable_fun_sum
+  intro j hj
+  exact (integrable_energyStandardPhysicalLayerAction S hf I₀ k₀ scale j).aestronglyMeasurable
+
 private theorem norm_energyStandardPhysicalTailAction_le_sum
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ : ℤ)
     (scale : RealInterval → ℤ) (ell : {ell : ℤ // k₀ ≤ ell}) (x : ℝ) :
@@ -130,7 +143,8 @@ theorem eLpNorm_energyStandardPhysicalTailMaximal_le
         eLpNorm (F j) (ENNReal.ofReal q) volume =
           eLpNorm (energyStandardPhysicalLayerAction S f I₀ k₀ scale j)
             (ENNReal.ofReal q) volume := by
-      apply eLpNorm_congr_norm_ae
+      apply eLpNorm_congr_norm_ae (hF j hj)
+        (integrable_energyStandardPhysicalLayerAction S hf I₀ k₀ scale j).aestronglyMeasurable
       filter_upwards with x
       simp only [F, Complex.norm_real, Real.norm_eq_abs, abs_norm]
     rw [heq]
@@ -144,6 +158,7 @@ theorem eLpNorm_energyStandardPhysicalTailMaximal_le
         (ENNReal.ofReal q) volume ≤ eLpNorm (∑ j ∈ P, F j)
           (ENNReal.ofReal q) volume := by
       apply eLpNorm_mono
+        (aestronglyMeasurable_standardPhysicalTailMaximal S hf I₀ k₀ scale)
       intro x
       rw [Real.norm_of_nonneg
         (energyStandardPhysicalTailMaximal_nonneg S f I₀ k₀ scale x)]

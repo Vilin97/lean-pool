@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anastasios Fragkos
 -/
 
+import Mathlib.MeasureTheory.Function.L2Space
 import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectPartition
 import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingRecursion
 import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelation

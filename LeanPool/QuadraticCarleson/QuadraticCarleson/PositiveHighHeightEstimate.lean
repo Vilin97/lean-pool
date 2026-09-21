@@ -126,8 +126,8 @@ theorem memLp_disjointLevelAtomSum {ι : Type*} [Countable ι]
   have hs : (∫⁻ x, ‖disjointLevelAtomSum A f k z R x‖ₑ ^ 2) < ∞ :=
     (disjointLevelAtomSum_sq_lintegral_le hf hAk z R hR hdisj).trans_lt
       (ENNReal.mul_lt_top (by finiteness) hmass)
-  refine ⟨hm.aestronglyMeasurable, ?_⟩
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  rw [MemLp, eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+    hm.aestronglyMeasurable]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
   exact ENNReal.rpow_lt_top_of_nonneg (by norm_num) hs.ne
 
@@ -143,7 +143,8 @@ theorem fixedHeight_disjointLevelAtomSum_eLpNorm_le {ι : Type*} [Countable ι]
   apply (paperFixedHeightQuadraticMaximal_eLpNorm_decay height
     (memLp_disjointLevelAtomSum hf hfi hAk z R hR hdisj)).trans
   apply mul_le_mul' le_rfl
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+    (measurable_disjointLevelAtomSum (A := A) hf k z R).aestronglyMeasurable]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
   exact ENNReal.rpow_le_rpow (disjointLevelAtomSum_sq_lintegral_le hf hAk z R hR hdisj)
     (by norm_num)

@@ -274,7 +274,7 @@ theorem eLpNorm_finset_sum_le_budget_mul_forty_mul_q
   calc
     eLpNorm (∑ j ∈ S, F j) (ENNReal.ofReal q) volume ≤
         ∑ j ∈ S, eLpNorm (F j) (ENNReal.ofReal q) volume :=
-      eLpNorm_sum_le (fun j hj ↦ hF j hj) hp1
+      eLpNorm_sum_le hp1
     _ ≤ ∑ j ∈ S,
         B * ENNReal.ofReal (((j : ℝ) / (2 : ℝ) ^ j) ^ (1 / q)) := by
       exact Finset.sum_le_sum (fun j hj ↦ hbound j hj)

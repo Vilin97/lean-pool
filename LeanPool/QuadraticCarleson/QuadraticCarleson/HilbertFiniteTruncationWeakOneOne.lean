@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
 
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 import Mathlib.Analysis.Convolution
 
@@ -33,8 +34,8 @@ def annularHilbertKernel (ε R t : ℝ) : ℂ :=
 theorem measurable_annularHilbertKernel (ε R : ℝ) :
     Measurable (annularHilbertKernel ε R) := by
   apply Measurable.ite
-  · exact (measurableSet_lt measurable_const measurable_id.abs).inter
-      (measurableSet_le measurable_id.abs measurable_const)
+  · exact (measurableSet_lt measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
   · exact measurable_const.div (Complex.measurable_ofReal.comp measurable_id)
   · exact measurable_const
 
@@ -141,7 +142,7 @@ theorem integrableOn_zeroHilbertTail {ε : ℝ} (hε : 0 < ε)
     {f : ℝ → ℂ} (hf : Integrable f) (x : ℝ) :
     IntegrableOn (fun t ↦ f (x - t) / (t : ℂ)) {t : ℝ | ε < |t|} := by
   let s : Set ℝ := {t : ℝ | ε < |t|}
-  have hs : MeasurableSet s := measurableSet_lt measurable_const measurable_id.abs
+  have hs : MeasurableSet s := measurableSet_lt measurable_const measurable_norm
   have hg : Integrable (fun t ↦ f (x - t)) := hf.comp_sub_left x
   have hm : Measurable (fun t : ℝ ↦ 1 / (t : ℂ)) :=
     measurable_const.div (Complex.measurable_ofReal.comp measurable_id)
@@ -164,7 +165,7 @@ theorem annularHilbertTruncation_eq_zeroTrunc_sub {ε R : ℝ}
   let sR : Set ℝ := {t : ℝ | R < |t|}
   let A : Set ℝ := {t : ℝ | ε < |t| ∧ |t| ≤ R}
   have hsR : MeasurableSet sR :=
-    measurableSet_lt measurable_const measurable_id.abs
+    measurableSet_lt measurable_const measurable_norm
   have hsub : sR ⊆ sε := by
     intro t ht
     exact hεR.trans_lt ht
@@ -172,8 +173,8 @@ theorem annularHilbertTruncation_eq_zeroTrunc_sub {ε R : ℝ}
     ext t
     simp only [sε, sR, A, mem_diff, mem_setOf_eq, not_lt]
   have hA : MeasurableSet A :=
-    (measurableSet_lt measurable_const measurable_id.abs).inter
-      (measurableSet_le measurable_id.abs measurable_const)
+    (measurableSet_lt measurable_const measurable_norm).inter
+      (measurableSet_le measurable_norm measurable_const)
   have hint : IntegrableOn (fun t ↦ f (x - t) / (t : ℂ)) sε :=
     integrableOn_zeroHilbertTail hε hf x
   calc
@@ -297,10 +298,7 @@ theorem integrable_finiteAnnularHilbertMax {N : ℕ} (ε R : Fin N → ℝ)
             ‖annularHilbertTruncation (ε i) (R i) f x‖) :=
           (integrable_annularHilbertTruncation (hε i) hf).norm
         simp only [Finset.sup_insert, NNReal.coe_max, coe_nnnorm]
-        convert hii.sup ih using 1
-        · rfl
-        · ext x
-          rw [Pi.sup_apply]
+        exact hii.sup ih
   exact hs Finset.univ
 
 /-- A concrete weak `(1,1)` estimate for a finite maximum of finite annular

@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
 
+import Mathlib.MeasureTheory.Function.LocallyIntegrable
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Combinatorics.Additive.AP.Three.Behrend
 import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 
 /-!

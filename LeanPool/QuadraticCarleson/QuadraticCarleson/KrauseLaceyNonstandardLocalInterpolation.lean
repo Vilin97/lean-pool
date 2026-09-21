@@ -96,7 +96,8 @@ theorem eLpNorm_interpolationLow_le_rpow
     (hg : Measurable g) :
     eLpNorm (interpolationLow g a) 2 volume ≤
       (ENNReal.ofReal (a ^ (2 - p)) * ∫⁻ x, ENNReal.ofReal (‖g x‖ ^ p)) ^ (1 / 2 : ℝ) := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+    (stronglyMeasurable_interpolationLow hg.stronglyMeasurable a).aestronglyMeasurable]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
   apply ENNReal.rpow_le_rpow _ (by norm_num)
   calc
@@ -141,9 +142,10 @@ theorem lintegral_nonstandard_pairing_le_threshold
       eLpNorm F 2 volume * eLpNorm (interpolationLow g a) 2 volume := by
     have h := ENNReal.lintegral_mul_le_Lp_mul_Lq volume Real.HolderConjugate.two_two
       hF hlow.aestronglyMeasurable.enorm
-    simpa only [Pi.mul_apply, eLpNorm_eq_lintegral_rpow_enorm_toReal
-      (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞),
-      ENNReal.toReal_ofNat] using h
+    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+        (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale N).aestronglyMeasurable,
+      eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hlow.aestronglyMeasurable]
+    simpa only [Pi.mul_apply, ENNReal.toReal_ofNat] using h
   calc
     _ = (∫⁻ x, ‖F x‖ₑ * ‖interpolationLow g a x‖ₑ) +
         ∫⁻ x, ‖F x‖ₑ * ‖interpolationHigh g a x‖ₑ := by

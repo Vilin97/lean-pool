@@ -479,8 +479,8 @@ theorem finitePieceTotal_sq_lintegral_eq_sum
       (fun j ↦ (hu j).toLp (u j))) :
     (∫⁻ x, ‖finitePieceTotal N u x‖ₑ ^ 2) =
       ∑ j ∈ Finset.range N, ∫⁻ x, ‖u j x‖ₑ ^ 2 := by
-  rw [← eLpNorm_two_sq_lintegral]
-  simp_rw [← eLpNorm_two_sq_lintegral]
+  rw [← eLpNorm_two_sq_lintegral _ (memLp_finitePieceTotal hu).aestronglyMeasurable]
+  simp_rw [← eLpNorm_two_sq_lintegral _ (hu _).aestronglyMeasurable]
   exact eLpNorm_finitePieceTotal_sq_eq_sum hu hsep
 
 /-- Final modular maximal-tail theorem for a separated finite family.  Once

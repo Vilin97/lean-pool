@@ -39,9 +39,11 @@ theorem lintegral_pairing_interpolationLow_le
     Real.HolderConjugate.two_two hU.enorm hlow.aestronglyMeasurable.enorm
   calc
     _ ≤ eLpNorm U 2 volume * eLpNorm (interpolationLow g a) 2 volume := by
-      simpa only [Pi.mul_apply, eLpNorm_eq_lintegral_rpow_enorm_toReal
-        (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞),
-        ENNReal.toReal_ofNat] using hholder
+      rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+          hU.aestronglyMeasurable,
+        eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+          hlow.aestronglyMeasurable]
+      simpa only [Pi.mul_apply, ENNReal.toReal_ofNat] using hholder
     _ ≤ _ := mul_le_mul' le_rfl
       (eLpNorm_interpolationLow_le_rpow g ha hp hp2 hg)
 
@@ -61,9 +63,11 @@ theorem lintegral_pairing_interpolationLow_ennreal_le
     Real.HolderConjugate.two_two hU hlow.aestronglyMeasurable.enorm
   calc
     _ ≤ eLpNorm U 2 volume * eLpNorm (interpolationLow g a) 2 volume := by
-      simpa only [Pi.mul_apply, eLpNorm_eq_lintegral_rpow_enorm_toReal
-        (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞),
-        ENNReal.toReal_ofNat, enorm_eq_self] using hholder
+      rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+          hU.aestronglyMeasurable,
+        eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+          hlow.aestronglyMeasurable]
+      simpa only [Pi.mul_apply, ENNReal.toReal_ofNat, enorm_eq_self] using hholder
     _ ≤ _ := mul_le_mul' le_rfl
       (eLpNorm_interpolationLow_le_rpow g ha hp hp2 hg)
 

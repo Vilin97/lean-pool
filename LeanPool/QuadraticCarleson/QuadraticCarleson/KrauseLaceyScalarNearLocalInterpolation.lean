@@ -296,9 +296,10 @@ theorem lintegral_energyNonstandard_pairing_le_threshold
       eLpNorm F 2 volume * eLpNorm (interpolationLow g a) 2 volume := by
     have h := ENNReal.lintegral_mul_le_Lp_mul_Lq volume Real.HolderConjugate.two_two
       hF hlow.aestronglyMeasurable.enorm
-    simpa only [Pi.mul_apply, eLpNorm_eq_lintegral_rpow_enorm_toReal
-      (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ∞),
-      ENNReal.toReal_ofNat] using h
+    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+        hFm.aestronglyMeasurable,
+      eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hlow.aestronglyMeasurable]
+    simpa only [Pi.mul_apply, ENNReal.toReal_ofNat] using h
   calc
     _ = (∫⁻ x, ‖F x‖ₑ * ‖interpolationLow g a x‖ₑ) +
         ∫⁻ x, ‖F x‖ₑ * ‖interpolationHigh g a x‖ₑ := by

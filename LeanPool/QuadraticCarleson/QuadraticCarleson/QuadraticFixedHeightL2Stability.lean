@@ -99,7 +99,8 @@ theorem ae_paperFixedHeightQuadraticMaximal_lt_top (height : ℕ)
     ∀ᵐ x, paperFixedHeightQuadraticMaximal height f x < ∞ := by
   have hnorm := (memLp_paperFixedHeightQuadraticMaximal height hf).eLpNorm_lt_top
   have hsq : (∫⁻ x, paperFixedHeightQuadraticMaximal height f x ^ 2) < ∞ := by
-    simpa only [eLpNorm_two_sq_lintegral, enorm_eq_self] using
+    simpa only [eLpNorm_two_sq_lintegral _
+      (measurable_paperFixedHeightQuadraticMaximal height hf).aestronglyMeasurable, enorm_eq_self] using
       ENNReal.pow_lt_top (n := 2) hnorm
   have ha := ae_lt_top
     ((measurable_paperFixedHeightQuadraticMaximal height hf).pow_const 2) hsq.ne
@@ -132,6 +133,8 @@ theorem paperFixedHeightQuadraticMaximalReal_eLpNorm_eq (height : ℕ)
     eLpNorm (paperFixedHeightQuadraticMaximalReal height f) 2 =
       eLpNorm (paperFixedHeightQuadraticMaximal height f) 2 := by
   apply eLpNorm_congr_enorm_ae
+    (measurable_paperFixedHeightQuadraticMaximalReal height hf).aestronglyMeasurable
+    (measurable_paperFixedHeightQuadraticMaximal height hf).aestronglyMeasurable
   filter_upwards [ae_paperFixedHeightQuadraticMaximal_lt_top height hf] with x hx
   exact Real.enorm_toReal hx.ne
 
@@ -171,6 +174,8 @@ theorem paperFixedHeightQuadraticMaximalReal_sub_eLpNorm_decay (height : ℕ)
     (f := f - g) (hf.sub hg)
   apply le_trans _ hbound
   apply eLpNorm_mono_enorm_ae
+    ((measurable_paperFixedHeightQuadraticMaximalReal height hf).aestronglyMeasurable.sub
+      (measurable_paperFixedHeightQuadraticMaximalReal height hg).aestronglyMeasurable)
   filter_upwards [ae_abs_paperFixedHeightQuadraticMaximalReal_sub_le height hf hg]
     with x hx
   simp only [Pi.sub_apply, Real.enorm_eq_ofReal_abs, enorm_eq_self]

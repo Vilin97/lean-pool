@@ -175,7 +175,7 @@ theorem measurable_sharpQuadraticTailKernel (lam ε : ℝ) :
     unfold phase
     fun_prop
   apply Measurable.ite
-  · exact measurableSet_lt measurable_const measurable_id.abs
+  · exact measurableSet_lt measurable_const measurable_norm
   · exact hp.measurable.div (Complex.measurable_ofReal.comp measurable_id)
   · exact measurable_const
 
@@ -203,7 +203,7 @@ theorem measurable_cutoffBoundaryKernel (lam ρ : ℝ) :
     (dyadicCutoff_smooth.continuous.measurable.comp
         (measurable_id.div_const (4 * ρ))).sub
       (measurable_const.ite
-        (measurableSet_le measurable_id.abs measurable_const)
+        (measurableSet_le measurable_norm measurable_const)
         measurable_const)
   apply Measurable.ite (measurableSet_singleton 0)
   · exact measurable_const
@@ -226,7 +226,7 @@ theorem quadraticHilbertConvolutionTrunc_eq_quadraticHilbertTrunc
     quadraticHilbertConvolutionTrunc lam ε f x =
       quadraticHilbertTrunc lam ε f x := by
   let s : Set ℝ := {u : ℝ | ε < |u|}
-  have hs : MeasurableSet s := measurableSet_lt measurable_const measurable_id.abs
+  have hs : MeasurableSet s := measurableSet_lt measurable_const measurable_norm
   rw [quadraticHilbertConvolutionTrunc, quadraticHilbertTrunc]
   calc
     (∫ y, sharpQuadraticTailKernel lam ε (x - y) * f y) =

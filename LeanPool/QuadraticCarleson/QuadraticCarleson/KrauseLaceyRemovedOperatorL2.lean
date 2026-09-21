@@ -120,7 +120,8 @@ theorem eLpNorm_removed_badLengthTailMaximal_sq_le
     Finset.sdiff_subset.trans ((activeBadIntervals_subset S f I₀ k₀ s scale N).trans hN)
   have heq : eLpNorm (badLengthTailMaximal S f I₀ k₀ s scale R) 2 volume ^ 2 =
       ∫⁻ x, ‖badLengthTailMaximal S f I₀ k₀ s scale R x‖ₑ ^ 2 := by
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+      (aemeasurable_badLengthTailMaximal S hf I₀ k₀ s scale R).aestronglyMeasurable]
     simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
     rw [← ENNReal.rpow_mul_natCast]
     norm_num

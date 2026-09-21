@@ -6,7 +6,7 @@ Authors: Quadratic Carleson formalization contributors
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.PVFourierIdentity
 import Mathlib.Analysis.Fourier.LpSpace
-import Mathlib.Data.Real.Sign
+import Mathlib.Basic.Real.Sign
 import Mathlib.MeasureTheory.Function.LpSeminorm.Monotonicity
 
 /-!
@@ -96,12 +96,16 @@ theorem memLp_fourierL2Representative (f : Lp (α := ℝ) ℂ 2) :
 def multipliedFourierRepresentative (f : Lp (α := ℝ) ℂ 2) : ℝ → ℂ :=
   fun ξ ↦ ordinaryHilbertMultiplier ξ * fourierL2Representative f ξ
 
+private theorem aestronglyMeasurable_multipliedFourierRepresentative
+    (f : Lp (α := ℝ) ℂ 2) : AEStronglyMeasurable (multipliedFourierRepresentative f) volume :=
+  measurable_ordinaryHilbertMultiplier.aestronglyMeasurable.mul
+    (Lp.aestronglyMeasurable (Lp.fourierTransformₗᵢ ℝ ℂ f))
+
 theorem memLp_ordinaryHilbertMultiplier_mul_fourier
     (f : Lp (α := ℝ) ℂ 2) :
     MemLp (multipliedFourierRepresentative f) 2 volume := by
   apply MemLp.of_le_mul (c := Real.pi) (memLp_fourierL2Representative f)
-  · exact measurable_ordinaryHilbertMultiplier.aestronglyMeasurable.mul
-      (memLp_fourierL2Representative f).1
+  · exact aestronglyMeasurable_multipliedFourierRepresentative f
   · filter_upwards with ξ
     unfold multipliedFourierRepresentative
     rw [norm_mul]
@@ -126,6 +130,7 @@ theorem eLpNorm_multipliedFourierRepresentative_le
     eLpNorm (multipliedFourierRepresentative f) 2 volume ≤
       ENNReal.ofReal Real.pi * eLpNorm (fourierL2Representative f) 2 volume := by
   apply eLpNorm_le_mul_eLpNorm_of_ae_le_mul
+    (aestronglyMeasurable_multipliedFourierRepresentative f)
   filter_upwards with ξ
   unfold multipliedFourierRepresentative
   rw [norm_mul]
@@ -148,7 +153,9 @@ theorem eLpNorm_multipliedFourierRepresentative_eq
   calc
     eLpNorm (multipliedFourierRepresentative f) 2 volume =
         eLpNorm (fun ξ ↦ (Real.pi : ℂ) * fourierL2Representative f ξ) 2 volume :=
-      eLpNorm_congr_norm_ae hnorm
+      eLpNorm_congr_norm_ae (aestronglyMeasurable_multipliedFourierRepresentative f)
+        (aestronglyMeasurable_const.mul
+          (Lp.aestronglyMeasurable (Lp.fourierTransformₗᵢ ℝ ℂ f))) hnorm
     _ = ‖(Real.pi : ℂ)‖ₑ * eLpNorm (fourierL2Representative f) 2 volume := by
       change eLpNorm ((Real.pi : ℂ) • fourierL2Representative f) 2 volume = _
       exact eLpNorm_const_smul (Real.pi : ℂ) (fourierL2Representative f) 2 volume

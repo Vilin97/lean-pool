@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
 
+import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
+import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
+import Mathlib.MeasureTheory.Group.Integral
 import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
 import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
 
@@ -283,7 +286,7 @@ private theorem integrableOn_quadraticHilbertTrunc_integrand
       (fun t ↦ f (x - t) * phase (lam * t ^ 2) / (t : ℂ))
       {t : ℝ | ε < |t|} := by
   let s : Set ℝ := {t : ℝ | ε < |t|}
-  have hs : MeasurableSet s := measurableSet_lt measurable_const measurable_id.abs
+  have hs : MeasurableSet s := measurableSet_lt measurable_const measurable_norm
   have hf : Integrable (fun t ↦ f (x - t)) :=
     f.integrable_for_truncation.comp_sub_left x
   have hm : Measurable (fun t : ℝ ↦ phase (lam * t ^ 2) / (t : ℂ)) := by

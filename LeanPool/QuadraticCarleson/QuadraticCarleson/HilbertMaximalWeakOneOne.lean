@@ -1755,9 +1755,9 @@ theorem measurable_cotlarPoissonErrorMajorant (r : ℝ) :
     Measurable (cotlarPoissonErrorMajorant r) := by
   unfold cotlarPoissonErrorMajorant
   apply Measurable.ite
-  · exact measurableSet_le measurable_id.abs measurable_const
+  · exact measurableSet_le measurable_norm measurable_const
   · exact measurable_const
-  · exact measurable_const.div (measurable_id.abs.pow_const 3)
+  · exact measurable_const.div (measurable_norm.pow_const 3)
 
 theorem measurable_cotlarConjugatePoissonKernel (r : ℝ) :
     Measurable (cotlarConjugatePoissonKernel r) := by
@@ -1851,7 +1851,7 @@ theorem measurable_cotlarDyadicBallSeries (q r : ℝ) :
   apply Measurable.tsum
   intro n
   apply Measurable.ite
-  · exact measurableSet_le measurable_id.abs measurable_const
+  · exact measurableSet_le measurable_norm measurable_const
   · exact measurable_const
   · exact measurable_const
 
@@ -2058,7 +2058,7 @@ def cotlarCentralBallMajorant (r t : ℝ) : ℝ≥0∞ :=
 theorem measurable_cotlarCentralBallMajorant (r : ℝ) :
     Measurable (cotlarCentralBallMajorant r) := by
   unfold cotlarCentralBallMajorant
-  exact Measurable.ite (measurableSet_le measurable_id.abs measurable_const)
+  exact Measurable.ite (measurableSet_le measurable_norm measurable_const)
     measurable_const measurable_const
 
 theorem lintegral_cotlarCentralBallMajorant_mul_le_maximal

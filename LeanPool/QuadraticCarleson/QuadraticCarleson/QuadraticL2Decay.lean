@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
 
+import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
 import Mathlib.Analysis.Complex.RealDeriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts

@@ -62,6 +62,15 @@ lemma stronglyMeasurable_interpolationHigh
   exact Measurable.ite
     (measurableSet_lt measurable_const hf.norm.measurable) hf.measurable measurable_const
 
+lemma stronglyMeasurable_interpolationLow
+    [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+    {f : α → E} (hf : StronglyMeasurable f) (a : ℝ) :
+    StronglyMeasurable (interpolationLow f a) := by
+  apply Measurable.stronglyMeasurable
+  unfold interpolationLow
+  exact Measurable.ite
+    (measurableSet_le hf.norm.measurable measurable_const) hf.measurable measurable_const
+
 end Truncation
 
 section Distribution

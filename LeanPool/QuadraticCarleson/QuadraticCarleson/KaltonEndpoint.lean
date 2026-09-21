@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
 
+import Mathlib.Analysis.Complex.ExponentialBounds
 import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 import Mathlib.Analysis.PSeries

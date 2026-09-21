@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Quadratic Carleson formalization contributors
 -/
 
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.SpecificLimits.Normed
 import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleRange
 import LeanPool.QuadraticCarleson.QuadraticCarleson.DyadicAtomScales
 import Mathlib.Topology.Algebra.InfiniteSum.ENNReal

@@ -75,6 +75,7 @@ theorem eLpNorm_badSubcollectionPrefixMaximal_le_of_ae_overlapCount_le
   apply le_trans _ (eLpNorm_badSubcollectionPrefixMaximal_le hf I₀ k₀ s hk₀ hs scale
     hlam hparent hsub N hN M)
   apply eLpNorm_mono
+    (memLp_badSubcollectionPrefixMaximal S f hf I₀ k₀ s scale N L).aestronglyMeasurable
   intro x
   rw [Real.norm_of_nonneg (badSubcollectionPrefixMaximal_nonneg S f I₀ k₀ s scale N L x),
     Real.norm_of_nonneg (badSubcollectionPrefixMaximal_nonneg S f I₀ k₀ s scale N M x)]
