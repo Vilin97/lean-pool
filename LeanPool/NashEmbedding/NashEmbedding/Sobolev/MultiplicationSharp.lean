@@ -74,7 +74,7 @@ lemma half_power_weight_ineq {s : ℝ} (hs : 0 ≤ s) (i j : Fin n → ℤ) :
   unfold weight;
   -- Apply the inequality $(a+b)^2 \leq 2(a^2 + b^2)$ to each term in the sum.
   have h_ineq : ∀ k : Fin n, ((i k + j k) : ℝ) ^ 2 ≤ 2 * ((i k : ℝ) ^ 2 + (j k : ℝ) ^ 2) := by
-    exact fun k => by linarith [ sq_nonneg ( i k - j k : ℝ ) ] ;
+    exact fun k => by linarith [ sq_nonneg ( i k - j k : ℝ ) ];
   -- Apply the inequality $(a+b)^2 \leq 2(a^2 + b^2)$ to the sum.
   have h_sum_ineq : (1 + ∑ k, ((i k + j k) : ℝ) ^ 2) ≤ 2 * (1 + ∑ k, (i k : ℝ) ^ 2) + 2 * (1 + ∑
       k, (j k : ℝ) ^ 2) := by
@@ -150,7 +150,7 @@ Squared norm through half-weight:
 -/
 lemma sobolevNormSq_half_weight (s : ℝ) (a : (Fin n → ℤ) → ℂ) :
     sobolevNormSq n s a = ∑' m, (weight n (s / 2) m * ‖a m‖) ^ 2 := by
-  exact tsum_congr fun m => by rw [ mul_pow, weight_half_mul ] ; ring;
+  exact tsum_congr fun m => by rw [ mul_pow, weight_half_mul ]; ring;
 
 /-- Young's bound applied to the weighted convolution (one direction):
 For `f ∈ ℓ¹` nonneg, `g ∈ ℓ²` nonneg,
@@ -170,7 +170,7 @@ lemma young_l1_l2_bound
 /-
 Summability of the α⋅|b| convolution term at each point.
 -/
-lemma summable_alpha_abs_b {s : ℝ} 
+lemma summable_alpha_abs_b {s : ℝ}
     {a b : (Fin n → ℤ) → ℂ}
     (ha : MemSobolev n s a) (hb_l1 : Summable (fun m => ‖b m‖))
     (m : Fin n → ℤ) :
@@ -178,7 +178,7 @@ lemma summable_alpha_abs_b {s : ℝ}
   have h_conv : Summable (fun j => ‖b j‖ * (weight n (s / 2) (m - j) * ‖a (m - j)‖)) := by
     have h_f : Summable (fun j => ‖b j‖) := hb_l1
     have h_g : Summable (fun j => (weight n (s / 2) j * ‖a j‖) ^ 2) := by
-      convert ha using 2 ; ring;
+      convert ha using 2; ring;
       unfold MemSobolev; norm_num [ weight ] ; ring;
       exact iff_of_eq (by
         congr
@@ -207,7 +207,7 @@ lemma summable_alpha_abs_b {s : ℝ}
 /-
 Summability of the |a|⋅β convolution term at each point.
 -/
-lemma summable_abs_a_beta {s : ℝ} 
+lemma summable_abs_a_beta {s : ℝ}
     {a b : (Fin n → ℤ) → ℂ}
     (ha_l1 : Summable (fun m => ‖a m‖)) (hb : MemSobolev n s b)
     (m : Fin n → ℤ) :
@@ -219,7 +219,7 @@ lemma summable_abs_a_beta {s : ℝ}
   · grind +splitImp;
   · exact fun m => mul_nonneg ( weight_nonneg _ _ ) ( norm_nonneg _ );
   · exact ha_l1;
-  · convert hb using 2 ; ring;
+  · convert hb using 2; ring;
     unfold MemSobolev; norm_num [ weight ] ; ring;
     exact iff_of_eq (by
       congr
@@ -253,9 +253,9 @@ lemma seqConv_unsquared_bound {s : ℝ} (hs : 0 ≤ s)
       · intro i
         have h_ineq : weight n (s / 2) m ≤ 2 ^ s * (weight n (s / 2) i + weight n (s / 2) (m -
             i)) := by
-          convert half_power_weight_ineq hs i ( m - i ) using 1 ; ring;
+          convert half_power_weight_ineq hs i ( m - i ) using 1; ring;
         convert mul_le_mul_of_nonneg_right h_ineq ( mul_nonneg ( norm_nonneg ( a i ) ) (
-            norm_nonneg ( b ( m - i ) ) ) ) using 1 ; ring;
+            norm_nonneg ( b ( m - i ) ) ) ) using 1; ring;
         · rw [ norm_mul, mul_assoc ];
         · ring;
       · exact Summable.mul_left _ ( Summable.of_nonneg_of_le ( fun _ => by positivity ) ( fun _
@@ -290,7 +290,7 @@ lemma seqConv_pointwise_bound {s : ℝ} (hs : 0 ≤ s)
         ^ 2 := by
       exact pow_le_pow_left₀ (mul_nonneg (weight_nonneg _ _) (norm_nonneg _))
         (seqConv_unsquared_bound hs ha_l1 hb_l1 ha hb m) _
-    convert h_sq using 1 ; rw [ mul_pow, two_mul, Real.rpow_add ] <;> norm_num;
+    convert h_sq using 1; rw [ mul_pow, two_mul, Real.rpow_add ] <;> norm_num;
     exact Or.inl <| by ring;
   rw [ weight_half_mul ];
   nlinarith [ sq_nonneg ( ∑' i, weight n ( s / 2 ) i * ‖a i‖ * ‖b ( m - i )‖ - ∑' i, ‖a i‖ * (
@@ -311,9 +311,9 @@ lemma young_alpha_b_bound {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s)
   have h_comm : ∀ m, ∑' i, weight n (s / 2) i * ‖a i‖ * ‖b (m - i)‖ = ∑' j, ‖b j‖ * (weight n (s
       / 2) (m - j) * ‖a (m - j)‖) := by
     intro m; rw [ ← Equiv.tsum_eq ( Equiv.subLeft m ) ] ; simp +decide [ mul_assoc, mul_comm,
-        mul_left_comm ] ;
+        mul_left_comm ];
   have := @this n ( fun m => ‖b m‖ ) ( fun m => weight n ( s / 2 ) m * ‖a m‖ ) ?_ ?_ ?_ ?_ <;>
-      simp_all +decide [ mul_pow, mul_assoc, mul_comm, mul_left_comm, tsum_mul_left,
+      simp_all? +decide [ mul_pow, mul_assoc, mul_comm, mul_left_comm, tsum_mul_left,
       tsum_mul_right ];
   · have h_summable : (∑' i, ‖b i‖) ^ 2 ≤ sobolevEmbedConstSq n s * sobolevNormSq n s b := by
       convert tsum_norm_sq_le hn ( by linarith : ( n : ℝ ) < 2 * s ) hb using 1
@@ -330,7 +330,7 @@ lemma young_alpha_b_bound {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s)
   · exact fun m => mul_nonneg ( norm_nonneg _ ) ( weight_nonneg _ _ );
   · exact summable_norm_of_memSobolev hn ( by linarith ) hb;
   · have := ha;
-    convert this using 2 ; ring;
+    convert this using 2; ring;
     unfold MemSobolev; ring;
     rw [ show weight n s = fun m => weight n ( s * ( 1 / 2 ) ) m * weight n ( s * ( 1 / 2 ) ) m
         by ext m; rw [ weight_half_mul ] ; ring ] ; norm_num [ mul_assoc, mul_comm,
@@ -349,7 +349,7 @@ lemma young_a_beta_bound {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s)
       sobolevEmbedConstSq n s * sobolevNormSq n s a * sobolevNormSq n s b := by
   have := summable_norm_of_memSobolev hn hs ha;
   have h_summable_b : Summable (fun m => (weight n (s / 2) m * ‖b m‖) ^ 2) := by
-    convert hb using 2 ; ring;
+    convert hb using 2; ring;
     unfold MemSobolev; norm_num [ sq, mul_assoc, mul_comm, mul_left_comm, weight ] ;
     exact iff_of_eq (by
       congr
@@ -411,7 +411,7 @@ theorem second_multiplication_theorem_seq
     · rw [ tsum_mul_left, Summable.tsum_add ];
       · unfold mt2Const;
         have := young_alpha_b_bound hn hs ha hb; have := young_a_beta_bound hn hs ha hb;
-            nlinarith [ Real.rpow_pos_of_pos zero_lt_two ( 2 * s ) ] ;
+            nlinarith [ Real.rpow_pos_of_pos zero_lt_two ( 2 * s ) ];
       · exact young_alpha_b_bound hn hs ha hb |>.1;
       · exact young_a_beta_bound hn hs ha hb |>.1
 

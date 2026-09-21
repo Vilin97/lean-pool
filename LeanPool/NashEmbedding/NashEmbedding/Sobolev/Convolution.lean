@@ -173,9 +173,9 @@ lemma ftRn_rescale (φ : (Fin n → ℝ) → ℂ) (_hφ : Integrable φ)
       -- Apply the change of variables $z = \epsilon^{-1} y$ to the integral.
       have h_change : ∀ {f : (Fin n → ℝ) → ℂ}, ∫ y, f y = ∫ z, f (ε • z) * ε ^ n := by
         intro f; rw [ MeasureTheory.integral_mul_const ] ; rw [
-            MeasureTheory.Measure.integral_comp_smul ] ; norm_num [ hε.ne' ] ;
+            MeasureTheory.Measure.integral_comp_smul ]; norm_num [ hε.ne' ];
         rw [ abs_of_pos hε, inv_mul_eq_div, div_mul_cancel₀ _ ( by norm_cast; positivity ) ];
-      convert h_change using 3 ; norm_num [ hε.ne', mul_assoc, mul_left_comm, mul_comm ]
+      convert h_change using 3; norm_num [ hε.ne', mul_assoc, mul_left_comm, mul_comm ]
 
 /-! ## Mollifier convergence (Theorem) -/
 

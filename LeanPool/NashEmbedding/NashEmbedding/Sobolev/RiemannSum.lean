@@ -114,7 +114,7 @@ lemma geom_sum_exp (M : ℕ) (hM : 0 < M) (q : ℤ) :
     if (M : ℤ) ∣ q then (M : ℂ) else 0 := by
   split_ifs with hMq; simp_all +decide only [ofReal_div, ofReal_mul, ofReal_ofNat, ofReal_intCast, ofReal_natCast] ;
   · obtain ⟨ k, rfl ⟩ := hMq; norm_num [ mul_assoc, mul_comm, mul_left_comm, div_eq_mul_inv,
-      hM.ne' ] ;
+      hM.ne' ];
     calc
       _ = ∑ _j : Fin M, (1 : ℂ) := by
         apply Finset.sum_congr rfl
@@ -129,17 +129,17 @@ lemma geom_sum_exp (M : ℕ) (hM : 0 < M) (q : ℤ) :
     have hω_ne_one : ω ≠ 1 := by
       rw [ Ne.eq_def, Complex.exp_eq_one_iff ];
       norm_num [ Complex.ext_iff, div_eq_iff, Real.pi_ne_zero, hM.ne' ];
-      exact fun x hx => hMq <| ⟨ x, by rw [ ← @Int.cast_inj ℝ ] ; push_cast; nlinarith [
+      exact fun x hx => hMq <| ⟨ x, by rw [ ← @Int.cast_inj ℝ ]; push_cast; nlinarith [
           Real.pi_pos ] ⟩
     have hω_pow_M : ω ^ M = 1 := by
-      rw [ ← Complex.exp_nat_mul, mul_comm, Complex.exp_eq_one_iff ] ; use q ; ring_nf ;
-          norm_num [ hM.ne' ] ;
+      rw [ ← Complex.exp_nat_mul, mul_comm, Complex.exp_eq_one_iff ]; use q; ring_nf;
+          norm_num [ hM.ne' ];
     -- The sum of a geometric series with common ratio $\omega$ and $M$ terms is
     -- $\frac{\omega^M - 1}{\omega - 1}$.
     have h_geo_series : ∑ j ∈ Finset.range M, ω ^ j = (ω ^ M - 1) / (ω - 1) := by
       rw [ geom_sum_eq hω_ne_one ];
     convert h_geo_series using 1 <;> norm_num [ ← Complex.exp_nat_mul, mul_div_assoc, mul_comm ];
-    · rw [ Finset.sum_range ] ; congr ; ext ; rw [ ← Complex.exp_nat_mul ] ; ring;
+    · rw [ Finset.sum_range ]; congr; ext; rw [ ← Complex.exp_nat_mul ]; ring;
     · rw [ hω_pow_M, sub_self, zero_div ]
 
 /-! ## Riemann sum of a single Fourier exponential -/
@@ -157,14 +157,14 @@ lemma riemannSum_fourierExp (M : ℕ) (hM : 0 < M) (ℓ : Fin n → ℤ) :
     have h_exp_one : ∀ j : Fin n, ∀ k : Fin M, Complex.exp (Complex.I * (ℓ j : ℝ) * (2 * Real.pi
         / M) * (k : ℝ)) = 1 := by
       intro j k; specialize h j; obtain ⟨ m, hm ⟩ := h; norm_num [ hm, Complex.exp_eq_one_iff ]
-          ; ring_nf;
+         ; ring_nf;
       exact ⟨ m * k, by simpa [ hM.ne', mul_assoc, mul_comm, mul_left_comm ] ⟩;
     unfold fourierExp meshPoint; simp +decide ;
     simp_all +decide [ mul_assoc, mul_comm, mul_left_comm, Finset.mul_sum _ _ _, Complex.exp_sum ];
   · -- Apply the geometric sum lemma to each term in the product.
     have h_prod : ∏ j : Fin n, ∑ k : Fin M, Complex.exp (↑(2 * π * (ℓ j : ℝ) * (k : ℕ) / (M :
         ℝ)) * I) = 0 := by
-      simp_all +decide [Finset.prod_eq_zero_iff];
+      simp_all? +decide [Finset.prod_eq_zero_iff];
       obtain ⟨ a, ha ⟩ := h; use a; have := geom_sum_exp M hM ( ℓ a ) ; aesop;
     convert h_prod using 1;
     rw [ Fintype.prod_sum ];
@@ -182,7 +182,7 @@ lemma norm_riemannK_normalized_le {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s
     ‖(((2 * π : ℝ) ^ n : ℝ) : ℂ)⁻¹ * riemannK n u M m‖ ≤
       ∑' k : Fin n → ℤ, ‖fourierCoeffDistrib u k‖ := by
   unfold riemannK;
-  by_cases hM : M = 0 <;> simp_all +decide [div_eq_mul_inv, mul_pow, mul_assoc, mul_comm, mul_left_comm];
+  by_cases hM : M = 0 <;> simp_all? +decide [div_eq_mul_inv, mul_pow, mul_assoc, mul_comm, mul_left_comm];
   · simp +decide [ hn.ne' ];
     exact tsum_nonneg fun _ => norm_nonneg _;
   · refine le_trans ( mul_le_mul_of_nonneg_left ( norm_sum_le _ _ ) ( by positivity ) ) ?_;
@@ -233,11 +233,11 @@ lemma riemannK_aliasing {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s)
   · unfold riemannK;
     simp +decide [ mul_assoc, mul_comm, mul_left_comm, fourierSynthesis ];
     simp +decide [ sub_eq_add_neg, fourierExp_mul, mul_assoc, mul_comm, ← tsum_mul_left ];
-  · rw [ ← tsum_mul_left ] ; rw [ ← tsum_eq_tsum_of_ne_zero_bij ];
+  · rw [ ← tsum_mul_left ]; rw [ ← tsum_eq_tsum_of_ne_zero_bij ];
     use fun x => fun j => m j + M * x.val j;
-    · intro x y hxy; ext j; replace hxy := congr_fun hxy j; simp_all +decide ;
+    · intro x y hxy; ext j; replace hxy := congr_fun hxy j; simp_all? +decide ;
       exact hxy.resolve_right hM.ne';
-    · intro x hx; simp_all +decide [Function.support] ;
+    · intro x hx; simp_all? +decide [Function.support] ;
       have hcoord : ∀ j, m j + M * ((x j - m j) / M) = x j := by
         intro j
         rw [mul_comm, Int.ediv_mul_cancel (hx.1 j)]
@@ -278,7 +278,7 @@ private theorem lattice_dilate_tail_norm_le (a : (Fin n → ℤ) → ℂ)
   have h_tail_norm : ‖∑' ℓ : Fin n → ℤ, a (fun j => m j + (M : ℤ) * ℓ j) * (if ℓ ≠ 0 then 1 else
       0)‖ ≤ ∑' ℓ : Fin n → ℤ, ‖a (fun j => m j + (M : ℤ) * ℓ j)‖ * (if ℓ ≠ 0 then 1 else 0) := by
     by_cases h : Summable ( fun ℓ : Fin n → ℤ => a ( fun j => m j + M * ℓ j ) * if ℓ ≠ 0 then 1
-        else 0 ) <;> simp_all +decide [tsum_eq_zero_of_not_summable];
+        else 0 ) <;> simp_all? +decide [tsum_eq_zero_of_not_summable];
     · convert norm_tsum_le_tsum_norm ?_ using 1;
       · exact tsum_congr fun x => by split_ifs <;> simp +decide [ * ] ;
       · exact h.norm;
@@ -295,9 +295,9 @@ private theorem lattice_dilate_tail_norm_le (a : (Fin n → ℤ) → ℂ)
         grind;
       · simp +contextual only [Finset.mem_singleton, funext_iff, not_forall, mul_ite, mul_one, mul_zero, ne_eq, Pi.zero_apply, ite_eq_right_iff, norm_eq_zero, forall_exists_index];
         intro b x hx y hy h; specialize h x; simp_all +decide [ Int.mul_ediv_cancel_left _ ( by
-            positivity : ( M : ℤ ) ≠ 0 ) ] ;
+            positivity : ( M : ℤ ) ≠ 0 ) ];
     · rw [ tsum_eq_single 0 ] <;> simp +contextual only [ge_iff_le, hk, ↓reduceIte, mul_zero, Pi.zero_apply, add_zero, mul_ite, mul_one, ne_eq, not_true_eq_false, Std.le_refl, not_false_eq_true, ite_eq_right_iff, norm_eq_zero];
-      intro b' hb' hk'; contrapose! hk; simp_all +decide [funext_iff] ;
+      intro b' hb' hk'; contrapose! hk; simp_all? +decide [funext_iff] ;
       exact ⟨ hb'.choose, le_mul_of_one_le_right ( by positivity ) ( mod_cast abs_pos.mpr
           hb'.choose_spec ) ⟩;
   refine le_trans ?_ ( Summable.tsum_le_tsum h_tail_norm ?_ ?_ );
@@ -309,11 +309,11 @@ private theorem lattice_dilate_tail_norm_le (a : (Fin n → ℤ) → ℂ)
         convert ha using 1;
       rw [ summable_iff_vanishing ] at *;
       intro e he; obtain ⟨ s, hs ⟩ := h_summable e he; use s.image fun x => ( x, fun j => ( x j
-          - m j ) / M ) ; intro t ht; simp_all +decide [Finset.disjoint_left] ;
+          - m j ) / M ); intro t ht; simp_all? +decide [Finset.disjoint_left];
       convert hs ( Finset.image ( fun x : ( Fin n → ℤ ) × ( Fin n → ℤ ) => fun j => m j + M *
           x.2 j ) ( t.filter fun x => x.2 ≠ 0 ∧ x.1 = fun j => m j + M * x.2 j ) ) _ using 1;
       · rw [ Finset.sum_image ];
-        · rw [ Finset.sum_filter ] ; congr ; ext ; aesop;
+        · rw [ Finset.sum_filter ]; congr; ext; aesop;
         · intro x hx y hy; simp_all +decide [ funext_iff ] ;
           intro h
           apply Prod.ext
@@ -325,7 +325,7 @@ private theorem lattice_dilate_tail_norm_le (a : (Fin n → ℤ) → ℂ)
         intro a x hx hx' hx''; specialize ht _ _ hx _; simp_all +decide [ funext_iff ] ;
         exact fun j => m j + M * x j;
         simp_all +decide [ mul_comm ];
-        exact fun ha => ht ha <| funext fun j => by rw [ Int.mul_ediv_cancel _ ( by positivity ) ] ;
+        exact fun ha => ht ha <| funext fun j => by rw [ Int.mul_ediv_cancel _ ( by positivity ) ];
   · refine Summable.of_nonneg_of_le ( fun k => tsum_nonneg fun ℓ => by positivity ) ( fun k =>
       h_tail_norm k ) ?_;
     have h_summable : Summable (fun k : Fin n → ℤ => ‖a k‖) := by
@@ -380,7 +380,7 @@ lemma riemannK_normalized_tendsto {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s
     (summable_norm_of_memSobolev hn hs hu) m
   rw [ Metric.tendsto_nhds ] at *;
   intro ε hε; filter_upwards [ Filter.eventually_ge_atTop 1, h_tail_zero ε hε |> fun h =>
-      h.natCast_atTop ] with M hM₁ hM₂; simp_all +decide [dist_eq_norm] ;
+      h.natCast_atTop ] with M hM₁ hM₂; simp_all? +decide [dist_eq_norm] ;
   refine lt_of_le_of_lt ( h_tail_norm M hM₁ ) ?_;
   convert lt_of_abs_lt hM₂ using 1;
   norm_cast
@@ -437,9 +437,9 @@ theorem riemannSum_convergence (φ : (Fin n → ℝ) → ℂ)
             (((2 * Real.pi : ℝ) ^ n : ℝ) : ℂ)⁻¹ * riemannK n u M m - fourierCoeffDistrib u m)
           Filter.atTop (nhds 0) := by
             convert Filter.Tendsto.sub_const ( riemannK_normalized_tendsto hn hs hu m ) (
-                fourierCoeffDistrib u m ) using 2 ; ring!;
+                fourierCoeffDistrib u m ) using 2; ring!;
       convert h_fourier_coeff.const_mul ( ftRn n φ ( fun j => ( m j : ℝ ) ) ) using 2 <;>
-          norm_num [ fourierCoeffDistrib_riemannSumDistrib, fourierCoeffDistrib_convDistrib ] ;
+          norm_num [ fourierCoeffDistrib_riemannSumDistrib, fourierCoeffDistrib_convDistrib ];
           ring;
     simpa [ fourierCoeffDistrib_sub ] using h_pointwise.norm.pow 2;
   have h_dom : ∀ M : ℕ, ∀ m : Fin n → ℤ, weight n s m * ‖fourierCoeffDistrib (riemannSumDistrib
@@ -449,10 +449,10 @@ theorem riemannSum_convergence (φ : (Fin n → ℝ) → ℂ)
     have h_fourier_coeff : fourierCoeffDistrib (riemannSumDistrib n φ u M - convDistrib n φ u) m
         = ftRn n φ (fun j => (m j : ℝ)) * (((2 * π : ℝ) ^ n : ℝ)⁻¹ * riemannK n u M m -
         fourierCoeffDistrib u m) := by
-      rw [ fourierCoeffDistrib_sub ] ; ring!;
-      rw [ fourierCoeffDistrib_riemannSumDistrib, fourierCoeffDistrib_convDistrib ] ; ring!;
-          norm_num [ mul_assoc, mul_comm, mul_left_comm, Real.pi_ne_zero ] ;
-      exact Or.inl <| by rw [ inv_eq_one_div, div_pow ] ; norm_num;
+      rw [ fourierCoeffDistrib_sub ]; ring!;
+      rw [ fourierCoeffDistrib_riemannSumDistrib, fourierCoeffDistrib_convDistrib ]; ring!;
+          norm_num [ mul_assoc, mul_comm, mul_left_comm, Real.pi_ne_zero ];
+      exact Or.inl <| by rw [ inv_eq_one_div, div_pow ]; norm_num;
     have h_fourier_coeff_bound : ‖(((2 * π : ℝ) ^ n : ℝ)⁻¹ * riemannK n u M m -
         fourierCoeffDistrib u m)‖ ≤ 2 * ∑' k : Fin n → ℤ, ‖fourierCoeffDistrib u k‖ := by
       have h_fourier_coeff_bound : ‖(((2 * π : ℝ) ^ n : ℝ)⁻¹ * riemannK n u M m)‖ ≤ ∑' k : Fin n

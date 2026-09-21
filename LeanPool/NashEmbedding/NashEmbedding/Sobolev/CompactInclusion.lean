@@ -179,7 +179,7 @@ theorem compactInclusion_lp_weighted {s t : ℝ} (hst : s < t)
         have h_split : ∑' m, weight n s m * ‖(a (φ k) m) - (a_lim m)‖ ^ 2 = ∑' m, weight n s m *
             ‖(a (φ k) m) - (a_lim m)‖ ^ 2 * (if m ∈ F then 1 else 0) + ∑' m, weight n s m * ‖(a
             (φ k) m) - (a_lim m)‖ ^ 2 * (if m ∈ F then 0 else 1) := by
-          rw [ ← Summable.tsum_add ] ; congr ; ext m ; aesop;
+          rw [ ← Summable.tsum_add ]; congr; ext m; aesop;
           · refine summable_of_ne_finset_zero (s := F) ?_
             intro m hm
             rw [ite_eq_right hm]
@@ -322,7 +322,7 @@ theorem compactInclusion_lp_weighted {s t : ℝ} (hst : s < t)
             have hsum : Summable (fun m => weight n t m * ‖a_lim m‖ ^ 2) := ha_lim_mem
             exact (hsum.hasSum.eventually (lt_mem_nhds h_second_sum_final)).exists
         convert add_le_add h_second_sum_final.1 h_second_sum_final.2 using 1
-        · rw [ ← Summable.tsum_add ] ; congr ; ext m ; ring
+        · rw [ ← Summable.tsum_add ]; congr; ext m; ring
           · exact ha_mem ( φ k );
           · exact ha_lim_mem;
         · norm_num;

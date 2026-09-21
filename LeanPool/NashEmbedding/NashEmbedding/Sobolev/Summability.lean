@@ -53,7 +53,7 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
     have h_prod : (∏ i : Fin n, (1 + (m i : ℝ) ^ 2)) ^ (1 / n : ℝ) ≤ 1 + (∑ i : Fin n, ((m i) :
         ℝ) ^ 2) := by
       have := @Real.geom_mean_le_arith_mean;
-      specialize this Finset.univ ( fun _i => 1 ) ( fun _i => ( 1 + ( m _i : ℝ ) ^ 2 ) ) ;
+      specialize this Finset.univ ( fun _i => 1 ) ( fun _i => ( 1 + ( m _i : ℝ ) ^ 2 ) );
           norm_num at *;
       refine (this hn (fun _ => by positivity)).trans ?_
       rw [div_le_iff₀ (by positivity)]
@@ -74,7 +74,7 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
   have h_summable_one_dim : Summable (fun m : ℤ => (1 + (m : ℝ) ^ 2) ^ (-s / n)) := by
     have h_summable_one_dim : Summable (fun m : ℕ => (1 + (m : ℝ) ^ 2) ^ (-s / n)) := by
       have h_summable_one_dim : Summable (fun m : ℕ => (m : ℝ) ^ (-2 * s / n)) := by
-        exact Real.summable_nat_rpow.2 ( by rw [ div_lt_iff₀ ( by positivity ) ] ; linarith );
+        exact Real.summable_nat_rpow.2 ( by rw [ div_lt_iff₀ ( by positivity ) ]; linarith );
       rw [ ← summable_nat_add_iff 1 ] at *;
       refine .of_nonneg_of_le ( fun m => Real.rpow_nonneg ( by positivity ) _ ) ( fun m => ?_ )
           h_summable_one_dim;
@@ -89,7 +89,7 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
       rw [ ← tsum_even_add_odd ] <;> norm_num [ Equiv.intEquivNat ];
       · norm_num [ Equiv.intEquivNatSumNat ];
         exact tsum_congr fun m => by ring;
-      · convert h_summable_one_dim using 1 ; rfl
+      · convert h_summable_one_dim using 1; rfl
       · convert h_summable_one_dim.comp_injective ( show Function.Injective ( fun k : ℕ => k + 1
           ) from fun a b h => by simpa using h ) using 1
         ext; simp [Equiv.intEquivNatSumNat];
@@ -114,7 +114,7 @@ theorem summable_weight_neg {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s) :
         have h_prod_summable : Summable (fun m : ℤ × (Fin k → ℤ) => (1 + (m.1 : ℝ) ^ 2) ^ (-s /
           n) * ∏ i : Fin k, (1 + (m.2 i : ℝ) ^ 2) ^ (-s / n)) := by
           exact .of_norm <| by simpa using Summable.mul_norm ( h_summable_one_dim.norm ) (
-              ih.norm ) ;
+              ih.norm );
         convert h_prod_summable.comp_injective ( show Function.Injective ( fun m : Fin ( k + 1 )
             → ℤ => ( m 0, fun i => m ( Fin.succ i ) ) ) from fun m m' h => by simpa [
             funext_iff, Fin.forall_fin_succ ] using h ) using 1
@@ -144,7 +144,7 @@ theorem summable_norm_of_memSobolev {s : ℝ} (hn : 0 < n)
     · exact Summable.add ( summable_weight_neg hn hs ) ha;
   convert h_cauchy_schwarz using 2;
   unfold weight; norm_num [ mul_assoc, mul_comm, mul_left_comm, Real.sqrt_mul, Real.sqrt_sq,
-      le_of_lt ( weight_pos _ _ ) ] ;
+      le_of_lt ( weight_pos _ _ ) ];
   rw [ ← Real.sqrt_mul ( by positivity ), ← Real.rpow_add ( by positivity ), add_neg_cancel,
       Real.rpow_zero, Real.sqrt_one, mul_one ]
 

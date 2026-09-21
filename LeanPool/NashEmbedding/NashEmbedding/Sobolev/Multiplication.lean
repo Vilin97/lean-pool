@@ -71,7 +71,7 @@ lemma weight_base_submul (m j : Fin n → ℤ) :
           (1 + ∑ i : Fin n, (j i : ℝ) ^ 2) := by
   -- Expanding the sum of squares and applying the AM-GM inequality to each term.
   have h_expand : ∀ i, (m i : ℝ) ^ 2 ≤ 2 * (m i - j i) ^ 2 + 2 * (j i) ^ 2 := by
-    exact fun i => by linarith [ sq_nonneg ( m i - 2 * j i : ℝ ) ] ;
+    exact fun i => by linarith [ sq_nonneg ( m i - 2 * j i : ℝ ) ];
   have := Finset.sum_le_sum fun i ( hi : i ∈ Finset.univ ) => h_expand i;
   -- Apply the inequality term by term to the sum.
   norm_cast at *;
@@ -85,7 +85,7 @@ lemma weight_base_submul (m j : Fin n → ℤ) :
 -/
 lemma peetre_weight (s : ℝ) (m j : Fin n → ℤ) :
     weight n s m ≤ (2 : ℝ) ^ (abs s) * weight n (abs s) (m - j) * weight n s j := by
-  by_cases hs : 0 ≤ s <;> simp_all +decide [ weight ];
+  by_cases hs : 0 ≤ s <;> simp_all? +decide [ weight ];
   · rw [ abs_of_nonneg hs ];
     rw [ ← Real.mul_rpow, ← Real.mul_rpow ] <;> try positivity;
     apply Real.rpow_le_rpow
@@ -106,8 +106,8 @@ lemma peetre_weight (s : ℝ) (m j : Fin n → ℤ) :
         Finset.sum_nonneg fun _ _ => sq_nonneg _ ) ) ) zero_lt_two;
     · rw [ Real.div_rpow ( by positivity ) ( by positivity ), Real.mul_rpow ( by positivity ) (
         by positivity ), Real.inv_rpow ( by positivity ) ];
-      rw [ abs_of_neg hs, Real.rpow_neg ( by positivity ), Real.rpow_neg ( by positivity ) ] ;
-          ring_nf ; norm_num
+      rw [ abs_of_neg hs, Real.rpow_neg ( by positivity ), Real.rpow_neg ( by positivity ) ];
+          ring_nf; norm_num
 
 /-! ## Translation invariance of tsum -/
 
@@ -117,7 +117,7 @@ Translation invariance: `∑' m, f(m - i) = ∑' m, f(m)`.
 lemma tsum_sub_shift
     {f : (Fin n → ℤ) → ℝ}  (i : Fin n → ℤ) :
     ∑' m, f (m - i) = ∑' m, f m := by
-  conv_rhs => rw [ ← Equiv.tsum_eq ( Equiv.subRight i ) ] ;
+  conv_rhs => rw [ ← Equiv.tsum_eq ( Equiv.subRight i ) ];
   rfl
 
 /-! ## Young's convolution inequality (ℓ¹ ⊛ ℓ²) -/
@@ -173,11 +173,11 @@ theorem young_conv_sq_bound
               i * u j * v i ^ 2 + u i * u j * v j ^ 2) / 2 := by
             exact Finset.sum_le_sum fun i hi => Finset.sum_le_sum fun j hj => h_cauchy_schwarz i j;
           convert h_cauchy_schwarz using 1 <;> norm_num [ Finset.sum_add_distrib, ←
-              Finset.mul_sum _ _ _, ← Finset.sum_div ] ; ring;
+              Finset.mul_sum _ _ _, ← Finset.sum_div ]; ring;
           · simp +decide only [sq, Finset.mul_sum _ _ _, mul_comm, mul_left_comm];
           · simp +decide [ ← Finset.mul_sum _ _ _, ← Finset.sum_mul, mul_assoc, mul_comm,
-              mul_left_comm, Finset.sum_add_distrib ] ; ring;
-            simp +decide [ mul_assoc, Finset.mul_sum _ _ _ ] ; ring;
+              mul_left_comm, Finset.sum_add_distrib ]; ring;
+            simp +decide [ mul_assoc, Finset.mul_sum _ _ _ ]; ring;
         exact h_cauchy_schwarz u v hu hv;
       have h_cauchy_schwarz : Filter.Tendsto (fun N : Finset (Fin n → ℤ) => (∑ i ∈ N, u i * v i)
           ^ 2) Filter.atTop (nhds ((∑' i, u i * v i) ^ 2)) := by
@@ -185,7 +185,7 @@ theorem young_conv_sq_bound
         refine Summable.hasSum ?_;
         have h_cauchy_schwarz : Summable (fun i => u i * v i) := by
           have h_cauchy_schwarz : ∀ i, u i * v i ≤ u i + u i * v i ^ 2 := by
-            exact fun i => by nlinarith only [ hu i, hv i, sq_nonneg ( v i - 1 ) ] ;
+            exact fun i => by nlinarith only [ hu i, hv i, sq_nonneg ( v i - 1 ) ];
           exact Summable.of_nonneg_of_le ( fun i => mul_nonneg ( hu i ) ( hv i ) )
               h_cauchy_schwarz ( hu_sum.add hv_sum );
         exact h_cauchy_schwarz;
@@ -200,18 +200,18 @@ theorem young_conv_sq_bound
     rw [ Summable.tsum_comm ];
     · simp +decide only [← tsum_mul_left];
     · have h_fubini : Summable (fun p : (Fin n → ℤ) × (Fin n → ℤ) => f p.1 * g p.2 ^ 2) := by
-        exact .of_norm <| by simpa using Summable.mul_norm ( hf.norm ) ( hg_sq.norm ) ;
+        exact .of_norm <| by simpa using Summable.mul_norm ( hf.norm ) ( hg_sq.norm );
       convert h_fubini.comp_injective ( show Function.Injective ( fun p : ( Fin n → ℤ ) × ( Fin
           n → ℤ ) => ( p.1, p.2 - p.1 ) ) from fun p q h => by aesop ) using 1
       funext p; simp [Function.uncurry, Function.comp]
   have h_translation_invariance : ∀ i, ∑' m, g (m - i) ^ 2 = ∑' m, g m ^ 2 := by
     exact fun i => Equiv.tsum_eq ( Equiv.subRight i ) fun m => g m ^ 2;
-  simp_all +decide [ tsum_mul_right, tsum_mul_left ];
+  simp_all? +decide [ tsum_mul_right, tsum_mul_left ];
   refine ⟨ ?_, ?_ ⟩;
   · refine Summable.of_nonneg_of_le ( fun m => sq_nonneg _ ) ( fun m => h_cauchy_schwarz m ) ?_;
     refine Summable.mul_left _ ?_;
     contrapose! h_fubini;
-    rw [ tsum_eq_zero_of_not_summable h_fubini ] ; norm_num;
+    rw [ tsum_eq_zero_of_not_summable h_fubini ]; norm_num;
     constructor;
     · intro H;
       have h_zero : ∀ m, f m = 0 := by
@@ -228,7 +228,7 @@ theorem young_conv_sq_bound
     · refine Summable.of_nonneg_of_le ( fun m => sq_nonneg _ ) ( fun m => h_cauchy_schwarz m ) ?_;
       refine Summable.mul_left _ ?_;
       contrapose! h_fubini;
-      rw [ tsum_eq_zero_of_not_summable h_fubini ] ; norm_num;
+      rw [ tsum_eq_zero_of_not_summable h_fubini ]; norm_num;
       constructor;
       · intro H;
         have h_zero : ∀ m, f m = 0 := by
@@ -243,7 +243,7 @@ theorem young_conv_sq_bound
         exact h_fubini <| by simpa [ h_g_zero ] using summable_zero;
     · refine Summable.mul_left _ ?_;
       contrapose! h_fubini;
-      rw [ tsum_eq_zero_of_not_summable h_fubini ] ; norm_num;
+      rw [ tsum_eq_zero_of_not_summable h_fubini ]; norm_num;
       constructor <;> intro h <;> simp_all +decide [ tsum_eq_zero_of_not_summable ];
       · -- Since $f$ is non-negative and its sum is zero, $f$ must be zero everywhere.
         have h_f_zero : ∀ m, f m = 0 := by
@@ -288,7 +288,7 @@ theorem sobolev_mul_seq {s : ℝ}
             * Real.sqrt (weight n s (m - i)) := by
           have h_peetre : weight n s m ≤ (2 : ℝ) ^ (|s|) * weight n (|s|) i * weight n s (m - i)
               := by
-            convert peetre_weight s m ( m - i ) using 1 ; ring;
+            convert peetre_weight s m ( m - i ) using 1; ring;
           convert Real.sqrt_le_sqrt h_peetre using 1;
           have htwo : (2 : ℝ) ^ |s| = (2 ^ (|s| / 2)) ^ 2 := by
             rw [← Real.rpow_natCast, ← Real.rpow_mul (by positivity)]
@@ -355,7 +355,7 @@ theorem sobolev_mul_seq {s : ℝ}
       · exact fun m => mul_nonneg ( norm_nonneg _ ) ( weight_nonneg _ _ );
       · exact fun m => mul_nonneg ( Real.sqrt_nonneg _ ) ( norm_nonneg _ );
       · exact hb;
-      · simp_all +decide [ mul_pow, Real.sq_sqrt ( weight_nonneg _ _ ) ];
+      · simp_all? +decide [ mul_pow, Real.sq_sqrt ( weight_nonneg _ _ ) ];
         exact ha;
   have h_summable : Summable (fun m => (weight n s m) * ‖∑' i, b i * a (m - i)‖ ^ 2) := by
     exact Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) )
@@ -366,7 +366,7 @@ theorem sobolev_mul_seq {s : ℝ}
     refine Real.sqrt_le_sqrt ?_;
     refine le_trans ( Summable.tsum_le_tsum h_peetre h_summable ?_ ) ?_;
     · exact Summable.mul_left _ h_young.1;
-    · rw [ tsum_mul_left ] ; nlinarith [ show 0 ≤ ( 2 ^ ( |s| / 2 ) : ℝ ) ^ 2 by positivity ] ;
+    · rw [ tsum_mul_left ]; nlinarith [ show 0 ≤ ( 2 ^ ( |s| / 2 ) : ℝ ) ^ 2 by positivity ];
   refine ⟨h_summable, h_sqrt.trans_eq ?_⟩
   unfold sobolevNormSq
   rw [Real.sqrt_mul (by positivity), Real.sqrt_mul (by positivity), Real.sqrt_sq (by

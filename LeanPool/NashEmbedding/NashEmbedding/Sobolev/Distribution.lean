@@ -91,8 +91,8 @@ lemma fourierExp_inner_eq (m m₀ : Fin n → ℤ) :
   · simp +decide only [Algebra.mul_smul_comm, mul_one, fourierExp, ofReal_sum, ofReal_mul, ofReal_intCast, ← h, ofReal_pow, ofReal_ofNat];
     norm_num [ Complex.mul_conj, Complex.normSq_eq_norm_sq, Complex.norm_exp ];
     erw [ MeasureTheory.measureReal_def ];
-    erw [ Real.volume_Icc_pi ] ; norm_num [ mul_comm ];
-    rw [ ENNReal.toReal_ofReal ( by positivity ) ] ; norm_num;
+    erw [ Real.volume_Icc_pi ]; norm_num [ mul_comm ];
+    rw [ ENNReal.toReal_ofReal ( by positivity ) ]; norm_num;
   · -- Since $m \neq m_0$, there exists $j$ such that $m_j \neq m_{0,j}$.
     obtain ⟨j, hj⟩ : ∃ j : Fin n, m j ≠ m₀ j := by
       exact Function.ne_iff.mp h;
@@ -106,7 +106,7 @@ lemma fourierExp_inner_eq (m m₀ : Fin n → ℤ) :
           i) else 0)) := by
         rw [ ← MeasureTheory.integral_indicator ] <;> norm_num [ Set.indicator, Pi.le_def,
             forall_and ];
-        congr with x ; split_ifs <;> simp_all +decide [ mul_assoc, mul_comm, mul_left_comm,
+        congr with x; split_ifs <;> simp_all? +decide [ mul_assoc, mul_comm, mul_left_comm,
             Finset.prod_ite ];
         · rw [ ← Complex.exp_sum, Finset.mul_sum _ _ _ ];
         · grind;
@@ -116,24 +116,24 @@ lemma fourierExp_inner_eq (m m₀ : Fin n → ℤ) :
       convert h_prod ( fun i θ => if 0 ≤ θ ∧ θ ≤ 2 * Real.pi then Complex.exp ( Complex.I * ( m
           i - m₀ i ) * θ ) else 0 ) using 1;
       exact Finset.prod_congr rfl fun _ _ => by rw [ ← MeasureTheory.integral_indicator ] <;>
-          norm_num [ Set.indicator ] ;
+          norm_num [ Set.indicator ];
     -- For $m_j \neq m_{0,j}$, the integral $\int_0^{2\pi} e^{i(m_j - m_{0,j})\theta}
     -- d\theta$ is zero.
     have h_integral_zero : ∀ j : Fin n, m j ≠ m₀ j → ∫ θ : ℝ in Set.Icc 0 (2 * Real.pi),
         Complex.exp (Complex.I * ((m j - m₀ j) : ℂ) * θ) = 0 := by
       intro j hj; rw [ MeasureTheory.integral_Icc_eq_integral_Ioc, ←
-          intervalIntegral.integral_of_le Real.two_pi_pos.le ] ;
+          intervalIntegral.integral_of_le Real.two_pi_pos.le ];
       have := @integral_exp_mul_complex 0 ( 2 * Real.pi );
       convert this ( show ( I * ( m j - m₀ j : ℂ ) ) ≠ 0 from mul_ne_zero Complex.I_ne_zero <|
-          sub_ne_zero_of_ne <| mod_cast hj ) using 1 ; norm_num;
+          sub_ne_zero_of_ne <| mod_cast hj ) using 1; norm_num;
       exact Eq.symm ( div_eq_zero_iff.mpr <| Or.inl <| sub_eq_zero.mpr <|
           Complex.exp_eq_one_iff.mpr ⟨ m j - m₀ j, by push_cast; ring ⟩ );
     convert h_prod using 1;
     · unfold fourierExp; norm_num [ Complex.exp_add, Complex.exp_neg, mul_sub, sub_mul,
-        Finset.sum_sub_distrib ] ;
+        Finset.sum_sub_distrib ];
       norm_num [ Complex.exp_sub, Complex.exp_neg, Complex.exp_conj ];
       norm_num [ div_eq_mul_inv, Complex.inv_def, Complex.normSq_eq_norm_sq, Complex.norm_exp ];
-    · rw [ Finset.prod_eq_zero ( Finset.mem_univ j ) ( h_integral_zero j hj ) ] ; norm_num
+    · rw [ Finset.prod_eq_zero ( Finset.mem_univ j ) ( h_integral_zero j hj ) ]; norm_num
 
 /-! ## Fourier inversion formula -/
 
@@ -168,13 +168,13 @@ lemma fourierSynthesis_inner
         · rw [ ENNReal.le_ofReal_iff_toReal_le ] <;> norm_num [ norm_fourierExp ];
           finiteness;
         · simp +decide only [Algebra.mul_smul_comm, mul_one, ofReal_norm, MeasureTheory.lintegral_const, MeasurableSet.univ, MeasureTheory.Measure.restrict_apply, Set.univ_inter, volume_Icc_pi, Pi.smul_apply, Pi.ofNat_apply, smul_eq_mul, Pi.zero_apply, sub_zero, Finset.prod_const, Finset.card_univ, Fintype.card_fin, mul_pow, norm_nonneg, ENNReal.ofReal_mul, Nat.ofNat_nonneg, pow_nonneg, ENNReal.ofReal_pow, ENNReal.ofReal_ofNat];
-          rw [ ENNReal.ofReal_mul ( by positivity ), ENNReal.ofReal_pow ( by positivity ) ] ;
-              ring_nf ; norm_num;
+          rw [ ENNReal.ofReal_mul ( by positivity ), ENNReal.ofReal_pow ( by positivity ) ];
+              ring_nf; norm_num;
       · rw [ ← ENNReal.ofReal_tsum_of_nonneg ] <;> norm_num;
         · exact fun m => mul_nonneg ( norm_nonneg _ ) ( pow_nonneg ( by positivity ) _ );
         · exact ha.mul_right _;
   rw [ h_expand, tsum_eq_single m₀ ];
-  · rw [ mul_comm, fourierExp_inner_eq ] ; norm_num;
+  · rw [ mul_comm, fourierExp_inner_eq ]; norm_num;
   · intro m hm; rw [ fourierExp_inner_eq m m₀ ] ; aesop;
 
 /-! ## Standard Fourier coefficients -/
@@ -388,7 +388,7 @@ theorem sobolev_embedding_linear_add
 /-- **Sobolev embedding: scalar multiplication.** -/
 theorem sobolev_embedding_linear_smul
     {a : (Fin n → ℤ) → ℂ} (c : ℂ)
-    (ha : Summable (fun m => ‖a m‖))
+
     (θ : Fin n → ℝ) :
     fourierSynthesis n (c • a) θ = c * fourierSynthesis n a θ :=
   fourierSynthesis_smul c θ
@@ -396,7 +396,7 @@ theorem sobolev_embedding_linear_smul
 /-- **Sobolev embedding: periodicity.** The Fourier synthesis is `2π`-periodic
 in each variable. -/
 theorem sobolev_embedding_periodic
-    {a : (Fin n → ℤ) → ℂ} (ha : Summable (fun m => ‖a m‖))
+    {a : (Fin n → ℤ) → ℂ}
     (θ : Fin n → ℝ) (j : Fin n) :
     fourierSynthesis n a (Function.update θ j (θ j + 2 * π)) =
       fourierSynthesis n a θ :=

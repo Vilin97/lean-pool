@@ -95,18 +95,18 @@ theorem hasDerivAt_fourierSeries_partial
           norm_num [ Complex.norm_def, Complex.normSq, Complex.exp_re, Complex.exp_im ];
           intro x y; rw [ Real.sqrt_eq_iff_mul_self_eq ] <;> norm_num <;> ring <;> norm_num [
               Real.sin_sq, Real.cos_sq ] <;> ring;
-          · rw [ Real.cos_sub ] ; ring;
+          · rw [ Real.cos_sub ]; ring;
           · nlinarith [ sq_nonneg ( Real.cos x - Real.cos y ), sq_nonneg ( Real.sin x - Real.sin
               y ), Real.cos_sq' x, Real.cos_sq' y ];
         -- Use the fact that $|\sin(z)| \leq |z|$ for any real number $z$.
         have h_sin_bound : ∀ z : ℝ, |Real.sin z| ≤ |z| := by
           exact fun z => Real.abs_sin_le_abs;
         grind +revert;
-      filter_upwards [ self_mem_nhdsWithin ] with t ht k ; simp_all +decide only [fourierExp, partialCoeff, Function.update_eq_self, Complex.norm_div, Complex.norm_mul, norm_real, Real.norm_eq_abs];
+      filter_upwards [ self_mem_nhdsWithin ] with t ht k; simp_all +decide only [fourierExp, partialCoeff, Function.update_eq_self, Complex.norm_div, Complex.norm_mul, norm_real, Real.norm_eq_abs];
       rw [ div_le_iff₀ ( abs_pos.mpr ht ) ];
       convert mul_le_mul_of_nonneg_left ( h_exp_diff ( ∑ x : Fin n, ( k x : ℝ ) * (
           Function.update θ j ( θ j + t ) x ) ) ( ∑ x : Fin n, ( k x : ℝ ) * ( θ x ) ) ) (
-          norm_nonneg ( b k ) ) using 1 ; norm_num [ Finset.sum_update_of_mem ] ; ring;
+          norm_nonneg ( b k ) ) using 1; norm_num [ Finset.sum_update_of_mem ]; ring;
       simp +decide [Finset.sum_update_of_mem, Function.update_apply]; ring;
       simp +decide [Finset.sum_ite, Finset.filter_eq', Finset.filter_ne']; ring;
       norm_num [ mul_assoc, mul_comm, mul_left_comm, abs_mul ];

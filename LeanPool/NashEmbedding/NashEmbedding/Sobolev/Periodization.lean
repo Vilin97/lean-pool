@@ -87,8 +87,8 @@ def periodicExtension (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (x : Fin n → �
 lemma periodicExtension_isPeriodic2Pi (φ : (Fin n → ℝ) → ℂ) :
     IsPeriodic2Pi (periodicExtension n φ) := by
   unfold periodicExtension; intro x k; symm; simp? +decide [ IsPeriodic2Pi, periodicShift ] ;
-  rw [ ← Equiv.tsum_eq ( Equiv.addLeft k ) ] ; simp +decide only [Equiv.coe_addLeft] ; ring;
-  unfold periodicShift; congr; ext; simp +decide [ add_assoc ] ;
+  rw [ ← Equiv.tsum_eq ( Equiv.addLeft k ) ]; simp +decide only [Equiv.coe_addLeft]; ring;
+  unfold periodicShift; congr; ext; simp? +decide [ add_assoc ] ;
   exact congr_arg _ ( by ext; simp +decide [ mul_add ] )
 
 /-
@@ -181,7 +181,7 @@ lemma periodicExtension_re_nonneg {φ : (Fin n → ℝ) → ℂ}
   by_cases h : Summable ( fun k : Fin n → ℤ => φ ( y + periodicShift n k ) );
   · convert Complex.re_tsum h |> fun h' => h'.symm ▸ tsum_nonneg fun k => hnn ( y +
       periodicShift n k ) using 1;
-  · rw [ tsum_eq_zero_of_not_summable h ] ; norm_num
+  · rw [ tsum_eq_zero_of_not_summable h ]; norm_num
 
 /-
 If `φ` has pointwise zero imaginary part (e.g.\ `φ`
@@ -198,7 +198,7 @@ lemma periodicExtension_im_zero {φ : (Fin n → ℝ) → ℂ}
       ℤ, Complex.im (φ (y + periodicShift n k)) := by
       convert Complex.im_tsum h;
     aesop;
-  · rw [ tsum_eq_zero_of_not_summable h ] ; norm_num
+  · rw [ tsum_eq_zero_of_not_summable h ]; norm_num
 
 /-! ## Partial derivatives of periodic functions -/
 

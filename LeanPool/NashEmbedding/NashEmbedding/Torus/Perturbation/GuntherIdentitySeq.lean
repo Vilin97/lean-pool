@@ -142,7 +142,7 @@ lemma vcoeff_vrapid (hn : 0 < n) {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu :
   isRapidDecay_stdFourierCoeff hn (smoothPeriodic_ofReal_comp hu α).1
       (smoothPeriodic_ofReal_comp hu α).2
 
-lemma vcoeff_vreal {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u) :
+lemma vcoeff_vreal {u : (Fin n → ℝ) → (Fin N → ℝ)}  :
     VReal (vcoeff n u) := fun α =>
   conjReflect_stdFourierCoeff_of_real (fun x => by simp)
 

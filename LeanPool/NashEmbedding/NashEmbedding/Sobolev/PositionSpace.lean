@@ -264,7 +264,7 @@ lemma convexComboScalar_isPeriodic2Pi (φ : (Fin n → ℝ) → ℂ) (M : ℕ)
 /-- `convexComboScalar n φ M k x ≥ 0`, provided `0 < M`, `φ` has compact
     support, and `φ` has pointwise non-negative real part. -/
 lemma convexComboScalar_nonneg {φ : (Fin n → ℝ) → ℂ}
-    (hφ_supp : HasCompactSupport φ) (hφ_re_nn : ∀ x, 0 ≤ (φ x).re)
+     (hφ_re_nn : ∀ x, 0 ≤ (φ x).re)
     {M : ℕ} (hM : 0 < M) (k : Fin n → Fin M) (x : Fin n → ℝ) :
     0 ≤ convexComboScalar n φ M k x := by
   have hδ_pos : (0 : ℝ) < 2 * Real.pi / (M : ℝ) := by positivity

@@ -362,7 +362,7 @@ theorem convex_combination_approx (hn : 0 < n)
   have h_f_periodic : ∀ k, IsPeriodic2Pi (f k) :=
     fun k => convexComboScalar_isPeriodic2Pi ψc_ε M k
   have h_f_nn : ∀ k x, 0 ≤ f k x :=
-    fun k x => convexComboScalar_nonneg hψc_ε_supp hψc_ε_re_nn hM_pos k x
+    fun k x => convexComboScalar_nonneg hψc_ε_re_nn hM_pos k x
   -- ──── Step 8: package the witnesses. ────
   refine ⟨M, hM_pos, f, B, ?_, ?_, ?_, ?_, ?_⟩
   -- (1) f k smooth periodic.

@@ -83,11 +83,11 @@ lemma mollifier_exists  :
         have := b.support_eq;
         exact lt_of_le_of_lt ( by simpa using ( norm_le_pi_norm x j ) ) ( lt_of_lt_of_le (
             mem_ball_zero_iff.mp ( this.subset hx ) ) hb.le );
-  refine ⟨ fun x => b x / ( ∫ x, b x ), ?_, ?_, ?_, ?_, ?_, ?_ ⟩ <;> simp_all +decide [
+  refine ⟨ fun x => b x / ( ∫ x, b x ), ?_, ?_, ?_, ?_, ?_, ?_ ⟩ <;> simp_all? +decide [
       MeasureTheory.integral_div ];
   · exact hb.1.div_const _;
   · rw [ hasCompactSupport_iff_eventuallyEq ] at *;
-    filter_upwards [ hb.2.1 ] with x hx using by simp +decide [ hx, hb.2.2.2.1.ne' ] ;
+    filter_upwards [ hb.2.1 ] with x hx using by simp +decide [ hx, hb.2.2.2.1.ne' ];
   · exact MeasureTheory.Integrable.div_const ( by exact ( by contrapose! hb; simp_all +decide [
       MeasureTheory.integral_undef ] ) ) _;
   · exact fun x => div_nonneg ( hb.2.2.1 x ) hb.2.2.2.1.le;
@@ -127,7 +127,7 @@ lemma rescale_support_in_cube {φ : (Fin n → ℝ) → ℂ}
   have h_phi_nonzero : φ (ε⁻¹ • x) ≠ 0 := by
     exact fun h => hx <| by unfold rescale; aesop;
   intro j; specialize hsupp ( ε⁻¹ • x ) h_phi_nonzero j; simp_all +decide [ abs_mul, abs_inv ] ;
-  rw [ abs_of_pos hε ] at hsupp ; nlinarith [ inv_mul_cancel₀ ( ne_of_gt hε ), Real.pi_gt_three,
+  rw [ abs_of_pos hε ] at hsupp; nlinarith [ inv_mul_cancel₀ ( ne_of_gt hε ), Real.pi_gt_three,
       abs_nonneg ( x j ) ]
 
 /-

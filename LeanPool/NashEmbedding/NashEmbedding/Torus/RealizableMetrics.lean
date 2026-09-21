@@ -53,7 +53,8 @@ theorem realizable_sum {n : ℕ}
       refine ⟨ N₁ + N₂, fun x => Fin.append ( u₁ x ) ( u₂ x ), ?_, ?_ ⟩;
       · constructor;
         · rw [ contDiff_pi ] at *;
-          intro i; refine Fin.addCases ?_ ?_ i <;> simp +decide only [Fin.append_left, Fin.append_right] ;
+          intro i; refine Fin.addCases ?_ ?_ i <;> simp +decide only [Fin.append_left,
+            Fin.append_right];
           · exact fun i => contDiff_pi.1 hsp₁.smooth i;
           · exact fun i => hsp₂.smooth.comp ( contDiff_id ) |> ContDiff.comp ( contDiff_pi.1
               contDiff_id i );
@@ -64,14 +65,24 @@ theorem realizable_sum {n : ℕ}
         convert congr_arg₂ ( · + · ) ( hreal₁ x i j ) ( hreal₂ x i j ) using 1;
         unfold partialDeriv;
         rw [ fderiv_pi ];
-        · simp +decide only [dotProduct, ContinuousLinearMap.coe_pi', Fin.sum_univ_add, Fin.append_left, Fin.append_right];
+        · simp +decide only [dotProduct, ContinuousLinearMap.coe_pi', Fin.sum_univ_add,
+          Fin.append_left, Fin.append_right];
           rw [ fderiv_pi, fderiv_pi ];
           · congr! 2;
-          · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hsp₂.smooth.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id );
-          · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hsp₁.smooth.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id );
-        · intro i; cases i using Fin.addCases <;> simp +decide only [Fin.append, Fin.addCases_left, Fin.addCases_right] ;
-          · exact DifferentiableAt.comp x ( differentiableAt_pi.1 ( hsp₁.smooth.contDiffAt.differentiableAt ( by norm_num ) ) _ ) ( differentiableAt_id );
-          · exact DifferentiableAt.comp x ( differentiableAt_pi.1 ( hsp₂.smooth.contDiffAt.differentiableAt ( by norm_num ) ) _ ) ( differentiableAt_id )
+          · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+            hsp₂.smooth.contDiffAt.differentiableAt ( by
+            norm_num ) ) i ) ( differentiableAt_id );
+          · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+            hsp₁.smooth.contDiffAt.differentiableAt ( by
+            norm_num ) ) i ) ( differentiableAt_id );
+        · intro i; cases i using Fin.addCases <;> simp +decide only [Fin.append,
+          Fin.addCases_left, Fin.addCases_right];
+          · exact DifferentiableAt.comp x ( differentiableAt_pi.1 (
+            hsp₁.smooth.contDiffAt.differentiableAt ( by
+            norm_num ) ) _ ) ( differentiableAt_id );
+          · exact DifferentiableAt.comp x ( differentiableAt_pi.1 (
+            hsp₂.smooth.contDiffAt.differentiableAt ( by
+            norm_num ) ) _ ) ( differentiableAt_id )
 
 /-
 (ii) Non-negative scaling: if `g` is realizable and `t ≥ 0`, then `t • g` is realizable.
@@ -85,19 +96,27 @@ theorem realizable_nonneg_smul {n : ℕ}
       obtain ⟨N, u, hsp, hreal⟩ := hg
       use N, fun x => Real.sqrt t • u x;
       constructor;
-      · exact ⟨ by simpa using hsp.smooth.const_smul ( Real.sqrt t ), fun x k => by simp +decide [ hsp.periodic x k ] ⟩;
+      · exact ⟨ by
+        simpa using hsp.smooth.const_smul ( Real.sqrt t ), fun x k => by
+        simp +decide [ hsp.periodic x k ] ⟩;
       · intro x i j; simp +decide [ Realizes, dotProduct, Finset.mul_sum _ _ _, mul_assoc,
-          mul_left_comm, mul_comm, ht ] ;
+          mul_left_comm, mul_comm, ht ];
         -- By definition of partial derivative, we have:
         have h_partial_deriv : ∀ i x, partialDeriv i (fun x => Real.sqrt t • u x) x = Real.sqrt
             t • partialDeriv i u x := by
           unfold partialDeriv;
           intro i x; erw [ fderiv_pi ] ; norm_num [ hsp.smooth.contDiffAt.differentiableAt ] ;
           · ext j; erw [ fderiv_mul ] <;> norm_num [ hsp.smooth.contDiffAt.differentiableAt ] ;
-            · rw [ fderiv_pi ] ; aesop;
-              exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hsp.smooth.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id );
-            · exact DifferentiableAt.comp x ( differentiableAt_pi.1 ( hsp.smooth.contDiffAt.differentiableAt ( by norm_num ) ) j ) ( differentiableAt_id );
-          · exact fun i => DifferentiableAt.mul ( differentiableAt_const _ ) ( differentiableAt_pi.1 ( hsp.smooth.contDiffAt.differentiableAt ( by norm_num ) ) i );
+            · rw [ fderiv_pi ]; aesop;
+              exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+                hsp.smooth.contDiffAt.differentiableAt ( by
+                norm_num ) ) i ) ( differentiableAt_id );
+            · exact DifferentiableAt.comp x ( differentiableAt_pi.1 (
+              hsp.smooth.contDiffAt.differentiableAt ( by
+              norm_num ) ) j ) ( differentiableAt_id );
+          · exact fun i => DifferentiableAt.mul ( differentiableAt_const _ ) (
+            differentiableAt_pi.1 ( hsp.smooth.contDiffAt.differentiableAt ( by
+            norm_num ) ) i );
         simp_all +decide [ Realizes, dotProduct, Finset.mul_sum _ _ _, mul_assoc, mul_left_comm,
             mul_comm, ht ];
         simp +decide only [← mul_assoc, Real.mul_self_sqrt ht, ← hreal, Finset.mul_sum _ _ _]
@@ -120,7 +139,7 @@ theorem realizable_translate {n : ℕ}
         convert h ( x - y ) i j using 1;
         unfold partialDeriv;
         erw [ fderiv_comp ] <;> norm_num [ hu.smooth.contDiffAt.differentiableAt ];
-        erw [ fderiv_sub_const ] ; norm_num
+        erw [ fderiv_sub_const ]; norm_num
 
 /-
 (iv) Finite positive combinations of translates.
@@ -136,7 +155,7 @@ theorem realizable_finComb {n M : ℕ}
     simp only [Finset.univ_eq_empty, Finset.sum_empty]
     use 0
     use fun _ => 0
-    simp [Realizes]
+    simp? [Realizes]
     constructor <;> norm_num [IsPeriodic2Pi]
     exact contDiff_const
   | succ M ih =>
@@ -175,19 +194,19 @@ theorem injRealizable_posDef {n : ℕ}
             funext fun x => (hu' x i j).symm
           rw [eq]
           exact h_smooth i j
-        · intro x k; ext i j; have := hu.smoothPeriodic.periodic x k; simp_all +decide [
-            Realizes ] ;
+        · intro x k; ext i j; have := hu.smoothPeriodic.periodic x k; simp_all? +decide [
+            Realizes ];
           rw [ ← hu' ( x + periodicShift n k ) i j, ← hu' x i j ];
           have h_periodic_deriv : ∀ i, fderiv ℝ u (x + periodicShift n k) (Pi.single i 1) =
               fderiv ℝ u x (Pi.single i 1) := by
             have h_periodic_deriv : ∀ i, fderiv ℝ u (x + periodicShift n k) (Pi.single i 1) =
                 fderiv ℝ (fun y => u (y + periodicShift n k)) x (Pi.single i 1) := by
               intro i; erw [ fderiv_comp x ] <;> norm_num [ this,
-                  hu.smoothPeriodic.smooth.contDiffAt.differentiableAt ] ;
+                  hu.smoothPeriodic.smooth.contDiffAt.differentiableAt ];
             have h_periodic_deriv : ∀ i, fderiv ℝ (fun y => u (y + periodicShift n k)) x
                 (Pi.single i 1) = fderiv ℝ u x (Pi.single i 1) := by
               intro i; rw [ show ( fun y => u ( y + periodicShift n k ) ) = u from funext fun y
-                  => hu.smoothPeriodic.periodic y k ] ;
+                  => hu.smoothPeriodic.periodic y k ];
             aesop;
           exact congr_arg₂ _ ( h_periodic_deriv i ) ( h_periodic_deriv j );
       · intro x
@@ -197,7 +216,11 @@ theorem injRealizable_posDef {n : ℕ}
               2 := by
             simp +decide only [← hu' x, dotProduct, Finset.mul_sum _ _ _, pow_two, mul_comm,
                 mul_left_comm];
-            exact Eq.symm ( by rw [ Finset.sum_comm ] ; exact Finset.sum_congr rfl fun _ _ => Finset.sum_comm.trans ( Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring ) );
+            exact Eq.symm ( by
+              rw [ Finset.sum_comm ]; exact Finset.sum_congr rfl fun _ _ =>
+                Finset.sum_comm.trans ( Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun
+                _ _ => by
+                ring ) );
           -- Since $v \neq 0$, there exists some $k$ such that $\sum_{i} v_i
           -- \partial_i u(x)_k \neq 0$.
           obtain ⟨k, hk⟩ : ∃ k, ∑ i, v i * partialDeriv i u x k ≠ 0 := by
@@ -205,11 +228,13 @@ theorem injRealizable_posDef {n : ℕ}
             rw [ Fintype.linearIndependent_iff ] at this;
             contrapose! this;
             exact ⟨ v, by ext k; simpa [ mul_comm ] using this k, Function.ne_iff.mp hv_ne_zero ⟩;
-          exact h_sum.symm ▸ lt_of_lt_of_le ( by positivity ) ( Finset.single_le_sum ( fun k _ => sq_nonneg ( ∑ i, v i * partialDeriv i u x k ) ) ( Finset.mem_univ k ) );
+          exact h_sum.symm ▸ lt_of_lt_of_le ( by
+            positivity ) ( Finset.single_le_sum ( fun k _ => sq_nonneg ( ∑ i, v i * partialDeriv
+              i u x k ) ) ( Finset.mem_univ k ) );
         constructor;
         · ext i j; have := hu' x i j; have := hu' x j i; simp_all +decide [ dotProduct, mul_comm ] ;
         · intro v hv; specialize h_pos_def v; simp_all +decide [ Finsupp.sum_fintype, mul_assoc,
-            mul_comm, mul_left_comm ] ;
+            mul_comm, mul_left_comm ];
 
 /-
 Helper: partial derivative of concat projects to partial derivative of first component.
@@ -223,10 +248,17 @@ lemma partialDeriv_concat_castAdd {n N₁ N₂ : ℕ}
       unfold partialDeriv;
       rw [ fderiv_pi, fderiv_pi ];
       · simp +decide [ Fin.append ];
-      · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hd₁.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id );
-      · intro i; refine Fin.addCases ?_ ?_ i <;> simp +decide only [Fin.append, Fin.addCases_left, Fin.addCases_right] ;
-        · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hd₁.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id );
-        · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hd₂.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id )
+      · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+        hd₁.contDiffAt.differentiableAt ( by
+        norm_num ) ) i ) ( differentiableAt_id );
+      · intro i; refine Fin.addCases ?_ ?_ i <;> simp +decide only [Fin.append,
+        Fin.addCases_left, Fin.addCases_right];
+        · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+          hd₁.contDiffAt.differentiableAt ( by
+          norm_num ) ) i ) ( differentiableAt_id );
+        · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+          hd₂.contDiffAt.differentiableAt ( by
+          norm_num ) ) i ) ( differentiableAt_id )
 /-
 Helper: linear independence is preserved by Fin.append (projecting to first component).
 -/
@@ -252,13 +284,21 @@ lemma partialDeriv_concat {n N₁ N₂ : ℕ}
       unfold partialDeriv;
       rw [ fderiv_pi ];
       · ext j;
-        refine Fin.addCases ?_ ?_ j <;> simp +decide only [Fin.append, ContinuousLinearMap.coe_pi', Fin.addCases_left, Fin.addCases_right];
+        refine Fin.addCases ?_ ?_ j <;> simp +decide only [Fin.append,
+          ContinuousLinearMap.coe_pi', Fin.addCases_left, Fin.addCases_right];
         · intro k; rw [ fderiv_pi ] ; aesop;
-          exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hd₁.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id );
+          exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+            hd₁.contDiffAt.differentiableAt ( by
+            norm_num ) ) i ) ( differentiableAt_id );
         · intro k; rw [ fderiv_pi ] ; aesop;
-          exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hd₂.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id );
-      · intro k; refine Fin.addCases ?_ ?_ k <;> simp +decide only [Fin.append, Fin.addCases_left, Fin.addCases_right] ;
-        · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 ( hd₁.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id );
+          exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+            hd₂.contDiffAt.differentiableAt ( by
+            norm_num ) ) i ) ( differentiableAt_id );
+      · intro k; refine Fin.addCases ?_ ?_ k <;> simp +decide only [Fin.append,
+        Fin.addCases_left, Fin.addCases_right];
+        · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
+          hd₁.contDiffAt.differentiableAt ( by
+          norm_num ) ) i ) ( differentiableAt_id );
         · exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
             hd₂.contDiffAt.differentiableAt ( by norm_num ) ) i ) ( differentiableAt_id )
 
@@ -283,8 +323,8 @@ theorem injRealizable_promotion {n : ℕ}
           intro i; refine Fin.addCases ?_ ?_ i <;> simp +decide [ * ] ;
         · intro x k; simp? +decide [ hsp₁.periodic, hsp₂.periodic ] ;
           rw [ hsp₁.periodic, hsp₂.periodic ];
-      · intro x y hxy; specialize hinj₁ x y; simp_all +decide [ funext_iff, Fin.append ] ;
-        exact hinj₁ fun i => by simpa using hxy ( Fin.castAdd N₂ i ) ;
+      · intro x y hxy; specialize hinj₁ x y; simp_all? +decide [ funext_iff, Fin.append ] ;
+        exact hinj₁ fun i => by simpa using hxy ( Fin.castAdd N₂ i );
       · intro x;
         convert linearIndependent_of_append_proj ( hfr₁ x ) using 1;
         exact funext fun i => partialDeriv_concat hsp₁.smooth hsp₂.smooth i x;
@@ -338,18 +378,22 @@ theorem flatTorusEmb_isInjectiveEmbedding {n : ℕ} :
             Real.sin (y i) := by
           intro i
           have h_cos : Real.cos (x i) = Real.cos (y i) := by
-            convert congr_fun hxy ( Fin.mk ( 2 * i ) ( by linarith [ Fin.is_lt i ] ) ) using 1 <;> norm_num [ flatTorusEmb ]
+            convert congr_fun hxy ( Fin.mk ( 2 * i ) ( by
+              linarith [ Fin.is_lt i ] ) ) using 1 <;> norm_num [ flatTorusEmb ]
           have h_sin : Real.sin (x i) = Real.sin (y i) := by
-            have := congr_fun hxy ⟨ 2 * i + 1, by linarith [ Fin.is_lt i ] ⟩ ; simp_all +decide [ flatTorusEmb ] ;
+            have := congr_fun hxy ⟨ 2 * i + 1, by
+              linarith [ Fin.is_lt i ] ⟩; simp_all? +decide [ flatTorusEmb ];
             convert this using 2 <;> norm_num [ Nat.add_div ]
           exact ⟨h_cos, h_sin⟩
         have h_eq : ∀ i : Fin n, ∃ k : ℤ, x i - y i = 2 * Real.pi * k := by
           intro i
           have h_eq : Real.cos (x i - y i) = 1 ∧ Real.sin (x i - y i) = 0 := by
-            simp_all +decide [ Real.cos_sub, Real.sin_sub ];
+            simp_all? +decide [ Real.cos_sub, Real.sin_sub ];
             exact ⟨ by rw [ ← sq, ← sq, Real.cos_sq_add_sin_sq ], by ring ⟩
           generalize_proofs at *;
-          rw [ Real.cos_eq_one_iff, Real.sin_eq_zero_iff ] at h_eq; obtain ⟨ k₁, hk₁ ⟩ := h_eq.1; obtain ⟨ k₂, hk₂ ⟩ := h_eq.2; exact ⟨ k₁, by linarith ⟩ ;
+          rw [ Real.cos_eq_one_iff, Real.sin_eq_zero_iff ] at h_eq; obtain ⟨ k₁, hk₁ ⟩ :=
+            h_eq.1; obtain ⟨ k₂, hk₂ ⟩ := h_eq.2; exact ⟨ k₁, by
+            linarith ⟩;
         generalize_proofs at *;
         choose k hk using h_eq; use k; ext i; simp +decide [ hk, periodicShift ] ;
       · intro x
@@ -366,14 +410,16 @@ theorem flatTorusEmb_isInjectiveEmbedding {n : ℕ} :
             have h_deriv : (fderiv ℝ (fun x => flatTorusEmb n x k) x) (Pi.single i 1) = deriv
                 (fun t => flatTorusEmb n (x + Pi.single i t) k) 0 := by
               rw [ deriv ];
-              rw [ show ( fun t => flatTorusEmb n ( x + Pi.single i t ) k ) = ( fun x => flatTorusEmb n x k ) ∘ ( fun t => x + Pi.single i t ) by ext; rfl, fderiv_comp ] <;> norm_num [ fderiv_apply_one_eq_deriv ];
+              rw [ show ( fun t => flatTorusEmb n ( x + Pi.single i t ) k ) = ( fun x =>
+                flatTorusEmb n x k ) ∘ ( fun t => x + Pi.single i t ) by
+                ext; rfl, fderiv_comp ] <;> norm_num [ fderiv_apply_one_eq_deriv ];
               · rw [ deriv_pi ] <;> norm_num [ Finset.sum_apply, Pi.single_apply ];
-                · congr ; ext j ; aesop;
+                · congr; ext j; aesop;
                 · exact fun j => by split_ifs <;> norm_num;
               · unfold flatTorusEmb; norm_num [ Real.differentiableAt_sin,
-                  Real.differentiableAt_cos ] ;
+                  Real.differentiableAt_cos ];
                 split_ifs <;> [ exact DifferentiableAt.cos ( differentiableAt_pi.1
-                    differentiableAt_id _ ) ; exact DifferentiableAt.sin ( differentiableAt_pi.1
+                    differentiableAt_id _ ); exact DifferentiableAt.sin ( differentiableAt_pi.1
                     differentiableAt_id _ ) ];
               · intro j; by_cases h : j = i <;> simp +decide [ h, Pi.single_apply ] ;
             generalize_proofs at *;
@@ -387,12 +433,15 @@ theorem flatTorusEmb_isInjectiveEmbedding {n : ℕ} :
           rw [ fderiv_pi ];
           · exact funext fun k => h_deriv k ▸ rfl;
           · intro k; unfold flatTorusEmb; split_ifs <;> norm_num [ Real.differentiableAt_sin,
-              Real.differentiableAt_cos ] ;
+              Real.differentiableAt_cos ];
             · fun_prop (disch := norm_num);
             · fun_prop (disch := norm_num)
         generalize_proofs at *;
         refine Fintype.linearIndependent_iff.2 ?_;
-        intro g hg i; have := congr_fun hg ⟨ 2 * i, by linarith [ Fin.is_lt i ] ⟩ ; have := congr_fun hg ⟨ 2 * i + 1, by linarith [ Fin.is_lt i ] ⟩ ; simp_all +decide [ Finset.sum_ite, Finset.filter_eq', Finset.filter_ne' ] ;
+        intro g hg i; have := congr_fun hg ⟨ 2 * i, by
+          linarith [ Fin.is_lt i ] ⟩; have := congr_fun hg ⟨ 2 * i + 1, by
+          linarith [ Fin.is_lt i ] ⟩; simp_all +decide [ Finset.sum_ite, Finset.filter_eq',
+            Finset.filter_ne' ];
         simp_all +decide [ Finset.sum_filter, Fin.val_inj ];
         simp_all +decide [ Finset.sum_ite, Fin.val_inj, ne_of_apply_ne ( fun x => x % 2 ),
             Nat.add_mod, Nat.mul_mod ];
@@ -408,26 +457,28 @@ theorem flatTorusEmb_injRealizes {n : ℕ} :
         unfold partialDeriv flatMetric flatTorusEmb;
         rw [ fderiv_pi ];
         · simp +decide only [dotProduct, ContinuousLinearMap.coe_pi', Matrix.one_apply];
-          rw [ Finset.sum_eq_add ( ⟨ 2 * i, by linarith [ Fin.is_lt i ] ⟩ : Fin ( 2 * n ) ) ( ⟨ 2 * i + 1, by linarith [ Fin.is_lt i ] ⟩ : Fin ( 2 * n ) ) ] <;> norm_num;
+          rw [ Finset.sum_eq_add ( ⟨ 2 * i, by
+            linarith [ Fin.is_lt i ] ⟩ : Fin ( 2 * n ) ) ( ⟨ 2 * i + 1, by
+            linarith [ Fin.is_lt i ] ⟩ : Fin ( 2 * n ) ) ] <;> norm_num;
           · erw [ fderiv_cos, fderiv_sin ] <;> norm_num;
             · erw [ HasFDerivAt.fderiv ( hasFDerivAt_apply _ _ ), HasFDerivAt.fderiv (
-                hasFDerivAt_apply _ _ ) ] ; norm_num;
+                hasFDerivAt_apply _ _ ) ]; norm_num;
               norm_num [ Nat.add_div, Pi.single_apply ];
               split_ifs <;> simp +decide [ *, ← sq ];
             · fun_prop;
             · exact differentiableAt_pi.1 differentiableAt_id _;
           · intro c hc₁ hc₂; split_ifs ;
             · erw [ fderiv_cos ] <;> norm_num;
-              · erw [ HasFDerivAt.fderiv ( hasFDerivAt_apply _ _ ) ] ; norm_num;
+              · erw [ HasFDerivAt.fderiv ( hasFDerivAt_apply _ _ ) ]; norm_num;
                 grind;
               · fun_prop;
             · erw [ fderiv_sin ] <;> norm_num;
-              · erw [ HasFDerivAt.fderiv ( hasFDerivAt_apply _ _ ) ] ; norm_num [ Pi.single_apply ];
+              · erw [ HasFDerivAt.fderiv ( hasFDerivAt_apply _ _ ) ]; norm_num [ Pi.single_apply ];
                 grind;
               · fun_prop;
         · intro i; split_ifs <;> [ exact DifferentiableAt.cos ( differentiableAt_pi.1
-            differentiableAt_id _ ) ; exact DifferentiableAt.sin ( differentiableAt_pi.1
-            differentiableAt_id _ ) ] ; ⟩
+            differentiableAt_id _ ); exact DifferentiableAt.sin ( differentiableAt_pi.1
+            differentiableAt_id _ ) ]; ⟩
 
 /-! ## Closure of positive-definite metrics (Lemma 1.11) -/
 
@@ -450,7 +501,8 @@ theorem posDefSmoothMetric_add {n : ℕ}
             funext x; simp [Matrix.add_apply]
           rw [eq]
           exact h1.add h2
-        · exact fun x k => by simp +decide [ hg.smoothPeriodic.periodic x k, hg'.smoothPeriodic.periodic x k ] ;
+        · exact fun x k => by
+            simp +decide [hg.smoothPeriodic.periodic x k, hg'.smoothPeriodic.periodic x k]
       · exact fun x => Matrix.PosDef.add ( hg.posDef x ) ( hg'.posDef x )
 
 /-
@@ -472,7 +524,7 @@ theorem posDefSmoothMetric_pos_smul {n : ℕ}
             funext x; simp [Pi.smul_apply, Matrix.smul_apply, smul_eq_mul]
           rw [eq]
           exact contDiff_const.mul hg_ij
-        · exact fun x k => by simp +decide [ hg₁.periodic x k ] ;
+        · exact fun x k => by simp +decide [ hg₁.periodic x k ];
       · intro x;
         change (t • g x).PosDef
         exact Matrix.PosDef.smul ( hg.posDef x ) ht
@@ -508,9 +560,11 @@ theorem posDefSmoothMetric_stability {n : ℕ}
             have h_pos_def : ∀ x ∈ Set.Icc (0 : Fin n → ℝ) (fun _ => 2 * Real.pi), ∀ v : Fin n →
                 ℝ, v ≠ 0 → 0 < dotProduct v (Matrix.mulVec (g x) v) := by
               have := hg.posDef;
-              intro x hx v hv; specialize this x; have := this.2; simp_all +decide only [gt_iff_lt] ;
-              convert this ( show ( Finsupp.equivFunOnFinite.symm v ) ≠ 0 from by simpa [ Finsupp.ext_iff, funext_iff ] using hv ) using 1
-              · simp +decide [ dotProduct, Matrix.mulVec, Finsupp.sum_fintype, Finset.mul_sum,
+              intro x hx v hv; specialize this x; have := this.2; simp_all +decide only
+                [gt_iff_lt];
+              convert this ( show ( Finsupp.equivFunOnFinite.symm v ) ≠ 0 from by
+                simpa [ Finsupp.ext_iff, funext_iff ] using hv ) using 1
+              · simp? +decide [ dotProduct, Matrix.mulVec, Finsupp.sum_fintype, Finset.mul_sum,
                   Finset.sum_mul, mul_assoc, mul_comm ]
                 exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
             -- By definition of $IsPosDefSmoothMetric$, $g(x)$ is positive definite
@@ -536,7 +590,10 @@ theorem posDefSmoothMetric_stability {n : ℕ}
                     p.2) / ‖p.2‖ ^ 2 ≤ dotProduct q.2 (Matrix.mulVec (g q.1) q.2) / ‖q.2‖ ^ 2 := by
                   have h_compact : IsCompact (Set.Icc (0 : Fin n → ℝ) (fun _ => 2 * Real.pi) ×ˢ
                       {v : Fin n → ℝ | ‖v‖ = 1}) := by
-                    exact isCompact_Icc.prod ( isCompact_sphere 0 1 |> fun h => h.of_isClosed_subset ( isClosed_eq continuous_norm continuous_const ) fun x hx => by simpa using hx );
+                    exact isCompact_Icc.prod ( isCompact_sphere 0 1 |> fun h =>
+                      h.of_isClosed_subset ( isClosed_eq continuous_norm continuous_const ) fun
+                      x hx => by
+                      simpa using hx );
                   have := h_compact.exists_isMinOn
                     ⟨⟨0, fun _ => 1⟩, by
                       norm_num [Norm.norm]
@@ -547,17 +604,22 @@ theorem posDefSmoothMetric_stability {n : ℕ}
                   generalize_proofs at *;
                   exact ⟨ this.choose, this.choose_spec.1, fun q hq => this.choose_spec.2 hq ⟩;
                 obtain ⟨ p, hp₁, hp₂ ⟩ := h_extreme_value;
-                exact ⟨ p.2 ⬝ᵥ g p.1 *ᵥ p.2 / ‖p.2‖ ^ 2, div_pos ( h_pos_def p.1 hp₁.1 p.2 ( by rintro h; simpa [ h ] using hp₁.2 ) ) ( sq_pos_of_pos ( norm_pos_iff.mpr ( by rintro h; simpa [ h ] using hp₁.2 ) ) ), hp₂ ⟩;
+                exact ⟨ p.2 ⬝ᵥ g p.1 *ᵥ p.2 / ‖p.2‖ ^ 2, div_pos ( h_pos_def p.1 hp₁.1 p.2 ( by
+                  rintro h; simpa [ h ] using hp₁.2 ) ) ( sq_pos_of_pos ( norm_pos_iff.mpr ( by
+                  rintro h; simpa [ h ] using hp₁.2 ) ) ), hp₂ ⟩;
               refine ⟨ K, hK.1, fun x hx v hv => ?_ ⟩;
-              have := hK.2 ( x, ‖v‖⁻¹ • v ) ⟨ hx, by simp +decide only [Set.mem_ofPred_eq, norm_smul, norm_inv, norm_norm, ne_eq, norm_eq_zero, hv, not_false_eq_true, inv_mul_cancel₀] ⟩ ;
-                  simp_all +decide only [ge_iff_le] ;
-              simp_all +decide [ Matrix.mulVec_smul, dotProduct_smul, mul_assoc, mul_comm,
+              have := hK.2 ( x, ‖v‖⁻¹ • v ) ⟨ hx, by
+                simp +decide only [Set.mem_ofPred_eq, norm_smul, norm_inv, norm_norm, ne_eq,
+                  norm_eq_zero, hv, not_false_eq_true, inv_mul_cancel₀] ⟩;
+                  simp_all +decide only [ge_iff_le];
+              simp_all? +decide [ Matrix.mulVec_smul, dotProduct_smul, mul_assoc, mul_comm,
                   mul_left_comm, sq, norm_smul ];
               convert mul_le_mul_of_nonneg_right this ( mul_self_nonneg ‖v‖ ) using 1
               · have hn : ‖v‖ ≠ 0 := norm_ne_zero_iff.mpr hv
                 field_simp
           obtain ⟨ K, hK₀, hK ⟩ := h_compact; use K, hK₀; intro x v hv; specialize hK ( fun i =>
-              x i - ⌊x i / ( 2 * Real.pi ) ⌋ * ( 2 * Real.pi ) ) ?_ v hv <;> simp_all +decide [Set.mem_Icc] ;
+              x i - ⌊x i / ( 2 * Real.pi ) ⌋ * ( 2 * Real.pi ) ) ?_ v hv <;> simp_all? +decide
+                [Set.mem_Icc];
           · constructor
             · intro i
               apply sub_nonneg.2
@@ -600,7 +662,10 @@ theorem posDefSmoothMetric_stability {n : ℕ}
                 simpa only [ ← abs_mul, dotProduct ] using Finset.abs_sum_le_sum_abs _ _;
               have h_pos : ∑ i : Fin n, |v i| * |(h x).mulVec v i| ≤ ∑ i : Fin n, ‖v‖ *
                   (matOpNorm (h x) * ‖v‖) := by
-                exact Finset.sum_le_sum fun i _ => mul_le_mul ( norm_le_pi_norm v i ) ( by solve_by_elim ) ( by positivity ) ( by positivity );
+                exact Finset.sum_le_sum fun i _ => mul_le_mul ( norm_le_pi_norm v i ) ( by
+                  solve_by_elim ) ( by
+                  positivity ) ( by
+                  positivity );
               have hnonneg : 0 ≤ matOpNorm (h x) * ‖v‖ ^ 2 :=
                 mul_nonneg (ContinuousLinearMap.opNorm_nonneg _) (sq_nonneg _)
               norm_num at *
@@ -611,7 +676,9 @@ theorem posDefSmoothMetric_stability {n : ℕ}
           · simp +decide [ Matrix.mulVec, dotProduct, Finsupp.sum_fintype ];
             simp +decide only [mul_assoc, Finset.mul_sum _ _ _];
           · have := h_norm x;
-            rw [ lt_div_iff₀ ] at this <;> nlinarith [ show 0 < ‖ ( v : Fin n → ℝ )‖ ^ 2 by exact sq_pos_of_pos <| norm_pos_iff.mpr <| by simpa [ Finsupp.ext_iff ] using hv_ne_zero ];
+            rw [ lt_div_iff₀ ] at this <;> nlinarith [ show 0 < ‖ ( v : Fin n → ℝ )‖ ^ 2 by
+              exact sq_pos_of_pos <| norm_pos_iff.mpr <| by
+                simpa [ Finsupp.ext_iff ] using hv_ne_zero ];
           · exact fun h => hv_ne_zero <| Finsupp.ext fun i => by simpa using congr_fun h i;
 
 end NashEmbedding

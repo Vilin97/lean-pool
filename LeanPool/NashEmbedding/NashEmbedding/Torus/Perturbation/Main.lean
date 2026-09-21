@@ -141,8 +141,8 @@ lemma bData_smooth (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu
 lemma bData_real {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u₀)
     (hfree : IsFree u₀) {h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ} (hh : SmoothPeriodic h) :
     (bData n u₀ h).Real where
-  a_real i := vcoeff_vreal (dualA_smoothPeriodic hu hfree i)
-  b_real p q := vcoeff_vreal (dualB_smoothPeriodic hu hfree p q)
+  a_real i := vcoeff_vreal
+  b_real p q := vcoeff_vreal
   h_real p q := by
     have hc : Continuous (fun x => ((h x p q : ℝ) : ℂ)) :=
       Complex.continuous_ofReal.comp
@@ -453,11 +453,11 @@ def Wfun (n : ℕ) (u₀ : (Fin n → ℝ) → (Fin N → ℝ)) (h : (Fin n → 
   fun x => -(∑ i, Ftil n v i x • dualA u₀ i x)
     + ∑ pq ∈ pairs n, ((1 / 2 : ℝ) * (Util n v pq.1 pq.2 x - h x pq.1 pq.2)) • dualB u₀ pq.1 pq.2 x
 
-lemma Ftil_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) 
+lemma Ftil_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v)
     (i : Fin n) : SmoothPeriodic (Ftil n v i) :=
   ssynth_smoothPeriodic hn (isRapidDecay_Fb hn hv i)
 
-lemma Util_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) 
+lemma Util_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v)
     (i j : Fin n) : SmoothPeriodic (Util n v i j) :=
   ssynth_smoothPeriodic hn (isRapidDecay_Ub hn hv i j)
 
@@ -471,7 +471,7 @@ private lemma coeff_Util (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (hr :
     (i j : Fin n) : stdFourierCoeff n (fun x => ((Util n v i j x : ℝ) : ℂ)) = Ub i j v v :=
   stdFourierCoeff_ssynth hn (isRapidDecay_Ub hn hv i j) (conjReflect_Ub hr i j)
 
-lemma Util_symm (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (i j : Fin n) :
+lemma Util_symm  {v : VecSeq n N}  (i j : Fin n) :
     Util n v i j = Util n v j i := by
   unfold Util; rw [Ub_symm i j]
 
@@ -582,7 +582,7 @@ theorem vcoeff_Wfun (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (h
 
 lemma Wfun_smoothPeriodic (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u₀)
     (hfree : IsFree u₀) {h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ} (hh : SmoothPeriodic h)
-    {v : VecSeq n N} (hv : VRapid n N v) (hr : VReal v) :
+    {v : VecSeq n N} (hv : VRapid n N v)  :
     SmoothPeriodic (Wfun n u₀ h v) := by
   have hF : ∀ i, SmoothPeriodic (Ftil n v i) := fun i => Ftil_smoothPeriodic hn hv i
   have hU : ∀ p q, SmoothPeriodic (Util n v p q) := fun p q => Util_smoothPeriodic hn hv p q
@@ -778,8 +778,7 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
     have h1 : vcoeff n V = vcoeff n (Wfun n u₀ h v) := by
       rw [hV, vcoeff_vsynth hn hvrapid hvreal, vcoeff_Wfun hn hu hfree hh hvrapid hvreal, ← hvfix]
     have h2 := congrArg (vsynth n) h1
-    rwa [vsynth_vcoeff hn hVsp, vsynth_vcoeff hn (Wfun_smoothPeriodic hn hu hfree hh hvrapid
-        hvreal)] at h2
+    rwa [vsynth_vcoeff hn hVsp, vsynth_vcoeff hn (Wfun_smoothPeriodic hn hu hfree hh hvrapid)] at h2
   -- the ansatz, pointwise
   have hans1 : ∀ i x, V x ⬝ᵥ pderiv i u₀ x = -Ftil n v i x := by
     intro i x; rw [hVW]; exact Wfun_dot_pderiv hfree h v i x
@@ -789,7 +788,7 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
     rcases le_or_gt i j with hij | hij
     · rw [hVW]; exact Wfun_dot_pderiv_pderiv hfree h v hij x
     · rw [pderiv_comm hu.smooth i j, hVW, Wfun_dot_pderiv_pderiv hfree h v hij.le x,
-        Util_symm hn hvrapid j i, (hsymm x).apply j i]
+        Util_symm j i, (hsymm x).apply j i]
   -- the product identity
   have hprod := pderiv_dot_pderiv_vsynth hn hvrapid hvreal
   -- assemble
@@ -819,7 +818,7 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
   rw [hfun_i, pderiv_neg (Ftil n v i)] at hpr_j
   simp only at hpr_i hpr_j
   rw [hans2 i j x] at hpr_i
-  rw [hans2 j i x, Util_symm hn hvrapid j i, (hsymm x).apply i j] at hpr_j
+  rw [hans2 j i x, Util_symm j i, (hsymm x).apply i j] at hpr_j
   -- expand and finish
   rw [hdi, hdj, add_dotProduct, dotProduct_add, dotProduct_add, hprod i j x]
   have hcomm : pderiv i u₀ x ⬝ᵥ pderiv j V x = pderiv j V x ⬝ᵥ pderiv i u₀ x := dotProduct_comm _ _
