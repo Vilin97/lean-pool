@@ -73,13 +73,12 @@ noncomputable def slabFacetMap
 
 /-- Slab rescaling commutes with simultaneous prime translation. -/
 theorem slabFacetMap_translate
-    (hp : Nat.Prime p) (m : Nat) (hm : 0 < m) (r : Fin m)
+    (p : Nat) (m : Nat) (hm : 0 < m) (r : Fin m)
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     slabFacetMap m hm r
-        (EquivariantPrismNonhorizontalCancellation.translateFacetMap hp g tau) =
-      EquivariantPrismNonhorizontalCancellation.translateFacetMap
-        hp g (slabFacetMap m hm r tau) :=
+        (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
+      EquivariantPrismNonhorizontalCancellation.translateFacetMap p g (slabFacetMap m hm r tau) :=
   rfl
 
 /-- Embed one base-prism facet occurrence into slab `r`. -/
@@ -146,7 +145,7 @@ theorem stackFacetOrbitIndicator_translate
     (s : (StackCells hp N m hm).Facet)
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
-    stackFacetOrbitIndicator hp N m hm s (EquivariantPrismNonhorizontalCancellation.translateFacetMap hp g tau) =
+    stackFacetOrbitIndicator hp N m hm s (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
       stackFacetOrbitIndicator hp N m hm s tau := by
   classical
   unfold stackFacetOrbitIndicator
@@ -154,7 +153,7 @@ theorem stackFacetOrbitIndicator_translate
       (∃ o : (StackCells hp N m hm).FacetOccurrence,
           (StackCells hp N m hm).facetClass o = s ∧
             ∃ h : PrimeSymmetry p,
-              EquivariantPrismNonhorizontalCancellation.mapVertexSignature (EquivariantPrismNonhorizontalCancellation.translateFacetMap hp g tau) =
+              EquivariantPrismNonhorizontalCancellation.mapVertexSignature (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
                 fun i => h • (StackCells hp N m hm).facetSignature o i) ↔
       (∃ o : (StackCells hp N m hm).FacetOccurrence,
           (StackCells hp N m hm).facetClass o = s ∧
@@ -188,7 +187,7 @@ theorem slabFacetOrbitIndicator_translate
     (s : (StackCells hp N m hm).Facet) (r : Fin m)
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
-    slabFacetOrbitIndicator hp N m hm s r (EquivariantPrismNonhorizontalCancellation.translateFacetMap hp g tau) =
+    slabFacetOrbitIndicator hp N m hm s r (EquivariantPrismNonhorizontalCancellation.translateFacetMap p g tau) =
       slabFacetOrbitIndicator hp N m hm s r tau := by
   unfold slabFacetOrbitIndicator
   rw [slabFacetMap_translate]

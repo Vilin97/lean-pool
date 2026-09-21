@@ -37,9 +37,9 @@ open AffinePositiveRayBoundary.VertexMap
 
 variable {p : Nat}
 
-private abbrev parentIndex (hp : Nat.Prime p) :
+private abbrev parentIndex (p : Nat) :
     Fin (p - 1 + 1) → Fin (p - 1 + 1) :=
-  EndpointStackAffinePullbackCore.parentIndex hp
+  EndpointStackAffinePullbackCore.parentIndex p
 
 private abbrev cylinderIndex (hp : Nat.Prime p) : Fin (p + 1) → Fin (p - 1 + 2) :=
   EndpointStackAffinePullbackCore.cylinderIndex hp
@@ -56,7 +56,7 @@ noncomputable def pullbackVector
     (s : (Cells hp A.level).VertexSlot) : Fin p → Real :=
   EndpointStackAffinePullbackCore.pullbackVertexValue (p - 1) s.1.2
     (fun j => A.map (RefinedAffineMap.vertex hp A.level s.1.1
-      (parentIndex (p := p) hp j))) (cylinderIndex hp s.2)
+      (parentIndex p j))) (cylinderIndex hp s.2)
 
 /-- Prime-decorated local pullback value. -/
 noncomputable def decoratedPullbackVector
@@ -245,7 +245,7 @@ theorem localVertexMap_assignment_value
     (localVertexMap hp (Cells hp A.level) (assignment hp A hcompat) q).value i =
       EndpointStackAffinePullbackCore.pullbackVertexValue (p - 1) q.2
         (fun j => A.map (RefinedAffineMap.vertex hp A.level q.1
-          (parentIndex (p := p) hp j))) (cylinderIndex hp i) := by
+          (parentIndex p j))) (cylinderIndex hp i) := by
   exact vectorValue_assignment_sample hp A hcompat (q, i)
 
 /-- Every one-step affine-pullback cell of the descended assignment avoids the origin. -/
@@ -278,7 +278,7 @@ theorem localVertexMap_canonicalAssignment_value
     (localVertexMap hp (Cells hp A.level) (canonicalAssignment hp A) q).value i =
       EndpointStackAffinePullbackCore.pullbackVertexValue (p - 1) q.2
         (fun j => A.map (RefinedAffineMap.vertex hp A.level q.1
-          (parentIndex (p := p) hp j))) (cylinderIndex hp i) :=
+          (parentIndex p j))) (cylinderIndex hp i) :=
   localVertexMap_assignment_value hp A
     (oneStepAffinePullbackCompatible hp A) q i
 

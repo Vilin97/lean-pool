@@ -68,7 +68,7 @@ theorem relabel_mul
   exact BarredPermutation.relabel_mul σ τ c.1
 
 @[simp] theorem prime_smul_val
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (c : FoxNeuwirthTopCell p) :
     (g • c : FoxNeuwirthTopCell p).1 =
       c.1.relabel (PrimeSymmetry.toPerm p g) :=
@@ -222,7 +222,7 @@ noncomputable def toConfig
 
 /-- Relabelling the model point relabels its configuration. -/
 theorem toConfig_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (z : FoxNeuwirthTopCellModelPoint p) :
     (g • z).toConfig = g • z.toConfig := by
   apply Subtype.ext
@@ -275,7 +275,7 @@ theorem reference_smul
 
 /-- Group actions on the finite-cell model are continuous. -/
 theorem continuous_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p) :
+    (p : Nat) (g : PrimeSymmetry p) :
     Continuous fun z : FoxNeuwirthTopCellModelPoint p => g • z := by
   exact
     ((continuous_of_discreteTopology.comp continuous_fst).prodMk
@@ -296,13 +296,13 @@ noncomputable def foxNeuwirthTopCellModel
         · simp [Finset.sum_const, hp.ne_zero]⟩⟩
   exact
     { Point := FoxNeuwirthTopCellModelPoint p
-      continuous_smul := FoxNeuwirthTopCellModelPoint.continuous_smul hp
+      continuous_smul := FoxNeuwirthTopCellModelPoint.continuous_smul p
       toConfig :=
         ⟨FoxNeuwirthTopCellModelPoint.toConfig,
           FoxNeuwirthTopCellModelPoint.continuous_toConfig⟩
       toConfig_equivariant := by
         intro g z
-        exact FoxNeuwirthTopCellModelPoint.toConfig_smul hp g z
+        exact FoxNeuwirthTopCellModelPoint.toConfig_smul p g z
       reference :=
         ⟨FoxNeuwirthTopCellModelPoint.reference hp,
           FoxNeuwirthTopCellModelPoint.continuous_reference hp⟩

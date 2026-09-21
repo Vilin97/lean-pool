@@ -56,7 +56,7 @@ def mapVertexSignature
 
 /-- Prime translation of an affine facet map. -/
 def translateFacetMap
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1 :=
   fun x => (g • (tau x).1, (tau x).2)
@@ -64,7 +64,7 @@ def translateFacetMap
 @[simp] theorem mapVertexSignature_translateFacetMap
     (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
-    mapVertexSignature hp (translateFacetMap hp g tau) =
+    mapVertexSignature hp (translateFacetMap p g tau) =
       fun i => g • mapVertexSignature hp tau i := by
   funext i
   rfl
@@ -111,7 +111,7 @@ theorem facetOrbitIndicator_translate
     (s : (Cells hp N L).Facet)
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
-    facetOrbitIndicator hp N L s (translateFacetMap hp g tau) =
+    facetOrbitIndicator hp N L s (translateFacetMap p g tau) =
       facetOrbitIndicator hp N L s tau := by
   classical
   unfold facetOrbitIndicator
@@ -119,7 +119,7 @@ theorem facetOrbitIndicator_translate
       (∃ o : (Cells hp N L).FacetOccurrence,
           (Cells hp N L).facetClass o = s ∧
             ∃ h : PrimeSymmetry p,
-              mapVertexSignature hp (translateFacetMap hp g tau) =
+              mapVertexSignature hp (translateFacetMap p g tau) =
                 fun i => h • (Cells hp N L).facetSignature o i) ↔
       (∃ o : (Cells hp N L).FacetOccurrence,
           (Cells hp N L).facetClass o = s ∧
@@ -453,23 +453,23 @@ theorem sideMapWeight_translate
     (hp : Nat.Prime p)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
     (hW : ∀ (g : PrimeSymmetry p) tau,
-      W (translateFacetMap hp g tau) = W tau)
+      W (translateFacetMap p g tau) = W tau)
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
-    sideMapWeight W (translateFacetMap hp g tau) = sideMapWeight W tau := by
+    sideMapWeight W (translateFacetMap p g tau) = sideMapWeight W tau := by
   classical
   unfold sideMapWeight
-  have hl : MapIsLowerHorizontal (translateFacetMap hp g tau) ↔
+  have hl : MapIsLowerHorizontal (translateFacetMap p g tau) ↔
       MapIsLowerHorizontal tau := by rfl
-  have hu : MapIsUpperHorizontal (translateFacetMap hp g tau) ↔
+  have hu : MapIsUpperHorizontal (translateFacetMap p g tau) ↔
       MapIsUpperHorizontal tau := by rfl
   by_cases hside : ¬ MapIsLowerHorizontal tau ∧ ¬ MapIsUpperHorizontal tau
-  · have hside' : ¬ MapIsLowerHorizontal (translateFacetMap hp g tau) ∧
-        ¬ MapIsUpperHorizontal (translateFacetMap hp g tau) := by
+  · have hside' : ¬ MapIsLowerHorizontal (translateFacetMap p g tau) ∧
+        ¬ MapIsUpperHorizontal (translateFacetMap p g tau) := by
       simpa only [hl, hu] using hside
     rw [if_pos hside, if_pos hside', hW g tau]
-  · have hside' : ¬ (¬ MapIsLowerHorizontal (translateFacetMap hp g tau) ∧
-        ¬ MapIsUpperHorizontal (translateFacetMap hp g tau)) := by
+  · have hside' : ¬ (¬ MapIsLowerHorizontal (translateFacetMap p g tau) ∧
+        ¬ MapIsUpperHorizontal (translateFacetMap p g tau)) := by
       simpa only [hl, hu] using hside
     rw [if_neg hside, if_neg hside']
 
@@ -619,7 +619,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
   (W : (↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 + 1) × Set.Icc (0 : Real) 1) → ZMod (n + 1 + 1))
   (hW :
     ∀ (g : ↥(PrimeSymmetry (n + 1 + 1))) (tau : ↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 + 1) × Set.Icc (0 : Real) 1),
-      W (translateFacetMap hp g tau) = W tau)
+      W (translateFacetMap (n + 1 + 1) g tau) = W tau)
   (eta : Fin L → Equiv.Perm (Fin (n + 1 + 1))) (h : Fin (n + 1)) (theta : Fin N → Equiv.Perm (Fin (n + 1))) :
   ∑ x,
       ∑ x_1,
@@ -641,7 +641,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
     dsimp [Vsimplex, arbitrarySpatialSideWeight]
     calc
       _ = sideMapWeight W
-          (translateFacetMap hp g (fun x =>
+          (translateFacetMap (n + 1 + 1) g (fun x =>
             staircasePrismMap n (fun y => f.realizationPoint
               (StandardSimplex.ofDelta (affineCompMap n N theta y))) h
               (deltaCast (Nat.sub_add_cancel (Nat.zero_lt_succ n)).symm
@@ -650,7 +650,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
             funext x
             apply Prod.ext
             · simp only [translateFacetMap, staircasePrismMap, Prod.fst]
-              exact realizationPoint_prime_smul_any hp g f _
+              exact realizationPoint_prime_smul_any (n + 1 + 1) g f _
             · rfl
       _ = _ := sideMapWeight_translate hp W hW g _
   have hz := orbit_boundary_pairing_eq_zero hp Vsimplex hVsimplex
@@ -769,7 +769,7 @@ theorem occurrencePairing_side_eq_zero
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
     (hW : ∀ (g : PrimeSymmetry p) tau,
-      W (translateFacetMap hp g tau) = W tau) :
+      W (translateFacetMap p g tau) = W tau) :
     occurrencePairing hp N L (sideMapWeight W) = 0 := by
   classical
   have hpdim : p = (p - 1) + 1 := (Nat.sub_add_cancel hp.pos).symm
@@ -938,7 +938,7 @@ theorem occurrencePairing_eq_upper_sub_lower
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
     (hW : ∀ (g : PrimeSymmetry p) tau,
-      W (translateFacetMap hp g tau) = W tau) :
+      W (translateFacetMap p g tau) = W tau) :
     occurrencePairing hp N L W =
       upperEndpointPairing hp N L W - lowerEndpointPairing hp N L W := by
   classical

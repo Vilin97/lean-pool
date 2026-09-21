@@ -124,8 +124,8 @@ noncomputable def samplePoint
 theorem segmentSafe_smul
     (hp : Nat.Prime p)
     (F G : ContinuousCoordinateMap p)
-    (hF : IsEquivariantCoordinateMap hp F)
-    (hG : IsEquivariantCoordinateMap hp G)
+    (hF : IsEquivariantCoordinateMap p F)
+    (hG : IsEquivariantCoordinateMap p G)
     {x : Realization p} (hx : SegmentSafe F G x)
     (g : PrimeSymmetry p) :
     SegmentSafe F G (g • x) := by
@@ -141,8 +141,8 @@ theorem segmentSafe_smul
 theorem segmentSafe_smul_iff
     (hp : Nat.Prime p)
     (F G : ContinuousCoordinateMap p)
-    (hF : IsEquivariantCoordinateMap hp F)
-    (hG : IsEquivariantCoordinateMap hp G)
+    (hF : IsEquivariantCoordinateMap p F)
+    (hG : IsEquivariantCoordinateMap p G)
     (x : Realization p) (g : PrimeSymmetry p) :
     SegmentSafe F G (g • x) ↔ SegmentSafe F G x := by
   constructor
@@ -385,7 +385,7 @@ theorem continuous_bridgeWeight
   unfold bridgeWeight
   exact continuous_const.mul
     (continuous_finsetSum _ fun g _ =>
-      (continuous_rawBridgeWeight hp F A).comp (Realization.continuous_smul hp g))
+      (continuous_rawBridgeWeight hp F A).comp (Realization.continuous_smul p g))
 
 theorem bridgeWeight_nonneg
     (hp : Nat.Prime p) (F : ZeroFreeMap hp)

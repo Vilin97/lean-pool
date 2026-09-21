@@ -76,7 +76,7 @@ instance primeSymmetryAction (p : Nat) :
     exact mul_smul _ _ _
 
 @[simp] theorem smul_coe
-    (hp : Nat.Prime p) (g : PrimeSymmetry p) (c : TopCell p) :
+    (p : Nat) (g : PrimeSymmetry p) (c : TopCell p) :
     (g • c : TopCell p).1 = g • c.1 :=
   rfl
 

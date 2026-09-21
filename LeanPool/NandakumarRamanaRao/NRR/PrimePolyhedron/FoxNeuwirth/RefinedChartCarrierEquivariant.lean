@@ -36,7 +36,7 @@ def maximalCoordinateIndex (i : Fin p) : Fin (p - 1 + 1) :=
 
 /-- Relabelling a maximal simplex commutes with its realization chart. -/
 theorem realizationPoint_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (w : StandardSimplex (p - 1)) :
     (g • s).realizationPoint w = g • s.realizationPoint w := by
   apply Realization.ext
@@ -74,7 +74,7 @@ theorem refinedPoint_prime_smul
     g • s.realizationPoint
       (StandardSimplex.ofDelta (affineCompMap (p - 1) N
         (maximalRefinementWord N rho) (StandardSimplex.toDelta w)))
-  exact realizationPoint_prime_smul hp g s _
+  exact realizationPoint_prime_smul p g s _
 
 /-- Prime relabelling commutes with every represented refined vertex. -/
 theorem refinedVertex_prime_smul
@@ -223,7 +223,7 @@ interpolant by the same prime symmetry. -/
 theorem simplexValue_prime_smul
     (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (N : Nat) (rho : RefinementWord p N)
-    (F : ContinuousCoordinateMap p) (hF : IsEquivariantCoordinateMap hp F)
+    (F : ContinuousCoordinateMap p) (hF : IsEquivariantCoordinateMap p F)
     (w : StandardSimplex (p - 1)) :
     simplexValue (g • s) N rho F w = g • simplexValue s N rho F w := by
   funext c
@@ -236,7 +236,7 @@ theorem simplexValue_prime_smul
 /-- Symmetry-decorated refined affine values agree whenever the decorated chart points agree. -/
 theorem decorated_value_eq_of_decorated_chart_eq
     (hp : Nat.Prime p) (N : Nat)
-    (F : ContinuousCoordinateMap p) (hF : IsEquivariantCoordinateMap hp F)
+    (F : ContinuousCoordinateMap p) (hF : IsEquivariantCoordinateMap p F)
     (q r : TopCell hp N)
     (g h : PrimeSymmetry p)
     (w v : StandardSimplex (p - 1))

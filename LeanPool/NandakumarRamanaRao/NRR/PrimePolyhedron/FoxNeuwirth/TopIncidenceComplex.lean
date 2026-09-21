@@ -63,21 +63,21 @@ theorem zeroFacetBoundary_comp_topIncidenceBoundary
 
 /-- The oriented sum of all top cells. -/
 noncomputable def orientedTopChain
-    (hp : Nat.Prime p) : TopCellChain p (ZMod p) :=
+    (p : Nat) : TopCellChain p (ZMod p) :=
   fun c => orientedTopCoefficient (c : BarredPermutation p)
 
 /-- Applying the top incidence map to the oriented top chain is exactly the previously defined
 actual boundary coefficient. -/
 @[simp] theorem topIncidenceBoundary_orientedTopChain_apply
     (hp : Nat.Prime p) (a : BarredPermutation p) :
-    topIncidenceBoundary (orientedTopChain hp) a =
+    topIncidenceBoundary (orientedTopChain p) a =
       actualTopBoundaryCoefficient a :=
   rfl
 
 /-- The oriented top chain is an unconditional cycle modulo every prime. -/
 theorem topIncidenceBoundary_orientedTopChain_eq_zero
     (hp : Nat.Prime p) :
-    topIncidenceBoundary (orientedTopChain hp) = 0 := by
+    topIncidenceBoundary (orientedTopChain p) = 0 := by
   funext a
   exact actualTopBoundaryCoefficient_eq_zero_prime hp a
 
@@ -85,7 +85,7 @@ theorem topIncidenceBoundary_orientedTopChain_eq_zero
 not an assumption: both the composite-zero identity and the top-cycle equation are theorems above. -/
 structure PrimeTopIncidenceData (hp : Nat.Prime p) where
   /-- The top chain and its identification with the canonical oriented chain. -/
-  topChainData : {chain : TopCellChain p (ZMod p) // chain = orientedTopChain hp}
+  topChainData : {chain : TopCellChain p (ZMod p) // chain = orientedTopChain p}
   boundary_zero : topIncidenceBoundary topChainData.1 = 0
   boundary_squared : zeroFacetBoundary (topIncidenceBoundary topChainData.1) =
     (fun _ => (0 : ZMod p))
@@ -98,7 +98,7 @@ variable {hp : Nat.Prime p}
 def topChain (D : PrimeTopIncidenceData hp) : TopCellChain p (ZMod p) :=
   D.topChainData.1
 
-theorem topChain_eq (D : PrimeTopIncidenceData hp) : D.topChain = orientedTopChain hp :=
+theorem topChain_eq (D : PrimeTopIncidenceData hp) : D.topChain = orientedTopChain p :=
   D.topChainData.2
 
 end PrimeTopIncidenceData
@@ -106,7 +106,7 @@ end PrimeTopIncidenceData
 /-- Canonical top incidence data produced by the facet--shuffle calculation. -/
 noncomputable def primeTopIncidenceData
     (hp : Nat.Prime p) : PrimeTopIncidenceData hp where
-  topChainData := ⟨orientedTopChain hp, rfl⟩
+  topChainData := ⟨orientedTopChain p, rfl⟩
   boundary_zero := topIncidenceBoundary_orientedTopChain_eq_zero hp
   boundary_squared := zeroFacetBoundary_comp_topIncidenceBoundary _
 

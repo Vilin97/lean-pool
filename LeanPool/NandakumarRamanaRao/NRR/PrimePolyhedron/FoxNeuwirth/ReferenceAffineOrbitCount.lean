@@ -105,7 +105,7 @@ def topDirection
 differences from `lastLabel`.  Introducing this lift is essential when comparing two arbitrary
 labels: neither label has to be one of the fixed target-coordinate labels. -/
 def liftedVertexValue
-    (hp : Nat.Prime p) (epsilon : Real)
+    (p : Nat) (epsilon : Real)
     (c : BarredPermutation p) (x : Fin p) : Real :=
   if c.IsTop then
     -epsilon * (triangular (c.rank x).1 : Real)
@@ -127,8 +127,8 @@ theorem mapAt_vertexValue_eq_lifted_sub
     (hp : Nat.Prime p) (epsilon : Real)
     (c : BarredPermutation p) (r : Fin (p - 1)) :
     (mapAt hp epsilon).vertexValue c r =
-      liftedVertexValue hp epsilon c (coordinateLabel hp r) -
-        liftedVertexValue hp epsilon c (lastLabel hp) := by
+      liftedVertexValue p epsilon c (coordinateLabel hp r) -
+        liftedVertexValue p epsilon c (lastLabel hp) := by
   by_cases htop : c.IsTop
   · simp [mapAt, liftedVertexValue, topDirection, htop]
     ring
@@ -273,13 +273,13 @@ theorem weighted_lifted_difference_eq_zero
     (hzero : ∀ r, (mapAt hp epsilon).value s w r = 0)
     (x y : Fin p) :
     (∑ i : Fin (p - 1 + 1), w i *
-      (liftedVertexValue hp epsilon (s i) x -
-        liftedVertexValue hp epsilon (s i) y)) = 0 := by
+      (liftedVertexValue p epsilon (s i) x -
+        liftedVertexValue p epsilon (s i) y)) = 0 := by
   classical
   have hcoordinate (u : Fin p) :
       (∑ i : Fin (p - 1 + 1), w i *
-        (liftedVertexValue hp epsilon (s i) u -
-          liftedVertexValue hp epsilon (s i) (lastLabel hp))) = 0 := by
+        (liftedVertexValue p epsilon (s i) u -
+          liftedVertexValue p epsilon (s i) (lastLabel hp))) = 0 := by
     by_cases hu : u = lastLabel hp
     · subst u
       simp
@@ -291,14 +291,14 @@ theorem weighted_lifted_difference_eq_zero
         using hzero r
   calc
     (∑ i : Fin (p - 1 + 1), w i *
-        (liftedVertexValue hp epsilon (s i) x -
-          liftedVertexValue hp epsilon (s i) y)) =
+        (liftedVertexValue p epsilon (s i) x -
+          liftedVertexValue p epsilon (s i) y)) =
         (∑ i : Fin (p - 1 + 1), w i *
-          (liftedVertexValue hp epsilon (s i) x -
-            liftedVertexValue hp epsilon (s i) (lastLabel hp))) -
+          (liftedVertexValue p epsilon (s i) x -
+            liftedVertexValue p epsilon (s i) (lastLabel hp))) -
         (∑ i : Fin (p - 1 + 1), w i *
-          (liftedVertexValue hp epsilon (s i) y -
-            liftedVertexValue hp epsilon (s i) (lastLabel hp))) := by
+          (liftedVertexValue p epsilon (s i) y -
+            liftedVertexValue p epsilon (s i) (lastLabel hp))) := by
           rw [← Finset.sum_sub_distrib]
           apply Finset.sum_congr rfl
           intro i hi
@@ -1032,12 +1032,12 @@ theorem strictOrder_eq_of_top_weight_pos
   have htopLastT : (toSimplex hp z (Fin.last (p - 1))).IsTop :=
     (toSimplex_isTop_iff_last hp z (Fin.last (p - 1))).2 (by simp)
   have hliftNonTop : ∀ (j : Fin (p - 1)) (u : Fin p),
-      liftedVertexValue hp (epsilon hp) (toSimplex hp z j.castSucc) u
+      liftedVertexValue p (epsilon hp) (toSimplex hp z j.castSucc) u
         = ((toSimplex hp z j.castSucc).blockIndex u : Real) := by
     intro j u
     simp only [liftedVertexValue, if_neg (hnotTopT j)]
   have hliftLast : ∀ (u : Fin p),
-      liftedVertexValue hp (epsilon hp) (toSimplex hp z (Fin.last (p - 1))) u
+      liftedVertexValue p (epsilon hp) (toSimplex hp z (Fin.last (p - 1))) u
         = -(epsilon hp) * (triangular (z.top u).1 : Real) := by
     intro u
     simp only [liftedVertexValue, if_pos htopLastT]
@@ -1086,11 +1086,11 @@ theorem strictOrder_eq_of_top_weight_pos
                 -(epsilon hp) * (triangular (z.top x).1 : Real)) =
           (∑ i : Fin (p - 1),
             w i.castSucc *
-              (liftedVertexValue hp (epsilon hp) (toSimplex hp z i.castSucc) y -
-                liftedVertexValue hp (epsilon hp) (toSimplex hp z i.castSucc) x)) +
+              (liftedVertexValue p (epsilon hp) (toSimplex hp z i.castSucc) y -
+                liftedVertexValue p (epsilon hp) (toSimplex hp z i.castSucc) x)) +
             w (Fin.last (p - 1)) *
-              (liftedVertexValue hp (epsilon hp) (toSimplex hp z (Fin.last (p - 1))) y -
-                liftedVertexValue hp (epsilon hp) (toSimplex hp z (Fin.last (p - 1))) x) := by
+              (liftedVertexValue p (epsilon hp) (toSimplex hp z (Fin.last (p - 1))) y -
+                liftedVertexValue p (epsilon hp) (toSimplex hp z (Fin.last (p - 1))) x) := by
         congr 1
         · apply Finset.sum_congr rfl
           intro j hj
@@ -1185,8 +1185,8 @@ theorem removal_eq_identity_of_top_weight_pos
     have htopLast : (toSimplex hp z (Fin.last (p - 1))).IsTop :=
       (toSimplex_isTop_iff_last hp z (Fin.last (p - 1))).2 (by simp)
     have hnonTopDiff (j : Fin (p - 1)) :
-        liftedVertexValue hp (epsilon hp) (toSimplex hp z j.castSucc) y -
-            liftedVertexValue hp (epsilon hp) (toSimplex hp z j.castSucc) x =
+        liftedVertexValue p (epsilon hp) (toSimplex hp z j.castSucc) y -
+            liftedVertexValue p (epsilon hp) (toSimplex hp z j.castSucc) x =
           if j ≤ z.removal.symm r then 1 else 0 := by
       have hstage := stageBlock_adjacent_sub hp z (stageIndex hp j.castSucc) r
       simp only [stageIndex_val, Fin.val_castSucc] at hstage
@@ -1195,9 +1195,9 @@ theorem removal_eq_identity_of_top_weight_pos
       simp only [toSimplex_apply, stageCell_blockIndex, x, y, Fin.le_def]
       exact_mod_cast hstage
     have htopDiff :
-        liftedVertexValue hp (epsilon hp)
+        liftedVertexValue p (epsilon hp)
               (toSimplex hp z (Fin.last (p - 1))) y -
-            liftedVertexValue hp (epsilon hp)
+            liftedVertexValue p (epsilon hp)
               (toSimplex hp z (Fin.last (p - 1))) x =
           -(epsilon hp) * (r.1 + 1) := by
       simp only [liftedVertexValue]
@@ -1213,20 +1213,20 @@ theorem removal_eq_identity_of_top_weight_pos
     have hcongr :
         (∑ j : Fin (p - 1),
               w j.castSucc *
-                (liftedVertexValue hp (epsilon hp) (toSimplex hp z j.castSucc) y -
-                  liftedVertexValue hp (epsilon hp) (toSimplex hp z j.castSucc) x)) +
+                (liftedVertexValue p (epsilon hp) (toSimplex hp z j.castSucc) y -
+                  liftedVertexValue p (epsilon hp) (toSimplex hp z j.castSucc) x)) +
             w (Fin.last (p - 1)) *
-              (liftedVertexValue hp (epsilon hp)
+              (liftedVertexValue p (epsilon hp)
                     (toSimplex hp z (Fin.last (p - 1))) y -
-                liftedVertexValue hp (epsilon hp)
+                liftedVertexValue p (epsilon hp)
                     (toSimplex hp z (Fin.last (p - 1))) x) =
           (∑ j : Fin (p - 1),
               if j ≤ z.removal.symm r then w j.castSucc else 0) -
             epsilon hp * w (Fin.last (p - 1)) * (r.1 + 1) := by
       rw [htopDiff]
       rw [show (∑ j : Fin (p - 1), w j.castSucc *
-              (liftedVertexValue hp (epsilon hp) (toSimplex hp z j.castSucc) y -
-                liftedVertexValue hp (epsilon hp) (toSimplex hp z j.castSucc) x))
+              (liftedVertexValue p (epsilon hp) (toSimplex hp z j.castSucc) y -
+                liftedVertexValue p (epsilon hp) (toSimplex hp z j.castSucc) x))
             = ∑ j : Fin (p - 1), if j ≤ z.removal.symm r then w j.castSucc else 0 from by
           apply Finset.sum_congr rfl
           intro j _
@@ -1505,14 +1505,14 @@ theorem selectedFlagOfTopCell_smul
   exact (selectedSimplex_smul hp g c.1.rank).symm
 
 /-- Quotient of the selected reference flags. -/
-abbrev SelectedOrbit (hp : Nat.Prime p) :=
+abbrev SelectedOrbit (p : Nat) :=
   MulAction.orbitRel.Quotient (PrimeSymmetry p) (BarredPermutation.TopCell p)
 
-noncomputable instance selectedOrbitFintype (hp : Nat.Prime p) :
-    Fintype (SelectedOrbit hp) := Fintype.ofFinite _
+noncomputable instance selectedOrbitFintype (p : Nat) :
+    Fintype (SelectedOrbit p) := Fintype.ofFinite _
 
 /-- Relabelling commutes with a dimension recast of order-complex simplices. -/
-theorem smul_castDim (hp : Nat.Prime p) (g : PrimeSymmetry p)
+theorem smul_castDim (p : Nat) (g : PrimeSymmetry p)
     {d d' : ℕ} (hd : d = d') (s : Simplex p d) :
     g • (congrArg (Simplex p) hd ▸ s) = congrArg (Simplex p) hd ▸ (g • s) := by
   subst hd; rfl
@@ -1520,11 +1520,11 @@ theorem smul_castDim (hp : Nat.Prime p) (g : PrimeSymmetry p)
 /-- Selected top-cell orbits and selected top-simplex orbits are canonically equivalent. -/
 noncomputable def selectedOrbitEquivTopSupport
     (hp : Nat.Prime p) :
-    SelectedOrbit hp ≃
+    SelectedOrbit p ≃
       {q : PrimeOrbitCycle.TopOrbit hp //
         IsSelected hp (topRepr hp q)} := by
   classical
-  let toTop : SelectedOrbit hp → PrimeOrbitCycle.TopOrbit hp :=
+  let toTop : SelectedOrbit p → PrimeOrbitCycle.TopOrbit hp :=
     Quotient.map
       (fun c : BarredPermutation.TopCell p =>
         (coveringTopCell_eq hp).symm ▸ selectedFlagOfTopCell hp c)
@@ -1533,9 +1533,9 @@ noncomputable def selectedOrbitEquivTopSupport
         rcases hab with ⟨g, rfl⟩
         refine ⟨g, ?_⟩
         simp only [selectedFlagOfTopCell_smul]
-        exact smul_castDim hp g (by have := hp.two_le; omega)
+        exact smul_castDim p g (by have := hp.two_le; omega)
           (selectedFlagOfTopCell hp b))
-  have toTop_selected (q : SelectedOrbit hp) :
+  have toTop_selected (q : SelectedOrbit p) :
       IsSelected hp (topRepr hp (toTop q)) := by
     obtain ⟨c, rfl⟩ := Quotient.exists_rep q
     have hclass :
@@ -1567,7 +1567,7 @@ noncomputable def selectedOrbitEquivTopSupport
           have hproof : congrArg (Simplex p) hd = coveringTopCell_eq hp :=
             Subsingleton.elim _ _
           rw [← hproof]
-          exact smul_castDim hp g hd (Quotient.out (toTop (Quotient.mk'' c)))
+          exact smul_castDim p g hd (Quotient.out (toTop (Quotient.mk'' c)))
         _ = (coveringTopCell_eq hp) ▸
               ((coveringTopCell_eq hp).symm ▸ selectedFlagOfTopCell hp c) := by
           exact congrArg
@@ -1603,7 +1603,7 @@ noncomputable def selectedOrbitEquivTopSupport
             (g • selectedFlagOfTopCell hp b) := by
       change g • (congrArg (Simplex p) hd' ▸ selectedFlagOfTopCell hp b) =
         congrArg (Simplex p) hd' ▸ (g • selectedFlagOfTopCell hp b)
-      exact smul_castDim hp g hd' (selectedFlagOfTopCell hp b)
+      exact smul_castDim p g hd' (selectedFlagOfTopCell hp b)
     have hback :
         (coveringTopCell_eq hp).symm ▸
             (g • selectedFlagOfTopCell hp b) =
@@ -1654,7 +1654,7 @@ noncomputable def selectedOrbitEquivTopSupport
 
 theorem card_selectedOrbit
     (hp : Nat.Prime p) :
-    Fintype.card (SelectedOrbit hp) = FoxNeuwirth.referenceOrbitMultiplicity hp := by
+    Fintype.card (SelectedOrbit p) = FoxNeuwirth.referenceOrbitMultiplicity p := by
   classical
   let X := BarredPermutation.TopCell p
   -- Relabelling makes the top cells a torsor for the full permutation group.
@@ -1695,11 +1695,11 @@ theorem card_selectedOrbit
         exact congrArg (fun e : Equiv.Perm (Fin p) => e i) hrank
       have h := congrArg (fun e : Equiv.Perm (Fin p) => e.symm) hinv
       simpa using h }
-  let e : SelectedOrbit hp ≃
+  let e : SelectedOrbit p ≃
       (Equiv.Perm (Fin p) ⧸ primeSymmetrySubgroup p) :=
     MulAction.equivSubgroupOrbitsQuotientGroup x0
       (primeSymmetrySubgroup p)
-  change Fintype.card (SelectedOrbit hp) =
+  change Fintype.card (SelectedOrbit p) =
     Nat.card ((Equiv.Perm (Fin p)) ⧸ primeSymmetrySubgroup p)
   rw [← Nat.card_eq_fintype_card]
   exact Nat.card_congr e

@@ -31,7 +31,7 @@ def staircaseTime (k : Fin p) (j : Fin (p + 1)) : Fin 2 :=
 
 /-- Spatial vertex attached to a staircase vertex.  Vertices `k` and `k+1` project to the same
 spatial vertex and lie at the two interval endpoints. -/
-def staircaseSpatial (hp : Nat.Prime p) (k : Fin p) (j : Fin (p + 1)) : Fin p :=
+def staircaseSpatial (p : Nat) (k : Fin p) (j : Fin (p + 1)) : Fin p :=
   if h : j.1 ≤ k.1 then
     ⟨j.1, lt_of_le_of_lt h k.2⟩
   else
@@ -53,7 +53,7 @@ noncomputable def spatialWeight
     (hp : Nat.Prime p) (k : Fin p) (w : StandardSimplex p)
     (i : Fin (p - 1 + 1)) : Real :=
   ∑ j : Fin (p + 1),
-    if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial hp k j) = i then w j else 0
+    if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial p k j) = i then w j else 0
 
 /-- The staircase interval coordinate. -/
 noncomputable def intervalWeight
@@ -134,7 +134,7 @@ noncomputable def chart
       apply Continuous.subtype_mk
       change Continuous fun w : Delta p => fun i =>
         ∑ j : Fin (p + 1),
-          if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial hp q.1.2 j) = i then
+          if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial p q.1.2 j) = i then
             StandardSimplex.ofDelta (affineCompMap p L q.2 w) j else 0
       apply continuous_pi
       intro i

@@ -90,13 +90,13 @@ def cellParam (c : FoxNeuwirthTopCell p) :
   simp [cellCarrier]
 
 /-- The declared dimension of every maximal component. -/
-def cellDimension (hp : Nat.Prime p)
+def cellDimension (p : Nat)
     (_c : FoxNeuwirthTopCell p) : ℕ :=
   p - 1
 
  theorem cellDimension_eq
     (hp : Nat.Prime p) (c : FoxNeuwirthTopCell p) :
-    cellDimension hp c = p - 1 :=
+    cellDimension p c = p - 1 :=
   rfl
 
 /-- Each component is homeomorphic to the standard simplex. -/

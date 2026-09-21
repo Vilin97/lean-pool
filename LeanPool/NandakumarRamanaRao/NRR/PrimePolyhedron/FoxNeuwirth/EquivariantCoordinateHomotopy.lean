@@ -36,7 +36,7 @@ abbrev CoordinateMap := RefinedAffineMap.ContinuousCoordinateMap (p := p)
 
 /-- Prime-equivariance of a continuous coordinate map. -/
 abbrev IsEquivariant (hp : Nat.Prime p) (F : CoordinateMap (p := p)) : Prop :=
-  IsEquivariantCoordinateMap hp F
+  IsEquivariantCoordinateMap p F
 
 /-- A continuous prime-equivariant coordinate map avoiding the origin. -/
 structure ZeroFreeMap (hp : Nat.Prime p) where

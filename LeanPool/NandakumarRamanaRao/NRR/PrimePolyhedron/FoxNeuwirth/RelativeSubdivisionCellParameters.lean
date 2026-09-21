@@ -215,14 +215,14 @@ variable (hp : Nat.Prime p) {n : Nat}
 variable (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n)
 
 /-- Chosen finite singular-cell support of a relative cylinder collar. -/
-noncomputable abbrev CollarSupport (hp : Nat.Prime p)
+noncomputable abbrev CollarSupport (p : Nat)
     (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n) :=
   RelativeSubdivisionBoundary.collarRealization B
 
 /-- One vertex occurrence of one singular `(n+1)`-simplex in the finite collar support. -/
 abbrev VertexSlot (hp : Nat.Prime p)
     (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n) :=
-  (CollarSupport hp B).Occurrence × Fin (n + 2)
+  (CollarSupport p B).Occurrence × Fin (n + 2)
 
 noncomputable instance vertexSlotFintype : Fintype (VertexSlot hp B) := inferInstance
 noncomputable instance vertexSlotDecidableEq : DecidableEq (VertexSlot hp B) :=
@@ -232,7 +232,7 @@ noncomputable instance vertexSlotDecidableEq : DecidableEq (VertexSlot hp B) :=
 noncomputable def slotPoint (s : VertexSlot hp B) : CylinderPoint p :=
   CylinderPoint.ofProd
     ((singularSimplexAsContinuousMap (RelativeCylinder p) (n + 1)
-      ((CollarSupport hp B).simplex s.1)) (stdSimplex.vertex s.2))
+      ((CollarSupport p B).simplex s.1)) (stdSimplex.vertex s.2))
 
 /-- Symmetry-decorated finite collar vertex occurrences. -/
 abbrev CoverVertexSlot := PrimeSymmetry p × VertexSlot hp B

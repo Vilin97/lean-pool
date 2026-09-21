@@ -142,7 +142,7 @@ theorem spatialWeight_eq_of_lt
       simp [staircaseSpatial, Fin.ext_iff]
       omega
   · intro j hj hji
-    have hne : staircaseSpatial hp k j ≠ i := by
+    have hne : staircaseSpatial p k j ≠ i := by
       intro h
       simp only [staircaseSpatial] at h
       split_ifs at h with hjk
@@ -170,7 +170,7 @@ theorem spatialWeight_eq_of_gt
       simp [j, staircaseSpatial, Fin.ext_iff]
       omega
   · intro j' hj' hjne
-    have hne : staircaseSpatial hp k j' ≠ i := by
+    have hne : staircaseSpatial p k j' ≠ i := by
       intro h
       simp only [staircaseSpatial] at h
       split_ifs at h with hjk
@@ -211,7 +211,7 @@ theorem spatialWeight_pivot
     simpa only [Finset.mem_singleton] using (Finset.mem_sdiff.mp hjmem.1).2
   have hj1 : j ≠ (⟨k.1 + 1, by have := k.2; omega⟩ : Fin (p + 1)) := by
     simpa only [Finset.mem_singleton] using hjmem.2
-  have hne : staircaseSpatial hp k j ≠ k := by
+  have hne : staircaseSpatial p k j ≠ k := by
     intro h
     simp only [staircaseSpatial] at h
     split_ifs at h with hjk
@@ -414,7 +414,7 @@ theorem realizationPoint_orbit_separated
         simp
       omega
   subst j
-  apply BarredPermutation.primeSymmetry_action_free hp
+  apply BarredPermutation.primeSymmetry_action_free p
   simpa using hj.symm
 
 /-- No two different vertices of one refined prism simplex lie in the same prime orbit. -/

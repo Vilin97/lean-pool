@@ -184,7 +184,7 @@ structure RegularApproximation
   /-- Global continuous map whose samples define the refined PL approximation. -/
   map : ContinuousCoordinateMap p
   /-- The sampled map respects prime-symmetry relabelling. -/
-  equivariant : IsEquivariantCoordinateMap hp map
+  equivariant : IsEquivariantCoordinateMap p map
   /-- Every refined top simplex is transverse to the diagonal ray. -/
   regular : ∀ q : TopCell hp level, determinant hp level map q ≠ 0
   /-- The straight-line interpolation from the original map to the sampled affine map is
@@ -209,7 +209,7 @@ end RegularApproximation
 theorem exists_regularApproximation
     (hp : Nat.Prime p)
     (F : ContinuousCoordinateMap p)
-    (hEq : IsEquivariantCoordinateMap hp F)
+    (hEq : IsEquivariantCoordinateMap p F)
     (hF : ∀ x : Realization p, F x ≠ 0) :
     Nonempty (RegularApproximation hp F) := by
   classical

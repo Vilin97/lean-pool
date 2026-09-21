@@ -74,7 +74,7 @@ theorem continuous_staircasePoint (hp : Nat.Prime p) (k : Fin p) :
   · apply Continuous.subtype_mk
     change Continuous fun w : StandardSimplex p => fun i =>
       ∑ j : Fin (p + 1),
-        if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial hp k j) = i then
+        if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial p k j) = i then
           w j else 0
     apply continuous_pi
     intro i

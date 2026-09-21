@@ -38,7 +38,7 @@ noncomputable def staircaseSpatialLinear
     (hp : Nat.Prime p) (k : Fin p) :
     (Fin (p + 1) → Real) →ₗ[Real] (Fin p → Real) where
   toFun u i :=
-    ∑ j : Fin (p + 1), if staircaseSpatial hp k j = i then u j else 0
+    ∑ j : Fin (p + 1), if staircaseSpatial p k j = i then u j else 0
   map_add' := by
     intro u v
     funext i

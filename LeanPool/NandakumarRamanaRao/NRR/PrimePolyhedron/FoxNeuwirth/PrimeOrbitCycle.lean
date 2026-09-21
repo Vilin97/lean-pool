@@ -32,7 +32,7 @@ namespace BarredPermutation
 
 /-- Relabelling of a barred permutation is free because its rank is a permutation. -/
 theorem primeSymmetry_action_free
-    (hp : Nat.Prime p) {g : PrimeSymmetry p} {c : BarredPermutation p}
+    (p : Nat) {g : PrimeSymmetry p} {c : BarredPermutation p}
     (hgc : g • c = c) : g = 1 := by
   apply PrimeSymmetry.toPerm_injective p
   have hsymm : (PrimeSymmetry.toPerm p g).symm = 1 := by
@@ -57,9 +57,9 @@ namespace Simplex
 
 /-- The prime symmetry action is free on every order-complex simplex. -/
 theorem primeSymmetry_action_free
-    (hp : Nat.Prime p) {g : PrimeSymmetry p} {s : Simplex p d}
+    (p : Nat) {g : PrimeSymmetry p} {s : Simplex p d}
     (hgs : g • s = s) : g = 1 := by
-  apply BarredPermutation.primeSymmetry_action_free hp
+  apply BarredPermutation.primeSymmetry_action_free p
     (c := s 0)
   have hv := congrArg (fun t : Simplex p d => t 0) hgs
   simpa using hv
@@ -89,7 +89,7 @@ theorem primeSymmetry_sign_cast_eq_one
 
 /-- Bar indicators and hence bar-removal matrices are unchanged by relabelling. -/
 theorem barDifferenceMatrix_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
+    (p : Nat) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
     barDifferenceMatrix (g • s) = barDifferenceMatrix s := by
   ext r k
   simp [barDifferenceMatrix, barIndicator]
@@ -100,11 +100,11 @@ theorem barRemovalDeterminant_smul
     (hp : Nat.Prime p) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
     barRemovalDeterminant (g • s) = barRemovalDeterminant s := by
   unfold barRemovalDeterminant
-  rw [barDifferenceMatrix_smul hp g s]
+  rw [barDifferenceMatrix_smul p g s]
 
 /-- The bottom-cell orientation changes by the label-permutation sign. -/
 theorem permutationOrientationSign_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p) (c : BarredPermutation p) :
+    (p : Nat) (g : PrimeSymmetry p) (c : BarredPermutation p) :
     (((permutationOrientationSign (g • c) : Int) : ZMod p)) =
       (((permutationOrientationSign c : Int) : ZMod p)) := by
   classical
@@ -123,12 +123,12 @@ theorem chain_smul
   unfold TopFlagSubdivision.chain TopFlagSubdivision.integralCoefficient
   push_cast
   simp only [Simplex.prime_smul_apply]
-  rw [permutationOrientationSign_smul hp g (s 0)]
+  rw [permutationOrientationSign_smul p g (s 0)]
   rw [barRemovalDeterminant_smul hp g s]
 
 /-- Simplicial incidence is invariant under simultaneous relabelling. -/
 theorem simplicialIncidence_smul
-    (hp : Nat.Prime p)
+    (p : Nat)
     (g : PrimeSymmetry p)
     (target : Simplex p d) (source : Simplex p (d + 1)) :
     SimplicialIncidence.incidence (R := ZMod p) (g • target) (g • source) =
@@ -181,7 +181,7 @@ noncomputable def coveringEquivariantData
     exact gen hdim s
   incidence_smul := by
     intro g f s
-    exact simplicialIncidence_smul hp g f s
+    exact simplicialIncidence_smul p g f s
 
 /-- Prime-symmetry orbit quotient of the unconditional top-flag cycle. -/
 noncomputable def orbitCycle (hp : Nat.Prime p) : FiniteIncidenceCycle (ZMod p) :=

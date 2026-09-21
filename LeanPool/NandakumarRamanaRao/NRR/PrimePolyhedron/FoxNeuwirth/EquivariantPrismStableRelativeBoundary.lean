@@ -238,7 +238,7 @@ noncomputable def endpointInterpolant
       have hraw : Continuous fun x : Realization p =>
           rawEndpointInterpolant hp N L s a (g • x) :=
         (continuous_rawEndpointInterpolant hp N L s a).comp
-          (Realization.continuous_smul hp g)
+          (Realization.continuous_smul p g)
       apply continuous_pi
       intro j
       change Continuous fun x =>
@@ -257,7 +257,7 @@ noncomputable def endpointInterpolant
 theorem endpointInterpolant_equivariant
     (hp : Nat.Prime p) (N L : Nat) (s : EndpointSide)
     (a : Assignment hp N L) :
-    IsEquivariantCoordinateMap hp (endpointInterpolant hp N L s a) := by
+    IsEquivariantCoordinateMap p (endpointInterpolant hp N L s a) := by
   classical
   intro h x
   change

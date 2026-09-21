@@ -37,7 +37,7 @@ open RefinedAffineMap
 variable {p d n : Nat}
 
 /-- The identity correspondence between parent vertex indices. -/
-def parentIndex (hp : Nat.Prime p) : Fin (p - 1 + 1) → Fin (p - 1 + 1) :=
+def parentIndex (p : Nat) : Fin (p - 1 + 1) → Fin (p - 1 + 1) :=
   id
 
 /-- Cast cylinder vertex indices to the dimension convention for the endpoint stack. -/
@@ -105,7 +105,7 @@ theorem affine_pullbackEndpointValue_eq_value
     (fun c => ∑ i : Fin (p + 1), w i *
         pullbackVertexValue (p - 1) r
           (fun j => A.map (RefinedAffineMap.vertex hp A.level q
-            (parentIndex (p := p) hp j)))
+            (parentIndex p j)))
           (cylinderIndex (p := p) hp i) c) =
       RefinedAffineMap.value hp A.level A.map q
         (StandardSimplex.ofDelta (RelativeSubdivisionCylinderCombinatorics.spatialPoint (p - 1) r
@@ -138,7 +138,7 @@ theorem affine_pullbackEndpointValue_ne_zero
     (fun c => ∑ i : Fin (p + 1), w i *
         pullbackVertexValue (p - 1) r
           (fun j => A.map (RefinedAffineMap.vertex hp A.level q
-            (parentIndex (p := p) hp j)))
+            (parentIndex p j)))
           (cylinderIndex (p := p) hp i) c) ≠ 0 := by
   rw [affine_pullbackEndpointValue_eq_value hp A q r w]
   have h := A.zeroFreeStraightLine q
@@ -160,7 +160,7 @@ theorem pullbackEndpointValue_upper_eq_refinedVertexValue
         (RelativeSubdivisionCylinderCombinatorics.upperCell (p - 1) (by
           simpa [Nat.sub_add_cancel hp.pos] using pi))
         (fun j => A.map (RefinedAffineMap.vertex hp A.level q
-          (parentIndex (p := p) hp j)))
+          (parentIndex p j)))
         (cylinderIndex (p := p) hp i.succ) =
       RefinedAffineMap.value hp A.level A.map q
         (StandardSimplex.ofDelta (prefixBarycenter (p - 1)

@@ -41,14 +41,14 @@ theorem simplestRoute_actualBoundaryReduction
 incidence cycle. -/
 noncomputable def simplestRouteCellularCycle
     (hp : Nat.Prime p)
-    (H : FoxNeuwirth.FacetShuffleCardinality hp) :
+    (H : FoxNeuwirth.FacetShuffleCardinality p) :
     FiniteIncidenceCycle (ZMod p) :=
   FoxNeuwirth.actualFiniteIncidenceCycle hp H
 
 /-- The facet--shuffle theorem is unconditional. -/
 theorem simplestRoute_facetTheorem
     (p : Nat) (hp : Nat.Prime p) :
-    FoxNeuwirth.FacetShuffleCardinality hp :=
+    FoxNeuwirth.FacetShuffleCardinality p :=
   FoxNeuwirth.facetShuffleCardinality hp
 
 /-- The genuine cellular-cycle stage is closed for every prime. -/
@@ -62,11 +62,11 @@ Fox--Neuwirth incidence convention is assumed. -/
 theorem simplestRoute_topIncidenceStage
     (p : Nat) (hp : Nat.Prime p) :
     FoxNeuwirth.topIncidenceBoundary
-        (FoxNeuwirth.orientedTopChain hp) =
+        (FoxNeuwirth.orientedTopChain p) =
           (fun _ => (0 : ZMod p)) ∧
       FoxNeuwirth.zeroFacetBoundary
         (FoxNeuwirth.topIncidenceBoundary
-          (FoxNeuwirth.orientedTopChain hp)) =
+          (FoxNeuwirth.orientedTopChain p)) =
             (fun _ => (0 : ZMod p)) := by
   constructor
   · exact FoxNeuwirth.topIncidenceBoundary_orientedTopChain_eq_zero hp

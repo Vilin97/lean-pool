@@ -145,7 +145,7 @@ theorem cellularBoundary_ne_zero_iff
 
 /-- Prime-symmetry form of signed incidence covariance. -/
 theorem signedIncidence_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (a b : BarredPermutation p) :
     signedIncidence (g • a) (g • b) =
       a.orientationTransport (PrimeSymmetry.toPerm p g) *

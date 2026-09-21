@@ -60,7 +60,7 @@ noncomputable def basePrismChart
       apply Continuous.subtype_mk
       change Continuous fun w : Delta p => fun i =>
         ∑ j : Fin (p + 1),
-          if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial hp q.2 j) = i then
+          if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial p q.2 j) = i then
             StandardSimplex.ofDelta w j else 0
       apply continuous_pi
       intro i

@@ -346,7 +346,7 @@ theorem facetDeterminant_ne_zero_of_eq_refined_primeSmul
       facetValue V k i = g • RefinedAffineMap.vertexValue hp N F q (refinedVertexIndex hp i))
     (hregular : RefinedAffineMap.determinant hp N F q ≠ 0) :
     facetDeterminant hp V k ≠ 0 := by
-  let W : VertexMap p := primeSmulVertexMap hp g⁻¹ V
+  let W : VertexMap p := primeSmulVertexMap p g⁻¹ V
   have hWvertex : ∀ i : Fin p,
       facetValue W k i = RefinedAffineMap.vertexValue hp N F q (refinedVertexIndex hp i) := by
     intro i
@@ -399,9 +399,9 @@ theorem unsignedFacetIndex_eq_refinedLocalIndex
 
 /-- Affine interpolation commutes with simultaneous prime relabelling of all vertex values. -/
 private theorem facetAffineValue_primeSmul_local
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (V : VertexMap p) (k : Fin (p + 1)) (w : StandardSimplex (p - 1)) :
-    facetAffineValue (primeSmulVertexMap hp g V) k w =
+    facetAffineValue (primeSmulVertexMap p g V) k w =
       g • facetAffineValue V k w := by
   funext r
   simp [facetAffineValue, facetValue, primeSmulVertexMap,
@@ -420,7 +420,7 @@ theorem unsignedFacetIndex_eq_refinedLocalIndex_primeSmul
     (haffine : ∀ w : StandardSimplex (p - 1),
       facetAffineValue V k w = g • RefinedAffineMap.value hp N F q w) :
     unsignedFacetIndex hp V k = RefinedAffineMap.localIndex hp N F q := by
-  let W : VertexMap p := primeSmulVertexMap hp g⁻¹ V
+  let W : VertexMap p := primeSmulVertexMap p g⁻¹ V
   have hWvertex : ∀ i : Fin p,
       facetValue W k i = RefinedAffineMap.vertexValue hp N F q (refinedVertexIndex hp i) := by
     intro i

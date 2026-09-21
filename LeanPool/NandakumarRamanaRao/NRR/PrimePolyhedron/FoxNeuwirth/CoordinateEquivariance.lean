@@ -17,7 +17,7 @@ variable {p : Nat}
 
 /-- Prime-equivariance of a continuous full-coordinate map. -/
 def IsEquivariantCoordinateMap
-    (hp : Nat.Prime p)
+    (p : Nat)
     (F : RefinedAffineMap.ContinuousCoordinateMap p) : Prop :=
   ∀ (g : PrimeSymmetry p) (x : Realization p), F (g • x) = g • F x
 

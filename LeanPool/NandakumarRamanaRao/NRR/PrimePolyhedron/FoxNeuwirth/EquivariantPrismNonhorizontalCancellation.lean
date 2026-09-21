@@ -1227,15 +1227,15 @@ def mapVertexSignature
 
 /-- Prime translation of an affine facet map. -/
 def translateFacetMap
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
     Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1 :=
   fun x => (g • (tau x).1, (tau x).2)
 
 @[simp] theorem mapVertexSignature_translateFacetMap
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
-    mapVertexSignature (translateFacetMap hp g tau) =
+    mapVertexSignature (translateFacetMap p g tau) =
       fun i => g • mapVertexSignature tau i := by
   funext i
   rfl
@@ -1330,11 +1330,11 @@ theorem realizedFacetWeight_translateFacetMap
     (hp : Nat.Prime p) (N L : Nat) (a : Assignment hp N L)
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
-    realizedFacetWeight hp N L a (translateFacetMap hp g tau) =
+    realizedFacetWeight hp N L a (translateFacetMap p g tau) =
       realizedFacetWeight hp N L a tau := by
   classical
   have hiff :
-      FacetMapIsRealizedUpToPrime hp N L (translateFacetMap hp g tau) ↔
+      FacetMapIsRealizedUpToPrime hp N L (translateFacetMap p g tau) ↔
         FacetMapIsRealizedUpToPrime hp N L tau := by
     constructor
     · rintro ⟨o, h, hh⟩
@@ -1351,11 +1351,11 @@ theorem realizedFacetWeight_translateFacetMap
   unfold realizedFacetWeight
   by_cases hright : FacetMapIsRealizedUpToPrime hp N L tau
   · have hleft : FacetMapIsRealizedUpToPrime hp N L
-        (translateFacetMap hp g tau) := hiff.mpr hright
+        (translateFacetMap p g tau) := hiff.mpr hright
     rw [dif_pos hleft, dif_pos hright]
     let oL : FacetOccurrence hp N L := Classical.choose hleft
     let hL : PrimeSymmetry p := Classical.choose (Classical.choose_spec hleft)
-    have heqL : mapVertexSignature (translateFacetMap hp g tau) =
+    have heqL : mapVertexSignature (translateFacetMap p g tau) =
         fun i => hL • occurrencePointSignature hp N L oL i :=
       Classical.choose_spec (Classical.choose_spec hleft)
     let oR : FacetOccurrence hp N L := Classical.choose hright
@@ -1374,7 +1374,7 @@ theorem realizedFacetWeight_translateFacetMap
     exact occurrenceUnsignedFacetIndex_eq_of_pointSignature_eq_primeSmul
       hp N L a oL oR (hL⁻¹ * g * hR) horbit
   · have hleft : ¬ FacetMapIsRealizedUpToPrime hp N L
-        (translateFacetMap hp g tau) := fun h => hright (hiff.mp h)
+        (translateFacetMap p g tau) := fun h => hright (hiff.mp h)
     rw [dif_neg hleft, dif_neg hright]
 
 /-- A facet map is lower horizontal when every one of its vertices has time zero. -/
@@ -1515,22 +1515,22 @@ theorem nonhorizontalMapWeight_smul
     (g : PrimeSymmetry p)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
     nonhorizontalMapWeight hp N L a
-        (translateFacetMap hp g tau) =
+        (translateFacetMap p g tau) =
       nonhorizontalMapWeight hp N L a tau := by
   classical
   unfold nonhorizontalMapWeight
-  have hl : MapIsLowerHorizontal (translateFacetMap hp g tau) ↔
+  have hl : MapIsLowerHorizontal (translateFacetMap p g tau) ↔
       MapIsLowerHorizontal tau := by rfl
-  have hu : MapIsUpperHorizontal (translateFacetMap hp g tau) ↔
+  have hu : MapIsUpperHorizontal (translateFacetMap p g tau) ↔
       MapIsUpperHorizontal tau := by rfl
   by_cases h : ¬ MapIsLowerHorizontal tau ∧ ¬ MapIsUpperHorizontal tau
-  · have hg : ¬ MapIsLowerHorizontal (translateFacetMap hp g tau) ∧
-        ¬ MapIsUpperHorizontal (translateFacetMap hp g tau) := by
+  · have hg : ¬ MapIsLowerHorizontal (translateFacetMap p g tau) ∧
+        ¬ MapIsUpperHorizontal (translateFacetMap p g tau) := by
       exact ⟨fun hlow => h.1 (hl.mp hlow), fun hupp => h.2 (hu.mp hupp)⟩
     rw [if_pos hg, if_pos h]
     exact realizedFacetWeight_translateFacetMap hp N L a g tau
-  · have hg : ¬ (¬ MapIsLowerHorizontal (translateFacetMap hp g tau) ∧
-        ¬ MapIsUpperHorizontal (translateFacetMap hp g tau)) := by
+  · have hg : ¬ (¬ MapIsLowerHorizontal (translateFacetMap p g tau) ∧
+        ¬ MapIsUpperHorizontal (translateFacetMap p g tau)) := by
       intro htrans
       exact h ⟨fun hlow => htrans.1 (hl.mpr hlow),
         fun hupp => htrans.2 (hu.mpr hupp)⟩
@@ -1699,7 +1699,7 @@ noncomputable def orbitFaceWitnessEquiv
         PrimeOrbitCycle.facetRepresentative hp qf := by
       rw [mul_smul, haspec, hfaceg]
     have hga : g * a = 1 :=
-      Simplex.primeSymmetry_action_free hp hstab
+      Simplex.primeSymmetry_action_free p hstab
     have ha : a = g⁻¹ := by
       calc
         a = 1 * a := by simp
@@ -1894,7 +1894,7 @@ theorem refined_chart_eq_affineCompMap
 
 /-- Relabelling any simplex commutes with its realization chart. -/
 theorem realizationPoint_prime_smul_any
-    (hp : Nat.Prime p) (g : PrimeSymmetry p)
+    (p : Nat) (g : PrimeSymmetry p)
     (s : Simplex p d) (w : StandardSimplex d) :
     (g • s).realizationPoint w = g • s.realizationPoint w := by
   apply Realization.ext
@@ -2075,7 +2075,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
     dsimp [W, spatialSideWeight]
     calc
       _ = nonhorizontalMapWeight hp N L a
-          (translateFacetMap hp g (fun x =>
+          (translateFacetMap (n + 1 + 1) g (fun x =>
             staircasePrismMap n (fun y => f.realizationPoint
               (StandardSimplex.ofDelta (affineCompMap n N theta y))) h
               (deltaCast (Nat.sub_add_cancel (Nat.zero_lt_succ n)).symm
@@ -2084,7 +2084,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
             funext x
             apply Prod.ext
             · simp only [translateFacetMap, staircasePrismMap, Prod.fst]
-              exact realizationPoint_prime_smul_any hp g f _
+              exact realizationPoint_prime_smul_any (n + 1 + 1) g f _
             · rfl
       _ = _ := nonhorizontalMapWeight_smul hp N L a g _
   have hz := orbit_boundary_pairing_eq_zero hp W hW

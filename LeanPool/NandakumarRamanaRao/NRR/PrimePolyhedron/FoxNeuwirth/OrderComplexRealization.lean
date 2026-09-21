@@ -474,7 +474,7 @@ theorem site_relabel
 
 /-- The configuration map is equivariant for the selected prime symmetry. -/
 theorem toConfig_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :
+    (p : Nat) (g : PrimeSymmetry p) (x : Realization p) :
     (g • x).toConfig = g • x.toConfig := by
   apply Subtype.ext
   funext i
@@ -482,7 +482,7 @@ theorem toConfig_smul
 
 /-- Prime-symmetry actions on the realization are continuous. -/
 theorem continuous_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry p) :
+    (p : Nat) (g : PrimeSymmetry p) :
     Continuous fun x : Realization p => g • x :=
   continuous_relabel (PrimeSymmetry.toPerm p g)
 
@@ -530,11 +530,11 @@ noncomputable def orderComplexModel (hp : Nat.Prime p) :
   letI : NeZero p := ⟨hp.ne_zero⟩
   exact
     { Point := Realization p
-      continuous_smul := Realization.continuous_smul hp
+      continuous_smul := Realization.continuous_smul p
       toConfig := ⟨Realization.toConfig, Realization.continuous_toConfig⟩
       toConfig_equivariant := by
         intro g x
-        exact Realization.toConfig_smul hp g x
+        exact Realization.toConfig_smul p g x
       reference := ⟨Realization.reference hp, Realization.continuous_reference hp⟩
       reference_equivariant := by
         intro g x

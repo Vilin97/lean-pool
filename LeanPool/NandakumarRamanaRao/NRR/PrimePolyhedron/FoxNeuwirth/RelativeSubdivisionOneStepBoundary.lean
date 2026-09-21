@@ -404,7 +404,7 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
           fun x => g • f.realizationPoint
             (StandardSimplex.ofDelta (affineCompMap d N theta x)) := by
       funext x
-      exact realizationPoint_prime_smul_any hp g f _
+      exact realizationPoint_prime_smul_any (d + 2) g f _
     exact (congrArg (sideMapWeight hp N s r) heq).trans
       (sideMapWeight_smul hp N s r g _)
   have hz := EquivariantPrismNonhorizontalCancellation.orbit_boundary_pairing_eq_zero hp W hW

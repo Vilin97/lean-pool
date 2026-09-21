@@ -70,7 +70,7 @@ noncomputable instance instFintypePrimeSymmetry (p : Nat) :
   Fintype.ofFinite _
 
 /-- Orbit-representative data for the prime action on top-dimensional cells. -/
-abbrev CellularTopOrbitRepresentatives (hp : Nat.Prime p) :=
+abbrev CellularTopOrbitRepresentatives (p : Nat) :=
   OrbitRepresentativeData (PrimeSymmetry p) (BarredPermutation.TopCell p)
 
 end FoxNeuwirth

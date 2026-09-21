@@ -242,7 +242,7 @@ noncomputable def topExtensionToShuffle
 
 /-- Exact finite combinatorial statement needed to identify every genuine facet boundary with a
 proper shuffle coefficient. -/
-def FacetShuffleCardinality (hp : Nat.Prime p) : Prop :=
+def FacetShuffleCardinality (p : Nat) : Prop :=
   ∀ a : BarredPermutation p,
     a.dualDimension = p - 2 →
       ∃ k : Nat, 0 < k ∧ k < p ∧
@@ -256,7 +256,7 @@ def FacetShuffleBijection (hp : Nat.Prime p) : Prop :=
 /-- The canonical shuffle bijection implies the required cardinality formula. -/
 theorem facetShuffleCardinality_of_bijection
     (hp : Nat.Prime p) (H : FacetShuffleBijection hp) :
-    FacetShuffleCardinality hp := by
+    FacetShuffleCardinality p := by
   intro a ha
   let k := facetLeftSize hp a ha
   let e : TopExtension a ≃ ShuffleIndex p k :=
@@ -271,7 +271,7 @@ theorem facetShuffleCardinality_of_bijection
 /-- The shuffle-cardinality theorem implies divisibility of every actual top-extension
 multiplicity by the prime. -/
 theorem prime_dvd_topExtensionMultiplicity
-    (hp : Nat.Prime p) (H : FacetShuffleCardinality hp)
+    (hp : Nat.Prime p) (H : FacetShuffleCardinality p)
     (a : BarredPermutation p) :
     p ∣ topExtensionMultiplicity a := by
   by_cases ha : a.dualDimension = p - 2
@@ -284,7 +284,7 @@ theorem prime_dvd_topExtensionMultiplicity
 /-- The shuffle-cardinality theorem proves that the actual oriented top-cell sum has zero boundary
 modulo `p`. -/
 theorem actualTopBoundaryCoefficient_eq_zero
-    (hp : Nat.Prime p) (H : FacetShuffleCardinality hp)
+    (hp : Nat.Prime p) (H : FacetShuffleCardinality p)
     (a : BarredPermutation p) :
     actualTopBoundaryCoefficient a = 0 := by
   rw [actualTopBoundaryCoefficient_eq_multiplicity hp a]
@@ -298,7 +298,7 @@ theorem actualTopBoundaryCoefficient_eq_zero
 
 /-- The genuine finite incidence cycle obtained from the actual top-cell boundary. -/
 noncomputable def actualFiniteIncidenceCycle
-    (hp : Nat.Prime p) (H : FacetShuffleCardinality hp) :
+    (hp : Nat.Prime p) (H : FacetShuffleCardinality p) :
     FiniteIncidenceCycle (ZMod p) where
   TopCell := BarredPermutation.TopCell p
   Facet := BarredPermutation p

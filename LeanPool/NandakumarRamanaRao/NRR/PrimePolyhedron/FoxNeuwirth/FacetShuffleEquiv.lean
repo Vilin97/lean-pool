@@ -527,7 +527,7 @@ theorem facetShuffleBijection (hp : Nat.Prime p) : FacetShuffleBijection hp := b
   exact (facetShuffleEquiv hp a ha).bijective
 
 /-- Unconditional shuffle-cardinality formula for all prime facets. -/
-theorem facetShuffleCardinality (hp : Nat.Prime p) : FacetShuffleCardinality hp :=
+theorem facetShuffleCardinality (hp : Nat.Prime p) : FacetShuffleCardinality p :=
   facetShuffleCardinality_of_bijection hp (facetShuffleBijection hp)
 
 /-- Every actual cellular boundary coefficient vanishes modulo the prime. -/
