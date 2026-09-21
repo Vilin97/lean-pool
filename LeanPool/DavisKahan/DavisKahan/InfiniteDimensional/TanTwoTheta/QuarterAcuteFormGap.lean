@@ -282,109 +282,15 @@ theorem spectrum_re_lower_of_coercive
   rw [hneg]
   exact hunit.neg
 
-/-- Dimension-free strict quarter-angle branch from the paper's ordered form
-hypotheses and full off-diagonality. -/
-theorem isQuarterAcute_of_orderedFormGap
-    (A H : E →L[ℂ] E)
-    (U V : Submodule ℂ E)
-    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
-    {a b : ℝ}
-    (hA : IsSelfAdjoint A)
-    (hH : IsSelfAdjoint H)
-    (hAU : ∀ x ∈ U, A x ∈ U)
-    (hAplusH_V : ∀ x ∈ V, (A + H) x ∈ V)
-    (hab : a < b)
-    (hUhigh : ∀ x ∈ U,
-      b * ‖x‖ ^ 2 ≤ RCLike.re ⟪A x, x⟫_ℂ)
-    (hUperpLow : ∀ x ∈ Uᗮ,
-      RCLike.re ⟪A x, x⟫_ℂ ≤ a * ‖x‖ ^ 2)
-    (hVhigh : ∀ x ∈ V,
-      b * ‖x‖ ^ 2 ≤ RCLike.re ⟪(A + H) x, x⟫_ℂ)
-    (hVperpLow : ∀ x ∈ Vᗮ,
-      RCLike.re ⟪(A + H) x, x⟫_ℂ ≤ a * ‖x‖ ^ 2)
-    (hHU : ∀ x ∈ U, H x ∈ Uᗮ)
-    (hHUperp : ∀ x ∈ Uᗮ, H x ∈ U) :
-    IsQuarterAcute U V := by
+/-- A positive Lyapunov identity forces the conjugated operator's spectrum into a right half-plane. -/
+private theorem exists_spectrum_re_lower_of_lyapunov
+    (W B C : E →L[ℂ] E) {δ : ℝ} (hδ : 0 < δ)
+    (hBcoer : ∀ x, δ * ‖x‖ ^ 2 ≤ RCLike.re ⟪B x, x⟫_ℂ)
+    (hCstar : IsSelfAdjoint C)
+    (hCcoer : ∀ x, δ * ‖x‖ ^ 2 ≤ RCLike.re ⟪C x, x⟫_ℂ)
+    (hlyap : C ∘L W + star W ∘L C = B + B) :
+    ∃ α : ℝ, 0 < α ∧ ∀ z ∈ spectrum ℂ W, α ≤ z.re := by
   classical
-  let c : ℝ := (a + b) / 2
-  let δ : ℝ := (b - a) / 2
-  let T0 : E →L[ℂ] E := A - (c : ℂ) • ContinuousLinearMap.id ℂ E
-  let S0 : E →L[ℂ] E := A + H - (c : ℂ) • ContinuousLinearMap.id ℂ E
-  let J : E →L[ℂ] E := U.reflectionOperator
-  let K : E →L[ℂ] E := V.reflectionOperator
-  let B : E →L[ℂ] E := J ∘L T0
-  let C : E →L[ℂ] E := K ∘L S0
-  let W : E →L[ℂ] E := K ∘L J
-  have hδ : 0 < δ := by dsimp [δ]; linarith
-  have hAH : IsSelfAdjoint (A + H) := hA.add hH
-  have hAsym : A.toLinearMap.IsSymmetric :=
-    ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mp hA
-  have hAHsym : (A + H).toLinearMap.IsSymmetric :=
-    ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mp hAH
-  have hUred : A.Reduces U := ContinuousLinearMap.IsSymmetric.reduces_of_invariant hAsym hAU
-  have hVred : ContinuousLinearMap.Reduces (A + H) V :=
-    ContinuousLinearMap.IsSymmetric.reduces_of_invariant hAHsym hAplusH_V
-  have hJcommA : J ∘L A = A ∘L J := by
-    simpa only [J] using Submodule.reflectionOperator_comm_of_reduces A U hUred
-  have hKcommAH : K ∘L (A + H) = (A + H) ∘L K := by
-    simpa only [K] using Submodule.reflectionOperator_comm_of_reduces (A + H) V hVred
-  have hJstar : star J = J := by
-    simpa only [J] using
-      TauCeti.DavisKahan.star_reflectionOperator_complex U
-  have hKstar : star K = K := by
-    simpa only [K] using
-      TauCeti.DavisKahan.star_reflectionOperator_complex V
-  have hJ2 : J ∘L J = ContinuousLinearMap.id ℂ E := by
-    simpa only [J] using Submodule.reflectionOperator_involutive U
-  have hK2 : K ∘L K = ContinuousLinearMap.id ℂ E := by
-    simpa only [K] using Submodule.reflectionOperator_involutive V
-  have hT0star : IsSelfAdjoint T0 := by
-    rw [isSelfAdjoint_iff]
-    dsimp [T0, c]
-    rw [star_sub, star_smul, hA.star_eq, star_id_clm]
-    simp
-  have hS0star : IsSelfAdjoint S0 := by
-    rw [isSelfAdjoint_iff]
-    dsimp [S0, c]
-    rw [star_sub, star_smul, hAH.star_eq, star_id_clm]
-    simp
-  have hJcommT0 : J ∘L T0 = T0 ∘L J := by
-    dsimp [T0]
-    rw [ContinuousLinearMap.comp_sub, ContinuousLinearMap.sub_comp,
-      hJcommA]
-    ext x
-    simp
-  have hKcommS0 : K ∘L S0 = S0 ∘L K := by
-    dsimp [S0]
-    rw [ContinuousLinearMap.comp_sub, ContinuousLinearMap.sub_comp,
-      hKcommAH]
-    ext x
-    simp
-  have hBstar : IsSelfAdjoint B := by
-    rw [isSelfAdjoint_iff]
-    dsimp [B]
-    change star (J * T0) = J * T0
-    rw [star_mul, hT0star.star_eq, hJstar]
-    change T0 ∘L J = J ∘L T0
-    exact hJcommT0.symm
-  have hCstar : IsSelfAdjoint C := by
-    rw [isSelfAdjoint_iff]
-    dsimp [C]
-    change star (K * S0) = K * S0
-    rw [star_mul, hS0star.star_eq, hKstar]
-    change S0 ∘L K = K ∘L S0
-    exact hKcommS0.symm
-  have hBcoer : ∀ x, δ * ‖x‖ ^ 2 ≤ RCLike.re ⟪B x, x⟫_ℂ := by
-    intro x
-    simpa only [B, T0, J, c, δ, ContinuousLinearMap.comp_apply,
-      sub_apply, smul_apply, ContinuousLinearMap.id_apply] using
-      reflected_centered_form_lower A U hA hAU hUhigh hUperpLow x
-  have hCcoer : ∀ x, δ * ‖x‖ ^ 2 ≤ RCLike.re ⟪C x, x⟫_ℂ := by
-    intro x
-    simpa only [C, S0, K, c, δ, ContinuousLinearMap.comp_apply,
-      sub_apply, smul_apply, ContinuousLinearMap.id_apply] using
-      reflected_centered_form_lower (A + H) V hAH hAplusH_V
-        hVhigh hVperpLow x
   have hCnonneg : (0 : E →L[ℂ] E) ≤ C := by
     rw [ContinuousLinearMap.nonneg_iff_isPositive]
     refine ⟨ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mp hCstar, ?_⟩
@@ -423,44 +329,6 @@ theorem isQuarterAcute_of_orderedFormGap
     exact (CFC.rpow_nonneg (a := C) (y := (1 / 2 : ℝ))).isSelfAdjoint.star_eq
   have hRinvstar : star Rinv = Rinv := by
     exact (CFC.rpow_nonneg (a := C) (y := (-1 / 2 : ℝ))).isSelfAdjoint.star_eq
-  have hJH : J ∘L H = -(H ∘L J) := by
-    simpa only [J] using reflection_anticommutes_of_maps_orthogonal H U hHU hHUperp
-  have hWstar : star W = J ∘L K := by
-    dsimp [W]
-    change star (K * J) = J * K
-    rw [star_mul, hJstar, hKstar]
-  have hlyap : C ∘L W + star W ∘L C = B + B := by
-    rw [hWstar]
-    apply ContinuousLinearMap.ext
-    intro x
-    simp only [add_apply, ContinuousLinearMap.comp_apply]
-    change K (S0 (K (J x))) + J (K (K (S0 x))) =
-      J (T0 x) + J (T0 x)
-    have hKcomm_apply (y : E) : K (S0 y) = S0 (K y) := by
-      have h := DFunLike.congr_fun hKcommS0 y
-      simpa only [ContinuousLinearMap.comp_apply] using h
-    have hK2_apply (y : E) : K (K y) = y := by
-      have h := DFunLike.congr_fun hK2 y
-      simpa only [ContinuousLinearMap.comp_apply,
-        ContinuousLinearMap.id_apply] using h
-    have hJT0_apply (y : E) : J (T0 y) = T0 (J y) := by
-      have h := DFunLike.congr_fun hJcommT0 y
-      simpa only [ContinuousLinearMap.comp_apply] using h
-    have hJH_apply (y : E) : J (H y) = -H (J y) := by
-      have h := DFunLike.congr_fun hJH y
-      simpa only [ContinuousLinearMap.comp_apply, neg_apply] using h
-    have hS0_apply (y : E) : S0 y = T0 y + H y := by
-      dsimp [S0, T0]
-      simp only [sub_apply, add_apply, smul_apply,
-        ContinuousLinearMap.id_apply]
-      module
-    have hfirst : K (S0 (K (J x))) = S0 (J x) := by
-      rw [hKcomm_apply, hK2_apply]
-    have hsecond : J (K (K (S0 x))) = J (S0 x) := by
-      rw [hK2_apply]
-    rw [hfirst, hsecond, hS0_apply, hS0_apply,
-      map_add, hJT0_apply, hJH_apply]
-    abel
   let Z : E →L[ℂ] E := R ∘L W ∘L Rinv
   have hZstar : star Z = Rinv ∘L star W ∘L R := by
     dsimp [Z]
@@ -560,6 +428,23 @@ theorem isQuarterAcute_of_orderedFormGap
     intro z hz
     rw [hspecWZ] at hz
     exact hspecZ z hz
+  exact ⟨α, hα, hspecW⟩
+
+/-- A positive spectral bound for the reflection product gives a strict quarter angle. -/
+private theorem isQuarterAcute_of_reflection_spectrum_lower
+    (U V : Submodule ℂ E)
+    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    {α : ℝ} (hα : 0 < α)
+    (hspecW : ∀ z ∈ spectrum ℂ (V.reflectionOperator ∘L U.reflectionOperator), α ≤ z.re) :
+    IsQuarterAcute U V := by
+  classical
+  let J : E →L[ℂ] E := U.reflectionOperator
+  let K : E →L[ℂ] E := V.reflectionOperator
+  let W : E →L[ℂ] E := K ∘L J
+  have hWstar : star W = J ∘L K := by
+    change star (K * J) = J * K
+    rw [star_mul]
+    simp only [J, K, TauCeti.DavisKahan.star_reflectionOperator_complex]
   have hWunit : W ∈ unitary (E →L[ℂ] E) := by
     simpa only [W, K, J, ContinuousLinearMap.mul_def] using
       TauCeti.DavisKahan.spectraReflectionProduct_mem_unitary U V
@@ -701,6 +586,151 @@ theorem isQuarterAcute_of_orderedFormGap
     have hsqle := pow_le_pow_left₀ hthresholdPos.le hle 2
     rw [hthresholdSq] at hsqle
     exact (not_le_of_gt hDsq) hsqle
+
+/-- Dimension-free strict quarter-angle branch from the paper's ordered form
+hypotheses and full off-diagonality. -/
+theorem isQuarterAcute_of_orderedFormGap
+    (A H : E →L[ℂ] E)
+    (U V : Submodule ℂ E)
+    [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    {a b : ℝ}
+    (hA : IsSelfAdjoint A)
+    (hH : IsSelfAdjoint H)
+    (hAU : ∀ x ∈ U, A x ∈ U)
+    (hAplusH_V : ∀ x ∈ V, (A + H) x ∈ V)
+    (hab : a < b)
+    (hUhigh : ∀ x ∈ U,
+      b * ‖x‖ ^ 2 ≤ RCLike.re ⟪A x, x⟫_ℂ)
+    (hUperpLow : ∀ x ∈ Uᗮ,
+      RCLike.re ⟪A x, x⟫_ℂ ≤ a * ‖x‖ ^ 2)
+    (hVhigh : ∀ x ∈ V,
+      b * ‖x‖ ^ 2 ≤ RCLike.re ⟪(A + H) x, x⟫_ℂ)
+    (hVperpLow : ∀ x ∈ Vᗮ,
+      RCLike.re ⟪(A + H) x, x⟫_ℂ ≤ a * ‖x‖ ^ 2)
+    (hHU : ∀ x ∈ U, H x ∈ Uᗮ)
+    (hHUperp : ∀ x ∈ Uᗮ, H x ∈ U) :
+    IsQuarterAcute U V := by
+  classical
+  let c : ℝ := (a + b) / 2
+  let δ : ℝ := (b - a) / 2
+  let T0 : E →L[ℂ] E := A - (c : ℂ) • ContinuousLinearMap.id ℂ E
+  let S0 : E →L[ℂ] E := A + H - (c : ℂ) • ContinuousLinearMap.id ℂ E
+  let J : E →L[ℂ] E := U.reflectionOperator
+  let K : E →L[ℂ] E := V.reflectionOperator
+  let B : E →L[ℂ] E := J ∘L T0
+  let C : E →L[ℂ] E := K ∘L S0
+  let W : E →L[ℂ] E := K ∘L J
+  have hδ : 0 < δ := by dsimp [δ]; linarith
+  have hAH : IsSelfAdjoint (A + H) := hA.add hH
+  have hAsym : A.toLinearMap.IsSymmetric :=
+    ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mp hA
+  have hAHsym : (A + H).toLinearMap.IsSymmetric :=
+    ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mp hAH
+  have hUred : A.Reduces U := ContinuousLinearMap.IsSymmetric.reduces_of_invariant hAsym hAU
+  have hVred : ContinuousLinearMap.Reduces (A + H) V :=
+    ContinuousLinearMap.IsSymmetric.reduces_of_invariant hAHsym hAplusH_V
+  have hJcommA : J ∘L A = A ∘L J := by
+    simpa only [J] using Submodule.reflectionOperator_comm_of_reduces A U hUred
+  have hKcommAH : K ∘L (A + H) = (A + H) ∘L K := by
+    simpa only [K] using Submodule.reflectionOperator_comm_of_reduces (A + H) V hVred
+  have hJstar : star J = J := by
+    simpa only [J] using
+      TauCeti.DavisKahan.star_reflectionOperator_complex U
+  have hKstar : star K = K := by
+    simpa only [K] using
+      TauCeti.DavisKahan.star_reflectionOperator_complex V
+  have hJ2 : J ∘L J = ContinuousLinearMap.id ℂ E := by
+    simpa only [J] using Submodule.reflectionOperator_involutive U
+  have hK2 : K ∘L K = ContinuousLinearMap.id ℂ E := by
+    simpa only [K] using Submodule.reflectionOperator_involutive V
+  have hT0star : IsSelfAdjoint T0 := by
+    rw [isSelfAdjoint_iff]
+    dsimp [T0, c]
+    rw [star_sub, star_smul, hA.star_eq, star_id_clm]
+    simp
+  have hS0star : IsSelfAdjoint S0 := by
+    rw [isSelfAdjoint_iff]
+    dsimp [S0, c]
+    rw [star_sub, star_smul, hAH.star_eq, star_id_clm]
+    simp
+  have hJcommT0 : J ∘L T0 = T0 ∘L J := by
+    dsimp [T0]
+    rw [ContinuousLinearMap.comp_sub, ContinuousLinearMap.sub_comp,
+      hJcommA]
+    ext x
+    simp
+  have hKcommS0 : K ∘L S0 = S0 ∘L K := by
+    dsimp [S0]
+    rw [ContinuousLinearMap.comp_sub, ContinuousLinearMap.sub_comp,
+      hKcommAH]
+    ext x
+    simp
+  have hBstar : IsSelfAdjoint B := by
+    rw [isSelfAdjoint_iff]
+    dsimp [B]
+    change star (J * T0) = J * T0
+    rw [star_mul, hT0star.star_eq, hJstar]
+    change T0 ∘L J = J ∘L T0
+    exact hJcommT0.symm
+  have hCstar : IsSelfAdjoint C := by
+    rw [isSelfAdjoint_iff]
+    dsimp [C]
+    change star (K * S0) = K * S0
+    rw [star_mul, hS0star.star_eq, hKstar]
+    change S0 ∘L K = K ∘L S0
+    exact hKcommS0.symm
+  have hBcoer : ∀ x, δ * ‖x‖ ^ 2 ≤ RCLike.re ⟪B x, x⟫_ℂ := by
+    intro x
+    simpa only [B, T0, J, c, δ, ContinuousLinearMap.comp_apply,
+      sub_apply, smul_apply, ContinuousLinearMap.id_apply] using
+      reflected_centered_form_lower A U hA hAU hUhigh hUperpLow x
+  have hCcoer : ∀ x, δ * ‖x‖ ^ 2 ≤ RCLike.re ⟪C x, x⟫_ℂ := by
+    intro x
+    simpa only [C, S0, K, c, δ, ContinuousLinearMap.comp_apply,
+      sub_apply, smul_apply, ContinuousLinearMap.id_apply] using
+      reflected_centered_form_lower (A + H) V hAH hAplusH_V
+        hVhigh hVperpLow x
+  have hJH : J ∘L H = -(H ∘L J) := by
+    simpa only [J] using reflection_anticommutes_of_maps_orthogonal H U hHU hHUperp
+  have hWstar : star W = J ∘L K := by
+    dsimp [W]
+    change star (K * J) = J * K
+    rw [star_mul, hJstar, hKstar]
+  have hlyap : C ∘L W + star W ∘L C = B + B := by
+    rw [hWstar]
+    apply ContinuousLinearMap.ext
+    intro x
+    simp only [add_apply, ContinuousLinearMap.comp_apply]
+    change K (S0 (K (J x))) + J (K (K (S0 x))) =
+      J (T0 x) + J (T0 x)
+    have hKcomm_apply (y : E) : K (S0 y) = S0 (K y) := by
+      have h := DFunLike.congr_fun hKcommS0 y
+      simpa only [ContinuousLinearMap.comp_apply] using h
+    have hK2_apply (y : E) : K (K y) = y := by
+      have h := DFunLike.congr_fun hK2 y
+      simpa only [ContinuousLinearMap.comp_apply,
+        ContinuousLinearMap.id_apply] using h
+    have hJT0_apply (y : E) : J (T0 y) = T0 (J y) := by
+      have h := DFunLike.congr_fun hJcommT0 y
+      simpa only [ContinuousLinearMap.comp_apply] using h
+    have hJH_apply (y : E) : J (H y) = -H (J y) := by
+      have h := DFunLike.congr_fun hJH y
+      simpa only [ContinuousLinearMap.comp_apply, neg_apply] using h
+    have hS0_apply (y : E) : S0 y = T0 y + H y := by
+      dsimp [S0, T0]
+      simp only [sub_apply, add_apply, smul_apply,
+        ContinuousLinearMap.id_apply]
+      module
+    have hfirst : K (S0 (K (J x))) = S0 (J x) := by
+      rw [hKcomm_apply, hK2_apply]
+    have hsecond : J (K (K (S0 x))) = J (S0 x) := by
+      rw [hK2_apply]
+    rw [hfirst, hsecond, hS0_apply, hS0_apply,
+      map_add, hJT0_apply, hJH_apply]
+    abel
+  obtain ⟨α, hα, hspecW⟩ := exists_spectrum_re_lower_of_lyapunov
+    W B C hδ hBcoer hCstar hCcoer hlyap
+  exact isQuarterAcute_of_reflection_spectrum_lower U V hα hspecW
 
 /-! ### The non-strict quarter angle, and why it is stated separately
 
