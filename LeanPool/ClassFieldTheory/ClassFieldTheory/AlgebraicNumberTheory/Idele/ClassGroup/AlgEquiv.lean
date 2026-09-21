@@ -161,8 +161,6 @@ embedding it into a third relative idèle class group is the same as
 embedding along the composite field embedding. -/
 theorem RelativeIdeleGroup.classEmbedding_relativeIdeleClassCongr
     {N : Type*} [Field N] [Algebra K N]
-    [FiniteDimensional K L] [FiniteDimensional K M]
-    [FiniteDimensional K N]
     (e : L ≃ₐ[K] M)
     (f : M →ₐ[K] N)
     (c : RelativeIdeleGroup.ClassGroup K L) :
