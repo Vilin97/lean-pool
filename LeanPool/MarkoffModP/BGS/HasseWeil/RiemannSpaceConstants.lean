@@ -38,6 +38,21 @@ local instance regularConstantAlgebra : Algebra K L :=
 local instance regularConstantTower : IsScalarTower K (RatFunc K) L :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+local instance regularInfinityNonempty : Nonempty (FiniteExtensionInfinityPlace K L) := by
+  let _ : Algebra.IsIntegral (RatFuncInfinityIntegers K)
+      (RatFuncInfinityIntegralClosure K L) :=
+    IsIntegralClosure.isIntegral_algebra (RatFuncInfinityIntegers K) L
+  let _ : Module.IsTorsionFree (RatFuncInfinityIntegers K) L :=
+    Module.IsTorsionFree.trans_faithfulSMul
+      (RatFuncInfinityIntegers K) (RatFunc K) L
+  let _ : Module.IsTorsionFree (RatFuncInfinityIntegers K)
+      (RatFuncInfinityIntegralClosure K L) :=
+    IsIntegralClosure.isTorsionFree (RatFuncInfinityIntegers K) L
+  exact Ideal.nonempty_primesOver (ratFuncInfinityPlace K).asIdeal
+
+local instance regularPlaceNonempty : Nonempty (FiniteExtensionPlace K L) :=
+  Nonempty.map Sum.inr (regularInfinityNonempty K L)
+
 /-- The subalgebra of functions regular at every exhaustive place. -/
 def finiteExtensionRegularSubalgebra : Subalgebra K L where
   carrier := finiteExtensionRiemannSpace K L 0

@@ -168,22 +168,24 @@ theorem finiteExtensionRiemannSpace_finitePlace_increment
   let Q : FiniteExtensionPlace K L := .inl q
   let S := finiteExtensionRiemannSpace K L D
   let T := finiteExtensionRiemannSpace K L (D + Finsupp.single Q 1)
-  letI : Algebra (RatFuncFiniteIntegralClosure K L)
+  let : Algebra (RatFuncFiniteIntegralClosure K L)
       (RatFuncFiniteIntegralClosure K L) :=
     Algebra.id (RatFuncFiniteIntegralClosure K L)
   let upperFiniteClosureLocalAlgebra :
       Algebra (RatFuncFiniteIntegralClosure K L)
         (FiniteExtensionFinitePlaceLocalRing K L q) :=
     OreLocalization.instAlgebra
-  letI := upperFiniteClosureLocalAlgebra
-  letI : SMul (RatFuncFiniteIntegralClosure K L)
+  let := upperFiniteClosureLocalAlgebra
+  let : SMul (RatFuncFiniteIntegralClosure K L)
       (FiniteExtensionFinitePlaceLocalRing K L q) :=
     upperFiniteClosureLocalAlgebra.toSMul
-  letI : Algebra K (FiniteExtensionFinitePlaceLocalRing K L q) :=
+  let : Algebra K (FiniteExtensionFinitePlaceLocalRing K L q) :=
     OreLocalization.instAlgebra
-  letI := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
-  letI := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
-  letI : IsScalarTower K R L := by
+  let := finiteExtensionFinitePlaceLocalAlgebra (K := K) (L := L) q
+  let := finiteExtensionFinitePlaceLocalIsFractionRing (K := K) (L := L) q
+  let _ : FaithfulSMul R L :=
+    (faithfulSMul_iff_algebraMap_injective R L).mpr (IsFractionRing.injective R L)
+  let : IsScalarTower K R L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext c
     symm
@@ -198,7 +200,7 @@ theorem finiteExtensionRiemannSpace_finitePlace_increment
           (finiteExtensionFinitePlaceLocalizationToField_comp_algebraMap
             (K := K) (L := L) q) (algebraMap K A c)]
     rfl
-  letI : IsDiscreteValuationRing R :=
+  let : IsDiscreteValuationRing R :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain
       A q.ne_bot R
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
@@ -371,18 +373,18 @@ theorem finiteExtensionRiemannSpace_finitePlace_increment
     ext x
     rw [LinearMap.mem_ker, Submodule.mem_comap]
     exact hkerPoint x
-  letI : Finite (IsLocalRing.ResidueField R) := by
+  let : Finite (IsLocalRing.ResidueField R) := by
     simpa [R] using
       finiteExtensionFinitePlace_residueField_finite (K := K) (L := L) q
-  letI : Module.Finite K (IsLocalRing.ResidueField R) :=
+  let : Module.Finite K (IsLocalRing.ResidueField R) :=
     Module.Finite.of_finite
-  letI : Module.Finite K f.range := inferInstance
-  letI : Module.Finite K f.ker := by
+  let : Module.Finite K f.range := inferInstance
+  let : Module.Finite K f.ker := by
     rw [hker]
     exact Module.Finite.equiv (Submodule.comapSubtypeEquivOfLe hST).symm
-  letI : Module.Finite K (T ⧸ f.ker) :=
+  let : Module.Finite K (T ⧸ f.ker) :=
     Module.Finite.equiv f.quotKerEquivRange.symm
-  letI hTFinite : Module.Finite K T :=
+  let hTFinite : Module.Finite K T :=
     Module.Finite.of_submodule_quotient f.ker
   have hkerRank : Module.finrank K f.ker = Module.finrank K S := by
     rw [hker]

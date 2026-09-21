@@ -147,6 +147,9 @@ theorem functionFieldNormalClosureConstantField_isExact :
         (FunctionFieldNormalClosure K L)) :=
   algebraicClosure.algebraicClosure_eq_bot K (FunctionFieldNormalClosure K L)
 
+local instance normalClosureConstantModule :
+    Module K (FunctionFieldNormalClosureConstantField K L) := Algebra.toModule
+
 omit [DecidableEq (RatFunc K)] in
 /-- Frobenius on the finite algebraic constant field has order equal to its
 degree over `K`. -/

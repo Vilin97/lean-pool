@@ -267,7 +267,8 @@ private theorem actualInfinityPlaceResidueField_finite
     simpa [p] using Ideal.primesOver.liesOver
       (ratFuncInfinityPlace K).asIdeal P
   letI := Localization.AtPrime.algebraOfLiesOver p P.1
-  letI : Localization.AtPrime.IsLiesOverAlgebra p P.1 := ⟨rfl⟩
+  let _ : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
+      (Localization.AtPrime P.1) := inferInstance
   letI : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 :=
     inferInstance
   letI : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
@@ -970,6 +971,10 @@ theorem exactConstantExtensionInfinityPlace_degree_eq_one_of_dvd
     C S N q hqOrigin
   letI : Finite P.1.ResidueField :=
     actualInfinityPlaceResidueField_finite C N P
+  let _ : DistribMulAction (RatFuncInfinityIntegralClosure C N)
+      (RatFuncInfinityIntegralClosure C N) :=
+    (Algebra.toModule : Module (RatFuncInfinityIntegralClosure C N)
+      (RatFuncInfinityIntegralClosure C N)).toDistribMulAction
   apply Nat.div_self
   rw [finiteExtensionInfinityPlace_degree_eq_finrank_residueField C N P]
   exact Module.finrank_pos

@@ -325,7 +325,6 @@ theorem exactConstantExtensionUpstairsFinitePlace_eq_compatibleNormalizationTran
       normalizationAlgEquivRatFuncFiniteOfAlgebraMap,
       integralClosureAlgEquivRatFuncFiniteOfAlgebraMap]
     rw [integralClosureAlgEquivRatFuncFiniteOfEq_coe]
-    rfl
   apply IsDedekindDomain.HeightOneSpectrum.ext
   have hActualIdeal :
       (exactConstantExtensionUpstairsFinitePlace
@@ -637,7 +636,6 @@ theorem exactConstantExtensionCompatibleBaseFinitePlace_under_original
       normalizationAlgEquivRatFuncFiniteOfAlgebraMap,
       integralClosureAlgEquivRatFuncFiniteOfAlgebraMap]
     rw [integralClosureAlgEquivRatFuncFiniteOfEq_coe]
-    rfl
   have hNormalizationMapsAgree
       (z : S ⊗[C] integralClosure C[X] N) :
       ((eTensor z : integralClosure S[X] (ExactConstantExtension C N S)) :
