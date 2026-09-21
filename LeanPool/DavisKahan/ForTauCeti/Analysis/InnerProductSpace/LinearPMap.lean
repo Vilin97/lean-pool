@@ -1,0 +1,37 @@
+/-
+Copyright (c) 2026 Jon Crall, Edward Wang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jon Crall, Edward Wang
+-/
+
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Closed
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Complexification
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Constructions
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.DiagonalMultiplication
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.GraphCore
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RayleighRitz
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.RealLowerBound
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Resolvent
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventBound
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventOpen
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ResolventSandwich
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.ScalarTransport
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SelfAdjointMaximal
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SelfAdjointResolvent
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Shift
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralCutOperator
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralFormBounds
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralGapInverse
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralGrid
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralMeasure
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralProjectionGroup
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralProjectionNaturality
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralSupport
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SpectralVectorBounds
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.StoneUniqueness
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.SubmoduleAdjoint
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.Sylvester
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.UnitaryTransport
+import LeanPool.DavisKahan.ForTauCeti.Analysis.InnerProductSpace.LinearPMap.YosidaApproximation
+
+/-! Supporting modules for Davis–Kahan rotation of eigenvectors. -/

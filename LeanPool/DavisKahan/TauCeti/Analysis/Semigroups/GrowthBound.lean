@@ -1,0 +1,254 @@
+/-
+Copyright (c) 2026 The Tau Ceti contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: The Tau Ceti contributors
+-/
+module
+
+public import LeanPool.DavisKahan.TauCeti.Analysis.Semigroups.Basic
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+
+/-!
+# Growth bounds for strongly continuous semigroups
+
+This file contains exponential growth bounds for C₀-semigroups, including the
+contraction case and the existence of a finite exponential type.
+
+The uniform operator bound this provides also yields strong continuity of `(u, x) ↦ S u x` in
+both arguments at once (`StronglyContinuousSemigroup.tendsto_realOperator_apply` and its
+`ContinuousOn` form `StronglyContinuousSemigroup.continuousOn_realOperator_apply`), which does
+not follow from continuity of `u ↦ S u` alone.
+
+## References
+Ported and adapted (Apache 2.0) from `mrdouglasny/hille-yosida`; references include
+Engel--Nagel, Linares, Pazy, Hille, and Yosida.
+-/
+
+public section
+
+noncomputable section
+
+open scoped Topology NNReal
+
+namespace TauCeti.Semigroups
+
+variable {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+
+/-! ## Exponential growth bounds -/
+
+/-- A C₀-semigroup has exponential growth bound `(ω, M)`, with `M ≥ 1`. -/
+def StronglyContinuousSemigroup.HasGrowthBound
+    (S : StronglyContinuousSemigroup X) (ω : ℝ) (M : ℝ) : Prop :=
+  1 ≤ M ∧ ∀ (t : ℝ), 0 ≤ t → ‖S.realOperator t‖ ≤ M * Real.exp (ω * t)
+
+omit [CompleteSpace X] in
+/-- The multiplicative constant in a growth bound is at least one. -/
+theorem StronglyContinuousSemigroup.HasGrowthBound.one_le
+    {S : StronglyContinuousSemigroup X} {ω M : ℝ} (hb : S.HasGrowthBound ω M) :
+    1 ≤ M := by
+  unfold StronglyContinuousSemigroup.HasGrowthBound at hb
+  exact hb.1
+
+omit [CompleteSpace X] in
+/-- The operator-norm estimate supplied by a growth bound. -/
+theorem StronglyContinuousSemigroup.HasGrowthBound.bound
+    {S : StronglyContinuousSemigroup X} {ω M : ℝ} (hb : S.HasGrowthBound ω M)
+    (t : ℝ) (ht : 0 ≤ t) : ‖S.realOperator t‖ ≤ M * Real.exp (ω * t) := by
+  unfold StronglyContinuousSemigroup.HasGrowthBound at hb
+  exact hb.2 t ht
+
+omit [CompleteSpace X] in
+/-- Constructor for a growth bound from the multiplicative lower bound and operator-norm
+estimate. -/
+public theorem StronglyContinuousSemigroup.hasGrowthBound_of_bound
+    {S : StronglyContinuousSemigroup X} {ω M : ℝ} (hM : 1 ≤ M)
+    (hbound : ∀ (t : ℝ), 0 ≤ t → ‖S.realOperator t‖ ≤ M * Real.exp (ω * t)) :
+    S.HasGrowthBound ω M := by
+  unfold StronglyContinuousSemigroup.HasGrowthBound
+  exact ⟨hM, hbound⟩
+
+omit [CompleteSpace X] in
+/-- A growth bound can be weakened by increasing both the exponential rate and the multiplicative
+constant. -/
+theorem StronglyContinuousSemigroup.HasGrowthBound.mono
+    {S : StronglyContinuousSemigroup X} {ω M ω' M' : ℝ}
+    (hb : S.HasGrowthBound ω M) (hω : ω ≤ ω') (hM : M ≤ M') :
+    S.HasGrowthBound ω' M' := by
+  refine ⟨hb.one_le.trans hM, fun t ht => ?_⟩
+  have hM_nonneg : 0 ≤ M := zero_le_one.trans hb.one_le
+  have hexp : Real.exp (ω * t) ≤ Real.exp (ω' * t) :=
+    Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_right hω ht)
+  exact (hb.bound t ht).trans
+    (mul_le_mul hM hexp (Real.exp_nonneg _) (hM_nonneg.trans hM))
+
+omit [CompleteSpace X] in
+/-- A growth bound can be weakened by increasing the exponential rate. -/
+theorem StronglyContinuousSemigroup.HasGrowthBound.mono_omega
+    {S : StronglyContinuousSemigroup X} {ω M ω' : ℝ} (hb : S.HasGrowthBound ω M) (hω : ω ≤ ω') :
+    S.HasGrowthBound ω' M :=
+  hb.mono hω le_rfl
+
+omit [CompleteSpace X] in
+/-- **A growth bound controls the semigroup on `[0, t₀]` by the envelope
+`M * exp (max ω 0 * t₀)`.** Replacing the signed rate `ω` by `max ω 0` makes the envelope
+nondecreasing in the time, so the bound at `t₀` covers every earlier nonnegative `t`. -/
+theorem StronglyContinuousSemigroup.HasGrowthBound.norm_le_mul_exp_max_zero_mul_of_le
+    {S : StronglyContinuousSemigroup X} {ω M : ℝ} (hb : S.HasGrowthBound ω M) {t t₀ : ℝ}
+    (ht : 0 ≤ t) (htt₀ : t ≤ t₀) :
+    ‖S.realOperator t‖ ≤ M * Real.exp (max ω 0 * t₀) := by
+  refine ((hb.mono_omega (le_max_left ω 0)).bound t ht).trans ?_
+  exact mul_le_mul_of_nonneg_left
+    (Real.exp_le_exp.mpr
+      (mul_le_mul_of_nonneg_left htt₀ (le_max_right ω 0)))
+    (zero_le_one.trans hb.one_le)
+
+omit [CompleteSpace X] in
+/-- A growth bound can be weakened by increasing the multiplicative constant. -/
+theorem StronglyContinuousSemigroup.HasGrowthBound.mono_const
+    {S : StronglyContinuousSemigroup X} {ω M M' : ℝ} (hb : S.HasGrowthBound ω M) (hM : M ≤ M') :
+    S.HasGrowthBound ω M' :=
+  hb.mono le_rfl hM
+
+omit [CompleteSpace X] in
+/-- A contraction semigroup has growth bound `(0, 1)`. -/
+theorem ContractionSemigroup.hasGrowthBound (S : ContractionSemigroup X) :
+    S.toStronglyContinuousSemigroup.HasGrowthBound 0 1 :=
+  ⟨le_rfl, fun t ht => by simpa using S.contracting_real t ht⟩
+
+omit [CompleteSpace X] in
+/-- A contraction semigroup has every nonnegative exponential growth rate with constant `1`. -/
+theorem ContractionSemigroup.hasGrowthBound_of_nonneg_omega
+    (S : ContractionSemigroup X) {ω : ℝ} (hω : 0 ≤ ω) :
+    S.toStronglyContinuousSemigroup.HasGrowthBound ω 1 :=
+  S.hasGrowthBound.mono_omega hω
+
+omit [CompleteSpace X] in
+/-- A contraction semigroup has growth bound `(0, M)` for every `M ≥ 1`. -/
+theorem ContractionSemigroup.hasGrowthBound_of_one_le_const
+    (S : ContractionSemigroup X) {M : ℝ} (hM : 1 ≤ M) :
+    S.toStronglyContinuousSemigroup.HasGrowthBound 0 M :=
+  S.hasGrowthBound.mono_const hM
+
+omit [CompleteSpace X] in
+/-- A contraction semigroup has growth bound `(ω, M)` whenever `0 ≤ ω` and `1 ≤ M`. -/
+theorem ContractionSemigroup.hasGrowthBound_of_nonneg_omega_of_one_le_const
+    (S : ContractionSemigroup X) {ω M : ℝ} (hω : 0 ≤ ω) (hM : 1 ≤ M) :
+    S.toStronglyContinuousSemigroup.HasGrowthBound ω M :=
+  S.hasGrowthBound.mono hω hM
+
+
+/-! ## Growth Bounds and Exponential Type -/
+
+/-- Every C₀-semigroup has a finite exponential growth bound
+([EN] Prop. I.5.5, [Linares] Thm. 1). -/
+theorem StronglyContinuousSemigroup.existsGrowthBound (S : StronglyContinuousSemigroup X) :
+    ∃ (ω : ℝ) (M : ℝ), S.HasGrowthBound ω M := by
+  obtain ⟨M, hM1, hMbound⟩ := S.normBoundedOnUnitInterval
+  have hM_pos : 0 < M := by linarith
+  refine ⟨Real.log M, M, hM1, fun t ht => ?_⟩
+  set n := ⌊t⌋₊ with hn_def
+  have hn_le : (↑n : ℝ) ≤ t := Nat.floor_le ht
+  have hfrac_nn : 0 ≤ t - ↑n := sub_nonneg.mpr hn_le
+  have hfrac_le1 : t - ↑n ≤ 1 := by
+    have := Nat.lt_floor_add_one t; linarith
+  have hone : ‖S (1 : ℝ≥0)‖ ≤ M := by
+    simpa [S.realOperator_def] using hMbound 1 zero_le_one le_rfl
+  have hint : ‖S.realOperator (n : ℝ)‖ ≤ M ^ n := by
+    simpa [S.realOperator_def, nsmul_eq_mul] using S.norm_map_nsmul_le_pow 1 hone n
+  calc ‖S.realOperator t‖
+      = ‖S.realOperator ((t - ↑n) + ↑n)‖ := by
+        rw [sub_add_cancel]
+    _ ≤ ‖S.realOperator (t - ↑n)‖ * ‖S.realOperator ↑n‖ :=
+        S.norm_realOperator_add_le _ _ hfrac_nn (Nat.cast_nonneg n)
+    _ ≤ M * M ^ n :=
+        mul_le_mul (hMbound _ hfrac_nn hfrac_le1) hint (norm_nonneg _) (by linarith)
+    _ ≤ M * Real.exp (Real.log M * t) := by
+        apply mul_le_mul_of_nonneg_left _ (by linarith)
+        calc (M : ℝ) ^ n
+            = Real.exp (↑n * Real.log M) := by
+              rw [Real.exp_nat_mul, Real.exp_log hM_pos]
+          _ ≤ Real.exp (Real.log M * t) := by
+              apply Real.exp_le_exp.mpr
+              calc ↑n * Real.log M ≤ t * Real.log M :=
+                    mul_le_mul_of_nonneg_right hn_le (Real.log_nonneg hM1)
+                _ = Real.log M * t := by ring
+
+/-- A C₀-semigroup admits a growth bound with exponent at least any prescribed real number. -/
+theorem StronglyContinuousSemigroup.existsGrowthBound_ge_omega
+    (S : StronglyContinuousSemigroup X) (ω₀ : ℝ) :
+    ∃ (ω : ℝ) (M : ℝ), ω₀ ≤ ω ∧ S.HasGrowthBound ω M := by
+  obtain ⟨ω, M, hb⟩ := S.existsGrowthBound
+  refine ⟨max ω ω₀, M, le_max_right _ _, hb.mono_omega ?_⟩
+  exact le_max_left _ _
+
+/-- A C₀-semigroup admits a growth bound with multiplicative constant at least any prescribed
+real number. -/
+theorem StronglyContinuousSemigroup.existsGrowthBound_ge_const
+    (S : StronglyContinuousSemigroup X) (M₀ : ℝ) :
+    ∃ (ω : ℝ) (M : ℝ), M₀ ≤ M ∧ S.HasGrowthBound ω M := by
+  obtain ⟨ω, M, hb⟩ := S.existsGrowthBound
+  refine ⟨ω, max M M₀, le_max_right _ _, hb.mono_const ?_⟩
+  exact le_max_left _ _
+
+/-- A C₀-semigroup admits a growth bound whose exponent and multiplicative constant are both at
+least prescribed lower bounds. -/
+theorem StronglyContinuousSemigroup.existsGrowthBound_ge
+    (S : StronglyContinuousSemigroup X) (ω₀ M₀ : ℝ) :
+    ∃ (ω : ℝ) (M : ℝ), ω₀ ≤ ω ∧ M₀ ≤ M ∧ S.HasGrowthBound ω M := by
+  obtain ⟨ω, M, hb⟩ := S.existsGrowthBound
+  refine ⟨max ω ω₀, max M M₀, le_max_right _ _, le_max_right _ _, ?_⟩
+  exact hb.mono (le_max_left _ _) (le_max_left _ _)
+
+/-! ## Joint strong continuity -/
+
+/-- **Joint strong continuity**: if `f i → r` through nonnegative values and `g i → z`, then
+`S (f i) (g i) → S r z`.
+
+A C₀-semigroup is strongly, not uniformly, continuous, so this does not follow from continuity
+of `u ↦ S.realOperator u` alone; the proof combines strong continuity at `r` with the uniform
+operator bound supplied by a growth bound. -/
+theorem StronglyContinuousSemigroup.tendsto_realOperator_apply {ι : Type*} {l : Filter ι}
+    (S : StronglyContinuousSemigroup X) {f : ι → ℝ} {g : ι → X} {r : ℝ} {z : X}
+    (hf : Filter.Tendsto f l (𝓝 r)) (hf0 : ∀ᶠ i in l, 0 ≤ f i) (hr : 0 ≤ r)
+    (hg : Filter.Tendsto g l (𝓝 z)) :
+    Filter.Tendsto (fun i => S.realOperator (f i) (g i)) l (𝓝 (S.realOperator r z)) := by
+  obtain ⟨omega, M, hb⟩ := S.existsGrowthBound
+  have hM : (0 : ℝ) < M := lt_of_lt_of_le zero_lt_one hb.one_le
+  -- A single operator-norm bound valid for all times eventually visited by `f`.
+  have hbound : ∀ᶠ i in l, ‖S.realOperator (f i)‖ ≤ M * Real.exp (|omega| * (r + 1)) := by
+    filter_upwards [hf0, hf.eventually_lt_const (lt_add_one r)] with i hi0 hi1
+    refine (hb.bound (f i) hi0).trans ?_
+    refine mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr ?_) hM.le
+    calc omega * f i ≤ |omega| * f i := mul_le_mul_of_nonneg_right (le_abs_self omega) hi0
+      _ ≤ |omega| * (r + 1) := mul_le_mul_of_nonneg_left hi1.le (abs_nonneg omega)
+  -- The argument moves: the operator norms are uniformly bounded, so this contribution vanishes.
+  have h1 : Filter.Tendsto (fun i => S.realOperator (f i) (g i - z)) l (𝓝 0) := by
+    refine squeeze_zero_norm' (a := fun i => M * Real.exp (|omega| * (r + 1)) * ‖g i - z‖) ?_ ?_
+    · filter_upwards [hbound] with i hi
+      exact (ContinuousLinearMap.le_opNorm _ _).trans
+        (mul_le_mul_of_nonneg_right hi (norm_nonneg _))
+    · simpa using
+        (tendsto_iff_norm_sub_tendsto_zero.mp hg).const_mul (M * Real.exp (|omega| * (r + 1)))
+  -- The time moves: this is strong continuity of the orbit of the fixed vector `z`.
+  have h2 : Filter.Tendsto (fun i => S.realOperator (f i) z) l (𝓝 (S.realOperator r z)) := by
+    have hfw : Filter.Tendsto f l (𝓝[Set.Ici 0] r) :=
+      tendsto_nhdsWithin_iff.mpr ⟨hf, hf0⟩
+    simpa [Function.comp_def] using (S.realOperator_continuousWithinAt z r hr).tendsto.comp hfw
+  have hsplit : ∀ i, S.realOperator (f i) (g i)
+      = S.realOperator (f i) (g i - z) + S.realOperator (f i) z := by
+    intro i
+    rw [← ContinuousLinearMap.map_add, sub_add_cancel]
+  simpa using (h1.add h2).congr fun i => (hsplit i).symm
+
+/-- The `ContinuousOn` form of joint strong continuity: a continuous nonnegative time
+reparametrization applied to a continuous vector-valued map gives a continuous orbit. -/
+theorem StronglyContinuousSemigroup.continuousOn_realOperator_apply
+    (S : StronglyContinuousSemigroup X) {Y : Type*} [TopologicalSpace Y] {s : Set Y}
+    {f : Y → ℝ} {g : Y → X} (hf : ContinuousOn f s) (hf0 : ∀ u ∈ s, 0 ≤ f u)
+    (hg : ContinuousOn g s) :
+    ContinuousOn (fun u => S.realOperator (f u) (g u)) s := fun u hu =>
+  S.tendsto_realOperator_apply (hf u hu) (eventually_nhdsWithin_of_forall hf0) (hf0 u hu) (hg u hu)
+
+end TauCeti.Semigroups
+
+end
