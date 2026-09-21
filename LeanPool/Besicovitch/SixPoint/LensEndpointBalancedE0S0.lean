@@ -6,6 +6,7 @@ Authors: Yongxi Lin
 module
 
 public import LeanPool.Besicovitch.SixPoint.RationalChord
+public import LeanPool.Besicovitch.SixPoint.MatrixCorrections
 public import LeanPool.Besicovitch.SixPoint.SiblingIncidenceLedger
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
 import Mathlib.Analysis.Matrix.Order
@@ -314,14 +315,6 @@ private def targetOffDiagonal (certificate : LensCertificate) : Matrix Five Five
         -certificate.alpha₁₂, -certificate.alpha₂₂,
         certificate.blueSeparation, 0]
 
-private def pairSign (r : ℝ) : ℝ := if 0 ≤ r then 1 else -1
-
-private def pairVector (r : ℝ) (i j : Five) : Five → ℝ :=
-  fun k ↦ if k = i then 1 else if k = j then pairSign r else 0
-
-private def pairCorrection (r : ℝ) (i j : Five) : Matrix Five Five ℝ :=
-  |r| • Matrix.vecMulVec (pairVector r i j) (pairVector r i j)
-
 private def residual (certificate : LensCertificate) (i j : Five) : ℝ :=
   targetOffDiagonal certificate i j - factorGram certificate i j
 
@@ -337,10 +330,6 @@ private def certificateMatrix (certificate : LensCertificate) : Matrix Five Five
     pairCorrection (residual certificate 2 3) 2 3 +
     pairCorrection (residual certificate 2 4) 2 4 +
     pairCorrection (residual certificate 3 4) 3 4
-
-private theorem pairCorrection_posSemidef (r : ℝ) (i j : Five) :
-    (pairCorrection r i j).PosSemidef := by
-  exact (Matrix.posSemidef_vecMulVec_self_star (pairVector r i j)).smul (abs_nonneg r)
 
 private theorem certificateMatrix_posSemidef (certificate : LensCertificate) :
     (certificateMatrix certificate).PosSemidef := by
@@ -361,43 +350,6 @@ private theorem certificateMatrix_posSemidef (certificate : LensCertificate) :
   have h := h.add (pairCorrection_posSemidef (residual certificate 2 3) 2 3)
   have h := h.add (pairCorrection_posSemidef (residual certificate 2 4) 2 4)
   exact h.add (pairCorrection_posSemidef (residual certificate 3 4) 3 4)
-
-private theorem abs_mul_pairSign (r : ℝ) : |r| * pairSign r = r := by
-  by_cases hr : 0 ≤ r
-  · simp [pairSign, hr, abs_of_nonneg hr]
-  · simp [pairSign, hr, abs_of_neg (lt_of_not_ge hr)]
-
-@[simp]
-private theorem pairCorrection_apply_pair (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j i j = r := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hij.symm, abs_mul_pairSign]
-
-@[simp]
-private theorem pairCorrection_apply_pair_rev (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j j i = r := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hij.symm, abs_mul_pairSign,
-    mul_comm]
-
-@[simp]
-private theorem pairCorrection_apply_left_left (r : ℝ) {i j : Five} :
-    pairCorrection r i j i i = |r| := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector]
-
-@[simp]
-private theorem pairCorrection_apply_right_right (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j j j = |r| := by
-  by_cases hr : 0 ≤ r <;>
-    simp [pairCorrection, Matrix.vecMulVec, pairVector, pairSign, hij.symm, hr]
-
-@[simp]
-private theorem pairCorrection_apply_zero_left (r : ℝ) {i j k l : Five}
-    (hki : k ≠ i) (hkj : k ≠ j) : pairCorrection r i j k l = 0 := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hki, hkj]
-
-@[simp]
-private theorem pairCorrection_apply_zero_right (r : ℝ) {i j k l : Five}
-    (hli : l ≠ i) (hlj : l ≠ j) : pairCorrection r i j k l = 0 := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hli, hlj]
 
 private theorem factorGram_apply_comm (certificate : LensCertificate) (i j : Five) :
     factorGram certificate i j = factorGram certificate j i := by
@@ -495,25 +447,7 @@ private theorem certificateMatrix_diagonal₄ (certificate : LensCertificate) :
 private theorem gram_sum_nonneg {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (certificate : LensCertificate) (v : Five → E) :
     0 ≤ ∑ i, ∑ j, certificateMatrix certificate i j * ⟪v i, v j⟫_ℝ := by
-  have hmatrix := (certificateMatrix_posSemidef certificate).hadamard
-    (Matrix.posSemidef_gram ℝ v)
-  have h := hmatrix.dotProduct_mulVec_nonneg (fun _ ↦ (1 : ℝ))
-  simpa [dotProduct, Matrix.mulVec, Finset.mul_sum] using h
-
-private def positivePart (x : ℝ) : ℝ := max x 0
-
-private def negativePart (x : ℝ) : ℝ := max (-x) 0
-
-private theorem positivePart_sub_negativePart (x : ℝ) :
-    positivePart x - negativePart x = x := by
-  by_cases hx : 0 ≤ x
-  · simp [positivePart, negativePart, hx]
-  · have hx' : x ≤ 0 := le_of_not_ge hx
-    simp [positivePart, negativePart, hx', neg_nonneg.mpr hx']
-
-private theorem positivePart_nonneg (x : ℝ) : 0 ≤ positivePart x := le_max_right _ _
-
-private theorem negativePart_nonneg (x : ℝ) : 0 ≤ negativePart x := le_max_right _ _
+  exact matrix_inner_sum_nonneg (certificateMatrix_posSemidef certificate) v
 
 private def dualY (certificate : LensCertificate) : ℝ :=
   diagonal₀ certificate + certificate.alpha₁₁ + certificate.alpha₁₂ +
@@ -564,31 +498,6 @@ private def LensCertificate.Valid (certificate : LensCertificate) : Prop :=
     0 < certificate.alpha₂₂ ∧ 0 ≤ certificate.redSeparation ∧
     0 ≤ certificate.blueSeparation ∧ certificateUpperBound certificate < 0
 
-private theorem weighted_norm_tangent {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) (weight alpha : ℝ) (halpha : 0 < alpha) :
-    weight * ‖x‖ ≤ alpha * ‖x‖ ^ 2 + weight ^ 2 / (4 * alpha) := by
-  have hdiv : (4 * alpha) * (weight ^ 2 / (4 * alpha)) = weight ^ 2 := by
-    field_simp [halpha.ne']
-  nlinarith [sq_nonneg (2 * alpha * ‖x‖ - weight)]
-
-private theorem radial_secant {r d l u : ℝ} (hd : 0 ≤ d) (hl : l ≤ r) (hu : r ≤ u)
-    (hsum : 0 < l + u) :
-    -d * r ≤ -d / (l + u) * r ^ 2 - d * l * u / (l + u) := by
-  have hproduct : 0 ≤ (r - l) * (u - r) :=
-    mul_nonneg (sub_nonneg.mpr hl) (sub_nonneg.mpr hu)
-  have hbase : r ^ 2 + l * u ≤ (l + u) * r := by nlinarith
-  have hscaled := mul_le_mul_of_nonneg_left hbase (div_nonneg hd hsum.le)
-  field_simp [hsum.ne'] at hscaled ⊢
-  nlinarith
-
-private theorem norm_sub_sub_sq {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (e x y : E) :
-    ‖e - x - y‖ ^ 2 = ‖e‖ ^ 2 + ‖x‖ ^ 2 + ‖y‖ ^ 2 -
-      2 * ⟪e, x⟫_ℝ - 2 * ⟪e, y⟫_ℝ + 2 * ⟪x, y⟫_ℝ := by
-  rw [norm_sub_sq_real, norm_sub_sq_real]
-  simp only [inner_sub_left]
-  ring
-
 private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (certificate : LensCertificate) (e p₁ p₂ w₁ w₂ : E) :
     0 ≤ diagonal₀ certificate * ‖e‖ ^ 2 +
@@ -634,17 +543,6 @@ private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
     certificateMatrix_offDiagonal certificate (by decide : (4 : Five) ≠ 3)] at h
   simp [targetOffDiagonal, real_inner_comm] at h
   nlinarith
-
-private theorem balance_mul_sq_le {a r l u : ℝ} (hl : 0 ≤ l) (hlr : l ≤ r) (hru : r ≤ u) :
-    a * r ^ 2 ≤ positivePart a * u ^ 2 - negativePart a * l ^ 2 := by
-  have hr := hl.trans hlr
-  have hu := hr.trans hru
-  have hupperSq := (sq_le_sq₀ hr hu).2 hru
-  have hlowerSq := (sq_le_sq₀ hl hr).2 hlr
-  have hupper := mul_le_mul_of_nonneg_left hupperSq (positivePart_nonneg a)
-  have hlower := mul_le_mul_of_nonneg_left hlowerSq (negativePart_nonneg a)
-  have hparts := congrArg (fun x : ℝ ↦ x * r ^ 2) (positivePart_sub_negativePart a)
-  linarith only [hparts, hupper, hlower]
 
 private theorem balance_mul_sq_le_one {a r : ℝ} (hr : 0 ≤ r) (hru : r ≤ 1) :
     a * r ^ 2 ≤ positivePart a := by
@@ -734,11 +632,11 @@ private theorem certificate_analytic_bound {E : Type*} [NormedAddCommGroup E]
   have halpha₁₂R : (0 : ℝ) < certificate.alpha₁₂ := by exact_mod_cast halpha₁₂
   have halpha₂₂R : (0 : ℝ) < certificate.alpha₂₂ := by exact_mod_cast halpha₂₂
   have htangent₁₁ :=
-    weighted_norm_tangent (e - p₁ - w₁) 17 certificate.alpha₁₁ halpha₁₁R
+    weightedNorm_le_quadratic (e - p₁ - w₁) 17 certificate.alpha₁₁ halpha₁₁R
   have htangent₁₂ :=
-    weighted_norm_tangent (e - p₁ - w₂) 3 certificate.alpha₁₂ halpha₁₂R
+    weightedNorm_le_quadratic (e - p₁ - w₂) 3 certificate.alpha₁₂ halpha₁₂R
   have htangent₂₂ :=
-    weighted_norm_tangent (e - p₂ - w₂) 5 certificate.alpha₂₂ halpha₂₂R
+    weightedNorm_le_quadratic (e - p₂ - w₂) 5 certificate.alpha₂₂ halpha₂₂R
   rw [norm_sub_sub_sq e p₁ w₁] at htangent₁₁
   rw [norm_sub_sub_sq e p₁ w₂] at htangent₁₂
   rw [norm_sub_sub_sq e p₂ w₂] at htangent₂₂

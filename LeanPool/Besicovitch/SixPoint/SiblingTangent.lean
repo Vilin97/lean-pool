@@ -6,6 +6,7 @@ Authors: Yongxi Lin
 module
 
 public import LeanPool.Besicovitch.SixPoint.RationalChord
+public import LeanPool.Besicovitch.SixPoint.NormEstimates
 public import LeanPool.Besicovitch.Certificates.EndpointBridge
 public import LeanPool.Besicovitch.SixPoint.EndpointGeometry
 
@@ -24,56 +25,6 @@ noncomputable section
 open scoped InnerProductSpace
 
 namespace LeanPool.Besicovitch
-
-private theorem norm_tangent {E : Type*} [SeminormedAddCommGroup E] (x : E) {r : ℝ}
-    (hr : 0 < r) : ‖x‖ ≤ (‖x‖ ^ 2 + r ^ 2) / (2 * r) := by
-  rw [le_div_iff₀ (by positivity : 0 < 2 * r)]
-  nlinarith [sq_nonneg (‖x‖ - r)]
-
-private theorem weighted_norm_tangent {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) (weight r : ℝ) (hr : 0 < r) (hweight : 0 ≤ weight) :
-    weight * ‖x‖ ≤ weight / (2 * r) * (‖x‖ ^ 2 + r ^ 2) := by
-  calc
-    weight * ‖x‖ ≤ weight * ((‖x‖ ^ 2 + r ^ 2) / (2 * r)) :=
-      mul_le_mul_of_nonneg_left (norm_tangent x hr) hweight
-    _ = _ := by ring
-
-private theorem weighted_norm_sq {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (x y : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
-    ‖a • x + b • y‖ ^ 2 =
-      (a + b) * (a * ‖x‖ ^ 2 + b * ‖y‖ ^ 2) - a * b * ‖x - y‖ ^ 2 := by
-  rw [norm_add_sq_real, norm_sub_sq_real]
-  simp only [norm_smul, Real.norm_eq_abs, abs_of_nonneg ha, abs_of_nonneg hb,
-    real_inner_smul_left, real_inner_smul_right]
-  ring
-
-private theorem two_mul_norm_tangent {E : Type*} [SeminormedAddCommGroup E] (x : E)
-    {r : ℝ} (hr : 0 < r) : 2 * ‖x‖ ≤ r + ‖x‖ ^ 2 / r := by
-  have h := norm_tangent x hr
-  calc
-    2 * ‖x‖ ≤ 2 * ((‖x‖ ^ 2 + r ^ 2) / (2 * r)) :=
-      mul_le_mul_of_nonneg_left h (by norm_num)
-    _ = r + ‖x‖ ^ 2 / r := by field_simp; ring
-
-private theorem quadratic_le_max_endpoints {a b d l x u : ℝ} (ha : 0 ≤ a)
-    (hlx : l ≤ x) (hxu : x ≤ u) :
-    a * x ^ 2 + b * x + d ≤ max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := by
-  by_cases hlu : l = u
-  · subst u
-    have hx : x = l := le_antisymm hxu hlx
-    subst x
-    exact le_max_left _ _
-  have hwidth : 0 < u - l := sub_pos.mpr (lt_of_le_of_ne (hlx.trans hxu) hlu)
-  have hcurve : a * (x - l) * (x - u) ≤ 0 :=
-    mul_nonpos_of_nonneg_of_nonpos (mul_nonneg ha (sub_nonneg.mpr hlx))
-      (sub_nonpos.mpr hxu)
-  have hleft := le_max_left (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d)
-  have hright := le_max_right (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d)
-  have hweighted := add_le_add
-    (mul_le_mul_of_nonneg_left hleft (sub_nonneg.mpr hxu))
-    (mul_le_mul_of_nonneg_left hright (sub_nonneg.mpr hlx))
-  apply (mul_le_mul_iff_of_pos_left hwidth).mp
-  nlinarith
 
 /-- A separable convex quadratic on the radial triangle is bounded at its three vertices. -/
 theorem separableQuadratic_le_radial_vertices {a₁ a₂ b₁ b₂ d c t₁ t₂ : ℝ}
@@ -111,30 +62,6 @@ theorem separableQuadratic_le_radial_vertices {a₁ a₂ b₁ b₂ d c t₁ t₂
       (le_max_of_le_right (le_max_right _ _)) (le_max_left _ _))
   simpa [value, v11, v1c, vc1] using hfinal
 
-/-- A positive quadratic coefficient gives a global tangent majorant for a weighted norm. -/
-theorem weightedNorm_le_quadratic {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) (weight coefficient : ℝ) (hcoefficient : 0 < coefficient) :
-    weight * ‖x‖ ≤ coefficient * ‖x‖ ^ 2 + weight ^ 2 / (4 * coefficient) := by
-  have hsquare := sq_nonneg (2 * coefficient * ‖x‖ - weight)
-  field_simp [hcoefficient.ne']
-  nlinarith
-
-private theorem gramTwoMulNormTangent {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) {radius : ℝ} (hradius : 0 < radius) :
-    2 * ‖x‖ ≤ radius + ‖x‖ ^ 2 / radius := by
-  have hsquare := sq_nonneg (‖x‖ - radius)
-  field_simp [hradius.ne']
-  nlinarith
-
-private theorem gramWeightedNormSq {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (x y : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
-    ‖a • x + b • y‖ ^ 2 =
-      (a + b) * (a * ‖x‖ ^ 2 + b * ‖y‖ ^ 2) - a * b * ‖x - y‖ ^ 2 := by
-  rw [norm_add_sq_real, norm_sub_sq_real]
-  simp only [norm_smul, Real.norm_eq_abs, abs_of_nonneg ha, abs_of_nonneg hb,
-    real_inner_smul_left, real_inner_smul_right]
-  ring
-
 /-- The scalar upper function for a two-point Gram estimate. -/
 def gramPairValue (c u₁ u₂ g₁ g₂ d₁ d₂ off sigma t₁ t₂ : ℝ) : ℝ :=
   (u₁ + (g₁ + g₂) * g₁ / sigma) * t₁ ^ 2 - d₁ * t₁ +
@@ -164,13 +91,13 @@ theorem gramPairCore_le_vertices {E : Type*} [NormedAddCommGroup E]
   have hzUpper : ‖z‖ ^ 2 ≤ Q := by
     rw [show ‖z‖ ^ 2 =
       (g₁ + g₂) * (g₁ * ‖x₁‖ ^ 2 + g₂ * ‖x₂‖ ^ 2) -
-        g₁ * g₂ * ‖x₁ - x₂‖ ^ 2 by exact gramWeightedNormSq x₁ x₂ hg₁ hg₂]
+        g₁ * g₂ * ‖x₁ - x₂‖ ^ 2 by exact weighted_norm_sq x₁ x₂ hg₁ hg₂]
     dsimp only [Q]
     exact sub_le_sub_left
       (mul_le_mul_of_nonneg_left hseparationSq (mul_nonneg hg₁ hg₂)) _
   have hinner := real_inner_le_norm (-e) z
   simp only [inner_neg_left, norm_neg, he, one_mul] at hinner
-  have hnorm := gramTwoMulNormTangent z hsigma
+  have hnorm := two_mul_norm_tangent z hsigma
   have hscaled := (div_le_div_iff_of_pos_right hsigma).2 hzUpper
   have horientation : -2 * ⟪e, z⟫_ℝ ≤ sigma + Q / sigma := by
     nlinarith

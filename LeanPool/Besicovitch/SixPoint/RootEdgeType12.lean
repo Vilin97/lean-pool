@@ -6,6 +6,7 @@ Authors: Yongxi Lin
 module
 
 public import LeanPool.Besicovitch.SixPoint.RationalChord
+public import LeanPool.Besicovitch.SixPoint.MatrixCorrections
 public import LeanPool.Besicovitch.SixPoint.RootEdge
 public import LeanPool.Besicovitch.SixPoint.SiblingIncidenceLedger
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
@@ -74,14 +75,6 @@ private def targetOffDiagonal : Matrix Five Five ℝ :=
       5 / 28 + 4 / 15, -5 / 28, 0, 0, blueSeparationMultiplier;
       15 / 43, 0, -15 / 43, blueSeparationMultiplier, 0]
 
-private def pairSign (r : ℝ) : ℝ := if 0 ≤ r then 1 else -1
-
-private def pairVector (r : ℝ) (i j : Five) : Five → ℝ :=
-  fun k ↦ if k = i then 1 else if k = j then pairSign r else 0
-
-private def pairCorrection (r : ℝ) (i j : Five) : Matrix Five Five ℝ :=
-  |r| • Matrix.vecMulVec (pairVector r i j) (pairVector r i j)
-
 private def residual (i j : Five) : ℝ :=
   targetOffDiagonal i j - factorGram i j
 
@@ -97,10 +90,6 @@ private def certificateMatrix : Matrix Five Five ℝ :=
     pairCorrection (residual 2 3) 2 3 +
     pairCorrection (residual 2 4) 2 4 +
     pairCorrection (residual 3 4) 3 4
-
-private theorem pairCorrection_posSemidef (r : ℝ) (i j : Five) :
-    (pairCorrection r i j).PosSemidef := by
-  exact (Matrix.posSemidef_vecMulVec_self_star (pairVector r i j)).smul (abs_nonneg r)
 
 private theorem certificateMatrix_posSemidef : certificateMatrix.PosSemidef := by
   have hfactor : factorGram.PosSemidef := by
@@ -120,42 +109,6 @@ private theorem certificateMatrix_posSemidef : certificateMatrix.PosSemidef := b
   have h := h.add (pairCorrection_posSemidef (residual 2 3) 2 3)
   have h := h.add (pairCorrection_posSemidef (residual 2 4) 2 4)
   exact h.add (pairCorrection_posSemidef (residual 3 4) 3 4)
-
-private theorem abs_mul_pairSign (r : ℝ) : |r| * pairSign r = r := by
-  by_cases hr : 0 ≤ r
-  · simp [pairSign, hr, abs_of_nonneg hr]
-  · simp [pairSign, hr, abs_of_neg (lt_of_not_ge hr)]
-
-@[simp]
-private theorem pairCorrection_apply_pair (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j i j = r := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hij.symm, abs_mul_pairSign]
-
-@[simp]
-private theorem pairCorrection_apply_pair_rev (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j j i = r := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hij.symm, abs_mul_pairSign, mul_comm]
-
-@[simp]
-private theorem pairCorrection_apply_left_left (r : ℝ) {i j : Five} (_hij : i ≠ j) :
-    pairCorrection r i j i i = |r| := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector]
-
-@[simp]
-private theorem pairCorrection_apply_right_right (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j j j = |r| := by
-  by_cases hr : 0 ≤ r <;>
-    simp [pairCorrection, Matrix.vecMulVec, pairVector, pairSign, hij.symm, hr]
-
-@[simp]
-private theorem pairCorrection_apply_zero_left (r : ℝ) {i j k l : Five}
-    (hki : k ≠ i) (hkj : k ≠ j) : pairCorrection r i j k l = 0 := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hki, hkj]
-
-@[simp]
-private theorem pairCorrection_apply_zero_right (r : ℝ) {i j k l : Five}
-    (hli : l ≠ i) (hlj : l ≠ j) : pairCorrection r i j k l = 0 := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hli, hlj]
 
 private theorem factorGram_apply_comm (i j : Five) : factorGram i j = factorGram j i := by
   simp only [factorGram, Matrix.sum_apply, Matrix.vecMulVec_apply]
@@ -276,9 +229,7 @@ private theorem certificateMatrix_diagonal₄ :
 private theorem gram_sum_nonneg {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (v : Five → E) :
     0 ≤ ∑ i, ∑ j, certificateMatrix i j * ⟪v i, v j⟫_ℝ := by
-  have hmatrix := certificateMatrix_posSemidef.hadamard (Matrix.posSemidef_gram ℝ v)
-  have h := hmatrix.dotProduct_mulVec_nonneg (fun _ ↦ (1 : ℝ))
-  simpa [dotProduct, Matrix.mulVec, Finset.mul_sum] using h
+  exact matrix_inner_sum_nonneg certificateMatrix_posSemidef v
 
 private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (e p₁ p₂ w₁ w₂ : E) :
@@ -316,31 +267,6 @@ private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
     certificateMatrix_offDiagonal (by decide : (4 : Five) ≠ 3)] at h
   simp [targetOffDiagonal, real_inner_comm] at h
   nlinarith
-
-private theorem weighted_norm_tangent {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) (weight alpha : ℝ) (halpha : 0 < alpha) :
-    weight * ‖x‖ ≤ alpha * ‖x‖ ^ 2 + weight ^ 2 / (4 * alpha) := by
-  have hdiv : (4 * alpha) * (weight ^ 2 / (4 * alpha)) = weight ^ 2 := by
-    field_simp [halpha.ne']
-  nlinarith [sq_nonneg (2 * alpha * ‖x‖ - weight)]
-
-private theorem radial_secant {r d l u : ℝ} (hd : 0 ≤ d) (hl : l ≤ r) (hu : r ≤ u)
-    (hsum : 0 < l + u) :
-    -d * r ≤ -d / (l + u) * r ^ 2 - d * l * u / (l + u) := by
-  have hproduct : 0 ≤ (r - l) * (u - r) :=
-    mul_nonneg (sub_nonneg.mpr hl) (sub_nonneg.mpr hu)
-  have hbase : r ^ 2 + l * u ≤ (l + u) * r := by nlinarith
-  have hscaled := mul_le_mul_of_nonneg_left hbase (div_nonneg hd hsum.le)
-  field_simp [hsum.ne'] at hscaled ⊢
-  nlinarith
-
-private theorem norm_sub_sub_sq {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (e x y : E) :
-    ‖e - x - y‖ ^ 2 = ‖e‖ ^ 2 + ‖x‖ ^ 2 + ‖y‖ ^ 2 -
-      2 * ⟪e, x⟫_ℝ - 2 * ⟪e, y⟫_ℝ + 2 * ⟪x, y⟫_ℝ := by
-  rw [norm_sub_sq_real, norm_sub_sq_real]
-  simp only [inner_sub_left]
-  ring
 
 private theorem norm_sub_sq {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (e x : E) :
@@ -516,10 +442,10 @@ theorem rootEdge_type12_expanded_lt {E : Type*} [NormedAddCommGroup E]
       nlinarith [one_lt_barC_and_barC_lt_two.1]
     have hscaled := mul_le_mul_of_nonneg_left hblueSeparation hcoefficient
     nlinarith
-  have htangent₁ := weighted_norm_tangent (e - p₁ - w₁) 1 (5 / 28) (by norm_num)
-  have htangent₂ := weighted_norm_tangent (e - p₂ - w₂) (3 / 2) (15 / 43)
+  have htangent₁ := weightedNorm_le_quadratic (e - p₁ - w₁) 1 (5 / 28) (by norm_num)
+  have htangent₂ := weightedNorm_le_quadratic (e - p₂ - w₂) (3 / 2) (15 / 43)
     (by norm_num)
-  have htangent₃ := weighted_norm_tangent (e - w₁) 1 (4 / 15) (by norm_num)
+  have htangent₃ := weightedNorm_le_quadratic (e - w₁) 1 (4 / 15) (by norm_num)
   norm_num at htangent₁ htangent₂ htangent₃
   have hquadratic := tangentQuadratic_le e p₁ p₂ w₁ w₂ he hp₁ hp₂ hw₁ hw₂
     hredSeparation hblueSeparation

@@ -6,6 +6,7 @@ Authors: Yongxi Lin
 module
 
 public import LeanPool.Besicovitch.SixPoint.RationalChord
+public import LeanPool.Besicovitch.SixPoint.NormEstimates
 public import LeanPool.Besicovitch.SixPoint.SiblingLens
 
 /-!
@@ -23,14 +24,6 @@ noncomputable section
 open scoped InnerProductSpace
 
 namespace LeanPool.Besicovitch
-
-private theorem norm_sub_sub_sq {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (e x y : E) :
-    ‖e - x - y‖ ^ 2 = ‖e‖ ^ 2 + ‖x‖ ^ 2 + ‖y‖ ^ 2 -
-      2 * ⟪e, x⟫_ℝ - 2 * ⟪e, y⟫_ℝ + 2 * ⟪x, y⟫_ℝ := by
-  rw [norm_sub_sq_real, norm_sub_sq_real]
-  simp only [inner_sub_left]
-  ring
 
 /-- A rational sum-of-squares factorization of the `E1/S0` cross matrix. -/
 private theorem e1s0_cross_inner_le {E : Type*} [NormedAddCommGroup E]

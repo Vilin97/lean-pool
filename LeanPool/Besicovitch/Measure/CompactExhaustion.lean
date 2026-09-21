@@ -23,18 +23,15 @@ open scoped ENNReal Topology
 
 namespace LeanPool.Besicovitch
 
-variable {X : Type*} [TopologicalSpace X] [MeasurableSpace X]
-  [OpensMeasurableSpace X] [T2Space X]
+variable {X : Type*} [MeasurableSpace X]
 
-/-- An almost-everywhere increasing measurable exhaustion contains a compact core losing less than
-any prescribed positive mass. -/
-theorem exists_compact_in_monotone_ae_cover_measure_sdiff_lt {mu : Measure X}
-    [Measure.InnerRegularCompactLTTop mu] {A : Set X} (hA : MeasurableSet A)
-    (hA_finite : mu A ≠ ∞) {G : ℕ → Set X} (hG_measurable : ∀ n, MeasurableSet (G n))
-    (hG_subset : ∀ n, G n ⊆ A) (hG_mono : Monotone G)
+/-- A monotone measurable cover has an arbitrarily small exceptional set at a finite stage. -/
+theorem exists_in_monotone_ae_cover_measure_sdiff_lt {mu : Measure X}
+    {A : Set X} (hA : MeasurableSet A) (hA_finite : mu A ≠ ∞) {G : ℕ → Set X}
+    (hG_measurable : ∀ n, MeasurableSet (G n)) (hG_mono : Monotone G)
     (hcovered : ∀ᵐ x ∂mu.restrict A, x ∈ ⋃ n, G n)
     {epsilon : ℝ≥0∞} (hepsilon : 0 < epsilon) :
-    ∃ (n : ℕ) (F : Set X), IsCompact F ∧ F ⊆ G n ∧ mu (A \ F) < epsilon := by
+    ∃ n, mu (A \ G n) < epsilon := by
   have hnull : mu (⋂ n, A \ G n) = 0 := by
     have hnull_restrict : (mu.restrict A) (⋂ n, A \ G n) = 0 := by
       rw [← ae_eq_empty]
@@ -61,15 +58,27 @@ theorem exists_compact_in_monotone_ae_cover_measure_sdiff_lt {mu : Measure X}
     ⟨0, ne_top_of_le_ne_top hA_finite (measure_mono sdiff_subset)⟩
   have hinf : (⨅ n, mu (A \ G n)) = 0 := by
     rw [← hanti.measure_iInter hmeasurable hfinite, hnull]
-  have hexceptional (epsilon : ℝ≥0∞) (hepsilon : 0 < epsilon) :
-      ∃ n, mu (A \ G n) < epsilon := by
-    by_contra h
-    push Not at h
-    have : epsilon ≤ (⨅ n, mu (A \ G n)) := le_iInf h
-    rw [hinf] at this
-    exact (not_le_of_gt hepsilon) this
+  by_contra h
+  push Not at h
+  have : epsilon ≤ (⨅ n, mu (A \ G n)) := le_iInf h
+  rw [hinf] at this
+  exact (not_le_of_gt hepsilon) this
+
+variable [TopologicalSpace X] [OpensMeasurableSpace X] [T2Space X]
+
+/-- An almost-everywhere increasing measurable exhaustion contains a compact core losing less than
+any prescribed positive mass. -/
+theorem exists_compact_in_monotone_ae_cover_measure_sdiff_lt {mu : Measure X}
+    [Measure.InnerRegularCompactLTTop mu] {A : Set X} (hA : MeasurableSet A)
+    (hA_finite : mu A ≠ ∞) {G : ℕ → Set X} (hG_measurable : ∀ n, MeasurableSet (G n))
+    (hG_subset : ∀ n, G n ⊆ A) (hG_mono : Monotone G)
+    (hcovered : ∀ᵐ x ∂mu.restrict A, x ∈ ⋃ n, G n)
+    {epsilon : ℝ≥0∞} (hepsilon : 0 < epsilon) :
+    ∃ (n : ℕ) (F : Set X), IsCompact F ∧ F ⊆ G n ∧ mu (A \ F) < epsilon := by
   have hhalf : 0 < epsilon / 2 := ENNReal.div_pos hepsilon.ne' (by norm_num)
-  obtain ⟨m, hm⟩ := hexceptional (epsilon / 2) hhalf
+  obtain ⟨m, hm⟩ :=
+    exists_in_monotone_ae_cover_measure_sdiff_lt hA hA_finite hG_measurable hG_mono
+      hcovered hhalf
   have hG_finite : mu (G m) ≠ ∞ :=
     ne_top_of_le_ne_top hA_finite (measure_mono (hG_subset m))
   obtain ⟨F, hFG, hF_compact, hGF⟩ :=

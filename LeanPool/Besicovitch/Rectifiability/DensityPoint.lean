@@ -37,7 +37,7 @@ theorem IsStraightMeasure.measure_closedBall_le {mu : Measure (EuclideanSpace �
 
 /-- A lower ball-mass bound and a small loss outside the core leave a core point in the outer
 annulus. -/
-theorem annulus_inter_nonempty {mu : Measure (EuclideanSpace ℝ (Fin 2))} [IsFiniteMeasure mu]
+theorem annulus_inter_nonempty {mu : Measure (EuclideanSpace ℝ (Fin 2))}
     (hmu : IsStraightMeasure mu) {F : Set (EuclideanSpace ℝ (Fin 2))}
     {z : (EuclideanSpace ℝ (Fin 2))} {sigma alpha rho : ℝ}
     (hsigma : 0 < sigma) (halpha_pos : 0 < alpha) (halpha : alpha < 28) (hrho : 0 < rho)
@@ -72,7 +72,8 @@ theorem annulus_inter_nonempty {mu : Measure (EuclideanSpace ℝ (Fin 2))} [IsFi
         (measure_mono hsubset).trans (measure_union_le _ _)
       _ < ENNReal.ofReal (sigma * alpha / 28 * rho) +
           ENNReal.ofReal (sigma * rho) :=
-        ENNReal.add_lt_add_of_lt_of_le (measure_ne_top mu _) hloss hinner
+        ENNReal.add_lt_add_of_lt_of_le (ne_top_of_le_ne_top ENNReal.ofReal_ne_top hinner)
+          hloss hinner
       _ = ENNReal.ofReal (sigma * alpha / 28 * rho + sigma * rho) := by
         rw [ENNReal.ofReal_add (by positivity) (by positivity)]
       _ < ENNReal.ofReal (2 * sigma * rho) := by
@@ -84,7 +85,7 @@ theorem annulus_inter_nonempty {mu : Measure (EuclideanSpace ℝ (Fin 2))} [IsFi
 /-- At a density point of `F`, straightness makes the mass outside `F` smaller than any prescribed
 positive linear function of the radius. -/
 theorem exists_scale_measure_ball_sdiff_lt
-    {mu : Measure (EuclideanSpace ℝ (Fin 2))} [IsFiniteMeasure mu]
+    {mu : Measure (EuclideanSpace ℝ (Fin 2))}
     (hmu : IsStraightMeasure mu) {F : Set (EuclideanSpace ℝ (Fin 2))}
     {z : (EuclideanSpace ℝ (Fin 2))}
     (hdensity : Tendsto
@@ -116,7 +117,8 @@ theorem exists_scale_measure_ball_sdiff_lt
   · have hnumerator : mu (Fᶜ ∩ Metric.closedBall z r) <
         ENNReal.ofReal (k / 2) * mu (Metric.closedBall z r) := by
       exact (ENNReal.div_lt_iff (Or.inl hball_zero)
-        (Or.inl (measure_ne_top mu _))).mp hratio
+        (Or.inl (ne_top_of_le_ne_top ENNReal.ofReal_ne_top
+          (hmu.measure_closedBall_le z r)))).mp hratio
     calc
       mu (Metric.ball z r \ F) ≤ mu (Fᶜ ∩ Metric.closedBall z r) := measure_mono hset
       _ < ENNReal.ofReal (k / 2) * mu (Metric.closedBall z r) := hnumerator

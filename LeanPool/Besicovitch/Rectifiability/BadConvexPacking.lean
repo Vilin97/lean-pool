@@ -66,26 +66,9 @@ theorem mul_tsum_ediam_badConvexSets_le
     (hdisjoint : chosen.PairwiseDisjoint id) :
     ENNReal.ofReal alpha *
       ∑' V : chosen, Metric.ediam (V : Set (EuclideanSpace ℝ (Fin 2))) ≤ mu Fᶜ := by
-  let : Countable chosen := hcountable.to_subtype
-  have hpair : Pairwise fun V W : chosen ↦
-      Disjoint ((V : Set (EuclideanSpace ℝ (Fin 2))) \ F)
-        ((W : Set (EuclideanSpace ℝ (Fin 2))) \ F) := by
-    intro V W hVW
-    have hne : (V : Set (EuclideanSpace ℝ (Fin 2))) ≠
-        (W : Set (EuclideanSpace ℝ (Fin 2))) :=
-      fun h ↦ hVW (Subtype.ext h)
-    exact (hdisjoint V.property W.property hne).mono sdiff_subset sdiff_subset
-  have hmeasurable (V : chosen) : MeasurableSet ((V : Set (EuclideanSpace ℝ (Fin 2))) \ F) :=
-    (hchosen V.property).1.measurableSet.diff hF
-  rw [← ENNReal.tsum_mul_left]
-  calc
-    (∑' V : chosen,
-      ENNReal.ofReal alpha * Metric.ediam (V : Set (EuclideanSpace ℝ (Fin 2)))) ≤
-        ∑' V : chosen, mu ((V : Set (EuclideanSpace ℝ (Fin 2))) \ F) :=
-      ENNReal.tsum_le_tsum fun V ↦ (hchosen V.property).2.2.2.le
-    _ = mu (⋃ V : chosen, (V : Set (EuclideanSpace ℝ (Fin 2))) \ F) :=
-      (measure_iUnion hpair hmeasurable).symm
-    _ ≤ mu Fᶜ := measure_mono <| iUnion_subset fun V _ hx ↦ hx.2
+  simpa only [← compl_eq_univ_sdiff] using
+    mul_tsum_ediam_badConvexSets_le_measure hF hchosen hcountable hdisjoint
+      (ambient := univ) (fun _ _ ↦ subset_univ _)
 
 /-- If the outside mass is less than `alpha / enlargement` times the retained mass, then the
 diameter sum is less than `1 / enlargement` times the retained mass. -/

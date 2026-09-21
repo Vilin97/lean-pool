@@ -662,398 +662,168 @@ The four box endpoints of each stored certificate, for the cover argument. -/
     (gramCertificates 29).wUpper = 7 / 10 := rfl
 
 
+local macro "verify_gram_certificate" : tactic =>
+  `(tactic| norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
+    dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
+    diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
+    Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
+    redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
+    gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
+    weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons])
+
 /-- Arithmetic validation for certificate 0. -/
-theorem gramCertificates_valid_0 (j : Fin 30) (hj : j = 0) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_0 : (gramCertificates 0).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 1. -/
-theorem gramCertificates_valid_1 (j : Fin 30) (hj : j = 1) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_1 : (gramCertificates 1).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 2. -/
-theorem gramCertificates_valid_2 (j : Fin 30) (hj : j = 2) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_2 : (gramCertificates 2).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 3. -/
-theorem gramCertificates_valid_3 (j : Fin 30) (hj : j = 3) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_3 : (gramCertificates 3).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 4. -/
-theorem gramCertificates_valid_4 (j : Fin 30) (hj : j = 4) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_4 : (gramCertificates 4).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 5. -/
-theorem gramCertificates_valid_5 (j : Fin 30) (hj : j = 5) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_5 : (gramCertificates 5).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 6. -/
-theorem gramCertificates_valid_6 (j : Fin 30) (hj : j = 6) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_6 : (gramCertificates 6).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 7. -/
-theorem gramCertificates_valid_7 (j : Fin 30) (hj : j = 7) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_7 : (gramCertificates 7).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 8. -/
-theorem gramCertificates_valid_8 (j : Fin 30) (hj : j = 8) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_8 : (gramCertificates 8).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 9. -/
-theorem gramCertificates_valid_9 (j : Fin 30) (hj : j = 9) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_9 : (gramCertificates 9).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 10. -/
-theorem gramCertificates_valid_10 (j : Fin 30) (hj : j = 10) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_10 : (gramCertificates 10).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 11. -/
-theorem gramCertificates_valid_11 (j : Fin 30) (hj : j = 11) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_11 : (gramCertificates 11).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 12. -/
-theorem gramCertificates_valid_12 (j : Fin 30) (hj : j = 12) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_12 : (gramCertificates 12).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 13. -/
-theorem gramCertificates_valid_13 (j : Fin 30) (hj : j = 13) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_13 : (gramCertificates 13).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 14. -/
-theorem gramCertificates_valid_14 (j : Fin 30) (hj : j = 14) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_14 : (gramCertificates 14).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 15. -/
-theorem gramCertificates_valid_15 (j : Fin 30) (hj : j = 15) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_15 : (gramCertificates 15).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 16. -/
-theorem gramCertificates_valid_16 (j : Fin 30) (hj : j = 16) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_16 : (gramCertificates 16).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 17. -/
-theorem gramCertificates_valid_17 (j : Fin 30) (hj : j = 17) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_17 : (gramCertificates 17).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 18. -/
-theorem gramCertificates_valid_18 (j : Fin 30) (hj : j = 18) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_18 : (gramCertificates 18).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 19. -/
-theorem gramCertificates_valid_19 (j : Fin 30) (hj : j = 19) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_19 : (gramCertificates 19).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 20. -/
-theorem gramCertificates_valid_20 (j : Fin 30) (hj : j = 20) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_20 : (gramCertificates 20).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 21. -/
-theorem gramCertificates_valid_21 (j : Fin 30) (hj : j = 21) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_21 : (gramCertificates 21).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 22. -/
-theorem gramCertificates_valid_22 (j : Fin 30) (hj : j = 22) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_22 : (gramCertificates 22).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 23. -/
-theorem gramCertificates_valid_23 (j : Fin 30) (hj : j = 23) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_23 : (gramCertificates 23).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 24. -/
-theorem gramCertificates_valid_24 (j : Fin 30) (hj : j = 24) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_24 : (gramCertificates 24).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 25. -/
-theorem gramCertificates_valid_25 (j : Fin 30) (hj : j = 25) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_25 : (gramCertificates 25).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 26. -/
-theorem gramCertificates_valid_26 (j : Fin 30) (hj : j = 26) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_26 : (gramCertificates 26).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 27. -/
-theorem gramCertificates_valid_27 (j : Fin 30) (hj : j = 27) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_27 : (gramCertificates 27).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 28. -/
-theorem gramCertificates_valid_28 (j : Fin 30) (hj : j = 28) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_28 : (gramCertificates 28).Valid := by
+  verify_gram_certificate
 
 /-- Arithmetic validation for certificate 29. -/
-theorem gramCertificates_valid_29 (j : Fin 30) (hj : j = 29) : (gramCertificates j).Valid := by
-  fin_cases j <;> cases hj
-  all_goals norm_num [gramCertificates, GramCertificate.Valid, GramCertificate.upperBound,
-      dualRadialBound, balance₀, balance₁, balance₂, balance₃, balance₄,
-      diagonal₀, diagonal₁, diagonal₂, diagonal₃, diagonal₄, factorGram, factorRow,
-      Matrix.vecMulVec, residual, targetOffDiagonal, positivePart, negativePart,
-      redFirstLower, blueFirstLower, tenThousandthFactor, barC, gramLambda, gramMu,
-      gramFirstPenalty, gramSecondPenalty, weightedFirstPenalty, weightedSecondPenalty,
-      weightedConstantTerm, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.cons_val_four, Matrix.head_cons]
+theorem gramCertificates_valid_29 : (gramCertificates 29).Valid := by
+  verify_gram_certificate
 
 /-- Every stored certificate satisfies its arithmetic side conditions. -/
 theorem gramCertificates_valid (i : Fin 30) : (gramCertificates i).Valid := by
   fin_cases i
-  · exact gramCertificates_valid_0 _ rfl
-  · exact gramCertificates_valid_1 _ rfl
-  · exact gramCertificates_valid_2 _ rfl
-  · exact gramCertificates_valid_3 _ rfl
-  · exact gramCertificates_valid_4 _ rfl
-  · exact gramCertificates_valid_5 _ rfl
-  · exact gramCertificates_valid_6 _ rfl
-  · exact gramCertificates_valid_7 _ rfl
-  · exact gramCertificates_valid_8 _ rfl
-  · exact gramCertificates_valid_9 _ rfl
-  · exact gramCertificates_valid_10 _ rfl
-  · exact gramCertificates_valid_11 _ rfl
-  · exact gramCertificates_valid_12 _ rfl
-  · exact gramCertificates_valid_13 _ rfl
-  · exact gramCertificates_valid_14 _ rfl
-  · exact gramCertificates_valid_15 _ rfl
-  · exact gramCertificates_valid_16 _ rfl
-  · exact gramCertificates_valid_17 _ rfl
-  · exact gramCertificates_valid_18 _ rfl
-  · exact gramCertificates_valid_19 _ rfl
-  · exact gramCertificates_valid_20 _ rfl
-  · exact gramCertificates_valid_21 _ rfl
-  · exact gramCertificates_valid_22 _ rfl
-  · exact gramCertificates_valid_23 _ rfl
-  · exact gramCertificates_valid_24 _ rfl
-  · exact gramCertificates_valid_25 _ rfl
-  · exact gramCertificates_valid_26 _ rfl
-  · exact gramCertificates_valid_27 _ rfl
-  · exact gramCertificates_valid_28 _ rfl
-  · exact gramCertificates_valid_29 _ rfl
+  · exact gramCertificates_valid_0
+  · exact gramCertificates_valid_1
+  · exact gramCertificates_valid_2
+  · exact gramCertificates_valid_3
+  · exact gramCertificates_valid_4
+  · exact gramCertificates_valid_5
+  · exact gramCertificates_valid_6
+  · exact gramCertificates_valid_7
+  · exact gramCertificates_valid_8
+  · exact gramCertificates_valid_9
+  · exact gramCertificates_valid_10
+  · exact gramCertificates_valid_11
+  · exact gramCertificates_valid_12
+  · exact gramCertificates_valid_13
+  · exact gramCertificates_valid_14
+  · exact gramCertificates_valid_15
+  · exact gramCertificates_valid_16
+  · exact gramCertificates_valid_17
+  · exact gramCertificates_valid_18
+  · exact gramCertificates_valid_19
+  · exact gramCertificates_valid_20
+  · exact gramCertificates_valid_21
+  · exact gramCertificates_valid_22
+  · exact gramCertificates_valid_23
+  · exact gramCertificates_valid_24
+  · exact gramCertificates_valid_25
+  · exact gramCertificates_valid_26
+  · exact gramCertificates_valid_27
+  · exact gramCertificates_valid_28
+  · exact gramCertificates_valid_29
 
 end LeanPool.Besicovitch

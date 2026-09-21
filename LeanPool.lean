@@ -295,8 +295,11 @@ import LeanPool.Besicovitch.SixPoint.GramCertificateCover
 import LeanPool.Besicovitch.SixPoint.GramCertificateData
 import LeanPool.Besicovitch.SixPoint.GramWeightedBound
 import LeanPool.Besicovitch.SixPoint.LensEndpointBalancedE0S0
+import LeanPool.Besicovitch.SixPoint.MatrixCorrections
+import LeanPool.Besicovitch.SixPoint.NormEstimates
 import LeanPool.Besicovitch.SixPoint.Normalization
 import LeanPool.Besicovitch.SixPoint.Packing
+import LeanPool.Besicovitch.SixPoint.PackingRelabel
 import LeanPool.Besicovitch.SixPoint.RationalChord
 import LeanPool.Besicovitch.SixPoint.Realization
 import LeanPool.Besicovitch.SixPoint.RootEdge

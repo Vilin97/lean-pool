@@ -6,6 +6,7 @@ Authors: Yongxi Lin
 module
 
 public import LeanPool.Besicovitch.SixPoint.RationalChord
+public import LeanPool.Besicovitch.SixPoint.NormEstimates
 public import LeanPool.Besicovitch.Certificates.EndpointBridge
 public import LeanPool.Besicovitch.SixPoint.EndpointGeometry
 public import LeanPool.Besicovitch.SixPoint.SiblingTriangle
@@ -79,74 +80,11 @@ private theorem rowUpper_eq_quadratic (c t₁ t₂ : ℝ) :
   simp only [rowUpper, rowBase, rowQuadratic1, rowQuadratic2]
   ring
 
-private theorem norm_tangent {E : Type*} [SeminormedAddCommGroup E] (x : E) {r : ℝ}
-    (hr : 0 < r) : ‖x‖ ≤ (‖x‖ ^ 2 + r ^ 2) / (2 * r) := by
-  rw [le_div_iff₀ (by positivity : 0 < 2 * r)]
-  nlinarith [sq_nonneg (‖x‖ - r)]
-
-private theorem weighted_norm_tangent {E : Type*} [SeminormedAddCommGroup E]
+private theorem weighted_norm_tangent_of_eq {E : Type*} [SeminormedAddCommGroup E]
     (x : E) (weight r k : ℝ) (hr : 0 < r) (hrelation : k = weight / (2 * r))
     (hweight : 0 ≤ weight) : weight * ‖x‖ ≤ k * (‖x‖ ^ 2 + r ^ 2) := by
-  calc
-    weight * ‖x‖ ≤ weight * ((‖x‖ ^ 2 + r ^ 2) / (2 * r)) :=
-      mul_le_mul_of_nonneg_left (norm_tangent x hr) hweight
-    _ = _ := by rw [hrelation]; ring
-
-private theorem weighted_norm_sq {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    (x y : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
-    ‖a • x + b • y‖ ^ 2 =
-      (a + b) * (a * ‖x‖ ^ 2 + b * ‖y‖ ^ 2) - a * b * ‖x - y‖ ^ 2 := by
-  rw [norm_add_sq_real, norm_sub_sq_real]
-  simp only [norm_smul, Real.norm_eq_abs, abs_of_nonneg ha, abs_of_nonneg hb,
-    real_inner_smul_left, real_inner_smul_right]
-  ring
-
-private theorem norm_sub_sub_sq {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    (e p w : E) :
-    ‖e - p - w‖ ^ 2 = ‖e‖ ^ 2 + ‖p‖ ^ 2 + ‖w‖ ^ 2 - 2 * ⟪e, p⟫_ℝ -
-      2 * ⟪e, w⟫_ℝ + 2 * ⟪p, w⟫_ℝ := by
-  rw [show e - p - w = e - (p + w) by abel, norm_sub_sq_real, norm_add_sq_real]
-  simp only [inner_add_right]
-  ring
-
-private theorem two_mul_norm_tangent {E : Type*} [SeminormedAddCommGroup E] (x : E) {r : ℝ}
-    (hr : 0 < r) : 2 * ‖x‖ ≤ r + ‖x‖ ^ 2 / r := by
-  have h := norm_tangent x hr
-  calc
-    2 * ‖x‖ ≤ 2 * ((‖x‖ ^ 2 + r ^ 2) / (2 * r)) :=
-      mul_le_mul_of_nonneg_left h (by norm_num)
-    _ = r + ‖x‖ ^ 2 / r := by field_simp; ring
-
-private theorem quadratic_le_max_endpoints {a b d l x u : ℝ} (ha : 0 ≤ a)
-    (hlx : l ≤ x) (hxu : x ≤ u) :
-    a * x ^ 2 + b * x + d ≤ max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := by
-  by_cases hlu : l = u
-  · subst u
-    have hx : x = l := le_antisymm hxu hlx
-    subst x
-    exact le_max_left _ _
-  have hwidth : 0 < u - l := sub_pos.mpr (lt_of_le_of_ne (hlx.trans hxu) hlu)
-  have hleft : a * l ^ 2 + b * l + d ≤
-      max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := le_max_left _ _
-  have hright : a * u ^ 2 + b * u + d ≤
-      max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := le_max_right _ _
-  have hcurve : a * (x - l) * (x - u) ≤ 0 :=
-    mul_nonpos_of_nonneg_of_nonpos (mul_nonneg ha (sub_nonneg.mpr hlx))
-      (sub_nonpos.mpr hxu)
-  have hleftWeight : 0 ≤ u - x := sub_nonneg.mpr hxu
-  have hrightWeight : 0 ≤ x - l := sub_nonneg.mpr hlx
-  have hsecant :
-      (u - l) * (a * x ^ 2 + b * x + d) ≤
-        (u - x) * (a * l ^ 2 + b * l + d) +
-          (x - l) * (a * u ^ 2 + b * u + d) := by
-    nlinarith
-  have hbound :
-      (u - x) * (a * l ^ 2 + b * l + d) +
-          (x - l) * (a * u ^ 2 + b * u + d) ≤
-        (u - l) * max (a * l ^ 2 + b * l + d) (a * u ^ 2 + b * u + d) := by
-    nlinarith [mul_le_mul_of_nonneg_left hleft hleftWeight,
-      mul_le_mul_of_nonneg_left hright hrightWeight]
-  exact (mul_le_mul_iff_of_pos_left hwidth).mp (hsecant.trans hbound)
+  rw [hrelation]
+  exact LeanPool.Besicovitch.weighted_norm_tangent x weight r hr hweight
 
 private theorem rowUpper_le_vertices {c t₁ t₂ : ℝ} (ht₁_one : t₁ ≤ 1)
     (ht₂_one : t₂ ≤ 1) (hsum : c ≤ t₁ + t₂) :
@@ -275,13 +213,13 @@ private theorem row_tangent_sum_le {E : Type*} [NormedAddCommGroup E]
     10 * ‖e - p - w₁‖ + 10 * ‖e - p - w₂‖ + 9 * ‖e - w₁‖ ≤
       rowPositiveConstant barC + rowA1 * ‖w₁‖ ^ 2 + rowA2 * ‖w₂‖ ^ 2 -
         2 * ⟪e, rowA1 • w₁ + rowA2 • w₂⟫_ℝ := by
-  have htangent1 := weighted_norm_tangent (e - p - w₁) 10 rowRho1 rowK1
+  have htangent1 := weighted_norm_tangent_of_eq (e - p - w₁) 10 rowRho1 rowK1
     (by norm_num [rowRho1])
     (by norm_num [rowK1, rowRho1]) (by norm_num)
-  have htangent2 := weighted_norm_tangent (e - p - w₂) 10 rowRho2 rowK2
+  have htangent2 := weighted_norm_tangent_of_eq (e - p - w₂) 10 rowRho2 rowK2
     (by norm_num [rowRho2])
     (by norm_num [rowK2, rowRho2]) (by norm_num)
-  have htangent3 := weighted_norm_tangent (e - w₁) 9 rowRho3 rowK3
+  have htangent3 := weighted_norm_tangent_of_eq (e - w₁) 9 rowRho3 rowK3
     (by norm_num [rowRho3])
     (by norm_num [rowK3, rowRho3]) (by norm_num)
   have htangentSum :

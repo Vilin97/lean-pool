@@ -6,6 +6,7 @@ Authors: Yongxi Lin
 module
 
 public import LeanPool.Besicovitch.SixPoint.RationalChord
+public import LeanPool.Besicovitch.SixPoint.NormEstimates
 public import LeanPool.Besicovitch.SixPoint.SiblingIncidenceLedger
 
 /-!
@@ -23,46 +24,6 @@ noncomputable section
 open scoped InnerProductSpace
 
 namespace LeanPool.Besicovitch
-
-private theorem norm_tangent {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) {radius : ℝ} (hradius : 0 < radius) :
-    ‖x‖ ≤ (‖x‖ ^ 2 + radius ^ 2) / (2 * radius) := by
-  rw [le_div_iff₀ (by positivity : 0 < 2 * radius)]
-  nlinarith [sq_nonneg (‖x‖ - radius)]
-
-private theorem weighted_norm_tangent {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) (weight radius : ℝ) (hradius : 0 < radius) (hweight : 0 ≤ weight) :
-    weight * ‖x‖ ≤ weight / (2 * radius) * (‖x‖ ^ 2 + radius ^ 2) := by
-  calc
-    weight * ‖x‖ ≤ weight * ((‖x‖ ^ 2 + radius ^ 2) / (2 * radius)) :=
-      mul_le_mul_of_nonneg_left (norm_tangent x hradius) hweight
-    _ = _ := by ring
-
-private theorem two_mul_norm_tangent {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) {radius : ℝ} (hradius : 0 < radius) :
-    2 * ‖x‖ ≤ radius + ‖x‖ ^ 2 / radius := by
-  have h := norm_tangent x hradius
-  calc
-    2 * ‖x‖ ≤ 2 * ((‖x‖ ^ 2 + radius ^ 2) / (2 * radius)) :=
-      mul_le_mul_of_nonneg_left h (by norm_num)
-    _ = radius + ‖x‖ ^ 2 / radius := by field_simp; ring
-
-private theorem weighted_norm_sq {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (x y : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
-    ‖a • x + b • y‖ ^ 2 =
-      (a + b) * (a * ‖x‖ ^ 2 + b * ‖y‖ ^ 2) - a * b * ‖x - y‖ ^ 2 := by
-  rw [norm_add_sq_real, norm_sub_sq_real]
-  simp only [norm_smul, Real.norm_eq_abs, abs_of_nonneg ha, abs_of_nonneg hb,
-    real_inner_smul_left, real_inner_smul_right]
-  ring
-
-private theorem norm_sub_sub_sq {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (e x y : E) :
-    ‖e - x - y‖ ^ 2 = ‖e‖ ^ 2 + ‖x‖ ^ 2 + ‖y‖ ^ 2 -
-      2 * ⟪e, x⟫_ℝ - 2 * ⟪e, y⟫_ℝ + 2 * ⟪x, y⟫_ℝ := by
-  rw [norm_sub_sq_real, norm_sub_sq_real]
-  simp only [inner_sub_left]
-  ring
 
 /-- The rational Gram majorant that retains the three-distance incidence pattern. -/
 private theorem offMatching_cross_inner_le {E : Type*} [NormedAddCommGroup E]

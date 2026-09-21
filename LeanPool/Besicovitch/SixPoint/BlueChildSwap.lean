@@ -5,6 +5,8 @@ Authors: Yongxi Lin
 -/
 module
 
+public import LeanPool.Besicovitch.SixPoint.PackingRelabel
+
 public import LeanPool.Besicovitch.SixPoint.RationalChord
 public import LeanPool.Besicovitch.SixPoint.SiblingFailureTree
 
@@ -36,7 +38,8 @@ def swapBlueIndexEquiv : SixPointIndex ≃ SixPointIndex where
     rcases index with ⟨color, label⟩
     cases color <;> cases label <;> rfl
 
-@[simp] private theorem swapBlueIndexEquiv_color (index : SixPointIndex) :
+/-- Child relabelling preserves the color of each index. -/
+@[simp] theorem swapBlueIndexEquiv_color (index : SixPointIndex) :
     (swapBlueIndexEquiv index).1 = index.1 := by
   rcases index with ⟨color, label⟩
   cases color <;> rfl
@@ -51,21 +54,8 @@ def swapBlueChildren (configuration : SixPointConfiguration) : SixPointConfigura
   | .red, label => configuration .red label
   | .blue, label => configuration .blue (swapChildLabel label)
 
-private theorem swapBlueChildren_swapBlueIndex
-    (configuration : SixPointConfiguration) (index : SixPointIndex) :
-    swapBlueChildren configuration (swapBlueIndexEquiv index).1
-        (swapBlueIndexEquiv index).2 = configuration index.1 index.2 := by
-  rcases index with ⟨color, label⟩
-  cases color <;> cases label <;> rfl
-
-@[simp] private theorem swapBlueChildren_swappedLabel
-    (configuration : SixPointConfiguration) (index : SixPointIndex) :
-    swapBlueChildren configuration index.1 (swapBlueIndexEquiv index).2 =
-      configuration index.1 index.2 := by
-  rcases index with ⟨color, label⟩
-  cases color <;> cases label <;> rfl
-
-@[simp] private theorem swapBlueChildren_eq_swapBlueIndex
+/-- The permuted configuration agrees with the relabelled original centers. -/
+@[simp] theorem swapBlueChildren_eq_swapBlueIndex
     (configuration : SixPointConfiguration) (index : SixPointIndex) :
     swapBlueChildren configuration index.1 index.2 =
       configuration (swapBlueIndexEquiv index).1 (swapBlueIndexEquiv index).2 := by
@@ -113,119 +103,33 @@ theorem swapBlueIndex_mem_of_mem_map {support : Finset SixPointIndex}
   obtain ⟨source, hsource, rfl⟩ := hindex
   simpa using hsource
 
-/-- Relabel a packing after the two blue children have been swapped. -/
+/-- Transport a packing through the child permutation. -/
 def unswapBlue {configuration : SixPointConfiguration}
     (packing : SixPointPacking (swapBlueChildren configuration)) :
-    SixPointPacking configuration where
-  support := packing.support.map swapBlueIndexEquiv.toEmbedding
-  meets_color color := by
-    obtain ⟨label, hlabel⟩ := packing.meets_color color
-    cases color with
-    | red =>
-        exact ⟨label, Finset.mem_map.2 ⟨(.red, label), hlabel, rfl⟩⟩
-    | blue =>
-        exact ⟨swapChildLabel label,
-          Finset.mem_map.2 ⟨(.blue, label), hlabel, by cases label <;> rfl⟩⟩
-  radius index := packing.radius ⟨swapBlueIndexEquiv index,
-    swapBlueIndex_mem_of_mem_map index.2⟩
-  same_color_disjoint i j hij hcolor := by
-    let i' : packing.support := ⟨swapBlueIndexEquiv i,
-      swapBlueIndex_mem_of_mem_map i.2⟩
-    let j' : packing.support := ⟨swapBlueIndexEquiv j,
-      swapBlueIndex_mem_of_mem_map j.2⟩
-    have hij' : i' ≠ j' := by
-      intro heq
-      apply hij
-      apply Subtype.ext
-      exact swapBlueIndexEquiv.injective (congrArg Subtype.val heq)
-    have hcolor' : i'.1.1 = j'.1.1 := by
-      simpa [i', j'] using hcolor
-    have hp := packing.same_color_disjoint i' j' hij' hcolor'
-    simpa [i', j', swapBlueChildren_swappedLabel] using hp
+    SixPointPacking configuration :=
+  packing.relabel swapBlueIndexEquiv swapBlueIndexEquiv_color
+    (swapBlueChildren_eq_swapBlueIndex configuration)
 
-private def unswapBlueSupportEquiv {configuration : SixPointConfiguration}
-    (packing : SixPointPacking (swapBlueChildren configuration)) :
-    (packing.unswapBlue).support ≃ packing.support where
-  toFun index := ⟨swapBlueIndexEquiv index, swapBlueIndex_mem_of_mem_map index.2⟩
-  invFun index := ⟨swapBlueIndexEquiv index, Finset.mem_map.2 ⟨index, index.2, rfl⟩⟩
-  left_inv index := by
-    apply Subtype.ext
-    exact swapBlueIndexEquiv_involution index
-  right_inv index := by
-    apply Subtype.ext
-    exact swapBlueIndexEquiv_involution index
-
-@[simp] private theorem unswapBlueSupportEquiv_apply_val
-    {configuration : SixPointConfiguration}
-    (packing : SixPointPacking (swapBlueChildren configuration))
-    (index : packing.unswapBlue.support) :
-    ((unswapBlueSupportEquiv packing index : packing.support) : SixPointIndex) =
-      swapBlueIndexEquiv index := rfl
-
-@[simp] private theorem unswapBlueSupportEquiv_symm_apply_val
-    {configuration : SixPointConfiguration}
-    (packing : SixPointPacking (swapBlueChildren configuration))
-    (index : packing.support) :
-    (((unswapBlueSupportEquiv packing).symm index : packing.unswapBlue.support) :
-      SixPointIndex) = swapBlueIndexEquiv index := rfl
-
-@[simp] private theorem unswapBlue_radius_eq
-    {configuration : SixPointConfiguration}
-    (packing : SixPointPacking (swapBlueChildren configuration))
-    (index : packing.unswapBlue.support) :
-    (packing.unswapBlue.radius index : ℝ) =
-      packing.radius (unswapBlueSupportEquiv packing index) := by
-  congr 1
-
-private theorem unswapBlue_radius_symm_eq
-    {configuration : SixPointConfiguration}
-    (packing : SixPointPacking (swapBlueChildren configuration))
-    (index : packing.support) :
-    (packing.unswapBlue.radius ((unswapBlueSupportEquiv packing).symm index) : ℝ) =
-      packing.radius index := by
-  rw [unswapBlue_radius_eq]
-  exact congrArg (fun supportIndex ↦ (packing.radius supportIndex : ℝ))
-    ((unswapBlueSupportEquiv packing).apply_symm_apply index)
-
-/-- Swapping child names leaves the packing's total radius unchanged. -/
+/-- Child relabelling preserves the total radius. -/
 theorem unswapBlue_totalRadius {configuration : SixPointConfiguration}
     (packing : SixPointPacking (swapBlueChildren configuration)) :
     packing.unswapBlue.totalRadius = packing.totalRadius := by
-  unfold totalRadius
-  rw [← Finset.univ_eq_attach, ← Finset.univ_eq_attach]
-  apply Fintype.sum_equiv (unswapBlueSupportEquiv packing)
-  intro index
-  congr 1
+  exact packing.relabel_totalRadius swapBlueIndexEquiv swapBlueIndexEquiv_color
+    (swapBlueChildren_eq_swapBlueIndex configuration)
 
-/-- Swapping child names leaves the packing's virtual diameter unchanged. -/
+/-- Child relabelling preserves the virtual diameter. -/
 theorem unswapBlue_virtualDiameter {configuration : SixPointConfiguration}
     (packing : SixPointPacking (swapBlueChildren configuration)) :
     packing.unswapBlue.virtualDiameter = packing.virtualDiameter := by
-  apply le_antisymm
-  · unfold virtualDiameter
-    apply Finset.sup'_le
-    intro i hi
-    apply Finset.sup'_le
-    intro j hj
-    simpa only [unswapBlueSupportEquiv_apply_val, unswapBlue_radius_eq,
-      swapBlueChildren_swapBlueIndex, virtualDiameter] using
-      packing.pair_le_virtualDiameter (unswapBlueSupportEquiv packing i)
-        (unswapBlueSupportEquiv packing j)
-  · unfold virtualDiameter
-    apply Finset.sup'_le
-    intro i hi
-    apply Finset.sup'_le
-    intro j hj
-    simpa only [unswapBlueSupportEquiv_symm_apply_val, unswapBlue_radius_symm_eq,
-      swapBlueChildren_eq_swapBlueIndex, swapBlueIndexEquiv_involution, virtualDiameter] using
-      packing.unswapBlue.pair_le_virtualDiameter
-        ((unswapBlueSupportEquiv packing).symm i) ((unswapBlueSupportEquiv packing).symm j)
+  exact packing.relabel_virtualDiameter swapBlueIndexEquiv swapBlueIndexEquiv_color
+    (swapBlueChildren_eq_swapBlueIndex configuration)
 
-/-- Swapping child names leaves the packing score unchanged. -/
+/-- Child relabelling preserves the packing score. -/
 theorem unswapBlue_score {configuration : SixPointConfiguration}
     (packing : SixPointPacking (swapBlueChildren configuration)) (s : ℝ) :
     packing.unswapBlue.score s = packing.score s := by
-  simp only [score, packing.unswapBlue_totalRadius, packing.unswapBlue_virtualDiameter]
+  exact packing.relabel_score swapBlueIndexEquiv swapBlueIndexEquiv_color
+    (swapBlueChildren_eq_swapBlueIndex configuration) s
 
 end SixPointPacking
 

@@ -6,6 +6,7 @@ Authors: Yongxi Lin
 module
 
 public import LeanPool.Besicovitch.SixPoint.RationalChord
+public import LeanPool.Besicovitch.SixPoint.MatrixCorrections
 public import LeanPool.Besicovitch.SixPoint.WeightedReduction
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
 import Mathlib.Analysis.Matrix.Order
@@ -113,17 +114,6 @@ def targetOffDiagonal (certificate : GramCertificate) : Matrix Five Five ℝ :=
       certificate.alpha₁ + certificate.alpha₄, -certificate.alpha₄, -certificate.alpha₁,
         certificate.etaW, 0]
 
-/-- The sign used to correct a residual off-diagonal entry. -/
-def pairSign (r : ℝ) : ℝ := if 0 ≤ r then 1 else -1
-
-/-- A two-coordinate vector whose outer product has the required residual sign. -/
-def pairVector (r : ℝ) (i j : Five) : Five → ℝ :=
-  fun k ↦ if k = i then 1 else if k = j then pairSign r else 0
-
-/-- A positive semidefinite rank-one correction for an off-diagonal residual. -/
-def pairCorrection (r : ℝ) (i j : Five) : Matrix Five Five ℝ :=
-  |r| • Matrix.vecMulVec (pairVector r i j) (pairVector r i j)
-
 /-- The discrepancy between the target quadratic form and its rational Gram factor. -/
 def residual (certificate : GramCertificate) (i j : Five) : ℝ :=
   targetOffDiagonal certificate i j - factorGram certificate i j
@@ -141,10 +131,6 @@ private def certificateMatrix (certificate : GramCertificate) : Matrix Five Five
     pairCorrection (residual certificate 2 4) 2 4 +
     pairCorrection (residual certificate 3 4) 3 4
 
-private theorem pairCorrection_posSemidef (r : ℝ) (i j : Five) :
-    (pairCorrection r i j).PosSemidef :=
-  (Matrix.posSemidef_vecMulVec_self_star (pairVector r i j)).smul (abs_nonneg r)
-
 private theorem certificateMatrix_posSemidef (certificate : GramCertificate) :
     (certificateMatrix certificate).PosSemidef := by
   have hfactor : (factorGram certificate).PosSemidef := by
@@ -161,42 +147,6 @@ private theorem certificateMatrix_posSemidef (certificate : GramCertificate) :
   have h := h.add (pairCorrection_posSemidef (residual certificate 2 3) 2 3)
   have h := h.add (pairCorrection_posSemidef (residual certificate 2 4) 2 4)
   exact h.add (pairCorrection_posSemidef (residual certificate 3 4) 3 4)
-
-private theorem abs_mul_pairSign (r : ℝ) : |r| * pairSign r = r := by
-  by_cases hr : 0 ≤ r
-  · simp [pairSign, hr, abs_of_nonneg hr]
-  · simp [pairSign, hr, abs_of_neg (lt_of_not_ge hr)]
-
-@[simp]
-private theorem pairCorrection_apply_pair (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j i j = r := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hij.symm, abs_mul_pairSign]
-
-@[simp]
-private theorem pairCorrection_apply_pair_rev (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j j i = r := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hij.symm, abs_mul_pairSign, mul_comm]
-
-@[simp]
-private theorem pairCorrection_apply_left_left (r : ℝ) {i j : Five} :
-    pairCorrection r i j i i = |r| := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector]
-
-@[simp]
-private theorem pairCorrection_apply_right_right (r : ℝ) {i j : Five} (hij : i ≠ j) :
-    pairCorrection r i j j j = |r| := by
-  by_cases hr : 0 ≤ r <;>
-    simp [pairCorrection, Matrix.vecMulVec, pairVector, pairSign, hij.symm, hr]
-
-@[simp]
-private theorem pairCorrection_apply_zero_left (r : ℝ) {i j k l : Five}
-    (hki : k ≠ i) (hkj : k ≠ j) : pairCorrection r i j k l = 0 := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hki, hkj]
-
-@[simp]
-private theorem pairCorrection_apply_zero_right (r : ℝ) {i j k l : Five}
-    (hli : l ≠ i) (hlj : l ≠ j) : pairCorrection r i j k l = 0 := by
-  simp [pairCorrection, Matrix.vecMulVec, pairVector, hli, hlj]
 
 private theorem factorGram_apply_comm (certificate : GramCertificate) (i j : Five) :
     factorGram certificate i j = factorGram certificate j i := by
@@ -297,10 +247,7 @@ private theorem certificateMatrix_diagonal₄ (certificate : GramCertificate) :
 private theorem gram_sum_nonneg {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (certificate : GramCertificate) (v : Five → E) :
     0 ≤ ∑ i, ∑ j, certificateMatrix certificate i j * ⟪v i, v j⟫_ℝ := by
-  have hmatrix := (certificateMatrix_posSemidef certificate).hadamard
-    (Matrix.posSemidef_gram ℝ v)
-  have h := hmatrix.dotProduct_mulVec_nonneg (fun _ ↦ (1 : ℝ))
-  simpa [dotProduct, Matrix.mulVec, Finset.mul_sum] using h
+  exact matrix_inner_sum_nonneg (certificateMatrix_posSemidef certificate) v
 
 /-- The lower bound the separation forces on the first red radius. -/
 def redFirstLower (certificate : GramCertificate) : ℝ := barC - certificate.pUpper
@@ -354,23 +301,6 @@ private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
     certificateMatrix_offDiagonal certificate (by decide : (4 : Five) ≠ 3)] at h
   simp [targetOffDiagonal, real_inner_comm] at h
   nlinarith
-
-/-- The nonnegative part of a real coefficient. -/
-def positivePart (x : ℝ) : ℝ := max x 0
-
-/-- The magnitude of the nonpositive part of a real coefficient. -/
-def negativePart (x : ℝ) : ℝ := max (-x) 0
-
-private theorem positivePart_sub_negativePart (x : ℝ) :
-    positivePart x - negativePart x = x := by
-  by_cases hx : 0 ≤ x
-  · simp [positivePart, negativePart, hx]
-  · have hx' : x ≤ 0 := le_of_not_ge hx
-    simp [positivePart, negativePart, hx', neg_nonneg.mpr hx']
-
-private theorem positivePart_nonneg (x : ℝ) : 0 ≤ positivePart x := le_max_right _ _
-
-private theorem negativePart_nonneg (x : ℝ) : 0 ≤ negativePart x := le_max_right _ _
 
 /-- The balance of the root vector. -/
 def balance₀ (certificate : GramCertificate) : ℝ :=
@@ -438,42 +368,6 @@ def GramCertificate.Valid (certificate : GramCertificate) : Prop :=
     0 < (certificate.alpha₄ : ℝ) ∧ 0 < (certificate.alpha₅ : ℝ) ∧
     0 ≤ (certificate.etaP : ℝ) ∧ 0 ≤ (certificate.etaW : ℝ) ∧
     certificate.upperBound ≤ -(1 / 2000)
-
-private theorem weighted_norm_tangent {E : Type*} [SeminormedAddCommGroup E]
-    (x : E) (weight alpha : ℝ) (halpha : 0 < alpha) :
-    weight * ‖x‖ ≤ alpha * ‖x‖ ^ 2 + weight ^ 2 / (4 * alpha) := by
-  have hdiv : (4 * alpha) * (weight ^ 2 / (4 * alpha)) = weight ^ 2 := by
-    field_simp [halpha.ne']
-  nlinarith [sq_nonneg (2 * alpha * ‖x‖ - weight)]
-
-private theorem radial_secant {r d l u : ℝ} (hd : 0 ≤ d) (hl : l ≤ r) (hu : r ≤ u)
-    (hsum : 0 < l + u) :
-    -d * r ≤ -d / (l + u) * r ^ 2 - d * l * u / (l + u) := by
-  have hproduct : 0 ≤ (r - l) * (u - r) :=
-    mul_nonneg (sub_nonneg.mpr hl) (sub_nonneg.mpr hu)
-  have hbase : r ^ 2 + l * u ≤ (l + u) * r := by nlinarith
-  have hscaled := mul_le_mul_of_nonneg_left hbase (div_nonneg hd hsum.le)
-  field_simp [hsum.ne'] at hscaled ⊢
-  nlinarith
-
-private theorem norm_sub_sub_sq {E : Type*} [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (e x y : E) :
-    ‖e - x - y‖ ^ 2 = ‖e‖ ^ 2 + ‖x‖ ^ 2 + ‖y‖ ^ 2 -
-      2 * ⟪e, x⟫_ℝ - 2 * ⟪e, y⟫_ℝ + 2 * ⟪x, y⟫_ℝ := by
-  rw [norm_sub_sq_real, norm_sub_sq_real]
-  simp only [inner_sub_left]
-  ring
-
-private theorem balance_mul_sq_le {a r l u : ℝ} (hl : 0 ≤ l) (hlr : l ≤ r) (hru : r ≤ u) :
-    a * r ^ 2 ≤ positivePart a * u ^ 2 - negativePart a * l ^ 2 := by
-  have hr := hl.trans hlr
-  have hu := hr.trans hru
-  have hupperSq := (sq_le_sq₀ hr hu).2 hru
-  have hlowerSq := (sq_le_sq₀ hl hr).2 hlr
-  have hupper := mul_le_mul_of_nonneg_left hupperSq (positivePart_nonneg a)
-  have hlower := mul_le_mul_of_nonneg_left hlowerSq (negativePart_nonneg a)
-  have hparts := congrArg (fun x : ℝ ↦ x * r ^ 2) (positivePart_sub_negativePart a)
-  linarith only [hparts, hupper, hlower]
 
 private theorem certificate_dual_bound {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (certificate : GramCertificate) (hvalid : certificate.Valid)
@@ -557,12 +451,12 @@ theorem weightedPairScore_le_of_gramCertificate {E : Type*} [NormedAddCommGroup 
       hbound⟩ e p₁ p₂ w₁ w₂ he hp₁ hw₁ hp₁Lower hw₁Lower hpsep hwsep hpLower
       hpUpper hwLower hwUpper
   -- six quadratic norm tangents
-  have ht₀ := weighted_norm_tangent (e - p₁ - w₁) (1 + gramLambda) certificate.alpha₀ ha₀
-  have ht₁ := weighted_norm_tangent (e - p₂ - w₂) 1 certificate.alpha₁ ha₁
-  have ht₂ := weighted_norm_tangent (e - p₁) (gramMu / 2) certificate.alpha₂ ha₂
-  have ht₃ := weighted_norm_tangent (e - w₁) (gramMu / 2) certificate.alpha₃ ha₃
-  have ht₄ := weighted_norm_tangent (e - p₁ - w₂) (gramMu / 2) certificate.alpha₄ ha₄
-  have ht₅ := weighted_norm_tangent (e - w₁ - p₂) (gramMu / 2) certificate.alpha₅ ha₅
+  have ht₀ := weightedNorm_le_quadratic (e - p₁ - w₁) (1 + gramLambda) certificate.alpha₀ ha₀
+  have ht₁ := weightedNorm_le_quadratic (e - p₂ - w₂) 1 certificate.alpha₁ ha₁
+  have ht₂ := weightedNorm_le_quadratic (e - p₁) (gramMu / 2) certificate.alpha₂ ha₂
+  have ht₃ := weightedNorm_le_quadratic (e - w₁) (gramMu / 2) certificate.alpha₃ ha₃
+  have ht₄ := weightedNorm_le_quadratic (e - p₁ - w₂) (gramMu / 2) certificate.alpha₄ ha₄
+  have ht₅ := weightedNorm_le_quadratic (e - w₁ - p₂) (gramMu / 2) certificate.alpha₅ ha₅
   rw [norm_sub_sub_sq e p₁ w₁] at ht₀
   rw [norm_sub_sub_sq e p₂ w₂] at ht₁
   rw [norm_sub_sq_real] at ht₂ ht₃

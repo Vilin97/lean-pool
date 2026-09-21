@@ -25,9 +25,7 @@ namespace LeanPool.Besicovitch
 
 /-- The weakened diagonal-matching slack `q1`. -/
 def firstActiveFailureSlack (configuration : SixPointConfiguration) : ℝ :=
-  dist (configuration .red .left) (configuration .blue .left) +
-    dist (configuration .red .right) (configuration .blue .right) -
-      2 * barC * (2 * barC - 1)
+  diagonalMatchingReducedSlack configuration
 
 /-- The coincident sibling-endpoint slack `q2`. -/
 def secondActiveFailureSlack (configuration : SixPointConfiguration) : ℝ :=
@@ -50,17 +48,7 @@ theorem firstActiveFailureSlack_nonneg
     {configuration : SixPointConfiguration} (h : configuration.IsAdmissibleAt barS)
     (hmatching : SelectedDiagonalMatchingFails configuration) :
     0 ≤ firstActiveFailureSlack configuration := by
-  have hL := (sibling_distance_mem_endpoint_interval h .red).1
-  have hM := (sibling_distance_mem_endpoint_interval h .blue).1
-  have hcoefficient : 0 ≤ 2 * barC - 1 := by
-    nlinarith [one_lt_barC_and_barC_lt_two.1]
-  have hscaled := mul_le_mul_of_nonneg_left (show 2 * barC ≤
-      dist (configuration .red .left) (configuration .red .right) +
-        dist (configuration .blue .left) (configuration .blue .right) by linarith)
-    hcoefficient
-  simp [firstActiveFailureSlack, SelectedDiagonalMatchingFails, incidenceCrossDistance,
-    incidenceChild] at hmatching ⊢
-  nlinarith
+  exact diagonalMatchingReducedSlack_nonneg h hmatching
 
 /-- Coincident endpoint failures at `B11` make `q2` strictly positive. -/
 theorem secondActiveFailureSlack_pos
@@ -142,7 +130,8 @@ theorem weightedPairScore_configuration_eq_activeFailureCombination
   have hb₂ : ‖configuration.bluePullback .right‖ =
       dist (configuration .blue .root) (configuration .blue .right) := by
     simp [SixPointConfiguration.bluePullback, dist_eq_norm]
-  simp only [weightedPairScore, firstActiveFailureSlack, secondActiveFailureSlack,
+  simp only [weightedPairScore, firstActiveFailureSlack, diagonalMatchingReducedSlack,
+    incidenceCrossDistance, secondActiveFailureSlack,
     thirdActiveFailureSlack, matchedChildAverage, incidenceChild, weightedFirstPenalty,
     weightedSecondPenalty, weightedConstantTerm]
   rw [← hB₁₁, ← hB₂₂, ← hB₁₂, hB₂₁', ← hAred, ← hAblue,
