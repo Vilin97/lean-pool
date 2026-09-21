@@ -9988,8 +9988,6 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-    - V7.scaleIdentificationImpossibility
-    - V7.knownParameterAboveTwoOptimality
     - V7.main
     main_results:
     - declaration: V7.scaleIdentificationImpossibility

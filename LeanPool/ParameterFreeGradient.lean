@@ -202,7 +202,7 @@ import LeanPool.ParameterFreeGradient.V7.TrialInterfaces
 Source: url:https://github.com/yuningyang19/parameter_free_gradient_p
 Authors: Yuning Yang
 Status: verified
-Main declarations: `V7.scaleIdentificationImpossibility`, `V7.knownParameterAboveTwoOptimality`, `V7.main`
+Main declarations: `V7.main`
 Tags: optimization, oracle-complexity, gradient-methods
 MSC: 90C25
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuning Yang
 -/
 
-import Mathlib
+import Mathlib.Analysis.MeanInequalities
 
 /-!
 # Finite-dimensional real `ell_p` geometry for the frozen O3 probe
