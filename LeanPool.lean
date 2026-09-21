@@ -443,6 +443,7 @@ import LeanPool.ChannelCapacity.Finite
 import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
 import LeanPool.ChannelCapacity.NonDegeneracy
 import LeanPool.ChannelCapacity.StrictConcavity
+import LeanPool.ChipFiring
 import LeanPool.Chudnovsky
 import LeanPool.Chudnovsky.Basic
 import LeanPool.Chudnovsky.Chudnovsky

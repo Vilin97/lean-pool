@@ -9966,3 +9966,39 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: chip-firing-with-lean
+    title: Chip-Firing with Lean 4
+    summary: A Lean 4 / Mathlib formalization of Baker and Norine's Riemann-Roch theorem for
+      finite graphs. Chip configurations on a finite graph, modulo chip-firing moves, form an
+      abelian group analogous to the group of line bundles on a compact Riemann surface. Each
+      class can be assigned a rank, analogous to the dimension of a linear series. These ranks
+      then satisfy a formula of the form r(D) - r(K-D) = deg D + 1 - g, in exact analogy to
+      Riemann surfaces. This formula is formalized, along with the analog of Clifford's theorem
+      for finite graphs.
+    branch: combinatorics
+    entry_module: LeanPool.ChipFiring
+    authors:
+    - Dhyey Dharmendrakumar Mavani
+    - Nathan Pflueger
+    source:
+      url: https://github.com/dhyeymavani2003/chip-firing-with-lean
+      github_repo: dhyeymavani2003/chip-firing-with-lean
+      commit: 5b422d855c02af60591121ba7c11b5e8242542b8
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - Propositions.riemann_roch
+    - Propositions.clifford
+    main_results:
+    - declaration: Propositions.riemann_roch
+      informal: For a finite connected graph, the ranks of a divisor and its canonical complement
+        satisfy the graph Riemann–Roch formula.
+    - declaration: Propositions.clifford
+      informal: For a special divisor on a finite connected graph, its rank is at most half
+        its degree.
+    tags:
+    - combinatorics
+    msc:
+    - 05C57
+    - 14T20
+    provenance: mix
