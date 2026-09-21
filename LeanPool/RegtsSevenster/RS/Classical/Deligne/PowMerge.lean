@@ -190,7 +190,10 @@ theorem powPeel_inv_concat [Category.{v} D] [MonoidalCategory D] (X : D)
         𝟙 (tensorPow D X (b + 1)) := by
     rw [hcoh, hsplit]
     simp only [Category.assoc]
-    rw [leftUnitor_inv_naturality_assoc, reassoc_of% hcombine']
+    have hc := congrArg (fun t => t ≫ powCast X
+      (by omega : 0 + (b + 1) = b + 1)) hcombine'
+    repeat' erw [Category.assoc] at hc
+    erw [leftUnitor_inv_naturality_assoc, hc]
     simp only [powCast_comp]
     have hid : powCast X
         (by omega : b + 1 = b + 1) = 𝟙 _ := powCast_rfl X (b + 1)
@@ -254,7 +257,7 @@ theorem headMod_act [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
         (show X ⊗ tensorPow D X 0 ⟶ X from (ρ_ X).hom) ≫
           (modPowOne A X).inv := by
       show ((ρ_ X).hom ≫ (λ_ X).inv) ≫ modPowπ A X 1 = _
-      rw [Category.assoc]
+      erw [Category.assoc]
       rfl
     have hu : (actLeft A X ▷ tensorPow D X 0) ≫
         (show X ⊗ tensorPow D X 0 ⟶ X from (ρ_ X).hom) =
@@ -268,8 +271,12 @@ theorem headMod_act [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
       have hcoh0 : (α_ A X (𝟙_ D)).inv ≫ (ρ_ (A ⊗ X)).hom =
           A ◁ (ρ_ X).hom := by monoidal
       exact hcoh0
-    rw [h0, MonoidalCategory.whiskerLeft_comp, Category.assoc,
-      ← actLeft_modPowOne_inv, reassoc_of% hu, reassoc_of% hcoh]
+    have hu' := congrArg (fun t => t ≫ (modPowOne A X).inv) hu
+    repeat' erw [Category.assoc] at hu'
+    have hcoh' := congrArg (fun t => t ≫ actLeft A X ≫ (modPowOne A X).inv) hcoh
+    repeat' erw [Category.assoc] at hcoh'
+    erw [h0, MonoidalCategory.whiskerLeft_comp, Category.assoc,
+      ← actLeft_modPowOne_inv, hu', hcoh']
   | succ b₀ =>
     have hcast : (A ◁ modPowCast A X
           (by omega : 1 + (b₀ + 1) = b₀ + 1 + 1)) ≫
@@ -401,7 +408,7 @@ theorem modPowπ_actRight
   show (modPowπ A X (a + 1) ▷ A) ≫
       ((β_ (modPow A X (a + 1)) A).hom ≫
         actLeft A (modPowMod A X a).X) = _
-  rw [← Category.assoc, hβ, Category.assoc, hact]
+  erw [← Category.assoc, hβ, Category.assoc, hact]
   exact ((reassoc_of% hkey) (modPowπ A X (a + 1))).trans
     (Category.assoc _ _ _)
 

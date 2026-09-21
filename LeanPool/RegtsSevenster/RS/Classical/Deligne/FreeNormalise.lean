@@ -45,7 +45,7 @@ theorem freeNormalise
       modPowπ A (freeMod A V).X (n + 1) := by
   induction n with
   | zero =>
-    rw [freeCollapse_freeInsert_one, Category.id_comp]
+    erw [freeCollapse_freeInsert_one, Category.id_comp]
   | succ k ih =>
     rw [freeCollapse_freeInsert_succ]
     refine Eq.trans (Category.assoc _ _ _) ?_
@@ -87,7 +87,7 @@ theorem freeCollapseDesc_section
     freeCollapseDesc A V (n + 1) ≫ freeCollapseSection A V n =
       𝟙 (modPow A (freeMod A V).X (n + 1)) := by
   apply modPow_hom_ext A (freeMod A V).X
-  rw [← Category.assoc, modPowπ_freeCollapseDesc,
+  erw [← Category.assoc, modPowπ_freeCollapseDesc,
     freeCollapseSection, ← Category.assoc]
   refine Eq.trans (freeNormalise A V n) ?_
   exact (Category.comp_id _).symm

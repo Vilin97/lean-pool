@@ -214,7 +214,7 @@ private theorem oddSqShift_ee
         (shift (gammaAlgebra D L R).unitMod)
         (rhoEvenOdd L R (L.sq.inv ≫ (a ▷ L.obj)))
         (rhoEvenOdd L R (L.sq.inv ≫ (b ▷ L.obj)))) = _
-  rw [rhoEvenOdd_expand, rhoEvenOdd_expand,
+  erw [rhoEvenOdd_expand, rhoEvenOdd_expand,
     shiftUnitHom_evenMap_tmulEE]
   rfl
 
@@ -232,7 +232,7 @@ private theorem oddSqShift_oo
         (shift (gammaAlgebra D L R).unitMod)
         (rhoOddOdd L R ((λ_ L.obj).inv ≫ (x ▷ L.obj)))
         (rhoOddOdd L R ((λ_ L.obj).inv ≫ (y ▷ L.obj)))) = _
-  rw [rhoOddOdd_expand, rhoOddOdd_expand,
+  erw [rhoOddOdd_expand, rhoOddOdd_expand,
     shiftUnitHom_evenMap_tmulOO]
   rfl
 
@@ -250,7 +250,7 @@ private theorem oddSqShift_eo
         (shift (gammaAlgebra D L R).unitMod)
         (rhoEvenOdd L R (L.sq.inv ≫ (a ▷ L.obj)))
         (rhoOddOdd L R ((λ_ L.obj).inv ≫ (x ▷ L.obj)))) = _
-  rw [rhoEvenOdd_expand, rhoOddOdd_expand,
+  erw [rhoEvenOdd_expand, rhoOddOdd_expand,
     shiftUnitHom_oddMap_tmulEO]
   rfl
 
@@ -268,7 +268,7 @@ private theorem oddSqShift_oe
         (shift (gammaAlgebra D L R).unitMod)
         (rhoOddOdd L R ((λ_ L.obj).inv ≫ (x ▷ L.obj)))
         (rhoEvenOdd L R (L.sq.inv ≫ (a ▷ L.obj)))) = _
-  rw [rhoOddOdd_expand, rhoEvenOdd_expand,
+  erw [rhoOddOdd_expand, rhoEvenOdd_expand,
     shiftUnitHom_oddMap_tmulOE]
   rfl
 
@@ -340,12 +340,9 @@ theorem isIso_gammaPairComparison_oddSquare
     [∀ Z : D, PreservesColimitsOfShape WalkingParallelPair (tensorLeft Z)] :
     IsIso (gammaPairComparison L R (freeMod R L.obj)
       (freeMod R L.obj)) := by
-  haveI hsh : IsIso (oddSqShift L R) := by
-    haveI : IsIso (SuperCommAlgebra.Mod.tensorHom
-        (gammaShiftIso L R).hom (gammaShiftIso L R).hom) :=
-      (SuperCommAlgebra.Mod.tensorIso (gammaShiftIso L R)
-        (gammaShiftIso L R)).isIso_hom
-    exact IsIso.comp_isIso
+  haveI hsh : IsIso (oddSqShift L R) :=
+    ((SuperCommAlgebra.Mod.tensorIso (gammaShiftIso L R) (gammaShiftIso L R)).trans
+      (shiftUnitTensor (shift (gammaAlgebra D L R).unitMod))).isIso_hom
   haveI hmap : IsIso (oddSqMap L R) := by
     rw [oddSqMap_eq]
     refine ⟨-inv (oddSqShift L R), ?_, ?_⟩

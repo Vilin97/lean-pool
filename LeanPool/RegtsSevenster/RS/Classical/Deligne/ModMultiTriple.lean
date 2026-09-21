@@ -239,7 +239,7 @@ lemma tripleWindowFst_cond
         modTensorAssocInvCover A X Y Z := by
   rw [modTensorAssocInvCover]
   simp only [Iso.hom_inv_id_assoc]
-  rw [← MonoidalCategory.comp_whiskerRight_assoc,
+  erw [← MonoidalCategory.comp_whiskerRight_assoc,
     ← MonoidalCategory.comp_whiskerRight_assoc,
     modTensor_condition]
 
@@ -453,8 +453,9 @@ lemma whiskerRight_modTensorπ_tripleInv
         modMultiTripleInv A X Y Z =
       (α_ X.X Y.X Z.X).hom ≫ tripleResolveInv A X Y Z ≫
         modMultiπ A [X, Y, Z] := by
+  repeat' erw [Category.assoc]
   erw [modTensorπ_tripleInv]
-  rw [whiskerRight_modTensorπ_tripleInvMid, tripleInvCover]
+  erw [whiskerRight_modTensorπ_tripleInvMid, tripleInvCover]
 
 /-- The forward comparison retracts the backward comparison. -/
 @[reassoc (attr := simp)]
@@ -471,6 +472,7 @@ lemma modMultiTripleHom_tripleInv
   rw [modMultiπ_tripleHom_assoc, Category.comp_id,
     modTensorAssocInvCover]
   simp only [Category.assoc]
+  repeat' erw [Category.assoc]
   erw [modTensorπ_tripleInv]
   rw [whiskerRight_modTensorπ_tripleInvMid, tripleInvCover,
     Iso.inv_hom_id_assoc, tripleResolve_inv_assoc]

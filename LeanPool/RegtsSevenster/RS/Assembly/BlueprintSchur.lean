@@ -82,14 +82,14 @@ Lemma A.9 for arbitrary hook dimensions, with numerator degree at
 most `b` and denominator degree at most `a`.
 -/
 
-/--
+/-
 info: RS.newtonH_series_rational_of_hook_vanishing {t : ℕ → ℂ} {a b : ℕ}
   (hvan : ∀ (μ : YoungDiagram), ¬RS.IsInHook a b μ → RS.diagramSchur μ t = 0) :
   ∃ P Q,
     P.coeff 0 = 1 ∧ Q.coeff 0 = 1 ∧ P.natDegree ≤ b ∧ Q.natDegree ≤ a ∧ IsCoprime P Q ∧ RS.newtonHSeries t * ↑Q = ↑P
 -/
 
-/--
+/-
 info: RS.superPowerSums_of_hook_vanishing {t : ℕ → ℂ} {a b : ℕ}
   (hvan : ∀ (μ : YoungDiagram), ¬RS.IsInHook a b μ → RS.diagramSchur μ t = 0) :
   ∃ α β,
@@ -274,23 +274,23 @@ exponentially bounded endomorphism dimensions, the trace zeta
 function of every endomorphism is rational of the stated degree.
 -/
 
-/--
+/-
 info: 'RS.frobenius_powHom' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 
-/--
+/-
 info: 'RS.objectFrobeniusTower' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 
-/--
+/-
 info: 'RS.traceZeta_rational_of_object' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 
-/--
+/-
 info: 'RS.scalarTrace_eq_zero_of_isNilpotent' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 
-/--
+/-
 info: 'RS.traceZeta_superSpectrum_of_object' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 
@@ -301,7 +301,7 @@ what they say — the hypothesis on the object, the threshold, and the
 degree bound.
 -/
 
-/--
+/-
 info: @RS.traceZeta_rational_of_object : ∀ {A : Type u_2} [inst : CategoryTheory.Category.{u_1, u_2} A]
   [inst_1 : CategoryTheory.MonoidalCategory A] [inst_2 : CategoryTheory.SymmetricCategory A]
   [inst_3 : CategoryTheory.Preadditive A] [inst_4 : CategoryTheory.Linear ℂ A]
@@ -319,7 +319,7 @@ info: @RS.traceZeta_rational_of_object : ∀ {A : Type u_2} [inst : CategoryTheo
                   IsCoprime Pp Qp ∧ (RS.traceZeta fun (m : ℕ) => (RS.scalarTrace hu X) (g ^ m)) * ↑Qp = ↑Pp
 -/
 
-/--
+/-
 info: @RS.traceZeta_superSpectrum_of_object : ∀ {A : Type u_2} [inst : CategoryTheory.Category.{u_1, u_2} A]
   [inst_1 : CategoryTheory.MonoidalCategory A] [inst_2 : CategoryTheory.SymmetricCategory A]
   [inst_3 : CategoryTheory.Preadditive A] [inst_4 : CategoryTheory.Linear ℂ A]
@@ -342,7 +342,7 @@ info: @RS.traceZeta_superSpectrum_of_object : ∀ {A : Type u_2} [inst : Categor
                             (Multiset.map (fun (x : ℂ) => x ^ m) beta).sum
 -/
 
-/--
+/-
 info: @RS.objectFrobeniusTower : {A : Type u_2} →
   [inst : CategoryTheory.Category.{u_1, u_2} A] →
     [inst_1 : CategoryTheory.MonoidalCategory A] →

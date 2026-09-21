@@ -57,9 +57,9 @@ theorem modPowOne_pairPow
   have hinv : ∀ (X : D) [ModObj A X], (modPowOne A X).inv =
       (λ_ X).inv ≫ modPowπ A X 1 := by
     intro X _
-    rw [modPowOne, Iso.trans_inv]
+    erw [modPowOne, Iso.trans_inv]
     rfl
-  rw [hinv, hinv, ← MonoidalCategory.tensorHom_comp_tensorHom,
+  erw [hinv, hinv, ← MonoidalCategory.tensorHom_comp_tensorHom,
     Category.assoc]
   refine ((congrArg (fun t =>
     ((λ_ M'.X).inv ⊗ₘ (λ_ M.X).inv) ≫ t)
@@ -114,7 +114,7 @@ theorem powSeed_pairing
     powSeed A M M' d ≫
         modTensorSwap A (modPowMod A M.X 0) (modPowMod A M'.X 0) ≫
         modPowPairing A M M' d 0 = η[A] := by
-  rw [powSeed, Category.assoc]
+  erw [powSeed, Category.assoc]
   have hX : modTensorMap A (toModPowModZero A M)
       (toModPowModZero A M') ≫
       modTensorSwap A (modPowMod A M.X 0) (modPowMod A M'.X 0) ≫
@@ -250,17 +250,18 @@ theorem tensorHom_π_interchange_map
       (modTensorMod A N₂ P₂) ≫ modTensorMap A f g =
     (f.hom ⊗ₘ g.hom) ≫ modTensorπ A Q R :=
     modTensorπ_map A f g
-  show tensorμ N₁.X N₂.X P₁.X P₂.X ≫
+  conv_lhs => arg 2; erw [Category.assoc]
+  change tensorμ N₁.X N₂.X P₁.X P₂.X ≫
     (modTensorπ A N₁ P₁ ⊗ₘ modTensorπ A N₂ P₂) ≫
     modTensorπ A (modTensorMod A N₁ P₁)
       (modTensorMod A N₂ P₂) ≫
     modTensorMap A f g = _
   refine congrArg (CategoryStruct.comp _) ?_
   refine (congrArg (CategoryStruct.comp _) h6).trans ?_
-  rw [← Category.assoc]
+  erw [← Category.assoc]
   show ((modTensorπ A N₁ P₁ ⊗ₘ modTensorπ A N₂ P₂) ≫
       (f.hom ⊗ₘ g.hom)) ≫ modTensorπ A Q R = _
-  rw [MonoidalCategory.tensorHom_comp_tensorHom]
+  erw [MonoidalCategory.tensorHom_comp_tensorHom]
 
 end InterchangeMap
 
@@ -554,7 +555,7 @@ private theorem powDeltaCore_raw
     rw [hpeelcast (by omega : 0 + (n + 1) = n + 1),
       reassoc_of% (concat_peel_head M.X 0 (n + 1)),
       powPeel_zero, tensorPowConcat_zero_left]
-    simp only [← MonoidalCategory.whiskerLeft_comp]
+    repeat' erw [← MonoidalCategory.whiskerLeft_comp]
     have hslot : ((λ_ (tensorPow D M.X (n + 1))).hom ≫
         powCast M.X (by omega : n + 1 = 0 + (n + 1))) ≫
         powCast M.X (by omega : 0 + (n + 1) = n + 1) =
@@ -809,8 +810,7 @@ theorem powDelta_pairing
           (modPowMod A M'.X (n + 1)) ≫
         modPowPairing A M M' d (n + 1)) := by
     rw [powDelta]
-    simp only [Category.assoc]
-    rfl
+    repeat' erw [Category.assoc]
   refine hflat.trans ?_
   refine ((congrArg (fun t =>
     (ρ_ (powStage A M M' n)).inv ≫
@@ -896,6 +896,7 @@ theorem rawPair_actHead
       ← comp_whiskerRight, ← comp_whiskerRight]
     refine congrArg (· ▷ tensorPow D M.X (n + 1)) ?_
     simp only [MonoidalCategory.whiskerLeft_comp]
+    rfl
   have hsplit2 : (powTailAct A M'.X n ▷
       tensorPow D M.X (n + 1)) ≫ rawPair A M M' d (n + 1) =
     ((α_ A (tensorPow D M'.X n) M'.X).inv ▷

@@ -81,7 +81,7 @@ theorem fibreMu_naturality
         (tmulEE _ _ (m ≫ R ◁ f) (n ≫ R ◁ g)) := by
       rw [comp_evenMap_apply, tensorHom_evenMap_tmulEE]
       rfl
-    rw [hl, fibreMu_evenMap_tmulEE, comp_evenMap_apply,
+    erw [hl, fibreMu_evenMap_tmulEE, comp_evenMap_apply,
       fibreMu_evenMap_tmulEE]
     exact Eq.trans (whisker_eq _ (hint m n))
       (Category.assoc _ _ _).symm
@@ -93,7 +93,7 @@ theorem fibreMu_naturality
         (tmulOO _ _ (m ≫ R ◁ f) (n ≫ R ◁ g)) := by
       rw [comp_evenMap_apply, tensorHom_evenMap_tmulOO]
       rfl
-    rw [hl, fibreMu_evenMap_tmulOO, comp_evenMap_apply,
+    erw [hl, fibreMu_evenMap_tmulOO, comp_evenMap_apply,
       fibreMu_evenMap_tmulOO]
     exact Eq.trans (whisker_eq _ (hint m n))
       (Category.assoc _ _ _).symm
@@ -105,7 +105,7 @@ theorem fibreMu_naturality
         (tmulEO _ _ (m ≫ R ◁ f) (n ≫ R ◁ g)) := by
       rw [comp_oddMap_apply, tensorHom_oddMap_tmulEO]
       rfl
-    rw [hl, fibreMu_oddMap_tmulEO, comp_oddMap_apply,
+    erw [hl, fibreMu_oddMap_tmulEO, comp_oddMap_apply,
       fibreMu_oddMap_tmulEO]
     exact Eq.trans (whisker_eq _ (hint m n))
       (Category.assoc _ _ _).symm
@@ -117,7 +117,7 @@ theorem fibreMu_naturality
         (tmulOE _ _ (m ≫ R ◁ f) (n ≫ R ◁ g)) := by
       rw [comp_oddMap_apply, tensorHom_oddMap_tmulOE]
       rfl
-    rw [hl, fibreMu_oddMap_tmulOE, comp_oddMap_apply,
+    erw [hl, fibreMu_oddMap_tmulOE, comp_oddMap_apply,
       fibreMu_oddMap_tmulOE]
     exact Eq.trans (whisker_eq _ (hint m n))
       (Category.assoc _ _ _).symm

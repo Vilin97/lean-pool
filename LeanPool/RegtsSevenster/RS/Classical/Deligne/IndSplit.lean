@@ -438,7 +438,8 @@ private theorem pairSum_expand {a b : ℕ} (lam : YoungDiagram)
     rw [mul_assoc, Finset.sum_mul]
     congr 1
     exact Finset.sum_congr rfl fun τ _ => by ring]
-  rw [← Finset.mul_sum, indMult]
+  rw [← Finset.mul_sum]
+  dsimp only [indMult]
   ring
 
 /-! ### The splitting identity -/

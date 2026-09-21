@@ -184,7 +184,8 @@ theorem tensorHom_π_chainMul2
         (symPowMod A M.X (q + 1 + s)) :=
     modTensorπ_map A (symMulMod A M'.X p r)
       (symMulMod A M.X q s)
-  show tensorμ (symPow A M'.X (p + 1)) (symPow A M.X (q + 1))
+  conv_lhs => arg 2; erw [Category.assoc]
+  change tensorμ (symPow A M'.X (p + 1)) (symPow A M.X (q + 1))
       (symPow A M'.X (r + 1)) (symPow A M.X (s + 1)) ≫
     (modTensorπ A (symPowMod A M'.X p) (symPowMod A M'.X r) ⊗ₘ
       modTensorπ A (symPowMod A M.X q) (symPowMod A M.X s)) ≫
@@ -195,7 +196,7 @@ theorem tensorHom_π_chainMul2
       (symMulMod A M.X q s) = _
   refine congrArg (CategoryStruct.comp _) ?_
   refine (congrArg (CategoryStruct.comp _) h6).trans ?_
-  rw [show (symMulMod A M'.X p r).hom = symMulDesc A M'.X p r
+  erw [show (symMulMod A M'.X p r).hom = symMulDesc A M'.X p r
       from rfl,
     show (symMulMod A M.X q s).hom = symMulDesc A M.X q s from
       rfl, ← Category.assoc]

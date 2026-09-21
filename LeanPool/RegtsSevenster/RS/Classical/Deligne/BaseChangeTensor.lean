@@ -331,7 +331,7 @@ theorem whiskerLeft_unitSlot_baseChangeAct
       ← MonoidalCategory.comp_whiskerRight,
       MonObj.mul_one]
     monoidal
-  rw [unitSlot, MonoidalCategory.whiskerLeft_comp,
+  erw [unitSlot, MonoidalCategory.whiskerLeft_comp,
     MonoidalCategory.whiskerLeft_comp, Category.assoc,
     Category.assoc]
   refine Eq.trans (whisker_eq _ (whisker_eq _
@@ -498,7 +498,7 @@ theorem whiskerLeft_unitSlot_collapseMid
     rw [associator_inv_naturality_middle_assoc,
       ← MonoidalCategory.comp_whiskerRight, actRight_one]
     monoidal
-  rw [unitSlot, MonoidalCategory.whiskerLeft_comp,
+  erw [unitSlot, MonoidalCategory.whiskerLeft_comp,
     MonoidalCategory.whiskerLeft_comp, Category.assoc,
     Category.assoc]
   refine Eq.trans (whisker_eq _ (whisker_eq _

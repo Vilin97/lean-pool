@@ -53,8 +53,8 @@ instance colourSpace.mulAction {n p : ℕ} :
     MulAction (Equiv.Perm (Fin n)) (colourSpace n p) where
   smul π g := g ∘ ⇑π⁻¹
   one_smul g := by
-    show g ∘ ⇑(1 : Equiv.Perm (Fin n))⁻¹ = g
-    simp
+    funext i
+    rfl
   mul_smul π ρ g := by
     show g ∘ ⇑(π * ρ)⁻¹ = (g ∘ ⇑ρ⁻¹) ∘ ⇑π⁻¹
     rw [mul_inv_rev]
