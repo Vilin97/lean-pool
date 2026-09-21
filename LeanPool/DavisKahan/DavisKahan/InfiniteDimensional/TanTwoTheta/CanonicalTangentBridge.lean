@@ -309,30 +309,23 @@ theorem ambient_doubleAngleTangent_eq_extendCoordinate
       = Uᗮ.subtypeL ((2 : ℂ) • X (Ring.inverse DX (U.subtypeL.adjoint x)))
   rw [hDinvApp, map_add, hYPerpApp, add_zero, hYJ, map_smul]
 
--- This proof carries about forty `have`s over operators on `E`, several of them
--- `Ring.inverse` and `CFC` terms whose defeq checks are expensive; it exhausts the
--- default heartbeat budget during `whnf`.  The budget is raised rather than the
--- proof weakened -- nothing here is left incomplete or `simp`-blasted.
-/-- The canonical ambient double-angle tangent is the modulus of the ambient
-extension of the graph-coordinate double-angle tangent. -/
-private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
+/-- Gram compression identities for the angular operator associated with a quarter-acute pair. -/
+private theorem quarterAngular_gram_projection_identities
     (U V : Submodule ℂ E) [U.HasOrthogonalProjection]
     [V.HasOrthogonalProjection] (hquarter : IsQuarterAcute U V) :
-    directedTanTwoAngleOperatorC U V hquarter =
-      ContinuousLinearMap.modulus
-        (doubleAngleTangentOperator
-          (quarterAcuteAngularOperator U V hquarter)
-          (norm_quarterAcuteAngularOperator_lt_one U V hquarter)) := by
+    let Y := quarterAcuteAngularOperator U V hquarter
+    let P := U.starProjection
+    let G := Y.adjoint ∘L Y
+    let R := Ring.inverse (ContinuousLinearMap.id ℂ E + G)
+    Y ∘L P = Y ∧ G ∘L P = G ∧ P ∘L G = G ∧ G ∘L R = R ∘L G ∧
+      directedCosAngleOperatorC U V ∘L directedCosAngleOperatorC U V = R ∘L P ∧
+      directedSinAngleOperatorC U V ∘L directedSinAngleOperatorC U V = G ∘L R ∘L P := by
   let Y : E →L[ℂ] E := quarterAcuteAngularOperator U V hquarter
   let P : E →L[ℂ] E := U.starProjection
   let Q : E →L[ℂ] E := V.starProjection
   let G : E →L[ℂ] E := Y.adjoint ∘L Y
   let N : E →L[ℂ] E := ContinuousLinearMap.id ℂ E + G
   let R : E →L[ℂ] E := Ring.inverse N
-  let D : E →L[ℂ] E := ContinuousLinearMap.id ℂ E - G
-  let M : E →L[ℂ] E := ContinuousLinearMap.modulus
-    (doubleAngleTangentOperator Y
-      (norm_quarterAcuteAngularOperator_lt_one U V hquarter))
   have hY : IsAngularOperator U Y :=
     quarterAcuteAngularOperator_isAngularOperator U V hquarter
   have hYP : Y ∘L P = Y := hY.1
@@ -511,23 +504,20 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
       ← ContinuousLinearMap.comp_assoc Vᗮ.starProjection Vᗮ.starProjection
         U.starProjection, hQperpQperp]
     exact hPQperpP
-  have hSCcomm : Commute Sang Cang :=
-    commute_directedSinAngleOperatorC_directedCosAngleOperatorC U V
-  have hSinTwo : directedSinTwoAngleOperatorC U V = (2 : ℂ) • (Sang ∘L Cang) := rfl
-  have hCosTwo : cosTwoAngleOperatorC U V = D ∘L R ∘L P := by
-    -- `dsimp` unfolds the `let`s, after which `hCangSq`/`hSangSq` (stated in terms
-    -- of `Cang`/`Sang`) no longer match.  Keep the abbreviations and restate the
-    -- squares with `*` instead.
-    change Cang * Cang - Sang * Sang = D ∘L R ∘L P
-    rw [show Cang * Cang = R ∘L P from hCangSq,
-      show Sang * Sang = G ∘L R ∘L P from hSangSq]
-    -- state the identity with `1`, not `ContinuousLinearMap.id`: they are the same
-    -- element, but `noncomm_ring` only knows `one_mul` for the former.
-    change R * P - G * (R * P) = ((1 : E →L[ℂ] E) - G) * (R * P)
-    noncomm_ring
+  exact ⟨hYP, hGP, hPG, hGR, hCangSq, hSangSq⟩
+
+/-- The modulus of the double-angle tangent is obtained from the modulus of its argument. -/
+private theorem modulus_doubleAngleTangentOperator_formula
+    (Y : E →L[ℂ] E) (hYnorm : ‖Y‖ < 1) :
+    ContinuousLinearMap.modulus (doubleAngleTangentOperator Y hYnorm) =
+      (2 : ℂ) • (ContinuousLinearMap.modulus Y ∘L
+        Ring.inverse (ContinuousLinearMap.id ℂ E - Y.adjoint ∘L Y)) := by
+  let G : E →L[ℂ] E := Y.adjoint ∘L Y
+  let D : E →L[ℂ] E := ContinuousLinearMap.id ℂ E - G
+  let M : E →L[ℂ] E := ContinuousLinearMap.modulus (doubleAngleTangentOperator Y hYnorm)
   have hDunit : IsUnit D :=
     isUnit_doubleAngleDenominator Y
-      (norm_quarterAcuteAngularOperator_lt_one U V hquarter)
+      hYnorm
   have hDcommG : D ∘L G = G ∘L D := by
     dsimp [D]
     rw [ContinuousLinearMap.sub_comp, ContinuousLinearMap.comp_sub,
@@ -541,7 +531,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     exact hu.units_inv_left
   have hTformula :
       doubleAngleTangentOperator Y
-          (norm_quarterAcuteAngularOperator_lt_one U V hquarter) =
+          hYnorm =
         (2 : ℂ) • (Y ∘L Ring.inverse D) := rfl
   -- Hoisted above `hMsq`.  `hMsq` needs the self-adjointness of `D⁻¹` and the
   -- commutation `[|Y|, D⁻¹] = 0`; both were originally proved *below*, inside
@@ -578,7 +568,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
         calc ‖Y x‖ ≤ ‖Y‖ * ‖x‖ := Y.le_opNorm x
           _ ≤ 1 * ‖x‖ :=
               mul_le_mul_of_nonneg_right
-                (norm_quarterAcuteAngularOperator_lt_one U V hquarter).le
+                hYnorm.le
                 (norm_nonneg x)
           _ = ‖x‖ := one_mul _
       nlinarith [hle, norm_nonneg (Y x), norm_nonneg x]
@@ -670,6 +660,53 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     -- `congr 1` discharges the remaining associativity itself; no `noncomm_ring`
     -- is needed (adding one reports "no goals to be solved").
     congr 1
+  exact hMformula
+
+/-- The canonical ambient double-angle tangent is the modulus of the ambient
+extension of the graph-coordinate double-angle tangent. -/
+private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
+    (U V : Submodule ℂ E) [U.HasOrthogonalProjection]
+    [V.HasOrthogonalProjection] (hquarter : IsQuarterAcute U V) :
+    directedTanTwoAngleOperatorC U V hquarter =
+      ContinuousLinearMap.modulus
+        (doubleAngleTangentOperator
+          (quarterAcuteAngularOperator U V hquarter)
+          (norm_quarterAcuteAngularOperator_lt_one U V hquarter)) := by
+  let Y : E →L[ℂ] E := quarterAcuteAngularOperator U V hquarter
+  let P : E →L[ℂ] E := U.starProjection
+  let Q : E →L[ℂ] E := V.starProjection
+  let G : E →L[ℂ] E := Y.adjoint ∘L Y
+  let N : E →L[ℂ] E := ContinuousLinearMap.id ℂ E + G
+  let R : E →L[ℂ] E := Ring.inverse N
+  let D : E →L[ℂ] E := ContinuousLinearMap.id ℂ E - G
+  let M : E →L[ℂ] E := ContinuousLinearMap.modulus
+    (doubleAngleTangentOperator Y
+      (norm_quarterAcuteAngularOperator_lt_one U V hquarter))
+  obtain ⟨hYP, hGP, hPG, hGR, hCangSq, hSangSq⟩ :=
+    quarterAngular_gram_projection_identities U V hquarter
+  let Cang : E →L[ℂ] E := directedCosAngleOperatorC U V
+  let Sang : E →L[ℂ] E := directedSinAngleOperatorC U V
+  have hSCcomm : Commute Sang Cang :=
+    commute_directedSinAngleOperatorC_directedCosAngleOperatorC U V
+  have hSinTwo : directedSinTwoAngleOperatorC U V = (2 : ℂ) • (Sang ∘L Cang) := rfl
+  have hCosTwo : cosTwoAngleOperatorC U V = D ∘L R ∘L P := by
+    -- `dsimp` unfolds the `let`s, after which `hCangSq`/`hSangSq` (stated in terms
+    -- of `Cang`/`Sang`) no longer match.  Keep the abbreviations and restate the
+    -- squares with `*` instead.
+    change Cang * Cang - Sang * Sang = D ∘L R ∘L P
+    rw [show Cang * Cang = R ∘L P from hCangSq,
+      show Sang * Sang = G ∘L R ∘L P from hSangSq]
+    -- state the identity with `1`, not `ContinuousLinearMap.id`: they are the same
+    -- element, but `noncomm_ring` only knows `one_mul` for the former.
+    change R * P - G * (R * P) = ((1 : E →L[ℂ] E) - G) * (R * P)
+    noncomm_ring
+  have hDunit : IsUnit D := isUnit_doubleAngleDenominator Y
+    (norm_quarterAcuteAngularOperator_lt_one U V hquarter)
+  have hmodYnonneg : (0 : E →L[ℂ] E) ≤ ContinuousLinearMap.modulus Y :=
+    ContinuousLinearMap.modulus_nonneg Y
+  have hMformula : M = (2 : ℂ) • (ContinuousLinearMap.modulus Y ∘L Ring.inverse D) :=
+    modulus_doubleAngleTangentOperator_formula Y
+      (norm_quarterAcuteAngularOperator_lt_one U V hquarter)
   have hSCformula : Sang ∘L Cang =
       ContinuousLinearMap.modulus Y ∘L R ∘L P := by
     -- `Commute G (R P)` from `G R = R G` and `G P = G = P G`; then
@@ -758,7 +795,8 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
           ContinuousLinearMap.comp_id]
       rw [hGP] at h
       -- `h : G P⊥ + G = G`, so `(G P⊥ + G) - G = 0`, i.e. `G P⊥ = 0`.
-      simpa using sub_eq_zero_of_eq h
+      change G + G ∘L Uᗮ.starProjection = G at h
+      exact add_eq_left.mp h
     have hDPerp : D ∘L Uᗮ.starProjection = Uᗮ.starProjection := by
       change (ContinuousLinearMap.id ℂ E - G) ∘L Uᗮ.starProjection = _
       rw [ContinuousLinearMap.sub_comp, ContinuousLinearMap.id_comp, hGPerp,
