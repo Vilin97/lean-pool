@@ -45,7 +45,8 @@ theorem matching_support_card {H M : Finset (Finset V)} {r : ℕ}
       intro e he; simpa using hr e (hM.subset he)
     rw [Finset.sum_congr rfl this, Finset.sum_const, smul_eq_mul, mul_comm]
   · intro x hx y hy hxy
-    simpa using hM.disjoint x hx y hy hxy
+    change Disjoint x y
+    exact hM.disjoint x hx y hy hxy
 
 /-- **A3b — edges meeting a set.** The number of edges of `H` meeting a vertex set `S` is at
 most `∑_{v ∈ S} degree H v`. -/

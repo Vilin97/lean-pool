@@ -97,10 +97,7 @@ theorem edge_survives_prob {H : Finset (Finset V)} {p : ℝ} (ρ : BernoulliRete
     dsimp [g]
     by_cases hfe : i = e
     · subst hfe; simp
-      -- Goal: MeasurableSet (ρ.A i) in comap space
-      -- We need: ∃ s : Set Prop, MeasurableSet s ∧ (fun x => x ∈ ρ.A i)⁻¹(s) = ρ.A i
-      use {True}
-      simp
+      exact MeasurableSpace.measurableSet_generateFrom (Set.mem_singleton _)
     · rw [if_neg hfe]
       -- Goal: MeasurableSet (ρ.A i)ᶜ in generateFrom {ρ.A i}
       exact MeasurableSet.compl (MeasurableSpace.measurableSet_generateFrom (Set.mem_singleton _)))
