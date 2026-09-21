@@ -60,7 +60,6 @@ unit and coordinate differentials and the explicit modulo-`D.t` inclusion
 stored in `D.visible`. -/
 def HasCompatibleVisibleFrame
     (P : PrimeSpectrum (MvPolynomial (Fin m) k)) (hm : 0 < m)
-    [CharZero k]
     (W : Data k (ComponentFractionField P) (componentCoordinate P ⟨0, hm⟩)) :
   letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
@@ -80,7 +79,6 @@ def HasCompatibleVisibleFrame
 normalization, and exact parameter identity are exactly the fields required by
 `HasVisibleDivisorFrame`. -/
 theorem hasVisibleDivisorFrame_of_compatible_normalized_column
-    [CharZero k]
     (P : PrimeSpectrum (MvPolynomial (Fin m) k)) (hm : 0 < m)
     (W : Data k (ComponentFractionField P) (componentCoordinate P ⟨0, hm⟩)) :
     letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
@@ -179,7 +177,6 @@ prefix.  Unlike `DivisorialVisibleFrameExistence`, this retains the same
 `Data`, the normalized projective column, its exact parameter identity, and a
 `VisibleDivisorFrame` attached to that column. -/
 def HasNormalizedCompatibleVisibleFrame
-    [CharZero k]
     (P : PrimeSpectrum (MvPolynomial (Fin m) k)) (hm : 0 < m) : Prop :=
   ∃ W : Data k (ComponentFractionField P) (componentCoordinate P ⟨0, hm⟩),
     letI : Algebra (CoordinateZeroLocalRing W.coefficientField)

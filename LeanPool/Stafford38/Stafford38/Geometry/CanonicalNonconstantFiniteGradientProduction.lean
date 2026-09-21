@@ -69,7 +69,7 @@ def HigherDimensionalCanonicalResidueExtensionNonconstantFiniteGradientProductio
 exact conormal axis consumed by the residue-extension assembly.  The
 constant-coordinate component is handled by the existing ground-field branch.
 -/
-theorem higherDimensionalCanonicalResidueExtensionConormalAxisProduction_of_nonconstantFiniteGradient
+theorem conormalAxisProduction_of_nonconstantFiniteGradient
     (hnonconstant :
       HigherDimensionalCanonicalResidueExtensionNonconstantFiniteGradientProduction.{u}) :
     HigherDimensionalCanonicalResidueExtensionConormalAxisProduction.{u} := by

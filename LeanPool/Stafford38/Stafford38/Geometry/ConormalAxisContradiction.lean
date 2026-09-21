@@ -85,7 +85,7 @@ theorem eval_axis_eq_one_of_pureCoefficient_one
     by_cases hN : N = 0
     · subst N
       simp
-    · rw [Finsupp.support_single_ne_zero t hN]
+    · rw [Finsupp.support_single t hN]
       simp [axisPoint]
   · intro m hm hne
     have hmcoeff : P.coeff m ≠ 0 :=
@@ -107,7 +107,7 @@ theorem eval_axis_eq_one_of_pureCoefficient_one
       rw [hmform, hdegree]
     rcases hexists with ⟨i, hi, hit⟩
     rw [Finset.prod_eq_zero hi, mul_zero]
-    rw [axisPoint, if_neg hit, zero_pow]
+    rw [axisPoint, ite_eq_right hit, zero_pow]
     exact Finsupp.mem_support_iff.mp hi
   · intro hnot
     exact (hnot (MvPolynomial.mem_support_iff.mpr (hpure.trans_ne one_ne_zero))).elim

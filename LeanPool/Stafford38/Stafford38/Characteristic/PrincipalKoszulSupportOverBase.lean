@@ -8,10 +8,14 @@ import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulSupportOverBa
 import LeanPool.Stafford38.Stafford38.Characteristic.StableTorsionResidualSupport
 import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulFiniteTorsion
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for principal Koszul support over the base ring
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.PrincipalKoszulSupportOverBase
 
-export AlgebraicAnalysis.PrincipalKoszulSupportOverBase (length_cokernel_gt_kernel_of_support_over_base)
+export AlgebraicAnalysis.PrincipalKoszulSupportOverBase (
+  length_cokernel_gt_kernel_of_support_over_base)
 
 end Stafford38.Characteristic.PrincipalKoszulSupportOverBase

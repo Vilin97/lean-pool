@@ -31,6 +31,7 @@ noncomputable section
 
 variable {k : Type*} [Field k] [IsAlgClosed k] [CharZero k] {n : ℕ}
 
+omit [IsAlgClosed k] [CharZero k] in
 theorem vanishingIdeal_isRadical (W : Set (PhaseVar n → k)) :
     (MvPolynomial.vanishingIdeal k W).IsRadical := by
   intro p hp
@@ -40,6 +41,7 @@ theorem vanishingIdeal_isRadical (W : Set (PhaseVar n → k)) :
   simpa only [map_pow] using eq_zero_of_pow_eq_zero
     (show (MvPolynomial.aeval q p) ^ m = 0 by simpa only [map_pow] using h)
 
+omit [IsAlgClosed k] [CharZero k] in
 theorem zeroLocus_vanishingIdeal_of_algebraic_closed
     (W : Set (PhaseVar n → k))
     (hclosed : ∃ L : Ideal (SymbolRing k n), W = MvPolynomial.zeroLocus k L) :
@@ -49,6 +51,7 @@ theorem zeroLocus_vanishingIdeal_of_algebraic_closed
   · exact MvPolynomial.zeroLocus_anti_mono (MvPolynomial.le_vanishingIdeal_zeroLocus L)
   · exact MvPolynomial.zeroLocus_vanishingIdeal_le _
 
+omit [IsAlgClosed k] [CharZero k] in
 theorem baseProjection_eq_zeroLocus_comap
     (W : Set (PhaseVar n → k))
     (hclosed : ∃ L : Ideal (SymbolRing k n), W = MvPolynomial.zeroLocus k L)

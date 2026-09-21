@@ -97,7 +97,6 @@ theorem filtration_clearance
         exact hstep i (by omega)
       rcases ih hstep' hsm with ⟨t, ht, htm⟩
       refine ⟨s * t, mul_ne_zero hs ht, ?_⟩
-      change (op (s * t)) • m ∈ F 0
       simpa only [op_mul, smul_smul] using htm
 
 /-- A finite cleared filtration makes the terminal quotient torsion. -/

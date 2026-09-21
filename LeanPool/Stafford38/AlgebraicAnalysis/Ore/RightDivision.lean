@@ -45,11 +45,14 @@ namespace OreDivisionDerivation
 
 variable {B : Type*} [Ring B] (D : OreDivisionDerivation B)
 
-@[simp] theorem map_zero : D 0 = 0 := D.map_zero'
+@[simp]
+theorem map_zero : D 0 = 0 := D.map_zero'
 
-@[simp] theorem map_add (a b : B) : D (a + b) = D a + D b := D.map_add' a b
+@[simp]
+theorem map_add (a b : B) : D (a + b) = D a + D b := D.map_add' a b
 
-@[simp] theorem leibniz (a b : B) : D (a * b) = a * D b + D a * b := D.leibniz' a b
+@[simp]
+theorem leibniz (a b : B) : D (a * b) = a * D b + D a * b := D.leibniz' a b
 
 lemma map_nsmul (a : B) (n : ℕ) : D (n • a) = n • D a := by
   induction n with
@@ -71,7 +74,7 @@ lemma push_coeff (b : B) (i n : ℕ) :
     (OreDivision.push D b i).coeff n =
       ∑ k ∈ Finset.range (i + 1),
         if i - k = n then Nat.choose i k • (D^[k]) b else 0 := by
-  simp [push, Polynomial.coeff_sum, Polynomial.coeff_monomial]
+  simp [push,  Polynomial.coeff_monomial]
 
 lemma push_degree_le (b : B) (i : ℕ) : (OreDivision.push D b i).degree ≤ (i : WithBot ℕ) := by
   rw [Polynomial.degree_le_iff_coeff_zero]
@@ -128,7 +131,7 @@ lemma rightMulMonomial_coeff (p : Polynomial B) (b : B) (j n : ℕ) :
       ∑ i ∈ p.support, ∑ k ∈ Finset.range (i + 1),
         if i - k + j = n then
           p.coeff i * (Nat.choose i k • (D^[k]) b) else 0 := by
-  simp [rightMulMonomial, rightTerm, Polynomial.coeff_sum,
+  simp [rightMulMonomial, rightTerm,
     Polynomial.coeff_monomial, Polynomial.sum_def]
 
 lemma rightTerm_zero (i : ℕ) (b : B) (j : ℕ) : rightTerm D i 0 b j = 0 := by
@@ -235,7 +238,7 @@ lemma rightMul_monomial (d : Polynomial B) (c : B) (j : ℕ) :
     simp [rightMul, Polynomial.sum_def, rightMulMonomial_zero_right]
   · unfold rightMul
     rw [Polynomial.sum_def, Polynomial.support_monomial j hc]
-    simp [Polynomial.coeff_monomial, hc]
+    simp [Polynomial.coeff_monomial]
 
 lemma rightMulMonomial_degree_le (p : Polynomial B) (b : B) (j : ℕ) :
     (rightMulMonomial D p b j).degree ≤ (p.natDegree + j : WithBot ℕ) := by
@@ -280,7 +283,7 @@ lemma rightMulMonomial_coeff_top (p : Polynomial B) (hp : p ≠ 0)
     simp [hne_sub]) (by simp)]
   rw [Nat.sub_zero]
   simp only [ite_true, Nat.choose_zero_right, Function.iterate_zero_apply,
-    one_nsmul, one_mul, Polynomial.leadingCoeff]
+    one_nsmul,  Polynomial.leadingCoeff]
 
 lemma rightMul_degree_le (d q : Polynomial B) :
     (rightMul D d q).degree ≤ (d.natDegree + q.natDegree : WithBot ℕ) := by
@@ -497,7 +500,7 @@ lemma cancel_degree_lt [Nontrivial B] (d p : Polynomial B) (hd : d.Monic)
       exact_mod_cast hq_degree_nat
     rw [hq_nat, hq_top]
     rfl
-  exact Polynomial.degree_sub_lt (hp_degree.trans hq_degree.symm) hp hleading
+  exact Polynomial.degree_sub_lt_left (hp_degree.trans hq_degree.symm) hp hleading
 
 theorem right_division_exists [Nontrivial B] (d p : Polynomial B) (hd : d.Monic) :
     ∃ q r : Polynomial B,
@@ -764,7 +767,7 @@ theorem commutator_iterate_pow_of_lt (p x : A)
       · have hjeq : j = n := by omega
         rw [Function.iterate_succ_apply', hjeq,
           commutator_iterate_pow_of_le p x hpx n n le_rfl]
-        simp [commutatorDerivation]
+        simp? [commutatorDerivation]
         rw [Nat.cast_comm]
         simp
 
@@ -795,8 +798,8 @@ theorem commutator_pow_mul_pow (p x : A)
   · rw [commutator_iterate_pow p x hpx i r]
     simp only [ite_eq_left hir]
     rw [show k - i = (k - i) by rfl]
-    simp [hir, smul_mul_assoc, smul_smul, Nat.mul_comm, Nat.mul_left_comm,
-      Nat.mul_assoc, mul_assoc]
+    simp [
+       mul_assoc]
   · rw [commutator_iterate_pow p x hpx i r]
     simp [hir]
 
@@ -837,8 +840,8 @@ theorem pfree_power_of_le {k A : Type*} [Field k] [Ring A]
   rw [commutator_pow_mul_pow p x hpx u n]
   rw [map_sum]
   rw [Finset.sum_eq_single u]
-  · simp only [hun, ↓reduceIte, Nat.choose_self, Nat.cast_one, one_mul,
-      Nat.cast_ofNat, nsmul_eq_mul, map_smul, Nat.sub_self, pow_zero, mul_one]
+  · simp only [hun, ↓reduceIte, Nat.choose_self,  one_mul,
+       nsmul_eq_mul,  Nat.sub_self, pow_zero, mul_one]
     change Submodule.Quotient.mk
         (↑(n.descFactorial u) * x ^ (n - u)) =
       (n.descFactorial u : k) • Submodule.Quotient.mk (x ^ (n - u))
@@ -874,7 +877,7 @@ theorem pfree_monic_corner {k A : Type*} [Field k] [Ring A]
   rw [map_sum]
   rw [Finset.sum_eq_single m]
   · simp only [Nat.choose_self, Nat.le_add_right, ↓reduceIte, Nat.sub_self,
-      Nat.cast_one, one_mul, Nat.cast_ofNat, nsmul_eq_mul, map_smul]
+      Nat.cast_one, one_mul,  nsmul_eq_mul]
     simp only [Submodule.mkQ_apply, pow_zero, Nat.add_sub_cancel_left, mul_one]
     rw [← Submodule.Quotient.mk_smul]
     congr 1
@@ -1050,7 +1053,7 @@ lemma eval_monomial (b : B) (j : ℕ) :
     simp [eval, Polynomial.sum_def]
   · unfold eval
     rw [Polynomial.sum_def, Polynomial.support_monomial j hb]
-    simp [Polynomial.coeff_monomial, hb]
+    simp [Polynomial.coeff_monomial]
 
 /-- The coefficient-left normal form of an iterated commutator. -/
 def commutatorNormal (q : Polynomial B) (j : ℕ) : Polynomial B :=
@@ -1105,7 +1108,7 @@ lemma commutatorNormal_coeff_top [Nontrivial B] (q : Polynomial B) (j : ℕ)
     · simp [hji]) (by
       intro hnot
       exact (hnot (Polynomial.natDegree_mem_support_of_nonzero hq0)).elim)]
-  simp [hjn, Polynomial.coeff_monomial, hq.leadingCoeff]
+  simp [hjn,  hq.leadingCoeff]
 
 theorem commutator_iterate_eval_eq_eval_normal
     (p : B) (q : Polynomial B) (j : ℕ)
@@ -1134,7 +1137,7 @@ theorem commutator_iterate_eval_eq_eval_normal
       eval D O (Polynomial.monomial (i - j)
         (i.descFactorial j • q.coeff i))
     rw [eval_monomial]
-    simp [map_nsmul, smul_mul_assoc]
+    simp []
     simp [Nat.cast_comm, mul_assoc]
   · rw [commutator_iterate_eval_monomial D O p (q.coeff i) i j hpb hDp]
     simp [hji]

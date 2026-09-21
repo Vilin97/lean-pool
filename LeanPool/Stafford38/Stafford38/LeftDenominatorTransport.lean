@@ -6,6 +6,10 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.Stafford38.LocalizationCorollaries
 
+/-!
+Transport of the two-generator identity through left unit denominator clearing.
+-/
+
 namespace Stafford38.LocalizationCorollaries
 
 theorem s38_of_leftUnitClearing

@@ -56,7 +56,7 @@ lemma rightPBWCombination_term_as_normalForm
   rw [rightPBWMonomial, normalOre_op_smul_def, ← normalForm_C,
     ← normalForm_mul]
 lemma rightPBWCombination_finsupp_as_normalForm
-    [Nontrivial B] (D : OreDivisionDerivation B) (c : ℕ →₀ Bᵐᵒᵖ) :
+     (D : OreDivisionDerivation B) (c : ℕ →₀ Bᵐᵒᵖ) :
     rightPBWCombination D c =
       normalForm D
         (c.sum fun n b => OreDivision.rightMul D (Polynomial.X ^ n)
@@ -131,7 +131,7 @@ lemma rightPBWCombination_eq_zero
     simpa [Polynomial.lcoeff_apply] using hcoeff
   have hcm : c m = 0 := by
     have htop := hterm m hm
-    rw [if_pos rfl] at htop
+    rw [ite_eq_left rfl] at htop
     have hcm'' : (c m).unop = 0 := by simpa [htop] using hcm'
     exact MulOpposite.opEquiv.symm.injective hcm''
   exact (Finsupp.mem_support_iff.mp hm) hcm
@@ -194,7 +194,8 @@ def rightOrePBWBasis [Nontrivial B] (D : OreDivisionDerivation B) :
   Basis.mk (rightOrePBW_linearIndependent D)
     (rightPBW_span_eq_top D).ge
 
-@[simp] theorem rightOrePBWBasis_apply [Nontrivial B]
+@[simp]
+theorem rightOrePBWBasis_apply [Nontrivial B]
     (D : OreDivisionDerivation B) (n : ℕ) :
     rightOrePBWBasis D n = rightPBWMonomial D n := by
   exact Basis.mk_apply _ _ _
@@ -205,11 +206,12 @@ theorem rightOrePBWBasis_repr_symm_single [Nontrivial B]
       b • rightPBWMonomial D n := by
   rw [(rightOrePBWBasis D).repr_symm_single, rightOrePBWBasis_apply]
 
-@[simp] theorem rightPBWMonomial_zero (D : OreDivisionDerivation B) :
+theorem rightPBWMonomial_zero (D : OreDivisionDerivation B) :
     rightPBWMonomial D 0 = 1 := by
   simp [rightPBWMonomial, normalForm_one]
 
-@[simp] theorem rightPBWMonomial_op_smul
+@[simp]
+theorem rightPBWMonomial_op_smul
     (D : OreDivisionDerivation B) (b : Bᵐᵒᵖ) (n : ℕ) :
     b • rightPBWMonomial D n =
       normalForm D (Polynomial.X ^ n) * normalCoefficient D b.unop := by
@@ -228,12 +230,13 @@ theorem normalForm_mem_rightPBWWindow_of_degree_lt
   simpa [rightPBWWindow, rightPBWMonomial, rightCoefficientWindow] using
     (normalForm_mem_rightCoefficientWindow_of_degree_lt D p n hp)
 theorem rightPBWWindow_finite
-    [Nontrivial B] (D : OreDivisionDerivation B) (n : ℕ) :
+     (D : OreDivisionDerivation B) (n : ℕ) :
     Module.Finite Bᵐᵒᵖ (rightPBWWindow D n) := by
   exact Module.Finite.span_of_finite Bᵐᵒᵖ
     (Set.finite_range (fun j : Fin n => rightPBWMonomial D (j : ℕ)))
 
-@[simp] theorem rightPBWMonomial_apply (D : OreDivisionDerivation B) (n : ℕ) :
+@[simp]
+theorem rightPBWMonomial_apply (D : OreDivisionDerivation B) (n : ℕ) :
     rightPBWMonomial D n = normalForm D (Polynomial.X ^ n) := rfl
 
 /-- Right multiplication by a PBW monomial has the expected top coefficient.
@@ -360,7 +363,8 @@ def monicPrincipalRightQuotientBasis [Nontrivial B]
       (rightPBWWindow D H.natDegree)
       (monicPrincipalRightIdeal_isCompl_rightPBWWindow D H hH)).symm
 
-@[simp] theorem monicPrincipalRightQuotientBasis_apply [Nontrivial B]
+@[simp]
+theorem monicPrincipalRightQuotientBasis_apply [Nontrivial B]
     (D : OreDivisionDerivation B) (H : Polynomial B) (hH : H.Monic)
     (j : Fin H.natDegree) :
     monicPrincipalRightQuotientBasis D H hH j =

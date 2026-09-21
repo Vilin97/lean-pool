@@ -75,7 +75,7 @@ abbrev CoordinateZeroLocalRing := Localization.AtPrime (coordinateZeroPrime k)
 instance coordinateZeroLocalRing_isDomain : IsDomain (CoordinateZeroLocalRing k) :=
   inferInstance
 
-instance coordinateZeroLocalRing_smul : SMul k (CoordinateZeroLocalRing k) :=
+instance coordinateZeroLocalRingSMul : SMul k (CoordinateZeroLocalRing k) :=
   Algebra.toSMul
 
 instance coordinateZeroLocalRing_isDiscreteValuationRing :
@@ -182,7 +182,9 @@ has been made. -/
 structure BoundaryValuationData
     {K : Type v} [Field K] [Algebra k K]
     (x : K) (hx : Transcendental k x) where
+  /-- The valuation subring supporting the local factorization at coordinate zero. -/
   valuation : ValuationSubring K
+  /-- The local map from the coordinate-zero local ring into the selected valuation ring. -/
   factor : CoordinateZeroLocalRing k →+* valuation.toSubring
   factor_isLocal : IsLocalHom factor
   factor_commutes :
@@ -204,8 +206,10 @@ domain, so this centre is necessarily on the boundary. -/
 structure DiscreteBoundaryRefinement
     {K : Type v} [Field K] [Algebra k K]
     (x : K) where
+  /-- The discrete valuation subring realizing the boundary refinement. -/
   valuation : ValuationSubring K
   isDiscrete : IsDiscreteValuationRing valuation.toSubring
+  /-- The specified nonzero coordinate as a nonunit of the discrete valuation ring. -/
   coordinate : valuation.toSubring
   coordinate_eq : (coordinate : K) = x
   coordinate_ne : coordinate ≠ 0
@@ -333,7 +337,7 @@ For a prime affine ideal one applies this to its quotient domain and its
 fraction field; the unit is supplied by `I + (x) = ⊤`. -/
 theorem exists_boundaryValuationSubring_of_affineUnit
     [IsAlgClosed k]
-    {A : Type*} [CommRing A] [IsDomain A] [Algebra k A]
+    {A : Type*} [CommRing A] [Algebra k A]
     {K : Type v} [Field K] [Algebra k K]
     (ι : A →ₐ[k] K) (u : Aˣ)
     (hu : ι (u : A) ∉ Set.range (algebraMap k K)) :

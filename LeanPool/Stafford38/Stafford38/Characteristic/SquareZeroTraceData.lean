@@ -38,7 +38,8 @@ def rightActionEnd (b : B) : Module.End k N where
   map_add' _ _ := smul_add _ _ _
   map_smul' a m := (smul_comm a (MulOpposite.op b) m).symm
 
-@[simp] theorem rightActionEnd_apply (b : B) (m : N) :
+@[simp]
+theorem rightActionEnd_apply (b : B) (m : N) :
     rightActionEnd k B N b m = MulOpposite.op b • m :=
   rfl
 
@@ -62,7 +63,7 @@ theorem rightAction_commutator (a b : B) :
   simp only [Stafford.commutator_eq_shared, AlgebraicAnalysis.ringCommutator]
   rw [rightActionEnd_mul_reverse, rightActionEnd_mul_reverse]
   ext m
-  simp [rightActionEnd, AlgebraicAnalysis.ringCommutator, sub_smul]
+  simp [rightActionEnd,  sub_smul]
 
 /-- Minimal data for a right-module square-zero deformation and its
 first-order commutator bracket.

@@ -64,7 +64,7 @@ def rightModuleEquiv {A B : Type*} [Ring A] [Ring B] [Algebra k A]
 
 /-- The inverse regular-right-module equivalence, with the inverse opposite
 scalar map made explicit for quotient composition. -/
-def rightModuleEquiv_symm {A B : Type*} [Ring A] [Ring B] [Algebra k A]
+def rightModuleEquivSymm {A B : Type*} [Ring A] [Ring B] [Algebra k A]
     [Algebra k B] (e : A ≃ₐ[k] B) :
     @LinearEquiv Bᵐᵒᵖ Aᵐᵒᵖ _ _ (AlgEquiv.op e).toRingEquiv.symm
       (AlgEquiv.op e).toRingEquiv _ _ B A _ _ _ _ :=
@@ -148,9 +148,9 @@ theorem transported_canonicalRightIdeal
     · intro a b ha hb hha hhb
       simpa using (canonicalRightIdeal x d N).add_mem hha hhb
     · intro c a ha hha
-      change (rightModuleEquiv_symm e) (c • a) ∈
+      change (rightModuleEquivSymm e) (c • a) ∈
         canonicalRightIdeal x d N
-      rw [(rightModuleEquiv_symm e).map_smulₛₗ c a]
+      rw [(rightModuleEquivSymm e).map_smulₛₗ c a]
       exact (canonicalRightIdeal x d N).smul_mem _ hha
 
 theorem presented_canonicalRightIdeal_map
@@ -181,7 +181,8 @@ def transportedRightQuotientMap {A B : Type*} [Ring A] [Ring B]
     intro a ha
     exact ⟨a, ha, by rfl⟩)
 
-@[simp] theorem transportedRightQuotientMap_qmk
+@[simp]
+theorem transportedRightQuotientMap_qmk
     {A B : Type*} [Ring A] [Ring B] [Algebra k A] [Algebra k B]
     (e : A ≃ₐ[k] B) (I : RightIdeal A) (a : A) :
   transportedRightQuotientMap e I (qmk I a) =
@@ -194,13 +195,13 @@ def transportedRightQuotientEquiv {A B : Type*} [Ring A] [Ring B]
     @LinearEquiv Aᵐᵒᵖ Bᵐᵒᵖ _ _ (AlgEquiv.op e).toRingEquiv
       (AlgEquiv.op e).toRingEquiv.symm _ _
       (RightQuotient I) (RightQuotient (transportedRightIdeal e I)) _ _ _ _ := by
-  apply LinearEquiv.ofLinear (transportedRightQuotientMap e I)
+  apply LinearEquiv.ofLinearMap (transportedRightQuotientMap e I)
     (Submodule.mapQ (transportedRightIdeal e I) I
-      (rightModuleEquiv_symm e) (by
+      (rightModuleEquivSymm e) (by
         intro b hb
         change b ∈ e '' I at hb
         rcases hb with ⟨a, ha, rfl⟩
-        simpa [rightModuleEquiv_symm] using ha))
+        simpa [rightModuleEquivSymm] using ha))
   · apply LinearMap.ext
     intro q
     refine Submodule.Quotient.induction_on
@@ -218,7 +219,8 @@ def transportedRightQuotientEquiv {A B : Type*} [Ring A] [Ring B]
     change qmk I (e.symm (e a)) = qmk I a
     simp
 
-@[simp] theorem transportedRightQuotientEquiv_qmk
+@[simp]
+theorem transportedRightQuotientEquiv_qmk
     {A B : Type*} [Ring A] [Ring B] [Algebra k A] [Algebra k B]
     (e : A ≃ₐ[k] B) (I : RightIdeal A) (a : A) :
     transportedRightQuotientEquiv e I (qmk I a) =

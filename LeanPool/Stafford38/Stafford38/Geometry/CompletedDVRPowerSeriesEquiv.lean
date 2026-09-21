@@ -80,7 +80,7 @@ def nilpotentPowerSeriesEval
     rw [← Polynomial.eval₂_mul]
     apply eval₂_eq_of_coeff_eq_of_pow_eq_zero c x n hx
     intro d hd
-    rw [PowerSeries.coeff_trunc, if_pos hd]
+    rw [PowerSeries.coeff_trunc, ite_eq_left hd]
     calc
       (PowerSeries.coeff d) (f * g) =
           (PowerSeries.coeff d)
@@ -118,9 +118,9 @@ theorem nilpotentPowerSeriesEval_X
       cases n with
       | zero =>
           have hx0 : x = 0 := by simpa using hx
-          simp [nilpotentPowerSeriesEval, PowerSeries.trunc_one_X, hx0]
+          simp [nilpotentPowerSeriesEval,  hx0]
       | succ n =>
-          simp [nilpotentPowerSeriesEval, PowerSeries.trunc_X_of]
+          simp [nilpotentPowerSeriesEval]
 
 /-- Truncated evaluation is independent of a larger truncation once the
 smaller nilpotence exponent has been reached. -/
@@ -131,15 +131,15 @@ private theorem nilpotentPowerSeriesEval_truncation_independent
       Polynomial.eval₂ c x (PowerSeries.trunc m f) := by
   apply eval₂_eq_of_coeff_eq_of_pow_eq_zero c x m hx
   intro d hd
-  rw [PowerSeries.coeff_trunc, if_pos (lt_of_lt_of_le hd hmn),
-    PowerSeries.coeff_trunc, if_pos hd]
+  rw [PowerSeries.coeff_trunc, ite_eq_left (lt_of_lt_of_le hd hmn),
+    PowerSeries.coeff_trunc, ite_eq_left hd]
 
 end NilpotentEvaluation
 
 section CompleteDVR
 
 variable (E V : Type u)
-variable [Field E] [CommRing V] [IsDomain V] [IsLocalRing V]
+variable [Field E] [CommRing V] [IsDomain V]
 variable [IsDiscreteValuationRing V] [Algebra E V]
 
 private abbrev K := ResidueField V
@@ -331,7 +331,7 @@ private theorem coefficient_eq_zero_of_mul_uniformizer_pow_eq_zero
           adicJetResidue E V 0
             (adicJetCoefficientSection E V hsep 0 a) := by
         simp only [rawResidue, completionCoordinateSection, adicJetResidue,
-          AlgHom.comp_apply, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
+          AlgHom.comp_apply]
         generalize hz : adicJetCoefficientSection E V hsep 0 a = z
         obtain ⟨w, rfl⟩ := Ideal.Quotient.mk_surjective z
         rfl
@@ -441,7 +441,7 @@ private theorem exists_coefficient_mul_uniformizer_pow_eq
           adicJetResidue E V 0
             (adicJetCoefficientSection E V hsep 0 a) := by
         simp only [rawResidue, completionCoordinateSection, adicJetResidue,
-          AlgHom.comp_apply, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
+          AlgHom.comp_apply]
         generalize hz : adicJetCoefficientSection E V hsep 0 a = z
         obtain ⟨w, rfl⟩ := Ideal.Quotient.mk_surjective z
         rfl
@@ -491,8 +491,6 @@ private noncomputable def powerSeriesApproximant
       have ha := Classical.choose_spec
         (exists_coefficient_mul_uniformizer_pow_eq E V hsep n y hy)
       refine ⟨f.1 + PowerSeries.C a * PowerSeries.X ^ n, ?_⟩
-      change powerSeriesCoordinateMap E V hsep (n + 1)
-          (f.1 + PowerSeries.C a * PowerSeries.X ^ n) = z.val (n + 1)
       rw [map_add, map_mul, map_pow]
       have hC : powerSeriesCoordinateMap E V hsep (n + 1)
           (PowerSeries.C a) =
@@ -524,7 +522,7 @@ private theorem powerSeriesApproximant_succ_coeff
       ((powerSeriesApproximant E V hsep z n).1 +
         PowerSeries.C _ * PowerSeries.X ^ n) = _
   rw [map_add, PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow,
-    if_neg hi.ne, mul_zero, add_zero]
+    ite_eq_right hi.ne, mul_zero, add_zero]
 
 /-- All coefficients below level `a` are stable in every later approximant. -/
 private theorem powerSeriesApproximant_coeff_stable
@@ -605,8 +603,8 @@ theorem completedDVRPowerSeriesMap_surjective
             (uniformizerCoordinate V n) n
             (uniformizerCoordinate_pow_eq_zero V n)
           intro d hd
-          rw [PowerSeries.coeff_trunc, if_pos hd,
-            PowerSeries.coeff_trunc, if_pos hd]
+          rw [PowerSeries.coeff_trunc, ite_eq_left hd,
+            PowerSeries.coeff_trunc, ite_eq_left hd]
           exact powerSeriesExpansion_coeff_eq_approximant E V hsep z hd
     _ = powerSeriesCoordinateMap E V hsep n
           (powerSeriesApproximant E V hsep z n) := rfl

@@ -51,7 +51,7 @@ lemma rightMul_coeff_C_top (D : OreDivisionDerivation B) (p : Polynomial B)
   · subst b
     simp
   · rw [Polynomial.support_C hb]
-    simp
+    simp?
     exact OreDivision.rightMulMonomial_coeff_top D p hp b 0
 
 lemma degree_lt_of_degree_le_of_coeff_zero
@@ -127,7 +127,7 @@ theorem exists_monic_minimal_member
   have hp0 : p ≠ 0 := by
     intro hp
     apply hz0
-    simpa [hp] using (normalForm_zero D)
+    simp [hp]
   let P : ℕ → Prop := fun n => ∃ q : Polynomial B,
     q ≠ 0 ∧ normalForm D q ∈ I ∧ q.natDegree = n
   have hex : ∃ n, P n := ⟨p.natDegree, p, hp0, hzI, rfl⟩
@@ -187,7 +187,7 @@ def normalOrePrincipalRightIdealElement (D : OreDivisionDerivation B)
   Submodule.span (NormalOre D)ᵐᵒᵖ ({a} : Set (NormalOre D))
 
 /-- Right Euclidean division transported from polynomial normal form. -/
-theorem normalOre_right_division [Nontrivial B]
+theorem normalOre_right_division
     (D : OreDivisionDerivation B) (d : Polynomial B) (hd : d.Monic)
     (a : NormalOre D) :
     ∃ q r : Polynomial B,
@@ -234,7 +234,7 @@ theorem exists_monic_minimal_right_member
   have hp0 : p ≠ 0 := by
     intro hp
     apply hz0
-    simpa [hp] using (normalForm_zero D)
+    simp [hp]
   let P : ℕ → Prop := fun n => ∃ q : Polynomial B,
     q ≠ 0 ∧ normalForm D q ∈ I ∧ q.natDegree = n
   have hex : ∃ n, P n := ⟨p.natDegree, p, hp0, hzI, rfl⟩

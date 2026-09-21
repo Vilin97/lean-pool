@@ -57,7 +57,8 @@ def fibreLinePolynomial
 def verticalDeriv (v : Fin n → k) (g : SymbolRing k n) : SymbolRing k n :=
   ∑ i, MvPolynomial.C (v i) * MvPolynomial.pderiv (Sum.inr i) g
 
-@[simp] theorem verticalDeriv_C (v : Fin n → k) (a : k) :
+@[simp]
+theorem verticalDeriv_C (v : Fin n → k) (a : k) :
     verticalDeriv v (MvPolynomial.C a) = 0 := by
   simp [verticalDeriv]
 
@@ -79,31 +80,37 @@ theorem verticalDeriv_mul (v : Fin n → k) (g h : SymbolRing k n) :
     intro i hi
     ac_rfl
 
-@[simp] theorem verticalDeriv_X_base (v : Fin n → k) (i : Fin n) :
+@[simp]
+theorem verticalDeriv_X_base (v : Fin n → k) (i : Fin n) :
     verticalDeriv v (MvPolynomial.X (Sum.inl i)) = 0 := by
   simp [verticalDeriv]
 
-@[simp] theorem verticalDeriv_X_fibre (v : Fin n → k) (i : Fin n) :
+@[simp]
+theorem verticalDeriv_X_fibre (v : Fin n → k) (i : Fin n) :
     verticalDeriv v (MvPolynomial.X (Sum.inr i)) = MvPolynomial.C (v i) := by
   classical
   simp [verticalDeriv, Pi.single_apply]
 
-@[simp] theorem fibreLinePolynomial_C
+@[simp]
+theorem fibreLinePolynomial_C
     (y v : Fin n → k) (a : k) :
     fibreLinePolynomial y v (MvPolynomial.C a) = Polynomial.C a := by
   simp [fibreLinePolynomial]
 
-@[simp] theorem fibreLinePolynomial_zero (y v : Fin n → k) :
+@[simp]
+theorem fibreLinePolynomial_zero (y v : Fin n → k) :
     fibreLinePolynomial y v 0 = 0 := by
   simp [fibreLinePolynomial]
 
-@[simp] theorem fibreLinePolynomial_add
+@[simp]
+theorem fibreLinePolynomial_add
     (y v : Fin n → k) (g h : SymbolRing k n) :
     fibreLinePolynomial y v (g + h) =
       fibreLinePolynomial y v g + fibreLinePolynomial y v h := by
   simp [fibreLinePolynomial]
 
-@[simp] theorem fibreLinePolynomial_mul
+@[simp]
+theorem fibreLinePolynomial_mul
     (y v : Fin n → k) (g h : SymbolRing k n) :
     fibreLinePolynomial y v (g * h) =
       fibreLinePolynomial y v g * fibreLinePolynomial y v h := by
@@ -114,12 +121,14 @@ theorem fibreLinePolynomial_sum {ι : Type*} [Fintype ι]
     fibreLinePolynomial y v (∑ i, g i) = ∑ i, fibreLinePolynomial y v (g i) := by
   simp [fibreLinePolynomial]
 
-@[simp] theorem fibreLinePolynomial_X_base
+@[simp]
+theorem fibreLinePolynomial_X_base
     (y v : Fin n → k) (i : Fin n) :
     fibreLinePolynomial y v (MvPolynomial.X (Sum.inl i)) = Polynomial.C (y i) := by
   simp [fibreLinePolynomial]
 
-@[simp] theorem fibreLinePolynomial_X_fibre
+@[simp]
+theorem fibreLinePolynomial_X_fibre
     (y v : Fin n → k) (i : Fin n) :
     fibreLinePolynomial y v (MvPolynomial.X (Sum.inr i)) =
       Polynomial.C (v i) * Polynomial.X := by
@@ -137,7 +146,7 @@ theorem derivative_fibreLinePolynomial
   | mul_X p i hp =>
       rcases i with i | i
       · simp only [fibreLinePolynomial_mul, fibreLinePolynomial_X_base, Polynomial.derivative_mul,
-          Polynomial.derivative_C, zero_mul, add_zero, hp]
+          Polynomial.derivative_C,   hp]
         simp [verticalDeriv_mul]
       · simp only [fibreLinePolynomial_mul, fibreLinePolynomial_X_fibre, Polynomial.derivative_mul,
           Polynomial.derivative_C, Polynomial.derivative_X, zero_mul, zero_add, mul_one, hp]
@@ -188,9 +197,9 @@ theorem fibreLinePolynomial_baseLift
     (y v : Fin n → k) (f : MvPolynomial (Fin n) k) :
     fibreLinePolynomial y v (baseLift f) = Polynomial.C (MvPolynomial.eval y f) := by
   induction f using MvPolynomial.induction_on with
-  | C a => simp [baseLift, fibreLinePolynomial, differentialAt]
+  | C a => simp [baseLift, fibreLinePolynomial]
   | add p q hp hq => simp only [map_add, fibreLinePolynomial_add, hp, hq,
-      MvPolynomial.eval_add, map_add]
+       map_add]
   | mul_X p j hp =>
       rw [map_mul, fibreLinePolynomial_mul, hp, MvPolynomial.eval_mul,
         MvPolynomial.eval_X, map_mul]

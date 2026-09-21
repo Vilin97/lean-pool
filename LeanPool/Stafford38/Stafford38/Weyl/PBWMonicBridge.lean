@@ -63,12 +63,12 @@ theorem coeff_axisPolynomial {n : ℕ} (t : PhaseVar n)
             intro h
             exact hmt (Finsupp.single_injective t h)
           simp [hmt, hs]
-      · push_neg at hsub
+      · push Not at hsub
         rcases hsub with ⟨i, hi, hit⟩
         have hmne : m ≠ Finsupp.single t N := by
           intro hm
           subst m
-          simp [Finsupp.single_apply, Ne.symm hit] at hi
+          simp [ Ne.symm hit] at hi
         rw [axisPolynomial, MvPolynomial.aeval_monomial]
         have hz : m.prod
             (fun i e => (if i = t then MvPolynomial.X ()
@@ -89,6 +89,8 @@ theorem coeff_principal_pure_eq_normalForm {n N : ℕ}
   rw [coeff_presentedPrincipalComponent]
   simp [monomialWeight, bernsteinWeight]
 
+/-- Membership in Bernstein degree `N` with pure `t`-power coefficient equal to one in PBW
+normal form. -/
 def IsPBWMonicAt {n : ℕ} (t : PhaseVar n) (N : ℕ)
     (d : PresentedWeyl k n) : Prop :=
   d ∈ bernsteinPiece k n N ∧
@@ -109,8 +111,11 @@ theorem coeff_normalForm_eq_zero_of_exponent_gt {n N : ℕ}
 
 structure NormalizedPBWChartData {n : ℕ} (t : PhaseVar n) (N : ℕ)
     (d : PresentedWeyl k n) where
+  /-- The symplectic matrix defining the normalized coordinate change. -/
   M : Matrix (PhaseVar n) (PhaseVar n) k
+  /-- The inverse symplectic matrix of the normalized coordinate change. -/
   Ninv : Matrix (PhaseVar n) (PhaseVar n) k
+  /-- The nonzero scalar used to normalize the pure PBW coefficient. -/
   c : k
   hM : M * standardForm k n * Matrix.transpose M = standardForm k n
   hNinv : Ninv * standardForm k n * Matrix.transpose Ninv = standardForm k n

@@ -26,73 +26,76 @@ noncomputable section
 
 variable (k : Type*) [Field k] [Algebra ℚ k]
 variable (n N : ℕ) (d : PresentedWeyl k (n + 1))
-variable (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
 
 attribute [local instance] sourceModule targetModule
 
 theorem sourceSucc_intertwines_polynomials (r : ℕ)
     (P : MvPolynomial (Fin n ⊕ Fin n) k) :
-    (complex k n N d hd).sourceTotalSuccMap r ∘ₗ sourceAction k n N d hd (r + 1) P =
-      sourceAction k n N d hd r P ∘ₗ (complex k n N d hd).sourceTotalSuccMap r :=
+    (complex k n N d).sourceTotalSuccMap r ∘ₗ sourceAction k n N d (r + 1) P =
+      sourceAction k n N d r P ∘ₗ (complex k n N d).sourceTotalSuccMap r :=
   commutingPolynomialAction_intertwines _ _ _ _ _
-    (fun i => (generator k n N d hd i).sourceTotalSuccMap_naturality r) P
+    (fun i => (generator k n N d i).sourceTotalSuccMap_naturality r) P
 
 theorem targetSucc_intertwines_polynomials (r : ℕ)
     (P : MvPolynomial (Fin n ⊕ Fin n) k) :
-    (complex k n N d hd).targetTotalSuccMap r ∘ₗ targetAction k n N d hd r P =
-      targetAction k n N d hd (r + 1) P ∘ₗ (complex k n N d hd).targetTotalSuccMap r :=
+    (complex k n N d).targetTotalSuccMap r ∘ₗ targetAction k n N d r P =
+      targetAction k n N d (r + 1) P ∘ₗ (complex k n N d).targetTotalSuccMap r :=
   commutingPolynomialAction_intertwines _ _ _ _ _
-    (fun i => (generator k n N d hd i).targetTotalSuccMap_naturality r) P
+    (fun i => (generator k n N d i).targetTotalSuccMap_naturality r) P
 
+/-- The source transition map, linear for the tangential polynomial action. -/
 def tangentialSourceSucc (r : ℕ) :
-    (complex k n N d hd).SourceTotal (r + 1) →ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
-      (complex k n N d hd).SourceTotal r where
-  toFun := (complex k n N d hd).sourceTotalSuccMap r
+    (complex k n N d).SourceTotal (r + 1) →ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
+      (complex k n N d).SourceTotal r where
+  toFun := (complex k n N d).sourceTotalSuccMap r
   map_add' := map_add _
   map_smul' P z := congrArg (fun f => f z)
-    (sourceSucc_intertwines_polynomials k n N d hd r P)
+    (sourceSucc_intertwines_polynomials k n N d r P)
 
+/-- The target transition map, linear for the tangential polynomial action. -/
 def tangentialTargetSucc (r : ℕ) :
-    (complex k n N d hd).TargetTotal r →ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
-      (complex k n N d hd).TargetTotal (r + 1) where
-  toFun := (complex k n N d hd).targetTotalSuccMap r
+    (complex k n N d).TargetTotal r →ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
+      (complex k n N d).TargetTotal (r + 1) where
+  toFun := (complex k n N d).targetTotalSuccMap r
   map_add' := map_add _
   map_smul' P z := congrArg (fun f => f z)
-    (targetSucc_intertwines_polynomials k n N d hd r P)
+    (targetSucc_intertwines_polynomials k n N d r P)
 
 theorem tangentialSourceSucc_injective (r : ℕ) :
-    Function.Injective (tangentialSourceSucc k n N d hd r) :=
-  (complex k n N d hd).totalSourceSuccMap_injective r
+    Function.Injective (tangentialSourceSucc k n N d r) :=
+  (complex k n N d).totalSourceSuccMap_injective r
 
 theorem tangentialSourceSucc_range (r : ℕ) :
-    (tangentialSourceSucc k n N d hd r).range =
-      (tangentialDrop k n N d hd r).ker := by
+    (tangentialSourceSucc k n N d r).range =
+      (tangentialDrop k n N d r).ker := by
   ext z
-  exact SetLike.ext_iff.mp ((complex k n N d hd).range_totalSourceSuccMap r) z
+  exact SetLike.ext_iff.mp ((complex k n N d).range_totalSourceSuccMap r) z
 
 theorem tangentialTargetSucc_surjective (r : ℕ) :
-    Function.Surjective (tangentialTargetSucc k n N d hd r) :=
-  (DirectSum.lmap_surjective _).mpr ((complex k n N d hd).targetSuccMap_surjective r)
+    Function.Surjective (tangentialTargetSucc k n N d r) :=
+  (DirectSum.lmap_surjective _).mpr ((complex k n N d).targetSuccMap_surjective r)
 
 theorem tangentialTargetSucc_ker (r : ℕ) :
-    (tangentialTargetSucc k n N d hd r).ker =
-      (tangentialDrop k n N d hd r).range := by
+    (tangentialTargetSucc k n N d r).ker =
+      (tangentialDrop k n N d r).range := by
   ext z
-  exact SetLike.ext_iff.mp ((complex k n N d hd).ker_totalTargetSuccMap r) z
+  exact SetLike.ext_iff.mp ((complex k n N d).ker_totalTargetSuccMap r) z
 
+/-- The source total module identified with the kernel of the tangential drop map. -/
 def tangentialSourceSuccEquiv (r : ℕ) :
-    (complex k n N d hd).SourceTotal (r + 1) ≃ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
-      (tangentialDrop k n N d hd r).ker :=
-  LinearEquiv.ofInjective (tangentialSourceSucc k n N d hd r)
-      (tangentialSourceSucc_injective k n N d hd r) ≪≫ₗ
-    LinearEquiv.ofEq _ _ (tangentialSourceSucc_range k n N d hd r)
+    (complex k n N d).SourceTotal (r + 1) ≃ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
+      (tangentialDrop k n N d r).ker :=
+  LinearEquiv.ofInjective (tangentialSourceSucc k n N d r)
+      (tangentialSourceSucc_injective k n N d r) ≪≫ₗ
+    LinearEquiv.ofEq _ _ (tangentialSourceSucc_range k n N d r)
 
+/-- The next target total module identified with the quotient by the tangential drop image. -/
 def tangentialTargetSuccEquiv (r : ℕ) :
-    (complex k n N d hd).TargetTotal (r + 1) ≃ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
-      ((complex k n N d hd).TargetTotal r ⧸ (tangentialDrop k n N d hd r).range) :=
-  ((Submodule.quotEquivOfEq _ _ (tangentialTargetSucc_ker k n N d hd r).symm) ≪≫ₗ
-    (tangentialTargetSucc k n N d hd r).quotKerEquivOfSurjective
-      (tangentialTargetSucc_surjective k n N d hd r)).symm
+    (complex k n N d).TargetTotal (r + 1) ≃ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
+      ((complex k n N d).TargetTotal r ⧸ (tangentialDrop k n N d r).range) :=
+  ((Submodule.quotEquivOfEq _ _ (tangentialTargetSucc_ker k n N d r).symm) ≪≫ₗ
+    (tangentialTargetSucc k n N d r).quotKerEquivOfSurjective
+      (tangentialTargetSucc_surjective k n N d r)).symm
 
 
 end

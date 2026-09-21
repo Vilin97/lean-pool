@@ -27,6 +27,7 @@ noncomputable section
 
 variable {k : Type*} [Field k] {n : ℕ}
 
+/-- The decomposition of the symbol ring into homogeneous momentum-order pieces. -/
 abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 

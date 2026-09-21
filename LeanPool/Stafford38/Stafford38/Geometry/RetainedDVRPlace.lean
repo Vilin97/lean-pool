@@ -31,6 +31,7 @@ noncomputable section
 
 universe u v w
 
+/-- Finiteness of the residue-field extension induced by a local ring homomorphism. -/
 def ResidueExtensionFinite
     {A V : Type*} [CommRing A] [IsLocalRing A]
     [CommRing V] [IsLocalRing V] (factor : A →+* V)
@@ -43,12 +44,15 @@ def ResidueExtensionFinite
 structure RetainedDVRPlace
     (A : Type u) [CommRing A] [IsDomain A] [IsLocalRing A]
     {L : Type w} [Field L] [Algebra A L] (a : A) where
+  /-- The valuation subring giving the retained discrete valuation place. -/
   valuation : ValuationSubring L
   isDiscrete : IsDiscreteValuationRing valuation.toSubring
+  /-- The nonzero nonunit parameter lifting the specified source element. -/
   parameter : valuation.toSubring
   parameter_eq : (parameter : L) = algebraMap A L a
   parameter_ne : parameter ≠ 0
   parameter_nonunit : ¬IsUnit parameter
+  /-- The local source-ring map into the valuation ring, compatible with the ambient field. -/
   factor : A →+* valuation.toSubring
   factor_commutes :
     valuation.toSubring.subtype.comp factor = algebraMap A L

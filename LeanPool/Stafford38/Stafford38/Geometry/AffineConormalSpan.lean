@@ -43,6 +43,7 @@ noncomputable section
 
 variable {k : Type*} [Field k] {n : ℕ}
 
+/-- The ambient tangent vector space of affine `n`-space. -/
 abbrev AffineTangentVector (k : Type*) (n : ℕ) := Fin n → k
 
 /-- The differential of `f` at `y`, viewed as a linear functional on the
@@ -51,7 +52,7 @@ def differentialCovector (y : Fin n → k) (f : MvPolynomial (Fin n) k) :
     Module.Dual k (AffineTangentVector k n) where
   toFun v := ∑ i, differentialAt y f i * v i
   map_add' u v := by simp [mul_add, Finset.sum_add_distrib]
-  map_smul' a v := by simp [mul_assoc, mul_left_comm, mul_comm, Finset.mul_sum]
+  map_smul' a v := by simp [mul_assoc,  mul_comm, Finset.mul_sum]
 
 @[simp]
 theorem differentialCovector_apply (y : Fin n → k)
@@ -104,7 +105,7 @@ def coordinateCovector (xi : Fin n → k) :
     Module.Dual k (AffineTangentVector k n) where
   toFun v := ∑ i, xi i * v i
   map_add' u v := by simp [mul_add, Finset.sum_add_distrib]
-  map_smul' a v := by simp [mul_assoc, mul_left_comm, mul_comm, Finset.mul_sum]
+  map_smul' a v := by simp [ mul_left_comm,  Finset.mul_sum]
 
 @[simp]
 theorem coordinateCovector_apply (xi v : Fin n → k) :

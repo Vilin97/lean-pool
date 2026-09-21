@@ -234,7 +234,7 @@ theorem phaseMonomial_succ_decompose {n : ℕ}
     MvPolynomial.rename_monomial,
     MvPolynomial.X_pow_eq_monomial,
     MvPolynomial.X_pow_eq_monomial,
-    MvPolynomial.monomial_mul, MvPolynomial.monomial_mul]
+    MvPolynomial.monomial_mul_monomial, MvPolynomial.monomial_mul_monomial]
   simp [add_comm, add_left_comm, add_assoc]
 
 theorem principal_one_bernstein (r : ℕ) :
@@ -396,7 +396,7 @@ theorem algHom_principal_compatibility {n r N : ℕ}
         exact h
       by_cases hd : d = N
       · subst N
-        rw [presentedPrincipalComponent_basis, if_pos rfl,
+        rw [presentedPrincipalComponent_basis, ite_eq_left rfl,
           presentedPBWBasis_apply]
         have h := algHom_orderedMonomial_principal_all k n f hgen g hprincipal
           (fun i => m (.inl i)) (fun i => m (.inr i))
@@ -405,7 +405,7 @@ theorem algHom_principal_compatibility {n r N : ℕ}
       · have hdlt : d < N := lt_of_le_of_ne hm hd
         rw [presentedPrincipalComponent_eq_zero_of_mem_of_lt k
           (@bernsteinWeight r) (f (presentedPBWBasis k n m)) hmapmem hdlt,
-          presentedPrincipalComponent_basis, if_neg hd, map_zero]
+          presentedPrincipalComponent_basis, ite_eq_right hd, map_zero]
   | zero => simp
   | add x y hx hy ihx ihy =>
       simp only [map_add]

@@ -100,10 +100,10 @@ theorem exists_ambientConormalAxis_of_minimalPrime_coordinate_constant
     intro j hj
     by_cases hji : j = i
     · subst j
-      simp [differentialAt, MvPolynomial.pderiv_mul, h, hhzero,
-        mul_assoc, mul_left_comm, mul_comm]
-    · simp [differentialAt, MvPolynomial.pderiv_mul, h, hhzero,
-        hji, Ne.symm hji, mul_assoc, mul_left_comm, mul_comm]
+      simp [differentialAt,  h, hhzero,
+          mul_comm]
+    · simp [differentialAt,  h, hhzero,
+        hji, Ne.symm hji,   mul_comm]
   have hproductConormal : differentialCovector y (h * g) ∈
       affineConormalSpace y I := by
     rw [affineConormalSpace_eq_equationCovectorSpan]
@@ -190,10 +190,10 @@ theorem exists_residueExtensionConormalAxis_of_minimalPrime_coordinate_constant
     rw [hdiffAtL]
     by_cases hji : j = i
     · subst j
-      simp [h, differentialAt, MvPolynomial.pderiv_mul, hhzero,
-        mul_assoc, mul_left_comm, mul_comm]
-    · simp [h, differentialAt, MvPolynomial.pderiv_mul, hhzero,
-        hji, Ne.symm hji, mul_assoc, mul_left_comm, mul_comm]
+      simp [h, differentialAt,  hhzero,
+          mul_comm]
+    · simp [h, differentialAt,  hhzero,
+        hji, Ne.symm hji,   mul_comm]
   have haxisConormal : coordinateCovector
       (fun j : Fin m ↦ if j = i then 1 else 0) ∈
         affineConormalSpace yL IL := by

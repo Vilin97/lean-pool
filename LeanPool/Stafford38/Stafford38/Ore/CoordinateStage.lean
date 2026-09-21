@@ -32,9 +32,11 @@ def zeroDerivation : OreDivisionDerivation B where
   map_add' := by simp
   leibniz' := by simp
 
-@[simp] theorem zeroDerivation_apply (b : B) : zeroDerivation b = 0 := rfl
+@[simp]
+theorem zeroDerivation_apply (b : B) : zeroDerivation b = 0 := rfl
 
-@[simp] theorem zeroDerivation_iterate_succ (n : ℕ) (b : B) :
+@[simp]
+theorem zeroDerivation_iterate_succ (n : ℕ) (b : B) :
     ((zeroDerivation : B → B)^[n + 1]) b = 0 := by
   rw [Function.iterate_succ_apply']
   rfl
@@ -75,12 +77,14 @@ theorem rightMul_zeroDerivation_eq_mul (p q : Polynomial B) :
 /-- The central-coordinate extension of `B`. -/
 abbrev CoordinateStage := NormalOre (zeroDerivation : OreDivisionDerivation B)
 
-@[simp] theorem normalForm_mul_zeroDerivation (p q : Polynomial B) :
+@[simp]
+theorem normalForm_mul_zeroDerivation (p q : Polynomial B) :
     normalForm zeroDerivation (p * q) =
       normalForm zeroDerivation p * normalForm zeroDerivation q := by
   rw [← rightMul_zeroDerivation_eq_mul, normalForm_mul]
 
-@[simp] theorem normalFormAddEquiv_symm_normalForm (p : Polynomial B) :
+@[simp]
+theorem normalFormAddEquiv_symm_normalForm (p : Polynomial B) :
     (normalFormAddEquiv zeroDerivation).symm (normalForm zeroDerivation p) = p := by
   rw [show normalForm zeroDerivation p =
     (normalFormAddEquiv zeroDerivation) p by rfl]
@@ -130,7 +134,8 @@ def coordinateDerivation : OreDivisionDerivation (CoordinateStage (B := B)) wher
       normalForm_mul_zeroDerivation, normalForm_mul_zeroDerivation]
     exact add_comm _ _
 
-@[simp] theorem coordinateDerivation_normalForm (p : Polynomial B) :
+@[simp]
+theorem coordinateDerivation_normalForm (p : Polynomial B) :
     coordinateDerivation (normalForm zeroDerivation p) =
       normalForm zeroDerivation (Polynomial.derivative p) := by
   change normalForm zeroDerivation
@@ -138,12 +143,14 @@ def coordinateDerivation : OreDivisionDerivation (CoordinateStage (B := B)) wher
       (normalForm zeroDerivation p))) = _
   rw [normalFormAddEquiv_symm_normalForm]
 
-@[simp] theorem coordinateDerivation_coefficient (b : B) :
+@[simp]
+theorem coordinateDerivation_coefficient (b : B) :
     coordinateDerivation (normalCoefficient zeroDerivation b) = 0 := by
   rw [← normalForm_C, coordinateDerivation_normalForm,
     Polynomial.derivative_C, normalForm_zero]
 
-@[simp] theorem coordinateDerivation_variable :
+@[simp]
+theorem coordinateDerivation_variable :
     coordinateDerivation (normalVariable zeroDerivation : CoordinateStage (B := B)) = 1 := by
   rw [normalVariable, coordinateDerivation_normalForm,
     Polynomial.derivative_X, normalForm_one]

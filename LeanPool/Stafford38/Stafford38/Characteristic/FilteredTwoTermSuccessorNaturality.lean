@@ -7,10 +7,15 @@ Authors: Christopher Albert
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermSuccessorNaturality
 import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalActions
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for naturality of successor-page operators
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.FilteredTwoTermPages
 
-export AlgebraicAnalysis.FilteredTwoTermPages (FilteredTwoTerm.PageOperator.sourceTotalSuccMap_naturality FilteredTwoTerm.PageOperator.targetTotalSuccMap_naturality)
+export AlgebraicAnalysis.FilteredTwoTermPages (
+  FilteredTwoTerm.PageOperator.sourceTotalSuccMap_naturality
+  FilteredTwoTerm.PageOperator.targetTotalSuccMap_naturality)
 
 end Stafford38.Characteristic.FilteredTwoTermPages

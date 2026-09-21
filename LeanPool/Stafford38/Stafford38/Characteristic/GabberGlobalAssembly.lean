@@ -19,10 +19,12 @@ preserve the right-module bracket orientation.
 
 ## References and proof context
 
-[Gab81] Ofer Gabber, *The Integrability of the Characteristic Variety*, American Journal of Mathematics 103 (1981), no. 3, 445–468.
+[Gab81] Ofer Gabber, *The Integrability of the Characteristic Variety*, American Journal of
+  Mathematics 103 (1981), no. 3, 445–468.
 https://doi.org/10.2307/2374101
 
-This is the classical theorem implemented for cyclic Weyl quotients. Its exact radical-involutivity interface is proved here; see docs/literature.md and docs/proof-guide.md.
+This is the classical theorem implemented for cyclic Weyl quotients. Its exact
+  radical-involutivity interface is proved here; see docs/literature.md and docs/proof-guide.md.
 -/
 
 namespace Stafford38.Characteristic.GabberGlobalAssembly
@@ -117,7 +119,7 @@ theorem localized_cofactor_mem
   let : SMul (C q) Wₗ :=
     (localizedTwoBlockModule D S q hpow).toDistribMulAction.toDistribSMul.toSMul
   let E := concreteLeftPrincipalParameterReduction k I S q
-  let rho := localizedDoubledPowerModuleSpecialization D S q hpow
+  let rho := localizedDoubledPowerModuleSpecialization D S
   have hparam : parameterAct (W := Wₗ) E.parameter = localizedCAct D S := by
     ext w
     exact localizedTwoBlock_parameter_smul D S q hpow w
@@ -125,7 +127,7 @@ theorem localized_cofactor_mem
     localizedDoubledPowerModuleSpecialization_action D S q hpow
   have hker : AddMonoidHom.ker rho = AddMonoidHom.range (parameterAct (W := Wₗ) E.parameter) := by
     rw [hparam]
-    exact localizedDoubledPowerModuleSpecialization_ker D S q hpow
+    exact localizedDoubledPowerModuleSpecialization_ker D S
   have hexact : AddMonoidHom.ker (parameterAct (W := Wₗ) E.parameter) =
       AddMonoidHom.range (parameterAct (W := Wₗ) E.parameter) := by
     rw [hparam]
@@ -133,14 +135,15 @@ theorem localized_cofactor_mem
   have hc2 : E.parameter * E.parameter = 0 := by
     rw [← pow_two]
     change ((localizedTwoBlockIdeal D S q).ringCon.mk'
-      (OreLocalization.numeratorRingHom (MulOpposite.op (orderReesTwoJetParameter (n := n) k)))) ^ 2 = 0
+      (OreLocalization.numeratorRingHom (MulOpposite.op (orderReesTwoJetParameter (n := n) k))))
+        ^ 2 = 0
     exact localizedTwoBlock_parameter_sq D S q
   have hmax : (IsLocalRing.maximalIdeal R).map (Ideal.Quotient.mk H) =
       IsLocalRing.maximalIdeal Rq :=
     IsLocalRing.map_maximalIdeal_of_surjective _ Ideal.Quotient.mk_surjective
   rw [hmax] at hx hy ⊢
   exact artinian_local_cofactor_mem_maximalIdeal k E rho
-    (localizedDoubledPowerModuleSpecialization_surjective D S q hpow)
+    (localizedDoubledPowerModuleSpecialization_surjective D S)
     hact hker hexact hc2 x y z hx hy hxy
 
 omit hOre in
@@ -171,7 +174,7 @@ theorem minimalPrime_isInvolutive
     rw [show φ (MulOpposite.op v) =
       (localizedTwoBlockIdeal D S (q + 1)).ringCon.mk'
         (OreLocalization.numeratorRingHom (MulOpposite.op v)) from rfl,
-      localizedTwoBlockSpecialization_mk]
+      RingCon.coe_mk', localizedTwoBlockSpecialization_mk]
     change Ideal.Quotient.mk H (localizedOppositeSpecialization D S
       (OreLocalization.numeratorRingHom (MulOpposite.op v))) = _
     exact congrArg (Ideal.Quotient.mk H)
@@ -225,7 +228,7 @@ theorem associatedGraded_radical_isInvolutive :
   exact minimalPrime_isInvolutive k I P hP f (hle hf) g (hle hg)
 
 theorem weylAssociatedGradedRadicalInvolutivity :
-    Stafford38.Characteristic.CanonicalGabberInvolutivityInterface.WeylAssociatedGradedRadicalInvolutivity.{u} := by
+    CanonicalGabberInvolutivityInterface.WeylAssociatedGradedRadicalInvolutivity.{u} := by
   intro k _ _ n I
   exact associatedGraded_radical_isInvolutive k I
 

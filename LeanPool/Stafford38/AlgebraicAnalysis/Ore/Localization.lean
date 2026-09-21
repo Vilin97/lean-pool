@@ -45,7 +45,7 @@ theorem exists_common_left_multiple (s : Finset S) :
       · exact ⟨u, huv⟩
       · rcases ht b hb with ⟨w, hw⟩
         refine ⟨(v : R) * w, ?_⟩
-        simpa [Submonoid.coe_mul, hw, mul_assoc]
+        simp [Submonoid.coe_mul, hw, mul_assoc]
 
 end CommonDenominators
 
@@ -54,12 +54,14 @@ section FractionRepresentation
 variable {R : Type u} [Ring R] [Nontrivial R] [NoZeroDivisors R]
 variable {S : Submonoid R} [OreSet S]
 
+omit [Nontrivial R] [NoZeroDivisors R] in
 /-- Every element of an Ore localization has an explicit numerator/denominator form. -/
 theorem exists_fraction (x : R[S⁻¹]) :
     ∃ r : R, ∃ s : S, x = r /ₒ s := by
   induction x using OreLocalization.ind with
   | _ r s => exact ⟨r, s, rfl⟩
 
+omit [Nontrivial R] [NoZeroDivisors R] in
 /-- A nonzero localized element has a representative with nonzero numerator. -/
 theorem exists_ne_zero_numerator {x : R[S⁻¹]} (hx : x ≠ 0) :
     ∃ r : R, r ≠ 0 ∧ ∃ s : S, x = r /ₒ s := by
@@ -84,6 +86,7 @@ theorem numerator_injective (hS : S ≤ nonZeroDivisorsRight R) :
       exact one_ne_zero h1
     exact (mul_eq_zero.mp hsy).resolve_left hs0
 
+omit [Nontrivial R] [NoZeroDivisors R] in
 /-- Every chosen denominator becomes a unit in an Ore localization. -/
 theorem denominator_isUnit (s : S) :
     IsUnit (OreLocalization.numeratorHom (s : R) : R[S⁻¹]) :=

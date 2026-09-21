@@ -126,7 +126,7 @@ theorem exists_algebraicClosure_zero_of_mem_primeZeroLocus
   apply exists_algebraicClosure_zero_of_ne_top J
   intro hJ
   subst J
-  exact p.2.ne_top (by simpa using hp)
+  simp at hp
 
 /-- A geometric point gives a prime of the original polynomial ring by
 contracting its evaluation kernel.  The displayed equality records the exact
@@ -137,6 +137,7 @@ def groundPrimeOfAlgebraicClosurePoint (q : σ → AlgebraicClosure k) :
     (k := k) (K := AlgebraicClosure k) σ)
     (MvPolynomial.pointToPoint q)
 
+omit [Finite σ] in
 theorem groundPrimeOfAlgebraicClosurePoint_asIdeal
     (q : σ → AlgebraicClosure k) :
     (groundPrimeOfAlgebraicClosurePoint (k := k) q).asIdeal =
@@ -145,6 +146,7 @@ theorem groundPrimeOfAlgebraicClosurePoint_asIdeal
           (k := k) (K := AlgebraicClosure k) σ) :=
   rfl
 
+omit [Finite σ] in
 /-- Conversely, a geometric zero of the extended ideal contracts to a prime
 of the ground polynomial ring containing the original ideal. -/
 theorem groundPrimeOfAlgebraicClosurePoint_mem_zeroLocus

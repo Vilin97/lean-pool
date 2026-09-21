@@ -46,8 +46,8 @@ variable {k : Type u} [Field k] {m : ℕ}
 
 /-- The ground-field structure on the retained residue field induced by the
 actual coefficient map through the valuation ring. -/
+@[instance_reducible]
 def retainedResidueGroundAlgebra
-    [CharZero k]
     (P : PrimeSpectrum (MvPolynomial (Fin m) k)) (i : Fin m)
     (W : Data k (ComponentFractionField P) (componentCoordinate P i)) :
     letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
@@ -66,7 +66,7 @@ def retainedResidueGroundAlgebra
   exact ((residue V).comp (retainedComponentCoefficientMap P i W)).toAlgebra
 
 private theorem completedDVRPowerSeriesMap_ground
-    (E V : Type u) [Field E] [CommRing V] [IsDomain V] [IsLocalRing V]
+    (E V : Type u) [Field E] [CommRing V] [IsDomain V]
     [IsDiscreteValuationRing V] [Algebra E V]
     (hsep : Algebra.IsSeparable E (ResidueField V)) (c : E) :
     algebraMap V (AdicCompletion (maximalIdeal V) V) (algebraMap E V c) =

@@ -7,10 +7,16 @@ Authors: Christopher Albert
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulFiniteTorsion
 import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulPositivity
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for finite torsion in principal Koszul complexes
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.PrincipalKoszulFiniteTorsion
 
-export AlgebraicAnalysis.PrincipalKoszulFiniteTorsion (isNoetherian_kernel_power isFiniteLength_kernel_power length_cokernel_gt_kernel_of_stable_power_and_nonzero)
+export AlgebraicAnalysis.PrincipalKoszulFiniteTorsion (
+  isNoetherian_kernel_power
+  isFiniteLength_kernel_power
+  length_cokernel_gt_kernel_of_stable_power_and_nonzero)
 
 end Stafford38.Characteristic.PrincipalKoszulFiniteTorsion

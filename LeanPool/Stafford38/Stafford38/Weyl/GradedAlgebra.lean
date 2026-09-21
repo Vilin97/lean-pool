@@ -34,6 +34,7 @@ variable (k : Type u) [Field k]
 
 -- The quotient instances used to define the graded pieces are local to
 -- `AssociatedGraded`; restate them here for the external direct sum.
+/-- The additive structure on each quotient piece used to form the external graded direct sum. -/
 local instance (priority := 10000) presentedAssociatedGradedPieceAddCommGroup'
     {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
     AddCommGroup (presentedAssociatedGradedPiece k w N) :=
@@ -42,6 +43,7 @@ local instance (priority := 10000) presentedAssociatedGradedPieceAddCommGroup'
     (presentedWeightPiece k w N).module
     (LinearMap.ker (principalComponentOnPiece k w N))
 
+/-- The coefficient-field module structure on each piece of the external graded direct sum. -/
 local instance (priority := 10000) presentedAssociatedGradedPieceModule'
     {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
     Module k (presentedAssociatedGradedPiece k w N) :=
@@ -67,6 +69,7 @@ def presentedAssociatedGradedRawLinearEquiv {n : ℕ} (w : PhaseVar n → ℕ) :
     (DirectSum.decomposeLinearEquiv
       (MvPolynomial.weightedHomogeneousSubmodule k w)).symm
 
+/-- The underlying equivalence between the external associated graded and the symbol ring. -/
 def presentedAssociatedGradedRawEquiv {n : ℕ} (w : PhaseVar n → ℕ) :
     PresentedAssociatedGraded k w ≃ SymbolRing k n :=
   (presentedAssociatedGradedRawLinearEquiv k w).toEquiv
@@ -94,7 +97,8 @@ def presentedAssociatedGradedOf {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ)
     PresentedAssociatedGraded k w :=
   DirectSum.of (fun N => presentedAssociatedGradedPiece k w N) N z
 
-@[simp] theorem presentedAssociatedGradedAlgEquiv_of {n : ℕ}
+@[simp]
+theorem presentedAssociatedGradedAlgEquiv_of {n : ℕ}
     (w : PhaseVar n → ℕ) (N : ℕ)
     (z : presentedAssociatedGradedPiece k w N) :
     presentedAssociatedGradedAlgEquiv k w
@@ -145,7 +149,8 @@ def presentedAssociatedGradedMk {n N : ℕ} (w : PhaseVar n → ℕ)
     (z : presentedWeightPiece k w N) : PresentedAssociatedGraded k w :=
   presentedAssociatedGradedOf k w N (Submodule.Quotient.mk z)
 
-@[simp] theorem presentedAssociatedGradedAlgEquiv_mk {n N : ℕ}
+@[simp]
+theorem presentedAssociatedGradedAlgEquiv_mk {n N : ℕ}
     (w : PhaseVar n → ℕ) (z : presentedWeightPiece k w N) :
     presentedAssociatedGradedAlgEquiv k w
         (presentedAssociatedGradedMk k w z) =
@@ -154,12 +159,15 @@ def presentedAssociatedGradedMk {n N : ℕ} (w : PhaseVar n → ℕ)
     presentedAssociatedGradedPieceEquiv_mk]
   rfl
 
+/-- The product of representatives in Bernstein filtration degrees `N` and `M`, in degree `N +
+M`. -/
 def bernsteinMulRepresentative {n N M : ℕ}
     (x : bernsteinPiece k n N) (y : bernsteinPiece k n M) :
     bernsteinPiece k n (N + M) :=
   ⟨(x : PresentedWeyl k n) * y,
     mul_mem_bernsteinPiece k x.property y.property⟩
 
+/-- The product of representatives in order filtration degrees `N` and `M`, in degree `N + M`. -/
 def orderMulRepresentative {n N M : ℕ}
     (x : orderPiece k n N) (y : orderPiece k n M) :
     orderPiece k n (N + M) :=

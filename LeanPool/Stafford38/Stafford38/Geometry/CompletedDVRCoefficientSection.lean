@@ -240,7 +240,7 @@ theorem eval_completedCoefficientSection
       adicJetCoefficientSection E V hsep n := by
   ext x
   simp only [AlgHom.comp_apply, AlgHom.restrictScalars_apply,
-    completedCoefficientSection, AdicCompletion.evalₐ, AdicCompletion.eval_apply,
+    completedCoefficientSection, AdicCompletion.evalₐ,
     completionCoordinateSection, exactQuotientToCompletionCoordinate]
   have h : ((m V) ^ (n + 1) • ⊤ : Ideal V) = (m V) ^ (n + 1) := by
     ext y

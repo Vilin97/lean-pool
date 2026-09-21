@@ -11,6 +11,10 @@ import LeanPool.Stafford38.Stafford38.Characteristic.NoncharacteristicMinimalPri
 import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalSupportAvoidanceFromCokernel
 import LeanPool.Stafford38.Stafford38.Characteristic.MinimalSupportExistence
 
+/-!
+The contradiction between the canonical page length inequality and Koszul positivity.
+-/
+
 namespace Stafford38.Characteristic.CanonicalKoszulContradiction
 
 open scoped Pointwise
@@ -35,9 +39,11 @@ variable (hN : 0 < N) (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
 
 attribute [local instance] sourceModule targetModule
 
+/-- The tangential coefficient-ring action on the canonical associated graded module. -/
 local instance gradedModule : Module (T k n) (Graded k n N d) :=
   oldCoeffModule n (Graded k n N d)
 
+/-- The embedding of tangential coefficients into the full symbol ring, as an algebra structure. -/
 local instance coefficientAlgebra : Algebra (T k n) (SymbolRing k (n + 1)) :=
   (((tangentialPolynomialActionHom (k := k) n).comp Polynomial.C).comp
     (oldSymbolTangentialAlgEquiv (k := k) n).toRingHom).toAlgebra
@@ -67,19 +73,19 @@ theorem no_minimal_coordinate_cokernel_support
   have : Module.Finite R (E ⧸ (fC.restrictScalars R).range) := hfinite.2
   have hlength := localized_kernel_and_cokernel_isFiniteLength fC q hqmem hqmin
   let S := q.asIdeal.primeCompl
-  let ek := localizedEquiv S (firstSourceGradedKernelEquiv k n N d hd)
-  let ec := localizedEquiv S (firstTargetGradedCokernelEquiv k n N d hd)
+  let ek := localizedEquiv S (firstSourceGradedKernelEquiv k n N d)
+  let ec := localizedEquiv S (firstTargetGradedCokernelEquiv k n N d)
   have hA : IsFiniteLength (Localization S)
-      (LocalizedModule S ((complex k n N d hd).SourceTotal 1)) :=
+      (LocalizedModule S ((complex k n N d).SourceTotal 1)) :=
     ek.symm.isFiniteLength hlength.2
   have hB : IsFiniteLength (Localization S)
-      (LocalizedModule S ((complex k n N d hd).TargetTotal 1)) :=
+      (LocalizedModule S ((complex k n N d).TargetTotal 1)) :=
     ec.symm.isFiniteLength hlength.1
   have hle := canonicalPage_length_target_le_source k n N d hd S hA hB
   rw [ec.length_eq, ek.length_eq] at hle
   have hlt := localized_length_cokernel_gt_kernel (R := R) (C := C) (E := E)
     x q hqmem hqmin (fun p hp =>
-      canonical_minimalPrime_mem_of_normalCoordinate_false d hN hd hp)
+      canonical_minimalPrime_mem_of_normalCoordinate_false d hd hp)
   exact (not_lt_of_ge hle) hlt
 
 
@@ -123,13 +129,13 @@ theorem coordinate_quotSMulTop_subsingleton :
 include hN hd in
 theorem canonical_support_avoidance :
     Disjoint
-      (Stafford38.CharacteristicTransposedFilteredModuleSupport.transposedOrderAssociatedGradedSupport k
+      (CharacteristicTransposedFilteredModuleSupport.transposedOrderAssociatedGradedSupport k
         (Stafford38.WeylEulerResidue.canonicalRightIdeal
           (presentedCoordinate k n) d N))
       (PrimeSpectrum.zeroLocus
         ({MvPolynomial.X (.inl (0 : Fin (n + 1)))} : Set (SymbolRing k (n + 1)))) :=
   CanonicalSupportAvoidanceFromCokernel.canonical_support_avoidance_of_coordinate_cokernel_subsingleton
-    k n N d hd (coordinate_quotSMulTop_subsingleton k n N d hN hd)
+    k n N d (coordinate_quotSMulTop_subsingleton k n N d hN hd)
 
 
 end

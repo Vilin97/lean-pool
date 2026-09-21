@@ -45,19 +45,19 @@ universe u
 private def finOnePolynomialEquiv (k : Type u) [Field k] :
     MvPolynomial (Fin 1) k ≃ₐ[k] Polynomial k :=
   (MvPolynomial.renameEquiv k (Equiv.equivPUnit.{1, 1} (Fin 1))).trans
-    (MvPolynomial.pUnitAlgEquiv.{u, 0} k)
+    (MvPolynomial.uniqueAlgEquiv k PUnit.{1})
 
 private theorem finOnePolynomialEquiv_eval
     {k : Type u} [Field k] (f : MvPolynomial (Fin 1) k) (y : Fin 1 → k) :
     Polynomial.eval (y 0) (finOnePolynomialEquiv k f) =
       MvPolynomial.eval y f := by
-  induction' f using MvPolynomial.induction_on with a p q hp hq p i hp
-  · simp [finOnePolynomialEquiv]
-  · simp [hp, hq]
-  · fin_cases i
-    simp only [map_mul, MvPolynomial.rename_X, AlgEquiv.trans_apply,
-      MvPolynomial.renameEquiv_apply, MvPolynomial.uniqueAlgEquiv_apply,
-      MvPolynomial.eval_mul, Polynomial.eval_mul]
+  induction f using MvPolynomial.induction_on with
+  | C a => simp [finOnePolynomialEquiv]
+  | add p q hp hq => simp [hp, hq]
+  | mul_X p i hp =>
+    fin_cases i
+    simp only [map_mul,
+       Polynomial.eval_mul]
     rw [hp]
     simp [finOnePolynomialEquiv]
 
@@ -65,15 +65,15 @@ private theorem finOnePolynomialEquiv_pderiv
     {k : Type u} [Field k] (f : MvPolynomial (Fin 1) k) :
     finOnePolynomialEquiv k (MvPolynomial.pderiv (0 : Fin 1) f) =
       (finOnePolynomialEquiv k f).derivative := by
-  induction' f using MvPolynomial.induction_on with a p q hp hq p i hp
-  · simp [finOnePolynomialEquiv]
-  · simp [hp, hq]
-  · fin_cases i
+  induction f using MvPolynomial.induction_on with
+  | C a => simp [finOnePolynomialEquiv]
+  | add p q hp hq => simp [hp, hq]
+  | mul_X p i hp =>
+    fin_cases i
     simp only [MvPolynomial.pderiv_mul, MvPolynomial.pderiv_X,
-      Pi.single_apply, if_pos, one_mul, map_add, map_mul,
-      MvPolynomial.rename_X, AlgEquiv.trans_apply,
-      MvPolynomial.renameEquiv_apply, MvPolynomial.uniqueAlgEquiv_apply,
-      Polynomial.derivative_mul, Polynomial.derivative_X]
+      Pi.single_apply,   map_add, map_mul,
+
+      Polynomial.derivative_mul]
     rw [hp]
     simp [finOnePolynomialEquiv]
 

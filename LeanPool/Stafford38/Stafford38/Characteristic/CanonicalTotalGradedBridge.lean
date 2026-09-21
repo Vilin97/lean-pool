@@ -8,6 +8,10 @@ import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalFilteredGradedBrid
 import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedModule
 import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalPages
 
+/-!
+Equivalences between total two-term pages and the canonical associated graded modules.
+-/
+
 namespace Stafford38.Characteristic.CanonicalTotalGradedBridge
 
 open Stafford38.Characteristic
@@ -37,6 +41,7 @@ variable {A : ℤ → Type u} {B : ℕ → Type u}
 variable [∀ p, AddCommMonoid (A p)] [∀ p, Module k (A p)]
 variable [∀ m, AddCommMonoid (B m)] [∀ m, Module k (B m)]
 
+/-- The nonpositive integer index corresponding to a natural filtration degree. -/
 def negIndex : ℕ → ℤ
   | 0 => 0
   | n + 1 => Int.negSucc n
@@ -50,7 +55,7 @@ private noncomputable def nonpositiveDirectSumToNat
   DirectSum.toModule k ℤ (DirectSum ℕ B) (fun p =>
     match p with
     | Int.ofNat 0 => (DirectSum.lof k ℕ B 0).comp (e 0).toLinearMap
-    | Int.ofNat (n + 1) => 0
+    | Int.ofNat (_n + 1) => 0
     | Int.negSucc n =>
         (DirectSum.lof k ℕ B (n + 1)).comp (e (n + 1)).toLinearMap)
 
@@ -60,7 +65,9 @@ private noncomputable def natDirectSumToNonpositive
   DirectSum.toModule k ℕ (DirectSum ℤ A) (fun m =>
     (DirectSum.lof k ℤ A (negIndex m)).comp (e m).symm.toLinearMap)
 
-@[simp] private theorem natDirectSumToNonpositive_lof
+omit [Algebra ℚ k] in
+@[simp]
+private theorem natDirectSumToNonpositive_lof
     (e : ∀ m : ℕ, A (negIndex m) ≃ₗ[k] B m) (m : ℕ) (x : B m) :
     natDirectSumToNonpositive k e (DirectSum.lof k ℕ B m x) =
       DirectSum.lof k ℤ A (negIndex m) ((e m).symm x) := by
@@ -121,7 +128,9 @@ private noncomputable def nonpositiveDirectSumLinearEquiv
         exact (e (n + 1)).symm_apply_apply
           (show A (negIndex (n + 1)) from x)
 
-@[simp] private theorem nonpositiveDirectSumLinearEquiv_lof
+omit [Algebra ℚ k] in
+@[simp]
+private theorem nonpositiveDirectSumLinearEquiv_lof
     (e : ∀ m : ℕ, A (negIndex m) ≃ₗ[k] B m)
     (hpos : ∀ p, 0 < p → Subsingleton (A p)) (m : ℕ) (x : A (negIndex m)) :
     nonpositiveDirectSumLinearEquiv k e hpos
@@ -144,82 +153,77 @@ end ReindexNonpositive
 private abbrev CI (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   presentedCanonicalRightIdeal (k := k) n N d
 
-private abbrev K (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :=
-  canonicalFilteredTwoTerm k n N d hd
+private abbrev K (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
+  canonicalFilteredTwoTerm k n N d
 
-abbrev SourceTotal0 (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :=
-  (K k n N d hd).SourceTotal 0
+/-- The source total module on page zero of the canonical filtered two-term complex. -/
+abbrev SourceTotal0 (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
+  (K k n N d).SourceTotal 0
 
-abbrev TargetTotal0 (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :=
-  (K k n N d hd).TargetTotal 0
+/-- The target total module on page zero of the canonical filtered two-term complex. -/
+abbrev TargetTotal0 (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
+  (K k n N d).TargetTotal 0
 
 theorem sourceComponentType_eq
-    (n N m : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :
-    (K k n N d hd).SourcePage 0 (-(m : ℤ)) =
+    (n N m : ℕ) (d : PresentedWeyl k (n + 1)) :
+    (K k n N d).SourcePage 0 (-(m : ℤ)) =
       QuotientOrderGradedPiece k (CI k n N d) m :=
-  zeroPage_source_is_actual_graded_piece k n N m d hd
+  zeroPage_source_is_actual_graded_piece k n N m d
 
 theorem targetComponentType_eq
-    (n N m : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :
-    (K k n N d hd).TargetPage 0 (-(m : ℤ)) =
+    (n N m : ℕ) (d : PresentedWeyl k (n + 1)) :
+    (K k n N d).TargetPage 0 (-(m : ℤ)) =
       QuotientOrderGradedPiece k (CI k n N d) m :=
-  zeroPage_target_is_actual_graded_piece k n N m d hd
+  zeroPage_target_is_actual_graded_piece k n N m d
 
 /-- The total degree-zero source page is the actual order-associated graded module. -/
 noncomputable def sourceTotal0LinearEquivOrderAssociatedGraded
-    (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :
-    SourceTotal0 k n N d hd ≃ₗ[k]
+    (n N : ℕ) (d : PresentedWeyl k (n + 1)) :
+    SourceTotal0 k n N d ≃ₗ[k]
       OrderAssociatedGradedModule k (CI k n N d) :=
   nonpositiveDirectSumLinearEquiv k
     (fun m =>
-      (LinearEquiv.cast (M := fun p : ℤ => (K k n N d hd).SourcePage 0 p)
+      (LinearEquiv.cast (M := fun p : ℤ => (K k n N d).SourcePage 0 p)
         (negIndex_eq m)) ≪≫ₗ
-      zeroPageSourceLinearEquivOrderGradedPiece k n N m d hd)
-    (zeroPage_source_subsingleton_of_pos k n N · d hd)
+      zeroPageSourceLinearEquivOrderGradedPiece k n N m d)
+    (zeroPage_source_subsingleton_of_pos k n N · d)
 
 /-- The total degree-zero target page is the actual order-associated graded module. -/
 noncomputable def targetTotal0LinearEquivOrderAssociatedGraded
-    (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :
-    TargetTotal0 k n N d hd ≃ₗ[k]
+    (n N : ℕ) (d : PresentedWeyl k (n + 1)) :
+    TargetTotal0 k n N d ≃ₗ[k]
       OrderAssociatedGradedModule k (CI k n N d) :=
   nonpositiveDirectSumLinearEquiv k
     (fun m =>
-      (LinearEquiv.cast (M := fun p : ℤ => (K k n N d hd).TargetPage 0 p)
+      (LinearEquiv.cast (M := fun p : ℤ => (K k n N d).TargetPage 0 p)
         (negIndex_eq m)) ≪≫ₗ
-      zeroPageTargetLinearEquivOrderGradedPiece k n N m d hd)
-    (zeroPage_target_subsingleton_of_pos k n N · d hd)
+      zeroPageTargetLinearEquivOrderGradedPiece k n N m d)
+    (zeroPage_target_subsingleton_of_pos k n N · d)
 
-@[simp] theorem sourceTotal0LinearEquiv_lof_negIndex
+@[simp]
+theorem sourceTotal0LinearEquiv_lof_negIndex
     (n N m : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
-    (x : (K k n N d hd).SourcePage 0 (negIndex m)) :
-    sourceTotal0LinearEquivOrderAssociatedGraded k n N d hd
-        (DirectSum.lof k ℤ (fun p => (K k n N d hd).SourcePage 0 p)
+    (x : (K k n N d).SourcePage 0 (negIndex m)) :
+    sourceTotal0LinearEquivOrderAssociatedGraded k n N d
+        (DirectSum.lof k ℤ (fun p => (K k n N d).SourcePage 0 p)
           (negIndex m) x) =
       orderAssociatedGradedOf k (CI k n N d) m
         (((LinearEquiv.cast
-          (M := fun p : ℤ => (K k n N d hd).SourcePage 0 p) (negIndex_eq m)) ≪≫ₗ
-            zeroPageSourceLinearEquivOrderGradedPiece k n N m d hd) x) := by
+          (M := fun p : ℤ => (K k n N d).SourcePage 0 p) (negIndex_eq m)) ≪≫ₗ
+            zeroPageSourceLinearEquivOrderGradedPiece k n N m d) x) := by
   exact nonpositiveDirectSumLinearEquiv_lof k _ _ m x
 
-@[simp] theorem targetTotal0LinearEquiv_lof_negIndex
+@[simp]
+theorem targetTotal0LinearEquiv_lof_negIndex
     (n N m : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
-    (x : (K k n N d hd).TargetPage 0 (negIndex m)) :
-    targetTotal0LinearEquivOrderAssociatedGraded k n N d hd
-        (DirectSum.lof k ℤ (fun p => (K k n N d hd).TargetPage 0 p)
+    (x : (K k n N d).TargetPage 0 (negIndex m)) :
+    targetTotal0LinearEquivOrderAssociatedGraded k n N d
+        (DirectSum.lof k ℤ (fun p => (K k n N d).TargetPage 0 p)
           (negIndex m) x) =
       orderAssociatedGradedOf k (CI k n N d) m
         (((LinearEquiv.cast
-          (M := fun p : ℤ => (K k n N d hd).TargetPage 0 p) (negIndex_eq m)) ≪≫ₗ
-            zeroPageTargetLinearEquivOrderGradedPiece k n N m d hd) x) := by
+          (M := fun p : ℤ => (K k n N d).TargetPage 0 p) (negIndex_eq m)) ≪≫ₗ
+            zeroPageTargetLinearEquivOrderGradedPiece k n N m d) x) := by
   exact nonpositiveDirectSumLinearEquiv_lof k _ _ m x
 
 

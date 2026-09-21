@@ -86,8 +86,10 @@ def falling (E : D) : ℕ → D
   | 0 => 1
   | (n + 1) => falling E n * (E - (n : D))
 
-@[simp] lemma rising_zero (E : D) : rising E 0 = 1 := rfl
-@[simp] lemma falling_zero (E : D) : falling E 0 = 1 := rfl
+@[simp]
+lemma rising_zero (E : D) : rising E 0 = 1 := rfl
+@[simp]
+lemma falling_zero (E : D) : falling E 0 = 1 := rfl
 
 lemma rising_succ (E : D) (n : ℕ) :
     rising E (n + 1) = rising E n * (E + ((n : D) + 1)) := rfl
@@ -211,12 +213,14 @@ commutator `p ^ r x ^ r - x ^ r p ^ r`. -/
 noncomputable def cornerPoly (k : Type*) [CommRing k] (r : ℕ) : k[X] :=
   risingPoly k r - fallingPoly k r
 
-@[simp] lemma risingPoly_zero : risingPoly k 0 = 1 := rfl
+@[simp]
+lemma risingPoly_zero : risingPoly k 0 = 1 := rfl
 
 lemma risingPoly_succ (n : ℕ) :
     risingPoly k (n + 1) = risingPoly k n * (X + Polynomial.C ((n : k) + 1)) := rfl
 
-@[simp] lemma fallingPoly_zero : fallingPoly k 0 = 1 := rfl
+@[simp]
+lemma fallingPoly_zero : fallingPoly k 0 = 1 := rfl
 
 lemma fallingPoly_succ (n : ℕ) :
     fallingPoly k (n + 1) = fallingPoly k n * (X - Polynomial.C (n : k)) := rfl
@@ -250,7 +254,8 @@ noncomputable def shiftedProd (C : k[X]) : List (D × ℕ) → k[X]
   | (t :: ts) => C.comp (X + Polynomial.C ((t.2 : ℕ) : k)) * shiftedProd C ts
 
 omit [Ring D] [Algebra k D] in
-@[simp] lemma shiftedProd_nil (C : k[X]) : shiftedProd C ([] : List (D × ℕ)) = 1 := rfl
+@[simp]
+lemma shiftedProd_nil (C : k[X]) : shiftedProd C ([] : List (D × ℕ)) = 1 := rfl
 
 omit [Ring D] [Algebra k D] in
 lemma shiftedProd_cons (C : k[X]) (t : D × ℕ) (ts : List (D × ℕ)) :

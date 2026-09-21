@@ -7,7 +7,10 @@ Authors: Christopher Albert
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.StableTorsionResidualSupport
 import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulPositivity
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for residual support after removing stable torsion
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.StableTorsionResidualSupport
 

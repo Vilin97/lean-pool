@@ -8,6 +8,11 @@ import LeanPool.Stafford38.Stafford38.Characteristic.TransposedFilteredModuleSup
 import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
 import LeanPool.Stafford38.Stafford38.PaperInputs
 
+/-! A zero coordinate cokernel has empty support.  Transposition fixes the
+coordinate variable, so the same empty-support statement excludes the
+coordinate zero locus from the transposed support. -/
+
+
 namespace Stafford38.Characteristic.CanonicalSupportAvoidanceFromCokernel
 
 open Stafford38.Characteristic
@@ -23,12 +28,9 @@ noncomputable section
 universe u
 variable (k : Type u) [Field k]
 
-/-! A zero coordinate cokernel has empty support.  Transposition fixes the
-coordinate variable, so the same empty-support statement excludes the
-coordinate zero locus from the transposed support. -/
+
 theorem canonical_support_avoidance_of_coordinate_cokernel_subsingleton
     (n N : ℕ) (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
     (hzero : Subsingleton (QuotSMulTop
       (MvPolynomial.X (.inl (0 : Fin (n + 1))) : SymbolRing k (n + 1))
       (OrderAssociatedGradedModule k

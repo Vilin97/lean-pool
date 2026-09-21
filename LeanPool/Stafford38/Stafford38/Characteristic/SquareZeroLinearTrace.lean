@@ -138,10 +138,8 @@ theorem quotientEnd_trace_eq_zero
   let Bk := rangeEnd C B hBC
   let Au := offDiagonal C A hAC s hs
   let Bu := offDiagonal C B hBC s hs
-
   have hs_apply (x : V ⧸ LinearMap.range C) : q (s x) = x := by
     exact LinearMap.congr_fun hs x
-
   have hquot_comm : Aq.comp Bq = Bq.comp Aq := by
     apply LinearMap.ext
     intro x
@@ -150,21 +148,18 @@ theorem quotientEnd_trace_eq_zero
     change A (B v) - B (A v) ∈ LinearMap.range C
     refine ⟨Z v, ?_⟩
     exact (LinearMap.congr_fun hcomm v).symm
-
   have heA : e.toLinearMap.comp Aq = Ak.comp e.toLinearMap := by
     apply LinearMap.ext
     intro x
     obtain ⟨v, rfl⟩ := Submodule.mkQ_surjective (LinearMap.range C) x
     apply Subtype.ext
     exact LinearMap.congr_fun hAC.symm v
-
   have heB : e.toLinearMap.comp Bq = Bk.comp e.toLinearMap := by
     apply LinearMap.ext
     intro x
     obtain ⟨v, rfl⟩ := Submodule.mkQ_surjective (LinearMap.range C) x
     apply Subtype.ext
     exact LinearMap.congr_fun hBC.symm v
-
   have hblock :
       e.toLinearMap.comp Zq =
         Ak.comp Bu + Au.comp Bq - Bk.comp Au - Bu.comp Aq := by
@@ -187,15 +182,13 @@ theorem quotientEnd_trace_eq_zero
     have hh := LinearMap.congr_fun hcomm (s x)
     simp only [LinearMap.sub_apply, LinearMap.comp_apply] at hh
     rw [← hh]
-    simp only [LinearMap.sub_apply, LinearMap.comp_apply, map_sub]
+    simp only [  map_sub]
     rw [hABx]
     abel
-
   let X : (V ⧸ LinearMap.range C) →ₗ[k] (V ⧸ LinearMap.range C) :=
     e.symm.toLinearMap.comp Au
   let Y : (V ⧸ LinearMap.range C) →ₗ[k] (V ⧸ LinearMap.range C) :=
     e.symm.toLinearMap.comp Bu
-
   have hZblock : Zq = Aq.comp Y - Y.comp Aq + (X.comp Bq - Bq.comp X) := by
     apply LinearMap.ext
     intro x
@@ -216,7 +209,6 @@ theorem quotientEnd_trace_eq_zero
         _ = Bk (Au x) := congrArg Bk (hX x)
     rw [map_add, map_sub, map_sub, hAY, hY, hX, hBX]
     exact hb.trans (by abel)
-
   change LinearMap.trace k (V ⧸ LinearMap.range C) Zq = 0
   rw [hZblock]
   exact trace_commutator_sum_eq_zero Aq Bq X Y

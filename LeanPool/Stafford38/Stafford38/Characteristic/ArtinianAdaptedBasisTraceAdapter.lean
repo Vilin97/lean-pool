@@ -57,7 +57,8 @@ def leftMultiplicationEnd (r : R) : Module.End K V where
   map_smul' a v := by exact smul_comm r a v
 
 omit [IsLocalRing R] in
-@[simp] theorem leftMultiplicationEnd_apply (r : R) (v : V) :
+@[simp]
+theorem leftMultiplicationEnd_apply (r : R) (v : V) :
     leftMultiplicationEnd (K := K) (V := V) r v = r • v := rfl
 
 /-- A basis genuinely adapted to the maximal-ideal-power filtration.
@@ -155,6 +156,7 @@ theorem leftMultiplicationMatrix_isNilpotent
     rw [hp N v, hN, zero_smul, LinearMap.zero_apply]
   exact hend.map (LinearMap.toMatrixAlgEquiv b)
 
+omit [IsLocalRing R] in
 /-- Matrix form of equation (3.1): the coefficient-field scalar contributes
 `q I`, and the maximal-ideal remainder contributes its multiplication
 matrix. -/
@@ -170,7 +172,7 @@ theorem leftMultiplicationMatrix_decomposition
       leftMultiplicationEnd (K := K) (V := V) (algebraMap K R q + r) =
         q • LinearMap.id + leftMultiplicationEnd (K := K) (V := V) r := by
     ext v
-    simp [leftMultiplicationEnd, add_smul, IsScalarTower.algebraMap_smul]
+    simp [leftMultiplicationEnd, add_smul]
   rw [hend, (LinearMap.toMatrix b b).map_add,
     (LinearMap.toMatrix b b).map_smul]
   simp

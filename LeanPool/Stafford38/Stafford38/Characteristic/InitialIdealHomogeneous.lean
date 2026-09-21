@@ -42,6 +42,7 @@ private abbrev OrderHomogeneous (N : ℕ) :=
 private abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
+/-- The grading of the symbol algebra by momentum order. -/
 local instance orderGradedAlgebraInstance :
     GradedAlgebra (orderDecomposition (n := n) k) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
@@ -78,7 +79,7 @@ private theorem decompose_mul_mem_orderSymbolRelation
     DirectSum.sum_support_decompose (orderDecomposition (n := n) k) x
   rw [← hxsum, Finset.mul_sum,
     DirectSum.decompose_sum]
-  rw [DFinsupp.finset_sum_apply]
+  rw [DFinsupp.finsetSum_apply]
   apply Submodule.sum_mem
   intro M hM
   by_cases hMN : M ≤ N

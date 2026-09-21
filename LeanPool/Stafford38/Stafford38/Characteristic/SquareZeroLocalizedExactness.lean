@@ -77,7 +77,8 @@ def localizedCAct :
   map_zero' := smul_zero _
   map_add' x y := smul_add _ x y
 
-@[simp] theorem localizedCAct_apply
+@[simp]
+theorem localizedCAct_apply
     (x : LocalizedDeformationModule D S) :
     localizedCAct D S x = MulOpposite.op D.c • x :=
   rfl
@@ -176,13 +177,14 @@ def localizedSpecializationFun :
             (⟨t * s, hts⟩ : OppositeDenominators D S)) • D.rho m =
           (denominatorMap D S s : R) •
             (D.pi t.unop • D.rho m)
-      simp only [map_mul, MulOpposite.unop_mul]
+      simp only [map_mul]
       rw [mul_smul]
       change D.pi t.unop • D.pi s.val.unop • D.rho m =
         D.pi s.val.unop • D.pi t.unop • D.rho m
       rw [smul_comm])
 
-@[simp] theorem localizedSpecializationFun_oreDiv
+@[simp]
+theorem localizedSpecializationFun_oreDiv
     (m : N) (s : OppositeDenominators D S) :
     localizedSpecializationFun D S (m /ₒ s) =
       LocalizedModule.mk (D.rho m) (denominatorMap D S s) :=
@@ -254,7 +256,8 @@ def localizedSpecialization :
                   (denominatorMap D S s : R)) *
                   (denominatorMap D S s : R) := by rw [← hab']
 
-@[simp] theorem localizedSpecialization_apply
+@[simp]
+theorem localizedSpecialization_apply
     (x : LocalizedDeformationModule D S) :
     localizedSpecialization D S x = localizedSpecializationFun D S x :=
   rfl
@@ -405,7 +408,8 @@ theorem exists_minimalPrimeLocalizedExactnessAndFiniteLength
           (LocalizedModule P.primeCompl G) := by
   obtain ⟨h, hexact⟩ := exists_localizedExactnessFor D P.primeCompl
   refine ⟨h, hexact, ?_⟩
-  exact Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization.localizedModule_nontrivial_and_isFiniteLength
+  exact
+    Characteristic.MinimalPrimeFiniteLengthLocalization.localizedModule_nontrivial_and_isFiniteLength
     P hP
 
 

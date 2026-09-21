@@ -25,8 +25,11 @@ noncomputable section
 
 variable (k : Type*) [Field k] [CharZero k] (n : ℕ)
 
+/-- The polynomial coefficient algebra for the finite Taylor projection. -/
 abbrev PolynomialRing := MvPolynomial (Fin n) k
+/-- Linear operators on the polynomial coefficient algebra. -/
 abbrev Operator := Module.End k (PolynomialRing k n)
+/-- Linear transformations of the space of polynomial operators. -/
 abbrev OperatorEnd := Module.End k (Operator k n)
 
 /-- The actual finite Taylor projection in coordinate `i`. -/
@@ -35,6 +38,7 @@ def projection (i : Fin n) (m : ℕ) (P : Operator k n) : Operator k n :=
     ((-1 : k) ^ j / (j.factorial : k)) •
       ((coordinateCommutator k n i ^ j) P * momentumEnd k n i ^ j)
 
+omit [CharZero k] in
 private theorem coordinateCommutator_mul (i : Fin n) (P Q : Operator k n) :
     coordinateCommutator k n i (P * Q) =
       coordinateCommutator k n i P * Q + P * coordinateCommutator k n i Q := by
@@ -43,12 +47,19 @@ private theorem coordinateCommutator_mul (i : Fin n) (P Q : Operator k n) :
   simp [coordinateCommutator, Stafford38.DifferentialOperators.commutator_apply,
     Module.End.mul_apply]
 
-@[simp] theorem coordinateCommutator_momentum (i : Fin n) :
+omit [CharZero k] in
+theorem coordinateCommutator_momentum (i : Fin n) :
     coordinateCommutator k n i (momentumEnd k n i) = 1 := by
   apply LinearMap.ext
   intro f
   simp [coordinateCommutator, Stafford38.DifferentialOperators.commutator_apply,
-    momentumEnd, Module.End.mul_apply]
+    momentumEnd]
+
+omit [CharZero k] in
+@[simp]
+theorem commutator_momentum_coordinate (i : Fin n) :
+    Stafford38.DifferentialOperators.commutator (momentumEnd k n i) (MvPolynomial.X i) = 1 := by
+  simpa only [coordinateCommutator_apply] using coordinateCommutator_momentum k n i
 
 private theorem coordinateCommutator_momentum_pow (i : Fin n) : ∀ j : ℕ,
     coordinateCommutator k n i (momentumEnd k n i ^ j) =
@@ -62,8 +73,9 @@ private theorem coordinateCommutator_momentum_pow (i : Fin n) : ∀ j : ℕ,
       rw [coordinateCommutator_momentum_pow]
       cases j with
       | zero => simp
-      | succ j => simp [pow_succ, add_mul, smul_mul_assoc, add_smul]
+      | succ j => simp [pow_succ, add_mul,  add_smul]
 
+omit [CharZero k] in
 private theorem iterate_succ_apply (T : OperatorEnd k n) (j : ℕ) (P : Operator k n) :
     (T ^ (j + 1)) P = T ((T ^ j) P) := by
   rw [pow_succ']
@@ -97,7 +109,7 @@ theorem coordinateCommutator_projection_eq_zero (i : Fin n) (m : ℕ)
   -- Shift the derivative-of-the-right-factor sum by one.  Its coefficient is
   -- the negative of the next term in the first sum.
   rw [Finset.sum_range_succ']
-  simp only [Nat.cast_zero, zero_smul, zero_add]
+  simp only [Nat.cast_zero, zero_smul]
   have hcancel (j : ℕ) :
       ((-1 : k) ^ j / (j.factorial : k)) •
           ((coordinateCommutator k n i ^ (j + 1)) P * momentumEnd k n i ^ j) +
@@ -146,6 +158,7 @@ private def rightMomentum (i : Fin n) :
     Operator k n →ₗ[k] Operator k n :=
   LinearMap.mulRight k (momentumEnd k n i)
 
+omit [CharZero k] in
 private theorem rightMomentum_pow_apply (i : Fin n) (j : ℕ) (P : Operator k n) :
     (rightMomentum k n i ^ j) P = P * momentumEnd k n i ^ j := by
   induction j with
@@ -154,6 +167,7 @@ private theorem rightMomentum_pow_apply (i : Fin n) (j : ℕ) (P : Operator k n)
       rw [pow_succ', Module.End.mul_apply, ih]
       simp [rightMomentum, pow_succ, mul_assoc]
 
+omit [CharZero k] in
 private theorem projectorMapG_apply_eq_projection (i : Fin n) (m : ℕ)
     (P : Operator k n) :
     projectorMapG m (rightMomentum k n i) (coordinateCommutator k n i) P =

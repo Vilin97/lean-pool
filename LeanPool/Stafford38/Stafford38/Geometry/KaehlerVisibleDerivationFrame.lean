@@ -40,7 +40,7 @@ variable {k K : Type u} [Field k] [Field K] [Algebra k K]
 /-- If finitely many residue coordinates span the Kähler differentials, one
 can select a basis among them and choose dual derivations. -/
 theorem exists_visible_derivation_frame_of_kaehler_span
-    {iota : Type v} [Fintype iota]
+    {iota : Type v}
     [FiniteDimensional K (Ω[K⁄k])]
     (qbar : iota → K)
     (hspan :
@@ -114,7 +114,7 @@ theorem constantCoeff_coefficientwiseTangentMatrix
 /-- Under the Kähler-span hypothesis, coefficientwise derivations furnish a
 selected power-series minor with constant coefficient exactly one. -/
 theorem exists_coefficientwise_selectedMinor_constantCoeff_eq_one_of_kaehler_span
-    {iota : Type v} [Fintype iota]
+    {iota : Type v} [Finite iota]
     [FiniteDimensional K (Ω[K⁄k])]
     (q : iota → PowerSeries K)
     (hspan :
@@ -128,6 +128,8 @@ theorem exists_coefficientwise_selectedMinor_constantCoeff_eq_one_of_kaehler_spa
           if i = j then 1 else 0) ∧
       PowerSeries.constantCoeff
         (selectedMinor (coefficientwiseTangentMatrix q D) rows).det = 1 := by
+  classical
+  let := Fintype.ofFinite iota
   obtain ⟨rows, D, hD⟩ :=
     exists_visible_derivation_frame_of_kaehler_span
       (fun i ↦ PowerSeries.constantCoeff (q i)) hspan

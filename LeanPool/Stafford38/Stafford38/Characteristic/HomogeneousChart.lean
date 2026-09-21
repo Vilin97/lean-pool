@@ -33,7 +33,7 @@ theorem exists_eval_ne_zero_of_homogeneous [CharZero k]
     (hP : P.IsHomogeneous N) (hne : P ≠ 0) :
     ∃ v : PhaseVar n → k, MvPolynomial.eval v P ≠ 0 := by
   by_contra h
-  push_neg at h
+  push Not at h
   exact hne (hP.eq_zero_of_forall_eval_eq_zero h)
 
 theorem eval_symbolLinearAlgHom {n : ℕ}
@@ -69,11 +69,13 @@ theorem homogeneous_unit_eq_monomial {N : ℕ}
       rw [hdform, Finsupp.degree_single] at hdeg
       rw [hdform, hdeg]
     rw [hP.coeff_eq_zero hdegree]
-    rw [MvPolynomial.coeff_monomial, if_neg (Ne.symm hd)]
+    rw [MvPolynomial.coeff_monomial, ite_eq_right (Ne.symm hd)]
 
+/-- The unit vector on the selected coordinate or momentum axis. -/
 def axisPoint {n : ℕ} (t : PhaseVar n) : PhaseVar n → k :=
   fun i => if i = t then 1 else 0
 
+/-- Restriction of a symbol polynomial to the selected axis, as a one-variable polynomial. -/
 def axisPolynomial {n : ℕ} (t : PhaseVar n) :
     SymbolRing k n →ₐ[k] MvPolynomial Unit k :=
   MvPolynomial.aeval (fun i => if i = t then MvPolynomial.X () else 0)

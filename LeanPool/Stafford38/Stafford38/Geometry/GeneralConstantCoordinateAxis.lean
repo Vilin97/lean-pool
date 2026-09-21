@@ -8,6 +8,10 @@ import LeanPool.Stafford38.Stafford38.Geometry.AffineComponentCoordinateSplit
 import LeanPool.Stafford38.Stafford38.Geometry.ConstantCoordinateConormal
 import Mathlib.RingTheory.Nullstellensatz
 
+/-!
+A constant coordinate equation and its pure conormal axis on an affine component.
+-/
+
 namespace Stafford38.Geometry.GeneralConstantCoordinateAxis
 
 open Stafford38.Geometry.AffineComponentCoordinateSplit
@@ -18,7 +22,7 @@ noncomputable section
 universe u
 
 theorem exists_constant_coordinate_equation_and_pure_axis
-    {k : Type u} [Field k] [IsAlgClosed k] [CharZero k]
+    {k : Type u} [Field k] [IsAlgClosed k]
     {m : ℕ} (hm : 0 < m)
     (P : PrimeSpectrum (MvPolynomial (Fin m) k))
     (halg : IsAlgebraic k (componentCoordinate P ⟨0, hm⟩)) :

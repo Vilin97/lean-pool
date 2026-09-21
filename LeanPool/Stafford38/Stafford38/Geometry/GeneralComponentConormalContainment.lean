@@ -10,6 +10,10 @@ import LeanPool.Stafford38.Stafford38.Geometry.ConormalPrincipalOpenDensity
 import LeanPool.Stafford38.Stafford38.Geometry.SmoothAffineConormal
 import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
 
+/-!
+Containment of a component’s conormal closure in the ambient characteristic variety.
+-/
+
 namespace Stafford38.Geometry.GeneralComponentConormalContainment
 
 open Stafford38
@@ -29,6 +33,7 @@ universe u
 
 variable {k : Type u} [Field k] [IsAlgClosed k] [CharZero k] {n : ℕ}
 
+omit [IsAlgClosed k] [CharZero k] in
 private theorem differentialCovector_mul (y : Fin n → k)
     (p q : MvPolynomial (Fin n) k) :
     differentialCovector y (p * q) =
@@ -44,6 +49,7 @@ private theorem differentialCovector_mul (y : Fin n → k)
   refine Finset.sum_congr rfl fun i _ ↦ ?_
   ring
 
+omit [IsAlgClosed k] [CharZero k] in
 private theorem exists_separator
     (I P : Ideal (MvPolynomial (Fin n) k))
     (hI : I.IsRadical) (hP : P ∈ I.minimalPrimes) :
@@ -56,7 +62,7 @@ private theorem exists_separator
     intro Q hQ
     rw [hT, Finset.mem_erase, hfin.mem_toFinset] at hQ
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     exact hQ.1 (le_antisymm hcon (hP.2 hQ.2.1 hcon))
   choose s hsQ hsP using hchoice
   let f := ∏ Q ∈ T.attach, s Q.1 Q.2
@@ -139,7 +145,7 @@ theorem equationConormalClosure_minimalPrime_subset_zeroLocus
     exact (GeneralConormalContainment.equationConormalLocus_subset_zeroLocus
         J hJpoisson (fun z hz ↦
         zeroSection_commonZero_of_isHomogeneous J hhom z hz)) hqI
-  have hclosure := equationConormalClosure_restricted_eq P hP.1.1 f hfP S hS hopen
+  have hclosure := equationConormalClosure_restricted_eq P hP.1.1 f hfP S hopen
   intro q hq
   apply (zeroLocus_vanishingIdeal_mono_of_subset_zeroLocus
     (ConormalPrincipalOpenDensity.restrictedEquationConormalLocus P S)

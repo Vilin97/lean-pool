@@ -61,7 +61,7 @@ theorem presentedPrincipalComponent_eq_zero_of_mem_of_lt {n L T : ℕ}
   ext m
   rw [coeff_presentedPrincipalComponent]
   by_cases hm : monomialWeight w m = T
-  · rw [if_pos hm]
+  · rw [ite_eq_left hm]
     have hcoeff :
         (presentedNormalFormLinearEquiv k n z).coeff m = 0 := by
       by_contra hne
@@ -79,16 +79,16 @@ theorem presentedPrincipalComponent_basis {n : ℕ}
   rw [coeff_presentedPrincipalComponent,
     presentedNormalFormLinearEquiv_basis]
   by_cases hm : monomialWeight w m = N
-  · rw [if_pos hm, MvPolynomial.coeff_monomial]
+  · rw [ite_eq_left hm, MvPolynomial.coeff_monomial]
     by_cases hmq : m = q
     · subst q
       simp [hm]
-    · simp [hmq, Ne.symm hmq]
+    · simp [hmq]
   · simp only [ite_eq_right hm, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
     by_cases hqm : q = m
     · subst q
       simp [hm]
-    · simp [hqm, Ne.symm hqm]
+    · simp [ Ne.symm hqm]
 
 theorem weightedHomogeneousComponent_monomial {n N : ℕ}
     (w : PhaseVar n → ℕ) (m : PhaseVar n →₀ ℕ) (c : k) :
@@ -100,16 +100,16 @@ theorem weightedHomogeneousComponent_monomial {n N : ℕ}
   rw [MvPolynomial.coeff_weightedHomogeneousComponent,
     finsupp_weight_eq_monomialWeight]
   by_cases hm : monomialWeight w m = N
-  · rw [if_pos hm, MvPolynomial.coeff_monomial]
+  · rw [ite_eq_left hm, MvPolynomial.coeff_monomial]
     by_cases hmq : m = q
     · subst q
       simp [hm]
-    · simp [hmq, Ne.symm hmq]
+    · simp [hmq]
   · simp only [ite_eq_right hm, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
     by_cases hqm : q = m
     · subst q
       simp [hm]
-    · simp [hqm, Ne.symm hqm]
+    · simp [ Ne.symm hqm]
 
 theorem weightedHomogeneousComponent_rename
     {n r T : ℕ} (wOld : PhaseVar n → ℕ) (wNew : PhaseVar r → ℕ)
@@ -146,7 +146,7 @@ theorem weightedHomogeneousComponent_monomial_mul {n T : ℕ}
     MvPolynomial.coeff_monomial_mul',
     MvPolynomial.coeff_monomial_mul']
   by_cases hsq : s ≤ q
-  · rw [if_pos hsq, if_pos hsq, one_mul, one_mul,
+  · rw [ite_eq_left hsq, ite_eq_left hsq, one_mul, one_mul,
       MvPolynomial.coeff_weightedHomogeneousComponent]
     have hsplit : s + (q - s) = q := by
       rw [add_comm]
@@ -166,7 +166,7 @@ theorem weightedHomogeneousComponent_monomial_mul {n T : ℕ}
             T + monomialWeight w s := by
         omega
       simp [hrest, hne]
-  · rw [if_neg hsq, if_neg hsq]
+  · rw [ite_eq_right hsq, ite_eq_right hsq]
     simp
 
 theorem monomialWeight_mapDomain_oldIndex_bernstein (n : ℕ)
@@ -193,7 +193,7 @@ theorem presentedNormalFormLinearEquiv_previous_ordered_monomial
   rw [presentedNormalFormLinearEquiv_previous_ordered,
     MvPolynomial.X_pow_eq_monomial,
     MvPolynomial.X_pow_eq_monomial,
-    MvPolynomial.monomial_mul]
+    MvPolynomial.monomial_mul_monomial]
   simp [extendPhaseExponent]
 
 theorem monomialWeight_extend_zero_bernstein (n a p : ℕ) :
@@ -275,10 +275,10 @@ theorem phaseMonomial_succ_product (n : ℕ)
             phaseExponent (fun i => c i.succ) (fun i => q i.succ)).mapDomain
               oldIndex := by
     rw [phaseExponent_succ_eq_extend, phaseExponent_succ_eq_extend]
-    simp [extendPhaseExponent, map_add, add_assoc, add_comm, add_left_comm]
+    simp? [extendPhaseExponent,  add_assoc, add_comm, add_left_comm]
     rw [Finsupp.mapDomain_add]
-  rw [MvPolynomial.monomial_mul, MvPolynomial.monomial_mul,
-    MvPolynomial.rename_monomial, MvPolynomial.monomial_mul]
+  rw [MvPolynomial.monomial_mul_monomial, MvPolynomial.monomial_mul_monomial,
+    MvPolynomial.rename_monomial, MvPolynomial.monomial_mul_monomial]
   simp only [one_mul]
   rw [hexp]
 
@@ -303,8 +303,7 @@ theorem presentedOrderedMonomial_mul_principal_bernstein :
         exact Sum.elim Fin.elim0 Fin.elim0 i
       rw [hap, hcq]
       simp [presentedOrderedMonomial, monomialWeight,
-        presentedPrincipalComponent, presentedNormalFormLinearEquiv_one,
-        weightedHomogeneousComponent_monomial]
+        presentedPrincipalComponent, presentedNormalFormLinearEquiv_one]
   | succ n ih =>
       intro a p c q
       let L :=
@@ -333,7 +332,7 @@ theorem presentedOrderedMonomial_mul_principal_bernstein :
       rw [presentedCoefficientOrdered_mul]
       simp only [map_sum]
       rw [Finset.sum_eq_single 0]
-      · simp only [Nat.zero_le, if_true, Nat.choose_zero_right,
+      · simp only [Nat.zero_le, ite_true, Nat.choose_zero_right,
           Nat.descFactorial_zero, mul_one, one_nsmul, Nat.sub_zero]
         rw [presentedPrincipalComponent_coefficientOrdered_bernstein]
         have hih := ih
@@ -351,7 +350,7 @@ theorem presentedOrderedMonomial_mul_principal_bernstein :
           have := Finset.mem_range.mp hi
           omega
         by_cases hic : i ≤ c 0
-        · simp only [if_pos hic]
+        · simp only [ite_eq_left hic]
           have hold :
               presentedOrderedMonomial k n
                     (fun j => a j.succ) (fun j => p j.succ) *
@@ -399,8 +398,7 @@ theorem presentedOrderedMonomial_mul_principal_order :
         exact Sum.elim Fin.elim0 Fin.elim0 i
       rw [hap, hcq]
       simp [presentedOrderedMonomial, monomialWeight,
-        presentedPrincipalComponent, presentedNormalFormLinearEquiv_one,
-        weightedHomogeneousComponent_monomial]
+        presentedPrincipalComponent, presentedNormalFormLinearEquiv_one]
   | succ n ih =>
       intro a p c q
       let L :=
@@ -429,7 +427,7 @@ theorem presentedOrderedMonomial_mul_principal_order :
       rw [presentedCoefficientOrdered_mul]
       simp only [map_sum]
       rw [Finset.sum_eq_single 0]
-      · simp only [Nat.zero_le, if_true, Nat.choose_zero_right,
+      · simp only [Nat.zero_le, ite_true, Nat.choose_zero_right,
           Nat.descFactorial_zero, mul_one, one_nsmul, Nat.sub_zero]
         rw [presentedPrincipalComponent_coefficientOrdered_order]
         have hih := ih
@@ -447,7 +445,7 @@ theorem presentedOrderedMonomial_mul_principal_order :
           have := Finset.mem_range.mp hi
           omega
         by_cases hic : i ≤ c 0
-        · simp only [if_pos hic]
+        · simp only [ite_eq_left hic]
           have hold :
               presentedOrderedMonomial k n
                     (fun j => a j.succ) (fun j => p j.succ) *

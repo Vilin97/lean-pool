@@ -96,7 +96,7 @@ theorem transposedCanonical_coordinate_smul_surjective
 
 /-! ## Symbol-space invariance -/
 
-@[simp] theorem symbolTransposition_axisCoordinate (n : ℕ) :
+theorem symbolTransposition_axisCoordinate (n : ℕ) :
     symbolTransposition k (AxisCoordinate k n) = AxisCoordinate k n := by
   simp [AxisCoordinate]
 
@@ -217,7 +217,7 @@ theorem transposedGradedCoordinate_surjective_iff
 /-- For the canonical quotient, hyperplane support exclusion is exactly
 surjectivity of the coordinate on the actual associated graded module. -/
 theorem canonicalSupport_disjoint_axis_iff_gradedCoordinate_surjective
-    [Algebra ℚ k] (n N : ℕ) (d : PresentedWeyl k (n + 1)) :
+     (n N : ℕ) (d : PresentedWeyl k (n + 1)) :
     Disjoint
         (Module.support (SymbolRing k (n + 1))
           (OrderAssociatedGradedModule k (CanonicalIdeal k n N d)))

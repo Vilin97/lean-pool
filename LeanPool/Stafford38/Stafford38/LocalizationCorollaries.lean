@@ -15,6 +15,7 @@ namespace Stafford38.LocalizationCorollaries
 
 universe u v
 
+/-- The two-generator identity transported through localization. -/
 abbrev S38 := AlgebraicAnalysis.TwoGeneratorIdentity
 
 /-- A fraction-clearing formulation sufficient to transport `S38`. The unit

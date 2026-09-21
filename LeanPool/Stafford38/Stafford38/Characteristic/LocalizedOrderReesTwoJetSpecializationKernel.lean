@@ -62,7 +62,8 @@ def localizedOrderReesTwoJetParameterMul :
   map_zero' := mul_zero _
   map_add' := mul_add _
 
-@[simp] theorem localizedOrderReesTwoJetParameterMul_apply
+@[simp]
+theorem localizedOrderReesTwoJetParameterMul_apply
     (y : OreLocalization (OppositeDenominators (concreteData k I) S)
       ((OrderReesTwoJet (n := n) k)ᵐᵒᵖ)) :
     localizedOrderReesTwoJetParameterMul k I S y =

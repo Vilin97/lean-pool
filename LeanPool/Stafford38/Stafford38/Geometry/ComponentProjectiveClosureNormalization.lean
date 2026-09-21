@@ -143,7 +143,8 @@ theorem retained_eval₂_eq_zero_of_commonScale
   let : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   let : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
-  let : SMul (CoordinateZeroLocalRing W.coefficientField) (ComponentFractionField P) := Algebra.toSMul
+  let : SMul (CoordinateZeroLocalRing W.coefficientField) (ComponentFractionField P) :=
+    Algebra.toSMul
   let : SMul W.coefficientField (ComponentFractionField P) := Algebra.toSMul
   let : IsScalarTower W.coefficientField
       (CoordinateZeroLocalRing W.coefficientField)

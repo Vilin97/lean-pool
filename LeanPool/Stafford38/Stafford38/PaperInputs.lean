@@ -75,8 +75,8 @@ theorem canonicalSupportVanishing_of_inputs (h : Inputs.{u}) :
   exact canonicalSupportDescent
       (algebraicallyClosedCanonicalSupportVanishing_of_residueExtension_rankSplit
         hunit h.residueExtensionSymbolControl
-          (higherDimensionalCanonicalResidueExtensionConormalAxisProduction_of_nonconstantFiniteGradient
-            (higherDimensionalCanonicalResidueExtensionNonconstantFiniteGradientProduction_of_visibleDivisorFrame
+          (conormalAxisProduction_of_nonconstantFiniteGradient
+            (nonconstantFiniteGradientProduction_of_visibleDivisorFrame
               h.higherDimensionalVisibleDivisorFrameProduction)))
 
 /-- The universal identity under the explicit paper inputs. -/

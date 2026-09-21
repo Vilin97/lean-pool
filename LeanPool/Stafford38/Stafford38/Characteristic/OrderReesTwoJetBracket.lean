@@ -60,7 +60,7 @@ theorem parameter_mul_homogeneousCommutatorQuotient
       Stafford.commutator
         (orderReesMonomial k r a) (orderReesMonomial k s b) := by
   by_cases h : 0 < r + s
-  · rw [homogeneousCommutatorQuotient, dif_pos h,
+  · rw [homogeneousCommutatorQuotient, dite_eq_left h,
       orderReesParameter_mul_monomial]
     apply Subtype.ext
     change Polynomial.monomial ((r + s - 1) + 1)
@@ -70,14 +70,13 @@ theorem parameter_mul_homogeneousCommutatorQuotient
         Polynomial.monomial s (b : PresentedWeyl k n) *
           Polynomial.monomial r (a : PresentedWeyl k n)
     simp only [Polynomial.monomial_mul_monomial, Stafford.commutator,
-      AlgebraicAnalysis.ringCommutator,
-      ← Polynomial.monomial_sub]
+      AlgebraicAnalysis.ringCommutator]
     rw [show s + r = r + s by omega]
     rw [Nat.sub_add_cancel (by omega : 1 ≤ r + s)]
     exact Polynomial.monomial_sub (r + s)
   · have hrs : r = 0 ∧ s = 0 := by omega
     rcases hrs with ⟨rfl, rfl⟩
-    rw [homogeneousCommutatorQuotient, dif_neg (by omega), mul_zero]
+    rw [homogeneousCommutatorQuotient, dite_eq_right (by omega), mul_zero]
     have hab := commutator_eq_zero_of_mem_orderPiece_zero
       k a.property b.property
     apply Subtype.ext
@@ -102,13 +101,13 @@ theorem specialization_homogeneousCommutatorQuotient
         (presentedPrincipalComponent k (@orderWeight n) r a)
         (presentedPrincipalComponent k (@orderWeight n) s b) := by
   by_cases h : 0 < r + s
-  · rw [homogeneousCommutatorQuotient, dif_pos h,
+  · rw [homogeneousCommutatorQuotient, dite_eq_left h,
       orderReesSpecialization_monomial]
     exact principalComponent_commutator_eq_neg_poisson
       k a.property b.property
   · have hrs : r = 0 ∧ s = 0 := by omega
     rcases hrs with ⟨rfl, rfl⟩
-    rw [homogeneousCommutatorQuotient, dif_neg (by omega), map_zero]
+    rw [homogeneousCommutatorQuotient, dite_eq_right (by omega), map_zero]
     have hcomm := principalComponent_commutator_eq_neg_poisson
       k a.property b.property
     rw [commutator_eq_zero_of_mem_orderPiece_zero k a.property b.property,

@@ -32,15 +32,16 @@ def IsDerivation (d : E →+ E) : Prop :=
 def IsInnerDerivation (d : E →+ E) : Prop :=
   ∃ e : E, ∀ y : E, d y = e * y - y * e
 theorem not_isInnerDerivation_of_central
-    (d : E →+ E) (hd : IsDerivation d) (x : E)
+    (d : E →+ E) (x : E)
     (hxcentral : ∀ y : E, x * y = y * x) (hdx : d x = 1) :
     ¬ IsInnerDerivation d := by
   intro hinner
   obtain ⟨e, he⟩ := hinner
   have h := he x
   rw [hdx, hxcentral e] at h
-  exact (one_ne_zero : (1 : E) ≠ 0) (by simpa using h)
+  simp at h
 
+omit [Nontrivial E] in
 /-- Commutation with a set propagates through the subring it generates. -/
 theorem commute_of_mem_subring_closure
     (x : E) (G : Set E) (hG : ∀ g ∈ G, Commute x g) :
@@ -54,6 +55,7 @@ theorem commute_of_mem_subring_closure
   | neg a ha hca => exact hca.neg_right
   | mul a b ha hb hca hcb => exact hca.mul_right hcb
 
+omit [Nontrivial E] in
 /--
 A central element of a source ring remains central in a target ring when
 every target element has a right-fraction presentation and every denominator
@@ -84,10 +86,10 @@ A derivation that sends a central coordinate to `1` cannot be inner.  This is
 the form consumed by differential-Ore stage arguments.
 -/
 theorem not_inner_of_central_coordinate
-    (d : E →+ E) (hd : IsDerivation d) (x : E)
+    (d : E →+ E) (_hd : IsDerivation d) (x : E)
     (hxcentral : ∀ y : E, Commute x y) (hdx : d x = 1) :
     ¬ IsInnerDerivation d :=
-  not_isInnerDerivation_of_central d hd x (fun y => (hxcentral y).eq) hdx
+  not_isInnerDerivation_of_central d x (fun y => (hxcentral y).eq) hdx
 
 
 end AlgebraicAnalysis.NoncommutativeDerivation

@@ -8,6 +8,10 @@ import LeanPool.Stafford38.Stafford38.Characteristic.NormalSymbolPolynomial
 import LeanPool.Stafford38.Stafford38.Characteristic.AssociatedGradedFinite
 import LeanPool.Stafford38.Stafford38.Characteristic.MonicAnnihilatorFinite
 
+/-!
+Finiteness of the canonical graded quotient from a monic normal-symbol annihilator.
+-/
+
 namespace Stafford38.Characteristic.CanonicalNormalSymbolFiniteness
 
 open Stafford38.Characteristic
@@ -25,22 +29,27 @@ open Stafford38.Geometry.ConormalAxisContradiction
 noncomputable section
 variable {k : Type*} [Field k]
 
+/-- The polynomial coefficient ring in all phase variables except the distinguished normal
+momentum. -/
 abbrev normalCoeffRing (n : ℕ) :=
   MvPolynomial {v : PhaseVar (n + 1) // v ≠ Sum.inr (0 : Fin (n + 1))} k
 
+/-- The ring map from polynomials in the normal momentum to the order-symbol algebra. -/
 def normalPolynomialActionHom (n : ℕ) :
     Polynomial (normalCoeffRing (k := k) n) →+* SymbolRing k (n + 1) :=
   (normalSymbolAlgEquiv (k := k) n).symm.toRingHom
 
 /-- The polynomial-ring action obtained by transporting the symbol action
 across the normal-variable equivalence. -/
-@[instance_reducible] def normalPolynomialModule (n : ℕ) (E : Type*) [AddCommGroup E]
+@[instance_reducible]
+def normalPolynomialModule (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] :
     Module (Polynomial (normalCoeffRing (k := k) n)) E :=
   Module.compHom E (normalPolynomialActionHom (k := k) n)
 
 /-- The corresponding action of the ring of all non-normal symbols. -/
-@[instance_reducible] def normalCoeffModule (n : ℕ) (E : Type*) [AddCommGroup E]
+@[instance_reducible]
+def normalCoeffModule (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] : Module (normalCoeffRing (k := k) n) E :=
   Module.compHom E
     ((normalPolynomialActionHom (k := k) n).comp Polynomial.C)

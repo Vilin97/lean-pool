@@ -36,6 +36,7 @@ structure SplitMatrixPresentation
   columnsSpan :
     Submodule.span R (Set.range fun j => fun i => B i j) = L
 
+omit [DecidableEq ι] in
 /-- A finite-rank complemented submodule of a finite coordinate module over a
 local ring has split matrix coordinates.  Finiteness descends along the
 projection onto the summand, projectivity comes from the split inclusion, and
@@ -44,6 +45,8 @@ theorem exists_splitMatrixPresentation
     (L L' : Submodule R (ι → R)) (hcompl : IsCompl L L') (r : ℕ)
     (hrank : Module.finrank R L = r) :
     Nonempty (SplitMatrixPresentation L r) := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   let p : (ι → R) →ₗ[R] L := L.projectionOnto L' hcompl
   let : Module.Finite R L :=
     Module.Finite.of_surjective p (Submodule.projectionOnto_surjective hcompl)
@@ -81,11 +84,14 @@ theorem exists_splitMatrixPresentation
     rw [← himage, ← Submodule.map_span, b.span_eq, Submodule.map_top]
     exact Submodule.range_subtype (p := L)
 
+omit [DecidableEq ι] in
 /-- Property-valued form: no particular complement is part of the input. -/
 theorem exists_splitMatrixPresentation_of_isComplemented
     (L : Submodule R (ι → R)) (hcompl : IsComplemented L) (r : ℕ)
     (hrank : Module.finrank R L = r) :
     Nonempty (SplitMatrixPresentation L r) := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   obtain ⟨L', hLL'⟩ := hcompl
   exact exists_splitMatrixPresentation L L' hLL' r hrank
 

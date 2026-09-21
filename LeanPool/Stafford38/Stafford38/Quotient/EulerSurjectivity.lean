@@ -50,10 +50,10 @@ def preservers (I : RightIdeal A) (R : Subring A) : Subring A where
   carrier := {a | ∀ r : R, ReducesTo I R ((r : A) * a)}
   zero_mem' := by
     intro r
-    exact ⟨0, by simp [ReducesTo, qmk]⟩
+    exact ⟨0, by simp [ qmk]⟩
   one_mem' := by
     intro r
-    exact ⟨r, by simp [ReducesTo]⟩
+    exact ⟨r, by simp []⟩
   add_mem' := by
     intro a b ha hb r
     obtain ⟨s, hs⟩ := ha r
@@ -95,7 +95,6 @@ theorem rightMul_surjective_of_euler_normal
     (hgenerate : Subring.closure ((R : Set A) ∪ {p}) = ⊤) :
     Function.Surjective (rightMul I x) := by
   obtain ⟨U, hU⟩ := hresidue
-
   have hp : p ∈ preservers I R := by
     intro r
     obtain ⟨s, hs⟩ := hnormal r
@@ -110,7 +109,6 @@ theorem rightMul_surjective_of_euler_normal
           (r : A) * p + (U : A) * ((s : A) * x) * p := by noncomm_ring
       _ = (r : A) * p + (U : A) * (x * (r : A)) * p := by rw [hs]
       _ = (1 + (U : A) * x) * ((r : A) * p) := by noncomm_ring
-
   have hall : preservers I R = ⊤ := by
     apply top_unique
     rw [← hgenerate]
@@ -119,7 +117,6 @@ theorem rightMul_surjective_of_euler_normal
     rcases ha with ha | rfl
     · exact subring_le_preservers I R ha
     · simpa using hp
-
   intro q
   obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective I q
   have ha : a ∈ preservers I R := by

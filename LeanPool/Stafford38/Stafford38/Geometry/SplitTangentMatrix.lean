@@ -50,7 +50,7 @@ The nonsingular inverse is the adjugate divided by the determinant in
 Mathlib's matrix API; no inverse of the rectangular matrix is used.
 -/
 def selectedMinorLeftInverse
-    {ι κ : Type*} [Fintype ι] [Fintype κ]
+    {ι κ : Type*} [Fintype κ]
     [DecidableEq ι] [DecidableEq κ]
     (B : Matrix ι κ R) (rows : κ ↪ ι) : Matrix κ ι R :=
   (selectedMinor B rows)⁻¹ * rowSelector (R := R) rows
@@ -69,12 +69,15 @@ theorem selectedMinorLeftInverse_mul
 /-- The selected-minor construction, packaged as an explicit split matrix. -/
 theorem exists_leftInverse_of_selectedMinor_det_isUnit
     {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ]
+     [DecidableEq κ]
     (B : Matrix ι κ R) (rows : κ ↪ ι)
     (hdet : IsUnit (selectedMinor B rows).det) :
-    ∃ C : Matrix κ ι R, C * B = 1 :=
-  ⟨selectedMinorLeftInverse B rows,
-    selectedMinorLeftInverse_mul B rows hdet⟩
+    ∃ C : Matrix κ ι R, C * B = 1 := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
+  exact
+    ⟨selectedMinorLeftInverse B rows,
+        selectedMinorLeftInverse_mul B rows hdet⟩
 
 /-! ## Power-series criterion -/
 
@@ -95,13 +98,15 @@ theorem powerSeries_selectedMinorLeftInverse_mul
 /-- Existence form used by the tangent-limit annihilator construction. -/
 theorem powerSeries_exists_leftInverse_of_selectedMinor_constantCoeff_ne_zero
     {ι κ : Type*} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ]
+     [DecidableEq κ]
     (B : Matrix ι κ (PowerSeries k)) (rows : κ ↪ ι)
     (hconst : PowerSeries.constantCoeff (selectedMinor B rows).det ≠ 0) :
-    ∃ C : Matrix κ ι (PowerSeries k), C * B = 1 :=
-  ⟨selectedMinorLeftInverse B rows,
-    powerSeries_selectedMinorLeftInverse_mul B rows hconst⟩
-
+    ∃ C : Matrix κ ι (PowerSeries k), C * B = 1 := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
+  exact
+    ⟨selectedMinorLeftInverse B rows,
+        powerSeries_selectedMinorLeftInverse_mul B rows hconst⟩
 
 end
 

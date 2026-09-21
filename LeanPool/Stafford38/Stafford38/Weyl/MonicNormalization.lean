@@ -37,7 +37,7 @@ universe u
 variable (k : Type u) [Field k]
 
 theorem weightedHomogeneousComponent_weightedTotalDegree_ne_zero
-    {σ : Type*} [DecidableEq σ] (w : σ → ℕ)
+    {σ : Type*} (w : σ → ℕ)
     {f : MvPolynomial σ k} (hf : f ≠ 0) :
     MvPolynomial.weightedHomogeneousComponent w
         (MvPolynomial.weightedTotalDegree w f) f ≠ 0 := by
@@ -49,7 +49,7 @@ theorem weightedHomogeneousComponent_weightedTotalDegree_ne_zero
   rw [MvPolynomial.coeff_weightedHomogeneousComponent] at hc
   have hw : Finsupp.weight w m = MvPolynomial.weightedTotalDegree w f := by
     simpa [MvPolynomial.weightedTotalDegree] using hmax.symm
-  rw [if_pos hw] at hc
+  rw [ite_eq_left hw] at hc
   exact (MvPolynomial.mem_support_iff.mp hm) hc
 
 theorem principal_isHomogeneous {n N : ℕ} (d : PresentedWeyl k n) :
@@ -130,17 +130,20 @@ theorem scalar_or_positive_top_bernstein_piece {n : ℕ}
     refine ⟨c, ?_, hdc⟩
     intro hc
     subst c
-    simp at hdc
+    simp? at hdc
     exact hd hdc
   · right
     exact ⟨N, Nat.pos_of_ne_zero hN, hpiece, hprincipal⟩
 
+/-- The symplectic image of a Weyl element rescaled by the inverse normalization coefficient. -/
 def normalizedSymplecticImage {n : ℕ}
     (M : Matrix (PhaseVar n) (PhaseVar n) k)
     (hM : M * standardForm k n * Matrix.transpose M = standardForm k n)
     (c : k) (d : PresentedWeyl k n) : PresentedWeyl k n :=
   c⁻¹ • standardSymplecticAlgHom k M hM d
 
+/-- Existence of an invertible symplectic change giving a normalized pure-axis principal
+coefficient. -/
 def HasNormalizedSymplecticChart {n : ℕ} (t : PhaseVar n) (N : ℕ)
     (d : PresentedWeyl k n) : Prop :=
   ∃ (M Ninv : Matrix (PhaseVar n) (PhaseVar n) k) (c : k),

@@ -50,14 +50,16 @@ def filteredRightMul (I : RightIdeal (PresentedWeyl k n))
       change z * y ∈ I
       exact I.smul_mem (MulOpposite.op y) hz)
 
-@[simp] theorem filteredRightMul_mk
+@[simp]
+theorem filteredRightMul_mk
     (I : RightIdeal (PresentedWeyl k n))
     (y z : PresentedWeyl k n) :
-    filteredRightMul k I y ((rightIdealKSubmodule k I).mkQ z) =
+    filteredRightMul k I y (Submodule.Quotient.mk z) =
       (rightIdealKSubmodule k I).mkQ (z * y) :=
   rfl
 
-@[simp] theorem filteredRightMul_one
+@[simp]
+theorem filteredRightMul_one
     (I : RightIdeal (PresentedWeyl k n))
     (q : FilteredRightQuotient k I) :
     filteredRightMul k I 1 q = q := by
@@ -68,17 +70,20 @@ def filteredRightMul (I : RightIdeal (PresentedWeyl k n))
   rw [mul_one]
 
 /-- The right Weyl scalar action underlying the following module instance. -/
+@[instance_reducible]
 def filteredRightQuotientOpSMul
     (I : RightIdeal (PresentedWeyl k n)) :
     SMul (PresentedWeyl k n)ᵐᵒᵖ (FilteredRightQuotient k I) :=
   ⟨fun y q => filteredRightMul k I y.unop q⟩
 
+/-- The opposite Weyl action on the filtered right quotient. -/
 local instance filteredRightQuotientSMul
     (I : RightIdeal (PresentedWeyl k n)) :
     SMul (PresentedWeyl k n)ᵐᵒᵖ (FilteredRightQuotient k I) :=
   filteredRightQuotientOpSMul k I
 
 /-- The additive quotient is an honest right module over the Weyl algebra. -/
+@[instance_reducible]
 def filteredRightQuotientOpModule
     (I : RightIdeal (PresentedWeyl k n)) :
     Module (PresentedWeyl k n)ᵐᵒᵖ (FilteredRightQuotient k I) :=
@@ -119,15 +124,17 @@ def filteredRightQuotientOpModule
       rw [mul_one]
       rfl)
 
+/-- The right Weyl module structure on the filtered quotient, expressed using opposite scalars. -/
 local instance filteredRightQuotientModule
     (I : RightIdeal (PresentedWeyl k n)) :
     Module (PresentedWeyl k n)ᵐᵒᵖ (FilteredRightQuotient k I) :=
   filteredRightQuotientOpModule k I
 
-@[simp] theorem op_smul_filtered_mk
+@[simp]
+theorem op_smul_filtered_mk
     (I : RightIdeal (PresentedWeyl k n))
     (y z : PresentedWeyl k n) :
-    MulOpposite.op y • ((rightIdealKSubmodule k I).mkQ z) =
+    MulOpposite.op y • (Submodule.Quotient.mk z) =
       (rightIdealKSubmodule k I).mkQ (z * y) :=
   rfl
 
@@ -184,7 +191,8 @@ def orderReesOpCoefficients
       ⟨MulOpposite.op (r.unop.val.coeff N),
         (mem_orderPieceOp_iff k N _).2 (r.unop.property N)⟩
 
-@[simp] theorem orderReesOpCoefficients_apply
+@[simp]
+theorem orderReesOpCoefficients_apply
     (r : (OrderReesRing (n := n) k)ᵐᵒᵖ) (N : ℕ) :
     ((orderReesOpCoefficients (n := n) k r) N :
       (PresentedWeyl k n)ᵐᵒᵖ) =
@@ -216,7 +224,8 @@ def orderReesOpToDirectSum :
     rw [orderReesOpCoefficients_apply, orderReesOpCoefficients_apply]
     simp
 
-@[simp] theorem orderReesOpToDirectSum_apply
+@[simp]
+theorem orderReesOpToDirectSum_apply
     (r : (OrderReesRing (n := n) k)ᵐᵒᵖ) (N : ℕ) :
     ((orderReesOpToDirectSum (n := n) k r) N :
       (PresentedWeyl k n)ᵐᵒᵖ) =
@@ -261,7 +270,7 @@ private theorem orderPieceOpToReesOp_mul
         orderPieceOpToReesOp (n := n) k M z := by
   apply MulOpposite.unop_injective
   apply Subtype.ext
-  simp only [orderPieceOpToReesOp, MulOpposite.unop_op,
+  simp only [orderPieceOpToReesOp,
     MulOpposite.unop_mul]
   simp [orderReesMonomial, Polynomial.monomial_mul_monomial,
     Nat.add_comm]
@@ -275,7 +284,8 @@ def orderPieceOpDirectSumToReesOp :
     (orderPieceOpToReesOp_one (n := n) k)
     (orderPieceOpToReesOp_mul (n := n) k)
 
-@[simp] theorem orderPieceOpDirectSumToReesOp_of
+@[simp]
+theorem orderPieceOpDirectSumToReesOp_of
     (N : ℕ) (y : orderPieceOp (n := n) k N) :
     orderPieceOpDirectSumToReesOp (n := n) k
         (DirectSum.of (fun M => orderPieceOp (n := n) k M) N y) =
@@ -337,7 +347,8 @@ def orderPieceOpDirectSumEquivReesOp :
     ⟨(orderPieceOpDirectSumToReesOp_leftInverse (n := n) k).injective,
       (orderPieceOpDirectSumToReesOp_rightInverse (n := n) k).surjective⟩
 
-@[simp] theorem orderPieceOpDirectSumEquivReesOp_symm_apply
+@[simp]
+theorem orderPieceOpDirectSumEquivReesOp_symm_apply
     (r : (OrderReesRing (n := n) k)ᵐᵒᵖ) :
     (orderPieceOpDirectSumEquivReesOp (n := n) k).symm r =
       orderReesOpToDirectSum (n := n) k r := by
@@ -357,6 +368,7 @@ own constructions written in this file's shape; each proof obligation is
 discharged exactly as upstream.
 -/
 
+/-- The graded action of opposite order pieces on quotient order pieces. -/
 local instance orderPieceOpGMulAction
     (I : RightIdeal (PresentedWeyl k n)) :
     GradedMonoid.GMulAction (fun N => orderPieceOp (n := n) k N)
@@ -367,6 +379,7 @@ local instance orderPieceOpGMulAction
     mul_smul := fun ⟨_i, _a⟩ ⟨_j, _a'⟩ ⟨_l, _b⟩ =>
       Sigma.subtype_ext (add_vadd _ _ _) (mul_smul _ _ _) }
 
+/-- The distributive graded action of opposite order pieces on quotient order pieces. -/
 local instance orderPieceOpGdistribMulAction
     (I : RightIdeal (PresentedWeyl k n)) :
     DirectSum.GdistribMulAction (fun N => orderPieceOp (n := n) k N)
@@ -375,6 +388,7 @@ local instance orderPieceOpGdistribMulAction
     smul_add := fun _a _b _c => Subtype.ext <| smul_add _ _ _
     smul_zero := fun _a => Subtype.ext <| smul_zero _ }
 
+/-- The graded module structure of quotient order pieces over the opposite order pieces. -/
 local instance orderPieceOpGmodule
     (I : RightIdeal (PresentedWeyl k n)) :
     DirectSum.Gmodule (fun N => orderPieceOp (n := n) k N)
@@ -469,7 +483,7 @@ theorem orderReesParameter_op_decomposition :
     simp [orderReesParameter_coe]
   · rw [DirectSum.of_eq_of_ne 1 L _ hL]
     rw [orderReesOpToDirectSum_apply]
-    simp [orderReesParameter_coe, Polynomial.coeff_X, hL, Ne.symm hL]
+    simp [orderReesParameter_coe, Polynomial.coeff_X,  Ne.symm hL]
 
 /-- The central Rees parameter acts exactly as the previously constructed
 successor shift. -/
@@ -507,7 +521,7 @@ theorem orderReesParameter_op_smul_eq_shift
       ext L
       by_cases hL : N + 1 = L
       · subst L
-        simp [DirectSum.of_apply, Nat.one_add]
+        simp? [DirectSum.of_apply, Nat.one_add]
         apply Subtype.ext
         simp only [quotientOrderPieceSucc, Submodule.coe_inclusion]
         exact (cast_quotientOrderPiece_coe k I (Nat.one_add N) q').trans rfl

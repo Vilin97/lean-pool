@@ -8,6 +8,10 @@ import LeanPool.Stafford38.Stafford38.LocalizedDifferentialClearing
 import LeanPool.Stafford38.Stafford38.LeftDenominatorTransport
 import LeanPool.Stafford38.Stafford38.FoundationClosure
 
+/-!
+Two-generator corollaries for localized polynomial differential-operator rings.
+-/
+
 namespace Stafford38.LocalizedDifferentialCorollaries
 
 open Stafford
@@ -27,15 +31,19 @@ variable [Algebra (MvPolynomial (Fin n) k) B] [Algebra k B]
 variable [IsScalarTower k (MvPolynomial (Fin n) k) B]
 variable [IsLocalization S B]
 
+/-- The polynomial coefficient algebra in `n` variables. -/
 abbrev A := MvPolynomial (Fin n) k
+/-- The differential-operator algebra of the localized coefficient ring. -/
 abbrev D := DifferentialOperators.algebra (k := k) (R := B)
 
+/-- Multiplication by a coefficient, bundled as a differential operator of order zero. -/
 def multiplicationD (b : B) : D (k := k) B :=
   ⟨multiplication (k := k) b,
     ⟨0, (mem_order_zero_iff_eq_multiplication _).2 (by
       ext x
       simp [multiplication_apply])⟩⟩
 
+omit [CharZero k] in
 private theorem multiplicationD_mul (b c : B) :
     multiplicationD (k := k) (B := B) b * multiplicationD (k := k) (B := B) c =
       multiplicationD (k := k) (B := B) (b * c) := by
@@ -43,12 +51,14 @@ private theorem multiplicationD_mul (b c : B) :
   ext x
   simp [multiplicationD, multiplication_apply, mul_assoc]
 
+omit [CharZero k] in
 private theorem multiplicationD_one : multiplicationD (k := k) (B := B) (1 : B) =
     (1 : D (k := k) B) := by
   apply Subtype.ext
   ext x
   simp [multiplicationD, multiplication_apply]
 
+omit [CharZero k] in
 private theorem multiplicationD_isUnit {b : B} (hb : IsUnit b) :
     IsUnit (multiplicationD (k := k) (B := B) b) := by
   rcases hb with ⟨u, hu⟩
@@ -105,6 +115,7 @@ theorem s38_fraction_ring_differential
   intro d hd
   exact Stafford38.universalStatement (k := k) n d hd
 
+/-- The product of all coordinate variables, whose inversion gives the Laurent localization. -/
 def allCoordinateProduct : A (k := k) (n := n) :=
   Finset.univ.prod (fun i : Fin n => MvPolynomial.X i)
 

@@ -40,6 +40,7 @@ variable {n : ℕ}
 private abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
+/-- The weighted graded-algebra structure used for support of the filtered quotient. -/
 local instance orderGradedAlgebraInstance :
     GradedAlgebra (orderDecomposition (n := n) k) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
@@ -53,7 +54,8 @@ def symbolToOrderRelationGraded
       (orderSymbolRelation k I N).mkQ).comp
     (DirectSum.decomposeLinearEquiv (orderDecomposition (n := n) k)).toLinearMap
 
-@[simp] theorem symbolToOrderRelationGraded_apply
+@[simp]
+theorem symbolToOrderRelationGraded_apply
     (I : RightIdeal (PresentedWeyl k n)) (P : SymbolRing k n) (N : ℕ) :
     symbolToOrderRelationGraded k I P N =
       Submodule.Quotient.mk

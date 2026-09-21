@@ -36,7 +36,8 @@ def DerivationOreRightHilbertBasis : Prop :=
     ∀ D : OreDivisionDerivation B,
       IsNoetherianRing (NormalOre D)ᵐᵒᵖ
 
-@[simp] theorem rightScalar_smul_def (b : Bᵐᵒᵖ) (c : B) :
+@[simp]
+theorem rightScalar_smul_def (b : Bᵐᵒᵖ) (c : B) :
     b • c = c * b.unop := by
   rw [MulOpposite.smul_eq_mul_unop]
 
@@ -53,7 +54,6 @@ private theorem rightScalar_top_span :
 private theorem rightScalar_module_finite : Module.Finite Bᵐᵒᵖ B := by
   refine ⟨?_⟩
   refine ⟨({1} : Finset B), ?_⟩
-  change Submodule.span Bᵐᵒᵖ (({1} : Finset B) : Set B) = ⊤
   simpa only [Finset.coe_singleton] using
     (rightScalar_top_span (B := B))
 
@@ -190,14 +190,12 @@ lemma mem_leadingCoeffNth (D : OreDivisionDerivation B)
     rcases hc with ⟨z, hz, rfl⟩
     let p := (normalPolyEquiv D).symm z.1
     refine ⟨p, ?_, ?_, ?_⟩
-    · change normalForm D p ∈ I
-      have hpz : normalForm D p = z.1 := by
+    · have hpz : normalForm D p = z.1 := by
         change (normalPolyEquiv D) p = z.1
         exact (normalPolyEquiv D).apply_symm_apply z.1
       rw [hpz]
       simpa [rightIdealAsCoeffSubmodule] using z.2.2
-    · change p.degree ≤ (n : WithBot ℕ)
-      exact z.2.1
+    · exact z.2.1
     · change ((normalPolyEquiv D).symm z.1).coeff n = _
       rfl
   · rintro ⟨p, hpI, hpdeg, hpc⟩
@@ -503,7 +501,7 @@ theorem normalOre_rightIdeal_fg_of_op_noetherian
           exact I.sub_mem hpI huI
         have hrdeg : r.degree < (n : WithBot ℕ) := by
           dsimp [r]
-          have hsub := Polynomial.degree_sub_lt (hpdeg.trans hudeg.symm) hp0 hplead
+          have hsub := Polynomial.degree_sub_lt_left (hpdeg.trans hudeg.symm) hp0 hplead
           simpa [hpdeg] using hsub
         by_cases hr0 : r = 0
         · have hpr : p = u := sub_eq_zero.mp hr0

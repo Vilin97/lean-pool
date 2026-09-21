@@ -41,17 +41,20 @@ variable {k A ι : Type*} [Field k] [Ring A] [Algebra k A]
 /-- Historical namespace for the shared ring commutator. -/
 def commutator (u v : A) : A := AlgebraicAnalysis.ringCommutator u v
 
-@[simp] theorem commutator_eq_shared (u v : A) :
+@[simp]
+theorem commutator_eq_shared (u v : A) :
     commutator u v = AlgebraicAnalysis.ringCommutator u v := rfl
 
 /-- The linear combination of a family of generators specified by a matrix. -/
 def linearCombination (M : Matrix ι ι k) (z : ι → A) (i : ι) : A :=
   ∑ j, algebraMap k A (M i j) * z j
 
+omit [DecidableEq ι] in
 lemma commutator_sum_left (u : ι → A) (v : A) :
     commutator (∑ i, u i) v = ∑ i, commutator (u i) v := by
   simp [commutator, Finset.sum_mul, Finset.mul_sum]
 
+omit [DecidableEq ι] in
 lemma commutator_sum_right (u : A) (v : ι → A) :
     commutator u (∑ i, v i) = ∑ i, commutator u (v i) := by
   simp [commutator, Finset.sum_mul, Finset.mul_sum]
@@ -95,15 +98,18 @@ lemma commutator_smul_smul (a b : k) (u v : A) :
     _ = algebraMap k A (a * b) * (u * v - v * u) := by
           rw [mul_comm b a, mul_sub]
 
+omit [DecidableEq ι] in
 lemma commutator_linearCombination
     (M : Matrix ι ι k) (z : ι → A) (omega : Matrix ι ι k) (i l : ι)
     (hcomm : ∀ j n, commutator (z j) (z n) =
       algebraMap k A (omega j n)) :
     commutator (linearCombination M z i) (linearCombination M z l) =
       algebraMap k A (∑ j, ∑ n, M i j * omega j n * M l n) := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   rw [linearCombination, linearCombination, commutator_sum_left]
   simp_rw [commutator_sum_right, commutator_smul_smul, hcomm]
-  simp only [map_sum, map_mul, Finset.sum_mul, Finset.mul_sum]
+  simp only [map_sum, map_mul]
   congr 2
   funext j
   congr 1
@@ -124,6 +130,7 @@ lemma commutator_linearCombination
           algebraMap k A (M l n) := by
             rw [← mul_assoc]
 
+omit [DecidableEq ι] in
 /-- A matrix preserving `omega` preserves all Weyl commutators. -/
 theorem symplectic_linear_change_preserves_commutator
     (M : Matrix ι ι k) (z : ι → A) (omega : Matrix ι ι k)
@@ -132,6 +139,8 @@ theorem symplectic_linear_change_preserves_commutator
     (hM : M * omega * Matrix.transpose M = omega) :
     ∀ i l, commutator (linearCombination M z i) (linearCombination M z l) =
       algebraMap k A (omega i l) := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   intro i l
   rw [commutator_linearCombination M z omega i l hcomm]
   have hentry : (∑ j, ∑ n, M i j * omega j n * M l n) = omega i l := by
@@ -145,8 +154,10 @@ theorem symplectic_linear_change_preserves_commutator
 
 /-! ### The standard A₂ specialization -/
 
+/-- The two coordinate and two momentum indices of the second Weyl algebra. -/
 abbrev A2Index := Fin 2 ⊕ Fin 2
 
+/-- The standard symplectic form on the four generators of the second Weyl algebra. -/
 abbrev A2SymplecticForm (k : Type*) [CommRing k] :
     Matrix A2Index A2Index k := Matrix.J (Fin 2) k
 
@@ -178,6 +189,8 @@ explicit.  This is still presentation-level algebra: identifying the
 quotient with a PBW Weyl algebra remains separate, while the inverse-matrix
 argument below proves the form-preserving A₂ map is an automorphism. -/
 
+/-- The generating relation equating each generator commutator with the corresponding scalar
+form entry. -/
 def freeWeylRelation (omega : Matrix ι ι k)
     (a b : FreeAlgebra k ι) : Prop :=
   ∃ i j,
@@ -185,12 +198,15 @@ def freeWeylRelation (omega : Matrix ι ι k)
       FreeAlgebra.ι k j * FreeAlgebra.ι k i ∧
     b = algebraMap k (FreeAlgebra k ι) (omega i j)
 
+/-- The quotient of the free algebra by the commutator relations prescribed by `omega`. -/
 abbrev FreeWeyl (k : Type*) [Field k] (ι : Type*)
     (omega : Matrix ι ι k) := RingQuot (freeWeylRelation omega)
 
+/-- The image of a free generator in the Weyl quotient. -/
 def freeWeylGenerator (omega : Matrix ι ι k) (i : ι) : FreeWeyl k ι omega :=
   RingQuot.mkAlgHom k (freeWeylRelation omega) (FreeAlgebra.ι k i)
 
+omit [Fintype ι] [DecidableEq ι] in
 theorem freeWeylGenerator_commutator
     (omega : Matrix ι ι k) (i j : ι) :
     commutator (freeWeylGenerator omega i) (freeWeylGenerator omega j) =
@@ -200,7 +216,7 @@ theorem freeWeylGenerator_commutator
       (FreeAlgebra.ι k i * FreeAlgebra.ι k j -
         FreeAlgebra.ι k j * FreeAlgebra.ι k i)
       (algebraMap k (FreeAlgebra k ι) (omega i j)) from ⟨i, j, rfl, rfl⟩)
-  simp only [freeWeylGenerator, commutator, RingQuot.mkAlgHom_coe]
+  simp only [freeWeylGenerator, commutator]
   calc
     RingQuot.mkAlgHom k (freeWeylRelation omega) (FreeAlgebra.ι k i) *
           RingQuot.mkAlgHom k (freeWeylRelation omega) (FreeAlgebra.ι k j) -
@@ -225,17 +241,21 @@ theorem freeWeylGenerator_commutator
       rw [hmap]
       rfl
 
+/-- The linear combination of Weyl elements specified by a row of a matrix. -/
 def freeWeylLinearCombination {omega : Matrix ι ι k}
     (M : Matrix ι ι k) (z : ι → FreeWeyl k ι omega) (i : ι) :
     FreeWeyl k ι omega :=
   ∑ j, algebraMap k (FreeWeyl k ι omega) (M i j) * z j
 
+/-- The free-algebra homomorphism sending generators to their matrix linear combinations. -/
 def freeWeylMap (M : Matrix ι ι k) (omega : Matrix ι ι k) :
     FreeAlgebra k ι →ₐ[k] FreeWeyl k ι omega :=
   FreeAlgebra.lift k (fun i => freeWeylLinearCombination M
     (freeWeylGenerator omega) i)
 
-def freeWeylMapRespects (M : Matrix ι ι k) (omega : Matrix ι ι k)
+omit [DecidableEq ι] in
+/-- A matrix substitution preserving the prescribed commutators respects the quotient relations. -/
+theorem freeWeylMapRespects (M : Matrix ι ι k) (omega : Matrix ι ι k)
     (hpres : ∀ i j,
       commutator (freeWeylLinearCombination M (freeWeylGenerator omega) i)
           (freeWeylLinearCombination M (freeWeylGenerator omega) j) =
@@ -247,6 +267,8 @@ def freeWeylMapRespects (M : Matrix ι ι k) (omega : Matrix ι ι k)
         freeWeylLinearCombination, AlgHom.commutes]
       exact hpres i j
 
+/-- The endomorphism of the Weyl quotient induced by a commutator-preserving matrix
+substitution. -/
 def freeWeylSymplecticAlgHom (M : Matrix ι ι k) (omega : Matrix ι ι k)
     (hpres : ∀ i j,
       commutator (freeWeylLinearCombination M (freeWeylGenerator omega) i)
@@ -256,6 +278,7 @@ def freeWeylSymplecticAlgHom (M : Matrix ι ι k) (omega : Matrix ι ι k)
   RingQuot.liftAlgHom k
     ⟨freeWeylMap M omega, freeWeylMapRespects M omega hpres⟩
 
+omit [DecidableEq ι] in
 theorem freeWeylSymplecticAlgHom_generator
     (M : Matrix ι ι k) (omega : Matrix ι ι k)
     (hpres : ∀ i j,
@@ -264,11 +287,9 @@ theorem freeWeylSymplecticAlgHom_generator
         algebraMap k (FreeWeyl k ι omega) (omega i j)) (i : ι) :
     freeWeylSymplecticAlgHom M omega hpres (freeWeylGenerator omega i) =
       freeWeylLinearCombination M (freeWeylGenerator omega) i := by
-  simpa [freeWeylSymplecticAlgHom, freeWeylGenerator, freeWeylMap,
-    FreeAlgebra.lift_ι_apply] using
-    (RingQuot.liftAlgHom_mkAlgHom_apply k (freeWeylMap M omega)
-      (freeWeylMapRespects M omega hpres) (FreeAlgebra.ι k i))
+  simp [freeWeylSymplecticAlgHom, freeWeylGenerator, freeWeylMap]
 
+omit [DecidableEq ι] in
 theorem freeWeylSymplecticAlgHom_map_linearCombination
     (M N : Matrix ι ι k) (omega : Matrix ι ι k)
     (hpres : ∀ i j,
@@ -278,6 +299,8 @@ theorem freeWeylSymplecticAlgHom_map_linearCombination
     freeWeylSymplecticAlgHom M omega hpres
         (freeWeylLinearCombination N (freeWeylGenerator omega) i) =
       freeWeylLinearCombination (N * M) (freeWeylGenerator omega) i := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   rw [freeWeylLinearCombination, map_sum]
   simp_rw [map_mul, AlgHom.commutes,
     freeWeylSymplecticAlgHom_generator M omega hpres]
@@ -296,6 +319,7 @@ lemma freeWeylLinearCombination_one
         (freeWeylGenerator omega) i = freeWeylGenerator omega i := by
   simp [freeWeylLinearCombination, Matrix.one_apply]
 
+omit [DecidableEq ι] in
 theorem freeWeylSymplecticAlgHom_comp_generator
     (M N : Matrix ι ι k) (omega : Matrix ι ι k)
     (hM : ∀ i j,
@@ -309,10 +333,13 @@ theorem freeWeylSymplecticAlgHom_comp_generator
     freeWeylSymplecticAlgHom M omega hM
       (freeWeylSymplecticAlgHom N omega hN (freeWeylGenerator omega i)) =
       freeWeylLinearCombination (N * M) (freeWeylGenerator omega) i := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   rw [freeWeylSymplecticAlgHom_generator N omega hN]
   exact freeWeylSymplecticAlgHom_map_linearCombination M N omega hM i
 
-def a2_freeWeyl_symplectic_hpres
+/-- A symplectic change of the four generators preserves the defining Weyl commutators. -/
+theorem a2_freeWeyl_symplectic_hpres
     (M : Matrix A2Index A2Index k)
     (hM : M * A2SymplecticForm k * Matrix.transpose M = A2SymplecticForm k) :
     ∀ i l,
@@ -333,7 +360,8 @@ def a2_freeWeyl_symplectic_hpres
     (fun j n => freeWeylGenerator_commutator (A2SymplecticForm k) j n)
     hM i l
 
-def a2_freeWeyl_symplectic_hom
+/-- The endomorphism of the second Weyl quotient induced by a symplectic matrix. -/
+def a2FreeWeylSymplecticHom
     (M : Matrix A2Index A2Index k)
     (hM : M * A2SymplecticForm k * Matrix.transpose M = A2SymplecticForm k) :
     FreeWeyl k A2Index (A2SymplecticForm k) →ₐ[k]
@@ -345,7 +373,7 @@ theorem a2_freeWeyl_symplectic_hom_generator
     (M : Matrix A2Index A2Index k)
     (hM : M * A2SymplecticForm k * Matrix.transpose M = A2SymplecticForm k)
     (i : A2Index) :
-    a2_freeWeyl_symplectic_hom M hM
+    a2FreeWeylSymplecticHom M hM
         (freeWeylGenerator (A2SymplecticForm k) i) =
       freeWeylLinearCombination M
         (freeWeylGenerator (A2SymplecticForm k)) i := by
@@ -357,8 +385,8 @@ theorem a2_freeWeyl_symplectic_hom_comp_generator
     (hM : M * A2SymplecticForm k * Matrix.transpose M = A2SymplecticForm k)
     (hN : N * A2SymplecticForm k * Matrix.transpose N = A2SymplecticForm k)
     (i : A2Index) :
-    a2_freeWeyl_symplectic_hom M hM
-        (a2_freeWeyl_symplectic_hom N hN
+    a2FreeWeylSymplecticHom M hM
+        (a2FreeWeylSymplecticHom N hN
           (freeWeylGenerator (A2SymplecticForm k) i)) =
       freeWeylLinearCombination (N * M)
         (freeWeylGenerator (A2SymplecticForm k)) i := by
@@ -372,20 +400,21 @@ theorem a2_freeWeyl_symplectic_hom_comp_eq_id
     (hM : M * A2SymplecticForm k * Matrix.transpose M = A2SymplecticForm k)
     (hN : N * A2SymplecticForm k * Matrix.transpose N = A2SymplecticForm k)
     (hNM : N * M = 1) :
-    (a2_freeWeyl_symplectic_hom M hM).comp
-        (a2_freeWeyl_symplectic_hom N hN) =
+    (a2FreeWeylSymplecticHom M hM).comp
+        (a2FreeWeylSymplecticHom N hN) =
       AlgHom.id k (FreeWeyl k A2Index (A2SymplecticForm k)) := by
   apply RingQuot.ringQuot_ext' k
   apply FreeAlgebra.hom_ext
   funext i
-  change a2_freeWeyl_symplectic_hom M hM
-      (a2_freeWeyl_symplectic_hom N hN
+  change a2FreeWeylSymplecticHom M hM
+      (a2FreeWeylSymplecticHom N hN
         (freeWeylGenerator (A2SymplecticForm k) i)) =
     freeWeylGenerator (A2SymplecticForm k) i
   rw [a2_freeWeyl_symplectic_hom_comp_generator M N hM hN i, hNM]
   exact freeWeylLinearCombination_one (A2SymplecticForm k) i
 
-def a2_freeWeyl_symplectic_equiv
+/-- The automorphism of the second Weyl quotient induced by a symplectic group element. -/
+def a2FreeWeylSymplecticEquiv
     (M : Matrix.symplecticGroup (Fin 2) k) :
     FreeWeyl k A2Index (A2SymplecticForm k) ≃+*
       FreeWeyl k A2Index (A2SymplecticForm k) := by
@@ -397,9 +426,9 @@ def a2_freeWeyl_symplectic_equiv
       Matrix.transpose ((M⁻¹ : Matrix.symplecticGroup (Fin 2) k) :
         Matrix A2Index A2Index k) = A2SymplecticForm k :=
     SymplecticGroup.mem_iff.mp (M⁻¹).property
-  let f := a2_freeWeyl_symplectic_hom
+  let f := a2FreeWeylSymplecticHom
     (M : Matrix A2Index A2Index k) hM
-  let g := a2_freeWeyl_symplectic_hom
+  let g := a2FreeWeylSymplecticHom
     ((M⁻¹ : Matrix.symplecticGroup (Fin 2) k) : Matrix A2Index A2Index k) hMi
   have hfg : f.comp g =
       AlgHom.id k (FreeWeyl k A2Index (A2SymplecticForm k)) := by

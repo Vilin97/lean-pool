@@ -28,10 +28,12 @@ universe u
 
 variable (k : Type u) [Field k]
 
+/-- The standard symplectic matrix on coordinate and momentum indices. -/
 abbrev standardForm (n : ℕ) : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) k :=
   Matrix.J (Fin n) k
 
-def standardSymplecticHpres {n : ℕ}
+/-- Preservation of the standard Weyl commutator relations under a symplectic linear change. -/
+theorem standardSymplecticHpres {n : ℕ}
     (M : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) k)
     (hM : M * standardForm k n * Matrix.transpose M = standardForm k n) :
     ∀ i j,
@@ -46,6 +48,7 @@ def standardSymplecticHpres {n : ℕ}
     (freeWeylGenerator (standardForm k n)) (standardForm k n)
     (fun i j => freeWeylGenerator_commutator (standardForm k n) i j) hM
 
+/-- The presented Weyl algebra endomorphism induced by a standard symplectic matrix. -/
 def standardSymplecticAlgHom {n : ℕ}
     (M : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) k)
     (hM : M * standardForm k n * Matrix.transpose M = standardForm k n) :
@@ -54,7 +57,8 @@ def standardSymplecticAlgHom {n : ℕ}
   freeWeylSymplecticAlgHom M (standardForm k n)
     (standardSymplecticHpres k M hM)
 
-@[simp] theorem standardSymplecticAlgHom_generator {n : ℕ}
+@[simp]
+theorem standardSymplecticAlgHom_generator {n : ℕ}
     (M : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) k)
     (hM : M * standardForm k n * Matrix.transpose M = standardForm k n)
     (i : Fin n ⊕ Fin n) :
@@ -109,7 +113,8 @@ def standardSymplecticAlgEquivOfInverse {n : ℕ}
     (standardSymplecticAlgHom k M hM).map_add
     (standardSymplecticAlgHom k M hM).commutes
 
-@[simp] theorem standardSymplecticAlgEquivOfInverse_generator {n : ℕ}
+@[simp]
+theorem standardSymplecticAlgEquivOfInverse_generator {n : ℕ}
     (M N : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) k)
     (hM : M * standardForm k n * Matrix.transpose M = standardForm k n)
     (hN : N * standardForm k n * Matrix.transpose N = standardForm k n)
@@ -119,7 +124,8 @@ def standardSymplecticAlgEquivOfInverse {n : ℕ}
       freeWeylLinearCombination M (freeWeylGenerator (standardForm k n)) i :=
   standardSymplecticAlgHom_generator k M hM i
 
-@[simp] theorem standardSymplecticAlgEquivOfInverse_symm_generator {n : ℕ}
+@[simp]
+theorem standardSymplecticAlgEquivOfInverse_symm_generator {n : ℕ}
     (M N : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) k)
     (hM : M * standardForm k n * Matrix.transpose M = standardForm k n)
     (hN : N * standardForm k n * Matrix.transpose N = standardForm k n)

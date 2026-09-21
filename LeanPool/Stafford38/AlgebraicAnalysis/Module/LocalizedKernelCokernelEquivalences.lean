@@ -33,7 +33,8 @@ noncomputable def localizedMap : LocalizedModule S U →ₗ[Localization S]
     LocalizedModule S V :=
   (LocalizedModule.map S f).extendScalarsOfIsLocalization S (Localization S)
 
-@[simp] theorem localizedMap_apply (x : LocalizedModule S U) :
+@[simp]
+theorem localizedMap_apply (x : LocalizedModule S U) :
     localizedMap S f x = LocalizedModule.map S f x :=
   rfl
 

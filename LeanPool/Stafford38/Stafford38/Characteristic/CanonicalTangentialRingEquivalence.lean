@@ -6,6 +6,10 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialSymbolFiniteness
 
+/-!
+The polynomial-ring equivalence identifying old and retained tangential variables.
+-/
+
 namespace Stafford38.Characteristic.CanonicalTangentialRingEquivalence
 
 open Stafford38.Characteristic
@@ -55,7 +59,8 @@ def oldTangentialVarEquiv (n : ℕ) :
   Equiv.ofBijective (oldTangentialVar n)
     ⟨oldTangentialVar_injective n, oldTangentialVar_surjective n⟩
 
-@[simp] theorem oldTangentialVarEquiv_apply (n : ℕ) (i : Fin n ⊕ Fin n) :
+@[simp]
+theorem oldTangentialVarEquiv_apply (n : ℕ) (i : Fin n ⊕ Fin n) :
     (oldTangentialVarEquiv n i).1.1 = oldIndex i :=
   rfl
 
@@ -65,7 +70,8 @@ def oldSymbolTangentialAlgEquiv (n : ℕ) :
     MvPolynomial (Fin n ⊕ Fin n) k ≃ₐ[k] tangentialCoeffRing (k := k) n :=
   MvPolynomial.renameEquiv k (oldTangentialVarEquiv n)
 
-@[simp] theorem oldSymbolTangentialAlgEquiv_X (n : ℕ)
+@[simp]
+theorem oldSymbolTangentialAlgEquiv_X (n : ℕ)
     (i : Fin n ⊕ Fin n) :
     oldSymbolTangentialAlgEquiv (k := k) n (MvPolynomial.X i) =
       MvPolynomial.X (oldTangentialVarEquiv n i) := by

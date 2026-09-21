@@ -6,6 +6,10 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.Stafford38.FixedSourceStatement
 
+/-!
+Assembly of the fixed-source reduction from canonical characteristic and Weyl data.
+-/
+
 namespace Stafford38.FixedSource
 
 open Stafford38
@@ -53,7 +57,6 @@ theorem universalFixedSourceStatement_of_canonicalSupportVanishing
             (.inl (0 : Fin (n + 1)))
         exact (freeWeylLinearCombination_one (standardForm k (n + 1))
           (.inl (0 : Fin (n + 1)))).symm
-
     refine ⟨ell, algebraMap k _ c⁻¹, 0, hell, ?_⟩
     simp only [hdegree, hNzero, pow_zero]
     rw [← map_mul, mul_inv_cancel₀ hc, map_one]

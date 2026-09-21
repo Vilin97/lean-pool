@@ -54,6 +54,7 @@ theorem normalScalar_commutes (D : OreDivisionDerivation B)
       exact (hsa.mul_right (hsx.pow_right n)).eq
 
 /-- The scalar algebra structure induced by the canonical coefficient map. -/
+@[instance_reducible]
 def normalOreAlgebra (D : OreDivisionDerivation B)
     (hD : ∀ c : k, D (algebraMap k B c) = 0) : Algebra k (NormalOre D) :=
   RingHom.toAlgebra'

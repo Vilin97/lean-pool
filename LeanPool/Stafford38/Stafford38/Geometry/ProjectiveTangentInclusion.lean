@@ -82,7 +82,7 @@ variable {k : Type*} [Field k]
 /-- Formal row annihilation reaches the Laurent-valued equation-conormal
 locus under tangent inclusion rather than tangent equality. -/
 theorem laurentPhasePoint_mem_equationConormalLocus_of_zariski_le_span
-    {κ : Type*} [Fintype κ]
+    {κ : Type*} [Finite κ]
     (I : Ideal (MvPolynomial (Fin n) (LaurentSeries k)))
     (q ell : Fin (n + 1) → PowerSeries k)
     (Z : Matrix (Fin (n + 1)) κ (PowerSeries k))
@@ -98,6 +98,8 @@ theorem laurentPhasePoint_mem_equationConormalLocus_of_zariski_le_span
     Sum.elim (dehomogenizedPoint (laurentColumn q))
         (fun i ↦ laurentColumn ell i.succ) ∈
       equationConormalLocus I := by
+  classical
+  let := Fintype.ofFinite κ
   exact phasePoint_mem_equationConormalLocus_of_zariski_le_span
     I (laurentColumn q) (laurentColumn ell)
       (laurentNonpositionTangentMatrix Z tau)
@@ -109,7 +111,7 @@ theorem laurentPhasePoint_mem_equationConormalLocus_of_zariski_le_span
 
 /-- The weakened Laurent bridge retains the exact fibre-residue identity. -/
 theorem laurentPhasePoint_mem_equationConormalLocus_and_residue_of_zariski_le_span
-    {κ : Type*} [Fintype κ]
+    {κ : Type*} [Finite κ]
     (I : Ideal (MvPolynomial (Fin n) (LaurentSeries k)))
     (q ell : Fin (n + 1) → PowerSeries k)
     (Z : Matrix (Fin (n + 1)) κ (PowerSeries k))
@@ -126,13 +128,15 @@ theorem laurentPhasePoint_mem_equationConormalLocus_and_residue_of_zariski_le_sp
           (fun i ↦ laurentColumn ell i.succ) ∈ equationConormalLocus I ∧
       residueColumn (fun i : Fin n ↦ ell i.succ) =
         fun i ↦ residueColumn ell i.succ := by
+  classical
+  let := Fintype.ofFinite κ
   exact ⟨laurentPhasePoint_mem_equationConormalLocus_of_zariski_le_span
     I q ell Z tau hq0 hrow hbase htangent, residueColumn_tail ell⟩
 
 /-- The same inclusion hypothesis reaches the projected Laurent
 equation-conormal direction closure required by the asymptotic consumer. -/
 theorem residue_tail_mem_laurentEquationConormalDirectionClosure_of_zariski_le_span
-    {κ : Type*} [Fintype κ]
+    {κ : Type*} [Finite κ]
     (I : Ideal (MvPolynomial (Fin n) k))
     (q ell : Fin (n + 1) → PowerSeries k)
     (Z : Matrix (Fin (n + 1)) κ (PowerSeries k))
@@ -151,6 +155,8 @@ theorem residue_tail_mem_laurentEquationConormalDirectionClosure_of_zariski_le_s
           (laurentNonpositionTangentMatrix Z tau)) :
     residueColumn (fun i : Fin n ↦ ell i.succ) ∈
       laurentEquationConormalDirectionClosure I := by
+  classical
+  let := Fintype.ofFinite κ
   apply residue_mem_laurentEquationConormalDirectionClosure
     I (dehomogenizedPoint (laurentColumn q)) (fun i : Fin n ↦ ell i.succ)
   exact laurentPhasePoint_mem_equationConormalLocus_of_zariski_le_span

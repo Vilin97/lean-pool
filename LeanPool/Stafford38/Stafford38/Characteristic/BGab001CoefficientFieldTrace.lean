@@ -323,7 +323,7 @@ theorem artinian_local_commutator_cofactor_mem_maximalIdeal
   obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero
     (ne_of_gt (Module.finrank_pos (R := K) (M := V)))
   obtain ⟨b, level, hb⟩ :=
-    Stafford38.Characteristic.ArtinianAdaptedBasisExistence.exists_maximalIdealFiltrationAdaptedBasis
+    Characteristic.ArtinianAdaptedBasisExistence.exists_maximalIdealFiltrationAdaptedBasis
       (K := K) (R := R) (V := V) hn
   exact commutator_cofactor_mem_maximalIdeal S rho hrho hact hker hexact hc2
     b level hb hcoeff x y z hx hy hxy

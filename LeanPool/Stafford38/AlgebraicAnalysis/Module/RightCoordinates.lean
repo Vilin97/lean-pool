@@ -32,10 +32,12 @@ variable {S ι α : Type*} [Ring S]
 def rightCoordinateAction (v : ι →₀ S) (a : S) : ι →₀ S :=
   (MulOpposite.op a : Sᵐᵒᵖ) • v
 
-@[simp] theorem rightCoordinateAction_apply (v : ι →₀ S) (a : S) (i : ι) :
+@[simp]
+theorem rightCoordinateAction_apply (v : ι →₀ S) (a : S) (i : ι) :
     rightCoordinateAction v a i = v i * a := rfl
 
-@[simp] theorem rightCoordinateAction_eq_op_smul (v : ι →₀ S) (a : S) :
+@[simp]
+theorem rightCoordinateAction_eq_op_smul (v : ι →₀ S) (a : S) :
     rightCoordinateAction v a =
       (MulOpposite.op a : Sᵐᵒᵖ) • v := rfl
 
@@ -44,7 +46,7 @@ theorem rightCoordinateAction_add (v w : ι →₀ S) (a : S) :
     rightCoordinateAction (v + w) a =
       rightCoordinateAction v a + rightCoordinateAction w a := by
   ext i
-  simp [rightCoordinateAction, add_mul]
+  simp [rightCoordinateAction]
 
 /-- Coordinatewise right multiplication is additive in the scalar. -/
 theorem rightCoordinateAction_add_scalar (v : ι →₀ S) (a b : S) :
@@ -53,9 +55,9 @@ theorem rightCoordinateAction_add_scalar (v : ι →₀ S) (a b : S) :
   ext i
   simp [rightCoordinateAction, mul_add]
 
-@[simp] theorem rightCoordinateAction_one (v : ι →₀ S) :
+theorem rightCoordinateAction_one (v : ι →₀ S) :
     rightCoordinateAction v 1 = v := by
-  simpa only [rightCoordinateAction_eq_op_smul, MulOpposite.op_one, one_smul]
+  simp only [rightCoordinateAction_eq_op_smul, MulOpposite.op_one, one_smul]
 
 /-- Written in right-sided order, successive coordinate actions multiply the
 scalars in the same order. -/
@@ -80,7 +82,7 @@ theorem rightCoordinateAction_single (i : ι) (s a : S) :
   by_cases h : i = j
   · subst j
     simp [rightCoordinateAction]
-  · simp [rightCoordinateAction, h, Ne.symm h]
+  · simp [rightCoordinateAction,  Ne.symm h]
 
 /-- Every finitely supported coordinate vector is the finite sum of its pure
 coordinate vectors. -/

@@ -53,7 +53,7 @@ def pairMomentum : PairStage (B := B) :=
 /-- The checked right PBW basis for the momentum stage over the coordinate
 stage.  This is a consumer of the reusable one-stage right-PBW interface; the
 pair-specific generators and Weyl relation remain owned by Stafford38. -/
-def pairStage_rightOrePBWBasis [Nontrivial B] :
+def pairStageRightOrePBWBasis [Nontrivial B] :
     Module.Basis ℕ (CoordinateStage (B := B))ᵐᵒᵖ (PairStage (B := B)) :=
   rightOrePBWBasis coordinateDerivation
 
@@ -104,6 +104,7 @@ section Scalars
 variable {k : Type*} [CommRing k] [Algebra k B]
 
 /-- The scalar algebra structure on the central-coordinate stage. -/
+@[instance_reducible]
 def coordinateStageAlgebra : Algebra k (CoordinateStage (B := B)) :=
   Stafford38.OreScalarAlgebra.normalOreAlgebra innerD fun c => by
     exact zeroDerivation_apply (algebraMap k B c)
@@ -116,6 +117,7 @@ theorem coordinateDerivation_algebraMap (c : k) :
   exact coordinateDerivation_coefficient (algebraMap k B c)
 
 /-- The scalar algebra structure on the full coordinate-momentum pair. -/
+@[instance_reducible]
 def pairStageAlgebra : Algebra k (PairStage (B := B)) := by
   letI : Algebra k (CoordinateStage (B := B)) := coordinateStageAlgebra
   exact Stafford38.OreScalarAlgebra.normalOreAlgebra outerD

@@ -18,6 +18,7 @@ open Stafford38.WeylTranspositionFiltration
 
 universe u
 
+/-- The left-handed Stafford identity `1 = R * d + S * d * F` for nonzero Weyl elements. -/
 def LeftHandedStatement : Prop :=
   ∀ (k : Type u) [Field k] [CharZero k] (n : ℕ) (d : WeylAlg k n),
     d ≠ 0 → ∃ R S F : WeylAlg k n,

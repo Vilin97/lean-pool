@@ -6,10 +6,15 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.TwoTermPageLength
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for length comparison for filtered two-term pages
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.TwoTermPageLength
 
-export AlgebraicAnalysis.TwoTermPageLength (exists_boundary_eq_top_of_iSup_eq_top twoTermPage_length_target_le_source)
+export AlgebraicAnalysis.TwoTermPageLength (
+  exists_boundary_eq_top_of_iSup_eq_top
+  twoTermPage_length_target_le_source)
 
 end Stafford38.Characteristic.TwoTermPageLength

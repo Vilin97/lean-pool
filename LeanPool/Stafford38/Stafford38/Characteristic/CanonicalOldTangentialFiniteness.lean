@@ -6,6 +6,10 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalTangentialRingEquivalence
 
+/-!
+Finiteness over the original tangential polynomial ring after changing phase variables.
+-/
+
 namespace Stafford38.Characteristic.CanonicalOldTangentialFiniteness
 
 open Stafford38.Characteristic
@@ -22,10 +26,13 @@ open Stafford38.WeylEulerResidue
 noncomputable section
 variable {k : Type*} [Field k]
 
+/-- The polynomial coefficient ring in the original tangential position and momentum variables. -/
 abbrev oldTangentialCoeffRing (n : ℕ) := MvPolynomial (Fin n ⊕ Fin n) k
 
 /- The coefficient action written in the old, non-subtype variables. -/
-@[instance_reducible] def oldCoeffModule
+/-- The original tangential coefficient action transported from the full symbol algebra. -/
+@[instance_reducible]
+def oldCoeffModule
     (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] :
     Module (oldTangentialCoeffRing (k := k) n) E :=
@@ -33,12 +40,14 @@ abbrev oldTangentialCoeffRing (n : ℕ) := MvPolynomial (Fin n ⊕ Fin n) k
     (((tangentialPolynomialActionHom (k := k) n).comp Polynomial.C).comp
       (oldSymbolTangentialAlgEquiv (k := k) n).toRingHom)
 
+/-- The transported module structure over the original tangential coefficient ring. -/
 local instance (priority := 10) oldCoeffModuleInstance
     (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] :
     Module (oldTangentialCoeffRing (k := k) n) E :=
   oldCoeffModule (k := k) n E
 
+/-- Multiplication by the distinguished position symbol, viewed as a tangential linear map. -/
 def oldCoordinateMap (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] :
     E →ₗ[oldTangentialCoeffRing (k := k) n] E := by

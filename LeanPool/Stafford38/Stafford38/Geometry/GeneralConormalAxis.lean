@@ -18,10 +18,12 @@ directions is a separate statement.
 
 ## References and proof context
 
-[HTT08] Ryoshi Hotta, Kiyoshi Takeuchi, and Toshiyuki Tanisaki, *D-Modules, Perverse Sheaves, and Representation Theory*, Progress in Mathematics 236, Birkhäuser, 2008.
+[HTT08] Ryoshi Hotta, Kiyoshi Takeuchi, and Toshiyuki Tanisaki, *D-Modules, Perverse Sheaves,
+  and Representation Theory*, Progress in Mathematics 236, Birkhäuser, 2008.
 https://doi.org/10.1007/978-0-8176-4523-6
 
-Chapters 1–2 supply characteristic-variety context. The visible-frame and finite-gradient construction is project mathematics, not a cited theorem from this book. See docs/literature.md.
+Chapters 1–2 supply characteristic-variety context. The visible-frame and finite-gradient
+  construction is project mathematics, not a cited theorem from this book. See docs/literature.md.
 -/
 
 namespace Stafford38.Geometry.GeneralConormalAxis

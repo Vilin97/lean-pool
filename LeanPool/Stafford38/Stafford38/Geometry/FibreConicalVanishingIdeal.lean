@@ -26,6 +26,7 @@ def IsFibreConical (W : Set (PhaseVar n → k)) : Prop :=
   ∀ q ∈ W, ∀ a : k, a ≠ 0 →
     Sum.elim (fun i => q (.inl i)) (fun i => a * q (.inr i)) ∈ W
 
+omit [CharZero k] [IsAlgClosed k] in
 /-- The coefficient of fibre degree `d` on a fibre line is evaluation of the
 `d`th order-weight homogeneous component. -/
 theorem coeff_fibreLinePolynomial_eq_eval_weightedHomogeneousComponent
@@ -79,6 +80,7 @@ theorem coeff_fibreLinePolynomial_eq_eval_weightedHomogeneousComponent
               Polynomial.coeff_mul_X, Polynomial.coeff_mul_C]
             simp [hP]
 
+omit [CharZero k] in
 /-- Fibre-conicality makes the vanishing ideal homogeneous for fibre degree. -/
 theorem vanishingIdeal_isHomogeneous_of_isFibreConical
     (W : Set (PhaseVar n → k)) (hW : IsFibreConical W) :
@@ -93,7 +95,7 @@ theorem vanishingIdeal_isHomogeneous_of_isFibreConical
     apply Polynomial.eq_zero_of_infinite_isRoot
     refine Set.Infinite.mono ?_ (Set.infinite_univ.sdiff (Set.finite_singleton 0))
     intro a ha
-    simp only [Set.mem_diff, Set.mem_univ, Set.mem_singleton_iff, true_and] at ha
+    simp only [Set.mem_sdiff, Set.mem_univ, Set.mem_singleton_iff, true_and] at ha
     change Polynomial.eval a (fibreLinePolynomial y ξ g) = 0
     rw [eval_fibreLinePolynomial]
     exact hg _ (hW q hq a ha)

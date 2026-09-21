@@ -47,24 +47,26 @@ def coefficientDerivation (D : OreDivisionDerivation B) :
     · intro i a b
       simp [D.map_add]
 
-@[simp] lemma coefficientDerivation_monomial
+@[simp]
+lemma coefficientDerivation_monomial
     (D : OreDivisionDerivation B) (i : ℕ) (b : B) :
     coefficientDerivation D (monomial i b) = monomial i (D b) := by
   by_cases hb : b = 0
   · subst b
     simp [D.map_zero]
-  · simp [coefficientDerivation, hb, D.map_zero]
+  · simp [coefficientDerivation,  D.map_zero]
 
-@[simp] lemma coefficientDerivation_C_mul
+@[simp]
+lemma coefficientDerivation_C_mul
     (D : OreDivisionDerivation B) (b : B) (p : Polynomial B) :
     coefficientDerivation D (C b * p) =
       C b * coefficientDerivation D p + C (D b) * p := by
   induction p using Polynomial.induction_on' with
   | add p q hp hq =>
-      simp [map_add, hp, hq, mul_add, add_mul, add_assoc, add_left_comm,
+      simp [map_add, hp, hq, mul_add,  add_assoc, add_left_comm,
         add_comm]
   | monomial n a =>
-      simp [D.leibniz, mul_add, add_mul, mul_assoc]
+      simp [D.leibniz]
 
 /-- Coefficients act by ordinary left multiplication. -/
 def coefficientLeft : B →+* AddMonoid.End (Polynomial B) where
@@ -116,13 +118,15 @@ def faithfulAmbient (D : OreDivisionDerivation B) :
     rw [coefficientDerivation_C_mul]
     noncomm_ring
 
-@[simp] lemma coefficientDerivation_X_pow
+@[simp]
+lemma coefficientDerivation_X_pow
     (D : OreDivisionDerivation B) (n : ℕ) :
     coefficientDerivation D (X ^ n) = 0 := by
   rw [Polynomial.X_pow_eq_monomial, coefficientDerivation_monomial,
     derivation_one, monomial_zero_right]
 
-@[simp] lemma leftOreShift_X_pow (D : OreDivisionDerivation B) (n : ℕ) :
+@[simp]
+lemma leftOreShift_X_pow (D : OreDivisionDerivation B) (n : ℕ) :
     leftOreShift D (X ^ n) = X ^ (n + 1) := by
   change X ^ n * X + coefficientDerivation D (X ^ n) = X ^ (n + 1)
   rw [coefficientDerivation_X_pow, add_zero, pow_succ]
@@ -224,7 +228,8 @@ abbrev NormalOre (D : OreDivisionDerivation B) := faithfulRange D
 def normalForm (D : OreDivisionDerivation B) (p : Polynomial B) : NormalOre D :=
   ⟨OreAmbient.eval D (faithfulAmbient D) p, ⟨p, rfl⟩⟩
 
-@[simp] theorem normalForm_injective (D : OreDivisionDerivation B) :
+@[simp]
+theorem normalForm_injective (D : OreDivisionDerivation B) :
     Function.Injective (normalForm D) := by
   intro p q h
   apply faithful_eval_injective D
@@ -235,28 +240,33 @@ theorem normalForm_surjective (D : OreDivisionDerivation B) :
   rintro ⟨_, p, rfl⟩
   exact ⟨p, rfl⟩
 
-@[simp] theorem normalForm_zero (D : OreDivisionDerivation B) :
+@[simp]
+theorem normalForm_zero (D : OreDivisionDerivation B) :
     normalForm D 0 = 0 := by
   apply Subtype.ext
   exact OreAmbient.eval_zero D (faithfulAmbient D)
 
-@[simp] theorem normalForm_one (D : OreDivisionDerivation B) :
+@[simp]
+theorem normalForm_one (D : OreDivisionDerivation B) :
     normalForm D 1 = 1 := by
   apply Subtype.ext
   exact faithful_eval_one D
 
-@[simp] theorem normalForm_add (D : OreDivisionDerivation B)
+@[simp]
+theorem normalForm_add (D : OreDivisionDerivation B)
     (p q : Polynomial B) :
     normalForm D (p + q) = normalForm D p + normalForm D q := by
   apply Subtype.ext
   exact OreAmbient.eval_add D (faithfulAmbient D) p q
 
-@[simp] theorem normalForm_neg (D : OreDivisionDerivation B)
+@[simp]
+theorem normalForm_neg (D : OreDivisionDerivation B)
     (p : Polynomial B) : normalForm D (-p) = -normalForm D p := by
   apply Subtype.ext
   exact map_neg (OreAmbient.evalAddHom D (faithfulAmbient D)) p
 
-@[simp] theorem normalForm_mul (D : OreDivisionDerivation B)
+@[simp]
+theorem normalForm_mul (D : OreDivisionDerivation B)
     (p q : Polynomial B) :
     normalForm D (rightMul D p q) = normalForm D p * normalForm D q := by
   apply Subtype.ext
@@ -281,7 +291,8 @@ def normalCoefficient (D : OreDivisionDerivation B) : B →+* NormalOre D :=
   coefficientLeft.codRestrict (faithfulRange D) fun b => by
     exact ⟨C b, faithful_eval_C D b⟩
 
-@[simp] theorem normalForm_C (D : OreDivisionDerivation B) (b : B) :
+@[simp]
+theorem normalForm_C (D : OreDivisionDerivation B) (b : B) :
     normalForm D (C b) = normalCoefficient D b := by
   apply Subtype.ext
   exact faithful_eval_C D b
@@ -377,19 +388,22 @@ def oreLift (D : OreDivisionDerivation B) (O : OreAmbient B A D) :
     rw [hpq]
     exact OreAmbient.eval_rightMul D O p q
 
-@[simp] theorem oreLift_normalForm (D : OreDivisionDerivation B)
+@[simp]
+theorem oreLift_normalForm (D : OreDivisionDerivation B)
     (O : OreAmbient B A D) (p : Polynomial B) :
     oreLift D O (normalForm D p) = OreAmbient.eval D O p := by
   change OreAmbient.eval D O ((normalFormAddEquiv D).symm (normalForm D p)) = _
   rw [show normalForm D p = (normalFormAddEquiv D) p by rfl]
   rw [(normalFormAddEquiv D).symm_apply_apply]
 
-@[simp] theorem oreLift_coefficient (D : OreDivisionDerivation B)
+@[simp]
+theorem oreLift_coefficient (D : OreDivisionDerivation B)
     (O : OreAmbient B A D) (b : B) :
     oreLift D O (normalCoefficient D b) = O.embed b := by
   rw [← normalForm_C, oreLift_normalForm, ambient_eval_C]
 
-@[simp] theorem oreLift_variable (D : OreDivisionDerivation B)
+@[simp]
+theorem oreLift_variable (D : OreDivisionDerivation B)
     (O : OreAmbient B A D) : oreLift D O (normalVariable D) = O.x := by
   rw [normalVariable, oreLift_normalForm, ambient_eval_X]
 

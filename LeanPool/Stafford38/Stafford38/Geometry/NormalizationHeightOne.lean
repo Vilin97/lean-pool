@@ -140,7 +140,7 @@ theorem height_le_height_under_of_isIntegral
     {R A : Type*} [CommRing R] [CommRing A] [Algebra R A] [Algebra.IsIntegral R A]
     (P : Ideal A) [P.IsPrime] : P.height ≤ (Ideal.under R P).height := by
   have hs : StrictMono (PrimeSpectrum.comap (algebraMap R A)) := fun x y hxy ↦
-    Ideal.IsIntegral.comap_lt_comap (I := x.asIdeal) (J := y.asIdeal) hxy
+    Ideal.IsIntegral.under_lt_under (I := x.asIdeal) (J := y.asIdeal) hxy
   have h := Order.height_le_height_apply_of_strictMono _ hs (⟨P, ‹_›⟩ : PrimeSpectrum A)
   rwa [← PrimeSpectrum.height_eq_orderHeight (⟨P, ‹_›⟩ : PrimeSpectrum A),
     ← PrimeSpectrum.height_eq_orderHeight

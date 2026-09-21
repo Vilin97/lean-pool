@@ -8,7 +8,10 @@ import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportKernelCokernel
 import LeanPool.Stafford38.Stafford38.Characteristic.EndomorphismKernelSupportOverBase
 import LeanPool.Stafford38.Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for localized kernel and cokernel lengths
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic
 

@@ -78,6 +78,7 @@ abbrev CanonicalOrdinaryCoordinateKoszulH0 (n N : ℕ)
       (filteredRightMul k (CanonicalIdeal k n N d)
         (presentedCoordinate k n))
 
+omit [Algebra ℚ k] in
 /-- The initial-ideal target is exactly surjectivity of coordinate
 multiplication on the actual order-associated graded module.  Cyclicity is
 used in both directions, and the annihilator is the literal order initial
@@ -136,6 +137,7 @@ theorem canonical_orderInitialIdeal_sup_coordinate_eq_top_iff_graded_surjective
       exact (Ideal.span {X}).mul_mem_right P
         (Ideal.subset_span (Set.mem_singleton X))
 
+omit [Algebra ℚ k] in
 /-- Exact Koszul formulation of the requested theorem: the initial ideal and
 the coordinate generate one iff the specialized one-coordinate Koszul
 `H₀` is zero. -/
@@ -160,6 +162,7 @@ theorem canonical_ordinary_coordinate_surjective_of_axisMonic
       (rightMul (CanonicalIdeal k n N d) (presentedCoordinate k n)) :=
   presentedCanonicalRightQuotient_rightMul_coordinate_surjective n N hd
 
+omit [Algebra ℚ k] in
 /-- The filtered additive model and the literal regular-right-module quotient
 intertwine their written right coordinate actions. -/
 theorem filteredRightQuotientEquivRightQuotient_coordinate
@@ -194,6 +197,7 @@ theorem canonical_ordinary_coordinateKoszulH0_subsingleton_of_axisMonic
   rw [filteredRightQuotientEquivRightQuotient_coordinate]
   simpa [e] using hr
 
+omit [Algebra ℚ k] in
 /-- The initial-top statement and the existing strict unit predecessor are
 equivalent for the literal canonical quotient. -/
 theorem canonical_orderInitialIdeal_sup_coordinate_eq_top_iff_strictUnit

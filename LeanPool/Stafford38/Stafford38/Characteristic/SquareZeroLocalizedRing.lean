@@ -51,7 +51,8 @@ def oppositeSpecializationRingHom : Bᵐᵒᵖ →+* R where
     change D.pi (b.unop * a.unop) = D.pi a.unop * D.pi b.unop
     rw [map_mul, mul_comm]
 
-@[simp] theorem oppositeSpecializationRingHom_apply (b : Bᵐᵒᵖ) :
+@[simp]
+theorem oppositeSpecializationRingHom_apply (b : Bᵐᵒᵖ) :
     oppositeSpecializationRingHom D b = D.pi b.unop :=
   rfl
 
@@ -81,7 +82,9 @@ def localizedDenominatorUnits :
     OppositeDenominators D S →* Units (Localization S) :=
   (localizationNumeratorUnits S).comp (denominatorMap D S)
 
-@[simp] theorem localizedDenominatorUnits_val
+omit [OreLocalization.OreSet (OppositeDenominators D S)] in
+@[simp]
+theorem localizedDenominatorUnits_val
     (s : OppositeDenominators D S) :
     (localizedDenominatorUnits D S s : Localization S) =
       algebraMap R (Localization S) (denominatorMap D S s) := by
@@ -99,20 +102,21 @@ def localizedOppositeSpecialization :
       rw [localizedDenominatorUnits_val]
       rfl)
 
-@[simp] theorem localizedOppositeSpecialization_oreDiv
+@[simp]
+theorem localizedOppositeSpecialization_oreDiv
     (b : Bᵐᵒᵖ) (s : OppositeDenominators D S) :
     localizedOppositeSpecialization D S (b /ₒ s) =
       ((localizedDenominatorUnits D S s)⁻¹ : Units (Localization S)) *
         algebraMap R (Localization S) (D.pi b.unop) :=
   rfl
 
-@[simp] theorem localizedOppositeSpecialization_numerator (b : Bᵐᵒᵖ) :
+theorem localizedOppositeSpecialization_numerator (b : Bᵐᵒᵖ) :
     localizedOppositeSpecialization D S
         (OreLocalization.numeratorHom b) =
       algebraMap R (Localization S) (D.pi b.unop) := by
   exact OreLocalization.universalHom_commutes _ _ _
 
-@[simp] theorem localizedOppositeSpecialization_parameter :
+theorem localizedOppositeSpecialization_parameter :
     localizedOppositeSpecialization D S
         (OreLocalization.numeratorHom (MulOpposite.op D.c)) = 0 := by
   simp [D.pi_c]

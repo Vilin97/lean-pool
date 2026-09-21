@@ -25,6 +25,8 @@ noncomputable section
 
 variable {k : Type*} [Field k] [IsAlgClosed k] {n : ℕ}
 
+/-- An affine point whose evaluation map defines a prime in the smooth locus of the quotient
+algebra. -/
 def SmoothAffinePoint (I : Ideal (MvPolynomial (Fin n) k))
     (y : Fin n → k) : Prop :=
   ∃ e : (MvPolynomial (Fin n) k ⧸ I) →ₐ[k] k,
@@ -34,6 +36,7 @@ def SmoothAffinePoint (I : Ideal (MvPolynomial (Fin n) k))
       PrimeSpectrum (MvPolynomial (Fin n) k ⧸ I)) ∈
       Algebra.smoothLocus k (MvPolynomial (Fin n) k ⧸ I)
 
+omit [IsAlgClosed k] in
 theorem smoothAffinePoint_mem_zeroLocus
     (I : Ideal (MvPolynomial (Fin n) k)) :
     {y | SmoothAffinePoint I y} ⊆ MvPolynomial.zeroLocus k I := by
@@ -59,7 +62,6 @@ theorem equationConormalClosure_smoothAffine_eq
     exact hfbar (Ideal.Quotient.eq_zero_iff_mem.mpr h)
   apply equationConormalClosure_restricted_eq I hI f hf
     {y | SmoothAffinePoint I y}
-    (smoothAffinePoint_mem_zeroLocus I)
   intro y hyI hyf
   let e : (MvPolynomial (Fin n) k ⧸ I) →ₐ[k] k :=
     Ideal.Quotient.liftₐ I (MvPolynomial.aeval y) (by
@@ -74,7 +76,7 @@ theorem equationConormalClosure_smoothAffine_eq
       rw [PrimeSpectrum.mem_basicOpen]
       intro hker
       have hezero : e (Ideal.Quotient.mk I f) = 0 := hker
-      simp [e] at hezero
+      simp? [e] at hezero
       exact hyf hezero
     exact (Algebra.basicOpen_subset_smoothLocus_iff_smooth.mpr hsmooth) hopen
 

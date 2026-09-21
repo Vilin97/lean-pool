@@ -166,7 +166,7 @@ the complete base-equation hypothesis required by
 `FormalDivisorLaurentConormal`.  Only the exact tangent-space identification
 remains as geometric input. -/
 theorem laurentPhasePoint_mem_dehomogenizedEquationConormalLocus
-    {k : Type*} [Field k] {I κ : Type*} [Fintype κ]
+    {k : Type*} [Field k] {I κ : Type*} [Finite κ]
     (equations : I → MvPolynomial (Fin (n + 1)) (LaurentSeries k))
     (degree : I → ℕ)
     (hhomogeneous : ∀ i, (equations i).IsHomogeneous (degree i))
@@ -184,6 +184,8 @@ theorem laurentPhasePoint_mem_dehomogenizedEquationConormalLocus
     Sum.elim (dehomogenizedPoint (laurentColumn q))
         (fun i ↦ laurentColumn ell i.succ) ∈
       equationConormalLocus (dehomogenizedEquationIdeal equations) := by
+  classical
+  let := Fintype.ofFinite κ
   apply laurentPhasePoint_mem_equationConormalLocus
     (dehomogenizedEquationIdeal equations) q ell Z tau hq₀ hrow
   · intro f hf

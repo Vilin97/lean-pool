@@ -35,9 +35,11 @@ noncomputable section
 
 variable (B : Type*) [Ring B] [Algebra ℚ B]
 
+/-- The rational scalar algebra structure on the coordinate stage. -/
 local instance : Algebra ℚ (CoordinateStage (B := B)) :=
   coordinateStageAlgebra
 
+/-- The rational scalar algebra structure on the pair stage. -/
 local instance : Algebra ℚ (PairStage (B := B)) :=
   pairStageAlgebra
 
@@ -336,6 +338,7 @@ private lemma coordinateCoefficient_mem_pairGeneratorSubring
         apply Subring.subset_closure
         exact Or.inr (Or.inl rfl)
 
+omit [Algebra ℚ B] in
 /-- The old coefficient ring together with the new coordinate and momentum
 generates the complete pair stage. -/
 theorem closure_pairOldSubring_union_coordinate_momentum_eq_top :
@@ -371,6 +374,7 @@ universe u
 
 variable (k : Type u) [Field k] [Algebra ℚ k]
 
+/-- Rational scalar algebra structures on all iterated pair stages, defined recursively. -/
 local instance iteratedRatAlgebra :
     (n : ℕ) → Algebra ℚ (IteratedPairStage k n)
   | 0 => by
@@ -381,13 +385,16 @@ local instance iteratedRatAlgebra :
       change Algebra ℚ (PairStage (B := IteratedPairStage k n))
       exact pairStageAlgebra
 
+/-- The base-field algebra structure on an iterated pair stage. -/
 local instance (n : ℕ) : Algebra k (IteratedPairStage k n) :=
   iteratedPairStageAlgebra k n
 
+/-- The rational scalar algebra structure on the next coordinate stage of the iteration. -/
 local instance (n : ℕ) :
     Algebra ℚ (CoordinateStage (B := IteratedPairStage k n)) :=
   coordinateStageAlgebra
 
+/-- The rational scalar algebra structure on the next pair stage of the iteration. -/
 local instance (n : ℕ) :
     Algebra ℚ (PairStage (B := IteratedPairStage k n)) :=
   pairStageAlgebra

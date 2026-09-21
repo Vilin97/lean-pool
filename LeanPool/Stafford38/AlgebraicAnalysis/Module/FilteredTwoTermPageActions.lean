@@ -112,7 +112,8 @@ def sourceMap (r : ℕ) (p : ℤ) :
   Submodule.mapQ _ _ (P.sourceRestricted r p)
     (P.sourceRestricted_denominator r p)
 
-@[simp] theorem sourceMap_mk (r : ℕ) (p : ℤ) (x : K.cycles r p) :
+@[simp]
+theorem sourceMap_mk (r : ℕ) (p : ℤ) (x : K.cycles r p) :
     P.sourceMap r p (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (P.sourceRestricted r p x) :=
   Submodule.mapQ_apply _ _ _ _
@@ -123,7 +124,8 @@ def sourcePageCast (r : ℕ) {p q : ℤ} (h : p = q) :
   subst q
   exact LinearEquiv.refl k _
 
-@[simp] theorem sourcePageCast_mk (r : ℕ) {p q : ℤ} (h : p = q)
+@[simp]
+theorem sourcePageCast_mk (r : ℕ) {p q : ℤ} (h : p = q)
     (x : K.cycles r p) :
     sourcePageCast (K := K) r h (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (h ▸ x) := by
@@ -167,7 +169,8 @@ def targetMap (r : ℕ) (p : ℤ) :
   Submodule.mapQ _ _ (P.targetRestricted p)
     (P.targetRestricted_denominator r p)
 
-@[simp] theorem targetMap_mk (r : ℕ) (p : ℤ) (x : K.G p) :
+@[simp]
+theorem targetMap_mk (r : ℕ) (p : ℤ) (x : K.G p) :
     P.targetMap r p (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (P.targetRestricted p x) :=
   Submodule.mapQ_apply _ _ _ _
@@ -178,7 +181,8 @@ def targetPageCast (r : ℕ) {p q : ℤ} (h : p = q) :
   subst q
   exact LinearEquiv.refl k _
 
-@[simp] theorem targetPageCast_mk (r : ℕ) {p q : ℤ} (h : p = q)
+@[simp]
+theorem targetPageCast_mk (r : ℕ) {p q : ℤ} (h : p = q)
     (x : K.G p) :
     targetPageCast (K := K) r h (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (h ▸ x) := by
@@ -209,7 +213,8 @@ def targetMapAtDrop (r : ℕ) (p : ℤ) :
   Submodule.mapQ _ _ (P.targetRestrictedAtDrop r p)
     (P.targetRestrictedAtDrop_denominator r p)
 
-@[simp] theorem targetMapAtDrop_mk (r : ℕ) (p : ℤ) (x : K.G (p + r)) :
+@[simp]
+theorem targetMapAtDrop_mk (r : ℕ) (p : ℤ) (x : K.G (p + r)) :
     P.targetMapAtDrop r p (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (P.targetRestrictedAtDrop r p x) :=
   Submodule.mapQ_apply _ _ _ _

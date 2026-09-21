@@ -226,18 +226,29 @@ alternative split column. -/
 structure CompletedProjectiveBoundaryChartOver
     (m : ℕ) (hm : 0 < m)
     (I : Ideal (MvPolynomial (Fin m) k)) where
+  /-- The number of homogeneous equations defining the completed boundary chart. -/
   equationCount : ℕ
+  /-- The number of tangent columns in the completed boundary chart. -/
   tangentCount : ℕ
+  /-- Homogeneous Laurent-series equations vanishing on the formal projective arc. -/
   equations : Fin equationCount →
     MvPolynomial (Fin (m + 1)) (LaurentSeries K)
+  /-- The homogeneous degree of each chart equation. -/
   degree : Fin equationCount → ℕ
   homogeneous : ∀ j, (equations j).IsHomogeneous (degree j)
+  /-- Power-series homogeneous coordinates of the formal projective arc. -/
   q : Fin (m + 1) → PowerSeries K
+  /-- Power-series tangent columns with zero component in the chosen projective chart. -/
   Z : Matrix (Fin (m + 1)) (Fin tangentCount) (PowerSeries K)
+  /-- Rows selecting a tangent minor that remains invertible after taking residues. -/
   rows : Fin tangentCount ↪ Fin (m + 1)
+  /-- The projective coordinate normalized to one along the arc. -/
   chart : Fin (m + 1)
+  /-- The nonzero coordinate whose residue vanishes at the boundary. -/
   zero : Fin (m + 1)
+  /-- The first fibre coordinate, expressed as the boundary coordinate times `ratio`. -/
   axis : Fin (m + 1)
+  /-- A nonzero power-series coordinate ratio vanishing at the special point. -/
   ratio : PowerSeries K
   q_chart : q chart = 1
   Z_chart : ∀ j, Z chart j = 0
@@ -257,9 +268,12 @@ structure CompletedProjectiveBoundaryChartOver
     I.map (groundPolynomialMap (k := k) (K := K) (Fin m)) ≤
       dehomogenizedEquationIdeal equations
   axis_is_first_fibre : axis = Fin.succ ⟨0, hm⟩
+  /-- The additional column completing the formal tangent matrix. -/
   tau : Fin (m + 1) → PowerSeries K
+  /-- A left inverse of the completed formal tangent matrix. -/
   C : Matrix (FormalTangentColumn (Fin tangentCount))
     (Fin (m + 1)) (PowerSeries K)
+  /-- An annihilating covector whose residue is the specified coordinate axis. -/
   ell : Fin (m + 1) → PowerSeries K
   left_inverse : C * formalTangentMatrix q Z tau = 1
   annihilation : rowMul ell (formalTangentMatrix q Z tau) = 0
@@ -273,7 +287,6 @@ structure CompletedProjectiveBoundaryChartOver
 /-- The residue-extension completed chart supplies a Laurent equation-
 conormal point with pure first fibre residue. -/
 theorem exists_conormalAxis_of_completedProjectiveBoundaryChartOver
-    [CharZero K]
     {m : ℕ} (hm : 0 < m)
     (I : Ideal (MvPolynomial (Fin m) k))
     (W : CompletedProjectiveBoundaryChartOver (k := k) (K := K) m hm I) :
@@ -321,7 +334,7 @@ theorem exists_conormalAxis_of_completedProjectiveBoundaryChartOver
             exact hi (Fin.succ_injective m h)
           change (if i.succ = Fin.succ ⟨0, hm⟩ then 1 else 0) =
             (if i = ⟨0, hm⟩ then 1 else 0)
-          rw [if_neg hne, if_neg hi]
+          rw [ite_eq_right hne, ite_eq_right hi]
 
 
 end

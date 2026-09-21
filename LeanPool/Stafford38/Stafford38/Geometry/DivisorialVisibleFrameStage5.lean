@@ -6,6 +6,10 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
 
+/-!
+Coefficient-field maps and residue-field compatibility for a divisorial valuation ring.
+-/
+
 open IsLocalRing
 
 noncomputable section
@@ -14,6 +18,7 @@ universe u
 
 namespace Stafford38.Geometry.DivisorialVisibleFrameStage5
 
+/-- The coefficient-field inclusion restricted to the chosen valuation ring. -/
 def coeffHom {k K : Type u} [Field k] [Field K] [Algebra k K]
     (E : IntermediateField k K) (V : ValuationSubring K)
     (hEV : ∀ z : E, (z : K) ∈ V.toSubring) : E →+* V.toSubring :=

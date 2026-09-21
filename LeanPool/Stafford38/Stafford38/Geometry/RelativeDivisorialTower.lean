@@ -155,7 +155,7 @@ theorem restrictScalars_adjoin_coordinate
       IntermediateField.adjoin k s := by
   rw [IntermediateField.adjoin_adjoin_left]
   congr 1
-  rw [Set.union_comm, ← Set.insert_eq, Set.insert_diff_singleton,
+  rw [Set.union_comm, ← Set.insert_eq, Set.insert_sdiff_singleton,
     Set.insert_eq_of_mem hx]
 
 /-- A finitely generated field extension is finite over the field generated

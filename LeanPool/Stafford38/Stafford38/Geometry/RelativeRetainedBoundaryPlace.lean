@@ -43,8 +43,10 @@ coordinate maps to `x`. -/
 structure Data
     (k K : Type u) [Field k] [Field K] [Algebra k K]
     (x : K) where
+  /-- The coefficient subfield over which the selected coordinate is transcendental. -/
   coefficientField : IntermediateField k K
   coordinate_transcendental : Transcendental coefficientField x
+  /-- The source DVR action on the ambient function field. -/
   ambientAlgebra : Algebra (SourceDVR coefficientField) K
   coefficientTower :
     letI : Algebra (SourceDVR coefficientField) K := ambientAlgebra
@@ -54,6 +56,7 @@ structure Data
     algebraMap (SourceDVR coefficientField) K
         (algebraMap (Polynomial coefficientField)
           (SourceDVR coefficientField) Polynomial.X) = x
+  /-- A retained DVR place identifying its parameter with the selected coordinate. -/
   place :
     letI : Algebra (SourceDVR coefficientField) K := ambientAlgebra
     RetainedDVRPlace (SourceDVR coefficientField) (L := K)

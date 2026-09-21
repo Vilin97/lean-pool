@@ -215,9 +215,11 @@ open Stafford38.OrePairStage
 
 variable (B : Type*) [Ring B] [Algebra ℚ B]
 
+/-- The rational scalar algebra structure used by the coordinate-stage Euler construction. -/
 local instance : Algebra ℚ (Stafford38.OreCoordinateStage.CoordinateStage (B := B)) :=
   coordinateStageAlgebra
 
+/-- The rational scalar algebra structure used by the pair-stage Euler construction. -/
 local instance : Algebra ℚ (PairStage (B := B)) :=
   pairStageAlgebra
 

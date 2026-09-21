@@ -40,16 +40,16 @@ variable {k : Type u} [Field k]
 /-- Differentiating `X^(a+1) u` leaves the expected nonzero leading
 coefficient in degree `a`. -/
 theorem coeff_derivative_X_pow_succ_mul
-    [CharZero k] (u : PowerSeries k) (a : ℕ) :
+     (u : PowerSeries k) (a : ℕ) :
     PowerSeries.coeff a
         (PowerSeries.derivative
           ((PowerSeries.X : PowerSeries k) ^ (a + 1) * u)) =
       PowerSeries.constantCoeff u * ((a + 1 : ℕ) : k) := by
   rw [PowerSeries.coeff_derivative]
   congr 1
-  simpa [PowerSeries.coeff_zero_eq_constantCoeff_apply, Nat.add_comm] using
-    (PowerSeries.coeff_X_pow_mul u (a + 1) 0)
-  simp
+  · simpa [PowerSeries.coeff_zero_eq_constantCoeff_apply, Nat.add_comm] using
+      (PowerSeries.coeff_X_pow_mul u (a + 1) 0)
+  · simp
 
 /-- In characteristic zero the leading derivative coefficient above cannot
 vanish when the leading coefficient of `u` is nonzero. -/
@@ -242,7 +242,7 @@ theorem residue_formalTangentMatrix_mulVec_injective
 assembled tangent matrix; no splitting hypothesis is used. -/
 theorem exists_formalTangentMatrix_leftInverse
     {ι : Type v} {κ : Type w} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ]
+     [DecidableEq κ]
     (q : ι → PowerSeries k) (Z : Matrix ι κ (PowerSeries k))
     (tau : ι → PowerSeries k) (rows : κ ↪ ι) (chart : ι)
     (hqchart : q chart = 1)
@@ -254,6 +254,8 @@ theorem exists_formalTangentMatrix_leftInverse
     (hprimitive : ∃ i, PowerSeries.constantCoeff (tau i) ≠ 0) :
     ∃ C : Matrix (FormalTangentColumn κ) ι (PowerSeries k),
       C * formalTangentMatrix q Z tau = 1 := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   apply powerSeries_exists_leftInverse_of_residue_mulVec_injective
   exact residue_formalTangentMatrix_mulVec_injective
     q Z tau rows chart hqchart hZchart htauchart htauselected

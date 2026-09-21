@@ -36,8 +36,8 @@ private lemma projectorMap_term_all
         ((-1 : 𝕜) ^ r / (r.factorial : 𝕜)) •
           ((S ^ (j + r) * D ^ (j + r)) x) := by
   unfold projectorMapG
-  simp only [Finset.mul_sum, Finset.sum_mul, Finset.sum_apply,
-    smul_mul_assoc, mul_smul_comm, smul_add, Module.End.mul_apply]
+  simp only [Finset.mul_sum, Finset.sum_mul,
+    smul_mul_assoc, mul_smul_comm,  Module.End.mul_apply]
   rw [LinearMap.sum_apply]
   apply Finset.sum_congr rfl
   intro r hr
@@ -46,7 +46,6 @@ private lemma projectorMap_term_all
     ((-1 : 𝕜) ^ r / (r.factorial : 𝕜)) •
       ((S ^ (j + r) * D ^ (j + r)) x)
   congr 1
-  change ((S ^ j * (S ^ r * D ^ r) * D ^ j) x) = _
   calc
     (S ^ j * (S ^ r * D ^ r) * D ^ j) x =
         ((S ^ j * S ^ r) * (D ^ r * D ^ j)) x := by

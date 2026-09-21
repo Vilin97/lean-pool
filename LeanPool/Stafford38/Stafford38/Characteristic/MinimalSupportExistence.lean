@@ -6,7 +6,10 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportExistence
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for existence of a minimal support prime
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.MinimalSupportExistence
 

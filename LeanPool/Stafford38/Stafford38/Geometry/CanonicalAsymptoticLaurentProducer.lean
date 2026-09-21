@@ -87,18 +87,29 @@ structure CompletedProjectiveBoundaryChart
     (k : Type u) [Field k] [CharZero k]
     (m : ℕ) (hm : 0 < m)
     (I : Ideal (MvPolynomial (Fin m) k)) where
+  /-- The number of homogeneous equations in the completed projective boundary chart. -/
   equationCount : ℕ
+  /-- The number of tangent columns in the completed projective boundary chart. -/
   tangentCount : ℕ
+  /-- Homogeneous Laurent-series equations vanishing on the formal boundary arc. -/
   equations : Fin equationCount →
     MvPolynomial (Fin (m + 1)) (LaurentSeries k)
+  /-- The homogeneous degree of each completed-chart equation. -/
   degree : Fin equationCount → ℕ
   homogeneous : ∀ j, (equations j).IsHomogeneous (degree j)
+  /-- Power-series homogeneous coordinates of the formal projective arc. -/
   q : Fin (m + 1) → PowerSeries k
+  /-- The power-series tangent columns in the chosen affine projective chart. -/
   Z : Matrix (Fin (m + 1)) (Fin tangentCount) (PowerSeries k)
+  /-- Rows selecting a tangent minor with nonzero determinant after taking residues. -/
   rows : Fin tangentCount ↪ Fin (m + 1)
+  /-- The projective coordinate normalized to one along the arc. -/
   chart : Fin (m + 1)
+  /-- The nonzero boundary coordinate whose constant coefficient vanishes. -/
   zero : Fin (m + 1)
+  /-- The first fibre coordinate used for the limiting conormal direction. -/
   axis : Fin (m + 1)
+  /-- The nonzero vanishing ratio relating the fibre coordinate to the boundary coordinate. -/
   ratio : PowerSeries k
   q_chart : q chart = 1
   Z_chart : ∀ j, Z chart j = 0
@@ -120,9 +131,12 @@ structure CompletedProjectiveBoundaryChart
       (k := k) (K := LaurentSeries k) (Fin m)) ≤
       dehomogenizedEquationIdeal equations
   axis_is_first_fibre : axis = Fin.succ ⟨0, hm⟩
+  /-- The additional column completing the formal tangent matrix. -/
   tau : Fin (m + 1) → PowerSeries k
+  /-- A left inverse of the completed formal tangent matrix. -/
   C : Matrix (FormalTangentColumn (Fin tangentCount))
     (Fin (m + 1)) (PowerSeries k)
+  /-- A formal annihilating covector whose residue is the specified fibre axis. -/
   ell : Fin (m + 1) → PowerSeries k
   left_inverse : C * formalTangentMatrix q Z tau = 1
   annihilation : rowMul ell (formalTangentMatrix q Z tau) = 0
@@ -197,7 +211,7 @@ theorem exists_conormalAxis_of_completedProjectiveBoundaryChart
             exact hi (Fin.succ_injective m h)
           change (if i.succ = Fin.succ ⟨0, hm⟩ then 1 else 0) =
             (if i = ⟨0, hm⟩ then 1 else 0)
-          rw [if_neg hne, if_neg hi]
+          rw [ite_eq_right hne, ite_eq_right hi]
 
 /-! ## The remaining global production obligation -/
 

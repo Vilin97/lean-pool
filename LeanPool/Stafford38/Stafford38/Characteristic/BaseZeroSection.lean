@@ -39,6 +39,7 @@ variable {n : ℕ}
 private abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
+/-- The graded algebra structure on symbols induced by the order weights. -/
 local instance orderGradedAlgebraInstance :
     GradedAlgebra (orderDecomposition (n := n) k) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
@@ -117,7 +118,7 @@ theorem zeroComponent_eq_baseLift_fibreZeroSpecialization
           MvPolynomial.isWeightedHomogeneous_X k (@orderWeight n) (Sum.inl i)
         rw [DirectSum.coe_decompose_mul_of_right_mem_of_le
           (orderDecomposition (n := n) k) hX (Nat.zero_le 0)]
-        simp only [Nat.zero_sub, map_mul, hP, fibreZeroSpecialization_X_base]
+        simp only [ map_mul, hP, fibreZeroSpecialization_X_base]
         simp [baseLift]
       · have hX : MvPolynomial.X (Sum.inr i : PhaseVar n) ∈
             orderDecomposition (n := n) k 1 :=

@@ -95,8 +95,7 @@ theorem derivation_ext_of_compAlgebraMap_eq
         D₂.liftKaehlerDifferential.comp e.toLinearMap := by
     apply LinearMap.ext
     intro z
-    induction z using TensorProduct.induction_on with
-    | zero => simp
+    induction z using TensorProduct.inductionOn with
     | add x y hx hy => simp only [map_add, hx, hy]
     | tmul a x =>
         simp only [e,

@@ -36,17 +36,21 @@ noncomputable section
 universe u
 variable (k : Type u) [Field k]
 
+/-- The base-field algebra structure on an iterated pair stage for outer Ore normalization. -/
 local instance (n : ℕ) : Algebra k (IteratedPairStage k n) :=
   iteratedPairStageAlgebra k n
 
+/-- The base-field algebra structure on the outer coordinate stage. -/
 local instance (n : ℕ) :
     Algebra k (CoordinateStage (B := IteratedPairStage k n)) :=
   coordinateStageAlgebra
 
+/-- The base-field algebra structure on the outer pair stage. -/
 local instance (n : ℕ) :
     Algebra k (PairStage (B := IteratedPairStage k n)) :=
   pairStageAlgebra
 
+/-- The polynomial in the outer Ore variable representing a presented Weyl element. -/
 def presentedOuterPolynomial (n : ℕ) (d : PresentedWeyl k (n + 1)) :
     Polynomial (CoordinateStage (B := IteratedPairStage k n)) :=
   (normalFormAddEquiv
@@ -55,6 +59,7 @@ def presentedOuterPolynomial (n : ℕ) (d : PresentedWeyl k (n + 1)) :
         (CoordinateStage (B := IteratedPairStage k n)))).symm
     (presentedToIterated k (n + 1) d)
 
+/-- The coordinate-stage linear normal form with coefficients in the transverse symbol ring. -/
 def coordinateCoefficientNormalForm (n : ℕ) :
     CoordinateStage (B := IteratedPairStage k n) ≃ₗ[k]
       Polynomial (SymbolRing k n) := by
@@ -66,6 +71,7 @@ def coordinateCoefficientNormalForm (n : ℕ) :
       exact zeroDerivation_apply (algebraMap k (IteratedPairStage k n) c)))).symm.trans
       (polynomialMapRangeLinearEquiv (iteratedNormalFormLinearEquiv k n))
 
+/-- The two-variable nested polynomial normal form of the outer Weyl pair. -/
 def presentedNestedNormalForm (n : ℕ) (d : PresentedWeyl k (n + 1)) :
     Polynomial (Polynomial (SymbolRing k n)) := by
   letI : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
@@ -94,13 +100,15 @@ theorem presentedNestedNormalForm_eq_mapRange (n : ℕ)
         (presentedOuterPolynomial k n d) := by
   rfl
 
+/-- The PBW exponent combining outer momentum and coordinate powers with transverse exponents. -/
 def pairExponent (n a p : ℕ) (m : PhaseVar n →₀ ℕ) :
     PhaseVar (n + 1) →₀ ℕ :=
   Finsupp.single (.inr (0 : Fin (n + 1))) p +
     Finsupp.single (.inl (0 : Fin (n + 1))) a +
     Finsupp.mapDomain oldIndex m
 
-@[simp] theorem mapDomain_oldIndex_newCoordinate (n : ℕ)
+@[simp]
+theorem mapDomain_oldIndex_newCoordinate (n : ℕ)
     (m : PhaseVar n →₀ ℕ) :
     Finsupp.mapDomain oldIndex m (.inl (0 : Fin (n + 1))) = 0 := by
   rw [Finsupp.mapDomain_of_notMem_range]
@@ -109,7 +117,8 @@ def pairExponent (n a p : ℕ) (m : PhaseVar n →₀ ℕ) :
   | inl j => exact Fin.succ_ne_zero j (Sum.inl.inj hi)
   | inr j => simp [oldIndex] at hi
 
-@[simp] theorem mapDomain_oldIndex_newMomentum (n : ℕ)
+@[simp]
+theorem mapDomain_oldIndex_newMomentum (n : ℕ)
     (m : PhaseVar n →₀ ℕ) :
     Finsupp.mapDomain oldIndex m (.inr (0 : Fin (n + 1))) = 0 := by
   rw [Finsupp.mapDomain_of_notMem_range]
@@ -125,7 +134,7 @@ theorem coeff_flattenPairSymbols_monomial (n a p a' p' : ℕ)
       if p' = p ∧ a' = a then r.coeff m else 0 := by
   rw [flattenPairSymbols_monomial]
   rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.X_pow_eq_monomial,
-    MvPolynomial.monomial_mul, mul_one]
+    MvPolynomial.monomial_mul_monomial, mul_one]
   rw [MvPolynomial.coeff_monomial_mul']
   classical
   by_cases hp : p' = p
@@ -139,7 +148,7 @@ theorem coeff_flattenPairSymbols_monomial (n a p a' p' : ℕ)
         intro i
         simp only [pairExponent, Finsupp.add_apply]
         omega
-      rw [if_pos hle]
+      rw [ite_eq_left hle]
       have hsub :
           (pairExponent n a p m -
             (Finsupp.single (.inr (0 : Fin (n + 1))) p +
@@ -153,7 +162,7 @@ theorem coeff_flattenPairSymbols_monomial (n a p a' p' : ℕ)
           ((Finsupp.single (.inr (0 : Fin (n + 1))) p +
               Finsupp.single (.inl (0 : Fin (n + 1))) a') ≤
             pairExponent n a p m)
-      · rw [if_pos hle]
+      · rw [ite_eq_left hle]
         have haa : a' ≤ a := by
           simpa [pairExponent, Finsupp.single_apply] using
             hle (.inl (0 : Fin (n + 1)))
@@ -167,13 +176,13 @@ theorem coeff_flattenPairSymbols_monomial (n a p a' p' : ℕ)
           omega
         rw [hz]
         simp [ha]
-      · rw [if_neg hle]
+      · rw [ite_eq_right hle]
         simp [ha]
   · by_cases hle :
         ((Finsupp.single (.inr (0 : Fin (n + 1))) p' +
             Finsupp.single (.inl (0 : Fin (n + 1))) a') ≤
           pairExponent n a p m)
-    · rw [if_pos hle]
+    · rw [ite_eq_left hle]
       have hpp : p' ≤ p := by
         simpa [pairExponent, Finsupp.single_apply] using
           hle (.inr (0 : Fin (n + 1)))
@@ -187,7 +196,7 @@ theorem coeff_flattenPairSymbols_monomial (n a p a' p' : ℕ)
         omega
       rw [hz]
       simp [hp]
-    · rw [if_neg hle]
+    · rw [ite_eq_right hle]
       simp [hp]
 
 theorem coeff_flattenPairSymbols (n a p : ℕ)
@@ -201,7 +210,7 @@ theorem coeff_flattenPairSymbols (n a p : ℕ)
       induction r using Polynomial.induction_on' with
       | add r₁ r₂ h₁ h₂ =>
           rw [map_add (Polynomial.monomial p') r₁ r₂]
-          simp only [map_add, MvPolynomial.coeff_add,
+          simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply,
             Polynomial.coeff_monomial, Polynomial.coeff_add]
           by_cases hp : p' = p
           · subst p'
@@ -230,13 +239,15 @@ theorem coeff_polynomialMapRangeLinearEquiv
       rw [polynomialMapRangeLinearEquiv_monomial]
       by_cases h : n = p <;> simp [Polynomial.coeff_monomial, h]
 
-@[simp] theorem degree_pairExponent (n a p : ℕ)
+@[simp]
+theorem degree_pairExponent (n a p : ℕ)
     (m : PhaseVar n →₀ ℕ) :
     (pairExponent n a p m).degree =
       p + a + (Finsupp.mapDomain oldIndex m).degree := by
   simp [pairExponent]
 
-@[simp] theorem pairExponent_newMomentum (n a p : ℕ)
+@[simp]
+theorem pairExponent_newMomentum (n a p : ℕ)
     (m : PhaseVar n →₀ ℕ) :
     pairExponent n a p m (.inr (0 : Fin (n + 1))) = p := by
   simp [pairExponent]
@@ -247,7 +258,7 @@ theorem nested_coeff_eq_zero_of_outer_exponent_gt (n N : ℕ)
     {p : ℕ} (hp : N < p) :
     (presentedNestedNormalForm k n d).coeff p = 0 := by
   ext a m
-  simp only [Polynomial.coeff_zero, MvPolynomial.coeff_zero]
+  simp only [Polynomial.coeff_zero, AddMonoidAlgebra.coeff_zero]
   rw [← coeff_flattenPairSymbols k n a p m]
   rw [flatten_presentedNestedNormalForm]
   exact coeff_normalForm_eq_zero_of_exponent_gt k

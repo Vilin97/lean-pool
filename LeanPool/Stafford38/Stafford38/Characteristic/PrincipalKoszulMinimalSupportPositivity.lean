@@ -7,10 +7,14 @@ Authors: Christopher Albert
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulMinimalSupportPositivity
 import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulSupportOverBase
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for principal Koszul positivity at minimal support
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.PrincipalKoszulMinimalSupportPositivity
 
-export AlgebraicAnalysis.PrincipalKoszulMinimalSupportPositivity (length_cokernel_gt_kernel_of_minimal_support)
+export AlgebraicAnalysis.PrincipalKoszulMinimalSupportPositivity (
+  length_cokernel_gt_kernel_of_minimal_support)
 
 end Stafford38.Characteristic.PrincipalKoszulMinimalSupportPositivity

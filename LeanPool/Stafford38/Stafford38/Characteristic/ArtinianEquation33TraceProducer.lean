@@ -41,7 +41,9 @@ variable {n : ℕ}
 /-- A parameter reduction whose kernel is its principal two-sided ideal. -/
 structure ParameterIdealReduction
     (B Abar : Type u) [Ring B] [CommRing Abar] where
+  /-- The parameter whose principal ideal is killed by reduction. -/
   parameter : B
+  /-- The ring homomorphism reducing modulo the parameter ideal. -/
   modParameter : B →+* Abar
   ker_modParameter : RingHom.ker modParameter = Ideal.span {parameter}
 

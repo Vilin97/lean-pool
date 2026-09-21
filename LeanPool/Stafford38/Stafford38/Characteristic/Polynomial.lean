@@ -47,7 +47,8 @@ def IsPoisson
     (J : Ideal (SymbolRing k n)) : Prop :=
   ∀ f ∈ J, ∀ g, poissonBracket f g ∈ J
 
-@[simp] theorem poissonBracket_self
+@[simp]
+theorem poissonBracket_self
     {k : Type*} [CommRing k] {n : ℕ} (f : SymbolRing k n) :
     poissonBracket f f = 0 := by
   simp [poissonBracket, mul_comm]

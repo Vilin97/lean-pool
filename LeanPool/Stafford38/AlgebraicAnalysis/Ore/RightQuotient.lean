@@ -68,11 +68,13 @@ instance normalOreOpModule (D : OreDivisionDerivation B) :
       change x * normalCoefficient D (1 : Bᵐᵒᵖ).unop = x
       rw [MulOpposite.unop_one, (normalCoefficient D).map_one, mul_one])
 
-@[simp] theorem normalOre_op_smul_def (D : OreDivisionDerivation B)
+@[simp]
+theorem normalOre_op_smul_def (D : OreDivisionDerivation B)
     (b : Bᵐᵒᵖ) (a : NormalOre D) :
     b • a = a * normalCoefficient D b.unop := rfl
 
-@[simp] theorem normalForm_X_pow_coe (D : OreDivisionDerivation B) (n : ℕ) :
+@[simp]
+theorem normalForm_X_pow_coe (D : OreDivisionDerivation B) (n : ℕ) :
     (normalForm D (X ^ n) : AddMonoid.End (Polynomial B)) =
       (leftOreShift D) ^ n := by
   change OreAmbient.eval D (faithfulAmbient D) (X ^ n) = _

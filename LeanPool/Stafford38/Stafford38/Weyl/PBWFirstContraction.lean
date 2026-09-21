@@ -38,9 +38,9 @@ private theorem weightedHomogeneousComponent_monomial_mul_eq_zero_of_lt
   classical
   ext q
   rw [MvPolynomial.coeff_weightedHomogeneousComponent,
-    MvPolynomial.coeff_monomial_mul', MvPolynomial.coeff_zero]
+    MvPolynomial.coeff_monomial_mul', AddMonoidAlgebra.coeff_zero]
   by_cases hsq : s ≤ q
-  · rw [if_pos hsq, one_mul]
+  · rw [ite_eq_left hsq, one_mul]
     have hsplit : s + (q - s) = q := by
       rw [add_comm]
       exact tsub_add_cancel_of_le hsq
@@ -50,8 +50,8 @@ private theorem weightedHomogeneousComponent_monomial_mul_eq_zero_of_lt
       rw [← hsplit]
       simp [monomialWeight, Finsupp.sum_add_index, add_mul]
     have hne : monomialWeight w q ≠ T := by omega
-    rw [finsupp_weight_eq_monomialWeight, if_neg hne, Finsupp.zero_apply]
-  · rw [if_neg hsq]
+    rw [finsupp_weight_eq_monomialWeight, ite_eq_right hne, Finsupp.zero_apply]
+  · rw [ite_eq_right hsq]
     simp
 
 private theorem phaseExponent_old_contraction_exponents
@@ -76,30 +76,30 @@ private theorem phaseExponent_old_contraction_exponents
     rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
   have hmapCoordinateZero (s : PhaseVar n →₀ ℕ) :
       Finsupp.mapDomain oldIndex s (.inl (0 : Fin (n + 1))) = 0 := by
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨v, hv⟩
     cases v <;> simp [oldIndex, Fin.succ_ne_zero] at hv
   have hmapMomentumZero (s : PhaseVar n →₀ ℕ) :
       Finsupp.mapDomain oldIndex s (.inr (0 : Fin (n + 1))) = 0 := by
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨v, hv⟩
     cases v <;> simp [oldIndex, Fin.succ_ne_zero] at hv
   ext v
   rcases v with v | v
   · refine Fin.cases ?_ (fun j => ?_) v
     · simp [phaseExponent, extendPhaseExponent, oldIndex,
-        Finsupp.single_apply, Fin.succ_ne_zero, hmapCoordinateZero]
+         Fin.succ_ne_zero, hmapCoordinateZero]
     · have hzero : (0 : Fin (n + 1)) ≠ j.succ :=
         Ne.symm (Fin.succ_ne_zero j)
       simp [phaseExponent, extendPhaseExponent, oldIndex,
-        Finsupp.single_apply, Fin.succ_ne_zero, hzero, hmapCoordinate]
+        Finsupp.single_apply, Fin.succ_ne_zero,  hmapCoordinate]
   · refine Fin.cases ?_ (fun j => ?_) v
     · simp [phaseExponent, extendPhaseExponent, oldIndex,
-        Finsupp.single_apply, Fin.succ_ne_zero, hmapMomentumZero]
+         Fin.succ_ne_zero, hmapMomentumZero]
     · have hzero : (0 : Fin (n + 1)) ≠ j.succ :=
         Ne.symm (Fin.succ_ne_zero j)
       simp [phaseExponent, extendPhaseExponent, oldIndex,
-        Finsupp.single_apply, Fin.succ_ne_zero, hzero, hmapMomentum]
+        Finsupp.single_apply, Fin.succ_ne_zero,  hmapMomentum]
 
 private theorem firstContraction_old_term
     (n : ℕ) (a p c q : Fin (n + 1) → ℕ) (i : Fin n) :
@@ -118,7 +118,7 @@ private theorem firstContraction_old_term
                 (phaseExponent (fun j => c j.succ) (fun j => q j.succ)) 1)) := by
   classical
   simp only [MvPolynomial.pderiv_monomial,
-    MvPolynomial.monomial_mul, MvPolynomial.rename_monomial, map_mul]
+    MvPolynomial.monomial_mul_monomial, MvPolynomial.rename_monomial]
   rw [phaseExponent_old_contraction_exponents n a p c q i]
   simp [phaseExponent]
 
@@ -140,10 +140,10 @@ private theorem phaseExponent_newest_contraction_exponents
   · refine Fin.cases ?_ (fun j => ?_) v
     · have hmap (s : PhaseVar n →₀ ℕ) :
           Finsupp.mapDomain oldIndex s (.inl (0 : Fin (n + 1))) = 0 := by
-        apply Finsupp.mapDomain_notin_range
+        apply Finsupp.mapDomain_of_notMem_range
         rintro ⟨w, hw⟩
         cases w <;> simp [oldIndex, Fin.succ_ne_zero] at hw
-      simp [extendPhaseExponent, Finsupp.single_apply, hmap]
+      simp [extendPhaseExponent,  hmap]
       omega
     · have hmap (s : PhaseVar n →₀ ℕ) :
           Finsupp.mapDomain oldIndex s (.inl j.succ) = s (.inl j) := by
@@ -151,15 +151,15 @@ private theorem phaseExponent_newest_contraction_exponents
         rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
       have hzero : (0 : Fin (n + 1)) ≠ j.succ :=
         Ne.symm (Fin.succ_ne_zero j)
-      simp [extendPhaseExponent, phaseExponent, Finsupp.single_apply,
-        hmap, hzero, Fin.succ_ne_zero]
+      simp [extendPhaseExponent, phaseExponent,
+        hmap,  Fin.succ_ne_zero]
   · refine Fin.cases ?_ (fun j => ?_) v
     · have hmap (s : PhaseVar n →₀ ℕ) :
           Finsupp.mapDomain oldIndex s (.inr (0 : Fin (n + 1))) = 0 := by
-        apply Finsupp.mapDomain_notin_range
+        apply Finsupp.mapDomain_of_notMem_range
         rintro ⟨w, hw⟩
         cases w <;> simp [oldIndex, Fin.succ_ne_zero] at hw
-      simp [extendPhaseExponent, Finsupp.single_apply, hmap]
+      simp [extendPhaseExponent,  hmap]
       omega
     · have hmap (s : PhaseVar n →₀ ℕ) :
           Finsupp.mapDomain oldIndex s (.inr j.succ) = s (.inr j) := by
@@ -167,8 +167,8 @@ private theorem phaseExponent_newest_contraction_exponents
         rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
       have hzero : (0 : Fin (n + 1)) ≠ j.succ :=
         Ne.symm (Fin.succ_ne_zero j)
-      simp [extendPhaseExponent, phaseExponent, Finsupp.single_apply,
-        hmap, hzero, Fin.succ_ne_zero]
+      simp [extendPhaseExponent, phaseExponent,
+        hmap,  Fin.succ_ne_zero]
 
 private theorem firstContraction_newest_term
     (n : ℕ) (a p c q : Fin (n + 1) → ℕ)
@@ -188,9 +188,9 @@ private theorem firstContraction_newest_term
           (MvPolynomial.monomial (phaseExponent c q) 1) := by
   classical
   simp only [MvPolynomial.pderiv_monomial,
-    MvPolynomial.monomial_mul, MvPolynomial.rename_monomial, map_mul]
+    MvPolynomial.monomial_mul_monomial, MvPolynomial.rename_monomial]
   rw [phaseExponent_newest_contraction_exponents n a p c q hp hc]
-  simp [phaseExponent, Nat.choose, Nat.descFactorial]
+  simp? [phaseExponent,  Nat.descFactorial]
   rw [← map_natCast
       (MvPolynomial.C : k →+* SymbolRing k (n + 1)) (p 0),
     ← map_natCast
@@ -317,7 +317,7 @@ theorem presentedOrderedMonomial_mul_firstContraction :
       simp only [map_sum]
       have hmem0 : 0 ∈ Finset.range (p 0 + 1) := by simp
       rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem hmem0]
-      simp only [Nat.zero_le, if_true, Nat.choose_zero_right,
+      simp only [Nat.zero_le, ite_true, Nat.choose_zero_right,
         Nat.descFactorial_zero, mul_one, one_nsmul, Nat.sub_zero]
       change presentedPrincipalComponent k (@orderWeight (n + 1)) (L + t - 1)
             (presentedCoefficientOrdered k n (a 0 + c 0) t z) + _ = _
@@ -375,7 +375,7 @@ theorem presentedOrderedMonomial_mul_firstContraction :
             rw [htop]
             exact firstContraction_newest_term k n a p c q hp hc
           rw [Finset.sum_eq_single 1]
-          · simp only [show 1 ≤ c 0 from hc, if_true]
+          · simp only [show 1 ≤ c 0 from hc, ite_true]
             rw [hone]
             abel
           · intro i hi hi1
@@ -386,7 +386,7 @@ theorem presentedOrderedMonomial_mul_firstContraction :
               have := Finset.mem_range.mp hirange
               omega
             by_cases hic : i ≤ c 0
-            · simp only [if_pos hic, map_nsmul]
+            · simp only [ite_eq_left hic, map_nsmul]
               have hterm := presentedCoefficientOrdered_mem_orderPiece k n L
                 (a 0 + c 0 - i) (p 0 + q 0 - i) z hzOrder
               have hlt : L + (p 0 + q 0 - i) < L + t - 1 := by

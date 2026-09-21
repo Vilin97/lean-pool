@@ -44,13 +44,14 @@ private abbrev CanonicalIdeal (n N : ℕ)
     (d : PresentedWeyl k (n + 1)) :=
   canonicalRightIdeal (presentedCoordinate k n) d N
 
+omit [Algebra ℚ k] in
 /-- The distinguished coordinate belongs to differential order zero. -/
 theorem presentedCoordinate_mem_orderPiece_zero (n : ℕ) :
     presentedCoordinate k n ∈ orderPiece k (n + 1) 0 := by
   rw [orderPiece, mem_presentedWeightPiece,
     presentedCoordinate, presentedNormalFormLinearEquiv_generator]
   intro m hm
-  rw [MvPolynomial.coeff_X'] at hm
+  rw [MvPolynomial.coeff_X] at hm
   split at hm
   · next heq =>
       subst m
@@ -177,6 +178,7 @@ theorem canonical_graded_coordinate_surjective
   rw [hyx', sub_self]
   exact Submodule.zero_mem _
 
+omit [Algebra ℚ k] in
 /-- The order-zero principal symbol of the distinguished coordinate is the
 corresponding base variable. -/
 theorem coe_coordinate_order_symbol (n : ℕ) :
@@ -189,7 +191,7 @@ theorem coe_coordinate_order_symbol (n : ℕ) :
   change (presentedPrincipalComponent k orderWeight 0
         (presentedCoordinate k n)).coeff m = _
   rw [coeff_presentedPrincipalComponent, presentedCoordinate,
-    presentedNormalFormLinearEquiv_generator, MvPolynomial.coeff_X']
+    presentedNormalFormLinearEquiv_generator, MvPolynomial.coeff_X]
   by_cases hm : Finsupp.single (.inl (0 : Fin (n + 1))) 1 = m
   · subst m
     simp [monomialWeight, orderWeight, fibreWeight]
@@ -239,8 +241,7 @@ theorem canonical_orderInitialIdeal_sup_coordinate_eq_top
         MvPolynomial.X (.inl (0 : Fin (n + 1))) - 1 ∈
       orderInitialIdeal k I := by
     convert hJ using 1
-    simp only [Submodule.coe_sub, coe_homogeneousRightMul,
-      Submodule.coe_mk]
+    simp only [Submodule.coe_sub, coe_homogeneousRightMul]
     rw [show (X : SymbolRing k (n + 1)) =
       MvPolynomial.X (.inl (0 : Fin (n + 1))) by
         exact coe_coordinate_order_symbol k n]

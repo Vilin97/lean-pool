@@ -328,13 +328,15 @@ def eulerPolynomialEval (x d : A) : Polynomial ℚ →+* A :=
   Polynomial.eval₂RingHom' (algebraMap ℚ A) (theta x d)
     (fun q => Algebra.commutes q (theta x d))
 
-@[simp] theorem eulerPolynomialEval_X (x d : A) :
+@[simp]
+theorem eulerPolynomialEval_X (x d : A) :
     eulerPolynomialEval x d Polynomial.X = x * d := by
   change Polynomial.eval₂ (algebraMap ℚ A) (theta x d) Polynomial.X = x * d
   rw [Polynomial.eval₂_X (algebraMap ℚ A) (theta x d)]
   rfl
 
-@[simp] theorem eulerPolynomialEval_C (x d : A) (q : ℚ) :
+@[simp]
+theorem eulerPolynomialEval_C (x d : A) (q : ℚ) :
     eulerPolynomialEval x d (Polynomial.C q) = algebraMap ℚ A q := by
   change Polynomial.eval₂ (algebraMap ℚ A) (theta x d) (Polynomial.C q) =
     algebraMap ℚ A q

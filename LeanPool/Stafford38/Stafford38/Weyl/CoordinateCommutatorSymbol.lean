@@ -94,7 +94,7 @@ theorem extendPhaseExponent_sub_newestMomentum_general
   classical
   have hnew : (Finsupp.mapDomain oldIndex m)
       (.inr (0 : Fin (n + 1))) = 0 := by
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨i, hi⟩
     cases i <;> simp [oldIndex, Fin.succ_ne_zero] at hi
   ext i
@@ -102,22 +102,22 @@ theorem extendPhaseExponent_sub_newestMomentum_general
   · by_cases hi : i = 0
     · subst i
       simp [extendPhaseExponent, oldIndex,
-        add_comm, add_left_comm, add_assoc]
+        add_comm,  add_assoc]
     · simp [extendPhaseExponent, oldIndex, hi,
-        add_comm, add_left_comm, add_assoc]
+        add_comm,  add_assoc]
   · by_cases hi : i = 0
     · subst i
       simp [extendPhaseExponent, oldIndex, hnew]
     · have h0i : (0 : Fin (n + 1)) ≠ i := Ne.symm hi
-      simp [extendPhaseExponent, oldIndex, hi, h0i,
-        add_comm, add_left_comm, add_assoc]
+      simp [extendPhaseExponent, oldIndex, hi,
+        add_comm,  add_assoc]
 
 theorem extendPhaseExponent_newestMomentum_apply
     (n a p : ℕ) (m : PhaseVar n →₀ ℕ) :
     extendPhaseExponent n a p m (.inr (0 : Fin (n + 1))) = p := by
   have hnew : (Finsupp.mapDomain oldIndex m)
       (.inr (0 : Fin (n + 1))) = 0 := by
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨i, hi⟩
     cases i <;> simp [oldIndex, Fin.succ_ne_zero] at hi
   simp [extendPhaseExponent, oldIndex, hnew]
@@ -176,8 +176,7 @@ theorem coordinate_symbol_linear_maps_eq (n T : ℕ) :
       (if monomialWeight orderWeight q = T + 1 then
         MvPolynomial.monomial q 1 else 0)
   by_cases hp : p = 0
-  · simp [hp, q, q', MvPolynomial.pderiv_monomial,
-      extendPhaseExponent_newestMomentum_apply]
+  · simp [hp, q, q']
     split <;> simp [MvPolynomial.pderiv_monomial,
       extendPhaseExponent_newestMomentum_apply]
   · have hp0 : 0 < p := Nat.pos_of_ne_zero hp
@@ -189,7 +188,7 @@ theorem coordinate_symbol_linear_maps_eq (n T : ℕ) :
       omega
     by_cases hq : monomialWeight orderWeight q = T + 1
     · have hq' : monomialWeight orderWeight q' = T := by omega
-      rw [if_pos hq, if_pos hq', MvPolynomial.pderiv_monomial,
+      rw [ite_eq_left hq, ite_eq_left hq', MvPolynomial.pderiv_monomial,
         extendPhaseExponent_newestMomentum_apply,
         extendPhaseExponent_sub_newestMomentum_general]
       rw [MvPolynomial.smul_monomial]
@@ -198,7 +197,7 @@ theorem coordinate_symbol_linear_maps_eq (n T : ℕ) :
         intro h
         apply hq
         omega
-      rw [if_neg hq, if_neg hq']
+      rw [ite_eq_right hq, ite_eq_right hq']
       simp
 
 /-- For every presented Weyl element and every homogeneous order degree, the

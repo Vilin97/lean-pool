@@ -57,7 +57,7 @@ theorem differentialAt_baseLinearCombination {ι : Type*} [Fintype ι]
     differentialAt y (baseLinearCombination a f) i =
       ∑ j, a j * differentialAt y (f j) i := by
   classical
-  simp [baseLinearCombination, differentialAt, MvPolynomial.pderiv_mul]
+  simp [baseLinearCombination, differentialAt]
 
 /-- With scalar parameter one, translation by the differential of the
 combined equation is exactly the point represented by the combined

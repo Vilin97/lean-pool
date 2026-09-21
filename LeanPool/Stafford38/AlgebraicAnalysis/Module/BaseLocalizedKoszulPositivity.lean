@@ -10,6 +10,10 @@ import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalSupportKernelCokernel
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedMinimalSupportAvoidance
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulMinimalSupportPositivity
 
+/-!
+Strict positivity of the localized principal Koszul Euler characteristic over the base ring.
+-/
+
 namespace AlgebraicAnalysis.BaseLocalizedKoszulPositivity
 
 open scoped Pointwise

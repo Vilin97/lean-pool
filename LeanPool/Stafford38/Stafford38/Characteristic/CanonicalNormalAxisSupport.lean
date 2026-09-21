@@ -49,7 +49,7 @@ theorem vars_subset_momentum_of_isFibreOnly
   classical
   intro v hv
   rcases v with i | i
-  · obtain ⟨m, hm, hmi⟩ := (MvPolynomial.mem_vars _).mp hv
+  · obtain ⟨m, hm, hmi⟩ := (MvPolynomial.mem_vars_iff_mem_support _).mp hv
     have hzero := hP m (MvPolynomial.mem_support_iff.mp hm) i
     exact False.elim ((Finsupp.mem_support_iff.mp hmi) hzero)
   · exact ⟨i, rfl⟩

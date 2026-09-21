@@ -16,23 +16,28 @@ noncomputable section
 
 variable (k : Type*) [Field k] (n : ℕ)
 
+/-- The polynomial coefficient algebra for the operator commutator construction. -/
 abbrev PolynomialRing := MvPolynomial (Fin n) k
+/-- The algebra of linear operators on the polynomial coefficient algebra. -/
 abbrev Operator := Module.End k (PolynomialRing k n)
+/-- Linear endomorphisms of the space of polynomial operators. -/
 abbrev OperatorEnd := Module.End k (Operator k n)
 
+/-- The linear map sending an operator to its commutator with a coordinate multiplication. -/
 def coordinateCommutator (i : Fin n) : OperatorEnd k n where
   toFun P := commutator P (MvPolynomial.X i)
   map_add' P Q := by
     apply LinearMap.ext
     intro f
-    simp [commutator_apply, sub_eq_add_neg, add_mul]
+    simp? [commutator_apply, sub_eq_add_neg]
     noncomm_ring
   map_smul' c P := by
     apply LinearMap.ext
     intro f
     simp [commutator_apply, smul_sub]
 
-@[simp] theorem coordinateCommutator_apply (i : Fin n) (P : Operator k n) :
+@[simp]
+theorem coordinateCommutator_apply (i : Fin n) (P : Operator k n) :
     coordinateCommutator k n i P = commutator P (MvPolynomial.X i) := rfl
 
 theorem coordinateCommutator_comm (i j : Fin n) :
@@ -43,13 +48,15 @@ theorem coordinateCommutator_comm (i j : Fin n) :
   apply LinearMap.ext
   intro f
   simp [coordinateCommutator, commutator_apply, Module.End.mul_apply,
-    mul_add, add_mul, sub_eq_add_neg, mul_assoc, mul_comm, mul_left_comm]
+    mul_add,  sub_eq_add_neg, mul_assoc, mul_comm, mul_left_comm]
   abel
 
+/-- The composition of coordinate-commutator maps in the order specified by a list. -/
 def iteratedCoordinateCommutator (l : List (Fin n)) : OperatorEnd k n :=
   l.foldr (fun i T => coordinateCommutator k n i * T) 1
 
-@[simp] theorem iteratedCoordinateCommutator_nil :
+@[simp]
+theorem iteratedCoordinateCommutator_nil :
     iteratedCoordinateCommutator k n [] = 1 := rfl
 
 theorem iteratedCoordinateCommutator_cons (i : Fin n) (l : List (Fin n)) :

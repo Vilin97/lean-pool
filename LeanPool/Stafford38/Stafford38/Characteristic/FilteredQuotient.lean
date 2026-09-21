@@ -49,10 +49,12 @@ differential-order piece elaborates.  Both are `rfl`, so nothing about the
 `k`-module structure changes.
 -/
 
+/-- The additive-monoid structure used for a filtered Weyl submodule. -/
 local instance (priority := 10000) pieceAddCommMonoid {n : ℕ}
     (p : Submodule k (PresentedWeyl k n)) : AddCommMonoid p :=
   AddCommGroup.toAddCommMonoid
 
+/-- The scalar-module structure inherited by a filtered Weyl submodule. -/
 local instance (priority := 10000) pieceModule {n : ℕ}
     (p : Submodule k (PresentedWeyl k n)) : Module k p :=
   Submodule.module p
@@ -69,7 +71,8 @@ def rightIdealKSubmodule {A : Type*} [Ring A] [Algebra k A]
     rw [Algebra.smul_def, Algebra.commutes]
     exact h
 
-@[simp] theorem mem_rightIdealKSubmodule {A : Type*} [Ring A] [Algebra k A]
+@[simp]
+theorem mem_rightIdealKSubmodule {A : Type*} [Ring A] [Algebra k A]
     (I : RightIdeal A) (a : A) :
     a ∈ rightIdealKSubmodule k I ↔ a ∈ I :=
   Iff.rfl

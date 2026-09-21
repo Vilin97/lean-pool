@@ -36,6 +36,7 @@ universe u
 
 variable {k : Type u} [Field k] [IsAlgClosed k] {n : ℕ}
 
+omit [IsAlgClosed k] in
 /-- A nonempty reduced order support makes its contracted base ideal proper. -/
 theorem reducedOrderBaseIdeal_ne_top_of_support_nonempty
     (I : RightIdeal (PresentedWeyl k n))
@@ -76,6 +77,7 @@ theorem exists_reducedOrderBaseZero_of_support_nonempty
   rw [hMy, MvPolynomial.mem_vanishingIdeal_singleton_iff] at hfM
   exact hfM
 
+omit [IsAlgClosed k] in
 /-- If support avoids the coordinate-zero prime locus, every point of the
 contracted base variety has nonzero distinguished coordinate. -/
 theorem coordinate_ne_zero_of_baseZero_of_support_disjoint

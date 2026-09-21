@@ -115,6 +115,7 @@ structure ChartArcCompatibleBoundaryChart
     (k : Type u) [Field k] [CharZero k]
     (m : ℕ) (hm : 0 < m)
     (I : Ideal (MvPolynomial (Fin m) k)) where
+  /-- The completed boundary chart underlying the chart-compatible arc data. -/
   toCompleted : CompletedProjectiveBoundaryChart k m hm I
   chart_ideal_containment :
     I.map (scalarPolynomialMap
@@ -186,7 +187,7 @@ theorem completedChartAffineArc_annihilates
           (algebraMap k (PowerSeries k)) =
         algebraMap k (LaurentSeries k) := by
     ext a
-    simp [PowerSeries.algebraMap_eq, PowerSeries.coe_C,
+    simp [PowerSeries.algebraMap_eq,
       LaurentSeries.algebraMap_apply]
   rw [hcoeff] at hmap
   have hpoint :

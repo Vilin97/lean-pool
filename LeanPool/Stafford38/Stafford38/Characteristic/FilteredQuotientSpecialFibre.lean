@@ -44,7 +44,8 @@ def quotientOrderShiftQuotientLinearEquiv
     ((quotientOrderReesToAssociatedGraded k I).quotKerEquivOfSurjective
       (quotientOrderReesToAssociatedGraded_surjective k I))
 
-@[simp] theorem quotientOrderShiftQuotientLinearEquiv_mk
+@[simp]
+theorem quotientOrderShiftQuotientLinearEquiv_mk
     (I : RightIdeal (PresentedWeyl k n))
     (x : QuotientOrderReesModule k I) :
     quotientOrderShiftQuotientLinearEquiv k I

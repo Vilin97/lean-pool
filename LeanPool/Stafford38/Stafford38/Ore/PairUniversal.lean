@@ -45,12 +45,14 @@ def coordinateLift (f : B →+* A) (X : A)
     CoordinateStage (B := B) →+* A :=
   oreLift zeroDerivation (coordinateAmbient f X hX)
 
-@[simp] theorem coordinateLift_coefficient (f : B →+* A) (X : A)
+@[simp]
+theorem coordinateLift_coefficient (f : B →+* A) (X : A)
     (hX : ∀ b, X * f b = f b * X) (b : B) :
     coordinateLift f X hX (normalCoefficient zeroDerivation b) = f b :=
   oreLift_coefficient zeroDerivation (coordinateAmbient f X hX) b
 
-@[simp] theorem coordinateLift_variable (f : B →+* A) (X : A)
+@[simp]
+theorem coordinateLift_variable (f : B →+* A) (X : A)
     (hX : ∀ b, X * f b = f b * X) :
     coordinateLift f X hX (normalVariable zeroDerivation) = X :=
   oreLift_variable zeroDerivation (coordinateAmbient f X hX)
@@ -105,7 +107,7 @@ theorem coordinateLift_derivation_relation (f : B →+* A) (X P : A)
         normalForm_monomial, map_mul, map_pow,
         coordinateLift_coefficient, coordinateLift_variable]
       rw [← mul_assoc, hP, mul_assoc, momentum_mul_coordinate_pow X P hPX n]
-      simp only [add_mul, mul_add, mul_assoc]
+      simp only [ mul_add, mul_assoc]
       congr 1
       rw [map_mul, map_natCast, nsmul_eq_mul]
       simp only [mul_assoc]
@@ -129,7 +131,8 @@ def pairLift (f : B →+* A) (X P : A)
     PairStage (B := B) →+* A :=
   oreLift coordinateDerivation (pairAmbient f X P hX hP hPX)
 
-@[simp] theorem pairLift_coefficient (f : B →+* A) (X P : A)
+@[simp]
+theorem pairLift_coefficient (f : B →+* A) (X P : A)
     (hX : ∀ b, X * f b = f b * X)
     (hP : ∀ b, P * f b = f b * P)
     (hPX : P * X = X * P + 1)
@@ -142,7 +145,8 @@ def pairLift (f : B →+* A) (X P : A)
   change coordinateLift f X hX (normalCoefficient zeroDerivation b) = f b
   exact coordinateLift_coefficient f X hX b
 
-@[simp] theorem pairLift_coordinate (f : B →+* A) (X P : A)
+@[simp]
+theorem pairLift_coordinate (f : B →+* A) (X P : A)
     (hX : ∀ b, X * f b = f b * X)
     (hP : ∀ b, P * f b = f b * P)
     (hPX : P * X = X * P + 1) :
@@ -154,7 +158,8 @@ def pairLift (f : B →+* A) (X P : A)
   change coordinateLift f X hX (normalVariable zeroDerivation) = X
   exact coordinateLift_variable f X hX
 
-@[simp] theorem pairLift_momentum (f : B →+* A) (X P : A)
+@[simp]
+theorem pairLift_momentum (f : B →+* A) (X P : A)
     (hX : ∀ b, X * f b = f b * X)
     (hP : ∀ b, P * f b = f b * P)
     (hPX : P * X = X * P + 1) :
@@ -188,6 +193,7 @@ section Scalars
 
 variable {k : Type*} [CommRing k] [Algebra k B] [Algebra k A]
 
+/-- The scalar algebra structure on the pair stage used by its universal algebra map. -/
 local instance : Algebra k (PairStage (B := B)) :=
   pairStageAlgebra (k := k) (B := B)
 
@@ -203,7 +209,8 @@ def pairLiftAlgHom (f : B →ₐ[k] A) (X P : A)
     exact pairLift_coefficient f.toRingHom X P hX hP hPX (algebraMap k B c)
       |>.trans (f.commutes c)
 
-@[simp] theorem pairLiftAlgHom_coefficient (f : B →ₐ[k] A) (X P : A)
+@[simp]
+theorem pairLiftAlgHom_coefficient (f : B →ₐ[k] A) (X P : A)
     (hX : ∀ b, X * f b = f b * X)
     (hP : ∀ b, P * f b = f b * P)
     (hPX : P * X = X * P + 1)
@@ -212,7 +219,8 @@ def pairLiftAlgHom (f : B →ₐ[k] A) (X P : A)
   change pairLift f.toRingHom X P hX hP hPX (pairCoefficient b) = f b
   exact pairLift_coefficient f.toRingHom X P hX hP hPX b
 
-@[simp] theorem pairLiftAlgHom_coordinate (f : B →ₐ[k] A) (X P : A)
+@[simp]
+theorem pairLiftAlgHom_coordinate (f : B →ₐ[k] A) (X P : A)
     (hX : ∀ b, X * f b = f b * X)
     (hP : ∀ b, P * f b = f b * P)
     (hPX : P * X = X * P + 1) :
@@ -220,7 +228,8 @@ def pairLiftAlgHom (f : B →ₐ[k] A) (X P : A)
   change pairLift f.toRingHom X P hX hP hPX pairCoordinate = X
   exact pairLift_coordinate f.toRingHom X P hX hP hPX
 
-@[simp] theorem pairLiftAlgHom_momentum (f : B →ₐ[k] A) (X P : A)
+@[simp]
+theorem pairLiftAlgHom_momentum (f : B →ₐ[k] A) (X P : A)
     (hX : ∀ b, X * f b = f b * X)
     (hP : ∀ b, P * f b = f b * P)
     (hPX : P * X = X * P + 1) :

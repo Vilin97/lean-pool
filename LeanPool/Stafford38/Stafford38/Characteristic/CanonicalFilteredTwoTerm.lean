@@ -37,9 +37,11 @@ variable (k : Type u) [Field k] [Algebra ℚ k]
 private abbrev CanonicalIdeal (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   presentedCanonicalRightIdeal (k := k) n N d
 
+/-- The filtered quotient by the canonical right ideal determined by `d` and its monic degree. -/
 abbrev CanonicalQuotient (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   FilteredRightQuotient k (CanonicalIdeal k n N d)
 
+/-- Right multiplication by an element, descended to the quotient by a right ideal. -/
 def rightMulLinearMap (I : RightIdeal (PresentedWeyl k (n + 1)))
     (a : PresentedWeyl k (n + 1)) :
     FilteredRightQuotient k I →ₗ[k] FilteredRightQuotient k I :=
@@ -48,7 +50,9 @@ def rightMulLinearMap (I : RightIdeal (PresentedWeyl k (n + 1)))
       intro z hz
       exact I.smul_mem (MulOpposite.op a) hz)
 
-@[simp] theorem rightMulLinearMap_mk
+omit [Algebra ℚ k] in
+@[simp]
+theorem rightMulLinearMap_mk
     (I : RightIdeal (PresentedWeyl k (n + 1)))
     (a z : PresentedWeyl k (n + 1)) :
     rightMulLinearMap k I a (Submodule.Quotient.mk z) =
@@ -56,21 +60,26 @@ def rightMulLinearMap (I : RightIdeal (PresentedWeyl k (n + 1)))
   change Submodule.Quotient.mk (LinearMap.mulRight k a z) = _
   rfl
 
+/-- The decreasing integer filtration obtained from quotient order pieces in nonpositive
+degrees. -/
 def canonicalOrderFiltration
     (I : RightIdeal (PresentedWeyl k (n + 1))) (p : ℤ) :
     Submodule k (FilteredRightQuotient k I) :=
-  if hp : p ≤ 0 then quotientOrderPiece k I (-p).toNat else ⊥
+  if _hp : p ≤ 0 then quotientOrderPiece k I (-p).toNat else ⊥
 
+omit [Algebra ℚ k] in
 theorem canonicalOrderFiltration_eq_of_nonpos
     (I : RightIdeal (PresentedWeyl k (n + 1))) {p : ℤ} (hp : p ≤ 0) :
     canonicalOrderFiltration k I p = quotientOrderPiece k I (-p).toNat := by
   simp [canonicalOrderFiltration, hp]
 
+omit [Algebra ℚ k] in
 theorem canonicalOrderFiltration_eq_bot_of_pos
     (I : RightIdeal (PresentedWeyl k (n + 1))) {p : ℤ} (hp : 0 < p) :
     canonicalOrderFiltration k I p = ⊥ := by
   simp [canonicalOrderFiltration, not_le.mpr hp]
 
+omit [Algebra ℚ k] in
 theorem canonicalOrderFiltration_antitone
     (I : RightIdeal (PresentedWeyl k (n + 1))) :
     Antitone (canonicalOrderFiltration k I) := by
@@ -84,6 +93,7 @@ theorem canonicalOrderFiltration_antitone
   · rw [canonicalOrderFiltration_eq_bot_of_pos k I (lt_of_not_ge hq)]
     exact bot_le
 
+omit [Algebra ℚ k] in
 theorem canonicalOrderFiltration_exhaustive
     (I : RightIdeal (PresentedWeyl k (n + 1))) :
     ∀ q : FilteredRightQuotient k I, ∃ p : ℤ,
@@ -99,6 +109,7 @@ theorem canonicalOrderFiltration_exhaustive
   change (rightIdealKSubmodule k I).mkQ z ∈ quotientOrderPiece k I m
   exact Submodule.mem_map.mpr ⟨z, hm, rfl⟩
 
+omit [Algebra ℚ k] in
 private theorem quotientOrderPiece_mul_coordinate_mem
     (I : RightIdeal (PresentedWeyl k (n + 1)))
     {m : ℕ} {q : FilteredRightQuotient k I}
@@ -114,9 +125,10 @@ private theorem quotientOrderPiece_mul_coordinate_mem
   refine ⟨z * presentedCoordinate k n, mul_mem_orderPiece k hz hx, ?_⟩
   rfl
 
+/-- The filtered two-term construction on the canonical quotient, with differential given by
+right multiplication by the distinguished coordinate. -/
 def canonicalFilteredTwoTerm (n N : ℕ)
-    (d : PresentedWeyl k (n + 1))
-    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :
+    (d : PresentedWeyl k (n + 1)) :
     FilteredTwoTerm k (CanonicalQuotient k n N d) where
   G := canonicalOrderFiltration k (CanonicalIdeal k n N d)
   antitone := canonicalOrderFiltration_antitone k _
@@ -136,7 +148,7 @@ theorem canonicalFilteredTwoTerm_f_surjective
     (n N : ℕ) {d : PresentedWeyl k (n + 1)}
     (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d) :
     Function.Surjective
-      (canonicalFilteredTwoTerm k n N d hd).f := by
+      (canonicalFilteredTwoTerm k n N d).f := by
   intro q
   obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective
     (rightIdealKSubmodule k (CanonicalIdeal k n N d)) q

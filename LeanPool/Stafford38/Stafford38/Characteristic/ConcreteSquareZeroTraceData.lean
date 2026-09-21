@@ -70,14 +70,15 @@ def negativePoissonBracketLinear :
       c • (-poissonBracket f g)
     rw [poissonBracket_smul_left, smul_neg]
 
-@[simp] theorem negativePoissonBracketLinear_apply
+@[simp]
+theorem negativePoissonBracketLinear_apply
     (f g : SymbolRing k n) :
     negativePoissonBracketLinear (n := n) k f g =
       -poissonBracket f g :=
   rfl
 
 /-- The two-jet action commutes with the original coefficient-field action. -/
-def filteredQuotientTwoJetSMulCommClass
+theorem filteredQuotientTwoJetSMulCommClass
     (I : RightIdeal (PresentedWeyl k n)) :
     SMulCommClass k (OrderReesTwoJet (n := n) k)ᵐᵒᵖ
       (FilteredQuotientTwoJet k I) where
@@ -119,7 +120,8 @@ def filteredQuotientTwoJetTraceData
     obtain ⟨z, hz, hpi⟩ := exists_twoJet_commutatorQuotient k a b
     exact ⟨z, hz, by simpa using hpi⟩
 
-@[simp] theorem filteredQuotientTwoJetTraceData_bracket
+@[simp]
+theorem filteredQuotientTwoJetTraceData_bracket
     (I : RightIdeal (PresentedWeyl k n)) (f g : SymbolRing k n) :
     (filteredQuotientTwoJetTraceData k I).bracket f g =
       -poissonBracket f g :=

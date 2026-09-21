@@ -126,7 +126,7 @@ private noncomputable def partialStep
       · rintro ⟨i, hi, rfl⟩
         have hiOld : (i : V) ∈ old.carrier := by
           by_contra hn
-          have : lev i = t := dif_neg hn
+          have : lev i = t := dite_eq_right hn
           change u ≤ lev i at hi
           rw [this] at hi
           exact (Nat.not_le_of_lt htu') hi

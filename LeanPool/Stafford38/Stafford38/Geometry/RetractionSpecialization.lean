@@ -143,15 +143,18 @@ theorem residue_annihilatorLift_eq
 /-- A column with entries in a one-variable formal power-series ring. -/
 abbrev PowerSeriesColumn (k : Type*) (ι : Type*) := ι → PowerSeries k
 
+/-- The column obtained by taking the constant coefficient of each power series. -/
 def residueColumn {k : Type*} [CommRing k] {ι : Type*}
     (a : PowerSeriesColumn k ι) : ι → k :=
   fun i => PowerSeries.constantCoeff (a i)
 
+/-- The constant power-series column lifting a column over the coefficient ring. -/
 def constantColumn {k : Type*} [CommRing k] {ι : Type*}
     (a : ι → k) : PowerSeriesColumn k ι :=
   fun i => PowerSeries.C (a i)
 
-@[simp] theorem residueColumn_constantColumn {k : Type*} [CommRing k] {ι : Type*}
+@[simp]
+theorem residueColumn_constantColumn {k : Type*} [CommRing k] {ι : Type*}
     (a : ι → k) : residueColumn (constantColumn a) = a := by
   funext i
   simp [residueColumn, constantColumn]

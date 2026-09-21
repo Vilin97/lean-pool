@@ -57,15 +57,16 @@ def symbolWeightPiece {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
   add_mem' {f g} hf hg m hm := by
     by_cases hfm : f.coeff m = 0
     · apply hg m
-      simpa [MvPolynomial.coeff_add, hfm] using hm
+      simpa [AddMonoidAlgebra.coeff_add, hfm] using hm
     · exact hf m hfm
   smul_mem' c f hf m hm := by
     apply hf m
     intro hfm
     apply hm
-    simp [MvPolynomial.coeff_smul, hfm]
+    simp [ hfm]
 
-@[simp] theorem mem_symbolWeightPiece {n : ℕ} (w : PhaseVar n → ℕ)
+@[simp]
+theorem mem_symbolWeightPiece {n : ℕ} (w : PhaseVar n → ℕ)
     (N : ℕ) (f : SymbolRing k n) :
     f ∈ symbolWeightPiece k w N ↔
       ∀ m, f.coeff m ≠ 0 → monomialWeight w m ≤ N :=
@@ -83,7 +84,7 @@ theorem symbolWeightPiece_antitone_weight {n : ℕ}
   intro f hf m hm
   exact (monomialWeight_mono h m).trans (hf m hm)
 
-@[simp] theorem monomial_mem_symbolWeightPiece_iff {n : ℕ}
+theorem monomial_mem_symbolWeightPiece_iff {n : ℕ}
     (w : PhaseVar n → ℕ) (N : ℕ) (m : PhaseVar n →₀ ℕ) :
     MvPolynomial.monomial m (1 : k) ∈ symbolWeightPiece k w N ↔
       monomialWeight w m ≤ N := by
@@ -117,7 +118,8 @@ def presentedWeightPiece {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
   (symbolWeightPiece k w N).comap
     (presentedNormalFormLinearEquiv k n).toLinearMap
 
-@[simp] theorem mem_presentedWeightPiece {n : ℕ} (w : PhaseVar n → ℕ)
+@[simp]
+theorem mem_presentedWeightPiece {n : ℕ} (w : PhaseVar n → ℕ)
     (N : ℕ) (a : PresentedWeyl k n) :
     a ∈ presentedWeightPiece k w N ↔
       ∀ m, (presentedNormalFormLinearEquiv k n a).coeff m ≠ 0 →
@@ -201,7 +203,7 @@ theorem presentedCoefficientOrdered_basis_normal (n a p : ℕ)
     MvPolynomial.rename_monomial,
     MvPolynomial.X_pow_eq_monomial,
     MvPolynomial.X_pow_eq_monomial,
-    MvPolynomial.monomial_mul, MvPolynomial.monomial_mul]
+    MvPolynomial.monomial_mul_monomial, MvPolynomial.monomial_mul_monomial]
   simp [extendPhaseExponent]
 
 /-- Appending a fixed newest-pair monomial is scalar-linear in the old
@@ -237,7 +239,7 @@ theorem monomialWeight_extend_bernstein (n a p : ℕ)
     Finsupp.sum_single_index, Finsupp.sum_single_index,
     Finsupp.sum_mapDomain_index]
   · simp [bernsteinWeight, add_comm, add_left_comm, add_assoc]
-  all_goals simp [bernsteinWeight, add_mul]
+  all_goals simp [bernsteinWeight]
 
 theorem monomialWeight_extend_order (n a p : ℕ)
     (m : PhaseVar n →₀ ℕ) :
@@ -253,7 +255,7 @@ theorem monomialWeight_extend_order (n a p : ℕ)
     congr 1
     apply Finsupp.sum_congr
     intro i hi
-    cases i <;> simp [orderWeight, fibreWeight, oldIndex]
+    cases i <;> simp [  oldIndex]
   all_goals simp [orderWeight, fibreWeight, oldIndex, add_mul]
 
 theorem phaseExponent_succ_eq_extend (n : ℕ)
@@ -404,7 +406,7 @@ theorem presentedOrderedMonomial_mul_mem_bernsteinPiece :
         have := Finset.mem_range.mp hi
         omega
       by_cases hic : i ≤ c 0
-      · simp only [if_pos hic]
+      · simp only [ite_eq_left hic]
         apply Submodule.smul_mem
         have hterm := presentedCoefficientOrdered_mem_bernsteinPiece k
           n
@@ -473,7 +475,7 @@ theorem presentedOrderedMonomial_mul_mem_orderPiece :
         have := Finset.mem_range.mp hi
         omega
       by_cases hic : i ≤ c 0
-      · simp only [if_pos hic]
+      · simp only [ite_eq_left hic]
         apply Submodule.smul_mem
         have hterm := presentedCoefficientOrdered_mem_orderPiece k
           n

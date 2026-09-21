@@ -99,7 +99,8 @@ theorem TwoGeneratorIdentity.of_rightOreLocalization
     (hR : TwoGeneratorIdentity R) :
     TwoGeneratorIdentity
       (AlgebraicAnalysis.OreRightLocalization.RightOreLocalization R S) := by
-  apply TwoGeneratorIdentity.of_rightUnitClearing hR
+  apply TwoGeneratorIdentity.of_rightUnitClearing
+    (f := AlgebraicAnalysis.OreRightLocalization.rightNumeratorRingHom (R := R) (S := S)) hR
   intro q hq
   rcases AlgebraicAnalysis.OreRightLocalization.rightOre_clear (S := S) q with
     ⟨a, s, _, hs, hclear⟩

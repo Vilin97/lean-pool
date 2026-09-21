@@ -6,10 +6,20 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.BaseLocalizationModuleComparison
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for comparison of base and coefficient localizations
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.BaseLocalizationModuleComparison
 
-export AlgebraicAnalysis.BaseLocalizationModuleComparison (coefficientDenominator localizedModule_isLocalizedOverBase localizedModule_isLocalizedOverCoefficient localizedModuleComparison localizedModuleComparison_mkLinearMap localizedModuleComparison_mk localizedModuleComparison_natural)
+export AlgebraicAnalysis.BaseLocalizationModuleComparison (
+  coefficientDenominator
+  localizedModule_isLocalizedOverBase
+  localizedModule_isLocalizedOverCoefficient
+  localizedModuleComparison
+  localizedModuleComparison_mkLinearMap
+  localizedModuleComparison_mk
+  localizedModuleComparison_natural)
 
 end Stafford38.Characteristic.BaseLocalizationModuleComparison

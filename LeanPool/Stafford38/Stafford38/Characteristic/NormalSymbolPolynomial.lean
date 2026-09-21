@@ -8,6 +8,10 @@ import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalAxisSupport
 import LeanPool.Stafford38.Stafford38.Weyl.PBWMonicBridge
 import Mathlib.RingTheory.MvPolynomial.Homogeneous
 
+/-!
+Normal-symbol polynomials obtained from the canonical filtered quotient.
+-/
+
 namespace Stafford38.Characteristic.NormalSymbolPolynomial
 
 open Stafford38.Characteristic
@@ -21,10 +25,14 @@ open Stafford38.Geometry.ConormalAxisContradiction
 noncomputable section
 variable {k : Type*} [Field k]
 
+/-- The variable equivalence separating the first momentum variable from the remaining phase
+variables. -/
 def normalVariableEquiv (n : ℕ) :
     Option {v : PhaseVar (n + 1) // v ≠ Sum.inr (0 : Fin (n + 1))} ≃ PhaseVar (n + 1) :=
   Equiv.optionSubtypeNe (Sum.inr (0 : Fin (n + 1)))
 
+/-- The symbol-algebra equivalence viewing the first momentum variable as an outer polynomial
+variable. -/
 def normalSymbolAlgEquiv (n : ℕ) :
     SymbolRing k (n + 1) ≃ₐ[k]
       Polynomial (MvPolynomial
@@ -33,6 +41,8 @@ def normalSymbolAlgEquiv (n : ℕ) :
     (MvPolynomial.optionEquivLeft k
       {v : PhaseVar (n + 1) // v ≠ Sum.inr (0 : Fin (n + 1))})
 
+/-- The degree-`N` principal order symbol expressed as a polynomial in the first momentum
+variable. -/
 def canonicalNormalPolynomial {n N : ℕ} (d : PresentedWeyl k (n + 1)) :
     Polynomial (MvPolynomial
       {v : PhaseVar (n + 1) // v ≠ Sum.inr (0 : Fin (n + 1))} k) :=
@@ -51,7 +61,7 @@ theorem normalSymbolAlgEquiv_otherVariable (n : ℕ)
   simp [normalSymbolAlgEquiv, normalVariableEquiv, hv]
 
 theorem optionEquivLeft_monic_of_isHomogeneous
-    {S : Type*} [Finite S] (P : MvPolynomial (Option S) k) (N : ℕ)
+    {S : Type*} (P : MvPolynomial (Option S) k) (N : ℕ)
     (hP : P.IsHomogeneous N)
     (hlead : P.coeff (Finsupp.single none N) = 1) :
     (MvPolynomial.optionEquivLeft k S P).Monic := by
@@ -90,7 +100,7 @@ theorem optionEquivLeft_monic_of_isHomogeneous
               (fun _ _ ↦ Nat.zero_le _)).mp hdegree x hx
         · exact Finsupp.notMem_support_iff.mp hx
       rw [hzero]
-      rw [MvPolynomial.coeff_one, if_neg (Ne.symm hm)]
+      rw [MvPolynomial.coeff_one, ite_eq_right (Ne.symm hm)]
 
 theorem canonicalNormalPolynomial_monic {n N : ℕ}
     {d : PresentedWeyl k (n + 1)}

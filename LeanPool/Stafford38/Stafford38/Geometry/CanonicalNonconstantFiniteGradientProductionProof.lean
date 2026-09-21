@@ -53,6 +53,7 @@ structure RegularizedOneRowConormalData
     {m : ℕ} (hm : 0 < m)
     (I : Ideal (MvPolynomial (Fin m) k))
     (q : Fin (m + 1) → PowerSeries K) where
+  /-- The power-series conormal row with prescribed residue, annihilating the projective arc. -/
   ell : Fin (m + 1) → PowerSeries K
   q_origin_ne : q 0 ≠ 0
   projective_annihilation :

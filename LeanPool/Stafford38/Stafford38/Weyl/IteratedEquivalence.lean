@@ -35,6 +35,7 @@ variable (k : Type u) [Field k]
 
 /-- The scalar algebra structure inherited recursively by the iterated Ore
 tower. -/
+@[instance_reducible]
 def iteratedPairStageAlgebra :
     (n : Nat) → Algebra k (IteratedPairStage k n)
   | 0 => by
@@ -82,17 +83,21 @@ def iteratedGenerator (n : Nat) :
     (Fin n ⊕ Fin n) → IteratedPairStage k n :=
   Sum.elim (iteratedCoordinate k n) (iteratedMomentum k n)
 
-@[simp] theorem iteratedCoordinate_zero (n : Nat) :
+@[simp]
+theorem iteratedCoordinate_zero (n : Nat) :
     iteratedCoordinate k (n + 1) 0 = stageCoordinate k n := rfl
 
-@[simp] theorem iteratedCoordinate_succ (n : Nat) (i : Fin n) :
+@[simp]
+theorem iteratedCoordinate_succ (n : Nat) (i : Fin n) :
     iteratedCoordinate k (n + 1) i.succ =
       stageAlgHom k n (iteratedCoordinate k n i) := rfl
 
-@[simp] theorem iteratedMomentum_zero (n : Nat) :
+@[simp]
+theorem iteratedMomentum_zero (n : Nat) :
     iteratedMomentum k (n + 1) 0 = stageMomentum k n := rfl
 
-@[simp] theorem iteratedMomentum_succ (n : Nat) (i : Fin n) :
+@[simp]
+theorem iteratedMomentum_succ (n : Nat) (i : Fin n) :
     iteratedMomentum k (n + 1) i.succ =
       stageAlgHom k n (iteratedMomentum k n i) := rfl
 
@@ -279,7 +284,8 @@ def presentedToIterated (n : Nat) :
   freeWeylLift (Matrix.J (Fin n) k) (iteratedGenerator k n)
     (iteratedGenerator_commutator k n)
 
-@[simp] theorem presentedToIterated_generator (n : Nat)
+@[simp]
+theorem presentedToIterated_generator (n : Nat)
     (i : Fin n ⊕ Fin n) :
     presentedToIterated k n
         (freeWeylGenerator (Matrix.J (Fin n) k) i) =
@@ -308,22 +314,22 @@ theorem oldGenerator_commutator (n : Nat) (i j : Fin n ⊕ Fin n) :
   cases i with
   | inl i =>
       cases j with
-      | inl j => simp [oldIndex, Matrix.J] <;> rfl
+      | inl j => (simp [oldIndex, Matrix.J]; rfl)
       | inr j =>
           by_cases h : i = j
           · subst j
-            simp [oldIndex, Matrix.J]
+            simp? [oldIndex, Matrix.J]
             calc
               _ = -algebraMap k (PresentedWeyl k (n + 1)) 1 :=
                 map_neg (algebraMap k (PresentedWeyl k (n + 1))) 1
               _ = -1 := by rw [map_one]
-          · simp [oldIndex, Matrix.J, h] <;> rfl
+          · (simp [oldIndex, Matrix.J, h]; rfl)
   | inr i =>
       cases j with
       | inl j =>
           by_cases h : i = j <;>
-            simp [oldIndex, Matrix.J, h] <;> rfl
-      | inr j => simp [oldIndex, Matrix.J] <;> rfl
+            (simp [oldIndex, Matrix.J, h]; rfl)
+      | inr j => (simp [oldIndex, Matrix.J]; rfl)
 
 /-- The canonical rank-shift embedding preserving the old generators. -/
 def previousWeylEmbedding (n : Nat) :
@@ -331,7 +337,8 @@ def previousWeylEmbedding (n : Nat) :
   freeWeylLift (Matrix.J (Fin n) k) (oldGenerator k n)
     (oldGenerator_commutator k n)
 
-@[simp] theorem previousWeylEmbedding_generator (n : Nat)
+@[simp]
+theorem previousWeylEmbedding_generator (n : Nat)
     (i : Fin n ⊕ Fin n) :
     previousWeylEmbedding k n
         (freeWeylGenerator (Matrix.J (Fin n) k) i) = oldGenerator k n i := by
@@ -465,7 +472,8 @@ def iteratedToPresented :
           (iteratedToPresented n b))
         (presentedMomentum_mul_coordinate k n)
 
-@[simp] theorem iteratedToPresented_coefficient (n : Nat)
+@[simp]
+theorem iteratedToPresented_coefficient (n : Nat)
     (b : IteratedPairStage k n) :
     iteratedToPresented k (n + 1) (stageEmbedding k n b) =
       previousWeylEmbedding k n (iteratedToPresented k n b) := by
@@ -474,7 +482,8 @@ def iteratedToPresented :
   change pairLiftAlgHom _ _ _ _ _ _ (pairCoefficient b) = _
   exact pairLiftAlgHom_coefficient _ _ _ _ _ _ b
 
-@[simp] theorem iteratedToPresented_coordinate (n : Nat) :
+@[simp]
+theorem iteratedToPresented_coordinate (n : Nat) :
     iteratedToPresented k (n + 1) (stageCoordinate k n) =
       presentedCoordinate k n := by
   let : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
@@ -482,7 +491,8 @@ def iteratedToPresented :
   change pairLiftAlgHom _ _ _ _ _ _ pairCoordinate = _
   exact pairLiftAlgHom_coordinate _ _ _ _ _ _
 
-@[simp] theorem iteratedToPresented_momentum (n : Nat) :
+@[simp]
+theorem iteratedToPresented_momentum (n : Nat) :
     iteratedToPresented k (n + 1) (stageMomentum k n) =
       presentedMomentum k n := by
   let : Algebra k (IteratedPairStage k n) := iteratedPairStageAlgebra k n
@@ -500,14 +510,16 @@ theorem presentedToIterated_previous (n : Nat) :
   cases i <;> unfold oldGenerator oldIndex <;>
     rw [presentedToIterated_generator] <;> rfl
 
-@[simp] theorem presentedToIterated_coordinate (n : Nat) :
+@[simp]
+theorem presentedToIterated_coordinate (n : Nat) :
     presentedToIterated k (n + 1) (presentedCoordinate k n) =
       stageCoordinate k n := by
   unfold presentedCoordinate
   rw [presentedToIterated_generator]
   rfl
 
-@[simp] theorem presentedToIterated_momentum (n : Nat) :
+@[simp]
+theorem presentedToIterated_momentum (n : Nat) :
     presentedToIterated k (n + 1) (presentedMomentum k n) =
       stageMomentum k n := by
   unfold presentedMomentum
@@ -646,7 +658,8 @@ def presentedIteratedEquiv (n : Nat) :
     (presentedToIterated_comp_iteratedToPresented k n)
     (iteratedToPresented_comp_presentedToIterated k n)
 
-@[simp] theorem presentedIteratedEquiv_generator (n : Nat)
+@[simp]
+theorem presentedIteratedEquiv_generator (n : Nat)
     (i : Fin n ⊕ Fin n) :
     presentedIteratedEquiv k n
         (freeWeylGenerator (Matrix.J (Fin n) k) i) =

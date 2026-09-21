@@ -6,10 +6,15 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedMinimalSupportAvoidance
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for minimal support avoidance after localization
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.LocalizedMinimalSupportAvoidance
 
-export AlgebraicAnalysis.LocalizedMinimalSupportAvoidance (annihilator_localizedModule localized_minimalPrime_avoids)
+export AlgebraicAnalysis.LocalizedMinimalSupportAvoidance (
+  annihilator_localizedModule
+  localized_minimalPrime_avoids)
 
 end Stafford38.Characteristic.LocalizedMinimalSupportAvoidance

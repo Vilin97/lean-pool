@@ -93,8 +93,12 @@ structure EquationPackage
     {S : Type u} [Field S]
     (I : Ideal (MvPolynomial (Fin m) k)) (coeff : k →+* S)
     (q : Fin (m + 1) → S) where
+  /-- The size of the finite homogeneous equation family. -/
   equationCount : ℕ
+  /-- Homogeneous equations vanishing at the point and generating the extended affine ideal
+  after dehomogenization. -/
   equations : Fin equationCount → MvPolynomial (Fin (m + 1)) S
+  /-- The homogeneous degree assigned to each retained component equation. -/
   degree : Fin equationCount → ℕ
   homogeneous : ∀ j, (equations j).IsHomogeneous (degree j)
   equations_vanish : ∀ j, MvPolynomial.eval q (equations j) = 0

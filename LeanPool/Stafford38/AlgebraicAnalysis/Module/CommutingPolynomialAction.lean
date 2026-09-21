@@ -45,7 +45,8 @@ noncomputable def commutingPolynomialAction {σ : Type w}
       (MvPolynomial.aeval (fun i =>
         ⟨v i, Algebra.subset_adjoin ⟨i, rfl⟩⟩))
 
-@[simp] theorem commutingPolynomialAction_apply_X {σ : Type w}
+@[simp]
+theorem commutingPolynomialAction_apply_X {σ : Type w}
     (v : σ → Module.End k V) (hcomm : ∀ i j, Commute (v i) (v j)) (i : σ) :
     commutingPolynomialAction v hcomm (MvPolynomial.X i) = v i := by
   classical
@@ -54,7 +55,7 @@ noncomputable def commutingPolynomialAction {σ : Type w}
 /-- Evaluation sends constants to scalar endomorphisms. This named
 compatibility lemma is retained even though generic algebra-hom simplification
 can also discharge its left-hand side. -/
-@[simp] theorem commutingPolynomialAction_apply_C {σ : Type w}
+theorem commutingPolynomialAction_apply_C {σ : Type w}
     (v : σ → Module.End k V) (hcomm : ∀ i j, Commute (v i) (v j)) (a : k) :
     commutingPolynomialAction v hcomm (MvPolynomial.C a) = algebraMap k (Module.End k V) a := by
   classical
@@ -94,6 +95,7 @@ theorem commutingPolynomialAction_intertwines {σ : Type w}
           rw [hgi]
 
 /-- The polynomial action as a module structure on the original space. -/
+@[instance_reducible]
 noncomputable def commutingPolynomialModule {σ : Type w}
     (v : σ → Module.End k V) (hcomm : ∀ i j, Commute (v i) (v j)) :
     Module (MvPolynomial σ k) V :=

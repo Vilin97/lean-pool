@@ -98,7 +98,8 @@ def drop (r : ℕ) (p : ℤ) :
   Submodule.mapQ _ _ (K.restrictedDrop r p) (K.drop_denominator r p)
 
 /-- Representative formula for the page differential. -/
-@[simp] theorem drop_mk (r : ℕ) (p : ℤ) (x : K.cycles r p) :
+@[simp]
+theorem drop_mk (r : ℕ) (p : ℤ) (x : K.cycles r p) :
     K.drop r p (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (K.restrictedDrop r p x) := rfl
 

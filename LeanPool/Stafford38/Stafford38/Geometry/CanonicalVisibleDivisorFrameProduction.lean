@@ -117,7 +117,7 @@ theorem exists_mul_mem_of_mem_minimalPrimes_of_isRadical
     intro Q hQ
     rw [hT, Finset.mem_erase, hfin.mem_toFinset] at hQ
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     exact hQ.1 (le_antisymm hcon (hP.2 hQ.2.1 hcon))
   choose s hsQ hsP using hchoice
   refine ⟨∏ Q ∈ T.attach, s Q.1 Q.2, ?_, ?_⟩
@@ -150,7 +150,7 @@ theorem affineConormalSpace_map_minimalPrime_le [Algebra k F]
   set S := equationCovectorSpan y (I.map (MvPolynomial.map (algebraMap k F)))
   refine Submodule.span_le.2 ?_
   rintro _ ⟨⟨f', hf'⟩, rfl⟩
-  show differentialCovector y f' ∈ S
+  change differentialCovector y f' ∈ S
   have key : MvPolynomial.eval y f' = 0 ∧ differentialCovector y f' ∈ S := by
     refine Submodule.span_induction (p := fun x _ ↦
       MvPolynomial.eval y x = 0 ∧ differentialCovector y x ∈ S) ?_ ?_ ?_ ?_ hf'
@@ -181,7 +181,7 @@ end Transfer
 projective column and a visible divisor frame attached to it. -/
 def HasVisibleDivisorFrame
     (P : PrimeSpectrum (MvPolynomial (Fin m) k)) (hm : 0 < m)
-    [CharZero k] : Prop :=
+     : Prop :=
   ∃ W : Data k (ComponentFractionField P) (componentCoordinate P ⟨0, hm⟩),
     letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
         (ComponentFractionField P) := W.ambientAlgebra
@@ -288,7 +288,7 @@ def HigherDimensionalCanonicalVisibleDivisorFrameProduction : Prop :=
       HasVisibleDivisorFrame P (Nat.zero_lt_succ n)
 
 /-- The visible-frame producer discharges the finite-gradient interface. -/
-theorem higherDimensionalCanonicalResidueExtensionNonconstantFiniteGradientProduction_of_visibleDivisorFrame
+theorem nonconstantFiniteGradientProduction_of_visibleDivisorFrame
     (h : HigherDimensionalCanonicalVisibleDivisorFrameProduction.{u}) :
     HigherDimensionalCanonicalResidueExtensionNonconstantFiniteGradientProduction.{u} := by
   intro k _ _ _ n N d hn hdisjoint P hP htrans

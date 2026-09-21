@@ -8,6 +8,10 @@ import Mathlib.RingTheory.MvPolynomial.EulerIdentity
 import LeanPool.Stafford38.Stafford38.Characteristic.GabberGlobalAssembly
 import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalAxisSupport
 
+/-!
+Avoidance of the normal coordinate by minimal primes of the characteristic support.
+-/
+
 namespace Stafford38.Characteristic.NoncharacteristicMinimalPrime
 
 open Stafford38
@@ -32,6 +36,7 @@ private def iterPderiv (i : PhaseVar (n + 1)) (r : ℕ)
     (f : SymbolRing k (n + 1)) : SymbolRing k (n + 1) :=
   (MvPolynomial.pderiv i)^[r] f
 
+omit [CharZero k] in
 private theorem iterPderiv_mem_of_involutive
     (P : Ideal (SymbolRing k (n + 1))) (hP : IsInvolutive P)
     (j : Fin (n + 1)) (hx : MvPolynomial.X (.inl j) ∈ P)
@@ -46,6 +51,7 @@ private theorem iterPderiv_mem_of_involutive
       simpa [iterPderiv, Function.iterate_succ_apply', poissonBracket,
         Pi.single_apply] using hb
 
+omit [CharZero k] in
 private theorem iterPderiv_eq_factorial_of_homogeneous
     (i : PhaseVar (n + 1)) (f : SymbolRing k (n + 1))
     (hf : f.IsHomogeneous N)
@@ -84,7 +90,7 @@ private theorem iterPderiv_eq_factorial_of_homogeneous
           Nat.descFactorial_succ]
         have hnat : m + 1 + r - r = m + 1 := by omega
         rw [hnat]
-        simp [Nat.add_assoc, Nat.cast_mul]
+        simp? [Nat.add_assoc, Nat.cast_mul]
         have hcarg :
             Finsupp.single i m + (Finsupp.single i 1 + Finsupp.single i r) =
               Finsupp.single i m + (Finsupp.single i r + Finsupp.single i 1) := by
@@ -108,11 +114,11 @@ private theorem iterPderiv_eq_factorial_of_homogeneous
     ext q
     by_cases hq : q = i <;> simp [hq]
   rw [hzeroCoeff, hcoeff N 0]
-  simp [Nat.zero_add, Nat.descFactorial_self, hc]
+  simp [ Nat.descFactorial_self, hc]
 
 theorem canonical_minimalPrime_mem_of_normalCoordinate_false
     (d : PresentedWeyl k (n + 1))
-    (hN : 0 < N) (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
+    (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
     {P : Ideal (SymbolRing k (n + 1))} (hP : P ∈
       (Module.annihilator (SymbolRing k (n + 1))
         (OrderAssociatedGradedModule k

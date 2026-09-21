@@ -11,7 +11,10 @@ import LeanPool.Stafford38.Stafford38.Characteristic.MinimalSupportKernelCokerne
 import LeanPool.Stafford38.Stafford38.Characteristic.LocalizedMinimalSupportAvoidance
 import LeanPool.Stafford38.Stafford38.Characteristic.PrincipalKoszulMinimalSupportPositivity
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for Koszul positivity after base localization
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.BaseLocalizedKoszulPositivity
 

@@ -97,7 +97,6 @@ private lemma right_derivation_preserves_kernel (y : R) (D : Derivation k R R)
           (rightComposition D.toLinearMap ^ a) P * D.toLinearMap by rfl,
         delta_mul, delta_right_derivation, hxy]
       rw [ih, zero_mul, zero_add]
-      congr
       ext z
       simp [multiplication_apply]
 
@@ -172,7 +171,7 @@ private lemma delta_derivation_pow (x : R) (D : Derivation k R R)
     delta x (D.toLinearMap ^ a) = (a : k) • D.toLinearMap ^ (a - 1)
   | 0 => by
       ext y
-      simp [delta, commutator_apply, multiplication_apply]
+      simp [delta, commutator_apply]
   | a + 1 => by
       rw [pow_succ, delta_mul, delta_right_derivation, hDx,
         delta_derivation_pow x D hDx a]
@@ -205,7 +204,7 @@ private lemma projection_kernel (x : R) (D : Derivation k R R) (hDx : D x = 1)
   rw [Finset.sum_range_succ, hnil]
   simp only [zero_mul, smul_zero, add_zero]
   rw [Finset.sum_range_succ']
-  simp only [Nat.cast_zero, zero_smul, zero_add]
+  simp only [Nat.cast_zero, zero_smul]
   have hcancel (a : ℕ) :
       ((-1 : k) ^ a / (a.factorial : k)) •
           ((delta x ^ (a + 1)) P * D.toLinearMap ^ a) +
@@ -335,7 +334,7 @@ theorem mem_submodule_of_coordinates'
             m _ (delta_pow_after_zero (x i) (m + 1) a Q hnil)
         · have hij : i ≠ j := fun e => hinot (e ▸ hj)
           apply projection_preserves_kernel (x i) (x j) (D i)
-              (by rw [hdual, if_neg hij])
+              (by rw [hdual, ite_eq_right hij])
           exact delta_iterate_preserves_kernel (x i) (x j) a Q (hkern j hj)
   apply heliminate (List.ofFn fun i : Fin n => i)
     (List.nodup_ofFn.mpr fun _ _ h => h) ?_ P hP

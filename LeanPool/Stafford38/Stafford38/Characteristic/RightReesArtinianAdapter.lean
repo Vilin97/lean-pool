@@ -202,7 +202,7 @@ theorem exists_concrete_localizedPreArtinianCore
       LocalizedPreArtinianCore
         (filteredQuotientTwoJetTraceData K I) P.primeCompl := by
   obtain ⟨h, _hexact, hnontrivial, hlength⟩ :=
-    Stafford38.Characteristic.AssociatedGradedFinite.exists_minimalPrimeLocalizedExactnessAndFiniteLength
+    Characteristic.AssociatedGradedFinite.exists_minimalPrimeLocalizedExactnessAndFiniteLength
       K I P hP
   refine ⟨h, ?_⟩
   let := h

@@ -148,7 +148,7 @@ theorem sourceRowAction_fun_add
     (M : Matrix ι ι B) (f g : ι → W) (i : ι) :
     sourceRowAction M (fun j => f j + g j) i =
       sourceRowAction M f i + sourceRowAction M g i := by
-  simp [sourceRowAction, Finset.sum_add_distrib, add_smul]
+  simp [sourceRowAction, Finset.sum_add_distrib]
 
 theorem action_parameter_comm
     (c a : B) (hcentral : ∀ b : B, c * b = b * c) (w : W) :
@@ -203,7 +203,7 @@ theorem action_on_source_equation
             sourceRowAction_parameter_mul c hcentral Bm Gamma e i,
             sourceRowAction_mul,
             sourceRowAction_parameter_mul c hcentral Theta Gamma e i]
-          simp only [smul_add, hdouble, zero_add, add_zero]
+          simp only [smul_add, hdouble,  add_zero]
           abel
 
 /-- The matrix appearing after the parameter has been removed from the
@@ -400,9 +400,9 @@ theorem commutator_on_source_equations
             (fullSourceExpansionMatrix x y X Y Omega A Bm Gamma Theta) e i := by
           rw [hBArow]
           simp [fullSourceExpansionMatrix, sourceExpansionMatrix,
-            sourceRowAction_add, sourceRowAction_sub, neg_one_smul]
+            sourceRowAction_add, sourceRowAction_sub]
           abel_nf
-          simp [neg_one_smul]
+          simp []
           abel
 
 theorem rho_sourceRowAction

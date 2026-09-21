@@ -74,6 +74,7 @@ def leftMulLinear (q : R) : R →ₗ[Rᵐᵒᵖ] R where
 /-- The right ideal `qR`, represented as the range of left multiplication. -/
 def principalRightIdeal (q : R) : Submodule Rᵐᵒᵖ R :=
   LinearMap.range (leftMulLinear q)
+omit [Nontrivial R] [NoZeroDivisors R] [OreLocalization.OreSet (nonZeroDivisors Rᵐᵒᵖ)] in
 theorem principalRightIdeal_mem (q x : R) :
     q * x ∈ principalRightIdeal q := by
   exact ⟨x, rfl⟩
@@ -95,7 +96,7 @@ theorem principal_quotient_isTorsion (q : R) (hq : q ≠ 0) :
   · intro hden
     have hden' : (den : Rᵐᵒᵖ) = 0 := by
       apply unop_injective
-      simpa [denR] using hden
+      simp [denR] at hden
     exact (nonZeroDivisors.coe_ne_zero den) hden'
   change (principalRightIdeal q).mkQ ((op denR) • x) = 0
   rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]

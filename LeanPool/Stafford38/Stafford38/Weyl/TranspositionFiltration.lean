@@ -37,19 +37,23 @@ universe u
 
 variable (k : Type u) [Field k]
 
-@[simp] theorem transpose_zero (n : Nat) :
+@[simp]
+theorem transpose_zero (n : Nat) :
     transpose k n 0 = 0 := by
   simp [transpose]
 
-@[simp] theorem transpose_add (n : Nat) (a b : PresentedWeyl k n) :
+@[simp]
+theorem transpose_add (n : Nat) (a b : PresentedWeyl k n) :
     transpose k n (a + b) = transpose k n a + transpose k n b := by
   simp [transpose]
 
-@[simp] theorem transpose_smul (n : Nat) (c : k) (a : PresentedWeyl k n) :
+@[simp]
+theorem transpose_smul (n : Nat) (c : k) (a : PresentedWeyl k n) :
     transpose k n (c • a) = c • transpose k n a := by
   simp [transpose]
 
-@[simp] theorem transpose_pow (n : Nat) (a : PresentedWeyl k n) (r : Nat) :
+@[simp]
+theorem transpose_pow (n : Nat) (a : PresentedWeyl k n) (r : Nat) :
     transpose k n (a ^ r) = transpose k n a ^ r := by
   induction r with
   | zero => simp [transpose]
@@ -107,7 +111,7 @@ theorem coordinate_mem_bernsteinPiece {n : Nat} (i : Fin n) :
   rw [bernsteinPiece, mem_presentedWeightPiece, coordinate,
     presentedNormalFormLinearEquiv_generator]
   intro m hm
-  simp only [MvPolynomial.coeff_X', ne_eq, ite_eq_right_iff] at hm
+  simp only [MvPolynomial.coeff_X, ne_eq, ite_eq_right_iff] at hm
   by_contra hweight
   exact hm (by
     intro h
@@ -119,7 +123,7 @@ theorem momentum_mem_bernsteinPiece {n : Nat} (i : Fin n) :
   rw [bernsteinPiece, mem_presentedWeightPiece, momentum,
     presentedNormalFormLinearEquiv_generator]
   intro m hm
-  simp only [MvPolynomial.coeff_X', ne_eq, ite_eq_right_iff] at hm
+  simp only [MvPolynomial.coeff_X, ne_eq, ite_eq_right_iff] at hm
   by_contra hweight
   exact hm (by
     intro h
@@ -131,7 +135,7 @@ theorem coordinate_mem_orderPiece {n : Nat} (i : Fin n) :
   rw [orderPiece, mem_presentedWeightPiece, coordinate,
     presentedNormalFormLinearEquiv_generator]
   intro m hm
-  simp only [MvPolynomial.coeff_X', ne_eq, ite_eq_right_iff] at hm
+  simp only [MvPolynomial.coeff_X, ne_eq, ite_eq_right_iff] at hm
   by_contra hweight
   exact hm (by
     intro h
@@ -143,7 +147,7 @@ theorem momentum_mem_orderPiece {n : Nat} (i : Fin n) :
   rw [orderPiece, mem_presentedWeightPiece, momentum,
     presentedNormalFormLinearEquiv_generator]
   intro m hm
-  simp only [MvPolynomial.coeff_X', ne_eq, ite_eq_right_iff] at hm
+  simp only [MvPolynomial.coeff_X, ne_eq, ite_eq_right_iff] at hm
   by_contra hweight
   exact hm (by
     intro h
@@ -342,11 +346,13 @@ def symbolTransposition {n : Nat} : SymbolRing k n →ₐ[k] SymbolRing k n :=
     (fun i : Fin n => MvPolynomial.X (.inl i))
     (fun i : Fin n => -MvPolynomial.X (.inr i)))
 
-@[simp] theorem symbolTransposition_coordinate {n : Nat} (i : Fin n) :
+@[simp]
+theorem symbolTransposition_coordinate {n : Nat} (i : Fin n) :
     symbolTransposition k (MvPolynomial.X (.inl i)) = MvPolynomial.X (.inl i) := by
   simp [symbolTransposition]
 
-@[simp] theorem symbolTransposition_momentum {n : Nat} (i : Fin n) :
+@[simp]
+theorem symbolTransposition_momentum {n : Nat} (i : Fin n) :
     symbolTransposition k (MvPolynomial.X (.inr i)) = -MvPolynomial.X (.inr i) := by
   simp [symbolTransposition]
 
@@ -438,7 +444,7 @@ theorem principal_transpose_orderedMonomial_bernstein :
       rw [he]
       simp [presentedOrderedMonomial, transpose, monomialWeight,
         presentedPrincipalComponent, presentedNormalFormLinearEquiv_one,
-        weightedHomogeneousComponent_monomial, symbolTransposition]
+         symbolTransposition]
   | succ n ih =>
       intro a p
       let oldA : Fin n → Nat := fun i => a i.succ
@@ -503,7 +509,7 @@ theorem principal_transpose_bernstein {n N : Nat} {a : PresentedWeyl k n}
                   (fun i => m (.inl i)) (fun i => m (.inr i))) =
               MvPolynomial.monomial m (1 : k) := by
           rw [← presentedPBWBasis_apply,
-            presentedPrincipalComponent_basis, if_pos rfl]
+            presentedPrincipalComponent_basis, ite_eq_left rfl]
         rw [ht', ho]
       · have hdlt : d < N := lt_of_le_of_ne hm hd
         have ht := transpose_orderedMonomial_mem_bernsteinPiece k n
@@ -519,7 +525,7 @@ theorem principal_transpose_bernstein {n N : Nat} {a : PresentedWeyl k n}
                 (presentedOrderedMonomial k n
                   (fun i => m (.inl i)) (fun i => m (.inr i))) = 0 := by
           rw [← presentedPBWBasis_apply,
-            presentedPrincipalComponent_basis, if_neg hd]
+            presentedPrincipalComponent_basis, ite_eq_right hd]
         rw [presentedPrincipalComponent_eq_zero_of_mem_of_lt k
             bernsteinWeight _ ht' hdlt, ho, map_zero]
   | zero => simp
@@ -616,7 +622,7 @@ theorem principal_transpose_orderedMonomial_order :
       rw [he]
       simp [presentedOrderedMonomial, transpose, monomialWeight,
         presentedPrincipalComponent, presentedNormalFormLinearEquiv_one,
-        weightedHomogeneousComponent_monomial, symbolTransposition]
+         symbolTransposition]
   | succ n ih =>
       intro a p
       let oldA : Fin n → Nat := fun i => a i.succ
@@ -681,7 +687,7 @@ theorem principal_transpose_order {n N : Nat} {a : PresentedWeyl k n}
                   (fun i => m (.inl i)) (fun i => m (.inr i))) =
               MvPolynomial.monomial m (1 : k) := by
           rw [← presentedPBWBasis_apply,
-            presentedPrincipalComponent_basis, if_pos rfl]
+            presentedPrincipalComponent_basis, ite_eq_left rfl]
         rw [ht', ho]
       · have hdlt : d < N := lt_of_le_of_ne hm hd
         have ht := transpose_orderedMonomial_mem_orderPiece k n
@@ -697,7 +703,7 @@ theorem principal_transpose_order {n N : Nat} {a : PresentedWeyl k n}
                 (presentedOrderedMonomial k n
                   (fun i => m (.inl i)) (fun i => m (.inr i))) = 0 := by
           rw [← presentedPBWBasis_apply,
-            presentedPrincipalComponent_basis, if_neg hd]
+            presentedPrincipalComponent_basis, ite_eq_right hd]
         rw [presentedPrincipalComponent_eq_zero_of_mem_of_lt k
             orderWeight _ ht' hdlt, ho, map_zero]
   | zero => simp
@@ -713,6 +719,7 @@ theorem symbolTransposition_comp_self {n : Nat} :
   | inl i => simp
   | inr i => simp
 
+/-- The involutive symbol-algebra automorphism induced by Weyl transposition. -/
 def symbolTranspositionEquiv {n : Nat} :
     SymbolRing k n ≃ₐ[k] SymbolRing k n :=
   AlgEquiv.ofAlgHom (symbolTransposition k) (symbolTransposition k)

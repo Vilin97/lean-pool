@@ -206,6 +206,7 @@ forgets arbitrary base coordinates, whereas membership in a full phase set
 still retains them.  In particular no converse reconstructing a finite phase
 specialization is available from `fibreImage`. -/
 
+omit [Field K] in
 theorem fibre_mem_fibreImage_of_phase_mem
     (S : Set (PhaseVar n → K)) (q : PhaseVar n → K) (hq : q ∈ S) :
     (fun i ↦ q (Sum.inr i)) ∈ fibreImage S :=

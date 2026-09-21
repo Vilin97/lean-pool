@@ -90,7 +90,7 @@ machinery supplies the finite equations and coefficients automatically. -/
 theorem exists_finiteGradientBoundaryCertificate_of_zariski_le_formalSpan
     {m : ℕ} (hm : 0 < m)
     (I : Ideal (MvPolynomial (Fin m) k))
-    {κ : Type*} [Fintype κ]
+    {κ : Type*} [Finite κ]
     (q ell : Fin (m + 1) → PowerSeries k)
     (Z : Matrix (Fin (m + 1)) κ (PowerSeries k))
     (tau : Fin (m + 1) → PowerSeries k)
@@ -110,6 +110,8 @@ theorem exists_finiteGradientBoundaryCertificate_of_zariski_le_formalSpan
       residueColumn (fun i : Fin m ↦ ell i.succ) =
         (fun i : Fin m ↦ if i = ⟨0, hm⟩ then 1 else 0)) :
     Nonempty (FiniteGradientBoundaryCertificate k m hm I) := by
+  classical
+  let := Fintype.ofFinite κ
   let Iext := I.map
     (scalarPolynomialMap (k := k) (K := LaurentSeries k) (Fin m))
   let y := dehomogenizedPoint (laurentColumn q)

@@ -69,7 +69,9 @@ def canonicalGradedCoordinateAction (n N m : ℕ)
     (quotientOrderHomogeneousAction (N := m) (M := 0)
       k (CanonicalIdeal k n N d) (coordinateOrderSymbol k n))
 
-@[simp] theorem canonicalGradedCoordinateAction_mk
+omit [Algebra ℚ k] in
+@[simp]
+theorem canonicalGradedCoordinateAction_mk
     (n N m : ℕ) (d : PresentedWeyl k (n + 1))
     (z : orderPiece k (n + 1) m) :
     canonicalGradedCoordinateAction k n N m d
@@ -86,6 +88,7 @@ def canonicalGradedCoordinateAction (n N m : ℕ)
       ⟨presentedCoordinate k n,
         presentedCoordinate_mem_orderPiece_zero k n⟩
 
+omit [Algebra ℚ k] in
 /-- Degreewise coordinate cancellation is exactly injectivity of coordinate
 multiplication on every actual associated-graded quotient piece.  Thus the
 previously conditional consumer's hypothesis is the strictness part of the
@@ -150,6 +153,7 @@ theorem coordinateCancellation_iff_forall_graded_injective
     rw [ker_orderPieceToQuotientGraded] at hzker
     exact hzker
 
+omit [Algebra ℚ k] in
 /-- Saturation of the concrete order initial ideal by the coordinate implies
 the exact degreewise cancellation needed by the canonical consumer.  This is
 a sufficient commutative-algebra formulation of strictness; it is not assumed

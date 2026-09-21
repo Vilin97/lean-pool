@@ -46,6 +46,7 @@ variable {n : ℕ}
 private abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
+/-- The graded algebra structure given by the order weights on symbol variables. -/
 local instance orderGradedAlgebraInstance :
     GradedAlgebra (orderDecomposition (n := n) k) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
@@ -86,7 +87,8 @@ def restrictScalarsQuotientLinearEquiv
       intro P
       rfl }
 
-@[simp] theorem restrictScalarsQuotientLinearEquiv_mk
+@[simp]
+theorem restrictScalarsQuotientLinearEquiv_mk
     (I : RightIdeal (PresentedWeyl k n)) (P : SymbolRing k n) :
     restrictScalarsQuotientLinearEquiv k I
         (Submodule.Quotient.mk P) =
@@ -275,7 +277,8 @@ def orderPieceOne : orderPiece k n 0 :=
     subst m
     simp [monomialWeight]⟩
 
-@[simp] theorem presentedPrincipalComponent_orderPieceOne :
+@[simp]
+theorem presentedPrincipalComponent_orderPieceOne :
     presentedPrincipalComponent k (@orderWeight n) 0
         (orderPieceOne (n := n) k) = 1 := by
   change presentedPrincipalComponent k (@orderWeight n) 0
@@ -302,7 +305,8 @@ def orderAssociatedGradedGenerator
     OrderAssociatedGradedModule k I :=
   (orderAssociatedGradedLinearEquivCharacteristic k I).symm 1
 
-@[simp] theorem orderAssociatedGradedLinearEquivCharacteristic_generator
+@[simp]
+theorem orderAssociatedGradedLinearEquivCharacteristic_generator
     (I : RightIdeal (PresentedWeyl k n)) :
     orderAssociatedGradedLinearEquivCharacteristic k I
         (orderAssociatedGradedGenerator k I) = 1 :=

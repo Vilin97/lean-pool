@@ -6,10 +6,21 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.MinimalPrimeFiniteLengthLocalization
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for finite length after localization at a minimal support prime
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization
 
-export AlgebraicAnalysis.MinimalPrimeFiniteLengthLocalization (finiteLength_of_maximalIdeal_pow_smul_eq_bot localizedModule_finite localizedModule_nontrivial maximalIdeal_le_radical_map_annihilator map_annihilator_le_localized_annihilator exists_maximalIdeal_pow_le_localized_annihilator localizedModule_isFiniteLength localizedModule_nontrivial_and_isFiniteLength)
+export AlgebraicAnalysis.MinimalPrimeFiniteLengthLocalization (
+  finiteLength_of_maximalIdeal_pow_smul_eq_bot
+  localizedModule_finite
+  localizedModule_nontrivial
+  maximalIdeal_le_radical_map_annihilator
+  map_annihilator_le_localized_annihilator
+  exists_maximalIdeal_pow_le_localized_annihilator
+  localizedModule_isFiniteLength
+  localizedModule_nontrivial_and_isFiniteLength)
 
 end Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization

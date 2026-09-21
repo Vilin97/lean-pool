@@ -129,7 +129,7 @@ def concreteLocalizedTwoBlockSpecialFibreHom (q : ℕ) :
 theorem concreteLocalizedTwoBlockSpecialFibreHom_mk
     (q : ℕ) (z : LocalizedTwoBlockRing D S q) :
     concreteLocalizedTwoBlockSpecialFibreHom k I S q
-        ((concreteLocalizedTwoBlockParameterIdeal k I S q).ringCon.mk' z) =
+        (↑z) =
       localizedTwoBlockSpecialization D S q z := by
   rfl
 
@@ -168,7 +168,7 @@ def concreteLocalizedTwoBlockSpecialFibreRingEquiv (q : ℕ) :
 theorem concreteLocalizedTwoBlockSpecialFibreRingEquiv_mk
     (q : ℕ) (z : LocalizedTwoBlockRing D S q) :
     concreteLocalizedTwoBlockSpecialFibreRingEquiv k I S q
-        ((concreteLocalizedTwoBlockParameterIdeal k I S q).ringCon.mk' z) =
+        (↑z) =
       localizedTwoBlockSpecialization D S q z := by
   rfl
 

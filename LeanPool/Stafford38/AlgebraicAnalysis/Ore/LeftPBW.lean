@@ -62,7 +62,8 @@ def leftNormalFormLinearEquiv (D : OreDivisionDerivation K) :
   { normalFormAddEquiv D with
     map_smul' := normalForm_smul_left D }
 
-@[simp] theorem leftNormalFormLinearEquiv_apply
+@[simp]
+theorem leftNormalFormLinearEquiv_apply
     (D : OreDivisionDerivation K) (p : Polynomial K) :
     leftNormalFormLinearEquiv D p = normalForm D p := rfl
 
@@ -71,7 +72,8 @@ field. -/
 def orePBWBasis (D : OreDivisionDerivation K) : Basis ℕ K (NormalOre D) :=
   (Polynomial.basisMonomials K).map (leftNormalFormLinearEquiv D)
 
-@[simp] theorem orePBWBasis_apply (D : OreDivisionDerivation K) (n : ℕ) :
+@[simp]
+theorem orePBWBasis_apply (D : OreDivisionDerivation K) (n : ℕ) :
     orePBWBasis D n = normalVariable D ^ n := by
   rw [orePBWBasis, Basis.map_apply, Polynomial.coe_basisMonomials]
   change normalForm D (Polynomial.monomial n 1) = normalVariable D ^ n

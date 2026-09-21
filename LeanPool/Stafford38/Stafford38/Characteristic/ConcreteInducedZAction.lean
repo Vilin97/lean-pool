@@ -61,7 +61,8 @@ def parameterAct (c : B) : W →+ W where
   map_zero' := smul_zero c
   map_add' x y := smul_add c x y
 
-@[simp] theorem parameterAct_apply (c : B) (w : W) :
+@[simp]
+theorem parameterAct_apply (c : B) (w : W) :
     parameterAct (W := W) c w = c • w := rfl
 
 /-- A fixed lift of every basis vector through a surjective specialization.
@@ -72,7 +73,8 @@ def liftedBasisVector
     (b : Module.Basis (Fin (r + 1)) K V) (i : Fin (r + 1)) : W :=
   Classical.choose (hrho (b i))
 
-@[simp] theorem rho_liftedBasisVector
+@[simp]
+theorem rho_liftedBasisVector
     (rho : W →+ V) (hrho : Function.Surjective rho)
     (b : Module.Basis (Fin (r + 1)) K V) (i : Fin (r + 1)) :
     rho (liftedBasisVector rho hrho b i) = b i :=
@@ -85,6 +87,8 @@ def sourceActionCoefficients
     Matrix (Fin (r + 1)) (Fin (r + 1)) Abar :=
   fun i j ↦ algebraMap K Abar (b.repr (T (b i)) j)
 
+omit [IsScalarTower K Abar V] in
+omit [Module Abar V] in
 /-- The source-row coefficient matrix is the transpose of Mathlib's column
 matrix, followed by coefficient-field inclusion. -/
 theorem sourceActionCoefficients_eq_transpose_toMatrix_map
@@ -111,7 +115,10 @@ def liftedSourceActionMatrix
     Matrix (Fin (r + 1)) (Fin (r + 1)) B :=
   liftMatrix S (sourceActionCoefficients (Abar := Abar) b T)
 
-@[simp] theorem liftedSourceActionMatrix_map
+omit [Module Abar V] [IsScalarTower K Abar V] in
+omit [IsScalarTower K Abar V] in
+@[simp]
+theorem liftedSourceActionMatrix_map
     (S : LeftPrincipalParameterReduction (B := B) (Abar := Abar))
     (b : Module.Basis (Fin (r + 1)) K V) (T : Module.End K V) :
     (liftedSourceActionMatrix S b T).map S.modParameter =
@@ -291,6 +298,7 @@ theorem localizedDoubledPower_le_annihilator
 /-- The canonical quotient-ring module structure on the actual localized
 special fibre.  It is kept as an explicit definition because its proof
 depends on the chosen annihilating power. -/
+@[instance_reducible]
 noncomputable def localizedDoubledPowerQuotientModule
     (q : ℕ)
     (hpow : 𝔪 ^ q ≤ Module.annihilator A₀ (LocalizedModule S G)) :
@@ -303,17 +311,14 @@ noncomputable def localizedDoubledPowerQuotientModule
 
 /-- The actual localized specialization, with codomain carrying the canonical
 doubled-power quotient action. -/
-def localizedDoubledPowerModuleSpecialization
-    (q : ℕ)
-    (hpow : 𝔪 ^ q ≤ Module.annihilator A₀ (LocalizedModule S G)) :
+def localizedDoubledPowerModuleSpecialization :
     Wₗ →+ LocalizedModule S G :=
   localizedSpecialization D S
 
-theorem localizedDoubledPowerModuleSpecialization_surjective
-    (q : ℕ)
-    (hpow : 𝔪 ^ q ≤ Module.annihilator A₀ (LocalizedModule S G)) :
+omit [IsLocalRing A₀] in
+theorem localizedDoubledPowerModuleSpecialization_surjective :
     Function.Surjective
-      (localizedDoubledPowerModuleSpecialization D S q hpow) :=
+      (localizedDoubledPowerModuleSpecialization D S) :=
   localizedSpecialization_surjective D S
 
 /-- Full action compatibility after both honest quotient descents.  The left
@@ -327,10 +332,10 @@ theorem localizedDoubledPowerModuleSpecialization_action
     letI : Module (A₀ ⧸ localizedDoubledPower S q)
         (LocalizedModule S G) :=
       localizedDoubledPowerQuotientModule S q hpow
-    localizedDoubledPowerModuleSpecialization D S q hpow
+    localizedDoubledPowerModuleSpecialization D S
           (localizedTwoBlockAction D S q hpow a w) =
         localizedTwoBlockSpecialization D S q a •
-          localizedDoubledPowerModuleSpecialization D S q hpow w := by
+          localizedDoubledPowerModuleSpecialization D S w := by
   let : Module (A₀ ⧸ localizedDoubledPower S q)
       (LocalizedModule S G) :=
     localizedDoubledPowerQuotientModule S q hpow
@@ -343,13 +348,12 @@ theorem localizedDoubledPowerModuleSpecialization_action
     rw [localizedSpecialization_smul]
     rfl
 
+omit [IsLocalRing A₀] in
 /-- The specialization kernel is still exactly the image of the actual
 localized parameter action. -/
-theorem localizedDoubledPowerModuleSpecialization_ker
-    (q : ℕ)
-    (hpow : 𝔪 ^ q ≤ Module.annihilator A₀ (LocalizedModule S G)) :
+theorem localizedDoubledPowerModuleSpecialization_ker :
     AddMonoidHom.ker
-        (localizedDoubledPowerModuleSpecialization D S q hpow) =
+        (localizedDoubledPowerModuleSpecialization D S) =
       AddMonoidHom.range (localizedCAct D S) :=
   localizedSpecialization_ker_eq_range D S
 
@@ -383,23 +387,20 @@ def LocalizedFirstOrderSourceActionEquation
   ∀ i,
     localizedTwoBlockAction D S q hpow a
         (liftedBasisVector
-          (localizedDoubledPowerModuleSpecialization D S q hpow)
-          (localizedDoubledPowerModuleSpecialization_surjective
-            D S q hpow) b i) =
+          (localizedDoubledPowerModuleSpecialization D S)
+          (localizedDoubledPowerModuleSpecialization_surjective D S) b i) =
       localizedSourceLinearCombination D S q hpow
           (liftedSourceActionMatrix P b
             (leftMultiplicationEnd (K := K)
               (V := LocalizedModule S G) (P.modParameter a)))
           (liftedBasisVector
-            (localizedDoubledPowerModuleSpecialization D S q hpow)
-            (localizedDoubledPowerModuleSpecialization_surjective
-              D S q hpow) b) i +
+            (localizedDoubledPowerModuleSpecialization D S)
+            (localizedDoubledPowerModuleSpecialization_surjective D S) b) i +
         localizedTwoBlockAction D S q hpow P.parameter
           (localizedSourceLinearCombination D S q hpow Gamma
             (liftedBasisVector
-              (localizedDoubledPowerModuleSpecialization D S q hpow)
-              (localizedDoubledPowerModuleSpecialization_surjective
-                D S q hpow) b) i)
+              (localizedDoubledPowerModuleSpecialization D S)
+              (localizedDoubledPowerModuleSpecialization_surjective D S) b) i)
 
 /-- The concrete first-order action-equation producer.
 
@@ -434,24 +435,21 @@ theorem exists_localizedFirstOrderSourceActionMatrix
         ∀ i,
           localizedTwoBlockAction D S q hpow a
             (liftedBasisVector
-              (localizedDoubledPowerModuleSpecialization D S q hpow)
-              (localizedDoubledPowerModuleSpecialization_surjective
-                D S q hpow) b i) =
+              (localizedDoubledPowerModuleSpecialization D S)
+              (localizedDoubledPowerModuleSpecialization_surjective D S) b i) =
             localizedSourceLinearCombination D S q hpow
               (liftedSourceActionMatrix P b
                 (leftMultiplicationEnd (K := K)
                   (V := LocalizedModule S G)
                   (P.modParameter a)))
               (liftedBasisVector
-                (localizedDoubledPowerModuleSpecialization D S q hpow)
-                (localizedDoubledPowerModuleSpecialization_surjective
-                  D S q hpow) b) i +
+                (localizedDoubledPowerModuleSpecialization D S)
+                (localizedDoubledPowerModuleSpecialization_surjective D S) b) i +
               localizedTwoBlockAction D S q hpow P.parameter
                 (localizedSourceLinearCombination D S q hpow Gamma
                   (liftedBasisVector
-                  (localizedDoubledPowerModuleSpecialization D S q hpow)
-                  (localizedDoubledPowerModuleSpecialization_surjective
-                    D S q hpow) b) i) := by
+                  (localizedDoubledPowerModuleSpecialization D S)
+                  (localizedDoubledPowerModuleSpecialization_surjective D S) b) i) := by
   let : Module (A₀ ⧸ localizedDoubledPower S q)
       (LocalizedModule S G) :=
     localizedDoubledPowerQuotientModule S q hpow
@@ -463,9 +461,9 @@ theorem exists_localizedFirstOrderSourceActionMatrix
   let : Module (C₂ q) Wₗ := localizedTwoBlockModule D S q hpow
   intro r b
   have haction : ∀ (z : C₂ q) (w : Wₗ),
-      localizedDoubledPowerModuleSpecialization D S q hpow (z • w) =
+      localizedDoubledPowerModuleSpecialization D S (z • w) =
         P.modParameter z •
-          localizedDoubledPowerModuleSpecialization D S q hpow w := by
+          localizedDoubledPowerModuleSpecialization D S w := by
     intro z w
     rw [hPmod]
     exact localizedDoubledPowerModuleSpecialization_action D S q hpow z w
@@ -476,18 +474,18 @@ theorem exists_localizedFirstOrderSourceActionMatrix
     rw [hPparameter]
     exact localizedTwoBlock_parameter_smul D S q hpow w
   have hker : AddMonoidHom.ker
-        (localizedDoubledPowerModuleSpecialization D S q hpow) =
+        (localizedDoubledPowerModuleSpecialization D S) =
       AddMonoidHom.range (parameterAct (W := Wₗ) P.parameter) := by
     rw [hparameterAct]
-    exact localizedDoubledPowerModuleSpecialization_ker D S q hpow
+    exact localizedDoubledPowerModuleSpecialization_ker D S
   have hsq : P.parameter * P.parameter = 0 := by
     rw [hPparameter]
     have h := localizedTwoBlock_parameter_sq D S q
     rw [pow_two] at h
     exact h
   have hresult := exists_firstOrderSourceActionMatrix P
-    (localizedDoubledPowerModuleSpecialization D S q hpow)
-    (localizedDoubledPowerModuleSpecialization_surjective D S q hpow)
+    (localizedDoubledPowerModuleSpecialization D S)
+    (localizedDoubledPowerModuleSpecialization_surjective D S)
     haction hker hsq b a
   simp only [localizedSourceLinearCombination]
   exact hresult
@@ -549,9 +547,8 @@ theorem exists_concreteLocalizedFirstOrderSourceActionMatrix
         ∀ i,
           localizedTwoBlockAction D S q hpow a
             (liftedBasisVector
-              (localizedDoubledPowerModuleSpecialization D S q hpow)
-              (localizedDoubledPowerModuleSpecialization_surjective
-                D S q hpow) b i) =
+              (localizedDoubledPowerModuleSpecialization D S)
+              (localizedDoubledPowerModuleSpecialization_surjective D S) b i) =
             localizedSourceLinearCombination D S q hpow
               (liftedSourceActionMatrix P b
                 (leftMultiplicationEnd (K := K)
@@ -559,15 +556,13 @@ theorem exists_concreteLocalizedFirstOrderSourceActionMatrix
                     (OrderAssociatedGradedModule k I))
                   (P.modParameter a)))
               (liftedBasisVector
-                (localizedDoubledPowerModuleSpecialization D S q hpow)
-                (localizedDoubledPowerModuleSpecialization_surjective
-                  D S q hpow) b) i +
+                (localizedDoubledPowerModuleSpecialization D S)
+                (localizedDoubledPowerModuleSpecialization_surjective D S) b) i +
               localizedTwoBlockAction D S q hpow P.parameter
                 (localizedSourceLinearCombination D S q hpow Gamma
                   (liftedBasisVector
-                    (localizedDoubledPowerModuleSpecialization D S q hpow)
-                    (localizedDoubledPowerModuleSpecialization_surjective
-                      D S q hpow) b) i) := by
+                    (localizedDoubledPowerModuleSpecialization D S)
+                    (localizedDoubledPowerModuleSpecialization_surjective D S) b) i) := by
   exact exists_localizedFirstOrderSourceActionMatrix D S q hpow
     (concreteLeftPrincipalParameterReduction k I S q) rfl rfl a
 

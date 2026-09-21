@@ -102,14 +102,16 @@ theorem transposedQuotientOrderPiece_mono
   Submodule.map_mono (Submodule.map_mono
     (presentedWeightPiece_mono k orderWeight hNM))
 
-@[simp] theorem filteredQuotientToTransposedLinearEquiv_mk
+@[simp]
+theorem filteredQuotientToTransposedLinearEquiv_mk
     (I : RightIdeal (PresentedWeyl k n)) (a : PresentedWeyl k n) :
     filteredQuotientToTransposedLinearEquiv k I
         (Submodule.Quotient.mk a) =
       TransposedFilteredRightQuotient.mk (qmk I a) :=
   rfl
 
-@[simp] theorem transposed_smul_qmk
+@[simp]
+theorem transposed_smul_qmk
     (I : RightIdeal (PresentedWeyl k n))
     (a b : PresentedWeyl k n) :
     a • TransposedFilteredRightQuotient.mk (qmk I b) =
@@ -204,7 +206,8 @@ noncomputable instance (I : RightIdeal (PresentedWeyl k n)) :
       (symbolTranspositionEquiv k).toRingEquiv.toRingHom
   (transposedOrderAssociatedGradedAddEquiv k I).module (SymbolRing k n)
 
-@[simp] theorem transposedSymbol_smul
+@[simp]
+theorem transposedSymbol_smul
     (I : RightIdeal (PresentedWeyl k n))
     (P : SymbolRing k n) (q : TransposedOrderAssociatedGradedModule k I) :
     (P • q).toOrderAssociatedGradedModule =

@@ -28,7 +28,8 @@ variable {A : Type*} [Ring A]
 /-- The ring commutator, with the written multiplication order retained. -/
 def ringCommutator (u v : A) : A := u * v - v * u
 
-@[simp] theorem ringCommutator_apply (u v : A) :
+@[simp]
+theorem ringCommutator_apply (u v : A) :
     ringCommutator u v = u * v - v * u := rfl
 
 /-- Leibniz expansion in the first argument. -/

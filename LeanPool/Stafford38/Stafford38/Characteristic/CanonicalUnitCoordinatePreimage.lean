@@ -87,6 +87,7 @@ theorem strictUnitCoordinatePreimage_of_strictLowerCoordinatePreimages
     exact hy
   exact ⟨y, hy0, hyx⟩
 
+omit [Algebra ℚ k] in
 /-- A single strict unit preimage gives the exact degree-zero initial relation
 needed for scheme-level coordinate-axis avoidance. -/
 theorem canonical_orderInitialIdeal_sup_coordinate_eq_top_of_strictUnit
@@ -153,6 +154,7 @@ theorem canonical_orderInitialIdeal_sup_coordinate_eq_top_of_strictUnit
       rw [Ideal.mem_span_singleton]
       exact ⟨(Y : SymbolRing k (n + 1)), by rw [mul_comm]⟩))
 
+omit [Algebra ℚ k] in
 /-- The terminal set-theoretic conclusion follows from the unit-only strict
 preimage; neither all-degree cancellation nor graded injectivity is consumed. -/
 theorem canonical_orderCharacteristicSupport_disjoint_coordinate_zeroLocus_of_strictUnit

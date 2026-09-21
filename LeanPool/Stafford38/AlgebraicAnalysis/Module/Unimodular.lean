@@ -91,8 +91,7 @@ theorem unimodularSplitMap_right_inverse
     change y.1 + r • x - φ (y.1 + r • x) • x = y.1
     rw [φ.map_add, φ.map_smul, LinearMap.mem_ker.mp y.2]
     simp [hx, smul_eq_mul]
-  · simp only [LinearMap.comp_apply, unimodularSplitMap, LinearMap.prod_apply,
-      unimodularSplitMapInv]
+  · simp only [  LinearMap.prod_apply]
     change φ (y.1 + r • x) = r
     rw [φ.map_add, φ.map_smul, LinearMap.mem_ker.mp y.2, hx]
     simp [smul_eq_mul]
@@ -100,7 +99,7 @@ theorem unimodularSplitMap_right_inverse
 /-- A unimodular element splits off a free rank-one factor. -/
 def unimodularSplitEquiv (φ : N →ₗ[R] R) (x : N) (hx : φ x = 1) :
     N ≃ₗ[R] LinearMap.ker φ × R :=
-  LinearEquiv.ofLinear (unimodularSplitMap φ x hx)
+  LinearEquiv.ofLinearMap (unimodularSplitMap φ x hx)
     (unimodularSplitMapInv φ x)
     (unimodularSplitMap_right_inverse φ x hx)
     (unimodularSplitMap_left_inverse φ x hx)

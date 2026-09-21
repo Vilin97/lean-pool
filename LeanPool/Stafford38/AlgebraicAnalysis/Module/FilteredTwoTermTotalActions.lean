@@ -58,7 +58,8 @@ def targetTotalMap (r : ℕ) : K.TargetTotal r →ₗ[k] K.TargetTotal r :=
     (DirectSum.lof k ℤ (fun q : ℤ => K.TargetPage r q) (p - d)).comp
       (P.targetMap r p))
 
-@[simp] theorem sourceTotalMap_lof (r : ℕ) (p : ℤ) (x : K.SourcePage r p) :
+@[simp]
+theorem sourceTotalMap_lof (r : ℕ) (p : ℤ) (x : K.SourcePage r p) :
     P.sourceTotalMap r
         (DirectSum.lof k ℤ (fun q : ℤ => K.SourcePage r q) p x) =
       DirectSum.lof k ℤ (fun q : ℤ => K.SourcePage r q) (p - d)
@@ -66,7 +67,8 @@ def targetTotalMap (r : ℕ) : K.TargetTotal r →ₗ[k] K.TargetTotal r :=
   rw [sourceTotalMap, DirectSum.toModule_lof]
   rfl
 
-@[simp] theorem targetTotalMap_lof (r : ℕ) (p : ℤ) (x : K.TargetPage r p) :
+@[simp]
+theorem targetTotalMap_lof (r : ℕ) (p : ℤ) (x : K.TargetPage r p) :
     P.targetTotalMap r
         (DirectSum.lof k ℤ (fun q : ℤ => K.TargetPage r q) p x) =
       DirectSum.lof k ℤ (fun q : ℤ => K.TargetPage r q) (p - d)

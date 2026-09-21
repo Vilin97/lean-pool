@@ -36,16 +36,21 @@ variable [Algebra (MvPolynomial (Fin n) k) B] [Algebra k B]
 variable [IsScalarTower k (MvPolynomial (Fin n) k) B]
 variable [IsLocalization S B]
 
+/-- The polynomial algebra whose localization carries the Weyl action. -/
 abbrev A := MvPolynomial (Fin n) k
+/-- The differential-operator algebra on a coefficient algebra over `k`. -/
 abbrev D (B : Type u) [CommRing B] [Algebra k B] :=
   algebra (k := k) (R := B)
 
+/-- The endomorphism given by multiplication by a localized coordinate. -/
 def coordinateEnd (i : Fin n) : End (k := k) (R := B) :=
   multiplication (algebraMap (A (k := k) (n := n)) B (MvPolynomial.X i))
 
+/-- The localized partial derivative, regarded as a linear endomorphism. -/
 def momentumEnd (i : Fin n) : End (k := k) (R := B) :=
   (localizedPderiv S B i).toLinearMap
 
+omit [IsScalarTower k (MvPolynomial (Fin n) k) B] in
 theorem coordinateEnd_mem_order_zero (i : Fin n) :
     coordinateEnd (B := B) i ∈ order (k := k) (R := B) 0 := by
   rw [mem_order_zero_iff_eq_multiplication]
@@ -62,8 +67,9 @@ theorem momentumEnd_mem_order_one (i : Fin n) :
   change localizedPderiv S B i (a * x) - a * localizedPderiv S B i x = _
   rw [(localizedPderiv S B i).leibniz]
   simp [DifferentialOperators.commutator_apply, multiplication_apply,
-    momentumEnd, mul_comm, add_comm]
+    momentumEnd, mul_comm]
 
+/-- The coordinate multiplication and differentiation operators forming the Weyl generators. -/
 def differentialGenerator : (Fin n ⊕ Fin n) → D (k := k) B
   | .inl i => ⟨coordinateEnd (B := B) i, 0,
       coordinateEnd_mem_order_zero (B := B) i⟩
@@ -80,7 +86,7 @@ theorem differentialGenerator_commutator (i j : Fin n ⊕ Fin n) :
   | inl i =>
       cases j with
       | inl j => simp [Stafford.commutator, differentialGenerator,
-          coordinateEnd, Module.End.mul_apply, Matrix.J, mul_comm, mul_assoc,
+          coordinateEnd, Module.End.mul_apply, Matrix.J, mul_comm,
           mul_left_comm]
       | inr j =>
           by_cases h : i = j
@@ -108,12 +114,15 @@ theorem differentialGenerator_commutator (i j : Fin n ⊕ Fin n) :
           simpa [Stafford.commutator, differentialGenerator, momentumEnd,
             Module.End.mul_apply, Matrix.J] using (sub_eq_zero.mpr hcf)
 
+/-- The algebra map realizing the presented Weyl algebra as differential operators on a
+localization. -/
 def localizedWeylAction :
     PresentedWeyl k n →ₐ[k] D (k := k) B :=
   freeWeylLift (Matrix.J (Fin n) k) (differentialGenerator S B)
     (differentialGenerator_commutator S B)
 
-@[simp] theorem localizedWeylAction_generator (i : Fin n ⊕ Fin n) :
+@[simp]
+theorem localizedWeylAction_generator (i : Fin n ⊕ Fin n) :
     localizedWeylAction S B
         (freeWeylGenerator (Matrix.J (Fin n) k) i) =
       differentialGenerator S B i :=

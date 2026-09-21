@@ -38,7 +38,7 @@ theorem sub_pureMonomial_mem_span_X
   rw [MvPolynomial.mem_ideal_span_X_image]
   intro m hm
   by_contra haux
-  push_neg at haux
+  push Not at haux
   have hdiff :
       (P - MvPolynomial.monomial (Finsupp.single t N) c).coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
@@ -54,7 +54,7 @@ theorem sub_pureMonomial_mem_span_X
   have hsupp : m.support ⊆ {t} := by
     intro i hi
     have hiVars : i ∈ P.vars :=
-      (MvPolynomial.mem_vars i).mpr ⟨m, hmP, hi⟩
+      (MvPolynomial.mem_vars_iff_mem_support i).mpr ⟨m, hmP, hi⟩
     have hiAllowed : i = t ∨ i ∈ s := by
       simpa only [Set.mem_insert_iff] using hvars hiVars
     rcases hiAllowed with rfl | his

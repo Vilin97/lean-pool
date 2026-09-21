@@ -12,6 +12,10 @@ import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
 import Mathlib.RingTheory.FiniteType
 import LeanPool.Stafford38.Stafford38.Geometry.NormalizationHeightOne
 
+/-!
+Normalized affine charts and integral models for a selected divisorial boundary coordinate.
+-/
+
 open IsLocalRing
 open scoped nonZeroDivisors
 
@@ -185,7 +189,8 @@ theorem stage2_exists_chart_normalization
     apply (Subring.integralClosure_subring_le_iff (S := C₀) (T := W.toSubring)).2
     exact hC₀W
   have hyA : y i ∈ A := by
-    exact A₀.algebraMap_mem ⟨y i, Algebra.subset_adjoin (Set.mem_union_right _ (Set.mem_singleton _))⟩
+    exact A₀.algebraMap_mem ⟨y i, Algebra.subset_adjoin (Set.mem_union_right _
+      (Set.mem_singleton _))⟩
   have hnormA : ∀ a, Y a * s ∈ A := by
     intro a
     exact A₀.algebraMap_mem

@@ -50,7 +50,8 @@ def polynomialMapRangeLinearEquiv
     ((Finsupp.mapRange.linearEquiv e).trans
       (polynomialFinsuppLinearEquiv (k := k) (R := S)).symm)
 
-@[simp] theorem polynomialMapRangeLinearEquiv_C
+@[simp]
+theorem polynomialMapRangeLinearEquiv_C
     {k R S : Type*} [CommSemiring k] [Semiring R] [Semiring S]
     [Algebra k R] [Algebra k S] (e : R ≃ₗ[k] S) (r : R) :
     polynomialMapRangeLinearEquiv e (Polynomial.C r) =
@@ -58,7 +59,8 @@ def polynomialMapRangeLinearEquiv
   apply (Polynomial.toFinsuppIso S).injective
   simp [polynomialMapRangeLinearEquiv, polynomialFinsuppLinearEquiv]
 
-@[simp] theorem polynomialMapRangeLinearEquiv_monomial
+@[simp]
+theorem polynomialMapRangeLinearEquiv_monomial
     {k R S : Type*} [CommSemiring k] [Semiring R] [Semiring S]
     [Algebra k R] [Algebra k S] (e : R ≃ₗ[k] S) (n : ℕ) (r : R) :
     polynomialMapRangeLinearEquiv e (Polynomial.monomial n r) =
@@ -66,7 +68,8 @@ def polynomialMapRangeLinearEquiv
   apply (Polynomial.toFinsuppIso S).injective
   simp [polynomialMapRangeLinearEquiv, polynomialFinsuppLinearEquiv]
 
-@[simp] theorem polynomialMapRangeLinearEquiv_X
+@[simp]
+theorem polynomialMapRangeLinearEquiv_X
     {k R S : Type*} [CommSemiring k] [Semiring R] [Semiring S]
     [Algebra k R] [Algebra k S] (e : R ≃ₗ[k] S)
     (h1 : e 1 = 1) :
@@ -74,7 +77,8 @@ def polynomialMapRangeLinearEquiv
   apply (Polynomial.toFinsuppIso S).injective
   simp [polynomialMapRangeLinearEquiv, polynomialFinsuppLinearEquiv, h1]
 
-@[simp] theorem polynomialMapRangeLinearEquiv_one
+@[simp]
+theorem polynomialMapRangeLinearEquiv_one
     {k R S : Type*} [CommSemiring k] [Semiring R] [Semiring S]
     [Algebra k R] [Algebra k S] (e : R ≃ₗ[k] S)
     (h1 : e 1 = 1) :
@@ -87,27 +91,31 @@ variable, linearly over any central ground ring. -/
 def univariateMvPolynomialLinearEquiv
     {k R : Type*} [CommRing k] [CommRing R] [Algebra k R] :
     Polynomial R ≃ₗ[k] MvPolynomial PUnit.{1} R :=
-  ((MvPolynomial.pUnitAlgEquiv R).symm.toLinearEquiv).restrictScalars k
+  ((MvPolynomial.uniqueAlgEquiv R PUnit.{1}).symm.toLinearEquiv).restrictScalars k
 
-@[simp] theorem univariateMvPolynomialLinearEquiv_C
+@[simp]
+theorem univariateMvPolynomialLinearEquiv_C
     {k R : Type*} [CommRing k] [CommRing R] [Algebra k R] (r : R) :
     univariateMvPolynomialLinearEquiv (k := k) (R := R) (Polynomial.C r) =
       MvPolynomial.C r := by
-  simp [univariateMvPolynomialLinearEquiv, MvPolynomial.pUnitAlgEquiv]
+  change Polynomial.eval₂ MvPolynomial.C (MvPolynomial.X PUnit.unit) (Polynomial.C r) = _
+  simp
 
-@[simp] theorem univariateMvPolynomialLinearEquiv_X
+@[simp]
+theorem univariateMvPolynomialLinearEquiv_X
     {k R : Type*} [CommRing k] [CommRing R] [Algebra k R] :
     univariateMvPolynomialLinearEquiv (k := k) (R := R) Polynomial.X =
       MvPolynomial.X (PUnit.unit : PUnit.{1}) := by
-  simp [univariateMvPolynomialLinearEquiv, MvPolynomial.pUnitAlgEquiv]
+  change Polynomial.eval₂ MvPolynomial.C (MvPolynomial.X PUnit.unit) Polynomial.X = _
+  simp
 
 /-- Flatten two nested univariate polynomial layers into two commuting symbol
 variables as an algebra equivalence over the coefficient ring. -/
 def nestedPolynomialAlgEquiv (R : Type*) [CommRing R] :
     Polynomial (Polynomial R) ≃ₐ[R]
       MvPolynomial (PUnit.{1} ⊕ PUnit.{1}) R :=
-  (Polynomial.mapAlgEquiv ((MvPolynomial.pUnitAlgEquiv R).symm)).trans
-    ((((MvPolynomial.pUnitAlgEquiv (MvPolynomial PUnit.{1} R)).symm
+  (Polynomial.mapAlgEquiv ((MvPolynomial.uniqueAlgEquiv R PUnit.{1}).symm)).trans
+    ((((MvPolynomial.uniqueAlgEquiv (MvPolynomial PUnit.{1} R) PUnit.{1}).symm
       ).restrictScalars R).trans
         (MvPolynomial.sumAlgEquiv R PUnit.{1} PUnit.{1}).symm)
 
@@ -118,20 +126,23 @@ def nestedPolynomialLinearEquiv
       MvPolynomial (PUnit.{1} ⊕ PUnit.{1}) R :=
   (nestedPolynomialAlgEquiv R).toLinearEquiv.restrictScalars k
 
-@[simp] theorem nestedPolynomialLinearEquiv_constant
+@[simp]
+theorem nestedPolynomialLinearEquiv_constant
     {k R : Type*} [CommRing k] [CommRing R] [Algebra k R] (r : R) :
     nestedPolynomialLinearEquiv (k := k) (R := R)
         (Polynomial.C (Polynomial.C r)) = MvPolynomial.C r := by
   simp [nestedPolynomialLinearEquiv, nestedPolynomialAlgEquiv]
 
-@[simp] theorem nestedPolynomialLinearEquiv_coordinate
+@[simp]
+theorem nestedPolynomialLinearEquiv_coordinate
     {k R : Type*} [CommRing k] [CommRing R] [Algebra k R] :
     nestedPolynomialLinearEquiv (k := k) (R := R)
         (Polynomial.C Polynomial.X) =
       MvPolynomial.X (.inr (PUnit.unit : PUnit.{1})) := by
   simp [nestedPolynomialLinearEquiv, nestedPolynomialAlgEquiv]
 
-@[simp] theorem nestedPolynomialLinearEquiv_momentum
+@[simp]
+theorem nestedPolynomialLinearEquiv_momentum
     {k R : Type*} [CommRing k] [CommRing R] [Algebra k R] :
     nestedPolynomialLinearEquiv (k := k) (R := R) Polynomial.X =
       MvPolynomial.X (.inl (PUnit.unit : PUnit.{1})) := by
@@ -218,24 +229,29 @@ def normalFormLinearEquiv : Polynomial B ≃ₗ[k] NormalOre D :=
   { normalFormAddEquiv D with
     map_smul' := normalForm_smul D hAlg }
 
-@[simp] theorem normalFormLinearEquiv_apply (p : Polynomial B) :
+@[simp]
+theorem normalFormLinearEquiv_apply (p : Polynomial B) :
     normalFormLinearEquiv D hAlg p = normalForm D p := rfl
 
-@[simp] theorem normalFormLinearEquiv_symm_normalForm (p : Polynomial B) :
+@[simp]
+theorem normalFormLinearEquiv_symm_normalForm (p : Polynomial B) :
     (normalFormLinearEquiv D hAlg).symm (normalForm D p) = p :=
   (normalFormLinearEquiv D hAlg).symm_apply_apply p
 
-@[simp] theorem normalFormLinearEquiv_symm_coefficient (b : B) :
+@[simp]
+theorem normalFormLinearEquiv_symm_coefficient (b : B) :
     (normalFormLinearEquiv D hAlg).symm (normalCoefficient D b) =
       Polynomial.C b := by
   rw [← normalForm_C, normalFormLinearEquiv_symm_normalForm]
 
-@[simp] theorem normalFormLinearEquiv_symm_variable :
+@[simp]
+theorem normalFormLinearEquiv_symm_variable :
     (normalFormLinearEquiv D hAlg).symm (normalVariable D) =
       Polynomial.X := by
   rw [normalVariable, normalFormLinearEquiv_symm_normalForm]
 
-@[simp] theorem normalFormLinearEquiv_symm_one :
+@[simp]
+theorem normalFormLinearEquiv_symm_one :
     (normalFormLinearEquiv D hAlg).symm 1 = 1 := by
   rw [← normalForm_one D, normalFormLinearEquiv_symm_normalForm]
 
@@ -263,7 +279,8 @@ def pairNormalFormLinearEquiv
       ((normalFormLinearEquiv zeroDerivation hInner).symm.trans
         (polynomialMapRangeLinearEquiv e)))
 
-@[simp] theorem pairNormalFormLinearEquiv_coefficient
+@[simp]
+theorem pairNormalFormLinearEquiv_coefficient
     {k B S : Type*} [CommRing k] [Ring B] [Algebra k B]
     [CommRing S] [Algebra k S]
     [Algebra k (CoordinateStage (B := B))]
@@ -273,7 +290,8 @@ def pairNormalFormLinearEquiv
       Polynomial.C (Polynomial.C (e b)) := by
   simp [pairNormalFormLinearEquiv, pairCoefficient]
 
-@[simp] theorem pairNormalFormLinearEquiv_coordinate
+@[simp]
+theorem pairNormalFormLinearEquiv_coordinate
     {k B S : Type*} [CommRing k] [Ring B] [Algebra k B]
     [CommRing S] [Algebra k S]
     [Algebra k (CoordinateStage (B := B))]
@@ -284,7 +302,8 @@ def pairNormalFormLinearEquiv
   simp [pairNormalFormLinearEquiv, pairCoordinate,
     polynomialMapRangeLinearEquiv_X _ h1]
 
-@[simp] theorem pairNormalFormLinearEquiv_momentum
+@[simp]
+theorem pairNormalFormLinearEquiv_momentum
     {k B S : Type*} [CommRing k] [Ring B] [Algebra k B]
     [CommRing S] [Algebra k S]
     [Algebra k (CoordinateStage (B := B))]
@@ -301,7 +320,8 @@ def pairNormalFormLinearEquiv
 
 /-- The two-stage normal-form map sends a coefficient followed by powers of
 the new coordinate and momentum to the corresponding nested monomial. -/
-@[simp] theorem pairNormalFormLinearEquiv_orderedMonomial
+@[simp]
+theorem pairNormalFormLinearEquiv_orderedMonomial
     {k B S : Type*} [CommRing k] [Ring B] [Algebra k B]
     [CommRing S] [Algebra k S]
     [Algebra k (CoordinateStage (B := B))]

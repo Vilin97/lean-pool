@@ -38,9 +38,9 @@ def orderReesSubring : Subring (Polynomial (PresentedWeyl k n)) where
     intro N
     by_cases hN : N = 0
     · subst N
-      rw [Polynomial.coeff_one, if_pos rfl]
+      rw [Polynomial.coeff_one, ite_eq_left rfl]
       exact (orderPieceOne (n := n) k).property
-    · rw [Polynomial.coeff_one, if_neg hN]
+    · rw [Polynomial.coeff_one, ite_eq_right hN]
       exact Submodule.zero_mem _
   add_mem' := by
     intro f g hf hg N
@@ -62,7 +62,8 @@ def orderReesSubring : Subring (Polynomial (PresentedWeyl k n)) where
 /-- The type of elements of the differential-order Rees ring. -/
 abbrev OrderReesRing := orderReesSubring (n := n) k
 
-@[simp] theorem mem_orderReesSubring_iff
+@[simp]
+theorem mem_orderReesSubring_iff
     (f : Polynomial (PresentedWeyl k n)) :
     f ∈ orderReesSubring (n := n) k ↔
       ∀ N, f.coeff N ∈ orderPiece k n N :=
@@ -79,13 +80,14 @@ def orderReesMonomial (N : ℕ) (z : orderPiece k n N) :
       exact z.property
     · exact Submodule.zero_mem _⟩
 
-@[simp] theorem orderReesMonomial_coe (N : ℕ) (z : orderPiece k n N) :
+@[simp]
+theorem orderReesMonomial_coe (N : ℕ) (z : orderPiece k n N) :
     ((orderReesMonomial k N z : OrderReesRing (n := n) k) :
       Polynomial (PresentedWeyl k n)) =
         Polynomial.monomial N (z : PresentedWeyl k n) :=
   rfl
 
-@[simp] theorem orderReesMonomial_coeff_same
+theorem orderReesMonomial_coeff_same
     (N : ℕ) (z : orderPiece k n N) :
     ((orderReesMonomial k N z : OrderReesRing (n := n) k) :
       Polynomial (PresentedWeyl k n)).coeff N = (z : PresentedWeyl k n) := by
@@ -98,7 +100,8 @@ def orderReesParameter : OrderReesRing (n := n) k :=
     ⟨1, presentedWeightPiece_mono k orderWeight (Nat.zero_le 1)
       (orderPieceOne (n := n) k).property⟩
 
-@[simp] theorem orderReesParameter_coe :
+@[simp]
+theorem orderReesParameter_coe :
     ((orderReesParameter (n := n) k : OrderReesRing (n := n) k) :
       Polynomial (PresentedWeyl k n)) = Polynomial.X := by
   rw [orderReesParameter, orderReesMonomial_coe]
@@ -125,7 +128,7 @@ theorem orderReesParameter_mul_monomial
           presentedWeightPiece_mono k orderWeight (Nat.le_succ N) z.property⟩ := by
   apply Subtype.ext
   simp [orderReesParameter_coe, orderReesMonomial,
-    Polynomial.X_mul_monomial, Nat.add_comm]
+    Polynomial.X_mul_monomial]
 
 /-- The polynomial Rees parameter is central, including over the
 noncommutative Weyl coefficient ring. -/
@@ -157,7 +160,7 @@ theorem exists_parameter_mul_eq_monomial_iff_mem_lower
         (N + 1) =
       (Polynomial.monomial (N + 1) (z : PresentedWeyl k n)).coeff
         (N + 1) at hc
-    rw [Polynomial.coeff_X_mul, Polynomial.coeff_monomial, if_pos rfl] at hc
+    rw [Polynomial.coeff_X_mul, Polynomial.coeff_monomial, ite_eq_left rfl] at hc
     rw [← hc]
     exact r.property N
   · intro hz

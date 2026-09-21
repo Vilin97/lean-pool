@@ -99,8 +99,11 @@ structure FiniteGradientBoundaryCertificate
     (k : Type u) [Field k]
     (m : ℕ) (hm : 0 < m)
     (I : Ideal (MvPolynomial (Fin m) k)) where
+  /-- The number of equations in the finite-gradient conormal certificate. -/
   equationCount : ℕ
+  /-- Power-series projective coordinates of the formal boundary arc. -/
   q : Fin (m + 1) → PowerSeries k
+  /-- A power-series covector annihilating the arc with the prescribed coordinate residue. -/
   ell : Fin (m + 1) → PowerSeries k
   q_origin_ne : q 0 ≠ 0
   projective_annihilation :
@@ -109,9 +112,12 @@ structure FiniteGradientBoundaryCertificate
     ∀ f ∈ I.map
         (scalarPolynomialMap (k := k) (K := LaurentSeries k) (Fin m)),
       MvPolynomial.eval (dehomogenizedPoint (laurentColumn q)) f = 0
+  /-- Equations in the scalar-extended ideal whose gradients generate the conormal row. -/
   equations : Fin equationCount →
     I.map (scalarPolynomialMap
       (k := k) (K := LaurentSeries k) (Fin m))
+  /-- The Laurent-series coefficients expressing the conormal row as a finite gradient
+  combination. -/
   coefficients : Fin equationCount → LaurentSeries k
   gradient_identity : ∀ i : Fin m,
     laurentColumn ell i.succ =
@@ -161,7 +167,7 @@ exactly the existential conclusion demanded by
 geometric producer may target this certificate instead of the stronger
 all-tangent-space interface. -/
 theorem canonicalAsymptoticLaurentWitness_of_finiteGradientBoundaryCertificate
-    {k : Type u} [Field k] [CharZero k] [IsAlgClosed k]
+    {k : Type u} [Field k]
     (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (W : FiniteGradientBoundaryCertificate k (n + 1)
       (Nat.zero_lt_succ n)

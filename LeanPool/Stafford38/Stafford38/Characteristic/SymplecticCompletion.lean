@@ -28,12 +28,15 @@ noncomputable section
 universe u
 variable (k : Type u) [Field k]
 
+/-- The standard alternating pairing on coordinate and momentum vectors. -/
 def phasePairing {n : ℕ} (u v : PhaseVar n → k) : k :=
   ∑ i, (u (.inr i) * v (.inl i) - u (.inl i) * v (.inr i))
 
+/-- The standard basis vector of phase space at a chosen phase index. -/
 def phaseBasis {n : ℕ} (j : PhaseVar n) : PhaseVar n → k :=
   fun i => if i = j then 1 else 0
 
+/-- The symplectic transvection adding a multiple of `u` determined by its alternating pairing. -/
 def symplecticTransvection {n : ℕ} (a : k) (u : PhaseVar n → k) :
     Matrix (PhaseVar n) (PhaseVar n) k :=
   fun i j => (if i = j then 1 else 0) +
@@ -73,40 +76,40 @@ theorem transvection_mulVec {n : ℕ} (a : k) (u z : PhaseVar n → k)
 
 theorem phasePairing_add_left {n : ℕ} (u v w : PhaseVar n → k) :
     phasePairing k (u + v) w = phasePairing k u w + phasePairing k v w := by
-  simp [phasePairing, Finset.sum_add_distrib]
+  simp? [phasePairing]
   simp_rw [add_mul]
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
   ring
 
 theorem phasePairing_add_right {n : ℕ} (u v w : PhaseVar n → k) :
     phasePairing k u (v + w) = phasePairing k u v + phasePairing k u w := by
-  simp [phasePairing, Finset.sum_add_distrib]
+  simp? [phasePairing]
   simp_rw [mul_add]
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
   ring
 
 theorem phasePairing_smul_left {n : ℕ} (c : k) (u v : PhaseVar n → k) :
     phasePairing k (c • u) v = c * phasePairing k u v := by
-  simp [phasePairing, Finset.mul_sum]
+  simp? [phasePairing]
   rw [mul_sub]
   rw [Finset.mul_sum, Finset.mul_sum]
   congr 1 <;> apply Finset.sum_congr rfl <;> intro x hx <;> ring
 
 theorem phasePairing_smul_right {n : ℕ} (c : k) (u v : PhaseVar n → k) :
     phasePairing k u (c • v) = c * phasePairing k u v := by
-  simp [phasePairing, Finset.mul_sum]
+  simp? [phasePairing]
   rw [mul_sub]
   rw [Finset.mul_sum, Finset.mul_sum]
   congr 1 <;> apply Finset.sum_congr rfl <;> intro x hx <;> ring
 
 theorem phasePairing_skew {n : ℕ} (u v : PhaseVar n → k) :
     phasePairing k u v = -phasePairing k v u := by
-  simp [phasePairing, Finset.sum_neg_distrib]
+  simp? [phasePairing]
   congr 1 <;> apply Finset.sum_congr rfl <;> intro x hx <;> ring
 
 theorem phasePairing_self {n : ℕ} (u : PhaseVar n → k) :
     phasePairing k u u = 0 := by
-  simp [phasePairing]
+  simp? [phasePairing]
   have hsum : (∑ x, u (.inl x) * u (.inr x)) =
       ∑ x, u (.inr x) * u (.inl x) := by
     apply Finset.sum_congr rfl
@@ -171,7 +174,7 @@ theorem symplecticTransvection_mem {n : ℕ} (a : k)
 
 theorem phasePairing_sub_right {n : ℕ} (u v w : PhaseVar n → k) :
     phasePairing k u (v - w) = phasePairing k u v - phasePairing k u w := by
-  simp [phasePairing, Finset.sum_sub_distrib]
+  simp? [phasePairing, Finset.sum_sub_distrib]
   simp_rw [mul_sub]
   rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib]
   ring
@@ -181,7 +184,7 @@ theorem exists_phasePairing_right_ne_zero {n : ℕ}
     ∃ z : PhaseVar n → k, phasePairing k u z ≠ 0 := by
   have hex : ∃ i, u i ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     apply hu
     funext i
     exact h i
@@ -218,6 +221,7 @@ theorem exists_phasePairing_bridge {n : ℕ}
   · rw [phasePairing_add_left]
     simpa [not_not.mp hrv] using hsv
 
+/-- The transvection sending `x` to `y` when their alternating pairing is nonzero. -/
 def transvectionSending {n : ℕ} (x y : PhaseVar n → k) :
     Matrix (PhaseVar n) (PhaseVar n) k :=
   symplecticTransvection k (phasePairing k x y)⁻¹ (y - x)
@@ -269,7 +273,8 @@ theorem exists_symplectic_pureCoefficient_ne_zero [CharZero k]
     ∃ M : Matrix (PhaseVar n) (PhaseVar n) k,
       M ∈ Matrix.symplecticGroup (Fin n) k ∧
       (axisPolynomial k t
-            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠ 0 := by
+            (CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠
+              0 := by
   rcases exists_eval_ne_zero_of_homogeneous k hP hne with ⟨v, hv⟩
   have hvne : v ≠ 0 := by
     intro hvzero
@@ -292,7 +297,8 @@ theorem exists_symplectic_chart_matrices [CharZero k]
       Ninv * standardForm k n * Matrix.transpose Ninv = standardForm k n ∧
       M * Ninv = 1 ∧ Ninv * M = 1 ∧
       (axisPolynomial k t
-            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠ 0 := by
+            (CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠
+              0 := by
   rcases exists_symplectic_pureCoefficient_ne_zero k t hP hne hN with
     ⟨M, hM, hcoeff⟩
   let A : Matrix.symplecticGroup (Fin n) k := ⟨M, hM⟩
@@ -324,7 +330,8 @@ theorem symplectic_pureCoefficient_statement [CharZero k]
     ∃ M : Matrix (PhaseVar n) (PhaseVar n) k,
       M ∈ Matrix.symplecticGroup (Fin n) k ∧
       (axisPolynomial k t
-            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠ 0 :=
+            (CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠
+              0 :=
   exists_symplectic_pureCoefficient_ne_zero k t hP hne hN
 
 theorem symplectic_chart_matrices_statement [CharZero k]
@@ -335,7 +342,8 @@ theorem symplectic_chart_matrices_statement [CharZero k]
       Ninv * standardForm k n * Matrix.transpose Ninv = standardForm k n ∧
       M * Ninv = 1 ∧ Ninv * M = 1 ∧
       (axisPolynomial k t
-            (Stafford38.CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠ 0 :=
+            (CharacteristicLinearAction.symbolLinearAlgHom k M P)).coeff (Finsupp.single () N) ≠
+              0 :=
   exists_symplectic_chart_matrices k t hP hne hN
 
 

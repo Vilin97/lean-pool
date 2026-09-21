@@ -81,7 +81,7 @@ theorem projectiveDehomogenize_homogenizeAtZero {m : ℕ}
     rw [hfun, MvPolynomial.bind₁_X_left]
     rfl
   simp_rw [hcomponent]
-  simp [projectiveDehomogenize]
+  simp? [projectiveDehomogenize]
   exact MvPolynomial.sum_homogeneousComponent f
 
 /-- Every affine ideal over a field has a finite homogeneous projective

@@ -28,7 +28,7 @@ variable [CommRing R] [AddCommGroup E] [Module R E]
 
 private abbrev scalarEnd (x : R) : E →ₗ[R] E := LinearMap.lsmul R E x
 theorem residual_nontrivial_of_support
-    [IsNoetherianRing R] [Module.Finite R E]
+     [Module.Finite R E]
     (x : R) (n : ℕ) (p q : PrimeSpectrum R)
     (hp : p ∈ Module.support R E) (hpq : p ≤ q)
     (hxp : x ∉ p.asIdeal)

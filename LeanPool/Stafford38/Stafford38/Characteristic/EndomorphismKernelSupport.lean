@@ -6,7 +6,10 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.EndomorphismKernelSupport
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for support comparison for an endomorphism kernel and cokernel
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic
 

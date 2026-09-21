@@ -46,7 +46,8 @@ def totalDrop (r : ℕ) : K.SourceTotal r →ₗ[k] K.TargetTotal r :=
       (K.drop r p))
 
 /-- Component formula for the total differential. -/
-@[simp] theorem totalDrop_lof (r : ℕ) (p : ℤ) (x : K.SourcePage r p) :
+@[simp]
+theorem totalDrop_lof (r : ℕ) (p : ℤ) (x : K.SourcePage r p) :
     K.totalDrop r (DirectSum.lof k ℤ (fun q : ℤ => K.SourcePage r q) p x) =
       DirectSum.lof k ℤ (fun q : ℤ => K.TargetPage r q) (p + r) (K.drop r p x) := by
   rw [totalDrop, DirectSum.toModule_lof]
@@ -56,7 +57,7 @@ def totalDrop (r : ℕ) : K.SourceTotal r →ₗ[k] K.TargetTotal r :=
 
 This compatibility lemma intentionally retains the quotient representative on
 the right-hand side, although the simplifier can reduce it further. -/
-@[simp] theorem totalDrop_lof_mk (r : ℕ) (p : ℤ)
+theorem totalDrop_lof_mk (r : ℕ) (p : ℤ)
     (x : K.cycles r p) :
     K.totalDrop r
         (DirectSum.lof k ℤ (fun q : ℤ => K.SourcePage r q) p
@@ -81,7 +82,7 @@ private theorem totalDrop_apply_component (r : ℕ) (p : ℤ)
       · have hshift : q + (r : ℤ) ≠ p + (r : ℤ) := by omega
         change (DFinsupp.single (q + (r : ℤ)) (K.drop r q y)) (p + r) =
           K.drop r p ((DFinsupp.single q y) p)
-        rw [DFinsupp.single_apply, DFinsupp.single_apply, dif_neg hshift, dif_neg h]
+        rw [DFinsupp.single_apply, DFinsupp.single_apply, dite_eq_right hshift, dite_eq_right h]
         simp
   | add x y hx hy => simpa using congrArg₂ (· + ·) hx hy
 

@@ -6,10 +6,18 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.LocalizedKernelCokernelEquivalences
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for localization of kernels and cokernels
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.LocalizedKernelCokernelEquivalences
 
-export AlgebraicAnalysis.LocalizedKernelCokernelEquivalences (localizedMap localizedMap_apply localizedEquiv localizedKernelEquiv localizedCokernelEquiv)
+export AlgebraicAnalysis.LocalizedKernelCokernelEquivalences (
+  localizedMap
+  localizedMap_apply
+  localizedEquiv
+  localizedKernelEquiv
+  localizedCokernelEquiv)
 
 end Stafford38.Characteristic.LocalizedKernelCokernelEquivalences

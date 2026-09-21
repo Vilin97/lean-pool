@@ -84,7 +84,7 @@ lemma coefficientDerivation_rightMulMonomial (D E : OreDivisionDerivation B)
         (coefficientDerivation E q) b j]
       abel
   | monomial i a =>
-      simp [rightMulMonomial, Polynomial.sum_monomial_index, rightTerm_zero]
+      simp? [rightMulMonomial, Polynomial.sum_monomial_index, rightTerm_zero]
       exact coefficientDerivation_rightTerm D E hcomm i a b j
 
 lemma coefficientDerivation_rightMul (D E : OreDivisionDerivation B)
@@ -125,12 +125,6 @@ def liftDerivation (D E : OreDivisionDerivation B)
     rcases normalForm_surjective D z with ⟨p, rfl⟩
     rcases normalForm_surjective D w with ⟨q, rfl⟩
     rw [← normalForm_mul]
-    change normalForm D (coefficientDerivation E
-      ((normalFormAddEquiv D).symm (normalForm D (rightMul D p q)))) =
-      normalForm D p * normalForm D (coefficientDerivation E
-        ((normalFormAddEquiv D).symm (normalForm D q))) +
-      normalForm D (coefficientDerivation E
-        ((normalFormAddEquiv D).symm (normalForm D p))) * normalForm D q
     have hs (r : Polynomial B) :
         (normalFormAddEquiv D).symm (normalForm D r) = r := by
       change (normalFormAddEquiv D).symm ((normalFormAddEquiv D) r) = r
@@ -140,7 +134,8 @@ def liftDerivation (D E : OreDivisionDerivation B)
     rw [normalForm_add, normalForm_mul, normalForm_mul]
     rw [add_comm]
 
-@[simp] theorem liftDerivation_apply_normalForm
+@[simp]
+theorem liftDerivation_apply_normalForm
     (D E : OreDivisionDerivation B)
     (hcomm : ∀ b : B, D (E b) = E (D b)) (p : Polynomial B) :
     liftDerivation D E hcomm (normalForm D p) =
@@ -153,7 +148,8 @@ def liftDerivation (D E : OreDivisionDerivation B)
     exact (normalFormAddEquiv D).symm_apply_apply p
   rw [hs]
 
-@[simp] theorem liftDerivation_apply_coefficient (D E : OreDivisionDerivation B)
+@[simp]
+theorem liftDerivation_apply_coefficient (D E : OreDivisionDerivation B)
     (hcomm : ∀ b : B, D (E b) = E (D b)) (b : B) :
     liftDerivation D E hcomm (normalCoefficient D b) =
       normalCoefficient D (E b) := by
@@ -165,7 +161,8 @@ def liftDerivation (D E : OreDivisionDerivation B)
   rw [← monomial_zero_left, coefficientDerivation_monomial]
   rw [monomial_zero_left, normalForm_C]
 
-@[simp] theorem liftDerivation_apply_variable (D E : OreDivisionDerivation B)
+@[simp]
+theorem liftDerivation_apply_variable (D E : OreDivisionDerivation B)
     (hcomm : ∀ b : B, D (E b) = E (D b)) :
     liftDerivation D E hcomm (normalVariable D) = 0 := by
   change normalForm D (coefficientDerivation E

@@ -62,7 +62,8 @@ def phaseSuccEquiv (n : Nat) :
     · exact Fin.cases rfl (fun _ => rfl) i
     · exact Fin.cases rfl (fun _ => rfl) i
 
-@[simp] theorem phaseSuccEquiv_old (n : Nat) (i : PhaseVar n) :
+@[simp]
+theorem phaseSuccEquiv_old (n : Nat) (i : PhaseVar n) :
     phaseSuccEquiv n (.inr i) = oldIndex i := by
   cases i <;> rfl
 
@@ -76,28 +77,32 @@ def flattenPairSymbols (n : Nat) :
       ).toLinearEquiv).trans
         (MvPolynomial.renameEquiv k (phaseSuccEquiv n)).toLinearEquiv)
 
-@[simp] theorem flattenPairSymbols_coordinate (n : Nat) :
+@[simp]
+theorem flattenPairSymbols_coordinate (n : Nat) :
     flattenPairSymbols k n (Polynomial.C Polynomial.X) =
       MvPolynomial.X (.inl (0 : Fin (n + 1))) := by
   simp [flattenPairSymbols, nestedPolynomialLinearEquiv_coordinate,
     MvPolynomial.sumAlgEquiv_symm_X]
   rfl
 
-@[simp] theorem flattenPairSymbols_momentum (n : Nat) :
+@[simp]
+theorem flattenPairSymbols_momentum (n : Nat) :
     flattenPairSymbols k n Polynomial.X =
       MvPolynomial.X (.inr (0 : Fin (n + 1))) := by
   simp [flattenPairSymbols, nestedPolynomialLinearEquiv_momentum,
     MvPolynomial.sumAlgEquiv_symm_X]
   rfl
 
-@[simp] theorem flattenPairSymbols_one (n : Nat) :
+@[simp]
+theorem flattenPairSymbols_one (n : Nat) :
     flattenPairSymbols k n 1 = 1 := by
   change flattenPairSymbols k n (Polynomial.C (Polynomial.C 1)) = 1
   rw [flattenPairSymbols, LinearEquiv.trans_apply,
     nestedPolynomialLinearEquiv_constant]
   simp
 
-@[simp] theorem flattenPairSymbols_oldGenerator (n : Nat) (i : PhaseVar n) :
+@[simp]
+theorem flattenPairSymbols_oldGenerator (n : Nat) (i : PhaseVar n) :
     flattenPairSymbols k n
         (Polynomial.C (Polynomial.C (MvPolynomial.X i))) =
       MvPolynomial.X (oldIndex i) := by
@@ -106,15 +111,15 @@ def flattenPairSymbols (n : Nat) :
 
 theorem iterToSum_C_eq_rename {R S₁ S₂ : Type*} [CommSemiring R]
     (r : MvPolynomial S₂ R) :
-    MvPolynomial.iterToSum R S₁ S₂ (MvPolynomial.C r) =
+    (MvPolynomial.sumRingEquiv R S₁ S₂).symm (MvPolynomial.C r) =
       MvPolynomial.rename Sum.inr r := by
   induction r using MvPolynomial.induction_on with
   | C c =>
       simpa only [MvPolynomial.rename_C] using
-        (MvPolynomial.iterToSum_C_C R S₁ S₂ c)
+        (MvPolynomial.sumRingEquiv_symm_C_C R S₁ S₂ c)
   | add p q hp hq => simp [hp, hq]
   | mul_X p i hp =>
-      simp only [map_mul, hp, MvPolynomial.iterToSum_C_X,
+      simp only [map_mul, hp, MvPolynomial.sumRingEquiv_symm_C_X,
         MvPolynomial.rename_X]
 
 private theorem sumAlgEquiv_symm_C_eq_rename
@@ -154,7 +159,8 @@ exponents `p`. -/
 def phaseExponent {n : ℕ} (a p : Fin n → ℕ) : PhaseVar n →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (Sum.elim a p)
 
-@[simp] theorem phaseExponent_apply {n : ℕ} (a p : Fin n → ℕ)
+@[simp]
+theorem phaseExponent_apply {n : ℕ} (a p : Fin n → ℕ)
     (i : PhaseVar n) : phaseExponent a p i = Sum.elim a p i := rfl
 
 theorem oldIndex_injective {n : ℕ} :
@@ -181,7 +187,7 @@ theorem phaseExponent_succ (n : ℕ) (a p : Fin (n + 1) → ℕ) :
   | inl i =>
       refine Fin.cases ?_ (fun j => ?_) i
       · rw [Finsupp.add_apply, Finsupp.add_apply,
-          Finsupp.mapDomain_notin_range]
+          Finsupp.mapDomain_of_notMem_range]
         · simp [phaseExponent]
         · rintro ⟨j, hj⟩
           cases j with
@@ -192,12 +198,12 @@ theorem phaseExponent_succ (n : ℕ) (a p : Fin (n + 1) → ℕ) :
             (phaseExponent (fun i => a i.succ) (fun i => p i.succ))
               (oldIndex (.inl j))
         rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
-        simp [phaseExponent, oldIndex, Finsupp.single_apply,
+        simp [phaseExponent,
           Fin.succ_ne_zero]
   | inr i =>
       refine Fin.cases ?_ (fun j => ?_) i
       · rw [Finsupp.add_apply, Finsupp.add_apply,
-          Finsupp.mapDomain_notin_range]
+          Finsupp.mapDomain_of_notMem_range]
         · simp [phaseExponent]
         · rintro ⟨j, hj⟩
           cases j with
@@ -208,7 +214,7 @@ theorem phaseExponent_succ (n : ℕ) (a p : Fin (n + 1) → ℕ) :
             (phaseExponent (fun i => a i.succ) (fun i => p i.succ))
               (oldIndex (.inr j))
         rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
-        simp [phaseExponent, oldIndex, Finsupp.single_apply,
+        simp [phaseExponent,
           Fin.succ_ne_zero]
 
 /-- Ordered monomials in the iterated tower: all older pairs occur first, and
@@ -229,8 +235,8 @@ theorem symbolMonomial_succ (n : ℕ) (a p : Fin (n + 1) → ℕ) :
             (phaseExponent (fun i => a i.succ) (fun i => p i.succ)) 1) =
       MvPolynomial.monomial (phaseExponent a p) (1 : k) := by
   rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.X_pow_eq_monomial,
-    MvPolynomial.rename_monomial, MvPolynomial.monomial_mul,
-    MvPolynomial.monomial_mul, mul_one, mul_one, phaseExponent_succ]
+    MvPolynomial.rename_monomial, MvPolynomial.monomial_mul_monomial,
+    MvPolynomial.monomial_mul_monomial, mul_one, mul_one, phaseExponent_succ]
 
 /-- Scalar-linear normal-form coordinates for the recursively iterated Ore
 tower. -/
@@ -252,7 +258,8 @@ def iteratedNormalFormLinearEquiv :
           coordinateDerivation_algebraMap)
         (iteratedNormalFormLinearEquiv n)).trans (flattenPairSymbols k n)
 
-@[simp] theorem iteratedNormalFormLinearEquiv_one :
+@[simp]
+theorem iteratedNormalFormLinearEquiv_one :
     ∀ n : Nat, iteratedNormalFormLinearEquiv k n 1 = 1 := by
   intro n
   induction n with
@@ -289,7 +296,8 @@ def iteratedNormalFormLinearEquiv :
 
 /-- The recursive normal-form coordinate map sends each named Weyl generator
 to its corresponding commutative symbol variable. -/
-@[simp] theorem iteratedNormalFormLinearEquiv_generator :
+@[simp]
+theorem iteratedNormalFormLinearEquiv_generator :
     ∀ (n : Nat) (i : PhaseVar n),
       iteratedNormalFormLinearEquiv k n (iteratedGenerator k n i) =
         MvPolynomial.X i := by
@@ -341,7 +349,6 @@ to its corresponding commutative symbol variable. -/
             rw [pairNormalFormLinearEquiv_coefficient, hij,
               flattenPairSymbols_oldGenerator]
             rfl
-
       | inr i =>
           refine Fin.cases ?_ (fun j => ?_) i
           · change iteratedNormalFormLinearEquiv k (n + 1) (stageMomentum k n) = _
@@ -464,14 +471,16 @@ def presentedNormalFormLinearEquiv (n : Nat) :
   (presentedIteratedEquiv k n).toLinearEquiv.trans
     (iteratedNormalFormLinearEquiv k n)
 
-@[simp] theorem presentedNormalFormLinearEquiv_one (n : Nat) :
+@[simp]
+theorem presentedNormalFormLinearEquiv_one (n : Nat) :
     presentedNormalFormLinearEquiv k n 1 = 1 := by
   rw [presentedNormalFormLinearEquiv, LinearEquiv.trans_apply,
     AlgEquiv.toLinearEquiv_apply, map_one, iteratedNormalFormLinearEquiv_one]
 
 /-- The transported normal-form coordinates agree with the named generators
 of the quotient presentation. -/
-@[simp] theorem presentedNormalFormLinearEquiv_generator (n : Nat)
+@[simp]
+theorem presentedNormalFormLinearEquiv_generator (n : Nat)
     (i : PhaseVar n) :
     presentedNormalFormLinearEquiv k n
         (freeWeylGenerator (Matrix.J (Fin n) k) i) =
@@ -571,7 +580,7 @@ theorem presentedCoefficientOrdered_mul
         have := Finset.mem_range.mp hi
         omega
       by_cases hic : i ≤ c
-      · simp only [if_pos hic, OreAmbient.mul_nsmul_left,
+      · simp only [ite_eq_left hic, OreAmbient.mul_nsmul_left,
           OreAmbient.nsmul_mul_right, mul_nsmul]
         congr 1
         congr 1
@@ -661,7 +670,8 @@ def presentedNormalFormBasis (n : Nat) :
   (MvPolynomial.basisMonomials (PhaseVar n) k).map
     (presentedNormalFormLinearEquiv k n).symm
 
-@[simp] theorem presentedNormalFormBasis_apply (n : Nat)
+@[simp]
+theorem presentedNormalFormBasis_apply (n : Nat)
     (m : PhaseVar n →₀ ℕ) :
     presentedNormalFormBasis k n m =
       (presentedNormalFormLinearEquiv k n).symm (MvPolynomial.monomial m 1) := by
@@ -690,7 +700,8 @@ def presentedPBWBasis (n : Nat) :
     Module.Basis (PhaseVar n →₀ ℕ) k (PresentedWeyl k n) :=
   presentedNormalFormBasis k n
 
-@[simp] theorem presentedPBWBasis_apply (n : ℕ)
+@[simp]
+theorem presentedPBWBasis_apply (n : ℕ)
     (m : PhaseVar n →₀ ℕ) :
     presentedPBWBasis k n m =
       presentedOrderedMonomial k n

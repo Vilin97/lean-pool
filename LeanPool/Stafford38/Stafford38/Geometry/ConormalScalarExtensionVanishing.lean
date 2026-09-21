@@ -24,12 +24,14 @@ noncomputable section
 variable {k K : Type*} [Field k] [IsAlgClosed k] [Field K] [Algebra k K]
 variable {n : ℕ}
 
+/-- The extended-field span of gradients of ground-field equations at the chosen point. -/
 def groundGradientSpan (I : Ideal (MvPolynomial (Fin n) k))
     (y : Fin n → K) : Submodule K (Fin n → K) :=
   Submodule.span K
     (Set.range fun h : I => fun i =>
       MvPolynomial.eval₂ (algebraMap k K) y (MvPolynomial.pderiv i h.1))
 
+omit [IsAlgClosed k] in
 theorem differential_mem_groundGradientSpan
     (I : Ideal (MvPolynomial (Fin n) k)) (y : Fin n → K)
     (hy : ∀ h ∈ I, MvPolynomial.eval₂ (algebraMap k K) y h = 0)
@@ -65,10 +67,11 @@ theorem differential_mem_groundGradientSpan
       have heq : (fun i => differentialAt y (a * g) i) =
           MvPolynomial.eval y a • (fun i => differentialAt y g i) := by
         funext i
-        simp [differentialAt, MvPolynomial.pderiv_mul, hgeval]
+        simp [differentialAt,  hgeval]
       rw [smul_eq_mul, heq]
       exact (groundGradientSpan I y).smul_mem _ ih
 
+omit [IsAlgClosed k] in
 theorem conormal_covector_mem_groundGradientSpan
     (I : Ideal (MvPolynomial (Fin n) k)) (q : PhaseVar n → K)
     (hq : q ∈ equationConormalLocus
@@ -90,6 +93,7 @@ theorem conormal_covector_mem_groundGradientSpan
   exact (groundGradientSpan I y).smul_mem _
     (differential_mem_groundGradientSpan I y hq'.1 g.1 g.2)
 
+omit [IsAlgClosed k] in
 theorem exists_ground_gradient_finsupp
     (I : Ideal (MvPolynomial (Fin n) k)) (q : PhaseVar n → K)
     (hq : q ∈ equationConormalLocus
@@ -106,6 +110,8 @@ theorem exists_ground_gradient_finsupp
   have hi := congrFun hc i
   simpa [Finsupp.linearCombination_apply, Finsupp.sum, mul_comm] using hi.symm
 
+/-- Substitution of a formal linear combination of finitely many equation gradients for the
+fibre variables. -/
 def finiteGradientSubstitution {ι : Type*} [Fintype ι]
     (h : ι → MvPolynomial (Fin n) k) :
     SymbolRing k n →+* MvPolynomial (Fin n ⊕ ι) k :=
@@ -114,6 +120,7 @@ def finiteGradientSubstitution {ι : Type*} [Fintype ι]
       (fun i => ∑ a : ι, MvPolynomial.X (.inr a) *
         MvPolynomial.rename Sum.inl (MvPolynomial.pderiv i (h a))))
 
+omit [IsAlgClosed k] in
 theorem eval₂_finiteGradientSubstitution {L : Type*} [Field L] [Algebra k L]
     {ι : Type*} [Fintype ι] (h : ι → MvPolynomial (Fin n) k)
     (P : SymbolRing k n) (z : Fin n ⊕ ι → L) :
@@ -133,7 +140,7 @@ theorem eval₂_finiteGradientSubstitution {L : Type*} [Field L] [Algebra k L]
       rw [hP]
       rcases i with i | i
       · simp [finiteGradientSubstitution]
-      · simp [finiteGradientSubstitution, MvPolynomial.eval₂_rename]
+      · simp? [finiteGradientSubstitution, MvPolynomial.eval₂_rename]
         left
         congr 1
 
@@ -173,7 +180,7 @@ theorem scalarExtension_vanishing
       have heq : coordinateCovector ξ =
           ∑ a : ι, z (.inr a) • differentialCovector y (equations a) := by
         ext v
-        simp [ξ, coordinateCovector, differentialCovector,
+        simp? [ξ, coordinateCovector, differentialCovector,
           Finset.sum_mul, Finset.mul_sum]
         rw [Finset.sum_comm]
         simp [mul_assoc]

@@ -84,6 +84,7 @@ theorem twoBlockIdeal_le_actionAnnihilator
 
 /-- Scalar multiplication by the quotient ring, when the quotient ideal acts
 trivially. -/
+@[instance_reducible]
 def quotientSMul (J : TwoSidedIdeal C)
     (hJ : J ≤ actionAnnihilator (C := C) (W := W)) :
     SMul J.ringCon.Quotient W where
@@ -97,6 +98,7 @@ def quotientSMul (J : TwoSidedIdeal C)
 
 /-- The original module action descended through a noncommutative two-sided
 quotient. -/
+@[instance_reducible]
 def quotientModule (J : TwoSidedIdeal C)
     (hJ : J ≤ actionAnnihilator (C := C) (W := W)) :
     Module J.ringCon.Quotient W := by
@@ -111,7 +113,7 @@ theorem quotient_mk_smul (J : TwoSidedIdeal C)
     (hJ : J ≤ actionAnnihilator (C := C) (W := W))
     (a : C) (w : W) :
     letI := quotientModule J hJ
-    J.ringCon.mk' a • w = a • w := by
+    (↑a : J.ringCon.Quotient) • w = a • w := by
   change (quotientSMul J hJ).smul (J.ringCon.mk' a) w = a • w
   rfl
 
@@ -134,7 +136,7 @@ def quotientRingHom (J : TwoSidedIdeal C) (f : C →+* T)
 @[simp]
 theorem quotientRingHom_mk (J : TwoSidedIdeal C) (f : C →+* T)
     (hf : ∀ a ∈ J, f a = 0) (a : C) :
-    quotientRingHom J f hf (J.ringCon.mk' a) = f a := by
+    quotientRingHom J f hf (↑a) = f a := by
   unfold quotientRingHom
   rfl
 
@@ -248,7 +250,7 @@ def localizedTwoBlockSpecialization (q : ℕ) :
 theorem localizedTwoBlockSpecialization_mk
     (q : ℕ) (a : Cₗ) :
     localizedTwoBlockSpecialization D S q
-        ((localizedTwoBlockIdeal D S q).ringCon.mk' a) =
+        (↑a) =
       Ideal.Quotient.mk (localizedDoubledPower S q)
         (localizedOppositeSpecialization D S a) := by
   rfl
@@ -260,10 +262,11 @@ theorem localizedTwoBlockSpecialization_surjective (q : ℕ) :
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective y
   obtain ⟨a, ha⟩ := localizedOppositeSpecialization_surjective D S r
   refine ⟨(localizedTwoBlockIdeal D S q).ringCon.mk' a, ?_⟩
-  rw [localizedTwoBlockSpecialization_mk, ha]
+  rw [RingCon.coe_mk', localizedTwoBlockSpecialization_mk, ha]
 
 /-- The descended action of the two-block quotient ring on the unchanged
 localized deformation module. -/
+@[instance_reducible]
 def localizedTwoBlockModule
     (q : ℕ)
     (hpow : 𝔪 ^ q ≤
@@ -288,7 +291,7 @@ theorem localizedTwoBlockAction_mk
       Module.annihilator A₀ (LocalizedModule S G))
     (a : Cₗ) (w : Wₗ) :
     localizedTwoBlockAction D S q hpow
-      ((localizedTwoBlockIdeal D S q).ringCon.mk' a) w = a • w := by
+      (↑a) w = a • w := by
   rfl
 
 /-- The descended parameter still acts by the concrete localized parameter
@@ -302,7 +305,7 @@ theorem localizedTwoBlock_parameter_smul
       ((localizedTwoBlockIdeal D S q).ringCon.mk'
         (OreLocalization.numeratorRingHom (MulOpposite.op D.c))) w =
       localizedCAct D S w := by
-  rw [localizedTwoBlockAction_mk]
+  rw [RingCon.coe_mk', localizedTwoBlockAction_mk]
   rw [localizedCAct_apply]
   exact OreLocalization.oreDiv_one_smul _ _
 

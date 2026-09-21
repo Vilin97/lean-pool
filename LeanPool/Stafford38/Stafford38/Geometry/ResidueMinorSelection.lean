@@ -30,10 +30,12 @@ variable {k : Type u} [Field k]
 /-- Full column rank produces an explicitly indexed square row minor with
 nonzero determinant. -/
 theorem exists_selectedMinor_det_ne_zero_of_rank_eq_card
-    {ι : Type v} {κ : Type w} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ]
+    {ι : Type v} {κ : Type w} [Finite ι] [Fintype κ]
+     [DecidableEq κ]
     (B : Matrix ι κ k) (hrank : B.rank = Fintype.card κ) :
     ∃ rows : κ ↪ ι, (selectedMinor B rows).det ≠ 0 := by
+  classical
+  let := Fintype.ofFinite ι
   let S : Submodule k (κ → k) := Submodule.span k (Set.range B.row)
   have hfinrank : Module.finrank k S = Module.finrank k (κ → k) := by
     rw [← Matrix.rank_eq_finrank_span_row B, hrank, Module.finrank_pi]
@@ -70,10 +72,13 @@ theorem exists_selectedMinor_det_ne_zero_of_rank_eq_card
 /-- Injectivity of the residue matrix on column vectors is the usual
 hypothesis implying the existence of a nonsingular selected row minor. -/
 theorem exists_selectedMinor_det_ne_zero_of_mulVec_injective
-    {ι : Type v} {κ : Type w} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ]
+    {ι : Type v} {κ : Type w} [Finite ι] [Fintype κ]
+     [DecidableEq κ]
     (B : Matrix ι κ k) (hinj : Function.Injective B.mulVec) :
     ∃ rows : κ ↪ ι, (selectedMinor B rows).det ≠ 0 := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
+  let := Fintype.ofFinite ι
   apply exists_selectedMinor_det_ne_zero_of_rank_eq_card B
   have hker : LinearMap.ker B.mulVecLin = ⊥ := LinearMap.ker_eq_bot.mpr hinj
   have hker_finrank : Module.finrank k (LinearMap.ker B.mulVecLin) = 0 := by
@@ -101,12 +106,15 @@ theorem constantCoeff_selectedMinor_det
 /-- Injectivity after reduction to constant coefficients selects a minor whose
 power-series determinant is a unit. -/
 theorem powerSeries_exists_selectedMinor_constantCoeff_ne_zero_of_residue_mulVec_injective
-    {ι : Type v} {κ : Type w} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ]
+    {ι : Type v} {κ : Type w} [Finite ι] [Fintype κ]
+     [DecidableEq κ]
     (B : Matrix ι κ (PowerSeries k))
     (hinj : Function.Injective (residueMatrix B).mulVec) :
     ∃ rows : κ ↪ ι,
       PowerSeries.constantCoeff (selectedMinor B rows).det ≠ 0 := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
+  let := Fintype.ofFinite ι
   obtain ⟨rows, hrows⟩ :=
     exists_selectedMinor_det_ne_zero_of_mulVec_injective (residueMatrix B) hinj
   exact ⟨rows, by rwa [constantCoeff_selectedMinor_det]⟩
@@ -115,10 +123,12 @@ theorem powerSeries_exists_selectedMinor_constantCoeff_ne_zero_of_residue_mulVec
 the power-series matrix has an explicit left inverse. -/
 theorem powerSeries_exists_leftInverse_of_residue_mulVec_injective
     {ι : Type v} {κ : Type w} [Fintype ι] [Fintype κ]
-    [DecidableEq ι] [DecidableEq κ]
+     [DecidableEq κ]
     (B : Matrix ι κ (PowerSeries k))
     (hinj : Function.Injective (residueMatrix B).mulVec) :
     ∃ C : Matrix κ ι (PowerSeries k), C * B = 1 := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   obtain ⟨rows, hrows⟩ :=
     powerSeries_exists_selectedMinor_constantCoeff_ne_zero_of_residue_mulVec_injective B hinj
   exact powerSeries_exists_leftInverse_of_selectedMinor_constantCoeff_ne_zero B rows hrows

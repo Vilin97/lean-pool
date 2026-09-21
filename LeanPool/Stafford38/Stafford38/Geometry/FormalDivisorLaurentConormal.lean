@@ -59,7 +59,7 @@ def laurentNonpositionTangentMatrix { κ : Type* }
 /-- The position component of an exact formal tangent annihilation becomes
 the projective point-annihilation relation over Laurent series. -/
 theorem laurentColumn_dot_eq_zero_of_formalTangent_rowMul
-    { κ : Type* } [Fintype κ]
+    { κ : Type* }
     (q ell : Fin (n + 1) → PowerSeries k)
     (Z : Matrix (Fin (n + 1)) κ (PowerSeries k))
     (tau : Fin (n + 1) → PowerSeries k)
@@ -74,7 +74,7 @@ theorem laurentColumn_dot_eq_zero_of_formalTangent_rowMul
 become annihilation of all embedded divisor and normalized-transverse
 columns. -/
 theorem laurentNonposition_rowMul_eq_zero_of_formalTangent_rowMul
-    { κ : Type* } [Fintype κ]
+    { κ : Type* }
     (q ell : Fin (n + 1) → PowerSeries k)
     (Z : Matrix (Fin (n + 1)) κ (PowerSeries k))
     (tau : Fin (n + 1) → PowerSeries k)
@@ -106,7 +106,7 @@ supplies both projective relations.  Given the base equations and the exact
 dehomogenized tangent-space equality, the resulting Laurent phase point lies
 in the equation-defined conormal locus. -/
 theorem laurentPhasePoint_mem_equationConormalLocus
-    { κ : Type* } [Fintype κ]
+    { κ : Type*} [Finite κ]
     (I : Ideal (MvPolynomial (Fin n) (LaurentSeries k)))
     (q ell : Fin (n + 1) → PowerSeries k)
     (Z : Matrix (Fin (n + 1)) κ (PowerSeries k))
@@ -122,6 +122,8 @@ theorem laurentPhasePoint_mem_equationConormalLocus
     Sum.elim (dehomogenizedPoint (laurentColumn q))
         (fun i ↦ laurentColumn ell i.succ) ∈
       equationConormalLocus I := by
+  classical
+  let := Fintype.ofFinite κ
   exact phasePoint_mem_equationConormalLocus_of_projective_row
     I (laurentColumn q) (laurentColumn ell)
       (laurentNonpositionTangentMatrix Z tau)
@@ -143,7 +145,7 @@ theorem residueColumn_tail
 /-- Package the conormal membership together with the exact residue relation
 for its regular fibre coordinates. -/
 theorem laurentPhasePoint_mem_equationConormalLocus_and_residue
-    { κ : Type* } [Fintype κ]
+    { κ : Type*} [Finite κ]
     (I : Ideal (MvPolynomial (Fin n) (LaurentSeries k)))
     (q ell : Fin (n + 1) → PowerSeries k)
     (Z : Matrix (Fin (n + 1)) κ (PowerSeries k))
@@ -161,6 +163,8 @@ theorem laurentPhasePoint_mem_equationConormalLocus_and_residue
         equationConormalLocus I ∧
       residueColumn (fun i : Fin n ↦ ell i.succ) =
         fun i ↦ residueColumn ell i.succ := by
+  classical
+  let := Fintype.ofFinite κ
   exact ⟨laurentPhasePoint_mem_equationConormalLocus
     I q ell Z tau hq0 hrow hbase htangent, residueColumn_tail ell⟩
 
@@ -168,7 +172,7 @@ theorem laurentPhasePoint_mem_equationConormalLocus_and_residue
 ideal.  The possibly singular dehomogenized position is retained over Laurent
 series, while the regular fibre is the power-series tail of `ell`. -/
 theorem residue_tail_mem_laurentEquationConormalDirectionClosure
-    { κ : Type* } [Fintype κ]
+    { κ : Type*} [Finite κ]
     (I : Ideal (MvPolynomial (Fin n) k))
     (q ell : Fin (n + 1) → PowerSeries k)
     (Z : Matrix (Fin (n + 1)) κ (PowerSeries k))
@@ -187,6 +191,8 @@ theorem residue_tail_mem_laurentEquationConormalDirectionClosure
             (k := k) (K := LaurentSeries k) (Fin n)))) :
     residueColumn (fun i : Fin n ↦ ell i.succ) ∈
       laurentEquationConormalDirectionClosure I := by
+  classical
+  let := Fintype.ofFinite κ
   apply residue_mem_laurentEquationConormalDirectionClosure
     I (dehomogenizedPoint (laurentColumn q)) (fun i : Fin n ↦ ell i.succ)
   exact laurentPhasePoint_mem_equationConormalLocus

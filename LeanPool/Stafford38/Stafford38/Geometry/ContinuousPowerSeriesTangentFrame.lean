@@ -153,7 +153,7 @@ theorem continuous_uniformizerDerivation
   refine continuous_pi_iff.mpr fun d ↦ ?_
   obtain ⟨n, rfl⟩ : ∃ n, d = Finsupp.single () n :=
     ⟨d default, Finsupp.unique_single d⟩
-  show Continuous fun a : PowerSeries K ↦
+  change Continuous fun a : PowerSeries K ↦
     PowerSeries.coeff n (uniformizerDerivation (k := k) (K := K) a)
   rw [funext fun f ↦ coeff_uniformizerDerivation (k := k) (K := K) f n]
   exact (continuous_of_discreteTopology :

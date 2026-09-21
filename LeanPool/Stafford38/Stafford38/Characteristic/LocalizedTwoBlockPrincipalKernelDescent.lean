@@ -156,7 +156,7 @@ theorem localizedTwoBlockSpecialization_eq_zero_iff_exists_parameter_mul
         (hprincipal
           (OreLocalization.numeratorRingHom (MulOpposite.op D.c))).2
             ⟨1, mul_one _⟩
-      rw [localizedTwoBlockSpecialization_mk, hc0, map_zero, zero_mul]
+      rw [RingCon.coe_mk', localizedTwoBlockSpecialization_mk, hc0, map_zero, zero_mul]
 
 /-- Kernel/range form of the descended left-principal kernel theorem. -/
 theorem localizedTwoBlockSpecialization_ker_eq_range_parameterMul

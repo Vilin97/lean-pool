@@ -39,8 +39,10 @@ namespace Stafford38FixedSourceChallenge
 
 universe u
 
+/-- The disjoint coordinate and momentum indices for `n` Weyl pairs. -/
 abbrev PhaseVar (n : ℕ) := Fin n ⊕ Fin n
 
+/-- The free-algebra relation imposing the commutators prescribed by a matrix. -/
 def relation {k : Type u} [Field k] {n : ℕ}
     (omega : Matrix (PhaseVar n) (PhaseVar n) k)
     (a b : FreeAlgebra k (PhaseVar n)) : Prop :=
@@ -49,21 +51,27 @@ def relation {k : Type u} [Field k] {n : ℕ}
       FreeAlgebra.ι k j * FreeAlgebra.ι k i ∧
     b = algebraMap k (FreeAlgebra k (PhaseVar n)) (omega i j)
 
+/-- The Weyl algebra presented by the standard coordinate-momentum commutator relations. -/
 abbrev WeylAlg (k : Type u) [Field k] (n : ℕ) :=
   RingQuot (relation (k := k) (n := n) (Matrix.J (Fin n) k))
 
+/-- The image of a formal coordinate or momentum generator in the Weyl quotient. -/
 def generator (k : Type u) [Field k] (n : ℕ) (i : PhaseVar n) : WeylAlg k n :=
   RingQuot.mkAlgHom k (relation (k := k) (n := n) (Matrix.J (Fin n) k))
     (FreeAlgebra.ι k i)
 
+/-- The inclusion of the old phase indices after adjoining a new first Weyl pair. -/
 def oldIndex {n : ℕ} : PhaseVar n → PhaseVar (n + 1)
   | .inl i => .inl i.succ
   | .inr i => .inr i.succ
 
+/-- The free-algebra map shifting all generators past the newly adjoined pair. -/
 def freeOldMap (k : Type u) [Field k] (n : ℕ) :
     FreeAlgebra k (PhaseVar n) →ₐ[k] FreeAlgebra k (PhaseVar (n + 1)) :=
   FreeAlgebra.lift k (fun i => FreeAlgebra.ι k (oldIndex i))
 
+/-- The recursively ordered free-algebra monomial with prescribed coordinate and momentum
+exponents. -/
 def freeOrderedMonomial (k : Type u) [Field k] :
     (n : ℕ) → (Fin n → ℕ) → (Fin n → ℕ) → FreeAlgebra k (PhaseVar n)
   | 0, _, _ => 1
@@ -73,32 +81,40 @@ def freeOrderedMonomial (k : Type u) [Field k] :
         FreeAlgebra.ι k (.inl (0 : Fin (n + 1))) ^ a 0 *
         FreeAlgebra.ι k (.inr (0 : Fin (n + 1))) ^ p 0
 
+/-- The Weyl-algebra image of the recursively ordered monomial. -/
 def orderedMonomial (k : Type u) [Field k] (n : ℕ)
     (a p : Fin n → ℕ) : WeylAlg k n :=
   RingQuot.mkAlgHom k (relation (k := k) (n := n) (Matrix.J (Fin n) k))
     (freeOrderedMonomial k n a p)
 
+/-- The total coordinate and momentum degree of an exponent pair. -/
 def phaseDegree {n : ℕ} (a p : Fin n → ℕ) : ℕ :=
   (∑ i, a i) + ∑ i, p i
 
+/-- The span of ordered monomials of total phase degree at most `N`. -/
 def bernsteinPiece (k : Type u) [Field k] (n N : ℕ) :
     Submodule k (WeylAlg k n) :=
   Submodule.span k
     {z | ∃ a p : Fin n → ℕ,
       phaseDegree a p ≤ N ∧ z = orderedMonomial k n a p}
 
+/-- The least Bernstein filtration degree containing the specified Weyl element. -/
 noncomputable def bernsteinDegree (k : Type u) [Field k] {n : ℕ}
     (d : WeylAlg k n) : ℕ :=
   sInf {N : ℕ | d ∈ bernsteinPiece k n N}
 
+/-- The matrix-weighted linear combination of a family of Weyl elements. -/
 def linearCombination (k : Type u) [Field k] {n : ℕ}
     (M : Matrix (PhaseVar n) (PhaseVar n) k)
     (z : PhaseVar n → WeylAlg k n) (i : PhaseVar n) : WeylAlg k n :=
   ∑ j, algebraMap k (WeylAlg k n) (M i j) * z j
 
+/-- The standard symplectic form on the coordinate and momentum indices. -/
 abbrev standardForm (k : Type u) [Field k] (n : ℕ) :
     Matrix (PhaseVar n) (PhaseVar n) k := Matrix.J (Fin n) k
 
+/-- A coordinate obtained from the standard first coordinate by an invertible symplectic linear
+change. -/
 def IsLinearWeylCoordinate (k : Type u) [Field k] (n : ℕ)
     (ell : WeylAlg k (n + 1)) : Prop :=
   ∃ (M N : Matrix (PhaseVar (n + 1)) (PhaseVar (n + 1)) k)
@@ -110,6 +126,8 @@ def IsLinearWeylCoordinate (k : Type u) [Field k] (n : ℕ)
       ell = linearCombination k N (generator k (n + 1))
         (.inl (0 : Fin (n + 1)))
 
+/-- The Stafford identity using a linear Weyl coordinate raised to the input element’s Bernstein
+degree. -/
 def UniversalFixedSourceStatement : Prop :=
   ∀ (k : Type u) [Field k] [CharZero k] (n : ℕ)
     (d : WeylAlg k (n + 1)), d ≠ 0 →

@@ -66,11 +66,13 @@ universe u
 
 variable {k : Type u} [Field k] [IsAlgClosed k] [CharZero k]
 
+/-- The order-weight grading used by the general coisotropic adapter. -/
 local instance orderGradedAlgebraInstance {n : ℕ} :
     GradedAlgebra
       (MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
 
+omit [IsAlgClosed k] [CharZero k] in
 private theorem orderInitialIdeal_isHomogeneous
     {n : ℕ} (I : RightIdeal (PresentedWeyl k n)) :
     (orderInitialIdeal k I).IsHomogeneous
@@ -82,6 +84,7 @@ private theorem orderInitialIdeal_isHomogeneous
     (decompose_mem_orderSymbolRelation_of_mem_orderInitialIdeal
       k I P hP d)
 
+omit [IsAlgClosed k] [CharZero k] in
 private theorem zeroLocus_isFibreConical_of_isHomogeneous
     {n : ℕ} (J : Ideal (SymbolRing k n))
     (hhom : J.IsHomogeneous

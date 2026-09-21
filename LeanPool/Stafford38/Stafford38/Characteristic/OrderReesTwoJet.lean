@@ -49,7 +49,7 @@ def orderReesScalarHom : k →+* OrderReesRing (n := n) k where
       rw [Polynomial.coeff_C_zero]
       rw [Algebra.algebraMap_eq_smul_one]
       exact Submodule.smul_mem _ a (orderPieceOne (n := n) k).property
-    · rw [Polynomial.coeff_C, if_neg hN]
+    · rw [Polynomial.coeff_C, ite_eq_right hN]
       exact Submodule.zero_mem _⟩
   map_zero' := by ext; simp
   map_one' := by ext; simp
@@ -83,7 +83,8 @@ def orderPrincipalSum :
     (fun N => by simp)
     (fun N x y => by simp)
 
-@[simp] theorem orderPrincipalSum_monomial
+@[simp]
+theorem orderPrincipalSum_monomial
     (N : ℕ) (z : PresentedWeyl k n) :
     orderPrincipalSum (n := n) k (Polynomial.monomial N z) =
       presentedPrincipalComponent k (@orderWeight n) N z := by
@@ -149,10 +150,12 @@ def orderReesSpecialization :
     change MvPolynomial.weightedHomogeneousComponent (@orderWeight n) 0
       (presentedNormalFormLinearEquiv k n 1) = 1
     rw [Stafford38.WeylPBW.presentedNormalFormLinearEquiv_one]
-    exact (MvPolynomial.isWeightedHomogeneous_one k (@orderWeight n)).weightedHomogeneousComponent_same
+    exact (MvPolynomial.isWeightedHomogeneous_one k (@orderWeight
+      n)).weightedHomogeneousComponent_same
   map_mul' := orderPrincipalSum_mul k
 
-@[simp] theorem orderReesSpecialization_monomial
+@[simp]
+theorem orderReesSpecialization_monomial
     (N : ℕ) (z : orderPiece k n N) :
     orderReesSpecialization (n := n) k (orderReesMonomial k N z) =
       presentedPrincipalComponent k (@orderWeight n) N z := by
@@ -160,7 +163,8 @@ def orderReesSpecialization :
     (Polynomial.monomial N (z : PresentedWeyl k n)) = _
   rw [orderPrincipalSum_monomial]
 
-@[simp] theorem orderReesSpecialization_parameter :
+@[simp]
+theorem orderReesSpecialization_parameter :
     orderReesSpecialization (n := n) k
         (orderReesParameter (n := n) k) = 0 := by
   rw [orderReesParameter, orderReesSpecialization_monomial]
@@ -184,17 +188,17 @@ theorem orderReesSpecialization_surjective :
       change presentedPrincipalComponent k (@orderWeight n) N
           (a • Stafford38.WeylPBW.presentedPBWBasis k n m) =
         MvPolynomial.monomial m a
-      rw [map_smul, presentedPrincipalComponent_basis, if_pos rfl]
+      rw [map_smul, presentedPrincipalComponent_basis, ite_eq_left rfl]
       rw [MvPolynomial.smul_monomial]
       simp
   | add P Q hP hQ =>
       obtain ⟨p, hp⟩ := hP
       obtain ⟨q, hq⟩ := hQ
       refine ⟨p + q, ?_⟩
-      change orderReesSpecialization (n := n) k (p + q) = P + Q
       rw [(orderReesSpecialization (n := n) k).map_add, hp, hq]
 
-@[simp] theorem orderReesSpecialization_scalar (a : k) :
+@[simp]
+theorem orderReesSpecialization_scalar (a : k) :
     orderReesSpecialization (n := n) k
         (orderReesScalarHom (n := n) k a) =
       algebraMap k (SymbolRing k n) a := by
@@ -315,14 +319,16 @@ def orderReesTwoJetSpecialization :
       exact f.map_mul x y
     commutes' := f.commutes }
 
-@[simp] theorem orderReesTwoJetSpecialization_quotient
+@[simp]
+theorem orderReesTwoJetSpecialization_quotient
     (r : OrderReesRing (n := n) k) :
     orderReesTwoJetSpecialization (n := n) k
         (orderReesTwoJetQuotient (n := n) k r) =
       orderReesSpecialization (n := n) k r := by
   rfl
 
-@[simp] theorem orderReesTwoJetSpecialization_parameter :
+@[simp]
+theorem orderReesTwoJetSpecialization_parameter :
     orderReesTwoJetSpecialization (n := n) k
         (orderReesTwoJetParameter (n := n) k) = 0 := by
   rw [orderReesTwoJetParameter,

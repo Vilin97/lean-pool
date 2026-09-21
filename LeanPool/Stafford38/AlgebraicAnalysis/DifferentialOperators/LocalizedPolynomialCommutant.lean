@@ -60,7 +60,7 @@ theorem eq_multiplication_of_commute_coordinate
         simpa [Algebra.smul_def] using P.map_smul c b
     | add a a' ha ha' =>
         intro b
-        simp only [map_add, map_mul, ha b, ha' b, add_mul]
+        simp only [map_add,  ha b, ha' b, add_mul]
     | mul_X a i ha =>
         intro b
         calc

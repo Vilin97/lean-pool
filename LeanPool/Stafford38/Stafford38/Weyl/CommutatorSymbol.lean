@@ -105,15 +105,16 @@ theorem presentedCoordinate_commutator_coefficientOrdered
           congrArg Neg.neg
             (Algebra.mul_smul_comm (p : k) Q (P ^ (p - 1)))
 
-@[simp] theorem poissonBracket_newestCoordinate
+@[simp]
+theorem poissonBracket_newestCoordinate
     (n : ℕ) (f : SymbolRing k (n + 1)) :
     poissonBracket (MvPolynomial.X (.inl (0 : Fin (n + 1)))) f =
       MvPolynomial.pderiv (.inr (0 : Fin (n + 1))) f := by
-  simp only [poissonBracket, MvPolynomial.pderiv_X, mul_zero, sub_zero]
+  simp only [poissonBracket, MvPolynomial.pderiv_X]
   rw [Finset.sum_eq_single (0 : Fin (n + 1))]
   · simp
   · intro i _ hi
-    simp [Pi.single_apply, hi]
+    simp [ hi]
   · simp
 
 theorem pderiv_rename_oldIndex_newestMomentum
@@ -125,7 +126,7 @@ theorem pderiv_rename_oldIndex_newestMomentum
   | monomial m c =>
       rw [MvPolynomial.rename_monomial, MvPolynomial.pderiv_monomial]
       have hz : (m.mapDomain oldIndex) (.inr (0 : Fin (n + 1))) = 0 := by
-        apply Finsupp.mapDomain_notin_range
+        apply Finsupp.mapDomain_of_notMem_range
         rintro ⟨i, hi⟩
         cases i <;> simp [oldIndex, Fin.succ_ne_zero] at hi
       simp [hz]

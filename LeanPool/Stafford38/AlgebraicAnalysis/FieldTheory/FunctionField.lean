@@ -27,7 +27,7 @@ universe u v w
 field extension of the ground field. -/
 theorem top_fg_of_finiteType_fractionRing
     (k : Type u) (A : Type v) (K : Type w)
-    [Field k] [CommRing A] [IsDomain A] [Algebra k A]
+    [Field k] [CommRing A] [Algebra k A]
     [Field K] [Algebra A K] [IsFractionRing A K]
     [Algebra k K] [IsScalarTower k A K]
     [Algebra.FiniteType k A] :
@@ -49,7 +49,7 @@ theorem top_fg_of_finiteType_fractionRing
     · intro x hx
       exact IntermediateField.subset_adjoin k _ ⟨x, hx, rfl⟩
     · intro x
-      simpa [f] using T.algebraMap_mem x
+      simp [f]
     · intro x y _ _ hx hy
       simpa using T.add_mem hx hy
     · intro x y _ _ hx hy

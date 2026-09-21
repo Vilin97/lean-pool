@@ -137,6 +137,7 @@ The zero section in one-dimensional phase space has ideal `(ξ)`.  It is
 self-involutive, but it is not stable under bracketing with arbitrary ambient
 polynomials because `{ξ, x} = -1`. -/
 
+/-- The ideal of the zero section in the cotangent space of the affine line. -/
 def zeroSectionIdealOne (k : Type*) [Field k] : Ideal (SymbolRing k 1) :=
   Ideal.span {MvPolynomial.X (Sum.inr (0 : Fin 1) : PhaseVar 1)}
 

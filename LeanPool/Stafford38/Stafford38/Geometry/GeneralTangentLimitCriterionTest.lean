@@ -34,7 +34,7 @@ theorem paper_shape_consumer
     (D : DirectSummandInput (dimY := dimY) I q L) :
     Projectivization.mk k
         (fun i : Fin n => if i = D.axis then (1 : k) else 0)
-        (by intro h; have hh := congrFun h D.axis; simpa using hh) ∈
+        (by intro h; have hh := congrFun h D.axis; simp at hh) ∈
       projectiveHomogeneousClosure
         (projectivizedDirectionSet (smoothConormalDirectionSet I)) := by
   exact tangent_limit_criterion_of_directSummand I q L D

@@ -63,7 +63,9 @@ variable {B Abar : Type u} [Ring B] [CommRing Abar]
 This is the elementwise form supplied by the concrete localized Rees
 specialization. -/
 structure LeftPrincipalParameterReduction where
+  /-- The central parameter whose multiples form the kernel of reduction. -/
   parameter : B
+  /-- The surjective ring map reducing the source algebra modulo the central parameter. -/
   modParameter : B →+* Abar
   surjective : Function.Surjective modParameter
   parameter_comm : ∀ z : B, parameter * z = z * parameter
@@ -280,10 +282,15 @@ structure Equation33Cofactors
     (S : LeftPrincipalParameterReduction (B := B) (Abar := Abar))
     (x y : B)
     (A Bm Gamma Theta : Matrix (Fin (n + 1)) (Fin (n + 1)) B) where
+  /-- The strictly upper triangular cofactor of the scalar commutator of `x` with `Bm`. -/
   X : Matrix (Fin (n + 1)) (Fin (n + 1)) B
+  /-- The strictly upper triangular cofactor of the scalar commutator of `y` with `A`. -/
   Y : Matrix (Fin (n + 1)) (Fin (n + 1)) B
+  /-- The strictly upper triangular cofactor of the matrix commutator of `Bm` with `A`. -/
   Omega : Matrix (Fin (n + 1)) (Fin (n + 1)) B
+  /-- The parameter cofactor of the trace of the commutator of `Theta` with `A`. -/
   tauThetaA : B
+  /-- The parameter cofactor of the trace of the commutator of `Bm` with `Gamma`. -/
   tauBGamma : B
   xB_eq : ∀ i j, S.parameter * X i j = scalarMatrixCommutator x Bm i j
   yA_eq : ∀ i j, S.parameter * Y i j = scalarMatrixCommutator y A i j
@@ -373,6 +380,7 @@ def sourceCorrectionThetaA
     (Theta A : Matrix (Fin (n + 1)) (Fin (n + 1)) B) :=
   sourceMatrixCommutator Theta A
 
+/-- The matrix commutator correction involving `Bm` and `Gamma`. -/
 def sourceCorrectionBGamma
     (Bm Gamma : Matrix (Fin (n + 1)) (Fin (n + 1)) B) :=
   sourceMatrixCommutator Bm Gamma

@@ -26,14 +26,16 @@ abbrev End := Module.End k R
 def multiplication (a : R) : End (k := k) (R := R) :=
   LinearMap.mulLeft k a
 
-@[simp] theorem multiplication_apply (a x : R) :
+@[simp]
+theorem multiplication_apply (a x : R) :
     multiplication (k := k) a x = a * x := rfl
 
 /-- The commutator of an endomorphism with multiplication by `a`. -/
 def commutator (P : End (k := k) (R := R)) (a : R) : End (k := k) (R := R) :=
   P * multiplication (k := k) a - multiplication (k := k) a * P
 
-@[simp] theorem commutator_apply (P : End (k := k) (R := R)) (a x : R) :
+@[simp]
+theorem commutator_apply (P : End (k := k) (R := R)) (a x : R) :
     commutator P a x = P (a * x) - a * P x := rfl
 
 /-- Differential operators of order at most `n`. -/
@@ -75,10 +77,12 @@ def order : ℕ → Submodule k (End (k := k) (R := R))
           rw [heq]
           exact (order n).smul_mem c (hP a) }
 
-@[simp] theorem mem_order_zero_iff (P : End (k := k) (R := R)) :
+@[simp]
+theorem mem_order_zero_iff (P : End (k := k) (R := R)) :
     P ∈ order (k := k) (R := R) 0 ↔ ∀ a, commutator P a = 0 := Iff.rfl
 
-@[simp] theorem mem_order_succ_iff (P : End (k := k) (R := R)) (n : ℕ) :
+@[simp]
+theorem mem_order_succ_iff (P : End (k := k) (R := R)) (n : ℕ) :
     P ∈ order (k := k) (R := R) (n + 1) ↔
       ∀ a, commutator P a ∈ order n := by
   change (∀ a, commutator P a ∈ order n) ↔ _
@@ -187,7 +191,8 @@ def algebra : Subalgebra k (End (k := k) (R := R)) where
     ext x
     simp [multiplication_apply]
 
-@[simp] theorem mem_algebra_iff (P : End (k := k) (R := R)) :
+@[simp]
+theorem mem_algebra_iff (P : End (k := k) (R := R)) :
     P ∈ algebra (k := k) (R := R) ↔ ∃ n, P ∈ order n := Iff.rfl
 
 /-! The two basic kinds of operators are finite-order without any geometric

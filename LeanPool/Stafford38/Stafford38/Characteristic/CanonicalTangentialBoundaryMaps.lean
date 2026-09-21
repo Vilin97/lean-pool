@@ -31,34 +31,36 @@ attribute [local instance] sourceModule targetModule
 
 theorem totalBoundaryMap_intertwines_polynomials (r : ℕ)
     (P : MvPolynomial (Fin n ⊕ Fin n) k) :
-    (complex k n N d hd).totalBoundaryMap r ∘ₗ targetAction k n N d hd 1 P =
-      targetAction k n N d hd (r + 1) P ∘ₗ
-        (complex k n N d hd).totalBoundaryMap r :=
+    (complex k n N d).totalBoundaryMap r ∘ₗ targetAction k n N d 1 P =
+      targetAction k n N d (r + 1) P ∘ₗ
+        (complex k n N d).totalBoundaryMap r :=
   commutingPolynomialAction_intertwines _ _ _ _ _
-    (fun i => (generator k n N d hd i).totalBoundaryMap_naturality r) P
+    (fun i => (generator k n N d i).totalBoundaryMap_naturality r) P
 
+/-- The total boundary map as a linear map for the commuting tangential polynomial action. -/
 def tangentialBoundaryMap (r : ℕ) :
-    (complex k n N d hd).TargetTotal 1 →ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
-      (complex k n N d hd).TargetTotal (r + 1) where
-  toFun := (complex k n N d hd).totalBoundaryMap r
+    (complex k n N d).TargetTotal 1 →ₗ[MvPolynomial (Fin n ⊕ Fin n) k]
+      (complex k n N d).TargetTotal (r + 1) where
+  toFun := (complex k n N d).totalBoundaryMap r
   map_add' := map_add _
   map_smul' P z :=
     congrArg (fun f => f z)
-      (totalBoundaryMap_intertwines_polynomials k n N d hd r P)
+      (totalBoundaryMap_intertwines_polynomials k n N d r P)
 
 theorem tangentialBoundaryMap_surjective (r : ℕ) :
-    Function.Surjective (tangentialBoundaryMap k n N d hd r) :=
-  (complex k n N d hd).totalBoundaryMap_surjective r
+    Function.Surjective (tangentialBoundaryMap k n N d r) :=
+  (complex k n N d).totalBoundaryMap_surjective r
 
 theorem tangentialBoundaryMap_ker_mono :
-    Monotone (fun r => (tangentialBoundaryMap k n N d hd r).ker) := by
+    Monotone (fun r => (tangentialBoundaryMap k n N d r).ker) := by
   intro r s hrs z hz
-  exact (complex k n N d hd).totalBoundaryMap_ker_mono r s hrs hz
+  exact (complex k n N d).totalBoundaryMap_ker_mono r s hrs hz
 
+include hd in
 theorem tangentialBoundaryMap_eventually_zero
-    (z : (complex k n N d hd).TargetTotal 1) :
-    ∃ r, tangentialBoundaryMap k n N d hd r z = 0 :=
-  (complex k n N d hd).totalBoundaryMap_eventually_zero
+    (z : (complex k n N d).TargetTotal 1) :
+    ∃ r, tangentialBoundaryMap k n N d r z = 0 :=
+  (complex k n N d).totalBoundaryMap_eventually_zero
     (CanonicalFilteredTwoTerm.canonicalOrderFiltration_exhaustive k _)
     (CanonicalFilteredTwoTerm.canonicalFilteredTwoTerm_f_surjective k n N hd) z
 

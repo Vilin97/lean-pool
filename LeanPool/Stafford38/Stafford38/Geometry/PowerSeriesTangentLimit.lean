@@ -38,11 +38,13 @@ variable {k : Type u} [Field k]
 def axisRow {ι : Type*} [DecidableEq ι] (axis : ι) : ι → k :=
   fun i => if i = axis then 1 else 0
 
-@[simp] theorem axisRow_apply_same {ι : Type*} [DecidableEq ι] (axis : ι) :
+@[simp]
+theorem axisRow_apply_same {ι : Type*} [DecidableEq ι] (axis : ι) :
     axisRow (k := k) axis axis = 1 := by
   simp [axisRow]
 
-@[simp] theorem axisRow_apply_of_ne {ι : Type*} [DecidableEq ι]
+@[simp]
+theorem axisRow_apply_of_ne {ι : Type*} [DecidableEq ι]
     {axis i : ι} (hi : i ≠ axis) : axisRow (k := k) axis i = 0 := by
   simp [axisRow, hi]
 
@@ -116,7 +118,7 @@ fibre.  The left inverse `C` is an independent lattice-splitting hypothesis;
 it is not obtained from the common-power presentation.
 -/
 theorem exists_annihilator_specializing_to_axis
-    {ι κ : Type*} [Fintype ι] [Fintype κ]
+    {ι κ : Type*} [Fintype ι] [Finite κ]
     [DecidableEq ι] [DecidableEq κ]
     (T B : Matrix ι κ (PowerSeries k))
     (C : Matrix κ ι (PowerSeries k))
@@ -126,6 +128,8 @@ theorem exists_annihilator_specializing_to_axis
     (hCB : C * B = 1) :
     ∃ a : ι → PowerSeries k,
       rowMul a B = 0 ∧ residueColumn a = axisRow (k := k) axis := by
+  classical
+  let := Fintype.ofFinite κ
   let a₀ : ι → k := axisRow (k := k) axis
   let a : ι → PowerSeries k :=
     annihilatorLift (constantColumn a₀) B C

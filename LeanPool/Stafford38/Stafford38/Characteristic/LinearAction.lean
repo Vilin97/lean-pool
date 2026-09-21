@@ -25,23 +25,26 @@ universe u
 
 variable (k : Type u) [Field k]
 
+/-- The linear symbol polynomial determined by a row of the change-of-variables matrix. -/
 def symbolLinearCombination {n : ℕ}
     (M : Matrix (PhaseVar n) (PhaseVar n) k) (i : PhaseVar n) :
     SymbolRing k n :=
   ∑ j, MvPolynomial.C (M i j) * MvPolynomial.X j
 
+/-- The symbol-algebra map induced by a matrix of linear substitutions. -/
 def symbolLinearAlgHom {n : ℕ}
     (M : Matrix (PhaseVar n) (PhaseVar n) k) :
     SymbolRing k n →ₐ[k] SymbolRing k n :=
   MvPolynomial.aeval (symbolLinearCombination k M)
 
-@[simp] theorem symbolLinearAlgHom_X {n : ℕ}
+@[simp]
+theorem symbolLinearAlgHom_X {n : ℕ}
     (M : Matrix (PhaseVar n) (PhaseVar n) k) (i : PhaseVar n) :
     symbolLinearAlgHom k M (MvPolynomial.X i) =
       symbolLinearCombination k M i := by
   rw [symbolLinearAlgHom, MvPolynomial.aeval_X]
 
-@[simp] theorem symbolLinearAlgHom_C {n : ℕ}
+theorem symbolLinearAlgHom_C {n : ℕ}
     (M : Matrix (PhaseVar n) (PhaseVar n) k) (c : k) :
     symbolLinearAlgHom k M (MvPolynomial.C c) = MvPolynomial.C c := by
   rw [symbolLinearAlgHom, MvPolynomial.aeval_C]
@@ -76,14 +79,16 @@ def symbolLinearAlgEquivOfInverse {n : ℕ}
     (by rw [symbolLinearAlgHom_comp, hNM, symbolLinearAlgHom_one])
     (by rw [symbolLinearAlgHom_comp, hMN, symbolLinearAlgHom_one])
 
-@[simp] theorem symbolLinearAlgEquivOfInverse_X {n : ℕ}
+@[simp]
+theorem symbolLinearAlgEquivOfInverse_X {n : ℕ}
     (M N : Matrix (PhaseVar n) (PhaseVar n) k)
     (hMN : M * N = 1) (hNM : N * M = 1) (i : PhaseVar n) :
     symbolLinearAlgEquivOfInverse k M N hMN hNM (MvPolynomial.X i) =
       symbolLinearCombination k M i :=
   symbolLinearAlgHom_X k M i
 
-@[simp] theorem symbolLinearAlgEquivOfInverse_symm_X {n : ℕ}
+@[simp]
+theorem symbolLinearAlgEquivOfInverse_symm_X {n : ℕ}
     (M N : Matrix (PhaseVar n) (PhaseVar n) k)
     (hMN : M * N = 1) (hNM : N * M = 1) (i : PhaseVar n) :
     (symbolLinearAlgEquivOfInverse k M N hMN hNM).symm

@@ -24,6 +24,7 @@ noncomputable section
 
 variable {k ι A : Type*} [Field k] [Ring A] [Algebra k A]
 
+/-- The free-algebra map evaluating each formal Weyl generator at the prescribed element. -/
 def freeWeylGeneratorMap (z : ι → A) : FreeAlgebra k ι →ₐ[k] A :=
   FreeAlgebra.lift k z
 
@@ -44,7 +45,8 @@ def freeWeylLift (omega : Matrix ι ι k) (z : ι → A)
   RingQuot.liftAlgHom k
     ⟨freeWeylGeneratorMap z, freeWeylGeneratorMap_respects omega z hz⟩
 
-@[simp] theorem freeWeylLift_generator (omega : Matrix ι ι k) (z : ι → A)
+@[simp]
+theorem freeWeylLift_generator (omega : Matrix ι ι k) (z : ι → A)
     (hz : ∀ i j, Stafford.commutator (z i) (z j) = algebraMap k A (omega i j)) (i : ι) :
     freeWeylLift omega z hz (freeWeylGenerator omega i) = z i := by
   simp [freeWeylLift, freeWeylGenerator, freeWeylGeneratorMap,

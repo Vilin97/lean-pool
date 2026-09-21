@@ -50,7 +50,8 @@ def sourceSuccMap (r : ℕ) (p : ℤ) :
   Submodule.mapQ _ _ (K.sourceSuccInclusion r p)
     (K.sourceSuccInclusion_denominator r p)
 
-@[simp] theorem sourceSuccMap_mk (r : ℕ) (p : ℤ)
+@[simp]
+theorem sourceSuccMap_mk (r : ℕ) (p : ℤ)
     (x : K.cycles (r + 1) p) :
     K.sourceSuccMap r p (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk (K.sourceSuccInclusion r p x) :=
@@ -118,7 +119,8 @@ def targetSuccMap (r : ℕ) (p : ℤ) :
     intro x hx
     exact K.boundaries_le_succ r p hx)
 
-@[simp] private theorem targetSuccMap_mk (r : ℕ) (p : ℤ)
+@[simp]
+private theorem targetSuccMap_mk (r : ℕ) (p : ℤ)
     (x : K.G p) :
     K.targetSuccMap r p (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk x :=

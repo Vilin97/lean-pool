@@ -87,7 +87,8 @@ def presentedWeylScalarExtension (n : Nat) :
     (fun i => freeWeylGenerator (Matrix.J (Fin n) K) i)
     (presentedWeylScalarExtension_commutator n)
 
-@[simp] theorem presentedWeylScalarExtension_generator (n : Nat)
+@[simp]
+theorem presentedWeylScalarExtension_generator (n : Nat)
     (i : Fin n ⊕ Fin n) :
     presentedWeylScalarExtension (k := k) (K := K) n
         (freeWeylGenerator (Matrix.J (Fin n) k) i) =
@@ -96,7 +97,7 @@ def presentedWeylScalarExtension (n : Nat) :
     (fun i => freeWeylGenerator (Matrix.J (Fin n) K) i)
     (presentedWeylScalarExtension_commutator n) i
 
-@[simp] theorem presentedWeylScalarExtension_scalar (n : Nat) (a : k) :
+theorem presentedWeylScalarExtension_scalar (n : Nat) (a : k) :
     presentedWeylScalarExtension (k := k) (K := K) n
         (algebraMap k (PresentedWeyl k n) a) =
       algebraMap k (PresentedWeyl K n) a := by
@@ -169,12 +170,13 @@ def symbolScalarExtension (n : Nat) :
     intro a
     simp
 
-@[simp] theorem symbolScalarExtension_apply (n : Nat) (p : SymbolRing k n) :
+@[simp]
+theorem symbolScalarExtension_apply (n : Nat) (p : SymbolRing k n) :
     symbolScalarExtension (k := k) (K := K) n p =
       MvPolynomial.map (algebraMap k K) p :=
   rfl
 
-@[simp] theorem symbolScalarExtension_monomial (n : Nat)
+theorem symbolScalarExtension_monomial (n : Nat)
     (m : PhaseVar n →₀ ℕ) (a : k) :
     symbolScalarExtension (k := k) (K := K) n
         (MvPolynomial.monomial m a) =
@@ -189,7 +191,7 @@ def pbwScalarLinearMap (n : Nat) :
     ((symbolScalarExtension (k := k) (K := K) n).toLinearMap.comp
       (presentedNormalFormLinearEquiv k n).toLinearMap)
 
-@[simp] theorem pbwScalarLinearMap_basis (n : Nat)
+theorem pbwScalarLinearMap_basis (n : Nat)
     (m : PhaseVar n →₀ ℕ) :
     pbwScalarLinearMap (k := k) (K := K) n
         (presentedPBWBasis k n m) =
@@ -204,6 +206,14 @@ def pbwScalarLinearMap (n : Nat) :
   simp only [map_one]
   rw [← presentedNormalFormBasis_apply]
   rfl
+
+@[simp]
+theorem pbwScalarLinearMap_orderedMonomial (n : Nat)
+    (m : PhaseVar n →₀ ℕ) :
+    pbwScalarLinearMap (k := k) (K := K) n
+        (presentedOrderedMonomial k n (fun i => m (.inl i)) (fun i => m (.inr i))) =
+      presentedOrderedMonomial K n (fun i => m (.inl i)) (fun i => m (.inr i)) := by
+  simpa only [presentedPBWBasis_apply] using pbwScalarLinearMap_basis (k := k) (K := K) n m
 
 theorem presentedWeylScalarExtension_basis (n : Nat)
     (m : PhaseVar n →₀ ℕ) :
@@ -276,7 +286,7 @@ theorem symbolScalarExtension_weightedHomogeneousComponent (n : Nat)
     MvPolynomial.coeff_weightedHomogeneousComponent]
   simp only [finsupp_weight_eq_monomialWeight]
   by_cases hm : monomialWeight w m = N
-  · simp [hm]
+  · simp? [hm]
     rw [MvPolynomial.coeff_map]
   · simp [hm]
 
@@ -335,21 +345,25 @@ theorem presentedWeylScalarExtension_isPBWMonicAt (n : Nat)
   refine ⟨presentedWeylScalarExtension_mem_bernsteinPiece
     (k := k) (K := K) (n + 1) N hz.1, ?_⟩
   change (presentedNormalFormLinearEquiv K (n + 1)
-        (presentedWeylScalarExtension (k := k) (K := K) (n + 1) z)).coeff (Finsupp.single (.inr (0 : Fin (n + 1))) N) = 1
+        (presentedWeylScalarExtension (k := k) (K := K) (n + 1) z)).coeff (Finsupp.single (.inr
+          (0 : Fin (n + 1))) N) = 1
   have hnorm := presentedNormalFormLinearEquiv_scalarExtension
     (k := k) (K := K) (n + 1) z
   rw [hnorm]
   change (MvPolynomial.map (algebraMap k K)
-        (presentedNormalFormLinearEquiv k (n + 1) z)).coeff (Finsupp.single (.inr (0 : Fin (n + 1))) N) = 1
+        (presentedNormalFormLinearEquiv k (n + 1) z)).coeff (Finsupp.single (.inr (0 : Fin (n +
+          1))) N) = 1
   rw [MvPolynomial.coeff_map]
   simp [hz.2]
 
-@[simp] theorem presentedWeylScalarExtension_coordinate (n : Nat) :
+@[simp]
+theorem presentedWeylScalarExtension_coordinate (n : Nat) :
     presentedWeylScalarExtension (k := k) (K := K) (n + 1)
         (presentedCoordinate k n) = presentedCoordinate K n := by
   simp [presentedCoordinate]
 
-@[simp] theorem presentedWeylScalarExtension_momentum (n : Nat) :
+@[simp]
+theorem presentedWeylScalarExtension_momentum (n : Nat) :
     presentedWeylScalarExtension (k := k) (K := K) (n + 1)
         (presentedMomentum k n) = presentedMomentum K n := by
   simp [presentedMomentum]
@@ -498,7 +512,7 @@ theorem scalarImageRightIdealSpan_mul_right (n : Nat)
   · intro z hz
     rcases hz with ⟨z, hz, rfl⟩
     exact hbase z hz b
-  · simp [S, scalarImageRightIdealSpan]
+  · simp [ scalarImageRightIdealSpan]
   · intro a₁ a₂ _ _ ha₁ ha₂
     simpa [add_mul] using S.add_mem ha₁ ha₂
   · intro c a _ ha
@@ -573,8 +587,7 @@ def FilteredInitialLifting : Prop :=
 theorem canonicalSupportDescent_of_filteredInitialLifting
     (hfiltered : FilteredInitialLifting.{u}) :
     Stafford38.CanonicalSupportVanishingReduction.CanonicalSupportDescent.{u} := by
-  intro hclosed
-  intro k _ _ n N d hN hd
+  intro hclosed k _ _ n N d hN hd
   let e := presentedWeylScalarExtension (k := k)
     (K := AlgebraicClosure k) (n + 1)
   let I := canonicalRightIdeal (presentedCoordinate k n) d N

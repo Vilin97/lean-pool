@@ -58,6 +58,8 @@ def quotientDerivationLinear (D : Derivation k P F) (hD : ∀ f ∈ I, D f = 0) 
       exact hD f hf)).comp
     (Submodule.Quotient.restrictScalarsEquiv k I).symm.toLinearMap
 
+omit [IsScalarTower k (P ⧸ I) F] in
+omit [Algebra (P ⧸ I) F] in
 theorem quotientDerivationLinear_mk (D : Derivation k P F) (hD : ∀ f ∈ I, D f = 0)
     (f : P) :
     quotientDerivationLinear D hD (Ideal.Quotient.mk I f) = D f :=
@@ -85,6 +87,7 @@ def quotientDerivation [IsScalarTower P (P ⧸ I) F]
     rw [← Ideal.Quotient.algebraMap_eq, ← IsScalarTower.algebraMap_smul (P ⧸ I) p,
       ← IsScalarTower.algebraMap_smul (P ⧸ I) q]
 
+omit [IsScalarTower k (P ⧸ I) F] in
 theorem quotientDerivation_mk [IsScalarTower P (P ⧸ I) F]
     (D : Derivation k P F) (hD : ∀ f ∈ I, D f = 0) (f : P) :
     quotientDerivation D hD (Ideal.Quotient.mk I f) = D f :=
@@ -134,10 +137,12 @@ theorem mkDerivation_eq_sum_pderiv [Algebra (MvPolynomial (Fin m) k) F]
         simp only [pderiv_mul, map_add, map_mul, aeval_X, pderiv_X, Pi.single_apply]
         split_ifs <;> simp <;> ring
       simp only [h2, Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_ite_eq,
-        Finset.mem_univ, if_true]
+        Finset.mem_univ, ite_true]
     rw [h1, Derivation.leibniz, mkDerivation_X, hp, Algebra.smul_def, Algebra.smul_def, halg, halg,
       aeval_X]
 
+omit [I.IsPrime] [IsScalarTower k (MvPolynomial (Fin m) k ⧸ I) F] in
+omit [Algebra k F] in
 /-- Nonzero-divisors of `A` act invertibly on the fraction field `F`. -/
 theorem isUnit_algebraMap_end
     (s : nonZeroDivisors (MvPolynomial (Fin m) k ⧸ I)) :
@@ -145,12 +150,14 @@ theorem isUnit_algebraMap_end
       (Module.End (MvPolynomial (Fin m) k ⧸ I) F) s) := by
   rw [Module.End.isUnit_iff]
   have hfun : ⇑(algebraMap (MvPolynomial (Fin m) k ⧸ I)
-      (Module.End (MvPolynomial (Fin m) k ⧸ I) F) s) = fun x ↦ (s : MvPolynomial (Fin m) k ⧸ I) • x :=
+      (Module.End (MvPolynomial (Fin m) k ⧸ I) F) s) = fun x ↦ (s : MvPolynomial (Fin m) k ⧸ I)
+        • x :=
     funext fun _ ↦ rfl
   rw [hfun]
   have := IsLocalization.smul_bijective (M := nonZeroDivisors (MvPolynomial (Fin m) k ⧸ I)) F s
   simpa [Submonoid.smul_def] using this
 
+omit [I.IsPrime] in
 /-- **Main theorem.**  A Kähler relation among the generic-point coordinates
 places the corresponding coordinate covector in the affine conormal space of
 the extended ideal at the generic point. -/
@@ -180,10 +187,12 @@ theorem coordinateCovector_mem_affineConormalSpace_of_kaehler_sum_eq_zero
     rfl
   have : IsScalarTower k (MvPolynomial (Fin m) k) F :=
     IsScalarTower.of_algebraMap_eq fun a ↦ by
-      change algebraMap k F a = algebraMap A F (algebraMap (MvPolynomial (Fin m) k) A (algebraMap k _ a))
+      change algebraMap k F a = algebraMap A F (algebraMap (MvPolynomial (Fin m) k) A
+        (algebraMap k _ a))
       rw [← IsScalarTower.algebraMap_apply k (MvPolynomial (Fin m) k) A,
         ← IsScalarTower.algebraMap_apply k A F]
-  have halg : ∀ p : MvPolynomial (Fin m) k, algebraMap (MvPolynomial (Fin m) k) F p = aeval y p := by
+  have halg : ∀ p : MvPolynomial (Fin m) k, algebraMap (MvPolynomial (Fin m) k) F p = aeval y p
+    := by
     intro p
     have : (IsScalarTower.toAlgHom k (MvPolynomial (Fin m) k) F) = aeval y := by
       apply MvPolynomial.algHom_ext

@@ -16,13 +16,21 @@ canonical-support proof uses the general coisotropic-set theorem.
 
 ## References and proof context
 
-[Sta78] J. T. Stafford, *Module Structure of Weyl Algebras*, Journal of the London Mathematical Society (2) 18 (1978), 429–442.
+[Sta78] J. T. Stafford, *Module Structure of Weyl Algebras*, Journal of the London Mathematical
+  Society (2) 18 (1978), 429–442.
 https://doi.org/10.1112/jlms/s2-18.3.429
 
-Conjecture 3.8, p. 438, is the source problem. This project proves the general case and exact-degree strengthening. See docs/literature.md for the imported involutivity and visible-frame route.
+Conjecture 3.8, p. 438, is the source problem. This project proves the general case and
+  exact-degree strengthening. See docs/literature.md for the imported involutivity and
+  visible-frame route.
 -/
 
 namespace Stafford38.FoundationClosure
+
+open Stafford38.Characteristic.CanonicalGabberInvolutivityInterface
+open Stafford38.Geometry.ExactDivisorialVisibleFrameExistence
+open Stafford38.SpecializedNoncharacteristicEquality
+open Stafford38.Geometry.GeneralCoisotropicCanonicalAdapter
 
 universe u
 
@@ -32,22 +40,24 @@ theorem canonicalNoncharacteristicSupportAvoidance :
   exact Characteristic.CanonicalKoszulContradiction.canonical_support_avoidance
     k n N d hN hd
 
+/-- The canonical noncharacteristic, residue-symbol, and visible-divisor inputs for the global
+assembly. -/
 def inputs : PaperInputs.Inputs.{u} where
   noncharacteristicApplication := canonicalNoncharacteristicSupportAvoidance
   residueExtensionSymbolControl :=
-    Characteristic.CanonicalGabberInvolutivityInterface.canonicalResidueExtensionSymbolControl_of_associatedGradedRadical
+    canonicalResidueExtensionSymbolControl_of_associatedGradedRadical
       Characteristic.GabberGlobalAssembly.weylAssociatedGradedRadicalInvolutivity
   higherDimensionalVisibleDivisorFrameProduction :=
-    Geometry.ExactDivisorialVisibleFrameExistence.higherDimensionalCanonicalVisibleDivisorFrameProduction
+    higherDimensionalCanonicalVisibleDivisorFrameProduction
 
 theorem canonicalSupportVanishingViaGeneralCoisotropic :
     UniversalAssembly.CanonicalSupportVanishing.{u} := by
   let hunit : CanonicalSupportVanishingReduction.CanonicalStrictUnitCoordinatePreimage.{u} := by
     intro k _ _ _ n N d hN hd
-    exact SpecializedNoncharacteristicEquality.strictUnitCoordinatePreimage_of_transposedSupport_disjoint_axis
+    exact strictUnitCoordinatePreimage_of_transposedSupport_disjoint_axis
       k n N d (canonicalNoncharacteristicSupportAvoidance k n N d hN hd)
   exact Weyl.FilteredScalarLifting.canonicalSupportDescent
-    (Geometry.GeneralCoisotropicCanonicalAdapter.algebraicallyClosedCanonicalSupportVanishing_of_generalCoisotropic
+    (algebraicallyClosedCanonicalSupportVanishing_of_generalCoisotropic
       hunit)
 
 end Stafford38.FoundationClosure

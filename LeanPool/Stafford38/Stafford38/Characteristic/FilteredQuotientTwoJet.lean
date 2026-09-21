@@ -40,6 +40,7 @@ universe u
 variable (k : Type u) [Field k]
 variable {n : ℕ}
 
+/-- The symbol-ring module structure on the quotient order-associated graded module. -/
 local instance quotientOrderAssociatedGradedSymbolModule
     (I : RightIdeal (PresentedWeyl k n)) :
     Module (Stafford38.Characteristic.SymbolRing k n)
@@ -47,12 +48,14 @@ local instance quotientOrderAssociatedGradedSymbolModule
   inferInstanceAs (Module (Stafford38.Characteristic.SymbolRing k n)
     (OrderAssociatedGradedModule k I))
 
+/-- The opposite Weyl algebra action encoding the right action on the filtered quotient. -/
 local instance filteredRightQuotientSMul
     (I : RightIdeal (PresentedWeyl k n)) :
     SMul (PresentedWeyl k n)ᵐᵒᵖ
       (Stafford38.CharacteristicFilteredQuotient.FilteredRightQuotient k I) :=
   filteredRightQuotientOpSMul k I
 
+/-- The module over the opposite Weyl algebra carried by the filtered right quotient. -/
 local instance filteredRightQuotientModule
     (I : RightIdeal (PresentedWeyl k n)) :
     Module (PresentedWeyl k n)ᵐᵒᵖ
@@ -95,6 +98,7 @@ Mathlib's internal graded-module chain no longer derives from the
 this file's shape, exactly as already done in `FilteredQuotientReesAction`.
 -/
 
+/-- The graded action of opposite order-filtration pieces on quotient filtration pieces. -/
 local instance orderPieceOpGMulAction
     (I : RightIdeal (PresentedWeyl k n)) :
     GradedMonoid.GMulAction
@@ -108,6 +112,7 @@ local instance orderPieceOpGMulAction
     mul_smul := fun ⟨_i, _a⟩ ⟨_j, _a'⟩ ⟨_l, _b⟩ =>
       Sigma.subtype_ext (add_vadd _ _ _) (mul_smul _ _ _) }
 
+/-- Distributivity of the graded opposite-order action over addition in quotient pieces. -/
 local instance orderPieceOpGdistribMulAction
     (I : RightIdeal (PresentedWeyl k n)) :
     DirectSum.GdistribMulAction
@@ -117,6 +122,7 @@ local instance orderPieceOpGdistribMulAction
     smul_add := fun _a _b _c => Subtype.ext <| smul_add _ _ _
     smul_zero := fun _a => Subtype.ext <| smul_zero _ }
 
+/-- The graded module structure linking opposite order pieces and quotient order pieces. -/
 local instance orderPieceOpGmodule
     (I : RightIdeal (PresentedWeyl k n)) :
     DirectSum.Gmodule
@@ -155,7 +161,8 @@ def filteredQuotientTwoJetQuotient
     QuotientOrderReesModule k I →ₗ[k] FilteredQuotientTwoJet k I :=
   (quotientOrderReesTwoJetSubmodule k I).mkQ
 
-@[simp] theorem filteredQuotientTwoJetQuotient_apply
+@[simp]
+theorem filteredQuotientTwoJetQuotient_apply
     (I : RightIdeal (PresentedWeyl k n))
     (x : QuotientOrderReesModule k I) :
     filteredQuotientTwoJetQuotient k I x = Submodule.Quotient.mk x :=
@@ -232,7 +239,8 @@ def quotientOrderReesSourceAction
       intro x hx
       exact op_smul_mem_quotientOrderReesTwoJetSubmodule k I r hx)
 
-@[simp] theorem quotientOrderReesSourceAction_mk
+@[simp]
+theorem quotientOrderReesSourceAction_mk
     (I : RightIdeal (PresentedWeyl k n))
     (r : (OrderReesRing (n := n) k)ᵐᵒᵖ)
     (x : QuotientOrderReesModule k I) :
@@ -242,6 +250,7 @@ def quotientOrderReesSourceAction
 
 /-- The inherited source-Rees scalar multiplication on the two-jet
 quotient. -/
+@[instance_reducible]
 def filteredQuotientTwoJetSourceSMul
     (I : RightIdeal (PresentedWeyl k n)) :
     SMul (OrderReesRing (n := n) k)ᵐᵒᵖ
@@ -256,6 +265,7 @@ standalone route.  The module instance supplies the action. -/
 
 /-- Before scalar factorization, the module two-jet is an honest module over
 the opposite source Rees ring. -/
+@[instance_reducible]
 def filteredQuotientTwoJetSourceModule
     (I : RightIdeal (PresentedWeyl k n)) :
     Module (OrderReesRing (n := n) k)ᵐᵒᵖ
@@ -291,13 +301,16 @@ def filteredQuotientTwoJetSourceModule
       rw [one_smul]
       )
 
+/-- The opposite Rees-ring module structure on the quotient truncated at the square of the Rees
+parameter. -/
 local instance filteredQuotientTwoJetSourceModuleInstance
     (I : RightIdeal (PresentedWeyl k n)) :
     Module (OrderReesRing (n := n) k)ᵐᵒᵖ
       (FilteredQuotientTwoJet k I) :=
   filteredQuotientTwoJetSourceModule k I
 
-@[simp] theorem source_op_smul_mk
+@[simp]
+theorem source_op_smul_mk
     (I : RightIdeal (PresentedWeyl k n))
     (r : OrderReesRing (n := n) k)
     (x : QuotientOrderReesModule k I) :
@@ -389,7 +402,8 @@ def quotientOrderReesTwoJetAction
       exact sub_eq_zero.mp hzero)
     q.unop
 
-@[simp] theorem quotientOrderReesTwoJetAction_quotient
+@[simp]
+theorem quotientOrderReesTwoJetAction_quotient
     (I : RightIdeal (PresentedWeyl k n))
     (r : OrderReesRing (n := n) k) :
     quotientOrderReesTwoJetAction k I
@@ -398,6 +412,7 @@ def quotientOrderReesTwoJetAction
   rfl
 
 /-- Scalar multiplication by the opposite order-Rees two-jet. -/
+@[instance_reducible]
 def filteredQuotientTwoJetSMul
     (I : RightIdeal (PresentedWeyl k n)) :
     SMul (OrderReesTwoJet (n := n) k)ᵐᵒᵖ
@@ -420,6 +435,7 @@ private theorem exists_twoJet_op_representative
 
 /-- The concrete module two-jet is a right module over the order-Rees
 two-jet, represented as a left module over the opposite ring. -/
+@[instance_reducible]
 def filteredQuotientTwoJetModule
     (I : RightIdeal (PresentedWeyl k n)) :
     Module (OrderReesTwoJet (n := n) k)ᵐᵒᵖ
@@ -450,7 +466,8 @@ noncomputable instance filteredQuotientTwoJetModuleInstance
       (FilteredQuotientTwoJet k I) :=
   filteredQuotientTwoJetModule k I
 
-@[simp] theorem twoJet_quotient_op_smul_mk
+@[simp]
+theorem twoJet_quotient_op_smul_mk
     (I : RightIdeal (PresentedWeyl k n))
     (r : OrderReesRing (n := n) k)
     (x : QuotientOrderReesModule k I) :
@@ -459,7 +476,8 @@ noncomputable instance filteredQuotientTwoJetModuleInstance
       Submodule.Quotient.mk (MulOpposite.op r • x) :=
   rfl
 
-@[simp] theorem twoJet_op_smul_mk
+@[simp]
+theorem twoJet_op_smul_mk
     (I : RightIdeal (PresentedWeyl k n))
     (r : OrderReesRing (n := n) k)
     (x : QuotientOrderReesModule k I) :
@@ -482,7 +500,8 @@ theorem quotientOrderReesTwoJetCAct_apply
       MulOpposite.op (orderReesTwoJetParameter (n := n) k) • x :=
   rfl
 
-@[simp] theorem quotientOrderReesTwoJetCAct_mk
+@[simp]
+theorem quotientOrderReesTwoJetCAct_mk
     (I : RightIdeal (PresentedWeyl k n))
     (x : QuotientOrderReesModule k I) :
     quotientOrderReesTwoJetCAct k I (Submodule.Quotient.mk x) =
@@ -539,10 +558,11 @@ def filteredQuotientTwoJetRho
       have hcomp := LinearMap.congr_fun
         (quotientOrderReesToAssociatedGraded_comp_shift k I)
         (quotientOrderReesShift k I y)
-      show quotientOrderReesToAssociatedGraded k I _ = 0
+      change quotientOrderReesToAssociatedGraded k I _ = 0
       simpa [LinearMap.comp_apply] using hcomp)
 
-@[simp] theorem filteredQuotientTwoJetRho_mk
+@[simp]
+theorem filteredQuotientTwoJetRho_mk
     (I : RightIdeal (PresentedWeyl k n))
     (x : QuotientOrderReesModule k I) :
     filteredQuotientTwoJetRho k I (Submodule.Quotient.mk x) =

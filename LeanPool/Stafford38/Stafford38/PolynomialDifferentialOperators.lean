@@ -29,11 +29,14 @@ noncomputable section
 
 variable (k : Type*) [Field k] (n : ℕ)
 
+/-- The polynomial algebra in `n` variables over `k`. -/
 abbrev PolynomialRing := MvPolynomial (Fin n) k
 
+/-- Multiplication by a polynomial coordinate, regarded as a linear endomorphism. -/
 def coordinateEnd (i : Fin n) : End (k := k) (R := PolynomialRing k n) :=
   multiplication (MvPolynomial.X i)
 
+/-- Partial differentiation in a polynomial coordinate, regarded as a linear endomorphism. -/
 def momentumEnd (i : Fin n) : End (k := k) (R := PolynomialRing k n) :=
   (MvPolynomial.pderiv i).toLinearMap
 
@@ -50,9 +53,10 @@ theorem momentumEnd_mem_order_one (i : Fin n) :
   rw [mem_order_zero_iff_eq_multiplication]
   apply LinearMap.ext
   intro g
-  simp [commutator_apply, momentumEnd, multiplication_apply]
+  simp? [commutator_apply, momentumEnd, multiplication_apply]
   exact mul_comm _ _
 
+/-- The polynomial multiplication and differentiation operators satisfying the Weyl relations. -/
 def differentialGenerator :
     (Fin n ⊕ Fin n) → algebra (k := k) (R := PolynomialRing k n)
   | .inl i => ⟨coordinateEnd k n i, 0, coordinateEnd_mem_order_zero k n i⟩
@@ -114,7 +118,8 @@ def polynomialDifferentialAction :
   freeWeylLift (Matrix.J (Fin n) k) (differentialGenerator k n)
     (differentialGenerator_commutator k n)
 
-@[simp] theorem polynomialDifferentialAction_generator (i : Fin n ⊕ Fin n) :
+@[simp]
+theorem polynomialDifferentialAction_generator (i : Fin n ⊕ Fin n) :
     polynomialDifferentialAction k n
         (freeWeylGenerator (Matrix.J (Fin n) k) i) = differentialGenerator k n i :=
   freeWeylLift_generator _ _ _ i

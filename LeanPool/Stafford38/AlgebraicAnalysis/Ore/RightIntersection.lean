@@ -31,11 +31,13 @@ def RightOreCondition (R : Type*) [SemigroupWithZero R] : Prop :=
 The right ideals are left `Rᵐᵒᵖ`-submodules, so multiplying a member on the
 right is expressed by scalar multiplication by `MulOpposite.op`. -/
 theorem exists_mem_finset_rightIdeals
-    {ι : Type*} [DecidableEq ι]
+    {ι : Type*}
     (s : Finset ι) (I : ι → Submodule Rᵐᵒᵖ R)
     (hI : ∀ i ∈ s, ∃ x ∈ I i, x ≠ 0)
     (hOre : RightOreCondition R) :
     ∃ x : R, x ≠ 0 ∧ ∀ i ∈ s, x ∈ I i := by
+  classical
+  let : DecidableEq ι := Classical.decEq ι
   classical
   induction s using Finset.induction_on with
   | empty =>

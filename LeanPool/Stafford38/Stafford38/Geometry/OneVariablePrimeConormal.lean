@@ -39,7 +39,7 @@ ring with the ordinary polynomial ring. -/
 private def finOnePolynomialEquiv (k : Type u) [Field k] :
     MvPolynomial (Fin 1) k ≃ₐ[k] Polynomial k :=
   (MvPolynomial.renameEquiv k (Equiv.equivPUnit.{1, 1} (Fin 1))).trans
-    (MvPolynomial.pUnitAlgEquiv.{u, 0} k)
+    (MvPolynomial.uniqueAlgEquiv k PUnit.{1})
 
 /-- A prime component of the affine line whose entire zero set avoids the
 origin is maximal.  Algebraic closedness is not needed for this PID step. -/

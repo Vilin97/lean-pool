@@ -103,7 +103,7 @@ theorem ker_kaehler_residue_map_eq
       rw [ha, Derivation.leibniz]
       simp only [f, map_smul, TensorProduct.tmul_add,
         TensorProduct.tmul_smul, TensorProduct.smul_tmul']
-      simp [Algebra.smul_def, htresidue]
+      simp? [Algebra.smul_def, htresidue]
       change (algebraMap V (ResidueField V) a) •
           ((1 : ResidueField V) ⊗ₜ[V] KaehlerDifferential.D k V t) = _
       rw [ResidueField.algebraMap_eq, TensorProduct.smul_tmul']
@@ -244,7 +244,7 @@ theorem kaehler_le_coordinate_span_sup_maximalIdeal_smul
 for an independent generator `t` of the maximal ideal. -/
 theorem kaehler_image_visible
     {k V F : Type u} {ι : Type v}
-    [Fintype ι]
+    [Finite ι]
     [Field k] [CharZero k] [CommRing V] [IsLocalRing V] [Field F]
     [Algebra k V] [Algebra k F] [Algebra V F] [IsScalarTower k V F]
     (t : V) (hmax : maximalIdeal V = Ideal.span {t}) (q : ι → V)
@@ -258,6 +258,8 @@ theorem kaehler_image_visible
           (KaehlerDifferential.D k F) t q ⊔
         Ideal.span {t} •
           LinearMap.range (KaehlerDifferential.map k k V F) := by
+  classical
+  let := Fintype.ofFinite ι
   let φ : Ω[V⁄k] →ₗ[V] Ω[F⁄k] :=
     KaehlerDifferential.map k k V F
   let C : Submodule V (Ω[V⁄k]) :=

@@ -81,7 +81,7 @@ theorem universalStatement_of_canonicalSupportVanishing
         hscalar | hchart
       · rcases hscalar with ⟨c, hc, rfl⟩
         refine ⟨0, algebraMap k (PresentedWeyl k (n + 1)) c⁻¹, 0, ?_⟩
-        simp only [zero_mul, zero_add]
+        simp only [zero_mul]
         rw [← map_mul]
         rw [mul_inv_cancel₀ hc, map_one]
         simp
@@ -103,7 +103,7 @@ theorem universalStatement_of_canonicalSupportVanishing
           algebraMap k (PresentedWeyl k (n + 1)) c⁻¹
         have hd'eq : d' = a * e d := by
           simp [d', a, e, normalizedSymplecticImage, Algebra.smul_def,
-            standardSymplecticAlgEquivOfInverse] <;> rfl
+            standardSymplecticAlgEquivOfInverse]; rfl
         have ha_comm : ∀ z : PresentedWeyl k (n + 1), a * z = z * a := by
           intro z
           exact Algebra.commutes c⁻¹ z

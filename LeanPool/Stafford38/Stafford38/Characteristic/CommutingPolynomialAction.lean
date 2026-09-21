@@ -6,10 +6,18 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.CommutingPolynomialAction
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for polynomial actions from commuting endomorphisms
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic
 
-export AlgebraicAnalysis.CommutingPolynomialAction (commutingPolynomialAction commutingPolynomialAction_apply_X commutingPolynomialAction_apply_C commutingPolynomialAction_intertwines commutingPolynomialModule)
+export AlgebraicAnalysis.CommutingPolynomialAction (
+  commutingPolynomialAction
+  commutingPolynomialAction_apply_X
+  commutingPolynomialAction_apply_C
+  commutingPolynomialAction_intertwines
+  commutingPolynomialModule)
 
 end Stafford38.Characteristic

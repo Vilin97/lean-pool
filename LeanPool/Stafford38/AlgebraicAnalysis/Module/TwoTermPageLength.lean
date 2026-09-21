@@ -8,6 +8,10 @@ import Mathlib.RingTheory.Length
 import Mathlib.LinearAlgebra.Isomorphisms
 import Mathlib.Tactic
 
+/-!
+Length comparison for stabilized two-term pages with exhaustive target boundaries.
+-/
+
 namespace AlgebraicAnalysis.TwoTermPageLength
 
 open scoped ENat

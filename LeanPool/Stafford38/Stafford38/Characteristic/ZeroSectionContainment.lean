@@ -42,6 +42,7 @@ variable {n : ℕ}
 private abbrev orderDecomposition :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
+/-- The symbol grading by momentum degree used to isolate the zero section. -/
 local instance orderGradedAlgebraInstance :
     GradedAlgebra (orderDecomposition (n := n) k) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
@@ -82,7 +83,7 @@ private theorem eval_zeroComponent
             (Sum.inl i)
         rw [DirectSum.coe_decompose_mul_of_right_mem_of_le
           (orderDecomposition (n := n) k) hX (Nat.zero_le 0)]
-        simp only [Nat.zero_sub, MvPolynomial.eval_mul, hP,
+        simp only [ MvPolynomial.eval_mul, hP,
           MvPolynomial.eval_X]
         rfl
       · have hX : MvPolynomial.X (Sum.inr i : PhaseVar n) ∈

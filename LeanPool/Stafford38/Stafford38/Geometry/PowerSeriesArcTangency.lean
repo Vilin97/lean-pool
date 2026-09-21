@@ -47,17 +47,17 @@ theorem derivation_eval₂
       ∑ i, MvPolynomial.eval₂ (algebraMap k S) q
           (MvPolynomial.pderiv i f) * D (q i) := by
   induction f using MvPolynomial.induction_on with
-  | C a => simp [PowerSeries.algebraMap_apply]
+  | C a => simp []
   | add f g hf hg =>
       simp only [MvPolynomial.eval₂_add, D.map_add, map_add, hf, hg,
         Finset.sum_add_distrib, add_mul]
   | mul_X f i hf =>
       simp only [MvPolynomial.eval₂_mul, D.leibniz, smul_eq_mul, hf,
-        MvPolynomial.pderiv_mul, map_add, add_mul, Finset.sum_add_distrib,
+        MvPolynomial.pderiv_mul,  add_mul, Finset.sum_add_distrib,
         MvPolynomial.eval₂_add, MvPolynomial.eval₂_X,
-        MvPolynomial.eval₂_zero, MvPolynomial.pderiv_X,
+         MvPolynomial.pderiv_X,
         Pi.single_apply]
-      simp [Finset.mul_sum, Finset.sum_ite_eq', eq_comm, mul_comm,
+      simp? [Finset.mul_sum,   mul_comm,
         mul_left_comm, mul_assoc]
       have hsecond :
           (∑ x : Fin m,
@@ -75,7 +75,7 @@ theorem derivation_eval₂
                   q (if i = x then 1 else 0) * D (q x)) i
             (by
               intro b hb hbi
-              simp [hbi, Ne.symm hbi])
+              simp [ Ne.symm hbi])
             (by
               intro hi
               exact (hi (Finset.mem_univ i)).elim))
@@ -130,12 +130,12 @@ theorem derivationVector_mem_zariskiTangentSpace_of_eval₂_eq_zero
             · have hi := congrArg₂ (· + ·) ih₁.2 ih₂.2
               change ∑ i, MvPolynomial.eval q
                   (MvPolynomial.pderiv i (h₁ + h₂)) * D (q i) = 0
-              simp only [map_add, MvPolynomial.eval_add, add_mul]
+              simp only [map_add,  add_mul]
               rw [Finset.sum_add_distrib]
               simpa [differentialCovector, differentialAt] using hi
         | smul a h hh ih =>
             constructor
-            · simpa [smul_eq_mul, ih.1]
+            · simp [smul_eq_mul, ih.1]
             · have ihD :
                   ∑ i, MvPolynomial.eval q
                       (MvPolynomial.pderiv i h) * D (q i) = 0 := by
@@ -150,7 +150,7 @@ theorem derivationVector_mem_zariskiTangentSpace_of_eval₂_eq_zero
                   MvPolynomial.pderiv_mul,
                   MvPolynomial.eval_add, MvPolynomial.eval_mul, add_mul,
                   Finset.sum_add_distrib]
-                simp [Finset.mul_sum, Finset.sum_mul, mul_assoc, mul_comm,
+                simp [Finset.mul_sum,   mul_comm,
                   mul_left_comm]
               rw [show (a • h : MvPolynomial (Fin m) S) = a * h by rfl]
               rw [hprod]
@@ -158,9 +158,9 @@ theorem derivationVector_mem_zariskiTangentSpace_of_eval₂_eq_zero
       exact hmap g.1 g.2 |>.2
   | zero => simp
   | add φ ψ hφ hψ ihφ ihψ =>
-      simpa [ihφ, ihψ]
+      simp [ihφ, ihψ]
   | smul a φ hφ ihφ =>
-      simpa [ihφ]
+      simp [ihφ]
 
 /-- Constant-term evaluation commutes with evaluating a base-field
 polynomial in a power-series point. -/
@@ -235,12 +235,12 @@ theorem residueDerivationVector_mem_zariskiTangentSpace_of_eval₂_eq_zero
                   (fun i ↦ PowerSeries.constantCoeff (q i))
                   (MvPolynomial.pderiv i (h₁ + h₂)) *
                     PowerSeries.constantCoeff (D (q i)) = 0
-              simp only [map_add, MvPolynomial.eval_add, add_mul]
+              simp only [map_add,  add_mul]
               rw [Finset.sum_add_distrib]
               simpa [differentialCovector, differentialAt] using hi
         | smul a h hh ih =>
             constructor
-            · simpa [smul_eq_mul, ih.1]
+            · simp [smul_eq_mul, ih.1]
             · have hprod :
                   differentialCovector
                       (fun i ↦ PowerSeries.constantCoeff (q i))
@@ -259,17 +259,16 @@ theorem residueDerivationVector_mem_zariskiTangentSpace_of_eval₂_eq_zero
                 simp only [differentialCovector_apply, differentialAt,
                   MvPolynomial.pderiv_mul, MvPolynomial.eval_add,
                   MvPolynomial.eval_mul, add_mul, Finset.sum_add_distrib]
-                simp [Finset.mul_sum, Finset.sum_mul, mul_assoc, mul_comm,
-                  mul_left_comm]
+                simp [Finset.mul_sum,  mul_assoc, mul_comm]
               rw [show (a • h : MvPolynomial (Fin m) K) = a * h by rfl]
               rw [hprod]
               simp [ih.1, ih.2]
       exact hmap g.1 g.2 |>.2
   | zero => simp
   | add φ ψ hφ hψ ihφ ihψ =>
-      simpa [ihφ, ihψ]
+      simp [ihφ, ihψ]
   | smul a φ hφ ihφ =>
-      simpa [ihφ]
+      simp [ihφ]
 
 /-- The uniformizer member of the power-series frame is tangent after
 residue specialization whenever the arc annihilates the base ideal. -/
@@ -327,13 +326,13 @@ theorem derivative_eval_map
   induction f using MvPolynomial.induction_on with
   | C a => simp
   | add f g hf hg =>
-      simp only [map_add, MvPolynomial.eval_add, Derivation.map_add,
+      simp only [map_add,
         hf, hg, Finset.sum_add_distrib, add_mul]
   | mul_X f i hf =>
-      simp only [map_mul, MvPolynomial.eval_mul, Derivation.leibniz,
-        smul_eq_mul, map_add, hf, MvPolynomial.pderiv_mul, add_mul,
+      simp only [map_mul,  Derivation.leibniz,
+        smul_eq_mul, map_add, hf,  add_mul,
         Finset.sum_add_distrib]
-      simp [Pi.single_apply, Finset.mul_sum, mul_comm, mul_left_comm,
+      simp [Pi.single_apply, Finset.mul_sum, mul_comm,
         mul_assoc]
 
 /-! ## Tangency at the closed point -/
@@ -399,9 +398,9 @@ theorem arcVelocity_mem_zariskiTangentSpace_of_eval_eq_zero
         g.1 g.2
   | zero => simp
   | add φ ψ hφ hψ ihφ ihψ =>
-      simpa [ihφ, ihψ]
+      simp [ihφ, ihψ]
   | smul a φ hφ ihφ =>
-      simpa [ihφ]
+      simp [ihφ]
 
 @[simp]
 theorem residueFrameVector_none_mem_zariskiTangentSpace_of_eval_eq_zero

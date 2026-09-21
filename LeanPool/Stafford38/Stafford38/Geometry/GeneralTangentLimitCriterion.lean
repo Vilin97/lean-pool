@@ -182,12 +182,14 @@ theorem formalProjectiveArcInClosure_iff {n : ℕ}
 original lattice after scalar extension. -/
 private theorem genericFibre_eq_span_matrixColumns
     {R K : Type*} [CommRing R] [Field K] [Algebra R K]
-    {ι κ : Type*} [Fintype κ]
+    {ι κ : Type*} [Finite κ]
     (L : Submodule R (ι → R)) (B : Matrix ι κ R)
     (hspan : Submodule.span R (Set.range fun j => fun i => B i j) = L) :
     genericFibre (K := K) L =
       Submodule.span K (Set.range fun j => fun i =>
         algebraMap R K (B i j)) := by
+  classical
+  let := Fintype.ofFinite κ
   let f := extendColumn (R := R) (K := K) (ι := ι)
   let columns : κ → (ι → R) := fun j i => B i j
   apply le_antisymm
@@ -282,7 +284,9 @@ structure Input {n dimY : ℕ} {κ : Type*} [Fintype κ] [DecidableEq κ]
     (I : Ideal (MvPolynomial (Fin n) k))
     (q : Fin (n + 1) → PowerSeries k)
     (B : Matrix (Fin (n + 1)) κ (PowerSeries k)) where
+  /-- The affine coordinate axis specifying the tangent-limit residue condition. -/
   axis : Fin n
+  /-- A left inverse of the matrix whose columns span the limiting tangent space. -/
   C : Matrix κ (Fin (n + 1)) (PowerSeries k)
   hprime : I.IsPrime
   hsplit : C * B = 1
@@ -315,6 +319,7 @@ structure DirectSummandInput {n dimY : ℕ}
     (q : Fin (n + 1) → PowerSeries k)
     (L : Submodule (PowerSeries k)
       (Fin (n + 1) → PowerSeries k)) where
+  /-- The affine coordinate axis defining the residue hyperplane condition. -/
   axis : Fin n
   isComplemented : IsComplemented L
   rank_eq : Module.finrank (PowerSeries k) L = dimY + 1
@@ -336,7 +341,7 @@ structure DirectSummandInput {n dimY : ℕ}
     PowerSeries.constantCoeff ((v : Fin (n + 1) → PowerSeries k) axis.succ) = 0
 
 private theorem rowMul_zero_of_leftInverse_axis
-    {n : ℕ} {κ : Type*} [Fintype κ] [DecidableEq κ]
+    {n : ℕ} {κ : Type*} [Finite κ] [DecidableEq κ]
     (B : Matrix (Fin (n + 1)) κ (PowerSeries k))
     (C : Matrix κ (Fin (n + 1)) (PowerSeries k))
     (axis : Fin (n + 1))
@@ -345,6 +350,8 @@ private theorem rowMul_zero_of_leftInverse_axis
     ∃ ell : Fin (n + 1) → PowerSeries k,
       rowMul ell B = 0 ∧
         residueColumn ell = axisRow (k := k) axis := by
+  classical
+  let := Fintype.ofFinite κ
   let a₀ : Fin (n + 1) → k := axisRow (k := k) axis
   let a : Fin (n + 1) → PowerSeries k := constantColumn a₀
   have hres : residueColumn a = a₀ := by
@@ -360,7 +367,7 @@ private theorem rowMul_zero_of_leftInverse_axis
   · simpa [ell, a₀] using hell.2
 
 private theorem rowMul_laurent_of_rowMul
-    {n : ℕ} {κ : Type*} [Fintype κ]
+    {n : ℕ} {κ : Type*}
     (ell : Fin (n + 1) → PowerSeries k)
     (B : Matrix (Fin (n + 1)) κ (PowerSeries k))
     (h : rowMul ell B = 0) :
@@ -390,7 +397,7 @@ theorem exists_axis_laurent_smooth_conormal_direction
            (smoothEquationConormalLocus I) ∧
        Projectivization.mk k
            (fun i : Fin n => if i = D.axis then (1 : k) else 0)
-           (by intro h; have hh := congrFun h D.axis; simpa using hh) ∈
+           (by intro h; have hh := congrFun h D.axis; simp at hh) ∈
          projectiveHomogeneousClosure
            (projectivizedDirectionSet (smoothConormalDirectionSet I))) := by
   obtain ⟨ell, hrow, hres⟩ := rowMul_zero_of_leftInverse_axis
@@ -491,7 +498,7 @@ theorem exists_axis_laurent_smooth_conormal_direction
     I axisVec (by
       intro h
       have hh := congrFun h D.axis
-      simpa [axisVec] using hh) hvanAxis
+      simp [axisVec] at hh) hvanAxis
   exact ⟨ell, hrow, hres, ⟨hphaseSmooth, hclosure, by simpa [axisVec] using hproj⟩⟩
 
 /-- Paper-level tangent-limit criterion.  Starting from an actual rank
@@ -509,7 +516,7 @@ theorem tangent_limit_criterion_of_directSummand
     (D : DirectSummandInput (dimY := dimY) I q L) :
     Projectivization.mk k
         (fun i : Fin n => if i = D.axis then (1 : k) else 0)
-        (by intro h; have hh := congrFun h D.axis; simpa using hh) ∈
+        (by intro h; have hh := congrFun h D.axis; simp at hh) ∈
       projectiveHomogeneousClosure
         (projectivizedDirectionSet (smoothConormalDirectionSet I)) := by
   obtain ⟨P⟩ := exists_splitMatrixPresentation_of_isComplemented

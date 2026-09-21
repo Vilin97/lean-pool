@@ -66,7 +66,8 @@ def quotientOrderReesShift
     (DirectSum.lof k ℕ (fun M => quotientOrderPiece k I M) (N + 1)).comp
       (quotientOrderPieceSucc k I N)
 
-@[simp] theorem quotientOrderReesShift_of
+@[simp]
+theorem quotientOrderReesShift_of
     (I : RightIdeal (PresentedWeyl k n)) (N : ℕ)
     (q : quotientOrderPiece k I N) :
     quotientOrderReesShift k I
@@ -95,7 +96,8 @@ def quotientOrderReesToAssociatedGraded
     (DirectSum.lof k ℕ (fun M => QuotientOrderGradedPiece k I M) N).comp
       (quotientOrderPieceToGraded k I N)
 
-@[simp] theorem quotientOrderReesToAssociatedGraded_of
+@[simp]
+theorem quotientOrderReesToAssociatedGraded_of
     (I : RightIdeal (PresentedWeyl k n)) (N : ℕ)
     (q : quotientOrderPiece k I N) :
     quotientOrderReesToAssociatedGraded k I

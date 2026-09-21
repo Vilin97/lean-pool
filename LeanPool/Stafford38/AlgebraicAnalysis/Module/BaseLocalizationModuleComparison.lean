@@ -45,6 +45,8 @@ theorem localizedModule_isLocalizedOverBase :
       (LocalizedModule.mkLinearMap SC E) := by
     infer_instance
   exact IsLocalizedModule.restrictScalars S (LocalizedModule.mkLinearMap SC E)
+omit [IsScalarTower R C E] in
+omit [Module R E] in
 theorem localizedModule_isLocalizedOverCoefficient :
     IsLocalizedModule SC (LocalizedModule.mkLinearMap SC E) := by
   infer_instance
@@ -77,7 +79,7 @@ noncomputable def localizedModuleComparison :
       ((LocalizedModule.mkLinearMap SC E).restrictScalars R)).extendScalarsOfIsLocalization
         S (Localization S)
 
-@[simp] theorem localizedModuleComparison_mkLinearMap (m : E) :
+theorem localizedModuleComparison_mkLinearMap (m : E) :
     localizedModuleComparison S (LocalizedModule.mkLinearMap S E m) =
       LocalizedModule.mkLinearMap SC E m := by
   let : IsLocalizedModule S
@@ -87,7 +89,8 @@ noncomputable def localizedModuleComparison :
     (LocalizedModule.mkLinearMap S E)
     ((LocalizedModule.mkLinearMap SC E).restrictScalars R) m
 
-@[simp] theorem localizedModuleComparison_mk (m : E) (s : S) :
+@[simp]
+theorem localizedModuleComparison_mk (m : E) (s : S) :
     localizedModuleComparison S (LocalizedModule.mk m s) =
       (LocalizedModule.mk m (coefficientDenominator (C := C) S s) :
         LocalizedModule SC E) := by

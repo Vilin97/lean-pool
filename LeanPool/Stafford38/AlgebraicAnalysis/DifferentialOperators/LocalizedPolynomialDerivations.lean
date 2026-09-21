@@ -83,8 +83,7 @@ theorem derivation_ext_of_compAlgebraMap_eq
         D₂.liftKaehlerDifferential.comp e.toLinearMap := by
     apply LinearMap.ext
     intro z
-    induction z using TensorProduct.induction_on with
-    | zero => simp
+    induction z using TensorProduct.inductionOn with
     | add x y hx hy => simp only [map_add, hx, hy]
     | tmul a x =>
         simp only [e,
@@ -118,16 +117,16 @@ private theorem pderiv_comm (i j : Fin n) (f : MvPolynomial (Fin n) k) :
   | mul_X p l hp =>
       by_cases hij : i = j
       · subst j
-        simp [hp, mul_comm]
+        simp [ mul_comm]
       · by_cases hil : i = l
         · subst l
           by_cases hjl : j = i
           · exact False.elim (hij hjl.symm)
-          · simp [MvPolynomial.pderiv_mul, hp, hjl, hij, mul_comm] <;> ring
+          · simp [hp, hij, mul_comm]; ring
         · by_cases hjl : j = l
           · subst l
-            simp [MvPolynomial.pderiv_mul, hp, hil, hij, mul_comm] <;> ring
-          · simp [MvPolynomial.pderiv_mul, hp, hil, hjl, hij, mul_comm] <;> ring
+            simp [hp, hil, mul_comm]; ring
+          · simp [hp, hil, hjl, mul_comm]
 
 /-- The `i`th polynomial partial derivative, transported to a localization. -/
 noncomputable def localizedPderiv

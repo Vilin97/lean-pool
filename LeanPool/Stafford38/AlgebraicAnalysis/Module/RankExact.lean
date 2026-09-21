@@ -102,7 +102,7 @@ theorem finrank_prod_add [Module.Finite Q V] [Module.Finite Q W] :
     Module.finrank Q (V × W) = Module.finrank Q V + Module.finrank Q W := by
   exact Module.finrank_prod
 theorem finrank_add_of_linearEquiv_prod {U : Type v}
-    [AddCommGroup U] [Module Q U] [Module.Finite Q U]
+    [AddCommGroup U] [Module Q U]
     [Module.Finite Q V] [Module.Finite Q W]
     (e : U ≃ₗ[Q] V × W) :
     Module.finrank Q U = Module.finrank Q V + Module.finrank Q W := by

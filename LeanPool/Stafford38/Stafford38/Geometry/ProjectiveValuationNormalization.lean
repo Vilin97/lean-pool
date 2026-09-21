@@ -46,8 +46,10 @@ theorem adicCompletion_algebraMap_injective
 /-- A finite family in a valuation ring has a member dividing every member. -/
 theorem exists_index_dvd_all
     {R : Type u} [CommRing R] [IsDomain R] [ValuationRing R]
-    {ι : Type v} [Fintype ι] [Nonempty ι] (a : ι → R) :
+    {ι : Type v} [Finite ι] [Nonempty ι] (a : ι → R) :
     ∃ c, ∀ i, a c ∣ a i := by
+  classical
+  let := Fintype.ofFinite ι
   classical
   let s : Finset (Associates R) :=
     Finset.univ.image fun i ↦ Associates.mk (a i)
@@ -77,11 +79,13 @@ theorem exists_index_dvd_all
 lift to any valuation subring of that field. -/
 theorem exists_normalized_projective_lift
     {K : Type u} [Field K] (V : ValuationSubring K)
-    {ι : Type v} [Fintype ι] [Nonempty ι]
+    {ι : Type v} [Finite ι] [Nonempty ι]
     (f : ι → K) (hf : ∃ i, f i ≠ 0) :
     ∃ (chart : ι) (q : ι → V) (scale : K),
       scale ≠ 0 ∧ q chart = 1 ∧
       ∀ i, (q i : K) = scale * f i := by
+  classical
+  let := Fintype.ofFinite ι
   classical
   obtain ⟨b, hb⟩ :=
     IsLocalization.exist_integer_multiples_of_finite
@@ -119,8 +123,6 @@ theorem exists_normalized_projective_lift
   · intro i
     change algebraMap V K (q i) = scale * f i
     apply mul_left_cancel₀ hchartK_ne
-    change algebraMap V K (a chart) * algebraMap V K (q i) =
-      algebraMap V K (a chart) * (scale * f i)
     calc
       algebraMap V K (a chart) * algebraMap V K (q i) =
           algebraMap V K (a chart * q i) := by rw [map_mul]

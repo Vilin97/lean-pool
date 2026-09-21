@@ -10,6 +10,10 @@ import LeanPool.Stafford38.Stafford38.Geometry.KaehlerDVRVisibility
 import LeanPool.Stafford38.Stafford38.Geometry.ProjectiveDivisorOrderGap
 import LeanPool.Stafford38.Stafford38.Geometry.RelativeRetainedBoundaryPlace
 
+/-!
+Existence of a divisorial frame satisfying the exact visibility interface.
+-/
+
 namespace Stafford38.Geometry.ExactDivisorialVisibleFrameExistence
 
 open IsLocalRing Polynomial

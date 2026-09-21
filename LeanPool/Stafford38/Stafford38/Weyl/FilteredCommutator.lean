@@ -99,11 +99,13 @@ theorem commutator_eq_zero_of_mem_orderPiece_zero
     k (@orderWeight n) _ hcomm).mp htop
   simpa [presentedStrictLowerPiece] using hlower
 
-@[simp] theorem poissonBracket_zero_left {n : ℕ}
+@[simp]
+theorem poissonBracket_zero_left {n : ℕ}
     (f : SymbolRing k n) : poissonBracket 0 f = 0 := by
   simp [poissonBracket]
 
-@[simp] theorem poissonBracket_zero_right {n : ℕ}
+@[simp]
+theorem poissonBracket_zero_right {n : ℕ}
     (f : SymbolRing k n) : poissonBracket f 0 = 0 := by
   simp [poissonBracket]
 
@@ -129,7 +131,7 @@ theorem poissonBracket_smul_left {n : ℕ}
     (c : k) (f g : SymbolRing k n) :
     poissonBracket (c • f) g = c • poissonBracket f g := by
   simp only [poissonBracket, Algebra.smul_def, MvPolynomial.pderiv_mul,
-    MvPolynomial.algebraMap_eq, MvPolynomial.pderiv_C, zero_mul, add_zero,
+    MvPolynomial.algebraMap_eq, MvPolynomial.pderiv_C, zero_mul,
     Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro i hi
@@ -139,7 +141,7 @@ theorem poissonBracket_smul_right {n : ℕ}
     (c : k) (f g : SymbolRing k n) :
     poissonBracket f (c • g) = c • poissonBracket f g := by
   simp only [poissonBracket, Algebra.smul_def, MvPolynomial.pderiv_mul,
-    MvPolynomial.algebraMap_eq, MvPolynomial.pderiv_C, zero_mul, add_zero,
+    MvPolynomial.algebraMap_eq, MvPolynomial.pderiv_C, zero_mul,
     Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro i hi
@@ -287,12 +289,12 @@ theorem principalComponent_commutator_eq_neg_poisson_of_PBW
         subst s
         rw [presentedPrincipalComponent_basis,
           presentedPrincipalComponent_basis]
-        simp only [R, S, if_pos rfl]
+        simp only [R, S]
         exact hPBW m q
       · have hSlt : S < s := lt_of_le_of_ne hq hS
         rw [presentedPrincipalComponent_basis,
           presentedPrincipalComponent_basis]
-        simp only [R, S, hR, if_pos, hS, if_false,
+        simp only [R, S, hR, ite_eq_left, hS, ite_false,
           poissonBracket_zero_right, neg_zero]
         by_cases hzero : R + S = 0
         · have hR0 : R = 0 := by omega
@@ -307,7 +309,7 @@ theorem principalComponent_commutator_eq_neg_poisson_of_PBW
     · have hRlt : R < r := lt_of_le_of_ne hm hR
       rw [presentedPrincipalComponent_basis,
         presentedPrincipalComponent_basis]
-      simp only [R, S, hR, if_false, poissonBracket_zero_left, neg_zero]
+      simp only [R,  hR, ite_false, poissonBracket_zero_left, neg_zero]
       by_cases hzero : R + S = 0
       · have hR0 : R = 0 := by omega
         have hS0 : S = 0 := by omega

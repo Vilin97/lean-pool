@@ -7,10 +7,20 @@ Authors: Christopher Albert
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalActions
 import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalPages
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for operator actions on total filtered two-term pages
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.FilteredTwoTermPages
 
-export AlgebraicAnalysis.FilteredTwoTermPages (FilteredTwoTerm.PageOperator.sourceTotalMap FilteredTwoTerm.PageOperator.targetTotalMap FilteredTwoTerm.PageOperator.sourceTotalMap_lof FilteredTwoTerm.PageOperator.targetTotalMap_lof FilteredTwoTerm.PageOperator.totalDrop_intertwines FilteredTwoTerm.PageOperator.sourceTotalMap_commute_of_commutator_lowers FilteredTwoTerm.PageOperator.targetTotalMap_commute_of_commutator_lowers)
+export AlgebraicAnalysis.FilteredTwoTermPages (
+  FilteredTwoTerm.PageOperator.sourceTotalMap
+  FilteredTwoTerm.PageOperator.targetTotalMap
+  FilteredTwoTerm.PageOperator.sourceTotalMap_lof
+  FilteredTwoTerm.PageOperator.targetTotalMap_lof
+  FilteredTwoTerm.PageOperator.totalDrop_intertwines
+  FilteredTwoTerm.PageOperator.sourceTotalMap_commute_of_commutator_lowers
+  FilteredTwoTerm.PageOperator.targetTotalMap_commute_of_commutator_lowers)
 
 end Stafford38.Characteristic.FilteredTwoTermPages

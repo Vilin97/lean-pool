@@ -72,7 +72,8 @@ def homogeneousRightMul {N M : ℕ}
     apply Subtype.ext
     exact Algebra.smul_mul_assoc c (Q : SymbolRing k n) P
 
-@[simp] theorem coe_homogeneousRightMul {N M : ℕ}
+@[simp]
+theorem coe_homogeneousRightMul {N M : ℕ}
     (P : MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n) M)
     (Q : MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n) N) :
     (homogeneousRightMul k P Q : SymbolRing k n) = Q * P :=
@@ -128,7 +129,8 @@ def homogeneousSymbolAction {N M : ℕ}
     (homogeneousRightMul k P)
     (homogeneousRightMul_mem_orderSymbolRelation k I P)
 
-@[simp] theorem homogeneousSymbolAction_mk {N M : ℕ}
+@[simp]
+theorem homogeneousSymbolAction_mk {N M : ℕ}
     (I : RightIdeal (PresentedWeyl k n))
     (P : MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n) M)
     (Q : MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n) N) :
@@ -159,7 +161,8 @@ theorem quotientOrderHomogeneousAction_compatibility {N M : ℕ}
         (quotientOrderGradedPieceEquivSymbols k I N q) := by
   simp [quotientOrderHomogeneousAction]
 
-@[simp] theorem quotientOrderGradedPieceEquivSymbols_mk {N : ℕ}
+@[simp]
+theorem quotientOrderGradedPieceEquivSymbols_mk {N : ℕ}
     (I : RightIdeal (PresentedWeyl k n)) (z : orderPiece k n N) :
     quotientOrderGradedPieceEquivSymbols k I N
         (orderPieceToQuotientGraded k I N z) =

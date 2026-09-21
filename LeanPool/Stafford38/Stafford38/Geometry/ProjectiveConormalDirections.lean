@@ -27,11 +27,13 @@ noncomputable section
 
 variable {k : Type*} [Field k] [IsAlgClosed k] {n : ℕ}
 
+/-- Projective points whose every nonzero representative annihilates a given polynomial. -/
 def projectiveHomogeneousZeroLocus (P : MvPolynomial (Fin n) k) :
     Set (Projectivization k (Fin n → k)) :=
   {z | ∀ v : Fin n → k, ∀ hv : v ≠ 0,
     z = Projectivization.mk k v hv → MvPolynomial.eval v P = 0}
 
+/-- The intersection of all homogeneous polynomial zero loci containing a projective set. -/
 def projectiveHomogeneousClosure
     (T : Set (Projectivization k (Fin n → k))) :
     Set (Projectivization k (Fin n → k)) :=
@@ -40,6 +42,7 @@ def projectiveHomogeneousClosure
     T ⊆ projectiveHomogeneousZeroLocus P →
       z ∈ projectiveHomogeneousZeroLocus P}
 
+/-- Nonzero covectors conormal to at least one smooth affine point of the ideal. -/
 def smoothConormalDirectionSet
     (I : Ideal (MvPolynomial (Fin n) k)) :
     Set (Fin n → k) :=
@@ -47,16 +50,19 @@ def smoothConormalDirectionSet
     SmoothAffinePoint I y ∧ ξ ≠ 0 ∧
       coordinateCovector ξ ∈ affineConormalSpace y I}
 
+/-- Covectors conormal to smooth affine points, including the zero covector. -/
 def smoothConormalFibreProjection
     (I : Ideal (MvPolynomial (Fin n) k)) : Set (Fin n → k) :=
   {ξ | ∃ y : Fin n → k,
     SmoothAffinePoint I y ∧
       coordinateCovector ξ ∈ affineConormalSpace y I}
 
+/-- The projective classes represented by nonzero vectors in a given set. -/
 def projectivizedDirectionSet (T : Set (Fin n → k)) :
     Set (Projectivization k (Fin n → k)) :=
   {z | ∃ v, v ∈ T ∧ ∃ hv : v ≠ 0, z = Projectivization.mk k v hv}
 
+omit [IsAlgClosed k] in
 private theorem eval_smul_of_isHomogeneous
     (P : MvPolynomial (Fin n) k) (d : ℕ) (hP : P.IsHomogeneous d)
     (a : k) (v : Fin n → k) :
@@ -73,6 +79,7 @@ private theorem eval_smul_of_isHomogeneous
   rw [Finset.prod_pow_eq_pow_sum, hd]
   ring
 
+omit [IsAlgClosed k] in
 theorem mk_mem_projectiveHomogeneousClosure_of_fibre_zeroLocus
     (I : Ideal (MvPolynomial (Fin n) k)) (ξ : Fin n → k) (hξ : ξ ≠ 0)
     (hvan : ξ ∈ MvPolynomial.zeroLocus k

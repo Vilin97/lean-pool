@@ -52,6 +52,7 @@ private abbrev OrderHomogeneous (n N : ℕ) :=
 private abbrev orderDecomposition (n : ℕ) :=
   MvPolynomial.weightedHomogeneousSubmodule k (@orderWeight n)
 
+/-- The weighted graded-algebra structure on the order-symbol decomposition. -/
 local instance orderGradedAlgebraInstance (n : ℕ) :
     GradedAlgebra (orderDecomposition k n) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
@@ -67,6 +68,7 @@ private theorem unit_relation_of_sup_span_eq_top
   rw [hrelation]
   exact I.neg_mem hj
 
+omit [Algebra ℚ k] in
 /-- The converse needed by the terminal cancellation route: unit generation
 in the order initial ideal yields an actual order-zero coordinate predecessor
 of the unit in the canonical right quotient. -/

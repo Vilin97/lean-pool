@@ -20,7 +20,7 @@ noncomputable section
 
 variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
 theorem exists_minimal_support_prime
-    [IsNoetherianRing R] [Module.Finite R U] [Nontrivial U] :
+     [Module.Finite R U] [Nontrivial U] :
     ∃ q : PrimeSpectrum R,
       q ∈ Module.support R U ∧
         ∀ p ∈ Module.support R U, p.asIdeal ≤ q.asIdeal →

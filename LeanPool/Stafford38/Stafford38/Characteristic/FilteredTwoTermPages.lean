@@ -6,10 +6,28 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPages
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for filtered two-term cycles, boundaries, and pages
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.FilteredTwoTermPages
 
-export AlgebraicAnalysis.FilteredTwoTermPages (FilteredTwoTerm FilteredTwoTerm.cycles FilteredTwoTerm.boundaries FilteredTwoTerm.next_le FilteredTwoTerm.boundaries_le FilteredTwoTerm.SourcePage FilteredTwoTerm.TargetPage FilteredTwoTerm.drop FilteredTwoTerm.drop_mk FilteredTwoTerm.cycles_succ_le FilteredTwoTerm.boundaries_le_succ FilteredTwoTerm.drop_mk_eq_zero_of_mem_cycles_succ FilteredTwoTerm.exists_cycles_succ_rep_of_drop_mk_eq_zero FilteredTwoTerm.mem_boundaries_succ_rep FilteredTwoTerm.exists_mem_boundaries_of_surjective)
+export AlgebraicAnalysis.FilteredTwoTermPages (
+  FilteredTwoTerm
+  FilteredTwoTerm.cycles
+  FilteredTwoTerm.boundaries
+  FilteredTwoTerm.next_le
+  FilteredTwoTerm.boundaries_le
+  FilteredTwoTerm.SourcePage
+  FilteredTwoTerm.TargetPage
+  FilteredTwoTerm.drop
+  FilteredTwoTerm.drop_mk
+  FilteredTwoTerm.cycles_succ_le
+  FilteredTwoTerm.boundaries_le_succ
+  FilteredTwoTerm.drop_mk_eq_zero_of_mem_cycles_succ
+  FilteredTwoTerm.exists_cycles_succ_rep_of_drop_mk_eq_zero
+  FilteredTwoTerm.mem_boundaries_succ_rep
+  FilteredTwoTerm.exists_mem_boundaries_of_surjective)
 
 end Stafford38.Characteristic.FilteredTwoTermPages

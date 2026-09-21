@@ -8,10 +8,15 @@ import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermBoundaryNatur
 import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermTotalActions
 import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermBoundaryExhaustion
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for naturality of filtered boundary maps
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.FilteredTwoTermPages
 
-export AlgebraicAnalysis.FilteredTwoTermPages (FilteredTwoTerm.PageOperator.targetBoundaryMap_naturality FilteredTwoTerm.PageOperator.totalBoundaryMap_naturality)
+export AlgebraicAnalysis.FilteredTwoTermPages (
+  FilteredTwoTerm.PageOperator.targetBoundaryMap_naturality
+  FilteredTwoTerm.PageOperator.totalBoundaryMap_naturality)
 
 end Stafford38.Characteristic.FilteredTwoTermPages

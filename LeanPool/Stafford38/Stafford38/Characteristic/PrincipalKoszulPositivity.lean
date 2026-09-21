@@ -7,10 +7,22 @@ Authors: Christopher Albert
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.PrincipalKoszulPositivity
 import LeanPool.Stafford38.Stafford38.Characteristic.MinimalPrimeFiniteLengthLocalization
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for positivity of the principal Koszul Euler characteristic
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.PrincipalKoszulPositivity
 
-export AlgebraicAnalysis.PrincipalKoszulPositivity (exists_stable_kernel_power exists_stable_kernel_power_smul isArtinian_kernel_power quotient_by_stable_kernel_power_injective length_cokernel_eq_kernel_add_regular_quotient scalar_range_ne_top_of_mem_maximalIdeal length_cokernel_smul_gt_length_kernel_smul length_cokernel_smul_gt_kernel_of_finite_torsion length_cokernel_smul_gt_kernel_of_support_prime)
+export AlgebraicAnalysis.PrincipalKoszulPositivity (
+  exists_stable_kernel_power
+  exists_stable_kernel_power_smul
+  isArtinian_kernel_power
+  quotient_by_stable_kernel_power_injective
+  length_cokernel_eq_kernel_add_regular_quotient
+  scalar_range_ne_top_of_mem_maximalIdeal
+  length_cokernel_smul_gt_length_kernel_smul
+  length_cokernel_smul_gt_kernel_of_finite_torsion
+  length_cokernel_smul_gt_kernel_of_support_prime)
 
 end Stafford38.Characteristic.PrincipalKoszulPositivity

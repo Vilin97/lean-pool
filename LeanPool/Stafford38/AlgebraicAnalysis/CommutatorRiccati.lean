@@ -22,7 +22,8 @@ variable {A : Type*} [Ring A]
 /-- Historical local name for the shared ring commutator. -/
 def commutator (a b : A) : A := AlgebraicAnalysis.ringCommutator a b
 
-@[simp] theorem commutator_eq_shared (a b : A) :
+@[simp]
+theorem commutator_eq_shared (a b : A) :
     commutator a b = AlgebraicAnalysis.ringCommutator a b := rfl
 
 /-- Iterated commutation by a fixed element. -/

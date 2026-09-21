@@ -55,7 +55,7 @@ def augmentedProjectiveMatrix {ι : Type v} {κ : Type w}
 
 /-- The nonposition part of the formal power-series tangent matrix. -/
 def nonpositionPowerSeriesMatrix {k : Type u} {ι : Type v} {κ : Type w}
-    [Field k] (Z : Matrix ι κ (PowerSeries k))
+     (Z : Matrix ι κ (PowerSeries k))
     (tau : ι → PowerSeries k) : Matrix ι (κ ⊕ Unit) (PowerSeries k)
   | i, Sum.inl j => Z i j
   | i, Sum.inr _ => tau i
@@ -80,7 +80,7 @@ theorem linearIndependent_chartDehomogenizedTangentColumns
     funext i
     simp only [Pi.zero_apply, Matrix.mulVec, dotProduct,
       augmentedProjectiveMatrix, c', Fintype.sum_sum_type,
-      Fintype.sum_unique, one_mul]
+      Fintype.sum_unique]
     change q i * s + ∑ a, B i a * c a = 0
     by_cases hi : i = chart
     · subst i
@@ -89,7 +89,7 @@ theorem linearIndependent_chartDehomogenizedTangentColumns
       simp [mul_comm]
     · have hcoordinate := congrFun hc ⟨i, hi⟩
       simp only [Pi.zero_apply] at hcoordinate
-      simp [chartDehomogenizedTangentColumn] at hcoordinate
+      simp? [chartDehomogenizedTangentColumn] at hcoordinate
       simp_rw [← mul_div_assoc] at hcoordinate
       rw [← Finset.sum_div] at hcoordinate
       simp only [s]
@@ -115,7 +115,7 @@ theorem linearIndependent_chartDehomogenizedTangentColumns
 of the residue matrix. -/
 theorem residueMatrix_mul_eq_one_of_mul_eq_one
     {k : Type u} [Field k] {ι : Type v} {κ : Type w}
-    [Fintype ι] [Fintype κ] [DecidableEq κ]
+    [Fintype ι]  [DecidableEq κ]
     (C : Matrix κ ι (PowerSeries k)) (B : Matrix ι κ (PowerSeries k))
     (hCB : C * B = 1) :
     residueMatrix C * residueMatrix B = 1 := by

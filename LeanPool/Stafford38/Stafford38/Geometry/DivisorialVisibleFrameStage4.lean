@@ -11,6 +11,10 @@ import Mathlib.RingTheory.Algebraic.Basic
 import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
 import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
 
+/-!
+Algebraicity of the divisorial residue field from integral affine models.
+-/
+
 open IsLocalRing
 noncomputable section
 universe u v
@@ -19,7 +23,7 @@ namespace Stafford38.Geometry.DivisorialVisibleFrameStage4
 
 theorem stage4_residueField_isAlgebraic_of_isIntegral
     {k K : Type u} [Field k] [Field K] [Algebra k K]
-    (A : Subalgebra k K) (p : Ideal A) [p.IsPrime]
+    (A : Subalgebra k K) (p : Ideal A)
     (V : ValuationSubring K) [IsLocalRing V.toSubring]
     [Algebra k V.toSubring] [IsScalarTower k V.toSubring K]
     (hAV : ∀ a : A, (a : K) ∈ V.toSubring)
@@ -144,7 +148,7 @@ private theorem isAlgebraic_over_larger_intermediateField
     (IntermediateField.inclusion_injective hLM)⟩
 
 theorem stage4'_isAlgebraic_of_normalized_column
-    {k K : Type u} [Field k] [Field K] [Algebra k K]
+    {k K : Type u} [Field k] [Field K]
     (V : ValuationSubring K) [IsLocalRing V.toSubring] [Algebra k V.toSubring]
     {r : ℕ} (y : Fin r → K) (j : Fin (r + 1)) (hj : j ≠ 0) (s₀ : K)
     (c : Fin (r + 1) → V.toSubring) (hc : ∀ a, (c a : K) = (Fin.cases 1 y a : K) * s₀)

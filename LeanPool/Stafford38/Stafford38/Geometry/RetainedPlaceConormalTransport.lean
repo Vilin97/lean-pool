@@ -161,7 +161,7 @@ theorem divisorFrame_kaehler_relation
   refine ⟨b, ?_⟩
   simp only [hy, hy₁] at hb
   simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul, zero_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, algebraMap_smul]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, algebraMap_smul]
   rw [← hb, sub_self]
 
 end KaehlerRelation
@@ -183,7 +183,7 @@ theorem annihilation_identity
       ∑ j, ((if j = i₀ then 1 else 0) - t ^ (a + e - 1) * b j) * qs j = 0 := by
   obtain ⟨e', rfl⟩ := Nat.exists_eq_add_of_le' he
   simp only [Nat.add_sub_cancel, sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul,
-    zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true, hq₁, Finset.sum_mul]
+    zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, hq₁, Finset.sum_mul]
   have hpow : ∀ j, t ^ (a + (e' + 1) - 1) * b j * qs j =
       t ^ e' * b j * qs j * uinv * q₀ := by
     intro j
@@ -351,7 +351,8 @@ theorem retainedLaurentLift_comp_algebraMap
   let : Algebra k (ResidueField V) :=
     retainedResidueGroundAlgebra P i W
   let : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
-  let : SMul (CoordinateZeroLocalRing W.coefficientField) (ComponentFractionField P) := Algebra.toSMul
+  let : SMul (CoordinateZeroLocalRing W.coefficientField) (ComponentFractionField P) :=
+    Algebra.toSMul
   let : SMul W.coefficientField (ComponentFractionField P) := Algebra.toSMul
   let : IsScalarTower W.coefficientField
       (CoordinateZeroLocalRing W.coefficientField)

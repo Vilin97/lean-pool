@@ -60,7 +60,7 @@ theorem presentedPrincipalComponent_eq_zero_iff_mem_strictLower
         have hle := (mem_presentedWeightPiece k w 0 z).mp hz
         have hpc := congrArg (fun f : MvPolynomial _ _ => f.coeff m) hp
         rw [coeff_presentedPrincipalComponent,
-          MvPolynomial.coeff_zero] at hpc
+          AddMonoidAlgebra.coeff_zero] at hpc
         by_cases hc :
             (presentedNormalFormLinearEquiv k n z).coeff m = 0
         · rw [hc]
@@ -73,7 +73,7 @@ theorem presentedPrincipalComponent_eq_zero_iff_mem_strictLower
         have hle := (mem_presentedWeightPiece k w (N + 1) z).mp hz m hm
         have hpc := congrArg (fun f : MvPolynomial _ _ => f.coeff m) hp
         rw [coeff_presentedPrincipalComponent,
-          MvPolynomial.coeff_zero] at hpc
+          AddMonoidAlgebra.coeff_zero] at hpc
         by_contra hnot
         have heq : monomialWeight w m = N + 1 := by omega
         simp [heq, hm] at hpc
@@ -154,6 +154,7 @@ theorem principalComponentOnPiece_surjective {n N : ℕ}
     (presentedNormalFormLinearEquiv k n).apply_symm_apply f]
   exact f.property.weightedHomogeneousComponent_same
 
+/-- The quotient structure for submodules of a presented homogeneous weight piece. -/
 local instance (priority := 10000) presentedWeightPieceHasQuotient {n : ℕ}
     (w : PhaseVar n → ℕ) (N : ℕ) :
     HasQuotient (presentedWeightPiece k w N)
@@ -170,6 +171,7 @@ abbrev presentedAssociatedGradedPiece {n : ℕ}
   (presentedWeightPiece k w N) ⧸
     LinearMap.ker (principalComponentOnPiece k w N)
 
+/-- The additive group structure on a homogeneous associated-graded quotient piece. -/
 local instance (priority := 10000) presentedAssociatedGradedPieceAddCommGroup
     {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
     AddCommGroup (presentedAssociatedGradedPiece k w N) :=
@@ -178,6 +180,7 @@ local instance (priority := 10000) presentedAssociatedGradedPieceAddCommGroup
     (presentedWeightPiece k w N).module
     (LinearMap.ker (principalComponentOnPiece k w N))
 
+/-- The coefficient-field module structure on a homogeneous associated-graded quotient piece. -/
 local instance (priority := 10000) presentedAssociatedGradedPieceModule
     {n : ℕ} (w : PhaseVar n → ℕ) (N : ℕ) :
     Module k (presentedAssociatedGradedPiece k w N) :=

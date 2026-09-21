@@ -8,10 +8,25 @@ import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermTotalPages
 import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPageEquivalences
 import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPageActions
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for total filtered two-term pages
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.FilteredTwoTermPages
 
-export AlgebraicAnalysis.FilteredTwoTermPages (FilteredTwoTerm.SourceTotal FilteredTwoTerm.TargetTotal FilteredTwoTerm.totalDrop FilteredTwoTerm.totalDrop_lof FilteredTwoTerm.totalDrop_lof_mk FilteredTwoTerm.sourceTotalSuccMap FilteredTwoTerm.totalSourceSuccMap_injective FilteredTwoTerm.range_totalSourceSuccMap FilteredTwoTerm.sourceTotalSuccEquivKerDrop FilteredTwoTerm.targetTotalSuccMap FilteredTwoTerm.ker_totalTargetSuccMap FilteredTwoTerm.targetTotalSuccEquivCokerDrop)
+export AlgebraicAnalysis.FilteredTwoTermPages (
+  FilteredTwoTerm.SourceTotal
+  FilteredTwoTerm.TargetTotal
+  FilteredTwoTerm.totalDrop
+  FilteredTwoTerm.totalDrop_lof
+  FilteredTwoTerm.totalDrop_lof_mk
+  FilteredTwoTerm.sourceTotalSuccMap
+  FilteredTwoTerm.totalSourceSuccMap_injective
+  FilteredTwoTerm.range_totalSourceSuccMap
+  FilteredTwoTerm.sourceTotalSuccEquivKerDrop
+  FilteredTwoTerm.targetTotalSuccMap
+  FilteredTwoTerm.ker_totalTargetSuccMap
+  FilteredTwoTerm.targetTotalSuccEquivCokerDrop)
 
 end Stafford38.Characteristic.FilteredTwoTermPages

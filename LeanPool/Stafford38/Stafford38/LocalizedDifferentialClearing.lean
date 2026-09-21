@@ -8,6 +8,10 @@ import LeanPool.Stafford38.Stafford38.LocalizedWeylAction
 import LeanPool.Stafford38.Stafford38.CoordinateDifferentialGeneration
 import LeanPool.Stafford38.Stafford38.LocalizedPolynomialCommutant
 
+/-!
+Clearing coefficient denominators in localized polynomial differential operators.
+-/
+
 namespace Stafford38.LocalizedDifferentialClearing
 
 open Stafford
@@ -28,24 +32,31 @@ variable [Algebra (MvPolynomial (Fin n) k) B] [Algebra k B]
 variable [IsScalarTower k (MvPolynomial (Fin n) k) B]
 variable [IsLocalization S B]
 
+/-- The polynomial coefficient algebra in the selected finite set of variables. -/
 abbrev A := MvPolynomial (Fin n) k
+/-- The algebra of differential operators on the localized coefficient algebra. -/
 abbrev D := DifferentialOperators.algebra (k := k) (R := B)
 
+/-- The endomorphism induced by a presented Weyl element on the localization. -/
 def weylEnd (a : PresentedWeyl k n) : Module.End k B :=
   (localizedWeylAction S B a : Module.End k B)
 
+/-- The localized coefficient-module span of the Weyl action endomorphisms. -/
 def actionSpan : Submodule B (Module.End k B) :=
   Submodule.span B (Set.range (weylEnd S B))
 
+omit [CharZero k] in
 private theorem actionSpan_mem (a : PresentedWeyl k n) :
     weylEnd S B a ∈ actionSpan S B :=
   Submodule.subset_span ⟨a, rfl⟩
 
+omit [CharZero k] in
 private theorem actionSpan_smul_eq_multiplication (b : B) :
     b • weylEnd S B 1 = multiplication (k := k) b := by
   ext x
-  simp [weylEnd, multiplication_apply, Algebra.smul_def]
+  simp [weylEnd, multiplication_apply]
 
+omit [CharZero k] in
 private theorem actionSpan_mul_right_generator
     (i : Fin n) (a : PresentedWeyl k n) :
     weylEnd S B a * (localizedPderiv S B i).toLinearMap ∈ actionSpan S B := by
@@ -60,12 +71,13 @@ private theorem actionSpan_mul_right_generator
         (a * freeWeylGenerator (Matrix.J (Fin n) k) (.inr i)) =
       weylEnd S B a * weylEnd S B
         (freeWeylGenerator (Matrix.J (Fin n) k) (.inr i)) := by
-    simpa [weylEnd] using hm
+    simp [weylEnd]
   change weylEnd S B a * weylEnd S B
       (freeWeylGenerator (Matrix.J (Fin n) k) (.inr i)) ∈ actionSpan S B
   rw [← hm']
   exact actionSpan_mem S B _
 
+omit [CharZero k] in
 private theorem actionSpan_right_stable
     (i : Fin n) {Q : Module.End k B} (hQ : Q ∈ actionSpan S B) :
     Q * (localizedPderiv S B i).toLinearMap ∈ actionSpan S B := by
@@ -106,6 +118,7 @@ theorem localized_differential_mem_actionSpan
     (P : Module.End k B) ∈ actionSpan S B :=
   actual_differential_mem_actionSpan S B P (P.property)
 
+omit [CharZero k] in
 private theorem multiplication_algebraMap_in_action
     (f : A (k := k) (n := n)) :
     ∃ a : PresentedWeyl k n,
@@ -147,7 +160,7 @@ private theorem multiplication_algebraMap_in_action
       have hmul := congrArg (fun q : D (k := k) B => (q : Module.End k B))
         ((localizedWeylAction S B).map_mul Xweyl a)
       rw [show weylEnd S B (Xweyl * a) = weylEnd S B Xweyl * weylEnd S B a by
-        simpa [weylEnd] using hmul]
+        simp [weylEnd]]
       rw [hX, ha]
       ext z
       simp [multiplication_apply, Module.End.mul_apply, map_mul, mul_assoc]
@@ -168,7 +181,7 @@ theorem actual_differential_left_denominator_clearing
     simp [multiplication_apply, Module.End.mul_apply]
   · refine ⟨1, 0, ?_⟩
     ext z
-    simp [multiplication_apply, weylEnd]
+    simp [ weylEnd]
   · intro Q T hQ hT hcQ hcT
     obtain ⟨s, a, ha⟩ := hcQ
     obtain ⟨t, b, hb⟩ := hcT
@@ -179,7 +192,7 @@ theorem actual_differential_left_denominator_clearing
         weylEnd S B (c * d) = weylEnd S B c * weylEnd S B d := by
       have h := congrArg (fun q : D (k := k) B => (q : Module.End k B))
         ((localizedWeylAction S B).map_mul c d)
-      simpa [weylEnd] using h
+      simp [weylEnd]
     have hact_add (c d : PresentedWeyl k n) :
         weylEnd S B (c + d) = weylEnd S B c + weylEnd S B d := by
       simp [weylEnd]
@@ -196,7 +209,7 @@ theorem actual_differential_left_denominator_clearing
         weylEnd S B pr * weylEnd S B a := by
       have h := congrArg (fun q : D (k := k) B => (q : Module.End k B))
         ((localizedWeylAction S B).map_mul pr a)
-      simpa [weylEnd] using h
+      simp [weylEnd]
     rw [hact_mul, hpr, ← ha]
     ext z
     simp only [Module.End.mul_apply, multiplication_apply, LinearMap.smul_apply,

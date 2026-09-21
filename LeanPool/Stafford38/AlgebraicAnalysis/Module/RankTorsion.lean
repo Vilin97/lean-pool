@@ -79,7 +79,7 @@ theorem rank_eq_of_surjective (f : V →ₗ[Q] V') (hf : Function.Surjective f) 
     Module.rank Q V = Module.rank Q V' + Module.rank Q (LinearMap.ker f) :=
   LinearMap.rank_eq_of_surjective hf
 theorem finrank_eq_of_surjective [Module.Finite Q V]
-    [Module.Finite Q V'] (f : V →ₗ[Q] V') (hf : Function.Surjective f) :
+     (f : V →ₗ[Q] V') (hf : Function.Surjective f) :
     Module.finrank Q V = Module.finrank Q V' +
       Module.finrank Q (LinearMap.ker f) := by
   have h := (LinearMap.ker f).finrank_quotient_add_finrank
@@ -102,29 +102,32 @@ variable [OreLocalization.OreSet (Rᵐᵒᵖ)⁰]
 variable {M : Type v} [AddCommGroup M] [Module Rᵐᵒᵖ M]
 
 /-- The full Ore localization of the opposite coefficient ring. -/
-abbrev FractionRingOp (R : Type u) [Ring R] [Nontrivial R]
-    [NoZeroDivisors R] [OreLocalization.OreSet (Rᵐᵒᵖ)⁰] :=
+abbrev FractionRingOp (R : Type u) [Ring R]
+     [OreLocalization.OreSet (Rᵐᵒᵖ)⁰] :=
   (Rᵐᵒᵖ)[(Rᵐᵒᵖ)⁰⁻¹]
 
 /-- Localization of a right `R`-module, represented as a left opposite-module. -/
 abbrev LocalizedRightModule (R : Type u) (M : Type v)
-    [Ring R] [Nontrivial R] [NoZeroDivisors R]
+    [Ring R]
     [OreLocalization.OreSet (Rᵐᵒᵖ)⁰] [AddCommGroup M] [Module Rᵐᵒᵖ M] :=
   M[(Rᵐᵒᵖ)⁰⁻¹]
 
 /-- The rank of a right module after passage to the full fraction ring. -/
 noncomputable def oreRank (M : Type v) [AddCommGroup M] [Module Rᵐᵒᵖ M] : Cardinal :=
   Module.rank (FractionRingOp R) (LocalizedRightModule R M)
+omit [Nontrivial R] [NoZeroDivisors R] in
 theorem oreRank_eq_rank_localized :
     oreRank (R := R) M =
       Module.rank (FractionRingOp R) (LocalizedRightModule R M) :=
   rfl
+omit [Nontrivial R] [NoZeroDivisors R] in
 theorem oreRank_eq_of_localizedLinearEquiv {N : Type v}
     [AddCommGroup N] [Module Rᵐᵒᵖ N]
     (e : LocalizedRightModule R M ≃ₗ[FractionRingOp R]
       LocalizedRightModule R N) :
     oreRank (R := R) M = oreRank (R := R) N := by
   exact e.rank_eq
+omit [Nontrivial R] [NoZeroDivisors R] in
 theorem localized_oreDiv_one_eq_zero_iff (m : M) :
     (m /ₒ (1 : (Rᵐᵒᵖ)⁰) : LocalizedRightModule R M) = 0 ↔
       ∃ s : (Rᵐᵒᵖ)⁰, s • m = 0 := by

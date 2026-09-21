@@ -70,7 +70,7 @@ variable [AddCommGroup M] [Module R M]
 example [SMulCommClass R S S] :
     Module S (S ⊗[R] M) := by infer_instance
 
-theorem baseChange_mono [SMulCommClass R S S]
+theorem baseChange_mono
     {p q : Submodule R M} (hpq : p ≤ q) :
     p.baseChange S ≤ q.baseChange S := by
   rw [Submodule.baseChange_eq_span, Submodule.baseChange_eq_span]
@@ -186,6 +186,8 @@ The two PBW bases identify the ordinary tensor base-change with the target
 presented Weyl algebra.  This is the concrete bridge that turns the abstract
 intersection theorem above into a bounded PBW decomposition.
 -/
+/-- The scalar-extension equivalence identifying the two presented Weyl algebras through their
+PBW bases. -/
 def pbwTensorEquiv (n : Nat) :
     (K ⊗[k] PresentedWeyl k n) ≃ₗ[K] PresentedWeyl K n :=
   (presentedPBWBasis k n).baseChange K |>.equiv
@@ -484,13 +486,13 @@ theorem cancellation_falsifier :
     Submodule.span ℚ ({(1, 1), (0, 1)} : Set (ℚ × ℚ))
   have hzF : ((1, 0) : ℚ × ℚ) ∈ F := by
     apply Submodule.subset_span
-    simp [F]
+    simp []
   have huI : ((1, 1) : ℚ × ℚ) ∈ I := by
     apply Submodule.subset_span
-    simp [I]
+    simp []
   have hvI : ((0, 1) : ℚ × ℚ) ∈ I := by
     apply Submodule.subset_span
-    simp [I]
+    simp []
   have hzI : ((1, 0) : ℚ × ℚ) ∈ I := by
     have hdiff := I.sub_mem huI hvI
     have heq : ((1, 1) : ℚ × ℚ) - ((0, 1) : ℚ × ℚ) = (1, 0) := by

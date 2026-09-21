@@ -72,6 +72,7 @@ def StrictLowerCoordinatePreimages (n N : ℕ)
           (y * presentedCoordinate k n) =
         qmk (CanonicalIdeal k n N d) l
 
+omit [Algebra ℚ k] in
 /-- A genuinely general filtered reduction.  Ordinary cancellation on the
 canonical quotient and strict-order coordinate division together imply the
 load-bearing cancellation theorem on every filtration degree. -/
@@ -104,6 +105,7 @@ theorem coordinateCancellation_of_quotient_injective_of_strict_preimages
     (Submodule.mem_sup_left hdiff)
     (Submodule.mem_sup_right hy)
 
+omit [Algebra ℚ k] in
 /-- Actual-graded form of the general filtered reduction. -/
 theorem canonical_graded_coordinateAction_injective_of_quotient_injective_of_strict_preimages
     (n N m : ℕ) (d : PresentedWeyl k (n + 1))
@@ -137,6 +139,7 @@ theorem canonical_unrestricted_coordinate_preimages_of_monic
   rw [qmk_right_mul]
   exact hq
 
+omit [Algebra ℚ k] in
 private theorem degree_eq_one_of_order_one_of_fibreOnly
     {n : ℕ} {P : SymbolRing k n} {m : PhaseVar n →₀ ℕ}
     (hm : P.coeff m ≠ 0)
@@ -159,6 +162,7 @@ private theorem degree_eq_one_of_order_one_of_fibreOnly
           · simp [orderWeight, fibreWeight]
     _ = 1 := horder
 
+omit [Algebra ℚ k] in
 private theorem exponent_eq_selected_of_order_one_of_selected_ne_zero
     {n : ℕ} {P : SymbolRing k n} {m : PhaseVar n →₀ ℕ}
     (t : Fin n)
@@ -181,6 +185,7 @@ private theorem exponent_eq_selected_of_order_one_of_selected_ne_zero
     (Finsupp.degree_eq_zero_iff _).mp heraseDegree
   rw [← hdecomp, hmt1, herase, add_zero]
 
+omit [Algebra ℚ k] in
 /-- A fibre-only order-homogeneous linear symbol whose selected momentum
 coefficient is one has selected partial derivative one. -/
 theorem pderiv_eq_one_of_order_one_fibreOnly
@@ -193,7 +198,7 @@ theorem pderiv_eq_one_of_order_one_fibreOnly
   let Q := P - MvPolynomial.X (.inr t)
   have hQt : (.inr t : PhaseVar n) ∉ Q.vars := by
     intro ht
-    rw [MvPolynomial.mem_vars] at ht
+    rw [MvPolynomial.mem_vars_iff_mem_support] at ht
     obtain ⟨m, hmQ, htm⟩ := ht
     have hmQne : Q.coeff m ≠ 0 :=
       MvPolynomial.mem_support_iff.mp hmQ
@@ -221,6 +226,7 @@ theorem pderiv_eq_one_of_order_one_fibreOnly
     abel
   rw [hdecomp, map_add, hQderiv, MvPolynomial.pderiv_X_self, zero_add]
 
+omit [Algebra ℚ k] in
 /-- In canonical Bernstein degree one, the selected coordinate commutator is
 the scalar `-1`.  This is the strict low-order replacement for the missing
 higher-order division estimate. -/
@@ -271,7 +277,7 @@ theorem coordinate_commutator_eq_neg_one_degree_one
     rw [map_neg]
     have honepc : presentedPrincipalComponent k orderWeight 0
         (1 : PresentedWeyl k (n + 1)) = 1 := by
-      exact Stafford38.CharacteristicAssociatedGradedModule.presentedPrincipalComponent_orderPieceOne
+      exact CharacteristicAssociatedGradedModule.presentedPrincipalComponent_orderPieceOne
         (n := n + 1) k
     rw [honepc]
     simp

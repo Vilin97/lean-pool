@@ -48,7 +48,8 @@ def commutator (x : S) : S →+ S where
   map_add' w v := by simp [add_mul, mul_add, sub_eq_add_neg, add_assoc,
     add_left_comm, add_comm]
 
-@[simp] theorem commutator_apply (x w : S) :
+@[simp]
+theorem commutator_apply (x w : S) :
     commutator x w = w * x - x * w := rfl
 
 /-- Correct central-coordinate PBW data for a differential Ore stage. -/
@@ -96,7 +97,7 @@ lemma iterate_derivative_natDegree (p : Polynomial E) :
   · subst m
     rw [coeff_iterate_derivative]
     simp only [Nat.zero_add, Nat.descFactorial_self, coeff_C_zero,
-      smul_eq_mul, coeff_natDegree]
+       coeff_natDegree]
   · have hlt : p.natDegree < m + p.natDegree := by
       omega
     have hcoeff : p.coeff (m + p.natDegree) = 0 :=
@@ -147,7 +148,7 @@ lemma regular_action_injective [CharZero E]
   exact D.normal.map_zero
 
 /-- One commutator lowers a nonconstant PBW polynomial's degree. -/
-lemma ad_degree_reduction [CharZero E] {p : Polynomial E}
+lemma ad_degree_reduction {p : Polynomial E}
     (hpositive : p.natDegree ≠ 0) :
     (derivative p).natDegree < p.natDegree ∧
       commutator (D.embed D.coordinate) (D.normal p) =

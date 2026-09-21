@@ -56,7 +56,7 @@ theorem exists_fibreLift_eq_of_isFibreOnly
     Sum.inr_injective
   intro i hi
   change i ∈ Q.vars at hi
-  rw [MvPolynomial.mem_vars] at hi
+  rw [MvPolynomial.mem_vars_iff_mem_support] at hi
   rcases hi with ⟨m, hm, him⟩
   have hcoeff : Q.coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
@@ -82,6 +82,7 @@ private abbrev orderDecompositionGroundExtension :=
   MvPolynomial.weightedHomogeneousSubmodule k
     (@Stafford38.WeylFiltration.orderWeight n)
 
+/-- The weighted grading of the order-symbol algebra used for extension of the ground field. -/
 local instance orderGradedAlgebraGroundExtensionInstance :
     GradedAlgebra (orderDecompositionGroundExtension (k := k) (n := n)) :=
   MvPolynomial.weightedGradedAlgebra k

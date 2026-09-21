@@ -54,7 +54,7 @@ theorem sourceTotalSuccMap_naturality (r : ℕ) :
         ((K.G (p + 1)).comap (K.cycles (r + 1) p).subtype) x ?_
       intro z
       rw [K.sourceSuccMap_mk, P.sourceMap_mk]
-      simp [sourceSuccEquivKerDrop, sourceSuccKernelMap, sourceSuccMap]
+      simp? [sourceSuccEquivKerDrop, sourceSuccKernelMap, sourceSuccMap]
       apply (Submodule.Quotient.eq _).2
       change P.g (z : M) - P.g (z : M) ∈ K.G (p - d + 1)
       simp

@@ -133,7 +133,7 @@ theorem retainedCompleted_family_properties
     letI : IsDiscreteValuationRing V := W.place.isDiscrete
     letI : Algebra W.coefficientField V :=
       (relativeCoefficientMap W.coefficientField W.place).toAlgebra
-    ∀ {ι : Type v} [Fintype ι]
+    ∀ {ι : Type v}
       (q : ι → V) (chart zero axis : ι),
       q chart = 1 → q zero ≠ 0 →
       q axis = q zero * W.place.parameter →
@@ -148,7 +148,7 @@ theorem retainedCompleted_family_properties
   let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
-  intro ι _ q chart zero axis hchart hzero haxis
+  intro ι q chart zero axis hchart hzero haxis
   dsimp
   refine ⟨by rw [hchart, map_one], ?_, ?_⟩
   · simpa using (retainedToCompletedPowerSeries_injective W).ne hzero
@@ -166,7 +166,7 @@ theorem retainedCompleted_projective_order_properties
     letI : IsDiscreteValuationRing V := W.place.isDiscrete
     letI : Algebra W.coefficientField V :=
       (relativeCoefficientMap W.coefficientField W.place).toAlgebra
-    ∀ {ι : Type v} [Fintype ι]
+    ∀ {ι : Type v}
       (q : ι → V) (chart zero axis : ι),
       q chart = 1 → q zero ≠ 0 → ¬IsUnit (q zero) →
       q axis = q zero * W.place.parameter →
@@ -183,7 +183,7 @@ theorem retainedCompleted_projective_order_properties
   let : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
-  intro ι _ q chart zero axis hchart hzero hzero_nonunit haxis
+  intro ι q chart zero axis hchart hzero hzero_nonunit haxis
   obtain ⟨hqchart, hqzero, hqaxis⟩ :=
     retainedCompleted_family_properties W q chart zero axis
       hchart hzero haxis

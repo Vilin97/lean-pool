@@ -6,10 +6,16 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.MonicAnnihilatorFinite
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for finite modules from monic annihilators
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.MonicAnnihilatorFinite
 
-export AlgebraicAnalysis.MonicAnnihilatorFinite (finite_of_monic_annihilator finite_of_variable_annihilates finite_kernel_and_cokernel_variable)
+export AlgebraicAnalysis.MonicAnnihilatorFinite (
+  finite_of_monic_annihilator
+  finite_of_variable_annihilates
+  finite_kernel_and_cokernel_variable)
 
 end Stafford38.Characteristic.MonicAnnihilatorFinite

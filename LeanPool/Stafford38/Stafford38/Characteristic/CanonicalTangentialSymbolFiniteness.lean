@@ -6,6 +6,10 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.Stafford38.Characteristic.CanonicalNormalSymbolFiniteness
 
+/-!
+Finiteness of canonical graded modules over the tangential symbol ring.
+-/
+
 namespace Stafford38.Characteristic.CanonicalTangentialSymbolFiniteness
 
 open Stafford38.Characteristic
@@ -22,25 +26,31 @@ open Stafford38.WeylPBWMonicBridge
 noncomputable section
 variable {k : Type*} [Field k]
 
+/-- The phase variables other than the distinguished normal momentum. -/
 abbrev NormalVar (n : ℕ) :=
   {v : PhaseVar (n + 1) // v ≠ Sum.inr (0 : Fin (n + 1))}
+/-- The phase variables remaining after removing the distinguished normal position and momentum. -/
 abbrev TangentialVar (n : ℕ) :=
   {v : NormalVar n // v ≠ ⟨Sum.inl (0 : Fin (n + 1)), by simp⟩}
 
+/-- The polynomial ring in the tangential phase variables. -/
 abbrev tangentialCoeffRing (n : ℕ) :=
   MvPolynomial (TangentialVar n) k
 
+/-- The equivalence separating the normal position from the tangential phase variables. -/
 def tangentialVariableEquiv (n : ℕ) :
     Option (TangentialVar n) ≃ NormalVar n :=
   Equiv.optionSubtypeNe
     (⟨Sum.inl (0 : Fin (n + 1)), by simp⟩ : NormalVar n)
 
+/-- The normal coefficient ring expressed as polynomials in the distinguished position. -/
 def normalCoeffTangentialAlgEquiv (n : ℕ) :
     normalCoeffRing (k := k) n ≃ₐ[k]
       Polynomial (tangentialCoeffRing (k := k) n) :=
   (MvPolynomial.renameEquiv k (tangentialVariableEquiv n).symm).trans
     (MvPolynomial.optionEquivLeft k (TangentialVar n))
 
+/-- The ring map transporting tangential polynomials to the full order-symbol algebra. -/
 def tangentialPolynomialActionHom (n : ℕ) :
     Polynomial (tangentialCoeffRing (k := k) n) →+*
       SymbolRing k (n + 1) :=
@@ -49,25 +59,31 @@ def tangentialPolynomialActionHom (n : ℕ) :
       Polynomial (normalCoeffRing (k := k) n)).comp
       (normalCoeffTangentialAlgEquiv (k := k) n).symm.toRingHom)
 
-@[instance_reducible] def tangentialPolynomialModule
+/-- The action of polynomials in the normal position with tangential coefficients. -/
+@[instance_reducible]
+def tangentialPolynomialModule
     (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] :
     Module (Polynomial (tangentialCoeffRing (k := k) n)) E :=
   Module.compHom E (tangentialPolynomialActionHom (k := k) n)
 
-@[instance_reducible] def tangentialCoeffModule
+/-- The tangential coefficient action obtained by restricting the transported polynomial action. -/
+@[instance_reducible]
+def tangentialCoeffModule
     (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] :
     Module (tangentialCoeffRing (k := k) n) E :=
   Module.compHom E
     ((tangentialPolynomialActionHom (k := k) n).comp Polynomial.C)
 
+/-- The transported module structure over polynomials with tangential coefficients. -/
 local instance tangentialPolynomialModuleInstance
     (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] :
     Module (Polynomial (tangentialCoeffRing (k := k) n)) E :=
   tangentialPolynomialModule (k := k) n E
 
+/-- The transported module structure over the tangential coefficient ring. -/
 local instance tangentialCoeffModuleInstance
     (n : ℕ) (E : Type*) [AddCommGroup E]
     [Module (SymbolRing k (n + 1)) E] :

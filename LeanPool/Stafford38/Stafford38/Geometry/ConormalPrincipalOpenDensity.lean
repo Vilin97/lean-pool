@@ -51,18 +51,21 @@ theorem mem_of_vanishes_on_principal_open
   · exact False.elim (hf hfi)
   · exact hpi
 
+/-- The equation-conormal locus restricted to base points in a specified set. -/
 def restrictedEquationConormalLocus
     (I : Ideal (MvPolynomial (Fin n) k)) (S : Set (Fin n → k)) :
     Set (PhaseVar n → k) :=
   {q | q ∈ equationConormalLocus I ∧
     (fun i => q (Sum.inl i)) ∈ S}
 
+omit [IsAlgClosed k] in
 theorem restricted_subset_equationConormalLocus
     (I : Ideal (MvPolynomial (Fin n) k)) (S : Set (Fin n → k)) :
     restrictedEquationConormalLocus I S ⊆ equationConormalLocus I := by
   intro q hq
   exact hq.1
 
+omit [IsAlgClosed k] in
 /-- A covector in the equation conormal is the gradient of one equation of
 the ideal; finite linear combinations can be absorbed into that equation. -/
 theorem exists_equation_with_differentialAt_eq
@@ -80,14 +83,16 @@ theorem exists_equation_with_differentialAt_eq
     exact I.mul_mem_left _ p.2
   · rw [hc i]
     simp only [h, differentialAt, map_sum, MvPolynomial.pderiv_mul,
-      MvPolynomial.pderiv_C, zero_mul, zero_add, MvPolynomial.eval_sum,
+      MvPolynomial.pderiv_C, zero_mul, zero_add,
       MvPolynomial.eval_mul, MvPolynomial.eval_C]
 
+/-- Substitution of the gradient of an equation for the fibre variables of the symbol ring. -/
 def gradientGraphSubstitution (h : MvPolynomial (Fin n) k) :
     SymbolRing k n →+* MvPolynomial (Fin n) k :=
   MvPolynomial.eval₂Hom MvPolynomial.C
     (Sum.elim MvPolynomial.X (fun i => MvPolynomial.pderiv i h))
 
+omit [IsAlgClosed k] in
 theorem eval_gradientGraphSubstitution
     (h : MvPolynomial (Fin n) k) (P : SymbolRing k n) (y : Fin n → k) :
     MvPolynomial.eval y (gradientGraphSubstitution h P) =
@@ -96,16 +101,16 @@ theorem eval_gradientGraphSubstitution
   | C a => simp [gradientGraphSubstitution]
   | add P Q hP hQ =>
       simp only [gradientGraphSubstitution] at hP hQ
-      simp only [gradientGraphSubstitution, map_add, MvPolynomial.eval_add]
+      simp only [gradientGraphSubstitution, map_add]
       rw [hP, hQ]
   | mul_X P i hP =>
       simp only [gradientGraphSubstitution] at hP
       rcases i with i | i
       · simp only [gradientGraphSubstitution, map_mul, MvPolynomial.eval₂Hom_X',
-          Sum.elim_inl, MvPolynomial.eval_mul, MvPolynomial.eval_X]
+          Sum.elim_inl,  MvPolynomial.eval_X]
         rw [hP]
       · simp only [gradientGraphSubstitution, map_mul, MvPolynomial.eval₂Hom_X',
-          Sum.elim_inr, MvPolynomial.eval_mul]
+          Sum.elim_inr]
         rw [hP]
         simp [differentialAt]
 
@@ -115,7 +120,6 @@ theorem equationConormalClosure_restricted_eq
     (I : Ideal (MvPolynomial (Fin n) k)) (hI : I.IsPrime)
     (f : MvPolynomial (Fin n) k) (hf : f ∉ I)
     (S : Set (Fin n → k))
-    (hS : S ⊆ MvPolynomial.zeroLocus k I)
     (hopen : ∀ y : Fin n → k, y ∈ MvPolynomial.zeroLocus k I →
       MvPolynomial.eval y f ≠ 0 → y ∈ S) :
     MvPolynomial.zeroLocus k

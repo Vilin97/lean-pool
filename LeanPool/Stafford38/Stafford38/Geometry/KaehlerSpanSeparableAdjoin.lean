@@ -106,10 +106,7 @@ theorem kaehler_span_of_formallyEtale_adjoin_eq_top
           W.smul_mem (algebraMap E K a) hx'
   let e := KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale k E K
   have he (y : K ⊗[E] Ω[E⁄k]) : e y ∈ W := by
-    induction y using TensorProduct.induction_on with
-    | zero =>
-        rw [show e (0 : K ⊗[E] Ω[E⁄k]) = 0 from e.map_zero]
-        exact W.zero_mem
+    induction y using TensorProduct.inductionOn with
     | add x y hx hy =>
         simpa only [map_add] using W.add_mem hx hy
     | tmul a w =>
@@ -138,12 +135,14 @@ theorem kaehler_span_of_separable_adjoin_eq_top
 after separable extension. -/
 theorem exists_visible_derivation_frame_of_finite_separable_adjoin
     [Algebra.IsSeparable E K]
-    {ι : Type v} [Fintype ι] (q : ι → E)
+    {ι : Type v} [Finite ι] (q : ι → E)
     (hgen : IntermediateField.adjoin k (Set.range q) = ⊤) :
     ∃ (rows : Fin (Module.finrank K (Ω[K⁄k])) ↪ ι)
       (D : Fin (Module.finrank K (Ω[K⁄k])) → Derivation k K K),
       ∀ i j, D j (algebraMap E K (q (rows i))) =
         if i = j then 1 else 0 := by
+  classical
+  let := Fintype.ofFinite ι
   have hspan := kaehler_span_of_separable_adjoin_eq_top
     (k := k) (E := E) (K := K) q hgen
   let : FiniteDimensional K (Ω[K⁄k]) := by
@@ -154,7 +153,7 @@ theorem exists_visible_derivation_frame_of_finite_separable_adjoin
     let : FiniteDimensional K (⊤ : Submodule K (Ω[K⁄k])) :=
       (LinearEquiv.ofEq _ _ hspan).finiteDimensional
     exact Submodule.topEquiv.finiteDimensional
-  exact Stafford38.Geometry.KaehlerVisibleDerivationFrame.exists_visible_derivation_frame_of_kaehler_span
+  exact Geometry.KaehlerVisibleDerivationFrame.exists_visible_derivation_frame_of_kaehler_span
     (fun i ↦ algebraMap E K (q i)) hspan
 
 

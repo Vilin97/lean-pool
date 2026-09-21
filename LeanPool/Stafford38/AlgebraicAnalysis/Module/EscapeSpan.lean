@@ -30,10 +30,12 @@ variable {S : Type*} [Ring S] {n : ℕ}
 def rightMulVector (v : Fin n → S) (a : S) : Fin n → S :=
   fun i => v i * a
 
-@[simp] theorem rightMulVector_apply (v : Fin n → S) (a : S) (i : Fin n) :
+@[simp]
+theorem rightMulVector_apply (v : Fin n → S) (a : S) (i : Fin n) :
     rightMulVector v a i = v i * a := rfl
 
-@[simp] theorem op_smul_vector (v : Fin n → S) (a : S) :
+@[simp]
+theorem op_smul_vector (v : Fin n → S) (a : S) :
     (MulOpposite.op a : Sᵐᵒᵖ) • v = rightMulVector v a := by
   rfl
 
@@ -41,10 +43,12 @@ def rightMulVector (v : Fin n → S) (a : S) : Fin n → S :=
 def commutatorVector (x : S) (v : Fin n → S) : Fin n → S :=
   fun i => commutator x (v i)
 
-@[simp] theorem commutatorVector_apply (x : S) (v : Fin n → S) (i : Fin n) :
+@[simp]
+theorem commutatorVector_apply (x : S) (v : Fin n → S) (i : Fin n) :
     commutatorVector x v i = commutator x (v i) := rfl
 
-@[simp] theorem commutatorVector_iterate_apply (x : S) (v : Fin n → S)
+@[simp]
+theorem commutatorVector_iterate_apply (x : S) (v : Fin n → S)
     (k : ℕ) (i : Fin n) :
     (commutatorVector x)^[k] v i =
       (commutator x)^[k] (v i) := by
@@ -100,7 +104,7 @@ theorem single_mem_of_unit_single_mem
         (Pi.single i a : Fin n → S) i
       simpa only [Pi.single_eq_same] using hcoord
     · have hji' : j ≠ i := Ne.symm hji
-      simp [hji, hji']
+      simp [ hji']
   rw [← heq]
   exact hsmul
 

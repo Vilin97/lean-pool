@@ -47,7 +47,8 @@ def targetBoundaryMap (r : ℕ) (p : ℤ) :
     intro x hx
     exact K.boundaries_one_le r p hx)
 
-@[simp] theorem targetBoundaryMap_mk (r : ℕ) (p : ℤ) (x : K.G p) :
+@[simp]
+theorem targetBoundaryMap_mk (r : ℕ) (p : ℤ) (x : K.G p) :
     K.targetBoundaryMap r p (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk x :=
   Submodule.mapQ_apply _ _ _ _
@@ -77,7 +78,8 @@ def totalBoundaryMap (r : ℕ) :
     K.TargetTotal 1 →ₗ[k] K.TargetTotal (r + 1) :=
   DirectSum.lmap (K.targetBoundaryMap r)
 
-@[simp] theorem totalBoundaryMap_lof (r : ℕ) (p : ℤ)
+@[simp]
+theorem totalBoundaryMap_lof (r : ℕ) (p : ℤ)
     (x : K.TargetPage 1 p) :
     K.totalBoundaryMap r
         (DirectSum.lof k ℤ (fun q : ℤ => K.TargetPage 1 q) p x) =
@@ -116,7 +118,7 @@ private theorem pointwise_boundary_exhaustion
   have hbound : K.boundaries n p ≤ K.boundaries (r + 1) p := by
     rcases n with _ | n
     · exact (K.boundaries_le_succ 0 p).trans (K.boundaries_one_le r p)
-    · simpa [r] using le_rfl
+    · simp [r]
   refine ⟨r, ?_⟩
   rw [K.targetBoundaryMap_mk, Submodule.Quotient.mk_eq_zero]
   exact hbound hn

@@ -7,10 +7,22 @@ Authors: Christopher Albert
 import LeanPool.Stafford38.AlgebraicAnalysis.Module.FilteredTwoTermPageEquivalences
 import LeanPool.Stafford38.Stafford38.Characteristic.FilteredTwoTermPages
 
-/- Compatibility exports for the neutral AlgebraicAnalysis API. -/
+/-!
+Compatibility exports for successor-page kernel and cokernel equivalences
+from the shared algebraic-analysis library.
+-/
 
 namespace Stafford38.Characteristic.FilteredTwoTermPages
 
-export AlgebraicAnalysis.FilteredTwoTermPages (FilteredTwoTerm.sourceSuccMap FilteredTwoTerm.sourceSuccMap_mk FilteredTwoTerm.sourceSuccKernelMap FilteredTwoTerm.sourceSuccEquivKerDrop FilteredTwoTerm.targetSuccMap FilteredTwoTerm.targetSuccMap_surjective FilteredTwoTerm.ker_targetSuccMap_eq_range_drop FilteredTwoTerm.targetCokernelMap FilteredTwoTerm.targetSuccEquivCokerDrop)
+export AlgebraicAnalysis.FilteredTwoTermPages (
+  FilteredTwoTerm.sourceSuccMap
+  FilteredTwoTerm.sourceSuccMap_mk
+  FilteredTwoTerm.sourceSuccKernelMap
+  FilteredTwoTerm.sourceSuccEquivKerDrop
+  FilteredTwoTerm.targetSuccMap
+  FilteredTwoTerm.targetSuccMap_surjective
+  FilteredTwoTerm.ker_targetSuccMap_eq_range_drop
+  FilteredTwoTerm.targetCokernelMap
+  FilteredTwoTerm.targetSuccEquivCokerDrop)
 
 end Stafford38.Characteristic.FilteredTwoTermPages

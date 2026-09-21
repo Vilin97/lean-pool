@@ -6,6 +6,9 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.Stafford38.UniversalAssembly
 
+/-! The (actual) Bernstein degree, read directly from checked PBW normal form. -/
+
+
 namespace Stafford38.FixedSource
 
 open Stafford38
@@ -20,12 +23,14 @@ open Stafford
 noncomputable section
 universe u
 
-/-! The (actual) Bernstein degree, read directly from checked PBW normal form. -/
+
+/-- The Bernstein degree computed from the total weight of the checked PBW normal form. -/
 def bernsteinDegree (k : Type u) [Field k] {n : ℕ}
     (d : PresentedWeyl k n) : ℕ :=
   MvPolynomial.weightedTotalDegree (@bernsteinWeight n)
     (presentedNormalFormLinearEquiv k n d)
 
+/-- A presented Weyl coordinate arising from an invertible symplectic change of generators. -/
 def IsLinearWeylCoordinate (k : Type u) [Field k] (n : ℕ)
     (ell : PresentedWeyl k (n + 1)) : Prop :=
   ∃ (M N : Matrix (PhaseVar (n + 1)) (PhaseVar (n + 1)) k)
@@ -69,7 +74,7 @@ theorem bernsteinDegree_eq_of_piece_of_principal_ne_zero
       simp [hne]
     exact hm hz
   have hfd : f.coeff m ≠ 0 := by
-    rw [if_pos hweight] at hcoeff
+    rw [ite_eq_left hweight] at hcoeff
     simpa [f] using hcoeff
   have hge : N ≤ bernsteinDegree k d := by
     calc

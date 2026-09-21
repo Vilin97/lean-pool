@@ -45,7 +45,7 @@ theorem exists_zero_base_coordinate
     ∃ q ∈ MvPolynomial.zeroLocus k J, q (.inl ⟨0, hm⟩) = 0 := by
   classical
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   let B := J.comap (baseLift (k := k) (n := m)).toRingHom
   obtain ⟨Q, hQ⟩ := Ideal.nonempty_minimalPrimes
     (show B ≠ ⊤ from Ideal.comap_ne_top _ hproper)

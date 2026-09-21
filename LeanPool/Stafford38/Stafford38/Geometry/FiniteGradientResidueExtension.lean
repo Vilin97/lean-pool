@@ -45,8 +45,11 @@ natural boundary residue field `K`, for an affine ideal defined over `k`. -/
 structure FiniteGradientBoundaryCertificateOver
     (m : ℕ) (hm : 0 < m)
     (I : Ideal (MvPolynomial (Fin m) k)) where
+  /-- The number of equations in the residue-extension gradient certificate. -/
   equationCount : ℕ
+  /-- The formal projective arc over the residue coefficient field. -/
   q : Fin (m + 1) → PowerSeries K
+  /-- The formal conormal row over the residue coefficient field. -/
   ell : Fin (m + 1) → PowerSeries K
   q_origin_ne : q 0 ≠ 0
   projective_annihilation :
@@ -54,8 +57,11 @@ structure FiniteGradientBoundaryCertificateOver
   base_vanish :
     ∀ f ∈ I.map (groundPolynomialMap (k := k) (K := K) (Fin m)),
       MvPolynomial.eval (dehomogenizedPoint (laurentColumn q)) f = 0
+  /-- Ground-ideal equations after coefficient extension used to express the conormal row. -/
   equations : Fin equationCount →
     I.map (groundPolynomialMap (k := k) (K := K) (Fin m))
+  /-- The Laurent-series coefficients of the finite gradient representation over the residue
+  field. -/
   coefficients : Fin equationCount → LaurentSeries K
   gradient_identity : ∀ i : Fin m,
     laurentColumn ell i.succ =

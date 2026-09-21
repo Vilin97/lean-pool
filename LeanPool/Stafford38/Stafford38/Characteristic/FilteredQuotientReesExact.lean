@@ -49,7 +49,7 @@ private theorem quotientOrderReesShift_apply_succ
       · subst M
         simp
       · have hs : M + 1 ≠ N + 1 := by omega
-        simp [h, hs]
+        simp [h]
   | add x y hx hy =>
       simpa using congrArg₂ (· + ·) hx hy
 
