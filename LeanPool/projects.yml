@@ -9887,7 +9887,9 @@ projects:
         informal: >-
           On the explicit seven-vertex, nine-arc instance, the minimum cost
           among unsplittable routings satisfying the additive maximum-demand
-          capacity bound is exactly 60; the given splittable flow costs 58.
+          capacity bound is exactly 60.
+      - declaration: GoemansFlow.fractional_cost
+        informal: The given splittable flow on the counterexample instance costs exactly 58.
       - declaration: GoemansFlow.path_complete
         informal: >-
           For each of the three terminals, the lists of arcs giving a walk

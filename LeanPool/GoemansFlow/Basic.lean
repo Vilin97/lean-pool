@@ -48,11 +48,20 @@ instance instDecidableIsWalk [DecidableEq W] (tail head : E → W) (x : W) (l : 
 
 end Walks
 
-/-- Load induced on arc `a` by an unsplittable routing `P` with demands `d`:
-`flow_P(a) = sum_{k : a in P k} d k`. -/
+/-- Load induced on arc `a` by routing `P` with demands `d`, counting every traversal.
+For arc-simple paths this is the sum of demands of commodities whose path contains `a`. -/
 def unsplittableLoad {R K E : Type} [AddCommMonoid R] [Fintype K] [DecidableEq E]
     (d : K → R) (P : K → List E) (a : E) : R :=
-  ∑ k : K, if a ∈ P k then d k else 0
+  ∑ k : K, (P k).count a • d k
+
+/-- On arc-simple paths, traversal-counting load agrees with the membership formula. -/
+theorem unsplittableLoad_eq_sum_of_nodup {R K E : Type} [AddCommMonoid R] [Fintype K]
+    [DecidableEq E] (d : K → R) (P : K → List E) (a : E) (h : ∀ k, (P k).Nodup) :
+    unsplittableLoad d P a = ∑ k : K, if a ∈ P k then d k else 0 := by
+  apply Finset.sum_congr rfl
+  intro k _
+  rw [List.nodup_iff_count_eq_ite.mp (h k) a]
+  by_cases ha : a ∈ P k <;> simp [ha, one_nsmul]
 
 /-- Goemans' cost conjecture (Conjecture 1.3 of arXiv:2308.02651), restricted to
 simple, loopless, acyclic digraphs, with explicit capacities and strictly positive demands.

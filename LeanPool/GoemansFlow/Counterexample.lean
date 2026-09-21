@@ -263,6 +263,18 @@ theorem path_complete (i : Fin 3) (l : List Arc) :
   · intro h
     fin_cases i <;> rcases h with rfl | rfl <;> decide
 
+/-- Every routing in the counterexample uses arc-simple paths. -/
+theorem routing_paths_nodup (p : Fin 3 → List Arc) (h : IsRouting p) : ∀ i, (p i).Nodup := by
+  intro i
+  rcases (path_complete i (p i)).mp (h i) with he | hz
+  · rw [he]; fin_cases i <;> decide
+  · rw [hz]; fin_cases i <;> decide
+
+/-- The traversal-counting load agrees with upstream's membership formula on every routing. -/
+theorem routing_load_eq_sum (p : Fin 3 → List Arc) (h : IsRouting p) (a : Arc) :
+    unsplittableLoad demand p a = ∑ i : Fin 3, if a ∈ p i then demand i else 0 :=
+  unsplittableLoad_eq_sum_of_nodup demand p a (routing_paths_nodup p h)
+
 /-- Conversely, all six really are walks. -/
 theorem the_six_are_walks :
     IsWalk tail head Vertex.s expensivePathOne Vertex.t1 ∧
@@ -289,8 +301,7 @@ theorem the_six_walks_are_simple :
 
 /-- The load written as a function of the three chosen paths. -/
 def loadThree (q0 q1 q2 : List Arc) (a : Arc) : ℤ :=
-  (if a ∈ q0 then demand 0 else 0) + (if a ∈ q1 then demand 1 else 0) +
-    (if a ∈ q2 then demand 2 else 0)
+  q0.count a • demand 0 + q1.count a • demand 1 + q2.count a • demand 2
 
 /-- Routing cost expressed in terms of the three chosen paths. -/
 def routingCostThree (q0 q1 q2 : List Arc) : ℤ := ∑ a : Arc, arcCost a * loadThree q0 q1 q2 a
@@ -465,8 +476,7 @@ omit [LinearOrder R] [IsStrictOrderedRing R] in
 private theorem unsplittableLoad_cast {K E : Type} [Fintype K] [DecidableEq E]
     (d : K → ℤ) (P : K → List E) (a : E) :
     unsplittableLoad (fun k => ((d k : R))) P a = ((unsplittableLoad d P a : ℤ) : R) := by
-  simp only [unsplittableLoad]
-  exact cast_sum_ite (R := R) (fun k => a ∈ P k) d
+  simp only [unsplittableLoad, nsmul_eq_mul, Int.cast_sum, Int.cast_mul, Int.cast_natCast]
 
 /-- If the conjecture held over `R`, it would hold over `ℤ` (an integral instance is an
 `R`-instance, and the conclusion pulls back along the order embedding `ℤ ↪ R`). -/
