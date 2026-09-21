@@ -1,0 +1,24 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.All
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Core
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Final
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumCyclotomicTarget
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumGlobalEmbedding
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumLeftFactors
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumLocalizationEmbedding
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumValuationInertiaBound
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalCompositumValuedEmbedding
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.GlobalPadicPrimePowInertiaBound
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.LocalCyclotomicEmbedding
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.RationalCyclotomicArithmeticReciprocity
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.RationalRayClassFieldCyclotomic
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.RayClassComparison
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.Setup
+import LeanPool.ClassFieldTheory.ClassFieldTheory.KroneckerWeber.UnramifiedCompositumSupport
+
+/-! Supporting modules for Local and global class field theory. -/

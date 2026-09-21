@@ -1,0 +1,25 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Adele
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.AdeleBaseChange
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.All
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Completion
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.CompositumEmbedding
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.FiniteAbelianCompositum
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Idele
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NormalClosure
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.NumberField
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.PowerResidueSymbols
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.QuadraticReciprocity
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Ramification
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SUnit
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.SeparableClosureEmbedding
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.TensorProduct
+
+/-! Supporting modules for Local and global class field theory. -/

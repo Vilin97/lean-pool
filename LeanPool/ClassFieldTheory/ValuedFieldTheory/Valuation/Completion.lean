@@ -1,0 +1,23 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.AbsoluteValueExtensions
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.BaseChangeAdjoinRoot
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.BaseChangeNormTrace
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.CanonicalTensorMap
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.DegreeNormTrace
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.ExtensionFactorClassification
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.ExtensionInvariants
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteLocalization
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.FiniteProductNormTrace
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.Padic
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.PolynomialCRT
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.PolynomialFactors
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.SeparablePolynomialFactors
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductDecomposition
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Completion.TensorProductProductFormulas
+
+/-! Supporting modules for Local and global class field theory. -/

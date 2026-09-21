@@ -1,0 +1,23 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FiniteAbelianGlobalReciprocity
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FiniteAbelianGlobalReciprocityQuotient
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FiniteAbelianReciprocityQuotientEquivMk
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceLocalGlobalNormKernel
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceRayArtinNormKernel
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceRayArtinDecomposition
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceCompletionLocalArtin
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceRayArtinLocalValue
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.TopologicalGlobalReciprocity
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.MaximalAbelianGlobalArtin
+/-!
+# Global class field theory
+
+This module collects finite ideal-theoretic reciprocity and the topological
+maximal-abelian statements. The latter are proved via topological comparison
+with the existing restricted-product implementation.
+-/

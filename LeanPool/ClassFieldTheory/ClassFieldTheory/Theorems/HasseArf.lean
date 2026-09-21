@@ -1,0 +1,30 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.All
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HasseArf
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionAtLowerIndexDifference
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionAtLowerIndexNatOfJump
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionAtLowerIndexStrictMono
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionCanonical
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionInverseHerbrandFunction
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.HerbrandFunctionNat
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.InverseHerbrandFunctionHerbrandFunction
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.IsUpperRamificationJumpInt
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.LowerRamificationGroupAntitone
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.LowerRamificationGroupEventuallyBot
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.LowerRamificationGroupNormal
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.LowerRamificationGroupZeroEqInertia
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.RealAndUpperRamificationGroupNormal
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.RealLowerRamificationGroupCanonical
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.RealLowerRamificationGroupNat
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.RealLowerRamificationGroupNormal
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupAfter
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupAntitone
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupCanonical
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.HasseArf.UpperRamificationGroupEventuallyBot
+
+/-! Supporting modules for Local and global class field theory. -/

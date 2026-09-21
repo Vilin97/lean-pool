@@ -1,0 +1,27 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.AlgebraicExtensionUniqueness
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.AlgebraicIntegralClosure
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Complete
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.CoprimeFactorLifting
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Core
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.EtaleLifting
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.Factorization
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialBounds
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.IrreduciblePolynomialLifting
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.MonicFactorization
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.NonmonicReduction
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveFactorization
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.PrimitiveReduction
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.SimpleRootFactorization
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.StandardEtaleLifting
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueAlgebraicExtensions
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueExtensionPrimitive
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.UniqueExtensionReduction
+import LeanPool.ClassFieldTheory.ValuedFieldTheory.Valuation.Henselian.ValuationExtensionCriterion
+
+/-! Supporting modules for Local and global class field theory. -/

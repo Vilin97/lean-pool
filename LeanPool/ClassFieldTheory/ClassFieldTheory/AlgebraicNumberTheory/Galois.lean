@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.AbsoluteAbelianization
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.All
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.CyclicPrimeDegreeSubextension
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.CyclicPrimeSubextension
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.FixedFieldLattice
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.InfiniteBaseChange
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.MathlibAbsoluteAbelianization
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.MathlibAbsoluteGaloisBaseEquiv
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.MaximalAbelianSubextension
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.NormalFieldRange
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.RelativeAbelianization
+import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.Galois.UnboundedDegree
+
+/-! Supporting modules for Local and global class field theory. -/

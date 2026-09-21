@@ -1,0 +1,19 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.All
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FiniteAbelianGlobalReciprocity
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FiniteAbelianGlobalReciprocityQuotient
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FiniteAbelianReciprocityQuotientEquivMk
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceCompletionLocalArtin
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceLocalGlobalNormKernel
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceRayArtinDecomposition
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceRayArtinLocalValue
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.FinitePlaceRayArtinNormKernel
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.MaximalAbelianGlobalArtin
+import LeanPool.ClassFieldTheory.ClassFieldTheory.Theorems.GlobalClassFieldTheory.TopologicalGlobalReciprocity
+
+/-! Supporting modules for Local and global class field theory. -/
