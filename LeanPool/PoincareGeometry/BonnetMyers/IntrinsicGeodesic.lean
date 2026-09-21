@@ -471,6 +471,8 @@ uniqueness of the manifold derivative, rather than by choosing coordinates. -/
 
 open LocalGeodesic
 
+variable {cov : CovariantDerivative I E (TangentSpace I : M → Type u)}
+
 /-- Equality of shifted local-geodesic curve germs determines equality of
 their tangent-velocity germs. -/
 theorem eventuallyEq_velocity_of_eventuallyEq_curve_shift

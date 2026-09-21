@@ -73,13 +73,14 @@ theorem obata_radial_curve_reflection {K a : ℝ} (ha : 0 < a)
   have hτ : HasDerivAt τ (-1) r := by simpa [τ] using (hasDerivAt_id r).const_sub (Real.pi / Real.sqrt K)
   have hc : HasMFDerivAt 𝓘(ℝ, ℝ) I (γ ∘ τ) r
       ((1 : ℝ →L[ℝ] ℝ).smulRight (-gradient (I := I) (obataRadial K a f) (γ (τ r)))) := by
-    convert! ((hγ (τ r) ht).hasMFDerivAt (Ioo_mem_nhds ht.1 ht.2)).comp r
-      hτ.hasFDerivAt.hasMFDerivAt using 1
+    have hcomp := ((hγ (τ r) ht).hasMFDerivAt (Ioo_mem_nhds ht.1 ht.2)).comp r
+      hτ.hasFDerivAt.hasMFDerivAt
+    apply hcomp.congr_mfderiv
     apply ContinuousLinearMap.ext
     intro s
-    simp [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply]
-    change -(s • gradient (I := I) (obataRadial K a f) (γ (τ r))) =
-      (s * (-1)) • gradient (I := I) (obataRadial K a f) (γ (τ r))
+    change ℝ at s
+    change (s * (-1 : ℝ)) • gradient (I := I) (obataRadial K a f) (γ (τ r)) =
+      s • (-gradient (I := I) (obataRadial K a f) (γ (τ r)))
     simp
   rw [← obata_radial_gradient_neg ha hf (hreg (τ r) ht)] at hc
   exact hc.hasMFDerivWithinAt

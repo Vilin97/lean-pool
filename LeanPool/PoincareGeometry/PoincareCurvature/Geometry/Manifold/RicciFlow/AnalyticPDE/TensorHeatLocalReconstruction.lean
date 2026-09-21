@@ -408,7 +408,7 @@ theorem contMDiff_cutoffLocalTensorOfMatrix (p : M)
     (u := e.baseSet) (n := (2 : ℕ∞ω)) (ψ := ψ)
     hψ.contMDiffOn e.open_baseSet hψsupp
     (contMDiffOn_localTensorOfMatrix p e b q hq)
-  simpa [cutoffLocalTensorOfMatrix] using h
+  exact h
 
 /-- Open-subset form of cutoff reconstruction: only regularity on an open
 neighbourhood of the cutoff support is needed. -/
@@ -428,7 +428,7 @@ theorem contMDiff_cutoffLocalTensorOfMatrix_of_isOpen (p : M)
     (u := u) (n := (2 : ℕ∞ω)) (ψ := ψ)
     hψ.contMDiffOn hu hψsupp
     (contMDiffOn_localTensorOfMatrix_of_isOpen p e b q hu hue hq)
-  simpa [cutoffLocalTensorOfMatrix] using h
+  exact h
 
 /-- Coefficient-level form of `contMDiff_cutoffLocalTensorOfMatrix`: globally
 `C²` matrix coefficients may be fed directly into cutoff reconstruction. -/

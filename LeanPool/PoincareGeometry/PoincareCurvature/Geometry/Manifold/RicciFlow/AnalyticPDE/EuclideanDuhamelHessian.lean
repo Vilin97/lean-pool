@@ -66,10 +66,12 @@ lemma aestronglyMeasurable_heatHessianEntryConvolution_time
     AEStronglyMeasurable (fun s =>
       heatHessianEntryConvolutionND (t - s) (q s) j k x) := by
   have hK : Measurable (fun p : ℝ × (Fin n → ℝ) =>
-      heatKernelND (t - p.1) (x - p.2)) :=
-    measurable_uncurry_heatKernelND.comp
-      ((measurable_const.sub measurable_fst).prodMk
-        (measurable_const.sub measurable_snd))
+      heatKernelND (t - p.1) (x - p.2)) := by
+    have hmap : Measurable (fun p : ℝ × (Fin n → ℝ) => (t - p.1, x - p.2)) :=
+      (measurable_const.sub measurable_fst).prodMk
+        (measurable_const.sub measurable_snd)
+    have hkernel := (measurable_uncurry_heatKernelND (n := n)).comp hmap
+    exact hkernel
   have hc : Measurable (fun p : ℝ × (Fin n → ℝ) =>
       (x - p.2) j * (x - p.2) k / (4 * (t - p.1) ^ 2) -
         if j = k then 1 / (2 * (t - p.1)) else 0) := by

@@ -54,6 +54,7 @@ lemma mvfderiv_eq_of_eventuallyEq {f g : M → ℝ} (h : f =ᶠ[𝓝 x] g) :
     mvfderiv (I := I) f x = mvfderiv (I := I) g x := by
   unfold mvfderiv
   rw [h.mfderiv_eq, h.eq_of_nhds]
+  rfl
 
 /-- Differentiate `K G = 1` at `G = K = 1`. This is an ordinary product-rule
 consequence, not an inverse-derivative assumption. -/

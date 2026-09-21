@@ -479,10 +479,12 @@ theorem aestronglyMeasurable_heatHessianCoordConvolutionND_twoTime
       ((volume : Measure ℝ).prod volume) := by
   have hK : Measurable (fun z : (ℝ × ℝ) × (Fin n → ℝ) =>
       heatKernelND (z.1.1 - z.1.2) (x - z.2)) := by
-    exact measurable_uncurry_heatKernelND.comp
-      (((measurable_fst.comp measurable_fst).sub
-          (measurable_snd.comp measurable_fst)).prodMk
-        (measurable_const.sub measurable_snd))
+    have hmap : Measurable (fun z : (ℝ × ℝ) × (Fin n → ℝ) =>
+        (z.1.1 - z.1.2, x - z.2)) :=
+      ((measurable_fst.comp measurable_fst).sub
+        (measurable_snd.comp measurable_fst)).prodMk (measurable_const.sub measurable_snd)
+    have hkernel := (measurable_uncurry_heatKernelND (n := n)).comp hmap
+    exact hkernel
   have hc : Measurable (fun z : (ℝ × ℝ) × (Fin n → ℝ) =>
       (x - z.2) k ^ 2 / (4 * (z.1.1 - z.1.2) ^ 2) -
         1 / (2 * (z.1.1 - z.1.2))) := by

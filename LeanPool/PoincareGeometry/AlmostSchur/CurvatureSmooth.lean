@@ -156,9 +156,11 @@ theorem contMDiffAt_ricciTraceEndomorphism_of_order
           (ricciTraceEndomorphism cov Y Z y)) x := by
   apply contMDiffAt_endomorphism_of_localFrame n _ x (Module.finBasis ℝ E)
   intro i
-  exact contMDiffAt_curvatureTensor_apply_of_order (I := I) n cov hm ht
+  have hfield := contMDiffAt_curvatureTensor_apply_of_order (I := I) n cov hm ht
     (contMDiffAt_localFrame_of_mem (n + 2) (trivializationAt E TM x)
       (Module.finBasis ℝ E) i (mem_baseSet_trivializationAt E TM x)) hY hZ
+  simpa only [ricciTraceEndomorphism, LinearMap.coe_toContinuousLinearMap',
+    CovariantDerivative.ricciEndomorphism_apply] using hfield
 
 theorem contMDiffAt_ricciCurvature_apply_of_order
     (n : ℕ) (cov : CovariantDerivative I E TM)

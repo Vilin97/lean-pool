@@ -40,8 +40,8 @@ theorem gradient_ne_zero_along_curve {f : M → ℝ}
   intro hz
   have hconst : IsMIntegralCurve (fun _ : ℝ => γ t) (gradient (I := I) f) := by
     intro s
-    simpa only [hz, ContinuousLinearMap.smulRight_zero] using
-      (hasMFDerivAt_const (I := 𝓘(ℝ, ℝ)) (I' := I) (c := γ t) (x := s))
+    simp only [hz, ContinuousLinearMap.smulRight_zero]
+    convert (hasMFDerivAt_const (I := 𝓘(ℝ, ℝ)) (I' := I) (c := γ t) (x := s)) using 1 <;> rfl
   let : IsContMDiffRiemannianBundle I (↑(1 : ℕ)) E TM :=
     IsContMDiffRiemannianBundle.of_le (n := 1) (by norm_num)
   have he := isMIntegralCurve_Ioo_eq_of_contMDiff_boundaryless

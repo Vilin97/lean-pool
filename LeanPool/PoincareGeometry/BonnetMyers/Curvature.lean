@@ -139,9 +139,7 @@ theorem curvature_apply_contMDiff
         (fun z ↦ e.localFrameCoeff I b i z (Z z)) y := by
       have hz := contMDiffAt_localFrameCoeff (I := I) b hybase hZ.contMDiffAt i
       simpa only [LinearMap.piApply_apply] using hz
-    convert ((φ.contMDiffAt.of_le (by exact ENat.LEInfty.out)).smul hcoeff) using 1
-    ext z
-    simp [f, Pi.mul_apply, Pi.smul_apply, smul_eq_mul]
+    exact (φ.contMDiffAt.of_le (by exact ENat.LEInfty.out)).smul hcoeff
   have hτ : ContMDiff I (I.prod 𝓘(ℝ, E)) 2
       (fun y ↦ TotalSpace.mk' E y (τ y)) := by
     simpa [τ] using CovariantDerivative.smoothExtend_contMDiff_two
@@ -160,9 +158,7 @@ theorem curvature_apply_contMDiff
         (fun z ↦ e.localFrameCoeff I b i z (τ z)) y := by
       have hz := contMDiffAt_localFrameCoeff (I := I) b hybase hτ'.contMDiffAt i
       simpa only [LinearMap.piApply_apply] using hz
-    convert ((φ.contMDiffAt.of_le (by exact ENat.LEInfty.out)).smul hcoeff) using 1
-    ext z
-    simp [g, Pi.mul_apply, Pi.smul_apply, smul_eq_mul]
+    exact (φ.contMDiffAt.of_le (by exact ENat.LEInfty.out)).smul hcoeff
   have hσs : ∀ i : Fin (Module.finrank ℝ E),
       ContMDiff I (I.prod 𝓘(ℝ, E)) 2
         (fun y ↦ TotalSpace.mk' E y (σs i y)) := by

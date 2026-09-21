@@ -86,7 +86,8 @@ theorem normal_chart_eq_radial_transport
   have hv : ‖(v : TM p)‖ = R := by
     simpa only [Metric.mem_sphere, dist_zero_right] using v.2
   have hscale (r : ℝ) : r • u = L ((r / (t * R)) • (v : TM p)) := by
-    simp [u, map_smul, smul_smul, div_eq_mul_inv]
+    rw [L.map_smul]
+    simp [u, smul_smul, div_eq_mul_inv]
   have hnorm (r : ℝ) (hr : 0 ≤ r) : ‖S (r • u)‖ = r / t := by
     rw [hscale, map_smul, map_smul, hcancel, norm_smul, Real.norm_eq_abs,
       abs_of_nonneg (div_nonneg hr htR.1.le), hv]
