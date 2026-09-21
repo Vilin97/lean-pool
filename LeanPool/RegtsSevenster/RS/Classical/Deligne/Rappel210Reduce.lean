@@ -366,28 +366,28 @@ theorem freeSectionHom_section
       associator_inv_naturality_middle_assoc,
       ← MonoidalCategory.comp_whiskerRight, MonObj.mul_one]
     monoidal
-  calc freeSectionHom S B cls ≫ (B ◁ (unitForm S).g)
-      = (B ◁ pointSection S B cls) ≫
-          (B ◁ (β_ (unitFormMid S) B).hom) ≫
-          (B ◁ (B ◁ (unitForm S).g)) ≫
-          (α_ B B (𝟙_ D)).inv ≫ (μ[B] ▷ (𝟙_ D)) := by
-        rw [freeSectionHom]
-        simp only [Category.assoc]
-        rw [h1]
-        exact whisker_eq _ (whisker_eq _
-          ((Category.assoc _ _ _).symm.trans
-            ((eq_whisker h2 _).trans (Category.assoc _ _ _))))
-    _ = (B ◁ (pointSection S B cls ≫
-          (β_ (unitFormMid S) B).hom ≫
-          (B ◁ (unitForm S).g))) ≫
-          (α_ B B (𝟙_ D)).inv ≫ (μ[B] ▷ (𝟙_ D)) := by
-        simp only [MonoidalCategory.whiskerLeft_comp,
-          Category.assoc]
-    _ = (B ◁ ((ρ_ (𝟙_ D)).inv ≫ (η[B] ▷ (𝟙_ D)))) ≫
-          (α_ B B (𝟙_ D)).inv ≫ (μ[B] ▷ (𝟙_ D)) := by
-        rw [hinner]
-        rfl
-    _ = 𝟙 (B ⊗ 𝟙_ D) := hfold
+  have hstart : freeSectionHom S B cls ≫ (B ◁ (unitForm S).g) =
+      (B ◁ pointSection S B cls) ≫
+        (B ◁ (β_ (unitFormMid S) B).hom) ≫
+        (B ◁ (B ◁ (unitForm S).g)) ≫
+        (α_ B B (𝟙_ D)).inv ≫ (μ[B] ▷ (𝟙_ D)) := by
+    rw [freeSectionHom]
+    simp only [Category.assoc]
+    rw [h1]
+    exact whisker_eq _ (whisker_eq _
+      ((Category.assoc _ _ _).symm.trans
+        ((eq_whisker h2 _).trans (Category.assoc _ _ _))))
+  have hpack : (B ◁ pointSection S B cls) ≫
+        (B ◁ (β_ (unitFormMid S) B).hom) ≫
+        (B ◁ (B ◁ (unitForm S).g)) ≫
+        (α_ B B (𝟙_ D)).inv ≫ (μ[B] ▷ (𝟙_ D)) =
+      (B ◁ (pointSection S B cls ≫
+        (β_ (unitFormMid S) B).hom ≫ (B ◁ (unitForm S).g))) ≫
+        (α_ B B (𝟙_ D)).inv ≫ (μ[B] ▷ (𝟙_ D)) := by
+    repeat' erw [MonoidalCategory.whiskerLeft_comp, Category.assoc]
+  have hreplace := congrArg (fun t => (B ◁ t) ≫
+    (α_ B B (𝟙_ D)).inv ≫ (μ[B] ▷ (𝟙_ D))) hinner
+  exact hstart.trans (hpack.trans (hreplace.trans hfold))
 
 /-- **Extend a point to the free module**: any morphism into the
 carrier of a module extends to a linear map from the free module,
@@ -569,19 +569,23 @@ theorem freeSectionPoint_g
   have hpull : (B ◁ pullback.fst (((S.X₃)ᘁ) ◁ S.g)
       (unitName S.X₃)) ≫ (B ◁ (((S.X₃)ᘁ) ◁ S.g)) =
     (B ◁ (unitForm S).g) ≫ (B ◁ unitName S.X₃) := by
-    rw [← MonoidalCategory.whiskerLeft_comp,
+    erw [← MonoidalCategory.whiskerLeft_comp,
       ← MonoidalCategory.whiskerLeft_comp]
     exact congrArg (fun t => B ◁ t) pullback.condition
   have hsec : (freeSection S B cls).hom ≫
       (B ◁ (unitForm S).g) = 𝟙 (B ⊗ 𝟙_ D) := by
     rw [freeSection_hom]
     exact freeSectionHom_section S B cls hcls
+  have hsection : (freeSection S B cls).hom ≫
+      (B ◁ pullback.fst (((S.X₃)ᘁ) ◁ S.g) (unitName S.X₃)) ≫
+      (B ◁ (((S.X₃)ᘁ) ◁ S.g)) = B ◁ unitName S.X₃ :=
+    (whisker_eq _ hpull).trans
+      ((Category.assoc _ _ _).symm.trans
+        ((eq_whisker hsec _).trans (Category.id_comp _)))
   rw [freeSectionPoint]
   simp only [Category.assoc]
   exact whisker_eq _ (whisker_eq _
-    ((whisker_eq _ hpull).trans
-      ((Category.assoc _ _ _).symm.trans
-        ((eq_whisker hsec _).trans (Category.id_comp _)))))
+    ((Category.assoc _ _ _).trans hsection))
 
 /-- **The transferred point**: the free-section element,
 contracted against the argument. -/

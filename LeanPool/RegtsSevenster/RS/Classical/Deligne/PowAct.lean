@@ -429,7 +429,7 @@ private theorem leg_split_below
     ((tensorPowConcat X (a + 2) b).hom)
   simp only [modPowGlue, tensorPowConcat_succ_hom, powExpose,
     comp_whiskerRight, Category.assoc] at h0 ⊢
-  exact h0
+  simpa only [tensorPow, comp_whiskerRight, Category.assoc] using! h0
 
 /-- **The below-top slots pass the tail action** by naturality. -/
 private theorem act_slot_below

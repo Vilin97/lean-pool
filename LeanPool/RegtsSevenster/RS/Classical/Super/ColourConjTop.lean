@@ -508,7 +508,7 @@ private theorem braid_ee (r : ℂ) (x y : (stdSuperPair k ℓ).even) :
       (Eq.trans (whisker_unit_even'
         (SuperVect.koszulBraiding (stdSuperPair k ℓ)
           (stdSuperPair k ℓ)) r _)
-        (by rw [SuperVect.koszul_ee])))) ?_
+        (congrArg (fun z => (r ⊗ₜ[ℂ] z, 0)) (SuperVect.koszul_ee x y))))) ?_
   exact SuperVect.assoc_unit_inv_ee r y x
 
 private theorem braid_oo (r : ℂ) (w z : (stdSuperPair k ℓ).odd) :
@@ -1360,7 +1360,7 @@ private theorem braid_eo (r : ℂ) (x : (stdSuperPair k ℓ).even)
       (Eq.trans (whisker_unit_odd'
         (SuperVect.koszulBraiding (stdSuperPair k ℓ)
           (stdSuperPair k ℓ)) r _)
-        (by rw [SuperVect.koszul_eo])))) ?_
+        (congrArg (fun z => (r ⊗ₜ[ℂ] z, 0)) (SuperVect.koszul_eo x w))))) ?_
   exact SuperVect.assoc_unit_inv_oe r w x
 
 private theorem braid_oe (r : ℂ) (u : (stdSuperPair k ℓ).odd)
@@ -1409,7 +1409,7 @@ private theorem braid_oe (r : ℂ) (u : (stdSuperPair k ℓ).odd)
       (Eq.trans (whisker_unit_odd'
         (SuperVect.koszulBraiding (stdSuperPair k ℓ)
           (stdSuperPair k ℓ)) r _)
-        (by rw [SuperVect.koszul_oe])))) ?_
+        (congrArg (fun z => (r ⊗ₜ[ℂ] z, 0)) (SuperVect.koszul_oe u y))))) ?_
   exact SuperVect.assoc_unit_inv_eo r y u
 
 /-- Pointwise sum on odd colour functions. -/

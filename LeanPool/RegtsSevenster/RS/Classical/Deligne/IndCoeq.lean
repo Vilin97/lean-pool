@@ -145,7 +145,7 @@ lemma preservesColimit_flip_lim
         (colimit.ι (G.flip ⋙ lim) a ≫
             (HasColimit.isoOfNatIso (limitIsoFlipCompLim G).symm).hom ≫
               (colimitLimitIso G).hom) ≫ limit.π (colimit G.flip) b =
-          limit.π (G ⋙ (evaluation K 𝒟).obj a) b ≫
+          limit.π (G.flip.obj a) b ≫
             (colimit.ι G.flip a).app b := by
       refine (Category.assoc _ _ _).trans ?_
       refine (congrArg (fun t => colimit.ι (G.flip ⋙ lim) a ≫ t)
@@ -156,8 +156,8 @@ lemma preservesColimit_flip_lim
         (fun t => (limitIsoFlipCompLim G).symm.hom.app a ≫ t)
         (ι_colimitLimitIso_limit_π G a b)).trans ?_
       refine (Category.assoc _ _ _).symm.trans ?_
-      exact congrArg (fun t => t ≫ (colimit.ι G.flip a).app b)
-        (limitObjIsoLimitCompEvaluation_inv_π_app G b a)
+      apply congrArg (fun t => t ≫ (colimit.ι G.flip a).app b)
+      simp [limitIsoFlipCompLim, Category.assoc]
     exact hL.trans hR.symm
   haveI : IsIso (colimit.post G.flip lim) := by
     rw [key]

@@ -204,8 +204,7 @@ lemma dayCoyonedaCorepresentableBy_homEquiv_iso
       (coyonedaDayCorepresentableBy (p ⊗ q)) = dayCoyonedaIso p q
     from rfl] at h
   rw [h]
-  dsimp [coyonedaDayCorepresentableBy]
-  rw [coyonedaEquiv_apply]
+  change coyonedaEquiv (𝟙 (coyoneda.obj (op (p ⊗ q)))) = 𝟙 (p ⊗ q)
   rfl
 
 /-- `RS.dayCoyonedaIso` sends the canonical element to the
@@ -330,16 +329,18 @@ lemma dayCoyonedaIso_hom_associator [SmallCategory D] [MonoidalCategory D]
           (dayCoyonedaIso b c).hom) ≫
         (dayCoyonedaIso a (b ⊗ c)).hom := by
   apply (dayCoyonedaCorepresentableBy₂ a b c).homEquiv.injective
-  simp only [← Category.assoc]
-  rw [(dayCoyonedaCorepresentableBy₂ a b c).homEquiv_comp,
-    (dayCoyonedaCorepresentableBy₂ a b c).homEquiv_comp,
-    (dayCoyonedaCorepresentableBy₂ a b c).homEquiv_comp,
-    (dayCoyonedaCorepresentableBy₂ a b c).homEquiv_comp,
-    dayCoyonedaCorepresentableBy₂_homEquiv_apply,
-    dayCoyonedaCorepresentableBy₂_homEquiv_apply,
-    dayEvaluation_map_apply, dayEvaluation_map_apply,
-    dayEvaluation_map_apply, dayEvaluation_map_apply,
-    whiskerRight_dayCoyonedaIso_app_unitElt,
+  change (coyoneda.map ((α_ a b c).inv.op)).app ((a ⊗ b) ⊗ c)
+      ((dayCoyonedaIso (a ⊗ b) c).hom.natTrans.app ((a ⊗ b) ⊗ c)
+        (((dayCoyonedaIso a b).hom ▷ DayFunctor.mk (coyoneda.obj (op c))).natTrans.app
+          ((a ⊗ b) ⊗ c) (dayCoyonedaUnitElt₂ a b c))) =
+    (dayCoyonedaIso a (b ⊗ c)).hom.natTrans.app ((a ⊗ b) ⊗ c)
+      ((DayFunctor.mk (coyoneda.obj (op a)) ◁ (dayCoyonedaIso b c).hom).natTrans.app
+        ((a ⊗ b) ⊗ c)
+        ((α_ (DayFunctor.mk (coyoneda.obj (op a)))
+          (DayFunctor.mk (coyoneda.obj (op b)))
+          (DayFunctor.mk (coyoneda.obj (op c)))).hom.natTrans.app
+          ((a ⊗ b) ⊗ c) (dayCoyonedaUnitElt₂ a b c)))
+  rw [whiskerRight_dayCoyonedaIso_app_unitElt,
     dayCoyonedaIso_hom_app_unitElt, dayAssociator_hom_app_unitElt]
   have hnatl : (DayFunctor.mk (coyoneda.obj (op a)) ◁
         (dayCoyonedaIso b c).hom).natTrans.app ((a ⊗ b) ⊗ c)
@@ -389,11 +390,13 @@ lemma dayCoyonedaIso_hom_braiding
       (dayCoyonedaIso b a).hom =
     (dayCoyonedaIso a b).hom ≫ ⟨coyoneda.map ((β_ b a).hom.op)⟩ := by
   apply (dayCoyonedaCorepresentableBy a b).homEquiv.injective
-  rw [(dayCoyonedaCorepresentableBy a b).homEquiv_comp,
-    (dayCoyonedaCorepresentableBy a b).homEquiv_comp,
-    dayCoyonedaCorepresentableBy_homEquiv_iso,
-    dayEvaluation_map_apply, dayEvaluation_map_apply,
-    dayCoyonedaCorepresentableBy_homEquiv_apply]
+  change (dayCoyonedaIso b a).hom.natTrans.app (a ⊗ b)
+      ((β_ (DayFunctor.mk (coyoneda.obj (op a)))
+        (DayFunctor.mk (coyoneda.obj (op b)))).hom.natTrans.app (a ⊗ b)
+        (dayCoyonedaUnitElt a b)) =
+    (coyoneda.map ((β_ b a).hom.op)).app (a ⊗ b)
+      ((dayCoyonedaIso a b).hom.natTrans.app (a ⊗ b) (dayCoyonedaUnitElt a b))
+  rw [dayCoyonedaIso_hom_app_unitElt]
   have hβ : (β_ (DayFunctor.mk (coyoneda.obj (op a)))
         (DayFunctor.mk (coyoneda.obj (op b)))).hom.natTrans.app (a ⊗ b)
         (dayCoyonedaUnitElt a b) =

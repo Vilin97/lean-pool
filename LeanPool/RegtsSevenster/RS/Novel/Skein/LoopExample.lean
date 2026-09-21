@@ -109,7 +109,7 @@ half-edges at the vertex are matched to each other. -/
 private def loopFullTransition : loopFull.TransitionSystem where
   match_ := not
   match_invol := fun f _ => Bool.not_not f
-  match_ne := fun f _ => by cases f <;> simp
+  match_ne := fun f _ => by cases f <;> intro h <;> cases h
   match_mem := fun f _ => Finset.mem_univ _
   match_vertex := fun _ _ _ hv => hv
   attach_internal := fun _ _ => ⟨(), rfl⟩

@@ -155,7 +155,8 @@ private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Fintype G] :
         have h2 : rhoS S₀ g (eTS.symm ⟨v, hv⟩) =
             (MonoidAlgebra.single g (1 : ℂ)) • eTS.symm ⟨v, hv⟩ :=
           rhoS_apply S₀ g _
-        rw [h1, map_smul, h2]
+        erw [h1, map_smul, h2]
+        rfl
       -- Character additivity via trace decomposition
       have hchar_split : ∀ g : G,
           ρ.character g = ρT.character g + ρW.character g := by
@@ -187,7 +188,6 @@ private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Fintype G] :
           congr 1
           ext ⟨v, hv⟩ : 1
           apply Subtype.ext
-          simp only [restrict_apply]
           exact (rhoSub_val_eq ρ T g ⟨v, hv⟩).symm
         · -- trace on N false (= W) = ρW.character g
           change (trace ℂ ↥(W.restrictScalars ℂ)) (f.restrict (hMaps false)) =
@@ -195,7 +195,6 @@ private theorem character_eq_sum_nChar_aux {G : Type*} [Group G] [Fintype G] :
           congr 1
           ext ⟨v, hv⟩ : 1
           apply Subtype.ext
-          simp only [restrict_apply]
           exact (rhoSub_val_eq ρ W g ⟨v, hv⟩).symm
       -- Assemble final result
       refine ⟨m' + 1, Fin.cons S₀ S', ?_, ?_⟩

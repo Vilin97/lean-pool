@@ -303,7 +303,7 @@ theorem wordMap_standard
       (wordMap f g (p + q + 1) (standardWord p (q + 1)))
       (wordMap f g (p + q) (standardWord p q) ⊗ₘ g)
       hsplit).trans ?_
-    rw [Category.assoc]
+    erw [Category.assoc]
     exact concat_step_glue (standardMixedIso U V p q).inv
       (wordMap f g (p + q) (standardWord p q))
       (tensorPowMap f p) (tensorPowMap g q)
@@ -465,7 +465,7 @@ private theorem insertTop_cast
     (eqToHom H ▷ T) ≫ insertTop T b k =
       insertTop T a k ≫ (eqToHom H ▷ T) := by
   subst hab
-  rw [show H = rfl from rfl, eqToHom_refl,
+  erw [show H = rfl from rfl, eqToHom_refl,
     MonoidalCategory.id_whiskerRight, Category.id_comp]
   exact (Category.comp_id _).symm
 
@@ -480,7 +480,7 @@ private theorem cast_then_cast_whisker [Category.{v} A] [MonoidalCategory A]
     eqToHom H₁ ≫ (eqToHom H₂ ▷ T) = eqToHom H₃ := by
   subst hbn
   subst hab
-  rw [show H₁ = rfl from rfl, show H₂ = rfl from rfl,
+  erw [show H₁ = rfl from rfl, show H₂ = rfl from rfl,
     show H₃ = rfl from rfl, eqToHom_refl, eqToHom_refl,
     MonoidalCategory.id_whiskerRight, Category.id_comp]
   rfl
@@ -507,7 +507,7 @@ private theorem letter_insert_true
       eqToHom (congrArg (tensorPow A Z)
         (Nat.succ_add_eq_add_succ p m)) := by
   rw [tensor_split_last]
-  simp only [Category.assoc]
+  repeat' erw [Category.assoc]
   rw [concat_whisker_insert, insertTop_full,
     MonoidalCategory.associator_naturality_assoc,
     tensor_then_whiskerLeft_assoc,

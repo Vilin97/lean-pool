@@ -102,7 +102,7 @@ theorem swapTop_muFold
       (((muFold A n ▷ A) ≫ μ[A]) ▷ A) ≫ μ[A] := rfl
   rw [hM]
   unfold swapTop
-  simp only [Category.assoc]
+  repeat' erw [Category.assoc]
   exact braidTop_mul' A (muFold A n)
 
 /-- **Bubbling is absorbed by the fold.** -/

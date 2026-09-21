@@ -322,8 +322,11 @@ private theorem samePairing_of_matchEq {W : Fragment α} {F : EdgeSubset W}
     SamePairing κ₁ κ₂ :=
   fun _ hδ => (pathMatch_matchEq heq hδ).symm
 
--- Raised budget: membership in the symmetric difference is
--- unfolded through the status sets on both sides.
+private theorem statusMembership_iff (p q : Prop) :
+    ((p ∧ ¬ q) ∨ (q ∧ ¬ p)) ↔ q ≠ p := by
+  rw [prop_ne_iff]
+  tauto
+
 /-- Membership in the status difference is the status change. -/
 private theorem mem_statusDiff
     [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
@@ -331,9 +334,7 @@ private theorem mem_statusDiff
     {i : α} :
     i ∈ statusDiff κ κ' ↔
       ((i ∈ highSet κ') ≠ (i ∈ highSet κ)) := by
-  unfold statusDiff
-  rw [mem_symmU, prop_ne_iff]
-  tauto
+  exact mem_symmU.trans (statusMembership_iff _ _)
 
 /-- Status differences transport across matching equality on the
 right. -/

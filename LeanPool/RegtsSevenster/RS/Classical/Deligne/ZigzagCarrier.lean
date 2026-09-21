@@ -71,7 +71,7 @@ theorem modMultiπ_single
   show (modMultiTriv A (modSlots_singleton A X)).inv ≫
       (modMultiTriv A (modSlots_singleton A X)).hom ≫
       (ρ_ X.X).hom = (ρ_ X.X).hom
-  rw [Iso.inv_hom_id_assoc]
+  erw [Iso.inv_hom_id_assoc]
 
 /-- Recognise a singleton conjugate: a multi-level morphism whose
 projection matches a carrier morphism through the unitor is the
@@ -204,7 +204,7 @@ theorem zigContract_cond
         (((modTensorLegM A M M' ▷ modList A [M]) ≫
           (α_ M.X M'.X (modList A [M])).hom) ≫
           contract3Fold A p M) ≫ (modMultiSingle A M).hom := by
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have aN : ((((M.X ⊗ A) ⊗ M'.X) ◁ (ρ_ M.X).inv) ≫
         ((modTensorLegN A M M' ▷ modList A [M]) ≫
           (α_ M.X M'.X (modList A [M])).hom)) ≫
@@ -213,7 +213,7 @@ theorem zigContract_cond
         (((modTensorLegN A M M' ▷ modList A [M]) ≫
           (α_ M.X M'.X (modList A [M])).hom) ≫
           contract3Fold A p M) ≫ (modMultiSingle A M).hom := by
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   exact (window_contract3Fold_carrier A p
       (modTensorLegM A M M')).symm.trans
     ((aM.trans (hmid.trans aN.symm)).trans
@@ -395,7 +395,7 @@ theorem zigComposite_eq_carrier
     rw [reassoc_of% s1, reassoc_of% s2,
       whiskerLeft_modMultiπ_concat_assoc, copairImage_eq,
       MonoidalCategory.comp_whiskerRight]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have hcore := pairInv_concat_contract3_single A p hp
   have hfin : (λ_ (M.X ⊗ 𝟙_ D)).inv ≫
       ((η[A] ≫ c) ▷ (M.X ⊗ 𝟙_ D)) ≫
@@ -486,7 +486,7 @@ theorem contract3LFold_single
         ((α_ A M'.X (𝟙_ D)).inv ≫
           (actLeft A M'.X ▷ (𝟙_ D))) ≫
         (modMultiπ A [M'] ≫ (modMultiSingle A M').hom) := by
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have hmid := congrArg
     (fun t => (α_ M'.X M.X (M'.X ⊗ 𝟙_ D)).inv ≫
       ((modTensorπ A M' M ≫ p) ▷ (M'.X ⊗ 𝟙_ D)) ≫
@@ -601,7 +601,7 @@ theorem zagContract_cond
           contract3LFold A p M') ≫
         (modMultiSingle A M').hom := by
     rw [MonoidalCategory.whiskerLeft_comp]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have aN : (M'.X ◁ ((ρ_ ((M.X ⊗ A) ⊗ M'.X)).inv ≫
         ((modTensorLegN A M M' ▷ modList A []) ≫
           (α_ M.X M'.X (modList A [])).hom))) ≫
@@ -612,7 +612,7 @@ theorem zagContract_cond
           contract3LFold A p M') ≫
         (modMultiSingle A M').hom := by
     rw [MonoidalCategory.whiskerLeft_comp]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   exact (window_contract3LFold_carrier A p
       (modTensorLegM A M M')).symm.trans
     ((aM.trans (hmid.trans aN.symm)).trans
@@ -743,7 +743,7 @@ theorem pairInv_concat_contract3L_single
       ((ρ_ M'.X).hom ▷ (M.X ⊗ M'.X)) ≫
         (α_ M'.X M.X M'.X).inv := by
       monoidal
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
     rw [reassoc_of% hx, reassoc_of% hcoh]
   have hR : ((M'.X ⊗ 𝟙_ D) ◁ modTensorπ A M M') ≫
       ((ρ_ M'.X).hom ▷ modTensor A M M') ≫
@@ -801,7 +801,7 @@ theorem zagComposite_eq_carrier
     simp only [zagComposite, Category.assoc]
     rw [reassoc_of% s1, reassoc_of% s2, copairImage_eq,
       MonoidalCategory.whiskerLeft_comp]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have hcore := pairInv_concat_contract3L_single A p hp
   have hfin : (ρ_ (M'.X ⊗ 𝟙_ D)).inv ≫
       ((M'.X ⊗ 𝟙_ D) ◁ (η[A] ≫ c)) ≫

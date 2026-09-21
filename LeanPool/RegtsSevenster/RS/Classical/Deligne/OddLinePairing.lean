@@ -34,7 +34,6 @@ theorem neg_id_whiskerRight
   show (tensorRight Y).map (-𝟙 X) = _
   rw [Functor.map_neg]
   simp
-  rfl
 
 /-- Whiskering a negated identity on the left negates it. -/
 theorem whiskerLeft_neg_id [Category.{v} D] [MonoidalCategory D] [Preadditive D]
@@ -44,7 +43,6 @@ theorem whiskerLeft_neg_id [Category.{v} D] [MonoidalCategory D] [Preadditive D]
   show (tensorLeft X).map (-𝟙 Y) = _
   rw [Functor.map_neg]
   simp
-  rfl
 
 /-- **Cyclic rearrangement of a triple of lines is free**: the
 two transpositions each contribute a sign, and the signs

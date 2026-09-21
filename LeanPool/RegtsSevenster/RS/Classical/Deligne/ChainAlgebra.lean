@@ -239,7 +239,7 @@ theorem ι_chainMulStage [Category.{v} E] (B : ℕ → E) (δ : ∀ n, B n ⟶ B
       (smallNatEquiv.functor.obj i)) ≫
       chainMulStage B δ mu hδl j =
     mu i j ≫ chainColimitι B δ (i + 1 + j)
-  rw [chainMulStage, ι_preservesColimitIso_hom_assoc]
+  erw [chainMulStage, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (chainMulCocone B δ mu hδl j)
     (smallNatEquiv.functor.obj i)
 
@@ -257,7 +257,7 @@ theorem chainColimit_tensorRight_hom_ext
     (chainDiagram B δ)).inv).mp
   apply colimit.hom_ext
   intro k
-  rw [ι_preservesColimitIso_inv_assoc,
+  erw [ι_preservesColimitIso_inv_assoc,
     ι_preservesColimitIso_inv_assoc]
   exact w (smallNatEquiv.inverse.obj k)
 
@@ -295,7 +295,7 @@ theorem tensorLeft_chainColimit_hom_ext
     (chainDiagram B δ)).inv).mp
   apply colimit.hom_ext
   intro k
-  rw [ι_preservesColimitIso_inv_assoc,
+  erw [ι_preservesColimitIso_inv_assoc,
     ι_preservesColimitIso_inv_assoc]
   exact w (smallNatEquiv.inverse.obj k)
 
@@ -366,7 +366,7 @@ theorem whiskerLeft_ι_chainColimitMul
         (smallNatEquiv.functor.obj j)) ≫
       chainColimitMul B δ mu hδl hδr =
     chainMulStage B δ mu hδl j
-  rw [chainColimitMul, ι_preservesColimitIso_hom_assoc]
+  erw [chainColimitMul, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (chainMulTotalCocone B δ mu hδl hδr)
     (smallNatEquiv.functor.obj j)
 
@@ -449,7 +449,7 @@ theorem ι_chainMulStageL [Category.{v} E] (B : ℕ → E) (δ : ∀ n, B n ⟶ 
       (smallNatEquiv.functor.obj j)) ≫
       chainMulStageL B δ mu hδr i =
     mu i j ≫ chainColimitι B δ (i + 1 + j)
-  rw [chainMulStageL, ι_preservesColimitIso_hom_assoc]
+  erw [chainMulStageL, ι_preservesColimitIso_hom_assoc]
   exact colimit.ι_desc (chainMulLCocone B δ mu hδr i)
     (smallNatEquiv.functor.obj j)
 
@@ -515,7 +515,7 @@ theorem chainColimit_sandwich_hom_ext
     (tensorRight Y ⋙ tensorLeft X) (chainDiagram B δ)).inv).mp
   apply colimit.hom_ext
   intro k
-  rw [ι_preservesColimitIso_inv_assoc,
+  erw [ι_preservesColimitIso_inv_assoc,
     ι_preservesColimitIso_inv_assoc]
   exact w (smallNatEquiv.inverse.obj k)
 

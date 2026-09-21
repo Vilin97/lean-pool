@@ -37,7 +37,7 @@ theorem oddLine_swapTop
     (L : OddLine D) (n : ℕ) :
     swapTop L.obj n = -𝟙 (tensorPow D L.obj (n + 2)) := by
   unfold swapTop
-  rw [L.braid_neg, whiskerLeft_neg, MonoidalCategory.whiskerLeft_id,
+  erw [L.braid_neg, whiskerLeft_neg, MonoidalCategory.whiskerLeft_id,
     Preadditive.neg_comp, Category.id_comp, Preadditive.comp_neg,
     Iso.hom_inv_id]
 
