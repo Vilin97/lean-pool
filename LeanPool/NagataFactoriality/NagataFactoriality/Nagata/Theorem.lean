@@ -30,7 +30,7 @@ theorem nagata_theorem {R : Type*} [CommRing R] [IsDomain R] [IsNoetherianRing R
 
 theorem nagata_theorem_isLocalization {R T : Type*} [CommRing R] [IsDomain R] [IsNoetherianRing R]
     (S : Submonoid R) [CommRing T] [Algebra R T] [_root_.IsLocalization S T]
-    [IsDomain T] (hS : PrimeGenerated S) (hUFD : UniqueFactorizationMonoid T) :
+     (hS : PrimeGenerated S) (hUFD : UniqueFactorizationMonoid T) :
     UniqueFactorizationMonoid R := by
   let : UniqueFactorizationMonoid T := hUFD
   exact ufd_of_factorization_and_primes
@@ -50,7 +50,7 @@ theorem nagata_theorem_of_prime_generators {R : Type*} [CommRing R] [IsDomain R]
 
 theorem nagata_theorem_of_prime_generators_isLocalization {R T : Type*} [CommRing R] [IsDomain R]
     [IsNoetherianRing R] (s : Set R) [CommRing T] [Algebra R T]
-    [_root_.IsLocalization (Submonoid.closure s) T] [IsDomain T]
+    [_root_.IsLocalization (Submonoid.closure s) T]
     (hs : ∀ q ∈ s, Prime q) (hUFD : UniqueFactorizationMonoid T) :
     UniqueFactorizationMonoid R := by
   exact nagata_theorem_isLocalization (R := R) (T := T) (Submonoid.closure s)
@@ -71,7 +71,7 @@ theorem nagata_theorem_of_finite_prime_generators {R : Type*} [CommRing R] [IsDo
 
 theorem nagata_theorem_of_finite_prime_generators_isLocalization {R T : Type*}
     [CommRing R] [IsDomain R] [IsNoetherianRing R] (s : Finset R) [CommRing T] [Algebra R T]
-    [_root_.IsLocalization (Submonoid.closure (↑s : Set R)) T] [IsDomain T]
+    [_root_.IsLocalization (Submonoid.closure (↑s : Set R)) T]
     (hs : ∀ q ∈ s, Prime q) (hUFD : UniqueFactorizationMonoid T) :
     UniqueFactorizationMonoid R := by
   exact nagata_theorem_of_prime_generators_isLocalization (R := R) (T := T) (s := (↑s : Set R))
@@ -94,7 +94,7 @@ theorem nagata_theorem_of_prime_or_unit {R : Type*} [CommRing R] [IsDomain R] [I
 
 theorem nagata_theorem_of_prime_or_unit_isLocalization {R T : Type*}
     [CommRing R] [IsDomain R] [IsNoetherianRing R] (S : Submonoid R) [CommRing T] [Algebra R T]
-    [_root_.IsLocalization S T] [IsDomain T]
+    [_root_.IsLocalization S T]
     (hS : ∀ s ∈ S, Prime s ∨ IsUnit s) (hUFD : UniqueFactorizationMonoid T) :
     UniqueFactorizationMonoid R := by
   let : UniqueFactorizationMonoid T := hUFD

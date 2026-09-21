@@ -357,7 +357,7 @@ theorem localization_irreducible_of_irreducible_primeGenerated {α : Type*}
       (β := Localization S) (S := S) hS hp havoid)
 
 theorem prime_of_localization_prime_primeGenerated_isLocalization {α β : Type*}
-    [CommRing α] [IsDomain α] {S : Submonoid α} [CommRing β] [Algebra α β] [IsDomain β]
+    [CommRing α] [IsDomain α] {S : Submonoid α} [CommRing β] [Algebra α β]
     [_root_.IsLocalization S β] (hS : PrimeGenerated S) {p : α} (hp : Irreducible p)
     (havoid : Avoids S p) (hploc : Prime (algebraMap α β p)) : Prime p := by
   let : Fact ((0 : α) ∉ S) := ⟨zero_notMem_of_primeGenerated hS⟩
@@ -385,7 +385,7 @@ theorem prime_of_localization_prime_primeGenerated {α : Type*} [CommRing α] [I
       (β := Localization S) (S := S) hS hp havoid hploc)
 
 theorem nagata_key_lemma_primeGenerated_isLocalization {α β : Type*}
-    [CommRing α] [IsDomain α] {S : Submonoid α} [CommRing β] [Algebra α β] [IsDomain β]
+    [CommRing α] [IsDomain α] {S : Submonoid α} [CommRing β] [Algebra α β]
     [_root_.IsLocalization S β] (hS : PrimeGenerated S) [UniqueFactorizationMonoid β]
     {p : α} (hp : Irreducible p) : Prime p := by
   let : Fact ((0 : α) ∉ S) := ⟨zero_notMem_of_primeGenerated hS⟩
@@ -604,7 +604,7 @@ theorem dvd_of_localization_dvd {α : Type*} [CommRing α] [IsDomain α] {S : Su
       (β := Localization S) (S := S) hS hp havoid hdiv)
 
 theorem prime_of_localization_prime_isLocalization {α β : Type*}
-    [CommRing α] [IsDomain α] {S : Submonoid α} [CommRing β] [Algebra α β] [IsDomain β]
+    [CommRing α] [IsDomain α] {S : Submonoid α} [CommRing β] [Algebra α β]
     [_root_.IsLocalization S β] (hS : ∀ s ∈ S, Prime s ∨ IsUnit s) {p : α}
     (hp : Irreducible p) (havoid : Avoids S p) (hploc : Prime (algebraMap α β p)) : Prime p := by
   let : Fact ((0 : α) ∉ S) := submonoidZeroNotMemFact hS
@@ -630,7 +630,7 @@ theorem prime_of_localization_prime {α : Type*} [CommRing α] [IsDomain α] {S 
       (β := Localization S) (S := S) hS hp havoid hploc)
 
 theorem nagata_key_lemma_isLocalization {α β : Type*}
-    [CommRing α] [IsDomain α] {S : Submonoid α} [CommRing β] [Algebra α β] [IsDomain β]
+    [CommRing α] [IsDomain α] {S : Submonoid α} [CommRing β] [Algebra α β]
     [_root_.IsLocalization S β] (hS : ∀ s ∈ S, Prime s ∨ IsUnit s)
     [UniqueFactorizationMonoid β] {p : α} (hp : Irreducible p) : Prime p := by
   let : Fact ((0 : α) ∉ S) := submonoidZeroNotMemFact hS
