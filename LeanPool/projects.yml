@@ -1,4 +1,76 @@
 projects:
+  - slug: kurosh
+    title: Kurosh and Schreier subgroup theorems via covering graphs
+    summary: >-
+      Proves the Kurosh subgroup theorem for arbitrary subgroups of indexed
+      free products, with factors given by actual intersections with conjugates
+      of the original factors and with the decomposition maps induced by their
+      inclusions. The development constructs Bass–Serre trees, quotient graphs,
+      graph-of-groups covers, path lifting, and normal forms. It also gives an
+      explicit finite Schreier basis and classifies automorphisms of a finite
+      regular Schreier action by its quotient group. The finite-graph basis
+      infrastructure is reused from LeanPool.FiniteGraphFundamentalGroup.
+    branch: combinatorial group theory
+    entry_module: LeanPool.Kurosh
+    authors:
+      - Arthur Freitas Ramos
+      - David Barros Hulak
+      - Ruy J. G. B. de Queiroz
+    source:
+      title: Schreier and Kurosh subgroup theorems via covering graphs
+      url: https://github.com/Arthur742Ramos/KuroshSubgroupTheorem
+      doi: 10.1007/BF01449159
+      github_repo: Arthur742Ramos/KuroshSubgroupTheorem
+      commit: 911707126c8b9bb0c764bf853008fe1053c0aad9
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GraphCoveringTheory.KuroshStatement.kurosh_decomposition_with_inclusions
+    main_results:
+      - declaration: GraphCoveringTheory.KuroshStatement.kurosh_decomposition_with_inclusions
+        informal: >-
+          Every subgroup H of an arbitrary indexed free product admits a free
+          product decomposition into a free group and subgroups of H that are
+          intersections with conjugates of the original factors. The isomorphism
+          to H is induced by the actual subgroup inclusions and a homomorphism
+          from the free factor.
+        source_ref: Kurosh subgroup theorem; upstream inclusion-preserving statement.
+      - declaration: GraphCoveringTheory.Kurosh.kurosh_decomposition
+        informal: >-
+          H is isomorphic to the free product of its nontrivial vertex stabilizers
+          in the quotient Bass–Serre graph and the free group of that graph.
+      - declaration: GraphCoveringTheory.schreier_basis_fintype
+        informal: >-
+          A finite-index subgroup H of a free group on any finite generator type
+          of cardinality r has an explicit free basis of size d*r + 1 - d,
+          where d is its index and subtraction is natural-number subtraction.
+          This formulation also covers the empty generator type.
+      - declaration: GraphCoveringTheory.schreier_basis_fintype_proved
+        informal: >-
+          If the finite generator type is nonempty, the basis has the classical
+          Schreier size 1 + d*(r - 1).
+        source_ref: Schreier index formula; DOI 10.1007/BF02952517.
+      - declaration: GraphCoveringTheory.finiteIndexQuotientDeckGroupEquiv
+        informal: >-
+          For a finite-index normal subgroup H of a group G, the automorphism
+          group of the finite regular Schreier G-action is isomorphic to G/H
+          by right translations. This is a theorem about the action, not a
+          classification of general topological covers.
+      - declaration: GraphCoveringTheory.Kurosh.kurosh_subgroup_is_free_of_trivial_stabilizers
+        informal: >-
+          A subgroup with trivial stabilizers at every vertex of its quotient
+          Bass–Serre graph is a free group.
+    tags:
+      - group-theory
+      - free-products
+      - bass-serre-theory
+      - schreier-index-formula
+      - covering-graphs
+    msc:
+      - 20E07
+      - 05C25
+      - 18B40
   - slug: komlos
     title: The Komlós and Beck–Fiala bounds with constant 36
     summary: >-
