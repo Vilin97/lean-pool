@@ -9985,10 +9985,7 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-    - QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_sub_log2_modular_failure
-    - QuadraticCarleson.StatementSurface.PaperTheorems.full_sub_log2_modular_failure
     - QuadraticCarleson.StatementSurface.PaperTheorems.full_LlogL_endpoint
-    - QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_log2_squared_log4_endpoint
     main_results:
     - declaration: QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_sub_log2_modular_failure
       informal: Lacunary purely quadratic modulation fails modular estimates below the

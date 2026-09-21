@@ -1,10 +1,11 @@
 /-
-Copyright (c) 2026 Anastasios Fragkos. All rights reserved.
+Copyright (c) 2026 Quadratic Carleson formalization contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Anastasios Fragkos
+Authors: Quadratic Carleson formalization contributors
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Order.CompletePartialOrder
 
 /-!
 # Exact dyadic scale classes for Calderón--Zygmund atoms

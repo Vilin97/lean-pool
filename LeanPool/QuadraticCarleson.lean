@@ -306,7 +306,7 @@ import LeanPool.QuadraticCarleson.Solution
 Source: url:https://github.com/anastasiosfragkosmath/quadratic-carleson-palomar-submission
 Authors: Anastasios Fragkos
 Status: verified
-Main declarations: `QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_sub_log2_modular_failure`, `QuadraticCarleson.StatementSurface.PaperTheorems.full_sub_log2_modular_failure`, `QuadraticCarleson.StatementSurface.PaperTheorems.full_LlogL_endpoint`, `QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_log2_squared_log4_endpoint`
+Main declarations: `QuadraticCarleson.StatementSurface.PaperTheorems.full_LlogL_endpoint`
 Tags: harmonic-analysis, maximal-operators, endpoint-estimates
 MSC: 42B20
 -/
