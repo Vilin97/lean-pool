@@ -47,7 +47,7 @@ theorem stone_theorem_intrinsic :
   · intro U
     exact ⟨U.generator, U.generator_isSelfAdjoint, U.generates_generator⟩
   · intro A hA
-    let U := selfAdjoint_generates_unitary_group A hA
+    let U := selfAdjointGeneratesUnitaryGroup A hA
     refine ⟨U, ?_⟩
     rw [← selfAdjoint_generates_unitary_group_generator A hA]
     exact U.generates_generator

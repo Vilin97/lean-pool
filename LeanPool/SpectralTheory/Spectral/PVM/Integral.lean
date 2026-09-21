@@ -516,9 +516,9 @@ theorem PVM.simpleIntegral_piecewise_const (E_pvm : PVM E)
           simp only [SimpleFunc.piecewise_apply, SimpleFunc.const_apply, Set.mem_preimage,
             Set.mem_singleton_iff]
           by_cases ht : t ∈ S
-          · rw [if_pos ht]
+          · rw [ite_eq_left ht]
             exact iff_of_true rfl ht
-          · rw [if_neg ht]
+          · rw [ite_eq_right ht]
             exact iff_of_false (Ne.symm hz) ht
         rw [hpre, zero_smul, add_zero]
 

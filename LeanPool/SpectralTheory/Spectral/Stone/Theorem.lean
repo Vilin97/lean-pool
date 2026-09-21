@@ -647,7 +647,7 @@ theorem PVM.phaseUnitaryGroup_generator (E_pvm : PVM E) :
   simpa only [PVM.phaseUnitaryGroup] using spectralUnitaryGroup_generator E_pvm
 
 /-- A self-adjoint operator generates a strongly continuous one-parameter unitary group. -/
-noncomputable def selfAdjoint_generates_unitary_group
+noncomputable def selfAdjointGeneratesUnitaryGroup
     (A : E →ₗ.[ℂ] E) (hA : IsSelfAdjoint A) :
     StrongContUnitary E :=
   (Classical.choose (spectral_theorem_existence A hA)).phaseUnitaryGroup
@@ -655,7 +655,7 @@ noncomputable def selfAdjoint_generates_unitary_group
 /-- The phase unitary group constructed from a self-adjoint operator has generator `A`. -/
 theorem selfAdjoint_generates_unitary_group_generator
     (A : E →ₗ.[ℂ] E) (hA : IsSelfAdjoint A) :
-    (selfAdjoint_generates_unitary_group A hA).generator = A := by
-  unfold selfAdjoint_generates_unitary_group
+    (selfAdjointGeneratesUnitaryGroup A hA).generator = A := by
+  unfold selfAdjointGeneratesUnitaryGroup
   rw [PVM.phaseUnitaryGroup_generator]
   exact Classical.choose_spec (spectral_theorem_existence A hA)

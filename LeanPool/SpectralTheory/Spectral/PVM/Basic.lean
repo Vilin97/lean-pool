@@ -22,6 +22,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 Laws hold for measurable sets only. -/
 structure PVM (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [CompleteSpace E] where
+  /-- The orthogonal projection assigned to a measurable subset of the real line. -/
   proj : Set ℝ → (E →L[ℂ] E)
   isOrthogonalProjection : ∀ S, MeasurableSet S →
     IsSelfAdjoint (proj S) ∧ IsIdempotentElem (proj S)

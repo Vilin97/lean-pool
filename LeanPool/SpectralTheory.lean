@@ -34,7 +34,7 @@ import LeanPool.SpectralTheory.SpectralStoneSolution
 Source: url:https://github.com/savarin/lean-spectral-theory
 Authors: Ezzeri Esa
 Status: verified
-Main declarations: `PalomarSpectralStone.spectral_theorem_intrinsic`, `PalomarSpectralStone.stone_theorem_intrinsic`
+Main declarations: `PalomarSpectralStone.spectral_theorem_intrinsic`
 Tags: functional-analysis
 MSC: 47A10, 47B15
 -/

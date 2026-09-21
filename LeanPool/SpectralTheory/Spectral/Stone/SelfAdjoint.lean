@@ -416,13 +416,11 @@ private theorem weightedOrbit_quotient_tendsto
   have hgderiv : HasDerivAt g (F a + f a - f 0) 0 := by
     have hgraw := (Real.hasDerivAt_exp 0).smul hHderiv
     convert hgraw using 1
-    · funext h
-      rfl
-    · change F a + f a - f 0 =
+    change F a + f a - f 0 =
         Real.exp 0 • (f a - f 0) + Real.exp 0 • (F (a + 0) - F 0)
-      simp only [Real.exp_zero, one_smul, add_zero, F,
-        intervalIntegral.integral_same, sub_zero]
-      abel
+    simp only [Real.exp_zero, one_smul, add_zero, F,
+      intervalIntegral.integral_same, sub_zero]
+    abel
   have horbit (h : ℝ) :
       U.toFun h (∫ t in 0..a, f t) = g h := by
     rw [weightedOrbit_shift]

@@ -104,7 +104,7 @@ private theorem normalCfcQuadraticLinearMap_nonneg
     star_mul_self_nonneg ((cfcHom hU) q)
   have hpositive : ContinuousLinearMap.IsPositive
       (star ((cfcHom hU) q) * (cfcHom hU) q) :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mp hpos
+    ContinuousLinearMap.nonneg_iff_isPositive.mp hpos
   change 0 ≤ (@inner ℂ E _ x
     ((cfcHom hU) (realToComplexContinuousMap f) x)).re
   rw [hmap]
@@ -243,7 +243,7 @@ private theorem normalCfcRealOperator_isPositive
     unfold normalCfcRealOperator
     rw [realToComplexContinuousMap_eq_star_mul_self fs hfs, map_mul, map_star]
   rw [hmap]
-  apply (ContinuousLinearMap.nonneg_iff_isPositive _).mp
+  apply ContinuousLinearMap.nonneg_iff_isPositive.mp
   exact star_mul_self_nonneg ((cfcHom hU) q)
 
 private theorem normalCfcRealOperator_le_one
@@ -262,7 +262,7 @@ private theorem normalCfcRealOperator_le_one
     unfold normalCfcRealOperator
     rw [hmap, map_sub, map_one]
   rw [← sub_nonneg, ← hop]
-  exact (ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+  exact ContinuousLinearMap.nonneg_iff_isPositive.mpr
     (normalCfcRealOperator_isPositive U hU g hg)
 
 private theorem normalCfcRealOperator_mul
@@ -300,7 +300,7 @@ private theorem norm_sq_apply_le_re_inner_of_nonneg_of_le_one
     (D : E →L[ℂ] E) (hD0 : 0 ≤ D) (hD1 : D ≤ 1) (x : E) :
     ‖D x‖ ^ 2 ≤ (@inner ℂ E _ (D x) x).re := by
   have hDpos : ContinuousLinearMap.IsPositive D :=
-    (ContinuousLinearMap.nonneg_iff_isPositive D).mp hD0
+    ContinuousLinearMap.nonneg_iff_isPositive.mp hD0
   have h1D : 0 ≤ 1 - D := sub_nonneg.mpr hD1
   have hcomm : Commute D (1 - D) := (Commute.one_right D).sub_right rfl
   have hprod : 0 ≤ D * (1 - D) := Commute.mul_nonneg hD0 h1D hcomm
@@ -309,7 +309,7 @@ private theorem norm_sq_apply_le_re_inner_of_nonneg_of_le_one
     convert hprod using 1
     · noncomm_ring
   have hdiffpos : ContinuousLinearMap.IsPositive (D - D * D) :=
-    (ContinuousLinearMap.nonneg_iff_isPositive (D - D * D)).mp (sub_nonneg.mpr hsq)
+    ContinuousLinearMap.nonneg_iff_isPositive.mp (sub_nonneg.mpr hsq)
   have hq := hdiffpos.re_inner_nonneg_left x
   rw [sub_apply, mul_apply_eq_comp, inner_sub_left] at hq
   change 0 ≤ (@inner ℂ E _ (D x) x).re -
@@ -426,7 +426,7 @@ private theorem tendsto_integral_closedSetApprox_mul_self
 omit [CompleteSpace E] in
 private theorem exists_isClosed_measureReal_sdiff_lt
     {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] [BorelSpace X]
-    (mu : Measure X) [mu.Regular] [IsFiniteMeasure mu]
+    (mu : Measure X) [IsFiniteMeasure mu]
     {S : Set X} (hS : MeasurableSet S) {eps : ℝ} (heps : 0 < eps) :
     ∃ K : Set X, K ⊆ S ∧ IsClosed K ∧ mu.real (S \ K) < eps := by
   let epsE : ENNReal := ENNReal.ofReal eps
@@ -744,7 +744,7 @@ private theorem tendsto_normalCfcRealOperator_of_integral
   have hD1 (n : ℕ) : phi n - P ≤ 1 := by
     calc
       phi n - P ≤ phi n := sub_le_self _
-        ((ContinuousLinearMap.nonneg_iff_isPositive P).mpr
+        (ContinuousLinearMap.nonneg_iff_isPositive.mpr
           (normalCfcOperator_isPositive U hU S))
       _ ≤ 1 := normalCfcRealOperator_le_one U hU (f n) (hf1 n)
   have hgap : Filter.Tendsto
@@ -814,7 +814,7 @@ theorem normalCfcOperator_isIdempotent_of_isClosed
         Filter.atTop (nhds (P y)) := by
       exact tendsto_normalCfcRealOperator_closedSetApprox U hU K hK hKne y
     have hphi0 (n : ℕ) : 0 ≤ phi n := by
-      exact (ContinuousLinearMap.nonneg_iff_isPositive (phi n)).mpr
+      exact ContinuousLinearMap.nonneg_iff_isPositive.mpr
         (normalCfcRealOperator_isPositive U hU (closedSetApprox K n)
           (fun z => (closedSetApprox_mem_Icc K n z).1))
     have hphi1 (n : ℕ) : phi n ≤ 1 := by
@@ -909,7 +909,7 @@ theorem normalCfcOperator_isIdempotent
   let Q : ℕ → E →L[ℂ] E := fun n => normalCfcOperator U hU (K n)
   let D : ℕ → E →L[ℂ] E := fun n => T - Q n
   have hQ0 (n : ℕ) : 0 ≤ Q n :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+    ContinuousLinearMap.nonneg_iff_isPositive.mpr
       (normalCfcOperator_isPositive U hU (K n))
   have hD0 (n : ℕ) : 0 ≤ D n := by
     exact sub_nonneg.mpr (normalCfcOperator_mono U hU (hKS n))
@@ -1157,7 +1157,7 @@ theorem normalCfcOperator_countably_additive
             (normalCfcOperator U hU (tailUnion S n) x) x).re :=
         norm_sq_apply_le_re_inner_of_nonneg_of_le_one
           (normalCfcOperator U hU (tailUnion S n))
-          ((ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+          (ContinuousLinearMap.nonneg_iff_isPositive.mpr
             (normalCfcOperator_isPositive U hU (tailUnion S n)))
           (normalCfcOperator_le_one U hU (tailUnion S n)) x
       _ = (normalCfcScalarMeasure U hU x).real (tailUnion S n) := by

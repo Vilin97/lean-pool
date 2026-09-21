@@ -5,7 +5,10 @@ Authors: Ezzeri Esa
 -/
 import LeanPool.SpectralTheory.Spectral.PVM.Integral
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 import Mathlib.MeasureTheory.Measure.WithDensity
 import Mathlib.MeasureTheory.Integral.DominatedConvergence
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
@@ -73,6 +76,7 @@ theorem PVM.scalarContent_countably_additive_tendsto (E_pvm : PVM E) (x : E)
     rw [sum_inner, Complex.re_sum]
   · rfl
 
+/-- The finite positive measure obtained by evaluating the PVM at a vector. -/
 noncomputable def PVM.scalarMeasure (E_pvm : PVM E) (x : E) :
     MeasureTheory.Measure ℝ :=
   Measure.ofMeasurable
@@ -427,9 +431,9 @@ private theorem PVM.spectralTruncation_measurable (f : ℝ → ℂ) (hf : Measur
 private theorem PVM.norm_spectralTruncation_le (f : ℝ → ℂ) (n : ℕ) (t : ℝ) :
     ‖PVM.spectralTruncation f n t‖ ≤ n := by
   by_cases h : ‖f t‖ ≤ n
-  · rw [PVM.spectralTruncation, if_pos h]
+  · rw [PVM.spectralTruncation, ite_eq_left h]
     exact h
-  · rw [PVM.spectralTruncation, if_neg h, norm_zero]
+  · rw [PVM.spectralTruncation, ite_eq_right h, norm_zero]
     exact Nat.cast_nonneg n
 
 /-- Spectral truncations converge pointwise to the original function. -/
@@ -438,7 +442,7 @@ private theorem PVM.spectralTruncation_tendsto (f : ℝ → ℂ) (t : ℝ) :
       Filter.atTop (nhds (f t)) := by
   obtain ⟨N, hN⟩ := exists_nat_ge ‖f t‖
   refine tendsto_atTop_of_eventually_const (i₀ := N) fun n hn => ?_
-  rw [PVM.spectralTruncation, if_pos]
+  rw [PVM.spectralTruncation, ite_eq_left]
   exact hN.trans (Nat.cast_le.2 hn)
 
 /-- The bounded spectral integral of the `n`th truncation. -/
@@ -472,10 +476,10 @@ private theorem PVM.spectralTruncation_error_le (f : ℝ → ℂ) (n : ℕ) (t :
     (↑(‖f t - PVM.spectralTruncation f n t‖₊ ^ 2) : ENNReal) ≤
       ↑(‖f t‖₊ ^ 2) := by
   by_cases h : ‖f t‖ ≤ n
-  · rw [PVM.spectralTruncation, if_pos h, sub_self, nnnorm_zero,
+  · rw [PVM.spectralTruncation, ite_eq_left h, sub_self, nnnorm_zero,
       zero_pow (by omega)]
     exact bot_le
-  · rw [PVM.spectralTruncation, if_neg h, sub_zero]
+  · rw [PVM.spectralTruncation, ite_eq_right h, sub_zero]
 
 /-- Squared truncation error converges pointwise to zero. -/
 private theorem PVM.spectralTruncation_error_tendsto_zero (f : ℝ → ℂ) (t : ℝ) :
@@ -484,7 +488,7 @@ private theorem PVM.spectralTruncation_error_tendsto_zero (f : ℝ → ℂ) (t :
       Filter.atTop (nhds 0) := by
   obtain ⟨N, hN⟩ := exists_nat_ge ‖f t‖
   refine tendsto_atTop_of_eventually_const (i₀ := N) fun n hn => ?_
-  rw [PVM.spectralTruncation, if_pos, sub_self, nnnorm_zero,
+  rw [PVM.spectralTruncation, ite_eq_left, sub_self, nnnorm_zero,
     zero_pow (by omega), ENNReal.coe_zero]
   exact hN.trans (Nat.cast_le.2 hn)
 
@@ -517,10 +521,10 @@ private theorem PVM.spectralTruncation_sub_le_error (f : ℝ → ℂ) {n m : ℕ
   unfold PVM.spectralTruncation
   by_cases hn : ‖f t‖ ≤ n
   · have hm : ‖f t‖ ≤ m := hn.trans (Nat.cast_le.2 hnm)
-    rw [if_pos hn, if_pos hm]
+    rw [ite_eq_left hn, ite_eq_left hm]
   · by_cases hm : ‖f t‖ ≤ m
-    · rw [if_neg hn, if_pos hm]
-    · rw [if_neg hn, if_neg hm, sub_self, nnnorm_zero, zero_pow (by omega)]
+    · rw [ite_eq_right hn, ite_eq_left hm]
+    · rw [ite_eq_right hn, ite_eq_right hm, sub_self, nnnorm_zero, zero_pow (by omega)]
       exact bot_le
 
 /-- Differences of bounded truncation integrals satisfy the pointwise `L²` identity. -/
@@ -605,6 +609,7 @@ private theorem PVM.cauchySeq_truncatedIntegral (E_pvm : PVM E)
   intro n m _hnm
   exact E_pvm.ofReal_norm_sq_truncatedIntegral_sub f hf (x : E) n m
 
+/-- Spectral integration on the domain of vectors with finite second moment. -/
 noncomputable def PVM.unboundedIntegral (E_pvm : PVM E)
     (f : ℝ → ℂ) (hf : Measurable f) : E →ₗ.[ℂ] E :=
   { domain := E_pvm.squareIntegrableDomain f
@@ -729,8 +734,8 @@ theorem PVM.ofReal_norm_sq_integral_sub_unboundedIntegral (E_pvm : PVM E)
   have hgn_norm (n : ℕ) (r : ℝ) : ‖gn n r‖ ≤ ‖g r‖ := by
     unfold gn PVM.spectralTruncation
     by_cases hr : ‖g r‖ ≤ n
-    · rw [if_pos hr]
-    · rw [if_neg hr, norm_zero]
+    · rw [ite_eq_left hr]
+    · rw [ite_eq_right hr, norm_zero]
       exact norm_nonneg _
   have hdiff_bdd (n : ℕ) : ∀ r, ‖(f - gn n) r‖ ≤ C + n := by
     intro r
@@ -874,9 +879,9 @@ private theorem PVM.integral_complexIndicator (E_pvm : PVM E)
     intro r
     dsimp only [s]
     by_cases hr : r ∈ S
-    · rw [SimpleFunc.piecewise_apply, if_pos hr,
+    · rw [SimpleFunc.piecewise_apply, ite_eq_left hr,
         SimpleFunc.const_apply, complexIndicator, Set.indicator_of_mem hr]
-    · rw [SimpleFunc.piecewise_apply, if_neg hr,
+    · rw [SimpleFunc.piecewise_apply, ite_eq_right hr,
         SimpleFunc.const_apply, complexIndicator, Set.indicator_of_notMem hr]
   have hU : TendstoUniformly (fun _n : ℕ => fun r => s r)
       (complexIndicator S) Filter.atTop := by
@@ -996,9 +1001,9 @@ private theorem norm_boundedTruncation_le
     (g : ℝ → ℂ) (n : ℕ) (r : ℝ) :
     ‖boundedTruncation g n r‖ ≤ n := by
   by_cases hr : ‖g r‖ ≤ n
-  · rw [boundedTruncation, if_pos hr]
+  · rw [boundedTruncation, ite_eq_left hr]
     exact hr
-  · rw [boundedTruncation, if_neg hr, norm_zero]
+  · rw [boundedTruncation, ite_eq_right hr, norm_zero]
     exact Nat.cast_nonneg n
 
 private theorem boundedTruncation_tendsto
@@ -1007,7 +1012,7 @@ private theorem boundedTruncation_tendsto
       Filter.atTop (nhds (g r)) := by
   obtain ⟨N, hN⟩ := exists_nat_ge ‖g r‖
   refine tendsto_atTop_of_eventually_const (i₀ := N) fun n hn => ?_
-  rw [boundedTruncation, if_pos]
+  rw [boundedTruncation, ite_eq_left]
   exact hN.trans (Nat.cast_le.2 hn)
 
 private theorem boundedTruncation_sub_error_measurable
@@ -1022,10 +1027,10 @@ private theorem boundedTruncation_sub_error_le
     (↑(‖boundedTruncation g n r - g r‖₊ ^ 2) : ENNReal) ≤
       (↑(‖g r‖₊ ^ 2) : ENNReal) := by
   by_cases hr : ‖g r‖ ≤ n
-  · rw [boundedTruncation, if_pos hr, sub_self, nnnorm_zero,
+  · rw [boundedTruncation, ite_eq_left hr, sub_self, nnnorm_zero,
       zero_pow (by omega)]
     exact bot_le
-  · rw [boundedTruncation, if_neg hr, zero_sub, nnnorm_neg]
+  · rw [boundedTruncation, ite_eq_right hr, zero_sub, nnnorm_neg]
 
 private theorem boundedTruncation_sub_error_tendsto_zero
     (g : ℝ → ℂ) (r : ℝ) :
@@ -1034,7 +1039,7 @@ private theorem boundedTruncation_sub_error_tendsto_zero
       Filter.atTop (nhds 0) := by
   obtain ⟨N, hN⟩ := exists_nat_ge ‖g r‖
   refine tendsto_atTop_of_eventually_const (i₀ := N) fun n hn => ?_
-  rw [boundedTruncation, if_pos, sub_self, nnnorm_zero,
+  rw [boundedTruncation, ite_eq_left, sub_self, nnnorm_zero,
     zero_pow (by omega), ENNReal.coe_zero]
   exact hN.trans (Nat.cast_le.2 hn)
 
@@ -1124,10 +1129,10 @@ private theorem boundedTruncation_mul_sub_error_le
     (↑(‖boundedTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal) ≤
       (↑(‖g r * f r‖₊ ^ 2) : ENNReal) := by
   by_cases hr : ‖g r‖ ≤ n
-  · rw [boundedTruncation, if_pos hr, sub_self, nnnorm_zero,
+  · rw [boundedTruncation, ite_eq_left hr, sub_self, nnnorm_zero,
       zero_pow (by omega)]
     exact bot_le
-  · rw [boundedTruncation, if_neg hr, zero_mul, zero_sub, nnnorm_neg]
+  · rw [boundedTruncation, ite_eq_right hr, zero_mul, zero_sub, nnnorm_neg]
 
 private theorem boundedTruncation_mul_sub_error_tendsto_zero
     (g f : ℝ → ℂ) (r : ℝ) :
@@ -1137,7 +1142,7 @@ private theorem boundedTruncation_mul_sub_error_tendsto_zero
       Filter.atTop (nhds 0) := by
   obtain ⟨N, hN⟩ := exists_nat_ge ‖g r‖
   refine tendsto_atTop_of_eventually_const (i₀ := N) fun n hn => ?_
-  rw [boundedTruncation, if_pos, sub_self, nnnorm_zero,
+  rw [boundedTruncation, ite_eq_left, sub_self, nnnorm_zero,
     zero_pow (by omega), ENNReal.coe_zero]
   exact hN.trans (Nat.cast_le.2 hn)
 

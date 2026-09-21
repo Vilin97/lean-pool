@@ -9987,7 +9987,6 @@ projects:
     status: verified
     main_declarations:
     - PalomarSpectralStone.spectral_theorem_intrinsic
-    - PalomarSpectralStone.stone_theorem_intrinsic
     main_results:
     - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
       informal: Every self-adjoint partial linear operator on a complex Hilbert space has a

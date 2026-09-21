@@ -20,6 +20,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 /-- A strongly continuous one-parameter unitary group. -/
 structure StrongContUnitary (E : Type*) [NormedAddCommGroup E]
     [InnerProductSpace ℂ E] [CompleteSpace E] where
+  /-- The unitary operator at each real time. -/
   toFun : ℝ → (E →L[ℂ] E)
   isUnitary : ∀ t, toFun t ∈ unitary (E →L[ℂ] E)
   zero : toFun 0 = 1

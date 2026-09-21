@@ -32,6 +32,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 operator topology. Its laws are imposed on Borel-measurable sets. -/
 structure PVM (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [CompleteSpace E] where
+  /-- The orthogonal projection assigned to a measurable subset of the real line. -/
   proj : Set ℝ → (E →L[ℂ] E)
   isOrthogonalProjection : ∀ S, MeasurableSet S →
     IsSelfAdjoint (proj S) ∧ IsIdempotentElem (proj S)
@@ -90,6 +91,7 @@ theorem spectral_theorem_intrinsic
 /-- A strongly continuous one-parameter unitary group. -/
 structure StrongContUnitary (E : Type*) [NormedAddCommGroup E]
     [InnerProductSpace ℂ E] [CompleteSpace E] where
+  /-- The unitary operator at each real time. -/
   toFun : ℝ → (E →L[ℂ] E)
   isUnitary : ∀ t, toFun t ∈ unitary (E →L[ℂ] E)
   zero : toFun 0 = 1
