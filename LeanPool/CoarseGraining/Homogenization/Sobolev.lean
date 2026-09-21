@@ -1,0 +1,32 @@
+/-
+Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong, Tuomo Kuusi
+-/
+
+import LeanPool.CoarseGraining.Homogenization.Sobolev.CubeEmbedding
+import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpCoordinate
+import LeanPool.CoarseGraining.Homogenization.Sobolev.FiniteLpExponent
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional
+import LeanPool.CoarseGraining.Homogenization.Sobolev.H1
+import LeanPool.CoarseGraining.Homogenization.Sobolev.L2Ambient
+import LeanPool.CoarseGraining.Homogenization.Sobolev.MatchedPair
+import LeanPool.CoarseGraining.Homogenization.Sobolev.NegativeSobolev
+import LeanPool.CoarseGraining.Homogenization.Sobolev.NormalizedLp
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidal
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalCubeBridge
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalExact
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2OriginCubeBridge
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Realization
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalL2Recovery
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeBridge
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalOriginCubeSymmetry
+import LeanPool.CoarseGraining.Homogenization.Sobolev.PotentialSolenoidalTranslation
+import LeanPool.CoarseGraining.Homogenization.Sobolev.SmoothCompactSupport
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Truncation
+import LeanPool.CoarseGraining.Homogenization.Sobolev.W1p
+import LeanPool.CoarseGraining.Homogenization.Sobolev.WeakDerivatives
+
+/-! Supporting modules for Coarse-graining theory for elliptic equations. -/

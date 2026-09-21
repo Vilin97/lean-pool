@@ -1,0 +1,44 @@
+/-
+Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong, Tuomo Kuusi
+-/
+
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AffineAverage
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.AxisCube
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CenteredCubeCalderonZygmundQTwo
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH10
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Dilation
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveH1Translation
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveMeanZero
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CoerciveSmooth
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeBesovPoincare
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCalderonZygmund
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeCoerciveH1
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeDirichletH2
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeNeumannW22CZ
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubePoisson
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.CubeReflection
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Cutoff
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotient
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.DifferenceQuotientH1
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.EuclideanL2CZ
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H10Graph
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.H1Graph
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.Hodge
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.HodgeCubeBridge
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.MeanZero
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLp
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpIntegral
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpKernel
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareLpSmooth
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareMeanZero
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareSegment
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareW1p
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.PoincareZeroTrace
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.QuantitativeCutoff
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.WeakHessianEuclidean
+import LeanPool.CoarseGraining.Homogenization.Sobolev.Foundations.ZeroTraceAverages
+
+/-! Supporting modules for Coarse-graining theory for elliptic equations. -/

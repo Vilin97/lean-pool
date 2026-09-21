@@ -1,0 +1,27 @@
+/-
+Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong, Tuomo Kuusi
+-/
+
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliCutoffProduct
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliEnergyBridge
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalBridge
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalGradientBridge
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliSingleCubeToRaw
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS
+import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHSLocalRecurrence
+import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov
+import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes
+import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantities
+import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic
+import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS
+import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces
+import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesComponentwise
+import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesPositiveQTwo
+import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesQTwo
+
+/-! Supporting modules for Coarse-graining theory for elliptic equations. -/
