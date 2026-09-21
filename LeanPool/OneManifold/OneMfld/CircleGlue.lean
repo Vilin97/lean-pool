@@ -316,6 +316,450 @@ private lemma exists_normalized_charts {M : Type*} [TopologicalSpace M] [T2Space
     hAs, hBs, hAt, hBt, hunion', himA₀, himA₁, himB₀, himB₁,
     hr'mem.1, hrp', hp'mem.2, hcA, hs'mem.1, hsq', hq'mem.2, hcB⟩
 
+private theorem circle_overlap_membership
+    {M : Type*}
+    [TopologicalSpace M]
+    (A B : OpenPartialHomeomorph M NNReal)
+    (W₀ W₁ : Set M)
+    (r p s q : NNReal)
+    (hBt : B.target = Ioo 0 1)
+    (hunion : A.source ∩ B.source = W₀ ∪ W₁)
+    (himgA₀ : A '' W₀ = Ioo 0 r)
+    (himgA₁ : A '' W₁ = Ioo p 1)
+    (himgB₀ : B '' W₀ = Ioo q 1)
+    (himgB₁ : B '' W₁ = Ioo 0 s)
+    (hrp : r ≤ p)
+    (hsq : s ≤ q)
+    (hW₀A : W₀ ⊆ A.source)
+    (hW₀B : W₀ ⊆ B.source)
+    (hW₁A : W₁ ⊆ A.source)
+    (hW₁B : W₁ ⊆ B.source)
+    (ν : NNReal)
+    (hpν : p < ν)
+    (m₁ : M)
+    (hm₁ν : A m₁ = ν)
+    (μ : NNReal)
+    (hqμ : q < μ)
+    (m₀ : M)
+    (hm₀μ : B m₀ = μ)
+    (hρmem : A m₀ ∈ Ioo 0 r)
+    (hσmem : B m₁ ∈ Ioo 0 s)
+    (K₀ : ∀ x ∈ W₀, A m₀ ≤ A x ↔ B m₀ ≤ B x)
+    (K₁ : ∀ x ∈ W₁, A x ≤ A m₁ ↔ B x ≤ B m₁)
+    (sset : Set M)
+    (hssetdef : sset = A.source ∩ A ⁻¹' Icc (A m₀) ν) :
+    ∀ y ∈ B.source, B y ≤ B m₁ ∨ B m₀ ≤ B y ↔ y ∈ sset := by
+  classical
+  intro y hy
+  rw [hssetdef]
+  by_cases hyA : y ∈ A.source
+  · have hyS : y ∈ W₀ ∪ W₁ := by rw [← hunion]; exact ⟨hyA, hy⟩
+    rcases hyS with hyW | hyW
+    · have hAy : A y ∈ Ioo 0 r := by rw [← himgA₀]; exact mem_image_of_mem _ hyW
+      have hBy : B y ∈ Ioo q 1 := by rw [← himgB₀]; exact mem_image_of_mem _ hyW
+      have hnots : ¬ (B y ≤ B m₁) := by
+        rw [not_le]
+        exact lt_trans (lt_of_lt_of_le hσmem.2 hsq) hBy.1
+      have hK := K₀ y hyW
+      constructor
+      · rintro (hc | hc)
+        · exact absurd hc hnots
+        · refine ⟨hyA, ?_⟩
+          rw [mem_preimage]
+          exact ⟨hK.mpr hc, le_of_lt (lt_of_lt_of_le hAy.2 (hrp.trans hpν.le))⟩
+      · rintro ⟨-, hmem⟩
+        rw [mem_preimage] at hmem
+        exact Or.inr (hK.mp hmem.1)
+    · have hAy : A y ∈ Ioo p 1 := by rw [← himgA₁]; exact mem_image_of_mem _ hyW
+      have hBy : B y ∈ Ioo 0 s := by rw [← himgB₁]; exact mem_image_of_mem _ hyW
+      have hnots : ¬ (B m₀ ≤ B y) := by
+        rw [not_le, hm₀μ]
+        exact lt_trans (lt_of_lt_of_le hBy.2 hsq) hqμ
+      have hK := K₁ y hyW
+      constructor
+      · rintro (hc | hc)
+        · refine ⟨hyA, ?_⟩
+          rw [mem_preimage]
+          refine ⟨le_of_lt (lt_trans (lt_of_lt_of_le hρmem.2 hrp) hAy.1), ?_⟩
+          rw [← hm₁ν]
+          exact hK.mpr hc
+        · exact absurd hc hnots
+      · rintro ⟨-, hmem⟩
+        rw [mem_preimage] at hmem
+        refine Or.inl (hK.mp ?_)
+        rw [hm₁ν]
+        exact hmem.2
+  · constructor
+    · rintro (hc | hc)
+      · exfalso
+        have hBy0 : (0:NNReal) < B y := by
+          have hmem := B.map_source hy
+          rw [hBt] at hmem
+          exact hmem.1
+        have hmem : B y ∈ Ioo 0 s := ⟨hBy0, lt_of_le_of_lt hc hσmem.2⟩
+        have hyW : y ∈ W₁ := mem_of_image_mem B hW₁B himgB₁ hy hmem
+        exact hyA (hW₁A hyW)
+      · exfalso
+        have hBy1 : B y < 1 := by
+          have hmem := B.map_source hy
+          rw [hBt] at hmem
+          exact hmem.2
+        rw [hm₀μ] at hc
+        have hmem : B y ∈ Ioo q 1 := ⟨lt_of_lt_of_le hqμ hc, hBy1⟩
+        have hyW : y ∈ W₀ := mem_of_image_mem B hW₀B himgB₀ hy hmem
+        exact hyA (hW₀A hyW)
+    · rintro ⟨hyA', -⟩
+      exact absurd hyA' hyA
+
+private theorem glue_circle_arcs
+    {M : Type*}
+    [TopologicalSpace M]
+    (A B : OpenPartialHomeomorph M NNReal)
+    (W₀ W₁ : Set M)
+    (r p : NNReal)
+    (hAt : A.target = Ioo 0 1)
+    (himgA₀ : A '' W₀ = Ioo 0 r)
+    (himgA₁ : A '' W₁ = Ioo p 1)
+    (hW₀A : W₀ ⊆ A.source)
+    (hW₀B : W₀ ⊆ B.source)
+    (hW₁A : W₁ ⊆ A.source)
+    (hW₁B : W₁ ⊆ B.source)
+    (ν : NNReal)
+    (hpν : p < ν)
+    (m₁ : M)
+    (hm₁ν : A m₁ = ν)
+    (μ : NNReal)
+    (m₀ : M)
+    (hm₀μ : B m₀ = μ)
+    (hm₀A : m₀ ∈ A.source)
+    (hm₀B : m₀ ∈ B.source)
+    (hm₁A : m₁ ∈ A.source)
+    (hm₁B : m₁ ∈ B.source)
+    (hρmem : A m₀ ∈ Ioo 0 r)
+    (kα kg g0 : ℝ)
+    (hkα1 : kα < 1)
+    (hkg1 : kg < 1)
+    (hid1 : kg * ↑(B m₁) + g0 = kα * ↑ν)
+    (hid2 : kg * ↑μ + g0 = 1 + kα * ↑(A m₀))
+    (hcg0 : kα * ↑(A m₀) < g0)
+    (hg0d : g0 < kα * ↑ν)
+    (h1c : 1 + kα * ↑(A m₀) < g0 + kg)
+    (hc₁0 : 0 < kα * ↑(A m₀))
+    (hd₁kα : kα * ↑ν < kα)
+    (hc₁1 : kα * ↑(A m₀) < 1)
+    (hc₁d₁ : kα * ↑(A m₀) ≤ kα * ↑ν)
+    (e e' : OpenPartialHomeomorph M (AddCircle 1))
+    (heval : ∀ (x : M), e x = ↑(kα * ↑(A x)))
+    (he'val : ∀ (x : M), e' x = ↑(kg * ↑(B x) + g0))
+    (hes : e.source = A.source)
+    (he's : e'.source = B.source)
+    (htargetE : e.target = QuotientAddGroup.mk '' Ioo 0 kα)
+    (htargetE' : e'.target = QuotientAddGroup.mk '' Ioo g0 (g0 + kg))
+    (sset : Set M)
+    (tset : Set (ℝ ⧸ AddSubgroup.zmultiples 1))
+    (hssub : sset ⊆ A.source)
+    (H : e.IsImage sset tset)
+    (claim1 :
+      ∀ v ∈ Ioo g0 (g0 + kg), ↑v ∈ tset ↔ v ∈ Icc (kα * ↑(A m₀)) (kα * ↑ν) ∨ v ∈ Icc (1 +
+      kα * ↑(A m₀)) (1 + kα * ↑ν))
+    (H' : e'.IsImage sset tset)
+    (hfrontier : frontier tset ⊆ {↑(kα * ↑(A m₀)), ↑(kα * ↑ν)})
+    (hssetdef : sset = A.source ∩ A ⁻¹' Icc (A m₀) ν)
+    (htsetdef : tset = ((↑) : ℝ → AddCircle (1 : ℝ)) '' Icc (kα * (A m₀ : ℝ)) (kα * (ν : ℝ))) :
+  ∃ f : OpenPartialHomeomorph M (AddCircle (1 : ℝ)),
+    f.source = A.source ∪ B.source ∧ f.target = univ := by
+  classical
+  -- Injectivity of each chart identifies the split-point fibers.
+  have he₀ : e m₀ = ((kα * ((A m₀ : NNReal) : ℝ) : ℝ) : AddCircle (1 : ℝ)) :=
+    heval m₀
+  have he₁ : e m₁ = ((kα * ((ν : NNReal) : ℝ) : ℝ) : AddCircle (1 : ℝ)) := by
+    rw [heval m₁, hm₁ν]
+  have he'₀ : e' m₀ = e m₀ := by
+    rw [he'val m₀, hm₀μ, hid2, heval m₀, add_comm 1]
+    exact addCircle_coe_add_one _
+  have he'₁ : e' m₁ = e m₁ := by
+    rw [he'val m₁, hid1, heval m₁, hm₁ν]
+  have Pce : ∀ x ∈ A.source,
+      (e x = ((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ x = m₀) := by
+    intro x hx
+    rw [← he₀]
+    exact ⟨fun h => e.injOn (hes.symm ▸ hx) (hes.symm ▸ hm₀A) h, congrArg e⟩
+  have Pde : ∀ x ∈ A.source,
+      (e x = ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ x = m₁) := by
+    intro x hx
+    rw [← he₁]
+    exact ⟨fun h => e.injOn (hes.symm ▸ hx) (hes.symm ▸ hm₁A) h, congrArg e⟩
+  have Pce' : ∀ y ∈ B.source,
+      (e' y = ((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ y = m₀) := by
+    intro y hy
+    rw [← he₀, ← he'₀]
+    exact ⟨fun h => e'.injOn (he's.symm ▸ hy) (he's.symm ▸ hm₀B) h, congrArg e'⟩
+  have Pde' : ∀ y ∈ B.source,
+      (e' y = ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ y = m₁) := by
+    intro y hy
+    rw [← he₁, ← he'₁]
+    exact ⟨fun h => e'.injOn (he's.symm ▸ hy) (he's.symm ▸ hm₁B) h, congrArg e'⟩
+  -- Frontier agreement and equality on the frontier.
+  have hpre := H.frontier.preimage_eq
+  have hpre' := H'.frontier.preimage_eq
+  have Hs : e.source ∩ frontier sset = e'.source ∩ frontier sset := by
+    rw [← hpre, ← hpre']
+    ext x
+    simp only [mem_inter_iff, mem_preimage]
+    constructor
+    · rintro ⟨hx, hfx⟩
+      have hx' : x ∈ A.source := by rwa [hes] at hx
+      have hex := hfrontier hfx
+      simp only [mem_insert_iff, mem_singleton_iff] at hex
+      rcases hex with hcx | hdx
+      · have hxm : x = m₀ := (Pce x hx').mp hcx
+        subst hxm
+        refine ⟨by rw [he's]; exact hm₀B, ?_⟩
+        rw [(Pce' x hm₀B).mpr rfl, ← hcx]
+        exact hfx
+      · have hxm : x = m₁ := (Pde x hx').mp hdx
+        subst hxm
+        refine ⟨by rw [he's]; exact hm₁B, ?_⟩
+        rw [(Pde' x hm₁B).mpr rfl, ← hdx]
+        exact hfx
+    · rintro ⟨hx, hfx⟩
+      have hx' : x ∈ B.source := by rwa [he's] at hx
+      have hex := hfrontier hfx
+      simp only [mem_insert_iff, mem_singleton_iff] at hex
+      rcases hex with hcx | hdx
+      · have hxm : x = m₀ := (Pce' x hx').mp hcx
+        subst hxm
+        refine ⟨by rw [hes]; exact hm₀A, ?_⟩
+        rw [(Pce x hm₀A).mpr rfl, ← hcx]
+        exact hfx
+      · have hxm : x = m₁ := (Pde' x hx').mp hdx
+        subst hxm
+        refine ⟨by rw [hes]; exact hm₁A, ?_⟩
+        rw [(Pde x hm₁A).mpr rfl, ← hdx]
+        exact hfx
+  have Heq : Set.EqOn e e' (e.source ∩ frontier sset) := by
+    rw [← hpre]
+    rintro x ⟨hx, hfx⟩
+    rw [mem_preimage] at hfx
+    have hx' : x ∈ A.source := by rwa [hes] at hx
+    have hex := hfrontier hfx
+    simp only [mem_insert_iff, mem_singleton_iff] at hex
+    rcases hex with hcx | hdx
+    · have hxm : x = m₀ := (Pce x hx').mp hcx
+      subst hxm
+      rw [hcx, (Pce' x hm₀B).mpr rfl]
+    · have hxm : x = m₁ := (Pde x hx').mp hdx
+      subst hxm
+      rw [hdx, (Pde' x hm₁B).mpr rfl]
+  -- Glue.
+  refine ⟨e.piecewise e' sset tset H H' Hs Heq, ?_, ?_⟩
+  · change Set.ite sset e.source e'.source = A.source ∪ B.source
+    have hite : Set.ite sset e.source e'.source
+        = (e.source ∩ sset) ∪ (e'.source \ sset) := rfl
+    rw [hite, hes, he's]
+    apply Subset.antisymm
+    · rintro x (⟨hx, -⟩ | ⟨hx, -⟩)
+      · exact Or.inl hx
+      · exact Or.inr hx
+    · rintro x hx
+      by_cases hxs : x ∈ sset
+      · exact Or.inl ⟨hssub hxs, hxs⟩
+      · rcases hx with hxa | hxb
+        · have hxB : x ∈ B.source := by
+            have hAx : A x ∈ Ioo (0:NNReal) 1 := hAt ▸ A.map_source hxa
+            have hnot : A x ∉ Icc (A m₀) ν := by
+              intro hmem
+              exact hxs (by rw [hssetdef]; exact ⟨hxa, hmem⟩)
+            rcases lt_or_ge (A x) (A m₀) with hlt | hge
+            · have hmem : A x ∈ Ioo 0 r := ⟨hAx.1, lt_trans hlt hρmem.2⟩
+              exact hW₀B (mem_of_image_mem A hW₀A himgA₀ hxa hmem)
+            · rcases le_or_gt (A x) ν with hle | hgt
+              · exact absurd ⟨hge, hle⟩ hnot
+              · have hmem : A x ∈ Ioo p 1 := ⟨lt_trans hpν hgt, hAx.2⟩
+                exact hW₁B (mem_of_image_mem A hW₁A himgA₁ hxa hmem)
+          exact Or.inr ⟨hxB, hxs⟩
+        · exact Or.inr ⟨hxb, hxs⟩
+  · change Set.ite tset e.target e'.target = univ
+    have hite : Set.ite tset e.target e'.target
+        = (e.target ∩ tset) ∪ (e'.target \ tset) := rfl
+    rw [hite]
+    have h1 : e.target ∩ tset = tset := by
+      apply inter_eq_right.mpr
+      rw [htargetE, htsetdef]
+      exact image_mono
+        (fun u hu => ⟨lt_of_lt_of_le hc₁0 hu.1, lt_of_le_of_lt hu.2 hd₁kα⟩)
+    have h2 : e'.target \ tset = ((↑) : ℝ → AddCircle (1 : ℝ)) ''
+        (Ioo (kα * ((ν : NNReal):ℝ)) (kα * ((A m₀ : NNReal):ℝ) + 1)) := by
+      rw [htargetE']
+      ext z
+      constructor
+      · rintro ⟨⟨v, hv, rfl⟩, hnt⟩
+        have hnor : ¬(v ∈ Icc (kα * ((A m₀ : NNReal):ℝ)) (kα * ((ν : NNReal):ℝ)) ∨
+            v ∈ Icc (1 + kα * ((A m₀ : NNReal):ℝ)) (1 + kα * ((ν : NNReal):ℝ))) :=
+          fun hor => hnt ((claim1 v hv).mpr hor)
+        push Not at hnor
+        obtain ⟨hn1, hn2⟩ := hnor
+        rw [mem_Icc] at hn1 hn2
+        push Not at hn1 hn2
+        refine mem_image_of_mem _ ⟨?_, ?_⟩
+        · exact hn1 (by linarith [hv.1])
+        · by_contra hge
+          push Not at hge
+          have := hn2 (by linarith)
+          linarith [hv.2]
+      · rintro ⟨u, hu, rfl⟩
+        have huv : u ∈ Ioo g0 (g0 + kg) :=
+          ⟨lt_trans hg0d hu.1, by linarith [hu.2]⟩
+        refine ⟨mem_image_of_mem _ huv, ?_⟩
+        intro ht
+        rcases (claim1 u huv).mp ht with hin | hin
+        · rw [mem_Icc] at hin
+          linarith [hu.1, hin.2]
+        · rw [mem_Icc] at hin
+          linarith [hu.2, hin.1]
+    rw [h1, h2, htsetdef]
+    exact addCircle_arc_union_covers hc₁d₁ (by linarith)
+
+private theorem circle_coordinate_H
+    {M : Type*}
+    [TopologicalSpace M]
+    (A : OpenPartialHomeomorph M NNReal)
+    (ν : NNReal)
+    (m₀ : M)
+    (kα : ℝ)
+    (hkα0 : 0 < kα)
+    (hkα1 : kα < 1)
+    (hc₁0 : 0 < kα * ↑(A m₀))
+    (hd₁kα : kα * ↑ν < kα)
+    (e : OpenPartialHomeomorph M (AddCircle 1))
+    (heval : ∀ (x : M), e x = ↑(kα * ↑(A x)))
+    (hbounds : ∀ x ∈ A.source, 0 < kα * ↑(A x) ∧ kα * ↑(A x) < kα)
+    (hes : e.source = A.source)
+    (sset : Set M)
+    (hssetdef : sset = A.source ∩ A ⁻¹' Icc (A m₀) ν)
+    (tset : Set (ℝ ⧸ AddSubgroup.zmultiples 1))
+    (htsetdef : tset = QuotientAddGroup.mk '' Icc (kα * ↑(A m₀)) (kα * ↑ν)) :
+  e.IsImage sset tset := by
+  classical
+  intro x hx
+  rw [hes] at hx
+  rw [heval x]
+  obtain ⟨hb0, hb1⟩ := hbounds x hx
+  constructor
+  · intro hy
+    rw [htsetdef] at hy
+    rcases hy with ⟨y, hy, hye⟩
+    have hyeq : y = kα * ((A x : NNReal):ℝ) := by
+      apply addCircle_coe_inj hye
+      rw [abs_lt]
+      constructor
+      · linarith [hy.1]
+      · linarith [hy.2]
+    rw [hyeq] at hy
+    have hxle : ((A m₀ : NNReal):ℝ) ≤ ((A x : NNReal):ℝ) := le_of_mul_le_mul_left hy.1 hkα0
+    have hxge : ((A x : NNReal):ℝ) ≤ ((ν : NNReal):ℝ) := le_of_mul_le_mul_left hy.2 hkα0
+    rw [hssetdef]
+    refine ⟨hx, ?_⟩
+    rw [mem_preimage]
+    exact ⟨by exact_mod_cast hxle, by exact_mod_cast hxge⟩
+  · intro hmem
+    rw [hssetdef] at hmem
+    obtain ⟨-, hmem2⟩ := hmem
+    rw [mem_preimage] at hmem2
+    have h1' : ((A m₀ : NNReal):ℝ) ≤ ((A x : NNReal):ℝ) := by exact_mod_cast hmem2.1
+    have h2' : ((A x : NNReal):ℝ) ≤ ((ν : NNReal):ℝ) := by exact_mod_cast hmem2.2
+    rw [htsetdef]
+    exact mem_image_of_mem _ ⟨mul_le_mul_of_nonneg_left h1' hkα0.le,
+      mul_le_mul_of_nonneg_left h2' hkα0.le⟩
+
+private theorem circle_coordinate_claim1
+    {M : Type*}
+    [TopologicalSpace M]
+    (A : OpenPartialHomeomorph M NNReal)
+    (ν : NNReal)
+    (m₀ : M)
+    (kα kg g0 : ℝ)
+    (hkα1 : kα < 1)
+    (hkg1 : kg < 1)
+    (hg0d : g0 < kα * ↑ν)
+    (h1c : 1 + kα * ↑(A m₀) < g0 + kg)
+    (hc₁0 : 0 < kα * ↑(A m₀))
+    (hd₁kα : kα * ↑ν < kα)
+    (tset : Set (ℝ ⧸ AddSubgroup.zmultiples 1))
+    (htsetdef : tset = QuotientAddGroup.mk '' Icc (kα * ↑(A m₀)) (kα * ↑ν)) :
+  ∀ v ∈ Ioo g0 (g0 + kg),
+    ↑v ∈ tset ↔ v ∈ Icc (kα * ↑(A m₀)) (kα * ↑ν) ∨ v ∈ Icc (1 + kα * ↑(A m₀)) (1 + kα * ↑ν) := by
+  classical
+  intro v hv
+  rw [htsetdef]
+  constructor
+  · rintro ⟨z, hz, hze⟩
+    have h1 : -1 < v - z := by linarith [hz.2, hv.1]
+    have h2 : v - z < 2 := by linarith [hz.1, hv.2]
+    rcases addCircle_eq_or_eq_add_one hze.symm h1 h2 with heq | heq
+    · left; rw [heq]; exact hz
+    · right; rw [heq]; exact ⟨by linarith [hz.1], by linarith [hz.2]⟩
+  · rintro (hv1 | hv2)
+    · exact mem_image_of_mem _ hv1
+    · refine ⟨v - 1, ⟨by linarith [hv2.1], by linarith [hv2.2]⟩, ?_⟩
+      rw [← addCircle_coe_add_one (v - 1), sub_add_cancel]
+
+private theorem circle_coordinate_claim2
+    {M : Type*}
+    [TopologicalSpace M]
+    (A B : OpenPartialHomeomorph M NNReal)
+    (ν : NNReal)
+    (m₁ : M)
+    (μ : NNReal)
+    (m₀ : M)
+    (hm₀μ : B m₀ = μ)
+    (kα kg g0 : ℝ)
+    (hkg0 : 0 < kg)
+    (hkg1 : kg < 1)
+    (hid1 : kg * ↑(B m₁) + g0 = kα * ↑ν)
+    (hid2 : kg * ↑μ + g0 = 1 + kα * ↑(A m₀))
+    (hg0d : g0 < kα * ↑ν)
+    (h1c : 1 + kα * ↑(A m₀) < g0 + kg)
+    (hb'bounds : ∀ x ∈ B.source, g0 < kg * ↑(B x) + g0 ∧ kg * ↑(B x) + g0 < g0 + kg) :
+  ∀ y ∈ B.source,
+    kg * ↑(B y) + g0 ∈ Icc (kα * ↑(A m₀)) (kα * ↑ν) ∨ kg * ↑(B y) + g0 ∈ Icc (1 + kα * ↑(A m₀))
+        (1 + kα * ↑ν) ↔
+      B y ≤ B m₁ ∨ B m₀ ≤ B y := by
+  classical
+  intro y hy
+  obtain ⟨hb0, hb1⟩ := hb'bounds y hy
+  constructor
+  · rintro (hc | hc)
+    · left
+      have h' : kg * ((B y : NNReal):ℝ) + g0 ≤ kg * ((B m₁ : NNReal):ℝ) + g0 := by
+        rw [hid1]; exact hc.2
+      have hby : ((B y : NNReal):ℝ) ≤ ((B m₁ : NNReal):ℝ) :=
+        le_of_mul_le_mul_left (by linarith) hkg0
+      exact_mod_cast hby
+    · right
+      have h' : kg * ((μ : NNReal):ℝ) + g0 ≤ kg * ((B y : NNReal):ℝ) + g0 := by
+        rw [hid2]; exact hc.1
+      have hby : ((μ : NNReal):ℝ) ≤ ((B y : NNReal):ℝ) :=
+        le_of_mul_le_mul_left (by linarith) hkg0
+      rw [hm₀μ]
+      exact_mod_cast hby
+  · rintro (hc | hc)
+    · left
+      have hby : ((B y : NNReal):ℝ) ≤ ((B m₁ : NNReal):ℝ) := by exact_mod_cast hc
+      constructor
+      · linarith
+      · rw [← hid1]
+        have := mul_le_mul_of_nonneg_left hby hkg0.le
+        linarith
+    · right
+      rw [hm₀μ] at hc
+      have hby : ((μ : NNReal):ℝ) ≤ ((B y : NNReal):ℝ) := by exact_mod_cast hc
+      constructor
+      · rw [← hid2]
+        have := mul_le_mul_of_nonneg_left hby hkg0.le
+        linarith
+      · linarith
+
 /-- Assemble the circle chart from the normalized data: embed each chart as an arc of
 `AddCircle 1` and glue along a closed sub-arc via `piecewise`. -/
 private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Space M]
@@ -484,155 +928,27 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
     (Icc (kα * ((A m₀ : NNReal):ℝ)) (kα * ((ν : NNReal):ℝ))) with htsetdef
   have hssub : sset ⊆ A.source := by rw [hssetdef]; exact inter_subset_left
   -- `e` maps `sset` to `tset`.
-  have H : e.IsImage sset tset := by
-    intro x hx
-    rw [hes] at hx
-    rw [heval x]
-    obtain ⟨hb0, hb1⟩ := hbounds x hx
-    constructor
-    · rintro ⟨y, hy, hye⟩
-      have hyeq : y = kα * ((A x : NNReal):ℝ) := by
-        apply addCircle_coe_inj hye
-        rw [abs_lt]
-        constructor
-        · linarith [hy.1]
-        · linarith [hy.2]
-      rw [hyeq] at hy
-      have hxle : ((A m₀ : NNReal):ℝ) ≤ ((A x : NNReal):ℝ) := le_of_mul_le_mul_left hy.1 hkα0
-      have hxge : ((A x : NNReal):ℝ) ≤ ((ν : NNReal):ℝ) := le_of_mul_le_mul_left hy.2 hkα0
-      rw [hssetdef]
-      refine ⟨hx, ?_⟩
-      rw [mem_preimage]
-      exact ⟨by exact_mod_cast hxle, by exact_mod_cast hxge⟩
-    · intro hmem
-      rw [hssetdef] at hmem
-      obtain ⟨-, hmem2⟩ := hmem
-      rw [mem_preimage] at hmem2
-      have h1' : ((A m₀ : NNReal):ℝ) ≤ ((A x : NNReal):ℝ) := by exact_mod_cast hmem2.1
-      have h2' : ((A x : NNReal):ℝ) ≤ ((ν : NNReal):ℝ) := by exact_mod_cast hmem2.2
-      rw [htsetdef]
-      exact mem_image_of_mem _ ⟨mul_le_mul_of_nonneg_left h1' hkα0.le,
-        mul_le_mul_of_nonneg_left h2' hkα0.le⟩
+  have H : e.IsImage sset tset :=
+    circle_coordinate_H A ν m₀ kα hkα0 hkα1 hc₁0 hd₁kα e heval hbounds hes sset hssetdef tset
+        htsetdef
   -- Windows: membership of a point of the `e'`-arc in `tset`.
   have claim1 : ∀ v : ℝ, v ∈ Ioo g0 (g0 + kg) →
       (((v : ℝ) : AddCircle (1 : ℝ)) ∈ tset ↔
         v ∈ Icc (kα * ((A m₀ : NNReal):ℝ)) (kα * ((ν : NNReal):ℝ)) ∨
-        v ∈ Icc (1 + kα * ((A m₀ : NNReal):ℝ)) (1 + kα * ((ν : NNReal):ℝ))) := by
-    intro v hv
-    rw [htsetdef]
-    constructor
-    · rintro ⟨z, hz, hze⟩
-      have h1 : -1 < v - z := by linarith [hz.2, hv.1]
-      have h2 : v - z < 2 := by linarith [hz.1, hv.2]
-      rcases addCircle_eq_or_eq_add_one hze.symm h1 h2 with heq | heq
-      · left; rw [heq]; exact hz
-      · right; rw [heq]; exact ⟨by linarith [hz.1], by linarith [hz.2]⟩
-    · rintro (hv1 | hv2)
-      · exact mem_image_of_mem _ hv1
-      · refine ⟨v - 1, ⟨by linarith [hv2.1], by linarith [hv2.2]⟩, ?_⟩
-        rw [← addCircle_coe_add_one (v - 1), sub_add_cancel]
+        v ∈ Icc (1 + kα * ((A m₀ : NNReal):ℝ)) (1 + kα * ((ν : NNReal):ℝ))) :=
+    circle_coordinate_claim1 A ν m₀ kα kg g0 hkα1 hkg1 hg0d h1c hc₁0 hd₁kα tset htsetdef
   -- Translation of the window membership into `B`-coordinate inequalities.
   have claim2 : ∀ y ∈ B.source,
       ((kg * ((B y : NNReal):ℝ) + g0 ∈
           Icc (kα * ((A m₀ : NNReal):ℝ)) (kα * ((ν : NNReal):ℝ)) ∨
         kg * ((B y : NNReal):ℝ) + g0 ∈
           Icc (1 + kα * ((A m₀ : NNReal):ℝ)) (1 + kα * ((ν : NNReal):ℝ)))
-        ↔ (B y ≤ B m₁ ∨ B m₀ ≤ B y)) := by
-    intro y hy
-    obtain ⟨hb0, hb1⟩ := hb'bounds y hy
-    constructor
-    · rintro (hc | hc)
-      · left
-        have h' : kg * ((B y : NNReal):ℝ) + g0 ≤ kg * ((B m₁ : NNReal):ℝ) + g0 := by
-          rw [hid1]; exact hc.2
-        have hby : ((B y : NNReal):ℝ) ≤ ((B m₁ : NNReal):ℝ) :=
-          le_of_mul_le_mul_left (by linarith) hkg0
-        exact_mod_cast hby
-      · right
-        have h' : kg * ((μ : NNReal):ℝ) + g0 ≤ kg * ((B y : NNReal):ℝ) + g0 := by
-          rw [hid2]; exact hc.1
-        have hby : ((μ : NNReal):ℝ) ≤ ((B y : NNReal):ℝ) :=
-          le_of_mul_le_mul_left (by linarith) hkg0
-        rw [hm₀μ]
-        exact_mod_cast hby
-    · rintro (hc | hc)
-      · left
-        have hby : ((B y : NNReal):ℝ) ≤ ((B m₁ : NNReal):ℝ) := by exact_mod_cast hc
-        constructor
-        · linarith
-        · rw [← hid1]
-          have := mul_le_mul_of_nonneg_left hby hkg0.le
-          linarith
-      · right
-        rw [hm₀μ] at hc
-        have hby : ((μ : NNReal):ℝ) ≤ ((B y : NNReal):ℝ) := by exact_mod_cast hc
-        constructor
-        · rw [← hid2]
-          have := mul_le_mul_of_nonneg_left hby hkg0.le
-          linarith
-        · linarith
+        ↔ (B y ≤ B m₁ ∨ B m₀ ≤ B y)) :=
+    circle_coordinate_claim2 A B ν m₁ μ m₀ hm₀μ kα kg g0 hkg0 hkg1 hid1 hid2 hg0d h1c hb'bounds
   -- The `B`-coordinate inequalities describe exactly `sset`.
-  have claim3 : ∀ y ∈ B.source, ((B y ≤ B m₁ ∨ B m₀ ≤ B y) ↔ y ∈ sset) := by
-    intro y hy
-    rw [hssetdef]
-    by_cases hyA : y ∈ A.source
-    · have hyS : y ∈ W₀ ∪ W₁ := by rw [← hunion]; exact ⟨hyA, hy⟩
-      rcases hyS with hyW | hyW
-      · have hAy : A y ∈ Ioo 0 r := by rw [← himgA₀]; exact mem_image_of_mem _ hyW
-        have hBy : B y ∈ Ioo q 1 := by rw [← himgB₀]; exact mem_image_of_mem _ hyW
-        have hnots : ¬ (B y ≤ B m₁) := by
-          rw [not_le]
-          exact lt_trans (lt_of_lt_of_le hσmem.2 hsq) hBy.1
-        have hK := K₀ y hyW
-        constructor
-        · rintro (hc | hc)
-          · exact absurd hc hnots
-          · refine ⟨hyA, ?_⟩
-            rw [mem_preimage]
-            exact ⟨hK.mpr hc, le_of_lt (lt_of_lt_of_le hAy.2 (hrp.trans hpν.le))⟩
-        · rintro ⟨-, hmem⟩
-          rw [mem_preimage] at hmem
-          exact Or.inr (hK.mp hmem.1)
-      · have hAy : A y ∈ Ioo p 1 := by rw [← himgA₁]; exact mem_image_of_mem _ hyW
-        have hBy : B y ∈ Ioo 0 s := by rw [← himgB₁]; exact mem_image_of_mem _ hyW
-        have hnots : ¬ (B m₀ ≤ B y) := by
-          rw [not_le, hm₀μ]
-          exact lt_trans (lt_of_lt_of_le hBy.2 hsq) hqμ
-        have hK := K₁ y hyW
-        constructor
-        · rintro (hc | hc)
-          · refine ⟨hyA, ?_⟩
-            rw [mem_preimage]
-            refine ⟨le_of_lt (lt_trans (lt_of_lt_of_le hρmem.2 hrp) hAy.1), ?_⟩
-            rw [← hm₁ν]
-            exact hK.mpr hc
-          · exact absurd hc hnots
-        · rintro ⟨-, hmem⟩
-          rw [mem_preimage] at hmem
-          refine Or.inl (hK.mp ?_)
-          rw [hm₁ν]
-          exact hmem.2
-    · constructor
-      · rintro (hc | hc)
-        · exfalso
-          have hBy0 : (0:NNReal) < B y := by
-            have hmem := B.map_source hy
-            rw [hBt] at hmem
-            exact hmem.1
-          have hmem : B y ∈ Ioo 0 s := ⟨hBy0, lt_of_le_of_lt hc hσmem.2⟩
-          have hyW : y ∈ W₁ := mem_of_image_mem B hW₁B himgB₁ hy hmem
-          exact hyA (hW₁A hyW)
-        · exfalso
-          have hBy1 : B y < 1 := by
-            have hmem := B.map_source hy
-            rw [hBt] at hmem
-            exact hmem.2
-          rw [hm₀μ] at hc
-          have hmem : B y ∈ Ioo q 1 := ⟨lt_of_lt_of_le hqμ hc, hBy1⟩
-          have hyW : y ∈ W₀ := mem_of_image_mem B hW₀B himgB₀ hy hmem
-          exact hyA (hW₀A hyW)
-      · rintro ⟨hyA', -⟩
-        exact absurd hyA' hyA
+  have claim3 : ∀ y ∈ B.source, ((B y ≤ B m₁ ∨ B m₀ ≤ B y) ↔ y ∈ sset) :=
+    circle_overlap_membership A B W₀ W₁ r p s q hBt hunion himgA₀ himgA₁ himgB₀ himgB₁
+      hrp hsq hW₀A hW₀B hW₁A hW₁B ν hpν m₁ hm₁ν μ hqμ m₀ hm₀μ hρmem hσmem K₀ K₁ sset hssetdef
   -- `e'` also maps `sset` to `tset`.
   have H' : e'.IsImage sset tset := by
     intro y hy
@@ -647,195 +963,10 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
        ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ))} := by
     rw [htsetdef]
     exact addCircle_frontier_arc_subset hc₁d₁
-  -- The endpoint classes are attained only at the split points.
-  have Pce : ∀ x ∈ A.source,
-      (e x = ((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ x = m₀) := by
-    intro x hx
-    obtain ⟨hb0, hb1⟩ := hbounds x hx
-    constructor
-    · intro hcoe
-      rw [heval x] at hcoe
-      have heq : kα * ((A x : NNReal):ℝ) = kα * ((A m₀ : NNReal):ℝ) := by
-        apply addCircle_coe_inj hcoe
-        rw [abs_lt]
-        exact ⟨by linarith, by linarith⟩
-      have hAeq : A x = A m₀ :=
-        NNReal.coe_injective (mul_left_cancel₀ hkα0.ne' heq)
-      exact A.injOn hx hm₀A hAeq
-    · rintro rfl
-      rw [heval x]
-  have Pde : ∀ x ∈ A.source,
-      (e x = ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ x = m₁) := by
-    intro x hx
-    obtain ⟨hb0, hb1⟩ := hbounds x hx
-    have hd₁0 : (0:ℝ) < kα * ((ν : NNReal):ℝ) := by linarith
-    constructor
-    · intro hcoe
-      rw [heval x] at hcoe
-      have heq : kα * ((A x : NNReal):ℝ) = kα * ((ν : NNReal):ℝ) := by
-        apply addCircle_coe_inj hcoe
-        rw [abs_lt]
-        exact ⟨by linarith, by linarith⟩
-      have hAeq : A x = ν :=
-        NNReal.coe_injective (mul_left_cancel₀ hkα0.ne' heq)
-      rw [← hm₁ν] at hAeq
-      exact A.injOn hx hm₁A hAeq
-    · rintro rfl
-      rw [heval x, hm₁ν]
-  have Pce' : ∀ y ∈ B.source,
-      (e' y = ((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ y = m₀) := by
-    intro y hy
-    obtain ⟨hb0, hb1⟩ := hb'bounds y hy
-    constructor
-    · intro hcoe
-      rw [he'val y] at hcoe
-      rcases addCircle_eq_or_eq_add_one hcoe (by linarith) (by linarith) with heq | heq
-      · exfalso; linarith
-      · have h' : kg * ((B y : NNReal):ℝ) + g0 = kg * ((μ : NNReal):ℝ) + g0 := by
-          rw [hid2]; linarith
-        have hBeq : B y = μ :=
-          NNReal.coe_injective (mul_left_cancel₀ hkg0.ne' (by linarith))
-        rw [← hm₀μ] at hBeq
-        exact B.injOn hy hm₀B hBeq
-    · rintro rfl
-      rw [he'val y, hm₀μ, hid2, add_comm 1 (kα * ((A y : NNReal):ℝ))]
-      exact addCircle_coe_add_one _
-  have Pde' : ∀ y ∈ B.source,
-      (e' y = ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ y = m₁) := by
-    intro y hy
-    obtain ⟨hb0, hb1⟩ := hb'bounds y hy
-    constructor
-    · intro hcoe
-      rw [he'val y] at hcoe
-      rcases addCircle_eq_or_eq_add_one hcoe (by linarith) (by linarith) with heq | heq
-      · have h' : kg * ((B y : NNReal):ℝ) + g0 = kg * ((B m₁ : NNReal):ℝ) + g0 := by
-          rw [hid1]; linarith
-        have hBeq : B y = B m₁ :=
-          NNReal.coe_injective (mul_left_cancel₀ hkg0.ne' (by linarith))
-        exact B.injOn hy hm₁B hBeq
-      · exfalso; linarith
-    · rintro rfl
-      rw [he'val y, hid1]
-  -- Frontier agreement and equality on the frontier.
-  have hpre := H.frontier.preimage_eq
-  have hpre' := H'.frontier.preimage_eq
-  have Hs : e.source ∩ frontier sset = e'.source ∩ frontier sset := by
-    rw [← hpre, ← hpre']
-    ext x
-    simp only [mem_inter_iff, mem_preimage]
-    constructor
-    · rintro ⟨hx, hfx⟩
-      have hx' : x ∈ A.source := by rwa [hes] at hx
-      have hex := hfrontier hfx
-      simp only [mem_insert_iff, mem_singleton_iff] at hex
-      rcases hex with hcx | hdx
-      · have hxm : x = m₀ := (Pce x hx').mp hcx
-        subst hxm
-        refine ⟨by rw [he's]; exact hm₀B, ?_⟩
-        rw [(Pce' x hm₀B).mpr rfl, ← hcx]
-        exact hfx
-      · have hxm : x = m₁ := (Pde x hx').mp hdx
-        subst hxm
-        refine ⟨by rw [he's]; exact hm₁B, ?_⟩
-        rw [(Pde' x hm₁B).mpr rfl, ← hdx]
-        exact hfx
-    · rintro ⟨hx, hfx⟩
-      have hx' : x ∈ B.source := by rwa [he's] at hx
-      have hex := hfrontier hfx
-      simp only [mem_insert_iff, mem_singleton_iff] at hex
-      rcases hex with hcx | hdx
-      · have hxm : x = m₀ := (Pce' x hx').mp hcx
-        subst hxm
-        refine ⟨by rw [hes]; exact hm₀A, ?_⟩
-        rw [(Pce x hm₀A).mpr rfl, ← hcx]
-        exact hfx
-      · have hxm : x = m₁ := (Pde' x hx').mp hdx
-        subst hxm
-        refine ⟨by rw [hes]; exact hm₁A, ?_⟩
-        rw [(Pde x hm₁A).mpr rfl, ← hdx]
-        exact hfx
-  have Heq : Set.EqOn e e' (e.source ∩ frontier sset) := by
-    rw [← hpre]
-    rintro x ⟨hx, hfx⟩
-    rw [mem_preimage] at hfx
-    have hx' : x ∈ A.source := by rwa [hes] at hx
-    have hex := hfrontier hfx
-    simp only [mem_insert_iff, mem_singleton_iff] at hex
-    rcases hex with hcx | hdx
-    · have hxm : x = m₀ := (Pce x hx').mp hcx
-      subst hxm
-      rw [hcx, (Pce' x hm₀B).mpr rfl]
-    · have hxm : x = m₁ := (Pde x hx').mp hdx
-      subst hxm
-      rw [hdx, (Pde' x hm₁B).mpr rfl]
-  -- Glue.
-  refine ⟨e.piecewise e' sset tset H H' Hs Heq, ?_, ?_⟩
-  · change Set.ite sset e.source e'.source = A.source ∪ B.source
-    have hite : Set.ite sset e.source e'.source
-        = (e.source ∩ sset) ∪ (e'.source \ sset) := rfl
-    rw [hite, hes, he's]
-    apply Subset.antisymm
-    · rintro x (⟨hx, -⟩ | ⟨hx, -⟩)
-      · exact Or.inl hx
-      · exact Or.inr hx
-    · rintro x hx
-      by_cases hxs : x ∈ sset
-      · exact Or.inl ⟨hssub hxs, hxs⟩
-      · rcases hx with hxa | hxb
-        · have hxB : x ∈ B.source := by
-            have hAx : A x ∈ Ioo (0:NNReal) 1 := hAt ▸ A.map_source hxa
-            have hnot : A x ∉ Icc (A m₀) ν := by
-              intro hmem
-              exact hxs (by rw [hssetdef]; exact ⟨hxa, hmem⟩)
-            rcases lt_or_ge (A x) (A m₀) with hlt | hge
-            · have hmem : A x ∈ Ioo 0 r := ⟨hAx.1, lt_trans hlt hρmem.2⟩
-              exact hW₀B (mem_of_image_mem A hW₀A himgA₀ hxa hmem)
-            · rcases le_or_gt (A x) ν with hle | hgt
-              · exact absurd ⟨hge, hle⟩ hnot
-              · have hmem : A x ∈ Ioo p 1 := ⟨lt_trans hpν hgt, hAx.2⟩
-                exact hW₁B (mem_of_image_mem A hW₁A himgA₁ hxa hmem)
-          exact Or.inr ⟨hxB, hxs⟩
-        · exact Or.inr ⟨hxb, hxs⟩
-  · change Set.ite tset e.target e'.target = univ
-    have hite : Set.ite tset e.target e'.target
-        = (e.target ∩ tset) ∪ (e'.target \ tset) := rfl
-    rw [hite]
-    have h1 : e.target ∩ tset = tset := by
-      apply inter_eq_right.mpr
-      rw [htargetE, htsetdef]
-      exact image_mono
-        (fun u hu => ⟨lt_of_lt_of_le hc₁0 hu.1, lt_of_le_of_lt hu.2 hd₁kα⟩)
-    have h2 : e'.target \ tset = ((↑) : ℝ → AddCircle (1 : ℝ)) ''
-        (Ioo (kα * ((ν : NNReal):ℝ)) (kα * ((A m₀ : NNReal):ℝ) + 1)) := by
-      rw [htargetE']
-      ext z
-      constructor
-      · rintro ⟨⟨v, hv, rfl⟩, hnt⟩
-        have hnor : ¬(v ∈ Icc (kα * ((A m₀ : NNReal):ℝ)) (kα * ((ν : NNReal):ℝ)) ∨
-            v ∈ Icc (1 + kα * ((A m₀ : NNReal):ℝ)) (1 + kα * ((ν : NNReal):ℝ))) :=
-          fun hor => hnt ((claim1 v hv).mpr hor)
-        push Not at hnor
-        obtain ⟨hn1, hn2⟩ := hnor
-        rw [mem_Icc] at hn1 hn2
-        push Not at hn1 hn2
-        refine mem_image_of_mem _ ⟨?_, ?_⟩
-        · exact hn1 (by linarith [hv.1])
-        · by_contra hge
-          push Not at hge
-          have := hn2 (by linarith)
-          linarith [hv.2]
-      · rintro ⟨u, hu, rfl⟩
-        have huv : u ∈ Ioo g0 (g0 + kg) :=
-          ⟨lt_trans hg0d hu.1, by linarith [hu.2]⟩
-        refine ⟨mem_image_of_mem _ huv, ?_⟩
-        intro ht
-        rcases (claim1 u huv).mp ht with hin | hin
-        · rw [mem_Icc] at hin
-          linarith [hu.1, hin.2]
-        · rw [mem_Icc] at hin
-          linarith [hu.2, hin.1]
-    rw [h1, h2, htsetdef]
-    exact addCircle_arc_union_covers hc₁d₁ (by linarith)
+  exact glue_circle_arcs A B W₀ W₁ r p hAt himgA₀ himgA₁ hW₀A hW₀B hW₁A hW₁B ν hpν m₁ hm₁ν μ m₀
+      hm₀μ hm₀A hm₀B hm₁A hm₁B hρmem kα kg g0 hkα1 hkg1 hid1 hid2 hcg0 hg0d h1c hc₁0 hd₁kα hc₁1
+      hc₁d₁ e e' heval he'val hes he's htargetE htargetE' sset tset hssub H claim1 H' hfrontier
+      hssetdef htsetdef
 
 /-- **The circle chart.** Two O-charts with `Overlap` and a disconnected overlap glue to
 a chart of `M` onto the whole of `AddCircle 1`. -/

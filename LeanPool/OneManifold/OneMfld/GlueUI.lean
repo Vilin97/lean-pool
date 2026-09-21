@@ -22,6 +22,95 @@ point `m := b.symm μ` (that is, `k/(ρ+k) = μ/2` where `ρ := a m`). Glue with
 
 open Set
 
+/-- The half-scale and Möbius charts cover the unit interval across their common split level. -/
+private theorem half_mobius_target_cover {M : Type*} [TopologicalSpace M]
+    (a b : OpenPartialHomeomorph M NNReal)
+    (eb : OpenPartialHomeomorph NNReal UnitInterval)
+    (e' : OpenPartialHomeomorph M UnitInterval)
+    (hat : a.target = Iio 1) (hbt : b.target = Iio 1)
+    (hbs : eb.source = Iio 1)
+    (hbt' : eb.target = {y : UnitInterval | (y : ℝ) < 1 / 2})
+    (he'src : e'.source = a.source) (μ ρ k : NNReal)
+    (hkR : (0 : ℝ) < (k : ℝ)) (hμR : (0 : ℝ) < (μ : ℝ))
+    (hμ1R : (μ : ℝ) < 1) (hρ1R : (ρ : ℝ) < 1)
+    (hρkR : (0 : ℝ) < (ρ : ℝ) + (k : ℝ))
+    (hkeyR : (k : ℝ) / ((ρ : ℝ) + (k : ℝ)) = (μ : ℝ) / 2)
+    (he'f : ∀ x : M, (e' x : ℝ) = (k : ℝ) / ((a x : ℝ) + (k : ℝ))) :
+    (b.trans eb).target ∩ {y : UnitInterval | (y : ℝ) ≤ (μ : ℝ) / 2} ∪
+      e'.target \ {y : UnitInterval | (y : ℝ) ≤ (μ : ℝ) / 2} = univ := by
+  classical
+  apply eq_univ_of_forall
+  intro y
+  by_cases hy : (y : ℝ) ≤ (μ : ℝ) / 2
+  · -- lower piece
+    left
+    have hyt : y ∈ eb.target := by
+      rw [hbt']
+      change (y : ℝ) < 1 / 2
+      linarith
+    refine ⟨?_, hy⟩
+    rw [OpenPartialHomeomorph.trans_target]
+    refine ⟨hyt, ?_⟩
+    rw [mem_preimage, hbt, ← hbs]
+    exact eb.map_target hyt
+  · -- upper piece
+    right
+    push Not at hy
+    refine ⟨?_, fun h => absurd h (not_le.2 hy)⟩
+    have hy0 : (0 : ℝ) < (y : ℝ) := lt_trans (half_pos hμR) hy
+    have hy1 : (y : ℝ) ≤ 1 := y.2.2
+    -- the point `w := k/y - k` of `a.target` mapping to `y`
+    have hknn : (k : ℝ) ≤ (k : ℝ) / (y : ℝ) := by
+      rw [le_div_iff₀ hy0]
+      nlinarith
+    have hnn : (0 : ℝ) ≤ (k : ℝ) / (y : ℝ) - (k : ℝ) := by linarith
+    have h1k : (0 : ℝ) < 1 + (k : ℝ) := by linarith
+    have hge : (k : ℝ) / (1 + (k : ℝ)) ≤ (k : ℝ) / ((ρ : ℝ) + (k : ℝ)) := by
+      rw [div_le_div_iff₀ h1k hρkR]
+      nlinarith
+    have hygt : (k : ℝ) / (1 + (k : ℝ)) < (y : ℝ) :=
+      lt_of_le_of_lt (hge.trans (le_of_eq hkeyR)) hy
+    have hlt1 : (k : ℝ) / (y : ℝ) - (k : ℝ) < 1 := by
+      rw [div_lt_iff₀ h1k] at hygt
+      rw [sub_lt_iff_lt_add]
+      rw [div_lt_iff₀ hy0]
+      nlinarith
+    set w : NNReal := Real.toNNReal ((k : ℝ) / (y : ℝ) - (k : ℝ)) with hwdef
+    have hwcoe : (w : ℝ) = (k : ℝ) / (y : ℝ) - (k : ℝ) := Real.coe_toNNReal _ hnn
+    have hwtarget : w ∈ a.target := by
+      rw [hat, mem_Iio, ← NNReal.coe_lt_coe, NNReal.coe_one, hwcoe]
+      exact hlt1
+    set x₀ := a.symm w with hx0def
+    have hx0src : x₀ ∈ a.source := a.map_target hwtarget
+    have hax0 : a x₀ = w := a.right_inv hwtarget
+    have hkne : (k : ℝ) ≠ 0 := hkR.ne'
+    have hyne : (y : ℝ) ≠ 0 := hy0.ne'
+    have he'x0 : (e' x₀ : ℝ) = (y : ℝ) := by
+      rw [he'f x₀, hax0, hwcoe, sub_add_cancel]
+      rw [div_div_eq_mul_div, mul_comm (k : ℝ) (y : ℝ), mul_div_assoc,
+        div_self hkne, mul_one]
+    have hexy : e' x₀ = y := Subtype.ext he'x0
+    have hx0src' : x₀ ∈ e'.source := by rw [he'src]; exact hx0src
+    have := e'.map_source hx0src'
+    rwa [hexy] at this
+
+/-- The Möbius parameter maps the selected upper-chart coordinate to the half-scale split. -/
+private theorem mobius_split_identity (μ ρ k : NNReal) (h2μ : μ < 2)
+    (hkdef : k = μ * ρ / (2 - μ)) (hρkR : (0 : ℝ) < (ρ : ℝ) + (k : ℝ)) :
+    (k : ℝ) / ((ρ : ℝ) + (k : ℝ)) = (μ : ℝ) / 2 := by
+  have h2μpos : 0 < 2 - μ := tsub_pos_of_lt h2μ
+  have hkey2 : 2 * k = μ * (ρ + k) := by
+    have h1 : k * (2 - μ) = μ * ρ := by
+      rw [hkdef]; exact div_mul_cancel₀ _ h2μpos.ne'
+    calc 2 * k = ((2 - μ) + μ) * k := by rw [tsub_add_cancel_of_le h2μ.le]
+      _ = (2 - μ) * k + μ * k := add_mul _ _ _
+      _ = μ * ρ + μ * k := by rw [mul_comm (2 - μ) k, h1]
+      _ = μ * (ρ + k) := (mul_add μ ρ k).symm
+  have h := congrArg (fun x : NNReal => (x : ℝ)) hkey2
+  push_cast at h
+  rw [div_eq_div_iff hρkR.ne' (two_ne_zero)]
+  linarith
+
 /-- **Unit-interval gluing.** Two boundary charts (targets `Iio 1`) whose overlap is an
 upper end-segment in each glue to a chart of `M` onto the whole unit interval, with
 source `a.source ∪ b.source`. -/
@@ -57,13 +146,6 @@ theorem glue_hh_ui {M : Type*} [TopologicalSpace M] [T2Space M]
   have h2μpos : 0 < 2 - μ := tsub_pos_of_lt h2μ
   set k : NNReal := μ * ρ / (2 - μ) with hkdef
   have hkpos : 0 < k := div_pos (mul_pos hμpos hρpos) h2μpos
-  have hkey2 : 2 * k = μ * (ρ + k) := by
-    have h1 : k * (2 - μ) = μ * ρ := by
-      rw [hkdef]; exact div_mul_cancel₀ _ h2μpos.ne'
-    calc 2 * k = ((2 - μ) + μ) * k := by rw [tsub_add_cancel_of_le h2μ.le]
-      _ = (2 - μ) * k + μ * k := add_mul _ _ _
-      _ = μ * ρ + μ * k := by rw [mul_comm (2 - μ) k, h1]
-      _ = μ * (ρ + k) := (mul_add μ ρ k).symm
   -- real-number versions of the positivity facts and the key identity
   have hkR : (0 : ℝ) < (k : ℝ) := NNReal.coe_pos.2 hkpos
   have hμR : (0 : ℝ) < (μ : ℝ) := NNReal.coe_pos.2 hμpos
@@ -71,11 +153,8 @@ theorem glue_hh_ui {M : Type*} [TopologicalSpace M] [T2Space M]
   have hμ1R : (μ : ℝ) < 1 := by exact_mod_cast hμ1
   have hρ1R : (ρ : ℝ) < 1 := by exact_mod_cast hρ1
   have hρkR : (0 : ℝ) < (ρ : ℝ) + (k : ℝ) := by linarith
-  have hkeyR : (k : ℝ) / ((ρ : ℝ) + (k : ℝ)) = (μ : ℝ) / 2 := by
-    have h := congrArg (fun x : NNReal => (x : ℝ)) hkey2
-    push_cast at h
-    rw [div_eq_div_iff hρkR.ne' (two_ne_zero)]
-    linarith
+  have hkeyR : (k : ℝ) / ((ρ : ℝ) + (k : ℝ)) = (μ : ℝ) / 2 :=
+    mobius_split_identity μ ρ k h2μ hkdef hρkR
   -- the two building blocks
   obtain ⟨eb, hbs, hbt', hbf⟩ := halfOPH
   obtain ⟨ea, has, hat', haf, hanti⟩ := mobiusOPH k hkpos
@@ -250,60 +329,6 @@ theorem glue_hh_ui {M : Type*} [TopologicalSpace M] [T2Space M]
           have hzx : z = x := b.injOn hzS.2 hxb hz
           subst hzx
           exact Or.inr ⟨hzS.1, hxs⟩
-  · -- target computation
-    have hft : f.target = e.target ∩ tset ∪ e'.target \ tset := rfl
-    rw [hft]
-    apply eq_univ_of_forall
-    intro y
-    by_cases hy : (y : ℝ) ≤ (μ : ℝ) / 2
-    · -- lower piece
-      left
-      have hyt : y ∈ eb.target := by
-        rw [hbt']
-        change (y : ℝ) < 1 / 2
-        linarith
-      refine ⟨?_, hy⟩
-      rw [hedef, OpenPartialHomeomorph.trans_target]
-      refine ⟨hyt, ?_⟩
-      rw [mem_preimage, hbt, ← hbs]
-      exact eb.map_target hyt
-    · -- upper piece
-      right
-      push Not at hy
-      refine ⟨?_, fun h => absurd h (not_le.2 hy)⟩
-      have hy0 : (0 : ℝ) < (y : ℝ) := lt_trans (half_pos hμR) hy
-      have hy1 : (y : ℝ) ≤ 1 := y.2.2
-      -- the point `w := k/y - k` of `a.target` mapping to `y`
-      have hknn : (k : ℝ) ≤ (k : ℝ) / (y : ℝ) := by
-        rw [le_div_iff₀ hy0]
-        nlinarith
-      have hnn : (0 : ℝ) ≤ (k : ℝ) / (y : ℝ) - (k : ℝ) := by linarith
-      have h1k : (0 : ℝ) < 1 + (k : ℝ) := by linarith
-      have hge : (k : ℝ) / (1 + (k : ℝ)) ≤ (k : ℝ) / ((ρ : ℝ) + (k : ℝ)) := by
-        rw [div_le_div_iff₀ h1k hρkR]
-        nlinarith
-      have hygt : (k : ℝ) / (1 + (k : ℝ)) < (y : ℝ) :=
-        lt_of_le_of_lt (hge.trans (le_of_eq hkeyR)) hy
-      have hlt1 : (k : ℝ) / (y : ℝ) - (k : ℝ) < 1 := by
-        rw [div_lt_iff₀ h1k] at hygt
-        rw [sub_lt_iff_lt_add]
-        rw [div_lt_iff₀ hy0]
-        nlinarith
-      set w : NNReal := Real.toNNReal ((k : ℝ) / (y : ℝ) - (k : ℝ)) with hwdef
-      have hwcoe : (w : ℝ) = (k : ℝ) / (y : ℝ) - (k : ℝ) := Real.coe_toNNReal _ hnn
-      have hwtarget : w ∈ a.target := by
-        rw [hat, mem_Iio, ← NNReal.coe_lt_coe, NNReal.coe_one, hwcoe]
-        exact hlt1
-      set x₀ := a.symm w with hx0def
-      have hx0src : x₀ ∈ a.source := a.map_target hwtarget
-      have hax0 : a x₀ = w := a.right_inv hwtarget
-      have hkne : (k : ℝ) ≠ 0 := hkR.ne'
-      have hyne : (y : ℝ) ≠ 0 := hy0.ne'
-      have he'x0 : (e' x₀ : ℝ) = (y : ℝ) := by
-        rw [he'f x₀, hax0, hwcoe, sub_add_cancel]
-        rw [div_div_eq_mul_div, mul_comm (k : ℝ) (y : ℝ), mul_div_assoc,
-          div_self hkne, mul_one]
-      have hexy : e' x₀ = y := Subtype.ext he'x0
-      have hx0src' : x₀ ∈ e'.source := by rw [he'src]; exact hx0src
-      have := e'.map_source hx0src'
-      rwa [hexy] at this
+  · change (b.trans eb).target ∩ tset ∪ e'.target \ tset = univ
+    exact half_mobius_target_cover a b eb e' hat hbt hbs hbt' he'src μ ρ k
+      hkR hμR hμ1R hρ1R hρkR hkeyR he'f

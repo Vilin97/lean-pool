@@ -938,6 +938,328 @@ lemma zero_in_open (a b : NNReal) (h : IsOpen ((Ioo a b) ∪ {0})) : a ≤ 0 ∧
     apply this
     rwa [U0] at openU'
 
+private theorem classify_nnreal_of_real_Ioo (U : Set NNReal) (hu : IsOpen U)
+    (hr : relu ⁻¹' (U ∩ Ioi 0) = Ioi (0 : ℝ) ∩ NNReal.toReal '' U)
+    (h0u0 : 0 ∉ U ∩ Ioi 0) (h0u' : 0 ∉ relu ⁻¹' (U ∩ Ioi 0))
+    (c : ∃ a b : ℝ, Ioo a b = relu ⁻¹' (U ∩ Ioi 0)) :
+    (∃ x y, Set.Ioo x y = U) ∨ (∃ x : NNReal, Set.Iio x = U) ∨
+      (∃ x : NNReal, Set.Ioi x = U) ∨ U = univ := by
+  let U0 := U ∩ Ioi 0
+  let U' := relu ⁻¹' U0
+  change relu ⁻¹' U0 = Ioi (0 : ℝ) ∩ NNReal.toReal '' U at hr
+  change 0 ∉ U0 at h0u0
+  change 0 ∉ U' at h0u'
+  have hu0 : IsOpen U0 := hu.inter isOpen_Ioi
+  change ∃ a b : ℝ, Ioo a b = U' at c
+  rcases c with ⟨ a, b, c ⟩
+  have c' := relu_ioo a b
+  have hc := relu_interval_ioo c
+  rw [hc] at c'
+  by_cases hu0' : 0 ∈ U
+  · have uu0 : U = U0 ∪ { 0 } := by
+      ext x
+      simp only [union_singleton, mem_insert_iff]
+      apply Iff.intro
+      · intro hx
+        dsimp [U0]
+        simp only [mem_inter_iff, mem_Ioi]
+        by_cases h : x = 0
+        · left; exact h
+        · right; apply And.intro
+          · assumption
+          · exact pos_iff_ne_zero.mpr h
+      · intro hx
+        rcases hx with (hx|hx)
+        · rw [hx]
+          assumption
+        · dsimp [U0] at hx
+          simp only [mem_inter_iff, mem_Ioi] at hx
+          exact hx.1
+    rw [uu0]
+    rcases c' with (c'|c'|c'|c')
+    · right
+      left
+      rw [c']
+      rw [c'] at uu0
+      rw [uu0] at hu
+      have hz := zero_in_open (relu a) (relu b) hu
+      use relu b
+      ext x
+      simp only [mem_Iio, union_singleton, mem_insert_iff, mem_Ioo]
+      apply Iff.intro
+      · intro hx
+        by_cases h0 : x = 0
+        · left; exact h0
+        · right
+          apply And.intro
+          · have : 0 < x := by exact pos_iff_ne_zero.mpr h0
+            exact lt_of_le_of_lt hz.1 this
+          · assumption
+      · intro hx
+        rcases hx with (hx|hx)
+        · rw [hx]
+          exact hz.2
+        · exact hx.2
+    · by_cases hb : relu b = 0
+      · rw [hb] at c'
+        simp only [lt_self_iff_false, not_false_eq_true, Ico_eq_empty] at c'
+        rw [c'] at uu0
+        simp only [union_singleton, insert_empty_eq] at uu0
+        rw [uu0] at hu
+        have : ¬ IsOpen ({ 0 } : Set NNReal) := not_isOpen_singleton 0
+        exfalso
+        exact this hu
+      · right
+        left
+        use relu b
+        rw [c']
+        ext x
+        simp only [mem_Iio, union_singleton, mem_insert_iff, mem_Ico, zero_le, true_and,
+          iff_or_self]
+        intro hx
+        rw [hx]
+        exact pos_iff_ne_zero.mpr hb
+    · rw [c'] at hu0
+      exfalso
+      have this' : ¬ IsOpen ({ 0 } : Set NNReal) := not_isOpen_singleton 0
+      exact this' hu0
+    · rw [c'] at uu0
+      simp only [union_singleton, insert_empty_eq] at uu0
+      have : ¬ IsOpen ({ 0 } : Set NNReal) := not_isOpen_singleton 0
+      rw [uu0] at hu
+      exfalso
+      exact this hu
+  · have uu0 : U = U0 := by
+      dsimp [U0]
+      simp only [left_eq_inter]
+      intro x hx
+      simp only [mem_Ioi]
+      have : x ≠ 0 := by exact ne_of_mem_of_not_mem hx hu0'
+      exact pos_iff_ne_zero.mpr this
+    rw [←uu0] at c'
+    rcases c' with (c'|c'|c'|c')
+    · left
+      use relu a
+      use relu b
+      rw [c']
+    · right
+      left
+      use (relu b)
+      rw [c']
+      ext x
+      simp only [mem_Iio, mem_Ico, zero_le, true_and]
+    · rw [c'] at hu
+      exfalso
+      have : ¬ IsOpen ({ 0 } : Set NNReal) := not_isOpen_singleton 0
+      apply this
+      exact hu
+    · left
+      use 0
+      use 0
+      rw [c']
+      simp only [lt_self_iff_false, not_false_eq_true, Ioo_eq_empty]
+
+private theorem classify_nnreal_of_real_Ioi (U : Set NNReal) (hu : IsOpen U) (hc : IsConnected U)
+    (hr : relu ⁻¹' (U ∩ Ioi 0) = Ioi (0 : ℝ) ∩ NNReal.toReal '' U)
+    (h0u0 : 0 ∉ U ∩ Ioi 0) (h0u' : 0 ∉ relu ⁻¹' (U ∩ Ioi 0))
+    (c : ∃ a : ℝ, Ioi a = relu ⁻¹' (U ∩ Ioi 0)) :
+    (∃ x y, Set.Ioo x y = U) ∨ (∃ x : NNReal, Set.Iio x = U) ∨
+      (∃ x : NNReal, Set.Ioi x = U) ∨ U = univ := by
+  let U0 := U ∩ Ioi 0
+  let U' := relu ⁻¹' U0
+  change relu ⁻¹' U0 = Ioi (0 : ℝ) ∩ NNReal.toReal '' U at hr
+  change 0 ∉ U0 at h0u0
+  change 0 ∉ U' at h0u'
+  have hu0 : IsOpen U0 := hu.inter isOpen_Ioi
+  change ∃ x : ℝ, Ioi x = U' at c
+  rcases c with ⟨ x, c ⟩
+  by_cases h0 : x = 0
+  · by_cases hu0 : 0 ∈ U
+    · right; right; right
+      rw [h0] at c
+      dsimp [U'] at c
+      ext z
+      simp only [mem_univ, iff_true]
+      by_cases hz0 : z = 0
+      · rw [hz0]
+        assumption
+      · have zpos : z > 0 := by
+          exact pos_iff_ne_zero.mpr hz0
+        have zi : z ∈ Set.Ioi 0 := by exact zpos
+        have zi' : NNReal.toReal z ∈ relu ⁻¹' U0 := by
+          rw [←c]
+          simp only [mem_Ioi, NNReal.coe_pos]
+          assumption
+        simp only [mem_preimage] at zi'
+        rw [relu_proj] at zi'
+        exact mem_of_mem_inter_left zi'
+    · right; right; left
+      use 0
+      have uu0 : U = U0 := by
+        ext z
+        apply Iff.intro
+        · intro hz
+          dsimp [U0]
+          simp only [mem_inter_iff, mem_Ioi]
+          apply And.intro
+          · exact hz
+          · have : z ≠ 0 := by exact ne_of_mem_of_not_mem hz hu0
+            exact pos_iff_ne_zero.mpr this
+        · intro hz
+          exact mem_of_mem_inter_left hz
+      rw [uu0]
+      rw [h0] at c
+      ext z
+      simp only [mem_Ioi]
+      apply Iff.intro
+      · intro hz
+        have : NNReal.toReal z > 0 := by exact hz
+        have this' : NNReal.toReal z ∈ U' := by
+          rw [←c]
+          simp only [mem_Ioi, NNReal.coe_pos]
+          assumption
+        dsimp [U'] at this'
+        simp only [mem_preimage] at this'
+        rw [relu_proj] at this'
+        assumption
+      · intro hz
+        rw [←uu0] at hz
+        have : z ≠ 0 := by exact ne_of_mem_of_not_mem hz hu0
+        exact pos_iff_ne_zero.mpr this
+  · by_cases hx : x < 0
+    · have : 0 ∈ U' := by
+        have this' : 0 ∈ Set.Ioi x := by exact hx
+        rw [c] at this'
+        assumption
+      exfalso
+      exact h0u' this
+    · right; right; left
+      by_cases hu0 : 0 ∈ U
+      · have : U = U0 ∪ {0} := by
+          ext z
+          simp only [union_singleton, mem_insert_iff]
+          apply Iff.intro
+          · intro hz
+            by_cases hz' : z = 0
+            · left; assumption
+            · right
+              dsimp [U0]
+              refine (mem_inter_iff z U (Ioi 0)).mpr ?_
+              apply And.intro
+              · assumption
+              · simp only [mem_Ioi]
+                exact pos_iff_ne_zero.mpr hz'
+          · intro hz
+            rcases hz with (hz|hz)
+            · rw [hz]
+              assumption
+            · exact mem_of_mem_inter_left hz
+        dsimp [U'] at c
+        rw [hr] at c
+        have contra : ¬ IsConnected U := by
+          dsimp [IsConnected]
+          simp only [not_and]
+          intro hn
+          dsimp [IsPreconnected]
+          simp only [not_forall]
+          have xpos : x ≥ 0 := by linarith
+          use Set.Iio (NNReal.mk x xpos)
+          use Set.Ioi (NNReal.mk x xpos)
+          simp only [exists_prop, Iio_union_Ioi, subset_compl_singleton_iff]
+          apply And.intro
+          · exact isOpen_Iio
+          · apply And.intro
+            · exact isOpen_Ioi
+            · apply And.intro
+              · by_contra h
+                have h' : NNReal.toReal (NNReal.mk x xpos) ∈ NNReal.toReal '' U :=
+                  mem_image_of_mem NNReal.toReal h
+                have h'' : NNReal.toReal (NNReal.mk x xpos) ∈ Set.Ioi 0 := by
+                  apply mem_Ioi.mpr
+                  exact lt_of_le_of_ne xpos fun a => h0 (id (Eq.symm a))
+                have h3 : NNReal.toReal (NNReal.mk x xpos)  ∈ Set.Ioi x := by
+                  rw [c]
+                  exact mem_inter h'' h'
+                simp only [NNReal.coe_mk, mem_Ioi, lt_self_iff_false] at h3
+              · apply And.intro
+                · use 0
+                  simp only [mem_inter_iff, mem_Iio]
+                  apply And.intro
+                  · assumption
+                  · apply NNReal.coe_pos.mp
+                    simp only [NNReal.coe_mk]
+                    exact lt_of_le_of_ne xpos fun a => h0 (id (Eq.symm a))
+                · apply And.intro
+                  · apply inter_nonempty.mpr
+                    use (1 : NNReal) + (NNReal.mk x xpos)
+                    apply And.intro
+                    · have : 1 + x ∈ Set.Ioi x := by
+                        apply mem_Ioi.mpr
+                        exact lt_one_add x
+                      rw [c] at this
+                      simp only [mem_inter_iff, mem_Ioi, mem_image] at this
+                      rcases this with ⟨ tpos, ⟨ t, ⟨ tu, ht ⟩  ⟩  ⟩
+                      have ht2 : t = 1 + (NNReal.mk x xpos) := by
+                        exact NNReal.eq ht
+                      rw [←ht2]
+                      assumption
+                    · apply mem_Ioi.mpr
+                      exact lt_one_add ((NNReal.mk x xpos) : NNReal)
+                  · refine not_nonempty_iff_eq_empty.mpr ?_
+                    let x' : NNReal := (NNReal.mk x xpos)
+                    have : (Set.Iio x' ∩ Set.Ioi x') = ∅ := by
+                      ext z
+                      simp only [mem_inter_iff, mem_Iio, mem_Ioi, mem_empty_iff_false,
+                        iff_false, not_and, not_lt]
+                      intro hz
+                      exact le_of_lt hz
+                    rw [this]
+                    simp only [inter_empty]
+        exfalso
+        exact contra hc
+      · have h0' : 0 ∉ Set.Ioi x := by exact Eq.mpr_not (congrFun c 0) h0u'
+        simp only [mem_Ioi, not_lt] at h0'
+        use (NNReal.mk x h0')
+        ext z
+        simp only [mem_Ioi]
+        apply Iff.intro
+        · intro hxz
+          have hu' : NNReal.toReal z ∈ U' := by
+            rw [←c]
+            simp only [mem_Ioi]
+            exact hxz
+          have : NNReal.toReal z ∈ Ioi 0 ∩ NNReal.toReal '' U := by
+            rw [←hr]
+            exact hu'
+          have this' : NNReal.toReal z ∈ NNReal.toReal '' U := mem_of_mem_inter_right this
+          simp only [mem_image, NNReal.coe_inj, exists_eq_right] at this'
+          assumption
+        · intro hz
+          apply NNReal.coe_lt_coe.mp
+          simp only [NNReal.coe_mk]
+          dsimp [U'] at c
+          have z0 : z ∈ U0 := by
+            refine (mem_inter_iff z U (Ioi 0)).mpr ?_
+            apply And.intro
+            · exact hz
+            · refine mem_Ioi.mpr ?_
+              refine NNReal.coe_pos.mp ?_
+              simp only [NNReal.coe_pos]
+              have hz0 : z ≠ 0 := by exact ne_of_mem_of_not_mem hz hu0
+              exact pos_iff_ne_zero.mpr hz0
+          have : NNReal.toReal z ∈ Set.Ioi 0 ∩ NNReal.toReal '' U := by
+            simp only [mem_inter_iff, mem_Ioi, NNReal.coe_pos, mem_image, NNReal.coe_inj,
+              exists_eq_right]
+            apply And.intro
+            · have : z ≠ 0 := by exact ne_of_mem_of_not_mem hz hu0
+              have this' : z ≥ 0 := by exact zero_le
+              exact pos_iff_ne_zero.mpr this
+            assumption
+          rw [←hr] at this
+          rw [←c] at this
+          simp only [mem_Ioi] at this
+          assumption
+
 theorem classify_connected_nnreal_interval (U : Set NNReal) (hu : IsOpen U) (hc : IsConnected U) :
   (∃ x y, (Set.Ioo x y = U)) ∨
   (∃ (x : NNReal), (Set.Iio x = U)) ∨
@@ -1041,113 +1363,7 @@ theorem classify_connected_nnreal_interval (U : Set NNReal) (hu : IsOpen U) (hc 
       rw [relu_zero]
       assumption
     rcases c with (c|c|c|c)
-    · rcases c with ⟨ a, b, c ⟩
-      have c' := relu_ioo a b
-      have hc := relu_interval_ioo c
-      rw [hc] at c'
-      by_cases hu0' : 0 ∈ U
-      · have uu0 : U = U0 ∪ { 0 } := by
-          ext x
-          simp only [union_singleton, mem_insert_iff]
-          apply Iff.intro
-          · intro hx
-            dsimp [U0]
-            simp only [mem_inter_iff, mem_Ioi]
-            by_cases h : x = 0
-            · left; exact h
-            · right; apply And.intro
-              · assumption
-              · exact pos_iff_ne_zero.mpr h
-          · intro hx
-            rcases hx with (hx|hx)
-            · rw [hx]
-              assumption
-            · dsimp [U0] at hx
-              simp only [mem_inter_iff, mem_Ioi] at hx
-              exact hx.1
-        rw [uu0]
-        rcases c' with (c'|c'|c'|c')
-        · right
-          left
-          rw [c']
-          rw [c'] at uu0
-          rw [uu0] at hu
-          have hz := zero_in_open (relu a) (relu b) hu
-          use relu b
-          ext x
-          simp only [mem_Iio, union_singleton, mem_insert_iff, mem_Ioo]
-          apply Iff.intro
-          · intro hx
-            by_cases h0 : x = 0
-            · left; exact h0
-            · right
-              apply And.intro
-              · have : 0 < x := by exact pos_iff_ne_zero.mpr h0
-                exact lt_of_le_of_lt hz.1 this
-              · assumption
-          · intro hx
-            rcases hx with (hx|hx)
-            · rw [hx]
-              exact hz.2
-            · exact hx.2
-        · by_cases hb : relu b = 0
-          · rw [hb] at c'
-            simp only [lt_self_iff_false, not_false_eq_true, Ico_eq_empty] at c'
-            rw [c'] at uu0
-            simp only [union_singleton, insert_empty_eq] at uu0
-            rw [uu0] at hu
-            have : ¬ IsOpen ({ 0 } : Set NNReal) := not_isOpen_singleton 0
-            exfalso
-            exact this hu
-          · right
-            left
-            use relu b
-            rw [c']
-            ext x
-            simp only [mem_Iio, union_singleton, mem_insert_iff, mem_Ico, zero_le, true_and,
-              iff_or_self]
-            intro hx
-            rw [hx]
-            exact pos_iff_ne_zero.mpr hb
-        · rw [c'] at hu0
-          exfalso
-          have this' : ¬ IsOpen ({ 0 } : Set NNReal) := not_isOpen_singleton 0
-          exact this' hu0
-        · rw [c'] at uu0
-          simp only [union_singleton, insert_empty_eq] at uu0
-          have : ¬ IsOpen ({ 0 } : Set NNReal) := not_isOpen_singleton 0
-          rw [uu0] at hu
-          exfalso
-          exact this hu
-      · have uu0 : U = U0 := by
-          dsimp [U0]
-          simp only [left_eq_inter]
-          intro x hx
-          simp only [mem_Ioi]
-          have : x ≠ 0 := by exact ne_of_mem_of_not_mem hx hu0'
-          exact pos_iff_ne_zero.mpr this
-        rw [←uu0] at c'
-        rcases c' with (c'|c'|c'|c')
-        · left
-          use relu a
-          use relu b
-          rw [c']
-        · right
-          left
-          use (relu b)
-          rw [c']
-          ext x
-          simp only [mem_Iio, mem_Ico, zero_le, true_and]
-        · rw [c'] at hu
-          exfalso
-          have : ¬ IsOpen ({ 0 } : Set NNReal) := not_isOpen_singleton 0
-          apply this
-          exact hu
-        · left
-          use 0
-          use 0
-          rw [c']
-          simp only [lt_self_iff_false, not_false_eq_true, Ioo_eq_empty]
+    · exact classify_nnreal_of_real_Ioo U hu hr h0u0 h0u' c
     · rcases c with ⟨ x, hx ⟩
       rw [hx] at h0u'
       simp only [mem_Iio, not_lt] at h0u'
@@ -1160,193 +1376,7 @@ theorem classify_connected_nnreal_interval (U : Set NNReal) (hu : IsOpen U) (hc 
       have hc : x - 1 ∈ Set.Ioi 0 := by exact mem_of_mem_inter_left hxi
       simp only [mem_Ioi, sub_pos] at hc
       linarith
-    · rcases c with ⟨ x, c ⟩
-      by_cases h0 : x = 0
-      · by_cases hu0 : 0 ∈ U
-        · right; right; right
-          rw [h0] at c
-          dsimp [U'] at c
-          ext z
-          simp only [mem_univ, iff_true]
-          by_cases hz0 : z = 0
-          · rw [hz0]
-            assumption
-          · have zpos : z > 0 := by
-              exact pos_iff_ne_zero.mpr hz0
-            have zi : z ∈ Set.Ioi 0 := by exact zpos
-            have zi' : NNReal.toReal z ∈ relu ⁻¹' U0 := by
-              rw [←c]
-              simp only [mem_Ioi, NNReal.coe_pos]
-              assumption
-            simp only [mem_preimage] at zi'
-            rw [relu_proj] at zi'
-            exact mem_of_mem_inter_left zi'
-        · right; right; left
-          use 0
-          have uu0 : U = U0 := by
-            ext z
-            apply Iff.intro
-            · intro hz
-              dsimp [U0]
-              simp only [mem_inter_iff, mem_Ioi]
-              apply And.intro
-              · exact hz
-              · have : z ≠ 0 := by exact ne_of_mem_of_not_mem hz hu0
-                exact pos_iff_ne_zero.mpr this
-            · intro hz
-              exact mem_of_mem_inter_left hz
-          rw [uu0]
-          rw [h0] at c
-          ext z
-          simp only [mem_Ioi]
-          apply Iff.intro
-          · intro hz
-            have : NNReal.toReal z > 0 := by exact hz
-            have this' : NNReal.toReal z ∈ U' := by
-              rw [←c]
-              simp only [mem_Ioi, NNReal.coe_pos]
-              assumption
-            dsimp [U'] at this'
-            simp only [mem_preimage] at this'
-            rw [relu_proj] at this'
-            assumption
-          · intro hz
-            rw [←uu0] at hz
-            have : z ≠ 0 := by exact ne_of_mem_of_not_mem hz hu0
-            exact pos_iff_ne_zero.mpr this
-      · by_cases hx : x < 0
-        · have : 0 ∈ U' := by
-            have this' : 0 ∈ Set.Ioi x := by exact hx
-            rw [c] at this'
-            assumption
-          exfalso
-          exact h0u' this
-        · right; right; left
-          by_cases hu0 : 0 ∈ U
-          · have : U = U0 ∪ {0} := by
-              ext z
-              simp only [union_singleton, mem_insert_iff]
-              apply Iff.intro
-              · intro hz
-                by_cases hz' : z = 0
-                · left; assumption
-                · right
-                  dsimp [U0]
-                  refine (mem_inter_iff z U (Ioi 0)).mpr ?_
-                  apply And.intro
-                  · assumption
-                  · simp only [mem_Ioi]
-                    exact pos_iff_ne_zero.mpr hz'
-              · intro hz
-                rcases hz with (hz|hz)
-                · rw [hz]
-                  assumption
-                · exact mem_of_mem_inter_left hz
-            dsimp [U'] at c
-            rw [hr] at c
-            have contra : ¬ IsConnected U := by
-              dsimp [IsConnected]
-              simp only [not_and]
-              intro hn
-              dsimp [IsPreconnected]
-              simp only [not_forall]
-              have xpos : x ≥ 0 := by linarith
-              use Set.Iio (NNReal.mk x xpos)
-              use Set.Ioi (NNReal.mk x xpos)
-              simp only [exists_prop, Iio_union_Ioi, subset_compl_singleton_iff]
-              apply And.intro
-              · exact isOpen_Iio
-              · apply And.intro
-                · exact isOpen_Ioi
-                · apply And.intro
-                  · by_contra h
-                    have h' : NNReal.toReal (NNReal.mk x xpos) ∈ NNReal.toReal '' U :=
-                      mem_image_of_mem NNReal.toReal h
-                    have h'' : NNReal.toReal (NNReal.mk x xpos) ∈ Set.Ioi 0 := by
-                      apply mem_Ioi.mpr
-                      exact lt_of_le_of_ne xpos fun a => h0 (id (Eq.symm a))
-                    have h3 : NNReal.toReal (NNReal.mk x xpos)  ∈ Set.Ioi x := by
-                      rw [c]
-                      exact mem_inter h'' h'
-                    simp only [NNReal.coe_mk, mem_Ioi, lt_self_iff_false] at h3
-                  · apply And.intro
-                    · use 0
-                      simp only [mem_inter_iff, mem_Iio]
-                      apply And.intro
-                      · assumption
-                      · apply NNReal.coe_pos.mp
-                        simp only [NNReal.coe_mk]
-                        exact lt_of_le_of_ne xpos fun a => h0 (id (Eq.symm a))
-                    · apply And.intro
-                      · apply inter_nonempty.mpr
-                        use (1 : NNReal) + (NNReal.mk x xpos)
-                        apply And.intro
-                        · have : 1 + x ∈ Set.Ioi x := by
-                            apply mem_Ioi.mpr
-                            exact lt_one_add x
-                          rw [c] at this
-                          simp only [mem_inter_iff, mem_Ioi, mem_image] at this
-                          rcases this with ⟨ tpos, ⟨ t, ⟨ tu, ht ⟩  ⟩  ⟩
-                          have ht2 : t = 1 + (NNReal.mk x xpos) := by
-                            exact NNReal.eq ht
-                          rw [←ht2]
-                          assumption
-                        · apply mem_Ioi.mpr
-                          exact lt_one_add ((NNReal.mk x xpos) : NNReal)
-                      · refine not_nonempty_iff_eq_empty.mpr ?_
-                        let x' : NNReal := (NNReal.mk x xpos)
-                        have : (Set.Iio x' ∩ Set.Ioi x') = ∅ := by
-                          ext z
-                          simp only [mem_inter_iff, mem_Iio, mem_Ioi, mem_empty_iff_false,
-                            iff_false, not_and, not_lt]
-                          intro hz
-                          exact le_of_lt hz
-                        rw [this]
-                        simp only [inter_empty]
-            exfalso
-            exact contra hc
-          · have h0' : 0 ∉ Set.Ioi x := by exact Eq.mpr_not (congrFun c 0) h0u'
-            simp only [mem_Ioi, not_lt] at h0'
-            use (NNReal.mk x h0')
-            ext z
-            simp only [mem_Ioi]
-            apply Iff.intro
-            · intro hxz
-              have hu' : NNReal.toReal z ∈ U' := by
-                rw [←c]
-                simp only [mem_Ioi]
-                exact hxz
-              have : NNReal.toReal z ∈ Ioi 0 ∩ NNReal.toReal '' U := by
-                rw [←hr]
-                exact hu'
-              have this' : NNReal.toReal z ∈ NNReal.toReal '' U := mem_of_mem_inter_right this
-              simp only [mem_image, NNReal.coe_inj, exists_eq_right] at this'
-              assumption
-            · intro hz
-              apply NNReal.coe_lt_coe.mp
-              simp only [NNReal.coe_mk]
-              dsimp [U'] at c
-              have z0 : z ∈ U0 := by
-                refine (mem_inter_iff z U (Ioi 0)).mpr ?_
-                apply And.intro
-                · exact hz
-                · refine mem_Ioi.mpr ?_
-                  refine NNReal.coe_pos.mp ?_
-                  simp only [NNReal.coe_pos]
-                  have hz0 : z ≠ 0 := by exact ne_of_mem_of_not_mem hz hu0
-                  exact pos_iff_ne_zero.mpr hz0
-              have : NNReal.toReal z ∈ Set.Ioi 0 ∩ NNReal.toReal '' U := by
-                simp only [mem_inter_iff, mem_Ioi, NNReal.coe_pos, mem_image, NNReal.coe_inj,
-                  exists_eq_right]
-                apply And.intro
-                · have : z ≠ 0 := by exact ne_of_mem_of_not_mem hz hu0
-                  have this' : z ≥ 0 := by exact zero_le
-                  exact pos_iff_ne_zero.mpr this
-                assumption
-              rw [←hr] at this
-              rw [←c] at this
-              simp only [mem_Ioi] at this
-              assumption
+    · exact classify_nnreal_of_real_Ioi U hu hc hr h0u0 h0u' c
     · exfalso
       have h0i : 0 ∉ Set.Ioi (0 : NNReal) := self_notMem_Ioi
       have this' : 0 ∈ U0 := by
