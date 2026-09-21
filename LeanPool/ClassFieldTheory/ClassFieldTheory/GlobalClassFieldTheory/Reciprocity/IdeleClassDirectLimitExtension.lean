@@ -17,6 +17,13 @@ noncomputable section
 namespace GlobalClassFieldTheory
 namespace Reciprocity
 
+private theorem rationalIdeleClassDirectLimit_smul_mk
+    (E : FiniteGaloisIntermediateField ℚ (SeparableClosure ℚ))
+    (c : RelativeIdeleGroup.ClassGroup ℚ E)
+    (σ : SeparableClosure ℚ ≃ₐ[ℚ] SeparableClosure ℚ) :
+    σ • (⟦⟨E, c⟩⟧ : rationalIdeleClassDirectLimit) =
+      (⟦⟨E, σ • c⟩⟧ : rationalIdeleClassDirectLimit) := rfl
+
 open ClassFormation
 open LocalClassFieldTheory
 open CyclicCohomology
@@ -263,7 +270,7 @@ theorem rationalIdeleClassEquivFixed_relativeCosetAction_coe
               (K := ℚ) (L := K) c)⟩⟧ :
           rationalIdeleClassDirectLimit)
     from rfl,
-    DirectLimit.smul_def]
+    rationalIdeleClassDirectLimit_smul_mk]
   apply congrArg Additive.ofMul
   apply congrArg
     (fun d :

@@ -568,6 +568,8 @@ private theorem rationalAbstractExtensionIdeleClassEquiv_action_mk
               (extensionSubgroup K L hLK) σ))
           (rationalAbstractExtensionIdeleClassEquiv
             K L hLK hnormal x) := by
+  have hfixed := rationalAbstractExtensionIdeleClassEquiv_action_fixed_mk
+    K L hLK hnormal (hKfinite := hKfinite) (hfinite := hfinite) σ x
   let F := abstractFixedField ℚ (SeparableClosure ℚ) K
   let E := abstractRelativeFixedField ℚ (SeparableClosure ℚ) hLK
   let := hnormal
@@ -628,25 +630,10 @@ private theorem rationalAbstractExtensionIdeleClassEquiv_action_mk
   let τ₀ : E ≃ₐ[ℚ] E := τ.restrictScalars ℚ
   let c : Additive (RelativeIdeleGroup.ClassGroup ℚ E) :=
     eRelative.symm (eFixed.symm (eAmbient x))
-  change
-    (((eAmbient.trans eFixed.symm).trans eRelative.symm).trans eTower)
-        (M.ρ
-          (QuotientGroup.mk'
-            (extensionSubgroup K L hLK) σ) x) =
-      Additive.ofMul
-        (τ • Additive.toMul
-          (eTower
-            (eRelative.symm
-              (eFixed.symm (eAmbient x)))))
-  apply addEquiv_trans_symm_trans_symm_trans_apply_eq
-      eAmbient eFixed eRelative eTower
-      (z := Additive.ofMul (τ₀ • Additive.toMul c))
-  · exact
-      rationalAbstractExtensionIdeleClassEquiv_action_fixed_mk
-        K L hLK hnormal σ x
-  · simpa only [eTower, τ₀, c] using
-      (rationalTowerRelativeIdeleClassBaseChangeAddEquiv_smul
-        F E τ c)
+  have htower := rationalTowerRelativeIdeleClassBaseChangeAddEquiv_smul F E τ c
+  have hresult := addEquiv_trans_symm_trans_symm_trans_apply_eq
+    _ _ _ eTower hfixed htower
+  exact hresult
 
 /-- The abstract quotient action on the rational absolute idele-class
 representation becomes the ordinary Galois action on the relative idele
