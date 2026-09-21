@@ -220,6 +220,7 @@ import LeanPool.ArtinWedderburn.NiceIdeals
 import LeanPool.ArtinWedderburn.NonUnitalToUnital
 import LeanPool.ArtinWedderburn.PrimeRing
 import LeanPool.ArtinWedderburn.SetProd
+import LeanPool.AsymptoticTrianglePacking
 import LeanPool.BannaiBannaiStanton
 import LeanPool.BannaiBannaiStanton.BoundOnDistanceSet
 import LeanPool.Basic

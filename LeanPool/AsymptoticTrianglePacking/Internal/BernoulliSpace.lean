@@ -1,0 +1,80 @@
+/-
+Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Juan Pablo Traverso Gianini, Aristotle
+-/
+/-
+# LeanPool.AsymptoticTrianglePacking.Internal — existence of a Bernoulli retention space
+
+Standalone, Mathlib-only. The measure-theoretic prerequisite for the nibble iteration (step 2):
+for any finite hypergraph `H` on a finite vertex type and any retention probability `p ∈ [0,1]`,
+there EXISTS a probability space carrying a `BernoulliRetention` on `H` at `p` — an independent
+family of events `A e` (`e` retained) each of probability `p`.
+
+Standard construction: `Ω := Finset V → Bool` (finite, since `V` is a `Fintype`) with the product
+Bernoulli(`p`) measure `Measure.pi (fun _ => (Bernoulli) p)`; `A e := {ω | ω e = true}`. The
+coordinate events are independent (product measure) and each has probability `p`.
+
+Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
+-/
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+open MeasureTheory ProbabilityTheory
+
+namespace LeanPool.AsymptoticTrianglePacking.Internal
+
+universe u
+
+/-- **Existence of a Bernoulli retention.** For any finite hypergraph `H` on a finite vertex type
+and any `p ∈ [0,1]`, there is a probability space carrying a `BernoulliRetention` on `H` at `p`. -/
+theorem exists_bernoulliRetention {V : Type u} [Fintype V] [DecidableEq V]
+    (H : Finset (Finset V)) {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
+    ∃ (Ω : Type u) (mΩ : MeasureSpace Ω),
+      IsProbabilityMeasure (@MeasureSpace.volume Ω mΩ) ∧
+        Nonempty (@BernoulliRetention V _ Ω mΩ H p) := by
+  let q : NNReal := ⟨p, hp0⟩
+  have hq : q ≤ 1 := by simpa [q] using hp1
+  let μ : Measure Bool := (PMF.bernoulli q hq).toMeasure
+  let Ω := Finset V → Bool
+  let mΩ : MeasureSpace Ω := ⟨Measure.pi (fun _ => μ)⟩
+  refine ⟨Ω, mΩ, ?_, ?_⟩
+  · letI : MeasureSpace Ω := mΩ
+    exact Measure.pi.instIsProbabilityMeasure (fun _ : Finset V => μ)
+  · letI : MeasureSpace Ω := mΩ
+    let A : Finset V → Set Ω := fun e => {ω | ω e = true}
+    have hmeas : ∀ e, MeasurableSet (A e) := by
+      intro e
+      change MeasurableSet ((fun ω : Ω => ω e) ⁻¹' ({true} : Set Bool))
+      exact (measurable_pi_apply e) (measurableSet_singleton true)
+    have hfun : iIndepFun (fun e (ω : Ω) => ω e)
+        (Measure.pi (fun _ : Finset V => μ)) := by
+      simpa only [id_eq] using
+        (iIndepFun_pi (μ := fun _ : Finset V => μ) (X := fun _ => id)
+          (fun _ => measurable_id.aemeasurable))
+    have hpred : iIndepFun (fun e (ω : Ω) => ω e = true)
+        (Measure.pi (fun _ : Finset V => μ)) := by
+      simpa only [Function.comp_apply] using
+        hfun.comp (fun _ b => b = true) (fun _ => Measurable.of_discrete)
+    have hind : iIndepSet A (Measure.pi (fun _ : Finset V => μ)) := by
+      rw [← iIndep_comap_mem_iff]
+      apply (iIndepFun_iff_iIndep _ _ _).1
+      simpa [A] using hpred
+    refine ⟨⟨A, hmeas, ?_, ?_⟩⟩
+    · simpa [mΩ] using hind
+    · intro e he
+      rw [show (ℙ : Measure Ω) = Measure.pi (fun _ : Finset V => μ) by rfl]
+      rw [show A e = Function.eval e ⁻¹' ({true} : Set Bool) by rfl]
+      rw [← Measure.map_apply (measurable_pi_apply e) (measurableSet_singleton true)]
+      rw [Measure.pi_map_eval]
+      have hμuniv : μ Set.univ = 1 := measure_univ
+      rw [show ∏ j ∈ Finset.univ.erase e, μ Set.univ = 1 by
+        exact Finset.prod_eq_one (fun _ _ => hμuniv)]
+      rw [one_smul]
+      change (PMF.bernoulli q hq).toMeasure {true} = ENNReal.ofReal p
+      rw [PMF.toMeasure_apply_singleton _ true (measurableSet_singleton true)]
+      rw [PMF.bernoulli_apply]
+      exact ENNReal.coe_nnreal_eq q
+
+end LeanPool.AsymptoticTrianglePacking.Internal
