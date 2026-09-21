@@ -514,4 +514,3 @@ theorem contourIntegral_resolvent_eq_two_pi_I_smul_one_of_oriented_convex_carrie
         A Omega c hc hcside hOmega
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/
-
