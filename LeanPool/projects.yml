@@ -9966,3 +9966,38 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: lean-operator-theory
+    title: Unitary dilation and the Crouzeix–Palencia bound
+    summary: Proves unitary power dilation for Hilbert-space contractions, von Neumann’s polynomial inequality,
+      and the Crouzeix–Palencia polynomial spectral-set estimate for the closed numerical range.
+    branch: operator theory
+    entry_module: LeanPool.OperatorTheory
+    authors:
+    - Ezzeri Esa
+    source:
+      url: https://github.com/savarin/lean-operator-theory
+      github_repo: savarin/lean-operator-theory
+      commit: 6f90bb7e6b056b54f56005e0416d77d6d7c2a478
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - PalomarCrouzeixPalencia.exists_unitary_power_dilation
+    - PalomarCrouzeixPalencia.vonNeumann_inequality
+    - PalomarCrouzeixPalencia.crouzeix_palencia
+    main_results:
+    - declaration: PalomarCrouzeixPalencia.exists_unitary_power_dilation
+      informal: Every contraction on a complex Hilbert space admits a unitary power dilation.
+    - declaration: PalomarCrouzeixPalencia.vonNeumann_inequality
+      informal: Polynomial evaluation on a contraction is bounded by the polynomial supremum on the closed
+        unit disk.
+    - declaration: PalomarCrouzeixPalencia.crouzeix_palencia
+      informal: The closure of the numerical range is a polynomial spectral set with constant 1 + √2.
+    tags:
+    - operator-theory
+    - functional-analysis
+    - spectral-theory
+    msc:
+    - 47A12
+    - 47A20
+    - 47A25
