@@ -360,6 +360,7 @@ theorem exists_norm_le_two_sided_shifted_inverse_of_spectrum_gap
   -- for a self-adjoint element the norm *is* the spectral radius
   have hsa : _root_.IsSelfAdjoint (resolvent A (c : ℂ)) := isSelfAdjoint_resolvent_ofReal hA hc
   have hrad : spectralRadius ℂ (resolvent A (c : ℂ)) ≤ ENNReal.ofReal s⁻¹ := by
+    rw [spectralRadius_eq_of_unital]
     refine iSup₂_le fun μ hμ => ?_
     calc (‖μ‖₊ : ℝ≥0∞) = ENNReal.ofReal ‖μ‖ := by
           rw [← ENNReal.ofReal_coe_nnreal]; norm_cast

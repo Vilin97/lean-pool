@@ -2,7 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 4.8
+-/
 
+/-
 CFC bridge for the finite-dimensional operator polar decomposition.
 -/
 module
@@ -40,7 +42,7 @@ the same operator. -/
 theorem operatorAbs_toContinuousLinearMap_eq_modulus (A : E →ₗ[𝕜] F) :
     (operatorAbs A).toContinuousLinearMap = A.toContinuousLinearMap.modulus := by
   refine ContinuousLinearMap.eq_modulus_of_nonneg_of_mul_self_eq ?_ ?_
-  · exact (ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+  · exact (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr
       ((LinearMap.isPositive_toContinuousLinearMap_iff (operatorAbs A)).mpr
         (isPositive_operatorAbs A))
   · ext x

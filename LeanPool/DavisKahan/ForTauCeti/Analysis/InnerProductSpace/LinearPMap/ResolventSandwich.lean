@@ -269,7 +269,7 @@ theorem rightInverse_sandwich_of_lowerFormBoundOn_top {T R : E →L[𝕜] E}
     (0 : E →L[𝕜] E) ≤ R ∧ R ≤ (((β - lam)⁻¹ : ℝ) : 𝕜) • (1 : E →L[𝕜] E) := by
   have hcoer := coercive_rightInverse_of_lowerFormBoundOn_top hform hR
   have hsym := isSymmetric_of_rightInverse_sub_smul hT hR
-  refine ⟨(_root_.ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+  refine ⟨(_root_.ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr
       (isPositive_of_lowerFormBoundOn_top hsym
         (lowerFormBoundOn_top_of_coercive (by linarith) hcoer)), ?_⟩
   exact le_smul_one_of_upperFormBoundOn_top hsym
@@ -412,7 +412,7 @@ theorem neg_resolvent_nonneg_of_lowerFormBound (hA : IsSelfAdjoint A) {β lam : 
     (hform : ∀ x : A.domain, β * ‖(x : E)‖ ^ 2 ≤ (⟪A x, (x : E)⟫_ℂ).re)
     (hlam : (lam : ℂ) ∈ resolventSet A) :
     (0 : E →L[ℂ] E) ≤ -resolvent A (lam : ℂ) :=
-  (_root_.ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+  (_root_.ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr
     (isPositive_neg_resolvent_of_lowerFormBound hA hlt hform hlam)
 
 /-- The difference `(β - lam)⁻¹ • 1 - (-R(lam))` is a positive operator.  This
@@ -484,7 +484,7 @@ theorem adjoint_conj_neg_resolvent_nonneg_of_lowerFormBound (hA : IsSelfAdjoint 
     (hlam : (lam : ℂ) ∈ resolventSet A) (B : F →L[ℂ] E) :
     (0 : F →L[ℂ] F)
       ≤ ContinuousLinearMap.adjoint B ∘L (-resolvent A (lam : ℂ)) ∘L B :=
-  (_root_.ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+  (_root_.ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr
     ((isPositive_neg_resolvent_of_lowerFormBound hA hlt hform hlam).adjoint_conj B)
 
 /-- **The conjugated sandwich, upper half**:

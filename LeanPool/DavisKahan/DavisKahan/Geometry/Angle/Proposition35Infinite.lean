@@ -623,7 +623,7 @@ theorem section3AngleOperator_eigenvalue_mem_Icc {x : H} (hx0 : x ≠ 0) {θ : �
     eq_of_smul_eq_smul_right hx0 hback
   have hreal : θ = Real.arcsin (Real.sin θ) :=
     RCLike.ofReal_injective (K := 𝕜) hscalar
-  have hnn := ((ContinuousLinearMap.nonneg_iff_isPositive _).mp
+  have hnn := ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp
     (section3SinAngleOperator_nonneg U V)).re_inner_nonneg_left x
   rw [hsx, inner_smul_left, RCLike.conj_ofReal, RCLike.re_ofReal_mul,
     inner_self_eq_norm_sq] at hnn
@@ -683,7 +683,7 @@ private theorem positive_square_eigenvector
     (hsq : A (A x) = ((c ^ 2 : ℝ) : 𝕜) • x) :
     A x = ((c : ℝ) : 𝕜) • x := by
   have hApos : (A : H →ₗ[𝕜] H).IsPositive :=
-    ((ContinuousLinearMap.nonneg_iff_isPositive A).mp hA).toLinearMap
+    ((ContinuousLinearMap.nonneg_iff_isPositive (f := A)).mp hA).toLinearMap
   have hsq' : (A : H →ₗ[𝕜] H) ((A : H →ₗ[𝕜] H) x) =
       (((c : ℝ) : 𝕜) * ((c : ℝ) : 𝕜)) • x := by
     change A (A x) = (((c : ℝ) : 𝕜) * ((c : ℝ) : 𝕜)) • x

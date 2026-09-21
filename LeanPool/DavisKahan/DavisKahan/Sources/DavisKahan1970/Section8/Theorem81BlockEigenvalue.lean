@@ -129,8 +129,8 @@ theorem nonneg_compressOperator_of_nonneg {T : G →L[𝕜] G}
     (0 : U →L[𝕜] U) ≤ compressOperator U T := by
   have : CompleteSpace U :=
     (Submodule.isComplete_coe_of_hasOrthogonalProjection U).completeSpace_coe
-  have hTpos := (ContinuousLinearMap.nonneg_iff_isPositive T).mp hT
-  refine (ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+  have hTpos := (ContinuousLinearMap.nonneg_iff_isPositive (f := T)).mp hT
+  refine (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr
     (ContinuousLinearMap.isPositive_def'.mpr
       ⟨isSelfAdjoint_compressOperator hTpos.isSelfAdjoint U, fun x => ?_⟩)
   have hcoe : ((compressOperator U T x : U) : G) = U.starProjection (T (x : G)) := rfl

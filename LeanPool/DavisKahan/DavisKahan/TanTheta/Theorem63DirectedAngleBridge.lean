@@ -215,7 +215,7 @@ private theorem coordinateSineModulus_apply_rightSingularBasis
   have hMnonneg : (0 : Z →L[ℂ] Z) ≤ M := by
     exact ContinuousLinearMap.modulus_nonneg B
   have hMpos : (M : Z →ₗ[ℂ] Z).IsPositive :=
-    ((ContinuousLinearMap.nonneg_iff_isPositive M).mp hMnonneg).toLinearMap
+    ((ContinuousLinearMap.nonneg_iff_isPositive (f := M)).mp hMnonneg).toLinearMap
   have hsigma0 : 0 ≤ sigma := finiteSourceSingularValue_nonneg S i
   have hroot := LinearMap.IsPositive.apply_eq_smul_of_apply_apply_eq_smul
     hMpos hsigma0 hM_sq

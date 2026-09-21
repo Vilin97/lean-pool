@@ -2,7 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
+-/
 
+/-
 Staged for Tau Ceti: additions to the operator modulus API.
 -/
 module
@@ -59,7 +61,7 @@ theorem conjStarAlgEquiv_modulus (e : E ≃ₗᵢ[𝕜] F) {T : E →L[𝕜] G} 
   · -- Conjugation by a unitary preserves nonnegativity.
     rw [nonneg_iff_isPositive, LinearIsometryEquiv.conjStarAlgEquiv_apply,
       ← e.adjoint_eq_symm]
-    exact ((nonneg_iff_isPositive _).mp T.modulus_nonneg).conj_adjoint _
+    exact ((nonneg_iff_isPositive (f := _)).mp T.modulus_nonneg).conj_adjoint _
   · -- Multiplicativity turns `|T|² = T⋆T` into `(e|T|e⁻¹)² = S⋆S`.
     rw [← map_mul, modulus_mul_self, h]
 

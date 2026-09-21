@@ -398,7 +398,7 @@ theorem beamOneLp_ne_zero : beamOneLp ≠ 0 := by
 
 /-- Real `L²` realization of the source centered-affine coordinates. -/
 def centeredAffineLp (p : DavisKahan1970.Section9.CenteredAffine) : BeamL2 :=
-  affineLp (p.constant - p.centered) (2 * p.centered)
+  affineLp (p.fixedValue - p.centered) (2 * p.centered)
 
 /-- The centred affine function lies in the beam trial subspace. -/
 theorem centeredAffineLp_mem_beamTrial (p : DavisKahan1970.Section9.CenteredAffine) :

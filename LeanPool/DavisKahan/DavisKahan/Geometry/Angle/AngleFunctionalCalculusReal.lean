@@ -277,7 +277,7 @@ theorem sinAngleOperatorR_nonneg :
   have hpos : (0 : ℝ) ≤ RCLike.re
       ⟪complexify (sinAngleOperatorR U V) (ofReal x), ofReal x⟫_ℂ := by
     rw [complexify_sinAngleOperatorR]
-    exact ((ContinuousLinearMap.nonneg_iff_isPositive _).1
+    exact ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).1
       (sinAngleOperatorC_nonneg _ _)).2 _
   have hval : RCLike.re
       ⟪complexify (sinAngleOperatorR U V) (ofReal x), ofReal x⟫_ℂ =

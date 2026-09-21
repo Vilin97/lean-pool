@@ -101,7 +101,7 @@ theorem isSelfAdjoint_source_block_spectraDirectRotation
     IsSelfAdjoint (U.starProjection * spectraDirectRotation U V hacute * U.starProjection) := by
   have hC : IsSelfAdjoint
       (ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V)) :=
-    ((ContinuousLinearMap.nonneg_iff_isPositive _).mp
+    ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp
       (ContinuousLinearMap.modulus_nonneg _)).isSelfAdjoint
   have hcomm : Commute
       (ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V)) (U.starProjection) :=
@@ -117,7 +117,7 @@ theorem isSelfAdjoint_complement_block_spectraDirectRotation
       (Uᗮ).starProjection) := by
   have hC : IsSelfAdjoint
       (ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V)) :=
-    ((ContinuousLinearMap.nonneg_iff_isPositive _).mp
+    ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp
       (ContinuousLinearMap.modulus_nonneg _)).isSelfAdjoint
   have hcomm : Commute
       (ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V))
@@ -411,7 +411,7 @@ theorem projection_mul_reflectionOperator_self :
 theorem nonneg_add_star_of_re_inner_nonneg (T : H →L[ℂ] H)
     (hre : ∀ x : H, 0 ≤ RCLike.re ⟪T x, x⟫_ℂ) :
     (0 : H →L[ℂ] H) ≤ T + star T := by
-  refine (ContinuousLinearMap.nonneg_iff_isPositive _).mpr ?_
+  refine (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr ?_
   refine ContinuousLinearMap.isPositive_def'.mpr ⟨?_, fun x => ?_⟩
   · rw [IsSelfAdjoint, star_add, star_star, add_comm]
   · rw [ContinuousLinearMap.reApplyInnerSelf_apply]

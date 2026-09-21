@@ -591,7 +591,7 @@ theorem modulus_adjoint (M : E →L[𝕜] F) :
     M.adjoint.modulus = M.polarPartial ∘L M.modulus ∘L M.polarPartial.adjoint := by
   refine (eq_modulus_of_nonneg_of_mul_self_eq ?_ ?_).symm
   · rw [ContinuousLinearMap.nonneg_iff_isPositive]
-    exact ((ContinuousLinearMap.nonneg_iff_isPositive _).mp M.modulus_nonneg).conj_adjoint
+    exact ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp M.modulus_nonneg).conj_adjoint
       M.polarPartial
   · have hP : ∀ y : E, M.polarPartial.adjoint (M.polarPartial y)
         = M.polarInitial.starProjection y := by

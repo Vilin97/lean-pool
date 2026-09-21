@@ -122,7 +122,7 @@ theorem lowerFramePolarData_real_nonempty
   have hgramC_eq : complexify gramR = gramC := by
     simpa [gramR, gramC, XC] using complexify_gram X
   have hgram_nonneg : 0 ≤ gramC := by
-    exact (ContinuousLinearMap.nonneg_iff_isPositive gramC).2
+    exact (ContinuousLinearMap.nonneg_iff_isPositive (f := gramC)).2
       (ContinuousLinearMap.isPositive_adjoint_comp_self XC)
   have hgram_unit : IsUnit gramC := by
     refine TauCeti.ContinuousLinearMap.isUnit_of_coercive

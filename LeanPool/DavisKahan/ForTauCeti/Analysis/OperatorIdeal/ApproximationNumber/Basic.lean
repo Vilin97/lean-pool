@@ -9,6 +9,7 @@ public import LeanPool.DavisKahan.ForTauCeti.LinearAlgebra.Dimension.RankComp
 public import Mathlib.Analysis.Normed.Operator.Basic
 public import Mathlib.LinearAlgebra.Dimension.LinearMap
 public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.Dimension.DivisionRing
 
 /-!
 # Approximation numbers of bounded operators

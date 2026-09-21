@@ -988,7 +988,7 @@ theorem inner_beamPerturbation_affineLp (ε : ℝ) (a b c d : ℂ) :
 
 /-- The `L²` realization of a centered-affine trial function `c + d (2t - 1)`. -/
 def centeredAffineLp (p : DavisKahan1970.Section9.CenteredAffine) : BeamL2 :=
-  affineLp ((p.constant - p.centered : ℝ) : ℂ) ((2 * p.centered : ℝ) : ℂ)
+  affineLp ((p.fixedValue - p.centered : ℝ) : ℂ) ((2 * p.centered : ℝ) : ℂ)
 
 /-- The centred affine function lies in the beam trial subspace. -/
 theorem centeredAffineLp_mem_beamTrial (p : DavisKahan1970.Section9.CenteredAffine) :

@@ -213,11 +213,11 @@ theorem proposition3_4_full_real
   have hsource_nonnegC :
       (0 : RealComplexification E →L[ℂ] RealComplexification E) ≤
         CU.starProjection * WC * CU.starProjection :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mpr hsource_posC
+    (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr hsource_posC
   have hcomplement_nonnegC :
       (0 : RealComplexification E →L[ℂ] RealComplexification E) ≤
         CUᗮ.starProjection * WC * CUᗮ.starProjection :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mpr hcomplement_posC
+    (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr hcomplement_posC
 
   have hcosC : ∀ z ∈ CU, ‖z‖ ^ 2 / 2 ≤ ‖CV.starProjection z‖ ^ 2 := by
     intro z hz

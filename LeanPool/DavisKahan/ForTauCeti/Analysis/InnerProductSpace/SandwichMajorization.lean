@@ -2,7 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
+-/
 
+/-
 Staged for Tau Ceti.  Mathlib is not the destination (`ForTauCeti/README.md`);
 on the closed Mathlib track this material would have been an addition to
 `Mathlib/Analysis/InnerProductSpace/` (new file `SandwichMajorization.lean`).
@@ -395,7 +397,7 @@ theorem approximationNumber_adjoint_sandwich_weaklyMajorized [CompleteSpace E]
       (fun i : Fin (finrank 𝕜 E) =>
         M.approximationNumber (i : ℕ) * D.approximationNumber (i : ℕ) ^ 2) := by
   have hMpos : (M : E →ₗ[𝕜] E).IsPositive :=
-    ((ContinuousLinearMap.nonneg_iff_isPositive M).mp hM).toLinearMap
+    ((ContinuousLinearMap.nonneg_iff_isPositive (f := M)).mp hM).toLinearMap
   have hcoe : ((ContinuousLinearMap.adjoint D ∘L M ∘L D : E →L[𝕜] E) : E →ₗ[𝕜] E)
       = (D : E →ₗ[𝕜] E).adjoint ∘ₗ (M : E →ₗ[𝕜] E) ∘ₗ (D : E →ₗ[𝕜] E) := rfl
   have hmain := singularValues_adjoint_sandwich_weaklyMajorized hMpos (D : E →ₗ[𝕜] E)

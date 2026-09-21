@@ -137,7 +137,7 @@ theorem approximationNumber_mono_of_form_le
     S.approximationNumber n ≤ T.approximationNumber n := by
   have hsa : ∀ {R : E →L[ℂ] E}, (0 : E →L[ℂ] E) ≤ R → IsSelfAdjoint (CFC.sqrt R) :=
     fun {R} _ =>
-      ((ContinuousLinearMap.nonneg_iff_isPositive _).mp (CFC.sqrt_nonneg R)).isSelfAdjoint
+      ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp (CFC.sqrt_nonneg R)).isSelfAdjoint
   have hnormsq : ∀ {R : E →L[ℂ] E}, (0 : E →L[ℂ] E) ≤ R → ∀ x : E,
       ‖CFC.sqrt R x‖ ^ 2 = RCLike.re ⟪x, R x⟫_ℂ := by
     intro R hR x

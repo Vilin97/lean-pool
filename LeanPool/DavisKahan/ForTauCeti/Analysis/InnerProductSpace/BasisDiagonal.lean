@@ -2,7 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
+-/
 
+/-
 Staged for Tau Ceti: additions to `Mathlib/Analysis/InnerProductSpace/Spectrum.lean`,
 or a new file next to `OrthonormalBasis` in `PiL2`.
 -/

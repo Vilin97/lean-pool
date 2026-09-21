@@ -317,7 +317,7 @@ theorem spectraAbsoluteValue_canonicalIntertwinerR_eq :
     exact ContinuousLinearMap.modulus_mul_self_eq_star_mul_self _
   have h := ContinuousLinearMap.eq_modulus_of_nonneg_of_mul_self_eq
     (T := TauCeti.DavisKahan.canonicalIntertwinerR U V)
-    ((ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+    ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr
       (TauCeti.DavisKahan.isPositive_canonicalAbsoluteValueR U V))
     (by simpa only [ContinuousLinearMap.mul_def,
       ContinuousLinearMap.star_eq_adjoint] using hsquare)

@@ -531,7 +531,7 @@ theorem spectraDirectRotation_real_inner_nonneg
       _ = principalHalfPhase z + star (principalHalfPhase z) := by
           rw [Complex.star_def, Complex.add_conj]
   -- Expand the quadratic form of `W + W⋆`.
-  have hp := (ContinuousLinearMap.nonneg_iff_isPositive _).mp hpos
+  have hp := (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hpos
   have hx := hp.inner_nonneg_left x
   have hexpand : ⟪(spectraReflectionProductHalfPhase U V hacute +
         star (spectraReflectionProductHalfPhase U V hacute)) x, x⟫_ℂ =
@@ -633,7 +633,7 @@ theorem spectraCanonicalAbsoluteValue_inner_pos
   change 0 < RCLike.re ⟪B x, x⟫_ℂ
   have hBnonneg : (0 : H →L[ℂ] H) ≤ B :=
     ContinuousLinearMap.modulus_nonneg _
-  have hBpositive := (ContinuousLinearMap.nonneg_iff_isPositive B).mp hBnonneg
+  have hBpositive := (ContinuousLinearMap.nonneg_iff_isPositive (f := B)).mp hBnonneg
   have hBform : ∀ z : H, 0 ≤ RCLike.re ⟪B z, z⟫_ℂ := fun z =>
     hBpositive.re_inner_nonneg_left z
   have hBsym : (B : H →ₗ[ℂ] H).IsSymmetric :=
@@ -1374,8 +1374,8 @@ theorem reflection_conjugate_eq_star_of_intertwines_of_diagonalBlocks_pos
   set T : H →L[ℂ] H := C₀ + C₁ with hTdef
   have hTpos : (0 : H →L[ℂ] H) ≤ T := by
     rw [hTdef, ContinuousLinearMap.nonneg_iff_isPositive]
-    exact ((ContinuousLinearMap.nonneg_iff_isPositive _).mp hC₀pos).add
-      ((ContinuousLinearMap.nonneg_iff_isPositive _).mp hC₁pos)
+    exact ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hC₀pos).add
+      ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hC₁pos)
   have hTsq : T * T = C₀ * C₀ + C₁ * C₁ := by
     rw [hTdef]
     calc (C₀ + C₁) * (C₀ + C₁) = C₀ * C₀ + C₀ * C₁ + (C₁ * C₀ + C₁ * C₁) := by
@@ -1555,7 +1555,7 @@ theorem eq_spectraDirectRotation_iff_diagonalBlocks_pos
         (∀ x ∈ U, 0 ≤ ⟪W x, x⟫_ℂ) ∧
         (∀ x ∈ Uᗮ, 0 ≤ ⟪W x, x⟫_ℂ) := by
   have hCP : (ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V)).IsPositive :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mp
+    (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp
       (ContinuousLinearMap.modulus_nonneg _)
   constructor
   · rintro rfl
@@ -1905,7 +1905,7 @@ theorem spectraDirectRotation_minimal
   have hRpos : ∀ z : H, 0 ≤ RCLike.re ⟪R z, z⟫_ℂ := by
     intro z
     have hCpos :=
-      (ContinuousLinearMap.nonneg_iff_isPositive C).mp
+      (ContinuousLinearMap.nonneg_iff_isPositive (f := C)).mp
         (ContinuousLinearMap.modulus_nonneg
           (spectraCanonicalIntertwiner U V))
     have hz : C (R z) = z := by
@@ -1928,7 +1928,7 @@ theorem spectraDirectRotation_minimal
     exact (le_inv_mul_iff₀ hc).2 h'
   have hCcoer : ∀ z : H, c * ‖z‖ ^ 2 ≤ RCLike.re ⟪C z, z⟫_ℂ := fun z =>
     re_inner_ge_of_inverse_norm_le hc hRC hRsa hRpos hRnorm
-      (fun w => ((ContinuousLinearMap.nonneg_iff_isPositive C).mp
+      (fun w => ((ContinuousLinearMap.nonneg_iff_isPositive (f := C)).mp
         (ContinuousLinearMap.modulus_nonneg
           (spectraCanonicalIntertwiner U V))).re_inner_nonneg_left w) z
   refine (D - 1).opNorm_le_bound (norm_nonneg (W - 1)) ?_

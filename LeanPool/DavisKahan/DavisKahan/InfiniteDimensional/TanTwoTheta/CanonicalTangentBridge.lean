@@ -350,7 +350,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     rwa [ContinuousLinearMap.adjoint_comp, hPadj] at h
   have hGnonneg : (0 : E →L[ℂ] E) ≤ G := by
     dsimp [G]
-    exact (ContinuousLinearMap.nonneg_iff_isPositive _).2
+    exact (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).2
       (ContinuousLinearMap.isPositive_adjoint_comp_self Y)
   have hGP : G ∘L P = G := by
     dsimp [G]
@@ -653,7 +653,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     rw [ContinuousLinearMap.nonneg_iff_isPositive]
     -- `0 ≤ (2 : ℂ)` is an order on ℂ (`re` compared, `im` equal), so it needs
     -- `Complex.le_def`; `norm_num` alone does not unfold it.
-    exact ((ContinuousLinearMap.nonneg_iff_isPositive _).mp hprod).smul_of_nonneg
+    exact ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hprod).smul_of_nonneg
       (by simp [Complex.le_def])
   have hMformula :
       M = (2 : ℂ) • (ContinuousLinearMap.modulus Y ∘L Ring.inverse D) := by

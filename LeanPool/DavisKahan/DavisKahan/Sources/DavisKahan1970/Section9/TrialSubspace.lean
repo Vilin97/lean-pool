@@ -32,18 +32,18 @@ namespace CenteredAffine
 
 /-- Unit-interval `L2` inner product of two centered affine functions. -/
 noncomputable def inner (p q : CenteredAffine) : ℝ :=
-  p.constant * q.constant + p.centered * q.centered / 3
+  p.fixedValue * q.fixedValue + p.centered * q.centered / 3
 
 /-- Inner product after multiplication of the second function by `t`. -/
 noncomputable def tInner (p q : CenteredAffine) : ℝ :=
-  p.constant * q.constant / 2
-    + (p.constant * q.centered + p.centered * q.constant) / 6
+  p.fixedValue * q.fixedValue / 2
+    + (p.fixedValue * q.centered + p.centered * q.fixedValue) / 6
     + p.centered * q.centered / 6
 
 /-- Inner product after multiplication of the second function by `t^2`. -/
 noncomputable def tSqInner (p q : CenteredAffine) : ℝ :=
-  p.constant * q.constant / 3
-    + (p.constant * q.centered + p.centered * q.constant) / 6
+  p.fixedValue * q.fixedValue / 3
+    + (p.fixedValue * q.centered + p.centered * q.fixedValue) / 6
     + 2 * p.centered * q.centered / 15
 
 /-- The affine inner product is symmetric. -/

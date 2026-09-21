@@ -163,7 +163,7 @@ omit [CompleteSpace H] in
 consumes. -/
 theorem isPositive_toLinearMap_of_nonneg {S : H →L[𝕜] H}
     (hS : (0 : H →L[𝕜] H) ≤ S) : (S : H →ₗ[𝕜] H).IsPositive :=
-  ((ContinuousLinearMap.nonneg_iff_isPositive S).mp hS).toLinearMap
+  ((ContinuousLinearMap.nonneg_iff_isPositive (f := S)).mp hS).toLinearMap
 
 /-! ### 2. Extension by zero appends zeros -/
 

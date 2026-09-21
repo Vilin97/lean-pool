@@ -97,7 +97,7 @@ variable {E : Type u} {F : Type v} {G : Type w}
 /-- The Gram operator `T⋆ T` is nonnegative.  This is the `0 ≤ ·` form of
 `ContinuousLinearMap.isPositive_adjoint_comp_self`. -/
 theorem adjoint_comp_self_nonneg (T : E →L[𝕜] F) : 0 ≤ T.adjoint ∘L T :=
-  (nonneg_iff_isPositive _).mpr (isPositive_adjoint_comp_self T)
+  (nonneg_iff_isPositive (f := _)).mpr (isPositive_adjoint_comp_self T)
 
 omit [CompleteSpace E] [CompleteSpace F] [CompleteSpace G] in
 /-- Two operators out of the same space with pointwise equal norms have equal

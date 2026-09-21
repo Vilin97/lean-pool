@@ -2,7 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Thinking
+-/
 
+/-
 The dense-range lemma below is adapted from Adam Bornemann's private lemma
 `denseRange_of_selfAdjoint_injective` in
 `Spectra/Modular/Tomita/BoundedPicture.lean`, Spectra commit

@@ -682,7 +682,7 @@ theorem isPositive_canonicalAbsoluteValueR :
     (canonicalAbsoluteValueR U V).IsPositive := by
   refine isPositive_of_complexify ?_
   rw [complexify_canonicalAbsoluteValueR]
-  exact (ContinuousLinearMap.nonneg_iff_isPositive _).mp
+  exact (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp
     (ContinuousLinearMap.modulus_nonneg _)
 
 /-- Rewriting a diagonal block of the real direct rotation as a compression of the Halmos

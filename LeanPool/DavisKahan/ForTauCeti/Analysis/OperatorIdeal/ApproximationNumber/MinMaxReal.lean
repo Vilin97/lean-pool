@@ -145,7 +145,7 @@ theorem exists_linearIndependent_lowerBound_of_lt_approximationNumber_real
     exact (complexify_gram T).symm
   have hCnonneg : (0 : RealComplexification E →L[ℂ] RealComplexification E) ≤ C := by
     dsimp only [C]
-    exact (ContinuousLinearMap.nonneg_iff_isPositive _).2
+    exact (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).2
       (ContinuousLinearMap.isPositive_adjoint_comp_self Tc)
   have hC : IsSelfAdjoint C := IsSelfAdjoint.of_nonneg hCnonneg
   have hCfix : conjugateOperator C = C := by

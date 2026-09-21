@@ -273,7 +273,7 @@ theorem proposition3_3_principalSquareRoot_converse
   -- accretive quadratic form
   have haccr : ∀ y : H, 0 ≤ RCLike.re ⟪T y, y⟫_ℂ := by
     intro y
-    have hp := (ContinuousLinearMap.nonneg_iff_isPositive (T + star T)).mp hTpos
+    have hp := (ContinuousLinearMap.nonneg_iff_isPositive (f := (T + star T))).mp hTpos
     have hy := hp.re_inner_nonneg_left y
     rw [add_apply, inner_add_left, map_add] at hy
     have hstar : RCLike.re ⟪star T y, y⟫_ℂ = RCLike.re ⟪T y, y⟫_ℂ := by
@@ -564,13 +564,13 @@ theorem nonneg_add_star_of_isDirectRotation (hT : IsDirectRotation U V T)
       IsSelfAdjoint ((Uᗮ).starProjection * T * (Uᗮ).starProjection)) :
     (0 : H →L[ℂ] H) ≤ T + star T := by
   have hP : (0 : H →L[ℂ] H) ≤ U.starProjection * T * U.starProjection := by
-    refine (ContinuousLinearMap.nonneg_iff_isPositive _).mpr ?_
+    refine (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr ?_
     refine ContinuousLinearMap.isPositive_def'.mpr ⟨hsource_sa, fun x => ?_⟩
     rw [ContinuousLinearMap.reApplyInnerSelf_apply, inner_re_symm (𝕜 := ℂ)]
     exact hT.source_compression_nonnegative x
   have hPc : (0 : H →L[ℂ] H)
       ≤ (Uᗮ).starProjection * T * (Uᗮ).starProjection := by
-    refine (ContinuousLinearMap.nonneg_iff_isPositive _).mpr ?_
+    refine (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr ?_
     refine ContinuousLinearMap.isPositive_def'.mpr ⟨hcomplement_sa, fun x => ?_⟩
     rw [ContinuousLinearMap.reApplyInnerSelf_apply, inner_re_symm (𝕜 := ℂ)]
     exact hT.complement_compression_nonnegative x
@@ -773,8 +773,8 @@ theorem proposition3_3_principalSquareRoot_forward_of_nonneg_blocks
     IsDirectRotation U V T ∧
       IsPrincipalUnitarySquareRoot (spectraReflectionProduct U V) T ∧
       T '' (halmosSourceDefect U V : Set H) = (halmosTargetDefect U V : Set H) := by
-  have hsp := (ContinuousLinearMap.nonneg_iff_isPositive _).mp hsource_pos
-  have hcp := (ContinuousLinearMap.nonneg_iff_isPositive _).mp hcomplement_pos
+  have hsp := (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hsource_pos
+  have hcp := (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hcomplement_pos
   have hT : IsDirectRotation U V T :=
     { unitary_mem := hunitary
       intertwines := hintertwines

@@ -2,7 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
+-/
 
+/-
 Staged for Tau Ceti: the normalised self-adjoint Krein/Julia column completion.
 -/
 module
@@ -433,7 +435,7 @@ theorem exists_selfAdjoint_contraction_extension_of_column_gram_le
         = A * A + ContinuousLinearMap.adjoint B ∘L B := add_comm _ _
       _ ≤ 1 := hgram'
   have hBnn : (0 : E →L[ℂ] E) ≤ ContinuousLinearMap.adjoint B ∘L B :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+    (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr
       (ContinuousLinearMap.isPositive_adjoint_comp_self B)
   have hG : (0 : E →L[ℂ] E) ≤ 1 - A * A := hBnn.trans hBG
   -- Steps 2 and 3: the positive square root of the defect, and its commutation with `A`.

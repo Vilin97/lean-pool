@@ -2,7 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, OpenAI GPT-5.6 Sol
+-/
 
+/-
 Source-scope review (2026-09-09): the bounded-trial declarations in this module
 remain valid specializations, not full coverage of the unbounded trial scope.
 Their `hVdom`/`hPdom` hypotheses put every trial vector in the exact operator's
@@ -12,7 +14,6 @@ these shared hypotheses also restrict the ambient clause unnecessarily; use
 `SinTwoThetaAmbientUnbounded` for its independent ambient estimate.
 `SinTwoThetaCommonDomain` contains a replacement candidate pending compiler
 validation. It is not imported here or certified by the result inventory.
-
 -/
 import LeanPool.DavisKahan.DavisKahan.DoubleAngle.UnboundedIdeal
 import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.ScalarGeneric

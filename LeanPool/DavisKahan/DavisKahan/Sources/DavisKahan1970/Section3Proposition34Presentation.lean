@@ -75,8 +75,8 @@ theorem proposition3_4_isDirectRotation_complex
       (0 : H →L[ℂ] H) ≤ (Uᗮ).starProjection * W * (Uᗮ).starProjection)
     (hcos : ∀ x ∈ U, ‖x‖ ^ 2 / 2 ≤ ‖V.starProjection x‖ ^ 2) :
     IsDirectRotation (reflectedSubspace U V) V (W * W) := by
-  have hsp := (ContinuousLinearMap.nonneg_iff_isPositive _).mp hsource_pos
-  have hcp := (ContinuousLinearMap.nonneg_iff_isPositive _).mp hcomplement_pos
+  have hsp := (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hsource_pos
+  have hcp := (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hcomplement_pos
   have hW : IsDirectRotation U V W :=
     { unitary_mem := hunitary
       intertwines := hintertwines

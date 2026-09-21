@@ -156,7 +156,7 @@ theorem nonneg_adjoint_sandwich {M : H →L[𝕜] H} (hM : (0 : H →L[𝕜] H) 
     (D : H →L[𝕜] H) :
     (0 : H →L[𝕜] H) ≤ ContinuousLinearMap.adjoint D ∘L M ∘L D := by
   rw [ContinuousLinearMap.nonneg_iff_isPositive]
-  have hp := ((ContinuousLinearMap.nonneg_iff_isPositive _).mp hM).conj_adjoint
+  have hp := ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp hM).conj_adjoint
     (ContinuousLinearMap.adjoint D)
   simpa only [ContinuousLinearMap.adjoint_adjoint] using hp
 

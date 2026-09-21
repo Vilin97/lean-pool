@@ -118,7 +118,7 @@ theorem sq_eq (h : IsSourceDirectRotation U V D) :
 
 /-- A direct rotation is accretive, so its Hermitian part is nonnegative. -/
 theorem add_star_nonneg (h : IsSourceDirectRotation U V D) : 0 ≤ D + star D := by
-  refine (ContinuousLinearMap.nonneg_iff_isPositive _).mpr
+  refine (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr
     (ContinuousLinearMap.isPositive_def'.mpr ⟨?_, fun x => ?_⟩)
   · exact IsSelfAdjoint.add_star_self D
   · have hre := re_inner_directRotation_nonneg U V D h.toIsDirectRotation x

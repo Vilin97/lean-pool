@@ -231,7 +231,7 @@ theorem spectraDirectRotation_sourceCompression_nonnegative
   have hnonneg : (0 : H →L[ℂ] H) ≤ C :=
     ContinuousLinearMap.modulus_nonneg _
   have hpositive :=
-    (ContinuousLinearMap.nonneg_iff_isPositive C).mp hnonneg
+    (ContinuousLinearMap.nonneg_iff_isPositive (f := C)).mp hnonneg
   exact hpositive.re_inner_nonneg_left (U.starProjection x)
 
 /-- The acute canonical direct rotation has nonnegative complementary
@@ -301,7 +301,7 @@ theorem spectraDirectRotation_complementCompression_nonnegative
   have hnonneg : (0 : H →L[ℂ] H) ≤ C :=
     ContinuousLinearMap.modulus_nonneg _
   have hpositive :=
-    (ContinuousLinearMap.nonneg_iff_isPositive C).mp hnonneg
+    (ContinuousLinearMap.nonneg_iff_isPositive (f := C)).mp hnonneg
   exact hpositive.re_inner_nonneg_left ((Uᗮ).starProjection x)
 
 /-- The crossed source blocks of the acute canonical direct rotation are

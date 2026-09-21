@@ -299,7 +299,7 @@ theorem reflectionProduct_form_pos_of_orderedFormGap_unbounded
     TauCeti.ContinuousLinearMap.nonneg_of_lyapunov_nonneg hXsa hGnonneg hGinj hlyap
   have hXnn : ∀ z : E, 0 ≤ RCLike.re ⟪X z, z⟫_ℂ := by
     intro z
-    have h := ((ContinuousLinearMap.nonneg_iff_isPositive X).mp hXnonneg).2 z
+    have h := ((ContinuousLinearMap.nonneg_iff_isPositive (f := X)).mp hXnonneg).2 z
     rwa [ContinuousLinearMap.reApplyInnerSelf_apply] at h
   -- **Pointwise strictness.**  A null vector of the form `⟪X ·, ·⟫` would be
   -- orthogonal to the whole range of `X`, and in particular would annihilate

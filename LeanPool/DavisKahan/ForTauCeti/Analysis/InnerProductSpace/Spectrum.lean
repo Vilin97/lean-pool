@@ -2,7 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Fable 5
+-/
 
+/-
 Staged for Tau Ceti, roadmap topic T01.  Mathlib is not the destination
 (`ForTauCeti/README.md`); what follows is where this material would have gone on
 the closed Mathlib track —

@@ -130,11 +130,11 @@ theorem proposition3_3_complex_forward
     IsPrincipalUnitarySquareRoot (spectraReflectionProduct U V) T := by
   have hsource_nonneg : (0 : H →L[ℂ] H) ≤ U.starProjection * T * U.starProjection :=
     (ContinuousLinearMap.nonneg_iff_isPositive
-      (U.starProjection * T * U.starProjection)).mpr hsource_pos
+      (f := (U.starProjection * T * U.starProjection))).mpr hsource_pos
   have hcomplement_nonneg : (0 : H →L[ℂ] H) ≤
       Uᗮ.starProjection * T * Uᗮ.starProjection :=
     (ContinuousLinearMap.nonneg_iff_isPositive
-      (Uᗮ.starProjection * T * Uᗮ.starProjection)).mpr hcomplement_pos
+      (f := (Uᗮ.starProjection * T * Uᗮ.starProjection))).mpr hcomplement_pos
   exact (proposition3_3_principalSquareRoot_forward_of_nonneg_blocks
     U V T hunitary hintertwines hcrossed hsource_nonneg hcomplement_nonneg).2.1
 

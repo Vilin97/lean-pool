@@ -2,6 +2,9 @@
 Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall, Claude Opus 5
+-/
+
+/-
 Adapted from: Spectra (https://github.com/adambornemann-glitch/Spectra),
   `Spectra/OneParameterUnitaryGroup/Basic.lean` at commit
   `8dbaaf6728d1342ae16acf79fd7eef7c59b37e63`,

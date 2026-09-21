@@ -232,7 +232,7 @@ theorem lowerFramePolarData_nonempty
     Nonempty (LowerFramePolarData X ε hX hε) := by
   let gram : F →L[ℂ] F := X.adjoint ∘L X
   have hgram_nonneg : 0 ≤ gram := by
-    exact (ContinuousLinearMap.nonneg_iff_isPositive gram).2
+    exact (ContinuousLinearMap.nonneg_iff_isPositive (f := gram)).2
       (ContinuousLinearMap.isPositive_adjoint_comp_self X)
   have hgram_unit : IsUnit gram := by
     refine TauCeti.ContinuousLinearMap.isUnit_of_coercive

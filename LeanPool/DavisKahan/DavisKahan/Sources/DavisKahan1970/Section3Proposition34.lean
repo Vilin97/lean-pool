@@ -202,8 +202,8 @@ theorem proposition3_4_full_complex
   have hpaper : IsDirectRotation (reflectedSubspace U V) V (W * W) :=
     proposition3_4_isDirectRotation_complex U V W hunitary hintertwines
       hcrossed
-      ((ContinuousLinearMap.nonneg_iff_isPositive _).mpr hsource_pos)
-      ((ContinuousLinearMap.nonneg_iff_isPositive _).mpr hcomplement_pos) hcos
+      ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr hsource_pos)
+      ((ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr hcomplement_pos) hcos
   have hWsq : W * W = spectraReflectionProduct U V :=
     sq_eq_spectraReflectionProduct U V W hunitary hintertwines
       hsource_pos.isSelfAdjoint hcomplement_pos.isSelfAdjoint hcrossed

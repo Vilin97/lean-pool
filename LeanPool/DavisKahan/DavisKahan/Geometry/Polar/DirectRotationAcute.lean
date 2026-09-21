@@ -275,7 +275,7 @@ theorem isPositive_projection_mul_spectraCanonicalPolarFactor_mul_projection
   have hPP : U.starProjection * U.starProjection = U.starProjection :=
     U.isIdempotentElem_starProjection
   have hpos : (ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V)).IsPositive :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mp
+    (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mp
       (ContinuousLinearMap.modulus_nonneg _)
   have hcomp := isPositive_starProjection_compression hpos U
   have hrw : U.starProjection *
@@ -412,7 +412,7 @@ theorem eq_spectraCanonicalPolarFactor_of_diagonalBlocks_isPositive
     rfl
   have hblocksum : (T).IsPositive := hblockU.add hblockUperp
   have hTpos : (0 : H →L[𝕜] H) ≤ T :=
-    (ContinuousLinearMap.nonneg_iff_isPositive T).mpr hblocksum
+    (ContinuousLinearMap.nonneg_iff_isPositive (f := T)).mpr hblocksum
   have hTsa : star T = T :=
     (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr hblocksum.1).star_eq
   have hGram : star S * S = T * T := by
