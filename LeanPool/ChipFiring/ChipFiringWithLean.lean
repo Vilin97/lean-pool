@@ -13,3 +13,9 @@ import LeanPool.ChipFiring.ChipFiringWithLean.Algorithms
 import LeanPool.ChipFiring.ChipFiringWithLean.Rank
 import LeanPool.ChipFiring.ChipFiringWithLean.RRGHelpers
 import LeanPool.ChipFiring.ChipFiringWithLean.RiemannRoch
+
+/-!
+# ChipFiringWithLean
+
+Chip firing, graph divisors, and their combinatorial properties.
+-/
