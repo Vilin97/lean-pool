@@ -54,17 +54,17 @@ def grownForestForSupportOrder
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges}) :
     Forest V :=
   Classical.choose
-    (exists_followOrder?_eq_some_support_of_mem_edgeSetOrders
+    (exists_followOrderOption_eq_some_support_of_mem_edgeSetOrders
       choices order.property)
 
-theorem followOrder?_grownForestForSupportOrder
+theorem followOrderOption_grownForestForSupportOrder
     (choices : ActiveExtensionChoice V)
     (I : ForestIndex V)
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges}) :
-    followOrder? choices (Forest.empty V) order.val =
+    followOrderOption choices (Forest.empty V) order.val =
       some (grownForestForSupportOrder choices I order) :=
   (Classical.choose_spec
-    (exists_followOrder?_eq_some_support_of_mem_edgeSetOrders
+    (exists_followOrderOption_eq_some_support_of_mem_edgeSetOrders
       choices order.property)).1
 
 theorem grownForestForSupportOrder_support
@@ -73,7 +73,7 @@ theorem grownForestForSupportOrder_support
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges}) :
     (grownForestForSupportOrder choices I order).support = I :=
   (Classical.choose_spec
-    (exists_followOrder?_eq_some_support_of_mem_edgeSetOrders
+    (exists_followOrderOption_eq_some_support_of_mem_edgeSetOrders
       choices order.property)).2
 
 theorem grownForestForSupportOrder_edges
@@ -157,8 +157,8 @@ theorem rootBoundarySupportOrderContribution_eq_grownForestForSupportOrder
       have hgrown :
           grownForestForSupportOrder choices I order = Forest.empty V := by
         have hfollow :=
-          followOrder?_grownForestForSupportOrder choices I order
-        simp [followOrder?, horderList] at hfollow
+          followOrderOption_grownForestForSupportOrder choices I order
+        simp [followOrderOption, horderList] at hfollow
         exact hfollow.symm
       rw [hgrown]
       exact rootBoundarySupportOrderContribution_empty_eq_orderedContribution_empty
@@ -170,7 +170,7 @@ theorem rootBoundarySupportOrderContribution_eq_grownForestForSupportOrder
       have hroot :=
         rootBoundarySupportOrderContribution_eq_orderedContribution_of_followOrder_eq_some
           choices
-          (followOrder?_grownForestForSupportOrder choices I order)
+          (followOrderOption_grownForestForSupportOrder choices I order)
           ρ
           (by
             rw [horderList]

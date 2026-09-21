@@ -445,17 +445,17 @@ theorem boundarySupportOrderTreeFiber_eq_zero_of_followOrder_eq_none
     ∀ (order : List (Edge V)) (F : Forest V) (pref : List (Edge V))
       (prefixTs : List ℝ) (top : ℝ) (I : ForestIndex V)
       (ρ : (Edge V → ℝ) → ℝ),
-      followOrder? choices F order = none →
+      followOrderOption choices F order = none →
       boundarySupportOrderTreeFiber choices F pref prefixTs top I
         (pref ++ order) ρ = 0
   | [], _F, _pref, _prefixTs, _top, _I, _ρ, hnone => by
-      simp [followOrder?] at hnone
+      simp [followOrderOption] at hnone
   | e :: tail, F, pref, prefixTs, top, I, ρ, hnone => by
       by_cases he : e ∈ F.activeEdges
-      · simp [followOrder?, he] at hnone
+      · simp only [followOrderOption, dite_eq_left he] at hnone
         by_cases htail : tail = []
         · subst tail
-          simp [followOrder?] at hnone
+          simp [followOrderOption] at hnone
         · rw [show
             boundarySupportOrderTreeFiber choices F pref prefixTs top I
                 (pref ++ (e :: tail)) ρ =
@@ -590,24 +590,24 @@ theorem rootBoundarySupportOrderContribution_chosenGrowth_eq_orderedContribution
 theorem rootBoundarySupportOrderContribution_eq_orderedContribution_of_followOrder_eq_some
     (choices : ActiveExtensionChoice V)
     {G : Forest V} {order : List (Edge V)}
-    (hG : followOrder? choices (Forest.empty V) order = some G)
+    (hG : followOrderOption choices (Forest.empty V) order = some G)
     (ρ : (Edge V → ℝ) → ℝ)
     (horder : order ≠ []) :
     rootBoundarySupportOrderContribution choices ρ G.support order =
       G.orderedContribution order ρ :=
   rootBoundarySupportOrderContribution_chosenGrowth_eq_orderedContribution
-    choices (chosenGrowth_of_followOrder?_eq_some choices hG) ρ horder
+    choices (chosenGrowth_of_followOrderOption_eq_some choices hG) ρ horder
 
 /-- A failed deterministic root order has zero contribution in every support fiber. -/
 theorem rootBoundarySupportOrderContribution_eq_zero_of_followOrder_eq_none
     (choices : ActiveExtensionChoice V)
     (I : ForestIndex V) {order : List (Edge V)}
-    (horder : followOrder? choices (Forest.empty V) order = none)
+    (horder : followOrderOption choices (Forest.empty V) order = none)
     (ρ : (Edge V → ℝ) → ℝ) :
     rootBoundarySupportOrderContribution choices ρ I order = 0 := by
   cases order with
   | nil =>
-      simp [followOrder?] at horder
+      simp [followOrderOption] at horder
   | cons e tail =>
       rw [rootBoundarySupportOrderContribution_eq_treeFiber_of_not_empty_marker
         choices ρ I (e :: tail) (by

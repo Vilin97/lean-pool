@@ -134,7 +134,7 @@ theorem isClosed_orderedFinSimplexWithTop (top : ℝ) (n : ℕ) :
   let fs : List ((Fin n → ℝ) → ℝ) :=
     List.ofFn fun i : Fin n => fun ts : Fin n → ℝ => ts i
   have hfs : ∀ f ∈ fs, Continuous f := by
-    simp [fs]
+    simp only [List.mem_ofFn, forall_exists_index, forall_apply_eq_imp_iff, fs]
     intro i
     exact continuous_apply i
   have hclosed :
@@ -231,7 +231,7 @@ theorem measurableSet_orderedFinSimplexHeadTail (top : ℝ) (n : ℕ) :
   let fs : List ((ℝ × (Fin n → ℝ)) → ℝ) :=
     List.ofFn fun i : Fin n => fun z : ℝ × (Fin n → ℝ) => z.2 i
   have hfs : ∀ f ∈ fs, Measurable f := by
-    simp [fs]
+    simp only [List.mem_ofFn, forall_exists_index, forall_apply_eq_imp_iff, fs]
     intro i
     exact (measurable_pi_apply i).comp measurable_snd
   have htail :
@@ -269,8 +269,9 @@ theorem orderedFinSimplexWithTop_succ_eq_piFinSuccAbove_preimage_headTail
     (0 ≤ ts 0 ∧ ts 0 ≤ top ∧
         Fin.tail ts ∈ orderedFinSimplexWithTop (ts 0) n) ↔
       φ ts ∈ orderedFinSimplexHeadTail top n
-  simp [φ, orderedFinSimplexHeadTail, MeasurableEquiv.piFinSuccAbove_apply,
-    Fin.insertNthEquiv, Fin.tail_def]
+  simp only [Fin.tail_def, orderedFinSimplexHeadTail, Set.mem_Icc,
+    MeasurableEquiv.piFinSuccAbove_apply, Fin.insertNthEquiv, Fin.zero_succAbove,
+    Fin.insertNth_zero', Fin.removeNth_zero, Equiv.symm_mk, Equiv.coe_fn_mk, Set.mem_ofPred_eq, φ]
   constructor
   · rintro ⟨h0, htop, htail⟩
     exact ⟨⟨h0, htop⟩, htail⟩
@@ -646,6 +647,7 @@ theorem integrableOn_orderedFinSimplex_orderedCubeSectorIntegrand
       (s := orderedFinSimplex order.length)).mp hcomp
 
 omit [Fintype V] in
+omit [DecidableEq V] in
 /--
 Finite-dimensional analytic core of the simplex-sector conversion: for
 continuous integrands, the recursive
@@ -731,7 +733,7 @@ theorem orderedSimplexIntegralAux_eq_setIntegral_orderedFinSimplexWithTop_of_con
               _ = ∫ us in orderedFinSimplexWithTop t order.length, G (Fin.cons t us) := rfl
         _ = ∫ xs in orderedFinSimplexWithTop top (order.length + 1), G xs := hset.symm
 
-omit [Fintype V] in
+omit [Fintype V] [DecidableEq V] in
 /-- Unit-bound finite-dimensional analytic core of the simplex-sector conversion. -/
 theorem orderedSimplexIntegral_eq_setIntegral_orderedFinSimplex_of_continuous
     (order : List (Edge V)) (G : (Fin order.length → ℝ) → ℝ)
@@ -739,6 +741,7 @@ theorem orderedSimplexIntegral_eq_setIntegral_orderedFinSimplex_of_continuous
     orderedSimplexIntegral order
       (fun ts => G (fun i : Fin order.length => ts.getD i.val 0)) =
       ∫ xs in orderedFinSimplex order.length, G xs := by
+  classical
   rw [orderedSimplexIntegral]
   calc
     orderedSimplexIntegralAux 1 order

@@ -3,7 +3,7 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.BKARForestFormula.BKAR
 
 /-!
@@ -47,12 +47,13 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 /-! ## Mirror vocabulary (byte-identical to `Challenge.lean`) -/
 
 /-- Off-diagonal unordered pairs = edges of the complete graph on `V`. -/
-abbrev Edge (V : Type*) [DecidableEq V] : Type _ := {e : Sym2 V // ¬ e.IsDiag}
+abbrev Edge (V : Type*) : Type _ := {e : Sym2 V // ¬ e.IsDiag}
 
 noncomputable instance : Fintype (Edge V) := Fintype.ofFinite _
 
 /-- A fixed orientation of an edge (Mathlib `Sym2.out`). -/
-def Edge.left  (e : Edge V) : V := e.val.out.1
+def Edge.left (e : Edge V) : V := e.val.out.1
+/-- The second endpoint in the chosen representative of an unordered edge. -/
 def Edge.right (e : Edge V) : V := e.val.out.2
 
 /-- The simple graph carried by a finite edge set. -/
@@ -61,6 +62,7 @@ def edgeGraph (S : Finset (Edge V)) : SimpleGraph V :=
 
 /-- Q1: the forest index, indexed by an edge set whose carried graph is acyclic. -/
 structure ForestIndex (V : Type*) [Fintype V] [DecidableEq V] where
+  /-- The finite edge set indexing a term of the forest formula. -/
   edges : Finset (Edge V)
   acyclic : (edgeGraph edges).IsAcyclic
 
@@ -87,7 +89,8 @@ def paramValue (J : ForestIndex V) (u : {e : Edge V // e ∈ J.edges} → ℝ) (
 /-- The threshold subgraph: edges of `J` whose parameter is `≥ s`. -/
 def thresholdGraph (J : ForestIndex V) (u : {e : Edge V // e ∈ J.edges} → ℝ) (s : ℝ) :
     SimpleGraph V :=
-  SimpleGraph.fromEdgeSet {x : Sym2 V | ∃ e : Edge V, e ∈ J.edges ∧ e.val = x ∧ s ≤ paramValue J u e}
+  SimpleGraph.fromEdgeSet {x : Sym2 V | ∃ e : Edge V, e ∈ J.edges ∧ e.val = x ∧ s ≤ paramValue J
+    u e}
 
 /--
 Q2: the BKAR interpolation point `x^F(u)_e`, as the largest threshold `s ∈ [0,1]`
@@ -128,6 +131,7 @@ def ContDiffHyp (ρ : (Edge V → ℝ) → ℝ) : Prop := ContDiff ℝ (∞ : Wi
 /-! ## Q1 bridge: mirror graph acyclicity ↔ repository certificate -/
 
 omit [Fintype V] in
+omit [DecidableEq V] in
 /-- The mirror graph on an edge set is byte-identical to the repository's
 `EdgePath.edgeSetGraph`. -/
 theorem edgeGraph_eq (S : Finset (Edge V)) :
@@ -180,11 +184,13 @@ def indexEquiv : ForestIndex V ≃ BKAR.ForestIndex V where
 /-! ## Q2 bridge: threshold `sSup` interpolation ↔ repository path-minimum -/
 
 omit [Fintype V] in
+omit [DecidableEq V] in
 /-- Reachability in `edgeSetGraph S` is the existence of a simple edge path. -/
 theorem edgeSetGraph_reachable_iff_exists_isSimplePath
     (S : Finset (Edge V)) (i j : V) :
     (BKAR.EdgePath.edgeSetGraph S).Reachable i j ↔
       ∃ γ, BKAR.EdgePath.IsSimplePath S γ i j := by
+  classical
   constructor
   · rintro ⟨w⟩
     exact ⟨_, BKAR.EdgePath.Walk.toEdgePath_isSimplePath_of_isPath w.toPath.2⟩
@@ -255,7 +261,7 @@ theorem standardInterp_bridge (J : ForestIndex V)
     intro s hs0 hs1
     rw [(data.toForest).le_standardInterp_iff_thresholdConnected u hs0 hs1 e]
     exact reachable_thresholdGraph_iff J data u s e
-  show sSup {s : ℝ | 0 ≤ s ∧ s ≤ 1 ∧
+  change sSup {s : ℝ | 0 ≤ s ∧ s ≤ 1 ∧
       (thresholdGraph J u s).Reachable e.left e.right}
       = (data.toForest).standardInterp u e
   apply le_antisymm
@@ -283,7 +289,7 @@ theorem mixedPartialList_bridge :
       mixedPartialList l ρ = BKAR.mixedPartialList l ρ
   | [], _ρ => rfl
   | e :: es, ρ => by
-      show partialDeriv e (mixedPartialList es ρ)
+      change partialDeriv e (mixedPartialList es ρ)
         = BKAR.partialDeriv e (BKAR.mixedPartialList es ρ)
       rw [mixedPartialList_bridge es ρ]
       rfl
@@ -310,7 +316,7 @@ theorem cubeContribution_bridge (J : ForestIndex V)
     intro u hu
     have hu' : ∀ e : {e : Edge V // e ∈ J.edges}, 0 ≤ u e ∧ u e ≤ 1 :=
       fun e => Set.mem_Icc.mp (Set.mem_univ_pi.mp hu e)
-    show mixedPartial J ρ (standardInterp J u)
+    change mixedPartial J ρ (standardInterp J u)
       = (data.toForest).mixedPartial ρ ((data.toForest).standardInterp u)
     rw [standardInterp_bridge J data u hu']
     exact congrFun (mixedPartial_bridge J data ρ) _
@@ -325,6 +331,7 @@ theorem cubeContribution_bridge (J : ForestIndex V)
 /-! ## Configuration and sum bridges -/
 
 omit [Fintype V] in
+omit [DecidableEq V] in
 /-- The all-ones config agrees (definitional). -/
 theorem oneConfig_bridge :
     (fun _ : Edge V => (1 : ℝ)) = BKAR.oneConfig := rfl

@@ -41,13 +41,14 @@ theorem singletonGrowth_tailGrowth (h : ActiveExtension F e) :
     h.singletonGrowth.tailGrowth = OrderedGrowth.nil h.forest :=
   rfl
 
-theorem singletonGrowth_branchIntegralAux_eq_integral_partialDeriv_interpWithFill_of_activeEdges_eq_empty
+theorem singleton_branchIntegralAux_eq_integral_partialDeriv_of_emptyActiveEdges
     (h : ActiveExtension F e) (top : ℝ) (u : F.EdgeParam → ℝ)
     (ρ : (Edge V → ℝ) → ℝ) (hterm : h.forest.activeEdges = ∅) :
     h.singletonGrowth.branchIntegralAux top u ρ =
       ∫ t in 0..top, partialDeriv e ρ
         (h.forest.interpWithFill (h.extension.extendParam u t) t) := by
-  rw [singletonGrowth, OrderedGrowth.branchIntegralAux_cons_nil_eq_integral_partialDeriv_standardInterp]
+  rw [singletonGrowth,
+    OrderedGrowth.branchIntegralAux_cons_nil_eq_integral_partialDeriv_standardInterp]
   apply intervalIntegral.integral_congr
   intro t _
   change partialDeriv e ρ
@@ -57,31 +58,31 @@ theorem singletonGrowth_branchIntegralAux_eq_integral_partialDeriv_interpWithFil
   rw [← h.forest.interpWithFill_eq_standardInterp_of_activeEdges_eq_empty
     (h.extension.extendParam u t) t hterm]
 
-theorem integral_partialDeriv_interpWithFill_eq_singletonGrowth_branchIntegralAux_of_activeEdges_eq_empty
+theorem integral_partialDeriv_eq_singleton_branchIntegralAux_of_emptyActiveEdges
     (h : ActiveExtension F e) (top : ℝ) (u : F.EdgeParam → ℝ)
     (ρ : (Edge V → ℝ) → ℝ) (hterm : h.forest.activeEdges = ∅) :
     (∫ t in 0..top, partialDeriv e ρ
         (h.forest.interpWithFill (h.extension.extendParam u t) t)) =
       h.singletonGrowth.branchIntegralAux top u ρ :=
-  (h.singletonGrowth_branchIntegralAux_eq_integral_partialDeriv_interpWithFill_of_activeEdges_eq_empty
+  (h.singleton_branchIntegralAux_eq_integral_partialDeriv_of_emptyActiveEdges
     top u ρ hterm).symm
 
-theorem singletonGrowth_branchIntegral_eq_integral_partialDeriv_interpWithFill_of_activeEdges_eq_empty
+theorem singleton_branchIntegral_eq_integral_partialDeriv_of_emptyActiveEdges
     (h : ActiveExtension F e) (u : F.EdgeParam → ℝ)
     (ρ : (Edge V → ℝ) → ℝ) (hterm : h.forest.activeEdges = ∅) :
     h.singletonGrowth.branchIntegral u ρ =
       ∫ t in 0..(1 : ℝ), partialDeriv e ρ
         (h.forest.interpWithFill (h.extension.extendParam u t) t) :=
-  h.singletonGrowth_branchIntegralAux_eq_integral_partialDeriv_interpWithFill_of_activeEdges_eq_empty
+  h.singleton_branchIntegralAux_eq_integral_partialDeriv_of_emptyActiveEdges
     1 u ρ hterm
 
-theorem integral_partialDeriv_interpWithFill_eq_singletonGrowth_branchIntegral_of_activeEdges_eq_empty
+theorem integral_partialDeriv_eq_singleton_branchIntegral_of_emptyActiveEdges
     (h : ActiveExtension F e) (u : F.EdgeParam → ℝ)
     (ρ : (Edge V → ℝ) → ℝ) (hterm : h.forest.activeEdges = ∅) :
     (∫ t in 0..(1 : ℝ), partialDeriv e ρ
         (h.forest.interpWithFill (h.extension.extendParam u t) t)) =
       h.singletonGrowth.branchIntegral u ρ :=
-  (h.singletonGrowth_branchIntegral_eq_integral_partialDeriv_interpWithFill_of_activeEdges_eq_empty
+  (h.singleton_branchIntegral_eq_integral_partialDeriv_of_emptyActiveEdges
     u ρ hterm).symm
 
 end ActiveExtension

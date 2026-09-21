@@ -26,7 +26,8 @@ namespace Finpartition
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-noncomputable section
+noncomputable
+section
 
 /--
 Summing the indicator of “`z` and `w` lie in the same part” over the parts of a
@@ -52,7 +53,7 @@ theorem sum_parts_indicator_pair
       simp [hz_not]
     · intro hcz
       exact False.elim (hcz (Finset.mem_univ cz))
-  · rw [if_neg hw]
+  · rw [ite_eq_right hw]
     apply Finset.sum_eq_zero
     intro c _
     by_cases hz : z ∈ c.1
@@ -71,7 +72,8 @@ namespace Forest
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-noncomputable section
+noncomputable
+section
 
 /-- The `Forest` representative carried by the threshold edge set. -/
 def thresholdForest (F : Forest V) (u : F.EdgeParam → ℝ) (s : ℝ) :
@@ -181,7 +183,6 @@ theorem mem_thresholdComponent (F : Forest V) (u : F.EdgeParam → ℝ)
     (Finpartition.mem_part_ofSetoid_iff_rel
       (s := F.thresholdSetoid u s) (a := i) (b := j))
 
-@[simp]
 theorem self_mem_thresholdComponent (F : Forest V) (u : F.EdgeParam → ℝ)
     (s : ℝ) (i : V) :
     i ∈ F.thresholdComponent u s i := by

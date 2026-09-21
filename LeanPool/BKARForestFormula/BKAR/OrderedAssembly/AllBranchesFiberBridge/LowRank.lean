@@ -94,16 +94,16 @@ Deterministic finite-order form of the chosen-growth bridge: if following an
 order through the selected active extensions reaches `G`, the support-summed
 root fiber is exactly the ordered sector of `G` with that order.
 -/
-theorem sum_rootBoundarySupportOrderContribution_eq_orderedContribution_of_followOrder_eq_some
+theorem sum_rootContribution_eq_orderedContribution_of_followOrder_eq_some
     (choices : ActiveExtensionChoice V)
     {G : Forest V} {order : List (Edge V)}
-    (hG : followOrder? choices (Forest.empty V) order = some G)
+    (hG : followOrderOption choices (Forest.empty V) order = some G)
     (ρ : (Edge V → ℝ) → ℝ) :
     Finset.sum (Finset.univ : Finset (ForestIndex V))
         (fun I => rootBoundarySupportOrderContribution choices ρ I order) =
       G.orderedContribution order ρ :=
   sum_rootBoundarySupportOrderContribution_chosenGrowth choices
-    (chosenGrowth_of_followOrder?_eq_some choices hG) ρ
+    (chosenGrowth_of_followOrderOption_eq_some choices hG) ρ
 
 /--
 Complementary deterministic finite-order form: if the selected extensions
@@ -113,7 +113,7 @@ root fiber after summing over supports.
 theorem sum_rootBoundarySupportOrderContribution_eq_zero_of_followOrder_eq_none
     (choices : ActiveExtensionChoice V)
     {order : List (Edge V)}
-    (horder : followOrder? choices (Forest.empty V) order = none)
+    (horder : followOrderOption choices (Forest.empty V) order = none)
     (ρ : (Edge V → ℝ) → ℝ) :
     Finset.sum (Finset.univ : Finset (ForestIndex V))
         (fun I => rootBoundarySupportOrderContribution choices ρ I order) =
@@ -121,7 +121,7 @@ theorem sum_rootBoundarySupportOrderContribution_eq_zero_of_followOrder_eq_none
   classical
   cases order with
   | nil =>
-      simp [followOrder?] at horder
+      simp [followOrderOption] at horder
   | cons e tail =>
       apply Finset.sum_eq_zero
       intro I _
@@ -138,7 +138,7 @@ For a canonical support order, the root fiber is an ordered sector of the
 `Forest` representative grown by following that order. This isolates the only remaining
 choice dependence in the sector integrand: the grown `Forest` representative data.
 -/
-theorem exists_rootBoundarySupportOrderContribution_eq_orderedContribution_of_mem_edgeSetOrders
+theorem exists_rootContribution_eq_orderedContribution_of_mem_edgeSetOrders
     (choices : ActiveExtensionChoice V)
     {I : ForestIndex V} {order : List (Edge V)}
     (horder : order ∈ edgeSetOrders I.edges)
@@ -160,7 +160,7 @@ theorem exists_rootBoundarySupportOrderContribution_eq_orderedContribution_of_me
           rootBoundarySupportOrderContribution_empty_eq_orderedContribution_empty
             choices ρ I hI
   | cons e tail =>
-      rcases exists_followOrder?_eq_some_support_of_mem_edgeSetOrders
+      rcases exists_followOrderOption_eq_some_support_of_mem_edgeSetOrders
           choices horder with
         ⟨G, hfollow, hsupport⟩
       refine ⟨G, hsupport, ?_⟩
@@ -173,7 +173,7 @@ theorem exists_rootBoundarySupportOrderContribution_eq_orderedContribution_of_me
 After summing over all support indices, a canonical order leaves the ordered
 sector of the `Forest` representative grown by following that order.
 -/
-theorem exists_sum_rootBoundarySupportOrderContribution_eq_orderedContribution_of_mem_edgeSetOrders
+theorem exists_sum_rootContribution_eq_orderedContribution_of_mem_edgeSetOrders
     (choices : ActiveExtensionChoice V)
     {I : ForestIndex V} {order : List (Edge V)}
     (horder : order ∈ edgeSetOrders I.edges)
@@ -182,12 +182,12 @@ theorem exists_sum_rootBoundarySupportOrderContribution_eq_orderedContribution_o
       Finset.sum (Finset.univ : Finset (ForestIndex V))
           (fun J => rootBoundarySupportOrderContribution choices ρ J order) =
         G.orderedContribution order ρ := by
-  rcases exists_followOrder?_eq_some_support_of_mem_edgeSetOrders
+  rcases exists_followOrderOption_eq_some_support_of_mem_edgeSetOrders
       choices horder with
     ⟨G, hfollow, hsupport⟩
   refine ⟨G, hsupport, ?_⟩
   exact
-    sum_rootBoundarySupportOrderContribution_eq_orderedContribution_of_followOrder_eq_some
+    sum_rootContribution_eq_orderedContribution_of_followOrder_eq_some
       choices hfollow ρ
 
 /-- The empty support inner sum is the empty forest ordered contribution. -/

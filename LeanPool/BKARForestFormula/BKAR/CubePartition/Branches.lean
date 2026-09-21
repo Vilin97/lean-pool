@@ -136,7 +136,7 @@ theorem branchIntegral_emptyStart_eq_orderedContribution
 A terminal tail integral at a nonempty recursion node can be read as the
 ordered simplex for the accumulated prefix followed by the tail order.
 -/
-theorem branchIntegralAux_mixedPartialList_eq_orderedSimplexIntegralAux_paramsOfOrder_append
+theorem branchIntegralAux_mixedPartial_eq_simplexIntegralAux_paramsOfOrder_append
     (data : TerminalGrowth F) (pref : List (Edge V)) (prefixTs : List ℝ)
     (hpref : pref.toFinset = F.edges)
     (hprefixTs : prefixTs.length = pref.length)

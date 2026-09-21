@@ -109,7 +109,7 @@ theorem sum_edgeSetOrders_orderedCubeSectorContribution_eq_cubeContribution_of_e
 The canonical grown forest over a support folds its support-indexed ordered
 cube sectors back to its unordered cube contribution.
 -/
-theorem sum_edgeSetOrders_orderedCubeSectorContribution_eq_cubeContribution_canonicalGrownForestForSupport
+theorem sectorContributionSum_eq_canonicalContribution
     (choices : ActiveExtensionChoice V) (I : ForestIndex V)
     (ρ : (Edge V → ℝ) → ℝ) (hρ : BKARContDiff ρ) :
     Finset.sum (edgeSetOrders I.edges)
@@ -126,7 +126,7 @@ After sectorwise canonicalization, the whole support/order sum over grown
 `Forest` representatives folds to the ordinary cube contribution of the canonical grown
 representative.
 -/
-theorem sum_grownForestForSupportOrder_orderedCubeSectorContribution_eq_canonicalGrownForestForSupport_cubeContribution
+theorem sum_orderedSectorContribution_eq_canonicalContribution
     (choices : ActiveExtensionChoice V) (I : ForestIndex V)
     (ρ : (Edge V → ℝ) → ℝ) (hρ : BKARContDiff ρ) :
     Finset.sum (edgeSetOrders I.edges).attach
@@ -160,7 +160,7 @@ theorem sum_grownForestForSupportOrder_orderedCubeSectorContribution_eq_canonica
               (canonicalGrownForestForSupport choices I).orderedCubeSectorContribution
                 order ρ)
     _ = (canonicalGrownForestForSupport choices I).cubeContribution ρ :=
-        sum_edgeSetOrders_orderedCubeSectorContribution_eq_cubeContribution_canonicalGrownForestForSupport
+        sectorContributionSum_eq_canonicalContribution
           choices I ρ hρ
 
 /--
@@ -173,8 +173,8 @@ theorem canonicalGrownForestForSupport_cubeContribution_eq_of_choices
     (canonicalGrownForestForSupport choices₁ I).cubeContribution ρ =
       (canonicalGrownForestForSupport choices₂ I).cubeContribution ρ := by
   apply cubeContribution_eq_of_edges_eq
-  simp [canonicalGrownForestForSupport_edges]
-  exact hρ
+  · simp [canonicalGrownForestForSupport_edges]
+  · exact hρ
 
 end Forest
 

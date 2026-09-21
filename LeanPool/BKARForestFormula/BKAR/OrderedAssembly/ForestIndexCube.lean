@@ -52,7 +52,7 @@ theorem cubeContribution_eq_canonicalGrownForestForSupport
       (Forest.canonicalGrownForestForSupport choices I).cubeContribution ρ := by
   classical
   unfold cubeContribution
-  rw [dif_pos ⟨choices⟩]
+  rw [dite_eq_left ⟨choices⟩]
   exact
     Forest.canonicalGrownForestForSupport_cubeContribution_eq_of_choices
       (Classical.choice ⟨choices⟩) choices I ρ hρ

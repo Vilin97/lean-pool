@@ -58,7 +58,7 @@ end OrderedGrowth
 Finite-sector normal form for the grown support/order forest, expressed via
 its concrete chosen-growth branch integrand.
 -/
-theorem grownForestForSupportOrder_orderedCubeSectorContribution_eq_integral_branchIntegrand
+theorem orderedSectorContribution_eq_integral_branchIntegrand
     (choices : ActiveExtensionChoice V)
     (I : ForestIndex V)
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges})
@@ -66,16 +66,16 @@ theorem grownForestForSupportOrder_orderedCubeSectorContribution_eq_integral_bra
     (grownForestForSupportOrder choices I order).orderedCubeSectorContribution
         order.val ρ =
       ∫ ts in orderedFinSimplex order.val.length,
-        (grownForestForSupportOrder_orderedGrowth choices I order).branchIntegrand
+        (grownForestForSupportOrderGrowth choices I order).branchIntegrand
           emptyParam ρ (List.ofFn ts) :=
   OrderedGrowth.orderedCubeSectorContribution_eq_integral_branchIntegrand_emptyStart
-    (grownForestForSupportOrder_orderedGrowth choices I order) ρ
+    (grownForestForSupportOrderGrowth choices I order) ρ
 
 /--
 Finite-coordinate form of the grown support/order cube sector, written
 directly with the grown forest's ordered-sector integrand.
 -/
-theorem grownForestForSupportOrder_orderedCubeSectorContribution_eq_orderedFinSimplexIntegral
+theorem orderedSectorContribution_eq_orderedFinSimplexIntegral
     (choices : ActiveExtensionChoice V)
     (I : ForestIndex V)
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges})
@@ -99,7 +99,7 @@ the recursive ordered
 simplex contribution is the corresponding closed cube-sector integral of the
 `Forest` representative grown by following that same support order.
 -/
-theorem rootBoundarySupportOrderContribution_eq_grownForestForSupportOrder_orderedCubeSectorContribution
+theorem rootContribution_eq_orderedSectorContribution
     (choices : ActiveExtensionChoice V)
     (I : ForestIndex V)
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges})
@@ -119,22 +119,22 @@ theorem rootBoundarySupportOrderContribution_eq_grownForestForSupportOrder_order
 Finite-sector normal form for the canonical grown representative in its
 canonical order.
 -/
-theorem canonicalGrownForestForSupport_orderedCubeSectorContribution_eq_integral_branchIntegrand
+theorem canonicalSectorContribution_eq_integral_branchIntegrand
     (choices : ActiveExtensionChoice V) (I : ForestIndex V)
     (ρ : (Edge V → ℝ) → ℝ) :
     (canonicalGrownForestForSupport choices I).orderedCubeSectorContribution
         I.canonicalOrder.val ρ =
       ∫ ts in orderedFinSimplex I.canonicalOrder.val.length,
-        (canonicalGrownForestForSupport_orderedGrowth choices I).branchIntegrand
+        (canonicalGrownForestForSupportGrowth choices I).branchIntegrand
           emptyParam ρ (List.ofFn ts) :=
   OrderedGrowth.orderedCubeSectorContribution_eq_integral_branchIntegrand_emptyStart
-    (canonicalGrownForestForSupport_orderedGrowth choices I) ρ
+    (canonicalGrownForestForSupportGrowth choices I) ρ
 
 /--
 Finite-coordinate form of the canonical grown representative's sector for
 an arbitrary order of the same support.
 -/
-theorem canonicalGrownForestForSupport_orderedCubeSectorContribution_eq_orderedFinSimplexIntegral
+theorem canonicalSectorContribution_eq_orderedFinSimplexIntegral
     (choices : ActiveExtensionChoice V) (I : ForestIndex V)
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges})
     (ρ : (Edge V → ℝ) → ℝ) :
@@ -233,9 +233,9 @@ theorem grownForestForSupportOrder_orderedCubeSectorContribution_eq_canonical
         order.val ρ =
       (canonicalGrownForestForSupport choices I).orderedCubeSectorContribution
         order.val ρ := by
-  rw [grownForestForSupportOrder_orderedCubeSectorContribution_eq_orderedFinSimplexIntegral
+  rw [orderedSectorContribution_eq_orderedFinSimplexIntegral
     choices I order ρ]
-  rw [canonicalGrownForestForSupport_orderedCubeSectorContribution_eq_orderedFinSimplexIntegral
+  rw [canonicalSectorContribution_eq_orderedFinSimplexIntegral
     choices I order ρ]
   apply setIntegral_congr_fun (measurableSet_orderedFinSimplex order.val.length)
   intro ts _hts

@@ -135,7 +135,7 @@ theorem interpWithFill_of_inSameComponent (F : Forest V)
     (u : F.EdgeParam → ℝ) (t : ℝ) {e : Edge V}
     (he : F.inSameComponent e.left e.right) :
     F.interpWithFill u t e = F.pathMin u (F.pathInF e.left e.right he) := by
-  rw [interpWithFill, dif_pos he]
+  rw [interpWithFill, dite_eq_left he]
 
 theorem interpWithFill_of_mem_activeEdges (F : Forest V)
     (u : F.EdgeParam → ℝ) (t : ℝ) {e : Edge V}

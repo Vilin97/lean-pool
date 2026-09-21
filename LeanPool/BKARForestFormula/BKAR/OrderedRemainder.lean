@@ -30,9 +30,13 @@ For each active edge, the data consists of a one-edge active extension and an
 ordered tail growth starting from the extended forest.
 -/
 structure ActiveBranchData (F : Forest V) where
+  /-- The chosen one-edge extension for each active edge. -/
   extension : ∀ e : {e // e ∈ F.activeEdges}, ActiveExtension F e.val
+  /-- The order of the remaining edges along each chosen branch. -/
   order : ∀ _ : {e // e ∈ F.activeEdges}, List (Edge V)
+  /-- The final forest of each chosen branch. -/
   terminal : ∀ _ : {e // e ∈ F.activeEdges}, Forest V
+  /-- The ordered growth following the chosen first extension of each branch. -/
   tail :
     ∀ e : {e // e ∈ F.activeEdges},
       OrderedGrowth (extension e).forest (order e) (terminal e)
@@ -176,7 +180,7 @@ Terminal singleton branches turn the active-edge branch sum into the sum of
 one-edge partial-derivative integrals on the terminal fill-parameter
 interpolations.
 -/
-theorem singleton_branchIntegralAux_eq_sum_integrals_partialDeriv_interpWithFill_of_activeEdges_eq_empty
+theorem singleton_branchIntegralAux_eq_integralSum_partialDeriv_of_emptyActiveEdges
     (extensions : ∀ e : {e // e ∈ F.activeEdges},
       ActiveExtension F e.val)
     (top : ℝ) (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ)
@@ -191,7 +195,7 @@ theorem singleton_branchIntegralAux_eq_sum_integrals_partialDeriv_interpWithFill
   rw [branchIntegralAux]
   apply Finset.sum_congr rfl
   intro e _
-  exact (extensions e).singletonGrowth_branchIntegralAux_eq_integral_partialDeriv_interpWithFill_of_activeEdges_eq_empty
+  exact (extensions e).singleton_branchIntegralAux_eq_integral_partialDeriv_of_emptyActiveEdges
     top u ρ (hterm e)
 
 /--
@@ -248,7 +252,7 @@ theorem branchIntegralAux_eq_sum_orderedSimplexIntegralAux_mixedPartialList_stan
 
 /--
 Unit-simplex version of
-`ActiveBranchData.branchIntegralAux_eq_sum_orderedSimplexIntegralAux_mixedPartialList_standardInterp`.
+The standard-interpolation identity for `ActiveBranchData.branchIntegralAux`.
 -/
 theorem branchIntegral_eq_sum_orderedSimplexIntegral_mixedPartialList_standardInterp
     (data : ActiveBranchData F)
@@ -266,7 +270,7 @@ theorem branchIntegral_eq_sum_orderedSimplexIntegral_mixedPartialList_standardIn
 Terminal selected branches rewrite the active-branch sum as a sum of ordered
 simplex integrals over terminal fill-parameter interpolation points.
 -/
-theorem branchIntegralAux_eq_sum_orderedSimplexIntegralAux_mixedPartialList_interpWithFill_of_activeEdges_eq_empty
+theorem branchIntegralAux_eq_simplexSum_of_emptyActiveEdges
     (data : ActiveBranchData F)
     (hterm : ∀ e : {e // e ∈ F.activeEdges},
       (data.terminal e).activeEdges = ∅)
@@ -290,7 +294,7 @@ theorem branchIntegralAux_eq_sum_orderedSimplexIntegralAux_mixedPartialList_inte
 /--
 Accumulated-derivative version of the terminal singleton branch-sum identity.
 -/
-theorem singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWithFill_of_activeEdges_eq_empty
+theorem singleton_branchIntegralAux_eq_integralSum_mixedPartial_of_emptyActiveEdges
     (extensions : ∀ e : {e // e ∈ F.activeEdges},
       ActiveExtension F e.val)
     (es : List (Edge V)) (top : ℝ)
@@ -303,7 +307,7 @@ theorem singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWith
           mixedPartialList (e.val :: es) ρ
             ((extensions e).forest.interpWithFill
               ((extensions e).extension.extendParam u t) t)) := by
-  rw [singleton_branchIntegralAux_eq_sum_integrals_partialDeriv_interpWithFill_of_activeEdges_eq_empty
+  rw [singleton_branchIntegralAux_eq_integralSum_partialDeriv_of_emptyActiveEdges
     extensions top u (mixedPartialList es ρ) hterm]
   apply Finset.sum_congr rfl
   intro e _
@@ -314,7 +318,7 @@ theorem singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWith
 /--
 Terminal singleton branches in the standard terminal-interpolation form.
 -/
-theorem singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardInterp_of_activeEdges_eq_empty
+theorem singleton_branchIntegralAux_eq_standardIntegralSum_of_emptyActiveEdges
     (extensions : ∀ e : {e // e ∈ F.activeEdges},
       ActiveExtension F e.val)
     (es : List (Edge V)) (top : ℝ)
@@ -327,7 +331,7 @@ theorem singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardIn
           mixedPartialList (e.val :: es) ρ
             ((extensions e).forest.standardInterp
               ((extensions e).extension.extendParam u t))) := by
-  rw [singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWithFill_of_activeEdges_eq_empty
+  rw [singleton_branchIntegralAux_eq_integralSum_mixedPartial_of_emptyActiveEdges
     extensions es top u ρ hterm]
   apply Finset.sum_congr rfl
   intro e _
@@ -344,9 +348,9 @@ theorem singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardIn
 
 /--
 Unit-simplex version of
-`ActiveBranchData.singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWithFill_of_activeEdges_eq_empty`.
+`ActiveBranchData.singleton_branchIntegralAux_eq_integralSum_mixedPartial_of_emptyActiveEdges`.
 -/
-theorem singleton_branchIntegral_eq_sum_integrals_mixedPartialList_interpWithFill_of_activeEdges_eq_empty
+theorem singleton_branchIntegral_eq_integralSum_mixedPartial_of_emptyActiveEdges
     (extensions : ∀ e : {e // e ∈ F.activeEdges},
       ActiveExtension F e.val)
     (es : List (Edge V))
@@ -359,14 +363,14 @@ theorem singleton_branchIntegral_eq_sum_integrals_mixedPartialList_interpWithFil
           mixedPartialList (e.val :: es) ρ
             ((extensions e).forest.interpWithFill
               ((extensions e).extension.extendParam u t) t)) :=
-  singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWithFill_of_activeEdges_eq_empty
+  singleton_branchIntegralAux_eq_integralSum_mixedPartial_of_emptyActiveEdges
     extensions es 1 u ρ hterm
 
 /--
 Unit-simplex version of
-`ActiveBranchData.singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardInterp_of_activeEdges_eq_empty`.
+`ActiveBranchData.singleton_branchIntegralAux_eq_standardIntegralSum_of_emptyActiveEdges`.
 -/
-theorem singleton_branchIntegral_eq_sum_integrals_mixedPartialList_standardInterp_of_activeEdges_eq_empty
+theorem singleton_branchIntegral_eq_integralSum_standardMixedPartial_of_emptyActiveEdges
     (extensions : ∀ e : {e // e ∈ F.activeEdges},
       ActiveExtension F e.val)
     (es : List (Edge V))
@@ -379,7 +383,7 @@ theorem singleton_branchIntegral_eq_sum_integrals_mixedPartialList_standardInter
           mixedPartialList (e.val :: es) ρ
             ((extensions e).forest.standardInterp
               ((extensions e).extension.extendParam u t))) :=
-  singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardInterp_of_activeEdges_eq_empty
+  singleton_branchIntegralAux_eq_standardIntegralSum_of_emptyActiveEdges
     extensions es 1 u ρ hterm
 
 end ActiveBranchData
@@ -388,7 +392,7 @@ end ActiveBranchData
 Terminal active-extension expansion rewritten as a singleton active-branch
 remainder.
 -/
-theorem mixedPartialList_interpWithFill_eq_standardInterp_add_singletonBranchIntegralAux_of_activeEdges_eq_empty
+theorem mixedPartial_eq_standard_add_singletonBranchIntegralAux_of_emptyActiveEdges
     (F : Forest V)
     (es : List (Edge V)) (u : F.EdgeParam → ℝ)
     (ρ : (Edge V → ℝ) → ℝ) (b : ℝ)
@@ -410,14 +414,14 @@ theorem mixedPartialList_interpWithFill_eq_standardInterp_add_singletonBranchInt
           (mixedPartialList es ρ) := by
   rw [F.mixedPartialList_interpWithFill_eq_standardInterp_add_sum_activeExtensions
     es u ρ b hbound hρ hint extensions]
-  rw [ActiveBranchData.singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWithFill_of_activeEdges_eq_empty
+  rw [ActiveBranchData.singleton_branchIntegralAux_eq_integralSum_mixedPartial_of_emptyActiveEdges
     extensions es b u ρ hterm]
 
 /--
 Terminal active-extension expansion rewritten directly as standard
 singleton-branch integrals.
 -/
-theorem mixedPartialList_interpWithFill_eq_standardInterp_add_sum_singletonBranchIntegrals_standardInterp_of_activeEdges_eq_empty
+theorem mixedPartial_eq_standard_add_singletonIntegralSum_of_emptyActiveEdges
     (F : Forest V)
     (es : List (Edge V)) (u : F.EdgeParam → ℝ)
     (ρ : (Edge V → ℝ) → ℝ) (b : ℝ)
@@ -440,9 +444,9 @@ theorem mixedPartialList_interpWithFill_eq_standardInterp_add_sum_singletonBranc
             mixedPartialList (e.val :: es) ρ
               ((extensions e).forest.standardInterp
                 ((extensions e).extension.extendParam u t))) := by
-  rw [F.mixedPartialList_interpWithFill_eq_standardInterp_add_singletonBranchIntegralAux_of_activeEdges_eq_empty
+  rw [F.mixedPartial_eq_standard_add_singletonBranchIntegralAux_of_emptyActiveEdges
     es u ρ b hbound hρ hint extensions hterm]
-  rw [ActiveBranchData.singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardInterp_of_activeEdges_eq_empty
+  rw [ActiveBranchData.singleton_branchIntegralAux_eq_standardIntegralSum_of_emptyActiveEdges
     extensions es b u ρ hterm]
 
 end Forest

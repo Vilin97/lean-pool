@@ -193,7 +193,7 @@ One telescoping recurrence for the local recursive boundary remainder: each
 child remainder splits into its local support/order boundary layer plus its
 own recursive remainder.
 -/
-theorem localRecursiveBoundaryRemainder_eq_sum_integral_child_sum_localBoundarySupportOrderContribution_add_localRecursiveBoundaryRemainder_of_allBranchesAnalytic
+theorem recursiveRemainder_eq_childBoundarySum_add_remainder_of_analytic
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (pref : List (Edge V)) (prefixTs : List ℝ)
     (top : ℝ) (ρ : (Edge V → ℝ) → ℝ)
@@ -234,7 +234,7 @@ theorem localRecursiveBoundaryRemainder_eq_sum_integral_child_sum_localBoundaryS
       exact List.mem_toFinset.mpr ha
     exact (choices F e).extension.new_not_mem he_mem
   have hsplit :=
-    sum_integral_allBranchesBoundaryExpansion_child_eq_sum_localBoundarySupportOrderContribution_add_sum_integral_child_sum_of_allBranchesAnalytic
+    childIntegralSum_eq_boundarySum_add_childIntegral_of_analytic
       choices (choices F e).forest (pref ++ [e.val]) (prefixTs ++ [t])
       t ρ hprefChild hnodupChild
       (allBranchesAnalytic.child_activeEdges_card choices F e pref prefixTs
@@ -245,7 +245,7 @@ theorem localRecursiveBoundaryRemainder_eq_sum_integral_child_sum_localBoundaryS
 The local recursive remainder folds into the exact recursive support/order
 tree contribution below the current node.
 -/
-theorem localRecursiveBoundaryRemainder_eq_sum_integral_boundarySupportOrderTreeContribution_of_activeEdges_card_le
+theorem recursiveRemainder_eq_sum_integral_treeContribution_of_activeEdges_card_le
     (choices : ActiveExtensionChoice V) :
     ∀ (n : Nat) (F : Forest V) (pref : List (Edge V))
       (prefixTs : List ℝ) (top : ℝ) (ρ : (Edge V → ℝ) → ℝ),
@@ -273,7 +273,7 @@ theorem localRecursiveBoundaryRemainder_eq_sum_integral_boundarySupportOrderTree
   | n + 1, F, pref, prefixTs, top, ρ, hle, hpref, hnodup,
       hanalytic => by
       rw [
-        localRecursiveBoundaryRemainder_eq_sum_integral_child_sum_localBoundarySupportOrderContribution_add_localRecursiveBoundaryRemainder_of_allBranchesAnalytic
+        recursiveRemainder_eq_childBoundarySum_add_remainder_of_analytic
           choices F pref prefixTs top ρ hpref hnodup hanalytic]
       apply Finset.sum_congr rfl
       intro e _
@@ -308,7 +308,7 @@ theorem localRecursiveBoundaryRemainder_eq_sum_integral_boundarySupportOrderTree
         allBranchesAnalytic.child_activeEdges_card choices F e pref prefixTs
           top ρ hanalytic ht
       have hfold :=
-        localRecursiveBoundaryRemainder_eq_sum_integral_boundarySupportOrderTreeContribution_of_activeEdges_card_le
+        recursiveRemainder_eq_sum_integral_treeContribution_of_activeEdges_card_le
           choices n (choices F e).forest (pref ++ [e.val])
           (prefixTs ++ [t]) t ρ hchild_le hprefChild hnodupChild
           hchildAnalytic
@@ -356,7 +356,7 @@ theorem firstRecursiveBoundaryRemainder_eq_localRecursiveBoundaryRemainder_empty
 Exact one-step support/order regrouping of the boundary tree at an arbitrary
 node.
 -/
-theorem allBranchesBoundaryExpansion_activeEdges_card_eq_standard_add_sum_localBoundarySupportOrderContribution_add_localRecursiveBoundaryRemainder
+theorem boundaryExpansion_eq_standard_add_boundarySum_add_remainder
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (pref : List (Edge V)) (prefixTs : List ℝ)
     (top : ℝ) (ρ : (Edge V → ℝ) → ℝ)
@@ -375,7 +375,7 @@ theorem allBranchesBoundaryExpansion_activeEdges_card_eq_standard_add_sum_localB
                 top I order ρ)) +
           localRecursiveBoundaryRemainder choices F pref prefixTs top ρ) := by
   rw [allBranchesBoundaryExpansion_activeEdges_card_eq_standard_add_sum]
-  rw [sum_integral_allBranchesBoundaryExpansion_child_eq_sum_localBoundarySupportOrderContribution_add_sum_integral_child_sum_of_allBranchesAnalytic
+  rw [childIntegralSum_eq_boundarySum_add_childIntegral_of_analytic
     choices F pref prefixTs top ρ hpref hnodup hanalytic]
   rw [localRecursiveBoundaryRemainder_def]
 
@@ -383,7 +383,7 @@ theorem allBranchesBoundaryExpansion_activeEdges_card_eq_standard_add_sum_localB
 Exact-depth local boundary expansion with all recursive remainders folded into
 the support/order tree contribution.
 -/
-theorem allBranchesBoundaryExpansion_activeEdges_card_eq_standard_add_boundarySupportOrderTreeContribution
+theorem boundaryExpansion_activeEdges_card_eq_standard_add_treeContribution
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (pref : List (Edge V)) (prefixTs : List ℝ)
     (top : ℝ) (ρ : (Edge V → ℝ) → ℝ)
@@ -397,10 +397,10 @@ theorem allBranchesBoundaryExpansion_activeEdges_card_eq_standard_add_boundarySu
         (F.standardInterp (F.paramsOfOrder pref prefixTs)) +
         boundarySupportOrderTreeContribution choices F pref prefixTs top ρ := by
   rw [
-    allBranchesBoundaryExpansion_activeEdges_card_eq_standard_add_sum_localBoundarySupportOrderContribution_add_localRecursiveBoundaryRemainder
+    boundaryExpansion_eq_standard_add_boundarySum_add_remainder
       choices F pref prefixTs top ρ hpref hnodup hanalytic]
   have hfold :=
-    localRecursiveBoundaryRemainder_eq_sum_integral_boundarySupportOrderTreeContribution_of_activeEdges_card_le
+    recursiveRemainder_eq_sum_integral_treeContribution_of_activeEdges_card_le
       choices F.activeEdges.card F pref prefixTs top ρ le_rfl hpref hnodup
       hanalytic
   rw [hfold]
@@ -411,7 +411,7 @@ theorem allBranchesBoundaryExpansion_activeEdges_card_eq_standard_add_boundarySu
 Root exact boundary-tree regrouping with the remaining recursive contribution
 expressed by the local remainder API.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_localBoundarySupportOrderContribution_empty_add_localRecursiveBoundaryRemainder
+theorem oneConfig_eq_initialSectorSum_add_boundarySum_add_recursiveRemainder
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -425,7 +425,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_localBoundarySupportOrde
               localBoundarySupportOrderContribution choices
                 (Forest.empty V) [] [] 1 I order ρ)) +
           localRecursiveBoundaryRemainder choices (Forest.empty V) [] [] 1 ρ) := by
-  rw [rho_oneConfig_eq_orderedSectorSum_empty_add_sum_localBoundarySupportOrderContribution_empty_add_sum_integral_child_sum
+  rw [oneConfig_eq_initialSectorSum_add_boundarySum_add_childIntegral
     choices ρ hanalytic]
   rw [localRecursiveBoundaryRemainder_def]
   simp
@@ -445,10 +445,10 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_boundarySupportOrderTreeCont
         boundarySupportOrderTreeContribution choices (Forest.empty V) [] []
           1 ρ := by
   rw [
-    rho_oneConfig_eq_orderedSectorSum_empty_add_sum_localBoundarySupportOrderContribution_empty_add_localRecursiveBoundaryRemainder
+    oneConfig_eq_initialSectorSum_add_boundarySum_add_recursiveRemainder
       choices ρ hanalytic]
   have hfold :=
-    localRecursiveBoundaryRemainder_eq_sum_integral_boundarySupportOrderTreeContribution_of_activeEdges_card_le
+    recursiveRemainder_eq_sum_integral_treeContribution_of_activeEdges_card_le
       choices (Forest.empty V).activeEdges.card (Forest.empty V) [] [] 1 ρ
       le_rfl (by simp [Forest.empty_edges]) List.nodup_nil hanalytic
   rw [hfold]

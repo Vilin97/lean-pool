@@ -713,7 +713,7 @@ theorem intervalIntegrable_allBranchesBoundaryExpansion_activeEdges_card_child
 /--
 Integral form of the parent-summand/child-boundary identification.
 -/
-theorem integral_mixedPartialList_cons_interpWithFill_eq_integral_allBranchesBoundaryExpansion_child
+theorem integral_mixedPartial_cons_interpolation_eq_integral_boundaryExpansion_child
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (e : {e // e ∈ F.activeEdges})
     (pref : List (Edge V)) (prefixTs : List ℝ)
@@ -742,7 +742,7 @@ Arbitrary-node exact-depth recursion: the current fill-parameter remainder is
 the local boundary sector plus exact-depth boundary subtrees below all active
 children.
 -/
-theorem mixedPartialList_interpWithFill_eq_standardInterp_add_sum_allBranchesBoundaryExpansion
+theorem mixedPartial_eq_standard_add_sum_boundaryExpansion
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (pref : List (Edge V)) (prefixTs : List ℝ)
     (top : ℝ) (ρ : (Edge V → ℝ) → ℝ)
@@ -917,7 +917,7 @@ theorem integral_mixedPartialList_cons_interpWithFill_eq_integral_child_standard
               (choices (choices F e).forest e').forest
               ((pref ++ [e.val]) ++ [e'.val])
               ((prefixTs ++ [t]) ++ [s]) s ρ)) := by
-  rw [integral_mixedPartialList_cons_interpWithFill_eq_integral_allBranchesBoundaryExpansion_child
+  rw [integral_mixedPartial_cons_interpolation_eq_integral_boundaryExpansion_child
     choices F e pref prefixTs hpref hprefixTs top ρ hanalytic]
   exact
     integral_allBranchesBoundaryExpansion_child_eq_integral_standard_add_sum
@@ -961,7 +961,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_integral_child_standard_
 Terminal one-edge children at any prefixed recursion node are exactly the
 corresponding prefixed one-edge ordered simplex.
 -/
-theorem integral_allBranchesBoundaryExpansion_singleton_eq_prefixed_orderedSimplexIntegralAux
+theorem integral_boundaryExpansion_singleton_eq_prefixed_simplexIntegralAux
     (choices : ActiveExtensionChoice V)
     (G : Forest V) (e : Edge V)
     (pref : List (Edge V)) (prefixTs : List ℝ)
@@ -1060,7 +1060,7 @@ Root base case for the support/order regrouping: if every first active-edge
 child is already terminal, the boundary tree has only empty and one-edge
 ordered sectors.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_of_forall_child_activeEdges_eq_empty
+theorem oneConfig_eq_initialSectorSum_add_orderedContributionSum_of_terminalChildren
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -1088,7 +1088,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_of_f
 Root terminal-child base case, expressed through the singleton
 `ActiveTerminalBranchData` branch sum.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_singleton_branchIntegral_of_forall_child_activeEdges_eq_empty
+theorem oneConfig_eq_initialSectorSum_add_singleton_branchIntegral_of_terminalChildren
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -1136,7 +1136,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_singleton_supportOrderContri
                 (ActiveTerminalBranchData.singleton
                   (fun e => choices (Forest.empty V) e) hterm)
                 I order ρ)) := by
-  rw [rho_oneConfig_eq_orderedSectorSum_empty_add_singleton_branchIntegral_of_forall_child_activeEdges_eq_empty
+  rw [oneConfig_eq_initialSectorSum_add_singleton_branchIntegral_of_terminalChildren
     choices ρ hanalytic hterm]
   rw [ActiveTerminalBranchData.branchIntegral_empty_eq_sum_supportOrderContribution
     (ActiveTerminalBranchData.singleton

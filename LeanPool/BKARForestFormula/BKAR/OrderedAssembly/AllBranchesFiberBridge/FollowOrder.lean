@@ -63,31 +63,31 @@ theorem support_edges_eq_toFinset_emptyStart
 end ChosenGrowth
 
 /-- Follow an edge order through the active extensions selected by `choices`. -/
-noncomputable def followOrder?
+noncomputable def followOrderOption
     (choices : ActiveExtensionChoice V) :
     Forest V → List (Edge V) → Option (Forest V)
   | F, [] => some F
   | F, e :: order =>
       if he : e ∈ F.activeEdges then
-        followOrder? choices (choices F ⟨e, he⟩).forest order
+        followOrderOption choices (choices F ⟨e, he⟩).forest order
       else
         none
 
-theorem chosenGrowth_of_followOrder?_eq_some
+theorem chosenGrowth_of_followOrderOption_eq_some
     (choices : ActiveExtensionChoice V) :
     ∀ {F G : Forest V} {order : List (Edge V)},
-      followOrder? choices F order = some G →
+      followOrderOption choices F order = some G →
       ChosenGrowth choices F order G
   | F, G, [], h => by
-      simp [followOrder?] at h
+      simp only [followOrderOption, Option.some.injEq] at h
       rw [← h]
       exact ChosenGrowth.nil F
   | F, G, e :: order, h => by
       by_cases he : e ∈ F.activeEdges
-      · simp [followOrder?, he] at h
+      · simp only [followOrderOption, dite_eq_left he] at h
         exact ChosenGrowth.cons he
-          (chosenGrowth_of_followOrder?_eq_some choices h)
-      · simp [followOrder?, he] at h
+          (chosenGrowth_of_followOrderOption_eq_some choices h)
+      · simp [followOrderOption, he] at h
 
 /--
 Canonical orders of an acyclic target support can be followed through any
@@ -95,14 +95,14 @@ choice of active extensions. The invariant says that the current
 `Forest` representative carries the already-consumed prefix, while `order` is the remaining
 suffix and `S` is the final edge set.
 -/
-theorem exists_followOrder?_eq_some_of_acyclic_union
+theorem exists_followOrderOption_eq_some_of_acyclic_union
     (choices : ActiveExtensionChoice V) :
     ∀ {F : Forest V} {S : Finset (Edge V)} (order : List (Edge V)),
       IsAcyclicEdgeSet S →
       order.toFinset ∪ F.edges = S →
       order.Nodup →
       Disjoint order.toFinset F.edges →
-      ∃ G : Forest V, followOrder? choices F order = some G ∧
+      ∃ G : Forest V, followOrderOption choices F order = some G ∧
         G.edges = S
   | F, S, [], _hS, hset, _hnodup, _hdisj => by
       refine ⟨F, ?_, ?_⟩
@@ -155,23 +155,22 @@ theorem exists_followOrder?_eq_some_of_acyclic_union
         | inr hxF =>
             rw [Finset.disjoint_left] at htailDisjF
             exact htailDisjF hxTail hxF
-      rcases exists_followOrder?_eq_some_of_acyclic_union choices tail
+      rcases exists_followOrderOption_eq_some_of_acyclic_union choices tail
           hS hchildSet htailNodup hchildDisj with
         ⟨G, hfollow, hGedges⟩
       refine ⟨G, ?_, hGedges⟩
-      simp [followOrder?, he]
-      exact hfollow
+      simpa only [followOrderOption, dite_eq_left he] using hfollow
 
 /--
 Every canonical order of a forest index follows to some `Forest` representative whose
 support is exactly that index, independently of the extension choices.
 -/
-theorem exists_followOrder?_eq_some_support_of_mem_edgeSetOrders
+theorem exists_followOrderOption_eq_some_support_of_mem_edgeSetOrders
     (choices : ActiveExtensionChoice V)
     {I : ForestIndex V} {order : List (Edge V)}
     (horder : order ∈ edgeSetOrders I.edges) :
     ∃ G : Forest V,
-      followOrder? choices (Forest.empty V) order = some G ∧
+      followOrderOption choices (Forest.empty V) order = some G ∧
         G.support = I := by
   have hset : order.toFinset = I.edges :=
     toFinset_eq_of_mem_edgeSetOrders horder
@@ -183,7 +182,7 @@ theorem exists_followOrder?_eq_some_support_of_mem_edgeSetOrders
   have hdisj : Disjoint order.toFinset (Forest.empty V).edges := by
     rw [Forest.empty_edges]
     exact Finset.disjoint_empty_right order.toFinset
-  rcases exists_followOrder?_eq_some_of_acyclic_union choices order
+  rcases exists_followOrderOption_eq_some_of_acyclic_union choices order
       I.acyclic hunion hnodup hdisj with
     ⟨G, hfollow, hGedges⟩
   refine ⟨G, hfollow, ?_⟩

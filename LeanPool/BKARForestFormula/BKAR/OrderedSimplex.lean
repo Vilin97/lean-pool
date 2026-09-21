@@ -49,11 +49,13 @@ def OrderedSimplexParams : ℝ → List ℝ → Prop
   | _, [] => True
   | top, t :: ts => 0 ≤ t ∧ t ≤ top ∧ OrderedSimplexParams t ts
 
+omit [DecidableEq V] in
 @[simp]
 theorem orderedSimplexIntegralAux_nil (top : ℝ) (f : List ℝ → ℝ) :
     orderedSimplexIntegralAux top ([] : List (Edge V)) f = f [] :=
   rfl
 
+omit [DecidableEq V] in
 @[simp]
 theorem orderedSimplexIntegralAux_cons (top : ℝ) (e : Edge V)
     (order : List (Edge V)) (f : List ℝ → ℝ) :
@@ -62,11 +64,13 @@ theorem orderedSimplexIntegralAux_cons (top : ℝ) (e : Edge V)
         orderedSimplexIntegralAux t order (fun ts => f (t :: ts)) :=
   rfl
 
+omit [DecidableEq V] in
 @[simp]
 theorem orderedSimplexIntegral_nil (f : List ℝ → ℝ) :
     orderedSimplexIntegral ([] : List (Edge V)) f = f [] :=
   rfl
 
+omit [DecidableEq V] in
 @[simp]
 theorem orderedSimplexIntegral_cons (e : Edge V) (order : List (Edge V))
     (f : List ℝ → ℝ) :
@@ -75,10 +79,12 @@ theorem orderedSimplexIntegral_cons (e : Edge V) (order : List (Edge V))
         orderedSimplexIntegralAux t order (fun ts => f (t :: ts)) :=
   rfl
 
+omit [DecidableEq V] in
 theorem orderedSimplexIntegral_singleton (e : Edge V) (f : List ℝ → ℝ) :
     orderedSimplexIntegral [e] f = ∫ t in 0..(1 : ℝ), f [t] :=
   rfl
 
+omit [DecidableEq V] in
 theorem orderedSimplexIntegral_pair (e₁ e₂ : Edge V) (f : List ℝ → ℝ) :
     orderedSimplexIntegral [e₁, e₂] f =
       ∫ t₁ in 0..(1 : ℝ), ∫ t₂ in 0..t₁, f [t₁, t₂] :=
@@ -147,6 +153,7 @@ theorem le_head_of_mem_tail {top t s : ℝ} {ts : List ℝ}
 
 end OrderedSimplexParams
 
+omit [DecidableEq V] in
 theorem orderedSimplexIntegralAux_congr (top : ℝ) :
     ∀ (order : List (Edge V)) {f g : List ℝ → ℝ},
       (∀ ts, f ts = g ts) →
@@ -161,12 +168,15 @@ theorem orderedSimplexIntegralAux_congr (top : ℝ) :
         (g := fun ts => g (t :: ts))
         (fun ts => hfg (t :: ts))
 
+omit [DecidableEq V] in
 theorem orderedSimplexIntegral_congr {order : List (Edge V)}
     {f g : List ℝ → ℝ} (hfg : ∀ ts, f ts = g ts) :
     orderedSimplexIntegral order f = orderedSimplexIntegral order g := by
+  classical
   rw [orderedSimplexIntegral]
   exact orderedSimplexIntegralAux_congr 1 order hfg
 
+omit [DecidableEq V] in
 /--
 Congruence for nested simplex integrals when the integrands agree on
 parameter lists whose length matches the remaining edge order.
@@ -185,6 +195,7 @@ theorem orderedSimplexIntegralAux_congr_of_length (top : ℝ) :
         (g := fun ts => g (t :: ts))
         (fun ts hlen => hfg (t :: ts) (by simp [hlen]))
 
+omit [DecidableEq V] in
 /--
 Unit-bound version of `orderedSimplexIntegralAux_congr_of_length`.
 -/
@@ -192,6 +203,7 @@ theorem orderedSimplexIntegral_congr_of_length {order : List (Edge V)}
     {f g : List ℝ → ℝ}
     (hfg : ∀ ts, ts.length = order.length → f ts = g ts) :
     orderedSimplexIntegral order f = orderedSimplexIntegral order g := by
+  classical
   rw [orderedSimplexIntegral]
   exact orderedSimplexIntegralAux_congr_of_length 1 order hfg
 

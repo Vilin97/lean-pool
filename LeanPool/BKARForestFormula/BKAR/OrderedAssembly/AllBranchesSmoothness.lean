@@ -141,7 +141,7 @@ theorem allBranchesAnalytic_of_activeEdges_eq_empty
 The recursive child-sum integrability clause is automatic when the selected
 child is already terminal.
 -/
-theorem allBranchesAnalytic_child_recursive_sum_intervalIntegrable_of_child_activeEdges_eq_empty
+theorem allBranchesAnalytic_child_recursive_sum_intervalIntegrable_of_terminalChild
     (choices : Forest.ActiveExtensionChoice V)
     (F : Forest V) (e : {e // e ∈ F.activeEdges})
     (pref : List (Edge V)) (prefixTs : List ℝ)
@@ -394,7 +394,7 @@ theorem allBranchesAnalytic_empty_of_contDiff
 Final flattened root identity with both the analytic recursion predicate and
 the nontrivial fiber-integrability predicate discharged by `BKARContDiff`.
 -/
-theorem rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty_of_contDiff
+theorem oneConfig_eq_zeroConfig_add_nonemptyTreeSum_of_contDiff
     (hρ : BKARContDiff ρ) (choices : Forest.ActiveExtensionChoice V) :
     ρ oneConfig =
       ρ zeroConfig +
@@ -405,7 +405,7 @@ theorem rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter
             (fun order =>
               Forest.boundarySupportOrderTreeFiber choices (Forest.empty V)
                 [] [] 1 I order ρ)) :=
-  hρ.rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty_of_contDiff_of_allBranchesAnalytic
+  hρ.oneConfig_eq_zeroConfig_add_nonemptyTreeSum_of_contDiff_of_analytic
     choices (hρ.allBranchesAnalytic_empty_of_contDiff choices)
 
 /--
@@ -419,9 +419,9 @@ theorem rho_oneConfig_eq_sum_rootBoundarySupportOrderContribution_of_contDiff
         (fun I => Finset.sum (Forest.edgeSetOrders I.edges)
           (fun order =>
             Forest.rootBoundarySupportOrderContribution choices ρ I order)) := by
-  rw [Forest.sum_rootBoundarySupportOrderContribution_eq_zeroConfig_add_sum_treeFiber_filter_edges_ne_empty]
+  rw [Forest.sum_rootContribution_eq_zeroConfig_add_sum_treeFiber_filter_edges_ne_empty]
   exact
-    hρ.rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty_of_contDiff
+    hρ.oneConfig_eq_zeroConfig_add_nonemptyTreeSum_of_contDiff
       choices
 
 end BKARContDiff

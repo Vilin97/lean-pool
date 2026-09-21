@@ -131,7 +131,7 @@ theorem le_standardInterp_iff_thresholdConnected
     s ≤ F.standardInterp u e ↔
       F.thresholdConnected u s e.left e.right := by
   by_cases hcomp : F.inSameComponent e.left e.right
-  · rw [standardInterp, dif_pos hcomp]
+  · rw [standardInterp, dite_eq_left hcomp]
     constructor
     · intro hmin
       exact (F.thresholdConnected_iff_exists_le_pathMin u hs1 e.left e.right).mpr
@@ -145,7 +145,7 @@ theorem le_standardInterp_iff_thresholdConnected
             F.pathInF e.left e.right hcomp :=
         F.pathInF_eq_of_edges_eq F rfl hcomp' hcomp
       simpa [hpath] using hmin
-  · rw [standardInterp, dif_neg hcomp]
+  · rw [standardInterp, dite_eq_right hcomp]
     constructor
     · intro hle
       exact False.elim ((not_le_of_gt hs0) hle)

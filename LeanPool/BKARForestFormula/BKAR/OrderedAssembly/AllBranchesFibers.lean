@@ -413,7 +413,7 @@ theorem localBoundarySupportOrderSum_eq_sum_supportOrderPairs
 /--
 The folded boundary tree is the finite sum of its global support/order fibers.
 -/
-theorem boundarySupportOrderTreeContribution_eq_sum_supportOrderPairs_treeFiber_of_activeEdges_card_le
+theorem treeContribution_eq_sum_supportOrderPairs_treeFiber_of_activeEdges_card_le
     (choices : ActiveExtensionChoice V) :
     ∀ (n : Nat) (F : Forest V) (pref : List (Edge V))
       (prefixTs : List ℝ) (top : ℝ) (ρ : (Edge V → ℝ) → ℝ),
@@ -490,7 +490,7 @@ theorem boundarySupportOrderTreeContribution_eq_sum_supportOrderPairs_treeFiber_
                 (choices F e).activeEdges_card_lt
               exact Nat.lt_succ_iff.mp (hlt.trans_le hle)
             exact
-              boundarySupportOrderTreeContribution_eq_sum_supportOrderPairs_treeFiber_of_activeEdges_card_le
+              treeContribution_eq_sum_supportOrderPairs_treeFiber_of_activeEdges_card_le
                 choices n (choices F e).forest (pref ++ [e.val])
                 (prefixTs ++ [t]) t ρ hchild_le (hchildFiber e t ht)
         _ =
@@ -529,7 +529,7 @@ theorem boundarySupportOrderTreeContribution_eq_sum_treeFiber_of_activeEdges_car
             boundarySupportOrderTreeFiber choices F pref prefixTs top
               I order ρ)) := by
   have h :=
-    boundarySupportOrderTreeContribution_eq_sum_supportOrderPairs_treeFiber_of_activeEdges_card_le
+    treeContribution_eq_sum_supportOrderPairs_treeFiber_of_activeEdges_card_le
       choices n F pref prefixTs top ρ hle hfiber
   rw [supportOrderPairs, Finset.sum_sigma] at h
   exact h
@@ -563,7 +563,7 @@ theorem rootBoundarySupportOrderContribution_empty_order_eq_zeroConfig
     (hI : I.edges = ∅) :
     rootBoundarySupportOrderContribution choices ρ I [] = ρ zeroConfig := by
   rw [rootBoundarySupportOrderContribution_def]
-  rw [if_pos ⟨hI, rfl⟩]
+  rw [ite_eq_left ⟨hI, rfl⟩]
   rw [boundarySupportOrderTreeFiber_empty_order_eq_zero]
   simp
 
@@ -594,7 +594,7 @@ theorem rootBoundarySupportOrderContribution_eq_treeFiber_of_not_empty_marker
       boundarySupportOrderTreeFiber choices (Forest.empty V) [] [] 1
         I order ρ := by
   rw [rootBoundarySupportOrderContribution_def]
-  rw [if_neg hmarker]
+  rw [ite_eq_right hmarker]
   simp
 
 theorem rootBoundarySupportOrderContribution_eq_treeFiber_of_edges_ne_empty
@@ -752,7 +752,7 @@ theorem sum_rootBoundarySupportOrderContribution_eq_zeroConfig_add_sum_treeFiber
   rw [Finset.sum_add_distrib]
   rw [sum_emptySupportOrderMarker]
 
-theorem sum_rootBoundarySupportOrderContribution_eq_zeroConfig_add_sum_treeFiber_filter_edges_ne_empty
+theorem sum_rootContribution_eq_zeroConfig_add_sum_treeFiber_filter_edges_ne_empty
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ) :
     Finset.sum (Finset.univ : Finset (ForestIndex V))
@@ -832,7 +832,7 @@ theorem rho_oneConfig_eq_sum_rootBoundarySupportOrderContribution
 Equivalent final-shaped root identity with the empty support removed from the
 remaining tree-fiber sum.
 -/
-theorem rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty
+theorem oneConfig_eq_zeroConfig_add_nonemptyTreeSum
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -852,13 +852,13 @@ theorem rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter
                 I order ρ)) := by
   rw [rho_oneConfig_eq_sum_rootBoundarySupportOrderContribution
     choices ρ hanalytic hfiber]
-  rw [sum_rootBoundarySupportOrderContribution_eq_zeroConfig_add_sum_treeFiber_filter_edges_ne_empty]
+  rw [sum_rootContribution_eq_zeroConfig_add_sum_treeFiber_filter_edges_ne_empty]
 
 /--
 Root identity whose remaining analytic side condition is restricted to the
 nontrivial support/order fibers.
 -/
-theorem rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty_of_nontrivialIntegrable
+theorem oneConfig_eq_zeroConfig_add_nonemptyTreeSum_of_nontrivialIntegrable
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -877,7 +877,7 @@ theorem rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter
               boundarySupportOrderTreeFiber choices (Forest.empty V) [] [] 1
                 I order ρ)) := by
   exact
-    rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty
+    oneConfig_eq_zeroConfig_add_nonemptyTreeSum
       choices ρ hanalytic
       (boundarySupportOrderTreeFiberIntegrable_of_nontrivialIntegrable
         choices (Forest.empty V).activeEdges.card (Forest.empty V) [] [] 1

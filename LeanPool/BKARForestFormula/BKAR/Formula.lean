@@ -163,7 +163,7 @@ private theorem bkar_formula_canonical_grown_cube_contributions_with_choices
   apply Finset.sum_congr rfl
   intro I _hI
   exact
-    Forest.sum_grownForestForSupportOrder_orderedCubeSectorContribution_eq_canonicalGrownForestForSupport_cubeContribution
+    Forest.sum_orderedSectorContribution_eq_canonicalContribution
       choices I ρ hρ
 
 private theorem canonicalGrownForestCubeContributionSum_eq
@@ -236,7 +236,7 @@ theorem canonicalGrownForestForSupport_cubeContribution_eq_sum_edgeSetOrders
           (Forest.canonicalGrownForestForSupport choices I).orderedCubeSectorContribution
             order ρ) := by
   exact
-    (Forest.sum_edgeSetOrders_orderedCubeSectorContribution_eq_cubeContribution_canonicalGrownForestForSupport
+    (Forest.sectorContributionSum_eq_canonicalContribution
       choices I ρ hρ).symm
 
 /--
@@ -256,7 +256,7 @@ private theorem bkar_formula_nonempty_with_choices
             (fun order =>
               Forest.boundarySupportOrderTreeFiber choices (Forest.empty V)
                 [] [] 1 I order ρ)) :=
-  BKARContDiff.rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty_of_contDiff
+  BKARContDiff.oneConfig_eq_zeroConfig_add_nonemptyTreeSum_of_contDiff
     hρ choices
 
 /--

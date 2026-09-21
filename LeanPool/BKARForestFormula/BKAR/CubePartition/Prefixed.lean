@@ -48,7 +48,7 @@ theorem branchIntegralAux_mixedPartialList_eq_sum_prefixed_orderedSimplexIntegra
   rw [data.branchIntegralAux_eq_sum_growth_branchIntegralAux]
   apply Finset.sum_congr rfl
   intro e _
-  exact (data.growth e).branchIntegralAux_mixedPartialList_eq_orderedSimplexIntegralAux_paramsOfOrder_append
+  exact (data.growth e).branchIntegralAux_mixedPartial_eq_simplexIntegralAux_paramsOfOrder_append
     pref prefixTs hpref hprefixTs top ρ
 
 end ActiveTerminalBranchData

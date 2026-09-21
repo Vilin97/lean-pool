@@ -29,6 +29,7 @@ namespace Forest
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
+/-- All lists enumerating the forest edges exactly once. -/
 def edgeSetOrders (S : Finset (Edge V)) : Finset (List (Edge V)) :=
   S.toList.permutations.toFinset
 
@@ -444,8 +445,8 @@ theorem paramValue_paramsOfOrder_eq_of_edges_eq
       intro he
       exact heF (by
         simpa [hedges] using he)
-    rw [paramValue, dif_neg heF]
-    rw [paramValue, dif_neg heG]
+    rw [paramValue, dite_eq_right heF]
+    rw [paramValue, dite_eq_right heG]
 
 /--
 In a common edge order, `paramsOfOrder` gives the same standard interpolation
@@ -496,12 +497,12 @@ theorem extendParam_eq_paramsOfOrder_cons
     h.extendParam u t = F'.paramsOfOrder (e :: order) (t :: ts) := by
   funext e'
   by_cases hnew : e'.val = e
-  · rw [extendParam, dif_pos hnew]
+  · rw [extendParam, dite_eq_left hnew]
     rw [show e' = ⟨e, hnew ▸ e'.property⟩ from Subtype.ext hnew]
     rw [F'.paramsOfOrder_cons_self e order t ts]
   · have hold : e'.val ∈ F.edges :=
       h.mem_old_of_mem_of_ne e'.property hnew
-    rw [extendParam, dif_neg hnew]
+    rw [extendParam, dite_eq_right hnew]
     rw [hu, F'.paramsOfOrder_cons_of_ne order t ts e'.property hnew]
     rfl
 
@@ -524,7 +525,7 @@ theorem extendParam_eq_paramsOfOrder_append_singleton
       F'.paramsOfOrder (pref ++ [e]) (prefixTs ++ [t]) := by
   funext e'
   by_cases hnew : e'.val = e
-  · rw [extendParam, dif_pos hnew]
+  · rw [extendParam, dite_eq_left hnew]
     rw [show e' = ⟨e, hnew ▸ e'.property⟩ from Subtype.ext hnew]
     rw [paramsOfOrder]
     change t = (prefixTs ++ [t]).getD ((pref ++ [e]).idxOf e) 0
@@ -537,7 +538,7 @@ theorem extendParam_eq_paramsOfOrder_append_singleton
     simp [hprefixTs]
   · have hold : e'.val ∈ F.edges :=
       h.mem_old_of_mem_of_ne e'.property hnew
-    rw [extendParam, dif_neg hnew]
+    rw [extendParam, dite_eq_right hnew]
     rw [paramsOfOrder]
     change prefixTs.getD (pref.idxOf e'.val) 0 =
       (prefixTs ++ [t]).getD ((pref ++ [e]).idxOf e'.val) 0

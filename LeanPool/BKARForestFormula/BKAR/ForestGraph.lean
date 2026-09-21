@@ -22,9 +22,10 @@ noncomputable section
 namespace BKAR
 
 theorem simpleGraph_isAcyclic_sup_edge_of_not_reachable
-    {V : Type*} [DecidableEq V] {G : SimpleGraph V} {x y : V}
+    {V : Type*} {G : SimpleGraph V} {x y : V}
     (hG : G.IsAcyclic) (hxy : ¬ G.Reachable x y) :
     (G ⊔ SimpleGraph.edge x y).IsAcyclic := by
+  classical
   by_cases hdiag : x = y
   · exact False.elim (hxy (hdiag ▸ SimpleGraph.Reachable.rfl))
   intro u c hc
@@ -68,20 +69,24 @@ variable {V : Type*} [DecidableEq V]
 def edgeSetGraph (S : Finset (Edge V)) : SimpleGraph V :=
   SimpleGraph.fromEdgeSet {x : Sym2 V | ∃ e : Edge V, e ∈ S ∧ e.val = x}
 
+omit [DecidableEq V] in
 theorem edgeSetGraph_adj_of_mem_between
     {S : Finset (Edge V)} {e : Edge V} {i j : V}
     (he : e ∈ S) (hbetween : e.Between i j) :
     (edgeSetGraph S).Adj i j := by
+  classical
   rw [edgeSetGraph, SimpleGraph.fromEdgeSet_adj]
   constructor
   · exact ⟨e, he, hbetween⟩
   · intro hij
     exact e.not_between_self j (hij ▸ hbetween)
 
+omit [DecidableEq V] in
 theorem exists_mem_between_of_edgeSetGraph_adj
     {S : Finset (Edge V)} {i j : V}
     (h : (edgeSetGraph S).Adj i j) :
     ∃ e : Edge V, e ∈ S ∧ e.Between i j := by
+  classical
   rw [edgeSetGraph, SimpleGraph.fromEdgeSet_adj] at h
   rcases h.1 with ⟨e, heS, heq⟩
   exact ⟨e, heS, heq⟩
@@ -91,18 +96,26 @@ def edgeOfAdj {S : Finset (Edge V)} {i j : V}
     (h : (edgeSetGraph S).Adj i j) : Edge V :=
   Classical.choose (exists_mem_between_of_edgeSetGraph_adj h)
 
+omit [DecidableEq V] in
 theorem edgeOfAdj_mem {S : Finset (Edge V)} {i j : V}
     (h : (edgeSetGraph S).Adj i j) :
-    edgeOfAdj h ∈ S :=
-  (Classical.choose_spec (exists_mem_between_of_edgeSetGraph_adj h)).1
+    edgeOfAdj h ∈ S := by
+  classical
+  exact
+    (Classical.choose_spec (exists_mem_between_of_edgeSetGraph_adj h)).1
 
+omit [DecidableEq V] in
 theorem edgeOfAdj_between {S : Finset (Edge V)} {i j : V}
     (h : (edgeSetGraph S).Adj i j) :
-    (edgeOfAdj h).Between i j :=
-  (Classical.choose_spec (exists_mem_between_of_edgeSetGraph_adj h)).2
+    (edgeOfAdj h).Between i j := by
+  classical
+  exact
+    (Classical.choose_spec (exists_mem_between_of_edgeSetGraph_adj h)).2
 
+omit [DecidableEq V] in
 theorem edge_adj_iff_between (e : Edge V) {i j : V} :
     (SimpleGraph.edge e.left e.right).Adj i j ↔ e.Between i j := by
+  classical
   constructor
   · intro h
     rw [SimpleGraph.edge, SimpleGraph.fromEdgeSet_adj] at h
@@ -142,6 +155,7 @@ theorem edgeSetGraph_insert (S : Finset (Edge V)) (e : Edge V) :
 
 namespace IsPath
 
+omit [DecidableEq V] in
 theorem exists_walk {S : Finset (Edge V)} :
     ∀ {γ : List (Edge V)} {i j : V}, IsPath S γ i j →
       ∃ p : (edgeSetGraph S).Walk i j,
@@ -163,17 +177,21 @@ end IsPath
 
 namespace IsSimplePath
 
+omit [DecidableEq V] in
 theorem exists_walk_isTrail {S : Finset (Edge V)}
     {γ : List (Edge V)} {i j : V}
     (h : IsSimplePath S γ i j) :
     ∃ p : (edgeSetGraph S).Walk i j,
       p.edges = γ.map (fun e : Edge V => e.val) ∧ p.IsTrail := by
+  classical
+  classical
   rcases h.1.exists_walk with ⟨p, hp⟩
   refine ⟨p, hp, ?_⟩
   constructor
   rw [hp]
   exact h.2.map Subtype.val_injective
 
+omit [DecidableEq V] in
 theorem exists_graph_path_of_isAcyclic {S : Finset (Edge V)}
     {γ : List (Edge V)} {i j : V}
     (hG : (edgeSetGraph S).IsAcyclic)
@@ -181,14 +199,17 @@ theorem exists_graph_path_of_isAcyclic {S : Finset (Edge V)}
     ∃ p : (edgeSetGraph S).Path i j,
       (p : (edgeSetGraph S).Walk i j).edges =
         γ.map (fun e : Edge V => e.val) := by
+  classical
   rcases h.exists_walk_isTrail with ⟨p, hp_edges, hp_trail⟩
   exact ⟨⟨p, (hG.isPath_iff_isTrail p).mpr hp_trail⟩, hp_edges⟩
 
+omit [DecidableEq V] in
 theorem unique_of_isAcyclic {S : Finset (Edge V)}
     {γ₁ γ₂ : List (Edge V)} {i j : V}
     (hG : (edgeSetGraph S).IsAcyclic)
     (h₁ : IsSimplePath S γ₁ i j) (h₂ : IsSimplePath S γ₂ i j) :
     γ₁ = γ₂ := by
+  classical
   rcases h₁.exists_graph_path_of_isAcyclic hG with ⟨p₁, hp₁⟩
   rcases h₂.exists_graph_path_of_isAcyclic hG with ⟨p₂, hp₂⟩
   have hp : p₁ = p₂ := (hG.subsingleton_path i j).allEq p₁ p₂
@@ -211,9 +232,11 @@ def toEdgePath {S : Finset (Edge V)} {i j : V}
   | SimpleGraph.Walk.nil => []
   | SimpleGraph.Walk.cons h p => edgeOfAdj h :: toEdgePath p
 
+omit [DecidableEq V] in
 theorem toEdgePath_isPath {S : Finset (Edge V)} :
     ∀ {i j : V} (p : (edgeSetGraph S).Walk i j),
       IsPath S (toEdgePath p) i j := by
+  classical
   intro i j p
   induction p with
   | nil =>
@@ -221,9 +244,11 @@ theorem toEdgePath_isPath {S : Finset (Edge V)} :
   | cons h p ih =>
       exact IsPath.cons (edgeOfAdj_mem h) (edgeOfAdj_between h) ih
 
+omit [DecidableEq V] in
 theorem toEdgePath_edges {S : Finset (Edge V)} :
     ∀ {i j : V} (p : (edgeSetGraph S).Walk i j),
       (toEdgePath p).map (fun e : Edge V => e.val) = p.edges := by
+  classical
   intro i j p
   induction p with
   | nil =>
@@ -233,21 +258,26 @@ theorem toEdgePath_edges {S : Finset (Edge V)} :
       simp only [toEdgePath, List.map_cons, List.cons.injEq, and_true]
       exact edgeOfAdj_between h
 
+omit [DecidableEq V] in
 theorem toEdgePath_isSimplePath_of_isTrail {S : Finset (Edge V)}
     {i j : V} {p : (edgeSetGraph S).Walk i j}
     (hp : p.IsTrail) :
     IsSimplePath S (toEdgePath p) i j := by
+  classical
   constructor
   · exact toEdgePath_isPath p
   · apply List.Nodup.of_map (fun e : Edge V => e.val)
     rw [toEdgePath_edges p]
     exact hp.edges_nodup
 
+omit [DecidableEq V] in
 theorem toEdgePath_isSimplePath_of_isPath {S : Finset (Edge V)}
     {i j : V} {p : (edgeSetGraph S).Walk i j}
     (hp : p.IsPath) :
-    IsSimplePath S (toEdgePath p) i j :=
-  toEdgePath_isSimplePath_of_isTrail hp.isTrail
+    IsSimplePath S (toEdgePath p) i j := by
+  classical
+  exact
+    toEdgePath_isSimplePath_of_isTrail hp.isTrail
 
 end Walk
 

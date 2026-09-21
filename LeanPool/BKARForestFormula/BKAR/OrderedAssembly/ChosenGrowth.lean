@@ -91,14 +91,14 @@ theorem branchIntegral_emptyStart_eq_orderedContribution
 end ChosenGrowth
 
 /-- The ordered-growth certificate carried by a grown support/order forest. -/
-def grownForestForSupportOrder_orderedGrowth
+def grownForestForSupportOrderGrowth
     (choices : ActiveExtensionChoice V)
     (I : ForestIndex V)
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges}) :
     OrderedGrowth (Forest.empty V) order.val
       (grownForestForSupportOrder choices I order) :=
-  (chosenGrowth_of_followOrder?_eq_some choices
-    (followOrder?_grownForestForSupportOrder choices I order)).toOrderedGrowth
+  (chosenGrowth_of_followOrderOption_eq_some choices
+    (followOrderOption_grownForestForSupportOrder choices I order)).toOrderedGrowth
 
 /--
 The grown support/order forest's ordered contribution can be read as the
@@ -109,12 +109,12 @@ theorem grownForestForSupportOrder_branchIntegral_eq_orderedContribution
     (I : ForestIndex V)
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges})
     (ρ : (Edge V → ℝ) → ℝ) :
-  (grownForestForSupportOrder_orderedGrowth choices I order).branchIntegral
+  (grownForestForSupportOrderGrowth choices I order).branchIntegral
         emptyParam ρ =
       (grownForestForSupportOrder choices I order).orderedContribution
         order.val ρ :=
   OrderedGrowth.branchIntegral_emptyStart_eq_orderedContribution
-    (grownForestForSupportOrder_orderedGrowth choices I order) ρ
+    (grownForestForSupportOrderGrowth choices I order) ρ
 
 /--
 The branch point attached to a grown support/order forest is exactly its
@@ -125,14 +125,14 @@ theorem grownForestForSupportOrder_branchPoint_eq_standardInterp_paramsOfOrder
     (I : ForestIndex V)
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges})
     (ts : List ℝ) (hlen : ts.length = order.val.length) :
-    (grownForestForSupportOrder_orderedGrowth choices I order).branchPoint
+    (grownForestForSupportOrderGrowth choices I order).branchPoint
         emptyParam ts =
       (grownForestForSupportOrder choices I order).standardInterp
         ((grownForestForSupportOrder choices I order).paramsOfOrder
           order.val ts) := by
   rw [OrderedGrowth.branchPoint_def]
   rw [OrderedGrowth.params_emptyStart_eq_paramsOfOrder_of_length
-    (grownForestForSupportOrder_orderedGrowth choices I order) hlen]
+    (grownForestForSupportOrderGrowth choices I order) hlen]
 
 /--
 The grown support/order branch integrand is the usual ordered-sector
@@ -144,7 +144,7 @@ theorem grownForestForSupportOrder_branchIntegrand_eq_orderedSectorIntegrand
     (order : {order : List (Edge V) // order ∈ edgeSetOrders I.edges})
     (ρ : (Edge V → ℝ) → ℝ)
     (ts : List ℝ) (hlen : ts.length = order.val.length) :
-    (grownForestForSupportOrder_orderedGrowth choices I order).branchIntegrand
+    (grownForestForSupportOrderGrowth choices I order).branchIntegrand
         emptyParam ρ ts =
       mixedPartialList order.val.reverse ρ
         ((grownForestForSupportOrder choices I order).standardInterp
@@ -152,14 +152,14 @@ theorem grownForestForSupportOrder_branchIntegrand_eq_orderedSectorIntegrand
             order.val ts)) := by
   rw [OrderedGrowth.branchIntegrand_def_standardInterp]
   rw [OrderedGrowth.params_emptyStart_eq_paramsOfOrder_of_length
-    (grownForestForSupportOrder_orderedGrowth choices I order) hlen]
+    (grownForestForSupportOrderGrowth choices I order) hlen]
 
 /-- The ordered-growth certificate carried by the canonical support representative. -/
-def canonicalGrownForestForSupport_orderedGrowth
+def canonicalGrownForestForSupportGrowth
     (choices : ActiveExtensionChoice V) (I : ForestIndex V) :
     OrderedGrowth (Forest.empty V) I.canonicalOrder.val
       (canonicalGrownForestForSupport choices I) :=
-  grownForestForSupportOrder_orderedGrowth choices I I.canonicalOrder
+  grownForestForSupportOrderGrowth choices I I.canonicalOrder
 
 /--
 The canonical support representative's canonical-order contribution is the
@@ -168,12 +168,12 @@ branch integral of its concrete ordered-growth certificate.
 theorem canonicalGrownForestForSupport_branchIntegral_eq_orderedContribution
     (choices : ActiveExtensionChoice V) (I : ForestIndex V)
     (ρ : (Edge V → ℝ) → ℝ) :
-  (canonicalGrownForestForSupport_orderedGrowth choices I).branchIntegral
+  (canonicalGrownForestForSupportGrowth choices I).branchIntegral
         emptyParam ρ =
       (canonicalGrownForestForSupport choices I).orderedContribution
         I.canonicalOrder.val ρ :=
   OrderedGrowth.branchIntegral_emptyStart_eq_orderedContribution
-    (canonicalGrownForestForSupport_orderedGrowth choices I) ρ
+    (canonicalGrownForestForSupportGrowth choices I) ρ
 
 /--
 The branch point attached to the canonical support representative is exactly
@@ -182,14 +182,14 @@ its standard interpolation in canonical-order coordinates.
 theorem canonicalGrownForestForSupport_branchPoint_eq_standardInterp_paramsOfOrder
     (choices : ActiveExtensionChoice V) (I : ForestIndex V)
     (ts : List ℝ) (hlen : ts.length = I.canonicalOrder.val.length) :
-    (canonicalGrownForestForSupport_orderedGrowth choices I).branchPoint
+    (canonicalGrownForestForSupportGrowth choices I).branchPoint
         emptyParam ts =
       (canonicalGrownForestForSupport choices I).standardInterp
         ((canonicalGrownForestForSupport choices I).paramsOfOrder
           I.canonicalOrder.val ts) := by
   rw [OrderedGrowth.branchPoint_def]
   rw [OrderedGrowth.params_emptyStart_eq_paramsOfOrder_of_length
-    (canonicalGrownForestForSupport_orderedGrowth choices I) hlen]
+    (canonicalGrownForestForSupportGrowth choices I) hlen]
 
 /--
 The canonical support representative's canonical branch integrand is the
@@ -200,7 +200,7 @@ theorem canonicalGrownForestForSupport_branchIntegrand_eq_orderedSectorIntegrand
     (choices : ActiveExtensionChoice V) (I : ForestIndex V)
     (ρ : (Edge V → ℝ) → ℝ)
     (ts : List ℝ) (hlen : ts.length = I.canonicalOrder.val.length) :
-    (canonicalGrownForestForSupport_orderedGrowth choices I).branchIntegrand
+    (canonicalGrownForestForSupportGrowth choices I).branchIntegrand
         emptyParam ρ ts =
       mixedPartialList I.canonicalOrder.val.reverse ρ
         ((canonicalGrownForestForSupport choices I).standardInterp
@@ -208,7 +208,7 @@ theorem canonicalGrownForestForSupport_branchIntegrand_eq_orderedSectorIntegrand
             I.canonicalOrder.val ts)) := by
   rw [OrderedGrowth.branchIntegrand_def_standardInterp]
   rw [OrderedGrowth.params_emptyStart_eq_paramsOfOrder_of_length
-    (canonicalGrownForestForSupport_orderedGrowth choices I) hlen]
+    (canonicalGrownForestForSupportGrowth choices I) hlen]
 
 end Forest
 

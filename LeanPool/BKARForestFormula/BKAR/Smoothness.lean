@@ -43,26 +43,39 @@ namespace BKARContDiff
 
 variable {ρ : (Edge V → ℝ) → ℝ}
 
+omit [DecidableEq V] in
 theorem contDiff (hρ : BKARContDiff ρ) :
     ContDiff ℝ (∞ : WithTop ℕ∞) ρ :=
   hρ
 
+omit [DecidableEq V] in
 theorem continuous (hρ : BKARContDiff ρ) :
-    Continuous ρ :=
-  hρ.contDiff.continuous
+    Continuous ρ := by
+  classical
+  exact
+    hρ.contDiff.continuous
 
+omit [DecidableEq V] in
 theorem differentiable (hρ : BKARContDiff ρ) :
-    Differentiable ℝ ρ :=
-  hρ.contDiff.differentiable (by simp)
+    Differentiable ℝ ρ := by
+  classical
+  exact
+    hρ.contDiff.differentiable (by simp)
 
+omit [DecidableEq V] in
 theorem differentiableAt (hρ : BKARContDiff ρ) (x : Edge V → ℝ) :
-    DifferentiableAt ℝ ρ x :=
-  hρ.differentiable.differentiableAt
+    DifferentiableAt ℝ ρ x := by
+  classical
+  exact
+    hρ.differentiable.differentiableAt
 
+omit [DecidableEq V] in
 theorem fderiv_contDiff (hρ : BKARContDiff ρ) :
-    ContDiff ℝ (∞ : WithTop ℕ∞) (fderiv ℝ ρ) :=
-  hρ.contDiff.fderiv_right
-    (m := (∞ : WithTop ℕ∞)) (n := (∞ : WithTop ℕ∞)) (by simp)
+    ContDiff ℝ (∞ : WithTop ℕ∞) (fderiv ℝ ρ) := by
+  classical
+  exact
+    hρ.contDiff.fderiv_right
+        (m := (∞ : WithTop ℕ∞)) (n := (∞ : WithTop ℕ∞)) (by simp)
 
 theorem fderiv_apply_contDiff (hρ : BKARContDiff ρ) (e : Edge V) :
     ContDiff ℝ (∞ : WithTop ℕ∞)
@@ -215,6 +228,7 @@ theorem append_singleton {X : Type*} [TopologicalSpace X]
 
 end ListPathContinuous
 
+omit [DecidableEq V] in
 theorem constantConfig_contDiff :
     ContDiff ℝ (∞ : WithTop ℕ∞) (constantConfig (V := V)) := by
   rw [contDiff_pi]
@@ -222,9 +236,13 @@ theorem constantConfig_contDiff :
   simpa [constantConfig] using!
     (contDiff_id : ContDiff ℝ (∞ : WithTop ℕ∞) (id : ℝ → ℝ))
 
-theorem constantConfig_continuous :
-    Continuous (constantConfig (V := V)) :=
-  constantConfig_contDiff.continuous
+omit [Fintype V] in
+omit [DecidableEq V] in
+theorem constantConfig_continuous [Finite V] :
+    Continuous (constantConfig (V := V)) := by
+  classical
+  let := Fintype.ofFinite V
+  exact constantConfig_contDiff.continuous
 
 theorem updateCoord_contDiff (x : Edge V → ℝ) (e : Edge V) :
     ContDiff ℝ (∞ : WithTop ℕ∞) (updateCoord x e) := by
@@ -244,7 +262,7 @@ theorem extendParam_continuous (h : EdgeExtension F F' e)
   · have hfun :
         (fun t : ℝ => h.extendParam u t e') = id := by
       funext t
-      rw [extendParam, dif_pos he']
+      rw [extendParam, dite_eq_left he']
       rfl
     rw [hfun]
     exact continuous_id
@@ -252,7 +270,7 @@ theorem extendParam_continuous (h : EdgeExtension F F' e)
         (fun t : ℝ => h.extendParam u t e') =
           fun _ : ℝ => u ⟨e'.val, h.mem_old_of_mem_of_ne e'.property he'⟩ := by
       funext t
-      rw [extendParam, dif_neg he']
+      rw [extendParam, dite_eq_right he']
     rw [hfun]
     exact continuous_const
 
@@ -268,7 +286,7 @@ theorem extendParam_continuous_comp
         (fun x : X => h.extendParam (uPath x) (tPath x) e') =
           tPath := by
       funext x
-      rw [extendParam, dif_pos he']
+      rw [extendParam, dite_eq_left he']
     rw [hfun]
     exact ht
   · have hfun :
@@ -276,7 +294,7 @@ theorem extendParam_continuous_comp
           fun x : X =>
             uPath x ⟨e'.val, h.mem_old_of_mem_of_ne e'.property he'⟩ := by
       funext x
-      rw [extendParam, dif_neg he']
+      rw [extendParam, dite_eq_right he']
     rw [hfun]
     exact
       (continuous_apply
@@ -297,13 +315,13 @@ theorem interpWithFill_contDiff (u : F.EdgeParam → ℝ) :
         (fun t : ℝ => F.interpWithFill u t e) =
           fun _ : ℝ => F.pathMin u (F.pathInF e.left e.right h) := by
       funext t
-      rw [interpWithFill, dif_pos h]
+      rw [interpWithFill, dite_eq_left h]
     rw [hfun]
     exact contDiff_const
   · have hfun :
         (fun t : ℝ => F.interpWithFill u t e) = id := by
       funext t
-      rw [interpWithFill, dif_neg h]
+      rw [interpWithFill, dite_eq_right h]
       rfl
     rw [hfun]
     exact contDiff_id
@@ -328,7 +346,7 @@ theorem paramValue_continuous_comp
         (fun x : X => F.paramValue (uPath x) e) =
           fun _ : X => (1 : ℝ) := by
       funext x
-      rw [paramValue, dif_neg he]
+      rw [paramValue, dite_eq_right he]
     rw [hfun]
     exact continuous_const
 
@@ -372,14 +390,14 @@ theorem standardInterp_continuous_comp
         (fun x : X => F.standardInterp (uPath x) e) =
           fun x : X => F.pathMin (uPath x) (F.pathInF e.left e.right h) := by
       funext x
-      rw [standardInterp, dif_pos h]
+      rw [standardInterp, dite_eq_left h]
     rw [hfun]
     exact F.pathMin_continuous_comp hu (F.pathInF e.left e.right h)
   · have hfun :
         (fun x : X => F.standardInterp (uPath x) e) =
           fun _ : X => (0 : ℝ) := by
       funext x
-      rw [standardInterp, dif_neg h]
+      rw [standardInterp, dite_eq_right h]
     rw [hfun]
     exact continuous_const
 

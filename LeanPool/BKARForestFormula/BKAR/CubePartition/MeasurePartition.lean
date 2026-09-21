@@ -235,14 +235,14 @@ theorem measurable_paramValue (F : Forest V) (e : Edge V) :
         (fun u : F.EdgeParam → ℝ => F.paramValue u e) =
           fun u : F.EdgeParam → ℝ => u (⟨e, he⟩ : F.EdgeParam) := by
       funext u
-      rw [paramValue, dif_pos he]
+      rw [paramValue, dite_eq_left he]
     rw [hfun]
     exact measurable_pi_apply (⟨e, he⟩ : F.EdgeParam)
   · have hfun :
         (fun u : F.EdgeParam → ℝ => F.paramValue u e) =
           fun _ : F.EdgeParam → ℝ => (1 : ℝ) := by
       funext u
-      rw [paramValue, dif_neg he]
+      rw [paramValue, dite_eq_right he]
     rw [hfun]
     exact measurable_const
 

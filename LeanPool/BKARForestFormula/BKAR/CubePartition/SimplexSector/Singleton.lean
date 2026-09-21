@@ -34,7 +34,8 @@ theorem edges_eq_singleton_of_singleton_mem_edgeOrders
   have hset := F.toFinset_eq_of_mem_edgeOrders horder
   simpa using hset.symm
 
-def uniqueEdgeParamOfEdgesSingleton
+/-- The unique edge parameter when the forest consists of the specified single edge. -/
+@[reducible] def uniqueEdgeParamOfEdgesSingleton
     (F : Forest V) {e : Edge V} (hedges : F.edges = {e}) :
     Unique F.EdgeParam where
   default := ⟨e, by rw [hedges]; exact Finset.mem_singleton_self e⟩
@@ -109,14 +110,16 @@ theorem measurePreserving_funUnique_edgeParam_singleton
       (volume : Measure (F.EdgeParam → ℝ)) (volume : Measure ℝ) := by
   let : Unique F.EdgeParam := F.uniqueEdgeParamOfEdgesSingleton hedges
   rw [volume_pi]
-  convert measurePreserving_funUnique (volume : Measure ℝ) F.EdgeParam using 2; rfl
+  convert measurePreserving_funUnique (volume : Measure ℝ) F.EdgeParam using 2
 
 omit [Fintype V] in
+omit [DecidableEq V] in
 /-- The one-dimensional ordered simplex integral is the set integral over `[0, 1]`. -/
 theorem orderedSimplexIntegral_singleton_eq_setIntegral_Icc
     (e : Edge V) (f : ℝ → ℝ) :
     orderedSimplexIntegral [e] (fun ts => f (ts.getD 0 0)) =
       ∫ t in Set.Icc (0 : ℝ) 1, f t := by
+  classical
   rw [orderedSimplexIntegral_singleton]
   change (∫ t in 0..(1 : ℝ), f t) =
     ∫ t in Set.Icc (0 : ℝ) 1, f t

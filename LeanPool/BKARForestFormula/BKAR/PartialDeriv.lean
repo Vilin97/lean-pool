@@ -85,11 +85,13 @@ theorem partialDeriv_updateCoord_self (e : Edge V)
   funext t
   rw [updateCoord_update_same]
 
-theorem partialDeriv_of_hasFDerivAt [Fintype V] (e : Edge V)
+theorem partialDeriv_of_hasFDerivAt [Finite V] (e : Edge V)
     {ρ : (Edge V → ℝ) → ℝ} {x : Edge V → ℝ}
     {ρ' : (Edge V → ℝ) →L[ℝ] ℝ}
     (hρ : HasFDerivAt ρ ρ' x) :
     partialDeriv e ρ x = ρ' (edgeBasis e) := by
+  classical
+  let := Fintype.ofFinite V
   have hupdate :
       HasDerivAt (updateCoord x e) (edgeBasis e) (x e) := by
     simpa [updateCoord] using! hasDerivAt_update (𝕜 := ℝ) x e (x e)

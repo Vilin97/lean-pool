@@ -372,7 +372,7 @@ theorem firstBoundarySupportContribution_eq_localBoundarySupportContribution_emp
   rfl
 
 /-- The root support/order fiber is the empty-prefix instance of the local API. -/
-theorem firstBoundarySupportOrderContribution_eq_localBoundarySupportOrderContribution_empty
+theorem firstContribution_eq_boundaryContribution_empty
     (choices : ActiveExtensionChoice V)
     (I : ForestIndex V) (order : List (Edge V))
     (ρ : (Edge V → ℝ) → ℝ) :
@@ -638,7 +638,7 @@ theorem integral_allBranchesBoundaryExpansion_child_eq_integral_standard_add_int
 /--
 Prefixed ordered-simplex form of the nonterminal child split.
 -/
-theorem integral_allBranchesBoundaryExpansion_child_eq_prefixed_orderedSimplexIntegralAux_add_integral_sum
+theorem childIntegral_eq_prefixedSimplex_add_integralSum
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (e : {e // e ∈ F.activeEdges})
     (pref : List (Edge V)) (prefixTs : List ℝ)
@@ -688,7 +688,7 @@ theorem integral_allBranchesBoundaryExpansion_child_eq_prefixed_orderedSimplexIn
 Nonterminal child split with the linearity hypotheses read from
 `allBranchesAnalytic`.
 -/
-theorem integral_allBranchesBoundaryExpansion_child_eq_prefixed_orderedSimplexIntegralAux_add_integral_sum_of_allBranchesAnalytic
+theorem childIntegral_eq_prefixedSimplex_add_integralSum_of_analytic
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (e : {e // e ∈ F.activeEdges})
     (pref : List (Edge V)) (prefixTs : List ℝ)
@@ -715,7 +715,7 @@ theorem integral_allBranchesBoundaryExpansion_child_eq_prefixed_orderedSimplexIn
                 ((pref ++ [e.val]) ++ [e'.val])
                 ((prefixTs ++ [t]) ++ [s]) s ρ) := by
   exact
-    integral_allBranchesBoundaryExpansion_child_eq_prefixed_orderedSimplexIntegralAux_add_integral_sum
+    childIntegral_eq_prefixedSimplex_add_integralSum
       choices F e pref prefixTs top ρ
       (allBranchesAnalytic.child_standard_intervalIntegrable
         choices F e pref prefixTs top ρ hanalytic)
@@ -727,7 +727,7 @@ Arbitrary-node nonterminal regrouping step. After summing over all active
 children, the first child sectors regroup by support and canonical order, and
 the only remaining term is the exact recursive child-boundary sum.
 -/
-theorem sum_integral_allBranchesBoundaryExpansion_child_eq_sum_localBoundarySupportOrderContribution_add_sum_integral_child_sum_of_allBranchesAnalytic
+theorem childIntegralSum_eq_boundarySum_add_childIntegral_of_analytic
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (pref : List (Edge V)) (prefixTs : List ℝ)
     (top : ℝ) (ρ : (Edge V → ℝ) → ℝ)
@@ -780,7 +780,7 @@ theorem sum_integral_allBranchesBoundaryExpansion_child_eq_sum_localBoundarySupp
     apply Finset.sum_congr rfl
     intro e _
     exact
-      integral_allBranchesBoundaryExpansion_child_eq_prefixed_orderedSimplexIntegralAux_add_integral_sum_of_allBranchesAnalytic
+      childIntegral_eq_prefixedSimplex_add_integralSum_of_analytic
         choices F e pref prefixTs top ρ hanalytic
   rw [hsplit]
   rw [Finset.sum_add_distrib]
@@ -790,7 +790,7 @@ theorem sum_integral_allBranchesBoundaryExpansion_child_eq_sum_localBoundarySupp
 /--
 Root specialization of the arbitrary-node nonterminal regrouping step.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_localBoundarySupportOrderContribution_empty_add_sum_integral_child_sum
+theorem oneConfig_eq_initialSectorSum_add_boundarySum_add_childIntegral
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -814,7 +814,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_localBoundarySupportOrde
   rw [rho_oneConfig_eq_orderedSectorSum_empty_add_sum_allBranchesBoundaryExpansion
     choices ρ hanalytic]
   have hsplit :=
-    sum_integral_allBranchesBoundaryExpansion_child_eq_sum_localBoundarySupportOrderContribution_add_sum_integral_child_sum_of_allBranchesAnalytic
+    childIntegralSum_eq_boundarySum_add_childIntegral_of_analytic
       choices (Forest.empty V) [] [] 1 ρ (by simp [Forest.empty_edges])
       List.nodup_nil hanalytic
   simpa using
@@ -824,7 +824,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_localBoundarySupportOrde
 Empty-start form of the nonterminal child split: the first child sector is the
 one-edge ordered contribution of the child forest.
 -/
-theorem integral_allBranchesBoundaryExpansion_empty_child_eq_orderedContribution_add_integral_sum
+theorem integral_boundaryExpansion_empty_child_eq_orderedContribution_add_integral_sum
     (choices : ActiveExtensionChoice V)
     (e : {e // e ∈ (Forest.empty V).activeEdges})
     (ρ : (Edge V → ℝ) → ℝ)
@@ -894,7 +894,7 @@ Root first-layer nonterminal regrouping bridge. Each first active edge now
 contributes its one-edge ordered sector plus the exact recursive boundary
 subtrees below the child.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_integral_child_sum
+theorem oneConfig_eq_initialSectorSum_add_orderedContributionSum_add_childIntegralSum
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -940,14 +940,14 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_
   apply Finset.sum_congr rfl
   intro e _
   exact
-    integral_allBranchesBoundaryExpansion_empty_child_eq_orderedContribution_add_integral_sum
+    integral_boundaryExpansion_empty_child_eq_orderedContribution_add_integral_sum
       choices e ρ (hstd e) (hrec e)
 
 /--
 Separated finite-sum form of the root nonterminal bridge: exposed one-edge
 sectors and recursive child sums are now two distinct finite sums.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_sum_integral_child_sum
+theorem oneConfig_eq_initialSectorSum_add_orderedContributionSum_add_childIntegral
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -987,7 +987,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_
                   (choices ((choices (Forest.empty V) e).forest) e').forest.activeEdges.card
                   (choices ((choices (Forest.empty V) e).forest) e').forest
                   ([e.val] ++ [e'.val]) ([t] ++ [s]) s ρ))) := by
-  rw [rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_integral_child_sum
+  rw [oneConfig_eq_initialSectorSum_add_orderedContributionSum_add_childIntegralSum
     choices ρ hanalytic hstd hrec]
   rw [Finset.sum_add_distrib]
 
@@ -995,7 +995,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_
 Root nonterminal regrouping with the first sectors split from the recursive
 child sums, using only the strengthened all-branches analytic hypothesis.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_sum_integral_child_sum_of_allBranchesAnalytic
+theorem oneConfig_eq_initialSectorSum_add_orderedContributionSum_add_childIntegral_of_analytic
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -1016,7 +1016,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_
                   (choices ((choices (Forest.empty V) e).forest) e').forest
                   ([e.val] ++ [e'.val]) ([t] ++ [s]) s ρ))) := by
   exact
-    rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_sum_integral_child_sum
+    oneConfig_eq_initialSectorSum_add_orderedContributionSum_add_childIntegral
       choices ρ hanalytic
       (fun e =>
         allBranchesAnalytic.child_standard_intervalIntegrable
@@ -1030,7 +1030,7 @@ Root nonterminal regrouping with exposed one-edge sectors already fibered by
 support and canonical order. The remaining summand is the exact recursive
 child-boundary contribution.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrderContribution_add_sum_integral_child_sum
+theorem oneConfig_eq_initialSectorSum_add_sum_firstContribution_add_childIntegral
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -1050,7 +1050,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrde
                   (choices ((choices (Forest.empty V) e).forest) e').forest.activeEdges.card
                   (choices ((choices (Forest.empty V) e).forest) e').forest
                   ([e.val] ++ [e'.val]) ([t] ++ [s]) s ρ))) := by
-  rw [rho_oneConfig_eq_orderedSectorSum_empty_add_sum_orderedContribution_add_sum_integral_child_sum_of_allBranchesAnalytic
+  rw [oneConfig_eq_initialSectorSum_add_orderedContributionSum_add_childIntegral_of_analytic
     choices ρ hanalytic]
   rw [sum_firstBoundarySupportOrderContribution choices ρ]
 
@@ -1058,7 +1058,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrde
 Root nonterminal regrouping with the recursive contribution packaged as the
 first recursive boundary remainder.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrderContribution_add_firstRecursiveBoundaryRemainder
+theorem oneConfig_eq_initialSectorSum_add_sum_firstContribution_add_recursiveRemainder
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -1071,14 +1071,14 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrde
             (fun order =>
               firstBoundarySupportOrderContribution choices I order ρ)) +
         firstRecursiveBoundaryRemainder choices ρ) := by
-  rw [rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrderContribution_add_sum_integral_child_sum
+  rw [oneConfig_eq_initialSectorSum_add_sum_firstContribution_add_childIntegral
     choices ρ hanalytic]
   rw [firstRecursiveBoundaryRemainder_def]
 
 /--
 Terminal-child base case of the regrouped all-branches identity.
 -/
-theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrderContribution_of_forall_child_activeEdges_eq_empty
+theorem oneConfig_eq_initialSectorSum_add_sum_firstContribution_of_terminalChildren
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)
     (hanalytic :
@@ -1092,7 +1092,7 @@ theorem rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrde
           (fun I => Finset.sum (edgeSetOrders I.edges)
             (fun order =>
               firstBoundarySupportOrderContribution choices I order ρ)) := by
-  rw [rho_oneConfig_eq_orderedSectorSum_empty_add_sum_firstBoundarySupportOrderContribution_add_firstRecursiveBoundaryRemainder
+  rw [oneConfig_eq_initialSectorSum_add_sum_firstContribution_add_recursiveRemainder
     choices ρ hanalytic]
   rw [firstRecursiveBoundaryRemainder_eq_zero_of_forall_child_activeEdges_eq_empty
     choices ρ hterm]

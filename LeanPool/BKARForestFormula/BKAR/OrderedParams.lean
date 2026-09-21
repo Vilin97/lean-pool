@@ -31,9 +31,9 @@ theorem extendParam_mem_Icc (h : EdgeExtension F F' e)
     (hs : 0 ≤ s ∧ s ≤ 1) (e' : F'.EdgeParam) :
     0 ≤ h.extendParam u s e' ∧ h.extendParam u s e' ≤ 1 := by
   by_cases he' : e'.val = e
-  · rw [extendParam, dif_pos he']
+  · rw [extendParam, dite_eq_left he']
     exact hs
-  · rw [extendParam, dif_neg he']
+  · rw [extendParam, dite_eq_right he']
     exact hu ⟨e'.val, h.mem_old_of_mem_of_ne e'.property he'⟩
 
 theorem le_extendParam_of_le (h : EdgeExtension F F' e)

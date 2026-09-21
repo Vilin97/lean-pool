@@ -3,7 +3,7 @@ Copyright (c) 2026 Scott Armstrong. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import LeanPool.BKARForestFormula.BKAR.Forest
 
 /-! # Path-minimum forest interpolation
@@ -69,7 +69,7 @@ def paramValue (F : Forest V) (u : F.EdgeParam → ℝ) (e : Edge V) : ℝ :=
 theorem paramValue_of_mem (F : Forest V) (u : F.EdgeParam → ℝ)
     {e : Edge V} (he : e ∈ F.edges) :
     F.paramValue u e = u ⟨e, he⟩ := by
-  rw [paramValue, dif_pos he]
+  rw [paramValue, dite_eq_left he]
 
 /-- Auxiliary minimum, seeded by the first edge of a nonempty path. -/
 def pathMinAux (F : Forest V) (u : F.EdgeParam → ℝ) :
@@ -105,7 +105,7 @@ theorem paramValue_mem_Icc (F : Forest V) (u : F.EdgeParam → ℝ)
   by_cases he : e ∈ F.edges
   · rw [paramValue_of_mem F u he]
     exact hu ⟨e, he⟩
-  · rw [paramValue, dif_neg he]
+  · rw [paramValue, dite_eq_right he]
     exact ⟨zero_le_one, le_rfl⟩
 
 theorem pathMinAux_mem_Icc (F : Forest V) (u : F.EdgeParam → ℝ)
@@ -153,33 +153,33 @@ theorem standardInterp_of_not_inSameComponent (F : Forest V)
     (u : F.EdgeParam → ℝ) {e : Edge V}
     (he : ¬ F.inSameComponent e.left e.right) :
     F.standardInterp u e = 0 := by
-  rw [standardInterp, dif_neg he]
+  rw [standardInterp, dite_eq_right he]
 
 theorem interpWithFill_of_not_inSameComponent (F : Forest V)
     (u : F.EdgeParam → ℝ) (t : ℝ) {e : Edge V}
     (he : ¬ F.inSameComponent e.left e.right) :
     F.interpWithFill u t e = t := by
-  rw [interpWithFill, dif_neg he]
+  rw [interpWithFill, dite_eq_right he]
 
 theorem standardInterp_of_mem (F : Forest V) (u : F.EdgeParam → ℝ)
     {e : Edge V} (he : e ∈ F.edges) :
     F.standardInterp u e = u ⟨e, he⟩ := by
-  rw [standardInterp, dif_pos (F.edge_inSameComponent he),
+  rw [standardInterp, dite_eq_left (F.edge_inSameComponent he),
     F.pathInF_eq_singleton_of_edge_mem he, F.pathMin_singleton u he]
 
 theorem interpWithFill_of_mem (F : Forest V) (u : F.EdgeParam → ℝ)
     (t : ℝ) {e : Edge V} (he : e ∈ F.edges) :
     F.interpWithFill u t e = u ⟨e, he⟩ := by
-  rw [interpWithFill, dif_pos (F.edge_inSameComponent he),
+  rw [interpWithFill, dite_eq_left (F.edge_inSameComponent he),
     F.pathInF_eq_singleton_of_edge_mem he, F.pathMin_singleton u he]
 
 theorem standardInterp_mem_Icc (F : Forest V) (u : F.EdgeParam → ℝ)
     (hu : ∀ e : F.EdgeParam, 0 ≤ u e ∧ u e ≤ 1) (e : Edge V) :
     0 ≤ F.standardInterp u e ∧ F.standardInterp u e ≤ 1 := by
   by_cases h : F.inSameComponent e.left e.right
-  · rw [standardInterp, dif_pos h]
+  · rw [standardInterp, dite_eq_left h]
     exact F.pathMin_mem_Icc u hu (F.pathInF e.left e.right h)
-  · rw [standardInterp, dif_neg h]
+  · rw [standardInterp, dite_eq_right h]
     exact ⟨le_rfl, zero_le_one⟩
 
 theorem interpWithFill_mem_Icc (F : Forest V) (u : F.EdgeParam → ℝ)
@@ -187,16 +187,16 @@ theorem interpWithFill_mem_Icc (F : Forest V) (u : F.EdgeParam → ℝ)
     (ht : 0 ≤ t ∧ t ≤ 1) (e : Edge V) :
     0 ≤ F.interpWithFill u t e ∧ F.interpWithFill u t e ≤ 1 := by
   by_cases h : F.inSameComponent e.left e.right
-  · rw [interpWithFill, dif_pos h]
+  · rw [interpWithFill, dite_eq_left h]
     exact F.pathMin_mem_Icc u hu (F.pathInF e.left e.right h)
-  · rw [interpWithFill, dif_neg h]
+  · rw [interpWithFill, dite_eq_right h]
     exact ht
 
 theorem empty_standardInterp (u : (Forest.empty V).EdgeParam → ℝ) :
     (Forest.empty V).standardInterp u = zeroConfig := by
   funext e
   rw [standardInterp]
-  rw [dif_neg]
+  rw [dite_eq_right]
   · rfl
   · intro hcomp
     exact e.left_ne_right ((Forest.empty_inSameComponent_iff.mp hcomp))
@@ -206,7 +206,7 @@ theorem empty_interpWithFill (u : (Forest.empty V).EdgeParam → ℝ)
     (Forest.empty V).interpWithFill u t = constantConfig t := by
   funext e
   rw [interpWithFill]
-  rw [dif_neg]
+  rw [dite_eq_right]
   · rfl
   · intro hcomp
     exact e.left_ne_right ((Forest.empty_inSameComponent_iff.mp hcomp))
@@ -276,8 +276,8 @@ theorem standardInterp_eq_of_edges_eq (F G : Forest V)
   by_cases hF : F.inSameComponent e.left e.right
   · have hG : G.inSameComponent e.left e.right :=
       F.inSameComponent_of_edges_eq G hedges hF
-    rw [standardInterp, dif_pos hF]
-    rw [standardInterp, dif_pos hG]
+    rw [standardInterp, dite_eq_left hF]
+    rw [standardInterp, dite_eq_left hG]
     rw [F.pathInF_eq_of_edges_eq G hedges hF hG]
     exact F.pathMin_eq_of_forall G u v
       (G.pathInF e.left e.right hG)
@@ -285,8 +285,8 @@ theorem standardInterp_eq_of_edges_eq (F G : Forest V)
   · have hG : ¬ G.inSameComponent e.left e.right := by
       intro hG
       exact hF (G.inSameComponent_of_edges_eq F hedges.symm hG)
-    rw [standardInterp, dif_neg hF]
-    rw [standardInterp, dif_neg hG]
+    rw [standardInterp, dite_eq_right hF]
+    rw [standardInterp, dite_eq_right hG]
 
 theorem pathMinAux_le_seed (F : Forest V) (u : F.EdgeParam → ℝ) :
     ∀ (a : ℝ) (γ : List (Edge V)), F.pathMinAux u a γ ≤ a
@@ -375,7 +375,7 @@ def extendParam (h : EdgeExtension F F' e₀)
 theorem extendParam_new (h : EdgeExtension F F' e₀)
     (u : F.EdgeParam → ℝ) (s : ℝ) :
     h.extendParam u s ⟨e₀, h.new_mem⟩ = s := by
-  rw [extendParam, dif_pos rfl]
+  rw [extendParam, dite_eq_left rfl]
 
 theorem extendParam_old (h : EdgeExtension F F' e₀)
     (u : F.EdgeParam → ℝ) (s : ℝ) {e : Edge V} (he : e ∈ F.edges) :
@@ -384,7 +384,7 @@ theorem extendParam_old (h : EdgeExtension F F' e₀)
     intro heq
     have heq' : e = e₀ := heq
     exact h.new_not_mem (heq' ▸ he)
-  rw [extendParam, dif_neg hne]
+  rw [extendParam, dite_eq_right hne]
 
 theorem paramValue_extend_new (h : EdgeExtension F F' e₀)
     (u : F.EdgeParam → ℝ) (s : ℝ) :
@@ -403,8 +403,8 @@ theorem le_extendParam (h : EdgeExtension F F' e₀)
     (hu : ∀ e : F.EdgeParam, s ≤ u e) (e : F'.EdgeParam) :
     s ≤ h.extendParam u s e := by
   by_cases he : e.val = e₀
-  · rw [extendParam, dif_pos he]
-  · rw [extendParam, dif_neg he]
+  · rw [extendParam, dite_eq_left he]
+  · rw [extendParam, dite_eq_right he]
     exact hu ⟨e.val, h.mem_old_of_mem_of_ne e.property he⟩
 
 theorem paramValue_extend_le (h : EdgeExtension F F' e₀)
@@ -426,15 +426,15 @@ theorem interpWithFill_extend_eq (h : EdgeExtension F F' e₀)
     F.interpWithFill u s = F'.interpWithFill (h.extendParam u s) s := by
   funext e
   by_cases hF : F.inSameComponent e.left e.right
-  · rw [interpWithFill, dif_pos hF, interpWithFill,
-      dif_pos (h.old_component hF), h.old_path hF]
+  · rw [interpWithFill, dite_eq_left hF, interpWithFill,
+      dite_eq_left (h.old_component hF), h.old_path hF]
     apply pathMin_eq_of_forall
     intro e' he'
     have heF : e' ∈ F.edges :=
       F.edge_mem_of_isSimplePath (F.pathInF_isSimple hF) e' he'
     exact (h.paramValue_extend_old u s heF).symm
   · by_cases hF' : F'.inSameComponent e.left e.right
-    · rw [interpWithFill, dif_neg hF, interpWithFill, dif_pos hF']
+    · rw [interpWithFill, dite_eq_right hF, interpWithFill, dite_eq_left hF']
       have huse : e₀ ∈ F'.pathInF e.left e.right hF' :=
         h.new_path_uses hF hF'
       have hlower :
@@ -451,7 +451,7 @@ theorem interpWithFill_extend_eq (h : EdgeExtension F F' e₀)
         F'.pathMin_le_of_mem_eq (h.extendParam u s) huse
           (h.paramValue_extend_new u s)
       exact (le_antisymm hupper hlower).symm
-    · rw [interpWithFill, dif_neg hF, interpWithFill, dif_neg hF']
+    · rw [interpWithFill, dite_eq_right hF, interpWithFill, dite_eq_right hF']
 
 end EdgeExtension
 

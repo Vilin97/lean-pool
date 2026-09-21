@@ -36,10 +36,13 @@ namespace OrderedGrowth
 
 variable {F G : Forest V} {e : Edge V} {order : List (Edge V)}
 
+/-- The intermediate forest, first extension, and tail of a nonempty ordered growth. -/
 structure ConsData (F : Forest V) (e : Edge V) (order : List (Edge V))
     (G : Forest V) where
+  /-- The intermediate forest after the first edge is adjoined. -/
   forest : Forest V
   step : EdgeExtension F forest e
+  /-- The remaining ordered growth from the intermediate forest to the final forest. -/
   tail : OrderedGrowth forest order G
 
 /-- Decompose a nonempty ordered growth into its first step and tail growth. -/

@@ -346,7 +346,7 @@ Final flattened root identity with the fiber-integrability obligation
 discharged by `BKARContDiff`. The remaining analytic input is the
 all-branches induction hypothesis.
 -/
-theorem rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty_of_contDiff_of_allBranchesAnalytic
+theorem oneConfig_eq_zeroConfig_add_nonemptyTreeSum_of_contDiff_of_analytic
     (hρ : BKARContDiff ρ) (choices : Forest.ActiveExtensionChoice V)
     (hanalytic :
       Forest.allBranchesAnalytic choices (Forest.empty V).activeEdges.card
@@ -360,7 +360,7 @@ theorem rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter
             (fun order =>
               Forest.boundarySupportOrderTreeFiber choices (Forest.empty V)
                 [] [] 1 I order ρ)) :=
-  Forest.rho_oneConfig_eq_zeroConfig_add_sum_boundarySupportOrderTreeFiber_filter_edges_ne_empty_of_nontrivialIntegrable
+  Forest.oneConfig_eq_zeroConfig_add_nonemptyTreeSum_of_nontrivialIntegrable
     choices ρ hanalytic
     (hρ.boundarySupportOrderTreeFiberNontrivialIntegrable_of_contDiff
       choices (Forest.empty V).activeEdges.card (Forest.empty V) [] [] 1 rfl)

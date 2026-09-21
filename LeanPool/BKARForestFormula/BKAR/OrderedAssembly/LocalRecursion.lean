@@ -93,7 +93,7 @@ Local selected-terminal recursion.  Starting from any forest and accumulated
 derivative list, one FTC layer contributes the selected terminal branch sum
 and leaves exactly the local first-tail errors.
 -/
-theorem mixedPartialList_interpWithFill_eq_standardInterp_add_branchIntegralAux_sub_sum_localFirstTailRemainder
+theorem mixedPartial_eq_standard_add_branchIntegralAux_sub_sum_tailRemainder
     (data : ActiveTerminalBranchData F)
     (es : List (Edge V)) (u : F.EdgeParam → ℝ)
     (ρ : (Edge V → ℝ) → ℝ) (b : ℝ)
@@ -123,7 +123,7 @@ Prefixed sector form of the local selected-terminal recursion.  This is the
 shape needed by the finishing induction: selected terminal branches are already
 expressed using the accumulated edge order `pref`.
 -/
-theorem mixedPartialList_interpWithFill_eq_standardInterp_add_sum_prefixed_orderedSimplexIntegralAux_sub_sum_localFirstTailRemainder
+theorem mixedPartial_eq_standard_add_prefixedSimplexSum_sub_sum_tailRemainder
     (data : ActiveTerminalBranchData F)
     (pref : List (Edge V)) (prefixTs : List ℝ)
     (hpref : pref.toFinset = F.edges)
@@ -153,7 +153,7 @@ theorem mixedPartialList_interpWithFill_eq_standardInterp_add_sum_prefixed_order
           Finset.sum F.activeEdges.attach
             (fun e => data.localFirstTailRemainder e b
               (F.paramsOfOrder pref prefixTs) pref.reverse ρ) := by
-  rw [data.mixedPartialList_interpWithFill_eq_standardInterp_add_branchIntegralAux_sub_sum_localFirstTailRemainder
+  rw [data.mixedPartial_eq_standard_add_branchIntegralAux_sub_sum_tailRemainder
     pref.reverse (F.paramsOfOrder pref prefixTs) ρ b hbound hρ hint]
   rw [data.branchIntegralAux_mixedPartialList_eq_sum_prefixed_orderedSimplexIntegralAux
     pref prefixTs hpref hprefixTs b ρ]

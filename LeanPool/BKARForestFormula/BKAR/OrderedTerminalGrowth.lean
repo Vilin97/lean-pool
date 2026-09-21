@@ -30,8 +30,11 @@ This packages one ordered branch together with the certificate that its final
 forest has no active edges left.
 -/
 structure TerminalGrowth (F : Forest V) where
+  /-- The list of edges adjoined along the terminal branch. -/
   order : List (Edge V)
+  /-- The final forest, which has no active edges. -/
   terminal : Forest V
+  /-- The ordered sequence of extensions reaching the terminal forest. -/
   growth : OrderedGrowth F order terminal
   terminal_activeEdges_eq_empty : terminal.activeEdges = ∅
 
@@ -322,7 +325,9 @@ For each active edge, this chooses a one-edge active extension and a terminal
 ordered tail branch from the extended forest.
 -/
 structure ActiveTerminalBranchData (F : Forest V) where
+  /-- The first extension chosen for each active edge. -/
   extension : ∀ e : {e // e ∈ F.activeEdges}, ActiveExtension F e.val
+  /-- The terminal ordered branch following each chosen first extension. -/
   tail :
     ∀ e : {e // e ∈ F.activeEdges},
       TerminalGrowth (extension e).forest
@@ -548,7 +553,7 @@ theorem branchIntegralAux_eq_sum_orderedSimplexIntegralAux_mixedPartialList_inte
           (fun ts => mixedPartialList (e.val :: (data.tail e).order).reverse ρ
             ((data.tail e).terminal.interpWithFill
               ((data.growth e).growth.params u ts) b))) :=
-  data.branchData.branchIntegralAux_eq_sum_orderedSimplexIntegralAux_mixedPartialList_interpWithFill_of_activeEdges_eq_empty
+  data.branchData.branchIntegralAux_eq_simplexSum_of_emptyActiveEdges
     data.branchData_terminal_activeEdges_eq_empty top u ρ b
 
 /--
@@ -569,7 +574,7 @@ theorem singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardIn
           mixedPartialList (e.val :: es) ρ
             ((extensions e).forest.standardInterp
               ((extensions e).extension.extendParam u t))) :=
-  ActiveBranchData.singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardInterp_of_activeEdges_eq_empty
+  ActiveBranchData.singleton_branchIntegralAux_eq_standardIntegralSum_of_emptyActiveEdges
     extensions es top u ρ hterm
 
 /--
@@ -589,12 +594,12 @@ theorem singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWith
           mixedPartialList (e.val :: es) ρ
             ((extensions e).forest.interpWithFill
               ((extensions e).extension.extendParam u t) t)) :=
-  ActiveBranchData.singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_interpWithFill_of_activeEdges_eq_empty
+  ActiveBranchData.singleton_branchIntegralAux_eq_integralSum_mixedPartial_of_emptyActiveEdges
     extensions es top u ρ hterm
 
 /--
 Unit-simplex standard-interpolation version of
-`ActiveTerminalBranchData.singleton_branchIntegralAux_eq_sum_integrals_mixedPartialList_standardInterp`.
+The standard-interpolation identity for `ActiveTerminalBranchData.singleton_branchIntegralAux`.
 -/
 theorem singleton_branchIntegral_eq_sum_integrals_mixedPartialList_standardInterp
     (extensions : ∀ e : {e // e ∈ F.activeEdges},

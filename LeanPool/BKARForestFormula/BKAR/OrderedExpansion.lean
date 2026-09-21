@@ -170,6 +170,7 @@ end EdgeExtension
 
 /-- A chosen one-edge forest extension for an edge. -/
 structure ActiveExtension (F : Forest V) (e : Edge V) where
+  /-- The forest obtained by adjoining the selected active edge. -/
   forest : Forest V
   extension : EdgeExtension F forest e
 
@@ -302,7 +303,7 @@ theorem interpWithFill_eq_standardInterp_of_activeEdges_eq_empty (F : Forest V)
     F.interpWithFill u t = F.standardInterp u := by
   funext e
   by_cases he : F.inSameComponent e.left e.right
-  · rw [interpWithFill, standardInterp, dif_pos he, dif_pos he]
+  · rw [interpWithFill, standardInterp, dite_eq_left he, dite_eq_left he]
   · have hactive : e ∈ F.activeEdges :=
       F.mem_activeEdges_of_not_inSameComponent he
     have hempty : e ∈ (∅ : Finset (Edge V)) := by
@@ -569,7 +570,7 @@ theorem mixedPartialList_interpWithFill_eq_standardInterp_add_sum_integrals_acti
 Terminal form of the ordered-recursion step: with no active edges, the boundary
 term is the whole contribution and the next remainder is zero.
 -/
-theorem mixedPartialList_interpWithFill_eq_standardInterp_add_sum_integrals_activeEdges_of_activeEdges_eq_empty
+theorem mixedPartial_eq_standard_add_integralSum_activeEdges_of_emptyActiveEdges
     (F : Forest V)
     (es : List (Edge V)) (u : F.EdgeParam → ℝ)
     (ρ : (Edge V → ℝ) → ℝ) (b : ℝ) (hF : F.activeEdges = ∅) :

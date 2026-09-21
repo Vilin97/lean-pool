@@ -26,10 +26,10 @@ extension characterization.
 namespace BKAR
 
 /-- Edges of the complete graph on `V`, represented as off-diagonal unordered pairs. -/
-abbrev Edge (V : Type*) [DecidableEq V] : Type _ :=
+abbrev Edge (V : Type*) : Type _ :=
   { e : Sym2 V // ¬ e.IsDiag }
 
-noncomputable instance instFintypeEdge {V : Type*} [Fintype V] [DecidableEq V] :
+noncomputable instance instFintypeEdge {V : Type*} [Fintype V] :
     Fintype (Edge V) :=
   Fintype.ofFinite (Edge V)
 
@@ -43,11 +43,13 @@ def mk (i j : V) (hij : i ≠ j) : Edge V :=
     intro hdiag
     exact hij ((Sym2.mk_isDiag_iff).mp hdiag)⟩
 
+omit [DecidableEq V] in
 @[simp]
 theorem mk_val (i j : V) (hij : i ≠ j) :
     (mk i j hij : Edge V).val = Sym2.mk i j :=
   rfl
 
+omit [DecidableEq V] in
 theorem not_isDiag (e : Edge V) : ¬ e.val.IsDiag :=
   e.property
 
@@ -55,9 +57,11 @@ theorem not_isDiag (e : Edge V) : ¬ e.val.IsDiag :=
 def Between (e : Edge V) (i j : V) : Prop :=
   e.val = Sym2.mk i j
 
+omit [DecidableEq V] in
 theorem mk_between (i j : V) (hij : i ≠ j) : (mk i j hij).Between i j :=
   rfl
 
+omit [DecidableEq V] in
 theorem mk_comm (i j : V) (hij : i ≠ j) :
     mk i j hij = mk j i hij.symm := by
   apply Subtype.ext
@@ -71,20 +75,27 @@ noncomputable def left (e : Edge V) : V :=
 noncomputable def right (e : Edge V) : V :=
   e.val.out.2
 
+omit [DecidableEq V] in
 theorem mk_left_right_eq (e : Edge V) :
     Sym2.mk e.left e.right = e.val := by
   change Sym2.mk e.val.out.1 e.val.out.2 = e.val
   exact e.val.out_eq
 
-theorem between_left_right (e : Edge V) : e.Between e.left e.right :=
-  (e.mk_left_right_eq).symm
+omit [DecidableEq V] in
+theorem between_left_right (e : Edge V) : e.Between e.left e.right := by
+  classical
+  exact
+    (e.mk_left_right_eq).symm
 
+omit [DecidableEq V] in
 theorem left_ne_right (e : Edge V) : e.left ≠ e.right := by
+  classical
   intro h
   exact e.property (by
     rw [← e.mk_left_right_eq]
     exact (Sym2.mk_isDiag_iff).mpr h)
 
+omit [DecidableEq V] in
 theorem not_between_self (e : Edge V) (i : V) :
     ¬ e.Between i i := by
   intro h
@@ -93,8 +104,10 @@ theorem not_between_self (e : Edge V) (i : V) :
     rw [h]
     exact (Sym2.mk_isDiag_iff).mpr rfl)
 
+omit [DecidableEq V] in
 theorem Between.symm {e : Edge V} {i j : V} (h : e.Between i j) :
     e.Between j i := by
+  classical
   rw [Between] at h ⊢
   rw [h]
   exact Sym2.eq_swap
@@ -120,6 +133,7 @@ def IsSimplePath (S : Finset (Edge V))
 
 namespace IsPath
 
+omit [DecidableEq V] in
 theorem mono {S T : Finset (Edge V)} (hsub : S ⊆ T) :
     ∀ {γ : List (Edge V)} {i j : V},
       IsPath S γ i j → IsPath T γ i j
@@ -131,6 +145,7 @@ theorem mono {S T : Finset (Edge V)} (hsub : S ⊆ T) :
       | cons he hbetween htail =>
           exact IsPath.cons (hsub he) hbetween (mono hsub htail)
 
+omit [DecidableEq V] in
 theorem mono_of_forall_mem {S T : Finset (Edge V)} :
     ∀ {γ : List (Edge V)} {i j : V},
       IsPath S γ i j →
@@ -148,6 +163,7 @@ theorem mono_of_forall_mem {S T : Finset (Edge V)} :
             (mono_of_forall_mem htail
               (fun e' he' => hmem e' (by simp [he'])))
 
+omit [DecidableEq V] in
 theorem edge_mem {S : Finset (Edge V)} :
     ∀ {γ : List (Edge V)} {i j : V},
       IsPath S γ i j → ∀ e ∈ γ, e ∈ S
@@ -161,6 +177,7 @@ theorem edge_mem {S : Finset (Edge V)} :
           exact he.elim (fun heq => heq ▸ he₀)
             (fun htail_mem => edge_mem htail e htail_mem)
 
+omit [DecidableEq V] in
 theorem append {S : Finset (Edge V)} :
     ∀ {γ₁ γ₂ : List (Edge V)} {i j k : V},
       IsPath S γ₁ i j → IsPath S γ₂ j k →
@@ -173,6 +190,7 @@ theorem append {S : Finset (Edge V)} :
       | cons he hbetween htail₁ =>
           exact IsPath.cons he hbetween (append htail₁ htail₂)
 
+omit [DecidableEq V] in
 theorem reverse {S : Finset (Edge V)} :
     ∀ {γ : List (Edge V)} {i j : V},
       IsPath S γ i j → IsPath S γ.reverse j i
@@ -190,12 +208,14 @@ end IsPath
 
 namespace IsSimplePath
 
+omit [DecidableEq V] in
 theorem mono {S T : Finset (Edge V)} (hsub : S ⊆ T)
     {γ : List (Edge V)} {i j : V}
     (h : IsSimplePath S γ i j) :
     IsSimplePath T γ i j :=
   ⟨h.1.mono hsub, h.2⟩
 
+omit [DecidableEq V] in
 theorem mono_of_forall_mem {S T : Finset (Edge V)}
     {γ : List (Edge V)} {i j : V}
     (h : IsSimplePath S γ i j)
@@ -203,12 +223,14 @@ theorem mono_of_forall_mem {S T : Finset (Edge V)}
     IsSimplePath T γ i j :=
   ⟨h.1.mono_of_forall_mem hmem, h.2⟩
 
+omit [DecidableEq V] in
 theorem edge_mem {S : Finset (Edge V)}
     {γ : List (Edge V)} {i j : V}
     (h : IsSimplePath S γ i j) :
     ∀ e ∈ γ, e ∈ S :=
   h.1.edge_mem
 
+omit [DecidableEq V] in
 theorem reverse {S : Finset (Edge V)}
     {γ : List (Edge V)} {i j : V}
     (h : IsSimplePath S γ i j) :
@@ -217,6 +239,7 @@ theorem reverse {S : Finset (Edge V)}
 
 end IsSimplePath
 
+omit [DecidableEq V] in
 theorem isSimplePath_empty_iff {γ : List (Edge V)} {i j : V} :
     IsSimplePath (∅ : Finset (Edge V)) γ i j ↔ γ = [] ∧ i = j := by
   constructor
@@ -230,6 +253,8 @@ theorem isSimplePath_empty_iff {γ : List (Edge V)} {i j : V} :
     rcases h with ⟨rfl, rfl⟩
     exact ⟨IsPath.nil i, List.nodup_nil⟩
 
+omit [DecidableEq V] in
+open Classical in
 theorem isPath_singleton_tail_nil {e₀ : Edge V} :
     ∀ {γ : List (Edge V)} {i j : V},
       IsSimplePath ({e₀} : Finset (Edge V)) γ i j →
@@ -250,10 +275,12 @@ theorem isPath_singleton_tail_nil {e₀ : Edge V} :
                 (List.nodup_cons.mp h.2).1
               exact False.elim (hnot (by simp [heq, heq']))
 
+omit [DecidableEq V] in
 theorem isSimplePath_singleton_iff {e₀ : Edge V}
     {γ : List (Edge V)} {i j : V} :
     IsSimplePath ({e₀} : Finset (Edge V)) γ i j ↔
       (γ = [] ∧ i = j) ∨ (γ = [e₀] ∧ e₀.Between i j) := by
+  classical
   constructor
   · intro h
     rcases isPath_singleton_tail_nil h with hnil | hsingle
@@ -286,8 +313,11 @@ by the acyclicity certificate.
 -/
 structure AcyclicEdgeSetData {V : Type*} [Fintype V] [DecidableEq V]
     (S : Finset (Edge V)) where
+  /-- The relation of belonging to the same connected component. -/
   inSameComponent : V → V → Prop
+  /-- The predicate that an edge list is a simple path between the given vertices. -/
   isSimplePath : List (Edge V) → V → V → Prop
+  /-- The canonical simple path between vertices in the same component. -/
   pathIn : (i j : V) → inSameComponent i j → List (Edge V)
   pathIn_isSimple :
     ∀ {i j : V} (h : inSameComponent i j), isSimplePath (pathIn i j h) i j
@@ -427,6 +457,7 @@ end AcyclicEdgeSetData
 
 /-- The finite edge-set index over which the final BKAR forest sum ranges. -/
 structure ForestIndex (V : Type*) [Fintype V] [DecidableEq V] where
+  /-- The finite acyclic edge set indexing a forest summand. -/
   edges : Finset (Edge V)
   acyclic : IsAcyclicEdgeSet edges
 
@@ -466,7 +497,9 @@ end ForestIndex
 
 /-- A forest is a finite edge set with the path API needed for BKAR interpolation. -/
 structure Forest (V : Type*) [Fintype V] [DecidableEq V] where
+  /-- The finite edge set of the forest. -/
   edges : Finset (Edge V)
+  /-- The component and unique-path data witnessing acyclicity of the edge set. -/
   acyclic : AcyclicEdgeSetData edges
   acyclic_insert_iff' :
     ∀ {i j : V} (hij : i ≠ j), Edge.mk i j hij ∉ edges →
@@ -518,9 +551,9 @@ def singletonAcyclicEdgeSetData (e₀ : Edge V) :
   pathIn_isSimple := by
     intro i j h
     by_cases hij : i = j
-    · rw [if_pos hij]
+    · rw [ite_eq_left hij]
       exact Or.inl ⟨rfl, hij⟩
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       apply Or.inr
       constructor
       · rfl
