@@ -839,6 +839,15 @@ import LeanPool.Desargues.Basic
 import LeanPool.Desargues.Morphism
 import LeanPool.Desargues.PV
 import LeanPool.Desargues.Structure
+import LeanPool.Dilatations
+import LeanPool.Dilatations.Basic
+import LeanPool.Dilatations.CategoryCounterexample
+import LeanPool.Dilatations.Centers
+import LeanPool.Dilatations.Duality
+import LeanPool.Dilatations.IteratedRings
+import LeanPool.Dilatations.NaiveCenterCounterexample
+import LeanPool.Dilatations.RingComparison
+import LeanPool.Dilatations.Rings
 import LeanPool.DirectedTopologyLean4
 import LeanPool.DirectedTopologyLean4.Constructions
 import LeanPool.DirectedTopologyLean4.CoverLemma
