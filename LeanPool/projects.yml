@@ -9966,3 +9966,41 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: densityhalesjewett
+    title: The density Hales–Jewett theorem and Szemerédi's theorem
+    summary: 'A Lean 4 formalization of the density Hales–Jewett theorem: for every finite alphabet
+      α and every density δ > 0, all sufficiently large n have the property that any set of
+      at least δ·|α|^n words of length n over α contains a combinatorial line. The basis for
+      the formalization is the combinatorial proof of Dodos, Kanellopoulos, and Tyros. As a
+      consequence, we also formalize Szemerédi''s theorem on the integers: for every k ≥ 3 and
+      δ > 0, the following holds for all sufficiently large n. Any subset of {0, …, n−1} of
+      size at least δ·n contains a nonconstant arithmetic progression of length k.'
+    branch: combinatorics
+    entry_module: LeanPool.DensityHalesJewett
+    authors:
+    - Gabriel Dahia
+    source:
+      url: https://github.com/gdahia/densityhalesjewett
+      github_repo: gdahia/densityhalesjewett
+      commit: 1c2f5aa1b99caa8e2a87beacf80f07f066c309d3
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - Combinatorics.Line.exists_of_density_atTop
+    - Combinatorics.ArithmeticProgression.exists_of_density_nat_atTop
+    main_results:
+    - declaration: Combinatorics.Line.exists_of_density_atTop
+      informal: Every positive-density subset of sufficiently long words over a finite nontrivial
+        alphabet contains a combinatorial line.
+    - declaration: Combinatorics.ArithmeticProgression.exists_of_density_nat_atTop
+      informal: Every positive-density subset of a sufficiently long initial interval of the
+        natural numbers contains an arithmetic progression of any prescribed length at least
+        three with nonzero common difference.
+    tags:
+    - combinatorics
+    msc:
+    - 05D10
+    - 05A05
+    - 11B75
+    - 68R15
+    provenance: AI

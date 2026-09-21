@@ -908,6 +908,7 @@ import LeanPool.DemazureProduct.Tableaux
 import LeanPool.DemazureProduct.Transpositions
 import LeanPool.DemazureProduct.Utils
 import LeanPool.DemazureProduct.Valley
+import LeanPool.DensityHalesJewett
 import LeanPool.Desargues
 import LeanPool.Desargues.Basic
 import LeanPool.Desargues.Morphism
