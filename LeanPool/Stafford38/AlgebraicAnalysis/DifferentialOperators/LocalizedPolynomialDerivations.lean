@@ -6,7 +6,7 @@ Authors: Christopher Albert
 
 import Mathlib.RingTheory.Etale.Kaehler
 import Mathlib.RingTheory.Kaehler.Polynomial
-import Mathlib.RingTheory.Derivation.Lie
+import Mathlib.RingTheory.Derivation.Basic
 
 /-!
 # Derivations through localizations
@@ -101,6 +101,15 @@ theorem derivation_ext_of_compAlgebraMap_eq
   simpa [Derivation.liftKaehlerDifferential_comp_D] using
     LinearMap.congr_fun hmaps (KaehlerDifferential.D k B x)
 
+/-- The commutator is constructed directly because the localization argument only needs
+its derivation rule, not the surrounding Lie-algebra structure. -/
+private def derivationCommutator (D E : Derivation k B B) : Derivation k B B :=
+  Derivation.mk' (D.toLinearMap.comp E.toLinearMap - E.toLinearMap.comp D.toLinearMap)
+    fun a b ↦ by
+      simp only [LinearMap.sub_apply, LinearMap.comp_apply, Derivation.coeFn_coe,
+        Derivation.leibniz, map_add, smul_eq_mul]
+      ring
+
 section Polynomial
 
 variable {k : Type u} {n : ℕ} [Field k]
@@ -181,7 +190,7 @@ theorem localizedPderiv_comm
         (localizedPderiv S B j).toLinearMap =
       (localizedPderiv S B j).toLinearMap.comp
         (localizedPderiv S B i).toLinearMap := by
-  have hcomm : ⁅localizedPderiv S B i, localizedPderiv S B j⁆ = 0 := by
+  have hcomm : derivationCommutator k B (localizedPderiv S B i) (localizedPderiv S B j) = 0 := by
     apply derivation_ext_of_compAlgebraMap_eq k _ B S
     apply Derivation.ext
     intro f
@@ -221,8 +230,7 @@ theorem localizedPderiv_comm
   apply LinearMap.ext
   intro x
   have hx := congrArg (fun d : Derivation k B B => d x) hcomm
-  exact sub_eq_zero.mp (by simpa [Derivation.commutator_apply,
-    LinearMap.comp_apply] using hx)
+  exact sub_eq_zero.mp (by simpa [derivationCommutator, LinearMap.comp_apply] using hx)
 
 end Polynomial
 
