@@ -52,7 +52,7 @@ variable {X E : Type*}
 
 namespace FiniteParabolicC2AlphaBanach
 
-variable {t₀ T α Bχ Kχ R : ℝ}
+variable {t₀ T α Bχ Kχ KA BB KB BC KC R : ℝ}
 
 /-- Principal coefficient frozen to `A c` away from the normalized cutoff. -/
 def finiteLocalizedPrincipalCoefficient

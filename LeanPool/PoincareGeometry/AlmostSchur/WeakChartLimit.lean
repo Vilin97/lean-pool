@@ -80,7 +80,7 @@ theorem ae_eq_comp_chart_symm {f g : M → ℝ}
           (A • (Measure.map e (ν.restrict e.source)).restrict K) :=
         Measure.map_mono hdom hq
       _ = A • Measure.map q ((Measure.map e (ν.restrict e.source)).restrict K) :=
-        Measure.map_smul A _ q
+        Measure.map_smul A hq.aemeasurable
       _ ≤ A • Measure.map q (Measure.map e (ν.restrict e.source)) :=
         smul_le_smul_left A (Measure.map_mono Measure.restrict_le_self hq)
       _ = A • ν.restrict e.source := by rw [hback]

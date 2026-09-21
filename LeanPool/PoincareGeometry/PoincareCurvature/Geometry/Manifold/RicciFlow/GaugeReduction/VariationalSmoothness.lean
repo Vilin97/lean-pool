@@ -301,9 +301,9 @@ theorem contDiffOn_three_of_augmented_tower {V : Type*} [NormedAddCommGroup V]
       simpa using hbase
     exact contDiffOn_succ_of_augmented_flow_contDiffOn_isOpen hS0 hderiv1 hmaps1 hbase'
   have h2' : ContDiffOn ℝ ((2 : ℕ) : WithTop ℕ∞) (fun w : V × (V →L[ℝ] V) => Ψ0 w t) S0 := by
-    simpa using h2
+    convert h2 using 1 <;> norm_num
   have h3 : ContDiffOn ℝ ((2 : ℕ) + 1) g0 s0 :=
     contDiffOn_succ_of_augmented_flow_contDiffOn_isOpen hs0 hderiv0 hmaps0 h2'
-  simpa using h3
+  convert h3 using 1 <;> norm_num
 
 end PoincareCurvature.VariationalSmoothness

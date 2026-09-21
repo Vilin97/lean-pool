@@ -74,9 +74,12 @@ theorem exists_uniform_manifold_flow_contMDiff {v : Π x : M, TangentSpace I x} 
     refine ⟨(continuousAt_extChartAt_symm'' hf3').comp h.continuousAt,
       HasDerivWithinAt.hasFDerivWithinAt ?_⟩
     simp only [mfld_simps, hasDerivWithinAt_univ]
-    change HasDerivAt ((extChartAt I z ∘ φ.symm) ∘ f) (v z) t
-    rw [← tangentCoordChange_self (I := I) (x := z) (z := z) (v := v z) hft2,
-      ← tangentCoordChange_comp (x := x) ⟨⟨hft2, hft1⟩, hft2⟩]
+    change HasDerivWithinAt ((extChartAt I z ∘ φ.symm) ∘ f) (v z) univ t
+    apply HasDerivAt.hasDerivWithinAt
+    let vz : E := v z
+    change HasDerivAt ((extChartAt I z ∘ φ.symm) ∘ f) vz t
+    rw [← tangentCoordChange_self (I := I) (x := z) (z := z) (v := vz) hft2,
+      ← tangentCoordChange_comp (x := x) (v := vz) ⟨⟨hft2, hft1⟩, hft2⟩]
     apply HasFDerivAt.comp_hasDerivAt _ _ h
     apply HasFDerivWithinAt.hasFDerivAt (s := range I) _ (by simp [I.range_eq_univ])
     rw [← φ.right_inv hf3']

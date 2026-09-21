@@ -4660,6 +4660,8 @@ theorem bilinearDerivationField_norm_le
     (hbound : ∀ (i : κ) (x : Kc i),
       ‖(et i).continuousLinearMapAt ℝ x.1‖ * ‖(et i).symmL ℝ x.1‖ * ‖P x.1‖ ≤ C) :
     ‖bilinearDerivationField et Kc hKc Ko hKo hKoEq hcover hP C hC hbound‖ ≤ 2 * C := by
+  letI : ∀ x, SeminormedAddCommGroup (W x →L[ℝ] ℝ) :=
+    fun _ => ContinuousLinearMap.toSeminormedAddCommGroup
   unfold bilinearDerivationField
   refine (norm_add_le _ _).trans ?_
   rw [two_mul]

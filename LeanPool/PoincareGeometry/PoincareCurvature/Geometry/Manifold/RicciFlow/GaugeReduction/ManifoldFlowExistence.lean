@@ -194,9 +194,12 @@ theorem exists_nhds_uniform_integralCurve {E H M : Type*} [NormedAddCommGroup E]
     refine ⟨(continuousAt_extChartAt_symm'' hf3').comp h.continuousAt,
       HasDerivWithinAt.hasFDerivWithinAt ?_⟩
     simp only [mfld_simps, hasDerivWithinAt_univ]
-    change HasDerivAt ((extChartAt I xₜ ∘ (extChartAt I x₀).symm) ∘ g) (v xₜ) t
-    rw [← tangentCoordChange_self (I := I) (x := xₜ) (z := xₜ) (v := v xₜ) hft2,
-      ← tangentCoordChange_comp (x := x₀) ⟨⟨hft2, hft1⟩, hft2⟩]
+    change HasDerivWithinAt ((extChartAt I xₜ ∘ (extChartAt I x₀).symm) ∘ g) (v xₜ) univ t
+    apply HasDerivAt.hasDerivWithinAt
+    let vz : E := v xₜ
+    change HasDerivAt ((extChartAt I xₜ ∘ (extChartAt I x₀).symm) ∘ g) vz t
+    rw [← tangentCoordChange_self (I := I) (x := xₜ) (z := xₜ) (v := vz) hft2,
+      ← tangentCoordChange_comp (x := x₀) (v := vz) ⟨⟨hft2, hft1⟩, hft2⟩]
     apply HasFDerivAt.comp_hasDerivAt _ _ h
     apply HasFDerivWithinAt.hasFDerivAt (s := range I) _ <|
       mem_nhds_iff.mpr ⟨interior (extChartAt I x₀).target,
@@ -318,9 +321,12 @@ theorem exists_nhds_uniform_localFlow_continuousOn {E H M : Type*}
       refine ⟨(continuousAt_extChartAt_symm'' hf3').comp h.continuousAt,
         HasDerivWithinAt.hasFDerivWithinAt ?_⟩
       simp only [mfld_simps, hasDerivWithinAt_univ]
-      change HasDerivAt ((extChartAt I xₜ ∘ (extChartAt I x₀).symm) ∘ g) (v xₜ) t
-      rw [← tangentCoordChange_self (I := I) (x := xₜ) (z := xₜ) (v := v xₜ) hft2,
-        ← tangentCoordChange_comp (x := x₀) ⟨⟨hft2, hft1⟩, hft2⟩]
+      change HasDerivWithinAt ((extChartAt I xₜ ∘ (extChartAt I x₀).symm) ∘ g) (v xₜ) univ t
+      apply HasDerivAt.hasDerivWithinAt
+      let vz : E := v xₜ
+      change HasDerivAt ((extChartAt I xₜ ∘ (extChartAt I x₀).symm) ∘ g) vz t
+      rw [← tangentCoordChange_self (I := I) (x := xₜ) (z := xₜ) (v := vz) hft2,
+        ← tangentCoordChange_comp (x := x₀) (v := vz) ⟨⟨hft2, hft1⟩, hft2⟩]
       apply HasFDerivAt.comp_hasDerivAt _ _ h
       apply HasFDerivWithinAt.hasFDerivAt (s := range I) _ <|
         mem_nhds_iff.mpr ⟨interior (extChartAt I x₀).target,
@@ -498,6 +504,8 @@ theorem isTimeDependentIntegralCurve_of_autonomous {E H M : Type*} [NormedAddCom
       = (1 : ℝ →L[ℝ] ℝ).smulRight (X t ((Γ t).2)) := by
     ext
     simp [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply, hfst t ht]
+    change (1 : ℝ) • X t (Γ t).2 = _
+    exact one_smul _ _
   exact hclm ▸ hcomp
 
 /-- **The time component tracks the parameter.** An integral curve `Γ` of the
@@ -522,7 +530,13 @@ theorem autonomous_fst_eq_id {E H M : Type*} [NormedAddCommGroup E] [NormedSpace
       ((hasMFDerivAt_fst (Γ τ)).hasMFDerivWithinAt (s := univ)).comp τ (hΓ τ hτ)
         (by rw [preimage_univ]; exact subset_univ s)
     rw [hasMFDerivWithinAt_iff_hasFDerivWithinAt] at hcomp
-    have hdw := hcomp.hasDerivWithinAt
+    let D : ℝ →L[ℝ] ℝ :=
+      (ContinuousLinearMap.fst ℝ (TangentSpace 𝓘(ℝ, ℝ) (Γ τ).1)
+        (TangentSpace I (Γ τ).2)).comp
+        ((1 : ℝ →L[ℝ] ℝ).smulRight
+          (((1 : ℝ), X (Γ τ).1 (Γ τ).2) : TangentSpace ((𝓘(ℝ, ℝ)).prod I) (Γ τ)))
+    have hcomp' : HasFDerivWithinAt (Prod.fst ∘ Γ) D s τ := hcomp
+    have hdw := hcomp'.hasDerivWithinAt
     have hfun : (Prod.fst ∘ Γ) = φ := rfl
     rw [hfun] at hdw
     refine hdw.congr_deriv ?_
@@ -530,7 +544,8 @@ theorem autonomous_fst_eq_id {E H M : Type*} [NormedAddCommGroup E] [NormedSpace
         (ContinuousLinearMap.smulRight (1 : ℝ →L[ℝ] ℝ)
           (((1 : ℝ), X (Γ τ).1 (Γ τ).2) : TangentSpace ((𝓘(ℝ, ℝ)).prod I) (Γ τ))))
         (1 : ℝ) = (1 : ℝ)
-    simp [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply]
+    change (1 : ℝ) * 1 = 1
+    exact mul_one _
   have hderiv : ∀ τ ∈ s, deriv φ τ = 1 := fun τ hτ =>
     ((hd τ hτ).hasDerivAt (hs.mem_nhds hτ)).deriv
   have hdiff : DifferentiableOn ℝ φ s := fun τ hτ => (hd τ hτ).differentiableWithinAt
@@ -568,7 +583,13 @@ theorem autonomous_fst_eq_add {E H M : Type*} [NormedAddCommGroup E] [NormedSpac
       ((hasMFDerivAt_fst (Γ τ)).hasMFDerivWithinAt (s := univ)).comp τ (hΓ τ hτ)
         (by rw [preimage_univ]; exact subset_univ s)
     rw [hasMFDerivWithinAt_iff_hasFDerivWithinAt] at hcomp
-    have hdw := hcomp.hasDerivWithinAt
+    let D : ℝ →L[ℝ] ℝ :=
+      (ContinuousLinearMap.fst ℝ (TangentSpace 𝓘(ℝ, ℝ) (Γ τ).1)
+        (TangentSpace I (Γ τ).2)).comp
+        ((1 : ℝ →L[ℝ] ℝ).smulRight
+          (((1 : ℝ), X (Γ τ).1 (Γ τ).2) : TangentSpace ((𝓘(ℝ, ℝ)).prod I) (Γ τ)))
+    have hcomp' : HasFDerivWithinAt (Prod.fst ∘ Γ) D s τ := hcomp
+    have hdw := hcomp'.hasDerivWithinAt
     have hfun : (Prod.fst ∘ Γ) = φ := rfl
     rw [hfun] at hdw
     refine hdw.congr_deriv ?_
@@ -576,7 +597,8 @@ theorem autonomous_fst_eq_add {E H M : Type*} [NormedAddCommGroup E] [NormedSpac
         (ContinuousLinearMap.smulRight (1 : ℝ →L[ℝ] ℝ)
           (((1 : ℝ), X (Γ τ).1 (Γ τ).2) : TangentSpace ((𝓘(ℝ, ℝ)).prod I) (Γ τ))))
         (1 : ℝ) = (1 : ℝ)
-    simp [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply]
+    change (1 : ℝ) * 1 = 1
+    exact mul_one _
   have hderiv : ∀ τ ∈ s, deriv φ τ = 1 := fun τ hτ =>
     ((hd τ hτ).hasDerivAt (hs.mem_nhds hτ)).deriv
   have hdiff : DifferentiableOn ℝ φ s := fun τ hτ => (hd τ hτ).differentiableWithinAt
@@ -665,11 +687,10 @@ theorem autonomousLift_hasMFDerivWithinAt {E H M : Type*} [NormedAddCommGroup E]
   refine h.congr_mfderiv ?_
   refine ContinuousLinearMap.ext fun r => ?_
   refine Prod.ext ?_ rfl
-  rw [ContinuousLinearMap.prod_apply]
-  show (ContinuousLinearMap.id ℝ ℝ) r
-      = ((1 : ℝ →L[ℝ] ℝ) r • ((1 : ℝ), X t (γ t)) : ℝ × TangentSpace I (γ t)).1
-  rw [ContinuousLinearMap.id_apply, Prod.smul_fst, ContinuousLinearMap.one_apply,
-    smul_eq_mul, mul_one]
+  let r' : ℝ := r
+  change r' = r' * 1
+  exact (mul_one _).symm
+
 
 /-- **Joint continuity at the anchor of a *time-dependent* manifold flow — via autonomisation and the
 jointly-continuous flow box.** For a jointly-`C¹` time-dependent field `X` on a boundaryless complete

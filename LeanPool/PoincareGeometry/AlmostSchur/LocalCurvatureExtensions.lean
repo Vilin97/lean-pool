@@ -56,7 +56,8 @@ theorem exists_contMDiff_section_germ_with_coefficients
     ContMDiffOn.smul_section_of_tsupport hφ.contMDiffOn hVo hφV hWV
   refine ⟨W', hW', ?_, ?_⟩
   · filter_upwards [φ.eventuallyEq_one] with y hy
-    simp [W', hy]
+    simp only [W', hy, Pi.one_apply, one_smul]
+    rfl
   · intro i
     have hbase : ContMDiffOn I 𝓘(ℝ, ℝ) n
         (fun y ↦ e.localFrameCoeff I b i y (W' y)) e.baseSet :=

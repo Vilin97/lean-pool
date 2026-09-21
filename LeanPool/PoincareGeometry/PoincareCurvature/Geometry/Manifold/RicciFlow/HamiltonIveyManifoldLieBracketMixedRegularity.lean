@@ -119,10 +119,18 @@ theorem hasDerivAt_mlieBracket_left_of_joint_contMDiffAt
   have hbracket := hasDerivAt_lieBracket_left_of_joint_contDiffAt U Udot V hU hUtime hV
   let L : E →L[ℝ] TM x := (mfderiv I 𝓘(ℝ, E) (extChartAt I x) x).inverse
   have htransport := L.hasFDerivAt.comp_hasDerivAt t hbracket
-  simpa only [VectorField.mlieBracket, VectorField.mlieBracketWithin_apply,
-    Set.preimage_univ, Set.univ_inter,
-    ModelWithCorners.Boundaryless.range_eq_univ, VectorField.lieBracketWithin_univ,
-    Function.comp_def, U, Udot, V, L] using! htransport
+  have htransport' : HasDerivAt
+      (fun τ => L (VectorField.lieBracketWithin ℝ (U τ) V (range I) (extChartAt I x x)))
+      (L (VectorField.lieBracketWithin ℝ Udot V (range I) (extChartAt I x x))) t := by
+    convert htransport using 1 <;> first
+      | rfl
+      | simp only [ModelWithCorners.Boundaryless.range_eq_univ,
+          VectorField.lieBracketWithin_univ]
+    all_goals rfl
+  convert htransport' using 1 <;>
+    simp only [VectorField.mlieBracket, VectorField.mlieBracketWithin_apply,
+      Set.preimage_univ, Set.univ_inter, Function.comp_def, U, Udot, V, L] <;> rfl
+
 
 /-- The corresponding derivative in the right slot follows by antisymmetry. -/
 theorem hasDerivAt_mlieBracket_right_of_joint_contMDiffAt

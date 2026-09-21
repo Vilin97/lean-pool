@@ -34,10 +34,8 @@ lemma extDerivFun_const_smul_apply (c : ℝ) {f : M → ℝ} {x : M} (u : Tangen
   have hfun : (fun y : M ↦ c * f y) = (fun _ : M ↦ c) • f := by
     funext y; simp [smul_eq_mul]
   rw [hfun]
-  have key := fromTangentSpace_mfderiv_smul_apply (f := fun _ : M ↦ c) (g := f)
-    mdifferentiableAt_const hf u
-  show NormedSpace.fromTangentSpace _ (mfderiv% ((fun _ : M ↦ c) • f) x u) = _
-  rw [key]
-  simp
+  rw [mvfderiv_smul mdifferentiableAt_const hf]
+  simp [mvfderiv_const]
+
 
 end RicciFlow

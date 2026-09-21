@@ -796,7 +796,7 @@ lemma heatKernelND_le_pow {n : ℕ} {t : ℝ} (ht : 0 < t) (x : Fin n → ℝ) :
   rw [heatKernelND_apply]
   calc ∏ i, heatKernel1D t (x i)
       ≤ ∏ _i : Fin n, (4 * π * t) ^ (-(1 : ℝ) / 2) := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro i _; exact heatKernel1D_nonneg ht (x i)
         · intro i _; exact heatKernel1D_le_prefactor ht (x i)
     _ = ((4 * π * t) ^ (-(1 : ℝ) / 2)) ^ n := by
@@ -1863,7 +1863,7 @@ lemma heatKernelND_le_factor (n : ℕ) (t : ℝ) (ht : 0 < t) (x : Fin n → ℝ
   apply mul_le_mul_of_nonneg_left _ (heatKernel1D_nonneg ht (x i))
   calc ∏ j ∈ Finset.univ.erase i, heatKernel1D t (x j)
       ≤ ∏ _j ∈ Finset.univ.erase i, (4 * π * t) ^ (-(1 : ℝ) / 2) := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro j _; exact heatKernel1D_nonneg ht (x j)
         · intro j _; exact heatKernel1D_le_prefactor ht (x j)
     _ = ((4 * π * t) ^ (-(1 : ℝ) / 2)) ^ (n - 1) := by
@@ -2030,7 +2030,7 @@ theorem heatKernelND_update_sub_abs_le (n : ℕ) (t : ℝ) (ht : 0 < t)
       ≤ ((4 * π * t) ^ (-(1 : ℝ) / 2)) ^ (n - 1) := by
     calc (∏ j ∈ Finset.univ.erase i, heatKernel1D t (x j))
         ≤ ∏ _j ∈ Finset.univ.erase i, (4 * π * t) ^ (-(1 : ℝ) / 2) :=
-          Finset.prod_le_prod (fun j _ => heatKernel1D_nonneg ht (x j))
+          Finset.prod_le_prod₀ (fun j _ => heatKernel1D_nonneg ht (x j))
             (fun j _ => heatKernel1D_le_prefactor ht (x j))
       _ = ((4 * π * t) ^ (-(1 : ℝ) / 2)) ^ (n - 1) := by
           rw [Finset.prod_const, Finset.card_erase_of_mem (Finset.mem_univ i), Finset.card_univ,
@@ -6865,7 +6865,7 @@ lemma heatKernelND_le_const_mul_heatKernelND_of_mem_Icc {n : ℕ} {a b t : ℝ}
   calc heatKernelND t w
       = ∏ i, heatKernel1D t (w i) := rfl
     _ ≤ ∏ i, ((4 * π * a) ^ (-(1 : ℝ) / 2) * (4 * π * b) ^ ((1 : ℝ) / 2)) * heatKernel1D b (w i) :=
-        Finset.prod_le_prod (fun i _ => heatKernel1D_nonneg ht0 (w i)) (fun i _ => hcoord (w i))
+        Finset.prod_le_prod₀ (fun i _ => heatKernel1D_nonneg ht0 (w i)) (fun i _ => hcoord (w i))
     _ = ((4 * π * a) ^ (-(1 : ℝ) / 2) * (4 * π * b) ^ ((1 : ℝ) / 2)) ^ n
           * ∏ i, heatKernel1D b (w i) := by
         rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]

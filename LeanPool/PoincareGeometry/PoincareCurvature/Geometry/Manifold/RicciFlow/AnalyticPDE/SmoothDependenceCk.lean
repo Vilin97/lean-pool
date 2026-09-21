@@ -909,13 +909,11 @@ theorem norm_flow_sub_variational_le
         (A s (g s - f s - w s) + (v s (g s) - v s (f s) - A s (g s - f s))) s
     have hd := ((hg s).sub (hf s)).sub (hw s)
     convert hd using 1
-    · funext r
-      rfl
-    · change A s (g s - f s - w s) +
-          (v s (g s) - v s (f s) - A s (g s - f s)) =
-        v s (g s) - v s (f s) - A s (w s)
-      simp only [map_sub]
-      abel
+    change A s (g s - f s - w s) +
+        (v s (g s) - v s (f s) - A s (g s - f s)) =
+      v s (g s) - v s (f s) - A s (w s)
+    simp only [map_sub]
+    abel
   -- the base and perturbed fields differ by at most `δ`, uniformly in `(s, u)`
   have hpert : ∀ s u, dist (variationalFieldVec A s u)
       (A s u + (v s (g s) - v s (f s) - A s (g s - f s))) ≤ δ := by

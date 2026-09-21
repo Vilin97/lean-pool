@@ -283,7 +283,9 @@ theorem matrix_apply_c2AlphaNormLe {m n A : Type*} [Fintype m] [Fintype n]
   let L : Matrix m n A →L[ℝ] A :=
     (ContinuousLinearMap.proj j : (n → A) →L[ℝ] A).comp
       (ContinuousLinearMap.proj i : Matrix m n A →L[ℝ] n → A)
-  simpa [L] using h.continuousLinearMap L
+  have hport := h.continuousLinearMap L
+  simp [L] at hport ⊢
+  exact hport
 
 /-- Entrywise full higher parabolic controls assemble into a matrix-valued full higher
 parabolic norm ball by inserting entries and summing them. -/
@@ -991,7 +993,9 @@ theorem ricciDeTurckSchematicMatrix_lipschitzOnWith_toCompactCoordFamily_of_high
       (hMdiff hu hv) (hDdiff hu hv) (hHdiff hu hv)
       hδpos (hdet hu) (hdet hv)
   intro z hz
-  simpa [hAeq hu z, hAeq hv z] using hraw hz
+  have hport := hraw hz
+  simp [hAeq hu z, hAeq hv z] at hport ⊢
+  exact hport
 
 /-- Compact-coordinate readout Lipschitz bridge from higher primitive controls with coarser
 exported constants.  Entrywise higher difference controls may use sharp constants, while the
@@ -1073,7 +1077,9 @@ theorem ricciDeTurckSchematicMatrix_lipschitzOnWith_toCompactCoordFamily_of_high
         (hMdiff hu hv) (hDdiff hu hv) (hHdiff hu hv)
         hδpos (hdet hu) (hdet hv)
   intro z hz
-  simpa [hAeq hu z, hAeq hv z] using hraw hz
+  have hport := hraw hz
+  simp [hAeq hu z, hAeq hv z] at hport ⊢
+  exact hport
 
 /-- Linear finite-cover readout version of
 `ricciDeTurckSchematicMatrix_lipschitzOnWith_toCompactCoordFamily_of_higher_primitive_normLe`.
@@ -1286,8 +1292,7 @@ theorem ricciDeTurckSchematicMatrix_compactCoord_dist_le_of_higher_primitive_nor
       (KM := KM) (KD := KD) (KH := KH) (C := C) (DB := DB) (HB := HB)
       (stateSet := stateSet) (A := A) (M := M) (D := D) (H := H)
       hDB hHB hKM hKD hKH hM hD hH hMdiff hDdiff hHdiff hδpos hdet hAeq
-  simpa using
-    (parabolicC0AlphaSubmodule.forall_compactCoord_dist_le_of_toCompactCoordFamily_lipschitzOnWith
+  exact (parabolicC0AlphaSubmodule.forall_compactCoord_dist_le_of_toCompactCoordFamily_lipschitzOnWith
       (X := X) (E := Matrix n n ℝ) (α := α) (s := s)
       Kdom hKdom hα hLip)
 
@@ -1722,8 +1727,7 @@ theorem ricciDeTurckSchematicMatrix_compactCoord_dist_le_of_higher_primitive_nor
       hDB hHB hKM0_nonneg hKD0_nonneg hKH0_nonneg
       hKM_nonneg hKD_nonneg hKH_nonneg hKM_le hKD_le hKH_le
       hM hD hH hMdiff hDdiff hHdiff hδpos hdet hAeq
-  simpa using
-    (parabolicC0AlphaSubmodule.forall_compactCoord_dist_le_of_toCompactCoordFamily_lipschitzOnWith
+  exact (parabolicC0AlphaSubmodule.forall_compactCoord_dist_le_of_toCompactCoordFamily_lipschitzOnWith
       (X := X) (E := Matrix n n ℝ) (α := α) (s := s)
       Kdom hKdom hα hLip)
 
@@ -2348,15 +2352,17 @@ theorem ricciDeTurckSchematicMatrix_lipschitzOnWith_of_metric_entries_directions
       (J u i j) htime hspace
     have hread := hctrl.2.1.continuousLinearMap
       (firstDerivativeVectorReadout (X := X) (E := ℝ) (ξ a))
-    simpa [firstDerivativeVectorRadius, firstDerivativeVectorReadoutOpNorm] using
-      hread.norm_le hz
+    have hport := hread.norm_le hz
+    simp [firstDerivativeVectorRadius, firstDerivativeVectorReadoutOpNorm] at hport ⊢
+    exact hport
   · intro u hu z hz a b i j
     have hctrl := (hM hu i j).secondJet_c0AlphaNormLe_self_of_unique
       (J u i j) htime hspace
     have hread := hctrl.2.2.1.continuousLinearMap
       (secondDerivativeVectorReadout (X := X) (E := ℝ) (ξ a) (ξ b))
-    simpa [secondDerivativeVectorRadius, secondDerivativeVectorReadoutOpNorm] using
-      hread.norm_le hz
+    have hport := hread.norm_le hz
+    simp [secondDerivativeVectorRadius, secondDerivativeVectorReadoutOpNorm] at hport ⊢
+    exact hport
   · intro u hu v hv z hz
     exact matrix_norm_sub_le_sum_mul_of_entries
       (X := X) (α := α) (s := s) (K := KM) (M := M u) (N := M v)
@@ -2369,8 +2375,9 @@ theorem ricciDeTurckSchematicMatrix_lipschitzOnWith_of_metric_entries_directions
     have hentry :
         ‖(J u i j).spaceDeriv z (ξ a) - (J v i j).spaceDeriv z (ξ a)‖ ≤
           firstDerivativeVectorRadius (X := X) ξ KM a i j * dist u v := by
-      simpa [firstDerivativeVectorRadius, firstDerivativeVectorReadoutOpNorm, mul_assoc]
-        using hread.norm_le hz
+      have hport := hread.norm_le hz
+      simp [firstDerivativeVectorRadius, firstDerivativeVectorReadoutOpNorm, mul_assoc] at hport ⊢
+      exact hport
     exact hentry.trans
       (mul_le_mul_of_nonneg_right
         (entry_le_triple_sum hKDentry_nonneg a i j) dist_nonneg)
@@ -2389,8 +2396,10 @@ theorem ricciDeTurckSchematicMatrix_lipschitzOnWith_of_metric_entries_directions
         ‖(J u i j).spaceSecondDeriv z (ξ a) (ξ b) -
           (J v i j).spaceSecondDeriv z (ξ a) (ξ b)‖ ≤
           secondDerivativeVectorRadius (X := X) ξ KM a b i j * dist u v := by
-      simpa [secondDerivativeVectorRadius, secondDerivativeVectorReadoutOpNorm,
-        Pi.sub_apply, mul_assoc] using hread.norm_le hz
+      have hport := hread.norm_le hz
+      simp [secondDerivativeVectorRadius, secondDerivativeVectorReadoutOpNorm,
+        Pi.sub_apply, mul_assoc] at hport ⊢
+      exact hport
     have hentry_le_sum :
         secondDerivativeVectorRadius (X := X) ξ KM a b i j ≤
           ∑ a, ∑ b, secondDerivativeVectorRadius (X := X) ξ KM a b i j := by
@@ -2640,7 +2649,9 @@ theorem ricciDeTurckSchematicMatrix_lipschitzOnWith_pi_family_of_metric_entries_
           (fun a i j => (J r v i j).spaceDeriv z (ξ r a))
           (fun a b i j => (J r v i j).spaceSecondDeriv z (ξ r a) (ξ r b))‖ ≤
         Kcoord r * dist u v := by
-    simpa [dist_eq_norm] using hr
+    have hport := hr
+    simp [dist_eq_norm] at hport ⊢
+    exact hport
   exact hentry.trans (mul_le_mul_of_nonneg_right hr_le_sum dist_nonneg)
 
 /-- Compact-coordinate readout Lipschitz bridge for the schematic Ricci-DeTurck RHS when the
@@ -2831,8 +2842,7 @@ theorem ricciDeTurckSchematicMatrix_compactCoord_dist_le_of_metric_entries_direc
       (X := X) (α := α) (s := s) Kdom hKdom hα ξ
       (δ := δ) (C := C) (KM := KM) (stateSet := stateSet)
       (A := A) (M := M) J hC hKM hM hMdiff htime hspace hδpos hdet hAeq
-  simpa using
-    (parabolicC0AlphaSubmodule.forall_compactCoord_dist_le_of_toCompactCoordFamily_lipschitzOnWith
+  exact (parabolicC0AlphaSubmodule.forall_compactCoord_dist_le_of_toCompactCoordFamily_lipschitzOnWith
       (X := X) (E := Matrix n n ℝ) (α := α) (s := s)
       Kdom hKdom hα hLip)
 
@@ -3152,8 +3162,7 @@ theorem ricciDeTurckSchematicMatrix_compactCoord_dist_le_pi_family_of_metric_ent
       (X := X) (α := α) (s := s) Kdom hKdom hα ξ
       (δ := δ) (C := C) (KM := KM) (stateSet := stateSet)
       (A := A) (M := M) J hC hKM hM hMdiff htime hspace hδpos hdet hAeq
-  simpa using
-    (parabolicC0AlphaSubmodule.forall_compactCoord_dist_le_of_toCompactCoordFamily_lipschitzOnWith
+  exact (parabolicC0AlphaSubmodule.forall_compactCoord_dist_le_of_toCompactCoordFamily_lipschitzOnWith
       (X := X) (E := κ → Matrix n n ℝ) (α := α) (s := s)
       Kdom hKdom hα hLip)
 
@@ -3550,7 +3559,9 @@ theorem ricciDeTurckSchematicMatrix_lipschitzOnWith_pi_family_of_higher_primitiv
           (M r u z) (D r u z) (H r u z) -
         ParabolicC0AlphaOn.ricciDeTurckSchematicMatrix
           (M r v z) (D r v z) (H r v z)‖ ≤ Kcoord r * dist u v := by
-    simpa [dist_eq_norm] using hr
+    have hport := hr
+    simp [dist_eq_norm] at hport ⊢
+    exact hport
   exact hentry.trans (mul_le_mul_of_nonneg_right hr_le_sum dist_nonneg)
 
 /-- Finite-family state-space Lipschitz bridge from higher primitive controls with coarser
@@ -3706,7 +3717,9 @@ theorem ricciDeTurckSchematicMatrix_lipschitzOnWith_pi_family_of_higher_primitiv
           (M r u z) (D r u z) (H r u z) -
         ParabolicC0AlphaOn.ricciDeTurckSchematicMatrix
           (M r v z) (D r v z) (H r v z)‖ ≤ Kcoord r * dist u v := by
-    simpa [dist_eq_norm] using hr
+    have hport := hr
+    simp [dist_eq_norm] at hport ⊢
+    exact hport
   exact hentry.trans (mul_le_mul_of_nonneg_right hr_le_sum dist_nonneg)
 
 end ParabolicC2AlphaNormLe
@@ -3734,7 +3747,9 @@ theorem matrix_apply_c2AlphaOn {m n A : Type*} [Fintype m] [Fintype n]
   let L : Matrix m n A →L[ℝ] A :=
     (ContinuousLinearMap.proj j : (n → A) →L[ℝ] A).comp
       (ContinuousLinearMap.proj i : Matrix m n A →L[ℝ] n → A)
-  simpa [L] using h.continuousLinearMap L
+  have hport := h.continuousLinearMap L
+  simp [L] at hport ⊢
+  exact hport
 
 /-- Entrywise higher parabolic membership assembles into matrix-valued higher parabolic
 membership. -/
@@ -3783,13 +3798,14 @@ theorem ricciDeTurckSchematicMatrix_c0AlphaOn_of_entries {n : Type*}
     ParabolicC0AlphaOn α
       (fun z : ℝ × X =>
         ParabolicC0AlphaOn.ricciDeTurckSchematicMatrix (M z) (D z) (H z)) s := by
-  simpa [ParabolicC0AlphaOn.ricciDeTurckSchematicMatrix] using
-    (ParabolicC0AlphaOn.ricciDeTurck_schematic
+  have hport := (ParabolicC0AlphaOn.ricciDeTurck_schematic
       (M := M) (D := D) (H := H)
       (fun a b => (hM a b).c0AlphaOn)
       (fun a b c => (hD a b c).c0AlphaOn)
       (fun a b i j => (hH a b i j).c0AlphaOn)
       hδpos hdet)
+  simp [ParabolicC0AlphaOn.ricciDeTurckSchematicMatrix] at hport ⊢
+  exact hport
 
 /-- Finite-family direct higher-regularity handoff for schematic Ricci-DeTurck RHS coordinates. -/
 theorem ricciDeTurckSchematicMatrix_c0AlphaOn_family_of_entries {κ n : Type*}
@@ -4641,8 +4657,7 @@ theorem chosenMatrixEntrySecondJet_ricciDeTurckSchematicMatrix_c0AlphaOn_of_dire
     simpa [chosenMatrixEntrySecondJet, secondDerivativeVectorReadout] using
       hbase.continuousLinearMap
         (secondDerivativeVectorReadout (X := X) (E := ℝ) (v a) (v b))
-  simpa [ParabolicC0AlphaOn.ricciDeTurckSchematicMatrix] using
-    (ParabolicC0AlphaOn.ricciDeTurck_schematic
+  have hport := (ParabolicC0AlphaOn.ricciDeTurck_schematic
       (X := X) (α := α) (s := s) (𝕜 := ℝ)
       (M := fun z : ℝ × X => M z)
       (D := fun z a i j =>
@@ -4651,6 +4666,8 @@ theorem chosenMatrixEntrySecondJet_ricciDeTurckSchematicMatrix_c0AlphaOn_of_dire
         (chosenMatrixEntrySecondJet
           (X := X) (α := α) (s := s) i j M).spaceSecondDeriv z (v a) (v b))
       hM hD hH hδpos hdet)
+  simp [ParabolicC0AlphaOn.ricciDeTurckSchematicMatrix] at hport ⊢
+  exact hport
 
 /-- Finite-family form of
 `chosenMatrixEntrySecondJet_ricciDeTurckSchematicMatrix_c0AlphaOn_of_directions`

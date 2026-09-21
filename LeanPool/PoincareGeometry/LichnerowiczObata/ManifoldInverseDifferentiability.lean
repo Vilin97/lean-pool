@@ -50,7 +50,9 @@ theorem mdifferentiableAt_local_inverse_of_equiv
         (continuousAt_extChartAt (I := I) x)
     exact hc.comp hmid
   have he : HasFDerivAt F (e : E →L[ℝ] E') (extChartAt I x x) := by
-    simpa only [I.range_eq_univ, hasFDerivWithinAt_univ] using hf.2
+    have h := hf.2
+    rw [I.range_eq_univ, hasFDerivWithinAt_univ] at h
+    convert h using 1 <;> rfl
   have he' : HasFDerivAt F (e : E →L[ℝ] E') (G a) := by rw [hg0]; exact he
   have ht : ∀ᶠ y in 𝓝 a, y ∈ (extChartAt J (f x)).target :=
     extChartAt_target_mem_nhds (f x)

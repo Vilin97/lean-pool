@@ -32,21 +32,22 @@ theorem isMIntegralCurveOn_normal_ray
       r • V (ψ (r • u))) :
     IsMIntegralCurveOn (fun r => ψ (r • u)) V J := by
   intro r hr
-  have hdu : mfderiv 𝓘(ℝ, P) I ψ (r • u) u = V (ψ (r • u)) := by
+  let L : P →L[ℝ] TangentSpace I (ψ (r • u)) := mfderiv 𝓘(ℝ, P) I ψ (r • u)
+  have hdu : L u = V (ψ (r • u)) := by
     apply smul_right_injective (TangentSpace I (ψ (r • u))) (hne r hr)
-    simpa only [map_smul] using hrad r hr
+    have hrad' : L (r • u) = r • V (ψ (r • u)) := hrad r hr
+    simpa only [map_smul] using hrad'
   let A : ℝ →L[ℝ] P := (1 : ℝ →L[ℝ] ℝ).smulRight u
   have hA : HasMFDerivAt 𝓘(ℝ, ℝ) 𝓘(ℝ, P) A r A :=
     hasMFDerivAt_iff_hasFDerivAt.mpr A.hasFDerivAt
   have hc := (hψ r hr).hasMFDerivAt.comp r hA
-  have he : (mfderiv 𝓘(ℝ, P) I ψ (r • u)).comp A =
+  have he : L.comp A =
       (1 : ℝ →L[ℝ] ℝ).smulRight (V (ψ (r • u))) := by
     apply ContinuousLinearMap.ext
     intro s
-    change mfderiv 𝓘(ℝ, P) I ψ (r • u) (s • u) = s • V (ψ (r • u))
+    change L (s • u) = s • V (ψ (r • u))
     rw [map_smul, hdu]
-  rw [he] at hc
-  exact hc.hasMFDerivWithinAt
+  exact (hc.congr_mfderiv he).hasMFDerivWithinAt
 
 /-- On a positive interval, a normal ray and an integral curve with one
 common point agree everywhere on that interval. This identifies the maps,

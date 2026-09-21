@@ -36,13 +36,13 @@ theorem hasDerivAt_chart_integralCurve {X : Π y : M, TangentSpace I y}
     (extChartAt I c).left_inv (by simpa using hx)
   simp only [coordinateVectorField]
   rw [he]
-  rw [hasDerivAt_iff_hasFDerivAt, ← hasMFDerivAt_iff_hasFDerivAt]
+  rw [hasDerivAt_iff_hasFDerivAt]
+  apply hasMFDerivAt_iff_hasFDerivAt.mp
   have hc := (mdifferentiableAt_extChartAt (I := I) hx).hasMFDerivAt
   apply (hc.comp t hγ.hasMFDerivAt).congr_mfderiv
   ext
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply,
-    map_smul, TangentBundle.continuousLinearMapAt_trivializationAt hx]
-  rfl
+  simp only [TangentBundle.continuousLinearMapAt_trivializationAt hx]
+  exact (mfderiv I 𝓘(ℝ, E) (extChartAt I c) (γ t)).map_smul (1 : ℝ) (X (γ t))
 
 /-- A manifold family expressed in fixed input and output charts. -/
 def chartFlow (η : M × ℝ → M) (c₀ c₁ : M) (z : E × ℝ) : E :=
