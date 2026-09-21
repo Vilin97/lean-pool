@@ -8,11 +8,7 @@ module
 public import LeanPool.HSDInteriorPointLP.PrimalDualData
 public import Mathlib.Analysis.Real.Sqrt
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.Algebra.Order.Algebra
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Sym.Sym2.Init
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Tactic.NormNum.GCD
 import Mathlib.Tactic.Positivity.Finset
 
 /-!
@@ -266,35 +262,21 @@ theorem HLPNewtonBlockOperator_eq_zero_iff_homogeneous {m n : Nat}
     (P : LPData m n) (w : HSState n) (D : HLPFullDirection m n) :
     HLPNewtonBlockOperator P w (HLPFullDirection.toBlockVector D) = 0 ↔
       HLPNewtonHomogeneousBlockSystem P w D := by
+  simp only [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector]
   constructor
   · intro h
-    refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-    · intro i
-      have hi := congrArg (fun u : HLPBlockSpace m n => u.1 i) h
-      simpa [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hi
-    · intro j
-      have hj := congrArg (fun u : HLPBlockSpace m n => u.2.1 j) h
-      simpa [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hj
-    · have hg := congrArg (fun u : HLPBlockSpace m n => u.2.2.1) h
-      simpa [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hg
-    · have hn := congrArg (fun u : HLPBlockSpace m n => u.2.2.2.1) h
-      simpa [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hn
-    · intro j
-      have hc := congrArg (fun u : HLPBlockSpace m n => u.2.2.2.2.1 j) h
-      simpa [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hc
-    · have hs := congrArg (fun u : HLPBlockSpace m n => u.2.2.2.2.2) h
-      simpa [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hs
+    exact ⟨fun i => congrArg (fun u : HLPBlockSpace m n => u.1 i) h,
+      fun j => congrArg (fun u : HLPBlockSpace m n => u.2.1 j) h,
+      congrArg (fun u : HLPBlockSpace m n => u.2.2.1) h,
+      congrArg (fun u : HLPBlockSpace m n => u.2.2.2.1) h,
+      fun j => congrArg (fun u : HLPBlockSpace m n => u.2.2.2.2.1 j) h,
+      congrArg (fun u : HLPBlockSpace m n => u.2.2.2.2.2) h⟩
   · intro h
-    ext i <;>
-      simp [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector, h.primal_block, h.dual_block, h.gap_block,
-        h.normalizing_block, h.complementarity_block, h.scalar_complementarity_block]
+    exact Prod.ext (funext h.primal_block)
+      (Prod.ext (funext h.dual_block) (Prod.ext h.gap_block
+        (Prod.ext h.normalizing_block
+          (Prod.ext (funext h.complementarity_block) h.scalar_complementarity_block))))
+
 
 /-- Hitting the inhomogeneous right-hand side is exactly solving the Newton block. -/
 theorem HLPNewtonBlockOperator_eq_rhs_iff_block_system {m n : Nat}
@@ -302,36 +284,25 @@ theorem HLPNewtonBlockOperator_eq_rhs_iff_block_system {m n : Nat}
     HLPNewtonBlockOperator P w (HLPFullDirection.toBlockVector D)
         = HLPNewtonBlockRhs w γ m ↔
       HLPNewtonBlockSystem P w D γ := by
+  simp only [HLPNewtonBlockOperator, HLPFullDirection.toBlockVector,
+    HLPNewtonBlockRhs, scalarComplRhs]
   constructor
   · intro h
-    refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-    · intro i
-      have hi := congrArg (fun u : HLPBlockSpace m n => u.1 i) h
-      simpa [HLPNewtonBlockOperator, HLPNewtonBlockRhs, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hi
-    · intro j
-      have hj := congrArg (fun u : HLPBlockSpace m n => u.2.1 j) h
-      simpa [HLPNewtonBlockOperator, HLPNewtonBlockRhs, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hj
-    · have hg := congrArg (fun u : HLPBlockSpace m n => u.2.2.1) h
-      simpa [HLPNewtonBlockOperator, HLPNewtonBlockRhs, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hg
-    · have hn := congrArg (fun u : HLPBlockSpace m n => u.2.2.2.1) h
-      simpa [HLPNewtonBlockOperator, HLPNewtonBlockRhs, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector] using hn
-    · intro j
-      have hc := congrArg (fun u : HLPBlockSpace m n => u.2.2.2.2.1 j) h
-      simpa [HLPNewtonBlockOperator, HLPNewtonBlockRhs, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector, complRhs] using hc
-    · have hs := congrArg (fun u : HLPBlockSpace m n => u.2.2.2.2.2) h
-      simpa [HLPNewtonBlockOperator, HLPNewtonBlockRhs, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector, scalarComplRhs] using hs
+    exact ⟨fun i => congrArg (fun u : HLPBlockSpace m n => u.1 i) h,
+      fun j => congrArg (fun u : HLPBlockSpace m n => u.2.1 j) h,
+      congrArg (fun u : HLPBlockSpace m n => u.2.2.1) h,
+      congrArg (fun u : HLPBlockSpace m n => u.2.2.2.1) h,
+      fun j => by
+        have hcomponent : w.x j * D.ds j + w.s j * D.dx j = complRhs w γ j :=
+          congrArg (fun u : HLPBlockSpace m n => u.2.2.2.2.1 j) h
+        simpa only [complRhs] using hcomponent,
+      congrArg (fun u : HLPBlockSpace m n => u.2.2.2.2.2) h⟩
   · intro h
-    ext i <;>
-      simp [HLPNewtonBlockOperator, HLPNewtonBlockRhs, HLPFullDirection.toBlockVector,
-        HLPFullDirection.ofBlockVector, h.primal_block, h.dual_block, h.gap_block,
-        h.normalizing_block, h.complementarity_block, h.scalar_complementarity_block,
-        complRhs, scalarComplRhs]
+    exact Prod.ext (funext h.primal_block)
+      (Prod.ext (funext h.dual_block) (Prod.ext h.gap_block
+        (Prod.ext h.normalizing_block
+          (Prod.ext (funext h.complementarity_block) h.scalar_complementarity_block))))
+
 
 /-- In a finite-dimensional vector space, an injective linear self-map is surjective. -/
 theorem finiteDimensional_surjective_of_injective_self
