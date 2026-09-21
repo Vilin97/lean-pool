@@ -7,10 +7,6 @@ module
 
 public import LeanPool.HSDInteriorPointLP.NewtonSystem
 import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Algebra.Order.Algebra
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Sym.Sym2.Init
-import Mathlib.Tactic.NormNum.GCD
 import Mathlib.Tactic.Positivity.Finset
 
 /-!
@@ -64,6 +60,21 @@ complementarity arguments, and all warning-clean fixed lemmas.
 -/
 
 /-! ## Corrector-side algebra already derivable from the HSD equations -/
+
+/-- The scalar quadratic estimate shared by the vector and scalar corrector pairs. -/
+theorem complementarity_second_order_upper {x s dx ds μ : ℝ}
+    (h : x * ds + s * dx = μ - x * s) :
+    4 * (x * s) * (dx * ds) ≤ (μ - x * s) ^ 2 := by
+  calc
+    4 * (x * s) * (dx * ds) = 4 * (x * ds) * (s * dx) := by ring
+    _ ≤ (x * ds + s * dx) ^ 2 := four_mul_le_sq_add _ _
+    _ = (μ - x * s) ^ 2 := congrArg (fun a : ℝ => a ^ 2) h
+
+/-- Convert a squared centrality deviation to the corresponding product lower bound. -/
+theorem product_lower_of_deviation_sq {μ z β : ℝ} (hβ : 0 ≤ β * μ)
+    (h : (μ - z) ^ 2 ≤ (β * μ) ^ 2) : (1 - β) * μ ≤ z := by
+  have hdeviation := (abs_le.mp (abs_le_of_sq_le_sq h hβ)).2
+  linarith only [hdeviation]
 
 /-- A full corrector step preserves the homogenized complementarity gap, hence also
 preserves `mu`.  This is only the gap algebra; the central-neighborhood estimate is
@@ -124,22 +135,9 @@ theorem corrector_centerSq_full_step_eq_cross_sq {n : Nat}
       (mu (addStep w d 1)) =
       (∑ i : Fin n, (d.dx i * d.ds i) ^ 2) +
         (d.dtau * d.dkappa) ^ 2 := by
-  have hmu := corrector_mu_full_step w d hdir
-  have hsum :
-      (∑ i : Fin n,
-          ((addStep w d 1).x i * (addStep w d 1).s i - mu w) ^ 2) =
-        ∑ i : Fin n, (d.dx i * d.ds i) ^ 2 := by
-    apply Finset.sum_congr rfl
-    intro i _
-    have hp := corrector_component_product_full_step w d hdir i
-    simp_all
-  have hscalar :
-      ((addStep w d 1).tau * (addStep w d 1).kappa - mu w) ^ 2 =
-        (d.dtau * d.dkappa) ^ 2 := by
-    have hp := corrector_scalar_product_full_step w d hdir
-    simp_all
-  unfold centerSq
-  simp_all
+  simp only [centerSq, corrector_mu_full_step w d hdir,
+    corrector_component_product_full_step w d hdir,
+    corrector_scalar_product_full_step w d hdir, add_sub_cancel_left]
 
 
 /-! ## Elementary estimates for the corrector obligation -/
@@ -184,21 +182,9 @@ theorem corrector_component_second_order_upper {n : Nat}
     (hdir : HSDStepDirection w d 1) (i : Fin n) :
     4 * (w.x i * w.s i) * (d.dx i * d.ds i) ≤
       (mu w - w.x i * w.s i) ^ 2 := by
-  have hsq : 0 ≤ (w.x i * d.ds i - w.s i * d.dx i) ^ 2 := sq_nonneg _
-  have hc := hdir.compl.component_eq i
-  have hident :
-      (w.x i * d.ds i - w.s i * d.dx i) ^ 2 =
-        (mu w - w.x i * w.s i) ^ 2 -
-          4 * (w.x i * w.s i) * (d.dx i * d.ds i) := by
-    calc
-      (w.x i * d.ds i - w.s i * d.dx i) ^ 2
-          = (w.x i * d.ds i + w.s i * d.dx i) ^ 2 -
-              4 * (w.x i * w.s i) * (d.dx i * d.ds i) := by
-              ring
-      _ = (mu w - w.x i * w.s i) ^ 2 -
-              4 * (w.x i * w.s i) * (d.dx i * d.ds i) := by
-              simp_all
-  nlinarith
+  apply complementarity_second_order_upper
+  simpa only [one_mul] using hdir.compl.component_eq i
+
 
 /-- Scalar analogue of `corrector_component_second_order_upper`. -/
 theorem corrector_scalar_second_order_upper {n : Nat}
@@ -206,21 +192,8 @@ theorem corrector_scalar_second_order_upper {n : Nat}
     (hdir : HSDStepDirection w d 1) :
     4 * (w.tau * w.kappa) * (d.dtau * d.dkappa) ≤
       (mu w - w.tau * w.kappa) ^ 2 := by
-  have hsq : 0 ≤ (w.tau * d.dkappa - w.kappa * d.dtau) ^ 2 := sq_nonneg _
-  have hc := hdir.compl.scalar_eq
-  have hident :
-      (w.tau * d.dkappa - w.kappa * d.dtau) ^ 2 =
-        (mu w - w.tau * w.kappa) ^ 2 -
-          4 * (w.tau * w.kappa) * (d.dtau * d.dkappa) := by
-    calc
-      (w.tau * d.dkappa - w.kappa * d.dtau) ^ 2
-          = (w.tau * d.dkappa + w.kappa * d.dtau) ^ 2 -
-              4 * (w.tau * w.kappa) * (d.dtau * d.dkappa) := by
-              ring
-      _ = (mu w - w.tau * w.kappa) ^ 2 -
-              4 * (w.tau * w.kappa) * (d.dtau * d.dkappa) := by
-              simp_all
-  nlinarith
+  apply complementarity_second_order_upper
+  simpa only [one_mul] using hdir.compl.scalar_eq
 
 
 /-- Extract the centrality bound from an `HSDNeighborhood`.  Keeping this as a
@@ -241,39 +214,23 @@ centrality residual. -/
 theorem neighborhood_component_dev_sq_le_bound {n : Nat} (β : ℝ)
     (w : HSState n) (hneigh : HSDNeighborhood β w) (i : Fin n) :
     (mu w - w.x i * w.s i) ^ 2 ≤ (β * mu w) ^ 2 := by
-  have hcenter := neighborhood_centerSq_le β w hneigh
-  unfold centerSq at hcenter
-  have hsingle :
-      (w.x i * w.s i - mu w) ^ 2 ≤
-        ∑ j : Fin n, (w.x j * w.s j - mu w) ^ 2 := by
-    exact Finset.single_le_sum
-      (fun j _ => sq_nonneg (w.x j * w.s j - mu w))
-      (by simp)
-  have hscalar_nonneg : 0 ≤ (w.tau * w.kappa - mu w) ^ 2 := sq_nonneg _
-  have hsame :
-      (mu w - w.x i * w.s i) ^ 2 =
-        (w.x i * w.s i - mu w) ^ 2 := by
-    ring
-  rw [hsame]
-  nlinarith
+  rw [sub_sq_comm]
+  exact (Finset.single_le_sum (fun j _ => sq_nonneg (w.x j * w.s j - mu w))
+    (Finset.mem_univ i)).trans
+    ((le_add_of_nonneg_right (sq_nonneg _)).trans
+      (neighborhood_centerSq_le β w hneigh))
+
 
 /-- The scalar complementarity product has squared deviation bounded by the whole
 centrality residual. -/
 theorem neighborhood_scalar_dev_sq_le_bound {n : Nat} (β : ℝ)
     (w : HSState n) (hneigh : HSDNeighborhood β w) :
     (mu w - w.tau * w.kappa) ^ 2 ≤ (β * mu w) ^ 2 := by
-  have hcenter := neighborhood_centerSq_le β w hneigh
-  unfold centerSq at hcenter
-  have hsum_nonneg :
-      0 ≤ ∑ j : Fin n, (w.x j * w.s j - mu w) ^ 2 := by
-    exact Finset.sum_nonneg
-      (fun j _ => sq_nonneg (w.x j * w.s j - mu w))
-  have hsame :
-      (mu w - w.tau * w.kappa) ^ 2 =
-        (w.tau * w.kappa - mu w) ^ 2 := by
-    ring
-  rw [hsame]
-  nlinarith
+  rw [sub_sq_comm]
+  exact (le_add_of_nonneg_left
+    (Finset.sum_nonneg (fun j _ => sq_nonneg (w.x j * w.s j - mu w)))).trans
+    (neighborhood_centerSq_le β w hneigh)
+
 
 /-- In the wide neighborhood, every vector complementarity product is at least
 `mu/2`.  This keeps the scalar `τκ` separate from the `Fin n` sum, as in the
@@ -281,25 +238,35 @@ separated proof plan. -/
 theorem neighborhood_component_product_lower_wide {n : Nat}
     (w : HSState n) (hneigh : HSDNeighborhood ytmBetaWide w) (i : Fin n) :
     mu w / 2 ≤ w.x i * w.s i := by
-  have hdev := neighborhood_component_dev_sq_le_bound ytmBetaWide w hneigh i
-  have hmu : 0 < mu w := mu_pos_of_neighborhood ytmBetaWide w hneigh
-  unfold ytmBetaWide at hdev
-  have hs : 0 ≤ (w.x i * w.s i - mu w / 2) ^ 2 := sq_nonneg _
-  nlinarith
+  have hlower := product_lower_of_deviation_sq
+    (mul_nonneg hneigh.2.1.le (mu_pos_of_neighborhood ytmBetaWide w hneigh).le)
+    (neighborhood_component_dev_sq_le_bound ytmBetaWide w hneigh i)
+  norm_num only [ytmBetaWide, show (1 : ℝ) - 1 / 2 = 1 / 2 by norm_num] at hlower
+  simpa only [one_div_mul_eq_div] using hlower
+
 
 /-- Scalar analogue of `neighborhood_component_product_lower_wide`. -/
 theorem neighborhood_scalar_product_lower_wide {n : Nat}
     (w : HSState n) (hneigh : HSDNeighborhood ytmBetaWide w) :
     mu w / 2 ≤ w.tau * w.kappa := by
-  have hdev := neighborhood_scalar_dev_sq_le_bound ytmBetaWide w hneigh
-  have hmu : 0 < mu w := mu_pos_of_neighborhood ytmBetaWide w hneigh
-  unfold ytmBetaWide at hdev
-  have hs : 0 ≤ (w.tau * w.kappa - mu w / 2) ^ 2 := sq_nonneg _
-  nlinarith
+  have hlower := product_lower_of_deviation_sq
+    (mul_nonneg hneigh.2.1.le (mu_pos_of_neighborhood ytmBetaWide w hneigh).le)
+    (neighborhood_scalar_dev_sq_le_bound ytmBetaWide w hneigh)
+  norm_num only [ytmBetaWide, show (1 : ℝ) - 1 / 2 = 1 / 2 by norm_num] at hlower
+  simpa only [one_div_mul_eq_div] using hlower
+
 
 /-- Positive part used in the YTM corrector estimate.  It is deliberately kept as a
 small elementary definition instead of using an order-theory abstraction. -/
 def posPart (a : ℝ) : ℝ := if 0 ≤ a then a else 0
+
+/-- A positive denominator turns a product upper bound into a positive-part bound. -/
+theorem posPart_le_of_mul_le {a b c : ℝ} (ha : 0 < a) (hc : 0 ≤ c)
+    (h : a * b ≤ c) : posPart b ≤ c / a := by
+  unfold posPart
+  split_ifs
+  · exact (le_div_iff₀ ha).2 (by simpa only [mul_comm] using h)
+  · exact div_nonneg hc ha.le
 
 /-- Absolute value expressed through the positive part.  This identity is useful for
 turning the skew relation `Σ δᵢ + η = 0` into an `ℓ₁` bound. -/
@@ -325,30 +292,17 @@ theorem corrector_component_posPart_bound {n : Nat}
     (hdir : HSDStepDirection w d 1) (i : Fin n) :
     posPart (d.dx i * d.ds i) ≤
       (mu w - w.x i * w.s i) ^ 2 / (2 * mu w) := by
-  have hmu : 0 < mu w := mu_pos_of_neighborhood ytmBetaWide w hneigh
-  have hzlower := neighborhood_component_product_lower_wide w hneigh i
-  have hquad := corrector_component_second_order_upper w d hdir i
-  unfold posPart
-  by_cases hδ : 0 ≤ d.dx i * d.ds i
-  · rw [ite_eq_left hδ]
-    have hcoef : 2 * mu w ≤ 4 * (w.x i * w.s i) := by
-      nlinarith
-    have hmul : 2 * mu w * (d.dx i * d.ds i) ≤
-        4 * (w.x i * w.s i) * (d.dx i * d.ds i) := by
-      exact mul_le_mul_of_nonneg_right hcoef hδ
-    have hbound : 2 * mu w * (d.dx i * d.ds i) ≤
-        (mu w - w.x i * w.s i) ^ 2 := le_trans hmul hquad
-    have hbound' : (d.dx i * d.ds i) * (2 * mu w) ≤
-        (mu w - w.x i * w.s i) ^ 2 := by
-      calc
-        (d.dx i * d.ds i) * (2 * mu w)
-            = 2 * mu w * (d.dx i * d.ds i) := by ring
-        _ ≤ (mu w - w.x i * w.s i) ^ 2 := hbound
-    have hden : 0 < 2 * mu w := by nlinarith
-    exact (le_div_iff₀ hden).2 hbound'
-  · rw [ite_eq_right hδ]
-    have hden_nonneg : 0 ≤ 2 * mu w := by nlinarith
-    exact div_nonneg (sq_nonneg _) hden_nonneg
+  have hmu := mu_pos_of_neighborhood ytmBetaWide w hneigh
+  by_cases hproduct : 0 ≤ d.dx i * d.ds i
+  · apply posPart_le_of_mul_le (mul_pos (by norm_num) hmu) (sq_nonneg _)
+    have hcoefficient := neighborhood_component_product_lower_wide w hneigh i
+    have hscaled : 2 * mu w ≤ 4 * (w.x i * w.s i) := by
+      linarith only [hcoefficient]
+    exact (mul_le_mul_of_nonneg_right hscaled hproduct).trans
+      (corrector_component_second_order_upper w d hdir i)
+  · rw [posPart, ite_eq_right hproduct]
+    exact div_nonneg (sq_nonneg _) (mul_nonneg (by norm_num) hmu.le)
+
 
 /-- Scalar analogue of `corrector_component_posPart_bound`. -/
 theorem corrector_scalar_posPart_bound {n : Nat}
@@ -357,30 +311,17 @@ theorem corrector_scalar_posPart_bound {n : Nat}
     (hdir : HSDStepDirection w d 1) :
     posPart (d.dtau * d.dkappa) ≤
       (mu w - w.tau * w.kappa) ^ 2 / (2 * mu w) := by
-  have hmu : 0 < mu w := mu_pos_of_neighborhood ytmBetaWide w hneigh
-  have hzlower := neighborhood_scalar_product_lower_wide w hneigh
-  have hquad := corrector_scalar_second_order_upper w d hdir
-  unfold posPart
-  by_cases hδ : 0 ≤ d.dtau * d.dkappa
-  · rw [ite_eq_left hδ]
-    have hcoef : 2 * mu w ≤ 4 * (w.tau * w.kappa) := by
-      nlinarith
-    have hmul : 2 * mu w * (d.dtau * d.dkappa) ≤
-        4 * (w.tau * w.kappa) * (d.dtau * d.dkappa) := by
-      exact mul_le_mul_of_nonneg_right hcoef hδ
-    have hbound : 2 * mu w * (d.dtau * d.dkappa) ≤
-        (mu w - w.tau * w.kappa) ^ 2 := le_trans hmul hquad
-    have hbound' : (d.dtau * d.dkappa) * (2 * mu w) ≤
-        (mu w - w.tau * w.kappa) ^ 2 := by
-      calc
-        (d.dtau * d.dkappa) * (2 * mu w)
-            = 2 * mu w * (d.dtau * d.dkappa) := by ring
-        _ ≤ (mu w - w.tau * w.kappa) ^ 2 := hbound
-    have hden : 0 < 2 * mu w := by nlinarith
-    exact (le_div_iff₀ hden).2 hbound'
-  · rw [ite_eq_right hδ]
-    have hden_nonneg : 0 ≤ 2 * mu w := by nlinarith
-    exact div_nonneg (sq_nonneg _) hden_nonneg
+  have hmu := mu_pos_of_neighborhood ytmBetaWide w hneigh
+  by_cases hproduct : 0 ≤ d.dtau * d.dkappa
+  · apply posPart_le_of_mul_le (mul_pos (by norm_num) hmu) (sq_nonneg _)
+    have hcoefficient := neighborhood_scalar_product_lower_wide w hneigh
+    have hscaled : 2 * mu w ≤ 4 * (w.tau * w.kappa) := by
+      linarith only [hcoefficient]
+    exact (mul_le_mul_of_nonneg_right hscaled hproduct).trans
+      (corrector_scalar_second_order_upper w d hdir)
+  · rw [posPart, ite_eq_right hproduct]
+    exact div_nonneg (sq_nonneg _) (mul_nonneg (by norm_num) hmu.le)
+
 
 /-- Summed positive-part bound, still keeping the vector and scalar pieces separate.
 This is the key estimate needed before converting the zero-sum relation into an
@@ -391,65 +332,23 @@ theorem corrector_positive_part_sum_bound {n : Nat}
     (hdir : HSDStepDirection w d 1) :
     (∑ i : Fin n, posPart (d.dx i * d.ds i)) +
       posPart (d.dtau * d.dkappa) ≤ mu w / 8 := by
-  have hmu : 0 < mu w := mu_pos_of_neighborhood ytmBetaWide w hneigh
-  have hvec :
-      (∑ i : Fin n, posPart (d.dx i * d.ds i)) ≤
-        ∑ i : Fin n, (mu w - w.x i * w.s i) ^ 2 / (2 * mu w) := by
-    exact Finset.sum_le_sum (fun i _ =>
-      corrector_component_posPart_bound w d hneigh hdir i)
-  have hscalar := corrector_scalar_posPart_bound w d hneigh hdir
-  have hvec_rewrite :
-      (∑ i : Fin n, (mu w - w.x i * w.s i) ^ 2 / (2 * mu w)) =
-        (∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2) / (2 * mu w) := by
-    calc
-      (∑ i : Fin n, (mu w - w.x i * w.s i) ^ 2 / (2 * mu w))
-          = ∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2 / (2 * mu w) := by
-              apply Finset.sum_congr rfl
-              intro i _
-              ring
-      _ = (∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2) / (2 * mu w) := by
-              rw [← Finset.sum_div]
-  have hscalar_rewrite :
-      (mu w - w.tau * w.kappa) ^ 2 / (2 * mu w) =
-        (w.tau * w.kappa - mu w) ^ 2 / (2 * mu w) := by
-    ring
-  have hsum_rewrite :
-      (∑ i : Fin n, (mu w - w.x i * w.s i) ^ 2 / (2 * mu w)) +
-        (mu w - w.tau * w.kappa) ^ 2 / (2 * mu w) =
-      ((∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2) +
-        (w.tau * w.kappa - mu w) ^ 2) / (2 * mu w) := by
-    calc
-      (∑ i : Fin n, (mu w - w.x i * w.s i) ^ 2 / (2 * mu w)) +
-          (mu w - w.tau * w.kappa) ^ 2 / (2 * mu w)
-          = (∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2) / (2 * mu w) +
-              (w.tau * w.kappa - mu w) ^ 2 / (2 * mu w) := by
-              rw [hvec_rewrite, hscalar_rewrite]
-      _ = ((∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2) +
-            (w.tau * w.kappa - mu w) ^ 2) / (2 * mu w) := by
-              ring
-  have hcenter := neighborhood_centerSq_le ytmBetaWide w hneigh
-  unfold centerSq at hcenter
-  unfold ytmBetaWide at hcenter
-  have hbound_center :
-      ((∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2) +
-        (w.tau * w.kappa - mu w) ^ 2) / (2 * mu w) ≤ mu w / 8 := by
-    have hcenter' :
-        ((∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2) +
-          (w.tau * w.kappa - mu w) ^ 2) ≤ (mu w / 2) ^ 2 := by
-      convert hcenter using 1
-      ring
-    have hden : 0 < 2 * mu w := by nlinarith
-    rw [div_le_iff₀ hden]
-    nlinarith [hcenter']
+  have hmu := mu_pos_of_neighborhood ytmBetaWide w hneigh
+  have hden : 0 < 2 * mu w := mul_pos (by norm_num) hmu
   calc
-    (∑ i : Fin n, posPart (d.dx i * d.ds i)) +
-        posPart (d.dtau * d.dkappa)
+    (∑ i : Fin n, posPart (d.dx i * d.ds i)) + posPart (d.dtau * d.dkappa)
         ≤ (∑ i : Fin n, (mu w - w.x i * w.s i) ^ 2 / (2 * mu w)) +
-            (mu w - w.tau * w.kappa) ^ 2 / (2 * mu w) := by
-            exact add_le_add hvec hscalar
-    _ = ((∑ i : Fin n, (w.x i * w.s i - mu w) ^ 2) +
-          (w.tau * w.kappa - mu w) ^ 2) / (2 * mu w) := hsum_rewrite
-    _ ≤ mu w / 8 := hbound_center
+            (mu w - w.tau * w.kappa) ^ 2 / (2 * mu w) :=
+      add_le_add (Finset.sum_le_sum (fun i _ =>
+        corrector_component_posPart_bound w d hneigh hdir i))
+        (corrector_scalar_posPart_bound w d hneigh hdir)
+    _ = centerSq w.x w.tau w.s w.kappa (mu w) / (2 * mu w) := by
+      simp only [centerSq, sub_sq_comm (mu w), Finset.sum_div, add_div]
+    _ ≤ (ytmBetaWide * mu w) ^ 2 / (2 * mu w) :=
+      div_le_div_of_nonneg_right (neighborhood_centerSq_le ytmBetaWide w hneigh) hden.le
+    _ = mu w / 8 := by
+      unfold ytmBetaWide
+      field_simp
+      ring
 
 
 /-- If a finite family together with one scalar has zero total sum, then the sum of
@@ -488,52 +387,18 @@ term is kept separate from the `Fin n` sum to match the HSDE notation. -/
 theorem sum_sq_add_sq_le_l1_sq {n : Nat} (a : Fin n → ℝ) (η : ℝ) :
     (∑ i : Fin n, (a i) ^ 2) + η ^ 2 ≤
       ((∑ i : Fin n, |a i|) + |η|) ^ 2 := by
-  let L : ℝ := (∑ i : Fin n, |a i|) + |η|
-  have hL_nonneg : 0 ≤ L := by
-    dsimp [L]
-    exact add_nonneg
-      (Finset.sum_nonneg (fun i _ => abs_nonneg (a i)))
-      (abs_nonneg η)
-  have hterm : ∀ i : Fin n, (a i) ^ 2 ≤ |a i| * L := by
-    intro i
-    have hsingle : |a i| ≤ ∑ j : Fin n, |a j| := by
-      exact Finset.single_le_sum
-        (fun j _ => abs_nonneg (a j))
-        (by simp)
-    have hleL : |a i| ≤ L := by
-      dsimp [L]
-      nlinarith [abs_nonneg η]
-    calc
-      (a i) ^ 2 = |a i| * |a i| := by
-        rw [← sq_abs]
-        ring
-      _ ≤ |a i| * L := by
-        exact mul_le_mul_of_nonneg_left hleL (abs_nonneg (a i))
-  have hsum : (∑ i : Fin n, (a i) ^ 2) ≤ (∑ i : Fin n, |a i|) * L := by
-    calc
-      (∑ i : Fin n, (a i) ^ 2) ≤ ∑ i : Fin n, |a i| * L := by
-        exact Finset.sum_le_sum (fun i _ => hterm i)
-      _ = (∑ i : Fin n, |a i|) * L := by
-        rw [← Finset.sum_mul]
-  have hscalar : η ^ 2 ≤ |η| * L := by
-    have hleL : |η| ≤ L := by
-      dsimp [L]
-      have hsum_nonneg : 0 ≤ ∑ i : Fin n, |a i| := by
-        exact Finset.sum_nonneg (fun i _ => abs_nonneg (a i))
-      nlinarith
-    calc
-      η ^ 2 = |η| * |η| := by
-        rw [← sq_abs]
-        ring
-      _ ≤ |η| * L := by
-        exact mul_le_mul_of_nonneg_left hleL (abs_nonneg η)
+  have hsum := Finset.sum_sq_le_sq_sum_of_nonneg
+    (s := Finset.univ) (fun i _ => abs_nonneg (a i))
+  simp only [sq_abs] at hsum
   calc
-    (∑ i : Fin n, (a i) ^ 2) + η ^ 2
-        ≤ (∑ i : Fin n, |a i|) * L + |η| * L := by
-          exact add_le_add hsum hscalar
-    _ = L ^ 2 := by
-          dsimp [L]
-          ring
+    (∑ i : Fin n, (a i) ^ 2) + η ^ 2 ≤ (∑ i : Fin n, |a i|) ^ 2 + |η| ^ 2 := by
+      simpa only [sq_abs] using add_le_add hsum (le_refl (η ^ 2))
+    _ ≤ ((∑ i : Fin n, |a i|) + |η|) ^ 2 := by
+      rw [add_sq]
+      exact add_le_add (le_add_of_nonneg_right
+        (mul_nonneg (mul_nonneg (show (0 : ℝ) ≤ 2 by norm_num)
+          (Finset.sum_nonneg (fun i _ => abs_nonneg (a i)))) (abs_nonneg η))) le_rfl
+
 
 /-- The ℓ₁ bound implies the YTM square-sum bound for the corrector products. -/
 theorem corrector_cross_sq_sum_bound {n : Nat}
@@ -542,21 +407,12 @@ theorem corrector_cross_sq_sum_bound {n : Nat}
     (hdir : HSDStepDirection w d 1) :
     (∑ i : Fin n, (d.dx i * d.ds i) ^ 2) +
       (d.dtau * d.dkappa) ^ 2 ≤ (mu w / 4) ^ 2 := by
-  have hl1 := corrector_cross_l1_bound w d hneigh hdir
-  have hmu : 0 < mu w := mu_pos_of_neighborhood ytmBetaWide w hneigh
-  have hsquares := sum_sq_add_sq_le_l1_sq
-    (fun i : Fin n => d.dx i * d.ds i) (d.dtau * d.dkappa)
-  have hL_nonneg :
-      0 ≤ (∑ i : Fin n, |d.dx i * d.ds i|) + |d.dtau * d.dkappa| := by
-    exact add_nonneg
-      (Finset.sum_nonneg (fun i _ => abs_nonneg (d.dx i * d.ds i)))
-      (abs_nonneg (d.dtau * d.dkappa))
-  have hmu4_nonneg : 0 ≤ mu w / 4 := by nlinarith
-  have hsq_l1 :
-      ((∑ i : Fin n, |d.dx i * d.ds i|) + |d.dtau * d.dkappa|) ^ 2
-        ≤ (mu w / 4) ^ 2 := by
-    nlinarith
-  exact le_trans hsquares hsq_l1
+  exact (sum_sq_add_sq_le_l1_sq
+    (fun i : Fin n => d.dx i * d.ds i) (d.dtau * d.dkappa)).trans
+    (pow_le_pow_left₀
+      (add_nonneg (Finset.sum_nonneg (fun i _ => abs_nonneg _)) (abs_nonneg _))
+      (corrector_cross_l1_bound w d hneigh hdir) 2)
+
 
 /-- Each vector second-order product is individually bounded by `mu/4` in absolute
 value. -/
@@ -565,16 +421,11 @@ theorem corrector_component_cross_abs_le_quarter_mu {n : Nat}
     (hneigh : HSDNeighborhood ytmBetaWide w)
     (hdir : HSDStepDirection w d 1) (i : Fin n) :
     |d.dx i * d.ds i| ≤ mu w / 4 := by
-  have hl1 := corrector_cross_l1_bound w d hneigh hdir
-  have hsingle : |d.dx i * d.ds i| ≤ ∑ j : Fin n, |d.dx j * d.ds j| := by
-    exact Finset.single_le_sum
-      (fun j _ => abs_nonneg (d.dx j * d.ds j))
-      (by simp)
-  have hle_total :
-      |d.dx i * d.ds i| ≤
-        (∑ j : Fin n, |d.dx j * d.ds j|) + |d.dtau * d.dkappa| := by
-    nlinarith [abs_nonneg (d.dtau * d.dkappa)]
-  exact le_trans hle_total hl1
+  exact (Finset.single_le_sum (fun j _ => abs_nonneg (d.dx j * d.ds j))
+    (Finset.mem_univ i)).trans
+    ((le_add_of_nonneg_right (abs_nonneg _)).trans
+      (corrector_cross_l1_bound w d hneigh hdir))
+
 
 /-- The scalar second-order product is individually bounded by `mu/4` in absolute
 value. -/
@@ -583,14 +434,10 @@ theorem corrector_scalar_cross_abs_le_quarter_mu {n : Nat}
     (hneigh : HSDNeighborhood ytmBetaWide w)
     (hdir : HSDStepDirection w d 1) :
     |d.dtau * d.dkappa| ≤ mu w / 4 := by
-  have hl1 := corrector_cross_l1_bound w d hneigh hdir
-  have hsum_nonneg : 0 ≤ ∑ j : Fin n, |d.dx j * d.ds j| := by
-    exact Finset.sum_nonneg (fun j _ => abs_nonneg (d.dx j * d.ds j))
-  have hle_total :
-      |d.dtau * d.dkappa| ≤
-        (∑ j : Fin n, |d.dx j * d.ds j|) + |d.dtau * d.dkappa| := by
-    nlinarith
-  exact le_trans hle_total hl1
+  exact (le_add_of_nonneg_left
+    (Finset.sum_nonneg (fun j _ => abs_nonneg (d.dx j * d.ds j)))).trans
+    (corrector_cross_l1_bound w d hneigh hdir)
+
 
 /-- If two factors have positive product and a positive weighted sum with positive
 weights, then both factors are positive. -/
@@ -599,13 +446,11 @@ theorem factors_pos_of_mul_pos_and_weighted_sum_pos {a b wa wb : ℝ}
     (hmul : 0 < a * b)
     (hsum : 0 < wb * a + wa * b) :
     0 < a ∧ 0 < b := by
-  rcases (mul_pos_iff.mp hmul) with hpos | hneg
+  rcases mul_pos_iff.mp hmul with hpos | ⟨ha, hb⟩
   · exact hpos
-  · rcases hneg with ⟨ha, hb⟩
-    have hterm1 : wb * a < 0 := mul_neg_of_pos_of_neg hwb ha
-    have hterm2 : wa * b < 0 := mul_neg_of_pos_of_neg hwa hb
-    have hsum_neg : wb * a + wa * b < 0 := by nlinarith
-    nlinarith
+  · exact False.elim ((add_neg (mul_neg_of_pos_of_neg hwb ha)
+      (mul_neg_of_pos_of_neg hwa hb)).not_gt hsum)
+
 
 /-- Positivity of each vector pair after the full corrector step. -/
 theorem corrector_component_pair_pos_full_step {n : Nat}
@@ -817,9 +662,9 @@ theorem predictor_alpha_fixed_pos (n : Nat) :
 /-- The fixed predictor step length is at most one. -/
 theorem predictor_alpha_fixed_le_one (n : Nat) :
     ytmStepConstant / Real.sqrt (hdim n) ≤ 1 := by
-  have hden : 0 < Real.sqrt (hdim n) := sqrt_hdim_pos n
-  rw [div_le_iff₀ hden]
-  nlinarith [ytmStepConstant_le_one, one_le_sqrt_hdim n]
+  exact (div_le_one (sqrt_hdim_pos n)).2
+    (ytmStepConstant_le_one.trans (one_le_sqrt_hdim n))
+
 
 /-- Predictor step formula for `mu`.  For `γ = 0`, the homogenized gap and hence
 `mu` are multiplied by `1 - α`. -/
