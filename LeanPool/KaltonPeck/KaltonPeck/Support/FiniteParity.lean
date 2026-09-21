@@ -20,7 +20,8 @@ structures that underlie the later rank-parity arguments.
 
 namespace KaltonPeck.Support.FiniteParity
 
-noncomputable section
+noncomputable
+section
 
 /-- A finite-dimensional real alternating bilinear form has even rank, and its radical has the
 same parity as the ambient space.
@@ -121,7 +122,7 @@ dimension.
 
 Blueprint: `lem:finite-complex-even`; audit: `LEM-COMPLEX-STRUCTURE-EVEN-DIM`. -/
 theorem finiteComplexDimensionEven {V : Type*} [AddCommGroup V] [Module ℝ V]
-    [FiniteDimensional ℝ V] (J : Module.End ℝ V) (hJ : J ^ 2 = -1) :
+     (J : Module.End ℝ V) (hJ : J ^ 2 = -1) :
     Even (Module.finrank ℝ V) := by
   by_contra h
   have hOdd : Odd (Module.finrank ℝ V) := Nat.not_even_iff_odd.mp h
@@ -137,7 +138,7 @@ theorem finiteComplexDimensionEven {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 Blueprint: `lem:finite-complex-even`; audit: `LEM-COMPLEX-STRUCTURE-EVEN-DIM`. -/
 theorem finiteContinuousComplexDimensionEven {V : Type*} [NormedAddCommGroup V]
-    [NormedSpace ℝ V] [FiniteDimensional ℝ V] (J : V →L[ℝ] V)
+    [NormedSpace ℝ V] (J : V →L[ℝ] V)
     (hJ : IsComplexStructure J) : Even (Module.finrank ℝ V) := by
   apply finiteComplexDimensionEven J.toLinearMap
   exact congrArg ContinuousLinearMap.toLinearMap hJ
@@ -146,7 +147,7 @@ theorem finiteContinuousComplexDimensionEven {V : Type*} [NormedAddCommGroup V]
 
 Blueprint: `lem:finite-complex-even`; audit: `LEM-COMPLEX-STRUCTURE-EVEN-DIM`. -/
 theorem finiteInvariantSubmoduleComplexDimensionEven {V : Type*} [AddCommGroup V]
-    [Module ℝ V] (J : Module.End ℝ V) (W : Submodule ℝ V) [FiniteDimensional ℝ W]
+    [Module ℝ V] (J : Module.End ℝ V) (W : Submodule ℝ V)
     (hW : ∀ x : W, J x ∈ W) (hJ : ∀ x : W, J (J x) = -(x : V)) :
     Even (Module.finrank ℝ W) := by
   let JW : Module.End ℝ W :=

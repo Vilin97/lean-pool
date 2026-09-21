@@ -21,7 +21,8 @@ preserved by, and hence invariant under, the Hilbert-space adjoint.
 
 namespace KaltonPeck.Support.StrictlySingular
 
-noncomputable section
+noncomputable
+section
 
 open scoped InnerProduct NNReal
 

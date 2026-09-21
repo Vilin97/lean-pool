@@ -51,11 +51,11 @@ theorem exists_unit_norm_apply_lt_of_not_boundedBelow
 
 theorem ker_not_finiteDimensional_of_codomain_finiteDimensional
     {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
-    [FiniteDimensional ℝ F] [CompleteSpace X]
+    [FiniteDimensional ℝ F]
     (hX : ¬ FiniteDimensional ℝ X) (f : X →L[ℝ] F) :
     ¬ FiniteDimensional ℝ f.toLinearMap.ker := by
   intro hker
-  letI : FiniteDimensional ℝ f.toLinearMap.ker := hker
+  let : FiniteDimensional ℝ f.toLinearMap.ker := hker
   let hc : f.toLinearMap.ker.ClosedComplemented :=
     Submodule.ClosedComplemented.of_finiteDimensional f.toLinearMap.ker
   let Z : Submodule ℝ X := hc.complement
@@ -73,10 +73,10 @@ theorem ker_not_finiteDimensional_of_codomain_finiteDimensional
     have hdiffbot : (z₁ : X) - (z₂ : X) ∈ (⊥ : Submodule ℝ X) :=
       hcompl.isCompl.disjoint.le_bot ⟨hdiffker, hdiffZ⟩
     simpa only [Submodule.mem_bot, sub_eq_zero] using hdiffbot
-  letI : FiniteDimensional ℝ Z :=
+  let : FiniteDimensional ℝ Z :=
     FiniteDimensional.of_injective (f.toLinearMap.domRestrict Z) hinj
   have hprod : FiniteDimensional ℝ (f.toLinearMap.ker × Z) := inferInstance
-  letI : FiniteDimensional ℝ X :=
+  let : FiniteDimensional ℝ X :=
     @LinearEquiv.finiteDimensional ℝ (f.toLinearMap.ker × Z) _ _ _
       X _ _ (Submodule.prodEquivOfIsCompl _ _ hcompl.isCompl) hprod
   exact hX inferInstance
@@ -90,7 +90,7 @@ theorem IsStrictlySingular.exists_unit_mem_ker_norm_apply_lt
     ∃ x : X, f x = 0 ∧ ‖x‖ = 1 ∧ ‖U x‖ < ε := by
   let V : Submodule ℝ X := f.toLinearMap.ker
   have hVclosed : IsClosed (V : Set X) := f.isClosed_ker
-  letI : CompleteSpace V := hVclosed.completeSpace_coe
+  let : CompleteSpace V := hVclosed.completeSpace_coe
   have hV : ¬ FiniteDimensional ℝ V :=
     ker_not_finiteDimensional_of_codomain_finiteDimensional hX f
   have hsub : ∃ K, AntilipschitzWith K V.subtypeL :=
@@ -387,7 +387,7 @@ theorem IsStrictlySingular.exists_biorthogonal_sequence_summable
       (fun n => (hsmall n).le)
   have hφnorm (n : ℕ) : 1 ≤ ‖φ n‖ := by
     have happly : ‖φ n (v n)‖ ≤ ‖φ n‖ * ‖v n‖ := (φ n).le_opNorm (v n)
-    rw [hbio n n, if_pos rfl, norm_one, hvnorm n, mul_one] at happly
+    rw [hbio n n, ite_eq_left rfl, norm_one, hvnorm n, mul_one] at happly
     exact happly
   have hUnorm (n : ℕ) : ‖U (v n)‖ ≤ ‖φ n‖ * ‖U (v n)‖ := by
     nlinarith [hφnorm n, norm_nonneg (U (v n))]
@@ -484,7 +484,7 @@ theorem linearIndependent_of_biorthogonal
   exact hk.symm
 
 theorem not_finiteDimensional_topologicalClosure_span_of_biorthogonal
-    [CompleteSpace X] {v : ℕ → X} {φ : ℕ → StrongDual ℝ X}
+     {v : ℕ → X} {φ : ℕ → StrongDual ℝ X}
     (hbio : ∀ i j, φ i (v j) = if i = j then 1 else 0) :
     ¬ FiniteDimensional ℝ
       (Submodule.span ℝ (Set.range v)).topologicalClosure := by
@@ -499,7 +499,7 @@ theorem not_finiteDimensional_topologicalClosure_span_of_biorthogonal
     funext n
     rfl
   intro hM
-  letI : FiniteDimensional ℝ M := hM
+  let : FiniteDimensional ℝ M := hM
   have hcard := hvM.lt_aleph0_of_finiteDimensional
   simp at hcard
 
@@ -543,7 +543,7 @@ theorem IsStrictlySingular.add
     (Submodule.span ℝ (Set.range vt)).topologicalClosure
   have hMclosed : IsClosed (M : Set Z) :=
     Submodule.isClosed_topologicalClosure _
-  letI : CompleteSpace M := hMclosed.completeSpace_coe
+  let : CompleteSpace M := hMclosed.completeSpace_coe
   have hM : ¬ FiniteDimensional ℝ M := by
     exact not_finiteDimensional_topologicalClosure_span_of_biorthogonal hbiot
   have hsub : ∃ K, AntilipschitzWith K M.subtypeL :=

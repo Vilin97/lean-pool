@@ -22,7 +22,8 @@ canonical model and quotient map, and compares arbitrary complete presented mode
 
 namespace KaltonPeck.Support
 
-noncomputable section
+noncomputable
+section
 
 /-- A real sequence is square-summable. -/
 def IsSquareSummable (x : ℕ → ℝ) : Prop :=
@@ -493,8 +494,6 @@ private lemma entropyDefect_squareSummable (x y : ℕ → ℝ)
     have hx' : Memℓp x 2 := (squareSummable_iff_memL2 x).mp hx
     have hy' : Memℓp y 2 := (squareSummable_iff_memL2 y).mp hy
     convert (hx'.norm.add hy'.norm).const_smul (3 : ℝ) using 1
-    funext n
-    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, Real.norm_eq_abs]
   exact hbound.mono fun n ↦ by
     simpa only [Real.norm_eq_abs] using entropy_add_defect_bound (x n) (y n)
 
@@ -1214,13 +1213,13 @@ private lemma complete_of_linear_equiv_bounds
   apply Metric.complete_of_cauchySeq_tendsto
   intro u hu
   have hEu : CauchySeq (fun n ↦ E (u n)) :=
-    E.toContinuousLinearMap.lipschitz.cauchySeq_comp hu
+    E.toContinuousLinearMap.lipschitzWith.cauchySeq_comp hu
   obtain ⟨y, hy⟩ := cauchySeq_tendsto_of_complete hEu
   refine ⟨E.symm y, ?_⟩
   convert (E.symm.continuous.tendsto y).comp hy using 1
   simp [Function.comp_def]
 
-@[reducible] private noncomputable def kernelCompleteSpace :
+private theorem kernelCompleteSpace :
     CompleteSpace secondCLM.ker :=
   complete_of_linear_equiv_bounds kernelEquiv 6 4 kernelEquiv_norm_le
     kernelEquiv_symm_norm_le
@@ -1239,7 +1238,7 @@ private lemma complete_of_section_and_complete_ker
   apply Metric.complete_of_cauchySeq_tendsto
   intro u hu
   have hfu : CauchySeq (fun n ↦ f (u n)) :=
-    f.lipschitz.cauchySeq_comp hu
+    f.lipschitzWith.cauchySeq_comp hu
   obtain ⟨x, hx⟩ := cauchySeq_tendsto_of_complete hfu
   let d : ℕ → B := fun n ↦ x - f (u n)
   have hd : Tendsto d atTop (nhds 0) := by
@@ -1277,14 +1276,13 @@ private lemma complete_of_section_and_complete_ker
     hvlim.sub hc
   simpa [v] using huv
 
-@[reducible] private noncomputable def rawCompleteSpace : CompleteSpace Raw := by
+private theorem rawCompleteSpace : CompleteSpace Raw := by
   exact complete_of_section_and_complete_ker secondCLM canonicalSection 4
     secondCLM_section canonicalSection_norm_le
 
 /-- Summability and the quantitative bound for the canonical coordinate pairing.
 Implementation data shared by the canonical Banach model and its symplectic form. -/
-@[nolint defLemma]
-def canonicalPairingData :
+theorem canonicalPairingData :
     (∀ (p : (ℕ → ℝ) × (ℕ → ℝ)) (y : ℕ → ℝ), IsAdmissiblePair p →
       IsSquareSummable y →
         Summable (fun n ↦ p.1 n * y n - p.2 n * centralizer y n)) ∧
@@ -1389,7 +1387,7 @@ Blueprint support for `thm:kp-canonical-banach`; audit ID `EXT-CGP-UPPER-SEMI-PR
 theorem canonicalL2_not_finiteDimensional :
     ¬ FiniteDimensional ℝ CanonicalL2 := by
   intro h
-  letI : FiniteDimensional ℝ CanonicalL2 := h
+  let : FiniteDimensional ℝ CanonicalL2 := h
   have hlinear :
       LinearIndependent ℝ
         (fun i : ℕ ↦ (lp.single 2 i (1 : ℝ) : CanonicalL2)) := by
@@ -1434,13 +1432,13 @@ theorem canonicalKaltonPeckBanach :
           change Set.Finite {n | q.1.1 n ≠ 0} ∧ Set.Finite {n | q.1.2 n ≠ 0} at hq
           constructor
           · exact (hp.1.union hq.1).subset fun n hn ↦ by
-              simp only [Set.mem_union, Set.mem_setOf_eq]
+              simp only [Set.mem_union, Set.mem_ofPred_eq]
               by_cases hp0 : p.1.1 n = 0
               · right
                 exact fun hq0 ↦ hn (by rw [hp0, hq0, add_zero])
               · exact Or.inl hp0
           · exact (hp.2.union hq.2).subset fun n hn ↦ by
-              simp only [Set.mem_union, Set.mem_setOf_eq]
+              simp only [Set.mem_union, Set.mem_ofPred_eq]
               by_cases hp0 : p.1.2 n = 0
               · right
                 exact fun hq0 ↦ hn (by rw [hp0, hq0, add_zero])
@@ -1451,10 +1449,10 @@ theorem canonicalKaltonPeckBanach :
           change Set.Finite {n | p.1.1 n ≠ 0} ∧ Set.Finite {n | p.1.2 n ≠ 0} at hp
           constructor
           · exact hp.1.subset fun n hn ↦ by
-              simp only [Set.mem_setOf_eq]
+              simp only [Set.mem_ofPred_eq]
               exact fun h ↦ hn (by rw [h, mul_zero])
           · exact hp.2.subset fun n hn ↦ by
-              simp only [Set.mem_setOf_eq]
+              simp only [Set.mem_ofPred_eq]
               exact fun h ↦ hn (by rw [h, mul_zero]) }
     have hL2 : Dense {x : L2 | Set.Finite {n | x n ≠ 0}} := by
       rw [dense_iff_closure_eq]
@@ -1509,7 +1507,7 @@ theorem canonicalKaltonPeckBanach :
         Set.Finite {n | x n ≠ 0}
       refine ⟨hx.subset ?_, hx⟩
       intro n hn
-      simp only [Set.mem_setOf_eq] at hn ⊢
+      simp only [Set.mem_ofPred_eq] at hn ⊢
       exact fun hzero ↦ hn (by simp [centralizer, hzero])
     change Dense (D : Set Raw)
     rw [dense_iff_closure_eq]
@@ -1558,6 +1556,23 @@ def AreComparisonConstants {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X
   exact 0 < c ∧ 0 < C ∧ ∀ z,
     c * kaltonPeckQuasiNorm (hX.coordinates z) ≤ ‖z‖ ∧
       ‖z‖ ≤ C * kaltonPeckQuasiNorm (hX.coordinates z)
+
+private theorem norm_le_mul_of_coordinate_match
+    {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    (hX : RealKaltonPeckPresentation X) (hY : RealKaltonPeckPresentation Y)
+    {c C : ℝ} (hc : 0 < c) (hC : 0 ≤ C)
+    (hlower : ∀ x, c * kaltonPeckQuasiNorm (hX.coordinates x) ≤ ‖x‖)
+    (hupper : ∀ y, ‖y‖ ≤ C * kaltonPeckQuasiNorm (hY.coordinates y))
+    (x : X) (y : Y) (hcoord : hY.coordinates y = hX.coordinates x) :
+    ‖y‖ ≤ (C / c) * ‖x‖ := by
+  have hq : kaltonPeckQuasiNorm (hX.coordinates x) ≤ ‖x‖ / c :=
+    (le_div_iff₀ hc).2 (by simpa [mul_comm] using hlower x)
+  calc
+    ‖y‖ ≤ C * kaltonPeckQuasiNorm (hY.coordinates y) := hupper y
+    _ = C * kaltonPeckQuasiNorm (hX.coordinates x) := by rw [hcoord]
+    _ ≤ C * (‖x‖ / c) := mul_le_mul_of_nonneg_left hq hC
+    _ = (C / c) * ‖x‖ := by ring
 
 /-- The coordinate-matching bounded linear equivalence between two presented models.
 Blueprint label: `thm:presentation-equivalence`; audit ID
@@ -1616,26 +1631,16 @@ def presentationEquiv {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     Classical.choose_spec (Classical.choose_spec hY.norm_equivalent)
   refine e.toContinuousLinearEquivOfBounds (CY / cX) (CX / cY) ?_ ?_
   · intro x
-    have hq : kaltonPeckQuasiNorm (hX.coordinates x) ≤ ‖x‖ / cX :=
-      (le_div_iff₀ hX_data.1).2 (by simpa [mul_comm] using (hX_data.2.2 x).1)
-    calc
-      ‖e x‖ ≤ CY * kaltonPeckQuasiNorm (hY.coordinates (e x)) :=
-        (hY_data.2.2 (e x)).2
-      _ = CY * kaltonPeckQuasiNorm (hX.coordinates x) := by rw [he_coordinates]
-      _ ≤ CY * (‖x‖ / cX) := mul_le_mul_of_nonneg_left hq hY_data.2.1.le
-      _ = (CY / cX) * ‖x‖ := by ring
+    exact norm_le_mul_of_coordinate_match hX hY hX_data.1 hY_data.2.1.le
+      (fun z => (hX_data.2.2 z).1) (fun z => (hY_data.2.2 z).2) x (e x)
+      (he_coordinates x)
   · intro y
     have he_symm_coordinates : hX.coordinates (e.symm y) = hY.coordinates y := by
       symm
       simpa using he_coordinates (e.symm y)
-    have hq : kaltonPeckQuasiNorm (hY.coordinates y) ≤ ‖y‖ / cY :=
-      (le_div_iff₀ hY_data.1).2 (by simpa [mul_comm] using (hY_data.2.2 y).1)
-    calc
-      ‖e.symm y‖ ≤ CX * kaltonPeckQuasiNorm (hX.coordinates (e.symm y)) :=
-        (hX_data.2.2 (e.symm y)).2
-      _ = CX * kaltonPeckQuasiNorm (hY.coordinates y) := by rw [he_symm_coordinates]
-      _ ≤ CX * (‖y‖ / cY) := mul_le_mul_of_nonneg_left hq hX_data.2.1.le
-      _ = (CX / cY) * ‖y‖ := by ring
+    exact norm_le_mul_of_coordinate_match hY hX hY_data.1 hX_data.2.1.le
+      (fun z => (hY_data.2.2 z).1) (fun z => (hX_data.2.2 z).2) y (e.symm y)
+      he_symm_coordinates
 
 /-- Coordinate identity, algebraic uniqueness, and the two explicit presentation bounds.
 Blueprint label: `thm:presentation-equivalence`; audit IDs

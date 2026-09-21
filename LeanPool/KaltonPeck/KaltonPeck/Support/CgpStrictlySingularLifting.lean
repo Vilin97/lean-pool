@@ -21,7 +21,8 @@ kernel and quotient to operators on the full canonical Kalton--Peck space.
 
 namespace KaltonPeck.Support.GraphFredholm
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates Symplectic StrictlySingular
 open Function Set Filter Topology
@@ -72,7 +73,7 @@ private theorem interpolationTerm_summable
 private def interpolationOperator
     {X Y : Type*}
     [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [NormedAddCommGroup Y] [NormedSpace ℝ Y] [CompleteSpace Y]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
     (φ : ℕ → StrongDual ℝ X) (e : ℕ → Y) :
     X →L[ℝ] Y :=
   ∑' n, interpolationTerm φ e n
@@ -191,6 +192,137 @@ private theorem exists_antilipschitz_sub_of_apply_norm_le
   rw [div_mul_eq_mul_div]
   exact (le_div_iff₀ hden).2 hcore
 
+/-- A sufficiently small perturbation into the kernel contradicts strict singularity there. -/
+private theorem false_of_small_kernel_perturbation
+    {Z : Type} [NormedAddCommGroup Z] [NormedSpace ℝ Z]
+    (M : Submodule ℝ Z) [CompleteSpace M] (hM : ¬ FiniteDimensional ℝ M)
+    (T : CanonicalRealKaltonPeck →L[ℝ] CanonicalRealKaltonPeck)
+    (hTi : IsStrictlySingular.{0, 0, 0, 0} (T.comp canonicalL2Inclusion))
+    (S P : Z →L[ℝ] CanonicalRealKaltonPeck) (KS KT : ℝ≥0)
+    (hKS : AntilipschitzWith KS S) (hKT : AntilipschitzWith KT (T.comp S))
+    (d : ℝ) (hd : 0 ≤ d) (hPbound : ∀ x, ‖P x‖ ≤ d * ‖x‖)
+    (hKSsmall : (KS : ℝ) * d < 1) (hKTsmall : (KT : ℝ) * (‖T‖ * d) < 1)
+    (hkernel : ∀ x : M, canonicalL2Quotient ((S - P) (x : Z)) = 0) : False := by
+  let SM : M →L[ℝ] CanonicalRealKaltonPeck :=
+    S.comp M.subtypeL
+  let PM : M →L[ℝ] CanonicalRealKaltonPeck :=
+    P.comp M.subtypeL
+  let J : M →L[ℝ] CanonicalRealKaltonPeck := SM - PM
+  have hJ_eq (x : M) : J x = (S - P) (x : Z) := by
+    rfl
+  have hqJ (x : M) :
+      canonicalL2Quotient (J x) = 0 := by
+    exact hkernel x
+  have hSManti : AntilipschitzWith KS SM := by
+    apply AntilipschitzWith.of_le_mul_dist
+    intro x y
+    change dist x y ≤
+      (KS : ℝ) * dist (S (x : Z)) (S (y : Z))
+    rw [Subtype.dist_eq]
+    exact hKS.le_mul_dist (x : Z) (y : Z)
+  have hPMbound (x : M) : ‖PM x‖ ≤ d * ‖x‖ := by
+    change ‖P (x : Z)‖ ≤ d * ‖x‖
+    simpa only [Submodule.norm_coe] using hPbound (x : Z)
+  obtain ⟨KJ, hJanti'⟩ :=
+    exists_antilipschitz_sub_of_apply_norm_le
+      SM PM KS d hSManti hd hPMbound hKSsmall
+  have hJanti : AntilipschitzWith KJ J := hJanti'
+  let TSM : M →L[ℝ] CanonicalRealKaltonPeck :=
+    (T.comp S).comp M.subtypeL
+  let TPM : M →L[ℝ] CanonicalRealKaltonPeck :=
+    T.comp PM
+  have hTSManti : AntilipschitzWith KT TSM := by
+    apply AntilipschitzWith.of_le_mul_dist
+    intro x y
+    change dist x y ≤
+      (KT : ℝ) * dist (T (S (x : Z))) (T (S (y : Z)))
+    rw [Subtype.dist_eq]
+    exact hKT.le_mul_dist (x : Z) (y : Z)
+  have hTPMbound (x : M) :
+      ‖TPM x‖ ≤ (‖T‖ * d) * ‖x‖ := by
+    calc
+      ‖TPM x‖ ≤ ‖T‖ * ‖PM x‖ := T.le_opNorm (PM x)
+      _ ≤ ‖T‖ * (d * ‖x‖) :=
+        mul_le_mul_of_nonneg_left (hPMbound x) (norm_nonneg T)
+      _ = (‖T‖ * d) * ‖x‖ := by ring
+  obtain ⟨KTJ, hTJanti'⟩ :=
+    exists_antilipschitz_sub_of_apply_norm_le
+      TSM TPM KT (‖T‖ * d) hTSManti
+        (mul_nonneg (norm_nonneg T) hd) hTPMbound hKTsmall
+  have hTJ_identity :
+      TSM - TPM = T.comp J := by
+    ext x
+    dsimp only [TSM, TPM, J, SM, PM]
+    simp only [sub_apply, ContinuousLinearMap.comp_apply, map_sub]
+  rw [hTJ_identity] at hTJanti'
+  have hTJanti : AntilipschitzWith KTJ (T.comp J) := hTJanti'
+  have hi_closed :
+      IsClosed (canonicalL2Inclusion.range :
+        Set CanonicalRealKaltonPeck) := by
+    rw [canonicalL2Inclusion_range]
+    exact canonicalL2Quotient.isClosed_ker
+  let : CompleteSpace canonicalL2Inclusion.range :=
+    hi_closed.completeSpace_coe
+  let ir : CanonicalL2 →L[ℝ] canonicalL2Inclusion.range :=
+    canonicalL2Inclusion.codRestrict canonicalL2Inclusion.range
+      (fun x => ⟨x, rfl⟩)
+  have hir_inj : Function.Injective ir := by
+    intro x y hxy
+    exact canonicalL2Inclusion_injective (congrArg Subtype.val hxy)
+  have hir_surj : Function.Surjective ir := by
+    rintro ⟨z, x, rfl⟩
+    exact ⟨x, rfl⟩
+  let ie :
+      CanonicalL2 ≃L[ℝ] canonicalL2Inclusion.range :=
+    ContinuousLinearEquiv.ofBijective ir
+      (LinearMap.ker_eq_bot.mpr hir_inj)
+      (LinearMap.range_eq_top.mpr hir_surj)
+  let Jrange : M →L[ℝ] canonicalL2Inclusion.range :=
+    J.codRestrict canonicalL2Inclusion.range (fun x => by
+      rw [canonicalL2Inclusion_range]
+      exact hqJ x)
+  let L : M →L[ℝ] CanonicalL2 :=
+    ie.symm.toContinuousLinearMap.comp Jrange
+  have hiL : canonicalL2Inclusion.comp L = J := by
+    ext x
+    change canonicalL2Inclusion (ie.symm (Jrange x)) = J x
+    have hir_apply :
+        ir (ie.symm (Jrange x)) = Jrange x :=
+      ie.apply_symm_apply (Jrange x)
+    exact congrArg Subtype.val hir_apply
+  have hLanti : ∃ KL, AntilipschitzWith KL L := by
+    refine ⟨KJ * ‖canonicalL2Inclusion‖₊,
+      AntilipschitzWith.of_le_mul_dist ?_⟩
+    intro x y
+    have hiLx : canonicalL2Inclusion (L x) = J x := by
+      exact DFunLike.congr_fun hiL x
+    have hiLy : canonicalL2Inclusion (L y) = J y := by
+      exact DFunLike.congr_fun hiL y
+    calc
+      dist x y ≤ (KJ : ℝ) * dist (J x) (J y) :=
+        hJanti.le_mul_dist x y
+      _ = (KJ : ℝ) *
+          dist (canonicalL2Inclusion (L x))
+            (canonicalL2Inclusion (L y)) := by rw [hiLx, hiLy]
+      _ ≤ (KJ : ℝ) *
+          ((‖canonicalL2Inclusion‖₊ : ℝ) * dist (L x) (L y)) :=
+        mul_le_mul_of_nonneg_left
+          (canonicalL2Inclusion.lipschitzWith.dist_le_mul _ _)
+          (NNReal.coe_nonneg KJ)
+      _ = ((KJ * ‖canonicalL2Inclusion‖₊ : NNReal) : ℝ) *
+          dist (L x) (L y) := by
+        rw [NNReal.coe_mul]
+        ring
+  apply hTi M hM L hLanti
+  refine ⟨KTJ, ?_⟩
+  have hcomp :
+      (T.comp canonicalL2Inclusion).comp L =
+        T.comp J := by
+    rw [ContinuousLinearMap.comp_assoc, hiL]
+  rw [hcomp]
+  exact hTJanti
+
+
 -- The biorthogonal interpolation argument needs more elaboration time than the default limit.
 /-- Canonical Proposition 5.3(b): strict singularity on the canonical kernel forces
 strict singularity on all of `Z₂`. -/
@@ -242,7 +374,7 @@ theorem canonical_isStrictlySingular_of_inclusion_of_quotient
     (Submodule.span ℝ (Set.range vt)).topologicalClosure
   have hMclosed : IsClosed (M : Set Z) :=
     Submodule.isClosed_topologicalClosure _
-  letI : CompleteSpace M := hMclosed.completeSpace_coe
+  let : CompleteSpace M := hMclosed.completeSpace_coe
   have hM : ¬ FiniteDimensional ℝ M :=
     not_finiteDimensional_topologicalClosure_span_of_biorthogonal hbiot
   let k : ℕ → canonicalL2Quotient.ker :=
@@ -346,126 +478,8 @@ theorem canonical_isStrictlySingular_of_inclusion_of_quotient
   have hMker : M ≤ F.ker := by
     change (Submodule.span ℝ (Set.range vt)).topologicalClosure ≤ F.ker
     exact Submodule.topologicalClosure_minimal _ hspan F.isClosed_ker
-  let SM : M →L[ℝ] CanonicalRealKaltonPeck :=
-    S.comp M.subtypeL
-  let PM : M →L[ℝ] CanonicalRealKaltonPeck :=
-    P.comp M.subtypeL
-  let J : M →L[ℝ] CanonicalRealKaltonPeck := SM - PM
-  have hJ_eq (x : M) : J x = J₀ (x : Z) := by
-    rfl
-  have hqJ (x : M) :
-      canonicalL2Quotient (J x) = 0 := by
-    have hx : (x : Z) ∈ F.ker := hMker x.property
-    change F (x : Z) = 0 at hx
-    simpa only [F, ContinuousLinearMap.comp_apply, hJ_eq] using hx
-  have hSManti : AntilipschitzWith KS SM := by
-    apply AntilipschitzWith.of_le_mul_dist
-    intro x y
-    change dist x y ≤
-      (KS : ℝ) * dist (S (x : Z)) (S (y : Z))
-    rw [Subtype.dist_eq]
-    exact hKS.le_mul_dist (x : Z) (y : Z)
-  have hPMbound (x : M) : ‖PM x‖ ≤ d * ‖x‖ := by
-    change ‖P (x : Z)‖ ≤ d * ‖x‖
-    simpa only [Submodule.norm_coe] using hPbound (x : Z)
-  obtain ⟨KJ, hJanti'⟩ :=
-    exists_antilipschitz_sub_of_apply_norm_le
-      SM PM KS d hSManti hd hPMbound hKSsmall
-  have hJanti : AntilipschitzWith KJ J := hJanti'
-  let TSM : M →L[ℝ] CanonicalRealKaltonPeck :=
-    (T.comp S).comp M.subtypeL
-  let TPM : M →L[ℝ] CanonicalRealKaltonPeck :=
-    T.comp PM
-  have hTSManti : AntilipschitzWith KT TSM := by
-    apply AntilipschitzWith.of_le_mul_dist
-    intro x y
-    change dist x y ≤
-      (KT : ℝ) * dist (T (S (x : Z))) (T (S (y : Z)))
-    rw [Subtype.dist_eq]
-    exact hKT.le_mul_dist (x : Z) (y : Z)
-  have hTPMbound (x : M) :
-      ‖TPM x‖ ≤ (‖T‖ * d) * ‖x‖ := by
-    calc
-      ‖TPM x‖ ≤ ‖T‖ * ‖PM x‖ := T.le_opNorm (PM x)
-      _ ≤ ‖T‖ * (d * ‖x‖) :=
-        mul_le_mul_of_nonneg_left (hPMbound x) (norm_nonneg T)
-      _ = (‖T‖ * d) * ‖x‖ := by ring
-  obtain ⟨KTJ, hTJanti'⟩ :=
-    exists_antilipschitz_sub_of_apply_norm_le
-      TSM TPM KT (‖T‖ * d) hTSManti
-        (mul_nonneg (norm_nonneg T) hd) hTPMbound hKTsmall
-  have hTJ_identity :
-      TSM - TPM = T.comp J := by
-    ext x
-    dsimp only [TSM, TPM, J, SM, PM]
-    simp only [sub_apply, ContinuousLinearMap.comp_apply, map_sub]
-  rw [hTJ_identity] at hTJanti'
-  have hTJanti : AntilipschitzWith KTJ (T.comp J) := hTJanti'
-  have hi_closed :
-      IsClosed (canonicalL2Inclusion.range :
-        Set CanonicalRealKaltonPeck) := by
-    rw [canonicalL2Inclusion_range]
-    exact canonicalL2Quotient.isClosed_ker
-  letI : CompleteSpace canonicalL2Inclusion.range :=
-    hi_closed.completeSpace_coe
-  let ir : CanonicalL2 →L[ℝ] canonicalL2Inclusion.range :=
-    canonicalL2Inclusion.codRestrict canonicalL2Inclusion.range
-      (fun x => ⟨x, rfl⟩)
-  have hir_inj : Function.Injective ir := by
-    intro x y hxy
-    exact canonicalL2Inclusion_injective (congrArg Subtype.val hxy)
-  have hir_surj : Function.Surjective ir := by
-    rintro ⟨z, x, rfl⟩
-    exact ⟨x, rfl⟩
-  let ie :
-      CanonicalL2 ≃L[ℝ] canonicalL2Inclusion.range :=
-    ContinuousLinearEquiv.ofBijective ir
-      (LinearMap.ker_eq_bot.mpr hir_inj)
-      (LinearMap.range_eq_top.mpr hir_surj)
-  let Jrange : M →L[ℝ] canonicalL2Inclusion.range :=
-    J.codRestrict canonicalL2Inclusion.range (fun x => by
-      rw [canonicalL2Inclusion_range]
-      exact hqJ x)
-  let L : M →L[ℝ] CanonicalL2 :=
-    ie.symm.toContinuousLinearMap.comp Jrange
-  have hiL : canonicalL2Inclusion.comp L = J := by
-    ext x
-    change canonicalL2Inclusion (ie.symm (Jrange x)) = J x
-    have hir_apply :
-        ir (ie.symm (Jrange x)) = Jrange x :=
-      ie.apply_symm_apply (Jrange x)
-    exact congrArg Subtype.val hir_apply
-  have hLanti : ∃ KL, AntilipschitzWith KL L := by
-    refine ⟨KJ * ‖canonicalL2Inclusion‖₊,
-      AntilipschitzWith.of_le_mul_dist ?_⟩
-    intro x y
-    have hiLx : canonicalL2Inclusion (L x) = J x := by
-      exact DFunLike.congr_fun hiL x
-    have hiLy : canonicalL2Inclusion (L y) = J y := by
-      exact DFunLike.congr_fun hiL y
-    calc
-      dist x y ≤ (KJ : ℝ) * dist (J x) (J y) :=
-        hJanti.le_mul_dist x y
-      _ = (KJ : ℝ) *
-          dist (canonicalL2Inclusion (L x))
-            (canonicalL2Inclusion (L y)) := by rw [hiLx, hiLy]
-      _ ≤ (KJ : ℝ) *
-          ((‖canonicalL2Inclusion‖₊ : ℝ) * dist (L x) (L y)) :=
-        mul_le_mul_of_nonneg_left
-          (canonicalL2Inclusion.lipschitz.dist_le_mul _ _)
-          (NNReal.coe_nonneg KJ)
-      _ = ((KJ * ‖canonicalL2Inclusion‖₊ : NNReal) : ℝ) *
-          dist (L x) (L y) := by
-        rw [NNReal.coe_mul]
-        ring
-  apply hTi M hM L hLanti
-  refine ⟨KTJ, ?_⟩
-  have hcomp :
-      (T.comp canonicalL2Inclusion).comp L =
-        T.comp J := by
-    rw [ContinuousLinearMap.comp_assoc, hiL]
-  rw [hcomp]
-  exact hTJanti
+  exact false_of_small_kernel_perturbation M hM T hTi S P KS KT hKS hKT d hd
+    hPbound hKSsmall hKTsmall (fun x => hMker x.property)
 
 end
 

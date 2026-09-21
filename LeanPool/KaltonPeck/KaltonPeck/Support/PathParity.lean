@@ -21,7 +21,8 @@ invariance result for paths of Fredholm alternating forms.
 
 namespace KaltonPeck.Support.PathParity
 
-noncomputable section
+noncomputable
+section
 
 /-- A closed kernel complement, continuous dual coordinates, and the invertible range block.
 
@@ -67,13 +68,13 @@ def kernelSplitting {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (hFredholm : IsFredholm eta.toDual) : KernelSplittingData eta := by
   have hRange :
       eta.toDual.toLinearMap.range = Forms.continuousAnnihilator eta.radical := by
-    letI : FiniteDimensional ℝ eta.radical := hFredholm.1
+    let : FiniteDimensional ℝ eta.radical := hFredholm.1
     let hComplemented :=
       Submodule.ClosedComplemented.of_finiteDimensional eta.radical
     let Y : Submodule ℝ X := hComplemented.complement
     let hTop : Submodule.IsTopCompl eta.radical Y :=
       hComplemented.isTopCompl_complement
-    letI : CompleteSpace Y :=
+    let : CompleteSpace Y :=
       hComplemented.isClosed_complement.completeSpace_coe
     let e : (eta.radical × Y) ≃L[ℝ] X :=
       Submodule.prodEquivOfIsTopCompl eta.radical Y hTop
@@ -383,6 +384,53 @@ structure LocalSchurPointData {X : Type*} [NormedAddCommGroup X] [NormedSpace �
   radicalEquivKernel_apply (f : reducedForm.radical) :
     ((radicalEquivKernel f : eta.radical) : X) = kernelMap (f : eta0.radical)
 
+/-- A continuous operator family remains equivalent near a member that is an equivalence. -/
+private theorem exists_nearby_equiv {J Y B : Type*} [MetricSpace J]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y] [CompleteSpace Y]
+    [NormedAddCommGroup B] [NormedSpace ℝ B]
+    (D : J → Y →L[ℝ] B) (hD : Continuous D) (t0 : J) (e : Y ≃L[ℝ] B)
+    (hD0 : D t0 = e.toContinuousLinearMap) :
+    ∃ epsilon : ℝ, 0 < epsilon ∧ ∀ t, dist t t0 < epsilon →
+      ∃ e' : Y ≃L[ℝ] B, e'.toContinuousLinearMap = D t := by
+  let post : (Y →L[ℝ] B) →L[ℝ] Y →L[ℝ] Y :=
+    ContinuousLinearMap.compL ℝ Y B Y e.symm.toContinuousLinearMap
+  let P (t : J) : Y →L[ℝ] Y := post (D t)
+  have hP_apply (t : J) (y : Y) : P t y = e.symm (D t y) := rfl
+  have hP0 : P t0 = ContinuousLinearMap.id ℝ Y := by
+    ext y
+    rw [hP_apply, hD0]
+    exact e.symm_apply_apply y
+  have hPContinuous : Continuous P := post.continuous.comp hD
+  have hNhd : P ⁻¹' Metric.ball (ContinuousLinearMap.id ℝ Y) 1 ∈ nhds t0 := by
+    apply (Metric.isOpen_ball.preimage hPContinuous).mem_nhds
+    simp [hP0]
+  obtain ⟨epsilon, hEpsilon, hBall⟩ := Metric.mem_nhds_iff.mp hNhd
+  refine ⟨epsilon, hEpsilon, ?_⟩
+  intro t ht
+  have hPtBall := hBall ht
+  have hPerturb : ‖ContinuousLinearMap.id ℝ Y - P t‖ < 1 := by
+    change dist (P t) (ContinuousLinearMap.id ℝ Y) < 1 at hPtBall
+    have hdist : dist (ContinuousLinearMap.id ℝ Y) (P t) < 1 := by
+      rwa [dist_comm]
+    rwa [dist_eq_norm] at hdist
+  let u : (Y →L[ℝ] Y)ˣ := Units.oneSub (ContinuousLinearMap.id ℝ Y - P t) hPerturb
+  let PtEquiv : Y ≃L[ℝ] Y := ContinuousLinearEquiv.unitsEquiv ℝ Y u
+  have hPtEquiv : PtEquiv.toContinuousLinearMap = P t := by
+    ext y
+    change (u : Y →L[ℝ] Y) y = P t y
+    dsimp only [u]
+    rw [Units.val_oneSub]
+    simp
+  refine ⟨PtEquiv.trans e, ?_⟩
+  ext y
+  change e (PtEquiv y) = D t y
+  have hy := congrArg (fun T : Y →L[ℝ] Y => T y) hPtEquiv
+  calc
+    e (PtEquiv y) = e (P t y) := congrArg e hy
+    _ = D t y := by
+      rw [hP_apply]
+      exact e.apply_symm_apply (D t y)
+
 /-- Local Schur reduction relative to an arbitrary real parameter set.
 
 For all sufficiently close `t` in `J`, the bounded injection from the fixed kernel restricts to
@@ -401,7 +449,7 @@ theorem localSchurReduction {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ 
   let Y := data.complement
   let A := Forms.continuousAnnihilator Y
   let B := Forms.continuousAnnihilator (eta t0).radical
-  letI : CompleteSpace Y := data.complementClosed.completeSpace_coe
+  let : CompleteSpace Y := data.complementClosed.completeSpace_coe
   let q : StrongDual ℝ X →L[ℝ] B :=
     (ContinuousLinearMap.snd ℝ A B).comp data.dualCoordinates.toContinuousLinearMap
   let C (t : J) : (eta t0).radical →L[ℝ] B :=
@@ -427,72 +475,19 @@ theorem localSchurReduction {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ 
       data.restrictionEquiv y
     rw [← data.restrictionEquiv_apply]
     exact hSecondCoordinate (data.restrictionEquiv y)
-  let preY : (X →L[ℝ] StrongDual ℝ X) →L[ℝ] Y →L[ℝ] StrongDual ℝ X :=
-    (ContinuousLinearMap.compL ℝ Y X (StrongDual ℝ X)).flip Y.subtypeL
-  let r : StrongDual ℝ X →L[ℝ] Y :=
-    data.restrictionEquiv.symm.toContinuousLinearMap.comp q
-  let postr : (Y →L[ℝ] StrongDual ℝ X) →L[ℝ] Y →L[ℝ] Y :=
-    ContinuousLinearMap.compL ℝ Y (StrongDual ℝ X) Y r
-  let conjugate : (X →L[ℝ] StrongDual ℝ X) →L[ℝ] Y →L[ℝ] Y :=
-    postr.comp preY
-  let P (t : J) : Y →L[ℝ] Y := conjugate (eta t).toDual
-  have hP_apply (t : J) (y : Y) :
-      P t y = data.restrictionEquiv.symm (D t y) := by
-    change data.restrictionEquiv.symm
-      (q ((eta t).toDual (y : X))) =
-        data.restrictionEquiv.symm (q ((eta t).toDual (y : X)))
-    rfl
-  have hP0 : P t0 = ContinuousLinearMap.id ℝ Y := by
-    apply ContinuousLinearMap.ext
-    intro y
-    rw [hP_apply, hD0]
-    exact data.restrictionEquiv.symm_apply_apply y
-  have hPContinuous : Continuous P :=
-    conjugate.continuous.comp hContinuous
-  have hNhd :
-      P ⁻¹' Metric.ball (ContinuousLinearMap.id ℝ Y) 1 ∈ nhds t0 := by
-    apply (Metric.isOpen_ball.preimage hPContinuous).mem_nhds
-    simp [hP0]
-  obtain ⟨epsilon, hEpsilon, hBall⟩ := Metric.mem_nhds_iff.mp hNhd
+  let : NormedAddCommGroup B := inferInstance
+  let : NormedSpace ℝ B := inferInstance
+  have hDContinuous : Continuous D :=
+    ((ContinuousLinearMap.compL ℝ Y (StrongDual ℝ X) B q).comp
+      ((ContinuousLinearMap.compL ℝ Y X (StrongDual ℝ X)).flip Y.subtypeL)).continuous.comp
+        hContinuous
+  obtain ⟨epsilon, hEpsilon, hEquiv⟩ :=
+    exists_nearby_equiv D hDContinuous t0 data.restrictionEquiv hD0
   refine ⟨epsilon, hEpsilon, ?_⟩
   intro t ht
-  have htBall : t ∈ Metric.ball t0 epsilon := by
-    change dist (t : ℝ) (t0 : ℝ) < epsilon
-    simpa [Real.dist_eq] using ht
-  have hPtBall := hBall htBall
-  have hPerturb :
-      ‖ContinuousLinearMap.id ℝ Y - P t‖ < 1 := by
-    change dist (P t) (ContinuousLinearMap.id ℝ Y) < 1 at hPtBall
-    have hdist :
-        dist (ContinuousLinearMap.id ℝ Y) (P t) < 1 := by
-      rw [dist_comm]
-      exact hPtBall
-    rw [dist_eq_norm (ContinuousLinearMap.id ℝ Y) (P t)] at hdist
-    exact hdist
-  let u : (Y →L[ℝ] Y)ˣ :=
-    Units.oneSub (ContinuousLinearMap.id ℝ Y - P t) hPerturb
-  let PtEquiv : Y ≃L[ℝ] Y :=
-    ContinuousLinearEquiv.unitsEquiv ℝ Y u
-  have hPtEquiv : PtEquiv.toContinuousLinearMap = P t := by
-    apply ContinuousLinearMap.ext
-    intro y
-    change (u : Y →L[ℝ] Y) y = P t y
-    dsimp only [u]
-    rw [Units.val_oneSub]
-    simp
-  let DtEquiv : Y ≃L[ℝ] B := PtEquiv.trans data.restrictionEquiv
-  have hDtEquiv : DtEquiv.toContinuousLinearMap = D t := by
-    apply ContinuousLinearMap.ext
-    intro y
-    change data.restrictionEquiv (PtEquiv y) = D t y
-    have hy := congrArg (fun T : Y →L[ℝ] Y => T y) hPtEquiv
-    calc
-      data.restrictionEquiv (PtEquiv y) =
-          data.restrictionEquiv (P t y) :=
-        congrArg data.restrictionEquiv hy
-      _ = D t y := by
-        rw [hP_apply]
-        exact data.restrictionEquiv.apply_symm_apply (D t y)
+  have htDist : dist t t0 < epsilon := by
+    simpa [Subtype.dist_eq, Real.dist_eq] using ht
+  obtain ⟨DtEquiv, hDtEquiv⟩ := hEquiv t htDist
   let L : (eta t0).radical →L[ℝ] Y :=
     DtEquiv.symm.toContinuousLinearMap.comp (C t)
   have hDL (f : (eta t0).radical) : D t (L f) = C t f := by
@@ -664,7 +659,7 @@ theorem mod2Path {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     have hclose : |(t : ℝ) - (t0 : ℝ)| < epsilon := by
       simpa [Metric.mem_ball, Subtype.dist_eq, Real.dist_eq] using ht
     obtain ⟨data⟩ := hSchur t hclose
-    letI : FiniteDimensional ℝ (eta t0).radical := (hFredholm t0).1
+    let : FiniteDimensional ℝ (eta t0).radical := (hFredholm t0).1
     have hparity :=
       (FiniteParity.finiteContinuousAlternatingRankEven data.reducedForm).2
     rw [data.radicalEquivKernel.finrank_eq] at hparity
@@ -675,8 +670,7 @@ theorem mod2Path {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
       exact continuousAt_const.congr_of_eventuallyEq heq
   intro s t
   change k s % 2 = k t % 2
-  exact PreconnectedSpace.constant
-    (inferInstance : PreconnectedSpace (Set.Icc (0 : ℝ) 1)) hcontinuous
+  exact TotallyDisconnectedSpace.eq_of_continuous _ hcontinuous _ _
 
 end
 

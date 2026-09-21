@@ -23,7 +23,8 @@ is compact by approximation with finite-dimensional compressions.
 
 namespace KaltonPeck.Support.StrictlySingular
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates Symplectic
 open Function Set Filter Topology
@@ -65,8 +66,8 @@ private instance constraintSubspace_finiteDimensional
   have h₂ : FiniteDimensional ℝ
       (Submodule.span ℝ (Set.range fun i => H.adjoint (H (p.v i)))) :=
     FiniteDimensional.span_of_finite ℝ (Set.finite_range _)
-  letI : FiniteDimensional ℝ (Submodule.span ℝ (Set.range p.v)) := h₁
-  letI : FiniteDimensional ℝ
+  let : FiniteDimensional ℝ (Submodule.span ℝ (Set.range p.v)) := h₁
+  let : FiniteDimensional ℝ
       (Submodule.span ℝ (Set.range fun i => H.adjoint (H (p.v i)))) := h₂
   infer_instance
 
@@ -445,7 +446,7 @@ private theorem exists_compact_opNorm_approximation
       IsCompactOperator K ∧ dist H K < ε := by
   obtain ⟨M, hM, htail⟩ :=
     exists_finiteDimensional_orthogonal_tail_opNorm_lt H hH hε
-  letI : FiniteDimensional ℝ M := hM
+  let : FiniteDimensional ℝ M := hM
   let K : CanonicalL2 →L[ℝ] CanonicalL2 :=
     H.comp M.starProjection
   have hproj : IsCompactOperator M.orthogonalProjectionOnto :=
@@ -484,7 +485,7 @@ theorem canonicalL2_isCompact_of_isStrictlySingular
     obtain ⟨K, hK, hdist⟩ :=
       exists_compact_opNorm_approximation H hH hε
     exact ⟨K, hK, hdist⟩
-  exact isClosed_setOf_isCompactOperator.closure_subset hclosure
+  exact isClosed_setOfPred_isCompactOperator.closure_subset hclosure
 
 end
 

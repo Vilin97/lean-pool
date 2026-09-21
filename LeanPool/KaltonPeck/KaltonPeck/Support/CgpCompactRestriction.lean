@@ -21,7 +21,8 @@ the compact-perturbation argument for the canonical Kalton--Peck space.
 
 namespace KaltonPeck.Support.GraphFredholm
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates Symplectic
 open Function Set Filter Topology
@@ -41,20 +42,20 @@ universe uX uY
 Blueprint label: `lem:upper-semi-calculus`. -/
 theorem IsUpperSemiFredholm.comp
     {X Y Z : Type*}
-    [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] [CompleteSpace Y]
     [NormedAddCommGroup Z] [NormedSpace ℝ Z] [CompleteSpace Z]
     {A : X →L[ℝ] Y} (hA : IsUpperSemiFredholm A)
     {B : Y →L[ℝ] Z} (hB : IsUpperSemiFredholm B) :
     IsUpperSemiFredholm (B.comp A) := by
-  letI : FiniteDimensional ℝ A.toLinearMap.ker := hA.1
-  letI : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
+  let : FiniteDimensional ℝ A.toLinearMap.ker := hA.1
+  let : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
   have hker : FiniteDimensional ℝ (B.comp A).toLinearMap.ker := by
     change FiniteDimensional ℝ (B.toLinearMap.comp A.toLinearMap).ker
     rw [LinearMap.ker_comp]
     infer_instance
   refine ⟨hker, ?_⟩
-  letI : CompleteSpace B.toLinearMap.range := hB.2.completeSpace_coe
+  let : CompleteSpace B.toLinearMap.range := hB.2.completeSpace_coe
   let f : Y →L[ℝ] B.toLinearMap.range := B.rangeRestrict
   have hfq : Topology.IsQuotientMap f :=
     f.isQuotientMap B.toLinearMap.surjective_rangeRestrict
@@ -156,7 +157,7 @@ theorem upperSemi_of_antilipschitz_evalKernel
     IsUpperSemiFredholm T := by
   let H : Submodule ℝ X := f.ker
   have hHclosed : IsClosed (H : Set X) := f.isClosed_ker
-  letI : CompleteSpace H := hHclosed.completeSpace_coe
+  let : CompleteSpace H := hHclosed.completeSpace_coe
   have hfRange : FiniteDimensional ℝ f.range := inferInstance
   let hHcomp : H.ClosedComplemented :=
     f.ker_closedComplemented_of_finiteDimensional_range
@@ -176,7 +177,7 @@ theorem upperSemi_of_antilipschitz_evalKernel
     have hbot : (x : X) - (y : X) ∈ (⊥ : Submodule ℝ X) :=
       htop.isCompl.disjoint.le_bot ⟨hdiffH, hdiffC⟩
     simpa only [Submodule.mem_bot, sub_eq_zero] using hbot
-  letI : FiniteDimensional ℝ C := hCfin
+  let : FiniteDimensional ℝ C := hCfin
   rcases hanti with ⟨K, hK⟩
   have hTHinj : Function.Injective (T.domRestrict H) := hK.injective
   let p : T.toLinearMap.ker →ₗ[ℝ] C :=
@@ -199,7 +200,7 @@ theorem upperSemi_of_antilipschitz_evalKernel
         show T (y : X) = 0 from y.property, sub_zero]
     have : z = 0 := hTHinj (by simpa using hz0)
     exact sub_eq_zero.mp (congrArg Subtype.val this)
-  letI : FiniteDimensional ℝ T.toLinearMap.ker :=
+  let : FiniteDimensional ℝ T.toLinearMap.ker :=
     FiniteDimensional.of_injective p hp
   have hTHclosed :
       IsClosed (((T.domRestrict H).toLinearMap.range : Submodule ℝ Y) : Set Y) :=
@@ -477,7 +478,7 @@ theorem exists_biorthogonal_sequence_summable_of_not_upper
       (fun n => (hsmall n).le)
   have hφnorm (n : ℕ) : 1 ≤ ‖φ n‖ := by
     have happly : ‖φ n (v n)‖ ≤ ‖φ n‖ * ‖v n‖ := (φ n).le_opNorm (v n)
-    rw [hbio n n, if_pos rfl, norm_one, hvnorm n, mul_one] at happly
+    rw [hbio n n, ite_eq_left rfl, norm_one, hvnorm n, mul_one] at happly
     exact happly
   have hTnorm (n : ℕ) : ‖T (v n)‖ ≤ ‖φ n‖ * ‖T (v n)‖ := by
     nlinarith [hφnorm n, norm_nonneg (T (v n))]
@@ -495,6 +496,7 @@ private theorem functional_smulRight_isCompact
     (fun x => (ContinuousLinearMap.toSpanSingleton ℝ y) (c x))
   exact hc.clm_comp (ContinuousLinearMap.toSpanSingleton ℝ y)
 
+omit [CompleteSpace X] in
 /-- A biorthogonal family with summable weighted images spans a closed
 infinite-dimensional subspace on which the operator is compact. -/
 theorem hasInfiniteDimensionalCompactRestriction_of_biorthogonal_weighted
@@ -573,6 +575,137 @@ abbrev KP := CanonicalRealKaltonPeck
 /-- Abbreviation for the canonical real Hilbert coordinate space. -/
 abbrev H := CanonicalL2
 
+/-- A compact perturbation of the identity embeds the closed biorthogonal span into the kernel. -/
+private theorem compact_kernel_embedding_of_perturbation
+    (M : Submodule ℝ KP) (hMclosed : IsClosed (M : Set KP))
+    (B : KP →L[ℝ] KP) (hBMcompact : IsCompactOperator (B.comp M.subtypeL))
+    (x : ℕ → KP) (hxM : ∀ n, x n ∈ M) (φe : ℕ → StrongDual ℝ KP)
+    (hbioe : ∀ i j, φe i (x j) = if i = j then 1 else 0)
+    (y : ℕ → canonicalL2Quotient.ker) (K : KP →L[ℝ] KP)
+    (hKcompact : IsCompactOperator K) (hKnorm : ‖K‖ < 1)
+    (hKx : ∀ j, K (x j) = x j - (y j : KP)) :
+    ∃ (N : Submodule ℝ KP), IsClosed (N : Set KP) ∧
+      ¬ FiniteDimensional ℝ N ∧
+      ∃ R : N →L[ℝ] H,
+        (∃ K, AntilipschitzWith K R) ∧
+        IsCompactOperator ((B.comp canonicalL2Inclusion).comp R) := by
+  let N : Submodule ℝ KP :=
+    (Submodule.span ℝ (Set.range x)).topologicalClosure
+  have hNclosed : IsClosed (N : Set KP) :=
+    Submodule.isClosed_topologicalClosure _
+  let : CompleteSpace N := hNclosed.completeSpace_coe
+  have hN : ¬ FiniteDimensional ℝ N :=
+    not_finiteDimensional_topologicalClosure_span_of_biorthogonal hbioe
+  have hNleM : N ≤ M := by
+    intro z hz
+    have hspan :
+        (Submodule.span ℝ (Set.range x) : Set KP) ⊆ (M : Set KP) := by
+      exact Submodule.span_le.mpr (by
+        rintro _ ⟨n, rfl⟩
+        exact hxM n)
+    exact (hMclosed.closure_subset_iff.2 hspan) hz
+  let iNM : N →L[ℝ] M :=
+    N.subtypeL.codRestrict M (fun z => hNleM z.property)
+  have hBNcompact : IsCompactOperator (B.comp N.subtypeL) := by
+    have hc := hBMcompact.comp_clm iNM
+    have heq :
+        (B.comp M.subtypeL).comp iNM = B.comp N.subtypeL := by
+      apply ContinuousLinearMap.ext
+      intro z
+      rfl
+    rw [← heq]
+    exact hc
+  let J : N →L[ℝ] KP :=
+    ((1 : KP →L[ℝ] KP) - K).comp N.subtypeL
+  let F : KP →L[ℝ] H :=
+    canonicalL2Quotient.comp ((1 : KP →L[ℝ] KP) - K)
+  have hFx (j : ℕ) : F (x j) = 0 := by
+    change canonicalL2Quotient (x j - K (x j)) = 0
+    rw [hKx]
+    simp only [sub_sub_cancel]
+    exact (y j).property
+  have hJker (z : N) : J z ∈ canonicalL2Quotient.ker := by
+    change canonicalL2Quotient (J z) = 0
+    change F (z : KP) = 0
+    exact ContinuousLinearMap.eqOn_closure_span (f := F) (g := 0)
+      (fun _ hz => by
+        obtain ⟨j, rfl⟩ := hz
+        exact hFx j) z.property
+  have hJrange (z : N) : J z ∈ canonicalL2Inclusion.range := by
+    rw [canonicalL2Inclusion_range]
+    exact hJker z
+  let JR : N →L[ℝ] canonicalL2Inclusion.range :=
+    J.codRestrict canonicalL2Inclusion.range hJrange
+  have hiClosed :
+      IsClosed (canonicalL2Inclusion.range : Set KP) := by
+    rw [canonicalL2Inclusion_range]
+    exact canonicalL2Quotient.isClosed_ker
+  let E : H ≃L[ℝ] canonicalL2Inclusion.range :=
+    canonicalL2Inclusion.equivRange
+      canonicalL2Inclusion_injective hiClosed
+  let R : N →L[ℝ] H := E.symm.toContinuousLinearMap.comp JR
+  have hiR : canonicalL2Inclusion.comp R = J := by
+    apply ContinuousLinearMap.ext
+    intro z
+    have h := E.apply_symm_apply (JR z)
+    exact congrArg Subtype.val h
+  have hJlower (z : N) :
+      (1 - ‖K‖) * ‖z‖ ≤ ‖J z‖ := by
+    change (1 - ‖K‖) * ‖(z : KP)‖ ≤
+      ‖(z : KP) - K (z : KP)‖
+    calc
+      (1 - ‖K‖) * ‖(z : KP)‖ =
+          ‖(z : KP)‖ - ‖K‖ * ‖(z : KP)‖ := by ring
+      _ ≤ ‖(z : KP)‖ - ‖K (z : KP)‖ :=
+        sub_le_sub_left (K.le_opNorm (z : KP)) _
+      _ ≤ ‖(z : KP) - K (z : KP)‖ := norm_sub_norm_le _ _
+  let c : ℝ := (1 - ‖K‖) / (‖canonicalL2Inclusion‖ + 1)
+  have hc : 0 < c := by
+    dsimp [c]
+    exact div_pos (sub_pos.mpr hKnorm) (by positivity)
+  have hRlower (z : N) : c * ‖z‖ ≤ ‖R z‖ := by
+    have hiBound :
+        ‖J z‖ ≤ ‖canonicalL2Inclusion‖ * ‖R z‖ := by
+      rw [← hiR]
+      exact canonicalL2Inclusion.le_opNorm (R z)
+    have hden : 0 < ‖canonicalL2Inclusion‖ + 1 := by positivity
+    dsimp [c]
+    rw [div_mul_eq_mul_div, div_le_iff₀ hden]
+    calc
+      (1 - ‖K‖) * ‖z‖ ≤ ‖J z‖ := hJlower z
+      _ ≤ ‖canonicalL2Inclusion‖ * ‖R z‖ := hiBound
+      _ ≤ (‖canonicalL2Inclusion‖ + 1) * ‖R z‖ := by
+        exact mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg _)
+      _ = ‖R z‖ * (‖canonicalL2Inclusion‖ + 1) := by ring
+  have hRanti : ∃ K₀, AntilipschitzWith K₀ R := by
+    rw [antilipschitzWith_iff_exists_mul_le_norm]
+    exact ⟨c, hc, hRlower⟩
+  have hBKcompact : IsCompactOperator (B.comp K) :=
+    hKcompact.clm_comp B
+  have hBJNcompact :
+      IsCompactOperator (B.comp J) := by
+    have hsecond :
+        IsCompactOperator ((B.comp K).comp N.subtypeL) :=
+      hBKcompact.comp_clm N.subtypeL
+    have heq :
+        B.comp J =
+          B.comp N.subtypeL - (B.comp K).comp N.subtypeL := by
+      apply ContinuousLinearMap.ext
+      intro z
+      change B ((z : KP) - K (z : KP)) =
+        B (z : KP) - B (K (z : KP))
+      exact map_sub B (z : KP) (K (z : KP))
+    rw [heq]
+    exact hBNcompact.sub hsecond
+  have hBiRcompact :
+      IsCompactOperator ((B.comp canonicalL2Inclusion).comp R) := by
+    have heq :
+        (B.comp canonicalL2Inclusion).comp R = B.comp J := by
+      rw [ContinuousLinearMap.comp_assoc, hiR]
+    rw [heq]
+    exact hBJNcompact
+  exact ⟨N, hNclosed, hN, R, hRanti, hBiRcompact⟩
+
 /-- The corrected compact perturbation step in CGP Proposition 5.3(c).
 Starting from an infinite-dimensional compact restriction of `B`, it
 constructs an infinite-dimensional closed subspace and an embedding into
@@ -587,7 +720,7 @@ theorem exists_compact_kernel_embedding_of_compactRestriction
         (∃ K, AntilipschitzWith K R) ∧
         IsCompactOperator ((B.comp canonicalL2Inclusion).comp R) := by
   obtain ⟨M, hMclosed, hM, hBMcompact⟩ := hB
-  letI : CompleteSpace M := hMclosed.completeSpace_coe
+  let : CompleteSpace M := hMclosed.completeSpace_coe
   let qM : M →L[ℝ] H := canonicalL2Quotient.comp M.subtypeL
   have hqMstrict : IsStrictlySingular qM :=
     hq.precomp M.subtypeL
@@ -693,124 +826,8 @@ theorem exists_compact_kernel_embedding_of_compactRestriction
   have hbioe (i j : ℕ) :
       φe i (x j) = if i = j then 1 else 0 := by
     simpa [x] using hφe_apply i (vt j) ▸ hbiot i j
-  let N : Submodule ℝ KP :=
-    (Submodule.span ℝ (Set.range x)).topologicalClosure
-  have hNclosed : IsClosed (N : Set KP) :=
-    Submodule.isClosed_topologicalClosure _
-  letI : CompleteSpace N := hNclosed.completeSpace_coe
-  have hN : ¬ FiniteDimensional ℝ N :=
-    not_finiteDimensional_topologicalClosure_span_of_biorthogonal hbioe
-  have hNleM : N ≤ M := by
-    intro z hz
-    have hspan :
-        (Submodule.span ℝ (Set.range x) : Set KP) ⊆ (M : Set KP) := by
-      exact Submodule.span_le.mpr (by
-        rintro _ ⟨n, rfl⟩
-        exact (vt n).property)
-    exact (hMclosed.closure_subset_iff.2 hspan) hz
-  let iNM : N →L[ℝ] M :=
-    N.subtypeL.codRestrict M (fun z => hNleM z.property)
-  have hBNcompact : IsCompactOperator (B.comp N.subtypeL) := by
-    have hc := hBMcompact.comp_clm iNM
-    have heq :
-        (B.comp M.subtypeL).comp iNM = B.comp N.subtypeL := by
-      apply ContinuousLinearMap.ext
-      intro z
-      rfl
-    rw [← heq]
-    exact hc
-  let J : N →L[ℝ] KP :=
-    ((1 : KP →L[ℝ] KP) - K).comp N.subtypeL
-  let F : KP →L[ℝ] H :=
-    canonicalL2Quotient.comp ((1 : KP →L[ℝ] KP) - K)
-  have hFx (j : ℕ) : F (x j) = 0 := by
-    change canonicalL2Quotient (x j - K (x j)) = 0
-    rw [hKx]
-    have hxy : x j - d j = (y j : KP) := by
-      simp [d]
-    rw [hxy]
-    exact (y j).property
-  have hJker (z : N) : J z ∈ canonicalL2Quotient.ker := by
-    change canonicalL2Quotient (J z) = 0
-    change F (z : KP) = 0
-    exact ContinuousLinearMap.eqOn_closure_span (f := F) (g := 0)
-      (fun _ hz => by
-        obtain ⟨j, rfl⟩ := hz
-        exact hFx j) z.property
-  have hJrange (z : N) : J z ∈ canonicalL2Inclusion.range := by
-    rw [canonicalL2Inclusion_range]
-    exact hJker z
-  let JR : N →L[ℝ] canonicalL2Inclusion.range :=
-    J.codRestrict canonicalL2Inclusion.range hJrange
-  have hiClosed :
-      IsClosed (canonicalL2Inclusion.range : Set KP) := by
-    rw [canonicalL2Inclusion_range]
-    exact canonicalL2Quotient.isClosed_ker
-  let E : H ≃L[ℝ] canonicalL2Inclusion.range :=
-    canonicalL2Inclusion.equivRange
-      canonicalL2Inclusion_injective hiClosed
-  let R : N →L[ℝ] H := E.symm.toContinuousLinearMap.comp JR
-  have hiR : canonicalL2Inclusion.comp R = J := by
-    apply ContinuousLinearMap.ext
-    intro z
-    have h := E.apply_symm_apply (JR z)
-    exact congrArg Subtype.val h
-  have hJlower (z : N) :
-      (1 - ‖K‖) * ‖z‖ ≤ ‖J z‖ := by
-    change (1 - ‖K‖) * ‖(z : KP)‖ ≤
-      ‖(z : KP) - K (z : KP)‖
-    calc
-      (1 - ‖K‖) * ‖(z : KP)‖ =
-          ‖(z : KP)‖ - ‖K‖ * ‖(z : KP)‖ := by ring
-      _ ≤ ‖(z : KP)‖ - ‖K (z : KP)‖ :=
-        sub_le_sub_left (K.le_opNorm (z : KP)) _
-      _ ≤ ‖(z : KP) - K (z : KP)‖ := norm_sub_norm_le _ _
-  let c : ℝ := (1 - ‖K‖) / (‖canonicalL2Inclusion‖ + 1)
-  have hc : 0 < c := by
-    dsimp [c]
-    exact div_pos (sub_pos.mpr hKnorm) (by positivity)
-  have hRlower (z : N) : c * ‖z‖ ≤ ‖R z‖ := by
-    have hiBound :
-        ‖J z‖ ≤ ‖canonicalL2Inclusion‖ * ‖R z‖ := by
-      rw [← hiR]
-      exact canonicalL2Inclusion.le_opNorm (R z)
-    have hden : 0 < ‖canonicalL2Inclusion‖ + 1 := by positivity
-    dsimp [c]
-    rw [div_mul_eq_mul_div, div_le_iff₀ hden]
-    calc
-      (1 - ‖K‖) * ‖z‖ ≤ ‖J z‖ := hJlower z
-      _ ≤ ‖canonicalL2Inclusion‖ * ‖R z‖ := hiBound
-      _ ≤ (‖canonicalL2Inclusion‖ + 1) * ‖R z‖ := by
-        exact mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg _)
-      _ = ‖R z‖ * (‖canonicalL2Inclusion‖ + 1) := by ring
-  have hRanti : ∃ K₀, AntilipschitzWith K₀ R := by
-    rw [antilipschitzWith_iff_exists_mul_le_norm]
-    exact ⟨c, hc, hRlower⟩
-  have hBKcompact : IsCompactOperator (B.comp K) :=
-    hKcompact.clm_comp B
-  have hBJNcompact :
-      IsCompactOperator (B.comp J) := by
-    have hsecond :
-        IsCompactOperator ((B.comp K).comp N.subtypeL) :=
-      hBKcompact.comp_clm N.subtypeL
-    have heq :
-        B.comp J =
-          B.comp N.subtypeL - (B.comp K).comp N.subtypeL := by
-      apply ContinuousLinearMap.ext
-      intro z
-      change B ((z : KP) - K (z : KP)) =
-        B (z : KP) - B (K (z : KP))
-      exact map_sub B (z : KP) (K (z : KP))
-    rw [heq]
-    exact hBNcompact.sub hsecond
-  have hBiRcompact :
-      IsCompactOperator ((B.comp canonicalL2Inclusion).comp R) := by
-    have heq :
-        (B.comp canonicalL2Inclusion).comp R = B.comp J := by
-      rw [ContinuousLinearMap.comp_assoc, hiR]
-    rw [heq]
-    exact hBJNcompact
-  exact ⟨N, hNclosed, hN, R, hRanti, hBiRcompact⟩
+  exact compact_kernel_embedding_of_perturbation M hMclosed B hBMcompact
+    x (fun n => (vt n).property) φe hbioe y K hKcompact hKnorm hKx
 
 /-- Contrapositive form of the corrected CGP Proposition 5.3(c): if an
 operator on the canonical Kalton--Peck space fails to be upper
@@ -825,7 +842,7 @@ theorem not_upperSemi_comp_canonicalL2Inclusion_of_not_upper
   obtain ⟨N, hNclosed, hN, R, hRanti, hcompact⟩ :=
     exists_compact_kernel_embedding_of_compactRestriction
       hq B hcompactRestriction
-  letI : CompleteSpace N := hNclosed.completeSpace_coe
+  let : CompleteSpace N := hNclosed.completeSpace_coe
   rcases hRanti with ⟨K, hK⟩
   have hRinj : Function.Injective R := hK.injective
   have hRker : R.toLinearMap.ker = ⊥ :=

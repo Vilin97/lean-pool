@@ -24,7 +24,8 @@ Kalton--Peck presentations, and develops the associated block-operator theory.
 
 namespace KaltonPeck.Support.Symplectic
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates
 open scoped lp
@@ -33,7 +34,7 @@ open scoped lp
 local instance classicalPropDecidable (p : Prop) : Decidable p :=
   Classical.propDecidable p
 
-private def memlpTwoIff (x : ℕ → ℝ) : Memℓp x 2 ↔ IsSquareSummable x := by
+private theorem memlpTwoIff (x : ℕ → ℝ) : Memℓp x 2 ↔ IsSquareSummable x := by
   simpa [IsSquareSummable, Real.norm_eq_abs, sq_abs] using
     (memℓp_gen_iff (p := (2 : ENNReal)) (f := x) (by norm_num))
 
@@ -41,7 +42,7 @@ private def toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) :
     lp (fun _ : ℕ ↦ ℝ) 2 :=
   ⟨(x : PreLp (fun _ : ℕ ↦ ℝ)), (memlpTwoIff x).2 hx⟩
 
-private def l2Norm_toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) :
+private theorem l2Norm_toL2 (x : ℕ → ℝ) (hx : IsSquareSummable x) :
     l2Norm x = ‖toL2 x hx‖ := by
   rw [lp.norm_eq_tsum_rpow (p := (2 : ENNReal)) (by norm_num)]
   change Real.sqrt (∑' n, x n ^ 2) =
@@ -65,7 +66,7 @@ private structure StrongPairingData where
       |∑' n, (p.1 n * y n - p.2 n * centralizer y n)| ≤
         (l2Norm (p.1 - centralizer p.2) + 4 * l2Norm p.2) * l2Norm y
 
-private def strongPairingData : StrongPairingData where
+private theorem strongPairingData : StrongPairingData where
   sectionSummable := canonicalPairingData.1
   sectionBound := canonicalPairingData.2
 
@@ -77,7 +78,7 @@ private def canonicalPairing
     (p q : (ℕ → ℝ) × (ℕ → ℝ)) : ℝ :=
   ∑' n, canonicalPairingTerm p q n
 
-private def canonicalPairing_summable (D : StrongPairingData)
+private theorem canonicalPairing_summable (D : StrongPairingData)
     (p q : (ℕ → ℝ) × (ℕ → ℝ))
     (hp : IsAdmissiblePair p) (hq : IsAdmissiblePair q) :
     Summable (canonicalPairingTerm p q) := by
@@ -90,7 +91,7 @@ private def canonicalPairing_summable (D : StrongPairingData)
     simp [canonicalPairingTerm]
     ring)
 
-private def canonicalPairing_decomp (D : StrongPairingData)
+private theorem canonicalPairing_decomp (D : StrongPairingData)
     (p q : (ℕ → ℝ) × (ℕ → ℝ))
     (hp : IsAdmissiblePair p) (hq : IsAdmissiblePair q) :
     canonicalPairing p q =
@@ -106,7 +107,7 @@ private def canonicalPairing_decomp (D : StrongPairingData)
       (toL2 p.2 hp.1 n) (toL2 (q.1 - centralizer q.2) hq.2 n))
     exact lp.summable_inner _ _
 
-private def canonicalPairing_bound (D : StrongPairingData)
+private theorem canonicalPairing_bound (D : StrongPairingData)
     (p q : (ℕ → ℝ) × (ℕ → ℝ))
     (hp : IsAdmissiblePair p) (hq : IsAdmissiblePair q) :
     |canonicalPairing p q| ≤ 5 * kaltonPeckQuasiNorm p * kaltonPeckQuasiNorm q := by
@@ -296,10 +297,10 @@ private def pairingContinuousLinearMap (D : StrongPairingData) :
         (mul_nonneg (by norm_num) (div_nonneg (norm_nonneg _) hdata.1.le))
     _ = (5 / c ^ 2) * ‖z‖ * ‖w‖ := by field_simp
 
-private def fromL2SquareSummable (x : L2) : IsSquareSummable (fun n ↦ x n) :=
+private theorem fromL2SquareSummable (x : L2) : IsSquareSummable (fun n ↦ x n) :=
   (memlpTwoIff (fun n ↦ x n)).1 x.2
 
-private def centralizer_zeroS : centralizer (0 : ℕ → ℝ) = 0 := by
+private theorem centralizer_zeroS : centralizer (0 : ℕ → ℝ) = 0 := by
   funext n
   simp [centralizer]
 
@@ -309,13 +310,13 @@ private def kernelPair (x : L2) : (ℕ → ℝ) × (ℕ → ℝ) :=
 private def sectionPair (x : L2) : (ℕ → ℝ) × (ℕ → ℝ) :=
   (centralizer (fun n ↦ x n), fun n ↦ x n)
 
-private def kernelPair_mem (x : L2) : IsAdmissiblePair (kernelPair x) := by
+private theorem kernelPair_mem (x : L2) : IsAdmissiblePair (kernelPair x) := by
   rw [IsAdmissiblePair]
   constructor
   · simp [kernelPair, IsSquareSummable]
   · simpa [kernelPair, centralizer_zeroS] using fromL2SquareSummable x
 
-private def sectionPair_mem (x : L2) : IsAdmissiblePair (sectionPair x) := by
+private theorem sectionPair_mem (x : L2) : IsAdmissiblePair (sectionPair x) := by
   rw [IsAdmissiblePair]
   constructor
   · exact fromL2SquareSummable x
@@ -325,7 +326,7 @@ private def kernelVector (x : L2) : CanonicalRealKaltonPeck :=
   Classical.choose (canonicalRealKaltonPeckPresentation.coordinates_surjective
     (kernelPair x) (kernelPair_mem x))
 
-private def kernelVector_coordinates (x : L2) :
+private theorem kernelVector_coordinates (x : L2) :
     canonicalRealKaltonPeckPresentation.coordinates (kernelVector x) = kernelPair x :=
   Classical.choose_spec (canonicalRealKaltonPeckPresentation.coordinates_surjective
     (kernelPair x) (kernelPair_mem x))
@@ -334,7 +335,7 @@ private def sectionVector (x : L2) : CanonicalRealKaltonPeck :=
   Classical.choose (canonicalRealKaltonPeckPresentation.coordinates_surjective
     (sectionPair x) (sectionPair_mem x))
 
-private def sectionVector_coordinates (x : L2) :
+private theorem sectionVector_coordinates (x : L2) :
     canonicalRealKaltonPeckPresentation.coordinates (sectionVector x) = sectionPair x :=
   Classical.choose_spec (canonicalRealKaltonPeckPresentation.coordinates_surjective
     (sectionPair x) (sectionPair_mem x))
@@ -399,7 +400,7 @@ private def kernelContinuousLinearMap : L2 →L[ℝ] CanonicalRealKaltonPeck := 
       rw [l2Norm_toL2 _ (fromL2SquareSummable x)]
       congr 1
 
-private def sectionVector_norm_bound (x : L2) :
+private theorem sectionVector_norm_bound (x : L2) :
     ‖sectionVector x‖ ≤
       Classical.choose (Classical.choose_spec
         canonicalRealKaltonPeckPresentation.norm_equivalent) * ‖x‖ := by
@@ -428,13 +429,13 @@ private def sectionVector_norm_bound (x : L2) :
       rw [l2Norm_toL2 _ (fromL2SquareSummable x)]
       congr 1
 
-private def pairingContinuousLinearMap_apply (D : StrongPairingData)
+private theorem pairingContinuousLinearMap_apply (D : StrongPairingData)
     (z w : CanonicalRealKaltonPeck) :
     pairingContinuousLinearMap D z w = canonicalPairing
       (canonicalRealKaltonPeckPresentation.coordinates z)
       (canonicalRealKaltonPeckPresentation.coordinates w) := rfl
 
-private def canonicalPairing_kernel_right
+private theorem canonicalPairing_kernel_right
     (p : (ℕ → ℝ) × (ℕ → ℝ)) (hp : IsAdmissiblePair p) (a : L2) :
     canonicalPairing p (kernelPair a) = -inner ℝ (toL2 p.2 hp.1) a := by
   rw [canonicalPairing, lp.inner_eq_tsum, ← tsum_neg]
@@ -442,7 +443,7 @@ private def canonicalPairing_kernel_right
   intro n
   simp [canonicalPairingTerm, kernelPair, toL2]
 
-private def canonicalPairing_kernel_left
+private theorem canonicalPairing_kernel_left
     (a : L2) (q : (ℕ → ℝ) × (ℕ → ℝ)) (hq : IsAdmissiblePair q) :
     canonicalPairing (kernelPair a) q = inner ℝ a (toL2 q.2 hq.1) := by
   rw [canonicalPairing, lp.inner_eq_tsum]
@@ -451,7 +452,7 @@ private def canonicalPairing_kernel_left
   simp [canonicalPairingTerm, kernelPair, toL2]
   ring
 
-private def canonicalPairing_section_right
+private theorem canonicalPairing_section_right
     (p : (ℕ → ℝ) × (ℕ → ℝ)) (y : L2) :
     canonicalPairing p (sectionPair y) =
       ∑' n, (p.1 n * y n - p.2 n * centralizer (fun k ↦ y k) n) := by
@@ -461,7 +462,7 @@ private def canonicalPairing_section_right
   simp [canonicalPairingTerm, sectionPair]
   ring
 
-private def pairing_kernel_right (D : StrongPairingData) (z : CanonicalRealKaltonPeck)
+private theorem pairing_kernel_right (D : StrongPairingData) (z : CanonicalRealKaltonPeck)
     (a : L2) : pairingContinuousLinearMap D z (kernelContinuousLinearMap a) =
       -inner ℝ (toL2 (canonicalRealKaltonPeckPresentation.coordinates z).2
         (canonicalRealKaltonPeckPresentation.coordinates_mem z).1) a := by
@@ -472,7 +473,7 @@ private def pairing_kernel_right (D : StrongPairingData) (z : CanonicalRealKalto
   exact canonicalPairing_kernel_right _
     (canonicalRealKaltonPeckPresentation.coordinates_mem z) a
 
-private def pairing_kernel_left (D : StrongPairingData) (a : L2)
+private theorem pairing_kernel_left (D : StrongPairingData) (a : L2)
     (z : CanonicalRealKaltonPeck) : pairingContinuousLinearMap D (kernelContinuousLinearMap a) z =
       inner ℝ a (toL2 (canonicalRealKaltonPeckPresentation.coordinates z).2
         (canonicalRealKaltonPeckPresentation.coordinates_mem z).1) := by
@@ -484,7 +485,7 @@ private def pairing_kernel_left (D : StrongPairingData) (a : L2)
   exact canonicalPairing_kernel_left a _
     (canonicalRealKaltonPeckPresentation.coordinates_mem z)
 
-private def pairing_section_right (D : StrongPairingData) (z : CanonicalRealKaltonPeck)
+private theorem pairing_section_right (D : StrongPairingData) (z : CanonicalRealKaltonPeck)
     (y : L2) : pairingContinuousLinearMap D z (sectionVector y) =
       ∑' n, ((canonicalRealKaltonPeckPresentation.coordinates z).1 n * y n -
         (canonicalRealKaltonPeckPresentation.coordinates z).2 n *
@@ -492,7 +493,7 @@ private def pairing_section_right (D : StrongPairingData) (z : CanonicalRealKalt
   rw [pairingContinuousLinearMap_apply, sectionVector_coordinates]
   exact canonicalPairing_section_right _ y
 
-private def pairing_section_kernel (D : StrongPairingData) (b a : L2) :
+private theorem pairing_section_kernel (D : StrongPairingData) (b a : L2) :
     pairingContinuousLinearMap D (sectionVector b) (kernelContinuousLinearMap a) =
       -inner ℝ b a := by
   rw [pairing_kernel_right]
@@ -500,7 +501,7 @@ private def pairing_section_kernel (D : StrongPairingData) (b a : L2) :
   ext n
   exact congr_fun (congr_arg Prod.snd (sectionVector_coordinates b)) n
 
-private def pairing_kernel_section (D : StrongPairingData) (a y : L2) :
+private theorem pairing_kernel_section (D : StrongPairingData) (a y : L2) :
     pairingContinuousLinearMap D (kernelContinuousLinearMap a) (sectionVector y) =
       inner ℝ a y := by
   rw [pairing_kernel_left]
@@ -508,7 +509,7 @@ private def pairing_kernel_section (D : StrongPairingData) (a y : L2) :
   ext n
   exact congr_fun (congr_arg Prod.snd (sectionVector_coordinates y)) n
 
-private def vector_eq_kernelVector_of_second_eq_zero (z : CanonicalRealKaltonPeck)
+private theorem vector_eq_kernelVector_of_second_eq_zero (z : CanonicalRealKaltonPeck)
     (hz : (canonicalRealKaltonPeckPresentation.coordinates z).2 = 0) :
     ∃ a : L2, z = kernelVector a := by
   have ha : IsSquareSummable (canonicalRealKaltonPeckPresentation.coordinates z).1 := by
@@ -523,7 +524,7 @@ private def vector_eq_kernelVector_of_second_eq_zero (z : CanonicalRealKaltonPec
   · rfl
   · exact hz
 
-private def functional_zero_of_zero_second
+private theorem functional_zero_of_zero_second
     (f : StrongDual ℝ CanonicalRealKaltonPeck)
     (hf : ∀ a, f (kernelContinuousLinearMap a) = 0)
     (z : CanonicalRealKaltonPeck)
@@ -531,7 +532,7 @@ private def functional_zero_of_zero_second
   obtain ⟨a, rfl⟩ := vector_eq_kernelVector_of_second_eq_zero z hz
   exact hf a
 
-private def section_add_defect_second (x y : L2) :
+private theorem section_add_defect_second (x y : L2) :
     (canonicalRealKaltonPeckPresentation.coordinates
       (sectionVector (x + y) - sectionVector x - sectionVector y)).2 = 0 := by
   rw [map_sub, map_sub, sectionVector_coordinates, sectionVector_coordinates,
@@ -539,14 +540,14 @@ private def section_add_defect_second (x y : L2) :
   funext n
   simp [sectionPair]
 
-private def section_smul_defect_second (c : ℝ) (x : L2) :
+private theorem section_smul_defect_second (c : ℝ) (x : L2) :
     (canonicalRealKaltonPeckPresentation.coordinates
       (sectionVector (c • x) - c • sectionVector x)).2 = 0 := by
   rw [map_sub, map_smul, sectionVector_coordinates, sectionVector_coordinates]
   funext n
   simp [sectionPair]
 
-private def vector_sub_section_second (z : CanonicalRealKaltonPeck) :
+private theorem vector_sub_section_second (z : CanonicalRealKaltonPeck) :
     let y := toL2 (canonicalRealKaltonPeckPresentation.coordinates z).2
       (canonicalRealKaltonPeckPresentation.coordinates_mem z).1
     (canonicalRealKaltonPeckPresentation.coordinates (z - sectionVector y)).2 = 0 := by
@@ -555,7 +556,7 @@ private def vector_sub_section_second (z : CanonicalRealKaltonPeck) :
   funext n
   simp [sectionPair, toL2]
 
-private def pairing_ker_eq_zero (D : StrongPairingData) (z : CanonicalRealKaltonPeck)
+private theorem pairing_ker_eq_zero (D : StrongPairingData) (z : CanonicalRealKaltonPeck)
     (hz : pairingContinuousLinearMap D z = 0) : z = 0 := by
   let x := toL2 (canonicalRealKaltonPeckPresentation.coordinates z).2
     (canonicalRealKaltonPeckPresentation.coordinates_mem z).1
@@ -598,14 +599,14 @@ private def pairing_ker_eq_zero (D : StrongPairingData) (z : CanonicalRealKalton
   · exact hfirst
   · exact hsecond
 
-private def pairing_injective (D : StrongPairingData) :
+private theorem pairing_injective (D : StrongPairingData) :
     Function.Injective (pairingContinuousLinearMap D) := by
   intro z z' h
   rw [← sub_eq_zero]
   apply pairing_ker_eq_zero D
   rw [map_sub, h, sub_self]
 
-private def pairing_surjective (D : StrongPairingData) :
+private theorem pairing_surjective (D : StrongPairingData) :
     Function.Surjective (pairingContinuousLinearMap D) := by
   intro f
   let fj : StrongDual ℝ L2 := f.comp kernelContinuousLinearMap
@@ -783,7 +784,7 @@ Blueprint support for `thm:kp-canonical-banach`; audit ID `EXT-CGP-UPPER-SEMI-PR
 theorem canonicalRealKaltonPeck_not_finiteDimensional :
     ¬ FiniteDimensional ℝ CanonicalRealKaltonPeck := by
   intro h
-  letI : FiniteDimensional ℝ CanonicalRealKaltonPeck := h
+  let : FiniteDimensional ℝ CanonicalRealKaltonPeck := h
   have hL2 : FiniteDimensional ℝ CanonicalL2 :=
     FiniteDimensional.of_injective canonicalL2Inclusion.toLinearMap
       canonicalL2Inclusion_injective
@@ -882,7 +883,7 @@ Blueprint labels: `thm:block-primary` and `thm:block-transport`. -/
 def AreMutuallySupportDisjoint (w v : ℕ → ℕ → ℝ) : Prop := by
   exact ∀ n m, Disjoint {k | w n k ≠ 0} {k | v m k ≠ 0}
 
-private def blockSquareSummable (w : ℕ → ℕ → ℝ)
+private theorem blockSquareSummable (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (n : ℕ) :
     IsSquareSummable (w n) := by
   apply summable_of_hasFiniteSupport
@@ -894,7 +895,7 @@ private def blockL2 (w : ℕ → ℕ → ℝ)
     lp (fun _ : ℕ ↦ ℝ) 2 :=
   toL2 (w n) (blockSquareSummable w hw n)
 
-private def blockSupportBefore (w : ℕ → ℕ → ℝ)
+private theorem blockSupportBefore (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) {n m : ℕ} (hnm : n < m)
     {i j : ℕ} (hi : w n i ≠ 0) (hj : w m j ≠ 0) : i < j := by
   revert j
@@ -908,7 +909,7 @@ private def blockSupportBefore (w : ℕ → ℕ → ℝ)
       change w m k ≠ 0 at hk
       exact lt_trans (ih hk) (hw.2.2 m k j hk hj)
 
-private def blockSupportDisjoint (w : ℕ → ℕ → ℝ)
+private theorem blockSupportDisjoint (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) {n m : ℕ} (hnm : n ≠ m) :
     Disjoint {k | w n k ≠ 0} {k | w m k ≠ 0} := by
   rw [Set.disjoint_left]
@@ -919,18 +920,18 @@ private def blockSupportDisjoint (w : ℕ → ℕ → ℝ)
   · exact Nat.lt_asymm (blockSupportBefore w hw hgt hkm hkn)
       (blockSupportBefore w hw hgt hkm hkn)
 
-private def blocksOrthonormal (w : ℕ → ℕ → ℝ)
+private theorem blocksOrthonormal (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) :
     Orthonormal ℝ (blockL2 w hw) := by
   rw [orthonormal_iff_ite]
   intro n m
   by_cases hnm : n = m
   · subst m
-    rw [if_pos rfl, inner_self_eq_norm_sq_to_K]
+    rw [ite_eq_left rfl, inner_self_eq_norm_sq_to_K]
     change ‖toL2 (w n) (blockSquareSummable w hw n)‖ ^ 2 = 1
     rw [← l2Norm_toL2 (w n) (blockSquareSummable w hw n), hw.2.1]
     norm_num
-  · rw [if_neg hnm, lp.inner_eq_tsum]
+  · rw [ite_eq_right hnm, lp.inner_eq_tsum]
     have hzfun : (fun k ↦ inner ℝ (blockL2 w hw n k) (blockL2 w hw m k)) =
         (0 : ℕ → ℝ) := by
       funext k
@@ -954,12 +955,12 @@ private def HasActiveBlock (w : ℕ → ℕ → ℝ) (k : ℕ) : Prop :=
 private def activeBlockIndex (w : ℕ → ℕ → ℝ) (k : ℕ) : ℕ :=
   if hk : HasActiveBlock w k then Classical.choose hk else 0
 
-private def activeBlockIndex_spec (w : ℕ → ℕ → ℝ) {k : ℕ}
+private theorem activeBlockIndex_spec (w : ℕ → ℕ → ℝ) {k : ℕ}
     (hk : HasActiveBlock w k) : w (activeBlockIndex w k) k ≠ 0 := by
-  rw [activeBlockIndex, dif_pos hk]
+  rw [activeBlockIndex, dite_eq_left hk]
   exact Classical.choose_spec hk
 
-private def activeBlockIndex_eq (w : ℕ → ℕ → ℝ)
+private theorem activeBlockIndex_eq (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) {n k : ℕ} (hnk : w n k ≠ 0) :
     activeBlockIndex w k = n := by
   have hk : HasActiveBlock w k := ⟨n, hnk⟩
@@ -972,24 +973,24 @@ private def rawBlockTransform (w : ℕ → ℕ → ℝ) (x : ℕ → ℝ) : ℕ 
     x (activeBlockIndex w k) * w (activeBlockIndex w k) k
   else 0
 
-private def rawBlockTransform_apply_of_mem (w : ℕ → ℕ → ℝ)
+private theorem rawBlockTransform_apply_of_mem (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (x : ℕ → ℝ)
     {n k : ℕ} (hnk : w n k ≠ 0) : rawBlockTransform w x k = x n * w n k := by
-  rw [rawBlockTransform, dif_pos ⟨n, hnk⟩, activeBlockIndex_eq w hw hnk]
+  rw [rawBlockTransform, dite_eq_left ⟨n, hnk⟩, activeBlockIndex_eq w hw hnk]
 
-private def rawBlockTransform_apply_of_not_mem (w : ℕ → ℕ → ℝ)
+private theorem rawBlockTransform_apply_of_not_mem (w : ℕ → ℕ → ℝ)
     (x : ℕ → ℝ) {k : ℕ} (hk : ¬ HasActiveBlock w k) :
     rawBlockTransform w x k = 0 := by
-  rw [rawBlockTransform, dif_neg hk]
+  rw [rawBlockTransform, dite_eq_right hk]
 
-private def rawBlockTransform_add (w : ℕ → ℕ → ℝ) (x y : ℕ → ℝ) :
+private theorem rawBlockTransform_add (w : ℕ → ℕ → ℝ) (x y : ℕ → ℝ) :
     rawBlockTransform w (x + y) = rawBlockTransform w x + rawBlockTransform w y := by
   funext k
   by_cases hk : HasActiveBlock w k
   · simp [rawBlockTransform, hk, add_mul]
   · simp [rawBlockTransform, hk]
 
-private def rawBlockTransform_smul (w : ℕ → ℕ → ℝ) (a : ℝ)
+private theorem rawBlockTransform_smul (w : ℕ → ℕ → ℝ) (a : ℝ)
     (x : ℕ → ℝ) : rawBlockTransform w (a • x) = a • rawBlockTransform w x := by
   funext k
   by_cases hk : HasActiveBlock w k
@@ -1001,14 +1002,14 @@ private lemma rawBlockTransform_zero (w : ℕ → ℕ → ℝ) :
   funext k
   simp [rawBlockTransform]
 
-private def rawBlockTransform_sub (w : ℕ → ℕ → ℝ) (x y : ℕ → ℝ) :
+private theorem rawBlockTransform_sub (w : ℕ → ℕ → ℝ) (x y : ℕ → ℝ) :
     rawBlockTransform w (x - y) = rawBlockTransform w x - rawBlockTransform w y := by
   rw [sub_eq_add_neg, rawBlockTransform_add]
   have hneg : rawBlockTransform w (-y) = -rawBlockTransform w y := by
     simpa only [neg_one_smul] using rawBlockTransform_smul w (-1) y
   rw [hneg, sub_eq_add_neg]
 
-private def rawBlockTransform_eq_isometry (w : ℕ → ℕ → ℝ)
+private theorem rawBlockTransform_eq_isometry (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (x : ℕ → ℝ)
     (hx : IsSquareSummable x) :
     rawBlockTransform w x = blockIsometry w hw (toL2 x hx) := by
@@ -1027,13 +1028,13 @@ private def rawBlockTransform_eq_isometry (w : ℕ → ℕ → ℝ)
     simpa [blockIsometry] using hsk'
   rw [← hsum.tsum_eq]
   by_cases hk : HasActiveBlock w k
-  · rw [rawBlockTransform, dif_pos hk, tsum_eq_single (activeBlockIndex w k)]
+  · rw [rawBlockTransform, dite_eq_left hk, tsum_eq_single (activeBlockIndex w k)]
     intro n hne
     have hz : w n k = 0 := by
       by_contra hn
       exact hne (activeBlockIndex_eq w hw hn).symm
     simp [hz]
-  · rw [rawBlockTransform, dif_neg hk]
+  · rw [rawBlockTransform, dite_eq_right hk]
     symm
     calc
       (∑' n, x n * w n k) = ∑' _n, 0 := by
@@ -1045,14 +1046,14 @@ private def rawBlockTransform_eq_isometry (w : ℕ → ℕ → ℝ)
         simp [hwn]
       _ = 0 := tsum_zero
 
-private def rawBlockTransform_squareSummable (w : ℕ → ℕ → ℝ)
+private theorem rawBlockTransform_squareSummable (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (x : ℕ → ℝ)
     (hx : IsSquareSummable x) : IsSquareSummable (rawBlockTransform w x) := by
   rw [← memlpTwoIff]
   rw [rawBlockTransform_eq_isometry w hw x hx]
   exact lp.memℓp _
 
-private def rawBlockTransform_l2Norm (w : ℕ → ℕ → ℝ)
+private theorem rawBlockTransform_l2Norm (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (x : ℕ → ℝ)
     (hx : IsSquareSummable x) :
     l2Norm (rawBlockTransform w x) = l2Norm x := by
@@ -1069,14 +1070,14 @@ private def rawBlockCorrection (w : ℕ → ℕ → ℝ) (x : ℕ → ℝ) : ℕ
     x (activeBlockIndex w k) * centralizer (w (activeBlockIndex w k)) k
   else 0
 
-private def rawBlockCorrection_add (w : ℕ → ℕ → ℝ) (x y : ℕ → ℝ) :
+private theorem rawBlockCorrection_add (w : ℕ → ℕ → ℝ) (x y : ℕ → ℝ) :
     rawBlockCorrection w (x + y) = rawBlockCorrection w x + rawBlockCorrection w y := by
   funext k
   by_cases hk : HasActiveBlock w k
   · simp [rawBlockCorrection, hk, add_mul]
   · simp [rawBlockCorrection, hk]
 
-private def rawBlockCorrection_smul (w : ℕ → ℕ → ℝ) (a : ℝ)
+private theorem rawBlockCorrection_smul (w : ℕ → ℕ → ℝ) (a : ℝ)
     (x : ℕ → ℝ) : rawBlockCorrection w (a • x) = a • rawBlockCorrection w x := by
   funext k
   by_cases hk : HasActiveBlock w k
@@ -1093,7 +1094,7 @@ private lemma rawBlockTransform_standardBasis (w : ℕ → ℕ → ℝ)
     rawBlockTransform w (standardBasisSequence n) = w n := by
   funext k
   by_cases hk : HasActiveBlock w k
-  · rw [rawBlockTransform, dif_pos hk]
+  · rw [rawBlockTransform, dite_eq_left hk]
     by_cases hindex : activeBlockIndex w k = n
     · simp [standardBasisSequence, hindex]
     · have hwn : w n k = 0 := by
@@ -1110,7 +1111,7 @@ private lemma rawBlockCorrection_standardBasis (w : ℕ → ℕ → ℝ)
     rawBlockCorrection w (standardBasisSequence n) = centralizer (w n) := by
   funext k
   by_cases hk : HasActiveBlock w k
-  · rw [rawBlockCorrection, dif_pos hk]
+  · rw [rawBlockCorrection, dite_eq_left hk]
     by_cases hindex : activeBlockIndex w k = n
     · simp [standardBasisSequence, hindex]
     · have hwn : w n k = 0 := by
@@ -1122,7 +1123,7 @@ private lemma rawBlockCorrection_standardBasis (w : ℕ → ℕ → ℝ)
       exact hk ⟨n, hn⟩
     simp [rawBlockCorrection, centralizer, hk, hwn]
 
-private def l2Norm_ne_zero_of_apply_ne_zero (x : ℕ → ℝ) (hx : IsSquareSummable x)
+private theorem l2Norm_ne_zero_of_apply_ne_zero (x : ℕ → ℝ) (hx : IsSquareSummable x)
     {n : ℕ} (hn : x n ≠ 0) : l2Norm x ≠ 0 := by
   rw [l2Norm_toL2 x hx]
   intro hnorm
@@ -1130,7 +1131,7 @@ private def l2Norm_ne_zero_of_apply_ne_zero (x : ℕ → ℝ) (hx : IsSquareSumm
   have := congr_arg (fun z : lp (fun _ : ℕ ↦ ℝ) 2 ↦ z n) hz
   exact hn (by simpa [toL2] using this)
 
-private def centralizer_rawBlockTransform (w : ℕ → ℕ → ℝ)
+private theorem centralizer_rawBlockTransform (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (x : ℕ → ℝ)
     (hx : IsSquareSummable x) :
     centralizer (rawBlockTransform w x) =
@@ -1144,7 +1145,7 @@ private def centralizer_rawBlockTransform (w : ℕ → ℕ → ℝ)
     have hB := rawBlockTransform_apply_of_mem w hw x hwn
     have hBK := rawBlockTransform_apply_of_mem w hw (centralizer x) hwn
     have hnormB := rawBlockTransform_l2Norm w hw x hx
-    rw [centralizer, hB, hnormB, hBK, rawBlockCorrection, dif_pos hk]
+    rw [centralizer, hB, hnormB, hBK, rawBlockCorrection, dite_eq_left hk]
     change 2 * (x n * w n k) * Real.log (|x n * w n k| / l2Norm x) =
       2 * x n * Real.log (|x n| / l2Norm x) * w n k +
         x n * (2 * w n k * Real.log (|w n k| / l2Norm (w n)))
@@ -1168,7 +1169,7 @@ private def blockTargetPair (w : ℕ → ℕ → ℝ)
     (p : (ℕ → ℝ) × (ℕ → ℝ)) : (ℕ → ℝ) × (ℕ → ℝ) :=
   (rawBlockTransform w p.1 + rawBlockCorrection w p.2, rawBlockTransform w p.2)
 
-private def blockTargetPair_add (w : ℕ → ℕ → ℝ)
+private theorem blockTargetPair_add (w : ℕ → ℕ → ℝ)
     (p q : (ℕ → ℝ) × (ℕ → ℝ)) :
     blockTargetPair w (p + q) = blockTargetPair w p + blockTargetPair w q := by
   apply Prod.ext
@@ -1179,12 +1180,12 @@ private def blockTargetPair_add (w : ℕ → ℕ → ℝ)
     abel
   · exact rawBlockTransform_add w p.2 q.2
 
-private def blockTargetPair_smul (w : ℕ → ℕ → ℝ) (a : ℝ)
+private theorem blockTargetPair_smul (w : ℕ → ℕ → ℝ) (a : ℝ)
     (p : (ℕ → ℝ) × (ℕ → ℝ)) :
     blockTargetPair w (a • p) = a • blockTargetPair w p := by
   apply Prod.ext <;> simp [blockTargetPair, rawBlockTransform_smul, rawBlockCorrection_smul]
 
-private def blockTargetPair_mem (w : ℕ → ℕ → ℝ)
+private theorem blockTargetPair_mem (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w)
     (p : (ℕ → ℝ) × (ℕ → ℝ)) (hp : IsAdmissiblePair p) :
     IsAdmissiblePair (blockTargetPair w p) := by
@@ -1204,7 +1205,7 @@ private def blockTargetPair_mem (w : ℕ → ℕ → ℝ)
   rw [hdefect]
   exact rawBlockTransform_squareSummable w hw _ ha
 
-private def blockTargetPair_quasiNorm (w : ℕ → ℕ → ℝ)
+private theorem blockTargetPair_quasiNorm (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w)
     (p : (ℕ → ℝ) × (ℕ → ℝ)) (hp : IsAdmissiblePair p) :
     kaltonPeckQuasiNorm (blockTargetPair w p) = kaltonPeckQuasiNorm p := by
@@ -1232,7 +1233,7 @@ private def blockTargetVector (w : ℕ → ℕ → ℝ)
     (blockTargetPair_mem w hw _
       (canonicalRealKaltonPeckPresentation.coordinates_mem z)))
 
-private def blockTargetVector_coordinates (w : ℕ → ℕ → ℝ)
+private theorem blockTargetVector_coordinates (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (z : CanonicalRealKaltonPeck) :
     canonicalRealKaltonPeckPresentation.coordinates (blockTargetVector w hw z) =
       blockTargetPair w (canonicalRealKaltonPeckPresentation.coordinates z) :=
@@ -1280,7 +1281,7 @@ private def canonicalBlockLinearMap (w : ℕ → ℕ → ℝ)
           rw [map_smul]
           }
 
-private def canonicalBlockLinearMap_quasiNorm (w : ℕ → ℕ → ℝ)
+private theorem canonicalBlockLinearMap_quasiNorm (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) (z : CanonicalRealKaltonPeck) :
     kaltonPeckQuasiNorm
         (canonicalRealKaltonPeckPresentation.coordinates (canonicalBlockLinearMap w hw z)) =

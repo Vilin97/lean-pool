@@ -35,7 +35,7 @@ import LeanPool.KaltonPeck.KaltonPeck
 Source: url:https://github.com/adas1236/KaltonPeck
 Authors: Avik Das
 Status: verified
-Main declarations: `KaltonPeck.rankParityGeneral`, `KaltonPeck.rankParityZ2`, `KaltonPeck.noHyperplaneComplexStructure`
+Main declarations: `KaltonPeck.noHyperplaneComplexStructure`
 Tags: functional-analysis, banach-spaces, fredholm-theory
 MSC: 46B03, 47A53
 -/

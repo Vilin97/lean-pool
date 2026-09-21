@@ -22,7 +22,8 @@ strong symplectic forms, and the basic algebraic API for symplectic adjoints.
 
 namespace KaltonPeck.Support.Forms
 
-noncomputable section
+noncomputable
+section
 
 /-- Continuous functionals on `X` that vanish on the subspace `W`.
 
@@ -36,7 +37,7 @@ def continuousAnnihilator {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 Blueprint: `lem:double-annihilator`; audit: `AUX-CONT-DOUBLE-ANNIHILATOR`. -/
 theorem continuousDoubleAnnihilator {X : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] (W : Submodule ℝ X)
+    [NormedSpace ℝ X] (W : Submodule ℝ X)
     (hW : IsClosed (W : Set X)) :
     {x : X | ∀ φ : continuousAnnihilator W, (φ : StrongDual ℝ X) x = 0} = (W : Set X) := by
   ext x
@@ -156,7 +157,7 @@ theorem quotientDualEquivAnnihilator_apply {X : Type*} [NormedAddCommGroup X]
 
 Blueprint: `lem:strong-reflexive`; audit: `AUX-STRONG-SYMPLECTIC-REFLEXIVE`. -/
 theorem strongSymplecticTransposeInclusion {X : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] (ω : StrongSymplecticForm X) :
+    [NormedSpace ℝ X] (ω : StrongSymplecticForm X) :
     (transpose ω.toDual.toContinuousLinearMap).comp
         (NormedSpace.inclusionInDoubleDual ℝ X) =
       -ω.toDual.toContinuousLinearMap := by
@@ -173,7 +174,7 @@ theorem strongSymplecticTransposeInclusion {X : Type*} [NormedAddCommGroup X]
 
 Blueprint: `lem:strong-reflexive`; audit: `AUX-STRONG-SYMPLECTIC-REFLEXIVE`. -/
 theorem strongSymplecticReflexive {X : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] (ω : StrongSymplecticForm X) :
+    [NormedSpace ℝ X] (ω : StrongSymplecticForm X) :
     Function.Surjective (NormedSpace.inclusionInDoubleDual ℝ X) := by
   intro F
   let z : X := ω.toDual.symm ((transpose ω.toDual.toContinuousLinearMap) F)
@@ -200,7 +201,7 @@ theorem strongSymplecticReflexive {X : Type*} [NormedAddCommGroup X]
 
 Blueprint: `lem:adjoint-calculus`; audit: `AUX-SYMPLECTIC-ADJOINT-CALCULUS`. -/
 theorem adjoint_one {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (ω : StrongSymplecticForm X) : ω.adjoint 1 = 1 := by
+     (ω : StrongSymplecticForm X) : ω.adjoint 1 = 1 := by
   have hadj (T : X →L[ℝ] X) (x y : X) :
       ω.toDual (ω.adjoint T x) y = ω.toDual x (T y) := by
     change ω.toDual (ω.toDual.symm ((transpose T) (ω.toDual x))) y = _
@@ -218,7 +219,7 @@ theorem adjoint_one {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 Blueprint: `lem:adjoint-calculus`; audit: `AUX-SYMPLECTIC-ADJOINT-CALCULUS`. -/
 theorem adjoint_add {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (ω : StrongSymplecticForm X) (A B : X →L[ℝ] X) :
+     (ω : StrongSymplecticForm X) (A B : X →L[ℝ] X) :
     ω.adjoint (A + B) = ω.adjoint A + ω.adjoint B := by
   have hadj (T : X →L[ℝ] X) (x y : X) :
       ω.toDual (ω.adjoint T x) y = ω.toDual x (T y) := by
@@ -237,7 +238,7 @@ theorem adjoint_add {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 Blueprint: `lem:adjoint-calculus`; audit: `AUX-SYMPLECTIC-ADJOINT-CALCULUS`. -/
 theorem adjoint_smul {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (ω : StrongSymplecticForm X) (a : ℝ) (A : X →L[ℝ] X) :
+     (ω : StrongSymplecticForm X) (a : ℝ) (A : X →L[ℝ] X) :
     ω.adjoint (a • A) = a • ω.adjoint A := by
   have hadj (T : X →L[ℝ] X) (x y : X) :
       ω.toDual (ω.adjoint T x) y = ω.toDual x (T y) := by
@@ -256,7 +257,7 @@ theorem adjoint_smul {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 Blueprint: `lem:adjoint-calculus`; audit: `AUX-SYMPLECTIC-ADJOINT-CALCULUS`. -/
 theorem adjoint_mul {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (ω : StrongSymplecticForm X) (A B : X →L[ℝ] X) :
+     (ω : StrongSymplecticForm X) (A B : X →L[ℝ] X) :
     ω.adjoint (A * B) = ω.adjoint B * ω.adjoint A := by
   have hadj (T : X →L[ℝ] X) (x y : X) :
       ω.toDual (ω.adjoint T x) y = ω.toDual x (T y) := by
@@ -277,7 +278,7 @@ theorem adjoint_mul {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 Blueprint: `lem:adjoint-calculus`; audit: `AUX-SYMPLECTIC-ADJOINT-CALCULUS`. -/
 theorem adjoint_involutive {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (ω : StrongSymplecticForm X) (A : X →L[ℝ] X) :
+     (ω : StrongSymplecticForm X) (A : X →L[ℝ] X) :
     ω.adjoint (ω.adjoint A) = A := by
   have hadj (T : X →L[ℝ] X) (x y : X) :
       ω.toDual (ω.adjoint T x) y = ω.toDual x (T y) := by
@@ -304,7 +305,7 @@ theorem adjoint_involutive {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X
 
 Blueprint: `lem:adjoint-calculus`; audit: `AUX-SYMPLECTIC-ADJOINT-CALCULUS`. -/
 theorem adjoint_apply {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (ω : StrongSymplecticForm X) (A : X →L[ℝ] X) (x y : X) :
+     (ω : StrongSymplecticForm X) (A : X →L[ℝ] X) (x y : X) :
     ω.toDual (ω.adjoint A x) y = ω.toDual x (A y) := by
   change ω.toDual (ω.toDual.symm ((transpose A) (ω.toDual x))) y = _
   rw [ω.toDual.apply_symm_apply]

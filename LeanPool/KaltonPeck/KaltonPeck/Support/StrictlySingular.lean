@@ -51,7 +51,7 @@ private theorem antilipschitzWith_of_comp
     dist x y ≤ (K : ℝ) * dist (R (U x)) (R (U y)) := by
       simpa only [ContinuousLinearMap.comp_apply] using h.le_mul_dist x y
     _ ≤ (K : ℝ) * ((‖R‖₊ : ℝ) * dist (U x) (U y)) :=
-      mul_le_mul_of_nonneg_left (R.lipschitz.dist_le_mul _ _) (NNReal.coe_nonneg K)
+      mul_le_mul_of_nonneg_left (R.lipschitzWith.dist_le_mul _ _) (NNReal.coe_nonneg K)
     _ = ((K * ‖R‖₊ : NNReal) : ℝ) * dist (U x) (U y) := by
       rw [NNReal.coe_mul]
       ring
@@ -63,26 +63,26 @@ singular.
 Blueprint label: `lem:upper-semi-not-strictly-singular`. -/
 theorem not_isStrictlySingular_of_finiteDimensional_ker_of_isClosed_range
     {𝕜 : Type u𝕜} {X : Type uX} {Y : Type uY}
-    [NontriviallyNormedField 𝕜] [IsRCLikeNormedField 𝕜] [CompleteSpace 𝕜]
+    [NontriviallyNormedField 𝕜] [IsRCLikeNormedField 𝕜]
     [NormedAddCommGroup X] [NormedSpace 𝕜 X] [CompleteSpace X]
     [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] [CompleteSpace Y]
     (hX : ¬ FiniteDimensional 𝕜 X) (A : X →L[𝕜] Y)
     (hkerA : FiniteDimensional 𝕜 A.toLinearMap.ker)
     (hrangeA : IsClosed (A.toLinearMap.range : Set Y)) :
     ¬ IsStrictlySingular.{u𝕜, uX, uY, uX} A := by
-  letI : FiniteDimensional 𝕜 A.toLinearMap.ker := hkerA
+  let : FiniteDimensional 𝕜 A.toLinearMap.ker := hkerA
   let hker : A.toLinearMap.ker.ClosedComplemented :=
     Submodule.ClosedComplemented.of_finiteDimensional A.toLinearMap.ker
   let Z : Submodule 𝕜 X := hker.complement
   have htop : Submodule.IsTopCompl A.toLinearMap.ker Z :=
     hker.isTopCompl_complement
   have hZclosed : IsClosed (Z : Set X) := hker.isClosed_complement
-  letI : CompleteSpace Z := hZclosed.completeSpace_coe
+  let : CompleteSpace Z := hZclosed.completeSpace_coe
   have hZ : ¬ FiniteDimensional 𝕜 Z := by
     intro hZfin
-    letI : FiniteDimensional 𝕜 Z := hZfin
+    let : FiniteDimensional 𝕜 Z := hZfin
     have hprod : FiniteDimensional 𝕜 (A.toLinearMap.ker × Z) := inferInstance
-    letI : FiniteDimensional 𝕜 X :=
+    let : FiniteDimensional 𝕜 X :=
       @LinearEquiv.finiteDimensional 𝕜 (A.toLinearMap.ker × Z) _ _ _
         X _ _ (Submodule.prodEquivOfIsCompl _ _ htop.isCompl) hprod
     exact hX inferInstance
@@ -175,7 +175,7 @@ theorem isStrictlySingular_of_isCompactOperator
   have hemb : IsClosedEmbedding (T.comp S) :=
     hanti.isClosedEmbedding (T.comp S).uniformContinuous
   have hpre : IsCompact ((T.comp S) ⁻¹' C) := hemb.isCompact_preimage hC
-  letI : LocallyCompactSpace Z :=
+  let : LocallyCompactSpace Z :=
     hpre.locallyCompactSpace_of_mem_nhds_of_addGroup hC0
   exact hZ (FiniteDimensional.of_locallyCompactSpace 𝕜)
 

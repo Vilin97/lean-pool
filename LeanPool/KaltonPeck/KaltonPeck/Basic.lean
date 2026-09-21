@@ -15,7 +15,8 @@ Authors: adas1236
 This file contains a minimal introductory definition for the project.
 -/
 
-def hello := "world"
+/-- The greeting retained from the upstream template module. -/
+def KaltonPeck.hello := "world"
 
 /-
 Upstream license notice:

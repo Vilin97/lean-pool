@@ -20,14 +20,15 @@ computes the rank of the resulting square defect.
 
 namespace KaltonPeck.Support.TargetSupport
 
-noncomputable section
+noncomputable
+section
 
 /-- A codimension-one complex structure extends by the identity on a one-dimensional topological
 complement, and its square defect has exactly rank one.
 Blueprint label: `lem:hyperplane-extension`; audit IDs `HID-HYPERPLANE-BLOCK-EXTENSION`,
 `HID-RANK-ONE-COMPUTATION`, and `COV-HYPERPLANE-EXT`. -/
 theorem hyperplaneExtension {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (H : Submodule ℝ X) (hH : IsHyperplane H) (J : H →L[ℝ] H)
+     (H : Submodule ℝ X) (hH : IsHyperplane H) (J : H →L[ℝ] H)
     (hJ : IsComplexStructure J) :
     ∃ F : Submodule ℝ X,
       H.IsTopCompl F ∧ IsClosed (F : Set X) ∧ Module.finrank ℝ F = 1 ∧
@@ -41,7 +42,7 @@ theorem hyperplaneExtension {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ 
             (T ^ 2 + 1).toLinearMap.range = F ∧
               HasFiniteRank (T ^ 2 + 1) ∧ operatorRank (T ^ 2 + 1) = 1 := by
   rcases hH with ⟨hHclosed, hcodim⟩
-  letI : FiniteDimensional ℝ (X ⧸ H) :=
+  let : FiniteDimensional ℝ (X ⧸ H) :=
     FiniteDimensional.of_finrank_eq_succ hcodim
   obtain ⟨F, hHF⟩ :=
     (Submodule.ClosedComplemented.of_finiteDimensional_quotient hHclosed).exists_isTopCompl

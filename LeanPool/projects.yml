@@ -9982,8 +9982,6 @@ projects:
     status: verified
     provenance: human
     main_declarations:
-    - KaltonPeck.rankParityGeneral
-    - KaltonPeck.rankParityZ2
     - KaltonPeck.noHyperplaneComplexStructure
     main_results:
     - declaration: KaltonPeck.rankParityGeneral

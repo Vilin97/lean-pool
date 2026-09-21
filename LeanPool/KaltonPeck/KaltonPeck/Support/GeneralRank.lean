@@ -22,14 +22,15 @@ rank-parity form, and proves evenness of its restricted radical.
 
 namespace KaltonPeck.Support.GeneralRank
 
-noncomputable section
+noncomputable
+section
 
 /-- The kernel of `T ² + I` is closed, finite-codimensional, invariant under `T`, and carries
 the restricted complex structure.
 
 Blueprint: `lem:finite-rank-kernel`; audit: `AUX-FINITE-RANK-KERNEL-CODIM`. -/
 theorem finiteRankPolynomialKernel {X : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] (T : X →L[ℝ] X)
+    [NormedSpace ℝ X] (T : X →L[ℝ] X)
     (hFiniteRank : HasFiniteRank (T ^ 2 + 1)) :
     IsClosed ((T ^ 2 + 1).toLinearMap.ker : Set X) ∧
       FiniteDimensional ℝ (X ⧸ (T ^ 2 + 1).toLinearMap.ker) ∧
@@ -149,7 +150,7 @@ def rankParityForm {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
             (StrongDual ℝ X ⧸
               (omega.toDual.toContinuousLinearMap.comp G).toLinearMap.range) :=
         Submodule.Quotient.equiv _ _ omega.toDual.toLinearEquiv hRangeEq.symm
-      letI : FiniteDimensional ℝ (X ⧸ G.toLinearMap.range) := hCokernel
+      let : FiniteDimensional ℝ (X ⧸ G.toLinearMap.range) := hCokernel
       exact FiniteDimensional.of_surjective eCoker.toLinearMap eCoker.surjective
 
 /-- The restricted radical is `T`-invariant and has even real dimension.
@@ -159,9 +160,7 @@ Blueprint: `lem:restricted-radical-even`; audit: `AUX-ETA-T-INVARIANT-ON-E`,
 `LEM-COMPLEX-STRUCTURE-EVEN-DIM`. -/
 theorem restrictedRadicalEven {X : Type*} [NormedAddCommGroup X]
     [NormedSpace ℝ X] [CompleteSpace X] (omega : StrongSymplecticForm X)
-    (T : X →L[ℝ] X) (hFiniteRank : HasFiniteRank (T ^ 2 + 1))
-    [FiniteDimensional ℝ
-      ((rankParityForm omega T).form.restrictedRadical (T ^ 2 + 1).toLinearMap.ker)] :
+    (T : X →L[ℝ] X) (hFiniteRank : HasFiniteRank (T ^ 2 + 1)) :
     (∀ x : (rankParityForm omega T).form.restrictedRadical
         (T ^ 2 + 1).toLinearMap.ker,
       T (x : X) ∈

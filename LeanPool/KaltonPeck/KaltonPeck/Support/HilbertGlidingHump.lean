@@ -21,7 +21,8 @@ signed-average estimates.
 
 namespace KaltonPeck.Support.HilbertGlidingHump
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates Symplectic
 open Filter Function
@@ -100,7 +101,7 @@ theorem exists_unit_tail
     (l2Head N).orthogonalProjectionOnto.domRestrict M
   have hker : ¬ FiniteDimensional ℝ P.toLinearMap.ker := by
     intro hkerFinite
-    letI : FiniteDimensional ℝ P.toLinearMap.ker := hkerFinite
+    let : FiniteDimensional ℝ P.toLinearMap.ker := hkerFinite
     obtain ⟨C, hcompl⟩ := P.toLinearMap.ker.exists_isCompl
     have hCinj : Function.Injective (P.toLinearMap.domRestrict C) := by
       intro x y hxy
@@ -114,10 +115,10 @@ theorem exists_unit_tail
       have hzero : (x : M) - (y : M) ∈ (⊥ : Submodule ℝ M) :=
         hcompl.disjoint.le_bot ⟨hxyKer, hxyC⟩
       simpa only [Submodule.mem_bot, sub_eq_zero] using hzero
-    letI : FiniteDimensional ℝ C :=
+    let : FiniteDimensional ℝ C :=
       FiniteDimensional.of_injective (P.toLinearMap.domRestrict C) hCinj
     have hprod : FiniteDimensional ℝ (P.toLinearMap.ker × C) := inferInstance
-    letI : FiniteDimensional ℝ M :=
+    let : FiniteDimensional ℝ M :=
       @LinearEquiv.finiteDimensional ℝ (P.toLinearMap.ker × C) _ _ _
         M _ _ (Submodule.prodEquivOfIsCompl _ _ hcompl) hprod
     exact hM inferInstance
@@ -236,7 +237,7 @@ private lemma exists_finiteApproxBlock
     by_contra hstop
     have hkStop : ¬ k < stop := by
       simpa only [Set.mem_Iio] using hstop
-    rw [if_neg hkStop] at hzk
+    rw [ite_eq_right hkStop] at hzk
     exact hzk rfl
   have hvNonempty : Set.Nonempty {k | v k ≠ 0} := by
     by_contra hempty
@@ -256,9 +257,9 @@ private lemma exists_finiteApproxBlock
     dsimp only [z] at hzk
     rw [l2Trunc_apply, huk] at hzk
     by_cases hkStop : k < stop
-    · rw [if_pos hkStop] at hzk
+    · rw [ite_eq_left hkStop] at hzk
       exact hzk rfl
-    · rw [if_neg hkStop] at hzk
+    · rw [ite_eq_right hkStop] at hzk
       exact hzk rfl
   have hvUpper : ∀ k, v k ≠ 0 → k < stop := by
     intro k hvk
@@ -266,7 +267,7 @@ private lemma exists_finiteApproxBlock
     dsimp only [z] at hzk
     rw [l2Trunc_apply] at hzk
     by_contra hstop
-    rw [if_neg hstop] at hzk
+    rw [ite_eq_right hstop] at hzk
     exact hzk rfl
   exact ⟨stop, u, v, hstartStop, huNorm, hvNorm, hvFinite, hvNonempty,
     hvLower, hvUpper, huv⟩

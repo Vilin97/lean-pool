@@ -21,7 +21,8 @@ operator whose symplectic adjoint is also compact.
 
 namespace KaltonPeck.Support.GraphFredholm
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates Symplectic
 open scoped ENNReal NNReal Topology lp BigOperators

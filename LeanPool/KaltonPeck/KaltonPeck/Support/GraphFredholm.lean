@@ -31,7 +31,8 @@ establish the main Fredholm results for canonical operators on the Kalton--Peck 
 
 namespace KaltonPeck.Support.GraphFredholm
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates Symplectic
 open HilbertGlidingHump
@@ -72,14 +73,14 @@ theorem exists_summableApproximateKernelSequence_of_finiteDimensional_ker
       ¬ FiniteDimensional ℝ Z ∧
       ∃ z : ℕ → Z, (∀ n, ‖z n‖ = 1) ∧
         Summable (fun n ↦ ‖(T.comp Z.subtypeL) (z n)‖) := by
-  letI : FiniteDimensional ℝ T.toLinearMap.ker := hkerT
+  let : FiniteDimensional ℝ T.toLinearMap.ker := hkerT
   let hker : T.toLinearMap.ker.ClosedComplemented :=
     Submodule.ClosedComplemented.of_finiteDimensional T.toLinearMap.ker
   let Z : Submodule ℝ X := hker.complement
   have htop : Submodule.IsTopCompl T.toLinearMap.ker Z :=
     hker.isTopCompl_complement
   have hZclosed : IsClosed (Z : Set X) := hker.isClosed_complement
-  letI : CompleteSpace Z := hZclosed.completeSpace_coe
+  let : CompleteSpace Z := hZclosed.completeSpace_coe
   let S : Z →L[ℝ] X := Z.subtypeL
   have hTSinjective : Function.Injective (T.comp S) := by
     intro x y hxy
@@ -110,8 +111,8 @@ theorem exists_summableApproximateKernelSequence_of_finiteDimensional_ker
     simpa only [hrange] using hrangeT
   have hZ : ¬ FiniteDimensional ℝ Z := by
     intro hZfin
-    letI : FiniteDimensional ℝ Z := hZfin
-    haveI : FiniteDimensional ℝ (T.comp S).toLinearMap.range := inferInstance
+    let : FiniteDimensional ℝ Z := hZfin
+    have : FiniteDimensional ℝ (T.comp S).toLinearMap.range := inferInstance
     exact hTSrange (T.comp S).toLinearMap.range.closed_of_finiteDimensional
   have hnanti : ¬ ∃ K, AntilipschitzWith K (T.comp S) := by
     intro hanti
@@ -276,8 +277,8 @@ theorem no_boundedCentralizerLift_of_subspace_obstruction
     LinearEquiv.ofInjective Q.toLinearMap hQinj
   have hQrange : ¬ FiniteDimensional ℝ Q.range := by
     intro hfinite
-    letI : FiniteDimensional ℝ Q.range := hfinite
-    letI : FiniteDimensional ℝ Z :=
+    let : FiniteDimensional ℝ Q.range := hfinite
+    let : FiniteDimensional ℝ Z :=
       @LinearEquiv.finiteDimensional ℝ Q.range _ _ _ Z _ _ e.symm
         inferInstance
     exact hZ inferInstance
@@ -502,7 +503,7 @@ private lemma signedL2_centralizer
     have hratio :
         |signedL2 N σ k| / l2Norm (fun j ↦ signedL2 N σ j) =
           1 / Real.sqrt (N : ℝ) := by
-      rw [signedL2_apply, if_pos hk, hl2, div_one, abs_div, habsσ,
+      rw [signedL2_apply, ite_eq_left hk, hl2, div_one, abs_div, habsσ,
         abs_of_pos hsqrt]
     have hlog :
         Real.log (1 / Real.sqrt (N : ℝ)) = -(Real.log N / 2) := by
@@ -545,7 +546,7 @@ private lemma signedSecondVector_coordinates
         (∑ i ∈ Finset.range N,
           (σ i / Real.sqrt (N : ℝ)) • standardBasisSequence i) k =
             signedL2 N σ k
-      rw [Finset.sum_apply, signedL2_apply, if_neg hk]
+      rw [Finset.sum_apply, signedL2_apply, ite_eq_right hk]
       apply Finset.sum_eq_zero
       intro i hi
       have hik : i ≠ k := by
@@ -616,7 +617,7 @@ private theorem exists_sign_sum_sq_le
             have hia : i ≠ a := fun h ↦ ha (h ▸ hi)
             simp [ε', hia]
           rw [Finset.sum_insert ha, Finset.sum_insert ha, hrest]
-          simp only [ε', if_pos, one_smul]
+          simp only [ε', ite_eq_left, one_smul]
           rw [add_comm (v a) x, norm_add_sq_real]
           calc
             ‖x‖ ^ 2 + 2 * ⟪x, v a⟫_ℝ + ‖v a‖ ^ 2 ≤
@@ -639,7 +640,7 @@ private theorem exists_sign_sum_sq_le
             have hia : i ≠ a := fun h ↦ ha (h ▸ hi)
             simp [ε', hia]
           rw [Finset.sum_insert ha, Finset.sum_insert ha, hrest]
-          simp only [ε', if_pos, neg_smul, one_smul]
+          simp only [ε', ite_eq_left, neg_smul, one_smul]
           rw [neg_add_eq_sub, norm_sub_sq_real]
           calc
             ‖x‖ ^ 2 - 2 * ⟪x, v a⟫_ℝ + ‖v a‖ ^ 2 ≤
@@ -730,6 +731,185 @@ private theorem exists_sign_average_norm_le
         (Real.sqrt N)⁻¹ * (Real.sqrt N * B) :=
       mul_le_mul_of_nonneg_left hraw_norm (inv_nonneg.mpr hsqrt.le)
     _ = B := by field_simp
+
+/-- Signed block averages bound the centralizer's logarithmic growth by a fixed constant. -/
+private theorem signed_log_bound
+    (M : Submodule ℝ CanonicalL2) (L : M →L[ℝ] CanonicalRealKaltonPeck)
+    (y : ℕ → M) (W : CanonicalRealKaltonPeck →L[ℝ] CanonicalRealKaltonPeck)
+    (error : ℕ → ℝ) (hsum : Summable error) (herror : ∀ n, 0 ≤ error n)
+    (hy_signed : ∀ (N : ℕ), 0 < N → ∀ σ : ℕ → ℝ, (∀ i < N, |σ i| = 1) →
+      ‖∑ i ∈ Finset.range N, (σ i / Real.sqrt N) • (y i : CanonicalL2)‖ ≤ 1 + ∑' n, error n)
+    (k : ℕ → canonicalL2Quotient.ker) (h : ℕ → CanonicalL2)
+    (hih : ∀ n, canonicalL2Inclusion (h n) = (k n : CanonicalRealKaltonPeck))
+    (K B c : ℝ) (hK : 0 ≤ K) (hB : 0 ≤ B) (hh_bound : ∀ n, ‖h n‖ ≤ B)
+    (hclose : ∀ n, ‖L (y n) - W (canonicalSecondBasisVector n) -
+      (k n : CanonicalRealKaltonPeck)‖ ≤ K * error n)
+    (hmodel : ∀ s, c * kaltonPeckQuasiNorm
+      (canonicalRealKaltonPeckPresentation.coordinates s) ≤ ‖s‖)
+    (hWleft : canonicalKaltonSwansonForm.adjoint W * W = 1) (N : ℕ) (hN : 0 < N) :
+    c * (Real.log N + 1) ≤ ‖canonicalKaltonSwansonForm.adjoint W‖ *
+      (‖L‖ * (1 + ∑' n, error n) + ‖canonicalL2Inclusion‖ * B + K * ∑' n, error n) := by
+  let w : ℕ → CanonicalRealKaltonPeck := fun n ↦ L (y n)
+  let z : ℕ → CanonicalRealKaltonPeck := fun n ↦ W (canonicalSecondBasisVector n)
+  let r : ℕ → CanonicalRealKaltonPeck := fun n ↦ w n - z n
+  let errorSum : ℝ := ∑' n, error n
+  let U : ℝ := ‖L‖ * (1 + errorSum) + ‖canonicalL2Inclusion‖ * B + K * errorSum
+  obtain ⟨σ, hσ, hhavg⟩ :=
+    exists_sign_average_norm_le hN h hB (fun i _ ↦ hh_bound i)
+  have habsσ : ∀ i < N, |σ i| = 1 := by
+    intro i hi
+    rcases hσ i hi with h | h <;> simp [h]
+  let s : CanonicalRealKaltonPeck := signedSecondVector N σ
+  let wsum : CanonicalRealKaltonPeck :=
+    ∑ i ∈ Finset.range N, (σ i / Real.sqrt N) • w i
+  let zsum : CanonicalRealKaltonPeck :=
+    ∑ i ∈ Finset.range N, (σ i / Real.sqrt N) • z i
+  let rsum : CanonicalRealKaltonPeck :=
+    ∑ i ∈ Finset.range N, (σ i / Real.sqrt N) • r i
+  let ksum : CanonicalRealKaltonPeck :=
+    ∑ i ∈ Finset.range N,
+      (σ i / Real.sqrt N) • (k i : CanonicalRealKaltonPeck)
+  have hwsum :
+      ‖wsum‖ ≤ ‖L‖ * (1 + errorSum) := by
+    have hmap :
+        wsum = L
+          (∑ i ∈ Finset.range N,
+            (σ i / Real.sqrt N) • y i) := by
+      dsimp only [wsum, w]
+      rw [map_sum]
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [map_smul]
+    rw [hmap]
+    have hsource := hy_signed N hN σ habsσ
+    have hsource' :
+        ‖∑ i ∈ Finset.range N,
+          (σ i / Real.sqrt N) • y i‖ ≤ 1 + errorSum := by
+      have hcoe :
+          ((↑(∑ i ∈ Finset.range N,
+              (σ i / Real.sqrt N) • y i) : CanonicalL2)) =
+            ∑ i ∈ Finset.range N,
+              (σ i / Real.sqrt N) • (y i : CanonicalL2) := by
+        simp
+      change
+        ‖((↑(∑ i ∈ Finset.range N,
+            (σ i / Real.sqrt N) • y i) : CanonicalL2))‖ ≤
+          1 + errorSum
+      rw [hcoe]
+      exact hsource
+    exact (L.le_opNorm _).trans
+      (mul_le_mul_of_nonneg_left hsource' (norm_nonneg L))
+  have hzsum : zsum = W s := by
+    dsimp only [zsum, z, s, signedSecondVector]
+    rw [map_sum]
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [map_smul]
+  have hrsum : rsum = wsum - zsum := by
+    dsimp only [rsum, r, wsum, zsum]
+    rw [← Finset.sum_sub_distrib]
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [smul_sub]
+  have hksum :
+      ksum = canonicalL2Inclusion
+        (∑ i ∈ Finset.range N,
+          (σ i / Real.sqrt N) • h i) := by
+    dsimp only [ksum]
+    rw [map_sum]
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [map_smul, hih]
+  have hksum_norm :
+      ‖ksum‖ ≤ ‖canonicalL2Inclusion‖ * B := by
+    rw [hksum]
+    exact (canonicalL2Inclusion.le_opNorm _).trans
+      (mul_le_mul_of_nonneg_left hhavg
+        (norm_nonneg canonicalL2Inclusion))
+  have hrsum_ksum :
+      ‖rsum - ksum‖ ≤ K * errorSum := by
+    have heq :
+        rsum - ksum =
+          ∑ i ∈ Finset.range N,
+            (σ i / Real.sqrt N) •
+              (r i - (k i : CanonicalRealKaltonPeck)) := by
+      dsimp only [rsum, ksum]
+      rw [← Finset.sum_sub_distrib]
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [smul_sub]
+      dsimp only [r]
+      module
+    rw [heq]
+    apply (norm_sum_le _ _).trans
+    calc
+      ∑ i ∈ Finset.range N,
+          ‖(σ i / Real.sqrt N) •
+            (r i - (k i : CanonicalRealKaltonPeck))‖ ≤
+          K * ∑ i ∈ Finset.range N, error i := by
+        rw [Finset.mul_sum]
+        apply Finset.sum_le_sum
+        intro i hi
+        rw [norm_smul, Real.norm_eq_abs]
+        have hiN := Finset.mem_range.mp hi
+        have hsqrt : 1 ≤ Real.sqrt (N : ℝ) :=
+          Real.one_le_sqrt.mpr (by exact_mod_cast hN)
+        have hsqrtPos : 0 < Real.sqrt (N : ℝ) :=
+          lt_of_lt_of_le (by norm_num) hsqrt
+        have hcoeff : |σ i / Real.sqrt N| ≤ 1 := by
+          rw [abs_div, habsσ i hiN, abs_of_pos hsqrtPos]
+          exact (div_le_one hsqrtPos).2 hsqrt
+        have hclose :
+            ‖r i - (k i : CanonicalRealKaltonPeck)‖ ≤
+              K * error i := by
+          exact hclose i
+        exact
+          (mul_le_of_le_one_left (norm_nonneg _) hcoeff).trans hclose
+      _ ≤ K * errorSum :=
+        mul_le_mul_of_nonneg_left
+          (hsum.sum_le_tsum (Finset.range N)
+            (fun i _ ↦ herror i)) hK
+  have hrsum_norm :
+      ‖rsum‖ ≤ ‖canonicalL2Inclusion‖ * B + K * errorSum := by
+    calc
+      ‖rsum‖ = ‖(rsum - ksum) + ksum‖ := by rw [sub_add_cancel]
+      _ ≤ ‖rsum - ksum‖ + ‖ksum‖ := norm_add_le _ _
+      _ ≤ K * errorSum + ‖canonicalL2Inclusion‖ * B :=
+        add_le_add hrsum_ksum hksum_norm
+      _ = ‖canonicalL2Inclusion‖ * B + K * errorSum := by ring
+  have hzsum_norm : ‖zsum‖ ≤ U := by
+    rw [hrsum] at hrsum_norm
+    have hz : zsum = wsum - (wsum - zsum) := by abel
+    rw [hz]
+    calc
+      ‖wsum - (wsum - zsum)‖ ≤ ‖wsum‖ + ‖wsum - zsum‖ :=
+        norm_sub_le _ _
+      _ ≤ ‖L‖ * (1 + errorSum) +
+          (‖canonicalL2Inclusion‖ * B + K * errorSum) :=
+        add_le_add hwsum hrsum_norm
+      _ = U := by simp [U]; ring
+  have hs_left :
+      s = canonicalKaltonSwansonForm.adjoint W (W s) := by
+    have happly := congrArg
+      (fun T : CanonicalRealKaltonPeck →L[ℝ] CanonicalRealKaltonPeck ↦
+        T s)
+      hWleft
+    simpa only [mul_apply_eq_comp, one_apply_eq_self]
+      using happly.symm
+  calc
+    c * (Real.log N + 1) =
+        c * kaltonPeckQuasiNorm
+          (canonicalRealKaltonPeckPresentation.coordinates s) := by
+      rw [signedSecondVector_quasiNorm hN σ hσ]
+    _ ≤ ‖s‖ := hmodel s
+    _ = ‖canonicalKaltonSwansonForm.adjoint W (W s)‖ :=
+      congrArg norm hs_left
+    _ ≤ ‖canonicalKaltonSwansonForm.adjoint W‖ * ‖W s‖ :=
+      (canonicalKaltonSwansonForm.adjoint W).le_opNorm _
+    _ = ‖canonicalKaltonSwansonForm.adjoint W‖ * ‖zsum‖ := by
+      rw [hzsum]
+    _ ≤ ‖canonicalKaltonSwansonForm.adjoint W‖ * U :=
+      mul_le_mul_of_nonneg_left hzsum_norm (norm_nonneg _)
 
 /-- No infinite-dimensional Hilbert subspace admits a uniformly bounded linear approximation
 to the Kalton--Peck centralizer.
@@ -866,167 +1046,14 @@ theorem no_boundedCentralizerApproximation
       canonicalKaltonSwansonForm.adjoint W * W = 1 :=
     (canonicalNormalizedBlock v hv).2.2.2.2.2.1
   have hbound_every_N (N : ℕ) (hN : 0 < N) :
-      c * (Real.log N + 1) ≤
-        ‖canonicalKaltonSwansonForm.adjoint W‖ * U := by
-    obtain ⟨σ, hσ, hhavg⟩ :=
-      exists_sign_average_norm_le hN h hB (fun i _ ↦ hh_bound i)
-    have habsσ : ∀ i < N, |σ i| = 1 := by
-      intro i hi
-      rcases hσ i hi with h | h <;> simp [h]
-    let s : CanonicalRealKaltonPeck := signedSecondVector N σ
-    let wsum : CanonicalRealKaltonPeck :=
-      ∑ i ∈ Finset.range N, (σ i / Real.sqrt N) • w i
-    let zsum : CanonicalRealKaltonPeck :=
-      ∑ i ∈ Finset.range N, (σ i / Real.sqrt N) • z i
-    let rsum : CanonicalRealKaltonPeck :=
-      ∑ i ∈ Finset.range N, (σ i / Real.sqrt N) • r i
-    let ksum : CanonicalRealKaltonPeck :=
-      ∑ i ∈ Finset.range N,
-        (σ i / Real.sqrt N) • (k i : CanonicalRealKaltonPeck)
-    have hwsum :
-        ‖wsum‖ ≤ ‖L‖ * (1 + errorSum) := by
-      have hmap :
-          wsum = L
-            (∑ i ∈ Finset.range N,
-              (σ i / Real.sqrt N) • y i) := by
-        dsimp only [wsum, w]
-        rw [map_sum]
-        apply Finset.sum_congr rfl
-        intro i hi
-        rw [map_smul]
-      rw [hmap]
-      have hsource := hy_signed N hN σ habsσ
-      have hsource' :
-          ‖∑ i ∈ Finset.range N,
-            (σ i / Real.sqrt N) • y i‖ ≤ 1 + errorSum := by
-        have hcoe :
-            ((↑(∑ i ∈ Finset.range N,
-                (σ i / Real.sqrt N) • y i) : CanonicalL2)) =
-              ∑ i ∈ Finset.range N,
-                (σ i / Real.sqrt N) • (y i : CanonicalL2) := by
-          simp
-        change
-          ‖((↑(∑ i ∈ Finset.range N,
-              (σ i / Real.sqrt N) • y i) : CanonicalL2))‖ ≤
-            1 + errorSum
-        rw [hcoe]
-        simpa only [errorSum, error] using hsource
-      exact (L.le_opNorm _).trans
-        (mul_le_mul_of_nonneg_left hsource' (norm_nonneg L))
-    have hzsum : zsum = W s := by
-      dsimp only [zsum, z, s, signedSecondVector]
-      rw [map_sum]
-      apply Finset.sum_congr rfl
-      intro i hi
-      rw [map_smul]
-    have hrsum : rsum = wsum - zsum := by
-      dsimp only [rsum, r, wsum, zsum]
-      rw [← Finset.sum_sub_distrib]
-      apply Finset.sum_congr rfl
-      intro i hi
-      rw [smul_sub]
-    have hksum :
-        ksum = canonicalL2Inclusion
-          (∑ i ∈ Finset.range N,
-            (σ i / Real.sqrt N) • h i) := by
-      dsimp only [ksum]
-      rw [map_sum]
-      apply Finset.sum_congr rfl
-      intro i hi
-      rw [map_smul, hih]
-    have hksum_norm :
-        ‖ksum‖ ≤ ‖canonicalL2Inclusion‖ * B := by
-      rw [hksum]
-      exact (canonicalL2Inclusion.le_opNorm _).trans
-        (mul_le_mul_of_nonneg_left hhavg
-          (norm_nonneg canonicalL2Inclusion))
-    have hrsum_ksum :
-        ‖rsum - ksum‖ ≤ K * errorSum := by
-      have heq :
-          rsum - ksum =
-            ∑ i ∈ Finset.range N,
-              (σ i / Real.sqrt N) •
-                (r i - (k i : CanonicalRealKaltonPeck)) := by
-        dsimp only [rsum, ksum]
-        rw [← Finset.sum_sub_distrib]
-        apply Finset.sum_congr rfl
-        intro i hi
-        rw [smul_sub]
-        dsimp only [r]
-        module
-      rw [heq]
-      apply (norm_sum_le _ _).trans
-      calc
-        ∑ i ∈ Finset.range N,
-            ‖(σ i / Real.sqrt N) •
-              (r i - (k i : CanonicalRealKaltonPeck))‖ ≤
-            K * ∑ i ∈ Finset.range N, error i := by
-          rw [Finset.mul_sum]
-          apply Finset.sum_le_sum
-          intro i hi
-          rw [norm_smul, Real.norm_eq_abs]
-          have hiN := Finset.mem_range.mp hi
-          have hsqrt : 1 ≤ Real.sqrt (N : ℝ) :=
-            Real.one_le_sqrt.mpr (by exact_mod_cast hN)
-          have hsqrtPos : 0 < Real.sqrt (N : ℝ) :=
-            lt_of_lt_of_le (by norm_num) hsqrt
-          have hcoeff : |σ i / Real.sqrt N| ≤ 1 := by
-            rw [abs_div, habsσ i hiN, abs_of_pos hsqrtPos]
-            exact (div_le_one hsqrtPos).2 hsqrt
-          have hclose :
-              ‖r i - (k i : CanonicalRealKaltonPeck)‖ ≤
-                K * error i := by
-            calc
-              ‖r i - (k i : CanonicalRealKaltonPeck)‖ ≤
-                  K * ‖canonicalL2Quotient (r i)‖ := hk_close i
-              _ = K * error i := by rw [hqr]
-          exact
-            (mul_le_of_le_one_left (norm_nonneg _) hcoeff).trans hclose
-        _ ≤ K * errorSum :=
-          mul_le_mul_of_nonneg_left
-            (hsum.sum_le_tsum (Finset.range N)
-              (fun i hi ↦ norm_nonneg _)) hK.le
-    have hrsum_norm :
-        ‖rsum‖ ≤ ‖canonicalL2Inclusion‖ * B + K * errorSum := by
-      calc
-        ‖rsum‖ = ‖(rsum - ksum) + ksum‖ := by rw [sub_add_cancel]
-        _ ≤ ‖rsum - ksum‖ + ‖ksum‖ := norm_add_le _ _
-        _ ≤ K * errorSum + ‖canonicalL2Inclusion‖ * B :=
-          add_le_add hrsum_ksum hksum_norm
-        _ = ‖canonicalL2Inclusion‖ * B + K * errorSum := by ring
-    have hzsum_norm : ‖zsum‖ ≤ U := by
-      rw [hrsum] at hrsum_norm
-      have hz : zsum = wsum - (wsum - zsum) := by abel
-      rw [hz]
-      calc
-        ‖wsum - (wsum - zsum)‖ ≤ ‖wsum‖ + ‖wsum - zsum‖ :=
-          norm_sub_le _ _
-        _ ≤ ‖L‖ * (1 + errorSum) +
-            (‖canonicalL2Inclusion‖ * B + K * errorSum) :=
-          add_le_add hwsum hrsum_norm
-        _ = U := by simp [U]; ring
-    have hs_left :
-        s = canonicalKaltonSwansonForm.adjoint W (W s) := by
-      have happly := congrArg
-        (fun T : CanonicalRealKaltonPeck →L[ℝ] CanonicalRealKaltonPeck ↦
-          T s)
-        hWleft
-      simpa only [mul_apply_eq_comp, one_apply_eq_self]
-        using happly.symm
+      c * (Real.log N + 1) ≤ ‖canonicalKaltonSwansonForm.adjoint W‖ * U := by
+    apply signed_log_bound M L y W error hsum (fun _ => norm_nonneg _) hy_signed
+      k h hih K B c hK.le hB hh_bound _ (fun s => (hmodel s).1) hWleft N hN
+    intro n
     calc
-      c * (Real.log N + 1) =
-          c * kaltonPeckQuasiNorm
-            (canonicalRealKaltonPeckPresentation.coordinates s) := by
-        rw [signedSecondVector_quasiNorm hN σ hσ]
-      _ ≤ ‖s‖ := (hmodel s).1
-      _ = ‖canonicalKaltonSwansonForm.adjoint W (W s)‖ :=
-        congrArg norm hs_left
-      _ ≤ ‖canonicalKaltonSwansonForm.adjoint W‖ * ‖W s‖ :=
-        (canonicalKaltonSwansonForm.adjoint W).le_opNorm _
-      _ = ‖canonicalKaltonSwansonForm.adjoint W‖ * ‖zsum‖ := by
-        rw [hzsum]
-      _ ≤ ‖canonicalKaltonSwansonForm.adjoint W‖ * U :=
-        mul_le_mul_of_nonneg_left hzsum_norm (norm_nonneg _)
+      ‖r n - (k n : CanonicalRealKaltonPeck)‖ ≤
+          K * ‖canonicalL2Quotient (r n)‖ := hk_close n
+      _ = K * error n := by rw [hqr]
   let G : ℝ :=
     (‖canonicalKaltonSwansonForm.adjoint W‖ * U) / c
   obtain ⟨N, hNlarge⟩ := exists_nat_gt (Real.exp G)
@@ -1104,7 +1131,7 @@ theorem canonical_factor_through_quotient
     exact hz
   have hqbar_range : qbar.range = ⊤ :=
     LinearMap.range_eq_top.mpr hqbar_surjective
-  letI : IsClosed
+  let : IsClosed
       (canonicalL2Quotient.ker : Set CanonicalRealKaltonPeck) :=
     canonicalL2Quotient.isClosed_ker
   let e :
@@ -1377,7 +1404,6 @@ private lemma inclusion_factorizationL2Basis (n : ℕ) :
 
 private theorem continuousLinearMap_ext_factorizationL2Basis
     {Y : Type*} [NormedAddCommGroup Y] [NormedSpace ℝ Y]
-    [CompleteSpace Y]
     (A B : CanonicalL2 →L[ℝ] Y)
     (hAB : ∀ n,
       A (factorizationL2Basis n) = B (factorizationL2Basis n)) :
@@ -1463,7 +1489,7 @@ private theorem exists_pos_mul_norm_sub_starProjection_le
     (hrange : IsClosed (A.range : Set Y)) :
     ∃ c > 0, ∀ x : CanonicalL2,
       c * ‖x - A.ker.starProjection x‖ ≤ ‖A x‖ := by
-  letI : FiniteDimensional ℝ A.ker := _hker
+  let : FiniteDimensional ℝ A.ker := _hker
   let S : A.kerᗮ →L[ℝ] Y := A.domRestrict A.kerᗮ
   have hS_injective : Function.Injective S := by
     intro x y hxy
@@ -1565,11 +1591,15 @@ def HasUpperSummableKernelBlockApproximation : Prop :=
             α • canonicalBlockOperator v hv
                 (canonicalFirstBasisVector n)‖)
 
-/-- Every upper semi-Fredholm canonical operator admits an absolutely summable kernel-column
-approximation between normalized successive source and target blocks. -/
-theorem hasUpperSummableKernelBlockApproximation :
-    HasUpperSummableKernelBlockApproximation := by
-  intro T hT
+/-- An upper semi-Fredholm operator has kernel approximants with positive bounded norms. -/
+private theorem exists_bounded_kernel_approximants
+    (T : CanonicalRealKaltonPeck →L[ℝ] CanonicalRealKaltonPeck) (hT : IsUpperSemiFredholm T) :
+    ∃ (w : ℕ → ℕ → ℝ) (hw : IsSuccessiveNormalizedBlockSequence w)
+      (a : ℕ → CanonicalL2) (δ B : ℝ) (N₀ : ℕ), 0 < δ ∧
+      (∀ n, N₀ ≤ n → δ ≤ ‖a n‖) ∧ (∀ n, N₀ ≤ n → ‖a n‖ ≤ B) ∧
+      Summable (fun n => ‖(T.comp canonicalL2Inclusion)
+        (canonicalL2BlockEmbedding w hw (lp.single 2 n (1 : ℝ))) -
+          canonicalL2Inclusion (a n)‖) := by
   let A : CanonicalL2 →L[ℝ] CanonicalRealKaltonPeck :=
     T.comp canonicalL2Inclusion
   have hInclusionUpper : IsUpperSemiFredholm canonicalL2Inclusion := by
@@ -1583,7 +1613,7 @@ theorem hasUpperSummableKernelBlockApproximation :
   have hA : IsUpperSemiFredholm A := by
     exact hInclusionUpper.comp hT
   let M : Submodule ℝ CanonicalL2 := A.ker
-  letI : FiniteDimensional ℝ M := hA.1
+  let : FiniteDimensional ℝ M := hA.1
   let Q : CanonicalL2 →L[ℝ] CanonicalL2 :=
     canonicalL2Quotient.comp A
   have hQstrict : IsStrictlySingular Q := by
@@ -1768,6 +1798,91 @@ theorem hasUpperSummableKernelBlockApproximation :
       _ ≤ (Ki : ℝ) * (‖A‖ + 1) :=
         mul_le_mul_of_nonneg_left hiUpper (NNReal.coe_nonneg Ki)
       _ = B := rfl
+  exact ⟨w, hw, a, δ, B, N₀, hδ, haLower, haUpper, hdSum⟩
+
+/-- Three approximation errors control a scalar multiple of an operator image. -/
+private theorem norm_sub_smul_image_le
+    {H E : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (i : H →L[ℝ] E) (a u v : H) (α : ℝ) (z : E)
+    (ha : a = ‖a‖ • u) (hu : ‖u‖ = 1) :
+    ‖z - α • i v‖ ≤ ‖z - i a‖ + ‖i‖ * |‖a‖ - α| +
+      (|α| * ‖i‖) * ‖u - v‖ := by
+  have hmiddle : ‖i a - α • i u‖ ≤ ‖i‖ * |‖a‖ - α| := by
+    rw [show i a = ‖a‖ • i u by rw [← map_smul, ← ha], ← sub_smul,
+      norm_smul, Real.norm_eq_abs]
+    calc
+      |‖a‖ - α| * ‖i u‖ ≤ |‖a‖ - α| * (‖i‖ * ‖u‖) :=
+        mul_le_mul_of_nonneg_left (i.le_opNorm u) (abs_nonneg _)
+      _ = ‖i‖ * |‖a‖ - α| := by rw [hu]; ring
+  have hlast : ‖α • i u - α • i v‖ ≤ (|α| * ‖i‖) * ‖u - v‖ := by
+    rw [← smul_sub, ← map_sub, norm_smul, Real.norm_eq_abs]
+    simpa only [mul_assoc] using
+      mul_le_mul_of_nonneg_left (i.le_opNorm (u - v)) (abs_nonneg α)
+  calc
+    ‖z - α • i v‖ ≤ ‖z - i a‖ + ‖i a - α • i v‖ :=
+      norm_sub_le_norm_sub_add_norm_sub _ _ _
+    _ ≤ ‖z - i a‖ + (‖i a - α • i u‖ + ‖α • i u - α • i v‖) := by
+      gcongr
+      exact norm_sub_le_norm_sub_add_norm_sub _ _ _
+    _ ≤ ‖z - i a‖ + (‖i‖ * |‖a‖ - α| + (|α| * ‖i‖) * ‖u - v‖) := by
+      gcongr
+    _ = ‖z - i a‖ + ‖i‖ * |‖a‖ - α| + (|α| * ‖i‖) * ‖u - v‖ := by ring
+
+/-- Kernel approximants of a successive block image tend to zero in each Hilbert coordinate. -/
+private theorem tendsto_kernel_approximation_coordinates_zero
+    (A : CanonicalL2 →L[ℝ] CanonicalRealKaltonPeck) (w : ℕ → ℕ → ℝ)
+    (hw : IsSuccessiveNormalizedBlockSequence w) (a : ℕ → CanonicalL2)
+    (heVec : Tendsto (fun n =>
+      A (canonicalL2BlockEmbedding w hw (lp.single 2 n (1 : ℝ))) -
+        canonicalL2Inclusion (a n)) atTop (𝓝 0)) (j : ℕ) :
+    Tendsto (fun n => a n j) atTop (𝓝 0) := by
+  let b : ℕ → CanonicalL2 := fun n =>
+    canonicalL2BlockEmbedding w hw (lp.single 2 n (1 : ℝ))
+  let z : ℕ → CanonicalRealKaltonPeck := fun n => A (b n)
+  let y : CanonicalRealKaltonPeck := canonicalSecondBasisVector j
+  let F : StrongDual ℝ CanonicalRealKaltonPeck :=
+    (ContinuousLinearMap.apply ℝ ℝ y).comp
+      canonicalKaltonSwansonForm.toDual.toContinuousLinearMap
+  have hFApply (x : CanonicalRealKaltonPeck) :
+      F x = canonicalKaltonSwansonForm.toDual x y := rfl
+  have hzF :
+      Tendsto (fun n => F (z n)) atTop (𝓝 0) := by
+    simpa only [hFApply, y, z, b] using
+      tendsto_canonical_pairing_apply_block_zero A w hw y
+  have heF :
+      Tendsto
+        (fun n => F
+          (z n - canonicalL2Inclusion (a n)))
+        atTop (𝓝 0) := by
+    simpa only [Function.comp_def, map_zero] using
+      (F.continuous.tendsto 0).comp heVec
+  have hiF :
+      Tendsto
+        (fun n => F (canonicalL2Inclusion (a n)))
+        atTop (𝓝 0) := by
+    have hsub := hzF.sub heF
+    convert hsub using 1
+    · ext n
+      simp only [map_sub]
+      ring_nf
+    · ring_nf
+  simpa only [hFApply, y,
+    canonical_pairing_inclusion_secondBasis] using hiF
+
+/-- Every upper semi-Fredholm canonical operator admits an absolutely summable kernel-column
+approximation between normalized successive source and target blocks. -/
+theorem hasUpperSummableKernelBlockApproximation :
+    HasUpperSummableKernelBlockApproximation := by
+  intro T hT
+  obtain ⟨w, hw, a, δ, B, N₀, hδ, haLower, haUpper, hdSum⟩ :=
+    exists_bounded_kernel_approximants T hT
+  let A := T.comp canonicalL2Inclusion
+  let b : ℕ → CanonicalL2 := fun n =>
+    canonicalL2BlockEmbedding w hw (lp.single 2 n (1 : ℝ))
+  let z : ℕ → CanonicalRealKaltonPeck := fun n => A (b n)
+  let d : ℕ → ℝ := fun n => ‖z n - canonicalL2Inclusion (a n)‖
+  have hdZero : Tendsto d atTop (𝓝 0) := hdSum.tendsto_atTop_zero
   let r : ℕ → ℝ := fun n => ‖a (N₀ + n)‖
   have hrange (n : ℕ) : r n ∈ Set.Icc δ B := by
     constructor
@@ -1811,37 +1926,8 @@ theorem hasUpperSummableKernelBlockApproximation :
         atTop (𝓝 0) := by
     rw [tendsto_zero_iff_norm_tendsto_zero]
     simpa only [d] using hdZero
-  have haCoordinateZero (j : ℕ) :
-      Tendsto (fun n => a n j) atTop (𝓝 0) := by
-    let y : CanonicalRealKaltonPeck := canonicalSecondBasisVector j
-    let F : StrongDual ℝ CanonicalRealKaltonPeck :=
-      (ContinuousLinearMap.apply ℝ ℝ y).comp
-        canonicalKaltonSwansonForm.toDual.toContinuousLinearMap
-    have hFApply (x : CanonicalRealKaltonPeck) :
-        F x = canonicalKaltonSwansonForm.toDual x y := rfl
-    have hzF :
-        Tendsto (fun n => F (z n)) atTop (𝓝 0) := by
-      simpa only [hFApply, y, z, b] using
-        tendsto_canonical_pairing_apply_block_zero A w hw y
-    have heF :
-        Tendsto
-          (fun n => F
-            (z n - canonicalL2Inclusion (a n)))
-          atTop (𝓝 0) := by
-      simpa only [Function.comp_def, map_zero] using
-        (F.continuous.tendsto 0).comp heVec
-    have hiF :
-        Tendsto
-          (fun n => F (canonicalL2Inclusion (a n)))
-          atTop (𝓝 0) := by
-      have hsub := hzF.sub heF
-      convert hsub using 1
-      · ext n
-        simp only [map_sub]
-        ring_nf
-      · ring_nf
-    simpa only [hFApply, y,
-      canonical_pairing_inclusion_secondBasis] using hiF
+  have haCoordinateZero (j : ℕ) : Tendsto (fun n => a n j) atTop (𝓝 0) :=
+    tendsto_kernel_approximation_coordinates_zero A w hw a heVec j
   let u : ℕ → CanonicalL2 := fun n =>
     ‖a (κ n)‖⁻¹ • a (κ n)
   have haκNormPos (n : ℕ) : 0 < ‖a (κ n)‖ :=
@@ -1976,77 +2062,9 @@ theorem hasUpperSummableKernelBlockApproximation :
     exact (hscaleU (θ n)).symm
   have hunNorm : ‖un‖ = 1 :=
     huNorm (θ n)
-  have hmiddle :
-      ‖canonicalL2Inclusion an -
-          α • canonicalL2Inclusion un‖ ≤
-        ‖canonicalL2Inclusion‖ * |‖an‖ - α| := by
-    have hian :
-        canonicalL2Inclusion an =
-          ‖an‖ • canonicalL2Inclusion un := by
-      calc
-        canonicalL2Inclusion an =
-            canonicalL2Inclusion (‖an‖ • un) :=
-          congrArg canonicalL2Inclusion hanUn
-        _ = ‖an‖ • canonicalL2Inclusion un :=
-          map_smul _ _ _
-    rw [hian, ← sub_smul, norm_smul,
-      Real.norm_eq_abs]
-    calc
-      |‖an‖ - α| *
-          ‖canonicalL2Inclusion un‖ ≤
-        |‖an‖ - α| *
-          (‖canonicalL2Inclusion‖ * ‖un‖) :=
-        mul_le_mul_of_nonneg_left
-          (canonicalL2Inclusion.le_opNorm un)
-          (abs_nonneg _)
-      _ = ‖canonicalL2Inclusion‖ *
-          |‖an‖ - α| := by
-        rw [hunNorm]
-        ring
-  have hlast :
-      ‖α • canonicalL2Inclusion un -
-          α • V (canonicalFirstBasisVector n)‖ ≤
-        (|α| * ‖canonicalL2Inclusion‖) *
-          ‖un - vn‖ := by
-    rw [htarget]
-    rw [← smul_sub, ← map_sub, norm_smul,
-      Real.norm_eq_abs]
-    simpa only [vn, Bv, mul_assoc] using
-      mul_le_mul_of_nonneg_left
-        (canonicalL2Inclusion.le_opNorm (un - vn))
-        (abs_nonneg α)
-  calc
-    ‖T (canonicalBlockOperator w hw
-          (canonicalFirstBasisVector (idx n))) -
-        α • V (canonicalFirstBasisVector n)‖ ≤
-      ‖T (canonicalBlockOperator w hw
-            (canonicalFirstBasisVector (idx n))) -
-          canonicalL2Inclusion an‖ +
-        ‖canonicalL2Inclusion an -
-          α • V (canonicalFirstBasisVector n)‖ :=
-      norm_sub_le_norm_sub_add_norm_sub _ _ _
-    _ ≤
-      ‖T (canonicalBlockOperator w hw
-            (canonicalFirstBasisVector (idx n))) -
-          canonicalL2Inclusion an‖ +
-        (‖canonicalL2Inclusion an -
-            α • canonicalL2Inclusion un‖ +
-          ‖α • canonicalL2Inclusion un -
-            α • V (canonicalFirstBasisVector n)‖) := by
-      gcongr
-      exact norm_sub_le_norm_sub_add_norm_sub _ _ _
-    _ ≤
-      ‖T (canonicalBlockOperator w hw
-            (canonicalFirstBasisVector (idx n))) -
-          canonicalL2Inclusion an‖ +
-        (‖canonicalL2Inclusion‖ *
-            |‖an‖ - α| +
-          (|α| * ‖canonicalL2Inclusion‖) *
-            ‖un - vn‖) := by
-      gcongr
-    _ = majorant n := by
-      simp only [majorant, an, un, vn]
-      ring
+  rw [htarget]
+  exact norm_sub_smul_image_le canonicalL2Inclusion an un vn α
+    (T (canonicalBlockOperator w hw (canonicalFirstBasisVector (idx n)))) hanUn hunNorm
 
 /-- An absolutely summable canonical kernel-block approximation supplies exactly the retained
 upper factorization used by the compact-Gram contradiction. -/
@@ -2278,8 +2296,8 @@ private theorem isFredholmOfUpperSemiOfAdjointEq
     {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
     (ω : StrongSymplecticForm X) (B : X →L[ℝ] X)
     (hB : IsUpperSemiFredholm B) (hself : ω.adjoint B = B) : IsFredholm B := by
-  letI : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
-  letI : IsClosed (B.toLinearMap.range : Set X) := hB.2
+  let : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
+  let : IsClosed (B.toLinearMap.range : Set X) := hB.2
   let kernelToAnnihilator :
       B.toLinearMap.ker →ₗ[ℝ] Forms.continuousAnnihilator B.toLinearMap.range :=
     { toFun := fun x => ⟨ω.toDual (x : X), by
@@ -2328,13 +2346,13 @@ private theorem isFredholmOfUpperSemiOfAdjointEq
   let kernelAnnihilatorEquiv :
       B.toLinearMap.ker ≃ₗ[ℝ] Forms.continuousAnnihilator B.toLinearMap.range :=
     LinearEquiv.ofBijective kernelToAnnihilator ⟨hInjective, hSurjective⟩
-  letI : FiniteDimensional ℝ (Forms.continuousAnnihilator B.toLinearMap.range) :=
+  let : FiniteDimensional ℝ (Forms.continuousAnnihilator B.toLinearMap.range) :=
     kernelAnnihilatorEquiv.finiteDimensional
   let quotientDualEquiv :
       StrongDual ℝ (X ⧸ B.toLinearMap.range) ≃ₗ[ℝ]
         Forms.continuousAnnihilator B.toLinearMap.range :=
     (Forms.quotientDualEquivAnnihilator B.toLinearMap.range).toLinearEquiv
-  letI : FiniteDimensional ℝ (StrongDual ℝ (X ⧸ B.toLinearMap.range)) :=
+  let : FiniteDimensional ℝ (StrongDual ℝ (X ⧸ B.toLinearMap.range)) :=
     @LinearEquiv.finiteDimensional ℝ
       (Forms.continuousAnnihilator B.toLinearMap.range) _ _ _
       (StrongDual ℝ (X ⧸ B.toLinearMap.range)) _ _
@@ -2593,7 +2611,7 @@ theorem cgpTransport {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     e.toContinuousLinearMap.comp (A.comp e.symm.toContinuousLinearMap)
   have hAcan : IsUpperSemiFredholm Acan := by
     constructor
-    · letI : FiniteDimensional ℝ A.toLinearMap.ker := hA.1
+    · let : FiniteDimensional ℝ A.toLinearMap.ker := hA.1
       exact (Fredholm.kernelEquivOfEquivComp A e e.symm).symm.finiteDimensional
     · have hrange : (Acan.toLinearMap.range : Set CanonicalRealKaltonPeck) =
           e '' (A.toLinearMap.range : Set X) := by
@@ -2845,7 +2863,7 @@ theorem kaltonPeckAlternatingPath_spec {X : Type*} [NormedAddCommGroup X]
   · change Continuous (fun t : Set.Icc (0 : ℝ) 1 ↦
       ω.toDual.toContinuousLinearMap +
         t.1 • (transpose T).comp (ω.toDual.toContinuousLinearMap.comp T))
-    letI : NormedAddCommGroup (X →L[ℝ] StrongDual ℝ X) :=
+    let : NormedAddCommGroup (X →L[ℝ] StrongDual ℝ X) :=
       ContinuousLinearMap.toNormedAddCommGroup
     have hω : Continuous (fun _ : Set.Icc (0 : ℝ) 1 ↦
         ω.toDual.toContinuousLinearMap) := continuous_const

@@ -20,7 +20,8 @@ pairings with the canonical Hilbert-space inclusion.
 
 namespace KaltonPeck.Support.Symplectic
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates
 open Filter
@@ -47,9 +48,9 @@ private lemma pairingL2Trunc_finite (m : ℕ) (x : CanonicalL2) :
     Set.Finite {k | pairingL2Trunc m x k ≠ 0} := by
   refine (Finset.finite_toSet (Finset.range m)).subset ?_
   intro k hk
-  simp only [Set.mem_setOf_eq, Finset.mem_coe, Finset.mem_range] at hk ⊢
+  simp only [Set.mem_ofPred_eq, Finset.mem_coe, Finset.mem_range] at hk ⊢
   by_contra hkm
-  rw [pairingL2Trunc_apply, if_neg hkm] at hk
+  rw [pairingL2Trunc_apply, ite_eq_right hkm] at hk
   exact hk rfl
 
 private lemma dense_pairingL2_finiteSupport :

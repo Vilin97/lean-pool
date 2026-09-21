@@ -24,7 +24,8 @@ that is not upper semi-Fredholm becomes compact.
 
 namespace KaltonPeck.Support.CgpBlockExtraction
 
-noncomputable section
+noncomputable
+section
 
 open Coordinates Symplectic
 open Function
@@ -33,7 +34,7 @@ open scoped Topology
 
 private theorem upperSemi_of_antilipschitz_orthogonal
     {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
     (T : E →L[ℝ] F) (H : Submodule ℝ E) [FiniteDimensional ℝ H]
     (hanti : ∃ K, AntilipschitzWith K (T.domRestrict Hᗮ)) :
     FiniteDimensional ℝ T.toLinearMap.ker ∧
@@ -59,12 +60,12 @@ private theorem upperSemi_of_antilipschitz_orthogonal
       rw [hx, hy, sub_zero]
     have hz : z = 0 := hg_inj (by simpa using hzero)
     exact sub_eq_zero.mp (congrArg Subtype.val hz)
-  letI : FiniteDimensional ℝ T.toLinearMap.ker :=
+  let : FiniteDimensional ℝ T.toLinearMap.ker :=
     FiniteDimensional.of_injective p hp_inj
   have hclosed_perp :
       IsClosed (((T.domRestrict Hᗮ).toLinearMap.range : Submodule ℝ F) : Set F) :=
     hK.isClosed_range (T.domRestrict Hᗮ).uniformContinuous
-  letI : FiniteDimensional ℝ (Submodule.map T.toLinearMap H) := inferInstance
+  let : FiniteDimensional ℝ (Submodule.map T.toLinearMap H) := inferInstance
   have hrange :
       T.toLinearMap.range =
         (T.domRestrict Hᗮ).toLinearMap.range ⊔ Submodule.map T.toLinearMap H := by
@@ -140,7 +141,7 @@ private lemma l2Norm_coe_eq_norm (x : CanonicalL2) :
     _ = |x n| ^ (2 : ℝ) := (Real.rpow_natCast |x n| 2).symm
 
 private lemma exists_small_unit_tail
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X)))
@@ -194,7 +195,7 @@ private structure FiniteBlock
   map_norm_lt : ‖T vec‖ < ε
 
 private lemma exists_finiteBlock
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X)))
@@ -283,7 +284,7 @@ private lemma exists_finiteBlock
     rw [l2Trunc_apply] at hyk
     change k < m
     by_contra hkm
-    rw [if_neg hkm] at hyk
+    rw [ite_eq_right hkm] at hyk
     exact hyk rfl
   have hv_nonempty : Set.Nonempty {k | v k ≠ 0} := by
     by_contra hempty
@@ -304,9 +305,9 @@ private lemma exists_finiteBlock
     dsimp only [y] at hyk
     rw [l2Trunc_apply, huk] at hyk
     by_cases hkm : k < m
-    · rw [if_pos hkm] at hyk
+    · rw [ite_eq_left hkm] at hyk
       exact hyk rfl
-    · rw [if_neg hkm] at hyk
+    · rw [ite_eq_right hkm] at hyk
       exact hyk rfl
   have hv_upper : ∀ k, v k ≠ 0 → k < m := by
     intro k hvk
@@ -314,7 +315,7 @@ private lemma exists_finiteBlock
     dsimp only [y] at hyk
     rw [l2Trunc_apply] at hyk
     by_contra hkm
-    rw [if_neg hkm] at hyk
+    rw [ite_eq_right hkm] at hyk
     exact hyk rfl
   exact ⟨m, v, hstartm, hv_norm, hv_finite, hv_nonempty, hv_lower,
     hv_upper, hv_small⟩
@@ -326,7 +327,7 @@ private lemma blockEpsilon_pos (n : ℕ) : 0 < blockEpsilon n := by
   exact pow_pos (by norm_num) _
 
 private noncomputable def chosenBlock
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X)))
@@ -334,7 +335,7 @@ private noncomputable def chosenBlock
   Classical.choice (exists_finiteBlock T hT start (blockEpsilon_pos n))
 
 private noncomputable def blockCut
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X))) : ℕ → ℕ
@@ -342,7 +343,7 @@ private noncomputable def blockCut
   | n + 1 => (chosenBlock T hT (blockCut T hT n) n).stop
 
 private noncomputable def blockVec
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X)))
@@ -350,7 +351,7 @@ private noncomputable def blockVec
   (chosenBlock T hT (blockCut T hT n) n).vec
 
 private noncomputable def extractedBlock
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X))) :
@@ -358,7 +359,7 @@ private noncomputable def extractedBlock
   fun n k => blockVec T hT n k
 
 private lemma extractedBlock_isSuccessive
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X))) :
@@ -385,7 +386,7 @@ private lemma extractedBlock_isSuccessive
     exact lt_of_lt_of_le hiCut hj'
 
 private lemma extractedBlock_basis_bound
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X)))
@@ -425,7 +426,7 @@ weighting by the norms of the coordinate functionals.
 Blueprint label: `lem:schauder-weighted-images-compact`. -/
 theorem compact_of_schauderBasis_weighted
     {X Y : Type*}
-    [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] [CompleteSpace Y]
     (b : SchauderBasis ℝ X) (T : X →L[ℝ] Y)
     (hT : Summable fun n => ‖b.coord n‖ * ‖T (b n)‖) :
@@ -537,7 +538,7 @@ private lemma summable_blockEpsilon : Summable blockEpsilon := by
 /-- Failure of upper semi-Fredholmness on the canonical Hilbert space yields a normalized
 successive block sequence whose basis images are absolutely summable. -/
 theorem exists_summable_canonicalL2Block_of_not_upperSemi
-    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [CompleteSpace X]
+    {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (T : CanonicalL2 →L[ℝ] X)
     (hT : ¬ (FiniteDimensional ℝ T.toLinearMap.ker ∧
       IsClosed (T.toLinearMap.range : Set X))) :

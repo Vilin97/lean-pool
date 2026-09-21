@@ -22,7 +22,8 @@ index, and range results for Fredholm operators.
 
 namespace KaltonPeck.Support.Fredholm
 
-noncomputable section
+noncomputable
+section
 
 /-- The canonical linear equivalence from a quotient by a kernel onto the range.
 
@@ -53,7 +54,7 @@ theorem quotientKernelRange {X Y : Type*} [NormedAddCommGroup X]
         Module.finrank ℝ (X ⧸ A.toLinearMap.ker) =
           Module.finrank ℝ A.toLinearMap.range ∧
             Module.finrank ℝ (X ⧸ A.toLinearMap.ker) = operatorRank A := by
-  letI : FiniteDimensional ℝ A.toLinearMap.range := hA
+  let : FiniteDimensional ℝ A.toLinearMap.range := hA
   exact
     ⟨A.isClosed_ker, (quotientKernelRangeEquiv A).symm.finiteDimensional,
       (quotientKernelRangeEquiv A).finrank_eq,
@@ -63,9 +64,9 @@ theorem quotientKernelRange {X Y : Type*} [NormedAddCommGroup X]
 
 Blueprint: `lem:fredholm-calculus`, item 1; audit: `INF-FREDHOLM-CALCULUS`. -/
 theorem isFredholm_equiv_comp {X Y X' Y' : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] [NormedAddCommGroup Y] [NormedSpace ℝ Y]
-    [CompleteSpace Y] [NormedAddCommGroup X'] [NormedSpace ℝ X'] [CompleteSpace X']
-    [NormedAddCommGroup Y'] [NormedSpace ℝ Y'] [CompleteSpace Y'] (A : X →L[ℝ] Y)
+    [NormedSpace ℝ X] [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+     [NormedAddCommGroup X'] [NormedSpace ℝ X']
+    [NormedAddCommGroup Y'] [NormedSpace ℝ Y'] (A : X →L[ℝ] Y)
     (U : Y ≃L[ℝ] Y') (V : X' ≃L[ℝ] X) :
     IsFredholm A ↔
       IsFredholm (U.toContinuousLinearMap.comp (A.comp V.toContinuousLinearMap)) := by
@@ -245,7 +246,7 @@ theorem fredholmIndex_equiv_comp {X Y X' Y' : Type*} [NormedAddCommGroup X]
 
 Blueprint: `lem:fredholm-calculus`, item 2; audit: `INF-FREDHOLM-CALCULUS`. -/
 theorem fredholm_smul {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] [NormedAddCommGroup Y] [NormedSpace ℝ Y] [CompleteSpace Y]
+     [NormedAddCommGroup Y] [NormedSpace ℝ Y]
     (A : X →L[ℝ] Y) (a : ℝ) (ha : a ≠ 0) :
     (IsFredholm (a • A) ↔ IsFredholm A) ∧ fredholmIndex (a • A) = fredholmIndex A := by
   have hker : (a • A).toLinearMap.ker = A.toLinearMap.ker := by
@@ -282,14 +283,14 @@ theorem ker_comp_of_injective {X Y Z : Type*} [NormedAddCommGroup X]
 
 Blueprint: `lem:fredholm-calculus`, item 3; audit: `INF-FREDHOLM-CALCULUS`. -/
 theorem isFredholm_comp {X Y Z : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    [NormedSpace ℝ X] [NormedAddCommGroup Y] [NormedSpace ℝ Y]
     [CompleteSpace Y] [NormedAddCommGroup Z] [NormedSpace ℝ Z] [CompleteSpace Z]
     (A : X →L[ℝ] Y) (B : Y →L[ℝ] Z) (hA : IsFredholm A) (hB : IsFredholm B) :
     IsFredholm (B.comp A) := by
-  letI : FiniteDimensional ℝ A.toLinearMap.ker := hA.1
-  letI : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
-  letI : FiniteDimensional ℝ (Y ⧸ A.toLinearMap.range) := hA.2.2
-  letI : FiniteDimensional ℝ (Z ⧸ B.toLinearMap.range) := hB.2.2
+  let : FiniteDimensional ℝ A.toLinearMap.ker := hA.1
+  let : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
+  let : FiniteDimensional ℝ (Y ⧸ A.toLinearMap.range) := hA.2.2
+  let : FiniteDimensional ℝ (Z ⧸ B.toLinearMap.range) := hB.2.2
   have hker : FiniteDimensional ℝ (B.comp A).toLinearMap.ker := by
     change FiniteDimensional ℝ (B.toLinearMap.comp A.toLinearMap).ker
     rw [LinearMap.ker_comp]
@@ -299,7 +300,7 @@ theorem isFredholm_comp {X Y Z : Type*} [NormedAddCommGroup X]
     rw [LinearMap.range_comp]
     infer_instance
   refine ⟨hker, ?_, hcoker⟩
-  letI : CompleteSpace B.toLinearMap.range := hB.2.1.completeSpace_coe
+  let : CompleteSpace B.toLinearMap.range := hB.2.1.completeSpace_coe
   let f : Y →L[ℝ] B.toLinearMap.range := B.rangeRestrict
   have hfq : Topology.IsQuotientMap f :=
     f.isQuotientMap B.toLinearMap.surjective_rangeRestrict
@@ -337,24 +338,24 @@ theorem isFredholm_comp {X Y Z : Type*} [NormedAddCommGroup X]
 
 Blueprint: `lem:fredholm-calculus`, item 3; audit: `INF-FREDHOLM-CALCULUS`. -/
 theorem fredholmIndex_comp {X Y Z : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] [NormedAddCommGroup Y] [NormedSpace ℝ Y]
-    [CompleteSpace Y] [NormedAddCommGroup Z] [NormedSpace ℝ Z] [CompleteSpace Z]
+    [NormedSpace ℝ X] [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+     [NormedAddCommGroup Z] [NormedSpace ℝ Z]
     (A : X →L[ℝ] Y) (B : Y →L[ℝ] Z) (hA : IsFredholm A) (hB : IsFredholm B) :
     fredholmIndex (B.comp A) = fredholmIndex B + fredholmIndex A := by
-  letI : FiniteDimensional ℝ A.toLinearMap.ker := hA.1
-  letI : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
-  letI : FiniteDimensional ℝ (Y ⧸ A.toLinearMap.range) := hA.2.2
-  letI : FiniteDimensional ℝ (Z ⧸ B.toLinearMap.range) := hB.2.2
+  let : FiniteDimensional ℝ A.toLinearMap.ker := hA.1
+  let : FiniteDimensional ℝ B.toLinearMap.ker := hB.1
+  let : FiniteDimensional ℝ (Y ⧸ A.toLinearMap.range) := hA.2.2
+  let : FiniteDimensional ℝ (Z ⧸ B.toLinearMap.range) := hB.2.2
   change (B.toLinearMap.comp A.toLinearMap).index =
     B.toLinearMap.index + A.toLinearMap.index
-  exact LinearMap.index_comp B.toLinearMap
+  exact LinearMap.index_comp B.toLinearMap A.toLinearMap
 
 /-- A bounded left inverse gives zero kernel, finite-dimensional kernel, and closed range.
 
 Blueprint: `lem:fredholm-calculus`, item 4; audit: `INF-FREDHOLM-CALCULUS`. -/
 theorem leftInverseKernelRange {X Y : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] [NormedAddCommGroup Y] [NormedSpace ℝ Y]
-    [CompleteSpace Y] (A : X →L[ℝ] Y) (hA : A.HasLeftInverse) :
+    [NormedSpace ℝ X] [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+     (A : X →L[ℝ] Y) (hA : A.HasLeftInverse) :
     A.toLinearMap.ker = ⊥ ∧
       FiniteDimensional ℝ A.toLinearMap.ker ∧ IsClosed (A.toLinearMap.range : Set Y) := by
   have hker : A.toLinearMap.ker = ⊥ := A.ker_eq_bot_of_injective hA.injective
@@ -366,7 +367,7 @@ theorem leftInverseKernelRange {X Y : Type*} [NormedAddCommGroup X]
 
 Blueprint: `lem:skew-fredholm-range`; audit: `AUX-SKEW-FREDHOLM-INDEX-RANGE`. -/
 theorem skewFredholmRange {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (S : X →L[ℝ] StrongDual ℝ X)
+     (S : X →L[ℝ] StrongDual ℝ X)
     (hReflexive : Function.Surjective (NormedSpace.inclusionInDoubleDual ℝ X))
     (hFredholm : IsFredholm S)
     (hSkew : (transpose S).comp (NormedSpace.inclusionInDoubleDual ℝ X) = -S) :
@@ -483,10 +484,10 @@ theorem skewFredholmRange {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     LinearEquiv.ofBijective kernelToRangeAnnihilator
       ⟨hkernelToRangeAnnihilator_injective,
         hkernelToRangeAnnihilator_surjective⟩
-  letI : FiniteDimensional ℝ S.toLinearMap.ker := hFredholm.1
-  letI : FiniteDimensional ℝ
+  let : FiniteDimensional ℝ S.toLinearMap.ker := hFredholm.1
+  let : FiniteDimensional ℝ
       (StrongDual ℝ X ⧸ S.toLinearMap.range) := hFredholm.2.2
-  letI : IsClosed (S.toLinearMap.range : Set (StrongDual ℝ X)) := hFredholm.2.1
+  let : IsClosed (S.toLinearMap.range : Set (StrongDual ℝ X)) := hFredholm.2.1
   have hkernel_annihilator_dim :
       Module.finrank ℝ S.toLinearMap.ker =
         Module.finrank ℝ

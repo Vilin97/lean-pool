@@ -20,7 +20,8 @@ Fredholm, finite-rank, complex-structure, and hyperplane notions used throughout
 
 namespace KaltonPeck.Support
 
-noncomputable section
+noncomputable
+section
 
 /-- A possibly degenerate continuous alternating form on a real normed space.
 

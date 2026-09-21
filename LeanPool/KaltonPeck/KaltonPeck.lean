@@ -29,7 +29,8 @@ obstruction theorems.
 
 namespace KaltonPeck
 
-noncomputable section
+noncomputable
+section
 
 /-- A strong continuous alternating form on a real normed space. -/
 structure StrongSymplecticForm (X : Type*) [NormedAddCommGroup X] [NormedSpace ℝ X] where
@@ -136,15 +137,15 @@ theorem rankParityGeneral {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   let E := (T ^ 2 + 1).toLinearMap.ker
   obtain ⟨hEclosed, hEfinite, hEdim, _, _⟩ :=
     Support.GeneralRank.finiteRankPolynomialKernel T hFinite
-  letI : IsClosed (E : Set X) := hEclosed
-  letI : FiniteDimensional ℝ (X ⧸ E) := hEfinite
+  let : IsClosed (E : Set X) := hEclosed
+  let : FiniteDimensional ℝ (X ⧸ E) := hEfinite
   let eta := (Support.GeneralRank.rankParityForm omega T).form
   have hEtaFred : Support.IsFredholm eta.toDual :=
     (Support.GeneralRank.rankParityForm omega T).isFredholm hFred
   obtain ⟨hRfinite, hParity⟩ :=
     Support.FiniteCodim.finiteCodimParity eta
       (Support.Forms.strongSymplecticReflexive omega) hEtaFred E
-  letI : FiniteDimensional ℝ (eta.restrictedRadical E) := hRfinite
+  let : FiniteDimensional ℝ (eta.restrictedRadical E) := hRfinite
   have hREven : Even (Module.finrank ℝ (eta.restrictedRadical E)) := by
     simpa [eta, E] using
       (Support.GeneralRank.restrictedRadicalEven omega T hFinite).2

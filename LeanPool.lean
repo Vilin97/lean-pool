@@ -2858,6 +2858,9 @@ import LeanPool.KaltonPeck.KaltonPeck.Support.CgpStrictlySingularLifting
 import LeanPool.KaltonPeck.KaltonPeck.Support.Coordinates
 import LeanPool.KaltonPeck.KaltonPeck.Support.Definitions
 import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim
+import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim.QuotientSum
+import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim.RadicalQuotient
+import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim.StrongQuotient
 import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteParity
 import LeanPool.KaltonPeck.KaltonPeck.Support.Forms
 import LeanPool.KaltonPeck.KaltonPeck.Support.Fredholm
