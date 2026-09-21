@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
+import Mathlib.Data.Fintype.Card
+import Mathlib.Tactic
 
 /-!
 # `NRR.EMP.WeightSpace` — finite‑dimensional algebra of normalized weights

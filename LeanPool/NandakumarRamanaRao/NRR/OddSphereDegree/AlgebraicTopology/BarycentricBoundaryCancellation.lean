@@ -10,7 +10,8 @@ import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSi
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.AffineLastFaceIdentity
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.PermSignLastFaceFinished
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricFiniteCancellation
-import Mathlib
+import Mathlib.Combinatorics.Quiver.ReflQuiver
+import Mathlib.Tactic
 
 /-!
 # Generator-level barycentric boundary cancellation `∂ (sd σ) = sd (∂ σ)`
@@ -112,12 +113,15 @@ theorem cofaceTop_last_castSucc (n : ℕ) (t : Fin (n + 1)) (y : Delta n) :
 
 /-- The topological realization of the coface morphism `δ k` is the affine coface
 `cofaceTop n k`. -/
-theorem cofaceTop_eq (n : ℕ) (k : Fin (n + 2)) :
-    (SimplexCategory.toTop₀.map (SimplexCategory.δ k)).hom = cofaceTop n k := by
-  apply ContinuousMap.ext
-  intro y
-  show (SimplexCategory.toTop₀.map (SimplexCategory.δ k)).hom y = cofaceTop n k y
-  simp only [SimplexCategory.toTop₀_map]
+theorem cofaceTop_eq (n : ℕ) (k : Fin (n + 2))
+    (y : Convexity.StdSimplex ℝ (Fin (n + 1))) :
+    intrinsicSimplexCoordinates (n + 1)
+        ((SimplexCategory.toTop₀.map (SimplexCategory.δ k)).hom y) =
+      cofaceTop n k (intrinsicSimplexCoordinates n y) := by
+  apply Subtype.ext
+  change ⇑(Finsupp.mapDomain (Fin.succAbove k) y.weights) =
+    FunOnFinite.map (Fin.succAbove k) (⇑y.weights)
+  simp only [FunOnFinite.map, Finsupp.equivFunOnFinite_symm_coe]
   rfl
 
 /-- **Face as a continuous map.** The `k`-th boundary face of a singular simplex
@@ -129,24 +133,33 @@ theorem faceSimplex_continuousMap (X : TopCat.{0}) (n : ℕ) (k : Fin (n + 2))
       = (singularSimplexAsContinuousMap X (n + 1) σ).comp (cofaceTop n k) := by
   rw [singularSimplexAsContinuousMap, singularSimplexAsContinuousMap,
     AlexanderWhitney.faceSimplex,
-    toSSetObjEquiv_map_op_naturality X n (n + 1) (SimplexCategory.δ k) σ, cofaceTop_eq]
-  rfl
+    toSSetObjEquiv_map_op_naturality X n (n + 1) (SimplexCategory.δ k) σ]
+  apply ContinuousMap.ext
+  intro y
+  change ((X.toSSetObjEquiv (Opposite.op ⦋n + 1⦌)) σ)
+      ((SimplexCategory.toTop₀.map (SimplexCategory.δ k)).hom
+        ((intrinsicSimplexCoordinates n).symm y)) =
+    ((X.toSSetObjEquiv (Opposite.op ⦋n + 1⦌)) σ)
+      ((intrinsicSimplexCoordinates (n + 1)).symm (cofaceTop n k y))
+  apply congrArg ((X.toSSetObjEquiv (Opposite.op ⦋n + 1⦌)) σ)
+  apply (intrinsicSimplexCoordinates (n + 1)).injective
+  simpa using cofaceTop_eq n k ((intrinsicSimplexCoordinates n).symm y)
 
 /-! ## 2. Singular-simplex equality and the subdivision summand as a map -/
 
 /-- Two singular simplices coincide as soon as their associated continuous maps
 do (`toSSetObjEquiv` is injective). -/
 theorem singularSimplices_ext {X : TopCat.{0}} {n : ℕ} {a b : singularSimplices X n}
-    (h : singularSimplexAsContinuousMap X n a = singularSimplexAsContinuousMap X n b) : a = b :=
-  (X.toSSetObjEquiv _).injective h
+    (h : singularSimplexAsContinuousMap X n a = singularSimplexAsContinuousMap X n b) : a = b := by
+  have h' := congrArg (continuousMapAsSingularSimplex X n) h
+  simpa using h'
 
 /-- The barycentric subdivision summand `σ ∘ a_π`, viewed as a continuous map. -/
 theorem barycentricSubdivSimplex_continuousMap (X : TopCat.{0}) (n : ℕ)
     (π : Equiv.Perm (Fin (n + 1))) (σ : singularSimplices X n) :
     singularSimplexAsContinuousMap X n (barycentricSubdivSimplex X n π σ)
       = (singularSimplexAsContinuousMap X n σ).comp (affineSubdivContinuousMap n π) := by
-  rw [barycentricSubdivSimplex, singularSimplexAsContinuousMap, continuousMapAsSingularSimplex,
-    Equiv.apply_symm_apply]
+  exact singularSimplexAsContinuousMap_continuousMapAsSingularSimplex X n _
 
 /-! ## 3. Internal-face bridge: affine faces agree under adjacent swap -/
 

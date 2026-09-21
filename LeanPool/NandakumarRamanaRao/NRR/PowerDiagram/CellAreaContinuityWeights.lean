@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
 import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAlgebra
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.HalfspaceFiniteIntersectionAreaContinuity

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthContinuity
 
 /-!
@@ -34,9 +35,7 @@ unit-sphere subtype), we parameterize directions by the interval `[0, 2π]` via 
 
 ## Import policy
 
-Only `WidthContinuity.lean` is imported; it transitively provides all of Mathlib (via
-`Basic.lean`'s `import Mathlib`) together with the width-function continuity API. No extra
-imports are required.
+The width-function continuity API and interval-integrability lemmas are imported directly.
 -/
 
 namespace NRR.Geometry

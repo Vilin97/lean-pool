@@ -5,7 +5,7 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Chain-level barycentric boundary commutation `∂ ∘ sd = sd ∘ ∂`

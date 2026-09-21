@@ -78,18 +78,50 @@ noncomputable def affineSubdivContinuousMap (n : ℕ)
 
 /-! ## 2. Singular-simplex summands -/
 
+/-- Coordinate realization of Mathlib's intrinsic simplex. -/
+noncomputable def intrinsicSimplexCoordinates (n : ℕ) :
+    Convexity.StdSimplex ℝ (Fin (n + 1)) ≃ₜ Delta n where
+  toFun x := ⟨x.weights, x.nonneg, by simpa [Finsupp.sum_fintype] using x.total⟩
+  invFun x :=
+    { weights := Finsupp.equivFunOnFinite.symm x.1
+      nonneg := x.2.1
+      total := by simpa [Finsupp.sum_fintype] using x.2.2 }
+  left_inv x := by ext i; rfl
+  right_inv x := by apply Subtype.ext; rfl
+  continuous_toFun :=
+    (Convexity.StdSimplex.isEmbedding_toFun_comp_weights ℝ _).continuous.subtype_mk _
+  continuous_invFun := by
+    apply (Convexity.StdSimplex.isEmbedding_toFun_comp_weights ℝ _).isInducing.continuous_iff.mpr
+    exact continuous_subtype_val
+
+
 /-- Convert a singular simplex, represented as a simplex of `TopCat.toSSet.obj X`,
 to the corresponding bundled continuous map out of the topological standard
 simplex. -/
 noncomputable def singularSimplexAsContinuousMap (X : TopCat.{0}) (n : ℕ)
     (σ : singularSimplices X n) : C(Delta n, X) :=
-  (X.toSSetObjEquiv (Opposite.op (⦋n⦌ : SimplexCategory))) σ
+  ((X.toSSetObjEquiv (Opposite.op (⦋n⦌ : SimplexCategory))) σ).comp
+    ⟨(intrinsicSimplexCoordinates n).symm, (intrinsicSimplexCoordinates n).symm.continuous⟩
 
 /-- Convert a bundled continuous map out of the standard simplex into the
 corresponding simplex of the singular simplicial set. -/
 noncomputable def continuousMapAsSingularSimplex (X : TopCat.{0}) (n : ℕ)
     (σ : C(Delta n, X)) : singularSimplices X n :=
-  (X.toSSetObjEquiv (Opposite.op (⦋n⦌ : SimplexCategory))).symm σ
+  (X.toSSetObjEquiv (Opposite.op (⦋n⦌ : SimplexCategory))).symm
+    (σ.comp ⟨intrinsicSimplexCoordinates n, (intrinsicSimplexCoordinates n).continuous⟩)
+
+@[simp] theorem singularSimplexAsContinuousMap_continuousMapAsSingularSimplex
+    (X : TopCat.{0}) (n : ℕ) (σ : C(Delta n, X)) :
+    singularSimplexAsContinuousMap X n (continuousMapAsSingularSimplex X n σ) = σ := by
+  ext x
+  simp [singularSimplexAsContinuousMap, continuousMapAsSingularSimplex]
+
+@[simp] theorem continuousMapAsSingularSimplex_singularSimplexAsContinuousMap
+    (X : TopCat.{0}) (n : ℕ) (σ : singularSimplices X n) :
+    continuousMapAsSingularSimplex X n (singularSimplexAsContinuousMap X n σ) = σ := by
+  apply (X.toSSetObjEquiv _).injective
+  ext x
+  simp [singularSimplexAsContinuousMap, continuousMapAsSingularSimplex]
 
 /-- The `π`-summand of barycentric subdivision of a singular simplex: precompose
 `σ : Δⁿ → X` with the affine subdivision simplex `a_π : Δⁿ → Δⁿ`. -/

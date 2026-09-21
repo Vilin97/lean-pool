@@ -5,7 +5,11 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionCone
-import Mathlib
+import Mathlib.CategoryTheory.Limits.Lattice
+import Mathlib.CategoryTheory.Limits.Shapes.Countable
+import Mathlib.CategoryTheory.Limits.Sifted
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Homotopy Operator -/
 

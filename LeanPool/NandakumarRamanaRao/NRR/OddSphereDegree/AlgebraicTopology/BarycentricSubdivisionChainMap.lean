@@ -5,7 +5,7 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryChainMap
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Barycentric subdivision as a chain map

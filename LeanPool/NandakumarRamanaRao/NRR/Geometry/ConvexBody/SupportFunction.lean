@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import Mathlib.Analysis.InnerProductSpace.Continuous
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Basic
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Topology
 

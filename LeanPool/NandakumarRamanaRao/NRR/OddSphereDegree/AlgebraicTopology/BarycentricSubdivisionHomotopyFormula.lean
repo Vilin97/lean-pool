@@ -89,8 +89,7 @@ theorem pushSimplex_stdSimplexId (X : TopCat.{0}) (n : ℕ) (σ : singularSimpli
   rw [pushSimplex_continuousMap,
     show stdSimplexIdSingularSimplex n
         = continuousMapAsSingularSimplex (TopCat.of (Delta n)) n (ContinuousMap.id (Delta n)) from rfl]
-  simp only [singularSimplexAsContinuousMap, continuousMapAsSingularSimplex,
-    Equiv.apply_symm_apply, TopCat.hom_ofHom]
+  simp only [singularSimplexAsContinuousMap_continuousMapAsSingularSimplex, TopCat.hom_ofHom]
   ext x; rfl
 
 theorem pushSimplex_barycentricSubdivSimplex {X Y : TopCat.{0}} (f : X ⟶ Y) (n : ℕ)

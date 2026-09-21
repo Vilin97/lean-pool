@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Analysis.Convex.Basic
+import Mathlib.Basic.Real.Basic
+import Mathlib.Tactic
+import Mathlib.Topology.Closure
 
 /-!
 # `NRR.Geometry.ConvexBody` — bundled compact convex bodies with nonempty interior

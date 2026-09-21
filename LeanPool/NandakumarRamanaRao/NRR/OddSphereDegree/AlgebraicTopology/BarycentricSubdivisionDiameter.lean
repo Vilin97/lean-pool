@@ -4,7 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.Normed.Module.Convex
+import Mathlib.Data.Int.Star
+import Mathlib.Tactic
 
 /-!
 # Diameter shrinking for iterated barycentric subdivision

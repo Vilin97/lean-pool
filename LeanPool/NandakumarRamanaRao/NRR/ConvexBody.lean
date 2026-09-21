@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import Mathlib.Analysis.Convex.Body
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.Interior
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarCircle
 

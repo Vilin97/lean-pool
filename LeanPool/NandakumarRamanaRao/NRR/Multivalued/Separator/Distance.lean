@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Tactic
+import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # `NRR.Multivalued.Separator.Distance` — distance to a closed nonempty set

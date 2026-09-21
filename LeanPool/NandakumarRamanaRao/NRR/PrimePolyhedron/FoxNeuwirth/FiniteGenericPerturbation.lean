@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Basic.Real.Basic
+import Mathlib.RingTheory.Etale.Weakly
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic
 
 /-!
 # Finite generic scalar perturbations

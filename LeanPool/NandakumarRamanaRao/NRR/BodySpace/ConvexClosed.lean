@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Tactic
+import Mathlib.Topology.MetricSpace.Closeds
 import LeanPool.NandakumarRamanaRao.NRR.BodySpace.Topology
 
 /-!

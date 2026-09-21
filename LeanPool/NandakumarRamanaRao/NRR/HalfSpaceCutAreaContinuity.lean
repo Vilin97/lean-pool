@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.MeasureTheory.Function.SpecialFunctions.Inner
+import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.HalfspaceCut
 import LeanPool.NandakumarRamanaRao.NRR.HalfSpace

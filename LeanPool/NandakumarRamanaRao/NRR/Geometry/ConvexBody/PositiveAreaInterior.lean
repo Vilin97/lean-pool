@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Analysis.Normed.Affine.AddTorsorBases
+import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.HalfSpace
 /-!
 # `NRR.Geometry.ConvexBody` — positive area implies nonempty interior

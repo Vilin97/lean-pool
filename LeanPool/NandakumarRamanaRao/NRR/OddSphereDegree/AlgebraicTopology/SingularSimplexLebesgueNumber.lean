@@ -5,7 +5,7 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallSimplices
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # A Lebesgue number for a singular simplex against an open cover

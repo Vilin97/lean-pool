@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeter
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.PlanarPerimeterTransform
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.WidthFamilies

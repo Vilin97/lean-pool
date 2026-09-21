@@ -36,9 +36,9 @@ noncomputable def constI (X : TopCat.{0}) (t : unitInterval) : X ⟶ unitI :=
   TopCat.ofHom (ContinuousMap.const _ t)
 
 /-- The standard topological `1`-simplex, viewed (via
-`stdSimplexHomeomorphUnitInterval`) as a continuous map into the interval. -/
-noncomputable def edgeCM : C(stdSimplex ℝ (Fin (1 + 1)), unitI) :=
-  ⟨stdSimplexHomeomorphUnitInterval, stdSimplexHomeomorphUnitInterval.continuous⟩
+`Convexity.StdSimplex.homeomorphI`) as a continuous map into the interval. -/
+noncomputable def edgeCM : C(Convexity.StdSimplex ℝ (Fin (1 + 1)), unitI) :=
+  ⟨Convexity.StdSimplex.homeomorphI, Convexity.StdSimplex.homeomorphI.continuous⟩
 
 /-- The singular edge of the interval: the simplicial `1`-simplex of `Sing I`
 classified by the homeomorphism `Δ¹_top ≃ₜ I`. -/
@@ -152,10 +152,10 @@ theorem edge_vtx_zero (X : TopCat.{0}) :
     ((TopCat.toSSet.obj unitI).map _
       ((unitI.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 1))).symm edgeCM)) default = 0
   rw [TopCat.toSSetObjEquiv_naturality_apply]
-  change stdSimplexHomeomorphUnitInterval _ = 0
-  rw [← stdSimplexHomeomorphUnitInterval_zero]
+  change Convexity.StdSimplex.homeomorphI _ = 0
+  rw [← Convexity.StdSimplex.homeomorphI_single_zero]
   congr 1
-  rw [Subsingleton.elim default (stdSimplex.vertex 0), stdSimplex.map_vertex]
+  rw [Subsingleton.elim default (Convexity.StdSimplex.single 0), Convexity.StdSimplex.map_single]
   rfl
 
 /-- The `1`-vertex of `Δ[1]`, pushed along the singular edge, is the const-valued
@@ -178,10 +178,10 @@ theorem edge_vtx_one (X : TopCat.{0}) :
     ((TopCat.toSSet.obj unitI).map _
       ((unitI.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 1))).symm edgeCM)) default = 1
   rw [TopCat.toSSetObjEquiv_naturality_apply]
-  change stdSimplexHomeomorphUnitInterval _ = 1
-  rw [← stdSimplexHomeomorphUnitInterval_one]
+  change Convexity.StdSimplex.homeomorphI _ = 1
+  rw [← Convexity.StdSimplex.homeomorphI_single_one]
   congr 1
-  rw [Subsingleton.elim default (stdSimplex.vertex 0), stdSimplex.map_vertex]
+  rw [Subsingleton.elim default (Convexity.StdSimplex.single 0), Convexity.StdSimplex.map_single]
   rfl
 
 /-- Key reduction: the product-comparison inverse turns the lifted const-valued

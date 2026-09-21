@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.SupportFunction
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.AffineOps
 import LeanPool.NandakumarRamanaRao.NRR.Geometry.ConvexBody.LinearImage

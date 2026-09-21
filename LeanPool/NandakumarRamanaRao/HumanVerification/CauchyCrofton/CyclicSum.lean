@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Data.Int.Star
+import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Tactic
 
 /-!
 # Total variation of a cyclically unimodal sequence

@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Algebra.Order.Archimedean.Real.Hom
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.BodySpace.ConvexClosed
 
 /-!

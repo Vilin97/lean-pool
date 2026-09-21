@@ -6,7 +6,8 @@ Authors: Arseniy Akopyan
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricBoundaryCancellation
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
-import Mathlib
+import Mathlib.Tactic
+import Mathlib.Topology.GDelta.MetrizableSpace
 
 /-! # Barycentric Subdivision Cone -/
 
@@ -300,8 +301,7 @@ theorem coneSimplex_continuousMap (n k : ℕ) (v : Delta n)
     (σ : singularSimplices (TopCat.of (Delta n)) k) :
     singularSimplexAsContinuousMap (TopCat.of (Delta n)) (k + 1) (coneSimplex n k v σ)
       = affineConeContinuousMap v (singularSimplexAsContinuousMap (TopCat.of (Delta n)) k σ) := by
-  rw [coneSimplex, singularSimplexAsContinuousMap, continuousMapAsSingularSimplex,
-    Equiv.apply_symm_apply]
+  exact singularSimplexAsContinuousMap_continuousMapAsSingularSimplex _ _ _
 
 noncomputable def constSimplex0 (n : ℕ) (v : Delta n) :
     singularSimplices (TopCat.of (Delta n)) 0 :=
@@ -311,8 +311,7 @@ noncomputable def constSimplex0 (n : ℕ) (v : Delta n) :
 @[simp] theorem constSimplex0_continuousMap (n : ℕ) (v : Delta n) :
     singularSimplexAsContinuousMap (TopCat.of (Delta n)) 0 (constSimplex0 n v)
       = ContinuousMap.const (Delta 0) v := by
-  dsimp [constSimplex0, singularSimplexAsContinuousMap, continuousMapAsSingularSimplex]
-  exact Equiv.apply_symm_apply _ _
+  exact singularSimplexAsContinuousMap_continuousMapAsSingularSimplex _ _ _
 
 theorem coneSimplex_face_zero (n k : ℕ) (v : Delta n)
     (σ : singularSimplices (TopCat.of (Delta n)) k) :
