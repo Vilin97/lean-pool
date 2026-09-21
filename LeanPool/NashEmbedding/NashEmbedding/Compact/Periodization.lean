@@ -39,7 +39,8 @@ All leaves were proved by Aristotle (project bf61e09c, 2026-08-30).
 open scoped BigOperators ContDiff Manifold Topology
 open Matrix NashEmbedding.Sobolev Set
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

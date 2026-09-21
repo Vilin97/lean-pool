@@ -64,7 +64,8 @@ on ℝⁿ to the momentum-side Sobolev structures of `DistributionSobolev`.
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -86,9 +87,9 @@ def periodicExtension (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (x : Fin n → �
 -/
 lemma periodicExtension_isPeriodic2Pi (φ : (Fin n → ℝ) → ℂ) :
     IsPeriodic2Pi (periodicExtension n φ) := by
-  unfold periodicExtension; intro x k; symm; simp? +decide [ IsPeriodic2Pi, periodicShift ] ;
+  unfold periodicExtension; intro x k; symm; simp +decide only ;
   rw [ ← Equiv.tsum_eq ( Equiv.addLeft k ) ]; simp +decide only [Equiv.coe_addLeft]; ring;
-  unfold periodicShift; congr; ext; simp? +decide [ add_assoc ] ;
+  unfold periodicShift; congr; ext; simp +decide only [Pi.add_apply, Int.cast_add, add_assoc] ;
   exact congr_arg _ ( by ext; simp +decide [ mul_add ] )
 
 /-
@@ -275,9 +276,9 @@ lemma fderiv_mul_fourierExp_single {g : (Fin n → ℝ) → ℂ} (hg : ContDiff 
 /-! ## Integration by parts on the period cube -/
 
 /-- The shift by `2π` in the `j`-th slot of `insertNth`. -/
-lemma insertNth_two_pi_eq {k : ℕ} (j : Fin (k+1)) (x : Fin k → ℝ) :
-    (j.insertNth (2 * π) x : Fin (k+1) → ℝ)
-      = j.insertNth 0 x + periodicShift (k+1) (Pi.single j 1) := by
+lemma insertNth_two_pi_eq {k : ℕ} (j : Fin (k + 1)) (x : Fin k → ℝ) :
+    (j.insertNth (2 * π) x : Fin (k + 1) → ℝ)
+      = j.insertNth 0 x + periodicShift (k + 1) (Pi.single j 1) := by
   funext i
   refine Fin.succAboveCases j ?_ ?_ i
   · simp [periodicShift]
@@ -286,32 +287,32 @@ lemma insertNth_two_pi_eq {k : ℕ} (j : Fin (k+1)) (x : Fin k → ℝ) :
 
 /-- **Integration by parts on the period cube.** For smooth `2πℤⁿ`-periodic `g`,
 `∫ ∂ⱼg · e_c = -(i cⱼ) ∫ g · e_c` over `[0,2π]ⁿ`. -/
-theorem integral_partialDeriv_mul_fourierExp {k : ℕ} {g : (Fin (k+1) → ℝ) → ℂ}
-    (hg : ContDiff ℝ ∞ g) (hper : IsPeriodic2Pi g) (c : Fin (k+1) → ℤ) (j : Fin (k+1)) :
-    ∫ θ in Set.Icc (0 : Fin (k+1) → ℝ) (2 * π • (1 : Fin (k+1) → ℝ)),
-        partialDeriv j g θ * fourierExp (k+1) c θ
+theorem integral_partialDeriv_mul_fourierExp {k : ℕ} {g : (Fin (k + 1) → ℝ) → ℂ}
+    (hg : ContDiff ℝ ∞ g) (hper : IsPeriodic2Pi g) (c : Fin (k + 1) → ℤ) (j : Fin (k + 1)) :
+    ∫ θ in Set.Icc (0 : Fin (k + 1) → ℝ) (2 * π • (1 : Fin (k + 1) → ℝ)),
+        partialDeriv j g θ * fourierExp (k + 1) c θ
       = -(Complex.I * (c j : ℂ)) *
-        ∫ θ in Set.Icc (0 : Fin (k+1) → ℝ) (2 * π • (1 : Fin (k+1) → ℝ)),
-          g θ * fourierExp (k+1) c θ := by
-  set P : (Fin (k+1) → ℝ) → ℂ := fun θ => g θ * fourierExp (k+1) c θ with hP
+        ∫ θ in Set.Icc (0 : Fin (k + 1) → ℝ) (2 * π • (1 : Fin (k + 1) → ℝ)),
+          g θ * fourierExp (k + 1) c θ := by
+  set P : (Fin (k + 1) → ℝ) → ℂ := fun θ => g θ * fourierExp (k + 1) c θ with hP
   have hPsmooth : ContDiff ℝ ∞ P := hg.mul (fourierExp_contDiff c)
   have hPper : IsPeriodic2Pi P := fun x l => by
     simp only [hP, hper x l, fourierExp_isPeriodic2Pi c x l]
-  set F : (Fin (k+1) → ℝ) → (Fin (k+1) → ℂ) :=
-    fun θ => ContinuousLinearMap.single ℝ (fun _ : Fin (k+1) => ℂ) j (P θ) with hF
-  set F' : (Fin (k+1) → ℝ) → ((Fin (k+1) → ℝ) →L[ℝ] (Fin (k+1) → ℂ)) :=
-    fun θ => (ContinuousLinearMap.single ℝ (fun _ : Fin (k+1) => ℂ) j).comp (fderiv ℝ P θ)
+  set F : (Fin (k + 1) → ℝ) → (Fin (k + 1) → ℂ) :=
+    fun θ => ContinuousLinearMap.single ℝ (fun _ : Fin (k + 1) => ℂ) j (P θ) with hF
+  set F' : (Fin (k + 1) → ℝ) → ((Fin (k + 1) → ℝ) →L[ℝ] (Fin (k + 1) → ℂ)) :=
+    fun θ => (ContinuousLinearMap.single ℝ (fun _ : Fin (k + 1) => ℂ) j).comp (fderiv ℝ P θ)
     with hF'
   have hFc : Continuous F :=
-    (ContinuousLinearMap.single ℝ (fun _ : Fin (k+1) => ℂ) j).continuous.comp hPsmooth.continuous
+    (ContinuousLinearMap.single ℝ (fun _ : Fin (k + 1) => ℂ) j).continuous.comp hPsmooth.continuous
   have hFd : ∀ θ, HasFDerivAt F (F' θ) θ := by
     intro θ
     have h1 : HasFDerivAt P (fderiv ℝ P θ) θ :=
       (hPsmooth.differentiable infty_ne_zero θ).hasFDerivAt
-    exact (ContinuousLinearMap.single ℝ (fun _ : Fin (k+1) => ℂ) j).hasFDerivAt.comp θ h1
+    exact (ContinuousLinearMap.single ℝ (fun _ : Fin (k + 1) => ℂ) j).hasFDerivAt.comp θ h1
   have hdiv : ∀ θ, ∑ i, F' θ (Pi.single i 1) i
-      = partialDeriv j g θ * fourierExp (k+1) c θ
-        + g θ * (Complex.I * (c j : ℂ) * fourierExp (k+1) c θ) := by
+      = partialDeriv j g θ * fourierExp (k + 1) c θ
+        + g θ * (Complex.I * (c j : ℂ) * fourierExp (k + 1) c θ) := by
     intro θ
     rw [← fderiv_mul_fourierExp_single hg c θ j]
     simp only [hF', ContinuousLinearMap.comp_apply, ContinuousLinearMap.single_apply]
@@ -320,32 +321,32 @@ theorem integral_partialDeriv_mul_fourierExp {k : ℕ} {g : (Fin (k+1) → ℝ) 
     · intro i _ hij
       simp [Pi.single_eq_of_ne hij]
     · simp
-  have hle : (0 : Fin (k+1) → ℝ) ≤ 2 * π • (1 : Fin (k+1) → ℝ) := by
+  have hle : (0 : Fin (k + 1) → ℝ) ≤ 2 * π • (1 : Fin (k + 1) → ℝ) := by
     intro i
-    simp only [Pi.zero_apply, Pi.mul_apply, Pi.ofNat_apply, Pi.smul_apply, Pi.one_apply,
+    simp only [ Pi.mul_apply, Pi.ofNat_apply, Pi.smul_apply,
       smul_eq_mul, mul_one, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left]
     positivity
-  have hAc : Continuous (fun θ => partialDeriv j g θ * fourierExp (k+1) c θ) :=
+  have hAc : Continuous (fun θ => partialDeriv j g θ * fourierExp (k + 1) c θ) :=
     (partialDeriv_contDiff hg j).continuous.mul (fourierExp_contDiff c).continuous
-  have hBc : Continuous (fun θ => g θ * (Complex.I * (c j : ℂ) * fourierExp (k+1) c θ)) :=
+  have hBc : Continuous (fun θ => g θ * (Complex.I * (c j : ℂ) * fourierExp (k + 1) c θ)) :=
     hg.continuous.mul (continuous_const.mul (fourierExp_contDiff c).continuous)
   have hint : IntegrableOn (fun θ => ∑ i, F' θ (Pi.single i 1) i)
-      (Set.Icc (0 : Fin (k+1) → ℝ) (2 * π • (1 : Fin (k+1) → ℝ))) := by
+      (Set.Icc (0 : Fin (k + 1) → ℝ) (2 * π • (1 : Fin (k + 1) → ℝ))) := by
     apply ContinuousOn.integrableOn_compact isCompact_Icc
     refine Continuous.continuousOn ?_
     rw [show (fun θ => ∑ i, F' θ (Pi.single i 1) i)
-        = fun θ => partialDeriv j g θ * fourierExp (k+1) c θ
-          + g θ * (Complex.I * (c j : ℂ) * fourierExp (k+1) c θ) from funext hdiv]
+        = fun θ => partialDeriv j g θ * fourierExp (k + 1) c θ
+          + g θ * (Complex.I * (c j : ℂ) * fourierExp (k + 1) c θ) from funext hdiv]
     exact hAc.add hBc
-  have key := integral_divergence_of_hasFDerivAt_off_countable (0 : Fin (k+1) → ℝ)
-    (2 * π • (1 : Fin (k+1) → ℝ)) hle F F' ∅ Set.countable_empty hFc.continuousOn
+  have key := integral_divergence_of_hasFDerivAt_off_countable (0 : Fin (k + 1) → ℝ)
+    (2 * π • (1 : Fin (k + 1) → ℝ)) hle F F' ∅ Set.countable_empty hFc.continuousOn
     (fun θ _ => hFd θ) hint
   -- the boundary terms vanish by periodicity
-  have hface : ∀ i : Fin (k+1), ∀ x : Fin k → ℝ,
-      F (i.insertNth ((2 * π • (1 : Fin (k+1) → ℝ)) i) x) i
-        = F (i.insertNth ((0 : Fin (k+1) → ℝ) i) x) i := by
+  have hface : ∀ i : Fin (k + 1), ∀ x : Fin k → ℝ,
+      F (i.insertNth ((2 * π • (1 : Fin (k + 1) → ℝ)) i) x) i
+        = F (i.insertNth ((0 : Fin (k + 1) → ℝ) i) x) i := by
     intro i x
-    have h2 : ((2 : Fin (k+1) → ℝ) * π • (1 : Fin (k+1) → ℝ)) i = 2 * π := by simp
+    have h2 : ((2 : Fin (k + 1) → ℝ) * π • (1 : Fin (k + 1) → ℝ)) i = 2 * π := by simp
     simp only [hF, ContinuousLinearMap.single_apply, h2, Pi.zero_apply]
     by_cases hij : i = j
     · subst hij
@@ -358,11 +359,11 @@ theorem integral_partialDeriv_mul_fourierExp {k : ℕ} {g : (Fin (k+1) → ℝ) 
   simp only [hdiv] at key
   rw [integral_add (hAc.continuousOn.integrableOn_compact isCompact_Icc)
     (hBc.continuousOn.integrableOn_compact isCompact_Icc)] at key
-  have hB' : ∫ θ in Set.Icc (0 : Fin (k+1) → ℝ) (2 * π • (1 : Fin (k+1) → ℝ)),
-        g θ * (Complex.I * (c j : ℂ) * fourierExp (k+1) c θ)
+  have hB' : ∫ θ in Set.Icc (0 : Fin (k + 1) → ℝ) (2 * π • (1 : Fin (k + 1) → ℝ)),
+        g θ * (Complex.I * (c j : ℂ) * fourierExp (k + 1) c θ)
       = (Complex.I * (c j : ℂ)) *
-        ∫ θ in Set.Icc (0 : Fin (k+1) → ℝ) (2 * π • (1 : Fin (k+1) → ℝ)),
-          g θ * fourierExp (k+1) c θ := by
+        ∫ θ in Set.Icc (0 : Fin (k + 1) → ℝ) (2 * π • (1 : Fin (k + 1) → ℝ)),
+          g θ * fourierExp (k + 1) c θ := by
     rw [← integral_const_mul]
     congr 1
     funext θ

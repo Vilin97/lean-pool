@@ -26,7 +26,8 @@ and stability under perturbation.
 open scoped BigOperators ContDiff
 open Matrix NashEmbedding.Sobolev
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 
@@ -48,7 +49,6 @@ theorem realizable_sum {n : ℕ}
     (h₁ : IsRealizable g₁) (h₂ : IsRealizable g₂) :
     IsRealizable (g₁ + g₂) := by
       obtain ⟨ N₁, u₁, hsp₁, hreal₁ ⟩ := h₁
-
       obtain ⟨ N₂, u₂, hsp₂, hreal₂ ⟩ := h₂;
       refine ⟨ N₁ + N₂, fun x => Fin.append ( u₁ x ) ( u₂ x ), ?_, ?_ ⟩;
       · constructor;
@@ -99,15 +99,16 @@ theorem realizable_nonneg_smul {n : ℕ}
       · exact ⟨ by
         simpa using hsp.smooth.const_smul ( Real.sqrt t ), fun x k => by
         simp +decide [ hsp.periodic x k ] ⟩;
-      · intro x i j; simp +decide [ Realizes, dotProduct, Finset.mul_sum _ _ _, mul_assoc,
-          mul_left_comm, mul_comm, ht ];
+      · intro x i j; simp +decide [  dotProduct ];
         -- By definition of partial derivative, we have:
         have h_partial_deriv : ∀ i x, partialDeriv i (fun x => Real.sqrt t • u x) x = Real.sqrt
             t • partialDeriv i u x := by
           unfold partialDeriv;
-          intro i x; erw [ fderiv_pi ] ; norm_num [ hsp.smooth.contDiffAt.differentiableAt ] ;
-          · ext j; erw [ fderiv_mul ] <;> norm_num [ hsp.smooth.contDiffAt.differentiableAt ] ;
-            · rw [ fderiv_pi ]; aesop;
+          intro i x; erw [ fderiv_pi ]
+          · norm_num [ hsp.smooth.contDiffAt.differentiableAt ]
+            ext j; erw [ fderiv_mul ] <;> norm_num [ hsp.smooth.contDiffAt.differentiableAt ] ;
+            · rw [ fderiv_pi ]
+              · aesop
               exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
                 hsp.smooth.contDiffAt.differentiableAt ( by
                 norm_num ) ) i ) ( differentiableAt_id );
@@ -117,9 +118,9 @@ theorem realizable_nonneg_smul {n : ℕ}
           · exact fun i => DifferentiableAt.mul ( differentiableAt_const _ ) (
             differentiableAt_pi.1 ( hsp.smooth.contDiffAt.differentiableAt ( by
             norm_num ) ) i );
-        simp_all +decide [ Realizes, dotProduct, Finset.mul_sum _ _ _, mul_assoc, mul_left_comm,
-            mul_comm, ht ];
-        simp +decide only [← mul_assoc, Real.mul_self_sqrt ht, ← hreal, Finset.mul_sum _ _ _]
+        simp_all +decide [ Realizes, dotProduct,  mul_assoc, mul_left_comm,
+            mul_comm ];
+        simp +decide only [← mul_assoc,  ← hreal, Finset.mul_sum _ _ _]
 
 /-
 (iii) Translation: if `g` is realizable and `y ∈ ℝⁿ`, then `τ_y g` is realizable.
@@ -155,7 +156,8 @@ theorem realizable_finComb {n M : ℕ}
     simp only [Finset.univ_eq_empty, Finset.sum_empty]
     use 0
     use fun _ => 0
-    simp? [Realizes]
+    simp only [zero_empty, Realizes, dotProduct_of_isEmpty, Pi.zero_apply, Matrix.zero_apply,
+      implies_true, and_true]
     constructor <;> norm_num [IsPeriodic2Pi]
     exact contDiff_const
   | succ M ih =>
@@ -194,8 +196,8 @@ theorem injRealizable_posDef {n : ℕ}
             funext fun x => (hu' x i j).symm
           rw [eq]
           exact h_smooth i j
-        · intro x k; ext i j; have := hu.smoothPeriodic.periodic x k; simp_all? +decide [
-            Realizes ];
+        · intro x k; ext i j; have := hu.smoothPeriodic.periodic x k; simp_all +decide only
+          [Realizes];
           rw [ ← hu' ( x + periodicShift n k ) i j, ← hu' x i j ];
           have h_periodic_deriv : ∀ i, fderiv ℝ u (x + periodicShift n k) (Pi.single i 1) =
               fderiv ℝ u x (Pi.single i 1) := by
@@ -233,7 +235,7 @@ theorem injRealizable_posDef {n : ℕ}
               i u x k ) ) ( Finset.mem_univ k ) );
         constructor;
         · ext i j; have := hu' x i j; have := hu' x j i; simp_all +decide [ dotProduct, mul_comm ] ;
-        · intro v hv; specialize h_pos_def v; simp_all +decide [ Finsupp.sum_fintype, mul_assoc,
+        · intro v hv; specialize h_pos_def v; simp_all +decide [ Finsupp.sum_fintype,
             mul_comm, mul_left_comm ];
 
 /-
@@ -267,7 +269,7 @@ lemma linearIndependent_of_append_proj {n N₁ N₂ : ℕ}
     (hli : LinearIndependent ℝ f₁) :
     LinearIndependent ℝ (fun i => Fin.append (f₁ i) (f₂ i)) := by
       convert Fintype.linearIndependent_iff.mpr _;
-      exact Fin.fintype n;
+      · exact Fin.fintype n
       intro g hg i;
       rw [ Fintype.linearIndependent_iff ] at hli;
       exact hli g ( by ext j; simpa using congr_fun hg ( Fin.castAdd N₂ j ) ) i
@@ -286,11 +288,13 @@ lemma partialDeriv_concat {n N₁ N₂ : ℕ}
       · ext j;
         refine Fin.addCases ?_ ?_ j <;> simp +decide only [Fin.append,
           ContinuousLinearMap.coe_pi', Fin.addCases_left, Fin.addCases_right];
-        · intro k; rw [ fderiv_pi ] ; aesop;
+        · intro k; rw [ fderiv_pi ]
+          · aesop
           exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
             hd₁.contDiffAt.differentiableAt ( by
             norm_num ) ) i ) ( differentiableAt_id );
-        · intro k; rw [ fderiv_pi ] ; aesop;
+        · intro k; rw [ fderiv_pi ]
+          · aesop
           exact fun i => DifferentiableAt.comp x ( differentiableAt_pi.1 (
             hd₂.contDiffAt.differentiableAt ( by
             norm_num ) ) i ) ( differentiableAt_id );
@@ -321,9 +325,10 @@ theorem injRealizable_promotion {n : ℕ}
           have := hsp₂.smooth;
           rw [ contDiff_pi ] at *;
           intro i; refine Fin.addCases ?_ ?_ i <;> simp +decide [ * ] ;
-        · intro x k; simp? +decide [ hsp₁.periodic, hsp₂.periodic ] ;
+        · intro x k; simp +decide only ;
           rw [ hsp₁.periodic, hsp₂.periodic ];
-      · intro x y hxy; specialize hinj₁ x y; simp_all? +decide [ funext_iff, Fin.append ] ;
+      · intro x y hxy; specialize hinj₁ x y; simp_all +decide only [funext_iff, Pi.sub_apply,
+        Fin.append];
         exact hinj₁ fun i => by simpa using hxy ( Fin.castAdd N₂ i );
       · intro x;
         convert linearIndependent_of_append_proj ( hfr₁ x ) using 1;
@@ -382,13 +387,14 @@ theorem flatTorusEmb_isInjectiveEmbedding {n : ℕ} :
               linarith [ Fin.is_lt i ] ) ) using 1 <;> norm_num [ flatTorusEmb ]
           have h_sin : Real.sin (x i) = Real.sin (y i) := by
             have := congr_fun hxy ⟨ 2 * i + 1, by
-              linarith [ Fin.is_lt i ] ⟩; simp_all? +decide [ flatTorusEmb ];
+              linarith [ Fin.is_lt i ] ⟩; simp_all +decide only [flatTorusEmb,
+                Nat.mul_add_mod_self_left, Nat.mod_succ, one_ne_zero, ↓reduceIte];
             convert this using 2 <;> norm_num [ Nat.add_div ]
           exact ⟨h_cos, h_sin⟩
         have h_eq : ∀ i : Fin n, ∃ k : ℤ, x i - y i = 2 * Real.pi * k := by
           intro i
           have h_eq : Real.cos (x i - y i) = 1 ∧ Real.sin (x i - y i) = 0 := by
-            simp_all? +decide [ Real.cos_sub, Real.sin_sub ];
+            simp_all +decide only [Real.cos_sub, Real.sin_sub];
             exact ⟨ by rw [ ← sq, ← sq, Real.cos_sq_add_sin_sq ], by ring ⟩
           generalize_proofs at *;
           rw [ Real.cos_eq_one_iff, Real.sin_eq_zero_iff ] at h_eq; obtain ⟨ k₁, hk₁ ⟩ :=
@@ -421,7 +427,7 @@ theorem flatTorusEmb_isInjectiveEmbedding {n : ℕ} :
                 split_ifs <;> [ exact DifferentiableAt.cos ( differentiableAt_pi.1
                     differentiableAt_id _ ); exact DifferentiableAt.sin ( differentiableAt_pi.1
                     differentiableAt_id _ ) ];
-              · intro j; by_cases h : j = i <;> simp +decide [ h, Pi.single_apply ] ;
+              · intro j; by_cases h : j = i <;> simp +decide [ h ] ;
             generalize_proofs at *;
             split_ifs <;> simp_all +decide [ flatTorusEmb ];
             · norm_num [ Real.cos_add ];
@@ -440,11 +446,10 @@ theorem flatTorusEmb_isInjectiveEmbedding {n : ℕ} :
         refine Fintype.linearIndependent_iff.2 ?_;
         intro g hg i; have := congr_fun hg ⟨ 2 * i, by
           linarith [ Fin.is_lt i ] ⟩; have := congr_fun hg ⟨ 2 * i + 1, by
-          linarith [ Fin.is_lt i ] ⟩; simp_all +decide [ Finset.sum_ite, Finset.filter_eq',
-            Finset.filter_ne' ];
+          linarith [ Fin.is_lt i ] ⟩; simp_all +decide [ Finset.sum_ite ];
         simp_all +decide [ Finset.sum_filter, Fin.val_inj ];
-        simp_all +decide [ Finset.sum_ite, Fin.val_inj, ne_of_apply_ne ( fun x => x % 2 ),
-            Nat.add_mod, Nat.mul_mod ];
+        simp_all +decide [   ne_of_apply_ne ( fun x => x % 2 ),
+            Nat.add_mod ];
         cases this <;> cases ‹g i = 0 ∨ Real.sin ( x i ) = 0› <;> nlinarith [
             Real.sin_sq_add_cos_sq ( x i ) ]
 
@@ -564,8 +569,9 @@ theorem posDefSmoothMetric_stability {n : ℕ}
                 [gt_iff_lt];
               convert this ( show ( Finsupp.equivFunOnFinite.symm v ) ≠ 0 from by
                 simpa [ Finsupp.ext_iff, funext_iff ] using hv ) using 1
-              · simp? +decide [ dotProduct, Matrix.mulVec, Finsupp.sum_fintype, Finset.mul_sum,
-                  Finset.sum_mul, mul_assoc, mul_comm ]
+              · simp +decide only [dotProduct, mulVec, Finset.mul_sum, star_trivial, mul_comm,
+                mul_zero, implies_true, Finsupp.sum_fintype,
+                Finsupp.equivFunOnFinite_symm_apply_apply, Finset.sum_const_zero]
                 exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
             -- By definition of $IsPosDefSmoothMetric$, $g(x)$ is positive definite
             -- for all $x$, so we can apply the continuity of the quadratic form.
@@ -580,7 +586,9 @@ theorem posDefSmoothMetric_stability {n : ℕ}
               · aesop;
             by_cases hn : n = 0;
             · subst hn; exact ⟨ 1, by norm_num, by simp +decide [ funext_iff ] ⟩ ;
-            · -- By definition of $IsPosDefSmoothMetric$, $g(x)$ is positive definite for all $x$, so we can apply the extreme value theorem to the continuous function on the compact set.
+            · -- By definition of $IsPosDefSmoothMetric$, $g(x)$ is positive definite for all $x$,
+              -- so we can apply the extreme value theorem to the continuous function on the
+              -- compact set.
               obtain ⟨K, hK⟩ : ∃ K > 0, ∀ p ∈ Set.Icc (0 : Fin n → ℝ) (fun _ => 2 * Real.pi) ×ˢ
                   {v : Fin n → ℝ | ‖v‖ = 1}, K ≤ dotProduct p.2 (Matrix.mulVec (g p.1) p.2) /
                   ‖p.2‖ ^ 2 := by
@@ -612,14 +620,16 @@ theorem posDefSmoothMetric_stability {n : ℕ}
                 simp +decide only [Set.mem_ofPred_eq, norm_smul, norm_inv, norm_norm, ne_eq,
                   norm_eq_zero, hv, not_false_eq_true, inv_mul_cancel₀] ⟩;
                   simp_all +decide only [ge_iff_le];
-              simp_all? +decide [ Matrix.mulVec_smul, dotProduct_smul, mul_assoc, mul_comm,
-                  mul_left_comm, sq, norm_smul ];
+              simp_all +decide only [mul_comm, Set.mem_Icc, ne_eq, and_imp, sq, gt_iff_lt,
+                Set.mem_prod, Set.mem_ofPred_eq,   Prod.forall, mulVec_smul,
+                dotProduct_smul, smul_dotProduct, smul_eq_mul, mul_left_comm, norm_smul, norm_inv,
+                norm_norm];
               convert mul_le_mul_of_nonneg_right this ( mul_self_nonneg ‖v‖ ) using 1
               · have hn : ‖v‖ ≠ 0 := norm_ne_zero_iff.mpr hv
                 field_simp
           obtain ⟨ K, hK₀, hK ⟩ := h_compact; use K, hK₀; intro x v hv; specialize hK ( fun i =>
-              x i - ⌊x i / ( 2 * Real.pi ) ⌋ * ( 2 * Real.pi ) ) ?_ v hv <;> simp_all? +decide
-                [Set.mem_Icc];
+              x i - ⌊x i / ( 2 * Real.pi ) ⌋ * ( 2 * Real.pi ) ) ?_ v hv <;> simp_all +decide
+                only [gt_iff_lt, Set.mem_Icc, ne_eq, and_imp];
           · constructor
             · intro i
               apply sub_nonneg.2
@@ -629,11 +639,11 @@ theorem posDefSmoothMetric_stability {n : ℕ}
               apply sub_le_iff_le_add'.2
               nlinarith [Int.lt_floor_add_one (x i / (2 * Real.pi)), Real.pi_pos,
                 mul_div_cancel₀ (x i) (by positivity : (2 * Real.pi) ≠ 0)]
-          · have := hg.smoothPeriodic.2; simp_all +decide [ IsPeriodic2Pi ] ;
+          · have := hg.smoothPeriodic.2; simp_all +decide only [IsPeriodic2Pi, ge_iff_le] ;
             convert hK using 3;
             rw [ ← this ];
             swap;
-            exact fun i => -⌊x i / ( 2 * Real.pi ) ⌋;
+            · exact fun i => -⌊x i / ( 2 * Real.pi ) ⌋
             unfold periodicShift; norm_num [ sub_eq_add_neg ] ;
             congr 1
             ext i

@@ -31,10 +31,11 @@ Proof shape:
 3. the abstract iteration (`GuntherIteration.lean`) gives a fixed point `v∞` in every `H^k`,
    with `conjReflect`-fixed (real) components, when `4 ‖c‖²_(r) ≤ ρ`, i.e. when `h` is small;
 4. the synthesis `V = vsynth v∞` is smooth periodic, and taking coefficients of the
-   position-space expression `-∑ᵢ F̃ᵢ Dᵢ + ∑_{p≤q} ½(Ũ_{pq} - h_{pq}) D_{pq}` shows `V` equals it;
-5. the dual-frame relations turn this into the ansatz `V·∂ᵢu₀ = -F̃ᵢ`,
-   `V·∂ᵢ∂ⱼu₀ = ½(Ũᵢⱼ - hᵢⱼ)`; the transported Günther identity gives
-   `∂ᵢV·∂ⱼV = ∂ᵢF̃ⱼ + ∂ⱼF̃ᵢ + Ũᵢⱼ`; the product rule finishes.
+   position-space expression `-∑ᵢ F_tildeᵢ Dᵢ + ∑_{p≤q} ½(U_tilde_{pq} - h_{pq}) D_{pq}` shows
+     `V` equals it;
+5. the dual-frame relations turn this into the ansatz `V·∂ᵢu₀ = -F_tildeᵢ`,
+   `V·∂ᵢ∂ⱼu₀ = ½(U_tildeᵢⱼ - hᵢⱼ)`; the transported Günther identity gives
+   `∂ᵢV·∂ⱼV = ∂ᵢF_tildeⱼ + ∂ⱼF_tildeᵢ + U_tildeᵢⱼ`; the product rule finishes.
 
 ## Main statements
 
@@ -44,7 +45,8 @@ Proof shape:
 open scoped BigOperators ContDiff
 open Filter Topology NashEmbedding.Sobolev Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 
@@ -138,8 +140,8 @@ lemma bData_smooth (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu
       simp [hh.periodic x k]
     exact isRapidDecay_stdFourierCoeff hn hs hp k
 
-lemma bData_real {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u₀)
-    (hfree : IsFree u₀) {h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ} (hh : SmoothPeriodic h) :
+lemma bData_real {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} {h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ}
+  (hh : SmoothPeriodic h) :
     (bData n u₀ h).Real where
   a_real i := vcoeff_vreal
   b_real p q := vcoeff_vreal
@@ -441,13 +443,14 @@ private lemma isPeriodic2Pi_const_mul {f : (Fin n → ℝ) → ℂ} (hf : IsPeri
   change c * f (x + periodicShift n k) = c * f x
   rw [hf x k]
 
-/-- The position-space `F̃ᵢ`. -/
+/-- The position-space `F_tildeᵢ`. -/
 def Ftil (n : ℕ) (v : VecSeq n N) (i : Fin n) : (Fin n → ℝ) → ℝ := ssynth n (Fb i v v)
 
-/-- The position-space `Ũᵢⱼ`. -/
+/-- The position-space `U_tildeᵢⱼ`. -/
 def Util (n : ℕ) (v : VecSeq n N) (i j : Fin n) : (Fin n → ℝ) → ℝ := ssynth n (Ub i j v v)
 
-/-- The position-space right-hand side `W = -∑ᵢ F̃ᵢ Dᵢ + ∑_{p≤q} ½(Ũ_{pq} - h_{pq}) D_{pq}`. -/
+/-- The position-space right-hand side `W = -∑ᵢ F_tildeᵢ Dᵢ + ∑_{p≤q} ½(U_tilde_{pq} - h_{pq})
+D_{pq}`. -/
 def Wfun (n : ℕ) (u₀ : (Fin n → ℝ) → (Fin N → ℝ)) (h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ)
     (v : VecSeq n N) : (Fin n → ℝ) → (Fin N → ℝ) :=
   fun x => -(∑ i, Ftil n v i x • dualA u₀ i x)
@@ -461,17 +464,17 @@ lemma Util_smoothPeriodic (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v)
     (i j : Fin n) : SmoothPeriodic (Util n v i j) :=
   ssynth_smoothPeriodic hn (isRapidDecay_Ub hn hv i j)
 
-/-- The coefficients of `F̃ᵢ` are `Fb i v v`. -/
+/-- The coefficients of `F_tildeᵢ` are `Fb i v v`. -/
 private lemma coeff_Ftil (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (hr : VReal v)
     (i : Fin n) : stdFourierCoeff n (fun x => ((Ftil n v i x : ℝ) : ℂ)) = Fb i v v :=
   stdFourierCoeff_ssynth hn (isRapidDecay_Fb hn hv i) (conjReflect_Fb hr i)
 
-/-- The coefficients of `Ũᵢⱼ` are `Ub i j v v`. -/
+/-- The coefficients of `U_tildeᵢⱼ` are `Ub i j v v`. -/
 private lemma coeff_Util (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v) (hr : VReal v)
     (i j : Fin n) : stdFourierCoeff n (fun x => ((Util n v i j x : ℝ) : ℂ)) = Ub i j v v :=
   stdFourierCoeff_ssynth hn (isRapidDecay_Ub hn hv i j) (conjReflect_Ub hr i j)
 
-lemma Util_symm  {v : VecSeq n N}  (i j : Fin n) :
+lemma Util_symm {v : VecSeq n N} (i j : Fin n) :
     Util n v i j = Util n v j i := by
   unfold Util; rw [Ub_symm i j]
 
@@ -582,7 +585,7 @@ theorem vcoeff_Wfun (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (h
 
 lemma Wfun_smoothPeriodic (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u₀)
     (hfree : IsFree u₀) {h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ} (hh : SmoothPeriodic h)
-    {v : VecSeq n N} (hv : VRapid n N v)  :
+    {v : VecSeq n N} (hv : VRapid n N v) :
     SmoothPeriodic (Wfun n u₀ h v) := by
   have hF : ∀ i, SmoothPeriodic (Ftil n v i) := fun i => Ftil_smoothPeriodic hn hv i
   have hU : ∀ p q, SmoothPeriodic (Util n v p q) := fun p q => Util_smoothPeriodic hn hv p q
@@ -608,7 +611,7 @@ lemma Wfun_smoothPeriodic (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N → �
         rw [(hU pq.1 pq.2).periodic x k, (hB pq.1 pq.2).periodic x k, hh.periodic x k]
 
 /-- **The product identity in position space**: for `V = vsynth v`,
-`∂ᵢV · ∂ⱼV = ∂ᵢF̃ⱼ + ∂ⱼF̃ᵢ + Ũᵢⱼ`. -/
+`∂ᵢV · ∂ⱼV = ∂ᵢF_tildeⱼ + ∂ⱼF_tildeᵢ + U_tildeᵢⱼ`. -/
 theorem pderiv_dot_pderiv_vsynth (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N v)
     (hr : VReal v) (i j : Fin n) (x : Fin n → ℝ) :
     pderiv i (vsynth n v) x ⬝ᵥ pderiv j (vsynth n v) x
@@ -661,7 +664,7 @@ theorem pderiv_dot_pderiv_vsynth (hn : 0 < n) {v : VecSeq n N} (hv : VRapid n N 
 
 /-! ## The ansatz from the dual frame -/
 
-/-- `W · ∂ᵢu₀ = -F̃ᵢ`. -/
+/-- `W · ∂ᵢu₀ = -F_tildeᵢ`. -/
 lemma Wfun_dot_pderiv {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hfree : IsFree u₀)
     (h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) (v : VecSeq n N) (i : Fin n) (x : Fin n → ℝ) :
     Wfun n u₀ h v x ⬝ᵥ pderiv i u₀ x = -Ftil n v i x := by
@@ -680,7 +683,7 @@ lemma Wfun_dot_pderiv {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hfree : IsFr
     Finset.mem_univ, ite_true]
   rw [Finset.sum_eq_zero (fun pq hpq => by rw [hB pq hpq, mul_zero]), add_zero]
 
-/-- `W · ∂ₚ∂_q u₀ = ½(Ũ_{pq} - h_{pq})` for `p ≤ q`. -/
+/-- `W · ∂ₚ∂_q u₀ = ½(U_tilde_{pq} - h_{pq})` for `p ≤ q`. -/
 lemma Wfun_dot_pderiv_pderiv {u₀ : (Fin n → ℝ) → (Fin N → ℝ)} (hfree : IsFree u₀)
     (h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) (v : VecSeq n N) {p q : Fin n} (hpq : p ≤ q)
     (x : Fin n → ℝ) :
@@ -745,7 +748,7 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
   -- the data with `h`
   set d : GuntherData n N := bData n u₀ h with hd
   have hds : d.Smooth := bData_smooth hn hu hfree hh
-  have hdr : d.Real := bData_real hu hfree hh
+  have hdr : d.Real := bData_real hh
   have hIter : IterHyp n N r (gC d) (gB d) (gA n N r d) (gBTop n N r d) (gBLow n N r d) :=
     gunther_iterHyp hn hr2 d hds
   -- the constants of `d` agree with those of `d₀` (they only involve `a`, `b`)
@@ -809,7 +812,7 @@ theorem gunther_perturbation (hn : 0 < n) {u₀ : (Fin n → ℝ) → (Fin N →
   have hpr_j : pderiv j (fun y => V y ⬝ᵥ pderiv i u₀ y) x
       = pderiv j V x ⬝ᵥ pderiv i u₀ x + V x ⬝ᵥ pderiv j (pderiv i u₀) x :=
     pderiv_dotProduct hVs (pderiv_contDiff hus i) j x
-  -- `V · ∂ⱼu₀ = -F̃ⱼ` as functions, hence for their derivatives
+  -- `V · ∂ⱼu₀ = -F_tildeⱼ` as functions, hence for their derivatives
   have hfun_j : (fun y => V y ⬝ᵥ pderiv j u₀ y) = fun y => -Ftil n v j y := funext fun y =>
       hans1 j y
   have hfun_i : (fun y => V y ⬝ᵥ pderiv i u₀ y) = fun y => -Ftil n v i y := funext fun y =>

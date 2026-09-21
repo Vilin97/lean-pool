@@ -40,7 +40,8 @@ Smooth compactly supported infrastructure on ℝⁿ:
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -52,7 +53,7 @@ variable {n : ℕ}
 There exists `ψ ∈ C^∞_c(ℝⁿ; ℝ)` with `ψ ≥ 0`, `∫ ψ = 1`, and
     `supp(ψ) ⊂ (-π, π)ⁿ`.
 -/
-lemma mollifier_exists  :
+lemma mollifier_exists :
     ∃ ψ : (Fin n → ℝ) → ℝ,
       ContDiff ℝ ∞ ψ ∧
       HasCompactSupport ψ ∧
@@ -71,8 +72,8 @@ lemma mollifier_exists  :
       obtain ⟨b, hb⟩ : ∃ b : ContDiffBump (0 : (Fin n) → ℝ), b.rOut < Real.pi := by
         refine ⟨ ?_, ?_ ⟩;
         constructor;
-        exact one_half_pos;
-        exact show ( 1 / 2 : ℝ ) < 1 by norm_num;
+        · exact one_half_pos
+        · exact show (1 / 2 : ℝ) < 1 by norm_num
         linarith [ Real.pi_gt_three ];
       refine ⟨ fun x => b x, ?_, ?_, ?_, ?_, ?_ ⟩;
       · exact ContDiffBump.contDiff b;
@@ -83,11 +84,12 @@ lemma mollifier_exists  :
         have := b.support_eq;
         exact lt_of_le_of_lt ( by simpa using ( norm_le_pi_norm x j ) ) ( lt_of_lt_of_le (
             mem_ball_zero_iff.mp ( this.subset hx ) ) hb.le );
-  refine ⟨ fun x => b x / ( ∫ x, b x ), ?_, ?_, ?_, ?_, ?_, ?_ ⟩ <;> simp_all? +decide [
-      MeasureTheory.integral_div ];
+  refine ⟨ fun x => b x / ( ∫ x, b x ), ?_, ?_, ?_, ?_, ?_, ?_ ⟩ <;> simp_all +decide only
+    [gt_iff_lt, ne_eq, div_eq_zero_iff, not_or, not_false_eq_true, implies_true, integral_div,
+    div_self_eq_one₀];
   · exact hb.1.div_const _;
   · rw [ hasCompactSupport_iff_eventuallyEq ] at *;
-    filter_upwards [ hb.2.1 ] with x hx using by simp +decide [ hx, hb.2.2.2.1.ne' ];
+    filter_upwards [ hb.2.1 ] with x hx using by simp +decide [ hx ];
   · exact MeasureTheory.Integrable.div_const ( by exact ( by contrapose! hb; simp_all +decide [
       MeasureTheory.integral_undef ] ) ) _;
   · exact fun x => div_nonneg ( hb.2.2.1 x ) hb.2.2.2.1.le;
@@ -136,7 +138,7 @@ lemma rescale_support_in_cube {φ : (Fin n → ℝ) → ℂ}
 lemma ftRn_at_zero (φ : (Fin n → ℝ) → ℂ) :
     ftRn n φ 0 = ∫ y, φ y := by
   exact MeasureTheory.integral_congr_ae ( Filter.Eventually.of_forall fun x => by simp +decide [
-      ftRn ] )
+       ] )
 
 /-! ## Bridge Lemma 1: `C^∞_c ⟹ FTRapidDecay`
 

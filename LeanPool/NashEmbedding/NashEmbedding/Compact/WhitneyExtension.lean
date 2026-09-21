@@ -59,7 +59,8 @@ Aristotle (project 564db993, 2026-08-30).
 open scoped Manifold ContDiff Topology
 open Set Function
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

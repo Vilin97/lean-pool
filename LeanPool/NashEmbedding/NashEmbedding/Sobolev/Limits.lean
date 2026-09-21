@@ -36,7 +36,8 @@ iterates are bounded in every `H^k`, hence so is their coefficientwise limit.
 open scoped BigOperators
 open Filter Topology
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 

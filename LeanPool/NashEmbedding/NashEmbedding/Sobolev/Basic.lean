@@ -36,7 +36,8 @@ exponential functions eₘ.
 open scoped BigOperators ComplexConjugate ContDiff
 open Complex Real
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 

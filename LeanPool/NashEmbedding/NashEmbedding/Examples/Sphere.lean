@@ -24,7 +24,8 @@ Every unit sphere `Sⁿ ⊂ ℝⁿ⁺¹` with its round metric, and every produc
 open scoped Manifold ContDiff EuclideanSpace
 open Bundle Function Metric
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

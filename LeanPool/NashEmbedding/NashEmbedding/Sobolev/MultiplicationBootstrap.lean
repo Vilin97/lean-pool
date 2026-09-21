@@ -35,7 +35,8 @@ open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev
 
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -351,8 +352,8 @@ lemma tsum_weighted_norm_sq_le {r : ℝ} (hn : 0 < n) (hr : 1 + (n : ℝ) / 2 < 
                rw [ ← Real.rpow_add_one ( by
                  exact ne_of_gt <| add_pos_of_pos_of_nonneg zero_lt_one <| Finset.sum_nonneg fun
                    _ _ => sq_nonneg _ ) ]; ring ]; linarith))
-  simp_all? +decide [mul_pow, mul_assoc, mul_comm, mul_left_comm, tsum_mul_left,
-    tsum_mul_right, norm_mul, norm_pow];
+  simp_all +decide only [one_div, mul_comm, Complex.norm_mul, norm_real, norm_eq_abs, mul_pow,
+    sq_abs, mul_left_comm, ge_iff_le];
   convert h_apply_tsum_norm_sq_le using 3
   all_goals (first
     | rfl

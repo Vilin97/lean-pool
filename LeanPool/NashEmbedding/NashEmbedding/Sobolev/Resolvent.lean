@@ -28,7 +28,8 @@ fixed-point operator in Theorem B.
 open scoped BigOperators
 open NashEmbedding.Sobolev
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 

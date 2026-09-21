@@ -35,7 +35,8 @@ carry metrics.
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Bornology Metric
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

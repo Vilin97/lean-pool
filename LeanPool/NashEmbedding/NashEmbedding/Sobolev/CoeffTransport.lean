@@ -36,7 +36,8 @@ stated):
 open scoped BigOperators ComplexConjugate ContDiff
 open Complex
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -103,7 +104,9 @@ lemma stdFourierCoeff_finset_sum' {ι : Type*} (S : Finset ι) {f : ι → (Fin 
 /-! ## Products, derivatives, the Laplacian -/
 
 /-- **Coefficients of a product are the convolution of the coefficients** (for smooth
-periodic factors): `f = (f̂)ˇ`, `g = (ĝ)ˇ` by Fourier inversion, `f g = (f̂ ⊛ ĝ)ˇ` by B2, and
+periodic factors): `f = (f̂)_check`, `g = (ĝ)_check` by
+  Fourier inversion, `f g = (f̂ ⊛ ĝ)_check` by
+  B2, and
 the coefficients of a synthesis of a rapidly decaying sequence are that sequence. -/
 theorem stdFourierCoeff_mul (hn : 0 < n) {f g : (Fin n → ℝ) → ℂ}
     (hf : ContDiff ℝ ∞ f) (hfp : IsPeriodic2Pi f) (hg : ContDiff ℝ ∞ g) (hgp : IsPeriodic2Pi g) :

@@ -27,7 +27,8 @@ etc.).
 open scoped BigOperators
 open Complex Real MeasureTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -61,7 +62,8 @@ lemma sobolevNormSqDistrib_triangle (s : ℝ) (a b c : TrigPolyDual n)
             b - c ) m ) ];
       nlinarith [ show 0 ≤ weight n s m by exact Real.rpow_nonneg ( add_nonneg zero_le_one <|
           Finset.sum_nonneg fun _ _ => sq_nonneg _ ) _ ];
-    · -- By definition of `fourierCoeffDistrib`, we have `fourierCoeffDistrib (a - c) = fourierCoeffDistrib (a - b) + fourierCoeffDistrib (b - c)`.
+    · -- By definition of `fourierCoeffDistrib`, we have `fourierCoeffDistrib (a - c) =
+      -- fourierCoeffDistrib (a - b) + fourierCoeffDistrib (b - c)`.
       have h_fourierCoeffDistrib : fourierCoeffDistrib (a - c) = fourierCoeffDistrib (a - b) +
           fourierCoeffDistrib (b - c) := by
         ext m; simp [fourierCoeffDistrib];

@@ -29,7 +29,8 @@ proved by Aristotle (project c61ad094, 2026-08-30); `inducedMetric` packages the
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Bornology Metric
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

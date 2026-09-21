@@ -37,7 +37,8 @@ be analytic.
 open scoped ContDiff
 open NashEmbedding NashEmbedding.Sobolev
 
-noncomputable section
+noncomputable
+section
 
 namespace TorusNashTests
 

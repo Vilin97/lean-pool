@@ -40,13 +40,14 @@ from `u '' M` to a smooth matrix field on `E'`.
 Smoothness.  `T_xM` is definitionally `E`, but `x ↦ mfderiv u x` is not
 continuous as a raw map `M → (E →L E')` (the chart at `x` jumps).  Mathlib's
 invariant form is `inTangentCoordinates`: near `x₀`,
-    L̃ x := mfderiv u x ∘L S x,   S x := (trivializationAt E (TangentSpace I) x₀).symmL ℝ x,
+    L_tilde x := mfderiv u x ∘L S x,   S x := (trivializationAt E (TangentSpace I) x₀).symmL ℝ x,
 is smooth (`ContMDiffAt.mfderiv_const`), and similarly
-    g̃ x a b := g.inner x (S x a) (S x b)
+    g_tilde x a b := g.inner x (S x a) (S x b)
 is smooth (section smoothness of `g` in the trivialization at `x₀`).  Since
 `S x` is a linear isomorphism, `pinv (L ∘L S) = S⁻¹ ∘L pinv L`, so
-    G x a b = g̃ x (pinv (L̃ x) a) (pinv (L̃ x) b) + ⟪(1 - L̃ x ∘L pinv (L̃ x)) a, …⟫,
-a smooth expression in `L̃ x` and `g̃ x` (leaves L1–L4 for `pinv`).
+    G x a b = g_tilde x (pinv (L_tilde x) a) (pinv (L_tilde x) b) + ⟪(1 - L_tilde x ∘L pinv
+      (L_tilde x)) a, …⟫,
+a smooth expression in `L_tilde x` and `g_tilde x` (leaves L1–L4 for `pinv`).
 
 Leaves L1–L7 and the assembly L8 were proved by Aristotle (project 6f927eaf, 2026-08-30).
 -/
@@ -54,7 +55,8 @@ Leaves L1–L7 and the assembly L8 were proved by Aristotle (project 6f927eaf, 2
 open scoped Manifold ContDiff Topology InnerProduct
 open Set Function ContinuousLinearMap Bundle
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

@@ -27,7 +27,8 @@ If `∑ |bₘ| < ∞` and `∑ |mⱼ| |bₘ| < ∞`, then the Fourier series
 open scoped BigOperators
 open NashEmbedding.Sobolev Complex
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -102,17 +103,19 @@ theorem hasDerivAt_fourierSeries_partial
         have h_sin_bound : ∀ z : ℝ, |Real.sin z| ≤ |z| := by
           exact fun z => Real.abs_sin_le_abs;
         grind +revert;
-      filter_upwards [ self_mem_nhdsWithin ] with t ht k; simp_all +decide only [fourierExp, partialCoeff, Function.update_eq_self, Complex.norm_div, Complex.norm_mul, norm_real, Real.norm_eq_abs];
+      filter_upwards [ self_mem_nhdsWithin ] with t ht k; simp_all +decide only [fourierExp,
+        partialCoeff, Function.update_eq_self, Complex.norm_div, Complex.norm_mul, norm_real,
+        Real.norm_eq_abs];
       rw [ div_le_iff₀ ( abs_pos.mpr ht ) ];
       convert mul_le_mul_of_nonneg_left ( h_exp_diff ( ∑ x : Fin n, ( k x : ℝ ) * (
           Function.update θ j ( θ j + t ) x ) ) ( ∑ x : Fin n, ( k x : ℝ ) * ( θ x ) ) ) (
           norm_nonneg ( b k ) ) using 1; norm_num [ Finset.sum_update_of_mem ]; ring;
-      simp +decide [Finset.sum_update_of_mem, Function.update_apply]; ring;
+      simp +decide [ Function.update_apply]; ring;
       simp +decide [Finset.sum_ite, Finset.filter_eq', Finset.filter_ne']; ring;
       norm_num [ mul_assoc, mul_comm, mul_left_comm, abs_mul ];
   convert h_deriv_sum using 2;
   rw [ ← Summable.tsum_sub ];
-  · simp +decide [ div_eq_inv_mul, mul_sub, mul_assoc, mul_comm, mul_left_comm, ← tsum_mul_left ];
+  · simp +decide [ div_eq_inv_mul, mul_sub,   mul_left_comm, ← tsum_mul_left ];
   · exact Summable.of_norm <| by simpa [ norm_fourierExp ] using hb;
   · exact .of_norm <| by simpa [ norm_fourierExp ] using hb;
 

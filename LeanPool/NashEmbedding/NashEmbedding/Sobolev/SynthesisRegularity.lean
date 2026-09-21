@@ -28,11 +28,11 @@ Theorem B (Günther's perturbation theorem), whose fixed-point iteration is
 run on coefficient sequences.
 
 * **B1 (regularity).** If `a : ℤⁿ → ℂ` is rapidly decaying (lies in every
-  weighted `ℓ²_(s)`), then its Fourier synthesis `ǎ(θ) = ∑ aₘ eₘ(θ)` is
+  weighted `ℓ²_(s)`), then its Fourier synthesis `a_check(θ) = ∑ aₘ eₘ(θ)` is
   `C^∞`, `2πℤⁿ`-periodic, and its partial derivatives are the syntheses of
-  the formal derivative coefficients: `∂ⱼ ǎ = (i mⱼ aₘ)ˇ`.
+  the formal derivative coefficients: `∂ⱼ a_check = (i mⱼ aₘ)_check`.
 * **B2 (multiplicativity).** If `a, b ∈ ℓ¹(ℤⁿ)`, then the synthesis of the
-  convolution `a ∗ b` is the pointwise product `ǎ · b̌`.
+  convolution `a ∗ b` is the pointwise product `a_check · b_check`.
 
 Conventions: `fourierSynthesis n a θ = ∑' m, a m * fourierExp n m θ` with
 `fourierExp n m θ = exp(i ∑ⱼ mⱼ θⱼ)`; `partialCoeff j a m = i * mⱼ * a m`;
@@ -43,7 +43,8 @@ smoothness is `ContDiff ℝ ∞` (`open scoped ContDiff`), never `⊤`.
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Complex
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -221,7 +222,7 @@ theorem fourierSynthesis_isPeriodic2Pi {a : (Fin n → ℤ) → ℂ} :
   rw [fourierExp_isPeriodic2Pi m x k]
 
 /-- **B1 (derivatives).** Partial derivatives of the synthesis are syntheses of the
-formal derivative coefficients: `∂ⱼ ǎ = (partialCoeff j a)ˇ`. -/
+formal derivative coefficients: `∂ⱼ a_check = (partialCoeff j a)_check`. -/
 theorem partialDeriv_fourierSynthesis (hn : 0 < n) {a : (Fin n → ℤ) → ℂ}
     (ha : IsRapidDecay n a) (j : Fin n) :
     partialDeriv j (fourierSynthesis n a) = fourierSynthesis n (partialCoeff j a) := by
@@ -276,7 +277,7 @@ private lemma summable_norm_prod_shear {a b : (Fin n → ℤ) → ℂ}
     ha.mul_of_nonneg hb (fun _ => norm_nonneg _) (fun _ => norm_nonneg _)
   exact ((shearEquiv n).symm.summable_iff).mpr hmul
 
-/-- **B2.** For `a, b ∈ ℓ¹(ℤⁿ)`, `(a ∗ b)ˇ = ǎ · b̌` pointwise. -/
+/-- **B2.** For `a, b ∈ ℓ¹(ℤⁿ)`, `(a ∗ b)_check = a_check · b_check` pointwise. -/
 theorem fourierSynthesis_seqConv {a b : (Fin n → ℤ) → ℂ}
     (ha : Summable (fun m => ‖a m‖)) (hb : Summable (fun m => ‖b m‖))
     (θ : Fin n → ℝ) :

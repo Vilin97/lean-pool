@@ -49,7 +49,8 @@ proved by Aristotle (projects 564db993, 6f927eaf, bf61e09c, 7856eea9; 2026-08-30
 open scoped Manifold ContDiff Topology
 open Bundle Set Function Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 
@@ -113,9 +114,9 @@ def PullsBackEuclidean (g : ContMDiffRiemannianMetric I ∞ E (TangentSpace I : 
   `ε > 0`.) -/
 /- `ChartedSpace` on matrices over themselves, with the topology spelled two ways:
 the model side carries the norm-derived chain (as `𝓘(ℝ, Matrix …)` elaborates it),
-the manifold side the direct Pi-derived instance.  The two are definitionally equal,
+the manifold side the direct Pi-derived instance. The two are definitionally equal,
 but v4.31's `Matrix` is a `def`, so instance search needs this exact mixed shape;
-`chartedSpaceSelf` alone cannot match it.  This bridge is not a workaround for
+`chartedSpaceSelf` alone cannot match it. This bridge is not a workaround for
 our instance choices: in isolated tests the same mixed goal also defeated
 Mathlib's scoped `Matrix.Norms.Elementwise` instances (with or without
 `fast_instance%`), so the `ContMDiff _ 𝓘(ℝ, Matrix _ _ ℝ) _ _` statements in
@@ -384,7 +385,7 @@ theorem exists_ambient_metric_of_equiv {E' F : Type*} [NormedAddCommGroup E']
   Smoothness of `formMatrix ∘ G₃ : M → Matrix` is `contDiff_formMatrix.comp_contMDiff`
   applied to S3's `ContMDiff` conclusion; `hext` then needs it as `ContMDiff I 𝓘(ℝ, Matrix …)
       ∞`.) -/
-theorem exists_ambient_matrix_field {N : ℕ}  [CompactSpace M]
+theorem exists_ambient_matrix_field {N : ℕ} [CompactSpace M]
     (g : ContMDiffRiemannianMetric I ∞ E (TangentSpace I : M → Type _))
     {u : M → EuclideanSpace ℝ (Fin N)} (hu : ContMDiff I 𝓘(ℝ, EuclideanSpace ℝ (Fin N)) ∞ u)
     (hinj : ∀ x, Injective (mfderiv I 𝓘(ℝ, EuclideanSpace ℝ (Fin N)) u x))

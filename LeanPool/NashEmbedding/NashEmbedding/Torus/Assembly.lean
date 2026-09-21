@@ -33,7 +33,8 @@ Theorem B's smallness measure `hSize`, and the metric-splitting step of Wasserma
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

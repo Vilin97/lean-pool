@@ -50,7 +50,8 @@ All constants are explicit `def`s; no attempt is made to optimize them.
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 
@@ -100,7 +101,7 @@ lemma top_nonneg (r k : ℕ) (v w : VecSeq n N) : 0 ≤ top n N r k v w := by
 
 /-- For `k ≥ r`, `lower_k ≤ 3 top_k`… we only need: `‖v‖²_(r)‖w‖²_(r) ≤ top_k`. -/
 lemma vecNormSq_mul_le_top {r k : ℕ} (hk : r ≤ k) {v w : VecSeq n N}
-    (hv : VMem n N k v)  :
+    (hv : VMem n N k v) :
     vecNormSq n N r v * vecNormSq n N r w ≤ top n N r k v w := by
   unfold top
   have hrk : ((r : ℕ) : ℝ) ≤ ((k : ℕ) : ℝ) := by exact_mod_cast hk
@@ -111,7 +112,7 @@ lemma vecNormSq_mul_le_top {r k : ℕ} (hk : r ≤ k) {v w : VecSeq n N}
   nlinarith
 
 /-- Monotonicity of the lower bucket in `k` (for `r ≤ k`). -/
-lemma lower_mono {r k : ℕ}  {v w : VecSeq n N}
+lemma lower_mono {r k : ℕ} {v w : VecSeq n N}
     (hv : VMem n N (k + 1 : ℕ) v) (hw : VMem n N (k + 1 : ℕ) w) :
     lower n N r k v w ≤ lower n N r (k + 1) v w := by
   unfold lower

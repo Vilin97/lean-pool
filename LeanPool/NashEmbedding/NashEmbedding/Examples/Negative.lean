@@ -23,7 +23,8 @@ its differential is zero, so the pullback is degenerate.
 open scoped Manifold ContDiff
 open Bundle Function
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

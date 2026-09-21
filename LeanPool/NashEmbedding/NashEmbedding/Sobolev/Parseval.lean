@@ -16,8 +16,8 @@ import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Periodization
 # Parseval's identity for continuous periodic functions
 
 For `f : ℝⁿ → ℂ` continuous and `2πℤⁿ`-periodic,
-    ∑_{m ∈ ℤⁿ} |ĉ_m|² = (2π)⁻ⁿ ∫_{[0,2π]ⁿ} |f|²,
-where `ĉ_m = stdFourierCoeff n f m = (2π)⁻ⁿ ∫_{[0,2π]ⁿ} f e^{-i m·θ}`.
+    ∑_{m ∈ ℤⁿ} |c_hat_m|² = (2π)⁻ⁿ ∫_{[0,2π]ⁿ} |f|²,
+where `c_hat_m = stdFourierCoeff n f m = (2π)⁻ⁿ ∫_{[0,2π]ⁿ} f e^{-i m·θ}`.
 
 Route: `toUnitTorusCM n f` is a continuous function on Mathlib's `UnitAddTorus (Fin n)`;
 its Mathlib Fourier coefficients are `stdFourierCoeff n f` (`mFourierCoeff_toUnitTorusCM`);
@@ -29,7 +29,8 @@ cube integral.
 open scoped BigOperators
 open Real MeasureTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -98,7 +99,7 @@ theorem parseval_stdFourierCoeff {f : (Fin n → ℝ) → ℂ} (hf : Continuous 
   rw [hint, volume_unitAddTorus, integral_normSq_toUnitTorusCM hf hper] at hs
   exact hs
 
-/-- Parseval in one variable: `∑ m, ‖ĉ_m‖² = (2π)⁻¹ ∫_{[0,2π]} ‖f‖²`. -/
+/-- Parseval in one variable: `∑ m, ‖c_hat_m‖² = (2π)⁻¹ ∫_{[0,2π]} ‖f‖²`. -/
 theorem parseval_stdFourierCoeff_one {f : (Fin 1 → ℝ) → ℂ} (hf : Continuous f)
     (hper : IsPeriodic2Pi f) :
     HasSum (fun m : Fin 1 → ℤ => ‖stdFourierCoeff 1 f m‖ ^ 2)

@@ -36,7 +36,8 @@ target so that scalar and vector-valued maps are handled uniformly;
 open scoped BigOperators ContDiff Matrix
 open Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

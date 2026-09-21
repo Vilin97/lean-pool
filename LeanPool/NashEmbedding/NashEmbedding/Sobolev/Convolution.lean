@@ -41,7 +41,8 @@ open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev MeasureTheory
 
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -73,7 +74,7 @@ lemma continuous_ftRn (φ : (Fin n → ℝ) → ℂ) (hφ : Integrable φ) :
       refine continuous_iff_continuousAt.mpr ?_;
       intro ξ;
       refine MeasureTheory.tendsto_integral_filter_of_dominated_convergence ?_ ?_ ?_ ?_ ?_;
-      refine fun x => ‖φ x‖;
+      · exact fun x => ‖φ x‖
       · exact Filter.Eventually.of_forall fun x => hφ.1.mul ( Continuous.aestronglyMeasurable (
           by continuity ) );
       · norm_num [ Complex.norm_exp ];
@@ -201,7 +202,7 @@ theorem mollifier_convergence (φ : (Fin n → ℝ) → ℂ)
         all_goals try first
         | rfl
         | (simp only [ tsum_zero ])
-        case hsum => convert hu.mul_left ( ( 2 * ∫ y, ‖φ y‖ ) ^ 2 ) using 2 <;> first | rfl | ring
+        case hsum => convert hu.mul_left ( ( 2 * ∫ y, ‖φ y‖ ) ^ 2 ) using 2; first | rfl | ring
         case hab =>
           intro m;
           -- By definition of $fourierCoeffDistrib$, we know that

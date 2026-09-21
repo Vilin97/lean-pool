@@ -32,7 +32,8 @@ vanish. The map is defined on a structured index type and transported to `Fin N`
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

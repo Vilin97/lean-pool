@@ -48,7 +48,8 @@ The injective piece comes from adjoining a `√δ'`-scaled flat-torus embedding.
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

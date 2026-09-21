@@ -38,7 +38,8 @@ open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev
 
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -85,7 +86,7 @@ lemma weight_base_submul (m j : Fin n → ℤ) :
 -/
 lemma peetre_weight (s : ℝ) (m j : Fin n → ℤ) :
     weight n s m ≤ (2 : ℝ) ^ (abs s) * weight n (abs s) (m - j) * weight n s j := by
-  by_cases hs : 0 ≤ s <;> simp_all? +decide [ weight ];
+  by_cases hs : 0 ≤ s <;> simp_all +decide only [weight, Pi.sub_apply, Int.cast_sub, not_le];
   · rw [ abs_of_nonneg hs ];
     rw [ ← Real.mul_rpow, ← Real.mul_rpow ] <;> try positivity;
     apply Real.rpow_le_rpow
@@ -115,7 +116,7 @@ lemma peetre_weight (s : ℝ) (m j : Fin n → ℤ) :
 Translation invariance: `∑' m, f(m - i) = ∑' m, f(m)`.
 -/
 lemma tsum_sub_shift
-    {f : (Fin n → ℤ) → ℝ}  (i : Fin n → ℤ) :
+    {f : (Fin n → ℤ) → ℝ} (i : Fin n → ℤ) :
     ∑' m, f (m - i) = ∑' m, f m := by
   conv_rhs => rw [ ← Equiv.tsum_eq ( Equiv.subRight i ) ];
   rfl
@@ -173,10 +174,10 @@ theorem young_conv_sq_bound
               i * u j * v i ^ 2 + u i * u j * v j ^ 2) / 2 := by
             exact Finset.sum_le_sum fun i hi => Finset.sum_le_sum fun j hj => h_cauchy_schwarz i j;
           convert h_cauchy_schwarz using 1 <;> norm_num [ Finset.sum_add_distrib, ←
-              Finset.mul_sum _ _ _, ← Finset.sum_div ]; ring;
-          · simp +decide only [sq, Finset.mul_sum _ _ _, mul_comm, mul_left_comm];
-          · simp +decide [ ← Finset.mul_sum _ _ _, ← Finset.sum_mul, mul_assoc, mul_comm,
-              mul_left_comm, Finset.sum_add_distrib ]; ring;
+              Finset.mul_sum _ _ _, ← Finset.sum_div ];
+          · ring
+            simp +decide only [sq, Finset.mul_sum _ _ _, mul_comm, mul_left_comm];
+          · simp +decide [ ← Finset.mul_sum _ _ _, ← Finset.sum_mul, mul_assoc, mul_comm ]; ring;
             simp +decide [ mul_assoc, Finset.mul_sum _ _ _ ]; ring;
         exact h_cauchy_schwarz u v hu hv;
       have h_cauchy_schwarz : Filter.Tendsto (fun N : Finset (Fin n → ℤ) => (∑ i ∈ N, u i * v i)
@@ -206,7 +207,7 @@ theorem young_conv_sq_bound
       funext p; simp [Function.uncurry, Function.comp]
   have h_translation_invariance : ∀ i, ∑' m, g (m - i) ^ 2 = ∑' m, g m ^ 2 := by
     exact fun i => Equiv.tsum_eq ( Equiv.subRight i ) fun m => g m ^ 2;
-  simp_all? +decide [ tsum_mul_right, tsum_mul_left ];
+  simp_all +decide only [tsum_mul_right];
   refine ⟨ ?_, ?_ ⟩;
   · refine Summable.of_nonneg_of_le ( fun m => sq_nonneg _ ) ( fun m => h_cauchy_schwarz m ) ?_;
     refine Summable.mul_left _ ?_;
@@ -217,13 +218,13 @@ theorem young_conv_sq_bound
       have h_zero : ∀ m, f m = 0 := by
         exact fun m => le_antisymm ( le_trans ( Summable.le_tsum ( hf ) m ( fun _ _ => hf_nn _ )
             ) H.le ) ( hf_nn m );
-      exact h_fubini <| by simpa [ h_zero ] using summable_zero;
-    · intro H; simp_all +decide [ tsum_eq_zero_of_not_summable ] ;
+      exact h_fubini <| by simp [ h_zero ];
+    · intro H; simp_all +decide only ;
       -- Since $\sum' m, g m ^ 2 = 0$, we have $g m = 0$ for all $m$.
       have h_g_zero : ∀ m, g m = 0 := by
         exact fun m => sq_eq_zero_iff.mp ( le_antisymm ( le_trans ( Summable.le_tsum ( hg_sq ) m
             ( fun _ _ => sq_nonneg _ ) ) H.le ) ( sq_nonneg _ ) );
-      exact h_fubini <| by simpa [ h_g_zero ] using summable_zero;
+      exact h_fubini <| by simp [ h_g_zero ];
   · refine le_trans ( Summable.tsum_le_tsum h_cauchy_schwarz ?_ ?_ ) ?_;
     · refine Summable.of_nonneg_of_le ( fun m => sq_nonneg _ ) ( fun m => h_cauchy_schwarz m ) ?_;
       refine Summable.mul_left _ ?_;
@@ -234,27 +235,27 @@ theorem young_conv_sq_bound
         have h_zero : ∀ m, f m = 0 := by
           exact fun m => le_antisymm ( le_trans ( Summable.le_tsum ( hf ) m ( fun _ _ => hf_nn _
               ) ) H.le ) ( hf_nn m );
-        exact h_fubini <| by simpa [ h_zero ] using summable_zero;
-      · intro H; simp_all +decide [ tsum_eq_zero_of_not_summable ] ;
+        exact h_fubini <| by simp [ h_zero ];
+      · intro H; simp_all +decide only ;
         -- Since $\sum' m, g m ^ 2 = 0$, we have $g m = 0$ for all $m$.
         have h_g_zero : ∀ m, g m = 0 := by
           exact fun m => sq_eq_zero_iff.mp ( le_antisymm ( le_trans ( Summable.le_tsum ( hg_sq )
               m ( fun _ _ => sq_nonneg _ ) ) H.le ) ( sq_nonneg _ ) );
-        exact h_fubini <| by simpa [ h_g_zero ] using summable_zero;
+        exact h_fubini <| by simp [ h_g_zero ];
     · refine Summable.mul_left _ ?_;
       contrapose! h_fubini;
       rw [ tsum_eq_zero_of_not_summable h_fubini ]; norm_num;
-      constructor <;> intro h <;> simp_all +decide [ tsum_eq_zero_of_not_summable ];
+      constructor <;> intro h <;> simp_all +decide only [zero_mul, _root_.sq_nonpos_iff];
       · -- Since $f$ is non-negative and its sum is zero, $f$ must be zero everywhere.
         have h_f_zero : ∀ m, f m = 0 := by
           exact fun m => le_antisymm ( le_trans ( Summable.le_tsum ( hf ) m ( fun _ _ => hf_nn _
               ) ) h.le ) ( hf_nn m );
-        exact h_fubini <| by simpa [ h_f_zero ] using summable_zero;
+        exact h_fubini <| by simp [ h_f_zero ];
       · -- Since $\sum' m, g m ^ 2 = 0$, we have $g m = 0$ for all $m$.
         have h_g_zero : ∀ m, g m = 0 := by
           exact fun m => sq_eq_zero_iff.mp ( le_antisymm ( le_trans ( Summable.le_tsum ( hg_sq )
               m ( fun _ _ => sq_nonneg _ ) ) h.le ) ( sq_nonneg _ ) );
-        exact h_fubini <| by simpa [ h_g_zero ] using summable_zero;
+        exact h_fubini <| by simp [ h_g_zero ];
     · rw [ tsum_mul_left, h_fubini, sq, mul_assoc ]
 
 /-! ## First Sobolev multiplication theorem (sequence side) -/
@@ -355,7 +356,7 @@ theorem sobolev_mul_seq {s : ℝ}
       · exact fun m => mul_nonneg ( norm_nonneg _ ) ( weight_nonneg _ _ );
       · exact fun m => mul_nonneg ( Real.sqrt_nonneg _ ) ( norm_nonneg _ );
       · exact hb;
-      · simp_all? +decide [ mul_pow, Real.sq_sqrt ( weight_nonneg _ _ ) ];
+      · simp_all +decide only [mul_pow, Real.sq_sqrt (weight_nonneg _ _)];
         exact ha;
   have h_summable : Summable (fun m => (weight n s m) * ‖∑' i, b i * a (m - i)‖ ^ 2) := by
     exact Summable.of_nonneg_of_le ( fun m => mul_nonneg ( weight_nonneg _ _ ) ( sq_nonneg _ ) )

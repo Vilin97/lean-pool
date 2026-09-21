@@ -47,7 +47,8 @@ open scoped BigOperators ContDiff
 open Complex Real MeasureTheory
 
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -145,8 +146,9 @@ lemma ftRn_partialDeriv_single
               (-(Complex.I * ↑(∑ k, ξ k * (Function.update y j t) k))))
               (-(Complex.I * (ξ j : ℂ)) *
                 Complex.exp (-(Complex.I * ↑(∑ k, ξ k * y k)))) (y j)
-      simp? +decide [Function.update_apply, Finset.sum_ite,
-        Finset.filter_eq', Finset.filter_ne']
+      simp +decide only [Function.update_apply, mul_ite, Finset.sum_ite, Finset.filter_eq',
+        Finset.mem_univ, ↓reduceIte, Finset.sum_singleton, Finset.filter_ne',
+        Finset.sum_erase_eq_sub, ofReal_add, ofReal_mul, ofReal_sub, ofReal_sum, neg_mul]
       -- Mirrors the earlier `hasDerivAt_fourierExp_update` (Periodization.lean),
       -- with an extra outer `.neg` for our sign convention and the coefficient
       -- cast from ℝ to ℂ.

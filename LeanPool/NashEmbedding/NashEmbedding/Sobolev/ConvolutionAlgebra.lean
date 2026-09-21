@@ -38,7 +38,8 @@ sequences; this is how the fixed point of Theorem B is seen to be real (`ℝᴺ`
 open scoped BigOperators ComplexConjugate
 open Complex
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 

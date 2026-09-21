@@ -47,7 +47,8 @@ real-imaginary decomposition of `periodicExtension`, linearity of
 open scoped BigOperators ContDiff
 open Complex Real NashEmbedding.Sobolev MeasureTheory Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

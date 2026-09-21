@@ -29,7 +29,8 @@ open NashEmbedding.Sobolev MeasureTheory
 
 namespace MollifierConvergenceTests
 
-noncomputable section
+noncomputable
+section
 
 variable {n : ℕ}
 

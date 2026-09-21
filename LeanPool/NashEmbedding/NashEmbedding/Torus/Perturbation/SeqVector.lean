@@ -28,7 +28,8 @@ Cauchy limits) to vector sequences. They are consumed by the abstract Günther i
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

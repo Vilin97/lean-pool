@@ -30,7 +30,8 @@ This file contains:
 open scoped BigOperators
 open NashEmbedding.Sobolev
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 

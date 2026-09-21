@@ -41,7 +41,8 @@ open scoped BigOperators ContDiff
 open MeasureTheory Real
 open scoped Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

@@ -60,7 +60,8 @@ open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev
 
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -88,7 +89,8 @@ lemma fourierExp_inner_eq (m m₀ : Fin n → ℤ) :
       fourierExp n m θ * starRingEnd ℂ (fourierExp n m₀ θ) =
     if m = m₀ then ((2 * π) ^ n : ℝ) else 0 := by
   split_ifs with h;
-  · simp +decide only [Algebra.mul_smul_comm, mul_one, fourierExp, ofReal_sum, ofReal_mul, ofReal_intCast, ← h, ofReal_pow, ofReal_ofNat];
+  · simp +decide only [Algebra.mul_smul_comm, mul_one, fourierExp, ofReal_sum, ofReal_mul,
+    ofReal_intCast, ← h, ofReal_pow, ofReal_ofNat];
     norm_num [ Complex.mul_conj, Complex.normSq_eq_norm_sq, Complex.norm_exp ];
     erw [ MeasureTheory.measureReal_def ];
     erw [ Real.volume_Icc_pi ]; norm_num [ mul_comm ];
@@ -106,8 +108,10 @@ lemma fourierExp_inner_eq (m m₀ : Fin n → ℤ) :
           i) else 0)) := by
         rw [ ← MeasureTheory.integral_indicator ] <;> norm_num [ Set.indicator, Pi.le_def,
             forall_and ];
-        congr with x; split_ifs <;> simp_all? +decide [ mul_assoc, mul_comm, mul_left_comm,
-            Finset.prod_ite ];
+        congr with x; split_ifs <;> simp_all +decide only [ne_eq, mul_comm, and_self,
+          ↓reduceIte, mul_left_comm, not_and, not_forall, not_le, Finset.prod_ite,
+          Finset.prod_const, zero_eq_mul, pow_eq_zero_iff', Finset.card_eq_zero,
+          Finset.filter_eq_empty_iff, Finset.mem_univ,  not_lt, forall_const, true_and];
         · rw [ ← Complex.exp_sum, Finset.mul_sum _ _ _ ];
         · grind;
       have h_prod : ∀ (f : Fin n → ℝ → ℂ), (∫ θ : Fin n → ℝ, ∏ i : Fin n, f i (θ i)) = ∏ i : Fin
@@ -139,7 +143,7 @@ lemma fourierExp_inner_eq (m m₀ : Fin n → ℤ) :
 
 /-
 **Fourier inversion.** If `a ∈ ℓ¹(ℤⁿ)`, then the inner product of the
-Fourier synthesis `ǎ(θ) = ∑ aₘ eₘ(θ)` with `conj(e_{m₀}(θ))` over
+Fourier synthesis `a_check(θ) = ∑ aₘ eₘ(θ)` with `conj(e_{m₀}(θ))` over
 `[0, 2π]ⁿ` recovers `(2π)ⁿ · a_{m₀}`.
 -/
 lemma fourierSynthesis_inner
@@ -161,13 +165,16 @@ lemma fourierSynthesis_inner
       · exact Complex.continuous_conj.comp ( Complex.continuous_exp.comp <| by continuity );
     · refine ne_of_lt (lt_of_le_of_lt (ENNReal.tsum_le_tsum
           (g := fun m => ENNReal.ofReal (‖a m‖ * (2 * Real.pi) ^ n)) (fun m => ?_)) ?_)
-
       · refine le_trans (MeasureTheory.lintegral_mono
             (g := fun _ => ENNReal.ofReal ‖a m‖) (fun x => ?_)) ?_
-
         · rw [ ENNReal.le_ofReal_iff_toReal_le ] <;> norm_num [ norm_fourierExp ];
           finiteness;
-        · simp +decide only [Algebra.mul_smul_comm, mul_one, ofReal_norm, MeasureTheory.lintegral_const, MeasurableSet.univ, MeasureTheory.Measure.restrict_apply, Set.univ_inter, volume_Icc_pi, Pi.smul_apply, Pi.ofNat_apply, smul_eq_mul, Pi.zero_apply, sub_zero, Finset.prod_const, Finset.card_univ, Fintype.card_fin, mul_pow, norm_nonneg, ENNReal.ofReal_mul, Nat.ofNat_nonneg, pow_nonneg, ENNReal.ofReal_pow, ENNReal.ofReal_ofNat];
+        · simp +decide only [Algebra.mul_smul_comm, mul_one, ofReal_norm,
+          MeasureTheory.lintegral_const, MeasurableSet.univ,
+          MeasureTheory.Measure.restrict_apply, Set.univ_inter, volume_Icc_pi, Pi.smul_apply,
+          Pi.ofNat_apply, smul_eq_mul,  sub_zero, Finset.prod_const,
+          Finset.card_univ, Fintype.card_fin, mul_pow, norm_nonneg, ENNReal.ofReal_mul,
+          Nat.ofNat_nonneg, pow_nonneg, ENNReal.ofReal_pow, ENNReal.ofReal_ofNat];
           rw [ ENNReal.ofReal_mul ( by positivity ), ENNReal.ofReal_pow ( by positivity ) ];
               ring_nf; norm_num;
       · rw [ ← ENNReal.ofReal_tsum_of_nonneg ] <;> norm_num;
@@ -188,8 +195,8 @@ def stdFourierCoeff (n : ℕ) (f : (Fin n → ℝ) → ℂ) (m : Fin n → ℤ) 
 
 /-
 **Fourier coefficient recovery.** If `a ∈ ℓ¹(ℤⁿ)`, then the standard
-Fourier coefficients of the synthesis `ǎ = ∑ aₘ eₘ` recover `a`:
-`stdFourierCoeff(ǎ)_m = a_m`. This is the key identity `ι ∘ ε = id`.
+Fourier coefficients of the synthesis `a_check = ∑ aₘ eₘ` recover `a`:
+`stdFourierCoeff(a_check)_m = a_m`. This is the key identity `ι ∘ ε = id`.
 -/
 theorem stdFourierCoeff_fourierSynthesis
     {a : (Fin n → ℤ) → ℂ} (ha : Summable (fun m => ‖a m‖))
@@ -308,7 +315,8 @@ theorem rellich_compactness_dist {s t : ℝ} (hst : s < t)
   · convert hb₁ using 1;
     unfold MemSobolevDistrib;
     rw [ fourierCoeffDistrib_seqToDual ];
-  · -- By definition of `fourierCoeffDistrib`, we have `fourierCoeffDistrib (φseq (ψ k) - seqToDual n b) = fourierCoeffDistrib (φseq (ψ k)) - b`.
+  · -- By definition of `fourierCoeffDistrib`, we have `fourierCoeffDistrib (φseq (ψ k) -
+    -- seqToDual n b) = fourierCoeffDistrib (φseq (ψ k)) - b`.
     have h_fourierCoeffDistrib : ∀ k, fourierCoeffDistrib (φseq (ψ k) - seqToDual n b) = fun m
         => fourierCoeffDistrib (φseq (ψ k)) m - b m := by
       intro k; ext m; simp +decide [ fourierCoeffDistrib, seqToDual ] ;
@@ -351,7 +359,7 @@ theorem sobolev_supBound_dist {s : ℝ} {k : ℕ} {α : Fin n → ℕ}
 
 /-- **Sobolev embedding: factorization.** For `2s > n` and `a ∈ ℓ²_(s+k)`,
 the Fourier coefficients of the Fourier synthesis recover `a`:
-`stdFourierCoeff(ǎ) = a`, i.e., `ι(ε(a)) = a` in `X_n^*`. -/
+`stdFourierCoeff(a_check) = a`, i.e., `ι(ε(a)) = a` in `X_n^*`. -/
 theorem sobolev_embedding_factorization
     {s : ℝ} {k : ℕ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s)
     {a : (Fin n → ℤ) → ℂ} (ha : MemSobolev n (s + k) a) (m : Fin n → ℤ) :
@@ -375,7 +383,7 @@ theorem sobolev_embedding_factorization_dist
   all_goals rfl
 
 /-- **Sobolev embedding: linearity.** The Fourier synthesis map
-`a ↦ ǎ` is linear. -/
+`a ↦ a_check` is linear. -/
 theorem sobolev_embedding_linear_add
     {a b : (Fin n → ℤ) → ℂ}
     (ha : Summable (fun m => ‖a m‖))
@@ -388,7 +396,6 @@ theorem sobolev_embedding_linear_add
 /-- **Sobolev embedding: scalar multiplication.** -/
 theorem sobolev_embedding_linear_smul
     {a : (Fin n → ℤ) → ℂ} (c : ℂ)
-
     (θ : Fin n → ℝ) :
     fourierSynthesis n (c • a) θ = c * fourierSynthesis n a θ :=
   fourierSynthesis_smul c θ

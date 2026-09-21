@@ -36,7 +36,8 @@ open MeasureTheory Real Matrix
 open NashEmbedding.Sobolev (periodicExtension rescale meshPoint positionSpaceRiemann
   integrationEmbed MemSobolevDistrib sobolevNormSqDistrib IsPeriodic2Pi)
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 
@@ -62,18 +63,29 @@ lemma exists_finset_periodicExtension {φ : (Fin n → ℝ) → ℂ} (hsupp : Ha
     have h_bound : ‖y + NashEmbedding.Sobolev.periodicShift n k‖ < R := by
       exact lt_of_not_ge fun h => hy_nonzero <| hR _ h;
     have h_bound : |(y i + 2 * Real.pi * (k i : ℝ))| ≤ R := by
-      exact le_trans ( by simpa [NashEmbedding.Sobolev.periodicShift] using norm_le_pi_norm ( y + NashEmbedding.Sobolev.periodicShift n k ) i ) h_bound.le;
+      exact le_trans ( by
+        simpa [NashEmbedding.Sobolev.periodicShift] using norm_le_pi_norm ( y +
+          NashEmbedding.Sobolev.periodicShift n k ) i ) h_bound.le;
     have h_bound : |y i| ≤ ‖x‖ + 1 := by
       have h_bound : |y i - x i| ≤ ‖y - x‖ := by
         exact norm_le_pi_norm ( y - x ) i;
-      exact abs_le.mpr ⟨ by linarith [ abs_le.mp h_bound, abs_le.mp ( norm_le_pi_norm x i ), abs_le.mp ( norm_le_pi_norm ( y - x ) i ), show ‖y - x‖ < 1 from by rw [← dist_eq_norm]; exact hy_ball ], by linarith [ abs_le.mp h_bound, abs_le.mp ( norm_le_pi_norm x i ), abs_le.mp ( norm_le_pi_norm ( y - x ) i ), show ‖y - x‖ < 1 from by rw [← dist_eq_norm]; exact hy_ball ] ⟩;
+      exact abs_le.mpr ⟨ by
+        linarith [ abs_le.mp h_bound, abs_le.mp ( norm_le_pi_norm x i ), abs_le.mp (
+          norm_le_pi_norm ( y - x ) i ), show ‖y - x‖ < 1 from by
+          rw [← dist_eq_norm]; exact hy_ball ], by
+        linarith [ abs_le.mp h_bound, abs_le.mp ( norm_le_pi_norm x i ), abs_le.mp (
+          norm_le_pi_norm ( y - x ) i ), show ‖y - x‖ < 1 from by
+          rw [← dist_eq_norm]; exact hy_ball ] ⟩;
     rw [ le_div_iff₀ ] <;> cases abs_cases ( k i : ℝ ) <;> cases abs_cases ( y i + 2 * Real.pi *
         ( k i : ℝ ) ) <;> cases abs_cases ( y i ) <;> nlinarith [ Real.pi_gt_three ];
   have h_finite_k : Set.Finite {k : Fin n → ℤ | ∀ i : Fin n, |(k i : ℝ)| ≤ (R + ‖x‖ + 1) / (2 *
       Real.pi)} := by
     have h_finite_k : ∀ i : Fin n, Set.Finite {k : ℤ | |(k : ℝ)| ≤ (R + ‖x‖ + 1) / (2 *
         Real.pi)} := by
-      exact fun i => Set.Finite.subset ( Set.finite_Icc ( -⌈ ( R + ‖x‖ + 1 ) / ( 2 * Real.pi ) ⌉ ) ⌈ ( R + ‖x‖ + 1 ) / ( 2 * Real.pi ) ⌉ ) fun k hk => ⟨ neg_le_of_abs_le <| by exact_mod_cast hk.out.trans <| Int.le_ceil _, le_of_abs_le <| by exact_mod_cast hk.out.trans <| Int.le_ceil _ ⟩;
+      exact fun i => Set.Finite.subset ( Set.finite_Icc ( -⌈ ( R + ‖x‖ + 1 ) / ( 2 * Real.pi ) ⌉
+        ) ⌈ ( R + ‖x‖ + 1 ) / ( 2 * Real.pi ) ⌉ ) fun k hk => ⟨ neg_le_of_abs_le <| by
+        exact_mod_cast hk.out.trans <| Int.le_ceil _, le_of_abs_le <| by
+        exact_mod_cast hk.out.trans <| Int.le_ceil _ ⟩;
     exact Set.Finite.subset ( Set.Finite.pi fun i => h_finite_k i ) fun k hk => by simpa using hk;
   have hfin : Set.Finite {k : Fin n → ℤ | ∃ y ∈ Metric.ball x 1, φ (y +
       NashEmbedding.Sobolev.periodicShift n k) ≠ 0} :=
@@ -343,7 +355,8 @@ lemma gram_pe_bump {χ : (Fin n → ℝ) → ℝ} (hχ : ContDiff ℝ ∞ χ) (h
   calc a * (periodicExtension n (cplx fun y => fderiv ℝ χ y (Pi.single i 1)) (x - z)).re
         * (a * (periodicExtension n (cplx fun y => fderiv ℝ χ y (Pi.single j 1)) (x - z)).re)
       = a ^ 2 * ((periodicExtension n (cplx fun y => fderiv ℝ χ y (Pi.single i 1)) (x - z)).re
-          * (periodicExtension n (cplx fun y => fderiv ℝ χ y (Pi.single j 1)) (x - z)).re) := by ring
+          * (periodicExtension n (cplx fun y => fderiv ℝ χ y (Pi.single j 1)) (x - z)).re) := by
+            ring
     _ = _ := by rw [hre, hmul, hc]
 
 /-! ## The concatenated bump family and its Gram matrix -/

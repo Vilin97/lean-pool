@@ -29,7 +29,8 @@ open NashEmbedding NashEmbedding.Sobolev Matrix
 
 namespace RealizableMetricsTests
 
-noncomputable section
+noncomputable
+section
 
 variable {n : ℕ}
 

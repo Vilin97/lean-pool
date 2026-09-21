@@ -27,7 +27,8 @@ injective embeddings, flat torus embedding.
 open scoped BigOperators ContDiff
 open Matrix NashEmbedding.Sobolev
 
-noncomputable section
+noncomputable
+section
 
 -- Matrix needs norm instances for ContDiff to work. `fast_instance%` rebuilds each
 -- structure so its parent projections reuse Mathlib's existing `Matrix` instances

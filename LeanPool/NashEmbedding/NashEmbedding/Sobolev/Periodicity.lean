@@ -25,7 +25,8 @@ position form) and by the NashEmbedding smooth-metric structures.
 open scoped BigOperators
 open Real
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 

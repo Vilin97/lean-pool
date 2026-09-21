@@ -21,7 +21,7 @@ import LeanPool.NashEmbedding.NashEmbedding.Sobolev.Multiplication
 
 This file proves that H^s_{2πℤⁿ}(ℝⁿ) is closed under pointwise
 multiplication when 2s > n, with the norm bound
-‖u·v‖²_{(s)} ≤ K̃_{n,s} · ‖u‖²_{(s)} · ‖v‖²_{(s)}.
+‖u·v‖²_{(s)} ≤ K_tilde_{n,s} · ‖u‖²_{(s)} · ‖v‖²_{(s)}.
 
 ## Main results
 
@@ -37,7 +37,8 @@ open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev
 
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -58,7 +59,7 @@ noncomputable def sobolevMulDistrib (u v : TrigPolyDual n) : TrigPolyDual n :=
 noncomputable def sobolevEmbedConstSq (n : ℕ) (s : ℝ) : ℝ :=
   ∑' (j : Fin n → ℤ), weight n (-s) j
 
-/-- The constant K̃_{n,s} = 4 · 2^{2s} · C²_{n,s}. -/
+/-- The constant K_tilde_{n,s} = 4 · 2^{2s} · C²_{n,s}. -/
 noncomputable def mt2Const (n : ℕ) (s : ℝ) : ℝ :=
   4 * (2 : ℝ) ^ (2 * s) * sobolevEmbedConstSq n s
 
@@ -114,10 +115,9 @@ lemma half_power_weight_ineq {s : ℝ} (hs : 0 ≤ s) (i j : Fin n → ℤ) :
 -/
 lemma weight_half_mul (s : ℝ) (m : Fin n → ℤ) :
     weight n s m = weight n (s / 2) m * weight n (s / 2) m := by
-  convert weight_mul _ _ m;
-  convert weight_mul _ _ m |> Eq.symm;
-  rotate_left;
-  exacts [ s / 2, s / 2, weight_mul _ _ _, by ring ]
+  rw [weight_mul]
+  congr 1
+  ring
 
 /-
 Summability of `‖a m‖^2` when `a ∈ ℓ²_{(s)}` and `s ≥ 0`.
@@ -202,7 +202,7 @@ lemma summable_alpha_abs_b {s : ℝ}
     convert h_conv using 1
   convert h_conv.comp_injective ( show Function.Injective ( fun i => m - i ) from fun x y hxy =>
       by simpa using hxy ) using 2
-  all_goals (first | rfl | simp +decide [ mul_assoc, mul_comm, mul_left_comm ])
+  all_goals (first | rfl | simp +decide [ mul_assoc, mul_comm ])
 
 /-
 Summability of the |a|⋅β convolution term at each point.
@@ -214,8 +214,8 @@ lemma summable_abs_a_beta {s : ℝ}
     Summable (fun i => ‖a i‖ * (weight n (s / 2) (m - i) * ‖b (m - i)‖)) := by
   convert conv_abs_summable _ _ _ _ m using 1;
   rotate_left;
-  use fun m => ‖a m‖;
-  use fun m => weight n ( s / 2 ) m * ‖b m‖;
+  · exact fun m => ‖a m‖
+  · exact fun m => weight n ( s / 2 ) m * ‖b m‖
   · grind +splitImp;
   · exact fun m => mul_nonneg ( weight_nonneg _ _ ) ( norm_nonneg _ );
   · exact ha_l1;
@@ -255,8 +255,9 @@ lemma seqConv_unsquared_bound {s : ℝ} (hs : 0 ≤ s)
             i)) := by
           convert half_power_weight_ineq hs i ( m - i ) using 1; ring;
         convert mul_le_mul_of_nonneg_right h_ineq ( mul_nonneg ( norm_nonneg ( a i ) ) (
-            norm_nonneg ( b ( m - i ) ) ) ) using 1; ring;
-        · rw [ norm_mul, mul_assoc ];
+            norm_nonneg ( b ( m - i ) ) ) ) using 1;
+        · ring
+          rw [ norm_mul, mul_assoc ];
         · ring;
       · exact Summable.mul_left _ ( Summable.of_nonneg_of_le ( fun _ => by positivity ) ( fun _
           => by simpa [ mul_assoc ] using mul_le_mul_of_nonneg_left ( Summable.le_tsum ( hb_l1 )
@@ -310,11 +311,10 @@ lemma young_alpha_b_bound {s : ℝ} (hn : 0 < n) (hs : (n : ℝ) < 2 * s)
   have := @young_conv_sq_bound;
   have h_comm : ∀ m, ∑' i, weight n (s / 2) i * ‖a i‖ * ‖b (m - i)‖ = ∑' j, ‖b j‖ * (weight n (s
       / 2) (m - j) * ‖a (m - j)‖) := by
-    intro m; rw [ ← Equiv.tsum_eq ( Equiv.subLeft m ) ] ; simp +decide [ mul_assoc, mul_comm,
-        mul_left_comm ];
+    intro m; rw [ ← Equiv.tsum_eq ( Equiv.subLeft m ) ] ; simp +decide [  mul_comm ];
   have := @this n ( fun m => ‖b m‖ ) ( fun m => weight n ( s / 2 ) m * ‖a m‖ ) ?_ ?_ ?_ ?_ <;>
-      simp_all? +decide [ mul_pow, mul_assoc, mul_comm, mul_left_comm, tsum_mul_left,
-      tsum_mul_right ];
+      simp_all +decide only [mul_comm, mul_assoc, mul_pow, mul_left_comm, true_and, ge_iff_le,
+        norm_nonneg, implies_true];
   · have h_summable : (∑' i, ‖b i‖) ^ 2 ≤ sobolevEmbedConstSq n s * sobolevNormSq n s b := by
       convert tsum_norm_sq_le hn ( by linarith : ( n : ℝ ) < 2 * s ) hb using 1
       unfold sobolevEmbedConstSq

@@ -43,7 +43,8 @@ Günther operator is shown to satisfy (E1), (E2) in `GuntherOperator.lean`.
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

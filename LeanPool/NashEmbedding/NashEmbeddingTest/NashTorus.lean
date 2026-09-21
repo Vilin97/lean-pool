@@ -41,7 +41,8 @@ Tests are grouped by what they discriminate:
 open scoped BigOperators ContDiff
 open NashEmbedding NashEmbedding.Sobolev Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashTorusWitnessTests
 
@@ -119,7 +120,7 @@ example : ¬ IsInjectiveMod2Pi doubledCircle := by
     simp [doubledCircle, Real.cos_two_pi, Real.sin_two_pi]
   obtain ⟨k, hk⟩ := h _ _ heq
   have h0 := congrFun hk 0
-  simp? [periodicShift] at h0
+  simp only [Fin.isValue, Pi.sub_apply, Pi.zero_apply, zero_sub, periodicShift] at h0
   -- h0 : -π = 2 * π * k 0
   have hpi : (0 : ℝ) < Real.pi := Real.pi_pos
   have hk' : (2 : ℝ) * (k 0 : ℝ) = -1 := by

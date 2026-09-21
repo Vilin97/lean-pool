@@ -33,7 +33,8 @@ is solved pointwise. Periodicity of the dual frame is inherited pointwise.
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 

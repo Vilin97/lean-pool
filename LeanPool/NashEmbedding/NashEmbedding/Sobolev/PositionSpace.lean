@@ -26,7 +26,7 @@ its smoothness, periodicity, and non-negativity properties.
 
 ## Main contents
 
-* `positionSpaceRiemann n φ u M` — `r_M^φ u(x) = δⁿ ∑_z φ^per(x - z) ǔ(z)`.
+* `positionSpaceRiemann n φ u M` — `r_M^φ u(x) = δⁿ ∑_z φ^per(x - z) u_check(z)`.
 * `periodicExtension_eq_self_of_mem`,
   `integral_periodicExtension_mul_fourierExp` — for `supp φ ⊂ (-π,π)ⁿ`,
   `φ^per = φ` on `[-π,π]ⁿ` and `∫_{[0,2π]ⁿ} φ^per · e_{-m} = φ̂(m)`.
@@ -44,7 +44,8 @@ its smoothness, periodicity, and non-negativity properties.
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding.Sobolev
 
@@ -53,8 +54,8 @@ variable {n : ℕ}
 /-! ## Definition: position-space Riemann sum -/
 
 /-- The position-space Riemann-sum operator
-    `r_M^φ u(x) = δⁿ ∑_z φ^per(x - z) · ǔ(z)`,
-    where `δ = 2π/M` and `ǔ` is the continuous representative of `u`. -/
+    `r_M^φ u(x) = δⁿ ∑_z φ^per(x - z) · u_check(z)`,
+    where `δ = 2π/M` and `u_check` is the continuous representative of `u`. -/
 def positionSpaceRiemann (n : ℕ) (φ : (Fin n → ℝ) → ℂ)
     (u : TrigPolyDual n) (M : ℕ) (x : Fin n → ℝ) : ℂ :=
   let δ := (2 * Real.pi / (M : ℝ))

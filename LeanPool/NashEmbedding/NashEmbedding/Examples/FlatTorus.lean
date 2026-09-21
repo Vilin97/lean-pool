@@ -44,7 +44,8 @@ assembly `torus2_matches_nashTorus` is by hand.  L7 is a general reusable fact
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Complex Matrix
 
-noncomputable section
+noncomputable
+section
 
 namespace NashEmbedding
 
