@@ -180,9 +180,9 @@ private theorem oppositeOrderPieceSum_smul_comm
           apply Subtype.ext
           exact (filteredRightMul k I y.val.unop).map_smul a q
       | add x z hx hz =>
-          simpa [smul_add] using congrArg₂ (fun p q => p + q) hx hz
+          simpa only [smul_add, map_add] using congrArg₂ (fun p q => p + q) hx hz
   | add r s hr hs =>
-      simpa [add_smul] using congrArg₂ (fun p q => p + q) hr hs
+      simpa only [add_smul, smul_add, map_add] using congrArg₂ (fun p q => p + q) hr hs
 
 local instance quotientOrderReesModule_smulCommClass
     (I : RightIdeal (PresentedWeyl k n)) :
@@ -227,7 +227,7 @@ def quotientOrderReesSourceAction
     FilteredQuotientTwoJet k I →ₗ[k] FilteredQuotientTwoJet k I :=
   (quotientOrderReesTwoJetSubmodule k I).mapQ
     (quotientOrderReesTwoJetSubmodule k I)
-    (DistribMulAction.toLinearMap k (QuotientOrderReesModule k I) r)
+    (DistribSMul.toLinearMap k (QuotientOrderReesModule k I) r)
     (by
       intro x hx
       exact op_smul_mem_quotientOrderReesTwoJetSubmodule k I r hx)
@@ -367,7 +367,7 @@ theorem source_op_smul_eq_zero_of_mem_twoJetIdeal
   have h := orderReesTwoJetIdeal_le_moduleAnnihilator k I hr
   change ∀ y : FilteredQuotientTwoJet k I,
     MulOpposite.op (r - 0) • y = 0 at h
-  simpa using h x
+  simpa only [sub_zero] using h x
 
 /-- Action of one opposite two-jet scalar, obtained by factoring the source
 right action through the two-sided `T²` quotient. -/
@@ -703,7 +703,7 @@ theorem quotientOrderReesToAssociatedGraded_action_compatibility
       MulOpposite.op r := by
     exact (orderPieceOpDirectSumEquivReesOp (n := n) k).apply_symm_apply _
   rw [heq] at hs
-  simpa using hs
+  simpa only [MulOpposite.unop_op] using hs
 
 /-- The factored two-jet action and the actual associated-graded
 specialization are compatible. -/

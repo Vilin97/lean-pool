@@ -67,8 +67,8 @@ theorem presentedPrincipalComponent_eq_zero_of_mem_of_lt {n L T : ℕ}
       by_contra hne
       have hle := (mem_presentedWeightPiece k w L z).mp hz m hne
       omega
-    rw [hcoeff, MvPolynomial.coeff_zero]
-  · rw [if_neg hm, MvPolynomial.coeff_zero]
+    simp only [hcoeff, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
+  · simp only [ite_eq_right hm, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
 
 theorem presentedPrincipalComponent_basis {n : ℕ}
     (w : PhaseVar n → ℕ) (N : ℕ) (m : PhaseVar n →₀ ℕ) :
@@ -84,7 +84,7 @@ theorem presentedPrincipalComponent_basis {n : ℕ}
     · subst q
       simp [hm]
     · simp [hmq, Ne.symm hmq]
-  · rw [if_neg hm, MvPolynomial.coeff_zero]
+  · simp only [ite_eq_right hm, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
     by_cases hqm : q = m
     · subst q
       simp [hm]
@@ -105,7 +105,7 @@ theorem weightedHomogeneousComponent_monomial {n N : ℕ}
     · subst q
       simp [hm]
     · simp [hmq, Ne.symm hmq]
-  · rw [if_neg hm, MvPolynomial.coeff_zero]
+  · simp only [ite_eq_right hm, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
     by_cases hqm : q = m
     · subst q
       simp [hm]

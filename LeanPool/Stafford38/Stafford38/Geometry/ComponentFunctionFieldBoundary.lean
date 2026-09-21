@@ -36,6 +36,9 @@ universe u
 
 variable {k : Type u} [Field k] {m : ℕ}
 
+local instance coordinateDomain (E : Type u) [Field E] :
+    IsDomain (CoordinateZeroLocalRing E) := inferInstance
+
 /-- The function field of a prime affine component is finitely generated as a
 field extension of the ground field. -/
 theorem componentFunctionField_fg
@@ -64,6 +67,37 @@ theorem exists_relativeRetainedBoundaryPlace_componentCoordinate
   exact exists_data_of_fg_charZero k (componentFunctionField_fg P)
     (componentCoordinate P i) hi
 
+private theorem normalized_with_parameter
+    {K : Type u} [Field K] (V : ValuationSubring K) (r : V.toSubring)
+    (p : Fin (m + 1) → K) (hpzero : p 0 = 1) (i : Fin m)
+    (hpi : p i.succ = (r : K)) :
+    ∃ (chart : Fin (m + 1)) (q : Fin (m + 1) → V.toSubring) (scale : K),
+      scale ≠ 0 ∧ q chart = 1 ∧ q 0 ≠ 0 ∧
+      (∀ a, (q a : K) = scale * p a) ∧ q i.succ = q 0 * r := by
+  obtain ⟨chart, q, scale, hscale, hchart, hq⟩ :=
+    exists_normalized_projective_lift V p ⟨0, by simp [hpzero]⟩
+  have hqzero : q 0 ≠ 0 := by
+    intro hzero
+    apply hscale
+    have h := hq 0
+    rw [hzero] at h
+    simpa [hpzero] using h.symm
+  refine ⟨chart, q, scale, hscale, hchart, hqzero, hq, ?_⟩
+  apply Subtype.ext
+  change (q i.succ : K) = (q 0 : K) * (r : K)
+  rw [hq, hq, hpzero, hpi, mul_one]
+
+private theorem normalized_relative_place
+    {K : Type u} [Field K] [Algebra k K] (x : K) (W : Data k K x)
+    (p : Fin (m + 1) → K) (hpzero : p 0 = 1) (i : Fin m) (hpi : p i.succ = x) :
+    letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K := W.ambientAlgebra
+    ∃ (chart : Fin (m + 1)) (q : Fin (m + 1) → W.place.valuation.toSubring) (scale : K),
+      scale ≠ 0 ∧ q chart = 1 ∧ q 0 ≠ 0 ∧
+      (∀ a, (q a : K) = scale * p a) ∧ q i.succ = q 0 * W.place.parameter := by
+  letI : Algebra (CoordinateZeroLocalRing W.coefficientField) K := W.ambientAlgebra
+  exact normalized_with_parameter W.place.valuation W.place.parameter
+    p hpzero i (hpi.trans W.parameter_eq_coordinate.symm)
+
 /-- The complete affine coordinate family can be scaled into the retained
 valuation ring with one projective coordinate equal to one. The selected
 coordinate remains the retained parameter times the homogeneous zeroth
@@ -85,29 +119,10 @@ theorem exists_normalizedProjectivePoint_relativeRetainedBoundaryPlace
             (MvPolynomial (Fin m) k ⧸ P.asIdeal)) =
           scale * componentProjectivePoint P a) ∧
         q (Fin.succ i) = q 0 * W.place.parameter := by
-  obtain ⟨W⟩ :=
-    exists_relativeRetainedBoundaryPlace_componentCoordinate P i hi
-  letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
-      (FractionRing (MvPolynomial (Fin m) k ⧸ P.asIdeal)) :=
-    W.ambientAlgebra
-  obtain ⟨chart, q, scale, hscale, hchart, hq⟩ :=
-    exists_normalized_projective_lift W.place.valuation
-      (componentProjectivePoint P) ⟨0, by simp [componentProjectivePoint]⟩
-  have hqzero : q 0 ≠ 0 := by
-    intro hzero
-    apply hscale
-    have h := hq 0
-    rw [hzero] at h
-    simpa [componentProjectivePoint] using h.symm
-  refine ⟨W, chart, q, scale, hscale, hchart, hqzero, hq, ?_⟩
-  apply Subtype.ext
-  change (q (Fin.succ i) : FractionRing
-      (MvPolynomial (Fin m) k ⧸ P.asIdeal)) =
-    (q 0 : FractionRing (MvPolynomial (Fin m) k ⧸ P.asIdeal)) *
-      (W.place.parameter : FractionRing
-        (MvPolynomial (Fin m) k ⧸ P.asIdeal))
-  rw [hq, hq, W.parameter_eq_coordinate]
-  simp [componentProjectivePoint]
+  let W := (exists_relativeRetainedBoundaryPlace_componentCoordinate P i hi).some
+  refine ⟨W, ?_⟩
+  exact normalized_relative_place (componentCoordinate P i) W
+    (componentProjectivePoint P) rfl i rfl
 
 /-- A transcendental coordinate on a prime affine component has a genuine
 discrete valuation place centred at coordinate zero.  It is the forgetful
@@ -117,8 +132,7 @@ theorem exists_discreteBoundaryRefinement_componentCoordinate
     (P : PrimeSpectrum (MvPolynomial (Fin m) k)) (i : Fin m)
     (hi : Transcendental k (componentCoordinate P i)) :
     Nonempty (DiscreteBoundaryRefinement k (componentCoordinate P i)) := by
-  obtain ⟨W⟩ :=
-    exists_relativeRetainedBoundaryPlace_componentCoordinate P i hi
+  let W := (exists_relativeRetainedBoundaryPlace_componentCoordinate P i hi).some
   letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (FractionRing (MvPolynomial (Fin m) k ⧸ P.asIdeal)) :=
     W.ambientAlgebra

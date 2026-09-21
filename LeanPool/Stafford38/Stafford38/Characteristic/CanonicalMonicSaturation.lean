@@ -201,7 +201,7 @@ theorem pderiv_eq_one_of_order_one_fibreOnly
     by_cases hm : m = Finsupp.single (.inr t) 1
     · subst m
       dsimp [Q] at hmQne
-      rw [MvPolynomial.coeff_sub, hcoeff, MvPolynomial.coeff_X] at hmQne
+      rw [hcoeff, MvPolynomial.coeff_X] at hmQne
       simp at hmQne
     · have hPzero : P.coeff m = 0 := by
         by_contra hP
@@ -212,7 +212,7 @@ theorem pderiv_eq_one_of_order_one_fibreOnly
         rw [MvPolynomial.coeff_X]
         simp [Ne.symm hm]
       dsimp [Q] at hmQne
-      rw [MvPolynomial.coeff_sub, hPzero, hXzero, sub_zero] at hmQne
+      rw [hPzero, hXzero, sub_zero] at hmQne
       exact hmQne rfl
   have hQderiv : MvPolynomial.pderiv (.inr t : PhaseVar n) Q = 0 :=
     MvPolynomial.pderiv_eq_zero_of_notMem_vars hQt

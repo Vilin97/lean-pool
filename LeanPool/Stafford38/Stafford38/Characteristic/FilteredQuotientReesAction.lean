@@ -392,6 +392,10 @@ noncomputable instance quotientOrderReesModuleOrderReesOpModule
   Module.compHom (QuotientOrderReesModule k I)
     (orderPieceOpDirectSumEquivReesOp (n := n) k).symm.toRingHom
 
+instance quotientOrderReesSMul (I : RightIdeal (PresentedWeyl k n)) :
+    SMul (OrderReesRing (n := n) k)ᵐᵒᵖ (QuotientOrderReesModule k I) :=
+  (quotientOrderReesModuleOrderReesOpModule k I).toSMul
+
 theorem op_smul_mem_quotientOrderPiece
     (I : RightIdeal (PresentedWeyl k n))
     {N M : ℕ} (q : quotientOrderPiece k I N)

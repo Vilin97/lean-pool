@@ -128,6 +128,7 @@ theorem exists_discreteValuationSubring_over_maximalIdeal
   let aC : C := algebraMap A C a
   have haC_mem : aC ∈ Q := by
     have ha : a ∈ Q.comap (algebraMap A C) := by
+      change a ∈ Q.under A
       rw [hQcomap, mem_maximalIdeal]
       exact ha_nonunit
     simpa only [Ideal.mem_comap, aC] using ha

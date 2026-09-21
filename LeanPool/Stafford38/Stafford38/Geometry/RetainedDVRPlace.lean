@@ -99,7 +99,7 @@ theorem exists_retainedDVRPlace
         (RingHom.ker_eq_comap_bot (algebraMap A C)).symm
       _ = ⊥ := (RingHom.injective_iff_ker_eq_bot _).mp hinjAC
   have hQmax : Q.IsMaximal := by
-    apply Ideal.isMaximal_of_isIntegral_of_isMaximal_comap
+    apply Ideal.isMaximal_of_isIntegral_of_isMaximal_under
       (R := A) (S := C) Q
     rw [hQcomap]
     exact maximalIdeal.isMaximal A
@@ -140,13 +140,14 @@ theorem exists_retainedDVRPlace
     have hfactor_mem : factor r ∈ maximalIdeal RQ := by
       change algebraMap C RQ (algebraMap A C r) ∈ maximalIdeal RQ
       rw [IsLocalization.AtPrime.to_map_mem_maximal_iff RQ Q]
-      change r ∈ Q.comap (algebraMap A C)
+      change r ∈ Q.under A
       rw [hQcomap]
       exact hrm
     exact (mem_nonunits_iff.mp hfactor_mem) hr
   let aC : C := algebraMap A C a
   have haC_mem : aC ∈ Q := by
     have ha : a ∈ Q.comap (algebraMap A C) := by
+      change a ∈ Q.under A
       rw [hQcomap, mem_maximalIdeal]
       exact ha_nonunit
     simpa only [Ideal.mem_comap, aC] using ha

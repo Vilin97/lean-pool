@@ -56,6 +56,17 @@ local instance orderGradedAlgebraInstance (n : ℕ) :
     GradedAlgebra (orderDecomposition k n) :=
   MvPolynomial.weightedGradedAlgebra k (@orderWeight n)
 
+private theorem unit_relation_of_sup_span_eq_top
+    {R : Type*} [CommRing R] (I : Ideal R) (X : R)
+    (htop : I ⊔ Ideal.span {X} = ⊤) : ∃ a : R, a * X - 1 ∈ I := by
+  have hone : (1 : R) ∈ I ⊔ Ideal.span {X} := by rw [htop]; exact Submodule.mem_top
+  obtain ⟨j, hj, s, hs, hjs⟩ := Submodule.mem_sup.mp hone
+  obtain ⟨a, ha⟩ := Ideal.mem_span_singleton.mp hs
+  refine ⟨a, ?_⟩
+  have hrelation : a * X - 1 = -j := by rw [← hjs, ha]; ring
+  rw [hrelation]
+  exact I.neg_mem hj
+
 /-- The converse needed by the terminal cancellation route: unit generation
 in the order initial ideal yields an actual order-zero coordinate predecessor
 of the unit in the canonical right quotient. -/
@@ -74,26 +85,10 @@ theorem strictUnitCoordinatePreimage_of_orderInitialIdeal_sup_coordinate_eq_top
   have hX : (X : SymbolRing k (n + 1)) =
       MvPolynomial.X (.inl (0 : Fin (n + 1))) := by
     exact coe_coordinate_order_symbol k n
-  have honeSup : (1 : SymbolRing k (n + 1)) ∈
-      orderInitialIdeal k I ⊔
-        Ideal.span {MvPolynomial.X (.inl (0 : Fin (n + 1)))} := by
-    rw [show orderInitialIdeal k I ⊔
-        Ideal.span {MvPolynomial.X (.inl (0 : Fin (n + 1)))} = ⊤ by
-      simpa [I] using htop]
-    exact Submodule.mem_top
-  obtain ⟨j, hj, s, hs, hjs⟩ := Submodule.mem_sup.mp honeSup
-  obtain ⟨a, ha⟩ := (Ideal.mem_span_singleton.mp hs)
-  have hsEq : s = a * (X : SymbolRing k (n + 1)) := by
-    calc
-      s = MvPolynomial.X (.inl (0 : Fin (n + 1))) * a := ha
-      _ = a * MvPolynomial.X (.inl (0 : Fin (n + 1))) := mul_comm _ _
-      _ = a * (X : SymbolRing k (n + 1)) := by rw [hX]
-  have hrelationInitial : s - 1 ∈ orderInitialIdeal k I := by
-    have hsj : s - 1 = -j := by
-      rw [← hjs]
-      abel
-    rw [hsj]
-    exact (orderInitialIdeal k I).neg_mem hj
+  obtain ⟨a, hrelationInitial⟩ := unit_relation_of_sup_span_eq_top
+    (orderInitialIdeal k I) (X : SymbolRing k (n + 1)) (by simpa only [hX] using htop)
+  let s := a * (X : SymbolRing k (n + 1))
+  have hsEq : s = a * (X : SymbolRing k (n + 1)) := rfl
   let A₀ : OrderHomogeneous k (n + 1) 0 :=
     DirectSum.decompose (orderDecomposition k (n + 1)) a 0
   let oneH : OrderHomogeneous k (n + 1) 0 :=

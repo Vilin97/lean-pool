@@ -83,92 +83,107 @@ lemma pairCoordinate_pow_mul_coefficient (b : B) : ∀ N : ℕ,
         _ = pairCoefficient b * pairCoordinate ^ (N + 1) := by
               rw [pairCoordinate_pow_mul_coefficient b N, pow_succ, mul_assoc]
 
+private theorem orderedMonomial_positive_factors
+    {A : Type*} [Ring A] [Algebra ℚ A]
+    (C : Subring A) (x p : A) (hweyl : p * x = x * p + 1)
+    (hcomm : ∀ c : C, x * (c : A) = (c : A) * x)
+    (hscalar : ∀ q : ℚ, algebraMap ℚ A q ∈ C)
+    (b : C) (a j N : ℕ) (hjN : j < N) :
+    ∃ U V : eulerSubring C x p,
+      ((b : A) * x ^ a * p ^ j) * x ^ N = (U : A) * x ∧
+      x ^ N * ((b : A) * x ^ a * p ^ j) = (V : A) * x := by
+  obtain ⟨f, hf⟩ := exists_eulerPolynomial_d_pow_mul_x_pow
+    (A := A) x p
+    hweyl j
+  have hpoly : eulerPolynomialEval x p f ∈
+      eulerSubring C x p :=
+    eulerPolynomialEval_mem_eulerSubring C
+      x p hscalar f
+  have hb : (b : A) ∈ eulerSubring C x p :=
+    coefficient_mem_eulerSubring C
+      x p b
+  have hxa : x ^ a ∈ eulerSubring C x p :=
+    (eulerSubring C x p).pow_mem
+      (coordinate_mem_eulerSubring C
+        x p) a
+  have hxleft : x ^ (N - j - 1) ∈ eulerSubring C x p :=
+    (eulerSubring C x p).pow_mem
+      (coordinate_mem_eulerSubring C
+        x p) (N - j - 1)
+  let U : eulerSubring C x p :=
+    ⟨(b : A) * x ^ a *
+        eulerPolynomialEval x p f *
+          x ^ (N - j - 1),
+      (eulerSubring C x p).mul_mem
+        ((eulerSubring C x p).mul_mem
+          ((eulerSubring C x p).mul_mem hb hxa) hpoly) hxleft⟩
+  obtain ⟨V, hV⟩ :=
+    orderedMonomial_eq_eulerSubring_mul_coordinate C x p hweyl hcomm hscalar b (N + a) j
+      (by omega)
+  refine ⟨U, V, ?_, ?_⟩
+  · have hpowN : x ^ N =
+        x ^ j * x ^ (N - j) := by
+      rw [← pow_add, Nat.add_sub_of_le (Nat.le_of_lt hjN)]
+    have hpowDiff : x ^ (N - j) =
+        x ^ (N - j - 1) * x := by
+      calc
+        x ^ (N - j) =
+            x ^ ((N - j - 1) + 1) := by congr 1; omega
+        _ = x ^ (N - j - 1) * x := by
+          rw [pow_add, pow_one]
+    change
+      ((b : A) * x ^ a * p ^ j) *
+          x ^ N =
+        ((b : A) * x ^ a *
+            eulerPolynomialEval x p f *
+              x ^ (N - j - 1)) * x
+    calc
+      ((b : A) * x ^ a * p ^ j) *
+          x ^ N =
+        (b : A) * x ^ a *
+          (p ^ j * x ^ j) *
+            x ^ (N - j) := by
+              rw [hpowN]
+              simp only [mul_assoc]
+      _ = (b : A) * x ^ a *
+          eulerPolynomialEval x p f *
+            x ^ (N - j) := by
+              rw [hf]
+      _ = ((b : A) * x ^ a *
+            eulerPolynomialEval x p f *
+              x ^ (N - j - 1)) * x := by
+              rw [hpowDiff]
+              simp only [mul_assoc]
+  · calc
+      x ^ N *
+          ((b : A) * x ^ a * p ^ j) =
+        (b : A) * x ^ (N + a) * p ^ j := by
+          calc
+            x ^ N *
+                ((b : A) * x ^ a * p ^ j) =
+              (x ^ N * (b : A)) *
+                x ^ a * p ^ j := by
+                  simp only [mul_assoc]
+            _ = ((b : A) * x ^ N) *
+                x ^ a * p ^ j := by
+                  rw [(Commute.pow_left (hcomm b) N).eq]
+            _ = (b : A) * x ^ (N + a) *
+                p ^ j := by
+                  rw [pow_add]
+                  simp only [mul_assoc]
+      _ = (V : A) * x := hV
+
+
 /-- A single ordered monomial with outer momentum exponent below `N` has the
 two required positive factorizations. -/
 theorem pairOrderedMonomial_hasPositiveCoordinateFactor
     (b : B) (a j N : ℕ) (hjN : j < N) :
     HasPositiveCoordinateFactor B N
       (pairCoefficient b * pairCoordinate ^ a * pairMomentum ^ j) := by
-  obtain ⟨f, hf⟩ := exists_eulerPolynomial_d_pow_mul_x_pow
-    (A := PairStage (B := B)) pairCoordinate pairMomentum
-    pairMomentum_mul_coordinate j
-  have hpoly : eulerPolynomialEval pairCoordinate pairMomentum f ∈
-      pairEulerSubring B :=
-    eulerPolynomialEval_mem_eulerSubring (pairOldSubring B)
-      pairCoordinate pairMomentum (rational_mem_pairOldSubring B) f
-  have hb : pairCoefficient b ∈ pairEulerSubring B :=
-    coefficient_mem_eulerSubring (pairOldSubring B)
-      pairCoordinate pairMomentum ⟨pairCoefficient b, ⟨b, rfl⟩⟩
-  have hxa : pairCoordinate ^ a ∈ pairEulerSubring B :=
-    (pairEulerSubring B).pow_mem
-      (coordinate_mem_eulerSubring (pairOldSubring B)
-        pairCoordinate pairMomentum) a
-  have hxleft : pairCoordinate ^ (N - j - 1) ∈ pairEulerSubring B :=
-    (pairEulerSubring B).pow_mem
-      (coordinate_mem_eulerSubring (pairOldSubring B)
-        pairCoordinate pairMomentum) (N - j - 1)
-  let U : pairEulerSubring B :=
-    ⟨pairCoefficient b * pairCoordinate ^ a *
-        eulerPolynomialEval pairCoordinate pairMomentum f *
-          pairCoordinate ^ (N - j - 1),
-      (pairEulerSubring B).mul_mem
-        ((pairEulerSubring B).mul_mem
-          ((pairEulerSubring B).mul_mem hb hxa) hpoly) hxleft⟩
-  obtain ⟨V, hV⟩ :=
-    pairOrderedMonomial_eq_eulerSubring_mul_coordinate B b (N + a) j
-      (by omega)
-  refine ⟨U, V, ?_, ?_⟩
-  · have hpowN : (pairCoordinate (B := B)) ^ N =
-        pairCoordinate ^ j * pairCoordinate ^ (N - j) := by
-      rw [← pow_add, Nat.add_sub_of_le (Nat.le_of_lt hjN)]
-    have hpowDiff : (pairCoordinate (B := B)) ^ (N - j) =
-        pairCoordinate ^ (N - j - 1) * pairCoordinate := by
-      calc
-        pairCoordinate ^ (N - j) =
-            pairCoordinate ^ ((N - j - 1) + 1) := by congr 1; omega
-        _ = pairCoordinate ^ (N - j - 1) * pairCoordinate := by
-          rw [pow_add, pow_one]
-    change
-      (pairCoefficient b * pairCoordinate ^ a * pairMomentum ^ j) *
-          pairCoordinate ^ N =
-        (pairCoefficient b * pairCoordinate ^ a *
-            eulerPolynomialEval pairCoordinate pairMomentum f *
-              pairCoordinate ^ (N - j - 1)) * pairCoordinate
-    calc
-      (pairCoefficient b * pairCoordinate ^ a * pairMomentum ^ j) *
-          pairCoordinate ^ N =
-        pairCoefficient b * pairCoordinate ^ a *
-          (pairMomentum ^ j * pairCoordinate ^ j) *
-            pairCoordinate ^ (N - j) := by
-              rw [hpowN]
-              simp only [mul_assoc]
-      _ = pairCoefficient b * pairCoordinate ^ a *
-          eulerPolynomialEval pairCoordinate pairMomentum f *
-            pairCoordinate ^ (N - j) := by
-              rw [hf]
-      _ = (pairCoefficient b * pairCoordinate ^ a *
-            eulerPolynomialEval pairCoordinate pairMomentum f *
-              pairCoordinate ^ (N - j - 1)) * pairCoordinate := by
-              rw [hpowDiff]
-              simp only [mul_assoc]
-  · calc
-      pairCoordinate ^ N *
-          (pairCoefficient b * pairCoordinate ^ a * pairMomentum ^ j) =
-        pairCoefficient b * pairCoordinate ^ (N + a) * pairMomentum ^ j := by
-          calc
-            pairCoordinate ^ N *
-                (pairCoefficient b * pairCoordinate ^ a * pairMomentum ^ j) =
-              (pairCoordinate ^ N * pairCoefficient b) *
-                pairCoordinate ^ a * pairMomentum ^ j := by
-                  simp only [mul_assoc]
-            _ = (pairCoefficient b * pairCoordinate ^ N) *
-                pairCoordinate ^ a * pairMomentum ^ j := by
-                  rw [pairCoordinate_pow_mul_coefficient B b N]
-            _ = pairCoefficient b * pairCoordinate ^ (N + a) *
-                pairMomentum ^ j := by
-                  rw [pow_add]
-                  simp only [mul_assoc]
-      _ = (V : PairStage (B := B)) * pairCoordinate := hV
+  exact orderedMonomial_positive_factors (pairOldSubring B)
+    pairCoordinate pairMomentum pairMomentum_mul_coordinate
+    (pairOldSubring_commutes_coordinate B) (rational_mem_pairOldSubring B)
+    ⟨pairCoefficient b, ⟨b, rfl⟩⟩ a j N hjN
 
 private lemma coordinateCoefficientTerm_hasPositive
     (c : CoordinateStage (B := B)) (j N : ℕ) (hjN : j < N) :
@@ -252,6 +267,35 @@ theorem normalForm_sub_X_pow_hasPositiveCoordinateFactor
   rw [(normalFormAddEquiv (coordinateDerivation (B := B))).symm_apply_apply] at hj
   exact support_sub_X_pow_lt B H N hN hgt j hj
 
+private theorem positive_residue_factor
+    {A : Type*} [Ring A] [Algebra ℚ A]
+    (C : Subring A) (x p : A) (hweyl : p * x = x * p + 1)
+    (hcomm : ∀ c : C, x * (c : A) = (c : A) * x)
+    (hscalar : ∀ q : ℚ, algebraMap ℚ A q ∈ C)
+    (d sigma : A) (N : ℕ) (hd : d = p ^ N + sigma)
+    (hpositive : ∃ U V : eulerSubring C x p,
+      sigma * x ^ N = (U : A) * x ∧ x ^ N * sigma = (V : A) * x) :
+    ∃ U : eulerSubring C x p, 1 + (U : A) * x ∈
+      canonicalRightIdeal x d N := by
+  obtain ⟨u, v, hmem⟩ := positiveEulerResidue_polynomial_mem
+    x p d sigma N hweyl hd
+  obtain ⟨U, V, hright, hleft⟩ := hpositive
+  obtain ⟨su, hsu⟩ := coordinate_mul_eulerPolynomial
+    C x p
+    hweyl hcomm
+    hscalar u
+  obtain ⟨sv, hsv⟩ := coordinate_mul_eulerPolynomial
+    C x p
+    hweyl hcomm
+    hscalar v
+  refine ⟨U * su + V * sv, ?_⟩
+  convert hmem using 1
+  simp only [Subring.coe_add, Subring.coe_mul, add_mul]
+  rw [hright, hleft]
+  simp only [mul_assoc]
+  rw [hsu, hsv]
+
+
 /-- The positive-factor interface turns the explicit Euler residue into the
 exact shaped residue consumed by quotient surjectivity. -/
 theorem positiveEulerResidue_eq_eulerSubring_mul_coordinate
@@ -261,23 +305,10 @@ theorem positiveEulerResidue_eq_eulerSubring_mul_coordinate
     ∃ U : pairEulerSubring B,
       1 + (U : PairStage (B := B)) * pairCoordinate ∈
         canonicalRightIdeal pairCoordinate d N := by
-  obtain ⟨u, v, hmem⟩ := positiveEulerResidue_polynomial_mem
-    pairCoordinate pairMomentum d sigma N pairMomentum_mul_coordinate hd
-  obtain ⟨U, V, hright, hleft⟩ := hpositive
-  obtain ⟨su, hsu⟩ := coordinate_mul_eulerPolynomial
-    (pairOldSubring B) pairCoordinate pairMomentum
-    pairMomentum_mul_coordinate (pairOldSubring_commutes_coordinate B)
-    (rational_mem_pairOldSubring B) u
-  obtain ⟨sv, hsv⟩ := coordinate_mul_eulerPolynomial
-    (pairOldSubring B) pairCoordinate pairMomentum
-    pairMomentum_mul_coordinate (pairOldSubring_commutes_coordinate B)
-    (rational_mem_pairOldSubring B) v
-  refine ⟨U * su + V * sv, ?_⟩
-  convert hmem using 1
-  simp only [Subring.coe_add, Subring.coe_mul, add_mul]
-  rw [hright, hleft]
-  simp only [mul_assoc]
-  rw [hsu, hsv]
+  exact positive_residue_factor (pairOldSubring B)
+    pairCoordinate pairMomentum pairMomentum_mul_coordinate
+    (pairOldSubring_commutes_coordinate B) (rational_mem_pairOldSubring B)
+    d sigma N hd hpositive
 
 omit [Algebra ℚ B] in
 private lemma coordinateCoefficient_mem_pairGeneratorSubring

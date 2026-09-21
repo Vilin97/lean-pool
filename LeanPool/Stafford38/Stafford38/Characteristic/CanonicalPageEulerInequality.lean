@@ -24,6 +24,35 @@ variable (n N : ℕ) (d : PresentedWeyl k (n + 1))
 variable (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
 variable (S : Submonoid (MvPolynomial (Fin n ⊕ Fin n) k))
 attribute [local instance] sourceModule targetModule
+private def sourceSuccLocalized (r : ℕ) :
+    LocalizedModule S ((complex k n N d hd).SourceTotal ((r + 1) + 1)) ≃ₗ[Localization S]
+      LinearMap.ker (localizedMap S (tangentialDrop k n N d hd (r + 1))) := by
+  exact (localizedEquiv
+    (U := (complex k n N d hd).SourceTotal ((r + 1) + 1))
+    (V := LinearMap.ker (tangentialDrop k n N d hd (r + 1))) S
+    (tangentialSourceSuccEquiv k n N d hd (r + 1))).trans
+      (localizedKernelEquiv S (tangentialDrop k n N d hd (r + 1)))
+
+private def targetSuccLocalized (r : ℕ) :
+    LocalizedModule S ((complex k n N d hd).TargetTotal ((r + 1) + 1)) ≃ₗ[Localization S]
+      LocalizedModule S ((complex k n N d hd).TargetTotal (r + 1)) ⧸
+        LinearMap.range (localizedMap S (tangentialDrop k n N d hd (r + 1))) := by
+  exact (localizedEquiv S (tangentialTargetSuccEquiv k n N d hd (r + 1))).trans
+    (localizedCokernelEquiv S (tangentialDrop k n N d hd (r + 1)))
+
+private theorem localized_boundary_subsingleton
+    (hC0 : IsFiniteLength (Localization S)
+      (LocalizedModule S ((complex k n N d hd).TargetTotal 1))) :
+    ∃ r, Subsingleton (LocalizedModule S ((complex k n N d hd).TargetTotal (r + 1))) := by
+  letI : IsNoetherian (Localization S)
+      (LocalizedModule S ((complex k n N d hd).TargetTotal 1)) :=
+    (isFiniteLength_iff_isNoetherian_isArtinian.mp hC0).1
+  exact exists_uniform_subsingleton_localized S
+    (fun r => tangentialBoundaryMap k n N d hd r)
+    (tangentialBoundaryMap_ker_mono k n N d hd)
+    (fun z => tangentialBoundaryMap_eventually_zero k n N d hd z)
+    (fun r => tangentialBoundaryMap_surjective k n N d hd r)
+
 theorem canonicalPage_length_target_le_source : ∀
     (hA0 : IsFiniteLength (Localization S)
       (LocalizedModule S ((complex k n N d hd).SourceTotal 1)))
@@ -32,39 +61,14 @@ theorem canonicalPage_length_target_le_source : ∀
     Module.length (Localization S) (LocalizedModule S ((complex k n N d hd).TargetTotal 1)) ≤
       Module.length (Localization S) (LocalizedModule S ((complex k n N d hd).SourceTotal 1)) := by
   intro hA0 hC0
-  let A : ℕ → Type _ := fun r => LocalizedModule S ((complex k n N d hd).SourceTotal (r+1))
-  let C : ℕ → Type _ := fun r => LocalizedModule S ((complex k n N d hd).TargetTotal (r+1))
-  letI : ∀ r, AddCommGroup (A r) := fun r => by dsimp only [A]; infer_instance
-  letI : ∀ r, Module (Localization S) (A r) := fun r => by dsimp only [A]; infer_instance
-  letI : ∀ r, AddCommGroup (C r) := fun r => by dsimp only [C]; infer_instance
-  letI : ∀ r, Module (Localization S) (C r) := fun r => by dsimp only [C]; infer_instance
-  let dd : ∀ r, A r →ₗ[Localization S] C r := fun r =>
-    localizedMap S (tangentialDrop k n N d hd (r+1))
-  have hA0' : IsFiniteLength (Localization S) (A 0) := by simpa [A] using hA0
-  have hC0' : IsFiniteLength (Localization S) (C 0) := by simpa [C] using hC0
-  have hs : ∀ r, A (r+1) ≃ₗ[Localization S] LinearMap.ker (dd r) := by
-    intro r
-    dsimp only [A, dd]
-    exact (localizedEquiv
-      (U := (complex k n N d hd).SourceTotal ((r + 1) + 1))
-      (V := LinearMap.ker (tangentialDrop k n N d hd (r + 1))) S
-      (tangentialSourceSuccEquiv k n N d hd (r+1))).trans
-        (localizedKernelEquiv S (tangentialDrop k n N d hd (r+1)))
-  have ht : ∀ r, C (r+1) ≃ₗ[Localization S] C r ⧸ LinearMap.range (dd r) := by
-    intro r
-    dsimp only [C, dd]
-    exact (localizedEquiv S (tangentialTargetSuccEquiv k n N d hd (r+1))).trans
-      (localizedCokernelEquiv S (tangentialDrop k n N d hd (r+1)))
-  letI : IsNoetherian (Localization S)
-      (LocalizedModule S ((complex k n N d hd).TargetTotal 1)) :=
-    (isFiniteLength_iff_isNoetherian_isArtinian.mp hC0).1
-  obtain ⟨N', hN'⟩ := exists_uniform_subsingleton_localized S
-    (fun r => tangentialBoundaryMap k n N d hd r)
-    (tangentialBoundaryMap_ker_mono k n N d hd)
-    (fun z => tangentialBoundaryMap_eventually_zero k n N d hd z)
-    (fun r => tangentialBoundaryMap_surjective k n N d hd r)
-  simpa [A, C] using twoTermPage_length_target_le_source A C hA0' hC0' dd hs ht N'
- #print axioms canonicalPage_length_target_le_source
+  obtain ⟨r, hr⟩ := localized_boundary_subsingleton k n N d hd S hC0
+  exact @twoTermPage_length_target_le_source (Localization S) _
+    (fun r => LocalizedModule S ((complex k n N d hd).SourceTotal (r + 1)))
+    (fun r => LocalizedModule S ((complex k n N d hd).TargetTotal (r + 1)))
+    (fun _ => inferInstance) (fun _ => inferInstance)
+    (fun _ => inferInstance) (fun _ => inferInstance)
+    hA0 hC0 (fun r => localizedMap S (tangentialDrop k n N d hd (r + 1)))
+    (sourceSuccLocalized k n N d hd S) (targetSuccLocalized k n N d hd S) r hr
 
 end
 end Stafford38.Characteristic.CanonicalPageEulerInequality

@@ -112,22 +112,23 @@ def Data.completedPowerSeriesEquiv
       V
       (relativeResidue_isSeparable W.coefficientField W.place))
 
-/-- A finitely generated characteristic-zero function field and a selected
-transcendental element admit a retained relative boundary place. -/
-theorem exists_data_of_fg_charZero
-    (k : Type u) [Field k] [CharZero k]
-    {K : Type u} [Field K] [Algebra k K]
-    (hfg : (⊤ : IntermediateField k K).FG)
-    (x : K) (hx : Transcendental k x) :
-    Nonempty (Data k K x) := by
-  obtain ⟨s, E, F, hxs, hs, hE, hF, hrestrict, hxE, hxF,
-      hfin, hsep⟩ :=
-    exists_relative_finite_separable_tower_of_charZero k hfg x hx
-  subst F
+private theorem exists_retained_over_adjoin
+    (E : Type u) [Field E] {K : Type u} [Field K] [Algebra E K]
+    (x : K) (hxE : Transcendental E x)
+    (hfin : FiniteDimensional (IntermediateField.adjoin E ({x} : Set K)) K)
+    (hsep : Algebra.IsSeparable (IntermediateField.adjoin E ({x} : Set K)) K) :
+    ∃ algRK : Algebra (SourceDVR E) K,
+      letI : Algebra (SourceDVR E) K := algRK
+      IsScalarTower E (SourceDVR E) K ∧
+      algebraMap (SourceDVR E) K
+        (algebraMap (Polynomial E) (SourceDVR E) Polynomial.X) = x ∧
+      Nonempty (RetainedDVRPlace (SourceDVR E) (L := K)
+        (algebraMap (Polynomial E) (SourceDVR E) Polynomial.X)) := by
   let R := SourceDVR E
   let L := FractionRing R
   let F := IntermediateField.adjoin E ({x} : Set K)
   let e : L ≃ₐ[E] F := coordinateLocalFractionEquivAdjoin E x hxE
+  letI : SMul E L := Algebra.toSMul
   letI : IsScalarTower E R L :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   let algRF : Algebra R F :=
@@ -176,13 +177,29 @@ theorem exists_data_of_fg_charZero
   obtain ⟨D⟩ :=
     exists_retainedDVRPlace (A := R) (F := F) (L := K)
       q hq_ne hq_nonunit
+  exact ⟨algRK, coefficientTower, hcoordinate, ⟨D⟩⟩
+
+
+/-- A finitely generated characteristic-zero function field and a selected
+transcendental element admit a retained relative boundary place. -/
+theorem exists_data_of_fg_charZero
+    (k : Type u) [Field k] [CharZero k]
+    {K : Type u} [Field K] [Algebra k K]
+    (hfg : (⊤ : IntermediateField k K).FG)
+    (x : K) (hx : Transcendental k x) :
+    Nonempty (Data k K x) := by
+  obtain ⟨s, E, F, hxs, hs, hE, hF, hrestrict, hxE, hxF,
+      hfin, hsep⟩ :=
+    exists_relative_finite_separable_tower_of_charZero k hfg x hx
+  subst F
+  obtain ⟨algRK, tower, coordinate, D⟩ := exists_retained_over_adjoin E x hxE hfin hsep
   exact ⟨{
     coefficientField := E
     coordinate_transcendental := hxE
     ambientAlgebra := algRK
-    coefficientTower := coefficientTower
-    coordinate_eq := hcoordinate
-    place := D
+    coefficientTower := tower
+    coordinate_eq := coordinate
+    place := D.some
   }⟩
 
 

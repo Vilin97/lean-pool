@@ -50,7 +50,7 @@ private theorem weightedHomogeneousComponent_monomial_mul_eq_zero_of_lt
       rw [← hsplit]
       simp [monomialWeight, Finsupp.sum_add_index, add_mul]
     have hne : monomialWeight w q ≠ T := by omega
-    rw [finsupp_weight_eq_monomialWeight, if_neg hne]
+    rw [finsupp_weight_eq_monomialWeight, if_neg hne, Finsupp.zero_apply]
   · rw [if_neg hsq]
     simp
 
@@ -69,11 +69,11 @@ private theorem phaseExponent_old_contraction_exponents
   have hmapCoordinate (s : PhaseVar n →₀ ℕ) (j : Fin n) :
       Finsupp.mapDomain oldIndex s (.inl j.succ) = s (.inl j) := by
     change Finsupp.mapDomain oldIndex s (oldIndex (.inl j)) = _
-    rw [Finsupp.mapDomain_apply oldIndex_injective]
+    rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
   have hmapMomentum (s : PhaseVar n →₀ ℕ) (j : Fin n) :
       Finsupp.mapDomain oldIndex s (.inr j.succ) = s (.inr j) := by
     change Finsupp.mapDomain oldIndex s (oldIndex (.inr j)) = _
-    rw [Finsupp.mapDomain_apply oldIndex_injective]
+    rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
   have hmapCoordinateZero (s : PhaseVar n →₀ ℕ) :
       Finsupp.mapDomain oldIndex s (.inl (0 : Fin (n + 1))) = 0 := by
     apply Finsupp.mapDomain_notin_range
@@ -148,7 +148,7 @@ private theorem phaseExponent_newest_contraction_exponents
     · have hmap (s : PhaseVar n →₀ ℕ) :
           Finsupp.mapDomain oldIndex s (.inl j.succ) = s (.inl j) := by
         change Finsupp.mapDomain oldIndex s (oldIndex (.inl j)) = _
-        rw [Finsupp.mapDomain_apply oldIndex_injective]
+        rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
       have hzero : (0 : Fin (n + 1)) ≠ j.succ :=
         Ne.symm (Fin.succ_ne_zero j)
       simp [extendPhaseExponent, phaseExponent, Finsupp.single_apply,
@@ -164,7 +164,7 @@ private theorem phaseExponent_newest_contraction_exponents
     · have hmap (s : PhaseVar n →₀ ℕ) :
           Finsupp.mapDomain oldIndex s (.inr j.succ) = s (.inr j) := by
         change Finsupp.mapDomain oldIndex s (oldIndex (.inr j)) = _
-        rw [Finsupp.mapDomain_apply oldIndex_injective]
+        rw [Finsupp.mapDomain_apply_of_injective oldIndex_injective]
       have hzero : (0 : Fin (n + 1)) ≠ j.succ :=
         Ne.symm (Fin.succ_ne_zero j)
       simp [extendPhaseExponent, phaseExponent, Finsupp.single_apply,
@@ -212,9 +212,8 @@ theorem pbwFirstContraction_phaseExponent_succ
           (pbwFirstContraction k
             (phaseExponent (fun i => a i.succ) (fun i => p i.succ))
             (phaseExponent (fun i => c i.succ) (fun i => q i.succ))) := by
-  rw [pbwFirstContraction, Fin.sum_univ_succ,
-    pbwFirstContraction, map_sum, Finset.mul_sum]
-  congr 1
+  simp only [pbwFirstContraction, Fin.sum_univ_succ, map_sum, Finset.mul_sum]
+  refine congrArg₂ (· + ·) rfl ?_
   apply Finset.sum_congr rfl
   intro i hi
   exact firstContraction_old_term k n a p c q i
