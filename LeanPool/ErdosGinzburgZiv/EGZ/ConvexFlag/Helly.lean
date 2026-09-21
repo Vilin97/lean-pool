@@ -431,47 +431,23 @@ private theorem mem_weakConvexHull_deletion_of_combination_projection
     exact (mem_weakConvexHull_iff_exists_projection hdel result).2
       ⟨lift, hliftHull, hliftBase, hliftCoord.symm⟩
 
-/-- The flagged Doignon step used in the proof of Flag Helly. -/
-private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
-    {I : Type*} [Fintype I] (points : I → F.Point)
-    (hinjective : Function.Injective points)
-    (hproper : ∀ i, points i ∈ Ω)
-    (hintegral : ∀ i, (points i).IsIntegral)
-    (hlarge : hellyConstant Ω < Fintype.card I) :
-    ∃ q, q ∈ Ω ∧ q.IsIntegral ∧
-      ∀ i, q ∈ F.weakConvexHull (deletion points i) := by
+private def DoignonCounterexample {F : ConvexFlag} (Ω : F.ProperPointSet)
+    {I : Type*} (p : I → F.Point) : Prop :=
+  Function.Injective p ∧ (∀ i, p i ∈ Ω) ∧ (∀ i, (p i).IsIntegral) ∧
+    ∀ q, q ∈ Ω → q.IsIntegral → ∃ i, q ∉ F.weakConvexHull (deletion p i)
+
+private noncomputable def doignonHullScore {F : ConvexFlag} (Ω : F.ProperPointSet)
+    {I : Type*} (p : I → F.Point) : ℕ := by
   classical
-  by_contra hconclusion
-  push Not at hconclusion
-  let Counterexample : (I → F.Point) → Prop := fun p ↦
-    Function.Injective p ∧
-    (∀ i, p i ∈ Ω) ∧
-    (∀ i, (p i).IsIntegral) ∧
-    ∀ q, q ∈ Ω → q.IsIntegral →
-      ∃ i, q ∉ F.weakConvexHull (deletion p i)
-  have hcounterPoints : Counterexample points :=
-    ⟨hinjective, hproper, hintegral, hconclusion⟩
-  let hullScore (p : I → F.Point) : ℕ :=
-    (Finset.univ.filter fun q : {q : F.Point // q.IsIntegral} ↦
-      q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p)).card
-  let ScoreWitness : ℕ → Prop := fun k ↦
-    ∃ p : I → F.Point, Counterexample p ∧ hullScore p = k
-  have hScoreWitness : ∃ k, ScoreWitness k :=
-    ⟨hullScore points, points, hcounterPoints, rfl⟩
-  let minimumScore := Nat.find hScoreWitness
-  obtain ⟨p, hp, hscorep⟩ := Nat.find_spec hScoreWitness
-  have hminimal {p' : I → F.Point} (hp' : Counterexample p') :
-      hullScore p ≤ hullScore p' := by
-    calc
-      hullScore p = minimumScore := hscorep
-      _ ≤ hullScore p' := Nat.find_min' hScoreWitness ⟨p', hp', rfl⟩
-  have hweakExtreme (i : I) :
-      p i ∉ F.weakConvexHull (deletion p i) := by
-    obtain ⟨j, hj⟩ := hp.2.2.2 (p i) (hp.2.1 i) (hp.2.2.1 i)
-    have hji : j = i := by
-      by_contra hne
-      exact hj (subset_weakConvexHull F (deletion p j) ⟨i, Ne.symm hne, rfl⟩)
-    simpa only [hji] using hj
+  exact (Finset.univ.filter fun q : {q : F.Point // q.IsIntegral} ↦
+    q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p)).card
+
+private theorem exists_integral_point_outside_range {F : ConvexFlag} (Ω : F.ProperPointSet)
+    {I : Type*} [Fintype I] (p : I → F.Point) (hp : DoignonCounterexample Ω p)
+    (hlarge : hellyConstant Ω < Fintype.card I) :
+    ∃ r : F.Point, r ∈ Ω ∧ r.IsIntegral ∧
+      r ∈ F.weakConvexHull (Set.range p) ∧ r ∉ Set.range p := by
+  classical
   let e : Fin (Fintype.card I) ≃ I := (Fintype.equivFin I).symm
   have hnotIndependent : ¬ HellyIndependent Ω (p ∘ e) := by
     intro h
@@ -533,6 +509,319 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
   have hr₀notRange : r₀ ∉ Set.range p := by
     rintro ⟨i, rfl⟩
     exact hnoProjection i ⟨le_rfl, (Point.coord_base (p i)).symm⟩
+  exact ⟨r₀, hr₀Ω, hr₀int, hr₀Weak, hr₀notRange⟩
+
+private theorem doignonHullScore_lt_of_missing {F : ConvexFlag} (Ω : F.ProperPointSet)
+    {I : Type*} (p p' : I → F.Point) (i : I)
+    (hproper : p i ∈ Ω) (hintegral : (p i).IsIntegral)
+    (hclosureSubset : F.weakConvexHull (Set.range p') ⊆ F.weakConvexHull (Set.range p))
+    (hmissing : p i ∉ F.weakConvexHull (Set.range p')) :
+    doignonHullScore Ω p' < doignonHullScore Ω p := by
+  classical
+  apply Finset.card_lt_card
+  apply Finset.ssubset_iff_subset_ne.mpr
+  constructor
+  · intro q hq
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hq ⊢
+    exact ⟨hq.1, hclosureSubset hq.2⟩
+  · intro heq
+    let qj : {q : F.Point // q.IsIntegral} := ⟨p i, hintegral⟩
+    have hold : qj ∈ Finset.univ.filter (fun q : {q : F.Point // q.IsIntegral} ↦
+        q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p)) := by
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and, qj]
+      exact ⟨hproper, subset_weakConvexHull F _ ⟨i, rfl⟩⟩
+    have hnew : qj ∉ Finset.univ.filter (fun q : {q : F.Point // q.IsIntegral} ↦
+        q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p')) := by
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and, qj, not_and]
+      exact fun _ ↦ hmissing
+    change (Finset.univ.filter fun q : {q : F.Point // q.IsIntegral} ↦
+        q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p')) =
+      (Finset.univ.filter fun q : {q : F.Point // q.IsIntegral} ↦
+        q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p)) at heq
+    rw [← heq] at hold
+    exact hnew hold
+
+private theorem injective_update_of_not_mem_range {F : ConvexFlag}
+    {I : Type*} [DecidableEq I] (p : I → F.Point) (hinjective : Function.Injective p)
+    (r : F.Point) (hr : r ∉ Set.range p) (j : I) :
+    Function.Injective (Function.update p j r) := by
+  classical
+  let p' := Function.update p j r
+  have hp'j : p' j = r := by simp [p']
+  have hp'ne (k : I) (hkj : k ≠ j) : p' k = p k := by simp [p', hkj]
+  change Function.Injective p'
+  intro a b hab
+  by_cases haj : a = j
+  · subst a
+    by_cases hbj : b = j
+    · exact hbj.symm
+    · have : r = p b := by simpa [hp'j, hp'ne b hbj] using hab
+      exact False.elim (hr ⟨b, this.symm⟩)
+  · by_cases hbj : b = j
+    · subst b
+      have : p a = r := by simpa [hp'j, hp'ne a haj] using hab
+      exact False.elim (hr ⟨a, this⟩)
+    · apply hinjective
+      simpa [hp'ne a haj, hp'ne b hbj] using hab
+
+private theorem doignon_projection_contradiction {F : ConvexFlag} (Ω : F.ProperPointSet)
+    {I : Type*} [Finite I] (p : I → F.Point) (hp : DoignonCounterexample Ω p)
+    (hminimal : ∀ {p' : I → F.Point}, DoignonCounterexample Ω p' →
+      doignonHullScore Ω p ≤ doignonHullScore Ω p')
+    (hweakExtreme : ∀ i, p i ∉ F.weakConvexHull (deletion p i))
+    (r : {q : F.Point // q.IsIntegral}) (hrΩ : r.1 ∈ Ω)
+    (hrWeak : r.1 ∈ F.weakConvexHull (Set.range p)) (hrNotRange : r.1 ∉ Set.range p)
+    (i : I) (hri : r.1.IsProjectionOf (p i)) : False := by
+  classical
+  have hfiniteRange : (Set.range p).Finite := Set.finite_range p
+  have hrSingleton : r.1 ∈ F.weakConvexHull ({p i} : Set F.Point) :=
+    mem_weakConvexHull_singleton_of_projection hri
+  have hrOther (k : I) (hki : k ≠ i) :
+      r.1 ∈ F.weakConvexHull (deletion p k) := by
+    apply weakConvexHull_mono (A := ({p i} : Set F.Point))
+      (B := deletion p k) (fun x hx ↦ ?_) hrSingleton
+    rw [Set.mem_singleton_iff] at hx
+    subst x
+    exact ⟨i, Ne.symm hki, rfl⟩
+  by_cases hrDelete : r.1 ∈ F.weakConvexHull (deletion p i)
+  · have hgood : ∀ k, r.1 ∈ F.weakConvexHull (deletion p k) := by
+      intro k
+      by_cases hki : k = i
+      · simpa only [hki] using hrDelete
+      · exact hrOther k hki
+    obtain ⟨k, hk⟩ := hp.2.2.2 r.1 hrΩ r.2
+    exact hk (hgood k)
+  · let p' : I → F.Point := Function.update p i r.1
+    have hp'i : p' i = r.1 := by simp [p']
+    have hp'ne (k : I) (hki : k ≠ i) : p' k = p k := by simp [p', hki]
+    have hdeleteI : deletion p' i = deletion p i := by
+      ext x
+      constructor
+      · rintro ⟨k, hki, rfl⟩
+        exact ⟨k, hki, (hp'ne k hki).symm⟩
+      · rintro ⟨k, hki, rfl⟩
+        exact ⟨k, hki, hp'ne k hki⟩
+    have hp'injective : Function.Injective p' :=
+      injective_update_of_not_mem_range p hp.1 r.1 hrNotRange i
+    have hp'proper (k : I) : p' k ∈ Ω := by
+      by_cases hki : k = i
+      · simpa [hki, hp'i] using hrΩ
+      · simpa [hp'ne k hki] using hp.2.1 k
+    have hp'integral (k : I) : (p' k).IsIntegral := by
+      by_cases hki : k = i
+      · simpa [hki, hp'i] using r.2
+      · simpa [hp'ne k hki] using hp.2.2.1 k
+    have hreplacementSubset (k : I) (hki : k ≠ i) :
+        deletion p' k ⊆ F.weakConvexHull (deletion p k) := by
+      intro x hx
+      obtain ⟨j, hjk, rfl⟩ := hx
+      by_cases hji : j = i
+      · subst j
+        rw [hp'i]
+        exact hrOther k hki
+      · rw [hp'ne j hji]
+        exact subset_weakConvexHull F _ ⟨j, hjk, rfl⟩
+    have hp'WeaklyConvex : ∀ k,
+        p' k ∉ F.weakConvexHull (deletion p' k) := by
+      intro k
+      by_cases hki : k = i
+      · subst k
+        rw [hp'i, hdeleteI]
+        exact hrDelete
+      · intro hk
+        have := weakConvexHull_absorb (hreplacementSubset k hki) hk
+        rw [hp'ne k hki] at this
+        exact hweakExtreme k this
+    have hpiNotNew : p i ∉ F.weakConvexHull (Set.range p') := by
+      intro hpi
+      obtain ⟨u, huHull, hpiProjection⟩ :=
+        (mem_weakConvexHull_iff_exists_projection (Set.finite_range p') (p i)).1 hpi
+      rcases huHull with ⟨n, uPoint, uWeight, huPoint, huComb⟩
+      by_cases husesR : ∃ a, 0 < uWeight a ∧ uPoint a = r.1
+      · obtain ⟨a, ha, har⟩ := husesR
+        have hru : r.1.base ≤ u.base := by
+          simpa only [har] using huComb.base_isLUB.1 a ha
+        rcases hpiProjection with ⟨hupi, -⟩
+        have hrpi : r.1.base ≤ (p i).base := hru.trans hupi
+        exact hrNotRange ⟨i, (r.1.eq_of_projection_of_base_le hri hrpi).symm⟩
+      · push Not at husesR
+        have huDelete : u ∈ F.convexHull (deletion p i) := by
+          apply huComb.mem_convexHull_of_active_mem
+          intro a ha
+          obtain ⟨j, hj⟩ := huPoint a
+          by_cases hji : j = i
+          · subst j
+            exact False.elim (husesR a ha (hj.symm.trans hp'i))
+          · exact ⟨j, hji, (hp'ne j hji).symm.trans hj⟩
+        have hdeleteFinite : (deletion p i).Finite :=
+          hfiniteRange.subset (by
+            rintro x ⟨j, -, rfl⟩
+            exact ⟨j, rfl⟩)
+        exact hweakExtreme i
+          ((mem_weakConvexHull_iff_exists_projection
+            hdeleteFinite (p i)).2 ⟨u, huDelete, hpiProjection⟩)
+    have hrangeSubset : Set.range p' ⊆ F.weakConvexHull (Set.range p) := by
+      rintro x ⟨k, rfl⟩
+      by_cases hki : k = i
+      · subst k
+        simpa only [hp'i] using hrWeak
+      · rw [hp'ne k hki]
+        exact subset_weakConvexHull F _ ⟨k, rfl⟩
+    have hclosureSubset : F.weakConvexHull (Set.range p') ⊆
+        F.weakConvexHull (Set.range p) :=
+      weakConvexHull_absorb hrangeSubset
+    have hscoreLt : doignonHullScore Ω p' < doignonHullScore Ω p :=
+      doignonHullScore_lt_of_missing Ω p p' i (hp.2.1 i) (hp.2.2.1 i)
+        hclosureSubset hpiNotNew
+    have hgoodNew : ∃ q, q ∈ Ω ∧ q.IsIntegral ∧
+        ∀ k, q ∈ F.weakConvexHull (deletion p' k) := by
+      by_contra hnone
+      push Not at hnone
+      have hp'counter : DoignonCounterexample Ω p' :=
+        ⟨hp'injective, hp'proper, hp'integral, hnone⟩
+      exact (not_le_of_gt hscoreLt) (hminimal hp'counter)
+    obtain ⟨s, hsΩ, hsint, hs⟩ := hgoodNew
+    have hsOld : ∀ k, s ∈ F.weakConvexHull (deletion p k) := by
+      intro k
+      by_cases hki : k = i
+      · subst k
+        rw [← hdeleteI]
+        exact hs i
+      · exact weakConvexHull_absorb (hreplacementSubset k hki) (hs k)
+    obtain ⟨k, hk⟩ := hp.2.2.2 s hsΩ hsint
+    exact hk (hsOld k)
+
+private theorem not_mem_replacement_of_no_projection {F : ConvexFlag}
+    {I : Type*} [Finite I] (p : I → F.Point)
+    (hweakExtreme : ∀ i, p i ∉ F.weakConvexHull (deletion p i))
+    (r : {q : F.Point // q.IsIntegral}) (hrWeak : r.1 ∈ F.weakConvexHull (Set.range p))
+    (hrProjection : ¬ ∃ i, r.1.IsProjectionOf (p i)) (i : I) :
+    p i ∉ F.weakConvexHull (Set.insert r.1 (deletion p i)) := by
+  classical
+  have hfiniteRange : (Set.range p).Finite := Set.finite_range p
+  obtain ⟨xi, hpiEval, hsep⟩ :=
+    exists_strictSeparator_of_not_mem_weakConvexHull (hweakExtreme i)
+  intro hpiReplacement
+  obtain ⟨a, ha, haEval, hpia⟩ := hpiReplacement xi hpiEval
+  have har : a = r.1 := by
+    rcases ha with (rfl | haDelete)
+    · rfl
+    · have := hsep a haDelete haEval
+      linarith
+  subst a
+  obtain ⟨b, hbRange, hbEval, hrb⟩ := hrWeak xi haEval
+  obtain ⟨k, hk⟩ := hbRange
+  have hki : k = i := by
+    by_contra hne
+    have hbDelete : b ∈ deletion p i := ⟨k, hne, hk⟩
+    have := hsep b hbDelete hbEval
+    linarith
+  subst k
+  have hbTarget : xi.eval b hbEval = xi.eval (p i) hpiEval :=
+    xi.eval_congr_point hk.symm hbEval hpiEval
+  have hrTarget : xi.eval r.1 haEval = xi.eval (p i) hpiEval := by
+    apply le_antisymm
+    · exact hrb.trans_eq hbTarget
+    · exact hpia
+  obtain ⟨lift, hliftHull, hrLiftProjection⟩ :=
+    (mem_weakConvexHull_iff_exists_projection hfiniteRange r.1).1 hrWeak
+  rcases hliftHull with ⟨n, liftPoint, liftWeight, hliftPoint, hliftComb⟩
+  rcases hrLiftProjection with ⟨hliftBase, hliftVal⟩
+  let hliftEval : xi.EvaluableAt lift := hliftBase.trans haEval
+  have hliftTarget : xi.eval lift hliftEval = xi.eval (p i) hpiEval := by
+    have hprojEval := xi.eval_eq_of_projection r.1 lift hliftBase hliftVal haEval
+    exact hprojEval.symm.trans hrTarget
+  have hactiveEq (t : Fin n) (ht : 0 < liftWeight t) : liftPoint t = p i := by
+    by_contra htne
+    let htEval : xi.EvaluableAt (liftPoint t) :=
+      (hliftComb.base_isLUB.1 t ht).trans hliftEval
+    have htDelete : liftPoint t ∈ deletion p i := by
+      obtain ⟨m, hm⟩ := hliftPoint t
+      have hmi : m ≠ i := by
+        intro hmi
+        subst m
+        exact htne hm.symm
+      exact ⟨m, hmi, hm⟩
+    have htStrict := hsep (liftPoint t) htDelete htEval
+    have hall (u : {u : Fin n // 0 < liftWeight u}) :
+        xi.eval (liftPoint u)
+            ((hliftComb.base_isLUB.1 u u.property).trans hliftEval) ≤
+          xi.eval (p i) hpiEval := by
+      by_cases hui : liftPoint u = p i
+      · exact le_of_eq (xi.eval_congr_point hui _ _)
+      · exact le_of_lt (hsep (liftPoint u) (by
+          obtain ⟨m, hm⟩ := hliftPoint u
+          have hmi : m ≠ i := by
+            intro hmi
+            subst m
+            exact hui hm.symm
+          exact ⟨m, hmi, hm⟩) _)
+    have hsumlt :
+        (∑ u : {u : Fin n // 0 < liftWeight u},
+          liftWeight u * xi.eval (liftPoint u)
+            ((hliftComb.base_isLUB.1 u u.property).trans hliftEval)) <
+          ∑ u : {u : Fin n // 0 < liftWeight u},
+            liftWeight u * xi.eval (p i) hpiEval := by
+      apply Finset.sum_lt_sum
+      · intro u _
+        exact mul_le_mul_of_nonneg_left (hall u) u.property.le
+      · let tt : {u : Fin n // 0 < liftWeight u} := ⟨t, ht⟩
+        exact ⟨tt, Finset.mem_univ tt,
+          mul_lt_mul_of_pos_left htStrict tt.property⟩
+    have hleft :
+        (∑ u : {u : Fin n // 0 < liftWeight u},
+          liftWeight u * xi.eval (liftPoint u)
+            ((hliftComb.base_isLUB.1 u u.property).trans hliftEval)) =
+          xi.eval (p i) hpiEval :=
+      (hliftComb.eval_eq xi hliftEval).symm.trans hliftTarget
+    have hright :
+        (∑ u : {u : Fin n // 0 < liftWeight u},
+          liftWeight u * xi.eval (p i) hpiEval) =
+          xi.eval (p i) hpiEval := by
+      rw [← Finset.sum_mul, hliftComb.sum_active, one_mul]
+    rw [hleft, hright] at hsumlt
+    exact (lt_irrefl _ hsumlt)
+  have hliftEq : lift = p i :=
+    hliftComb.result_eq_of_active_eq hactiveEq
+  apply hrProjection
+  refine ⟨i, ?_⟩
+  exact Eq.mp (congrArg (fun q : F.Point ↦ r.1.IsProjectionOf q) hliftEq)
+    ⟨hliftBase, hliftVal⟩
+
+/-- The flagged Doignon step used in the proof of Flag Helly. -/
+private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
+    {I : Type*} [Fintype I] (points : I → F.Point)
+    (hinjective : Function.Injective points)
+    (hproper : ∀ i, points i ∈ Ω)
+    (hintegral : ∀ i, (points i).IsIntegral)
+    (hlarge : hellyConstant Ω < Fintype.card I) :
+    ∃ q, q ∈ Ω ∧ q.IsIntegral ∧
+      ∀ i, q ∈ F.weakConvexHull (deletion points i) := by
+  classical
+  by_contra hconclusion
+  push Not at hconclusion
+  have hcounterPoints : DoignonCounterexample Ω points :=
+    ⟨hinjective, hproper, hintegral, hconclusion⟩
+  let ScoreWitness : ℕ → Prop := fun k ↦
+    ∃ p : I → F.Point, DoignonCounterexample Ω p ∧ doignonHullScore Ω p = k
+  have hScoreWitness : ∃ k, ScoreWitness k :=
+    ⟨doignonHullScore Ω points, points, hcounterPoints, rfl⟩
+  let minimumScore := Nat.find hScoreWitness
+  obtain ⟨p, hp, hscorep⟩ := Nat.find_spec hScoreWitness
+  have hminimal {p' : I → F.Point} (hp' : DoignonCounterexample Ω p') :
+      doignonHullScore Ω p ≤ doignonHullScore Ω p' := by
+    calc
+      doignonHullScore Ω p = minimumScore := hscorep
+      _ ≤ doignonHullScore Ω p' := Nat.find_min' hScoreWitness ⟨p', hp', rfl⟩
+  have hweakExtreme (i : I) :
+      p i ∉ F.weakConvexHull (deletion p i) := by
+    obtain ⟨j, hj⟩ := hp.2.2.2 (p i) (hp.2.1 i) (hp.2.2.1 i)
+    have hji : j = i := by
+      by_contra hne
+      exact hj (subset_weakConvexHull F (deletion p j) ⟨i, Ne.symm hne, rfl⟩)
+    simpa only [hji] using hj
+  obtain ⟨r₀, hr₀Ω, hr₀int, hr₀Weak, hr₀notRange⟩ :=
+    exists_integral_point_outside_range Ω p hp hlarge
   let R : Finset {q : F.Point // q.IsIntegral} :=
     Finset.univ.filter fun q ↦
       q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p) ∧ q.1 ∉ Set.range p
@@ -551,244 +840,11 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
   have hrNotRange : r.1 ∉ Set.range p := hrData.2.2
   by_cases hrProjection : ∃ i, r.1.IsProjectionOf (p i)
   · obtain ⟨i, hri⟩ := hrProjection
-    have hrSingleton : r.1 ∈ F.weakConvexHull ({p i} : Set F.Point) :=
-      mem_weakConvexHull_singleton_of_projection hri
-    have hrOther (k : I) (hki : k ≠ i) :
-        r.1 ∈ F.weakConvexHull (deletion p k) := by
-      apply weakConvexHull_mono (A := ({p i} : Set F.Point))
-        (B := deletion p k) (fun x hx ↦ ?_) hrSingleton
-      rw [Set.mem_singleton_iff] at hx
-      subst x
-      exact ⟨i, Ne.symm hki, rfl⟩
-    by_cases hrDelete : r.1 ∈ F.weakConvexHull (deletion p i)
-    · have hgood : ∀ k, r.1 ∈ F.weakConvexHull (deletion p k) := by
-        intro k
-        by_cases hki : k = i
-        · simpa only [hki] using hrDelete
-        · exact hrOther k hki
-      obtain ⟨k, hk⟩ := hp.2.2.2 r.1 hrΩ r.2
-      exact hk (hgood k)
-    · let p' : I → F.Point := Function.update p i r.1
-      have hp'i : p' i = r.1 := by simp [p']
-      have hp'ne (k : I) (hki : k ≠ i) : p' k = p k := by simp [p', hki]
-      have hdeleteI : deletion p' i = deletion p i := by
-        ext x
-        constructor
-        · rintro ⟨k, hki, rfl⟩
-          exact ⟨k, hki, (hp'ne k hki).symm⟩
-        · rintro ⟨k, hki, rfl⟩
-          exact ⟨k, hki, hp'ne k hki⟩
-      have hp'injective : Function.Injective p' := by
-        intro a b hab
-        by_cases hai : a = i
-        · subst a
-          by_cases hbi : b = i
-          · exact hbi.symm
-          · have : r.1 = p b := by simpa [hp'i, hp'ne b hbi] using hab
-            exact False.elim (hrNotRange ⟨b, this.symm⟩)
-        · by_cases hbi : b = i
-          · subst b
-            have : p a = r.1 := by simpa [hp'i, hp'ne a hai] using hab
-            exact False.elim (hrNotRange ⟨a, this⟩)
-          · apply hp.1
-            simpa [hp'ne a hai, hp'ne b hbi] using hab
-      have hp'proper (k : I) : p' k ∈ Ω := by
-        by_cases hki : k = i
-        · simpa [hki, hp'i] using hrΩ
-        · simpa [hp'ne k hki] using hp.2.1 k
-      have hp'integral (k : I) : (p' k).IsIntegral := by
-        by_cases hki : k = i
-        · simpa [hki, hp'i] using r.2
-        · simpa [hp'ne k hki] using hp.2.2.1 k
-      have hreplacementSubset (k : I) (hki : k ≠ i) :
-          deletion p' k ⊆ F.weakConvexHull (deletion p k) := by
-        intro x hx
-        obtain ⟨j, hjk, rfl⟩ := hx
-        by_cases hji : j = i
-        · subst j
-          rw [hp'i]
-          exact hrOther k hki
-        · rw [hp'ne j hji]
-          exact subset_weakConvexHull F _ ⟨j, hjk, rfl⟩
-      have hp'WeaklyConvex : ∀ k,
-          p' k ∉ F.weakConvexHull (deletion p' k) := by
-        intro k
-        by_cases hki : k = i
-        · subst k
-          rw [hp'i, hdeleteI]
-          exact hrDelete
-        · intro hk
-          have := weakConvexHull_absorb (hreplacementSubset k hki) hk
-          rw [hp'ne k hki] at this
-          exact hweakExtreme k this
-      have hpiNotNew : p i ∉ F.weakConvexHull (Set.range p') := by
-        intro hpi
-        obtain ⟨u, huHull, hpiProjection⟩ :=
-          (mem_weakConvexHull_iff_exists_projection (Set.finite_range p') (p i)).1 hpi
-        rcases huHull with ⟨n, uPoint, uWeight, huPoint, huComb⟩
-        by_cases husesR : ∃ a, 0 < uWeight a ∧ uPoint a = r.1
-        · obtain ⟨a, ha, har⟩ := husesR
-          have hru : r.1.base ≤ u.base := by
-            simpa only [har] using huComb.base_isLUB.1 a ha
-          rcases hpiProjection with ⟨hupi, -⟩
-          have hrpi : r.1.base ≤ (p i).base := hru.trans hupi
-          exact hrNotRange ⟨i, (r.1.eq_of_projection_of_base_le hri hrpi).symm⟩
-        · push Not at husesR
-          have huDelete : u ∈ F.convexHull (deletion p i) := by
-            apply huComb.mem_convexHull_of_active_mem
-            intro a ha
-            obtain ⟨j, hj⟩ := huPoint a
-            by_cases hji : j = i
-            · subst j
-              exact False.elim (husesR a ha (hj.symm.trans hp'i))
-            · exact ⟨j, hji, (hp'ne j hji).symm.trans hj⟩
-          have hdeleteFinite : (deletion p i).Finite :=
-            hfiniteRange.subset (by
-              rintro x ⟨j, -, rfl⟩
-              exact ⟨j, rfl⟩)
-          exact hweakExtreme i
-            ((mem_weakConvexHull_iff_exists_projection
-              hdeleteFinite (p i)).2 ⟨u, huDelete, hpiProjection⟩)
-      have hrangeSubset : Set.range p' ⊆ F.weakConvexHull (Set.range p) := by
-        rintro x ⟨k, rfl⟩
-        by_cases hki : k = i
-        · subst k
-          simpa only [hp'i] using hrWeak
-        · rw [hp'ne k hki]
-          exact subset_weakConvexHull F _ ⟨k, rfl⟩
-      have hclosureSubset : F.weakConvexHull (Set.range p') ⊆
-          F.weakConvexHull (Set.range p) :=
-        weakConvexHull_absorb hrangeSubset
-      have hscoreLt : hullScore p' < hullScore p := by
-        apply Finset.card_lt_card
-        apply Finset.ssubset_iff_subset_ne.mpr
-        constructor
-        · intro q hq
-          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hq ⊢
-          exact ⟨hq.1, hclosureSubset hq.2⟩
-        · intro heq
-          let qi : {q : F.Point // q.IsIntegral} := ⟨p i, hp.2.2.1 i⟩
-          have hold : qi ∈ Finset.univ.filter (fun q : {q : F.Point // q.IsIntegral} ↦
-              q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p)) := by
-            simp only [Finset.mem_filter, Finset.mem_univ, true_and, qi]
-            exact ⟨hp.2.1 i, subset_weakConvexHull F _ ⟨i, rfl⟩⟩
-          have hnew : qi ∉ Finset.univ.filter (fun q : {q : F.Point // q.IsIntegral} ↦
-              q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p')) := by
-            simp only [Finset.mem_filter, Finset.mem_univ, true_and, qi, not_and]
-            exact fun _ ↦ hpiNotNew
-          change (Finset.univ.filter fun q : {q : F.Point // q.IsIntegral} ↦
-              q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p')) =
-            (Finset.univ.filter fun q : {q : F.Point // q.IsIntegral} ↦
-              q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p)) at heq
-          rw [← heq] at hold
-          exact hnew hold
-      have hgoodNew : ∃ q, q ∈ Ω ∧ q.IsIntegral ∧
-          ∀ k, q ∈ F.weakConvexHull (deletion p' k) := by
-        by_contra hnone
-        push Not at hnone
-        have hp'counter : Counterexample p' :=
-          ⟨hp'injective, hp'proper, hp'integral, hnone⟩
-        exact (not_le_of_gt hscoreLt) (hminimal hp'counter)
-      obtain ⟨s, hsΩ, hsint, hs⟩ := hgoodNew
-      have hsOld : ∀ k, s ∈ F.weakConvexHull (deletion p k) := by
-        intro k
-        by_cases hki : k = i
-        · subst k
-          rw [← hdeleteI]
-          exact hs i
-        · exact weakConvexHull_absorb (hreplacementSubset k hki) (hs k)
-      obtain ⟨k, hk⟩ := hp.2.2.2 s hsΩ hsint
-      exact hk (hsOld k)
+    exact doignon_projection_contradiction Ω p hp (fun hp' => hminimal hp')
+      hweakExtreme r hrΩ hrWeak hrNotRange i hri
   · have hreplacementSeparation (i : I) :
-        p i ∉ F.weakConvexHull (Set.insert r.1 (deletion p i)) := by
-      obtain ⟨xi, hpiEval, hsep⟩ :=
-        exists_strictSeparator_of_not_mem_weakConvexHull (hweakExtreme i)
-      intro hpiReplacement
-      obtain ⟨a, ha, haEval, hpia⟩ := hpiReplacement xi hpiEval
-      have har : a = r.1 := by
-        rcases ha with (rfl | haDelete)
-        · rfl
-        · have := hsep a haDelete haEval
-          linarith
-      subst a
-      obtain ⟨b, hbRange, hbEval, hrb⟩ := hrWeak xi haEval
-      obtain ⟨k, hk⟩ := hbRange
-      have hki : k = i := by
-        by_contra hne
-        have hbDelete : b ∈ deletion p i := ⟨k, hne, hk⟩
-        have := hsep b hbDelete hbEval
-        linarith
-      subst k
-      have hbTarget : xi.eval b hbEval = xi.eval (p i) hpiEval :=
-        xi.eval_congr_point hk.symm hbEval hpiEval
-      have hrTarget : xi.eval r.1 haEval = xi.eval (p i) hpiEval := by
-        apply le_antisymm
-        · exact hrb.trans_eq hbTarget
-        · exact hpia
-      obtain ⟨lift, hliftHull, hrLiftProjection⟩ :=
-        (mem_weakConvexHull_iff_exists_projection hfiniteRange r.1).1 hrWeak
-      rcases hliftHull with ⟨n, liftPoint, liftWeight, hliftPoint, hliftComb⟩
-      rcases hrLiftProjection with ⟨hliftBase, hliftVal⟩
-      let hliftEval : xi.EvaluableAt lift := hliftBase.trans haEval
-      have hliftTarget : xi.eval lift hliftEval = xi.eval (p i) hpiEval := by
-        have hprojEval := xi.eval_eq_of_projection r.1 lift hliftBase hliftVal haEval
-        exact hprojEval.symm.trans hrTarget
-      have hactiveEq (t : Fin n) (ht : 0 < liftWeight t) : liftPoint t = p i := by
-        by_contra htne
-        let htEval : xi.EvaluableAt (liftPoint t) :=
-          (hliftComb.base_isLUB.1 t ht).trans hliftEval
-        have htDelete : liftPoint t ∈ deletion p i := by
-          obtain ⟨m, hm⟩ := hliftPoint t
-          have hmi : m ≠ i := by
-            intro hmi
-            subst m
-            exact htne hm.symm
-          exact ⟨m, hmi, hm⟩
-        have htStrict := hsep (liftPoint t) htDelete htEval
-        have hall (u : {u : Fin n // 0 < liftWeight u}) :
-            xi.eval (liftPoint u)
-                ((hliftComb.base_isLUB.1 u u.property).trans hliftEval) ≤
-              xi.eval (p i) hpiEval := by
-          by_cases hui : liftPoint u = p i
-          · exact le_of_eq (xi.eval_congr_point hui _ _)
-          · exact le_of_lt (hsep (liftPoint u) (by
-              obtain ⟨m, hm⟩ := hliftPoint u
-              have hmi : m ≠ i := by
-                intro hmi
-                subst m
-                exact hui hm.symm
-              exact ⟨m, hmi, hm⟩) _)
-        have hsumlt :
-            (∑ u : {u : Fin n // 0 < liftWeight u},
-              liftWeight u * xi.eval (liftPoint u)
-                ((hliftComb.base_isLUB.1 u u.property).trans hliftEval)) <
-              ∑ u : {u : Fin n // 0 < liftWeight u},
-                liftWeight u * xi.eval (p i) hpiEval := by
-          apply Finset.sum_lt_sum
-          · intro u _
-            exact mul_le_mul_of_nonneg_left (hall u) u.property.le
-          · let tt : {u : Fin n // 0 < liftWeight u} := ⟨t, ht⟩
-            exact ⟨tt, Finset.mem_univ tt,
-              mul_lt_mul_of_pos_left htStrict tt.property⟩
-        have hleft :
-            (∑ u : {u : Fin n // 0 < liftWeight u},
-              liftWeight u * xi.eval (liftPoint u)
-                ((hliftComb.base_isLUB.1 u u.property).trans hliftEval)) =
-              xi.eval (p i) hpiEval :=
-          (hliftComb.eval_eq xi hliftEval).symm.trans hliftTarget
-        have hright :
-            (∑ u : {u : Fin n // 0 < liftWeight u},
-              liftWeight u * xi.eval (p i) hpiEval) =
-              xi.eval (p i) hpiEval := by
-          rw [← Finset.sum_mul, hliftComb.sum_active, one_mul]
-        rw [hleft, hright] at hsumlt
-        exact (lt_irrefl _ hsumlt)
-      have hliftEq : lift = p i :=
-        hliftComb.result_eq_of_active_eq hactiveEq
-      apply hrProjection
-      refine ⟨i, ?_⟩
-      exact Eq.mp (congrArg (fun q : F.Point ↦ r.1.IsProjectionOf q) hliftEq)
-        ⟨hliftBase, hliftVal⟩
+        p i ∉ F.weakConvexHull (Set.insert r.1 (deletion p i)) :=
+      not_mem_replacement_of_no_projection p hweakExtreme r hrWeak hrProjection i
     obtain ⟨j, hrNotDelete⟩ := hp.2.2.2 r.1 hrΩ r.2
     let p' : I → F.Point := Function.update p j r.1
     have hp'j : p' j = r.1 := by simp [p']
@@ -814,20 +870,8 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
         · exact ⟨j, hp'j⟩
         · obtain ⟨k, hkj, hk⟩ := hx
           exact ⟨k, (hp'ne k hkj).trans hk⟩
-    have hp'injective : Function.Injective p' := by
-      intro a b hab
-      by_cases haj : a = j
-      · subst a
-        by_cases hbj : b = j
-        · exact hbj.symm
-        · have : r.1 = p b := by simpa [hp'j, hp'ne b hbj] using hab
-          exact False.elim (hrNotRange ⟨b, this.symm⟩)
-      · by_cases hbj : b = j
-        · subst b
-          have : p a = r.1 := by simpa [hp'j, hp'ne a haj] using hab
-          exact False.elim (hrNotRange ⟨a, this⟩)
-        · apply hp.1
-          simpa [hp'ne a haj, hp'ne b hbj] using hab
+    have hp'injective : Function.Injective p' :=
+      injective_update_of_not_mem_range p hp.1 r.1 hrNotRange j
     have hp'proper (k : I) : p' k ∈ Ω := by
       by_cases hkj : k = j
       · simpa [hkj, hp'j] using hrΩ
@@ -869,34 +913,14 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
     have hclosureSubset : F.weakConvexHull (Set.range p') ⊆
         F.weakConvexHull (Set.range p) :=
       weakConvexHull_absorb hrangeSubset
-    have hscoreLt : hullScore p' < hullScore p := by
-      apply Finset.card_lt_card
-      apply Finset.ssubset_iff_subset_ne.mpr
-      constructor
-      · intro q hq
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hq ⊢
-        exact ⟨hq.1, hclosureSubset hq.2⟩
-      · intro heq
-        let qj : {q : F.Point // q.IsIntegral} := ⟨p j, hp.2.2.1 j⟩
-        have hold : qj ∈ Finset.univ.filter (fun q : {q : F.Point // q.IsIntegral} ↦
-            q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p)) := by
-          simp only [Finset.mem_filter, Finset.mem_univ, true_and, qj]
-          exact ⟨hp.2.1 j, subset_weakConvexHull F _ ⟨j, rfl⟩⟩
-        have hnew : qj ∉ Finset.univ.filter (fun q : {q : F.Point // q.IsIntegral} ↦
-            q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p')) := by
-          simp only [Finset.mem_filter, Finset.mem_univ, true_and, qj, not_and]
-          exact fun _ ↦ hpjNotNew
-        change (Finset.univ.filter fun q : {q : F.Point // q.IsIntegral} ↦
-            q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p')) =
-          (Finset.univ.filter fun q : {q : F.Point // q.IsIntegral} ↦
-            q.1 ∈ Ω ∧ q.1 ∈ F.weakConvexHull (Set.range p)) at heq
-        rw [← heq] at hold
-        exact hnew hold
+    have hscoreLt : doignonHullScore Ω p' < doignonHullScore Ω p :=
+      doignonHullScore_lt_of_missing Ω p p' j (hp.2.1 j) (hp.2.2.1 j)
+        hclosureSubset hpjNotNew
     have hgoodNew : ∃ q, q ∈ Ω ∧ q.IsIntegral ∧
         ∀ k, q ∈ F.weakConvexHull (deletion p' k) := by
       by_contra hnone
       push Not at hnone
-      have hp'counter : Counterexample p' :=
+      have hp'counter : DoignonCounterexample Ω p' :=
         ⟨hp'injective, hp'proper, hp'integral, hnone⟩
       exact (not_le_of_gt hscoreLt) (hminimal hp'counter)
     obtain ⟨s, hsΩ, hsint, hs⟩ := hgoodNew
