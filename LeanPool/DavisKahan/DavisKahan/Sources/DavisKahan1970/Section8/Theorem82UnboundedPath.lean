@@ -183,6 +183,18 @@ theorem norm_sinTwoAngle_path_le
 
 /-! ### Theorem 8.2's perturbation branch at unbounded scope -/
 
+/-- The scaled quarter-angle inequality is equivalent to the usual square-root threshold. -/
+private theorem lt_sqrt_two_half_of_mul_lt {z : ℝ} (hlt : Real.sqrt 2 * z < 1) :
+    z < Real.sqrt 2 / 2 := by
+  have hs2 : Real.sqrt 2 * (Real.sqrt 2 / 2) = 1 := by
+    rw [show Real.sqrt 2 * (Real.sqrt 2 / 2) = Real.sqrt 2 ^ 2 / 2 by ring,
+      Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+    norm_num
+  have hpos2 : (0 : ℝ) < Real.sqrt 2 := Real.sqrt_pos.mpr (by norm_num)
+  by_contra hcon
+  rw [not_lt] at hcon
+  nlinarith [hlt, hs2, hpos2, hcon]
+
 /-- A uniform scaled Lipschitz estimate gives continuity along the unit interval. -/
 private theorem continuousOn_unitInterval_of_gap_bound (f : ℝ → ℝ) {gam d : ℝ}
     (hgam0 : 0 ≤ gam) (hd : 0 < d)
@@ -400,14 +412,7 @@ theorem theorem8_2_perturbationHalfGap_unbounded_complex
       by_contra hcon
       rw [not_lt] at hcon
       nlinarith [hstrict, hdelta]
-    have hs2 : Real.sqrt 2 * (Real.sqrt 2 / 2) = 1 := by
-      rw [show Real.sqrt 2 * (Real.sqrt 2 / 2) = Real.sqrt 2 ^ 2 / 2 by ring,
-        Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
-      norm_num
-    have hpos2 : (0 : ℝ) < Real.sqrt 2 := Real.sqrt_pos.mpr (by norm_num)
-    by_contra hcon
-    rw [not_lt] at hcon
-    nlinarith [hlt, hs2, hpos2, hcon]
+    exact lt_sqrt_two_half_of_mul_lt hlt
   -- connectedness
   have hsqrtpos : (0 : ℝ) < Real.sqrt 2 / 2 := by
     have := Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 2)
