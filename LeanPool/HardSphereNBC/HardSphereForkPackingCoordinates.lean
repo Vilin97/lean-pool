@@ -251,12 +251,10 @@ lemma hardSphereForkPackingMember_oriented_difference {k : Nat} [NeZero k]
       hardSpherePosition r
           (hardSphereForkMemberVertex (P.equivFin.symm i).val j) -
         hardSpherePosition r (P.equivFin.symm i).val.1 := by
-  simpa [hardSphereForkPackingMemberReversed,
-    hardSphereForkPackingMemberIndexFin,
-    hardSphereForkPackingMemberIndex] using
-    (hardSphereForkMember_oriented_difference hP
+  convert (hardSphereForkMember_oriented_difference (hT := hT) hP
       (P.equivFin.symm i).property j
-      (hardSphereForkMemberEdge_mem hP (P.equivFin.symm i).property j) r)
+      (hardSphereForkMemberEdge_mem hP (P.equivFin.symm i).property j) r) using 1
+  rfl
 
 lemma hardSphereForkPackingMemberIndexFin_injective {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
@@ -398,9 +396,13 @@ lemma hardSphereForkPackingIndexEquiv_member {k : Nat} [NeZero k]
     exact hsecond
   simp [hardSphereForkPackingIndexEquiv,
     hardSphereForkPackingSelectedEquiv,
-    hardSphereForkPackingSelectedIndices,
+    hardSphereForkPackingSelectedIndices, Equiv.sumCongr, Equiv.sumCompl, Equiv.ofBijective,
     hardSphereForkPackingFlatMemberIndex,
-    hardSphereForkPackingMemberIndexFin, hdiv, hmod]
+    hardSphereForkPackingMemberIndexFin]
+  change hardSphereForkPackingMemberIndex hT hP
+      (P.equivFin.symm (@finProdFinEquiv P.card 2 (i, j)).divNat,
+        (@finProdFinEquiv P.card 2 (i, j)).modNat) = _
+  rw [hdiv, hmod]
 
 lemma hardSphereForkPackingIndexEquiv_selected_apply {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
@@ -412,7 +414,8 @@ lemma hardSphereForkPackingIndexEquiv_selected_apply {k : Nat} [NeZero k]
         (Fin.castAdd (hardSphereForkPackingComplementCard hT hP) i) =
       hardSphereForkPackingFlatMemberIndex hT hP i := by
   simp [hardSphereForkPackingIndexEquiv, hardSphereForkPackingSelectedEquiv,
-    hardSphereForkPackingSelectedIndices]
+    hardSphereForkPackingSelectedIndices, Equiv.sumCongr, Equiv.sumCompl, Equiv.ofBijective]
+  rfl
 
 lemma hardSphereForkPackingIndexEquiv_complement_not_mem {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
@@ -424,7 +427,7 @@ lemma hardSphereForkPackingIndexEquiv_complement_not_mem {k : Nat} [NeZero k]
         (Fin.natAdd (P.card * 2) i) ∉
       hardSphereForkPackingSelectedIndices hT hP := by
   simp [hardSphereForkPackingIndexEquiv, hardSphereForkPackingSelectedEquiv,
-    hardSphereForkPackingSelectedIndices]
+    hardSphereForkPackingSelectedIndices, Equiv.sumCongr, Equiv.sumCompl, Equiv.ofBijective]
   intro x hx
   have hnot := ((Fintype.equivFin {x : Fin (k - 1) //
       x ∉ hardSphereForkPackingSelectedIndices hT hP}).symm i).property

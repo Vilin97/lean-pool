@@ -519,7 +519,7 @@ lemma nbc_tree_decomposition' (x : Sym2 V → Bool) :
         if T ∈ graphNBCTreeSubsets (overlapGraph x) then 1 else 0 := by
   classical
   by_cases hG : (overlapGraph x).Connected
-  · rw [if_pos hG, NBC]
+  · rw [ite_eq_left hG, NBC]
     have hsubset : graphNBCTreeSubsets (overlapGraph x) ⊆ treeUniverse := by
       intro T hT
       exact graphNBCTreeSubsets_subset_treeUniverse hT
@@ -554,9 +554,9 @@ lemma nbc_tree_decomposition_region {X : Type*}
       apply Finset.sum_congr rfl
       intro T hT
       by_cases h : T ∈ graphNBCTreeSubsets (overlapGraph (active x))
-      · rw [if_pos h, if_pos
+      · rw [ite_eq_left h, ite_eq_left
           ((mem_graphNBCTreeSubsets_iff_mem_treeUniverse_and_region active x hT).mp h)]
-      · rw [if_neg h, if_neg
+      · rw [ite_eq_right h, ite_eq_right
           ((mem_graphNBCTreeSubsets_iff_mem_treeUniverse_and_region active x hT).not.mp h)]
 
 /-! For disconnected overlap graphs both sides vanish.  This is the finite
@@ -587,9 +587,9 @@ lemma abs_mayerKernel_eq_nbc (x : Sym2 V → Bool) :
   classical
   rw [mayerKernel_eq_m]
   by_cases hG : (overlapGraph x).Connected
-  · rw [if_pos hG, m_eq_signed_NBC_of_connected hG]
+  · rw [ite_eq_left hG, m_eq_signed_NBC_of_connected hG]
     exact intMagnitude_signed_nat _ _
-  · rw [if_neg hG]
+  · rw [ite_eq_right hG]
     have hzero : connectedEdgeSubsets (overlapGraph x) = ∅ := by
       apply Finset.eq_empty_iff_forall_notMem.mpr
       intro A hA

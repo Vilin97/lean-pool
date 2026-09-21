@@ -133,7 +133,7 @@ lemma measurable_finite_bool_comp {X E Y : Type*}
     (hactive : ∀ e, Measurable (fun x => active x e))
     (g : (E → Bool) → Y) :
     Measurable (fun x => g (active x)) := by
-  exact (measurable_of_countable g).comp (measurable_pi_lambda _ hactive)
+  exact (measurable_of_countable g).comp (Measurable.of_eval hactive)
 
 lemma measurable_hardSphereOmega {k d : Nat} [NeZero k] :
     Measurable
@@ -261,7 +261,7 @@ lemma hardSphereMayerKernel_zero_of_not_connected
     mayerKernel (hardSphereActiveExact r) = 0 := by
   have hz : (mayerKernel (hardSphereActiveExact r)).natAbs = 0 := by
     have h := abs_mayerKernel_eq_nbc (hardSphereActiveExact r)
-    rw [if_neg hG] at h
+    rw [ite_eq_right hG] at h
     simpa [intMagnitude] using h
   exact Int.natAbs_eq_zero.mp hz
 
@@ -337,7 +337,7 @@ lemma norm_mayerKernel_real_le_card {V : Type*} [Fintype V] [DecidableEq V]
     rw [norm_prod]
     calc
       ∏ e ∈ A, ‖(bond x e : ℝ)‖ ≤ ∏ _e ∈ A, (1 : ℝ) := by
-        apply Finset.prod_le_prod
+        apply Finset.prod_le_prod₀
         · intro e he
           exact norm_nonneg _
         · intro e he
@@ -413,14 +413,14 @@ lemma hardSphere_absOmega_eq_region_indicator_sum
       exact m_eq_signed_NBC_of_connected hG
     have hdecomp := nbc_tree_decomposition_region
       (V := Fin k) (hardSphereActiveExact (k := k) (d := d)) r
-    rw [if_pos hG] at hdecomp
+    rw [ite_eq_left hG] at hdecomp
     have hdecompR := congrArg (fun n : Nat => (n : ℝ)) hdecomp
     simpa [hardSphereOmega, hkernel, Set.indicator, Int.cast_mul,
       Int.cast_pow] using hdecompR
   · have hzero := hardSphereMayerKernel_zero_of_not_connected r hG
     have hdecomp := nbc_tree_decomposition_region
       (V := Fin k) (hardSphereActiveExact (k := k) (d := d)) r
-    rw [if_neg hG] at hdecomp
+    rw [ite_eq_right hG] at hdecomp
     have hdecompR := congrArg (fun n : Nat => (n : ℝ)) hdecomp
     simpa [hardSphereOmega, hzero, Set.indicator] using hdecompR
 

@@ -273,7 +273,7 @@ lemma testAxisIntersection_section_integral_eq_lens (s : ℝ)
       (∫ t in (s - 1)..(s / 2), 1 - (t - s) ^ 2) =
         ∫ t in (-1 : ℝ)..(-s / 2), 1 - t ^ 2 := by
      convert intervalIntegral.integral_comp_sub_right
-       (f := fun t : ℝ => 1 - t ^ 2) s using 1 ; ring_nf
+       (f := fun t : ℝ => 1 - t ^ 2) s using 1; ring_nf
   rw [hshift]
   rw [intervalIntegral.integral_sub intervalIntegrable_const
       (intervalIntegral.intervalIntegrable_pow 2),
