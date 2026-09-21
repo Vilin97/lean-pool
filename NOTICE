@@ -24,6 +24,7 @@ These projects were imported from repositories already licensed under the
 Apache License, Version 2.0, and are redistributed here under the same license.
 
   LeanPool/ABCExceptions             https://github.com/b-mehta/ABC-Exceptions
+  LeanPool/ACMax                     https://github.com/MerLeanProver/ACMaxConjecture
   LeanPool/AFormalizationOfBorelDeterminacyInLean
                                      https://github.com/sven-manthe/A-formalization-of-Borel-determinacy-in-Lean
   LeanPool/AharoniKorman             https://github.com/b-mehta/AharoniKorman
@@ -37,6 +38,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/BruhatTits                https://github.com/chrisflav/bruhat-tits
   LeanPool/Burkholder                https://github.com/SmaniaD/Burkholder
   LeanPool/CencovPetz                https://github.com/abenenson/cencov-petz
+  LeanPool/CenteredMaximal           https://github.com/CoolRmal/centered-maximal-constant
   LeanPool/ChannelCapacity           https://github.com/abenenson/channel-capacity
   LeanPool/Chudnovsky                https://github.com/ldct/lean-eval-chudnovsky
   LeanPool/CircuitComplexity         https://github.com/SamuelSchlesinger/circuit-complexity
@@ -55,6 +57,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/DemazureOperatorsLean     https://github.com/bolito2/DemazureOperatorsLean
   LeanPool/DemazureProduct           https://github.com/npflueger/demazure
   LeanPool/Desargues                 https://github.com/oneofvalts/desargues
+  LeanPool/Dilatations               https://github.com/rndmx/DilCat
   LeanPool/DistanceGeometry          https://github.com/lyfar/distance-geometry-lean
   LeanPool/DomainTheory              https://github.com/catskillsresearch/domain_theory
   LeanPool/Duality                   https://github.com/madvorak/duality
@@ -97,6 +100,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/GapCVP                    https://github.com/openai/ten-proofs
   LeanPool/HadwigerNelsonBounds      https://github.com/lyfar/hadwiger-nelson-bounds-lean
   LeanPool/HansonWright              https://github.com/Lean-MoDS/StatsMLlib
+  LeanPool/HopfProblem               https://github.com/plby/HopfProblem
   LeanPool/Incompleteness            https://github.com/FormalizedFormalLogic/Incompleteness
   LeanPool/InfinitaryLogic           https://github.com/cameronfreer/infinitary-logic
   LeanPool/InfiniteConnesRigidity    https://github.com/openai/ten-proofs
@@ -110,6 +114,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Koethe                    https://github.com/tadamcz/koethe
   LeanPool/Komlos                    https://github.com/gdahia/Komlos
   LeanPool/KrafftSieve               https://github.com/ElNando888/KrafftSieve
+  LeanPool/Kurosh                    https://github.com/Arthur742Ramos/KuroshSubgroupTheorem
   LeanPool/LanguageGeneration        https://github.com/xiaoyulics/language-generation-characterization
   LeanPool/Lean4GlCoalgebras         https://github.com/mgignoux/lean4-gl-coalgebras
   LeanPool/LeanBooleanfun            https://github.com/roos-j/lean-booleanfun
@@ -150,6 +155,8 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/PFR                       https://github.com/teorth/pfr
   LeanPool/PebblingLean              https://github.com/pachterlab/P_2026_2
   LeanPool/PentagonalNumberTheorem   https://github.com/wwylele/PentagonalNumberTheorem
+  LeanPool/PentagonalNumberTheoremAnalytic
+                                     https://github.com/viazovska/PentagonalNumberTheorem
   LeanPool/PermanentFormulaLowerBound
                                      https://github.com/openai/ten-proofs
   LeanPool/PhaseRetrieval            https://github.com/susannabertolini/PhaseRetrieval
@@ -243,6 +250,8 @@ MIT permission notice that follows them.
       record is "ruplet".
 
   LeanPool/FourAP                    https://github.com/boonsuan/4ap
+  LeanPool/GaussianMomentsCounterexamples
+                                     https://github.com/long-mathematics/gaussian-moments-counterexamples
   LeanPool/HSDInteriorPointLP        https://github.com/makoto-yamashita/proof-on-a-homogeneous-self-dual-interior-point-method-for-linear-programming
   LeanPool/KaltonRoberts             https://github.com/boonsuan/KaltonRoberts
   LeanPool/Kuramoto                  https://github.com/velvetmonkey/kuramoto-lean
@@ -254,6 +263,7 @@ MIT permission notice that follows them.
 
   LeanPool/LeanStationaryHarmonicMaps
                                      https://github.com/BrookWW/LeanStationaryHarmonicMaps
+  LeanPool/NaslundCounterexample     https://github.com/JD-Jones-ASES/ns-lean
   LeanPool/Nivat                     https://github.com/boonsuan/nivat
   LeanPool/PCFTheory                 https://github.com/YnirPaz/PCF-Theory
       The upstream MIT LICENSE file contains no copyright line; the repository
