@@ -226,12 +226,12 @@ noncomputable def endpointInterpolant
     (hp : Nat.Prime p) (N L : Nat) (s : EndpointSide)
     (a : Assignment hp N L) : ContinuousCoordinateMap p where
   toFun x :=
-    ((Fintype.card (PrimeSymmetry hp) : Real)⁻¹) •
-      ∑ g : PrimeSymmetry hp,
+    ((Fintype.card (PrimeSymmetry p) : Real)⁻¹) •
+      ∑ g : PrimeSymmetry p,
         g⁻¹ • rawEndpointInterpolant hp N L s a (g • x)
   continuous_toFun := by
     have hsum : Continuous fun x : Realization p =>
-        ∑ g : PrimeSymmetry hp,
+        ∑ g : PrimeSymmetry p,
           g⁻¹ • rawEndpointInterpolant hp N L s a (g • x) := by
       apply continuous_finsetSum
       intro g hg
@@ -243,14 +243,14 @@ noncomputable def endpointInterpolant
       intro j
       change Continuous fun x =>
         rawEndpointInterpolant hp N L s a (g • x)
-          ((PrimeSymmetry.toPerm hp g⁻¹).symm j)
-      exact (continuous_apply ((PrimeSymmetry.toPerm hp g⁻¹).symm j)).comp hraw
+          ((PrimeSymmetry.toPerm p g⁻¹).symm j)
+      exact (continuous_apply ((PrimeSymmetry.toPerm p g⁻¹).symm j)).comp hraw
     change Continuous fun x =>
-      (Fintype.card (PrimeSymmetry hp) : Real)⁻¹ •
-        ∑ g : PrimeSymmetry hp,
+      (Fintype.card (PrimeSymmetry p) : Real)⁻¹ •
+        ∑ g : PrimeSymmetry p,
           g⁻¹ • rawEndpointInterpolant hp N L s a (g • x)
     have hconst : Continuous fun _ : Realization p =>
-        (Fintype.card (PrimeSymmetry hp) : Real)⁻¹ := continuous_const
+        (Fintype.card (PrimeSymmetry p) : Real)⁻¹ := continuous_const
     exact hconst.smul hsum
 
 /-- The symmetrized endpoint interpolant is prime-equivariant. -/
@@ -261,18 +261,18 @@ theorem endpointInterpolant_equivariant
   classical
   intro h x
   change
-    ((Fintype.card (PrimeSymmetry hp) : Real)⁻¹) •
-        ∑ g : PrimeSymmetry hp,
+    ((Fintype.card (PrimeSymmetry p) : Real)⁻¹) •
+        ∑ g : PrimeSymmetry p,
           g⁻¹ • rawEndpointInterpolant hp N L s a (g • (h • x)) =
-      h • (((Fintype.card (PrimeSymmetry hp) : Real)⁻¹) •
-        ∑ g : PrimeSymmetry hp,
+      h • (((Fintype.card (PrimeSymmetry p) : Real)⁻¹) •
+        ∑ g : PrimeSymmetry p,
           g⁻¹ • rawEndpointInterpolant hp N L s a (g • x))
   have hsum :
-      (∑ g : PrimeSymmetry hp,
+      (∑ g : PrimeSymmetry p,
           g⁻¹ • rawEndpointInterpolant hp N L s a (g • (h • x))) =
-        ∑ g : PrimeSymmetry hp,
+        ∑ g : PrimeSymmetry p,
           (g * h⁻¹)⁻¹ • rawEndpointInterpolant hp N L s a ((g * h⁻¹) • (h • x)) := by
-    apply Finset.sum_bij (fun g : PrimeSymmetry hp => fun _ => g * h)
+    apply Finset.sum_bij (fun g : PrimeSymmetry p => fun _ => g * h)
     · intro g hg
       simp
     · intro g₁ hg₁ g₂ hg₂ heq
@@ -299,13 +299,13 @@ theorem endpointInterpolant_equivariant
       (endpointSpatialPoint hp N L s v) =
         vectorValue hp N L a v.1 := by
   classical
-  change ((Fintype.card (PrimeSymmetry hp) : Real)⁻¹) •
-      ∑ g : PrimeSymmetry hp,
+  change ((Fintype.card (PrimeSymmetry p) : Real)⁻¹) •
+      ∑ g : PrimeSymmetry p,
         g⁻¹ • rawEndpointInterpolant hp N L s a
           (g • endpointSpatialPoint hp N L s v) = _
-  have hcard : (Fintype.card (PrimeSymmetry hp) : Real) ≠ 0 := by
+  have hcard : (Fintype.card (PrimeSymmetry p) : Real) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
-  have hterm : ∀ g : PrimeSymmetry hp,
+  have hterm : ∀ g : PrimeSymmetry p,
       g⁻¹ • rawEndpointInterpolant hp N L s a
           (g • endpointSpatialPoint hp N L s v) =
         vectorValue hp N L a v.1 := by
@@ -320,8 +320,8 @@ theorem endpointInterpolant_equivariant
     rw [← hpoint, rawEndpointInterpolant_sample]
     simpa [gv, vectorValue_smul hp N L a g v.1]
   calc
-    _ = ((Fintype.card (PrimeSymmetry hp) : Real)⁻¹) •
-        ∑ _g : PrimeSymmetry hp, vectorValue hp N L a v.1 := by
+    _ = ((Fintype.card (PrimeSymmetry p) : Real)⁻¹) •
+        ∑ _g : PrimeSymmetry p, vectorValue hp N L a v.1 := by
       congr 1
       apply Finset.sum_congr rfl
       intro g _
@@ -787,7 +787,7 @@ theorem norm_endpoint_value_sub_homotopy_value_le
     let x : GlobalVertex hp N L := sampleVertex hp N L (prismCell, 0)
     let j : Fin p := ⟨0, hp.pos⟩
     let t : Parameter hp N L :=
-      Quotient.mk (MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp N L)) (x, j)
+      Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp N L)) (x, j)
     exact le_trans (abs_nonneg (a t - homotopyAssignment hp N L H t))
       (le_of_lt (hclose t))
   rw [show

@@ -25,15 +25,15 @@ structure PrimeConfigurationModel (hp : Nat.Prime p) where
   [metricSpace : MetricSpace Point]
   [compactSpace : CompactSpace Point]
   [nonemptyPoint : Nonempty Point]
-  [pointAction : MulAction (PrimeSymmetry hp) Point]
+  [pointAction : MulAction (PrimeSymmetry p) Point]
   continuous_smul :
-    ∀ g : PrimeSymmetry hp, Continuous fun x : Point => g • x
+    ∀ g : PrimeSymmetry p, Continuous fun x : Point => g • x
   /-- The continuous map from model points to labelled configurations. -/
   toConfig : C(Point, Config p)
-  toConfig_equivariant : IsPrimeEquivariant (hp := hp) toConfig
+  toConfig_equivariant : IsPrimeEquivariant (p := p) toConfig
   /-- The reference continuous map to the zero-sum representation. -/
   reference : C(Point, ZeroSum p)
-  reference_equivariant : IsPrimeEquivariant (hp := hp) reference
+  reference_equivariant : IsPrimeEquivariant (p := p) reference
 
 namespace PrimeConfigurationModel
 
@@ -46,19 +46,19 @@ attribute [instance] PrimeConfigurationModel.metricSpace
 
 @[simp] theorem toConfig_smul
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp) (x : M.Point) :
+    (g : PrimeSymmetry p) (x : M.Point) :
     M.toConfig (g • x) = g • M.toConfig x :=
   M.toConfig_equivariant g x
 
 @[simp] theorem reference_smul
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp) (x : M.Point) :
+    (g : PrimeSymmetry p) (x : M.Point) :
     M.reference (g • x) = g • M.reference x :=
   M.reference_equivariant g x
 
  theorem smul_eq_self_imp
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp) (x : M.Point)
+    (g : PrimeSymmetry p) (x : M.Point)
     (h : g • x = x) : g = 1 := by
   apply PrimeSymmetry.config_smul_eq_self_imp g (M.toConfig x)
   calc
@@ -66,7 +66,7 @@ attribute [instance] PrimeConfigurationModel.metricSpace
     _ = M.toConfig x := by rw [h]
 
  theorem action_free (M : PrimeConfigurationModel hp) :
-    ∀ {g : PrimeSymmetry hp} {x : M.Point}, g • x = x → g = 1 := by
+    ∀ {g : PrimeSymmetry p} {x : M.Point}, g • x = x → g = 1 := by
   intro g x h
   exact M.smul_eq_self_imp g x h
 
@@ -75,7 +75,7 @@ def referenceZeroSet (M : PrimeConfigurationModel hp) : Set M.Point :=
   {x | M.reference x = 0}
 
  theorem referenceZeroSet_invariant (M : PrimeConfigurationModel hp) :
-    IsPrimeInvariant (hp := hp) M.referenceZeroSet :=
+    IsPrimeInvariant (p := p) M.referenceZeroSet :=
   M.reference_equivariant.zeroSet_invariant (fun g =>
     PrimeSymmetry.zeroSumSMulZero.smul_zero g)
 

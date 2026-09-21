@@ -74,7 +74,7 @@ noncomputable def slabFacetMap
 /-- Slab rescaling commutes with simultaneous prime translation. -/
 theorem slabFacetMap_translate
     (hp : Nat.Prime p) (m : Nat) (hm : 0 < m) (r : Fin m)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     slabFacetMap m hm r
         (EquivariantPrismNonhorizontalCancellation.translateFacetMap hp g tau) =
@@ -133,7 +133,7 @@ noncomputable def stackFacetOrbitIndicator
   classical
   exact if ∃ o : (StackCells hp N m hm).FacetOccurrence,
       (StackCells hp N m hm).facetClass o = s ∧
-        ∃ g : PrimeSymmetry hp,
+        ∃ g : PrimeSymmetry p,
           EquivariantPrismNonhorizontalCancellation.mapVertexSignature tau =
             fun i =>
               g • (StackCells hp N m hm).facetSignature o i
@@ -144,7 +144,7 @@ noncomputable def stackFacetOrbitIndicator
 theorem stackFacetOrbitIndicator_translate
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (s : (StackCells hp N m hm).Facet)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     stackFacetOrbitIndicator hp N m hm s (EquivariantPrismNonhorizontalCancellation.translateFacetMap hp g tau) =
       stackFacetOrbitIndicator hp N m hm s tau := by
@@ -153,12 +153,12 @@ theorem stackFacetOrbitIndicator_translate
   have hiff :
       (∃ o : (StackCells hp N m hm).FacetOccurrence,
           (StackCells hp N m hm).facetClass o = s ∧
-            ∃ h : PrimeSymmetry hp,
+            ∃ h : PrimeSymmetry p,
               EquivariantPrismNonhorizontalCancellation.mapVertexSignature (EquivariantPrismNonhorizontalCancellation.translateFacetMap hp g tau) =
                 fun i => h • (StackCells hp N m hm).facetSignature o i) ↔
       (∃ o : (StackCells hp N m hm).FacetOccurrence,
           (StackCells hp N m hm).facetClass o = s ∧
-            ∃ h : PrimeSymmetry hp,
+            ∃ h : PrimeSymmetry p,
               EquivariantPrismNonhorizontalCancellation.mapVertexSignature tau =
                 fun i => h • (StackCells hp N m hm).facetSignature o i) := by
     constructor
@@ -186,7 +186,7 @@ noncomputable def slabFacetOrbitIndicator
 theorem slabFacetOrbitIndicator_translate
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (s : (StackCells hp N m hm).Facet) (r : Fin m)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     slabFacetOrbitIndicator hp N m hm s r (EquivariantPrismNonhorizontalCancellation.translateFacetMap hp g tau) =
       slabFacetOrbitIndicator hp N m hm s r tau := by
@@ -209,7 +209,7 @@ theorem stackFacetOrbitIndicator_occurrence
   by_cases hos : (StackCells hp N m hm).facetClass o = s
   · have hex : ∃ o' : (StackCells hp N m hm).FacetOccurrence,
         (StackCells hp N m hm).facetClass o' = s ∧
-          ∃ g : PrimeSymmetry hp,
+          ∃ g : PrimeSymmetry p,
             EquivariantPrismNonhorizontalCancellation.mapVertexSignature tau =
               fun i => g • (StackCells hp N m hm).facetSignature o' i := by
       refine ⟨o, hos, 1, ?_⟩
@@ -218,7 +218,7 @@ theorem stackFacetOrbitIndicator_occurrence
     rw [if_pos hex, if_pos hos]
   · have hnot : ¬ ∃ o' : (StackCells hp N m hm).FacetOccurrence,
         (StackCells hp N m hm).facetClass o' = s ∧
-          ∃ g : PrimeSymmetry hp,
+          ∃ g : PrimeSymmetry p,
             EquivariantPrismNonhorizontalCancellation.mapVertexSignature tau =
               fun i => g • (StackCells hp N m hm).facetSignature o' i := by
       rintro ⟨o', ho', g, hg⟩

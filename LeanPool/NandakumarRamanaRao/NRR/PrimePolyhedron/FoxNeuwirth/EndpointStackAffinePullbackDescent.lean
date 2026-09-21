@@ -170,7 +170,7 @@ theorem globalPullbackVector_smul
     {F : ContinuousCoordinateMap p}
     (A : RegularApproximation hp F)
     (hcompat : OneStepAffinePullbackCompatible hp A)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (x : GlobalVertex hp (Cells hp A.level)) :
     globalPullbackVector hp A hcompat (g • x) =
       g • globalPullbackVector hp A hcompat x := by
@@ -194,7 +194,7 @@ theorem pullbackSiteValue_eq_of_orbitRel
     (A : RegularApproximation hp F)
     (hcompat : OneStepAffinePullbackCompatible hp A)
     {a b : ScalarSite hp (Cells hp A.level)}
-    (hab : MulAction.orbitRel (PrimeSymmetry hp)
+    (hab : MulAction.orbitRel (PrimeSymmetry p)
       (ScalarSite hp (Cells hp A.level)) a b) :
     pullbackSiteValue hp A hcompat a = pullbackSiteValue hp A hcompat b := by
   rw [MulAction.orbitRel_apply] at hab

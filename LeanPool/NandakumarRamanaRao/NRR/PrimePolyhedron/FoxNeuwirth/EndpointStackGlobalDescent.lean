@@ -147,7 +147,7 @@ theorem globalSelectedVector_smul
     {F : ContinuousCoordinateMap p}
     (A : RegularApproximation hp F)
     (hcompat : OneStepLastVertexCompatible hp A)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (x : GlobalVertex hp (Cells hp A.level)) :
     globalSelectedVector hp A hcompat (g • x) =
       g • globalSelectedVector hp A hcompat x := by
@@ -171,7 +171,7 @@ theorem selectedSiteValue_eq_of_orbitRel
     (A : RegularApproximation hp F)
     (hcompat : OneStepLastVertexCompatible hp A)
     {a b : ScalarSite hp (Cells hp A.level)}
-    (hab : MulAction.orbitRel (PrimeSymmetry hp)
+    (hab : MulAction.orbitRel (PrimeSymmetry p)
       (ScalarSite hp (Cells hp A.level)) a b) :
     selectedSiteValue hp A hcompat a = selectedSiteValue hp A hcompat b := by
   rw [MulAction.orbitRel_apply] at hab

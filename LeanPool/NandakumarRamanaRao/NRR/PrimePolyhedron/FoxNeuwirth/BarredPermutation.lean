@@ -238,23 +238,23 @@ noncomputable instance isFacetDecidable (a b : BarredPermutation p) :
   simp [hc]
 
 /-- The prime symmetry action on barred permutations. -/
-instance primeSymmetryAction (hp : Nat.Prime p) :
-    MulAction (PrimeSymmetry hp) (BarredPermutation p) where
-  smul g c := c.relabel (PrimeSymmetry.toPerm hp g)
+instance primeSymmetryAction (p : Nat) :
+    MulAction (PrimeSymmetry p) (BarredPermutation p) where
+  smul g c := c.relabel (PrimeSymmetry.toPerm p g)
   one_smul c := by
-    change c.relabel (PrimeSymmetry.toPerm hp 1) = c
+    change c.relabel (PrimeSymmetry.toPerm p 1) = c
     rw [map_one, relabel_one]
   mul_smul g h c := by
-    change c.relabel (PrimeSymmetry.toPerm hp (g * h)) =
-      (c.relabel (PrimeSymmetry.toPerm hp h)).relabel (PrimeSymmetry.toPerm hp g)
+    change c.relabel (PrimeSymmetry.toPerm p (g * h)) =
+      (c.relabel (PrimeSymmetry.toPerm p h)).relabel (PrimeSymmetry.toPerm p g)
     rw [map_mul]
-    exact relabel_mul (PrimeSymmetry.toPerm hp g)
-      (PrimeSymmetry.toPerm hp h) c
+    exact relabel_mul (PrimeSymmetry.toPerm p g)
+      (PrimeSymmetry.toPerm p h) c
 
 @[simp] theorem prime_smul_def
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (p : Nat) (g : PrimeSymmetry p)
     (c : BarredPermutation p) :
-    g • c = c.relabel (PrimeSymmetry.toPerm hp g) :=
+    g • c = c.relabel (PrimeSymmetry.toPerm p g) :=
   rfl
 
 end BarredPermutation

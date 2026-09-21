@@ -43,7 +43,7 @@ theorem localParameter_injective
       localParameter hp C q z.1 z.2) := by
   intro a b hab
   have horbit :
-      MulAction.orbitRel (PrimeSymmetry hp)
+      MulAction.orbitRel (PrimeSymmetry p)
         (ScalarSite hp C)
         (sampleVertex hp C (q, a.1), a.2)
         (sampleVertex hp C (q, b.1), b.2) :=

@@ -36,7 +36,7 @@ def maximalCoordinateIndex (i : Fin p) : Fin (p - 1 + 1) :=
 
 /-- Relabelling a maximal simplex commutes with its realization chart. -/
 theorem realizationPoint_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (w : StandardSimplex (p - 1)) :
     (g • s).realizationPoint w = g • s.realizationPoint w := by
   apply Realization.ext
@@ -47,16 +47,16 @@ theorem realizationPoint_prime_smul
   apply Finset.sum_congr rfl
   intro i hi
   by_cases h : g • s i = c
-  · have h' : s i = c.relabel (PrimeSymmetry.toPerm hp g).symm := by
+  · have h' : s i = c.relabel (PrimeSymmetry.toPerm p g).symm := by
       have := congrArg (fun z : BarredPermutation p =>
-        z.relabel (PrimeSymmetry.toPerm hp g).symm) h
+        z.relabel (PrimeSymmetry.toPerm p g).symm) h
       simpa using this
     simp [h, h']
-  · have h' : s i ≠ c.relabel (PrimeSymmetry.toPerm hp g).symm := by
+  · have h' : s i ≠ c.relabel (PrimeSymmetry.toPerm p g).symm := by
       intro hs
       apply h
       have := congrArg (fun z : BarredPermutation p =>
-        z.relabel (PrimeSymmetry.toPerm hp g)) hs
+        z.relabel (PrimeSymmetry.toPerm p g)) hs
       simpa using this
     rw [if_neg h']
     change (if g • (s i : BarredPermutation p) = c then w i else 0) = 0
@@ -64,7 +64,7 @@ theorem realizationPoint_prime_smul
 
 /-- Prime relabelling commutes with every iterated refined chart. -/
 theorem refinedPoint_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (N : Nat) (rho : RefinementWord p N)
     (w : StandardSimplex (p - 1)) :
     (g • s).refinedPoint N rho w = g • s.refinedPoint N rho w := by
@@ -78,7 +78,7 @@ theorem refinedPoint_prime_smul
 
 /-- Prime relabelling commutes with every represented refined vertex. -/
 theorem refinedVertex_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (N : Nat) (rho : RefinementWord p N)
     (i : Fin p) :
     (g • s).refinedVertex N rho i = g • s.refinedVertex N rho i := by
@@ -221,7 +221,7 @@ theorem simplexValue_eq_of_refinedPoint_eq
 /-- Sampling an equivariant map after relabelling the whole refined simplex relabels the affine
 interpolant by the same prime symmetry. -/
 theorem simplexValue_prime_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (s : Simplex p (p - 1)) (N : Nat) (rho : RefinementWord p N)
     (F : ContinuousCoordinateMap p) (hF : IsEquivariantCoordinateMap hp F)
     (w : StandardSimplex (p - 1)) :
@@ -238,7 +238,7 @@ theorem decorated_value_eq_of_decorated_chart_eq
     (hp : Nat.Prime p) (N : Nat)
     (F : ContinuousCoordinateMap p) (hF : IsEquivariantCoordinateMap hp F)
     (q r : TopCell hp N)
-    (g h : PrimeSymmetry hp)
+    (g h : PrimeSymmetry p)
     (w v : StandardSimplex (p - 1))
     (hpoint : g • chart hp N q (StandardSimplex.toDelta w) =
       h • chart hp N r (StandardSimplex.toDelta v)) :

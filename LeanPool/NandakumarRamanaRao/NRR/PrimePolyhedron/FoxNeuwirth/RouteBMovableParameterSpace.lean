@@ -89,7 +89,7 @@ theorem assignment_replaceCoordinate_frozen
 /-- Every reconstructed full assignment remains prime-equivariant. -/
 theorem vectorValue_assignmentOfMovableParameters_smul
     (base : Assignment hp C) (x : MovableParameterSpace hp C)
-    (g : PrimeSymmetry hp) (v : GlobalVertex hp C) :
+    (g : PrimeSymmetry p) (v : GlobalVertex hp C) :
     vectorValue hp C (assignmentOfMovableParameters hp C base x) (g • v) =
       g • vectorValue hp C (assignmentOfMovableParameters hp C base x) v :=
   vectorValue_smul hp C (assignmentOfMovableParameters hp C base x) g v

@@ -119,7 +119,7 @@ theorem patchedBoundarySiteValue_eq_of_orbitRel
     (A₀ : StableRegularApproximation hp F₀.map)
     (A₁ : StableRegularApproximation hp F₁.map)
     {a b : ScalarSite hp C}
-    (hab : MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp C) a b) :
+    (hab : MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp C) a b) :
     patchedBoundarySiteValue hp C F₀ F₁ H A₀ A₁ a =
       patchedBoundarySiteValue hp C F₀ F₁ H A₀ A₁ b := by
   rw [MulAction.orbitRel_apply] at hab

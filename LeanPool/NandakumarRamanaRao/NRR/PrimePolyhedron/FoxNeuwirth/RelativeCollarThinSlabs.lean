@@ -78,8 +78,8 @@ noncomputable def slabPoint
 
 /-- Time rescaling commutes with prime symmetry. -/
 @[simp] theorem slabPoint_smul
-    (hp : Nat.Prime p) (m : Nat) (hm : 0 < m) (r : Fin m)
-    (g : PrimeSymmetry hp) (z : CylinderPoint p) :
+    (m : Nat) (hm : 0 < m) (r : Fin m)
+    (g : PrimeSymmetry p) (z : CylinderPoint p) :
     slabPoint m hm r (g • z) = g • slabPoint m hm r z :=
   rfl
 

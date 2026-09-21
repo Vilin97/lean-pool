@@ -68,7 +68,7 @@ def toProd (z : CylinderPoint p) : Realization p × Set.Icc (0 : Real) 1 :=
   cases z
   rfl
 
-instance (hp : Nat.Prime p) : MulAction (PrimeSymmetry hp) (CylinderPoint p) where
+instance (p : Nat) : MulAction (PrimeSymmetry p) (CylinderPoint p) where
   smul g z := ⟨g • z.spatial, z.time⟩
   one_smul z := by
     cases z
@@ -80,15 +80,15 @@ instance (hp : Nat.Prime p) : MulAction (PrimeSymmetry hp) (CylinderPoint p) whe
       rfl
 
 @[simp] theorem smul_spatial
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (z : CylinderPoint p) :
+    (p : Nat) (g : PrimeSymmetry p) (z : CylinderPoint p) :
     (g • z).spatial = g • z.spatial := rfl
 
 @[simp] theorem smul_time
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (z : CylinderPoint p) :
+    (p : Nat) (g : PrimeSymmetry p) (z : CylinderPoint p) :
     (g • z).time = z.time := rfl
 
 @[simp] theorem toProd_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (z : CylinderPoint p) :
+    (p : Nat) (g : PrimeSymmetry p) (z : CylinderPoint p) :
     toProd (g • z) = (g • z.spatial, z.time) := rfl
 
 end CylinderPoint
@@ -108,7 +108,7 @@ noncomputable def slotPoint
 /-- Add a symmetry element to a local vertex occurrence.  This finite covering type contains all
 prime translates of the selected quotient-cell representatives. -/
 abbrev CoverVertexSlot (hp : Nat.Prime p) (N L : Nat) :=
-  PrimeSymmetry hp × VertexSlot hp N L
+  PrimeSymmetry p × VertexSlot hp N L
 
 noncomputable instance (hp : Nat.Prime p) (N L : Nat) : Fintype (CoverVertexSlot hp N L) := inferInstance
 noncomputable instance (hp : Nat.Prime p) (N L : Nat) : DecidableEq (CoverVertexSlot hp N L) := inferInstance
@@ -140,19 +140,19 @@ noncomputable instance globalVertexDecidableEq
 
 /-- Left multiplication on the symmetry decoration. -/
 def actCoverVertex {hp : Nat.Prime p}
-    (g : PrimeSymmetry hp) (s : CoverVertexSlot hp N L) : CoverVertexSlot hp N L :=
+    (g : PrimeSymmetry p) (s : CoverVertexSlot hp N L) : CoverVertexSlot hp N L :=
   (g * s.1, s.2)
 
 @[simp] theorem coverPoint_actCoverVertex
     (hp : Nat.Prime p) (N L : Nat)
-    (g : PrimeSymmetry hp) (s : CoverVertexSlot hp N L) :
+    (g : PrimeSymmetry p) (s : CoverVertexSlot hp N L) :
     coverPoint hp N L (actCoverVertex g s) = g • coverPoint hp N L s := by
   simp [coverPoint, actCoverVertex, mul_smul]
 
 /-- Prime symmetry acts on global sampled vertices. -/
 noncomputable instance globalVertexAction
     (hp : Nat.Prime p) (N L : Nat) :
-    MulAction (PrimeSymmetry hp) (GlobalVertex hp N L) where
+    MulAction (PrimeSymmetry p) (GlobalVertex hp N L) where
   smul g := Quotient.map (actCoverVertex g) (by
     intro a b hab
     change coverPoint hp N L (actCoverVertex g a) =
@@ -185,7 +185,7 @@ noncomputable def globalPoint
 
 @[simp] theorem globalPoint_smul
     (hp : Nat.Prime p) (N L : Nat)
-    (g : PrimeSymmetry hp) (x : GlobalVertex hp N L) :
+    (g : PrimeSymmetry p) (x : GlobalVertex hp N L) :
     globalPoint hp N L (g • x) = g • globalPoint hp N L x := by
   refine Quotient.inductionOn x ?_
   intro s
@@ -195,14 +195,14 @@ noncomputable def globalPoint
 /-- The global sampled vertex represented by an undecorated local slot. -/
 noncomputable def sampleVertex
     (hp : Nat.Prime p) (N L : Nat) (s : VertexSlot hp N L) : GlobalVertex hp N L :=
-  Quotient.mk _ ((1 : PrimeSymmetry hp), s)
+  Quotient.mk _ ((1 : PrimeSymmetry p), s)
 
 @[simp] theorem globalPoint_sampleVertex
     (hp : Nat.Prime p) (N L : Nat) (s : VertexSlot hp N L) :
     globalPoint hp N L (sampleVertex hp N L s) = slotPoint hp N L s := by
-  change globalPoint hp N L (Quotient.mk _ ((1 : PrimeSymmetry hp), s)) = _
+  change globalPoint hp N L (Quotient.mk _ ((1 : PrimeSymmetry p), s)) = _
   rw [globalPoint_mk]
-  change (1 : PrimeSymmetry hp) • slotPoint hp N L s = slotPoint hp N L s
+  change (1 : PrimeSymmetry p) • slotPoint hp N L s = slotPoint hp N L s
   exact one_smul _ _
 
 /-- Local copies of one geometric prism vertex determine the same global sampled vertex. -/
@@ -213,8 +213,8 @@ theorem sampleVertex_eq_of_vertex_eq
       SubdivisionPrismCharts.vertex hp N L q' i') :
     sampleVertex hp N L (q, i) = sampleVertex hp N L (q', i') := by
   apply Quotient.sound
-  change coverPoint hp N L ((1 : PrimeSymmetry hp), (q, i)) =
-    coverPoint hp N L ((1 : PrimeSymmetry hp), (q', i'))
+  change coverPoint hp N L ((1 : PrimeSymmetry p), (q, i)) =
+    coverPoint hp N L ((1 : PrimeSymmetry p), (q', i'))
   simpa [coverPoint, slotPoint] using congrArg CylinderPoint.ofProd h
 
 /-- Point-coordinate pairs on which prime symmetry acts diagonally. -/
@@ -223,7 +223,7 @@ abbrev ScalarSite (hp : Nat.Prime p) (N L : Nat) :=
 
 /-- One independent real parameter per diagonal prime orbit of sampled point-coordinate pairs. -/
 abbrev Parameter (hp : Nat.Prime p) (N L : Nat) :=
-  MulAction.orbitRel.Quotient (PrimeSymmetry hp) (ScalarSite hp N L)
+  MulAction.orbitRel.Quotient (PrimeSymmetry p) (ScalarSite hp N L)
 
 noncomputable instance parameterFintype
     (hp : Nat.Prime p) (N L : Nat) : Fintype (Parameter hp N L) :=
@@ -253,7 +253,7 @@ noncomputable def vectorValue
 /-- Scalar values are invariant under the diagonal action. -/
 theorem scalarValue_smul
     (hp : Nat.Prime p) (N L : Nat)
-    (a : Assignment hp N L) (g : PrimeSymmetry hp)
+    (a : Assignment hp N L) (g : PrimeSymmetry p)
     (x : GlobalVertex hp N L) (j : Fin p) :
     scalarValue hp N L a (g • x) (g • j) = scalarValue hp N L a x j := by
   unfold scalarValue
@@ -264,16 +264,16 @@ theorem scalarValue_smul
 /-- Every parameter assignment reconstructs a prime-equivariant vector assignment. -/
 theorem vectorValue_smul
     (hp : Nat.Prime p) (N L : Nat)
-    (a : Assignment hp N L) (g : PrimeSymmetry hp)
+    (a : Assignment hp N L) (g : PrimeSymmetry p)
     (x : GlobalVertex hp N L) :
     vectorValue hp N L a (g • x) = g • vectorValue hp N L a x := by
   funext j
   rw [PrimeSymmetry.smul_coordinate_apply]
   let j₀ : Fin p := g⁻¹ • j
   have hsite :
-      Quotient.mk (MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp N L))
+      Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp N L))
           (g • x, j) =
-        Quotient.mk (MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp N L))
+        Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp N L))
           (x, j₀) := by
     apply Quotient.sound
     refine ⟨g, ?_⟩
@@ -312,7 +312,7 @@ theorem homotopySiteValue_eq_of_orbitRel
     (hp : Nat.Prime p) (N L : Nat)
     {F₀ F₁ : ZeroFreeMap hp} (H : ZeroFreeHomotopy hp F₀ F₁)
     {a b : ScalarSite hp N L}
-    (hab : MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp N L) a b) :
+    (hab : MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp N L) a b) :
     homotopySiteValue hp N L H a = homotopySiteValue hp N L H b := by
   rw [MulAction.orbitRel_apply] at hab
   rcases hab with ⟨g, hgab⟩

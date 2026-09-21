@@ -350,7 +350,7 @@ theorem lowerFacetOccurrenceVertex_eq
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N)
     (o : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence)
     (ho : (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = lowerFacet hp N q) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o i =
         g • lowerCylinderPoint (RefinedAffineMap.vertex hp N q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
@@ -371,7 +371,7 @@ theorem upperFacetOccurrenceVertex_eq
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp (N + 1))
     (o : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence)
     (ho : (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = upperFacet hp N q) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o i =
         g • upperCylinderPoint (RefinedAffineMap.vertex hp (N + 1) q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by

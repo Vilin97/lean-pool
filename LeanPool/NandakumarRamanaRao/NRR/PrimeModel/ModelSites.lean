@@ -30,20 +30,20 @@ def sites (M : PrimeConfigurationModel hp) :
     M.sites x = M.toConfig x := rfl
 
  theorem sites_equivariant (M : PrimeConfigurationModel hp) :
-    IsPrimeEquivariant (hp := hp) M.sites :=
+    IsPrimeEquivariant (p := p) M.sites :=
   M.toConfig_equivariant
 
 /-- Action on a body/model-point parameter, fixing the body. -/
 def smulBodyPoint
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (z : BodySpace K A × M.Point) : BodySpace K A × M.Point :=
   (z.1, g • z.2)
 
 /-- Action on a body/model-point/interval parameter, fixing body and interval. -/
 def smulBodyPointInterval
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (z : (BodySpace K A × M.Point) × SignedInterval) :
     (BodySpace K A × M.Point) × SignedInterval :=
   ((z.1.1, g • z.1.2), z.2)
@@ -51,12 +51,12 @@ def smulBodyPointInterval
 @[simp] theorem smulBodyPoint_one
     (M : PrimeConfigurationModel hp)
     (z : BodySpace K A × M.Point) :
-    M.smulBodyPoint (1 : PrimeSymmetry hp) z = z := by
+    M.smulBodyPoint (1 : PrimeSymmetry p) z = z := by
   ext <;> simp [smulBodyPoint]
 
  theorem smulBodyPoint_mul
     (M : PrimeConfigurationModel hp)
-    (g h : PrimeSymmetry hp)
+    (g h : PrimeSymmetry p)
     (z : BodySpace K A × M.Point) :
     M.smulBodyPoint (g * h) z = M.smulBodyPoint g (M.smulBodyPoint h z) := by
   ext <;> simp [smulBodyPoint, mul_smul]
@@ -64,13 +64,13 @@ def smulBodyPointInterval
 @[simp] theorem smulBodyPointInterval_one
     (M : PrimeConfigurationModel hp)
     (z : (BodySpace K A × M.Point) × SignedInterval) :
-    M.smulBodyPointInterval (1 : PrimeSymmetry hp) z = z := by
+    M.smulBodyPointInterval (1 : PrimeSymmetry p) z = z := by
   rcases z with ⟨⟨C, x⟩, t⟩
   simp [smulBodyPointInterval]
 
  theorem smulBodyPointInterval_mul
     (M : PrimeConfigurationModel hp)
-    (g h : PrimeSymmetry hp)
+    (g h : PrimeSymmetry p)
     (z : (BodySpace K A × M.Point) × SignedInterval) :
     M.smulBodyPointInterval (g * h) z =
       M.smulBodyPointInterval g (M.smulBodyPointInterval h z) := by
@@ -78,12 +78,12 @@ def smulBodyPointInterval
   simp [smulBodyPointInterval, mul_smul]
 
  theorem continuous_smulBodyPoint
-    (M : PrimeConfigurationModel hp) (g : PrimeSymmetry hp) :
+    (M : PrimeConfigurationModel hp) (g : PrimeSymmetry p) :
     Continuous (M.smulBodyPoint (K := K) (A := A) g) :=
   continuous_fst.prodMk ((M.continuous_smul g).comp continuous_snd)
 
  theorem continuous_smulBodyPointInterval
-    (M : PrimeConfigurationModel hp) (g : PrimeSymmetry hp) :
+    (M : PrimeConfigurationModel hp) (g : PrimeSymmetry p) :
     Continuous (M.smulBodyPointInterval (K := K) (A := A) g) :=
   ((continuous_fst.comp continuous_fst).prodMk
       ((M.continuous_smul g).comp (continuous_snd.comp continuous_fst))).prodMk

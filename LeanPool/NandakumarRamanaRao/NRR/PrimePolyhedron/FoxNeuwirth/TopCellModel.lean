@@ -68,10 +68,10 @@ theorem relabel_mul
   exact BarredPermutation.relabel_mul σ τ c.1
 
 @[simp] theorem prime_smul_val
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (c : FoxNeuwirthTopCell p) :
     (g • c : FoxNeuwirthTopCell p).1 =
-      c.1.relabel (PrimeSymmetry.toPerm hp g) :=
+      c.1.relabel (PrimeSymmetry.toPerm p g) :=
   rfl
 
 end FoxNeuwirthTopCell
@@ -125,18 +125,18 @@ theorem relabel_mul
   funext i
   rfl
 
-instance primeSymmetryAction (hp : Nat.Prime p) :
-    MulAction (PrimeSymmetry hp) (FoxNeuwirthWeights p) where
-  smul g w := relabel (PrimeSymmetry.toPerm hp g) w
+instance primeSymmetryAction (p : Nat) :
+    MulAction (PrimeSymmetry p) (FoxNeuwirthWeights p) where
+  smul g w := relabel (PrimeSymmetry.toPerm p g) w
   one_smul w := relabel_one w
   mul_smul g h w := by
-    exact relabel_mul (PrimeSymmetry.toPerm hp g)
-      (PrimeSymmetry.toPerm hp h) w
+    exact relabel_mul (PrimeSymmetry.toPerm p g)
+      (PrimeSymmetry.toPerm p h) w
 
 @[simp] theorem prime_smul_apply
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (p : Nat) (g : PrimeSymmetry p)
     (w : FoxNeuwirthWeights p) (i : Fin p) :
-    (g • w) i = w ((PrimeSymmetry.toPerm hp g).symm i) :=
+    (g • w) i = w ((PrimeSymmetry.toPerm p g).symm i) :=
   rfl
 
 /-- Coordinate relabelling is continuous. -/
@@ -173,8 +173,8 @@ theorem nonempty (hp : Nat.Prime p) : Nonempty (FoxNeuwirthTopCellModelPoint p) 
       · intro i; positivity
       · simp [Finset.sum_const, hp.ne_zero]⟩⟩
 
-instance (hp : Nat.Prime p) :
-    MulAction (PrimeSymmetry hp) (FoxNeuwirthTopCellModelPoint p) where
+instance (p : Nat) :
+    MulAction (PrimeSymmetry p) (FoxNeuwirthTopCellModelPoint p) where
   smul g z := (g • z.1, g • z.2)
   one_smul z := by
     apply Prod.ext
@@ -222,16 +222,16 @@ noncomputable def toConfig
 
 /-- Relabelling the model point relabels its configuration. -/
 theorem toConfig_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (z : FoxNeuwirthTopCellModelPoint p) :
     (g • z).toConfig = g • z.toConfig := by
   apply Subtype.ext
   funext i
   ext j
   fin_cases j
-  · change z.2 ((PrimeSymmetry.toPerm hp g).symm i) = _
+  · change z.2 ((PrimeSymmetry.toPerm p g).symm i) = _
     rfl
-  · change (((z.1.1.rank ((PrimeSymmetry.toPerm hp g).symm i)).1 : ℕ) : ℝ) = _
+  · change (((z.1.1.rank ((PrimeSymmetry.toPerm p g).symm i)).1 : ℕ) : ℝ) = _
     rfl
 
 /-- The configuration map is continuous. -/
@@ -267,7 +267,7 @@ theorem continuous_reference (hp : Nat.Prime p) :
 
 /-- The reference map is equivariant. -/
 theorem reference_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (z : FoxNeuwirthTopCellModelPoint p) :
     reference hp (g • z) = g • reference hp z := by
   change coordinateDeviation hp.pos (g • z.2.1) = _
@@ -275,12 +275,12 @@ theorem reference_smul
 
 /-- Group actions on the finite-cell model are continuous. -/
 theorem continuous_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) :
     Continuous fun z : FoxNeuwirthTopCellModelPoint p => g • z := by
   exact
     ((continuous_of_discreteTopology.comp continuous_fst).prodMk
       ((FoxNeuwirthWeights.continuous_relabel
-        (PrimeSymmetry.toPerm hp g)).comp continuous_snd))
+        (PrimeSymmetry.toPerm p g)).comp continuous_snd))
 
 end FoxNeuwirthTopCellModelPoint
 

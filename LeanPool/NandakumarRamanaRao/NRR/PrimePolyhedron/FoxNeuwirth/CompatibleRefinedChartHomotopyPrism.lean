@@ -202,7 +202,7 @@ noncomputable def globalVector
 theorem globalVector_smul
     (hp : Nat.Prime p) {N : Nat} {K0 K1 : ChartMap hp N}
     (J : ChartHomotopy hp N K0 K1) (L : Nat)
-    (g : PrimeSymmetry hp) (x : GlobalVertex hp (RelativeCollarMiddlePrism.cellSystem hp N L)) :
+    (g : PrimeSymmetry p) (x : GlobalVertex hp (RelativeCollarMiddlePrism.cellSystem hp N L)) :
     globalVector hp J L (g • x) = g • globalVector hp J L x := by
   refine Quotient.inductionOn x ?_
   intro s

@@ -56,13 +56,13 @@ def mapVertexSignature
 
 /-- Prime translation of an affine facet map. -/
 def translateFacetMap
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1 :=
   fun x => (g • (tau x).1, (tau x).2)
 
 @[simp] theorem mapVertexSignature_translateFacetMap
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     mapVertexSignature hp (translateFacetMap hp g tau) =
       fun i => g • mapVertexSignature hp tau i := by
@@ -100,7 +100,7 @@ noncomputable def facetOrbitIndicator
   classical
   exact if ∃ o : (Cells hp N L).FacetOccurrence,
       (Cells hp N L).facetClass o = s ∧
-        ∃ g : PrimeSymmetry hp,
+        ∃ g : PrimeSymmetry p,
           mapVertexSignature hp tau =
             fun i => g • (Cells hp N L).facetSignature o i
   then 1 else 0
@@ -109,7 +109,7 @@ noncomputable def facetOrbitIndicator
 theorem facetOrbitIndicator_translate
     (hp : Nat.Prime p) (N L : Nat)
     (s : (Cells hp N L).Facet)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     facetOrbitIndicator hp N L s (translateFacetMap hp g tau) =
       facetOrbitIndicator hp N L s tau := by
@@ -118,12 +118,12 @@ theorem facetOrbitIndicator_translate
   have hiff :
       (∃ o : (Cells hp N L).FacetOccurrence,
           (Cells hp N L).facetClass o = s ∧
-            ∃ h : PrimeSymmetry hp,
+            ∃ h : PrimeSymmetry p,
               mapVertexSignature hp (translateFacetMap hp g tau) =
                 fun i => h • (Cells hp N L).facetSignature o i) ↔
       (∃ o : (Cells hp N L).FacetOccurrence,
           (Cells hp N L).facetClass o = s ∧
-            ∃ h : PrimeSymmetry hp,
+            ∃ h : PrimeSymmetry p,
               mapVertexSignature hp tau =
                 fun i => h • (Cells hp N L).facetSignature o i) := by
     constructor
@@ -153,7 +153,7 @@ theorem facetOrbitIndicator_occurrence
   by_cases hos : (Cells hp N L).facetClass o = s
   · have hex : ∃ o' : (Cells hp N L).FacetOccurrence,
         (Cells hp N L).facetClass o' = s ∧
-          ∃ g : PrimeSymmetry hp,
+          ∃ g : PrimeSymmetry p,
             mapVertexSignature hp (occurrenceFacetMap hp N L o) =
               fun i => g • (Cells hp N L).facetSignature o' i := by
       refine ⟨o, hos, 1, ?_⟩
@@ -162,7 +162,7 @@ theorem facetOrbitIndicator_occurrence
     rw [if_pos hex, if_pos hos]
   · have hnot : ¬ ∃ o' : (Cells hp N L).FacetOccurrence,
         (Cells hp N L).facetClass o' = s ∧
-          ∃ g : PrimeSymmetry hp,
+          ∃ g : PrimeSymmetry p,
             mapVertexSignature hp (occurrenceFacetMap hp N L o) =
               fun i => g • (Cells hp N L).facetSignature o' i := by
       rintro ⟨o', ho', g, hg⟩
@@ -452,9 +452,9 @@ theorem occurrencePairing_upper
 theorem sideMapWeight_translate
     (hp : Nat.Prime p)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
-    (hW : ∀ (g : PrimeSymmetry hp) tau,
+    (hW : ∀ (g : PrimeSymmetry p) tau,
       W (translateFacetMap hp g tau) = W tau)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
     sideMapWeight W (translateFacetMap hp g tau) = sideMapWeight W tau := by
   classical
@@ -618,7 +618,7 @@ theorem arbitrarySpatialSide_scaled_boundary
 private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 + 1))
   (W : (↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 + 1) × Set.Icc (0 : Real) 1) → ZMod (n + 1 + 1))
   (hW :
-    ∀ (g : ↥(PrimeSymmetry hp)) (tau : ↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 + 1) × Set.Icc (0 : Real) 1),
+    ∀ (g : ↥(PrimeSymmetry (n + 1 + 1))) (tau : ↑(Delta (n + 1 + 1 - 1)) → Realization (n + 1 + 1) × Set.Icc (0 : Real) 1),
       W (translateFacetMap hp g tau) = W tau)
   (eta : Fin L → Equiv.Perm (Fin (n + 1 + 1))) (h : Fin (n + 1)) (theta : Fin N → Equiv.Perm (Fin (n + 1))) :
   ∑ x,
@@ -635,7 +635,7 @@ private theorem fixed_refined_side_pairing_cancels (N L n : ℕ) (hp : Nat.Prime
     arbitrarySpatialSideWeight hp L (sideMapWeight W) eta h (fun x =>
       f.realizationPoint
         (StandardSimplex.ofDelta (affineCompMap n N theta x)))
-  have hVsimplex : ∀ (g : PrimeSymmetry hp) (f : Simplex (n + 1 + 1) n),
+  have hVsimplex : ∀ (g : PrimeSymmetry (n + 1 + 1)) (f : Simplex (n + 1 + 1) n),
       Vsimplex (g • f) = Vsimplex f := by
     intro g f
     dsimp [Vsimplex, arbitrarySpatialSideWeight]
@@ -768,7 +768,7 @@ refined prism boundary. -/
 theorem occurrencePairing_side_eq_zero
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
-    (hW : ∀ (g : PrimeSymmetry hp) tau,
+    (hW : ∀ (g : PrimeSymmetry p) tau,
       W (translateFacetMap hp g tau) = W tau) :
     occurrencePairing hp N L (sideMapWeight W) = 0 := by
   classical
@@ -937,7 +937,7 @@ theorem occurrencePairing_side_eq_zero
 theorem occurrencePairing_eq_upper_sub_lower
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
-    (hW : ∀ (g : PrimeSymmetry hp) tau,
+    (hW : ∀ (g : PrimeSymmetry p) tau,
       W (translateFacetMap hp g tau) = W tau) :
     occurrencePairing hp N L W =
       upperEndpointPairing hp N L W - lowerEndpointPairing hp N L W := by

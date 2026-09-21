@@ -93,7 +93,7 @@ noncomputable def reverseGlobalVector
 theorem reverseGlobalVector_smul
     (C : RelativeAffineCellSystem hp N₀ N₁ M L)
     (a : Assignment hp C)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (x : GlobalVertex hp (reverseCells C)) :
     reverseGlobalVector C a (g • x) = g • reverseGlobalVector C a x := by
   refine Quotient.inductionOn x ?_

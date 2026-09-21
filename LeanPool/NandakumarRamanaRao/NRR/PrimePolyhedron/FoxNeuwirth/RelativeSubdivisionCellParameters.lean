@@ -235,7 +235,7 @@ noncomputable def slotPoint (s : VertexSlot hp B) : CylinderPoint p :=
       ((CollarSupport hp B).simplex s.1)) (stdSimplex.vertex s.2))
 
 /-- Symmetry-decorated finite collar vertex occurrences. -/
-abbrev CoverVertexSlot := PrimeSymmetry hp × VertexSlot hp B
+abbrev CoverVertexSlot := PrimeSymmetry p × VertexSlot hp B
 
 noncomputable instance coverVertexSlotFintype : Fintype (CoverVertexSlot hp B) := inferInstance
 noncomputable instance coverVertexSlotDecidableEq : DecidableEq (CoverVertexSlot hp B) :=
@@ -262,17 +262,17 @@ noncomputable instance globalVertexDecidableEq : DecidableEq (GlobalVertex hp B)
 
 /-- Left multiplication on the symmetry decoration. -/
 def actCoverVertex
-    (g : PrimeSymmetry hp) (s : CoverVertexSlot hp B) : CoverVertexSlot hp B :=
+    (g : PrimeSymmetry p) (s : CoverVertexSlot hp B) : CoverVertexSlot hp B :=
   (g * s.1, s.2)
 
 @[simp] theorem coverPoint_actCoverVertex
-    (g : PrimeSymmetry hp) (s : CoverVertexSlot hp B) :
+    (g : PrimeSymmetry p) (s : CoverVertexSlot hp B) :
     coverPoint hp B (actCoverVertex hp B g s) = g • coverPoint hp B s := by
   simp [coverPoint, actCoverVertex, mul_smul]
 
 /-- Prime symmetry acts on the global relative-collar vertices. -/
 noncomputable instance globalVertexAction :
-    MulAction (PrimeSymmetry hp) (GlobalVertex hp B) where
+    MulAction (PrimeSymmetry p) (GlobalVertex hp B) where
   smul g := Quotient.map (actCoverVertex hp B g) (by
     intro a b hab
     change coverPoint hp B (actCoverVertex hp B g a) =
@@ -302,7 +302,7 @@ noncomputable def globalPoint : GlobalVertex hp B → CylinderPoint p :=
     globalPoint hp B (Quotient.mk _ s) = coverPoint hp B s := rfl
 
 @[simp] theorem globalPoint_smul
-    (g : PrimeSymmetry hp) (x : GlobalVertex hp B) :
+    (g : PrimeSymmetry p) (x : GlobalVertex hp B) :
     globalPoint hp B (g • x) = g • globalPoint hp B x := by
   refine Quotient.inductionOn x ?_
   intro s
@@ -311,11 +311,11 @@ noncomputable def globalPoint : GlobalVertex hp B → CylinderPoint p :=
 
 /-- Global sampled vertex represented by an undecorated local collar slot. -/
 noncomputable def sampleVertex (s : VertexSlot hp B) : GlobalVertex hp B :=
-  Quotient.mk _ ((1 : PrimeSymmetry hp), s)
+  Quotient.mk _ ((1 : PrimeSymmetry p), s)
 
 @[simp] theorem globalPoint_sampleVertex (s : VertexSlot hp B) :
     globalPoint hp B (sampleVertex hp B s) = slotPoint hp B s := by
-  change (1 : PrimeSymmetry hp) • slotPoint hp B s = _
+  change (1 : PrimeSymmetry p) • slotPoint hp B s = _
   exact one_smul _ _
 
 /-- Local copies of one geometric collar vertex determine the same global sampled vertex. -/
@@ -323,8 +323,8 @@ theorem sampleVertex_eq_of_slotPoint_eq
     {s t : VertexSlot hp B} (h : slotPoint hp B s = slotPoint hp B t) :
     sampleVertex hp B s = sampleVertex hp B t := by
   apply Quotient.sound
-  change coverPoint hp B ((1 : PrimeSymmetry hp), s) =
-    coverPoint hp B ((1 : PrimeSymmetry hp), t)
+  change coverPoint hp B ((1 : PrimeSymmetry p), s) =
+    coverPoint hp B ((1 : PrimeSymmetry p), t)
   simpa [coverPoint] using h
 
 /-- Point-coordinate sites before quotienting by diagonal prime symmetry. -/
@@ -332,7 +332,7 @@ abbrev ScalarSite := GlobalVertex hp B × Fin p
 
 /-- One scalar parameter per diagonal prime orbit of relative-collar vertex-coordinate sites. -/
 abbrev Parameter :=
-  MulAction.orbitRel.Quotient (PrimeSymmetry hp) (ScalarSite hp B)
+  MulAction.orbitRel.Quotient (PrimeSymmetry p) (ScalarSite hp B)
 
 noncomputable instance parameterFintype : Fintype (Parameter hp B) := Fintype.ofFinite _
 noncomputable instance parameterDecidableEq : DecidableEq (Parameter hp B) := Classical.decEq _
@@ -342,7 +342,7 @@ def IsHorizontalPoint (z : CylinderPoint p) : Prop :=
   z.time.1 = 0 ∨ z.time.1 = 1
 
 @[simp] theorem isHorizontalPoint_smul
-    (g : PrimeSymmetry hp) (z : CylinderPoint p) :
+    (g : PrimeSymmetry p) (z : CylinderPoint p) :
     IsHorizontalPoint (g • z) ↔ IsHorizontalPoint z := by
   rfl
 
@@ -351,7 +351,7 @@ def IsFrozenVertex (x : GlobalVertex hp B) : Prop :=
   IsHorizontalPoint (globalPoint hp B x)
 
 @[simp] theorem isFrozenVertex_smul
-    (g : PrimeSymmetry hp) (x : GlobalVertex hp B) :
+    (g : PrimeSymmetry p) (x : GlobalVertex hp B) :
     IsFrozenVertex hp B (g • x) ↔ IsFrozenVertex hp B x := by
   simp [IsFrozenVertex]
 
@@ -361,7 +361,7 @@ noncomputable def IsFrozenParameter : Parameter hp B → Prop :=
     (fun s : ScalarSite hp B => IsFrozenVertex hp B s.1)
     (by
       intro a b hab
-      obtain ⟨g, rfl⟩ : ∃ g : PrimeSymmetry hp, g • b = a := hab
+      obtain ⟨g, rfl⟩ : ∃ g : PrimeSymmetry p, g • b = a := hab
       exact propext (isFrozenVertex_smul hp B g b.1))
 
 /-- Parameter orbits represented on the two fixed horizontal boundaries. -/
@@ -461,15 +461,15 @@ noncomputable def vectorValue
 
 /-- Relative-collar assignments are prime-equivariant by the diagonal orbit quotient. -/
 theorem vectorValue_smul
-    (a : Assignment hp B) (g : PrimeSymmetry hp) (x : GlobalVertex hp B) :
+    (a : Assignment hp B) (g : PrimeSymmetry p) (x : GlobalVertex hp B) :
     vectorValue hp B a (g • x) = g • vectorValue hp B a x := by
   funext j
   rw [PrimeSymmetry.smul_coordinate_apply]
   let j₀ : Fin p := g⁻¹ • j
   have hsite :
-      Quotient.mk (MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp B))
+      Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp B))
           (g • x, j) =
-        Quotient.mk (MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp B))
+        Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp B))
           (x, j₀) := by
     apply Quotient.sound
     refine ⟨g, ?_⟩

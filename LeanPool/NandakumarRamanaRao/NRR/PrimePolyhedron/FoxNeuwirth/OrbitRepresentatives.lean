@@ -65,13 +65,13 @@ namespace FoxNeuwirth
 variable {p : Nat}
 
 /-- C3 data needed for the cellular top cells.  The action is already finite; the representative data and subgroup-index relation provide the quotient bookkeeping. -/
-noncomputable instance instFintypePrimeSymmetry (hp : Nat.Prime p) :
-    Fintype (PrimeSymmetry hp) :=
+noncomputable instance instFintypePrimeSymmetry (p : Nat) :
+    Fintype (PrimeSymmetry p) :=
   Fintype.ofFinite _
 
 /-- Orbit-representative data for the prime action on top-dimensional cells. -/
 abbrev CellularTopOrbitRepresentatives (hp : Nat.Prime p) :=
-  OrbitRepresentativeData (PrimeSymmetry hp) (BarredPermutation.TopCell p)
+  OrbitRepresentativeData (PrimeSymmetry p) (BarredPermutation.TopCell p)
 
 end FoxNeuwirth
 end NRR

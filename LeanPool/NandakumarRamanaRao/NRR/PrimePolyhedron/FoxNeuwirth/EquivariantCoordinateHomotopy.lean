@@ -52,7 +52,7 @@ structure ZeroFreeHomotopy
   map : C(Realization p × Set.Icc (0 : Real) 1, Fin p → Real)
   map_zero : ∀ x, map (x, ⟨0, by simp⟩) = F₀.map x
   map_one : ∀ x, map (x, ⟨1, by simp⟩) = F₁.map x
-  equivariant : ∀ (g : PrimeSymmetry hp) x t, map (g • x, t) = g • map (x, t)
+  equivariant : ∀ (g : PrimeSymmetry p) x t, map (g • x, t) = g • map (x, t)
   zeroFree : ∀ x t, map (x, t) ≠ 0
 
 namespace ZeroFreeHomotopy

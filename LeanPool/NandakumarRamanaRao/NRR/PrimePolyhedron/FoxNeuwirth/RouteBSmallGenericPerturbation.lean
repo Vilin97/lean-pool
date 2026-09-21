@@ -344,7 +344,7 @@ structure SmallGenericPerturbationResult
     (assignmentOfMovableParameters hp C base move) base eps
   fixesFrozen : ∀ {s : Parameter hp C}, IsFrozenParameter hp C s →
     assignmentOfMovableParameters hp C base move s = base s
-  equivariant : ∀ (g : PrimeSymmetry hp) (v : GlobalVertex hp C),
+  equivariant : ∀ (g : PrimeSymmetry p) (v : GlobalVertex hp C),
     vectorValue hp C (assignmentOfMovableParameters hp C base move) (g • v) =
       g • vectorValue hp C (assignmentOfMovableParameters hp C base move) v
   retainedMargin : LocalAffineCoordinateNormMargin hp C

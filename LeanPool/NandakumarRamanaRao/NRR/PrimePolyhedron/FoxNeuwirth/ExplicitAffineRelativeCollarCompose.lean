@@ -58,10 +58,10 @@ noncomputable def rightPoint (z : CylinderPoint p) : CylinderPoint p :=
 @[simp] theorem rightPoint_time (z : CylinderPoint p) :
     (rightPoint z).time.1 = (1 + z.time.1) / 2 := rfl
 
-@[simp] theorem leftPoint_smul (g : PrimeSymmetry hp) (z : CylinderPoint p) :
+@[simp] theorem leftPoint_smul (g : PrimeSymmetry p) (z : CylinderPoint p) :
     leftPoint (g • z) = g • leftPoint z := rfl
 
-@[simp] theorem rightPoint_smul (g : PrimeSymmetry hp) (z : CylinderPoint p) :
+@[simp] theorem rightPoint_smul (g : PrimeSymmetry p) (z : CylinderPoint p) :
     rightPoint (g • z) = g • rightPoint z := rfl
 
 /-- Both half-cylinder embeddings are injective. -/
@@ -577,7 +577,7 @@ theorem lowerFacetOccurrenceVertex_eq
     (o : (combinedCells C.cells D.cells).FacetOccurrence)
     (ho : (combinedCells C.cells D.cells).facetClass o =
       Combined.leftFacet C.cells D.cells (C.lowerFacet q)) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (combinedCells C.cells D.cells).facetSignature o i =
         g • lowerCylinderPoint (RefinedAffineMap.vertex hp N₀ q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
@@ -614,7 +614,7 @@ theorem upperFacetOccurrenceVertex_eq
     (o : (combinedCells C.cells D.cells).FacetOccurrence)
     (ho : (combinedCells C.cells D.cells).facetClass o =
       Combined.rightFacet C.cells D.cells (D.upperFacet q)) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (combinedCells C.cells D.cells).facetSignature o i =
         g • upperCylinderPoint (RefinedAffineMap.vertex hp N₁ q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by

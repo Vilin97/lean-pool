@@ -129,14 +129,14 @@ theorem reference_zero_in_full_permutation_orbit
 
 /-- Number of prime-symmetry orbits obtained by restricting a full permutation torsor. -/
 noncomputable def referenceOrbitMultiplicity (hp : Nat.Prime p) : Nat :=
-  (primeSymmetrySubgroup hp).index
+  (primeSymmetrySubgroup p).index
 
 /-- For two labels the selected symmetry group is the full group, so the reference zero set has one
 orbit. -/
 theorem referenceOrbitMultiplicity_eq_one
     (hp : Nat.Prime p) (h2 : p = 2) :
     referenceOrbitMultiplicity hp = 1 := by
-  rw [referenceOrbitMultiplicity, primeSymmetrySubgroup_eq_top hp h2]
+  rw [referenceOrbitMultiplicity, primeSymmetrySubgroup_eq_top p h2]
   simp
 
 /-- For an odd prime the selected symmetry group is alternating, hence has index two. -/
@@ -154,7 +154,7 @@ theorem referenceOrbitMultiplicity_eq_two
     simp [i, j] at hval
   letI : Nontrivial (Fin p) := ⟨⟨i, j, hij⟩⟩
   rw [referenceOrbitMultiplicity,
-    primeSymmetrySubgroup_eq_alternating hp h2]
+    primeSymmetrySubgroup_eq_alternating p h2]
   exact alternatingGroup.index_eq_two
 
 /-- Signed reference orbit count with local coefficient `1` on each restricted orbit. -/

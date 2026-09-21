@@ -62,12 +62,12 @@ instance : Coe (TopCell p) (BarredPermutation p) :=
   ⟨Subtype.val⟩
 
 /-- Prime symmetry preserves top cells. -/
-instance primeSymmetryAction (hp : Nat.Prime p) :
-    MulAction (PrimeSymmetry hp) (TopCell p) where
+instance primeSymmetryAction (p : Nat) :
+    MulAction (PrimeSymmetry p) (TopCell p) where
   smul g c :=
     ⟨g • c.1,
       (BarredPermutation.isTop_relabel
-        (PrimeSymmetry.toPerm hp g) c.1).2 c.2⟩
+        (PrimeSymmetry.toPerm p g) c.1).2 c.2⟩
   one_smul c := by
     apply Subtype.ext
     exact one_smul _ _
@@ -76,7 +76,7 @@ instance primeSymmetryAction (hp : Nat.Prime p) :
     exact mul_smul _ _ _
 
 @[simp] theorem smul_coe
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (c : TopCell p) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (c : TopCell p) :
     (g • c : TopCell p).1 = g • c.1 :=
   rfl
 

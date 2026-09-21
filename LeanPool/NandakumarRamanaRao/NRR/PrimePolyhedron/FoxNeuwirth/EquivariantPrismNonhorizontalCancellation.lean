@@ -1227,13 +1227,13 @@ def mapVertexSignature
 
 /-- Prime translation of an affine facet map. -/
 def translateFacetMap
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
     Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1 :=
   fun x => (g • (tau x).1, (tau x).2)
 
 @[simp] theorem mapVertexSignature_translateFacetMap
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
     mapVertexSignature (translateFacetMap hp g tau) =
       fun i => g • mapVertexSignature tau i := by
@@ -1261,14 +1261,14 @@ the subdivision and staircase identities. -/
 def FacetMapIsRealizedUpToPrime
     (hp : Nat.Prime p) (N L : Nat)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) : Prop :=
-  ∃ o : FacetOccurrence hp N L, ∃ g : PrimeSymmetry hp,
+  ∃ o : FacetOccurrence hp N L, ∃ g : PrimeSymmetry p,
     mapVertexSignature tau = fun i => g • occurrencePointSignature hp N L o i
 
 /-- Prime-equivalent ordered geometric occurrence signatures have equal unsigned indices for every
 compatible assignment. -/
 theorem occurrenceUnsignedFacetIndex_eq_of_pointSignature_eq_primeSmul
     (hp : Nat.Prime p) (N L : Nat) (a : Assignment hp N L)
-    (o o' : FacetOccurrence hp N L) (g : PrimeSymmetry hp)
+    (o o' : FacetOccurrence hp N L) (g : PrimeSymmetry p)
     (h : occurrencePointSignature hp N L o =
       fun i => g • occurrencePointSignature hp N L o' i) :
     unsignedFacetIndex hp (localVertexMap hp N L a o.1) o.2 =
@@ -1282,7 +1282,7 @@ theorem occurrenceUnsignedFacetIndex_eq_of_pointSignature_eq_primeSmul
       g • sampleVertex hp N L (o'.1, o'.2.succAbove i) := by
     apply Quotient.sound
     change coverPoint hp N L
-        ((1 : PrimeSymmetry hp), (o.1, o.2.succAbove i)) =
+        ((1 : PrimeSymmetry p), (o.1, o.2.succAbove i)) =
       coverPoint hp N L (g, (o'.1, o'.2.succAbove i))
     simpa [coverPoint, occurrencePointSignature] using congrFun h i
   rw [hs, vectorValue_smul]
@@ -1314,7 +1314,7 @@ theorem realizedFacetWeight_occurrence
     simp
   rw [dif_pos hex, signatureWeight_facetSignature]
   let o' : FacetOccurrence hp N L := Classical.choose hex
-  let g : PrimeSymmetry hp := Classical.choose (Classical.choose_spec hex)
+  let g : PrimeSymmetry p := Classical.choose (Classical.choose_spec hex)
   have hg : mapVertexSignature (occurrenceFacetMap hp N L o) =
       fun i => g • occurrencePointSignature hp N L o' i :=
     Classical.choose_spec (Classical.choose_spec hex)
@@ -1328,7 +1328,7 @@ theorem realizedFacetWeight_occurrence
 /-- The realized facet weight is invariant under simultaneous prime translation. -/
 theorem realizedFacetWeight_translateFacetMap
     (hp : Nat.Prime p) (N L : Nat) (a : Assignment hp N L)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
     realizedFacetWeight hp N L a (translateFacetMap hp g tau) =
       realizedFacetWeight hp N L a tau := by
@@ -1354,12 +1354,12 @@ theorem realizedFacetWeight_translateFacetMap
         (translateFacetMap hp g tau) := hiff.mpr hright
     rw [dif_pos hleft, dif_pos hright]
     let oL : FacetOccurrence hp N L := Classical.choose hleft
-    let hL : PrimeSymmetry hp := Classical.choose (Classical.choose_spec hleft)
+    let hL : PrimeSymmetry p := Classical.choose (Classical.choose_spec hleft)
     have heqL : mapVertexSignature (translateFacetMap hp g tau) =
         fun i => hL • occurrencePointSignature hp N L oL i :=
       Classical.choose_spec (Classical.choose_spec hleft)
     let oR : FacetOccurrence hp N L := Classical.choose hright
-    let hR : PrimeSymmetry hp := Classical.choose (Classical.choose_spec hright)
+    let hR : PrimeSymmetry p := Classical.choose (Classical.choose_spec hright)
     have heqR : mapVertexSignature tau =
         fun i => hR • occurrencePointSignature hp N L oR i :=
       Classical.choose_spec (Classical.choose_spec hright)
@@ -1512,7 +1512,7 @@ theorem nonhorizontalContribution_eq_occurrence_sum
 /-- Prime relabelling does not change the nonhorizontal facet weight. -/
 theorem nonhorizontalMapWeight_smul
     (hp : Nat.Prime p) (N L : Nat) (a : Assignment hp N L)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (tau : Delta (p - 1) -> Realization p × Set.Icc (0 : Real) 1) :
     nonhorizontalMapWeight hp N L a
         (translateFacetMap hp g tau) =
@@ -1576,7 +1576,7 @@ noncomputable def orbitFaceClass
 /-- A face and the canonical representative of its orbit differ by a prime relabelling. -/
 theorem exists_orbitFaceTransport
     (hp : Nat.Prime p) (c : PrimeOrbitCycle.TopOrbit hp) (k : Fin p) :
-    ∃ g : PrimeSymmetry hp,
+    ∃ g : PrimeSymmetry p,
       g • PrimeOrbitCycle.facetRepresentative hp (orbitFaceClass hp c k) =
         orbitTopFace hp c k := by
   have hclass :
@@ -1591,7 +1591,7 @@ theorem exists_orbitFaceTransport
 actual face of the chosen top representative. -/
 noncomputable def orbitFaceTransport
     (hp : Nat.Prime p) (c : PrimeOrbitCycle.TopOrbit hp) (k : Fin p) :
-    PrimeSymmetry hp :=
+    PrimeSymmetry p :=
   Classical.choose (exists_orbitFaceTransport hp c k)
 
 /-- Specification of the chosen face transporter. -/
@@ -1663,9 +1663,9 @@ noncomputable def orbitFaceWitnessEquiv
   right_inv := by
     rintro ⟨⟨⟨qf, s⟩, k⟩, hface⟩
     have hsorbit : ((s : c.orbit) : (PrimeOrbitCycle.coveringCycle hp).TopCell) ∈
-        MulAction.orbit (PrimeSymmetry hp) (PrimeOrbitCycle.topRepresentative hp c) := by
+        MulAction.orbit (PrimeSymmetry p) (PrimeOrbitCycle.topRepresentative hp c) := by
       change ((s : c.orbit) : (PrimeOrbitCycle.coveringCycle hp).TopCell) ∈
-        MulAction.orbit (PrimeSymmetry hp) (Quotient.out c)
+        MulAction.orbit (PrimeSymmetry p) (Quotient.out c)
       rw [← MulAction.orbitRel.Quotient.orbit_eq_orbit_out c Quotient.out_eq']
       exact s.property
     rcases MulAction.mem_orbit_iff.mp hsorbit with ⟨g, hg⟩
@@ -1691,7 +1691,7 @@ noncomputable def orbitFaceWitnessEquiv
         g⁻¹ • PrimeOrbitCycle.facetRepresentative hp qf =
             g⁻¹ • (g • orbitTopFace hp c k) := congrArg (fun x => g⁻¹ • x) hfaceg.symm
         _ = orbitTopFace hp c k := by simp
-    let a : PrimeSymmetry hp := orbitFaceTransport hp c k
+    let a : PrimeSymmetry p := orbitFaceTransport hp c k
     have haspec : a • PrimeOrbitCycle.facetRepresentative hp qf =
         orbitTopFace hp c k := by
       simpa [a, hq] using orbitFaceTransport_spec hp c k
@@ -1772,7 +1772,7 @@ theorem orbitFaceWitness_sum
 theorem orbit_coboundary_eq_face_sum
     (hp : Nat.Prime p) (c : PrimeOrbitCycle.TopOrbit hp)
     (W : Simplex p (p - 2) -> ZMod p)
-    (hW : ∀ (g : PrimeSymmetry hp) (f : Simplex p (p - 2)),
+    (hW : ∀ (g : PrimeSymmetry p) (f : Simplex p (p - 2)),
       W (g • f) = W f) :
     (∑ qf : PrimeOrbitCycle.FacetOrbit hp,
       (PrimeOrbitCycle.orbitCycle hp).incidence qf c *
@@ -1783,7 +1783,7 @@ theorem orbit_coboundary_eq_face_sum
   classical
   change (∑ qf : PrimeOrbitCycle.FacetOrbit hp,
       (FiniteIncidenceCycle.orbitIncidence
-        (G := PrimeSymmetry hp) (PrimeOrbitCycle.coveringCycle hp) qf c) *
+        (G := PrimeSymmetry p) (PrimeOrbitCycle.coveringCycle hp) qf c) *
         W (PrimeOrbitCycle.facetRepresentative hp qf)) = _
   unfold FiniteIncidenceCycle.orbitIncidence
   change (∑ qf : PrimeOrbitCycle.FacetOrbit hp,
@@ -1813,7 +1813,7 @@ theorem orbit_coboundary_eq_face_sum
 theorem orbit_boundary_pairing_eq_zero
     (hp : Nat.Prime p)
     (W : Simplex p (p - 2) -> ZMod p)
-    (hW : ∀ (g : PrimeSymmetry hp) (f : Simplex p (p - 2)),
+    (hW : ∀ (g : PrimeSymmetry p) (f : Simplex p (p - 2)),
       W (g • f) = W f) :
     (∑ c : PrimeOrbitCycle.TopOrbit hp,
       (PrimeOrbitCycle.orbitCycle hp).coefficient c *
@@ -1894,7 +1894,7 @@ theorem refined_chart_eq_affineCompMap
 
 /-- Relabelling any simplex commutes with its realization chart. -/
 theorem realizationPoint_prime_smul_any
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (s : Simplex p d) (w : StandardSimplex d) :
     (g • s).realizationPoint w = g • s.realizationPoint w := by
   apply Realization.ext
@@ -1905,19 +1905,19 @@ theorem realizationPoint_prime_smul_any
   apply Finset.sum_congr rfl
   intro i hi
   by_cases h : g • s i = c
-  · have h' : s i = c.relabel (PrimeSymmetry.toPerm hp g).symm := by
+  · have h' : s i = c.relabel (PrimeSymmetry.toPerm p g).symm := by
       have := congrArg (fun z : BarredPermutation p =>
-        z.relabel (PrimeSymmetry.toPerm hp g).symm) h
+        z.relabel (PrimeSymmetry.toPerm p g).symm) h
       simpa using this
     simp [h, h']
-  · have h' : s i ≠ c.relabel (PrimeSymmetry.toPerm hp g).symm := by
+  · have h' : s i ≠ c.relabel (PrimeSymmetry.toPerm p g).symm := by
       intro hs
       apply h
       have := congrArg (fun z : BarredPermutation p =>
-        z.relabel (PrimeSymmetry.toPerm hp g)) hs
+        z.relabel (PrimeSymmetry.toPerm p g)) hs
       simpa using this
     change (if g • s i = c then w i else 0) =
-      (if s i = c.relabel (PrimeSymmetry.toPerm hp g).symm then w i else 0)
+      (if s i = c.relabel (PrimeSymmetry.toPerm p g).symm then w i else 0)
     rw [if_neg h, if_neg h']
 
 /-- Weight of a staircase side simplex built over a spatial facet. -/
@@ -2069,7 +2069,7 @@ private theorem fixed_refined_side_cancels (N L n : ℕ) (hp : Nat.Prime (n + 1 
     spatialSideWeight hp N L a eta h (fun x =>
       f.realizationPoint
         (StandardSimplex.ofDelta (affineCompMap n N theta x)))
-  have hW : ∀ (g : PrimeSymmetry hp) (f : Simplex (n + 1 + 1) n),
+  have hW : ∀ (g : PrimeSymmetry (n + 1 + 1)) (f : Simplex (n + 1 + 1) n),
       W (g • f) = W f := by
     intro g f
     dsimp [W, spatialSideWeight]

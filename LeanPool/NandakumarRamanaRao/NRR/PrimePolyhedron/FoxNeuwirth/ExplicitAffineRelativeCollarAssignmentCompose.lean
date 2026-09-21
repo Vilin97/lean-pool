@@ -42,11 +42,11 @@ noncomputable def assignmentOfEquivariantVector
     {A B M L : Nat}
     (C : RelativeAffineCellSystem hp A B M L)
     (V : GlobalVertex hp C → Fin p → Real)
-    (hV : ∀ (g : PrimeSymmetry hp) (x : GlobalVertex hp C),
+    (hV : ∀ (g : PrimeSymmetry p) (x : GlobalVertex hp C),
       V (g • x) = g • V x) : Assignment hp C :=
   fun q => Quotient.liftOn q (fun s : ScalarSite hp C => V s.1 s.2) (by
     intro a b hab
-    obtain ⟨g, rfl⟩ : ∃ g : PrimeSymmetry hp, g • b = a := hab
+    obtain ⟨g, rfl⟩ : ∃ g : PrimeSymmetry p, g • b = a := hab
     have h := congrFun (hV g b.1) (g • b.2)
     simpa [PrimeSymmetry.smul_coordinate_apply, PrimeSymmetry.smul_label] using h)
 
@@ -55,7 +55,7 @@ noncomputable def assignmentOfEquivariantVector
     {A B M L : Nat}
     (C : RelativeAffineCellSystem hp A B M L)
     (V : GlobalVertex hp C → Fin p → Real)
-    (hV : ∀ (g : PrimeSymmetry hp) (x : GlobalVertex hp C),
+    (hV : ∀ (g : PrimeSymmetry p) (x : GlobalVertex hp C),
       V (g • x) = g • V x)
     (x : GlobalVertex hp C) :
     vectorValue hp C (assignmentOfEquivariantVector C V hV) x = V x := by
@@ -196,12 +196,12 @@ noncomputable def combinedGlobalVector
 theorem combinedGlobalVector_smul
     (VC : GlobalVertex hp C → Fin p → Real)
     (VD : GlobalVertex hp D → Fin p → Real)
-    (hC : ∀ (g : PrimeSymmetry hp) (x : GlobalVertex hp C),
+    (hC : ∀ (g : PrimeSymmetry p) (x : GlobalVertex hp C),
       VC (g • x) = g • VC x)
-    (hD : ∀ (g : PrimeSymmetry hp) (x : GlobalVertex hp D),
+    (hD : ∀ (g : PrimeSymmetry p) (x : GlobalVertex hp D),
       VD (g • x) = g • VD x)
     (hseam : SeamCompatible C D VC VD)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (x : GlobalVertex hp (combinedCells C D)) :
     combinedGlobalVector C D VC VD hseam (g • x) =
       g • combinedGlobalVector C D VC VD hseam x := by

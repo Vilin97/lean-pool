@@ -52,7 +52,7 @@ structure ChartMap (hp : Nat.Prime p) (N : Nat) where
   value : TopCell hp N -> StandardSimplex (p - 1) -> Fin p -> Real
   continuous_value : forall q, Continuous (value q)
   decorated_compatible : forall
-      (g h : PrimeSymmetry hp) (q r : TopCell hp N)
+      (g h : PrimeSymmetry p) (q r : TopCell hp N)
       (w v : StandardSimplex (p - 1)),
     g • chart hp N q (StandardSimplex.toDelta w) =
         h • chart hp N r (StandardSimplex.toDelta v) ->
@@ -70,7 +70,7 @@ structure ChartHomotopy
   value_zero : forall q w, value q w ⟨0, by simp⟩ = K0.value q w
   value_one : forall q w, value q w ⟨1, by simp⟩ = K1.value q w
   decorated_compatible : forall
-      (g h : PrimeSymmetry hp) (q r : TopCell hp N)
+      (g h : PrimeSymmetry p) (q r : TopCell hp N)
       (w v : StandardSimplex (p - 1)) (t : Set.Icc (0 : Real) 1),
     g • chart hp N q (StandardSimplex.toDelta w) =
         h • chart hp N r (StandardSimplex.toDelta v) ->

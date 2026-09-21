@@ -293,7 +293,7 @@ theorem lowerFacetOccurrenceVertex_eq
     (o : (RelativeCollarMiddlePrism.cellSystem hp N L).FacetOccurrence)
     (ho : (RelativeCollarMiddlePrism.cellSystem hp N L).facetClass o =
       lowerFacet hp N L q) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (RelativeCollarMiddlePrism.cellSystem hp N L).facetSignature o i =
         g • ExplicitAffineRelativeCollar.lowerCylinderPoint
           (RefinedAffineMap.vertex hp (N + L) q
@@ -323,7 +323,7 @@ theorem upperFacetOccurrenceVertex_eq
     (o : (RelativeCollarMiddlePrism.cellSystem hp N L).FacetOccurrence)
     (ho : (RelativeCollarMiddlePrism.cellSystem hp N L).facetClass o =
       upperFacet hp N L q) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (RelativeCollarMiddlePrism.cellSystem hp N L).facetSignature o i =
         g • ExplicitAffineRelativeCollar.upperCylinderPoint
           (RefinedAffineMap.vertex hp (N + L) q

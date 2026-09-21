@@ -112,7 +112,7 @@ theorem perturbedAssignment_equivariant
     (A0 : StableRegularApproximation hp F0.map)
     (A1 : StableRegularApproximation hp F1.map)
     (eps : Real) (heps : 0 < eps)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (v : GlobalVertex hp (baseData hp F0 F1 H A0 A1).collar.cells) :
     vectorValue hp (baseData hp F0 F1 H A0 A1).collar.cells
         (perturbedAssignment hp F0 F1 H A0 A1 eps heps) (g • v) =

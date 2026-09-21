@@ -121,7 +121,7 @@ noncomputable abbrev cellSystem
 
 /-- The generic quotient action specialized to the explicit middle-prism carrier. -/
 noncomputable instance middleGlobalVertexAction (hp : Nat.Prime p) (N L : Nat) :
-    MulAction (PrimeSymmetry hp) (Parameters.GlobalVertex hp (cellSystem hp N L)) :=
+    MulAction (PrimeSymmetry p) (Parameters.GlobalVertex hp (cellSystem hp N L)) :=
   Parameters.globalVertexAction hp (cellSystem hp N L)
 
 end RelativeCollarMiddlePrism

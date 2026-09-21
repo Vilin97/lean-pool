@@ -19,19 +19,19 @@ variable {p : ℕ}
 
  theorem PrimeSymmetry.coordinate_fixed_constant
     (hp : Nat.Prime p) (v : Fin p → ℝ)
-    (hfix : ∀ g : PrimeSymmetry hp, g • v = v) :
+    (hfix : ∀ g : PrimeSymmetry p, g • v = v) :
     ∀ i j, v i = v j := by
   intro i j
   obtain ⟨g, hg⟩ := PrimeSymmetry.exists_map_label hp j i
   have h := congrFun (hfix g) i
-  have hsymm : (PrimeSymmetry.toPerm hp g).symm i = j := by
-    exact (PrimeSymmetry.toPerm hp g).symm_apply_eq.mpr hg.symm
+  have hsymm : (PrimeSymmetry.toPerm p g).symm i = j := by
+    exact (PrimeSymmetry.toPerm p g).symm_apply_eq.mpr hg.symm
   rw [PrimeSymmetry.smul_coordinate_apply, hsymm] at h
   exact h.symm
 
  theorem PrimeSymmetry.coordinate_fixed_iff_constant
     (hp : Nat.Prime p) (v : Fin p → ℝ) :
-    (∀ g : PrimeSymmetry hp, g • v = v) ↔
+    (∀ g : PrimeSymmetry p, g • v = v) ↔
       ∃ c : ℝ, v = fun _ => c := by
   constructor
   · intro h
@@ -45,7 +45,7 @@ variable {p : ℕ}
 
  theorem PrimeSymmetry.zeroSum_fixed_eq_zero
     (hp : Nat.Prime p) (v : ZeroSum p)
-    (hfix : ∀ g : PrimeSymmetry hp, g • v = v) :
+    (hfix : ∀ g : PrimeSymmetry p, g • v = v) :
     v = 0 := by
   have hconst : ∀ i j, v i = v j := by
     apply PrimeSymmetry.coordinate_fixed_constant hp (fun i => v i)
@@ -74,13 +74,13 @@ variable {p : ℕ}
     _ = (0 : ZeroSum p) i := (ZeroSum.zero_apply i).symm
 
  theorem coordinateMean_prime_smul
-    (hp : Nat.Prime p) (v : Fin p → ℝ) (g : PrimeSymmetry hp) :
+    (hp : Nat.Prime p) (v : Fin p → ℝ) (g : PrimeSymmetry p) :
     coordinateMean hp.pos (g • v) = coordinateMean hp.pos v :=
-  coordinateMean_relabel hp.pos (PrimeSymmetry.toPerm hp g) v
+  coordinateMean_relabel hp.pos (PrimeSymmetry.toPerm p g) v
 
  theorem coordinateDeviation_prime_smul
-    (hp : Nat.Prime p) (v : Fin p → ℝ) (g : PrimeSymmetry hp) :
+    (hp : Nat.Prime p) (v : Fin p → ℝ) (g : PrimeSymmetry p) :
     coordinateDeviation hp.pos (g • v) = g • coordinateDeviation hp.pos v :=
-  coordinateDeviation_relabel hp.pos (PrimeSymmetry.toPerm hp g) v
+  coordinateDeviation_relabel hp.pos (PrimeSymmetry.toPerm p g) v
 
 end NRR

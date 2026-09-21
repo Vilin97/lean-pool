@@ -36,13 +36,13 @@ noncomputable def referenceL1 (M : PrimeConfigurationModel hp) (x : M.Point) : �
 
  theorem referenceL1_smul
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp) (x : M.Point) :
+    (g : PrimeSymmetry p) (x : M.Point) :
     M.referenceL1 (g • x) = M.referenceL1 x := by
   unfold referenceL1
   rw [M.reference_smul]
   simp only [PrimeSymmetry.smul_zeroSum_apply]
   simpa using
-    (PrimeSymmetry.toPerm hp g).symm.sum_comp
+    (PrimeSymmetry.toPerm p g).symm.sum_comp
       (fun i => |M.reference x i|)
 
 /-- Positive invariant scale used to bound every reference coordinate. -/
@@ -67,7 +67,7 @@ noncomputable def referenceScale (M : PrimeConfigurationModel hp) (x : M.Point) 
 
  theorem referenceScale_smul
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp) (x : M.Point) :
+    (g : PrimeSymmetry p) (x : M.Point) :
     M.referenceScale (g • x) = M.referenceScale x := by
   simp [referenceScale, referenceL1_smul]
 
@@ -97,7 +97,7 @@ noncomputable def scaledReference
 
  theorem scaledReference_smul
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp) (x : M.Point) :
+    (g : PrimeSymmetry p) (x : M.Point) :
     M.scaledReference (g • x) = g • M.scaledReference x := by
   apply ZeroSum.ext
   intro i
@@ -120,7 +120,7 @@ noncomputable def scaledReference
 /-- Action on a model point and signed-interval coordinate. -/
 def smulPointInterval
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (z : M.Point × SignedInterval) : M.Point × SignedInterval :=
   (g • z.1, z.2)
 
@@ -140,7 +140,7 @@ noncomputable def augmentedReference
 
  theorem augmentedReference_smul
     (M : PrimeConfigurationModel hp)
-    (g : PrimeSymmetry hp) (z : M.Point × SignedInterval) :
+    (g : PrimeSymmetry p) (z : M.Point × SignedInterval) :
     M.augmentedReference (M.smulPointInterval g z) =
       g • M.augmentedReference z := by
   funext i

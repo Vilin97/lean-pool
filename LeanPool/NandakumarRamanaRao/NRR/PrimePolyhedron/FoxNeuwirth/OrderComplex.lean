@@ -141,18 +141,18 @@ theorem relabel_mul
   intro i
   exact BarredPermutation.relabel_mul sigma tau (s i)
 
-instance primeSymmetryAction (hp : Nat.Prime p) :
-    MulAction (PrimeSymmetry hp) (Simplex p d) where
-  smul g s := relabel (PrimeSymmetry.toPerm hp g) s
+instance primeSymmetryAction (p : Nat) :
+    MulAction (PrimeSymmetry p) (Simplex p d) where
+  smul g s := relabel (PrimeSymmetry.toPerm p g) s
   one_smul s := by
-    change relabel (PrimeSymmetry.toPerm hp 1) s = s
+    change relabel (PrimeSymmetry.toPerm p 1) s = s
     rw [map_one, relabel_one]
   mul_smul g h s := by
-    exact relabel_mul (PrimeSymmetry.toPerm hp g)
-      (PrimeSymmetry.toPerm hp h) s
+    exact relabel_mul (PrimeSymmetry.toPerm p g)
+      (PrimeSymmetry.toPerm p h) s
 
 @[simp] theorem prime_smul_apply
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (p : Nat) (g : PrimeSymmetry p)
     (s : Simplex p d) (i : Fin (d + 1)) :
     (g • s) i = g • (s i) :=
   rfl

@@ -32,19 +32,19 @@ namespace BarredPermutation
 
 /-- Relabelling of a barred permutation is free because its rank is a permutation. -/
 theorem primeSymmetry_action_free
-    (hp : Nat.Prime p) {g : PrimeSymmetry hp} {c : BarredPermutation p}
+    (hp : Nat.Prime p) {g : PrimeSymmetry p} {c : BarredPermutation p}
     (hgc : g • c = c) : g = 1 := by
-  apply PrimeSymmetry.toPerm_injective hp
-  have hsymm : (PrimeSymmetry.toPerm hp g).symm = 1 := by
+  apply PrimeSymmetry.toPerm_injective p
+  have hsymm : (PrimeSymmetry.toPerm p g).symm = 1 := by
     apply Equiv.ext
     intro i
     have hrank := congrArg (fun a : BarredPermutation p => a.rank i) hgc
-    change c.rank ((PrimeSymmetry.toPerm hp g).symm i) = c.rank i at hrank
+    change c.rank ((PrimeSymmetry.toPerm p g).symm i) = c.rank i at hrank
     exact c.rank.injective hrank
-  have hperm : PrimeSymmetry.toPerm hp g = 1 := by
+  have hperm : PrimeSymmetry.toPerm p g = 1 := by
     calc
-      PrimeSymmetry.toPerm hp g =
-          (PrimeSymmetry.toPerm hp g).symm.symm :=
+      PrimeSymmetry.toPerm p g =
+          (PrimeSymmetry.toPerm p g).symm.symm :=
         (Equiv.symm_symm _).symm
       _ = (1 : Equiv.Perm (Fin p)).symm := congrArg Equiv.symm hsymm
       _ = 1 := by rfl
@@ -57,7 +57,7 @@ namespace Simplex
 
 /-- The prime symmetry action is free on every order-complex simplex. -/
 theorem primeSymmetry_action_free
-    (hp : Nat.Prime p) {g : PrimeSymmetry hp} {s : Simplex p d}
+    (hp : Nat.Prime p) {g : PrimeSymmetry p} {s : Simplex p d}
     (hgs : g • s = s) : g = 1 := by
   apply BarredPermutation.primeSymmetry_action_free hp
     (c := s 0)
@@ -72,24 +72,24 @@ open TopFlagSubdivision
 
 /-- The sign of every selected prime-symmetry permutation becomes one in `ZMod p`. -/
 theorem primeSymmetry_sign_cast_eq_one
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) :
-    ((((Equiv.Perm.sign (PrimeSymmetry.toPerm hp g) : ℤˣ) : ℤ) : ZMod p)) = 1 := by
+    (p : Nat) (g : PrimeSymmetry p) :
+    ((((Equiv.Perm.sign (PrimeSymmetry.toPerm p g) : ℤˣ) : ℤ) : ZMod p)) = 1 := by
   classical
   by_cases h2 : p = 2
   · subst p
-    rcases Int.units_eq_one_or (Equiv.Perm.sign (PrimeSymmetry.toPerm hp g)) with hsign | hsign
+    rcases Int.units_eq_one_or (Equiv.Perm.sign (PrimeSymmetry.toPerm 2 g)) with hsign | hsign
     · rw [hsign]; decide
     · rw [hsign]; decide
-  · have hmem : (PrimeSymmetry.toPerm hp g) ∈ alternatingGroup (Fin p) := by
-      rw [← primeSymmetrySubgroup_eq_alternating hp h2]
+  · have hmem : (PrimeSymmetry.toPerm p g) ∈ alternatingGroup (Fin p) := by
+      rw [← primeSymmetrySubgroup_eq_alternating p h2]
       exact g.property
-    have hsign : Equiv.Perm.sign (PrimeSymmetry.toPerm hp g) = 1 := by
+    have hsign : Equiv.Perm.sign (PrimeSymmetry.toPerm p g) = 1 := by
       simpa [alternatingGroup] using hmem
     rw [hsign]; simp
 
 /-- Bar indicators and hence bar-removal matrices are unchanged by relabelling. -/
 theorem barDifferenceMatrix_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (s : Simplex p (p - 1)) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
     barDifferenceMatrix (g • s) = barDifferenceMatrix s := by
   ext r k
   simp [barDifferenceMatrix, barIndicator]
@@ -97,28 +97,28 @@ theorem barDifferenceMatrix_smul
 
 /-- The bar-removal determinant is invariant under prime-symmetry relabelling. -/
 theorem barRemovalDeterminant_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (s : Simplex p (p - 1)) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
     barRemovalDeterminant (g • s) = barRemovalDeterminant s := by
   unfold barRemovalDeterminant
   rw [barDifferenceMatrix_smul hp g s]
 
 /-- The bottom-cell orientation changes by the label-permutation sign. -/
 theorem permutationOrientationSign_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (c : BarredPermutation p) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (c : BarredPermutation p) :
     (((permutationOrientationSign (g • c) : Int) : ZMod p)) =
       (((permutationOrientationSign c : Int) : ZMod p)) := by
   classical
   unfold permutationOrientationSign
   change (((((Equiv.Perm.sign
-    ((PrimeSymmetry.toPerm hp g).symm.trans c.rank) : ℤˣ) : ℤ) : ZMod p))) = _
+    ((PrimeSymmetry.toPerm p g).symm.trans c.rank) : ℤˣ) : ℤ) : ZMod p))) = _
   rw [Equiv.Perm.sign_trans, Equiv.Perm.sign_symm]
   push_cast
-  rw [primeSymmetry_sign_cast_eq_one hp g]
+  rw [primeSymmetry_sign_cast_eq_one p g]
   simp
 
 /-- The completed top-flag chain coefficient is constant on prime-symmetry orbits. -/
 theorem chain_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (s : Simplex p (p - 1)) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (s : Simplex p (p - 1)) :
     TopFlagSubdivision.chain (g • s) = TopFlagSubdivision.chain s := by
   unfold TopFlagSubdivision.chain TopFlagSubdivision.integralCoefficient
   push_cast
@@ -129,7 +129,7 @@ theorem chain_smul
 /-- Simplicial incidence is invariant under simultaneous relabelling. -/
 theorem simplicialIncidence_smul
     (hp : Nat.Prime p)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (target : Simplex p d) (source : Simplex p (d + 1)) :
     SimplicialIncidence.incidence (R := ZMod p) (g • target) (g • source) =
       SimplicialIncidence.incidence (R := ZMod p) target source := by
@@ -154,18 +154,18 @@ noncomputable abbrev coveringCycle (hp : Nat.Prime p) : FiniteIncidenceCycle (ZM
   exact SimplicialIncidence.ofCycle c hcycle
 
 noncomputable instance instMulActionCoveringTopCell (hp : Nat.Prime p) :
-    MulAction (PrimeSymmetry hp) (coveringCycle hp).TopCell :=
-  inferInstanceAs (MulAction (PrimeSymmetry hp) (Simplex p ((p - 2) + 1)))
+    MulAction (PrimeSymmetry p) (coveringCycle hp).TopCell :=
+  inferInstanceAs (MulAction (PrimeSymmetry p) (Simplex p ((p - 2) + 1)))
 
 noncomputable instance instMulActionCoveringFacet (hp : Nat.Prime p) :
-    MulAction (PrimeSymmetry hp) (coveringCycle hp).Facet :=
-  inferInstanceAs (MulAction (PrimeSymmetry hp) (Simplex p (p - 2)))
+    MulAction (PrimeSymmetry p) (coveringCycle hp).Facet :=
+  inferInstanceAs (MulAction (PrimeSymmetry p) (Simplex p (p - 2)))
 
 /-- Equivariance data for the covering top-flag cycle. -/
 noncomputable def coveringEquivariantData
     (hp : Nat.Prime p) :
     FiniteIncidenceCycle.EquivariantData
-      (G := PrimeSymmetry hp) (coveringCycle hp) where
+      (G := PrimeSymmetry p) (coveringCycle hp) where
   coefficient_smul := by
     intro g s
     have hdim : p - 1 = (p - 2) + 1 := by
@@ -186,7 +186,7 @@ noncomputable def coveringEquivariantData
 /-- Prime-symmetry orbit quotient of the unconditional top-flag cycle. -/
 noncomputable def orbitCycle (hp : Nat.Prime p) : FiniteIncidenceCycle (ZMod p) :=
   FiniteIncidenceCycle.orbitQuotient
-    (G := PrimeSymmetry hp) (coveringCycle hp) (coveringEquivariantData hp)
+    (G := PrimeSymmetry p) (coveringCycle hp) (coveringEquivariantData hp)
 
 /-- The quotient cycle has zero boundary by construction. -/
 theorem orbitCycle_boundary_zero
@@ -208,14 +208,14 @@ noncomputable def topRepresentative
     (hp : Nat.Prime p) (q : TopOrbit hp) :
     (coveringCycle hp).TopCell :=
   FiniteIncidenceCycle.topRepresentative
-    (G := PrimeSymmetry hp) (coveringCycle hp) q
+    (G := PrimeSymmetry p) (coveringCycle hp) q
 
 /-- Canonical representative of a facet orbit. -/
 noncomputable def facetRepresentative
     (hp : Nat.Prime p) (q : FacetOrbit hp) :
     (coveringCycle hp).Facet :=
   FiniteIncidenceCycle.facetRepresentative
-    (G := PrimeSymmetry hp) (coveringCycle hp) q
+    (G := PrimeSymmetry p) (coveringCycle hp) q
 
 end PrimeOrbitCycle
 end FoxNeuwirthOrderComplex

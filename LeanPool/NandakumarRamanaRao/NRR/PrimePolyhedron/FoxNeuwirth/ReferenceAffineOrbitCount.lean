@@ -643,12 +643,12 @@ theorem det_cutBasisMatrix
       ring
 
 theorem selectedSimplex_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (sigma : Equiv.Perm (Fin p)) :
     g • selectedSimplex hp sigma =
-      selectedSimplex hp ((PrimeSymmetry.toPerm hp g).symm.trans sigma) := by
+      selectedSimplex hp ((PrimeSymmetry.toPerm p g).symm.trans sigma) := by
   classical
-  let tau : Equiv.Perm (Fin p) := PrimeSymmetry.toPerm hp g
+  let tau : Equiv.Perm (Fin p) := PrimeSymmetry.toPerm p g
   let sigma' : Equiv.Perm (Fin p) := tau.symm.trans sigma
   apply Simplex.ext
   intro i
@@ -1494,25 +1494,25 @@ noncomputable def selectedFlagOfTopCell
 
 /-- Selected flags are equivariant. -/
 theorem selectedFlagOfTopCell_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (c : BarredPermutation.TopCell p) :
     selectedFlagOfTopCell hp (g • c) = g • selectedFlagOfTopCell hp c := by
   change selectedSimplex hp (g • c).1.rank =
     g • selectedSimplex hp c.1.rank
   have hrank : (g • c).1.rank =
-      (PrimeSymmetry.toPerm hp g).symm.trans c.1.rank := rfl
+      (PrimeSymmetry.toPerm p g).symm.trans c.1.rank := rfl
   rw [hrank]
   exact (selectedSimplex_smul hp g c.1.rank).symm
 
 /-- Quotient of the selected reference flags. -/
 abbrev SelectedOrbit (hp : Nat.Prime p) :=
-  MulAction.orbitRel.Quotient (PrimeSymmetry hp) (BarredPermutation.TopCell p)
+  MulAction.orbitRel.Quotient (PrimeSymmetry p) (BarredPermutation.TopCell p)
 
 noncomputable instance selectedOrbitFintype (hp : Nat.Prime p) :
     Fintype (SelectedOrbit hp) := Fintype.ofFinite _
 
 /-- Relabelling commutes with a dimension recast of order-complex simplices. -/
-theorem smul_castDim (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+theorem smul_castDim (hp : Nat.Prime p) (g : PrimeSymmetry p)
     {d d' : ℕ} (hd : d = d') (s : Simplex p d) :
     g • (congrArg (Simplex p) hd ▸ s) = congrArg (Simplex p) hd ▸ (g • s) := by
   subst hd; rfl
@@ -1550,7 +1550,7 @@ noncomputable def selectedOrbitEquivTopSupport
     -- selected flag back to the representative.
     have hselected : IsSelected hp (g⁻¹ • selectedFlagOfTopCell hp c) := by
       rcases c with ⟨c, hc⟩
-      refine ⟨((PrimeSymmetry.toPerm hp g⁻¹).symm.trans c.rank), ?_⟩
+      refine ⟨((PrimeSymmetry.toPerm p g⁻¹).symm.trans c.rank), ?_⟩
       simpa [selectedFlagOfTopCell, selectedSimplex_smul]
     have hd : p - 2 + 1 = p - 1 := by have := hp.two_le; omega
     have hgcast :
@@ -1696,11 +1696,11 @@ theorem card_selectedOrbit
       have h := congrArg (fun e : Equiv.Perm (Fin p) => e.symm) hinv
       simpa using h }
   let e : SelectedOrbit hp ≃
-      (Equiv.Perm (Fin p) ⧸ primeSymmetrySubgroup hp) :=
+      (Equiv.Perm (Fin p) ⧸ primeSymmetrySubgroup p) :=
     MulAction.equivSubgroupOrbitsQuotientGroup x0
-      (primeSymmetrySubgroup hp)
+      (primeSymmetrySubgroup p)
   change Fintype.card (SelectedOrbit hp) =
-    Nat.card ((Equiv.Perm (Fin p)) ⧸ primeSymmetrySubgroup hp)
+    Nat.card ((Equiv.Perm (Fin p)) ⧸ primeSymmetrySubgroup p)
   rw [← Nat.card_eq_fintype_card]
   exact Nat.card_congr e
 

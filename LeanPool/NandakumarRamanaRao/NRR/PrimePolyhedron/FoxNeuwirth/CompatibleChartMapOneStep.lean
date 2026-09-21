@@ -176,7 +176,7 @@ noncomputable def globalVector
 /-- The descended vector is prime-equivariant. -/
 theorem globalVector_smul
     (hp : Nat.Prime p) {N : Nat} (K : ChartMap hp N)
-    (g : PrimeSymmetry hp) (x : GlobalVertex hp (Cells hp N)) :
+    (g : PrimeSymmetry p) (x : GlobalVertex hp (Cells hp N)) :
     globalVector hp K (g • x) = g • globalVector hp K x := by
   refine Quotient.inductionOn x ?_
   intro s

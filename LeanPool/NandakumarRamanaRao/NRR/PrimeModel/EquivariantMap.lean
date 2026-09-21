@@ -20,61 +20,61 @@ variable {X Y Z P : Type*}
 
 /-- A map commuting with the selected prime-symmetry actions. -/
 def IsPrimeEquivariant
-    [MulAction (PrimeSymmetry hp) X]
-    [MulAction (PrimeSymmetry hp) Y]
+    [MulAction (PrimeSymmetry p) X]
+    [MulAction (PrimeSymmetry p) Y]
     (f : X → Y) : Prop :=
-  ∀ (g : PrimeSymmetry hp) (x : X), f (g • x) = g • f x
+  ∀ (g : PrimeSymmetry p) (x : X), f (g • x) = g • f x
 
  theorem IsPrimeEquivariant.id
-    [MulAction (PrimeSymmetry hp) X] :
-    IsPrimeEquivariant (hp := hp) (fun x : X => x) := by
+    [MulAction (PrimeSymmetry p) X] :
+    IsPrimeEquivariant (p := p) (fun x : X => x) := by
   intro g x
   rfl
 
  theorem IsPrimeEquivariant.comp
-    [MulAction (PrimeSymmetry hp) X]
-    [MulAction (PrimeSymmetry hp) Y]
-    [MulAction (PrimeSymmetry hp) Z]
+    [MulAction (PrimeSymmetry p) X]
+    [MulAction (PrimeSymmetry p) Y]
+    [MulAction (PrimeSymmetry p) Z]
     {f : X → Y} {g : Y → Z}
-    (hg : IsPrimeEquivariant (hp := hp) g)
-    (hf : IsPrimeEquivariant (hp := hp) f) :
-    IsPrimeEquivariant (hp := hp) (g ∘ f) := by
+    (hg : IsPrimeEquivariant (p := p) g)
+    (hf : IsPrimeEquivariant (p := p) f) :
+    IsPrimeEquivariant (p := p) (g ∘ f) := by
   intro a x
   change g (f (a • x)) = a • g (f x)
   rw [hf a x, hg a (f x)]
 
  theorem IsPrimeEquivariant.const_zero
-    [MulAction (PrimeSymmetry hp) X]
-    [Zero Y] [MulAction (PrimeSymmetry hp) Y]
-    (hzero : ∀ g : PrimeSymmetry hp, g • (0 : Y) = 0) :
-    IsPrimeEquivariant (hp := hp) (fun _ : X => (0 : Y)) := by
+    [MulAction (PrimeSymmetry p) X]
+    [Zero Y] [MulAction (PrimeSymmetry p) Y]
+    (hzero : ∀ g : PrimeSymmetry p, g • (0 : Y) = 0) :
+    IsPrimeEquivariant (p := p) (fun _ : X => (0 : Y)) := by
   intro g x
   exact (hzero g).symm
 
 /-- Invariance of a subset under the selected action. -/
 def IsPrimeInvariant
-    [MulAction (PrimeSymmetry hp) X]
+    [MulAction (PrimeSymmetry p) X]
     (S : Set X) : Prop :=
-  ∀ (g : PrimeSymmetry hp) (x : X), x ∈ S → g • x ∈ S
+  ∀ (g : PrimeSymmetry p) (x : X), x ∈ S → g • x ∈ S
 
  theorem IsPrimeEquivariant.preimage_invariant
-    [MulAction (PrimeSymmetry hp) X]
-    [MulAction (PrimeSymmetry hp) Y]
+    [MulAction (PrimeSymmetry p) X]
+    [MulAction (PrimeSymmetry p) Y]
     {f : X → Y} {T : Set Y}
-    (hf : IsPrimeEquivariant (hp := hp) f)
-    (hT : IsPrimeInvariant (hp := hp) T) :
-    IsPrimeInvariant (hp := hp) (f ⁻¹' T) := by
+    (hf : IsPrimeEquivariant (p := p) f)
+    (hT : IsPrimeInvariant (p := p) T) :
+    IsPrimeInvariant (p := p) (f ⁻¹' T) := by
   intro g x hx
   change f (g • x) ∈ T
   rw [hf g x]
   exact hT g (f x) hx
 
  theorem IsPrimeEquivariant.zeroSet_invariant
-    [MulAction (PrimeSymmetry hp) X]
-    [Zero Y] [MulAction (PrimeSymmetry hp) Y]
-    {f : X → Y} (hf : IsPrimeEquivariant (hp := hp) f)
-    (hzero : ∀ g : PrimeSymmetry hp, g • (0 : Y) = 0) :
-    IsPrimeInvariant (hp := hp) {x | f x = 0} := by
+    [MulAction (PrimeSymmetry p) X]
+    [Zero Y] [MulAction (PrimeSymmetry p) Y]
+    {f : X → Y} (hf : IsPrimeEquivariant (p := p) f)
+    (hzero : ∀ g : PrimeSymmetry p, g • (0 : Y) = 0) :
+    IsPrimeInvariant (p := p) {x | f x = 0} := by
   intro g x hx
   change f (g • x) = 0
   rw [hf g x, hx]
@@ -82,34 +82,34 @@ def IsPrimeInvariant
 
 /-- Trivial action on a parameter and the existing action on the second factor. -/
 def PrimeSymmetry.smulParamProd
-    [MulAction (PrimeSymmetry hp) X]
-    (g : PrimeSymmetry hp) (z : P × X) : P × X :=
+    [MulAction (PrimeSymmetry p) X]
+    (g : PrimeSymmetry p) (z : P × X) : P × X :=
   (z.1, g • z.2)
 
 theorem PrimeSymmetry.smulParamProd_one
-    [MulAction (PrimeSymmetry hp) X] (z : P × X) :
-    PrimeSymmetry.smulParamProd (hp := hp) (1 : PrimeSymmetry hp) z = z := by
+    [MulAction (PrimeSymmetry p) X] (z : P × X) :
+    PrimeSymmetry.smulParamProd (p := p) (1 : PrimeSymmetry p) z = z := by
   ext <;> simp [PrimeSymmetry.smulParamProd]
 
  theorem PrimeSymmetry.smulParamProd_mul
-    [MulAction (PrimeSymmetry hp) X]
-    (g h : PrimeSymmetry hp) (z : P × X) :
-    PrimeSymmetry.smulParamProd (hp := hp) (g * h) z =
-      PrimeSymmetry.smulParamProd (hp := hp) g
-        (PrimeSymmetry.smulParamProd (hp := hp) h z) := by
+    [MulAction (PrimeSymmetry p) X]
+    (g h : PrimeSymmetry p) (z : P × X) :
+    PrimeSymmetry.smulParamProd (p := p) (g * h) z =
+      PrimeSymmetry.smulParamProd (p := p) g
+        (PrimeSymmetry.smulParamProd (p := p) h z) := by
   ext <;> simp [PrimeSymmetry.smulParamProd, mul_smul]
 
 @[simp] theorem PrimeSymmetry.smulParamProd_apply
-    [MulAction (PrimeSymmetry hp) X]
-    (g : PrimeSymmetry hp) (z : P × X) :
-    PrimeSymmetry.smulParamProd (hp := hp) g z = (z.1, g • z.2) := rfl
+    [MulAction (PrimeSymmetry p) X]
+    (g : PrimeSymmetry p) (z : P × X) :
+    PrimeSymmetry.smulParamProd (p := p) g z = (z.1, g • z.2) := rfl
 
 /-- Pointwise equivariance of a homotopy with a trivially acted-on interval parameter. -/
 def IsPrimeEquivariantHomotopy
-    [MulAction (PrimeSymmetry hp) X]
-    [MulAction (PrimeSymmetry hp) Y]
+    [MulAction (PrimeSymmetry p) X]
+    [MulAction (PrimeSymmetry p) Y]
     (H : X × Set.Icc (0 : ℝ) 1 → Y) : Prop :=
-  ∀ (g : PrimeSymmetry hp) (x : X) (t : Set.Icc (0 : ℝ) 1),
+  ∀ (g : PrimeSymmetry p) (x : X) (t : Set.Icc (0 : ℝ) 1),
     H (g • x, t) = g • H (x, t)
 
 end NRR

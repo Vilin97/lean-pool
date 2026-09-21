@@ -374,7 +374,7 @@ theorem prism_vertex_injective
 identity group element. -/
 theorem realizationPoint_orbit_separated
     (hp : Nat.Prime p) {d : Nat} (s : Simplex p d)
-    (w v : StandardSimplex d) (g : PrimeSymmetry hp)
+    (w v : StandardSimplex d) (g : PrimeSymmetry p)
     (h : g • s.realizationPoint w = s.realizationPoint v) :
     g = 1 := by
   classical
@@ -420,7 +420,7 @@ theorem realizationPoint_orbit_separated
 /-- No two different vertices of one refined prism simplex lie in the same prime orbit. -/
 theorem prism_vertex_orbit_injective
     (hp : Nat.Prime p) (N L : Nat) (q : PrismCell hp N L)
-    (g : PrimeSymmetry hp) (i j : Fin (p + 1))
+    (g : PrimeSymmetry p) (i j : Fin (p + 1))
     (h : g • CylinderPoint.ofProd (SubdivisionPrismCharts.vertex hp N L q i) =
       CylinderPoint.ofProd (SubdivisionPrismCharts.vertex hp N L q j)) :
     g = 1 ∧ i = j := by
@@ -471,7 +471,7 @@ theorem localParameter_injective
       localParameter hp N L q z.1 z.2) := by
   intro a b hab
   have horbit :
-      MulAction.orbitRel (PrimeSymmetry hp)
+      MulAction.orbitRel (PrimeSymmetry p)
         (ScalarSite hp N L)
         (sampleVertex hp N L (q, a.1), a.2)
         (sampleVertex hp N L (q, b.1), b.2) :=

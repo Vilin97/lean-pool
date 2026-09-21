@@ -56,7 +56,7 @@ theorem facetValue_eq_primeSmul_of_facetClass_eq
     (a : Assignment hp C.cells)
     {o o' : C.cells.FacetOccurrence}
     (h : C.cells.facetClass o = C.cells.facetClass o') :
-    ∃ g : PrimeSymmetry hp, ∀ i : Fin p,
+    ∃ g : PrimeSymmetry p, ∀ i : Fin p,
       facetValue (localVertexMap hp C.cells a o'.1) o'.2 i =
         g • facetValue (localVertexMap hp C.cells a o.1) o.2 i := by
   rcases Quotient.exact h with ⟨g, hg⟩
@@ -341,7 +341,7 @@ theorem facetDeterminant_ne_zero_of_eq_refined_primeSmul
     (V : VertexMap p) (k : Fin (p + 1))
     (N : Nat) (F : RefinedAffineMap.ContinuousCoordinateMap p)
     (q : RefinedAffineMap.TopCell hp N)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (hvertex : ∀ i : Fin p,
       facetValue V k i = g • RefinedAffineMap.vertexValue hp N F q (refinedVertexIndex hp i))
     (hregular : RefinedAffineMap.determinant hp N F q ≠ 0) :
@@ -399,7 +399,7 @@ theorem unsignedFacetIndex_eq_refinedLocalIndex
 
 /-- Affine interpolation commutes with simultaneous prime relabelling of all vertex values. -/
 private theorem facetAffineValue_primeSmul_local
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (V : VertexMap p) (k : Fin (p + 1)) (w : StandardSimplex (p - 1)) :
     facetAffineValue (primeSmulVertexMap hp g V) k w =
       g • facetAffineValue V k w := by
@@ -414,7 +414,7 @@ theorem unsignedFacetIndex_eq_refinedLocalIndex_primeSmul
     (V : VertexMap p) (k : Fin (p + 1))
     (N : Nat) (F : RefinedAffineMap.ContinuousCoordinateMap p)
     (q : RefinedAffineMap.TopCell hp N)
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (hvertex : ∀ i : Fin p,
       facetValue V k i = g • RefinedAffineMap.vertexValue hp N F q (refinedVertexIndex hp i))
     (haffine : ∀ w : StandardSimplex (p - 1),
@@ -453,7 +453,7 @@ structure EndpointBoundaryFixed
   lowerData : ∀ (q : RefinedAffineMap.TopCell hp A₀.toRegularApproximation.level)
     (o : C.cells.FacetOccurrence),
     C.cells.facetClass o = C.lowerFacet q →
-      ∃ g : PrimeSymmetry hp,
+      ∃ g : PrimeSymmetry p,
         (∀ i : Fin p,
           facetValue (localVertexMap hp C.cells a o.1) o.2 i =
             g • RefinedAffineMap.vertexValue hp A₀.toRegularApproximation.level
@@ -465,7 +465,7 @@ structure EndpointBoundaryFixed
   upperData : ∀ (q : RefinedAffineMap.TopCell hp A₁.toRegularApproximation.level)
     (o : C.cells.FacetOccurrence),
     C.cells.facetClass o = C.upperFacet q →
-      ∃ g : PrimeSymmetry hp,
+      ∃ g : PrimeSymmetry p,
         (∀ i : Fin p,
           facetValue (localVertexMap hp C.cells a o.1) o.2 i =
             g • RefinedAffineMap.vertexValue hp A₁.toRegularApproximation.level
@@ -515,7 +515,7 @@ theorem lowerFacetVertexValuePrimeSmul
     (q : RefinedAffineMap.TopCell hp A₀.toRegularApproximation.level)
     (o : C.cells.FacetOccurrence)
     (ho : C.cells.facetClass o = C.lowerFacet q) :
-    ∃ g : PrimeSymmetry hp, ∀ i : Fin p,
+    ∃ g : PrimeSymmetry p, ∀ i : Fin p,
       facetValue (localVertexMap hp C.cells a o.1) o.2 i =
         g • RefinedAffineMap.vertexValue hp A₀.toRegularApproximation.level
           A₀.toRegularApproximation.map q (refinedVertexIndex hp i) := by
@@ -550,7 +550,7 @@ theorem upperFacetVertexValuePrimeSmul
     (q : RefinedAffineMap.TopCell hp A₁.toRegularApproximation.level)
     (o : C.cells.FacetOccurrence)
     (ho : C.cells.facetClass o = C.upperFacet q) :
-    ∃ g : PrimeSymmetry hp, ∀ i : Fin p,
+    ∃ g : PrimeSymmetry p, ∀ i : Fin p,
       facetValue (localVertexMap hp C.cells a o.1) o.2 i =
         g • RefinedAffineMap.vertexValue hp A₁.toRegularApproximation.level
           A₁.toRegularApproximation.map q (refinedVertexIndex hp i) := by
@@ -591,7 +591,7 @@ theorem toEndpointBoundaryFixed : EndpointBoundaryFixed hp A₀ A₁ C a := by
     let f : Fin (p - 1 + 1) → Real := fun i =>
       w i * RefinedAffineMap.vertexValue hp A₀.toRegularApproximation.level
         A₀.toRegularApproximation.map q i
-          ((PrimeSymmetry.toPerm hp g).symm j)
+          ((PrimeSymmetry.toPerm p g).symm j)
     simpa [facetAffineValue, RefinedAffineMap.value, hg,
       PrimeSymmetry.smul_coordinate_apply,
       refinedVertexIndex_eq_facetCoordinateIndex, f] using
@@ -605,7 +605,7 @@ theorem toEndpointBoundaryFixed : EndpointBoundaryFixed hp A₀ A₁ C a := by
     let f : Fin (p - 1 + 1) → Real := fun i =>
       w i * RefinedAffineMap.vertexValue hp A₁.toRegularApproximation.level
         A₁.toRegularApproximation.map q i
-          ((PrimeSymmetry.toPerm hp g).symm j)
+          ((PrimeSymmetry.toPerm p g).symm j)
     simpa [facetAffineValue, RefinedAffineMap.value, hg,
       PrimeSymmetry.smul_coordinate_apply,
       refinedVertexIndex_eq_facetCoordinateIndex, f] using

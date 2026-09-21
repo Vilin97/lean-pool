@@ -62,7 +62,7 @@ noncomputable def facetOrbitIndicator
   exact if ∃ o :
       (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence,
       (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = s ∧
-        ∃ g : PrimeSymmetry hp,
+        ∃ g : PrimeSymmetry p,
           v =
             fun i =>
               g •
@@ -74,7 +74,7 @@ noncomputable def facetOrbitIndicator
 theorem facetOrbitIndicator_smul
     (hp : Nat.Prime p) (N : Nat)
     (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet)
-    (g : PrimeSymmetry hp) (v : Fin p → CylinderPoint p) :
+    (g : PrimeSymmetry p) (v : Fin p → CylinderPoint p) :
     facetOrbitIndicator hp N s (fun i => g • v i) =
       facetOrbitIndicator hp N s v := by
   classical
@@ -82,12 +82,12 @@ theorem facetOrbitIndicator_smul
   have hiff :
       (∃ o : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence,
           (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = s ∧
-            ∃ h : PrimeSymmetry hp,
+            ∃ h : PrimeSymmetry p,
               (fun i => g • v i) =
                 fun i => h • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o i) ↔
       (∃ o : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence,
           (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = s ∧
-            ∃ h : PrimeSymmetry hp,
+            ∃ h : PrimeSymmetry p,
               v = fun i => h • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o i) := by
     constructor
     · rintro ⟨o, ho, h, hh⟩
@@ -151,7 +151,7 @@ theorem facetOrbitIndicator_occurrence
   by_cases hos : (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o = s
   · have hex : ∃ o' : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence,
         (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o' = s ∧
-          ∃ g : PrimeSymmetry hp,
+          ∃ g : PrimeSymmetry p,
             (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o =
               fun i => g • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o' i := by
       exact ⟨o, hos, 1, by funext i; simp⟩
@@ -159,7 +159,7 @@ theorem facetOrbitIndicator_occurrence
     rw [if_pos hex, if_pos hos]
   · have hnot : ¬ ∃ o' : (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence,
         (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass o' = s ∧
-          ∃ g : PrimeSymmetry hp,
+          ∃ g : PrimeSymmetry p,
             (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o =
               fun i => g • (RelativeSubdivisionOneStepCells.cellSystem hp N).facetSignature o' i := by
       rintro ⟨o', ho', g, hg⟩
@@ -346,7 +346,7 @@ noncomputable def sideMapWeight
 theorem sideMapWeight_smul
     (hp : Nat.Prime p) (N : Nat)
     (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) (r : RelativeSubdivisionCylinderCombinatorics.Cell (p - 2))
-    (g : PrimeSymmetry hp) (tau : Delta (p - 2) → Realization p) :
+    (g : PrimeSymmetry p) (tau : Delta (p - 2) → Realization p) :
     sideMapWeight hp N s r (fun x => g • tau x) =
       sideMapWeight hp N s r tau := by
   have htuple :
@@ -394,7 +394,7 @@ private theorem fixed_side_refinement_cancels (d : ℕ) (hp : Nat.Prime (d + 2))
     fun f => sideMapWeight hp N s r
       (fun x => f.realizationPoint
         (StandardSimplex.ofDelta (affineCompMap d N theta x)))
-  have hW : ∀ (g : PrimeSymmetry hp) (f : Simplex (d + 2) d),
+  have hW : ∀ (g : PrimeSymmetry (d + 2)) (f : Simplex (d + 2) d),
       W (g • f) = W f := by
     intro g f
     dsimp [W]

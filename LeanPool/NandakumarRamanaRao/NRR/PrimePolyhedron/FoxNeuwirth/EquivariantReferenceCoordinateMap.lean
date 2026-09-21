@@ -53,16 +53,16 @@ theorem equivariantReferenceCoordinateMap_deviation
 
 /-- Vertex data transform by coordinate relabelling. -/
 theorem equivariantReferenceCoordinateMap_vertex_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (c : BarredPermutation p) (i : Fin p) :
     (equivariantReferenceCoordinateMap hp).vertexValue (g • c) i =
       (equivariantReferenceCoordinateMap hp).vertexValue c
-        ((PrimeSymmetry.toPerm hp g).symm i) := by
+        ((PrimeSymmetry.toPerm p g).symm i) := by
   simp [equivariantReferenceCoordinateMap, BarredPermutation.IsTop]
 
 /-- The global full-coordinate reference map is prime-equivariant. -/
 theorem equivariantReferenceCoordinateMap_global_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (x : Realization p) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :
     (equivariantReferenceCoordinateMap hp).globalValue (g • x) =
       g • (equivariantReferenceCoordinateMap hp).globalValue x := by
   classical
@@ -70,32 +70,32 @@ theorem equivariantReferenceCoordinateMap_global_smul
   change
     (equivariantReferenceCoordinateMap hp).globalValue (g • x) i =
       (equivariantReferenceCoordinateMap hp).globalValue x
-        ((PrimeSymmetry.toPerm hp g).symm i)
+        ((PrimeSymmetry.toPerm p g).symm i)
   unfold CoordinateAffineVertexMap.globalValue
   have hvertex : ∀ c : BarredPermutation p,
       (equivariantReferenceCoordinateMap hp).vertexValue
-          (BarredPermutation.relabel (PrimeSymmetry.toPerm hp g) c) i =
+          (BarredPermutation.relabel (PrimeSymmetry.toPerm p g) c) i =
         (equivariantReferenceCoordinateMap hp).vertexValue c
-          ((PrimeSymmetry.toPerm hp g).symm i) := by
+          ((PrimeSymmetry.toPerm p g).symm i) := by
     intro c
     simpa [BarredPermutation.prime_smul_def] using
       equivariantReferenceCoordinateMap_vertex_smul hp g c i
   change (∑ c, x (BarredPermutation.relabel
-      (PrimeSymmetry.toPerm hp g).symm c) *
+      (PrimeSymmetry.toPerm p g).symm c) *
       (equivariantReferenceCoordinateMap hp).vertexValue c i) = _
   calc
     (∑ c, x (BarredPermutation.relabel
-          (PrimeSymmetry.toPerm hp g).symm c) *
+          (PrimeSymmetry.toPerm p g).symm c) *
         (equivariantReferenceCoordinateMap hp).vertexValue c i) =
         ∑ c, x c * (equivariantReferenceCoordinateMap hp).vertexValue
-          (BarredPermutation.relabel (PrimeSymmetry.toPerm hp g) c) i := by
+          (BarredPermutation.relabel (PrimeSymmetry.toPerm p g) c) i := by
       simpa using
-        (relabelEquiv (PrimeSymmetry.toPerm hp g).symm).sum_comp
+        (relabelEquiv (PrimeSymmetry.toPerm p g).symm).sum_comp
           (fun c => x c *
             (equivariantReferenceCoordinateMap hp).vertexValue
-              (BarredPermutation.relabel (PrimeSymmetry.toPerm hp g) c) i)
+              (BarredPermutation.relabel (PrimeSymmetry.toPerm p g) c) i)
     _ = ∑ c, x c * (equivariantReferenceCoordinateMap hp).vertexValue c
-          ((PrimeSymmetry.toPerm hp g).symm i) := by
+          ((PrimeSymmetry.toPerm p g).symm i) := by
       apply Finset.sum_congr rfl
       intro c _
       rw [hvertex c]
@@ -187,14 +187,14 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
     CoordinateAffineVertexMap.deviation]
 
  theorem positiveEquivariantReferenceCoordinateMap_global_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (x : Realization p) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :
     (positiveEquivariantReferenceCoordinateMap hp).globalValue (g • x) =
       g • (positiveEquivariantReferenceCoordinateMap hp).globalValue x := by
   funext i
   change
     (positiveEquivariantReferenceCoordinateMap hp).globalValue (g • x) i =
       (positiveEquivariantReferenceCoordinateMap hp).globalValue x
-        ((PrimeSymmetry.toPerm hp g).symm i)
+        ((PrimeSymmetry.toPerm p g).symm i)
   have hshift : ∀ (z : Realization p) (j : Fin p),
       (positiveEquivariantReferenceCoordinateMap hp).globalValue z j =
         (equivariantReferenceCoordinateMap hp).globalValue z j +
@@ -216,14 +216,14 @@ noncomputable def negativeEquivariantReferenceCoordinateMap
       (congrFun (equivariantReferenceCoordinateMap_global_smul hp g x) i)
 
  theorem negativeEquivariantReferenceCoordinateMap_global_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (x : Realization p) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :
     (negativeEquivariantReferenceCoordinateMap hp).globalValue (g • x) =
       g • (negativeEquivariantReferenceCoordinateMap hp).globalValue x := by
   funext i
   change
     (negativeEquivariantReferenceCoordinateMap hp).globalValue (g • x) i =
       (negativeEquivariantReferenceCoordinateMap hp).globalValue x
-        ((PrimeSymmetry.toPerm hp g).symm i)
+        ((PrimeSymmetry.toPerm p g).symm i)
   have hshift : ∀ (z : Realization p) (j : Fin p),
       (negativeEquivariantReferenceCoordinateMap hp).globalValue z j =
         (equivariantReferenceCoordinateMap hp).globalValue z j -

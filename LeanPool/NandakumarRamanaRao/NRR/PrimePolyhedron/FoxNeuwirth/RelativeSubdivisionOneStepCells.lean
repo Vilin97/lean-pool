@@ -164,7 +164,7 @@ theorem chart_time_affine
 identity symmetry. -/
 theorem refinedChart_orbit_separated
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N)
-    (x y : Delta (p - 1)) (g : PrimeSymmetry hp)
+    (x y : Delta (p - 1)) (g : PrimeSymmetry p)
     (h : g • RefinedAffineMap.chart hp N q x = RefinedAffineMap.chart hp N q y) :
     g = 1 := by
   let s : Simplex p (p - 1) := ReferenceAffineOrbitCount.topRepr hp q.1
@@ -214,7 +214,7 @@ theorem vertex_injective
 /-- No two vertices of a lifted cell lie in the same nontrivial prime orbit. -/
 theorem vertex_orbit_injective
     (hp : Nat.Prime p) (N : Nat) (q : Cell hp N)
-    (g : PrimeSymmetry hp) (i j : Fin (p + 1))
+    (g : PrimeSymmetry p) (i j : Fin (p + 1))
     (h : g • vertex hp N q i = vertex hp N q j) :
     g = 1 ∧ i = j := by
   have hspatial :

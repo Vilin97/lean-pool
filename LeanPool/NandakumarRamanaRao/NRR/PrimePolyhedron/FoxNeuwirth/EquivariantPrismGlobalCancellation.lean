@@ -126,11 +126,11 @@ theorem unsignedFacetIndex_eq_of_facetValue_eq
 
 /-- Relabel every output coordinate vector of a local affine simplex by a prime symmetry. -/
 noncomputable def primeSmulVertexMap
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (V : VertexMap p) : VertexMap p where
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (V : VertexMap p) : VertexMap p where
   value i := g • V.value i
 
 @[simp] theorem primeSmulVertexMap_value
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (V : VertexMap p) (i : Fin (p + 1)) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (V : VertexMap p) (i : Fin (p + 1)) :
     (primeSmulVertexMap hp g V).value i = g • V.value i := rfl
 
 /-- The square coordinate matrix of a facet before passing to fixed differences. -/
@@ -287,17 +287,17 @@ private theorem det_facetBorderedMatrix
 
 /-- Extend a prime coordinate permutation by fixing the border row. -/
 private def primeBorderRowPerm
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) : Equiv.Perm (Fin p ⊕ Unit) :=
-  Equiv.sumCongr (PrimeSymmetry.toPerm hp g).symm (Equiv.refl Unit)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) : Equiv.Perm (Fin p ⊕ Unit) :=
+  Equiv.sumCongr (PrimeSymmetry.toPerm p g).symm (Equiv.refl Unit)
 
 private theorem sign_primeBorderRowPerm
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) :
     Equiv.Perm.sign (primeBorderRowPerm hp g) =
-      Equiv.Perm.sign (PrimeSymmetry.toPerm hp g) := by
+      Equiv.Perm.sign (PrimeSymmetry.toPerm p g) := by
   simp [primeBorderRowPerm, Equiv.Perm.sign_sumCongr]
 
 private theorem facetBorderedMatrix_primeSmul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (V : VertexMap p) (k : Fin (p + 1)) :
     facetBorderedMatrix (primeSmulVertexMap hp g V) k =
       (facetBorderedMatrix V k).submatrix (primeBorderRowPerm hp g) id := by
@@ -317,17 +317,17 @@ private theorem facetBorderedMatrix_primeSmul
 
 /-- Exact determinant transformation under prime coordinate relabeling. -/
 private theorem facetDeterminant_primeSmul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (V : VertexMap p) (k : Fin (p + 1)) :
     facetDeterminant hp (primeSmulVertexMap hp g V) k =
-      ((((Equiv.Perm.sign (PrimeSymmetry.toPerm hp g) : ℤˣ) : ℤ) : Real)) *
+      ((((Equiv.Perm.sign (PrimeSymmetry.toPerm p g) : ℤˣ) : ℤ) : Real)) *
         facetDeterminant hp V k := by
   classical
   have hnew := det_facetBorderedMatrix hp (primeSmulVertexMap hp g V) k
   have hold := det_facetBorderedMatrix hp V k
   have hperm :
       Matrix.det (facetBorderedMatrix (primeSmulVertexMap hp g V) k) =
-        ((((Equiv.Perm.sign (PrimeSymmetry.toPerm hp g) : ℤˣ) : ℤ) : Real)) *
+        ((((Equiv.Perm.sign (PrimeSymmetry.toPerm p g) : ℤˣ) : ℤ) : Real)) *
           Matrix.det (facetBorderedMatrix V k) := by
     rw [facetBorderedMatrix_primeSmul, Matrix.det_permute,
       sign_primeBorderRowPerm]
@@ -336,12 +336,12 @@ private theorem facetDeterminant_primeSmul
 
 /-- Prime relabelling preserves nonvanishing of every oriented facet determinant. -/
 theorem facetDeterminant_primeSmul_ne_zero_iff
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (V : VertexMap p) (k : Fin (p + 1)) :
     facetDeterminant hp (primeSmulVertexMap hp g V) k ≠ 0 ↔
       facetDeterminant hp V k ≠ 0 := by
   rw [facetDeterminant_primeSmul]
-  rcases Int.units_eq_one_or (Equiv.Perm.sign (PrimeSymmetry.toPerm hp g)) with h | h
+  rcases Int.units_eq_one_or (Equiv.Perm.sign (PrimeSymmetry.toPerm p g)) with h | h
   · simp [h]
   · simp [h]
 
@@ -359,7 +359,7 @@ private theorem deviations_eq_zero_of_coordinateDeviation_eq_zero
   linarith
 
 private theorem facetAffineValue_primeSmul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (V : VertexMap p) (k : Fin (p + 1)) (w : StandardSimplex (p - 1)) :
     facetAffineValue (primeSmulVertexMap hp g V) k w =
       g • facetAffineValue V k w := by
@@ -368,7 +368,7 @@ private theorem facetAffineValue_primeSmul
     PrimeSymmetry.smul_coordinate_apply]
 
 private theorem facetHasPositiveRayIntersection_primeSmul_iff
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (V : VertexMap p) (k : Fin (p + 1)) :
     FacetHasPositiveRayIntersection hp (primeSmulVertexMap hp g V) k ↔
       FacetHasPositiveRayIntersection hp V k := by
@@ -379,7 +379,7 @@ private theorem facetHasPositiveRayIntersection_primeSmul_iff
     · apply deviations_eq_zero_of_coordinateDeviation_eq_zero hp
         (facetAffineValue V k w)
       have hsmul : g • coordinateDeviation hp.pos (facetAffineValue V k w) = 0 := by
-        rw [← coordinateDeviation_prime_smul]
+        rw [← coordinateDeviation_prime_smul hp]
         rw [← facetAffineValue_primeSmul hp g V k w]
         exact coordinateDeviation_eq_zero_of_deviation_eq_zero hp _ hwdev
       have hinv := congrArg (fun z : ZeroSum p => g⁻¹ • z) hsmul
@@ -396,7 +396,7 @@ private theorem facetHasPositiveRayIntersection_primeSmul_iff
     refine ⟨w, hwint, ?_, ?_⟩
     · apply deviations_eq_zero_of_coordinateDeviation_eq_zero hp
         (facetAffineValue (primeSmulVertexMap hp g V) k w)
-      rw [facetAffineValue_primeSmul, coordinateDeviation_prime_smul,
+      rw [facetAffineValue_primeSmul, coordinateDeviation_prime_smul hp,
         coordinateDeviation_eq_zero_of_deviation_eq_zero hp _ hwdev]
       simp
     · have hmeanEq :
@@ -442,7 +442,7 @@ private theorem determinantIndex_sign_mul
 coordinate mean are invariant under coordinate permutation; the determinant changes by the sign
 of the selected prime permutation, whose image in `ZMod p` is one. -/
 theorem unsignedFacetIndex_primeSmul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (V : VertexMap p) (k : Fin (p + 1)) :
     unsignedFacetIndex hp (primeSmulVertexMap hp g V) k =
       unsignedFacetIndex hp V k := by
@@ -464,7 +464,7 @@ theorem unsignedFacetIndex_primeSmul
 /-- If the ordered values of one facet are a simultaneous prime relabelling of another, their
 unsigned positive-ray indices agree. -/
 theorem unsignedFacetIndex_eq_of_facetValue_eq_primeSmul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (hp : Nat.Prime p) (g : PrimeSymmetry p)
     (V W : VertexMap p) (k l : Fin (p + 1))
     (hvalue : ∀ i : Fin p, facetValue W l i = g • facetValue V k i) :
     unsignedFacetIndex hp W l = unsignedFacetIndex hp V k := by

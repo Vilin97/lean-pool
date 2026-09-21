@@ -31,7 +31,7 @@ open RefinedAffineMap
 /-- Continuous coordinate map associated with an original affine vertex map. -/
 noncomputable def affineZeroFreeMap
     (hp : Nat.Prime p) (F : CoordinateAffineVertexMap p)
-    (heq : ∀ (g : PrimeSymmetry hp) (x : Realization p),
+    (heq : ∀ (g : PrimeSymmetry p) (x : Realization p),
       F.globalValue (g • x) = g • F.globalValue x)
     (hzero : ∀ x, F.globalValue x ≠ 0) : ZeroFreeMap hp where
   map := ofCoordinateAffineVertexMap F

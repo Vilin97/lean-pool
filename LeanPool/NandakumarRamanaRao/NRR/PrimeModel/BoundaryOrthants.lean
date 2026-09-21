@@ -42,12 +42,12 @@ def positiveOrthant (p : ℕ) : Set (Fin p → ℝ) :=
     isOpen_lt continuous_const (continuous_apply i)
 
  theorem negativeOrthant_invariant (hp : Nat.Prime p) :
-    IsPrimeInvariant (hp := hp) (negativeOrthant p) := by
+    IsPrimeInvariant (p := p) (negativeOrthant p) := by
   intro g v hv i
   exact hv _
 
  theorem positiveOrthant_invariant (hp : Nat.Prime p) :
-    IsPrimeInvariant (hp := hp) (positiveOrthant p) := by
+    IsPrimeInvariant (p := p) (positiveOrthant p) := by
   intro g v hv i
   exact hv _
 

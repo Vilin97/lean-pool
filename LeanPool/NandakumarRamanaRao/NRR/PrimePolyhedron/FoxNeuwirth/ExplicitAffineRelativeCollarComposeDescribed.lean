@@ -54,12 +54,12 @@ structure EndpointDescribedRelativeAffineCollar
       ∑ q : TopCell hp N₁, RefinedAffineMap.coefficient hp N₁ q * W (upperFacet q)
   lowerFacetOccurrenceVertex_eq : ∀ q o,
     cells.facetClass o = lowerFacet q →
-      ∃ g : PrimeSymmetry hp, ∀ i, cells.facetSignature o i =
+      ∃ g : PrimeSymmetry p, ∀ i, cells.facetSignature o i =
         g • lowerCylinderPoint (RefinedAffineMap.vertex hp N₀ q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))
   upperFacetOccurrenceVertex_eq : ∀ q o,
     cells.facetClass o = upperFacet q →
-      ∃ g : PrimeSymmetry hp, ∀ i, cells.facetSignature o i =
+      ∃ g : PrimeSymmetry p, ∀ i, cells.facetSignature o i =
         g • upperCylinderPoint (RefinedAffineMap.vertex hp N₁ q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))
 
@@ -242,7 +242,7 @@ theorem lowerFacetOccurrenceVertex_eq
     (o : (combinedCells C.cells D.cells).FacetOccurrence)
     (ho : (combinedCells C.cells D.cells).facetClass o =
       Combined.leftFacet C.cells D.cells (C.lowerFacet q)) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (combinedCells C.cells D.cells).facetSignature o i =
         g • lowerCylinderPoint (RefinedAffineMap.vertex hp N₀ q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
@@ -279,7 +279,7 @@ theorem upperFacetOccurrenceVertex_eq
     (o : (combinedCells C.cells D.cells).FacetOccurrence)
     (ho : (combinedCells C.cells D.cells).facetClass o =
       Combined.rightFacet C.cells D.cells (D.upperFacet q)) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (combinedCells C.cells D.cells).facetSignature o i =
         g • upperCylinderPoint (RefinedAffineMap.vertex hp N₁ q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by

@@ -392,7 +392,7 @@ theorem lowerFacetOccurrenceVertex_eq
     (q : TopCell hp N)
     (o : (StackCells hp N m hm).FacetOccurrence)
     (ho : (StackCells hp N m hm).facetClass o = lowerFacet hp N m hm q) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (StackCells hp N m hm).facetSignature o i =
         g • lowerCylinderPoint (RefinedAffineMap.vertex hp N q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by
@@ -414,7 +414,7 @@ theorem upperFacetOccurrenceVertex_eq
     (q : TopCell hp N)
     (o : (StackCells hp N m hm).FacetOccurrence)
     (ho : (StackCells hp N m hm).facetClass o = upperFacet hp N m hm q) :
-    ∃ g : PrimeSymmetry hp, ∀ i,
+    ∃ g : PrimeSymmetry p, ∀ i,
       (StackCells hp N m hm).facetSignature o i =
         g • upperCylinderPoint (RefinedAffineMap.vertex hp N q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i)) := by

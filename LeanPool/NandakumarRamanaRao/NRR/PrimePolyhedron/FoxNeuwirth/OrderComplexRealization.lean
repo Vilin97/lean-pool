@@ -230,18 +230,18 @@ theorem relabel_mul
   simp only [relabel_apply]
   exact congrArg x (BarredPermutation.relabel_mul tau.symm sigma.symm c)
 
-instance primeSymmetryAction (hp : Nat.Prime p) :
-    MulAction (PrimeSymmetry hp) (Realization p) where
-  smul g x := relabel (PrimeSymmetry.toPerm hp g) x
+instance primeSymmetryAction (p : Nat) :
+    MulAction (PrimeSymmetry p) (Realization p) where
+  smul g x := relabel (PrimeSymmetry.toPerm p g) x
   one_smul x := relabel_one x
   mul_smul g h x := by
-    exact relabel_mul (PrimeSymmetry.toPerm hp g)
-      (PrimeSymmetry.toPerm hp h) x
+    exact relabel_mul (PrimeSymmetry.toPerm p g)
+      (PrimeSymmetry.toPerm p h) x
 
 @[simp] theorem prime_smul_apply
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp)
+    (p : Nat) (g : PrimeSymmetry p)
     (x : Realization p) (c : BarredPermutation p) :
-    (g • x) c = x (c.relabel (PrimeSymmetry.toPerm hp g).symm) :=
+    (g • x) c = x (c.relabel (PrimeSymmetry.toPerm p g).symm) :=
   rfl
 
 /-- Relabelling is continuous because it merely permutes finitely many coordinates. -/
@@ -474,17 +474,17 @@ theorem site_relabel
 
 /-- The configuration map is equivariant for the selected prime symmetry. -/
 theorem toConfig_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (x : Realization p) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :
     (g • x).toConfig = g • x.toConfig := by
   apply Subtype.ext
   funext i
-  exact site_relabel (PrimeSymmetry.toPerm hp g) x i
+  exact site_relabel (PrimeSymmetry.toPerm p g) x i
 
 /-- Prime-symmetry actions on the realization are continuous. -/
 theorem continuous_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) :
     Continuous fun x : Realization p => g • x :=
-  continuous_relabel (PrimeSymmetry.toPerm hp g)
+  continuous_relabel (PrimeSymmetry.toPerm p g)
 
 /-- The barycentric map agrees with the canonical configuration at every order-complex vertex. -/
 theorem toConfig_vertex (c : BarredPermutation p) :
@@ -512,13 +512,13 @@ theorem continuous_reference (hp : Nat.Prime p) :
 
 /-- The reference vector is equivariant. -/
 theorem reference_smul
-    (hp : Nat.Prime p) (g : PrimeSymmetry hp) (x : Realization p) :
+    (hp : Nat.Prime p) (g : PrimeSymmetry p) (x : Realization p) :
     reference hp (g • x) = g • reference hp x := by
   unfold reference
   have hcoords :
       (fun i => (g • x).xCoord i) = g • (fun i => x.xCoord i) := by
     funext i
-    exact xCoord_relabel (PrimeSymmetry.toPerm hp g) x i
+    exact xCoord_relabel (PrimeSymmetry.toPerm p g) x i
   rw [hcoords]
   exact coordinateDeviation_prime_smul hp (fun i => x.xCoord i) g
 

@@ -19,7 +19,7 @@ variable {p : Nat}
 def IsEquivariantCoordinateMap
     (hp : Nat.Prime p)
     (F : RefinedAffineMap.ContinuousCoordinateMap p) : Prop :=
-  ∀ (g : PrimeSymmetry hp) (x : Realization p), F (g • x) = g • F x
+  ∀ (g : PrimeSymmetry p) (x : Realization p), F (g • x) = g • F x
 
 end FoxNeuwirthOrderComplex
 end NRR

@@ -47,7 +47,7 @@ theorem reflectPoint_injective : Function.Injective (@reflectPoint p) :=
   Function.Involutive.injective reflectPoint_involutive
 
 @[simp] theorem reflectPoint_smul
-    (g : PrimeSymmetry hp) (z : CylinderPoint p) :
+    (g : PrimeSymmetry p) (z : CylinderPoint p) :
     reflectPoint (g • z) = g • reflectPoint z := rfl
 
 /-- Reverse the affine cells and negate their oriented coefficients. -/

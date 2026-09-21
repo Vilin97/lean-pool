@@ -88,7 +88,7 @@ structure RelativeAffineCellSystem
       ∑ i : Fin (p + 1), w i * (vertex q i).time.1
   chart_injective : ∀ q, Function.Injective (chart q)
   vertex_injective : ∀ q, Function.Injective (vertex q)
-  vertex_orbit_injective : ∀ q (g : PrimeSymmetry hp) i j,
+  vertex_orbit_injective : ∀ q (g : PrimeSymmetry p) i j,
     g • vertex q i = vertex q j → g = 1 ∧ i = j
 
 attribute [instance]
@@ -126,7 +126,7 @@ geometric signature is the simultaneous prime translate of the other.  This is t
 relation required by the Fox--Neuwirth orbit cycle: spatial side faces cancel after passage to the
 prime quotient, not necessarily as identical facets of the chosen top-cell representatives. -/
 noncomputable def facetSetoid : Setoid C.FacetOccurrence where
-  r a b := ∃ g : PrimeSymmetry hp,
+  r a b := ∃ g : PrimeSymmetry p,
     (fun i => g • C.facetSignature a i) = C.facetSignature b
   iseqv := by
     refine ⟨?_, ?_, ?_⟩
@@ -303,12 +303,12 @@ structure EndpointIdentifiedRelativeAffineCollar
 
   lowerFacetOccurrenceVertex_eq : ∀ q o,
     cells.facetClass o = lowerFacet q →
-      ∃ g : PrimeSymmetry hp, ∀ i, cells.facetSignature o i =
+      ∃ g : PrimeSymmetry p, ∀ i, cells.facetSignature o i =
         g • lowerCylinderPoint (RefinedAffineMap.vertex hp N₀ q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))
   upperFacetOccurrenceVertex_eq : ∀ q o,
     cells.facetClass o = upperFacet q →
-      ∃ g : PrimeSymmetry hp, ∀ i, cells.facetSignature o i =
+      ∃ g : PrimeSymmetry p, ∀ i, cells.facetSignature o i =
         g • upperCylinderPoint (RefinedAffineMap.vertex hp N₁ q
           (Fin.cast (Nat.sub_add_cancel hp.pos).symm i))
 
@@ -350,7 +350,7 @@ variable (hp : Nat.Prime p)
 variable (C : RelativeAffineCellSystem hp N₀ N₁ M L)
 
 /-- Symmetry-decorated local vertex occurrences. -/
-abbrev CoverVertexSlot := PrimeSymmetry hp × C.VertexSlot
+abbrev CoverVertexSlot := PrimeSymmetry p × C.VertexSlot
 
 noncomputable instance coverVertexSlotFintype : Fintype (CoverVertexSlot hp C) := inferInstance
 instance coverVertexSlotDecidableEq : DecidableEq (CoverVertexSlot hp C) := inferInstance
@@ -375,17 +375,17 @@ noncomputable instance globalVertexDecidableEq : DecidableEq (GlobalVertex hp C)
 
 /-- Left multiplication on the symmetry decoration. -/
 def actCoverVertex
-    (g : PrimeSymmetry hp) (s : CoverVertexSlot hp C) : CoverVertexSlot hp C :=
+    (g : PrimeSymmetry p) (s : CoverVertexSlot hp C) : CoverVertexSlot hp C :=
   (g * s.1, s.2)
 
 @[simp] theorem coverPoint_actCoverVertex
-    (g : PrimeSymmetry hp) (s : CoverVertexSlot hp C) :
+    (g : PrimeSymmetry p) (s : CoverVertexSlot hp C) :
     coverPoint hp C (actCoverVertex hp C g s) = g • coverPoint hp C s := by
   simp [coverPoint, actCoverVertex, mul_smul]
 
 /-- Prime symmetry acts on global relative-collar vertices. -/
 noncomputable instance globalVertexAction :
-    MulAction (PrimeSymmetry hp) (GlobalVertex hp C) where
+    MulAction (PrimeSymmetry p) (GlobalVertex hp C) where
   smul g := Quotient.map (actCoverVertex hp C g) (by
     intro a b hab
     change coverPoint hp C (actCoverVertex hp C g a) =
@@ -415,7 +415,7 @@ noncomputable def globalPoint : GlobalVertex hp C → CylinderPoint p :=
     globalPoint hp C (Quotient.mk _ s) = coverPoint hp C s := rfl
 
 @[simp] theorem globalPoint_smul
-    (g : PrimeSymmetry hp) (x : GlobalVertex hp C) :
+    (g : PrimeSymmetry p) (x : GlobalVertex hp C) :
     globalPoint hp C (g • x) = g • globalPoint hp C x := by
   refine Quotient.inductionOn x ?_
   intro s
@@ -424,11 +424,11 @@ noncomputable def globalPoint : GlobalVertex hp C → CylinderPoint p :=
 
 /-- Global vertex represented by an undecorated local slot. -/
 noncomputable def sampleVertex (s : C.VertexSlot) : GlobalVertex hp C :=
-  Quotient.mk _ ((1 : PrimeSymmetry hp), s)
+  Quotient.mk _ ((1 : PrimeSymmetry p), s)
 
 @[simp] theorem globalPoint_sampleVertex (s : C.VertexSlot) :
     globalPoint hp C (sampleVertex hp C s) = C.slotPoint s := by
-  change coverPoint hp C ((1 : PrimeSymmetry hp), s) = C.slotPoint s
+  change coverPoint hp C ((1 : PrimeSymmetry p), s) = C.slotPoint s
   simp [coverPoint]
 
 /-- Geometrically equal local slots determine the same global sampled vertex. -/
@@ -436,8 +436,8 @@ theorem sampleVertex_eq_of_slotPoint_eq
     {s t : C.VertexSlot} (h : C.slotPoint s = C.slotPoint t) :
     sampleVertex hp C s = sampleVertex hp C t := by
   apply Quotient.sound
-  change coverPoint hp C ((1 : PrimeSymmetry hp), s) =
-    coverPoint hp C ((1 : PrimeSymmetry hp), t)
+  change coverPoint hp C ((1 : PrimeSymmetry p), s) =
+    coverPoint hp C ((1 : PrimeSymmetry p), t)
   simpa [coverPoint] using h
 
 /-- Point-coordinate sites before quotienting by diagonal prime symmetry. -/
@@ -445,7 +445,7 @@ abbrev ScalarSite := GlobalVertex hp C × Fin p
 
 /-- One scalar parameter per diagonal prime orbit. -/
 abbrev Parameter :=
-  MulAction.orbitRel.Quotient (PrimeSymmetry hp) (ScalarSite hp C)
+  MulAction.orbitRel.Quotient (PrimeSymmetry p) (ScalarSite hp C)
 
 noncomputable instance parameterFintype : Fintype (Parameter hp C) := Fintype.ofFinite _
 noncomputable instance parameterDecidableEq : DecidableEq (Parameter hp C) := Classical.decEq _
@@ -455,7 +455,7 @@ def IsFrozenVertex (x : GlobalVertex hp C) : Prop :=
   IsHorizontalPoint (globalPoint hp C x)
 
 @[simp] theorem isFrozenVertex_smul
-    (g : PrimeSymmetry hp) (x : GlobalVertex hp C) :
+    (g : PrimeSymmetry p) (x : GlobalVertex hp C) :
     IsFrozenVertex hp C (g • x) ↔ IsFrozenVertex hp C x := by
   simp [IsFrozenVertex, IsHorizontalPoint]
 
@@ -465,7 +465,7 @@ noncomputable def IsFrozenParameter : Parameter hp C → Prop :=
     (fun s : ScalarSite hp C => IsFrozenVertex hp C s.1)
     (by
       intro a b hab
-      change MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp C) a b at hab
+      change MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp C) a b at hab
       rw [MulAction.orbitRel_apply] at hab
       rcases hab with ⟨g, rfl⟩
       simpa using propext (isFrozenVertex_smul hp C g b.1))
@@ -560,18 +560,18 @@ noncomputable def vectorValue
 
 /-- Every assignment reconstructs a prime-equivariant vector assignment. -/
 theorem vectorValue_smul
-    (a : Assignment hp C) (g : PrimeSymmetry hp) (x : GlobalVertex hp C) :
+    (a : Assignment hp C) (g : PrimeSymmetry p) (x : GlobalVertex hp C) :
     vectorValue hp C a (g • x) = g • vectorValue hp C a x := by
   funext j
   rw [PrimeSymmetry.smul_coordinate_apply]
   let j₀ : Fin p := g⁻¹ • j
   have hsite :
-      Quotient.mk (MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp C))
+      Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp C))
           (g • x, j) =
-        Quotient.mk (MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp C))
+        Quotient.mk (MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp C))
           (x, j₀) := by
     apply Quotient.sound
-    change MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp C) (g • x, j) (x, j₀)
+    change MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp C) (g • x, j) (x, j₀)
     rw [MulAction.orbitRel_apply]
     refine ⟨g, ?_⟩
     apply Prod.ext
@@ -602,7 +602,7 @@ theorem endpointAdjustedSiteValue_eq_of_orbitRel
     (A₀ : RefinedAffineMap.RegularApproximation hp F₀.map)
     (A₁ : RefinedAffineMap.RegularApproximation hp F₁.map)
     {a b : ScalarSite hp C}
-    (hab : MulAction.orbitRel (PrimeSymmetry hp) (ScalarSite hp C) a b) :
+    (hab : MulAction.orbitRel (PrimeSymmetry p) (ScalarSite hp C) a b) :
     endpointAdjustedSiteValue hp C H A₀ A₁ a =
       endpointAdjustedSiteValue hp C H A₀ A₁ b := by
   rw [MulAction.orbitRel_apply] at hab

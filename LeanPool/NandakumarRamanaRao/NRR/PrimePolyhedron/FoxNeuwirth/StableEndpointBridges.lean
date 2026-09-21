@@ -106,7 +106,7 @@ theorem exists_segmentSafe_ball
 
 /-- One finite index for every prime translate of every refined endpoint vertex. -/
 abbrev SampleIndex (hp : Nat.Prime p) (N : Nat) :=
-  PrimeSymmetry hp × (TopCell hp N × Fin (p - 1 + 1))
+  PrimeSymmetry p × (TopCell hp N × Fin (p - 1 + 1))
 
 /-- Spatial point represented by a sample index. -/
 noncomputable def samplePoint
@@ -116,7 +116,7 @@ noncomputable def samplePoint
 /-- Left multiplication on the group coordinate realizes the prime action on sample points. -/
 @[simp] theorem samplePoint_mul
     (hp : Nat.Prime p) (N : Nat)
-    (h : PrimeSymmetry hp) (z : SampleIndex hp N) :
+    (h : PrimeSymmetry p) (z : SampleIndex hp N) :
     samplePoint hp N (h * z.1, z.2) = h • samplePoint hp N z := by
   simp [samplePoint, mul_smul]
 
@@ -127,14 +127,14 @@ theorem segmentSafe_smul
     (hF : IsEquivariantCoordinateMap hp F)
     (hG : IsEquivariantCoordinateMap hp G)
     {x : Realization p} (hx : SegmentSafe F G x)
-    (g : PrimeSymmetry hp) :
+    (g : PrimeSymmetry p) :
     SegmentSafe F G (g • x) := by
   intro t
   rw [hF g x, hG g x]
   intro hzero
   apply hx t
   funext j
-  have h := congrFun hzero ((PrimeSymmetry.toPerm hp g) j)
+  have h := congrFun hzero ((PrimeSymmetry.toPerm p g) j)
   simpa [PrimeSymmetry.smul_coordinate_apply, Pi.add_apply, Pi.smul_apply] using h
 
 /-- Segment safety is equivalent along a prime orbit. -/
@@ -143,7 +143,7 @@ theorem segmentSafe_smul_iff
     (F G : ContinuousCoordinateMap p)
     (hF : IsEquivariantCoordinateMap hp F)
     (hG : IsEquivariantCoordinateMap hp G)
-    (x : Realization p) (g : PrimeSymmetry hp) :
+    (x : Realization p) (g : PrimeSymmetry p) :
     SegmentSafe F G (g • x) ↔ SegmentSafe F G x := by
   constructor
   · intro h
@@ -375,8 +375,8 @@ noncomputable def bridgeWeight
     (hp : Nat.Prime p) (F : ZeroFreeMap hp)
     (A : StableRegularApproximation hp F.map)
     (x : Realization p) : Real :=
-  ((Fintype.card (PrimeSymmetry hp) : Real)⁻¹) *
-    ∑ g : PrimeSymmetry hp, rawBridgeWeight hp F A (g • x)
+  ((Fintype.card (PrimeSymmetry p) : Real)⁻¹) *
+    ∑ g : PrimeSymmetry p, rawBridgeWeight hp F A (g • x)
 
 theorem continuous_bridgeWeight
     (hp : Nat.Prime p) (F : ZeroFreeMap hp)
@@ -401,17 +401,17 @@ theorem bridgeWeight_le_one
     (A : StableRegularApproximation hp F.map)
     (x : Realization p) :
     bridgeWeight hp F A x ≤ 1 := by
-  have hn_nat : 0 < Fintype.card (PrimeSymmetry hp) := Fintype.card_pos
-  have hn : (0 : Real) < (Fintype.card (PrimeSymmetry hp) : Real) := by
+  have hn_nat : 0 < Fintype.card (PrimeSymmetry p) := Fintype.card_pos
+  have hn : (0 : Real) < (Fintype.card (PrimeSymmetry p) : Real) := by
     exact_mod_cast hn_nat
   have hsum :
-      (∑ g : PrimeSymmetry hp, rawBridgeWeight hp F A (g • x)) ≤
-        (Fintype.card (PrimeSymmetry hp) : Real) := by
+      (∑ g : PrimeSymmetry p, rawBridgeWeight hp F A (g • x)) ≤
+        (Fintype.card (PrimeSymmetry p) : Real) := by
     calc
-      (∑ g : PrimeSymmetry hp, rawBridgeWeight hp F A (g • x))
-          ≤ ∑ _g : PrimeSymmetry hp, (1 : Real) :=
+      (∑ g : PrimeSymmetry p, rawBridgeWeight hp F A (g • x))
+          ≤ ∑ _g : PrimeSymmetry p, (1 : Real) :=
         Finset.sum_le_sum fun g _ => rawBridgeWeight_le_one hp F A (g • x)
-      _ = (Fintype.card (PrimeSymmetry hp) : Real) := by simp
+      _ = (Fintype.card (PrimeSymmetry p) : Real) := by simp
   unfold bridgeWeight
   rw [inv_mul_le_iff₀ hn]
   simpa using hsum
@@ -420,7 +420,7 @@ theorem bridgeWeight_le_one
 @[simp] theorem bridgeWeight_smul
     (hp : Nat.Prime p) (F : ZeroFreeMap hp)
     (A : StableRegularApproximation hp F.map)
-    (h : PrimeSymmetry hp) (x : Realization p) :
+    (h : PrimeSymmetry p) (x : Realization p) :
     bridgeWeight hp F A (h • x) = bridgeWeight hp F A x := by
   classical
   unfold bridgeWeight
@@ -438,9 +438,9 @@ theorem bridgeWeight_le_one
       (samplePoint hp A.toRegularApproximation.level z) = 1 := by
   classical
   unfold bridgeWeight
-  have hcard : (Fintype.card (PrimeSymmetry hp) : Real) ≠ 0 := by
+  have hcard : (Fintype.card (PrimeSymmetry p) : Real) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
-  have hterm : ∀ g : PrimeSymmetry hp,
+  have hterm : ∀ g : PrimeSymmetry p,
       rawBridgeWeight hp F A
         (g • samplePoint hp A.toRegularApproximation.level z) = 1 := by
     intro g
@@ -456,19 +456,19 @@ theorem segmentSafe_of_bridgeWeight_pos
     (x : Realization p)
     (hx : 0 < bridgeWeight hp F A x) :
     SegmentSafe F.map A.toRegularApproximation.map x := by
-  have hsum : 0 < ∑ g : PrimeSymmetry hp,
+  have hsum : 0 < ∑ g : PrimeSymmetry p,
       rawBridgeWeight hp F A (g • x) := by
     unfold bridgeWeight at hx
-    have hcard_nat : 0 < Fintype.card (PrimeSymmetry hp) := Fintype.card_pos
-    have hcard : 0 < (Fintype.card (PrimeSymmetry hp) : Real) := by
+    have hcard_nat : 0 < Fintype.card (PrimeSymmetry p) := Fintype.card_pos
+    have hcard : 0 < (Fintype.card (PrimeSymmetry p) : Real) := by
       exact_mod_cast hcard_nat
-    have hinv : 0 < ((Fintype.card (PrimeSymmetry hp) : Real)⁻¹) :=
+    have hinv : 0 < ((Fintype.card (PrimeSymmetry p) : Real)⁻¹) :=
       inv_pos.mpr hcard
     rcases (mul_pos_iff.mp hx) with hpos | hneg
     · exact hpos.2
     · exact (not_lt_of_ge (le_of_lt hinv) hneg.1).elim
   by_contra hnone
-  have hall : ∀ g : PrimeSymmetry hp,
+  have hall : ∀ g : PrimeSymmetry p,
       rawBridgeWeight hp F A (g • x) = 0 := by
     intro g
     apply le_antisymm
@@ -539,7 +539,7 @@ noncomputable def bridgedMap
         (vertex hp A.toRegularApproximation.level q i) := by
   simpa [samplePoint] using
     bridgedMap_sample hp F A
-      ((1 : PrimeSymmetry hp), (q, i))
+      ((1 : PrimeSymmetry p), (q, i))
 
 /-- The straight line from the original map to the localized bridged map is zero-free. -/
 theorem bridgedMap_zeroFreeStraightLine

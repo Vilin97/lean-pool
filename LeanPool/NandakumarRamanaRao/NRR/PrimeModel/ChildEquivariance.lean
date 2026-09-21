@@ -49,10 +49,10 @@ variable {hp : Nat.Prime p}
  theorem PrimeConfigurationModel.child_smul
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A) (C : BodySpace K A)
-    (g : PrimeSymmetry hp) (x : M.Point) (i : Fin p) :
+    (g : PrimeSymmetry p) (x : M.Point) (i : Fin p) :
     EMP.VariableBody.child M.sites hA hp.pos (C, g • x) i =
       EMP.VariableBody.child M.sites hA hp.pos (C, x)
-        ((PrimeSymmetry.toPerm hp g).symm i) := by
+        ((PrimeSymmetry.toPerm p g).symm i) := by
   apply Subtype.ext
   apply ConvexSubbody.ext
   change EMP.VariableBody.cellSet hA C (M.sites (g • x))
@@ -61,19 +61,19 @@ variable {hp : Nat.Prime p}
       (EMP.VariableBody.normalizedWeight hA hp.pos C (M.toConfig (g • x))) i = _
   rw [M.toConfig_smul, PrimeSymmetry.smul_config]
   change EMP.VariableBody.cellSet hA C
-      (Config.relabel (PrimeSymmetry.toPerm hp g) (M.sites x))
+      (Config.relabel (PrimeSymmetry.toPerm p g) (M.sites x))
       (EMP.VariableBody.normalizedWeight hA hp.pos C
-        (Config.relabel (PrimeSymmetry.toPerm hp g) (M.sites x))) i = _
+        (Config.relabel (PrimeSymmetry.toPerm p g) (M.sites x))) i = _
   exact EMP.VariableBody.canonicalCellSet_relabel hA hp.pos C (M.sites x)
-    (PrimeSymmetry.toPerm hp g) i
+    (PrimeSymmetry.toPerm p g) i
 
  theorem PrimeConfigurationModel.child_carrier_smul
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A) (C : BodySpace K A)
-    (g : PrimeSymmetry hp) (x : M.Point) (i : Fin p) :
+    (g : PrimeSymmetry p) (x : M.Point) (i : Fin p) :
     ((EMP.VariableBody.child M.sites hA hp.pos (C, g • x) i).body : Set Plane) =
       ((EMP.VariableBody.child M.sites hA hp.pos (C, x)
-        ((PrimeSymmetry.toPerm hp g).symm i)).body : Set Plane) := by
+        ((PrimeSymmetry.toPerm p g).symm i)).body : Set Plane) := by
   rw [M.child_smul hA C g x i]
 
 end NRR

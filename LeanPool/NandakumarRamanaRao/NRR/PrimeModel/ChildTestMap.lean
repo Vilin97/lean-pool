@@ -42,7 +42,7 @@ noncomputable def childTestMap
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)
     (φ : NiceMV (BodySpace K (A / (p : ℝ))))
-    (g : PrimeSymmetry hp)
+    (g : PrimeSymmetry p)
     (z : (BodySpace K A × M.Point) × SignedInterval) :
     M.childTestMap hA φ
       (M.smulBodyPointInterval (K := K) (A := A) g z) =
@@ -90,7 +90,7 @@ def allChildrenZeroSet
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)
     (φ : NiceMV (BodySpace K (A / (p : ℝ)))) :
-    ∀ g : PrimeSymmetry hp,
+    ∀ g : PrimeSymmetry p,
       ∀ z ∈ M.allChildrenZeroSet hA φ,
         M.smulBodyPointInterval (K := K) (A := A) g z ∈
           M.allChildrenZeroSet hA φ := by

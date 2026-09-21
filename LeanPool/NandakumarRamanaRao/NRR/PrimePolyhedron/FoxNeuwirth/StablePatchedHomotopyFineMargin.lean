@@ -64,7 +64,7 @@ theorem middleHomotopySiteValue_eq_of_orbitRel
     (hp : Nat.Prime p) (N L : Nat)
     {G₀ G₁ : ZeroFreeMap hp} (K : ZeroFreeHomotopy hp G₀ G₁)
     {a b : ScalarSite hp (RelativeCollarMiddlePrism.cellSystem hp N L)}
-    (hab : MulAction.orbitRel (PrimeSymmetry hp)
+    (hab : MulAction.orbitRel (PrimeSymmetry p)
       (ScalarSite hp (RelativeCollarMiddlePrism.cellSystem hp N L)) a b) :
     middleHomotopySiteValue hp N L K a =
       middleHomotopySiteValue hp N L K b := by
