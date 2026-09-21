@@ -22,7 +22,7 @@ universe u
 
 /-- The normalized Markoff surface as a subtype. -/
 abbrev NormalizedMarkoffSurface (R : Type u) [CommRing R] :=
-  ↑(normalizedSurface R)
+  {x : NormalizedPoint R // IsNormalizedMarkoff x}
 
 /-- The fundamental rotation, restricted to the original-coordinate Markoff surface. -/
 def rotate1Surface {R : Type u} [CommRing R] (x : MarkoffSurface R) :

@@ -182,7 +182,10 @@ private def normalizedSurfaceEquivDiscriminantRoots
     ext <;> simp
   right_inv u := by
     rcases u with ⟨x, y, d⟩
-    simp
+    change (⟨x, y, (normalizedMarkoffThirdCoordinateEquivDiscriminantRoots hF x y)
+      ((normalizedMarkoffThirdCoordinateEquivDiscriminantRoots hF x y).symm d)⟩ :
+      Σ x : F, Σ y : F, {d : F // d ^ 2 = (y ^ 2 - 4) * x ^ 2 - 4 * y ^ 2}) = _
+    rw [Equiv.apply_symm_apply]
 
 private lemma squareRootSubtypeCard_eq_quadraticChar_add_one
     (hF : ringChar F ≠ 2) (t : F) :

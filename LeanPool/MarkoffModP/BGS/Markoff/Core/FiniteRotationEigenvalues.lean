@@ -81,10 +81,11 @@ theorem rhoSL_two_not_finiteOrder : ¬ IsOfFinOrder (rhoSL (2 : R)) := by
   have hmatrix := congrArg
     (fun g : Matrix.SpecialLinearGroup (Fin 2) R ↦
       (g : Matrix (Fin 2) (Fin 2) R)) hpower
+  change rho (2 : R) ^ n = 1 at hmatrix
   have hoffDiagonal := congrArg
     (fun m : Matrix (Fin 2) (Fin 2) R ↦ m 0 1) hmatrix
   have hnzero : (n : R) = 0 := by
-    simpa [rhoSL, rho_two_pow] using hoffDiagonal
+    simpa [rho_two_pow] using hoffDiagonal
   have : n = 0 := by exact_mod_cast hnzero
   exact hnpos.ne' this
 

@@ -476,7 +476,7 @@ private theorem exists_directionalPolynomial_representation
       · exact (parameter_bounds r hr).2.trans hhile |>.trans (parameter_bounds s hs).1
     exact hsr (parameter_inj hs hr hparam_eq)
   let q : Polynomial A :=
-    ∑ s ∈ F.support, Polynomial.monomial (index s) (MvPolynomial.coeff s F)
+    ∑ s ∈ F.support, Polynomial.monomial (index s) (F.coeff s)
   have coeff_finset_sum (n : ℕ) (S : Finset (Fin 2 →₀ ℕ))
       (g : (Fin 2 →₀ ℕ) → Polynomial A) :
       (∑ s ∈ S, g s).coeff n = ∑ s ∈ S, (g s).coeff n := by
@@ -484,13 +484,13 @@ private theorem exists_directionalPolynomial_representation
     | empty => simp
     | @insert a S ha ih => simp [ha, ih, Polynomial.coeff_add]
   have coeff_q_index : ∀ s ∈ F.support,
-      q.coeff (index s) = MvPolynomial.coeff s F := by
+      q.coeff (index s) = F.coeff s := by
     intro s hs
     rw [show q.coeff (index s) =
         ∑ t ∈ F.support,
-          (Polynomial.monomial (index t) (MvPolynomial.coeff t F)).coeff (index s) by
+          (Polynomial.monomial (index t) (F.coeff t)).coeff (index s) by
       simpa [q] using coeff_finset_sum (index s) F.support
-        (fun t => Polynomial.monomial (index t) (MvPolynomial.coeff t F))]
+        (fun t => Polynomial.monomial (index t) (F.coeff t))]
     rw [Finset.sum_eq_single s]
     · rw [Polynomial.coeff_monomial, if_pos rfl]
     · intro t ht hts
@@ -515,9 +515,9 @@ private theorem exists_directionalPolynomial_representation
     intro n hn
     rw [show q.coeff n =
         ∑ s ∈ F.support,
-          (Polynomial.monomial (index s) (MvPolynomial.coeff s F)).coeff n by
+          (Polynomial.monomial (index s) (F.coeff s)).coeff n by
       simpa [q] using coeff_finset_sum n F.support
-        (fun s => Polynomial.monomial (index s) (MvPolynomial.coeff s F))]
+        (fun s => Polynomial.monomial (index s) (F.coeff s))]
     simp only [Polynomial.coeff_monomial]
     apply Finset.sum_eq_zero
     intro s hs
@@ -599,7 +599,7 @@ private theorem exists_directionalPolynomial_representation
   have hhomog : directionalHomogenization v q N =
       ∑ s ∈ F.support,
         directionalHomogenization v
-          (Polynomial.monomial (index s) (MvPolynomial.coeff s F)) N := by
+          (Polynomial.monomial (index s) (F.coeff s)) N := by
     simp only [q, directionalHomogenization,
       Polynomial.homogenize_finsetSum, map_sum]
   rw [hhomog, Finset.mul_sum]
@@ -608,7 +608,7 @@ private theorem exists_directionalPolynomial_representation
   rw [directionalHomogenization_monomial v (index_le s hs)]
   rw [MvPolynomial.monomial_mul]
   simp only [one_mul]
-  apply congrArg (fun e => MvPolynomial.monomial e (MvPolynomial.coeff s F))
+  apply congrArg (fun e => MvPolynomial.monomial e (F.coeff s))
   simpa [add_assoc] using exponent_eq s hs
 
 private theorem directionalPolynomial_degree_eq_one_of_irreducible
@@ -812,10 +812,10 @@ theorem planeCurveSupportHasRankTwo_of_absoluteIrreducible_notSubtorusTranslate
     have hsupp_single : F.support = {r} := by
       apply Finset.eq_singleton_iff_unique_mem.mpr
       exact ⟨hr, fun s hs => hsingle s hs⟩
-    have hFmono : F = MvPolynomial.monomial r (MvPolynomial.coeff r F) := by
+    have hFmono : F = MvPolynomial.monomial r (F.coeff r) := by
       rw [← F.support_sum_monomial_coeff, hsupp_single]
       simp
-    have hcoeff : MvPolynomial.coeff r F ≠ 0 :=
+    have hcoeff : F.coeff r ≠ 0 :=
       MvPolynomial.mem_support_iff.mp hr
     have hx₀ : (x₀ : A) ≠ 0 := Units.ne_zero x₀
     have hy₀ : (y₀ : A) ≠ 0 := Units.ne_zero y₀

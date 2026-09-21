@@ -209,7 +209,7 @@ theorem factorizationEulerProduct_le_coarse
     (N.factorization.prod fun prime exponent =>
       coarseRankinPrimePowerFactor exponent (primeWeight prime)) := by
   simp only [Finsupp.prod]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro prime hprime
     exact rankinPrimePowerFactor_nonneg
       (Nat.prime_of_mem_primeFactors hprime)
@@ -244,7 +244,7 @@ theorem factorizationWeight_twelfthPower
   rw [hnCast]
   simp only [factorizationWeight, hn, ↓reduceIte, Finsupp.prod]
   rw [← Finset.prod_pow, ← Finset.prod_mul_distrib]
-  apply Finset.one_le_prod
+  apply Finset.one_le_prod₀
   intro prime hprime
   rw [show (prime : ℚ) ^ n.factorization prime *
       (primeWeight prime ^ n.factorization prime) ^ 12 =

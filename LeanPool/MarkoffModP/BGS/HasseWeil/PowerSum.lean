@@ -126,13 +126,10 @@ theorem norm_le_of_mem_of_weightedPowerSum_isBigO
       (fun n : ℕ ↦ (isolatePolynomial s z).sum
         (fun k a ↦ a * weightedPowerSum s weight (n + k))) =O[atTop]
           fun n : ℕ ↦ ρ ^ n := by
-    simpa only [Polynomial.sum_def] using
-      (IsBigO.sum fun k hk ↦
-        (hshift k).const_mul_left ((isolatePolynomial s z).coeff k) :
-          (fun n : ℕ ↦ ∑ k ∈ (isolatePolynomial s z).support,
-            (isolatePolynomial s z).coeff k *
-              weightedPowerSum s weight (n + k)) =O[atTop]
-            fun n : ℕ ↦ ρ ^ n)
+    convert! (IsBigO.sum (s := (isolatePolynomial s z).support) fun k hk ↦
+      (hshift k).const_mul_left ((isolatePolynomial s z).coeff k)) using 1
+    funext n
+    simp only [Polynomial.sum_def, Finset.sum_apply]
   have hisolated :
       (fun n : ℕ ↦ weight z * z ^ n * (isolatePolynomial s z).eval z) =O[atTop]
         fun n : ℕ ↦ ρ ^ n := by

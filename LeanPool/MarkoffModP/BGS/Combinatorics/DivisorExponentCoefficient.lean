@@ -89,11 +89,12 @@ theorem divisorExponentLayer_card_eq_divisorRankCoefficient
   | nil =>
       cases rank with
       | zero =>
-          simp [DivisorExponentLayer, DivisorExponentBox,
-            divisorExponentRank, divisorRankCoefficient]
+          let : Unique (DivisorExponentLayer [] 0) :=
+            ⟨⟨PUnit.unit, rfl⟩, fun x ↦ Subtype.ext (Subsingleton.elim (α := PUnit) _ _)⟩
+          exact Fintype.card_unique
       | succ rank =>
-          simp [DivisorExponentLayer, DivisorExponentBox,
-            divisorExponentRank, divisorRankCoefficient]
+          change Fintype.card {v : PUnit // 0 = rank + 1} = 0
+          exact Fintype.card_eq_zero_iff.mpr ⟨fun x ↦ Nat.noConfusion x.property⟩
   | cons factor factors ih =>
       calc
         Fintype.card

@@ -16,18 +16,18 @@ def diagonalScale {F : Type*} [Field F]
     (z : Fˣ × Fˣ) (f : MvPolynomial (Fin 2) F) :=
   f.support.sum fun m =>
     MvPolynomial.monomial m
-      (MvPolynomial.coeff m f * (z.1 : F) ^ m 0 * (z.2 : F) ^ m 1)
+      (f.coeff m * (z.1 : F) ^ m 0 * (z.2 : F) ^ m 1)
 
 theorem coeff_diagonalScale {F : Type*} [Field F]
     (z : Fˣ × Fˣ) (f : MvPolynomial (Fin 2) F)
     (m : Fin 2 →₀ ℕ) :
-    MvPolynomial.coeff m (diagonalScale z f) =
-      MvPolynomial.coeff m f * (z.1 : F) ^ m 0 * (z.2 : F) ^ m 1 := by
+    (diagonalScale z f).coeff m =
+      f.coeff m * (z.1 : F) ^ m 0 * (z.2 : F) ^ m 1 := by
   classical
   by_cases hm : m ∈ f.support
   · simp [diagonalScale, MvPolynomial.coeff_sum,
       MvPolynomial.coeff_monomial, hm]
-  · have hcoeff : MvPolynomial.coeff m f = 0 :=
+  · have hcoeff : f.coeff m = 0 :=
       MvPolynomial.notMem_support_iff.mp hm
     simp [diagonalScale, MvPolynomial.coeff_sum,
       MvPolynomial.coeff_monomial, hm, hcoeff]
@@ -68,7 +68,7 @@ private theorem eq_C_coeff_zero_of_bidegree_zero
     {F : Type*} [Field F] (g : MvPolynomial (Fin 2) F)
     (h0 : MvPolynomial.degreeOf 0 g = 0)
     (h1 : MvPolynomial.degreeOf 1 g = 0) :
-    g = MvPolynomial.C (MvPolynomial.coeff 0 g) := by
+    g = MvPolynomial.C (g.coeff 0) := by
   ext m
   by_cases hm : m = 0
   · subst m
@@ -125,7 +125,7 @@ theorem diagonalScale_eq_C_mul_of_dvd
     have h := hdegree 1
     rw [hg, MvPolynomial.degreeOf_mul_eq hf hg0] at h
     omega
-  let c := MvPolynomial.coeff 0 g
+  let c := g.coeff 0
   have hgC : g = MvPolynomial.C c :=
     eq_C_coeff_zero_of_bidegree_zero g hgDegree0 hgDegree1
   refine ⟨c, ?_⟩
@@ -161,10 +161,10 @@ theorem planeCurveSupportCharacterStabilizer_of_diagonalScale_eval_zero
   intro r hr s hs
   have hweight (m : Fin 2 →₀ ℕ) (hm : m ∈ f.support) :
       (z.1 : F) ^ m 0 * (z.2 : F) ^ m 1 = c := by
-    have hcoeff := congrArg (MvPolynomial.coeff m) hc
+    have hcoeff := congrArg (fun p ↦ p.coeff m) hc
     rw [coeff_diagonalScale] at hcoeff
     simp only [MvPolynomial.coeff_C_mul] at hcoeff
-    have hm0 : MvPolynomial.coeff m f ≠ 0 :=
+    have hm0 : f.coeff m ≠ 0 :=
       MvPolynomial.mem_support_iff.mp hm
     exact mul_left_cancel₀ hm0
       (by simpa [mul_comm, mul_left_comm, mul_assoc] using hcoeff)

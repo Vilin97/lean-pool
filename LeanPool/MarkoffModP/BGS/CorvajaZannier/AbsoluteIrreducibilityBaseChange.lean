@@ -179,7 +179,7 @@ theorem irreducible_map_of_irreducible_map_isAlgClosed
       have hDzero : MvPolynomial.map θ D = 0 := by
         ext m
         rw [MvPolynomial.coeff_map]
-        simp only [coeff_zero]
+        simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply]
         exact hker_specialize (hcoeffD m)
       simp only [D, map_sub, map_mul] at hDzero
       have hmapfAE : MvPolynomial.map θ fA =
@@ -202,12 +202,16 @@ theorem irreducible_map_of_irreducible_map_isAlgClosed
         MvPolynomial.X (gVar mg) * MvPolynomial.X invG - 1
       have hqG : qG ∈ RingHom.ker ψ := by
         change ψ qG = 0
-        simp [qG, ψ, val, gVar, invG, hmg]
+        dsimp only [qG]
+        rw [map_sub, map_mul, map_one]
+        simp [ψ, val, gVar, invG, hmg]
       have hqGE := hker_specialize hqG
       have hxG : x (gVar mg) ≠ 0 := by
         have hprod : x (gVar mg) * x invG = 1 := by
           apply sub_eq_zero.mp
-          simpa [qG, θ] using hqGE
+          change θ (MvPolynomial.X (gVar mg) * MvPolynomial.X invG - 1) = 0 at hqGE
+          rw [map_sub, map_mul, map_one] at hqGE
+          simpa only [θ, MvPolynomial.eval₂Hom_X'] using hqGE
         exact left_ne_zero_of_mul_eq_one hprod
       have hcoeffFormula : gE.coeff mg = x (gVar mg) := by
         simp [gE, G, MvPolynomial.coeff_sum,
@@ -221,12 +225,16 @@ theorem irreducible_map_of_irreducible_map_isAlgClosed
         MvPolynomial.X (hVar mh) * MvPolynomial.X invH - 1
       have hqH : qH ∈ RingHom.ker ψ := by
         change ψ qH = 0
-        simp [qH, ψ, val, hVar, invH, hmh]
+        dsimp only [qH]
+        rw [map_sub, map_mul, map_one]
+        simp [ψ, val, hVar, invH, hmh]
       have hqHE := hker_specialize hqH
       have hxH : x (hVar mh) ≠ 0 := by
         have hprod : x (hVar mh) * x invH = 1 := by
           apply sub_eq_zero.mp
-          simpa [qH, θ] using hqHE
+          change θ (MvPolynomial.X (hVar mh) * MvPolynomial.X invH - 1) = 0 at hqHE
+          rw [map_sub, map_mul, map_one] at hqHE
+          simpa only [θ, MvPolynomial.eval₂Hom_X'] using hqHE
         exact left_ne_zero_of_mul_eq_one hprod
       have hcoeffFormula : hE'.coeff mh = x (hVar mh) := by
         simp [hE', H, MvPolynomial.coeff_sum,

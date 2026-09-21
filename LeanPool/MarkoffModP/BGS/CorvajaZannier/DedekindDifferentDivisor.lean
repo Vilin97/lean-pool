@@ -48,7 +48,7 @@ def idealMultiplicityDivisor (I : Ideal R) (hI : I ≠ ⊥) :
   Finsupp.mk h.toFinset (fun v => multiplicity v.asIdeal I) (fun v => by
     rw [h.mem_toFinset, Set.mem_setOf_eq]
     simpa [Nat.pos_iff_ne_zero] using
-      (dvd_iff_multiplicity_pos (a := v.asIdeal) (b := I)).symm)
+      (dvd_iff_multiplicity_pos (FiniteMultiplicity.of_prime_left v.prime hI)).symm)
 
 @[simp]
 theorem idealMultiplicityDivisor_apply (I : Ideal R) (hI : I ≠ ⊥)

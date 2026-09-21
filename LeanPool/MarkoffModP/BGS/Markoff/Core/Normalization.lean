@@ -221,7 +221,7 @@ def normalizationEquiv (R : Type u) [CommRing R] [Invertible (3 : R)] :
 /-- Scaling by three restricts to an equivalence of the original and normalized Markoff
 surfaces. -/
 def normalizationSurfaceEquiv (R : Type u) [CommRing R] [Invertible (3 : R)] :
-    ↑(surface R) ≃ ↑(normalizedSurface R) :=
+    {x : Point R // IsMarkoff x} ≃ {x : NormalizedPoint R // IsNormalizedMarkoff x} :=
   (normalizationEquiv R).subtypeEquiv fun x => by
     change IsMarkoff x ↔ IsNormalizedMarkoff (toNormalized x)
     exact (isNormalizedMarkoff_toNormalized_iff x).symm

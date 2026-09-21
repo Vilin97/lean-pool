@@ -27,7 +27,11 @@ inductive NormalizedCoordinateAxis
   | first
   | second
   | third
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype NormalizedCoordinateAxis where
+  elems := {.first, .second, .third}
+  complete x := by cases x <;> simp
 
 /-- A normalized conic fiber, indexed without identifying normalized and original coordinates. -/
 def normalizedFiberAt {R : Type u} [CommRing R] :

@@ -265,7 +265,7 @@ theorem exists_fraction_approximating_at_finitePlaces_regular_elsewhere
       · have hcount :
             (normalizedFactors
               (Ideal.span ({(denominator : R)} : Set R))).count v.asIdeal = 0 := by
-          exact Multiset.count_eq_zero.mpr (by simpa using hfactor)
+          exact Multiset.count_eq_zero.mpr (by simpa only [Multiset.mem_toFinset] using hfactor)
         simp [hcount]
     simpa [z] using
       valuation_div_algebraMap_le_one_of_mem_denominatorPower

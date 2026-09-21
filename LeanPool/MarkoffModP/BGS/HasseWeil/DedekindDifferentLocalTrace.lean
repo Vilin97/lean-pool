@@ -38,7 +38,6 @@ theorem le_iff_count_ge {I J : FractionalIdeal R⁰ K} (hI : I ≠ 0) (hJ : J �
         simpa [hzero]
     apply finprod_le_finprod
     · exact hfinite I
-    · exact fun _ ↦ zero_le _
     · exact hfinite J
     · intro v
       exact zpow_le_zpow_right_of_le_one₀

@@ -48,7 +48,7 @@ instance : IsDiscreteValuationRing (RatFuncInfinityIntegers K) :=
 instance : IsDedekindDomain (RatFuncInfinityIntegers K) := by
   let hnf : ¬ IsField (RatFuncInfinityIntegers K) :=
     IsDiscreteValuationRing.not_isField (RatFuncInfinityIntegers K)
-  apply ((IsDiscreteValuationRing.TFAE (RatFuncInfinityIntegers K) hnf).out 0 2).mp
+  apply ((IsDiscreteValuationRing.TFAE (RatFuncInfinityIntegers K) hnf).out 1 3).mp
   infer_instance
 
 /-- The unique height-one prime of the infinity valuation ring. -/

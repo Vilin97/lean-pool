@@ -80,7 +80,7 @@ theorem card_divisors_pow_le_explicit_constant_mul
     (∏ p ∈ n.primeFactors, (n.factorization p + 1) ^ k) ≤
         ∏ p ∈ n.primeFactors,
           ((if p < 2 ^ k then D else 1) * p ^ n.factorization p) :=
-      Finset.prod_le_prod (fun _ _ => Nat.zero_le _) hfactor
+      Finset.prod_le_prod hfactor
     _ = D ^ (n.primeFactors.filter fun p => p < 2 ^ k).card * n := by
       rw [Finset.prod_mul_distrib, ← Nat.prod_primeFactors_pow_factorization hn]
       simp [Finset.prod_ite]
@@ -91,20 +91,23 @@ theorem card_divisors_pow_le_explicit_constant_mul
 /-- Sealed data for the closed factorization constant.  The subtype equation
 lets downstream proofs rewrite the value without asking the kernel to
 repeatedly normalize its enormous exponentiation. -/
-@[irreducible] def explicitDivisorConstantData :
+noncomputable def explicitDivisorConstantData :
     {n : ℕ // n = (32 ^ 32) ^ (2 ^ 32)} :=
-  ⟨(32 ^ 32) ^ (2 ^ 32), rfl⟩
+  Classical.choice ⟨⟨(32 ^ 32) ^ (2 ^ 32), rfl⟩⟩
 
 /-- The closed factorization constant used by the explicit Markoff proof. -/
-def explicitDivisorConstant : ℕ := explicitDivisorConstantData.1
+noncomputable def explicitDivisorConstant : ℕ := explicitDivisorConstantData.1
 
 theorem explicitDivisorConstant_eq :
     explicitDivisorConstant = (32 ^ 32) ^ (2 ^ 32) :=
   explicitDivisorConstantData.2
 
-theorem explicitDivisorConstant_pos : 0 < explicitDivisorConstant := by
-  rw [explicitDivisorConstant_eq]
-  exact pow_pos (pow_pos (by norm_num) _) _
+private theorem positive_of_eq_iterated_pow {n a b c : ℕ}
+    (ha : 0 < a) (h : n = (a ^ b) ^ c) : 0 < n :=
+  h.symm ▸ pow_pos (pow_pos ha _) _
+
+theorem explicitDivisorConstant_pos : 0 < explicitDivisorConstant :=
+  positive_of_eq_iterated_pow (by decide : 0 < 32) explicitDivisorConstant_eq
 
 theorem explicitDivisorConstant_le_pow_thirtyTwo :
     explicitDivisorConstant ≤ explicitDivisorConstant ^ 32 := by
