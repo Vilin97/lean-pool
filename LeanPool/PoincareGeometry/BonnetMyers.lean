@@ -1,0 +1,79 @@
+/-
+Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+-/
+
+import LeanPool.PoincareGeometry.BonnetMyers.Statement
+import LeanPool.PoincareGeometry.BonnetMyers.Construction
+import LeanPool.PoincareGeometry.BonnetMyers.Algebra
+import LeanPool.PoincareGeometry.BonnetMyers.IndexForm
+import LeanPool.PoincareGeometry.BonnetMyers.Comparison
+import LeanPool.PoincareGeometry.BonnetMyers.SecondVariation
+import LeanPool.PoincareGeometry.BonnetMyers.MetricConsequences
+import LeanPool.PoincareGeometry.BonnetMyers.ODE
+import LeanPool.PoincareGeometry.BonnetMyers.Geodesic
+import LeanPool.PoincareGeometry.BonnetMyers.Parallel
+import LeanPool.PoincareGeometry.BonnetMyers.Transport
+import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicGeodesic
+import LeanPool.PoincareGeometry.BonnetMyers.IntrinsicAcceleration
+import LeanPool.PoincareGeometry.BonnetMyers.CurveConnection
+import LeanPool.PoincareGeometry.BonnetMyers.ChartGluing
+import LeanPool.PoincareGeometry.BonnetMyers.MetricParallel
+import LeanPool.PoincareGeometry.BonnetMyers.MetricVariable
+import LeanPool.PoincareGeometry.BonnetMyers.LocalEnergy
+import LeanPool.PoincareGeometry.BonnetMyers.GeodesicFlow
+import LeanPool.PoincareGeometry.BonnetMyers.GeodesicCutoff
+import LeanPool.PoincareGeometry.BonnetMyers.GeodesicFlowRegularity
+import LeanPool.PoincareGeometry.BonnetMyers.StrongNormalNeighborhood
+import LeanPool.PoincareGeometry.BonnetMyers.NormalNeighborhood
+import LeanPool.PoincareGeometry.BonnetMyers.GaussLemma
+import LeanPool.PoincareGeometry.BonnetMyers.GeodesicLength
+import LeanPool.PoincareGeometry.BonnetMyers.GlobalDistance
+import LeanPool.PoincareGeometry.BonnetMyers.MetricBridge
+import LeanPool.PoincareGeometry.BonnetMyers.LocalDistanceRealization
+import LeanPool.PoincareGeometry.BonnetMyers.LocalCompactness
+import LeanPool.PoincareGeometry.BonnetMyers.RiemannianHopfRinow
+import LeanPool.PoincareGeometry.BonnetMyers.RiemannianMinimizer
+import LeanPool.PoincareGeometry.BonnetMyers.SecondVariationGeometry
+import LeanPool.PoincareGeometry.BonnetMyers.CoordinateCurvature
+import LeanPool.PoincareGeometry.BonnetMyers.CoordinateSecondVariation
+import LeanPool.PoincareGeometry.BonnetMyers.BrokenVariation
+import LeanPool.PoincareGeometry.BonnetMyers.VariationIntegral
+import LeanPool.PoincareGeometry.BonnetMyers.BrokenVariationIntegral
+import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentRegularity
+import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentLog
+import LeanPool.PoincareGeometry.BonnetMyers.DistanceRegularity
+import LeanPool.PoincareGeometry.BonnetMyers.CornerRigidity
+import LeanPool.PoincareGeometry.BonnetMyers.NormalCornerRigidity
+import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentCorner
+import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentGluing
+import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentTwoSided
+import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentDense
+import LeanPool.PoincareGeometry.BonnetMyers.MetricSegmentSmooth
+import LeanPool.PoincareGeometry.BonnetMyers.LocalParallelNorm
+import LeanPool.PoincareGeometry.BonnetMyers.ParallelConnection
+import LeanPool.PoincareGeometry.BonnetMyers.GlobalParallel
+import LeanPool.PoincareGeometry.BonnetMyers.ParallelReflection
+import LeanPool.PoincareGeometry.BonnetMyers.TransportContinuation
+import LeanPool.PoincareGeometry.BonnetMyers.ParallelFieldContinuation
+import LeanPool.PoincareGeometry.BonnetMyers.GlobalParallelTransport
+import LeanPool.PoincareGeometry.BonnetMyers.ManifoldSineTest
+import LeanPool.PoincareGeometry.BonnetMyers.GeometricComparison
+import LeanPool.PoincareGeometry.BonnetMyers.CurvatureRegularity
+import LeanPool.PoincareGeometry.BonnetMyers.GeometricIndex
+import LeanPool.PoincareGeometry.BonnetMyers.GlobalIntrinsicGeodesic
+import LeanPool.PoincareGeometry.BonnetMyers.FiniteGeodesicCover
+import LeanPool.PoincareGeometry.BonnetMyers.GlobalParallelField
+import LeanPool.PoincareGeometry.BonnetMyers.MinimizingGeodesic
+import LeanPool.PoincareGeometry.BonnetMyers.GlobalSecondVariation
+import LeanPool.PoincareGeometry.BonnetMyers.GlobalIndexNonnegative
+import LeanPool.PoincareGeometry.BonnetMyers.Complete
+
+/-!
+# Independent Bonnet--Myers theorem
+
+The target `BonnetMyersEntry.completeStatement` is proved by
+`BonnetMyersEntry.completeStatement_proved`. The former upstream wrappers are
+superseded.
+-/
