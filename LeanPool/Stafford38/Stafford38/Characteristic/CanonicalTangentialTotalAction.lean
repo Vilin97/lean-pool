@@ -26,7 +26,7 @@ open Stafford38.WeylQuotientTransport
 
 noncomputable section
 
-variable (k : Type*) [Field k] [Algebra ℚ k]
+variable (k : Type*) [Field k]
 variable (n N : ℕ) (d : PresentedWeyl k (n + 1))
 
 /-- The canonical filtered two-term complex associated with the Weyl element. -/

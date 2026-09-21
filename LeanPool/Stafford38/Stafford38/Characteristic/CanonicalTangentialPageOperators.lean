@@ -207,6 +207,7 @@ private theorem rightMul_lower_of_orderPiece
     rw [map_zero]
     exact Submodule.zero_mem _
 
+omit [Algebra ℚ k] in
 theorem tangential_commutator_lower
     (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (i j : Fin n ⊕ Fin n) (p : ℤ)
@@ -267,9 +268,11 @@ theorem tangential_commutator_lower
     have hc'' : oldGenerator k n (.inr j) * oldGenerator k n (.inr i) -
         oldGenerator k n (.inr i) * oldGenerator k n (.inr j) ∈
         orderPiece k (n + 1) 1 := by
-      convert hc' using 1 <;> simp [Stafford.commutator]
-    convert (rightMul_lower_of_orderPiece k n N d _ hc'' hz) using 1 <;>
-      norm_num [tangentialDegree] <;> ring
+      convert hc' using 1
+      simp [Stafford.commutator]
+    convert (rightMul_lower_of_orderPiece k n N d _ hc'' hz) using 1
+    norm_num [tangentialDegree]
+    ring
 
 end
 end Stafford38.Characteristic.CanonicalTangentialPageOperators

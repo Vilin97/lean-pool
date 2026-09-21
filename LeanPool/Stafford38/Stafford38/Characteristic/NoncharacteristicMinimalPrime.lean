@@ -83,8 +83,8 @@ private theorem iterPderiv_eq_factorial_of_homogeneous
         have harg :
             ((Finsupp.single i m + Finsupp.single i 1) + Finsupp.single i r) =
               Finsupp.single i (m + (r + 1)) := by
-          ext q
-          by_cases hq : q = i <;> simp [hq] <;> omega
+          simp only [Finsupp.single_add]
+          ac_rfl
         rw [harg]
         rw [show m + (r + 1) = m + 1 + r by omega,
           Nat.descFactorial_succ]
@@ -94,8 +94,7 @@ private theorem iterPderiv_eq_factorial_of_homogeneous
         have hcarg :
             Finsupp.single i m + (Finsupp.single i 1 + Finsupp.single i r) =
               Finsupp.single i m + (Finsupp.single i r + Finsupp.single i 1) := by
-          ext q
-          by_cases hq : q = i <;> simp [hq] <;> omega
+          ac_rfl
         rw [hcarg]
         ring
   have hzero : iterPderiv i N f =

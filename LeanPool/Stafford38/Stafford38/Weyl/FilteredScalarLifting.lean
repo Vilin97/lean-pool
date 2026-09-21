@@ -106,9 +106,9 @@ theorem baseChange_inf_eq [SMulCommClass R S S]
         simp
       · simp
       · intro a b _ _ ha hb
-        simpa only [map_add, ha, hb, add_zero] using rfl
+        simp only [map_add, ha, hb, add_zero]
       · intro c a _ ha
-        simpa only [map_smul, ha, smul_zero] using rfl
+        simp only [map_smul, ha, smul_zero]
     have hpRange : z ∈ LinearMap.range (p.subtype.baseChange S) := by
       rw [range_baseChange_subtype p]
       exact hz.1

@@ -137,7 +137,7 @@ theorem algebraicallyClosedCanonicalSupportVanishing_of_generalCoisotropic
       rw [← orderCharacteristicSupport_eq_zeroLocus_reduced k I]
       exact hp
     rw [htop] at hpzero
-    simpa using hpzero
+    simp at hpzero
   have hrad : J.IsRadical := by
     simpa only [J] using reducedOrderSupportIdeal_isRadical k I
   have hhom : J.IsHomogeneous
@@ -191,7 +191,8 @@ theorem algebraicallyClosedCanonicalSupportVanishing_of_generalCoisotropic
       funext i
       rcases i with i | i
       · simp [axisPoint]
-      · simp [axisPoint, Sum.inr.injEq] <;> rfl
+      · simp [axisPoint, Sum.inr.injEq]
+        rfl
     rw [hsplit] at heval
     simpa only [← MvPolynomial.aeval_def, MvPolynomial.aeval_eq_eval] using
       heval.symm.trans hcanonical

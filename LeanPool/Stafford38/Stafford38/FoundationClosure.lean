@@ -36,19 +36,19 @@ universe u
 
 theorem canonicalNoncharacteristicSupportAvoidance :
     PaperInputs.CanonicalNoncharacteristicSupportAvoidance.{u} := by
-  intro k _ _ _ n N d hN hd
+  intro k _ _ _ n N d _ hd
   exact Characteristic.CanonicalKoszulContradiction.canonical_support_avoidance
-    k n N d hN hd
+    k n N d hd
 
 /-- The canonical noncharacteristic, residue-symbol, and visible-divisor inputs for the global
 assembly. -/
-def inputs : PaperInputs.Inputs.{u} where
+theorem inputs : PaperInputs.Inputs.{u} := {
   noncharacteristicApplication := canonicalNoncharacteristicSupportAvoidance
   residueExtensionSymbolControl :=
     canonicalResidueExtensionSymbolControl_of_associatedGradedRadical
       Characteristic.GabberGlobalAssembly.weylAssociatedGradedRadicalInvolutivity
   higherDimensionalVisibleDivisorFrameProduction :=
-    higherDimensionalCanonicalVisibleDivisorFrameProduction
+    higherDimensionalCanonicalVisibleDivisorFrameProduction }
 
 theorem canonicalSupportVanishingViaGeneralCoisotropic :
     UniversalAssembly.CanonicalSupportVanishing.{u} := by

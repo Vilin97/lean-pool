@@ -73,7 +73,7 @@ theorem coordinate_axis_mem_projective_conormal_directions
     (havoid : ∀ y ∈ MvPolynomial.zeroLocus k I.asIdeal, y ⟨0, hm⟩ ≠ 0) :
     Projectivization.mk k
         (fun i : Fin m => if i = ⟨0, hm⟩ then (1 : k) else 0)
-        (by intro h; have := congrFun h ⟨0, hm⟩; simpa using this) ∈
+        (by intro h; have := congrFun h ⟨0, hm⟩; simp at this) ∈
       projectiveHomogeneousClosure
         (projectivizedDirectionSet (smoothConormalDirectionSet I.asIdeal)) := by
   exact mk_mem_projectiveHomogeneousClosure_of_fibre_zeroLocus I.asIdeal _ _

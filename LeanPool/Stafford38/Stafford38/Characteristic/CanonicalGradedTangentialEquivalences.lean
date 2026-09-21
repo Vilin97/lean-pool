@@ -160,7 +160,7 @@ theorem targetGradedEquiv_range :
   · rintro ⟨a, rfl⟩
     refine ⟨tangentialDrop k n N d 0 ((sourceGradedEquiv k n N d).symm a),
       ⟨(sourceGradedEquiv k n N d).symm a, rfl⟩, ?_⟩
-    simpa only [LinearEquiv.coe_toLinearMap, gradedEquiv_drop,
+    simp only [LinearEquiv.coe_toLinearMap, gradedEquiv_drop,
       LinearEquiv.apply_symm_apply]
 
 /-- The identification of the degree-zero drop cokernel with the cokernel of the tangential

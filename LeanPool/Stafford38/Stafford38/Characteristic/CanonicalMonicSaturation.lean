@@ -288,6 +288,7 @@ theorem coordinate_commutator_eq_neg_one_degree_one
     simpa [presentedStrictLowerPiece] using hlower
   exact sub_eq_zero.mp hdiff
 
+omit [Algebra ℚ k] in
 /-- Every canonical degree-one monic presentation is already the unit right
 ideal.  Both terms in the commutator are literal right-ideal elements. -/
 theorem canonicalRightIdeal_eq_top_degree_one
@@ -309,6 +310,7 @@ theorem canonicalRightIdeal_eq_top_degree_one
     simpa using (CanonicalIdeal k n 1 d).neg_mem hneg
   simpa using (CanonicalIdeal k n 1 d).smul_mem (MulOpposite.op z) hone
 
+omit [Algebra ℚ k] in
 /-- The ordinary coordinate action on the degree-one canonical quotient is
 injective.  This is the first half of the general filtered interface. -/
 theorem canonical_quotient_coordinate_injective_degree_one
@@ -325,6 +327,7 @@ theorem canonical_quotient_coordinate_injective_degree_one
   rw [canonicalRightIdeal_eq_top_degree_one k n hd]
   exact Submodule.mem_top
 
+omit [Algebra ℚ k] in
 /-- Strict lower-order coordinate preimages in degree one.  Together with
 `canonical_quotient_coordinate_injective_degree_one`, this instantiates the
 general filtered reduction and makes the unit-ideal case a reusable base
@@ -339,6 +342,7 @@ theorem canonical_strictLowerCoordinatePreimages_degree_one
   rw [canonicalRightIdeal_eq_top_degree_one k n hd]
   exact Submodule.mem_top
 
+omit [Algebra ℚ k] in
 /-- The canonical order initial ideal is the unit ideal in degree one. -/
 theorem canonical_orderInitialIdeal_eq_top_degree_one
     (n : ℕ) {d : PresentedWeyl k (n + 1)}
@@ -386,6 +390,7 @@ theorem canonical_orderCharacteristicSupport_eq_empty_degree_one
     (CanonicalIdeal k n 1 d)).2
   exact canonical_orderInitialIdeal_eq_top_degree_one k n hd
 
+omit [Algebra ℚ k] in
 /-- The degree-one case yields the literal fixed-source Stafford certificate. -/
 theorem exists_fixedSource_certificate_degree_one
     (n : ℕ) {d : PresentedWeyl k (n + 1)}

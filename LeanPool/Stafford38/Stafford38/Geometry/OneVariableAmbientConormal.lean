@@ -71,9 +71,7 @@ private theorem finOnePolynomialEquiv_pderiv
   | mul_X p i hp =>
     fin_cases i
     simp only [MvPolynomial.pderiv_mul, MvPolynomial.pderiv_X,
-      Pi.single_apply,   map_add, map_mul,
-
-      Polynomial.derivative_mul]
+      Pi.single_apply, map_add, map_mul, Polynomial.derivative_mul]
     rw [hp]
     simp [finOnePolynomialEquiv]
 

@@ -109,6 +109,8 @@ theorem coeff_normalForm_eq_zero_of_exponent_gt {n N : ℕ}
       Finsupp.single_eval_le_sum m (g := id) rfl (fun _ => Nat.zero_le _) t
   omega
 
+/-- A symplectic change of coordinates and a nonzero scalar that make the pure PBW coefficient
+equal to one while preserving the Bernstein degree bound. -/
 structure NormalizedPBWChartData {n : ℕ} (t : PhaseVar n) (N : ℕ)
     (d : PresentedWeyl k n) where
   /-- The symplectic matrix defining the normalized coordinate change. -/

@@ -32,10 +32,12 @@ open Stafford38.CharacteristicAssociatedGradedModule
 open Stafford38.WeylIteratedEquivalence
 open Stafford38.WeylPBWMonicBridge
 
+open CanonicalSupportAvoidanceFromCokernel
+
 noncomputable section
 variable (k : Type*) [Field k] [CharZero k] [Algebra ℚ k]
 variable (n N : ℕ) (d : PresentedWeyl k (n + 1))
-variable (hN : 0 < N) (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
+variable (hd : IsPBWMonicAt k (.inr (0 : Fin (n + 1))) N d)
 
 attribute [local instance] sourceModule targetModule
 
@@ -52,7 +54,7 @@ local instance coefficientTower :
     IsScalarTower (T k n) (SymbolRing k (n + 1)) (Graded k n N d) :=
   IsScalarTower.of_compHom (T k n) (SymbolRing k (n + 1)) (Graded k n N d)
 
-include hN hd in
+include hd in
 /-- At a minimal tangential support prime, the actual page Euler inequality
 contradicts the strict coordinate Koszul inequality. -/
 theorem no_minimal_coordinate_cokernel_support
@@ -89,7 +91,7 @@ theorem no_minimal_coordinate_cokernel_support
   exact (not_lt_of_ge hle) hlt
 
 
-include hN hd in
+include hd in
 theorem coordinate_cokernel_subsingleton :
     Subsingleton (Graded k n N d ⧸
       (oldCoordinateMap (k := k) n (Graded k n N d)).range) := by
@@ -101,9 +103,9 @@ theorem coordinate_cokernel_subsingleton :
   have : Nontrivial U := not_subsingleton_iff_nontrivial.mp h
   obtain ⟨q, hqmem, hqmin⟩ :=
     MinimalSupportExistence.exists_minimal_support_prime (R := T k n) (U := U)
-  exact no_minimal_coordinate_cokernel_support k n N d hN hd q hqmem hqmin
+  exact no_minimal_coordinate_cokernel_support k n N d hd q hqmem hqmin
 
-include hN hd in
+include hd in
 theorem coordinate_quotSMulTop_subsingleton :
     Subsingleton (QuotSMulTop
       (MvPolynomial.X (.inl (0 : Fin (n + 1))) : SymbolRing k (n + 1))
@@ -113,7 +115,7 @@ theorem coordinate_quotSMulTop_subsingleton :
   let x : C := MvPolynomial.X (.inl (0 : Fin (n + 1)))
   let f : Module.End C E := LinearMap.lsmul C E x
   have hf : oldCoordinateMap (k := k) n E = f.restrictScalars (T k n) := rfl
-  have hz := coordinate_cokernel_subsingleton k n N d hN hd
+  have hz := coordinate_cokernel_subsingleton k n N d hd
   rw [hf, LinearMap.range_restrictScalars] at hz
   have : Subsingleton (E ⧸ f.range) :=
     (Submodule.Quotient.restrictScalarsEquiv (T k n) f.range).toEquiv.subsingleton_congr.mp hz
@@ -126,7 +128,7 @@ theorem coordinate_quotSMulTop_subsingleton :
   rw [← hrange]
   infer_instance
 
-include hN hd in
+include hd in
 theorem canonical_support_avoidance :
     Disjoint
       (CharacteristicTransposedFilteredModuleSupport.transposedOrderAssociatedGradedSupport k
@@ -134,8 +136,8 @@ theorem canonical_support_avoidance :
           (presentedCoordinate k n) d N))
       (PrimeSpectrum.zeroLocus
         ({MvPolynomial.X (.inl (0 : Fin (n + 1)))} : Set (SymbolRing k (n + 1)))) :=
-  CanonicalSupportAvoidanceFromCokernel.canonical_support_avoidance_of_coordinate_cokernel_subsingleton
-    k n N d (coordinate_quotSMulTop_subsingleton k n N d hN hd)
+  canonical_support_avoidance_of_coordinate_cokernel_subsingleton
+    k n N d (coordinate_quotSMulTop_subsingleton k n N d hd)
 
 
 end

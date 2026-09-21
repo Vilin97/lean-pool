@@ -180,7 +180,7 @@ theorem zeroSectionIdealOne_not_isPoisson
   rcases hnegone with ⟨a, ha⟩
   have ha0 := congrArg
     (MvPolynomial.eval (fun _ : PhaseVar 1 => (0 : k))) ha
-  simpa using ha0
+  simp at ha0
 
 
 end

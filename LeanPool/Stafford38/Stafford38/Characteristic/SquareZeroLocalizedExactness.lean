@@ -409,7 +409,7 @@ theorem exists_minimalPrimeLocalizedExactnessAndFiniteLength
   obtain ⟨h, hexact⟩ := exists_localizedExactnessFor D P.primeCompl
   refine ⟨h, hexact, ?_⟩
   exact
-    Characteristic.MinimalPrimeFiniteLengthLocalization.localizedModule_nontrivial_and_isFiniteLength
+    MinimalPrimeFiniteLengthLocalization.localizedModule_nontrivial_and_isFiniteLength
     P hP
 
 

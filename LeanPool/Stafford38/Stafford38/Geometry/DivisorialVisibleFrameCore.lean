@@ -418,6 +418,8 @@ def Stage5Obligation : Prop :=
       letI : Algebra E V.toSubring := (coeffHom E V hEV).toAlgebra
       Module.Finite E (ResidueField V.toSubring)
 
+/-- The normalization, residue-algebraicity, and finite coefficient-field obligations used
+to assemble a visible divisor frame. -/
 structure AssemblyScaffold : Prop where
   stage2 : Stage2Obligation.{u}
   stage4 : Stage4Obligation.{u, v}

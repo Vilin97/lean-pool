@@ -34,7 +34,7 @@ noncomputable section
 
 universe u
 
-variable (k : Type u) [Field k] [Algebra ℚ k]
+variable (k : Type u) [Field k]
 
 private abbrev CI (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   presentedCanonicalRightIdeal (k := k) n N d
@@ -42,7 +42,6 @@ private abbrev CI (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
 private abbrev K (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   canonicalFilteredTwoTerm k n N d
 
-omit [Algebra ℚ k] in
 theorem G_at_neg
     (n N m : ℕ) (d : PresentedWeyl k (n + 1)) :
     (K k n N d).G (-(m : ℤ)) =
@@ -140,7 +139,6 @@ def zeroPageTargetLinearEquivOrderGradedPiece
     ext x
     simp [e, hB])
 
-omit [Algebra ℚ k] in
 theorem zeroPage_source_subsingleton_of_pos
     (n N : ℕ) (p : ℤ) (d : PresentedWeyl k (n + 1)) (hp : 0 < p) :
     Subsingleton ((K k n N d).SourcePage 0 p) := by
@@ -156,7 +154,6 @@ theorem zeroPage_source_subsingleton_of_pos
           ((K k n N d).cycles 0 p).subtype) by rfl, hcycles]
   infer_instance
 
-omit [Algebra ℚ k] in
 theorem zeroPage_target_subsingleton_of_pos
     (n N : ℕ) (p : ℤ) (d : PresentedWeyl k (n + 1)) (hp : 0 < p) :
     Subsingleton ((K k n N d).TargetPage 0 p) := by
@@ -168,7 +165,6 @@ theorem zeroPage_target_subsingleton_of_pos
           ((K k n N d).G p).subtype) by rfl, hG]
   infer_instance
 
-omit [Algebra ℚ k] in
 theorem zeroPage_drop_representative
     (n N m : ℕ) (d : PresentedWeyl k (n + 1))
     (x : (K k n N d).cycles 0 (-(m : ℤ))) :

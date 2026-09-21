@@ -104,8 +104,7 @@ theorem sum_sourceActionCoefficients_smul
     (i : Fin (r + 1)) :
     (∑ j, sourceActionCoefficients (Abar := Abar) b T i j • b j) =
       T (b i) := by
-  simpa [sourceActionCoefficients, IsScalarTower.algebraMap_smul]
-    using b.sum_repr (T (b i))
+  simp [sourceActionCoefficients]
 
 /-- Lift the source-row coefficients entrywise through the parameter
 reduction. -/

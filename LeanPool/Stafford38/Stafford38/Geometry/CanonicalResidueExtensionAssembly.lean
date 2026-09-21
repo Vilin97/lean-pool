@@ -139,7 +139,7 @@ theorem canonical_fibrePolynomial_eval_extensionAxis
     funext i
     rcases i with i | i
     · simp [axisPoint]
-    · simp [axisPoint] <;> rfl
+    · (simp [axisPoint]; rfl)
   rw [← hP] at hcanonical
   have heval := eval₂_fibreLift (K := k) P
     (fun _ : Fin (n + 1) ↦ (0 : k))

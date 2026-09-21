@@ -245,7 +245,7 @@ the desired support exclusion is equivalent to strict associated-graded
 coordinate surjectivity, while ordinary coordinate surjectivity was proved
 above from monicity. -/
 theorem transposedSupport_disjoint_axis_iff_gradedCoordinate_surjective
-    [Algebra ℚ k] (n N : ℕ) (d : PresentedWeyl k (n + 1)) :
+     (n N : ℕ) (d : PresentedWeyl k (n + 1)) :
     Disjoint
         (transposedOrderAssociatedGradedSupport k (CanonicalIdeal k n N d))
         (AxisZeroLocus k n) ↔
@@ -273,7 +273,7 @@ theorem transposedSupport_disjoint_axis_iff_transposedGradedCoordinate_surjectiv
 transposed support avoidance produces the canonical order-zero predecessor of
 the quotient unit.  No D-module theorem is used in this conversion. -/
 theorem strictUnitCoordinatePreimage_of_transposedSupport_disjoint_axis
-    [Algebra ℚ k] (n N : ℕ) (d : PresentedWeyl k (n + 1))
+     (n N : ℕ) (d : PresentedWeyl k (n + 1))
     (havoid : Disjoint
       (transposedOrderAssociatedGradedSupport k (CanonicalIdeal k n N d))
       (AxisZeroLocus k n)) :

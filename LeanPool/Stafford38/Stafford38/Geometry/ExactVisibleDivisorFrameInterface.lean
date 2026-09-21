@@ -193,7 +193,7 @@ def HasNormalizedCompatibleVisibleFrame
 
 /-- The exact witness above forgets to the pre-existing terminal input. -/
 theorem hasVisibleDivisorFrame_of_normalizedCompatibleVisibleFrame
-    [CharZero k]
+
     (P : PrimeSpectrum (MvPolynomial (Fin m) k)) (hm : 0 < m)
     (h : HasNormalizedCompatibleVisibleFrame P hm) :
     HasVisibleDivisorFrame P hm := by

@@ -33,7 +33,7 @@ noncomputable section
 
 universe u
 
-variable (k : Type u) [Field k] [Algebra ℚ k]
+variable (k : Type u) [Field k]
 
 section ReindexNonpositive
 
@@ -65,7 +65,6 @@ private noncomputable def natDirectSumToNonpositive
   DirectSum.toModule k ℕ (DirectSum ℤ A) (fun m =>
     (DirectSum.lof k ℤ A (negIndex m)).comp (e m).symm.toLinearMap)
 
-omit [Algebra ℚ k] in
 @[simp]
 private theorem natDirectSumToNonpositive_lof
     (e : ∀ m : ℕ, A (negIndex m) ≃ₗ[k] B m) (m : ℕ) (x : B m) :
@@ -128,7 +127,6 @@ private noncomputable def nonpositiveDirectSumLinearEquiv
         exact (e (n + 1)).symm_apply_apply
           (show A (negIndex (n + 1)) from x)
 
-omit [Algebra ℚ k] in
 @[simp]
 private theorem nonpositiveDirectSumLinearEquiv_lof
     (e : ∀ m : ℕ, A (negIndex m) ≃ₗ[k] B m)

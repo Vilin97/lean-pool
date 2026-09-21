@@ -73,15 +73,15 @@ include S in
 theorem s38_localized_differential
     (hS : S38 (PresentedWeyl k n)) : S38 (D (k := k) B) := by
   apply s38_of_leftUnitClearing hS
-  intro q hq
-  obtain ⟨s, a, ha⟩ := localized_differential_left_denominator_clearing S B q
-  let b : B := algebraMap (A (k := k) (n := n)) B (s : A)
-  have hb : IsUnit b := IsLocalization.map_units B s
-  refine ⟨a, multiplicationD (k := k) (B := B) b,
-    multiplicationD_isUnit (k := k) (B := B) hb, ?_⟩
-  apply Subtype.ext
-  change multiplication (k := k) b * (q : Module.End k B) = weylEnd S B a
-  exact ha
+  · intro q hq
+    obtain ⟨s, a, ha⟩ := localized_differential_left_denominator_clearing S B q
+    let b : B := algebraMap (A (k := k) (n := n)) B (s : A)
+    have hb : IsUnit b := IsLocalization.map_units B s
+    refine ⟨a, multiplicationD (k := k) (B := B) b,
+      multiplicationD_isUnit (k := k) (B := B) hb, ?_⟩
+    apply Subtype.ext
+    change multiplication (k := k) b * (q : Module.End k B) = weylEnd S B a
+    exact ha
 
 theorem s38_principal_localized_differential
     (f : A (k := k) (n := n))
@@ -146,7 +146,7 @@ theorem s38_partial_laurent_differential
     [Algebra (A (k := k) (n := n)) B] [Algebra k B]
     [IsScalarTower k (A (k := k) (n := n)) B]
     [IsLocalization (Submonoid.powers
-      (J.prod (fun i => (MvPolynomial.X i : A (k := k) (n := n)))) ) B] :
+      (J.prod (fun i => (MvPolynomial.X i : A (k := k) (n := n))))) B] :
     S38 (D (k := k) B) :=
   s38_unconditional_localized_differential
     (Submonoid.powers (J.prod (fun i =>

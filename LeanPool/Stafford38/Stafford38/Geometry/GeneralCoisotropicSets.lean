@@ -137,7 +137,7 @@ theorem exists_zero_base_coordinate_of_isFibreConical
     have hqzero : q ∈ MvPolynomial.zeroLocus k J := by
       exact MvPolynomial.zeroLocus_vanishingIdeal_le W hq
     rw [htop] at hqzero
-    simpa using hqzero
+    simp at hqzero
   have hrad : J.IsRadical := by
     simpa only [J] using vanishingIdeal_isRadical W
   have hhom : J.IsHomogeneous (orderDecomposition (k := k) (n := m)) := by

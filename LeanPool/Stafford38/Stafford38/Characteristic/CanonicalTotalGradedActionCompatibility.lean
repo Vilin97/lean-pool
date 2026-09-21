@@ -38,7 +38,7 @@ open Stafford38.CanonicalAxisAvoidanceConsumer
 noncomputable section
 
 universe u
-variable (k : Type u) [Field k] [Algebra ℚ k]
+variable (k : Type u) [Field k]
 
 private abbrev CI (n N : ℕ) (d : PresentedWeyl k (n + 1)) :=
   presentedCanonicalRightIdeal (k := k) n N d
@@ -70,7 +70,6 @@ def oldGeneratorOrderPiece (n : ℕ) (i : Fin n ⊕ Fin n) :
           tangentialDegree]
       · contradiction
 
-omit [Algebra ℚ k] in
 theorem principal_oldGenerator (n : ℕ) (i : Fin n ⊕ Fin n) :
     (principalComponentOnPiece k (@orderWeight (n + 1)) (tangentialDegree i)
       (oldGeneratorOrderPiece k n i) : SymbolRing k (n + 1)) =
@@ -318,7 +317,6 @@ theorem targetEquiv_intertwines_generator (n N : ℕ) (d : PresentedWeyl k (n + 
 def coordinateOrderPiece (n : ℕ) : orderPiece k (n + 1) 0 :=
   ⟨presentedCoordinate k n, presentedCoordinate_mem_orderPiece_zero k n⟩
 
-omit [Algebra ℚ k] in
 theorem principal_coordinate (n : ℕ) :
     (principalComponentOnPiece k (@orderWeight (n + 1)) 0
       (coordinateOrderPiece k n) : SymbolRing k (n + 1)) =
