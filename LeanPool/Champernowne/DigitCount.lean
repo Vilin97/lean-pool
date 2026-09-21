@@ -253,10 +253,10 @@ counted — occurrences at the head of a number are dropped, which is
 sound for a lower bound and uniform in `w` (a leading-zero `w` simply
 never occurs there). -/
 
-/-- Convert the block predicate at interior position `j` to the arithmetic
+/-- Convert the block predicate at position `j` to the arithmetic
 predicate, on a partial cohort of `(K+1)`-digit numbers. -/
 theorem filter_blockAt_partial_congr {b : ℕ} (hb : 1 < b) (K t j : ℕ)
-    {w : List ℕ} (hw : ∀ d ∈ w, d < b) (_hj : 0 < j) (hjk : j + w.length ≤ K + 1)
+    {w : List ℕ} (hw : ∀ d ∈ w, d < b) (hjk : j + w.length ≤ K + 1)
     (hAt : b ^ K + t ≤ b ^ (K + 1)) :
     (Finset.Ico (b ^ K) (b ^ K + t)).filter
       (fun n => ((bigDigits b n).drop j).take w.length = w)
@@ -276,7 +276,7 @@ theorem le_card_blockAt_partial {b : ℕ} (hb : 1 < b) (K t j : ℕ)
     t / b ^ w.length ≤ ((Finset.Ico (b ^ K) (b ^ K + t)).filter
       (fun n => ((bigDigits b n).drop j).take w.length = w)).card
       + b ^ (K + 1 - j - w.length) := by
-  rw [filter_blockAt_partial_congr hb K t j hw hj hjk hAt]
+  rw [filter_blockAt_partial_congr hb K t j hw hjk hAt]
   have hD : Nat.ofDigits b w.reverse < b ^ w.length := by
     have h := Nat.ofDigits_lt_base_pow_length hb
       (fun d hd => hw d (List.mem_reverse.mp hd))
