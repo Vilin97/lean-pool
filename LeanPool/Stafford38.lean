@@ -347,9 +347,9 @@ import LeanPool.Stafford38.Stafford38.Weyl.Symplectic
 import LeanPool.Stafford38.Stafford38.Weyl.Transposition
 import LeanPool.Stafford38.Stafford38.Weyl.TranspositionFiltration
 import LeanPool.Stafford38.Stafford38.Weyl.Universal
-import LeanPool.Stafford38.proofs.stafford38_reduction
-import LeanPool.Stafford38.proofs.weyl_pure_power
-import LeanPool.Stafford38.proofs.weyl_symplectic
+import LeanPool.Stafford38.Proofs.Stafford38Reduction
+import LeanPool.Stafford38.Proofs.WeylPurePower
+import LeanPool.Stafford38.Proofs.WeylSymplectic
 
 /-!
 # Stafford 3.8
@@ -357,7 +357,7 @@ import LeanPool.Stafford38.proofs.weyl_symplectic
 Source: url:https://github.com/itpplasma/stafford38-formal
 Authors: Christopher Albert
 Status: verified
-Main declarations: `Stafford38.universalStatement`, `Stafford38.universalFixedSourceStatement`
+Main declarations: `Stafford38.universalStatement`
 Tags: weyl-algebras, noncommutative-algebra, bernstein-degree
 MSC: 16S32
 -/

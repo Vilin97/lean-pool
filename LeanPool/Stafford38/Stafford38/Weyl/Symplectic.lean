@@ -5,7 +5,7 @@ Authors: Christopher Albert
 -/
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.proofs.weyl_symplectic
+import LeanPool.Stafford38.Proofs.WeylSymplectic
 
 /-!
 # General-rank linear symplectic changes of Weyl generators

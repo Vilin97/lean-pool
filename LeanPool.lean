@@ -6707,6 +6707,9 @@ import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Tower
 import LeanPool.Stafford38.AlgebraicAnalysis.Polynomial.DistinguishedVariable
 import LeanPool.Stafford38.AlgebraicAnalysis.RingTheory.TwoGeneratorIdentity
 import LeanPool.Stafford38.FixedSourceSolution
+import LeanPool.Stafford38.Proofs.Stafford38Reduction
+import LeanPool.Stafford38.Proofs.WeylPurePower
+import LeanPool.Stafford38.Proofs.WeylSymplectic
 import LeanPool.Stafford38.Solution
 import LeanPool.Stafford38.Stafford38
 import LeanPool.Stafford38.Stafford38.CanonicalSupportVanishingReduction
@@ -6978,9 +6981,6 @@ import LeanPool.Stafford38.Stafford38.Weyl.Symplectic
 import LeanPool.Stafford38.Stafford38.Weyl.Transposition
 import LeanPool.Stafford38.Stafford38.Weyl.TranspositionFiltration
 import LeanPool.Stafford38.Stafford38.Weyl.Universal
-import LeanPool.Stafford38.proofs.stafford38_reduction
-import LeanPool.Stafford38.proofs.weyl_pure_power
-import LeanPool.Stafford38.proofs.weyl_symplectic
 import LeanPool.SteinhausThreeGap
 import LeanPool.SteinhausThreeGap.Basic
 import LeanPool.SumDifferenceExponent

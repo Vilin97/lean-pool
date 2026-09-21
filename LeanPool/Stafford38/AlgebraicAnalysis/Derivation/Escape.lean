@@ -146,7 +146,6 @@ lemma regular_action_injective [CharZero E]
   exact D.normal.map_zero
 
 /-- One commutator lowers a nonconstant PBW polynomial's degree. -/
-@[nolint unusedArguments]
 lemma ad_degree_reduction [CharZero E] {p : Polynomial E}
     (hpositive : p.natDegree ≠ 0) :
     (derivative p).natDegree < p.natDegree ∧

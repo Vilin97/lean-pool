@@ -55,8 +55,6 @@ lemma rightPBWCombination_term_as_normalForm
         (Polynomial.C b.unop)) := by
   rw [rightPBWMonomial, normalOre_op_smul_def, ← normalForm_C,
     ← normalForm_mul]
-
-@[nolint unusedArguments]
 lemma rightPBWCombination_finsupp_as_normalForm
     [Nontrivial B] (D : OreDivisionDerivation B) (c : ℕ →₀ Bᵐᵒᵖ) :
     rightPBWCombination D c =
@@ -229,8 +227,6 @@ theorem normalForm_mem_rightPBWWindow_of_degree_lt
     normalForm D p ∈ rightPBWWindow D n := by
   simpa [rightPBWWindow, rightPBWMonomial, rightCoefficientWindow] using
     (normalForm_mem_rightCoefficientWindow_of_degree_lt D p n hp)
-
-@[nolint unusedArguments]
 theorem rightPBWWindow_finite
     [Nontrivial B] (D : OreDivisionDerivation B) (n : ℕ) :
     Module.Finite Bᵐᵒᵖ (rightPBWWindow D n) := by

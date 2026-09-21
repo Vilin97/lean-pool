@@ -45,8 +45,6 @@ theorem localizedModule_isLocalizedOverBase :
       (LocalizedModule.mkLinearMap SC E) := by
     infer_instance
   exact IsLocalizedModule.restrictScalars S (LocalizedModule.mkLinearMap SC E)
-
-@[nolint unusedArguments]
 theorem localizedModule_isLocalizedOverCoefficient :
     IsLocalizedModule SC (LocalizedModule.mkLinearMap SC E) := by
   infer_instance

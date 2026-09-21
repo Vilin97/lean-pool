@@ -19,8 +19,6 @@ namespace AlgebraicAnalysis.MinimalSupportExistence
 noncomputable section
 
 variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
-
-@[nolint unusedArguments]
 theorem exists_minimal_support_prime
     [IsNoetherianRing R] [Module.Finite R U] [Nontrivial U] :
     ∃ q : PrimeSpectrum R,

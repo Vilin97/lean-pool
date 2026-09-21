@@ -9987,7 +9987,6 @@ projects:
     provenance: AI
     main_declarations:
     - Stafford38.universalStatement
-    - Stafford38.universalFixedSourceStatement
     main_results:
     - declaration: Stafford38.universalStatement
       informal: For every characteristic-zero field, every Weyl algebra rank, and every

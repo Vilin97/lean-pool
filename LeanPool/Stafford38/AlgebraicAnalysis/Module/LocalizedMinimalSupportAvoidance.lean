@@ -74,7 +74,6 @@ theorem annihilator_localizedModule
       simp
 
 /-- Minimal-prime avoidance survives localization. -/
-@[nolint unusedArguments]
 theorem localized_minimalPrime_avoids
     [IsNoetherianRing C] [Module.Finite C E]
     (S : Submonoid C) (x : C)

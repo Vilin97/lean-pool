@@ -5,7 +5,7 @@ Authors: Christopher Albert
 -/
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
-import LeanPool.Stafford38.proofs.weyl_pure_power
+import LeanPool.Stafford38.Proofs.WeylPurePower
 
 /-!
 # The positive Euler residue in the canonical right ideal

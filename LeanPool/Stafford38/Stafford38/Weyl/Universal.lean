@@ -6,7 +6,7 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.AlgebraicAnalysis.Ore.Associativity
 import LeanPool.Stafford38.Stafford38.Ore.ScalarAlgebra
-import LeanPool.Stafford38.proofs.weyl_symplectic
+import LeanPool.Stafford38.Proofs.WeylSymplectic
 
 /-!
 # Universal property of the presented Weyl algebra

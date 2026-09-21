@@ -154,7 +154,6 @@ theorem map_annihilator_le_localized_annihilator
 
 /-- A power of the localized maximal ideal annihilates the localized finite
 module. -/
-@[nolint unusedArguments]
 theorem exists_maximalIdeal_pow_le_localized_annihilator
     [IsNoetherianRing R] [Module.Finite R G]
     (P : Ideal R) [P.IsPrime]

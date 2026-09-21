@@ -27,8 +27,6 @@ variable {R : Type u} {E : Type v}
 variable [CommRing R] [AddCommGroup E] [Module R E]
 
 private abbrev scalarEnd (x : R) : E →ₗ[R] E := LinearMap.lsmul R E x
-
-@[nolint unusedArguments]
 theorem residual_nontrivial_of_support
     [IsNoetherianRing R] [Module.Finite R E]
     (x : R) (n : ℕ) (p q : PrimeSpectrum R)

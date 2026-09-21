@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Albert
 -/
 
-import LeanPool.Stafford38.proofs.stafford38_reduction
-import LeanPool.Stafford38.proofs.weyl_symplectic
+import LeanPool.Stafford38.Proofs.Stafford38Reduction
+import LeanPool.Stafford38.Proofs.WeylSymplectic
 
 /-!
 # The universal Stafford 3.8 target

@@ -55,14 +55,12 @@ variable {R : Type u} [Ring R] [Nontrivial R] [NoZeroDivisors R]
 variable {S : Submonoid R} [OreSet S]
 
 /-- Every element of an Ore localization has an explicit numerator/denominator form. -/
-@[nolint unusedArguments]
 theorem exists_fraction (x : R[S⁻¹]) :
     ∃ r : R, ∃ s : S, x = r /ₒ s := by
   induction x using OreLocalization.ind with
   | _ r s => exact ⟨r, s, rfl⟩
 
 /-- A nonzero localized element has a representative with nonzero numerator. -/
-@[nolint unusedArguments]
 theorem exists_ne_zero_numerator {x : R[S⁻¹]} (hx : x ≠ 0) :
     ∃ r : R, r ≠ 0 ∧ ∃ s : S, x = r /ₒ s := by
   induction x using OreLocalization.ind with
@@ -87,7 +85,6 @@ theorem numerator_injective (hS : S ≤ nonZeroDivisorsRight R) :
     exact (mul_eq_zero.mp hsy).resolve_left hs0
 
 /-- Every chosen denominator becomes a unit in an Ore localization. -/
-@[nolint unusedArguments]
 theorem denominator_isUnit (s : S) :
     IsUnit (OreLocalization.numeratorHom (s : R) : R[S⁻¹]) :=
   OreLocalization.numerator_isUnit s

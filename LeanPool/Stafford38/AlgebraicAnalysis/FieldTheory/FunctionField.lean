@@ -25,7 +25,6 @@ universe u v w
 
 /-- The fraction field of a finitely generated domain is a finitely generated
 field extension of the ground field. -/
-@[nolint unusedArguments]
 theorem top_fg_of_finiteType_fractionRing
     (k : Type u) (A : Type v) (K : Type w)
     [Field k] [CommRing A] [IsDomain A] [Algebra k A]

@@ -6,7 +6,7 @@ Authors: Christopher Albert
 
 import LeanPool.Stafford38.Stafford38.Quotient.EulerSurjectivity
 import LeanPool.Stafford38.Stafford38.Ore.PairStage
-import LeanPool.Stafford38.proofs.weyl_pure_power
+import LeanPool.Stafford38.Proofs.WeylPurePower
 
 /-!
 # The Euler-nonnegative generated subring

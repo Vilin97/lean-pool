@@ -30,8 +30,6 @@ def IsDerivation (d : E →+ E) : Prop :=
 /-- An additive derivation is inner when it is a commutator with one element. -/
 def IsInnerDerivation (d : E →+ E) : Prop :=
   ∃ e : E, ∀ y : E, d y = e * y - y * e
-
-@[nolint unusedArguments]
 theorem not_isInnerDerivation_of_central
     (d : E →+ E) (hd : IsDerivation d) (x : E)
     (hxcentral : ∀ y : E, x * y = y * x) (hdx : d x = 1) :
@@ -43,7 +41,6 @@ theorem not_isInnerDerivation_of_central
   exact (one_ne_zero : (1 : E) ≠ 0) (by simpa using h)
 
 /-- Commutation with a set propagates through the subring it generates. -/
-@[nolint unusedArguments]
 theorem commute_of_mem_subring_closure
     (x : E) (G : Set E) (hG : ∀ g ∈ G, Commute x g) :
     ∀ y : E, y ∈ Subring.closure G → Commute x y := by
@@ -61,7 +58,6 @@ A central element of a source ring remains central in a target ring when
 every target element has a right-fraction presentation and every denominator
 maps to a unit.  No commutativity of either ring is assumed.
 -/
-@[nolint unusedArguments]
 theorem commute_map_of_right_fraction_representation
     {R : Type*} [Ring R]
     (ι : R →+* E) (x : R)

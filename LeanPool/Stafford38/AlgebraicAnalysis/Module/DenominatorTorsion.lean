@@ -70,8 +70,6 @@ def leftMulLinear (q : R) : R →ₗ[Rᵐᵒᵖ] R where
 /-- The right ideal `qR`, represented as the range of left multiplication. -/
 def principalRightIdeal (q : R) : Submodule Rᵐᵒᵖ R :=
   LinearMap.range (leftMulLinear q)
-
-@[nolint unusedArguments]
 theorem principalRightIdeal_mem (q x : R) :
     q * x ∈ principalRightIdeal q := by
   exact ⟨x, rfl⟩
