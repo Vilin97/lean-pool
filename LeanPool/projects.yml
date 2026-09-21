@@ -9966,3 +9966,34 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - title: Optimal fully dynamic matching on the line
+    summary: Constructs a measurable hierarchical policy for fully dynamic matching of uniformly arriving
+      demand and replenishment on the unit interval. Proves logarithmic-over-inventory bounds for long-run
+      root-mean-square distance from every initial inventory and for initialized finite-horizon expected
+      average cost.
+    branch: probability and optimization
+    main_declarations:
+    - FD1D.V5.Palomar.optimalDynamicMatchingUpperBound
+    main_results:
+    - declaration: FD1D.V5.Palomar.optimalDynamicMatchingUpperBound
+      informal: For every inventory size m at least two, an online policy has long-run RMS cost at most
+        (72000/log 2) log(m+1)/m from every initial inventory, and the same expected-average-cost bound
+        after initialization for horizons at least 2m².
+    tags:
+    - online-matching
+    - probability
+    - stochastic-optimization
+    msc:
+    - 60J20
+    - 90B15
+    provenance: AI
+    slug: fd1d-lean
+    entry_module: LeanPool.FullyDynamicMatching
+    authors:
+    - Yash Kanoria
+    source:
+      url: https://github.com/ykanoria/fd1d-lean
+      github_repo: ykanoria/fd1d-lean
+      commit: 26a5b4e2fd83fa86053239e09e92af370c62f18c
+    license: Apache-2.0
+    status: verified
