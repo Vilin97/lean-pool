@@ -1,0 +1,346 @@
+/-
+Copyright (c) 2026 Arseniy Akopyan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Arseniy Akopyan
+-/
+
+import Mathlib
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CoordinateProjection
+import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainsQuasiIso
+
+/-! # Mayer Vietoris SES -/
+
+open CategoryTheory AlgebraicTopology Limits TopologicalSpace
+open SphereOddDegree.AffineBarycentricSubdivision
+
+namespace SphereOddDegree
+
+open Classical
+
+variable (R : Type) [CommRing R] {X : TopCat.{0}}
+def twoSetCover (U V : Opens X) (hUV : U ⊔ V = ⊤) : OpenCoverData X where
+  sets := {(U : Set X), (V : Set X)}
+  isOpen_mem := by
+    rintro S (rfl | rfl)
+    · exact U.isOpen
+    · exact V.isOpen
+  covers := by
+    intro x
+    have hx : x ∈ ((U ⊔ V : Opens X) : Set X) := by rw [hUV]; trivial
+    rw [Opens.coe_sup] at hx
+    rcases hx with hxU | hxV
+    · exact ⟨(U : Set X), Set.mem_insert _ _, hxU⟩
+    · exact ⟨(V : Set X), Set.mem_insert_of_mem _ rfl, hxV⟩
+
+theorem twoSetCover_memU (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    (U : Set X) ∈ (twoSetCover U V hUV).sets :=
+  Set.mem_insert _ _
+
+theorem twoSetCover_memV (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    (V : Set X) ∈ (twoSetCover U V hUV).sets :=
+  Set.mem_insert_of_mem _ rfl
+
+noncomputable def twoOpenCoverSmallChains (R : Type) [CommRing R]
+    {X : TopCat.{0}} (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    ChainComplex (ModuleCat.{0} R) ℕ :=
+  smallChainComplex R X (twoSetCover U V hUV)
+
+noncomputable def mvInclUV_U (U V : Opens X) :
+    subChainComplex R X ((U : Set X) ∩ (V : Set X)) ⟶ subChainComplex R X (U : Set X) :=
+  subChainInclusion _ _ Set.inter_subset_left
+
+noncomputable def mvInclUV_V (U V : Opens X) :
+    subChainComplex R X ((U : Set X) ∩ (V : Set X)) ⟶ subChainComplex R X (V : Set X) :=
+  subChainInclusion _ _ Set.inter_subset_right
+
+noncomputable def mvInclU_small (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    subChainComplex R X (U : Set X) ⟶ twoOpenCoverSmallChains R U V hUV :=
+  subChainToSmall (twoSetCover U V hUV) _ (twoSetCover_memU U V hUV)
+
+noncomputable def mvInclV_small (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    subChainComplex R X (V : Set X) ⟶ twoOpenCoverSmallChains R U V hUV :=
+  subChainToSmall (twoSetCover U V hUV) _ (twoSetCover_memV U V hUV)
+
+theorem mvIncl_comp_eq (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    mvInclUV_U R U V ≫ mvInclU_small R U V hUV
+      = mvInclUV_V R U V ≫ mvInclV_small R U V hUV := by
+  apply HomologicalComplex.hom_ext
+  intro k
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  rintro ⟨c, hc⟩
+  apply Subtype.ext
+  rfl
+
+noncomputable def mvLeftChainMap (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    subChainComplex R X ((U : Set X) ∩ (V : Set X)) ⟶
+      subChainComplex R X (U : Set X) ⊞ subChainComplex R X (V : Set X) :=
+  biprod.lift (mvInclUV_U R U V) (-(mvInclUV_V R U V))
+
+noncomputable def mvRightChainMap (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    subChainComplex R X (U : Set X) ⊞ subChainComplex R X (V : Set X) ⟶
+      twoOpenCoverSmallChains R U V hUV :=
+  biprod.desc (mvInclU_small R U V hUV) (mvInclV_small R U V hUV)
+
+theorem mvLeft_comp_mvRight (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    mvLeftChainMap R U V hUV ≫ mvRightChainMap R U V hUV = 0 := by
+  rw [mvLeftChainMap, mvRightChainMap, biprod.lift_desc, mvIncl_comp_eq R U V hUV]
+  simp [Preadditive.neg_comp]
+
+noncomputable def mvShortComplex (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    ShortComplex (ChainComplex (ModuleCat.{0} R) ℕ) where
+  X₁ := subChainComplex R X ((U : Set X) ∩ (V : Set X))
+  X₂ := subChainComplex R X (U : Set X) ⊞ subChainComplex R X (V : Set X)
+  X₃ := twoOpenCoverSmallChains R U V hUV
+  f := mvLeftChainMap R U V hUV
+  g := mvRightChainMap R U V hUV
+  zero := mvLeft_comp_mvRight R U V hUV
+
+def IsSubVnotU (U V : Opens X) {n : ℕ} (σ : singularSimplices X n) : Prop :=
+  IsSubordinate (V : Set X) σ ∧ ¬ IsSubordinate (U : Set X) σ
+
+theorem keepHom_small_mem_U (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
+    (c : singularChainGroup R X k)
+    (hc : c ∈ smallChainSubmodule R X (twoSetCover U V hUV) k) :
+    (keepHom R X (IsSubordinate (U : Set X))).hom c ∈ subChainSubmodule R X (U : Set X) k := by
+  refine' Submodule.span_induction _ _ _ _ hc
+  · rintro _ ⟨σ, hσ, rfl⟩; rw [keepHom_generator]; split_ifs <;> simp_all [IsSubordinate]
+    exact chainGenerator_mem_subChainSubmodule ‹_›
+  · simp [keepHom]
+  · intro x y hx hy hx' hy'; rw [map_add]; exact Submodule.add_mem _ hx' hy'
+  · intro a x hx hx'; rw [map_smul]; exact Submodule.smul_mem _ _ hx'
+
+theorem keepHom_small_mem_V (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
+    (c : singularChainGroup R X k)
+    (hc : c ∈ smallChainSubmodule R X (twoSetCover U V hUV) k) :
+    (keepHom R X (IsSubVnotU U V)).hom c ∈ subChainSubmodule R X (V : Set X) k := by
+  refine' Submodule.span_induction _ _ _ _ hc
+  · rintro _ ⟨σ, hσ, rfl⟩; rw [keepHom_generator]; split_ifs <;> simp_all [IsSubVnotU]
+    exact chainGenerator_mem_subChainSubmodule (by tauto)
+  · simp [keepHom]
+  · intro x y hx hy hx' hy'; rw [map_add]; exact Submodule.add_mem _ hx' hy'
+  · intro a x hx hx'; rw [map_smul]; exact Submodule.smul_mem _ _ hx'
+
+theorem keepHom_split_small (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
+    (c : singularChainGroup R X k)
+    (hc : c ∈ smallChainSubmodule R X (twoSetCover U V hUV) k) :
+    (keepHom R X (IsSubordinate (U : Set X))).hom c
+      + (keepHom R X (IsSubVnotU U V)).hom c = c := by
+  refine' Submodule.span_induction _ _ _ _ hc
+  · rintro _ ⟨σ, hσ, rfl⟩
+    rw [keepHom_generator, keepHom_generator]
+    split_ifs <;> simp_all [IsSubordinate, IsSubVnotU]
+    contrapose! hσ
+    simp_all [IsSmallSimplex, twoSetCover]
+  · simp
+  · intro x y hx hy hx' hy'; rw [map_add, map_add, ← add_add_add_comm, hx', hy']
+  · intro a x hx hx'; rw [map_smul, map_smul, ← smul_add, hx']
+
+theorem keepHom_V_mem_UV (U V : Opens X) (k : ℕ)
+    (c : singularChainGroup R X k)
+    (hc : c ∈ subChainSubmodule R X (V : Set X) k) :
+    (keepHom R X (IsSubordinate (U : Set X))).hom c
+      ∈ subChainSubmodule R X ((U : Set X) ∩ (V : Set X)) k := by
+  have := keepHom_mem_subChainSubmodule (S := (U : Set X)) (T := (V : Set X)) hc
+  simpa using this
+
+noncomputable def restrictKeep {n : ℕ} (P : singularSimplices X n → Prop) [DecidablePred P]
+    (p q : Submodule R (singularChainGroup R X n))
+    (hmaps : ∀ c ∈ p, (keepHom R X P).hom c ∈ q) :
+    ModuleCat.of R p ⟶ ModuleCat.of R q :=
+  ModuleCat.ofHom (LinearMap.codRestrict q ((keepHom R X P).hom.comp p.subtype)
+    (fun c => hmaps c.1 c.2))
+
+@[simp] theorem restrictKeep_val {n : ℕ} (P : singularSimplices X n → Prop) [DecidablePred P]
+    (p q : Submodule R (singularChainGroup R X n))
+    (hmaps : ∀ c ∈ p, (keepHom R X P).hom c ∈ q) (c : p) :
+    (((restrictKeep R P p q hmaps).hom c) : singularChainGroup R X n)
+      = (keepHom R X P).hom (c : singularChainGroup R X n) :=
+  rfl
+
+noncomputable def routeU (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    (twoOpenCoverSmallChains R U V hUV).X k ⟶
+      (subChainComplex R X (U : Set X)).X k :=
+  restrictKeep R (IsSubordinate (U : Set X)) _ _ (keepHom_small_mem_U R U V hUV k)
+
+noncomputable def routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    (twoOpenCoverSmallChains R U V hUV).X k ⟶
+      (subChainComplex R X (V : Set X)).X k :=
+  restrictKeep R (IsSubVnotU U V) _ _ (keepHom_small_mem_V R U V hUV k)
+
+noncomputable def projVtoUV (U V : Opens X) (k : ℕ) :
+    (subChainComplex R X (V : Set X)).X k ⟶
+      (subChainComplex R X ((U : Set X) ∩ (V : Set X))).X k :=
+  restrictKeep R (IsSubordinate (U : Set X)) _ _ (keepHom_V_mem_UV R U V k)
+
+theorem keepHom_PV_eq_zero_of_mem_U (U V : Opens X) (k : ℕ)
+    (c : singularChainGroup R X k) (hc : c ∈ subChainSubmodule R X (U : Set X) k) :
+    (keepHom R X (IsSubVnotU U V)).hom c = 0 := by
+  refine' Submodule.span_induction _ _ _ _ hc
+  · rintro _ ⟨σ, hσ, rfl⟩; rw [keepHom_generator]; split_ifs <;> simp_all [IsSubVnotU]
+  · simp
+  · intro x y hx hy hx' hy'; rw [map_add, hx', hy', add_zero]
+  · intro a x hx hx'; rw [map_smul, hx', smul_zero]
+
+theorem mvInclU_small_comp_routeU (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    (mvInclU_small R U V hUV).f k ≫ routeU R U V hUV k = 𝟙 _ := by
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  rintro ⟨c, hc⟩
+  apply Subtype.ext
+  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_id, LinearMap.id_apply]
+  show (keepHom R X (IsSubordinate (U : Set X))).hom c = c
+  exact keepHom_eq_self_of_mem hc
+
+theorem mvInclU_small_comp_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    (mvInclU_small R U V hUV).f k ≫ routeV R U V hUV k = 0 := by
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  rintro ⟨c, hc⟩
+  apply Subtype.ext
+  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_zero, LinearMap.zero_apply]
+  show (keepHom R X (IsSubVnotU U V)).hom c = 0
+  exact keepHom_PV_eq_zero_of_mem_U R U V k c hc
+
+theorem mvInclV_small_comp_routeU (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    (mvInclV_small R U V hUV).f k ≫ routeU R U V hUV k
+      = projVtoUV R U V k ≫ (mvInclUV_U R U V).f k := by
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  rintro ⟨c, hc⟩
+  apply Subtype.ext
+  rfl
+
+theorem keepHom_split_subV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ)
+    (c : singularChainGroup R X k) (hc : c ∈ subChainSubmodule R X (V : Set X) k) :
+    (keepHom R X (IsSubordinate (U : Set X))).hom c
+      + (keepHom R X (IsSubVnotU U V)).hom c = c := by
+  exact keepHom_split_small R U V hUV k c (subChainSubmodule_le_smallChainSubmodule (twoSetCover_memV U V hUV) k hc)
+
+theorem mvInclUV_V_comp_projVtoUV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    (mvInclUV_V R U V).f k ≫ projVtoUV R U V k = 𝟙 _ := by
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  rintro ⟨c, hc⟩
+  apply Subtype.ext
+  simp only [ModuleCat.hom_comp, LinearMap.comp_apply, ModuleCat.hom_id, LinearMap.id_apply]
+  show (keepHom R X (IsSubordinate (U : Set X))).hom c = c
+  exact keepHom_eq_self_of_mem (subChainSubmodule_mono Set.inter_subset_left k hc)
+
+theorem projVtoUV_inclUV_V_add_inclV_routeV (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    ((projVtoUV R U V k ≫ (mvInclUV_V R U V).f k :
+        (subChainComplex R X (V : Set X)).X k
+          ⟶ (subChainComplex R X (V : Set X)).X k)
+      + ((mvInclV_small R U V hUV).f k ≫ routeV R U V hUV k :
+        (subChainComplex R X (V : Set X)).X k
+          ⟶ (subChainComplex R X (V : Set X)).X k))
+      = 𝟙 ((subChainComplex R X (V : Set X)).X k) := by
+  apply ModuleCat.hom_ext
+  apply LinearMap.ext
+  rintro ⟨c, hc⟩
+  apply Subtype.ext
+  simp only [ModuleCat.hom_add, ModuleCat.hom_comp, LinearMap.add_apply, LinearMap.comp_apply,
+    ModuleCat.hom_id, LinearMap.id_apply]
+  exact keepHom_split_subV R U V hUV k c hc
+
+noncomputable abbrev mvSplitSC (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    ShortComplex (ModuleCat.{0} R) :=
+  ShortComplex.mk
+    (biprod.lift ((mvInclUV_U R U V).f k) (-(mvInclUV_V R U V).f k))
+    (biprod.desc ((mvInclU_small R U V hUV).f k) ((mvInclV_small R U V hUV).f k))
+    (by
+      rw [biprod.lift_desc]
+      have : (mvInclUV_U R U V).f k ≫ (mvInclU_small R U V hUV).f k
+          = (mvInclUV_V R U V).f k ≫ (mvInclV_small R U V hUV).f k := by
+        apply ModuleCat.hom_ext
+        apply LinearMap.ext
+        rintro ⟨c, hc⟩
+        apply Subtype.ext
+        rfl
+      rw [this, Preadditive.neg_comp, add_neg_cancel])
+
+noncomputable def mvSplitting (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    (mvSplitSC R U V hUV k).Splitting where
+  r := biprod.desc 0 (-projVtoUV R U V k)
+  s := biprod.lift (routeU R U V hUV k) (routeV R U V hUV k)
+  f_r := by
+    change biprod.lift ((mvInclUV_U R U V).f k) (-(mvInclUV_V R U V).f k) ≫
+           biprod.desc 0 (-projVtoUV R U V k) = 𝟙 _
+    rw [biprod.lift_desc, comp_zero, Preadditive.neg_comp, Preadditive.comp_neg, neg_neg, zero_add]
+    exact mvInclUV_V_comp_projVtoUV R U V hUV k
+  s_g := by
+    change biprod.lift (routeU R U V hUV k) (routeV R U V hUV k) ≫
+           biprod.desc ((mvInclU_small R U V hUV).f k) ((mvInclV_small R U V hUV).f k) = 𝟙 _
+    rw [biprod.lift_desc]
+    apply ModuleCat.hom_ext
+    apply LinearMap.ext
+    rintro ⟨c, hc⟩
+    apply Subtype.ext
+    simp only [ModuleCat.hom_add, ModuleCat.hom_comp, LinearMap.add_apply, LinearMap.comp_apply,
+      ModuleCat.hom_id, LinearMap.id_apply]
+    exact keepHom_split_small R U V hUV k c hc
+  id := by
+    change biprod.desc 0 (-projVtoUV R U V k) ≫
+           biprod.lift ((mvInclUV_U R U V).f k) (-(mvInclUV_V R U V).f k) +
+           biprod.desc ((mvInclU_small R U V hUV).f k) ((mvInclV_small R U V hUV).f k) ≫
+           biprod.lift (routeU R U V hUV k) (routeV R U V hUV k) = 𝟙 _
+    apply biprod.hom_ext'
+    · apply biprod.hom_ext
+      · simp only [Preadditive.comp_add, biprod.inl_desc_assoc, zero_comp,
+          Category.assoc, biprod.lift_fst, Category.id_comp, zero_add, biprod.inl_fst]
+        exact mvInclU_small_comp_routeU R U V hUV k
+      · simp only [Preadditive.comp_add, biprod.inl_desc_assoc, zero_comp,
+          Category.assoc, biprod.lift_snd, Category.id_comp, zero_add, biprod.inl_snd]
+        exact mvInclU_small_comp_routeV R U V hUV k
+    · apply biprod.hom_ext
+      · simp only [Preadditive.comp_add, Preadditive.add_comp, biprod.inr_desc_assoc,
+          Preadditive.neg_comp, Category.assoc, biprod.lift_fst, Category.id_comp, biprod.inr_fst]
+        rw [mvInclV_small_comp_routeU R U V hUV k]
+        abel
+      · simp only [Preadditive.comp_add, Preadditive.add_comp, biprod.inr_desc_assoc,
+          Preadditive.neg_comp, Preadditive.comp_neg, Category.assoc, biprod.lift_snd,
+          neg_neg, Category.id_comp, biprod.inr_snd]
+        exact projVtoUV_inclUV_V_add_inclV_routeV R U V hUV k
+
+theorem biprodXIso_lift_f
+    {K L M : ChainComplex (ModuleCat.{0} R) ℕ} (a : K ⟶ L) (b : K ⟶ M) (k : ℕ) :
+    (biprod.lift a b).f k ≫ (HomologicalComplex.biprodXIso L M k).hom
+      = biprod.lift (a.f k) (b.f k) :=
+  biprod.map_lift_mapBiprod (HomologicalComplex.eval (ModuleCat.{0} R) (ComplexShape.down ℕ) k) L M a b
+
+theorem biprodXIso_desc_f
+    {K L M : ChainComplex (ModuleCat.{0} R) ℕ} (a : L ⟶ K) (b : M ⟶ K) (k : ℕ) :
+    (HomologicalComplex.biprodXIso L M k).hom ≫ biprod.desc (a.f k) (b.f k)
+      = (biprod.desc a b).f k :=
+  biprod.mapBiprod_hom_desc (HomologicalComplex.eval (ModuleCat.{0} R) (ComplexShape.down ℕ) k) L M a b
+
+noncomputable def mvEvalIso (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    ((HomologicalComplex.eval (ModuleCat.{0} R) (ComplexShape.down ℕ) k).mapShortComplex.obj
+      (mvShortComplex R U V hUV)) ≅ mvSplitSC R U V hUV k :=
+  ShortComplex.isoMk (Iso.refl _)
+    (HomologicalComplex.biprodXIso (subChainComplex R X (U : Set X)) (subChainComplex R X (V : Set X)) k)
+    (Iso.refl _)
+    (by
+      show 𝟙 _ ≫ biprod.lift ((mvInclUV_U R U V).f k) (-(mvInclUV_V R U V).f k) =
+           (mvLeftChainMap R U V hUV).f k ≫
+             (HomologicalComplex.biprodXIso (subChainComplex R X ↑U) (subChainComplex R X ↑V) k).hom
+      rw [Category.id_comp]
+      exact (biprodXIso_lift_f (R := R) (mvInclUV_U R U V) (-mvInclUV_V R U V) k).symm)
+    (by
+      show (HomologicalComplex.biprodXIso (subChainComplex R X ↑U) (subChainComplex R X ↑V) k).hom ≫
+             biprod.desc ((mvInclU_small R U V hUV).f k) ((mvInclV_small R U V hUV).f k) =
+           (mvRightChainMap R U V hUV).f k ≫ 𝟙 _
+      rw [Category.comp_id]
+      exact biprodXIso_desc_f (R := R) (mvInclU_small R U V hUV) (mvInclV_small R U V hUV) k)
+
+theorem mvShortComplex_degreewise_shortExact (U V : Opens X) (hUV : U ⊔ V = ⊤) (k : ℕ) :
+    ((HomologicalComplex.eval (ModuleCat.{0} R) (ComplexShape.down ℕ) k).mapShortComplex.obj
+      (mvShortComplex R U V hUV)).ShortExact :=
+  ShortComplex.shortExact_of_iso (mvEvalIso R U V hUV k).symm (mvSplitting R U V hUV k).shortExact
+
+theorem mvShortComplex_shortExact (U V : Opens X) (hUV : U ⊔ V = ⊤) :
+    (mvShortComplex R U V hUV).ShortExact :=
+  HomologicalComplex.shortExact_of_degreewise_shortExact (mvShortComplex R U V hUV)
+    (mvShortComplex_degreewise_shortExact R U V hUV)
+
+end SphereOddDegree
