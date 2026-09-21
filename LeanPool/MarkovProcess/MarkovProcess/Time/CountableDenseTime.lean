@@ -7,7 +7,7 @@ import Mathlib.Data.NNRat.Defs
 import Mathlib.Data.NNReal.Defs
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Data.Rat.Encodable
-import Mathlib.Logic.Denumerable
+import Mathlib.Basic.Denumerable
 import Mathlib.MeasureTheory.MeasurableSpace.Embedding
 
 /-!
