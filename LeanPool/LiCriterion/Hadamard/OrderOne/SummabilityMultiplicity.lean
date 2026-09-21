@@ -32,7 +32,7 @@ namespace OrderOne
 
 theorem zerosBallFinite_of_entire
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
@@ -62,9 +62,10 @@ theorem zerosBallFinite_of_entire
       (s := ({ρ : Z.Zero | ‖Z.z ρ‖ ≤ (2 : ℝ) ^ n} : Set Z.Zero)) (h := hD.subset hImage)
       (hi := h_inj.injOn)
 
-noncomputable def zerosBallFinset_of_entire
+/-- The finite set of indexed zeros of an entire function in the closed disk of radius `2 ^ n`. -/
+noncomputable def zerosBallFinsetOfEntire
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
@@ -75,23 +76,23 @@ noncomputable def zerosBallFinset_of_entire
 @[simp]
 lemma mem_zerosBallFinset_of_entire_iff
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
     (n : ℕ) (ρ : Z.Zero) :
-    ρ ∈ zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+    ρ ∈ zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
           (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) n ↔
       ‖Z.z ρ‖ ≤ (2 : ℝ) ^ n := by
   classical
-  simp [zerosBallFinset_of_entire]
+  simp [zerosBallFinsetOfEntire]
 
 /-! ### Main summability lemma -/
 
 theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
@@ -150,7 +151,7 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
   have hn₀_lt : |C * q ^ n₀| < ε := hN n₀ hn₀_ge_N
   -- Use the dyadic ball `‖Z.z ρ‖ ≤ 2^(n₀+1)` as the "finite head" for the Cauchy criterion.
   refine ⟨
-    zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+    zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
       (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (n₀ + 1),
     ?_⟩
   intro t ht
@@ -159,7 +160,7 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
     intro ρ hρt
     have hnot :
         ρ ∉
-          zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+          zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
             (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (n₀ + 1) :=
       (Finset.disjoint_left.1 ht) hρt
     have hnot' : ¬ ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (n₀ + 1) := by
@@ -190,7 +191,7 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
   have ht_subset :
       ∃ m : ℕ,
         t ⊆
-          zerosBallFinset_of_entire
+          zerosBallFinsetOfEntire
             (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
             (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m := by
     classical
@@ -219,7 +220,7 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
   -- Bound `∑_{ρ ∈ t} g ρ` by a dyadic-shell geometric estimate.
   have hball :
       (∑ ρ ∈
-          zerosBallFinset_of_entire
+          zerosBallFinsetOfEntire
             (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
             (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m,
         g ρ)
@@ -227,10 +228,10 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
     let w : Z.Zero → ℝ := fun ρ => (analyticOrderNatAt f (Z.z ρ) : ℝ)
     have hsub_ball :
         ∀ k : ℕ,
-          zerosBallFinset_of_entire
+          zerosBallFinsetOfEntire
               (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
               (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) k ⊆
-            zerosBallFinset_of_entire
+            zerosBallFinsetOfEntire
               (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
               (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) := by
       intro k ρ hρ
@@ -247,17 +248,17 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
     have hshell :
         ∀ k : ℕ, n₀ + 1 ≤ k →
           (∑ ρ ∈
-              zerosBallFinset_of_entire
+              zerosBallFinsetOfEntire
                     (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
                     (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) \
-                zerosBallFinset_of_entire
+                zerosBallFinsetOfEntire
                     (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
                     (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) k,
               g ρ)
             ≤ (2 : ℝ) ^ ((1 : ℝ) + εcount) * Ccount * q ^ k := by
       intro k hk
       let ball : ℕ → Finset Z.Zero := fun t =>
-        zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+        zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
           (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) t
       let diff : Finset Z.Zero := ball (k + 1) \ ball k
       have hk_pow_le : (2 : ℝ) ^ (n₀ + 1) ≤ (2 : ℝ) ^ k :=
@@ -423,7 +424,7 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
     by_cases hm : m ≤ n₀ + 1
     · have hsum0 :
           (∑ ρ ∈
-              zerosBallFinset_of_entire
+              zerosBallFinsetOfEntire
                 (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
                 (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m,
             g ρ) = 0 := by
@@ -444,7 +445,7 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
       simpa [hsum0] using hrhs_nonneg
     · have hm_ge : n₀ + 1 < m := lt_of_not_ge hm
       let ball : ℕ → Finset Z.Zero := fun t =>
-        zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+        zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
           (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) t
       -- Write `m = (n₀+1) + t` for some `t > 0` and sum shells.
       set t' : ℕ := m - (n₀ + 1) with ht'_def
@@ -582,7 +583,7 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
   have hsum_le :
       (∑ ρ ∈ t, g ρ) ≤
         ∑ ρ ∈
-            zerosBallFinset_of_entire
+            zerosBallFinsetOfEntire
               (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
               (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m,
           g ρ := by
@@ -595,7 +596,7 @@ theorem summable_analyticOrderNatAt_div_norm_sq_of_order_le_one
     calc
       (∑ ρ ∈ t, (analyticOrderNatAt f (Z.z ρ) : ℝ) / ‖Z.z ρ‖ ^ 2) = ∑ ρ ∈ t, g ρ := hsum_eq
       _ ≤
-          ∑ ρ ∈ zerosBallFinset_of_entire
+          ∑ ρ ∈ zerosBallFinsetOfEntire
               (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
               (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m,
             g ρ := hsum_le
@@ -657,7 +658,7 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
     {lam : ℝ} (hlam_nonneg : 0 ≤ lam) (hf_order_le : order f ≤ lam)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
@@ -723,7 +724,7 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
   have hn₀_lt : |C * q ^ n₀| < ε := hN n₀ hn₀_ge_N
   -- Finite head: the dyadic ball `‖Z.z ρ‖ ≤ 2^(n₀+1)`.
   refine ⟨
-    zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+    zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
       (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (n₀ + 1),
     ?_⟩
   intro t ht
@@ -731,7 +732,7 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
     intro ρ hρt
     have hnot :
         ρ ∉
-          zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+          zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
             (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (n₀ + 1) :=
       (Finset.disjoint_left.1 ht) hρt
     have hnot' : ¬ ‖Z.z ρ‖ ≤ (2 : ℝ) ^ (n₀ + 1) := by
@@ -761,7 +762,7 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
   have ht_subset :
       ∃ m : ℕ,
         t ⊆
-          zerosBallFinset_of_entire
+          zerosBallFinsetOfEntire
             (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
             (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m := by
     classical
@@ -789,7 +790,7 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
   -- Dyadic-shell bound for the "cumulative ball sum" of `g`.
   have hball :
       (∑ ρ ∈
-          zerosBallFinset_of_entire
+          zerosBallFinsetOfEntire
             (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
             (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m,
         g ρ)
@@ -797,10 +798,10 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
     let w : Z.Zero → ℝ := fun ρ => (analyticOrderNatAt f (Z.z ρ) : ℝ)
     have hsub_ball :
         ∀ k : ℕ,
-          zerosBallFinset_of_entire
+          zerosBallFinsetOfEntire
               (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
               (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) k ⊆
-            zerosBallFinset_of_entire
+            zerosBallFinsetOfEntire
               (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
               (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) := by
       intro k ρ hρ
@@ -817,17 +818,17 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
     have hshell :
         ∀ k : ℕ, n₀ + 1 ≤ k →
           (∑ ρ ∈
-              zerosBallFinset_of_entire
+              zerosBallFinsetOfEntire
                     (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
                     (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) (k + 1) \
-                zerosBallFinset_of_entire
+                zerosBallFinsetOfEntire
                     (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
                     (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) k,
               g ρ)
             ≤ (2 : ℝ) ^ (lam + εcount) * Ccount * q ^ k := by
       intro k hk
       let ball : ℕ → Finset Z.Zero := fun t =>
-        zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+        zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
           (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) t
       let diff : Finset Z.Zero := ball (k + 1) \ ball k
       have hk_pow_le : (2 : ℝ) ^ (n₀ + 1) ≤ (2 : ℝ) ^ k :=
@@ -991,7 +992,7 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
     by_cases hm : m ≤ n₀ + 1
     · have hsum0 :
           (∑ ρ ∈
-              zerosBallFinset_of_entire
+              zerosBallFinsetOfEntire
                 (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
                 (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m,
             g ρ) = 0 := by
@@ -1009,7 +1010,7 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
       simpa [hsum0] using hrhs_nonneg
     · have hm_ge : n₀ + 1 < m := lt_of_not_ge hm
       let ball : ℕ → Finset Z.Zero := fun t =>
-        zerosBallFinset_of_entire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
+        zerosBallFinsetOfEntire (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
           (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) t
       set t' : ℕ := m - (n₀ + 1) with ht'_def
       have ht'_pos : 0 < t' := Nat.sub_pos_of_lt hm_ge
@@ -1135,7 +1136,7 @@ theorem summable_analyticOrderNatAt_div_norm_pow_of_order_le
   have hsum_le :
       (∑ ρ ∈ t, g ρ) ≤
         ∑ ρ ∈
-            zerosBallFinset_of_entire
+            zerosBallFinsetOfEntire
               (hf_entire := hf_entire) (Z := Z) (h_zeros_only := h_zeros_only)
               (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m,
           g ρ := by

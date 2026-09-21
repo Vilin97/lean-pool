@@ -45,9 +45,9 @@ theorem paired_sum_formula_of_mtest_and_cauchy
   intro n
   classical
   -- Provide the shifted-product factorization as a typeclass instance for derived lemmas.
-  have hhad' : xi_factorization_shifted_prod := by
-    simpa [xi_factorization_shifted_prod] using hhad
-  let : Fact xi_factorization_shifted_prod := ⟨hhad'⟩
+  have hhad' : xiFactorizationShiftedProd := by
+    simpa [xiFactorizationShiftedProd] using hhad
+  let : Fact xiFactorizationShiftedProd := ⟨hhad'⟩
   -- Choose an increasing exhaustion of the zero set by finite subsets.
   obtain ⟨T, monoT, coverT⟩ := exists_increasing_finite_cover_zeros
   -- Choose a separation radius (inside the unit disk) to avoid all points `1 - 1/ρ`.
@@ -656,7 +656,7 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
       (fun ρ : NontrivialZero => (analyticOrderNatAt riemannXi ρ.val : ℝ) / ‖ρ.val‖ ^ 2))
     (hsep : ∃ r : ℝ, 0 < r ∧ r < 1 ∧ ∀ z ∈ Metric.ball (0 : ℂ) r,
       (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
-    (hhad : xi_factorization_prod_with_multiplicity) :
+    (hhad : xiFactorizationProdWithMultiplicity) :
     ∀ n : ℕ,
       taylorCoeff riemannXi n
         = (2⁻¹ : ℂ) * ∑' ρ : NontrivialZero,
@@ -1719,7 +1719,7 @@ theorem paired_sum_formula_of_standard_hypotheses
 theorem weighted_paired_sum_formula_of_standard_hypotheses
     (hgenus : Summable
       (fun ρ : NontrivialZero => (analyticOrderNatAt riemannXi ρ.val : ℝ) / ‖ρ.val‖ ^ 2))
-    (hhad : xi_factorization_prod_with_multiplicity) :
+    (hhad : xiFactorizationProdWithMultiplicity) :
     ∀ n : ℕ,
       taylorCoeff riemannXi n
         = (2⁻¹ : ℂ) * ∑' ρ : NontrivialZero,
@@ -2213,7 +2213,7 @@ theorem li_criterion_equiv_of_standard_hypotheses
 theorem li_criterion_equiv_of_weighted_standard_hypotheses
     (hgenus : Summable
       (fun ρ : NontrivialZero => (analyticOrderNatAt riemannXi ρ.val : ℝ) / ‖ρ.val‖ ^ 2))
-    (hhad : xi_factorization_prod_with_multiplicity) :
+    (hhad : xiFactorizationProdWithMultiplicity) :
     ((∀ s : ℂ, riemannZeta s = 0 → (0 < s.re ∧ s.re < 1) → s.re = 1 / 2) ↔
       (∀ n : ℕ, 0 ≤ (taylorCoeff riemannXi n).re)) := by
   have hsum : ∀ n : ℕ,

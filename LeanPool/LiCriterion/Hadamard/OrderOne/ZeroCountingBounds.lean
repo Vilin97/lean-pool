@@ -107,7 +107,7 @@ lemma mem_divisor_support_of_zero
 theorem ncard_zeros_le_of_order_le_one
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
@@ -249,7 +249,7 @@ This bounds `∑ ord_ρ(f)` over zeros `ρ` with `‖Z.z ρ‖ ≤ r`, where `or
 theorem sum_multiplicity_zeros_le_of_order_le_one
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
@@ -533,7 +533,7 @@ The proof is identical except we use the general max-modulus growth bound
 theorem sum_multiplicity_zeros_le_of_order_le
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) {lam : ℝ} (hf_order_le : order f ≤ lam)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :

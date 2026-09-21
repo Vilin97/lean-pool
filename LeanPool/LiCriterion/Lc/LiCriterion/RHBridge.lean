@@ -93,7 +93,7 @@ theorem biconditional_rh_li_of_standard_hypotheses
 theorem biconditional_rh_li_of_weighted_standard_hypotheses
     (hgenus : Summable
       (fun ρ : NontrivialZero => (analyticOrderNatAt riemannXi ρ.val : ℝ) / ‖ρ.val‖ ^ 2))
-    (hhad : xi_factorization_prod_with_multiplicity) :
+    (hhad : xiFactorizationProdWithMultiplicity) :
     (RiemannHypothesis ↔
       (∀ n : ℕ, 0 ≤ (taylorCoeff riemannXi n).re)) := by
   rw [rh_equiv_mathlib]

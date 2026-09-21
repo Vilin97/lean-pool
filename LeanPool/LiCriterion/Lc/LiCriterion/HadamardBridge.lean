@@ -128,7 +128,7 @@ theorem xi_hadamard_factorization_with_multiplicity
 theorem xi_factorization_prod_with_multiplicity_of_hadamard_order_one
     (hfinite : Hadamard.hasFiniteOrder riemannXi)
     (horder : Hadamard.order riemannXi ≤ 1) :
-    xi_factorization_prod_with_multiplicity := by
+    xiFactorizationProdWithMultiplicity := by
   obtain ⟨a, b, hξ⟩ := xi_hadamard_factorization_with_multiplicity hfinite horder
   refine ⟨a, b, ?_⟩
   intro s

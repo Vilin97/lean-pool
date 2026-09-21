@@ -76,7 +76,7 @@ theorem logDeriv_tprod_weierstrass_E_one_eq_tsum_of_summable_mul_inv_norm_sq
     (h : Summable (fun i : ι => (m i : ℝ) / ‖z i‖ ^ 2))
     (x : ℂ) (hx : ∀ i, x ≠ z i) :
     logDeriv
-        (fun w : ℂ => ∏' j : WithMultiplicity ι m, weierstrass_E 1 (w / z j.1)) x =
+        (fun w : ℂ => ∏' j : WithMultiplicity ι m, weierstrassE 1 (w / z j.1)) x =
       ∑' i : ι, (m i : ℂ) * (x / (z i * (x - z i))) := by
   classical
   have hz0' : ∀ j : WithMultiplicity ι m, z j.1 ≠ 0 := by
@@ -88,20 +88,20 @@ theorem logDeriv_tprod_weierstrass_E_one_eq_tsum_of_summable_mul_inv_norm_sq
     intro j
     exact hx j.1
   have hlog :
-      logDeriv (fun w : ℂ => ∏' j : WithMultiplicity ι m, weierstrass_E 1 (w / z j.1)) x =
+      logDeriv (fun w : ℂ => ∏' j : WithMultiplicity ι m, weierstrassE 1 (w / z j.1)) x =
         ∑' j : WithMultiplicity ι m, x / (z j.1 * (x - z j.1)) :=
     logDeriv_tprod_weierstrass_E_one_eq_tsum_of_summable_inv_norm_sq
       (z := fun j : WithMultiplicity ι m => z j.1) hz0' h' x hx'
   have hsumR : Summable (fun j : WithMultiplicity ι m => x / (z j.1 * (x - z j.1))) := by
     have hsum_log :
         Summable (fun j : WithMultiplicity ι m =>
-          logDeriv (fun w : ℂ => weierstrass_E 1 (w / z j.1)) x) := by
+          logDeriv (fun w : ℂ => weierstrassE 1 (w / z j.1)) x) := by
       simpa using
         summable_logDeriv_weierstrass_E_one_div_of_summable_inv_norm_sq
           (z := fun j : WithMultiplicity ι m => z j.1) hz0' h' x hx'
     have hterm :
         (fun j : WithMultiplicity ι m =>
-            logDeriv (fun w : ℂ => weierstrass_E 1 (w / z j.1)) x) =
+            logDeriv (fun w : ℂ => weierstrassE 1 (w / z j.1)) x) =
           (fun j : WithMultiplicity ι m => x / (z j.1 * (x - z j.1))) := by
       funext j
       simpa using logDeriv_weierstrass_E_one_div (a := z j.1) (x := x) (hz0 j.1) (hx j.1)
@@ -110,7 +110,7 @@ theorem logDeriv_tprod_weierstrass_E_one_eq_tsum_of_summable_mul_inv_norm_sq
     tsum_withMultiplicity_eq_tsum_sigma (z := z) (m := m) (x := x) hsumR
   have hInner := tsum_fintype_eq_mul_tsum_term (z := z) (m := m) (x := x)
   calc
-    logDeriv (fun w : ℂ => ∏' j : WithMultiplicity ι m, weierstrass_E 1 (w / z j.1)) x
+    logDeriv (fun w : ℂ => ∏' j : WithMultiplicity ι m, weierstrassE 1 (w / z j.1)) x
         = ∑' j : WithMultiplicity ι m, x / (z j.1 * (x - z j.1)) := hlog
     _ = ∑' i : ι, ∑' _ : Fin (m i), x / (z i * (x - z i)) := hSigma
     _ = ∑' i : ι, (m i : ℂ) * (x / (z i * (x - z i))) := by

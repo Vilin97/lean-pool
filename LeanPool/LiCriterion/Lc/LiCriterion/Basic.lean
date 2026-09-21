@@ -97,6 +97,7 @@ namespace LiCriterion
 -- Nontrivial zeros in the critical strip.
 --
 -- NOTE: this is placed near the top so it can be used by early analytic/M-test lemmas.
+/-- The zeros of the Riemann zeta function in the open critical strip. -/
 noncomputable def NontrivialZero : Type :=
   {ρ : ℂ // riemannZeta ρ = 0 ∧ 0 < ρ.re ∧ ρ.re < 1}
 
@@ -1595,16 +1596,16 @@ lemma eventually_le_norm_of_summable_inv_norm_sq
 
 This is an E₁-product form:
 
-`ξ(s) = exp(a + b*s) * ∏' ρ, weierstrass_E 1 ((s - 1 / 2) / (ρ - 1 / 2))`.
+`ξ(s) = exp(a + b*s) * ∏' ρ, weierstrassE 1 ((s - 1 / 2) / (ρ - 1 / 2))`.
 
 The shift by `1 / 2` aligns with the functional equation `ξ(s) = ξ(1-s)` and the pairing
 `ρ ↦ 1 - ρ` (so the denominators negate). -/
-def xi_hadamard_genus_one_shifted : Prop :=
+def xiHadamardGenusOneShifted : Prop :=
   ∃ a b : ℂ, ∀ s : ℂ,
     riemannXi s =
       Complex.exp (a + b * s) *
         ∏' ρ : NontrivialZero,
-          Hadamard.weierstrass_E 1
+          Hadamard.weierstrassE 1
             ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
 
 /-- Nontrivial zeros are paired by `ρ ↦ 1 - ρ`.
@@ -1663,6 +1664,7 @@ lemma pairedZero_involutive : Function.Involutive pairedZero := by
     _ = 1 - (1 - ρ.val) := by simp
     _ = ρ.val := by ring
 
+/-- The involutive equivalence of nontrivial zeros induced by reflection `ρ ↦ 1 - ρ`. -/
 noncomputable def pairedZeroEquiv : NontrivialZero ≃ NontrivialZero :=
   { toFun := pairedZero
     invFun := pairedZero
@@ -1674,29 +1676,30 @@ noncomputable def pairedZeroEquiv : NontrivialZero ≃ NontrivialZero :=
 /-! ### Genus‑1 Hadamard: the linear term vanishes (shifted form)
 
 We use the functional equation `ξ(s) = ξ(1-s)` and the involution `ρ ↦ 1-ρ` to show that in the
-shifted genus‑1 Hadamard factorization `xi_hadamard_genus_one_shifted`, the linear coefficient is
+shifted genus‑1 Hadamard factorization `xiHadamardGenusOneShifted`, the linear coefficient is
 forced to be `0`. The key symmetry is that the shifted E₁ product is invariant under `s ↦ 1-s`
 (by reindexing via `pairedZeroEquiv`). -/
 
+/-- The genus-one Weierstrass product over nontrivial zeros, centered at one half. -/
 noncomputable def xiE1ShiftedProd (s : ℂ) : ℂ :=
   ∏' ρ : NontrivialZero,
-    Hadamard.weierstrass_E 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
+    Hadamard.weierstrassE 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
 
 /-- A convenient “already-centered” ξ factorization hypothesis used by the genus‑1 Li pipeline. -/
-def xi_factorization_shifted_prod : Prop :=
+def xiFactorizationShiftedProd : Prop :=
   ∃ a : ℂ, ∀ s : ℂ, riemannXi s = Complex.exp a * xiE1ShiftedProd s
 
 private lemma weierstrass_E_one_mul_neg (w : ℂ) :
-    Hadamard.weierstrass_E 1 w *
-        Hadamard.weierstrass_E 1 (-w) = 1 - w ^ 2 := by
+    Hadamard.weierstrassE 1 w *
+        Hadamard.weierstrassE 1 (-w) = 1 - w ^ 2 := by
   have hexp : Complex.exp w * Complex.exp (-w) = 1 := by
     calc
       Complex.exp w * Complex.exp (-w) = Complex.exp (w + (-w)) := by
         simpa using (Complex.exp_add w (-w)).symm
       _ = 1 := by simp
   calc
-    Hadamard.weierstrass_E 1 w *
-        Hadamard.weierstrass_E 1 (-w)
+    Hadamard.weierstrassE 1 w *
+        Hadamard.weierstrassE 1 (-w)
         = ((1 - w) * Complex.exp w) * ((1 - (-w)) * Complex.exp (-w)) := by
             simp [Hadamard.weierstrass_E_one]
     _ = ((1 - w) * (1 + w)) * (Complex.exp w * Complex.exp (-w)) := by
@@ -1712,10 +1715,10 @@ private lemma xiE1ShiftedProd_one_sub (s : ℂ) :
   classical
   -- Reindex by `ρ ↦ 1 - ρ`, which negates `(ρ - 1 / 2)` and hence negates the E₁ argument.
   have hterm (ρ : NontrivialZero) :
-      Hadamard.weierstrass_E 1
+      Hadamard.weierstrassE 1
           (((1 - s) - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
         =
-      Hadamard.weierstrass_E 1
+      Hadamard.weierstrassE 1
           ((s - (1 / 2 : ℂ)) / ((pairedZero ρ).val - (1 / 2 : ℂ))) := by
     -- Reduce to the purely algebraic identity
     --   (2⁻¹ - s)/(ρ - 2⁻¹) = (s - 2⁻¹)/(2⁻¹ - ρ),
@@ -1727,7 +1730,7 @@ private lemma xiE1ShiftedProd_one_sub (s : ℂ) :
     -- First simplify the `pairedZero` denominator to `2⁻¹ - ρ`.
     simp only [one_div, pairedZero_val]
     -- Now prove equality of the E₁ arguments and finish by congruence.
-    refine congrArg (Hadamard.weierstrass_E 1) ?_
+    refine congrArg (Hadamard.weierstrassE 1) ?_
     -- First normalize `1 - s - 2⁻¹` and `1 - ρ - 2⁻¹` to `2⁻¹ - s` and `2⁻¹ - ρ`.
     rw [hs', hr']
     rw [hs, hr]
@@ -1743,13 +1746,13 @@ private lemma xiE1ShiftedProd_one_sub (s : ℂ) :
       xiE1ShiftedProd (1 - s)
         =
         ∏' ρ : NontrivialZero,
-          Hadamard.weierstrass_E 1
+          Hadamard.weierstrassE 1
             ((s - (1 / 2 : ℂ)) / ((pairedZero ρ).val - (1 / 2 : ℂ))) := by
     -- Use `tprod_congr` with the pointwise identity `hterm`.
     simpa [xiE1ShiftedProd] using (tprod_congr (fun ρ : NontrivialZero => hterm ρ))
   -- Reindex the right-hand side back to `xiE1ShiftedProd s`.
   let F : NontrivialZero → ℂ := fun ρ =>
-    Hadamard.weierstrass_E 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
+    Hadamard.weierstrassE 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
   calc
     xiE1ShiftedProd (1 - s)
         = ∏' ρ : NontrivialZero, F (pairedZero ρ) := by
@@ -1762,8 +1765,8 @@ private lemma xiE1ShiftedProd_one_sub (s : ℂ) :
 
 /-- Derived: in a shifted genus‑1 Hadamard factorization for `ξ`, the linear coefficient is `0`. -/
 theorem xi_hadamard_genus_one_shifted_linear_coeff_zero
-    (hhad : xi_hadamard_genus_one_shifted) :
-    xi_factorization_shifted_prod := by
+    (hhad : xiHadamardGenusOneShifted) :
+    xiFactorizationShiftedProd := by
   classical
   obtain ⟨a, b, hξ⟩ := hhad
   -- Abbreviate the product part.
@@ -1925,8 +1928,8 @@ theorem xi_hadamard_genus_one_shifted_linear_coeff_zero
 /-! ### Small derived lemmas for the paired/genus‑1 pipeline -/
 
 /-- `ξ(1 / 2)` is nonzero: in the shifted product every factor has argument `0`. -/
-lemma xi_half_ne_zero [Fact xi_factorization_shifted_prod] : riemannXi (1 / 2 : ℂ) ≠ 0 := by
-  obtain ⟨a, hξ⟩ := (Fact.out : xi_factorization_shifted_prod)
+lemma xi_half_ne_zero [Fact xiFactorizationShiftedProd] : riemannXi (1 / 2 : ℂ) ≠ 0 := by
+  obtain ⟨a, hξ⟩ := (Fact.out : xiFactorizationShiftedProd)
   have hE : xiE1ShiftedProd (2⁻¹ : ℂ) = 1 := by
     -- Every factor is `E₁(0) = 1`.
     simp [xiE1ShiftedProd, Hadamard.weierstrass_E_one]
@@ -1938,7 +1941,7 @@ lemma xi_half_ne_zero [Fact xi_factorization_shifted_prod] : riemannXi (1 / 2 : 
   exact this ▸ Complex.exp_ne_zero a
 
 /-- A nontrivial zero is never equal to `1 / 2` (or else ξ would vanish there). -/
-lemma NontrivialZero.ne_half [Fact xi_factorization_shifted_prod] (ρ : NontrivialZero) :
+lemma NontrivialZero.ne_half [Fact xiFactorizationShiftedProd] (ρ : NontrivialZero) :
     ρ.val ≠ (1 / 2 : ℂ) := by
   intro hρ
   have hzero : riemannXi ρ.val = 0 :=
@@ -1947,7 +1950,7 @@ lemma NontrivialZero.ne_half [Fact xi_factorization_shifted_prod] (ρ : Nontrivi
   exact xi_half_ne_zero this
 
 private lemma weierstrass_E_one_eq_zero_iff (w : ℂ) :
-    Hadamard.weierstrass_E 1 w = 0 ↔ w = 1 := by
+    Hadamard.weierstrassE 1 w = 0 ↔ w = 1 := by
   constructor
   · intro h
     -- `E₁(w) = (1-w) * exp(w)` and `exp(w) ≠ 0`.
@@ -1982,7 +1985,7 @@ lemma taylorCoeff_const_mul (c : ℂ) (hc : c ≠ 0) (f : ℂ → ℂ) (n : ℕ)
 noncomputable def xiPairedFactor (ρ : NontrivialZero) (s : ℂ) : ℂ :=
   1 - (((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ))) ^ 2)
 
-private lemma xiPairedFactor_eq_const_mul_pairLinear [Fact xi_factorization_shifted_prod]
+private lemma xiPairedFactor_eq_const_mul_pairLinear [Fact xiFactorizationShiftedProd]
     (ρ : NontrivialZero) (s : ℂ) :
     xiPairedFactor ρ s =
       (-(ρ.val * (pairedZero ρ).val) / (ρ.val - (1 / 2 : ℂ)) ^ 2) *
@@ -2461,10 +2464,10 @@ lemma inv_norm_sub_half_sq_le (ρ : NontrivialZero) (hρ : (1 : ℝ) ≤ ‖ρ.v
 private lemma multipliable_xiE1ShiftedProd_term_of_genus_one (s : ℂ)
     (hgenus : Summable (fun ρ : NontrivialZero => (1 : ℝ) / ‖ρ.val‖ ^ 2)) :
     Multipliable (fun ρ : NontrivialZero =>
-      Hadamard.weierstrass_E 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))) := by
+      Hadamard.weierstrassE 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))) := by
   classical
   let f : NontrivialZero → ℂ := fun ρ =>
-    Hadamard.weierstrass_E 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
+    Hadamard.weierstrassE 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
   let g : NontrivialZero → ℂ := fun ρ => f ρ - 1
   let C : ℝ := 16 * ‖s - (1 / 2 : ℂ)‖ ^ 2
   have hsum_dom : Summable (fun ρ : NontrivialZero => C * ((1 : ℝ) / ‖ρ.val‖ ^ 2)) :=
@@ -2483,7 +2486,7 @@ private lemma multipliable_xiE1ShiftedProd_term_of_genus_one (s : ℂ)
     have hw_le : ‖w‖ ≤ (1 / 2 : ℝ) := by
       simpa [w] using norm_div_sub_half_le_half (s := s) (ρ := (ρ.val : ℂ)) hρ1 hρbig
     have hE :
-        ‖Hadamard.weierstrass_E 1 w - 1‖ ≤ 4 * ‖w‖ ^ (1 + 1) := by
+        ‖Hadamard.weierstrassE 1 w - 1‖ ≤ 4 * ‖w‖ ^ (1 + 1) := by
       simpa using
         (Hadamard.weierstrass_E_small_disk_norm_sub_one_le (h := 1) (z := w)
           hw_le)
@@ -2519,7 +2522,7 @@ lemma xiE1ShiftedProd_sq_eq_tprod_xiPairedFactor_of_genus_one
     (xiE1ShiftedProd s) ^ 2 = ∏' ρ : NontrivialZero, xiPairedFactor ρ s := by
   classical
   let f : NontrivialZero → ℂ := fun ρ =>
-    Hadamard.weierstrass_E 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
+    Hadamard.weierstrassE 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
   let g : NontrivialZero → ℂ := fun ρ => f (pairedZero ρ)
   have hf : Multipliable f := multipliable_xiE1ShiftedProd_term_of_genus_one (s := s) hgenus
   have hg : Multipliable g := by
@@ -2600,7 +2603,7 @@ lemma xi_sq_factorization_paired_of_genus_one
 
 /- **DERIVED**: The linear coefficient vanishes from the functional equation ξ(s) = ξ(1-s).
 
-In the shifted genus‑1 Hadamard factorization `xi_hadamard_genus_one_shifted`, the symmetry
+In the shifted genus‑1 Hadamard factorization `xiHadamardGenusOneShifted`, the symmetry
 forces the linear coefficient to vanish; see `xi_hadamard_genus_one_shifted_linear_coeff_zero`. -/
 /-  (historical proof sketch preserved; no longer part of the proof path)
   -- The detailed proof uses linear_coeff_zero_of_symmetry
@@ -2862,7 +2865,7 @@ private lemma taylorCoeff_square_singleLinearFactor (ρ : NontrivialZero) (n : �
   simp [taylorCoeff, g1, hEqIter', hconst, hsingle', f, mul_div_assoc]
 
 /-- Taylor coefficients for a single paired quadratic factor give the paired Li summand. -/
-lemma taylorCoeff_xiPairedFactor [Fact xi_factorization_shifted_prod] (ρ : NontrivialZero) (n : ℕ) :
+lemma taylorCoeff_xiPairedFactor [Fact xiFactorizationShiftedProd] (ρ : NontrivialZero) (n : ℕ) :
     taylorCoeff (xiPairedFactor ρ) n = liPairedSummand n ρ := by
   classical
   let c : ℂ :=
@@ -3129,6 +3132,7 @@ lemma pairedZeroWithMultiplicity_involutive : Function.Involutive pairedZeroWith
       · exact pairedZero_involutive ρ
       · simp [pairedZeroWithMultiplicity]
 
+/-- Reflection of the indexed xi zeros, preserving each zero’s multiplicity index. -/
 noncomputable def pairedZeroWithMultiplicityEquiv :
     XiZeroWithMultiplicity ≃ XiZeroWithMultiplicity :=
   { toFun := pairedZeroWithMultiplicity
@@ -3343,11 +3347,11 @@ theorem summable_weighted_Li_paired_summand_of_weighted_genus
 
 /-- The multiplicity-aware genus-1 canonical product for `ξ`. -/
 noncomputable def xiE1ProdWithMultiplicity (s : ℂ) : ℂ :=
-  ∏' i : XiZeroWithMultiplicity, Hadamard.weierstrass_E 1 (s / i.1.val)
+  ∏' i : XiZeroWithMultiplicity, Hadamard.weierstrassE 1 (s / i.1.val)
 
 lemma multipliable_xiE1ProdWithMultiplicity_term_of_genus_one (s : ℂ)
     (hgenus : Summable (fun i : XiZeroWithMultiplicity => (1 : ℝ) / ‖i.1.val‖ ^ 2)) :
-    Multipliable (fun i : XiZeroWithMultiplicity => Hadamard.weierstrass_E 1 (s / i.1.val)) := by
+    Multipliable (fun i : XiZeroWithMultiplicity => Hadamard.weierstrassE 1 (s / i.1.val)) := by
   let z : XiZeroWithMultiplicity → ℂ := fun i => i.1.val
   have hz0 : ∀ i : XiZeroWithMultiplicity, z i ≠ 0 := by
     intro i
@@ -3357,7 +3361,7 @@ lemma multipliable_xiE1ProdWithMultiplicity_term_of_genus_one (s : ℂ)
       (z := z) (hz0 := hz0) hgenus s)
 
 /-- The multiplicity-aware order-`≤ 1` Hadamard factorization hypothesis for `ξ`. -/
-def xi_factorization_prod_with_multiplicity : Prop :=
+def xiFactorizationProdWithMultiplicity : Prop :=
   ∃ a b : ℂ, ∀ s : ℂ, riemannXi s = Complex.exp (a * s + b) * xiE1ProdWithMultiplicity s
 
 /-- The paired linear factor attached to a zero `ρ` and its reflected partner `1 - ρ`. -/
@@ -3381,8 +3385,8 @@ private lemma xiPairedLinearFactor_one_sub (ρ : NontrivialZero) (s : ℂ) :
   ring
 
 private lemma weierstrass_E_one_mul_paired_linear (ρ : NontrivialZero) (s : ℂ) :
-    Hadamard.weierstrass_E 1 (s / ρ.val) *
-        Hadamard.weierstrass_E 1 (s / (pairedZero ρ).val)
+    Hadamard.weierstrassE 1 (s / ρ.val) *
+        Hadamard.weierstrassE 1 (s / (pairedZero ρ).val)
       =
     Complex.exp (s / (ρ.val * (pairedZero ρ).val)) *
       xiPairedLinearFactor ρ s := by
@@ -3629,7 +3633,7 @@ lemma xiE1ProdWithMultiplicity_sq_eq_exp_mul_tprod_xiPairedLinearFactor_of_genus
         ∏' i : XiZeroWithMultiplicity, xiPairedLinearFactor i.1 s := by
   classical
   let f : XiZeroWithMultiplicity → ℂ := fun i =>
-    Hadamard.weierstrass_E 1 (s / i.1.val)
+    Hadamard.weierstrassE 1 (s / i.1.val)
   let g : XiZeroWithMultiplicity → ℂ := fun i => f (pairedZeroWithMultiplicity i)
   let d : XiZeroWithMultiplicity → ℂ := fun i =>
     (1 : ℂ) / (i.1.val * (pairedZero i.1).val)
@@ -3705,7 +3709,7 @@ lemma xiE1ProdWithMultiplicity_sq_eq_exp_mul_tprod_xiPairedLinearFactor_of_genus
 theorem xi_sq_factorization_pairedLinear_withMultiplicity_of_weighted_genus
     (hgenus : Summable
       (fun ρ : NontrivialZero => (analyticOrderNatAt riemannXi ρ.val : ℝ) / ‖ρ.val‖ ^ 2))
-    (hhad : xi_factorization_prod_with_multiplicity) :
+    (hhad : xiFactorizationProdWithMultiplicity) :
     ∃ b₂ : ℂ, ∀ s : ℂ,
       (riemannXi s) ^ 2 =
         Complex.exp b₂ * ∏' i : XiZeroWithMultiplicity, xiPairedLinearFactor i.1 s := by

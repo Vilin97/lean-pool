@@ -35,7 +35,7 @@ structure ZeroSet (f : ℂ → ℂ) where
 
 /-- The canonical genus‑1 Weierstrass product over a countable zero set. -/
 noncomputable def canonicalProductZeroSet
-    {f : ℂ → ℂ} (Z : ZeroSet f) [Countable Z.Zero] (s : ℂ) : ℂ :=
-  ∏' ρ : Z.Zero, weierstrass_E 1 (s / Z.z ρ)
+    {f : ℂ → ℂ} (Z : ZeroSet f) (s : ℂ) : ℂ :=
+  ∏' ρ : Z.Zero, weierstrassE 1 (s / Z.z ρ)
 
 end Hadamard

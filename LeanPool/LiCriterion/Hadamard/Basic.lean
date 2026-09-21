@@ -376,25 +376,25 @@ Weierstrass elementary factors where:
   E_p(w) = (1-w)exp(w + w²/2 + ... + w^p/p)
 These appear in the canonical product representation.
 -/
-noncomputable def weierstrass_E (p : ℕ) (w : ℂ) : ℂ :=
+noncomputable def weierstrassE (p : ℕ) (w : ℂ) : ℂ :=
   (1 - w) * Complex.exp (∑ k ∈ Finset.range p, w^(k+1) / (k+1))
 
 -- Basic property: E₀(z) = 1 - z
-lemma weierstrass_E_zero (w : ℂ) : weierstrass_E 0 w = 1 - w := by
-  simp [weierstrass_E, Finset.range_zero, Finset.sum_empty]
+lemma weierstrass_E_zero (w : ℂ) : weierstrassE 0 w = 1 - w := by
+  simp [weierstrassE, Finset.range_zero, Finset.sum_empty]
 
 -- E₁(z) = (1-z)exp(z)
-lemma weierstrass_E_one (w : ℂ) : weierstrass_E 1 w = (1 - w) * exp w := by
-  simp only [weierstrass_E, Finset.range_one, Finset.sum_singleton]
+lemma weierstrass_E_one (w : ℂ) : weierstrassE 1 w = (1 - w) * exp w := by
+  simp only [weierstrassE, Finset.range_one, Finset.sum_singleton]
   norm_num
 
 -- `E₁(1) = 0`.
-lemma weierstrass_E_at_one (p : ℕ) : weierstrass_E p (1 : ℂ) = 0 := by
-  simp [weierstrass_E]
+lemma weierstrass_E_at_one (p : ℕ) : weierstrassE p (1 : ℂ) = 0 := by
+  simp [weierstrassE]
 
 -- `E_p(w) = 0 ↔ w = 1` for all `p`.
 lemma weierstrass_E_eq_zero_iff_general (p : ℕ) (w : ℂ) :
-    weierstrass_E p w = 0 ↔ w = 1 := by
+    weierstrassE p w = 0 ↔ w = 1 := by
   constructor
   · intro h
     have h' : (1 - w) * Complex.exp (∑ k ∈ Finset.range p, w ^ (k + 1) / (k + 1)) = 0 := h
@@ -409,15 +409,15 @@ lemma weierstrass_E_eq_zero_iff_general (p : ℕ) (w : ℂ) :
         exact this
     | inr h2 => exact absurd h2 (Complex.exp_ne_zero _)
   · intro hw
-    simp [hw, weierstrass_E]
+    simp [hw, weierstrassE]
 
 -- `E_p(w) ≠ 0` when `w ≠ 1`.
 lemma weierstrass_E_ne_zero_general (p : ℕ) {w : ℂ} (hw : w ≠ 1) :
-    weierstrass_E p w ≠ 0 :=
+    weierstrassE p w ≠ 0 :=
   fun h => hw ((weierstrass_E_eq_zero_iff_general p w).1 h)
 
 -- `E₁(w) = 0 ↔ w = 1`.
-lemma weierstrass_E_one_eq_zero_iff (w : ℂ) : weierstrass_E 1 w = 0 ↔ w = 1 := by
+lemma weierstrass_E_one_eq_zero_iff (w : ℂ) : weierstrassE 1 w = 0 ↔ w = 1 := by
   rw [weierstrass_E_one]
   constructor
   · intro h
@@ -436,18 +436,18 @@ lemma weierstrass_E_one_eq_zero_iff (w : ℂ) : weierstrass_E 1 w = 0 ↔ w = 1 
     simp
 
 -- `E₁(w) ≠ 0` for `w ≠ 1`.
-lemma weierstrass_E_one_ne_zero (w : ℂ) (hw : w ≠ 1) : weierstrass_E 1 w ≠ 0 := by
+lemma weierstrass_E_one_ne_zero (w : ℂ) (hw : w ≠ 1) : weierstrassE 1 w ≠ 0 := by
   intro h0
   exact hw ((weierstrass_E_one_eq_zero_iff w).1 h0)
 
 -- Eₚ(0) = 1 for all p
-lemma weierstrass_E_zero_arg (p : ℕ) : weierstrass_E p 0 = 1 := by
-  simp [weierstrass_E]
+lemma weierstrass_E_zero_arg (p : ℕ) : weierstrassE p 0 = 1 := by
+  simp [weierstrassE]
 
 -- Key property: The Weierstrass E function is continuous
-lemma weierstrass_E_continuous (p : ℕ) : Continuous (weierstrass_E p) := by
+lemma weierstrass_E_continuous (p : ℕ) : Continuous (weierstrassE p) := by
   -- The function is continuous as a product of continuous functions
-  unfold weierstrass_E
+  unfold weierstrassE
   apply Continuous.mul
   · -- (1 - w) is continuous
     fun_prop
@@ -461,9 +461,9 @@ lemma weierstrass_E_continuous (p : ℕ) : Continuous (weierstrass_E p) := by
     fun_prop
 
 -- Key property: The Weierstrass E function is complex-differentiable (entire)
-lemma weierstrass_E_differentiable (p : ℕ) : Differentiable ℂ (weierstrass_E p) := by
+lemma weierstrass_E_differentiable (p : ℕ) : Differentiable ℂ (weierstrassE p) := by
   classical
-  unfold weierstrass_E
+  unfold weierstrassE
   fun_prop
 
 /-- `E_p'(1) ≠ 0` for all `p`.
@@ -471,13 +471,13 @@ lemma weierstrass_E_differentiable (p : ℕ) : Differentiable ℂ (weierstrass_E
 Concretely, `E_p'(1) = -exp(H_p)` where `H_p = ∑_{k=1}^p 1/k` (the `p`-th
 harmonic number), which is nonzero since `exp` never vanishes. -/
 lemma deriv_weierstrass_E_at_one_ne_zero (p : ℕ) :
-    deriv (weierstrass_E p) (1 : ℂ) ≠ 0 := by
+    deriv (weierstrassE p) (1 : ℂ) ≠ 0 := by
   classical
   let poly : ℂ → ℂ := fun w => ∑ k ∈ Finset.range p, w ^ (k + 1) / (k + 1)
   have hpoly_diff : Differentiable ℂ poly := by
     change Differentiable ℂ (fun w : ℂ => ∑ k ∈ Finset.range p, w ^ (k + 1) / (k + 1))
     fun_prop
-  have hE_eq : weierstrass_E p = fun w => (1 - w) * Complex.exp (poly w) := by
+  have hE_eq : weierstrassE p = fun w => (1 - w) * Complex.exp (poly w) := by
     funext w; rfl
   have h1 : HasDerivAt (fun w : ℂ => (1 : ℂ) - w) (-1) (1 : ℂ) :=
     (hasDerivAt_id (1 : ℂ)).const_sub (1 : ℂ)
@@ -503,11 +503,11 @@ lemma deriv_weierstrass_E_at_one_ne_zero (p : ℕ) :
 
 /-- `E_p` has a simple zero at `1` for all `p`. -/
 lemma weierstrass_E_analyticOrderAt_one (p : ℕ) :
-    analyticOrderAt (weierstrass_E p) (1 : ℂ) = 1 := by
-  have hanalytic : AnalyticAt ℂ (weierstrass_E p) (1 : ℂ) :=
+    analyticOrderAt (weierstrassE p) (1 : ℂ) = 1 := by
+  have hanalytic : AnalyticAt ℂ (weierstrassE p) (1 : ℂ) :=
     (weierstrass_E_differentiable p).analyticAt 1
-  have hzero : weierstrass_E p (1 : ℂ) = 0 := weierstrass_E_at_one p
-  have hderiv : deriv (weierstrass_E p) (1 : ℂ) ≠ 0 :=
+  have hzero : weierstrassE p (1 : ℂ) = 0 := weierstrass_E_at_one p
+  have hderiv : deriv (weierstrassE p) (1 : ℂ) ≠ 0 :=
     deriv_weierstrass_E_at_one_ne_zero p
   have h := hanalytic.analyticOrderAt_sub_eq_one_of_deriv_ne_zero hderiv
   simp only [hzero, sub_zero] at h
@@ -515,7 +515,7 @@ lemma weierstrass_E_analyticOrderAt_one (p : ℕ) :
 
 /-- `E_p` has `analyticOrderNatAt` equal to 1 at `w = 1`. -/
 lemma weierstrass_E_analyticOrderNatAt_one (p : ℕ) :
-    analyticOrderNatAt (weierstrass_E p) (1 : ℂ) = 1 := by
+    analyticOrderNatAt (weierstrassE p) (1 : ℂ) = 1 := by
   unfold analyticOrderNatAt
   rw [weierstrass_E_analyticOrderAt_one]
   rfl
@@ -542,11 +542,11 @@ variable {d : ℕ} {zeros : ℕ → ℂ}
 /-- Finite partial product for the canonical product. -/
 noncomputable def canonicalProductPartial (d : ℕ) (zeros : ℕ → ℂ)
     (s : Finset ℕ) (z : ℂ) : ℂ :=
-  ∏ n ∈ s, weierstrass_E d (z / zeros n)
+  ∏ n ∈ s, weierstrassE d (z / zeros n)
 
 /-- The Weierstrass canonical product (over all indices). -/
 noncomputable def canonicalProduct (d : ℕ) (zeros : ℕ → ℂ) (z : ℂ) : ℂ :=
-  ∏' n, weierstrass_E d (z / zeros n)
+  ∏' n, weierstrassE d (z / zeros n)
 
 @[simp]
 lemma canonicalProductPartial_empty (d : ℕ) (zeros : ℕ → ℂ) (z : ℂ) :
@@ -558,7 +558,7 @@ lemma canonicalProduct_at_zero (d : ℕ) (zeros : ℕ → ℂ) :
     canonicalProduct d zeros 0 = 1 := by
   -- Each factor equals 1 at z = 0, so the infinite product is 1.
   classical
-  have hfac : (fun n => weierstrass_E d (0 / zeros n)) = fun _n => (1 : ℂ) := by
+  have hfac : (fun n => weierstrassE d (0 / zeros n)) = fun _n => (1 : ℂ) := by
     funext n; simp [weierstrass_E_zero_arg]
   rw [canonicalProduct, hfac]
   exact tprod_one
@@ -1690,7 +1690,7 @@ lemma logTaylor_neg_eq_neg_sum (h : ℕ) (z : ℂ) :
 
 lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
   ∃ C : ℝ, ∀ z : ℂ, ‖z‖ ≤ (1 / 2 : ℝ) →
-    Real.log ‖weierstrass_E h z‖ ≥ -C * ‖z‖^(h+1) := by
+    Real.log ‖weierstrassE h z‖ ≥ -C * ‖z‖^(h+1) := by
   classical
   refine ⟨2, ?_⟩
   intro z hz
@@ -1713,17 +1713,17 @@ lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
       _ = - (Complex.log ((1 - z)⁻¹) + (-S)) := by ring
       _ = - (Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)) := by simp [hS']
   have hinv_ne : ((1 - z)⁻¹ : ℂ) ≠ 0 := inv_ne_zero hne
-  have hE : weierstrass_E h z = Complex.exp w := by
+  have hE : weierstrassE h z = Complex.exp w := by
     have : Complex.exp w = Complex.exp S / Complex.exp (Complex.log ((1 - z)⁻¹)) := by
       simpa [w, hw] using (Complex.exp_sub S (Complex.log ((1 - z)⁻¹)))
     calc
-      weierstrass_E h z = (1 - z) * Complex.exp S := by
-        simp [weierstrass_E, S]
+      weierstrassE h z = (1 - z) * Complex.exp S := by
+        simp [weierstrassE, S]
       _ = Complex.exp S * (1 - z) := by ring
       _ = Complex.exp S / Complex.exp (Complex.log ((1 - z)⁻¹)) := by
         simp [Complex.exp_log hinv_ne, div_eq_mul_inv]
       _ = Complex.exp w := this.symm
-  have hlogE : Real.log ‖weierstrass_E h z‖ = w.re := by
+  have hlogE : Real.log ‖weierstrassE h z‖ = w.re := by
     simp [hE, Complex.norm_exp, Real.log_exp]
   have hre_lower : w.re ≥ -‖w‖ := by
     have h1 : -|w.re| ≤ w.re := neg_abs_le w.re
@@ -1769,7 +1769,7 @@ lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
   have hre_bound : w.re ≥ - (2 * ‖z‖ ^ (h + 1)) := by
     have : -(2 * ‖z‖ ^ (h + 1)) ≤ -‖w‖ := neg_le_neg hw_le'
     exact le_trans this hre_lower
-  have : Real.log ‖weierstrass_E h z‖ ≥ - (2 * ‖z‖ ^ (h + 1)) := by
+  have : Real.log ‖weierstrassE h z‖ ≥ - (2 * ‖z‖ ^ (h + 1)) := by
     simpa [hlogE] using hre_bound
   simpa [mul_assoc, mul_left_comm, mul_comm] using this
 
@@ -1789,10 +1789,10 @@ lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
     have hpos : 0 < 1 - r := by linarith
     exact lt_of_lt_of_le hpos hnorm
   have logE :
-      Real.log ‖weierstrass_E h z‖
+      Real.log ‖weierstrassE h z‖
         = Real.log ‖1 - z‖ + (∑ k ∈ Finset.range h, (z^(k+1) / (k+1))).re := by
     -- log ||(1 - z) * exp(S)|| = log ||1 - z|| + Re S
-    have : weierstrass_E h z
+    have : weierstrassE h z
           = (1 - z) * Complex.exp (∑ k ∈ Finset.range h, z^(k+1) / (k+1)) := rfl
     simp [this, Complex.norm_mul, Complex.norm_exp, Real.log_mul, hpos1, Real.exp_pos]
   -- Bound `log ‖1 - z‖` from below using `log (1 - r)` and r ≤ 1 / 2.
@@ -1819,7 +1819,7 @@ lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
     simpa [hnorm] using hterm
   -- Combine the two bounds and reduce to a bound in terms of r
   have base_lower :
-      Real.log ‖weierstrass_E h z‖
+      Real.log ‖weierstrassE h z‖
         ≥ Real.log (1 - r) - ∑ k ∈ Finset.range h, r^(k+1) / (k+1) := by
     simpa [logE] using add_le_add hlog1 hsum_re
   -- Bound the finite sum crudely by 2r using a geometric-series bound
@@ -1865,7 +1865,7 @@ lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
       Real.log_le_log.mpr ⟨by norm_num, by linarith⟩
     simpa using this
   -- Combine: linear-in-r lower bound
-  have lower_linear : Real.log ‖weierstrass_E h z‖ ≥ - (Real.log 2 + 2) * r := by
+  have lower_linear : Real.log ‖weierstrassE h z‖ ≥ - (Real.log 2 + 2) * r := by
     have := base_lower
     have := le_trans this (by nlinarith [hsum_bound, hlog_one_minus])
     -- rearrange to (- (log 2 + 2)) * r
@@ -1897,7 +1897,7 @@ lemma weierstrass_E_small_disk_lower_bound (h : ℕ) :
 -/
 
 lemma weierstrass_E_small_disk_norm_sub_one_le (h : ℕ) :
-    ∀ z : ℂ, ‖z‖ ≤ (1 / 2 : ℝ) → ‖weierstrass_E h z - 1‖ ≤ 4 * ‖z‖ ^ (h + 1) := by
+    ∀ z : ℂ, ‖z‖ ≤ (1 / 2 : ℝ) → ‖weierstrassE h z - 1‖ ≤ 4 * ‖z‖ ^ (h + 1) := by
   classical
   intro z hz
   have hz_lt : ‖z‖ < 1 := lt_of_le_of_lt hz (by norm_num)
@@ -1919,12 +1919,12 @@ lemma weierstrass_E_small_disk_norm_sub_one_le (h : ℕ) :
       _ = - (Complex.log ((1 - z)⁻¹) + (-S)) := by ring
       _ = - (Complex.log ((1 - z)⁻¹) + logTaylor (h + 1) (-z)) := by simp [hS']
   have hinv_ne : ((1 - z)⁻¹ : ℂ) ≠ 0 := inv_ne_zero hne
-  have hE : weierstrass_E h z = Complex.exp w := by
+  have hE : weierstrassE h z = Complex.exp w := by
     have : Complex.exp w = Complex.exp S / Complex.exp (Complex.log ((1 - z)⁻¹)) := by
       simpa [w, hw] using (Complex.exp_sub S (Complex.log ((1 - z)⁻¹)))
     calc
-      weierstrass_E h z = (1 - z) * Complex.exp S := by
-        simp [weierstrass_E, S]
+      weierstrassE h z = (1 - z) * Complex.exp S := by
+        simp [weierstrassE, S]
       _ = Complex.exp S * (1 - z) := by ring
       _ = Complex.exp S / Complex.exp (Complex.log ((1 - z)⁻¹)) := by
         simp [Complex.exp_log hinv_ne, div_eq_mul_inv]
@@ -1974,24 +1974,24 @@ lemma weierstrass_E_small_disk_norm_sub_one_le (h : ℕ) :
     have hzpow_le_half : ‖z‖ ^ (h + 1) ≤ (1 / 2 : ℝ) := le_trans hzpow_le hz
     have : 2 * ‖z‖ ^ (h + 1) ≤ (1 : ℝ) := by nlinarith
     exact le_trans hw_le' this
-  have hmain : ‖weierstrass_E h z - 1‖ ≤ 2 * ‖w‖ := by
-    -- `weierstrass_E h z = exp w`
+  have hmain : ‖weierstrassE h z - 1‖ ≤ 2 * ‖w‖ := by
+    -- `weierstrassE h z = exp w`
     simpa [hE] using (Complex.norm_exp_sub_one_le (x := w) hw_le_one)
   -- convert the bound on `w` to a bound on `z`
   have hw_scale : 2 * ‖w‖ ≤ 2 * (2 * ‖z‖ ^ (h + 1)) :=
     mul_le_mul_of_nonneg_left hw_le' (by positivity : 0 ≤ (2 : ℝ))
   calc
-    ‖weierstrass_E h z - 1‖ ≤ 2 * ‖w‖ := hmain
+    ‖weierstrassE h z - 1‖ ≤ 2 * ‖w‖ := hmain
     _ ≤ 2 * (2 * ‖z‖ ^ (h + 1)) := hw_scale
     _ = 4 * ‖z‖ ^ (h + 1) := by ring
 
 lemma weierstrass_E_small_disk_log_norm_le (h : ℕ) (z : ℂ) (hz : ‖z‖ ≤ (1 / 2 : ℝ)) :
-    Real.log ‖weierstrass_E h z‖ ≤ 4 * ‖z‖ ^ (h + 1) := by
-  have hE_ne : weierstrass_E h z ≠ 0 := by
+    Real.log ‖weierstrassE h z‖ ≤ 4 * ‖z‖ ^ (h + 1) := by
+  have hE_ne : weierstrassE h z ≠ 0 := by
     intro h0
     have hmul :
         (1 - z) * Complex.exp (∑ k ∈ Finset.range h, z ^ (k + 1) / (k + 1)) = 0 := by
-      simpa [weierstrass_E] using h0
+      simpa [weierstrassE] using h0
     have h' := mul_eq_zero.mp hmul
     cases h' with
     | inl h1 =>
@@ -2003,22 +2003,22 @@ lemma weierstrass_E_small_disk_log_norm_le (h : ℕ) (z : ℂ) (hz : ‖z‖ ≤
         linarith
     | inr h2 =>
         exact (Complex.exp_ne_zero _ h2).elim
-  have hE_pos : 0 < ‖weierstrass_E h z‖ := norm_pos_iff.2 hE_ne
-  have hnorm : ‖weierstrass_E h z‖ ≤ 1 + 4 * ‖z‖ ^ (h + 1) := by
-    have htri : ‖weierstrass_E h z‖ ≤ ‖weierstrass_E h z - 1‖ + ‖(1 : ℂ)‖ := by
-      have hdecomp : (weierstrass_E h z - 1) + (1 : ℂ) = weierstrass_E h z := by ring
+  have hE_pos : 0 < ‖weierstrassE h z‖ := norm_pos_iff.2 hE_ne
+  have hnorm : ‖weierstrassE h z‖ ≤ 1 + 4 * ‖z‖ ^ (h + 1) := by
+    have htri : ‖weierstrassE h z‖ ≤ ‖weierstrassE h z - 1‖ + ‖(1 : ℂ)‖ := by
+      have hdecomp : (weierstrassE h z - 1) + (1 : ℂ) = weierstrassE h z := by ring
       -- Triangle inequality, rewriting `((E - 1) + 1)` back to `E`.
-      simpa [hdecomp] using (norm_add_le (weierstrass_E h z - 1) (1 : ℂ))
-    have hE1 : ‖weierstrass_E h z - 1‖ ≤ 4 * ‖z‖ ^ (h + 1) :=
+      simpa [hdecomp] using (norm_add_le (weierstrassE h z - 1) (1 : ℂ))
+    have hE1 : ‖weierstrassE h z - 1‖ ≤ 4 * ‖z‖ ^ (h + 1) :=
       weierstrass_E_small_disk_norm_sub_one_le h z hz
-    have htri' : ‖weierstrass_E h z‖ ≤ 4 * ‖z‖ ^ (h + 1) + ‖(1 : ℂ)‖ :=
+    have htri' : ‖weierstrassE h z‖ ≤ 4 * ‖z‖ ^ (h + 1) + ‖(1 : ℂ)‖ :=
       le_trans htri (add_le_add_left hE1 _)
     -- `‖(1 : ℂ)‖ = 1`
-    have htri'' : ‖weierstrass_E h z‖ ≤ 4 * ‖z‖ ^ (h + 1) + 1 := by
+    have htri'' : ‖weierstrassE h z‖ ≤ 4 * ‖z‖ ^ (h + 1) + 1 := by
       simpa using htri'
     simpa [add_assoc, add_comm, add_left_comm] using htri''
   have hlog_le :
-      Real.log ‖weierstrass_E h z‖ ≤ Real.log (1 + 4 * ‖z‖ ^ (h + 1)) :=
+      Real.log ‖weierstrassE h z‖ ≤ Real.log (1 + 4 * ‖z‖ ^ (h + 1)) :=
     Real.log_le_log hE_pos hnorm
   have hlog_upper : Real.log (1 + 4 * ‖z‖ ^ (h + 1)) ≤ 4 * ‖z‖ ^ (h + 1) := by
     have hpos : 0 < (1 + 4 * ‖z‖ ^ (h + 1) : ℝ) := by positivity
@@ -2040,30 +2040,30 @@ the form `∏ (1 + gₙ z)`. Our elementary-factor estimate
 theorem weierstrass_product_hasProdLocallyUniformlyOn
     (a : ℕ → ℂ) (p : ℕ → ℕ) (u : ℕ → ℝ)
     (hu : Summable u)
-    (h : ∀ᶠ n in atTop, ∀ z : ℂ, ‖(weierstrass_E (p n) (z / a n) - 1 : ℂ)‖ ≤ u n) :
-    HasProdLocallyUniformlyOn (fun n z ↦ weierstrass_E (p n) (z / a n))
-      (fun z ↦ ∏' n, weierstrass_E (p n) (z / a n)) (Set.univ : Set ℂ) := by
+    (h : ∀ᶠ n in atTop, ∀ z : ℂ, ‖(weierstrassE (p n) (z / a n) - 1 : ℂ)‖ ≤ u n) :
+    HasProdLocallyUniformlyOn (fun n z ↦ weierstrassE (p n) (z / a n))
+      (fun z ↦ ∏' n, weierstrassE (p n) (z / a n)) (Set.univ : Set ℂ) := by
   classical
-  -- Continuity of each `(z ↦ weierstrass_E (p n) (z / a n) - 1)` on `univ`.
+  -- Continuity of each `(z ↦ weierstrassE (p n) (z / a n) - 1)` on `univ`.
   have hcts :
       ∀ n,
-        ContinuousOn (fun z : ℂ => (weierstrass_E (p n) (z / a n) - 1 : ℂ))
+        ContinuousOn (fun z : ℂ => (weierstrassE (p n) (z / a n) - 1 : ℂ))
           (Set.univ : Set ℂ) := by
     intro n
-    have hE : Continuous (fun z : ℂ => weierstrass_E (p n) (z / a n)) :=
+    have hE : Continuous (fun z : ℂ => weierstrassE (p n) (z / a n)) :=
       (weierstrass_E_continuous (p n)).comp (by fun_prop)
     have h1 : Continuous (fun _z : ℂ => (1 : ℂ)) := continuous_const
     exact (hE.sub h1).continuousOn
   -- Turn the pointwise bound into the `∀ z ∈ univ` form expected by the library lemma.
   have h' :
-      ∀ᶠ n in atTop, ∀ z ∈ (Set.univ : Set ℂ), ‖(weierstrass_E (p n) (z / a n) - 1 : ℂ)‖ ≤ u n := by
+      ∀ᶠ n in atTop, ∀ z ∈ (Set.univ : Set ℂ), ‖(weierstrassE (p n) (z / a n) - 1 : ℂ)‖ ≤ u n := by
     filter_upwards [h] with n hn z hz
     simpa using hn z
   -- Apply the general theorem for products of the form `∏ (1 + gₙ z)`.
   have hprod :
       HasProdLocallyUniformlyOn
-        (fun n z ↦ (1 : ℂ) + (weierstrass_E (p n) (z / a n) - 1))
-        (fun z ↦ ∏' n, ((1 : ℂ) + (weierstrass_E (p n) (z / a n) - 1)))
+        (fun n z ↦ (1 : ℂ) + (weierstrassE (p n) (z / a n) - 1))
+        (fun z ↦ ∏' n, ((1 : ℂ) + (weierstrassE (p n) (z / a n) - 1)))
         (Set.univ : Set ℂ) := by
     simpa using
       (Summable.hasProdLocallyUniformlyOn_nat_one_add (α := ℂ) (R := ℂ)
@@ -2074,32 +2074,32 @@ theorem weierstrass_product_hasProdLocallyUniformlyOn
 theorem differentiableOn_weierstrass_product
     (a : ℕ → ℂ) (p : ℕ → ℕ) (u : ℕ → ℝ)
     (hu : Summable u)
-    (h : ∀ᶠ n in atTop, ∀ z : ℂ, ‖(weierstrass_E (p n) (z / a n) - 1 : ℂ)‖ ≤ u n) :
-    DifferentiableOn ℂ (fun z : ℂ => ∏' n, weierstrass_E (p n) (z / a n)) (Set.univ : Set ℂ) := by
+    (h : ∀ᶠ n in atTop, ∀ z : ℂ, ‖(weierstrassE (p n) (z / a n) - 1 : ℂ)‖ ≤ u n) :
+    DifferentiableOn ℂ (fun z : ℂ => ∏' n, weierstrassE (p n) (z / a n)) (Set.univ : Set ℂ) := by
   classical
   -- Get local uniform convergence of the partial products.
   have hprod := weierstrass_product_hasProdLocallyUniformlyOn (a := a) (p := p) (u := u) hu h
   have hseq :
       TendstoLocallyUniformlyOn
-        (fun N z ↦ ∏ i ∈ Finset.range N, weierstrass_E (p i) (z / a i))
-        (fun z ↦ ∏' n, weierstrass_E (p n) (z / a n))
+        (fun N z ↦ ∏ i ∈ Finset.range N, weierstrassE (p i) (z / a i))
+        (fun z ↦ ∏' n, weierstrassE (p n) (z / a n))
         atTop (Set.univ : Set ℂ) :=
     hprod.tendstoLocallyUniformlyOn_finsetRange
   -- Each partial product is entire (finite product of entire functions).
   have hdiff :
       ∀ᶠ N in (atTop : Filter ℕ),
         DifferentiableOn ℂ
-          (fun z ↦ ∏ i ∈ Finset.range N, weierstrass_E (p i) (z / a i))
+          (fun z ↦ ∏ i ∈ Finset.range N, weierstrassE (p i) (z / a i))
           (Set.univ : Set ℂ) := by
     refine Filter.Eventually.of_forall ?_
     intro N
     have hfun :
         DifferentiableOn ℂ
-          (∏ i ∈ Finset.range N, (fun z : ℂ => weierstrass_E (p i) (z / a i)))
+          (∏ i ∈ Finset.range N, (fun z : ℂ => weierstrassE (p i) (z / a i)))
           (Set.univ : Set ℂ) := by
       refine DifferentiableOn.finsetProd (𝕜 := ℂ) (𝔸' := ℂ) ?_
       intro i hi
-      have hE : Differentiable ℂ (weierstrass_E (p i)) := weierstrass_E_differentiable (p i)
+      have hE : Differentiable ℂ (weierstrassE (p i)) := weierstrass_E_differentiable (p i)
       have hdiv : Differentiable ℂ (fun z : ℂ => z / a i) := by fun_prop
       exact (hE.comp hdiv).differentiableOn
     simpa [Finset.prod_fn] using hfun
@@ -2119,8 +2119,8 @@ theorem weierstrass_product_hasProdLocallyUniformlyOn_of_tendsto_norm_atTop
     (a : ℕ → ℂ) (p : ℕ → ℕ)
     (ha : Tendsto (fun n ↦ ‖a n‖) atTop atTop)
     (hsum : ∀ R : ℝ, 0 < R → Summable (fun n ↦ (R / ‖a n‖) ^ (p n + 1))) :
-    HasProdLocallyUniformlyOn (fun n z ↦ weierstrass_E (p n) (z / a n))
-      (fun z ↦ ∏' n, weierstrass_E (p n) (z / a n)) (Set.univ : Set ℂ) := by
+    HasProdLocallyUniformlyOn (fun n z ↦ weierstrassE (p n) (z / a n))
+      (fun z ↦ ∏' n, weierstrassE (p n) (z / a n)) (Set.univ : Set ℂ) := by
   classical
   refine hasProdLocallyUniformlyOn_of_forall_compact (s := (Set.univ : Set ℂ)) isOpen_univ ?_
   intro K hKsub hK
@@ -2146,7 +2146,7 @@ theorem weierstrass_product_hasProdLocallyUniformlyOn_of_tendsto_norm_atTop
   -- The basic estimate gives an eventual bound by `u` on `K`.
   have h_large : ∀ᶠ n in atTop, 2 * R ≤ ‖a n‖ := (Filter.tendsto_atTop.mp ha) (2 * R)
   have hbound :
-      ∀ᶠ n in atTop, ∀ z ∈ K, ‖(weierstrass_E (p n) (z / a n) - 1 : ℂ)‖ ≤ u n := by
+      ∀ᶠ n in atTop, ∀ z ∈ K, ‖(weierstrassE (p n) (z / a n) - 1 : ℂ)‖ ≤ u n := by
     filter_upwards [h_large] with n hn z hzK
     have hzR : ‖z‖ ≤ R := hKnorm z hzK
     have ha_pos : 0 < ‖a n‖ := by
@@ -2159,7 +2159,7 @@ theorem weierstrass_product_hasProdLocallyUniformlyOn_of_tendsto_norm_atTop
       have hzdiv : ‖z‖ / ‖a n‖ ≤ (1 / 2 : ℝ) := (div_le_iff₀ ha_pos).2 hzle
       simpa [norm_div] using hzdiv
     have hE :
-        ‖(weierstrass_E (p n) (z / a n) - 1 : ℂ)‖ ≤ 4 * ‖z / a n‖ ^ (p n + 1) :=
+        ‖(weierstrassE (p n) (z / a n) - 1 : ℂ)‖ ≤ 4 * ‖z / a n‖ ^ (p n + 1) :=
       weierstrass_E_small_disk_norm_sub_one_le (h := p n) (z := z / a n) hzdiv_half
     have hdiv : ‖z / a n‖ ≤ R / ‖a n‖ := by
       have : ‖z‖ / ‖a n‖ ≤ R / ‖a n‖ :=
@@ -2171,18 +2171,18 @@ theorem weierstrass_product_hasProdLocallyUniformlyOn_of_tendsto_norm_atTop
         4 * ‖z / a n‖ ^ (p n + 1) ≤ 4 * (R / ‖a n‖) ^ (p n + 1) :=
       mul_le_mul_of_nonneg_left hpow (by norm_num : 0 ≤ (4 : ℝ))
     exact le_trans hE (by simpa [u] using hmul)
-  -- Continuity of each `(z ↦ weierstrass_E (p n) (z / a n) - 1)` on `K`.
+  -- Continuity of each `(z ↦ weierstrassE (p n) (z / a n) - 1)` on `K`.
   have hcts :
-      ∀ n, ContinuousOn (fun z : ℂ => (weierstrass_E (p n) (z / a n) - 1 : ℂ)) K := by
+      ∀ n, ContinuousOn (fun z : ℂ => (weierstrassE (p n) (z / a n) - 1 : ℂ)) K := by
     intro n
-    have hE : Continuous (fun z : ℂ => weierstrass_E (p n) (z / a n)) :=
+    have hE : Continuous (fun z : ℂ => weierstrassE (p n) (z / a n)) :=
       (weierstrass_E_continuous (p n)).comp (by fun_prop)
     exact (hE.sub continuous_const).continuousOn
   -- Apply the general theorem for products of the form `∏ (1 + gₙ z)`.
   have hprod :
       HasProdUniformlyOn
-        (fun n z ↦ (1 : ℂ) + (weierstrass_E (p n) (z / a n) - 1))
-        (fun z ↦ ∏' n, ((1 : ℂ) + (weierstrass_E (p n) (z / a n) - 1))) K := by
+        (fun n z ↦ (1 : ℂ) + (weierstrassE (p n) (z / a n) - 1))
+        (fun z ↦ ∏' n, ((1 : ℂ) + (weierstrassE (p n) (z / a n) - 1))) K := by
     simpa using
       (Summable.hasProdUniformlyOn_nat_one_add
         (α := ℂ) (R := ℂ) (K := K) hK (u := u) hu hbound hcts)
@@ -2193,30 +2193,30 @@ theorem differentiableOn_weierstrass_product_of_tendsto_norm_atTop
     (a : ℕ → ℂ) (p : ℕ → ℕ)
     (ha : Tendsto (fun n ↦ ‖a n‖) atTop atTop)
     (hsum : ∀ R : ℝ, 0 < R → Summable (fun n ↦ (R / ‖a n‖) ^ (p n + 1))) :
-    DifferentiableOn ℂ (fun z : ℂ => ∏' n, weierstrass_E (p n) (z / a n)) (Set.univ : Set ℂ) := by
+    DifferentiableOn ℂ (fun z : ℂ => ∏' n, weierstrassE (p n) (z / a n)) (Set.univ : Set ℂ) := by
   classical
   have hprod :=
     weierstrass_product_hasProdLocallyUniformlyOn_of_tendsto_norm_atTop (a := a) (p := p) ha hsum
   have hseq :
       TendstoLocallyUniformlyOn
-        (fun N z ↦ ∏ i ∈ Finset.range N, weierstrass_E (p i) (z / a i))
-        (fun z ↦ ∏' n, weierstrass_E (p n) (z / a n))
+        (fun N z ↦ ∏ i ∈ Finset.range N, weierstrassE (p i) (z / a i))
+        (fun z ↦ ∏' n, weierstrassE (p n) (z / a n))
         atTop (Set.univ : Set ℂ) :=
     hprod.tendstoLocallyUniformlyOn_finsetRange
   have hdiff :
       ∀ᶠ N in (atTop : Filter ℕ),
         DifferentiableOn ℂ
-          (fun z ↦ ∏ i ∈ Finset.range N, weierstrass_E (p i) (z / a i))
+          (fun z ↦ ∏ i ∈ Finset.range N, weierstrassE (p i) (z / a i))
           (Set.univ : Set ℂ) := by
     refine Filter.Eventually.of_forall ?_
     intro N
     have hfun :
         DifferentiableOn ℂ
-          (∏ i ∈ Finset.range N, (fun z : ℂ => weierstrass_E (p i) (z / a i)))
+          (∏ i ∈ Finset.range N, (fun z : ℂ => weierstrassE (p i) (z / a i)))
           (Set.univ : Set ℂ) := by
       refine DifferentiableOn.finsetProd (𝕜 := ℂ) (𝔸' := ℂ) ?_
       intro i hi
-      have hE : Differentiable ℂ (weierstrass_E (p i)) := weierstrass_E_differentiable (p i)
+      have hE : Differentiable ℂ (weierstrassE (p i)) := weierstrass_E_differentiable (p i)
       have hdiv : Differentiable ℂ (fun z : ℂ => z / a i) := by fun_prop
       exact (hE.comp hdiv).differentiableOn
     simpa [Finset.prod_fn] using hfun
@@ -2225,7 +2225,7 @@ theorem differentiableOn_weierstrass_product_of_tendsto_norm_atTop
 /-! Away from the zero at 1: on {‖z‖ ≥ 1 / 2, ‖z-1‖ ≥ δ}, log ‖E_h(z)‖ ≥ -C(δ)‖z‖^h. -/
 lemma weierstrass_E_away_from_one_lower_bound (h : ℕ) (δ : ℝ) (hδ : 0 < δ) :
   ∃ C : ℝ, ∀ z : ℂ, (1 / 2 : ℝ) ≤ ‖z‖ → δ ≤ ‖z - 1‖ →
-    Real.log ‖weierstrass_E h z‖ ≥ -C * ‖z‖^h := by
+    Real.log ‖weierstrassE h z‖ ≥ -C * ‖z‖^h := by
   classical
   refine ⟨(2 : ℝ)^h * (h + |Real.log δ|), ?_⟩
   intro z hz_ge hz_delta
@@ -2235,9 +2235,9 @@ lemma weierstrass_E_away_from_one_lower_bound (h : ℕ) (δ : ℝ) (hδ : 0 < δ
     simpa [norm_sub_rev] using hz_delta
   have hnorm_ne : ‖1 - z‖ ≠ 0 := ne_of_gt (lt_of_lt_of_le hδ hδ_le_norm)
   set S : ℂ := ∑ k ∈ Finset.range h, z^(k+1) / (k+1) with hS
-  have logE : Real.log ‖weierstrass_E h z‖ = Real.log ‖1 - z‖ + S.re := by
-    have : weierstrass_E h z = (1 - z) * Complex.exp S := by
-      simp [weierstrass_E, S]
+  have logE : Real.log ‖weierstrassE h z‖ = Real.log ‖1 - z‖ + S.re := by
+    have : weierstrassE h z = (1 - z) * Complex.exp S := by
+      simp [weierstrassE, S]
     simp [this, Complex.norm_exp, Real.log_mul, hnorm_ne, Real.exp_ne_zero, Real.log_exp]
   have hlog1 : Real.log ‖1 - z‖ ≥ Real.log δ := Real.log_le_log hδ hδ_le_norm
   have hSre : S.re ≥ -‖S‖ := by
@@ -2245,8 +2245,8 @@ lemma weierstrass_E_away_from_one_lower_bound (h : ℕ) (δ : ℝ) (hδ : 0 < δ
     have h2 : |S.re| ≤ ‖S‖ := abs_re_le_norm S
     have h3 : -‖S‖ ≤ -|S.re| := by linarith
     exact le_trans h3 h1
-  have base_lower : Real.log ‖weierstrass_E h z‖ ≥ Real.log δ - ‖S‖ := by
-    have : Real.log ‖weierstrass_E h z‖ ≥ Real.log δ + (-‖S‖) := by
+  have base_lower : Real.log ‖weierstrassE h z‖ ≥ Real.log δ - ‖S‖ := by
+    have : Real.log ‖weierstrassE h z‖ ≥ Real.log δ + (-‖S‖) := by
       have := add_le_add hlog1 hSre
       simpa [logE, sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using this
     simpa [sub_eq_add_neg, add_assoc] using this
@@ -2328,8 +2328,8 @@ lemma weierstrass_E_away_from_one_lower_bound (h : ℕ) (δ : ℝ) (hδ : 0 < δ
       simpa [mul_assoc, mul_left_comm, mul_comm] using this
     have h1 : -((2 : ℝ)^h * |Real.log δ| * r^h) ≤ -|Real.log δ| := neg_le_neg habs
     exact le_trans h1 h0
-  have hmain : Real.log ‖weierstrass_E h z‖ ≥ -((2 : ℝ)^h * (h + |Real.log δ|) * r^h) := by
-    have hS' : Real.log ‖weierstrass_E h z‖ ≥ Real.log δ - ((2 : ℝ)^h * h * r^h) := by
+  have hmain : Real.log ‖weierstrassE h z‖ ≥ -((2 : ℝ)^h * (h + |Real.log δ|) * r^h) := by
+    have hS' : Real.log ‖weierstrassE h z‖ ≥ Real.log δ - ((2 : ℝ)^h * h * r^h) := by
       have : Real.log δ - ‖S‖ ≥ Real.log δ - ((2 : ℝ)^h * h * r^h) := by
         linarith [hS_bound]
       exact ge_trans base_lower this
@@ -2337,13 +2337,13 @@ lemma weierstrass_E_away_from_one_lower_bound (h : ℕ) (δ : ℝ) (hδ : 0 < δ
         -((2 : ℝ)^h * |Real.log δ| * r^h) - ((2 : ℝ)^h * h * r^h) := by
       linarith [hlogδ]
     have htmp :
-        Real.log ‖weierstrass_E h z‖ ≥ -((2 : ℝ)^h * |Real.log δ| * r^h) - ((2 : ℝ)^h * h * r^h) :=
+        Real.log ‖weierstrassE h z‖ ≥ -((2 : ℝ)^h * |Real.log δ| * r^h) - ((2 : ℝ)^h * h * r^h) :=
       ge_trans hS' this
     have hEq :
         -((2 : ℝ)^h * |Real.log δ| * r^h) - ((2 : ℝ)^h * h * r^h)
           = -((2 : ℝ)^h * (h + |Real.log δ|) * r^h) := by
       simp [sub_eq_add_neg, mul_add, mul_left_comm, mul_comm, add_comm]
-    have : Real.log ‖weierstrass_E h z‖ ≥ -((2 : ℝ)^h * (h + |Real.log δ|) * r^h) := by
+    have : Real.log ‖weierstrassE h z‖ ≥ -((2 : ℝ)^h * (h + |Real.log δ|) * r^h) := by
       simpa [hEq] using htmp
     exact this
   simpa [hrdef] using hmain
@@ -2355,10 +2355,10 @@ lemma weierstrass_E_away_from_one_lower_bound (h : ℕ) (δ : ℝ) (hδ : 0 < δ
   have hr_ge : (1 / 2 : ℝ) ≤ r := by simpa [hrdef] using hz_ge
   have hr_nonneg : 0 ≤ r := by simp [hrdef]
   -- log |E_h(z)| = log |1-z| + Re(∑_{k=1}^h z^k/k)
-  have logE : Real.log ‖weierstrass_E h z‖
+  have logE : Real.log ‖weierstrassE h z‖
       = Real.log ‖1 - z‖ + (∑ k ∈ Finset.range h, (z^(k+1) / (k+1))).re := by
-    have : weierstrass_E h z = (1 - z) * Complex.exp (∑ k ∈ Finset.range h, z^(k+1) / (k+1)) := rfl
-    simp [this, weierstrass_E, Complex.norm_mul, Complex.norm_exp, Real.log_mul, Real.exp_pos]
+    have : weierstrassE h z = (1 - z) * Complex.exp (∑ k ∈ Finset.range h, z^(k+1) / (k+1)) := rfl
+    simp [this, weierstrassE, Complex.norm_mul, Complex.norm_exp, Real.log_mul, Real.exp_pos]
   -- Bound log |1-z| from below using δ.
   have hlog1 : Real.log ‖1 - z‖ ≥ Real.log δ := by
     have : ‖1 - z‖ ≥ δ := by simpa [norm_sub_rev] using hz_delta
@@ -2424,10 +2424,10 @@ lemma weierstrass_E_away_from_one_lower_bound (h : ℕ) (δ : ℝ) (hδ : 0 < δ
       have : ‖(k+1 : ℂ)‖ = (k+1 : ℝ) := by simp
       simp [hrdef, norm_div, Complex.norm_pow, this]
     simpa [this]
-  have : Real.log ‖weierstrass_E h z‖
+  have : Real.log ‖weierstrassE h z‖
       ≥ Real.log δ - (∑ k ∈ Finset.range h, r^(k+1) / (k+1)) := by
     simpa [logE] using add_le_add hlog1 sum_re_lower
-  have : Real.log ‖weierstrass_E h z‖ ≥ Real.log δ - ((2 : ℝ)^h * h * r^h) :=
+  have : Real.log ‖weierstrassE h z‖ ≥ Real.log δ - ((2 : ℝ)^h * h * r^h) :=
     le_trans this (by nlinarith [sum_bound])
   -- Absorb |log δ| into the r^h term using (2^h) r^h ≥ 1
   have h2r_ge_one : (2 : ℝ)^h * r^h ≥ 1 := by
@@ -2436,7 +2436,7 @@ lemma weierstrass_E_away_from_one_lower_bound (h : ℕ) (δ : ℝ) (hδ : 0 < δ
     have := mul_le_mul_of_nonneg_left this (by positivity : 0 ≤ (2 : ℝ)^h)
     simpa using this
   have hlog_abs : Real.log δ ≥ - |Real.log δ| := by nlinarith [abs_nonneg (Real.log δ)]
-  have : Real.log ‖weierstrass_E h z‖
+  have : Real.log ‖weierstrassE h z‖
       ≥ - ((2 : ℝ)^h * (h + |Real.log δ|)) * r^h := by
     -- Since (2^h) r^h ≥ 1, we have -|log δ| ≥ - (2^h) |log δ| r^h
     have : - |Real.log δ| ≥ - ((2 : ℝ)^h * |Real.log δ|) * r^h := by

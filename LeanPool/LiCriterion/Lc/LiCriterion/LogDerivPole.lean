@@ -81,7 +81,7 @@ lemma logDeriv_congr_of_eventuallyEq (f g : ℂ → ℂ) (z : ℂ) (h : f =ᶠ[�
   have hval : f z = g z := Filter.EventuallyEq.eq_of_nhds h
   simp [_root_.logDeriv, hder, hval]
 
-lemma tendsto_atTop_sub_of_bounded {α : Type} [TopologicalSpace α] {l : Filter α}
+lemma tendsto_atTop_sub_of_bounded {α : Type} {l : Filter α}
     {f g : α → ℝ} (hf : Tendsto f l atTop) (hg : ∃ M, ∀ᶠ x in l, g x ≤ M) :
     Tendsto (fun x => f x - g x) l atTop := by
   refine tendsto_atTop.2 ?_

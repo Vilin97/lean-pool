@@ -36,6 +36,7 @@ namespace LZCBorelCaratheodory
 noncomputable section
 
 -- Define the boundary supremum using conditionally complete lattice
+/-- The supremum of the real part of `g` on the circle of radius `R` centered at zero. -/
 noncomputable def boundaryRealSup (g : ℂ → ℂ) (R : ℝ) : ℝ :=
   sSup {x | ∃ ζ : ℂ, ‖ζ‖ = R ∧ x = (g ζ).re}
 

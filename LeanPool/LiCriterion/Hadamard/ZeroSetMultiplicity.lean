@@ -46,8 +46,8 @@ def zWithMultiplicity : Z.ZeroWithMultiplicity → ℂ := fun i => Z.z i.1
     Z.zWithMultiplicity ⟨ρ, k⟩ = Z.z ρ := rfl
 
 /-- The genus‑1 canonical product where each zero occurs with its multiplicity. -/
-noncomputable def canonicalProductZeroSetMultiplicity [Countable Z.Zero] (s : ℂ) : ℂ :=
-  ∏' i : Z.ZeroWithMultiplicity, weierstrass_E 1 (s / Z.zWithMultiplicity i)
+noncomputable def canonicalProductZeroSetMultiplicity (s : ℂ) : ℂ :=
+  ∏' i : Z.ZeroWithMultiplicity, weierstrassE 1 (s / Z.zWithMultiplicity i)
 
 end ZeroSetMultiplicity
 

@@ -94,7 +94,7 @@ import LeanPool.LiCriterion.Hadamard.Theorem
 ### 0.1 Rank-`p` canonical product for a `ZeroSetMultiplicity`
 
 `Hadamard.ZeroSetMultiplicity.canonicalProductZeroSetMultiplicity` is
-currently hard-coded to `weierstrass_E 1`. The general theorem needs the
+currently hard-coded to `weierstrassE 1`. The general theorem needs the
 rank-`p` variant. We introduce it here so downstream lemmas can refer to
 it; the genus-1 version is a special case.
 -/
@@ -109,12 +109,12 @@ namespace General
 /-- The rank-`p` canonical Weierstrass product over a `ZeroSetMultiplicity`,
 with each zero repeated according to its multiplicity. -/
 noncomputable def canonicalProductZeroSetMultiplicityRank
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f)
     (p : ℕ) (s : ℂ) : ℂ :=
-  ∏' i : Z.ZeroWithMultiplicity, weierstrass_E p (s / Z.zWithMultiplicity i)
+  ∏' i : Z.ZeroWithMultiplicity, weierstrassE p (s / Z.zWithMultiplicity i)
 
 @[simp] lemma canonicalProductZeroSetMultiplicityRank_one
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero] (s : ℂ) :
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) (s : ℂ) :
     canonicalProductZeroSetMultiplicityRank Z 1 s =
       Z.canonicalProductZeroSetMultiplicity s := rfl
 
@@ -124,7 +124,7 @@ with the concrete witness `2^h * (h + |log δ|)`. -/
 private lemma weierstrass_E_away_from_one_lower_bound_explicit
     (h : ℕ) (δ : ℝ) (hδ : 0 < δ) :
     ∀ z : ℂ, (1 / 2 : ℝ) ≤ ‖z‖ → δ ≤ ‖z - 1‖ →
-      Real.log ‖weierstrass_E h z‖
+      Real.log ‖weierstrassE h z‖
         ≥ -(((2 : ℝ) ^ h * ((h : ℝ) + |Real.log δ|)) * ‖z‖ ^ h) := by
   intro z hz_ge hz_delta
   set r : ℝ := ‖z‖ with hrdef
@@ -133,9 +133,9 @@ private lemma weierstrass_E_away_from_one_lower_bound_explicit
     simpa [norm_sub_rev] using hz_delta
   have hnorm_ne : ‖1 - z‖ ≠ 0 := ne_of_gt (lt_of_lt_of_le hδ hδ_le_norm)
   set S : ℂ := ∑ k ∈ Finset.range h, z ^ (k + 1) / (k + 1) with hS
-  have logE : Real.log ‖weierstrass_E h z‖ = Real.log ‖1 - z‖ + S.re := by
-    have : weierstrass_E h z = (1 - z) * Complex.exp S := by
-      simp [weierstrass_E, S]
+  have logE : Real.log ‖weierstrassE h z‖ = Real.log ‖1 - z‖ + S.re := by
+    have : weierstrassE h z = (1 - z) * Complex.exp S := by
+      simp [weierstrassE, S]
     simp [this, Complex.norm_exp, Real.log_mul, hnorm_ne, Real.exp_ne_zero,
       Real.log_exp]
   have hlog1 : Real.log ‖1 - z‖ ≥ Real.log δ := Real.log_le_log hδ hδ_le_norm
@@ -144,8 +144,8 @@ private lemma weierstrass_E_away_from_one_lower_bound_explicit
     have h2 : |S.re| ≤ ‖S‖ := abs_re_le_norm S
     have h3 : -‖S‖ ≤ -|S.re| := by linarith
     exact le_trans h3 h1
-  have base_lower : Real.log ‖weierstrass_E h z‖ ≥ Real.log δ - ‖S‖ := by
-    have : Real.log ‖weierstrass_E h z‖ ≥ Real.log δ + (-‖S‖) := by
+  have base_lower : Real.log ‖weierstrassE h z‖ ≥ Real.log δ - ‖S‖ := by
+    have : Real.log ‖weierstrassE h z‖ ≥ Real.log δ + (-‖S‖) := by
       have := add_le_add hlog1 hSre
       simpa [logE, sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using this
     simpa [sub_eq_add_neg, add_assoc] using this
@@ -226,10 +226,10 @@ private lemma weierstrass_E_away_from_one_lower_bound_explicit
       exact neg_le_neg habs
     exact le_trans h1 h0
   have hmain :
-      Real.log ‖weierstrass_E h z‖
+      Real.log ‖weierstrassE h z‖
         ≥ -((2 : ℝ) ^ h * ((h : ℝ) + |Real.log δ|) * r ^ h) := by
     have hS' :
-        Real.log ‖weierstrass_E h z‖ ≥ Real.log δ - ((2 : ℝ) ^ h * h * r ^ h) := by
+        Real.log ‖weierstrassE h z‖ ≥ Real.log δ - ((2 : ℝ) ^ h * h * r ^ h) := by
       have : Real.log δ - ‖S‖ ≥ Real.log δ - ((2 : ℝ) ^ h * h * r ^ h) := by
         linarith [hS_bound]
       exact ge_trans base_lower this
@@ -237,7 +237,7 @@ private lemma weierstrass_E_away_from_one_lower_bound_explicit
         -((2 : ℝ) ^ h * |Real.log δ| * r ^ h) - ((2 : ℝ) ^ h * h * r ^ h) := by
       linarith [hlogδ]
     have htmp :
-        Real.log ‖weierstrass_E h z‖ ≥
+        Real.log ‖weierstrassE h z‖ ≥
           -((2 : ℝ) ^ h * |Real.log δ| * r ^ h) - ((2 : ℝ) ^ h * h * r ^ h) :=
       ge_trans hS' this
     have hEq :
@@ -306,7 +306,7 @@ theorem summable_mult_div_norm_pow_of_order_le
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
     {lam : ℝ} (hlam_nonneg : 0 ≤ lam) (hf_order_le : order f ≤ lam)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    (Z : ZeroSetMultiplicity f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
@@ -326,12 +326,12 @@ theorem summable_mult_div_norm_pow_of_order_le
 
 private lemma cofinal_zerosBallFinset_of_entire
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    (Z : ZeroSetMultiplicity f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
     ∀ t : Finset Z.Zero, ∃ n : ℕ,
-      t ⊆ Hadamard.OrderOne.zerosBallFinset_of_entire
+      t ⊆ Hadamard.OrderOne.zerosBallFinsetOfEntire
         (hf_entire := hf_entire) (Z := Z.toZeroSet)
         (h_zeros_only := h_zeros_only) (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) n := by
   classical
@@ -359,7 +359,7 @@ private lemma cofinal_zerosBallFinset_of_entire
 
 /-- Convert a `ZeroWithMultiplicity` tsum into a multiplicity-weighted tsum on distinct zeros. -/
 private lemma tsum_zeroWithMultiplicity_eq_weighted_tsum_of_nonneg
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f)
     (g : Z.Zero → ℝ) (hg_nonneg : ∀ ρ : Z.Zero, 0 ≤ g ρ)
     (hg : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) * g ρ)) :
     (∑' i : Z.ZeroWithMultiplicity, g i.1) =
@@ -394,7 +394,7 @@ private theorem sum_mult_div_norm_pow_le_rpow_of_two_pow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
     {lam : ℝ} (hlam_nonneg : 0 ≤ lam) (hf_order_le : order f ≤ lam)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    (Z : ZeroSetMultiplicity f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
@@ -403,7 +403,7 @@ private theorem sum_mult_div_norm_pow_le_rpow_of_two_pow
     {δ : ℝ} (hδ_pos : 0 < δ) :
     ∃ n₀ : ℕ, ∃ C : ℝ, 0 ≤ C ∧
       ∀ n : ℕ, n₀ ≤ n →
-        (∑ ρ ∈ Hadamard.OrderOne.zerosBallFinset_of_entire
+        (∑ ρ ∈ Hadamard.OrderOne.zerosBallFinsetOfEntire
             (hf_entire := hf_entire) (Z := Z.toZeroSet) (h_zeros_only := h_zeros_only)
             (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) n,
           (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ p)
@@ -429,7 +429,7 @@ private theorem sum_mult_div_norm_pow_le_rpow_of_two_pow
   have hRcount_le : Rcount ≤ (2 : ℝ) ^ n₀ := le_trans (le_max_left _ _) hn₀
   have hone_le : (1 : ℝ) ≤ (2 : ℝ) ^ n₀ := le_trans (le_max_right _ _) hn₀
   let ball : ℕ → Finset Z.Zero := fun n =>
-    Hadamard.OrderOne.zerosBallFinset_of_entire
+    Hadamard.OrderOne.zerosBallFinsetOfEntire
       (hf_entire := hf_entire) (Z := Z.toZeroSet)
       (h_zeros_only := h_zeros_only) (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) n
   let smallSum : ℝ := ∑ ρ ∈ ball n₀, w ρ / ‖Z.z ρ‖ ^ p
@@ -663,7 +663,7 @@ private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
     {lam : ℝ} (hlam_nonneg : 0 ≤ lam) (hf_order_le : order f ≤ lam)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    (Z : ZeroSetMultiplicity f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
@@ -711,7 +711,7 @@ private theorem tsum_mult_div_norm_pow_tail_le_rpow_of_two_pow
     have hden_pos : 0 < 1 - q := sub_pos.mpr hq_lt_one
     exact div_nonneg hnum_nonneg (le_of_lt hden_pos)
   let ball : ℕ → Finset Z.Zero := fun n =>
-    Hadamard.OrderOne.zerosBallFinset_of_entire
+    Hadamard.OrderOne.zerosBallFinsetOfEntire
       (hf_entire := hf_entire) (Z := Z.toZeroSet)
       (h_zeros_only := h_zeros_only) (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) n
   have hsub_ball : ∀ k : ℕ, ball k ⊆ ball (k + 1) := by
@@ -1083,7 +1083,7 @@ over distinct zeros) and the library-level hypothesis
 `Summable (fun i : Z.ZeroWithMultiplicity => 1 / ‖Z.zWithMultiplicity i‖ ^ (p + 1))`
 (over the repeating sigma index). -/
 lemma summable_inv_norm_pow_zWithMultiplicity
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero] {p : ℕ}
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) {p : ℕ}
     (hsum : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1))) :
     Summable
       (fun i : Z.ZeroWithMultiplicity =>
@@ -1112,7 +1112,7 @@ lemma summable_inv_norm_pow_zWithMultiplicity
 
 /-- **Rank-`p` canonical product is entire.** -/
 theorem canonicalProductZeroSetMultiplicityRank_differentiable
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero] {p : ℕ}
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) {p : ℕ}
     (hsum : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1)))
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
     Differentiable ℂ (canonicalProductZeroSetMultiplicityRank Z p) := by
@@ -1132,7 +1132,7 @@ theorem canonicalProductZeroSetMultiplicityRank_differentiable
 
 /-- **The canonical product vanishes exactly on the zero set.** -/
 theorem canonicalProductZeroSetMultiplicityRank_eq_zero_iff
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero] {p : ℕ}
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) {p : ℕ}
     (hsum : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1)))
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) (s : ℂ) :
@@ -1157,7 +1157,7 @@ theorem canonicalProductZeroSetMultiplicityRank_eq_zero_iff
       exact hne i.1 hs
     have hne_prod :
         (∏' i : Z.ZeroWithMultiplicity,
-            weierstrass_E p (s / Z.zWithMultiplicity i)) ≠ 0 :=
+            weierstrassE p (s / Z.zWithMultiplicity i)) ≠ 0 :=
       Hadamard.OrderOne.tprod_weierstrass_E_div_ne_zero_of_summable_inv_norm_pow
         (z := Z.zWithMultiplicity) (p := p) hz0 hsum' s hx
     exact hne_prod hP
@@ -1170,14 +1170,14 @@ theorem canonicalProductZeroSetMultiplicityRank_eq_zero_iff
     let i₀ : Z.ZeroWithMultiplicity := ⟨ρ₀, ⟨0, hmult_pos⟩⟩
     have hi0_eq : Z.zWithMultiplicity i₀ = Z.z ρ₀ := rfl
     have hE_zero :
-        weierstrass_E p (Z.z ρ₀ / Z.zWithMultiplicity i₀) = 0 := by
+        weierstrassE p (Z.z ρ₀ / Z.zWithMultiplicity i₀) = 0 := by
       rw [hi0_eq]
       rw [div_self (h_z_ne_zero ρ₀)]
       exact weierstrass_E_at_one p
     -- A tprod with a zero factor is zero.
     have hex :
         ∃ i : Z.ZeroWithMultiplicity,
-          weierstrass_E p (Z.z ρ₀ / Z.zWithMultiplicity i) = 0 := ⟨i₀, hE_zero⟩
+          weierstrassE p (Z.z ρ₀ / Z.zWithMultiplicity i) = 0 := ⟨i₀, hE_zero⟩
     exact tprod_of_exists_eq_zero hex
 
 /-- **Generic sigma tprod reindexing for the Weierstrass product.**
@@ -1193,12 +1193,12 @@ around this by passing the inner multipliability explicitly via
 `Multipliable.tprod_sigma'`, which bypasses the automatic `sigma_factor`
 derivation. -/
 lemma tprod_sigma_weierstrass_E_eq_tprod_pow_generic
-    {ι : Type 0} [Countable ι] {z : ι → ℂ} {m : ι → ℕ} {p : ℕ}
+    {ι : Type 0} {z : ι → ℂ} {m : ι → ℕ} {p : ℕ}
     (hz0 : ∀ i : ι, z i ≠ 0)
     (hsum : Summable (fun i : ι => (m i : ℝ) / ‖z i‖ ^ (p + 1)))
     (s : ℂ) :
-    (∏' j : Σ i : ι, Fin (m i), weierstrass_E p (s / z j.1)) =
-      ∏' i : ι, weierstrass_E p (s / z i) ^ m i := by
+    (∏' j : Σ i : ι, Fin (m i), weierstrassE p (s / z j.1)) =
+      ∏' i : ι, weierstrassE p (s / z i) ^ m i := by
   classical
   have hz0_sigma : ∀ j : Σ i : ι, Fin (m i), z j.1 ≠ 0 := fun j => hz0 j.1
   -- Summability on the sigma type: `∑_{(i,k)} 1/‖z i‖^(p+1) = ∑_i (m i)/‖z i‖^(p+1)`.
@@ -1219,27 +1219,27 @@ lemma tprod_sigma_weierstrass_E_eq_tprod_pow_generic
         nsmul_eq_mul, mul_one_div]
   -- Multipliability on the sigma type via the library lemma.
   have hmul :
-      Multipliable (fun j : Σ i : ι, Fin (m i) => weierstrass_E p (s / z j.1)) :=
+      Multipliable (fun j : Σ i : ι, Fin (m i) => weierstrassE p (s / z j.1)) :=
     Hadamard.OrderOne.multipliable_weierstrass_E_of_summable_inv_norm_pow
       (z := fun j : Σ i : ι, Fin (m i) => z j.1) (p := p) hz0_sigma hsum_sigma s
   -- Each fiber is a finite product, hence trivially multipliable.
   have hmul_inner :
       ∀ i : ι, Multipliable
-        (fun k : Fin (m i) => weierstrass_E p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1)) :=
+        (fun k : Fin (m i) => weierstrassE p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1)) :=
     fun _ => Multipliable.of_finite
   -- Sigma → iterated. Use `tprod_sigma'` (explicit fiber multipliability) rather
   -- than `hmul.tprod_sigma`, which triggers a whnf timeout.
   have hsigma :
-      (∏' j : Σ i : ι, Fin (m i), weierstrass_E p (s / z j.1)) =
+      (∏' j : Σ i : ι, Fin (m i), weierstrassE p (s / z j.1)) =
         ∏' (i : ι) (k : Fin (m i)),
-          weierstrass_E p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1) :=
+          weierstrassE p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1) :=
     Multipliable.tprod_sigma' hmul_inner hmul
   rw [hsigma]
   refine tprod_congr (fun i => ?_)
   -- Inner tprod: reduce `⟨i, k⟩.1` to `i`, then constant product.
   have hconst :
-      (fun k : Fin (m i) => weierstrass_E p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1))
-        = (fun _ : Fin (m i) => weierstrass_E p (s / z i)) := by
+      (fun k : Fin (m i) => weierstrassE p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1))
+        = (fun _ : Fin (m i) => weierstrassE p (s / z i)) := by
     funext k; rfl
   rw [hconst, tprod_fintype, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 
@@ -1254,7 +1254,7 @@ analytic order 1 at `Z.z ρ`.
 
 /-- **`E_p(s / a)` has `analyticOrderNatAt` equal to 1 at `s = a`** (`a ≠ 0`). -/
 lemma analyticOrderNatAt_weierstrass_E_div {p : ℕ} {a : ℂ} (ha : a ≠ 0) :
-    analyticOrderNatAt (fun s : ℂ => weierstrass_E p (s / a)) a = 1 := by
+    analyticOrderNatAt (fun s : ℂ => weierstrassE p (s / a)) a = 1 := by
   classical
   -- The "inner" map `g(s) := s / a` is analytic with `g a = 1` and `deriv g a = 1/a ≠ 0`.
   let g : ℂ → ℂ := fun s => s / a
@@ -1274,14 +1274,14 @@ lemma analyticOrderNatAt_weierstrass_E_div {p : ℕ} {a : ℂ} (ha : a ≠ 0) :
     exact one_div_ne_zero ha
   -- Composition transports the analytic order from `g a = 1` back to `a`.
   have hcomp :
-      analyticOrderAt (weierstrass_E p ∘ g) a =
-        analyticOrderAt (weierstrass_E p) (g a) :=
-    analyticOrderAt_comp_of_deriv_ne_zero (f := weierstrass_E p) (g := g)
+      analyticOrderAt (weierstrassE p ∘ g) a =
+        analyticOrderAt (weierstrassE p) (g a) :=
+    analyticOrderAt_comp_of_deriv_ne_zero (f := weierstrassE p) (g := g)
       (z₀ := a) hg_analytic hg_deriv_ne
-  have hE_order : analyticOrderAt (weierstrass_E p) (1 : ℂ) = 1 :=
+  have hE_order : analyticOrderAt (weierstrassE p) (1 : ℂ) = 1 :=
     Hadamard.weierstrass_E_analyticOrderAt_one p
   have horder :
-      analyticOrderAt (fun s : ℂ => weierstrass_E p (s / a)) a = 1 := by
+      analyticOrderAt (fun s : ℂ => weierstrassE p (s / a)) a = 1 := by
     rw [← hE_order, ← hg_val]
     exact hcomp
   unfold analyticOrderNatAt
@@ -1294,12 +1294,12 @@ Specialization of `tprod_sigma_weierstrass_E_eq_tprod_pow_generic` to a
 `ZeroSetMultiplicity`. Provides the textbook form
 `P(s) = ∏' ρ, E_p(s/Z.z ρ)^(Z.mult ρ)`. -/
 lemma canonicalProductZeroSetMultiplicityRank_eq_tprod_pow
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero] {p : ℕ}
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) {p : ℕ}
     (hsum :
       Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1)))
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) (s : ℂ) :
     canonicalProductZeroSetMultiplicityRank Z p s =
-      ∏' ρ : Z.Zero, weierstrass_E p (s / Z.z ρ) ^ Z.mult ρ := by
+      ∏' ρ : Z.Zero, weierstrassE p (s / Z.z ρ) ^ Z.mult ρ := by
   -- Apply the generic version to `ι := Z.Zero`, `z := Z.z`, `m := Z.mult`.
   -- The LHS of the generic result is `∏' j : Σ ρ, Fin (Z.mult ρ), E_p(s/Z.z j.1)`,
   -- which equals `canonicalProductZeroSetMultiplicityRank Z p s` by definition.
@@ -1329,43 +1329,43 @@ private lemma summable_sigma_inv_norm_pow_generic
 
 /-- **Generic multipliability of the iterated power form.** -/
 lemma multipliable_pow_weierstrass_E_div_generic
-    {ι : Type 0} [Countable ι] {z : ι → ℂ} {m : ι → ℕ} {p : ℕ}
+    {ι : Type 0} {z : ι → ℂ} {m : ι → ℕ} {p : ℕ}
     (hz0 : ∀ i : ι, z i ≠ 0)
     (hsum : Summable (fun i : ι => (m i : ℝ) / ‖z i‖ ^ (p + 1)))
     (s : ℂ) :
     Multipliable
-      (fun i : ι => weierstrass_E p (s / z i) ^ m i) := by
+      (fun i : ι => weierstrassE p (s / z i) ^ m i) := by
   classical
   have hz0_sigma : ∀ j : Σ i : ι, Fin (m i), z j.1 ≠ 0 := fun j => hz0 j.1
   have hsum_sigma := summable_sigma_inv_norm_pow_generic (z := z) (m := m) (p := p) hsum
   have hmul_sigma :
       Multipliable
-        (fun j : Σ i : ι, Fin (m i) => weierstrass_E p (s / z j.1)) :=
+        (fun j : Σ i : ι, Fin (m i) => weierstrassE p (s / z j.1)) :=
     Hadamard.OrderOne.multipliable_weierstrass_E_of_summable_inv_norm_pow
       (z := fun j : Σ i : ι, Fin (m i) => z j.1) (p := p) hz0_sigma hsum_sigma s
   have hmul_inner :
       ∀ i : ι, Multipliable
         (fun k : Fin (m i) =>
-          weierstrass_E p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1)) :=
+          weierstrassE p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1)) :=
     fun _ => Multipliable.of_finite
   -- Outer multipliability via `sigma'`.
   have houter_mul :
       Multipliable
         (fun i : ι =>
           ∏' k : Fin (m i),
-            weierstrass_E p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1)) :=
+            weierstrassE p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1)) :=
     hmul_sigma.sigma' hmul_inner
   -- Reduce inner finite product to a power.
   have houter_eq :
       (fun i : ι =>
           ∏' k : Fin (m i),
-            weierstrass_E p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1))
-        = (fun i : ι => weierstrass_E p (s / z i) ^ m i) := by
+            weierstrassE p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1))
+        = (fun i : ι => weierstrassE p (s / z i) ^ m i) := by
     funext i
     have hconst :
         (fun k : Fin (m i) =>
-            weierstrass_E p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1))
-          = (fun _ : Fin (m i) => weierstrass_E p (s / z i)) := by
+            weierstrassE p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1))
+          = (fun _ : Fin (m i) => weierstrassE p (s / z i)) := by
       funext k; rfl
     rw [hconst, tprod_fintype, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
   rw [houter_eq] at houter_mul
@@ -1373,22 +1373,22 @@ lemma multipliable_pow_weierstrass_E_div_generic
 
 /-- **Generic non-vanishing of the iterated power form.** -/
 lemma tprod_pow_weierstrass_E_div_ne_zero_generic
-    {ι : Type 0} [Countable ι] {z : ι → ℂ} {m : ι → ℕ} {p : ℕ}
+    {ι : Type 0} {z : ι → ℂ} {m : ι → ℕ} {p : ℕ}
     (hz0 : ∀ i : ι, z i ≠ 0)
     (hsum : Summable (fun i : ι => (m i : ℝ) / ‖z i‖ ^ (p + 1)))
     (x : ℂ) (hx : ∀ i : ι, x ≠ z i) :
-    (∏' i : ι, weierstrass_E p (x / z i) ^ m i) ≠ 0 := by
+    (∏' i : ι, weierstrassE p (x / z i) ^ m i) ≠ 0 := by
   classical
   have hz0_sigma : ∀ j : Σ i : ι, Fin (m i), z j.1 ≠ 0 := fun j => hz0 j.1
   have hsum_sigma := summable_sigma_inv_norm_pow_generic (z := z) (m := m) (p := p) hsum
   have hxsigma : ∀ j : Σ i : ι, Fin (m i), x ≠ z j.1 := fun j => hx j.1
   have hne_sigma :
-      (∏' j : Σ i : ι, Fin (m i), weierstrass_E p (x / z j.1)) ≠ 0 :=
+      (∏' j : Σ i : ι, Fin (m i), weierstrassE p (x / z j.1)) ≠ 0 :=
     Hadamard.OrderOne.tprod_weierstrass_E_div_ne_zero_of_summable_inv_norm_pow
       (z := fun j : Σ i : ι, Fin (m i) => z j.1) (p := p) hz0_sigma hsum_sigma x hxsigma
   have hconv :
-      (∏' j : Σ i : ι, Fin (m i), weierstrass_E p (x / z j.1)) =
-        ∏' i : ι, weierstrass_E p (x / z i) ^ m i :=
+      (∏' j : Σ i : ι, Fin (m i), weierstrassE p (x / z j.1)) =
+        ∏' i : ι, weierstrassE p (x / z i) ^ m i :=
     tprod_sigma_weierstrass_E_eq_tprod_pow_generic
       (z := z) (m := m) (p := p) hz0 hsum x
   rw [hconv] at hne_sigma
@@ -1397,11 +1397,11 @@ lemma tprod_pow_weierstrass_E_div_ne_zero_generic
 /-- **`ZeroSetMultiplicity` wrapper**
 for `multipliable_pow_weierstrass_E_div_generic`. -/
 lemma multipliable_pow_weierstrass_E_div_of_summable
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero] {p : ℕ}
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) {p : ℕ}
     (hsum : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1)))
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) (s : ℂ) :
     Multipliable
-      (fun ρ : Z.Zero => weierstrass_E p (s / Z.z ρ) ^ Z.mult ρ) :=
+      (fun ρ : Z.Zero => weierstrassE p (s / Z.z ρ) ^ Z.mult ρ) :=
   multipliable_pow_weierstrass_E_div_generic
     (z := Z.z) (m := Z.mult) (p := p) h_z_ne_zero hsum s
 
@@ -1434,15 +1434,15 @@ Split off the factor at index `b`, expressing the rest as a subtype tprod.
 Proved via `Equiv.tprod_eq` plus sigma decomposition,
 avoiding all typeclass-explosive `Multipliable.*` operations. -/
 lemma tprod_pow_weierstrass_E_split_generic
-    {ι : Type 0} [Countable ι] {z : ι → ℂ} {m : ι → ℕ} {p : ℕ}
+    {ι : Type 0} {z : ι → ℂ} {m : ι → ℕ} {p : ℕ}
     (hz0 : ∀ i : ι, z i ≠ 0)
     (hsum : Summable (fun i : ι => (m i : ℝ) / ‖z i‖ ^ (p + 1)))
     (b : ι) (s : ℂ) :
-    (∏' i : ι, weierstrass_E p (s / z i) ^ m i) =
-      weierstrass_E p (s / z b) ^ m b *
-        (∏' i : {i : ι // i ≠ b}, weierstrass_E p (s / z i.val) ^ m i.val) := by
+    (∏' i : ι, weierstrassE p (s / z i) ^ m i) =
+      weierstrassE p (s / z b) ^ m b *
+        (∏' i : {i : ι // i ≠ b}, weierstrassE p (s / z i.val) ^ m i.val) := by
   classical
-  let f : ι → ℂ := fun i => weierstrass_E p (s / z i)
+  let f : ι → ℂ := fun i => weierstrassE p (s / z i)
   let g : (Σ i : ι, Fin (m i)) → ℂ := fun j => f j.1
   let e := sigmaFiberSplitEquiv (m := m) b
   have hz0_sigma : ∀ j : Σ i : ι, Fin (m i), z j.1 ≠ 0 := fun j => hz0 j.1
@@ -1454,11 +1454,11 @@ lemma tprod_pow_weierstrass_E_split_generic
   have hmul_inner :
       ∀ i : ι, Multipliable
         (fun k : Fin (m i) =>
-          weierstrass_E p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1)) :=
+          weierstrassE p (s / z (⟨i, k⟩ : Σ i : ι, Fin (m i)).1)) :=
     fun _ => Multipliable.of_finite
   have hsigma_eq :
       (∏' j : Σ i : ι, Fin (m i), g j) =
-        ∏' i : ι, weierstrass_E p (s / z i) ^ m i := by
+        ∏' i : ι, weierstrassE p (s / z i) ^ m i := by
     simpa [f, g] using
       (tprod_sigma_weierstrass_E_eq_tprod_pow_generic
         (z := z) (m := m) (p := p) hz0 hsum s)
@@ -1478,24 +1478,24 @@ lemma tprod_pow_weierstrass_E_split_generic
       (m := fun i : {i : ι // i ≠ b} => m i.val) (p := p) hsum_sub
   have hmul_right_sigma :
       Multipliable (fun j : Σ i : {i : ι // i ≠ b}, Fin (m i.val) =>
-        weierstrass_E p (s / z j.1.val)) :=
+        weierstrassE p (s / z j.1.val)) :=
     Hadamard.OrderOne.multipliable_weierstrass_E_of_summable_inv_norm_pow
       (z := fun j : Σ i : {i : ι // i ≠ b}, Fin (m i.val) => z j.1.val)
       (p := p) (fun j => hz0 j.1.val) hcompl_summable s
   have hright_eq :
       (h ∘ Sum.inr) =
         (fun j : Σ i : {i : ι // i ≠ b}, Fin (m i.val) =>
-          weierstrass_E p (s / z j.1.val)) := by
+          weierstrassE p (s / z j.1.val)) := by
     funext ⟨⟨i, hi⟩, k⟩; rfl
   have hmul_right : Multipliable (h ∘ Sum.inr) := by rw [hright_eq]; exact hmul_right_sigma
   have hsplit := Multipliable.tprod_sum hmul_left hmul_right
-  have hleft_eq : (∏' k, h (Sum.inl k)) = weierstrass_E p (s / z b) ^ m b := by
+  have hleft_eq : (∏' k, h (Sum.inl k)) = weierstrassE p (s / z b) ^ m b := by
     have : (fun k : Fin (m b) => h (Sum.inl k)) =
-        (fun _ : Fin (m b) => weierstrass_E p (s / z b)) := by funext; rfl
+        (fun _ : Fin (m b) => weierstrassE p (s / z b)) := by funext; rfl
     rw [this, tprod_fintype, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
   have hright_val :
       (∏' j, h (Sum.inr j)) =
-        ∏' i : {i : ι // i ≠ b}, weierstrass_E p (s / z i.val) ^ m i.val := by
+        ∏' i : {i : ι // i ≠ b}, weierstrassE p (s / z i.val) ^ m i.val := by
     rw [show (∏' j, h (Sum.inr j)) = ∏' j, (h ∘ Sum.inr) j from rfl, hright_eq]
     simpa using
       (tprod_sigma_weierstrass_E_eq_tprod_pow_generic
@@ -1520,7 +1520,7 @@ Proof:
    subtype.
 5. Combine using `analyticOrderNatAt_mul`. -/
 theorem analyticOrderNatAt_canonicalProductZeroSetMultiplicityRank
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero] {p : ℕ}
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) {p : ℕ}
     (hsum : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1)))
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) (ρ : Z.Zero) :
@@ -1528,10 +1528,10 @@ theorem analyticOrderNatAt_canonicalProductZeroSetMultiplicityRank
       (Z.z ρ) = Z.mult ρ := by
   classical
   -- Define the two factors as functions of `s`.
-  set f₁ : ℂ → ℂ := fun s => weierstrass_E p (s / Z.z ρ) ^ Z.mult ρ with hf₁_def
+  set f₁ : ℂ → ℂ := fun s => weierstrassE p (s / Z.z ρ) ^ Z.mult ρ with hf₁_def
   set Q : ℂ → ℂ := fun s =>
     ∏' ρ' : {ρ' : Z.Zero // ρ' ≠ ρ},
-      weierstrass_E p (s / Z.z ρ'.val) ^ Z.mult ρ'.val with hQ_def
+      weierstrassE p (s / Z.z ρ'.val) ^ Z.mult ρ'.val with hQ_def
   -- `P = f₁ * Q` as functions.
   have hP_fun_eq :
       canonicalProductZeroSetMultiplicityRank Z p = fun s => f₁ s * Q s := by
@@ -1548,13 +1548,13 @@ theorem analyticOrderNatAt_canonicalProductZeroSetMultiplicityRank
   -- `f₁` has analytic order `Z.mult ρ` at `Z.z ρ`.
   have hf₁_order : analyticOrderNatAt f₁ (Z.z ρ) = Z.mult ρ := by
     have hbase :
-        analyticOrderNatAt (fun s : ℂ => weierstrass_E p (s / Z.z ρ)) (Z.z ρ) = 1 :=
+        analyticOrderNatAt (fun s : ℂ => weierstrassE p (s / Z.z ρ)) (Z.z ρ) = 1 :=
       analyticOrderNatAt_weierstrass_E_div (p := p) (h_z_ne_zero ρ)
     -- f₁ = (s ↦ E_p(s/Z.z ρ)) ^ (Z.mult ρ) as Pi-power.
     have hf₁_eq :
-        f₁ = (fun s : ℂ => weierstrass_E p (s / Z.z ρ)) ^ Z.mult ρ := by
+        f₁ = (fun s : ℂ => weierstrassE p (s / Z.z ρ)) ^ Z.mult ρ := by
       funext s; simp [hf₁_def, Pi.pow_apply]
-    have hg_an : AnalyticAt ℂ (fun s : ℂ => weierstrass_E p (s / Z.z ρ)) (Z.z ρ) :=
+    have hg_an : AnalyticAt ℂ (fun s : ℂ => weierstrassE p (s / Z.z ρ)) (Z.z ρ) :=
       ((weierstrass_E_differentiable p).comp (by fun_prop)).analyticAt _
     rw [hf₁_eq, analyticOrderNatAt_pow hg_an, hbase]
     simp
@@ -1585,13 +1585,13 @@ theorem analyticOrderNatAt_canonicalProductZeroSetMultiplicityRank
     have hQ_sigma_diff :
         Differentiable ℂ (fun s : ℂ =>
           ∏' j : Σ i : {i : Z.Zero // i ≠ ρ}, Fin (Z.mult i.val),
-            weierstrass_E p (s / Z.z j.1.val)) :=
+            weierstrassE p (s / Z.z j.1.val)) :=
       Hadamard.OrderOne.differentiable_tprod_weierstrass_E_of_summable_inv_norm_pow
         (z := fun j : Σ i : {i : Z.Zero // i ≠ ρ}, Fin (Z.mult i.val) => Z.z j.1.val)
         (p := p) (fun j => hz0' j.1) hsum_sigma
     have hQ_eq :
         Q = fun s => ∏' j : Σ i : {i : Z.Zero // i ≠ ρ}, Fin (Z.mult i.val),
-          weierstrass_E p (s / Z.z j.1.val) := by
+          weierstrassE p (s / Z.z j.1.val) := by
       funext s; rw [hQ_def]
       exact (tprod_sigma_weierstrass_E_eq_tprod_pow_generic
         (z := fun ρ' : {ρ' : Z.Zero // ρ' ≠ ρ} => Z.z ρ'.val)
@@ -1641,7 +1641,7 @@ A wrapper that handles the zero-at-origin case by pre-processing `f(z) / z^m` sh
 added later (Conway p.289 reduction). -/
 theorem exists_quotient_entire
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero] {p : ℕ}
+    (Z : ZeroSetMultiplicity f) {p : ℕ}
     (hsum : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1)))
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
@@ -1932,23 +1932,23 @@ private theorem canonicalProduct_factor_lower_bound
     (z : ℂ) (hz : ‖z‖ = R) (C_near C_far : ℝ)
     (hzw_ne : ∀ i : Z.ZeroWithMultiplicity, Z.zWithMultiplicity i ≠ 0)
     (hfac_ne : ∀ i : Z.ZeroWithMultiplicity,
-      weierstrass_E p (z / Z.zWithMultiplicity i) ≠ 0)
+      weierstrassE p (z / Z.zWithMultiplicity i) ≠ 0)
     (hC_near : ∀ w : ℂ, (1 : ℝ) / 2 ≤ ‖w‖ → δ₀ / (4 * r) ≤ ‖w - 1‖ →
-      Real.log ‖weierstrass_E p w‖ ≥ -C_near * ‖w‖ ^ p)
+      Real.log ‖weierstrassE p w‖ ≥ -C_near * ‖w‖ ^ p)
     (hC_far : ∀ w : ℂ, ‖w‖ ≤ (1 : ℝ) / 2 →
-      Real.log ‖weierstrass_E p w‖ ≥ -C_far * ‖w‖ ^ (p + 1)) :
+      Real.log ‖weierstrassE p w‖ ≥ -C_far * ‖w‖ ^ (p + 1)) :
     ∀ i : Z.ZeroWithMultiplicity,
       Real.exp (-(if ‖Z.zWithMultiplicity i‖ ≤ 2 * R then
         C_near * ‖z / Z.zWithMultiplicity i‖ ^ p else
         max C_far 0 * ‖z / Z.zWithMultiplicity i‖ ^ (p + 1))) ≤
-        ‖weierstrass_E p (z / Z.zWithMultiplicity i)‖ := by
+        ‖weierstrassE p (z / Z.zWithMultiplicity i)‖ := by
   let zw := Z.zWithMultiplicity
   let C_far' := max C_far 0
   let a := fun i : Z.ZeroWithMultiplicity =>
     if ‖zw i‖ ≤ 2 * R then C_near * ‖z / zw i‖ ^ p
     else C_far' * ‖z / zw i‖ ^ (p + 1)
   intro i
-  change Real.exp (-(a i)) ≤ ‖weierstrass_E p (z / zw i)‖
+  change Real.exp (-(a i)) ≤ ‖weierstrassE p (z / zw i)‖
   by_cases hsmall : ‖zw i‖ ≤ 2 * R
   · -- Near zeros: use the away-from-one lower bound.
     have hw_big : (1 / 2 : ℝ) ≤ ‖z / zw i‖ := by
@@ -1987,9 +1987,9 @@ private theorem canonicalProduct_factor_lower_bound
         simp [this]
       simpa [hz_div] using hmain
     have hlog := hC_near (z / zw i) hw_big (by simpa using hdist)
-    have hpos : 0 < ‖weierstrass_E p (z / zw i)‖ := norm_pos_iff.2 (hfac_ne i)
+    have hpos : 0 < ‖weierstrassE p (z / zw i)‖ := norm_pos_iff.2 (hfac_ne i)
     have hneg :
-        -(C_near * ‖z / zw i‖ ^ p) ≤ Real.log ‖weierstrass_E p (z / zw i)‖ := by
+        -(C_near * ‖z / zw i‖ ^ p) ≤ Real.log ‖weierstrassE p (z / zw i)‖ := by
       simpa using hlog
     have := (Real.exp_le_exp).2 hneg
     simpa [a, hsmall, Real.exp_log hpos] using this
@@ -2006,7 +2006,7 @@ private theorem canonicalProduct_factor_lower_bound
       have : ‖z‖ / ‖zw i‖ ≤ (1 / 2 : ℝ) := (div_le_iff₀ hzi_pos).2 hmul
       simpa [norm_div] using this
     have hCfar :
-        Real.log ‖weierstrass_E p (z / zw i)‖ ≥ -C_far' * ‖z / zw i‖ ^ (p + 1) := by
+        Real.log ‖weierstrassE p (z / zw i)‖ ≥ -C_far' * ‖z / zw i‖ ^ (p + 1) := by
       have hbase := hC_far (z / zw i) hw_small
       have hle : C_far ≤ C_far' := le_max_left _ _
       have hw_nonneg : 0 ≤ ‖z / zw i‖ ^ (p + 1) := by positivity
@@ -2019,7 +2019,7 @@ private theorem canonicalProduct_factor_lower_bound
           neg_le_neg hmul
         simpa [neg_mul, mul_assoc] using this
       exact le_trans hneg hbase
-    have hpos : 0 < ‖weierstrass_E p (z / zw i)‖ := norm_pos_iff.2 (hfac_ne i)
+    have hpos : 0 < ‖weierstrassE p (z / zw i)‖ := norm_pos_iff.2 (hfac_ne i)
     have := (Real.exp_le_exp).2 hCfar
     simpa [a, hsmall, Real.exp_log hpos] using this
 
@@ -2105,7 +2105,7 @@ private theorem summable_nearFar_exponent {ι : Type*}
   simpa [hsimp] using this
 
 private theorem far_exponent_sum_bound
-    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) [Countable Z.Zero] (p : ℕ)
+    {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f) (p : ℕ)
     (hsum : Summable (fun ρ : Z.Zero => (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ (p + 1)))
     (n_tail : ℕ) (C_tail exponent : ℝ)
     (htail_weighted : ∀ n : ℕ, n_tail ≤ n →
@@ -2206,11 +2206,11 @@ private theorem far_exponent_sum_bound
 
 private theorem near_exponent_sum_bound
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    (Z : ZeroSetMultiplicity f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z) (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
     (p n : ℕ) (C_ball exponent : ℝ)
-    (hbound : (∑ ρ ∈ Hadamard.OrderOne.zerosBallFinset_of_entire hf_entire
+    (hbound : (∑ ρ ∈ Hadamard.OrderOne.zerosBallFinsetOfEntire hf_entire
       Z.toZeroSet h_zeros_only h_inj h_z_ne_zero n,
       (Z.mult ρ : ℝ) / ‖Z.z ρ‖ ^ p) ≤ C_ball * ((2 : ℝ) ^ n) ^ exponent) :
     (∑' i : Z.ZeroWithMultiplicity, if ‖Z.zWithMultiplicity i‖ ≤ (2 : ℝ) ^ n then
@@ -2219,7 +2219,7 @@ private theorem near_exponent_sum_bound
   classical
   let ZWM := Z.ZeroWithMultiplicity
   let zw := Z.zWithMultiplicity
-  let ballD := fun m => Hadamard.OrderOne.zerosBallFinset_of_entire
+  let ballD := fun m => Hadamard.OrderOne.zerosBallFinsetOfEntire
     hf_entire Z.toZeroSet h_zeros_only h_inj h_z_ne_zero m
   let nearBase := fun i : ZWM => if ‖zw i‖ ≤ (2 : ℝ) ^ n then
     (1 : ℝ) / ‖zw i‖ ^ p else 0
@@ -2287,7 +2287,7 @@ private theorem canonicalProduct_circle_lower_bound
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
     {lam : ℝ} (hlam : 0 ≤ lam) (hf_order_le : order f ≤ lam)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    (Z : ZeroSetMultiplicity f)
     {p : ℕ} (hp : p = Nat.floor lam)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
     (h_inj : Function.Injective Z.z)
@@ -2463,7 +2463,7 @@ private theorem canonicalProduct_circle_lower_bound
       fun r hr R δ₀ hrR hR2r hδ₀_pos hδ₀_le_r hδ₀_lb hsep z hz => ?_⟩
   have hr_pos : 0 < r := by linarith
   have hR_pos : 0 < R := by linarith
-  have hmul : Multipliable (fun i : ZWM => weierstrass_E p (z / zw i)) :=
+  have hmul : Multipliable (fun i : ZWM => weierstrassE p (z / zw i)) :=
     Hadamard.OrderOne.multipliable_weierstrass_E_of_summable_inv_norm_pow hzw_ne hsum_zwm z
   have hz_ne : ∀ i : ZWM, z ≠ zw i := by
     intro i hEq
@@ -2475,7 +2475,7 @@ private theorem canonicalProduct_circle_lower_bound
         _ = R := hz
     have habs_eq : |‖Z.z i.1‖ - R| = 0 := by simp [hnorm_eq]
     linarith
-  have hfac_ne : ∀ i : ZWM, weierstrass_E p (z / zw i) ≠ 0 :=
+  have hfac_ne : ∀ i : ZWM, weierstrassE p (z / zw i) ≠ 0 :=
     fun i => weierstrass_E_ne_zero_general p (by
       intro h; exact hz_ne i (by field_simp [hzw_ne i] at h; exact h))
   --
@@ -2505,7 +2505,7 @@ private theorem canonicalProduct_circle_lower_bound
     dsimp [C_near]
     positivity
   have hC_near : ∀ w : ℂ, (1 : ℝ) / 2 ≤ ‖w‖ → δ₀ / (4 * r) ≤ ‖w - 1‖ →
-      Real.log ‖weierstrass_E p w‖ ≥ -C_near * ‖w‖ ^ p := by
+      Real.log ‖weierstrassE p w‖ ≥ -C_near * ‖w‖ ^ p := by
     intro w hw hd
     simpa [C_near, mul_assoc, mul_left_comm, mul_comm] using
       weierstrass_E_away_from_one_lower_bound_explicit p (δ₀ / (4 * r)) hδ₁_pos w hw hd
@@ -2514,7 +2514,7 @@ private theorem canonicalProduct_circle_lower_bound
     else C_far' * ‖z / zw i‖ ^ (p + 1)
   --
   -- ── Block 3: Pointwise bound ──
-  have hfac_bound : ∀ i : ZWM, Real.exp (-(a i)) ≤ ‖weierstrass_E p (z / zw i)‖ :=
+  have hfac_bound : ∀ i : ZWM, Real.exp (-(a i)) ≤ ‖weierstrassE p (z / zw i)‖ :=
     canonicalProduct_factor_lower_bound Z p hR2r hδ₀_pos hsep z hz C_near C_far
       hzw_ne hfac_ne hC_near hC_far
   --
@@ -2531,7 +2531,7 @@ private theorem canonicalProduct_circle_lower_bound
     -- Finite product ∏_S ‖E_p‖ ≥ ∏_S exp(-a_i) = exp(-Σ_S a_i) ≥ exp(-Σ' a_i)
     -- Limit via ge_of_tendsto: ‖P z‖ = lim ‖∏_S E_p‖ ≥ exp(-Σ' a_i)
     have hpartial : ∀ s : Finset ZWM,
-        Real.exp (-∑' i, a i) ≤ ‖∏ i ∈ s, weierstrass_E p (z / zw i)‖ := by
+        Real.exp (-∑' i, a i) ≤ ‖∏ i ∈ s, weierstrassE p (z / zw i)‖ := by
       intro s
       calc Real.exp (-∑' i, a i)
           ≤ Real.exp (-∑ i ∈ s, a i) :=
@@ -2539,9 +2539,9 @@ private theorem canonicalProduct_circle_lower_bound
         _ = ∏ i ∈ s, Real.exp (-(a i)) := by
             have : -∑ i ∈ s, a i = ∑ i ∈ s, -(a i) := by simp [Finset.sum_neg_distrib]
             rw [this]; exact Real.exp_sum s fun i => -(a i)
-        _ ≤ ∏ i ∈ s, ‖weierstrass_E p (z / zw i)‖ :=
+        _ ≤ ∏ i ∈ s, ‖weierstrassE p (z / zw i)‖ :=
             Finset.prod_le_prod₀ (fun i _ => (Real.exp_pos _).le) (fun i _ => hfac_bound i)
-        _ = ‖∏ i ∈ s, weierstrass_E p (z / zw i)‖ := (norm_prod s _).symm
+        _ = ‖∏ i ∈ s, weierstrassE p (z / zw i)‖ := (norm_prod s _).symm
     exact ge_of_tendsto ((continuous_norm.tendsto _).comp hmul.hasProd)
       (Filter.Eventually.of_forall hpartial)
   --
@@ -2614,7 +2614,7 @@ private theorem canonicalProduct_circle_lower_bound
     have hR_ge_Rabs : Rabs ≤ R := le_trans hRc_ge_Rabs (le_trans hr hrR)
     have hRpow_eps9_ge : Ksum ≤ R ^ (ε / 9) := hRabs R hR_ge_Rabs
     let ballD : ℕ → Finset Z.Zero := fun m =>
-      Hadamard.OrderOne.zerosBallFinset_of_entire
+      Hadamard.OrderOne.zerosBallFinsetOfEntire
         (hf_entire := hf_entire) (Z := Z.toZeroSet)
         (h_zeros_only := h_zeros_only) (h_inj := h_inj) (h_z_ne_zero := h_z_ne_zero) m
     let nearBase : ZWM → ℝ := fun i =>
@@ -2876,7 +2876,7 @@ theorem order_Q_le_lam_of_factorization
     (hf_finite : hasFiniteOrder f)
     {lam : ℝ} (hlam : 0 ≤ lam) (hf_order_le : order f ≤ lam)
     (hQ_entire : Differentiable ℂ Q) (hQ_ne : ∀ z : ℂ, Q z ≠ 0)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    (Z : ZeroSetMultiplicity f)
     {p : ℕ} (hp : p = Nat.floor lam)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
     (h_inj : Function.Injective Z.z)
@@ -2974,8 +2974,8 @@ theorem order_Q_le_lam_of_factorization
       -- P(0) ≠ 0: all factors E_p(0/z_i) = E_p(0) = 1
       simp only [P, canonicalProductZeroSetMultiplicityRank]
       have h_all_one : ∀ i : Z.ZeroWithMultiplicity,
-          weierstrass_E p (0 / Z.zWithMultiplicity i) = 1 := by
-        intro i; simp [weierstrass_E]
+          weierstrassE p (0 / Z.zWithMultiplicity i) = 1 := by
+        intro i; simp [weierstrassE]
       simp only [h_all_one, tprod_one]; exact one_ne_zero
     --
     -- Step B: zero counting from Jensen.
@@ -3394,7 +3394,7 @@ the zero of `f` at the origin. Then there exists a polynomial `g` of
 degree `≤ p` such that
 ```
 f(z) = z^m · Complex.exp (g.eval z) · ∏' i : Z.ZeroWithMultiplicity,
-          Hadamard.weierstrass_E p (z / Z.zWithMultiplicity i)
+          Hadamard.weierstrassE p (z / Z.zWithMultiplicity i)
 ```
 for all `z : ℂ`.
 
@@ -3412,7 +3412,7 @@ theorem hadamard_factorization_general
     (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)
     {lam : ℝ} (hlam : 0 ≤ lam) (hf_order_le : order f ≤ lam)
-    (Z : ZeroSetMultiplicity f) [Countable Z.Zero]
+    (Z : ZeroSetMultiplicity f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)

@@ -19,7 +19,7 @@ open Filter Topology Set Metric
 namespace Hadamard
 
 /-- For genus 0, the Weierstrass elementary factor is just (1 - w). -/
-lemma weierstrass_E_zero' (w : ℂ) : weierstrass_E 0 w = 1 - w := weierstrass_E_zero w
+lemma weierstrass_E_zero' (w : ℂ) : weierstrassE 0 w = 1 - w := weierstrass_E_zero w
 
 /-! ### Exponentials of linear functions
 

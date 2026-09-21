@@ -75,7 +75,7 @@ function coming from `ZeroCountingBounds`.
 theorem ncard_zeros_le_rpow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
@@ -159,7 +159,7 @@ theorem sum_multiplicity_zeros_le_rpow_of_order_le
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) {lam : ℝ} (hf_order_le : order f ≤ lam)
     (hlam_nonneg : 0 ≤ lam)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
@@ -232,7 +232,7 @@ theorem sum_multiplicity_zeros_le_rpow_of_order_le
 theorem sum_multiplicity_zeros_le_rpow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
@@ -308,7 +308,7 @@ theorem sum_multiplicity_zeros_le_rpow
 theorem sum_invNorm_le_rpow_of_two_pow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
@@ -557,7 +557,7 @@ private lemma cofinal_zerosBallFinset
 theorem tsum_invNorm_sq_tail_le_rpow_of_two_pow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
-    (Z : ZeroSet f) [Countable Z.Zero]
+    (Z : ZeroSet f)
     (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
     (h_inj : Function.Injective Z.z)
     (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0)
