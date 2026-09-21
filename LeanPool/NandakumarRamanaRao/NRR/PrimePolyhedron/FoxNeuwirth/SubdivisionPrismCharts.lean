@@ -173,7 +173,7 @@ noncomputable def vertex
 noncomputable def staircaseSign (k : Fin p) : Int := (-1 : Int) ^ k.1
 
 /-- Orientation sign of a fully refined prism simplex. -/
-noncomputable def prismSign (q : PrismCell hp N L) : Int :=
+noncomputable def prismSign {hp : Nat.Prime p} (q : PrismCell hp N L) : Int :=
   staircaseSign q.1.2 *
     (∏ r : Fin L, (Equiv.Perm.sign (q.2 r) : Int))
 

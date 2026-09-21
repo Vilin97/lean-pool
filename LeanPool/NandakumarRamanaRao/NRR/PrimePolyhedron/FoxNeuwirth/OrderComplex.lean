@@ -68,7 +68,7 @@ theorem properFace_relabel_iff
       by simpa using h.2⟩
 
 /-- A `d`-simplex in the order complex is a strict chain of `d + 1` cells. -/
-def Simplex (p d : Nat) :=
+abbrev Simplex (p d : Nat) :=
   {vertex : Fin (d + 1) → BarredPermutation p //
     ∀ ⦃i j : Fin (d + 1)⦄, i < j → ProperFace (vertex i) (vertex j)}
 

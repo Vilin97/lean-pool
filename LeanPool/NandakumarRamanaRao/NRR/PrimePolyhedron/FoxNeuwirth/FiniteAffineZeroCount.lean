@@ -176,7 +176,7 @@ theorem boundary_apply_eq_incidence
   · simp [SimplicialChain.faceContribution, hface]
 
 /-- An ordinary simplicial cycle as a finite incidence cycle. -/
-noncomputable def ofCycle
+noncomputable abbrev ofCycle
     (chain : SimplicialChain R p (d + 1))
     (hcycle : SimplicialChain.boundary chain = 0) :
     FiniteIncidenceCycle R where

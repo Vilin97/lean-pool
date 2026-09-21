@@ -143,7 +143,7 @@ theorem simplicialIncidence_smul
   simp only [hequiv, smul_left_cancel_iff]
 
 /-- The covering finite incidence cycle associated with the completed top-flag chain. -/
-noncomputable def coveringCycle (hp : Nat.Prime p) : FiniteIncidenceCycle (ZMod p) := by
+noncomputable abbrev coveringCycle (hp : Nat.Prime p) : FiniteIncidenceCycle (ZMod p) := by
   have hdim : p - 1 = (p - 2) + 1 := by
     have := hp.two_le
     omega

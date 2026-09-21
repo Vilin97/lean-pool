@@ -35,11 +35,11 @@ structure CellularTopCycle (hp : Nat.Prime p) where
   boundary_zero : ∀ a s, boundaryCoefficient a s = 0
 
 /-- The top-cell index type of a cellular cycle. -/
-abbrev CellularTopCycle.TopCell (_ : CellularTopCycle hp) : Type :=
+abbrev CellularTopCycle.TopCell {hp : Nat.Prime p} (_ : CellularTopCycle hp) : Type :=
   BarredPermutation.TopCell p
 
 /-- The facet-orbit index type of a cellular cycle. -/
-abbrev CellularTopCycle.FacetOrbit (_ : CellularTopCycle hp) : Type :=
+abbrev CellularTopCycle.FacetOrbit {hp : Nat.Prime p} (_ : CellularTopCycle hp) : Type :=
   ProperSplit p
 
 /-- Canonical direct cellular cycle modulo a prime. -/

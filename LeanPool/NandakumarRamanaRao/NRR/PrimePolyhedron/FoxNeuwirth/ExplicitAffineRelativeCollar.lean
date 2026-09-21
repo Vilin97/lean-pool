@@ -93,7 +93,7 @@ attribute [instance]
 
 namespace RelativeAffineCellSystem
 
-variable {N₀ N₁ M L : Nat}
+variable {hp : Nat.Prime p} {N₀ N₁ M L : Nat}
 variable {hp : Nat.Prime p}
 variable (C : RelativeAffineCellSystem hp N₀ N₁ M L)
 
@@ -231,7 +231,7 @@ structure FoxNeuwirthRelativeAffineCollar
 
 namespace FoxNeuwirthRelativeAffineCollar
 
-variable {N₀ N₁ M L : Nat}
+variable {hp : Nat.Prime p} {N₀ N₁ M L : Nat}
 variable (C : FoxNeuwirthRelativeAffineCollar hp N₀ N₁ M L)
 
 /-- Every nonhorizontal geometric facet has zero total signed incidence. -/
@@ -305,7 +305,7 @@ structure EndpointIdentifiedRelativeAffineCollar
 
 namespace EndpointIdentifiedRelativeAffineCollar
 
-variable {N₀ N₁ M L : Nat}
+variable {hp : Nat.Prime p} {N₀ N₁ M L : Nat}
 variable (C : EndpointIdentifiedRelativeAffineCollar hp N₀ N₁ M L)
 
 /-- Every lower horizontal quotient facet is represented by at least one level-`N₀` refined orbit
@@ -336,7 +336,7 @@ def RelativeAffineCollarExists
 
 namespace Parameters
 
-variable {N₀ N₁ M L : Nat}
+variable {hp : Nat.Prime p} {N₀ N₁ M L : Nat}
 variable (hp : Nat.Prime p)
 variable (C : RelativeAffineCellSystem hp N₀ N₁ M L)
 
@@ -707,7 +707,7 @@ end Parameters
 
 namespace Polynomials
 
-variable {N₀ N₁ M L : Nat}
+variable {hp : Nat.Prime p} {N₀ N₁ M L : Nat}
 variable (hp : Nat.Prime p)
 variable (C : RelativeAffineCellSystem hp N₀ N₁ M L)
 

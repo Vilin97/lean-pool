@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import Mathlib.Data.Nat.Choose.Dvd
+
 import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.BarredPermutation
 /-!
 # Prime shuffle coefficients in the Fox--Neuwirth boundary

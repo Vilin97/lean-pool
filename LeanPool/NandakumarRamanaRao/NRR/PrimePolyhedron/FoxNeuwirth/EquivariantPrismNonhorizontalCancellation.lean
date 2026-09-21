@@ -952,14 +952,17 @@ theorem staircase_upper_face_eq
     simp only [staircasePrismMap, upperEndpointMap,
       genericStaircaseIntervalPoint, genericStaircaseTime, Prod.snd]
     rw [Fin.sum_univ_succ]
-    simp only [Fin.val_zero, zero_le, ↓reduceIte, Fin.val_succ]
+    simp +instances only [Fin.val_zero, zero_le, ↓reduceIte, Fin.val_succ]
     have hs : (∑ i : Fin (n + 1), cofacePoint n 0 x i.succ) =
         ∑ i : Fin (n + 1), x i := by
       apply Finset.sum_congr rfl
       intro i hi
       simpa using cofacePoint_apply_succAbove n 0 x i
     simp only [zero_ne_one, ↓reduceIte]
-    have hpos : ∀ i : Fin (n + 1), ¬ i.1 + 1 ≤ 0 := by intro i; omega
+    change (0 + ∑ i : Fin (n + 1),
+      if (if i.val + 1 ≤ 0 then (0 : Fin 2) else 1) = 1
+      then cofacePoint n 0 x i.succ else 0) = 1
+    have hpos : ∀ i : Fin (n + 1), ¬ i.val + 1 ≤ 0 := by intro i; omega
     simp_rw [if_neg (hpos _)]
     simp only [↓reduceIte, zero_add]
     rw [hs]
@@ -1205,6 +1208,7 @@ noncomputable def occurrenceFacetMap
   apply Fin.ext
   simp only [Fin.val_cast, facetFaceIndex_val, facetCoordinateIndex,
     Fin.val_castLE, fin_succAbove_val]
+  rfl
 
 @[simp] theorem occurrenceFacetMap_vertex
     (hp : Nat.Prime p) (N L : Nat)
@@ -1712,6 +1716,7 @@ noncomputable def orbitFaceWitnessEquiv
       · exact hs
     · rfl
 
+open scoped Classical in
 /-- Expand orbit incidence as a sum over its nonzero face witnesses. -/
 theorem orbitFaceWitness_sum
     (hp : Nat.Prime p) (c : PrimeOrbitCycle.TopOrbit hp)
@@ -1892,7 +1897,7 @@ theorem realizationPoint_prime_smul_any
   apply Realization.ext
   intro c
   classical
-  simp only [Simplex.realizationPoint_apply, Simplex.chartWeight,
+  simp +instances only [Simplex.realizationPoint_apply, Simplex.chartWeight,
     Realization.prime_smul_apply, Simplex.prime_smul_apply]
   apply Finset.sum_congr rfl
   intro i hi
@@ -1908,6 +1913,8 @@ theorem realizationPoint_prime_smul_any
       have := congrArg (fun z : BarredPermutation p =>
         z.relabel (PrimeSymmetry.toPerm hp g)) hs
       simpa using this
+    change (if g • s i = c then w i else 0) =
+      (if s i = c.relabel (PrimeSymmetry.toPerm hp g).symm then w i else 0)
     rw [if_neg h, if_neg h']
 
 /-- Weight of a staircase side simplex built over a spatial facet. -/

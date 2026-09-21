@@ -137,7 +137,7 @@ noncomputable instance globalVertexDecidableEq
   Classical.decEq _
 
 /-- Left multiplication on the symmetry decoration. -/
-def actCoverVertex
+def actCoverVertex {hp : Nat.Prime p}
     (g : PrimeSymmetry hp) (s : CoverVertexSlot hp N L) : CoverVertexSlot hp N L :=
   (g * s.1, s.2)
 
