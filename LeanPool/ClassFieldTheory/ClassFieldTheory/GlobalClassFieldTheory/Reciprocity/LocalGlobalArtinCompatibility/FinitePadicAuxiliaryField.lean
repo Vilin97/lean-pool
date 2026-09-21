@@ -748,7 +748,7 @@ theorem
 /-- Evaluation of the distinguished auxiliary automorphism through the
 restricted top-field place.  Isolating this coercion calculation prevents the
 whole decomposition-group proof from normalizing the fixed-field tower. -/
-private opaque
+private theorem
     numberFieldTowerFinitePadicAuxiliaryTopPlace_automorphism_apply
     (v : HeightOneSpectrum (𝓞 K))
     (p : Nat.Primes)
@@ -785,7 +785,7 @@ private opaque
 
 /-- The distinguished auxiliary automorphism preserves the top-field place
 obtained by restricting the original separable-closure place. -/
-private opaque numberFieldTowerFinitePadicAuxiliaryAutomorphism_mem_topPlaceDecomposition
+private theorem numberFieldTowerFinitePadicAuxiliaryAutomorphism_mem_topPlaceDecomposition
     (v : HeightOneSpectrum (𝓞 K))
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup)
@@ -837,7 +837,7 @@ private opaque numberFieldTowerFinitePadicAuxiliaryAutomorphism_mem_topPlaceDeco
 
 /-- The restricted top-field place and the chosen extension above its centre
 have the same decomposition group. -/
-private opaque numberFieldTowerFinitePadicAuxiliaryTopDecompositionGroup_eq_chosen
+private theorem numberFieldTowerFinitePadicAuxiliaryTopDecompositionGroup_eq_chosen
     (v : HeightOneSpectrum (𝓞 K))
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup)
@@ -1009,7 +1009,7 @@ private theorem globalNormResidueMonoidHomOfEmbedding_norm_restriction_apply
 /-- The auxiliary-field construction produces a lower local unit
 whose chosen local Artin value and global norm-residue value are both
 the finite quotient coordinate of the distinguished lift. -/
-opaque numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative
+theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative
     (v : HeightOneSpectrum (𝓞 K))
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup)

@@ -340,7 +340,7 @@ private theorem globalNormResidueMonoidHomOfEmbedding_norm_restriction_apply
 transports both its chosen local Artin value and its global norm-residue
 value.  All fields and places are explicit here, so no constructed
 fixed-field tower occurs in the declaration type. -/
-private opaque exists_finitePlaceNormDescent_localGlobalRepresentative
+private theorem exists_finitePlaceNormDescent_localGlobalRepresentative
     {M : Type}
     [Field M] [NumberField M]
     [Algebra K M] [FiniteDimensional K M] [IsGalois K M]
@@ -467,7 +467,7 @@ private opaque exists_finitePlaceNormDescent_localGlobalRepresentative
 by the auxiliary construction and then normed through an explicit base
 change.  This short bridge keeps the auxiliary witness out of the
 cyclic-fixed-field construction. -/
-private opaque exists_finitePlacePrimaryNormDescent_localGlobalRepresentative
+private theorem exists_finitePlacePrimaryNormDescent_localGlobalRepresentative
     {M : Type}
     [Field M] [NumberField M]
     [Algebra K M] [FiniteDimensional K M] [IsGalois K M]
@@ -504,7 +504,7 @@ private opaque exists_finitePlacePrimaryNormDescent_localGlobalRepresentative
 /-- Cyclic fixed-field descent turns a primary decomposition
 automorphism into a lower representative without exposing the constructed
 field tower in the declaration type. -/
-private opaque exists_finitePlacePrimary_cyclicFixedFieldRepresentative
+private theorem exists_finitePlacePrimary_cyclicFixedFieldRepresentative
     (v : IsDedekindDomain.HeightOneSpectrum (𝓞 K))
     (p : Nat.Primes)
     (δ :
