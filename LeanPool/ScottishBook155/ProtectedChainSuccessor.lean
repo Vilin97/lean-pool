@@ -104,7 +104,8 @@ noncomputable def append
                       (C.sourceSystem.embed j ⊤ le_top
                         (C.sourceSystem.embed i j (by simpa using hij) x)) =
                     T.sourceEmbedding (C.sourceSystem.embed i ⊤ le_top x)
-                  rw [C.sourceSystem.embed_trans]
+                  exact congrArg T.sourceEmbedding
+                    (C.sourceSystem.embed_trans i j ⊤ (by simpa using hij) le_top x)
 
       | coe k =>
           induction j using WithTop.recTopCoe with
@@ -170,7 +171,8 @@ noncomputable def append
                       (C.targetSystem.embed j ⊤ le_top
                         (C.targetSystem.embed i j (by simpa using hij) x)) =
                     T.targetEmbedding (C.targetSystem.embed i ⊤ le_top x)
-                  rw [C.targetSystem.embed_trans]
+                  exact congrArg T.targetEmbedding
+                    (C.targetSystem.embed_trans i j ⊤ (by simpa using hij) le_top x)
       | coe k =>
           induction j using WithTop.recTopCoe with
           | top => exact False.elim (by simpa using hjk)

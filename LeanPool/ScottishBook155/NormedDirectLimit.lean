@@ -163,7 +163,8 @@ noncomputable def algebraicLiftLinear : Carrier G f →ₗ[ℝ] H :=
 
 theorem algebraicLiftLinear_of (i : ι) (x : G i) :
     algebraicLiftLinear G f g hg (of G f i x) = g i x := by
-  simp [algebraicLiftLinear, of]
+  exact Module.DirectLimit.lift_of (R := ℝ) (ι := ι) (G := G) (f := linearMap G f)
+    (fun i => (g i).toLinearMap) hg x
 
 /-- A uniform componentwise bound descends to the algebraic direct limit. -/
 theorem algebraicLiftLinear_norm_le (C : ℝ)

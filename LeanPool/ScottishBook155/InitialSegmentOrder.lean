@@ -50,7 +50,8 @@ private theorem initialSegmentToWithTop_monotone (j : J) :
   intro x y hxy
   by_cases hy : y.1 < j
   · have hx : x.1 < j := lt_of_le_of_lt hxy hy
-    simpa [initialSegmentToWithTop, hx, hy] using hxy
+    simp only [initialSegmentToWithTop, hx, hy, ↓reduceDIte, WithTop.coe_le_coe]
+    exact hxy
   · simp [initialSegmentToWithTop, hy]
 
 private theorem initialSegmentFromWithTop_monotone (j : J) :
@@ -63,7 +64,9 @@ private theorem initialSegmentFromWithTop_monotone (j : J) :
   | coe y =>
       induction x using WithTop.recTopCoe with
       | top => exact False.elim (by simpa using hxy)
-      | coe x => simpa [initialSegmentFromWithTop] using hxy
+      | coe x =>
+          change x.1 ≤ y.1
+          exact WithTop.coe_le_coe.mp hxy
 
 /-- A closed initial segment is the corresponding open segment with one new
 top point. -/

@@ -90,8 +90,8 @@ theorem initialClosedSegment_mk_le (i : RecursionIndex) :
       intro x y hxy
       by_cases hx : x.1 < i
       · by_cases hy : y.1 < i
-        · simp only [hx, hy, ↓reduceDIte, Option.some.injEq, Subtype.mk.injEq] at hxy
-          exact Subtype.ext hxy
+        · simp only [hx, hy, ↓reduceDIte, Option.some.injEq] at hxy
+          exact Subtype.ext (congrArg (fun z : Set.Iio i => z.val) hxy)
         · simp only [hx, hy, ↓reduceDIte] at hxy
           cases hxy
       · by_cases hy : y.1 < i
