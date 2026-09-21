@@ -6,11 +6,6 @@ Authors: Makoto Yamashita
 module
 
 public import LeanPool.HSDInteriorPointLP.FixedYTMTheory
-import Mathlib.Algebra.Order.Algebra
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Data.Sym.Sym2.Init
-import Mathlib.Tactic.NormNum.GCD
-import Mathlib.Tactic.Positivity.Finset
 
 /-!
 # Generated predictor-corrector algorithm and final convergence theorem
