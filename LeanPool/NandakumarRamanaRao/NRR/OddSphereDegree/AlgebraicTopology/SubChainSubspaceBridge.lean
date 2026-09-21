@@ -46,7 +46,10 @@ theorem exists_pushSimplex_of_subordinate (S : Set X) (n : ℕ)
   let g : C(Delta n, S) :=
     ContinuousMap.mk (fun x => ⟨singularSimplexAsContinuousMap X n σ x, h_range ⟨x, rfl⟩⟩)
   use continuousMapAsSingularSimplex (TopCat.of S) n g
-  apply (X.toSSetObjEquiv (Opposite.op ⦋n⦌)).injective
+  apply singularSimplices_ext
+  change singularSimplexAsContinuousMap X n
+    (pushSimplex (sInclusion S) n (continuousMapAsSingularSimplex (TopCat.of S) n g)) = _
+  rw [pushSimplex_continuousMap, singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
   ext x
   rfl
 

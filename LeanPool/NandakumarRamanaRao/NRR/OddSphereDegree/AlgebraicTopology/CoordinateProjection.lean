@@ -5,7 +5,7 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SubordinateChains
-import Mathlib
+import Mathlib.Tactic
 
 /-! # Coordinate Projection -/
 
@@ -32,11 +32,11 @@ theorem keepHom_generator {n : ℕ} (P : singularSimplices X n → Prop) [Decida
   rw [hgen]
   refine h2.trans ?_
   by_cases hP : P σ
-  · rw [if_pos hP]
-    erw [if_pos hP]
+  · rw [ite_eq_left hP]
+    erw [ite_eq_left hP]
     rfl
-  · rw [if_neg hP]
-    erw [if_neg hP, ModuleCat.hom_zero, LinearMap.zero_apply]
+  · rw [ite_eq_right hP]
+    erw [ite_eq_right hP, ModuleCat.hom_zero, LinearMap.zero_apply]
 
 theorem keepHom_mem_subChainSubmodule {n : ℕ} {S T : Set X}
     [DecidablePred (IsSubordinate (X := X) S (n := n))]
@@ -48,9 +48,9 @@ theorem keepHom_mem_subChainSubmodule {n : ℕ} {S T : Set X}
   · intro σ hσ
     rw [keepHom_generator]
     by_cases hS : IsSubordinate S σ
-    · rw [if_pos hS]
+    · rw [ite_eq_left hS]
       exact chainGenerator_mem_subChainSubmodule (Set.subset_inter hS hσ)
-    · rw [if_neg hS]
+    · rw [ite_eq_right hS]
       exact Submodule.zero_mem _
   · show (keepHom R X (IsSubordinate S)).hom 0 ∈ _
     rw [map_zero]; exact Submodule.zero_mem _
@@ -68,7 +68,7 @@ theorem keepHom_eq_self_of_mem {n : ℕ} {S : Set X}
   refine subChainSubmodule_induction (S := S)
     (p := fun x => (keepHom R X (IsSubordinate S)).hom x = x) ?_ ?_ ?_ ?_ hc
   · intro σ hσ
-    rw [keepHom_generator, if_pos hσ]
+    rw [keepHom_generator, ite_eq_left hσ]
   · show (keepHom R X (IsSubordinate S)).hom 0 = 0
     rw [map_zero]
   · intro x y hx hy

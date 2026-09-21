@@ -5,7 +5,8 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainComplex
-import Mathlib
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Tactic
 
 /-!
 # Subordinate singular chains for a single subset

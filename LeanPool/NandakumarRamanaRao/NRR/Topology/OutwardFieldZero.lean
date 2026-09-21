@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.DegreePositiveIntegration
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereOrientationPosFromMV
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES

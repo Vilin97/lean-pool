@@ -6,7 +6,7 @@ Authors: Arseniy Akopyan
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyFormula
-import Mathlib
+import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Chain Homotopy -/
 
@@ -29,13 +29,13 @@ theorem barycentricSubdivisionChainHomotopyHom_succ
     (R : Type) [CommRing R] (X : TopCat.{0}) (p : ℕ) :
     barycentricSubdivisionChainHomotopyHom R X p (p + 1)
       = -(barycentricSubdivisionHomotopyLinearMap R X p) := by
-  rw [barycentricSubdivisionChainHomotopyHom, dif_pos rfl, eqToHom_refl, Category.comp_id]
+  rw [barycentricSubdivisionChainHomotopyHom, dite_eq_left rfl, eqToHom_refl, Category.comp_id]
 
 /-- Outside the relevant slot, the homotopy component vanishes. -/
 theorem barycentricSubdivisionChainHomotopyHom_zero
     (R : Type) [CommRing R] (X : TopCat.{0}) (p q : ℕ) (h : p + 1 ≠ q) :
     barycentricSubdivisionChainHomotopyHom R X p q = 0 := by
-  rw [barycentricSubdivisionChainHomotopyHom, dif_neg h]
+  rw [barycentricSubdivisionChainHomotopyHom, dite_eq_right h]
 
 /--
 **The chain-homotopy identity in Mathlib's sign convention.** For every degree

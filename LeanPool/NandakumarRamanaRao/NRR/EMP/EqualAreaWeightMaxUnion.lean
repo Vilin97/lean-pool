@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.CategoryTheory.Countable
+import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
 import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeightCellRigidity
 import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCellPartition

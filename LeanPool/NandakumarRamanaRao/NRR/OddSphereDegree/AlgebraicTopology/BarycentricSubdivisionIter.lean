@@ -5,7 +5,7 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainHomotopy
-import Mathlib
+import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Iter -/
 

@@ -6,7 +6,7 @@ Authors: Arseniy Akopyan
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionChainMap
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionHomotopyOperator
-import Mathlib
+import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Homotopy Formula -/
 

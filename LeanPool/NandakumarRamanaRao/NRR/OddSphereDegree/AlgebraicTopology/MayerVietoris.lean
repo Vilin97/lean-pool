@@ -5,7 +5,7 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.MayerVietorisSES
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # The singular Mayer–Vietoris long exact sequence and connecting isomorphism

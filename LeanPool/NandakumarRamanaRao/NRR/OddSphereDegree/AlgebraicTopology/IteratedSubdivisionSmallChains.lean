@@ -5,7 +5,7 @@ Authors: Arseniy Akopyan
 -/
 
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.IteratedSubdivisionSmallSimplex
-import Mathlib
+import Mathlib.Tactic
 
 /-! # Iterated Subdivision Small Chains -/
 

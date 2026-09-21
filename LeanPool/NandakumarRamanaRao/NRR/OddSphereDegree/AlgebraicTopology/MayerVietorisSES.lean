@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Algebra.Category.ModuleCat.Biproducts
+import Mathlib.Algebra.Homology.HomologicalComplexAbelian
+import Mathlib.Algebra.Homology.HomologicalComplexBiprod
+import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.CoordinateProjection
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainsQuasiIso
 

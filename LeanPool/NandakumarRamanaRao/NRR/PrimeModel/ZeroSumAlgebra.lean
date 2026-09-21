@@ -42,7 +42,7 @@ noncomputable instance instAddCommGroup : AddCommGroup (ZeroSum n) :=
   (equivKernel n).addCommGroup
 
 noncomputable instance instModule : Module ℝ (ZeroSum n) :=
-  (equivKernel n).module ℝ
+  (equivKernel n).addEquiv.module ℝ
 
 @[simp] theorem add_apply (u v : ZeroSum n) (i : Fin n) :
     (u + v) i = u i + v i := rfl

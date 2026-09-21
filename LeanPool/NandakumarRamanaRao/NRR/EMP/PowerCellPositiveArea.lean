@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.BodyCells
 import LeanPool.NandakumarRamanaRao.NRR.PowerDiagram.CellAreaVector
 import LeanPool.NandakumarRamanaRao.NRR.EMP.EqualAreaWeights

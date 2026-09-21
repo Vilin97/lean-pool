@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arseniy Akopyan
 -/
 
+import Mathlib.Geometry.Manifold.Instances.Sphere
+
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SubChainSubspaceBridge
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.SphereTopHomology
 /-!

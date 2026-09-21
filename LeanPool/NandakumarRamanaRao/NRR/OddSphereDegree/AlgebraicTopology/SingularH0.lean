@@ -40,7 +40,11 @@ theorem test_coface1 (x : Delta 0) : cofaceTop 0 1 x = ⟨Pi.single 0 1, single_
 
 theorem faceSimplex_pathSimplex_0 {a b : X} (p : Path a b) :
     AlexanderWhitney.faceSimplex X 0 0 (pathSimplex p) = pointSimplex X b := by
-  apply (X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 0))).injective
+  apply singularSimplices_ext
+  change singularSimplexAsContinuousMap X 0 _ = singularSimplexAsContinuousMap X 0 _
+  rw [faceSimplex_continuousMap]
+  simp only [pathSimplex, pointSimplex,
+    singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
   ext x
   change p (stdSimplexHomeomorphUnitInterval (cofaceTop 0 0 x)) = b
   rw [test_coface0 x, stdSimplexHomeomorphUnitInterval_one]
@@ -48,7 +52,11 @@ theorem faceSimplex_pathSimplex_0 {a b : X} (p : Path a b) :
 
 theorem faceSimplex_pathSimplex_1 {a b : X} (p : Path a b) :
     AlexanderWhitney.faceSimplex X 0 1 (pathSimplex p) = pointSimplex X a := by
-  apply (X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 0))).injective
+  apply singularSimplices_ext
+  change singularSimplexAsContinuousMap X 0 _ = singularSimplexAsContinuousMap X 0 _
+  rw [faceSimplex_continuousMap]
+  simp only [pathSimplex, pointSimplex,
+    singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
   ext x
   change p (stdSimplexHomeomorphUnitInterval (cofaceTop 0 1 x)) = a
   rw [test_coface1 x, stdSimplexHomeomorphUnitInterval_zero]
@@ -73,11 +81,13 @@ theorem chainGenerator_sub_mem_range_of_path {a b : X} (p : Path a b) :
 
 theorem pointSimplex_singularSimplex (σ : singularSimplices X 0) :
     pointSimplex X ((singularSimplexAsContinuousMap X 0 σ) (stdSimplex.vertex 0)) = σ := by
-  apply (X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 0))).injective
+  apply singularSimplices_ext
+  change singularSimplexAsContinuousMap X 0 _ = singularSimplexAsContinuousMap X 0 σ
+  rw [pointSimplex, singularSimplexAsContinuousMap_continuousMapAsSingularSimplex]
   ext x
-  have : x = stdSimplex.vertex 0 := delta0_subsingleton x (stdSimplex.vertex 0)
-  rw [this]
-  rfl
+  change (singularSimplexAsContinuousMap X 0 σ) _ =
+    (singularSimplexAsContinuousMap X 0 σ) x
+  exact congrArg (singularSimplexAsContinuousMap X 0 σ) (delta0_subsingleton _ x)
 
 theorem chainGenerator_sub_mem_range [PathConnectedSpace X] (σ τ : singularSimplices X 0) :
     chainGenerator ℤ X 0 σ - chainGenerator ℤ X 0 τ

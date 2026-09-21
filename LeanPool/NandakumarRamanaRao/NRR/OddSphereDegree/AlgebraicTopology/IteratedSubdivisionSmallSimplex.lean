@@ -8,7 +8,7 @@ import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallC
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionDiameter
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.BarycentricSubdivisionIter
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularSimplexLebesgueNumber
-import Mathlib
+import Mathlib.Tactic
 /-!
 # Each singular simplex eventually becomes small after iterated subdivision
 
@@ -191,8 +191,7 @@ noncomputable def affineSummandSimplex (n N : ℕ) (σ : singularSimplices X n)
     (ρs : Fin N → Equiv.Perm (Fin (n + 1))) :
     mvSimplexMap (affineSummandSimplex n N σ ρs)
       = (mvSimplexMap σ).comp (affineCompMap n N ρs) := by
-  simp only [affineSummandSimplex, mvSimplexMap, singularSimplexAsContinuousMap,
-    continuousMapAsSingularSimplex, Equiv.apply_symm_apply]
+  exact singularSimplexAsContinuousMap_continuousMapAsSingularSimplex X n _
 
 theorem affineSummandSimplex_zero (n : ℕ) (σ : singularSimplices X n)
     (ρs : Fin 0 → Equiv.Perm (Fin (n + 1))) :

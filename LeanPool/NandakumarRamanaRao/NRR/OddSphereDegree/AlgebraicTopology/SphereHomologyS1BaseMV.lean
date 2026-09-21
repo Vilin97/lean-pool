@@ -7,7 +7,16 @@ Authors: Arseniy Akopyan
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SphereHomologyMVStep
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SingularH0PathConnected
 import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.MayerVietoris
-import Mathlib
+import Mathlib.Algebra.AffineMonoid.Basic
+import Mathlib.Algebra.Category.FGModuleCat.Colimits
+import Mathlib.Algebra.Category.ModuleCat.Projective
+import Mathlib.AlgebraicTopology.FundamentalGroupoid.SimplyConnected
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.TotallySplit
+import Mathlib.Tactic
+import Mathlib.Topology.Separation.Lemmas
 /-!
 # Mayer–Vietoris base case: `H₁(S¹; ℤ) ≅ ℤ`
 
