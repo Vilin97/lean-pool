@@ -21,7 +21,7 @@ Hessian estimate with the parent-normalized descendant Poincare handoff. -/
 noncomputable def originCubeWeakInteriorDepthConstant (d : ℕ) (m : ℤ) : ℝ :=
   let Q : TriadicCube d := originCube d m
   (((cubeVolume Q)⁻¹) ^ (1 / (2 : ℝ)) *
-      (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+      (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
     (((d : ℝ) * (d : ℝ)) *
       MeanZeroNeumannPoissonSolution.originCubeParentReducedSolverEnergyConstant d m)
 
@@ -30,7 +30,7 @@ theorem originCubeWeakInteriorDepthConstant_nonneg (d : ℕ) (m : ℤ) :
   let Q : TriadicCube d := originCube d m
   have hparent :
       0 ≤ ((cubeVolume Q)⁻¹) ^ (1 / (2 : ℝ)) *
-        (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+        (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
     exact mul_nonneg
       (Real.rpow_nonneg (inv_nonneg.mpr (cubeVolume_nonneg Q)) _)
       (originCubeMeanZeroH1CoerciveEstimate d 0).constant_nonneg
@@ -48,7 +48,7 @@ namespace MeanZeroNeumannPoissonSolution
 theorem originCube_sum_reducedSolverEnergyBound_le_depthConstant_mul_cubeLpNorm
     {d : ℕ} {m : ℤ} {F : Vec d → ℝ} :
     (((cubeVolume (originCube d m))⁻¹) ^ (1 / (2 : ℝ)) *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
         (∑ k : Fin d, ∑ _l : Fin d,
           originCubeParentReducedSolverEnergyBound d m F k) ≤
       originCubeWeakInteriorDepthConstant d m *
@@ -56,7 +56,7 @@ theorem originCube_sum_reducedSolverEnergyBound_le_depthConstant_mul_cubeLpNorm
   let Q : TriadicCube d := originCube d m
   let P : ℝ :=
     ((cubeVolume Q)⁻¹) ^ (1 / (2 : ℝ)) *
-      (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+      (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   let K : ℝ := originCubeParentReducedSolverEnergyConstant d m
   let L : ℝ := cubeLpNorm Q (2 : ℝ≥0∞) F
   have hP_nonneg : 0 ≤ P := by
@@ -112,7 +112,7 @@ theorem cubeBesovDepthSeminorm_grad_originCube_le_weakInteriorDepthConstant
   let Q : TriadicCube d := originCube d m
   let P : ℝ :=
     ((cubeVolume Q)⁻¹) ^ (1 / (2 : ℝ)) *
-      (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+      (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   have hP_nonneg : 0 ≤ P := by
     dsimp [P]
     exact mul_nonneg

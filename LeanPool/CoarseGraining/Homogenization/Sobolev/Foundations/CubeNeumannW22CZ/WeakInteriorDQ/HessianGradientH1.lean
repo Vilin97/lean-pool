@@ -204,7 +204,7 @@ private theorem cubePoissonRhs_toScalarL2_norm_le_coercive
     (v : H1Function (openCubeSet Q))
     (hvOpen : MemScalarL2 (openCubeSet Q) (v.cubePoissonRhs Q)) :
     ‖Homogenization.toScalarL2 hvOpen‖ ≤
-      hC.constant * ‖v.gradToVectorL2‖ := by
+      hC.fixedValue * ‖v.gradToVectorL2‖ := by
   let : MeasureTheory.IsFiniteMeasure (volumeMeasureOn (openCubeSet Q)) := by
     simpa [volumeMeasureOn] using
       (isOpenBoundedConvexDomain_openCubeSet Q).isFiniteMeasure_restrict_volume
@@ -223,7 +223,7 @@ private theorem cubePoissonRhs_toScalarL2_norm_le_coercive
     simp
   have hPoincare :
       (v.toMeanZeroOnCube Q).valueL2Norm ≤
-        hC.constant * ‖v.gradToVectorL2‖ := by
+        hC.fixedValue * ‖v.gradToVectorL2‖ := by
     simpa [H1Function.toMeanZeroOnCube] using hC.bound_subAverage v
   simpa [H1MeanZeroFunction.valueL2Norm, hLpEq] using hPoincare
 
@@ -237,7 +237,7 @@ theorem cubeBesovOscillation_gradCoord_le_volumeFactor_mul_coerciveConst
     (H : HasWeakHessianOn (openCubeSet Q) u) (i : Fin d)
     (hC : H1CoerciveEstimate (openCubeSet Q)) :
     cubeBesovOscillation Q (2 : ℝ≥0∞) (fun x => u.grad x i) ≤
-      ((cubeVolume Q)⁻¹ + 1) * hC.constant *
+      ((cubeVolume Q)⁻¹ + 1) * hC.fixedValue *
         ‖(H.gradCoordH1Function i).gradToVectorL2‖ := by
   let : MeasureTheory.IsFiniteMeasure (volumeMeasureOn (openCubeSet Q)) := by
     simpa [volumeMeasureOn] using
@@ -250,7 +250,7 @@ theorem cubeBesovOscillation_gradCoord_le_volumeFactor_mul_coerciveConst
     memL2On_openCubeSet_of_memLp_normalizedCubeMeasure Q hvMem
   have hnormOpen :
       ‖Homogenization.toScalarL2 hvOpen‖ ≤
-        hC.constant * ‖v.gradToVectorL2‖ := by
+        hC.fixedValue * ‖v.gradToVectorL2‖ := by
     exact cubePoissonRhs_toScalarL2_norm_le_coercive hC v hvOpen
   have hnorm :=
     cubeLpNorm_two_le_volume_inv_add_one_mul_norm_toScalarL2_openCubeSet
@@ -265,13 +265,13 @@ theorem cubeBesovOscillation_gradCoord_le_volumeFactor_mul_coerciveConst
     _ ≤ ((cubeVolume Q)⁻¹ + 1) * ‖Homogenization.toScalarL2 hvOpen‖ := by
           simpa [hvOpen] using hnorm
     _ ≤ ((cubeVolume Q)⁻¹ + 1) *
-          (hC.constant * ‖v.gradToVectorL2‖) := by
+          (hC.fixedValue * ‖v.gradToVectorL2‖) := by
           exact mul_le_mul_of_nonneg_left hnormOpen
             (by
               have hInv : 0 ≤ (cubeVolume Q)⁻¹ :=
                 inv_nonneg.mpr (cubeVolume_nonneg Q)
               linarith)
-    _ = ((cubeVolume Q)⁻¹ + 1) * hC.constant *
+    _ = ((cubeVolume Q)⁻¹ + 1) * hC.fixedValue *
           ‖(H.gradCoordH1Function i).gradToVectorL2‖ := by
           rw [mul_assoc]
 
@@ -286,7 +286,7 @@ theorem cubeBesovOscillation_gradCoord_le_volumeInvRpowHalf_mul_coerciveConst
     (H : HasWeakHessianOn (openCubeSet Q) u) (i : Fin d)
     (hC : H1CoerciveEstimate (openCubeSet Q)) :
     cubeBesovOscillation Q (2 : ℝ≥0∞) (fun x => u.grad x i) ≤
-      ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * hC.constant *
+      ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * hC.fixedValue *
         ‖(H.gradCoordH1Function i).gradToVectorL2‖ := by
   let : MeasureTheory.IsFiniteMeasure (volumeMeasureOn (openCubeSet Q)) := by
     simpa [volumeMeasureOn] using
@@ -299,7 +299,7 @@ theorem cubeBesovOscillation_gradCoord_le_volumeInvRpowHalf_mul_coerciveConst
     memL2On_openCubeSet_of_memLp_normalizedCubeMeasure Q hvMem
   have hnormOpen :
       ‖Homogenization.toScalarL2 hvOpen‖ ≤
-        hC.constant * ‖v.gradToVectorL2‖ := by
+        hC.fixedValue * ‖v.gradToVectorL2‖ := by
     exact cubePoissonRhs_toScalarL2_norm_le_coercive hC v hvOpen
   have hnorm :=
     cubeLpNorm_two_eq_volume_inv_rpow_half_mul_norm_toScalarL2_openCubeSet
@@ -315,10 +315,10 @@ theorem cubeBesovOscillation_gradCoord_le_volumeInvRpowHalf_mul_coerciveConst
           ‖Homogenization.toScalarL2 hvOpen‖ := by
           simpa [hvOpen] using hnorm
     _ ≤ ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) *
-          (hC.constant * ‖v.gradToVectorL2‖) := by
+          (hC.fixedValue * ‖v.gradToVectorL2‖) := by
           exact mul_le_mul_of_nonneg_left hnormOpen
             (Real.rpow_nonneg (inv_nonneg.mpr (cubeVolume_nonneg Q)) _)
-    _ = ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * hC.constant *
+    _ = ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * hC.fixedValue *
           ‖(H.gradCoordH1Function i).gradToVectorL2‖ := by
           rw [mul_assoc]
 
@@ -331,7 +331,7 @@ theorem cubeBesovOscillation_gradCoord_descendant_le_volumeFactor_mul_coerciveCo
     (hR : R ∈ descendantsAtDepth Q j) (i : Fin d)
     (hC : H1CoerciveEstimate (openCubeSet R)) :
     cubeBesovOscillation R (2 : ℝ≥0∞) (fun x => u.grad x i) ≤
-      ((cubeVolume R)⁻¹ + 1) * hC.constant *
+      ((cubeVolume R)⁻¹ + 1) * hC.fixedValue *
         ‖((H.restrict (isOpen_openCubeSet R)
             (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖ := by
   let HR : HasWeakHessianOn (openCubeSet R) (u.restrictToOpenSubcube hR) :=
@@ -342,7 +342,7 @@ theorem cubeBesovOscillation_gradCoord_descendant_le_volumeFactor_mul_coerciveCo
   change
     cubeBesovOscillation R (2 : ℝ≥0∞)
         (fun x => (u.restrictToOpenSubcube hR).grad x i) ≤
-      ((cubeVolume R)⁻¹ + 1) * hC.constant *
+      ((cubeVolume R)⁻¹ + 1) * hC.fixedValue *
         ‖(HR.gradCoordH1Function i).gradToVectorL2‖
   exact hmain
 
@@ -353,7 +353,7 @@ theorem cubeBesovOscillation_gradCoord_descendant_le_volumeInvRpowHalf_mul_coerc
     (hR : R ∈ descendantsAtDepth Q j) (i : Fin d)
     (hC : H1CoerciveEstimate (openCubeSet R)) :
     cubeBesovOscillation R (2 : ℝ≥0∞) (fun x => u.grad x i) ≤
-      ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * hC.constant *
+      ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * hC.fixedValue *
         ‖((H.restrict (isOpen_openCubeSet R)
             (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖ := by
   let HR : HasWeakHessianOn (openCubeSet R) (u.restrictToOpenSubcube hR) :=
@@ -364,7 +364,7 @@ theorem cubeBesovOscillation_gradCoord_descendant_le_volumeInvRpowHalf_mul_coerc
   change
     cubeBesovOscillation R (2 : ℝ≥0∞)
         (fun x => (u.restrictToOpenSubcube hR).grad x i) ≤
-      ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * hC.constant *
+      ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * hC.fixedValue *
         ‖(HR.gradCoordH1Function i).gradToVectorL2‖
   exact hmain
 

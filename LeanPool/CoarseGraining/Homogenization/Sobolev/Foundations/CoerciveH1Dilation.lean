@@ -902,7 +902,7 @@ variable {d : ℕ} {U : Set (Vec d)}
 `a • U`, multiplying the constant by the dilation factor `a`. -/
 noncomputable def dilate {a : ℝ} (ha : 0 < a)
     (hC : H1CoerciveEstimate U) : H1CoerciveEstimate (a • U) where
-  fixedValue := a * hC.constant
+  fixedValue := a * hC.fixedValue
   constant_nonneg := mul_nonneg ha.le hC.constant_nonneg
   bound := by
     intro u
@@ -913,21 +913,21 @@ noncomputable def dilate {a : ℝ} (ha : 0 < a)
     have hFpos : 0 < dilationL2Factor d a := dilationL2Factor_pos (d := d) ha
     have hscaled :
         dilationL2Factor d a * u.valueL2Norm ≤
-          hC.constant * (a * dilationL2Factor d a * u.gradientL2Norm) := by
+          hC.fixedValue * (a * dilationL2Factor d a * u.gradientL2Norm) := by
       simpa [v, hvalue, hgrad] using hv
     have hscaled' :
         dilationL2Factor d a * u.valueL2Norm ≤
-          dilationL2Factor d a * ((a * hC.constant) * u.gradientL2Norm) := by
+          dilationL2Factor d a * ((a * hC.fixedValue) * u.gradientL2Norm) := by
       calc
         dilationL2Factor d a * u.valueL2Norm
-            ≤ hC.constant * (a * dilationL2Factor d a * u.gradientL2Norm) := hscaled
-        _ = dilationL2Factor d a * ((a * hC.constant) * u.gradientL2Norm) := by
+            ≤ hC.fixedValue * (a * dilationL2Factor d a * u.gradientL2Norm) := hscaled
+        _ = dilationL2Factor d a * ((a * hC.fixedValue) * u.gradientL2Norm) := by
               ring
     exact (mul_le_mul_iff_right₀ hFpos).1 hscaled'
 
 @[simp] theorem dilate_constant {d : ℕ} {U : Set (Vec d)} {a : ℝ}
     (ha : 0 < a) (hC : H1CoerciveEstimate U) :
-    (hC.dilate ha).constant = a * hC.constant :=
+    (hC.dilate ha).fixedValue = a * hC.fixedValue :=
   rfl
 
 end H1CoerciveEstimate

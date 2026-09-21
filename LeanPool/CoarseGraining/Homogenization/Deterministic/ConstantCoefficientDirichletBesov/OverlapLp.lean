@@ -783,7 +783,7 @@ theorem overlapCubeLpNorm_two_sub_overlapCubeAverage_le
         (fun x => u x - overlapCubeAverage S (fun y => u y)) ≤
       ((overlapCubeVolume S)⁻¹) ^ (1 / 2 : ℝ) *
         ((overlapCubeScaleFactor S *
-            (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+            (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
           ‖u.gradToVectorL2‖) := by
   let f : Vec d → ℝ := fun x => u.toMeanZero x
   have hf : MeasureTheory.MemLp f (2 : ℝ≥0∞)
@@ -830,7 +830,7 @@ theorem overlapCubeLpNorm_two_sub_overlapCubeAverage_le
     _ ≤
           ((overlapCubeVolume S)⁻¹) ^ (1 / 2 : ℝ) *
             ((overlapCubeScaleFactor S *
-                (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+                (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
               ‖u.gradToVectorL2‖) := by
           exact mul_le_mul_of_nonneg_left
             (openOverlapCubeMeanZero_valueL2Norm_le S u)
@@ -841,7 +841,7 @@ theorem overlapCubeLpNorm_two_sub_overlapCubeAverage_le_scale_mul_grad
     overlapCubeLpNorm S (2 : ℝ≥0∞)
         (fun x => u x - overlapCubeAverage S (fun y => u y)) ≤
       (overlapCubeScaleFactor S *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
         overlapCubeLpNorm S (2 : ℝ≥0∞) u.grad := by
   have hgrad : MeasureTheory.MemLp u.grad (2 : ℝ≥0∞)
       (normalizedOverlapCubeMeasure S) :=
@@ -888,18 +888,18 @@ theorem overlapCubeLpNorm_two_sub_overlapCubeAverage_le_scale_mul_grad
         ≤
           ((overlapCubeVolume S)⁻¹) ^ (1 / 2 : ℝ) *
             ((overlapCubeScaleFactor S *
-                (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+                (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
               ‖u.gradToVectorL2‖) :=
           overlapCubeLpNorm_two_sub_overlapCubeAverage_le S u
     _ =
           (overlapCubeScaleFactor S *
-              (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+              (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
             (((overlapCubeVolume S)⁻¹) ^ (1 / 2 : ℝ) *
               ‖u.gradToVectorL2‖) := by
           ring
     _ =
           (overlapCubeScaleFactor S *
-              (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+              (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
             overlapCubeLpNorm S (2 : ℝ≥0∞) u.grad := by
           rw [hgradExact]
 

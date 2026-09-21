@@ -610,11 +610,11 @@ namespace H1CoerciveEstimate
 variable {d : ℕ} {U : Set (Vec d)} [MeasureTheory.IsFiniteMeasure (volumeMeasureOn U)]
 
 theorem bound_subAverage (hC : H1CoerciveEstimate U) (u : H1Function U) :
-    (u.toMeanZero).valueL2Norm ≤ hC.constant * ‖u.gradToVectorL2‖ := by
+    (u.toMeanZero).valueL2Norm ≤ hC.fixedValue * ‖u.gradToVectorL2‖ := by
   calc
-    (u.toMeanZero).valueL2Norm ≤ hC.constant * (u.toMeanZero).gradientL2Norm :=
+    (u.toMeanZero).valueL2Norm ≤ hC.fixedValue * (u.toMeanZero).gradientL2Norm :=
       hC.bound u.toMeanZero
-    _ = hC.constant * ‖u.gradToVectorL2‖ := by
+    _ = hC.fixedValue * ‖u.gradToVectorL2‖ := by
       rw [H1MeanZeroFunction.gradientL2Norm, H1MeanZeroFunction.gradToVectorL2,
         H1Function.toMeanZero_toH1Function, H1Function.gradToVectorL2_subAverage_eq]
 
@@ -635,20 +635,20 @@ noncomputable def toScalarL2Linear : H1MeanZeroFunction U →ₗ[ℝ] ScalarL2 U
   rfl
 
 theorem norm_toScalarL2Linear_apply_le (hC : H1CoerciveEstimate U) (u : H1MeanZeroFunction U) :
-    ‖toScalarL2Linear (U := U) u‖ ≤ hC.constant * ‖u‖ := by
-  change ‖u.toScalarL2‖ ≤ hC.constant * u.gradientL2Norm
+    ‖toScalarL2Linear (U := U) u‖ ≤ hC.fixedValue * ‖u‖ := by
+  change ‖u.toScalarL2‖ ≤ hC.fixedValue * u.gradientL2Norm
   exact hC.bound u
 
 /-- The value realization as a continuous linear map once a coercive estimate
 controls `‖u‖_{L²}` by the gradient-only seminorm. -/
 noncomputable def toScalarL2CLM (hC : H1CoerciveEstimate U) :
     H1MeanZeroFunction U →L[ℝ] ScalarL2 U :=
-  (toScalarL2Linear (U := U)).mkContinuous hC.constant
+  (toScalarL2Linear (U := U)).mkContinuous hC.fixedValue
     (norm_toScalarL2Linear_apply_le (U := U) hC)
 
 @[simp] theorem toScalarL2CLM_apply (hC : H1CoerciveEstimate U) (u : H1MeanZeroFunction U) :
     toScalarL2CLM (U := U) hC u = u.toScalarL2 := by
-  show (toScalarL2Linear (U := U)).mkContinuous hC.constant
+  show (toScalarL2Linear (U := U)).mkContinuous hC.fixedValue
       (norm_toScalarL2Linear_apply_le (U := U) hC) u = u.toScalarL2
   rw [LinearMap.mkContinuous_apply]
   rfl
@@ -680,33 +680,33 @@ theorem norm_le_norm_toHilbertProductLinear_apply (u : H1MeanZeroFunction U) :
 
 theorem norm_toHilbertProductLinear_apply_le
     (hC : H1CoerciveEstimate U) (u : H1MeanZeroFunction U) :
-    ‖toHilbertProductLinear (d := d) (U := U) u‖ ≤ max hC.constant (d : ℝ) * ‖u‖ := by
+    ‖toHilbertProductLinear (d := d) (U := U) u‖ ≤ max hC.fixedValue (d : ℝ) * ‖u‖ := by
   rw [toHilbertProductLinear_apply, Prod.norm_def]
   refine max_le ?_ ?_
   · calc
-      ‖u.toScalarL2‖ ≤ hC.constant * ‖u‖ :=
+      ‖u.toScalarL2‖ ≤ hC.fixedValue * ‖u‖ :=
         norm_toScalarL2Linear_apply_le (U := U) hC u
-      _ ≤ max hC.constant (d : ℝ) * ‖u‖ := by
+      _ ≤ max hC.fixedValue (d : ℝ) * ‖u‖ := by
         exact mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)
   · calc
       ‖u.gradToHilbertVectorL2‖ ≤ (d : ℝ) * ‖u‖ := by
         change ‖u.toH1Function.gradToHilbertVectorL2‖ ≤
           (d : ℝ) * ‖u.toH1Function.gradToVectorL2‖
         exact H1Function.norm_gradToHilbertVectorL2_le (U := U) u.toH1Function
-      _ ≤ max hC.constant (d : ℝ) * ‖u‖ := by
+      _ ≤ max hC.fixedValue (d : ℝ) * ‖u‖ := by
         exact mul_le_mul_of_nonneg_right (le_max_right _ _) (norm_nonneg _)
 
 /-- The mean-zero coercive layer as a continuous linear map into
 `L²(U) × L²(U; ℝᵈ)` once a coercive estimate is available. -/
 noncomputable def toHilbertProductCLM (hC : H1CoerciveEstimate U) :
     H1MeanZeroFunction U →L[ℝ] (ScalarL2 U × HilbertVectorL2 U) :=
-  (toHilbertProductLinear (U := U)).mkContinuous (max hC.constant (d : ℝ))
+  (toHilbertProductLinear (U := U)).mkContinuous (max hC.fixedValue (d : ℝ))
     (norm_toHilbertProductLinear_apply_le (d := d) (U := U) hC)
 
 @[simp] theorem toHilbertProductCLM_apply
     (hC : H1CoerciveEstimate U) (u : H1MeanZeroFunction U) :
     toHilbertProductCLM (d := d) (U := U) hC u = (u.toScalarL2, u.gradToHilbertVectorL2) := by
-  show (toHilbertProductLinear (U := U)).mkContinuous (max hC.constant (d : ℝ))
+  show (toHilbertProductLinear (U := U)).mkContinuous (max hC.fixedValue (d : ℝ))
       (norm_toHilbertProductLinear_apply_le (d := d) (U := U) hC) u =
       (u.toScalarL2, u.gradToHilbertVectorL2)
   rw [LinearMap.mkContinuous_apply]

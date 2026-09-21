@@ -56,13 +56,13 @@ theorem cubePoissonGradientAverageConstant_nonneg {d : ℕ}
 theorem cubePoissonGradientAverageConstant_eq_dimensionConstant {d : ℕ}
     (Q : TriadicCube d) :
     cubePoissonGradientAverageConstant Q =
-      (d : ℝ) * (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+      (d : ℝ) * (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
   let S : ℝ := cubeBesovScaleWeight 1 Q
   let A : ℝ := ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ)
   let D : ℝ := (d : ℝ)
   let C : ℝ := cubeMeanZeroH1CoerciveConstant Q
   let B : ℝ := (cubeVolume Q) ^ (1 / 2 : ℝ)
-  let C₀ : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+  let C₀ : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   have hV_cancel : A * B = 1 := by
     have hV_pos : 0 < cubeVolume Q := cubeVolume_pos Q
     have hB_pos : 0 < B := by
@@ -85,7 +85,7 @@ theorem cubePoissonGradientAverageConstant_eq_dimensionConstant {d : ℕ}
       simp [cubePoissonGradientAverageConstant, S, A, D, C, B]
     _ = (S * C) * (A * B) * D := by ring
     _ = C₀ * 1 * D := by rw [hSC, hV_cancel]
-    _ = (d : ℝ) * (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+    _ = (d : ℝ) * (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
       simp [C₀, D, mul_comm]
 
 /-- Component-average bound for the Poisson gradient, in exactly the weighted

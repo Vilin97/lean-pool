@@ -106,7 +106,7 @@ instance isFiniteMeasure_volumeMeasureOn_axisCube
 `axisCube 0 1`.  It depends only on the dimension `d`. -/
 noncomputable def unitMeanZeroPoincareConst (d : ℕ) : ℝ :=
   (h1CoerciveEstimate_of_isOpenBoundedConvexDomain
-    (isOpenBoundedConvexDomain_axisCube (0 : Homogenization.Vec d) 1)).constant
+    (isOpenBoundedConvexDomain_axisCube (0 : Homogenization.Vec d) 1)).fixedValue
 
 theorem unitMeanZeroPoincareConst_nonneg (d : ℕ) :
     0 ≤ unitMeanZeroPoincareConst d :=
@@ -115,7 +115,7 @@ theorem unitMeanZeroPoincareConst_nonneg (d : ℕ) :
 
 private theorem coercive_constant_eqRec {V U : Set (Homogenization.Vec d)}
     (h : V = U) (hC : H1CoerciveEstimate V) :
-    (h ▸ hC).constant = hC.constant := by cases h; rfl
+    (h ▸ hC).fixedValue = hC.fixedValue := by cases h; rfl
 
 /-- The mean-zero coercive `H¹` estimate on `axisCube z L`, obtained by dilating
 the unit corner-cube estimate by `L` and translating by `z`.  Its constant is the
@@ -133,7 +133,7 @@ noncomputable def axisCubeMeanZeroCoerciveEstimate
 
 theorem axisCubeMeanZeroCoerciveEstimate_constant
     (z : Homogenization.Vec d) {L : ℝ} (hL : 0 < L) :
-    (axisCubeMeanZeroCoerciveEstimate z hL).constant = L * unitMeanZeroPoincareConst d := by
+    (axisCubeMeanZeroCoerciveEstimate z hL).fixedValue = L * unitMeanZeroPoincareConst d := by
   let : MeasureTheory.IsFiniteMeasure
       (volumeMeasureOn (L • axisCube (0 : Homogenization.Vec d) 1)) := by
     rw [smul_axisCube_zero_one L hL]
@@ -171,11 +171,11 @@ theorem scaled_meanZero_poincare (z : Homogenization.Vec d) {L : ℝ} (hL : 0 < 
       ≤ unitMeanZeroPoincareConst d * L *
           ∑ i : Fin d,
             (eLpNorm (fun x => u.grad x i) 2 (volumeMeasureOn (axisCube z L))).toReal := by
-  have hconst : (axisCubeMeanZeroCoerciveEstimate z hL).constant =
+  have hconst : (axisCubeMeanZeroCoerciveEstimate z hL).fixedValue =
       L * unitMeanZeroPoincareConst d :=
     axisCubeMeanZeroCoerciveEstimate_constant z hL
   have hb := (axisCubeMeanZeroCoerciveEstimate z hL).bound u.toMeanZero
-  have hconst_nonneg : 0 ≤ (axisCubeMeanZeroCoerciveEstimate z hL).constant :=
+  have hconst_nonneg : 0 ≤ (axisCubeMeanZeroCoerciveEstimate z hL).fixedValue :=
     (axisCubeMeanZeroCoerciveEstimate z hL).constant_nonneg
   -- Identify the value norm with the target left-hand side.
   have hval : (u.toMeanZero).valueL2Norm =
@@ -205,8 +205,8 @@ theorem scaled_meanZero_poincare (z : Homogenization.Vec d) {L : ℝ} (hL : 0 < 
   calc
     (eLpNorm u.subAverage.toFun 2 (volumeMeasureOn (axisCube z L))).toReal
         = (u.toMeanZero).valueL2Norm := hval.symm
-    _ ≤ (axisCubeMeanZeroCoerciveEstimate z hL).constant * (u.toMeanZero).gradientL2Norm := hb
-    _ ≤ (axisCubeMeanZeroCoerciveEstimate z hL).constant *
+    _ ≤ (axisCubeMeanZeroCoerciveEstimate z hL).fixedValue * (u.toMeanZero).gradientL2Norm := hb
+    _ ≤ (axisCubeMeanZeroCoerciveEstimate z hL).fixedValue *
           ∑ i : Fin d,
             (eLpNorm (fun x => u.grad x i) 2 (volumeMeasureOn (axisCube z L))).toReal :=
           mul_le_mul_of_nonneg_left hgrad_le hconst_nonneg

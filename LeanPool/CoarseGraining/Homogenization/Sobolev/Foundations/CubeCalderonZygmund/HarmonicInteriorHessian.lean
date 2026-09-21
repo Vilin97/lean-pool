@@ -127,7 +127,7 @@ private noncomputable def harmonicInteriorHessianEnergyCoreConstant (d : ℕ) : 
   Real.sqrt
     ((13824 : ℝ) * (d : ℝ) * quantitativeCubeCutoffGradientConst d ^ 2 *
       (1 + (256 : ℝ) * (d : ℝ) * quantitativeCubeCutoffGradientConst d ^ 2 *
-        (originCubeMeanZeroH1CoerciveEstimate d 0).constant ^ 2))
+        (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue ^ 2))
 
 private theorem openCubeInnerQuotientHessianSmoothTestReducedBound_le_harmonic_energy
     (Q : TriadicCube d) [MeasureTheory.IsFiniteMeasure (volumeMeasureOn (openCubeSet Q))]
@@ -140,7 +140,7 @@ private theorem openCubeInnerQuotientHessianSmoothTestReducedBound_le_harmonic_e
         u.gradientCoordL2NormSum := by
   let L : ℝ := cubeScaleFactor Q
   let K : ℝ := quantitativeCubeCutoffGradientConst d
-  let C0 : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+  let C0 : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   let G : ℝ := u.gradientCoordL2NormSum
   let a : ℝ := ∫ x in openCubeSet Q, (u.subAverage.grad x i) ^ 2
     ∂MeasureTheory.volume
@@ -165,11 +165,11 @@ private theorem openCubeInnerQuotientHessianSmoothTestReducedBound_le_harmonic_e
     have hbase := (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).bound_subAverage u
     have hgrad : ‖u.gradToVectorL2‖ ≤ G := by
       exact u.norm_gradToVectorL2_le_gradientCoordL2NormSum
-    have hconst : (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).constant = L * C0 := by
+    have hconst : (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).fixedValue = L * C0 := by
       simpa [L, C0] using scaledTranslatedCubeMeanZeroH1CoerciveEstimate_constant Q
     change ‖u.subAverage.toScalarL2‖ ≤ L * C0 * G
     change ‖u.subAverage.toScalarL2‖ ≤
-      (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).constant * ‖u.gradToVectorL2‖ at hbase
+      (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).fixedValue * ‖u.gradToVectorL2‖ at hbase
     rw [hconst] at hbase
     exact hbase.trans (mul_le_mul_of_nonneg_left hgrad (mul_nonneg hLpos.le
       (originCubeMeanZeroH1CoerciveEstimate d 0).constant_nonneg))
@@ -227,7 +227,7 @@ private theorem openCubeInnerQuotientHessianSmoothTestReducedBound_le_harmonic_e
     have hactual_nonneg : 0 ≤
         (13824 : ℝ) * (d : ℝ) * quantitativeCubeCutoffGradientConst d ^ 2 *
           (1 + (256 : ℝ) * (d : ℝ) * quantitativeCubeCutoffGradientConst d ^ 2 *
-            (originCubeMeanZeroH1CoerciveEstimate d 0).constant ^ 2) := by
+            (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue ^ 2) := by
       simpa [K, C0] using htarget_nonneg
     dsimp [harmonicInteriorHessianEnergyCoreConstant]
     rw [Real.sq_sqrt hactual_nonneg]
@@ -339,7 +339,7 @@ theorem exists_harmonic_innerHalf_hessian_energy_bound (d : ℕ) :
     nlinarith [sq_nonneg (d : ℝ), Real.sqrt_nonneg
       ((13824 : ℝ) * (d : ℝ) * quantitativeCubeCutoffGradientConst d ^ 2 *
         (1 + (256 : ℝ) * (d : ℝ) * quantitativeCubeCutoffGradientConst d ^ 2 *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant ^ 2))]
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue ^ 2))]
   intro Q u h
   let : MeasureTheory.IsFiniteMeasure (volumeMeasureOn (openCubeSet Q)) := by
     simpa [volumeMeasureOn] using
@@ -411,7 +411,7 @@ theorem exists_harmonic_innerHalf_hessian_energy_bound (d : ℕ) :
     linarith [sq_nonneg (d : ℝ), Real.sqrt_nonneg
       ((13824 : ℝ) * (d : ℝ) * quantitativeCubeCutoffGradientConst d ^ 2 *
         (1 + (256 : ℝ) * (d : ℝ) * quantitativeCubeCutoffGradientConst d ^ 2 *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant ^ 2))]
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue ^ 2))]
   change HS.hessianCoordL2NormSum ≤ C * (cubeScaleFactor Q)⁻¹ * u.gradientCoordL2NormSum
   calc
     HS.hessianCoordL2NormSum = H.hessianCoordL2NormSum := rfl

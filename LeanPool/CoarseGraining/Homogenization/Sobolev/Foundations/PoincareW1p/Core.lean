@@ -253,7 +253,7 @@ variable {d : ℕ} {U : Set (Vec d)} {p : ENNReal}
 
 theorem bound_subAverage (hC : W1pPoincareEstimate U p) (u : W1pFunction U p)
     (hmean : MeanZeroOn U u.toFun) :
-    u.subAverageLpSeminorm ≤ hC.constant * u.gradientCoordLpSeminormSum := by
+    u.subAverageLpSeminorm ≤ hC.fixedValue * u.gradientCoordLpSeminormSum := by
   rw [u.subAverageLpSeminorm_eq_valueLpSeminorm_of_meanZero hmean]
   let v : W1pMeanZeroFunction U p := ⟨u, hmean⟩
   simpa [v, W1pMeanZeroFunction.valueLpSeminorm,

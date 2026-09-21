@@ -78,7 +78,7 @@ noncomputable def h1CoerciveEstimate_cubeSet {d : ℕ} [NeZero d]
     h1CoerciveEstimate_of_isOpenBoundedConvexDomain
       (isOpenBoundedConvexDomain_openCubeSet Q)
   refine
-    { fixedValue := hCopen.constant
+    { fixedValue := hCopen.fixedValue
       constant_nonneg := hCopen.constant_nonneg
       bound := ?_ }
   intro u
@@ -109,8 +109,8 @@ noncomputable def h1CoerciveEstimate_cubeSet {d : ℕ} [NeZero d]
       H1Function.grad_toOpenCubeSet]
   calc
     u.valueL2Norm = uOpen.valueL2Norm := hvalue
-    _ ≤ hCopen.constant * uOpen.gradientL2Norm := hCopen.bound uOpen
-    _ = hCopen.constant * u.gradientL2Norm := by rw [hgrad]
+    _ ≤ hCopen.fixedValue * uOpen.gradientL2Norm := hCopen.bound uOpen
+    _ = hCopen.fixedValue * u.gradientL2Norm := by rw [hgrad]
 
 private theorem cubeAverageVec_sub_of_memVectorL2 {d : ℕ} (Q : TriadicCube d)
     (u v : Vec d → Vec d)

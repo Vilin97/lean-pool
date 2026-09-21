@@ -25,7 +25,7 @@ noncomputable section
 /-- The dimension-only constant in the local normalized cube Poincare
 estimate. -/
 noncomputable def cubeBesovW12LocalPoincareConstant (d : ℕ) : ℝ :=
-  (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+  (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
 
 theorem cubeBesovW12LocalPoincareConstant_nonneg (d : ℕ) :
     0 ≤ cubeBesovW12LocalPoincareConstant d :=

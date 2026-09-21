@@ -20,7 +20,7 @@ noncomputable section
 noncomputable def originCubeWeakInteriorDepthConstantExact (d : ℕ) (m : ℤ) : ℝ :=
   let Q : TriadicCube d := originCube d m
   (((cubeVolume Q)⁻¹) ^ (1 / (2 : ℝ)) *
-      (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+      (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
     (((d : ℝ) * (d : ℝ)) *
       MeanZeroNeumannPoissonSolution.originCubeParentReducedSolverEnergyConstantExact d m)
 
@@ -29,7 +29,7 @@ theorem originCubeWeakInteriorDepthConstantExact_nonneg (d : ℕ) (m : ℤ) :
   let Q : TriadicCube d := originCube d m
   have hparent :
       0 ≤ ((cubeVolume Q)⁻¹) ^ (1 / (2 : ℝ)) *
-        (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+        (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
     exact mul_nonneg
       (Real.rpow_nonneg (inv_nonneg.mpr (cubeVolume_nonneg Q)) _)
       (originCubeMeanZeroH1CoerciveEstimate d 0).constant_nonneg
@@ -56,7 +56,7 @@ theorem originCubeWeakInteriorDepthConstantExact_eq_unit (d : ℕ) (m : ℤ) :
       originCubeWeakInteriorDepthConstantExact d 0 := by
   let V : ℝ := cubeVolume (originCube d m)
   let A : ℝ := (V⁻¹) ^ (1 / 2 : ℝ)
-  let C₀ : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+  let C₀ : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   let D₂ : ℝ := (d : ℝ) * (d : ℝ)
   let K : ℝ :=
     MeanZeroNeumannPoissonSolution.originCubeParentReducedSolverEnergyConstantExact d m
@@ -92,7 +92,7 @@ namespace MeanZeroNeumannPoissonSolution
 theorem originCube_sum_reducedSolverEnergyBoundExact_le_depthConstant_mul_cubeLpNorm
     {d : ℕ} {m : ℤ} {F : Vec d → ℝ} :
     (((cubeVolume (originCube d m))⁻¹) ^ (1 / (2 : ℝ)) *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
         (∑ k : Fin d, ∑ _l : Fin d,
           originCubeParentReducedSolverEnergyBoundExact d m F k) ≤
       originCubeWeakInteriorDepthConstantExact d m *
@@ -100,7 +100,7 @@ theorem originCube_sum_reducedSolverEnergyBoundExact_le_depthConstant_mul_cubeLp
   let Q : TriadicCube d := originCube d m
   let P : ℝ :=
     ((cubeVolume Q)⁻¹) ^ (1 / (2 : ℝ)) *
-      (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+      (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   let K : ℝ := originCubeParentReducedSolverEnergyConstantExact d m
   let L : ℝ := cubeLpNorm Q (2 : ℝ≥0∞) F
   have hsum_eq :
@@ -212,7 +212,7 @@ theorem cubeBesovDepthSeminorm_grad_cube_le_weakInteriorDepthConstant
     ⟨H, hH⟩
   let P : ℝ :=
     ((cubeVolume Q)⁻¹) ^ (1 / (2 : ℝ)) *
-      (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+      (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   have hP_nonneg : 0 ≤ P := by
     dsimp [P]
     exact mul_nonneg

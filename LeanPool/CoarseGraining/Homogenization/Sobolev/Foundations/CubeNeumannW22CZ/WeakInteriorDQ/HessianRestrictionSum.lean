@@ -166,7 +166,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_cardInvGlo
     {K : ℝ} (hK : 0 ≤ K)
     (hfactor :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant ≤ K) :
+        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue ≤ K) :
     cubeBesovDepthSeminorm Q 1 (2 : ℝ≥0∞) (fun x => u.grad x i) j ≤
       cubeBesovDepthWeight Q 1 j *
         (K *
@@ -186,7 +186,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_cardInvGlo
     {K : ℝ} (hK : 0 ≤ K)
     (hfactor :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant ≤ K) :
+        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue ≤ K) :
     cubeBesovDepthSeminorm Q 1 (2 : ℝ≥0∞) (fun x => u.grad x i) j ≤
       cubeBesovDepthWeight Q 1 j *
         (K *

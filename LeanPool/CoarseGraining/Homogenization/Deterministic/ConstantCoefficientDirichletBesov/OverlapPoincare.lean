@@ -21,7 +21,7 @@ theorem overlapCubeLpNorm_two_overlapCubeFluctuationVec_toField_le_scale_mul_sum
     overlapCubeLpNorm S (2 : ℝ≥0∞)
         (overlapCubeFluctuationVec S G.toField) ≤
       (overlapCubeScaleFactor S *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
         ∑ i : Fin d,
           overlapCubeLpNorm S (2 : ℝ≥0∞)
             (G.restrictCoordToOpenOverlap hS i).grad := by
@@ -48,7 +48,7 @@ theorem overlapCubeLpNorm_two_overlapCubeFluctuationVec_toField_le_scale_mul_sum
             (fun x => overlapCubeFluctuationVec S G.toField x i) ≤
         ∑ i : Fin d,
           (overlapCubeScaleFactor S *
-              (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+              (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
             overlapCubeLpNorm S (2 : ℝ≥0∞)
               (G.restrictCoordToOpenOverlap hS i).grad := by
     refine Finset.sum_le_sum ?_
@@ -73,12 +73,12 @@ theorem overlapCubeLpNorm_two_overlapCubeFluctuationVec_toField_le_scale_mul_sum
     _ ≤
           ∑ i : Fin d,
             (overlapCubeScaleFactor S *
-                (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+                (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
               overlapCubeLpNorm S (2 : ℝ≥0∞)
                 (G.restrictCoordToOpenOverlap hS i).grad := hcomponents
     _ =
           (overlapCubeScaleFactor S *
-              (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+              (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
             ∑ i : Fin d,
               overlapCubeLpNorm S (2 : ℝ≥0∞)
                 (G.restrictCoordToOpenOverlap hS i).grad := by
@@ -90,7 +90,7 @@ theorem overlapCubeLpNorm_two_overlapCubeFluctuationVec_toField_le_scale_mul_sum
     overlapCubeLpNorm S (2 : ℝ≥0∞)
         (overlapCubeFluctuationVec S G.toField) ≤
       (overlapCubeScaleFactor S *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
         ∑ i : Fin d,
           overlapCubeLpNorm S (2 : ℝ≥0∞) (G.coord i).grad := by
   simpa using!
@@ -212,13 +212,13 @@ theorem cubeBesovOverlappingPositiveVectorDepthAverage_toField_le_raw
     {d : ℕ} (Q : TriadicCube d) (j : ℕ) (G : CubeVectorH1Function Q) :
     cubeBesovOverlappingPositiveVectorDepthAverage Q G.toField j ≤
       (((cubeScaleFactor Q / (3 : ℝ) ^ j) *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant) ^ 2) *
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) ^ 2) *
         ((Fintype.card (Fin d) : ℝ) *
           ((3 ^ d : ℝ) *
             ((((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) *
               G.gradientCoordL2NormSum) ^ 2))) := by
   classical
-  let C0 : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+  let C0 : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   let scale : ℝ := cubeScaleFactor Q / (3 : ℝ) ^ j
   let m : ℝ := (Fintype.card (Fin d) : ℝ)
   let parent : ℝ := ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) *
@@ -435,7 +435,7 @@ theorem cubeBesovOverlappingPositiveVectorDepthAverage_toField_le_raw
             (sq_nonneg (scale * C0))
     _ =
           (((cubeScaleFactor Q / (3 : ℝ) ^ j) *
-              (originCubeMeanZeroH1CoerciveEstimate d 0).constant) ^ 2) *
+              (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) ^ 2) *
             ((Fintype.card (Fin d) : ℝ) *
               ((3 ^ d : ℝ) *
                 ((((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) *
@@ -445,7 +445,7 @@ theorem cubeBesovOverlappingPositiveVectorDepthAverage_toField_le_raw
 /-- Explicit constant for the averaged overlap-cube Poincare estimate. -/
 noncomputable def cubeVectorH1OverlapPoincareConstant (d : ℕ) : ℝ :=
   Real.sqrt ((Fintype.card (Fin d) : ℝ) * (3 ^ d : ℝ)) *
-    (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+    (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
 
 theorem cubeVectorH1OverlapPoincareConstant_nonneg (d : ℕ) :
     0 ≤ cubeVectorH1OverlapPoincareConstant d := by
@@ -470,7 +470,7 @@ theorem cubeVectorH1OverlapPoincareEstimate
     CubeVectorH1OverlapPoincareEstimate d
       (cubeVectorH1OverlapPoincareConstant d) := by
   intro Q j G
-  let C0 : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+  let C0 : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   let M : ℝ := (Fintype.card (Fin d) : ℝ) * (3 ^ d : ℝ)
   let C : ℝ := cubeVectorH1OverlapPoincareConstant d
   let t : ℝ := Real.rpow (3 : ℝ) (-(j : ℝ))

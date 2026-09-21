@@ -178,7 +178,7 @@ variable {d : ℕ} {U : Set (Vec d)} {p : ENNReal}
 /-- Translate a finite-`p` Poincare estimate from `U` to `U + z` unchanged. -/
 noncomputable def translate (hC : W1pPoincareEstimate U p) (z : Vec d) :
     W1pPoincareEstimate (translateSet z U) p where
-  fixedValue := hC.constant
+  fixedValue := hC.fixedValue
   constant_nonneg := hC.constant_nonneg
   bound := by
     intro u
@@ -188,15 +188,15 @@ noncomputable def translate (hC : W1pPoincareEstimate U p) (z : Vec d) :
         simpa [v, W1pMeanZeroFunction.valueLpSeminorm] using!
           (W1pFunction.valueLpSeminorm_untranslateForPoincare_eq (U := U) z
             u.toW1pFunction).symm
-      _ ≤ hC.constant * v.gradientCoordLpSeminormSum := hC.bound v
-      _ = hC.constant * u.gradientCoordLpSeminormSum := by
+      _ ≤ hC.fixedValue * v.gradientCoordLpSeminormSum := hC.bound v
+      _ = hC.fixedValue * u.gradientCoordLpSeminormSum := by
         rw [show v.gradientCoordLpSeminormSum = u.gradientCoordLpSeminormSum by
           simpa [v, W1pMeanZeroFunction.gradientCoordLpSeminormSum] using!
             W1pFunction.gradientCoordLpSeminormSum_untranslateForPoincare_eq (U := U) z
               u.toW1pFunction]
 
 @[simp] theorem translate_constant (hC : W1pPoincareEstimate U p) (z : Vec d) :
-    (hC.translate z).constant = hC.constant :=
+    (hC.translate z).fixedValue = hC.fixedValue :=
   rfl
 
 end W1pPoincareEstimate

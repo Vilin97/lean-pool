@@ -41,7 +41,7 @@ finite whenever the centered-cube gain constant is finite. -/
 theorem axisCube_harmonicEuclideanGradientGain_coefficient_ne_top
     {d : ℕ} {r : FiniteLpExponent} {depth : ℕ}
     (G : INTERNAL.HarmonicEuclideanGradientGain d r depth) :
-    G.constant * (d : ℝ≥0∞) ≠ ∞ :=
+    G.fixedValue * (d : ℝ≥0∞) ≠ ∞ :=
   ENNReal.mul_ne_top G.constant_ne_top (ENNReal.natCast_ne_top d)
 
 /-- The fixed-depth Euclidean harmonic-gradient gain transported to an
@@ -59,7 +59,7 @@ theorem axisCube_harmonicEuclideanGradientGain
       eLpNorm (fun x => HilbertVec.ofVec (u.grad x)) r.exponent
           (axisCubeNormalizedMeasure (axisCubeConcentricDepthCorner z L depth)
             (axisCubeConcentricDepthSide L depth)) ≤
-        (G.constant * (d : ℝ≥0∞)) *
+        (G.fixedValue * (d : ℝ≥0∞)) *
           eLpNorm (fun x => HilbertVec.ofVec (u.grad x)) 2
             (axisCubeNormalizedMeasure z L) := by
   let v := axisCubeHarmonicPullback z hL u
@@ -70,7 +70,7 @@ theorem axisCube_harmonicEuclideanGradientGain
     G.memLp (originCube d 0) v hvharm
   have hgain_bound : eLpNorm (fun x => HilbertVec.ofVec (v.grad x)) r.exponent
       (normalizedCubeMeasure (centralDescendant (originCube d 0) depth)) ≤
-      G.constant * ∑ j : Fin d, eLpNorm (fun x => v.grad x j) 2
+      G.fixedValue * ∑ j : Fin d, eLpNorm (fun x => v.grad x j) 2
         (normalizedCubeMeasure (originCube d 0)) :=
     G.bound (originCube d 0) v hvharm
   rw [centralDescendant_originCube_zero_eq_originCube_neg_nat depth] at hgain_mem hgain_bound
@@ -122,13 +122,13 @@ theorem axisCube_harmonicEuclideanGradientGain
           (normalizedCubeMeasure (originCube d (-(depth : ℤ)))) := by
             rw [← hdepth_transport]
             simp only [v, axisCubeHarmonicPullback_grad]
-    _ ≤ G.constant * ∑ j : Fin d, eLpNorm (fun x => v.grad x j) 2
+    _ ≤ G.fixedValue * ∑ j : Fin d, eLpNorm (fun x => v.grad x j) 2
           (normalizedCubeMeasure (originCube d 0)) := hgain_bound
-    _ ≤ G.constant * ((d : ℝ≥0∞) * eLpNorm (fun x => HilbertVec.ofVec (v.grad x)) 2
+    _ ≤ G.fixedValue * ((d : ℝ≥0∞) * eLpNorm (fun x => HilbertVec.ofVec (v.grad x)) 2
           (normalizedCubeMeasure (originCube d 0))) := by gcongr
-    _ = (G.constant * (d : ℝ≥0∞)) * eLpNorm (fun x => HilbertVec.ofVec (v.grad x)) 2
+    _ = (G.fixedValue * (d : ℝ≥0∞)) * eLpNorm (fun x => HilbertVec.ofVec (v.grad x)) 2
           (normalizedCubeMeasure (originCube d 0)) := by ring
-    _ = (G.constant * (d : ℝ≥0∞)) *
+    _ = (G.fixedValue * (d : ℝ≥0∞)) *
         eLpNorm (fun x => HilbertVec.ofVec (u.grad x)) 2
           (axisCubeNormalizedMeasure z L) := by
       rw [hparent_transport']

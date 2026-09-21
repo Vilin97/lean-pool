@@ -888,7 +888,7 @@ noncomputable def h1CoerciveEstimate_of_isOpenBoundedConvexDomain
 theorem h1CoerciveEstimate_of_isOpenBoundedConvexDomain_constant_le_chosenBound
     {d : ℕ} {U : Set (Vec d)} [MeasureTheory.IsFiniteMeasure (volumeMeasureOn U)]
     (hU : IsOpenBoundedConvexDomain U) :
-    (h1CoerciveEstimate_of_isOpenBoundedConvexDomain (U := U) hU).constant ≤
+    (h1CoerciveEstimate_of_isOpenBoundedConvexDomain (U := U) hU).fixedValue ≤
       H1Function.h1CoerciveEstimateChosenBound (d := d) (U := U) hU := by
   classical
   unfold h1CoerciveEstimate_of_isOpenBoundedConvexDomain
@@ -912,7 +912,7 @@ theorem exists_poincare_constant_of_isOpenBoundedConvexDomain
       ∀ u : H1MeanZeroFunction U, u.valueL2Norm ≤ C * u.gradientL2Norm := by
   refine
     ⟨
-      (h1CoerciveEstimate_of_isOpenBoundedConvexDomain (U := U) hU).constant,
+      (h1CoerciveEstimate_of_isOpenBoundedConvexDomain (U := U) hU).fixedValue,
       (h1CoerciveEstimate_of_isOpenBoundedConvexDomain (U := U) hU).constant_nonneg,
       ?_
     ⟩

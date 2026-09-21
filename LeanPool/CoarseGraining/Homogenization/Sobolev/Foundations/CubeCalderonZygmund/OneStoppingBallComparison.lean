@@ -48,7 +48,7 @@ allows the later good-`lambda` parameter choice. -/
 def oneStoppingBallCoefficient {d : ℕ} {q : FiniteLpExponent} (depth : ℕ)
     (G : INTERNAL.HarmonicEuclideanGradientGain d q depth) : ℝ≥0∞ :=
   4 * (5 : ℝ≥0∞) ^ d *
-      (2 * (G.constant * (d : ℝ≥0∞))) ^ q.exponent.toReal +
+      (2 * (G.fixedValue * (d : ℝ≥0∞))) ^ q.exponent.toReal +
     12 * ENNReal.ofReal ((5 * (3 : ℝ) ^ depth) ^ d)
 
 /-- The coefficient is finite; hence it may safely be used in the later
@@ -156,7 +156,7 @@ theorem exists_stoppingComparison_harmonic_remainder
           (axisCubeConcentricDepthCorner (stoppingComparisonParentCorner x r depth)
             (stoppingComparisonParentSide r depth) depth)
           (axisCubeConcentricDepthSide (stoppingComparisonParentSide r depth) depth)) ≤
-        (2 * (G.constant * (d : ℝ≥0∞))) * ENNReal.ofReal level := by
+        (2 * (G.fixedValue * (d : ℝ≥0∞))) * ENNReal.ofReal level := by
   let U : Set (Vec d) := axisCube (stoppingComparisonParentCorner x r depth)
     (stoppingComparisonParentSide r depth)
   have hL : 0 < stoppingComparisonParentSide r depth := by
@@ -220,16 +220,16 @@ theorem exists_stoppingComparison_harmonic_remainder
             (axisCubeConcentricDepthCorner (stoppingComparisonParentCorner x r depth)
               (stoppingComparisonParentSide r depth) depth)
             (axisCubeConcentricDepthSide (stoppingComparisonParentSide r depth) depth)) ≤
-          (G.constant * (d : ℝ≥0∞)) *
+          (G.fixedValue * (d : ℝ≥0∞)) *
             eLpNorm (hilbertifyVecField (u - w.toH1Function).grad) 2
               (axisCubeNormalizedMeasure (stoppingComparisonParentCorner x r depth)
                 (stoppingComparisonParentSide r depth)) := hvGain.2
-      _ = (G.constant * (d : ℝ≥0∞)) *
+      _ = (G.fixedValue * (d : ℝ≥0∞)) *
             eLpNorm (hilbertifyVecField u.grad +
               (-hilbertifyVecField w.toH1Function.grad)) 2
               (axisCubeNormalizedMeasure (stoppingComparisonParentCorner x r depth)
                 (stoppingComparisonParentSide r depth)) := by rw [hvfield]
-      _ ≤ (G.constant * (d : ℝ≥0∞)) *
+      _ ≤ (G.fixedValue * (d : ℝ≥0∞)) *
             (eLpNorm (hilbertifyVecField u.grad) 2
               (axisCubeNormalizedMeasure (stoppingComparisonParentCorner x r depth)
                 (stoppingComparisonParentSide r depth)) +
@@ -244,15 +244,15 @@ theorem exists_stoppingComparison_harmonic_remainder
                 rw [axisCubeNormalizedMeasure_eq_smul_volume_restrict _ _ hL]
                 exact (memHilbertVectorL2_hilbertifyVecField
                   w.toH1Function.grad_memVectorL2).smul_measure hscale_ne_top |>.neg.aestronglyMeasurable)
-      _ ≤ (G.constant * (d : ℝ≥0∞)) *
+      _ ≤ (G.fixedValue * (d : ℝ≥0∞)) *
             (ENNReal.ofReal level + ENNReal.ofReal (eps * level)) := by
             gcongr
             · exact (eLpNorm_congr_ae hfuU).symm ▸ hparent.1
             · simpa only [eLpNorm_neg] using hwbound
-      _ ≤ (2 * (G.constant * (d : ℝ≥0∞))) * ENNReal.ofReal level := by
+      _ ≤ (2 * (G.fixedValue * (d : ℝ≥0∞))) * ENNReal.ofReal level := by
             rw [ENNReal.ofReal_mul heps.le]
             exact oneBall_harmonicGain_scale_le_two
-              (A := G.constant * (d : ℝ≥0∞)) (L := ENNReal.ofReal level)
+              (A := G.fixedValue * (d : ℝ≥0∞)) (L := ENNReal.ofReal level)
               (e := ENNReal.ofReal eps) (by
                 rw [ENNReal.ofReal_le_one]
                 exact heps_one)

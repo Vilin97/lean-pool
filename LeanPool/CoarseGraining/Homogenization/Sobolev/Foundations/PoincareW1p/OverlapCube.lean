@@ -30,7 +30,7 @@ theorem exists_overlapCube_meanZero_poincare_constant {d : ℕ} {q : ℝ}
   let hCunit : W1pPoincareEstimate (openCubeSet (originCube d 0)) (ENNReal.ofReal q) :=
     w1pPoincareEstimate_of_isOpenBoundedConvexDomain
       (isOpenBoundedConvexDomain_openCubeSet (originCube d 0)) hq
-  refine ⟨hCunit.constant, hCunit.constant_nonneg, ?_⟩
+  refine ⟨hCunit.fixedValue, hCunit.constant_nonneg, ?_⟩
   intro S
   rw [openOverlapCubeSet_eq_translateSet_smul_originCube_zero S]
   intro u
@@ -44,9 +44,9 @@ theorem exists_overlapCube_meanZero_poincare_constant {d : ℕ} {q : ℝ}
         (ENNReal.ofReal q) :=
     hCdil.translate (cubeCenter S)
   calc
-    u.valueLpSeminorm ≤ hCtrans.constant * u.gradientCoordLpSeminormSum :=
+    u.valueLpSeminorm ≤ hCtrans.fixedValue * u.gradientCoordLpSeminormSum :=
       hCtrans.bound u
-    _ = (hCunit.constant * overlapCubeScaleFactor S) *
+    _ = (hCunit.fixedValue * overlapCubeScaleFactor S) *
           u.gradientCoordLpSeminormSum := by
           simp only [hCtrans, hCdil, W1pPoincareEstimate.translate_constant,
             W1pPoincareEstimate.dilate_constant]

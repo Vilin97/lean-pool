@@ -109,7 +109,7 @@ constant. -/
 noncomputable def translate [MeasureTheory.IsFiniteMeasure (volumeMeasureOn U)]
     (hC : H1CoerciveEstimate U) (z : Vec d) :
     H1CoerciveEstimate (translateSet z U) where
-  fixedValue := hC.constant
+  fixedValue := hC.fixedValue
   constant_nonneg := hC.constant_nonneg
   bound := by
     intro u
@@ -117,13 +117,13 @@ noncomputable def translate [MeasureTheory.IsFiniteMeasure (volumeMeasureOn U)]
     calc
       u.valueL2Norm = v.valueL2Norm := by
         simpa [v] using (H1MeanZeroFunction.valueL2Norm_untranslate_eq (U := U) z u).symm
-      _ ≤ hC.constant * v.gradientL2Norm := hC.bound v
-      _ = hC.constant * u.gradientL2Norm := by
+      _ ≤ hC.fixedValue * v.gradientL2Norm := hC.bound v
+      _ = hC.fixedValue * u.gradientL2Norm := by
         rw [H1MeanZeroFunction.gradientL2Norm_untranslate_eq (U := U) z u]
 
 @[simp] theorem translate_constant [MeasureTheory.IsFiniteMeasure (volumeMeasureOn U)]
     (hC : H1CoerciveEstimate U) (z : Vec d) :
-    (hC.translate z).constant = hC.constant :=
+    (hC.translate z).fixedValue = hC.fixedValue :=
   rfl
 
 end H1CoerciveEstimate

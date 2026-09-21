@@ -229,7 +229,7 @@ theorem isCoercive_coeffGradientBilin
     (hC : H1CoerciveEstimate U) (hne : Set.Nonempty U)
     (hEll : IsEllipticFieldOn lam Lam U a) :
     IsCoercive (coeffGradientBilin (U := U) hEll) := by
-  let M : ℝ := hC.constant + 1
+  let M : ℝ := hC.fixedValue + 1
   rcases hne with ⟨x, hx⟩
   have hlam : 0 < lam := (hEll.2 x hx).1
   have hM_pos : 0 < M := by

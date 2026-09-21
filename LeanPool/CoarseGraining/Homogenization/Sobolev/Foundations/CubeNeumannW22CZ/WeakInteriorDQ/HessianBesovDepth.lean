@@ -39,7 +39,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_of_descendant_hessia
     {A : ℝ} (hA : 0 ≤ A)
     (hrow :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant *
+        ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue *
             ‖((H.restrict (isOpen_openCubeSet R)
                 (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖ ≤
           A) :
@@ -67,14 +67,14 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_descendantsAverage_s
         (descendantsAverage Q j
           (fun R =>
             (if hR : R ∈ descendantsAtDepth Q j then
-              ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant *
+              ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue *
                 ‖((H.restrict (isOpen_openCubeSet R)
                     (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖
             else
               0) ^ 2)) ^ (1 / 2 : ℝ) := by
   let A : TriadicCube d → ℝ := fun R =>
     if hR : R ∈ descendantsAtDepth Q j then
-      ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant *
+      ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue *
         ‖((H.restrict (isOpen_openCubeSet R)
             (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖
     else
@@ -82,18 +82,18 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_descendantsAverage_s
   have hA_eval :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
         A R =
-          ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant *
+          ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue *
             ‖((H.restrict (isOpen_openCubeSet R)
                 (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖ := by
     intro R hR
     change
       (if hR' : R ∈ descendantsAtDepth Q j then
-        ((cubeVolume R)⁻¹ + 1) * (hC R hR').constant *
+        ((cubeVolume R)⁻¹ + 1) * (hC R hR').fixedValue *
           ‖((H.restrict (isOpen_openCubeSet R)
               (openCubeSet_subset_of_mem_descendantsAtDepth hR')).gradCoordH1Function i).gradToVectorL2‖
       else
         0) =
-        ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant *
+        ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue *
           ‖((H.restrict (isOpen_openCubeSet R)
               (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖
     rw [dif_pos hR]
@@ -128,14 +128,14 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_descendantsAverage_v
         (descendantsAverage Q j
           (fun R =>
             (if hR : R ∈ descendantsAtDepth Q j then
-              ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant *
+              ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue *
                 ‖((H.restrict (isOpen_openCubeSet R)
                     (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖
             else
               0) ^ 2)) ^ (1 / 2 : ℝ) := by
   let A : TriadicCube d → ℝ := fun R =>
     if hR : R ∈ descendantsAtDepth Q j then
-      ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant *
+      ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue *
         ‖((H.restrict (isOpen_openCubeSet R)
             (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖
     else
@@ -143,18 +143,18 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_descendantsAverage_v
   have hA_eval :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
         A R =
-          ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant *
+          ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue *
             ‖((H.restrict (isOpen_openCubeSet R)
                 (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖ := by
     intro R hR
     change
       (if hR' : R ∈ descendantsAtDepth Q j then
-        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR').constant *
+        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR').fixedValue *
           ‖((H.restrict (isOpen_openCubeSet R)
               (openCubeSet_subset_of_mem_descendantsAtDepth hR')).gradCoordH1Function i).gradToVectorL2‖
       else
         0) =
-        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant *
+        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue *
           ‖((H.restrict (isOpen_openCubeSet R)
               (openCubeSet_subset_of_mem_descendantsAtDepth hR)).gradCoordH1Function i).gradToVectorL2‖
     rw [dif_pos hR]
@@ -184,7 +184,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_of_descend
     {K B : ℝ} (hK : 0 ≤ K) (hB : 0 ≤ B)
     (hfactor :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant ≤ K)
+        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue ≤ K)
     (havg :
       descendantsAverage Q j
         (fun R =>
@@ -203,7 +203,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_of_descend
       0
   let P : TriadicCube d → ℝ := fun R =>
     if hR : R ∈ descendantsAtDepth Q j then
-      ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant * Row R
+      ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue * Row R
     else
       0
   have hRow_eval :
@@ -223,14 +223,14 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_of_descend
     rw [dif_pos hR]
   have hP_eval :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        P R = ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant * Row R := by
+        P R = ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue * Row R := by
     intro R hR
     change
       (if hR' : R ∈ descendantsAtDepth Q j then
-        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR').constant * Row R
+        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR').fixedValue * Row R
       else
         0) =
-        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).constant * Row R
+        ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) * (hC R hR).fixedValue * Row R
     rw [dif_pos hR]
   have hP_nonneg :
       ∀ R ∈ descendantsAtDepth Q j, 0 ≤ P R := by
@@ -321,7 +321,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_of_descend
     {K B : ℝ} (hK : 0 ≤ K) (hB : 0 ≤ B)
     (hfactor :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant ≤ K)
+        ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue ≤ K)
     (havg :
       descendantsAverage Q j
         (fun R =>
@@ -340,7 +340,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_of_descend
       0
   let P : TriadicCube d → ℝ := fun R =>
     if hR : R ∈ descendantsAtDepth Q j then
-      ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant * Row R
+      ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue * Row R
     else
       0
   have hRow_eval :
@@ -360,14 +360,14 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_of_descend
     rw [dif_pos hR]
   have hP_eval :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        P R = ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant * Row R := by
+        P R = ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue * Row R := by
     intro R hR
     change
       (if hR' : R ∈ descendantsAtDepth Q j then
-        ((cubeVolume R)⁻¹ + 1) * (hC R hR').constant * Row R
+        ((cubeVolume R)⁻¹ + 1) * (hC R hR').fixedValue * Row R
       else
         0) =
-        ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant * Row R
+        ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue * Row R
     rw [dif_pos hR]
   have hP_nonneg :
       ∀ R ∈ descendantsAtDepth Q j, 0 ≤ P R := by
@@ -462,7 +462,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_global_hes
     {K : ℝ} (hK : 0 ≤ K)
     (hfactor :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant ≤ K) :
+        ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue ≤ K) :
     cubeBesovDepthSeminorm Q 1 (2 : ℝ≥0∞) (fun x => u.grad x i) j ≤
       cubeBesovDepthWeight Q 1 j *
         (K * ‖(H.gradCoordH1Function i).gradToVectorL2‖) := by
@@ -516,7 +516,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_const_mul_hessianCoo
     {K : ℝ} (hK : 0 ≤ K)
     (hfactor :
       ∀ R (hR : R ∈ descendantsAtDepth Q j),
-        ((cubeVolume R)⁻¹ + 1) * (hC R hR).constant ≤ K) :
+        ((cubeVolume R)⁻¹ + 1) * (hC R hR).fixedValue ≤ K) :
     cubeBesovDepthSeminorm Q 1 (2 : ℝ≥0∞) (fun x => u.grad x i) j ≤
       cubeBesovDepthWeight Q 1 j * (K * H.hessianCoordL2NormSum) := by
   have hdepth :=

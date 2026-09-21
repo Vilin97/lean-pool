@@ -44,7 +44,7 @@ noncomputable def scaledDescendantCoercivePrefactor {d : ℕ}
     (Q : TriadicCube d) (j : ℕ) : ℝ :=
   ((cubeVolume (originCube d (Q.scale - j)))⁻¹) ^ (1 / 2 : ℝ) *
     (cubeScaleFactor (originCube d (Q.scale - j)) *
-      (originCubeMeanZeroH1CoerciveEstimate d 0).constant)
+      (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue)
 
 theorem scaledDescendantCoercivePrefactor_nonneg {d : ℕ}
     (Q : TriadicCube d) (j : ℕ) :
@@ -62,7 +62,7 @@ theorem scaledDescendantCoercivePrefactor_eq {d : ℕ}
     {Q R : TriadicCube d} {j : ℕ}
     (hR : R ∈ descendantsAtDepth Q j) :
     ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) *
-        (scaledDescendantMeanZeroH1CoerciveEstimate Q j R hR).constant =
+        (scaledDescendantMeanZeroH1CoerciveEstimate Q j R hR).fixedValue =
       scaledDescendantCoercivePrefactor Q j := by
   have hscale : R.scale = Q.scale - j :=
     scale_eq_sub_of_mem_descendantsAtDepth hR
@@ -80,7 +80,7 @@ theorem scaledDescendantCoercivePrefactor_bound {d : ℕ}
     {Q R : TriadicCube d} {j : ℕ}
     (hR : R ∈ descendantsAtDepth Q j) :
     ((cubeVolume R)⁻¹) ^ (1 / 2 : ℝ) *
-        (scaledDescendantMeanZeroH1CoerciveEstimate Q j R hR).constant ≤
+        (scaledDescendantMeanZeroH1CoerciveEstimate Q j R hR).fixedValue ≤
       scaledDescendantCoercivePrefactor Q j := by
   exact le_of_eq (scaledDescendantCoercivePrefactor_eq hR)
 
@@ -88,7 +88,7 @@ theorem cubeBesovDepthWeight_mul_scaledDescendantCoercivePrefactor {d : ℕ}
     (Q : TriadicCube d) (j : ℕ) :
     cubeBesovDepthWeight Q 1 j * scaledDescendantCoercivePrefactor Q j =
       ((cubeVolume (originCube d (Q.scale - j)))⁻¹) ^ (1 / 2 : ℝ) *
-        (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+        (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
   let R0 : TriadicCube d := originCube d (Q.scale - j)
   have hscale :
       cubeScaleFactor Q / (3 : ℝ) ^ j = cubeScaleFactor R0 := by
@@ -166,7 +166,7 @@ theorem scaledDepthPrefactor_mul_cardInvHessianRoot_eq_parentVolume {d : ℕ}
         (scaledDescendantCoercivePrefactor Q j *
           ((((descendantsAtDepth Q j).card : ℝ)⁻¹ * A ^ 2) ^ (1 / 2 : ℝ))) =
       (((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) *
-        (originCubeMeanZeroH1CoerciveEstimate d 0).constant) * A := by
+        (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) * A := by
   rcases descendantsAtDepth_nonempty Q j with ⟨R, hR⟩
   have hvol :
       cubeVolume (originCube d (Q.scale - j)) = cubeVolume R :=
@@ -177,7 +177,7 @@ theorem scaledDepthPrefactor_mul_cardInvHessianRoot_eq_parentVolume {d : ℕ}
         ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * A := by
     rw [hvol]
     exact descendant_card_volume_rpow_half_mul_cardInv_sq_rpow_half hR hA
-  let C0 : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+  let C0 : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   let V0 : ℝ := ((cubeVolume (originCube d (Q.scale - j)))⁻¹) ^ (1 / 2 : ℝ)
   let root : ℝ :=
     ((((descendantsAtDepth Q j).card : ℝ)⁻¹ * A ^ 2) ^ (1 / 2 : ℝ))
@@ -223,7 +223,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_parentVolume_scaledCoercive
     (H : HasWeakHessianOn (openCubeSet Q) u) (i : Fin d) (j : ℕ) :
     cubeBesovDepthSeminorm Q 1 (2 : ℝ≥0∞) (fun x => u.grad x i) j ≤
       (((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) *
-        (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+        (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
         H.hessianCoordL2NormSum := by
   calc
     cubeBesovDepthSeminorm Q 1 (2 : ℝ≥0∞) (fun x => u.grad x i) j
@@ -233,7 +233,7 @@ theorem cubeBesovDepthSeminorm_gradCoord_le_parentVolume_scaledCoercive
                 H.hessianCoordL2NormSum ^ 2) ^ (1 / 2 : ℝ))) :=
           H.cubeBesovDepthSeminorm_gradCoord_le_depthWeight_mul_scaledCoercivePrefactor i j
     _ = (((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
           H.hessianCoordL2NormSum :=
         scaledDepthPrefactor_mul_cardInvHessianRoot_eq_parentVolume Q j
           H.hessianCoordL2NormSum_nonneg

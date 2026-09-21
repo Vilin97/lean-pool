@@ -106,7 +106,7 @@ noncomputable def originCubeMeanZeroH1CoerciveEstimate
 
 theorem originCubeMeanZeroH1CoerciveEstimate_constant_le_chosenBound
     (d : ℕ) (m : ℤ) :
-    (originCubeMeanZeroH1CoerciveEstimate d m).constant ≤
+    (originCubeMeanZeroH1CoerciveEstimate d m).fixedValue ≤
       H1Function.h1CoerciveEstimateChosenBound
         (d := d) (U := openCubeSet (originCube d m))
         (isOpenBoundedConvexDomain_openCubeSet_originCube_scale d m) := by
@@ -134,7 +134,7 @@ noncomputable def translatedCubeMeanZeroH1CoerciveEstimate {d : ℕ}
   let hC₀ : H1CoerciveEstimate (openCubeSet (originCube d Q.scale)) :=
     originCubeMeanZeroH1CoerciveEstimate d Q.scale
   refine
-    { fixedValue := hC₀.constant
+    { fixedValue := hC₀.fixedValue
       constant_nonneg := hC₀.constant_nonneg
       bound := ?_ }
   rw [openCubeSet_eq_translateSet_originCube_of_triadicCube Q]
@@ -142,19 +142,19 @@ noncomputable def translatedCubeMeanZeroH1CoerciveEstimate {d : ℕ}
 
 theorem translatedCubeMeanZeroH1CoerciveEstimate_constant {d : ℕ}
     (Q : TriadicCube d) :
-    (translatedCubeMeanZeroH1CoerciveEstimate Q).constant =
-      (originCubeMeanZeroH1CoerciveEstimate d Q.scale).constant := by
+    (translatedCubeMeanZeroH1CoerciveEstimate Q).fixedValue =
+      (originCubeMeanZeroH1CoerciveEstimate d Q.scale).fixedValue := by
   unfold translatedCubeMeanZeroH1CoerciveEstimate
   rfl
 
 theorem translatedCubeMeanZeroH1CoerciveEstimate_constant_nonneg {d : ℕ}
     (Q : TriadicCube d) :
-    0 ≤ (translatedCubeMeanZeroH1CoerciveEstimate Q).constant :=
+    0 ≤ (translatedCubeMeanZeroH1CoerciveEstimate Q).fixedValue :=
   (translatedCubeMeanZeroH1CoerciveEstimate Q).constant_nonneg
 
 theorem translatedCubeMeanZeroH1CoerciveEstimate_constant_le_origin_chosenBound {d : ℕ}
     (Q : TriadicCube d) :
-    (translatedCubeMeanZeroH1CoerciveEstimate Q).constant ≤
+    (translatedCubeMeanZeroH1CoerciveEstimate Q).fixedValue ≤
       H1Function.h1CoerciveEstimateChosenBound
         (d := d) (U := openCubeSet (originCube d Q.scale))
         (isOpenBoundedConvexDomain_openCubeSet_originCube_scale d Q.scale) := by
@@ -175,7 +175,7 @@ noncomputable def scaledOriginCubeMeanZeroH1CoerciveEstimate
   let hCdil : H1CoerciveEstimate (s • openCubeSet (originCube d 0)) :=
     hCunit.dilate hs_pos
   refine
-    { fixedValue := s * hCunit.constant
+    { fixedValue := s * hCunit.fixedValue
       constant_nonneg := mul_nonneg hs_pos.le hCunit.constant_nonneg
       bound := ?_ }
   rw [openCubeSet_originCube_eq_smul_unit d m]
@@ -183,9 +183,9 @@ noncomputable def scaledOriginCubeMeanZeroH1CoerciveEstimate
 
 theorem scaledOriginCubeMeanZeroH1CoerciveEstimate_constant
     (d : ℕ) (m : ℤ) :
-    (scaledOriginCubeMeanZeroH1CoerciveEstimate d m).constant =
+    (scaledOriginCubeMeanZeroH1CoerciveEstimate d m).fixedValue =
       cubeScaleFactor (originCube d m) *
-        (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+        (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
   rfl
 
 /-- Scale-correct coercive estimate on any triadic cube, obtained by dilating
@@ -202,7 +202,7 @@ noncomputable def scaledTranslatedCubeMeanZeroH1CoerciveEstimate {d : ℕ}
   let hC₀ : H1CoerciveEstimate (openCubeSet (originCube d Q.scale)) :=
     scaledOriginCubeMeanZeroH1CoerciveEstimate d Q.scale
   refine
-    { fixedValue := hC₀.constant
+    { fixedValue := hC₀.fixedValue
       constant_nonneg := hC₀.constant_nonneg
       bound := ?_ }
   rw [openCubeSet_eq_translateSet_originCube_of_triadicCube Q]
@@ -210,8 +210,8 @@ noncomputable def scaledTranslatedCubeMeanZeroH1CoerciveEstimate {d : ℕ}
 
 theorem scaledTranslatedCubeMeanZeroH1CoerciveEstimate_constant {d : ℕ}
     (Q : TriadicCube d) :
-    (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).constant =
-      cubeScaleFactor Q * (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+    (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).fixedValue =
+      cubeScaleFactor Q * (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
   unfold scaledTranslatedCubeMeanZeroH1CoerciveEstimate
   rw [scaledOriginCubeMeanZeroH1CoerciveEstimate_constant]
   rfl

@@ -241,7 +241,7 @@ theorem sqWeightedMeasure_oneStoppingBall_le
   have hvMem' : MemLp v q.exponent (axisCubeNormalizedMeasure z L) := by
     simpa only [v, z, L] using hvMem
   have hvBound' : eLpNorm v q.exponent (axisCubeNormalizedMeasure z L) ≤
-      (2 * (G.constant * (d : ℝ≥0∞))) * ENNReal.ofReal level := by
+      (2 * (G.fixedValue * (d : ℝ≥0∞))) * ENNReal.ofReal level := by
     simpa only [v, z, L] using hvBound
   have hvmeas : AEStronglyMeasurable v (volume.restrict child) := by
     rw [axisCubeNormalizedMeasure_eq_smul_volume_restrict z L hL] at hvMem'
@@ -303,18 +303,18 @@ theorem sqWeightedMeasure_oneStoppingBall_le
   have hharmonic_raw :
       (∫⁻ y in child, ENNReal.ofReal (‖v y‖ ^ q.exponent.toReal) ∂volume) ≤
         ENNReal.ofReal ((10 * r) ^ d) *
-          ((2 * (G.constant * (d : ℝ≥0∞))) * ENNReal.ofReal level) ^
+          ((2 * (G.fixedValue * (d : ℝ≥0∞))) * ENNReal.ofReal level) ^
             q.exponent.toReal := by
     simpa only [child, z, L] using
       (stoppingComparison_harmonic_raw_bound x hr depth v hvBound')
-  have hA : 2 * (G.constant * (d : ℝ≥0∞)) ≠ ∞ := by
+  have hA : 2 * (G.fixedValue * (d : ℝ≥0∞)) ≠ ∞ := by
     apply ENNReal.mul_ne_top
     · norm_num
     · exact axisCube_harmonicEuclideanGradientGain_coefficient_ne_top G
   have hharmonic_scale :
       2 * ENNReal.ofReal ((M * level / 2) ^ (2 - q.exponent.toReal)) *
           (∫⁻ y in child, ENNReal.ofReal (‖v y‖ ^ q.exponent.toReal) ∂volume) ≤
-        2 * (5 : ℝ≥0∞) ^ d * (2 * (G.constant * (d : ℝ≥0∞))) ^ q.exponent.toReal *
+        2 * (5 : ℝ≥0∞) ^ d * (2 * (G.fixedValue * (d : ℝ≥0∞))) ^ q.exponent.toReal *
           ENNReal.ofReal ((M / 2) ^ (2 - q.exponent.toReal)) *
           ENNReal.ofReal (level ^ (2 : ℝ)) * volume (Metric.closedBall x r) := by
     calc
@@ -322,12 +322,12 @@ theorem sqWeightedMeasure_oneStoppingBall_le
           (∫⁻ y in child, ENNReal.ofReal (‖v y‖ ^ q.exponent.toReal) ∂volume) ≤
           2 * ENNReal.ofReal ((M * level / 2) ^ (2 - q.exponent.toReal)) *
             (ENNReal.ofReal ((10 * r) ^ d) *
-              ((2 * (G.constant * (d : ℝ≥0∞))) * ENNReal.ofReal level) ^
+              ((2 * (G.fixedValue * (d : ℝ≥0∞))) * ENNReal.ofReal level) ^
                 q.exponent.toReal) := by
               gcongr
       _ = _ := oneBall_harmonic_tail_scale_factor x hr.le hM hlevel hA
   let Kh : ℝ≥0∞ :=
-    2 * (5 : ℝ≥0∞) ^ d * (2 * (G.constant * (d : ℝ≥0∞))) ^ q.exponent.toReal
+    2 * (5 : ℝ≥0∞) ^ d * (2 * (G.fixedValue * (d : ℝ≥0∞))) ^ q.exponent.toReal
   let Kc : ℝ≥0∞ := 6 * (5 * (3 : ℝ≥0∞) ^ depth) ^ d
   let m : ℝ≥0∞ := ENNReal.ofReal ((M / 2) ^ (2 - q.exponent.toReal))
   let e : ℝ≥0∞ := ENNReal.ofReal (eps ^ (2 : ℕ))

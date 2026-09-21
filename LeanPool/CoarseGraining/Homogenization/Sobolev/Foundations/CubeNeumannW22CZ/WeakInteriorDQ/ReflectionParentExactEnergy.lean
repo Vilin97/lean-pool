@@ -332,7 +332,7 @@ private theorem originCubeParentReducedSolverEnergyInsideExact_eq_volume_mul_uni
       cubeVolume (originCube d m) *
         originCubeParentReducedSolverEnergyInsideExact d 0 := by
   let s : ℝ := (3 : ℝ) ^ m
-  let C₀ : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+  let C₀ : ℝ := (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
   let κ : ℝ := quantitativeCubeCutoffGradientConst d
   have hs_pos : 0 < s := by
     dsimp [s]

@@ -106,7 +106,7 @@ private theorem exists_gradCoord_const_ae_on_innerHalf {Q : TriadicCube 1}
   have hvsubzero_norm : ‖v.subAverage.toScalarL2‖ = 0 := by
     change ‖v.subAverage.toScalarL2‖ ≤
       (h1CoerciveEstimate_of_isOpenBoundedConvexDomain
-        (isOpenBoundedConvexDomain_scaledOpenCubeSet_of_pos Q (by norm_num))).constant *
+        (isOpenBoundedConvexDomain_scaledOpenCubeSet_of_pos Q (by norm_num))).fixedValue *
         ‖v.subAverage.gradToVectorL2‖ at hp
     rw [H1Function.gradToVectorL2_subAverage_eq, hvgradzero] at hp
     simp only [norm_zero, mul_zero] at hp

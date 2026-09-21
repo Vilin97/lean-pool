@@ -90,7 +90,7 @@ noncomputable def harmonicGradientGain_two_zero (d : ℕ) :
 noncomputable def HarmonicEuclideanGradientGain.fromScalar {d : ℕ}
     {r : FiniteLpExponent} {depth : ℕ} (G : HarmonicGradientGain d r depth) :
     HarmonicEuclideanGradientGain d r depth := by
-  let C : ℝ≥0∞ := ‖(d : ℝ)‖ₑ * (d : ℝ≥0∞) * G.constant
+  let C : ℝ≥0∞ := ‖(d : ℝ)‖ₑ * (d : ℝ≥0∞) * G.fixedValue
   have hCtop : C ≠ ∞ :=
     ENNReal.mul_ne_top (ENNReal.mul_ne_top enorm_ne_top (ENNReal.natCast_ne_top d))
       G.constant_ne_top
@@ -107,10 +107,10 @@ noncomputable def HarmonicEuclideanGradientGain.fromScalar {d : ℕ}
     refine ⟨hhilbert, ?_⟩
     have hsum : ∑ i : Fin d,
         MeasureTheory.eLpNorm (fun x => u.grad x i) r.exponent μ ≤
-        (d : ℝ≥0∞) * (G.constant * ∑ j : Fin d,
+        (d : ℝ≥0∞) * (G.fixedValue * ∑ j : Fin d,
           MeasureTheory.eLpNorm (fun x => u.grad x j) 2 (normalizedCubeMeasure Q)) := by
       calc
-        _ ≤ ∑ _i : Fin d, G.constant * ∑ j : Fin d,
+        _ ≤ ∑ _i : Fin d, G.fixedValue * ∑ j : Fin d,
             MeasureTheory.eLpNorm (fun x => u.grad x j) 2 (normalizedCubeMeasure Q) :=
           Finset.sum_le_sum fun i _ => G.bound Q u h i
         _ = _ := by simp
@@ -122,7 +122,7 @@ noncomputable def HarmonicEuclideanGradientGain.fromScalar {d : ℕ}
             MeasureTheory.eLpNorm (fun x => u.grad x i) r.exponent μ :=
           euclidean_eLpNorm_le_dimension_mul_sum_coordinates μ r u.grad
             fun i => (hcoord i).aestronglyMeasurable
-        _ ≤ ‖(d : ℝ)‖ₑ * ((d : ℝ≥0∞) * (G.constant * ∑ j : Fin d,
+        _ ≤ ‖(d : ℝ)‖ₑ * ((d : ℝ≥0∞) * (G.fixedValue * ∑ j : Fin d,
             MeasureTheory.eLpNorm (fun x => u.grad x j) 2 (normalizedCubeMeasure Q))) :=
           mul_le_mul_right hsum _
         _ = _ := by simp [C]; ring
@@ -136,10 +136,10 @@ noncomputable def HarmonicEuclideanGradientGain.fromScalar {d : ℕ}
     let μ := normalizedCubeMeasure (centralDescendant Q depth)
     have hsum : ∑ i : Fin d,
         MeasureTheory.eLpNorm (fun x => u.grad x i) r.exponent μ ≤
-        (d : ℝ≥0∞) * (G.constant * ∑ j : Fin d,
+        (d : ℝ≥0∞) * (G.fixedValue * ∑ j : Fin d,
           MeasureTheory.eLpNorm (fun x => u.grad x j) 2 (normalizedCubeMeasure Q)) := by
       calc
-        _ ≤ ∑ _i : Fin d, G.constant * ∑ j : Fin d,
+        _ ≤ ∑ _i : Fin d, G.fixedValue * ∑ j : Fin d,
             MeasureTheory.eLpNorm (fun x => u.grad x j) 2 (normalizedCubeMeasure Q) :=
           Finset.sum_le_sum fun i _ => G.bound Q u h i
         _ = _ := by simp
@@ -149,7 +149,7 @@ noncomputable def HarmonicEuclideanGradientGain.fromScalar {d : ℕ}
             MeasureTheory.eLpNorm (fun x => u.grad x i) r.exponent μ :=
         euclidean_eLpNorm_le_dimension_mul_sum_coordinates μ r u.grad
           fun i => (G.memLp Q u h i).aestronglyMeasurable
-      _ ≤ ‖(d : ℝ)‖ₑ * ((d : ℝ≥0∞) * (G.constant * ∑ j : Fin d,
+      _ ≤ ‖(d : ℝ)‖ₑ * ((d : ℝ≥0∞) * (G.fixedValue * ∑ j : Fin d,
           MeasureTheory.eLpNorm (fun x => u.grad x j) 2 (normalizedCubeMeasure Q))) := by
         exact mul_le_mul_right hsum _
       _ = C * ∑ j : Fin d,
@@ -622,7 +622,7 @@ noncomputable def HarmonicGradientGain.upgrade {d : ℕ} (hd : 0 < d)
   have hAtop : A ≠ ∞ := hAspec.2.1
   have hA := hAspec.2.2
   let N : ℝ≥0∞ := ENNReal.ofReal ((3 ^ d : ℕ) : ℝ)
-  let K : ℝ≥0∞ := C * ((d : ℝ≥0∞) * G.constant * A + N * G.constant)
+  let K : ℝ≥0∞ := C * ((d : ℝ≥0∞) * G.fixedValue * A + N * G.fixedValue)
   have hdpos : 0 < (d : ℝ≥0∞) := by exact_mod_cast hd
   have hNtop : N ≠ ∞ := by simp [N]
   have hKpos : 0 < K := by
@@ -684,7 +684,7 @@ noncomputable def HarmonicGradientGain.upgrade {d : ℕ} (hd : 0 < d)
     have hD_eq : centralDescendant P depth = D := by
       simpa [P, D] using centralDescendant_after_centralChild Q depth
     have hsource : MeasureTheory.eLpNorm (fun x => u.grad x i) r.exponent
-        (normalizedCubeMeasure D) ≤ N * G.constant * R := by
+        (normalizedCubeMeasure D) ≤ N * G.fixedValue * R := by
       calc
         MeasureTheory.eLpNorm (fun x => u.grad x i) r.exponent
             (normalizedCubeMeasure D) =
@@ -695,14 +695,14 @@ noncomputable def HarmonicGradientGain.upgrade {d : ℕ} (hd : 0 < d)
               (normalizedCubeMeasure (centralDescendant Q depth)) := by
                 simpa [N] using eLpNorm_centralDescendant_le_descendantCount_mul
                   (centralDescendant Q depth) 1 r (fun x => u.grad x i)
-        _ ≤ N * (G.constant * R) := by
+        _ ≤ N * (G.fixedValue * R) := by
                 gcongr
                 simpa [R] using G.bound Q u h i
-        _ = N * G.constant * R := by ring
+        _ = N * G.fixedValue * R := by ring
     have hgrad : ∀ j : Fin d,
         MeasureTheory.eLpNorm (fun x => HD.hess i j x) r.exponent
             (normalizedCubeMeasure D) ≤
-          G.constant * ∑ k : Fin d,
+          G.fixedValue * ∑ k : Fin d,
             MeasureTheory.eLpNorm (fun x => HP.hess i k x) 2
               (normalizedCubeMeasure P) := by
       intro j
@@ -710,7 +710,7 @@ noncomputable def HarmonicGradientGain.upgrade {d : ℕ} (hd : 0 < d)
     have hsum : ∑ j : Fin d,
         MeasureTheory.eLpNorm (fun x => HD.hess i j x) r.exponent
             (normalizedCubeMeasure D) ≤
-          (d : ℝ≥0∞) * (G.constant * ∑ k : Fin d,
+          (d : ℝ≥0∞) * (G.fixedValue * ∑ k : Fin d,
             MeasureTheory.eLpNorm (fun x => HP.hess i k x) 2
               (normalizedCubeMeasure P)) :=
       sum_fin_le_natCast_mul _ _ hgrad
@@ -734,17 +734,17 @@ noncomputable def HarmonicGradientGain.upgrade {d : ℕ} (hd : 0 < d)
     have hgradient : ENNReal.ofReal (cubeScaleFactor D) *
         ∑ j : Fin d, MeasureTheory.eLpNorm (fun x => HD.hess i j x) r.exponent
           (normalizedCubeMeasure D) ≤
-        (d : ℝ≥0∞) * G.constant * A * R := by
+        (d : ℝ≥0∞) * G.fixedValue * A * R := by
       calc
         _ ≤ ENNReal.ofReal (cubeScaleFactor D) *
-            ((d : ℝ≥0∞) * (G.constant * ∑ k : Fin d,
+            ((d : ℝ≥0∞) * (G.fixedValue * ∑ k : Fin d,
               MeasureTheory.eLpNorm (fun x => HP.hess i k x) 2
                 (normalizedCubeMeasure P))) := by gcongr
-        _ = (d : ℝ≥0∞) * G.constant *
+        _ = (d : ℝ≥0∞) * G.fixedValue *
             (ENNReal.ofReal (cubeScaleFactor D) * ∑ k : Fin d,
               MeasureTheory.eLpNorm (fun x => HP.hess i k x) 2
                 (normalizedCubeMeasure P)) := by ring
-        _ ≤ (d : ℝ≥0∞) * G.constant *
+        _ ≤ (d : ℝ≥0∞) * G.fixedValue *
             (ENNReal.ofReal (cubeScaleFactor P) * ∑ a : Fin d, ∑ b : Fin d,
               MeasureTheory.eLpNorm (fun x => HP.hess a b x) 2
                 (normalizedCubeMeasure P)) := by
@@ -758,7 +758,7 @@ noncomputable def HarmonicGradientGain.upgrade {d : ℕ} (hd : 0 < d)
                       (normalizedCubeMeasure P) := mul_le_mul_left hscale _
                 _ ≤ _ := mul_le_mul_right hrow _
 
-        _ ≤ (d : ℝ≥0∞) * G.constant * (A * R) :=
+        _ ≤ (d : ℝ≥0∞) * G.fixedValue * (A * R) :=
           mul_le_mul_right henergy' _
         _ = _ := by ring
     let w : W1pFunction (openCubeSet D) r.exponent := hessianGradCoordToW1p HD i r
@@ -780,7 +780,7 @@ noncomputable def HarmonicGradientGain.upgrade {d : ℕ} (hd : 0 < d)
           (normalizedCubeMeasure (centralDescendant Q (depth + 1))) =
           MeasureTheory.eLpNorm (fun x => u.grad x i) q.exponent
             (normalizedCubeMeasure D) := by rfl
-      _ ≤ C * ((d : ℝ≥0∞) * G.constant * A * R + N * G.constant * R) := by
+      _ ≤ C * ((d : ℝ≥0∞) * G.fixedValue * A * R + N * G.fixedValue * R) := by
         calc
           _ ≤ C * (ENNReal.ofReal (cubeScaleFactor D) * ∑ j : Fin d,
               MeasureTheory.eLpNorm (fun x => HD.hess i j x) r.exponent
@@ -802,7 +802,7 @@ internal gain carrier without changing its analytic constant. -/
 noncomputable def HarmonicGradientGain.downgrade {d : ℕ} {r s : FiniteLpExponent}
     {depth : ℕ} (G : HarmonicGradientGain d r depth) (hsr : s.exponent ≤ r.exponent) :
     HarmonicGradientGain d s depth := by
-  refine ⟨G.constant, G.constant_pos, G.constant_ne_top, ?_, ?_⟩
+  refine ⟨G.fixedValue, G.constant_pos, G.constant_ne_top, ?_, ?_⟩
   · intro Q u h i
     let : MeasureTheory.IsProbabilityMeasure
         (normalizedCubeMeasure (centralDescendant Q depth)) :=

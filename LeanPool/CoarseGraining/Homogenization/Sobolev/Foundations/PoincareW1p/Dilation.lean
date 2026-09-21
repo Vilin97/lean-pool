@@ -55,7 +55,7 @@ variable {d : ℕ} {U : Set (Vec d)} {p : ENNReal}
 of its domain.  The constant gains exactly one factor of the dilation scale. -/
 noncomputable def dilate {a : ℝ} (ha : 0 < a) (hp_top : p ≠ ∞)
     (hC : W1pPoincareEstimate U p) : W1pPoincareEstimate (a • U) p where
-  fixedValue := a * hC.constant
+  fixedValue := a * hC.fixedValue
   constant_nonneg := mul_nonneg ha.le hC.constant_nonneg
   bound := by
     intro u
@@ -67,26 +67,26 @@ noncomputable def dilate {a : ℝ} (ha : 0 < a) (hp_top : p ≠ ∞)
       W1pFunction.dilationLpFactor_pos d p (inv_pos.mpr ha)
     have hscaled :
         W1pFunction.dilationLpFactor d p a⁻¹ * u.valueLpSeminorm ≤
-          hC.constant *
+          hC.fixedValue *
             (a * W1pFunction.dilationLpFactor d p a⁻¹ * u.gradientCoordLpSeminormSum) := by
       simpa [v, hvalue, hgrad] using hv
     have hscaled' :
         W1pFunction.dilationLpFactor d p a⁻¹ * u.valueLpSeminorm ≤
           W1pFunction.dilationLpFactor d p a⁻¹ *
-            ((a * hC.constant) * u.gradientCoordLpSeminormSum) := by
+            ((a * hC.fixedValue) * u.gradientCoordLpSeminormSum) := by
       calc
         W1pFunction.dilationLpFactor d p a⁻¹ * u.valueLpSeminorm ≤
-            hC.constant *
+            hC.fixedValue *
               (a * W1pFunction.dilationLpFactor d p a⁻¹ * u.gradientCoordLpSeminormSum) := hscaled
         _ = W1pFunction.dilationLpFactor d p a⁻¹ *
-              ((a * hC.constant) * u.gradientCoordLpSeminormSum) := by
+              ((a * hC.fixedValue) * u.gradientCoordLpSeminormSum) := by
               ring
     simpa [mul_comm, mul_left_comm, mul_assoc] using
       (mul_le_mul_iff_right₀ hfactor_pos).mp hscaled'
 
 @[simp] theorem dilate_constant {a : ℝ} (ha : 0 < a) (hp_top : p ≠ ∞)
     (hC : W1pPoincareEstimate U p) :
-    (hC.dilate ha hp_top).constant = a * hC.constant :=
+    (hC.dilate ha hp_top).fixedValue = a * hC.fixedValue :=
   rfl
 
 end W1pPoincareEstimate

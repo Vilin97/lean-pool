@@ -209,7 +209,7 @@ noncomputable def toH1MeanZeroFunction
 
 theorem norm_value_le_constant_mul_norm_gradient
     (hC : H1CoerciveEstimate U) (z : H1CoerciveHilbertSpace (U := U)) :
-    ‖value (U := U) z‖ ≤ hC.constant * ‖gradient (U := U) z‖ := by
+    ‖value (U := U) z‖ ≤ hC.fixedValue * ‖gradient (U := U) z‖ := by
   let u : H1MeanZeroFunction U := toH1MeanZeroFunction (U := U) z
   calc
     ‖value (U := U) z‖ = u.valueL2Norm := by
@@ -218,12 +218,12 @@ theorem norm_value_le_constant_mul_norm_gradient
             unfold u
             exact toH1MeanZeroFunction_toScalarL2 (U := U) z
           rw [huValue]
-    _ ≤ hC.constant * u.gradientL2Norm := hC.bound u
-    _ ≤ hC.constant * ‖u.gradToHilbertVectorL2‖ := by
+    _ ≤ hC.fixedValue * u.gradientL2Norm := hC.bound u
+    _ ≤ hC.fixedValue * ‖u.gradToHilbertVectorL2‖ := by
           exact mul_le_mul_of_nonneg_left
             (H1MeanZeroFunction.gradientL2Norm_le_norm_gradToHilbertVectorL2 (d := d) u)
             hC.constant_nonneg
-    _ = hC.constant * ‖gradient (U := U) z‖ := by
+    _ = hC.fixedValue * ‖gradient (U := U) z‖ := by
           have huGrad : u.gradToHilbertVectorL2 = gradient (U := U) z := by
             unfold u
             exact toH1MeanZeroFunction_gradToHilbertVectorL2 (U := U) z
@@ -231,12 +231,12 @@ theorem norm_value_le_constant_mul_norm_gradient
 
 theorem norm_le_max_constant_one_mul_norm_gradient
     (hC : H1CoerciveEstimate U) (z : H1CoerciveHilbertSpace (U := U)) :
-    ‖z‖ ≤ (hC.constant + 1) * ‖gradient (U := U) z‖ := by
+    ‖z‖ ≤ (hC.fixedValue + 1) * ‖gradient (U := U) z‖ := by
   let a : ℝ := ‖value (U := U) z‖
   let b : ℝ := ‖gradient (U := U) z‖
   have ha : 0 ≤ a := norm_nonneg _
   have hb : 0 ≤ b := norm_nonneg _
-  have hval : a ≤ hC.constant * b := by
+  have hval : a ≤ hC.fixedValue * b := by
     exact norm_value_le_constant_mul_norm_gradient (d := d) (U := U) hC z
   have hnorm :
       ‖z‖ = Real.sqrt (a ^ 2 + b ^ 2) := by
@@ -254,13 +254,13 @@ theorem norm_le_max_constant_one_mul_norm_gradient
   calc
     ‖z‖ = Real.sqrt (a ^ 2 + b ^ 2) := hnorm
     _ ≤ a + b := hsqrt_le
-    _ ≤ (hC.constant + 1) * b := by
+    _ ≤ (hC.fixedValue + 1) * b := by
           nlinarith [hval, hb, hC.constant_nonneg]
 
 theorem isCoercive_gradientBilin
     (hC : H1CoerciveEstimate U) :
     IsCoercive (gradientBilin (U := U)) := by
-  let M : ℝ := hC.constant + 1
+  let M : ℝ := hC.fixedValue + 1
   have hM_pos : 0 < M := by
     linarith [hC.constant_nonneg]
   refine ⟨M⁻¹ * M⁻¹, by positivity, ?_⟩

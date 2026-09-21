@@ -358,7 +358,7 @@ theorem cubeMeanZeroNeumannPoissonSolverOnCube {d : ℕ} (Q : TriadicCube d) :
   exact ⟨meanZeroNeumannPoissonSolutionOfCoerciveEstimate Q F hF, True.intro⟩
 
 noncomputable def cubeMeanZeroH1CoerciveConstant {d : ℕ} (Q : TriadicCube d) : ℝ := by
-  exact (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).constant
+  exact (scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q).fixedValue
 
 theorem cubeMeanZeroH1CoerciveConstant_nonneg {d : ℕ} (Q : TriadicCube d) :
     0 ≤ cubeMeanZeroH1CoerciveConstant Q := by
@@ -369,7 +369,7 @@ theorem cubeMeanZeroH1CoerciveConstant_eq_scale_mul_unit {d : ℕ}
     (Q : TriadicCube d) :
     cubeMeanZeroH1CoerciveConstant Q =
       cubeScaleFactor Q *
-        (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+        (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
   unfold cubeMeanZeroH1CoerciveConstant
   rw [scaledTranslatedCubeMeanZeroH1CoerciveEstimate_constant]
 
@@ -389,7 +389,7 @@ theorem meanZeroNeumannPoissonSolution_norm_gradToHilbertVectorL2_le {d : ℕ}
   let hC : H1CoerciveEstimate (openCubeSet Q) :=
     scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q
   change ‖W.w.gradToHilbertVectorL2‖ ≤
-    hC.constant * ‖Homogenization.toScalarL2 hF_open‖
+    hC.fixedValue * ‖Homogenization.toScalarL2 hF_open‖
   let G : HilbertVectorL2 (openCubeSet Q) := W.w.gradToHilbertVectorL2
   have henergy_left :
       ∫ x in openCubeSet Q,
@@ -427,7 +427,7 @@ theorem meanZeroNeumannPoissonSolution_norm_gradToHilbertVectorL2_le {d : ℕ}
       _ = inner ℝ (Homogenization.toScalarL2 hF_open) W.w.toScalarL2 := hrhs_inner
   have hsq_le :
       ‖G‖ ^ 2 ≤
-        (hC.constant * ‖Homogenization.toScalarL2 hF_open‖) * ‖G‖ := by
+        (hC.fixedValue * ‖Homogenization.toScalarL2 hF_open‖) * ‖G‖ := by
     calc
       ‖G‖ ^ 2 = inner ℝ G G := by
         symm
@@ -438,18 +438,18 @@ theorem meanZeroNeumannPoissonSolution_norm_gradToHilbertVectorL2_le {d : ℕ}
       _ ≤ ‖Homogenization.toScalarL2 hF_open‖ * ‖W.w.toScalarL2‖ :=
         abs_real_inner_le_norm _ _
       _ ≤ ‖Homogenization.toScalarL2 hF_open‖ *
-          (hC.constant * W.w.gradientL2Norm) := by
+          (hC.fixedValue * W.w.gradientL2Norm) := by
             exact mul_le_mul_of_nonneg_left
               (by
                 simpa [H1MeanZeroFunction.valueL2Norm] using hC.bound W.w)
               (norm_nonneg _)
-      _ ≤ ‖Homogenization.toScalarL2 hF_open‖ * (hC.constant * ‖G‖) := by
+      _ ≤ ‖Homogenization.toScalarL2 hF_open‖ * (hC.fixedValue * ‖G‖) := by
             refine mul_le_mul_of_nonneg_left ?_ (norm_nonneg _)
             exact mul_le_mul_of_nonneg_left
               (H1MeanZeroFunction.gradientL2Norm_le_norm_gradToHilbertVectorL2
                 (d := d) W.w)
               hC.constant_nonneg
-      _ = (hC.constant * ‖Homogenization.toScalarL2 hF_open‖) * ‖G‖ := by ring
+      _ = (hC.fixedValue * ‖Homogenization.toScalarL2 hF_open‖) * ‖G‖ := by ring
   exact
     nonneg_le_of_sq_le_mul_self (norm_nonneg G)
       (mul_nonneg hC.constant_nonneg (norm_nonneg _)) hsq_le
@@ -471,7 +471,7 @@ theorem meanZeroNeumannPoissonSolution_sum_cubeLpNorm_grad_le {d : ℕ}
     scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q
   change ∑ i : Fin d, cubeLpNorm Q (2 : ℝ≥0∞)
         (fun x => W.w.toH1Function.grad x i) ≤
-      (((cubeVolume Q)⁻¹ + 1) * (d : ℝ) * hC.constant *
+      (((cubeVolume Q)⁻¹ + 1) * (d : ℝ) * hC.fixedValue *
         (cubeVolume Q + 1)) * cubeLpNorm Q (2 : ℝ≥0∞) F
   let A : ℝ := ((cubeVolume Q)⁻¹ + 1)
   let B : ℝ := cubeVolume Q + 1
@@ -516,7 +516,7 @@ theorem meanZeroNeumannPoissonSolution_sum_cubeLpNorm_grad_le {d : ℕ}
               W.w.toH1Function)
             (Nat.cast_nonneg d)
     _ ≤ A * ((d : ℝ) *
-          (hC.constant *
+          (hC.fixedValue *
             ‖Homogenization.toScalarL2
               (memL2On_openCubeSet_of_memLp_normalizedCubeMeasure Q hF)‖)) := by
           refine mul_le_mul_of_nonneg_left ?_ hA_nonneg
@@ -525,7 +525,7 @@ theorem meanZeroNeumannPoissonSolution_sum_cubeLpNorm_grad_le {d : ℕ}
               simpa [hC, H1MeanZeroFunction.gradToHilbertVectorL2] using!
                 meanZeroNeumannPoissonSolution_norm_gradToHilbertVectorL2_le Q hF W)
             (Nat.cast_nonneg d)
-    _ ≤ A * ((d : ℝ) * (hC.constant * (B * cubeLpNorm Q (2 : ℝ≥0∞) F))) := by
+    _ ≤ A * ((d : ℝ) * (hC.fixedValue * (B * cubeLpNorm Q (2 : ℝ≥0∞) F))) := by
           refine mul_le_mul_of_nonneg_left ?_ hA_nonneg
           refine mul_le_mul_of_nonneg_left ?_ (Nat.cast_nonneg d)
           exact mul_le_mul_of_nonneg_left
@@ -533,7 +533,7 @@ theorem meanZeroNeumannPoissonSolution_sum_cubeLpNorm_grad_le {d : ℕ}
               simpa [B] using
                 norm_toScalarL2_openCubeSet_le_volume_add_one_mul_cubeLpNorm_two Q hF)
             hC.constant_nonneg
-    _ = (((cubeVolume Q)⁻¹ + 1) * (d : ℝ) * hC.constant *
+    _ = (((cubeVolume Q)⁻¹ + 1) * (d : ℝ) * hC.fixedValue *
           (cubeVolume Q + 1)) *
         cubeLpNorm Q (2 : ℝ≥0∞) F := by
           dsimp [A, B]
@@ -556,7 +556,7 @@ theorem meanZeroNeumannPoissonSolution_sum_cubeLpNorm_grad_le_exact {d : ℕ}
     scaledTranslatedCubeMeanZeroH1CoerciveEstimate Q
   change ∑ i : Fin d, cubeLpNorm Q (2 : ℝ≥0∞)
         (fun x => W.w.toH1Function.grad x i) ≤
-      (((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * (d : ℝ) * hC.constant *
+      (((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * (d : ℝ) * hC.fixedValue *
         (cubeVolume Q) ^ (1 / 2 : ℝ)) *
         cubeLpNorm Q (2 : ℝ≥0∞) F
   let A : ℝ := ((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ)
@@ -598,7 +598,7 @@ theorem meanZeroNeumannPoissonSolution_sum_cubeLpNorm_grad_le_exact {d : ℕ}
               W.w.toH1Function)
             (Nat.cast_nonneg d)
     _ ≤ A * ((d : ℝ) *
-          (hC.constant *
+          (hC.fixedValue *
             ‖Homogenization.toScalarL2
               (memL2On_openCubeSet_of_memLp_normalizedCubeMeasure Q hF)‖)) := by
           refine mul_le_mul_of_nonneg_left ?_ hA_nonneg
@@ -608,9 +608,9 @@ theorem meanZeroNeumannPoissonSolution_sum_cubeLpNorm_grad_le_exact {d : ℕ}
                 meanZeroNeumannPoissonSolution_norm_gradToHilbertVectorL2_le Q hF W)
             (Nat.cast_nonneg d)
     _ = A * ((d : ℝ) *
-          (hC.constant * (B * cubeLpNorm Q (2 : ℝ≥0∞) F))) := by
+          (hC.fixedValue * (B * cubeLpNorm Q (2 : ℝ≥0∞) F))) := by
           rw [norm_toScalarL2_openCubeSet_eq_volume_rpow_half_mul_cubeLpNorm_two Q hF]
-    _ = (((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * (d : ℝ) * hC.constant *
+    _ = (((cubeVolume Q)⁻¹) ^ (1 / 2 : ℝ) * (d : ℝ) * hC.fixedValue *
           (cubeVolume Q) ^ (1 / 2 : ℝ)) *
         cubeLpNorm Q (2 : ℝ≥0∞) F := by
           dsimp [A, B]

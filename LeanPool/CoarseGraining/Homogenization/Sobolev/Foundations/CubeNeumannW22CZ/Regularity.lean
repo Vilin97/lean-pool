@@ -42,7 +42,7 @@ constants. -/
 noncomputable def cubeNeumannW22CalderonZygmundConstant
     (d : ℕ) [NeZero d] : ℝ :=
   originCubeWeakInteriorDepthConstantExact d 0 +
-    (d : ℝ) * (originCubeMeanZeroH1CoerciveEstimate d 0).constant
+    (d : ℝ) * (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue
 
 theorem cubeNeumannW22CalderonZygmundConstant_nonneg
     (d : ℕ) [NeZero d] :

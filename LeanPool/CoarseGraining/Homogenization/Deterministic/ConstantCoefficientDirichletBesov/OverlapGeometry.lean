@@ -289,7 +289,7 @@ noncomputable def openOverlapCubeMeanZeroH1CoerciveEstimate {d : ℕ}
       (isOpenBoundedConvexDomain_openCubeSet
         (originCube d (S.scale + 1))).isFiniteMeasure_restrict_volume
   refine
-    { fixedValue := a * hCunit.constant
+    { fixedValue := a * hCunit.fixedValue
       constant_nonneg := mul_nonneg ha.le hCunit.constant_nonneg
       bound := ?_ }
   rw [openOverlapCubeSet_eq_translateSet_smul_originCube_zero S]
@@ -297,8 +297,8 @@ noncomputable def openOverlapCubeMeanZeroH1CoerciveEstimate {d : ℕ}
 
 @[simp] theorem openOverlapCubeMeanZeroH1CoerciveEstimate_constant {d : ℕ}
     (S : TriadicCube d) :
-    (openOverlapCubeMeanZeroH1CoerciveEstimate S).constant =
-      overlapCubeScaleFactor S * (originCubeMeanZeroH1CoerciveEstimate d 0).constant := by
+    (openOverlapCubeMeanZeroH1CoerciveEstimate S).fixedValue =
+      overlapCubeScaleFactor S * (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue := by
   rfl
 
 /-- The middle child of a triadic cube.  It is the child whose center agrees
@@ -556,7 +556,7 @@ theorem openOverlapCubeMeanZero_valueL2Norm_le {d : ℕ}
     (S : TriadicCube d) (u : H1Function (openOverlapCubeSet S)) :
     (u.toMeanZero).valueL2Norm ≤
       (overlapCubeScaleFactor S *
-          (originCubeMeanZeroH1CoerciveEstimate d 0).constant) *
+          (originCubeMeanZeroH1CoerciveEstimate d 0).fixedValue) *
         ‖u.gradToVectorL2‖ := by
   simpa using (openOverlapCubeMeanZeroH1CoerciveEstimate S).bound_subAverage u
 
