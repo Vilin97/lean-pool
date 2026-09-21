@@ -90,7 +90,7 @@ private lemma exists_card_divisors_pow_le_constant_mul (k : ℕ) :
     (∏ p ∈ n.primeFactors, (n.factorization p + 1) ^ k) ≤
         ∏ p ∈ n.primeFactors,
           ((if p < 2 ^ k then D else 1) * p ^ n.factorization p) :=
-      Finset.prod_le_prod (fun _ _ ↦ Nat.zero_le _) hfactor
+      Finset.prod_le_prod hfactor
     _ = D ^ (n.primeFactors.filter fun p ↦ p < 2 ^ k).card * n := by
       rw [Finset.prod_mul_distrib, ← Nat.prod_primeFactors_pow_factorization hn]
       simp [Finset.prod_ite]

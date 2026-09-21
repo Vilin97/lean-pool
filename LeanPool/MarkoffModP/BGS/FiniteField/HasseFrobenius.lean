@@ -126,9 +126,7 @@ theorem legendrePointFrobenius_baseChange (u v : F)
   | zero => rfl
   | some x y h =>
       simp only [legendrePointFrobenius, legendrePointBaseChange,
-        mapLegendrePointCoordinates, WeierstrassCurve.Affine.Point.some.injEq]
-      exact ⟨(FiniteField.frobeniusAlgHom F (AlgebraicClosure F)).commutes x,
-        (FiniteField.frobeniusAlgHom F (AlgebraicClosure F)).commutes y⟩
+        mapLegendrePointCoordinates, AlgHom.commutes]
 
 /-- Every Frobenius-fixed algebraic-closure point descends to an `F`-rational point. -/
 theorem exists_baseChange_eq_of_legendrePointFrobenius_eq (u v : F)
@@ -155,8 +153,7 @@ theorem exists_baseChange_eq_of_legendrePointFrobenius_eq (u v : F)
         ((legendreWeierstrassCurve u v).toAffine.baseChange_nonsingular
           (Algebra.ofId F (AlgebraicClosure F)).injective x₀ y₀).mp hmapped
       refine ⟨.some x₀ y₀ hbase, ?_⟩
-      simpa only [legendrePointBaseChange, WeierstrassCurve.Affine.Point.some.injEq]
-        using And.intro hx₀ hy₀
+      simp only [legendrePointBaseChange, hx₀, hy₀]
 
 /-- `F`-rational Legendre points are exactly the Frobenius-fixed algebraic-closure points. -/
 def legendreRationalPointEquivFrobeniusFixed (u v : F) :

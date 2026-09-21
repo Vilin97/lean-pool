@@ -110,8 +110,7 @@ def finitePrincipalDivisor (x : L) : HeightOneSpectrum R →₀ ℤ :=
 
 @[simp]
 theorem finitePrincipalDivisor_apply (x : L) (v : HeightOneSpectrum R) :
-    finitePrincipalDivisor x v = finitePlaceOrder v x := by
-  simp [finitePrincipalDivisor]
+    finitePrincipalDivisor x v = finitePlaceOrder v x := rfl
 
 /-- The finite principal divisor of a nonzero product is the sum of the two
 finite principal divisors. -/

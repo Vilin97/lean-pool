@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
-import Mathlib.RingTheory.Ideal.Norm.RelNorm
+import LeanPool.MarkoffModP.RiemannRoch.SeparableRelNorm
 import Mathlib.FieldTheory.IsSepClosed
 
 /-!
@@ -75,73 +75,7 @@ private theorem relNorm_eq_pow_of_isMaximal_of_isSeparable
     (P : Ideal S) (p : Ideal R) [P.LiesOver p]
     [P.IsMaximal] [p.IsMaximal] :
     Ideal.relNorm R P = p ^ P.inertiaDeg R := by
-  let M := SeparableClosure K
-  let φ : L →ₐ[K] M := IsSepClosed.lift
-  let E : IntermediateField K M := IntermediateField.normalClosure K L M
-  let φE := φ.codRestrict E.toSubalgebra (fun x =>
-    φ.fieldRange_le_normalClosure ⟨x, rfl⟩)
-  letI : Algebra L E := φE.toAlgebra
-  letI : IsScalarTower K L E := IsScalarTower.of_algHom φE
-  letI : Algebra S E :=
-    ((algebraMap L E).comp (algebraMap S L)).toAlgebra
-  letI : IsScalarTower S L E := IsScalarTower.of_algebraMap_eq' rfl
-  let T := integralClosure S E
-  letI : CommRing T := inferInstanceAs (CommRing (integralClosure S E))
-  letI : IsDomain T := inferInstanceAs (IsDomain (integralClosure S E))
-  letI : Algebra S T := inferInstanceAs (Algebra S (integralClosure S E))
-  letI : Algebra T E := inferInstanceAs (Algebra (integralClosure S E) E)
-  letI : IsScalarTower S T E :=
-    inferInstanceAs (IsScalarTower S (integralClosure S E) E)
-  letI : IsIntegralClosure T S E :=
-    integralClosure.isIntegralClosure S E
-  letI : Algebra R T := ((algebraMap S T).comp (algebraMap R S)).toAlgebra
-  letI : IsScalarTower R S T := IsScalarTower.of_algebraMap_eq' rfl
-  letI : IsScalarTower R L E := IsScalarTower.to₁₃₄ R K L E
-  letI : IsScalarTower R S E := IsScalarTower.to₁₂₄ R S L E
-  letI : IsScalarTower R T E := IsScalarTower.to₁₃₄ R S T E
-  letI : FaithfulSMul S E :=
-    (faithfulSMul_iff_algebraMap_injective S E).mpr
-      ((FaithfulSMul.algebraMap_injective L E).comp
-        (FaithfulSMul.algebraMap_injective S L))
-  letI : IsGalois K E := IsGalois.normalClosure K L M
-  letI : FiniteDimensional K E :=
-    normalClosure.is_finiteDimensional K L M
-  letI : FiniteDimensional L E := Module.Finite.right K L E
-  letI : Algebra.IsSeparable L E :=
-    Algebra.isSeparable_tower_top_of_isSeparable K L E
-  letI : IsFractionRing T E :=
-    integralClosure.isFractionRing_of_finite_extension L E
-  letI : Module.IsTorsionFree S T :=
-    Subalgebra.instIsTorsionFree (integralClosure S E)
-  letI : FaithfulSMul R T :=
-    (faithfulSMul_iff_algebraMap_injective R T).mpr
-      ((FaithfulSMul.algebraMap_injective S T).comp
-        (FaithfulSMul.algebraMap_injective R S))
-  letI : Module.Finite S T := IsIntegralClosure.finite S L E T
-  letI : Module.Finite R T := Module.Finite.trans S T
-  letI : IsDedekindDomain T :=
-    integralClosure.isDedekindDomain S L E
-  letI : IsGalois K (FractionRing T) := by
-    refine IsGalois.of_equiv_equiv (F := K) (E := E)
-      (f := (FractionRing.algEquiv R K).symm.toRingEquiv)
-      (g := (FractionRing.algEquiv T E).symm.toRingEquiv) ?_
-    ext
-    simpa using! IsFractionRing.algEquiv_commutes
-      (FractionRing.algEquiv R K).symm
-      (FractionRing.algEquiv T E).symm _
-  obtain ⟨Q, hQ⟩ : ∃ Q : Ideal T, Q.IsMaximal ∧ Q.LiesOver P :=
-    Ideal.exists_maximal_ideal_liesOver_of_isIntegral P
-  letI : Q.IsMaximal := hQ.1
-  letI : Q.LiesOver P := hQ.2
-  letI : Q.LiesOver p := Ideal.LiesOver.trans Q P p
-  have h := Ideal.relNorm_eq_pow_of_isPrime_isGalois Q p
-  letI : IsGalois (FractionRing S) (FractionRing T) :=
-    IsGalois.tower_top_of_isGalois
-      (FractionRing R) (FractionRing S) (FractionRing T)
-  rwa [← Ideal.relNorm_relNorm R S,
-    Ideal.relNorm_eq_pow_of_isPrime_isGalois Q P, map_pow,
-    Ideal.inertiaDeg_tower (R := R) P Q, pow_mul,
-    pow_left_inj (Ideal.inertiaDeg_pos Q S).ne'] at h
+  exact Ideal.relNorm_eq_pow_of_isMaximal_of_isSeparable P p
 
 private theorem count_relNorm_heightOne_of_liesOver (p : HeightOneSpectrum R)
     (Q : HeightOneSpectrum S) (hQp : Q.asIdeal.LiesOver p.asIdeal) :

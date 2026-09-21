@@ -132,9 +132,13 @@ lemma not_isSquare_algebraMap_adjoinSquare_of_independent
   let x : F := b.repr z 0
   let y : F := b.repr z 1
   have hb0 : b 0 = 1 := by
-    simp [b, PowerBasis.coe_basis]
+    simp only [b, Module.Basis.reindex_apply, PowerBasis.coe_basis]
+    change AdjoinRoot.root q ^ 0 = 1
+    exact pow_zero _
   have hb1 : b 1 = AdjoinRoot.root q := by
-    simp [b, PowerBasis.coe_basis]
+    simp only [b, Module.Basis.reindex_apply, PowerBasis.coe_basis]
+    change AdjoinRoot.root q ^ 1 = AdjoinRoot.root q
+    exact pow_one _
   have hz : z = algebraMap F (AdjoinRoot q) x +
       algebraMap F (AdjoinRoot q) y * AdjoinRoot.root q := by
     have hsum := b.sum_repr z
@@ -206,10 +210,22 @@ lemma adjoinSquareMap_injective {R S : Type*} [CommRing R] [CommRing S]
     (AdjoinRoot.powerBasis' hqRMonic).basis.reindex (finCongr hqRNatDegree)
   let bS : Module.Basis (Fin 2) S (AdjoinRoot qS) :=
     (AdjoinRoot.powerBasis' hqSMonic).basis.reindex (finCongr hqSNatDegree)
-  have hbR0 : bR 0 = 1 := by simp [bR, PowerBasis.coe_basis]
-  have hbR1 : bR 1 = AdjoinRoot.root qR := by simp [bR, PowerBasis.coe_basis]
-  have hbS0 : bS 0 = 1 := by simp [bS, PowerBasis.coe_basis]
-  have hbS1 : bS 1 = AdjoinRoot.root qS := by simp [bS, PowerBasis.coe_basis]
+  have hbR0 : bR 0 = 1 := by
+    simp only [bR, Module.Basis.reindex_apply, PowerBasis.coe_basis]
+    change AdjoinRoot.root qR ^ 0 = 1
+    exact pow_zero _
+  have hbR1 : bR 1 = AdjoinRoot.root qR := by
+    simp only [bR, Module.Basis.reindex_apply, PowerBasis.coe_basis]
+    change AdjoinRoot.root qR ^ 1 = AdjoinRoot.root qR
+    exact pow_one _
+  have hbS0 : bS 0 = 1 := by
+    simp only [bS, Module.Basis.reindex_apply, PowerBasis.coe_basis]
+    change AdjoinRoot.root qS ^ 0 = 1
+    exact pow_zero _
+  have hbS1 : bS 1 = AdjoinRoot.root qS := by
+    simp only [bS, Module.Basis.reindex_apply, PowerBasis.coe_basis]
+    change AdjoinRoot.root qS ^ 1 = AdjoinRoot.root qS
+    exact pow_one _
   rw [injective_iff_map_eq_zero]
   intro z hzMap
   let x : R := bR.repr z 0
@@ -223,7 +239,7 @@ lemma adjoinSquareMap_injective {R S : Type*} [CommRing R] [CommRing S]
       algebraMap S (AdjoinRoot qS) (φ x) +
           algebraMap S (AdjoinRoot qS) (φ y) * AdjoinRoot.root qS = 0 := by
     rw [hz] at hzMap
-    simpa [adjoinSquareMap, qR, qS] using hzMap
+    simpa [adjoinSquareMap, AdjoinRoot.map, qR, qS] using hzMap
   have hbasisTarget : φ x • bS 0 + φ y • bS 1 = 0 := by
     simpa [hbS0, hbS1, Algebra.smul_def] using htarget
   have hxMap := congrArg (bS.coord 0) hbasisTarget
@@ -279,7 +295,7 @@ lemma incidenceFirstQuadraticToRatFunc_algebraMap (a : L) (r : Polynomial L) :
         (algebraMap (Polynomial L) (IncidenceFirstQuadraticRing L a) r) =
       algebraMap (RatFunc L) (IncidenceFirstQuadraticRatFuncRing L a)
         (algebraMap (Polynomial L) (RatFunc L) r) := by
-  simp [incidenceFirstQuadraticToRatFunc, adjoinSquareMap]
+  simp [incidenceFirstQuadraticToRatFunc, adjoinSquareMap, AdjoinRoot.map]
 
 /-- The second quadratic polynomial over the first rational-function-field extension. -/
 def incidenceSecondQuadraticRatFuncPolynomial (a b : L) :
@@ -672,8 +688,8 @@ lemma incidenceAuxCoordinateRingToBiquadratic_coordinateClass (a b : L) (i : Fin
         (incidenceAuxCoordinateClass L a b i) =
       ![incidenceBiquadraticY L a b, incidenceBiquadraticLambda L a b,
         incidenceBiquadraticMu L a b] i := by
-  simp [incidenceAuxCoordinateRingToBiquadratic, incidenceAuxCoordinateClass,
-    incidenceAuxAevalToBiquadratic]
+  change incidenceAuxAevalToBiquadratic L a b (X i) = _
+  simp [incidenceAuxAevalToBiquadratic]
 
 @[simp]
 lemma incidenceBiquadraticToAuxCoordinateRing_y (a b : L) :

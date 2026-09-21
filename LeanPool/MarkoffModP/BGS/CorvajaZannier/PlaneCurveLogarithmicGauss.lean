@@ -34,14 +34,14 @@ def planeCurveLogarithmicPDeriv {K : Type*} [Field K]
 theorem coeff_planeCurveLogarithmicPDeriv
     {K : Type*} [Field K] (i : Fin 2)
     (f : MvPolynomial (Fin 2) K) (m : Fin 2 →₀ ℕ) :
-    MvPolynomial.coeff m (planeCurveLogarithmicPDeriv i f) =
-      (m i : K) * MvPolynomial.coeff m f := by
+    (planeCurveLogarithmicPDeriv i f).coeff m =
+      (m i : K) * f.coeff m := by
   induction f using MvPolynomial.induction_on' with
   | add p q hp hq =>
       simp only [planeCurveLogarithmicPDeriv, map_add, mul_add,
         MvPolynomial.coeff_add]
-      change MvPolynomial.coeff m (planeCurveLogarithmicPDeriv i p) +
-          MvPolynomial.coeff m (planeCurveLogarithmicPDeriv i q) = _
+      change (planeCurveLogarithmicPDeriv i p).coeff m +
+          (planeCurveLogarithmicPDeriv i q).coeff m = _
       rw [hp, hq]
   | monomial n a =>
       rw [planeCurveLogarithmicPDeriv,
@@ -61,8 +61,8 @@ def planeCurveLogarithmicDirection {K : Type*} [Field K]
 theorem coeff_planeCurveLogarithmicDirection
     {K : Type*} [Field K] (a b : K)
     (f : MvPolynomial (Fin 2) K) (m : Fin 2 →₀ ℕ) :
-    MvPolynomial.coeff m (planeCurveLogarithmicDirection a b f) =
-      (a * (m 0 : K) + b * (m 1 : K)) * MvPolynomial.coeff m f := by
+    (planeCurveLogarithmicDirection a b f).coeff m =
+      (a * (m 0 : K) + b * (m 1 : K)) * f.coeff m := by
   simp only [planeCurveLogarithmicDirection, MvPolynomial.coeff_add,
     MvPolynomial.coeff_C_mul, coeff_planeCurveLogarithmicPDeriv]
   ring
@@ -90,7 +90,7 @@ private theorem eq_C_coeff_zero_of_degreeOf_zero
     {K : Type*} [Field K] (g : MvPolynomial (Fin 2) K)
     (h0 : MvPolynomial.degreeOf 0 g = 0)
     (h1 : MvPolynomial.degreeOf 1 g = 0) :
-    g = MvPolynomial.C (MvPolynomial.coeff 0 g) := by
+    g = MvPolynomial.C (g.coeff 0) := by
   ext m
   by_cases hm : m = 0
   · subst m
@@ -131,7 +131,7 @@ theorem planeCurveLogarithmicDirection_eq_C_mul_of_dvd
   rw [hg, MvPolynomial.degreeOf_mul_eq hf hg0] at hdegree0 hdegree1
   have hgDegree0 : MvPolynomial.degreeOf 0 g = 0 := by omega
   have hgDegree1 : MvPolynomial.degreeOf 1 g = 0 := by omega
-  let d := MvPolynomial.coeff 0 g
+  let d := g.coeff 0
   have hgC : g = MvPolynomial.C d :=
     eq_C_coeff_zero_of_degreeOf_zero g hgDegree0 hgDegree1
   refine ⟨d, ?_⟩
@@ -163,10 +163,10 @@ private theorem logWeights_eq_of_logarithmicPDeriv_eq
     ∀ m ∈ f.support,
       (m 0 : K) - c * (m 1 : K) = d := by
   intro m hm
-  have hcoeff := congrArg (MvPolynomial.coeff m) hrelation
+  have hcoeff := congrArg (fun p ↦ p.coeff m) hrelation
   simp only [MvPolynomial.coeff_add, MvPolynomial.coeff_C_mul,
     coeff_planeCurveLogarithmicPDeriv] at hcoeff
-  have hm0 : MvPolynomial.coeff m f ≠ 0 :=
+  have hm0 : f.coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
   apply (mul_right_cancel₀ hm0)
   linear_combination hcoeff

@@ -25,7 +25,11 @@ inductive EvenSign
   | neg12
   | neg13
   | neg23
-  deriving DecidableEq, Fintype, Repr
+  deriving DecidableEq, Repr
+
+instance : Fintype EvenSign where
+  elems := {.id, .neg12, .neg13, .neg23}
+  complete x := by cases x <;> simp
 
 namespace EvenSign
 

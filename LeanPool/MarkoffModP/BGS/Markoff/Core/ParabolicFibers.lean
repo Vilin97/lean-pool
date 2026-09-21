@@ -368,14 +368,16 @@ theorem rhoSL_two_pow_eq_one_iff
     have hmatrix := congrArg
       (fun g : Matrix.SpecialLinearGroup (Fin 2) (ZMod p) =>
         (g : Matrix (Fin 2) (Fin 2) (ZMod p))) hpower
+    change rho (2 : ZMod p) ^ n = 1 at hmatrix
     have hentry := congrArg (fun m : Matrix (Fin 2) (Fin 2) (ZMod p) => m 0 1) hmatrix
-    simp [rhoSL, rho_two_pow] at hentry
+    simp [rho_two_pow] at hentry
     exact (ZMod.natCast_eq_zero_iff n p).mp hentry
   · intro hn
     have hnzero : (n : ZMod p) = 0 := (ZMod.natCast_eq_zero_iff n p).2 hn
     apply Matrix.SpecialLinearGroup.ext
     intro a b
-    fin_cases a <;> fin_cases b <;> simp [rhoSL, rho_two_pow, hnzero]
+    change (rho (2 : ZMod p) ^ n) a b = (1 : Matrix (Fin 2) (Fin 2) (ZMod p)) a b
+    fin_cases a <;> fin_cases b <;> simp [rho_two_pow, hnzero]
 
 /-- The normalized trace-`2` rotation has exact group-theoretic order `p`. -/
 theorem rotationOrder_two (p : ℕ) [Fact p.Prime] :
@@ -419,15 +421,16 @@ theorem rhoSL_neg_two_pow_eq_one_iff
     have hmatrix := congrArg
       (fun g : Matrix.SpecialLinearGroup (Fin 2) (ZMod p) =>
         (g : Matrix (Fin 2) (Fin 2) (ZMod p))) hpower
+    change rho (-2 : ZMod p) ^ n = 1 at hmatrix
     have hoffDiagonal := congrArg
       (fun m : Matrix (Fin 2) (Fin 2) (ZMod p) => m 0 1) hmatrix
     have hnzero : (n : ZMod p) = 0 := by
-      simpa [rhoSL, rho_neg_two_pow] using hoffDiagonal
+      simpa [rho_neg_two_pow] using hoffDiagonal
     have hpdvd : p ∣ n := (ZMod.natCast_eq_zero_iff n p).mp hnzero
     have hdiagonal := congrArg
       (fun m : Matrix (Fin 2) (Fin 2) (ZMod p) => m 0 0) hmatrix
     have hsign : (-1 : ZMod p) ^ n = 1 := by
-      simpa [rhoSL, rho_neg_two_pow, hnzero] using hdiagonal
+      simpa [rho_neg_two_pow, hnzero] using hdiagonal
     have heven : Even n := (neg_one_pow_eq_one_iff_even hnegOne).mp hsign
     exact (Fact.out : p.Prime).odd_of_ne_two hpTwo |>.coprime_two_left
       |>.mul_dvd_of_dvd_of_dvd heven.two_dvd hpdvd
@@ -439,8 +442,9 @@ theorem rhoSL_neg_two_pow_eq_one_iff
     have hsign : (-1 : ZMod p) ^ n = 1 := heven.neg_one_pow
     apply Matrix.SpecialLinearGroup.ext
     intro a b
+    change (rho (-2 : ZMod p) ^ n) a b = (1 : Matrix (Fin 2) (Fin 2) (ZMod p)) a b
     fin_cases a <;> fin_cases b <;>
-      simp [rhoSL, rho_neg_two_pow, hnzero, hsign]
+      simp [rho_neg_two_pow, hnzero, hsign]
 
 /-- The normalized trace-`-2` rotation has exact group-theoretic order `2p` for odd `p`. -/
 theorem rotationOrder_neg_two

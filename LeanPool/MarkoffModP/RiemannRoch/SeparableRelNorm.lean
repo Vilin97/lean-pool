@@ -89,6 +89,7 @@ theorem relNorm_eq_pow_of_isMaximal_of_isSeparable
   letI : Module.Finite S T := IsIntegralClosure.finite S L E T
   letI : Module.Finite R T := Module.Finite.trans S T
   letI : IsDedekindDomain T := integralClosure.isDedekindDomain S L E
+  have : IsTorsionFree S T := FaithfulSMul.to_isTorsionFree S T
   letI : IsGalois K E := {
     to_isSeparable := inferInstance
     to_normal := normalClosure.normal K L (AlgebraicClosure L) }

@@ -42,7 +42,7 @@ theorem algebraNorm_norm_le_pow_of_embeddings
     _ = ‖∏ σ : K →ₐ[ℚ] ℂ, σ x‖ := by rw [Algebra.norm_eq_prod_embeddings]
     _ ≤ ∏ σ : K →ₐ[ℚ] ℂ, ‖σ x‖ := Finset.norm_prod_le _ _
     _ ≤ ∏ _σ : K →ₐ[ℚ] ℂ, B := by
-      exact Finset.prod_le_prod (fun _ _ ↦ norm_nonneg _) (fun σ _ ↦ hB σ)
+      exact Finset.prod_le_prod₀ (fun _ _ ↦ norm_nonneg _) (fun σ _ ↦ hB σ)
     _ = B ^ Module.finrank ℚ K := by simp [AlgHom.card]
 
 /-- Integral version of `algebraNorm_norm_le_pow_of_embeddings`, with an integer-valued bound. -/
@@ -169,7 +169,7 @@ theorem cyclotomicDefect_integerNorm_natAbs_pos
   apply integerNorm_natAbs_pos
   intro hzero
   apply hη
-  simpa using congrArg (fun x : 𝓞 K ↦ (x : K)) hzero
+  exact congrArg (fun x : 𝓞 K ↦ (x : K)) hzero
 
 /-- The completed norm-and-reduction implication: if the nonzero cyclotomic defect reduces to zero
 at an ideal above `(p)`, then `p ≤ 20 ^ φ(n)`.  Constructing the compatible reduction data is the
@@ -193,7 +193,7 @@ theorem modulus_le_twenty_pow_totient_of_cyclotomicDefect_reduction
   have hηne : η ≠ 0 := by
     intro hzero
     apply hη
-    simpa [η] using congrArg (fun x : 𝓞 K ↦ (x : K)) hzero
+    exact congrArg (fun x : 𝓞 K ↦ (x : K)) hzero
   have hp_le : p ≤ (Algebra.norm ℤ η).natAbs :=
     modulus_le_integerNorm_natAbs_of_quotient_eq_zero P p η hP (by simpa [η] using hred) hηne
   exact hp_le.trans <| by
