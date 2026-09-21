@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+Authors: Adam Benenson
 -/
 
 module
@@ -11,11 +11,7 @@ public import LeanPool.PoincareGeometry.RellichKondrachov.Geometry.Manifold.Riem
 
 /-! # Finiteness -/
 
-/-
-Copyright (c) 2026 Adam Benenson. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Adam Benenson
--/
+
 
 /-!
 # `RellichKondrachov.Geometry.Manifold.Riemannian.VolumeMeasure.Finiteness`

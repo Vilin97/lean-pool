@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+Authors: Adam Benenson
 -/
 
 module
@@ -15,11 +15,7 @@ public import Mathlib.MeasureTheory.Measure.Prod
 
 @[expose] public section
 
-/-
-Copyright (c) 2026 Adam Benenson. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Adam Benenson
--/
+
 
 /-!
 # `RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.TranslationEstimateL2`
@@ -172,8 +168,6 @@ lemma enorm_translateL2_sub_toL2_le (a : E) (f : ↥(C1c (E := E))) :
     -- Expand the definition of `eLpNorm` at exponent `2`.
     have h2_ne0 : (2 : ℝ≥0∞) ≠ 0 := by simp
     have h2_netop : (2 : ℝ≥0∞) ≠ ∞ := by simp
-    simp_rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal
-      h2_ne0 h2_netop, ENNReal.toReal_ofNat] at *
     -- It suffices to compare the squared integrals.
     have hsq :
         (∫⁻ x, ‖f.1 (x + a) - f.1 x‖ₑ ^ (2 : ℝ) ∂μ) ≤
@@ -332,6 +326,13 @@ lemma enorm_translateL2_sub_toL2_le (a : E) (f : ↥(C1c (E := E))) :
           have := (ENNReal.rpow_mul ‖a‖ₑ (2 : ℝ) ((2 : ℝ)⁻¹)).symm
           have hmul : (2 : ℝ) * ((2 : ℝ)⁻¹) = (1 : ℝ) := by norm_num
           simpa [hmul, ENNReal.rpow_one] using! this
+    have hdiffmeas : AEStronglyMeasurable (fun x : E => f.1 (x + a) - f.1 x) μ :=
+      ((f.2.1.continuous.comp (continuous_id.add continuous_const)).sub
+        f.2.1.continuous).aestronglyMeasurable
+    have hgradmeas : AEStronglyMeasurable (fun x : E => grad (E := E) f.1 x) μ :=
+      (memLp_grad_of_mem_C1c (μ := μ) (E := E) f.2).aestronglyMeasurable
+    rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal h2_ne0 h2_netop hdiffmeas,
+      MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal h2_ne0 h2_netop hgradmeas]
     simpa [hroot, mul_assoc, mul_left_comm, mul_comm] using! hsq''
   -- Finish: translate back to the original `L²` norms.
   -- (The final `simp` is safe since we have explicit `eLpNorm` equalities above.)

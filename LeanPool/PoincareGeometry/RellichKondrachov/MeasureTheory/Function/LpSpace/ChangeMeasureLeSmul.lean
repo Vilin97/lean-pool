@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+Authors: Adam Benenson
 -/
 
 module
@@ -15,11 +15,7 @@ public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 @[expose] public section
 
-/-
-Copyright (c) 2026 Adam Benenson. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Adam Benenson
--/
+
 
 /-!
 # `RellichKondrachov.MeasureTheory.Function.LpSpace.ChangeMeasureLeSmul`
@@ -156,17 +152,17 @@ lemma vendorMeasureTheoryFunctionLpSpaceChangeMeasureLeSmul_norm_changeMeasureFu
           (c ^ (1 / p).toReal) * MeasureTheory.eLpNorm (fun x : α => f x) p μ := by
       simpa [ENNReal.smul_def, mul_assoc, mul_left_comm, mul_comm] using!
         (MeasureTheory.eLpNorm_smul_measure_of_ne_top
-          (μ := μ) (p := p) (f := fun x : α => f x) hp c)
+          (μ := μ) (p := p) (f := fun x : α => f x) hp c (MeasureTheory.Lp.aestronglyMeasurable f))
     exact hmono.trans_eq hscale
   have htoReal :
       ENNReal.toReal (MeasureTheory.eLpNorm (fun x : α => f x) p ν) ≤
         ENNReal.toReal ((c ^ (1 / p).toReal) * MeasureTheory.eLpNorm (fun x : α => f x) p μ) := by
     refine (ENNReal.toReal_le_toReal ?_ ?_).2 hle_eLpNorm
-    · exact hfν.2.ne
+    · exact hfν.ne
     ·
       have hfμ : MeasureTheory.MemLp (fun x : α => f x) p μ := by
         simpa using! (MeasureTheory.Lp.memLp f)
-      have hfμ_ne : MeasureTheory.eLpNorm (fun x : α => f x) p μ ≠ ∞ := hfμ.2.ne
+      have hfμ_ne : MeasureTheory.eLpNorm (fun x : α => f x) p μ ≠ ∞ := hfμ.ne
       have hcPow : c ^ (1 / p).toReal ≠ ∞ := by
         have hy0 : 0 ≤ (1 / p).toReal := by
           exact ENNReal.toReal_nonneg

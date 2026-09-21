@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz. All rights reserved.
+Copyright (c) 2026 Adam Benenson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Arthur Freitas Ramos, David Barros Hulak, Ruy J. G. B. de Queiroz
+Authors: Adam Benenson
 -/
 
 module
@@ -22,11 +22,7 @@ public import Mathlib.Probability.Moments.Variance
 
 @[expose] public section
 
-/-
-Copyright (c) 2026 Adam Benenson. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Adam Benenson
--/
+
 
 /-!
 # `L²` compactness criterion: approximation-by-translation bounds (Euclidean)
@@ -438,7 +434,7 @@ lemma norm_sq_smoothL2_sub_extendByZeroL2_le_integral_norm_sq_translateL2_sub_ex
         MeasureTheory.AEStronglyMeasurable f
           (Measure.map Prod.fst
             ((volume : Measure E).prod μ)) := by
-      simpa [Measure.map_fst_prod] using! hf_mem.1
+      simpa [Measure.map_fst_prod] using! ((MeasureTheory.Lp.aestronglyMeasurable F).congr hF_ae)
     exact MeasureTheory.AEStronglyMeasurable.comp_measurable
       (μ := (volume : Measure E).prod μ) (f := Prod.fst)
       (g := f) hf_map measurable_fst
