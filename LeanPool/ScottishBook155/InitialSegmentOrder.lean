@@ -66,7 +66,8 @@ private theorem initialSegmentFromWithTop_monotone (j : J) :
       | top => exact False.elim (by simpa using hxy)
       | coe x =>
           change x.1 ≤ y.1
-          exact WithTop.coe_le_coe.mp hxy
+          have h : x ≤ y := WithTop.coe_le_coe.mp hxy
+          exact h
 
 /-- A closed initial segment is the corresponding open segment with one new
 top point. -/
