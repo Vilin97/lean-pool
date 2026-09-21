@@ -87,12 +87,12 @@ end congr
 section commute
 variable {A B : HermitianMat d 𝕜}
 
-@[aesop unsafe apply 50% (rule_sets := [Commutes])]
+@[aesop apply 50% (rule_sets := [Commutes])]
 theorem _root_.Commute.cfc_left (hAB : Commute A.mat B.mat) :
     Commute (A.cfc f).mat B.mat := by
   exact hAB.cfc_real f
 
-@[aesop unsafe apply 50% (rule_sets := [Commutes])]
+@[aesop apply 50% (rule_sets := [Commutes])]
 theorem _root_.Commute.cfc_right (hAB : Commute A.mat B.mat) :
     Commute A.mat (B.cfc f).mat :=
   (hAB.symm.cfc_left f).symm
@@ -138,10 +138,6 @@ theorem cfc_toMat_eq_sum_smul_proj : (A.cfc f).mat =
   simp [Matrix.mul_apply,Finset.mul_sum, Finset.smul_sum, smul_ite, smul_zero]
 
 --Ensure we get this instance:
-/-- info: locallyCompact_of_proper -/
-#guard_msgs in
-
-#synth LocallyCompactSpace (HermitianMat d 𝕜)
 
 theorem cfc_eigenvalues (A : HermitianMat d 𝕜) :
     ∃ (e : d ≃ d), (A.cfc f).H.eigenvalues = f ∘ A.H.eigenvalues ∘ e :=

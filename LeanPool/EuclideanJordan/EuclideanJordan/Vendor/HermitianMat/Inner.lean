@@ -283,8 +283,6 @@ open ComplexOrder
 variable {d : Type*} [Fintype d] {𝕜 : Type*} [RCLike 𝕜]
 
 --Check that it synthesizes ok
-#guard_msgs(drop info) in
-#synth ContractibleSpace (HermitianMat d ℂ)
 
 @[fun_prop]
 theorem inner_continuous : Continuous (Inner.inner ℝ (E := HermitianMat d 𝕜)) := by

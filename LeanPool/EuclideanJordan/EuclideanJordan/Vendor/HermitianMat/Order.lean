@@ -174,7 +174,7 @@ open Lean Meta in
 `Matrix.PosSemidef A`, `Matrix.PosDef A`, or `And P Q` (syntactically), attempt to
 find a proof of nonnegativity or positivity for `e`. Only syntactic matching on the
 head constant is used; `isDefEq` is used only to compare the matrix argument. -/
-meta partial def findMatrixPSDInExpr (e : Expr) (p : Expr) (ty : Expr) :
+meta def findMatrixPSDInExpr (e : Expr) (p : Expr) (ty : Expr) :
     MetaM (Option (Bool × Expr)) := do
   let head := ty.getAppFn
   if head.isConst then
@@ -203,17 +203,17 @@ meta partial def findMatrixPSDInExpr (e : Expr) (p : Expr) (ty : Expr) :
           let pSemidef ← mkAppM ``Matrix.PosDef.posSemidef #[p]
           let pf ← mkAppM ``HermitianMat.posSemidef_to_nonneg #[pSemidef]
           return some (false, pf)
-    if name == ``And then
-      let args := ty.getAppArgs
-      if args.size == 2 then
-        -- Recurse on left and right
-        let pLeft ← mkAppM ``And.left #[p]
-        if let some result ← findMatrixPSDInExpr e pLeft args[0]! then
-          return some result
-        let pRight ← mkAppM ``And.right #[p]
-        if let some result ← findMatrixPSDInExpr e pRight args[1]! then
-          return some result
+  match ty with
+  | .app (.app (.const ``And _) left) right =>
+    let pLeft ← mkAppM ``And.left #[p]
+    if let some result ← findMatrixPSDInExpr e pLeft left then
+      return some result
+    let pRight ← mkAppM ``And.right #[p]
+    if let some result ← findMatrixPSDInExpr e pRight right then
+      return some result
+  | _ => pure ()
   return none
+termination_by structural ty
 
 open Lean Meta Mathlib.Meta.Positivity in
 /-- Positivity extension for `Matrix`: looks for `A.PosSemidef` or `A.PosDef` in the
@@ -249,7 +249,7 @@ open Lean Meta in
 `Matrix.PosSemidef A.mat`, `Matrix.PosDef A.mat`, or `And P Q` (syntactically), attempt to
 find a proof of nonnegativity or positivity for `e`. Only syntactic matching on the
 head constant is used; `isDefEq` is used only to compare the `HermitianMat` argument. -/
-meta partial def findHermitianMatPSDInExpr (e : Expr) (p : Expr) (ty : Expr) :
+meta def findHermitianMatPSDInExpr (e : Expr) (p : Expr) (ty : Expr) :
     MetaM (Option (Bool × Expr)) := do
   let head := ty.getAppFn
   if head.isConst then
@@ -282,16 +282,17 @@ meta partial def findHermitianMatPSDInExpr (e : Expr) (p : Expr) (ty : Expr) :
               let pSemidef ← mkAppM ``Matrix.PosDef.posSemidef #[p]
               let pf ← mkAppM ``HermitianMat.mat_posSemidef_to_nonneg #[pSemidef]
               return some (false, pf)
-    if name == ``And then
-      let args := ty.getAppArgs
-      if args.size == 2 then
-        let pLeft ← mkAppM ``And.left #[p]
-        if let some result ← findHermitianMatPSDInExpr e pLeft args[0]! then
-          return some result
-        let pRight ← mkAppM ``And.right #[p]
-        if let some result ← findHermitianMatPSDInExpr e pRight args[1]! then
-          return some result
+  match ty with
+  | .app (.app (.const ``And _) left) right =>
+    let pLeft ← mkAppM ``And.left #[p]
+    if let some result ← findHermitianMatPSDInExpr e pLeft left then
+      return some result
+    let pRight ← mkAppM ``And.right #[p]
+    if let some result ← findHermitianMatPSDInExpr e pRight right then
+      return some result
+  | _ => pure ()
   return none
+termination_by structural ty
 
 open Lean Meta Mathlib.Meta.Positivity in
 /-- Positivity extension for `HermitianMat`: looks for `A.mat.PosSemidef` or `A.mat.PosDef` in

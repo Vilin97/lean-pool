@@ -12,7 +12,7 @@ public import Mathlib.Order.CompletePartialOrder
 
 --Can this be rewritten more generally? For `finiteness` to work, I don't know how.
 --PR'ed in #33105
-@[aesop (rule_sets := [finiteness]) unsafe apply]
+@[aesop (rule_sets := [finiteness]) apply 50%]
 theorem ite_eq_top {α : Type*} [Top α] (h : Prop) [Decidable h] {x y : α} (hx : x ≠ ⊤) (hy : y ≠ ⊤) :
     (if h then x else y) ≠ ⊤ := by
   split <;> assumption

@@ -30,7 +30,7 @@ noncomputable section
 
 open BigOperators
 
-variable {n 𝕜 : Type*}
+variable {n 𝕜 dA dB : Type*}
 variable [RCLike 𝕜] [DecidableEq n]
 
 namespace Matrix
@@ -52,7 +52,7 @@ theorem zero_rank_eq_zero {A : Matrix n n 𝕜} [Fintype n] (hA : A.rank = 0) : 
     intro v
     rw [rank, Module.finrank_zero_iff] at hA
     have := hA.elim ⟨A.mulVecLin v, ⟨v, rfl⟩⟩ ⟨0, ⟨0, by rw [mulVecLin_apply, mulVec_zero]⟩⟩
-    simpa only [Subtype.mk.injEq] using this
+    exact congrArg Subtype.val this
   rw [← LinearEquiv.map_eq_zero_iff toLin']
   exact LinearMap.ext h
 
@@ -289,7 +289,7 @@ theorem zero_dotProduct_zero_iff : (∀ x : m → 𝕜, 0 = star x ⬝ᵥ A.mulV
   constructor
   · intro h
     ext i j
-    have h₂ := fun x ↦ (PosSemidef.dotProduct_mulVec_zero_iff hA x).mp (h x).symm
+    have h₂ := fun x ↦ (PosSemidef.dotProduct_mulVec_zero_iff hA).mp (h x).symm
     classical have : DecidableEq m := inferInstance
     convert! congrFun (h₂ (Pi.single j 1)) i using 1
     simp

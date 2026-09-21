@@ -89,7 +89,7 @@ attribute [aesop safe apply (rule_sets := [Commutes])]
 --quite common that we specifically need it at the end (or equivalently, at the beginning)
 --which is why we give a safe + fast tactic to apply. This often cuts heartbeats by a large
 --factor.
-attribute [aesop unsafe apply 5% (rule_sets := [Commutes])] Commute.symm
+attribute [aesop apply 5% (rule_sets := [Commutes])] Commute.symm
 
 --This essentially does `symm + assumption`. Note that `assumption` is already a builtin.
 add_aesop_rules safe tactic (rule_sets := [Commutes]) (by exact Commute.symm ‹_›)
@@ -101,7 +101,7 @@ add_aesop_rules safe tactic (rule_sets := [Commutes]) (by apply Commute.ofNat_ri
 --Try to normalize ring operations
 add_aesop_rules safe tactic (rule_sets := [Commutes]) (by apply Commute.ofNat_right)
 
-attribute [aesop unsafe apply 50% (rule_sets := [Commutes])]
+attribute [aesop apply 50% (rule_sets := [Commutes])]
   Commute.mul_left Commute.mul_right
   Commute.pow_left Commute.pow_right --Commute.pow_pow (redundant)
   Commute.smul_left Commute.smul_right
