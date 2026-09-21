@@ -23,7 +23,8 @@ as a family `frameBlock F : Sym2 (Fin n) → Submodule ℝ J` (`Sym2` because `V
 and proves `frameBlock_isInternal : DirectSum.IsInternal (frameBlock F)` — independence
 (`frameBlock_iSupIndep`) plus spanning (`frameBlock_iSup_eq_top`).
 
-`frameBlockRaw_self` records that the diagonal block really is `EuclideanJordan/PeirceSubalgebra.lean`'s
+`frameBlockRaw_self` records that the diagonal block really is
+    `EuclideanJordan/PeirceSubalgebra.lean`'s
 `peirceOneSub`, so the two definitions of `J₂(p i)` in the tree do not drift apart.
 
 ## ★ The reprice held in direction and was wrong about the mechanism
@@ -79,7 +80,8 @@ carried as data.  See `EuclideanJordan/Rank.lean`'s module docstring.  Do not re
 ★ That guard got easier to trip once `EuclideanJordan/HermitianCarrier.lean` named a frame.
 `diagJordanFrame : JordanFrame (HermitianMat n ℂ) (Fintype.card n)` puts a frame of cardinality
 `Fintype.card n` on `H_n(ℂ)`, which reads like "`rank (H_n(ℂ)) = Fintype.card n`".  It is not:
-`EuclideanJordan/Rank.lean` supplies `JordanFrame.card_le_rank`, an inequality in one direction only, and
+`EuclideanJordan/Rank.lean` supplies `JordanFrame.card_le_rank`, an inequality in one direction
+    only, and
 `rank` is a supremum over *every* orthogonal family of nonzero idempotents.  A named frame of
 cardinality `k` is a lower bound on the rank and nothing more.
 
@@ -199,7 +201,8 @@ theorem frameBlockRaw_mul_eq_zero (F : JordanFrame J n) {i j k : Fin n} (hki : k
 /-! ## How the frame's Peirce projections compose
 
 The eight ways two of the projections `peirceOne (p i)`, `peirceHalf (p i)` can be applied in
-succession.  Every one is `EuclideanJordan/Block.lean`'s commutation plus a single-idempotent rule from
+succession.  Every one is `EuclideanJordan/Block.lean`'s commutation plus a single-idempotent
+    rule from
 `EuclideanJordan/Peirce.lean`. -/
 
 section Compose
@@ -268,7 +271,8 @@ theorem sum_peirceHalf_erase (F : JordanFrame J n) {k : Fin n} {y : J}
     simpa using this
   have hmul : ∀ m, m ≠ k → F.p m * y = (2 : ℝ)⁻¹ • peirceHalf (F.p m) y := by
     intro m hm
-    calc F.p m * y = F.p m * (peirceOne (F.p m) y + peirceHalf (F.p m) y + peirceZero (F.p m) y) := by
+    calc F.p m * y = F.p m * (peirceOne (F.p m) y + peirceHalf (F.p m) y + peirceZero (F.p m) y)
+        := by
           rw [peirce_add_add]
       _ = (2 : ℝ)⁻¹ • peirceHalf (F.p m) y := by
           rw [mul_add, mul_add, mul_peirceOne (F.orthIdem.idem m),

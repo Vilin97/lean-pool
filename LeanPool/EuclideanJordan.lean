@@ -58,12 +58,12 @@ import LeanPool.EuclideanJordan.StructureSolution
 import LeanPool.EuclideanJordan.TraceFormSolution
 
 /-!
-# Euclidean Jordan algebras: power associativity, the spectral theorem, the trace form, Koecher/Alfsen-Shultz, and the frame Peirce decomposition
+# Euclidean Jordan algebras and the frame Peirce decomposition
 
 Source: url:https://github.com/ehrlich-b/euclidean-jordan
 Authors: Bryan Ehrlich
 Status: verified
-Main declarations: `EuclideanJordan.frameBlock_isInternal`, `EuclideanJordan.finrank_frameBlock_diag`
+Main declarations: `EuclideanJordan.frameBlock_isInternal`
 Tags: nonassociative-algebra
 MSC: 17C20, 17C27, 17C37, 17C65, 17A15, 46L70
 -/

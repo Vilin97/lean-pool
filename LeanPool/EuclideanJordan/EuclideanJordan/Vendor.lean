@@ -16,5 +16,6 @@ import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Tactic
 /-!
 # Vendor
 
-Supporting modules for Euclidean Jordan algebras: power associativity, the spectral theorem, the trace form, Koecher/Alfsen-Shultz, and the frame Peirce decomposition.
+Supporting modules for Euclidean Jordan algebras: power associativity, the spectral theorem, the
+    trace form, Koecher/Alfsen-Shultz, and the frame Peirce decomposition.
 -/

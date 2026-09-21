@@ -14,7 +14,8 @@ import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirce
 /-!
 # The Faraut–Korányi multiplication table relative to a Jordan frame
 
-`EuclideanJordan/FramePeirce.lean` builds the blocks `V_{ij}` of a Jordan frame `F = (p₁, …, pₙ)` and proves
+`EuclideanJordan/FramePeirce.lean` builds the blocks `V_{ij}` of a Jordan frame `F = (p₁, …,
+    pₙ)` and proves
 `J = ⨁_{i ≤ j} V_{ij}`.  This file multiplies them.  The table:
 
 * `V_{ii} ∘ V_{ii} ⊆ V_{ii}` (`frameBlockRaw_diag_mul_diag`),
@@ -25,7 +26,8 @@ import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirce
 
 together with `dim V_{ii} = 1` (`finrank_frameBlockRaw_self`) and the eigenvalue rule
 `pᵢ ∘ x = ½ • x` on `V_{ij}` (`frameBlockRaw_mul_left_half`).  The last three lines of the table
-are also stated as literal submodule inclusions through `EuclideanJordan/Class.lean`'s bundled `jmulₗ` and
+are also stated as literal submodule inclusions through `EuclideanJordan/Class.lean`'s bundled
+    `jmulₗ` and
 `Submodule.map₂`, in the `Map₂` section; there is no `Mul` on `Submodule ℝ J` to state them with,
 because Mathlib's `Submodule.mul` instance is declared for `[Semiring A] [Module R A]
 [IsScalarTower R A A]` — an associative unital ring — which a Jordan algebra is not.
@@ -55,10 +57,13 @@ completeness of the frame, used once, in `frameBlockRaw_mul_self_split`.
 
 ## ★ Primitivity is spent here
 
-`EuclideanJordan/FramePeirce.lean` records that no proof in it uses primitivity at all.  This file is not,
+`EuclideanJordan/FramePeirce.lean` records that no proof in it uses primitivity at all.  This
+    file is not,
 however, the first in the tree to *touch* the `IsPrimitive` clauses, and an earlier draft of this
-docstring said so wrongly: `EuclideanJordan/Rank.lean`'s `JordanFrame.p_ne_zero` consumes the `ne_zero` clause,
-and `EuclideanJordan/FrameExists.lean`'s `isPrimitive_coe_of_peirceOne` / `isPrimitive_coe_of_peirceZero`
+docstring said so wrongly: `EuclideanJordan/Rank.lean`'s `JordanFrame.p_ne_zero` consumes the
+    `ne_zero` clause,
+and `EuclideanJordan/FrameExists.lean`'s `isPrimitive_coe_of_peirceOne` /
+    `isPrimitive_coe_of_peirceZero`
 consume the splitting clause `∀ d, d ∘ d = d → c ∘ d = d → d = 0 ∨ d = c` in full.  What those two
 do with it is *transport* it across the coercion `↥(J₂(c)) → J`; they extract no structural
 consequence from it.
@@ -66,9 +71,11 @@ consequence from it.
 This file is the first to spend it.  Within this file the splitting clause is used at exactly one
 theorem, `peirceOneSub_eq_span_of_isPrimitive`, which runs `EuclideanJordan/Class.lean`'s
 `spectral_resolution_complete'` **inside** `J₂(c)` — legitimate because
-`EuclideanJordan/PeirceSubalgebra.lean` gives `J₂(c)` its own `EuclideanJordanAlgebra` instance with unit `c`
+`EuclideanJordan/PeirceSubalgebra.lean` gives `J₂(c)` its own `EuclideanJordanAlgebra` instance
+    with unit `c`
 — and reads off that every idempotent appearing in the resolution is `0` or `1`, by
-`EuclideanJordan/Rank.lean`'s `isPrimitive_iff_of_idem`.  A resolution all of whose idempotents are `0` or `1`
+`EuclideanJordan/Rank.lean`'s `isPrimitive_iff_of_idem`.  A resolution all of whose idempotents
+    are `0` or `1`
 has every term a real multiple of `1 = c`.
 
 Orthogonality of the resolution is *not* used in that argument, only the two-valuedness; that is
@@ -85,7 +92,8 @@ Everything *before* the `Primitive` section runs on `F.orthIdem` and `F.complete
 statement about one block of a frame carried as data, not about the rank of `J`.
 
 ★ **There is a carrier and a named frame**, so the theorems below are not statements about an
-empty class: `EuclideanJordan/HermitianCarrier.lean` supplies `instEuclideanJordanAlgebraHermitianMat` and
+empty class: `EuclideanJordan/HermitianCarrier.lean` supplies
+    `instEuclideanJordanAlgebraHermitianMat` and
 `diagJordanFrame : JordanFrame (HermitianMat n ℂ) (Fintype.card n)`.  `frameBlockRaw_mul_self_eq` is
 consumed at `F = diagJordanFrame` through `EuclideanJordan/Connection.lean`'s `exists_sq_smul`.
 
@@ -93,7 +101,8 @@ consumed at `F = diagJordanFrame` through `EuclideanJordan/Connection.lean`'s `e
 `EuclideanJordan/HermitianCarrier.lean`.
 The durable part is the one below.
 
-★ `rank J = n` is not proved for **any** frame, `diagJordanFrame` included: `EuclideanJordan/Rank.lean`
+★ `rank J = n` is not proved for **any** frame, `diagJordanFrame` included:
+    `EuclideanJordan/Rank.lean`
 bounds a frame's cardinality by the rank and by the dimension, and nothing anywhere converts
 `dim V_{ii} = 1` into a statement about `rank J`.
 -/
@@ -109,7 +118,8 @@ variable {n : ℕ}
 
 /-! ## The eigenvalue rule on a block -/
 
-/-- **`pᵢ ∘ x = ½ • x` for `x ∈ V_{ij}`, `i ≠ j`.**  Definitional at `EuclideanJordan/FramePeirce.lean`'s
+/-- **`pᵢ ∘ x = ½ • x` for `x ∈ V_{ij}`, `i ≠ j`.**  Definitional at
+`EuclideanJordan/FramePeirce.lean`'s
 `frameBlockRaw`; named because the multiplication rules below take it as an argument constantly. -/
 theorem frameBlockRaw_mul_left_half (F : JordanFrame J n) {i j : Fin n} (hij : i ≠ j) {x : J}
     (hx : x ∈ frameBlockRaw F i j) : F.p i * x = (2 : ℝ)⁻¹ • x :=
@@ -122,12 +132,15 @@ theorem frameBlockRaw_mul_right_half (F : JordanFrame J n) {i j : Fin n} (hij : 
 
 /-! ## The table
 
-Each rule is read off the single-idempotent Faraut–Korányi rules of `EuclideanJordan/PeirceMul.lean`, applied
-at one frame member at a time.  `frameBlockRaw_mul_eq_zero` (in `EuclideanJordan/FramePeirce.lean`) supplies
+Each rule is read off the single-idempotent Faraut–Korányi rules of
+    `EuclideanJordan/PeirceMul.lean`, applied
+at one frame member at a time.  `frameBlockRaw_mul_eq_zero` (in
+    `EuclideanJordan/FramePeirce.lean`) supplies
 the `0`-eigenvalue of every frame member outside a block's index pair. -/
 
 /-- **`V_{ii} ∘ V_{ii} ⊆ V_{ii}`** — the diagonal block is a subalgebra.  This is
-`eigen_one_mul_one` verbatim; `EuclideanJordan/PeirceSubalgebra.lean` already uses it as the `Mul` field of
+`eigen_one_mul_one` verbatim; `EuclideanJordan/PeirceSubalgebra.lean` already uses it as the
+    `Mul` field of
 `J₂(pᵢ)`. -/
 theorem frameBlockRaw_diag_mul_diag (F : JordanFrame J n) {i : Fin n} {x y : J}
     (hx : x ∈ frameBlockRaw F i i) (hy : y ∈ frameBlockRaw F i i) :
@@ -326,7 +339,8 @@ end Primitive
 /-! ## The table as submodule inclusions
 
 `Submodule.map₂ (jmulₗ J) P Q` is the submodule generated by the products, so these are the
-literal `⊆` statements of the module docstring.  `EuclideanJordan/Class.lean`'s `jmulₗ` is the bundled form of
+literal `⊆` statements of the module docstring.  `EuclideanJordan/Class.lean`'s `jmulₗ` is the
+    bundled form of
 the same product (`jmulₗ_apply` is `rfl`). -/
 
 section Map₂

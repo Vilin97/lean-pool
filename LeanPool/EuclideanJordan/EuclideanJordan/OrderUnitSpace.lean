@@ -8,7 +8,7 @@ Copyright (c) 2026 Bryan Ehrlich. All rights reserved.
 Released under Apache 2.0 license.
 Authors: Bryan Ehrlich
 -/
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Analysis.Normed.Module.Basic
 import Mathlib.Algebra.Order.Group.Defs
 import Mathlib.Tactic.Linarith
@@ -62,6 +62,7 @@ namespace OrderUnitSpace
 
 variable {V : Type*} [OrderUnitSpace V]
 
+/-- The distinguished order unit of an order unit space. -/
 scoped notation "𝟙" => OrderUnitSpace.ousUnit (V := _)
 
 -- Ordered group lemmas derived from add_le_add_left
@@ -74,17 +75,17 @@ theorem neg_le_neg {a b : V} (h : a ≤ b) : -b ≤ -a := by
   have h1 := add_le_add_right' h (-b)
   rw [add_neg_cancel] at h1
   have h2 := add_le_add_right' h1 (-a)
-  simp [add_assoc, add_neg_cancel, zero_add, add_zero] at h2
+  simp? [add_assoc, add_neg_cancel, zero_add, add_zero] at h2
   exact h2
 
 theorem neg_nonneg_of_nonpos {a : V} (h : a ≤ 0) : (0 : V) ≤ -a := by
   have := neg_le_neg h
-  simp at this
+  simp? at this
   exact this
 
 theorem neg_nonpos_of_nonneg {a : V} (h : (0 : V) ≤ a) : -a ≤ 0 := by
   have := neg_le_neg h
-  simp at this
+  simp? at this
   exact this
 
 theorem sub_nonneg_of_le {a b : V} (h : a ≤ b) : (0 : V) ≤ b - a := by

@@ -36,7 +36,8 @@ Then `jpow_mul_jpow_of_commuteAt` says: **`CommuteAt x m` alone gives
 
 ★ The reduction itself does **not** use the Jordan identity — its `omit` line says so. Every
 bit of Jordan content in power associativity is concentrated in `CommuteAt`. **This is the
-part that held up**: it is what let `EuclideanJordan/PowerAssoc.lean` attack a single commutator family
+part that held up**: it is what let `EuclideanJordan/PowerAssoc.lean` attack a single commutator
+    family
 instead of the product law, and the proof there is exactly that attack.
 
 ## What is discharged here

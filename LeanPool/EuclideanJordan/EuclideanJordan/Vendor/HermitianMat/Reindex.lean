@@ -24,6 +24,7 @@ variable {d d₂ d₃ d₄ 𝕜 : Type*} [RCLike 𝕜]
 
 variable (A B : HermitianMat d 𝕜) (e : d ≃ d₂)
 
+/-- Reindex both rows and columns of a Hermitian matrix along an equivalence. -/
 def reindex (e : d ≃ d₂) : HermitianMat d₂ 𝕜 :=
   ⟨A.mat.reindex e e, A.H.submatrix e.symm⟩
 
@@ -61,7 +62,7 @@ theorem reindex_add : A.reindex e + B.reindex e = (A + B).reindex e := by
   ext1; simp [Matrix.submatrix_add]
 
 @[simp]
-theorem reindex_sub  : A.reindex e - B.reindex e = (A - B).reindex e := by
+theorem reindex_sub : A.reindex e - B.reindex e = (A - B).reindex e := by
   ext1; simp [Matrix.submatrix_sub]
 
 @[simp]
@@ -100,7 +101,7 @@ theorem reindex_eq_conj [DecidableEq d] (e : d ≃ d₂) :
   change A.mat (e.symm i) (e.symm j) =
     ∑ k, (∑ l, (if e.symm i = l then 1 else 0) * A.mat l k) *
       star (if e.symm j = k then (1 : 𝕜) else 0)
-  simp [ite_mul, mul_ite, apply_ite]
+  simp [ite_mul, apply_ite]
 
 variable [Fintype d₂] [DecidableEq d] [DecidableEq d₂]
 

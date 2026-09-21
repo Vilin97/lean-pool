@@ -11,17 +11,24 @@ public import Mathlib.Topology.Instances.Real.Lemmas
 
 /-! # Inner product of Hermitian Matrices
 
-For general matrices there are multiple reasonable notions of "inner product" (Hilbert–Schmidt inner product,
-Frobenius inner product), and so Mathlib avoids giving a canonical `InnerProductSpace` instance. But for the
-particular case of Hermitian matrices, these all coincide, so we can put a canonical `InnerProductSpace`
+For general matrices there are multiple reasonable notions of "inner product" (Hilbert–Schmidt
+inner product,
+Frobenius inner product), and so Mathlib avoids giving a canonical `InnerProductSpace` instance.
+    But for the
+particular case of Hermitian matrices, these all coincide, so we can put a canonical
+    `InnerProductSpace`
 instance.
 
-This _does_ however induce a `Norm` on `HermitianMat` as well, the Frobenius norm, and this is less obviously
-a uniquely correct choice. It is something that one essentially has to live with, with the way that Mathlib
-currently structures the instances. (Thankfully, all norms induce the same _topology and bornology_ on
+This _does_ however induce a `Norm` on `HermitianMat` as well, the Frobenius norm, and this is
+    less obviously
+a uniquely correct choice. It is something that one essentially has to live with, with the way
+    that Mathlib
+currently structures the instances. (Thankfully, all norms induce the same _topology and
+    bornology_ on
 finite-dimensional matrices.)
 
-Some care to be taken so that the topology induced by the InnerProductSpace is defeq with the Subtype
+Some care to be taken so that the topology induced by the InnerProductSpace is defeq with the
+    Subtype
 topology that HermitianMat inherits from the topology on Matrix. This can be done via
 `InnerProductSpace.ofCoreOfTopology`.
 
@@ -115,7 +122,8 @@ protected def innerₗ : LinearMap.BilinForm R (HermitianMat n α) where
 end ring
 section starring
 
-variable [CommSemiring R] [Ring α] [StarRing α] [Algebra R α] [IsMaximalSelfAdjoint R α] [DecidableEq n]
+variable [CommSemiring R] [Ring α] [StarRing α] [Algebra R α] [IsMaximalSelfAdjoint R α]
+    [DecidableEq n]
 variable (A B : HermitianMat n α)
 
 @[simp]
@@ -170,7 +178,7 @@ theorem inner_eq_trace_rc : ⟪A, B⟫ = (A.mat * B.mat).trace := by
   convert! (Matrix.trace_conjTranspose (A.mat * B.mat)).symm using 1
   rw [Matrix.conjTranspose_mul, A.H, B.H, Matrix.trace_mul_comm]
 
-theorem inner_self_nonneg: 0 ≤ ⟪A, A⟫ := by
+theorem inner_self_nonneg : 0 ≤ ⟪A, A⟫ := by
   simp_rw [inner_eq_re_trace, Matrix.trace, Matrix.diag, Matrix.mul_apply, map_sum]
   refine Finset.sum_nonneg fun i _ ↦ Finset.sum_nonneg fun j _ ↦ ?_
   rw [← congrFun₂ A.H, Matrix.conjTranspose_apply]
@@ -190,7 +198,8 @@ theorem inner_ge_zero (hA : 0 ≤ A) (hB : 0 ≤ B) : 0 ≤ ⟪A, B⟫ := by
   rw [zero_le_iff] at hB
   open MatrixOrder in
   open Classical in
-  rw [inner_eq_re_trace, ← CFC.sqrt_mul_sqrt_self A.mat hA, Matrix.trace_mul_cycle, Matrix.trace_mul_cycle]
+  rw [inner_eq_re_trace, ← CFC.sqrt_mul_sqrt_self A.mat hA, Matrix.trace_mul_cycle,
+      Matrix.trace_mul_cycle]
   nth_rewrite 1 [← (Matrix.nonneg_iff_posSemidef.mp (CFC.sqrt_nonneg A.mat)).left]
   exact (RCLike.nonneg_iff.mp (hB.conjTranspose_mul_mul_same _).trace_nonneg).left
 
@@ -210,7 +219,8 @@ theorem inner_le_mul_trace (hA : 0 ≤ A) (hB : 0 ≤ B) : ⟪A, B⟫ ≤ A.trac
   simp [mul_comm]
 
 --TODO cleanup
-private theorem inner_zero_iff_aux_lemma [DecidableEq n] (hA₁ : A.mat.PosSemidef) (hB₁ : B.mat.PosSemidef) :
+private theorem inner_zero_iff_aux_lemma [DecidableEq n] (hA₁ : A.mat.PosSemidef) (hB₁ :
+    B.mat.PosSemidef) :
   RCLike.re (A.val * B.val).trace = 0 ↔
     LinearMap.range (Matrix.toEuclideanLin A.val) ≤
       LinearMap.ker (Matrix.toEuclideanLin B.val) := by
@@ -251,7 +261,8 @@ private theorem inner_zero_iff_aux_lemma [DecidableEq n] (hA₁ : A.mat.PosSemid
       = C.conjTranspose * (C * D.conjTranspose) * D from by simp [Matrix.mul_assoc], hE0']
   simp
 
-/-- The inner product of two PSD matrices is zero iff they have disjoint support, i.e., each lives entirely
+/-- The inner product of two PSD matrices is zero iff they have disjoint support, i.e., each
+lives entirely
 in the other's kernel. -/
 theorem inner_zero_iff [DecidableEq n] (hA₁ : 0 ≤ A) (hB₁ : 0 ≤ B)
     : ⟪A, B⟫ = 0 ↔ A.support ≤ B.ker := by
@@ -275,7 +286,8 @@ end RCLike
 
 section topology
 /-!
-Theorems about `HermitianMat`s that have to do with the topological structure. Pretty much everything here will
+Theorems about `HermitianMat`s that have to do with the topological structure. Pretty much
+    everything here will
 assume these are matrices over ℂ, but changes to upgrade this to other types are welcome.
 -/
 open ComplexOrder
@@ -299,9 +311,12 @@ section innerproductspace
 
 variable {d d₂ : Type*} [Fintype d] [Fintype d₂] {𝕜 : Type*} [RCLike 𝕜]
 
-/-- We define the Hermitian inner product as our "canonical" inner product, which does induce a norm.
-This disagrees slightly with Mathlib convention on the `Matrix` type, which avoids asserting one norm
-as there are several reasonable ones; for Hermitian matrices, though, this seem to be the right choice. -/
+/-- We define the Hermitian inner product as our "canonical" inner product, which does induce a
+norm.
+This disagrees slightly with Mathlib convention on the `Matrix` type, which avoids asserting one
+    norm
+as there are several reasonable ones; for Hermitian matrices, though, this seem to be the right
+    choice. -/
 @[reducible]
 noncomputable def InnerProductCore : InnerProductSpace.Core ℝ (HermitianMat d 𝕜) :=
    {
@@ -325,7 +340,8 @@ noncomputable def InnerProductCore : InnerProductSpace.Core ℝ (HermitianMat d 
       rw [Pi.zero_apply, Fintype.sum_eq_zero_iff_of_nonneg (fun i ↦ by positivity)] at h
       replace h := congrFun h i
       rw [Pi.zero_apply] at h
-      rw [add_eq_zero_iff_of_nonneg (by positivity) (by positivity), sq_eq_zero_iff, sq_eq_zero_iff] at h
+      rw [add_eq_zero_iff_of_nonneg (by positivity) (by positivity), sq_eq_zero_iff,
+          sq_eq_zero_iff] at h
       apply RCLike.ext (h.left.trans RCLike.zero_re.symm) (h.right.trans (map_zero _).symm)
   }
 
@@ -406,31 +422,43 @@ theorem Matrix.IsHermitian_isClosed : IsClosed { A : Matrix n n 𝕜 | A.IsHermi
 
 open ComplexOrder
 
-theorem Matrix.PosSemiDef_isClosed : IsClosed { A : Matrix n n 𝕜 | A.PosSemidef } := by
-  rw [show { A : Matrix n n 𝕜 | A.PosSemidef } = { A | A.IsHermitian } ∩ { A | ∀ x : n → 𝕜, 0 ≤ star x ⬝ᵥ A.mulVec x } from by
+omit [Fintype n] in
+theorem Matrix.PosSemiDef_isClosed [Finite n] : IsClosed { A : Matrix n n 𝕜 | A.PosSemidef } := by
+  classical
+  let := Fintype.ofFinite n
+  rw [show { A : Matrix n n 𝕜 | A.PosSemidef } = { A | A.IsHermitian } ∩ { A | ∀ x : n → 𝕜, 0 ≤
+      star x ⬝ᵥ A.mulVec x } from by
     ext A; simp [Matrix.posSemidef_iff_dotProduct_mulVec]]
   refine IsHermitian_isClosed.inter ?_
   suffices IsClosed (⋂ x : n → 𝕜, { A : Matrix n n 𝕜 | 0 ≤ star x ⬝ᵥ A.mulVec x }) by
     rwa [← Set.ofPred_forall] at this
   exact isClosed_iInter fun _ ↦ (isClosed_Ici (a := 0)).preimage (by fun_prop)
 
-theorem isClosed_nonneg : IsClosed { A : HermitianMat n 𝕜 | 0 ≤ A } := by
+omit [Fintype n] in
+theorem isClosed_nonneg [Finite n] : IsClosed { A : HermitianMat n 𝕜 | 0 ≤ A } := by
+  classical
+  let := Fintype.ofFinite n
   simp_rw [zero_le_iff]
   exact Matrix.PosSemiDef_isClosed.preimage_val
 
---TODO: The PosDef matrices are open *within* the HermitianMat space (not in the ambient space of matrices.)
+-- TODO: The PosDef matrices are open *within* the HermitianMat space (not in the ambient space
+-- of matrices.)
 
-instance : OrderClosedTopology (HermitianMat d 𝕜) where
+omit [Fintype d] in
+instance [Finite d] : OrderClosedTopology (HermitianMat d 𝕜) where
   isClosed_le' := by
     classical
+    let := Fintype.ofFinite d
     convert IsClosed.preimage (X := (HermitianMat d 𝕜 × HermitianMat d 𝕜))
       (f := fun xy ↦ (xy.2 - xy.1)) (by fun_prop) isClosed_nonneg
     ext ⟨x, y⟩
     simp only [Set.mem_ofPred_eq, Set.mem_preimage, ← sub_nonneg (b := x)]
 
-/-- Equivalently: the matrices `X` such that `X - A` is PSD and `B - X` is PSD, form a compact set. -/
-instance : CompactIccSpace (HermitianMat d 𝕜) where
+omit [Fintype d] in
+/-- The matrices `X` such that `X - A` and `B - X` are PSD form a compact set. -/
+instance [Finite d] : CompactIccSpace (HermitianMat d 𝕜) where
   isCompact_Icc := by
+    let := Fintype.ofFinite d
     intros A B
     have hclosed : IsClosed (Set.Icc A B) := isClosed_Icc
     apply Metric.isCompact_of_isClosed_isBounded hclosed
@@ -443,13 +471,20 @@ instance : CompactIccSpace (HermitianMat d 𝕜) where
 
 variable [DecidableEq d]
 
-/-- The PSD matrices that are `≤ 1` are a compact set. More generally, this is true of any closed interval,
-but stating that is a bit different because of how numerals are treated. The `0` and `1` here are already
-directly matrices, putting in an `(a : ℝ) • 1 ≤ m ∧ m ≤ (b : ℝ) • 1` involves casts. But that theorem should follow
+omit [Fintype d] in
+/-- The PSD matrices that are `≤ 1` are a compact set. More generally, this is true of any
+closed interval,
+but stating that is a bit different because of how numerals are treated. The `0` and `1` here
+    are already
+directly matrices, putting in an `(a : ℝ) • 1 ≤ m ∧ m ≤ (b : ℝ) • 1` involves casts. But that
+    theorem should follow
 easily from this. More generally `A ≤ m ∧ m ≤ B` is compact.
 -/
-theorem unitInterval_IsCompact : IsCompact {m : HermitianMat d 𝕜 | 0 ≤ m ∧ m ≤ 1} :=
-  CompactIccSpace.isCompact_Icc
+theorem unitInterval_IsCompact [Finite d] : IsCompact {m : HermitianMat d 𝕜 | 0 ≤ m ∧ m ≤ 1} := by
+  classical
+  let := Fintype.ofFinite d
+  exact
+    CompactIccSpace.isCompact_Icc
 
 @[simp]
 theorem norm_one : ‖(1 : HermitianMat d 𝕜)‖ = √(Fintype.card d : ℝ) := by
@@ -460,7 +495,8 @@ theorem norm_one : ‖(1 : HermitianMat d 𝕜)‖ = √(Fintype.card d : ℝ) :
 theorem norm_eq_trace_sq : ‖A‖ ^ 2 = (A.mat ^ 2).trace := by
   rw [norm_eq_frobenius, ← RCLike.ofReal_pow, ← Real.rpow_two, ← Real.rpow_mul (by positivity)]
   simp only [one_div, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, inv_mul_cancel₀, Real.rpow_one]
-  simp only [sq A.mat, map_sum, map_pow, Matrix.trace, Matrix.diag_apply, Matrix.mul_apply, mat_apply]
+  simp only [sq A.mat, map_sum, map_pow, Matrix.trace, Matrix.diag_apply, Matrix.mul_apply,
+      mat_apply]
   congr! with i _ j _
   rw [← star_star (A j i), ← A.mat_apply (i := j)]
   rw [← A.mat.conjTranspose_apply j i, A.H, eq_comm]
@@ -507,9 +543,12 @@ lemma inner_eq_doubly_stochastic_sum {d : Type*} [Fintype d] [DecidableEq d]
     push_cast
     simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply, hC_norm]
     simp only [Matrix.diagonal_apply, ite_mul, zero_mul, mul_ite, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Function.comp_apply,
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Function.comp_apply,
       Matrix.conjTranspose_apply]
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by
       simp only [RCLike.ofReal_eq_complex_ofReal]; ring
   rw [inner_eq_re_trace, key, Matrix.trace_mul_cycle, hUU, one_mul, hC_trace]
   exact Complex.ofReal_re _
+
+
+end HermitianMat

@@ -12,7 +12,7 @@ import Mathlib.Algebra.Jordan.Basic
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.DirectSum.Module
 import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Sym.Sym2
 import Mathlib.LinearAlgebra.BilinearMap
 import Mathlib.LinearAlgebra.Dimension.Finrank
@@ -284,7 +284,8 @@ Everything the two statements mention is defined below from Mathlib alone: the c
 
 ## This file
 
-Repeats the definitions and the two theorem statements of Part II of `StructureChallenge.lean` verbatim,
+Repeats the definitions and the two theorem statements of Part II of `StructureChallenge.lean`
+    verbatim,
 imports the reference library, and discharges them from `EuclideanJordan.frameBlock_isInternal`
 (`EuclideanJordan/FramePeirce.lean`) and `EuclideanJordan.finrank_frameBlock_diag`
 (`EuclideanJordan/FramePeirceMul.lean`).

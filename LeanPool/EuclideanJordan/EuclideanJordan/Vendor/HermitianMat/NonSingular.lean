@@ -8,6 +8,8 @@ module
 public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Order
 public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Isometry
 
+/-! Nonsingular Hermitian matrices and their inverses. -/
+
 @[expose] public section
 
 noncomputable section
@@ -42,6 +44,7 @@ variable {n m R 𝕜 : Type*} [Fintype n] [DecidableEq n] [Fintype m] [Decidable
 variable [CommRing R] [StarRing R] [RCLike 𝕜]
 variable (A : HermitianMat n R) (B : HermitianMat m R)
 
+/-- A Hermitian matrix is nonsingular when its underlying matrix is a unit. -/
 class NonSingular (A : HermitianMat n R) : Prop where
   isUnit : IsUnit A.mat
 
@@ -55,7 +58,7 @@ theorem nonsingular_iff_isUnit : NonSingular A ↔ IsUnit A.mat := by
 instance instHasInv_of_invertible [i : Invertible A.mat] : NonSingular A :=
   ⟨isUnit_of_invertible _⟩
 
-instance instInvertible_of_hasInv [h : NonSingular A] : Invertible A.mat :=
+instance instInvertibleOfHasInv [h : NonSingular A] : Invertible A.mat :=
   h.isUnit.invertible
 
 instance : NonSingular (1 : HermitianMat n R) :=
@@ -126,7 +129,7 @@ theorem nonSingular_iff_support_top : NonSingular A ↔ A.support = ⊤ := by
       obtain ⟨x, hx⟩ := hA (WithLp.toLp 2 y)
       exact ⟨x.ofLp, by
         have := congr_arg WithLp.ofLp hx
-        simp [lin, Matrix.toLpLin_apply] at this
+        simp? [lin, Matrix.toLpLin_apply] at this
         exact this⟩
     exact Matrix.mulVec_surjective_iff_isUnit.mp this
 

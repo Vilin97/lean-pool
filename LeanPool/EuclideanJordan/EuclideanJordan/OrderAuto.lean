@@ -49,10 +49,12 @@ Two facts about the cone, both of which need an **associative positive definite 
 * a sum of squares has nonnegative spectral coefficients (`nonneg_coeff`);
 * the **face lemma**: `0 ≤ x ≤ c` with `c` idempotent forces `c ∘ x = x` (`face_lemma`).
 
-`EuclideanJordan/Order.lean` proves the first from the *ambient* inner product, under the hypothesis that the
+`EuclideanJordan/Order.lean` proves the first from the *ambient* inner product, under the
+    hypothesis that the
 inner product is associative for the Jordan product.  A consumer that carries an inner product
 and a Jordan product as unrelated data has no such hypothesis available, which is why this file
-pairs against `EuclideanJordan/TraceForm.lean`'s `traceForm` instead: a form built from the algebra, so nothing has to
+pairs against `EuclideanJordan/TraceForm.lean`'s `traceForm` instead: a form built from the
+    algebra, so nothing has to
 be assumed about an ambient one.  Both facts are proved here from scratch in that vocabulary; the
 `inner`-shaped originals in `EuclideanJordan/Order.lean` are untouched and are not used.
 
@@ -67,7 +69,8 @@ extreme-points route was never built.
 
 ★ `EuclideanJordan/OrderUnitSpace.lean` carries an `IsSharp` of its own, and this file does
 **not** use it or bridge to it.  That one is stated over an `OrderUnitSpace` instance, and getting
-one here would mean instantiating `EuclideanJordan/Order.lean`'s `orderUnitSpaceOfBilinear` — a `def`, whose
+one here would mean instantiating `EuclideanJordan/Order.lean`'s `orderUnitSpaceOfBilinear` — a
+    `def`, whose
 own docstring warns that instantiating it puts a second `PartialOrder J` in scope.
 ★★ **The two are not literally the same formula, and the difference is worth stating rather than
 glossing.**  `OrderUnitSpace.IsSharp` quantifies its witness over the *effects* (`IsEffect a`, i.e.
@@ -257,7 +260,8 @@ theorem orth_of_sum_eq_unit {n : ℕ} {q : Fin n → J} {e : J} (he : ∀ y : J,
 omit [IsCommJordan J] [IsFormallyReal J] [Module.Finite ℝ J] in
 /-- A combination of orthogonal idempotents with nonnegative coefficients is in the cone.  The
 coefficient condition is only imposed where the idempotent is nonzero, matching what
-`nonneg_coeff` can supply: `EuclideanJordan/Spectral.lean`'s resolution pads with a possibly-zero idempotent,
+`nonneg_coeff` can supply: `EuclideanJordan/Spectral.lean`'s resolution pads with a
+    possibly-zero idempotent,
 whose coefficient is unconstrained. -/
 theorem isSoS_sum_smul_idem {n : ℕ} {q : Fin n → J} (hidem : ∀ i, q i * q i = q i)
     {g : Fin n → ℝ} (hg : ∀ i, q i ≠ 0 → 0 ≤ g i) :
@@ -361,16 +365,16 @@ theorem idem_of_isSharp {e c : J} (he : ∀ y : J, e * y = y) (h : IsSharp e c) 
       rw [hcq, sum_smul_sub_smul q lam i mu]
       refine isSoS_sum_smul_idem hfam.idem fun j hj => ?_
       by_cases hji : j = i
-      · rw [if_pos hji]; linarith
-      · rw [if_neg hji]; exact hlo j hj
+      · rw [ite_eq_left hji]; linarith
+      · rw [ite_eq_right hji]; exact hlo j hj
     have hwe : IsSoS mulLₗ (e - c - mu • q i) := by
       rw [hec', sum_smul_sub_smul q (fun j => 1 - lam j) i mu]
       refine isSoS_sum_smul_idem hfam.idem fun j hj => ?_
       by_cases hji : j = i
-      · rw [if_pos hji]
+      · rw [ite_eq_left hji]
         show (0 : ℝ) ≤ 1 - lam i - mu
         linarith
-      · rw [if_neg hji]
+      · rw [ite_eq_right hji]
         show (0 : ℝ) ≤ 1 - lam j
         linarith [hhi j hj]
     have hzero := hsharp (mu • q i) hwx hwc hwe
@@ -458,7 +462,8 @@ end Abstract
 
 /-! ## The theorem in bilinear-map vocabulary
 
-The crossing `EuclideanJordan/Bridge.lean` was built for: the *statement* mentions only the bundled bilinear
+The crossing `EuclideanJordan/Bridge.lean` was built for: the *statement* mentions only the
+    bundled bilinear
 map, so no ring instance has to exist before it elaborates; only the proof needs one. -/
 
 section Interface
@@ -470,7 +475,8 @@ bilinear map, the Jordan identity and formal reality as hypotheses in that vocab
 as `EuclideanJordan/Order.lean`'s `IsSoS`.
 
 ★ No inner product appears.  The ambient structure is a normed additive group carrying an
-`ℝ`-module structure — `NormedAddCommGroup` only because `EuclideanJordan/Bridge.lean`'s `ringOfBilinear` is
+`ℝ`-module structure — `NormedAddCommGroup` only because `EuclideanJordan/Bridge.lean`'s
+    `ringOfBilinear` is
 stated over one — and the norm is never used. -/
 theorem orderIso_preservesJordan (m : J →ₗ[ℝ] J →ₗ[ℝ] J)
     (hcomm : ∀ x y : J, m x y = m y x)
@@ -480,10 +486,10 @@ theorem orderIso_preservesJordan (m : J →ₗ[ℝ] J →ₗ[ℝ] J)
     (Φ : J ≃ₗ[ℝ] J) (hunital : Φ e = e)
     (horder : ∀ x : J, IsSoS m x ↔ IsSoS m (Φ x)) (x y : J) :
     Φ (m x y) = m (Φ x) (Φ y) := by
-  letI : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
-  letI : IsCommJordan J := ⟨hjordan⟩
-  letI : IsScalarTower ℝ J J := ⟨fun r a b => smul_bilinear m r a b⟩
-  letI : IsFormallyReal J := isFormallyReal_of_fin m hcomm hfr
+  let : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
+  let : IsCommJordan J := ⟨hjordan⟩
+  let : IsScalarTower ℝ J J := ⟨fun r a b => smul_bilinear m r a b⟩
+  let : IsFormallyReal J := isFormallyReal_of_fin m hcomm hfr
   have hm : (mulLₗ : J →ₗ[ℝ] J →ₗ[ℝ] J) = m := by ext a b; rfl
   rw [hm] at *
   exact map_jordan_of_orderIso he Φ hunital horder x y

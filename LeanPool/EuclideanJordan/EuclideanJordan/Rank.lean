@@ -14,7 +14,8 @@ import LeanPool.EuclideanJordan.EuclideanJordan.PeirceSubalgebra
 /-!
 # Primitive idempotents, Jordan frames, and rank
 
-`EuclideanJordan/Frame.lean` carries `IsOrthIdemFamily`: a family of pairwise-orthogonal idempotents, with
+`EuclideanJordan/Frame.lean` carries `IsOrthIdemFamily`: a family of pairwise-orthogonal
+    idempotents, with
 completeness deliberately left out.  This file adds the two conditions that turn such a family
 into a *Jordan frame* — every member primitive, and the family complete — and defines the rank.
 
@@ -43,10 +44,13 @@ off this file.
 ## The linear-independence argument is already in the tree
 
 Orthogonal nonzero idempotents are linearly independent, and the argument is
-`EuclideanJordan/Order.lean`'s `inner_left_coeff` verbatim: idempotency and then associativity of the inner
+`EuclideanJordan/Order.lean`'s `inner_left_coeff` verbatim: idempotency and then associativity
+    of the inner
 product give `⟪pₖ, pᵢ⟫ = ⟪pₖ ∘ pₖ, pᵢ⟫ = ⟪pₖ, pₖ ∘ pᵢ⟫ = 0` for `i ≠ k`, so pairing a vanishing
-combination against `pₖ` reads off `gₖ ‖pₖ‖² = 0`.  That lemma is stated in `EuclideanJordan/Order.lean`'s bilinear-map vocabulary;
-`EuclideanJordan/Class.lean`'s `jmulₗ` and `jmulₗ_inner_assoc` are what let it be applied at the class
+combination against `pₖ` reads off `gₖ ‖pₖ‖² = 0`.  That lemma is stated in
+    `EuclideanJordan/Order.lean`'s bilinear-map vocabulary;
+`EuclideanJordan/Class.lean`'s `jmulₗ` and `jmulₗ_inner_assoc` are what let it be applied at the
+    class
 without restating it.
 
 ## Scope
@@ -81,7 +85,8 @@ theorem IsPrimitive.eq_zero_or_eq {c : J} (h : IsPrimitive c) {d : J} (hd : d * 
 /-- Primitivity of `c`, read *inside* `J₂(c)`: `c` is primitive exactly when the only
 idempotents of the Peirce subalgebra are its zero and its unit.  The intended consumer is the
 `dim V_ii = 1` step of the frame Peirce decomposition, which runs the spectral theorem inside
-`J₂(pᵢ)`; that step is `EuclideanJordan/FramePeirceMul.lean`'s `peirceOneSub_eq_span_of_isPrimitive`, and it
+`J₂(pᵢ)`; that step is `EuclideanJordan/FramePeirceMul.lean`'s
+    `peirceOneSub_eq_span_of_isPrimitive`, and it
 consumes this lemma in the `→` direction. -/
 theorem isPrimitive_iff_of_idem {c : J} (hc : c * c = c) (hc0 : c ≠ 0) :
     IsPrimitive c ↔ ∀ d : ↥(peirceOneSub hc), d * d = d → d = 0 ∨ d = 1 := by

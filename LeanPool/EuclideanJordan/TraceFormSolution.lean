@@ -13,7 +13,7 @@ import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.LinearAlgebra.BilinearMap
 import Mathlib.LinearAlgebra.Trace
 import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import LeanPool.EuclideanJordan.EuclideanJordan.TraceForm
 
 /-!

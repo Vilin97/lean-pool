@@ -44,6 +44,7 @@ theorem symmMul_add_rightG (a b c : HermitianMat n 𝕜) :
   congr 1
   abel
 
+omit [DecidableEq n] in
 theorem symmMul_smul_rightG (t : ℝ) (a b : HermitianMat n 𝕜) :
     a.symmMul (t • b) = t • a.symmMul b := by
   ext1
@@ -55,12 +56,12 @@ def jordanBilinG (𝕜 : Type*) [RCLike 𝕜] :
     HermitianMat n 𝕜 →ₗ[ℝ] HermitianMat n 𝕜 →ₗ[ℝ] HermitianMat n 𝕜 :=
   LinearMap.mk₂ ℝ (fun a b => a.symmMul b)
     (fun a a' b => by
-      show (a + a').symmMul b = a.symmMul b + a'.symmMul b
+      change (a + a').symmMul b = a.symmMul b + a'.symmMul b
       rw [HermitianMat.symmMul_comm, symmMul_add_rightG]
       rw [HermitianMat.symmMul_comm (A := b) (B := a),
         HermitianMat.symmMul_comm (A := b) (B := a')])
     (fun t a b => by
-      show (t • a).symmMul b = t • a.symmMul b
+      change (t • a).symmMul b = t • a.symmMul b
       rw [HermitianMat.symmMul_comm, symmMul_smul_rightG,
         HermitianMat.symmMul_comm (A := b) (B := a)])
     (fun a b b' => symmMul_add_rightG a b b')

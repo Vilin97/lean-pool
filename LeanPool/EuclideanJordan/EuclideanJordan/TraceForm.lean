@@ -16,14 +16,16 @@ import Mathlib.LinearAlgebra.Projection
 /-!
 # The Jordan trace form
 
-`τ(x, y) := tr(L_{x ∘ y})`, where `L_c` is the Jordan multiplication operator `EuclideanJordan/Peirce.lean`
+`τ(x, y) := tr(L_{x ∘ y})`, where `L_c` is the Jordan multiplication operator
+    `EuclideanJordan/Peirce.lean`
 carries as `mulL`.  On a finite-dimensional formally real Jordan algebra this form is symmetric,
 **associative** (`τ(x ∘ y, z) = τ(y, x ∘ z)`) and **positive definite** — which is to say, it makes
 such an algebra Euclidean without any inner product having been supplied.
 
 ## Why this file exists
 
-`EuclideanJordan/Order.lean`'s Euclidean section — `inner_mul_self_nonneg_of_idem`, `inner_left_coeff`,
+`EuclideanJordan/Order.lean`'s Euclidean section — `inner_mul_self_nonneg_of_idem`,
+    `inner_left_coeff`,
 `nonneg_coeff_of_isSoS`, `isArchimedean_ofBilinear`, `isSoS_iff_exists_sq` — takes the associativity
 of the **ambient** inner product as a hypothesis, `hassoc : ∀ x y z, ⟪m x y, z⟫ = ⟪y, m x z⟫`.  The
 concrete carrier `H_n(𝕜)` discharges it by hand, through `hermitian_jordan_assoc`
@@ -36,7 +38,8 @@ inside those hypotheses has no associative form to pair against, and every one o
 above is inapplicable as stated.
 
 This file builds the missing form *from the algebra*.  Nothing here mentions a norm or an inner
-product; the ambient structure is `EuclideanJordan/Peirce.lean`'s (a commutative Jordan ring that is an
+product; the ambient structure is `EuclideanJordan/Peirce.lean`'s (a commutative Jordan ring
+    that is an
 `ℝ`-module), plus finite-dimensionality and formal reality where the spectral theorem is used.
 A consumer working in bilinear-map vocabulary installs `EuclideanJordan/Bridge.lean`'s
 `ringOfBilinear` and gets `traceForm` on the nose.
@@ -71,7 +74,8 @@ Faraut–Korányi (the trace of the quadratic representation, or the sum of the 
 for a unit `e` one has `L_e = id` and so `tr(L_e) = finrank ℝ J` rather than the rank of `J` — **a
 remark, not a lemma; it is not proved below and nothing uses it.**  Nothing downstream needs the
 normalisation, and
-`EuclideanJordan/Class.lean`'s `EuclideanJordanAlgebra` deliberately takes an *arbitrary* associative positive
+`EuclideanJordan/Class.lean`'s `EuclideanJordanAlgebra` deliberately takes an *arbitrary*
+    associative positive
 definite form rather than a normalised one, so `traceForm` is admissible there as it stands.
 -/
 
@@ -134,7 +138,8 @@ section Trace
 variable {J : Type*} [NonUnitalNonAssocCommRing J] [IsCommJordan J] [Module ℝ J]
   [IsScalarTower ℝ J J]
 
-/-- `EuclideanJordan/Peirce.lean`'s `mulL`, bundled as a linear map in the multiplier — which is what makes
+/-- `EuclideanJordan/Peirce.lean`'s `mulL`, bundled as a linear map in the multiplier — which is
+what makes
 `jtr` linear. -/
 def mulLₗ : J →ₗ[ℝ] J →ₗ[ℝ] J where
   toFun := mulL
@@ -260,7 +265,8 @@ theorem traceForm_comm (x y : J) : traceForm x y = traceForm y x := by
   simp only [traceForm_apply, mul_comm]
 
 /-- **The trace form is associative**: `τ(x ∘ y, z) = τ(y, x ∘ z)`.  This is the hypothesis
-`hassoc` that `EuclideanJordan/Order.lean`'s Euclidean section and `EuclideanJordan/Class.lean`'s class both take, now a
+`hassoc` that `EuclideanJordan/Order.lean`'s Euclidean section and
+    `EuclideanJordan/Class.lean`'s class both take, now a
 theorem about a form built from the algebra alone. -/
 theorem traceForm_assoc (x y z : J) : traceForm (x * y) z = traceForm y (x * z) := by
   simp only [traceForm_apply]
@@ -317,7 +323,8 @@ theorem eq_zero_of_traceForm_self_eq_zero {x : J} (h : traceForm x x = 0) : x = 
   refine Finset.sum_eq_zero fun i _ => ?_
   by_cases hq0 : q i = 0
   · rw [hq0, smul_zero]
-  · have hpos : (0 : ℝ) < jtr (q i) := lt_of_lt_of_le zero_lt_one (one_le_jtr_of_idem (hfam.idem i) hq0)
+  · have hpos : (0 : ℝ) < jtr (q i) := lt_of_lt_of_le zero_lt_one (one_le_jtr_of_idem (hfam.idem
+      i) hq0)
     have : lam i * lam i = 0 := by
       rcases mul_eq_zero.mp (hzero i) with h' | h'
       · exact h'

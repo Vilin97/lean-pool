@@ -14,7 +14,8 @@ import LeanPool.EuclideanJordan.EuclideanJordan.Block
 /-!
 # The Faraut–Korányi block pattern, forced by three constraints
 
-`EuclideanJordan/Block.lean` characterises the rank-two block `J₁(p+q)`. This file does the frame-level
+`EuclideanJordan/Block.lean` characterises the rank-two block `J₁(p+q)`. This file does the
+    frame-level
 analogue, but as a **constraint on eigenvalue patterns** rather than as an assembled direct
 sum — which is both what is provable here and what the FK block structure actually *is*.
 
@@ -71,6 +72,7 @@ theorem eigen_pattern_mem (hp : IsOrthIdemFamily p) (hx : x ≠ 0)
     (hmu : ∀ i, p i * x = mu i • x) (i : ι) : mu i = 0 ∨ mu i = (2 : ℝ)⁻¹ ∨ mu i = 1 :=
   eigenvalue_trichotomy (hp.idem i) hx (hmu i)
 
+omit [DecidableEq ι] in
 /-- **At most two frame idempotents see a given joint eigenvector.** -/
 theorem eigen_pattern_card_le_two (hp : IsOrthIdemFamily p) (hx : x ≠ 0)
     (hs : (∑ i, p i) * x = x) (hmu : ∀ i, p i * x = mu i • x) :

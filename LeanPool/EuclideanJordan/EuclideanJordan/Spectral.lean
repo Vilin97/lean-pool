@@ -40,7 +40,8 @@ at least one factor of `x`. Its whole content is one identity,
 
   `jeval_mul : jeval x p * jeval x q = jeval x (X * p * q)`,
 
-which is `EuclideanJordan/PowerAssoc.lean`'s `jpow_mul_jpow` transported along bilinearity. Everything
+which is `EuclideanJordan/PowerAssoc.lean`'s `jpow_mul_jpow` transported along bilinearity.
+    Everything
 downstream is ideal theory in `ℝ[X]`, where Mathlib already has what is needed, and the
 values live in the ambient `J`, where `EuclideanJordan/FormallyReal.lean` already applies.
 
@@ -48,16 +49,20 @@ The steps, each a named declaration below:
 
 | step | statement | declaration |
 | --- | --- | --- |
-| 1 | the annihilator `{p | x·p(x) = 0}` is an ideal of `ℝ[X]`, nonzero in finite dimension | `jann`, `exists_annihilator_generator` |
+| 1 | the annihilator `{p | x·p(x) = 0}` is an ideal of `ℝ[X]`, nonzero in finite dimension |
+    `jann`, `exists_annihilator_generator` |
 | 2 | its generator `m` is radical, hence squarefree | `isRadical_of_annihilator` |
 | 3 | `m` has a nonzero constant term | `coeff_zero_ne_zero_of_annihilator` |
 | 4 | `m` has no non-real complex root | `annihilator_aeval_ne_zero_of_im_ne_zero` |
-| 5 | so some product of distinct linear factors, none of them `X`, annihilates `x` | `exists_split_annihilator` |
-| 6 | Lagrange interpolation at those roots together with `0` gives the idempotents | `exists_orthIdem_finset` |
+| 5 | so some product of distinct linear factors, none of them `X`, annihilates `x` |
+    `exists_split_annihilator` |
+| 6 | Lagrange interpolation at those roots together with `0` gives the idempotents |
+    `exists_orthIdem_finset` |
 
 ★ **Step 2 is where formal reality enters the polynomial algebra**, through the identity
 `jpow (jeval x f) n = jeval x (Xⁿ f^{n+1})` (`jpow_jeval`): a Jordan power of a value of
-`jeval` is again a value of `jeval`, so `EuclideanJordan/FormallyReal.lean`'s no-nilpotents theorem —
+`jeval` is again a value of `jeval`, so `EuclideanJordan/FormallyReal.lean`'s no-nilpotents
+    theorem —
 which is stated about *ambient* elements of `J` — applies with no repackaging. This is why
 no `IsReduced` instance on a ring structure over `jspan x` is needed anywhere.
 
@@ -368,7 +373,8 @@ theorem exists_split_annihilator (x : J) :
           apply Complex.ext <;> simp [h]
         rw [hzr, Polynomial.aeval_algebraMap_apply_eq_algebraMap_eval] at hz
         simpa using hz
-      exact annihilator_aeval_ne_zero_of_im_ne_zero hm hsq hc0 him (by rw [hW, map_mul, hz, mul_zero])
+      exact annihilator_aeval_ne_zero_of_im_ne_zero hm hsq hc0 him (by rw [hW, map_mul, hz,
+          mul_zero])
     obtain ⟨v, hv⟩ := hWu.exists_right_inv
     refine (hm _).mpr ⟨v, ?_⟩
     calc (∏ a ∈ m.roots.toFinset, (X - C a))
@@ -423,7 +429,7 @@ theorem exists_orthIdem_finset (x : J) :
   have hXg : ∀ a ∈ S, b a = X * g a := by
     intro a ha
     have h0 : (b a).coeff 0 = 0 := by
-      rw [Polynomial.coeff_zero_eq_eval_zero, heval a ha 0 h0T, if_neg (Ne.symm (hne a ha))]
+      rw [Polynomial.coeff_zero_eq_eval_zero, heval a ha 0 h0T, ite_eq_right (Ne.symm (hne a ha))]
     conv_lhs => rw [← Polynomial.X_mul_divX_add (b a)]
     rw [h0, map_zero, add_zero, hgdef]
   refine ⟨S, fun a => jeval x (g a), ?_, ?_, fun a => jeval_mem_jspan x (g a), ?_⟩
@@ -444,8 +450,8 @@ theorem exists_orthIdem_finset (x : J) :
       · intro ν hν
         simp only [Polynomial.eval_mul, heval a ha ν hν, heval a' ha' ν hν]
         by_cases h : ν = a
-        · rw [if_pos h, if_neg (by rw [h]; exact haa'), mul_zero]
-        · rw [if_neg h, zero_mul]
+        · rw [ite_eq_left h, ite_eq_right (by rw [h]; exact haa'), mul_zero]
+        · rw [ite_eq_right h, zero_mul]
     rw [← jeval_mul] at key
     change jeval x (g a) * jeval x (g a') = 0
     exact key
@@ -459,11 +465,11 @@ theorem exists_orthIdem_finset (x : J) :
           Polynomial.eval_smul, smul_eq_mul]
         rcases Finset.mem_insert.mp hν with rfl | hνS
         · rw [Finset.sum_eq_zero fun a ha => by
-            rw [heval a ha 0 hν, if_neg (Ne.symm (hne a ha)), mul_zero], sub_zero]
+            rw [heval a ha 0 hν, ite_eq_right (Ne.symm (hne a ha)), mul_zero], sub_zero]
         · rw [Finset.sum_eq_single ν
-            (fun a ha hane => by rw [heval a ha ν hν, if_neg (Ne.symm hane), mul_zero])
+            (fun a ha hane => by rw [heval a ha ν hν, ite_eq_right (Ne.symm hane), mul_zero])
             (fun h => absurd hνS h),
-            heval ν hνS ν hν, if_pos rfl, mul_one, sub_self]
+            heval ν hνS ν hν, ite_eq_left rfl, mul_one, sub_self]
     rw [map_sub, map_sum, jeval_one, sub_eq_zero] at key
     simpa using key
 
@@ -550,11 +556,12 @@ variable {J : Type*} [NormedAddCommGroup J] [InnerProductSpace ℝ J]
 omit [InnerProductSpace ℝ J] in
 /-- Formal reality over an arbitrary `Finset`, from the `Fin k` form. The two differ only by
 reindexing. -/
-theorem isFormallyReal_of_fin [Module ℝ J] (m : J →ₗ[ℝ] J →ₗ[ℝ] J) (hcomm : ∀ x y : J, m x y = m y x)
+theorem isFormallyReal_of_fin [Module ℝ J] (m : J →ₗ[ℝ] J →ₗ[ℝ] J) (hcomm : ∀ x y : J, m x y = m
+    y x)
     (hfr : ∀ (k : ℕ) (f : Fin k → J), (∑ i, m (f i) (f i)) = 0 → ∀ i, f i = 0) :
     letI : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
     IsFormallyReal J := by
-  letI : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
+  let : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
   refine ⟨fun {ι} s f hsum i hi => ?_⟩
   classical
   have key : (∑ k : Fin s.card, m (f (s.equivFin.symm k)) (f (s.equivFin.symm k))) = 0 := by
@@ -569,7 +576,8 @@ theorem isFormallyReal_of_fin [Module ℝ J] (m : J →ₗ[ℝ] J →ₗ[ℝ] J)
 bilinear map, the Jordan identity and formal reality as hypotheses in that vocabulary, and the
 conclusion stated without mentioning any ring instance.
 
-★ This is the crossing `EuclideanJordan/Bridge.lean` was built for, and it works here for the reason that file
+★ This is the crossing `EuclideanJordan/Bridge.lean` was built for, and it works here for the
+    reason that file
 gives: the *statement* is expressible with `m` alone, so no ring instance has to exist before it
 elaborates. Only the proof needs one, and `ringOfBilinear` supplies it on the ambient additive
 group.
@@ -587,10 +595,10 @@ theorem spectral_resolution_bilinear [FiniteDimensional ℝ J] (m : J →ₗ[ℝ
       (∀ i j, i ≠ j → m (q i) (q j) = 0) ∧
       (∑ i, q i) = e ∧
       x = ∑ i, lam i • q i := by
-  letI : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
-  letI : IsCommJordan J := ⟨hjordan⟩
-  letI : IsScalarTower ℝ J J := ⟨fun r x y => smul_bilinear m r x y⟩
-  letI : IsFormallyReal J := isFormallyReal_of_fin m hcomm hfr
+  let : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
+  let : IsCommJordan J := ⟨hjordan⟩
+  let : IsScalarTower ℝ J J := ⟨fun r x y => smul_bilinear m r x y⟩
+  let : IsFormallyReal J := isFormallyReal_of_fin m hcomm hfr
   obtain ⟨n, q, lam, hfam, hsum, hx⟩ := spectral_resolution_complete e he x
   exact ⟨n, q, lam, hfam.idem, hfam.orth, hsum, hx⟩
 

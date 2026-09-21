@@ -53,7 +53,8 @@ the one under `NonUnitalNonAssocCommRing`. With both in scope `Module ℝ J` fai
 at `peirceOne`'s use site: it is an `AddCommGroup` diamond, not a gap in the mathematics.
 `EuclideanJordan/Bridge.lean` resolves it by building the ring on the *ambient* additive group,
 so only one `AddCommGroup` is ever in play. Concrete carriers are unaffected —
-`EuclideanJordan/Witness.lean` uses both worlds on `HermitianMat`, where the two are the same instance.
+`EuclideanJordan/Witness.lean` uses both worlds on `HermitianMat`, where the two are the same
+    instance.
 
 ★ **Completeness (`∑ p i = e`) is not assumed anywhere in this file.** None of the three
 facts needs it; it is what the *spectral* theorem produces and what the rank argument
@@ -115,7 +116,8 @@ omit [IsCommJordan J] [IsScalarTower ℝ J J] [Fintype ι] [DecidableEq ι] in
 that is, an element of the coherence block `V_{ij}` — lies in `J₂(p i + p j)`.
 
 The proof is that `1/2 + 1/2 = 1`; the content is entirely in the *definition* of `V_{ij}`
-as a joint half-eigenspace, which is what the Peirce theory of `EuclideanJordan/Peirce.lean` licenses. -/
+as a joint half-eigenspace, which is what the Peirce theory of `EuclideanJordan/Peirce.lean`
+    licenses. -/
 theorem mem_J2_of_half_half {i j : ι} {x : J} (hi : p i * x = (2 : ℝ)⁻¹ • x)
     (hj : p j * x = (2 : ℝ)⁻¹ • x) : (p i + p j) * x = x := by
   rw [add_mul, hi, hj]
@@ -162,14 +164,17 @@ theorem diagFamily_scalarOn_self (f : ι → ℝ) (i : ι) :
   rw [this]
   abel
 
+omit [DecidableEq ι] in
 /-- **The operator-commutation fact, derived.** For a
 rank-two block `q = p i + p j` of an orthogonal idempotent family, a diagonal family with
 `f i = f j` operator-commutes with every element of `J₂(q)`. -/
 theorem opCommute_scalarOn_frame (hp : IsOrthIdemFamily p) (f : ι → ℝ) {i j : ι} (hij : i ≠ j)
     (h : f i = f j) {b : J} (hb : (p i + p j) * b = b) (w : J) :
-    (∑ k, f k • p k) * (b * w) = b * ((∑ k, f k • p k) * w) :=
-  opCommute_scalarOn (add_idem_of_orthogonal (hp.idem i) (hp.idem j) (hp.orth i j hij))
-    (diagFamily_scalarOn f hij h) (pair_mul_offblock hp f i j) hb w
+    (∑ k, f k • p k) * (b * w) = b * ((∑ k, f k • p k) * w) := by
+  classical
+  exact
+    opCommute_scalarOn (add_idem_of_orthogonal (hp.idem i) (hp.idem j) (hp.orth i j hij))
+        (diagFamily_scalarOn f hij h) (pair_mul_offblock hp f i j) hb w
 
 end Fields
 

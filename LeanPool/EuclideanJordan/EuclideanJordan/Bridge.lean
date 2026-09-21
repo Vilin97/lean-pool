@@ -57,10 +57,10 @@ def ringOfBilinear (m : J →ₗ[ℝ] J →ₗ[ℝ] J) (hcomm : ∀ x y, m x y =
     mul := fun x y => m x y
     left_distrib := fun a b c => (m a).map_add b c
     right_distrib := fun a b c => by
-      show m (a + b) c = m a c + m b c
+      change m (a + b) c = m a c + m b c
       rw [map_add]; rfl
     zero_mul := fun a => by
-      show m 0 a = 0
+      change m 0 a = 0
       rw [map_zero]; rfl
     mul_zero := fun a => (m a).map_zero
     mul_comm := hcomm }
@@ -77,8 +77,8 @@ theorem peirce_poly_bilinear (hcomm : ∀ x y : J, m x y = m y x)
     (hjordan : ∀ a b : J, m (m a b) (m a a) = m a (m b (m a a)))
     {c : J} (hc : m c c = c) (y : J) :
     (2 : ℕ) • m c (m c (m c y)) + m c y = (3 : ℕ) • m c (m c y) := by
-  letI : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
-  letI : IsCommJordan J := ⟨hjordan⟩
+  let : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
+  let : IsCommJordan J := ⟨hjordan⟩
   exact peirce_poly hc y
 
 /-- **Operator commutation in bilinear-map vocabulary**: `L_a` and `L_b` commute at `w`, for
@@ -88,9 +88,9 @@ theorem opCommute_scalarOn_bilinear (hcomm : ∀ x y : J, m x y = m y x)
     {c a a₀ b : J} {mu : ℝ} (hc : m c c = c) (ha : a = mu • c + a₀)
     (ha₀ : m c a₀ = 0) (hb : m c b = b) (w : J) :
     m a (m b w) = m b (m a w) := by
-  letI : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
-  letI : IsCommJordan J := ⟨hjordan⟩
-  letI : IsScalarTower ℝ J J := ⟨fun r x y => smul_bilinear m r x y⟩
+  let : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
+  let : IsCommJordan J := ⟨hjordan⟩
+  let : IsScalarTower ℝ J J := ⟨fun r x y => smul_bilinear m r x y⟩
   exact opCommute_scalarOn hc ha ha₀ hb w
 
 end Bridge

@@ -15,12 +15,15 @@ import LeanPool.EuclideanJordan.EuclideanJordan.Rank
 # Every nontrivial finite-dimensional Euclidean Jordan algebra carries a Jordan frame
 
 `EuclideanJordan/Rank.lean` defines `JordanFrame J n` — a complete family of `n` pairwise-orthogonal
-primitive idempotents — and carries it as *data*, because a rank hypothesis supplies one.  This file proves such data always exists: `exists_jordanFrame`, by strong
+primitive idempotents — and carries it as *data*, because a rank hypothesis supplies one.  This
+    file proves such data always exists: `exists_jordanFrame`, by strong
 induction on `Module.finrank ℝ J` down the Peirce decomposition of a nontrivial idempotent.
 
 The induction itself is the expected one.  If `1` is primitive the one-element family
-`fun _ : Fin 1 => (1 : J)` is a frame.  Otherwise primitivity fails at its third clause, which hands over an idempotent `c` with
-`c ≠ 0` and `c ≠ 1`; `EuclideanJordan/PeirceSubalgebra.lean` makes `J₂(c)` and `J₀(c)` Euclidean Jordan
+`fun _ : Fin 1 => (1 : J)` is a frame.  Otherwise primitivity fails at its third clause, which
+    hands over an idempotent `c` with
+`c ≠ 0` and `c ≠ 1`; `EuclideanJordan/PeirceSubalgebra.lean` makes `J₂(c)` and `J₀(c)` Euclidean
+    Jordan
 algebras with units `c` and `1 - c` and drops the dimension at both; and the two frames obtained
 from the induction hypothesis concatenate along `Fin.append`.
 
@@ -42,12 +45,14 @@ which is `eigen_one_of_eigen_one` below, and which is in neither
 
 ★ **What makes it work is changing which idempotent one decomposes at.**  Attacking it at `c` —
 rewriting `c ∘ x` as `c ∘ (d ∘ x)` and trying to move `c` inwards — is circular, because moving
-`c` past `d` is what needs the conclusion; `EuclideanJordan/PeirceMul.lean`'s `mul_comm_of_eigen_one` only
+`c` past `d` is what needs the conclusion; `EuclideanJordan/PeirceMul.lean`'s
+    `mul_comm_of_eigen_one` only
 relocates that difficulty: `mul_comm_of_eigen_one` at `(c, d, x)` yields
 `c ∘ x = d ∘ (c ∘ x)`, which puts `c ∘ x` back inside `J₂(d)` rather than identifying it with
 `x`.  Decomposing at **`d`** instead makes it immediate: `d` annihilates `c - d`
 (`mul_sub_eq_zero_of_eigen_one`, one line), so `c - d` lies in `J₀(d)` while `x` lies in
-`J₂(d)`, and `EuclideanJordan/PeirceMul.lean`'s `eigen_one_mul_zero` — the rule that the two *extreme*
+`J₂(d)`, and `EuclideanJordan/PeirceMul.lean`'s `eigen_one_mul_zero` — the rule that the two
+    *extreme*
 Peirce components of a single idempotent annihilate each other — kills `(c - d) ∘ x` outright.
 Then `c ∘ x = d ∘ x + (c - d) ∘ x = x`.  (`c - d` is also idempotent, but that is neither
 proved nor used here.)
@@ -64,7 +69,8 @@ ambient carrier cannot be named without one.
 
 
 ★ The frame produced here carries **no claim about its cardinality**.  `exists_jordanFrame`
-existentially quantifies `n`, and `EuclideanJordan/Rank.lean`'s module docstring records why `rank J = n`
+existentially quantifies `n`, and `EuclideanJordan/Rank.lean`'s module docstring records why
+    `rank J = n`
 is not available: `rank J` is a supremum over *all* orthogonal families of nonzero idempotents,
 and bounding such a family by a frame's cardinality needs the frame Peirce decomposition or
 frame conjugacy.  Nothing here is a step towards it.  Do not read `exists_jordanFrame` as

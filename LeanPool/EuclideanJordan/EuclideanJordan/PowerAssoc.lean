@@ -25,7 +25,8 @@ them systematically, and Mathlib has nothing between `IsCommJordan` and this.
 ## The proof
 
 Write `cm x i j w` for the commutator `[L_{x^{i+1}}, L_{x^{j+1}}]` applied to `w`. The whole
-theorem is `cm x i j w = 0`, since `EuclideanJordan/Power.lean`'s `jpow_mul_jpow_of_commuteAt` already
+theorem is `cm x i j w = 0`, since `EuclideanJordan/Power.lean`'s `jpow_mul_jpow_of_commuteAt`
+    already
 turns commutation into the product law.
 
 The engine is `cm_cyclic`: for `i + j = N` (and given the product law at level `N`), the

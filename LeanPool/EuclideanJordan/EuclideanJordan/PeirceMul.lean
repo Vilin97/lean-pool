@@ -14,7 +14,8 @@ import LeanPool.EuclideanJordan.EuclideanJordan.Peirce
 /-!
 # The Peirce multiplication rules
 
-`EuclideanJordan/Peirce.lean` decomposes `J = J₁(c) ⊕ J_{1/2}(c) ⊕ J₀(c)` for an idempotent `c`. This
+`EuclideanJordan/Peirce.lean` decomposes `J = J₁(c) ⊕ J_{1/2}(c) ⊕ J₀(c)` for an idempotent `c`.
+    This
 file proves how the three components multiply — the Faraut–Korányi relations:
 
 | | `J₁` | `J_{1/2}` | `J₀` |
@@ -23,12 +24,14 @@ file proves how the three components multiply — the Faraut–Korányi relation
 | **`J_{1/2}`** | `⊆ J_{1/2}` | `⊆ J₁ ⊕ J₀` | `⊆ J_{1/2}` |
 | **`J₀`** | `= 0` | `⊆ J_{1/2}` | `⊆ J₀` |
 
-As in `EuclideanJordan/Peirce.lean`, the hypotheses are the Jordan identity and the invertibility of the
+As in `EuclideanJordan/Peirce.lean`, the hypotheses are the Jordan identity and the
+    invertibility of the
 integers used (`2` for the commuting rules, `4` for the half-half rule): no spectral theorem,
 no formal reality, no finite dimension, no unit.
 ## The two ingredients
 
-`EuclideanJordan/Peirce.lean` needed only the *once*-linearised Jordan identity `two_lin1_raw`. Five of
+`EuclideanJordan/Peirce.lean` needed only the *once*-linearised Jordan identity `two_lin1_raw`.
+    Five of
 the six rules follow from a single consequence of it — **`L_x` commutes with `L_c` whenever
 `x` lies in `J₁(c)` or `J₀(c)`** (`mul_comm_of_eigen_one`, `mul_comm_of_eigen_zero`) — after
 which each rule is one rewrite.
@@ -212,7 +215,8 @@ theorem eigen_zero_mul_half {c x y : J} (hc : c * c = c) (hx : c * x = 0)
 
 /-- **`J_{1/2}(c) ∘ J_{1/2}(c) ⊆ J₁(c) ⊕ J₀(c)`**, stated as the polynomial relation
 `L_c² = L_c` on the product — which is exactly "no `1/2`-component", since
-`peirceHalf c z = 4•(c ∘ z) − 4•(c ∘ (c ∘ z))` collapses to `0` under it (`peirceHalf_mul_half_eq_zero`).
+`peirceHalf c z = 4•(c ∘ z) − 4•(c ∘ (c ∘ z))` collapses to `0` under it
+    (`peirceHalf_mul_half_eq_zero`).
 ★ An earlier draft attributed this to the eigenvalue trichotomy. It does not use the
 trichotomy — it is the projection formula directly.
 

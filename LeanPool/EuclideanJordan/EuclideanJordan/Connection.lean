@@ -14,7 +14,8 @@ import LeanPool.EuclideanJordan.EuclideanJordan.FramePeirceMul
 /-!
 # Connections between frame blocks
 
-`EuclideanJordan/FramePeirceMul.lean` gives the multiplication table of a Jordan frame's blocks.  This file
+`EuclideanJordan/FramePeirceMul.lean` gives the multiplication table of a Jordan frame's blocks.
+    This file
 proves the two identities that turn that table into an *algebra*, and they are the engine of
 Jacobson coordinatization.
 
@@ -124,7 +125,8 @@ theorem inner_sq_p_of_mem (F : JordanFrame J n) {i j : Fin n} (hij : i ≠ j) {x
 
 /-! ## The square of an off-diagonal element
 
-★ `EuclideanJordan/FramePeirceMul.lean`'s `frameBlockRaw_mul_self_eq` gives `x ∘ x = a • pᵢ + b • pⱼ`.
+★ `EuclideanJordan/FramePeirceMul.lean`'s `frameBlockRaw_mul_self_eq` gives `x ∘ x = a • pᵢ + b
+    • pⱼ`.
 This section proves `a = b`, so that the square is a multiple of the *idempotent* `pᵢ + pⱼ`
 and the coefficient is a quadratic form.  The argument is power associativity, not the trace
 form: `x⁴` computed as `x² ∘ x²` and as `x ∘ (x ∘ x²)` gives `a² = a(a+b)/2` and
@@ -135,7 +137,8 @@ section Square
 variable [FiniteDimensional ℝ J]
 
 omit [FiniteDimensional ℝ J] in
-/-- `x⁴ = x² ∘ x²` and `x⁴ = x ∘ (x ∘ x²)` agree — `EuclideanJordan/PowerAssoc.lean`'s `jpow_mul_jpow` at
+/-- `x⁴ = x² ∘ x²` and `x⁴ = x ∘ (x ∘ x²)` agree — `EuclideanJordan/PowerAssoc.lean`'s
+`jpow_mul_jpow` at
 `(1, 1)`, unfolded. -/
 theorem sq_mul_sq_eq (x : J) : (x * x) * (x * x) = x * (x * (x * x)) := by
   have h := jpow_mul_jpow x 1 1
@@ -475,7 +478,7 @@ def connEquiv {F : JordanFrame J n} {i j k : Fin n} (hij : i ≠ j) (hjk : j ≠
   right_inv z := Subtype.ext (connMap_connMap (Ne.symm hij) hik hjk hc.symm z.2)
 
 /-- **Connected blocks have the same dimension.** -/
-theorem finrank_frameBlockRaw_eq [FiniteDimensional ℝ J] {F : JordanFrame J n} {i j k : Fin n}
+theorem finrank_frameBlockRaw_eq {F : JordanFrame J n} {i j k : Fin n}
     (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) {c : J} (hc : IsConnector F i j c) :
     Module.finrank ℝ ↥(frameBlockRaw F j k) = Module.finrank ℝ ↥(frameBlockRaw F i k) :=
   (connEquiv hij hjk hik hc).finrank_eq

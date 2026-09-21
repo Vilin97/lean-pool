@@ -14,8 +14,10 @@ import LeanPool.EuclideanJordan.EuclideanJordan.Class
 /-!
 # Peirce subalgebras: `J₂(c)` and `J₀(c)` as Euclidean Jordan algebras in their own right
 
-`EuclideanJordan/Peirce.lean` carries the Peirce decomposition at a single idempotent as three *linear
-maps* `peirceOne c`, `peirceHalf c`, `peirceZero c`, and `EuclideanJordan/PeirceMul.lean` carries the six
+`EuclideanJordan/Peirce.lean` carries the Peirce decomposition at a single idempotent as three
+    *linear
+maps* `peirceOne c`, `peirceHalf c`, `peirceZero c`, and `EuclideanJordan/PeirceMul.lean`
+    carries the six
 Faraut–Korányi rules governing how their images multiply.  Two of those rules —
 `eigen_one_mul_one` and `eigen_zero_mul_zero` — say that the eigenvalue-`1` and eigenvalue-`0`
 eigenspaces are closed under the product.  This file turns that closure into structure: each
@@ -35,7 +37,8 @@ That probe reproduces here, re-run against this tree on 2026-08-22: with
 `[EuclideanJordanAlgebra J]` in context,
 `example (S : NonUnitalSubalgebra ℝ J) : IsCommJordan ↥S := inferInstance` fails to synthesise,
 while the same `example` for `NonUnitalNonAssocCommRing ↥S` succeeds.  The conclusion drawn from
-it still does not apply, because under `EuclideanJordan/Class.lean`'s design **no transfer is needed**.
+it still does not apply, because under `EuclideanJordan/Class.lean`'s design **no transfer is
+    needed**.
 The class puts `Mul` and `One` on top of an inner-product space rather than alongside a ring
 structure, so the natural subobject is the same shape one level down: the ambient
 `Submodule ℝ J`, whose subtype already carries
@@ -43,7 +46,8 @@ structure, so the natural subobject is the same shape one level down: the ambien
 added on top.  Then `EuclideanJordanAlgebra ↥(peirceOneSub hc)` is *constructed* from six
 field proofs, every one of which is the ambient identity read through `Subtype.ext`, and
 `IsCommJordan`, `IsScalarTower`, `SMulCommClass` and the ring structure then arrive on the
-subtype the same way they arrive on `J`: as `EuclideanJordan/Class.lean`'s derived instances.  Nothing is
+subtype the same way they arrive on `J`: as `EuclideanJordan/Class.lean`'s derived instances.
+    Nothing is
 transferred because nothing has to be.
 
 ★ **One rough edge, measured rather than predicted.**  `IsFormallyReal ↥(peirceOneSub hc)` does
@@ -149,7 +153,8 @@ section Two
 
 variable {c : J} (hc : c * c = c)
 
-/-- Closure under the product is `EuclideanJordan/PeirceMul.lean`'s `eigen_one_mul_one`, applied to the
+/-- Closure under the product is `EuclideanJordan/PeirceMul.lean`'s `eigen_one_mul_one`, applied
+to the
 membership proofs directly: membership unfolds to the eigenvalue equation. -/
 instance instMulPeirceOneSub : Mul ↥(peirceOneSub hc) :=
   ⟨fun x y => ⟨(x : J) * (y : J), eigen_one_mul_one hc x.2 y.2⟩⟩

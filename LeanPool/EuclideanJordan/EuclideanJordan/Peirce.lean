@@ -10,7 +10,7 @@ Authors: Bryan Ehrlich
 -/
 import Mathlib.Algebra.Jordan.Basic
 import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.LinearCombination
 
 
@@ -27,7 +27,8 @@ wrong — `peirce_poly` divides by `2` (`two_smul_eq_zero'`), which is why every
 it carries `Module ℝ J`. Only the *linearised identities* `two_lin1_raw`/`two_lin1_apply` are
 genuinely torsion-free, and they are, deliberately: their factor of `2` is carried in the
 statement rather than cancelled. Caught 2026-08-12 by reading the `omit` lines against this
-paragraph. What the spectral theorem is needed for is *producing* idempotents — a Jordan frame — not for
+paragraph. What the spectral theorem is needed for is *producing* idempotents — a Jordan frame —
+    not for
 decomposing at one that is already in hand. `EuclideanJordan/FrameExists.lean` does the
 producing; this file does the decomposing.
 

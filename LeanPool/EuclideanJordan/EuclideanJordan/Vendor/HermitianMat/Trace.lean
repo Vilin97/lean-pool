@@ -10,7 +10,8 @@ public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Reind
 /-! # Trace of Hermitian Matrices
 
 While the trace of a Hermitian matrix is, in informal math, typically just "the same as" a trace of
-a matrix that happens to be Hermitian - it is a real number, not a complex number. Or more generally,
+a matrix that happens to be Hermitian - it is a real number, not a complex number. Or more
+    generally,
 it is a self-adjoint element of the base `StarAddMonoid`.
 
 Working directly with `Matrix.trace` then means that there would be constant casts between rings,
@@ -29,16 +30,18 @@ namespace HermitianMat
 variable {R n m α : Type*} [Star R] [TrivialStar R] [Fintype n] [Fintype m]
 
 section star
-variable [AddGroup α] [StarAddMonoid α] [CommSemiring R] [Semiring α] [Algebra R α] [IsMaximalSelfAdjoint R α]
+variable [Ring α] [StarAddMonoid α] [CommSemiring R] [Algebra R α] [IsMaximalSelfAdjoint R α]
 
 /-- The trace of the matrix. This requires a `IsMaximalSelfAdjoint R α` instance, and then maps from
-  `HermitianMat n α` to `R`. This means that the trace of (say) a `HermitianMat n ℤ` gives values in ℤ,
-  but that the trace of a `HermitianMat n ℂ` gives values in ℝ. The fact that traces are "automatically"
+  `HermitianMat n α` to `R`. This means that the trace of (say) a `HermitianMat n ℤ` gives
+      values in ℤ,
+  but that the trace of a `HermitianMat n ℂ` gives values in ℝ. The fact that traces are
+  "automatically"
   real reduces coercions down the line. -/
 def trace (A : HermitianMat n α) : R :=
   IsMaximalSelfAdjoint.selfadjMap (A.mat.trace)
 
-/-- `HermitianMat.trace` reduces to `Matrix.trace` in the algebra.-/
+/-- `HermitianMat.trace` reduces to `Matrix.trace` in the algebra. -/
 theorem trace_eq_trace (A : HermitianMat n α) : algebraMap R α A.trace = Matrix.trace A.mat := by
   rw [trace, Matrix.trace, map_sum, map_sum]
   congr! 1
@@ -161,9 +164,11 @@ section addCommGroup
 variable [AddCommGroup α] [StarAddMonoid α]
 omit [Fintype n]
 
+/-- The partial trace over the left factor of a Hermitian matrix indexed by a product. -/
 def traceLeft (A : HermitianMat (m × n) α) : HermitianMat n α :=
   ⟨A.mat.traceLeft, A.H.traceLeft⟩
 
+/-- The partial trace over the right factor of a Hermitian matrix indexed by a product. -/
 def traceRight (A : HermitianMat (m × n) α) : HermitianMat m α :=
   ⟨A.mat.traceRight, A.H.traceRight⟩
 
@@ -248,3 +253,6 @@ theorem traceRight_kron [Fintype n] : (A ⊗ₖ B).traceRight = B.trace • A :=
 
 end kron
 end partialTrace
+
+
+end HermitianMat

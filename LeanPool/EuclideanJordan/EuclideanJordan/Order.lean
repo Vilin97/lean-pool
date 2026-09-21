@@ -235,16 +235,16 @@ def orderUnitSpaceOfBilinear (m : J →ₗ[ℝ] J →ₗ[ℝ] J)
   { (inferInstance : NormedAddCommGroup J), (inferInstance : NormedSpace ℝ J),
     partialOrderOfSoS m hfr with
     add_le_add_left := fun a b h c => by
-      show IsSoS m (c + b - (c + a))
+      change IsSoS m (c + b - (c + a))
       rw [show c + b - (c + a) = b - a by abel]
       exact h
     ousUnit := e
     smul_nonneg_mono := fun r hr {a b} h => by
-      show IsSoS m (r • b - r • a)
+      change IsSoS m (r • b - r • a)
       rw [← smul_sub]
       exact IsSoS.smul hr h
     ousUnit_nonneg := by
-      show IsSoS m (e - 0)
+      change IsSoS m (e - 0)
       rw [sub_zero]
       exact isSoS_of_idem (he e)
     archimedean := fun a => exists_isSoS_smul_unit_sub hcomm hjordan hfr e he a }
@@ -282,7 +282,7 @@ theorem isEffect_ofBilinear (a : J) :
     rwa [sub_zero] at h0'
   · rintro ⟨h0, h1⟩
     refine ⟨?_, h1⟩
-    show IsSoS m (a - 0)
+    change IsSoS m (a - 0)
     rwa [sub_zero]
 
 /-- `EuclideanJordan/OrderUnitSpace.lean`'s spanning theorem, live at EJA generality.  It is
@@ -291,7 +291,7 @@ not merely that the structure typechecks. -/
 theorem span_isEffect_eq_top_ofBilinear :
     letI := orderUnitSpaceOfBilinear m hcomm hjordan hfr e he
     Submodule.span ℝ {a : J | OrderUnitSpace.IsEffect a} = ⊤ := by
-  letI := orderUnitSpaceOfBilinear m hcomm hjordan hfr e he
+  let := orderUnitSpaceOfBilinear m hcomm hjordan hfr e he
   exact OrderUnitSpace.span_isEffect_eq_top
 
 end Characterization
@@ -313,7 +313,8 @@ variable {m : J →ₗ[ℝ] J →ₗ[ℝ] J}
 /-- **`L_c` is a positive operator for an idempotent `c`.**
 
 `L_c = P₁(c) + ½ P_{1/2}(c)` on the nose, and both Peirce projections are idempotent
-(`EuclideanJordan/Peirce.lean`'s `mul_peirceOne` feeding `peirceOne_of_eigen`) and self-adjoint (from
+(`EuclideanJordan/Peirce.lean`'s `mul_peirceOne` feeding `peirceOne_of_eigen`) and self-adjoint
+    (from
 self-adjointness of `L_c`, which is `hassoc` at `x := c`).  A self-adjoint idempotent `P`
 satisfies `⟪P y, y⟫ = ⟪P y, P y⟫ ≥ 0`, so the sum is nonnegative.
 
@@ -325,9 +326,9 @@ theorem inner_mul_self_nonneg_of_idem
     (hassoc : ∀ x y z : J, inner ℝ (m x y) z = inner ℝ y (m x z))
     {c : J} (hc : m c c = c) (y : J) :
     0 ≤ inner ℝ (m c y) y := by
-  letI : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
-  letI : IsCommJordan J := ⟨hjordan⟩
-  letI : IsScalarTower ℝ J J := ⟨fun r x y => smul_bilinear m r x y⟩
+  let : NonUnitalNonAssocCommRing J := ringOfBilinear m hcomm
+  let : IsCommJordan J := ⟨hjordan⟩
+  let : IsScalarTower ℝ J J := ⟨fun r x y => smul_bilinear m r x y⟩
   have hc' : c * c = c := hc
   have hsa : ∀ u v : J, inner ℝ (c * u) v = inner ℝ u (c * v) := fun u v => hassoc c u v
   have hsa1 : ∀ u v : J, inner ℝ (peirceOne c u) v = inner ℝ u (peirceOne c v) := by
@@ -345,7 +346,7 @@ theorem inner_mul_self_nonneg_of_idem
   have hidh : peirceHalf c (peirceHalf c y) = peirceHalf c y :=
     peirceHalf_of_eigen_half (mul_peirceHalf hc' y)
   have hsplit : (m c y : J) = peirceOne c y + (2 : ℝ)⁻¹ • peirceHalf c y := by
-    show c * y = _
+    change c * y = _
     simp only [peirceOne_apply, peirceHalf_apply]
     module
   have key1 : inner ℝ (peirceOne c y) (peirceOne c y) = inner ℝ (peirceOne c y) y := by
@@ -440,7 +441,7 @@ theorem isArchimedean_ofBilinear
     (e : J) (he : ∀ y : J, m e y = y) :
     @OrderUnitSpace.IsArchimedean J (orderUnitSpaceOfBilinear m hcomm hjordan hfr e he) := by
   intro x hx
-  show IsSoS m (0 - x)
+  change IsSoS m (0 - x)
   obtain ⟨n, q, lam, hidem, horth, hsum, hxe⟩ :=
     spectral_resolution_bilinear m hcomm hjordan hfr e he x
   have hlam : ∀ i, q i ≠ 0 → lam i ≤ 0 := by

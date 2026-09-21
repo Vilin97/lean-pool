@@ -17,7 +17,8 @@ import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.HermitianMat.Inner
 /-!
 # Non-vacuity of the Peirce layer, on the Hermitian-matrix carrier
 
-`EuclideanJordan/Peirce.lean` and `EuclideanJordan/PeirceMul.lean` are stated over an abstract real commutative
+`EuclideanJordan/Peirce.lean` and `EuclideanJordan/PeirceMul.lean` are stated over an abstract
+    real commutative
 Jordan algebra and are *conditional* throughout: every theorem assumes `c ∘ c = c`, and the
 sharper ones assume an element with `c ∘ y = ½ y`. Conditional theorems are worth exactly
 as much as their hypotheses are satisfiable. This file is the check that they are.
@@ -34,18 +35,21 @@ they are interchangeable for a commutative product, and `IsScalarTower` is the o
 carrier supplies.
 
 **2. The `1/2`-eigenspace is not zero.** This is the part that could have gone wrong
-silently. Every rule in `EuclideanJordan/PeirceMul.lean` mentioning `J_{1/2}` would be *vacuously true*
+silently. Every rule in `EuclideanJordan/PeirceMul.lean` mentioning `J_{1/2}` would be
+    *vacuously true*
 on a carrier where the half-space is trivial — and the half-space **is** trivial for the two
 idempotents one reaches for first, `0` and `1`. So a witness is exhibited: `cWit` is the
 rank-one projection `diag(1,0)`, `xWit` is the off-diagonal `[[0,1],[1,0]]`, and
 `cWit_mul_xWit` proves `cWit ∘ xWit = ½ · xWit` with `xWit ≠ 0`.
 
-**3. `HermitianMat` is formally real** (§4 below), so `EuclideanJordan/FormallyReal.lean`'s no-nilpotents
+**3. `HermitianMat` is formally real** (§4 below), so `EuclideanJordan/FormallyReal.lean`'s
+    no-nilpotents
 theorem is live rather than conditional on an uninhabited hypothesis.
 
 **4. The diagonal matrix units are a complete Jordan frame** (§5 below), witnessing
 `IsOrthIdemFamily` — which had **no** carrier here until then, leaving every theorem of
-`EuclideanJordan/Frame.lean` and `EuclideanJordan/Block.lean` conditional on a structure nothing was known to satisfy.
+`EuclideanJordan/Frame.lean` and `EuclideanJordan/Block.lean` conditional on a structure nothing
+    was known to satisfy.
 
 ★ **Scope.** This is non-vacuity, not coverage: it shows the Peirce hypotheses have a model
 with all three components nonzero, and nothing more. The rank-two carrier is used because it
@@ -93,14 +97,15 @@ theorem cWit_idem : cWit * cWit = cWit := by
   apply HermitianMat.ext
   rw [mul_eq_symmMul, HermitianMat.symmMul_toMat, cWit_mat]
   ext i j
-  fin_cases i <;> fin_cases j <;> simp <;> norm_num
+  fin_cases i <;> fin_cases j <;> simp
+  norm_num
 
 /-- **The half-space is inhabited by a nonzero element**, so every `J_{1/2}` rule in
 `EuclideanJordan/PeirceMul.lean` has content on this carrier. -/
 theorem cWit_mul_xWit : cWit * xWit = (2 : ℝ)⁻¹ • xWit := by
   apply HermitianMat.ext
   rw [mul_eq_symmMul, HermitianMat.symmMul_toMat, cWit_mat, xWit_mat]
-  show _ = (2 : ℝ)⁻¹ • xWit.mat
+  change _ = (2 : ℝ)⁻¹ • xWit.mat
   rw [xWit_mat]
   ext i j
   fin_cases i <;> fin_cases j <;> simp [Matrix.vecMul_diagonal]
@@ -138,7 +143,8 @@ theorem witness_half_attained : ∃ y : H2, y ≠ 0 ∧ cWit * y = (2 : ℝ)⁻�
 
 /-! ### 4. Formal reality on the Hermitian-matrix carrier
 
-★★★ **This section closes the exposure `EuclideanJordan/FormallyReal.lean` declares in its own docstring**:
+★★★ **This section closes the exposure `EuclideanJordan/FormallyReal.lean` declares in its own
+    docstring**:
 that `IsFormallyReal` had no carrier here, so every theorem depending on it was conditional on
 an uninhabited hypothesis.
 
@@ -169,9 +175,11 @@ private theorem inner_mul_self_one (A : HermitianMat d 𝕜) :
   rw [HermitianMat.inner_def, HermitianMat.inner_def, mul_eq_symmMul, HermitianMat.symmMul_self]
   simp
 
+omit [DecidableEq d] in
 /-- **`H_d(𝕜)` is formally real.** -/
 instance instIsFormallyReal : EuclideanJordan.IsFormallyReal (HermitianMat d 𝕜) where
   eq_zero_of_sum_mul_self := by
+    let : DecidableEq d := Classical.decEq d
     intro ι s f hsum i hi
     have h0 : ∑ j ∈ s, inner ℝ (f j * f j) (1 : HermitianMat d 𝕜) = 0 := by
       rw [← inner_sum_left_one, hsum]
@@ -201,12 +209,14 @@ end FormallyReal
 /-! ### 5. A Jordan frame on the carrier
 
 ★★ **This closes the last vacuity exposure in the EJA layer.** `IsOrthIdemFamily`
-(`EuclideanJordan/Frame.lean`) had **no witness**, so every theorem of `EuclideanJordan/Frame.lean` and
+(`EuclideanJordan/Frame.lean`) had **no witness**, so every theorem of
+    `EuclideanJordan/Frame.lean` and
 `EuclideanJordan/Block.lean` was conditional on a structure nothing was known to satisfy — the same
 exposure that section 4 closed for `IsFormallyReal`. The diagonal matrix units supply it.
 
 ★ Completeness (`∑ i, p i = 1`) is proved here even though **no theorem in the abstract layer
-assumes it** — deliberately, per `EuclideanJordan/Frame.lean`'s docstring, since completeness is what the
+assumes it** — deliberately, per `EuclideanJordan/Frame.lean`'s docstring, since completeness is
+    what the
 spectral theorem produces rather than what the Peirce theory needs. Having it on the carrier
 shows the abstract results are not being kept general by weakening past what the intended
 model satisfies. -/
@@ -232,13 +242,15 @@ theorem diagFrame_orthIdem :
     rw [mul_eq_symmMul, HermitianMat.symmMul_toMat, diagFrame_mat,
       Matrix.diagonal_mul_diagonal]
     ext a b
-    by_cases h : a = b <;> simp [Matrix.smul_apply, h] <;> split_ifs <;> norm_num
+    by_cases h : a = b <;> simp [Matrix.smul_apply, h]
+    split_ifs <;> norm_num
   orth i j hij := by
     apply HermitianMat.ext
     rw [mul_eq_symmMul, HermitianMat.symmMul_toMat, diagFrame_mat, diagFrame_mat,
       Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
     ext a b
-    by_cases h : a = b <;> simp [Matrix.smul_apply, h] <;> split_ifs with h1 h2 <;> simp_all
+    by_cases h : a = b <;> simp [Matrix.smul_apply, h]
+    split_ifs with h1 h2 <;> simp_all
 
 /-- The frame is **complete**: the matrix units sum to the identity. -/
 theorem diagFrame_sum : (∑ i, diagFrame (d := d) i) = 1 := by

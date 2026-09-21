@@ -53,7 +53,7 @@ function along an index equivalence `e : d ≃ d₂`. This is the linear-equival
 `Equiv.piCongrLeft`. -/
 @[simps]
 def ofRelabel (e : d ≃ d₂) : (d₂ → R) ≃ₗ[R] (d → R) := by
-  refine' { e.symm.piCongrLeft (fun _ ↦ R) with .. }
+  refine { e.symm.piCongrLeft (fun _ ↦ R) with map_add' := ?_, map_smul' := ?_ }
   <;> (intros; ext; simp [Equiv.piCongrLeft_apply])
 
 variable (e : d ≃ d₂)

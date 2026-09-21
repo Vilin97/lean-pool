@@ -9967,8 +9967,7 @@ projects:
       - '90C35'
       - '05C21'
   - slug: euclidean-jordan
-    title: 'Euclidean Jordan algebras: power associativity, the spectral theorem, the trace
-      form, Koecher/Alfsen-Shultz, and the frame Peirce decomposition'
+    title: Euclidean Jordan algebras and the frame Peirce decomposition
     summary: 'The frame Peirce decomposition: relative to a Jordan frame, a Euclidean Jordan
       algebra is the internal direct sum of the blocks V_ij over unordered pairs of frame indices,
       and in finite dimension the diagonal blocks are lines, dim V_ii = 1 - the Faraut-Koranyi
@@ -9987,7 +9986,6 @@ projects:
     status: verified
     main_declarations:
     - EuclideanJordan.frameBlock_isInternal
-    - EuclideanJordan.finrank_frameBlock_diag
     main_results:
     - declaration: EuclideanJordan.frameBlock_isInternal
       informal: A Euclidean Jordan algebra is the internal direct sum of the Peirce blocks associated

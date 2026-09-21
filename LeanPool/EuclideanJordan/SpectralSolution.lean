@@ -12,7 +12,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 import Mathlib.LinearAlgebra.BilinearMap
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import LeanPool.EuclideanJordan.EuclideanJordan.Spectral
 
 /-!

@@ -20,7 +20,8 @@ The abstract modules of this library built before this one — `Peirce`, `Peirce
 and `Spectral` — state their hypotheses as a *tuple* drawn from
 `[NonUnitalNonAssocCommRing J] [IsCommJordan J] [Module ℝ J] [IsScalarTower ℝ J J]
 [IsFormallyReal J] [Module.Finite ℝ J]`, each module taking the sub-tuple it needs; or — on the
-Euclidean side of `EuclideanJordan/Order.lean` and in `Spectral`'s interface section — as a bilinear map
+Euclidean side of `EuclideanJordan/Order.lean` and in `Spectral`'s interface section — as a
+    bilinear map
 `m : J →ₗ[ℝ] J →ₗ[ℝ] J` carrying `hcomm`/`hjordan`/`hassoc` as ordinary hypotheses.  (`Witness`
 and `Spectral`'s concrete section state theirs over `HermitianMat` instead.)  Both abstract
 vocabularies are correct and neither is a *class*, so a theorem about a Euclidean Jordan
@@ -47,7 +48,8 @@ and nothing here claims otherwise.
 ★ The product is placed **on top of** the additive group of the inner-product space, never
 alongside a second one.  Assuming `[NormedAddCommGroup J]` and `[NonUnitalNonAssocCommRing J]`
 simultaneously produces two `AddCommGroup J` instances and `Module ℝ J` then fails to
-synthesise; `EuclideanJordan/Bridge.lean` records that diamond and `ringOfBilinear` dodges it by building
+synthesise; `EuclideanJordan/Bridge.lean` records that diamond and `ringOfBilinear` dodges it by
+    building
 the multiplicative structure on the *ambient* additive group.  This class is that dodge
 promoted from a `def` to a `class`: it `extends Mul J, One J` over
 `[NormedAddCommGroup J] [InnerProductSpace ℝ J]`, so only one `AddCommGroup J` is ever in play
@@ -60,7 +62,8 @@ Consequently `ringOfBilinear (jmulₗ J) mul_comm = instNonUnitalNonAssocCommRin
 ## What finite-dimensionality is, and is not, needed for
 
 `FiniteDimensional ℝ J` is deliberately **not** a field of the class.  It is genuinely required
-downstream: `EuclideanJordan/Spectral.lean` records that its `spectral_resolution_bilinear` — which is
+downstream: `EuclideanJordan/Spectral.lean` records that its `spectral_resolution_bilinear` —
+    which is
 `spectral_resolution_complete` in bilinear vocabulary, and carries the same hypotheses minus the
 inner product — is false without it, `ℝ[X]` satisfying every other hypothesis with no nonconstant
 resolution.  So the dimension is carried as a separate instance argument at exactly the theorems
@@ -71,7 +74,8 @@ vanishing sum of squares against the unit turns `∑ᵢ ⟪xᵢ ∘ xᵢ, 1⟫` 
 application of `inner_assoc`, and a vanishing sum of nonnegative reals has vanishing terms.
 
 This corrects the build plan on two points.  The plan derived the instance from
-`EuclideanJordan/Spectral.lean`'s `isFormallyReal_of_fin` under `[FiniteDimensional ℝ J]`.  That lemma
+`EuclideanJordan/Spectral.lean`'s `isFormallyReal_of_fin` under `[FiniteDimensional ℝ J]`.  That
+    lemma
 cannot supply it: `isFormallyReal_of_fin` *takes formal reality as a hypothesis*, in `Fin k`
 form, and does nothing but reindex it to the `Finset` form the class `IsFormallyReal` carries.
 The derivation had to come from the inner product instead — and once it does, the dimension
@@ -79,7 +83,8 @@ hypothesis turns out to be unused.
 
 ## Scope
 
-Almost all of this file is repackaging: the two restatements at the end (`spectral_resolution_complete'`, `peirce_add_add'`) discharge the claim
+Almost all of this file is repackaging: the two restatements at the end
+    (`spectral_resolution_complete'`, `peirce_add_add'`) discharge the claim
 that the existing layer is reachable from the class, and are not new results.
 
 ★ Two declarations are *not* repackaging, and the file should not be described as if they were.
@@ -88,7 +93,8 @@ associative inner product, and the existing layer does not contain that derivati
 takes formal reality as a hypothesis at every abstract site (`EuclideanJordan/Spectral.lean`'s
 `isFormallyReal_of_fin` *receives* it and does nothing but reindex; `EuclideanJordan/Order.lean`'s
 `orderUnitSpaceOfBilinear` receives it as `[IsFormallyReal J]`), and derives it only on the
-concrete carrier, in `EuclideanJordan/Witness.lean`'s `instIsFormallyReal` for `HermitianMat d 𝕜`.  Both new
+concrete carrier, in `EuclideanJordan/Witness.lean`'s `instIsFormallyReal` for `HermitianMat d
+    𝕜`.  Both new
 declarations are short; the point is only that "this file contains no new mathematics" would be
 false.
 
@@ -195,7 +201,8 @@ end EuclideanJordanAlgebra
 
 /-! ## The bridge to the bilinear-map vocabulary
 
-`EuclideanJordan/Order.lean`'s Euclidean section and `EuclideanJordan/Spectral.lean`'s interface section state
+`EuclideanJordan/Order.lean`'s Euclidean section and `EuclideanJordan/Spectral.lean`'s interface
+    section state
 everything over a bundled `m : J →ₗ[ℝ] J →ₗ[ℝ] J` carrying `hcomm`, `hjordan`, `hassoc` and a
 `Fin k`-indexed formal-reality hypothesis.  `jmulₗ` is the class's product in that vocabulary
 and the five lemmas after it are exactly that hypothesis tuple, so a consumer of
@@ -213,7 +220,8 @@ variable {J : Type*} [NormedAddCommGroup J] [InnerProductSpace ℝ J] [Euclidean
 
 @[simp] theorem jmulₗ_apply (x y : J) : jmulₗ J x y = x * y := rfl
 
-/-- ★ The class and `EuclideanJordan/Bridge.lean`'s `ringOfBilinear` produce the **same** ring structure,
+/-- ★ The class and `EuclideanJordan/Bridge.lean`'s `ringOfBilinear` produce the **same** ring
+structure,
 definitionally.  This is the precise sense in which the class does not introduce a second
 multiplicative structure alongside the one the existing layer runs on. -/
 theorem ringOfBilinear_jmulₗ :
@@ -248,7 +256,8 @@ theorem spectral_resolution_complete' [FiniteDimensional ℝ J] (x : J) :
       IsOrthIdemFamily c ∧ (∑ i, c i) = 1 ∧ x = ∑ i, lam i • c i :=
   spectral_resolution_complete 1 EuclideanJordanAlgebra.one_mul x
 
-/-- **The Peirce decomposition at a single idempotent, over the class.**  `EuclideanJordan/Peirce.lean`'s
+/-- **The Peirce decomposition at a single idempotent, over the class.**
+`EuclideanJordan/Peirce.lean`'s
 `peirce_add_add` needs no idempotency hypothesis: the three projections sum to the identity for
 every `c`. -/
 theorem peirce_add_add' (c y : J) : peirceOne c y + peirceHalf c y + peirceZero c y = y :=

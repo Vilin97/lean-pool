@@ -16,9 +16,12 @@ import LeanPool.EuclideanJordan.EuclideanJordan.HermitianBilin
 /-!
 # A carrier for `EuclideanJordanAlgebra`
 
-`EuclideanJordan/Class.lean` names the Euclidean Jordan algebra hypothesis as a class, and `EuclideanJordan/Rank.lean`,
-`EuclideanJordan/FrameExists.lean` and `EuclideanJordan/FramePeirce.lean` state their results over it.  Until this file
-the **only** instances of that class in the tree were `EuclideanJordan/PeirceSubalgebra.lean`'s two, and both
+`EuclideanJordan/Class.lean` names the Euclidean Jordan algebra hypothesis as a class, and
+    `EuclideanJordan/Rank.lean`,
+`EuclideanJordan/FrameExists.lean` and `EuclideanJordan/FramePeirce.lean` state their results
+    over it.  Until this file
+the **only** instances of that class in the tree were `EuclideanJordan/PeirceSubalgebra.lean`'s
+    two, and both
 are conditional on an ambient `[EuclideanJordanAlgebra J]`, so nothing exhibited a base model:
 `exists_jordanFrame` and `frameBlock_isInternal` were universally quantified over a class no
 object was known to inhabit.
@@ -33,8 +36,10 @@ An abstract theorem whose hypothesis no carrier is known to satisfy is worth not
 `IsFormallyReal` and `IsOrthIdemFamily`, and this file closes it for `EuclideanJordanAlgebra`.
 
 ★ The class was **not** the only unwitnessed hypothesis left in the layer, and an earlier draft
-of this docstring said it was.  `EuclideanJordan/Rank.lean`'s `IsPrimitive` and `JordanFrame` had no witness
-either — `EuclideanJordan/Witness.lean` builds the diagonal matrix units but never proves one primitive, so
+of this docstring said it was.  `EuclideanJordan/Rank.lean`'s `IsPrimitive` and `JordanFrame`
+    had no witness
+either — `EuclideanJordan/Witness.lean` builds the diagonal matrix units but never proves one
+    primitive, so
 no `JordanFrame` had ever been constructed.  Both are witnessed at the end of this file, but by a
 separate argument, and the class instance alone would not have supplied them.
 
@@ -58,7 +63,8 @@ The three lemmas before the instance are re-orientations, not new results: two u
 
 ## The diamond `EuclideanJordan/Class.lean` warned about, measured
 
-`EuclideanJordan/Class.lean` records that `instNonUnitalNonAssocCommRing` fires on any type carrying the
+`EuclideanJordan/Class.lean` records that `instNonUnitalNonAssocCommRing` fires on any type
+    carrying the
 class, that `HermitianMat d 𝕜` already carries a `Mul` from
 `EuclideanJordan/Vendor/HermitianMat/Jordan.lean`'s `scoped instance : CommMagma`, and that
 "if one is ever declared, that scoped instance and this class's `toMul` will both be in scope
@@ -99,14 +105,16 @@ M3/M4 results are now known to be about a nonempty class: `hermitian_exists_jord
 `H_n(𝕜)`.
 
 ★ The last section goes past existence and **names a frame** on `H_n(ℂ)`: `diagJordanFrame`, the
-diagonal matrix units of `EuclideanJordan/Witness.lean` reindexed along `Fintype.equivFin`.  Unlike the class
+diagonal matrix units of `EuclideanJordan/Witness.lean` reindexed along `Fintype.equivFin`.
+    Unlike the class
 instance, that is not repackaging: `diagFrame_isPrimitive` is the one obligation of `JordanFrame`
 that no lemma in the tree discharges — `diagFrame_orthIdem` gives `orthIdem` and `diagFrame_sum`
 gives `complete`, and `p` is data — and its proof and the four entrywise lemmas under it are
 written here.  (`hermitian_one_ne_zero` is new too, but it is three lines and reads off one
 matrix entry.)  ★ Note what primitivity is **not**: it is not
 `dim V_ii = 1`, and this file does not prove that.  Two scope limits on the frame: it is over
-`ℂ` only, because `EuclideanJordan/Witness.lean`'s `diagFrame` is, and its cardinality is `Fintype.card n`,
+`ℂ` only, because `EuclideanJordan/Witness.lean`'s `diagFrame` is, and its cardinality is
+    `Fintype.card n`,
 which is **not** proved to be the rank — `EuclideanJordan/Rank.lean` proves only `card ≤ rank` and
 `card ≤ finrank`.
 -/
@@ -124,16 +132,20 @@ theorem hermitian_symmMul_add_left (A B C : HermitianMat n 𝕜) :
     (A + B).symmMul C = A.symmMul C + B.symmMul C := by
   simpa only [jordanBilin_applyG] using (jordanBilinG (n := n) 𝕜).map_add₂ A B C
 
+omit [DecidableEq n] in
 /-- Real homogeneity of `∘` in its left argument, from `jordanBilinG`'s `LinearMap` structure. -/
 theorem hermitian_symmMul_smul_left (r : ℝ) (A B : HermitianMat n 𝕜) :
     (r • A).symmMul B = r • (A.symmMul B) := by
+  classical
   simpa only [jordanBilin_applyG] using (jordanBilinG (n := n) 𝕜).map_smul₂ r A B
 
+omit [DecidableEq n] in
 /-- The Jordan identity in the class's orientation, `x ∘ (x² ∘ y) = x² ∘ (x ∘ y)`.
 `EuclideanJordan/Order.lean`'s `hermitian_jordan_id` carries Mathlib's orientation
 `(x ∘ y) ∘ x² = x ∘ (y ∘ x²)`; the two differ by commuting the product twice. -/
 theorem hermitian_symmMul_jordan (A B : HermitianMat n 𝕜) :
     A.symmMul ((A.symmMul A).symmMul B) = (A.symmMul A).symmMul (A.symmMul B) := by
+  classical
   have h := hermitian_jordan_id (n := n) (𝕜 := 𝕜) A B
   simp only [jordanBilin_applyG] at h
   rw [HermitianMat.symmMul_comm (A.symmMul A) B, ← h]
@@ -141,7 +153,8 @@ theorem hermitian_symmMul_jordan (A B : HermitianMat n 𝕜) :
 
 /-! ## The instance -/
 
-/-- ★★★ **`H_n(𝕜)` is a Euclidean Jordan algebra.**  The class of `EuclideanJordan/Class.lean`, on the
+/-- ★★★ **`H_n(𝕜)` is a Euclidean Jordan algebra.**  The class of `EuclideanJordan/Class.lean`,
+on the
 Hermitian-matrix carrier, at the generality `EuclideanJordan/Order.lean` uses: any `RCLike` scalar
 field and any finite decidable index type. -/
 instance instEuclideanJordanAlgebraHermitianMat :
@@ -187,22 +200,28 @@ theorem hermitian_one_ne_zero [Nonempty n] : (1 : HermitianMat n 𝕜) ≠ 0 := 
     Matrix.zero_apply] at h2
   exact one_ne_zero h2
 
-instance instNontrivialHermitianMat [Nonempty n] : Nontrivial (HermitianMat n 𝕜) :=
-  ⟨⟨1, 0, hermitian_one_ne_zero⟩⟩
+omit [Fintype n] [DecidableEq n] in
+instance instNontrivialHermitianMat [Finite n] [Nonempty n] :
+    Nontrivial (HermitianMat n 𝕜) := by
+  let : DecidableEq n := Classical.decEq n
+  let := Fintype.ofFinite n
+  exact ⟨⟨1, 0, hermitian_one_ne_zero⟩⟩
 
 /-! ## M3 and M4 on the carrier
 
 The two results now read on a live object rather than on a class with no known inhabitant.
 Neither proof is new: each is the abstract theorem with `J := H_n(𝕜)`. -/
 
-/-- **(M3) on `H_n(𝕜)`.**  `EuclideanJordan/FrameExists.lean`'s `exists_jordanFrame`, instantiated.  The
+/-- **(M3) on `H_n(𝕜)`.**  `EuclideanJordan/FrameExists.lean`'s `exists_jordanFrame`,
+instantiated.  The
 finite-dimensionality it needs is `HermitianMat.FiniteDimensional`; the nontriviality is
 `hermitian_one_ne_zero`. -/
 theorem hermitian_exists_jordanFrame [Nonempty n] :
     ∃ k, Nonempty (JordanFrame (HermitianMat n 𝕜) k) :=
   exists_jordanFrame (HermitianMat n 𝕜) hermitian_one_ne_zero
 
-/-- **(M4) on `H_n(𝕜)`.**  `EuclideanJordan/FramePeirce.lean`'s `frameBlock_isInternal`, instantiated: a
+/-- **(M4) on `H_n(𝕜)`.**  `EuclideanJordan/FramePeirce.lean`'s `frameBlock_isInternal`,
+instantiated: a
 Jordan frame of `H_n(𝕜)` splits it as the internal direct sum of its diagonal and coherence
 blocks. -/
 theorem hermitian_frameBlock_isInternal {k : ℕ} (F : JordanFrame (HermitianMat n 𝕜) k) :
@@ -269,11 +288,11 @@ theorem mat_eq_zero_of_diagFrame_fixed {i : n} {D : HermitianMat n ℂ}
   simp only [diagFrame_symmMul_mat_apply] at he
   by_cases ha : a = i <;> by_cases hb : b = i
   · exact absurd ⟨ha, hb⟩ hab
-  · rw [if_pos ha, if_neg hb, add_zero] at he
+  · rw [ite_eq_left ha, ite_eq_right hb, add_zero] at he
     linear_combination -2 * he
-  · rw [if_neg ha, if_pos hb, zero_add] at he
+  · rw [ite_eq_right ha, ite_eq_left hb, zero_add] at he
     linear_combination -2 * he
-  · rw [if_neg ha, if_neg hb, add_zero, mul_zero] at he
+  · rw [ite_eq_right ha, ite_eq_right hb, add_zero, mul_zero] at he
     exact he.symm
 
 /-- So such an element is a scalar multiple of `E_ii`. -/
@@ -322,7 +341,8 @@ theorem diagFrame_isPrimitive (i : n) : IsPrimitive (diagFrame (d := n) i) := by
 
 /-- ★★★ **A Jordan frame on `H_n(ℂ)`, named.**  The diagonal matrix units, reindexed along
 `Fintype.equivFin` because `JordanFrame` is `Fin`-indexed.  ★ Its cardinality `Fintype.card n`
-is **not** claimed to be the rank of the algebra — `EuclideanJordan/Rank.lean` proves only that a frame's
+is **not** claimed to be the rank of the algebra — `EuclideanJordan/Rank.lean` proves only that
+    a frame's
 cardinality is bounded by the rank and by the dimension. -/
 noncomputable def diagJordanFrame : JordanFrame (HermitianMat n ℂ) (Fintype.card n) where
   p k := diagFrame ((Fintype.equivFin n).symm k)
