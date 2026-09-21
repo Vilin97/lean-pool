@@ -425,10 +425,10 @@ theorem tanTheta (N : SymmetricNormingFunction)
   · intro n
     change (TauCeti.DavisKahan.TanTheta.directedSineBlock U V).approximationNumber n < 1
     exact hlt n
-  · show N.evalSeq (tanSeq (directedSineBlock U V)) ≠ ⊤
+  · change N.evalSeq (tanSeq (directedSineBlock U V)) ≠ ⊤
     rw [heval]
     exact hmem
-  · show δ * (N.evalSeq (tanSeq (directedSineBlock U V))).toReal ≤ N.norm D.residual
+  · change δ * (N.evalSeq (tanSeq (directedSineBlock U V))).toReal ≤ N.norm D.residual
     rw [heval, N.norm_eq]
     exact hbound
 
@@ -606,10 +606,10 @@ theorem tanTwoTheta (N : SymmetricNormingFunction)
   · intro n
     change (TauCeti.DavisKahan.sinTwoThetaIdealBlock U V).approximationNumber n < 1
     exact hlt n
-  · show N.evalSeq (tanSeq (directedDoubleSine U V)) ≠ ⊤
+  · change N.evalSeq (tanSeq (directedDoubleSine U V)) ≠ ⊤
     rw [heval]
     exact hmem
-  · show δ * (N.evalSeq (tanSeq (directedDoubleSine U V))).toReal ≤
+  · change δ * (N.evalSeq (tanSeq (directedDoubleSine U V))).toReal ≤
       2 * N.norm (Uᗮ.starProjection ∘L H ∘L U.starProjection)
     rw [heval, N.norm_eq]
     change δ * N.toSourceNorm.gauge T ≤

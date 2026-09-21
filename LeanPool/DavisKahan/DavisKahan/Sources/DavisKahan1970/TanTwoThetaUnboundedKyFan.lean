@@ -2070,7 +2070,7 @@ theorem unboundedReflectionTangent_comp_diagonalPart
           (U.diagonalPart Z * U.diagonalPart Z)) := by
     rw [unboundedReflectionTangent]
     noncomm_ring
-  show unboundedReflectionTangent U Z * U.diagonalPart Z = _
+  change unboundedReflectionTangent U Z * U.diagonalPart Z = _
   rw [hassoc, hinv, mul_one]
 
 omit [CompleteSpace H] in
@@ -2496,7 +2496,7 @@ theorem inner_axis_axis : ⟪axis, axis⟫_ℂ = 3 := by
 theorem isSelfAdjoint_reflectionZ : IsSelfAdjoint reflectionZ := by
   rw [ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric]
   intro x y
-  show ⟪reflectionZ x, y⟫_ℂ = ⟪x, reflectionZ y⟫_ℂ
+  change ⟪reflectionZ x, y⟫_ℂ = ⟪x, reflectionZ y⟫_ℂ
   rw [reflectionZ_apply, reflectionZ_apply, inner_sub_left, inner_sub_right,
     inner_smul_left, inner_smul_left, inner_smul_right, inner_smul_right,
     ← inner_conj_symm axis x]
@@ -2506,7 +2506,7 @@ theorem isSelfAdjoint_reflectionZ : IsSelfAdjoint reflectionZ := by
 /-- The model's reflection is an involution. -/
 theorem reflectionZ_mul_self : reflectionZ * reflectionZ = 1 := by
   refine ContinuousLinearMap.ext fun w => ?_
-  show reflectionZ (reflectionZ w) = w
+  change reflectionZ (reflectionZ w) = w
   rw [reflectionZ_apply w, reflectionZ_apply, inner_sub_right, inner_smul_right,
     inner_smul_right, inner_axis_axis]
   module
@@ -2745,7 +2745,7 @@ theorem reflectionZ_comm (x : unperturbed.domain) :
     unperturbed ⟨reflectionZ (x : Model), mapsDomainTo_reflectionZ x⟩ +
         residual (reflectionZ (x : Model)) =
       reflectionZ (unperturbed x) + reflectionZ (residual (x : Model)) := by
-  show unperturbedMap (reflectionZ (x : Model)) +
+  change unperturbedMap (reflectionZ (x : Model)) +
       residual (reflectionZ (x : Model)) =
     reflectionZ (unperturbedMap (x : Model)) +
       reflectionZ (residual (x : Model))

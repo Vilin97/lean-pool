@@ -59,7 +59,7 @@ theorem reducingSubspace_orthogonalExactDecomposition
       isometry₁ := fun _ => rfl
       orthogonal := ?_
       projection_sum := ?_ }
-  · show U.subtypeL.adjoint ∘L Uᗮ.subtypeL = 0
+  · change U.subtypeL.adjoint ∘L Uᗮ.subtypeL = 0
     rw [Submodule.adjoint_subtypeL]
     apply ContinuousLinearMap.ext
     intro x
@@ -70,7 +70,7 @@ theorem reducingSubspace_orthogonalExactDecomposition
     have hsum := U.starProjection_add_starProjection_orthogonal (x : E)
     rw [hfix] at hsum
     exact add_eq_right.mp hsum
-  · show U.subtypeL ∘L U.subtypeL.adjoint +
+  · change U.subtypeL ∘L U.subtypeL.adjoint +
         Uᗮ.subtypeL ∘L Uᗮ.subtypeL.adjoint =
       ContinuousLinearMap.id 𝕜 E
     rw [Submodule.adjoint_subtypeL, Submodule.adjoint_subtypeL]

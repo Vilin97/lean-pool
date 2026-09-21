@@ -96,7 +96,7 @@ defects of the Halmos decomposition *are* the two crossed intersections, so the
 paper's acute case is exactly the vanishing of their orthogonal sum. -/
 theorem crossedDefectSum_eq_bot (hUV : U ⊓ Vᗮ = ⊥) (hVU : Uᗮ ⊓ V = ⊥) :
     crossedDefectSum U V = ⊥ := by
-  show (U ⊓ Vᗮ) ⊔ (Uᗮ ⊓ V) = ⊥
+  change (U ⊓ Vᗮ) ⊔ (Uᗮ ⊓ V) = ⊥
   rw [hUV, hVU, bot_sup_eq]
 
 omit [CompleteSpace H] in
@@ -115,7 +115,7 @@ theorem regularProjection_eq_one (hUV : U ⊓ Vᗮ = ⊥) (hVU : Uᗮ ⊓ V = �
   ext x
   have hmem : x ∈ (crossedDefectSum U V)ᗮ := by
     rw [hbot]; simp
-  show (crossedDefectSum U V)ᗮ.starProjection x = (1 : H →L[𝕜] H) x
+  change (crossedDefectSum U V)ᗮ.starProjection x = (1 : H →L[𝕜] H) x
   rw [one_apply_eq_self]
   exact Submodule.starProjection_eq_self_iff.mpr hmem
 
@@ -167,7 +167,7 @@ private theorem eq_of_mul_right_cancel_of_ker_eq_bot
     rintro y ⟨x, rfl⟩
     have hx := congrArg (fun S : H →L[𝕜] H => S x) h
     simp only [mul_apply_eq_comp] at hx
-    show (T₁ - T₂) (A x) = 0
+    change (T₁ - T₂) (A x) = 0
     simp only [sub_apply]
     rw [hx]
     exact sub_self _
@@ -208,7 +208,7 @@ theorem projection_mul_spectraCanonicalPolarFactor_mul_projection
   have hQQc : V.starProjection * Vᗮ.starProjection = 0 := by
     rw [Submodule.starProjection_orthogonal' V, mul_sub, mul_one, hQi, sub_self]
   have hSP : S * P = Q * P := by
-    show (V.starProjection * U.starProjection +
+    change (V.starProjection * U.starProjection +
       Vᗮ.starProjection * Uᗮ.starProjection) * U.starProjection =
       V.starProjection * U.starProjection
     calc (V.starProjection * U.starProjection +
@@ -219,7 +219,7 @@ theorem projection_mul_spectraCanonicalPolarFactor_mul_projection
   have hAA : A * A = star S * S := ContinuousLinearMap.modulus_mul_self_eq_star_mul_self S
   have hGram : star S * S * P = P * Q * P := by
     rw [mul_assoc, hSP, star_spectraCanonicalIntertwiner]
-    show (U.starProjection * V.starProjection +
+    change (U.starProjection * V.starProjection +
       Uᗮ.starProjection * Vᗮ.starProjection) *
       (V.starProjection * U.starProjection) =
       U.starProjection * V.starProjection * U.starProjection
@@ -248,7 +248,7 @@ private theorem isPositive_starProjection_compression {A : H →L[𝕜] H}
     (K.starProjection * A * K.starProjection).IsPositive := by
   constructor
   · intro x y
-    show ⟪K.starProjection (A (K.starProjection x)), y⟫_𝕜 =
+    change ⟪K.starProjection (A (K.starProjection x)), y⟫_𝕜 =
       ⟪x, K.starProjection (A (K.starProjection y))⟫_𝕜
     calc ⟪K.starProjection (A (K.starProjection x)), y⟫_𝕜
         = ⟪A (K.starProjection x), K.starProjection y⟫_𝕜 :=
@@ -257,7 +257,7 @@ private theorem isPositive_starProjection_compression {A : H →L[𝕜] H}
       _ = ⟪x, K.starProjection (A (K.starProjection y))⟫_𝕜 :=
           Submodule.inner_starProjection_left_eq_right K _ _
   · intro x
-    show 0 ≤ RCLike.re ⟪K.starProjection (A (K.starProjection x)), x⟫_𝕜
+    change 0 ≤ RCLike.re ⟪K.starProjection (A (K.starProjection x)), x⟫_𝕜
     have h : ⟪K.starProjection (A (K.starProjection x)), x⟫_𝕜 =
         ⟪A (K.starProjection x), K.starProjection x⟫_𝕜 :=
       Submodule.inner_starProjection_left_eq_right K _ _

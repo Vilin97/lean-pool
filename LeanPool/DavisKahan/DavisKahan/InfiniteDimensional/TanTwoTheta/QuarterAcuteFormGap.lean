@@ -98,7 +98,7 @@ private theorem reflection_apply_ofNat_smul
 
 private theorem star_id_clm :
     star (ContinuousLinearMap.id ℂ E) = ContinuousLinearMap.id ℂ E := by
-  show star (1 : E →L[ℂ] E) = (1 : E →L[ℂ] E)
+  change star (1 : E →L[ℂ] E) = (1 : E →L[ℂ] E)
   exact star_one _
 
 omit [CompleteSpace E] in

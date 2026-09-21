@@ -526,7 +526,7 @@ theorem norm_doubleAngleTangentOperator_comp_gramSpectralPVM_proj_Iic_le
   let PVM : ProjValMeasure E0 := gramSpectralPVM X
   let Q : E0 →L[ℂ] E0 := PVM.proj (Set.Iic (u ^ 2)) measurableSet_Iic
   let T := doubleAngleTangentOperator X hcontractive
-  show ‖T ∘L Q‖ ≤ DavisKahan.TanTwoTheta.doubleAngleTangent v
+  change ‖T ∘L Q‖ ≤ DavisKahan.TanTwoTheta.doubleAngleTangent v
   refine ContinuousLinearMap.opNorm_le_bound _ htanv0 fun x => ?_
   let q : E0 := Q x
   let D : E0 →L[ℂ] E0 := doubleAngleDenominator X

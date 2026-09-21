@@ -107,7 +107,7 @@ theorem complexify_canonicalIntertwinerR :
   have hmul : ∀ A B : E →L[ℝ] E, complexify (A * B) = complexify A * complexify B := by
     intro A B
     simpa only [ContinuousLinearMap.mul_def] using complexify_comp A B
-  show complexify (V.starProjection * U.starProjection +
+  change complexify (V.starProjection * U.starProjection +
       Vᗮ.starProjection * Uᗮ.starProjection) =
     (complexifySubmodule V).starProjection * (complexifySubmodule U).starProjection +
       (complexifySubmodule V)ᗮ.starProjection * (complexifySubmodule U)ᗮ.starProjection
@@ -608,7 +608,7 @@ theorem inner_complexify_nonneg_of_isPositive_compression
   · rw [RCLike.re_to_complex]
     exact hre
   · rw [RCLike.im_to_complex]
-    show ⟪A (re z), im z⟫_ℝ - ⟪A (im z), re z⟫_ℝ = 0
+    change ⟪A (re z), im z⟫_ℝ - ⟪A (im z), re z⟫_ℝ = 0
     rw [hsym, sub_self]
 
 /-- **Davis--Kahan 1970, Proposition 3.1, third clause, over `ℝ`.**
@@ -662,7 +662,7 @@ private theorem isPositive_starProjection_compression {A : E →L[ℝ] E}
     (hA : A.IsPositive) (W : Submodule ℝ E) [W.HasOrthogonalProjection] :
     (W.starProjection * A * W.starProjection).IsPositive := by
   refine (ContinuousLinearMap.isPositive_iff _).mpr ⟨fun x y => ?_, fun x => ?_⟩
-  · show ⟪W.starProjection (A (W.starProjection x)), y⟫_ℝ =
+  · change ⟪W.starProjection (A (W.starProjection x)), y⟫_ℝ =
       ⟪x, W.starProjection (A (W.starProjection y))⟫_ℝ
     calc ⟪W.starProjection (A (W.starProjection x)), y⟫_ℝ
         = ⟪A (W.starProjection x), W.starProjection y⟫_ℝ :=
@@ -671,7 +671,7 @@ private theorem isPositive_starProjection_compression {A : E →L[ℝ] E}
           hA.inner_left_eq_inner_right _ _
       _ = ⟪x, W.starProjection (A (W.starProjection y))⟫_ℝ :=
           Submodule.inner_starProjection_left_eq_right W _ _
-  · show 0 ≤ ⟪W.starProjection (A (W.starProjection x)), x⟫_ℝ
+  · change 0 ≤ ⟪W.starProjection (A (W.starProjection x)), x⟫_ℝ
     rw [Submodule.inner_starProjection_left_eq_right W]
     exact hA.inner_nonneg_left _
 

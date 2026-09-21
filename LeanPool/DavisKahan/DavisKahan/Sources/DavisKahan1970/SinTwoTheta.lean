@@ -644,7 +644,7 @@ theorem sinTwoTheta_directed_unbounded_addBounded_unequalDimension_symmetricNorm
   have hext := N.gauge_eq_of_sameApproximationSingularValues
     sinTwoTheta₀.same_singular_values
   refine ⟨?_, ?_⟩
-  · show N.extendedGauge sinTwoTheta₀.operator ≠ ⊤
+  · change N.extendedGauge sinTwoTheta₀.operator ≠ ⊤
     rw [hext]
     exact hmem
   · have hgauge : N.gauge sinTwoTheta₀.operator
@@ -961,7 +961,7 @@ theorem sinTwoTheta_directed_unbounded_addBounded_unequalDimension_symmetricNorm
   have hext := N.gauge_eq_of_sameApproximationSingularValues
     sinTwoTheta₀.same_singular_values
   refine ⟨?_, ?_⟩
-  · show N.extendedGauge sinTwoTheta₀.operator ≠ ⊤
+  · change N.extendedGauge sinTwoTheta₀.operator ≠ ⊤
     rw [hext]; exact hmem
   · have hgauge : N.gauge sinTwoTheta₀.operator
         = N.gauge (TauCeti.DavisKahan.Angle.directedSinTwoAngleOperatorC

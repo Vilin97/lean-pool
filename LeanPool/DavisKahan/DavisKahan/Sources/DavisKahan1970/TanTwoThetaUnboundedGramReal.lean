@@ -251,7 +251,7 @@ def complexifyBoundedCutoff (Ω : TauCeti.BoundedCutoff A U τ) :
   toProj := complexify Ω.toProj
   isSelfAdjoint := (complexify_isSelfAdjoint_iff Ω.toProj).2 Ω.isSelfAdjoint
   isIdempotentElem := by
-    show complexify Ω.toProj * complexify Ω.toProj = complexify Ω.toProj
+    change complexify Ω.toProj * complexify Ω.toProj = complexify Ω.toProj
     rw [← complexify_mul, Ω.isIdempotentElem.eq]
   mem_subspace := fun v => by
     rw [mem_complexifySubmodule, re_complexify, im_complexify]

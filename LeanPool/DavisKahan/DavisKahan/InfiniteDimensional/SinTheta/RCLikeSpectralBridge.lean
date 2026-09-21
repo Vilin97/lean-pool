@@ -139,7 +139,7 @@ theorem star_sub_smul
   have hASA : IsSelfAdjoint A :=
     ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr hA
   have hid : star (ContinuousLinearMap.id 𝕜 E) = ContinuousLinearMap.id 𝕜 E := by
-    show star (1 : E →L[𝕜] E) = (1 : E →L[𝕜] E)
+    change star (1 : E →L[𝕜] E) = (1 : E →L[𝕜] E)
     exact star_one _
   rw [star_sub, star_smul, hASA.star_eq, hid]
   rfl
@@ -267,7 +267,7 @@ theorem exists_mem_boundedRealSpectrum_of_mem_spectrum_sub_real_scalar
     simp
   refine ⟨RCLike.re w, ?_, ?_⟩
   · rw [DavisKahanExt.boundedRealSpectrum_eq_realSpectrum]
-    show ((RCLike.re w : ℝ) : 𝕜) ∈ spectrum 𝕜 A
+    change ((RCLike.re w : ℝ) : 𝕜) ∈ spectrum 𝕜 A
     rw [← hw_real]
     exact hw
   · rw [← hzw, hw_real]

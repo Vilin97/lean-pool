@@ -255,7 +255,7 @@ theorem boundedReflectionDefect_eq_neg_two_smul_offdiag
       (-2 : ℂ) • (Vᗮ.starProjection ∘L A ∘L V.starProjection +
         V.starProjection ∘L A ∘L Vᗮ.starProjection) := by
   ext x
-  show V.reflectionOperator (A (V.reflectionOperator x)) - A x =
+  change V.reflectionOperator (A (V.reflectionOperator x)) - A x =
     (-2 : ℂ) • (Vᗮ.starProjection (A (V.starProjection x)) +
       V.starProjection (A (Vᗮ.starProjection x)))
   rw [Submodule.reflectionOperator_apply,
@@ -318,7 +318,7 @@ theorem norm_boundedReflectionDefect_le_two_mul_norm_cross
     have hin1 : ‖T₁ z‖ ≤ ‖T₁‖ * ‖V.starProjection z‖ := by
       have hfac : T₁ z = T₁ (V.starProjection z) := by
         rw [hT₁]
-        show Vᗮ.starProjection (A (V.starProjection z)) =
+        change Vᗮ.starProjection (A (V.starProjection z)) =
           Vᗮ.starProjection (A (V.starProjection (V.starProjection z)))
         rw [show V.starProjection (V.starProjection z) =
           V.starProjection z from
@@ -329,7 +329,7 @@ theorem norm_boundedReflectionDefect_le_two_mul_norm_cross
     have hin2 : ‖T₂ z‖ ≤ ‖T₁‖ * ‖Vᗮ.starProjection z‖ := by
       have hfac : T₂ z = T₂ (Vᗮ.starProjection z) := by
         rw [hT₂]
-        show V.starProjection (A (Vᗮ.starProjection z)) =
+        change V.starProjection (A (Vᗮ.starProjection z)) =
           V.starProjection (A (Vᗮ.starProjection (Vᗮ.starProjection z)))
         rw [show Vᗮ.starProjection (Vᗮ.starProjection z) =
           Vᗮ.starProjection z from
@@ -403,7 +403,7 @@ theorem norm_reflectedOffdiag_add_eq
           V.starProjection ∘L A ∘L Vᗮ.starProjection)
             (V.starProjection z) =
           (Vᗮ.starProjection ∘L A ∘L V.starProjection) z := by
-      show Vᗮ.starProjection (A (V.starProjection (V.starProjection z))) +
+      change Vᗮ.starProjection (A (V.starProjection (V.starProjection z))) +
           V.starProjection (A (Vᗮ.starProjection (V.starProjection z))) =
         Vᗮ.starProjection (A (V.starProjection z))
       rw [hVfix, hperp, map_zero, map_zero, add_zero]
@@ -563,7 +563,7 @@ theorem subspaceGap_map_reflection
     rw [starProjection_map_reflection, hreflection]
     unfold boundedReflectionDefect
     abel
-  show ‖U.starProjection -
+  change ‖U.starProjection -
       (U.map (V.reflection.toLinearEquiv : H →ₗ[ℂ] H)).starProjection‖ = _
   rw [h, norm_neg]
 

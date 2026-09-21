@@ -50,7 +50,7 @@ theorem re_inner_split_of_reduces {B : H →ₗ.[ℂ] H} {Q : Submodule ℂ H}
   have hxeq : x = (⟨Q.starProjection (x : H), hred.projection_mem_domain x⟩ : B.domain)
       + ⟨Qᗮ.starProjection (x : H), hred.orthogonalProjection_mem_domain x⟩ :=
     Subtype.ext (by
-      show (x : H) = Q.starProjection (x : H) + Qᗮ.starProjection (x : H)
+      change (x : H) = Q.starProjection (x : H) + Qᗮ.starProjection (x : H)
       rw [Submodule.starProjection_orthogonal_apply]
       abel)
   have hcross1 : (⟪B (⟨Q.starProjection (x : H), hred.projection_mem_domain x⟩ : B.domain),
@@ -78,7 +78,7 @@ theorem re_inner_split_of_reduces {B : H →ₗ.[ℂ] H} {Q : Submodule ℂ H}
                   hred.orthogonalProjection_mem_domain x⟩ : B.domain) : H)⟫_ℂ := by
       exact congrArg (fun z : B.domain => (⟪B z, (z : H)⟫_ℂ)) hxeq
     rw [hstep, _root_.LinearPMap.map_add]
-    show ⟪_ + _, (Q.starProjection (x : H) + Qᗮ.starProjection (x : H))⟫_ℂ = _
+    change ⟪_ + _, (Q.starProjection (x : H) + Qᗮ.starProjection (x : H))⟫_ℂ = _
     rw [inner_add_left, inner_add_right, inner_add_right, hcross1, hcross2]
     ring
   rw [hexpand, Complex.add_re]

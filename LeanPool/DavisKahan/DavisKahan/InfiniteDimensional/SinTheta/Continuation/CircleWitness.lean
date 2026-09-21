@@ -97,7 +97,7 @@ theorem circleContour_path_norm_sub_center
     (D : CircleContinuationData A E s) (x : unitInterval) :
     ‖(CircleContour.circleContour (D.center : ℂ) D.radius).path x -
         (D.center : ℂ)‖ = D.radius := by
-  show ‖circleMap (D.center : ℂ) D.radius (2 * Real.pi * (x : ℝ)) -
+  change ‖circleMap (D.center : ℂ) D.radius (2 * Real.pi * (x : ℝ)) -
       (D.center : ℂ)‖ = D.radius
   simpa [mem_sphere_iff_norm] using
     circleMap_mem_sphere (D.center : ℂ)

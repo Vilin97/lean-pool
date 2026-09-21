@@ -58,7 +58,7 @@ theorem addBounded_addBounded (A : Hc →ₗ.[ℂ] Hc) (V W : Hc →L[ℂ] Hc) :
   refine LinearPMap.ext rfl ?_
   intro x y hxy
   simp only [TauCeti.LinearPMap.addBounded_apply, add_apply]
-  show (A ⟨x, y⟩ : Hc) + V x + W x = (A ⟨x, hxy⟩ : Hc) + (V x + W x)
+  change (A ⟨x, y⟩ : Hc) + V x + W x = (A ⟨x, hxy⟩ : Hc) + (V x + W x)
   abel
 
 omit [CompleteSpace Hc] in
@@ -67,7 +67,7 @@ theorem isSelfAdjointOperator_realSmul {V : Hc →L[ℂ] Hc}
     (hV : V.IsSymmetric) (c : ℝ) :
     ((c : ℂ) • V).IsSymmetric := by
   intro x y
-  show ⟪(c : ℂ) • V x, y⟫_ℂ = ⟪x, (c : ℂ) • V y⟫_ℂ
+  change ⟪(c : ℂ) • V x, y⟫_ℂ = ⟪x, (c : ℂ) • V y⟫_ℂ
   rw [inner_smul_left, inner_smul_right, Complex.conj_ofReal]
   exact congrArg (fun z : ℂ => (c : ℂ) * z) (hV x y)
 
@@ -328,12 +328,12 @@ theorem theorem8_2_perturbationHalfGap_unbounded_complex
         (DavisKahan.addBounded_zero _).symm (reducesSubspace_pathBand hA hHop l r 0)
         hQred' hlr hd hbandspec hQperp'
     rw [hfdef 0]
-    show ‖Qᗮ.starProjection ∘L (pathBand hA hHop l r 0).starProjection‖ = 0
+    change ‖Qᗮ.starProjection ∘L (pathBand hA hHop l r 0).starProjection‖ = 0
     rw [norm_eq_zero]
     ext x
     have hmem : (pathBand hA hHop l r 0).starProjection x ∈ Q :=
       hle ((pathBand hA hHop l r 0).starProjection_apply_mem x)
-    show Qᗮ.starProjection ((pathBand hA hHop l r 0).starProjection x) = 0
+    change Qᗮ.starProjection ((pathBand hA hHop l r 0).starProjection x) = 0
     rw [Submodule.starProjection_orthogonal_apply,
       Submodule.starProjection_eq_self_iff.mpr hmem, sub_self]
   have hR1 : P ≤ pathBand hA hHop l r 1 := by
@@ -423,11 +423,11 @@ theorem theorem8_2_perturbationHalfGap_unbounded_complex
   have hfixP : (pathBand hA hHop l r 1).starProjection ∘L P.starProjection
       = P.starProjection := by
     ext x
-    show (pathBand hA hHop l r 1).starProjection (P.starProjection x) = P.starProjection x
+    change (pathBand hA hHop l r 1).starProjection (P.starProjection x) = P.starProjection x
     exact Submodule.starProjection_eq_self_iff.mpr (hR1 (P.starProjection_apply_mem x))
   have hle : P.directedProjectionGap Q ≤ f 1 := by
     rw [hfdef 1]
-    show ‖Qᗮ.starProjection ∘L P.starProjection‖ ≤
+    change ‖Qᗮ.starProjection ∘L P.starProjection‖ ≤
       ‖Qᗮ.starProjection ∘L (pathBand hA hHop l r 1).starProjection‖
     calc ‖Qᗮ.starProjection ∘L P.starProjection‖
         = ‖(Qᗮ.starProjection ∘L (pathBand hA hHop l r 1).starProjection) ∘L
@@ -469,7 +469,7 @@ theorem theorem8_2_perturbationHalfGap_maximalAngle_lt_unbounded_complex
     (hsmall : ‖Hop‖ < delta / 2) :
     TauCeti.DavisKahanExt.maximalAngle P Q < Real.pi / 4 := by
   refine (maximalAngle_lt_pi_div_four_iff P Q).2 ?_
-  show P.projectionGap Q < Real.sqrt 2 / 2
+  change P.projectionGap Q < Real.sqrt 2 / 2
   rw [DavisKahan.subspaceGap_eq_directedGap_of_crossedDefectsEquivalent P Q hcross]
   exact theorem8_2_perturbationHalfGap_unbounded_complex hA Hop hHop hdelta hab
     hPred hQred hQspec hQperp hPspec hsmall
@@ -536,12 +536,12 @@ theorem theorem8_2_residualHalfGap_unbounded_complex
     have h1 : ⟪Hop x, y⟫_ℂ = ⟪x, Hop y⟫_ℂ := hHop x y
     have h2 : ⟪K' x, y⟫_ℂ = ⟪x, K' y⟫_ℂ := hK'sym x y
     rw [hDdef]
-    show ⟪Hop x - K' x, y⟫_ℂ = ⟪x, Hop y - K' y⟫_ℂ
+    change ⟪Hop x - K' x, y⟫_ℂ = ⟪x, Hop y - K' y⟫_ℂ
     rw [inner_sub_left, inner_sub_right, h1, h2]
   have hDP : ∀ x ∈ P, D x = 0 := by
     intro x hx
     rw [hDdef]
-    show Hop x - K' x = 0
+    change Hop x - K' x = 0
     rw [hK'P x hx, sub_self]
   have hA'sa : IsSelfAdjoint (TauCeti.LinearPMap.addBounded A D) :=
     DavisKahan.addBounded_isSelfAdjoint A hA D hDsym
@@ -549,7 +549,7 @@ theorem theorem8_2_residualHalfGap_unbounded_complex
     refine DavisKahan.reducesSubspace_of_isSelfAdjoint_of_invariant hA'sa
       (fun x => hPred.projection_mem_domain x) ?_
     intro x hx
-    show (A ⟨(x : Hc), x.2⟩ : Hc) + D (x : Hc) ∈ P
+    change (A ⟨(x : Hc), x.2⟩ : Hc) + D (x : Hc) ∈ P
     rw [hDP _ hx, add_zero]
     exact hPred.invariant ⟨(x : Hc), x.2⟩ hx
   have hrestr : TauCeti.LinearPMap.reducingRestriction A P hPred
@@ -558,7 +558,7 @@ theorem theorem8_2_residualHalfGap_unbounded_complex
     refine LinearPMap.ext rfl ?_
     intro x y hxy
     refine Subtype.ext ?_
-    show (A ⟨((x : P) : Hc), y⟩ : Hc)
+    change (A ⟨((x : P) : Hc), y⟩ : Hc)
       = (A ⟨((x : P) : Hc), hxy⟩ : Hc) + D ((x : P) : Hc)
     rw [hDP ((x : P) : Hc) x.2, add_zero]
   have htotal : TauCeti.LinearPMap.addBounded (TauCeti.LinearPMap.addBounded A D) K'
@@ -613,7 +613,7 @@ theorem theorem8_2_residualHalfGap_maximalAngle_lt_unbounded_complex
     (hRsmall : ‖Hop ∘L (P.subtypeL : P →L[ℂ] Hc)‖ < delta / 2) :
     TauCeti.DavisKahanExt.maximalAngle P Q < Real.pi / 4 := by
   refine (maximalAngle_lt_pi_div_four_iff P Q).2 ?_
-  show P.projectionGap Q < Real.sqrt 2 / 2
+  change P.projectionGap Q < Real.sqrt 2 / 2
   rw [DavisKahan.subspaceGap_eq_directedGap_of_crossedDefectsEquivalent P Q hcross]
   exact theorem8_2_residualHalfGap_unbounded_complex hA Hop hHop hdelta hab
     hPred hQred hQspec hQperp hPspec hRsmall
@@ -822,7 +822,7 @@ theorem theorem8_2_perturbationHalfGap_maximalAngle_lt_unbounded_real
     (hsmall : ‖Hop‖ < delta / 2) :
     TauCeti.DavisKahanExt.maximalAngle P Q < Real.pi / 4 := by
   refine (maximalAngle_lt_pi_div_four_iff P Q).2 ?_
-  show P.projectionGap Q < Real.sqrt 2 / 2
+  change P.projectionGap Q < Real.sqrt 2 / 2
   rw [DavisKahan.subspaceGap_eq_directedGap_of_crossedDefectsEquivalent P Q hcross]
   exact theorem8_2_perturbationHalfGap_unbounded_real hA Hop hHop hdelta hab
     hPred hQred hQspec hQperp hPspec hsmall
@@ -852,7 +852,7 @@ theorem theorem8_2_residualHalfGap_maximalAngle_lt_unbounded_real
     (hRsmall : ‖Hop ∘L (P.subtypeL : P →L[ℝ] Er)‖ < delta / 2) :
     TauCeti.DavisKahanExt.maximalAngle P Q < Real.pi / 4 := by
   refine (maximalAngle_lt_pi_div_four_iff P Q).2 ?_
-  show P.projectionGap Q < Real.sqrt 2 / 2
+  change P.projectionGap Q < Real.sqrt 2 / 2
   rw [DavisKahan.subspaceGap_eq_directedGap_of_crossedDefectsEquivalent P Q hcross]
   exact theorem8_2_residualHalfGap_unbounded_real hA Hop hHop hdelta hab
     hPred hQred hQspec hQperp hPspec hRsmall

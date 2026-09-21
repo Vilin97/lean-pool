@@ -218,7 +218,7 @@ theorem starProjection_orthogonal_selfAdjointSpectralSubspace
     (B : Set ℝ) (hB : MeasurableSet B) :
     (selfAdjointSpectralSubspace A hA B hB)ᗮ.starProjection =
       selfAdjointSpectralProjection A hA Bᶜ hB.compl := by
-  show _ = TauCeti.LinearPMap.specProjection hA Bᶜ hB.compl
+  change _ = TauCeti.LinearPMap.specProjection hA Bᶜ hB.compl
   rw [Submodule.starProjection_orthogonal',
     ← selfAdjointSpectralProjection_eq_starProjection A hA B hB,
     TauCeti.LinearPMap.specProjection_def,

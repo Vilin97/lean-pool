@@ -905,18 +905,18 @@ noncomputable def crossedDefectEquiv :
   left_inv x := by
     have hsq : d.sin₀ (d.sin₀ (x : E)) = (x : E) := d.sin₀_sin₀_of_cos₀_eq_zero x.2
     ext
-    show ContinuousLinearMap.adjoint d.intertwiner (d.intertwiner (x : E)) = (x : E)
+    change ContinuousLinearMap.adjoint d.intertwiner (d.intertwiner (x : E)) = (x : E)
     conv_lhs => rw [← hsq]
     rw [d.isometry_on_sin₀_apply, hsq]
   right_inv y := by
     have hsq : d.sin₁ (d.sin₁ (y : F)) = (y : F) := d.sin₁_sin₁_of_cos₁_eq_zero y.2
     ext
-    show d.intertwiner (ContinuousLinearMap.adjoint d.intertwiner (y : F)) = (y : F)
+    change d.intertwiner (ContinuousLinearMap.adjoint d.intertwiner (y : F)) = (y : F)
     conv_lhs => rw [← hsq]
     rw [d.coisometry_on_sin₁_apply, hsq]
   norm_map' x := by
     have hsq : d.sin₀ (d.sin₀ (x : E)) = (x : E) := d.sin₀_sin₀_of_cos₀_eq_zero x.2
-    show ‖d.intertwiner (x : E)‖ = ‖(x : E)‖
+    change ‖d.intertwiner (x : E)‖ = ‖(x : E)‖
     conv_lhs => rw [← hsq]
     rw [d.norm_intertwiner_sin₀, hsq]
 

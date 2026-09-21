@@ -107,7 +107,7 @@ theorem spectrumIn_of_eqOn {A B : H →L[ℂ] H} {P : Submodule ℂ H} {s : Set 
     apply ContinuousLinearMap.ext
     intro u
     apply Subtype.ext
-    show B (u : H) = A (u : H)
+    change B (u : H) = A (u : H)
     exact (heq (u : H) u.2).symm
   rw [restrictedSpectrum_eq_restrictionSpectrum B P hinv, hres,
     ← restrictedSpectrum_eq_restrictionSpectrum A P h.1]
@@ -164,7 +164,7 @@ theorem theorem8_2_perturbationHalfGap_complex
   set E : H →L[ℂ] H := -K with hEdef
   have hE : E.IsSymmetric := by
     intro x y
-    show ⟪-(K x), y⟫_ℂ = ⟪x, -(K y)⟫_ℂ
+    change ⟪-(K x), y⟫_ℂ = ⟪x, -(K y)⟫_ℂ
     have h : ⟪K x, y⟫_ℂ = ⟪x, K y⟫_ℂ := hK x y
     rw [inner_neg_left, inner_neg_right, h]
   have hBself : ∀ t : ℝ, (A0 + t • E).IsSymmetric := fun t =>
@@ -198,7 +198,7 @@ theorem theorem8_2_perturbationHalfGap_complex
   have hproj : ∀ t : ℝ, t ∈ Set.Icc (0 : ℝ) 1 →
       (R t).starProjection = circleRieszProjection (A0 + t • E) cen rad := by
     intro t ht
-    show (centralBandSubspace (A0 + t • E) (hBself t)
+    change (centralBandSubspace (A0 + t • E) (hBself t)
       (l := l) (r := rr) (d := d)).starProjection = _
     rw [starProjection_centralBandSubspace]
     exact (circleRieszProjection_eq_boundedSelfAdjointSpectralProjection
@@ -220,7 +220,7 @@ theorem theorem8_2_perturbationHalfGap_complex
       f t = ‖Qᗮ.starProjection ∘L
         circleRieszProjection (A0 + t • E) cen rad‖ := by
     intro t ht
-    show ‖Qᗮ.starProjection ∘L (R t).starProjection‖ = _
+    change ‖Qᗮ.starProjection ∘L (R t).starProjection‖ = _
     rw [hproj t ht]
   have hfcont : ContinuousOn f (Set.Icc 0 1) := by
     refine ContinuousOn.congr ?_ (fun t ht => hfeq t ht)
@@ -240,11 +240,11 @@ theorem theorem8_2_perturbationHalfGap_complex
     exact centralBandSubspace_le_of_spectrumIn_gapExterior _ (hBself 0) hd hlr
       (hgapt 0 ⟨le_rfl, zero_le_one⟩) hQred' hQperp'
   have hf0 : f 0 = 0 := by
-    show ‖Qᗮ.starProjection ∘L (R 0).starProjection‖ = 0
+    change ‖Qᗮ.starProjection ∘L (R 0).starProjection‖ = 0
     rw [norm_eq_zero]
     ext x
     have hmem : (R 0).starProjection x ∈ Q := hR0 ((R 0).starProjection_apply_mem x)
-    show Qᗮ.starProjection ((R 0).starProjection x) = 0
+    change Qᗮ.starProjection ((R 0).starProjection x) = 0
     rw [Submodule.starProjection_orthogonal_apply,
       Submodule.starProjection_eq_self_iff.mpr hmem, sub_self]
   -- `P ≤ R 1`
@@ -306,11 +306,11 @@ theorem theorem8_2_perturbationHalfGap_complex
   -- transport to the source pair
   have hfixP : (R 1).starProjection ∘L P.starProjection = P.starProjection := by
     ext x
-    show (R 1).starProjection (P.starProjection x) = P.starProjection x
+    change (R 1).starProjection (P.starProjection x) = P.starProjection x
     exact Submodule.starProjection_eq_self_iff.mpr
       (hR1 (P.starProjection_apply_mem x))
   have hle : P.directedProjectionGap Q ≤ f 1 := by
-    show ‖Qᗮ.starProjection ∘L P.starProjection‖ ≤
+    change ‖Qᗮ.starProjection ∘L P.starProjection‖ ≤
       ‖Qᗮ.starProjection ∘L (R 1).starProjection‖
     calc ‖Qᗮ.starProjection ∘L P.starProjection‖
         = ‖(Qᗮ.starProjection ∘L (R 1).starProjection) ∘L P.starProjection‖ := by
@@ -408,13 +408,13 @@ theorem theorem8_2_residualHalfGap_complex
     have hAxy : ⟪A x, y⟫_ℂ = ⟪x, A y⟫_ℂ := hA x y
     have hKxy : ⟪K x, y⟫_ℂ = ⟪x, K y⟫_ℂ := hK x y
     have hK'xy : ⟪K' x, y⟫_ℂ = ⟪x, K' y⟫_ℂ := hK'sym x y
-    show ⟪A x + K x - K' x, y⟫_ℂ = ⟪x, A y + K y - K' y⟫_ℂ
+    change ⟪A x + K x - K' x, y⟫_ℂ = ⟪x, A y + K y - K' y⟫_ℂ
     rw [inner_sub_left, inner_add_left, inner_sub_right, inner_add_right,
       hAxy, hKxy, hK'xy]
   -- (2) the unperturbed operator is unchanged on `P`
   have hA'P : ∀ x ∈ P, A' x = A x := by
     intro x hx
-    show A x + K x - K' x = A x
+    change A x + K x - K' x = A x
     rw [hK'P x hx]
     abel
   have hA'inv : ∀ x ∈ P, A' x ∈ P := by

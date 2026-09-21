@@ -99,7 +99,7 @@ omit [CompleteSpace E] in
 /-- On `U` the block coordinate is just `T`. -/
 theorem coe_blockGraphCoordinate (hTmem : ∀ x, T x ∈ Uᗮ) (x : U) :
     ((blockGraphCoordinate T U x : Uᗮ) : E) = T (x : E) := by
-  show Uᗮ.starProjection (T (x : E)) = T (x : E)
+  change Uᗮ.starProjection (T (x : E)) = T (x : E)
   exact Submodule.starProjection_eq_self_iff.mpr (hTmem _)
 
 omit [CompleteSpace E] in
@@ -126,7 +126,7 @@ theorem eq_subtypeL_comp_blockGraphCoordinate
       ContinuousLinearMap.adjoint U.subtypeL := by
   rw [Submodule.adjoint_subtypeL]
   ext x
-  show T x = ((blockGraphCoordinate T U (U.orthogonalProjectionOnto x) : Uᗮ) : E)
+  change T x = ((blockGraphCoordinate T U (U.orthogonalProjectionOnto x) : Uᗮ) : E)
   rw [coe_blockGraphCoordinate hTmem]
   exact apply_eq_apply_starProjection hTzero x
 
@@ -156,7 +156,7 @@ theorem coe_adjoint_blockGraphCoordinate
       ContinuousLinearMap.comp_assoc] at hc
     exact hc
   rw [hadj]
-  show _ = ((ContinuousLinearMap.adjoint (blockGraphCoordinate T U)
+  change _ = ((ContinuousLinearMap.adjoint (blockGraphCoordinate T U)
     (Uᗮ.orthogonalProjectionOnto (y : E)) : U) : E)
   congr 2
   exact (Submodule.orthogonalProjectionOnto_mem_subspace_eq_self y).symm

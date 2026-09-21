@@ -93,7 +93,7 @@ theorem _root_.ContinuousLinearMap.Reduces.map_isometryEquiv {A : E →L[ℂ] E}
   · rintro x ⟨y, hy, rfl⟩
     refine ⟨A y, hU.1 y hy, ?_⟩
     have h : conjByIsometryEquiv W A (W y) = W (A y) := by
-      show W (A (W.symm (W y))) = W (A y)
+      change W (A (W.symm (W y))) = W (A y)
       rw [W.symm_apply_apply]
     exact h.symm
   · intro x hx
@@ -102,7 +102,7 @@ theorem _root_.ContinuousLinearMap.Reduces.map_isometryEquiv {A : E →L[ℂ] E}
     rw [← Submodule.map_orthogonal_equiv]
     refine ⟨A y, hU.2 y hy, ?_⟩
     have h : conjByIsometryEquiv W A (W y) = W (A y) := by
-      show W (A (W.symm (W y))) = W (A y)
+      change W (A (W.symm (W y))) = W (A y)
       rw [W.symm_apply_apply]
     exact h.symm
 
@@ -153,7 +153,7 @@ theorem compressOperator_map (U : Submodule ℂ E) [U.HasOrthogonalProjection]
   rw [hL, hR, Submodule.starProjection_map_apply]
   have hc : W.symm ((conjByIsometryEquiv W A) (x : E)) =
       A (W.symm (x : E)) := by
-    show W.symm (W (A (W.symm (x : E)))) = A (W.symm (x : E))
+    change W.symm (W (A (W.symm (x : E)))) = A (W.symm (x : E))
     rw [W.symm_apply_apply]
   rw [hc]
 
@@ -204,7 +204,7 @@ theorem conjByReflection_sub_eq_reflectionDefect (V : Submodule ℂ E)
     conjByIsometryEquiv V.reflection A - A = reflectionDefect V A := by
   unfold reflectionDefect
   ext x
-  show V.reflection (A (V.reflection.symm x)) - A x =
+  change V.reflection (A (V.reflection.symm x)) - A x =
     V.reflectionOperator (A (V.reflectionOperator x)) - A x
   rw [reflectionOperator_eq_reflection, reflectionOperator_eq_reflection,
     Submodule.reflection_symm]
@@ -452,7 +452,7 @@ theorem norm_offdiag_add_eq (V : Submodule ℂ E) [V.HasOrthogonalProjection]
         V.starProjection ∘L A ∘L Vᗮ.starProjection)
           (V.starProjection z) =
         (Vᗮ.starProjection ∘L A ∘L V.starProjection) z := by
-      show Vᗮ.starProjection (A (V.starProjection (V.starProjection z))) +
+      change Vᗮ.starProjection (A (V.starProjection (V.starProjection z))) +
           V.starProjection (A (Vᗮ.starProjection (V.starProjection z))) =
         Vᗮ.starProjection (A (V.starProjection z))
       rw [hVfix, hperp, map_zero, map_zero, add_zero]
@@ -492,7 +492,7 @@ theorem subspaceGap_map_reflection (U V : Submodule ℂ E)
     rw [starProjection_map_reflection,
       ← conjByReflection_sub_eq_reflectionDefect]
     abel
-  show ‖U.starProjection -
+  change ‖U.starProjection -
       (U.map (V.reflection.toLinearEquiv : E →ₗ[ℂ] E)).starProjection‖ = _
   rw [h, norm_neg]
 

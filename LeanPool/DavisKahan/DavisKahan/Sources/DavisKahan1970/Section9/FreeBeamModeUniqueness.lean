@@ -68,7 +68,7 @@ theorem lipschitzWith_modeVectorField (beta : ℝ) :
       _ ≤ beta ^ 4 * dist p q := mul_le_mul_of_nonneg_left h1 (by positivity)
       _ ≤ max 1 (beta ^ 4) * dist p q :=
           mul_le_mul_of_nonneg_right (le_max_right _ _) dist_nonneg
-  show dist (modeVectorField beta p) (modeVectorField beta q)
+  change dist (modeVectorField beta p) (modeVectorField beta q)
       ≤ max 1 (beta ^ 4) * dist p q
   unfold modeVectorField
   rw [Prod.dist_eq, Prod.dist_eq, Prod.dist_eq]

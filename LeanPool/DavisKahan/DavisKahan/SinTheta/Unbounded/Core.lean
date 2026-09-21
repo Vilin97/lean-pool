@@ -91,7 +91,7 @@ theorem unbounded_adjoint_residual_block_identity
     let w : F :=
       D.X.adjoint (D.F₁ (D.Λ₁ y)) -
         D.residual.adjoint (D.F₁ (y : G))
-    show ⟪w, (x : F)⟫_𝕜 = ⟪z, D.A₀ x⟫_𝕜
+    change ⟪w, (x : F)⟫_𝕜 = ⟪z, D.A₀ x⟫_𝕜
     let Fx : D.A.domain := ⟨D.X (x : F), D.X_maps_domain x⟩
     let Fy : D.A.domain := ⟨D.F₁ (y : G), D.F₁_maps_domain y⟩
     calc

@@ -173,7 +173,7 @@ theorem norm_sylvester_le_of_generalSeparation_rclike
   have hEqc : ContinuousLinearMap.sylvesterOperator (complexify (A.restrictScalars ℝ))
       (complexify (B.restrictScalars ℝ)) (complexify (X.restrictScalars ℝ)) =
       complexify (C.restrictScalars ℝ) := by
-    show complexify (A.restrictScalars ℝ) ∘L complexify (X.restrictScalars ℝ)
+    change complexify (A.restrictScalars ℝ) ∘L complexify (X.restrictScalars ℝ)
       - complexify (X.restrictScalars ℝ) ∘L complexify (B.restrictScalars ℝ) = _
     rw [← complexify_comp, ← complexify_comp, ← complexify_sub, hEqr]
   -- self-adjointness survives both steps: restricting scalars takes the real part
@@ -186,14 +186,14 @@ theorem norm_sylvester_le_of_generalSeparation_rclike
     simpa [real_inner_eq_re_inner (𝕜 := 𝕜)] using congrArg RCLike.re (hB x y)
   have hAc : (complexify (A.restrictScalars ℝ)).IsSymmetric := by
     have hsa : IsSelfAdjoint (complexify (A.restrictScalars ℝ)) := by
-      show ContinuousLinearMap.adjoint _ = _
+      change ContinuousLinearMap.adjoint _ = _
       rw [← TauCeti.RealComplexification.complexify_adjoint]
       exact congrArg complexify
         (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.2 hAr)
     exact ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.1 hsa
   have hBc : (complexify (B.restrictScalars ℝ)).IsSymmetric := by
     have hsa : IsSelfAdjoint (complexify (B.restrictScalars ℝ)) := by
-      show ContinuousLinearMap.adjoint _ = _
+      change ContinuousLinearMap.adjoint _ = _
       rw [← TauCeti.RealComplexification.complexify_adjoint]
       exact congrArg complexify
         (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.2 hBr)
@@ -372,7 +372,7 @@ theorem sinTheta_symmetric
     sinTheta_perturbation hB hA hV hU hlr' hd hVU
   rw [show A - B = -(B - A) by abel, norm_neg] at h2
   have hmax : U.projectionGap V = max (U.directedProjectionGap V) (V.directedProjectionGap U) := by
-    show ‖U.starProjection - V.starProjection‖ =
+    change ‖U.starProjection - V.starProjection‖ =
       max ‖Vᗮ.starProjection ∘L U.starProjection‖
         ‖Uᗮ.starProjection ∘L V.starProjection‖
     rw [Submodule.norm_starProjection_sub_eq_max,

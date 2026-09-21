@@ -389,7 +389,7 @@ theorem realSpectrum_eq_spectrum_restrictScalars
     [CompleteSpace E] (A : E →L[𝕜] E) :
     realSpectrum A = spectrum ℝ (A.restrictScalars ℝ) := by
   ext r
-  show ((r : 𝕜) ∈ spectrum 𝕜 A) ↔ _
+  change ((r : 𝕜) ∈ spectrum 𝕜 A) ↔ _
   rw [spectrum.mem_iff, spectrum.mem_iff, not_iff_not,
     ContinuousLinearMap.isUnit_iff_bijective, ContinuousLinearMap.isUnit_iff_bijective]
   have hfun : ⇑((algebraMap ℝ (E →L[ℝ] E)) r - A.restrictScalars ℝ)

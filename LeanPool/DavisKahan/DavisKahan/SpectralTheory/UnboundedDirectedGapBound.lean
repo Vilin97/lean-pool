@@ -79,7 +79,7 @@ theorem directedGap_le_of_reducingGap_unbounded_complex
         (Hop ∘L (P.subtypeL : P →L[ℂ] Hc)) (x : P) := by
     intro x
     have hxA : ((x : P) : Hc) ∈ A.domain := x.2
-    show (A (⟨((x : P) : Hc), hxA⟩ : A.domain) : Hc) + Hop ((x : P) : Hc)
+    change (A (⟨((x : P) : Hc), hxA⟩ : A.domain) : Hc) + Hop ((x : P) : Hc)
         - (A (⟨((x : P) : Hc), hxA⟩ : A.domain) : Hc) = Hop ((x : P) : Hc)
     abel
   have key := DavisKahan.ExactSinTheta.sinTheta_unbounded_complex_reducingSubspace

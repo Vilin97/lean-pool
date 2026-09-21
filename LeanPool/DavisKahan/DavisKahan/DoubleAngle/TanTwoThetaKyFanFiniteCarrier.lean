@@ -141,6 +141,73 @@ section Main
 variable {A H T : E →L[𝕜] E} {U : Submodule 𝕜 E} [FiniteDimensional 𝕜 U]
   {a b : ℝ}
 
+private theorem compression_isSymmetric
+    (M : Submodule 𝕜 E) [M.HasOrthogonalProjection]
+    (B : E →L[𝕜] E) (hB : IsSelfAdjoint B) :
+    (M.orthogonalProjectionOnto ∘L B ∘L M.subtypeL : ↥M →L[𝕜] ↥M).toLinearMap.IsSymmetric := by
+  intro x y
+  change ⟪((M.orthogonalProjectionOnto ∘L B ∘L M.subtypeL) x : ↥M),
+      y⟫_𝕜 = ⟪x, ((M.orthogonalProjectionOnto ∘L B ∘L M.subtypeL) y :
+      ↥M)⟫_𝕜
+  rw [Submodule.coe_inner, Submodule.coe_inner]
+  change ⟪M.starProjection (B (x : E)), (y : E)⟫_𝕜 =
+    ⟪(x : E), M.starProjection (B (y : E))⟫_𝕜
+  calc ⟪M.starProjection (B (x : E)), (y : E)⟫_𝕜
+      = ⟪B (x : E), M.starProjection (y : E)⟫_𝕜 :=
+        M.inner_starProjection_left_eq_right _ _
+    _ = ⟪B (x : E), (y : E)⟫_𝕜 := by
+        rw [Submodule.starProjection_eq_self_iff.mpr y.2]
+    _ = ⟪(x : E), B (y : E)⟫_𝕜 := hB.isSymmetric (x : E) (y : E)
+    _ = ⟪M.starProjection (x : E), B (y : E)⟫_𝕜 := by
+        rw [Submodule.starProjection_eq_self_iff.mpr x.2]
+    _ = ⟪(x : E), M.starProjection (B (y : E))⟫_𝕜 :=
+        M.inner_starProjection_left_eq_right _ _
+
+private theorem tangent_singularValues_reindex
+    (V : Type*) [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V]
+    (R : V →L[𝕜] V) (v : ℕ → ℝ) (hv : ∀ n, R.toLinearMap.singularValues n = v n)
+    (S : Finset ℕ) :
+    ∃ S' : Finset (Fin (finrank 𝕜 V)), S'.card ≤ S.card ∧
+      ∑ n ∈ S, absDoubleAngleTangent (v n) =
+        ∑ x ∈ S', absDoubleAngleTangent (R.toLinearMap.singularValues (x : ℕ)) := by
+  classical
+  set S' : Finset (Fin (finrank 𝕜 V)) :=
+    Finset.univ.filter (fun j : Fin (finrank 𝕜 V) => (j : ℕ) ∈ S) with hS'def
+  have hS'inj : ∀ x ∈ S', ∀ y ∈ S', (x : ℕ) = (y : ℕ) → x = y :=
+    fun x _ y _ h => Fin.val_injective h
+  have himg : S'.image (fun x : Fin (finrank 𝕜 V) => (x : ℕ)) =
+      S.filter (fun n => n < finrank 𝕜 V) := by
+    ext n
+    simp only [hS'def, Finset.mem_image, Finset.mem_filter, Finset.mem_univ,
+      true_and]
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      exact ⟨hx, x.2⟩
+    · rintro ⟨hnS, hlt⟩
+      exact ⟨⟨n, hlt⟩, hnS, rfl⟩
+  have hS'card : S'.card ≤ S.card := by
+    calc S'.card = (S'.image (fun x : Fin (finrank 𝕜 V) => (x : ℕ))).card :=
+        (Finset.card_image_of_injOn hS'inj).symm
+      _ = (S.filter (fun n => n < finrank 𝕜 V)).card := by rw [himg]
+      _ ≤ S.card := Finset.card_le_card (Finset.filter_subset _ _)
+  have hLHS : ∑ n ∈ S, absDoubleAngleTangent (v n) =
+      ∑ x ∈ S',
+        absDoubleAngleTangent (R.toLinearMap.singularValues (x : ℕ)) := by
+    have hsplit : ∑ n ∈ S,
+          absDoubleAngleTangent (v n) =
+        ∑ n ∈ S.filter (fun n => n < finrank 𝕜 V),
+          absDoubleAngleTangent (v n) := by
+      refine (Finset.sum_filter_of_ne ?_).symm
+      intro n _ hne
+      by_contra hlt
+      exact hne (by
+        rw [← hv n,
+          R.toLinearMap.singularValues_of_finrank_le (Nat.le_of_not_lt hlt),
+          absDoubleAngleTangent_zero])
+    rw [hsplit, ← himg, Finset.sum_image hS'inj]
+    exact Finset.sum_congr rfl fun x _ => by rw [hv (x : ℕ)]
+  exact ⟨S', hS'card, hLHS⟩
+
 /-- **The branch-free Ky Fan root of the `tan 2Θ` theorem on an arbitrary
 Hilbert space** (finite-dimensional invariant configuration).
 
@@ -205,7 +272,7 @@ theorem sum_absDoubleAngleTangent_le_of_finiteDimensional_invariantSubspace
     M.orthogonalProjectionOnto ∘L T ∘L M.subtypeL with hT'def
   have hcoeT : ∀ x : ↥M, ((T' x : ↥M) : E) = T (x : E) := by
     intro x
-    show M.starProjection (T (x : E)) = T (x : E)
+    change M.starProjection (T (x : E)) = T (x : E)
     exact Submodule.starProjection_eq_self_iff.mpr (hTM (x : E))
   -- the trial subspace inside the carrier
   set U' : Submodule 𝕜 ↥M := U.comap M.subtype with hU'def
@@ -228,57 +295,37 @@ theorem sum_absDoubleAngleTangent_le_of_finiteDimensional_invariantSubspace
       exact (Submodule.mem_orthogonal U (x : E)).mp hx (w : E)
         ((hU'mem w).mp hw)
   -- symmetry of the compressions
-  have hsym : ∀ (B : E →L[𝕜] E), IsSelfAdjoint B →
-      (M.orthogonalProjectionOnto ∘L B ∘L
-        M.subtypeL : ↥M →L[𝕜] ↥M).toLinearMap.IsSymmetric := by
-    intro B hB x y
-    show ⟪((M.orthogonalProjectionOnto ∘L B ∘L M.subtypeL) x : ↥M),
-        y⟫_𝕜 = ⟪x, ((M.orthogonalProjectionOnto ∘L B ∘L M.subtypeL) y :
-        ↥M)⟫_𝕜
-    rw [Submodule.coe_inner, Submodule.coe_inner]
-    show ⟪M.starProjection (B (x : E)), (y : E)⟫_𝕜 =
-      ⟪(x : E), M.starProjection (B (y : E))⟫_𝕜
-    calc ⟪M.starProjection (B (x : E)), (y : E)⟫_𝕜
-        = ⟪B (x : E), M.starProjection (y : E)⟫_𝕜 :=
-          M.inner_starProjection_left_eq_right _ _
-      _ = ⟪B (x : E), (y : E)⟫_𝕜 := by
-          rw [Submodule.starProjection_eq_self_iff.mpr y.2]
-      _ = ⟪(x : E), B (y : E)⟫_𝕜 := hB.isSymmetric (x : E) (y : E)
-      _ = ⟪M.starProjection (x : E), B (y : E)⟫_𝕜 := by
-          rw [Submodule.starProjection_eq_self_iff.mpr x.2]
-      _ = ⟪(x : E), M.starProjection (B (y : E))⟫_𝕜 :=
-          M.inner_starProjection_left_eq_right _ _
   -- transfer the block hypotheses to the carrier
   have hAU' : ∀ x ∈ U', A'.toLinearMap x ∈ U' := by
     intro x hx
     have hAx : A (x : E) ∈ U := hAU _ ((hU'mem x).mp hx)
     refine (hU'mem _).mpr ?_
-    show M.starProjection (A (x : E)) ∈ U
+    change M.starProjection (A (x : E)) ∈ U
     rw [Submodule.starProjection_eq_self_iff.mpr (hUM hAx)]
     exact hAx
   have hHU' : ∀ x ∈ U', H'.toLinearMap x ∈ U'ᗮ := by
     intro x hx
     have hHx : H (x : E) ∈ Uᗮ := hHU _ ((hU'mem x).mp hx)
     refine (hU'perp _).mpr ?_
-    show M.starProjection (H (x : E)) ∈ Uᗮ
+    change M.starProjection (H (x : E)) ∈ Uᗮ
     exact starProjection_mem_orthogonal_of_le hUM hHx
   have hHUperp' : ∀ x ∈ U'ᗮ, H'.toLinearMap x ∈ U' := by
     intro x hx
     have hHx : H (x : E) ∈ U := hHUperp _ ((hU'perp x).mp hx)
     refine (hU'mem _).mpr ?_
-    show M.starProjection (H (x : E)) ∈ U
+    change M.starProjection (H (x : E)) ∈ U
     rw [Submodule.starProjection_eq_self_iff.mpr (hUM hHx)]
     exact hHx
   have hTmem' : ∀ x : ↥M, T'.toLinearMap x ∈ U'ᗮ := by
     intro x
     refine (hU'perp _).mpr ?_
-    show ((T' x : ↥M) : E) ∈ Uᗮ
+    change ((T' x : ↥M) : E) ∈ Uᗮ
     rw [hcoeT]
     exact hTmem (x : E)
   have hTzero' : ∀ x ∈ U'ᗮ, T'.toLinearMap x = 0 := by
     intro x hx
     apply Subtype.ext
-    show ((T' x : ↥M) : E) = ((0 : ↥M) : E)
+    change ((T' x : ↥M) : E) = ((0 : ↥M) : E)
     rw [hcoeT]
     exact hTzero _ ((hU'perp x).mp hx)
   -- transfer the quadratic-form bounds
@@ -288,7 +335,7 @@ theorem sum_absDoubleAngleTangent_le_of_finiteDimensional_invariantSubspace
         ⟪B (x : E), (x : E)⟫_𝕜 := by
     intro B x
     rw [Submodule.coe_inner]
-    show ⟪M.starProjection (B (x : E)), (x : E)⟫_𝕜 = _
+    change ⟪M.starProjection (B (x : E)), (x : E)⟫_𝕜 = _
     rw [M.inner_starProjection_left_eq_right,
       Submodule.starProjection_eq_self_iff.mpr x.2]
   have hUb' : ∀ x ∈ U', b * ‖x‖ ^ 2 ≤
@@ -311,7 +358,7 @@ theorem sum_absDoubleAngleTangent_le_of_finiteDimensional_invariantSubspace
     obtain ⟨y, hyU, hy⟩ := hinv (x : E) ((hU'mem x).mp hx)
     refine ⟨⟨y, hUM hyU⟩, hyU, ?_⟩
     apply Subtype.ext
-    show M.starProjection (A ((x : E) + M.starProjection (T (x : E)))) +
+    change M.starProjection (A ((x : E) + M.starProjection (T (x : E)))) +
         M.starProjection (H ((x : E) + M.starProjection (T (x : E)))) =
       y + M.starProjection (T y)
     rw [Submodule.starProjection_eq_self_iff.mpr (hTM (x : E)),
@@ -327,9 +374,9 @@ theorem sum_absDoubleAngleTangent_le_of_finiteDimensional_invariantSubspace
   -- exact transport of the graph-coordinate singular values
   have hTfact : T = M.subtypeL ∘L T' ∘L M.orthogonalProjectionOnto := by
     ext x
-    show T x = ((T' (M.orthogonalProjectionOnto x) : ↥M) : E)
+    change T x = ((T' (M.orthogonalProjectionOnto x) : ↥M) : E)
     rw [hcoeT]
-    show T x = T (M.starProjection x)
+    change T x = T (M.starProjection x)
     have hperp : x - M.starProjection x ∈ Uᗮ :=
       hMperpU (sub_starProjection_mem_orthogonal' (𝕜 := 𝕜) x)
     have hz := hTzero _ hperp
@@ -360,41 +407,8 @@ theorem sum_absDoubleAngleTangent_le_of_finiteDimensional_invariantSubspace
     rw [hT'id] at h
     rw [← h, hTa n]
   -- the participating indices inside the finite carrier
-  set S' : Finset (Fin (finrank 𝕜 ↥M)) :=
-    Finset.univ.filter (fun j : Fin (finrank 𝕜 ↥M) => (j : ℕ) ∈ S) with hS'def
-  have hS'inj : ∀ x ∈ S', ∀ y ∈ S', (x : ℕ) = (y : ℕ) → x = y :=
-    fun x _ y _ h => Fin.val_injective h
-  have himg : S'.image (fun x : Fin (finrank 𝕜 ↥M) => (x : ℕ)) =
-      S.filter (fun n => n < finrank 𝕜 ↥M) := by
-    ext n
-    simp only [hS'def, Finset.mem_image, Finset.mem_filter, Finset.mem_univ,
-      true_and]
-    constructor
-    · rintro ⟨x, hx, rfl⟩
-      exact ⟨hx, x.2⟩
-    · rintro ⟨hnS, hlt⟩
-      exact ⟨⟨n, hlt⟩, hnS, rfl⟩
-  have hS'card : S'.card ≤ S.card := by
-    calc S'.card = (S'.image (fun x : Fin (finrank 𝕜 ↥M) => (x : ℕ))).card :=
-        (Finset.card_image_of_injOn hS'inj).symm
-      _ = (S.filter (fun n => n < finrank 𝕜 ↥M)).card := by rw [himg]
-      _ ≤ S.card := Finset.card_le_card (Finset.filter_subset _ _)
-  have hLHS : ∑ n ∈ S, absDoubleAngleTangent (approximationSingularValue n T) =
-      ∑ x ∈ S',
-        absDoubleAngleTangent (T'.toLinearMap.singularValues (x : ℕ)) := by
-    have hsplit : ∑ n ∈ S,
-          absDoubleAngleTangent (approximationSingularValue n T) =
-        ∑ n ∈ S.filter (fun n => n < finrank 𝕜 ↥M),
-          absDoubleAngleTangent (approximationSingularValue n T) := by
-      refine (Finset.sum_filter_of_ne ?_).symm
-      intro n _ hne
-      by_contra hlt
-      exact hne (by
-        rw [← hTsv n,
-          T'.toLinearMap.singularValues_of_finrank_le (Nat.le_of_not_lt hlt),
-          absDoubleAngleTangent_zero])
-    rw [hsplit, ← himg, Finset.sum_image hS'inj]
-    exact Finset.sum_congr rfl fun x _ => by rw [hTsv (x : ℕ)]
+  obtain ⟨S', hS'card, hLHS⟩ := tangent_singularValues_reindex ↥M T'
+    (fun n => approximationSingularValue n T) hTsv S
   -- one-sided transport of the perturbation prefix
   have hH'id : H'.toLinearMap.toContinuousLinearMap = H' := by
     ext x; rfl
@@ -422,7 +436,7 @@ theorem sum_absDoubleAngleTangent_le_of_finiteDimensional_invariantSubspace
       fun n _ _ => approximationSingularValue_nonneg n H
   -- apply the branch-free finite theorem on the carrier
   have hfin := sum_absDoubleAngleTangent_le
-    (hsym A hA) (hsym H hH) hAU' hHU' hHUperp' hTmem' hTzero'
+    (compression_isSymmetric M A hA) (compression_isSymmetric M H hH) hAU' hHU' hHUperp' hTmem' hTzero'
     hUb' hUa' hinv' hab S'
   rw [hLHS]
   calc (b - a) * ∑ x ∈ S',

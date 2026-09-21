@@ -437,7 +437,7 @@ theorem star_spectraCanonicalIntertwiner_mul_self_commute_projection
     simpa only [star_mul,
       (isSelfAdjoint_starProjection U).star_eq,
       (isSelfAdjoint_starProjection V).star_eq] using h
-  show
+  change
     (star (spectraCanonicalIntertwiner U V) *
         spectraCanonicalIntertwiner U V) * U.starProjection =
       U.starProjection *
@@ -678,7 +678,7 @@ omit [CompleteSpace H] in
 theorem subspaceGap_orthogonal (U V : Submodule 𝕜 H)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
     Uᗮ.projectionGap Vᗮ = U.projectionGap V := by
-  show ‖Uᗮ.starProjection - Vᗮ.starProjection‖ = ‖U.starProjection - V.starProjection‖
+  change ‖Uᗮ.starProjection - Vᗮ.starProjection‖ = ‖U.starProjection - V.starProjection‖
   rw [Submodule.starProjection_orthogonal' U, Submodule.starProjection_orthogonal' V,
     show (1 - U.starProjection) - (1 - V.starProjection)
       = V.starProjection - U.starProjection from by abel]
@@ -1101,7 +1101,7 @@ theorem commute_projection_spectraCanonicalIntertwiner_star_mul_self
     rw [star_mul, star_mul, (isSelfAdjoint_starProjection U).star_eq,
       (isSelfAdjoint_starProjection V).star_eq] at h
     exact h.symm
-  show U.starProjection * (star C * C) = star C * C * U.starProjection
+  change U.starProjection * (star C * C) = star C * C * U.starProjection
   rw [← mul_assoc, ← h2, mul_assoc, ← h1, ← mul_assoc]
 
 /-- The ordered product of the target and source reflections.  The direct

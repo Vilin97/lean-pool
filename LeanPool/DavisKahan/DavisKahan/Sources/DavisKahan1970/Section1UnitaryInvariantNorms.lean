@@ -159,7 +159,7 @@ theorem equation1_12 (K : E →L[ℂ] F) {ν : ℕ}
   have hιnorm : ‖ι‖ ≤ 1 := by
     refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun z => ?_
     have hz : ‖ι z‖ = ‖z‖ := by
-      show ‖WithLp.toLp 2 ((z : F), (0 : EuclideanSpace ℂ (Fin ν)))‖ = ‖z‖
+      change ‖WithLp.toLp 2 ((z : F), (0 : EuclideanSpace ℂ (Fin ν)))‖ = ‖z‖
       rw [WithLp.prod_norm_eq_of_L2]
       simp
     rw [hz, one_mul]

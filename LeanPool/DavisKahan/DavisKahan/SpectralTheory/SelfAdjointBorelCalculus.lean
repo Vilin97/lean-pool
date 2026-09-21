@@ -127,7 +127,7 @@ theorem realSpectrum_eq_toPMap_top_spectrum
       Complex.ofReal ⁻¹'
         TauCeti.LinearPMap.spectrum ((A : H →ₗ[ℂ] H).toPMap ⊤) := by
   ext r
-  show (r : ℂ) ∈ spectrum ℂ A ↔ (r : ℂ) ∉ TauCeti.LinearPMap.resolventSet _
+  change (r : ℂ) ∈ spectrum ℂ A ↔ (r : ℂ) ∉ TauCeti.LinearPMap.resolventSet _
   rw [spectrum.mem_iff, Algebra.algebraMap_eq_smul_one,
     ← IsUnit.neg_iff, neg_sub, mem_resolventSet_toPMap_top_iff A (r : ℂ)]
 

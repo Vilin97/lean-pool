@@ -458,15 +458,15 @@ theorem finrank_beamTrial : Module.finrank ℝ beamTrial = 2 := by
   classical
   obtain ⟨hnorm1, hnorm2, h12ambient⟩ := beamTrial_orthonormal
   have h1 : ⟪beamTrialVecOne, beamTrialVecOne⟫_ℝ = 1 := by
-    show ⟪centeredAffineLp DavisKahan1970.Section9.trialOne,
+    change ⟪centeredAffineLp DavisKahan1970.Section9.trialOne,
       centeredAffineLp DavisKahan1970.Section9.trialOne⟫_ℝ = 1
     rw [real_inner_self_eq_norm_sq, hnorm1]
   have h2 : ⟪beamTrialVecTwo, beamTrialVecTwo⟫_ℝ = 1 := by
-    show ⟪centeredAffineLp DavisKahan1970.Section9.trialTwo,
+    change ⟪centeredAffineLp DavisKahan1970.Section9.trialTwo,
       centeredAffineLp DavisKahan1970.Section9.trialTwo⟫_ℝ = 1
     rw [real_inner_self_eq_norm_sq, hnorm2]
   have h12 : ⟪beamTrialVecOne, beamTrialVecTwo⟫_ℝ = 0 := by
-    show ⟪centeredAffineLp DavisKahan1970.Section9.trialOne,
+    change ⟪centeredAffineLp DavisKahan1970.Section9.trialOne,
       centeredAffineLp DavisKahan1970.Section9.trialTwo⟫_ℝ = 0
     exact h12ambient
   have h21 : ⟪beamTrialVecTwo, beamTrialVecOne⟫_ℝ = 0 := by

@@ -284,31 +284,27 @@ private theorem abs_re_inner_error_right
   rw [← map_sub, ← inner_sub_right]
   exact (RCLike.abs_re_le_norm _).trans (norm_inner_le_norm _ _)
 
-/-- Per approximate singular pair, equation (7.6) controls the **actual**
-tangent singular value by two residual pairings.  The polar factors of the
-signed cosine blocks are where the two angle branches are absorbed. -/
-theorem reflectionTangent_approximate_pair
-    (A0 : E0 →L[ℂ] E0) (A1 : E1 →L[ℂ] E1) (B T : E0 →L[ℂ] E1)
-    (C0 : E0 →L[ℂ] E0) (C1 : E1 →L[ℂ] E1)
-    (_hA0 : IsSelfAdjoint A0) (_hA1 : IsSelfAdjoint A1)
+private theorem reflectionTangent_pair_norm_estimates
+    (T : E0 →L[ℂ] E1) (C0 : E0 →L[ℂ] E0) (C1 : E1 →L[ℂ] E1)
     (hC0 : IsSelfAdjoint C0) (hC1 : IsSelfAdjoint C1)
     (hC0unit : IsUnit C0) (hC1unit : IsUnit C1)
-    {a b : ℝ} (_hab : a < b)
-    (hA0high : ∀ x : E0, b * ‖x‖ ^ 2 ≤ RCLike.re ⟪A0 x, x⟫_ℂ)
-    (hA1low : ∀ y : E1, RCLike.re ⟪A1 y, y⟫_ℂ ≤ a * ‖y‖ ^ 2)
     (hgram0 : C0.adjoint ∘L C0 ∘L (1 + T.adjoint ∘L T) = 1)
     (hgram1 : C1.adjoint ∘L C1 ∘L (1 + T ∘L T.adjoint) = 1)
-    (heq76 : (C1 ∘L T) ∘L A0 - A1 ∘L (C1 ∘L T) =
-      B ∘L C0 + C1 ∘L B)
-    {u : E0} {v : E1} {t eps : ℝ}
-    (hu : ‖u‖ = 1) (hv : ‖v‖ = 1) (ht0 : 0 ≤ t) (htnorm : t ≤ ‖T‖)
+    {u : E0} {v : E1} {t eps : ℝ} (ht0 : 0 ≤ t) (htnorm : t ≤ ‖T‖)
     (hTu : ‖T u - (t : ℂ) • v‖ ≤ eps)
     (hTv : ‖T.adjoint v - (t : ℂ) • u‖ ≤ eps) :
-    (b - a) * t ≤
-      |RCLike.re ⟪v, B u⟫_ℂ| +
-        |RCLike.re ⟪C1.polarIsometryOfIsUnitModulus v,
-          B (C0.polarIsometryOfIsUnitModulus u)⟫_ℂ| +
-        reflectionTangentErrorCoefficient A0 A1 B T C0 C1 * eps := by
+    let J0 := C0.polarIsometryOfIsUnitModulus
+    let J1 := C1.polarIsometryOfIsUnitModulus
+    let q : ℝ := Real.sqrt (1 + ‖T‖ ^ 2)
+    let c : ℝ := (Real.sqrt (1 + t ^ 2))⁻¹
+    let M0 : ℝ := 2 * ‖C0‖ ^ 2 * ‖T‖ * q
+    let M1 : ℝ := 2 * ‖C1‖ ^ 2 * ‖T‖ * q
+    (‖C1.modulus v - (c : ℂ) • v‖ ≤ M1 * eps) ∧
+      (‖C0 u - (c : ℂ) • J0 u‖ ≤ M0 * eps) ∧
+      (‖T.adjoint (C1.modulus v) - ((c * t : ℝ) : ℂ) • u‖ ≤
+        (‖T‖ * M1 + 1) * eps) ∧
+      (‖C1 (T u) - ((c * t : ℝ) : ℂ) • J1 v‖ ≤
+        (‖C1‖ + ‖T‖ * M1) * eps) := by
   let J0 := C0.polarIsometryOfIsUnitModulus
   let J1 := C1.polarIsometryOfIsUnitModulus
   let q : ℝ := Real.sqrt (1 + ‖T‖ ^ 2)
@@ -318,21 +314,7 @@ theorem reflectionTangent_approximate_pair
   let M1 : ℝ := 2 * ‖C1‖ ^ 2 * ‖T‖ * q
   have heps0 : 0 ≤ eps := (norm_nonneg _).trans hTu
   have hr0 : 0 < r := by dsimp [r]; positivity
-  have hq0 : 0 < q := by dsimp [q]; positivity
-  have hrleq : r ≤ q := by
-    dsimp [r, q]
-    exact Real.sqrt_le_sqrt (by nlinarith)
   have hc0 : 0 < c := by dsimp [c]; positivity
-  have hqc : 1 ≤ q * c := by
-    dsimp [c]
-    rw [le_mul_inv_iff₀ hr0]
-    simpa [one_mul] using hrleq
-  have hJ0norm : ‖J0 u‖ = 1 := by
-    dsimp [J0]
-    rw [norm_polar_apply C0 hC0 hC0unit, hu]
-  have hJ1norm : ‖J1 v‖ = 1 := by
-    dsimp [J1]
-    rw [norm_polar_apply C1 hC1 hC1unit, hv]
   have hmod0 : ‖C0.modulus u - (c : ℂ) • u‖ ≤ M0 * eps := by
     simpa [q, r, c, M0] using
       gram_residual_of_tangent_pair_right C0 T hgram0 ht0 htnorm hTu hTv
@@ -446,6 +428,105 @@ theorem reflectionTangent_approximate_pair
         have htM1 : t * (M1 * eps) ≤ ‖T‖ * (M1 * eps) :=
           mul_le_mul_of_nonneg_right htnorm hM1eps
         linarith only [htM1]
+  exact ⟨hmod1, hC0polar, hTstarMod, hC1T⟩
+
+private theorem abs_re_inner_map_approx_scaled
+    (B : E0 →L[ℂ] E1) {x y : E0} {z : E1} {c M eps : ℝ}
+    (hz : ‖z‖ = 1) (hc0 : 0 < c) (hxy : ‖x - (c : ℂ) • y‖ ≤ M * eps) :
+    |RCLike.re ⟪z, B x⟫_ℂ| ≤
+      c * |RCLike.re ⟪z, B y⟫_ℂ| + ‖B‖ * (M * eps) := by
+  let x0 : ℝ := RCLike.re ⟪z, B (x)⟫_ℂ
+  let y0 : ℝ := RCLike.re ⟪z, B (y)⟫_ℂ
+  let e0 : ℝ := ‖B‖ * (M * eps)
+  have hscale :
+      RCLike.re ⟪z, B ((c : ℂ) • y)⟫_ℂ = c * y0 := by
+    change RCLike.re ⟪z, B ((c : ℂ) • y)⟫_ℂ =
+      c * RCLike.re ⟪z, B (y)⟫_ℂ
+    rw [B.map_smul (c : ℂ) (y), inner_smul_right]
+    change (((c : ℂ) * ⟪z, B (y)⟫_ℂ).re) =
+      c * (⟪z, B (y)⟫_ℂ).re
+    rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im]
+    ring
+  have herr : |x0 - c * y0| ≤ e0 := by
+    have hBerr : ‖B (x) - B ((c : ℂ) • y)‖ ≤ e0 := by
+      dsimp [e0]
+      rw [← map_sub]
+      exact (B.le_opNorm _).trans
+        (mul_le_mul_of_nonneg_left hxy (norm_nonneg B))
+    have hinner := abs_re_inner_error_right
+      (z := z) (x := B (x)) (y := B ((c : ℂ) • y))
+    have hbound := hinner.trans (by simpa [hz] using hBerr)
+    dsimp [x0]
+    rw [hscale] at hbound
+    exact hbound
+  calc
+    |RCLike.re ⟪z, B (x)⟫_ℂ| = |x0| := by rfl
+    _ = |(x0 - c * y0) + c * y0| := by congr 1 ; ring
+    _ ≤ |x0 - c * y0| + |c * y0| := abs_add_le _ _
+    _ ≤ e0 + c * |y0| := by
+      gcongr
+      rw [abs_mul, abs_of_pos hc0]
+    _ = c * |y0| + e0 := by ring
+    _ = c * |RCLike.re ⟪z, B (y)⟫_ℂ| + ‖B‖ * (M * eps) := by rfl
+
+/-- Per approximate singular pair, equation (7.6) controls the **actual**
+tangent singular value by two residual pairings.  The polar factors of the
+signed cosine blocks are where the two angle branches are absorbed. -/
+theorem reflectionTangent_approximate_pair
+    (A0 : E0 →L[ℂ] E0) (A1 : E1 →L[ℂ] E1) (B T : E0 →L[ℂ] E1)
+    (C0 : E0 →L[ℂ] E0) (C1 : E1 →L[ℂ] E1)
+    (_hA0 : IsSelfAdjoint A0) (_hA1 : IsSelfAdjoint A1)
+    (hC0 : IsSelfAdjoint C0) (hC1 : IsSelfAdjoint C1)
+    (hC0unit : IsUnit C0) (hC1unit : IsUnit C1)
+    {a b : ℝ} (_hab : a < b)
+    (hA0high : ∀ x : E0, b * ‖x‖ ^ 2 ≤ RCLike.re ⟪A0 x, x⟫_ℂ)
+    (hA1low : ∀ y : E1, RCLike.re ⟪A1 y, y⟫_ℂ ≤ a * ‖y‖ ^ 2)
+    (hgram0 : C0.adjoint ∘L C0 ∘L (1 + T.adjoint ∘L T) = 1)
+    (hgram1 : C1.adjoint ∘L C1 ∘L (1 + T ∘L T.adjoint) = 1)
+    (heq76 : (C1 ∘L T) ∘L A0 - A1 ∘L (C1 ∘L T) =
+      B ∘L C0 + C1 ∘L B)
+    {u : E0} {v : E1} {t eps : ℝ}
+    (hu : ‖u‖ = 1) (hv : ‖v‖ = 1) (ht0 : 0 ≤ t) (htnorm : t ≤ ‖T‖)
+    (hTu : ‖T u - (t : ℂ) • v‖ ≤ eps)
+    (hTv : ‖T.adjoint v - (t : ℂ) • u‖ ≤ eps) :
+    (b - a) * t ≤
+      |RCLike.re ⟪v, B u⟫_ℂ| +
+        |RCLike.re ⟪C1.polarIsometryOfIsUnitModulus v,
+          B (C0.polarIsometryOfIsUnitModulus u)⟫_ℂ| +
+        reflectionTangentErrorCoefficient A0 A1 B T C0 C1 * eps := by
+  let J0 := C0.polarIsometryOfIsUnitModulus
+  let J1 := C1.polarIsometryOfIsUnitModulus
+  let q : ℝ := Real.sqrt (1 + ‖T‖ ^ 2)
+  let r : ℝ := Real.sqrt (1 + t ^ 2)
+  let c : ℝ := r⁻¹
+  let M0 : ℝ := 2 * ‖C0‖ ^ 2 * ‖T‖ * q
+  let M1 : ℝ := 2 * ‖C1‖ ^ 2 * ‖T‖ * q
+  have heps0 : 0 ≤ eps := (norm_nonneg _).trans hTu
+  have hr0 : 0 < r := by dsimp [r]; positivity
+  have hq0 : 0 < q := by dsimp [q]; positivity
+  have hrleq : r ≤ q := by
+    dsimp [r, q]
+    exact Real.sqrt_le_sqrt (by nlinarith)
+  have hc0 : 0 < c := by dsimp [c]; positivity
+  have hqc : 1 ≤ q * c := by
+    dsimp [c]
+    rw [le_mul_inv_iff₀ hr0]
+    simpa [one_mul] using hrleq
+  have hJ0norm : ‖J0 u‖ = 1 := by
+    dsimp [J0]
+    rw [norm_polar_apply C0 hC0 hC0unit, hu]
+  have hJ1norm : ‖J1 v‖ = 1 := by
+    dsimp [J1]
+    rw [norm_polar_apply C1 hC1 hC1unit, hv]
+  obtain ⟨hmod1, hC0polar, hTstarMod, hC1T⟩ :=
+    reflectionTangent_pair_norm_estimates T C0 C1 hC0 hC1 hC0unit hC1unit
+      hgram0 hgram1 ht0 htnorm hTu hTv
+  change ‖C1.modulus v - (c : ℂ) • v‖ ≤ M1 * eps at hmod1
+  change ‖C0 u - (c : ℂ) • J0 u‖ ≤ M0 * eps at hC0polar
+  change ‖T.adjoint (C1.modulus v) - ((c * t : ℝ) : ℂ) • u‖ ≤
+    (‖T‖ * M1 + 1) * eps at hTstarMod
+  change ‖C1 (T u) - ((c * t : ℝ) : ℂ) • J1 v‖ ≤
+    (‖C1‖ + ‖T‖ * M1) * eps at hC1T
   have hEq := congrArg (fun L : E0 →L[ℂ] E1 => L u) heq76
   simp only [ContinuousLinearMap.comp_apply, sub_apply, add_apply] at hEq
   have hEqInner := congrArg (fun z : E1 => RCLike.re ⟪J1 v, z⟫_ℂ) hEq
@@ -516,40 +597,8 @@ theorem reflectionTangent_approximate_pair
     linarith only [herr'.2, hformScaled]
   have hrhs0 :
       |RCLike.re ⟪J1 v, B (C0 u)⟫_ℂ| ≤
-        c * |RCLike.re ⟪J1 v, B (J0 u)⟫_ℂ| + ‖B‖ * (M0 * eps) := by
-    let x0 : ℝ := RCLike.re ⟪J1 v, B (C0 u)⟫_ℂ
-    let y0 : ℝ := RCLike.re ⟪J1 v, B (J0 u)⟫_ℂ
-    let e0 : ℝ := ‖B‖ * (M0 * eps)
-    have hscale :
-        RCLike.re ⟪J1 v, B ((c : ℂ) • J0 u)⟫_ℂ = c * y0 := by
-      change RCLike.re ⟪J1 v, B ((c : ℂ) • J0 u)⟫_ℂ =
-        c * RCLike.re ⟪J1 v, B (J0 u)⟫_ℂ
-      rw [B.map_smul (c : ℂ) (J0 u), inner_smul_right]
-      change (((c : ℂ) * ⟪J1 v, B (J0 u)⟫_ℂ).re) =
-        c * (⟪J1 v, B (J0 u)⟫_ℂ).re
-      rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im]
-      ring
-    have herr : |x0 - c * y0| ≤ e0 := by
-      have hBerr : ‖B (C0 u) - B ((c : ℂ) • J0 u)‖ ≤ e0 := by
-        dsimp [e0]
-        rw [← map_sub]
-        exact (B.le_opNorm _).trans
-          (mul_le_mul_of_nonneg_left hC0polar (norm_nonneg B))
-      have hinner := abs_re_inner_error_right
-        (z := J1 v) (x := B (C0 u)) (y := B ((c : ℂ) • J0 u))
-      have hbound := hinner.trans (by simpa [hJ1norm] using hBerr)
-      dsimp [x0]
-      rw [hscale] at hbound
-      exact hbound
-    calc
-      |RCLike.re ⟪J1 v, B (C0 u)⟫_ℂ| = |x0| := by rfl
-      _ = |(x0 - c * y0) + c * y0| := by congr 1 ; ring
-      _ ≤ |x0 - c * y0| + |c * y0| := abs_add_le _ _
-      _ ≤ e0 + c * |y0| := by
-        gcongr
-        rw [abs_mul, abs_of_pos hc0]
-      _ = c * |y0| + e0 := by ring
-      _ = c * |RCLike.re ⟪J1 v, B (J0 u)⟫_ℂ| + ‖B‖ * (M0 * eps) := by rfl
+        c * |RCLike.re ⟪J1 v, B (J0 u)⟫_ℂ| + ‖B‖ * (M0 * eps) :=
+    abs_re_inner_map_approx_scaled B hJ1norm hc0 hC0polar
   have hrhs1 :
       |RCLike.re ⟪J1 v, C1 (B u)⟫_ℂ| ≤
         c * |RCLike.re ⟪v, B u⟫_ℂ| + ‖B‖ * (M1 * eps) := by

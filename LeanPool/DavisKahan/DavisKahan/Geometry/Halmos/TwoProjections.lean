@@ -139,7 +139,7 @@ Corollary 3.1's defect-block form. -/
 theorem halmosTrivialPart_orthogonal_right (U V : Submodule 𝕜 H)
     [V.HasOrthogonalProjection] :
     halmosTrivialPart U Vᗮ = halmosTrivialPart U V := by
-  show (U ⊓ Vᗮ ⊔ U ⊓ Vᗮᗮ) ⊔ (Uᗮ ⊓ Vᗮ ⊔ Uᗮ ⊓ Vᗮᗮ) =
+  change (U ⊓ Vᗮ ⊔ U ⊓ Vᗮᗮ) ⊔ (Uᗮ ⊓ Vᗮ ⊔ Uᗮ ⊓ Vᗮᗮ) =
     (U ⊓ V ⊔ U ⊓ Vᗮ) ⊔ (Uᗮ ⊓ V ⊔ Uᗮ ⊓ Vᗮ)
   rw [Submodule.orthogonal_orthogonal V, sup_comm (U ⊓ Vᗮ) (U ⊓ V),
     sup_comm (Uᗮ ⊓ Vᗮ) (Uᗮ ⊓ V)]
@@ -149,7 +149,7 @@ omit [CompleteSpace H] in
 theorem halmosGenericPart_orthogonal_right (U V : Submodule 𝕜 H)
     [V.HasOrthogonalProjection] :
     halmosGenericPart U Vᗮ = halmosGenericPart U V := by
-  show (halmosTrivialPart U Vᗮ)ᗮ = (halmosTrivialPart U V)ᗮ
+  change (halmosTrivialPart U Vᗮ)ᗮ = (halmosTrivialPart U V)ᗮ
   rw [halmosTrivialPart_orthogonal_right U V]
 
 /-- The common part `U ⊓ V` is orthogonally complemented. -/

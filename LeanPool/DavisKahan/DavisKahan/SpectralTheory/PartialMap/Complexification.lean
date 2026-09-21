@@ -105,19 +105,19 @@ def linearMap
     (A (domainIm A z))
   map_add' z w := by
     refine RealComplexification.ext ?_ ?_
-    · show A (domainRe A z + domainRe A w) =
+    · change A (domainRe A z + domainRe A w) =
         A (domainRe A z) + A (domainRe A w)
       exact LinearPMap.map_add _ _ _
-    · show A (domainIm A z + domainIm A w) =
+    · change A (domainIm A z + domainIm A w) =
         A (domainIm A z) + A (domainIm A w)
       exact LinearPMap.map_add _ _ _
   map_smul' c z := by
     refine RealComplexification.ext ?_ ?_
-    · show A (c.re • domainRe A z - c.im • domainIm A z) =
+    · change A (c.re • domainRe A z - c.im • domainIm A z) =
         c.re • A (domainRe A z) -
           c.im • A (domainIm A z)
       rw [LinearPMap.map_sub, LinearPMap.map_smul, LinearPMap.map_smul]
-    · show A (c.im • domainRe A z + c.re • domainIm A z) =
+    · change A (c.im • domainRe A z + c.re • domainIm A z) =
         c.im • A (domainRe A z) +
           c.re • A (domainIm A z)
       rw [LinearPMap.map_add, LinearPMap.map_smul, LinearPMap.map_smul]
@@ -403,11 +403,11 @@ theorem complexify_ofBounded
   · intro x y hxy
     refine RealComplexification.ext ?_ ?_
     · rw [complexify_apply_re]
-      show T (re (x : Eℂ)) =
+      change T (re (x : Eℂ)) =
         re (RealComplexification.complexify T (y : Eℂ))
       rw [re_complexify, hxy]
     · rw [complexify_apply_im]
-      show T (im (x : Eℂ)) =
+      change T (im (x : Eℂ)) =
         im (RealComplexification.complexify T (y : Eℂ))
       rw [im_complexify, hxy]
 
@@ -570,7 +570,7 @@ theorem mem_complexify_adjoint_domain_iff
       continuous_ofImaginaryDomain A
     constructor
     · rw [LinearPMap.mem_adjoint_domain_iff]
-      show Continuous fun x : A.domain => ⟪re z, A x⟫_ℝ
+      change Continuous fun x : A.domain => ⟪re z, A x⟫_ℝ
       have hrestrict : Continuous fun x : A.domain =>
           ⟪z, (complexify A) (ofRealDomain A x)⟫_ℂ :=
         hz.comp hofReal
@@ -579,7 +579,7 @@ theorem mem_complexify_adjoint_domain_iff
         complexify_apply_ofReal, inner_ofReal_right_re] at hre
       exact hre
     · rw [LinearPMap.mem_adjoint_domain_iff]
-      show Continuous fun x : A.domain => ⟪im z, A x⟫_ℝ
+      change Continuous fun x : A.domain => ⟪im z, A x⟫_ℝ
       have hrestrict : Continuous fun x : A.domain =>
           ⟪z, (complexify A) (ofImaginaryDomain A x)⟫_ℂ :=
         hz.comp hofImaginary

@@ -961,7 +961,7 @@ theorem tan_two_theta_norm_sub_le (hT : T.IsSymmetric) (hS : S.IsSymmetric)
     have hYapp : ∀ w, Y w = X (X w) := fun w => rfl
     have hYsym : Y.IsSymmetric := by
       intro v w
-      show ⟪X (X v), w⟫_𝕜 = ⟪v, X (X w)⟫_𝕜
+      change ⟪X (X v), w⟫_𝕜 = ⟪v, X (X w)⟫_𝕜
       rw [hXsym' (X v) w, hXsym' v (X w)]
     have hn0 : 0 < Module.finrank 𝕜 E := Module.finrank_pos
     have : Nonempty (Fin (Module.finrank 𝕜 E)) := Fin.pos_iff_nonempty.mp hn0
@@ -989,7 +989,7 @@ theorem tan_two_theta_norm_sub_le (hT : T.IsSymmetric) (hS : S.IsSymmetric)
     have hXw2 : ∀ w, ‖X w‖ ^ 2 ≤ ν * ‖w‖ ^ 2 := by
       intro w
       have h1 : RCLike.re ⟪Y w, w⟫_𝕜 = ‖X w‖ ^ 2 := by
-        show RCLike.re ⟪X (X w), w⟫_𝕜 = _
+        change RCLike.re ⟪X (X w), w⟫_𝕜 = _
         rw [hXsym' (X w) w, inner_self_eq_norm_sq]
       have hpars : ∑ i, ‖(hYsym.eigenvectorBasis rfl).repr w i‖ ^ 2 = ‖w‖ ^ 2 := by
         simp_rw [OrthonormalBasis.repr_apply_apply]

@@ -150,7 +150,7 @@ theorem diagonalPair_normingGauge_le
     rw [htop] at hle
     exact hK (top_le_iff.mp hle)
   refine ⟨hB, ?_⟩
-  show (N.extendedGauge (diagonalPair U V K)).toReal ≤
+  change (N.extendedGauge (diagonalPair U V K)).toReal ≤
     (N.extendedGauge K).toReal
   exact (ENNReal.toReal_le_toReal hB hK).mpr hle
 

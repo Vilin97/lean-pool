@@ -241,7 +241,7 @@ theorem adjoint_comp_displacement_directRotation
     ext x
     -- `simp` unfolds `directRotation` into its polar factor, after which
     -- `symm_apply_apply` no longer matches; state the goal instead
-    show (directRotation U V hacute).symm ((directRotation U V hacute) x) = x
+    change (directRotation U V hacute).symm ((directRotation U V hacute) x) = x
     exact (directRotation U V hacute).symm_apply_apply x
   rw [map_sub, LinearMap.adjoint_id, hadj]
   have hexpand : (LinearMap.id - (directRotation U V hacute).symm.toLinearMap) ∘ₗ

@@ -98,7 +98,7 @@ theorem sinTwoThetaIdealBlock_hasSameApproximationNumbers_rclike :
     exact h n
   rcases RCLike.I_eq_zero_or_im_I_eq_one (K := 𝕜) with h | h
   · refine key (𝕂 := ℝ) (RCLikeIso.real h) fun n => ?_
-    show ExactSinTheta.approximationSingularValue n _ =
+    change ExactSinTheta.approximationSingularValue n _ =
       ExactSinTheta.approximationSingularValue n _
     rw [approximationSingularValue_sinTwoThetaIdealBlock_real,
       ← ExactSinTheta.ComplexificationApproximation.approximationSingularValue_complexify

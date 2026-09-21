@@ -110,7 +110,7 @@ theorem adjoint_angleComplexStructure (hacute : IsAcute U V) :
   have hGadj : LinearMap.adjoint (TauCeti.moorePenroseInverse (sinAngleOperator U V)) =
       TauCeti.moorePenroseInverse (sinAngleOperator U V) :=
     TauCeti.adjoint_moorePenroseInverse_of_isSymmetric hsym
-  show LinearMap.adjoint
+  change LinearMap.adjoint
       (((directRotation U V hacute).toLinearMap - directRotationCosine U V) ∘ₗ
         TauCeti.moorePenroseInverse (sinAngleOperator U V)) =
       -(((directRotation U V hacute).toLinearMap - directRotationCosine U V) ∘ₗ
@@ -150,7 +150,7 @@ theorem sinAngleOperator_apply_of_angleOperator_apply {x : E} {θ : ℝ}
   have h := TauCeti.selfAdjointFunctionalCalculus_apply_of_calculus_apply_eq_smul
     hsym Real.arcsin id hcalc (fun i hi => by
       have hmem := sinAngleOperator_eigenvalues_mem_Icc U V hsym i
-      show hsym.eigenvalues rfl i = Real.sin θ
+      change hsym.eigenvalues rfl i = Real.sin θ
       rw [← hi, Real.sin_arcsin hmem.1 hmem.2])
   rwa [TauCeti.selfAdjointFunctionalCalculus_id hsym] at h
 

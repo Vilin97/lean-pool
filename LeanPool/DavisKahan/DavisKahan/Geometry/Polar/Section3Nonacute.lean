@@ -293,7 +293,7 @@ theorem star_crossedDefectQuarterTurn_mul_self
       crossedDefectQuarterTurn_apply_target U V J (J ⟨s, hs⟩),
       crossedDefectQuarterTurn_apply_source U V J (J.symm ⟨t, ht⟩),
       LinearIsometryEquiv.symm_apply_apply, LinearIsometryEquiv.apply_symm_apply]
-    show -(s : H) - (t : H) = -(s + t)
+    change -(s : H) - (t : H) = -(s + t)
     abel
   have hproj : crossedDefectProjection U V x = s + t := by
     rw [crossedDefectProjection, hxr, map_add,
@@ -586,7 +586,7 @@ theorem polarFactor_add_star_eq_two_absoluteValue :
     rw [← hAsW, mul_assoc, hWstarW, hAreg]
   -- `W` commutes with the Gram operator, hence with `|C|`.
   have hcomm : Commute (star C * C) W := by
-    show star C * C * W = W * (star C * C)
+    change star C * C * W = W * (star C * C)
     calc star C * C * W
         = C * star C * W := by rw [spectraCanonicalIntertwiner_normal U V]
       _ = C * (star C * W) := by rw [mul_assoc]
@@ -604,7 +604,7 @@ theorem polarFactor_add_star_eq_two_absoluteValue :
   -- `E := W + W⋆ - 2A` is self-adjoint, `A E = 0`, and vanishes on the crossed block.
   set E := (W + star W) - (A + A) with hEdef
   have hEsa : IsSelfAdjoint E := by
-    show star E = E
+    change star E = E
     rw [hEdef, star_sub, star_add, star_add, star_star, hAsa.star_eq]
     abel
   have hEcross : ∀ z : H, z ∈ crossedDefectSum U V → E z = 0 := by

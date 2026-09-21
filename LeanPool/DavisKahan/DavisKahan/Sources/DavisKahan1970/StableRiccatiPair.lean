@@ -38,6 +38,15 @@ def stablePairError
       2 * s * ‖B.B01‖ * ε + ‖B.B01‖ * ε ^ 2) /
     (1 - s ^ 2)
 
+private theorem re_ofReal_mul_complex (r : ℝ) (z : ℂ) :
+    RCLike.re ((r : ℂ) * z) = r * RCLike.re z := by
+  simp [RCLike.re_to_complex]
+private theorem re_ofReal_sq_mul_complex (r : ℝ) (z : ℂ) :
+    RCLike.re ((r : ℂ) ^ 2 * z) = r ^ 2 * RCLike.re z := by
+  rw [pow_two, mul_assoc, re_ofReal_mul_complex,
+    re_ofReal_mul_complex]
+  ring
+
 /-- The stable form of equation (7.6), retaining the paired coefficient.
 
 For `ε = 0` this reduces to the existing exact singular-pair theorem.
@@ -78,14 +87,6 @@ theorem stableSingularPair_doubleAngleTangent_le
       _ ≤ (‖B.A1‖ * ε) * ‖y‖ := by
         gcongr
       _ = ‖B.A1‖ * ε := by rw [hynorm, mul_one]
-  have re_ofReal_mul_complex (r : ℝ) (z : ℂ) :
-      RCLike.re ((r : ℂ) * z) = r * RCLike.re z := by
-    simp [RCLike.re_to_complex]
-  have re_ofReal_sq_mul_complex (r : ℝ) (z : ℂ) :
-      RCLike.re ((r : ℂ) ^ 2 * z) = r ^ 2 * RCLike.re z := by
-    rw [pow_two, mul_assoc, re_ofReal_mul_complex,
-      re_ofReal_mul_complex]
-    ring
 
   have hA0err : |RCLike.re ⟪B.A0 x, e1⟫_ℂ| ≤ ‖B.A0‖ * ε := by
     calc

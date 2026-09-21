@@ -94,7 +94,7 @@ theorem sourceResidual_eq_sub_ritzBlock {A : H →ₗ.[𝕜] H} {Hop : H →L[�
     sourceResidual Hop P v
       = TauCeti.LinearPMap.addBounded A Hop ⟨(v : H), hPdom v⟩ - ((M v : P) : H) := by
   rw [TauCeti.LinearPMap.addBounded_apply, hRitz v]
-  show Hop (v : H) = A ⟨(v : H), hPdom v⟩ + Hop (v : H) - A ⟨(v : H), hPdom v⟩
+  change Hop (v : H) = A ⟨(v : H), hPdom v⟩ + Hop (v : H) - A ⟨(v : H), hPdom v⟩
   abel
 
 end Residual

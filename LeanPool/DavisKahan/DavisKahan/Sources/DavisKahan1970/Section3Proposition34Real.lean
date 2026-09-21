@@ -242,7 +242,7 @@ theorem proposition3_4_full_real
     reflectionOperator_mul_self_complex CU
 
   have hsqC : (WC * WC) * (WC * WC) = spectraReflectionProduct CR CV := by
-    show (WC * WC) * (WC * WC) = CV.reflectionOperator * CR.reflectionOperator
+    change (WC * WC) * (WC * WC) = CV.reflectionOperator * CR.reflectionOperator
     rw [hrefl, hWsq]
     noncomm_ring
 

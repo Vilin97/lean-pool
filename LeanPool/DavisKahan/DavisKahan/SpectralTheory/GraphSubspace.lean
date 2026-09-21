@@ -274,7 +274,7 @@ theorem projection_graphSubspace_formula
     rw [graphSubspace_eq_range U hX] at hw
     obtain ⟨y, hy⟩ := hw
     rw [← hy]
-    show ⟪z - (A * R * star A) z, A y⟫_𝕜 = 0
+    change ⟪z - (A * R * star A) z, A y⟫_𝕜 = 0
     rw [inner_eq_zero_symm]
     have hadj :=
       ContinuousLinearMap.adjoint_inner_right A y (z - (A * R * star A) z)
@@ -317,7 +317,7 @@ private theorem norm_projection_sub_of_block_norms
       have hQw : Q (x - Q x) = 0 := by
         rw [map_sub, hQQ x, sub_self]
       have h1 : (1 - Q) (x - Q x) = x - Q x := by
-        show (x - Q x) - Q (x - Q x) = x - Q x
+        change (x - Q x) - Q (x - Q x) = x - Q x
         rw [hQw, sub_zero]
       have happ : (P * (1 - Q)) (x - Q x) = P (x - Q x) := by
         calc (P * (1 - Q)) (x - Q x) = P ((1 - Q) (x - Q x)) := rfl
@@ -327,7 +327,7 @@ private theorem norm_projection_sub_of_block_norms
         _ = g * ‖x - Q x‖ := by rw [hT1norm]
     have hb2 : ‖Q x - P (Q x)‖ ≤ g * ‖Q x‖ := by
       have happ : ((1 - P) * Q) (Q x) = Q x - P (Q x) := by
-        show (1 - P) (Q (Q x)) = Q x - P (Q x)
+        change (1 - P) (Q (Q x)) = Q x - P (Q x)
         rw [hQQ x]
         rfl
       calc ‖Q x - P (Q x)‖ = ‖((1 - P) * Q) (Q x)‖ := by rw [happ]
@@ -719,16 +719,16 @@ private theorem acuteAngularOperator_spec
         have h : P (Q (R (P v))) = P v :=
           congrArg (fun S : E →L[𝕜] E => S v) hPQRP
         rw [map_sub]
-        show P (Q (R (P v))) - P v = 0
+        change P (Q (R (P v))) - P v = 0
         rw [h, sub_self]
       have hmem : (Q * R * P) v - v ∈ V := by
         refine V.sub_mem ?_ hv
-        show Q (R (P v)) ∈ V
+        change Q (R (P v)) ∈ V
         exact V.starProjection_apply_mem _
       have hzero := acute_coordinate_injective U V hacute _ hmem hPv
       exact ⟨v, sub_eq_zero.mp hzero⟩
     · rintro x ⟨y, rfl⟩
-      show Q (R (P y)) ∈ V
+      change Q (R (P y)) ∈ V
       exact V.starProjection_apply_mem _
 
 /-- A pair is acute exactly when it is the graph of a bounded angular operator. -/

@@ -276,7 +276,7 @@ theorem re_inner_le_of_mem_centralBandSubspace
   have hgnonneg : ∀ w : spectrum ℂ B, 0 ≤ g w := by
     intro w
     have hmem := hgap (reCoord_mem_realSpectrum B hB w)
-    show 0 ≤ (r - TauCeti.BorelCalculus.reCoord w) *
+    change 0 ≤ (r - TauCeti.BorelCalculus.reCoord w) *
       bandCutoff l r d (TauCeti.BorelCalculus.reCoord w)
     rcases hmem with hin | hout
     · rw [bandCutoff_eq_one hd hin, mul_one]
@@ -343,7 +343,7 @@ theorem le_re_inner_of_mem_centralBandSubspace
   have hgnonneg : ∀ w : spectrum ℂ B, 0 ≤ g w := by
     intro w
     have hmem := hgap (reCoord_mem_realSpectrum B hB w)
-    show 0 ≤ (TauCeti.BorelCalculus.reCoord w - l) *
+    change 0 ≤ (TauCeti.BorelCalculus.reCoord w - l) *
       bandCutoff l r d (TauCeti.BorelCalculus.reCoord w)
     rcases hmem with hin | hout
     · rw [bandCutoff_eq_one hd hin, mul_one]
@@ -439,7 +439,7 @@ theorem norm_shiftedOperator_ge_of_mem_centralBandSubspace_orthogonal
   have hgnonneg : ∀ w : spectrum ℂ B, 0 ≤ g w := by
     intro w
     have hmem := hgap (reCoord_mem_realSpectrum B hB w)
-    show 0 ≤ ((TauCeti.BorelCalculus.reCoord w - c) ^ 2 - K ^ 2) *
+    change 0 ≤ ((TauCeti.BorelCalculus.reCoord w - c) ^ 2 - K ^ 2) *
       (1 - bandCutoff l r d (TauCeti.BorelCalculus.reCoord w))
     rcases hmem with hin | hout
     · rw [bandCutoff_eq_one hd hin, sub_self, mul_zero]
@@ -564,7 +564,7 @@ theorem norm_shiftedOperator_ge_of_spectrumIn_gapExterior
     have hrestr : S1 = B.restrict hspec.invariant := by
       rw [hS1def]; exact compressOperator_eq_restrict_of_invariant B U hspec.invariant
     rw [hrestr]
-    show B x - ((c : ℝ) : ℂ) • x = _
+    change B x - ((c : ℝ) : ℂ) • x = _
     rw [shiftedOperator_apply, hc]
   have happly : (resolventOperator S1 ((c : ℝ) : ℂ))
       ((S1 - ((c : ℝ) : ℂ) • (1 : U →L[ℂ] U)) u) = u := by
@@ -680,7 +680,7 @@ theorem norm_shiftedOperator_le_of_spectrumIn_Icc
     exact U.starProjection_apply_mem _
   have hsym : (S ∘L Pu).IsSymmetric := by
     intro u v
-    show ⟪S (Pu u), v⟫_ℂ = ⟪u, S (Pu v)⟫_ℂ
+    change ⟪S (Pu u), v⟫_ℂ = ⟪u, S (Pu v)⟫_ℂ
     have h1 : ⟪S (Pu u), v⟫_ℂ = ⟪Pu u, S v⟫_ℂ :=
       (inner_shiftedOperator_symm B hB l r (Pu u) v).symm
     have h2 : ⟪Pu u, S v⟫_ℂ = ⟪u, Pu (S v)⟫_ℂ := by
@@ -695,7 +695,7 @@ theorem norm_shiftedOperator_le_of_spectrumIn_Icc
     have hsplit : Pu y + Uᗮ.starProjection y = y := by
       rw [hPu, Submodule.starProjection_orthogonal_apply]; abel
     have hval : ⟪(S ∘L Pu) y, y⟫_ℂ = ⟪S (Pu y), Pu y⟫_ℂ := by
-      show ⟪S (Pu y), y⟫_ℂ = _
+      change ⟪S (Pu y), y⟫_ℂ = _
       calc ⟪S (Pu y), y⟫_ℂ
           = ⟪S (Pu y), Pu y + Uᗮ.starProjection y⟫_ℂ := by rw [hsplit]
         _ = ⟪S (Pu y), Pu y⟫_ℂ + ⟪S (Pu y), Uᗮ.starProjection y⟫_ℂ :=
@@ -766,7 +766,7 @@ theorem centralBandSubspace_le_of_spectrumIn_gapExterior
         rw [Submodule.starProjection_orthogonal_apply]
         simp
       rw [hsplit]
-      show R.starProjection * ((1 : H →L[ℂ] H) - U.starProjection) =
+      change R.starProjection * ((1 : H →L[ℂ] H) - U.starProjection) =
         ((1 : H →L[ℂ] H) - U.starProjection) * R.starProjection
       rw [mul_sub, sub_mul, mul_one, one_mul, hcomm.eq]
     have h := congrArg (fun T : H →L[ℂ] H => T x) hperpcomm
@@ -815,7 +815,7 @@ theorem le_centralBandSubspace_of_spectrumIn_Icc
         rw [Submodule.starProjection_orthogonal_apply]
         simp
       rw [hsplit]
-      show U.starProjection * ((1 : H →L[ℂ] H) - R.starProjection) =
+      change U.starProjection * ((1 : H →L[ℂ] H) - R.starProjection) =
         ((1 : H →L[ℂ] H) - R.starProjection) * U.starProjection
       rw [mul_sub, sub_mul, mul_one, one_mul, hcomm.eq]
     have h := congrArg (fun T : H →L[ℂ] H => T x) hperpcomm

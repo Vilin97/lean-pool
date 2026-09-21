@@ -168,7 +168,7 @@ theorem re_inner_le_of_mem_boundedSelfAdjointSpectralSubspace_Iic
   have hgnonneg : ∀ w : spectrum ℂ B, 0 ≤ g w := by
     intro w
     have hmem := hgap (reCoord_mem_realSpectrum B hB w)
-    show 0 ≤ (alpha - TauCeti.BorelCalculus.reCoord w) *
+    change 0 ≤ (alpha - TauCeti.BorelCalculus.reCoord w) *
       spectralGapCutoff alpha delta (TauCeti.BorelCalculus.reCoord w)
     rcases hmem with hlow | hhigh
     · rw [spectralGapCutoff_eq_one hdelta (Set.mem_Iic.mp hlow), mul_one]
@@ -241,7 +241,7 @@ theorem le_re_inner_of_mem_boundedSelfAdjointSpectralSubspace_Iic_orthogonal
   have hgnonneg : ∀ w : spectrum ℂ B, 0 ≤ g w := by
     intro w
     have hmem := hgap (reCoord_mem_realSpectrum B hB w)
-    show 0 ≤ (TauCeti.BorelCalculus.reCoord w - (alpha + delta)) *
+    change 0 ≤ (TauCeti.BorelCalculus.reCoord w - (alpha + delta)) *
       (1 - spectralGapCutoff alpha delta (TauCeti.BorelCalculus.reCoord w))
     rcases hmem with hlow | hhigh
     · rw [spectralGapCutoff_eq_one hdelta (Set.mem_Iic.mp hlow), sub_self, mul_zero]
@@ -308,7 +308,7 @@ spectrum are the same set. -/
 theorem realSpectrum_eq_spectrum_real (T : F →L[ℂ] F) :
     realSpectrum T = spectrum ℝ T := by
   ext r
-  show ((r : ℂ) ∈ spectrum ℂ T) ↔ r ∈ spectrum ℝ T
+  change ((r : ℂ) ∈ spectrum ℂ T) ↔ r ∈ spectrum ℝ T
   rw [spectrum.mem_iff, spectrum.mem_iff, not_iff_not,
     IsScalarTower.algebraMap_apply ℝ ℂ (F →L[ℂ] F) r]
   rfl

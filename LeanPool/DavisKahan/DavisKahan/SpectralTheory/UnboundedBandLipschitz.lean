@@ -98,7 +98,7 @@ theorem subspaceGap_bandSubspace_le
   have hnegK : (-K).IsSymmetric := by
     intro x y
     have h : ⟪K x, y⟫_ℂ = ⟪x, K y⟫_ℂ := hK x y
-    show ⟪-(K x), y⟫_ℂ = ⟪x, -(K y)⟫_ℂ
+    change ⟪-(K x), y⟫_ℂ = ⟪x, -(K y)⟫_ℂ
     rw [inner_neg_left, inner_neg_right, h]
   have hBA : A = TauCeti.LinearPMap.addBounded B (-K) := by
     rw [hAB]
@@ -108,7 +108,7 @@ theorem subspaceGap_bandSubspace_le
   rw [norm_neg] at h2
   have hmax := Submodule.projectionGap_eq_max_directedProjectionGap
     (bandSubspace hA l r) (bandSubspace hB l r)
-  show d * (bandSubspace hA l r).projectionGap (bandSubspace hB l r) ≤ ‖K‖
+  change d * (bandSubspace hA l r).projectionGap (bandSubspace hB l r) ≤ ‖K‖
   rw [hmax]
   rcases max_cases ((bandSubspace hA l r).directedProjectionGap (bandSubspace hB l r))
     ((bandSubspace hB l r).directedProjectionGap (bandSubspace hA l r)) with ⟨he, -⟩ | ⟨he, -⟩
@@ -183,7 +183,7 @@ theorem abs_directedGap_sub_directedGap_le
     rw [show V.starProjection - U.starProjection =
       -(U.starProjection - V.starProjection) by abel, norm_neg]
   rw [hsymm] at hsub'
-  show |‖Wᗮ.starProjection ∘L U.starProjection‖ -
+  change |‖Wᗮ.starProjection ∘L U.starProjection‖ -
     ‖Wᗮ.starProjection ∘L V.starProjection‖| ≤ ‖U.starProjection - V.starProjection‖
   rw [abs_sub_le_iff]
   exact ⟨hsub, by linarith [hsub']⟩

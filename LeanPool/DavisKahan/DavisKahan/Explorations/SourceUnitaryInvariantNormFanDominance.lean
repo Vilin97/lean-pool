@@ -212,7 +212,7 @@ theorem hasFanDominanceSeparable_of_symmetricGaugeRepresentation
   intro E F E' F' _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ A B hAB
   rw [hΦ A, hΦ B]
   apply Φ.extend_le_extend_of_forall_sum_le
-    (TauCeti.approxSeq_antitone A) (TauCeti.approxSeq_antitone B)
+    (TauCeti.approxSeq_antitone A)
   intro k
   have hk := hAB k
   simp only [kyFanApproximationGauge, ContinuousLinearMap.kyFanGauge] at hk
@@ -3598,8 +3598,11 @@ theorem sinTwoTheta_complete_whereDefinedUIN_rclike_production_probe
       N.Mem Hop →
         δ * N.gaugeReal (TauCeti.DavisKahan.Angle.sinTwoAngleOperator P Q) ≤
           2 * N.gaugeReal Hop) := by
-  exact TauCeti.DavisKahan1970.SectionTwo.sinTwoTheta
-    N hA Hop hHop hPred hQred hPdom hres hδ hgap
+  constructor
+  · exact TauCeti.DavisKahan1970.sinTwoTheta_directed_unboundedResidual_reducing_whereDefinedUIN_rclike
+      N (DavisKahan.addBounded_isSelfAdjoint A hA Hop hHop) hQred hPdom hres hδ hgap
+  · exact TauCeti.DavisKahan1970.sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike
+      N hA Hop hHop hPred hQred hδ hgap
 
 /-!
 ## Boundary after Probes 44--47

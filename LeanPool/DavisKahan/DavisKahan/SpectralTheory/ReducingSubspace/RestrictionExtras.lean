@@ -48,10 +48,10 @@ theorem ofBounded_reducesSubspace
   · intro x
     simp
   · intro x hx
-    show A (x : E) ∈ U
+    change A (x : E) ∈ U
     exact hred.1 (x : E) hx
   · intro x hx
-    show A (x : E) ∈ Uᗮ
+    change A (x : E) ∈ Uᗮ
     exact hred.2 (x : E) hx
 
 /-- The block of a bounded operator on a subspace it reduces, as a partial map.

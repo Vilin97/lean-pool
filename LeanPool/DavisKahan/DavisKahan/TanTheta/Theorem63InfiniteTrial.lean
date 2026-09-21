@@ -153,7 +153,7 @@ theorem exists_finiteDimensional_le_lt_approximationSingularValue
         _ = ‖x‖ := rfl
         _ = 1 := hxnorm
     have happ : (K ∘L Z.subtypeL) ξ = (K ∘L F.subtypeL) x := by
-      show K ((ξ : Z) : H) = K ((x : F) : H)
+      change K ((ξ : Z) : H) = K ((x : F) : H)
       rw [hξx']
     have h := hmod ξ hξ
     rw [hnormξ, mul_one, happ] at h

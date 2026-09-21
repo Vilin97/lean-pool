@@ -195,7 +195,7 @@ theorem sharp52_inner (x y : SharpPlane52) : ⟪x, y⟫_ℝ = x 0 * y 0 + x 1 * 
 theorem sharp52_gramTrace (M : Matrix (Fin 2) (Fin 2) ℝ) :
     TauCeti.gramTraceFinTwo (Matrix.toEuclideanLin M) =
       M 0 0 ^ 2 + M 1 0 ^ 2 + (M 0 1 ^ 2 + M 1 1 ^ 2) := by
-  show ∑ i : Fin 2,
+  change ∑ i : Fin 2,
     ‖(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ i)‖ ^ 2 = _
   rw [Fin.sum_univ_two, sharp52_norm_sq, sharp52_norm_sq]
   rw [sharp52_entry, sharp52_entry, sharp52_entry, sharp52_entry]
@@ -204,7 +204,7 @@ theorem sharp52_gramTrace (M : Matrix (Fin 2) (Fin 2) ℝ) :
 theorem sharp52_gramDet (M : Matrix (Fin 2) (Fin 2) ℝ) :
     TauCeti.gramDetFinTwo (Matrix.toEuclideanLin M) =
       (M 0 0 * M 1 1 - M 0 1 * M 1 0) ^ 2 := by
-  show ‖(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 0)‖ ^ 2 *
+  change ‖(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 0)‖ ^ 2 *
       ‖(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 1)‖ ^ 2 -
       ‖⟪(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 0),
         (Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 1)⟫_ℝ‖ ^ 2 = _

@@ -264,7 +264,7 @@ theorem re_inner_halmosCosineSq_self (x : H) :
       U.starProjection (V.starProjection (U.starProjection x)) +
         (Uᗮ).starProjection
           ((Vᗮ).starProjection ((Uᗮ).starProjection x)) := by
-    show (U.starProjection * V.starProjection * U.starProjection +
+    change (U.starProjection * V.starProjection * U.starProjection +
       (Uᗮ).starProjection * (Vᗮ).starProjection *
         (Uᗮ).starProjection) x = _
     simp only [add_apply, mul_apply_eq_comp]

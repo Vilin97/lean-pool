@@ -447,7 +447,7 @@ theorem FiniteSpectralStep.operator_isSelfAdjoint
     {A : H →L[ℂ] H} {hA : A.IsSymmetric}
     (S : FiniteSpectralStep A hA) : S.operator.IsSymmetric := by
   apply ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mp
-  show star S.operator = S.operator
+  change star S.operator = S.operator
   rw [FiniteSpectralStep.operator, star_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [star_smul, Complex.star_def, Complex.conj_ofReal]
@@ -488,9 +488,9 @@ theorem exists_finiteSpectralStep
     have hcs : c ∈ s := htfin.mem_toFinset.mpr hc
     refine Set.mem_iUnion.mpr ⟨s.equivFin ⟨c, hcs⟩, ?_⟩
     have hyc : y (s.equivFin ⟨c, hcs⟩) = c := by
-      show ((s.equivFin.symm (s.equivFin ⟨c, hcs⟩) : ℝ)) = c
+      change ((s.equivFin.symm (s.equivFin ⟨c, hcs⟩) : ℝ)) = c
       rw [Equiv.symm_apply_apply]
-    show x ∈ Metric.ball (y (s.equivFin ⟨c, hcs⟩)) ε
+    change x ∈ Metric.ball (y (s.equivFin ⟨c, hcs⟩)) ε
     rwa [hyc]
   have hcell_meas : ∀ i, MeasurableSet (disjointed g i) := by
     intro i

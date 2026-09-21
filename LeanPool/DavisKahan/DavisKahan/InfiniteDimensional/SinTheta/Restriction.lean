@@ -68,7 +68,7 @@ theorem mem_realResolventSet_ofBounded_iff (X : E →L[𝕜] E) (lam : ℝ) :
     have hval : (↑u : E →L[𝕜] E) = X - (lam : 𝕜) • (1 : E →L[𝕜] E) := hu
     refine ⟨↑u⁻¹, ?_, ?_⟩
     · intro x
-      show (↑u⁻¹ : E →L[𝕜] E) (X (x : E) - (lam : 𝕜) • (x : E)) = (x : E)
+      change (↑u⁻¹ : E →L[𝕜] E) (X (x : E) - (lam : 𝕜) • (x : E)) = (x : E)
       have hinv : (↑u⁻¹ : E →L[𝕜] E) * (X - (lam : 𝕜) • (1 : E →L[𝕜] E)) = 1 := by
         rw [← hval]; exact u.inv_mul
       have hpt := ContinuousLinearMap.ext_iff.mp hinv (x : E)
@@ -76,7 +76,7 @@ theorem mem_realResolventSet_ofBounded_iff (X : E →L[𝕜] E) (lam : ℝ) :
         smul_apply, one_apply_eq_self] using hpt
     · intro y
       refine ⟨Submodule.mem_top, ?_⟩
-      show X ((↑u⁻¹ : E →L[𝕜] E) y) - (lam : 𝕜) • ((↑u⁻¹ : E →L[𝕜] E) y) = y
+      change X ((↑u⁻¹ : E →L[𝕜] E) y) - (lam : 𝕜) • ((↑u⁻¹ : E →L[𝕜] E) y) = y
       have hinv : (X - (lam : 𝕜) • (1 : E →L[𝕜] E)) * (↑u⁻¹ : E →L[𝕜] E) = 1 := by
         rw [← hval]; exact u.mul_inv
       have hpt := ContinuousLinearMap.ext_iff.mp hinv y
@@ -91,7 +91,7 @@ theorem boundedRealSpectrum_eq_realSpectrum (X : E →L[𝕜] E) :
     TauCeti.DavisKahan.ExactSinTheta.boundedRealSpectrum X =
       TauCeti.DavisKahan.Foundation.realSpectrum X := by
   ext lam
-  show lam ∈ (TauCeti.LinearPMap.realResolventSet
+  change lam ∈ (TauCeti.LinearPMap.realResolventSet
       ((X.toLinearMap.toPMap ⊤)))ᶜ ↔
     (lam : 𝕜) ∈ spectrum 𝕜 X
   rw [Set.mem_compl_iff, mem_realResolventSet_ofBounded_iff, spectrum.mem_iff,

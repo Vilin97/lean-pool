@@ -259,7 +259,7 @@ theorem sinTwoTheta_ambient_reflection_projectorDifference_symmetricNorming
       V.reflection hBeq D rfl
       (by
         intro x hxA hxB
-        show A ⟨x, hxB⟩ + D x - A ⟨x, hxA⟩ = D x
+        change A ⟨x, hxB⟩ + D x - A ⟨x, hxA⟩ = D x
         have hxx : (⟨x, hxB⟩ : A.domain) = ⟨x, hxA⟩ := rfl
         rw [hxx, add_sub_cancel_left])
       hδ hgap hDideal.1

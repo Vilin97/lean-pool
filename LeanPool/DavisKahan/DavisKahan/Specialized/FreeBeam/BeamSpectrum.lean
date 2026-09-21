@@ -972,7 +972,7 @@ theorem exists_eigenvector_of_mem_realSpectrum_beamOperator {lam : ℝ}
   set S : BeamL2 →L[ℂ] BeamL2 := ↑U⁻¹ with hSdef
   have hcommU : Commute R ↑U := by
     rw [hU]
-    show R * ((1 : BeamL2 →L[ℂ] BeamL2) - c • R)
+    change R * ((1 : BeamL2 →L[ℂ] BeamL2) - c • R)
       = ((1 : BeamL2 →L[ℂ] BeamL2) - c • R) * R
     rw [mul_sub, sub_mul, mul_one, one_mul, mul_smul_comm, smul_mul_assoc]
   have hcommS : Commute R S := hcommU.units_inv_right

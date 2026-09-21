@@ -102,7 +102,7 @@ theorem norm_semigroup_le_of_spectrum_subset_Iic
   refine norm_cfc_le (Real.exp_pos _).le fun z hz => ?_
   have hzre : z = z.re := hsa.mem_spectrum_eq_re hz
   have hmem : z.re ∈ realSpectrum T := by
-    show ((z.re : ℝ) : ℂ) ∈ spectrum ℂ T
+    change ((z.re : ℝ) : ℂ) ∈ spectrum ℂ T
     rw [← hzre]
     exact hz
   have hle : z.re ≤ c := hσ hmem
@@ -127,7 +127,7 @@ theorem norm_semigroup_neg_le_of_spectrum_subset_Ici
   have hσneg : realSpectrum (-T) ⊆ Set.Iic (-c) := by
     intro r hr
     have hmem : (-r) ∈ realSpectrum T := by
-      show ((-r : ℝ) : ℂ) ∈ spectrum ℂ T
+      change ((-r : ℝ) : ℂ) ∈ spectrum ℂ T
       have h1 : ((r : ℝ) : ℂ) ∈ -spectrum ℂ T := by
         rw [spectrum.neg_eq]
         exact hr
@@ -247,7 +247,7 @@ theorem hasDerivAt_ordered_solution_orbit
       -(semigroup (-A) t ∘L C ∘L semigroup B t) := by
     rw [← hEq]
     ext v
-    show (semigroup (-A) t) (X (B ((semigroup B t) v))) +
+    change (semigroup (-A) t) (X (B ((semigroup B t) v))) +
         (-A) ((semigroup (-A) t) (X ((semigroup B t) v))) =
       -((semigroup (-A) t) ((A ∘L X - X ∘L B) ((semigroup B t) v)))
     have h1 : (-A) ((semigroup (-A) t) (X ((semigroup B t) v))) =

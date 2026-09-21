@@ -349,7 +349,7 @@ theorem beam_lower_block_equation (ε : ℝ) {f : BeamL2} {lam : ℝ}
       + ⟨f - beamTrial.starProjection f, beamOrthogonal_part_mem_domain ε hfdom⟩
       = ⟨f, hfdom⟩ := by
     apply Subtype.ext
-    show beamTrial.starProjection f + (f - beamTrial.starProjection f) = f
+    change beamTrial.starProjection f + (f - beamTrial.starProjection f) = f
     abel
   have hTsplit : beamPerturbation ε (beamTrial.starProjection f)
       + (beamPerturbed ε)

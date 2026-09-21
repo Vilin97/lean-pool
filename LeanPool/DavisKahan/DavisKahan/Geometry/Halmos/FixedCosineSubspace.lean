@@ -92,10 +92,10 @@ def IsFixedCosineReducingSubspace
 /-- The Halmos cosine square is a symmetric operator. -/
 theorem halmosCosineSq_isSymmetric : (halmosCosineSq U V).IsSymmetric := by
   intro x y
-  show ⟪(U.starProjection * V.starProjection * U.starProjection +
+  change ⟪(U.starProjection * V.starProjection * U.starProjection +
       (Uᗮ).starProjection * (Vᗮ).starProjection *
         (Uᗮ).starProjection) x, y⟫_𝕜 = _
-  show ⟪_, _⟫_𝕜 = ⟪x, (U.starProjection * V.starProjection * U.starProjection +
+  change ⟪_, _⟫_𝕜 = ⟪x, (U.starProjection * V.starProjection * U.starProjection +
       (Uᗮ).starProjection * (Vᗮ).starProjection *
         (Uᗮ).starProjection) y⟫_𝕜
   simp only [add_apply, mul_apply_eq_comp, inner_add_left, inner_add_right]
@@ -123,8 +123,8 @@ theorem halmosCosineSq_sub_smul_isSymmetric (c : ℝ) :
   intro x y
   have hc : (starRingEnd 𝕜) ((c : 𝕜) ^ 2) = (c : 𝕜) ^ 2 := by
     rw [map_pow, RCLike.conj_ofReal]
-  show ⟪(halmosCosineSq U V - (c : 𝕜) ^ 2 • (1 : H →L[𝕜] H)) x, y⟫_𝕜 = _
-  show ⟪_, _⟫_𝕜 = ⟪x, (halmosCosineSq U V - (c : 𝕜) ^ 2 • (1 : H →L[𝕜] H)) y⟫_𝕜
+  change ⟪(halmosCosineSq U V - (c : 𝕜) ^ 2 • (1 : H →L[𝕜] H)) x, y⟫_𝕜 = _
+  change ⟪_, _⟫_𝕜 = ⟪x, (halmosCosineSq U V - (c : 𝕜) ^ 2 • (1 : H →L[𝕜] H)) y⟫_𝕜
   have hs : ⟪halmosCosineSq U V x, y⟫_𝕜 = ⟪x, halmosCosineSq U V y⟫_𝕜 :=
     halmosCosineSq_isSymmetric U V x y
   simp only [sub_apply, smul_apply, one_apply_eq_self, inner_sub_left,
@@ -191,7 +191,7 @@ theorem inner_halmosCosineSq_source (x : H) (hx : x ∈ U) :
       congrArg (fun T : H →L[𝕜] H => T x) (Submodule.starProjection_orthogonal' U)
     rw [show (Uᗮ).starProjection x = Uᗮ.starProjection x from rfl, hx', hPU, sub_self]
   have hval : halmosCosineSq U V x = U.starProjection (V.starProjection x) := by
-    show (U.starProjection * V.starProjection * U.starProjection
+    change (U.starProjection * V.starProjection * U.starProjection
       + (Uᗮ).starProjection * (Vᗮ).starProjection
         * (Uᗮ).starProjection) x = _
     simp only [add_apply, mul_apply_eq_comp, hPU,
@@ -216,7 +216,7 @@ theorem inner_halmosCosineSq_source_compl (x : H) (hx : x ∈ Uᗮ) :
     rw [show U.starProjection x = U.starProjection x from rfl, hUeq, hPUc, sub_self]
   have hval : halmosCosineSq U V x
       = (Uᗮ).starProjection ((Vᗮ).starProjection x) := by
-    show (U.starProjection * V.starProjection * U.starProjection
+    change (U.starProjection * V.starProjection * U.starProjection
       + (Uᗮ).starProjection * (Vᗮ).starProjection
         * (Uᗮ).starProjection) x = _
     simp only [add_apply, mul_apply_eq_comp, hPU,
@@ -282,7 +282,7 @@ theorem halmosCosineSq_source_apply (x : H) (hx : x ∈ U) :
     have hx' : Uᗮ.starProjection x = x - U.starProjection x :=
       congrArg (fun T : H →L[𝕜] H => T x) (Submodule.starProjection_orthogonal' U)
     rw [show (Uᗮ).starProjection x = Uᗮ.starProjection x from rfl, hx', hPU, sub_self]
-  show (U.starProjection * V.starProjection * U.starProjection
+  change (U.starProjection * V.starProjection * U.starProjection
     + (Uᗮ).starProjection * (Vᗮ).starProjection
       * (Uᗮ).starProjection) x = _
   simp only [add_apply, mul_apply_eq_comp, hPU,
@@ -300,7 +300,7 @@ theorem halmosCosineSq_source_compl_apply (x : H) (hx : x ∈ Uᗮ) :
     rw [show (Uᗮ).starProjection x = Uᗮ.starProjection x from rfl] at hPUc
     have hUeq : U.starProjection x = x - Uᗮ.starProjection x := by rw [hx']; abel
     rw [show U.starProjection x = U.starProjection x from rfl, hUeq, hPUc, sub_self]
-  show (U.starProjection * V.starProjection * U.starProjection
+  change (U.starProjection * V.starProjection * U.starProjection
     + (Uᗮ).starProjection * (Vᗮ).starProjection
       * (Uᗮ).starProjection) x = _
   simp only [add_apply, mul_apply_eq_comp, hPU,
@@ -323,7 +323,7 @@ theorem halmosCosineSq_mem_of_reduces {M : Submodule 𝕜 H}
       = U.starProjection (V.starProjection (U.starProjection w))
         + (Uᗮ).starProjection ((Vᗮ).starProjection
             ((Uᗮ).starProjection w)) := by
-    show (U.starProjection * V.starProjection * U.starProjection
+    change (U.starProjection * V.starProjection * U.starProjection
       + (Uᗮ).starProjection * (Vᗮ).starProjection
         * (Uᗮ).starProjection) w = _
     simp only [add_apply, mul_apply_eq_comp]

@@ -199,7 +199,7 @@ theorem realPlane_zeroResidual_model :
       (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr (by intro x y; simp))
   have hA0upper : TauCeti.LinearPMap.SemiboundedAbove A0 0 := by
     intro x
-    show RCLike.re
+    change RCLike.re
       ⟪(0 : RealPlane →L[ℝ] RealPlane) (x : RealPlane), (x : RealPlane)⟫_ℝ ≤ _
     simp
   have hcompLower : TauCeti.LinearPMap.SemiboundedBelow
@@ -223,7 +223,7 @@ theorem realPlane_zeroResidual_model :
   case hXdom => exact fun x => Submodule.mem_top
   case hReq =>
     intro x
-    show (0 : RealPlane) - (0 : RealPlane) = (0 : RealPlane)
+    change (0 : RealPlane) - (0 : RealPlane) = (0 : RealPlane)
     simp
   case hδ => exact zero_lt_one
   case hgap => exact hgap

@@ -104,7 +104,7 @@ noncomputable def ofTrialBlock (D : BoundedCompressionTrialBlock A Z) :
         (Submodule.mem_orthogonal' _ _).mp (D.residual_mem_orthogonal z) _ z'.2 }
   mem_domain := fun z => D.domain_le (z : Z).2
   action_eq := fun z => by
-    show ((D.operator (z : Z) : Z) : H) + D.residual ((z : Z)) = _
+    change ((D.operator (z : Z) : Z) : H) + D.residual ((z : Z)) = _
     rw [D.residual_apply]
     abel
 
@@ -141,7 +141,7 @@ theorem ofReducesSubspace (h : TauCeti.LinearPMap.ReducesSubspace A V) :
         (⟨V.starProjection ((x : H)), hVdom⟩ : A.domain)
             + ⟨Vᗮ.starProjection ((x : H)), hVpdom⟩ = x := by
       apply Subtype.ext
-      show V.starProjection ((x : H)) + Vᗮ.starProjection ((x : H)) = (x : H)
+      change V.starProjection ((x : H)) + Vᗮ.starProjection ((x : H)) = (x : H)
       rw [Submodule.starProjection_orthogonal_apply]
       abel
     have hmap : A x = A ⟨V.starProjection ((x : H)), hVdom⟩
@@ -217,7 +217,7 @@ theorem reflection_commutes_of_reducesSubspace
       (⟨V.starProjection ((x : H)), hVdom⟩ : T.domain)
           + ⟨Vᗮ.starProjection ((x : H)), hVpdom⟩ = x := by
     apply Subtype.ext
-    show V.starProjection ((x : H)) + Vᗮ.starProjection ((x : H)) = (x : H)
+    change V.starProjection ((x : H)) + Vᗮ.starProjection ((x : H)) = (x : H)
     rw [Submodule.starProjection_orthogonal_apply]
     abel
   have hsplit :

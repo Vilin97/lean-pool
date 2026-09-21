@@ -3,7 +3,10 @@ Copyright (c) 2026 Kitware, Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Crall
 -/
-import Mathlib
+import Mathlib.Analysis.InnerProductSpace.LinearPMap
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.PicardGroup
+import Mathlib.Tactic
 
 /-!
 # Davis--Kahan 1970: the four Section 2 theorems

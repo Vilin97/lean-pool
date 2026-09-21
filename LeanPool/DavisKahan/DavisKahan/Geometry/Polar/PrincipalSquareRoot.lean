@@ -238,6 +238,83 @@ structure IsPrincipalUnitarySquareRoot
     ∀ z ∈ spectrum ℂ T, 0 ≤ z.re
 
 open scoped ComplexOrder in
+private theorem principalSquareRoot_nonneg_sum (T : H →L[ℂ] H)
+    (hroot : IsPrincipalUnitarySquareRoot (spectraReflectionProduct U V) T) :
+    (0 : H →L[ℂ] H) ≤ T + star T := by
+  have hTnorm : IsStarNormal T := isStarNormal_of_mem_unitary hroot.unitary_mem
+  have e2 : cfc (fun z : ℂ => star z) T = star T := by
+    rw [cfc_star (R := ℂ) (fun z : ℂ => z) T, cfc_id' ℂ T]
+  have e3 : T + star T = cfc (fun z : ℂ => z + star z) T := by
+    rw [cfc_add (R := ℂ) T (fun z : ℂ => z) (fun z : ℂ => star z)
+      continuous_id.continuousOn continuous_star.continuousOn, cfc_id' ℂ T, e2]
+  rw [e3]
+  apply cfc_nonneg
+  intro z hz
+  have hre : 0 ≤ z.re := hroot.spectrum_right_half_plane z hz
+  rw [Complex.le_def]
+  refine ⟨?_, ?_⟩
+  · simp only [Complex.zero_re, Complex.add_re, Complex.star_def, Complex.conj_re]
+    linarith
+  · simp only [Complex.zero_im, Complex.add_im, Complex.star_def, Complex.conj_im]
+    ring
+
+open scoped ComplexOrder in
+private theorem principalSquareRoot_sum_eq_modulus (T : H →L[ℂ] H)
+    (hroot : IsPrincipalUnitarySquareRoot (spectraReflectionProduct U V) T) :
+    let A := ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V)
+    T + star T = A + A := by
+  let A := ContinuousLinearMap.modulus (spectraCanonicalIntertwiner U V)
+  have hTsT : T * star T = 1 := Unitary.mul_star_self_of_mem hroot.unitary_mem
+  have hsTT : star T * T = 1 := Unitary.star_mul_self_of_mem hroot.unitary_mem
+  have hTpos := principalSquareRoot_nonneg_sum U V T hroot
+  have hsqeq : (T + star T) * (T + star T) = (A + A) * (A + A) := by
+    have expand : (T + star T) * (T + star T)
+        = T * T + T * star T + star T * T + star T * star T := by noncomm_ring
+    have hstarTT : star T * star T = star (spectraReflectionProduct U V) := by
+      rw [← star_mul, hroot.square_eq]
+    have expandR : (A + A) * (A + A) = A * A + A * A + A * A + A * A := by noncomm_ring
+    have hAA : A * A = star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V :=
+      ContinuousLinearMap.modulus_mul_self_eq_star_mul_self _
+    rw [expand, hroot.square_eq, hTsT, hsTT, hstarTT, expandR, hAA]
+    have hG : spectraReflectionProduct U V + 1 =
+        spectraCanonicalIntertwiner U V + spectraCanonicalIntertwiner U V := by
+      rw [add_comm]
+      exact (spectraCanonicalIntertwiner_add_self_eq_one_add_reflectionProduct U V).symm
+    have hstarG : star (spectraReflectionProduct U V) + 1 =
+        star (spectraCanonicalIntertwiner U V) + star (spectraCanonicalIntertwiner U V) := by
+      have h := congrArg star hG
+      rwa [star_add, star_add, star_one] at h
+    have hSS : spectraCanonicalIntertwiner U V + star (spectraCanonicalIntertwiner U V)
+        = star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
+          + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V :=
+      spectraCanonicalIntertwiner_add_star U V
+    calc spectraReflectionProduct U V + 1 + 1 + star (spectraReflectionProduct U V)
+        = (spectraReflectionProduct U V + 1) + (star (spectraReflectionProduct U V) + 1) := by
+          abel
+      _ = (spectraCanonicalIntertwiner U V + spectraCanonicalIntertwiner U V)
+            + (star (spectraCanonicalIntertwiner U V) + star (spectraCanonicalIntertwiner U V)) := by
+          rw [hG, hstarG]
+      _ = (spectraCanonicalIntertwiner U V + star (spectraCanonicalIntertwiner U V))
+            + (spectraCanonicalIntertwiner U V + star (spectraCanonicalIntertwiner U V)) := by
+          abel
+      _ = (star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
+            + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V)
+          + (star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
+            + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V) := by
+          rw [hSS]
+      _ = star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
+            + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
+            + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
+            + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V := by
+          abel
+  have h2A_nonneg : (0 : H →L[ℂ] H) ≤ A + A :=
+    add_nonneg (ContinuousLinearMap.modulus_nonneg _) (ContinuousLinearMap.modulus_nonneg _)
+  calc T + star T
+      = CFC.sqrt ((T + star T) * (T + star T)) := (CFC.sqrt_unique rfl hTpos).symm
+    _ = CFC.sqrt ((A + A) * (A + A)) := by rw [hsqeq]
+    _ = A + A := CFC.sqrt_unique rfl h2A_nonneg
+
+open scoped ComplexOrder in
 /-- Davis--Kahan 1970, Proposition 3.3, converse direction.  The crossed
 intersection mapping condition selects the correct square root on the
 minus-one spectral subspace. -/
@@ -254,22 +331,8 @@ theorem proposition3_3_principalSquareRoot_converse
   have hsTT : star T * T = 1 := Unitary.star_mul_self_of_mem hunit
   have hTnorm : IsStarNormal T := isStarNormal_of_mem_unitary hunit
   -- (1) accretive: 0 ≤ T + star T
-  have hTpos : (0 : H →L[ℂ] H) ≤ T + star T := by
-    have e2 : cfc (fun z : ℂ => star z) T = star T := by
-      rw [cfc_star (R := ℂ) (fun z : ℂ => z) T, cfc_id' ℂ T]
-    have e3 : T + star T = cfc (fun z : ℂ => z + star z) T := by
-      rw [cfc_add (R := ℂ) T (fun z : ℂ => z) (fun z : ℂ => star z)
-        continuous_id.continuousOn continuous_star.continuousOn, cfc_id' ℂ T, e2]
-    rw [e3]
-    apply cfc_nonneg
-    intro z hz
-    have hre : 0 ≤ z.re := hroot.spectrum_right_half_plane z hz
-    rw [Complex.le_def]
-    refine ⟨?_, ?_⟩
-    · simp only [Complex.zero_re, Complex.add_re, Complex.star_def, Complex.conj_re]
-      linarith
-    · simp only [Complex.zero_im, Complex.add_im, Complex.star_def, Complex.conj_im]
-      ring
+  have hTpos : (0 : H →L[ℂ] H) ≤ T + star T :=
+    principalSquareRoot_nonneg_sum U V T hroot
   -- accretive quadratic form
   have haccr : ∀ y : H, 0 ≤ RCLike.re ⟪T y, y⟫_ℂ := by
     intro y
@@ -282,53 +345,7 @@ theorem proposition3_3_principalSquareRoot_converse
     rw [hstar] at hy
     linarith
   -- (2) T + star T = A + A
-  have hkey : T + star T = A + A := by
-    have hsqeq : (T + star T) * (T + star T) = (A + A) * (A + A) := by
-      have expand : (T + star T) * (T + star T)
-          = T * T + T * star T + star T * T + star T * star T := by noncomm_ring
-      have hstarTT : star T * star T = star (spectraReflectionProduct U V) := by
-        rw [← star_mul, hroot.square_eq]
-      have expandR : (A + A) * (A + A) = A * A + A * A + A * A + A * A := by noncomm_ring
-      have hAA : A * A = star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V :=
-        ContinuousLinearMap.modulus_mul_self_eq_star_mul_self _
-      rw [expand, hroot.square_eq, hTsT, hsTT, hstarTT, expandR, hAA]
-      have hG : spectraReflectionProduct U V + 1 =
-          spectraCanonicalIntertwiner U V + spectraCanonicalIntertwiner U V := by
-        rw [add_comm]
-        exact (spectraCanonicalIntertwiner_add_self_eq_one_add_reflectionProduct U V).symm
-      have hstarG : star (spectraReflectionProduct U V) + 1 =
-          star (spectraCanonicalIntertwiner U V) + star (spectraCanonicalIntertwiner U V) := by
-        have h := congrArg star hG
-        rwa [star_add, star_add, star_one] at h
-      have hSS : spectraCanonicalIntertwiner U V + star (spectraCanonicalIntertwiner U V)
-          = star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
-            + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V :=
-        spectraCanonicalIntertwiner_add_star U V
-      calc spectraReflectionProduct U V + 1 + 1 + star (spectraReflectionProduct U V)
-          = (spectraReflectionProduct U V + 1) + (star (spectraReflectionProduct U V) + 1) := by
-            abel
-        _ = (spectraCanonicalIntertwiner U V + spectraCanonicalIntertwiner U V)
-              + (star (spectraCanonicalIntertwiner U V) + star (spectraCanonicalIntertwiner U V)) := by
-            rw [hG, hstarG]
-        _ = (spectraCanonicalIntertwiner U V + star (spectraCanonicalIntertwiner U V))
-              + (spectraCanonicalIntertwiner U V + star (spectraCanonicalIntertwiner U V)) := by
-            abel
-        _ = (star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
-              + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V)
-            + (star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
-              + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V) := by
-            rw [hSS]
-        _ = star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
-              + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
-              + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V
-              + star (spectraCanonicalIntertwiner U V) * spectraCanonicalIntertwiner U V := by
-            abel
-    have h2A_nonneg : (0 : H →L[ℂ] H) ≤ A + A :=
-      add_nonneg (ContinuousLinearMap.modulus_nonneg _) (ContinuousLinearMap.modulus_nonneg _)
-    calc T + star T
-        = CFC.sqrt ((T + star T) * (T + star T)) := (CFC.sqrt_unique rfl hTpos).symm
-      _ = CFC.sqrt ((A + A) * (A + A)) := by rw [hsqeq]
-      _ = A + A := CFC.sqrt_unique rfl h2A_nonneg
+  have hkey : T + star T = A + A := principalSquareRoot_sum_eq_modulus U V T hroot
   -- (3) T * A = S
   have hTA : T * A = spectraCanonicalIntertwiner U V := by
     have h1 : T * (T + star T) = spectraCanonicalIntertwiner U V + spectraCanonicalIntertwiner U V := by
@@ -374,7 +391,7 @@ theorem proposition3_3_principalSquareRoot_converse
       exact norm_eq_zero.mp hn
     have hSexpand : spectraCanonicalIntertwiner U V x =
         V.starProjection (U.starProjection x) + (Vᗮ).starProjection ((Uᗮ).starProjection x) := by
-      show (V.starProjection * U.starProjection + (Vᗮ).starProjection * (Uᗮ).starProjection) x = _
+      change (V.starProjection * U.starProjection + (Vᗮ).starProjection * (Uᗮ).starProjection) x = _
       simp only [add_apply, mul_apply_eq_comp]
     rw [hSexpand] at hSx
     have hmemV : V.starProjection (U.starProjection x) ∈ V := V.starProjection_apply_mem _
@@ -435,7 +452,7 @@ theorem proposition3_3_principalSquareRoot_converse
     -- assemble
     have hTx : T x = T (U.starProjection x) + T ((Uᗮ).starProjection x) := by
       rw [← map_add, hxsplit]
-    show (T * U.starProjection - V.starProjection * T) x = 0
+    change (T * U.starProjection - V.starProjection * T) x = 0
     rw [sub_apply, mul_apply_eq_comp, mul_apply_eq_comp,
       hTx, map_add, hQTPx, hQTPcx, add_zero, sub_self]
   -- final intertwining: X = 0

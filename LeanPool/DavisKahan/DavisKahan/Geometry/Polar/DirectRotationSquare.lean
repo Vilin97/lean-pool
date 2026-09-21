@@ -311,7 +311,7 @@ theorem cosineGauge_mul_self (z : ℂ) :
   have hstar2 : star (2⁻¹ : ℂ) = 2⁻¹ := by
     simp
   rw [cosineGauge, star_smul, smul_mul_smul_comm]
-  show _ = star (2⁻¹ : ℂ) * 2⁻¹ * ((starRingEnd ℂ) (1 + z) * (1 + z))
+  change _ = star (2⁻¹ : ℂ) * 2⁻¹ * ((starRingEnd ℂ) (1 + z) * (1 + z))
   rw [← h, Complex.normSq_eq_norm_sq, hstar2]
   push_cast
   ring
@@ -1146,7 +1146,7 @@ theorem spectraDirectRotation_unique_of_diagonalBlocks
       _ = W := by rw [hJJ, one_mul, mul_one]
   have hT : U.reflectionOperator ∘L (W + star W) ∘L U.reflectionOperator =
       W + star W := by
-    show U.reflectionOperator * ((W + star W) * U.reflectionOperator) =
+    change U.reflectionOperator * ((W + star W) * U.reflectionOperator) =
       W + star W
     rw [← mul_assoc, mul_add, add_mul, mul_assoc, mul_assoc, ← mul_assoc _ W,
       ← mul_assoc _ (star W), hconj, hstarconj]
@@ -1241,6 +1241,22 @@ on complementary summands of one space, so their sum `T` is a single nonnegative
 with `T² B = B T²` for `B` the off-diagonal block, and `T B = B T` is
 `TauCeti.commute_of_commute_mul_self`. -/
 
+private theorem projectedBlock_nonneg
+    (U : Submodule ℂ H) [U.HasOrthogonalProjection] (W : H →L[ℂ] H)
+    (hblock : ∀ x ∈ U, 0 ≤ ⟪W x, x⟫_ℂ) :
+    (0 : H →L[ℂ] H) ≤ U.starProjection * W * U.starProjection := by
+  rw [ContinuousLinearMap.nonneg_iff_isPositive,
+    ContinuousLinearMap.isPositive_iff_complex]
+  intro x
+  have hval : ⟪(U.starProjection * W * U.starProjection) x, x⟫_ℂ =
+      ⟪W (U.starProjection x), U.starProjection x⟫_ℂ := by
+    simp only [mul_apply_eq_comp]
+    exact Submodule.inner_starProjection_left_eq_right U _ _
+  rw [hval]
+  obtain ⟨hzre, hzim⟩ := RCLike.nonneg_iff.mp
+    (hblock (U.starProjection x) (U.starProjection_apply_mem x))
+  exact ⟨RCLike.conj_eq_iff_re.mp (RCLike.conj_eq_iff_im.mpr hzim), hzre⟩
+
 /-- **The reflection conjugate of `W` is its adjoint, from property (i) alone.**
 
 `J_U W J_U = W⋆` says that in `U ⊕ Uᗮ` coordinates the diagonal blocks of `W` are
@@ -1284,32 +1300,8 @@ theorem reflection_conjugate_eq_star_of_intertwines_of_diagonalBlocks_pos
   set B : H →L[ℂ] H := P * W * P' with hBdef
   set F : H →L[ℂ] H := P' * W * P with hFdef
   -- Property (i): both diagonal blocks are positive operators, hence self-adjoint.
-  have hre : ∀ z : ℂ, 0 ≤ z → ((RCLike.re z : ℝ) : ℂ) = z ∧ 0 ≤ RCLike.re z := by
-    intro z hz
-    obtain ⟨hzre, hzim⟩ := RCLike.nonneg_iff.mp hz
-    exact ⟨RCLike.conj_eq_iff_re.mp (RCLike.conj_eq_iff_im.mpr hzim), hzre⟩
-  have hC₀pos : (0 : H →L[ℂ] H) ≤ C₀ := by
-    rw [ContinuousLinearMap.nonneg_iff_isPositive,
-      ContinuousLinearMap.isPositive_iff_complex]
-    intro x
-    have hval : ⟪C₀ x, x⟫_ℂ = ⟪W (P x), P x⟫_ℂ := by
-      rw [hC₀def]
-      simp only [mul_apply_eq_comp]
-      rw [hPdef]
-      exact Submodule.inner_starProjection_left_eq_right U _ _
-    rw [hval]
-    exact hre _ (hblockU (P x) (by rw [hPdef]; exact U.starProjection_apply_mem x))
-  have hC₁pos : (0 : H →L[ℂ] H) ≤ C₁ := by
-    rw [ContinuousLinearMap.nonneg_iff_isPositive,
-      ContinuousLinearMap.isPositive_iff_complex]
-    intro x
-    have hval : ⟪C₁ x, x⟫_ℂ = ⟪W (P' x), P' x⟫_ℂ := by
-      rw [hC₁def]
-      simp only [mul_apply_eq_comp]
-      rw [hP'def]
-      exact Submodule.inner_starProjection_left_eq_right Uᗮ _ _
-    rw [hval]
-    exact hre _ (hblockUperp (P' x) (by rw [hP'def]; exact Uᗮ.starProjection_apply_mem x))
+  have hC₀pos : (0 : H →L[ℂ] H) ≤ C₀ := projectedBlock_nonneg U W hblockU
+  have hC₁pos : (0 : H →L[ℂ] H) ≤ C₁ := projectedBlock_nonneg Uᗮ W hblockUperp
   have hC₀star : star C₀ = C₀ := (IsSelfAdjoint.of_nonneg hC₀pos).star_eq
   have hC₁star : star C₁ = C₁ := (IsSelfAdjoint.of_nonneg hC₁pos).star_eq
   -- Adjoints of the blocks, before positivity is used.
@@ -1382,7 +1374,7 @@ theorem reflection_conjugate_eq_star_of_intertwines_of_diagonalBlocks_pos
           noncomm_ring
       _ = C₀ * C₀ + C₁ * C₁ := by rw [hC₀C₁, hC₁C₀]; abel
   have hcomm : Commute (T * T) B := by
-    show T * T * B = B * (T * T)
+    change T * T * B = B * (T * T)
     have hBC₀C₀ : B * (C₀ * C₀) = 0 := by rw [← mul_assoc, hBC₀, zero_mul]
     rw [hTsq]
     calc (C₀ * C₀ + C₁ * C₁) * B = C₀ * (C₀ * B) + C₁ * (C₁ * B) := by noncomm_ring
@@ -1714,6 +1706,28 @@ private theorem re_inner_eq_of_diagonal_block {D C : H →L[ℂ] H}
       congrArg RCLike.re hsym.symm
     _ = RCLike.re ⟪C y, x⟫_ℂ := by rw [happ]
 
+private theorem unitaryOperator_bijective (A : H →L[ℂ] H)
+    (hAunit : A ∈ unitary (H →L[ℂ] H)) : Function.Bijective A := by
+  have hAinj : Function.Injective A := by
+    intro x y hxy
+    have hmap := congrArg (fun z => star A z) hxy
+    have hleft := Unitary.star_mul_self_of_mem hAunit
+    have hx := congrArg (fun T : H →L[ℂ] H => T x) hleft
+    have hy := congrArg (fun T : H →L[ℂ] H => T y) hleft
+    calc
+      x = star A (A x) := by
+        simpa only [mul_apply_eq_comp, one_apply_eq_self] using hx.symm
+      _ = star A (A y) := hmap
+      _ = y := by
+        simpa only [mul_apply_eq_comp, one_apply_eq_self] using hy
+  have hAsurj : Function.Surjective A := by
+    intro y
+    refine ⟨star A y, ?_⟩
+    have hright := Unitary.mul_star_self_of_mem hAunit
+    have h := congrArg (fun T : H →L[ℂ] H => T y) hright
+    simpa only [mul_apply_eq_comp, one_apply_eq_self] using h
+  exact ⟨hAinj, hAsurj⟩
+
 /-- Operator-norm minimality of the acute direct rotation among unitaries
 transporting the source projection to the target projection.
 
@@ -1758,24 +1772,7 @@ theorem spectraDirectRotation_minimal
     · simpa [D] using star_spectraDirectRotation_mul_self U V hacute
   have hAunit : A ∈ unitary (H →L[ℂ] H) :=
     (unitary (H →L[ℂ] H)).mul_mem hstarDunit hWunit
-  have hAinj : Function.Injective A := by
-    intro x y hxy
-    have hmap := congrArg (fun z => star A z) hxy
-    have hleft := Unitary.star_mul_self_of_mem hAunit
-    have hx := congrArg (fun T : H →L[ℂ] H => T x) hleft
-    have hy := congrArg (fun T : H →L[ℂ] H => T y) hleft
-    calc
-      x = star A (A x) := by
-        simpa only [mul_apply_eq_comp, one_apply_eq_self] using hx.symm
-      _ = star A (A y) := hmap
-      _ = y := by
-        simpa only [mul_apply_eq_comp, one_apply_eq_self] using hy
-  have hAsurj : Function.Surjective A := by
-    intro y
-    refine ⟨star A y, ?_⟩
-    have hright := Unitary.mul_star_self_of_mem hAunit
-    have h := congrArg (fun T : H →L[ℂ] H => T y) hright
-    simpa only [mul_apply_eq_comp, one_apply_eq_self] using h
+  obtain ⟨hAinj, hAsurj⟩ := unitaryOperator_bijective A hAunit
   have hAcomm : Commute A P := by
     rw [commute_iff_eq]
     show A * P = P * A
@@ -1896,7 +1893,7 @@ theorem spectraDirectRotation_minimal
         (ContinuousLinearMap.modulus_isSelfAdjoint
           (spectraCanonicalIntertwiner U V)).star_eq
       simpa only [star_mul, star_one, hCsa] using h
-    show star R = R
+    change star R = R
     calc
       star R = star R * 1 := (mul_one _).symm
       _ = star R * (C * R) := by rw [hCR]

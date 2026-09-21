@@ -187,7 +187,7 @@ theorem ambient_doubleAngleTangent_eq_extendCoordinate
   -- `G = Y⋆Y = J X⋆X J⋆`: the `J⊥` factors cancel.
   have hG : G = U.subtypeL ∘L (X.adjoint ∘L X) ∘L U.subtypeL.adjoint := by
     ext x
-    show Y.adjoint (Y x)
+    change Y.adjoint (Y x)
       = U.subtypeL ((X.adjoint ∘L X) (U.subtypeL.adjoint x))
     rw [hYadj, hYext]
     simp only [ContinuousLinearMap.comp_apply, hperp]
@@ -203,12 +203,12 @@ theorem ambient_doubleAngleTangent_eq_extendCoordinate
       U.subtypeL ∘L DX ∘L U.subtypeL.adjoint + Uᗮ.starProjection := by
     have hJDXJ : U.subtypeL ∘L DX ∘L U.subtypeL.adjoint
         = U.starProjection - G := by
-      show U.subtypeL ∘L (ContinuousLinearMap.id ℂ U - X.adjoint ∘L X) ∘L
+      change U.subtypeL ∘L (ContinuousLinearMap.id ℂ U - X.adjoint ∘L X) ∘L
           U.subtypeL.adjoint = U.starProjection - G
       rw [ContinuousLinearMap.sub_comp, ContinuousLinearMap.comp_sub,
         ContinuousLinearMap.id_comp,
         subtypeL_comp_adjoint_subtypeL U, hG]
-    show ContinuousLinearMap.id ℂ E - G
+    change ContinuousLinearMap.id ℂ E - G
         = U.subtypeL ∘L DX ∘L U.subtypeL.adjoint + Uᗮ.starProjection
     rw [hJDXJ, ← hPsum]
     abel
@@ -305,7 +305,7 @@ theorem ambient_doubleAngleTangent_eq_extendCoordinate
       = Uᗮ.subtypeL (X (Ring.inverse DX (U.subtypeL.adjoint x))) := by
     rw [hYext]
     simp only [ContinuousLinearMap.comp_apply, hJU]
-  show (2 : ℂ) • Y (Ring.inverse D x)
+  change (2 : ℂ) • Y (Ring.inverse D x)
       = Uᗮ.subtypeL ((2 : ℂ) • X (Ring.inverse DX (U.subtypeL.adjoint x)))
   rw [hDinvApp, map_add, hYPerpApp, add_zero, hYJ, map_smul]
 
@@ -368,7 +368,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     -- `inner_self_eq_norm_sq` (which is stated for `RCLike.re`) can match.
     have hval : RCLike.re ⟪N x, x⟫_ℂ = ‖x‖ ^ 2 + ‖Y x‖ ^ 2 := by
       have hN : N x = x + Y.adjoint (Y x) := by
-        show (ContinuousLinearMap.id ℂ E + Y.adjoint ∘L Y) x
+        change (ContinuousLinearMap.id ℂ E + Y.adjoint ∘L Y) x
             = x + Y.adjoint (Y x)
         rw [add_apply, ContinuousLinearMap.id_apply,
           ContinuousLinearMap.comp_apply]
@@ -429,7 +429,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
       -- the same operator (`DavisKahan.projection U` in some factors,
       -- `U.starProjection` in others), so no single hand-written pattern matches.
       -- Let `simp only` do the unfolding and the two collapses together.
-      show (P + Y * P) *
+      change (P + Y * P) *
             (Ring.inverse (1 + star (Y * P) * (Y * P)) * star (P + Y * P))
           = (P + Y) ∘L R ∘L (P + Y.adjoint)
       rw [show Y * P = Y from hYP, star_add,
@@ -437,7 +437,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
         hPadj]
       -- `R`, `N`, `G` are `let`-bound, and `1`/`id` and `*`/`∘SL` differ only up
       -- to unfolding, so finish by definitional equality.
-      show (P + Y) * (Ring.inverse (1 + Y.adjoint * Y) * (P + Y.adjoint))
+      change (P + Y) * (Ring.inverse (1 + Y.adjoint * Y) * (P + Y.adjoint))
           = (P + Y) * (Ring.inverse (1 + Y.adjoint * Y) * (P + Y.adjoint))
       rfl
     exact hgraph.trans hcollapse
@@ -451,7 +451,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
       rw [ContinuousLinearMap.comp_add, hPP, hPY, add_zero]
     have hright : (P + Y.adjoint) ∘L P = P := by
       rw [ContinuousLinearMap.add_comp, hPP, hYstarP, add_zero]
-    show P * (Q * P) = R * P
+    change P * (Q * P) = R * P
     rw [hQformula]
     calc P * (((P + Y) * (R * (P + Y.adjoint))) * P)
         = (P * (P + Y)) * (R * ((P + Y.adjoint) * P)) := by noncomm_ring
@@ -468,7 +468,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     -- `1` vs `id` mismatch and the bracketing of `P ∘ ((1 - Q) ∘ P)`.
     rw [Submodule.starProjection_orthogonal' V]
     have hexpand : P * ((1 - Q) * P) = P * P - P * (Q * P) := by noncomm_ring
-    show P * ((1 - Q) * P) = G * (R * P)
+    change P * ((1 - Q) * P) = G * (R * P)
     rw [hexpand, show P * P = P from hPP, show P * (Q * P) = R * P from hPQP]
     have hidentity : P - R ∘L P = G ∘L R ∘L P := by
       have hNRP := congrArg (fun T : E →L[ℂ] E => T ∘L P) hNR
@@ -518,12 +518,12 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     -- `dsimp` unfolds the `let`s, after which `hCangSq`/`hSangSq` (stated in terms
     -- of `Cang`/`Sang`) no longer match.  Keep the abbreviations and restate the
     -- squares with `*` instead.
-    show Cang * Cang - Sang * Sang = D ∘L R ∘L P
+    change Cang * Cang - Sang * Sang = D ∘L R ∘L P
     rw [show Cang * Cang = R ∘L P from hCangSq,
       show Sang * Sang = G ∘L R ∘L P from hSangSq]
     -- state the identity with `1`, not `ContinuousLinearMap.id`: they are the same
     -- element, but `noncomm_ring` only knows `one_mul` for the former.
-    show R * P - G * (R * P) = ((1 : E →L[ℂ] E) - G) * (R * P)
+    change R * P - G * (R * P) = ((1 : E →L[ℂ] E) - G) * (R * P)
     noncomm_ring
   have hDunit : IsUnit D :=
     isUnit_doubleAngleDenominator Y
@@ -554,9 +554,9 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     · -- Stay in the `ContinuousLinearMap` star instance throughout: the route via
       -- `IsSelfAdjoint.algebraMap` states the fact at a *different* `Star`
       -- instance on the same type, which is why it failed to typecheck.
-      show IsSelfAdjoint (ContinuousLinearMap.id ℂ E - G)
+      change IsSelfAdjoint (ContinuousLinearMap.id ℂ E - G)
       have hidsa : IsSelfAdjoint (ContinuousLinearMap.id ℂ E) := by
-        show star (ContinuousLinearMap.id ℂ E) = ContinuousLinearMap.id ℂ E
+        change star (ContinuousLinearMap.id ℂ E) = ContinuousLinearMap.id ℂ E
         rw [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_id]
       exact hidsa.sub
         (ContinuousLinearMap.isPositive_adjoint_comp_self Y).isSelfAdjoint
@@ -567,7 +567,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
       -- neither `map_sub` nor `inner_self_eq_norm_sq` can match.
       have hval : RCLike.re ⟪D x, x⟫_ℂ = ‖x‖ ^ 2 - ‖Y x‖ ^ 2 := by
         have hD : D x = x - Y.adjoint (Y x) := by
-          show (ContinuousLinearMap.id ℂ E - G) x = x - Y.adjoint (Y x)
+          change (ContinuousLinearMap.id ℂ E - G) x = x - Y.adjoint (Y x)
           rw [sub_apply, ContinuousLinearMap.id_apply,
             ContinuousLinearMap.comp_apply]
         rw [hD]
@@ -589,11 +589,11 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
   have hDinvSA : IsSelfAdjoint (Ring.inverse D) := hDinvNonneg.isSelfAdjoint
   have hcomm : Commute (ContinuousLinearMap.modulus Y) (Ring.inverse D) := by
     have hmodG : Commute (ContinuousLinearMap.modulus Y) G := by
-      show Commute (ContinuousLinearMap.modulus Y) (Y.adjoint ∘L Y)
+      change Commute (ContinuousLinearMap.modulus Y) (Y.adjoint ∘L Y)
       rw [← ContinuousLinearMap.modulus_mul_self Y]
       exact (Commute.refl _).mul_right (Commute.refl _)
     have hmodD : Commute (ContinuousLinearMap.modulus Y) D := by
-      show Commute (ContinuousLinearMap.modulus Y)
+      change Commute (ContinuousLinearMap.modulus Y)
         (ContinuousLinearMap.id ℂ E - G)
       exact (Commute.one_right _).sub_right hmodG
     have hu : Commute (ContinuousLinearMap.modulus Y)
@@ -621,7 +621,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     -- `adjoint` is a *conjugate*-linear isometry equiv (`≃ₗᵢ⋆`), so the scalar
     -- comes out through `map_smulₛₗ` as `star 2`, not as `2`.
     rw [map_smulₛₗ, ContinuousLinearMap.adjoint_comp, hDinvAdj]
-    show (starRingEnd ℂ) 2 • (Ring.inverse D * ContinuousLinearMap.adjoint Y) *
+    change (starRingEnd ℂ) 2 • (Ring.inverse D * ContinuousLinearMap.adjoint Y) *
           ((2 : ℂ) • (Y * Ring.inverse D))
         = (4 : ℂ) • (ContinuousLinearMap.modulus Y *
             (Ring.inverse D * (ContinuousLinearMap.modulus Y * Ring.inverse D)))
@@ -676,7 +676,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
     -- `Commute |Y| (R P)` because `|Y| = CFC.sqrt G` and `Commute.cfcₙ_nnreal`
     -- transports commutation through the functional calculus.
     have hGRP : Commute G (R ∘L P) := by
-      show G * (R * P) = (R * P) * G
+      change G * (R * P) = (R * P) * G
       calc G * (R * P) = (G * R) * P := (mul_assoc _ _ _).symm
         _ = (R * G) * P := by rw [show G * R = R * G from hGR]
         _ = R * (G * P) := mul_assoc _ _ _
@@ -725,7 +725,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
           (ContinuousLinearMap.modulus Y * (R * P)))
         = ContinuousLinearMap.modulus Y * (R * P) :=
       CFC.sqrt_unique rfl hrightNonneg
-    show Sang * Cang = ContinuousLinearMap.modulus Y * (R * P)
+    change Sang * Cang = ContinuousLinearMap.modulus Y * (R * P)
     rw [← h1, ← h2, hsq]
   have hCandidateComp :
       M ∘L cosTwoAngleExtendedC U V = directedSinTwoAngleOperatorC U V := by
@@ -760,7 +760,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
       -- `h : G P⊥ + G = G`, so `(G P⊥ + G) - G = 0`, i.e. `G P⊥ = 0`.
       simpa using sub_eq_zero_of_eq h
     have hDPerp : D ∘L Uᗮ.starProjection = Uᗮ.starProjection := by
-      show (ContinuousLinearMap.id ℂ E - G) ∘L Uᗮ.starProjection = _
+      change (ContinuousLinearMap.id ℂ E - G) ∘L Uᗮ.starProjection = _
       rw [ContinuousLinearMap.sub_comp, ContinuousLinearMap.id_comp, hGPerp,
         sub_zero]
     have hDinvPerp : Ring.inverse D ∘L Uᗮ.starProjection
@@ -777,7 +777,7 @@ private theorem directedTanTwoAngleOperatorC_eq_modulus_ambientGraphTangent
           Uᗮ.starProjection = 0 by
       rw [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_assoc,
         hDinvPerp, hMperp, smul_zero], add_zero]
-    show ((2 : ℂ) • (ContinuousLinearMap.modulus Y * Ring.inverse D)) *
+    change ((2 : ℂ) • (ContinuousLinearMap.modulus Y * Ring.inverse D)) *
         (D * (R * P))
       = (2 : ℂ) • (ContinuousLinearMap.modulus Y * (R * P))
     rw [smul_mul_assoc]

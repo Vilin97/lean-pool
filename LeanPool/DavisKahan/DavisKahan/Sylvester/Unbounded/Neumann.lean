@@ -298,7 +298,7 @@ theorem SylvesterEquation_boundedRealization
         Set.range (fun z : A.domain => ((z : E), A z)) := by
       intro n
       refine ⟨⟨X (u n), hEq.mapsTo_domain ⟨u n, hu_mem n⟩⟩, Prod.ext rfl ?_⟩
-      show A ⟨X (u n), hEq.mapsTo_domain ⟨u n, hu_mem n⟩⟩ =
+      change A ⟨X (u n), hEq.mapsTo_domain ⟨u n, hu_mem n⟩⟩ =
         C (u n) + X (T (u n))
       have hval : A ⟨X (u n), hEq.mapsTo_domain ⟨u n, hu_mem n⟩⟩ =
           C (u n) + X (B ⟨u n, hu_mem n⟩) :=
@@ -365,7 +365,7 @@ theorem mem_and_gauge_le_of_boundedLeft_exteriorRight
                 ((c : ℝ) : 𝕜) • Y (J z)) := by abel
         _ = C (J z) := h1
     have h3 : S (Y (J z)) = C (J z) + Y z := sub_eq_iff_eq_add.mp h2
-    show Y z = (S ∘L Y ∘L J) z + (-(C ∘L J)) z
+    change Y z = (S ∘L Y ∘L J) z + (-(C ∘L J)) z
     simp only [ContinuousLinearMap.comp_apply, neg_apply]
     rw [h3]
     abel

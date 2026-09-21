@@ -119,7 +119,7 @@ omit [CompleteSpace H] in
 This is the operator form of "`C` preserves both `U` and `Uᗮ`". -/
 theorem commute_starProjection_diagonalPart :
     Commute U.starProjection (U.diagonalPart Z) := by
-  show U.starProjection * U.diagonalPart Z = U.diagonalPart Z * U.starProjection
+  change U.starProjection * U.diagonalPart Z = U.diagonalPart Z * U.starProjection
   refine ContinuousLinearMap.ext fun x => ?_
   simp only [_root_.mul_apply_eq_comp]
   have hsplit : U.starProjection x + Uᗮ.starProjection x = x :=
@@ -542,7 +542,7 @@ theorem hasSameApproximationNumbers_reflectionSineCorner_sinTwoThetaIdealBlock :
   -- its adjoint
   have hstar : star (Uᗮ.starProjection ∘L J ∘L U.starProjection)
       = U.starProjection ∘L J ∘L Uᗮ.starProjection := by
-    show star (Uᗮ.starProjection * J * U.starProjection) = _
+    change star (Uᗮ.starProjection * J * U.starProjection) = _
     rw [star_mul, star_mul, hJsa.star_eq,
       (isSelfAdjoint_starProjection U).star_eq,
       (isSelfAdjoint_starProjection Uᗮ).star_eq]
@@ -605,7 +605,7 @@ theorem eq_of_mem_polarInitial_comp {P : E0 →L[ℂ] E0} (hPsa : IsSelfAdjoint 
     simpa only [_root_.mul_apply_eq_comp] using h
   -- the defect lies in the kernel of the composite
   have hker : v - P v ∈ LinearMap.ker (Y ∘L P).toLinearMap := by
-    show (Y ∘L P) (v - P v) = 0
+    change (Y ∘L P) (v - P v) = 0
     simp only [ContinuousLinearMap.comp_apply, map_sub, hPP v, sub_self]
   have hmem : v - P v ∈ (Y ∘L P).polarInitialᗮ := by
     rw [ContinuousLinearMap.polarInitial_orthogonal_eq_ker]
@@ -654,7 +654,7 @@ theorem isIdempotentElem_cutoffCorner (Ω : TauCeti.BoundedCutoff A U τ) :
 theorem isSelfAdjoint_cutoffCorner (Ω : TauCeti.BoundedCutoff A U τ) :
     IsSelfAdjoint (cutoffCorner Ω) := by
   refine ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr fun y z => ?_
-  show ⟪cutoffCorner Ω y, z⟫_𝕜 = ⟪y, cutoffCorner Ω z⟫_𝕜
+  change ⟪cutoffCorner Ω y, z⟫_𝕜 = ⟪y, cutoffCorner Ω z⟫_𝕜
   have hy : ((cutoffCorner Ω y : U) : G) = Ω.toProj (y : G) :=
     coe_cutoffCorner_apply Ω y
   have hz : ((cutoffCorner Ω z : U) : G) = Ω.toProj (z : G) :=

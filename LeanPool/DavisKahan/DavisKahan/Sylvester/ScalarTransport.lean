@@ -76,7 +76,7 @@ theorem semiboundedAbove_pmap_iff {A : E →ₗ.[𝕜] E} {c : ℝ} :
     rwa [e.re_map] at h2
   · intro h x
     have h2 := h (domainOut (e := e) A x)
-    show RCLike.re (e (inner 𝕜 (A (domainOut (e := e) A x))
+    change RCLike.re (e (inner 𝕜 (A (domainOut (e := e) A x))
       ((domainOut (e := e) A x : E)))) ≤ c * ‖(domainOut (e := e) A x : E)‖ ^ 2
     rwa [e.re_map]
 
@@ -92,7 +92,7 @@ theorem semiboundedBelow_pmap_iff {A : E →ₗ.[𝕜] E} {c : ℝ} :
     rwa [e.re_map] at h2
   · intro h x
     have h2 := h (domainOut (e := e) A x)
-    show c * ‖(domainOut (e := e) A x : E)‖ ^ 2 ≤
+    change c * ‖(domainOut (e := e) A x : E)‖ ^ 2 ≤
       RCLike.re (e (inner 𝕜 (A (domainOut (e := e) A x)) ((domainOut (e := e) A x : E))))
     rwa [e.re_map]
 

@@ -48,7 +48,7 @@ theorem coe_reCoord (A : H →L[ℂ] H) (hA : A.IsSymmetric)
   have hmem : z ∈ spectrum ℂ A := hz
   rw [← hAsa.spectrumRestricts.algebraMap_image] at hmem
   obtain ⟨lam, -, hlam⟩ := hmem
-  show ((z.re : ℝ) : ℂ) = z
+  change ((z.re : ℝ) : ℂ) = z
   rw [← hlam]
   simp
 

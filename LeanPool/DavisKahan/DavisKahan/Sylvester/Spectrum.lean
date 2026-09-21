@@ -288,10 +288,10 @@ theorem norm_crossCompression_eq
   · refine ContinuousLinearMap.opNorm_le_bound _ (ContinuousLinearMap.opNorm_nonneg _) fun x => ?_
     have hkey : ((Vᗮ.orthogonalProjectionOnto ((x : E)) : ↥Vᗮ) : E) =
         (Vᗮ.starProjection ∘L U.starProjection) (x : E) := by
-      show Vᗮ.starProjection (x : E) =
+      change Vᗮ.starProjection (x : E) =
         Vᗮ.starProjection (U.starProjection (x : E))
       rw [Submodule.starProjection_eq_self_iff.mpr x.2]
-    show ‖((Vᗮ.orthogonalProjectionOnto ((x : E)) : ↥Vᗮ) : E)‖ ≤
+    change ‖((Vᗮ.orthogonalProjectionOnto ((x : E)) : ↥Vᗮ) : E)‖ ≤
       ‖Vᗮ.starProjection ∘L U.starProjection‖ * ‖(x : E)‖
     rw [hkey]
     exact (Vᗮ.starProjection ∘L U.starProjection).le_opNorm _
@@ -310,7 +310,7 @@ theorem norm_crossCompression_eq
       _ ≤ ‖Vᗮ.orthogonalProjectionOnto ∘L U.subtypeL‖ * ‖y‖ := by
           refine mul_le_mul_of_nonneg_left ?_
             (ContinuousLinearMap.opNorm_nonneg _)
-          show ‖((U.orthogonalProjectionOnto y : ↥U) : E)‖ ≤ ‖y‖
+          change ‖((U.orthogonalProjectionOnto y : ↥U) : E)‖ ≤ ‖y‖
           exact U.norm_starProjection_apply_le y
 
 end Compression
@@ -342,7 +342,7 @@ theorem sinTheta_spectrum
   have hCnorm : ‖Vᗮ.orthogonalProjectionOnto ∘L (B - A) ∘L U.subtypeL‖ ≤
       ‖B - A‖ := by
     refine ContinuousLinearMap.opNorm_le_bound _ (ContinuousLinearMap.opNorm_nonneg _) fun x => ?_
-    show ‖((Vᗮ.orthogonalProjectionOnto ((B - A) (x : E)) : ↥Vᗮ) : E)‖ ≤
+    change ‖((Vᗮ.orthogonalProjectionOnto ((B - A) (x : E)) : ↥Vᗮ) : E)‖ ≤
       ‖B - A‖ * ‖(x : E)‖
     calc ‖((Vᗮ.orthogonalProjectionOnto ((B - A) (x : E)) : ↥Vᗮ) : E)‖
         = ‖Vᗮ.starProjection ((B - A) (x : E))‖ := rfl
@@ -451,10 +451,10 @@ theorem mem_and_gauge_sylvester_le_of_spectrum_intervalExterior
   refine Sylvester_mem_and_gauge_le_of_unbounded_bound_inverse N
     ⟨J, fun y => Submodule.mem_top, ?_, ?_⟩ B₁ hr0 hd hJnorm hB₁norm hEq' hC
   · intro y
-    show A₁ (J y) = y
+    change A₁ (J y) = y
     simpa using DFunLike.congr_fun hJ2 y
   · intro x
-    show J (A₁ (x : F₁)) = (x : F₁)
+    change J (A₁ (x : F₁)) = (x : F₁)
     simpa using DFunLike.congr_fun hJ1 (x : F₁)
 
 end IdealScope

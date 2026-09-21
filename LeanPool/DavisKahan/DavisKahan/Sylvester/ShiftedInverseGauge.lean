@@ -74,7 +74,7 @@ theorem exists_bounded_shift_extension
     · intro hx
       exact ⟨⟨x, hx⟩, rfl⟩
   have hdense : DenseRange ((B.domain.subtypeL : B.domain →L[𝕜] F)) := by
-    show Dense (Set.range _)
+    change Dense (Set.range _)
     rw [hrange]
     exact hBdense
   have hui : IsUniformInducing ((B.domain.subtypeL : B.domain →L[𝕜] F)) :=

@@ -188,7 +188,7 @@ theorem commute_compress_starProjection (U : Submodule ℂ E)
     Commute (U.starProjection ∘L T ∘L U.starProjection) U.starProjection := by
   have hidem : U.starProjection ∘L U.starProjection = U.starProjection :=
     U.isIdempotentElem_starProjection
-  show (U.starProjection ∘L T ∘L U.starProjection) * U.starProjection =
+  change (U.starProjection ∘L T ∘L U.starProjection) * U.starProjection =
     U.starProjection * (U.starProjection ∘L T ∘L U.starProjection)
   rw [ContinuousLinearMap.mul_def, ContinuousLinearMap.mul_def]
   calc (U.starProjection ∘L T ∘L U.starProjection) ∘L U.starProjection
@@ -310,14 +310,14 @@ theorem norm_directedSinTwoAngleOperatorC (U V : Submodule ℂ E)
       (V.starProjection ∘L U.starProjection) =
       U.starProjection ∘L V.starProjection := by
     rw [← ContinuousLinearMap.star_eq_adjoint]
-    show star (V.starProjection * U.starProjection) =
+    change star (V.starProjection * U.starProjection) =
       U.starProjection * V.starProjection
     rw [star_mul, (isSelfAdjoint_starProjection U).star_eq,
       (isSelfAdjoint_starProjection V).star_eq]
   have hcomp : (Vᗮ.starProjection ∘L U.starProjection) ∘L
       (U.starProjection ∘L V.starProjection) =
       Vᗮ.starProjection ∘L U.starProjection ∘L V.starProjection := by
-    show Vᗮ.starProjection * U.starProjection *
+    change Vᗮ.starProjection * U.starProjection *
         (U.starProjection * V.starProjection) =
       Vᗮ.starProjection * (U.starProjection * V.starProjection)
     rw [mul_assoc, ← mul_assoc U.starProjection,
@@ -327,7 +327,7 @@ theorem norm_directedSinTwoAngleOperatorC (U V : Submodule ℂ E)
     -- `‖|S| ∘L D‖ = ‖S ∘L D‖` and `‖D ∘L |T|‖ = ‖D ∘L T⋆‖` are stated with
     -- `∘L`; on an endomorphism algebra that is `*`, but only up to unfolding,
     -- so say so once and rewrite in the composite form.
-    show ‖directedSinAngleOperatorC U V ∘L directedCosAngleOperatorC U V‖ = _
+    change ‖directedSinAngleOperatorC U V ∘L directedCosAngleOperatorC U V‖ = _
     rw [directedSinAngleOperatorC, directedCosAngleOperatorC,
       ContinuousLinearMap.norm_modulus_comp, ContinuousLinearMap.norm_comp_modulus,
       hstar, hcomp]
@@ -464,7 +464,7 @@ theorem directedCosAngleOperatorC_apply_mem (U V : Submodule ℂ E)
       = (U.starProjection * directedCosAngleOperatorC U V) x := rfl
     _ = (directedCosAngleOperatorC U V * U.starProjection) x := by rw [← h.eq]
     _ = directedCosAngleOperatorC U V x := by
-        show directedCosAngleOperatorC U V (U.starProjection x) = _
+        change directedCosAngleOperatorC U V (U.starProjection x) = _
         rw [hx']
 
 /-- The extended cosine: the directed cosine on the source, the identity on
@@ -656,7 +656,7 @@ theorem directedTanAngleOperatorC_comp_cosAngleExtendedC (U V : Submodule ℂ E)
     directedTanAngleOperatorC U V hacute ∘L cosAngleExtendedC U V =
       directedSinAngleOperatorC U V := by
   ext x
-  show directedSinAngleOperatorC U V
+  change directedSinAngleOperatorC U V
     ((cosAngleExtendedCEquiv U V hacute).symm
       (cosAngleExtendedC U V x)) = directedSinAngleOperatorC U V x
   congr 1
@@ -821,7 +821,7 @@ theorem directedSinAngleOperatorC_apply_mem (U V : Submodule ℂ E)
     _ = (directedSinAngleOperatorC U V * U.starProjection) x := by
         rw [← h.eq]
     _ = directedSinAngleOperatorC U V x := by
-        show directedSinAngleOperatorC U V (U.starProjection x) = _
+        change directedSinAngleOperatorC U V (U.starProjection x) = _
         rw [hx']
 
 /-- **Quarter-acute coercivity of the double-angle cosine on the source.**
@@ -913,7 +913,7 @@ theorem cosTwoAngleOperatorC_apply_eq_zero_of_mem_orthogonal
     (U V : Submodule ℂ E)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     {y : E} (hy : y ∈ Uᗮ) : cosTwoAngleOperatorC U V y = 0 := by
-  show directedCosAngleOperatorC U V (directedCosAngleOperatorC U V y) -
+  change directedCosAngleOperatorC U V (directedCosAngleOperatorC U V y) -
     directedSinAngleOperatorC U V (directedSinAngleOperatorC U V y) = 0
   rw [directedCosAngleOperatorC_apply_eq_zero_of_mem_orthogonal U V hy,
     directedSinAngleOperatorC_apply_eq_zero_of_mem_orthogonal U V hy,
@@ -923,7 +923,7 @@ theorem cosTwoAngleOperatorC_apply_eq_zero_of_mem_orthogonal
 theorem cosTwoAngleOperatorC_apply_mem (U V : Submodule ℂ E)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     {x : E} (hx : x ∈ U) : cosTwoAngleOperatorC U V x ∈ U := by
-  show directedCosAngleOperatorC U V (directedCosAngleOperatorC U V x) -
+  change directedCosAngleOperatorC U V (directedCosAngleOperatorC U V x) -
     directedSinAngleOperatorC U V (directedSinAngleOperatorC U V x) ∈ U
   exact U.sub_mem
     (directedCosAngleOperatorC_apply_mem U V (directedCosAngleOperatorC_apply_mem U V hx))
@@ -996,7 +996,7 @@ theorem directedTanTwoAngleOperatorC_comp_cosTwoAngleExtendedC
     directedTanTwoAngleOperatorC U V hquarter ∘L cosTwoAngleExtendedC U V =
       directedSinTwoAngleOperatorC U V := by
   ext x
-  show directedSinTwoAngleOperatorC U V
+  change directedSinTwoAngleOperatorC U V
     ((cosTwoAngleExtendedCEquiv U V hquarter).symm
       (cosTwoAngleExtendedC U V x)) = directedSinTwoAngleOperatorC U V x
   congr 1

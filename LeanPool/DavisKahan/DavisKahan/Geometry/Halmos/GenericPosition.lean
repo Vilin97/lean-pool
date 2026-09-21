@@ -458,7 +458,7 @@ theorem coe_genericHalmosCosineSq_of_mem_left (m : genericLeftHalf U V) :
   -- Only the first summand survives on the `U`-half.
   have hval : halmosCosineSq U V (m : H) =
       U.starProjection (V.starProjection (m : H)) := by
-    show U.starProjection (V.starProjection (U.starProjection (m : H))) +
+    change U.starProjection (V.starProjection (U.starProjection (m : H))) +
       Uᗮ.starProjection (Vᗮ.starProjection (Uᗮ.starProjection (m : H))) = _
     rw [hmU, hmUc, map_zero, map_zero, add_zero]
   have hgen : halmosCosineSq U V (m : H) ∈ halmosGenericPart U V := by

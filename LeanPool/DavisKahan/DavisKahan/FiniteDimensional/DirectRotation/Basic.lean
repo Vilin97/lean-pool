@@ -334,7 +334,7 @@ theorem abs_canonicalIntertwiner_apply_eq_self_of_projection_eq
   have hfc := TauCeti.selfAdjointFunctionalCalculus_apply_of_apply_eq_smul
     hpos.isSymmetric Real.sqrt hsq
   rw [TauCeti.selfAdjointFunctionalCalculus_sqrt hpos, Real.sqrt_one] at hfc
-  show hpos.sqrt x = x
+  change hpos.sqrt x = x
   rw [hfc]
   simp
 

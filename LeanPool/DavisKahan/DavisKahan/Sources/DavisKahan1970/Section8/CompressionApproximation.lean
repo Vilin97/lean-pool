@@ -154,7 +154,7 @@ theorem approximationNumber_mono_of_form_le
   have hgram : ∀ {R : E →L[ℂ] E}, (0 : E →L[ℂ] E) ≤ R →
       gramOperator (CFC.sqrt R) = R := by
     intro R hR
-    show ContinuousLinearMap.adjoint (CFC.sqrt R) ∘L CFC.sqrt R = R
+    change ContinuousLinearMap.adjoint (CFC.sqrt R) ∘L CFC.sqrt R = R
     rw [← ContinuousLinearMap.star_eq_adjoint, (hsa hR).star_eq]
     exact CFC.sqrt_mul_sqrt_self R hR
   have hle : ∀ x : E, ‖CFC.sqrt S x‖ ≤ ‖CFC.sqrt T x‖ := by

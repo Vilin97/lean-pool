@@ -65,7 +65,7 @@ theorem realSpectralSubspace_orthogonalExactDecomposition
         realSelfAdjointSpectralSubspaceInclusion_isometric A hA Sᶜ hS.compl
       orthogonal := ?_
       projection_sum := ?_ }
-  · show U.subtypeL.adjoint ∘L Uc.subtypeL = 0
+  · change U.subtypeL.adjoint ∘L Uc.subtypeL = 0
     rw [Submodule.adjoint_subtypeL]
     apply ContinuousLinearMap.ext
     intro x
@@ -78,7 +78,7 @@ theorem realSpectralSubspace_orthogonalExactDecomposition
       simpa only [sub_apply,
         ContinuousLinearMap.id_apply] using hfix
     exact sub_eq_self.mp hfix'
-  · show U.subtypeL ∘L U.subtypeL.adjoint +
+  · change U.subtypeL ∘L U.subtypeL.adjoint +
         Uc.subtypeL ∘L Uc.subtypeL.adjoint = ContinuousLinearMap.id ℝ E
     rw [Submodule.adjoint_subtypeL, Submodule.adjoint_subtypeL]
     change U.starProjection + Uc.starProjection = ContinuousLinearMap.id ℝ E

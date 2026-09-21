@@ -143,13 +143,13 @@ theorem principalSourceVector_mem
   have hgram : A.adjoint ∘ₗ A =
       projection U - projection U ∘ₗ projection V ∘ₗ projection U := by
     have hAadj : A.adjoint = projection U ∘ₗ complementaryProjection V := by
-      show (complementaryProjection V ∘ₗ projection U).adjoint
+      change (complementaryProjection V ∘ₗ projection U).adjoint
           = projection U ∘ₗ complementaryProjection V
       rw [LinearMap.adjoint_comp, projection_adjoint]
       congr 1
       simp [complementaryProjection]
     rw [hAadj]
-    show (projection U ∘ₗ complementaryProjection V) ∘ₗ
+    change (projection U ∘ₗ complementaryProjection V) ∘ₗ
         (complementaryProjection V ∘ₗ projection U) =
         projection U - projection U ∘ₗ projection V ∘ₗ projection U
     ext x
@@ -223,7 +223,7 @@ theorem principalPlaneCosine_pos
         rwa [sinThetaMap, LinearMap.comp_apply, projection_apply_of_mem hu] at h
       rw [hu1, hsinNorm] at hdecomp
       have hVsq : ‖V.starProjection u‖ ^ 2 = 0 := by nlinarith
-      show V.starProjection u = 0
+      change V.starProjection u = 0
       exact norm_eq_zero.mp ((pow_eq_zero_iff (by norm_num)).mp hVsq)
     exact (by
       have := hacute.1 u hu hzero

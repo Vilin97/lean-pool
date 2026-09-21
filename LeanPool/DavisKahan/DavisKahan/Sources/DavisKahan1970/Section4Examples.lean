@@ -51,7 +51,7 @@ private theorem real_inner (x y : RealPlane) :
 private theorem real_gramTrace (M : Matrix (Fin 2) (Fin 2) ℝ) :
     TauCeti.gramTraceFinTwo (Matrix.toEuclideanLin M) =
       M 0 0 ^ 2 + M 1 0 ^ 2 + (M 0 1 ^ 2 + M 1 1 ^ 2) := by
-  show ∑ i : Fin 2,
+  change ∑ i : Fin 2,
     ‖(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ i)‖ ^ 2 = _
   rw [Fin.sum_univ_two, real_norm_sq, real_norm_sq]
   rw [real_entry, real_entry, real_entry, real_entry]
@@ -59,7 +59,7 @@ private theorem real_gramTrace (M : Matrix (Fin 2) (Fin 2) ℝ) :
 private theorem real_gramDet (M : Matrix (Fin 2) (Fin 2) ℝ) :
     TauCeti.gramDetFinTwo (Matrix.toEuclideanLin M) =
       (M 0 0 * M 1 1 - M 0 1 * M 1 0) ^ 2 := by
-  show ‖(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 0)‖ ^ 2 *
+  change ‖(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 0)‖ ^ 2 *
       ‖(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 1)‖ ^ 2 -
       ‖⟪(Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 0),
         (Matrix.toEuclideanLin M) (EuclideanSpace.basisFun (Fin 2) ℝ 1)⟫_ℝ‖ ^ 2 = _
@@ -369,7 +369,7 @@ private theorem complexDiagonal_gramTrace (z0 z1 : ℂ) :
     TauCeti.gramTraceFinTwo
         (Matrix.toEuclideanLin !![z0, 0; 0, z1]) =
       ‖z0‖ ^ 2 + ‖z1‖ ^ 2 := by
-  show ∑ i : Fin 2,
+  change ∑ i : Fin 2,
     ‖(Matrix.toEuclideanLin !![z0, 0; 0, z1])
       (EuclideanSpace.basisFun (Fin 2) ℂ i)‖ ^ 2 = _
   rw [Fin.sum_univ_two, complex_norm_sq, complex_norm_sq]
@@ -380,7 +380,7 @@ private theorem complexDiagonal_gramDet (z0 z1 : ℂ) :
     TauCeti.gramDetFinTwo
         (Matrix.toEuclideanLin !![z0, 0; 0, z1]) =
       ‖z0‖ ^ 2 * ‖z1‖ ^ 2 := by
-  show ‖(Matrix.toEuclideanLin !![z0, 0; 0, z1])
+  change ‖(Matrix.toEuclideanLin !![z0, 0; 0, z1])
       (EuclideanSpace.basisFun (Fin 2) ℂ 0)‖ ^ 2 *
       ‖(Matrix.toEuclideanLin !![z0, 0; 0, z1])
       (EuclideanSpace.basisFun (Fin 2) ℂ 1)‖ ^ 2 -

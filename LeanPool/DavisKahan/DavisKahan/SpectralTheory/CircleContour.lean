@@ -74,12 +74,12 @@ noncomputable def circleContour (c : ℂ) (r : ℝ) : PiecewiseC1ClosedContour w
     rw [Fin.strictMono_iff_lt_succ]
     intro i
     fin_cases i
-    show (0 : ℝ) < 1
+    change (0 : ℝ) < 1
     norm_num
   contDiffOn_piece := by
     intro i
     fin_cases i
-    show ContDiffOn ℝ 1 (circlePath c r).extend (Set.Icc (0 : ℝ) 1)
+    change ContDiffOn ℝ 1 (circlePath c r).extend (Set.Icc (0 : ℝ) 1)
     have hglob : ContDiffOn ℝ 1
         (fun t : ℝ => circleMap c r (2 * Real.pi * t)) (Set.Icc (0 : ℝ) 1) :=
       ((contDiff_circleMap c r).comp
@@ -135,7 +135,7 @@ theorem circleContour_normalizedWinding (c x r : ℝ) (hr : 0 < r)
       apply intervalIntegral.integral_congr
       intro t ht
       rw [Set.uIcc_of_le zero_le_one] at ht
-      show ((circleContour (c : ℂ) r).param t - (x : ℂ))⁻¹ *
+      change ((circleContour (c : ℂ) r).param t - (x : ℂ))⁻¹ *
           derivWithin (circleContour (c : ℂ) r).param (Set.Icc (0 : ℝ) 1) t =
         (2 * Real.pi : ℝ) • (deriv (circleMap (c : ℂ) r) (2 * Real.pi * t) •
           (circleMap (c : ℂ) r (2 * Real.pi * t) - (x : ℂ))⁻¹)
@@ -168,7 +168,7 @@ theorem exists_circle_spectralMargin
   have hpathmem : ∀ t : unitInterval,
       ‖(circleContour (c : ℂ) r).path t - (c : ℂ)‖ = r := by
     intro t
-    show ‖circleMap (c : ℂ) r (2 * Real.pi * (t : ℝ)) - (c : ℂ)‖ = r
+    change ‖circleMap (c : ℂ) r (2 * Real.pi * (t : ℝ)) - (c : ℂ)‖ = r
     simpa [mem_sphere_iff_norm] using
       circleMap_mem_sphere (c : ℂ) hsep.radius_pos.le (2 * Real.pi * (t : ℝ))
   by_cases hσ : (spectrum ℂ A).Nonempty
@@ -261,7 +261,7 @@ theorem circleContour_contourLength (c : ℂ) {r : ℝ} (hr : 0 ≤ r) :
     apply intervalIntegral.integral_congr
     intro t ht
     rw [Set.uIcc_of_le zero_le_one] at ht
-    show ‖derivWithin (circleContour c r).param (Set.Icc (0 : ℝ) 1) t‖ =
+    change ‖derivWithin (circleContour c r).param (Set.Icc (0 : ℝ) 1) t‖ =
       2 * Real.pi * r
     rw [circleContour_derivWithin c r ht, norm_smul, Real.norm_eq_abs,
       abs_of_pos (by positivity : (0 : ℝ) < 2 * Real.pi), norm_mul,

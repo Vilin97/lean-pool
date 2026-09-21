@@ -244,7 +244,7 @@ theorem reflectionProduct_form_pos_of_orderedFormGap_unbounded
   -- the Lyapunov hypothesis
   set X : E →L[ℂ] E := W + ContinuousLinearMap.adjoint W with hXdef
   have hXsa : IsSelfAdjoint X := by
-    show star X = X
+    change star X = X
     rw [hXdef, ← ContinuousLinearMap.star_eq_adjoint, star_add, star_star]
     abel
   have hXadj : ∀ y z : E, ⟪X y, z⟫_ℂ = ⟪y, X z⟫_ℂ := by

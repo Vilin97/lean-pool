@@ -169,7 +169,7 @@ theorem sin_two_theta_reflection_le (N : UnitarilyInvariantSeminorm 𝕜 E E)
   have hVsP : ∀ x, V'.starProjection x
       = W.reflection (Uᗮ.starProjection (W.reflection x)) := by
     intro x
-    show (Uᗮ.map ((W.reflection (𝕜 := 𝕜)).toLinearEquiv : E →ₗ[𝕜] E)).starProjection x
+    change (Uᗮ.map ((W.reflection (𝕜 := 𝕜)).toLinearEquiv : E →ₗ[𝕜] E)).starProjection x
       = W.reflection (Uᗮ.starProjection (W.reflection x))
     rw [Submodule.starProjection_map_apply, Submodule.reflection_symm]
   have hconj : ((V'.starProjection ∘L U.starProjection : E →L[𝕜] E) : E →ₗ[𝕜] E)

@@ -187,7 +187,7 @@ theorem theorem8_1_upperSandwichApproximation
         upperBlockShift (A + K) Q alpha ∘L cosineBlock P Q) x⟫_ℂ =
         ⟪cosineBlock P Q x,
           upperBlockShift (A + K) Q alpha (cosineBlock P Q x)⟫_ℂ := by
-      show ⟪x, ContinuousLinearMap.adjoint (cosineBlock P Q)
+      change ⟪x, ContinuousLinearMap.adjoint (cosineBlock P Q)
         (upperBlockShift (A + K) Q alpha (cosineBlock P Q x))⟫_ℂ = _
       rw [ContinuousLinearMap.adjoint_inner_right]
     have hright := upperBlockShift_apply (A + K) Q alpha (cosineBlock P Q x)
@@ -327,7 +327,7 @@ theorem theorem8_1_lowerSandwichApproximation
         lowerBlockShift (A + K) Q alpha delta ∘L lowerCosineBlock P Q) x⟫_ℂ =
         ⟪lowerCosineBlock P Q x,
           lowerBlockShift (A + K) Q alpha delta (lowerCosineBlock P Q x)⟫_ℂ := by
-      show ⟪x, ContinuousLinearMap.adjoint (lowerCosineBlock P Q)
+      change ⟪x, ContinuousLinearMap.adjoint (lowerCosineBlock P Q)
         (lowerBlockShift (A + K) Q alpha delta (lowerCosineBlock P Q x))⟫_ℂ = _
       rw [ContinuousLinearMap.adjoint_inner_right]
     have hright := lowerBlockShift_apply (A + K) Q alpha delta

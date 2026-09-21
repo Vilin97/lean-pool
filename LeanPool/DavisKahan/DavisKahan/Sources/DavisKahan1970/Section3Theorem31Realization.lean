@@ -477,20 +477,20 @@ theorem theorem3_1_intertwiner_of_nonzeroPartsUnitaryEquiv
   have hJJ : ContinuousLinearMap.adjoint J ∘L J = K₀.starProjection := by
     ext x
     rw [hadjJ]
-    show K₀.subtypeL ((e.symm : K₁ →L[𝕜'] K₀)
+    change K₀.subtypeL ((e.symm : K₁ →L[𝕜'] K₀)
         (K₁.orthogonalProjectionOnto (J x))) = K₀.starProjection x
     have hJx : J x = K₁.subtypeL ((e : K₀ →L[𝕜'] K₁) (K₀.orthogonalProjectionOnto x)) := rfl
     rw [hJx, hp₁]
-    show K₀.subtypeL (e.symm (e (K₀.orthogonalProjectionOnto x))) = _
+    change K₀.subtypeL (e.symm (e (K₀.orthogonalProjectionOnto x))) = _
     rw [e.symm_apply_apply]
     rfl
   have hJJ' : J ∘L ContinuousLinearMap.adjoint J = K₁.starProjection := by
     ext y
     rw [hadjJ]
-    show K₁.subtypeL ((e : K₀ →L[𝕜'] K₁) (K₀.orthogonalProjectionOnto (K₀.subtypeL
+    change K₁.subtypeL ((e : K₀ →L[𝕜'] K₁) (K₀.orthogonalProjectionOnto (K₀.subtypeL
       ((e.symm : K₁ →L[𝕜'] K₀) (K₁.orthogonalProjectionOnto y))))) = K₁.starProjection y
     rw [hp₀]
-    show K₁.subtypeL (e (e.symm (K₁.orthogonalProjectionOnto y))) = _
+    change K₁.subtypeL (e (e.symm (K₁.orthogonalProjectionOnto y))) = _
     rw [e.apply_symm_apply]
     rfl
   refine ⟨J, ?_, ?_, ?_⟩
@@ -526,7 +526,7 @@ theorem theorem3_1_intertwiner_of_nonzeroPartsUnitaryEquiv
                 exact Submodule.orthogonalProjectionOnto_apply_of_mem_orthogonal hv,
               add_zero]
     ext x
-    show K₁.subtypeL ((e : K₀ →L[𝕜'] K₁) (K₀.orthogonalProjectionOnto (Θ₀ x))) =
+    change K₁.subtypeL ((e : K₀ →L[𝕜'] K₁) (K₀.orthogonalProjectionOnto (Θ₀ x))) =
       Θ₁ (K₁.subtypeL ((e : K₀ →L[𝕜'] K₁) (K₀.orthogonalProjectionOnto x)))
     -- the projection commutes, so the argument is the restriction applied to `P₀ x`
     have hrestr : K₀.orthogonalProjectionOnto (Θ₀ x)

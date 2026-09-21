@@ -230,7 +230,7 @@ theorem directRotation_minimizes_max_displacement
         = -((LinearMap.id - X).toContinuousLinearMap) := by
       ext x
       simp
-    show ‖(displacementSquare X).toContinuousLinearMap‖ = _
+    change ‖(displacementSquare X).toContinuousLinearMap‖ = _
     rw [hD, hCLM, ContinuousLinearMap.norm_adjoint_comp_self, hneg, norm_neg, sq]
   rw [key, key] at h
   exact (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h
@@ -636,7 +636,7 @@ theorem angleOperator_comm_angleComplexStructure (U V : Submodule 𝕜 E)
       angleOperator U V *
         ((directRotation U V hacute).toLinearMap - directRotationCosine U V) := by
     rw [sub_mul, mul_sub, hR, hC]
-  show (((directRotation U V hacute).toLinearMap - directRotationCosine U V) ∘ₗ
+  change (((directRotation U V hacute).toLinearMap - directRotationCosine U V) ∘ₗ
       TauCeti.moorePenroseInverse (sinAngleOperator U V)) ∘ₗ angleOperator U V = _
   simp only [hmul, angleComplexStructure]
   calc ((directRotation U V hacute).toLinearMap - directRotationCosine U V) *
@@ -771,7 +771,7 @@ theorem angleComplexStructure_comp_self (U V : Submodule 𝕜 E)
       _ = A * (G * A) * G := by rw [hAG]
       _ = A * (G * A * G) := by noncomm_ring
       _ = A * G := by rw [hGAG]
-  show (D ∘ₗ G) ∘ₗ (D ∘ₗ G) = _
+  change (D ∘ₗ G) ∘ₗ (D ∘ₗ G) = _
   simp only [hmul]
   calc D * G * (D * G) = D * (G * D) * G := by noncomm_ring
     _ = D * (D * G) * G := by rw [hGD]

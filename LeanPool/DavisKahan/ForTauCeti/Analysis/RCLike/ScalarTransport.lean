@@ -89,6 +89,7 @@ namespace TauCeti
 
 /-- An isomorphism of `RCLike` fields fixing the reals and `I`. -/
 structure RCLikeIso (𝕜 : Type u) (𝕂 : Type w) [RCLike 𝕜] [RCLike 𝕂] where
+  /-- The underlying ring equivalence. -/
   toRingEquiv : 𝕜 ≃+* 𝕂
   map_ofReal : ∀ r : ℝ, toRingEquiv (r : 𝕜) = (r : 𝕂)
   map_I : toRingEquiv (RCLike.I : 𝕜) = RCLike.I
@@ -99,9 +100,6 @@ variable {𝕜 : Type u} {𝕂 : Type w} [RCLike 𝕜] [RCLike 𝕂]
 
 /-- The isomorphism acts as a function. -/
 instance : CoeFun (RCLikeIso 𝕜 𝕂) (fun _ => 𝕜 → 𝕂) := ⟨fun e => e.toRingEquiv⟩
-
-/-- The coercion to a function is the underlying ring equivalence. -/
-@[simp] theorem coe_toRingEquiv (e : RCLikeIso 𝕜 𝕂) (x : 𝕜) : e.toRingEquiv x = e x := rfl
 
 /-- Reverse an isomorphism of `RCLike` fields. -/
 def symm (e : RCLikeIso 𝕜 𝕂) : RCLikeIso 𝕂 𝕜 where
@@ -164,7 +162,7 @@ theorem im_I_map (e : RCLikeIso 𝕜 𝕂) :
   rw [apply_eq, apply_eq]; simp [RCLike.conj_re, RCLike.conj_im]
 
 /-- The inverse preserves norms. -/
-@[simp] theorem norm_symm_map' (e : RCLikeIso 𝕜 𝕂) (c : 𝕂) :
+theorem norm_symm_map' (e : RCLikeIso 𝕜 𝕂) (c : 𝕂) :
     ‖e.toRingEquiv.symm c‖ = ‖c‖ := by
   conv_rhs => rw [← e.toRingEquiv.apply_symm_apply c]
   exact (e.norm_map _).symm
@@ -187,7 +185,7 @@ noncomputable def homeomorph (e : RCLikeIso 𝕜 𝕂) : 𝕜 ≃ₜ 𝕂 where
 @[simp] theorem coe_homeomorph (e : RCLikeIso 𝕜 𝕂) : (e.homeomorph : 𝕜 → 𝕂) = e := rfl
 
 /-- The inverse preserves norms. -/
-@[simp] theorem norm_symm_map (e : RCLikeIso 𝕜 𝕂) (c : 𝕂) :
+theorem norm_symm_map (e : RCLikeIso 𝕜 𝕂) (c : 𝕂) :
     ‖e.toRingEquiv.symm c‖ = ‖c‖ := by
   conv_rhs => rw [← e.toRingEquiv.apply_symm_apply c]
   exact (e.norm_map _).symm
@@ -198,7 +196,7 @@ end RCLikeIso
 
 The type, the additive group, the topology and the norm are unchanged; only the
 scalar action and the inner product's field of values move. -/
-@[expose, nolint unusedArguments]
+@[expose]
 def ScalarTransport {𝕜 : Type u} {𝕂 : Type w} [RCLike 𝕜] [RCLike 𝕂]
     (_e : RCLikeIso 𝕜 𝕂) (E : Type v) : Type v := E
 
@@ -281,7 +279,7 @@ omit [InnerProductSpace 𝕜 E] in
   rfl
 
 /-- and its real part is literally unchanged. -/
-@[simp] theorem re_inner_of (x y : E) :
+theorem re_inner_of (x y : E) :
     RCLike.re (inner 𝕂 (of (e := e) x) (of (e := e) y)) = RCLike.re (inner 𝕜 x y) := by
   rw [inner_of, e.re_map]
 
@@ -437,7 +435,7 @@ instance hasOrthogonalProjection (S : Submodule 𝕜 E) [S.HasOrthogonalProjecti
     exact ⟨of (e := e) w, hw, by rw [submodule_orthogonal]; exact hsub⟩
 
 /-- and the projection is the original projection. -/
-@[simp] theorem starProjection_of (S : Submodule 𝕜 E) [S.HasOrthogonalProjection] (x : E) :
+theorem starProjection_of (S : Submodule 𝕜 E) [S.HasOrthogonalProjection] (x : E) :
     (submodule (e := e) S).starProjection (of (e := e) x) = of (e := e) (S.starProjection x) := by
   have hmem : S.starProjection x ∈ S := S.starProjection_apply_mem x
   have hperp : x - S.starProjection x ∈ Sᗮ := S.sub_starProjection_mem_orthogonal x

@@ -298,7 +298,7 @@ theorem circleRieszProjection_eq_boundedSelfAdjointSpectralProjection
             (circleMap (center : ℂ) radius θ - w)⁻¹) (spectrum ℂ A) :=
         continuousOn_const.mul
           (((continuous_const.sub continuous_id).continuousOn).inv₀ hne)
-      show circleSpectrumSymbol A center radius θ x = _
+      change circleSpectrumSymbol A center radius θ x = _
       unfold circleSpectrumSymbol
       rw [ContinuousMap.mkD_apply_of_continuousOn hcont]
       rfl

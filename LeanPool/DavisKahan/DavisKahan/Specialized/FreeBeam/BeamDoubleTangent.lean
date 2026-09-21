@@ -90,7 +90,7 @@ theorem beamRitzDiagonal_isSelfAdjoint (ε : ℝ) :
   have hsym : ∀ u v : BeamL2,
       ⟪beamPerturbation ε u, v⟫_ℂ = ⟪u, beamPerturbation ε v⟫_ℂ :=
     fun u v => beamPerturbation_isSelfAdjoint ε u v
-  show ⟪beamRitzDiagonal ε x, y⟫_ℂ = ⟪x, beamRitzDiagonal ε y⟫_ℂ
+  change ⟪beamRitzDiagonal ε x, y⟫_ℂ = ⟪x, beamRitzDiagonal ε y⟫_ℂ
   rw [hd, hd, inner_add_left, inner_add_right]
   congr 1
   · rw [Submodule.inner_starProjection_left_eq_right, hsym,
@@ -110,7 +110,7 @@ theorem beamRitzOffDiagonal_isSelfAdjoint (ε : ℝ) :
     fun u v => beamRitzDiagonal_isSelfAdjoint ε u v
   have hoff : ∀ z : BeamL2, beamRitzOffDiagonal ε z
       = beamPerturbation ε z - beamRitzDiagonal ε z := fun z => rfl
-  show ⟪beamRitzOffDiagonal ε x, y⟫_ℂ = ⟪x, beamRitzOffDiagonal ε y⟫_ℂ
+  change ⟪beamRitzOffDiagonal ε x, y⟫_ℂ = ⟪x, beamRitzOffDiagonal ε y⟫_ℂ
   rw [hoff, hoff, inner_sub_left, inner_sub_right, hsym, hdsym]
 
 /-- **The lower off-diagonal block is the Rayleigh--Ritz residual.**  On the trial
@@ -459,7 +459,7 @@ theorem beamLowReflection_apply (ε : ℝ) (x : BeamL2) :
 theorem beamLowReflection_isSelfAdjoint (ε : ℝ) :
     IsSelfAdjoint (beamLowReflection ε) := by
   have h2 : IsSelfAdjoint (2 : ℂ) := by
-    show star (2 : ℂ) = 2
+    change star (2 : ℂ) = 2
     simp
   have hone : IsSelfAdjoint (1 : BeamL2 →L[ℂ] BeamL2) := star_one _
   have hQ : IsSelfAdjoint (beamLowProjection ε) :=
@@ -472,7 +472,7 @@ theorem beamLowReflection_sq (ε : ℝ) :
   have hQ := TauCeti.LinearPMap.specProjection_apply_self
     (beamPerturbed_isSelfAdjoint ε) (Set.Iic 500) measurableSet_Iic
   refine ContinuousLinearMap.ext fun x => ?_
-  show beamLowReflection ε (beamLowReflection ε x) = x
+  change beamLowReflection ε (beamLowReflection ε x) = x
   have hstep : beamLowProjection ε (beamLowReflection ε x) = beamLowProjection ε x := by
     rw [beamLowReflection_apply, map_sub, map_smul, hQ x]
     module
@@ -546,7 +546,7 @@ theorem beamLowReflection_comm (ε : ℝ)
       = beamLowReflection ε ((beamPerturbed ε) ⟨(x : BeamL2), hxd⟩) :=
     beamPerturbed_comm_beamLowReflection ε ⟨(x : BeamL2), hxp⟩
       (beamLowReflection_mem_domain ε hxp)
-  show (beamComparison ε) ⟨beamLowReflection ε (x : BeamL2), hzd⟩
+  change (beamComparison ε) ⟨beamLowReflection ε (x : BeamL2), hzd⟩
       + beamRitzOffDiagonal ε (beamLowReflection ε (x : BeamL2))
       = beamLowReflection ε ((beamComparison ε) ⟨(x : BeamL2), hxd⟩)
         + beamLowReflection ε (beamRitzOffDiagonal ε (x : BeamL2))

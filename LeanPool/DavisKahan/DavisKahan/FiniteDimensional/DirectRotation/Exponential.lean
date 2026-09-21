@@ -263,7 +263,7 @@ theorem directRotation_eq_exp_angleComplexStructure_comp_angleOperator
     | succ k ih =>
         intro x
         rw [pow_succ, pow_succ]
-        show (X ^ k) (X x) = (Y ^ k) (Y x)
+        change (X ^ k) (X x) = (Y ^ k) (Y x)
         rw [hXY, ih]
   -- The exponential series, evaluated at a vector.
   have hexp : ∀ x : E, HasSum (fun n : ℕ => ((n ! : 𝕜))⁻¹ • (Y ^ n) x)
@@ -290,7 +290,7 @@ theorem directRotation_eq_exp_angleComplexStructure_comp_angleOperator
     -- `(Y²)ᵏ` acts on the eigenvector by `(-θ²)ᵏ`.
     have hstep : (Y * Y) (b i) = ((-(θ ^ 2) : ℝ) : 𝕜) • b i := by
       rw [hY2]
-      show -(angleOperator U V (angleOperator U V (b i))) = _
+      change -(angleOperator U V (angleOperator U V (b i))) = _
       rw [hTheta, map_smul, hTheta, smul_smul,
         show ((-(θ ^ 2) : ℝ) : 𝕜) = -(((θ : ℝ) : 𝕜) * ((θ : ℝ) : 𝕜)) by push_cast; ring,
         neg_smul]
@@ -300,7 +300,7 @@ theorem directRotation_eq_exp_angleComplexStructure_comp_angleOperator
       | zero => simp
       | succ m ih =>
           rw [pow_succ]
-          show ((Y * Y) ^ m) ((Y * Y) (b i)) = _
+          change ((Y * Y) ^ m) ((Y * Y) (b i)) = _
           rw [hstep, map_smul, ih, smul_smul]
           congr 1
           push_cast
@@ -313,7 +313,7 @@ theorem directRotation_eq_exp_angleComplexStructure_comp_angleOperator
         (((-(θ ^ 2)) ^ k : ℝ) : 𝕜) • Y (b i) := by
       intro k
       rw [pow_succ']
-      show Y ((Y ^ (2 * k)) (b i)) = _
+      change Y ((Y ^ (2 * k)) (b i)) = _
       rw [heven k, map_smul]
     -- The even part sums to `cos θ`, the odd part to `sin θ`.
     have hcos : HasSum (fun k : ℕ => (((2 * k)! : 𝕜))⁻¹ • (Y ^ (2 * k)) (b i))

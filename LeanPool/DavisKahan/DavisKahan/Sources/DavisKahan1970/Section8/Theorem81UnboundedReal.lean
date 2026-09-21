@@ -408,7 +408,7 @@ theorem re_inner_split_of_reduces_real {B : Er →ₗ.[ℝ] Er} {Q : Submodule �
   have hxeq : x = (⟨Q.starProjection (x : Er), hred.projection_mem_domain x⟩ : B.domain)
       + ⟨Qᗮ.starProjection (x : Er), hred.orthogonalProjection_mem_domain x⟩ :=
     Subtype.ext (by
-      show (x : Er) = Q.starProjection (x : Er) + Qᗮ.starProjection (x : Er)
+      change (x : Er) = Q.starProjection (x : Er) + Qᗮ.starProjection (x : Er)
       rw [Submodule.starProjection_orthogonal_apply]
       abel)
   have hcross1 : ⟪B (⟨Q.starProjection (x : Er), hred.projection_mem_domain x⟩ : B.domain),
@@ -430,7 +430,7 @@ theorem re_inner_split_of_reduces_real {B : Er →ₗ.[ℝ] Er} {Q : Submodule �
                 hred.orthogonalProjection_mem_domain x⟩ : B.domain) : Er)⟫_ℝ :=
     congrArg (fun z : B.domain => ⟪B z, (z : Er)⟫_ℝ) hxeq
   rw [hstep, _root_.LinearPMap.map_add]
-  show ⟪_ + _, (Q.starProjection (x : Er) + Qᗮ.starProjection (x : Er))⟫_ℝ = _
+  change ⟪_ + _, (Q.starProjection (x : Er) + Qᗮ.starProjection (x : Er))⟫_ℝ = _
   rw [inner_add_left, inner_add_right, inner_add_right, hcross1, hcross2]
   ring
 

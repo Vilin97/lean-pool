@@ -411,7 +411,7 @@ theorem commute_directedSinAngleOperator_directedCosAngleOperator_real {F : Type
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
     Commute (directedSinAngleOperator U V) (directedCosAngleOperator U V) := by
   refine complexify_injective ?_
-  show complexify (directedSinAngleOperator U V ∘L directedCosAngleOperator U V) =
+  change complexify (directedSinAngleOperator U V ∘L directedCosAngleOperator U V) =
     complexify (directedCosAngleOperator U V ∘L directedSinAngleOperator U V)
   rw [complexify_comp, complexify_comp, complexify_directedSinAngleOperator,
     complexify_directedCosAngleOperator]
@@ -621,7 +621,7 @@ private theorem starProjection_mul_self_generic (W : Submodule 𝕜 E)
     [W.HasOrthogonalProjection] :
     W.starProjection * W.starProjection = W.starProjection := by
   ext x
-  show W.starProjection (W.starProjection x) = W.starProjection x
+  change W.starProjection (W.starProjection x) = W.starProjection x
   rw [Submodule.starProjection_eq_self_iff]
   exact W.starProjection_apply_mem x
 
@@ -699,7 +699,7 @@ theorem directedSinTwoAngleOperator_mul_self :
               directedCosAngleOperator U V := by rw [hcomm.symm.eq]
       _ = (directedSinAngleOperator U V * directedSinAngleOperator U V) *
             (directedCosAngleOperator U V * directedCosAngleOperator U V) := by noncomm_ring
-  show (2 : ℝ) • _ * ((2 : ℝ) • _) = _
+  change (2 : ℝ) • _ * ((2 : ℝ) • _) = _
   rw [smul_mul_smul_comm, hrearrange, hsin, hcos]
   congr 1
   · norm_num
@@ -783,13 +783,13 @@ theorem directedSinTwoAngleOperator_hasSameApproximationNumbers_swap :
       = ContinuousLinearMap.modulus ((2 : ℝ) • star W) := by
     refine ContinuousLinearMap.eq_modulus_of_nonneg_of_mul_self_eq
       (directedSinTwoAngleOperator_nonneg U V) ?_
-    show _ = star ((2 : ℝ) • star W) * ((2 : ℝ) • star W)
+    change _ = star ((2 : ℝ) • star W) * ((2 : ℝ) • star W)
     rw [hstar2, star_star, hfour, hWW, directedSinTwoAngleOperator_mul_self, ← htdef]
   have hVU : directedSinTwoAngleOperator V U
       = ContinuousLinearMap.modulus ((2 : ℝ) • W) := by
     refine ContinuousLinearMap.eq_modulus_of_nonneg_of_mul_self_eq
       (directedSinTwoAngleOperator_nonneg V U) ?_
-    show _ = star ((2 : ℝ) • W) * ((2 : ℝ) • W)
+    change _ = star ((2 : ℝ) • W) * ((2 : ℝ) • W)
     rw [hstar2, hfour, hW'W, directedSinTwoAngleOperator_mul_self, ← hsdef]
   intro n
   rw [hUV, hVU, modulus_hasSameApproximationNumbers_rclike ((2 : ℝ) • star W) n,

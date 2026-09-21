@@ -99,7 +99,7 @@ noncomputable def complexifySubmoduleEquiv (Z : Submodule ℝ E) :
       rfl
     have htgt : ‖complexifySubmoduleLinearEquiv Z w‖ ^ 2 =
         ‖(re w).val‖ ^ 2 + ‖(im w).val‖ ^ 2 := by
-      show ‖mk ((re w).val) ((im w).val)‖ ^ 2 = _
+      change ‖mk ((re w).val) ((im w).val)‖ ^ 2 = _
       rw [TauCeti.RealComplexification.norm_sq]
       simp
     exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp (htgt.trans hsrc.symm)

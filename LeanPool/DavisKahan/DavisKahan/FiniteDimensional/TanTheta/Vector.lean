@@ -164,7 +164,7 @@ theorem norm_map_sub_midpoint_smul_le (hT : T.IsSymmetric) {W : Submodule 𝕜 E
     W.starProjection ∘L S.toContinuousLinearMap ∘L W.starProjection with hC
   have hCapp : ∀ y, C y = W.starProjection (S (W.starProjection y)) := fun y => rfl
   have hCsym : (C : E →ₗ[𝕜] E).IsSymmetric := fun x y => by
-    show ⟪W.starProjection (S (W.starProjection x)), y⟫_𝕜
+    change ⟪W.starProjection (S (W.starProjection x)), y⟫_𝕜
         = ⟪x, W.starProjection (S (W.starProjection y))⟫_𝕜
     rw [W.inner_starProjection_left_eq_right, hSsym, ← W.inner_starProjection_left_eq_right]
   have hform : ∀ y, |RCLike.re ⟪C y, y⟫_𝕜| ≤ (β - α) / 2 * ‖y‖ ^ 2 := by

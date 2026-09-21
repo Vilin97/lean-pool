@@ -174,7 +174,7 @@ theorem realSpectrum_add_offDiagonal_subset_exterior_of_form_gap
   rw [Algebra.algebraMap_eq_smul_one]
   have hneg : ((lam : ℝ) : ℂ) • (1 : E →L[ℂ] E) - (A + H) =
       -((A + H) - ((lam : ℝ) : ℂ) • ContinuousLinearMap.id ℂ E) := by
-    show ((lam : ℝ) : ℂ) • (1 : E →L[ℂ] E) - (A + H) =
+    change ((lam : ℝ) : ℂ) • (1 : E →L[ℂ] E) - (A + H) =
       -((A + H) - ((lam : ℝ) : ℂ) • (1 : E →L[ℂ] E))
     module
   rw [hneg]

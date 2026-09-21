@@ -57,7 +57,7 @@ theorem commonDomain_projection_mem
     P.starProjection (x : E) ∈ T.domain := by
   obtain ⟨y, hy⟩ := x
   have hy' : y ∈ A.domain := hdom ▸ hy
-  show P.starProjection y ∈ T.domain
+  change P.starProjection y ∈ T.domain
   rw [hdom]
   exact hP.projection_mem_domain (⟨y, hy'⟩)
 
@@ -162,7 +162,7 @@ theorem commonDomain_trialReflection_intertwines
       (⟨P.starProjection (x : E), hproj x⟩ : T.domain) +
         (⟨P.orthogonal.starProjection (x : E), hperp x⟩ : T.domain) = x := by
     apply Subtype.ext
-    show P.starProjection (x : E) + P.orthogonal.starProjection (x : E) = (x : E)
+    change P.starProjection (x : E) + P.orthogonal.starProjection (x : E) = (x : E)
     rw [Submodule.starProjection_orthogonal_apply]
     abel
   have hTx : T x = T (⟨P.starProjection (x : E), hproj x⟩) +

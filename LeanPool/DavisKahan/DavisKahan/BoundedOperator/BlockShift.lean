@@ -85,7 +85,7 @@ theorem upperBlockShift_apply (A : H →L[𝕜] H) (P : Submodule 𝕜 H)
   have hself : ⟪x, upperBlockShift A P alpha x⟫_𝕜 =
       ⟪Pᗮ.starProjection x,
         (A - (alpha : 𝕜) • ContinuousLinearMap.id 𝕜 H) (Pᗮ.starProjection x)⟫_𝕜 := by
-    show ⟪x, Pᗮ.starProjection ((A - (alpha : 𝕜) • ContinuousLinearMap.id 𝕜 H)
+    change ⟪x, Pᗮ.starProjection ((A - (alpha : 𝕜) • ContinuousLinearMap.id 𝕜 H)
       (Pᗮ.starProjection x))⟫_𝕜 = _
     rw [← ContinuousLinearMap.adjoint_inner_right,
       ContinuousLinearMap.isSelfAdjoint_iff'.mp (isSelfAdjoint_starProjection Pᗮ)]
@@ -124,7 +124,7 @@ theorem upperBlockShift_isSelfAdjoint (A : H →L[𝕜] H) (P : Submodule 𝕜 H
       A - (alpha : 𝕜) • ContinuousLinearMap.id 𝕜 H := by
     rw [map_sub, adjoint_realShift, ContinuousLinearMap.isSelfAdjoint_iff'.mp hA]
   rw [ContinuousLinearMap.isSelfAdjoint_iff']
-  show ContinuousLinearMap.adjoint (Pᗮ.starProjection ∘L
+  change ContinuousLinearMap.adjoint (Pᗮ.starProjection ∘L
       (A - (alpha : 𝕜) • ContinuousLinearMap.id 𝕜 H) ∘L Pᗮ.starProjection) = _
   rw [ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.adjoint_comp, hP, hB]
   simp [upperBlockShift, ContinuousLinearMap.comp_assoc]
@@ -179,7 +179,7 @@ theorem lowerBlockShift_apply (A : H →L[𝕜] H) (P : Submodule 𝕜 H)
       ⟪P.starProjection x,
         (((alpha + delta : ℝ) : 𝕜) • ContinuousLinearMap.id 𝕜 H - A)
           (P.starProjection x)⟫_𝕜 := by
-    show ⟪x, P.starProjection ((((alpha + delta : ℝ) : 𝕜) • ContinuousLinearMap.id 𝕜 H - A)
+    change ⟪x, P.starProjection ((((alpha + delta : ℝ) : 𝕜) • ContinuousLinearMap.id 𝕜 H - A)
       (P.starProjection x))⟫_𝕜 = _
     rw [← ContinuousLinearMap.adjoint_inner_right,
       ContinuousLinearMap.isSelfAdjoint_iff'.mp (isSelfAdjoint_starProjection P)]
@@ -208,7 +208,7 @@ theorem lowerBlockShift_isSelfAdjoint (A : H →L[𝕜] H) (P : Submodule 𝕜 H
       ((alpha + delta : ℝ) : 𝕜) • ContinuousLinearMap.id 𝕜 H - A := by
     rw [map_sub, adjoint_realShift, ContinuousLinearMap.isSelfAdjoint_iff'.mp hA]
   rw [ContinuousLinearMap.isSelfAdjoint_iff']
-  show ContinuousLinearMap.adjoint (P.starProjection ∘L
+  change ContinuousLinearMap.adjoint (P.starProjection ∘L
       (((alpha + delta : ℝ) : 𝕜) • ContinuousLinearMap.id 𝕜 H - A) ∘L
         P.starProjection) = _
   rw [ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.adjoint_comp, hP, hB]

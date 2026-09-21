@@ -226,7 +226,7 @@ theorem isPositive_compression_iff_forall_mem (W : H →L[ℂ] H) (K : Submodule
   · intro hpos x hx
     have hK : K.starProjection x = x := Submodule.starProjection_eq_self_iff.mpr hx
     have hval : ⟪(K.starProjection * W * K.starProjection) x, x⟫_ℂ = ⟪W x, x⟫_ℂ := by
-      show ⟪K.starProjection (W (K.starProjection x)), x⟫_ℂ = ⟪W x, x⟫_ℂ
+      change ⟪K.starProjection (W (K.starProjection x)), x⟫_ℂ = ⟪W x, x⟫_ℂ
       rw [hK, Submodule.inner_starProjection_left_eq_right K, hK]
     rw [← hval]
     exact hpos.inner_nonneg_left x

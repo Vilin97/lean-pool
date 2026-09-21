@@ -194,7 +194,7 @@ theorem beam_ritz_coordinate_identity (ε : ℝ) {f : BeamL2} {lam : ℝ}
   have hx : ⟪beamResidual ε v, (beamTrial.starProjection f)⟫_ℂ
       = ((α : ℝ) : ℂ) * ⟪(v : BeamL2), f⟫_ℂ := by
     rw [hcomp ⟨beamTrial.starProjection f, beamTrial.starProjection_apply_mem f⟩]
-    show ((α : ℝ) : ℂ) * ⟪(v : BeamL2), (beamTrial.starProjection f)⟫_ℂ = _
+    change ((α : ℝ) : ℂ) * ⟪(v : BeamL2), (beamTrial.starProjection f)⟫_ℂ = _
     rw [hvf]
   have hproj : ⟪beamTrial.starProjection (beamResidual ε v),
       f - beamTrial.starProjection f⟫_ℂ = 0 :=
@@ -319,7 +319,7 @@ theorem two_coordinate_schur_identity {d₁ d₂ : ℝ} {a b ρ : ℂ}
       = -((d₁ : ℂ) + (d₂ : ℂ)) * ((starRingEnd ℂ) (a - b) * ρ) := by
     linear_combination (starRingEnd ℂ) (a - b) * hcomplex - ((d₁ : ℂ) * (d₂ : ℂ)) * hcc
   have h3 := congrArg Complex.re h2
-  show d₁ * d₂ * ‖a - b‖ ^ 2 = (d₁ + d₂) * (-Complex.re _)
+  change d₁ * d₂ * ‖a - b‖ ^ 2 = (d₁ + d₂) * (-Complex.re _)
   simp only [Complex.mul_re, Complex.mul_im, Complex.neg_re, Complex.neg_im, Complex.add_re,
     Complex.add_im, Complex.ofReal_re, Complex.ofReal_im] at h3 ⊢
   linarith [h3]

@@ -1136,14 +1136,14 @@ theorem tanTheta_ambient_bounded_kyFan_complex_of_transversality
     have hleft : projectionBlock Uᗮᗮ Uᗮ (((delta : ℝ) : ℂ) • K) =
         (((delta : ℝ) : ℂ) • projectionBlock Uᗮ U K).adjoint := by
       rw [projectionBlock_smul, upperCorner_eq_adjoint_lowerCorner htr]
-      show ((delta : ℝ) : ℂ) • star (projectionBlock Uᗮ U K) =
+      change ((delta : ℝ) : ℂ) • star (projectionBlock Uᗮ U K) =
         star (((delta : ℝ) : ℂ) • projectionBlock Uᗮ U K)
       rw [star_smul, RCLike.star_def, Complex.conj_ofReal]
     have hright : projectionBlock Uᗮᗮ Uᗮ (T - A) =
         (projectionBlock Uᗮ U (T - A)).adjoint := by
       have hp := isSelfAdjoint_starProjection U
       rw [projectionBlock_upper, projectionBlock_lower]
-      show _ = star _
+      change _ = star _
       simp only [star_mul, star_sub, star_one, hp.star_eq, hHsa.star_eq]
       noncomm_ring
     rw [hleft, hright, kyFanApproximationGauge_adjoint,

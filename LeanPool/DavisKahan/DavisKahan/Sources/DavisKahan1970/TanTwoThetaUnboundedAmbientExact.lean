@@ -98,7 +98,7 @@ private theorem kyFan_upper_eq_lower_of_selfAdjoint_unboundedAmbientExact
       (projectionBlock Uᗮ U K).adjoint := by
     rw [projectionBlock_upper_unboundedAmbientExact,
       projectionBlock_lower_unboundedAmbientExact]
-    show _ = star _
+    change _ = star _
     simp only [star_mul, star_sub, star_one,
       (isSelfAdjoint_starProjection U).star_eq, hK.star_eq]
     noncomm_ring
@@ -113,7 +113,7 @@ private theorem kyFan_upper_eq_lower_of_skewAdjoint_unboundedAmbientExact
       -(projectionBlock Uᗮ U K).adjoint := by
     rw [projectionBlock_upper_unboundedAmbientExact,
       projectionBlock_lower_unboundedAmbientExact]
-    show _ = -star _
+    change _ = -star _
     have hKstar : star K = -K := by
       rw [ContinuousLinearMap.star_eq_adjoint]
       exact hK

@@ -42,7 +42,7 @@ theorem norm_sinAngleOperatorC_le_one (U V : Submodule ℂ E)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
     ‖sinAngleOperatorC U V‖ ≤ 1 := by
   rw [norm_sinAngleOperatorC]
-  show ‖(U.starProjection - V.starProjection : E →L[ℂ] E)‖ ≤ 1
+  change ‖(U.starProjection - V.starProjection : E →L[ℂ] E)‖ ≤ 1
   rw [Submodule.norm_starProjection_sub_eq_max]
   apply max_le
   · calc
@@ -216,7 +216,7 @@ theorem commute_sinAngleOperatorC_starProjection (U V : Submodule ℂ E)
     set q : E →L[ℂ] E := V.starProjection with hqdef
     have hp : p * p = p := U.isIdempotentElem_starProjection
     have hq : q * q = q := V.isIdempotentElem_starProjection
-    show (p - q) * (p - q) * p = p * ((p - q) * (p - q))
+    change (p - q) * (p - q) * p = p * ((p - q) * (p - q))
     have key : (p - q) * (p - q) * p - p * ((p - q) * (p - q)) =
         ((p * p - p) * q - q * (p * p - p)) + ((q * q - q) * p - p * (q * q - q)) := by
       noncomm_ring
@@ -239,7 +239,7 @@ theorem commute_sinAngleOperatorC_starProjection_right (U V : Submodule ℂ E)
     set q : E →L[ℂ] E := V.starProjection with hqdef
     have hp : p * p = p := U.isIdempotentElem_starProjection
     have hq : q * q = q := V.isIdempotentElem_starProjection
-    show (p - q) * (p - q) * q = q * ((p - q) * (p - q))
+    change (p - q) * (p - q) * q = q * ((p - q) * (p - q))
     have key : (p - q) * (p - q) * q - q * ((p - q) * (p - q)) =
         ((p * p - p) * q - q * (p * p - p)) + ((q * q - q) * p - p * (q * q - q)) := by
       noncomm_ring

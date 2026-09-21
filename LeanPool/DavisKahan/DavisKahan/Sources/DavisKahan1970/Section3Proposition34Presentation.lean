@@ -98,7 +98,7 @@ theorem proposition3_4_isDirectRotation_complex
     reflectionOperator_mul_self_complex U
   have hsq : (W * W) * (W * W) =
       spectraReflectionProduct (reflectedSubspace U V) V := by
-    show (W * W) * (W * W) =
+    change (W * W) * (W * W) =
       V.reflectionOperator * Submodule.reflectionOperator (reflectedSubspace U V)
     rw [hrefl, hWsq]
     noncomm_ring
@@ -174,7 +174,7 @@ theorem proposition3_4 (hacute : IsUniformlyAcute U V)
   have hRU : U.reflectionOperator * U.reflectionOperator = 1 :=
     reflectionOperator_mul_self_complex U
   have hsq : (W * W) * (W * W) = spectraReflectionProduct (reflectedSubspace U V) V := by
-    show (W * W) * (W * W)
+    change (W * W) * (W * W)
       = V.reflectionOperator * Submodule.reflectionOperator (reflectedSubspace U V)
     rw [hrefl, hWsq]
     noncomm_ring
@@ -229,7 +229,7 @@ theorem proposition3_4_eq_directRotation (hacute : IsUniformlyAcute U V)
       = U.reflectionOperator * V.reflectionOperator * U.reflectionOperator :=
     reflectionOperator_reflectedSubspace V U
   have hsq : (W * W) * (W * W) = spectraReflectionProduct (reflectedSubspace U V) V := by
-    show (W * W) * (W * W)
+    change (W * W) * (W * W)
       = V.reflectionOperator * Submodule.reflectionOperator (reflectedSubspace U V)
     rw [hrefl, hWsq]
     noncomm_ring

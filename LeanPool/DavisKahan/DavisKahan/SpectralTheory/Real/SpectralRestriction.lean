@@ -591,7 +591,7 @@ theorem realSelfAdjoint_apply_spectralProjection
     selfAdjointSpectralProjection_ofReal A hA S hS, re_ofReal] at hre
   refine Eq.trans ?_ hre
   refine PartialMapComplexification.toLinearMap_congr ?_
-  show realSelfAdjointSpectralProjection A hA S hS (x : E) =
+  change realSelfAdjointSpectralProjection A hA S hS (x : E) =
     re (selfAdjointSpectralProjection
       (PartialMapComplexification.complexify A)
       (PartialMapComplexification.isSelfAdjoint_complexify hA) S hS

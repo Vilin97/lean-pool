@@ -142,7 +142,7 @@ private theorem orthogonal_eq :
 omit [CompleteSpace E] in
 private theorem proj_sq : U.starProjection * U.starProjection = U.starProjection := by
   ext x
-  show U.starProjection (U.starProjection x) = U.starProjection x
+  change U.starProjection (U.starProjection x) = U.starProjection x
   rw [Submodule.starProjection_eq_self_iff]
   exact U.starProjection_apply_mem x
 

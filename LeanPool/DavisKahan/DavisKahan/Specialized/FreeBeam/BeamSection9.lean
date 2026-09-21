@@ -1241,14 +1241,14 @@ theorem beamTrialVec_orthonormal :
         ⟪beamTrialVecOne, beamTrialVecTwo⟫_ℂ = 0 := by
   obtain ⟨h1, h2, h12⟩ := beamTrial_orthonormal
   refine ⟨?_, ?_, ?_⟩
-  · show ⟪(beamTrialVecOne : BeamL2), (beamTrialVecOne : BeamL2)⟫_ℂ = 1
+  · change ⟪(beamTrialVecOne : BeamL2), (beamTrialVecOne : BeamL2)⟫_ℂ = 1
     rw [inner_self_eq_norm_sq_to_K]
-    show ((‖centeredAffineLp DavisKahan1970.Section9.trialOne‖ : ℂ)) ^ 2 = 1
+    change ((‖centeredAffineLp DavisKahan1970.Section9.trialOne‖ : ℂ)) ^ 2 = 1
     rw [← Complex.ofReal_pow, h1]
     norm_num
-  · show ⟪(beamTrialVecTwo : BeamL2), (beamTrialVecTwo : BeamL2)⟫_ℂ = 1
+  · change ⟪(beamTrialVecTwo : BeamL2), (beamTrialVecTwo : BeamL2)⟫_ℂ = 1
     rw [inner_self_eq_norm_sq_to_K]
-    show ((‖centeredAffineLp DavisKahan1970.Section9.trialTwo‖ : ℂ)) ^ 2 = 1
+    change ((‖centeredAffineLp DavisKahan1970.Section9.trialTwo‖ : ℂ)) ^ 2 = 1
     rw [← Complex.ofReal_pow, h2]
     norm_num
   · exact h12

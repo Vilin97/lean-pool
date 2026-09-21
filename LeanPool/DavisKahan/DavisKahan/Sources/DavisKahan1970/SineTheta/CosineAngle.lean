@@ -259,7 +259,7 @@ theorem directedSinAngleBlockC_eq_sineBlockModulusC
     have hs := ContinuousLinearMap.modulus_mul_self (sineBlockC U V)
     rw [← hs]
     exact (eq_sub_of_add_eq hp).symm
-  show directedSinAngleBlockC U V =
+  change directedSinAngleBlockC U V =
     CFC.sqrt ((sineBlockC U V).adjoint ∘L sineBlockC U V)
   exact (CFC.sqrt_unique hsquare hnonneg).symm
 

@@ -108,6 +108,23 @@ theorem conjugateOperator_rpow_eq
   subst hx0
   exact (spectrum.zero_notMem ℝ hunit) hx
 
+private theorem gramRpow_half_identities
+    (G : RealComplexification F →L[ℂ] RealComplexification F)
+    (hG : 0 ≤ G) (hunit : IsUnit G) :
+    G ^ (-1 / 2 : ℝ) * G ^ (1 / 2 : ℝ) = 1 ∧
+      G ^ (1 / 2 : ℝ) * G ^ (-1 / 2 : ℝ) = 1 ∧
+      G ^ (1 / 2 : ℝ) * G ^ (1 / 2 : ℝ) = G := by
+  have hadd : ∀ s t : ℝ, G ^ s * G ^ t = G ^ (s + t) :=
+    fun _ _ => (CFC.rpow_add hunit).symm
+  constructor
+  · rw [hadd]
+    norm_num [CFC.rpow_zero G hG]
+  constructor
+  · rw [hadd]
+    norm_num [CFC.rpow_zero G hG]
+  · rw [hadd]
+    norm_num [CFC.rpow_one G hG]
+
 /-- Existence of the real lower-frame polar package. -/
 theorem lowerFramePolarData_real_nonempty
     (X : F →L[ℝ] E) {ε : ℝ}
@@ -147,30 +164,12 @@ theorem lowerFramePolarData_real_nonempty
     simpa [sqrtR] using complexify_realPartOperator hsqrt_fix
   have hinvSqrt_complexify : complexify invSqrtR = invSqrtC := by
     simpa [invSqrtR] using complexify_realPartOperator hinvSqrt_fix
-  -- The three compositions below are one `rpow_add` each, differing only in the exponents;
-  -- naming that step keeps the difference visible instead of repeating the calc three times.
-  have hrpow : ∀ s t : ℝ, gramC ^ s * gramC ^ t = gramC ^ (s + t) :=
-    fun _ _ => (CFC.rpow_add hgram_unit).symm
+  have hident := gramRpow_half_identities gramC hgram_nonneg hgram_unit
   have hinvSqrt_sqrtC :
-      invSqrtC ∘L sqrtC = ContinuousLinearMap.id ℂ (RealComplexification F) := by
-    change invSqrtC * sqrtC = 1
-    calc
-      invSqrtC * sqrtC = gramC ^ ((-1 / 2 : ℝ) + (1 / 2 : ℝ)) := hrpow _ _
-      _ = gramC ^ (0 : ℝ) := by norm_num
-      _ = 1 := CFC.rpow_zero gramC hgram_nonneg
+      invSqrtC ∘L sqrtC = ContinuousLinearMap.id ℂ (RealComplexification F) := hident.1
   have hsqrt_invSqrtC :
-      sqrtC ∘L invSqrtC = ContinuousLinearMap.id ℂ (RealComplexification F) := by
-    change sqrtC * invSqrtC = 1
-    calc
-      sqrtC * invSqrtC = gramC ^ ((1 / 2 : ℝ) + (-1 / 2 : ℝ)) := hrpow _ _
-      _ = gramC ^ (0 : ℝ) := by norm_num
-      _ = 1 := CFC.rpow_zero gramC hgram_nonneg
-  have hsqrt_sqC : sqrtC ∘L sqrtC = gramC := by
-    change sqrtC * sqrtC = gramC
-    calc
-      sqrtC * sqrtC = gramC ^ ((1 / 2 : ℝ) + (1 / 2 : ℝ)) := hrpow _ _
-      _ = gramC ^ (1 : ℝ) := by norm_num
-      _ = gramC := CFC.rpow_one gramC hgram_nonneg
+      sqrtC ∘L invSqrtC = ContinuousLinearMap.id ℂ (RealComplexification F) := hident.2.1
+  have hsqrt_sqC : sqrtC ∘L sqrtC = gramC := hident.2.2
   have hinvSqrt_sqrtR :
       invSqrtR ∘L sqrtR = ContinuousLinearMap.id ℝ F := by
     apply complexify_injective

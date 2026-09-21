@@ -296,7 +296,7 @@ theorem trialOffDiagonalPart_upper :
     Vᗮ.starProjection ∘L trialOffDiagonalPart V M R ∘L V.starProjection =
       trialOffDiagonalBlock V M R := by
   ext z
-  show Vᗮ.starProjection (trialOffDiagonalBlock V M R (V.starProjection z) +
+  change Vᗮ.starProjection (trialOffDiagonalBlock V M R (V.starProjection z) +
       (trialOffDiagonalBlock V M R).adjoint (V.starProjection z)) =
     trialOffDiagonalBlock V M R z
   rw [trialOffDiagonalBlock_adjoint_apply, projPerp_proj V, map_zero, map_zero,
@@ -308,7 +308,7 @@ theorem trialOffDiagonalPart_lower :
     V.starProjection ∘L trialOffDiagonalPart V M R ∘L Vᗮ.starProjection =
       (trialOffDiagonalBlock V M R).adjoint := by
   ext z
-  show V.starProjection (trialOffDiagonalBlock V M R (Vᗮ.starProjection z) +
+  change V.starProjection (trialOffDiagonalBlock V M R (Vᗮ.starProjection z) +
       (trialOffDiagonalBlock V M R).adjoint (Vᗮ.starProjection z)) =
     (trialOffDiagonalBlock V M R).adjoint z
   rw [trialOffDiagonalBlock_apply (Vᗮ.starProjection z), proj_projPerp V,
@@ -388,7 +388,7 @@ theorem trialReflection_intertwines
   have hdefect : trialOffDiagonalPart V M R (V.reflectionOperator (x : H)) =
       trialCompression V M R (x : H) -
         (trialCompression V M R).adjoint (x : H) := by
-    show trialOffDiagonalBlock V M R (V.reflectionOperator (x : H)) +
+    change trialOffDiagonalBlock V M R (V.reflectionOperator (x : H)) +
       (trialOffDiagonalBlock V M R).adjoint (V.reflectionOperator (x : H)) = _
     rw [hXrefl, hXadjrefl, ← sub_eq_add_neg,
       trialOffDiagonalBlock_sub_adjoint_apply hA hVdom hres (x : H)]

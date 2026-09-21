@@ -218,7 +218,7 @@ theorem maximalAngle_lt_pi_div_four_of_directedGap_lt {𝕜 : Type*} [RCLike �
     (hdir : P.directedProjectionGap Q < Real.sqrt 2 / 2) :
     maximalAngle P Q < Real.pi / 4 := by
   refine (DavisKahan1970.Section8.maximalAngle_lt_pi_div_four_iff P Q).2 ?_
-  show P.projectionGap Q < Real.sqrt 2 / 2
+  change P.projectionGap Q < Real.sqrt 2 / 2
   rw [subspaceGap_eq_directedGap_of_finrank_eq P Q hrank]
   exact hdir
 
@@ -256,7 +256,7 @@ theorem maximalAngle_lt_pi_div_four_of_crossedDefects {𝕜 : Type*} [RCLike �
     (hdir : P.directedProjectionGap Q < Real.sqrt 2 / 2) :
     maximalAngle P Q < Real.pi / 4 := by
   refine (DavisKahan1970.Section8.maximalAngle_lt_pi_div_four_iff P Q).2 ?_
-  show P.projectionGap Q < Real.sqrt 2 / 2
+  change P.projectionGap Q < Real.sqrt 2 / 2
   rw [subspaceGap_eq_directedGap_of_crossedDefects P Q h]
   exact hdir
 
@@ -323,7 +323,7 @@ theorem theorem8_2_sinTwoTheta_residual_complex
   have hX : IsometricEmbedding (P.subtypeL : P →L[ℂ] H) := fun x => rfl
   have hM : (compressOperator P A).IsSymmetric := by
     intro x y
-    show ⟪compressOperator P A x, y⟫_ℂ = ⟪x, compressOperator P A y⟫_ℂ
+    change ⟪compressOperator P A x, y⟫_ℂ = ⟪x, compressOperator P A y⟫_ℂ
     have := hA (x : H) (y : H)
     simpa [compressOperator, Submodule.inner_starProjection_left_eq_right,
       Submodule.starProjection_eq_self_iff.mpr y.2,

@@ -133,7 +133,7 @@ private theorem coord_eq_zero_of_mem_U4 {x : E4} (hx : x ∈ U4) :
 
 private theorem projection_U4_apply (x : E4) :
     projection U4 x = x 0 • sv 0 + x 1 • sv 1 := by
-  show U4.starProjection x = _
+  change U4.starProjection x = _
   apply Submodule.eq_starProjection_of_mem_orthogonal
   · exact add_mem
       (Submodule.smul_mem _ _ (Submodule.subset_span (by simp)))
@@ -155,7 +155,7 @@ private theorem projection_V4_apply (x : E4) :
   have hx := LinearMap.congr_fun h (Wequiv.symm x)
   simp only [LinearMap.comp_apply] at hx
   have hWW : Wequiv.toLinearMap (Wequiv.symm x) = x := by
-    show Wequiv (Wequiv.symm x) = x
+    change Wequiv (Wequiv.symm x) = x
     exact Wequiv.apply_symm_apply x
   rw [hWW] at hx
   exact hx.symm
@@ -559,7 +559,7 @@ private theorem mem_omega2 {x : E4} (hx : x ∈ omega2) :
 
 private theorem projection_omega1_apply (x : E4) :
     projection omega1 x = x 0 • sv 0 + x 3 • sv 3 := by
-  show omega1.starProjection x = _
+  change omega1.starProjection x = _
   apply Submodule.eq_starProjection_of_mem_orthogonal
   · exact add_mem
       (Submodule.smul_mem _ _ (Submodule.subset_span (by simp)))
@@ -572,7 +572,7 @@ private theorem projection_omega1_apply (x : E4) :
 
 private theorem projection_omega2_apply (x : E4) :
     projection omega2 x = x 1 • sv 1 + x 2 • sv 2 := by
-  show omega2.starProjection x = _
+  change omega2.starProjection x = _
   apply Submodule.eq_starProjection_of_mem_orthogonal
   · exact add_mem
       (Submodule.smul_mem _ _ (Submodule.subset_span (by simp)))

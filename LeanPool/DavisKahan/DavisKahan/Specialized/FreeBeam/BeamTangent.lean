@@ -85,7 +85,7 @@ theorem beamRitzCompression_isSelfAdjoint (ε : ℝ) :
       = ⟪(x : BeamL2), beamResidual ε y⟫_ℂ := by
     rw [Submodule.coe_inner, beamRitzCompression_coe, ← inner_conj_symm, hproj,
       inner_conj_symm]
-  show ⟪(beamRitzCompression ε x : beamTrial), y⟫_ℂ
+  change ⟪(beamRitzCompression ε x : beamTrial), y⟫_ℂ
       = ⟪x, (beamRitzCompression ε y : beamTrial)⟫_ℂ
   rw [hx, hy]
   exact beamPerturbation_isSelfAdjoint ε (x : BeamL2) (y : BeamL2)
@@ -104,7 +104,7 @@ def beamTrialBlock (ε : ℝ) : BoundedCompressionTrialBlock (beamPerturbed ε) 
     congr 1
     have hker : beamOperator ⟨(x : BeamL2), beamTrial_le_domain x.2⟩ = 0 :=
       beamOperator_apply_trial x.2 _
-    show beamResidual ε x = _
+    change beamResidual ε x = _
     rw [show (beamPerturbed ε) ⟨(x : BeamL2), beamTrial_le_domain x.2⟩
         = beamOperator ⟨(x : BeamL2), beamTrial_le_domain x.2⟩
           + beamPerturbation ε (x : BeamL2) from rfl, hker, zero_add]
@@ -138,7 +138,7 @@ theorem beamTrialBlock_compression_form_le (ε : ℝ) (hε : 0 ≤ ε) (z : beam
     RCLike.re ⟪(beamTrialBlock ε).operator z, z⟫_ℂ ≤ ritzHigh ε * ‖z‖ ^ 2 := by
   have hz : ⟪(beamTrialBlock ε).operator z, z⟫_ℂ = ⟪beamResidual ε z, (z : BeamL2)⟫_ℂ := by
     rw [Submodule.coe_inner]
-    show ⟪beamTrial.starProjection (beamResidual ε z), (z : BeamL2)⟫_ℂ = _
+    change ⟪beamTrial.starProjection (beamResidual ε z), (z : BeamL2)⟫_ℂ = _
     rw [Submodule.inner_starProjection_left_eq_right,
       Submodule.starProjection_eq_self_iff.2 z.2]
   rw [hz]
@@ -178,7 +178,7 @@ theorem beamTrialBlock_residual_rank_le (ε : ℝ) :
     rintro y ⟨x, rfl⟩
     obtain ⟨α, β, hx⟩ := exists_beamTrialVec_repr x
     refine Submodule.mem_span_singleton.2 ⟨α - β, ?_⟩
-    show (α - β) • (beamTrialBlock ε).residual beamTrialVecOne
+    change (α - β) • (beamTrialBlock ε).residual beamTrialVecOne
       = (beamTrialBlock ε).residual x
     rw [hx, map_add, map_smul, map_smul, beamTrialBlock_residual_vecTwo]
     module
@@ -599,7 +599,7 @@ def beamColumnBlock (ε : ℝ) (v : BeamL2) (hv : v ∈ beamTrial) (hvnorm : ‖
   operator := ((a : ℝ) : ℂ) • ContinuousLinearMap.id ℂ (ℂ ∙ v)
   operator_selfAdjoint := by
     have h1 : IsSelfAdjoint (((a : ℝ) : ℂ)) := by
-      show star ((a : ℝ) : ℂ) = ((a : ℝ) : ℂ)
+      change star ((a : ℝ) : ℂ) = ((a : ℝ) : ℂ)
       rw [Complex.star_def, Complex.conj_ofReal]
     have h2 : IsSelfAdjoint (ContinuousLinearMap.id ℂ (ℂ ∙ v)) := by
       rw [ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric]
@@ -610,7 +610,7 @@ def beamColumnBlock (ε : ℝ) (v : BeamL2) (hv : v ∈ beamTrial) (hvnorm : ‖
     obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.1 x.2
     have hxv : (x : BeamL2) = c • v := hc.symm
     have hmem : (x : BeamL2) ∈ beamTrial := span_singleton_le_beamTrial hv x.2
-    show ((a : ℝ) : ℂ) • (x : BeamL2) = _
+    change ((a : ℝ) : ℂ) • (x : BeamL2) = _
     rw [beamPerturbed_apply_of_mem_beamTrial ε hmem,
       Submodule.starProjection_unit_singleton ℂ hvnorm, hxv, map_smul,
       inner_smul_right, hform]
@@ -618,7 +618,7 @@ def beamColumnBlock (ε : ℝ) (v : BeamL2) (hv : v ∈ beamTrial) (hvnorm : ‖
   residual := beamPerturbation ε ∘L (ℂ ∙ v).subtypeL - ((a : ℝ) : ℂ) • (ℂ ∙ v).subtypeL
   residual_apply := fun x => by
     have hmem : (x : BeamL2) ∈ beamTrial := span_singleton_le_beamTrial hv x.2
-    show beamPerturbation ε (x : BeamL2) - ((a : ℝ) : ℂ) • (x : BeamL2) = _
+    change beamPerturbation ε (x : BeamL2) - ((a : ℝ) : ℂ) • (x : BeamL2) = _
     rw [beamPerturbed_apply_of_mem_beamTrial ε hmem]
     rfl
 
@@ -647,7 +647,7 @@ theorem norm_beamColumnBlock_residual_le (ε : ℝ) (v : BeamL2) (hv : v ∈ bea
     have hxv : (x : BeamL2) = c • v := hc.symm
     have hres : (beamColumnBlock ε v hv hvnorm a hform).residual x
         = c • (beamPerturbation ε v - ((a : ℝ) : ℂ) • v) := by
-      show beamPerturbation ε (x : BeamL2) - ((a : ℝ) : ℂ) • (x : BeamL2) = _
+      change beamPerturbation ε (x : BeamL2) - ((a : ℝ) : ℂ) • (x : BeamL2) = _
       rw [hxv, map_smul]
       module
     have hnormx : ‖x‖ = ‖c‖ := by

@@ -74,7 +74,7 @@ theorem singularValues_diagOp_comp_perm
     refine b.toBasis.ext fun j => ?_
     rw [OrthonormalBasis.coe_toBasis, LinearMap.comp_apply,
       LinearMap.comp_apply]
-    show TauCeti.diagOp b (x ∘ π) (b j) =
+    change TauCeti.diagOp b (x ∘ π) (b j) =
       (b.equiv b π).symm (TauCeti.diagOp b x ((b.equiv b π) (b j)))
     rw [OrthonormalBasis.equiv_apply_basis, TauCeti.diagOp_apply_basis,
       TauCeti.diagOp_apply_basis, map_smul, Function.comp_apply]
@@ -305,7 +305,7 @@ noncomputable def finiteNorm (Φ : SymmetricNormingFunction.Axiomatic) (n : ℕ)
           rw [huniv, ← TauCeti.kyFanSum_eq_sum_fin,
             ← TauCeti.kyFanSum_eq_sum_fin, ← TauCeti.kyFanSum_eq_sum_fin]
           exact TauCeti.kyFanSum_add_le n A B
-      show Φ.gauge n (fun i : Fin n => (A + B).singularValues (i : ℕ)) ≤
+      change Φ.gauge n (fun i : Fin n => (A + B).singularValues (i : ℕ)) ≤
         Φ.gauge n (fun i : Fin n => A.singularValues (i : ℕ)) +
           Φ.gauge n (fun i : Fin n => B.singularValues (i : ℕ))
       calc
@@ -328,7 +328,7 @@ noncomputable def finiteNorm (Φ : SymmetricNormingFunction.Axiomatic) (n : ℕ)
         funext i
         rw [singularValues_smul_complex c A (i : ℕ)]
         rfl
-      show Φ.gauge n (fun i : Fin n => (c • A).singularValues (i : ℕ)) =
+      change Φ.gauge n (fun i : Fin n => (c • A).singularValues (i : ℕ)) =
         ‖c‖ * Φ.gauge n (fun i : Fin n => A.singularValues (i : ℕ))
       rw [hs, Φ.smul, abs_of_nonneg (norm_nonneg c)])
   unitary_invariant' :=
@@ -344,7 +344,7 @@ noncomputable def finiteNorm (Φ : SymmetricNormingFunction.Axiomatic) (n : ℕ)
                 = ↑V.toLinearEquiv from rfl,
             TauCeti.singularValues_unitary_comp,
             TauCeti.singularValues_comp_unitary]
-        show Φ.gauge n (fun i : Fin n =>
+        change Φ.gauge n (fun i : Fin n =>
             (U.toLinearMap ∘ₗ A ∘ₗ V.toLinearMap).singularValues (i : ℕ)) =
           Φ.gauge n (fun i : Fin n => A.singularValues (i : ℕ))
         rw [h])
@@ -358,7 +358,7 @@ theorem finiteNorm_gauge (Φ : SymmetricNormingFunction.Axiomatic) (n : ℕ)
       Φ.gauge n x := by
   obtain ⟨π, hπ⟩ :=
     exists_perm_singularValues_diagOp (EuclideanSpace.basisFun (Fin n) ℂ) x
-  show Φ.gauge n (fun i : Fin n =>
+  change Φ.gauge n (fun i : Fin n =>
       (TauCeti.diagOp (EuclideanSpace.basisFun (Fin n) ℂ) x).singularValues
         (i : ℕ)) = Φ.gauge n x
   have hfun : (fun i : Fin n =>

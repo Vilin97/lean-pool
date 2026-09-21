@@ -180,10 +180,10 @@ the `U`-half of it is `U` itself. -/
 theorem genericLeftHalf_eq_of_halmosTrivialPart_eq_bot
     (h : halmosTrivialPart U V = ⊥) : genericLeftHalf U V = U := by
   have hgen : halmosGenericPart U V = ⊤ := by
-    show (halmosTrivialPart U V)ᗮ = ⊤
+    change (halmosTrivialPart U V)ᗮ = ⊤
     rw [h]
     exact Submodule.bot_orthogonal_eq_top
-  show U ⊓ halmosGenericPart U V = U
+  change U ⊓ halmosGenericPart U V = U
   rw [hgen, inf_top_eq]
 
 /-- The orthogonal projection onto the `U`-half of the generic part is the projection onto
@@ -299,7 +299,7 @@ theorem finrank_eigenspace_eq_of_intertwiner
     intro m hm
     have hm' : genericCosineBlock U₁ V₁ m = μ • m := Module.End.mem_eigenspace_iff.mp hm
     rw [Module.End.mem_eigenspace_iff]
-    show genericCosineBlock U₂ V₂ (W m) = μ • W m
+    change genericCosineBlock U₂ V₂ (W m) = μ • W m
     rw [← hW m, hm', map_smul]
   have hbwd : ∀ y : genericLeftHalf U₂ V₂,
       y ∈ eigenspace (genericCosineBlock U₂ V₂).toLinearMap μ →
@@ -307,7 +307,7 @@ theorem finrank_eigenspace_eq_of_intertwiner
     intro y hy
     have hy' : genericCosineBlock U₂ V₂ y = μ • y := Module.End.mem_eigenspace_iff.mp hy
     rw [Module.End.mem_eigenspace_iff]
-    show genericCosineBlock U₁ V₁ (W.symm y) = μ • W.symm y
+    change genericCosineBlock U₁ V₁ (W.symm y) = μ • W.symm y
     rw [← hsymm y, hy', map_smul]
   have hmap : (eigenspace (genericCosineBlock U₁ V₁).toLinearMap μ).map
       (W.toLinearEquiv : genericLeftHalf U₁ V₁ →ₗ[𝕜] genericLeftHalf U₂ V₂) =

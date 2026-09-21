@@ -86,7 +86,7 @@ private theorem kyFan_lowerBlock_eq_upperBlock_reflection
   have hadj : projectionBlock Uᗮᗮ Uᗮ K =
       (projectionBlock Uᗮ U K).adjoint := by
     rw [projectionBlock_upper_reflection, projectionBlock_lower_reflection]
-    show _ = star _
+    change _ = star _
     simp only [star_mul, star_sub, star_one,
       (isSelfAdjoint_starProjection U).star_eq, hK.star_eq]
     noncomm_ring

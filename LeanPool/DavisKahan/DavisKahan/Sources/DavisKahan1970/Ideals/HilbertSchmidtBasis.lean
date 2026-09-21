@@ -125,7 +125,7 @@ theorem basisProjection_apply {ι : Type*}
   have hb := orthonormal_iff_ite.mp b.orthonormal
   have hmem : ∀ i ∈ s, b i ∈ Submodule.span 𝕜 (b '' (s : Set ι)) := fun i hi =>
     Submodule.subset_span ⟨i, Finset.mem_coe.mpr hi, rfl⟩
-  show (Submodule.span 𝕜 (b '' (s : Set ι))).starProjection x = _
+  change (Submodule.span 𝕜 (b '' (s : Set ι))).starProjection x = _
   refine Submodule.eq_starProjection_of_mem_of_inner_eq_zero ?_ ?_
   · exact Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _ (hmem i hi)
   · intro w hw
@@ -237,7 +237,7 @@ theorem approximationNumberEnergy_comp_starProjection
             mul_le_mul_of_nonneg_left hsubK
               (ContinuousLinearMap.approximationNumber_nonneg _ _)
         _ = (A ∘L K.starProjection).approximationNumber m := mul_one _
-    show approximationSingularValue m _ = approximationSingularValue m _
+    change approximationSingularValue m _ = approximationSingularValue m _
     unfold approximationSingularValue
     exact_mod_cast le_antisymm h1 h2
   -- the compression has rank at most `n`

@@ -214,7 +214,7 @@ theorem proposition3_4_full_complex
     reflectionOperator_mul_self_complex U
   have hsq : (W * W) * (W * W) =
       spectraReflectionProduct (reflectedSubspace U V) V := by
-    show (W * W) * (W * W) =
+    change (W * W) * (W * W) =
       V.reflectionOperator * (reflectedSubspace U V).reflectionOperator
     rw [hrefl, hWsq]
     noncomm_ring
@@ -293,10 +293,10 @@ theorem proposition3_4_square_is_reflected_directRotation
     spectraReflectionProduct_mem_unitary U V
   have hGsq : spectraReflectionProduct U V * spectraReflectionProduct U V
       = spectraReflectionProduct U (reflectedSubspace V U) := by
-    show spectraReflectionProduct U V * spectraReflectionProduct U V
+    change spectraReflectionProduct U V * spectraReflectionProduct U V
       = Submodule.reflectionOperator (reflectedSubspace V U) * U.reflectionOperator
     rw [reflectionOperator_reflectedSubspace U V]
-    show (V.reflectionOperator * U.reflectionOperator)
+    change (V.reflectionOperator * U.reflectionOperator)
         * (V.reflectionOperator * U.reflectionOperator)
       = V.reflectionOperator * U.reflectionOperator * V.reflectionOperator
         * U.reflectionOperator

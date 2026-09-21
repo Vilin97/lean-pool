@@ -76,7 +76,7 @@ theorem norm_adjoint_subtypeL_comp_subtypeL_eq
       _ ≤ ‖U.orthogonalProjectionOnto ∘L W.subtypeL‖ * ‖y‖ := by
         refine mul_le_mul_of_nonneg_left ?_
           (ContinuousLinearMap.opNorm_nonneg _)
-        show ‖((W.orthogonalProjectionOnto y : W) : H)‖ ≤ ‖y‖
+        change ‖((W.orthogonalProjectionOnto y : W) : H)‖ ≤ ‖y‖
         exact W.norm_starProjection_apply_le y
 
 /-- For spectral ranges, the complementary overlap block is exactly the
@@ -276,7 +276,7 @@ theorem sinTheta_addBounded_spectralProjection_sub_opNorm_of_formBounds
       A hA V hV B S hB hS hβ'α' hδ hSlow hShigh hBcomplSpec
   have hmax : U.projectionGap W =
       max (U.directedProjectionGap W) (W.directedProjectionGap U) := by
-    show ‖U.starProjection - W.starProjection‖ =
+    change ‖U.starProjection - W.starProjection‖ =
       max ‖Wᗮ.starProjection ∘L U.starProjection‖
         ‖Uᗮ.starProjection ∘L W.starProjection‖
     rw [Submodule.norm_starProjection_sub_eq_max,

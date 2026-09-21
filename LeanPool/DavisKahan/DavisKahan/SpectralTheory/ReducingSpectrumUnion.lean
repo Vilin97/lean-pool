@@ -103,9 +103,9 @@ theorem realSpectrum_subset_union_of_reduces
           - (lam : 𝕜) • (⟨a, haU⟩ : U) := by
       refine Subtype.ext ?_
       have hcomm := starProjection_apply_eq_of_reduces hred x
-      show U.starProjection (A x - (lam : 𝕜) • (x : E)) = _
+      change U.starProjection (A x - (lam : 𝕜) • (x : E)) = _
       rw [map_sub, hcomm, map_smul]
-      show (A ⟨U.starProjection (x : E), hred.projection_mem_domain x⟩ : E)
+      change (A ⟨U.starProjection (x : E), hred.projection_mem_domain x⟩ : E)
         - (lam : 𝕜) • U.starProjection (x : E) = (A ⟨a, ha⟩ : E) - (lam : 𝕜) • a
       have hsub : (⟨U.starProjection (x : E), hred.projection_mem_domain x⟩ : A.domain)
           = ⟨a, ha⟩ := Subtype.ext hadef.symm
@@ -119,18 +119,18 @@ theorem realSpectrum_subset_union_of_reduces
           - (lam : 𝕜) • (⟨b, hbU⟩ : Uᗮ) := by
       refine Subtype.ext ?_
       have hcomm := starProjection_apply_eq_of_reduces hred.orthogonal x
-      show Uᗮ.starProjection (A x - (lam : 𝕜) • (x : E)) = _
+      change Uᗮ.starProjection (A x - (lam : 𝕜) • (x : E)) = _
       rw [map_sub, hcomm, map_smul]
-      show (A ⟨Uᗮ.starProjection (x : E), hred.orthogonal.projection_mem_domain x⟩ : E)
+      change (A ⟨Uᗮ.starProjection (x : E), hred.orthogonal.projection_mem_domain x⟩ : E)
         - (lam : 𝕜) • Uᗮ.starProjection (x : E) = (A ⟨b, hb⟩ : E) - (lam : 𝕜) • b
       have hsub : (⟨Uᗮ.starProjection (x : E), hred.orthogonal.projection_mem_domain x⟩
           : A.domain) = ⟨b, hb⟩ := Subtype.ext hbdef.symm
       rw [hsub, ← hbdef]
-    show (U.subtypeL (R1 (U.orthogonalProjectionOnto (A x - (lam : 𝕜) • (x : E)))) : E)
+    change (U.subtypeL (R1 (U.orthogonalProjectionOnto (A x - (lam : 𝕜) • (x : E)))) : E)
       + (Uᗮ.subtypeL (R2 (Uᗮ.orthogonalProjectionOnto (A x - (lam : 𝕜) • (x : E)))) : E)
       = (x : E)
     rw [hUproj, hVproj, hUleg, hVleg]
-    show a + b = (x : E)
+    change a + b = (x : E)
     rw [hadef, hbdef, Submodule.starProjection_orthogonal_apply]
     abel
   · -- right inverse
@@ -155,7 +155,7 @@ theorem realSpectrum_subset_union_of_reduces
     have hveq' : (A ⟨((R2 (Uᗮ.orthogonalProjectionOnto y) : Uᗮ) : E), hvb⟩ : E)
         - (lam : 𝕜) • ((R2 (Uᗮ.orthogonalProjectionOnto y) : Uᗮ) : E)
         = Uᗮ.starProjection y := congrArg (fun z : Uᗮ => (z : E)) hveq
-    show (A ⟨_, hmem⟩ : E) - (lam : 𝕜) •
+    change (A ⟨_, hmem⟩ : E) - (lam : 𝕜) •
       (((R1 (U.orthogonalProjectionOnto y) : U) : E)
         + ((R2 (Uᗮ.orthogonalProjectionOnto y) : Uᗮ) : E)) = y
     rw [hadd, smul_add]
@@ -193,7 +193,7 @@ theorem invariantSubspace_orthogonal_of_isSelfAdjoint
       hinv ⟨U.starProjection y, hyd⟩ (U.starProjection_apply_mem y)
     have hperp : (inner 𝕜 (A (⟨U.starProjection y, hyd⟩ : A.domain)) (x : E) : 𝕜) = 0 :=
       (Submodule.mem_orthogonal U (x : E)).mp hx _ hmemU
-    show (inner 𝕜 (U.starProjection y) (A x) : 𝕜) = 0
+    change (inner 𝕜 (U.starProjection y) (A x) : 𝕜) = 0
     rw [← hval]
     exact hperp
   have hsub : (U : Set E) ⊆ closure (U.starProjection '' (A.domain : Set E)) := by

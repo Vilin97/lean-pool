@@ -205,6 +205,29 @@ theorem anticommutator_isSelfAdjoint (S T : H →L[ℂ] H)
   rw [_root_.IsSelfAdjoint, star_add, star_mul, star_mul, hS.star_eq, hT.star_eq]
   abel
 
+private theorem negativeProjection_form_bound {X : H →L[ℂ] H}
+    (hX : IsSelfAdjoint X) (β : ℝ) (hβ : 0 < β) :
+    let P := (TauCeti.BorelCalculus.boundedPVM hX).proj (Set.Iic (-β)) measurableSet_Iic
+    ∀ v : H, RCLike.re ⟪X (P v), P v⟫_ℂ ≤ (-β / 2) * ‖P v‖ ^ 2 := by
+  dsimp only
+  set P : H →L[ℂ] H :=
+    (TauCeti.BorelCalculus.boundedPVM hX).proj (Set.Iic (-β)) measurableSet_Iic with hPdef
+  intro v
+  refine TauCeti.BorelCalculus.re_inner_le_of_boundedPVM_proj_Ici_eq_zero hX (-β / 2) ?_
+  have hdisj : Set.Ici (-β / 2) ∩ Set.Iic (-β) = (∅ : Set ℝ) := by
+    ext t
+    simp only [Set.mem_inter_iff, Set.mem_Ici, Set.mem_Iic, Set.mem_empty_iff_false,
+      iff_false, not_and]
+    intro h1 h2
+    linarith
+  have hmul := (TauCeti.BorelCalculus.boundedPVM hX).proj_inter
+    (Set.Ici (-β / 2)) (Set.Iic (-β)) measurableSet_Ici measurableSet_Iic
+  rw [(TauCeti.BorelCalculus.boundedPVM hX).proj_congr hdisj
+    (measurableSet_Ici.inter measurableSet_Iic) MeasurableSet.empty,
+    (TauCeti.BorelCalculus.boundedPVM hX).proj_empty] at hmul
+  have := congrArg (fun T : H →L[ℂ] H => T v) hmul
+  simpa [hPdef] using this
+
 /-- **The Lyapunov positivity criterion.**
 
 `X` self-adjoint, `G` positive and injective, and `X G + G X` positive together
@@ -237,22 +260,8 @@ theorem nonneg_of_lyapunov_nonneg {X G : H →L[ℂ] H}
     have hPcomm : X * P = P * X :=
       TauCeti.BorelCalculus.boundedPVM_proj_comm hX (Set.Iic (-β)) measurableSet_Iic
     -- the spectral form bound on the range of `P`
-    have hPbound : ∀ v : H, RCLike.re ⟪X (P v), P v⟫_ℂ ≤ (-β / 2) * ‖P v‖ ^ 2 := by
-      intro v
-      refine TauCeti.BorelCalculus.re_inner_le_of_boundedPVM_proj_Ici_eq_zero hX (-β / 2) ?_
-      have hdisj : Set.Ici (-β / 2) ∩ Set.Iic (-β) = (∅ : Set ℝ) := by
-        ext t
-        simp only [Set.mem_inter_iff, Set.mem_Ici, Set.mem_Iic, Set.mem_empty_iff_false,
-          iff_false, not_and]
-        intro h1 h2
-        linarith
-      have hmul := (TauCeti.BorelCalculus.boundedPVM hX).proj_inter
-        (Set.Ici (-β / 2)) (Set.Iic (-β)) measurableSet_Ici measurableSet_Iic
-      rw [(TauCeti.BorelCalculus.boundedPVM hX).proj_congr hdisj
-        (measurableSet_Ici.inter measurableSet_Iic) MeasurableSet.empty,
-        (TauCeti.BorelCalculus.boundedPVM hX).proj_empty] at hmul
-      have := congrArg (fun T : H →L[ℂ] H => T v) hmul
-      simpa [hPdef] using this
+    have hPbound : ∀ v : H, RCLike.re ⟪X (P v), P v⟫_ℂ ≤ (-β / 2) * ‖P v‖ ^ 2 :=
+      negativeProjection_form_bound hX β hβ
     -- pointwise consequences of `P` being a self-adjoint idempotent commuting with `X`
     have hPP : ∀ y : H, P (P y) = P y := fun y => by
       have := congrArg (fun T : H →L[ℂ] H => T y) hPidem

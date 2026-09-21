@@ -1226,7 +1226,7 @@ theorem tanTwoBlockRepresentative_lowerBlock (hq : IsQuarterAcute U V) :
     hGp hpG hMip (doubleSecant_mul_cancel' hinv)
   rw [projectionBlock_lower', hcorner, doubleAngleTangentOperator,
     doubleAngleDenominator]
-  show 2 * (quarterAcuteAngularOperator U V hq *
+  change 2 * (quarterAcuteAngularOperator U V hq *
       Ring.inverse (1 - star (quarterAcuteAngularOperator U V hq) *
         quarterAcuteAngularOperator U V hq)) =
     (2 : ℂ) • (quarterAcuteAngularOperator U V hq *
@@ -1276,7 +1276,7 @@ private theorem kyFan_lowerBlock_eq_upperBlock (K : E →L[ℂ] E)
   have hadj : projectionBlock Uᗮᗮ Uᗮ K =
       (projectionBlock Uᗮ U K).adjoint := by
     rw [projectionBlock_upper', projectionBlock_lower']
-    show _ = star _
+    change _ = star _
     simp only [star_mul, star_sub, star_one,
       (isSelfAdjoint_starProjection U).star_eq, hK.star_eq]
     noncomm_ring

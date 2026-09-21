@@ -260,7 +260,7 @@ theorem eigenvalues_hermitianPart_le_singularValues
       calc RCLike.re ⟪(LinearMap.adjoint A ∘ₗ A) x, x⟫_𝕜
           ≤ A.singularValues (i : ℕ) ^ 2 * ‖x‖ ^ 2 := hgram
         _ = A.singularValues (i : ℕ) ^ 2 := by rw [hxnorm, one_pow, mul_one]
-    show ‖TauCeti.operatorAbs A x‖ ≤ A.singularValues (i : ℕ)
+    change ‖TauCeti.operatorAbs A x‖ ≤ A.singularValues (i : ℕ)
     rw [TauCeti.norm_operatorAbs_apply]
     nlinarith [norm_nonneg (A x), A.singularValues_nonneg (i : ℕ), hsq]
   calc

@@ -162,7 +162,7 @@ private theorem cosThetaMagnitude_apply_rightSingularBasis
   change C (C v) = cosThetaGram U X v at hsq
   rw [hCgram] at hsq
   have hcSq : c * c = 1 - σ ^ 2 := by
-    show Real.sqrt (1 - σ ^ 2) * Real.sqrt (1 - σ ^ 2) = 1 - σ ^ 2
+    change Real.sqrt (1 - σ ^ 2) * Real.sqrt (1 - σ ^ 2) = 1 - σ ^ 2
     rw [Real.mul_self_sqrt]
     nlinarith
   have hsq' : C (C v) = (((c : ℝ) : 𝕜) * ((c : ℝ) : 𝕜)) • v := by

@@ -97,9 +97,9 @@ theorem residual_eq_comp_subtypeL {𝕜 : Type*} [RCLike 𝕜] {G : Type*}
   have hco : ((compressOperator P A u : P) : G) = A (u : G) := by
     change P.starProjection (A (u : G)) = A (u : G)
     exact Submodule.starProjection_eq_self_iff.mpr hAu
-  show (A + K) (u : G) - ((compressOperator P A u : P) : G) = K (u : G)
+  change (A + K) (u : G) - ((compressOperator P A u : P) : G) = K (u : G)
   rw [hco]
-  show A (u : G) + K (u : G) - A (u : G) = K (u : G)
+  change A (u : G) + K (u : G) - A (u : G) = K (u : G)
   abel
 
 /-- Ambient projection onto the range of an isometric trial map. -/

@@ -84,7 +84,7 @@ theorem maximalAngle_le_pi_div_four_iff (U V : Submodule ℂ E)
     maximalAngle U V ≤ Real.pi / 4 ↔ U.projectionGap V ≤ Real.sqrt 2 / 2 := by
   have hmem : Real.pi / 4 ∈ Set.Ico (-(Real.pi / 2)) (Real.pi / 2) :=
     ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩
-  show Real.arcsin (U.projectionGap V) ≤ Real.pi / 4 ↔ _
+  change Real.arcsin (U.projectionGap V) ≤ Real.pi / 4 ↔ _
   rw [Real.arcsin_le_iff_le_sin' hmem, Real.sin_pi_div_four]
 
 /-- The strict quarter-angle condition, in the two equivalent phrasings.
@@ -98,7 +98,7 @@ theorem maximalAngle_lt_pi_div_four_iff {𝕜 : Type*} [RCLike 𝕜] {E : Type*}
     maximalAngle U V < Real.pi / 4 ↔ IsQuarterAcute U V := by
   have hmem : Real.pi / 4 ∈ Set.Ioc (-(Real.pi / 2)) (Real.pi / 2) :=
     ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩
-  show Real.arcsin (U.projectionGap V) < Real.pi / 4 ↔ _
+  change Real.arcsin (U.projectionGap V) < Real.pi / 4 ↔ _
   rw [Real.arcsin_lt_iff_lt_sin' hmem, Real.sin_pi_div_four]
   rfl
 
@@ -216,7 +216,7 @@ theorem theorem8_1_canonicalBranch
   have hquarter : IsQuarterAcute P Q := by
     have h : Pᗮ.projectionGap Qᗮ = P.projectionGap Q :=
       TauCeti.DavisKahan.subspaceGap_orthogonal P Q
-    show P.projectionGap Q < Real.sqrt 2 / 2
+    change P.projectionGap Q < Real.sqrt 2 / 2
     rw [← h]
     exact hquarterPerp
   refine
@@ -312,7 +312,7 @@ theorem theorem8_1_eq_canonicalBranch_of_maximalAngle_le
   set Q : Submodule ℂ E := canonicalLowBranch (A + H) hAHop alpha with hQdef
   have hquarter : IsQuarterAcute P Q := hconc.quarter_acute
   have hquarterPerp : IsQuarterAcute Pᗮ Qᗮ := by
-    show Pᗮ.projectionGap Qᗮ < Real.sqrt 2 / 2
+    change Pᗮ.projectionGap Qᗮ < Real.sqrt 2 / 2
     rw [TauCeti.DavisKahan.subspaceGap_orthogonal P Q]
     exact hquarter
   have hgapM : P.projectionGap M ≤ Real.sqrt 2 / 2 :=
@@ -329,7 +329,7 @@ theorem theorem8_1_eq_canonicalBranch_of_maximalAngle_le
       (Set.Iic alpha) measurableSet_Iic
   -- a reducing projection commutes with the branch projection
   have hcommT : Commute (A + H) M.starProjection := by
-    show (A + H) * M.starProjection = M.starProjection * (A + H)
+    change (A + H) * M.starProjection = M.starProjection * (A + H)
     refine ContinuousLinearMap.ext fun x => ?_
     exact (ContinuousLinearMap.starProjection_apply_comm_of_reduces
       (A + H) M hMreduces x).symm
@@ -463,7 +463,7 @@ theorem theorem8_1_maximalAngle_le_iff_spectrumIn
         rw [hPperpperp] at hx
         exact hHP x hx
     have hquarter : IsQuarterAcute P M := by
-      show P.projectionGap M < Real.sqrt 2 / 2
+      change P.projectionGap M < Real.sqrt 2 / 2
       rw [← TauCeti.DavisKahan.subspaceGap_orthogonal P M]
       exact hquarterPerp
     exact le_of_lt ((maximalAngle_lt_pi_div_four_iff P M).2 hquarter)

@@ -85,7 +85,7 @@ private theorem starProjection_mul_self (W : Submodule ℂ E)
     [W.HasOrthogonalProjection] :
     W.starProjection * W.starProjection = W.starProjection := by
   ext x
-  show W.starProjection (W.starProjection x) = W.starProjection x
+  change W.starProjection (W.starProjection x) = W.starProjection x
   rw [Submodule.starProjection_eq_self_iff]
   exact W.starProjection_apply_mem x
 

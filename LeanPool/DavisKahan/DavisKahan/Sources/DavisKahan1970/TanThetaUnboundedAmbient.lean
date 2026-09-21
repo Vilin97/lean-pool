@@ -154,7 +154,7 @@ theorem tanTheta_ambient_bounded_kyFan_complex_of_lowerCorner
           (((delta : ℝ) : ℂ) • projectionBlock Uᗮ U K).adjoint := by
       rw [projectionBlock_smul_unboundedTanThetaAmbient,
         upperCorner_eq_adjoint_lowerCorner htr]
-      show ((delta : ℝ) : ℂ) • star (projectionBlock Uᗮ U K) =
+      change ((delta : ℝ) : ℂ) • star (projectionBlock Uᗮ U K) =
         star (((delta : ℝ) : ℂ) • projectionBlock Uᗮ U K)
       rw [star_smul, RCLike.star_def, Complex.conj_ofReal]
     have hright :
@@ -163,7 +163,7 @@ theorem tanTheta_ambient_bounded_kyFan_complex_of_lowerCorner
       have hp := isSelfAdjoint_starProjection U
       rw [projectionBlock_upper_unboundedTanThetaAmbient,
         projectionBlock_lower_unboundedTanThetaAmbient]
-      show _ = star _
+      change _ = star _
       simp only [star_mul, star_sub, star_one, hp.star_eq, hH.star_eq]
       noncomm_ring
     rw [hleft, hright, kyFanApproximationGauge_adjoint,

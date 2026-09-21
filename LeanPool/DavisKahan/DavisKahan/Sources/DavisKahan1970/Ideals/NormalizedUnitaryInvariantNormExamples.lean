@@ -46,7 +46,7 @@ noncomputable def kyFanNormalizedUnitaryInvariantNorm
   toFanDominantIdealFamily := (KyFanDominantIdealFamily.kyFan k hk).toFanDominantIdealFamily
   gauge_rankOne_eq_one := by
     intro E F _ _ _ _ _ _ V hVnorm hVrank
-    show ((kyFanSymmetricIdealFamily (𝕜 := 𝕜) k hk).gauge V).toReal = 1
+    change ((kyFanSymmetricIdealFamily (𝕜 := 𝕜) k hk).gauge V).toReal = 1
     rw [gauge_kyFanSymmetricIdealFamily, ENNReal.toReal_ofReal
       (kyFanApproximationGauge_nonneg k V)]
     have hsum : kyFanApproximationGauge k V

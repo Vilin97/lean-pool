@@ -165,12 +165,12 @@ theorem notMem_spectrum_addBounded_of_spectrum_gap
   refine ⟨R ∘L V, fun y => ?_, fun y => ?_, fun x => ?_⟩
   · exact (hright (V y)).choose
   · obtain ⟨hmem, hsolve⟩ := hright (V y)
-    show ((c : ℝ) : ℂ) • (R ∘L V) y -
+    change ((c : ℝ) : ℂ) • (R ∘L V) y -
       (TauCeti.LinearPMap.addBounded A K) ⟨(R ∘L V) y, _⟩ = y
     have hadd : (TauCeti.LinearPMap.addBounded A K)
         (⟨R (V y), hmem⟩ : (TauCeti.LinearPMap.addBounded A K).domain)
         = A ⟨R (V y), hmem⟩ + K (R (V y)) := rfl
-    show ((c : ℝ) : ℂ) • R (V y) -
+    change ((c : ℝ) : ℂ) • R (V y) -
       (TauCeti.LinearPMap.addBounded A K) ⟨R (V y), hmem⟩ = y
     rw [hadd]
     have hstep : ((c : ℝ) : ℂ) • R (V y) - A ⟨R (V y), hmem⟩ = V y := hsolve
@@ -183,7 +183,7 @@ theorem notMem_spectrum_addBounded_of_spectrum_gap
   · have hxA : ((x : H)) ∈ A.domain := x.2
     have hadd : (TauCeti.LinearPMap.addBounded A K) x
         = A ⟨(x : H), hxA⟩ + K (x : H) := rfl
-    show (R ∘L V) (((c : ℝ) : ℂ) • (x : H) -
+    change (R ∘L V) (((c : ℝ) : ℂ) • (x : H) -
       (TauCeti.LinearPMap.addBounded A K) x) = (x : H)
     rw [hadd]
     have hw : R (((c : ℝ) : ℂ) • (x : H) - A ⟨(x : H), hxA⟩) = (x : H) :=

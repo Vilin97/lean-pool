@@ -434,9 +434,9 @@ theorem complexify_sinTwoAngleOperator (U V : Submodule ℝ E)
     complexify (DavisKahanExt.sinTwoAngleOperator U V) =
       DavisKahanExt.sinTwoAngleOperator (complexifySubmodule U)
         (complexifySubmodule V) := by
-  show complexify ((2 : ℝ) •
+  change complexify ((2 : ℝ) •
     (Uᗮ.starProjection ∘L V.starProjection ∘L U.starProjection)) = _
-  show _ = (2 : ℂ) • ((complexifySubmodule U)ᗮ.starProjection ∘L
+  change _ = (2 : ℂ) • ((complexifySubmodule U)ᗮ.starProjection ∘L
     (complexifySubmodule V).starProjection ∘L
       (complexifySubmodule U).starProjection)
   rw [complexify_real_smul, complexify_comp, complexify_comp,

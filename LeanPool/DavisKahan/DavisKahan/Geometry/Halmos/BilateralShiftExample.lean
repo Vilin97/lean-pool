@@ -74,7 +74,7 @@ theorem starProjection_of_map_eq {K L : Submodule 𝕜 H}
   · intro w hw
     rw [← h] at hw
     obtain ⟨u, hu, rfl⟩ := hw
-    show ⟪e y - e (K.starProjection y), e u⟫_𝕜 = 0
+    change ⟪e y - e (K.starProjection y), e u⟫_𝕜 = 0
     rw [← map_sub, e.inner_map_map]
     exact K.starProjection_inner_eq_zero y u hu
 
@@ -196,7 +196,7 @@ theorem map_coordinateHalfSpace (b : HilbertBasis ℤ 𝕜 H) (k : ℤ) :
     refine ⟨b (n - 1), ⟨n - 1, ?_, rfl⟩, ?_⟩
     · simp only [Set.mem_ofPred_eq] at hn ⊢
       omega
-    · show (bilateralShift b) (b (n - 1)) = b n
+    · change (bilateralShift b) (b (n - 1)) = b n
       rw [bilateralShift_apply_basis, sub_add_cancel]
 
 /-- **The shift intertwines the two projections.**

@@ -268,7 +268,7 @@ theorem lemma6_3_approximationNumber_leakage_of_energySplit
   have hrankA : A.rank ≤ (n : Cardinal) := by
     have hAeq :
         A = Q.starProjection ∘L (K ∘L P.starProjection) := by
-      show K ∘L P.starProjection = Q.starProjection ∘L (K ∘L P.starProjection)
+      change K ∘L P.starProjection = Q.starProjection ∘L (K ∘L P.starProjection)
       rw [← ContinuousLinearMap.comp_assoc]
       exact hKP
     rw [hAeq]

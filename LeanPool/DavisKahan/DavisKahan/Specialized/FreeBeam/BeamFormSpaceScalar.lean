@@ -566,7 +566,7 @@ def beamCoerciveFormData : Abstract.CoerciveFormData (𝕜 := 𝕜) (H := (BeamL
   embed_adjoint_injective := beamEmbed_adjoint_injective (𝕜 := 𝕜)
   formOperator := ContinuousLinearMap.id 𝕜 (BeamV (𝕜 := 𝕜))
   form_selfAdjoint := by
-    show star (ContinuousLinearMap.id 𝕜 (BeamV (𝕜 := 𝕜))) =
+    change star (ContinuousLinearMap.id 𝕜 (BeamV (𝕜 := 𝕜))) =
       ContinuousLinearMap.id 𝕜 (BeamV (𝕜 := 𝕜))
     rw [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_id]
   coercivityConstant := 1
