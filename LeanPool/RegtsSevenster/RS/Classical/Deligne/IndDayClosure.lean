@@ -109,8 +109,10 @@ theorem isIndObject_obj_of_preservesColimits
       (T.mapCocone ((equiv Cᵒᵖ (Type v)).inverse.mapCocone Q.cocone))) :=
     isColimitOfPreserves _ hc₂
   have hE : ∀ i, IsIndObject (E.obj i) := fun i => hT (Q.F.obj i)
-  exact (isIndObject_colimit Q.I E hE).map
-    (IsColimit.coconePointUniqueUpToIso (colimit.isColimit E) hc₃).hom
+  let e := IsColimit.coconePointUniqueUpToIso (colimit.isColimit E) hc₃
+  have : IsIso e.hom := e.isIso_hom
+  have hInd := (isIndObject_colimit Q.I E hE).map e.hom
+  exact hInd
 
 /-- The Day tensor of a representable presheaf with an ind-object is
 an ind-object. -/

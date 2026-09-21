@@ -269,26 +269,9 @@ theorem insertTop_comp_splitPow [Category.{v} A] [MonoidalCategory A]
       have hstep := whiskerRight_comp_splitPow X p (r + 1)
         (insertTop_comp_splitPow X p k r hkr)
       rw [hL, hR]
-      calc (swapTop X (p + r) ≫ (insertTop X (p + r) k ▷ X)) ≫
-              (splitPow X p (r + 1 + 1)).hom
-          = swapTop X (p + r) ≫ ((insertTop X (p + r) k ▷ X) ≫
-              (splitPow X p (r + 1 + 1)).hom) := Category.assoc _ _ _
-        _ = swapTop X (p + r) ≫ ((splitPow X p (r + 1 + 1)).hom ≫
-              (tensorPow A X p ◁ (insertTop X r k ▷ X))) :=
-              congrArg (fun z => swapTop X (p + r) ≫ z) hstep
-        _ = (swapTop X (p + r) ≫ (splitPow X p (r + 1 + 1)).hom) ≫
-              (tensorPow A X p ◁ (insertTop X r k ▷ X)) :=
-              (Category.assoc _ _ _).symm
-        _ = ((splitPow X p (r + 1 + 1)).hom ≫
-              (tensorPow A X p ◁ swapTop X r)) ≫
-              (tensorPow A X p ◁ (insertTop X r k ▷ X)) :=
-              congrArg
-                (fun z => z ≫ (tensorPow A X p ◁ (insertTop X r k ▷ X)))
-                (swapTop_comp_splitPow X p r)
-        _ = (splitPow X p (r + 1 + 1)).hom ≫
-              (tensorPow A X p ◁ swapTop X r) ≫
-              (tensorPow A X p ◁ (insertTop X r k ▷ X)) :=
-              Category.assoc _ _ _
+      erw [Category.assoc, hstep, ← Category.assoc,
+        swapTop_comp_splitPow X p r, Category.assoc]
+      rfl
 
 /-! ## Tensor powers respect the splitting -/
 
@@ -398,47 +381,11 @@ theorem permMor_comp_splitPow [Category.{v} A] [MonoidalCategory A]
       have hi := insertTop_comp_splitPow X p (q - (topImage τ : ℕ)) q
         hkq
       rw [hL, hR]
-      calc ((permMor X (p + q) (blockSum σ (restPerm τ)) ▷ X) ≫
-              insertTop X (p + q) (q - (topImage τ : ℕ))) ≫
-              (splitPow X p (q + 1)).hom
-          = (permMor X (p + q) (blockSum σ (restPerm τ)) ▷ X) ≫
-              (insertTop X (p + q) (q - (topImage τ : ℕ)) ≫
-                (splitPow X p (q + 1)).hom) := Category.assoc _ _ _
-        _ = (permMor X (p + q) (blockSum σ (restPerm τ)) ▷ X) ≫
-              ((splitPow X p (q + 1)).hom ≫
-                (tensorPow A X p ◁
-                  insertTop X q (q - (topImage τ : ℕ)))) :=
-              congrArg (fun z =>
-                (permMor X (p + q) (blockSum σ (restPerm τ)) ▷ X) ≫ z)
-                hi
-        _ = ((permMor X (p + q) (blockSum σ (restPerm τ)) ▷ X) ≫
-              (splitPow X p (q + 1)).hom) ≫
-              (tensorPow A X p ◁
-                insertTop X q (q - (topImage τ : ℕ))) :=
-              (Category.assoc _ _ _).symm
-        _ = ((splitPow X p (q + 1)).hom ≫
-              (permMor X p σ ⊗ₘ
-                (permMor X q (restPerm τ) ⊗ₘ 𝟙 X))) ≫
-              (tensorPow A X p ◁
-                insertTop X q (q - (topImage τ : ℕ))) := by
-              rw [← tensorHom_id
-                (permMor X (p + q) (blockSum σ (restPerm τ))) X, hw]
-              rfl
-        _ = (splitPow X p (q + 1)).hom ≫
-              ((permMor X p σ ⊗ₘ
-                (permMor X q (restPerm τ) ⊗ₘ 𝟙 X)) ≫
-                (𝟙 (tensorPow A X p) ⊗ₘ
-                  insertTop X q (q - (topImage τ : ℕ)))) := by
-              rw [Category.assoc, id_tensorHom]
-        _ = (splitPow X p (q + 1)).hom ≫
-              (permMor X p σ ⊗ₘ
-                ((permMor X q (restPerm τ) ⊗ₘ 𝟙 X) ≫
-                  insertTop X q (q - (topImage τ : ℕ)))) := by
-              rw [tensorHom_comp_tensorHom, Category.comp_id]
-        _ = (splitPow X p (q + 1)).hom ≫
-              (permMor X p σ ⊗ₘ
-                ((permMor X q (restPerm τ) ▷ X) ≫
-                  insertTop X q (q - (topImage τ : ℕ)))) := by
-              rw [tensorHom_id]
+      erw [Category.assoc, hi, ← Category.assoc,
+        ← tensorHom_id (permMor X (p + q) (blockSum σ (restPerm τ))) X, hw]
+      erw [Category.assoc,
+        ← id_tensorHom (tensorPow A X p) (insertTop X q (q - (topImage τ : ℕ))),
+        tensorHom_comp_tensorHom, Category.comp_id, tensorHom_id]
+      rfl
 
 end RS

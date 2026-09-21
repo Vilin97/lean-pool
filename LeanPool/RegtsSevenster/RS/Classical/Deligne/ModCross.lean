@@ -194,7 +194,6 @@ lemma modCrossBridge_legM
         (P.X ◁ modMultiLegM A rest X Y m)
     rw [← MonoidalCategory.whiskerLeft_comp,
       modCrossBridge_legM A X Y m rest]
-    rfl
 
 /-- **The stationary window of a singleton block is the second
 relation leg** of the head slot, through the bridge. -/
@@ -243,7 +242,6 @@ lemma modCrossBridge_legN
         (P.X ◁ modMultiLegN A rest X Y m)
     rw [← MonoidalCategory.whiskerLeft_comp,
       modCrossBridge_legN A X Y m rest]
-    rfl
 
 end CrossBase
 
@@ -385,7 +383,6 @@ lemma modCrossStepBridge_legM
         (Q.X ◁ modMultiLegM A rest X P (l' ++ Ys))
     rw [← MonoidalCategory.whiskerLeft_comp,
       modCrossStepBridge_legM A X P l' Ys rest]
-    rfl
 
 /-- **The step bridge against the second relation leg**: past the
 head slot, what remains is the crossing of the tail block, under

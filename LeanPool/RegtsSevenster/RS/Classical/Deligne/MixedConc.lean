@@ -622,9 +622,9 @@ theorem tensorPowConcat_permAlg
     (tensorPowConcat X a b).hom ≫ permAlg X (a + b) (blockAlgEmbed x y) =
       (permAlg X a x ⊗ₘ permAlg X b y) ≫ (tensorPowConcat X a b).hom := by
   induction x using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     induction y using MonoidAlgebra.induction_on with
-    | hM τ =>
+    | of τ =>
       rw [show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin a))) σ =
           MonoidAlgebra.single σ (1 : ℂ) from rfl,
         show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin b))) τ =
@@ -632,16 +632,16 @@ theorem tensorPowConcat_permAlg
         blockAlgEmbed_single, one_mul, permAlg_single, permAlg_single,
         permAlg_single]
       exact tensorPowConcat_permMor X σ τ
-    | hadd y₁ y₂ hy₁ hy₂ =>
+    | add y₁ y₂ hy₁ hy₂ =>
       rw [blockAlgEmbed_add_snd, map_add, map_add]
       exact tensor_add_glue hy₁ hy₂
-    | hsmul r y' hy =>
+    | smul r y' hy =>
       rw [blockAlgEmbed_smul_snd, map_smul, map_smul]
       exact tensor_smul_glue r hy
-  | hadd x₁ x₂ hx₁ hx₂ =>
+  | add x₁ x₂ hx₁ hx₂ =>
     rw [blockAlgEmbed_add_fst, map_add, map_add]
     exact add_tensor_glue hx₁ hx₂
-  | hsmul r x' hx =>
+  | smul r x' hx =>
     rw [blockAlgEmbed_smul_fst, map_smul, map_smul]
     exact smul_tensor_glue r hx
 

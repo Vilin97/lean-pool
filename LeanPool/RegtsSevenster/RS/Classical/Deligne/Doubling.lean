@@ -512,7 +512,7 @@ section GradedTensor
 
 /-- The graded tensor product of super-objects: parities add, so
 each component of the product is a biproduct of two mixed blocks. -/
-def tensorObj [Category.{v} A] [MonoidalCategory A] [Preadditive A]
+abbrev tensorObj [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [HasBinaryBiproducts A]
     (X Y : Doubled A) : Doubled A where
   even := X.even ⊗ Y.even ⊞ X.odd ⊗ Y.odd
@@ -633,7 +633,7 @@ section Total
 
 /-- The summing functor `X ↦ X.even ⊞ X.odd`.  It is faithful, and
 the monoidal coherences of the doubling are induced along it. -/
-def total [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A] :
+abbrev total [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A] :
     Doubled A ⥤ A where
   obj X := X.even ⊞ X.odd
   map f := biprod.map (evenHom f) (oddHom f)
@@ -675,7 +675,7 @@ open ZeroObject
 
 /-- The monoidal unit of the doubling: the unit of `A` in even
 degree, the zero object in odd degree. -/
-def unit [Category.{v} A] [MonoidalCategory A] [HasZeroObject A] : Doubled A :=
+abbrev unit [Category.{v} A] [MonoidalCategory A] [HasZeroObject A] : Doubled A :=
   ⟨𝟙_ A, 0⟩
 
 /-- A left tensor factor which is the zero object kills the
@@ -1211,38 +1211,10 @@ instance instBraidedCategory
         · simp [braidingEven, braidingOdd, assocEven, assocOdd]
         · simp [braidingEven, braidingOdd, assocEven, assocOdd,
             Preadditive.neg_comp, Preadditive.comp_neg]
-          show (α_ X.odd Y.odd Z.even).hom ≫
-              X.odd ◁ biprod.inr ≫
-                (-(β_ X.odd
-                  (Y.even ⊗ Z.odd ⊞ Y.odd ⊗ Z.even)).hom) ≫
-                descRight
-                  ((α_ Y.even Z.odd X.odd).hom ≫
-                    Y.even ◁ biprod.inr ≫ biprod.inl)
-                  ((α_ Y.odd Z.even X.odd).hom ≫
-                    Y.odd ◁ biprod.inl ≫ biprod.inr) =
-            -((β_ X.odd Y.odd).hom ▷ Z.even ≫
-                (α_ Y.odd X.odd Z.even).hom ≫
-                  Y.odd ◁ (β_ X.odd Z.even).hom ≫
-                    Y.odd ◁ biprod.inl ≫ biprod.inr)
-          simp [Preadditive.neg_comp, Preadditive.comp_neg]
       · apply tensorRight_ext
         · simp [braidingEven, braidingOdd, assocEven, assocOdd]
         · simp [braidingEven, braidingOdd, assocEven, assocOdd,
             Preadditive.neg_comp, Preadditive.comp_neg]
-          show (α_ X.odd Y.even Z.odd).hom ≫
-              X.odd ◁ biprod.inl ≫
-                (-(β_ X.odd
-                  (Y.even ⊗ Z.odd ⊞ Y.odd ⊗ Z.even)).hom) ≫
-                descRight
-                  ((α_ Y.even Z.odd X.odd).hom ≫
-                    Y.even ◁ biprod.inr ≫ biprod.inl)
-                  ((α_ Y.odd Z.even X.odd).hom ≫
-                    Y.odd ◁ biprod.inl ≫ biprod.inr) =
-            -((β_ X.odd Y.even).hom ▷ Z.odd ≫
-                (α_ Y.even X.odd Z.odd).hom ≫
-                  Y.even ◁ (β_ X.odd Z.odd).hom ≫
-                    Y.even ◁ biprod.inr ≫ biprod.inl)
-          simp [Preadditive.neg_comp, Preadditive.comp_neg]
     · apply biprod.hom_ext' <;> apply tensorRight_ext <;>
         simp [braidingEven, braidingOdd, assocEven, assocOdd,
           Preadditive.neg_comp, Preadditive.comp_neg]
@@ -1253,37 +1225,9 @@ instance instBraidedCategory
         · simp [braidingEven, braidingOdd, assocEven, assocOdd]
         · simp [braidingEven, braidingOdd, assocEven, assocOdd,
             Preadditive.neg_comp, Preadditive.comp_neg]
-          show (α_ X.even Y.odd Z.odd).inv ≫
-              biprod.inl ▷ Z.odd ≫
-                (-(β_ (X.even ⊗ Y.odd ⊞ X.odd ⊗ Y.even)
-                  Z.odd).hom) ≫
-                descLeft
-                  ((α_ Z.odd X.even Y.odd).inv ≫
-                    biprod.inr ▷ Y.odd ≫ biprod.inr)
-                  ((α_ Z.odd X.odd Y.even).inv ≫
-                    biprod.inr ▷ Y.even ≫ biprod.inl) =
-            -(X.even ◁ (β_ Y.odd Z.odd).hom ≫
-                (α_ X.even Z.odd Y.odd).inv ≫
-                  (β_ X.even Z.odd).hom ▷ Y.odd ≫
-                    biprod.inr ▷ Y.odd ≫ biprod.inr)
-          simp [Preadditive.neg_comp, Preadditive.comp_neg]
       · apply tensorLeft_ext
         · simp [braidingEven, braidingOdd, assocEven, assocOdd,
             Preadditive.neg_comp, Preadditive.comp_neg]
-          show (α_ X.odd Y.even Z.odd).inv ≫
-              biprod.inr ▷ Z.odd ≫
-                (-(β_ (X.even ⊗ Y.odd ⊞ X.odd ⊗ Y.even)
-                  Z.odd).hom) ≫
-                descLeft
-                  ((α_ Z.odd X.even Y.odd).inv ≫
-                    biprod.inr ▷ Y.odd ≫ biprod.inr)
-                  ((α_ Z.odd X.odd Y.even).inv ≫
-                    biprod.inr ▷ Y.even ≫ biprod.inl) =
-            -(X.odd ◁ (β_ Y.even Z.odd).hom ≫
-                (α_ X.odd Z.odd Y.even).inv ≫
-                  (β_ X.odd Z.odd).hom ▷ Y.even ≫
-                    biprod.inr ▷ Y.even ≫ biprod.inl)
-          simp [Preadditive.neg_comp, Preadditive.comp_neg]
         · simp [braidingEven, braidingOdd, assocEven, assocOdd]
     · apply biprod.hom_ext' <;> apply tensorLeft_ext <;>
         simp [braidingEven, braidingOdd, assocEven, assocOdd,
@@ -1328,7 +1272,7 @@ theorem isZero_biprod [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A]
       biprod.hom_ext _ _ (hM.eq_of_tgt _ _) (hN.eq_of_tgt _ _)⟩⟩
 
 /-- The even embedding `X ↦ (X, 0)`. -/
-def evenEmbed
+abbrev evenEmbed
     [Category.{v} A] [Preadditive A] [HasZeroObject A] : A ⥤ Doubled A where
   obj X := ⟨X, 0⟩
   map f := homMk f (𝟙 (0 : A))
@@ -1370,7 +1314,6 @@ instance [Category.{v} A] [Preadditive A] [HasZeroObject A] :
     intros
     ext
     · rfl
-    · exact (isZero_zero A).eq_of_src _ _
 
 /-- The even embedding is ℂ-linear. -/
 instance [Category.{v} A] [Preadditive A] [HasZeroObject A]
@@ -1380,7 +1323,6 @@ instance [Category.{v} A] [Preadditive A] [HasZeroObject A]
     intros
     ext
     · rfl
-    · exact (isZero_zero A).eq_of_src _ _
 
 /-- The even embedding is monoidal up to isomorphism: the graded
 tensor of two even objects collapses to the even tensor. -/
@@ -1405,7 +1347,6 @@ theorem evenEmbedTensorIso_braided
   · show biprod.map (β_ X Y).hom (-(β_ (0 : A) (0 : A)).hom) ≫
         biprod.fst = biprod.fst ≫ (β_ X Y).hom
     simp
-  · exact (isZero_zero A).eq_of_tgt _ _
 
 /-- The unit comparison of the even embedding: definitional. -/
 def evenEmbedUnitIso [Category.{v} A] [MonoidalCategory A] [Preadditive A]
@@ -1422,7 +1363,7 @@ open ZeroObject
 /-- The odd unit: the unit of `A` placed in odd degree.  Together
 with `oddUnitSq` and `braiding_oddUnit` this is exactly the
 invertible odd object required by Deligne 2.9. -/
-def oddUnit
+abbrev oddUnit
     [Category.{v} A] [MonoidalCategory A] [HasZeroObject A] : Doubled A :=
   ⟨0, 𝟙_ A⟩
 
@@ -1542,17 +1483,14 @@ def decomposition [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     · -- (inl, fst)
       ext
       · simp
-      · exact (isZero_zero A).eq_of_src _ _
     · -- (inl, snd)
       ext
       · exact (isZero_biprod (isZero_zeroTensor _)
           (isZero_tensorZero _)).eq_of_tgt _ _
-      · exact (isZero_zero A).eq_of_src _ _
     · -- (inr, fst)
       ext
       · exact (isZero_biprod (isZero_zeroTensor _)
           (isZero_tensorZero _)).eq_of_src _ _
-      · exact (isZero_zero A).eq_of_tgt _ _
     · -- (inr, snd)
       rw [biprod.inr_desc_assoc, Category.assoc, biprod.lift_snd,
         Category.comp_id, biprod.inr_snd]
@@ -1677,45 +1615,17 @@ def exactPairing [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     ext
     · apply biprod.hom_ext'
       · simp [assocEven, rightUnitorComp, leftUnitorComp]
-        show Q.even ◁ η_ P.odd Q.odd ≫
-            (α_ Q.even P.odd Q.odd).inv ≫
-              biprod.inl ▷ Q.odd ≫
-                ((0 : (Q.even ⊗ P.odd ⊞ Q.odd ⊗ P.even) ⟶
-                    (0 : A)) ▷ Q.odd) ≫
-                  biprod.inr = 0
-        simp
       · exact (isZero_tensorZero _).eq_of_src _ _
     · apply biprod.hom_ext'
       · exact (isZero_tensorZero _).eq_of_src _ _
       · simp [assocOdd, rightUnitorCompOdd, leftUnitorComp]
-        show Q.odd ◁ η_ P.even Q.even ≫
-            (α_ Q.odd P.even Q.even).inv ≫
-              biprod.inr ▷ Q.even ≫
-                ((0 : (Q.even ⊗ P.odd ⊞ Q.odd ⊗ P.even) ⟶
-                    (0 : A)) ▷ Q.even) ≫
-                  biprod.inr = 0
-        simp
   evaluation_coevaluation' := by
     ext
     · apply biprod.hom_ext'
       · simp [assocEven, rightUnitorComp, leftUnitorComp]
-        show η_ P.odd Q.odd ▷ P.even ≫
-            (α_ P.odd Q.odd P.even).hom ≫
-              P.odd ◁ biprod.inr ≫
-                (P.odd ◁ (0 : (Q.even ⊗ P.odd ⊞ Q.odd ⊗ P.even) ⟶
-                    (0 : A))) ≫
-                  biprod.inr = 0
-        simp
       · exact (isZero_zeroTensor _).eq_of_src _ _
     · apply biprod.hom_ext'
       · simp [assocOdd, rightUnitorCompOdd, leftUnitorComp]
-        show η_ P.even Q.even ▷ P.odd ≫
-            (α_ P.even Q.even P.odd).hom ≫
-              P.even ◁ biprod.inl ≫
-                (P.even ◁ (0 : (Q.even ⊗ P.odd ⊞ Q.odd ⊗ P.even) ⟶
-                    (0 : A))) ≫
-                  biprod.inl = 0
-        simp
       · exact (isZero_zeroTensor _).eq_of_src _ _
 
 /-- The doubling of a right rigid category is right rigid, with

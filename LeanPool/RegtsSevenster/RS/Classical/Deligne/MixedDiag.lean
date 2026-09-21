@@ -189,13 +189,10 @@ theorem tensorPowDistrib_swapTop
     have h := MonoidalCategory.comp_whiskerRight
       ((tensorPowDistrib X Y n).hom ▷ (X ⊗ Y))
       (tensorμ (tensorPow A X n) (tensorPow A Y n) X Y) (X ⊗ Y)
-    calc (tensorPowDistrib X Y (n + 2)).hom
-        = ((((tensorPowDistrib X Y n).hom ▷ (X ⊗ Y)) ≫
-              tensorμ (tensorPow A X n) (tensorPow A Y n) X Y) ▷
-            (X ⊗ Y)) ≫
-            tensorμ (tensorPow A X n ⊗ X) (tensorPow A Y n ⊗ Y)
-              X Y := rfl
-      _ = _ := by rw [h, Category.assoc]
+    change ((((tensorPowDistrib X Y n).hom ▷ (X ⊗ Y)) ≫
+      tensorμ (tensorPow A X n) (tensorPow A Y n) X Y) ▷ (X ⊗ Y)) ≫
+      tensorμ (tensorPow A X n ⊗ X) (tensorPow A Y n ⊗ Y) X Y = _
+    erw [h, Category.assoc]
   rw [hD]
   exact conj_step
     (swap_conj_base (X ⊗ Y) (tensorPowDistrib X Y n).hom)
@@ -379,7 +376,7 @@ theorem diagAlg_apply
     [Preadditive A] [Linear ℂ A]
     (X Y : A) (n : ℕ) (x : SymGroupAlgebra n) :
     diagAlg X Y n x =
-      Finsupp.sum x fun σ c =>
+      Finsupp.sum x.coeff fun σ c =>
         c • (permMor X n σ ⊗ₘ permMor Y n σ) := by
   rw [diagAlg, MonoidAlgebra.lift_apply]
   rfl
@@ -399,15 +396,15 @@ theorem tensorPowDistrib_permAlg
     permAlg (X ⊗ Y) n x ≫ (tensorPowDistrib X Y n).hom =
       (tensorPowDistrib X Y n).hom ≫ diagAlg X Y n x := by
   induction x using MonoidAlgebra.induction_on with
-  | hM σ =>
+  | of σ =>
     rw [show (MonoidAlgebra.of ℂ (Equiv.Perm (Fin n))) σ =
         MonoidAlgebra.single σ (1 : ℂ) from rfl,
       permAlg_single, diagAlg_single]
     exact tensorPowDistrib_permMor X Y n σ
-  | hadd x y hx hy =>
+  | add x y hx hy =>
     rw [map_add, map_add]
     exact intertwine_add hx hy
-  | hsmul r x hx =>
+  | smul r x hx =>
     rw [map_smul, map_smul]
     exact intertwine_smul r hx
 

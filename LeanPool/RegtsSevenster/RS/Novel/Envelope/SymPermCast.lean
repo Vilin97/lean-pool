@@ -113,7 +113,8 @@ theorem permAlg_symCast
       whiskerPowAlg X m k (permAlg X m x) := by
   have hext : (permAlg X (m + k)).comp (symCast (Nat.le_add_right m k)) =
       (whiskerPowAlg X m k).comp (permAlg X m) := by
-    refine MonoidAlgebra.algHom_ext fun σ => ?_
+    refine MonoidAlgebra.algHom_ext (R := ℂ) (A := ℂ) (M := Equiv.Perm (Fin m))
+      (fun σ => ?_) (by ext)
     show permAlg X (m + k) (symCast _ (MonoidAlgebra.single σ 1)) =
       whiskerPowAlg X m k (permAlg X m (MonoidAlgebra.single σ 1))
     have hsym : symCast (Nat.le_add_right m k)

@@ -42,7 +42,7 @@ open scoped Classical in
 /-- A coefficient of a product of complete homogeneous polynomials
 counts the tuples of multisets with the prescribed column sums. -/
 theorem coeff_hSub_prod {k : ℕ} (c : Fin k → ℕ) (w : Fin k →₀ ℕ) :
-    MvPolynomial.coeff w (∏ i, hSub (Finset.univ : Finset (Fin k)) (c i)) =
+    (∏ i, hSub (Finset.univ : Finset (Fin k)) (c i)).coeff w =
       (Fintype.card {W : ∀ i : Fin k, Sym (Fin k) (c i) //
         ∀ j : Fin k, (∑ i, (W i).1.count j) = w j} : ℂ) := by
   -- Step 1: Remove the trivially-true filter in hSub univ

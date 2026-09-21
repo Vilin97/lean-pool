@@ -34,12 +34,11 @@ theorem stairShift_apply (τ : Equiv.Perm (Fin k)) (j : Fin k) :
 /-- **Coefficient extraction against the staircase alternant.** -/
 theorem coeff_mul_alternant (P : MvPolynomial (Fin k) ℂ)
     (w₀ : Fin k →₀ ℕ) :
-    MvPolynomial.coeff w₀
-        (P * (powMat (fun _ : Fin k => 0)).det) =
+    (P * (powMat (fun _ : Fin k => 0)).det).coeff w₀ =
       ∑ τ : Equiv.Perm (Fin k),
         ((Equiv.Perm.sign τ : ℤ) : ℂ) *
           (if stairShift τ ≤ w₀
-            then MvPolynomial.coeff (w₀ - stairShift τ) P
+            then P.coeff (w₀ - stairShift τ)
             else 0) := by
   classical
   rw [Matrix.det_apply']

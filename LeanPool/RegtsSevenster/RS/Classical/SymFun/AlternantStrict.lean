@@ -67,7 +67,7 @@ alternant is the equality indicator. -/
 theorem alternant_coeff_strict (e w : Fin k → ℕ)
     (he : ∀ i j : Fin k, i < j → e j < e i)
     (hw : ∀ i j : Fin k, i < j → w j < w i) :
-    MvPolynomial.coeff (∑ i, Finsupp.single i (w i)) (altDet e) =
+    (altDet e).coeff (∑ i, Finsupp.single i (w i)) =
       if e = w then 1 else 0 := by
   classical
   by_cases heq : e = w
