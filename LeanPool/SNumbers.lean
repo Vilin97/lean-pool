@@ -54,7 +54,7 @@ import LeanPool.SNumbers.SNumbers
 Source: url:https://github.com/mario-ullrich/lean-snumbers
 Authors: Mario Ullrich
 Status: verified
-Main declarations: `SNumbers.approximationNumber_le_e_mul_hilbertNumber`, `SNumbers.allSNumbers_eq_on_HilbertSpace`, `John.john_decomposition`
+Main declarations: `SNumbers.approximationNumber_le_e_mul_hilbertNumber`
 Tags: functional-analysis, operator-theory, s-numbers
 MSC: 47B06, 46B20
 -/

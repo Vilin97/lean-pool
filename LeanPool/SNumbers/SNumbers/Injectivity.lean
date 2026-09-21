@@ -218,7 +218,7 @@ theorem gelfandNumber_comp_metricInjection {J : Y →L[𝕜] Z}
 theorem injective_gelfandNumber :
     Injective (𝕜 := 𝕜) (fun {_X _Y} _ _ _ _ S n => gelfandNumber S n) := by
   intro X Y Z _ _ _ _ _ _ S J hJ n
-  show gelfandNumber (J.comp S) n = gelfandNumber S n
+  change gelfandNumber (J.comp S) n = gelfandNumber S n
   exact gelfandNumber_comp_metricInjection hJ S n
 
 /-! ### The Kolmogorov numbers are surjective -/
@@ -234,7 +234,7 @@ runaway search. With `T` opaque the same proof goes through at once. -/
 lemma deviationFromSubspace_comp_metricSurjection {Q : W →L[𝕜] X}
     (hQ : IsMetricSurjection Q) (S : X →L[𝕜] Y) (V : Submodule 𝕜 Y) :
     deviationFromSubspace (S.comp Q) V = deviationFromSubspace S V := by
-  show ‖V.mkQL.comp (S.comp Q)‖ = ‖V.mkQL.comp S‖
+  change ‖V.mkQL.comp (S.comp Q)‖ = ‖V.mkQL.comp S‖
   rw [← ContinuousLinearMap.comp_assoc]
   -- Abstract `T := π_V ∘ S` as an opaque operator and inline
   -- `IsMetricSurjection.norm_comp` (goal `‖T.comp Q‖ = ‖T‖`).

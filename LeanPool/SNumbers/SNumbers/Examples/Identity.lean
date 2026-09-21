@@ -310,10 +310,12 @@ theorem le_approximationNumber_idEmbed {p q : ℝ≥0∞} [Fact (1 ≤ p)] [Fact
   refine le_csInf (approximationSet_nonempty _ _) ?_
   rintro r ⟨L, hL, rfl⟩
   -- The kernel of a rank-`≤ n` operator has dimension `≥ m - n`.
-  have hker : m - n ≤ Module.finrank 𝕜 (LinearMap.ker (L : PiLp q (fun _ : Fin m => 𝕜) →ₗ[𝕜] PiLp p (fun _ : Fin m => 𝕜))) := by
+  have hker : m - n ≤ Module.finrank 𝕜 (LinearMap.ker (L : PiLp q (fun _ : Fin m => 𝕜) →ₗ[𝕜]
+      PiLp p (fun _ : Fin m => 𝕜))) := by
     have hrn := (L : PiLp q (fun _ : Fin m => 𝕜) →ₗ[𝕜]
       PiLp p (fun _ : Fin m => 𝕜)).finrank_range_add_finrank_ker
-    have hrange : Module.finrank 𝕜 (LinearMap.range (L : PiLp q (fun _ : Fin m => 𝕜) →ₗ[𝕜] PiLp p (fun _ : Fin m => 𝕜))) ≤ n :=
+    have hrange : Module.finrank 𝕜 (LinearMap.range (L : PiLp q (fun _ : Fin m => 𝕜) →ₗ[𝕜] PiLp
+        p (fun _ : Fin m => 𝕜))) ≤ n :=
       Module.finrank_le_of_rank_le hL
     rw [finrank_piLp] at hrn
     omega
@@ -337,6 +339,9 @@ theorem approximationNumber_idEmbed_eq {p q : ℝ≥0∞} [Fact (1 ≤ p)] [Fact
     (hpq : p ≤ q) (hq : q ≠ ∞) {n : ℕ} (hn : n < m) :
     approximationNumber (idEmbed (𝕜 := 𝕜) (m := m) p q) n
       = ((m - n : ℕ) : ℝ) ^ (1 / p.toReal - 1 / q.toReal) :=
-  le_antisymm (approximationNumber_idEmbed_le hpq hq hn.le) (le_approximationNumber_idEmbed hpq hq hn)
+  le_antisymm (approximationNumber_idEmbed_le hpq hq hn.le) (le_approximationNumber_idEmbed hpq
+      hq hn)
+
+end SNumbers
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

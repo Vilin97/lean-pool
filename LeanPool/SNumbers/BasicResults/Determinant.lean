@@ -42,9 +42,10 @@ theorem LinearMap.det_adjoint (T : E →ₗ[𝕜] E) :
 /-- If a basis `b` consists of eigenvectors of `T`, with `T (b i) = μ i • b i`, then
 `det T = ∏ᵢ μᵢ`. (The matrix of `T` in the basis `b` is `diagonal μ`.) -/
 theorem LinearMap.det_eq_prod_of_apply_eq_smul {R M ι : Type*} [CommRing R] [AddCommGroup M]
-    [Module R M] [Fintype ι] [DecidableEq ι] (b : Module.Basis ι R M) (T : M →ₗ[R] M)
+    [Module R M] [Fintype ι] (b : Module.Basis ι R M) (T : M →ₗ[R] M)
     (μ : ι → R) (h : ∀ i, T (b i) = μ i • b i) :
     LinearMap.det T = ∏ i, μ i := by
+  classical
   rw [← LinearMap.det_toMatrix b]
   have hmat : LinearMap.toMatrix b b T = Matrix.diagonal μ := by
     ext i j

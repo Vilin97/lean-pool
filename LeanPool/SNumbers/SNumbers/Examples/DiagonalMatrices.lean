@@ -314,7 +314,8 @@ normalisation (S5'), and `sₙ(id) = 0` for `n ≥ m` is the rank axiom (S4). -/
 
 /-- The unit diagonal is the identity operator. -/
 @[simp] lemma DiagCLM_one :
-    DiagCLM p (fun _ : Fin m => (1 : 𝕜)) = ContinuousLinearMap.id 𝕜 (PiLp p (fun _ : Fin m => 𝕜)) := by
+    DiagCLM p (fun _ : Fin m => (1 : 𝕜)) = ContinuousLinearMap.id 𝕜 (PiLp p (fun _ : Fin m =>
+        𝕜)) := by
   ext x i; simp
 
 /-- For every strict s-number sequence, the identity on `ℓ^p_m` has `sₙ(id) = 1`
@@ -543,11 +544,12 @@ theorem approximationNumber_DiagCLMpq_le (hpq : p < q) (hq : q ≠ ∞) (σ : Fi
         = ∑ i ∈ Finset.univ.filter (fun i : Fin m => n ≤ (i : ℕ)), ‖σ i‖ ^ diagExp p q := by
       refine Finset.sum_congr rfl fun i hi => ?_
       rw [Finset.mem_filter] at hi
-      simp only [hρ, if_neg (not_lt.mpr hi.2)]
-    have h2 : ∑ i ∈ Finset.univ.filter (fun i : Fin m => ¬ n ≤ (i : ℕ)), ‖ρ i‖ ^ diagExp p q = 0 := by
+      simp only [hρ, ite_eq_right (not_lt.mpr hi.2)]
+    have h2 : ∑ i ∈ Finset.univ.filter (fun i : Fin m => ¬ n ≤ (i : ℕ)), ‖ρ i‖ ^ diagExp p q =
+        0 := by
       refine Finset.sum_eq_zero fun i hi => ?_
       rw [Finset.mem_filter, not_le] at hi
-      simp only [hρ, if_pos hi.2, norm_zero, Real.zero_rpow hR.ne']
+      simp only [hρ, ite_eq_left hi.2, norm_zero, Real.zero_rpow hR.ne']
     rw [h1, h2, add_zero]
   calc approximationNumber (DiagCLMpq p q σ) n
       ≤ ‖DiagCLMpq p q σ - L‖ := approximationNumber_le_norm_sub hLrank
@@ -910,7 +912,8 @@ lemma piLp_norm_le_of_exponent_ge [Nonempty (Fin m)] (hqp : q ≤ p) (f : Fin m 
       rw [hfp j]
       calc ‖f j‖ = (‖f j‖ ^ q.toReal) ^ (1 / q.toReal) := by
             rw [← Real.rpow_mul (norm_nonneg _), mul_one_div, div_self hQ.ne', Real.rpow_one]
-        _ ≤ (∑ i, ‖(WithLp.toLp q f : PiLp q (fun _ : Fin m => 𝕜)) i‖ ^ q.toReal) ^ (1 / q.toReal) := by
+        _ ≤ (∑ i, ‖(WithLp.toLp q f : PiLp q (fun _ : Fin m => 𝕜)) i‖ ^ q.toReal) ^ (1 /
+            q.toReal) := by
             refine Real.rpow_le_rpow (Real.rpow_nonneg (norm_nonneg _) _) ?_ (by positivity)
             rw [← hfq j]
             exact Finset.single_le_sum
@@ -953,7 +956,8 @@ lemma piLp_norm_le_of_exponent_ge [Nonempty (Fin m)] (hqp : q ≤ p) (f : Fin m 
                 rw [← Real.rpow_add hpos]; congr 1; ring
             _ ≤ ‖f i‖ ^ q.toReal * SQ ^ ((p.toReal - q.toReal) / q.toReal) :=
                 mul_le_mul_of_nonneg_left hle (Real.rpow_nonneg (norm_nonneg _) _)
-      have hcombine : SQ * SQ ^ ((p.toReal - q.toReal) / q.toReal) = SQ ^ (p.toReal / q.toReal) := by
+      have hcombine : SQ * SQ ^ ((p.toReal - q.toReal) / q.toReal) = SQ ^ (p.toReal / q.toReal)
+          := by
         rcases eq_or_lt_of_le hSQnn with h0 | hpos
         · rw [← h0, zero_mul, Real.zero_rpow (by positivity : (0:ℝ) < p.toReal / q.toReal).ne']
         · have hstep : SQ * SQ ^ ((p.toReal - q.toReal) / q.toReal)

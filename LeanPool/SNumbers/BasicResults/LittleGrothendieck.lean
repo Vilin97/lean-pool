@@ -72,13 +72,13 @@ def signedSum (w : ι → G) (S J : Finset ι) : G :=
 lemma signedSum_insert_of_notMem {w : ι → G} {a : ι} {S J : Finset ι}
     (ha : a ∉ J) (haS : a ∉ S) :
     signedSum w S (insert a J) = signedSum w S J - w a := by
-  rw [signedSum, signedSum, Finset.sum_insert ha, if_neg haS]
+  rw [signedSum, signedSum, Finset.sum_insert ha, ite_eq_right haS]
   abel
 
 /-- Adding a new index `a ∉ J` inside the sign pattern adds `w a`. -/
 lemma signedSum_insert_insert {w : ι → G} {a : ι} {S J : Finset ι} (ha : a ∉ J) :
     signedSum w (insert a S) (insert a J) = signedSum w S J + w a := by
-  rw [signedSum, signedSum, Finset.sum_insert ha, if_pos (Finset.mem_insert_self a S)]
+  rw [signedSum, signedSum, Finset.sum_insert ha, ite_eq_left (Finset.mem_insert_self a S)]
   have hcongr : ∀ j ∈ J, (if j ∈ insert a S then w j else -w j)
       = if j ∈ S then w j else -w j := by
     intro j hj
@@ -219,6 +219,7 @@ lemma sum_norm_apply_le_norm_l1 (f : lp (fun _ : ι => 𝕜) 1) (J : Finset ι) 
     (by norm_num : (0 : ℝ) < (1 : ℝ≥0∞).toReal) f J
   simpa using h
 
+omit [DecidableEq ι] in
 /-- **Little Grothendieck inequality for `H → ℓ₁`.** If `w j` are the *rows* of
 `A : H → ℓ₁`, i.e. `⟪w j, x⟫ = (A x) j` for all `x`, then
 `∑_{j ∈ J} ‖w j‖² ≤ ‖A‖²` for every finite `J`.
@@ -230,6 +231,7 @@ adjoint. The signed sums are bounded here by
 theorem sum_norm_sq_row_le (A : H →L[𝕜] lp (fun _ : ι => 𝕜) 1) {w : ι → H}
     (hw : ∀ (j : ι) (x : H), (inner 𝕜 (w j) x : 𝕜) = A x j) (J : Finset ι) :
     ∑ j ∈ J, ‖w j‖ ^ 2 ≤ ‖A‖ ^ 2 := by
+  classical
   refine sum_norm_sq_le_sq_of_signedSum_le 𝕜 fun S _ => ?_
   set z := signedSum w S J with hz
   -- Expand `⟪z, z⟫` using the rows: the signs reappear on the coordinates of `A z`.
@@ -238,8 +240,8 @@ theorem sum_norm_sq_row_le (A : H →L[𝕜] lp (fun _ : ι => 𝕜) 1) {w : ι 
     rw [hz, signedSum, sum_inner]
     refine Finset.sum_congr rfl fun j _ => ?_
     by_cases hj : j ∈ S
-    · rw [if_pos hj, if_pos hj, hw]
-    · rw [if_neg hj, if_neg hj, inner_neg_left, hw]
+    · rw [ite_eq_left hj, ite_eq_left hj, hw]
+    · rw [ite_eq_right hj, ite_eq_right hj, inner_neg_left, hw]
   have hle : ‖z‖ ^ 2 ≤ ‖A‖ * ‖z‖ :=
     calc ‖z‖ ^ 2 = RCLike.re (inner 𝕜 z z : 𝕜) := (inner_self_eq_norm_sq z).symm
       _ ≤ ‖(inner 𝕜 z z : 𝕜)‖ := RCLike.re_le_norm _

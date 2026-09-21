@@ -118,7 +118,7 @@ lemma kolmogorovNumber_le_of_fin_net {S : X →L[𝕜] Y} {k : ℕ} {y : Fin k �
     kolmogorovNumber S k ≤ ε := by
   set V : Submodule 𝕜 Y := Submodule.span 𝕜 (Set.range y) with hV
   refine (kolmogorovNumber_le_deviation (rank_span_range_le y)).trans ?_
-  show ‖V.mkQL.comp S‖ ≤ ε
+  change ‖V.mkQL.comp S‖ ≤ ε
   refine ContinuousLinearMap.opNorm_le_of_unit_closedBall _ fun x hx => ?_
   obtain ⟨i, hi⟩ := hcov x hx
   -- `y i` lies in `V`, so it is killed by the quotient map.
@@ -147,7 +147,7 @@ lemma gelfandNumber_le_two_mul_of_fin_net {S : X →L[𝕜] Y} {k : ℕ} {y : Fi
   choose b hb_norm hb_app using fun i : Fin k => exists_dual_vector'' 𝕜 (y i)
   obtain ⟨M, hM_closed, hM_rank, hM_ker⟩ := exists_closed_codim_forall_eq_zero S b
   refine (gelfandNumber_le_deviation hM_closed hM_rank).trans ?_
-  show ‖S.comp M.subtypeL‖ ≤ 2 * ε
+  change ‖S.comp M.subtypeL‖ ≤ 2 * ε
   refine ContinuousLinearMap.opNorm_le_of_unit_closedBall _ fun z hz => ?_
   obtain ⟨i, hi⟩ := hcov (z : X) (by simpa using hz)
   -- The norming functional of `y i` vanishes on `S x`, so `‖y i‖` is small.

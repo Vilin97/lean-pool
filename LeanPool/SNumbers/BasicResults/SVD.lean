@@ -27,7 +27,7 @@ operators.
 
 * `SVD.IsCompactOperator.norm_isSingularValue` — every
   compact operator attains its operator norm as a singular value.
-* `SVD.IsCompactOperator.SVD` — the singular value
+* `SVD.IsCompactOperator.schmidtRepresentation` — the singular value
   decomposition / Schmidt representation `S x = Σ aₖ ⟨uₖ,x⟩ vₖ`. Needs the
   *infinite* iteration plus the convergence facts `σₖ → 0`, `HasSum`.
 * `SVD.IsCompactOperator.truncation_residual_eq_approxNumber` — Eckart–Young
@@ -96,10 +96,11 @@ an injective map that only hits unit vectors, is `Orthonormal`. This is how a
 finite subfamily of an SVD family — the indices with non-zero singular value — is
 recognised as an orthonormal basis of its span. -/
 lemma OrthonormalOrZero.orthonormal_comp {H : Type*} [NormedAddCommGroup H]
-    [InnerProductSpace 𝕜 H] {ι κ : Type*} [DecidableEq ι] [DecidableEq κ] {u : ι → H}
+    [InnerProductSpace 𝕜 H] {ι κ : Type*} {u : ι → H}
     (h : OrthonormalOrZero 𝕜 u) {g : κ → ι} (hg : Function.Injective g)
     (hn : ∀ k, ‖u (g k)‖ = 1) :
     Orthonormal 𝕜 (fun k => u (g k)) := by
+  classical
   rw [orthonormal_iff_ite]
   intro i j
   rw [h.inner_eq (g i) (g j)]
@@ -110,22 +111,23 @@ lemma OrthonormalOrZero.orthonormal_comp {H : Type*} [NormedAddCommGroup H]
 /-- Finite Pythagoras for an orthonormal-or-zero family:
 `‖∑ cₖ • uₖ‖² = ∑ ‖cₖ‖² ‖uₖ‖²` (zero vectors drop out). -/
 lemma OrthonormalOrZero.norm_sum_smul_sq {H : Type*} [NormedAddCommGroup H]
-    [InnerProductSpace 𝕜 H] {ι : Type*} [DecidableEq ι] {u : ι → H}
+    [InnerProductSpace 𝕜 H] {ι : Type*} {u : ι → H}
     (h : OrthonormalOrZero 𝕜 u) (c : ι → 𝕜) (s : Finset ι) :
     ‖∑ k ∈ s, c k • u k‖ ^ 2 = ∑ k ∈ s, ‖c k‖ ^ 2 * ‖u k‖ ^ 2 := by
+  classical
   have key : (inner 𝕜 (∑ k ∈ s, c k • u k) (∑ k ∈ s, c k • u k) : 𝕜)
       = ∑ k ∈ s, ((‖c k‖ ^ 2 * ‖u k‖ ^ 2 : ℝ) : 𝕜) := by
     rw [sum_inner]
     refine Finset.sum_congr rfl fun i hi => ?_
     rw [inner_sum, Finset.sum_eq_single i]
-    · rw [inner_smul_left, inner_smul_right, h.inner_eq i i, if_pos rfl,
+    · rw [inner_smul_left, inner_smul_right, h.inner_eq i i, ite_eq_left rfl,
         show (starRingEnd 𝕜) (c i) * (c i * (‖u i‖ : 𝕜) ^ 2)
             = ((starRingEnd 𝕜) (c i) * c i) * (‖u i‖ : 𝕜) ^ 2 from by ring,
         RCLike.conj_mul]
       push_cast; ring
     · intro j _ hji
       rw [inner_smul_left, inner_smul_right, h.inner_eq i j,
-        if_neg (fun e => hji e.symm), mul_zero, mul_zero]
+        ite_eq_right (fun e => hji e.symm), mul_zero, mul_zero]
     · intro hi'; exact absurd hi hi'
   rw [← @inner_self_eq_norm_sq 𝕜, key, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -151,10 +153,11 @@ lemma OrthonormalOrZero.smul_inner_eq {H : Type*} [NormedAddCommGroup H]
 vector does (`uₖ = 0 → cₖ = 0`), the zero vectors drop and we recover the
 clean `‖∑ cₖ • uₖ‖² = ∑ ‖cₖ‖²`. -/
 lemma OrthonormalOrZero.norm_sum_smul_sq_of_support {H : Type*} [NormedAddCommGroup H]
-    [InnerProductSpace 𝕜 H] {ι : Type*} [DecidableEq ι] {u : ι → H}
+    [InnerProductSpace 𝕜 H] {ι : Type*} {u : ι → H}
     (h : OrthonormalOrZero 𝕜 u) (c : ι → 𝕜) (s : Finset ι)
     (hc : ∀ k ∈ s, u k = 0 → c k = 0) :
     ‖∑ k ∈ s, c k • u k‖ ^ 2 = ∑ k ∈ s, ‖c k‖ ^ 2 := by
+  classical
   rw [h.norm_sum_smul_sq]
   refine Finset.sum_congr rfl fun k hk => ?_
   rcases h.1 k with h1 | h0
@@ -172,9 +175,10 @@ lemma OrthonormalOrZero.comp {H : Type*} [NormedAddCommGroup H]
 `∑ ‖⟪uₖ, x⟫‖² ≤ ‖x‖²`. Proof via the partial projection `p := ∑ ⟪uₖ,x⟫·uₖ`:
 `‖p‖² = ∑‖⟪uₖ,x⟫‖² = re⟪p, x⟫ ≤ ‖p‖·‖x‖`, hence `‖p‖ ≤ ‖x‖`. -/
 lemma OrthonormalOrZero.sum_inner_products_le {H : Type*} [NormedAddCommGroup H]
-    [InnerProductSpace 𝕜 H] {ι : Type*} [DecidableEq ι] {u : ι → H}
+    [InnerProductSpace 𝕜 H] {ι : Type*} {u : ι → H}
     (h : OrthonormalOrZero 𝕜 u) (x : H) (s : Finset ι) :
     ∑ k ∈ s, ‖inner 𝕜 (u k) x‖ ^ 2 ≤ ‖x‖ ^ 2 := by
+  classical
   set p : H := ∑ k ∈ s, (inner 𝕜 (u k) x : 𝕜) • u k with hpdef
   have hcsupp : ∀ k ∈ s, u k = 0 → (inner 𝕜 (u k) x : 𝕜) = 0 :=
     fun k _ hk => by rw [hk]; simp
@@ -273,11 +277,11 @@ theorem IsCompactOperator.norm_isSingularValue
   -- Trivial case: ‖S‖ = 0, so S = 0 and any unit pair works.
   by_cases hS0 : ‖S‖ = 0
   · have hSu : S u₀ = 0 := by
-      have h := S.le_opNorm u₀; simp [hS0, hu₀] at h; exact h
+      simpa [hS0, hu₀] using S.le_opNorm u₀
     have hSv : S.adjoint v₀ = 0 := by
       have h := S.adjoint.le_opNorm v₀
       rw [LinearIsometryEquiv.norm_map ContinuousLinearMap.adjoint S] at h
-      simp [hS0, hv₀] at h; exact h
+      simpa [hS0, hv₀] using h
     exact ⟨u₀, v₀, hu₀, hv₀, by simp [hSu, hS0], by simp [hSv, hS0]⟩
   -- Main case: ‖S‖ > 0.
   have hpos : 0 < ‖S‖ := (norm_nonneg _).lt_of_ne (Ne.symm hS0)
@@ -285,7 +289,7 @@ theorem IsCompactOperator.norm_isSingularValue
   -- Step 1. Maximising sequence (xₙ) of unit vectors with ‖S xₙ‖ → ‖S‖.
   choose x hxu hxb using fun n : ℕ => exists_unit_norm_apply_ge (S := S) hu₀ n
   have hxle : ∀ n, ‖S (x n)‖ ≤ ‖S‖ := fun n => by
-    have := S.le_opNorm (x n); simp [hxu n] at this; exact this
+    simpa [hxu n] using S.le_opNorm (x n)
   have hxlim : Tendsto (fun n => ‖S (x n)‖) atTop (𝓝 ‖S‖) := by
     have h0 : Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1)) atTop (𝓝 0) :=
       tendsto_one_div_add_atTop_nhds_zero_nat
@@ -321,7 +325,7 @@ theorem IsCompactOperator.norm_isSingularValue
     rw [hN] at hlim
     refine le_of_tendsto' hlim fun n => ?_
     have h : ‖inner 𝕜 u' (x (φ n))‖ ≤ ‖u'‖ * ‖x (φ n)‖ := norm_inner_le_norm _ _
-    simp [hxu (φ n)] at h; exact h
+    simpa [hxu (φ n)] using h
   have hu'eq : ‖u'‖ = ‖S‖ := le_antisymm hu'le hu'ge
   -- Step 4. u := ‖S‖⁻¹ • u' is a unit vector; the C–S equality limit gives xφₙ → u.
   set u : H₁ := (‖S‖ : 𝕜)⁻¹ • u' with hudef
@@ -501,7 +505,8 @@ private lemma maximizer_inner_eq_zero {H H' : Type u}
       rw [hz, inner_sub_right, hp, hw.inner_right_sum c (Finset.mem_univ k)]; simp [hc]
     rw [← inner_conj_symm, h1, map_zero]
   have hzp : (inner 𝕜 z p : 𝕜) = 0 := by
-    rw [hp, inner_sum]; exact Finset.sum_eq_zero fun k _ => by rw [inner_smul_right, hzw k, mul_zero]
+    rw [hp, inner_sum]; exact Finset.sum_eq_zero fun k _ => by rw [inner_smul_right, hzw k,
+        mul_zero]
   have hpyth := norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero z p hzp
   rw [show z + p = x₀ by rw [hz]; abel, hx₀] at hpyth
   have hzsq : (1 : ℝ) ≤ ‖z‖ ^ 2 := by nlinarith [hz1]
@@ -536,8 +541,8 @@ private lemma svd_joint [Nontrivial H₁] [Nontrivial H₂]
         by_cases hab : a = b
         · subst hab
           obtain ⟨hu, -, -, -⟩ := svd_spec S hS ↑a
-          rw [if_pos rfl, inner_self_eq_norm_sq_to_K, hu]; norm_num
-        · rw [if_neg hab]
+          rw [ite_eq_left rfl, inner_self_eq_norm_sq_to_K, hu]; norm_num
+        · rw [ite_eq_right hab]
           rcases lt_or_gt_of_ne (fun e => hab (Fin.ext e)) with hlt | hgt
           · exact ihorth ↑a ↑b hlt b.2 (lt_of_lt_of_le hσ (svd_norm_antitone S hS (le_of_lt b.2)))
           · rw [← inner_conj_symm,
@@ -591,7 +596,8 @@ private lemma svd_full_apply_left [Nontrivial H₁] [Nontrivial H₂]
     S (svdU S hS j) = (‖svdT S hS j‖ : 𝕜) • svdV S hS j := by
   obtain ⟨-, -, hSj, -⟩ := svd_spec S hS j
   have hLj : (∑ k ∈ Finset.range j,
-      (‖svdT S hS k‖ : 𝕜) • (innerSL 𝕜 (svdU S hS k)).smulRight (svdV S hS k)) (svdU S hS j) = 0 := by
+      (‖svdT S hS k‖ : 𝕜) • (innerSL 𝕜 (svdU S hS k)).smulRight (svdV S hS k)) (svdU S hS j) =
+          0 := by
     rw [sum_apply]
     refine Finset.sum_eq_zero fun k hk => ?_
     rw [smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply,
@@ -651,8 +657,8 @@ private lemma svd_joint_v [Nontrivial H₁] [Nontrivial H₂]
         by_cases hab : a = b
         · subst hab
           obtain ⟨-, hv, -, -⟩ := svd_spec S hS ↑a
-          rw [if_pos rfl, inner_self_eq_norm_sq_to_K, hv]; norm_num
-        · rw [if_neg hab]
+          rw [ite_eq_left rfl, inner_self_eq_norm_sq_to_K, hv]; norm_num
+        · rw [ite_eq_right hab]
           rcases lt_or_gt_of_ne (fun e => hab (Fin.ext e)) with hlt | hgt
           · exact ihorth ↑a ↑b hlt b.2 (lt_of_lt_of_le hσ (svd_norm_antitone S hS (le_of_lt b.2)))
           · rw [← inner_conj_symm,
@@ -696,7 +702,8 @@ private lemma svd_sigma_tendsto_zero [Nontrivial H₁] [Nontrivial H₂]
     ⟨0, by rintro _ ⟨n, rfl⟩; exact norm_nonneg _⟩
   have hlim : Tendsto (fun n => ‖svdT S hS n‖) atTop (𝓝 (⨅ n, ‖svdT S hS n‖)) :=
     tendsto_atTop_ciInf (svd_norm_antitone S hS) hbdd
-  rcases eq_or_lt_of_le (le_ciInf (fun n => norm_nonneg (svdT S hS n)) : (0 : ℝ) ≤ _) with hL | hLpos
+  rcases eq_or_lt_of_le (le_ciInf (fun n => norm_nonneg (svdT S hS n)) : (0 : ℝ) ≤ _) with hL |
+      hLpos
   · rwa [← hL] at hlim
   exfalso
   set L := ⨅ n, ‖svdT S hS n‖ with hLdef
@@ -712,7 +719,8 @@ private lemma svd_sigma_tendsto_zero [Nontrivial H₁] [Nontrivial H₂]
     have hvorth : (inner 𝕜 (svdV S hS m) (svdV S hS n) : 𝕜) = 0 := by
       rcases lt_or_gt_of_ne hmn with h | h
       · exact (svd_joint_v S hS (n + 1)).2 m n h (Nat.lt_succ_self n) han
-      · rw [← inner_conj_symm, (svd_joint_v S hS (m + 1)).2 n m h (Nat.lt_succ_self m) ham, map_zero]
+      · rw [← inner_conj_symm, (svd_joint_v S hS (m + 1)).2 n m h (Nat.lt_succ_self m) ham,
+          map_zero]
     have hperp : (inner 𝕜 (S (svdU S hS m)) (S (svdU S hS n)) : 𝕜) = 0 := by
       rw [svd_full_apply_left S hS m ham, svd_full_apply_left S hS n han,
         inner_smul_left, inner_smul_right, hvorth, mul_zero, mul_zero]
@@ -755,9 +763,6 @@ private theorem svd_of_eq_zero {S : H₁ →L[𝕜] H₂} (hS0 : S = 0) :
     fun _ h => absurd rfl h, fun _ h => absurd rfl h, tendsto_const_nhds,
     fun x => by simp [hS0]⟩
 
--- The full name `SVD.IsCompactOperator.SVD` repeats `SVD`, which reads correctly
--- here: it is the SVD of a compact operator.
-
 /-- **Singular value decomposition / Schmidt representation.**
 Every compact operator between Hilbert spaces has a
 Schmidt expansion
@@ -795,7 +800,7 @@ with orthonormal sequences `(uₖ) ⊆ H₁`, `(vₖ) ⊆ H₂` and singular val
 4. *Convergence.* `‖S - Σₖ<n σₖ • rankOne 𝕜 vₖ uₖ‖ = ‖Sₙ‖ = σₙ → 0`,
    so the Schmidt partial sums converge to `S` in operator norm; the
    pointwise `HasSum` follows. -/
-theorem IsCompactOperator.SVD
+theorem IsCompactOperator.schmidtRepresentation
     {S : H₁ →L[𝕜] H₂} (hS : IsCompactOperator S) :
     ∃ (σ : ℕ → ℝ) (u : ℕ → H₁) (v : ℕ → H₂),
       (∀ k, 0 ≤ σ k) ∧ Antitone σ ∧
@@ -818,13 +823,13 @@ theorem IsCompactOperator.SVD
   have hon_u : OrthonormalOrZero 𝕜 u' := by
     refine ⟨fun i => ?_, fun i j hij => ?_⟩
     · by_cases h : ‖svdT S hS i‖ = 0
-      · right; simp only [hu', if_pos h]
-      · left; simp only [hu', if_neg h]; exact (svd_spec S hS i).1
+      · right; simp only [hu', ite_eq_left h]
+      · left; simp only [hu', ite_eq_right h]; exact (svd_spec S hS i).1
     · by_cases hi : ‖svdT S hS i‖ = 0
-      · simp only [hu', if_pos hi, inner_zero_left]
+      · simp only [hu', ite_eq_left hi, inner_zero_left]
       · by_cases hj : ‖svdT S hS j‖ = 0
-        · simp only [hu', if_pos hj, inner_zero_right]
-        · simp only [hu', if_neg hi, if_neg hj]
+        · simp only [hu', ite_eq_left hj, inner_zero_right]
+        · simp only [hu', ite_eq_right hi, ite_eq_right hj]
           have hjpos : 0 < ‖svdT S hS j‖ := (norm_nonneg _).lt_of_ne (Ne.symm hj)
           have hipos : 0 < ‖svdT S hS i‖ := (norm_nonneg _).lt_of_ne (Ne.symm hi)
           rcases lt_or_gt_of_ne hij with h | h
@@ -834,13 +839,13 @@ theorem IsCompactOperator.SVD
   have hon_v : OrthonormalOrZero 𝕜 v' := by
     refine ⟨fun i => ?_, fun i j hij => ?_⟩
     · by_cases h : ‖svdT S hS i‖ = 0
-      · right; simp only [hv', if_pos h]
-      · left; simp only [hv', if_neg h]; exact (svd_spec S hS i).2.1
+      · right; simp only [hv', ite_eq_left h]
+      · left; simp only [hv', ite_eq_right h]; exact (svd_spec S hS i).2.1
     · by_cases hi : ‖svdT S hS i‖ = 0
-      · simp only [hv', if_pos hi, inner_zero_left]
+      · simp only [hv', ite_eq_left hi, inner_zero_left]
       · by_cases hj : ‖svdT S hS j‖ = 0
-        · simp only [hv', if_pos hj, inner_zero_right]
-        · simp only [hv', if_neg hi, if_neg hj]
+        · simp only [hv', ite_eq_left hj, inner_zero_right]
+        · simp only [hv', ite_eq_right hi, ite_eq_right hj]
           have hjpos : 0 < ‖svdT S hS j‖ := (norm_nonneg _).lt_of_ne (Ne.symm hj)
           have hipos : 0 < ‖svdT S hS i‖ := (norm_nonneg _).lt_of_ne (Ne.symm hi)
           rcases lt_or_gt_of_ne hij with h | h
@@ -851,14 +856,14 @@ theorem IsCompactOperator.SVD
     hon_u, hon_v, ?_, ?_, svd_sigma_tendsto_zero S hS, ?_⟩
   · -- `σₖ ≠ 0 → u'ₖ ≠ 0`.
     intro k hk
-    simp only [hu', if_neg hk]
+    simp only [hu', ite_eq_right hk]
     intro hc
     have h1 := (svd_spec S hS k).1
     rw [hc, norm_zero] at h1
     exact one_ne_zero h1.symm
   · -- `σₖ ≠ 0 → v'ₖ ≠ 0`.
     intro k hk
-    simp only [hv', if_neg hk]
+    simp only [hv', ite_eq_right hk]
     intro hc
     have h1 := (svd_spec S hS k).2.1
     rw [hc, norm_zero] at h1
@@ -866,7 +871,7 @@ theorem IsCompactOperator.SVD
   · -- The Schmidt `HasSum`.
     intro x
     set c : ℕ → 𝕜 := fun k => (‖svdT S hS k‖ : 𝕜) * inner 𝕜 (u' k) x with hc
-    show HasSum (fun k => c k • v' k) (S x)
+    change HasSum (fun k => c k • v' k) (S x)
     -- Bessel: `∑ ‖⟪u'ₖ, x⟫‖²` is summable.
     have hbessel : Summable (fun k => ‖inner 𝕜 (u' k) x‖ ^ 2) :=
       summable_of_sum_range_le (fun k => sq_nonneg _)
@@ -910,7 +915,7 @@ theorem IsCompactOperator.SVD
         by_cases h : ‖svdT S hS k‖ = 0
         · have hz : (‖svdT S hS k‖ : 𝕜) = 0 := by simp [h]
           simp only [hc, hz, zero_mul, zero_smul]
-        · simp only [hc, hu', hv', if_neg h]
+        · simp only [hc, hu', hv', ite_eq_right h]
       simp_rw [hLx]
       refine tendsto_iff_norm_sub_tendsto_zero.mpr ?_
       refine squeeze_zero (fun n => norm_nonneg _) (g := fun n => ‖svdT S hS n‖ * ‖x‖) ?_ ?_
@@ -997,7 +1002,7 @@ private lemma svd_truncation_rank_le {σ : ℕ → ℝ} {u : ℕ → H₁} {v : 
     refine Submodule.sum_mem _ fun k hk =>
       Submodule.smul_mem _ _ (Submodule.smul_mem _ _ ?_)
     exact Submodule.subset_span (Finset.mem_coe.mpr (Finset.mem_image_of_mem v hk))
-  show Module.rank 𝕜 (LinearMap.range (L : H₁ →ₗ[𝕜] H₂)) ≤ (m : Cardinal)
+  change Module.rank 𝕜 (LinearMap.range (L : H₁ →ₗ[𝕜] H₂)) ≤ (m : Cardinal)
   calc Module.rank 𝕜 (LinearMap.range (L : H₁ →ₗ[𝕜] H₂))
       ≤ Module.rank 𝕜 (Submodule.span 𝕜 (↑(Finset.image v (Finset.range m)) : Set H₂)) :=
         Submodule.rank_mono hrange
@@ -1095,17 +1100,17 @@ lemma svd_sigma_eq_approx {S : H₁ →L[𝕜] H₂} {σ : ℕ → ℝ} {u : ℕ
         intro i j
         by_cases hij : i = j
         · subst hij
-          rw [if_pos rfl, inner_self_eq_norm_sq_to_K,
+          rw [ite_eq_left rfl, inner_self_eq_norm_sq_to_K,
             (hu.1 (i : ℕ)).resolve_right (hut (i : ℕ) (hσi i))]; norm_num
-        · rw [if_neg hij]; exact hu.2 (Fin.val_injective.ne hij)
+        · rw [ite_eq_right hij]; exact hu.2 (Fin.val_injective.ne hij)
       have hv_orth : Orthonormal 𝕜 (fun i : Fin (m + 1) => v i) := by
         rw [orthonormal_iff_ite]
         intro i j
         by_cases hij : i = j
         · subst hij
-          rw [if_pos rfl, inner_self_eq_norm_sq_to_K,
+          rw [ite_eq_left rfl, inner_self_eq_norm_sq_to_K,
             (hv.1 (i : ℕ)).resolve_right (hvt (i : ℕ) (hσi i))]; norm_num
-        · rw [if_neg hij]; exact hv.2 (Fin.val_injective.ne hij)
+        · rw [ite_eq_right hij]; exact hv.2 (Fin.val_injective.ne hij)
       set M : Submodule 𝕜 H₁ :=
         Submodule.span 𝕜 (Set.range (fun i : Fin (m + 1) => u i)) with hMdef
       have he_li : LinearIndependent 𝕜 (fun i : Fin (m + 1) => u i) :=
@@ -1153,12 +1158,12 @@ lemma svd_sigma_eq_approx {S : H₁ →L[𝕜] H₂} {σ : ℕ → ℝ} {u : ℕ
 number: `‖S - L‖ = aₙ(S)` (the truncated SVD). In particular the infimum
 defining `aₙ(S)` is attained on Hilbert spaces. -/
 theorem IsCompactOperator.truncation_residual_eq_approxNumber
-    [Nontrivial H₁] [Nontrivial H₂]
     {S : H₁ →L[𝕜] H₂} (hS : IsCompactOperator S) (n : ℕ) :
     ∃ L : H₁ →L[𝕜] H₂, L.rank ≤ (n : Cardinal) ∧
       ‖S - L‖ = SNumbers.approximationNumber S n := by
   classical
-  obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, _hσlim, hsum⟩ := IsCompactOperator.SVD hS
+  obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, _hσlim, hsum⟩ :=
+      IsCompactOperator.schmidtRepresentation hS
   -- The truncated SVD `L x = Σ_{k<n} σₖ ⟨uₖ,x⟩ vₖ`, a sum of `n` rank-one maps.
   set L : H₁ →L[𝕜] H₂ :=
     ∑ k ∈ Finset.range n, (σ k : 𝕜) • (innerSL 𝕜 (u k)).smulRight (v k) with hLdef
@@ -1197,7 +1202,6 @@ inclusion `A : ℓ₂ⁿ⁺¹ →L[𝕜] H₁` with `‖A‖ ≤ 1` and a contra
 i.e. `B ∘ S ∘ A = diag(a₀(S), …, aₙ(S))`. Built from the top `n+1` singular
 pairs only. -/
 theorem IsCompactOperator.diagonalFactorisation
-    [Nontrivial H₁] [Nontrivial H₂]
     {S : H₁ →L[𝕜] H₂} (hS : IsCompactOperator S) (n : ℕ) :
     ∃ (A : EuclideanSpace 𝕜 (Fin (n + 1)) →L[𝕜] H₁)
       (B : H₂ →L[𝕜] EuclideanSpace 𝕜 (Fin (n + 1))),
@@ -1206,7 +1210,8 @@ theorem IsCompactOperator.diagonalFactorisation
         B (S (A (EuclideanSpace.single k (1 : 𝕜)))) =
           (SNumbers.approximationNumber S k : 𝕜) •
             EuclideanSpace.single k (1 : 𝕜) := by
-  obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, _hσlim, hsum⟩ := IsCompactOperator.SVD hS
+  obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, _hσlim, hsum⟩ :=
+      IsCompactOperator.schmidtRepresentation hS
   have hσeq : ∀ m, σ m = SNumbers.approximationNumber S m :=
     svd_sigma_eq_approx hσ0 hσanti hu hv hut hvt hsum
   -- `A : eₖ ↦ uₖ` and `B : y ↦ ∑ ⟨vₖ,·⟩ eₖ`, both contractions.
@@ -1275,10 +1280,10 @@ theorem IsCompactOperator.diagonalFactorisation
         refine (Finset.sum_eq_single k ?_ ?_).trans ?_
         · intro j _ hjk
           rw [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, hv.inner_eq ↑j ↑k,
-            if_neg (Fin.val_injective.ne hjk), zero_smul]
+            ite_eq_right (Fin.val_injective.ne hjk), zero_smul]
         · intro h; exact absurd (Finset.mem_univ k) h
         · rw [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, hv.inner_eq ↑k ↑k,
-            if_pos rfl, (hv.1 ↑k).resolve_right hvk]; norm_num
+            ite_eq_left rfl, (hv.1 ↑k).resolve_right hvk]; norm_num
       rw [hBvk]
 
 /-! ### Scalar factorisation (general operators)
@@ -1354,7 +1359,8 @@ theorem exists_scalar_factorisation
       Ring.inverse G with hGinvdef
     have hGinvG : Ginv.comp G = 1 := by rw [hGinvdef]; exact Ring.inverse_mul_cancel G hGunit
     have hGGinv : G.comp Ginv = 1 := by rw [hGinvdef]; exact Ring.mul_inverse_cancel G hGunit
-    set B : H₂ →L[𝕜] EuclideanSpace 𝕜 (Fin (n + 1)) := (c : 𝕜) • Ginv.comp (ContinuousLinearMap.adjoint T) with hBdef
+    set B : H₂ →L[𝕜] EuclideanSpace 𝕜 (Fin (n + 1)) := (c : 𝕜) • Ginv.comp
+        (ContinuousLinearMap.adjoint T) with hBdef
     refine ⟨A, B, hA1, ?_, ?_⟩
     · -- `‖B‖ ≤ 1`.
       refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun y => ?_
@@ -1505,7 +1511,8 @@ theorem mul_approximationNumber_le_of_factorization {T : H₁ →L[𝕜] H₃}
       ∑ k ∈ s, ‖ContinuousLinearMap.adjoint T₂ (v k)‖ ^ 2 ≤ b ^ 2)
     (ha0 : 0 ≤ a) (hb0 : 0 ≤ b) (n : ℕ) :
     ((n : ℝ) + 1) * SNumbers.approximationNumber T n ≤ b * a := by
-  obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, hσlim, hsum⟩ := IsCompactOperator.SVD hT
+  obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, hσlim, hsum⟩ :=
+      IsCompactOperator.schmidtRepresentation hT
   have hσeq : σ n = SNumbers.approximationNumber T n :=
     svd_sigma_eq_approx hσ0 hσanti hu hv hut hvt hsum n
   -- Cauchy–Schwarz over `k ≤ n`, then the two Hilbert–Schmidt bounds.

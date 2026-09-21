@@ -60,7 +60,7 @@ lemma rank_id_piLp (k : ℕ) :
   have h1 : (ContinuousLinearMap.id 𝕜 (PiLp p (fun _ : Fin k => 𝕜))).rank
       = Module.rank 𝕜 (PiLp p (fun _ : Fin k => 𝕜)) := by
     rw [ContinuousLinearMap.rank, ContinuousLinearMap.coe_id]
-    show Module.rank 𝕜 (LinearMap.range (LinearMap.id : _ →ₗ[𝕜] _)) = _
+    change Module.rank 𝕜 (LinearMap.range (LinearMap.id : _ →ₗ[𝕜] _)) = _
     rw [LinearMap.range_id]; exact Submodule.topEquiv.rank_eq
   rw [h1, ← Module.finrank_eq_rank, finrank_piLp]
 
@@ -103,7 +103,8 @@ lemma exists_flat_vector_weighted {V : Submodule 𝕜 (Fin m → 𝕜)} {k : ℕ
       k ≤ (Finset.univ.filter (fun i => ‖x i‖ = w i)).card := by
   classical
   set B : Set (Fin m → 𝕜) := {x | x ∈ V ∧ ∀ i, ‖x i‖ ≤ w i} with hBdef
-  have hBne : B.Nonempty := ⟨0, V.zero_mem, fun i => by simp only [Pi.zero_apply, norm_zero]; exact hw i⟩
+  have hBne : B.Nonempty := ⟨0, V.zero_mem, fun i => by
+    simpa only [Pi.zero_apply, norm_zero] using hw i⟩
   have hBeq : B = (V : Set (Fin m → 𝕜)) ∩ ⋂ i, {x : Fin m → 𝕜 | ‖x i‖ ≤ w i} := by
     ext x; simp only [hBdef, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, SetLike.mem_coe]
   have hBclosed : IsClosed B := by

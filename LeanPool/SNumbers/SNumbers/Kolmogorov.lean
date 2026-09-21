@@ -257,7 +257,7 @@ lemma deviationFromSubspace_comp_comp_map_le
   have h_ker :
       V ≤ LinearMap.ker (BL : Y →ₗ[𝕜] (Z ⧸ V.map (B : Y →ₗ[𝕜] Z))) := by
     intro v hv
-    show (V.map (B : Y →ₗ[𝕜] Z)).mkQL (B v) = 0
+    change (V.map (B : Y →ₗ[𝕜] Z)).mkQL (B v) = 0
     rw [Submodule.mkQL_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     exact ⟨v, hv, rfl⟩
   have h_BL_norm : ‖BL‖ ≤ ‖B‖ := by
@@ -274,7 +274,7 @@ lemma deviationFromSubspace_comp_comp_map_le
     mul_nonneg (mul_nonneg (norm_nonneg B) (norm_nonneg A))
       (norm_nonneg (V.mkQL.comp S))
   refine opNorm_le_bound _ h_bound_nn fun w => ?_
-  show ‖(V.map (B : Y →ₗ[𝕜] Z)).mkQL (B (S (A w)))‖ ≤
+  change ‖(V.map (B : Y →ₗ[𝕜] Z)).mkQL (B (S (A w)))‖ ≤
        ‖B‖ * ‖A‖ * ‖V.mkQL.comp S‖ * ‖w‖
   -- Apply the descent: `BL (S (A w)) = V.liftQL BL _ (V.mkQL (S (A w)))`.
   have h_apply : (V.map (B : Y →ₗ[𝕜] Z)).mkQL (B (S (A w)))
@@ -310,7 +310,7 @@ lemma kolmogorovNumber_comp_comp_le
         (deviationFromSubspace_comp_comp_map_le A S B V)
   have h_inf : kolmogorovNumber (B.comp (S.comp A)) n
                 ≤ ‖B‖ * ‖A‖ * kolmogorovNumber S n := by
-    show _ ≤ (‖B‖ * ‖A‖) • sInf
+    change _ ≤ (‖B‖ * ‖A‖) • sInf
       {r | ∃ V : Submodule 𝕜 Y,
             Module.rank 𝕜 V ≤ (n : Cardinal) ∧ r = deviationFromSubspace S V}
     rw [← Real.sInf_smul_of_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _))]
@@ -335,7 +335,7 @@ lemma kolmogorovNumber_eq_zero_of_rank_le {S : X →L[𝕜] Y} {n : ℕ}
     simp only [coe_comp, Function.comp_apply, zero_apply,
       Submodule.mkQL_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     exact LinearMap.mem_range_self (S : X →ₗ[𝕜] Y) x
-  show ‖V.mkQL.comp S‖ ≤ 0
+  change ‖V.mkQL.comp S‖ ≤ 0
   rw [h_comp_zero]; exact le_of_eq (ContinuousLinearMap.opNorm_zero)
 
 
@@ -411,7 +411,7 @@ lemma kolmogorovNumber_strict {X : Type u} [NormedAddCommGroup X]
       exact lt_irrefl _ hV_finrank_lt
     have : FiniteDimensional 𝕜 V := FiniteDimensional.finiteDimensional_submodule V
     have h_dev_eq : deviationFromSubspace I V = ‖V.mkQL‖ := by
-      show ‖V.mkQL.comp I‖ = ‖V.mkQL‖
+      change ‖V.mkQL.comp I‖ = ‖V.mkQL‖
       rw [hI_def, ContinuousLinearMap.comp_id]
     rw [h_dev_eq]
     exact one_le_norm_mkQL_of_proper hV_ne_top

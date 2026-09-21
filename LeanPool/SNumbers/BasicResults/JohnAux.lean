@@ -78,7 +78,7 @@ lemma one_sub_two_mul_sum_sq_le_prod_one_add {ι : Type*} (s : Finset ι) (a : �
     1 - 2 * ∑ i ∈ s, a i ^ 2 ≤ ∏ i ∈ s, (1 + a i) := by
   have key : Real.exp (∑ i ∈ s, (a i - 2 * a i ^ 2)) ≤ ∏ i ∈ s, (1 + a i) := by
     rw [Real.exp_sum]
-    exact Finset.prod_le_prod (fun i _ => (Real.exp_pos _).le)
+    exact Finset.prod_le_prod₀ (fun i _ => (Real.exp_pos _).le)
       fun i hi => Real.exp_sub_two_mul_sq_le (abs_le.mp (ha i hi)).1
   have hs : ∑ i ∈ s, (a i - 2 * a i ^ 2) = -(2 * ∑ i ∈ s, a i ^ 2) := by
     rw [Finset.sum_sub_distrib, hsum, Finset.mul_sum]
@@ -108,14 +108,23 @@ theorem IsCompact.convexHull {s : Set E} (hs : IsCompact s) :
   classical
   rcases Set.eq_empty_or_nonempty s with rfl | ⟨x₀, hx₀⟩
   · simp only [convexHull_empty]; exact isCompact_empty
-  have hK : IsCompact ((stdSimplex ℝ (Fin (Module.finrank ℝ E + 1))) ×ˢ
+  let weights : Set (Fin (Module.finrank ℝ E + 1) → ℝ) :=
+    {w | (∀ i, 0 ≤ w i) ∧ ∑ i, w i = 1}
+  have hweights : IsCompact weights := by
+    have hcontinuous : Continuous (fun w :
+        Convexity.StdSimplex ℝ (Fin (Module.finrank ℝ E + 1)) =>
+        (w.weights : Fin (Module.finrank ℝ E + 1) → ℝ)) := by fun_prop
+    have hcompact := isCompact_range hcontinuous
+    rw [Convexity.StdSimplex.range_toFun_comp_weights] at hcompact
+    simpa only [weights, Set.iInter_ofPred, Set.ofPred_and] using hcompact
+  have hK : IsCompact (weights ×ˢ
       Set.univ.pi fun _ : Fin (Module.finrank ℝ E + 1) => s) :=
-    IsCompact.prod (isCompact_stdSimplex ℝ (Fin (Module.finrank ℝ E + 1)))
+    IsCompact.prod hweights
       (isCompact_univ_pi fun _ => hs)
   have himg : _root_.convexHull ℝ s =
       (fun p : (Fin (Module.finrank ℝ E + 1) → ℝ) × (Fin (Module.finrank ℝ E + 1) → E) =>
           ∑ i, p.1 i • p.2 i) ''
-        ((stdSimplex ℝ (Fin (Module.finrank ℝ E + 1))) ×ˢ
+        (weights ×ˢ
           Set.univ.pi fun _ : Fin (Module.finrank ℝ E + 1) => s) := by
     apply Set.Subset.antisymm
     · intro x hx
@@ -142,13 +151,13 @@ theorem IsCompact.convexHull {s : Set E} (hs : IsCompact s) :
         fun j h => hfinj h.choose_spec
       have hw'f : ∀ j, w' (f j) = w j := fun j => by
         simp only [hw']
-        rw [dif_pos ⟨j, rfl⟩, hchoose j ⟨j, rfl⟩]
+        rw [dite_eq_left ⟨j, rfl⟩, hchoose j ⟨j, rfl⟩]
       have hz'f : ∀ j, z' (f j) = z j := fun j => by
         simp only [hz']
-        rw [dif_pos ⟨j, rfl⟩, hchoose j ⟨j, rfl⟩]
+        rw [dite_eq_left ⟨j, rfl⟩, hchoose j ⟨j, rfl⟩]
       have hw'zero : ∀ i, i ∉ Finset.univ.image f → w' i = 0 := fun i hi => by
         simp only [hw']
-        exact dif_neg fun h =>
+        exact dite_eq_right fun h =>
           hi (Finset.mem_image.mpr ⟨h.choose, Finset.mem_univ _, h.choose_spec⟩)
       have hw'sum : ∑ i, w' i = 1 := by
         rw [← Finset.sum_subset (Finset.subset_univ (Finset.univ.image f))
@@ -165,12 +174,12 @@ theorem IsCompact.convexHull {s : Set E} (hs : IsCompact s) :
       refine ⟨(w', z'), ⟨⟨fun i => ?_, hw'sum⟩, Set.mem_univ_pi.mpr fun i => ?_⟩, hsum⟩
       · simp only [hw']
         by_cases h : ∃ j, f j = i
-        · rw [dif_pos h]; exact (hw0 _).le
-        · rw [dif_neg h]
+        · rw [dite_eq_left h]; exact (hw0 _).le
+        · rw [dite_eq_right h]
       · simp only [hz']
         by_cases h : ∃ j, f j = i
-        · rw [dif_pos h]; exact hzs (Set.mem_range_self _)
-        · rw [dif_neg h]; exact hx₀
+        · rw [dite_eq_left h]; exact hzs (Set.mem_range_self _)
+        · rw [dite_eq_right h]; exact hx₀
     · rintro x ⟨⟨w, z⟩, ⟨hw, hz⟩, rfl⟩
       exact mem_convexHull_of_exists_fintype w z hw.1 hw.2
         (fun i => hz i (Set.mem_univ i)) rfl

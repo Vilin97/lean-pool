@@ -31,7 +31,7 @@ s S n  =  aₙ(S)            (Pietsch uniqueness on Hilbert spaces)
 * **Uniqueness** (`allSNumbers_eq_on_HilbertSpace`) gives the first step for
   *every* `s` at once — this is why it suffices to treat `aₙ`.
 * **Eckart–Young** (`SVD.svd_sigma_eq_approx`) gives the second step. It
-  depends on the SVD `IsCompactOperator.SVD` which works in finite dimension.
+  depends on the SVD `IsCompactOperator.schmidtRepresentation` which works in finite dimension.
 * The third step `σ^{proj} = σ` (the **project's singular values equal
   Mathlib's**, which are `√` of the eigenvalues of `S* ∘ S`) is
   `project_singularValues_eq`. It is proved by diagonalising `S* ∘ S` (the `uₖ`
@@ -86,7 +86,7 @@ private lemma svd_adjoint_apply {S : H₁ →L[𝕜] H₂} {σ : ℕ → ℝ} {u
       rw [hv.inner_eq k j]
       by_cases hjk : j = k
       · subst hjk; simp
-      · rw [if_neg (fun e => hjk e.symm), mul_zero, if_neg hjk]
+      · rw [ite_eq_right (fun e => hjk e.symm), mul_zero, ite_eq_right hjk]
     rw [hfun] at h
     exact h.unique (hasSum_ite_eq k _)
   rw [LinearMap.adjoint_inner_left, ContinuousLinearMap.coe_coe, hval, inner_smul_left,
@@ -212,13 +212,14 @@ private lemma card_le_finrank_eigenspace_pos {S : H₁ →L[𝕜] H₂} {σ : �
     rw [Submodule.span_le, Set.range_subset_iff]
     rintro ⟨i, hi⟩
     rw [SetLike.mem_coe, Module.End.mem_eigenspace_iff]
-    show T (u ↑i) = (ν : 𝕜) • u ↑i
+    change T (u ↑i) = (ν : 𝕜) • u ↑i
     rw [hTdef, svd_adjoint_comp_self_apply hu hv hut hvt hsum ↑i]
     rw [hKdef, Finset.mem_filter] at hi
     congr 1
     exact_mod_cast hi.2
   calc K.card = Fintype.card {i // i ∈ K} := (Fintype.card_coe K).symm
-    _ = finrank 𝕜 (Submodule.span 𝕜 (Set.range b)) := (finrank_span_eq_card hborth.linearIndependent).symm
+    _ = finrank 𝕜 (Submodule.span 𝕜 (Set.range b)) := (finrank_span_eq_card
+        hborth.linearIndependent).symm
     _ ≤ finrank 𝕜 (Module.End.eigenspace T (ν : 𝕜)) := Submodule.finrank_mono hmem
 
 open Module in
@@ -375,7 +376,7 @@ theorem project_singularValues_eq (S : H₁ →L[𝕜] H₂) (n : ℕ) :
   have : CompleteSpace H₂ := FiniteDimensional.complete 𝕜 H₂
   have hScompact : IsCompactOperator S := isCompactOperator_of_locallyCompactSpace_rng S
   obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, _hσlim, hsum⟩ :=
-    SVD.IsCompactOperator.SVD hScompact
+    SVD.IsCompactOperator.schmidtRepresentation hScompact
   -- `svd_sigma_eq_approx` gives `aₙ = σ n`; it remains to identify `σ n` with
   -- Mathlib's eigenvalue-`σₙ`.
   rw [← SVD.svd_sigma_eq_approx hσ0 hσanti hu hv hut hvt hsum n]

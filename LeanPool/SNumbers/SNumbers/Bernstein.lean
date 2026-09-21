@@ -105,7 +105,7 @@ lemma gainOnSubspace_le_norm (S : X →L[𝕜] Y) (M : Submodule 𝕜 X) :
       simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_exists]
       rintro x ⟨hx_mem, hx_ne, _⟩
       exact hx_ne (by rwa [hM, Submodule.mem_bot] at hx_mem)
-    show sInf _ ≤ ‖S‖
+    change sInf _ ≤ ‖S‖
     rw [h_empty, Real.sInf_empty]; exact norm_nonneg _
   · obtain ⟨x, hx_mem, hx_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hM
     exact (gainOnSubspace_le_div hx_mem hx_ne).trans (S.ratio_le_opNorm x)
@@ -458,7 +458,7 @@ lemma bernsteinNumber_comp_comp_le
     simp only [not_forall, Classical.not_not, ne_eq] at h_inj
     obtain ⟨x, hx_mem, hx_ne, hAx_zero⟩ := h_inj
     have h_zero : ‖B.comp (S.comp A) x‖ / ‖x‖ = 0 := by
-      show ‖B (S (A x))‖ / ‖x‖ = 0
+      change ‖B (S (A x))‖ / ‖x‖ = 0
       rw [hAx_zero, map_zero, map_zero, norm_zero, zero_div]
     linarith [(gainOnSubspace_le_div hx_mem hx_ne).trans (le_of_eq h_zero),
       mul_nonneg (mul_nonneg (norm_nonneg B) (bernsteinNumber_nonneg S n))

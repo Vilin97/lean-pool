@@ -60,7 +60,7 @@ lemma stepDown_eq_one (t : ℝ) (n : ℕ) {s : ℝ} (hs : t ≤ s) : stepDown t 
 smaller value below the threshold (and `1` above). -/
 lemma stepDown_antitone (t s : ℝ) : Antitone (fun n => stepDown t n s) := by
   intro m n hmn
-  show stepDown t n s ≤ stepDown t m s
+  change stepDown t n s ≤ stepDown t m s
   rcases le_total t s with hts | hst
   · rw [stepDown_eq_one t n hts, stepDown_eq_one t m hts]
   · refine max_le_max le_rfl (min_le_min le_rfl ?_)
@@ -83,7 +83,8 @@ lemma stepDown_ramp_bound (t : ℝ) (n : ℕ) (s : ℝ) :
       abs_of_nonpos (mul_nonpos_of_nonpos_of_nonneg (by linarith) (stepDown_nonneg t n s)),
       show -((s - t) * stepDown t n s) = (t - s) * stepDown t n s by ring]
     refine (mul_le_mul_of_nonneg_left
-      (max_le_max le_rfl (min_le_right (1 : ℝ) _) : stepDown t n s ≤ max 0 (1 + ((n : ℝ) + 1) * (s - t)))
+      (max_le_max le_rfl (min_le_right (1 : ℝ) _) : stepDown t n s ≤ max 0 (1 + ((n : ℝ) + 1) *
+          (s - t)))
       (by linarith : (0 : ℝ) ≤ t - s)).trans ?_
     rcases le_total (1 + ((n : ℝ) + 1) * (s - t)) 0 with h | h
     · rw [max_eq_left h, mul_zero]; positivity
@@ -159,7 +160,7 @@ theorem exists_spectral_projection_complex [Nontrivial H₁]
       cfc_nonneg (fun s _ => stepDown_nonneg (c ^ 2) n s)
     rwa [ContinuousLinearMap.le_def, sub_zero] at h0
   have hTanti : Antitone T := fun m n hmn => by
-    show cfc (stepDown (c ^ 2) n) P ≤ cfc (stepDown (c ^ 2) m) P
+    change cfc (stepDown (c ^ 2) n) P ≤ cfc (stepDown (c ^ 2) m) P
     exact (cfc_le_iff (stepDown (c ^ 2) n) (stepDown (c ^ 2) m) P
       (stepDown_continuous (c ^ 2) n).continuousOn
       (stepDown_continuous (c ^ 2) m).continuousOn).mpr
@@ -172,7 +173,7 @@ theorem exists_spectral_projection_complex [Nontrivial H₁]
   -- `P` is positive, hence its spectrum is nonnegative.
   have hPpos : P.IsPositive := by
     refine ⟨fun x y => ?_, fun u => ?_⟩
-    · show ⟪P x, y⟫_ℂ = ⟪x, P y⟫_ℂ
+    · change ⟪P x, y⟫_ℂ = ⟪x, P y⟫_ℂ
       rw [← ContinuousLinearMap.adjoint_inner_right, ContinuousLinearMap.isSelfAdjoint_iff'.mp hPsa]
     · rw [ContinuousLinearMap.reApplyInnerSelf_apply, ← hSnorm u]; positivity
   have hP0 : (0 : H₁ →L[ℂ] H₁) ≤ P := by
@@ -212,7 +213,10 @@ theorem exists_spectral_projection_complex [Nontrivial H₁]
     rcases le_total s (c ^ 2) with hsc | hsc
     · have h2 : (1 - stepDown (c ^ 2) n s) ^ 2 ≤ 1 := pow_le_one₀ hg0 hg1
       nlinarith [mul_nonneg (sub_nonneg.mpr h2) hs0, hsc]
-    · rw [stepDown_eq_one (c ^ 2) n hsc]; simp; positivity
+    · rw [stepDown_eq_one (c ^ 2) n hsc]
+      simp only [sub_self, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+        zero_mul, ge_iff_le]
+      positivity
   have hQsa : ∀ n, IsSelfAdjoint (1 - T n) := fun n => by
     rw [ContinuousLinearMap.isSelfAdjoint_iff', map_sub, ContinuousLinearMap.adjoint_one,
       ContinuousLinearMap.isSelfAdjoint_iff'.mp (hTpos n).isSelfAdjoint]
@@ -257,7 +261,8 @@ theorem exists_spectral_projection_complex [Nontrivial H₁]
           (𝓝 (((P - c ^ 2 • (1 : H₁ →L[ℂ] H₁)).comp E) x)) := by
         simp only [ContinuousLinearMap.comp_apply]
         exact ((P - c ^ 2 • (1 : H₁ →L[ℂ] H₁)).continuous.tendsto _).comp (hEtend x)
-      have h2 : Tendsto (fun n => ((P - c ^ 2 • (1 : H₁ →L[ℂ] H₁)).comp (T n)) x) atTop (𝓝 (A x)) := by
+      have h2 : Tendsto (fun n => ((P - c ^ 2 • (1 : H₁ →L[ℂ] H₁)).comp (T n)) x) atTop (𝓝 (A
+          x)) := by
         rw [tendsto_iff_norm_sub_tendsto_zero]
         refine squeeze_zero (fun n => norm_nonneg _) (fun n => ?_) (by simpa using hb.mul_const ‖x‖)
         rw [← sub_apply]
@@ -265,7 +270,7 @@ theorem exists_spectral_projection_complex [Nontrivial H₁]
       exact tendsto_nhds_unique h1 h2
     have hEA : E.comp A = A.comp E := by
       refine commute_of_tendsto (fun n => ?_) hEtend
-      show (cfc (stepDown (c ^ 2) n) P).comp A = A.comp (cfc (stepDown (c ^ 2) n) P)
+      change (cfc (stepDown (c ^ 2) n) P).comp A = A.comp (cfc (stepDown (c ^ 2) n) P)
       rw [hA_def, hcomp _ _ (by fun_prop) (by fun_prop), hcomp _ _ (by fun_prop) (by fun_prop)]
       congr 1; ext s; ring
     have hEcomp0 : (0 : H₁ →L[ℂ] H₁) ≤ E.comp A := Commute.mul_nonneg hE0 hA0 hEA

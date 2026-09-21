@@ -65,7 +65,7 @@ theorem exists_spectral_projection (S : H₁ →L[𝕜] H₂) {c : ℝ} (hc0 : 0
       symm
       rw [ContinuousLinearMap.eq_adjoint_iff]
       intro x y
-      show re (inner 𝕜 (adjoint S x) y) = re (inner 𝕜 x (S y))
+      change re (inner 𝕜 (adjoint S x) y) = re (inner 𝕜 x (S y))
       rw [ContinuousLinearMap.adjoint_inner_left]
     obtain ⟨E₀, ha, hb, hcomm⟩ := exists_spectral_projection_real (S.restrictScalars ℝ) hc0
     -- `E₀` commutes with scalar multiplication, hence is `𝕜`-linear.

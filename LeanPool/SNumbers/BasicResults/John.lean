@@ -15,7 +15,11 @@ import Mathlib.Analysis.Normed.Group.Quotient
 import Mathlib.Analysis.Normed.Module.DoubleDual
 import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Analysis.Normed.Module.HahnBanach
-import Mathlib.Analysis.Seminorm
+import Mathlib.Algebra.Order.Algebra
+import Mathlib.Analysis.Normed.Group.Basic
+import Mathlib.Data.EReal.Operations
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.Topology.Order.Compact
 
 /-!
@@ -376,7 +380,7 @@ lemma mem_contact_of_apply_eq_one {q : Seminorm 𝕜 (EuclideanSpace 𝕜 (Fin k
 /-- The map `u ↦ u ⊗ u` sending a vector to its rank-one projection is continuous. -/
 lemma continuous_rankOneSA :
     Continuous fun u : EuclideanSpace 𝕜 (Fin k) => rankOneSA (𝕜 := 𝕜) u := by
-  show Continuous fun u : EuclideanSpace 𝕜 (Fin k) => (innerSL 𝕜 u).smulRight u
+  change Continuous fun u : EuclideanSpace 𝕜 (Fin k) => (innerSL 𝕜 u).smulRight u
   have h : Continuous fun u : EuclideanSpace 𝕜 (Fin k) =>
       ContinuousLinearMap.smulRightL 𝕜 (EuclideanSpace 𝕜 (Fin k))
         (EuclideanSpace 𝕜 (Fin k)) (innerSL 𝕜 u) :=
@@ -456,7 +460,7 @@ lemma exists_selfAdjoint_of_not_mem_convexHull (hk : 0 < k)
   have hHsa : IsSelfAdjoint H := by
     rw [ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric]
     intro x y
-    show ⟪H x, y⟫_𝕜 = ⟪x, H y⟫_𝕜
+    change ⟪H x, y⟫_𝕜 = ⟪x, H y⟫_𝕜
     rw [hHapp x, hHapp y]
     simp only [inner_sub_left, inner_sub_right, inner_smul_left, inner_smul_right,
       inner_add_left, inner_add_right, RCLike.conj_ofReal,
@@ -474,7 +478,8 @@ lemma exists_selfAdjoint_of_not_mem_convexHull (hk : 0 < k)
   have htrH : LinearMap.trace 𝕜 (EuclideanSpace 𝕜 (Fin k))
       (H : EuclideanSpace 𝕜 (Fin k) →ₗ[𝕜] EuclideanSpace 𝕜 (Fin k)) = 0 := by
     have hkK : ((k : ℕ) : 𝕜) ≠ 0 := Nat.cast_ne_zero.mpr hk.ne'
-    rw [hH, ContinuousLinearMap.toLinearMap_sub, map_sub, htrH₀, ContinuousLinearMap.toLinearMap_smul,
+    rw [hH, ContinuousLinearMap.toLinearMap_sub, map_sub, htrH₀,
+        ContinuousLinearMap.toLinearMap_smul,
       map_smul, ContinuousLinearMap.coe_id, LinearMap.trace_id, finrank_euclideanSpace_fin,
       hτ, smul_eq_mul]
     push_cast
@@ -664,7 +669,44 @@ lemma one_sub_le_norm_det_one_add_smul
         refine Finset.prod_congr rfl fun i _ => ?_
         rw [RCLike.norm_ofReal, abs_of_pos (hfac_pos i)]
 
--- The eigenvalue/determinant bookkeeping below needs more than the default budget.
+private lemma scaled_perturbation_det_gain {k : ℕ} (hk : 0 < k)
+    {CH t δ ρ D : ℝ} (ht0 : 0 < t) (_hδ : 0 < δ) (hρ : ρ = t * δ / 4)
+    (hρ0 : 0 < ρ) (hρhalf : ρ ≤ 1 / 2)
+    (hbound4 : t * (20 * ((k : ℝ) * CH ^ 2 + 1)) ≤ δ)
+    (hdetT : 1 - 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2)) ≤ D) :
+    1 < (1 - ρ)⁻¹ ^ k * D := by
+  have h1ρ : 0 < 1 - ρ := by linarith
+  -- arithmetic: the first-order gain beats the second-order loss
+  have hcge : 1 + ρ ≤ (1 - ρ)⁻¹ := by
+    have h2 : (1 + ρ) * (1 - ρ) ≤ 1 := by nlinarith [sq_nonneg ρ]
+    calc 1 + ρ = (1 + ρ) * (1 - ρ) * (1 - ρ)⁻¹ := by
+          rw [mul_assoc, mul_inv_cancel₀ h1ρ.ne', mul_one]
+      _ ≤ 1 * (1 - ρ)⁻¹ := mul_le_mul_of_nonneg_right h2 (by positivity)
+      _ = (1 - ρ)⁻¹ := one_mul _
+  have hc1 : 1 ≤ (1 - ρ)⁻¹ := by linarith
+  have hck : 1 + ρ ≤ (1 - ρ)⁻¹ ^ k := le_trans hcge (le_self_pow₀ hc1 hk.ne')
+  have hsmall : 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2)) * (1 + ρ) < ρ := by
+    have hρ32 : 1 + ρ ≤ 3 / 2 := by linarith
+    have h1 : t * ((k : ℝ) * CH ^ 2 + 1) ≤ δ / 20 := by nlinarith [hbound4]
+    have h2 : t * ((k : ℝ) * CH ^ 2) ≤ δ / 20 := by nlinarith [ht0]
+    have h3 : 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2)) * (1 + ρ)
+        ≤ 3 * (t * (t * ((k : ℝ) * CH ^ 2))) := by
+      nlinarith [mul_nonneg (mul_nonneg ht0.le ht0.le)
+        (by positivity : (0 : ℝ) ≤ (k : ℝ) * CH ^ 2), hρ32, hρ0]
+    have h4 : t * (t * ((k : ℝ) * CH ^ 2)) ≤ t * (δ / 20) :=
+      mul_le_mul_of_nonneg_left h2 ht0.le
+    have h5 : 3 * (t * (δ / 20)) < ρ := by
+      rw [hρ]
+      nlinarith [mul_pos ht0 _hδ]
+    linarith [h3, h4, h5]
+  have hprod0 : 0 ≤ 1 - 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2)) := by
+    nlinarith [hsmall, hρ0, hρhalf, mul_nonneg (mul_nonneg (sq_nonneg t)
+      (by positivity : (0 : ℝ) ≤ (k : ℝ) * CH ^ 2)) hρ0.le]
+  calc (1 : ℝ) < (1 + ρ) * (1 - 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2))) := by
+        nlinarith [hsmall]
+    _ ≤ (1 - ρ)⁻¹ ^ k * (1 - 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2))) :=
+        mul_le_mul_of_nonneg_right hck hprod0
+    _ ≤ (1 - ρ)⁻¹ ^ k * D := mul_le_mul_of_nonneg_left hdetT (by positivity)
 
 /-- **First-order optimality in John position.** If the identity has maximal `‖det‖`
 among feasible operators for `q` (with `q ≤ ‖·‖`), then no self-adjoint trace-zero `H`
@@ -782,39 +824,9 @@ lemma no_neg_direction_of_maxVolume (hk : 0 < k)
       (by rw [← hCH]; exact htCH)
     rw [hT, hCH]
     exact h
-  -- arithmetic: the first-order gain beats the second-order loss
-  have hcge : 1 + ρ ≤ (1 - ρ)⁻¹ := by
-    have h2 : (1 + ρ) * (1 - ρ) ≤ 1 := by nlinarith [sq_nonneg ρ]
-    calc 1 + ρ = (1 + ρ) * (1 - ρ) * (1 - ρ)⁻¹ := by
-          rw [mul_assoc, mul_inv_cancel₀ h1ρ.ne', mul_one]
-      _ ≤ 1 * (1 - ρ)⁻¹ := mul_le_mul_of_nonneg_right h2 (by positivity)
-      _ = (1 - ρ)⁻¹ := one_mul _
-  have hc1 : 1 ≤ (1 - ρ)⁻¹ := by linarith
-  have hck : 1 + ρ ≤ (1 - ρ)⁻¹ ^ k := le_trans hcge (le_self_pow₀ hc1 hk.ne')
-  have hsmall : 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2)) * (1 + ρ) < ρ := by
-    have hρ32 : 1 + ρ ≤ 3 / 2 := by linarith
-    have h1 : t * ((k : ℝ) * CH ^ 2 + 1) ≤ δ / 20 := by nlinarith [hbound4]
-    have h2 : t * ((k : ℝ) * CH ^ 2) ≤ δ / 20 := by nlinarith [ht0]
-    have h3 : 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2)) * (1 + ρ)
-        ≤ 3 * (t * (t * ((k : ℝ) * CH ^ 2))) := by
-      nlinarith [mul_nonneg (mul_nonneg ht0.le ht0.le)
-        (by positivity : (0 : ℝ) ≤ (k : ℝ) * CH ^ 2), hρ32, hρ0]
-    have h4 : t * (t * ((k : ℝ) * CH ^ 2)) ≤ t * (δ / 20) :=
-      mul_le_mul_of_nonneg_left h2 ht0.le
-    have h5 : 3 * (t * (δ / 20)) < ρ := by
-      rw [hρ]
-      nlinarith [mul_pos ht0 hδ]
-    linarith [h3, h4, h5]
-  have hprod0 : 0 ≤ 1 - 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2)) := by
-    nlinarith [hsmall, hρ0, hρhalf, mul_nonneg (mul_nonneg (sq_nonneg t)
-      (by positivity : (0 : ℝ) ≤ (k : ℝ) * CH ^ 2)) hρ0.le]
   have hgt : 1 < ‖((((1 - ρ)⁻¹ : ℝ) : 𝕜) • T).det‖ := by
     rw [hdetS]
-    calc (1 : ℝ) < (1 + ρ) * (1 - 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2))) := by
-          nlinarith [hsmall]
-      _ ≤ (1 - ρ)⁻¹ ^ k * (1 - 2 * (t ^ 2 * ((k : ℝ) * CH ^ 2))) :=
-          mul_le_mul_of_nonneg_right hck hprod0
-      _ ≤ (1 - ρ)⁻¹ ^ k * ‖T.det‖ := mul_le_mul_of_nonneg_left hdetT (by positivity)
+    exact scaled_perturbation_det_gain hk ht0 hδ hρ hρ0 hρhalf hbound4 hdetT
   exact absurd (hmax _ hSfeas) (not_le.mpr hgt)
 
 /-- **John decomposition of identity** — the classical core of John's ellipsoid
@@ -1091,7 +1103,7 @@ flip `Φ.flip : W → (𝕜^k)*` is injective (a nonzero `v` is separated by som
 functional) between spaces of equal finite dimension `k`, hence surjective, so
 the Riesz vector of `u₀` is hit by some `w`. The norm bound is then the contact
 inequality read through `‖Φ z‖ = q z`. -/
-private lemma exists_witness_of_contact [FiniteDimensional 𝕜 W]
+private lemma exists_witness_of_contact
     (hkW : Module.finrank 𝕜 W = k)
     (Φ : EuclideanSpace 𝕜 (Fin k) ≃L[𝕜] StrongDual 𝕜 W)
     {q : Seminorm 𝕜 (EuclideanSpace 𝕜 (Fin k))} (hqΦ : ∀ z, ‖Φ z‖ = q z)
@@ -1164,7 +1176,7 @@ private lemma sum_weight_smul_witness_eq
   have hLHS : (NormedSpace.inclusionInDoubleDualLi (E := W) 𝕜)
       (∑ i, ((c i : 𝕜) * (Φ (u i)) v) • w i) g
       = ∑ i, ((c i : 𝕜) * (Φ (u i)) v) * g (w i) := by
-    show g (∑ i, ((c i : 𝕜) * (Φ (u i)) v) • w i) = _
+    change g (∑ i, ((c i : 𝕜) * (Φ (u i)) v) • w i) = _
     rw [map_sum]
     exact Finset.sum_congr rfl fun i _ => by rw [map_smul, smul_eq_mul]
   have hRHS : (NormedSpace.inclusionInDoubleDualLi (E := W) 𝕜) v g = g v := rfl
@@ -1277,7 +1289,7 @@ theorem exists_projection_ker {X : Type u} [NormedAddCommGroup X] [NormedSpace �
   refine ⟨P, ?_, ?_, ?_⟩
   · -- `P ∘ P = P`, since `π ∘ P = π`.
     ext y
-    show P (P y) = P y
+    change P (P y) = P y
     rw [hPapply (P y), hπP y, ← hPapply y]
   · -- `ker P = M`.
     ext x0

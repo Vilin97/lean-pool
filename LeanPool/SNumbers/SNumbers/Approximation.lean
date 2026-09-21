@@ -226,7 +226,7 @@ lemma approximationNumber_comp_comp_le
   have h_inf : approximationNumber (B.comp (S.comp A)) n
                   ≤ ‖B‖ * ‖A‖ * approximationNumber S n := by
     -- Rewrite the right-hand side as a scalar action on the infimum.
-    show _ ≤ (‖B‖ * ‖A‖) • sInf (approximationSet S n)
+    change _ ≤ (‖B‖ * ‖A‖) • sInf (approximationSet S n)
     rw [← Real.sInf_smul_of_nonneg h_BA_nonneg]
     -- Now the goal is `a_n (B S A) ≤ sInf ((‖B‖ * ‖A‖) • approximationSet S n)`.
     refine le_csInf ((approximationSet_nonempty S n).image _) ?_

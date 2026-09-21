@@ -19,7 +19,7 @@ sequences sharply, and this file collects the whole picture.
 For the **Gelfand** and **Kolmogorov** numbers, decay to zero is equivalent to
 compactness over any Banach space:
 
-`S` is a compact operator ⟺ `cₙ(S) → 0` ⟺ `dₙ(S) → 0`.
+`S` is a compact operator ↔ `cₙ(S) → 0` ↔ `dₙ(S) → 0`.
 
 Both proofs run through total boundedness of `S(B_X)`, exactly as the entropy
 criterion `SNumbers.isCompactOperator_iff_tendsto_entropyNumber` does.
@@ -62,7 +62,7 @@ operators. On Hilbert spaces the Schmidt representation repairs this, and then
   `SNumbers.tendsto_gelfandNumber_iff_totallyBounded` — the same statements
   without any completeness assumption on the target space.
 * `SVD.IsCompactOperator.isApproximable`,
-  `SVD.isApproximable_iff_isCompactOperator` — compact ⟺ approximable on
+  `SVD.isApproximable_iff_isCompactOperator` — compact ↔ approximable on
   Hilbert spaces.
 * `SVD.isCompactOperator_iff_tendsto_sn` — on Hilbert spaces, compactness is
   equivalent to `sₙ(S) → 0` for *every* `s`-number sequence `s`.
@@ -422,13 +422,14 @@ variable [NormedAddCommGroup H₁] [InnerProductSpace 𝕜 H₁] [CompleteSpace 
 variable [NormedAddCommGroup H₂] [InnerProductSpace 𝕜 H₂] [CompleteSpace H₂]
 
 /-- On Hilbert spaces, every compact operator is approximable. The singular
-value decomposition `IsCompactOperator.SVD` produces singular values `σₙ → 0`
+value decomposition `IsCompactOperator.schmidtRepresentation` produces singular values `σₙ → 0`
 which, by Eckart–Young (`svd_sigma_eq_approx`), equal the approximation numbers
 `aₙ(S)`; hence `aₙ(S) → 0`. -/
 theorem IsCompactOperator.isApproximable {S : H₁ →L[𝕜] H₂}
     (hS : IsCompactOperator S) :
     IsApproximable S := by
-  obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, hσlim, hsum⟩ := IsCompactOperator.SVD hS
+  obtain ⟨σ, u, v, hσ0, hσanti, hu, hv, hut, hvt, hσlim, hsum⟩ :=
+    IsCompactOperator.schmidtRepresentation hS
   exact (Filter.tendsto_congr fun n =>
     (svd_sigma_eq_approx hσ0 hσanti hu hv hut hvt hsum n).symm).mpr hσlim
 

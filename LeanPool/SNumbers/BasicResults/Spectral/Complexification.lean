@@ -46,7 +46,7 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 
 /-- The **complexification** of a real inner product space `H`, modelled as the
 pair type `H × H`; the pair `(x, y)` represents the formal sum `x + i·y`. -/
-def Complexification (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] :
+def Complexification (H : Type*) :
     Type _ := H × H
 
 namespace Complexification
@@ -63,7 +63,9 @@ projection lemmas `mk_fst`/`mk_snd` below keeps every goal in this file stated i
 terms the simp set can act on. -/
 def mk (x y : H) : Complexification H := (x, y)
 
+omit [NormedAddCommGroup H] [InnerProductSpace ℝ H] in
 @[simp] lemma mk_fst (x y : H) : (mk x y).1 = x := rfl
+omit [NormedAddCommGroup H] [InnerProductSpace ℝ H] in
 @[simp] lemma mk_snd (x y : H) : (mk x y).2 = y := rfl
 
 /-- Complex scalar multiplication: `(a + b·i) • (x, y) = (a·x - b·y, a·y + b·x)`. -/
@@ -76,11 +78,17 @@ instance : SMul ℂ (Complexification H) where
 @[simp] lemma smul_snd (c : ℂ) (u : Complexification H) :
     (c • u).2 = c.re • u.2 + c.im • u.1 := rfl
 
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma add_fst (u v : Complexification H) : (u + v).1 = u.1 + v.1 := rfl
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma add_snd (u v : Complexification H) : (u + v).2 = u.2 + v.2 := rfl
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma zero_fst : (0 : Complexification H).1 = 0 := rfl
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma zero_snd : (0 : Complexification H).2 = 0 := rfl
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma sub_fst (u v : Complexification H) : (u - v).1 = u.1 - v.1 := rfl
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma sub_snd (u v : Complexification H) : (u - v).2 = u.2 - v.2 := rfl
 
 instance : Module ℂ (Complexification H) where
@@ -167,12 +175,16 @@ instance [Nontrivial H] : Nontrivial (Complexification H) :=
 /-- The canonical embedding `x ↦ x + i·0` of `H` into its complexification. -/
 def ofReal (x : H) : Complexification H := mk x 0
 
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma ofReal_fst (x : H) : (ofReal x).1 = x := rfl
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma ofReal_snd (x : H) : (ofReal x).2 = 0 := rfl
 
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma ofReal_add (x y : H) : ofReal (x + y) = ofReal x + ofReal y := by
   apply Prod.ext <;> simp
 
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma ofReal_sub (x y : H) : ofReal (x - y) = ofReal x - ofReal y := by
   apply Prod.ext <;> simp
 
@@ -256,15 +268,20 @@ object descends to the real space. -/
 /-- Complex conjugation on the complexification: `(x, y) ↦ (x, -y)`. -/
 def conj (u : Complexification H) : Complexification H := mk u.1 (-u.2)
 
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma conj_fst (u : Complexification H) : (conj u).1 = u.1 := rfl
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma conj_snd (u : Complexification H) : (conj u).2 = -u.2 := rfl
 
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma conj_conj (u : Complexification H) : conj (conj u) = u := by
   apply Prod.ext <;> simp
 
+omit [InnerProductSpace ℝ H] in
 @[simp] lemma conj_ofReal (x : H) : conj (ofReal x) = ofReal x := by
   apply Prod.ext <;> simp
 
+omit [InnerProductSpace ℝ H] in
 lemma conj_add (u v : Complexification H) : conj (u + v) = conj u + conj v := by
   apply Prod.ext <;> simp only [conj_fst, conj_snd, add_fst, add_snd, neg_add]
 

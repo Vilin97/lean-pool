@@ -57,10 +57,9 @@ variable {𝕜 : Type*} [RCLike 𝕜]
 `⊤, 2, 2`). -/
 theorem memLp_mul_left {f : α → 𝕜} (hf : MemLp f ⊤ μ) (g : Lp 𝕜 2 μ) :
     MemLp (f • ⇑g) 2 μ :=
-  ⟨hf.1.smul (Lp.aestronglyMeasurable g),
-    lt_of_le_of_lt
-      (eLpNorm_smul_le_eLpNorm_top_mul_eLpNorm 2 (Lp.aestronglyMeasurable g) f)
-      (ENNReal.mul_lt_top hf.2 (Lp.memLp g).2)⟩
+  lt_of_le_of_lt
+      (eLpNorm_smul_le_eLpNorm_top_mul_eLpNorm_of_pos 2 (by norm_num))
+      (ENNReal.mul_lt_top hf (Lp.memLp g))
 
 /-- The **multiplication operator** `M_f : L²(μ) →L[𝕜] L²(μ)`, `g ↦ f • g`,
 for an essentially bounded measurable scalar function `f` (`hf : MemLp f ⊤ μ`). -/
@@ -86,12 +85,12 @@ noncomputable def mulL2 (f : α → 𝕜) (hf : MemLp f ⊤ μ) : Lp 𝕜 2 μ �
         exact smul_comm (f x) c _ }
     ((eLpNorm f ⊤ μ).toReal)
     (fun g => by
-      show ‖(memLp_mul_left hf g).toLp (f • ⇑g)‖ ≤ (eLpNorm f ⊤ μ).toReal * ‖g‖
+      change ‖(memLp_mul_left hf g).toLp (f • ⇑g)‖ ≤ (eLpNorm f ⊤ μ).toReal * ‖g‖
       rw [Lp.norm_def, eLpNorm_congr_ae (MemLp.coeFn_toLp (memLp_mul_left hf g))]
       calc (eLpNorm (f • ⇑g) 2 μ).toReal
           ≤ (eLpNorm f ⊤ μ * eLpNorm (⇑g) 2 μ).toReal :=
-            ENNReal.toReal_mono (ENNReal.mul_lt_top hf.2 (Lp.memLp g).2).ne
-              (eLpNorm_smul_le_eLpNorm_top_mul_eLpNorm 2 (Lp.aestronglyMeasurable g) f)
+            ENNReal.toReal_mono (ENNReal.mul_lt_top hf (Lp.memLp g)).ne
+              (eLpNorm_smul_le_eLpNorm_top_mul_eLpNorm_of_pos 2 (by norm_num))
         _ = (eLpNorm f ⊤ μ).toReal * (eLpNorm (⇑g) 2 μ).toReal := ENNReal.toReal_mul
         _ = (eLpNorm f ⊤ μ).toReal * ‖g‖ := by rw [← Lp.norm_def])
 
@@ -108,7 +107,7 @@ theorem mulL2_opNorm_le (f : α → 𝕜) (hf : MemLp f ⊤ μ) :
 /-- The product of two essentially bounded functions is essentially bounded. -/
 theorem memLp_mul_top {f g : α → 𝕜} (hf : MemLp f ⊤ μ) (hg : MemLp g ⊤ μ) :
     MemLp (f * g) ⊤ μ :=
-  MemLp.mul hg hf
+  MemLp.mul hf hg
 
 /-- **Multiplicativity.** `M_f ∘ M_g = M_{f g}`: multiplication operators
 compose by multiplying their symbols. -/

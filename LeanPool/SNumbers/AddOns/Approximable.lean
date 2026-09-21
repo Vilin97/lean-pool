@@ -159,8 +159,8 @@ theorem IsApproximable.smul (c : 𝕜) {S : X →L[𝕜] Y}
         SNumbers.approximationNumber_le_norm_sub h_rank
       rwa [h_norm] at h_residual
     -- Lift to the infimum, mirroring `approximationNumber_comp_comp_le`.
-    show _ ≤ ‖c‖ • SNumbers.approximationNumber S n
-    show _ ≤ ‖c‖ • sInf (SNumbers.approximationSet S n)
+    change _ ≤ ‖c‖ • SNumbers.approximationNumber S n
+    change _ ≤ ‖c‖ • sInf (SNumbers.approximationSet S n)
     rw [← Real.sInf_smul_of_nonneg h_nonneg]
     refine le_csInf ((SNumbers.approximationSet_nonempty S n).image _) ?_
     rintro _ ⟨_, ⟨L, hL, rfl⟩, rfl⟩
@@ -242,7 +242,7 @@ theorem isClosed_isApproximable :
   rw [← closure_subset_iff_isClosed]
   intro S hS_in_closure
   rw [Metric.mem_closure_iff] at hS_in_closure
-  show IsApproximable S
+  change IsApproximable S
   unfold IsApproximable
   rw [Metric.tendsto_atTop]
   intro ε hε

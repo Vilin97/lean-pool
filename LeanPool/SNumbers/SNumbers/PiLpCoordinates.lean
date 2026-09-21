@@ -94,9 +94,9 @@ the rest. -/
 lemma padFin_projFin_apply (h : n ≤ m) (x : PiLp p (fun _ : Fin m => 𝕜)) (i : Fin m) :
     (padFin (projFin (p := p) h x)) i = if (i : ℕ) < n then x i else 0 := by
   by_cases hi : (i : ℕ) < n
-  · rw [padFin_apply, dif_pos hi, projFin_apply, if_pos hi]
+  · rw [padFin_apply, dite_eq_left hi, projFin_apply, ite_eq_left hi]
     congr 1
-  · rw [padFin_apply, dif_neg hi, if_neg hi]
+  · rw [padFin_apply, dite_eq_right hi, ite_eq_right hi]
 
 /-- The coordinate projection is a contraction: `‖projFin h x‖ ≤ ‖x‖`. -/
 lemma norm_projFin_le (h : n ≤ m) (x : PiLp p (fun _ : Fin m => 𝕜)) :
@@ -128,7 +128,7 @@ lemma norm_projFin_clm_le (h : n ≤ m) : ‖projFin (𝕜 := 𝕜) (p := p) h�
 /-- The coordinate embedding agrees with the original on the embedded indices. -/
 lemma padFin_castLE (h : n ≤ m) (y : PiLp p (fun _ : Fin n => 𝕜)) (j : Fin n) :
     (padFin (p := p) (m := m) y) (Fin.castLE h j) = y j := by
-  rw [padFin_apply, dif_pos (by simp only [Fin.val_castLE]; exact j.isLt)]
+  rw [padFin_apply, dite_eq_left (by simp only [Fin.val_castLE]; exact j.isLt)]
   congr 1
 
 /-- The coordinate embedding is an isometry, in particular a contraction:
@@ -145,7 +145,7 @@ lemma norm_padFin_le (h : n ≤ m) (y : PiLp p (fun _ : Fin n => 𝕜)) :
       by_cases hi : (i : ℕ) < n
       · simpa [padFin_apply, hi] using
           le_ciSup (Finite.bddAbove_range fun j => ‖y j‖) (⟨(i : ℕ), hi⟩ : Fin n)
-      · simp only [padFin_apply, dif_neg hi, norm_zero]
+      · simp only [padFin_apply, dite_eq_right hi, norm_zero]
         exact Real.iSup_nonneg fun j => norm_nonneg _
   · have hp0 : 0 < p.toReal := zero_lt_one.trans_le hp
     rw [PiLp.norm_eq_sum hp0, PiLp.norm_eq_sum hp0]
@@ -158,7 +158,7 @@ lemma norm_padFin_le (h : n ≤ m) (y : PiLp p (fun _ : Fin n => 𝕜)) :
       intro i _ hi
       have hni : ¬ (i : ℕ) < n := fun hlt =>
         hi (Finset.mem_image.mpr ⟨⟨(i : ℕ), hlt⟩, Finset.mem_univ _, Fin.ext rfl⟩)
-      rw [padFin_apply, dif_neg hni, norm_zero, Real.zero_rpow hp0.ne']
+      rw [padFin_apply, dite_eq_right hni, norm_zero, Real.zero_rpow hp0.ne']
     rw [hoff, Finset.sum_image fun a _ b _ hab => Fin.castLE_injective h hab]
     exact Finset.sum_congr rfl fun j _ => by rw [padFin_castLE]
 

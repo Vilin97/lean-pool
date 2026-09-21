@@ -108,7 +108,7 @@ theorem exists_tendsto_of_antitone_isPositive {T : ℕ → (H →L[ℂ] H)}
     have hbnd : ∀ k, ‖T k‖ ≤ ‖T 0‖ := fun k => by
       have hk0 : (0 : H →L[ℂ] H) ≤ T k := by
         rw [ContinuousLinearMap.le_def, sub_zero]; exact hpos k
-      exact CStarAlgebra.norm_le_norm_of_nonneg_of_le hk0 (hanti (Nat.zero_le k))
+      exact CStarAlgebra.norm_le_norm_of_le_of_nonneg (hanti (Nat.zero_le k)) hk0
     calc ‖T m - T n‖ ≤ ‖T m‖ + ‖T n‖ := norm_sub_le _ _
       _ ≤ ‖T 0‖ + ‖T 0‖ := by gcongr <;> exact hbnd _
       _ = 2 * ‖T 0‖ := by ring
@@ -166,7 +166,7 @@ theorem exists_continuousLinearMap_tendsto {T : ℕ → (H →L[ℂ] H)}
   have hbnd : ∀ k, ‖T k‖ ≤ ‖T 0‖ := fun k => by
     have hk0 : (0 : H →L[ℂ] H) ≤ T k := by
       rw [ContinuousLinearMap.le_def, sub_zero]; exact hpos k
-    exact CStarAlgebra.norm_le_norm_of_nonneg_of_le hk0 (hanti (Nat.zero_le k))
+    exact CStarAlgebra.norm_le_norm_of_le_of_nonneg (hanti (Nat.zero_le k)) hk0
   choose e he using fun x => exists_tendsto_of_antitone_isPositive hpos hanti x
   let L : H →ₗ[ℂ] H :=
     { toFun := e

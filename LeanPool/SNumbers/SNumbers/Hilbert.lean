@@ -306,8 +306,8 @@ lemma exists_l2_section (n : ℕ) :
     intro i j
     simp only [hsdef, lp.inner_single_left, RCLike.inner_apply, map_one, mul_one]
     by_cases h : i = j
-    · rw [if_pos h, h, lp.single_apply_self]
-    · rw [if_neg h]
+    · rw [ite_eq_left h, h, lp.single_apply_self]
+    · rw [ite_eq_right h]
       exact lp.single_apply_ne _ _ _ (fun he => h (Fin.ext he))
   -- The embedding `f v = Σ vₖ · eₖ`, as an inner-preserving linear map.
   set f : EuclideanSpace 𝕜 (Fin (n + 1)) →ₗ[𝕜] L2 𝕜 :=

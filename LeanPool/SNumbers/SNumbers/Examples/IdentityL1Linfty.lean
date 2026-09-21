@@ -185,7 +185,7 @@ lemma half_le_gelfandNumber (n : ℕ) :
       _ ≤ D * ‖x‖ := hopbound x hx_mem
       _ ≤ D * (2 + 2 * ε') := mul_le_mul_of_nonneg_left hx_l1 hD_nn
   -- Let `ε' → 0`.
-  show (1 : ℝ) / 2 ≤ D
+  change (1 : ℝ) / 2 ≤ D
   have h2D : (1 : ℝ) ≤ 2 * D := by
     refine le_of_forall_pos_le_add (fun δ hδ => ?_)
     have h1D : (0 : ℝ) < 1 + D := by linarith
@@ -625,13 +625,13 @@ theorem approximationNumber_comp_incl_comp_le (n : ℕ) :
         simp [ContinuousLinearMap.comp_apply]
       rw [h]
       by_cases hj : j < m
-      · rw [if_pos hj, trunc_coord_of_lt A m x hj, sub_self]
-      · rw [if_neg hj, trunc_coord_of_le A m x (not_lt.mp hj), sub_zero, inner_row]
+      · rw [ite_eq_left hj, trunc_coord_of_lt A m x hj, sub_self]
+      · rw [ite_eq_right hj, trunc_coord_of_le A m x (not_lt.mp hj), sub_zero, inner_row]
     rw [hcoord]
     by_cases hj : j < m
-    · rw [if_pos hj, norm_zero]
+    · rw [ite_eq_left hj, norm_zero]
       exact mul_nonneg hδpos.le (norm_nonneg x)
-    · rw [if_neg hj]
+    · rw [ite_eq_right hj]
       calc ‖(inner 𝕜 (row A j) x : 𝕜)‖ ≤ ‖row A j‖ * ‖x‖ := norm_inner_le_norm _ _
         _ ≤ δ * ‖x‖ :=
             mul_le_mul_of_nonneg_right (hm j (not_lt.mp hj)) (norm_nonneg x)

@@ -294,9 +294,9 @@ theorem gelfandNumber_le_sqrt_mul_bernsteinNumber_hilbert
       Finset.sum_eq_single j
         (fun i _ hij => by
           rw [inner_smul_right, (orthonormal_iff_ite (𝕜 := 𝕜)).mp hon j i,
-            if_neg (Ne.symm hij), mul_zero])
+            ite_eq_right (Ne.symm hij), mul_zero])
         (fun hj => absurd (Finset.mem_univ j) hj)]
-    rw [inner_smul_right, (orthonormal_iff_ite (𝕜 := 𝕜)).mp hon j j, if_pos rfl, mul_one]
+    rw [inner_smul_right, (orthonormal_iff_ite (𝕜 := 𝕜)).mp hon j j, ite_eq_left rfl, mul_one]
   have hindep : LinearIndependent 𝕜 e := by
     rw [Fintype.linearIndependent_iff]
     intro g hg j
@@ -405,7 +405,7 @@ lemma norm_comp_le_norm_mul_deviationFromSubspace {S : X →L[𝕜] Y}
   -- `R = (V.liftQL R hR) ∘ π_V`, so `R ∘ S = (V.liftQL R hR) ∘ (π_V ∘ S)`.
   have hfac : R.comp S = (V.liftQL R hR).comp (V.mkQL.comp S) := by
     ext x
-    show R (S x) = V.liftQL R hR (V.mkQL (S x))
+    change R (S x) = V.liftQL R hR (V.mkQL (S x))
     rw [Submodule.liftQL_mkQL]
   rw [hfac]
   calc ‖(V.liftQL R hR).comp (V.mkQL.comp S)‖
@@ -509,7 +509,7 @@ lemma approximationNumber_le_sqrt_mul_deviationFromSubspace
         exact h
       rw [← hw]; exact hPP
     rw [LinearMap.mem_ker]
-    show (ContinuousLinearMap.id 𝕜 Y - P) v = 0
+    change (ContinuousLinearMap.id 𝕜 Y - P) v = 0
     rw [sub_apply, ContinuousLinearMap.id_apply, hPv, sub_self]
   -- `‖id − P‖ ≤ 1 + √n`.
   have h4 : ‖(ContinuousLinearMap.id 𝕜 Y - P : Y →L[𝕜] Y)‖ ≤ 1 + Real.sqrt n :=
@@ -612,7 +612,7 @@ space. The approximation numbers are Mathlib's singular values
 `LinearMap.normDet_eq_norm_det`. This is the determinant ingredient of the
 maximal difference theorem. -/
 theorem prod_approximationNumber_eq_norm_det {E : Type u} [NormedAddCommGroup E]
-    [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] [Nontrivial E] (T : E →L[𝕜] E) :
+    [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] (T : E →L[𝕜] E) :
     ∏ k ∈ Finset.range (Module.finrank 𝕜 E), approximationNumber T k
       = ‖LinearMap.det (T : E →ₗ[𝕜] E)‖ := by
   rw [← LinearMap.normDet_eq_norm_det, LinearMap.normDet_eq_prod_singularValues]

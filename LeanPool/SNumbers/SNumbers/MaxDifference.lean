@@ -176,7 +176,7 @@ lemma norm_det_le_pow_norm {k : ℕ}
     rw [← h]
     calc ∏ i ∈ Finset.range (m + 1), approximationNumber T i
         ≤ ∏ _i ∈ Finset.range (m + 1), ‖T‖ :=
-          Finset.prod_le_prod (fun i _ => approximationNumber_nonneg T i)
+          Finset.prod_le_prod₀ (fun i _ => approximationNumber_nonneg T i)
             (fun i _ => approximationNumber_le_norm T i)
       _ = ‖T‖ ^ (m + 1) := by rw [Finset.prod_const, Finset.card_range]
 
@@ -305,13 +305,13 @@ lemma prod_approximationNumber_le_detNumber (S : X →L[𝕜] Y) {n : ℕ}
   set B₂ : Y →L[𝕜] EuclideanSpace 𝕜 (Fin n) :=
     (projFin (p := 2) hle).comp (B₁.comp B) with hB₂def
   have hA₂n : ‖A₂‖ ≤ 1 := by
-    refine (opNorm_comp_le _ _).trans (mul_le_one₀ ?_ (norm_nonneg _)
-      (norm_padFin_clm_le hle))
-    exact (opNorm_comp_le _ _).trans (mul_le_one₀ hA (norm_nonneg _) hA₁)
+    refine (opNorm_comp_le _ _).trans (Bound.mul_le_one ?_ (norm_padFin_clm_le hle)
+      (Or.inr (norm_nonneg _)))
+    exact (opNorm_comp_le _ _).trans (Bound.mul_le_one hA hA₁ (Or.inr (norm_nonneg _)))
   have hB₂n : ‖B₂‖ ≤ 1 := by
-    refine (opNorm_comp_le _ _).trans (mul_le_one₀ (norm_projFin_clm_le hle)
-      (norm_nonneg _) ?_)
-    exact (opNorm_comp_le _ _).trans (mul_le_one₀ hB₁ (norm_nonneg _) hB)
+    refine (opNorm_comp_le _ _).trans (Bound.mul_le_one (norm_projFin_clm_le hle) ?_
+      (Or.inr (norm_nonneg _)))
+    exact (opNorm_comp_le _ _).trans (Bound.mul_le_one hB₁ hB (Or.inr (norm_nonneg _)))
   -- `padFin`/`projFin` act on standard basis vectors as expected.
   have hpad_single : ∀ j : Fin n,
       padFin (p := 2) (EuclideanSpace.single j (1 : 𝕜))
@@ -320,10 +320,10 @@ lemma prod_approximationNumber_le_detNumber (S : X →L[𝕜] Y) {n : ℕ}
     ext i
     rw [padFin_apply, PiLp.single_apply]
     by_cases hi : (i : ℕ) < n
-    · rw [dif_pos hi, PiLp.single_apply]
+    · rw [dite_eq_left hi, PiLp.single_apply]
       refine if_congr ?_ rfl rfl
       rw [Fin.ext_iff, Fin.ext_iff, Fin.val_castSucc]
-    · rw [dif_neg hi, if_neg fun h => hi (by rw [h, Fin.val_castSucc]; exact j.isLt)]
+    · rw [dite_eq_right hi, ite_eq_right fun h => hi (by rw [h, Fin.val_castSucc]; exact j.isLt)]
   have hproj_single : ∀ j : Fin n,
       projFin (p := 2) hle (EuclideanSpace.single (Fin.castSucc j) (1 : 𝕜))
         = EuclideanSpace.single j (1 : 𝕜) := by
@@ -388,7 +388,7 @@ lemma detNumber_succ_le_hilbertNumber_mul (S : X →L[𝕜] Y) (n : ℕ) :
     calc approximationNumber (B.comp (S.comp A)) n
         ≤ ‖B‖ * ‖A‖ * hilbertNumber S n := h
       _ ≤ 1 * hilbertNumber S n :=
-          mul_le_mul_of_nonneg_right (mul_le_one₀ hB (norm_nonneg _) hA)
+          mul_le_mul_of_nonneg_right (Bound.mul_le_one hB hA (Or.inr (norm_nonneg _)))
             (hilbertNumber_nonneg S n)
       _ = hilbertNumber S n := one_mul _
   rw [h1, Finset.prod_range_succ]
@@ -497,7 +497,7 @@ private lemma borderDom_single_castSucc (j : Fin k) :
     rw [projFin_apply, PiLp.single_apply, PiLp.single_apply, castLE_succ_eq_castSucc i]
     exact if_congr Fin.castSucc_inj.symm.symm rfl rfl
   rw [borderDom_apply, hproj, PiLp.single_apply,
-    if_neg (Fin.castSucc_lt_last j).ne', mul_zero, zero_smul, add_zero]
+    ite_eq_right (Fin.castSucc_lt_last j).ne', mul_zero, zero_smul, add_zero]
 
 private lemma borderDom_single_last :
     borderDom A x lam mu (EuclideanSpace.single (Fin.last k) (1 : 𝕜)) = (mu : 𝕜) • x := by
@@ -505,9 +505,9 @@ private lemma borderDom_single_last :
       (EuclideanSpace.single (Fin.last k) (1 : 𝕜)) = 0 := by
     ext i
     rw [projFin_apply, PiLp.single_apply, castLE_succ_eq_castSucc i, PiLp.zero_apply,
-      if_neg (Fin.castSucc_lt_last i).ne]
+      ite_eq_right (Fin.castSucc_lt_last i).ne]
   rw [borderDom_apply, hproj, map_zero, smul_zero, zero_add, PiLp.single_apply,
-    if_pos rfl, mul_one]
+    ite_eq_left rfl, mul_one]
 
 private lemma borderCod_castSucc (y : Y) (i : Fin k) :
     (borderCod B b lam mu y) (Fin.castSucc i) = (lam : 𝕜) * (B y) i := by
@@ -515,7 +515,7 @@ private lemma borderCod_castSucc (y : Y) (i : Fin k) :
     ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply,
     PiLp.smul_apply, PiLp.smul_apply, PiLp.smul_apply,
     ← castLE_succ_eq_castSucc i, padFin_castLE, PiLp.single_apply,
-    if_neg ((Fin.castSucc_lt_last i).ne ∘ (castLE_succ_eq_castSucc i ▸ ·)),
+    ite_eq_right ((Fin.castSucc_lt_last i).ne ∘ (castLE_succ_eq_castSucc i ▸ ·)),
     smul_zero, smul_zero, add_zero, smul_eq_mul]
 
 private lemma borderCod_last (y : Y) :
@@ -523,7 +523,7 @@ private lemma borderCod_last (y : Y) :
   rw [borderCod, add_apply, PiLp.add_apply, smul_apply, smul_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearMap.smulRight_apply,
     PiLp.smul_apply, PiLp.smul_apply, PiLp.smul_apply, padFin_apply,
-    dif_neg (by simp), smul_zero, zero_add, PiLp.single_apply, if_pos rfl,
+    dite_eq_right (by simp), smul_zero, zero_add, PiLp.single_apply, ite_eq_left rfl,
     smul_eq_mul, smul_eq_mul, mul_one]
 
 /-- In `ℓ₂ᵏ⁺¹`, the squared norm splits as the squared norm of the first `k`

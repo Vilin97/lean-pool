@@ -265,7 +265,7 @@ lemma deviationFromRestriction_comp_comp_comap_le
       (norm_nonneg (S.comp M.subtypeL))
   refine opNorm_le_bound _ h_bound_nn fun w => ?_
   set y : M := ⟨A (w : W), w.2⟩
-  show ‖B (S (A (w : W)))‖ ≤ ‖B‖ * ‖A‖ * ‖S.comp M.subtypeL‖ * ‖w‖
+  change ‖B (S (A (w : W)))‖ ≤ ‖B‖ * ‖A‖ * ‖S.comp M.subtypeL‖ * ‖w‖
   have h_y : S (A (w : W)) = (S.comp M.subtypeL) y := rfl
   rw [h_y]
   calc ‖B ((S.comp M.subtypeL) y)‖
@@ -300,7 +300,7 @@ lemma gelfandNumber_comp_comp_le
       (deviationFromRestriction_comp_comp_comap_le A S B M)
   have h_inf : gelfandNumber (B.comp (S.comp A)) n
                 ≤ ‖B‖ * ‖A‖ * gelfandNumber S n := by
-    show _ ≤ (‖B‖ * ‖A‖) • sInf
+    change _ ≤ (‖B‖ * ‖A‖) • sInf
       {r | ∃ M : Submodule 𝕜 X,
             IsClosed (M : Set X) ∧
             Module.rank 𝕜 (X ⧸ M) ≤ (n : Cardinal) ∧
@@ -339,7 +339,7 @@ lemma gelfandNumber_eq_zero_of_rank_le {S : X →L[𝕜] Y} {n : ℕ}
     simp only [coe_comp, Function.comp_apply, zero_apply,
       Submodule.subtypeL_apply]
     exact x.2
-  show ‖S.comp M.subtypeL‖ ≤ 0
+  change ‖S.comp M.subtypeL‖ ≤ 0
   rw [h_comp_zero]; exact le_of_eq ContinuousLinearMap.opNorm_zero
 
 /-! ## (S5') Strict normalisation `gelfandNumber (id_X) n = 1` whenever `dim X > n`
@@ -388,7 +388,7 @@ lemma gelfandNumber_strict {X : Type u} [NormedAddCommGroup X]
     have : Nontrivial M := Module.nontrivial_of_finrank_pos hM_finrank_pos
     -- `I.comp M.subtypeL = M.subtypeL`, and its norm is 1.
     have h_dev_eq : deviationFromRestriction I M = ‖M.subtypeL‖ := by
-      show ‖I.comp M.subtypeL‖ = ‖M.subtypeL‖
+      change ‖I.comp M.subtypeL‖ = ‖M.subtypeL‖
       rw [hI_def, ContinuousLinearMap.id_comp]
     rw [h_dev_eq, M.norm_subtypeL]
 

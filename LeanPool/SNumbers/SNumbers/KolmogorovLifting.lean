@@ -107,7 +107,7 @@ abbrev Ball (X : Type u) [NormedAddCommGroup X] : Type u :=
 /-- `ℓ¹(B_X, 𝕜)` — the scalar `ℓ¹` space indexed by the closed unit ball
 of `X`. -/
 abbrev BallLp (𝕜 : Type u) [NontriviallyNormedField 𝕜] (X : Type u)
-    [NormedAddCommGroup X] [NormedSpace 𝕜 X] : Type u :=
+    [NormedAddCommGroup X] : Type u :=
   lp (fun _ : Ball X => 𝕜) 1
 
 variable {𝕜 : Type u} [NontriviallyNormedField 𝕜]
@@ -117,6 +117,7 @@ variable [NormedAddCommGroup Y] [NormedSpace 𝕜 Y]
 
 /-! ## The Pietsch surjection `Q : ℓ¹(B_X) →L[𝕜] X` -/
 
+omit [NormedSpace 𝕜 X] in
 /-- `α ∈ ℓ¹(B_X)` has summable absolute values. -/
 private lemma summable_norm_α (α : BallLp 𝕜 X) :
     Summable (fun x : Ball X => ‖α x‖) := by
@@ -310,6 +311,7 @@ variable [NormedAddCommGroup Z] [NormedSpace 𝕜 Z]
 -- the linter once here is shorter than an `omit` clause on nearly every lemma.
 
 
+omit [CompleteSpace 𝕜] [CompleteSpace W] [CompleteSpace X] in
 /-- For `w ∈ B_W`, `c⁻¹ • A w ∈ B_X` (provided `‖A‖ ≤ ‖c‖`, `c ≠ 0`). -/
 private lemma Aw_in_ball {A : W →L[𝕜] X} {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0)
     (w : Ball W) : ‖c⁻¹ • A (w : W)‖ ≤ 1 := by
@@ -325,16 +327,19 @@ private noncomputable def liftBasis {A : W →L[𝕜] X} {c : 𝕜}
   letI : DecidableEq (Ball X) := Classical.decEq _
   lp.single 1 (⟨c⁻¹ • A (w : W), Aw_in_ball hc hc_ne w⟩ : Ball X) c
 
+omit [CompleteSpace 𝕜] [CompleteSpace W] [CompleteSpace X] in
 private lemma norm_liftBasis {A : W →L[𝕜] X} {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0)
     (w : Ball W) : ‖liftBasis hc hc_ne w‖ = ‖c‖ := by
   let := Classical.decEq (Ball X)
   exact lp.norm_single (by norm_num : (0 : ℝ≥0∞) < 1) _ _
 
+omit [CompleteSpace 𝕜] [CompleteSpace W] in
 private lemma Q_liftBasis (A : W →L[𝕜] X) {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0)
     (w : Ball W) : (Q : BallLp 𝕜 X →L[𝕜] X) (liftBasis hc hc_ne w) = A (w : W) := by
   unfold liftBasis
   rw [Q_single _ (Aw_in_ball hc hc_ne w) c, smul_smul, mul_inv_cancel₀ hc_ne, one_smul]
 
+omit [CompleteSpace 𝕜] [CompleteSpace W] [CompleteSpace X] in
 private lemma summable_norm_smul_liftBasis {A : W →L[𝕜] X} {c : 𝕜}
     (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0) (α : BallLp 𝕜 W) :
     Summable (fun w : Ball W => ‖α w • liftBasis hc hc_ne w‖) := by
@@ -343,6 +348,7 @@ private lemma summable_norm_smul_liftBasis {A : W →L[𝕜] X} {c : 𝕜}
   rw [norm_smul]
   exact mul_le_mul_of_nonneg_left (norm_liftBasis hc hc_ne w).le (norm_nonneg _)
 
+omit [CompleteSpace W] [CompleteSpace X] in
 private lemma summable_smul_liftBasis {A : W →L[𝕜] X} {c : 𝕜}
     (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0) (α : BallLp 𝕜 W) :
     Summable (fun w : Ball W => α w • liftBasis hc hc_ne w) :=
@@ -375,10 +381,12 @@ noncomputable def liftA (A : W →L[𝕜] X) {c : 𝕜} (hc : ‖A‖ ≤ ‖c�
       rw [lp.norm_eq_tsum_rpow hp1 α, show (1 : ℝ≥0∞).toReal = 1 from by norm_num]
       simp [Real.rpow_one, mul_comm])
 
+omit [CompleteSpace W] [CompleteSpace X] in
 @[simp] lemma liftA_apply (A : W →L[𝕜] X) {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0)
     (α : BallLp 𝕜 W) :
     liftA A hc hc_ne α = ∑' w : Ball W, α w • liftBasis hc hc_ne w := rfl
 
+omit [CompleteSpace W] [CompleteSpace X] in
 lemma norm_liftA_le (A : W →L[𝕜] X) {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0) :
     ‖liftA A hc hc_ne‖ ≤ ‖c‖ :=
   LinearMap.mkContinuous_norm_le _ (norm_nonneg _) _
@@ -388,7 +396,7 @@ lemma norm_liftA_le (A : W →L[𝕜] X) {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (
 lemma Q_comp_liftA (A : W →L[𝕜] X) {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0) :
     (Q : BallLp 𝕜 X →L[𝕜] X).comp (liftA A hc hc_ne) = A.comp Q := by
   ext α
-  show (Q : BallLp 𝕜 X →L[𝕜] X) (liftA A hc hc_ne α)
+  change (Q : BallLp 𝕜 X →L[𝕜] X) (liftA A hc hc_ne α)
         = A ((Q : BallLp 𝕜 W →L[𝕜] W) α)
   rw [liftA_apply,
       (Q : BallLp 𝕜 X →L[𝕜] X).map_tsum (summable_smul_liftBasis hc hc_ne α)]
@@ -419,7 +427,7 @@ lemma kolmogorovNumber_comp_comp_le
              (Q : BallLp 𝕜 X →L[𝕜] X).comp (liftA A hc_lb.le hc_ne) from
           (Q_comp_liftA A hc_lb.le hc_ne).symm,
         ← ContinuousLinearMap.comp_assoc]
-  show approximationNumber
+  change approximationNumber
       ((B.comp (S.comp A)).comp (Q : BallLp 𝕜 W →L[𝕜] W)) n ≤ ‖B‖ * kN * ‖A‖ + ε
   rw [show (B.comp (S.comp A)).comp (Q : BallLp 𝕜 W →L[𝕜] W)
         = B.comp ((S.comp Q).comp (liftA A hc_lb.le hc_ne)) by
@@ -512,7 +520,7 @@ lemma kolmogorovNumber_strict (n : ℕ) (h : n < Module.finrank 𝕜 X) :
   have : Nontrivial X :=
     Module.nontrivial_of_finrank_pos (Nat.lt_of_le_of_lt (Nat.zero_le _) h)
   refine le_antisymm ((kolmogorovNumber_le_norm _ _).trans norm_id.le) ?_
-  show 1 ≤ approximationNumber
+  change 1 ≤ approximationNumber
     ((ContinuousLinearMap.id 𝕜 X).comp (Q : BallLp 𝕜 X →L[𝕜] X)) n
   rw [ContinuousLinearMap.id_comp]
   refine le_csInf (approximationSet_nonempty _ _) ?_
@@ -570,7 +578,7 @@ lemma kolmogorovNumber_le_approx (S : X →L[𝕜] Y) (n : ℕ) :
   set V : Submodule 𝕜 Y := LinearMap.range (L : BallLp 𝕜 X →ₗ[𝕜] Y) with hV
   have hV_rank : Module.rank 𝕜 V ≤ (n : Cardinal) := hL
   refine (SNumbers.kolmogorovNumber_le_deviation hV_rank).trans ?_
-  show ‖V.mkQL.comp S‖ ≤ ‖S.comp (Q : BallLp 𝕜 X →L[𝕜] X) - L‖
+  change ‖V.mkQL.comp S‖ ≤ ‖S.comp (Q : BallLp 𝕜 X →L[𝕜] X) - L‖
   -- `π_V ∘ L = 0` since `range L = V`.
   have hL0 : V.mkQL.comp L = 0 := by
     ext α
