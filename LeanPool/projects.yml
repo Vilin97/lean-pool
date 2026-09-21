@@ -9966,3 +9966,43 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+
+  - slug: quadratic-carleson-palomar-submission
+    title: Endpoint estimates for Stein's purely quadratic Carleson operator
+    summary: 'A Lean 4 formalization of four principal endpoint assertions from Fragkos,
+      Krause, and Lacey''s Endpoint Estimates for Stein''s Purely Quadratic Carleson
+      Operator: two failures of modular estimates below t log₂ t, a full-modulation
+      L log L endpoint estimate, and a lacunary L (log₂ L)² log₄ L endpoint estimate.'
+    branch: harmonic analysis
+    entry_module: LeanPool.QuadraticCarleson
+    authors:
+    - Anastasios Fragkos
+    source:
+      url: https://github.com/anastasiosfragkosmath/quadratic-carleson-palomar-submission
+      github_repo: anastasiosfragkosmath/quadratic-carleson-palomar-submission
+      commit: 3d3cf4316acac4c23140059a78fb570b1440394b
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_sub_log2_modular_failure
+    - QuadraticCarleson.StatementSurface.PaperTheorems.full_sub_log2_modular_failure
+    - QuadraticCarleson.StatementSurface.PaperTheorems.full_LlogL_endpoint
+    - QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_log2_squared_log4_endpoint
+    main_results:
+    - declaration: QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_sub_log2_modular_failure
+      informal: Lacunary purely quadratic modulation fails modular estimates below the
+        specified iterated-logarithmic threshold.
+    - declaration: QuadraticCarleson.StatementSurface.PaperTheorems.full_sub_log2_modular_failure
+      informal: Full purely quadratic modulation fails modular estimates below the specified
+        iterated-logarithmic threshold.
+    - declaration: QuadraticCarleson.StatementSurface.PaperTheorems.full_LlogL_endpoint
+      informal: The full-modulation operator satisfies the L log L endpoint estimate.
+    - declaration: QuadraticCarleson.StatementSurface.PaperTheorems.lacunary_log2_squared_log4_endpoint
+      informal: The lacunary operator satisfies the L (log₂ L)² log₄ L endpoint estimate.
+    tags:
+    - harmonic-analysis
+    - maximal-operators
+    - endpoint-estimates
+    msc:
+    - 42B20
