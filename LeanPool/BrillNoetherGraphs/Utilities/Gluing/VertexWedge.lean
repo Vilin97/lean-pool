@@ -53,7 +53,7 @@ theorem wedgeRightVertex_eq_left_iff
   · simp [wedgeRightVertex, hb]
 
 /-- Identifying `x` and `y` in the disjoint union of `G` and `H`. -/
-def vertexWedge (G : CFGraph.{u}) (H : CFGraph.{v})
+abbrev vertexWedge (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) : CFGraph.{max u v} where
   V := Sum G.V { b : H.V // b ≠ y }
   edges :=

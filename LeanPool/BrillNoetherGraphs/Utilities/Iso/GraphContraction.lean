@@ -168,7 +168,8 @@ def check (c : GraphContractionCertificate G H) : Bool :=
     Fintype.decidableForallFintype)
 @[simp] theorem check_eq_true_iff (c : GraphContractionCertificate G H) :
     c.check = true ↔ c.Valid := by
-  simp [check, Valid]
+  simp only [check, Bool.and_eq_true, decide_eq_true_eq, Valid, Prod.forall]
+  exact and_congr (@decide_eq_true_eq (Function.Surjective c.vertexMap) _).to_iff Iff.rfl
 
 /-- Push a divisor forward by summing it over fibres. -/
 def pushDiv (c : GraphContractionCertificate G H) (D : CFDiv G) : CFDiv H :=

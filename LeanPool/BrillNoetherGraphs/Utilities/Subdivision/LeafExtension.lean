@@ -35,7 +35,7 @@ private def liftEdge (edge : H.V × H.V) : Option H.V × Option H.V :=
   (some edge.1, some edge.2)
 
 /-- Adjoin a new leaf `none` to the old vertex `some root`. -/
-def addLeaf : CFGraph where
+abbrev addLeaf : CFGraph where
   V := Option H.V
   edges := (none, some root) ::ₘ H.edges.map (liftEdge H)
   loopless := by

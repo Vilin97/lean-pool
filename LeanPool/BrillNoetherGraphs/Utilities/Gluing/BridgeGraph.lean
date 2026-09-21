@@ -22,7 +22,7 @@ universe u v
 
 /-- The graph obtained from `G` and `H` by joining `x` to `y` with one edge.
 The factor vertex types are kept as the two summands of the new vertex type. -/
-def bridgeGraph (G : CFGraph.{u}) (H : CFGraph.{v})
+abbrev bridgeGraph (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) : CFGraph.{max u v} where
   V := Sum G.V H.V
   edges :=
@@ -78,20 +78,11 @@ def bridgeGraph (G : CFGraph.{u}) (H : CFGraph.{v})
 @[simp] theorem genus_bridgeGraph
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     genus (bridgeGraph G H x y) = genus G + genus H := by
-  simp only [genus, bridgeGraph_edge_card, bridgeGraph_vertex_card]
+  simp only [genus, bridgeGraph, Multiset.card_cons, Multiset.card_add,
+    Multiset.card_map, Fintype.card_sum]
   push_cast
   ring
 
--- Mathlib v4.33 flips `backward.isDefEq.respectTransparency` to `true` by
--- default (see `Init/MetaTypes.lean`), so instance-implicit arguments (here,
--- the `DecidablePred`/`DecidableEq` instances threaded through `Multiset.filter`
--- for `(bridgeGraph G H x y).V`) are only compared at `implicit` transparency
--- instead of being bumped to `default`. That means `simp` can no longer see
--- through the semireducible `bridgeGraph` to match `Multiset.filter_cons` /
--- `filter_add` / `filter_map` at all in the theorems below, and `rw` can't
--- unify `num_edges (bridgeGraph G H x y)`'s argument types either. Lean core
--- itself works around this the same way in several library files (e.g.
--- `Init/Data/List/Lemmas.lean`): disable the flag locally.
 /-- Edge multiplicities within the left factor are unchanged. -/
 @[simp] theorem num_edges_bridgeGraph_inl
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
