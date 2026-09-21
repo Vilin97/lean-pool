@@ -77,7 +77,7 @@ private theorem eraseRealPlace_isDefiningModulus_of_range_le
     (hvH : (IdeleGroup.infinitePlaceIdeleClass v.1).range ≤ H) :
     IsDefiningModulus H (m.eraseRealPlace v) := by
   let m' : RayClass.Modulus K := m.eraseRealPlace v
-  show IsDefiningModulus H m'
+  change IsDefiningModulus H m'
   let q : IdeleGroup K →* IdeleClassGroup K :=
     QuotientGroup.mk' (IdeleGroup.principalSubgroup K)
   rw [IsDefiningModulus, RayClass.Modulus.congruenceSubgroup,

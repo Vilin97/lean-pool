@@ -59,7 +59,7 @@ theorem abelianizedGaloisConjugationOfEmbeddings_eq_refl
 from two explicit realizations of the same finite Galois extension. -/
 theorem concreteNormResidueSymbolOfEmbedding_conjugation
     (i j : L →ₐ[K] SeparableClosure K)
-    (D : ClassFormation.DegreeData (Gal(SeparableClosure K / K)))
+    (D : ClassFormation.DegreeData (Gal(SeparableClosure K/K)))
     (v : ClassFormation.ValuationData D
       (galoisAmbientUnitsRep K (SeparableClosure K)))
     (hcf : ClassFormation.SatisfiesClassFieldAxiom

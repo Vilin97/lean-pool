@@ -139,8 +139,8 @@ theorem filteredLocalReciprocity_descends
     (E F : IntermediateField K (SeparableClosure K)) (hEF : E ≤ F)
     [FiniteDimensional K E] [FiniteDimensional K F]
     [IsAbelianGalois K E] [IsAbelianGalois K F]
-    (upperE : ℝ → Subgroup (Gal(E / K)))
-    (upperF : ℝ → Subgroup (Gal(F / K)))
+    (upperE : ℝ → Subgroup (Gal(E/K)))
+    (upperF : ℝ → Subgroup (Gal(F/K)))
     (hupper : ∀ t,
       Subgroup.map
           (intermediateFieldRestrictNormalHom E F hEF)

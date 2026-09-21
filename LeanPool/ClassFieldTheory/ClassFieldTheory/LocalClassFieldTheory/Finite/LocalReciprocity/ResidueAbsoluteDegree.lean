@@ -219,7 +219,7 @@ noncomputable def residueAbsoluteFrobeniusMulEquiv :
     (residueAbsoluteFrobenius_algebraicClosure_bijective k)
 
 /-- Arithmetic Frobenius gives a topological group equivalence
-`ℤ̂ ≃ Gal(k̄/k)`. -/
+`ℤ̂ ≃ Gal(k_bar/k)`. -/
 noncomputable def residueAbsoluteFrobeniusEquiv :
     ZHatMul ≃ₜ* Field.absoluteGaloisGroup k where
   toMulEquiv := residueAbsoluteFrobeniusMulEquiv k
@@ -234,7 +234,7 @@ noncomputable def residueAbsoluteFrobeniusEquiv :
 
 /-- **Finite local reciprocity, absolute residue degree.**  The inverse of arithmetic
 Frobenius coordinates, as a continuous surjective homomorphism
-`Gal(k̄/k) → ℤ̂`. -/
+`Gal(k_bar/k) → ℤ̂`. -/
 noncomputable def residueAbsoluteDegree :
     Field.absoluteGaloisGroup k →ₜ* ZHatMul :=
   ContinuousMonoidHom.toContinuousMonoidHom

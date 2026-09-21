@@ -19,7 +19,7 @@ namespace IntermediateField
 intersection of their fixed fields. -/
 theorem fixedField_sup_eq_inf
     {k Ω : Type*} [Field k] [Field Ω] [Algebra k Ω]
-    (S T : Subgroup (Gal(Ω / k))) :
+    (S T : Subgroup (Gal(Ω/k))) :
     IntermediateField.fixedField (S ⊔ T) =
       IntermediateField.fixedField S ⊓ IntermediateField.fixedField T := by
   apply le_antisymm

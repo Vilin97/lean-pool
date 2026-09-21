@@ -22,7 +22,7 @@ representation.  This is Hilbert 90 transported through the cyclic
 `H¹ ≃ H⁻¹` comparison. -/
 theorem unitsTateHminusOne_card_eq_one
     (K L : Type) [Field K] [Field L] [Algebra K L] [FiniteDimensional K L]
-    (g : Gal(L / K)) (hg : ∀ σ : Gal(L / K), σ ∈ Subgroup.zpowers g) :
+    (g : Gal(L/K)) (hg : ∀ σ : Gal(L / K), σ ∈ Subgroup.zpowers g) :
     Nat.card (tateCohomology (Rep.ofAlgebraAutOnUnits K L) (-1)) = 1 := by
   calc
     Nat.card (tateCohomology (Rep.ofAlgebraAutOnUnits K L) (-1)) =

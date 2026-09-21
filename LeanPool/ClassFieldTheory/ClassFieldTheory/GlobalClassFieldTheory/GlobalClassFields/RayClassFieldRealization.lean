@@ -430,7 +430,7 @@ general closed-finite-index reciprocity equivalence. -/
 theorem
     rayClassFieldGaloisContinuousMulEquivRayClassGroup_apply
     (m : RayClass.Modulus K)
-    (σ : Gal((rayClassField K m) / K)) :
+    (σ : Gal((rayClassField K m)/K)) :
     rayClassFieldGaloisContinuousMulEquivRayClassGroup
         (K := K) m σ =
       closedFiniteIndexClassFieldGaloisEquivNormQuotient

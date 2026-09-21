@@ -20,7 +20,7 @@ namespace Valuations
 
 variable {K : Type*} [Field K]
 
-/-- The additive exponential valuation `- log |x|`, with value `∞` at zero. -/
+/-- The additive exponential valuation `- log |x|`, with value `∞` at zero. -/
 def absoluteValueExponentialValuation
     (abv : AbsoluteValue K ℝ) (hnonarch : LubinTate.Valuations.NonarchimedeanAbsoluteValue abv) :
     LubinTate.Valuations.ExponentialValuation K := by

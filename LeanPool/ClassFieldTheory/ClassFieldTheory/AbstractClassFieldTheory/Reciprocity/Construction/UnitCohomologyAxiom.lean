@@ -495,7 +495,7 @@ theorem exists_unit_sigma_sub_eq_of_tateHMinusOne_isZero
 `H⁰(G(L/K),U_L)` and `H⁻¹(G(L/K),U_L)` vanish.
 
 This is a predicate on the abstract valuation datum.  It is the source axiom
-used in the subsequent proofs of independence and multiplicativity in ;
+used in the subsequent proofs of independence and multiplicativity;
 it is not introduced as a Lean axiom. -/
 def SatisfiesUnramifiedUnitCohomology
     (D : DegreeData G) (v : ValuationData D A) : Prop :=

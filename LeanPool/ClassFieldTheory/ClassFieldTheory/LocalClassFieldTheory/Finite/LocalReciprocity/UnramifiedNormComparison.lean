@@ -100,7 +100,7 @@ noncomputable def galoisGroupEquivAbelianizationOfUnramifiedValuation :
 /-- The cyclic Galois-group equivalence is the canonical map to the abelianization. -/
 @[simp]
 theorem galoisGroupEquivAbelianizationOfUnramifiedValuation_apply
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     galoisGroupEquivAbelianizationOfUnramifiedValuation K L σ =
       Abelianization.of σ :=
   rfl

@@ -23,7 +23,7 @@ closure of `ℚ`.  To form its compositum with an arbitrary number field, we fir
 embed that number field into the same separable closure.  The
 intersection degree below is the normalization integer
 
-`f_K = [K ∩ ℚ̃ : ℚ]`.
+`f_K = [K ∩ ℚ_tilde : ℚ]`.
 
 All fields in this file are the actual mathlib intermediate fields in
 `SeparableClosure ℚ`; no abstract copy of the compositum or of its
@@ -92,7 +92,7 @@ noncomputable instance rationalCyclotomicZHatField_isNormal :
   rationalCyclotomicZHatField_isAbelianGalois.toIsGalois.to_normal
 
 /-- The cyclotomic Galois-group equivalence, transported from the nested
-presentation to the copy of `ℚ̃` in `SeparableClosure ℚ`. -/
+presentation to the copy of `ℚ_tilde` in `SeparableClosure ℚ`. -/
 noncomputable def rationalCyclotomicZHatFieldGalEquivZHat :
     (rationalCyclotomicZHatField ≃ₐ[ℚ]
       rationalCyclotomicZHatField) ≃ₜ*
@@ -194,7 +194,7 @@ noncomputable def
         rationalCyclotomicZHatField
 
 /-- The actual global degree datum
-`d : Gal(ℚ̄/ℚ) → Multiplicative ZHat`, obtained by restriction to the
+`d : Gal(ℚ_bar/ℚ) → Multiplicative ZHat`, obtained by restriction to the
 cyclotomic `ZHat`-extension. -/
 noncomputable def rationalCyclotomicDegreeData :
     DegreeData
@@ -287,7 +287,7 @@ theorem rationalCyclotomicDegreeData_fixedField_inertia :
       rationalCyclotomicZHatField
 
 /-- For every abstract rational fixed field `F`, the field fixed by
-its cyclotomic inertia is the genuine compositum `Fℚ̃` in
+its cyclotomic inertia is the genuine compositum `Fℚ_tilde` in
 `SeparableClosure ℚ`. -/
 theorem
     rationalCyclotomicDegreeData_fixedField_fieldInertia
@@ -638,14 +638,14 @@ noncomputable instance rationalCyclotomicZHatFieldGal_isMulTorsionFree :
 
 variable (K : Type*) [Field K] [NumberField K]
 
-/-- The finite intersection `K ∩ ℚ̃` inside the common separable
+/-- The finite intersection `K ∩ ℚ_tilde` inside the common separable
 closure. -/
 def numberFieldCyclotomicZHatIntersection :
     IntermediateField ℚ (SeparableClosure ℚ) :=
   numberFieldInRationalSeparableClosure K ⊓
     rationalCyclotomicZHatField
 
-/-- The intersection `K ∩ ℚ̃`, embedded back into the original number
+/-- The intersection `K ∩ ℚ_tilde`, embedded back into the original number
 field through the chosen copy of `K` in `SeparableClosure ℚ`. -/
 noncomputable def numberFieldCyclotomicZHatIntersectionEmbedding :
     numberFieldCyclotomicZHatIntersection K →ₐ[ℚ] K :=
@@ -706,7 +706,7 @@ noncomputable instance
     rationalCyclotomicZHatField_isAbelianGalois
 
 /-- The cyclotomic intersection degree
-`f_K = [K ∩ ℚ̃ : ℚ]`. -/
+`f_K = [K ∩ ℚ_tilde : ℚ]`. -/
 noncomputable def cyclotomicZHatIntersectionDegree : ℕ :=
   Module.finrank ℚ (numberFieldCyclotomicZHatIntersection K)
 
@@ -807,8 +807,8 @@ theorem cyclotomicZHatIntersectionDegree_dvd_finrank :
   simpa only [cyclotomicZHatIntersectionDegree] using h
 
 /-- Under the actual Galois identification with `ZHat`, the
-subgroup fixing `K ∩ ℚ̃` is precisely
-`f_K ZHat`, where `f_K = [K ∩ ℚ̃ : ℚ]`. -/
+subgroup fixing `K ∩ ℚ_tilde` is precisely
+`f_K ZHat`, where `f_K = [K ∩ ℚ_tilde : ℚ]`. -/
 theorem
     rationalCyclotomicZHatFieldGal_fixingSubgroup_image_eq_mulNat_range :
     (((numberFieldCyclotomicZHatIntersection K).restrict
@@ -957,7 +957,7 @@ def numberFieldCyclotomicZHatFiniteIntersection
     (numberFieldCyclotomicZHatFiniteCompositumEmbedding K E).fieldRange
 
 /-- An element of the finite-layer intersection is, in the common
-separable closure, an element of the full intersection `K ∩ ℚ̃`. -/
+separable closure, an element of the full intersection `K ∩ ℚ_tilde`. -/
 theorem
     numberFieldCyclotomicZHatFiniteIntersection_coe_mem_intersection
     (E :
@@ -1286,7 +1286,7 @@ theorem
         r.range).symm
     _ = J.fixingSubgroup := by rw [hfixedField]
 
-/-- The actual compositum `Kℚ̃` inside `SeparableClosure ℚ`. -/
+/-- The actual compositum `Kℚ_tilde` inside `SeparableClosure ℚ`. -/
 def numberFieldCyclotomicZHatCompositum :
     IntermediateField ℚ (SeparableClosure ℚ) :=
   numberFieldInRationalSeparableClosure K ⊔

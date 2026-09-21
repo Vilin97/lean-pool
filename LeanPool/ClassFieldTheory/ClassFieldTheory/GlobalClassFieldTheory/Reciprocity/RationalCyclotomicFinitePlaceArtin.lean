@@ -1565,7 +1565,7 @@ private theorem
     (p : Nat.Primes) (n : ℕ)
     (sigma : Gal(
       rationalCyclotomicPrincipalPrimeLevel
-        (rationalCyclotomicPrincipalPrimeModulus p n) / ℚ))
+        (rationalCyclotomicPrincipalPrimeModulus p n)/ℚ))
     (a : (ZMod (p.1 ^ (n + 1)))ˣ)
     (haction :
       sigma (rationalCyclotomicLevelPrimitiveRoot

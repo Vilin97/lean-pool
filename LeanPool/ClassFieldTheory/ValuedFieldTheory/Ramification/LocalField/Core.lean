@@ -345,7 +345,7 @@ private theorem fixedFieldUpperRamificationGroup_map_autCongr
     [IsGalois K L] [IsGalois K M]
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : Subgroup Gal(L / K)) [H.Normal]
+    (H : Subgroup Gal(L/K)) [H.Normal]
     (e : IntermediateField.fixedField H ≃ₐ[K] M)
     (t : ℝ) :
     Subgroup.map (AlgEquiv.autCongr e).toMonoidHom
@@ -590,7 +590,7 @@ private theorem fixedFieldUpperRamificationGroup_eq_local
     [FiniteDimensional K L] [IsGalois K L]
     [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : Subgroup Gal(L / K)) [H.Normal]
+    (H : Subgroup Gal(L/K)) [H.Normal]
     (t : ℝ) :
     fixedFieldUpperRamificationGroup
         (chosenLocalExtensionCompleteDVF_hasUniqueDVFValuationExtension

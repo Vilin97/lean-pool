@@ -168,7 +168,7 @@ theorem inertiaUnitQuotientClass_mul_right_unit
         A.principalUnitGroup :=
     inertia_automorphismUnitQuotient_mem_principalUnitGroup_of_mem_unitGroup
       (K := K) A σ hu
-  show
+  change
     (QuotientGroup.mk
         (automorphismUnitQuotient K A (σ : decompositionGroup K A) (x * u)) :
       Lˣ ⧸ A.principalUnitGroup) =
@@ -209,7 +209,7 @@ theorem inertiaUnitQuotientClass_mul_right_algebraMapUnit
           (Units.map (algebraMap K L).toMonoidHom a) = 1 :=
     automorphismUnitQuotient_algebraMapUnit (K := K) A
       (σ : decompositionGroup K A) a
-  show
+  change
     (QuotientGroup.mk
         (automorphismUnitQuotient K A (σ : decompositionGroup K A)
           (x * Units.map (algebraMap K L).toMonoidHom a)) :
@@ -297,7 +297,7 @@ def valueDisplacementHom
       automorphismUnitQuotient_one_arg]
     exact A.unitGroup.one_mem
   map_mul' x y := by
-    show
+    change
       QuotientGroup.mk' A.unitGroup
           (automorphismUnitQuotient K A σ (x * y)) =
         QuotientGroup.mk' A.unitGroup
@@ -630,7 +630,7 @@ def inertiaUnitQuotientHom
       automorphismUnitQuotient_one_arg]
     exact A.principalUnitGroup.one_mem
   map_mul' x y := by
-    show
+    change
       QuotientGroup.mk' A.principalUnitGroup
           (automorphismUnitQuotient K A
             (σ : decompositionGroup K A) (x * y)) =
@@ -860,7 +860,7 @@ def valueTrivialInertiaCharacterHom
     apply QuotientGroup.monoidHom_ext
     apply MonoidHom.ext
     intro x
-    show
+    change
       valueModuloBaseToResidueUnits K A (σ * τ)
           (QuotientGroup.mk' (baseUnitValueClassSubgroup K A)
             (QuotientGroup.mk' A.unitGroup x)) =

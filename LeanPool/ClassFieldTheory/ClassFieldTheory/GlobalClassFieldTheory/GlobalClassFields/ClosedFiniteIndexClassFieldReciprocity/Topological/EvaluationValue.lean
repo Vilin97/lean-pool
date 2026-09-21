@@ -40,7 +40,7 @@ noncomputable abbrev closedFiniteIndexClassFieldReciprocityValue
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))
     [H.FiniteIndex]
     (σ : Gal((closedFiniteIndexClassField
-      (K := K) H hclosed) / K)) :
+      (K := K) H hclosed)/K)) :
     IdeleClassGroup K ⧸ H :=
   QuotientGroup.quotientMulEquivOfEq
       (closedFiniteIndexClassField_ideleClassNorm_range

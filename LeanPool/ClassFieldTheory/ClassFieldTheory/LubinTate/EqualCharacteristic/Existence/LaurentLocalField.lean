@@ -197,7 +197,7 @@ noncomputable def laurentValuativeIntegerEquiv
     { toFun := fun x => ⟨x, by
         have hxrel : (x : L) ≤ᵥ (1 : L) :=
           wL.vle_iff_le.mpr x.property
-        show vL (x : L) ≤ 1
+        change vL (x : L) ≤ 1
         simpa only [map_one] using vL.vle_iff_le.mp hxrel⟩
       invFun := fun x => ⟨x, by
         have hxv : vL (x : L) ≤ 1 := x.property

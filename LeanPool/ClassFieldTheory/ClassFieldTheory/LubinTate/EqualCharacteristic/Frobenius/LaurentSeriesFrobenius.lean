@@ -547,7 +547,7 @@ theorem equalCharacteristicFiniteUnramifiedFrobenius_coeff
 /-- Every automorphism of the chosen unramified factor is a power of its
 arithmetic Frobenius. -/
 theorem equalCharacteristicFiniteUnramifiedFrobenius_pow_surjective
-    (σ : Gal(equalCharacteristicFiniteUnramifiedExtension k p n / k⸨X⸩)) :
+    (σ : Gal(equalCharacteristicFiniteUnramifiedExtension k p n/k⸨X⸩)) :
     ∃ i < n, equalCharacteristicFiniteUnramifiedFrobenius k p n ^ i = σ := by
   obtain ⟨τ, rfl⟩ := (laurentSeriesCoefficientGalHom_surjective
     (k := k) (l := FiniteField.Extension k p n)) σ

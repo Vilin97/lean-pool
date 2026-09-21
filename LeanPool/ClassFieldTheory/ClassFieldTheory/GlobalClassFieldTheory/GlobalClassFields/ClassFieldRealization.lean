@@ -88,14 +88,14 @@ theorem IsAbelianGalois.of_base_equiv
 variable
     {k Ω : Type}
     [Field k] [Field Ω] [Algebra k Ω] [IsGalois k Ω]
-    {K : ClosedSubgroup (Gal(Ω / k))}
+    {K : ClosedSubgroup (Gal(Ω/k))}
 
 /-- The relative fixed field represented by a finite abelian subextension is
 finite-dimensional over the fixed field represented by its base subgroup. -/
 noncomputable instance
     finiteAbelianSubextensionAbstractRelativeFixedFieldFiniteDimensional
     [hKfinite : Finite
-      ((baseField Gal(Ω / k)).toSubgroup ⧸
+      ((baseField Gal(Ω/k)).toSubgroup ⧸
         extensionSubgroup
           (baseField Gal(Ω / k)) K (le_baseField K))]
     (L : FiniteAbelianSubextension K) :

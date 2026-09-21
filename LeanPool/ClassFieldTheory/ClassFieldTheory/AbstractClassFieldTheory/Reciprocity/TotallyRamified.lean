@@ -20,7 +20,7 @@ This file isolates the calculation.  The input from the finite reciprocity equiv
 first turned into an equality of actual norms.  For the cyclic totally
 ramified extension `M / M⁰`, the class-field axiom then supplies the element `a` with
 `aᵒ-a = v-u`.  The element written in this construction as
-`π_L^k v a^(1-σ̃)` is descended from `A_M` to the actual fixed group
+`π_L^k v a^(1-σ_tilde)` is descended from `A_M` to the actual fixed group
 `A_{M⁰}`, and its valuation is computed to be `k`.  The final invocation of
 the valuation endpoint in the reciprocity reduction exact row therefore gives `k = 0`.
 
@@ -40,7 +40,7 @@ variable {G : IntegralRepGroupType} [Group G] [TopologicalSpace G]
 /-! ## The linear calculation behind the fixed element -/
 
 /-- The additive form of the calculation.  Here `g` is `σ`, `t`
-is `σ̃`, `c = π_Σ^k`, and `b = π_L^k v`.  The hypotheses say
+is `σ_tilde`, `c = π_Σ^k`, and `b = π_L^k v`.  The hypotheses say
 that `t` fixes `c`, that `g` and `t` have the same action on `b`, and that
 `b-c = a^g-a`.  Commutativity of the cyclic quotient then shows that
 `b+a-a^t` is fixed by `g`. -/
@@ -296,8 +296,8 @@ theorem abstractReciprocity_exists_hMinusOne_primitive
 `L = M`) whose inclusion has normalized valuation `k`.
 
 The two action equations are not comparison data: they are the literal
-claims used in this construction, namely that `σ̃` fixes `π_Σ`, and that `σ` and
-`σ̃` have the same action on the element coming from `L`. -/
+claims used in this construction, namely that `σ_tilde` fixes `π_Σ`, and that `σ` and
+`σ_tilde` have the same action on the element coming from `L`. -/
 theorem abstractReciprocity_totallyRamified_fixedSource
     (v : ValuationData D A) (hcf : SatisfiesClassFieldAxiom A)
     (E : FiniteAbstractFieldExtension G)

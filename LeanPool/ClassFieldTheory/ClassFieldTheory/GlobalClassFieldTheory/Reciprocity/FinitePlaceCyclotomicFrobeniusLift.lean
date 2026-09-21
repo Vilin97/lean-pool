@@ -651,7 +651,7 @@ noncomputable instance
 
 /-- The image of the actual cyclotomic compositum over `F` is precisely
 `f_F ZHat`, where `f_F` is the degree of the genuine intersection
-`F ∩ ℚ̃`. -/
+`F ∩ ℚ_tilde`. -/
 theorem
     numberFieldCyclotomicZHatCompositumCoordinate_range_toAddSubgroup
     (F : Type*) [Field F] [NumberField F] :

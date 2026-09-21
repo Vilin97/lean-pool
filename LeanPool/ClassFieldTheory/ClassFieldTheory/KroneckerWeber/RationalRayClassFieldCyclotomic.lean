@@ -138,7 +138,7 @@ theorem galEquivZMod_autCongr
     [IsCyclotomicExtension {m} ℚ A]
     [IsCyclotomicExtension {m} ℚ B]
     (e : A ≃ₐ[ℚ] B)
-    (σ : Gal(A / ℚ)) :
+    (σ : Gal(A/ℚ)) :
     IsCyclotomicExtension.Rat.galEquivZMod
         m B (AlgEquiv.autCongr e σ) =
       IsCyclotomicExtension.Rat.galEquivZMod
@@ -426,7 +426,7 @@ theorem
     (σ :
       Gal(
         KummerTheory.rationalCyclotomicLevel
-          ⟨m, NeZero.pos m⟩ / ℚ)) :
+          ⟨m, NeZero.pos m⟩/ℚ)) :
     rationalCyclotomicLevelGaloisContinuousMulEquivRayClassGroup
         m σ =
       QuotientGroup.quotientMulEquivOfEq
@@ -689,7 +689,7 @@ standard `galEquivZMod` map literally. -/
 @[simp]
 theorem
     rationalCyclotomicGaloisContinuousMulEquivZModUnits_apply
-    (σ : Gal(CyclotomicField m ℚ / ℚ)) :
+    (σ : Gal(CyclotomicField m ℚ/ℚ)) :
     rationalCyclotomicGaloisContinuousMulEquivZModUnits
         m σ =
       IsCyclotomicExtension.Rat.galEquivZMod
@@ -702,7 +702,7 @@ cyclotomic norm-range equality. -/
 @[simp]
 theorem
     rationalCyclotomicGaloisContinuousMulEquivRayClassGroup_apply
-    (σ : Gal(CyclotomicField m ℚ / ℚ)) :
+    (σ : Gal(CyclotomicField m ℚ/ℚ)) :
     rationalCyclotomicGaloisContinuousMulEquivRayClassGroup
         m σ =
       QuotientGroup.quotientMulEquivOfEq

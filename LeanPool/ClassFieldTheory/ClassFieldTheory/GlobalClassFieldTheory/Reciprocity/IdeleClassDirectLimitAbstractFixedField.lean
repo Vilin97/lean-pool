@@ -25,7 +25,7 @@ open CyclicCohomology
 distinguished base subgroup.  This is `rationalIdeleClassEquivFixed` at
 the bottom intermediate field, transported along mathlib's canonical
 `ℚ ≃ₐ[ℚ] ⊥` equivalence and the identity
-`Gal(ℚ̄/⊥) = baseField`. -/
+`Gal(ℚ_bar/⊥) = baseField`. -/
 noncomputable def rationalIdeleClassEquivBaseFixed :
     Additive (IdeleClassGroup ℚ) ≃+
       KummerTheory.ambientFixedAddSubgroup

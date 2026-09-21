@@ -59,19 +59,19 @@ theorem AmbientEmbeddedFixedFieldPresentation.quotientRestriction
         extensionSubgroup upper.base.field upper.extension.field
           upper.extension.below)]
     [_hHabsolute : Finite
-      ((baseField Gal(SeparableClosure K / K)).toSubgroup ⧸
+      ((baseField Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
           (baseField Gal(SeparableClosure K / K))
           lower.base.field (le_baseField lower.base.field))]
     [_hH'absolute : Finite
-      ((baseField Gal(SeparableClosure K / K)).toSubgroup ⧸
+      ((baseField Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
           (baseField Gal(SeparableClosure K / K))
           upper.base.field (le_baseField upper.base.field))]
     [_hH'finite : Finite
       (lower.base.field.toSubgroup ⧸
         extensionSubgroup lower.base.field upper.base.field hH'H)]
-    (restrictActual : Gal(L' / K') →* Gal(L / K))
+    (restrictActual : Gal(L' / K') →* Gal(L/K))
     (hbase : ∀ x : L,
       jUpper (algebraMap L L' x) = jLower x)
     (hcompat : ∀ (τ : Gal(L' / K')) (x : L),
@@ -221,12 +221,12 @@ theorem AmbientEmbeddedFixedFieldPresentation.fixedFieldNormResidueTransport
         extensionSubgroup upper.base.field upper.extension.field
           upper.extension.below)]
     [_hHabsolute : Finite
-      ((baseField Gal(SeparableClosure K / K)).toSubgroup ⧸
+      ((baseField Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
           (baseField Gal(SeparableClosure K / K))
           lower.base.field (le_baseField lower.base.field))]
     [_hH'absolute : Finite
-      ((baseField Gal(SeparableClosure K / K)).toSubgroup ⧸
+      ((baseField Gal(SeparableClosure K/K)).toSubgroup ⧸
         extensionSubgroup
           (baseField Gal(SeparableClosure K / K))
           upper.base.field (le_baseField upper.base.field))]

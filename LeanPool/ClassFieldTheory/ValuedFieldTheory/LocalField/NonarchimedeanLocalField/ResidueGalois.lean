@@ -33,7 +33,7 @@ the local class-field calculation reduces the product of conjugates modulo the m
 def galoisGroupResidueFieldEquivOfIsIntegralClosure (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) :
     𝓀[L] ≃+* 𝓀[L] :=
   IsLocalRing.ResidueField.mapEquiv
     (galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ)
@@ -44,7 +44,7 @@ its conjugate. -/
 theorem galoisGroupResidueFieldEquivOfIsIntegralClosure_residue (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) (x : 𝒪[L]) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) (x : 𝒪[L]) :
     galoisGroupResidueFieldEquivOfIsIntegralClosure K L σ
         (IsLocalRing.residue 𝒪[L] x) =
       IsLocalRing.residue 𝒪[L]
@@ -56,7 +56,7 @@ theorem galoisGroupResidueFieldEquivOfIsIntegralClosure_integerUnitsToResidueUni
     (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) (u : 𝒪[L]ˣ) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) (u : 𝒪[L]ˣ) :
     Units.mapEquiv (galoisGroupResidueFieldEquivOfIsIntegralClosure K L σ).toMulEquiv
         (integerUnitsToResidueUnits L u) =
       integerUnitsToResidueUnits L
@@ -69,7 +69,7 @@ theorem galoisGroupResidueFieldEquivOfIsIntegralClosure_integerUnitsToResidueUni
 theorem galoisGroupResidueFieldEquivOfIsIntegralClosure_algebraMap (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) (x : 𝓀[K]) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) (x : 𝓀[K]) :
     galoisGroupResidueFieldEquivOfIsIntegralClosure K L σ (algebraMap 𝓀[K] 𝓀[L] x) =
       algebraMap 𝓀[K] 𝓀[L] x := by
   obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -86,7 +86,7 @@ theorem galoisGroupResidueFieldEquivOfIsIntegralClosure_algebraMap (K L : Type u
 def galoisGroupResidueAlgEquivOfIsIntegralClosure (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) :
     𝓀[L] ≃ₐ[𝓀[K]] 𝓀[L] where
   __ := galoisGroupResidueFieldEquivOfIsIntegralClosure K L σ
   commutes' := galoisGroupResidueFieldEquivOfIsIntegralClosure_algebraMap K L σ
@@ -116,7 +116,7 @@ automorphism. -/
 theorem galoisGroupResidueAlgEquivHomOfIsIntegralClosure_apply (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) :
     galoisGroupResidueAlgEquivHomOfIsIntegralClosure K L σ =
       galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ :=
   rfl
@@ -193,7 +193,7 @@ theorem galoisGroupResidueAlgEquivHomOfIsIntegralClosure_mem_ker_iff_stabilizerH
     (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) :
     σ ∈ (galoisGroupResidueAlgEquivHomOfIsIntegralClosure K L).ker ↔
       galoisGroupMaximalIdealStabilizerHomOfIsIntegralClosure K L σ ∈
         (galoisGroupResidueStabilizerHomOfIsIntegralClosure K L).ker := by
@@ -223,7 +223,7 @@ theorem galoisGroupResidueAlgEquivHomOfIsIntegralClosure_mem_ker_iff_mem_maximal
     (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) :
     σ ∈ (galoisGroupResidueAlgEquivHomOfIsIntegralClosure K L).ker ↔
       σ ∈ galoisGroupMaximalIdealInertiaOfIsIntegralClosure K L := by
   rw [galoisGroupResidueAlgEquivHomOfIsIntegralClosure_mem_ker_iff_stabilizerHom]
@@ -248,7 +248,7 @@ theorem galoisGroupResidueAlgEquivHomOfIsIntegralClosure_mem_ker_iff_residue_eq
     (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) :
     σ ∈ (galoisGroupResidueAlgEquivHomOfIsIntegralClosure K L).ker ↔
       ∀ x : 𝒪[L],
         IsLocalRing.residue 𝒪[L]
@@ -276,7 +276,7 @@ theorem galoisGroupResidueAlgEquivHomOfIsIntegralClosure_mem_ker_iff_sub_mem_max
     (K L : Type u)
     [Field K] [ValuativeRel K] [Field L] [ValuativeRel L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
-    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L / K)) :
+    [IsIntegralClosure 𝒪[L] 𝒪[K] L] (σ : Gal(L/K)) :
     σ ∈ (galoisGroupResidueAlgEquivHomOfIsIntegralClosure K L).ker ↔
       ∀ x : 𝒪[L],
         galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ x - x ∈

@@ -61,7 +61,7 @@ theorem chosenNormalBasisIntegerLattice_eq_span :
   rfl
 
 /-- Every normal-basis vector lies in the `𝒪_K`-span lattice `M`. -/
-theorem normalBasis_mem_integerLattice (σ : Gal(L / K)) :
+theorem normalBasis_mem_integerLattice (σ : Gal(L/K)) :
     IsGalois.normalBasis K L σ ∈ chosenNormalBasisIntegerLattice K L := by
   rw [IsGalois.normalBasis_apply]
   exact Submodule.subset_span (Set.mem_range_self σ)
@@ -86,7 +86,7 @@ theorem chosenNormalBasisIntegerLattice_field_span_eq_top :
 /-- The normal-basis lattice `M` is stable under the actual `Gal(L / K)`
 action. -/
 theorem galoisGroup_apply_mem_chosenNormalBasisIntegerLattice
-    (τ : Gal(L / K)) {x : L}
+    (τ : Gal(L/K)) {x : L}
     (hx : x ∈ chosenNormalBasisIntegerLattice K L) :
     τ x ∈ chosenNormalBasisIntegerLattice K L := by
   refine Submodule.span_induction
@@ -416,7 +416,7 @@ theorem exists_chosenBaseUniformizerPow_mul_mul_mem_of_fg_of_field_span_eq_top
     exact hleft x hxS y hyP
   · simp
   · intro x z _ _ hx hz
-    convert M.add_mem hx hz using 1 ; ring
+    convert M.add_mem hx hz using 1; ring
   · intro a x _ hx
     have hscaled :
         algebraMap 𝒪[K] L a *
@@ -1894,7 +1894,7 @@ theorem chosenNormalBasisPrincipalUnitSet_mul_error_mem_succ {n : Nat}
       chosenBaseUniformizerPowSubmodule K L (n + 1)
         (chosenNormalBasisIntegerLattice K L)
   rw [hunit]
-  convert hxy using 1 ; ring
+  convert hxy using 1; ring
 
 omit [Valuation.HasExtension
   (ValuativeRel.valuation K) (ValuativeRel.valuation L)] in

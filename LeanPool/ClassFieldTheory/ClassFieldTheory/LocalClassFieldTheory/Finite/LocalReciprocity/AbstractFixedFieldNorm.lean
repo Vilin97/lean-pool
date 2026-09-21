@@ -65,7 +65,7 @@ fixed coefficients has the same underlying field element as the ordinary
 field norm from its concrete fixed field. -/
 theorem normToBase_abstractFixedFieldUnit_val_of_isSeparable
     (H : ClosedSubgroup (Gal(Ω / K)))
-    [Finite ((baseField (Gal(Ω / K))).toSubgroup ⧸
+    [Finite ((baseField (Gal(Ω/K))).toSubgroup ⧸
       extensionSubgroup (baseField (Gal(Ω / K))) H (le_baseField H))]
     [FiniteDimensional K (abstractFixedField K Ω H)]
     [Algebra.IsSeparable K (abstractFixedField K Ω H)]
@@ -109,7 +109,7 @@ theorem localBaseValuation_normToBase_abstractFixedFieldUnit
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : ClosedSubgroup (Gal(SeparableClosure K / K)))
-    [Finite ((baseField (Gal(SeparableClosure K / K))).toSubgroup ⧸
+    [Finite ((baseField (Gal(SeparableClosure K/K))).toSubgroup ⧸
       extensionSubgroup (baseField (Gal(SeparableClosure K / K))) H
         (le_baseField H))]
     [FiniteDimensional K
@@ -174,7 +174,7 @@ theorem localBaseValuation_comp_normToBase_range_eq_residueFinrank
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : ClosedSubgroup (Gal(SeparableClosure K / K)))
-    [Finite ((baseField (Gal(SeparableClosure K / K))).toSubgroup ⧸
+    [Finite ((baseField (Gal(SeparableClosure K/K))).toSubgroup ⧸
       extensionSubgroup (baseField (Gal(SeparableClosure K / K))) H
         (le_baseField H))]
     [FiniteDimensional K

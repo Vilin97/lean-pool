@@ -530,7 +530,7 @@ theorem lubinTateUniformizerDiagonalCompositumField_isGalois
 private theorem explicitRestrictNormalHom_toAlgAut_eq_one
     (K C : Type) [Field K] [Field C] [Algebra K C]
     (B : IntermediateField K C) [Normal K B]
-    (δ : Gal(C / B)) :
+    (δ : Gal(C/B)) :
     AlgEquiv.restrictNormalHom B
         (MulSemiringAction.toAlgAut Gal(C / B) K C δ) =
       1 := by
@@ -543,7 +543,7 @@ private theorem explicitRestrictNormalHom_toAlgAut_eq_one
 private theorem explicitRestrictNormalHom_mul_inv_eq_one
     (K C : Type) [Field K] [Field C] [Algebra K C]
     (A : IntermediateField K C) [Normal K A]
-    (σ τ : Gal(C / K)) (ρ : Gal(A / K))
+    (σ τ : Gal(C/K)) (ρ : Gal(A/K))
     (hσ : AlgEquiv.restrictNormalHom A σ = ρ)
     (hτ : AlgEquiv.restrictNormalHom A τ = ρ) :
     AlgEquiv.restrictNormalHom A (σ * τ⁻¹) = 1 := by
@@ -552,7 +552,7 @@ private theorem explicitRestrictNormalHom_mul_inv_eq_one
 private theorem explicit_mem_fixingSubgroup_of_restrictNormalHom_eq_one
     (K C : Type) [Field K] [Field C] [Algebra K C]
     (A : IntermediateField K C) [Normal K A]
-    (σ : Gal(C / K))
+    (σ : Gal(C/K))
     (hσ : AlgEquiv.restrictNormalHom A σ = 1) :
     σ ∈ A.fixingSubgroup := by
   rw [IntermediateField.mem_fixingSubgroup_iff]
@@ -565,7 +565,7 @@ private theorem explicit_mem_fixingSubgroup_of_restrictNormalHom_eq_one
 
 private theorem explicit_eq_one_of_mem_fixingSubgroup_of_sup_eq_top
     (K C : Type) [Field K] [Field C] [Algebra K C]
-    (A B : IntermediateField K C) (σ : Gal(C / K))
+    (A B : IntermediateField K C) (σ : Gal(C/K))
     (hA : σ ∈ A.fixingSubgroup) (hB : σ ∈ B.fixingSubgroup)
     (hSup : A ⊔ B = ⊤) :
     σ = 1 := by
@@ -578,7 +578,7 @@ private theorem explicit_eq_one_of_mem_fixingSubgroup_of_sup_eq_top
 private theorem explicitAlgEquiv_eq_of_restrict_eq_of_sup_eq_top
     (K C : Type) [Field K] [Field C] [Algebra K C]
     (A B : IntermediateField K C) [Normal K A] [Normal K B]
-    (σ τ : Gal(C / K))
+    (σ τ : Gal(C/K))
     (hA : AlgEquiv.restrictNormalHom A σ =
       AlgEquiv.restrictNormalHom A τ)
     (hB : AlgEquiv.restrictNormalHom B σ =
@@ -606,8 +606,8 @@ private theorem explicitAlgEquiv_eq_of_restrict_eq_of_sup_eq_top
 private theorem explicit_orderOf_eq_of_restrict_orders_of_sup_eq_top
     (K C : Type) [Field K] [Field C] [Algebra K C]
     (A B : IntermediateField K C) [Normal K A] [Normal K B]
-    [Finite (Gal(A / K))] [Finite (Gal(B / K))]
-    (σ : Gal(C / K)) (σA : Gal(A / K)) (σB : Gal(B / K)) (d : ℕ)
+    [Finite (Gal(A/K))] [Finite (Gal(B/K))]
+    (σ : Gal(C/K)) (σA : Gal(A / K)) (σB : Gal(B / K)) (d : ℕ)
     (hA : AlgEquiv.restrictNormalHom A σ = σA)
     (hB : AlgEquiv.restrictNormalHom B σ = σB)
     (hAOrder : orderOf σA = d) (hBOrder : orderOf σB = d)
@@ -638,7 +638,7 @@ private theorem exists_explicitAlgEquiv_with_disjoint_restrictions
     (A B : IntermediateField K C)
     [Normal K A] [Normal K B] [Normal K C]
     [FiniteDimensional K A] [FiniteDimensional B C] [IsGalois B C]
-    (hInf : A ⊓ B = ⊥) (σA : Gal(A / K)) (σB : Gal(B / K)) :
+    (hInf : A ⊓ B = ⊥) (σA : Gal(A/K)) (σB : Gal(B/K)) :
     ∃ σ : Gal(C / K),
       AlgEquiv.restrictNormalHom A σ = σA ∧
         AlgEquiv.restrictNormalHom B σ = σB := by
@@ -835,7 +835,7 @@ theorem lubinTateUniformizerDiagonalAutomorphism_unique
     (hπ : (standardLocalField K).toCompleteDVF.valuation.IsUniformizer
       (π : K))
     (n : ℕ) (u : (standardLocalField K).valuationSubringˣ)
-    (σ : Gal((lubinTateUniformizerDiagonalCompositumField K hπ n u) / K))
+    (σ : Gal((lubinTateUniformizerDiagonalCompositumField K hπ n u)/K))
     (hσUnramified :
       let T := standardLubinTateLevelField hπ n
       letI : FiniteDimensional K T :=

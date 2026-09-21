@@ -303,10 +303,10 @@ its concrete fixed field in the chosen separable closure. -/
 theorem finiteAbstractField_degree_eq_abstractFixedField_finrank
     (K : Type) [Field K]
     (H : FiniteAbstractField
-      (Gal(SeparableClosure K / K)))
+      (Gal(SeparableClosure K/K)))
     (hnormal :
       (extensionSubgroup
-        (baseField (Gal(SeparableClosure K / K))) H.field
+        (baseField (Gal(SeparableClosure K/K))) H.field
         (le_baseField H.field)).Normal) :
     let E :=
       abstractFixedField K (SeparableClosure K) H.field
@@ -346,10 +346,10 @@ theorem abstractFixedField_isUnramifiedValuedExtension
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      (Gal(SeparableClosure K / K)))
+      (Gal(SeparableClosure K/K)))
     (hnormal :
       (extensionSubgroup
-        (baseField (Gal(SeparableClosure K / K))) H.field
+        (baseField (Gal(SeparableClosure K/K))) H.field
         (le_baseField H.field)).Normal)
     (hunramified :
       H.toFiniteAbstractExtension.IsUnramified
@@ -454,10 +454,10 @@ theorem localUpperRamificationGroup_abstractFixedField_eq_bot
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      (Gal(SeparableClosure K / K)))
+      (Gal(SeparableClosure K/K)))
     (hnormal :
       (extensionSubgroup
-        (baseField (Gal(SeparableClosure K / K))) H.field
+        (baseField (Gal(SeparableClosure K/K))) H.field
         (le_baseField H.field)).Normal)
     (hunramified :
       H.toFiniteAbstractExtension.IsUnramified

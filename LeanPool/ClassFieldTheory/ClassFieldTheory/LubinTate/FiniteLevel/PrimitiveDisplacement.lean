@@ -910,7 +910,7 @@ displacement formula is `q^k`. -/
 theorem standardLubinTateGal_displacement_addVal_le_of_ne
     (F : LocalField.{u, v} K) {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
-    (n : ℕ) (σ : Gal(standardLubinTateLevelField hπ n / K))
+    (n : ℕ) (σ : Gal(standardLubinTateLevelField hπ n/K))
     (hne :
       valuationSubringAutOfUniqueExtension
           (standardLubinTateLevelCompleteDVF_hasUniqueDVFValuationExtension

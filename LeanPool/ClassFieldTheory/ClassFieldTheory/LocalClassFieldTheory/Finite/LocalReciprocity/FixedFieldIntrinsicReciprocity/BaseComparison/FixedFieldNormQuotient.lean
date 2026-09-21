@@ -27,12 +27,12 @@ subgroup to the additive form of the ordinary field-norm subgroup. -/
 theorem map_fixedFieldFiniteNormSubgroup_eq_additiveNormSubgroup
     (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω]
     [IsGalois k Ω] [IsSepClosed Ω]
-    (K L : ClosedSubgroup Gal(Ω / k))
+    (K L : ClosedSubgroup Gal(Ω/k))
     (hLK : L.toSubgroup ≤ K.toSubgroup)
     [hfinite : Finite
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
-      ((baseField Gal(Ω / k)).toSubgroup ⧸
+      ((baseField Gal(Ω/k)).toSubgroup ⧸
         extensionSubgroup (baseField Gal(Ω / k)) K
           (le_baseField K))] :
     (finiteNormSubgroup (galoisAmbientUnitsRep k Ω) K L hLK).map
@@ -94,12 +94,12 @@ additively equivalent to the ordinary norm quotient of their fixed fields. -/
 noncomputable def fixedFieldFiniteNormQuotientEquivNormQuotient
     (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω]
     [IsGalois k Ω] [IsSepClosed Ω]
-    (K L : ClosedSubgroup Gal(Ω / k))
+    (K L : ClosedSubgroup Gal(Ω/k))
     (hLK : L.toSubgroup ≤ K.toSubgroup)
     [hfinite : Finite
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
-      ((baseField Gal(Ω / k)).toSubgroup ⧸
+      ((baseField Gal(Ω/k)).toSubgroup ⧸
         extensionSubgroup (baseField Gal(Ω / k)) K
           (le_baseField K))] :
     FiniteNormQuotient (galoisAmbientUnitsRep k Ω) K L hLK ≃+
@@ -186,12 +186,12 @@ class to the ordinary norm class of the corresponding fixed-field unit. -/
 theorem fixedFieldFiniteNormQuotientEquivNormQuotient_finiteNormClass
     (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω]
     [IsGalois k Ω] [IsSepClosed Ω]
-    (K L : ClosedSubgroup Gal(Ω / k))
+    (K L : ClosedSubgroup Gal(Ω/k))
     (hLK : L.toSubgroup ≤ K.toSubgroup)
     [hfinite : Finite
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
-      ((baseField Gal(Ω / k)).toSubgroup ⧸
+      ((baseField Gal(Ω/k)).toSubgroup ⧸
         extensionSubgroup (baseField Gal(Ω / k)) K
           (le_baseField K))]
     (a : ambientFixedAddSubgroup (galoisAmbientUnitsRep k Ω) K) :
@@ -242,30 +242,30 @@ prime element is the prescribed Frobenius quotient class. -/
 theorem abstractFixedFieldNormResidueSymbol_apply_primeNorm
     (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω]
     [IsGalois k Ω] [IsSepClosed Ω]
-    (D : DegreeData Gal(Ω / k))
+    (D : DegreeData Gal(Ω/k))
     (v : ValuationData D (galoisAmbientUnitsRep k Ω))
     (hcf : SatisfiesClassFieldAxiom
       (galoisAmbientUnitsRep k Ω))
-    (K L : ClosedSubgroup Gal(Ω / k))
+    (K L : ClosedSubgroup Gal(Ω/k))
     (hLK : L.toSubgroup ≤ K.toSubgroup)
     [hnormal : (extensionSubgroup K L hLK).Normal]
     [hfinite : Finite
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
-      ((baseField Gal(Ω / k)).toSubgroup ⧸
+      ((baseField Gal(Ω/k)).toSubgroup ⧸
         extensionSubgroup (baseField Gal(Ω / k)) K
           (le_baseField K))]
     (q : K.toSubgroup ⧸ extensionSubgroup K L hLK)
     (σ : D.FrobeniusElements
       ((⟨K, hKabsolute⟩ : FiniteAbstractField
-        Gal(Ω / k)).toFiniteResidueAbstractField D) L hLK)
+        Gal(Ω/k)).toFiniteResidueAbstractField D) L hLK)
     (hσ : D.frobeniusRestriction
       ((⟨K, hKabsolute⟩ : FiniteAbstractField
-        Gal(Ω / k)).toFiniteResidueAbstractField D) L hLK σ = q)
+        Gal(Ω/k)).toFiniteResidueAbstractField D) L hLK σ = q)
     (π : ambientFixedAddSubgroup (galoisAmbientUnitsRep k Ω)
       (D.frobeniusFixedField
         ((⟨K, hKabsolute⟩ : FiniteAbstractField
-          Gal(Ω / k)).toFiniteResidueAbstractField D)
+          Gal(Ω/k)).toFiniteResidueAbstractField D)
         L hLK σ))
     (hπ :
       let KF : FiniteAbstractField Gal(Ω / k) :=
@@ -354,17 +354,17 @@ class of the input unit. -/
 theorem abstractFixedFieldNormResidueSymbol_eq_of_normClass_eq
     (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω]
     [IsGalois k Ω] [IsSepClosed Ω]
-    (D : DegreeData Gal(Ω / k))
+    (D : DegreeData Gal(Ω/k))
     (v : ValuationData D (galoisAmbientUnitsRep k Ω))
     (hcf : SatisfiesClassFieldAxiom
       (galoisAmbientUnitsRep k Ω))
-    (K L : ClosedSubgroup Gal(Ω / k))
+    (K L : ClosedSubgroup Gal(Ω/k))
     (hLK : L.toSubgroup ≤ K.toSubgroup)
     [hnormal : (extensionSubgroup K L hLK).Normal]
     [hfinite : Finite
       (K.toSubgroup ⧸ extensionSubgroup K L hLK)]
     [hKabsolute : Finite
-      ((baseField Gal(Ω / k)).toSubgroup ⧸
+      ((baseField Gal(Ω/k)).toSubgroup ⧸
         extensionSubgroup (baseField Gal(Ω / k)) K
           (le_baseField K))]
     (x y : (abstractFixedField k Ω K)ˣ)

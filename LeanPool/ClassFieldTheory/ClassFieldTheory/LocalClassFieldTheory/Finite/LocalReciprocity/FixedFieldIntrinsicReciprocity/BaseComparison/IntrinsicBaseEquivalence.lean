@@ -99,7 +99,7 @@ theorem intrinsicBase_normalizedDegree_eq_ambientFixedField
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K)) :
+      Gal(SeparableClosure K/K)) :
     let F := abstractFixedField K (SeparableClosure K) H.field
     letI : Algebra F (SeparableClosure F) :=
       (separableClosure F (AlgebraicClosure F)).algebra
@@ -146,7 +146,7 @@ finite fixed field with its defining subgroup in the ambient Galois group. -/
 noncomputable def intrinsicBaseEquivAmbientFixedField
     (K : Type) [Field K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K)) :
+      Gal(SeparableClosure K/K)) :
     let F := abstractFixedField K (SeparableClosure K) H.field
     letI : Algebra F (SeparableClosure F) :=
       (separableClosure F (AlgebraicClosure F)).algebra
@@ -172,7 +172,7 @@ equivalence is conjugation followed by the standard fixed-field subgroup equival
 theorem intrinsicBaseEquivAmbientFixedField_apply_val
     (K : Type) [Field K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K)) :
+      Gal(SeparableClosure K/K)) :
     let F := abstractFixedField K (SeparableClosure K) H.field
     letI : Algebra F (SeparableClosure F) :=
       (separableClosure F (AlgebraicClosure F)).algebra

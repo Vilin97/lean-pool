@@ -47,7 +47,7 @@ def galoisGroupFieldUnitsMulDistribMulAction
 @[simp]
 theorem galoisGroupFieldUnitsMulDistribMulAction_smul
     (K L : Type u) [Field K] [Field L] [Algebra K L]
-    (σ : Gal(L / K)) (x : Lˣ) :
+    (σ : Gal(L/K)) (x : Lˣ) :
     letI := galoisGroupFieldUnitsMulDistribMulAction K L
     σ • x = Units.mapEquiv σ.toMulEquiv x :=
   rfl
@@ -89,7 +89,7 @@ theorem galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure_smul
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (σ : Gal(L / K)) (x : 𝒪[L]ˣ) :
+    (σ : Gal(L/K)) (x : 𝒪[L]ˣ) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     σ • x = Units.mapEquiv
       (galoisGroupIntegerRingEquivOfIsIntegralClosure K L σ).toMulEquiv x :=
@@ -111,7 +111,7 @@ def galoisGroupValueGroupMulDistribMulAction
 @[simp]
 theorem galoisGroupValueGroupMulDistribMulAction_smul
     (K L : Type u) [Field K] [Field L] [Algebra K L]
-    (σ : Gal(L / K)) (n : Multiplicative Int) :
+    (σ : Gal(L/K)) (n : Multiplicative Int) :
     letI := galoisGroupValueGroupMulDistribMulAction K L
     σ • n = n :=
   rfl
@@ -122,7 +122,7 @@ theorem integerUnitsToFieldUnits_galoisGroup_equivariant
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (σ : Gal(L / K)) (x : 𝒪[L]ˣ) :
+    (σ : Gal(L/K)) (x : 𝒪[L]ˣ) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     letI := galoisGroupFieldUnitsMulDistribMulAction K L
     integerUnitsToFieldUnits L (σ • x) =
@@ -142,7 +142,7 @@ theorem valuationMap_unitsMapEquiv_galoisGroup
     [IsNonarchimedeanLocalField L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (σ : Gal(L / K)) (x : Lˣ) :
+    (σ : Gal(L/K)) (x : Lˣ) :
     valuationMap L
         (Additive.ofMul (Units.mapEquiv σ.toMulEquiv x)) =
       valuationMap L (Additive.ofMul x) := by
@@ -209,7 +209,7 @@ theorem valuationUnitsMulHom_galoisGroup_equivariant
     [IsNonarchimedeanLocalField L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (σ : Gal(L / K)) (x : Lˣ) :
+    (σ : Gal(L/K)) (x : Lˣ) :
     letI := galoisGroupFieldUnitsMulDistribMulAction K L
     letI := galoisGroupValueGroupMulDistribMulAction K L
     valuationUnitsMulHom L (σ • x) =

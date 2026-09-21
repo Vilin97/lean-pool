@@ -870,7 +870,7 @@ noncomputable def
         ℚ rationalCyclotomicZHatField)
     (hE : NumberField E)
     (hAbelian : IsAbelianGalois ℚ E)
-    (f : (E' ≃ₐ[K] E') →* Gal(E / ℚ))
+    (f : (E' ≃ₐ[K] E') →* Gal(E/ℚ))
     (hnat :
       letI : NumberField E' := hE'
       letI : NumberField E := hE

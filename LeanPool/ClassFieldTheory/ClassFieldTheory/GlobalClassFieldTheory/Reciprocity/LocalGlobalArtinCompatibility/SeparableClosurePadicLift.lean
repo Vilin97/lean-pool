@@ -76,7 +76,7 @@ noncomputable def automorphismCyclicFixedField
     (Subgroup.closure ({σ} : Set (Gal(L / K))))
 
 noncomputable local instance automorphismCyclicFixedFieldNumberField
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     NumberField (automorphismCyclicFixedField σ) :=
   NumberField.of_module_finite K
     (automorphismCyclicFixedField σ)
@@ -84,7 +84,7 @@ noncomputable local instance automorphismCyclicFixedFieldNumberField
 /-- An automorphism, regarded over the fixed field of the cyclic
 subgroup it generates. -/
 noncomputable def automorphismOverCyclicFixedField
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     Gal(L / automorphismCyclicFixedField σ) :=
   IntermediateField.fixingSubgroupEquiv
     (automorphismCyclicFixedField σ)
@@ -100,7 +100,7 @@ omit [NumberField K] [NumberField L] [IsAbelianGalois K L] in
 field recovers the original automorphism. -/
 @[simp]
 theorem automorphismOverCyclicFixedField_restrictScalars
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     (automorphismOverCyclicFixedField σ).restrictScalars K = σ := by
   ext x
   rfl
@@ -109,7 +109,7 @@ omit [NumberField K] [NumberField L] [IsAbelianGalois K L] in
 /-- The automorphism over its cyclic fixed field genuinely generates
 the entire relative Galois group. -/
 theorem automorphismOverCyclicFixedField_generates
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     Subgroup.closure
         ({automorphismOverCyclicFixedField σ} :
           Set
@@ -160,7 +160,7 @@ theorem automorphismOverCyclicFixedField_generates
 the chosen extension of `v` to that field and taking its centre. -/
 noncomputable def automorphismCyclicFixedPlace
     (v : HeightOneSpectrum (𝓞 K))
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     let M := automorphismCyclicFixedField σ
     HeightOneSpectrum (𝓞 M) := by
   dsimp only
@@ -178,7 +178,7 @@ base-field place. -/
 @[simp]
 theorem finitePlaceBelow_automorphismCyclicFixedPlace
     (v : HeightOneSpectrum (𝓞 K))
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     finitePlaceBelow (K := K)
         (automorphismCyclicFixedPlace v σ) =
       v := by
@@ -196,7 +196,7 @@ place used in the norm--restriction square without making a new
 valuation choice. -/
 theorem finitePlaceBelow_chosenExtensionCentre_eq_automorphismCyclicFixedPlace
     (v : HeightOneSpectrum (𝓞 K))
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     let M := automorphismCyclicFixedField σ
     finitePlaceBelow (K := M)
         (finitePlaceExtensionCentre
@@ -229,7 +229,7 @@ cyclic-reduction place whose centre is the original chosen place of
 `L`. -/
 noncomputable def automorphismCyclicFixedTopExtension
     (v : HeightOneSpectrum (𝓞 K))
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     let M := automorphismCyclicFixedField σ
     AbsoluteValueExtension
       (NumberField.HeightOneSpectrum.adicAbv M
@@ -255,7 +255,7 @@ as the original chosen extension over the base field. -/
 @[simp]
 theorem automorphismCyclicFixedTopExtension_centre
     (v : HeightOneSpectrum (𝓞 K))
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     let M := automorphismCyclicFixedField σ
     finitePlaceExtensionCentre
         (K := M) (L := L)

@@ -40,7 +40,7 @@ theorem
     [FiniteDimensional F E] [IsAbelianGalois F E]
     (j : E →ₐ[K] SeparableClosure K)
     (e : ambientEmbeddedSeparableClosureEquiv K F E j)
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     ∃ x : Fˣ,
       localArtinMonoidHom F E x = z ∧
         ambientEmbeddedNormResidueAbelianElement K F E j e x = z := by

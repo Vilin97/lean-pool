@@ -148,7 +148,7 @@ theorem sUnitPrincipalIdelePowerSubgroup_map
       IdeleGroup.principalIdele K (y : Kˣ) ∈
         idelePowerLocalUnitSubgroup (K := K) n S T := by
       exact hy
-    show
+    change
       (((sUnitEquivSupportedPrincipalIdeleSubgroup
             (K := K) S T y :
           supportedPrincipalIdeleSubgroup (K := K) S T) :

@@ -546,7 +546,7 @@ def ofFiniteExtension (i : L →ₐ[K] AlgebraicClosure K) :
 @[simp]
 theorem ofFiniteExtension_apply
     (i : L →ₐ[K] AlgebraicClosure K)
-    (σ : Gal(AlgebraicClosure K / AlgHom.fieldRange i)) :
+    (σ : Gal(AlgebraicClosure K/AlgHom.fieldRange i)) :
     ofFiniteExtension K i σ = σ.restrictScalars K :=
   rfl
 
@@ -674,7 +674,7 @@ def quotientEquivGalFieldRangeOfNormalFiniteExtension [FiniteDimensional K L]
 @[simp]
 theorem quotientEquivGalFieldRangeOfNormalFiniteExtension_mk'
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
-    [Normal K (AlgHom.fieldRange i)] (σ : Gal(AlgebraicClosure K / K)) :
+    [Normal K (AlgHom.fieldRange i)] (σ : Gal(AlgebraicClosure K/K)) :
     quotientEquivGalFieldRangeOfNormalFiniteExtension K i
         (QuotientGroup.mk' (AlgHom.fieldRange i).fixingSubgroup σ) =
       AlgEquiv.restrictNormalHom (AlgHom.fieldRange i) σ :=
@@ -693,7 +693,7 @@ def quotientEquivGalOfNormalFiniteExtension [FiniteDimensional K L]
 @[simp]
 theorem quotientEquivGalOfNormalFiniteExtension_mk'
     [FiniteDimensional K L] (i : L →ₐ[K] AlgebraicClosure K)
-    [Normal K (AlgHom.fieldRange i)] (σ : Gal(AlgebraicClosure K / K)) :
+    [Normal K (AlgHom.fieldRange i)] (σ : Gal(AlgebraicClosure K/K)) :
     quotientEquivGalOfNormalFiniteExtension K i
         (QuotientGroup.mk' (AlgHom.fieldRange i).fixingSubgroup σ) =
       (AlgEquiv.autCongr (AlgEquiv.ofInjectiveField i)).symm

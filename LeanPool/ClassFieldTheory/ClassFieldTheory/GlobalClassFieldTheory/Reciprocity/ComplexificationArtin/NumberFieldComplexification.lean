@@ -292,7 +292,7 @@ private noncomputable def numberFieldComplexificationTransportCyclotomic :
     (numberFieldComplexificationCyclotomicEquiv F)).toMonoidHom
 
 private theorem numberFieldComplexificationRestriction_commutes
-    (σ : Gal(numberFieldComplexification F / F)) :
+    (σ : Gal(numberFieldComplexification F/F)) :
     numberFieldComplexificationTransportCyclotomic F
         (numberFieldComplexificationRestriction F σ) =
       numberFieldComplexificationLayerRestriction F

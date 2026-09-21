@@ -270,7 +270,7 @@ def galoisGroupIntegerUnitsModPrincipalUnitsMapEquivOfIsIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (n : Nat) (σ : Gal(L / K)) :
+    (n : Nat) (σ : Gal(L/K)) :
     IntegerUnitsModPrincipalUnitsAtLevel L n ≃*
       IntegerUnitsModPrincipalUnitsAtLevel L n :=
   integerUnitsModPrincipalUnitsMapEquivOfIntegerRingEquiv L n
@@ -283,7 +283,7 @@ theorem galoisGroupIntegerUnitsModPrincipalUnitsMapEquivOfIsIntegralClosure_mk
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (n : Nat) (σ : Gal(L / K)) (u : 𝒪[L]ˣ) :
+    (n : Nat) (σ : Gal(L/K)) (u : 𝒪[L]ˣ) :
     galoisGroupIntegerUnitsModPrincipalUnitsMapEquivOfIsIntegralClosure K L n σ
         (integerUnitsModPrincipalUnitsAtLevelMk L n u) =
       integerUnitsModPrincipalUnitsAtLevelMk L n
@@ -383,7 +383,7 @@ theorem galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralC
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (n : Nat) (σ : Gal(L / K)) (x : IntegerUnitsModPrincipalUnitsAtLevel L n) :
+    (n : Nat) (σ : Gal(L/K)) (x : IntegerUnitsModPrincipalUnitsAtLevel L n) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
       K L n
     σ • x = galoisGroupIntegerUnitsModPrincipalUnitsMapEquivOfIsIntegralClosure K L n σ x :=
@@ -396,7 +396,7 @@ theorem integerUnitsModPrincipalUnitsSuccMap_galoisGroup_of_isIntegralClosure
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (n : Nat) (σ : Gal(L / K))
+    (n : Nat) (σ : Gal(L/K))
     (x : IntegerUnitsModPrincipalUnitsAtLevel L (n + 1)) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
       K L (n + 1)
@@ -427,7 +427,7 @@ theorem principalUnitsSuccQuotToIntegerUnitsModPrincipalUnitsSucc_galoisGroup_of
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (n : Nat) (σ : Gal(L / K)) (x : PrincipalUnitsSuccQuot L n) :
+    (n : Nat) (σ : Gal(L/K)) (x : PrincipalUnitsSuccQuot L n) :
     letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure
       K L (n + 1)
@@ -519,7 +519,7 @@ theorem integerUnitsModPrincipalUnitsAtLevel_herbrandH0_finite_of_isNonarchimede
     [TopologicalSpace L] [IsNonarchimedeanLocalField L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L / K))] (n : Nat) :
+    [Fintype (Gal(L/K))] (n : Nat) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
     Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandH0
       (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n)) := by
@@ -534,7 +534,7 @@ theorem integerUnitsModPrincipalUnitsAtLevel_herbrandHMinusOne_finite_of_isNonar
     [TopologicalSpace L] [IsNonarchimedeanLocalField L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L / K))] (n : Nat) (σ : Gal(L / K)) :
+    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L / K)) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
     Finite (CyclicCohomology.ProfiniteCohomology.Herbrand.HerbrandHMinusOne
       (Gal(L / K)) (IntegerUnitsModPrincipalUnitsAtLevel L n) σ) := by
@@ -550,7 +550,7 @@ theorem integerUnitsModPrincipalUnitsAtLevel_herbrandQuotient_eq_one_of_isNonarc
     [TopologicalSpace L] [IsNonarchimedeanLocalField L] [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L / K))] (n : Nat) (σ : Gal(L / K))
+    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L / K))
     (hgen : ∀ g : Gal(L / K), g ∈ Subgroup.zpowers σ) :
     letI := galoisGroupIntegerUnitsModPrincipalUnitsMulDistribMulActionOfIsIntegralClosure K L n
     letI : Finite (IntegerUnitsModPrincipalUnitsAtLevel L n) :=
@@ -571,7 +571,7 @@ theorem integerUnitsModPrincipalUnitsSucc_herbrandQuotient_exact_multiplicative_
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L / K))] (n : Nat) (σ : Gal(L / K))
+    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L / K))
     (hgen : ∀ g : Gal(L / K), g ∈ Subgroup.zpowers σ)
     (hA0 :
       letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n
@@ -668,7 +668,7 @@ theorem integerUnitsModPrincipalUnitsSucc_herbrandQuotient_eq_one_of_isIntegralC
     [Algebra K L]
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    [Fintype (Gal(L / K))] (n : Nat) (σ : Gal(L / K))
+    [Fintype (Gal(L/K))] (n : Nat) (σ : Gal(L / K))
     (hgen : ∀ g : Gal(L / K), g ∈ Subgroup.zpowers σ)
     (hA0 :
       letI := galoisGroupPrincipalUnitsSuccQuotMulDistribMulActionOfIsIntegralClosure K L n

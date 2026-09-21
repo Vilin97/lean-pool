@@ -57,7 +57,7 @@ theorem finiteExtensionUnits_tate_card_of_generator
     (K L : Type) [Field K] [Field L] [Algebra K L]
     [FiniteDimensional K L] [IsGalois K L]
     [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K]
-    (g : Gal(L / K))
+    (g : Gal(L/K))
     (hg : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
     UnitsTateCardinalityData K L := by
   let : UniformSpace K := IsTopologicalAddGroup.rightUniformSpace K
@@ -185,7 +185,7 @@ theorem finiteTowerUnits_tate_card_of_generator
     [Algebra k K] [FiniteDimensional k K]
     [Algebra K L] [FiniteDimensional K L] [IsGalois K L]
     [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (g : Gal(L / K))
+    (g : Gal(L/K))
     (hg : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
     UnitsTateCardinalityData K L := by
   let : UniformSpace k := IsTopologicalAddGroup.rightUniformSpace k

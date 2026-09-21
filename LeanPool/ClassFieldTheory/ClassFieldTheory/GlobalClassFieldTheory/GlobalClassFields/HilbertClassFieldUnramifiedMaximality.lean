@@ -46,7 +46,7 @@ theorem isUnramifiedAtFinitePlaces_of_normRange_eq_bigHilbertNormSubgroup
   apply
     (ideleClassNorm_narrowFiniteConductor_eq_zero_iff_all_finitePlaces_unramified
       (K := K) (L := L)).1
-  show
+  change
     (ideleClassNormConductorialSubgroup
       (K := K) (L := L)).narrowFiniteConductor = 0
   have hsub :
@@ -66,7 +66,7 @@ theorem isUnramifiedAtFinitePlaces_of_normRange_eq_smallHilbertNormSubgroup
   apply
     (ideleClassNorm_narrowFiniteConductor_eq_zero_iff_all_finitePlaces_unramified
       (K := K) (L := L)).1
-  show
+  change
     (ideleClassNormConductorialSubgroup
       (K := K) (L := L)).narrowFiniteConductor = 0
   have hsub :

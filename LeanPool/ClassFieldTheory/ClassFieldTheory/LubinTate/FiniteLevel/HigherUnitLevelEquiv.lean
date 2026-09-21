@@ -996,7 +996,7 @@ private theorem
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (u : F.valuationSubringˣ) (n : ℕ)
     (σ :
-      Gal(standardLubinTateChangedLevelCompositumField hπ u n / K))
+      Gal(standardLubinTateChangedLevelCompositumField hπ u n/K))
     (hne :
       valuationSubringAutOfUniqueExtension
           (standardLubinTateChangedLevelCompositumCompleteDVF_hasUniqueDVFValuationExtension
@@ -1186,7 +1186,7 @@ private theorem
               hπ u n -
             beta))
     (σ :
-      Gal(standardLubinTateChangedLevelCompositumField hπ u n / K))
+      Gal(standardLubinTateChangedLevelCompositumField hπ u n/K))
     (hfix :
       σ (beta :
         standardLubinTateChangedLevelCompositumField hπ u n) =

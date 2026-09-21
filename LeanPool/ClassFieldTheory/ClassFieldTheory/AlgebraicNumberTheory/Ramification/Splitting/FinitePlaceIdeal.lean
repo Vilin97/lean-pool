@@ -169,7 +169,7 @@ theorem Set.Finite.preimage_finitePlaceBelow
     (hS : S.Finite) :
     {W : HeightOneSpectrum (𝓞 L) |
       finitePlaceBelow (K := K) W ∈ S}.Finite := by
-  show
+  change
     ((finitePlaceBelow (K := K)) ⁻¹' S).Finite
   exact hS.preimage'
     (fun v _ => finite_finitePlaceBelow_fibre

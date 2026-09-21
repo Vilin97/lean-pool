@@ -145,13 +145,13 @@ noncomputable def intrinsicFixedFieldConcreteSymbolValue
     (separableClosureUnits_isClassFormation F) x
 
 private def intrinsicFixedFieldConcretePrimeComparison
-    (x : Fˣ) (z : Abelianization Gal(E / F)) : Prop :=
+    (x : Fˣ) (z : Abelianization Gal(E/F)) : Prop :=
   intrinsicFixedFieldConcreteSymbolValue K H J hJH e x =
     z
 
 private def intrinsicFixedFieldAmbientPrimeComparison
     (_e : intrinsicFixedFieldSeparableClosureEquiv K H)
-    (x : Fˣ) (z : Abelianization Gal(E / F)) : Prop :=
+    (x : Fˣ) (z : Abelianization Gal(E/F)) : Prop :=
   abstractFixedFieldNormResidueSymbol
       K (SeparableClosure K)
       (localResidueDatum K)
@@ -182,7 +182,7 @@ def intrinsicFixedFieldAmbientFrobeniusAbelianization
           K H J hJH e σ)))
 
 private structure IntrinsicFixedFieldPrimeComparisonData
-    (z : Abelianization Gal(E / F)) where
+    (z : Abelianization Gal(E/F)) where
   xPrime : Fˣ
   concrete :
     intrinsicFixedFieldConcretePrimeComparison
@@ -835,7 +835,7 @@ private theorem intrinsicFixedFieldFrobeniusPrimeNorm_ambient
 
 
 private noncomputable def intrinsicFixedFieldPrimeRepresentative
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     (EI).extensionQuotient :=
   Classical.choose
     (QuotientGroup.mk_surjective
@@ -844,7 +844,7 @@ private noncomputable def intrinsicFixedFieldPrimeRepresentative
 omit [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K] in
 private theorem intrinsicFixedFieldPrimeRepresentative_abelianization
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     (qF).abelianizationCongr
         (Abelianization.of
           (intrinsicFixedFieldPrimeRepresentative
@@ -864,7 +864,7 @@ private theorem intrinsicFixedFieldPrimeRepresentative_abelianization
     _ = z := (qF).abelianizationCongr.apply_symm_apply z
 
 private noncomputable def intrinsicFixedFieldPrimeFrobeniusLift
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     intrinsicFixedFieldFrobeniusElements K H J hJH e :=
   Classical.choose
     ((localResidueDatum F).frobeniusRestriction_surjective
@@ -873,7 +873,7 @@ private noncomputable def intrinsicFixedFieldPrimeFrobeniusLift
         K H J hJH e z))
 
 private theorem intrinsicFixedFieldPrimeFrobeniusLift_restriction
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     (localResidueDatum F).frobeniusRestriction
         RF (EI).field (EI).below
         (intrinsicFixedFieldPrimeFrobeniusLift
@@ -887,14 +887,14 @@ private theorem intrinsicFixedFieldPrimeFrobeniusLift_restriction
         K H J hJH e z))
 
 private noncomputable def intrinsicFixedFieldPrimeComparisonWitness
-    (z : Abelianization Gal(E / F)) : Fˣ :=
+    (z : Abelianization Gal(E/F)) : Fˣ :=
   intrinsicFixedFieldFrobeniusPrimeNorm
     K H J hJH e
     (intrinsicFixedFieldPrimeFrobeniusLift
       K H J hJH e z)
 
 private theorem intrinsicFixedFieldPrimeComparisonWitness_concrete
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     intrinsicFixedFieldConcretePrimeComparison
       K H J hJH e
       (intrinsicFixedFieldPrimeComparisonWitness
@@ -1062,7 +1062,7 @@ private theorem
 
 private theorem
     intrinsicFixedFieldPrimeFrobeniusSourceRestrictionResult_eq
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     intrinsicFixedFieldFrobeniusSourceRestrictionResult
         K H J hJH e
         (intrinsicFixedFieldPrimeFrobeniusLift
@@ -1078,7 +1078,7 @@ private theorem
         K H J hJH e z)
 
 private theorem intrinsicFixedFieldPrimeFrobeniusLift_ambientRestriction
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     intrinsicFixedFieldFrobeniusAmbientRestrictionResult
         K H J hJH e
         (intrinsicFixedFieldPrimeFrobeniusLift
@@ -1107,7 +1107,7 @@ private theorem intrinsicFixedFieldPrimeFrobeniusLift_ambientRestriction
         K H J hJH e z
 
 private theorem intrinsicFixedFieldPrimeComparisonWitness_ambient
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     intrinsicFixedFieldAmbientPrimeComparison
       K H J hJH e
       (intrinsicFixedFieldPrimeComparisonWitness
@@ -1153,7 +1153,7 @@ private theorem intrinsicFixedFieldPrimeComparisonWitness_ambient
                 K H J hJH e z)))
 
 private noncomputable def intrinsicFixedFieldPrimeComparison
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     IntrinsicFixedFieldPrimeComparisonData
       K H J hJH e z :=
   { xPrime :=
@@ -1170,7 +1170,7 @@ private noncomputable def intrinsicFixedFieldPrimeComparison
 extension is represented by a unit with both its concrete norm-residue value
 and its actual ambient fixed-field norm-residue value. -/
 theorem exists_intrinsicFixedFieldPrimeComparison
-    (z : Abelianization Gal(E / F)) :
+    (z : Abelianization Gal(E/F)) :
     ∃ x : Fˣ,
       concreteNormResidueSymbolOfEmbedding
           F E iFE

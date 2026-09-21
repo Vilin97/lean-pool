@@ -817,7 +817,7 @@ theorem galoisGroupEquivResidueAlgEquivOfUnramifiedValuationOfIsIntegralClosure_
     [Valuation.HasExtension (ValuativeRel.valuation K) (ValuativeRel.valuation L)]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L] [Module.Finite 𝒪[K] 𝒪[L]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension K L]
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     galoisGroupEquivResidueAlgEquivOfUnramifiedValuationOfIsIntegralClosure K L σ =
       galoisGroupResidueAlgEquivOfIsIntegralClosure K L σ :=
   rfl

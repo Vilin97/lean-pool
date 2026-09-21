@@ -137,7 +137,7 @@ noncomputable def globalReciprocityAbelianizationContinuousMulEquiv :
 actual finite-Galois norm-residue map. -/
 @[simp]
 theorem globalReciprocityAbelianizationContinuousMulEquiv_apply
-    (σ : Abelianization (Gal(L / K))) :
+    (σ : Abelianization (Gal(L/K))) :
     globalReciprocityAbelianizationContinuousMulEquiv K L σ =
       Additive.toMul
         ((globalNormResidueAbelianizationEquiv K L).symm

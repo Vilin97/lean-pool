@@ -128,7 +128,7 @@ closed subgroup field (not necessarily normal over `K`), the residue degree
 defined by the absolute residue action is the degree of the literal residue
 field of the unique finite extension valuation. -/
 theorem localResidueDatum_residueDegree_eq_residueFinrank
-    (H : FiniteAbstractField (Gal(SeparableClosure K / K)))
+    (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
     [FiniteDimensional K
       (abstractFixedField K (SeparableClosure K) H.field)]
     [ValuativeRel (abstractFixedField K (SeparableClosure K) H.field)]

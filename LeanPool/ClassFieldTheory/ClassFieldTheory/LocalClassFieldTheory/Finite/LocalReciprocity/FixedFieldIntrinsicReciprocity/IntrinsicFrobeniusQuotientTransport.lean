@@ -28,7 +28,7 @@ noncomputable def
     intrinsicBaseContinuousEquivAmbientFixedField
     (K : Type) [Field K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K))
+      Gal(SeparableClosure K/K))
     (e : intrinsicFixedFieldSeparableClosureEquiv K H) :
     (intrinsicAbstractBase
       (abstractFixedField K (SeparableClosure K) H.field)).toSubgroup ≃ₜ*

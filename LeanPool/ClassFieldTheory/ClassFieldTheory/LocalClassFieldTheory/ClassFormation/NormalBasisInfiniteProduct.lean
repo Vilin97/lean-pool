@@ -174,7 +174,7 @@ the ambient local field. -/
 theorem tendsto_galoisGroupIntegerUnits_sigmaMinusOne_of_tendsto
     [UniformSpace L] [IsUniformAddGroup L] [IsNonarchimedeanLocalField L]
     [IsIntegralClosure 𝒪[L] 𝒪[K] L]
-    (g : Gal(L / K)) (f : Nat → 𝒪[L]ˣ) (x : 𝒪[L]ˣ)
+    (g : Gal(L/K)) (f : Nat → 𝒪[L]ˣ) (x : 𝒪[L]ˣ)
     (hf : Tendsto (fun d : Nat => ((f d : 𝒪[L]ˣ) : 𝒪[L])) atTop
       (nhds ((x : 𝒪[L]ˣ) : 𝒪[L]))) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L

@@ -35,7 +35,7 @@ variable (K L : Type u) [Field K] [Field L] [Algebra K L]
 for the actual Galois action on integer units and the transported action on
 the lattice quotient. -/
 theorem chosenNormalBasisPrincipalUnitLatticeClass_galoisGroup
-    (n : Nat) (sigma : Gal(L / K)) (u : 𝒪[L]ˣ)
+    (n : Nat) (sigma : Gal(L/K)) (u : 𝒪[L]ˣ)
     (hu : u ∈ chosenNormalBasisPrincipalUnitSet K L n) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
     letI := galoisGroupChosenNormalBasisLatticeSuccQuotDistribMulAction K L n
@@ -102,7 +102,7 @@ theorem chosenNormalBasisPrincipalUnitSuccQuotMulDistribMulAction_smul_mk
     (hVn : (Vn : Set 𝒪[L]ˣ) = chosenNormalBasisPrincipalUnitSet K L n)
     (hVsucc : (Vsucc : Set 𝒪[L]ˣ) =
       chosenNormalBasisPrincipalUnitSet K L (n + 1))
-    (sigma : Gal(L / K)) (u : Vn) :
+    (sigma : Gal(L/K)) (u : Vn) :
     letI := chosenNormalBasisPrincipalUnitSubgroupMulDistribMulAction
       K L n Vn hVn
     letI := chosenNormalBasisPrincipalUnitSuccQuotMulDistribMulAction

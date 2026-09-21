@@ -13,7 +13,7 @@ For a number field `K`, the actual cyclotomic `ZHat`-extension is the
 compositum of the embedded copy of `K` with the rational cyclotomic
 `ZHat`-extension.  Its normalization factor is the actual intersection degree
 
-`f_K = [K ∩ ℚ̃ : ℚ]`,
+`f_K = [K ∩ ℚ_tilde : ℚ]`,
 
 constructed in `CyclotomicZHatBaseChange`.
 
@@ -203,7 +203,7 @@ theorem
       exact hQProjection.symm
 
 /-- The rational normalization factor is one:
-`[ℚ ∩ ℚ̃ : ℚ] = 1`. -/
+`[ℚ ∩ ℚ_tilde : ℚ] = 1`. -/
 @[simp]
 theorem cyclotomicZHatIntersectionDegree_rat :
     cyclotomicZHatIntersectionDegree ℚ = 1 :=
@@ -369,7 +369,7 @@ theorem finiteCyclotomicLayer_normArtin_range_eq_fixingSubgroup
       K E
 
 /-- The ordinary norm `N_{K/ℚ}` factors through the determinant norm
-from the actual intersection `K ∩ ℚ̃`.  This is determinant-norm
+from the actual intersection `K ∩ ℚ_tilde`.  This is determinant-norm
 transitivity in the fixed-bottom-field tower presentation. -/
 theorem
     ideleNorm_mem_cyclotomicZHatIntersection_relativeIdeleNorm_range
@@ -438,7 +438,7 @@ theorem
           simp [b]]
 
 /-- The infinite rational Artin symbol of `N_{K/ℚ}(a)` fixes the actual
-intersection `K ∩ ℚ̃`. -/
+intersection `K ∩ ℚ_tilde`. -/
 theorem
     rationalCyclotomicZHatGlobalArtin_norm_mem_intersection_fixingSubgroup
     (a : IdeleGroup K) :
@@ -514,7 +514,7 @@ theorem
     _ = 1 := hfinite
 
 /-- The rational Artin symbols of norms from `K` are dense in the
-subgroup fixing the actual intersection `K ∩ ℚ̃`.  At each finite
+subgroup fixing the actual intersection `K ∩ ℚ_tilde`.  At each finite
 cyclotomic layer this is the exact restriction-image calculation above;
 the Krull neighborhood basis then gives density in the inverse limit. -/
 theorem

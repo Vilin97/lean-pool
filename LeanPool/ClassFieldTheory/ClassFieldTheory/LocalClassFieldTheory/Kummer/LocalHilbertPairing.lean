@@ -32,7 +32,7 @@ variable {K : Type u} {Omega : Type v}
 fields in a common ambient extension. -/
 theorem rootQuotient_map_intermediateFieldInclusion
     (E F : IntermediateField K Omega) (hEF : E ≤ F)
-    [Normal K E] (beta : Eˣ) (sigma : Gal(F / K)) :
+    [Normal K E] (beta : Eˣ) (sigma : Gal(F/K)) :
     rootQuotient (K := K) (L := F)
         (Units.map (IntermediateField.inclusion hEF).toMonoidHom beta) sigma =
       Units.map (IntermediateField.inclusion hEF).toMonoidHom

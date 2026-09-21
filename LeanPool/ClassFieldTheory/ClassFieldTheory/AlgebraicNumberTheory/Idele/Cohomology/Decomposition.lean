@@ -357,7 +357,7 @@ theorem unramifiedLocalIntegerUnitsHerbrand_subsingleton
     [Module.Finite 𝒪[k] 𝒪[ell]]
     [LocalFieldTheory.IsNonarchimedeanLocalField.IsUnramifiedValuedExtension
       k ell]
-    (g : Gal(ell / k))
+    (g : Gal(ell/k))
     (hg : ∀ σ : Gal(ell / k),
       σ ∈ Subgroup.zpowers g) :
     letI :=
@@ -416,7 +416,7 @@ noncomputable def unramifiedInducedIntegerUnitsHerbrandH0Equiv
     [Field k] [Field ell] [Algebra k ell]
     [FiniteDimensional k ell]
     [ValuativeRel ell]
-    [MulDistribMulAction (Gal(ell / k)) 𝒪[ell]ˣ]
+    [MulDistribMulAction (Gal(ell/k)) 𝒪[ell]ˣ]
     (e : H ≃* Gal(ell / k))
     (σ : G)
     (hσ : ∀ τ : G, τ ∈ Subgroup.zpowers σ) :
@@ -440,7 +440,7 @@ noncomputable def unramifiedInducedIntegerUnitsHerbrandHMinusOneEquiv
     [Field k] [Field ell] [Algebra k ell]
     [FiniteDimensional k ell]
     [ValuativeRel ell]
-    [MulDistribMulAction (Gal(ell / k)) 𝒪[ell]ˣ]
+    [MulDistribMulAction (Gal(ell/k)) 𝒪[ell]ˣ]
     (e : H ≃* Gal(ell / k))
     (σ : G)
     (hσ : ∀ τ : G, τ ∈ Subgroup.zpowers σ) :

@@ -461,7 +461,7 @@ theorem exists_cyclicIntermediateFields
 /-! ## The maximal unramified subextension in the third reduction -/
 
 /-- The inertia subgroup of `G(L/K)`: the image of `I_K` in the actual
-finite quotient.  Its fixed field is `L ∩ K̃` in the notation of. -/
+finite quotient.  Its fixed field is `L ∩ K_tilde` in the notation of. -/
 def inertiaImage (D : DegreeData G) (L : FiniteGaloisSubextension K) :
     Subgroup L.extensionQuotient :=
   (D.fieldInertiaWithin K).map
@@ -482,7 +482,7 @@ instance inertiaImage_normalInstance (D : DegreeData G)
     (L : FiniteGaloisSubextension K) : (L.inertiaImage D).Normal :=
   L.inertiaImage_normal D
 
-/-- The actual maximal unramified subextension `M = L ∩ K̃`. -/
+/-- The actual maximal unramified subextension `M = L ∩ K_tilde`. -/
 def maximalUnramifiedSubextension (D : DegreeData G)
     (L : FiniteGaloisSubextension K) : ClosedSubgroup G :=
   L.intermediateField (L.inertiaImage D)
@@ -603,7 +603,7 @@ namespace FiniteGaloisSubextension
 variable {K : ClosedSubgroup G}
 
 /-- In the cyclic case, the lower norm arrow for
-`L / (L ∩ K̃) / K` is injective by the order calculation from.
+`L / (L ∩ K_tilde) / K` is injective by the order calculation from.
 This specializes the actual cardinality proof in the reciprocity reduction exact row to the
 inertia-image intermediate field. -/
 theorem maximalUnramified_normMap_injective

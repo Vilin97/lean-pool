@@ -53,7 +53,7 @@ private theorem mulExact_transport_mulEquiv
       (eB.toMonoidHom.comp f)
       (eC.toMonoidHom.comp (g.comp eB.symm.toMonoidHom)) := by
   intro y
-  show
+  change
     eC (g (eB.symm y)) = 1 ↔
       ∃ x, eB (f x) = y
   constructor
@@ -86,14 +86,14 @@ private noncomputable def tateH0FixedCycle
       (groupCohomology.cochainsIso₀ M)
       (groupCohomology.cochainsIso₁ M)
       (by
-        show
+        change
           (groupHomology.chainsIso₀ M).hom ≫ M.norm.toModuleCatHom =
             M.tateNorm ≫ (groupCohomology.cochainsIso₀ M).hom
         rw [Rep.tateNorm]
         simp)
       (groupCohomology.comp_d₀₁_eq M)
   let x : S.moduleCatLeftHomologyData.K := by
-    show LinearMap.ker
+    change LinearMap.ker
       (groupCohomology.d₀₁ (Rep.ofMulDistribMulAction G A)).hom
     exact ⟨Additive.ofMul a.1, by
       rw [groupCohomology.d₀₁_ker_eq_invariants]
@@ -114,7 +114,7 @@ private theorem tateH0FixedCycle_iCycles
     (tateComplex M).iCycles 0 (tateH0FixedCycle a) =
       (groupCohomology.cochainsIso₀ M).inv
         (by
-          show Additive A
+          change Additive A
           exact Additive.ofMul a.1) := by
   let M := Rep.ofMulDistribMulAction G A
   let S : ShortComplex (ModuleCat ℤ) :=
@@ -126,21 +126,21 @@ private theorem tateH0FixedCycle_iCycles
       (groupCohomology.cochainsIso₀ M)
       (groupCohomology.cochainsIso₁ M)
       (by
-        show
+        change
           (groupHomology.chainsIso₀ M).hom ≫ M.norm.toModuleCatHom =
             M.tateNorm ≫ (groupCohomology.cochainsIso₀ M).hom
         rw [Rep.tateNorm]
         simp)
       (groupCohomology.comp_d₀₁_eq M)
   let x : S.moduleCatLeftHomologyData.K := by
-    show LinearMap.ker
+    change LinearMap.ker
       (groupCohomology.d₀₁ (Rep.ofMulDistribMulAction G A)).hom
     exact ⟨Additive.ofMul a.1, by
       rw [groupCohomology.d₀₁_ker_eq_invariants]
       intro g
       apply Additive.ofMul.injective
       exact a.2 g⟩
-  show
+  change
     (((((tateComplex M).cyclesIsoSc'
             (-1) 0 1 (by simp) (by simp)).inv ≫
           (tateComplex M).iCycles 0).hom
@@ -148,26 +148,26 @@ private theorem tateH0FixedCycle_iCycles
         (S.moduleCatCyclesIso.inv x)))) =
       (groupCohomology.cochainsIso₀ M).inv
         (by
-          show Additive A
+          change Additive A
           exact Additive.ofMul a.1)
   rw [HomologicalComplex.cyclesIsoSc'_inv_iCycles]
-  show
+  change
     (((ShortComplex.cyclesMap eS.inv ≫
           ((tateComplex M).sc' (-1) 0 1).iCycles).hom
       (S.moduleCatCyclesIso.inv x))) =
       (groupCohomology.cochainsIso₀ M).inv
         (by
-          show Additive A
+          change Additive A
           exact Additive.ofMul a.1)
   rw [ShortComplex.cyclesMap_i]
-  show
+  change
     (((S.moduleCatCyclesIso.inv ≫ S.iCycles ≫ eS.inv.τ₂).hom x)) =
       (groupCohomology.cochainsIso₀ M).inv
         (by
-          show Additive A
+          change Additive A
           exact Additive.ofMul a.1)
   rw [ShortComplex.moduleCatCyclesIso_inv_iCycles_assoc]
-  show
+  change
     (groupCohomology.cochainsIso₀
         (Rep.ofMulDistribMulAction G A)).inv (Additive.ofMul a.1) =
       (groupCohomology.cochainsIso₀
@@ -194,7 +194,7 @@ private theorem tateH0FixedCycle_map
   apply
     (ModuleCat.mono_iff_injective ((tateComplex MB).iCycles 0)).1
       inferInstance
-  show
+  change
     (((HomologicalComplex.cyclesMap (tateComplex.map φ) 0 ≫
           (tateComplex MB).iCycles 0).hom
         (tateH0FixedCycle a))) =
@@ -205,12 +205,12 @@ private theorem tateH0FixedCycle_map
   apply
     (ModuleCat.mono_iff_injective
       (groupCohomology.cochainsIso₀ MB).hom).1 inferInstance
-  show
+  change
     (((groupCohomology.cochainsMap (.id G) φ).f 0 ≫
           (groupCohomology.cochainsIso₀ MB).hom).hom
         ((groupCohomology.cochainsIso₀ MA).inv
           (by
-            show Additive A
+            change Additive A
             exact Additive.ofMul a.1))) =
       (groupCohomology.cochainsIso₀ MB).hom
         ((groupCohomology.cochainsIso₀ MB).inv
@@ -232,7 +232,7 @@ private theorem isoZeroBoundary_fixedCycle
       S.homologyπ
         (S.moduleCatCyclesIso.inv
           (by
-            show LinearMap.ker
+            change LinearMap.ker
               (groupCohomology.d₀₁
                 (Rep.ofMulDistribMulAction G A)).hom
             exact ⟨Additive.ofMul a.1, by
@@ -254,14 +254,14 @@ private theorem isoZeroBoundary_fixedCycle
       (groupCohomology.cochainsIso₀ M)
       (groupCohomology.cochainsIso₁ M)
       (by
-        show
+        change
           (groupHomology.chainsIso₀ M).hom ≫ M.norm.toModuleCatHom =
             M.tateNorm ≫ (groupCohomology.cochainsIso₀ M).hom
         rw [Rep.tateNorm]
         simp)
       (groupCohomology.comp_d₀₁_eq M)
   let x : S.moduleCatLeftHomologyData.K := by
-    show LinearMap.ker
+    change LinearMap.ker
       (groupCohomology.d₀₁ (Rep.ofMulDistribMulAction G A)).hom
     exact ⟨Additive.ofMul a.1, by
       rw [groupCohomology.d₀₁_ker_eq_invariants]
@@ -281,7 +281,7 @@ private theorem isoZeroBoundary_fixedCycle
           (-1) 0 1 (by simp) (by simp)).inv
           ((ShortComplex.cyclesMapIso eS).inv y) by
       rfl]
-    show
+    change
       (ShortComplex.cyclesMapIso eS).hom
           (((tateComplex M).cyclesIsoSc'
               (-1) 0 1 (by simp) (by simp)).hom
@@ -295,13 +295,13 @@ private theorem isoZeroBoundary_fixedCycle
         ((tateComplex M).homologyIsoSc'
             (-1) 0 1 (by simp) (by simp)).hom ≫
           ShortComplex.homologyMap eS.hom := by
-    show
+    change
       ShortComplex.homologyMap ((eSc ≪≫ eS).hom) =
         ShortComplex.homologyMap eSc.hom ≫
           ShortComplex.homologyMap eS.hom
     rw [Iso.trans_hom, ShortComplex.homologyMap_comp]
   rw [hIso]
-  show
+  change
     ((((tateComplex M).homologyπ 0 ≫
         ((tateComplex M).homologyIsoSc'
           (-1) 0 1 (by simp) (by simp)).hom) ≫
@@ -327,7 +327,7 @@ private theorem tateH0IsoHerbrandH0_fixedCycle
     ShortComplex.mk M.norm.toModuleCatHom (groupCohomology.d₀₁ M)
       (Rep.norm_comp_d_eq_zero M)
   let x : S.moduleCatLeftHomologyData.K := by
-    show LinearMap.ker
+    change LinearMap.ker
       (groupCohomology.d₀₁ (Rep.ofMulDistribMulAction G A)).hom
     exact ⟨Additive.ofMul a.1, by
       rw [groupCohomology.d₀₁_ker_eq_invariants]
@@ -340,7 +340,7 @@ private theorem tateH0IsoHerbrandH0_fixedCycle
           ((tateComplex M).homologyπ 0 (tateH0FixedCycle a)) =
         S.homologyπ y := by
     exact isoZeroBoundary_fixedCycle a
-  show
+  change
     (tateH0IsoHerbrandH0 (G := G) (A := A)).hom
         (show tateCohomology M 0 from
           (tateComplex M).homologyπ 0 (tateH0FixedCycle a)) =
@@ -504,7 +504,7 @@ theorem globalFieldNormSubgroup_le_everywhereLocalFieldNormSubgroup
     globalFieldNormSubgroup K L ≤
       everywhereLocalFieldNormSubgroup K L := by
   rintro x ⟨y, rfl⟩
-  show
+  change
     IdeleGroup.principalIdele K
         (Units.map
           (Algebra.norm K : L →* K) y) ∈
@@ -632,7 +632,7 @@ private theorem principalIdeleHerbrandH0Map_mk
           Additive
             (HerbrandH0 (L ≃ₐ[K] L)
               (RelativeIdeleGroup.principalSubgroup K L))) := by
-    show
+    change
       (tateH0IsoHerbrandH0
           (G := L ≃ₐ[K] L)
           (A := RelativeIdeleGroup.principalSubgroup K L)).hom cP = _
@@ -641,7 +641,7 @@ private theorem principalIdeleHerbrandH0Map_mk
       eI cI =
         (Additive.ofMul (HerbrandH0.mk aI) :
           Additive (HerbrandH0 (L ≃ₐ[K] L) (RelativeIdeleGroup K L))) := by
-    show
+    change
       (tateH0IsoHerbrandH0
           (G := L ≃ₐ[K] L)
           (A := RelativeIdeleGroup K L)).hom cI = _
@@ -649,7 +649,7 @@ private theorem principalIdeleHerbrandH0Map_mk
   have hc :
       ((tateCohomologyFunctor 0).map f).hom cP = cI := by
     dsimp only [cP, cI]
-    show
+    change
       ((((tateComplex
             (Rep.ofMulDistribMulAction (L ≃ₐ[K] L)
               (RelativeIdeleGroup.principalSubgroup K L))).homologyπ 0) ≫
@@ -686,7 +686,7 @@ private theorem principalIdeleHerbrandH0Map_mk
         Additive (HerbrandH0 (L ≃ₐ[K] L) (RelativeIdeleGroup K L))) := by
     rw [← hPe, eP.symm_apply_apply, ← hIe]
     exact congrArg eI hc
-  show
+  change
     Additive.toMul
         (eI (((tateCohomologyFunctor 0).map f).hom
           (eP.symm
@@ -856,7 +856,7 @@ theorem ideleClassToPrincipalConnecting_range_eq_ker
   have htarget : Function.MulExact connecting principal := by
     exact
       mulExact_transport_mulEquiv δm fm eP eI hbase
-  show MonoidHom.range connecting = MonoidHom.ker principal
+  change MonoidHom.range connecting = MonoidHom.ker principal
   exact htarget.monoidHom_ker_eq.symm
 
 end IdeleClassConnecting
@@ -982,7 +982,7 @@ theorem fieldUnitsHerbrandH0_map_baseFieldUnit_eq_one_of_mem_norm
     apply (HerbrandH0.mk_eq_one_iff aI).2
     obtain ⟨z, hz⟩ := hx
     refine ⟨z, ?_⟩
-    show
+    change
       tateNorm (L ≃ₐ[K] L) (RelativeIdeleGroup K L) z =
         (aI : RelativeIdeleGroup K L)
     dsimp only [aP,
@@ -1005,7 +1005,7 @@ theorem fieldUnitsHerbrandH0_map_baseFieldUnit_eq_one_of_mem_norm
           (fieldUnitsEquivPrincipalIdeles K L)
           (fieldUnitsEquivPrincipalIdeles_smul K L)
           (baseFieldUnitAsFixedUnit K L x)
-    show
+    change
       principalIdeleHerbrandH0Map K L
           (fieldUnitsHerbrandH0EquivPrincipalIdeles K L
             (HerbrandH0.mk (baseFieldUnitAsFixedUnit K L x))) =
@@ -1077,7 +1077,7 @@ theorem ideleClassToFieldUnitsConnecting_range_eq_ker
   ext q
   constructor
   · rintro ⟨c, rfl⟩
-    show
+    change
       principalIdeleHerbrandH0Map K L
           (e (e.symm
             (ideleClassToPrincipalConnecting K L c))) = 1
@@ -1097,7 +1097,7 @@ theorem ideleClassToFieldUnitsConnecting_range_eq_ker
       exact hq
     obtain ⟨c, hc⟩ := heq
     refine ⟨c, ?_⟩
-    show e.symm
+    change e.symm
         (ideleClassToPrincipalConnecting K L c) = q
     rw [hc, e.symm_apply_apply]
 
@@ -1190,7 +1190,7 @@ theorem everywhereLocalFieldNormSubgroup_le_global_of_subsingleton
   refine ⟨y, ?_⟩
   apply Units.ext
   apply FaithfulSMul.algebraMap_injective K L
-  show
+  change
     algebraMap K L
         ((Units.map (Algebra.norm K : L →* K) y : Kˣ) : K) =
       algebraMap K L (x : K)
@@ -1277,7 +1277,7 @@ theorem hasseNormDiagonal_injective_iff
         exact
           (QuotientGroup.eq_one_iff
             (IdeleGroup.principalIdele K x)).1 hx
-      show
+      change
         QuotientGroup.mk'
             (globalFieldNormSubgroup K L) x = 1
       exact (QuotientGroup.eq_one_iff x).2 (hlocal hxlocal)

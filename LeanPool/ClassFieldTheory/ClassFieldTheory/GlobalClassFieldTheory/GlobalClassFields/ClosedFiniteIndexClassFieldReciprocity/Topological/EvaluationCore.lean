@@ -40,7 +40,7 @@ equality between the actual norm range and a target subgroup. -/
 theorem globalReciprocityContinuousMulEquiv_trans_quotientOfEq_apply
     (H : Subgroup (IdeleClassGroup K))
     (hNorm : (_root_.ideleClassNorm K L).range = H)
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     ((globalReciprocityContinuousMulEquiv K L).trans
       (QuotientGroup.quotientContinuousMulEquivOfEq hNorm)) σ =
       QuotientGroup.quotientMulEquivOfEq hNorm

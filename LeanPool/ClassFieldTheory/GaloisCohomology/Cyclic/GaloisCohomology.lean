@@ -58,7 +58,7 @@ noncomputable def cyclic_H1_iso_HminusOne {k G : Type} [CommRing k] [Group G]
 
 /-- The cyclic low-degree comparison for the unit representation. -/
 noncomputable def unitsH1IsoTateHminusOne (K L : Type) [Field K] [Field L]
-    [Algebra K L] [FiniteDimensional K L] (g : Gal(L / K))
+    [Algebra K L] [FiniteDimensional K L] (g : Gal(L/K))
     (hg : ∀ x : Gal(L / K), x ∈ Subgroup.zpowers g) :
     groupCohomology.H1 (Rep.ofAlgebraAutOnUnits K L) ≅
       tateCohomology (Rep.ofAlgebraAutOnUnits K L) (-1) :=
@@ -68,7 +68,7 @@ noncomputable def unitsH1IsoTateHminusOne (K L : Type) [Field K] [Field L]
 This is low-degree cyclic Tate cohomology for the coefficient group `Lˣ`: the vanishing of
 `H¹(G,Lˣ)` gives the vanishing of `H^{-1}(G,Lˣ)`. -/
 theorem hilbert90_unitsTateHminusOne_isZero (K L : Type) [Field K]
-    [Field L] [Algebra K L] [FiniteDimensional K L] (g : Gal(L / K))
+    [Field L] [Algebra K L] [FiniteDimensional K L] (g : Gal(L/K))
     (hg : ∀ x : Gal(L / K), x ∈ Subgroup.zpowers g) :
     CategoryTheory.Limits.IsZero
       (tateCohomology (Rep.ofAlgebraAutOnUnits K L) (-1)) := by

@@ -119,7 +119,7 @@ actual norm-residue equivalence, with no additional choice of an
 abstract group isomorphism. -/
 @[simp]
 theorem globalReciprocityContinuousMulEquiv_apply
-    (σ : Gal(L / K)) :
+    (σ : Gal(L/K)) :
     globalReciprocityContinuousMulEquiv K L σ =
       Additive.toMul
         ((globalNormResidueEquiv K L).symm

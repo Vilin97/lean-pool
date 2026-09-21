@@ -28,13 +28,13 @@ open RamificationTheory.HilbertRamification.ValuationSubring
 
 private abbrev finiteFixedField
     (K : Type) [Field K]
-    (H : FiniteAbstractField (Gal(SeparableClosure K / K))) :
+    (H : FiniteAbstractField (Gal(SeparableClosure K/K))) :
     Type :=
   abstractFixedField K (SeparableClosure K) H.field
 
 local instance finiteFixedFieldSeparableClosureAlgebra
     (K : Type) [Field K]
-    (H : FiniteAbstractField (Gal(SeparableClosure K / K))) :
+    (H : FiniteAbstractField (Gal(SeparableClosure K/K))) :
     Algebra (finiteFixedField K H)
       (SeparableClosure (finiteFixedField K H)) :=
   (separableClosure (finiteFixedField K H)
@@ -91,7 +91,7 @@ class formation is the ordinary normalized local-field valuation. -/
 theorem localHenselianValuation_valuationAt_abstractFixedField
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : FiniteAbstractField (Gal(SeparableClosure K / K)))
+    (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
     (x : (abstractFixedField K (SeparableClosure K) H.field)ˣ) :
     letI : FiniteDimensional K
         (abstractFixedField K (SeparableClosure K) H.field) :=
@@ -725,7 +725,7 @@ the two uniquely extended local valuation rings. -/
 theorem localSeparableValuationSubring_eq_comap_abstractFixedFieldEquiv
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : FiniteAbstractField (Gal(SeparableClosure K / K)))
+    (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
     (e : SeparableClosure (finiteFixedField K H) ≃ₐ[
           finiteFixedField K H] SeparableClosure K) :
     letI : FiniteDimensional K
@@ -792,7 +792,7 @@ residue field. -/
 private theorem exists_abstractFixedFieldResidueEquiv
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : FiniteAbstractField (Gal(SeparableClosure K / K)))
+    (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
     [FiniteDimensional K (finiteFixedField K H)]
     [NontriviallyNormedField (finiteFixedField K H)]
     [ValuativeRel (finiteFixedField K H)]
@@ -924,7 +924,7 @@ private theorem exists_abstractFixedFieldResidueEquiv
 private theorem residueAbsoluteDegreeIn_eq_normalizedDegree_abstractFixedFieldEquiv
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : FiniteAbstractField (Gal(SeparableClosure K / K)))
+    (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
     [FiniteDimensional K (finiteFixedField K H)]
     [NontriviallyNormedField (finiteFixedField K H)]
     [ValuativeRel (finiteFixedField K H)]
@@ -1027,7 +1027,7 @@ field. -/
 theorem localResidueDegree_eq_normalizedDegree_abstractFixedFieldEquiv
     (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K]
     [IsNonarchimedeanLocalField K]
-    (H : FiniteAbstractField (Gal(SeparableClosure K / K)))
+    (H : FiniteAbstractField (Gal(SeparableClosure K/K)))
     (e : SeparableClosure (finiteFixedField K H) ≃ₐ[
           finiteFixedField K H] SeparableClosure K)
     (sigma : Gal(SeparableClosure (finiteFixedField K H) /

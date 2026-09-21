@@ -120,7 +120,7 @@ separable-closure equivalence is continuous. -/
 theorem intrinsicBaseEquivAmbientFixedField_continuous
     (K : Type) [Field K]
     (H : FiniteAbstractField
-      Gal(SeparableClosure K / K)) :
+      Gal(SeparableClosure K/K)) :
     let F := abstractFixedField K (SeparableClosure K) H.field
     letI : Algebra F (SeparableClosure F) :=
       (separableClosure F (AlgebraicClosure F)).algebra

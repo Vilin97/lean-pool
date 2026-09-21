@@ -38,7 +38,7 @@ variable (K L : Type u) [Field K] [Field L] [Algebra K L]
 /-- The local class-field-axiom theorem: for every sufficiently deep chosen normal-basis subgroup
 `V`, both low-degree Herbrand quotients are trivial. -/
 theorem exists_chosenNormalBasisPrincipalUnit_herbrand_subsingleton
-    (g : Gal(L / K))
+    (g : Gal(L/K))
     (hgen : ∀ sigma : Gal(L / K), sigma ∈ Subgroup.zpowers g) :
     ∃ c : Nat, ∀ n : Nat, c ≤ n →
       ∀ (V : Subgroup 𝒪[L]ˣ)

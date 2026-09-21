@@ -63,7 +63,7 @@ theorem mem_standardLubinTateRealLowerRamificationGroup_nat_iff_primitivePoint
     {F : LocalField.{u, v} K} {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n i : ℕ)
-    (σ : Gal((standardLubinTateLevelField hπ n) / K)) :
+    (σ : Gal((standardLubinTateLevelField hπ n)/K)) :
     σ ∈ standardLubinTateRealLowerRamificationGroup hπ n (i : ℝ) ↔
       ((i + 1 : ℕ) : ℕ∞) ≤
         IsDiscreteValuationRing.addVal

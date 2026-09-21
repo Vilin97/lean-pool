@@ -182,7 +182,7 @@ theorem relativeDeltaClass_one (H : Subgroup G) :
     relativeDeltaClass H 1 = 0 := by
   apply (QuotientAddGroup.eq_zero_iff _).2
   rw [mem_mixedProductInNumerator_iff]
-  show embeddedDelta H 1 ∈ mixedAugmentationProduct H
+  change embeddedDelta H 1 ∈ mixedAugmentationProduct H
   rw [embeddedDelta_eq]
   simp
 
@@ -193,7 +193,7 @@ theorem relativeDeltaClass_mul
       relativeDeltaClass H h + relativeDeltaClass H k := by
   apply (QuotientAddGroup.eq_iff_sub_mem).2
   rw [mem_mixedProductInNumerator_iff]
-  show
+  change
     embeddedDelta H (h * k) -
         (embeddedDelta H h + embeddedDelta H k) ∈
       mixedAugmentationProduct H
@@ -262,7 +262,7 @@ theorem transversalComponent_mul_right
         T.2.toLeftFun g := by
     exact congrArg T.2.leftQuotientEquiv hcoset
   apply Subtype.ext
-  show
+  change
     (T.2.toLeftFun (g * (h : G)) : G)⁻¹ *
         (g * (h : G)) =
       ((T.2.toLeftFun g : G)⁻¹ * g) * (h : G)
@@ -366,7 +366,7 @@ theorem transversalLinearization_mul_eq_zero
   rw [map_sum]
   apply Finset.sum_eq_zero
   intro h hh
-  show
+  change
     transversalLinearization H T
         ((x.coeff g •
             (deltaElement G g : IntegralGroupRing G)) *
@@ -554,7 +554,7 @@ theorem relativeDeltaAbelianization_surjective
   apply Multiplicative.toAdd.injective
   apply (QuotientAddGroup.eq_iff_sub_mem).2
   rw [mem_mixedProductInNumerator_iff]
-  show
+  change
     subgroupRingMap H (yH : IntegralGroupRing H) -
         (z : IntegralGroupRing G) ∈
       mixedAugmentationProduct H
@@ -815,7 +815,7 @@ theorem mk_singleMulEmbeddedDeltaElement_eq_relativeDeltaClass
       relativeDeltaClass H h := by
   apply (QuotientAddGroup.eq_iff_sub_mem).2
   rw [mem_mixedProductInNumerator_iff]
-  show
+  change
     MonoidAlgebra.single r 1 * embeddedDelta H h -
         embeddedDelta H h ∈
       mixedAugmentationProduct H

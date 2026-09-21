@@ -248,7 +248,7 @@ noncomputable def Internal.uniformizerHigherUnitInverseLimitHomeomorphIntrinsic
       (fun x : dvrHigherUnitQuotientInverseLimit
           (chosenPrincipalUnitPadicUniformizer F) => by
         intro i j hij
-        show higherUnitQuotientTransition F hij
+        change higherUnitQuotientTransition F hij
             (uniformizerHigherUnitQuotientEquiv F j
               (dvrHigherUnitQuotientInverseLimit_eval
                 (chosenPrincipalUnitPadicUniformizer F) j x)) =

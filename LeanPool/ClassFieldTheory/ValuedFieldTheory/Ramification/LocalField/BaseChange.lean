@@ -64,7 +64,7 @@ theorem galoisGroupEquivOfBaseRingEquiv_apply
     [Algebra B E] [Algebra K E]
     (e : B ≃+* K)
     (he : ∀ b, algebraMap K E (e b) = algebraMap B E b)
-    (σ : Gal(E / B)) (x : E) :
+    (σ : Gal(E/B)) (x : E) :
     galoisGroupEquivOfBaseRingEquiv B K E e he σ x = σ x :=
   rfl
 
@@ -84,7 +84,7 @@ private theorem upperRamificationGroup_map_baseChange
     (huniqK :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension
         (base := baseK) (target := target))
-    (q : Gal(E / B) ≃* Gal(E / K))
+    (q : Gal(E / B) ≃* Gal(E/K))
     (hq : ∀ σ x, q σ x = σ x)
     (t : ℝ) :
     Subgroup.map q.toMonoidHom

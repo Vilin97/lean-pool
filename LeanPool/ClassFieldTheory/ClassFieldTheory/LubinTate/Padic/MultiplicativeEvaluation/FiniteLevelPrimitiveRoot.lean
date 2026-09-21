@@ -618,7 +618,7 @@ private theorem padicMultiplicativePrimitiveRoot_unitAction
 private theorem padicMultiplicativeLevelAlgEquiv_mem_valuationSubring_iff
     (p : ℕ) [Fact p.Prime] (n : ℕ)
     (σ : Gal((standardLubinTateLevelField
-      (padicMultiplicativeLubinTateSeries_isUniformizer p) n) / ℚ_[p]))
+      (padicMultiplicativeLubinTateSeries_isUniformizer p) n)/ℚ_[p]))
     (x : standardLubinTateLevelField
       (padicMultiplicativeLubinTateSeries_isUniformizer p) n) :
     x ∈ (standardLubinTateLevelCompleteDVF
@@ -673,7 +673,7 @@ private noncomputable def
     padicMultiplicativeLevelAutomorphismIntegerRingEquiv
     (p : ℕ) [Fact p.Prime] (n : ℕ)
     (σ : Gal((standardLubinTateLevelField
-      (padicMultiplicativeLubinTateSeries_isUniformizer p) n) / ℚ_[p])) :
+      (padicMultiplicativeLubinTateSeries_isUniformizer p) n)/ℚ_[p])) :
     (standardLubinTateLevelCompleteDVF
         (padicMultiplicativeLubinTateSeries_isUniformizer p) n).valuationSubring ≃+*
       (standardLubinTateLevelCompleteDVF
@@ -689,7 +689,7 @@ private theorem
     padicMultiplicativeLevelAutomorphismIntegerRingEquiv_apply
     (p : ℕ) [Fact p.Prime] (n : ℕ)
     (σ : Gal((standardLubinTateLevelField
-      (padicMultiplicativeLubinTateSeries_isUniformizer p) n) / ℚ_[p]))
+      (padicMultiplicativeLubinTateSeries_isUniformizer p) n)/ℚ_[p]))
     (x : (standardLubinTateLevelCompleteDVF
       (padicMultiplicativeLubinTateSeries_isUniformizer p) n).valuationSubring) :
     ((padicMultiplicativeLevelAutomorphismIntegerRingEquiv p n σ x :
@@ -705,7 +705,7 @@ private theorem
     padicMultiplicativeLevelAutomorphismIntegerRingEquiv_continuous
     (p : ℕ) [Fact p.Prime] (n : ℕ)
     (σ : Gal((standardLubinTateLevelField
-      (padicMultiplicativeLubinTateSeries_isUniformizer p) n) / ℚ_[p])) :
+      (padicMultiplicativeLubinTateSeries_isUniformizer p) n)/ℚ_[p])) :
     Continuous (padicMultiplicativeLevelAutomorphismIntegerRingEquiv p n σ) := by
   let hπ := padicMultiplicativeLubinTateSeries_isUniformizer p
   let target := standardLubinTateLevelCompleteDVF hπ n
@@ -733,7 +733,7 @@ private theorem
     padicMultiplicativeLevelAutomorphismIntegerRingEquiv_comp_coefficientHom
     (p : ℕ) [Fact p.Prime] (n : ℕ)
     (σ : Gal((standardLubinTateLevelField
-      (padicMultiplicativeLubinTateSeries_isUniformizer p) n) / ℚ_[p])) :
+      (padicMultiplicativeLubinTateSeries_isUniformizer p) n)/ℚ_[p])) :
     (padicMultiplicativeLevelAutomorphismIntegerRingEquiv p n σ :
         (standardLubinTateLevelCompleteDVF
           (padicMultiplicativeLubinTateSeries_isUniformizer p) n).valuationSubring →+*

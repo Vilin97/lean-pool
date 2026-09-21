@@ -47,7 +47,7 @@ theorem
     (htarget :
       RamificationTheory.DiscreteValuationField.DVF.HasUniqueValuationExtension
         base target)
-    (σ : Gal(M / K)) (a : middle.valuationSubring) :
+    (σ : Gal(M/K)) (a : middle.valuationSubring) :
     valuationSubringAutOfUniqueExtension
           (base := base) (target := target) htarget σ
           (integerMap middle target a) =

@@ -109,7 +109,7 @@ global reciprocity from the transport between the equal norm quotients. -/
 private theorem
     arithmeticRayClassFieldGaloisContinuousMulEquivRayClassGroup_apply
     (m : RayClass.Modulus K)
-    (σ : Gal((rayClassField K m) / K)) :
+    (σ : Gal((rayClassField K m)/K)) :
     arithmeticRayClassFieldGaloisContinuousMulEquivRayClassGroup
         (K := K) m σ =
       QuotientGroup.quotientMulEquivOfEq

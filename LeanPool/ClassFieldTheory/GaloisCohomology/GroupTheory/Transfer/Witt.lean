@@ -164,7 +164,7 @@ theorem wordExponent_of {X : Type*} (x : X) :
 @[simp]
 theorem wordExponent_inv {X : Type*} (w : FreeGroup X) :
     wordExponent w⁻¹ = -wordExponent w := by
-  show
+  change
     FreeAbelianGroup.toFinsupp
         (-Additive.ofMul (Abelianization.of w)) =
       -FreeAbelianGroup.toFinsupp
@@ -175,7 +175,7 @@ theorem wordExponent_inv {X : Type*} (w : FreeGroup X) :
 theorem wordExponent_mul {X : Type*} (u v : FreeGroup X) :
     wordExponent (u * v) =
       wordExponent u + wordExponent v := by
-  show
+  change
     FreeAbelianGroup.toFinsupp
         (Additive.ofMul (Abelianization.of u) +
           Additive.ofMul (Abelianization.of v)) =
@@ -1037,7 +1037,7 @@ theorem eq_coeff_one_smul_groupNormElement
       x.coeff q) (hz q)
   have hcoeff : z.coeff q = z.coeff 1 := by
     simpa using hq.symm
-  show
+  change
     z.coeff q =
       z.coeff 1 * (groupNormElement Q).coeff q
   rw [hcoeff]

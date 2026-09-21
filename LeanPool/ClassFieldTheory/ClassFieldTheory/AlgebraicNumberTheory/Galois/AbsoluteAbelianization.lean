@@ -66,7 +66,7 @@ noncomputable def absoluteAbelianizationMulEquivMaximalAbelianGalois :
 maximal abelian extension. -/
 @[simp]
 theorem absoluteAbelianizationMulEquivMaximalAbelianGalois_mk
-    (sigma : Gal(SeparableClosure K / K)) :
+    (sigma : Gal(SeparableClosure K/K)) :
     absoluteAbelianizationMulEquivMaximalAbelianGalois K
         (QuotientGroup.mk sigma) =
       AlgEquiv.restrictNormalHom (maximalAbelianExtension K) sigma :=

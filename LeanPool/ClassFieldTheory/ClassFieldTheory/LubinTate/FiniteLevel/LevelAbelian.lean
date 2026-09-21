@@ -123,7 +123,7 @@ theorem standardLubinTateLevelField_gal_comm
     (F : LocalField.{u, v} K) {π : F.valuationSubring}
     (hπ : F.toCompleteDVF.valuation.IsUniformizer (π : K))
     (n : ℕ)
-    (σ τ : Gal((standardLubinTateLevelField hπ n) / K)) :
+    (σ τ : Gal((standardLubinTateLevelField hπ n)/K)) :
     σ * τ = τ * σ := by
   let e := standardLubinTateUnitParameterEquivGal F hπ n
   apply e.symm.injective

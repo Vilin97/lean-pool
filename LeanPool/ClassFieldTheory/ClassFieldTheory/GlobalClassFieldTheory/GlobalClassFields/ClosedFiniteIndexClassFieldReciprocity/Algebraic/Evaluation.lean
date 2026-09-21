@@ -29,7 +29,7 @@ theorem closedFiniteIndexClassFieldGaloisEquivNormQuotient_apply
     (hclosed : IsClosed (H : Set (IdeleClassGroup K)))
     [H.FiniteIndex]
     (σ : Gal((closedFiniteIndexClassField
-      (K := K) H hclosed) / K)) :
+      (K := K) H hclosed)/K)) :
     closedFiniteIndexClassFieldGaloisEquivNormQuotient
         (K := K) H hclosed σ =
       closedFiniteIndexClassFieldReciprocityValue

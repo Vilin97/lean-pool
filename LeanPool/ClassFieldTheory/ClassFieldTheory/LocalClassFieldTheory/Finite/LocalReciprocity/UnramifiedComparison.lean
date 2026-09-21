@@ -98,7 +98,7 @@ private theorem abstractBaseFrobeniusLift_degree :
 /-- A degree-one element of the local absolute Galois group acts by the
 arithmetic Frobenius on the selected residue algebraic closure. -/
 private theorem localSeparableResidueAlgAction_eq_frobenius_of_degree_one
-    (sigma : Gal((SeparableClosure K) / K))
+    (sigma : Gal((SeparableClosure K)/K))
     (hsigma : localResidueDegree K sigma =
       Multiplicative.ofAdd (1 : ZHat)) :
     localSeparableResidueAlgAction K sigma =
