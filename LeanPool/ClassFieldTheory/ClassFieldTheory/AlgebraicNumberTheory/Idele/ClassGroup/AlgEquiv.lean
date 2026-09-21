@@ -282,6 +282,18 @@ theorem ideleClassNorm_range_algEquiv
         relativeIdeleClassCongr_ideleClassNorm
           (K := K) e d⟩
 
+/-- Ordinary idele-class norm subgroups are invariant under a base-field equivalence. -/
+theorem ordinaryIdeleClassNorm_range_algEquiv
+    [NumberField L] [NumberField M] (e : L ≃ₐ[K] M) :
+    (_root_.ideleClassNorm K L).range = (_root_.ideleClassNorm K M).range := by
+  calc
+    (_root_.ideleClassNorm K L).range = (RelativeIdeleGroup.classNorm K L).range :=
+      ordinaryIdeleClassNorm_range_eq_relative (K := K) (L := L)
+    _ = (RelativeIdeleGroup.classNorm K M).range :=
+      (ideleClassNorm_range_algEquiv (K := K) e).symm
+    _ = (_root_.ideleClassNorm K M).range :=
+      (ordinaryIdeleClassNorm_range_eq_relative (K := K) (L := M)).symm
+
 /-- The idele-class norm index is invariant under an isomorphic realization
 of the top field. -/
 theorem ideleClassNorm_index_algEquiv

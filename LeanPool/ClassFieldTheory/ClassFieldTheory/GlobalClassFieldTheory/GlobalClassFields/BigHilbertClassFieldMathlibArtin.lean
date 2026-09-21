@@ -59,15 +59,8 @@ theorem bigHilbertClassField_ideleClassNorm_range_of_isBig
   let H := GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassField K
   let e : E ≃ₐ[K] H := bigHilbertClassFieldEquivOfIsBig E hE
   calc
-    (_root_.ideleClassNorm K E).range =
-        (RelativeIdeleGroup.classNorm K E).range :=
-      ordinaryIdeleClassNorm_range_eq_relative
-        (K := K) (L := E)
-    _ = (RelativeIdeleGroup.classNorm K H).range :=
-      (ideleClassNorm_range_algEquiv (K := K) e).symm
-    _ = (_root_.ideleClassNorm K H).range :=
-      (ordinaryIdeleClassNorm_range_eq_relative
-        (K := K) (L := H)).symm
+    (_root_.ideleClassNorm K E).range = (_root_.ideleClassNorm K H).range :=
+      ordinaryIdeleClassNorm_range_algEquiv e
     _ = _ :=
       GlobalClassFieldTheory.GlobalClassFields.bigHilbertClassField_ideleClassNorm_range_over_original
         (K := K)
