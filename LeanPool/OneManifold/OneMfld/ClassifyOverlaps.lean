@@ -3,7 +3,8 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Analysis.SpecialFunctions.Complex.Circle
+import Mathlib.Tactic
 import LeanPool.OneManifold.OneMfld.UnitInterval
 import LeanPool.OneManifold.OneMfld.FiniteIntervalCharts
 import LeanPool.OneManifold.OneMfld.IntervalCharts
@@ -22,6 +23,12 @@ import LeanPool.OneManifold.OneMfld.GlueUI
 import LeanPool.OneManifold.OneMfld.TwoComponents
 import LeanPool.OneManifold.OneMfld.CircleBlocks
 import LeanPool.OneManifold.OneMfld.CircleGlue
+
+/-!
+# ClassifyOverlaps
+
+Supporting results for the classification of compact one-dimensional manifolds.
+-/
 
 open Set
 
@@ -45,14 +52,14 @@ noncomputable def Homeomorph.toOpenPartialHomeomorphOnOpens
   invFun y := if hy : y ∈ B then (h.symm ⟨y, hy⟩ : X) else Classical.arbitrary X
   source := A
   target := B
-  map_source' x hx := by simp only [dif_pos hx]; exact (h ⟨x, hx⟩).2
-  map_target' y hy := by simp only [dif_pos hy]; exact (h.symm ⟨y, hy⟩).2
+  map_source' x hx := by simp only [dite_eq_left hx]; exact (h ⟨x, hx⟩).2
+  map_target' y hy := by simp only [dite_eq_left hy]; exact (h.symm ⟨y, hy⟩).2
   left_inv' x hx := by
-    simp only [dif_pos hx, dif_pos (h ⟨x, hx⟩).2]
+    simp only [dite_eq_left hx, dite_eq_left (h ⟨x, hx⟩).2]
     have : (⟨(h ⟨x, hx⟩ : Y), (h ⟨x, hx⟩).2⟩ : B) = h ⟨x, hx⟩ := rfl
     rw [this, Homeomorph.symm_apply_apply]
   right_inv' y hy := by
-    simp only [dif_pos hy, dif_pos (h.symm ⟨y, hy⟩).2]
+    simp only [dite_eq_left hy, dite_eq_left (h.symm ⟨y, hy⟩).2]
     have : (⟨(h.symm ⟨y, hy⟩ : X), (h.symm ⟨y, hy⟩).2⟩ : A) = h.symm ⟨y, hy⟩ := rfl
     rw [this, Homeomorph.apply_symm_apply]
   open_source := hA
@@ -61,14 +68,15 @@ noncomputable def Homeomorph.toOpenPartialHomeomorphOnOpens
     rw [continuousOn_iff_continuous_domRestrict]
     have : (A.domRestrict fun x => if hx : x ∈ A then (h ⟨x, hx⟩ : Y) else Classical.arbitrary Y)
         = fun x : A => ((h x : B) : Y) := by
-      funext x; simp only [Set.domRestrict_apply, dif_pos x.2]
+      funext x; simp only [Set.domRestrict_apply, dite_eq_left x.2]
     rw [this]
     exact continuous_subtype_val.comp h.continuous
   continuousOn_invFun := by
     rw [continuousOn_iff_continuous_domRestrict]
-    have : (B.domRestrict fun y => if hy : y ∈ B then (h.symm ⟨y, hy⟩ : X) else Classical.arbitrary X)
+    have : (B.domRestrict fun y => if hy : y ∈ B then (h.symm ⟨y, hy⟩ : X) else
+        Classical.arbitrary X)
         = fun y : B => ((h.symm y : A) : X) := by
-      funext y; simp only [Set.domRestrict_apply, dif_pos y.2]
+      funext y; simp only [Set.domRestrict_apply, dite_eq_left y.2]
     rw [this]
     exact continuous_subtype_val.comp h.symm.continuous
 
@@ -295,13 +303,15 @@ lemma exists_glue_h_h (a : HChart M) (b : HChart M) (h : Overlap a.source b.sour
   rw [hfs, ha's, hb's]
 
 /-- Glue two overlapping H-charts into a single chart of `M` onto the unit interval. -/
-noncomputable def glue_h_h (a : HChart M) (b : HChart M) (h : Overlap a.source b.source) :
-  { φ : OpenPartialHomeomorph M UnitInterval | φ.source = a.source ∪ b.source ∧ φ.target = Set.univ } :=
+noncomputable def glueHH (a : HChart M) (b : HChart M) (h : Overlap a.source b.source) :
+  { φ : OpenPartialHomeomorph M UnitInterval | φ.source = a.source ∪ b.source ∧ φ.target =
+      Set.univ } :=
   ⟨(exists_glue_h_h a b h).choose, (exists_glue_h_h a b h).choose_spec⟩
 
-noncomputable def handle_h_h (a : HChart M) (b : HChart M) (h : Overlap a.source b.source) :
+/-- Join overlapping boundary charts into a homeomorphism with the closed unit interval. -/
+noncomputable def handleHH (a : HChart M) (b : HChart M) (h : Overlap a.source b.source) :
   Homeomorph M UnitInterval := by
-  obtain ⟨φ, hφ, hs⟩ := glue_h_h a b h
+  obtain ⟨φ, hφ, hs⟩ := glueHH a b h
   have hne : φ.source.Nonempty := by
     rw [hφ]
     exact Set.Nonempty.inl (h.1.mono Set.inter_subset_left)
@@ -349,25 +359,25 @@ lemma exists_glue_o_h (a : OChart M) (b : HChart M) (h : Overlap a.source b.sour
       inter_eq_right.mpr (fun y hy => lt_of_le_of_lt hy hμ1)
     rw [h1, Iic_union_Ioo_eq_Iio hμν]
   refine ⟨⟨f, ⟨μ / ρ, htarget.symm⟩⟩, ?_⟩
-  show f.source = a.source ∪ b.source
+  change f.source = a.source ∪ b.source
   rw [hfs, ha's', hb's]
 
 /-- Glue an O-chart and an H-chart with connected overlap into an H-chart on the union. -/
-noncomputable def handle_o_h' (a : OChart M) (b : HChart M) (h : Overlap a.source b.source)
+noncomputable def handleOH' (a : OChart M) (b : HChart M) (h : Overlap a.source b.source)
   (hc : IsConnected (a.source ∩ b.source)) :
   { f : HChart M | f.source = a.source ∪ b.source } :=
   ⟨(exists_glue_o_h a b h hc).choose, (exists_glue_o_h a b h hc).choose_spec⟩
 
 /-- Glue an O-chart and an H-chart: the overlap with an H-chart is automatically
 connected. -/
-noncomputable def handle_o_h (a : OChart M) (b : HChart M) (h : Overlap a.source b.source) :
+noncomputable def handleOH (a : OChart M) (b : HChart M) (h : Overlap a.source b.source) :
   { f : HChart M | f.source = a.source ∪ b.source } := by
   have hane : a.source.Nonempty := h.1.mono inter_subset_left
   have hc : IsConnected (a.source ∩ b.source) := by
     rw [inter_comm]
     exact hchart_overlap_connected b a.toOpenPartialHomeomorph
       (a.connected_source hane) h.2.2 h.2.1 (inter_comm a.source b.source ▸ h.1)
-  exact handle_o_h' a b h hc
+  exact handleOH' a b h hc
 
 omit [ConnectedSpace M] in
 /-- Two O-charts with connected overlap glue to an O-chart on the union: rescale both,
@@ -421,13 +431,13 @@ lemma exists_glue_o_o (a : OChart M) (b : OChart M) (h : Overlap a.source b.sour
         exact ⟨⟨hy0, lt_of_le_of_lt hy hμ1⟩, hy⟩
     rw [h1, Ioc_union_Ioo_eq_Ioo hμν]
   refine ⟨⟨f, ⟨0, μ / ρ, htarget.symm⟩⟩, ?_⟩
-  show f.source = a.source ∪ b.source
+  change f.source = a.source ∪ b.source
   rw [hfs, ha's', hb's']
 
 /-- A disconnected overlap of two O-charts closes `M` up into a circle: the glued chart
 of `exists_circle_chart` maps `a.source ∪ b.source` onto the whole of `AddCircle 1`;
 transfer to `Circle` and apply the compact-target argument. -/
-noncomputable def circle_of_disconnected_overlap (a : OChart M) (b : OChart M)
+noncomputable def circleOfDisconnectedOverlap (a : OChart M) (b : OChart M)
   (h : Overlap a.source b.source) (hc : ¬ IsConnected (a.source ∩ b.source)) :
   Homeomorph M Circle := by
   have H := exists_circle_chart a b h hc
@@ -435,7 +445,7 @@ noncomputable def circle_of_disconnected_overlap (a : OChart M) (b : OChart M)
   let f' := H.choose.transHomeomorph (AddCircle.homeomorphCircle (one_ne_zero (α := ℝ)))
   have hfs' : f'.source = a.source ∪ b.source := hfs
   have hft' : f'.target = Set.univ := by
-    show (AddCircle.homeomorphCircle _).symm ⁻¹' H.choose.target = Set.univ
+    change (AddCircle.homeomorphCircle _).symm ⁻¹' H.choose.target = Set.univ
     rw [hft]
     exact Set.preimage_univ
   have hne : f'.source.Nonempty := by
@@ -445,8 +455,8 @@ noncomputable def circle_of_disconnected_overlap (a : OChart M) (b : OChart M)
 
 /-- Glue two O-charts: with a connected overlap they merge into an O-chart on the union;
 with a disconnected overlap, `M` is a circle. -/
-noncomputable def handle_o_o (a : OChart M) (b : OChart M) (h : Overlap a.source b.source) :
+noncomputable def handleOO (a : OChart M) (b : OChart M) (h : Overlap a.source b.source) :
   (Homeomorph M Circle) ⊕ { f : OChart M | f.source = a.source ∪ b.source } := by
   by_cases hc : IsConnected (a.source ∩ b.source)
   · exact Sum.inr ⟨(exists_glue_o_o a b h hc).choose, (exists_glue_o_o a b h hc).choose_spec⟩
-  · exact Sum.inl (circle_of_disconnected_overlap a b h hc)
+  · exact Sum.inl (circleOfDisconnectedOverlap a b h hc)

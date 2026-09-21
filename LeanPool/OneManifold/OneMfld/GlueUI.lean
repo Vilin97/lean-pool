@@ -3,7 +3,8 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Tactic
+import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 import LeanPool.OneManifold.OneMfld.GlueCore
 import LeanPool.OneManifold.OneMfld.GlueBlocks
 
@@ -259,7 +260,7 @@ theorem glue_hh_ui {M : Type*} [TopologicalSpace M] [T2Space M]
       left
       have hyt : y ∈ eb.target := by
         rw [hbt']
-        show (y : ℝ) < 1 / 2
+        change (y : ℝ) < 1 / 2
         linarith
       refine ⟨?_, hy⟩
       rw [hedef, OpenPartialHomeomorph.trans_target]

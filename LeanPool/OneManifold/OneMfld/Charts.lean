@@ -3,7 +3,7 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
 
 /-! Interval charts on a 1-manifold charted on `ℝ≥0`, and the `Overlap` relation.
@@ -12,14 +12,17 @@ An `OChart` has an open-interval target `Ioo x y` (an interior chart); an `HChar
 half-open target `Iio x` (a boundary chart); an `IChart` is either.
 -/
 
+/-- A one-dimensional chart with an open bounded interval as target. -/
 structure OChart (M : Type*) [TopologicalSpace M]
   extends OpenPartialHomeomorph M NNReal where
   target_ioo : (∃ x y, (Set.Ioo x y = target))
 
+/-- A boundary chart with a half-open interval as target. -/
 structure HChart (M : Type*) [TopologicalSpace M]
   extends OpenPartialHomeomorph M NNReal where
   target_iio : (∃ x, (Set.Iio x = target))
 
+/-- A chart whose target is an open interval or a half-open interval. -/
 structure IChart (M : Type*) [TopologicalSpace M]
   extends OpenPartialHomeomorph M NNReal where
   is_interval : (∃ x y, (Set.Ioo x y = target)) ∨ (∃ x, (Set.Iio x = target))
@@ -28,12 +31,15 @@ variable
   {M : Type*}
   [TopologicalSpace M]
 
+/-- Regard an interior chart as an interval chart. -/
 def OChart.toIChart (a : OChart M) : IChart M :=
   { a with is_interval := Or.inl a.target_ioo }
 
+/-- Regard a boundary chart as an interval chart. -/
 def HChart.toIChart (a : HChart M) : IChart M :=
   { a with is_interval := Or.inr a.target_iio }
 
+/-- Two sets meet and each has a point outside the other. -/
 def Overlap (U : Set α) (V : Set α) : Prop :=
   (U ∩ V).Nonempty ∧ (U \ V).Nonempty ∧ (V \ U).Nonempty
 

@@ -3,12 +3,20 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Tactic
+import Mathlib.Topology.Connected.Basic
+import Mathlib.Topology.OpenPartialHomeomorph.Defs
+
+/-!
+# PartialHomeomorphHelpers
+
+Supporting results for the classification of compact one-dimensional manifolds.
+-/
 
 lemma partial_homeo_connected {X : Type*} {Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
   (h : OpenPartialHomeomorph X Y) (conn : IsConnected h.source) : (IsConnected h.target) := by
   have ht : h.target = h.toFun '' h.source
-  exact Eq.symm (PartialEquiv.image_source_eq_target h.toPartialEquiv)
+  · exact Eq.symm (PartialEquiv.image_source_eq_target h.toPartialEquiv)
   rw [ht]
   apply IsConnected.image conn ↑h.toPartialEquiv h.continuousOn_toFun
 
@@ -23,7 +31,8 @@ lemma partial_homeo_connected' {X : Type*} {Y : Type*} [TopologicalSpace X] [Top
   rw [←hts]
   exact h''
 
-lemma partial_homeo_source_connected_iff_target_connected {X : Type*} {Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+lemma partial_homeo_source_connected_iff_target_connected {X : Type*} {Y : Type*}
+    [TopologicalSpace X] [TopologicalSpace Y]
   (h : OpenPartialHomeomorph X Y) : IsConnected h.source ↔ IsConnected h.target := by
   constructor
   · exact fun a => partial_homeo_connected h a

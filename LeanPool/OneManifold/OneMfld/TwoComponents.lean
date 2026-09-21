@@ -3,7 +3,7 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.OneManifold.OneMfld.Outer
 import LeanPool.OneManifold.OneMfld.TransitionMono
 import LeanPool.OneManifold.OneMfld.GlueCore
@@ -115,7 +115,7 @@ theorem overlap_mono_on [T2Space M] (a b : OpenPartialHomeomorph M NNReal)
     have hlim2' : Tendsto a.symm (𝓝[Ioo p r] r) (𝓝 (b.symm q)) := by
       apply Tendsto.congr' _ hlim2
       filter_upwards [self_mem_nhdsWithin] with t ht
-      show b.symm (τ t) = a.symm t
+      change b.symm (τ t) = a.symm t
       simp only [hτdef]
       exact b.left_inv (hWb (hsymm t ht).1)
     have hz : a.symm r = b.symm q := tendsto_nhds_unique' hFne hlim1 hlim2'
@@ -208,7 +208,7 @@ theorem overlap_mono_on' [T2Space M] (a b : OpenPartialHomeomorph M NNReal)
     have hlim2' : Tendsto a.symm (𝓝[Ioo p r] p) (𝓝 (b.symm w)) := by
       apply Tendsto.congr' _ hlim2
       filter_upwards [self_mem_nhdsWithin] with t ht
-      show b.symm (τ t) = a.symm t
+      change b.symm (τ t) = a.symm t
       simp only [hτdef]
       exact b.left_inv (hWb (hsymm t ht).1)
     have hz : a.symm p = b.symm w := tendsto_nhds_unique' hFne hlim1 hlim2'

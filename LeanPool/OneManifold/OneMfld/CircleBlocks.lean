@@ -3,7 +3,13 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Order.Lattice
+import Mathlib.Tactic
+import Mathlib.Topology.Algebra.ProperAction.Basic
+import Mathlib.Topology.GDelta.MetrizableSpace
+import Mathlib.Topology.Instances.AddCircle.Defs
+import Mathlib.Topology.Instances.ZMultiples
 
 /-! # Building blocks for the circle case
 
@@ -50,7 +56,7 @@ lemma mobiusFun_strictMonoOn (c : NNReal) (hc : 0 < c) :
   have hxy' : (x:ℝ) < y := hxy
   nlinarith [mul_pos hc' (sub_pos.mpr hxy')]
 
-lemma mobiusFun_mem (c : NNReal) (hc : 0 < c) {t : NNReal} (ht : t ∈ Ioo (0:NNReal) 1) :
+lemma mobiusFun_mem (c : NNReal) (hc : 0 < c) {t : NNReal} (ht : t ∈ Ioo (0 : NNReal) 1) :
     mobiusFun c t ∈ Ioo (0:NNReal) 1 := by
   have hden : 0 < t + c * (1 - t) := lt_of_lt_of_le ht.1 le_self_add
   refine ⟨div_pos ht.1 hden, ?_⟩
@@ -127,7 +133,7 @@ def mobiusOPH' (c : NNReal) (hc : 0 < c) :
             continuousOn_toFun := ?_
             continuousOn_invFun := ?_ },
     rfl, rfl, fun x => rfl, ?_, ?_⟩
-  · show ContinuousOn (fun x : NNReal => x / (x + c * (1 - x))) (Ioo 0 1)
+  · change ContinuousOn (fun x : NNReal => x / (x + c * (1 - x))) (Ioo 0 1)
     exact ContinuousOn.div continuousOn_id
       ((continuous_id.add (continuous_const.mul (continuous_const.sub continuous_id))).continuousOn)
       (fun x hx => (lt_of_lt_of_le hx.1 le_self_add).ne')
@@ -215,7 +221,7 @@ section AddCircleArith
 
 /-- Two reals with the same image in `AddCircle 1` and distance less than `1` are
 equal. -/
-lemma addCircle_coe_inj {x y : ℝ} (h : (x : AddCircle (1:ℝ)) = (y : AddCircle (1:ℝ)))
+lemma addCircle_coe_inj {x y : ℝ} (h : (x : AddCircle (1 : ℝ)) = (y : AddCircle (1 : ℝ)))
     (hxy : |x - y| < 1) : x = y := by
   have h0 : ((x - y : ℝ) : AddCircle (1:ℝ)) = 0 := by
     rw [AddCircle.coe_sub, h, sub_self]

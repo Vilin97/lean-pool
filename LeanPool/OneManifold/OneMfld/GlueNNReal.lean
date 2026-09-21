@@ -3,7 +3,7 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.OneManifold.OneMfld.GlueCore
 import LeanPool.OneManifold.OneMfld.Normalize
 
@@ -176,7 +176,7 @@ theorem glue_nnreal {M : Type*} [TopologicalSpace M] [T2Space M]
     rw [hbm, he'app, hcρ]
   -- Glue.
   refine ⟨b.piecewise e' s (Iic μ) H H' Hs Heq, ?_, μ, a m, hqμ, hμ1, hρ0, hρ1, ?_⟩
-  · show Set.ite s b.source e'.source = a.source ∪ b.source
+  · change Set.ite s b.source e'.source = a.source ∪ b.source
     have hite : Set.ite s b.source e'.source = (b.source ∩ s) ∪ (e'.source \ s) := rfl
     rw [hite, he's]
     apply Subset.antisymm
@@ -194,7 +194,7 @@ theorem glue_nnreal {M : Type*} [TopologicalSpace M] [T2Space M]
             exact hxs ⟨hxb, hle⟩
           have hxS := hmem_of_b x hxb (hqμ.trans hμx)
           exact Or.inr ⟨hxS.1, hxs⟩
-  · show Set.ite (Iic μ) b.target e'.target = (b.target ∩ Iic μ) ∪ Ioo μ (μ / a m)
+  · change Set.ite (Iic μ) b.target e'.target = (b.target ∩ Iic μ) ∪ Ioo μ (μ / a m)
     have hite : Set.ite (Iic μ) b.target e'.target
         = (b.target ∩ Iic μ) ∪ (e'.target \ Iic μ) := rfl
     rw [hite, he't]

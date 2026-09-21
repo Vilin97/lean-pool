@@ -3,7 +3,7 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.OneManifold.OneMfld.ClosureOverlap
 import LeanPool.OneManifold.OneMfld.LocallyConnected
 import LeanPool.OneManifold.OneMfld.PartialHomeomorphHelpers
@@ -115,7 +115,7 @@ section Escape
 lemma image_component_ne_target
     (U V : OpenPartialHomeomorph M NNReal)
     (hUV : (U.source \ V.source).Nonempty)
-    {x : M} (hx : x ∈ U.source ∩ V.source) :
+    {x : M} :
     U '' connectedComponentIn (U.source ∩ V.source) x ≠ U.target := by
   intro h
   obtain ⟨y, hyU, hyV⟩ := hUV
@@ -322,7 +322,7 @@ theorem overlap_component_outer_Iio [T2Space M]
     exact Metric.isBounded_Ico 0 v
   have hAne : A ≠ Iio v := by
     rw [← hUt]
-    exact image_component_ne_target U V hUV hx
+    exact image_component_ne_target U V hUV
   have hesc : ¬ closure A ⊆ Iio v := by
     rw [← hUt]
     exact not_closure_image_subset_target U V hUb hV hVU hx

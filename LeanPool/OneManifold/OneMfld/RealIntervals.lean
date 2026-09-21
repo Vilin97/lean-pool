@@ -3,7 +3,17 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.Normed.Module.RCLike.Real
+import Mathlib.Analysis.Normed.Order.Lattice
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.Tactic
+
+/-!
+# RealIntervals
+
+Supporting results for the classification of compact one-dimensional manifolds.
+-/
 
 open Set
 
@@ -20,8 +30,8 @@ lemma ordconn_of_connected {X : Set ℝ} (conn : IsConnected X)
 lemma Real.exists_isGLB {S : Set ℝ} (hne : S.Nonempty) (hbdd : BddBelow S)
     : ∃ x, IsGLB S x := by
   use sInf S
-  rw [Real.sInf_def, ← isLUB_neg, Real.sSup_def, dif_pos]
-  . apply Classical.choose_spec
+  rw [Real.sInf_def, ← isLUB_neg, Real.sSup_def, dite_eq_left]
+  · apply Classical.choose_spec
   exact ⟨nonempty_neg.mpr hne, BddBelow.neg hbdd⟩
 
 -- classifying real intervals
@@ -35,10 +45,10 @@ lemma connected_bddAbove_subset_contains_Ioo {X : Set ℝ} {supX : ℝ} {x : ℝ
     : Ioo x supX ⊆ X := by
   intro y ⟨x_lt_y, y_lt_supX⟩
   by_cases h: ∃ z ∈ X, y ≤ z
-  . rcases h with ⟨z, zX, y_le_z⟩
+  · rcases h with ⟨z, zX, y_le_z⟩
     have : Icc x z ⊆ X := ordconn_of_connected conn x xX z zX
     exact this ⟨LT.lt.le x_lt_y, y_le_z⟩
-  . push Not at h
+  · push Not at h
     have : y ∈ upperBounds X := fun z ↦ fun zX ↦ LT.lt.le (h z zX)
     have : supX ≤ y := h_supX.2 this
     linarith
@@ -48,10 +58,10 @@ lemma connected_bddBelow_subset_contains_Ioo {X : Set ℝ} {infX : ℝ} {x : ℝ
     : Ioo infX x ⊆ X := by
   intro y ⟨infX_lt_y, y_lt_x⟩
   by_cases h: ∃ z ∈ X, z ≤ y
-  . rcases h with ⟨z, zX, z_le_y⟩
+  · rcases h with ⟨z, zX, z_le_y⟩
     have : Icc z x ⊆ X := ordconn_of_connected conn z zX x xX
     exact this ⟨z_le_y, LT.lt.le y_lt_x⟩
-  . push Not at h
+  · push Not at h
     have : y ∈ lowerBounds X := fun z ↦ fun zX ↦ LT.lt.le (h z zX)
     have : y ≤ infX := h_infX.2 this
     linarith
@@ -66,19 +76,19 @@ lemma connected_bdd_subset_contains_Ioo
   have h₃ : Ioo infX supX ⊆ Ioo infX z ∪ {z} ∪ Ioo z supX := by
     intro x ⟨infX_lt_x, x_lt_supX⟩
     rcases lt_trichotomy x z with (x_lt_z | x_eq_z | z_lt_z)
-    . left; left
+    · left; left
       exact ⟨infX_lt_x, x_lt_z⟩
-    . left; right
+    · left; right
       rw [mem_singleton_iff, x_eq_z]
-    . right
+    · right
       exact ⟨z_lt_z, x_lt_supX⟩
   have h₄ : Ioo infX z ∪ {z} ∪ Ioo z supX ⊆ X := by
     rintro x ((_ | x_eq_z) | _)
-    . apply h₁; assumption
-    . rw [mem_singleton_iff] at x_eq_z
+    · apply h₁; assumption
+    · rw [mem_singleton_iff] at x_eq_z
       rw [x_eq_z]
       exact zX
-    . apply h₂; assumption
+    · apply h₂; assumption
   intro x x_Ioo
   exact h₄ (h₃ x_Ioo)
 
@@ -89,16 +99,16 @@ lemma bdd_subset_Icc
   intro x xX
   exact ⟨h_infX.1 xX, h_supX.1 xX⟩
 
-lemma x_lt_excluded_supX {x supX : ℝ} (xX: x ∈ X)
-    (h_supX: IsLUB X supX) (supX_X : supX ∉ X) : x < supX := by
+lemma x_lt_excluded_supX {x supX : ℝ} (xX : x ∈ X)
+    (h_supX : IsLUB X supX) (supX_X : supX ∉ X) : x < supX := by
   have : x ≠ supX := by
     intro x_eq_supX
     rw [← x_eq_supX] at supX_X
     contradiction
   exact Ne.lt_of_le this (h_supX.1 xX)
 
-lemma excluded_infX_lt_x {x infX : ℝ} (xX: x ∈ X)
-  (h_infX: IsGLB X infX) (infX_X : infX ∉ X) : infX < x := by
+lemma excluded_infX_lt_x {x infX : ℝ} (xX : x ∈ X)
+  (h_infX : IsGLB X infX) (infX_X : infX ∉ X) : infX < x := by
   have : infX ≠ x := by
     intro x_eq_supX
     rw [x_eq_supX] at infX_X
@@ -108,35 +118,35 @@ lemma excluded_infX_lt_x {x infX : ℝ} (xX: x ∈ X)
 lemma Ico_Ioo_with_endpoint {a b : ℝ} (hab : a < b)
     : Ico a b = (Ioo a b) ∪ {a} := by
   apply Subset.antisymm
-  . intro x ⟨x_le_a, x_lt_b⟩
+  · intro x ⟨x_le_a, x_lt_b⟩
     by_cases xa : x = a
-    . right; exact xa
-    . left; exact ⟨Ne.lt_of_le' xa x_le_a, x_lt_b⟩
-  . rintro x (x_Ioo | x_a)
-    . exact ⟨LT.lt.le x_Ioo.1, x_Ioo.2⟩
-    . exact ⟨Eq.ge x_a, Eq.trans_lt x_a hab⟩
+    · right; exact xa
+    · left; exact ⟨Ne.lt_of_le' xa x_le_a, x_lt_b⟩
+  · rintro x (x_Ioo | x_a)
+    · exact ⟨LT.lt.le x_Ioo.1, x_Ioo.2⟩
+    · exact ⟨Eq.ge x_a, Eq.trans_lt x_a hab⟩
 
 lemma Ioc_Ioo_with_endpoint {a b : ℝ} (hab : a < b)
     : Ioc a b = (Ioo a b) ∪ {b} := by
   apply Subset.antisymm
-  . intro x ⟨a_lt_x, x_le_b⟩
+  · intro x ⟨a_lt_x, x_le_b⟩
     by_cases xb : x = b
-    . right; exact xb
+    · right; exact xb
     have : x < b := Ne.lt_of_le xb x_le_b
     left; exact ⟨a_lt_x, this⟩
-  . rintro x (x_Ioo | x_b)
-    . exact ⟨x_Ioo.1, LT.lt.le x_Ioo.2⟩
-    . exact ⟨(by rw [x_b]; exact hab), Eq.le x_b⟩
+  · rintro x (x_Ioo | x_b)
+    · exact ⟨x_Ioo.1, LT.lt.le x_Ioo.2⟩
+    · exact ⟨(by rw [x_b]; exact hab), Eq.le x_b⟩
 
 lemma characterize_Ioo {X : Set ℝ} (conn : IsConnected X) {infX supX : ℝ}
     (h_infX : IsGLB X infX) (h_supX : IsLUB X supX)
     (infX_X : infX ∉ X) (supX_X : supX ∉ X)
     : X = Ioo infX supX := by
   apply Subset.antisymm
-  . intro x xX
+  · intro x xX
     exact ⟨excluded_infX_lt_x xX h_infX infX_X,
            x_lt_excluded_supX xX h_supX supX_X⟩
-  . exact connected_bdd_subset_contains_Ioo conn h_infX h_supX
+  · exact connected_bdd_subset_contains_Ioo conn h_infX h_supX
 
 lemma characterize_Ioc {X : Set ℝ} (conn : IsConnected X) {infX supX : ℝ}
     (inf_lt_sup : infX < supX)
@@ -144,10 +154,10 @@ lemma characterize_Ioc {X : Set ℝ} (conn : IsConnected X) {infX supX : ℝ}
     (infX_X : infX ∉ X) (supX_X : supX ∈ X)
     : X = Ioc infX supX := by
   apply Subset.antisymm
-  . intro x xX
+  · intro x xX
     exact ⟨excluded_infX_lt_x xX h_infX infX_X,
            h_supX.1 xX⟩
-  . rw [Ioc_Ioo_with_endpoint inf_lt_sup, union_subset_iff]
+  · rw [Ioc_Ioo_with_endpoint inf_lt_sup, union_subset_iff]
     exact ⟨connected_bdd_subset_contains_Ioo conn h_infX h_supX,
            singleton_subset_iff.mpr supX_X⟩
 
@@ -157,10 +167,10 @@ lemma characterize_Ico {X : Set ℝ} (conn : IsConnected X) {infX supX : ℝ}
     (infX_X : infX ∈ X) (supX_X : supX ∉ X)
     : X = Ico infX supX := by
   apply Subset.antisymm
-  . intro x xX
+  · intro x xX
     exact ⟨h_infX.1 xX,
            x_lt_excluded_supX xX h_supX supX_X⟩
-  . rw [Ico_Ioo_with_endpoint inf_lt_sup, union_subset_iff]
+  · rw [Ico_Ioo_with_endpoint inf_lt_sup, union_subset_iff]
     exact ⟨connected_bdd_subset_contains_Ioo conn h_infX h_supX,
            singleton_subset_iff.mpr infX_X⟩
 
@@ -169,49 +179,56 @@ lemma characterize_Icc {X : Set ℝ} (conn : IsConnected X) {infX supX : ℝ}
     (infX_X : infX ∈ X) (supX_X : supX ∈ X)
     : X = Icc infX supX := by
   apply Subset.antisymm
-  . exact bdd_subset_Icc h_infX h_supX
-  . exact (ordconn_of_connected conn) infX infX_X supX supX_X
+  · exact bdd_subset_Icc h_infX h_supX
+  · exact (ordconn_of_connected conn) infX infX_X supX supX_X
 
 lemma characterize_singleton {X : Set ℝ} {a : ℝ}
     (h_infX : IsGLB X a) (h_supX : IsLUB X a)
     : (X = {a}) := by
   apply Subset.antisymm
-  . apply subset_trans (bdd_subset_Icc h_infX h_supX)
+  · apply subset_trans (bdd_subset_Icc h_infX h_supX)
     exact Set.Icc_subset {a} rfl rfl
-  . rw [singleton_subset_iff]
+  · rw [singleton_subset_iff]
     rcases IsLUB.nonempty h_supX with ⟨x, xX⟩
     have : a = x := LE.le.antisymm (h_infX.1 xX) (h_supX.1 xX)
     exact mem_of_eq_of_mem (id this) xX
 
+/-- The four possibilities for including the two endpoints of a bounded interval. -/
 inductive BoundedIntervalKind | IooKind | IocKind | IcoKind | IccKind
 
 open BoundedIntervalKind
 
+/-- Two ordered real endpoints together with their inclusion convention. -/
 structure BoundedInterval where
-  left_endpoint : ℝ
-  right_endpoint : ℝ
-  left_lt_right : left_endpoint < right_endpoint
+  /-- The left endpoint of the interval. -/
+  leftEndpoint : ℝ
+  /-- The right endpoint of the interval. -/
+  rightEndpoint : ℝ
+  left_lt_right : leftEndpoint < rightEndpoint
+  /-- Which endpoints belong to the interval. -/
   kind : BoundedIntervalKind
 
-@[simp]
-def BoundedInterval_as_set : BoundedInterval → Set ℝ
+/-- Interpret the interval's endpoints and inclusion convention as a set of reals. -/
+def BoundedIntervalAsSet : BoundedInterval → Set ℝ
   | ⟨a, b, _, IooKind⟩ => Ioo a b
   | ⟨a, b, _, IocKind⟩ => Ioc a b
   | ⟨a, b, _, IcoKind⟩ => Ico a b
   | ⟨a, b, _, IccKind⟩ => Icc a b
 
+/-- The set is a nondegenerate bounded interval with some endpoint convention. -/
 def isBoundedInterval (X : Set ℝ) :=
-  ∃ I : BoundedInterval, X = BoundedInterval_as_set I
+  ∃ I : BoundedInterval, X = BoundedIntervalAsSet I
 
 lemma isBoundedInterval_Ioo (a b : ℝ) (lt : a < b) : isBoundedInterval (Ioo a b) := by
-  use ⟨a, b, lt, IooKind⟩; simp only [BoundedInterval_as_set]
+  use ⟨a, b, lt, IooKind⟩; simp only [BoundedIntervalAsSet]
 lemma isBoundedInterval_Ioc (a b : ℝ) (lt : a < b) : isBoundedInterval (Ioc a b) := by
-  use ⟨a, b, lt, IocKind⟩; simp only [BoundedInterval_as_set]
+  use ⟨a, b, lt, IocKind⟩; simp only [BoundedIntervalAsSet]
 lemma isBoundedInterval_Ico (a b : ℝ) (lt : a < b) : isBoundedInterval (Ico a b) := by
-  use ⟨a, b, lt, IcoKind⟩; simp only [BoundedInterval_as_set]
+  use ⟨a, b, lt, IcoKind⟩; simp only [BoundedIntervalAsSet]
 lemma isBoundedInterval_Icc (a b : ℝ) (lt : a < b) : isBoundedInterval (Icc a b) := by
-  use ⟨a, b, lt, IccKind⟩; simp only [BoundedInterval_as_set]
+  use ⟨a, b, lt, IccKind⟩; simp only [BoundedIntervalAsSet]
 
+/-- The set consists of exactly one real number. -/
 def isSingleton (X : Set ℝ) :=
   ∃ a : ℝ, X = {a}
 
@@ -220,15 +237,15 @@ lemma classify_connected_reals_with_GLB_lt_LUB
   (h_infX : IsGLB X infX) (h_supX : IsLUB X supX) (lt : infX < supX)
   : isBoundedInterval X := by
   by_cases infX_X : infX ∈ X
-  . by_cases supX_X : supX ∈ X
-    . use ⟨infX, supX, lt, IccKind⟩
+  · by_cases supX_X : supX ∈ X
+    · use ⟨infX, supX, lt, IccKind⟩
       exact characterize_Icc conn h_infX h_supX infX_X supX_X
-    . use ⟨infX, supX, lt, IcoKind⟩
+    · use ⟨infX, supX, lt, IcoKind⟩
       exact characterize_Ico conn lt h_infX h_supX infX_X supX_X
-  . by_cases supX_X : supX ∈ X
-    . use ⟨infX, supX, lt, IocKind⟩
+  · by_cases supX_X : supX ∈ X
+    · use ⟨infX, supX, lt, IocKind⟩
       exact characterize_Ioc conn lt h_infX h_supX infX_X supX_X
-    . use ⟨infX, supX, lt, IooKind⟩
+    · use ⟨infX, supX, lt, IooKind⟩
       exact characterize_Ioo conn h_infX h_supX infX_X supX_X
 
 theorem classify_connected_bounded_reals
@@ -238,10 +255,10 @@ theorem classify_connected_bounded_reals
   have ⟨supX, h_supX⟩ := Real.exists_isLUB nonempty above
   have ⟨infX, h_infX⟩ := Real.exists_isGLB nonempty below
   by_cases inf_eq_sup : infX = supX
-  . left; rw [isSingleton]; use infX
+  · left; rw [isSingleton]; use infX
     rw [← inf_eq_sup] at h_supX
     apply characterize_singleton h_infX h_supX
-  . right
+  · right
     have : infX ≤ supX := isGLB_le_isLUB h_infX h_supX nonempty
     have : infX < supX := Ne.lt_of_le inf_eq_sup this
     exact classify_connected_reals_with_GLB_lt_LUB conn h_infX h_supX this
@@ -251,15 +268,15 @@ theorem classify_connected_bounded_reals_nonempty_interior
     (h : (interior X) ≠ ∅)
     : isBoundedInterval X := by
   rcases classify_connected_bounded_reals conn above below with ⟨a, ha⟩ | bdd
-  . rw [ha, interior_singleton] at h
+  · rw [ha, interior_singleton] at h
     exact (h rfl).elim
-  . exact bdd
+  · exact bdd
 
 -- Some lemmas about bounded intervals in ℝ
 
 lemma isConnected_BoundedInterval (I : BoundedInterval)
-    : IsConnected (BoundedInterval_as_set I) := by
-  rw [BoundedInterval_as_set.eq_def]
+    : IsConnected (BoundedIntervalAsSet I) := by
+  rw [BoundedIntervalAsSet.eq_def]
   have ⟨a, b, lt, kind⟩ := I
   match kind with
   | IooKind => exact isConnected_Ioo lt
@@ -268,7 +285,7 @@ lemma isConnected_BoundedInterval (I : BoundedInterval)
   | IccKind => exact isConnected_Icc (LT.lt.le lt)
 
 lemma BoundedInterval_subset_Icc (I : BoundedInterval)
-    : BoundedInterval_as_set I ⊆ Icc I.left_endpoint I.right_endpoint := by
+    : BoundedIntervalAsSet I ⊆ Icc I.leftEndpoint I.rightEndpoint := by
   have ⟨a, b, lt, kind⟩ := I
   match kind with
   | IooKind => exact Ioo_subset_Icc_self
@@ -277,7 +294,7 @@ lemma BoundedInterval_subset_Icc (I : BoundedInterval)
   | IccKind => exact Eq.subset rfl
 
 lemma BoundedInterval_contains_Ioo (I : BoundedInterval)
-    : Ioo I.left_endpoint I.right_endpoint ⊆ BoundedInterval_as_set I := by
+    : Ioo I.leftEndpoint I.rightEndpoint ⊆ BoundedIntervalAsSet I := by
   have ⟨a, b, lt, kind⟩ := I
   match kind with
   | IooKind => exact Eq.subset rfl
@@ -285,31 +302,32 @@ lemma BoundedInterval_contains_Ioo (I : BoundedInterval)
   | IcoKind => exact Ioo_subset_Ico_self
   | IccKind => exact Ioo_subset_Icc_self
 
-lemma closure_BoundedInterval (I : BoundedInterval) : closure (BoundedInterval_as_set I) = Icc I.left_endpoint I.right_endpoint := by
+lemma closure_BoundedInterval (I : BoundedInterval) : closure (BoundedIntervalAsSet I) = Icc
+    I.leftEndpoint I.rightEndpoint := by
   apply Subset.antisymm
-  . calc closure (BoundedInterval_as_set I)
-      ⊆ closure (Icc I.left_endpoint I.right_endpoint)
+  · calc closure (BoundedIntervalAsSet I)
+      ⊆ closure (Icc I.leftEndpoint I.rightEndpoint)
         := closure_mono (BoundedInterval_subset_Icc I)
-    _ = Icc I.left_endpoint I.right_endpoint
+    _ = Icc I.leftEndpoint I.rightEndpoint
         := IsClosed.closure_eq isClosed_Icc
-  . calc Icc I.left_endpoint I.right_endpoint
-      = closure (Ioo I.left_endpoint I.right_endpoint)
+  · calc Icc I.leftEndpoint I.rightEndpoint
+      = closure (Ioo I.leftEndpoint I.rightEndpoint)
         := (closure_Ioo (ne_of_lt I.left_lt_right)).symm
-    _ ⊆ closure (BoundedInterval_as_set I)
+    _ ⊆ closure (BoundedIntervalAsSet I)
         := closure_mono (BoundedInterval_contains_Ioo I)
 
 lemma isBoundedBelow_BoundedInterval (I : BoundedInterval)
-    : BddBelow (BoundedInterval_as_set I) :=
+    : BddBelow (BoundedIntervalAsSet I) :=
   BddBelow.mono (BoundedInterval_subset_Icc I) bddBelow_Icc
 
 lemma isBoundedAbove_BoundedInterval (I : BoundedInterval)
-    : BddAbove (BoundedInterval_as_set I) :=
+    : BddAbove (BoundedIntervalAsSet I) :=
   BddAbove.mono (BoundedInterval_subset_Icc I) bddAbove_Icc
 
 @[simp]
 lemma interior_BoundedInterval (I : BoundedInterval)
-    : interior (BoundedInterval_as_set I) = Ioo I.left_endpoint I.right_endpoint := by
-  rw [BoundedInterval_as_set.eq_def]
+    : interior (BoundedIntervalAsSet I) = Ioo I.leftEndpoint I.rightEndpoint := by
+  rw [BoundedIntervalAsSet.eq_def]
   have ⟨a, b, lt, kind⟩ := I
   match kind with
   | IooKind => dsimp; exact interior_Ioo
@@ -321,12 +339,12 @@ lemma interior_BoundedInterval (I : BoundedInterval)
 @[simp]
 lemma Icc_diff_Ioo {a b : ℝ} (lt : a < b) : (Icc a b) \ (Ioo a b) = {a, b} := by
   apply Subset.antisymm
-  . rw [← Icc_sdiff_both]
+  · rw [← Icc_sdiff_both]
     exact sdiff_sdiff_le
-  . rintro x (xleft | xright)
-    . rw [mem_sdiff, mem_Icc, mem_Ioo, not_and]
+  · rintro x (xleft | xright)
+    · rw [mem_sdiff, mem_Icc, mem_Ioo, not_and]
       exact ⟨⟨by linarith, by linarith⟩, (by intro _; linarith)⟩
-    . simp only [mem_singleton_iff] at xright
+    · simp only [mem_singleton_iff] at xright
       rw [xright]
       simp only [mem_sdiff, mem_Icc, le_refl, and_true, mem_Ioo, lt_self_iff_false, and_false,
         not_false_eq_true]
@@ -334,7 +352,7 @@ lemma Icc_diff_Ioo {a b : ℝ} (lt : a < b) : (Icc a b) \ (Ioo a b) = {a, b} := 
 
 @[simp]
 lemma frontier_BoundedInterval (I : BoundedInterval)
-    : frontier (BoundedInterval_as_set I) = {I.left_endpoint, I.right_endpoint} := by
+    : frontier (BoundedIntervalAsSet I) = {I.leftEndpoint, I.rightEndpoint} := by
   rw [frontier, closure_BoundedInterval I, interior_BoundedInterval I]
   exact Icc_diff_Ioo I.left_lt_right
 
@@ -343,17 +361,17 @@ lemma pair_has_other {a b c : ℝ} (ne : a ≠ b) (h : c ∈ ({a, b} : Set ℝ))
   simp only [mem_insert_iff, mem_singleton_iff, ne_eq, exists_eq_or_imp, exists_eq_left]
   simp only [mem_insert_iff, mem_singleton_iff] at h
   rcases h with ca | cb
-  . rw [← ca] at ne; right; exact ne.symm
-  . rw [← cb] at ne; left; exact ne
+  · rw [← ca] at ne; right; exact ne.symm
+  · rw [← cb] at ne; left; exact ne
 
 theorem other_endpoint
     {X : Set ℝ} (int : (interior X) ≠ ∅)
     (conn : IsConnected X) (above : BddAbove X) (below : BddBelow X)
-    (a : ℝ) (ha: a ∈ frontier X) : ∃b : ℝ, b ∈ frontier X ∧ b ≠ a:= by
+    (a : ℝ) (ha : a ∈ frontier X) : ∃b : ℝ, b ∈ frontier X ∧ b ≠ a:= by
   have ⟨I, XI⟩ := classify_connected_bounded_reals_nonempty_interior conn above below int
   rw [XI, frontier_BoundedInterval]
   rw [XI, frontier_BoundedInterval] at ha
-  have : I.left_endpoint ≠ I.right_endpoint := by
+  have : I.leftEndpoint ≠ I.rightEndpoint := by
     exact ne_of_lt I.left_lt_right
   exact pair_has_other (ne_of_lt I.left_lt_right) ha
 
@@ -375,9 +393,9 @@ lemma characterize_Ioi {X : Set ℝ} (conn : IsConnected X)
     (above : ¬ BddAbove X) : X = Ioi infX := by
   rw [bddAbove_def] at above; push Not at above
   apply Subset.antisymm
-  . intro x xX
+  · intro x xX
     exact excluded_infX_lt_x xX h_infX infX_X
-  . intro x infX_lt_x
+  · intro x infX_lt_x
     rw [mem_Ioi] at infX_lt_x
     let ⟨B, BX, Bbig⟩ := above x
     have : Ioo infX B ⊆ X :=
@@ -389,9 +407,9 @@ lemma characterize_Ici {X : Set ℝ} (conn : IsConnected X)
     (above : ¬ BddAbove X) : X = Ici infX := by
   rw [bddAbove_def] at above; push Not at above
   apply Set.Subset.antisymm
-  . intro x xX
+  · intro x xX
     exact h_infX.1 xX
-  . intro x infX_le_x
+  · intro x infX_le_x
     have ⟨B, BX, Bbig⟩ := above x
     have : Set.Icc infX B ⊆ X := (ordconn_of_connected conn) infX infX_X B BX
     exact this ⟨infX_le_x, LT.lt.le Bbig⟩
@@ -402,17 +420,17 @@ lemma classify_Ixi {X : Set ℝ} (conn : IsConnected X)
   have ⟨infX, h_infX⟩ := Real.exists_isGLB (IsConnected.nonempty conn) below
   use infX
   by_cases infX_X : infX ∈ X
-  . right; exact characterize_Ici conn h_infX infX_X above
-  . left; exact characterize_Ioi conn h_infX infX_X above
+  · right; exact characterize_Ici conn h_infX infX_X above
+  · left; exact characterize_Ioi conn h_infX infX_X above
 
 lemma characterize_Iio {X : Set ℝ} (conn : IsConnected X)
     {supX : ℝ} (h_supX : IsLUB X supX) (supX_X : supX ∉ X)
     (below : ¬ BddBelow X) : X = Iio supX := by
   rw [bddBelow_def] at below; push Not at below
   apply Set.Subset.antisymm
-  . intro x xX
+  · intro x xX
     exact x_lt_excluded_supX xX h_supX supX_X
-  . intro x x_lt_supX
+  · intro x x_lt_supX
     rw [Set.mem_Iio] at x_lt_supX
     let ⟨A, AX, Asmall⟩ := below x
     have : Set.Ioo A supX ⊆ X :=
@@ -424,9 +442,9 @@ lemma characterize_Iic {X : Set ℝ} (conn : IsConnected X)
     (below : ¬ BddBelow X) : X = Iic supX := by
   rw [bddBelow_def] at below; push Not at below
   apply Set.Subset.antisymm
-  . intro x xX
+  · intro x xX
     exact h_supX.1 xX
-  . intro x x_le_supX
+  · intro x x_le_supX
     let ⟨A, AX, Asmall⟩ := below x
     have : Set.Icc A supX ⊆ X := (ordconn_of_connected conn) A AX supX supX_X
     exact this ⟨LT.lt.le Asmall, x_le_supX⟩
@@ -437,10 +455,11 @@ lemma classify_Iix {X : Set ℝ} (conn : IsConnected X)
   have ⟨supX, h_supX⟩ := Real.exists_isLUB (IsConnected.nonempty conn) above
   use supX
   by_cases supX_X : supX ∈ X
-  . right; exact characterize_Iic conn h_supX supX_X below
-  . left; exact characterize_Iio conn h_supX supX_X below
+  · right; exact characterize_Iic conn h_supX supX_X below
+  · left; exact characterize_Iio conn h_supX supX_X below
 
 -- Give names to the cases
+/-- The possible forms of a nonempty connected subset of the real line. -/
 inductive ConnectedRealClassification
   | of_univ : ConnectedRealClassification
   | of_Iio : ℝ → ConnectedRealClassification
@@ -452,35 +471,39 @@ inductive ConnectedRealClassification
 
 open ConnectedRealClassification
 
-def ConnectedRealClassification_as_set : ConnectedRealClassification → Set ℝ
+/-- Interpret a connected-set classification as a subset of the real line. -/
+def ConnectedRealClassificationAsSet : ConnectedRealClassification → Set ℝ
   | of_univ => univ
   | of_Iio a => Iio a
   | of_Iic a => Iic a
   | of_Ioi a => Ioi a
   | of_Ici a => Ici a
   | of_singleton a => {a}
-  | of_bounded_interval I => BoundedInterval_as_set I
+  | of_bounded_interval I => BoundedIntervalAsSet I
 
+/-- The set is represented by one of the connected real-set forms. -/
 def isConnectedRealClassification (X : Set ℝ) :=
-  ∃ I : ConnectedRealClassification, X = ConnectedRealClassification_as_set I
+  ∃ I : ConnectedRealClassification, X = ConnectedRealClassificationAsSet I
 
 theorem classify_connected_reals {X : Set ℝ} (conn : IsConnected X)
     : isConnectedRealClassification X := by
   by_cases below : BddBelow X
-  . by_cases above : BddAbove X
-    . rcases classify_connected_bounded_reals conn above below with sing | bdd
-      . let ⟨a, ha⟩ := sing
+  · by_cases above : BddAbove X
+    · rcases classify_connected_bounded_reals conn above below with sing | bdd
+      · let ⟨a, ha⟩ := sing
         use of_singleton a; exact ha
-      . let ⟨I, hI⟩ := bdd
+      · let ⟨I, hI⟩ := bdd
         use of_bounded_interval I; exact hI
-    . rcases classify_Ixi conn below above with ⟨a, hIoi | hIci⟩
-      . use of_Ioi a; exact hIoi
-      . use of_Ici a; exact hIci
-  . by_cases above : BddAbove X
-    . rcases classify_Iix conn below above with ⟨a, hIio | hIic⟩
-      . use of_Iio a
+    · rcases classify_Ixi conn below above with ⟨a, hIoi | hIci⟩
+      · use of_Ioi a; exact hIoi
+      · use of_Ici a; exact hIci
+  · by_cases above : BddAbove X
+    · rcases classify_Iix conn below above with ⟨a, hIio | hIic⟩
+      · use of_Iio a
         exact hIio
-      . use of_Iic a
+      · use of_Iic a
         exact hIic
-    . use of_univ
+    · use of_univ
       exact characterize_univ conn below above
+
+end RealIntervals

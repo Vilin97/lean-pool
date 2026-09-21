@@ -3,7 +3,8 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Tactic
 import LeanPool.OneManifold.OneMfld.UnitInterval
 
 /-! # Building blocks for the H-H gluing
@@ -54,21 +55,21 @@ def halfOPH :
     intro x hx
     have hx1 : x < (1 : NNReal) := hx
     have hx' : (x : ℝ) < 1 := by exact_mod_cast hx1
-    show min ((x : ℝ) / 2) 1 < 1/2
+    change min ((x : ℝ) / 2) 1 < 1/2
     rw [min_eq_left (by linarith : (x : ℝ) / 2 ≤ 1)]
     linarith
   · -- map_target'
     intro y hy
     have hy' : (y : ℝ) < 1/2 := hy
     have h2 : (0:ℝ) ≤ 2 * (y : ℝ) := mul_nonneg (by norm_num) y.2.1
-    show Real.toNNReal (2 * (y : ℝ)) < 1
+    change Real.toNNReal (2 * (y : ℝ)) < 1
     rw [Real.toNNReal_lt_iff_lt_coe h2, NNReal.coe_one]
     linarith
   · -- left_inv'
     intro x hx
     have hx1 : x < (1 : NNReal) := hx
     have hx' : (x : ℝ) < 1 := by exact_mod_cast hx1
-    show Real.toNNReal (2 * min ((x : ℝ) / 2) 1) = x
+    change Real.toNNReal (2 * min ((x : ℝ) / 2) 1) = x
     rw [min_eq_left (by linarith : (x : ℝ) / 2 ≤ 1),
       show 2 * ((x : ℝ) / 2) = (x : ℝ) from by ring]
     exact Real.toNNReal_coe
@@ -77,7 +78,7 @@ def halfOPH :
     have hy' : (y : ℝ) < 1/2 := hy
     have h2 : (0:ℝ) ≤ 2 * (y : ℝ) := mul_nonneg (by norm_num) y.2.1
     apply Subtype.ext
-    show min ((Real.toNNReal (2 * (y : ℝ)) : ℝ) / 2) 1 = (y : ℝ)
+    change min ((Real.toNNReal (2 * (y : ℝ)) : ℝ) / 2) 1 = (y : ℝ)
     rw [Real.coe_toNNReal _ h2,
       show 2 * (y : ℝ) / 2 = (y : ℝ) from by ring]
     exact min_eq_left y.2.2
@@ -123,7 +124,7 @@ def mobiusOPH (k : NNReal) (hk : 0 < k) :
     rfl, rfl, fun x => rfl, ?_⟩
   · -- left_inv'
     intro x _
-    show Real.toNNReal ((k : ℝ) / ((k : ℝ) / ((x : ℝ) + (k : ℝ))) - (k : ℝ)) = x
+    change Real.toNNReal ((k : ℝ) / ((k : ℝ) / ((x : ℝ) + (k : ℝ))) - (k : ℝ)) = x
     rw [key, show (x : ℝ) + (k : ℝ) - (k : ℝ) = (x : ℝ) from by ring]
     exact Real.toNNReal_coe
   · -- right_inv'
@@ -134,7 +135,7 @@ def mobiusOPH (k : NNReal) (hk : 0 < k) :
       rw [le_div_iff₀ hy']
       exact mul_le_of_le_one_right hk'.le hy1
     apply Subtype.ext
-    show (k : ℝ) / ((Real.toNNReal ((k : ℝ) / (y : ℝ) - (k : ℝ)) : ℝ) + (k : ℝ)) = (y : ℝ)
+    change (k : ℝ) / ((Real.toNNReal ((k : ℝ) / (y : ℝ) - (k : ℝ)) : ℝ) + (k : ℝ)) = (y : ℝ)
     rw [Real.coe_toNNReal _ (sub_nonneg.mpr hknn),
       show (k : ℝ) / (y : ℝ) - (k : ℝ) + (k : ℝ) = (k : ℝ) / (y : ℝ) from by ring,
       key]
@@ -155,7 +156,7 @@ lemma frontier_UIIic {c : ℝ} (h0 : 0 < c) (h1 : c < 1) :
     refine Subset.antisymm ?_ (interior_maximal (fun y (hy : (y : ℝ) < c) => hy.le)
       (isOpen_Iio.preimage continuous_subtype_val))
     intro y hy
-    show (y : ℝ) < c
+    change (y : ℝ) < c
     by_contra hlt
     have hymem : y ∈ {y : UnitInterval | (y : ℝ) ≤ c} := interior_subset hy
     have hyc : (y : ℝ) = c := le_antisymm hymem (not_lt.mp hlt)

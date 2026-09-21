@@ -3,7 +3,7 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.OneManifold.OneMfld.Charts
 import LeanPool.OneManifold.OneMfld.Normalize
 import LeanPool.OneManifold.OneMfld.GlueBlocks
@@ -27,7 +27,7 @@ open Set
 
 /-- Two reals with the same image in `AddCircle 1` differ by an integer. -/
 private lemma addCircle_coe_eq_iff_int {x y : ℝ} :
-    (x : AddCircle (1:ℝ)) = (y : AddCircle (1:ℝ)) ↔ ∃ n : ℤ, x - y = (n : ℝ) := by
+    (x : AddCircle (1 : ℝ)) = (y : AddCircle (1 : ℝ)) ↔ ∃ n : ℤ, x - y = (n : ℝ) := by
   rw [QuotientAddGroup.eq_iff_sub_mem]
   constructor
   · intro h
@@ -39,7 +39,7 @@ private lemma addCircle_coe_eq_iff_int {x y : ℝ} :
 /-- Window analysis: two reals with the same circle image and difference in `(-1, 2)`
 are equal or differ by exactly one period. -/
 private lemma addCircle_eq_or_eq_add_one {x y : ℝ}
-    (h : (x : AddCircle (1:ℝ)) = (y : AddCircle (1:ℝ)))
+    (h : (x : AddCircle (1 : ℝ)) = (y : AddCircle (1 : ℝ)))
     (h1 : -1 < x - y) (h2 : x - y < 2) : x = y ∨ x = y + 1 := by
   obtain ⟨n, hn⟩ := addCircle_coe_eq_iff_int.mp h
   have hn1 : (-1 : ℝ) < (n : ℝ) := hn ▸ h1
@@ -102,8 +102,8 @@ private lemma mono_key_ge {M : Type*} [TopologicalSpace M]
 /-- The real parameters of the circle gluing: slopes `kα`, `kg` and offset `g0` with the
 matching identities and strict separation inequalities. -/
 private lemma circle_params {ρ ν σ μ : ℝ}
-    (hρ0 : 0 < ρ) (hρ4 : ρ < 1/4) (hν3 : 3/4 < ν) (hν1 : ν < 1)
-    (hσ0 : 0 < σ) (hσ4 : σ < 1/4) (hμ3 : 3/4 < μ) (hμ1 : μ < 1) :
+    (hρ0 : 0 < ρ) (hρ4 : ρ < 1 / 4) (hν3 : 3 / 4 < ν) (hν1 : ν < 1)
+    (hσ0 : 0 < σ) (hσ4 : σ < 1 / 4) (hμ3 : 3 / 4 < μ) (hμ1 : μ < 1) :
     ∃ kα kg g0 : ℝ, 0 < kα ∧ kα < 1 ∧ 0 < kg ∧ kg < 1 ∧
       kg * σ + g0 = kα * ν ∧
       kg * μ + g0 = 1 + kα * ρ ∧
@@ -135,7 +135,7 @@ private lemma circle_params {ρ ν σ μ : ℝ}
   have hid2 : kg * μ + g0 = 1 + kα * ρ := by
     rw [hg0def]; linear_combination hkgden
   have hP1 : (1/3 : ℝ) < kα * (ν - ρ) := by nlinarith
-  have hP2 : (1/4 : ℝ) < kα * (ν - ρ) * μ := by nlinarith
+  have hP2 : (1 / 4 : ℝ) < kα * (ν - ρ) * μ := by nlinarith
   have hkey : σ < kα * (ν - ρ) * μ := by linarith
   have hc₁g0 : kα * ρ < g0 := by
     have h2 : kg * σ * (μ - σ) = σ * (1 - kα * (ν - ρ)) := by
@@ -157,10 +157,10 @@ private lemma circle_params {ρ ν σ μ : ℝ}
 `Ioo 0 1`) is the arc `coe '' Ioo d (d + k)`. -/
 private lemma affine_circle_target {M : Type*} [TopologicalSpace M]
     (X : OpenPartialHomeomorph M NNReal) (hXt : X.target = Ioo 0 1)
-    (E : OpenPartialHomeomorph M (AddCircle (1:ℝ)))
+    (E : OpenPartialHomeomorph M (AddCircle (1 : ℝ)))
     (hEs : E.source = X.source) {k d : ℝ} (hk : 0 < k)
-    (hEval : ∀ x ∈ X.source, E x = ((k * ((X x : NNReal) : ℝ) + d : ℝ) : AddCircle (1:ℝ))) :
-    E.target = ((↑) : ℝ → AddCircle (1:ℝ)) '' (Ioo d (d + k)) := by
+    (hEval : ∀ x ∈ X.source, E x = ((k * ((X x : NNReal) : ℝ) + d : ℝ) : AddCircle (1 : ℝ))) :
+    E.target = ((↑) : ℝ → AddCircle (1 : ℝ)) '' (Ioo d (d + k)) := by
   rw [← E.image_source_eq_target, hEs]
   ext z
   constructor
@@ -188,7 +188,7 @@ private lemma affine_circle_target {M : Type*} [TopologicalSpace M]
 
 /-- Normalize both charts to target `Ioo 0 1`, split the overlap into its two
 components, orient the second chart so the component lower in `a` is upper in `b`, and
-Möbius-shrink both charts so the lower end-segments sit below `1/4`. -/
+Möbius-shrink both charts so the lower end-segments sit below `1 / 4`. -/
 private lemma exists_normalized_charts {M : Type*} [TopologicalSpace M] [T2Space M]
     (a b : OChart M) (h : Overlap a.source b.source)
     (hdisc : ¬ IsConnected (a.source ∩ b.source)) :
@@ -198,8 +198,8 @@ private lemma exists_normalized_charts {M : Type*} [TopologicalSpace M] [T2Space
       A.source ∩ B.source = W₀ ∪ W₁ ∧
       A '' W₀ = Ioo 0 r ∧ A '' W₁ = Ioo p 1 ∧
       B '' W₀ = Ioo q 1 ∧ B '' W₁ = Ioo 0 s ∧
-      0 < r ∧ r ≤ p ∧ p < 1 ∧ r < 1/4 ∧
-      0 < s ∧ s ≤ q ∧ q < 1 ∧ s < 1/4 := by
+      0 < r ∧ r ≤ p ∧ p < 1 ∧ r < 1 / 4 ∧
+      0 < s ∧ s ≤ q ∧ q < 1 ∧ s < 1 / 4 := by
   have hane : a.source.Nonempty := h.1.mono inter_subset_left
   have hbne : b.source.Nonempty := h.1.mono inter_subset_right
   obtain ⟨a₀, ha₀s, ha₀t, -⟩ := a.rescale hane
@@ -250,7 +250,7 @@ private lemma exists_normalized_charts {M : Type*} [TopologicalSpace M] [T2Space
   obtain ⟨B₁, hB₁s, hB₁t, s₂, q₂, hs₂0, hs₂q, hq₂1, himgB₀, himgB₁⟩ := hBpick
   -- Möbius-shrink the `a`-side chart.
   have hr₀1 : r₀ < 1 := lt_of_le_of_lt hr₀p hp₁1
-  have hquarter : (0:NNReal) < 1/4 := by norm_num
+  have hquarter : (0:NNReal) < 1 / 4 := by norm_num
   obtain ⟨cA, hcA0, hcA⟩ := exists_mobiusFun_lt hr₀0 hr₀1 hquarter
   obtain ⟨mA, hmAs, hmAt, hmAf, hmAlo, hmAhi⟩ := mobiusOPH' cA hcA0
   set A := a₀.toOpenPartialHomeomorph.trans mA with hAdef
@@ -324,9 +324,9 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
     (hunion : A.source ∩ B.source = W₀ ∪ W₁)
     (himgA₀ : A '' W₀ = Ioo 0 r) (himgA₁ : A '' W₁ = Ioo p 1)
     (himgB₀ : B '' W₀ = Ioo q 1) (himgB₁ : B '' W₁ = Ioo 0 s)
-    (hr0 : 0 < r) (hrp : r ≤ p) (hp1 : p < 1) (hr4 : r < 1/4)
-    (hs0 : 0 < s) (hsq : s ≤ q) (hq1 : q < 1) (hs4 : s < 1/4) :
-    ∃ f : OpenPartialHomeomorph M (AddCircle (1:ℝ)),
+    (hr0 : 0 < r) (hrp : r ≤ p) (hp1 : p < 1) (hr4 : r < 1 / 4)
+    (hs0 : 0 < s) (hsq : s ≤ q) (hq1 : q < 1) (hs4 : s < 1 / 4) :
+    ∃ f : OpenPartialHomeomorph M (AddCircle (1 : ℝ)),
       f.source = A.source ∪ B.source ∧ f.target = univ := by
   classical
   have hfact : Fact ((0:ℝ) < 1) := ⟨one_pos⟩
@@ -363,17 +363,17 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
       · exact absurd h2 (not_lt.2 hrp)
       · exact absurd h1 (lt_irrefl p)
   -- Split points.
-  have h34lt1 : (3/4 : NNReal) < 1 := by norm_num
+  have h34lt1 : (3 / 4 : NNReal) < 1 := by norm_num
   obtain ⟨ν, hν1', hν2⟩ := exists_between (max_lt hp1 h34lt1)
   have hpν : p < ν := lt_of_le_of_lt (le_max_left _ _) hν1'
-  have h34ν : (3/4:NNReal) < ν := lt_of_le_of_lt (le_max_right _ _) hν1'
+  have h34ν : (3 / 4:NNReal) < ν := lt_of_le_of_lt (le_max_right _ _) hν1'
   obtain ⟨m₁, hm₁W, hm₁ν⟩ : ∃ m₁ ∈ W₁, A m₁ = ν := by
     have hmem : ν ∈ A '' W₁ := by rw [himgA₁]; exact ⟨hpν, hν2⟩
     obtain ⟨m₁, hm₁, he⟩ := hmem
     exact ⟨m₁, hm₁, he⟩
   obtain ⟨μ, hμ1', hμ2⟩ := exists_between (max_lt hq1 h34lt1)
   have hqμ : q < μ := lt_of_le_of_lt (le_max_left _ _) hμ1'
-  have h34μ : (3/4:NNReal) < μ := lt_of_le_of_lt (le_max_right _ _) hμ1'
+  have h34μ : (3 / 4:NNReal) < μ := lt_of_le_of_lt (le_max_right _ _) hμ1'
   obtain ⟨m₀, hm₀W, hm₀μ⟩ : ∃ m₀ ∈ W₀, B m₀ = μ := by
     have hmem : μ ∈ B '' W₀ := by rw [himgB₀]; exact ⟨hqμ, hμ2⟩
     obtain ⟨m₀, hm₀, he⟩ := hmem
@@ -389,12 +389,12 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
   have K₁ := mono_key_ge A B hW₁A mono₁ hm₁W
   -- Real versions of the split data.
   have hρ'0 : (0:ℝ) < ((A m₀ : NNReal) : ℝ) := by exact_mod_cast hρmem.1
-  have hρ'4 : ((A m₀ : NNReal) : ℝ) < 1/4 := by exact_mod_cast hρmem.2.trans hr4
-  have hν'3 : (3/4:ℝ) < ((ν : NNReal) : ℝ) := by exact_mod_cast h34ν
+  have hρ'4 : ((A m₀ : NNReal) : ℝ) < 1 / 4 := by exact_mod_cast hρmem.2.trans hr4
+  have hν'3 : (3 / 4:ℝ) < ((ν : NNReal) : ℝ) := by exact_mod_cast h34ν
   have hν'1 : ((ν : NNReal) : ℝ) < 1 := by exact_mod_cast hν2
   have hσ'0 : (0:ℝ) < ((B m₁ : NNReal) : ℝ) := by exact_mod_cast hσmem.1
-  have hσ'4 : ((B m₁ : NNReal) : ℝ) < 1/4 := by exact_mod_cast hσmem.2.trans hs4
-  have hμ'3 : (3/4:ℝ) < ((μ : NNReal) : ℝ) := by exact_mod_cast h34μ
+  have hσ'4 : ((B m₁ : NNReal) : ℝ) < 1 / 4 := by exact_mod_cast hσmem.2.trans hs4
+  have hμ'3 : (3 / 4:ℝ) < ((μ : NNReal) : ℝ) := by exact_mod_cast h34μ
   have hμ'1 : ((μ : NNReal) : ℝ) < 1 := by exact_mod_cast hμ2
   obtain ⟨kα, kg, g0, hkα0, hkα1, hkg0, hkg1, hid1, hid2, hcg0, hg0d, h1c, hg1d⟩ :=
     circle_params hρ'0 hρ'4 hν'3 hν'1 hσ'0 hσ'4 hμ'3 hμ'1
@@ -412,8 +412,8 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
   obtain ⟨eB, heBs, heBt, heBf⟩ := affineNNRealOPH kg g0 hkg0
   have heAf' : ∀ x : NNReal, eA x = kα * (x:ℝ) + 0 := heAf
   have heBf' : ∀ x : NNReal, eB x = kg * (x:ℝ) + g0 := heBf
-  set CA := AddCircle.openPartialHomeomorphCoe (1:ℝ) (0:ℝ) with hCAdef
-  set CB := AddCircle.openPartialHomeomorphCoe (1:ℝ) (g0 + kg - 1) with hCBdef
+  set CA := AddCircle.openPartialHomeomorphCoe (1 : ℝ) (0:ℝ) with hCAdef
+  set CB := AddCircle.openPartialHomeomorphCoe (1 : ℝ) (g0 + kg - 1) with hCBdef
   have hCAs : CA.source = Ioo (0:ℝ) (0+1) := rfl
   have hCBs : CB.source = Ioo (g0 + kg - 1) (g0 + kg - 1 + 1) := rfl
   set e := (A.trans eA).trans CA with hedef
@@ -433,11 +433,11 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
     rw [OpenPartialHomeomorph.trans_apply, heAf']
   have hBeBval : ∀ x, (B.trans eB) x = kg * ((B x : NNReal):ℝ) + g0 := fun x => by
     rw [OpenPartialHomeomorph.trans_apply, heBf']
-  have heval : ∀ x, e x = ((kα * ((A x : NNReal) : ℝ) : ℝ) : AddCircle (1:ℝ)) := by
+  have heval : ∀ x, e x = ((kα * ((A x : NNReal) : ℝ) : ℝ) : AddCircle (1 : ℝ)) := by
     intro x
     rw [hedef, OpenPartialHomeomorph.trans_apply, hAeAval, add_zero]
     rfl
-  have he'val : ∀ x, e' x = ((kg * ((B x : NNReal) : ℝ) + g0 : ℝ) : AddCircle (1:ℝ)) := by
+  have he'val : ∀ x, e' x = ((kg * ((B x : NNReal) : ℝ) + g0 : ℝ) : AddCircle (1 : ℝ)) := by
     intro x
     rw [he'def, OpenPartialHomeomorph.trans_apply, hBeBval]
     rfl
@@ -472,15 +472,15 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
     obtain ⟨hb0, hb1⟩ := hb'bounds x hx
     exact ⟨by linarith, by linarith⟩
   -- Targets.
-  have htargetE : e.target = ((↑) : ℝ → AddCircle (1:ℝ)) '' (Ioo 0 kα) := by
+  have htargetE : e.target = ((↑) : ℝ → AddCircle (1 : ℝ)) '' (Ioo 0 kα) := by
     have hgen := affine_circle_target A hAt e hes hkα0
       (fun x _ => by rw [heval x, add_zero])
     rw [hgen, zero_add]
-  have htargetE' : e'.target = ((↑) : ℝ → AddCircle (1:ℝ)) '' (Ioo g0 (g0 + kg)) :=
+  have htargetE' : e'.target = ((↑) : ℝ → AddCircle (1 : ℝ)) '' (Ioo g0 (g0 + kg)) :=
     affine_circle_target B hBt e' he's hkg0 (fun x _ => he'val x)
   -- The gluing sets.
   set sset := A.source ∩ A ⁻¹' (Icc (A m₀) ν) with hssetdef
-  set tset := ((↑) : ℝ → AddCircle (1:ℝ)) ''
+  set tset := ((↑) : ℝ → AddCircle (1 : ℝ)) ''
     (Icc (kα * ((A m₀ : NNReal):ℝ)) (kα * ((ν : NNReal):ℝ))) with htsetdef
   have hssub : sset ⊆ A.source := by rw [hssetdef]; exact inter_subset_left
   -- `e` maps `sset` to `tset`.
@@ -515,7 +515,7 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
         mul_le_mul_of_nonneg_left h2' hkα0.le⟩
   -- Windows: membership of a point of the `e'`-arc in `tset`.
   have claim1 : ∀ v : ℝ, v ∈ Ioo g0 (g0 + kg) →
-      (((v : ℝ) : AddCircle (1:ℝ)) ∈ tset ↔
+      (((v : ℝ) : AddCircle (1 : ℝ)) ∈ tset ↔
         v ∈ Icc (kα * ((A m₀ : NNReal):ℝ)) (kα * ((ν : NNReal):ℝ)) ∨
         v ∈ Icc (1 + kα * ((A m₀ : NNReal):ℝ)) (1 + kα * ((ν : NNReal):ℝ))) := by
     intro v hv
@@ -643,13 +643,13 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
     exact claim3 y hy
   -- The frontier of the closed arc consists of at most the two endpoint classes.
   have hfrontier : frontier tset ⊆
-      {((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1:ℝ)),
-       ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1:ℝ))} := by
+      {((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)),
+       ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ))} := by
     rw [htsetdef]
     exact addCircle_frontier_arc_subset hc₁d₁
   -- The endpoint classes are attained only at the split points.
   have Pce : ∀ x ∈ A.source,
-      (e x = ((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1:ℝ)) ↔ x = m₀) := by
+      (e x = ((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ x = m₀) := by
     intro x hx
     obtain ⟨hb0, hb1⟩ := hbounds x hx
     constructor
@@ -665,7 +665,7 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
     · rintro rfl
       rw [heval x]
   have Pde : ∀ x ∈ A.source,
-      (e x = ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1:ℝ)) ↔ x = m₁) := by
+      (e x = ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ x = m₁) := by
     intro x hx
     obtain ⟨hb0, hb1⟩ := hbounds x hx
     have hd₁0 : (0:ℝ) < kα * ((ν : NNReal):ℝ) := by linarith
@@ -683,7 +683,7 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
     · rintro rfl
       rw [heval x, hm₁ν]
   have Pce' : ∀ y ∈ B.source,
-      (e' y = ((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1:ℝ)) ↔ y = m₀) := by
+      (e' y = ((kα * ((A m₀ : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ y = m₀) := by
     intro y hy
     obtain ⟨hb0, hb1⟩ := hb'bounds y hy
     constructor
@@ -701,7 +701,7 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
       rw [he'val y, hm₀μ, hid2, add_comm 1 (kα * ((A y : NNReal):ℝ))]
       exact addCircle_coe_add_one _
   have Pde' : ∀ y ∈ B.source,
-      (e' y = ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1:ℝ)) ↔ y = m₁) := by
+      (e' y = ((kα * ((ν : NNReal):ℝ) : ℝ) : AddCircle (1 : ℝ)) ↔ y = m₁) := by
     intro y hy
     obtain ⟨hb0, hb1⟩ := hb'bounds y hy
     constructor
@@ -770,7 +770,7 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
       rw [hdx, (Pde' x hm₁B).mpr rfl]
   -- Glue.
   refine ⟨e.piecewise e' sset tset H H' Hs Heq, ?_, ?_⟩
-  · show Set.ite sset e.source e'.source = A.source ∪ B.source
+  · change Set.ite sset e.source e'.source = A.source ∪ B.source
     have hite : Set.ite sset e.source e'.source
         = (e.source ∩ sset) ∪ (e'.source \ sset) := rfl
     rw [hite, hes, he's]
@@ -796,7 +796,7 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
                 exact hW₁B (mem_of_image_mem A hW₁A himgA₁ hxa hmem)
           exact Or.inr ⟨hxB, hxs⟩
         · exact Or.inr ⟨hxb, hxs⟩
-  · show Set.ite tset e.target e'.target = univ
+  · change Set.ite tset e.target e'.target = univ
     have hite : Set.ite tset e.target e'.target
         = (e.target ∩ tset) ∪ (e'.target \ tset) := rfl
     rw [hite]
@@ -805,7 +805,7 @@ private lemma circle_chart_of_normalized {M : Type*} [TopologicalSpace M] [T2Spa
       rw [htargetE, htsetdef]
       exact image_mono
         (fun u hu => ⟨lt_of_lt_of_le hc₁0 hu.1, lt_of_le_of_lt hu.2 hd₁kα⟩)
-    have h2 : e'.target \ tset = ((↑) : ℝ → AddCircle (1:ℝ)) ''
+    have h2 : e'.target \ tset = ((↑) : ℝ → AddCircle (1 : ℝ)) ''
         (Ioo (kα * ((ν : NNReal):ℝ)) (kα * ((A m₀ : NNReal):ℝ) + 1)) := by
       rw [htargetE']
       ext z
@@ -842,7 +842,7 @@ a chart of `M` onto the whole of `AddCircle 1`. -/
 theorem exists_circle_chart {M : Type*} [TopologicalSpace M] [T2Space M]
     (a b : OChart M) (h : Overlap a.source b.source)
     (hdisc : ¬ IsConnected (a.source ∩ b.source)) :
-    ∃ f : OpenPartialHomeomorph M (AddCircle (1:ℝ)),
+    ∃ f : OpenPartialHomeomorph M (AddCircle (1 : ℝ)),
       f.source = a.source ∪ b.source ∧ f.target = univ := by
   obtain ⟨A, B, W₀, W₁, r, p, s, q, hAs, hBs, hAt, hBt, hunion,
     himgA₀, himgA₁, himgB₀, himgB₁, hr0, hrp, hp1, hr4, hs0, hsq, hq1, hs4⟩ :=

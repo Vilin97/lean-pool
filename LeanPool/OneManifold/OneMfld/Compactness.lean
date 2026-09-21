@@ -3,9 +3,15 @@ Copyright (c) 2026 Jim Fowler, Dennis Sweeney. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jim Fowler, Dennis Sweeney
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.OneManifold.OneMfld.FiniteIntervalCharts
 import LeanPool.OneManifold.OneMfld.Noncompact
+
+/-!
+# Compactness
+
+Supporting results for the classification of compact one-dimensional manifolds.
+-/
 
 variable
   {M : Type*}
@@ -81,7 +87,8 @@ lemma noncompact_iio (x : NNReal) (hx : 0 < x) : ¬ CompactSpace (Set.Iio x) := 
   have h:= noncompact_iio' x hx
   exact not_compactSpace_iff.mpr h
 
-lemma noncompact_target (ht : FinitelyIntervalChartedSpace M) (z : M) (a : OpenPartialHomeomorph M NNReal) (ha : a ∈ ht.atlas) (hz : z ∈ a.source) : ¬ CompactSpace (a.target) := by
+lemma noncompact_target (ht : FinitelyIntervalChartedSpace M) (z : M) (a : OpenPartialHomeomorph
+    M NNReal) (ha : a ∈ ht.atlas) (hz : z ∈ a.source) : ¬ CompactSpace (a.target) := by
     have := ht.is_interval a ha
     rcases this with (h|h)
     · rcases h with ⟨ x, y, h ⟩
