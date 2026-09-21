@@ -109,7 +109,7 @@ theorem exists_eq_sum_pderiv_mul_X_add_of_mem_span {δ : NatOrdinal}
   refine ⟨fun t ↦ if h : t ∈ T then eraseFinitePart wt δ.constantCoeff (U ⟨t, h⟩) else 0,
     fun t ht ↦ ?_, ?_⟩
   · beta_reduce
-    rw [dif_pos ht]
+    rw [dite_eq_left ht]
     exact ⟨isWeightedHomogeneous_eraseFinitePart wt _ (hUt ⟨t, ht⟩),
       eraseFinitePart_mem_supported wt _ _⟩
   · have hshape := eraseFinitePart_add_sum_X_mul_pderiv hδ hF
@@ -119,7 +119,7 @@ theorem exists_eq_sum_pderiv_mul_X_add_of_mem_span {δ : NatOrdinal}
     rw [← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun t _ ↦ ?_
     beta_reduce
-    rw [dif_pos t.2, mul_add, mul_comm (X (t : σ)), add_comm]
+    rw [dite_eq_left t.2, mul_add, mul_comm (X (t : σ)), add_comm]
 
 end MvPolynomial
 

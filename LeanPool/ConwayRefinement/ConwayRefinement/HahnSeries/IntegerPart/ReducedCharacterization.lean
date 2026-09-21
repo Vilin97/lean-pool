@@ -33,7 +33,7 @@ variable [Field R]
 private theorem coeff_sub_one_of_ne_zero (x : Nonpositive G R) {g : G} (hg : g ≠ 0) :
     ((x - 1 : Nonpositive G R) : R⟦G⟧).coeff g = (x : R⟦G⟧).coeff g := by
   change ((x : R⟦G⟧) - 1).coeff g = _
-  rw [HahnSeries.coeff_sub, HahnSeries.coeff_one, if_neg hg, sub_zero]
+  rw [HahnSeries.coeff_sub, HahnSeries.coeff_one, ite_eq_right hg, sub_zero]
 
 private theorem leadingClass_le_mk_of_mem_support (x : Nonpositive G R)
     (horder : (x : R⟦G⟧).order ≠ 0) {g : G} (hg : g ∈ (x : R⟦G⟧).support)
@@ -88,7 +88,7 @@ private theorem tau_eq_C_constantCoeff_of_support_nonzero_class
   · rw [coe_C]
     change ((tau (K := K) (leadingClass x horder) x : Nonpositive G R) :
       R⟦G⟧).coeff g = (HahnSeries.single 0 ((x : R⟦G⟧).coeff 0)).coeff g
-    rw [HahnSeries.coeff_single, if_neg hg0]
+    rw [HahnSeries.coeff_single, ite_eq_right hg0]
     by_cases hg : g ∈ (x : R⟦G⟧).support
     · rw [coeff_tau_of_not_mem]
       intro hball
@@ -136,7 +136,7 @@ theorem isReduced_iff_tau_leadingClass_eq_zero_or_one
           0 ∈ ((x - 1 : Nonpositive G R) : R⟦G⟧).support := by
         rw [HahnSeries.mem_support]
         change (((x : R⟦G⟧) - 1).coeff 0) ≠ 0
-        rw [HahnSeries.coeff_sub, HahnSeries.coeff_one, if_pos rfl]
+        rw [HahnSeries.coeff_sub, HahnSeries.coeff_one, ite_eq_left rfl]
         exact sub_ne_zero.mpr hnot.2
       have htop : (⊤ : ArchimedeanClass G) = d := hd ⟨hzeroSupport, hzeroSubSupport⟩
       exact (FiniteArchimedeanClass.mk (x : R⟦G⟧).order horder).prop
@@ -182,7 +182,7 @@ theorem isReduced_iff_tau_leadingClass_eq_zero_or_one
           (fun y : Nonpositive G R ↦ (y : R⟦G⟧).coeff g) htau
         rw [coeff_tau_of_mem _ _ hball] at hcoeff
         change (x : R⟦G⟧).coeff g = (1 : R⟦G⟧).coeff g at hcoeff
-        simp only [HahnSeries.coeff_one, if_neg hg0] at hcoeff
+        simp only [HahnSeries.coeff_one, ite_eq_right hg0] at hcoeff
         exact ((HahnSeries.mem_support _ _).mp hgSupport) hcoeff
     have heq : leadingClass x horder = FiniteArchimedeanClass.mk g hg0 :=
       le_antisymm hle (not_lt.mp hnlt)

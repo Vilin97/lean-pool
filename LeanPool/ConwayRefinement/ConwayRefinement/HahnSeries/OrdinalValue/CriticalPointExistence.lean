@@ -66,14 +66,14 @@ private theorem translatedTruncation_eq_C_of_support_subset_Ici
   ext δ
   rw [coeff_translatedTruncation, HahnSeries.Nonpositive.coe_C]
   rcases lt_trichotomy δ 0 with hδ | rfl | hδ
-  · rw [if_pos hδ.le, HahnSeries.C_apply,
+  · rw [ite_eq_left hδ.le, HahnSeries.C_apply,
       HahnSeries.coeff_single_of_ne hδ.ne]
     apply not_ne_iff.mp
     rw [← HahnSeries.mem_support]
     intro hmem
     exact (not_le_of_gt (by linarith : x + δ < x)) (hb hmem)
   · simp
-  · rw [if_neg (not_le_of_gt hδ), HahnSeries.C_apply,
+  · rw [ite_eq_right (not_le_of_gt hδ), HahnSeries.C_apply,
       HahnSeries.coeff_single_of_ne hδ.ne']
 
 private theorem principalHeadExponent_nonpositive

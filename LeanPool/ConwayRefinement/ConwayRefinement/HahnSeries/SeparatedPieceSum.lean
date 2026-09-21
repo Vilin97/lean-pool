@@ -117,9 +117,9 @@ def setRestrict (s : Set Γ) [DecidablePred (· ∈ s)] (b : R⟦Γ⟧) : R⟦Γ
     apply hg
     change (if g ∈ s then b.coeff g else 0) = 0
     rcases Classical.em (g ∈ s) with hgs | hgs
-    · rw [if_pos hgs]
+    · rw [ite_eq_left hgs]
       exact of_not_not fun h ↦ hgb ((mem_support _ _).mpr h)
-    · rw [if_neg hgs]
+    · rw [ite_eq_right hgs]
 
 @[simp]
 theorem coeff_setRestrict (s : Set Γ) [DecidablePred (· ∈ s)] (b : R⟦Γ⟧) (g : Γ) :
@@ -132,12 +132,12 @@ theorem support_setRestrict (s : Set Γ) [DecidablePred (· ∈ s)] (b : R⟦Γ�
   constructor
   · intro h
     rcases Classical.em (g ∈ s) with hgs | hgs
-    · rw [if_pos hgs] at h
+    · rw [ite_eq_left hgs] at h
       exact ⟨(mem_support _ _).mpr h, hgs⟩
-    · rw [if_neg hgs] at h
+    · rw [ite_eq_right hgs] at h
       exact absurd rfl h
   · rintro ⟨hb, hgs⟩
-    rw [if_pos hgs]
+    rw [ite_eq_left hgs]
     exact (mem_support _ _).mp hb
 
 open Classical in
@@ -155,7 +155,7 @@ theorem separatedHsum_setRestrict_eq (hι : (Set.univ : Set ι).IsPWO)
   ext g
   by_cases hgb : g ∈ b.support
   · obtain ⟨i, hgi⟩ := Set.mem_iUnion.mp (hcov hgb)
-    rw [coeff_separatedHsum_eq _ _ _ i g ?_, coeff_setRestrict, if_pos hgi]
+    rw [coeff_separatedHsum_eq _ _ _ i g ?_, coeff_setRestrict, ite_eq_left hgi]
     intro j hji
     rw [support_setRestrict]
     rintro ⟨-, hgj⟩

@@ -110,9 +110,9 @@ theorem entry_unitAt (n k : ℕ) : entry (unitAt n) k = if k = n then (1 : ℝ) 
 
 theorem unitAt_pos (n : ℕ) : 0 < unitAt n := by
   refine lt_of_forall_eq_of_lt (m := n) (fun j hj ↦ ?_) ?_
-  · rw [entry_unitAt, if_neg hj.ne]
+  · rw [entry_unitAt, ite_eq_right hj.ne]
     rfl
-  · rw [entry_unitAt, if_pos rfl]
+  · rw [entry_unitAt, ite_eq_left rfl]
     exact zero_lt_one
 
 /-- Every sequence vanishing below an index lies strictly between the negative and positive unit
@@ -124,13 +124,13 @@ theorem vanishingBelow_subset_Ioo (n : ℕ) :
   intro x hx
   constructor
   · refine lt_of_forall_eq_of_lt (m := n) (fun j hj ↦ ?_) ?_
-    · rw [entry_neg, entry_unitAt, if_neg hj.ne, neg_zero,
+    · rw [entry_neg, entry_unitAt, ite_eq_right hj.ne, neg_zero,
         hx j (hj.trans (Nat.lt_succ_self n))]
-    · rw [entry_neg, entry_unitAt, if_pos rfl, hx n (Nat.lt_succ_self n)]
+    · rw [entry_neg, entry_unitAt, ite_eq_left rfl, hx n (Nat.lt_succ_self n)]
       norm_num
   · refine lt_of_forall_eq_of_lt (m := n) (fun j hj ↦ ?_) ?_
-    · rw [entry_unitAt, if_neg hj.ne, hx j (hj.trans (Nat.lt_succ_self n))]
-    · rw [entry_unitAt, if_pos rfl, hx n (Nat.lt_succ_self n)]
+    · rw [entry_unitAt, ite_eq_right hj.ne, hx j (hj.trans (Nat.lt_succ_self n))]
+    · rw [entry_unitAt, ite_eq_left rfl, hx n (Nat.lt_succ_self n)]
       exact zero_lt_one
 
 theorem vanishingBelow_isOpen (n : ℕ) :
@@ -163,14 +163,14 @@ theorem vanishingBelow_isOpen (n : ℕ) :
     rcases lt_trichotomy (entry (y - x) m) 0 with hneg | hzero | hpos
     · refine absurd hmem.1 (not_lt.mpr (le_of_lt (lt_of_forall_eq_of_lt (m := m)
         (fun j hj ↦ ?_) ?_)))
-      · rw [hmin j hj, entry_neg, entry_unitAt, if_neg (by omega), neg_zero]
-      · rw [entry_neg, entry_unitAt, if_neg (by omega), neg_zero]
+      · rw [hmin j hj, entry_neg, entry_unitAt, ite_eq_right (by omega), neg_zero]
+      · rw [entry_neg, entry_unitAt, ite_eq_right (by omega), neg_zero]
         exact hneg
     · exact hm hzero
     · refine absurd hmem.2 (not_lt.mpr (le_of_lt (lt_of_forall_eq_of_lt (m := m)
         (fun j hj ↦ ?_) ?_)))
-      · rw [entry_unitAt, if_neg (by omega), hmin j hj]
-      · rw [entry_unitAt, if_neg (by omega)]
+      · rw [entry_unitAt, ite_eq_right (by omega), hmin j hj]
+      · rw [entry_unitAt, ite_eq_right (by omega)]
         exact hpos
   exact Filter.mem_of_superset
     (Ioo_mem_nhds (sub_lt_self x (unitAt_pos n)) (lt_add_of_pos_right x (unitAt_pos n))) hsub

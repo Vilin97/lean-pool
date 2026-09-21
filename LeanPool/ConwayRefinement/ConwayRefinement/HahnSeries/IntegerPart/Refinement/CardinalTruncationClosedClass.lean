@@ -160,7 +160,7 @@ def closedClassRestrict (S : Subring L) (q : FiniteArchimedeanClass G)
         hxNcard)⟩, by
     rw [mem_cardSuppLTTruncationIntegerPart]
     refine ⟨xr.2, ?_⟩
-    rw [Nonpositive.closedClassRestrict_coeff, if_pos]
+    rw [Nonpositive.closedClassRestrict_coeff, ite_eq_left]
     · simpa only [xN, coe_toNonpositiveRingHom] using hxmem.2
     · exact (FiniteArchimedeanClass.closedBallAddSubgroup q).zero_mem⟩
 
@@ -335,7 +335,7 @@ theorem exists_refinement_closedClassRestrict_of_ambient
         ((closedClassRestrict S q a :
           cardSuppLTTruncationIntegerPart (G := G) (R := L) (κ := κ) S) :
             L⟦G⟧).coeff 0 = (a : L⟦G⟧).coeff 0 := by
-      rw [coe_closedClassRestrict, Nonpositive.closedClassRestrict_coeff, if_pos]
+      rw [coe_closedClassRestrict, Nonpositive.closedClassRestrict_coeff, ite_eq_left]
       · exact congrArg (fun z : L⟦G⟧ ↦ z.coeff 0) (coe_toNonpositiveRingHom S a)
       · exact (FiniteArchimedeanClass.closedBallAddSubgroup q).zero_mem
     convert haS using 1

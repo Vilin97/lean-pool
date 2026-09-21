@@ -449,12 +449,12 @@ theorem exists_linear_part (hwt : ∀ i, wt i ≠ 0) (hmem : ∀ i, x i ∈ 𝒜
       · rw [Finsupp.single_apply, coeff_monomial]
         by_cases h : i = j
         · subst h; simp
-        · rw [if_neg h, if_neg]
+        · rw [ite_eq_right h, ite_eq_right]
           intro h'
           exact h (Finsupp.single_left_injective one_ne_zero h')
     · push Not at hd
       refine ⟨0, by simp, ?_, fun j ↦ by rw [Finsupp.coe_zero, Pi.zero_apply, coeff_monomial,
-        if_neg (hd j)]⟩
+        ite_eq_right (hd j)]⟩
       rw [map_zero, sub_zero]
       -- `d` has at least two factors: split off one variable
       have hd0 : d ≠ 0 := by

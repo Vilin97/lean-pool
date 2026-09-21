@@ -622,7 +622,7 @@ private theorem degreeLayerTruncationAt_principalComponentTensorMap_tmul_monomia
   simp only [coe_shiftedSeries]
   by_cases hhg : h = g
   · subst g
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have hgerm : translatedTruncation
         (HahnSeries.translate (h : ℝ) (p : K⟦ℝ⟧)) h = p := by
       apply Subtype.ext
@@ -633,7 +633,7 @@ private theorem degreeLayerTruncationAt_principalComponentTensorMap_tmul_monomia
     apply (principalComponentMk_eq_iff alpha _ p _ hpBound).mpr
     rw [hgerm, sub_self, ordinalValue_zero]
     exact NatOrdinal.wpow_pos alpha
-  · rw [if_neg hhg]
+  · rw [ite_eq_right hhg]
     rw [principalComponentMk_eq_zero_iff]
     rcases lt_or_gt_of_ne (Subtype.coe_ne_coe.mpr hhg) with hhgLT | hghLT
     · have htrunc : HahnSeries.truncLE ((g : ℝ) - (h : ℝ))

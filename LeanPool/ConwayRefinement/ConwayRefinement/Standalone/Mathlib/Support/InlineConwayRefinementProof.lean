@@ -626,7 +626,7 @@ theorem toCG_mul (x y : SupportGame.{u}) : toCG (x * y) = toCG x * toCG y := by
 termination_by (x, y)
 decreasing_by
   all_goals
-    aesop (add unsafe
+    aesop (add safe
       [ConwayRefinement.Standalone.InlineSurreal.IGame.Subposition.of_mem_moves, Prod.Lex.left,
         Prod.Lex.right])
 

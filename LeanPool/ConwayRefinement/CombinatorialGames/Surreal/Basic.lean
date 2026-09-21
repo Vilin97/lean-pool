@@ -295,14 +295,14 @@ theorem mk_ofSets {s t : Set IGame.{u}} [Small.{u} s] [Small.{u} t] {H : Numeric
   rw [mk_ofSets']
   congr!; aesop
 
-@[aesop apply unsafe]
+@[aesop apply safe]
 theorem lt_ofSets_of_mem_left {s t : Set Surreal.{u}} [Small.{u} s] [Small.{u} t]
     {H : ∀ x ∈ s, ∀ y ∈ t, x < y} {x : Surreal} (hx : x ∈ s) :
     x < !{s | t} := by
   rw [lt_iff_not_ge, ← toGame_le_iff, toGame_ofSets]
   exact Game.lf_ofSets_of_mem_left (Set.mem_image_of_mem _ hx)
 
-@[aesop apply unsafe]
+@[aesop apply safe]
 theorem ofSets_lt_of_mem_right {s t : Set Surreal.{u}} [Small.{u} s] [Small.{u} t]
     {H : ∀ x ∈ s, ∀ y ∈ t, x < y} {x : Surreal} (hx : x ∈ t) :
     !{s | t} < x := by

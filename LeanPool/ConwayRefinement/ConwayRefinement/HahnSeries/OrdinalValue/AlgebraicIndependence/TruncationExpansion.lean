@@ -100,7 +100,7 @@ theorem IsRemainder.mul_X {d : ι →₀ ℕ} {E : MvPolynomial ι K} (hE : IsRe
   classical
   obtain ⟨d₁, hd₁, d₂, hd₂, hw⟩ := exists_add_eq_weight_of_mem_support_mul (wt := wt) hd'
   obtain ⟨k, hk, hT⟩ := hE d₁ hd₁
-  rw [X, support_monomial, if_neg one_ne_zero, Finset.mem_singleton] at hd₂
+  rw [X, support_monomial, ite_eq_right one_ne_zero, Finset.mem_singleton] at hd₂
   subst hd₂
   rw [Finsupp.weight_single, one_smul] at hw
   exact ⟨k, hk, hw ▸ TermDegree.untrunc i hT⟩

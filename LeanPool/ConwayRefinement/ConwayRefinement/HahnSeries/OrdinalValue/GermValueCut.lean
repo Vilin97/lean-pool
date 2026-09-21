@@ -95,7 +95,7 @@ theorem exists_ordinalValue_translatedTruncation_le (b : SeriesWithOrdinalValueA
         ⟨(b.1 : K⟦ℝ⟧).coeff γ, ?_⟩
       refine toGerm_eq_toGerm_iff_exists_coeff_eq.mpr
         ⟨η' - γ, by linarith, fun δ hδlow hδ0 ↦ ?_⟩
-      rw [coeff_translatedTruncation, if_pos hδ0, HahnSeries.Nonpositive.coe_C]
+      rw [coeff_translatedTruncation, ite_eq_left hδ0, HahnSeries.Nonpositive.coe_C]
       rcases hδ0.eq_or_lt with rfl | hδneg
       · simp
       · rw [HahnSeries.C_apply, HahnSeries.coeff_single_of_ne (by linarith : δ ≠ (0 : ℝ))]

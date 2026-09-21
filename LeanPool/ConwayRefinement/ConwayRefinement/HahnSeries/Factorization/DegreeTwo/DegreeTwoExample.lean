@@ -319,7 +319,7 @@ private theorem degreeTwo_germ_coeff_eq_block (m : ℕ) {delta : ℝ}
     ((Berarducci.translatedTruncation (degreeTwoSeries (K := K) : K⟦ℝ⟧)
       (degreeTwoCutoff m) : Berarducci.Series K) : K⟦ℝ⟧).coeff delta =
         ((degreeTwoBlock (K := K) m : Berarducci.Series K) : K⟦ℝ⟧).coeff delta := by
-  rw [Berarducci.coeff_translatedTruncation, if_pos hdelta0]
+  rw [Berarducci.coeff_translatedTruncation, ite_eq_left hdelta0]
   by_cases hblock : delta ∈ Set.range (degreeTwoBlockEmbedding m)
   · obtain ⟨n, rfl⟩ := hblock
     rw [degreeTwoBlock_coeff_embedding (K := K)]
@@ -613,7 +613,7 @@ theorem degreeTwoWithConstant_coeff_eq_zero {x : ℝ}
     (hrange : x ∉ Set.range degreeTwoExponentEmbedding) (hx0 : x ≠ 0) :
     ((degreeTwoWithConstant (K := K) : Berarducci.Series K) : K⟦ℝ⟧).coeff x = 0 := by
   rw [degreeTwoWithConstant_coe (K := K), HahnSeries.coeff_add]
-  simp only [HahnSeries.C_apply, HahnSeries.coeff_single, if_neg hx0, add_zero]
+  simp only [HahnSeries.C_apply, HahnSeries.coeff_single, ite_eq_right hx0, add_zero]
   rw [← not_ne_iff, ← HahnSeries.mem_support, degreeTwoSeries_support (K := K)]
   exact hrange
 
@@ -691,10 +691,10 @@ private theorem translatedTruncation_C_one_eq_zero {x : ℝ} (hx : x < 0) :
   funext delta
   rw [Berarducci.coeff_translatedTruncation]
   by_cases hdelta : delta ≤ 0
-  · rw [if_pos hdelta, HahnSeries.C_apply]
+  · rw [ite_eq_left hdelta, HahnSeries.C_apply]
     have hsum : x + delta ≠ 0 := ne_of_lt (add_neg_of_neg_of_nonpos hx hdelta)
     simp [hsum]
-  · rw [if_neg hdelta]
+  · rw [ite_eq_right hdelta]
     rfl
 
 theorem degreeTwoWithConstant_translatedTruncationClass_eq_block (m : ℕ) :

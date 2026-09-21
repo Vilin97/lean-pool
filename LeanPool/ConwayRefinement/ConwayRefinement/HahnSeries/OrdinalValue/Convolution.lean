@@ -54,22 +54,22 @@ private theorem mem_support_translatedTruncation {b : K⟦ℝ⟧} {β u : ℝ} :
 
 theorem coeff_translatedTruncation_mul (b c : K⟦ℝ⟧) (β ξ δ : ℝ) :
     ((translatedTruncation b β * translatedTruncation c ξ : Series K) : K⟦ℝ⟧).coeff δ =
-      ∑ pq ∈ (Finset.addAntidiagonal b.isPWO_support c.isPWO_support (β + ξ + δ)).filter
+      ∑ pq ∈ (Finset.antidiagonal b.isPWO_support c.isPWO_support (β + ξ + δ)).filter
         (fun pq ↦ pq.1 ≤ β ∧ pq.2 ≤ ξ), b.coeff pq.1 * c.coeff pq.2 := by
   rw [Subring.coe_mul, HahnSeries.coeff_mul]
   refine Finset.sum_nbij' (i := fun uv ↦ (β + uv.1, ξ + uv.2))
     (j := fun pq ↦ (pq.1 - β, pq.2 - ξ)) ?_ ?_ ?_ ?_ ?_
   · rintro ⟨u, v⟩ huv
-    rw [Finset.mem_addAntidiagonal] at huv
+    rw [Finset.mem_antidiagonal] at huv
     obtain ⟨hu, hv, huv⟩ := huv
     rw [mem_support_translatedTruncation] at hu
     rw [mem_support_translatedTruncation] at hv
-    simp only [Finset.mem_filter, Finset.mem_addAntidiagonal]
+    simp only [Finset.mem_filter, Finset.mem_antidiagonal]
     refine ⟨⟨hu.2, hv.2, by linarith⟩, by linarith [hu.1], by linarith [hv.1]⟩
   · rintro ⟨p, q⟩ hpq
-    simp only [Finset.mem_filter, Finset.mem_addAntidiagonal] at hpq
+    simp only [Finset.mem_filter, Finset.mem_antidiagonal] at hpq
     obtain ⟨⟨hp, hq, hsum⟩, hpβ, hqξ⟩ := hpq
-    rw [Finset.mem_addAntidiagonal]
+    rw [Finset.mem_antidiagonal]
     refine ⟨?_, ?_, by linarith⟩
     · rw [mem_support_translatedTruncation]
       exact ⟨by linarith, by simpa using hp⟩
@@ -80,11 +80,11 @@ theorem coeff_translatedTruncation_mul (b c : K⟦ℝ⟧) (β ξ δ : ℝ) :
   · rintro ⟨p, q⟩ _
     simp
   · rintro ⟨u, v⟩ huv
-    rw [Finset.mem_addAntidiagonal] at huv
+    rw [Finset.mem_antidiagonal] at huv
     obtain ⟨hu, hv, -⟩ := huv
     rw [mem_support_translatedTruncation] at hu
     rw [mem_support_translatedTruncation] at hv
-    rw [coeff_translatedTruncation, coeff_translatedTruncation, if_pos hu.1, if_pos hv.1]
+    rw [coeff_translatedTruncation, coeff_translatedTruncation, ite_eq_left hu.1, ite_eq_left hv.1]
 
 /-- The finite index set of Berarducci's convolution formula: the first coordinates of the points
 of the closed supports lying on the line of sum `γ`. -/
@@ -137,8 +137,8 @@ theorem germAt_mul (b c : K⟦ℝ⟧) (γ : ℝ) :
   refine ⟨η₀ - γ, by linarith, fun δ hδlow hδ0 ↦ ?_⟩
   have hγδ : γ + δ ∈ Set.Ioc η₀ γ := ⟨by linarith, by linarith⟩
   have hunique := hsub hγδ
-  rw [coeff_translatedTruncation, if_pos hδ0]
-  set A := Finset.addAntidiagonal b.isPWO_support c.isPWO_support (γ + δ) with hA
+  rw [coeff_translatedTruncation, ite_eq_left hδ0]
+  set A := Finset.antidiagonal b.isPWO_support c.isPWO_support (γ + δ) with hA
   rw [HahnSeries.coeff_mul]
   have hcoeSum : ((∑ β ∈ convolutionIndex b c γ,
         translatedTruncation b β * translatedTruncation c (γ - β) : Series K) : K⟦ℝ⟧).coeff δ =
@@ -158,18 +158,18 @@ theorem germAt_mul (b c : K⟦ℝ⟧) (γ : ℝ) :
   simp only [Finset.sum_filter]
   rw [Finset.sum_comm]
   refine (Finset.sum_congr rfl fun pq hpq ↦ ?_).symm
-  rw [Finset.mem_addAntidiagonal] at hpq
+  rw [Finset.mem_antidiagonal] at hpq
   obtain ⟨hp, hq, hsum⟩ := hpq
   obtain ⟨β₀, hβ₀, hβ₀uniq⟩ :=
     hunique pq.1 (subset_closure hp) pq.2 (subset_closure hq) hsum
   refine (Finset.sum_eq_single β₀ ?_ ?_).trans ?_
   · intro β hβ hne
-    refine if_neg fun hdom ↦ hne ?_
+    refine ite_eq_right fun hdom ↦ hne ?_
     exact hβ₀uniq β ⟨(mem_convolutionIndex.mp hβ).1, (mem_convolutionIndex.mp hβ).2,
       hdom.1, hdom.2⟩
   · intro hnot
     exact absurd (mem_convolutionIndex.mpr ⟨hβ₀.1, hβ₀.2.1⟩) hnot
-  · exact if_pos ⟨hβ₀.2.2.1, hβ₀.2.2.2⟩
+  · exact ite_eq_left ⟨hβ₀.2.2.1, hβ₀.2.2.2⟩
 
 /-- Berarducci, Lemma 7.5(2), the convolution formula at a nonpositive cutoff. -/
 theorem germAt_mul_of_nonpos (b c : K⟦ℝ⟧) (γ : ℝ) (_hγ : γ ≤ 0) :

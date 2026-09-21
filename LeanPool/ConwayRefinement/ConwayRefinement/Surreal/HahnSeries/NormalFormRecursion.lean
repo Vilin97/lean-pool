@@ -139,21 +139,21 @@ attribute [simp] appendSingle_length
 
 theorem exp_eq_exp_appendSingle (s : TermSeq) (i r e hr he) :
     s.exp i = (s.appendSingle r e hr he).exp ⟨i.1, by grind⟩ := by
-  rw [appendSingle_exp, dif_neg (ne_of_lt i.2)]
+  rw [appendSingle_exp, dite_eq_right (ne_of_lt i.2)]
 
 theorem coeff_eq_coeff_appendSingle (s : TermSeq) (i r e hr he) :
     s.coeff i = (s.appendSingle r e hr he).coeff ⟨i.1, by grind⟩ := by
-  rw [appendSingle_coeff, dif_neg (ne_of_lt i.2)]
+  rw [appendSingle_coeff, dite_eq_right (ne_of_lt i.2)]
 
 @[simp, grind =]
 theorem exp_appendSingle_same (s : TermSeq) (r e hr he) :
     (s.appendSingle r e hr he).exp ⟨s.length, by grind⟩ = e := by
-  rw [appendSingle_exp, dif_pos rfl]
+  rw [appendSingle_exp, dite_eq_left rfl]
 
 @[simp, grind =]
 theorem coeff_appendSingle_same (s : TermSeq) (r e hr he) :
     (s.appendSingle r e hr he).coeff ⟨s.length, by grind⟩ = r := by
-  rw [appendSingle_coeff, dif_pos rfl]
+  rw [appendSingle_coeff, dite_eq_left rfl]
 
 @[simp]
 theorem coe_appendSingle {s : TermSeq} {r : ℝ} {e : Surreal} (hr : r ≠ 0) (he : ∀ i, e < s.exp i) :
@@ -163,7 +163,7 @@ theorem coe_appendSingle {s : TermSeq} {r : ℝ} {e : Surreal} (hr : r ≠ 0) (h
   · obtain ⟨j, rfl⟩ := hj
     rw [coeff_add_apply]
     conv_lhs => rw [exp_eq_exp_appendSingle s j r e hr he]
-    rw [coeff_coe, appendSingle_coeff, dif_neg (ne_of_lt j.2), coeff_coe,
+    rw [coeff_coe, appendSingle_coeff, dite_eq_right (ne_of_lt j.2), coeff_coe,
       coeff_single_of_ne (ne_of_lt (he j)), add_zero]
   · rw [coeff_add_apply, coeff_coe_of_notMem hj, zero_add]
     obtain rfl | he := eq_or_ne e j
@@ -242,13 +242,13 @@ theorem trunc_appendSingle {s : TermSeq} {r e hr he} {i} (hi : i ≤ s.length) :
       apply lt_of_lt_of_le ht
       rw [trunc_length]
       exact min_le_right ..
-    rw [trunc_exp, trunc_exp, appendSingle_exp, dif_neg (ne_of_lt hk)]
+    rw [trunc_exp, trunc_exp, appendSingle_exp, dite_eq_right (ne_of_lt hk)]
   · intro k hs ht
     have hk : k < s.length := by
       apply lt_of_lt_of_le ht
       rw [trunc_length]
       exact min_le_right ..
-    rw [trunc_coeff, trunc_coeff, appendSingle_coeff, dif_neg (ne_of_lt hk)]
+    rw [trunc_coeff, trunc_coeff, appendSingle_coeff, dite_eq_right (ne_of_lt hk)]
 
 @[simp]
 theorem trunc_appendSingle_self (s : TermSeq) {r e} (hr he) :
@@ -270,10 +270,10 @@ theorem trunc_add_one {s : TermSeq} {i} (hi : i < s.length) :
       exact min_le_left ..
     rw [appendSingle_exp]
     by_cases hki : k = i
-    · rw [dif_pos (hki.trans hlength.symm), trunc_exp]
+    · rw [dite_eq_left (hki.trans hlength.symm), trunc_exp]
       subst k
       rfl
-    · rw [dif_neg (by
+    · rw [dite_eq_right (by
         intro h
         exact hki (h.trans hlength)), trunc_exp, trunc_exp]
   · intro k hs ht
@@ -283,10 +283,10 @@ theorem trunc_add_one {s : TermSeq} {i} (hi : i < s.length) :
       exact min_le_left ..
     rw [appendSingle_coeff]
     by_cases hki : k = i
-    · rw [dif_pos (hki.trans hlength.symm), trunc_coeff]
+    · rw [dite_eq_left (hki.trans hlength.symm), trunc_coeff]
       subst k
       rfl
-    · rw [dif_neg (by
+    · rw [dite_eq_right (by
         intro h
         exact hki (h.trans hlength)), trunc_coeff, trunc_coeff]
 
@@ -423,12 +423,12 @@ theorem coeffIdx_truncIdx (x : SurrealHahnSeries) (i : Ordinal) :
 theorem coeffIdx_truncIdx_of_lt {x : SurrealHahnSeries} {i j : Ordinal} (h : j < i) :
     (x.truncIdx i).coeffIdx j = x.coeffIdx j := by
   rw [coeffIdx_truncIdx]
-  exact if_pos h
+  exact ite_eq_left h
 
 theorem coeffIdx_truncIdx_of_le {x : SurrealHahnSeries} {i j : Ordinal} (h : i ≤ j) :
     (x.truncIdx i).coeffIdx j = 0 := by
   rw [coeffIdx_truncIdx]
-  exact if_neg h.not_gt
+  exact ite_eq_right h.not_gt
 
 theorem truncIdx_add_one {x : SurrealHahnSeries} {i : Ordinal} (hi : i < x.length) :
     x.truncIdx (i + 1) = x.truncIdx i + single (x.exp ⟨i, hi⟩) (x.coeffIdx i) := by

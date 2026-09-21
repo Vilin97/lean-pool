@@ -40,15 +40,15 @@ theorem componentsGE_eq_sum_weightedHomogeneousComponent (τ : NatOrdinal) (P : 
   split_ifs with hτ
   · by_cases hd : d ∈ P.support
     · rw [Finset.sum_eq_single (Finsupp.weight wt d)]
-      · rw [if_pos rfl]
+      · rw [ite_eq_left rfl]
       · intro e _ he
-        rw [if_neg (Ne.symm he)]
+        rw [ite_eq_right (Ne.symm he)]
       · intro h
         exact absurd (Finset.mem_filter.mpr ⟨Finset.mem_image_of_mem _ hd, hτ⟩) h
     · rw [notMem_support_iff.mp hd]
       exact (Finset.sum_eq_zero fun e _ ↦ by split_ifs <;> rfl).symm
   · refine (Finset.sum_eq_zero fun e he ↦ ?_).symm
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro rfl
     exact hτ (Finset.mem_filter.mp he).2
 

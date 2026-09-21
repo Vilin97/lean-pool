@@ -151,7 +151,7 @@ private theorem mapLinear_tensorRightContraction_tensorProduct (lambda : E →�
     (T : Germ l V ⊗[K] E) :
     mapLinear (tensorRightContraction lambda) (tensorProduct (l := l) T) =
       tensorRightContraction lambda T := by
-  induction T with
+  induction T using TensorProduct.induction_on with
   | zero => simp
   | tmul g e =>
       rw [tensorProduct_tmul, tensorRightContraction_tmul]

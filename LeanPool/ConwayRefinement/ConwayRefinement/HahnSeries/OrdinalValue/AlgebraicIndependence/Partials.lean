@@ -397,13 +397,13 @@ theorem exists_finset_pderiv_eq_sum_of_lowDegreePartAlgebraicLE {v' : ι} (hv' :
   · intro i hi
     obtain ⟨v, -, rfl⟩ := Finset.mem_image.mp hi
     beta_reduce
-    rw [dif_pos (⟨v, rfl⟩ :
+    rw [dite_eq_left (⟨v, rfl⟩ :
       ∃ w : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v}, w.1.1 = v.1.1)]
     exact hUB₀ _
   · rw [hΘeq, Finset.sum_image fun v _ w _ h ↦ hinjv h]
     refine Finset.sum_congr rfl fun v _ ↦ ?_
     beta_reduce
-    rw [dif_pos (⟨v, rfl⟩ :
+    rw [dite_eq_left (⟨v, rfl⟩ :
       ∃ w : {v : {v // S.ContributesToPartialDerivativeAt v' v} // A v}, w.1.1 = v.1.1)]
     congr 2
     exact (hinjv (Classical.choose_spec

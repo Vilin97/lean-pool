@@ -78,9 +78,9 @@ theorem IsMonicFiniteSupport.mul
   let P : K⟦G⟧ := ((p : Nonpositive G K) : K⟦G⟧)
   let Q : K⟦G⟧ := ((q : Nonpositive G K) : K⟦G⟧)
   have hantidiagonal :
-      Finset.addAntidiagonal P.isPWO_support Q.isPWO_support (x + y) = {(x, y)} := by
+      Finset.antidiagonal P.isPWO_support Q.isPWO_support (x + y) = {(x, y)} := by
     ext ⟨i, j⟩
-    simp only [Finset.mem_addAntidiagonal, Finset.mem_singleton, Prod.mk.injEq]
+    simp only [Finset.mem_antidiagonal, Finset.mem_singleton, Prod.mk.injEq]
     constructor
     · rintro ⟨hi, hj, hij⟩
       have hix := hxGreatest.2 hi

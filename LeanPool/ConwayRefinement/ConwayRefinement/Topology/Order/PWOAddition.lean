@@ -36,8 +36,8 @@ theorem Set.IsPWO.exists_eventually_le {α : Type*} [PartialOrder α]
     {s : Set α} (hs : s.IsPWO) (𝒰 : Ultrafilter α) (hmem : s ∈ 𝒰) :
     ∃ a ∈ s, ∀ᶠ b in 𝒰, a ≤ b := by
   have hfin : {a | Minimal (· ∈ s) a}.Finite :=
-    (setOf_minimal_antichain _).finite_of_partiallyWellOrderedOn
-      (hs.mono (setOf_minimal_subset _))
+    (setOfPred_minimal_antichain _).finite_of_partiallyWellOrderedOn
+      (hs.mono (setOfPred_minimal_subset _))
   have he : ∀ᶠ b in 𝒰, ∃ a ∈ {a | Minimal (· ∈ s) a}, a ≤ b := by
     filter_upwards [hmem] with b hb
     obtain ⟨a, hab, ha⟩ := hs.exists_le_minimal hb

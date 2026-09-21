@@ -72,7 +72,7 @@ theorem derivAt_eq (alpha : NatOrdinal)
     derivAt alpha b gamma =
       principalComponentMk (alpha.removeNat 1)
         (translatedTruncation (b : K⟦ℝ⟧) gamma) h := by
-  simp only [derivAt, dif_pos h]
+  simp only [derivAt, dite_eq_left h]
 
 /-- A series in `J_{ω^(α+1)}` has translated truncations in `J_{ω^α} = J_{ω^(α⁻+1)}` near zero
 (truncation drop with `β = α`). -/

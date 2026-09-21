@@ -302,7 +302,7 @@ private theorem strictClosure_orderType_le_two_mul (hs : s.IsPWO) (hz : IsLUB s 
       2 * hs.orderType := by
   let ht := hs.closure.mono (s := strictClosure (s := s) (z := z)) inter_subset_left
   letI : WellFoundedLT (strictClosure (s := s) (z := z)) := ⟨ht.isWF⟩
-  letI : WellFoundedLT s := ⟨hs.isWF⟩
+  letI : WellFoundedLT s := hs.isWF
   let e : strictClosure (s := s) (z := z) ↪o s ×ₗ Fin 2 :=
     OrderEmbedding.ofStrictMono (closureEmbedding hs hz)
       (closureEmbedding_strictMono hs hz)
@@ -410,14 +410,14 @@ theorem IsPWO.cantorBendixsonRank_closure_eq_of_orderType_eq_opow
   have hsource :
       i ∈ ((⊤ : TopologicalSpace.Closeds (Iio T)).cantorBendixson a : Set (Iio T)) := by
     rw [mem_cantorBendixson_top_Iio_iff, Ordinal.cantorBendixson_top_eq,
-      if_neg ha, hi, Ordinal.mem_positivePrincipalMultiples]
+      ite_eq_right ha, hi, Ordinal.mem_positivePrincipalMultiples]
     exact ⟨1, zero_lt_one, by simp⟩
   have hsourceSucc :
       i ∉ ((⊤ : TopologicalSpace.Closeds (Iio T)).cantorBendixson (a + 1) :
         Set (Iio T)) := by
     have hsucc : a + 1 ≠ 0 := (add_pos_of_right zero_lt_one a).ne'
     rw [mem_cantorBendixson_top_Iio_iff, Ordinal.cantorBendixson_top_eq,
-      if_neg hsucc, hi, Ordinal.mem_positivePrincipalMultiples]
+      ite_eq_right hsucc, hi, Ordinal.mem_positivePrincipalMultiples]
     rintro ⟨q, hq, heq⟩
     have hle : omega0 ^ (a + 1) ≤ omega0 ^ (a + 1) * q :=
       by simpa using mul_le_mul_right (one_le_iff_pos.mpr hq) (omega0 ^ (a + 1))

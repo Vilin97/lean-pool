@@ -54,13 +54,13 @@ theorem support_truncLE_separatedHsum_sub_piece_subset
   apply hg
   rw [HahnSeries.coeff_sub, HahnSeries.coeff_truncLE, HahnSeries.coeff_truncLE]
   by_cases hgy : g ≤ y
-  · rw [if_pos hgy, if_pos hgy, coeff_separatedHsum_eq hX f hsep x g ?_, sub_self]
+  · rw [ite_eq_left hgy, ite_eq_left hgy, coeff_separatedHsum_eq hX f hsep x g ?_, sub_self]
     intro j hji hgj
     have hgCj : g ∈ C j := hfC j hgj
     rcases lt_or_gt_of_ne hji with hj | hj
     · exact hgc ((hord j x hj g hgCj c hc).le)
     · exact absurd (hord x j hj y hy g hgCj) (not_lt.mpr hgy)
-  · rw [if_neg hgy, if_neg hgy, sub_self]
+  · rw [ite_eq_right hgy, ite_eq_right hgy, sub_self]
 
 omit [AddCommGroup G] [IsOrderedAddMonoid G] in
 /-- Removing the part of a series outside a convex piece changes its weak truncations only at or
@@ -76,13 +76,13 @@ theorem support_truncLE_sub_truncLE_setRestrict_subset
   rw [HahnSeries.coeff_sub, HahnSeries.coeff_truncLE, HahnSeries.coeff_truncLE,
     coeff_setRestrict]
   by_cases hgy : g ≤ y
-  · rw [if_pos hgy, if_pos hgy]
+  · rw [ite_eq_left hgy, ite_eq_left hgy]
     by_cases hgC : g ∈ C
-    · rw [if_pos hgC, sub_self]
-    · rw [if_neg hgC]
+    · rw [ite_eq_left hgC, sub_self]
+    · rw [ite_eq_right hgC]
       have hgb : g ∉ b.support := fun hgb ↦ hgc (hb g hgb hgC hgy)
       rw [not_not.mp fun h ↦ hgb ((mem_support _ _).mpr h), sub_zero]
-  · rw [if_neg hgy, if_neg hgy, sub_self]
+  · rw [ite_eq_right hgy, ite_eq_right hgy, sub_self]
 
 open Classical in
 /-- Inside a piece, translating the difference between the truncated sum and the truncated

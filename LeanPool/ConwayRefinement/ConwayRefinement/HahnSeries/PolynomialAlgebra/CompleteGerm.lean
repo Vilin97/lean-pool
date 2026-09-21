@@ -98,7 +98,7 @@ theorem germAlgHom_injective
   have hcomponent : weightedHomogeneousComponent wt β F ≠ 0 := by
     rw [MvPolynomial.ne_zero_iff]
     refine ⟨d, ?_⟩
-    rw [coeff_weightedHomogeneousComponent, if_pos hβ.symm]
+    rw [coeff_weightedHomogeneousComponent, ite_eq_left hβ.symm]
     exact MvPolynomial.mem_support_iff.mp hd
   have hgraded : aeval xg (weightedHomogeneousComponent wt β F) ≠ 0 := by
     intro h

@@ -219,12 +219,12 @@ theorem support_trunc_anti {x : SurrealHahnSeries} : Antitone fun i ↦ (trunc x
 @[simp]
 theorem coeff_trunc_of_lt {x : SurrealHahnSeries} {i j : Surreal} (h : i < j) :
     (x.trunc i).coeff j = x.coeff j :=
-  if_pos h
+  ite_eq_left h
 
 @[simp]
 theorem coeff_trunc_of_le {x : SurrealHahnSeries} {i j : Surreal} (h : j ≤ i) :
     (x.trunc i).coeff j = 0 :=
-  if_neg h.not_gt
+  ite_eq_right h.not_gt
 
 theorem coeff_trunc_eq_zero {x : SurrealHahnSeries} {i j : Surreal} (h : x.coeff i = 0) :
     (x.trunc j).coeff i = 0 := by
@@ -393,11 +393,11 @@ def coeffIdx (x : SurrealHahnSeries) (i : Ordinal) : ℝ :=
 
 theorem coeffIdx_of_lt {x : SurrealHahnSeries} {i : Ordinal} (h : i < x.length) :
     x.coeffIdx i = x.coeff (x.exp ⟨i, h⟩) := by
-  rw [coeffIdx, dif_pos]
+  rw [coeffIdx, dite_eq_left]
 
 theorem coeffIdx_of_le {x : SurrealHahnSeries} {i : Ordinal} (h : x.length ≤ i) :
     x.coeffIdx i = 0 := by
-  rw [coeffIdx, dif_neg h.not_gt]
+  rw [coeffIdx, dite_eq_right h.not_gt]
 
 @[simp]
 theorem coeffIdx_zero : coeffIdx 0 = 0 := by
@@ -437,11 +437,11 @@ theorem support_truncIdx (x : SurrealHahnSeries) (i : Ordinal) :
 
 theorem truncIdx_of_lt {x : SurrealHahnSeries} {i : Ordinal} (h : i < x.length) :
     x.truncIdx i = x.trunc (x.exp ⟨i, h⟩) := by
-  rw [truncIdx, dif_pos]
+  rw [truncIdx, dite_eq_left]
 
 theorem truncIdx_of_le {x : SurrealHahnSeries} {i : Ordinal} (h : x.length ≤ i) :
     x.truncIdx i = x := by
-  rw [truncIdx, dif_neg h.not_gt]
+  rw [truncIdx, dite_eq_right h.not_gt]
 
 @[simp]
 theorem truncIdx_zero : truncIdx 0 = 0 := by
@@ -523,7 +523,7 @@ def term (x : SurrealHahnSeries) (i : Ordinal) : Surreal :=
 
 theorem term_of_lt {x : SurrealHahnSeries} {i : Ordinal} (hi : i < x.length) :
     x.term i = x.coeffIdx i * ω^ (x.exp ⟨i, hi⟩).1 :=
-  dif_pos hi
+  dite_eq_left hi
 
 @[simp]
 theorem term_eq_zero {x : SurrealHahnSeries} {i : Ordinal} : x.term i = 0 ↔ x.length ≤ i := by

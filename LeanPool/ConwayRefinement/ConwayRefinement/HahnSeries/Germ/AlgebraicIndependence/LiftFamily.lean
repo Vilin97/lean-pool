@@ -99,7 +99,7 @@ theorem exists_representative_hasLowerTruncationDegree
     rw [HahnSeries.coeff_sub, hbdef, HahnSeries.coeff_truncGT] at hcoeff
     have hle : g + γ ≤ c := by
       by_contra hn
-      rw [if_pos (not_le.mp hn), sub_self] at hcoeff
+      rw [ite_eq_left (not_le.mp hn), sub_self] at hcoeff
       exact hcoeff rfl
     simpa using sub_le_sub_right hle γ
   have hsub : ν ((w : Nonpositive G K) - b) = ⊥ := by

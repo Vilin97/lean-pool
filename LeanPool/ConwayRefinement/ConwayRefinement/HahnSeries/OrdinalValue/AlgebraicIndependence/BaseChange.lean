@@ -303,7 +303,7 @@ theorem principalComponentBaseChange_injective [Algebra K E]
       rw [map_sum]
       rw [Finset.sum_congr rfl fun i (_ : i ∈ c.support) ↦
         nonpositiveLinearCoeffMap_C_mul bE i j (b i)]
-      rw [Finset.sum_ite_eq' c.support j b, if_pos hj]
+      rw [Finset.sum_ite_eq' c.support j b, ite_eq_left hj]
     · exact Finsupp.notMem_support_iff.mp hj
   have hc : c = 0 := Finsupp.ext hzero
   rw [hc, Finsupp.sum_zero_index]

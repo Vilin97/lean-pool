@@ -112,9 +112,9 @@ theorem translatedTruncation_window_sub_mem (a b : ℝ) (E : K⟦ℝ⟧) {ξ : �
   rw [not_le] at hlt
   apply hδ
   by_cases h0 : δ ≤ 0
-  · rw [if_pos h0, if_pos h0, if_pos ⟨by linarith, by linarith⟩, show ξ + δ + b = b + ξ + δ by ring,
+  · rw [ite_eq_left h0, ite_eq_left h0, ite_eq_left ⟨by linarith, by linarith⟩, show ξ + δ + b = b + ξ + δ by ring,
       sub_self]
-  · rw [if_neg h0, if_neg h0, sub_zero]
+  · rw [ite_eq_right h0, ite_eq_right h0, sub_zero]
 
 /-! ### Sums along a sequence of cutoffs -/
 
@@ -173,11 +173,11 @@ theorem translatedTruncation_sumAlongCutoffsSeries_sub_mem (k : ℕ) {ξ : ℝ} 
   rw [not_le] at hlt
   apply hδ
   by_cases h0 : δ ≤ 0
-  · rw [if_pos h0, if_pos h0,
+  · rw [ite_eq_left h0, ite_eq_left h0,
       coeff_sumAlongCutoffs_of_mem w c γ hγ hdisj (k := k) ⟨by linarith, by linarith⟩,
       coeff_placedTerm,
-      if_pos (by linarith), show γ k + ξ + δ - γ k = ξ + δ by ring, sub_self]
-  · rw [if_neg h0, if_neg h0, sub_zero]
+      ite_eq_left (by linarith), show γ k + ξ + δ - γ k = ξ + δ by ring, sub_self]
+  · rw [ite_eq_right h0, ite_eq_right h0, sub_zero]
 
 /-- At cutoffs `ζ ≤ γ_0 + c_0`, below the first interval, the translated truncations of the sum
 (m) vanish. -/

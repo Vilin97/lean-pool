@@ -35,27 +35,27 @@ noncomputable def indicatorFinsupp (L : Set M) (R : Type u) [Semiring R] (y : M)
 open scoped Classical in
 theorem indicatorFinsupp_apply_of_mem (L : Set M) {y : M} (h : y ∈ L) (z : L) :
     L.indicatorFinsupp R y z = if (z : M) = y then 1 else 0 := by
-  rw [indicatorFinsupp, dif_pos h, Finsupp.single_apply]
+  rw [indicatorFinsupp, dite_eq_left h, Finsupp.single_apply]
   by_cases hz : (z : M) = y
-  · rw [if_pos hz, if_pos (Subtype.ext hz).symm]
-  · rw [if_neg hz, if_neg fun h' ↦ hz (congrArg Subtype.val h').symm]
+  · rw [ite_eq_left hz, ite_eq_left (Subtype.ext hz).symm]
+  · rw [ite_eq_right hz, ite_eq_right fun h' ↦ hz (congrArg Subtype.val h').symm]
 
 theorem indicatorFinsupp_apply_of_notMem (L : Set M) {y : M} (h : y ∉ L) (z : L) :
     L.indicatorFinsupp R y z = 0 := by
-  rw [indicatorFinsupp, dif_neg h, Finsupp.zero_apply]
+  rw [indicatorFinsupp, dite_eq_right h, Finsupp.zero_apply]
 
 /-- The indicator of `y` evaluated at the basis vector of `y` itself is `1`. -/
 theorem indicatorFinsupp_apply_self (L : Set M) {y : M} (h : y ∈ L) :
     L.indicatorFinsupp R y ⟨y, h⟩ = 1 := by
   classical
-  rw [indicatorFinsupp_apply_of_mem L h, if_pos rfl]
+  rw [indicatorFinsupp_apply_of_mem L h, ite_eq_left rfl]
 
 /-- The indicator of `y` vanishes at a basis vector other than `y`. -/
 theorem indicatorFinsupp_apply_of_ne (L : Set M) (y : M) (z : L) (hz : (z : M) ≠ y) :
     L.indicatorFinsupp R y z = 0 := by
   classical
   by_cases h : y ∈ L
-  · rw [indicatorFinsupp_apply_of_mem L h, if_neg hz]
+  · rw [indicatorFinsupp_apply_of_mem L h, ite_eq_right hz]
   · exact indicatorFinsupp_apply_of_notMem L h z
 
 theorem indicatorFinsupp_apply_nonneg [PartialOrder R] [IsOrderedRing R] (L : Set M) (y : M)
@@ -76,14 +76,14 @@ theorem linearCombination_indicatorFinsupp (L : Set M) (y : M) :
     Finsupp.linearCombination R (fun z : L ↦ (z : M)) (L.indicatorFinsupp R y) =
       if y ∈ L then y else 0 := by
   by_cases h : y ∈ L
-  · rw [indicatorFinsupp, dif_pos h, Finsupp.linearCombination_single, one_smul, if_pos h]
-  · rw [indicatorFinsupp, dif_neg h, map_zero, if_neg h]
+  · rw [indicatorFinsupp, dite_eq_left h, Finsupp.linearCombination_single, one_smul, ite_eq_left h]
+  · rw [indicatorFinsupp, dite_eq_right h, map_zero, ite_eq_right h]
 
 variable (R) in
 /-- The linear combination of the indicator of a member of `L` is that member. -/
 theorem linearCombination_indicatorFinsupp_of_mem (L : Set M) {y : M} (h : y ∈ L) :
     Finsupp.linearCombination R (fun z : L ↦ (z : M)) (L.indicatorFinsupp R y) = y := by
-  rw [linearCombination_indicatorFinsupp, if_pos h]
+  rw [linearCombination_indicatorFinsupp, ite_eq_left h]
 
 variable (R) in
 /-- The linear combination of the indicator of `0` is `0`, whether or not `0 ∈ L`. -/

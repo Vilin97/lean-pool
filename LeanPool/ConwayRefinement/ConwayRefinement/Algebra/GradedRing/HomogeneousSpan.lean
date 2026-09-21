@@ -83,12 +83,12 @@ theorem exists_decompose_eq_sum_mul_of_mem_span {ι : Type w} [Fintype ι] {q : 
     rw [← hr]
     exact Finset.sum_congr rfl fun j _ ↦ by rw [smul_eq_mul, mul_comm]
   refine ⟨fun j ↦ if h : ∃ β, β + c j = α then (decompose 𝒜 (r j) (Classical.choose h) : R) else 0,
-    fun j β hβ ↦ ?_, fun j h ↦ dif_neg h, ?_⟩
+    fun j β hβ ↦ ?_, fun j h ↦ dite_eq_right h, ?_⟩
   · have h : ∃ β, β + c j = α := ⟨β, hβ⟩
     have hβ' : ∀ h' : ∃ β, β + c j = α, Classical.choose h' = β := fun h' ↦
       add_right_cancel ((Classical.choose_spec h').trans hβ.symm)
     beta_reduce
-    rw [dif_pos h, hβ']
+    rw [dite_eq_left h, hβ']
     exact (decompose 𝒜 (r j) β).2
   · calc (decompose 𝒜 x α : R) = GradedRing.proj 𝒜 α (∑ j, q j * r j) := by
           rw [GradedRing.proj_apply, hr']

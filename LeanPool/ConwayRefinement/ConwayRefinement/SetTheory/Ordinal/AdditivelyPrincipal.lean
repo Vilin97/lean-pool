@@ -130,7 +130,7 @@ theorem additivePrincipalTerms_of_ne_zero {o : Ordinal} (ho : o ≠ 0) :
     additivePrincipalTerms o =
       omega0 ^ log omega0 o :: additivePrincipalTerms (o - omega0 ^ log omega0 o) := by
   rw [additivePrincipalTerms]
-  simp only [if_neg ho]
+  simp only [ite_eq_right ho]
 
 /-- A finite ordinary sum of ordinals below a positive additive-principal ordinal remains below
 that ordinal. -/

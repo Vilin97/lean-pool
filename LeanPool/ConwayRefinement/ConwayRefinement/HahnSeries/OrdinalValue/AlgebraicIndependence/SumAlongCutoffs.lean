@@ -279,7 +279,7 @@ theorem exists_sumAlongCutoffs (δ : NatOrdinal) (γ : ℕ → ℝ) (hγ : Stric
     · exact le_max_right _ _
   have hdisj : ∀ k, γ k ≤ γ (k + 1) + c (k + 1) := by
     intro k
-    simp only [hcdef, if_neg (Nat.succ_ne_zero k), Nat.add_sub_cancel]
+    simp only [hcdef, ite_eq_right (Nat.succ_ne_zero k), Nat.add_sub_cancel]
     linarith [le_max_left (γ k - γ (k + 1)) (-ε (k + 1))]
   -- the sum along cutoffs
   set s' := sumAlongCutoffs w c γ hγ hdisj with hs'def
@@ -314,10 +314,10 @@ theorem exists_sumAlongCutoffs (δ : NatOrdinal) (γ : ℕ → ℝ) (hγ : Stric
     have hgerm : toGerm (translatedTruncation (s : K⟦ℝ⟧) (γ k)) = toGerm (w k) := by
       rw [toGerm_eq_toGerm_iff_exists_coeff_eq]
       refine ⟨c k, hc k, fun η hη1 hη2 ↦ ?_⟩
-      rw [coeff_translatedTruncation, if_pos hη2, hscoe,
+      rw [coeff_translatedTruncation, ite_eq_left hη2, hscoe,
         coeff_sumAlongCutoffs_of_mem w c γ hγ hdisj (k := k) ⟨by linarith, by linarith⟩,
         coeff_placedTerm,
-        add_sub_cancel_left, if_pos hη1]
+        add_sub_cancel_left, ite_eq_left hη1]
     have hval : ordinalValue (translatedTruncation (s : K⟦ℝ⟧) (γ k)) = ordinalValue (w k) :=
       ordinalValue_eq_of_sub_mem_negativeMonomialIdeal (toGerm_eq_toGerm_iff.mp hgerm)
     refine ⟨hval ▸ hw k, ?_⟩
@@ -342,7 +342,7 @@ theorem exists_sumAlongCutoffs (δ : NatOrdinal) (γ : ℕ → ℝ) (hγ : Stric
       have hgerm : toGerm (translatedTruncation (s : K⟦ℝ⟧) ξ) = toGerm 0 := by
         rw [toGerm_eq_toGerm_iff_exists_coeff_eq]
         refine ⟨γ (k - 1) - ξ, by linarith, fun η hη1 hη2 ↦ ?_⟩
-        rw [coeff_translatedTruncation, if_pos hη2, hscoe, Subring.coe_zero,
+        rw [coeff_translatedTruncation, ite_eq_left hη2, hscoe, Subring.coe_zero,
           HahnSeries.coeff_zero]
         refine coeff_sumAlongCutoffs_eq_zero w c γ hγ hdisj fun j hj ↦ ?_
         rcases lt_trichotomy j k with hjk | rfl | hjk
@@ -365,10 +365,10 @@ theorem exists_sumAlongCutoffs (δ : NatOrdinal) (γ : ℕ → ℝ) (hγ : Stric
           toGerm (translatedTruncation ((w k : Series K) : K⟦ℝ⟧) (ξ - γ k)) := by
         rw [toGerm_eq_toGerm_iff_exists_coeff_eq]
         refine ⟨γ k + c k - ξ, by linarith, fun η hη1 hη2 ↦ ?_⟩
-        rw [coeff_translatedTruncation, coeff_translatedTruncation, if_pos hη2, if_pos hη2, hscoe,
+        rw [coeff_translatedTruncation, coeff_translatedTruncation, ite_eq_left hη2, ite_eq_left hη2, hscoe,
           coeff_sumAlongCutoffs_of_mem w c γ hγ hdisj (k := k) ⟨by linarith, by linarith⟩,
           coeff_placedTerm,
-          if_pos (by linarith)]
+          ite_eq_left (by linarith)]
         congr 1
         ring
       rw [ordinalValue_eq_of_sub_mem_negativeMonomialIdeal (toGerm_eq_toGerm_iff.mp hgerm)]

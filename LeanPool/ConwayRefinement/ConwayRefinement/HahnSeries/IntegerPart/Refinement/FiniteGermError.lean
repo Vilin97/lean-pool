@@ -100,7 +100,7 @@ theorem closedClassRestrict_ne_zero_of_mem_image_mk_support
   obtain ⟨g, hg, hgc⟩ := hc
   intro hzero
   have hcoeff := congrArg (fun x : Nonpositive G R ↦ (x : HahnSeries G R).coeff g) hzero
-  rw [closedClassRestrict_coeff, if_pos] at hcoeff
+  rw [closedClassRestrict_coeff, ite_eq_left] at hcoeff
   · exact (HahnSeries.mem_support _ _).mp hg hcoeff
   · apply (FiniteArchimedeanClass.mem_closedBallAddSubgroup_iff).mpr
     intro hg0
@@ -163,21 +163,21 @@ theorem closedClassRestrict_mul (c : FiniteArchimedeanClass G) (a b : Nonpositiv
       · exact hy hy0
     exact (le_min hx' hy').trans
       (ArchimedeanClass.min_le_mk_of_le_of_le hz.1 hz.2)
-  have hsub : Finset.addAntidiagonal
+  have hsub : Finset.antidiagonal
       (HahnSeries.filter (· ∈ C) (a : HahnSeries G R)).isPWO_support
       (HahnSeries.filter (· ∈ C) (b : HahnSeries G R)).isPWO_support g ⊆
-      Finset.addAntidiagonal (a : HahnSeries G R).isPWO_support
+      Finset.antidiagonal (a : HahnSeries G R).isPWO_support
         (b : HahnSeries G R).isPWO_support g := by
     intro p hp
-    rw [Finset.mem_addAntidiagonal] at hp ⊢
+    rw [Finset.mem_antidiagonal] at hp ⊢
     exact ⟨HahnSeries.support_filter_subset _ _ hp.1,
       HahnSeries.support_filter_subset _ _ hp.2.1, hp.2.2⟩
   by_cases hg : g ∈ C
-  · rw [if_pos hg]
+  · rw [ite_eq_left hg]
     refine Finset.sum_congr ?_ ?_
     · apply Finset.Subset.antisymm _ hsub
       intro p hp
-      rw [Finset.mem_addAntidiagonal] at hp ⊢
+      rw [Finset.mem_antidiagonal] at hp ⊢
       have hp1le : p.1 ≤ 0 := a.property hp.1
       have hp2le : p.2 ≤ 0 := b.property hp.2.1
       have hgp1 : g ≤ p.1 := by
@@ -190,12 +190,12 @@ theorem closedClassRestrict_mul (c : FiniteArchimedeanClass G) (a b : Nonpositiv
         by simpa only [HahnSeries.support_filter, Set.mem_setOf_eq] using
           And.intro hp.2.1 hp2C, hp.2.2⟩
     · intro p hp
-      rw [Finset.mem_addAntidiagonal, HahnSeries.support_filter,
+      rw [Finset.mem_antidiagonal, HahnSeries.support_filter,
         HahnSeries.support_filter] at hp
-      simp only [HahnSeries.coeff_filter, if_pos hp.1.2, if_pos hp.2.1.2]
-  · rw [if_neg hg]
+      simp only [HahnSeries.coeff_filter, ite_eq_left hp.1.2, ite_eq_left hp.2.1.2]
+  · rw [ite_eq_right hg]
     refine (Finset.sum_eq_zero fun p hp ↦ ?_).symm
-    rw [Finset.mem_addAntidiagonal, HahnSeries.support_filter,
+    rw [Finset.mem_antidiagonal, HahnSeries.support_filter,
       HahnSeries.support_filter] at hp
     exact (hg (hp.2.2 ▸ C.add_mem hp.1.2 hp.2.1.2)).elim
 

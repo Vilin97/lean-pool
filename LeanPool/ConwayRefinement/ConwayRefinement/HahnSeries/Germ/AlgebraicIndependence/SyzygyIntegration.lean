@@ -113,9 +113,9 @@ theorem hasSyzygyIntegration {B : Type w} [Finite B] (lam : B → NatOrdinal.{u}
         eventually_degree_translatedTruncLE_le (p b') (ρ b') (by
           rw [hρsucc]
           exact hpdeg)] with γ hγI hγdeg
-      simp only [D, dif_pos hb]
+      simp only [D, dite_eq_left hb]
       by_cases hne : cantorBendixsonDerivAt (ρ b') (p b') γ ≠ 0
-      · rw [if_pos]
+      · rw [ite_eq_left]
         refine mem_iUnion_of_mem b' ⟨?_, hγI⟩
         rw [mem_rankLevelSet_iff, ← cantorBendixsonRank_eq]
         exact (cantorBendixsonDerivAt_ne_zero_iff _ _ _ hγdeg).mp hne
@@ -124,7 +124,7 @@ theorem hasSyzygyIntegration {B : Type w} [Finite B] (lam : B → NatOrdinal.{u}
         split <;> rfl
     · have hDzero : D b = 0 := by
         funext γ
-        simp only [D, dif_neg hb, Pi.zero_apply]
+        simp only [D, dite_eq_right hb, Pi.zero_apply]
       rw [hDzero, Filter.Germ.coe_zero]
       by_cases hex : ∃ β, β + lam b = d
       · obtain ⟨β', hβ'⟩ := hex
@@ -146,17 +146,17 @@ theorem hasSyzygyIntegration {B : Type w} [Finite B] (lam : B → NatOrdinal.{u}
           have hleft : ρ b' + lam b = d.removeNat 1 := by
             rw [← NatOrdinal.removeNat_add_right (β b') (lam b) (hβpos b'), hβ]
           exact hleft.trans hκ.symm
-        simp only [D, dif_pos hb]
+        simp only [D, dite_eq_left hb]
         split
         · rw [← hρ]
           exact DirectSum.of_mem_rangeLof K (ν).Component (ρ b') _
         · exact zero_mem _
-      · simp only [D, dif_neg hb]
+      · simp only [D, dite_eq_right hb]
         exact zero_mem _
     · by_cases hb : b ∈ active
       · exact (hn ⟨ρ ⟨b, hb⟩, by
           rw [← NatOrdinal.removeNat_add_right (β ⟨b, hb⟩) (lam b) (hβpos ⟨b, hb⟩), hβ]⟩).elim
-      · simp only [D, dif_neg hb]
+      · simp only [D, dite_eq_right hb]
   · intro b γ hγ
     simp only [D]
     split <;> rfl
@@ -201,9 +201,9 @@ theorem hasSyzygyIntegration {B : Type w} [Finite B] (lam : B → NatOrdinal.{u}
     · rw [cantorBendixsonDerivation_apply]
       exact hderiv
     · intro γ hγ
-      simp only [if_pos hγ]
+      simp only [ite_eq_left hγ]
     · intro γ hγ
-      simp only [if_neg hγ]
+      simp only [ite_eq_right hγ]
 
 end HahnSeries.Nonpositive
 

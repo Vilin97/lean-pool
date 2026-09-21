@@ -310,9 +310,9 @@ theorem coordinate_blockForm [CharZero K] {ι : Type*} [Fintype ι] [DecidableEq
   classical
   rw [blockForm_def, map_sum]
   rw [Finset.sum_eq_single m]
-  · rw [coordinate_tmul, hφ, if_pos rfl, one_smul]
+  · rw [coordinate_tmul, hφ, ite_eq_left rfl, one_smul]
   · intro i _ hi
-    rw [coordinate_tmul, hφ, if_neg hi, zero_smul]
+    rw [coordinate_tmul, hφ, ite_eq_right hi, zero_smul]
   · intro h
     exact absurd (Finset.mem_univ m) h
 
@@ -486,7 +486,7 @@ theorem eq_of_initialForm_eq_finiteSupportGradedEmbedding [CharZero K] {a : Seri
     by_contra hd0
     have hcomp := congrArg (fun z : DegreeGraded K ↦ z d) h
     rw [finiteSupportGradedEmbedding_eq_initialForm, MaxAddDegree.initialForm_apply,
-      MaxAddDegree.initialForm_apply, dif_pos hd.symm, dif_neg (by
+      MaxAddDegree.initialForm_apply, dite_eq_left hd.symm, dite_eq_right (by
         rw [hdeg0]
         intro h0
         exact hd0 (by rw [← hd, ← h0]))] at hcomp

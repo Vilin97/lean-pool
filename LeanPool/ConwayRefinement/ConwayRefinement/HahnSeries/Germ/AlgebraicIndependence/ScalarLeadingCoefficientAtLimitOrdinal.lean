@@ -110,7 +110,7 @@ theorem false_of_aeval_eq_zero_of_leadingCoefficientDegree_eq_zero
     intro h
     have hc := congrArg (MvPolynomial.coeff (Finsupp.single B₀ 1)) h
     rw [MvPolynomial.coeff_add, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X,
-      if_pos rfl, mul_one, MvPolynomial.coeff_zero] at hc
+      ite_eq_left rfl, mul_one, MvPolynomial.coeff_zero] at hc
     have hleft : MvPolynomial.coeff (Finsupp.single B₀ 1) (xCoeff B₀ D' F) = 0 := by
       by_contra hne
       exact (mem_supported.mp (hFkmem D'))
@@ -206,7 +206,7 @@ theorem false_of_aeval_eq_zero_of_leadingCoefficientDegree_eq_zero
         rw [pow_zero, one_mul, xCoeff_of_mem_supported B₀
           (LiftFamily.FreeOfVariable.pol_translatedTruncLE_aeval_mem_supported
             (σ := σ) (hx := hx) hσ hinj hg hF0hom (hFkmem 0) (hFkvars 0) hγ) D',
-          if_neg (Nat.ne_of_gt hD'1)]
+          ite_eq_right (Nat.ne_of_gt hD'1)]
       · have hmk : (D' + 1 - k) • wt B₀ < α := by
           rw [← hαk k hkD]
           exact lt_add_of_pos_right _

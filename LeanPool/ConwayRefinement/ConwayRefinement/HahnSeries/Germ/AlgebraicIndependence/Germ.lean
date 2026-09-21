@@ -97,7 +97,7 @@ theorem constantCoeff_ne_zero_of_isUnit_cantorBendixson_germ
     rw [show ((b * c : Nonpositive G R) : HahnSeries G R).coeff 0 =
       (b : HahnSeries G R).coeff 0 * (c : HahnSeries G R).coeff 0 from
         coeff_zero_mul b c] at hbc'
-    simpa only [constantCoeff_apply, Subring.coe_one, HahnSeries.coeff_one, if_pos] using hbc'
+    simpa only [constantCoeff_apply, Subring.coe_one, HahnSeries.coeff_one, ite_eq_left] using hbc'
   intro hb0
   rw [hb0, zero_mul] at hbc
   exact zero_ne_one hbc

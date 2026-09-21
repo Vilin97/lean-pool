@@ -66,7 +66,7 @@ theorem partLT_eq_zero_of_mem_vars_pderiv {β α : NatOrdinal} {F : MvPolynomial
     exact hid' rfl
   have hid : i ∈ d.support := by
     rw [Finsupp.mem_support_iff] at hid' ⊢
-    rw [Finsupp.tsub_apply, Finsupp.single_apply, if_neg hi0.symm, Nat.sub_zero] at hid'
+    rw [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hi0.symm, Nat.sub_zero] at hid'
     exact hid'
   -- the parts below `ω^β` of the monomial add up to `α_{<β}`
   have hsum : ∑ j ∈ d.support, d j • NatOrdinal.partLT β (wt j) = NatOrdinal.partLT β α := by

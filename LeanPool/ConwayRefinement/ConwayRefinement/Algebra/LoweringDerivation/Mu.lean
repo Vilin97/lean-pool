@@ -290,10 +290,10 @@ theorem exists_mu_eq {j : ℕ} {H : R} (hH : H ∈ idealGE 𝒜 j) :
   refine Finset.sum_congr rfl fun i _ ↦ ?_
   rw [Submodule.mkQ_apply, smul_eq_mul]
   by_cases h : e i = j
-  · rw [if_pos h, mu_tmul]
+  · rw [ite_eq_left h, mu_tmul]
     have ha : (a i : R) = g i := by simp [a, h]
     rw [ha, mul_comm]
-  · rw [if_neg h, eq_comm, Submodule.Quotient.mk_eq_zero]
+  · rw [ite_eq_right h, eq_comm, Submodule.Quotient.mk_eq_zero]
     exact Ideal.mul_mem_left _ _ (mem_idealGE_of_mem 𝒜 (by have := hje i; omega) (hge i))
 
 /-- The class of a homogeneous element of `I_{≥j} ∩ A_δ` is in the image of `μ_j` restricted to
@@ -319,12 +319,12 @@ theorem exists_mu_lTensor_eq {j : ℕ} {δ : NatOrdinal} {H : R} (hHδ : H ∈ �
   refine Finset.sum_congr rfl fun k _ ↦ ?_
   rw [Submodule.mkQ_apply]
   by_cases h : e k = j
-  · rw [if_pos h, LinearMap.lTensor_tmul]
+  · rw [ite_eq_left h, LinearMap.lTensor_tmul]
     have ha' : (a' k : R) = a k := by simp [a', h]
     have hb' : ((fibreGrade 𝒜 (δ.removeNat j)).subtype (b' k)) = fibreMap 𝒜 (b k) := by
       simp [b', h]
     rw [hb', mu_tmul, ha']
-  · rw [if_neg h, eq_comm, Submodule.Quotient.mk_eq_zero]
+  · rw [ite_eq_right h, eq_comm, Submodule.Quotient.mk_eq_zero]
     exact Ideal.mul_mem_right _ _ (mem_idealGE_of_mem 𝒜 (by have := hje k; omega) (ha k))
 
 /-- Homogeneous lifting: a tensor in `A_j ⊗ (A/I)_β`, `j ⊕ β = α`, is the class modulo `I_{≥j+1}`

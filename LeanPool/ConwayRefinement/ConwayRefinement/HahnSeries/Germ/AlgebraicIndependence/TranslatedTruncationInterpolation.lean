@@ -372,9 +372,9 @@ theorem exists_prescribed_components_on_rankLevel (α β : NatOrdinal.{u})
     by_cases hs : γ ∈ (p : HahnSeries G R).closedSupport ∧
         (p : HahnSeries G R).closedSupport.cantorBendixsonRank
           (p : HahnSeries G R).closedSupport_isPWO γ = α.val
-    · rw [dif_pos hs, cantorBendixsonDerivAt_eq β b γ hbγ]
+    · rw [dite_eq_left hs, cantorBendixsonDerivAt_eq β b γ hbγ]
       exact (hpoint ⟨γ, hs⟩).choose_spec
-    · rw [dif_neg hs]
+    · rw [dite_eq_right hs]
       by_contra hne
       have hbexact := (cantorBendixsonDerivAt_ne_zero_iff β b γ hbγ).mp hne
       have hbB : (b : HahnSeries G R) = B := rfl
@@ -498,7 +498,7 @@ theorem exists_prescribed_truncations_on_topRankLevel (β ρ : NatOrdinal.{u})
       have hx0 : x ≤ 0 := closure_minimal p.property isClosed_Iic
         ((mem_closedSupport _ _).mp hxs)
       have hd := hp x hx0
-      rw [degree_translatedTruncLE_eq, if_pos hxs, WithBot.coe_le_coe] at hd
+      rw [degree_translatedTruncLE_eq, ite_eq_left hxs, WithBot.coe_le_coe] at hd
       have hval := NatOrdinal.of.symm.monotone hd
       change NatOrdinal.val (NatOrdinal.of ((p : HahnSeries G R).cantorBendixsonRank x)) ≤
         NatOrdinal.val β at hval
@@ -517,14 +517,14 @@ theorem exists_prescribed_truncations_on_topRankLevel (β ρ : NatOrdinal.{u})
       exact fun hyd ↦ hyn (hclosure (hderiv hyd))
     rw [degree_translatedTruncLE_eq]
     by_cases hym : y ∈ (c : HahnSeries G R).closedSupport
-    · rw [if_pos hym]
+    · rw [ite_eq_left hym]
       have hrlt : (c : HahnSeries G R).cantorBendixsonRank y < ρ.val := by
         by_contra hge
         exact hyd (((c : HahnSeries G R).mem_support_derivative_iff y ρ.val).mpr
           ⟨(mem_closedSupport _ _).mp hym, not_lt.mp hge⟩)
       rw [WithBot.coe_lt_coe, ← NatOrdinal.of_val ρ]
       exact NatOrdinal.of.lt_iff_lt.mpr hrlt
-    · rw [if_neg hym]
+    · rw [ite_eq_right hym]
       exact WithBot.bot_lt_coe ρ
 
 end HahnSeries.Nonpositive

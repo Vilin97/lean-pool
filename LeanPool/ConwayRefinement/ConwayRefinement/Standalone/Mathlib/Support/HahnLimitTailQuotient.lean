@@ -5,6 +5,7 @@ Authors: Dan Abramov
 -/
 module
 
+public import Mathlib.Algebra.Order.Archimedean.Basic
 public import LeanPool.ConwayRefinement.ConwayRefinement.Standalone.Mathlib.Support.ConvexQuotientSplitting
 public import LeanPool.ConwayRefinement.ConwayRefinement.Standalone.Mathlib.Support.OrderedAddGroup
 public import Mathlib.Algebra.Algebra.Rat

@@ -43,7 +43,7 @@ theorem tailZero_funAtZeroMinus_eq_zero :
   change (tailZero : FunAtZeroMinus ℚ) = ((fun _ : ℝ ↦ (0 : ℚ)) : FunAtZeroMinus ℚ)
   rw [funAtZeroMinus_coe_eq_iff_exists]
   refine ⟨1, by norm_num, fun γ hγ _ ↦ ?_⟩
-  rw [tailZero, if_neg]
+  rw [tailZero, ite_eq_right]
   linarith
 
 /-- Constant functions remain distinct in `Fun_{0⁻}(ℚ)`. -/
@@ -89,7 +89,7 @@ theorem eventuallyFirstAxis_funAtZeroMinus_mem :
     (eventuallyFirstAxis : FunAtZeroMinus (ℚ × ℚ)) ∈ funAtZeroMinusSubmodule firstAxis := by
   rw [coe_mem_funAtZeroMinusSubmodule_iff_exists]
   refine ⟨1, by norm_num, fun γ hγ _ ↦ ?_⟩
-  rw [eventuallyFirstAxis, if_neg]
+  rw [eventuallyFirstAxis, ite_eq_right]
   · simp
   · linarith
 

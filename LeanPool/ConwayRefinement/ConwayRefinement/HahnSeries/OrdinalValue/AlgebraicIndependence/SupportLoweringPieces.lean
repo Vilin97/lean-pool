@@ -56,7 +56,7 @@ theorem lt_of_mem_support_piece {a b : ℝ} {E : K⟦ℝ⟧} {y : ℝ}
   rw [HahnSeries.mem_support, coeff_piece] at hy
   by_contra h
   rw [not_lt] at h
-  exact hy (if_neg fun h' ↦ absurd h'.1 (not_lt.mpr (by linarith)))
+  exact hy (ite_eq_right fun h' ↦ absurd h'.1 (not_lt.mpr (by linarith)))
 
 /-- The sequence `γ_k := -ε/(k+1)`: strictly increasing, negative, with supremum `0`. -/
 theorem strictMono_neg_div_succ {ε : ℝ} (hε : 0 < ε) :

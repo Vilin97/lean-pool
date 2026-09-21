@@ -280,8 +280,8 @@ theorem gradedDivisibilityNonprincipalElement_not_mem :
     intro h
     have := congrArg Subtype.val h
     norm_num [gradedDivisibilityNonprincipalExponent] at this
-  rw [AddMonoidAlgebra.single_apply, if_neg (Ne.symm hne),
-    AddMonoidAlgebra.single_apply, if_pos rfl] at hcoeff
+  rw [AddMonoidAlgebra.single_apply, ite_eq_right (Ne.symm hne),
+    AddMonoidAlgebra.single_apply, ite_eq_left rfl] at hcoeff
   have hgraded :
       (0 : Berarducci.DegreeGraded K) = 1 := by
     simpa using congrArg

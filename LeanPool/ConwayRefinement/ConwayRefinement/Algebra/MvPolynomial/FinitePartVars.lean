@@ -83,7 +83,7 @@ theorem isWeightedHomogeneous_pderiv_of_add_wt_eq {F : MvPolynomial σ R} {δ : 
 
 /-- A homogeneous polynomial of nonzero degree has zero constant coefficient. -/
 theorem coeff_zero_eq_zero_of_isWeightedHomogeneous {p : MvPolynomial σ R} {β : NatOrdinal}
-    (hp : IsWeightedHomogeneous wt p β) (hβ : β ≠ 0) : coeff 0 p = 0 := by
+    (hp : IsWeightedHomogeneous wt p β) (hβ : β ≠ 0) : AddMonoidAlgebra.coeff p 0 = 0 := by
   by_contra h
   exact hβ ((hp h).symm.trans (map_zero _))
 

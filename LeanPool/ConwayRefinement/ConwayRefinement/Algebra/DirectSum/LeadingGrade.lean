@@ -53,7 +53,6 @@ theorem leadingGrade_eq_bot_iff (x : DirectSum ι A) :
     leadingGrade A x = ⊥ ↔ x = 0 := by
   classical
   simp only [leadingGrade, Finset.max_eq_bot, DFinsupp.support_eq_empty]
-  rfl
 
 theorem grade_le_leadingGrade {x : DirectSum ι A} {i : ι} (hi : x i ≠ 0) :
     (i : WithBot ι) ≤ leadingGrade A x := by

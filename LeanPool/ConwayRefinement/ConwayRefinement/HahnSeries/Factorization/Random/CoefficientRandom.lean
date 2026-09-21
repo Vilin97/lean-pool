@@ -111,7 +111,7 @@ theorem IsMutuallyCoefficientRandom.truncationsIndependent {ι : Type} {b : ι �
   -- The matrix of coefficients.
   have hcoeff : ∀ (q k : P), ((c k : Series K) : K⟦ℝ⟧).coeff (x q) =
       ((b (j k) : Series K) : K⟦ℝ⟧).coeff (γ k + x q) := fun q k ↦ by
-    rw [hc, coeff_translatedTruncation, if_pos (hxneg q).le]
+    rw [hc, coeff_translatedTruncation, ite_eq_left (hxneg q).le]
   let M : Matrix P P K := Matrix.of fun q k ↦ ((c k : Series K) : K⟦ℝ⟧).coeff (x q)
   have hMg : M.mulVec (fun k : P ↦ g k) = 0 := by
     funext q
@@ -131,9 +131,9 @@ theorem IsMutuallyCoefficientRandom.truncationsIndependent {ι : Type} {b : ι �
     simp only [M, Matrix.of_apply, v]
     rw [hcoeff q k]
     by_cases h : (j k, γ k + x q) ∈ coefficientIndex b
-    · rw [dif_pos h]
+    · rw [dite_eq_left h]
       rfl
-    · rw [dif_neg h, Option.elim]
+    · rw [dite_eq_right h, Option.elim]
       rw [mem_coefficientIndex_iff, not_ne_iff] at h
       exact h
   have hdiag : ∀ q, (v q q).isSome := by
@@ -142,16 +142,16 @@ theorem IsMutuallyCoefficientRandom.truncationsIndependent {ι : Type} {b : ι �
       rw [mem_coefficientIndex_iff]
       rw [← hcoeff q q]
       exact hxc q
-    simp only [v, dif_pos h, Option.isSome_some]
+    simp only [v, dite_eq_left h, Option.isSome_some]
   have hdistinct : ∀ q k q' k' w, v q k = some w → v q' k' = some w → q = q' ∧ k = k' := by
     intro q k q' k' w h1 h2
     have hpair : (j k, γ k + x q) = (j k', γ k' + x q') := by
       by_cases hk : (j k, γ k + x q) ∈ coefficientIndex b
       · by_cases hk' : (j k', γ k' + x q') ∈ coefficientIndex b
-        · simp only [v, dif_pos hk, dif_pos hk', Option.some.injEq] at h1 h2
+        · simp only [v, dite_eq_left hk, dite_eq_left hk', Option.some.injEq] at h1 h2
           exact congrArg Subtype.val (h1.trans h2.symm)
-        · simp [v, dif_neg hk'] at h2
-      · simp [v, dif_neg hk] at h1
+        · simp [v, dite_eq_right hk'] at h2
+      · simp [v, dite_eq_right hk] at h1
     have hj : j k = j k' := congrArg Prod.fst hpair
     have hγ' : γ k + x q = γ k' + x q' := congrArg Prod.snd hpair
     by_cases hqq : q = q'

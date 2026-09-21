@@ -166,12 +166,12 @@ theorem normalForm_support : normalForm.{u}.support = range exponentAtIndex := b
 theorem normalForm_coeff_exponent (m n : ℕ) :
     normalForm.{u}.coeff (exponent m n : ℝ) = 1 := by
   classical
-  rw [normalForm_coeff, coefficient, if_pos]
+  rw [normalForm_coeff, coefficient, ite_eq_left]
   exact ⟨(↑(toLex (m, n)) : Index), rfl⟩
 
 theorem normalForm_coeff_zero : normalForm.{u}.coeff 0 = 1 := by
   classical
-  rw [normalForm_coeff, coefficient, if_pos]
+  rw [normalForm_coeff, coefficient, ite_eq_left]
   exact ⟨⊤, rfl⟩
 
 private theorem normalForm_support_nonnegative : normalForm.{u}.support ⊆ Ici 0 := by

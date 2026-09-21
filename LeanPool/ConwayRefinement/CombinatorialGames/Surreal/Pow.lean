@@ -667,14 +667,14 @@ instance _root_.IGame.Numeric.wlog (x : IGame) : Numeric x.wlog := by
 
 @[simp]
 theorem mk_wlog (x : IGame) [h : Numeric x] : mk x.wlog = (mk x).wlog := by
-  simp_rw [IGame.wlog, dif_pos h, Surreal.out_eq]
+  simp_rw [IGame.wlog, dite_eq_left h, Surreal.out_eq]
 
 @[simp]
 theorem wlog_zero : wlog 0 = 0 :=
-  dif_pos rfl
+  dite_eq_left rfl
 
 theorem wpow_wlog_veq (h : x ≠ 0) : ω^ wlog x =ᵥ x := by
-  rw [wlog, dif_neg h]
+  rw [wlog, dite_eq_right h]
   exact Classical.choose_spec (exists_wpow_veq h)
 
 @[simp]

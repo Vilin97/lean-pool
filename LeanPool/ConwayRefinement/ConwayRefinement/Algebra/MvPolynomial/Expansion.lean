@@ -167,7 +167,7 @@ theorem xCoeff_mem_supported (k : ℕ) (p : MvPolynomial σ R) : xCoeff x k p �
   rename_val_mem_supported x _
 
 theorem coeff_xCoeff (k : ℕ) (p : MvPolynomial σ R) (m : σ →₀ ℕ) :
-    coeff m (xCoeff x k p) = if m x = 0 then coeff (m + Finsupp.single x k) p else 0 := by
+    AddMonoidAlgebra.coeff (xCoeff x k p) m = if m x = 0 then AddMonoidAlgebra.coeff p (m + Finsupp.single x k) else 0 := by
   rw [xCoeff_apply]
   split_ifs with hm
   · have hsub : (m.support : Set σ) ⊆ Set.range (Subtype.val : {y // y ≠ x} → σ) := fun y hy ↦

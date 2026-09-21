@@ -543,7 +543,7 @@ theorem rvMaximalFiniteSupportDivisor_eq_of_is {B : HahnDegreeRV K}
   classical
   let hex : ∃ b : Associates (FiniteSupportRing (K := K)),
       IsRVMaximalFiniteSupportDivisor B b := ⟨a, ha⟩
-  rw [rvMaximalFiniteSupportDivisor, dif_pos hex]
+  rw [rvMaximalFiniteSupportDivisor, dite_eq_left hex]
   exact (Classical.choose_spec hex).eq ha
 
 /-- Under pairwise gcd existence, the canonical RV class satisfies its defining

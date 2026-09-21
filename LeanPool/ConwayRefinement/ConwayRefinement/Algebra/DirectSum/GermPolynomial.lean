@@ -442,7 +442,7 @@ theorem eq_zero_of_eventually_mkDerivation_eq_zero [CharZero K] (hwt : ∀ i, 1 
   have hcoeff : ∀ γ, mkDerivation K (fun i ↦ g i γ) F = 0 → ∀ d ≤ D, q γ d = 0 := by
     intro γ hγ d hd
     have := xCoeff_sum_mul_X_pow x₀ (Finset.range (D + 1)) (q := q γ) (fun d _ ↦ hqsupp γ d) d
-    rwa [← hDexp γ, hγ, map_zero, if_pos (Finset.mem_range.mpr (by omega)), eq_comm] at this
+    rwa [← hDexp γ, hγ, map_zero, ite_eq_left (Finset.mem_range.mpr (by omega)), eq_comm] at this
   -- the coefficient of `(X x₀)^D`: `∂_γ c_D = 0`, so `c_D` is a non-zero scalar `a`
   have hcD0 : ∀ᶠ γ in l, mkDerivation K (fun i ↦ g i γ) (c D) = 0 :=
     hD.mono fun γ hγ ↦ by simpa [hq, hcD1] using hcoeff γ hγ D le_rfl
@@ -494,7 +494,7 @@ theorem eq_zero_of_eventually_mkDerivation_eq_zero [CharZero K] (hwt : ∀ i, 1 
   rw [haeval, zero_sub, neg_mem_iff] at hcf
   have hcx := hcfcoeff x₀
   rw [hind (wt x₀) cf hcfw hcf, Finsupp.coe_zero, Pi.zero_apply, hh, coeff_add, hc, coeff_xCoeff,
-    if_neg (by simp), zero_add, C_mul_X_eq_monomial, coeff_monomial, if_pos rfl] at hcx
+    ite_eq_right (by simp), zero_add, C_mul_X_eq_monomial, coeff_monomial, ite_eq_left rfl] at hcx
   exact ha0 ((mul_eq_zero.mp hcx.symm).resolve_left (Nat.cast_ne_zero.mpr (by omega)))
 
 /-! ### Algebraic independence -/

@@ -6,6 +6,9 @@ Authors: Yuyang Zhao
 module
 
 public import Mathlib.Algebra.Ring.Defs
+public import Mathlib.Algebra.Group.Defs
+public import Mathlib.Data.Finset.Insert
+import Mathlib.Algebra.Ring.Defs
 public import Mathlib.Data.Fintype.Defs
 public import Mathlib.Logic.Small.Defs
 
@@ -31,7 +34,11 @@ inductive Player where
   | left  : Player
   /-- The Right player. -/
   | right : Player
-deriving DecidableEq, Fintype, Inhabited
+deriving DecidableEq, Inhabited
+
+instance : Fintype Player where
+  elems := {Player.left, Player.right}
+  complete := by intro p; cases p <;> simp
 
 namespace Player
 

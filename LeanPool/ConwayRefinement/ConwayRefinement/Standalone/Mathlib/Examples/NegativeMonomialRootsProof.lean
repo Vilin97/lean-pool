@@ -17,9 +17,9 @@ public noncomputable section
 namespace ConwayRefinement.Standalone.Hahn.NegativeMonomialExample
 
 private theorem eq_zero_of_mem_addAntidiagonal_zero {x y : Ring} {ij : ℝ × ℝ}
-    (hij : ij ∈ Finset.addAntidiagonal x.1.isPWO_support y.1.isPWO_support 0) :
+    (hij : ij ∈ Finset.antidiagonal x.1.isPWO_support y.1.isPWO_support 0) :
     ij = (0, 0) := by
-  rcases Finset.mem_addAntidiagonal.mp hij with ⟨hi, hj, hij⟩
+  rcases Finset.mem_antidiagonal.mp hij with ⟨hi, hj, hij⟩
   have hi_zero := eq_zero_of_add_nonneg_left (x.2 hi) (y.2 hj) hij.ge
   have hj_zero := eq_zero_of_add_nonneg_right (x.2 hi) (y.2 hj) hij.ge
   exact Prod.ext hi_zero hj_zero
@@ -47,7 +47,7 @@ private def constantCoeff : Ring →+* ℚ where
       · apply Finset.sum_eq_single (0, 0)
         · intro ij hij hne
           exact (hne (eq_zero_of_mem_addAntidiagonal_zero hij)).elim
-        · simp [Finset.mem_addAntidiagonal, HahnSeries.mem_support, hx, hy]
+        · simp [Finset.mem_antidiagonal, HahnSeries.mem_support, hx, hy]
 
 private theorem nthRoot_not_unit (n : ℕ) (hn : 0 < n) : ¬ IsUnit (nthRoot n) := by
   intro h

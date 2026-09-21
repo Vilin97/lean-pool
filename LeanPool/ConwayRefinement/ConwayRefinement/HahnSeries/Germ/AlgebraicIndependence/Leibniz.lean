@@ -62,10 +62,10 @@ theorem cantorBendixsonValue_leibnizRemainder_lt_of_forall (b d : HahnSeries G R
       (d.support_translated_truncLE p.2)
     apply le_antisymm _ zero_le
     rcases hnot with hp | hp
-    · rw [cantorBendixsonValue_translated_truncLE, if_neg hp,
+    · rw [cantorBendixsonValue_translated_truncLE, ite_eq_right hp,
         NatOrdinal.of_zero, zero_mul] at hmul
       exact hmul
-    · rw [d.cantorBendixsonValue_translated_truncLE, if_neg hp,
+    · rw [d.cantorBendixsonValue_translated_truncLE, ite_eq_right hp,
         NatOrdinal.of_zero, mul_zero] at hmul
       exact hmul
   have hsub : I ⊆ I' := fun _ hp ↦
@@ -147,7 +147,7 @@ private theorem eventually_truncation_value_lt_wpow (b : HahnSeries G R) (α : N
     have hev := isClosed_closure.isOpen_compl.mem_nhds hn
     filter_upwards [hev] with c hc _
     rw [b.cantorBendixsonValue_translated_truncLE,
-      if_neg (by simpa only [mem_closedSupport, mem_compl_iff] using hc), NatOrdinal.of_zero]
+      ite_eq_right (by simpa only [mem_closedSupport, mem_compl_iff] using hc), NatOrdinal.of_zero]
     exact NatOrdinal.wpow_pos _
   · filter_upwards [b.eventually_value_translated_truncLE_lt hz] with c hc hne
     exact lt_of_lt_of_le (hc hne) hb
@@ -174,11 +174,11 @@ theorem eventually_cantorBendixsonValue_leibnizRemainder_lt_of_le_wpow (b d : Ha
   have hyv := (hηv ⟨hγ.1.trans hγy, hy.le⟩).2 hy.ne
   have hxle : NatOrdinal.of (translate (-x) (truncLE x b)).cantorBendixsonValue ≤ ω^ α := by
     by_cases hm : x ∈ b.closedSupport
-    · rw [b.cantorBendixsonValue_translated_truncLE, if_pos hm,
+    · rw [b.cantorBendixsonValue_translated_truncLE, ite_eq_left hm,
         NatOrdinal.of_omega0_opow] at hxv ⊢
       exact NatOrdinal.wpow_le_wpow.mpr
         (Order.lt_add_one_iff.mp (NatOrdinal.wpow_lt_wpow.mp hxv))
-    · rw [b.cantorBendixsonValue_translated_truncLE, if_neg hm, NatOrdinal.of_zero]
+    · rw [b.cantorBendixsonValue_translated_truncLE, ite_eq_right hm, NatOrdinal.of_zero]
       exact zero_le
   have hprod := (translate (-x) (truncLE x b)).cantorBendixsonValue_mul_le
     (translate (-y) (truncLE y d)) (b.support_translated_truncLE x)
@@ -186,12 +186,12 @@ theorem eventually_cantorBendixsonValue_leibnizRemainder_lt_of_le_wpow (b d : Ha
   apply hprod.trans_lt
   apply (mul_le_mul_left hxle _).trans_lt
   by_cases hm : y ∈ d.closedSupport
-  · rw [d.cantorBendixsonValue_translated_truncLE, if_pos hm,
+  · rw [d.cantorBendixsonValue_translated_truncLE, ite_eq_left hm,
       NatOrdinal.of_omega0_opow] at hyv ⊢
     rw [← NatOrdinal.wpow_add]
     apply NatOrdinal.wpow_lt_wpow.mpr
     exact add_lt_add_right (NatOrdinal.wpow_lt_wpow.mp hyv) α
-  · rw [d.cantorBendixsonValue_translated_truncLE, if_neg hm,
+  · rw [d.cantorBendixsonValue_translated_truncLE, ite_eq_right hm,
       NatOrdinal.of_zero, mul_zero]
     exact NatOrdinal.wpow_pos _
 

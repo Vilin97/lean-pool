@@ -150,14 +150,14 @@ theorem translatedTruncationClass_mul_eq
     have hxβle : x - β ≤ 0 := hcClosure hβClosure.2
     by_cases hβ0 : β = 0
     · subst β
-      rw [if_pos rfl, _root_.sub_zero, translatedTruncation_zero]
+      rw [ite_eq_left rfl, _root_.sub_zero, translatedTruncation_zero]
       exact toSeriesQuotientByJAddConstants_mul_translatedTruncation_eq_coeff_smul (hcNear hx)
-    · rw [if_neg hβ0]
+    · rw [ite_eq_right hβ0]
       by_cases hβx : β = x
       · subst β
-        rw [if_pos rfl, _root_.sub_self, translatedTruncation_zero]
+        rw [ite_eq_left rfl, _root_.sub_self, translatedTruncation_zero]
         exact toSeriesQuotientByJAddConstants_translatedTruncation_mul_eq_coeff_smul (hbNear hx)
-      · rw [if_neg hβx]
+      · rw [ite_eq_right hβx]
         have hβneg : β < 0 := lt_of_le_of_ne hβle hβ0
         have hxβneg : x - β < 0 := by
           apply lt_of_le_of_ne hxβle
@@ -178,7 +178,7 @@ theorem translatedTruncationClass_mul_eq
     · simp [hβ0]
   have hzero : (if 0 ∈ T then B else 0) = B := by
     by_cases hxClosure : x ∈ closure (c : K⟦ℝ⟧).support
-    · rw [if_pos]
+    · rw [ite_eq_left]
       exact mem_convolutionIndex.mpr
         ⟨hbCritical.mem_closure_support, by simpa using hxClosure⟩
     · have hxSupport : x ∉ (c : K⟦ℝ⟧).support :=
@@ -190,7 +190,7 @@ theorem translatedTruncationClass_mul_eq
       simp [hnot, B, hxSupport]
   have hxIndex : (if x ∈ T then C else 0) = C := by
     by_cases hxClosure : x ∈ closure (b : K⟦ℝ⟧).support
-    · rw [if_pos]
+    · rw [ite_eq_left]
       exact mem_convolutionIndex.mpr
         ⟨hxClosure, by simpa using hcCritical.mem_closure_support⟩
     · have hxSupport : x ∉ (b : K⟦ℝ⟧).support :=

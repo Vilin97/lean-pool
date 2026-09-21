@@ -110,12 +110,12 @@ theorem normalForm_support : normalForm.support = range exponentAtIndex := by
 theorem normalForm_coeff_exponent (n : ℕ) :
     normalForm.coeff (exponent n : ℝ) = 1 := by
   classical
-  rw [normalForm_coeff, coefficient, if_pos]
+  rw [normalForm_coeff, coefficient, ite_eq_left]
   exact ⟨(n : Index), rfl⟩
 
 theorem normalForm_coeff_zero : normalForm.coeff 0 = 1 := by
   classical
-  rw [normalForm_coeff, coefficient, if_pos]
+  rw [normalForm_coeff, coefficient, ite_eq_left]
   exact ⟨⊤, rfl⟩
 
 end Surreal.OmnificInteger.OneRowExample

@@ -172,13 +172,13 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
     intro t ht
     by_cases htB : t ∈ B
     · rw [Finset.sum_eq_single ⟨t, htB⟩]
-      · rw [ha', if_pos htB, if_pos rfl, mul_one]
+      · rw [ha', ite_eq_left htB, ite_eq_left rfl, mul_one]
       · intro b _ hb
-        rw [ha', if_pos htB, if_neg fun h ↦ hb (Subtype.ext h), mul_zero]
+        rw [ha', ite_eq_left htB, ite_eq_right fun h ↦ hb (Subtype.ext h), mul_zero]
       · intro h
         exact absurd (Finset.mem_univ _) h
     · rw [hsum t ht]
-      exact Finset.sum_congr rfl fun b _ ↦ by rw [ha', if_neg htB]
+      exact Finset.sum_congr rfl fun b _ ↦ by rw [ha', ite_eq_right htB]
   -- `F = ∑_b c_b W_b`
   obtain ⟨W, hW⟩ : ∃ W : ↥B → MvPolynomial ι K, ∀ b, W b = ∑ t ∈ T, a' t b * (X t + V t) :=
     ⟨_, fun _ ↦ rfl⟩
@@ -247,9 +247,9 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
     · have h : ∃ β, β + lam b = e := ⟨β, hβ⟩
       have hch : ∀ h' : ∃ β, β + lam b = e, Classical.choose h' = β := fun h' ↦
         add_right_cancel ((Classical.choose_spec h').trans hβ.symm)
-      rw [hcomp, dif_pos h, hch]
+      rw [hcomp, dite_eq_left h, hch]
       exact (decompose (A) (w b) β).2
-    · rw [hcomp, dif_neg h]
+    · rw [hcomp, dite_eq_right h]
   have hcomp_syz : ∀ σ ∈ L, ∀ e, ∑ b : ↥B, aeval x (c b) * comp (ev σ) e b = 0 := by
     intro σ hσ e
     have h1 : ∀ b : ↥B, aeval x (c b) * comp (ev σ) e b =
@@ -258,8 +258,8 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
       rw [GradedRing.proj_apply, coe_decompose_mul_of_left_mem (𝒜 := A)
         (aeval_mem_of_forall_mem hx.mem (hchom b (hBT b.2))) (aeval x (σ b)) e, hcomp, hev]
       by_cases h : ∃ β, β + lam b = e
-      · rw [dif_pos h, dif_pos h]
-      · rw [dif_neg h, dif_neg h, mul_zero]
+      · rw [dite_eq_left h, dite_eq_left h]
+      · rw [dite_eq_right h, dite_eq_right h, mul_zero]
     have h2 : ∑ b : ↥B, aeval x (c b) * aeval x (σ b) = 0 := by
       have := congrArg (aeval x) (hL σ hσ).2
       rw [map_sum, map_zero] at this
@@ -271,7 +271,7 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
     by_contra hβ
     apply hne
     by_cases h : ∃ β', β' + lam b = e
-    · rw [hcomp, hev, dif_pos h] at hmem hne ⊢
+    · rw [hcomp, hev, dite_eq_left h] at hmem hne ⊢
       -- a nonzero element of `P_β` and of `P_{β'}` forces `β = β'`
       have hβ' : β = Classical.choose h := by
         by_contra hne'
@@ -282,7 +282,7 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
       rw [hβ'] at hβ
       rw [decompose_aeval hx.mem, weightedHomogeneousComponent_eq_zero_of_forall_vars
         (fun i hi ↦ hΛ i (mem_supported.mp ((hL σ hσ).1 b) hi)) hβ, map_zero]
-    · rw [hcomp, dif_neg h] at hne
+    · rw [hcomp, dite_eq_right h] at hne
       exact absurd rfl hne
   -- the degrees occurring, and the sum of the components
   set E : Finset NatOrdinal := L.biUnion fun σ ↦ Finset.univ.biUnion fun b : ↥B ↦
@@ -301,7 +301,7 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
       have h : ∃ β', β' + lam b = β + lam b := ⟨β, rfl⟩
       have hch : ∀ h' : ∃ β', β' + lam b = β + lam b, Classical.choose h' = β := fun h' ↦
         add_right_cancel (Classical.choose_spec h')
-      rw [hcomp, dif_pos h, hch]
+      rw [hcomp, dite_eq_left h, hch]
     · intro e _ he
       rw [hcomp]
       split_ifs with h
@@ -326,7 +326,7 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
       ⟨e, hcomp_hom _ _⟩
     have heT : eT (comp (ev σ) e) = Classical.choose h := by
       simp only [heTdef]
-      rw [dif_pos h]
+      rw [dite_eq_left h]
     rw [heT]
     exact Classical.choose_spec h
   have hTPlim : ∀ w ∈ TP, ∀ (b : ↥B) β, w b ∈ A β → w b ≠ 0 →
@@ -585,9 +585,9 @@ theorem injectiveAt_of_forall_lt [CharZero K] (hgz : GradeZeroScalars A)
   have hf0 := hx.independent (wt b) f hfsupp hfmem
   have hfb := congrArg (fun g : ι →₀ K ↦ g b₀) hf0
   simp only [Finsupp.coe_zero, Pi.zero_apply] at hfb
-  rw [hfapply, if_pos (hBT hb₀)] at hfb
+  rw [hfapply, ite_eq_left (hBT hb₀)] at hfb
   have hκ1 : κ' b₀ = 1 := by
-    rw [hκ', ha' b₀ b, if_pos hb₀, if_pos hb, coeff_zero_one]
+    rw [hκ', ha' b₀ b, ite_eq_left hb₀, ite_eq_left hb, coeff_zero_one]
   rw [hκ1] at hfb
   exact one_ne_zero hfb
 

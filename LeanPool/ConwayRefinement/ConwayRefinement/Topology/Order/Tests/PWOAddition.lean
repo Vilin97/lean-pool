@@ -209,7 +209,7 @@ theorem convolution_square_nonzero_value :
     · intro p _
       apply mul_nonneg <;> simp only [accumulatingSeries_coeff] <;> split <;> norm_num
     · refine ⟨(negRecip n, negRecip n), ?_, ?_⟩
-      · rw [Finset.mem_addAntidiagonal, accumulatingSeries_support]
+      · rw [Finset.mem_antidiagonal, accumulatingSeries_support]
         exact ⟨mem_range_self n, mem_range_self n, rfl⟩
       · simp only [accumulatingSeries_coeff, mem_range_self, if_true, one_mul, zero_lt_one]
   have ht := negRecip_tendsto
@@ -583,7 +583,7 @@ theorem accumulatingSeries_survives_germ :
     rw [negRecip_apply]
     exact neg_nonpos.mpr (by positivity)
   refine ⟨⟨accumulatingSeries, hb⟩, rfl, ?_, ?_⟩
-  · rw [accumulatingSeries_coeff, if_neg]
+  · rw [accumulatingSeries_coeff, ite_eq_right]
     rintro ⟨n, hn⟩
     rw [negRecip_apply] at hn
     exact (neg_ne_zero.mpr (one_div_ne_zero (by positivity))) hn
@@ -803,8 +803,8 @@ theorem no_literal_assembly_at_accumulating_level :
       by_contra hne
       exact h0diff ((HahnSeries.mem_support _ _).mpr hne)
     rw [AddSubgroupClass.coe_sub, HahnSeries.coeff_sub, coe_translatedTruncLE,
-      coeff_translate, zero_sub, neg_neg, HahnSeries.coeff_truncLE, if_pos le_rfl,
-      OneMemClass.coe_one, HahnSeries.coeff_one, if_pos rfl, sub_eq_zero] at hzero
+      coeff_translate, zero_sub, neg_neg, HahnSeries.coeff_truncLE, ite_eq_left le_rfl,
+      OneMemClass.coe_one, HahnSeries.coeff_one, ite_eq_left rfl, sub_eq_zero] at hzero
     exact hzero
   have hxin : negRecip n ∈ (c : HahnSeries ℝ ℚ).support :=
     (HahnSeries.mem_support _ _).mpr (by rw [hcoeff]; exact one_ne_zero)
@@ -834,9 +834,9 @@ theorem accumulating_global_cofactor :
     intro x hx
     rw [degree_translatedTruncLE_eq]
     by_cases hxm : x ∈ (u : HahnSeries ℝ ℚ).closedSupport
-    · rw [if_pos hxm, huneg hx, NatOrdinal.of_zero, WithBot.coe_lt_coe]
+    · rw [ite_eq_left hxm, huneg hx, NatOrdinal.of_zero, WithBot.coe_lt_coe]
       exact zero_lt_one
-    · rw [if_neg hxm]
+    · rw [ite_eq_right hxm]
       exact WithBot.bot_lt_coe 1
   have hu : ∀ x : ℝ, x ≤ 0 →
       ν (translatedTruncLE x u) ≤ ((1 : NatOrdinal) : WithBot NatOrdinal) := by
@@ -981,7 +981,7 @@ theorem degree_lt_one_constant_extraction :
   set u : Nonpositive ℝ ℚ := ⟨1 + HahnSeries.single (-1) 1, hs⟩ with hu_def
   have hcoeff0 : (u : HahnSeries ℝ ℚ).coeff 0 = 1 := by
     change (1 + HahnSeries.single (-1 : ℝ) (1 : ℚ)).coeff 0 = 1
-    rw [HahnSeries.coeff_add, HahnSeries.coeff_one, if_pos rfl,
+    rw [HahnSeries.coeff_add, HahnSeries.coeff_one, ite_eq_left rfl,
       HahnSeries.coeff_single_of_ne (by norm_num : (0 : ℝ) ≠ -1), add_zero]
   have hufin : (u : HahnSeries ℝ ℚ).support.Finite := by
     apply Set.Finite.subset ((Set.finite_singleton (-1 : ℝ)).insert 0)

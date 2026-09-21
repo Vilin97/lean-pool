@@ -66,10 +66,10 @@ theorem wpow_le_supportOrderType_truncGT_truncLE {δ : NatOrdinal} (p : Series K
   have hgerm : toGerm (translatedTruncation (p : K⟦ℝ⟧) γ) = toGerm r := by
     rw [toGerm_eq_toGerm_iff_exists_coeff_eq]
     refine ⟨θ - γ, by linarith, fun η hη1 hη2 ↦ ?_⟩
-    rw [coeff_translatedTruncation, if_pos hη2]
+    rw [coeff_translatedTruncation, ite_eq_left hη2]
     change _ = (translate (-γ) (truncGT θ (truncLE γ (p : K⟦ℝ⟧)))).coeff η
     rw [coeff_translate, sub_neg_eq_add, coeff_truncGT_of_lt (by linarith),
-      HahnSeries.coeff_truncLE, if_pos (by linarith), add_comm]
+      HahnSeries.coeff_truncLE, ite_eq_left (by linarith), add_comm]
   calc ω^ δ ≤ ordinalValue (translatedTruncation (p : K⟦ℝ⟧) γ) := hγ
     _ = ordinalValue r :=
         ordinalValue_eq_of_sub_mem_negativeMonomialIdeal (toGerm_eq_toGerm_iff.mp hgerm)
@@ -280,11 +280,11 @@ theorem exists_strictMono_range_eq {Z : Set ℝ} (hZ : Z.IsPWO)
   let next : ℝ → ℝ := fun x ↦
     if h : (Z ∩ Set.Ioi x).Nonempty then (hZ.isWF.mono Set.inter_subset_left).min h else x
   have hnext_mem : ∀ x, (Z ∩ Set.Ioi x).Nonempty → next x ∈ Z ∧ x < next x := fun x h ↦ by
-    simp only [next, dif_pos h]
+    simp only [next, dite_eq_left h]
     exact Set.IsWF.min_mem _ h
   have hnext_le : ∀ x, ∀ z ∈ Z, x < z → next x ≤ z := fun x z hz hxz ↦ by
     have h : (Z ∩ Set.Ioi x).Nonempty := ⟨z, hz, hxz⟩
-    simp only [next, dif_pos h]
+    simp only [next, dite_eq_left h]
     exact Set.IsWF.min_le _ h ⟨hz, hxz⟩
   -- every point of `Z` has a point of `Z` above it
   have hZne : ∀ x ∈ Z, (Z ∩ Set.Ioi x).Nonempty := fun x hx ↦ by

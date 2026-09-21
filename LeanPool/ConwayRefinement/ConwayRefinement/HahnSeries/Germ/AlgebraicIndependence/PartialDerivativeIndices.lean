@@ -67,7 +67,7 @@ theorem componentsGE_mem_span_subtype {ι : Type w} [Finite ι]
       (weightedHomogeneousComponent wt (Finsupp.weight wt d) P) =
         weightedHomogeneousComponent wt (Finsupp.weight wt d) P := by
     rw [weightedHomogeneousComponent_of_mem
-      (weightedHomogeneousComponent_mem wt P _), if_pos rfl]
+      (weightedHomogeneousComponent_mem wt P _), ite_eq_left rfl]
   rw [← hcomp, hsum]
   rw [← Finset.sum_filter_add_sum_filter_not Finset.univ A]
   have hzero : ∑ j ∈ Finset.univ.filter (fun j ↦ ¬ A j), q j * a j = 0 :=

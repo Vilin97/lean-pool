@@ -192,7 +192,7 @@ theorem mk_lt_of_isPWO_topologicalClosure_span
       by_cases hy : (upper y).Nonempty
       · intro heq
         have heq' : between x hx = between y hy := by
-          simpa only [f, dif_pos hx, dif_pos hy, Sum.inl.injEq] using heq
+          simpa only [f, dite_eq_left hx, dite_eq_left hy, Sum.inl.injEq] using heq
         have hnle : next x hx ≤ y := (upperWF x).min_le hx ⟨y.2, hxy⟩
         have hlt : (between x hx : C) < between y hy := by
           calc

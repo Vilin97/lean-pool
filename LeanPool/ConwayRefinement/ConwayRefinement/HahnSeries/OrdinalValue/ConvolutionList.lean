@@ -76,10 +76,10 @@ theorem length_of_mem_convolutionIndexList :
   | [], γ, f, hf => by
       rw [convolutionIndexList_nil] at hf
       by_cases hγ : γ = 0
-      · rw [if_pos hγ, Finset.mem_singleton] at hf
+      · rw [ite_eq_left hγ, Finset.mem_singleton] at hf
         rw [hf]
         rfl
-      · rw [if_neg hγ] at hf
+      · rw [ite_eq_right hγ] at hf
         exact absurd hf (Finset.notMem_empty f)
   | b :: t, γ, f, hf => by
       rw [convolutionIndexList_cons, Finset.mem_biUnion] at hf
@@ -94,9 +94,9 @@ theorem sum_of_mem_convolutionIndexList :
   | [], γ, f, hf => by
       rw [convolutionIndexList_nil] at hf
       by_cases hγ : γ = 0
-      · rw [if_pos hγ, Finset.mem_singleton] at hf
+      · rw [ite_eq_left hγ, Finset.mem_singleton] at hf
         rw [hf, List.sum_nil, hγ]
-      · rw [if_neg hγ] at hf
+      · rw [ite_eq_right hγ] at hf
         exact absurd hf (Finset.notMem_empty f)
   | b :: t, γ, f, hf => by
       rw [convolutionIndexList_cons, Finset.mem_biUnion] at hf
@@ -124,11 +124,11 @@ theorem germAt_listProd (l : List K⟦ℝ⟧) (γ : ℝ) :
     rw [List.prod_nil, convolutionIndexList_nil]
     by_cases hγ : γ = 0
     · subst hγ
-      rw [if_pos rfl, Finset.sum_singleton, germListProd_nil]
+      rw [ite_eq_left rfl, Finset.sum_singleton, germListProd_nil]
       change germAt ((1 : Series K) : K⟦ℝ⟧) 0 = 1
       rw [germAt_apply, translatedTruncation_zero]
       exact map_one toGerm
-    · rw [if_neg hγ, Finset.sum_empty]
+    · rw [ite_eq_right hγ, Finset.sum_empty]
       exact germAt_one_of_ne_zero hγ
   | cons b t ih =>
     rw [List.prod_cons, germAt_mul, convolutionIndexList_cons]

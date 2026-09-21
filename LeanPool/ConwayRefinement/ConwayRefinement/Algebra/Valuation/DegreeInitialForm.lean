@@ -51,12 +51,12 @@ def initialForm (ν : MaxAddDegree R M) (x : R) : ν.AssociatedGraded :=
 
 theorem initialForm_eq_zero_of_eq_bot (ν : MaxAddDegree R M) {x : R}
     (hx : ν x = ⊥) : ν.initialForm x = 0 := by
-  rw [initialForm, dif_pos hx]
+  rw [initialForm, dite_eq_left hx]
 
 theorem initialForm_eq_homogeneousMk_of_ne_bot (ν : MaxAddDegree R M) {x : R}
     (hx : ν x ≠ ⊥) :
     ν.initialForm x = ν.homogeneousMk ((ν x).unbot hx) (ν.initialRepresentative x hx) := by
-  rw [initialForm, dif_neg hx]
+  rw [initialForm, dite_eq_right hx]
 
 omit [IsOrderedCancelAddMonoid M] in
 /-- The homogeneous class of an element of nonbottom degree in its exact degree is nonzero. -/
@@ -68,7 +68,7 @@ theorem componentMk_initialRepresentative_ne_zero (ν : MaxAddDegree R M) (x : R
 
 theorem initialForm_ne_zero_of_ne_bot (ν : MaxAddDegree R M) {x : R}
     (hx : ν x ≠ ⊥) : ν.initialForm x ≠ 0 := by
-  rw [initialForm, dif_neg hx, ne_eq, ν.homogeneousMk_eq_zero_iff,
+  rw [initialForm, dite_eq_right hx, ne_eq, ν.homogeneousMk_eq_zero_iff,
     ν.coe_initialRepresentative, WithBot.coe_unbot]
   exact lt_irrefl _
 
@@ -92,7 +92,7 @@ theorem initialForm_eq_homogeneousMk_of_componentMk_ne_zero
   have hxbot : ν x ≠ ⊥ := by simp [hdegree]
   have hm : (ν x).unbot hxbot = m :=
     (WithBot.unbot_eq_iff hxbot).mpr hdegree
-  rw [initialForm, dif_neg hxbot, ν.homogeneousMk_apply, ν.homogeneousMk_apply]
+  rw [initialForm, dite_eq_right hxbot, ν.homogeneousMk_apply, ν.homogeneousMk_apply]
   apply DirectSum.of_eq_of_gradedMonoid_eq
   apply Sigma.ext hm
   apply ν.componentMk_heq_of_grade_eq_of_coe_eq hm
@@ -120,7 +120,7 @@ theorem initialForm_eq_of_sub_lt (ν : MaxAddDegree R M) {x y : R}
   have hy : ν y ≠ ⊥ := hdegree ▸ hx
   have hm : (ν x).unbot hx = (ν y).unbot hy :=
     (WithBot.unbot_inj hx hy).mpr hdegree
-  rw [initialForm, dif_neg hx, initialForm, dif_neg hy,
+  rw [initialForm, dite_eq_right hx, initialForm, dite_eq_right hy,
     ν.homogeneousMk_apply, ν.homogeneousMk_apply]
   apply DirectSum.of_eq_of_gradedMonoid_eq
   apply Sigma.ext hm
@@ -141,7 +141,7 @@ theorem initialForm_one : ν.initialForm 1 = 1 := by
     rw [hcomponentOne, (DirectSum.of ν.Component 0).map_zero]
   · have hne : ν 1 ≠ ⊥ := by simp [hone]
     have hm : (ν 1).unbot hne = 0 := (WithBot.unbot_eq_iff hne).mpr hone
-    rw [initialForm, dif_neg hne, ν.homogeneousMk_apply, DirectSum.one_def]
+    rw [initialForm, dite_eq_right hne, ν.homogeneousMk_apply, DirectSum.one_def]
     change DirectSum.of ν.Component _ _ = DirectSum.of ν.Component 0 ν.componentOne
     rw [ν.componentOne_eq_componentMk]
     apply DirectSum.of_eq_of_gradedMonoid_eq
@@ -169,7 +169,7 @@ theorem initialForm_mul (x y : R) :
     have hm : (ν (x * y)).unbot hxy = (ν x).unbot hx + (ν y).unbot hy := by
       apply WithBot.coe_injective
       rw [WithBot.coe_unbot, WithBot.coe_add, ν.map_mul, WithBot.coe_unbot, WithBot.coe_unbot]
-    rw [initialForm, dif_neg hxy, initialForm, dif_neg hx, initialForm, dif_neg hy,
+    rw [initialForm, dite_eq_right hxy, initialForm, dite_eq_right hx, initialForm, dite_eq_right hy,
       ν.homogeneousMk_mul, ν.homogeneousMk_apply, ν.homogeneousMk_apply]
     apply DirectSum.of_eq_of_gradedMonoid_eq
     apply Sigma.ext hm

@@ -69,11 +69,11 @@ def endpointSpace (j : ℕ) (α : NatOrdinal) : Submodule E (Fibre 𝒜) :=
 
 omit [GradedAlgebra 𝒜] in
 theorem endpointSpace_of_pos {j : ℕ} {α : NatOrdinal} (hα : 0 < α.constantCoeff) :
-    endpointSpace 𝒜 j α = fibreGrade 𝒜 (α.removeNat (j + 1)) := if_pos hα
+    endpointSpace 𝒜 j α = fibreGrade 𝒜 (α.removeNat (j + 1)) := ite_eq_left hα
 
 omit [GradedAlgebra 𝒜] in
 theorem endpointSpace_of_eq_zero {j : ℕ} {α : NatOrdinal} (hα : α.constantCoeff = 0) :
-    endpointSpace 𝒜 j α = ⊥ := if_neg (by omega)
+    endpointSpace 𝒜 j α = ⊥ := ite_eq_right (by omega)
 
 omit [GradedAlgebra 𝒜] in
 theorem endpointSpace_le (j : ℕ) (α : NatOrdinal) :

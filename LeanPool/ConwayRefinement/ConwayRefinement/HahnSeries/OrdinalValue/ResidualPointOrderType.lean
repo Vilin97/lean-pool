@@ -587,7 +587,7 @@ theorem exists_residualPoint_orderType_eq_of_residualValue_eq_one
       ⟨(b.1 : K⟦ℝ⟧).coeff y, ?_⟩
     refine toGerm_eq_toGerm_iff_exists_coeff_eq.mpr
       ⟨z - y, by linarith, fun δ hδlow hδ0 ↦ ?_⟩
-    rw [coeff_translatedTruncation, if_pos hδ0, HahnSeries.Nonpositive.coe_C]
+    rw [coeff_translatedTruncation, ite_eq_left hδ0, HahnSeries.Nonpositive.coe_C]
     rcases hδ0.eq_or_lt with rfl | hδneg
     · simp
     · rw [HahnSeries.C_apply, HahnSeries.coeff_single_of_ne (by linarith : δ ≠ (0 : ℝ))]
@@ -599,7 +599,7 @@ theorem exists_residualPoint_orderType_eq_of_residualValue_eq_one
     intro hmem
     have hzero := constantCoeff_eq_zero_of_mem_negativeMonomialIdeal hmem
     rw [HahnSeries.Nonpositive.constantCoeff_apply, coeff_translatedTruncation,
-      if_pos le_rfl] at hzero
+      ite_eq_left le_rfl] at hzero
     exact hycoeff (by simpa using hzero)
   have hveq : ordinalValue (translatedTruncation (b.1 : K⟦ℝ⟧) y) = b.residualValue := by
     rw [hρ]

@@ -126,7 +126,7 @@ def ofSurrealHahnSeries (x : SurrealHahnSeries) : TermSeq where
 
 @[simp, grind =]
 theorem coeff_coe {s : TermSeq} (i : Iio s.length) : coeff s (s.exp i) = s.coeff i := by
-  rw [toSurrealHahnSeries, coeff_mk, dif_pos ⟨i, rfl⟩]
+  rw [toSurrealHahnSeries, coeff_mk, dite_eq_left ⟨i, rfl⟩]
   generalize_proofs H
   rw [s.exp_strictAnti.injective <| Classical.choose_spec H]
 

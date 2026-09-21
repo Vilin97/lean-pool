@@ -138,11 +138,11 @@ theorem of_principalComponentMk_mem_span_of_forall_componentsGE_mem {ι' : Type*
         (f : FunAtZeroMinus (PrincipalSubring K)) := by
     rw [principalSubringDerivation_of, principalComponentDerivation_principalComponentMk hα1]
     exact (funAtZeroMinus_coe_eq_iff_exists _ _).mpr ⟨ε, hε, fun δ h1 h2 ↦ by
-      simp only [f, if_pos (And.intro h1 h2)]⟩
+      simp only [f, ite_eq_left (And.intro h1 h2)]⟩
   have hf : ∀ δ, f δ ∈ Ideal.span (Set.range fun j ↦ aeval x (q j)) := by
     intro δ
     by_cases h : -ε < δ ∧ δ < 0
-    · simp only [f, if_pos h]
+    · simp only [f, ite_eq_left h]
       have hδ : ordinalValue (translatedTruncation (u : K⟦ℝ⟧) δ) <
           ω^ ((τ + 1).removeNat 1 + 1) := by
         rw [hrem]; exact hdrop δ h.1 h.2
@@ -153,7 +153,7 @@ theorem of_principalComponentMk_mem_span_of_forall_componentsGE_mem {ι' : Type*
       rw [hrep.of_principalComponentMk]
       exact aeval_mem_span_range_of_mem_span
         (weightedHomogeneousComponent_mem_span_of_componentsGE_mem wt hq (htrunc δ h.1 h.2) le_rfl)
-    · simp only [f, if_neg h]
+    · simp only [f, ite_eq_right h]
       exact Ideal.zero_mem _
   exact mem_span_of_principalSubringDerivation_eq_coe hq' hc hα1 (of_mem_principalGrading _ _) hf hΔ
 

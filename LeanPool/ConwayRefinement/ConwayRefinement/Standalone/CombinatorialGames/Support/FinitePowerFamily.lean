@@ -383,13 +383,13 @@ theorem finitePowerNormalForm_length (n : ℕ) :
 theorem finitePowerNormalForm_coeff_exponent (n : ℕ) (p : FiniteLex n) :
     (finitePowerNormalForm n).coeff (finitePowerConwayExponent n p : ℝ) = 1 := by
   classical
-  rw [finitePowerNormalForm_coeff, finitePowerCoefficient, if_pos]
+  rw [finitePowerNormalForm_coeff, finitePowerCoefficient, ite_eq_left]
   exact ⟨(↑p : ConwayIndex n), rfl⟩
 
 theorem finitePowerNormalForm_coeff_zero (n : ℕ) :
     (finitePowerNormalForm n).coeff 0 = 1 := by
   classical
-  rw [finitePowerNormalForm_coeff, finitePowerCoefficient, if_pos]
+  rw [finitePowerNormalForm_coeff, finitePowerCoefficient, ite_eq_left]
   exact ⟨⊤, rfl⟩
 
 private theorem finitePowerNormalForm_support_nonnegative (n : ℕ) :

@@ -69,12 +69,12 @@ theorem aevalTmulOne_comp_scalarRTensorAlgEquiv [DecidableEq σ] (y : σ → A) 
       Algebra.TensorProduct.map (aeval y : MvPolynomial σ K →ₐ[K] A) (AlgHom.id K L) := by
   refine Algebra.TensorProduct.ext ?_ ?_
   · refine MvPolynomial.algHom_ext fun i ↦ ?_
-    simp only [AlgHom.comp_apply, Algebra.TensorProduct.includeLeft_apply, AlgEquiv.coe_algHom,
+    simp only [AlgHom.comp_apply, Algebra.TensorProduct.includeLeft_apply, AlgEquiv.coe_toAlgHom,
       scalarRTensorAlgEquiv_X_tmul_one, aevalTmulOne_X, Algebra.TensorProduct.map_tmul,
       aeval_X, AlgHom.coe_id, id_eq]
   · refine AlgHom.ext fun l ↦ ?_
     simp only [AlgHom.coe_restrictScalars', AlgHom.comp_apply,
-      Algebra.TensorProduct.includeRight_apply, AlgEquiv.coe_algHom,
+      Algebra.TensorProduct.includeRight_apply, AlgEquiv.coe_toAlgHom,
       scalarRTensorAlgEquiv_one_tmul, aevalTmulOne_C, Algebra.TensorProduct.map_tmul,
       map_one, AlgHom.coe_id, id_eq]
 

@@ -138,7 +138,7 @@ theorem false_of_aeval_eq_zero_of_leastTerm_le_of_ne_zero
         rw [pow_zero, one_mul, xCoeff_of_mem_supported B₀
           (LiftFamily.FreeOfVariable.pol_translatedTruncLE_aeval_mem_supported
             (σ := σ) (hx := hx) hσ hinj hg hF0hom (hFkmem 0) (hFkvars 0) hγ) D,
-          if_neg (Nat.ne_of_gt hD)]
+          ite_eq_right (Nat.ne_of_gt hD)]
       · have hfreeK := LiftFamily.FreeOfVariable.aeval (σ := σ) (hx := hx) hσ hinj hg
           (hFkhom k hkD') (hαklt k hk1 hkD') (hFkmem k) (hFkvars k)
         exact (LiftFamily.FreeOfVariable.xCoeff_pol_translatedTruncLE_lift_pow_mul

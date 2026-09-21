@@ -146,7 +146,7 @@ private theorem withBot_eq_of_forall_le_iff {a b : WithBot M} (hbot : a = ⊥ �
 `ν = deg` and `P = S` this is the paper's `deg_S`. -/
 def degreeOver : MaxAddDegree R M where
   toFun := degreeOverFun ν P
-  map_zero' := by rw [degreeOverFun, if_pos rfl]
+  map_zero' := by rw [degreeOverFun, ite_eq_left rfl]
   map_one_le_zero' := by
     rw [WithBot.coe_zero.symm, degreeOverFun_le_iff]
     exact ν.one_mem_degreeOverStage_zero P

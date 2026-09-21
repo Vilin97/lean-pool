@@ -77,8 +77,8 @@ theorem degree_translatedTruncLE_eq (b : Nonpositive G R) (γ : G) :
   rw [cantorBendixsonDegreeValuation_apply, cantorBendixsonValuation_apply,
     coe_translatedTruncLE, HahnSeries.cantorBendixsonValue_translated_truncLE]
   by_cases hm : γ ∈ (b : HahnSeries G R).closedSupport
-  · simp only [if_pos hm, NatOrdinal.of_omega0_opow, NatOrdinal.cantorDegree_wpow]
-  · simp only [if_neg hm, NatOrdinal.of_zero, NatOrdinal.cantorDegree_zero]
+  · simp only [ite_eq_left hm, NatOrdinal.of_omega0_opow, NatOrdinal.cantorDegree_wpow]
+  · simp only [ite_eq_right hm, NatOrdinal.of_zero, NatOrdinal.cantorDegree_zero]
 
 /-- Translated truncations have degree strictly below any bound for the original degree,
 at all sufficiently close negative cutoffs. -/
@@ -106,7 +106,7 @@ theorem eventually_degree_translatedTruncLE_lt (b : Nonpositive G R) (α : NatOr
     filter_upwards [nhdsWithin_le_nhds hnh] with γ hγ
     change γ ∉ (b : HahnSeries G R).closedSupport at hγ
     rw [cantorBendixsonDegreeValuation_apply, cantorBendixsonValuation_apply,
-      coe_translatedTruncLE, cantorBendixsonValue_translated_truncLE, if_neg hγ,
+      coe_translatedTruncLE, cantorBendixsonValue_translated_truncLE, ite_eq_right hγ,
       NatOrdinal.of_zero, NatOrdinal.cantorDegree_zero]
     exact WithBot.bot_lt_coe α
 
@@ -165,7 +165,7 @@ theorem cantorBendixsonDerivAt_eq (α : NatOrdinal.{u}) (b : Nonpositive G R) (�
     (h : ν (translatedTruncLE γ b) ≤ α) :
     cantorBendixsonDerivAt α b γ =
       (ν).componentMk α ⟨translatedTruncLE γ b, ((ν).mem_filtrationLE_iff _ _).mpr h⟩ := by
-  rw [cantorBendixsonDerivAt, dif_pos h]
+  rw [cantorBendixsonDerivAt, dite_eq_left h]
 
 /-- Under the successor-filtration bound, the pointwise derivative is nonzero exactly at the
 points of the representative's closed support having the prescribed Cantor–Bendixson rank. -/
@@ -180,17 +180,17 @@ theorem cantorBendixsonDerivAt_ne_zero_iff (α : NatOrdinal.{u})
   have hdegree := degree_translatedTruncLE_eq b γ
   rw [hdegree]
   by_cases hm : γ ∈ (b : HahnSeries G R).closedSupport
-  · rw [if_pos hm, WithBot.coe_le_coe]
+  · rw [ite_eq_left hm, WithBot.coe_le_coe]
     constructor
     · intro hle
       refine ⟨hm, ?_⟩
       have heq : NatOrdinal.of ((b : HahnSeries G R).cantorBendixsonRank γ) = α :=
-        le_antisymm (by simpa only [hdegree, if_pos hm, WithBot.coe_le_coe] using h) hle
+        le_antisymm (by simpa only [hdegree, ite_eq_left hm, WithBot.coe_le_coe] using h) hle
       have := congrArg NatOrdinal.val heq
       simpa only [NatOrdinal.val_of] using this
     · rintro ⟨_, hr⟩
       rw [hr, NatOrdinal.of_val]
-  · rw [if_neg hm]
+  · rw [ite_eq_right hm]
     exact ⟨fun hbot ↦ ((not_le_of_gt (WithBot.bot_lt_coe α)) hbot).elim,
       fun hmem ↦ (hm hmem.1).elim⟩
 
@@ -356,7 +356,7 @@ theorem exists_lt_and_degree_translatedTruncLE_eq (b : Nonpositive G R) (α ρ :
     rw [h0] at hγlevel
     exact absurd (hrank0.symm.trans hγlevel.2) (ne_of_gt hρval)
   refine ⟨γ, hγmem.1, lt_of_le_of_ne hγ0 hγne, ?_⟩
-  rw [degree_translatedTruncLE_eq, if_pos hγlevel.1, cantorBendixsonRank_eq, hγlevel.2,
+  rw [degree_translatedTruncLE_eq, ite_eq_left hγlevel.1, cantorBendixsonRank_eq, hγlevel.2,
     NatOrdinal.of_val]
 
 /-- Below a degree that is a limit ordinal, no eventual bound on the truncation degrees holds:
@@ -389,7 +389,7 @@ theorem degree_le_add_one_of_forall_neg_le (b : Nonpositive G R) (τ : NatOrdina
     · exfalso
       have hmem : z ∈ (b : HahnSeries G R).closedSupport := (mem_closedSupport _ _).mpr hzs
       have hd := h z hzneg
-      rw [degree_translatedTruncLE_eq, if_pos hmem, WithBot.coe_le_coe] at hd
+      rw [degree_translatedTruncLE_eq, ite_eq_left hmem, WithBot.coe_le_coe] at hd
       have hval := NatOrdinal.of.symm.monotone hd
       change NatOrdinal.val (NatOrdinal.of ((b : HahnSeries G R).cantorBendixsonRank z)) ≤
         NatOrdinal.val τ at hval

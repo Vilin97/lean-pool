@@ -133,9 +133,9 @@ theorem exists_prescribed_components_on_set (β : NatOrdinal.{u}) (S : Set G)
   rw [cantorBendixsonLayerDeriv_componentMk, Filter.Germ.coe_eq]
   filter_upwards [eventually_degree_translatedTruncLE_le b β hb, hnear] with γ hbγ hnearγ
   by_cases hs : γ ∈ S
-  · rw [dif_pos hs, cantorBendixsonDerivAt_eq β b γ hbγ]
+  · rw [dite_eq_left hs, cantorBendixsonDerivAt_eq β b γ hbγ]
     exact (hpoint ⟨γ, hs⟩).choose_spec
-  · rw [dif_neg hs]
+  · rw [dite_eq_right hs]
     by_contra hne
     have hbexact := (cantorBendixsonDerivAt_ne_zero_iff β b γ hbγ).mp hne
     have hbB : (b : HahnSeries G R) = B := rfl

@@ -69,11 +69,11 @@ theorem principalComponentDerivation_of_pos {α : NatOrdinal} (hα : 0 < α.cons
     principalComponentDerivation K α a =
       Filter.Germ.mapLinear (DirectSum.lof K NatOrdinal (PrincipalComponent K) (α.removeNat 1))
         (principalComponentDerivAt K α hα a) := by
-  rw [principalComponentDerivation, dif_pos hα, LinearMap.comp_apply]
+  rw [principalComponentDerivation, dite_eq_left hα, LinearMap.comp_apply]
 
 theorem principalComponentDerivation_of_eq_zero {α : NatOrdinal} (hα : α.constantCoeff = 0)
     (a : PrincipalComponent K α) : principalComponentDerivation K α a = 0 := by
-  rw [principalComponentDerivation, dif_neg (by omega), LinearMap.zero_apply]
+  rw [principalComponentDerivation, dite_eq_right (by omega), LinearMap.zero_apply]
 
 /-- For `α` a successor, `∂` of the class of `u` is the function at `0⁻` `γ ↦ ∂(u)(γ)`, the class
 of the translated truncation `u^{|γ}` in `P_{α⁻}` included into `P̂`. -/

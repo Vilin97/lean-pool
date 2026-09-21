@@ -90,10 +90,10 @@ theorem coe_single (g : Γ) (r : R) (hg : g ≤ 0) :
   (rfl)
 
 private theorem eq_zero_of_mem_addAntidiagonal_zero {x y : Nonpositive Γ R} {ij : Γ × Γ}
-    (hij : ij ∈ Finset.addAntidiagonal (x : R⟦Γ⟧).isPWO_support
+    (hij : ij ∈ Finset.antidiagonal (x : R⟦Γ⟧).isPWO_support
       (y : R⟦Γ⟧).isPWO_support 0) :
     ij = (0, 0) := by
-  rcases Finset.mem_addAntidiagonal.mp hij with ⟨hi, hj, hij⟩
+  rcases Finset.mem_antidiagonal.mp hij with ⟨hi, hj, hij⟩
   have hi_zero := eq_zero_of_add_nonneg_left (support_subset x hi) (support_subset y hj) hij.ge
   have hj_zero := eq_zero_of_add_nonneg_right (support_subset x hi) (support_subset y hj) hij.ge
   exact Prod.ext hi_zero hj_zero
@@ -120,7 +120,7 @@ theorem coeff_zero_mul (x y : Nonpositive Γ R) :
     · apply Finset.sum_eq_single (0, 0)
       · intro ij hij hne
         exact (hne (eq_zero_of_mem_addAntidiagonal_zero hij)).elim
-      · simp [Finset.mem_addAntidiagonal, HahnSeries.mem_support, hx, hy]
+      · simp [Finset.mem_antidiagonal, HahnSeries.mem_support, hx, hy]
 
 /-- Evaluation at exponent zero as a ring homomorphism on nonpositive Hahn series. -/
 def constantCoeff : Nonpositive Γ R →+* R where

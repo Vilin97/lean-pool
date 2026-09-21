@@ -262,7 +262,7 @@ theorem count_reduced_of_ne {w : Multiset α} {hw : w ≠ 0} {t : Multiset α}
     Multiset.count y (s.reduced w hw t) = 2 * Multiset.count y w := by
   rw [reduced, unselected]
   simp only [Multiset.count_add, Multiset.count_replicate, Multiset.count_filter,
-    if_neg (Ne.symm hy), if_pos hy, Multiset.count_eq_zero.mpr hyt]
+    ite_eq_right (Ne.symm hy), ite_eq_left hy, Multiset.count_eq_zero.mpr hyt]
   omega
 
 theorem selected_mem_reduced {w : Multiset α} {hw : w ≠ 0} {t : Multiset α}
@@ -394,8 +394,8 @@ theorem replicate_selectedExponent_add_unselected (w : Multiset α) (hw : w ≠ 
   rw [Multiset.count_add, s.unselected_eq, Multiset.count_replicate, Multiset.count_filter]
   by_cases hy : y = s.selected w hw
   · subst hy
-    rw [if_pos rfl, if_neg (fun h ↦ h rfl), add_zero, s.selectedExponent_eq_count]
-  · rw [if_neg (Ne.symm hy), if_pos hy, zero_add]
+    rw [ite_eq_left rfl, ite_eq_right (fun h ↦ h rfl), add_zero, s.selectedExponent_eq_count]
+  · rw [ite_eq_right (Ne.symm hy), ite_eq_left hy, zero_add]
 
 /-- The complexity consists of the relevant distinct-factor weights and selected multiplicity. -/
 theorem complexity_eq (w : Multiset α) (hw : w ≠ 0) :

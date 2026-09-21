@@ -162,12 +162,12 @@ theorem pderiv_mem_span_varsOfFinitePart_of_forall_lt
       ∀ t ∈ s, f t = aeval x (mkDerivation K (fun i ↦ g i t) (pderiv j F)) := by
     refine ⟨fun t ↦ if ht : t ∈ s then
       aeval x (mkDerivation K (fun i ↦ g i t) (pderiv j F)) else 0, fun t ↦ ?_,
-      fun t ht ↦ dif_pos ht⟩
+      fun t ht ↦ dite_eq_left ht⟩
     beta_reduce
     by_cases ht : t ∈ s
-    · rw [dif_pos ht]
+    · rw [dite_eq_left ht]
       exact mem_span_of_mkDerivation hg hqdef ih (hsdef t ht)
-    · rw [dif_neg ht]
+    · rw [dite_eq_right ht]
       exact Ideal.zero_mem _
   have hΔf : Δ (aeval x (pderiv j F)) = (f : Germ l R) := by
     rw [hg.map_aeval hΔ]

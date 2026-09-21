@@ -37,9 +37,9 @@ theorem subgroupAlgebraHom_mapRingHom (H : AddSubgroup G) (P : AddMonoidAlgebra 
   rw [HahnSeries.coeff_subgroupAlgebraHom, HahnSeries.map_coeff,
     HahnSeries.coeff_subgroupAlgebraHom]
   by_cases hg : g ∈ H
-  · rw [dif_pos hg, dif_pos hg, AddMonoidAlgebra.mapRingHom_apply',
+  · rw [dite_eq_left hg, dite_eq_left hg, AddMonoidAlgebra.mapRingHom_apply',
       Finsupp.mapRange_apply]
-  · rw [dif_neg hg, dif_neg hg, map_zero]
+  · rw [dite_eq_right hg, dite_eq_right hg, map_zero]
 
 /-- Hahn-series form of scalar clearing for finite-support factors. -/
 theorem exists_scalar_of_hahn_mul_eq_map
@@ -86,11 +86,11 @@ theorem exists_scalar_of_hahn_mul_eq_map
   refine ⟨c, hc, fun x ↦ ?_⟩
   by_cases hx : x ∈ H
   · have : p.coeff x = p₁ ⟨x, hx⟩ := by
-      rw [← hp₁, HahnSeries.coeff_subgroupAlgebraHom, dif_pos hx]
+      rw [← hp₁, HahnSeries.coeff_subgroupAlgebraHom, dite_eq_left hx]
     rw [this]
     exact hcoeff _
   · have : p.coeff x = 0 := by
-      rw [← hp₁, HahnSeries.coeff_subgroupAlgebraHom, dif_neg hx]
+      rw [← hp₁, HahnSeries.coeff_subgroupAlgebraHom, dite_eq_right hx]
     rw [this, mul_zero]
     exact ⟨0, map_zero _⟩
 

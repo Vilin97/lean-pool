@@ -295,7 +295,7 @@ theorem seriesMaximalFiniteSupportDivisor_eq_of_is
   classical
   let hex : ∃ c : Associates (FiniteSupportRing (K := K)),
       IsSeriesMaximalFiniteSupportDivisor b c := ⟨a, ha⟩
-  rw [seriesMaximalFiniteSupportDivisor, dif_pos hex]
+  rw [seriesMaximalFiniteSupportDivisor, dite_eq_left hex]
   exact (Classical.choose_spec hex).eq ha
 
 /-- Under pairwise greatest-common-divisor existence, the canonical class satisfies its defining

@@ -74,7 +74,11 @@ inductive Player where
   | left  : Player
   /-- The Right player. -/
   | right : Player
-deriving DecidableEq, Fintype, Inhabited
+deriving DecidableEq, Inhabited
+
+instance : Fintype Player where
+  elems := {Player.left, Player.right}
+  complete := by intro p; cases p <;> simp
 
 namespace Player
 
@@ -534,7 +538,7 @@ theorem ofSets_inj {s₁ s₂ t₁ t₂ : Set IGame} [Small s₁] [Small s₂] [
 def Subposition : IGame → IGame → Prop :=
   Relation.TransGen fun x y => x ∈ ⋃ p, y.moves p
 
-@[aesop unsafe apply 50%]
+@[aesop safe apply]
 theorem Subposition.of_mem_moves {p} {x y : IGame} (h : x ∈ y.moves p) : Subposition x y :=
   Relation.TransGen.single (Set.mem_iUnion_of_mem p h)
 
@@ -568,7 +572,7 @@ theorem subposition_wf : WellFounded Subposition := by
 -- We make no use of `IGame`'s definition from a `QPF` after this point.
 attribute [irreducible] IGame
 
-instance : IsWellFounded _ Subposition := ⟨subposition_wf⟩
+instance : WellFounded _ Subposition := ⟨subposition_wf⟩
 instance : WellFoundedRelation IGame := ⟨Subposition, instIsWellFoundedSubposition.wf⟩
 
 theorem Subposition.irrefl (x : IGame) : ¬Subposition x x := _root_.irrefl x
@@ -1372,7 +1376,7 @@ theorem eq_intCast_of_mem_rightMoves_intCast {n : ℤ} {x : IGame} (hx : x ∈ n
 
 /-! ### Multiplication -/
 
-attribute [aesop apply unsafe 50%] Prod.Lex.left Prod.Lex.right
+attribute [aesop apply safe] Prod.Lex.left Prod.Lex.right
 
 private def mul' (x y : IGame) : IGame :=
   !{(range fun a : (xᴸ ×ˢ yᴸ ∪ xᴿ ×ˢ yᴿ :) ↦
@@ -2339,7 +2343,7 @@ theorem mk_ofSets {s t : Set IGame.{u_inline_8}} [Small.{u_inline_8} s]
   rw [mk_ofSets']
   congr!; aesop
 
-@[aesop apply unsafe]
+@[aesop apply safe]
 theorem lt_ofSets_of_mem_left {s t : Set Surreal.{u_inline_8}} [Small.{u_inline_8} s]
     [Small.{u_inline_8} t]
     {H : ∀ x ∈ s, ∀ y ∈ t, x < y} {x : Surreal} (hx : x ∈ s) :
@@ -2347,7 +2351,7 @@ theorem lt_ofSets_of_mem_left {s t : Set Surreal.{u_inline_8}} [Small.{u_inline_
   rw [lt_iff_not_ge, ← toGame_le_iff, toGame_ofSets]
   exact Game.lf_ofSets_of_mem_left (Set.mem_image_of_mem _ hx)
 
-@[aesop apply unsafe]
+@[aesop apply safe]
 theorem ofSets_lt_of_mem_right {s t : Set Surreal.{u_inline_8}} [Small.{u_inline_8} s]
     [Small.{u_inline_8} t]
     {H : ∀ x ∈ s, ∀ y ∈ t, x < y} {x : Surreal} (hx : x ∈ t) :
@@ -2522,7 +2526,7 @@ def ArgsRel :=
 lemma argsRel_wf : WellFounded ArgsRel :=
   InvImage.wf _ (Subrelation.wf (fun h => h.elim fun _ => Subposition.of_mem_moves)
     subposition_wf).cutExpand.transGen
-instance : IsWellFounded _ ArgsRel := ⟨argsRel_wf⟩
+instance : WellFounded _ ArgsRel := ⟨argsRel_wf⟩
 
 /-- The property that all arguments are numeric is leftward-closed under `ArgsRel`. -/
 lemma ArgsRel.numeric_closed {a' a} : ArgsRel a' a → a.Numeric → a'.Numeric :=

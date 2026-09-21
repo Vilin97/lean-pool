@@ -242,10 +242,10 @@ private theorem translatedTruncation_one_eq_zero_of_neg {u : ℝ} (hu : u < 0) :
   funext delta
   rw [coeff_translatedTruncation]
   by_cases hdelta : delta ≤ 0
-  · rw [if_pos hdelta]
+  · rw [ite_eq_left hdelta]
     have hsum : u + delta ≠ 0 := ne_of_lt (add_neg_of_neg_of_nonpos hu hdelta)
     simp [hsum]
-  · rw [if_neg hdelta]
+  · rw [ite_eq_right hdelta]
     rfl
 
 private theorem ordinalValue_add_one_eq_of_one_lt [CharZero K]

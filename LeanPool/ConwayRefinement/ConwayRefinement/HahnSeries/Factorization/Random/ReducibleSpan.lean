@@ -64,7 +64,7 @@ def gradeClass (α : NatOrdinal) (c : Series K) : PrincipalSubring K :=
 
 theorem gradeClass_of_lt {α : NatOrdinal} {c : Series K} (h : ordinalValue c < ω^ (α + 1)) :
     gradeClass α c = DirectSum.of (PrincipalComponent K) α (principalComponentMk α c h) := by
-  rw [gradeClass, dif_pos h]
+  rw [gradeClass, dite_eq_left h]
 
 theorem gradeClass_eq_homogeneousMk {α : NatOrdinal} {c : Series K}
     (h : ordinalValue c < ω^ (α + 1)) :
@@ -200,7 +200,7 @@ theorem gradeClass_eq_of_apply (α : NatOrdinal) (c : Series K) :
     gradeClass α c = DirectSum.of (PrincipalComponent K) α (gradeClass α c α) := by
   by_cases h : ordinalValue c < ω^ (α + 1)
   · rw [gradeClass_of_lt h, DirectSum.of_eq_same]
-  · rw [gradeClass, dif_neg h, DirectSum.zero_apply, map_zero]
+  · rw [gradeClass, dite_eq_right h, DirectSum.zero_apply, map_zero]
 
 /-! ### The reducible span -/
 

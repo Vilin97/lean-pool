@@ -102,7 +102,7 @@ theorem IsRemainder.mul_X {d : ι →₀ ℕ} {E : MvPolynomial ι K}
   intro d' hd'
   obtain ⟨d₁, hd₁, d₂, hd₂, hw⟩ := exists_add_eq_weight_of_mem_support_mul (wt := wt) hd'
   obtain ⟨k, hk, hT⟩ := hE d₁ hd₁
-  rw [X, support_monomial, if_neg one_ne_zero, Finset.mem_singleton] at hd₂
+  rw [X, support_monomial, ite_eq_right one_ne_zero, Finset.mem_singleton] at hd₂
   subst d₂
   rw [Finsupp.weight_single, one_smul] at hw
   exact ⟨k, hk, hw ▸ TermDegree.untrunc i hT⟩
@@ -272,7 +272,7 @@ theorem exists_pol_translatedTruncLE_aeval_monomial
           σ.pol hx α (translatedTruncLE γ (σ.lift i)) = _
         rw [translatedTruncLE_zero, hadef,
           σ.pol_aeval hx hinj (fun e he ↦ by
-            rw [support_monomial, if_neg one_ne_zero, Finset.mem_singleton] at he
+            rw [support_monomial, ite_eq_right one_ne_zero, Finset.mem_singleton] at he
             rwa [he])]
       have hfγ : f (γ, 0) =
           σ.pol hx α (translatedTruncLE γ a) * X i := by

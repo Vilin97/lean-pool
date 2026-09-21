@@ -54,9 +54,9 @@ private theorem ofIterate_mul (x y : R⟦Γ'⟧⟦Γ⟧) :
       (fun z _ ↦ (toLex (z.1.1, z.2.1), toLex (z.1.2, z.2.2)))
   · intro z hz
     rw [Finset.mem_sigma] at hz
-    rw [Finset.mem_addAntidiagonal] at hz
-    rw [Finset.mem_addAntidiagonal] at hz
-    rw [Finset.mem_addAntidiagonal]
+    rw [Finset.mem_antidiagonal] at hz
+    rw [Finset.mem_antidiagonal] at hz
+    rw [Finset.mem_antidiagonal]
     exact ⟨hz.2.1, hz.2.2.1, Prod.ext hz.1.2.2 hz.2.2.2⟩
   · intro z₁ hz₁ z₂ hz₂ heq
     have hbase : z₁.1 = z₂.1 :=
@@ -67,9 +67,9 @@ private theorem ofIterate_mul (x y : R⟦Γ'⟧⟦Γ⟧) :
         (congrArg (fun z ↦ (ofLex z.2).2) heq)
     exact Sigma.ext hbase (heq_of_eq hfiber)
   · intro z hz
-    rw [Finset.mem_addAntidiagonal] at hz
+    rw [Finset.mem_antidiagonal] at hz
     refine ⟨⟨((ofLex z.1).1, (ofLex z.2).1), ((ofLex z.1).2, (ofLex z.2).2)⟩, ?_, ?_⟩
-    · rw [Finset.mem_sigma, Finset.mem_addAntidiagonal, Finset.mem_addAntidiagonal]
+    · rw [Finset.mem_sigma, Finset.mem_antidiagonal, Finset.mem_antidiagonal]
       exact ⟨⟨ne_zero_of_coeff_ne_zero hz.1, ne_zero_of_coeff_ne_zero hz.2.1,
         congrArg Prod.fst hz.2.2⟩, hz.1, hz.2.1, congrArg Prod.snd hz.2.2⟩
     · rfl

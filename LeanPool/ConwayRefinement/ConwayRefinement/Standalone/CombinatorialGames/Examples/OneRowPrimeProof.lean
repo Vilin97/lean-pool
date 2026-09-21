@@ -48,9 +48,9 @@ theorem proof : HasDisplayedCoefficients := by
       · exact ⟨(n : Index), by simp [exponentAtIndex, exponent_apply]⟩
   constructor
   · intro i hi
-    rw [hcoeff, if_pos hi]
+    rw [hcoeff, ite_eq_left hi]
   · intro i hi
-    rw [hcoeff, if_neg hi]
+    rw [hcoeff, ite_eq_right hi]
 
 end HasDisplayedCoefficients
 

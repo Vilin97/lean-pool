@@ -155,7 +155,7 @@ theorem irreducible_of_homogeneous_of_grade_not_split {i : ι} (a : A i)
           have hle := grade_le_leadingGrade A hjne
           rw [hlz, WithBot.coe_le_coe] at hle
           exact hj (le_antisymm hle (hbot j))
-        rw [hzj, DirectSum.of_apply, dif_neg (Ne.symm hj)]
+        rw [hzj, DirectSum.of_apply, dite_eq_right (Ne.symm hj)]
     have hz0 : z 0 ≠ 0 := by
       intro h
       apply hz

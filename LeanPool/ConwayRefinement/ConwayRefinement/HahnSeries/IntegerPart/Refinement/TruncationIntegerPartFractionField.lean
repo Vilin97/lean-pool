@@ -119,7 +119,7 @@ private theorem constantCoeff_cofinalGermNonpositive :
   change (cofinalGermSeries (G := G) (K := K)).coeff 0 = 0
   rw [cofinalGermSeries]
   change (if 0 ∈ Set.range (cofinalNegativeExponent (G := G)) then 1 else 0) = 0
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨i, hi⟩
   exact (cofinalNegativeExponent_lt_zero i).ne hi
 

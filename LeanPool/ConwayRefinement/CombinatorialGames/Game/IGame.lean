@@ -1,8 +1,7 @@
 /-
 Copyright (c) 2025 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Violeta Hernández Palacios, Reid Barton, Mario Carneiro, Isabel Longbottom, Kim Morrison,
-Yuyang Zhao
+Authors: Violeta Hernández Palacios, Reid Barton, Mario Carneiro, Isabel Longbottom, Kim Morrison, Yuyang Zhao
 -/
 module
 
@@ -182,7 +181,7 @@ theorem ofSets_inj {s₁ s₂ t₁ t₂ : Set IGame} [Small s₁] [Small s₂] [
 def Subposition : IGame → IGame → Prop :=
   Relation.TransGen fun x y => x ∈ ⋃ p, y.moves p
 
-@[aesop unsafe apply 50%]
+@[aesop safe apply]
 theorem Subposition.of_mem_moves {p} {x y : IGame} (h : x ∈ y.moves p) : Subposition x y :=
   Relation.TransGen.single (Set.mem_iUnion_of_mem p h)
 
@@ -214,7 +213,7 @@ theorem subposition_wf : WellFounded Subposition := by
 -- We make no use of `IGame`'s definition from a `QPF` after this point.
 attribute [irreducible] IGame
 
-instance : IsWellFounded _ Subposition := ⟨subposition_wf⟩
+instance : WellFounded _ Subposition := ⟨subposition_wf⟩
 instance : WellFoundedRelation IGame := ⟨Subposition, instIsWellFoundedSubposition.wf⟩
 
 theorem Subposition.irrefl (x : IGame) : ¬Subposition x x := _root_.irrefl x
@@ -1017,7 +1016,7 @@ theorem eq_intCast_of_mem_rightMoves_intCast {n : ℤ} {x : IGame} (hx : x ∈ n
 /-! ### Multiplication -/
 
 -- TODO: upstream
-attribute [aesop apply unsafe 50%] Prod.Lex.left Prod.Lex.right
+attribute [aesop apply safe] Prod.Lex.left Prod.Lex.right
 
 private def mul' (x y : IGame) : IGame :=
   !{(range fun a : (xᴸ ×ˢ yᴸ ∪ xᴿ ×ˢ yᴿ :) ↦
@@ -1211,7 +1210,7 @@ private theorem inv_eq'' {x : IGame} :
 
 private theorem inv_eq {x : IGame.{u}} (hx : 0 < x) :
     x⁻¹ = !{.range (InvTy.val x left) | .range (InvTy.val x right)} := by
-  rw [inv_eq'', if_pos hx, inv']
+  rw [inv_eq'', ite_eq_left hx, inv']
   rfl
 
 private theorem inv_eq' {x : IGame.{u}} (hx : 0 < x) :
@@ -1243,7 +1242,7 @@ def invOption (x y a : IGame) : IGame :=
 
 private theorem invOption_eq {x y a : IGame} (hy : 0 < y) :
     invOption x y a = (1 + (y - x) * a) * inv' y := by
-  rw [invOption, IGame.div_eq_mul_inv, inv_eq'', if_pos hy]
+  rw [invOption, IGame.div_eq_mul_inv, inv_eq'', ite_eq_left hy]
 
 theorem zero_mem_leftMoves_inv {x : IGame} (hx : 0 < x) : 0 ∈ x⁻¹ᴸ := by
   rw [inv_eq hx, leftMoves_ofSets]

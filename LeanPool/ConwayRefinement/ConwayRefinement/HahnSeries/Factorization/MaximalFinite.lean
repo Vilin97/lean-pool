@@ -518,7 +518,7 @@ theorem layerMaximalFiniteSupportDivisor_eq_of_is {α : NatOrdinal}
   classical
   let hex : ∃ b : Associates (FiniteSupportRing (K := K)),
       IsLayerMaximalFiniteSupportDivisor α B b := ⟨a, ha⟩
-  rw [layerMaximalFiniteSupportDivisor, dif_pos hex]
+  rw [layerMaximalFiniteSupportDivisor, dite_eq_left hex]
   exact (Classical.choose_spec hex).eq ha
 
 /-- Under pairwise gcd existence, the canonical homogeneous class satisfies its defining
@@ -558,7 +558,7 @@ theorem gradedMaximalFiniteSupportDivisor_eq_of_is {B : DegreeGraded K}
   classical
   let hex : ∃ b : Associates (FiniteSupportRing (K := K)),
       IsGradedMaximalFiniteSupportDivisor B b := ⟨a, ha⟩
-  rw [gradedMaximalFiniteSupportDivisor, dif_pos hex]
+  rw [gradedMaximalFiniteSupportDivisor, dite_eq_left hex]
   exact (Classical.choose_spec hex).eq ha
 
 /-- Under pairwise gcd existence, the canonical graded class satisfies its defining

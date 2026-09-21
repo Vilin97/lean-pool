@@ -128,7 +128,7 @@ variable (x y : IGame) [hx : Impartial x] [hy : Impartial y]
 omit hx in
 theorem sub_equiv : x - y ≈ x + y := add_congr_right (neg_equiv y)
 
-@[aesop unsafe 50% apply]
+@[aesop safe apply]
 protected theorem of_mem_moves {p} {x y : IGame} [h : Impartial x] :
     y ∈ x.moves p → Impartial y :=
   (impartial_def.1 h).2 p y

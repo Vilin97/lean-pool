@@ -158,7 +158,7 @@ private theorem exists_complementary_factor {C : AddSubgroup G}
         simpa only [HahnSeries.support_one, Set.mem_singleton_iff] using h
       exact hg0 ▸ Set.mem_Iic.mpr le_rfl
     · exact Set.mem_Iic.mpr (hprod g h).1
-  · rw [HahnSeries.coeff_add, HahnSeries.coeff_one, if_pos rfl, hzero, add_zero]
+  · rw [HahnSeries.coeff_add, HahnSeries.coeff_one, ite_eq_left rfl, hzero, add_zero]
   · intro g hg hg0
     rcases HahnSeries.support_add_subset _ _ hg with h | h
     · exact absurd (by
@@ -204,7 +204,7 @@ def restrictToAddSubgroup (Z : Subring K) (C : AddSubgroup G)
     rw [HahnSeries.mem_cardSuppLTTruncationIntegerPart]
     refine ⟨(HahnSeries.support_filter_subset _ _).trans hxmem.1, ?_⟩
     change (HahnSeries.filter (· ∈ C) (x : K⟦G⟧)).coeff 0 ∈ Z
-    rw [HahnSeries.coeff_filter, if_pos C.zero_mem]
+    rw [HahnSeries.coeff_filter, ite_eq_left C.zero_mem]
     exact hxmem.2⟩
 
 open Classical in
@@ -313,7 +313,7 @@ theorem exists_factorization_by_restriction
       (HahnSeries.mem_cardSuppLTSubfield (Γ := G) (R := K) (κ := κ)).mpr
         ((HahnSeries.cardSupp_mono (HahnSeries.support_filter_subset _ _)).trans_lt b.1.2)⟩
   have ht0 : (tf : K⟦G⟧).coeff 0 = (b : K⟦G⟧).coeff 0 := by
-    rw [HahnSeries.coeff_filter, if_pos C.zero_mem]
+    rw [HahnSeries.coeff_filter, ite_eq_left C.zero_mem]
   let t : HahnSeries.cardSuppLTTruncationIntegerPart (G := G) (R := K) (κ := κ) Z :=
     ⟨tf, by
       rw [HahnSeries.mem_cardSuppLTTruncationIntegerPart]

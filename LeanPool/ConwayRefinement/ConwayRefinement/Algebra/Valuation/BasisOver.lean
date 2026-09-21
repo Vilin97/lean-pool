@@ -503,10 +503,10 @@ theorem homogeneousMk_eq_sum (t : R) (d : M)
     degreeOverSubalgebraHom ν P (f i) * H.layerClass i else 0]
   refine Finset.sum_congr rfl fun i _ ↦ ?_
   by_cases h : γ i = d
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     subst h
     rw [H.degreeOverSubalgebraHom_mul_layerClass]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     refine (ν.degreeOver P).homogeneousMk_eq_zero_of_degree_lt (hmem i i.2) ?_
     exact lt_of_le_of_lt (H.degreeOver_coe_mul_beta_le (f i) i)
       (WithBot.coe_lt_coe.mpr (lt_of_le_of_ne (hγ i i.2) h))

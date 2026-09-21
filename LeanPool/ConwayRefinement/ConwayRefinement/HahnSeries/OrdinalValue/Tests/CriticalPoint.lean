@@ -52,7 +52,7 @@ private theorem criticalNegativeMonomial_germ_zero_of_lt
   ext d
   rw [Berarducci.coeff_translatedTruncation]
   by_cases hd : d ≤ 0
-  · rw [if_pos hd, coe_criticalNegativeMonomial]
+  · rw [ite_eq_left hd, coe_criticalNegativeMonomial]
     have hne : y + d ≠ -1 := by linarith
     rw [HahnSeries.coeff_single_of_ne hne]
     simp

@@ -52,10 +52,10 @@ theorem coeff_add_of_forall_le {x y : K⟦G⟧} {a b : G}
     (ha : ∀ g ∈ x.support, g ≤ a) (hb : ∀ g ∈ y.support, g ≤ b) :
     (x * y).coeff (a + b) = x.coeff a * y.coeff b := by
   classical
-  have hsplit : ∀ c ∈ Finset.addAntidiagonal x.isPWO_support y.isPWO_support (a + b),
+  have hsplit : ∀ c ∈ Finset.antidiagonal x.isPWO_support y.isPWO_support (a + b),
       c = (a, b) := by
     intro c hc
-    rw [Finset.mem_addAntidiagonal] at hc
+    rw [Finset.mem_antidiagonal] at hc
     obtain ⟨hc1, hc2, hc0⟩ := hc
     have h1 : c.1 = a := by
       refine le_antisymm (ha _ hc1) ?_
@@ -76,7 +76,7 @@ theorem coeff_add_of_forall_le {x y : K⟦G⟧} {a b : G}
     refine Finset.sum_eq_zero fun c hc ↦ ?_
     rw [hsplit c hc, hy0, mul_zero]
   refine Finset.sum_eq_single_of_mem (a, b) ?_ (fun c hc hne ↦ absurd (hsplit c hc) hne)
-  refine Finset.mem_addAntidiagonal.mpr ⟨?_, ?_, rfl⟩
+  refine Finset.mem_antidiagonal.mpr ⟨?_, ?_, rfl⟩
   · exact (HahnSeries.mem_support x a).mpr hx0
   · exact (HahnSeries.mem_support y b).mpr hy0
 

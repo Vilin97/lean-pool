@@ -93,7 +93,7 @@ theorem exists_isMinimalSystem_extension (hwt : ∀ i, wt i ≠ 0) (hmem : ∀ i
       rw [hcdef, Finsupp.finsetSum_apply, Finset.sum_eq_single j]
       · rw [Finsupp.single_eq_same]
       · intro j' _ hj'
-        rw [Finsupp.single_apply, if_neg]
+        rw [Finsupp.single_apply, ite_eq_right]
         exact fun h ↦ hj' (Subtype.ext h)
       · intro h; exact absurd hj h
     have hcsupp : ∀ j ∈ c.support, wt j = β := by
@@ -229,11 +229,11 @@ theorem exists_isMinimalSystem_extension (hwt : ∀ i, wt i ≠ 0) (hmem : ∀ i
       intro q
       by_cases h : (q : (𝒜 β) ⧸ D β) ∈ S β
       · have hspec := Classical.choose_spec (Set.mem_range.mp h)
-        have hq : g q = Sum.inl (Classical.choose (Set.mem_range.mp h)).1 := dif_pos h
+        have hq : g q = Sum.inl (Classical.choose (Set.mem_range.mp h)).1 := dite_eq_left h
         refine ⟨by rw [hq]; exact (Classical.choose (Set.mem_range.mp h)).2, fun hq' ↦ ?_⟩
         rw [← hspec]
         exact congrArg (mkV β) (Subtype.ext (by change x' (g q) = _; rw [hq]; rfl))
-      · have hq : g q = Sum.inr ⟨⟨β, hβ⟩, ⟨q, h⟩⟩ := dif_neg h
+      · have hq : g q = Sum.inr ⟨⟨β, hβ⟩, ⟨q, h⟩⟩ := dite_eq_right h
         refine ⟨by rw [hq]; rfl, fun hq' ↦ ?_⟩
         rw [← hlift β ⟨q, h⟩]
         exact congrArg (mkV β) (Subtype.ext (by change x' (g q) = _; rw [hq]; rfl))

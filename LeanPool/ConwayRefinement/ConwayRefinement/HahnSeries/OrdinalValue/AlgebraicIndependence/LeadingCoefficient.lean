@@ -321,7 +321,7 @@ theorem pol_lift_pow (e : ℕ) (he : e • wt B₀ < α) :
     rw [map_pow, aeval_X]
   have hX : DegreeLT wt (X B₀ ^ e : MvPolynomial ι K) α := degreeLT_iff.mpr fun d hd ↦ by
     classical
-    rw [X_pow_eq_monomial, support_monomial, if_neg one_ne_zero, Finset.mem_singleton] at hd
+    rw [X_pow_eq_monomial, support_monomial, ite_eq_right one_ne_zero, Finset.mem_singleton] at hd
     rw [hd, Finsupp.weight_single]
     exact he
   rw [h1, σ.pol_aeval hx hinj hX]
@@ -439,8 +439,8 @@ theorem exists_forall_xCoeff_pol_translatedTruncation_pow_mul (hg : wt B₀ < α
     refine ⟨ε, hε, fun γ hγε hγ0 ↦ ?_⟩
     rw [pow_zero, one_mul]
     refine ⟨fun k hk ↦ ?_, ?_⟩
-    · rw [xCoeff_of_mem_supported B₀ (h γ hγε hγ0), if_neg (Nat.pos_iff_ne_zero.mp hk)]
-    · rw [xCoeff_of_mem_supported B₀ (h γ hγε hγ0), if_pos rfl]
+    · rw [xCoeff_of_mem_supported B₀ (h γ hγε hγ0), ite_eq_right (Nat.pos_iff_ne_zero.mp hk)]
+    · rw [xCoeff_of_mem_supported B₀ (h γ hγε hγ0), ite_eq_left rfl]
   | succ e ih =>
     -- degrees
     have hstep : e • wt B₀ + β < (e + 1) • wt B₀ + β := by
@@ -532,14 +532,14 @@ theorem exists_forall_xCoeff_pol_translatedTruncation_pow_mul (hg : wt B₀ < α
         Finset.sum_eq_zero fun β hβ ↦ hfβ β hβ k (by omega)]
       obtain ⟨k', rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
       rw [xCoeff_succ_X_mul, (h₁ γ hγ₁ hγ0).1 k' (by omega), ← mul_assoc,
-        xCoeff_mul_X_pow B₀ (Subalgebra.mul_mem _ (h₃ γ hγ₃ hγ0) hu.pol_mem), if_neg (by omega),
+        xCoeff_mul_X_pow B₀ (Subalgebra.mul_mem _ (h₃ γ hγ₃ hγ0) hu.pol_mem), ite_eq_right (by omega),
         add_zero, add_zero]
     · -- the coefficient of `X_{B₀}^(e+1)`
       rw [hconv, map_add, map_add, hf0, hfγ, map_sum,
         Finset.sum_eq_zero fun β hβ ↦ hfβ β hβ (e + 1) (Nat.lt_succ_self e),
         xCoeff_succ_X_mul, (h₁ γ hγ₁ hγ0).2, ← mul_assoc,
         xCoeff_mul_X_pow B₀ (Subalgebra.mul_mem _ (h₃ γ hγ₃ hγ0) hu.pol_mem),
-        if_neg (Nat.succ_ne_self e), add_zero, add_zero]
+        ite_eq_right (Nat.succ_ne_self e), add_zero, add_zero]
 
 /-- **The coefficient of `X_{B₀}^e` for the pure power `b_{B₀}^{e+1}`.** For `(e + 1) • wt B₀ ≤ α`
 and all `γ < 0` sufficiently close to `0`, the coefficient of `X_{B₀}^e` in the polynomial of
@@ -555,7 +555,7 @@ theorem exists_forall_xCoeff_pol_translatedTruncation_pow (hg : wt B₀ < α) (e
   | zero =>
     obtain ⟨ε, hε, h⟩ := σ.exists_forall_pol_translatedTruncation_lift_mem hx hinj B₀ hg
     refine ⟨ε, hε, fun γ hγε hγ0 ↦ ?_⟩
-    rw [zero_add, pow_one, xCoeff_of_mem_supported B₀ (h γ hγε hγ0), if_pos rfl, one_smul]
+    rw [zero_add, pow_one, xCoeff_of_mem_supported B₀ (h γ hγε hγ0), ite_eq_left rfl, one_smul]
   | succ e ih =>
     have hstep : (e + 1) • wt B₀ < (e + 1 + 1) • wt B₀ := by
       rw [succ_nsmul (wt B₀) (e + 1)]
@@ -637,7 +637,7 @@ theorem exists_forall_xCoeff_pol_translatedTruncation_pow (hg : wt B₀ < α) (e
       simp only
       rw [xCoeff_mul_of_mem_supported B₀ (h₃ β (by linarith) hβneg), h0', hC, mul_zero]
     rw [hconv, map_add, map_add, hf0, hfγ, map_sum, Finset.sum_eq_zero hfβ, add_zero,
-      xCoeff_succ_X_mul, h₁ γ hγ₁ hγ0, xCoeff_mul_X_pow B₀ (h₃ γ hγ₃ hγ0), if_pos rfl]
+      xCoeff_succ_X_mul, h₁ γ hγ₁ hγ0, xCoeff_mul_X_pow B₀ (h₃ γ hγ₃ hγ0), ite_eq_left rfl]
     exact (succ_nsmul _ (e + 1)).symm
 
 end Lifts

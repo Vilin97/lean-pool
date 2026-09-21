@@ -92,7 +92,7 @@ theorem degreeGradedEquivPrincipalMonoidAlgebra_finiteSupportMonomial
   rw [degreeGradedEquivPrincipalMonoidAlgebra,
     AlgEquiv.trans_apply, AlgEquiv.trans_apply, htensor]
   simp only [Algebra.TensorProduct.congr_apply, AlgEquiv.refl_toAlgHom,
-    Algebra.TensorProduct.map_tmul, AlgEquiv.coe_algHom,
+    Algebra.TensorProduct.map_tmul, AlgEquiv.coe_toAlgHom,
     HahnSeries.Nonpositive.finiteSupportAddMonoidAlgebraEquiv_monomial,
     AlgEquiv.coe_restrictScalars', AddMonoidAlgebra.scalarTensorEquiv_tmul,
     AddMonoidAlgebra.mapAlgHom_single, map_one, one_smul]

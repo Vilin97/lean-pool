@@ -155,10 +155,10 @@ theorem exists_grading_mul_and_derivation_eq_rankLevel
             by_cases hγ : γ ∈ (p : HahnSeries G K).closedSupport ∧
                 (p : HahnSeries G K).closedSupport.cantorBendixsonRank
                   (p : HahnSeries G K).closedSupport_isPWO γ = δ.val
-            · simp only [dif_pos hγ, Function.comp_apply]
+            · simp only [dite_eq_left hγ, Function.comp_apply]
               change DirectSum.of (ν).Component β (b ⟨γ, hγ⟩) = a ⟨γ, hγ⟩
               exact hb ⟨γ, hγ⟩
-            · simp only [dif_neg hγ, Function.comp_apply, map_zero]
+            · simp only [dite_eq_right hγ, Function.comp_apply, map_zero]
   · refine ⟨0, ?_, ?_⟩
     · rw [mul_zero]
       exact zero_mem _
@@ -167,8 +167,8 @@ theorem exists_grading_mul_and_derivation_eq_rankLevel
         by_cases hγ : γ ∈ (p : HahnSeries G K).closedSupport ∧
             (p : HahnSeries G K).closedSupport.cantorBendixsonRank
               (p : HahnSeries G K).closedSupport_isPWO γ = δ.val
-        · simp only [Pi.zero_apply, dif_pos hγ, ha0 ⟨γ, hγ⟩ hβ]
-        · simp only [Pi.zero_apply, dif_neg hγ]
+        · simp only [Pi.zero_apply, dite_eq_left hγ, ha0 ⟨γ, hγ⟩ hβ]
+        · simp only [Pi.zero_apply, dite_eq_right hγ]
 
 open Classical in
 /-- Ideal membership of a successor homogeneous class follows from pointwise ideal membership
@@ -250,20 +250,20 @@ theorem mem_span_of_cantorBendixsonGradedDerivation_eq_coe
         by_cases hi : (i : G) ∈ good
         · change (if (i : G) ∈ good then f i else 0) ∈
             DirectSum.rangeLof K (ν).Component δ
-          rw [if_pos hi, ← hi]
+          rw [ite_eq_left hi, ← hi]
           exact DirectSum.of_mem_rangeLof K (ν).Component δ _
         · change (if (i : G) ∈ good then f i else 0) ∈
             DirectSum.rangeLof K (ν).Component δ
-          rw [if_neg hi]
+          rw [ite_eq_right hi]
           exact zero_mem _
       have haIdeal : ∀ i, a i ∈ Ideal.span (Set.range q) := by
         intro i
         by_cases hi : (i : G) ∈ good
         · change (if (i : G) ∈ good then f i else 0) ∈ Ideal.span (Set.range q)
-          rw [if_pos hi]
+          rw [ite_eq_left hi]
           exact hf i
         · change (if (i : G) ∈ good then f i else 0) ∈ Ideal.span (Set.range q)
-          rw [if_neg hi]
+          rw [ite_eq_right hi]
           exact Ideal.zero_mem _
       have hdec := fun i ↦ OrdinalGraded.exists_eq_sum_mul_of_mem_span
         (𝒜 := DirectSum.rangeLof K (ν).Component) hq (haGrade i) (haIdeal i)
@@ -298,16 +298,16 @@ theorem mem_span_of_cantorBendixsonGradedDerivation_eq_coe
         by_cases hγ : γ ∈ (p : HahnSeries G K).closedSupport ∧
             (p : HahnSeries G K).closedSupport.cantorBendixsonRank
               (p : HahnSeries G K).closedSupport_isPWO γ = δ.val
-        · simp only [dif_pos hγ]
+        · simp only [dite_eq_left hγ]
           calc
             DirectSum.of (ν).Component δ
                 (cantorBendixsonDerivAt δ (p : Nonpositive G K) γ) =
                 f γ := hγgood
             _ = a ⟨γ, hγ⟩ := by
               change f γ = if γ ∈ good then f γ else 0
-              rw [if_pos hγgood]
+              rw [ite_eq_left hγgood]
             _ = ∑ j, q j * u ⟨γ, hγ⟩ j := hsum ⟨γ, hγ⟩
-        · simp only [dif_neg hγ, mul_zero, Finset.sum_const_zero]
+        · simp only [dite_eq_right hγ, mul_zero, Finset.sum_const_zero]
           have hzero : cantorBendixsonDerivAt δ (p : Nonpositive G K) γ = 0 := by
             by_contra hne
             have hs := (cantorBendixsonDerivAt_ne_zero_iff δ

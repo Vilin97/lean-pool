@@ -195,7 +195,7 @@ theorem eq_zero_of_forall_weight_lt_of_degree_aeval_eq_bot
       · obtain ⟨d, hd⟩ := MvPolynomial.ne_zero_iff.mp hzero
         rw [coeff_weightedHomogeneousComponent] at hd
         by_cases hdw : (Finsupp.weight wt) d = β
-        · rw [if_pos hdw] at hd
+        · rw [ite_eq_left hdw] at hd
           have hβα : β < α := hdw ▸ hw d (MvPolynomial.mem_support_iff.mpr hd)
           have hrep := represents_aeval_weightedHomogeneousComponent x hV hβ
           have hrep0 : Represents (aeval V F) β 0 :=
@@ -203,13 +203,13 @@ theorem eq_zero_of_forall_weight_lt_of_degree_aeval_eq_bot
           exact absurd (hinj β _ hβα
             (weightedHomogeneousComponent_isWeightedHomogeneous (w := wt) (n := β) (φ := F))
             (hrep.unique hrep0)) hzero
-        · rw [if_neg hdw] at hd
+        · rw [ite_eq_right hdw] at hd
           exact absurd rfl hd
     have hlt : ∀ d ∈ F.support, (Finsupp.weight wt) d < β := by
       intro d hd
       refine lt_of_le_of_ne (hβ d hd) fun he ↦ ?_
       have := congrArg (MvPolynomial.coeff d) hcomp0
-      rw [coeff_weightedHomogeneousComponent, if_pos he, MvPolynomial.coeff_zero] at this
+      rw [coeff_weightedHomogeneousComponent, ite_eq_left he, MvPolynomial.coeff_zero] at this
       exact MvPolynomial.mem_support_iff.mp hd this
     rcases eq_or_ne β 0 with rfl | hβ0
     · rw [MvPolynomial.eq_zero_iff]
@@ -247,7 +247,7 @@ theorem forall_weight_le_degree_aeval_of_injective
         intro e he
         refine lt_of_le_of_ne (hβ e he) fun heq ↦ ?_
         have hcz := congrArg (MvPolynomial.coeff e) hzero
-        rw [coeff_weightedHomogeneousComponent, if_pos heq, MvPolynomial.coeff_zero] at hcz
+        rw [coeff_weightedHomogeneousComponent, ite_eq_left heq, MvPolynomial.coeff_zero] at hcz
         exact MvPolynomial.mem_support_iff.mp he hcz
       rcases eq_or_ne β 0 with rfl | hβ0
       · exact absurd (hlt d hd) (not_lt_of_ge (zero_le (a := (Finsupp.weight wt) d)))
@@ -258,13 +258,13 @@ theorem forall_weight_le_degree_aeval_of_injective
       rw [coeff_weightedHomogeneousComponent] at he
       by_cases hew : (Finsupp.weight wt) e = β
       · have hβα : β < α := hew ▸ hw e (MvPolynomial.mem_support_iff.mpr (by
-          rwa [if_pos hew] at he))
+          rwa [ite_eq_left hew] at he))
         have haev : aeval x (weightedHomogeneousComponent wt β F) ≠ 0 := fun h ↦
           hzero (hinj β _ hβα
             (weightedHomogeneousComponent_isWeightedHomogeneous (w := wt) (n := β) (φ := F)) h)
         rw [(represents_aeval_weightedHomogeneousComponent x hV hβ).degree_eq haev]
         exact WithBot.coe_le_coe.mpr (hβ d hd)
-      · rw [if_neg hew] at he
+      · rw [ite_eq_right hew] at he
         exact absurd rfl he
 
 open Classical in
@@ -339,8 +339,8 @@ theorem translatedTruncLE_smul (γ : G) (k : K) (b : Nonpositive G K) :
   rw [HahnSeries.coeff_smul, coeff_translate, coeff_translate, HahnSeries.coeff_truncLE,
     HahnSeries.coeff_truncLE, HahnSeries.coeff_smul]
   by_cases h : g - -γ ≤ γ
-  · rw [if_pos h, if_pos h]
-  · rw [if_neg h, if_neg h, smul_zero]
+  · rw [ite_eq_left h, ite_eq_left h]
+  · rw [ite_eq_right h, ite_eq_right h, smul_zero]
 
 /-- A lift of the zero class has degree strictly below the class degree. -/
 theorem Represents.degree_lt_of_eq_zero {b : Nonpositive G K} {m : NatOrdinal.{u}}

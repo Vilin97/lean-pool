@@ -215,12 +215,12 @@ theorem cantorBendixson_top_eq (a : Ordinal.{u}) :
       rw [ih]
       by_cases ha : a = 0
       · subst a
-        simp only [zero_add, if_true, if_neg one_ne_zero]
+        simp only [zero_add, if_true, ite_eq_right one_ne_zero]
         rw [derivedSet_univ_eq, ← derivedSet_Ioi_zero_eq,
           ← positivePrincipalMultiples_zero,
           derivedSet_positivePrincipalMultiples]
         simp
-      · simp only [if_neg ha]
+      · simp only [ite_eq_right ha]
         rw [derivedSet_positivePrincipalMultiples]
         simp [ha]
   | limit a ha ih =>
@@ -228,7 +228,7 @@ theorem cantorBendixson_top_eq (a : Ordinal.{u}) :
       simp only [TopologicalSpace.Closeds.coe_iInf]
       ext x
       simp only [mem_iInter]
-      simp only [if_neg (show a ≠ 0 from ha.ne_bot)]
+      simp only [ite_eq_right (show a ≠ 0 from ha.ne_bot)]
       constructor
       · intro hx
         apply (Set.ext_iff.mp (iInter_positivePrincipalMultiples ha) x).mp
@@ -239,18 +239,18 @@ theorem cantorBendixson_top_eq (a : Ordinal.{u}) :
           have h1a : (1 : Ordinal.{u}) < a := by
             simpa using ha.succ_lt ha.bot_lt
           have hstage := hx ⟨(1 : Ordinal.{u}), h1a⟩
-          rw [ih (1 : Ordinal.{u}) h1a, if_neg one_ne_zero] at hstage
+          rw [ih (1 : Ordinal.{u}) h1a, ite_eq_right one_ne_zero] at hstage
           obtain ⟨y, hy, hxy⟩ := hstage
           change 0 < x
           exact pos_iff_ne_zero.mpr fun hx0 ↦ by
             rw [hx0] at hxy
             exact (mul_ne_zero (opow_ne_zero _ omega0_ne_zero) hy.ne') hxy
-        · simpa only [ih i.1 i.2, if_neg hi] using hx i
+        · simpa only [ih i.1 i.2, ite_eq_right hi] using hx i
       · intro hx i
         rw [ih i.1 i.2]
         by_cases hi : i.1 = 0
         · simp [hi]
-        · rw [if_neg hi]
+        · rw [ite_eq_right hi]
           have hall := (Set.ext_iff.mp (iInter_positivePrincipalMultiples ha) x).mpr hx
           exact mem_iInter.mp hall i
 

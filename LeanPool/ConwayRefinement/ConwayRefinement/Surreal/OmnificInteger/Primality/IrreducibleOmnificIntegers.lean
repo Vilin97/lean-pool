@@ -125,7 +125,7 @@ theorem isReduced_or_isReduced_neg_of_irreducible [CharZero R]
         rw [← toNonpositive_rhoIntegerPart u c Z x hT htau, h1, map_neg, map_one] at hcoeff
         have : ((-1 : Nonpositive G R) : R⟦G⟧).coeff 0 = -1 := by
           rw [Subring.coe_neg, Subring.coe_one, HahnSeries.coeff_neg, HahnSeries.coeff_one,
-            if_pos rfl]
+            ite_eq_left rfl]
         rw [this] at hcoeff
         have h2 : (1 : R) + 1 = 0 := by
           calc (1 : R) + 1 = -1 + 1 := by rw [hcoeff]
@@ -185,7 +185,7 @@ theorem intCoeff_spec (x : cardSuppLTTruncationIntegerPart (G := G) (R := R) (κ
   map_one' := by
     apply Int.cast_injective (α := R)
     rw [intCoeff_spec, Int.cast_one, Subring.coe_one, Subfield.coe_one, HahnSeries.coeff_one,
-      if_pos rfl]
+      ite_eq_left rfl]
   map_mul' x y := by
     apply Int.cast_injective (α := R)
     rw [Int.cast_mul, intCoeff_spec, intCoeff_spec, intCoeff_spec]

@@ -255,7 +255,7 @@ theorem injectiveAt_of_limit
   have hlam₀ : lam₀ < NatOrdinal.partLT β α := max_lt hlamE1 hl₁
   have hα₁le : α₁ ≤ NatOrdinal.partGE β α + lam₀ := by
     by_cases h : NatOrdinal.partGE β α₁ = NatOrdinal.partGE β α
-    · have hl : l₁ = NatOrdinal.partLT β α₁ := by rw [hl₁def, if_pos h]
+    · have hl : l₁ = NatOrdinal.partLT β α₁ := by rw [hl₁def, ite_eq_left h]
       calc α₁ = NatOrdinal.partGE β α₁ + NatOrdinal.partLT β α₁ :=
             (NatOrdinal.partGE_add_partLT β α₁).symm
         _ = NatOrdinal.partGE β α + l₁ := by rw [h, hl]

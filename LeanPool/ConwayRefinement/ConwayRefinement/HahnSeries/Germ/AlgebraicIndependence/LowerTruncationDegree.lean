@@ -88,7 +88,7 @@ theorem hasLowerTruncationDegree_algebraMap (k : K) :
   · rw [algebraMap_apply]
     exact degree_C_le k
   · intro y hy
-    rw [degree_translatedTruncLE_eq, if_neg ?_]
+    rw [degree_translatedTruncLE_eq, ite_eq_right ?_]
     · exact WithBot.bot_lt_coe 0
     · intro hmem
       have hclos := (mem_closedSupport _ _).mp hmem
@@ -523,9 +523,9 @@ theorem exists_lt_forall_degree_monomial_leibniz_le
         rw [MvPolynomial.pderiv_pow, MvPolynomial.pderiv_X]
         by_cases hji : j = i
         · subst hji
-          rw [Pi.single_eq_same, if_pos rfl, mul_one, map_mul, map_pow, MvPolynomial.aeval_X,
+          rw [Pi.single_eq_same, ite_eq_left rfl, mul_one, map_mul, map_pow, MvPolynomial.aeval_X,
             map_natCast, Nat.add_sub_cancel, nsmul_eq_mul]
-        · rw [Pi.single_eq_of_ne (Ne.symm hji), if_neg hji, mul_zero, map_zero]
+        · rw [Pi.single_eq_of_ne (Ne.symm hji), ite_eq_right hji, mul_zero, map_zero]
       have hA : aeval V (MvPolynomial.monomial (Finsupp.single i (n + 1) + d') (1 : K)) =
           V i ^ (n + 1) * aeval V (MvPolynomial.monomial d' (1 : K)) := by
         rw [hsplit, map_mul, map_pow, MvPolynomial.aeval_X]
@@ -561,13 +561,13 @@ theorem exists_lt_forall_degree_monomial_leibniz_le
           rw [hsplit, MvPolynomial.pderiv_mul, map_add, e1, e2, add_mul]
           congr 1
           · by_cases hji : j = i
-            · rw [if_pos hji, if_pos hji, hji]
-            · rw [if_neg hji, if_neg hji, zero_mul, zero_mul]
+            · rw [ite_eq_left hji, ite_eq_left hji, hji]
+            · rw [ite_eq_right hji, ite_eq_right hji, zero_mul, zero_mul]
           · ring
         rw [Finset.sum_congr rfl hterm, Finset.sum_add_distrib, ← Finset.mul_sum,
           Finset.sum_ite_eq' t i (fun _ ↦ ((n + 1 : ℕ) • (V i ^ n) *
             aeval V (MvPolynomial.monomial d' (1 : K))) * translatedTruncLE γ (V i)),
-          if_pos hit]
+          ite_eq_left hit]
       obtain ⟨lamA, hlamA, hboundA⟩ :=
         exists_lt_forall_degree_pow_leibniz_le (hV i) (hwt i) n
       by_cases hd0 : d' = 0
@@ -836,13 +836,13 @@ theorem exists_lt_forall_degree_polynomialDifferentiatedRelation_le
     exact ⟨Q, hQw, hQ⟩
   choose Q hQw hQ using hrep
   refine ⟨fun i ↦ if hi : i ∈ t then Q i hi else 0, fun i hi ↦ by
-    simpa only [dif_pos hi] using hQw i hi, ?_⟩
+    simpa only [dite_eq_left hi] using hQw i hi, ?_⟩
   -- substituting is exact modulo series bounded strictly below zero
   have hsub : ν ((∑ i ∈ t, aeval V (MvPolynomial.pderiv i F) * translatedTruncLE γ (V i)) -
       ∑ i ∈ t, aeval V (MvPolynomial.pderiv i F) *
         aeval V (if hi : i ∈ t then Q i hi else 0)) = ⊥ := by
     refine degree_sub_eq_bot_sum t _ _ fun i hi ↦ ?_
-    rw [dif_pos hi]
+    rw [dite_eq_left hi]
     exact degree_sub_eq_bot_mul (by simp) (hQ i hi)
   have hval : aeval V (∑ i ∈ t, MvPolynomial.pderiv i F *
       (if hi : i ∈ t then Q i hi else 0)) =

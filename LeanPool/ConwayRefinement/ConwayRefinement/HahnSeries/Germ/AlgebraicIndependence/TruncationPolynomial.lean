@@ -84,7 +84,7 @@ theorem pol_weight_le_degree {α : NatOrdinal.{u}} {u : Nonpositive G K}
       (((Finsupp.weight wt) d : NatOrdinal) : WithBot NatOrdinal) ≤ ν u := by
   classical
   unfold pol
-  rw [dif_pos hu]
+  rw [dite_eq_left hu]
   exact (Classical.choose_spec (σ.exists_polynomial hx u hu)).1
 
 include hx in
@@ -94,7 +94,7 @@ theorem degree_sub_aeval_pol_eq_bot {α : NatOrdinal.{u}} {u : Nonpositive G K}
     ν (u - aeval σ.lift (σ.pol hx α u)) = ⊥ := by
   classical
   unfold pol
-  rw [dif_pos hu]
+  rw [dite_eq_left hu]
   exact (Classical.choose_spec (σ.exists_polynomial hx u hu)).2.2
 
 include hx in
@@ -230,7 +230,7 @@ theorem weightedTotalDegree_xCoeff_add_nsmul_lt
   obtain ⟨d, hd, hsup⟩ := Finset.exists_mem_eq_sup _ (support_nonempty.mpr h)
     (Finsupp.weight wt)
   have hmem : d + Finsupp.single B₀ k ∈ (xCoeff B₀ k Q * X B₀ ^ k).support := by
-    rw [mem_support_iff, X_pow_eq_monomial, coeff_mul_monomial', if_pos le_add_self,
+    rw [mem_support_iff, X_pow_eq_monomial, coeff_mul_monomial', ite_eq_left le_add_self,
       add_tsub_cancel_right, mul_one]
     exact mem_support_iff.mp hd
   have hlt := hQ _ (support_xCoeff_mul_X_pow_subset B₀ k Q hmem)
@@ -252,7 +252,7 @@ theorem pol_eq_zero_of_degree_eq_bot {α : NatOrdinal.{u}} {u : Nonpositive G K}
     (hu : ν u = ⊥) : σ.pol hx α u = 0 := by
   classical
   unfold pol
-  rw [dif_pos (by rw [hu]; exact WithBot.bot_lt_coe α)]
+  rw [dite_eq_left (by rw [hu]; exact WithBot.bot_lt_coe α)]
   have hspec := Classical.choose_spec (σ.exists_polynomial hx u
     (by rw [hu]; exact WithBot.bot_lt_coe α))
   apply MvPolynomial.eq_zero_iff.mpr
@@ -445,7 +445,7 @@ theorem pol_translatedTruncLE_mul_boundary {α m n : NatOrdinal.{u}}
     by_cases h0a : 0 ∈ (a : HahnSeries G K).closedSupport
     · have hγb : γ ∉ (b : HahnSeries G K).closedSupport := fun h ↦ hnot ⟨h0a, h⟩
       have hbot : ν (translatedTruncLE γ b) = ⊥ := by
-        rw [degree_translatedTruncLE_eq, if_neg hγb]
+        rw [degree_translatedTruncLE_eq, ite_eq_right hγb]
       rw [σ.pol_eq_zero_of_degree_eq_bot hx hbot, mul_zero]
     · have hbot : ν a = ⊥ := by
         rw [cantorBendixsonDegreeValuation_apply, cantorBendixsonValuation_apply,
@@ -469,7 +469,7 @@ theorem pol_translatedTruncLE_mul_boundary {α m n : NatOrdinal.{u}}
             NatOrdinal.cantorDegree_zero]
         rw [translatedTruncLE_zero, σ.pol_eq_zero_of_degree_eq_bot hx hbot, mul_zero]
       · have hbot : ν (translatedTruncLE γ a) = ⊥ := by
-          rw [degree_translatedTruncLE_eq, if_neg hγa]
+          rw [degree_translatedTruncLE_eq, ite_eq_right hγa]
         rw [σ.pol_eq_zero_of_degree_eq_bot hx hbot, zero_mul]
     · exact absurd hq hqnot
 
@@ -497,7 +497,7 @@ theorem pol_lift_pow {α : NatOrdinal.{u}}
   rw [hpow]
   apply σ.pol_aeval hx hinj
   intro d hd
-  rw [X_pow_eq_monomial, support_monomial, if_neg one_ne_zero,
+  rw [X_pow_eq_monomial, support_monomial, ite_eq_right one_ne_zero,
     Finset.mem_singleton] at hd
   rw [hd, Finsupp.weight_single]
   exact he
@@ -915,8 +915,8 @@ theorem xCoeff_pol_translatedTruncLE_lift_pow_mul
   | zero =>
       rw [pow_zero, one_mul]
       exact ⟨fun k hk ↦ by
-        rw [xCoeff_of_mem_supported B₀ (hu.trunc_mem hγ) k, if_neg (Nat.ne_of_gt hk)],
-        by rw [xCoeff_of_mem_supported B₀ (hu.trunc_mem hγ) 0, if_pos rfl]⟩
+        rw [xCoeff_of_mem_supported B₀ (hu.trunc_mem hγ) k, ite_eq_right (Nat.ne_of_gt hk)],
+        by rw [xCoeff_of_mem_supported B₀ (hu.trunc_mem hγ) 0, ite_eq_left rfl]⟩
   | succ e ih =>
       have hg0 : wt B₀ ≠ 0 := hx.ne_zero B₀
       have hstep : e • wt B₀ + m < (e + 1) • wt B₀ + m := by
@@ -1009,7 +1009,7 @@ theorem xCoeff_pol_translatedTruncLE_lift_pow_mul
               X B₀ ^ e by ring,
           xCoeff_mul_X_pow B₀ (Subalgebra.mul_mem _
             (σ.pol_translatedTruncLE_lift_mem_supported hx hσ hB₀ le_rfl hγ)
-            hu.pol_mem) (k' + 1) e, if_neg (by omega), add_zero, add_zero]
+            hu.pol_mem) (k' + 1) e, ite_eq_right (by omega), add_zero, add_zero]
       · rw [map_add, map_add, map_sum,
           Finset.sum_eq_zero fun q hq ↦ hfhigh q hq (e + 1) (Nat.lt_succ_self e),
           xCoeff_succ_X_mul, ih'.2, ← mul_assoc,
@@ -1019,7 +1019,7 @@ theorem xCoeff_pol_translatedTruncLE_lift_pow_mul
               X B₀ ^ e by ring,
           xCoeff_mul_X_pow B₀ (Subalgebra.mul_mem _
             (σ.pol_translatedTruncLE_lift_mem_supported hx hσ hB₀ le_rfl hγ)
-            hu.pol_mem) (e + 1) e, if_neg (Nat.succ_ne_self e), add_zero, add_zero]
+            hu.pol_mem) (e + 1) e, ite_eq_right (Nat.succ_ne_self e), add_zero, add_zero]
 
 /-- A proper truncation of the evaluation of a top-degree homogeneous polynomial which omits
 `B₀` and uses no heavier variable still has a representing polynomial which omits `B₀`. -/
@@ -1129,7 +1129,7 @@ theorem xCoeff_pol_translatedTruncLE_lift_pow
   | zero =>
       rw [zero_add, pow_one, xCoeff_of_mem_supported B₀
         (σ.pol_translatedTruncLE_lift_mem_supported hx hσ hB₀ le_rfl hγ) 0,
-        if_pos rfl, one_smul]
+        ite_eq_left rfl, one_smul]
   | succ e ih =>
       have hg0 : wt B₀ ≠ 0 := hx.ne_zero B₀
       have hstep : (e + 1) • wt B₀ < (e + 1 + 1) • wt B₀ := by
@@ -1218,7 +1218,7 @@ theorem xCoeff_pol_translatedTruncLE_lift_pow
         Finset.sum_eq_zero hfzero, add_zero, xCoeff_succ_X_mul, ih he'.le hγ,
         xCoeff_mul_X_pow B₀
           (σ.pol_translatedTruncLE_lift_mem_supported hx hσ hB₀ le_rfl hγ)
-          (e + 1) (e + 1), if_pos rfl]
+          (e + 1) (e + 1), ite_eq_left rfl]
       exact (succ_nsmul _ (e + 1)).symm
 
 end FreeOfVariable

@@ -98,10 +98,10 @@ private theorem filter_mul (p : G → Prop) [DecidablePred p]
   ext g
   rw [HahnSeries.coeff_filter, HahnSeries.coeff_mul, HahnSeries.coeff_mul]
   by_cases hg : p g
-  · rw [if_pos hg]
+  · rw [ite_eq_left hg]
     apply Finset.sum_congr
     · ext ij
-      simp only [Finset.mem_addAntidiagonal, HahnSeries.support_filter]
+      simp only [Finset.mem_antidiagonal, HahnSeries.support_filter]
       constructor
       · rintro ⟨hi, hj, hij⟩
         have hp := (hpadd (support_subset x hi) (support_subset y hj)).mp (hij ▸ hg)
@@ -110,12 +110,12 @@ private theorem filter_mul (p : G → Prop) [DecidablePred p]
         exact ⟨hi, hj, hij⟩
     · intro ij hij
       rw [HahnSeries.coeff_filter, HahnSeries.coeff_filter]
-      rw [Finset.mem_addAntidiagonal] at hij
+      rw [Finset.mem_antidiagonal] at hij
       rw [HahnSeries.support_filter, HahnSeries.support_filter] at hij
       simp [hij.1.2, hij.2.1.2]
-  · rw [if_neg hg]
+  · rw [ite_eq_right hg]
     apply (Finset.sum_eq_zero fun ij hij ↦ ?_).symm
-    rw [Finset.mem_addAntidiagonal] at hij
+    rw [Finset.mem_antidiagonal] at hij
     rw [HahnSeries.support_filter] at hij
     rw [HahnSeries.support_filter] at hij
     have hpij := (hpadd (support_subset x hij.1.1) (support_subset y hij.2.1.1)).mpr
@@ -168,14 +168,14 @@ theorem coeff_T_of_mem (c : FiniteArchimedeanClass G) (x : Nonpositive G R) {g :
     ((T (K := K) c x : Nonpositive G R) : R⟦G⟧).coeff g = (x : R⟦G⟧).coeff g := by
   classical
   change (HahnSeries.filter (fun g ↦ g ∈ closedBall K c) (x : R⟦G⟧)).coeff g = _
-  rw [HahnSeries.coeff_filter, if_pos hg]
+  rw [HahnSeries.coeff_filter, ite_eq_left hg]
 
 theorem coeff_T_of_not_mem (c : FiniteArchimedeanClass G) (x : Nonpositive G R) {g : G}
     (hg : g ∉ closedBall K c) :
     ((T (K := K) c x : Nonpositive G R) : R⟦G⟧).coeff g = 0 := by
   classical
   change (HahnSeries.filter (fun g ↦ g ∈ closedBall K c) (x : R⟦G⟧)).coeff g = 0
-  rw [HahnSeries.coeff_filter, if_neg hg]
+  rw [HahnSeries.coeff_filter, ite_eq_right hg]
 
 /-- Closed-class truncation cannot introduce a new support exponent. -/
 theorem support_T_subset (c : FiniteArchimedeanClass G) (x : Nonpositive G R) :
@@ -189,14 +189,14 @@ theorem coeff_tau_of_mem (c : FiniteArchimedeanClass G) (x : Nonpositive G R) {g
     ((tau (K := K) c x : Nonpositive G R) : R⟦G⟧).coeff g = (x : R⟦G⟧).coeff g := by
   classical
   change (HahnSeries.filter (fun g ↦ g ∈ ball K c) (x : R⟦G⟧)).coeff g = _
-  rw [HahnSeries.coeff_filter, if_pos hg]
+  rw [HahnSeries.coeff_filter, ite_eq_left hg]
 
 theorem coeff_tau_of_not_mem (c : FiniteArchimedeanClass G) (x : Nonpositive G R) {g : G}
     (hg : g ∉ ball K c) :
     ((tau (K := K) c x : Nonpositive G R) : R⟦G⟧).coeff g = 0 := by
   classical
   change (HahnSeries.filter (fun g ↦ g ∈ ball K c) (x : R⟦G⟧)).coeff g = 0
-  rw [HahnSeries.coeff_filter, if_neg hg]
+  rw [HahnSeries.coeff_filter, ite_eq_right hg]
 
 /-- Closed truncation at the class of the lowest nonzero exponent retains the whole series. -/
 theorem T_leadingClass (x : Nonpositive G R) (horder : (x : R⟦G⟧).order ≠ 0) :

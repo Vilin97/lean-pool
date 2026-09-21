@@ -89,9 +89,9 @@ theorem convexQuotientSplitRingEquiv_filter_comap
     rw [hmk]
   split
   · rename_i hmem
-    rw [if_pos (hiff.mp hmem), convexQuotientSplitRingEquiv_coeff]
+    rw [ite_eq_left (hiff.mp hmem), convexQuotientSplitRingEquiv_coeff]
   · rename_i hmem
-    rw [if_neg (fun hq ↦ hmem (hiff.mpr hq))]
+    rw [ite_eq_right (fun hq ↦ hmem (hiff.mpr hq))]
     rfl
 
 open Classical in

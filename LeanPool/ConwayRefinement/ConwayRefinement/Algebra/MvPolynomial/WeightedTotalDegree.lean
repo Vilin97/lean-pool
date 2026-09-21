@@ -45,7 +45,7 @@ theorem weightedHomogeneousComponent_weightedTotalDegree_ne_zero {F : MvPolynomi
     fun s ↦ Finsupp.weight w s
   intro h0
   have := coeff_weightedHomogeneousComponent (w := w) (n := weightedTotalDegree w F) (φ := F) d
-  rw [h0, coeff_zero, weightedTotalDegree, hsup, if_pos rfl] at this
+  rw [h0, AddMonoidAlgebra.coeff_zero, weightedTotalDegree, hsup, ite_eq_left rfl] at this
   exact mem_support_iff.mp hd this.symm
 
 omit [OrderBot M] in
@@ -60,9 +60,9 @@ theorem eq_sum_weightedHomogeneousComponent (F : MvPolynomial σ R) :
   simp only [coeff_weightedHomogeneousComponent]
   by_cases hd : d ∈ F.support
   · rw [Finset.sum_eq_single (Finsupp.weight w d)]
-    · rw [if_pos rfl]
+    · rw [ite_eq_left rfl]
     · intro m _ hm
-      rw [if_neg (Ne.symm hm)]
+      rw [ite_eq_right (Ne.symm hm)]
     · intro hnot
       exact absurd (Finset.mem_image_of_mem _ hd) hnot
   · rw [notMem_support_iff.mp hd]
@@ -86,25 +86,25 @@ theorem weightedTotalDegree_sub_weightedHomogeneousComponent_lt (F : MvPolynomia
   by_cases hFG : F - G = 0
   · exact Or.inl hFG
   refine Or.inr (lt_of_le_of_ne (Finset.sup_le fun s hs ↦ ?_) fun heq ↦ ?_)
-  · have hs' : coeff s (F - G) ≠ 0 := mem_support_iff.mp hs
-    have hsub : coeff s (F - G) =
-        if Finsupp.weight w s = d then 0 else coeff s F := by
+  · have hs' : AddMonoidAlgebra.coeff (F - G) s ≠ 0 := mem_support_iff.mp hs
+    have hsub : AddMonoidAlgebra.coeff (F - G) s =
+        if Finsupp.weight w s = d then 0 else AddMonoidAlgebra.coeff F s := by
       rw [coeff_sub, hG, coeff_weightedHomogeneousComponent]
       split_ifs <;> simp
     have hne : Finsupp.weight w s ≠ d := by
       intro heq
-      rw [hsub, if_pos heq] at hs'
+      rw [hsub, ite_eq_left heq] at hs'
       exact hs' rfl
-    have hFne : coeff s F ≠ 0 := by
-      rw [hsub, if_neg hne] at hs'
+    have hFne : AddMonoidAlgebra.coeff F s ≠ 0 := by
+      rw [hsub, ite_eq_right hne] at hs'
       exact hs'
     exact le_weightedTotalDegree _ (mem_support_iff.mpr hFne)
   · obtain ⟨s, hs, hsup⟩ := Finset.exists_mem_eq_sup (F - G).support (support_nonempty.mpr hFG)
       fun s ↦ Finsupp.weight w s
-    have hs' : coeff s (F - G) ≠ 0 := mem_support_iff.mp hs
+    have hs' : AddMonoidAlgebra.coeff (F - G) s ≠ 0 := mem_support_iff.mp hs
     have hweight : Finsupp.weight w s = d := by
       rw [← heq, weightedTotalDegree, hsup]
-    rw [coeff_sub, hG, coeff_weightedHomogeneousComponent, if_pos hweight, sub_self] at hs'
+    rw [coeff_sub, hG, coeff_weightedHomogeneousComponent, ite_eq_left hweight, sub_self] at hs'
     exact hs' rfl
 
 end CommRing

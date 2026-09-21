@@ -126,8 +126,8 @@ theorem dvdFS_of_forall_subgroup {H : AddSubgroup G} {f g h : K⟦G⟧}
       · intro x hx
         rw [HahnSeries.mem_support, hcoeff x] at hx
         by_cases hxp : x - s ∈ H
-        · exact absurd (if_pos hxp) hx
-        · rw [if_neg hxp] at hx
+        · exact absurd (ite_eq_left hxp) hx
+        · rw [ite_eq_right hxp] at hx
           refine Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨?_, ?_⟩)
           · rintro rfl
             exact hxp (by simp)

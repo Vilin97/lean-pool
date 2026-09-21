@@ -90,9 +90,9 @@ private theorem wellOrderingRel_of_lt {a b : CofinalIndex G} (hab : a < b) :
   · exact False.elim (hab.ne (Subtype.ext h))
   · exact False.elim ((a.property b.1 h).asymm hab)
 
-noncomputable instance : WellFoundedLT (CofinalIndex G) := ⟨
+noncomputable instance : WellFoundedLT (CofinalIndex G) :=
   (InvImage.wf (fun c : CofinalIndex G ↦ c.1) WellOrderingRel.isWellOrder.wf).mono
-    (fun _ _ h ↦ wellOrderingRel_of_lt h)⟩
+    (fun _ _ h ↦ wellOrderingRel_of_lt h)
 
 /-- The indexed Archimedean classes are cofinal in the finite class order. -/
 theorem isCofinal_range_archimedeanClass : IsCofinal
@@ -100,7 +100,7 @@ theorem isCofinal_range_archimedeanClass : IsCofinal
   change IsCofinal (Set.range (fun c :
     {c : FiniteArchimedeanClass G // ∀ d, WellOrderingRel d c → d < c} => c.1))
   simpa using
-    (isCofinal_setOf_imp_lt
+    (isCofinal_setOfPred_imp_lt
       (WellOrderingRel : FiniteArchimedeanClass G → FiniteArchimedeanClass G → Prop))
 
 end CofinalIndex

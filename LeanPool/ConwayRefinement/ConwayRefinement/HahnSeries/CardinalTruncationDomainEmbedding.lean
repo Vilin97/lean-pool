@@ -228,11 +228,11 @@ theorem CardSuppLTTruncationIntegerPart.coe_mapDomain_restrictDomain
     change (HahnSeries.embDomain e
       (HahnSeries.restrictDomain e (x : R⟦H⟧))).coeff (e g) = _
     rw [HahnSeries.embDomain_coeff, HahnSeries.restrictDomain_coeff,
-      HahnSeries.coeff_filter, if_pos]
+      HahnSeries.coeff_filter, ite_eq_left]
     · rfl
     · exact Set.mem_range_self g
-  · rw [HahnSeries.embDomain_notin_range]
-    · rw [HahnSeries.coeff_filter, if_neg hh]
+  · rw [HahnSeries.embDomain_of_notMem_range]
+    · rw [HahnSeries.coeff_filter, ite_eq_right hh]
     · exact hh
 
 namespace CardSuppLTTruncationIntegerPart

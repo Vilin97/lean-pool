@@ -350,7 +350,7 @@ theorem degLT_eq_zero_of_mem_vars_H {i : ι} (hi : i ∈ S.H.vars) : S.degLT i =
     exact hid' rfl
   have hid : i ∈ d.support := by
     rw [Finsupp.mem_support_iff] at hid' ⊢
-    rw [Finsupp.tsub_apply, Finsupp.single_apply, if_neg hi0.symm, Nat.sub_zero] at hid'
+    rw [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hi0.symm, Nat.sub_zero] at hid'
     exact hid'
   -- The parts below `β` add up to `α_{<β} = (deg B₀)_{<β}`; `B₀` contributes all of it.
   have hsum := S.sum_degLT_eq_αLT hd

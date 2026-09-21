@@ -41,16 +41,16 @@ variable [NonUnitalNonAssocSemiring R]
 /-- The coefficient of two weak truncations is a restricted finite antidiagonal sum. -/
 theorem coeff_truncLE_mul_truncLE (b d : HahnSeries G R) (a c z : G) :
     (truncLE a b * truncLE c d).coeff z =
-      ∑ p ∈ (Finset.addAntidiagonal b.isPWO_support d.isPWO_support z).filter
+      ∑ p ∈ (Finset.antidiagonal b.isPWO_support d.isPWO_support z).filter
         (fun p ↦ p.1 ≤ a ∧ p.2 ≤ c), b.coeff p.1 * d.coeff p.2 := by
   classical
   rw [coeff_mul]
-  have he : Finset.addAntidiagonal (truncLE a b).isPWO_support
+  have he : Finset.antidiagonal (truncLE a b).isPWO_support
       (truncLE c d).isPWO_support z =
-      (Finset.addAntidiagonal b.isPWO_support d.isPWO_support z).filter
+      (Finset.antidiagonal b.isPWO_support d.isPWO_support z).filter
         (fun p ↦ p.1 ≤ a ∧ p.2 ≤ c) := by
     ext p
-    simp only [Finset.mem_addAntidiagonal, support_truncLE, mem_setOf_eq, Finset.mem_filter]
+    simp only [Finset.mem_antidiagonal, support_truncLE, mem_setOf_eq, Finset.mem_filter]
     tauto
   rw [he]
   apply Finset.sum_congr rfl
@@ -98,15 +98,15 @@ theorem eventually_coeff_mul_eq_sum_truncLE (b d : HahnSeries G R) (γ : G) :
   rw [Finset.sum_comm]
   apply Finset.sum_congr rfl
   intro q hq
-  obtain ⟨hqb, hqd, hqz⟩ := Finset.mem_addAntidiagonal.mp hq
+  obtain ⟨hqb, hqd, hqz⟩ := Finset.mem_antidiagonal.mp hq
   let q' : (b.closedSupport : Set G) ×ˢ (d.closedSupport : Set G) :=
     ⟨q, (b.mem_closedSupport q.1).mpr (subset_closure hqb),
       (d.mem_closedSupport q.2).mpr (subset_closure hqd)⟩
   obtain ⟨p, hp, huniq⟩ := hz q' hqz
   symm
-  refine (Finset.sum_eq_single p.1 ?_ ?_).trans (if_pos hp.2)
+  refine (Finset.sum_eq_single p.1 ?_ ?_).trans (ite_eq_left hp.2)
   · intro r hr hne
-    apply if_neg
+    apply ite_eq_right
     intro hdom
     have hr' := (b.mem_closedSupportAddFiber d γ r).mp hr
     let r' : (b.closedSupport : Set G) ×ˢ (d.closedSupport : Set G) :=
@@ -164,12 +164,12 @@ theorem cantorBendixsonValue_convolution_error (b d : HahnSeries G R) (γ : G) :
   have he : z - -γ = γ + z := by simp only [sub_neg_eq_add, add_comm]
   rw [he]
   by_cases hzγ : γ + z ≤ γ
-  · rw [if_pos hzγ, hz]
+  · rw [ite_eq_left hzγ, hz]
     have hcoef : S.coeff (γ + z) =
         ∑ p ∈ b.closedSupportAddFiber d γ, (truncLE p.1 b * truncLE p.2 d).coeff (γ + z) :=
       coeff_sum _
     rw [hcoef, sub_self]
-  · rw [if_neg hzγ, hS _ (lt_of_not_ge hzγ), sub_self]
+  · rw [ite_eq_right hzγ, hS _ (lt_of_not_ge hzγ), sub_self]
 
 /-- The translated product truncation and its finite convolution sum have the same value. -/
 @[blueprint "lem:cantor-bendixson-convolution"

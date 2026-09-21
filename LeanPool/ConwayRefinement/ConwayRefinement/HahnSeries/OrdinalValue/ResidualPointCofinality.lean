@@ -109,7 +109,7 @@ private theorem isLUB_negativeSupport_translatedTruncation_of_cofinal_support
     have hdelta0 : -gamma + x < 0 := by
       linarith [hBlt x hxB]
     constructor
-    · rw [HahnSeries.mem_support, coeff_translatedTruncation, if_pos hdelta0.le]
+    · rw [HahnSeries.mem_support, coeff_translatedTruncation, ite_eq_left hdelta0.le]
       simpa using hxCoeff
     · exact hdelta0
   constructor

@@ -167,9 +167,9 @@ theorem cantorBendixsonValue_translated_truncLE (b : HahnSeries G R) (c : G) :
     simpa only [neg_add_cancel] using
       ((truncLE c b).mem_closedSupport_translate (-c) c).trans (b.mem_closedSupport_truncLE c)
   by_cases hc : c ∈ b.closedSupport
-  · rw [if_pos hc, cantorBendixsonValue_of_mem _ ((mem_closedSupport _ _).mp (hm.mpr hc)),
+  · rw [ite_eq_left hc, cantorBendixsonValue_of_mem _ ((mem_closedSupport _ _).mp (hm.mpr hc)),
       cantorBendixsonRank_translated_truncLE]
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     apply cantorBendixsonValue_of_notMem
     intro hh
     exact hc (hm.mp ((mem_closedSupport _ _).mpr hh))
@@ -186,10 +186,10 @@ theorem eventually_value_translated_truncLE_lt (b : HahnSeries G R)
     with c hc hne
   rw [b.cantorBendixsonValue_translated_truncLE, b.cantorBendixsonValue_of_mem hb0]
   by_cases hmem : c ∈ b.closedSupport
-  · rw [if_pos hmem]
+  · rw [ite_eq_left hmem]
     apply (Ordinal.opow_lt_opow_iff_right Ordinal.one_lt_omega0).mpr
     simpa only [cantorBendixsonRank_eq] using hc hmem hne
-  · rw [if_neg hmem]
+  · rw [ite_eq_right hmem]
     exact Ordinal.opow_pos _ Ordinal.omega0_pos
 
 variable [Nontrivial G]
@@ -256,15 +256,15 @@ theorem cantorBendixsonValue_reconstruction (b d : HahnSeries G R) (hb : b.suppo
       have hylt : y < 0 := lt_of_le_of_ne hy0 hyne
       have hval : (translate (-y) (truncLE y b)).cantorBendixsonValue =
           Ordinal.omega0 ^ a := by
-        rw [b.cantorBendixsonValue_translated_truncLE, if_pos ((b.mem_closedSupport y).mpr hys),
+        rw [b.cantorBendixsonValue_translated_truncLE, ite_eq_left ((b.mem_closedSupport y).mpr hys),
           hyr]
       have h := hlevel y hy hylt hval
       rw [d.cantorBendixsonValue_translated_truncLE] at h
       by_cases hym : y ∈ d.closedSupport
-      · rw [if_pos hym] at h
+      · rw [ite_eq_left hym] at h
         exact ⟨(d.mem_closedSupport y).mp hym,
           (Ordinal.opow_le_opow_iff_right Ordinal.one_lt_omega0).mp h⟩
-      · rw [if_neg hym] at h
+      · rw [ite_eq_right hym] at h
         exact ((Ordinal.opow_pos _ Ordinal.omega0_pos).not_ge h).elim)
   rw [d.cantorBendixsonValue_of_mem hd0]
   exact Ordinal.opow_le_opow_right Ordinal.omega0_pos hdr

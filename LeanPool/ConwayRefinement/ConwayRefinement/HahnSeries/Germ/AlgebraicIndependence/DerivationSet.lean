@@ -113,9 +113,9 @@ theorem exists_derivation_eq_of_isDiscrete (ρ : NatOrdinal.{u}) (S : Set G)
         rw [Filter.Germ.mapLinear_coe, Filter.Germ.coe_eq]
         refine Filter.Eventually.of_forall fun γ ↦ ?_
         by_cases hγ : γ ∈ S
-        · simp only [dif_pos hγ, if_pos hγ, Function.comp_apply]
+        · simp only [dite_eq_left hγ, ite_eq_left hγ, Function.comp_apply]
           exact hy ⟨γ, hγ⟩
-        · simp only [dif_neg hγ, if_neg hγ, Function.comp_apply, map_zero]
+        · simp only [dite_eq_right hγ, ite_eq_right hγ, Function.comp_apply, map_zero]
 
 end HahnSeries.Nonpositive
 

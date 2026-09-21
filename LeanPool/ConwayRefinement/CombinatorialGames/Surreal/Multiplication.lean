@@ -164,7 +164,7 @@ def ArgsRel := InvImage (TransGen <| CutExpand fun x y => ∃ p, x ∈ y.moves p
 lemma argsRel_wf : WellFounded ArgsRel :=
   InvImage.wf _ (Subrelation.wf (fun h => h.elim fun _ => Subposition.of_mem_moves)
     subposition_wf).cutExpand.transGen
-instance : IsWellFounded _ ArgsRel := ⟨argsRel_wf⟩
+instance : WellFounded _ ArgsRel := ⟨argsRel_wf⟩
 
 /-- The property that all arguments are numeric is leftward-closed under `ArgsRel`. -/
 lemma ArgsRel.numeric_closed {a' a} : ArgsRel a' a → a.Numeric → a'.Numeric :=

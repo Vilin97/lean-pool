@@ -76,7 +76,7 @@ private theorem not_accPt_support_of_translatedTruncation_mem_nearConstantSubgro
     have hη0 : η < δ := by dsimp [δ]; linarith
     have hδ0 : δ < 0 := by dsimp [δ]; linarith
     have hzero := hcoeff δ hη0 hδ0
-    rw [coeff_translatedTruncation, if_pos hδ0.le] at hzero
+    rw [coeff_translatedTruncation, ite_eq_left hδ0.le] at hzero
     have hcoeffZero : (b : K⟦ℝ⟧).coeff w = 0 := by
       simpa [δ] using hzero
     exact (HahnSeries.mem_support _ _).mp hwSupport hcoeffZero

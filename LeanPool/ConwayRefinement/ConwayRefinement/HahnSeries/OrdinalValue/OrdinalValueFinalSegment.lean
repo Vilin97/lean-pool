@@ -258,7 +258,7 @@ theorem le_ordinalValue_translatedTruncation_of_forall_le_orderType
     have hδθ : θ < -γ + x := by linarith
     have hδneg : -γ + x < 0 := by linarith
     have hgerm : ((translatedTruncation b γ : Series K) : K⟦ℝ⟧).coeff (-γ + x) = b.coeff x := by
-      rw [coeff_translatedTruncation, if_pos hδ0]
+      rw [coeff_translatedTruncation, ite_eq_left hδ0]
       congr 1
       ring
     rw [HahnSeries.mem_support, ← hcoeff (-γ + x) hδθ hδneg, hgerm]
@@ -289,7 +289,7 @@ theorem exists_ordinalValue_translatedTruncation_eq_of_sub_mem_nearConstantSubgr
   rw [← toGerm_eq_toGerm_iff]
   apply toGerm_eq_toGerm_iff_exists_coeff_eq.mpr
   refine ⟨η - γ, sub_neg.mpr hηγ, fun δ hδ hδ0 ↦ ?_⟩
-  rw [coeff_translatedTruncation, coeff_translatedTruncation, if_pos hδ0, if_pos hδ0]
+  rw [coeff_translatedTruncation, coeff_translatedTruncation, ite_eq_left hδ0, ite_eq_left hδ0]
   have hnear : η < γ + δ := by linarith
   have hnegative : γ + δ < 0 := by linarith
   have hjZero : (j : K⟦ℝ⟧).coeff (γ + δ) = 0 := by

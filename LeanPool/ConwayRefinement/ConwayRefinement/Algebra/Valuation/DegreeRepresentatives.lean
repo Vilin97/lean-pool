@@ -204,14 +204,14 @@ theorem degree_aeval_lt_of_forall_weight_lt {ν : MaxAddDegree R M} {ι : Type w
     ν (aeval x F) < (m : WithBot M) := by
   classical
   rw [show aeval x F =
-      ∑ d ∈ F.support, aeval x (monomial d (MvPolynomial.coeff d F)) by
+      ∑ d ∈ F.support, aeval x (monomial d (AddMonoidAlgebra.coeff F d)) by
     conv_lhs => rw [F.as_sum]
     rw [map_sum]]
   apply ν.map_sum_lt_of_forall_lt _ _ (WithBot.bot_lt_coe m)
   intro d hd
-  have hhom : IsWeightedHomogeneous wt (monomial d (MvPolynomial.coeff d F))
+  have hhom : IsWeightedHomogeneous wt (monomial d (AddMonoidAlgebra.coeff F d))
       (Finsupp.weight wt d) :=
-    isWeightedHomogeneous_monomial wt d (MvPolynomial.coeff d F) rfl
+    isWeightedHomogeneous_monomial wt d (AddMonoidAlgebra.coeff F d) rfl
   exact (ν.represents_aeval hscalar hx hhom).degree_le.trans_lt
     (WithBot.coe_lt_coe.mpr (hF d hd))
 
@@ -234,9 +234,9 @@ theorem represents_aeval_weightedHomogeneousComponent {ν : MaxAddDegree R M} {�
     have hne := MvPolynomial.mem_support_iff.mp hd
     rw [MvPolynomial.coeff_sub, coeff_weightedHomogeneousComponent] at hne
     by_cases hdw : Finsupp.weight wt d = m
-    · rw [if_pos hdw, sub_self] at hne
+    · rw [ite_eq_left hdw, sub_self] at hne
       exact absurd rfl hne
-    · rw [if_neg hdw, sub_zero] at hne
+    · rw [ite_eq_right hdw, sub_zero] at hne
       exact lt_of_le_of_ne (hF d (MvPolynomial.mem_support_iff.mpr hne)) hdw
   have htop := ν.represents_aeval hscalar hx hhom
   have hlow :

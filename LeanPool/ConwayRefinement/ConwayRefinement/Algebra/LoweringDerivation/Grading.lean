@@ -121,7 +121,7 @@ theorem decompose_mul_of_right_mem_eq_zero {r g : R} {e δ : NatOrdinal} (hg : g
   classical
   rw [DirectSum.decompose_mul, DirectSum.decompose_of_mem 𝒜 hg,
     DirectSum.coe_mul_apply_eq_dfinsuppSum, DFinsupp.sum_comm]
-  refine (DFinsupp.sum_single_index ?_).trans (DFinsupp.sum_eq_zero fun β ↦ if_neg (h β))
+  refine (DFinsupp.sum_single_index ?_).trans (DFinsupp.sum_eq_zero fun β ↦ ite_eq_right (h β))
   simp
 
 /-- The degree-`δ` component of an element of the span of homogeneous generators is a finite sum
@@ -145,14 +145,14 @@ theorem exists_decompose_eq_sum_of_mem_span {S : Set R} (e : S → NatOrdinal)
     intro i
     rw [smul_eq_mul]
     split_ifs with hP
-    · rw [show β' i = β ⟨i, hP⟩ from dif_pos hP]
+    · rw [show β' i = β ⟨i, hP⟩ from dite_eq_left hP]
       exact decompose_mul_of_right_mem_eq 𝒜 (hS (g i)) (hβ ⟨i, hP⟩)
     · exact decompose_mul_of_right_mem_eq_zero 𝒜 (hS (g i)) fun β hβ ↦ hP ⟨β, hβ⟩
   rw [← hsum, DirectSum.decompose_sum, DirectSum.sum_apply, Submodule.coe_sum,
     Finset.sum_congr rfl fun i _ ↦ hterm i, ← Finset.sum_filter,
     Finset.sum_subtype (Finset.univ.filter fun i : Fin n ↦ ∃ β, β + e (g i) = δ)
       (p := fun i : Fin n ↦ ∃ β, β + e (g i) = δ) (fun i ↦ by simp)]
-  exact Finset.sum_congr rfl fun k _ ↦ by rw [show β' k.1 = β k from dif_pos k.2]
+  exact Finset.sum_congr rfl fun k _ ↦ by rw [show β' k.1 = β k from dite_eq_left k.2]
 
 /-- A homogeneous element of `I_{≥j} ∩ A_δ` is a finite sum of products `a * b` with `a ∈ A_e`,
 `e ≥ j` finite, and `b` homogeneous of a degree `β` with `e ⊕ β = δ`. -/

@@ -97,7 +97,7 @@ theorem support_translatedTruncLE_orderedIntervalHsum_sub_component_subset
           · exact (not_lt_of_ge (hxle.trans (hord i j hij))) (hsupp j hxj).1
         _ = (f i).coeff x := congrArg (fun q : R⟦Γ⟧ ↦ q.coeff x)
           (orderedIntervalSummableFamily_apply hι f cut center hsupp hord i)
-    rw [HahnSeries.coeff_truncLE, if_pos hxle, hcoeff, sub_self]
+    rw [HahnSeries.coeff_truncLE, ite_eq_left hxle, hcoeff, sub_self]
   · have hnot : ¬x ≤ center i := by
       change ¬center i + g ≤ center i
       exact not_le_of_gt (by
@@ -105,7 +105,7 @@ theorem support_translatedTruncLE_orderedIntervalHsum_sub_component_subset
     have hfi : (f i).coeff x = 0 := by
       by_contra h
       exact hnot (hsupp i ((mem_support _ _).mpr h)).2
-    rw [HahnSeries.coeff_truncLE, if_neg hnot, hfi, sub_zero]
+    rw [HahnSeries.coeff_truncLE, ite_eq_right hnot, hfi, sub_zero]
 
 end AddCommGroup
 

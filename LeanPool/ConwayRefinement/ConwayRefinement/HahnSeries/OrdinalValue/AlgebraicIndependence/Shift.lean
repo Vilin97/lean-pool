@@ -43,11 +43,11 @@ def shift (ξ : ℝ) (u : Series K) : Series K :=
 
 theorem coe_shift_of_le {ξ : ℝ} (hξ : ξ ≤ 0) (u : Series K) :
     ((shift ξ u : Series K) : K⟦ℝ⟧) = translate ξ (u : K⟦ℝ⟧) := by
-  rw [shift, dif_pos hξ, Subring.coe_mul, Nonpositive.coe_single, single_one_mul_eq_translate]
+  rw [shift, dite_eq_left hξ, Subring.coe_mul, Nonpositive.coe_single, single_one_mul_eq_translate]
 
 theorem shift_mul {ξ : ℝ} (hξ : ξ ≤ 0) (u v : Series K) :
     shift ξ u * v = shift ξ (u * v) := by
-  rw [shift, shift, dif_pos hξ, dif_pos hξ, mul_assoc]
+  rw [shift, shift, dite_eq_left hξ, dite_eq_left hξ, mul_assoc]
 
 /-- The translated truncation of a shift: `(t^ξ u)^{|ζ} = u^{|ζ - ξ}`. -/
 theorem translatedTruncation_shift {ξ : ℝ} (hξ : ξ ≤ 0) (u : Series K) (ζ : ℝ) :

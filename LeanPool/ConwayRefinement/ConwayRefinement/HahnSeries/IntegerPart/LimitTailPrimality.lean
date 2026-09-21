@@ -163,7 +163,7 @@ theorem isPrimal_of_finite_classes_and_limit_tail_conditions
             obtain ⟨z, ⟨r, hr, hqr⟩, hzq⟩ := hqocc'
             intro hzero
             have hcoeff := congrArg (fun y : HahnSeries G R ↦ y.coeff r) hzero
-            rw [HahnSeries.coeff_filter, if_pos] at hcoeff
+            rw [HahnSeries.coeff_filter, ite_eq_left] at hcoeff
             · exact (HahnSeries.mem_support _ _).mp hr hcoeff
             · change P.mkQ r ∈ FiniteArchimedeanClass.closedBallAddSubgroup q
               apply FiniteArchimedeanClass.mem_closedBallAddSubgroup_iff.mpr

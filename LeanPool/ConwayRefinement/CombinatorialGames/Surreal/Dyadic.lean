@@ -145,7 +145,7 @@ decreasing_by dyadic_wf
 noncomputable instance : Coe Dyadic IGame := ⟨toIGame⟩
 
 theorem toIGame_of_den_eq_one {x : Dyadic} (hx : x.den = 1) : (x : IGame) = x.num := by
-  rw [toIGame, dif_pos hx]
+  rw [toIGame, dite_eq_left hx]
 
 @[simp] theorem toIGame_intCast (n : ℤ) : ((n : Dyadic) : IGame) = n := by
   simpa using toIGame_of_den_eq_one (Dyadic.den_intCast n)
@@ -156,7 +156,7 @@ theorem toIGame_of_den_eq_one {x : Dyadic} (hx : x.den = 1) : (x : IGame) = x.nu
 
 theorem toIGame_of_den_ne_one {x : Dyadic} (hx : x.den ≠ 1) :
     x = !{{(lower x : IGame)} | {(upper x : IGame)}} :=
-  by rw [toIGame, dif_neg hx]
+  by rw [toIGame, dite_eq_right hx]
 
 @[simp]
 theorem toIGame_half : half = ½ := by

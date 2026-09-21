@@ -90,8 +90,8 @@ theorem replicate_selectedExponent_add_unselected (w : FormalExpression K) (hw :
   rw [Multiset.count_add, unselected_eq, Multiset.count_replicate, Multiset.count_filter]
   by_cases hy : y = selected w hw
   · subst hy
-    rw [if_pos rfl, if_neg (fun h ↦ h rfl), add_zero, selectedExponent_eq_count]
-  · rw [if_neg (Ne.symm hy), if_pos hy, zero_add]
+    rw [ite_eq_left rfl, ite_eq_right (fun h ↦ h rfl), add_zero, selectedExponent_eq_count]
+  · rw [ite_eq_right (Ne.symm hy), ite_eq_left hy, zero_add]
 
 end FormalExpression
 

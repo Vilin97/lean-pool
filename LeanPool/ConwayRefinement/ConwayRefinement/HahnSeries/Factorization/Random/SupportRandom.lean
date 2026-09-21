@@ -85,7 +85,7 @@ theorem IsMutuallySupportRandom.truncationsIndependent {ι : Type} {b : ι → S
   -- The coefficient of `R` at `x` vanishes, so another `c k₁` contributes at `x`.
   have hcoeff : ∀ k : κ, ((c k : Series K) : K⟦ℝ⟧).coeff x =
       ((b (j k) : Series K) : K⟦ℝ⟧).coeff (γ k + x) := fun k ↦ by
-    rw [hc, coeff_translatedTruncation, if_pos hx0.le]
+    rw [hc, coeff_translatedTruncation, ite_eq_left hx0.le]
   obtain ⟨k₁, hk₁P, hk₁ne, hk₁c⟩ : ∃ k₁ ∈ P, k₁ ≠ k₀ ∧ ((c k₁ : Series K) : K⟦ℝ⟧).coeff x ≠ 0 := by
     by_contra hnone
     push Not at hnone

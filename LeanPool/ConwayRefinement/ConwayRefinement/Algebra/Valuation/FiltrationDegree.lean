@@ -100,12 +100,12 @@ def value (x : R) : WithBot (OrderDual ℕ) := by
 
 @[simp]
 theorem value_zero : hF.value 0 = ⊥ := by
-  rw [value, dif_pos rfl]
+  rw [value, dite_eq_left rfl]
 
 theorem value_of_ne_zero {x : R} (hx : x ≠ 0) :
     hF.value x = ((OrderDual.toDual (hF.index hx) : OrderDual ℕ) :
       WithBot (OrderDual ℕ)) := by
-  rw [value, dif_neg hx]
+  rw [value, dite_eq_right hx]
 
 theorem value_eq_bot_iff (x : R) : hF.value x = ⊥ ↔ x = 0 := by
   constructor

@@ -208,7 +208,7 @@ private theorem sub_trunc_vle_wpow (x i : Surreal) : x - x.trunc i ≤ᵥ ω^ i 
       have hmem : ↑(s.exp ⟨j, hjlen⟩) ∈ (s.trunc i).support := by
         rw [SurrealHahnSeries.support_trunc]
         exact ⟨(s.exp ⟨j, hjlen⟩).2, hiExp⟩
-      rw [← hj, SurrealHahnSeries.support_truncIdx, dif_pos hjlen] at hmem
+      rw [← hj, SurrealHahnSeries.support_truncIdx, dite_eq_left hjlen] at hmem
       have hfalse : ↑(s.exp ⟨j, hjlen⟩) < ↑(s.exp ⟨j, hjlen⟩) := by
         simpa using hmem.2
       exact (lt_irrefl _) hfalse

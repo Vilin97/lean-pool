@@ -228,7 +228,7 @@ def unsplitIntegerPart
   · rw [coeff_T_of_mem c z hg]
   · rw [coeff_T_of_not_mem c z hg]
     symm
-    apply HahnSeries.embDomain_notin_range
+    apply HahnSeries.embDomain_of_notMem_range
     exact fun ⟨h, hh⟩ ↦ hg (by
       rw [closedBallOrderEmbedding_apply] at hh
       exact hh ▸ h.2)

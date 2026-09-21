@@ -59,11 +59,11 @@ private theorem coeff_subgroupAlgebraHom_single (H : AddSubgroup G) (a : H) (b :
       = if hg : g ∈ H then (Finsupp.single a b : H →₀ K) ⟨g, hg⟩ else 0 := by
   rw [subgroupAlgebraHom_single, HahnSeries.coeff_single]
   by_cases hg : g ∈ H
-  · rw [dif_pos hg, Finsupp.single_apply]
+  · rw [dite_eq_left hg, Finsupp.single_apply]
     by_cases hga : g = (a : G)
-    · rw [if_pos hga, if_pos (Subtype.ext hga.symm : a = ⟨g, hg⟩)]
-    · rw [if_neg hga, if_neg (fun h : a = ⟨g, hg⟩ ↦ hga (congrArg Subtype.val h).symm)]
-  · rw [dif_neg hg, if_neg]
+    · rw [ite_eq_left hga, ite_eq_left (Subtype.ext hga.symm : a = ⟨g, hg⟩)]
+    · rw [ite_eq_right hga, ite_eq_right (fun h : a = ⟨g, hg⟩ ↦ hga (congrArg Subtype.val h).symm)]
+  · rw [dite_eq_right hg, ite_eq_right]
     rintro rfl
     exact hg a.2
 
@@ -90,7 +90,7 @@ theorem subgroupAlgebraHom_injective (H : AddSubgroup G) :
   intro f₁ f₂ h
   ext a
   have hc := congrArg (fun x : K⟦G⟧ ↦ x.coeff (a : G)) h
-  simp only [coeff_subgroupAlgebraHom, dif_pos a.2] at hc
+  simp only [coeff_subgroupAlgebraHom, dite_eq_left a.2] at hc
   simpa using hc
 
 open Classical in
@@ -100,7 +100,7 @@ theorem support_subgroupAlgebraHom_subset (H : AddSubgroup G) (f : AddMonoidAlge
   rw [HahnSeries.mem_support, coeff_subgroupAlgebraHom] at hg
   by_cases hgH : g ∈ H
   · exact hgH
-  · rw [dif_neg hgH] at hg
+  · rw [dite_eq_right hgH] at hg
     exact absurd rfl hg
 
 open Classical in
@@ -110,9 +110,9 @@ theorem support_subgroupAlgebraHom_finite (H : AddSubgroup G) (f : AddMonoidAlge
   intro g hg
   rw [HahnSeries.mem_support, coeff_subgroupAlgebraHom] at hg
   by_cases hgH : g ∈ H
-  · rw [dif_pos hgH] at hg
+  · rw [dite_eq_left hgH] at hg
     exact ⟨⟨g, hgH⟩, Finsupp.mem_support_iff.mpr hg, rfl⟩
-  · rw [dif_neg hgH] at hg
+  · rw [dite_eq_right hgH] at hg
     exact absurd rfl hg
 
 open Classical in
@@ -129,8 +129,8 @@ theorem exists_subgroupAlgebraHom_eq
   ext g
   rw [coeff_subgroupAlgebraHom]
   by_cases hgH : g ∈ H
-  · rw [dif_pos hgH, Finsupp.comapDomain_apply, hxf, Finsupp.onFinset_apply]
-  · rw [dif_neg hgH]
+  · rw [dite_eq_left hgH, Finsupp.comapDomain_apply, hxf, Finsupp.onFinset_apply]
+  · rw [dite_eq_right hgH]
     by_contra hne
     exact hgH (hsub ((HahnSeries.mem_support _ _).mpr (Ne.symm hne)))
 

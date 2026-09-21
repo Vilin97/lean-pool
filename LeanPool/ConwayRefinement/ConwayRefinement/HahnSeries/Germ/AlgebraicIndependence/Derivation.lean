@@ -66,7 +66,7 @@ def cantorBendixsonHomogeneousDerivation (α : NatOrdinal.{u}) :
 theorem cantorBendixsonHomogeneousDerivation_limit (α : NatOrdinal.{u})
     (hα : α.constantCoeff = 0) :
     cantorBendixsonHomogeneousDerivation (G := G) (R := R) α = 0 := by
-  rw [cantorBendixsonHomogeneousDerivation, dif_neg (by simp [hα])]
+  rw [cantorBendixsonHomogeneousDerivation, dite_eq_right (by simp [hα])]
 
 private theorem successorDerivation_cast {α β : NatOrdinal.{u}}
     (h : α = β) (e : β + 1 = α + 1) :
@@ -83,7 +83,7 @@ private theorem cantorBendixsonHomogeneousDerivation_succ (α : NatOrdinal.{u}) 
     simp only [Nat.cast_one] at he
     rw [he]
     exact Nat.zero_lt_succ _
-  rw [cantorBendixsonHomogeneousDerivation, dif_pos hc]
+  rw [cantorBendixsonHomogeneousDerivation, dite_eq_left hc]
   have he : (α + 1).removeNat 1 = α := by
     apply add_right_cancel (b := (1 : NatOrdinal))
     simpa only [Nat.cast_one] using NatOrdinal.removeNat_add_natCast hc

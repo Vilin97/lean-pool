@@ -273,7 +273,7 @@ theorem weightedHomogeneousComponent_weightedTotalDegree_ne_zero {F : MvPolynomi
     (Finsupp.weight wt)
   intro h
   have := congrArg (coeff d) h
-  rw [coeff_weightedHomogeneousComponent, if_pos (by rw [weightedTotalDegree, hsup]),
+  rw [coeff_weightedHomogeneousComponent, ite_eq_left (by rw [weightedTotalDegree, hsup]),
     coeff_zero] at this
   exact mem_support_iff.mp hd this
 
@@ -530,7 +530,7 @@ theorem toGerm_aeval_pol {α : NatOrdinal} {u : Series K} (hu : ordinalValue u <
     toGerm (aeval σ.lift (σ.pol hx α u)) = toGerm u := by
   classical
   unfold pol
-  rw [dif_pos hu]
+  rw [dite_eq_left hu]
   exact (Classical.choose_spec (σ.exists_degreeLT_toGerm_aeval_eq hx α u hu)).2
 
 /-- When evaluation is injective below `α`, the polynomial of `u` modulo `J` is the unique

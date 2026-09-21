@@ -169,13 +169,13 @@ theorem coeff_trunc (x i : Surreal) :
 theorem coeff_trunc_of_lt {x i j : Surreal} (h : i < j) :
     (x.trunc i).coeff j = x.coeff j := by
   rw [coeff_trunc]
-  exact if_pos h
+  exact ite_eq_left h
 
 @[simp]
 theorem coeff_trunc_of_le {x i j : Surreal} (h : j ≤ i) :
     (x.trunc i).coeff j = 0 := by
   rw [coeff_trunc]
-  exact if_neg h.not_gt
+  exact ite_eq_right h.not_gt
 
 @[simp, grind =]
 theorem support_trunc (x i : Surreal) : (x.trunc i).support = x.support ∩ Ioi i := by

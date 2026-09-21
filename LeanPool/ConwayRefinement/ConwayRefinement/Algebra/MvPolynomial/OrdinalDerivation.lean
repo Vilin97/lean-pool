@@ -152,7 +152,7 @@ theorem vars_pderiv_subset (i : σ) (p : MvPolynomial σ R) : (pderiv i p).vars 
   -- `d'` is `d - single i 1` for a monomial `d` of `p` with `d i ≠ 0`
   have : d' ∈ (p.support.image fun d ↦ d - Finsupp.single i 1) := by
     have hsum : pderiv i p =
-        ∑ d ∈ p.support, monomial (d - Finsupp.single i 1) (coeff d p * d i) := by
+        ∑ d ∈ p.support, monomial (d - Finsupp.single i 1) (AddMonoidAlgebra.coeff p d * d i) := by
       conv_lhs => rw [p.as_sum, map_sum]
       exact Finset.sum_congr rfl fun d _ ↦ pderiv_monomial
     rw [hsum] at hd'
@@ -173,7 +173,7 @@ theorem exists_mem_support_of_mem_support_pderiv {i : σ}
     ∃ d ∈ p.support, d i ≠ 0 ∧ d' = d - Finsupp.single i 1 := by
   classical
   have hsum : pderiv i p =
-      ∑ d ∈ p.support, monomial (d - Finsupp.single i 1) (coeff d p * d i) := by
+      ∑ d ∈ p.support, monomial (d - Finsupp.single i 1) (AddMonoidAlgebra.coeff p d * d i) := by
     conv_lhs => rw [p.as_sum, map_sum]
     exact Finset.sum_congr rfl fun d _ ↦ pderiv_monomial
   rw [hsum] at hd'
@@ -196,16 +196,16 @@ theorem exists_add_eq_weight_of_mem_support_pderiv (wt : σ → NatOrdinal) {i :
 
 /-- The coefficient of `d - X_v` in `∂_v p`, for a monomial `d` containing `X_v`. -/
 theorem coeff_sub_single_pderiv {v : σ} {p : MvPolynomial σ R} {d : σ →₀ ℕ} (hd : d v ≠ 0) :
-    coeff (d - Finsupp.single v 1) (pderiv v p) = coeff d p * (d v : R) := by
+    AddMonoidAlgebra.coeff (pderiv v p) (d - Finsupp.single v 1) = AddMonoidAlgebra.coeff p d * (d v : R) := by
   classical
   have hsum : pderiv v p =
-      ∑ d' ∈ p.support, monomial (d' - Finsupp.single v 1) (coeff d' p * d' v) := by
+      ∑ d' ∈ p.support, monomial (d' - Finsupp.single v 1) (AddMonoidAlgebra.coeff p d' * d' v) := by
     conv_lhs => rw [p.as_sum, map_sum]
     exact Finset.sum_congr rfl fun d' _ ↦ pderiv_monomial
   rw [hsum, MvPolynomial.coeff_sum]
   by_cases hdp : d ∈ p.support
   · rw [Finset.sum_eq_single d]
-    · rw [coeff_monomial, if_pos rfl]
+    · rw [coeff_monomial, ite_eq_left rfl]
     · intro d' _ hne
       rw [coeff_monomial]
       split_ifs with h

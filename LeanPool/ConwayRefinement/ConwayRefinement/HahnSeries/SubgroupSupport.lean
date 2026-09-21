@@ -110,30 +110,30 @@ theorem filter_mul_of_invariant {H : AddSubgroup G} {f u : K⟦G⟧}
     filter p (f * u) = f * filter p u := by
   ext c
   rw [HahnSeries.coeff_filter, HahnSeries.coeff_mul, HahnSeries.coeff_mul]
-  have hsub : Finset.addAntidiagonal f.isPWO_support (filter p u).isPWO_support c
-      ⊆ Finset.addAntidiagonal f.isPWO_support u.isPWO_support c := by
+  have hsub : Finset.antidiagonal f.isPWO_support (filter p u).isPWO_support c
+      ⊆ Finset.antidiagonal f.isPWO_support u.isPWO_support c := by
     intro b hb
-    rw [Finset.mem_addAntidiagonal] at hb ⊢
+    rw [Finset.mem_antidiagonal] at hb ⊢
     exact ⟨hb.1, HahnSeries.support_filter_subset _ u hb.2.1, hb.2.2⟩
-  have hrestrict : ∀ b ∈ Finset.addAntidiagonal f.isPWO_support (filter p u).isPWO_support c,
+  have hrestrict : ∀ b ∈ Finset.antidiagonal f.isPWO_support (filter p u).isPWO_support c,
       f.coeff b.1 * (filter p u).coeff b.2 = f.coeff b.1 * u.coeff b.2 := by
     intro b hb
-    rw [Finset.mem_addAntidiagonal] at hb
+    rw [Finset.mem_antidiagonal] at hb
     rw [HahnSeries.support_filter] at hb
-    rw [HahnSeries.coeff_filter, if_pos hb.2.1.2]
+    rw [HahnSeries.coeff_filter, ite_eq_left hb.2.1.2]
   by_cases hc : p c
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     refine Finset.sum_congr ?_ (fun b hb ↦ (hrestrict b hb).symm)
     refine Finset.Subset.antisymm (fun b hb ↦ ?_) hsub
-    rw [Finset.mem_addAntidiagonal] at hb ⊢
+    rw [Finset.mem_antidiagonal] at hb ⊢
     obtain ⟨hb1, hb2, hb0⟩ := hb
     refine ⟨hb1, ?_, hb0⟩
     rw [HahnSeries.support_filter]
     refine ⟨hb2, ?_⟩
     exact (hp b.1 (hf hb1) b.2).mp (by rw [hb0]; exact hc)
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     refine (Finset.sum_eq_zero fun b hb ↦ ?_).symm
-    rw [Finset.mem_addAntidiagonal] at hb
+    rw [Finset.mem_antidiagonal] at hb
     rw [HahnSeries.support_filter] at hb
     refine absurd ?_ hc
     have hb0 := hb.2.2

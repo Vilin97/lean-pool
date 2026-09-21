@@ -346,7 +346,7 @@ theorem coeff_zero_reductionQuotient (u : HahnEmbedding.ArchimedeanStrata K G)
   change ((HahnSeries.archimedeanSplitRingEquiv u c (TClosed c x) /
     HahnSeries.C (tauBall c x)).coeff 0).coeff 0 = 1
   rw [coeff_zero_archimedeanSplitRingEquiv_TClosed_div_C u c x htau]
-  rw [HahnSeries.coeff_one, if_pos rfl]
+  rw [HahnSeries.coeff_one, ite_eq_left rfl]
 
 /-- LM24's `ρ_σ`: divide the closed-class truncation by the open-class truncation when the
 latter is nonzero, and otherwise retain the closed-class truncation. -/

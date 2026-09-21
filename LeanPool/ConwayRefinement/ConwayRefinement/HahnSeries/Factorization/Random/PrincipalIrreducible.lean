@@ -53,7 +53,7 @@ theorem not_isUnit_of_grade_ne_zero {alpha : NatOrdinal} (halpha : alpha ≠ 0)
   rw [hy] at hzero
   apply (one_ne_zero : (1 : PrincipalSubring K) ≠ 0)
   rw [DirectSum.one_def] at hzero ⊢
-  simp only [DirectSum.of_apply, dif_pos] at hzero
+  simp only [DirectSum.of_apply, dite_eq_left] at hzero
   rw [show (GradedMonoid.GOne.one : PrincipalComponent K 0) = 0 by simpa using hzero, map_zero]
 
 /-- A nonzero class of grade zero is a unit: grade zero is the scalar field. -/

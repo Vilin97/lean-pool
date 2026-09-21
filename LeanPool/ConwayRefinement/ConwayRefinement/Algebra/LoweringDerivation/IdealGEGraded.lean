@@ -217,12 +217,12 @@ theorem gradeInitial_natCast (n : ℕ) (a : 𝒜 (n : NatOrdinal)) :
     gradeInitial 𝒜 (n : NatOrdinal) a = idealGEMk 𝒜 n (mem_idealGE_of_mem 𝒜 le_rfl a.2) := by
   have h : (n : NatOrdinal) = ((n : NatOrdinal).constantCoeff : NatOrdinal) := by
     rw [NatOrdinal.constantCoeff_natCast]
-  rw [gradeInitial, dif_pos h]
+  rw [gradeInitial, dite_eq_left h]
   exact idealGEMk_congr_index 𝒜 (NatOrdinal.constantCoeff_natCast n) _
 
 theorem gradeInitial_of_not_natCast {α : NatOrdinal} (hα : ¬ ∃ n : ℕ, α = n) (a : 𝒜 α) :
     gradeInitial 𝒜 α a = 0 := by
-  rw [gradeInitial, dif_neg fun h ↦ hα ⟨_, h⟩]
+  rw [gradeInitial, dite_eq_right fun h ↦ hα ⟨_, h⟩]
   rfl
 
 /-- The sum of the classes in `gr_{I_•} A` of the homogeneous components of finite degree. -/

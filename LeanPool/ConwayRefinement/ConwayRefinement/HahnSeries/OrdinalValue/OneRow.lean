@@ -200,7 +200,7 @@ theorem withConstant_coeff_exponent (n : ℕ) :
   have hne : exponent n ≠ 0 := by
     rw [exponent_apply]
     exact (neg_lt_zero.mpr (by positivity)).ne
-  rw [HahnSeries.coeff_one, if_neg hne, add_zero]
+  rw [HahnSeries.coeff_one, ite_eq_right hne, add_zero]
 
 @[simp]
 theorem withConstant_coeff_zero :
@@ -222,7 +222,7 @@ theorem withConstant_support :
   · subst x
     simp [withConstant_coeff_zero]
   · have hone : (1 : K⟦ℝ⟧).coeff x = 0 := by
-      rw [HahnSeries.coeff_one, if_neg hx]
+      rw [HahnSeries.coeff_one, ite_eq_right hx]
     rw [HahnSeries.mem_support, withConstant, Subring.coe_add,
       HahnSeries.coeff_add, show ((1 : Series K) : K⟦ℝ⟧) = 1 from rfl,
       hone, add_zero, ← HahnSeries.mem_support, withoutConstant_support]

@@ -58,15 +58,15 @@ theorem det_ne_zero_of_algebraicIndependent {V : Type w} {f : V → A}
     by_cases hij : i = j
     · subst hij
       obtain ⟨w, hw⟩ := Option.isSome_iff_exists.mp (hdiag i)
-      rw [hw, if_pos rfl]
+      rw [hw, ite_eq_left rfl]
       simp only [Option.elim, MvPolynomial.eval_X, e]
-      rw [if_pos ⟨i, hw⟩]
-    · rw [if_neg hij]
+      rw [ite_eq_left ⟨i, hw⟩]
+    · rw [ite_eq_right hij]
       cases hv : v i j with
       | none => simp
       | some w =>
         simp only [Option.elim, MvPolynomial.eval_X, e]
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨i', hi'⟩
         obtain ⟨h1, h2⟩ := hdistinct i j i' i' w hv hi'
         exact hij (h1.trans h2.symm)

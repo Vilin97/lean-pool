@@ -133,14 +133,14 @@ theorem exists_forall_degree_translatedTruncLE_sub_sum_mul_lt (β : NatOrdinal.{
   · have hu' : ν (translatedTruncLE x u) < β := by
       by_cases hxm : x ∈ (u : HahnSeries G R).closedSupport
       · refine lt_of_le_of_ne (hu x hx) ?_
-        rw [degree_translatedTruncLE_eq, if_pos hxm]
+        rw [degree_translatedTruncLE_eq, ite_eq_left hxm]
         intro he
         apply hxl
         refine ⟨hxm, ?_⟩
         have hval := congrArg NatOrdinal.val (WithBot.coe_injective he)
         rw [NatOrdinal.val_of, cantorBendixsonRank_eq] at hval
         exact hval
-      · rw [degree_translatedTruncLE_eq, if_neg hxm]
+      · rw [degree_translatedTruncLE_eq, ite_eq_right hxm]
         exact hbot
     rw [map_sub, map_sum]
     refine ((ν).map_sub_le_max _ _).trans_lt (max_lt hu' ?_)

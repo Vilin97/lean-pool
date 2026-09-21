@@ -407,12 +407,12 @@ theorem boundaryNormalForm_length :
 theorem boundaryNormalForm_coeff_exponent (x : BoundaryIndex) :
     boundaryNormalForm.coeff (boundaryExponentAtIndex x) = 1 := by
   classical
-  rw [boundaryNormalForm_coeff, boundaryCoefficient, if_pos]
+  rw [boundaryNormalForm_coeff, boundaryCoefficient, ite_eq_left]
   exact ⟨x, rfl⟩
 
 theorem boundaryNormalForm_coeff_zero : boundaryNormalForm.coeff 0 = 0 := by
   classical
-  rw [boundaryNormalForm_coeff, boundaryCoefficient, if_neg]
+  rw [boundaryNormalForm_coeff, boundaryCoefficient, ite_eq_right]
   rintro ⟨x, hx⟩
   have hxpos := boundaryExponentAtIndex_pos x
   rw [hx] at hxpos

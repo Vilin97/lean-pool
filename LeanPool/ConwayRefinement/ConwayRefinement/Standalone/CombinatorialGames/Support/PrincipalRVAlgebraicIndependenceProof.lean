@@ -130,13 +130,13 @@ theorem ordinalValue_eq (a : nonpos K) : ordinalValue a = Berarducci.ordinalValu
   classical
   unfold ordinalValue
   by_cases hJ : MemJ a
-  · rw [if_pos hJ, Berarducci.ordinalValue_of_mem_negativeMonomialIdeal ((memJ_iff a).mp hJ)]
-  rw [if_neg hJ]
+  · rw [ite_eq_left hJ, Berarducci.ordinalValue_of_mem_negativeMonomialIdeal ((memJ_iff a).mp hJ)]
+  rw [ite_eq_right hJ]
   by_cases hN : IsNearConstant a
-  · rw [if_pos hN,
+  · rw [ite_eq_left hN,
       Berarducci.ordinalValue_of_mem_nearConstantSubgroup_of_not_mem_negativeMonomialIdeal
         ((isNearConstant_iff a).mp hN) (fun h ↦ hJ ((memJ_iff a).mpr h))]
-  rw [if_neg hN,
+  rw [ite_eq_right hN,
     Berarducci.ordinalValue_of_not_mem_nearConstantSubgroup
       (fun h ↦ hN ((isNearConstant_iff a).mpr h))]
   congr 1

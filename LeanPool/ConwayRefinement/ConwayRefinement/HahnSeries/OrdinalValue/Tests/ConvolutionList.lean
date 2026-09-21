@@ -25,7 +25,7 @@ open scoped HahnSeries
 /-- The empty product contributes only at cutoff zero. -/
 theorem convolutionIndexList_nil_one :
     Berarducci.convolutionIndexList ([] : List ℚ⟦ℝ⟧) 1 = ∅ := by
-  rw [Berarducci.convolutionIndexList_nil, if_neg one_ne_zero]
+  rw [Berarducci.convolutionIndexList_nil, ite_eq_right one_ne_zero]
 
 /-- Reading the formula at the empty list computes the germ of one away from zero. -/
 theorem germAt_one_at_one : Berarducci.germAt (1 : ℚ⟦ℝ⟧) 1 = 0 := by

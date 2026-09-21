@@ -160,7 +160,7 @@ theorem printedRepresentativeAdd_not_commutative :
           ((oneRepresentative : ℚ) + ((0 : trivialValuation.filtrationLE 0) : ℚ)) =
         trivialValuation oneRepresentative := by
     simp
-  rw [printedRepresentativeAdd, if_neg hzeroOne, printedRepresentativeAdd, if_pos honeZero]
+  rw [printedRepresentativeAdd, ite_eq_right hzeroOne, printedRepresentativeAdd, ite_eq_left honeZero]
   simp only [add_zero]
   exact oneRepresentative_componentMk_ne_zero.symm
 

@@ -89,8 +89,8 @@ theorem homogeneousMk_finsetSum_apply {ι : Type x} (s : Finset ι) (m : ι → 
   have hterm : ∀ i ∈ s, (ν.homogeneousMk (m i) ⟨y i, hy i⟩) d =
       if h : m i = d then ν.componentMk d ⟨y i, h ▸ hy i⟩ else 0 := fun i _ ↦ by
     by_cases h : m i = d
-    · rw [dif_pos h, ν.homogeneousMk_apply_of_eq (hy i) h]
-    · rw [dif_neg h, ν.homogeneousMk_apply_of_ne (hy i) h]
+    · rw [dite_eq_left h, ν.homogeneousMk_apply_of_eq (hy i) h]
+    · rw [dite_eq_right h, ν.homogeneousMk_apply_of_ne (hy i) h]
   rw [Finset.sum_congr rfl hterm, Finset.sum_dite, Finset.sum_const_zero, add_zero, ← map_sum]
   congr 1
   apply Subtype.ext
@@ -113,8 +113,8 @@ theorem initialForm_apply (y : R) (d : M) :
     have hmem : y ∈ ν.filtrationLE m := (ν.mem_filtrationLE_iff m y).mpr hm.symm.le
     rw [← ν.homogeneousMk_eq_initialForm_of_degree_eq hmem hm.symm]
     by_cases h : m = d
-    · rw [ν.homogeneousMk_apply_of_eq hmem h, dif_pos (by rw [← hm, h])]
-    · rw [ν.homogeneousMk_apply_of_ne hmem h, dif_neg]
+    · rw [ν.homogeneousMk_apply_of_eq hmem h, dite_eq_left (by rw [← hm, h])]
+    · rw [ν.homogeneousMk_apply_of_ne hmem h, dite_eq_right]
       intro h'
       rw [← hm, WithBot.coe_inj] at h'
       exact h h'

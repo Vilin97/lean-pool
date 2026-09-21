@@ -130,7 +130,7 @@ theorem translatedTruncation_zero (b : Series K) :
   rw [coeff_translatedTruncation]
   by_cases hδ : δ ≤ 0
   · simp [hδ]
-  · rw [if_neg hδ]
+  · rw [ite_eq_right hδ]
     apply Eq.symm
     apply not_ne_iff.mp
     rw [← HahnSeries.mem_support]
@@ -188,14 +188,14 @@ theorem germAt_eq_germAt_iff_exists_coeff_eq {b c : K⟦ℝ⟧} {γ : ℝ} :
     have hshiftLower : ε < δ - γ := by linarith
     have hshiftUpper : δ - γ ≤ 0 := by linarith
     have h := heq (δ - γ) hshiftLower hshiftUpper
-    rw [coeff_translatedTruncation, coeff_translatedTruncation, if_pos hshiftUpper,
-      if_pos hshiftUpper] at h
+    rw [coeff_translatedTruncation, coeff_translatedTruncation, ite_eq_left hshiftUpper,
+      ite_eq_left hshiftUpper] at h
     simpa [sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using h
   · rintro ⟨η, hη, heq⟩
     refine ⟨η - γ, by linarith, fun δ hεδ hδ0 ↦ ?_⟩
     have hLower : η < γ + δ := by linarith
     have hUpper : γ + δ ≤ γ := by linarith
-    rw [coeff_translatedTruncation, coeff_translatedTruncation, if_pos hδ0, if_pos hδ0]
+    rw [coeff_translatedTruncation, coeff_translatedTruncation, ite_eq_left hδ0, ite_eq_left hδ0]
     exact heq (γ + δ) hLower hUpper
 
 /-- A germ taken at a point outside the closure of the support vanishes. -/
@@ -207,7 +207,7 @@ theorem germAt_eq_zero_of_not_mem_closure_support {b : K⟦ℝ⟧} {γ : ℝ}
   have hzero : (0 : Germ K) = toGerm 0 := by simp
   rw [germAt_apply, hzero, toGerm_eq_toGerm_iff_exists_coeff_eq]
   refine ⟨-ε, by linarith, fun δ hδlow hδ0 ↦ ?_⟩
-  rw [coeff_translatedTruncation, if_pos hδ0]
+  rw [coeff_translatedTruncation, ite_eq_left hδ0]
   simp only [Subring.coe_zero, HahnSeries.coeff_zero]
   by_contra hcoeff
   have hmem : γ + δ ∈ b.support := (HahnSeries.mem_support _ _).mpr hcoeff

@@ -91,7 +91,7 @@ theorem convexQuotientSplit_filter_eq_closed_class_restrict
   rw [CardSuppLTTruncationIntegerPart.coe_closedClassRestrict,
     Nonpositive.closedClassRestrict_coeff]
   by_cases hzD : z ∈ D
-  · rw [if_pos hzD]
+  · rw [ite_eq_left hzD]
     change ((convexQuotientSplitRingEquiv P (t : R⟦G⟧)).coeff z).coeff p = _
     have hxcoeff := congrArg
       (fun y : (R⟦P⟧)⟦G ⧸ P⟧ ↦ (y.coeff z).coeff p)
@@ -100,10 +100,10 @@ theorem convexQuotientSplit_filter_eq_closed_class_restrict
     rw [CardSuppLTTruncationIntegerPart.coe_toNonpositiveRingHom]
     rw [coe_cardSuppLTTruncationIntegerPartConvexQuotientSplitRingEquiv]
     rw [hxcoeff]
-    simpa only [D, if_pos hzD] using hz
-  · rw [if_neg hzD]
+    simpa only [D, ite_eq_left hzD] using hz
+  · rw [ite_eq_right hzD]
     change ((convexQuotientSplitRingEquiv P (t : R⟦G⟧)).coeff z).coeff p = 0
-    simpa only [D, if_neg hzD, HahnSeries.coeff_zero] using hz
+    simpa only [D, ite_eq_right hzD, HahnSeries.coeff_zero] using hz
 
 private theorem ambient_factorization_of_closed_class_factorization
     (P : Submodule K G) [P.toAddSubgroup.IsConvex] (Z : Subring R)

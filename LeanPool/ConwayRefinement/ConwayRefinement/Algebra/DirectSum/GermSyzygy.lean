@@ -83,12 +83,12 @@ theorem exists_eq_sum_smul_of_mem_span {lam : B → NatOrdinal.{z}} {T : Finset 
   obtain ⟨r, _, hr⟩ := Submodule.mem_span_finset.mp hwN
   refine ⟨fun τ ↦ if h : ∃ ρ, ρ + eT τ = d then
       (decompose A (r τ) (Classical.choose h) : R) else 0,
-    fun τ _ ↦ ⟨fun ρ hρ ↦ ?_, fun h ↦ dif_neg h⟩, ?_⟩
+    fun τ _ ↦ ⟨fun ρ hρ ↦ ?_, fun h ↦ dite_eq_right h⟩, ?_⟩
   · have h : ∃ ρ, ρ + eT τ = d := ⟨ρ, hρ⟩
     have hρ' : ∀ h' : ∃ ρ, ρ + eT τ = d, Classical.choose h' = ρ := fun h' ↦
       add_right_cancel ((Classical.choose_spec h').trans hρ.symm)
     beta_reduce
-    rw [dif_pos h, hρ']
+    rw [dite_eq_left h, hρ']
     exact (decompose A (r τ) ρ).2
   · funext b
     rw [Finset.sum_apply]
@@ -121,9 +121,9 @@ theorem exists_eq_sum_smul_of_mem_span {lam : B → NatOrdinal.{z}} {T : Finset 
             rw [Classical.choose_spec h1]
             refine add_right_cancel (b := lam b) ?_
             rw [add_assoc, hβ', Classical.choose_spec h2, hβ]
-          rw [dif_pos h1, dif_pos h2, hch, mul_comm]
+          rw [dite_eq_left h1, dite_eq_left h2, hch, mul_comm]
         · have h2 : ¬ ∃ ρ, ρ + eT τ = d := fun h ↦ h1 (hiff.mpr h)
-          rw [dif_neg h1, dif_neg h2, zero_mul]
+          rw [dite_eq_right h1, dite_eq_right h2, zero_mul]
       · rw [(hT τ hτ).eq_zero hτb, mul_zero, ← GradedRing.proj_apply, map_zero, mul_zero]
     · -- no degree is forced: both sides vanish
       rw [hw.eq_zero hb]
@@ -134,7 +134,7 @@ theorem exists_eq_sum_smul_of_mem_span {lam : B → NatOrdinal.{z}} {T : Finset 
         have h2 : ¬ ∃ ρ, ρ + eT τ = d := fun ⟨ρ, hρ⟩ ↦
           hb ⟨ρ + β', by rw [add_assoc, hβ', hρ]⟩
         beta_reduce
-        rw [dif_neg h2, zero_mul]
+        rw [dite_eq_right h2, zero_mul]
       · rw [(hT τ hτ).eq_zero hτb, mul_zero]
 
 section Induction
@@ -266,7 +266,7 @@ theorem mem_span_of_isHomogeneousTuple_of_sum_eq_zero
     obtain ⟨W, hWon, hWoff⟩ : ∃ W : T → B → R, (∀ t ∈ V, W t = fun b ↦ D b t) ∧
         ∀ t ∉ V, W t = 0 :=
       ⟨fun t ↦ if t ∈ V then (fun b ↦ D b t) else 0,
-        fun t ht ↦ if_pos ht, fun t ht ↦ if_neg ht⟩
+        fun t ht ↦ ite_eq_left ht, fun t ht ↦ ite_eq_right ht⟩
     have hWhom : ∀ t, IsHomogeneousTuple A lam (W t) d' := fun t ↦ by
       by_cases ht : t ∈ V
       · rw [hWon t ht, hd'def]

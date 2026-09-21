@@ -251,7 +251,7 @@ theorem degLT_eq_zero_of_mem_vars_H {i : ι} (hD : degreeOf S.B₀ S.F = 1) (hi 
     exact hid' rfl
   have hid : i ∈ d.support := by
     rw [Finsupp.mem_support_iff] at hid' ⊢
-    rw [Finsupp.tsub_apply, Finsupp.single_apply, if_neg hi0.symm, Nat.sub_zero] at hid'
+    rw [Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right hi0.symm, Nat.sub_zero] at hid'
     exact hid'
   -- the parts below `β` of `d` add up to `α_{<β} = (deg B₀)_{<β}`, and `B₀` contributes all of it
   have hsum := S.sum_degLT_eq_αLT hd
@@ -328,7 +328,7 @@ theorem exists_eq_add_single_add_single {d : ι →₀ ℕ} {i u : ι} (hi : i �
   have hdi : 1 ≤ d i := Nat.one_le_iff_ne_zero.mpr (Finsupp.mem_support_iff.mp hi)
   have hdu : 1 ≤ d u := Nat.one_le_iff_ne_zero.mpr (Finsupp.mem_support_iff.mp hu)
   have h1 : Finsupp.single u 1 ≤ d - Finsupp.single i 1 := by
-    rw [Finsupp.single_le_iff, Finsupp.tsub_apply, Finsupp.single_apply, if_neg (Ne.symm hui)]
+    rw [Finsupp.single_le_iff, Finsupp.tsub_apply, Finsupp.single_apply, ite_eq_right (Ne.symm hui)]
     omega
   have h2 : Finsupp.single i 1 ≤ d := Finsupp.single_le_iff.mpr hdi
   rw [add_right_comm, tsub_add_cancel_of_le h1, tsub_add_cancel_of_le h2]

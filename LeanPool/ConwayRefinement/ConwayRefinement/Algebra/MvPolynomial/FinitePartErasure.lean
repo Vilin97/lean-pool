@@ -92,12 +92,12 @@ theorem eraseFinitePart_monomial (d : σ →₀ ℕ) (r : R) :
   split_ifs with h
   · obtain ⟨i, hi, hik⟩ := h
     rw [Finsupp.prod, Finset.prod_eq_zero hi (by
-      rw [if_pos hik, zero_pow (Finsupp.mem_support_iff.mp hi)]), mul_zero]
+      rw [ite_eq_left hik, zero_pow (Finsupp.mem_support_iff.mp hi)]), mul_zero]
   · rw [monomial_eq, algebraMap_eq]
     congr 1
     refine Finset.prod_congr rfl fun i hi ↦ ?_
     beta_reduce
-    rw [if_neg fun hik ↦ h ⟨i, hi, hik⟩]
+    rw [ite_eq_right fun hik ↦ h ⟨i, hi, hik⟩]
 
 /-- The substitution fixes a polynomial none of whose variable weights has constant Cantor
 coefficient `k`. -/
@@ -108,7 +108,7 @@ theorem eraseFinitePart_eq_self {G : MvPolynomial σ R}
   conv_rhs => rw [G.as_sum]
   conv_lhs => rw [G.as_sum, map_sum]
   refine Finset.sum_congr rfl fun d hd ↦ ?_
-  rw [eraseFinitePart_monomial, if_neg]
+  rw [eraseFinitePart_monomial, ite_eq_right]
   rintro ⟨i, hi, hik⟩
   exact hG i ((mem_vars_iff_mem_support i).mpr ⟨d, hd, hi⟩) hik
 

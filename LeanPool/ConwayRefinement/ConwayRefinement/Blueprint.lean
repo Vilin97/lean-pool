@@ -115,27 +115,29 @@ private structure CollectState where
 
 private abbrev CollectM := ReaderT CollectContext (StateM CollectState)
 
-private partial def collectSelected (name : Name) : CollectM Unit := do
-  let state ← get
-  unless state.visited.contains name do
-    modify fun state => { state with visited := state.visited.insert name }
-    let { environment, root } ← read
-    if name != root && (nodeExt.find? environment name).isSome then
-      modify fun state => { state with selected := state.selected.insert name }
-    else
-      let collectExpression (expression : Expr) : CollectM Unit :=
-        expression.getUsedConstants.forM collectSelected
-      match environment.find? name with
-      | some (.axiomInfo _) => pure ()
-      | some (.defnInfo value) => collectExpression value.type *> collectExpression value.value
-      | some (.thmInfo value) => collectExpression value.type *> collectExpression value.value
-      | some (.opaqueInfo value) => collectExpression value.type *> collectExpression value.value
-      | some (.quotInfo _) => pure ()
-      | some (.ctorInfo value) => collectExpression value.type
-      | some (.recInfo value) => collectExpression value.type
-      | some (.inductInfo value) =>
-          collectExpression value.type *> value.ctors.forM collectSelected
-      | none => pure ()
+private def collectSelected : Nat → Name → CollectM Unit
+  | 0, _ => pure ()
+  | fuel + 1, name => do
+    let state ← get
+    unless state.visited.contains name do
+      modify fun state => { state with visited := state.visited.insert name }
+      let { environment, root } ← read
+      if name != root && (nodeExt.find? environment name).isSome then
+        modify fun state => { state with selected := state.selected.insert name }
+      else
+        let collectExpression (expression : Expr) : CollectM Unit :=
+          expression.getUsedConstants.forM (collectSelected fuel)
+        match environment.find? name with
+        | some (.axiomInfo _) => pure ()
+        | some (.defnInfo value) => collectExpression value.type *> collectExpression value.value
+        | some (.thmInfo value) => collectExpression value.type *> collectExpression value.value
+        | some (.opaqueInfo value) => collectExpression value.type *> collectExpression value.value
+        | some (.quotInfo _) => pure ()
+        | some (.ctorInfo value) => collectExpression value.type
+        | some (.recInfo value) => collectExpression value.type
+        | some (.inductInfo value) =>
+            collectExpression value.type *> value.ctors.forM (collectSelected fuel)
+        | none => pure ()
 
 private def declarationType : ConstantInfo → Expr
   | .axiomInfo value | .defnInfo value | .thmInfo value | .opaqueInfo value |
@@ -153,11 +155,11 @@ private def collectDependencies (environment : Environment) (root : Name) :
   let some info := environment.find? root | return ({}, {})
   let mut statementState : CollectState := {}
   for name in (declarationType info).getUsedConstants do
-    (_, statementState) := ((collectSelected name).run { environment, root }).run statementState
+    (_, statementState) := ((collectSelected (environment.constants.toList.length + 1) name).run { environment, root }).run statementState
   let mut proofState := statementState
   if let some value := declarationValue? info then
     for name in value.getUsedConstants do
-      (_, proofState) := ((collectSelected name).run { environment, root }).run proofState
+      (_, proofState) := ((collectSelected (environment.constants.toList.length + 1) name).run { environment, root }).run proofState
   return (statementState.selected, proofState.selected \ statementState.selected)
 
 private def namesJson (names : NameSet) : Json :=

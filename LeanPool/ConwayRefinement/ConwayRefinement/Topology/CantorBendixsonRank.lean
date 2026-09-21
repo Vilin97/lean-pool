@@ -50,13 +50,13 @@ namespace TopologicalSpace.Closeds
 theorem exists_notMem_cantorBendixson_succ (s : Closeds X) (hs : (s : Set X).IsPWO) (x : X) :
     ∃ o : Ordinal.{u}, x ∉ (s.cantorBendixson (o + 1) : Set X) := by
   classical
-  letI : WellFoundedLT (s : Set X) := ⟨hs.isWF⟩
+  letI : WellFoundedLT (s : Set X) := hs.isWF
   let r (y : X) : Ordinal.{u} :=
     if h : y ∈ s then Ordinal.typein (α := (s : Set X)) (· < ·) ⟨y, h⟩ else 0
   have hr : ∀ y ∈ s, ∀ᶠ z in 𝓝 y, z ∈ s → z ≠ y → r z < r y := by
     intro y hy
     filter_upwards [hs.eventually_le y] with z hz hzs hzy
-    simp only [r, dif_pos hzs, dif_pos hy, Ordinal.typein_lt_typein]
+    simp only [r, dite_eq_left hzs, dite_eq_left hy, Ordinal.typein_lt_typein]
     exact (lt_of_le_of_ne (hz hzs) hzy : z < y)
   refine ⟨r x, fun hx ↦ ?_⟩
   exact (not_le_of_gt (Order.lt_succ (r x)))

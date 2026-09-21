@@ -96,7 +96,7 @@ theorem count_reduced_of_ne {w : FormalExpression K} {hw : w ≠ 0} {t : FormalE
     Multiset.count y (reduced w hw t) = 2 * Multiset.count y w := by
   rw [reduced, unselected]
   simp only [Multiset.count_add, Multiset.count_replicate, Multiset.count_filter,
-    if_neg (Ne.symm hy), if_pos hy, Multiset.count_eq_zero.mpr hyt]
+    ite_eq_right (Ne.symm hy), ite_eq_left hy, Multiset.count_eq_zero.mpr hyt]
   omega
 
 /-- The selected factor survives the reduction exactly when its exponent exceeds one. -/

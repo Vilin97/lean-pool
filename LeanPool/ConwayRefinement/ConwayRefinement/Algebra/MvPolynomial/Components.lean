@@ -32,25 +32,25 @@ variable {σ : Type u} {R : Type v} [CommRing R] (wt : σ → NatOrdinal)
 at least `τ`. -/
 noncomputable def componentsGE (τ : NatOrdinal) (P : MvPolynomial σ R) : MvPolynomial σ R := by
   classical
-  exact ∑ d ∈ P.support.filter fun d ↦ τ ≤ Finsupp.weight wt d, monomial d (coeff d P)
+  exact ∑ d ∈ P.support.filter fun d ↦ τ ≤ Finsupp.weight wt d, monomial d (AddMonoidAlgebra.coeff P d)
 
 open Classical in
 theorem coeff_componentsGE (τ : NatOrdinal) (P : MvPolynomial σ R) (d : σ →₀ ℕ) :
-    coeff d (componentsGE wt τ P) = if τ ≤ Finsupp.weight wt d then coeff d P else 0 := by
+    AddMonoidAlgebra.coeff (componentsGE wt τ P) d = if τ ≤ Finsupp.weight wt d then AddMonoidAlgebra.coeff P d else 0 := by
   classical
   rw [componentsGE]
   simp only [coeff_sum, coeff_monomial]
   split_ifs with hτ
   · rw [Finset.sum_eq_single d]
-    · rw [if_pos rfl]
+    · rw [ite_eq_left rfl]
     · intro d' _ hd'
-      rw [if_neg hd']
+      rw [ite_eq_right hd']
     · intro hd
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       by_contra h
       exact hd (Finset.mem_filter.mpr ⟨mem_support_iff.mpr h, hτ⟩)
   · refine Finset.sum_eq_zero fun d' hd' ↦ ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro rfl
     exact hτ (Finset.mem_filter.mp hd').2
 
@@ -58,14 +58,14 @@ theorem componentsGE_add (τ : NatOrdinal) (P Q : MvPolynomial σ R) :
     componentsGE wt τ (P + Q) = componentsGE wt τ P + componentsGE wt τ Q := by
   classical
   ext d
-  simp only [coeff_componentsGE, coeff_add]
+  simp only [AddMonoidAlgebra.coeff_add, Finsupp.add_apply, coeff_componentsGE]
   split_ifs <;> simp
 
 theorem componentsGE_neg (τ : NatOrdinal) (P : MvPolynomial σ R) :
     componentsGE wt τ (-P) = -componentsGE wt τ P := by
   classical
   ext d
-  have hneg : ∀ Q : MvPolynomial σ R, coeff d (-Q) = -coeff d Q := fun Q ↦ by
+  have hneg : ∀ Q : MvPolynomial σ R, AddMonoidAlgebra.coeff (-Q) d = -AddMonoidAlgebra.coeff Q d := fun Q ↦ by
     change (coeffAddMonoidHom d) (-Q) = -(coeffAddMonoidHom d) Q
     exact map_neg _ _
   rw [hneg, coeff_componentsGE, coeff_componentsGE, hneg]
@@ -93,7 +93,7 @@ theorem componentsGE_eq_zero_of_forall_lt {τ : NatOrdinal} {P : MvPolynomial σ
     (hP : ∀ d ∈ P.support, Finsupp.weight wt d < τ) : componentsGE wt τ P = 0 := by
   classical
   ext d
-  rw [coeff_componentsGE, coeff_zero]
+  rw [coeff_componentsGE, AddMonoidAlgebra.coeff_zero]
   split_ifs with hτ
   · by_contra h
     exact absurd (hP d (mem_support_iff.mpr h)) (not_lt.mpr hτ)

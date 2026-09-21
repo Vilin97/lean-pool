@@ -130,7 +130,7 @@ theorem isReduced_of_T_eq_self_of_tau_eq_one (c : FiniteArchimedeanClass G)
     have hcoeff := congrArg (fun y : Nonpositive G R ↦ (y : R⟦G⟧).coeff g) htau
     rw [coeff_tau_of_mem (K := K) c x hball] at hcoeff
     change (x : R⟦G⟧).coeff g = (1 : R⟦G⟧).coeff g at hcoeff
-    rw [HahnSeries.coeff_one, if_neg hg0] at hcoeff
+    rw [HahnSeries.coeff_one, ite_eq_right hg0] at hcoeff
     exact (HahnSeries.mem_support _ _).mp hg hcoeff
   have hle := (FiniteArchimedeanClass.mem_closedBall_iff K).mp hgClosed hg0
   have hnlt : ¬ c < FiniteArchimedeanClass.mk g hg0 := fun hlt ↦
@@ -153,7 +153,7 @@ theorem IsReduced.supportArchimedeanClasses_finite {x : Nonpositive G R} (hx : I
     refine ⟨hg, ?_⟩
     rw [HahnSeries.mem_support]
     change ((x : R⟦G⟧) - 1).coeff g ≠ 0
-    rw [HahnSeries.coeff_sub, HahnSeries.coeff_one, if_neg hg0, sub_zero]
+    rw [HahnSeries.coeff_sub, HahnSeries.coeff_one, ite_eq_right hg0, sub_zero]
     exact (HahnSeries.mem_support _ _).mp hg
 
 end Ring

@@ -125,10 +125,10 @@ theorem translatedTruncation_approachZero_neg_one :
   · by_cases hδNonpositive : δ ≤ 0
     · have hδNeg : δ < 0 := lt_of_le_of_ne hδNonpositive hδ
       have hlt : -1 + δ < -1 := by linarith
-      rw [if_pos hδNonpositive,
+      rw [ite_eq_left hδNonpositive,
         approachZero_coeff_eq_zero_of_lt_neg_one hlt]
       simp [hδ]
-    · rw [if_neg hδNonpositive]
+    · rw [ite_eq_right hδNonpositive]
       simp [hδ]
 
 /-- The least exponent is a residual point, whereas zero fails the value equation and is
