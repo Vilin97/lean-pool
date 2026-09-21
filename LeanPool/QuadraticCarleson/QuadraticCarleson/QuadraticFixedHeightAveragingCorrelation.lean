@@ -93,7 +93,7 @@ theorem annularQuadraticKernel_correlation_le_ordered
   have hP : 0 ≤ P := by dsimp [P]; positivity
   have hpnorm (t : ℝ) : ‖p t‖ ≤ P := by
     calc
-      ‖p t‖ = ‖a (x - t)‖ * ‖b (y - t)‖ := by simp [p, norm_mul]
+      ‖p t‖ = ‖a (x - t)‖ * ‖b (y - t)‖ := by simp [p]
       _ ≤ (D / R) * (D / S) :=
         mul_le_mul (hab _) (hbb _) (norm_nonneg _) (by positivity)
       _ = D ^ 2 / (R * S) := by ring
@@ -185,7 +185,8 @@ theorem finite_annularQuadraticKernel_maximal_sq_lintegral_le
     unfold annularQuadraticKernel phase
     fun_prop
   have hs (i : Fin (n + 1)) : HasCompactSupport (annularQuadraticKernel (a i) (lam i)) := by
-    apply HasCompactSupport.of_support_subset_isCompact (isCompact_Icc : IsCompact (Icc (r i / 4) (r i)))
+    apply HasCompactSupport.of_support_subset_isCompact (isCompact_Icc : IsCompact (Icc (r i /
+      4) (r i)))
     intro t ht
     apply hsupp i
     intro hz
@@ -196,6 +197,6 @@ theorem finite_annularQuadraticKernel_maximal_sq_lintegral_le
       annularQuadraticKernel_correlation_le (hr i) (hr j) hH hD hu hu1 hdecay
         (hheight i).1 (hheight i).2 (hheight j).1 (hheight j).2
         (ha i) (ha' i) (ha j) (ha' j) (hsupp i) (hsupp j) (hb i) (hb' i) (hb j) (hb' j) x y) hf
-  convert h using 1 <;> congr 2 <;> ring
+  convert h using 1; congr 2; ring
 
 end QuadraticCarleson

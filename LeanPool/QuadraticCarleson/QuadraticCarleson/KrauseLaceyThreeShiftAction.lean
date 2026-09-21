@@ -22,8 +22,10 @@ namespace KrauseLaceyThreeShiftGrid
 open KrauseLaceyStoppingRecursion
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for interval indices in this finite stopping construction. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- Fixed-shift families from different depths cannot share an interval. -/
@@ -106,7 +108,7 @@ theorem localizedTailAction_finiteOneShiftMultiscaleFamily
   intro depth hdepth
   by_cases hcut : (2 : ℝ) ^ ell ≤
       (2 : ℝ) ^ (topScale - (depth : ℤ) + 2)
-  · rw [if_pos hcut]
+  · rw [ite_eq_left hcut]
     unfold krauseLaceyFixedScaleLocalizedSum
     apply Finset.sum_congr rfl
     intro I hI
@@ -115,8 +117,8 @@ theorem localizedTailAction_finiteOneShiftMultiscaleFamily
         (finiteShiftGridInterval topScale shift depth
           (finiteShiftGridAddress depth n).2) = topScale - (depth : ℤ) := by
       simp only [finiteShiftGridScale, finiteShiftGridDepth_interval]
-    rw [finiteShiftGridInterval_length_eq_scale, hscale, if_pos hcut]
-  · rw [if_neg hcut]
+    rw [finiteShiftGridInterval_length_eq_scale, hscale, ite_eq_left hcut]
+  · rw [ite_eq_right hcut]
     apply Finset.sum_eq_zero
     intro I hI
     rcases mem_finiteOneShiftFamily hI with ⟨n, _, _, rfl⟩
@@ -124,7 +126,7 @@ theorem localizedTailAction_finiteOneShiftMultiscaleFamily
         (finiteShiftGridInterval topScale shift depth
           (finiteShiftGridAddress depth n).2) = topScale - (depth : ℤ) := by
       simp only [finiteShiftGridScale, finiteShiftGridDepth_interval]
-    rw [finiteShiftGridInterval_length_eq_scale, hscale, if_neg hcut]
+    rw [finiteShiftGridInterval_length_eq_scale, hscale, ite_eq_right hcut]
 
 /-- Summing the three fixed-scale grid pieces recovers the localized sum on
 the full central-third partition, with no duplicated interval. -/
@@ -172,7 +174,7 @@ theorem sum_fixedScaleLocalizedSum_eq_globalConvolution
     _ = _ := by rw [hinput]
 
 /-- The sum of the three finite multiscale tail actions is the exact finite
-positive-half dyadic convolution tail.  This is the operator-level bridge
+positive-half dyadic convolution tail. This is the operator-level bridge
 from the three-grid forest to the positive-half smooth-truncation
 approximants; the negative half is obtained separately by reflection. -/
 theorem sum_localizedTailAction_eq_finite_globalTail
@@ -197,10 +199,10 @@ theorem sum_localizedTailAction_eq_finite_globalTail
   intro depth hdepth
   by_cases hcut : (2 : ℝ) ^ ell ≤
       (2 : ℝ) ^ (topScale - (depth : ℤ) + 2)
-  · simp only [if_pos hcut]
+  · simp only [ite_eq_left hcut]
     exact sum_fixedScaleLocalizedSum_eq_globalConvolution
       f topScale depth (E depth) (hinput depth hdepth) x
-  · simp only [if_neg hcut, Finset.sum_const_zero]
+  · simp only [ite_eq_right hcut, Finset.sum_const_zero]
 
 /-- Complete finite deterministic bridge for the positive half: for any
 finite set of depths there are concrete support-covering interval families,
@@ -234,7 +236,7 @@ theorem exists_threeShiftForests_globalTail
       f topScale ell depths E (fun depth hdepth ↦ (hE depth).2.2) x
 
 /-- One choice of the three localized families works simultaneously for every
-physical lower cutoff and every observation point.  This is the form needed
+physical lower cutoff and every observation point. This is the form needed
 for the maximal truncation; the covering families depend only on the compact
 support of `f`, not on the cutoff or the point. -/
 theorem exists_threeShiftForests_globalTail_all_thresholds

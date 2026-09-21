@@ -25,6 +25,7 @@ namespace PositiveHighHeightEstimate
 
 open CalderonZygmundLevelAtoms PositiveLevelIntegration PositiveEndpointOptimization
 
+/-- The exponentially growing height cutoff for the full modulation endpoint. -/
 def fullHighCutoff (k : ℕ) : ℕ := 20 * 2 ^ k
 
 theorem cast_fullHighCutoff (k : ℕ) : (fullHighCutoff k : ℝ) = fullCutoff 20 k := by
@@ -34,6 +35,7 @@ theorem fullHighCutoff_pos (k : ℕ) : 0 < fullHighCutoff k := by
   unfold fullHighCutoff
   positivity
 
+/-- The series of high-frequency prefactors at the full endpoint cutoffs. -/
 noncomputable def fullHighPrefactorSeries : ℝ≥0∞ :=
   ∑' k : ℕ, ENNReal.ofReal (highFrequencyPrefactor (1 / 10) (fullAmplitude k) (fullCutoff 20 k))
 
@@ -63,6 +65,7 @@ theorem tsum_fullHighPrefactor :
   rw [ENNReal.tsum_mul_left]
   norm_num [fullHighPrefactorSeries]
 
+/-- The high-height endpoint constant obtained from the squared tail bound and prefactor series. -/
 noncomputable def fullHighEndpointConstant : ℝ≥0∞ :=
   highHeightTailConstant ^ 2 * (4 * fullHighPrefactorSeries) * 80
 

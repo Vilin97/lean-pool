@@ -25,7 +25,8 @@ open CalderonZygmundDyadicStopping
 open KrauseLaceyStoppingExtraction KrauseLaceyStoppingRecursion
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Every represented descendant interval lies inside the represented root. -/
 theorem finiteShiftGridInterval_subset_root
@@ -213,7 +214,7 @@ theorem completeFiniteShiftGridTree_subset_root
 
 /-- Every interval belongs to the complete tree below its canonical
 depth-zero ancestor whenever that tree is retained at least to the interval's
-depth.  The ancestor address is Euclidean division by `2 ^ depth`; this is
+depth. The ancestor address is Euclidean division by `2 ^ depth`; this is
 valid for negative addresses as well. -/
 theorem finiteShiftGridInterval_mem_completeAncestorTree_of_le
     (topScale : ℤ) (shift : Fin 3) (maxDepth depth : ℕ) (q : ℤ)

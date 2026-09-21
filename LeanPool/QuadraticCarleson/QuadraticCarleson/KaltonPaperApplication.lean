@@ -31,6 +31,7 @@ def HasExtendedWeakL1Bound {X : Type*} [MeasurableSpace X]
   0 ≤ A ∧ ∀ a : ℝ, 0 < a →
     ENNReal.ofReal a * μ {x | ENNReal.ofReal a < F x} ≤ ENNReal.ofReal A
 
+/-- The pointwise supremum of a family of extended nonnegative outputs. -/
 noncomputable def blockSupremum {X ι : Type*} (F : ι → X → ℝ≥0∞) (x : X) : ℝ≥0∞ :=
   ⨆ τ, F τ x
 
@@ -92,6 +93,8 @@ theorem hasWeakL1Bound_capOutput {X : Type*} [MeasurableSpace X]
     (ne_top_of_le_ne_top (by finiteness) (min_le_left _ _))).mpr hlt).trans_le
       (min_le_right _ _)
 
+/-- The first `N` outputs capped at height `M` and converted to real values, extended by zero to
+later indices. -/
 noncomputable def finiteCapSequence {X : Type*}
     (F : ℕ → X → ℝ≥0∞) (N M k : ℕ) (x : X) : ℝ :=
   if k < N then capOutput (F k) M x else 0
@@ -132,6 +135,7 @@ theorem hasWeakL1Bound_finiteCapSequence {X : Type*} [MeasurableSpace X]
       ofPred_false, measure_empty, mul_zero]
     exact bot_le
 
+/-- The sum of the first `N` extended nonnegative outputs, each capped at height `M`. -/
 noncomputable def partialCap {X : Type*} (F : ℕ → X → ℝ≥0∞)
     (N M : ℕ) (x : X) : ℝ≥0∞ :=
   ∑ k ∈ Finset.range N, min (M : ℝ≥0∞) (F k x)

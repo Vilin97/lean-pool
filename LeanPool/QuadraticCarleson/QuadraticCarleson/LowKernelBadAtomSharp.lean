@@ -10,10 +10,10 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.LowOscillatoryMajorant
 /-!
 # Sharp low-kernel estimate for a cancellative bad atom
 
-The derivative estimate alone gives a bound growing like `2^(2B)`.  The
+The derivative estimate alone gives a bound growing like `2^(2B)`. The
 paper obtains the sharp `O(B)` estimate by taking the minimum of that
 cancellation bound and the `1 / |t|` size bound for the telescoped low
-kernel.  This file proves the resulting common pointwise majorant uniformly
+kernel. This file proves the resulting common pointwise majorant uniformly
 in the modulation parameter `lam`, then integrates it with
 `integral_lowDecayMajorant_two_pow_le`.
 -/
@@ -116,7 +116,7 @@ theorem norm_setIntegral_paperLowCZKernel_le_cancellation
       unfold lowKernelCZConstant
       ring
 
-/-- Sharp pointwise bad-atom estimate.  Its right-hand side is independent
+/-- Sharp pointwise bad-atom estimate. Its right-hand side is independent
 of `lam`, so it is also a common pointwise majorant for any modulation
 supremum. -/
 theorem norm_setIntegral_paperLowCZKernel_le_lowDecayMajorant
@@ -183,7 +183,7 @@ theorem lowDecayMajorant_mono_length
   exact div_le_div_of_nonneg_right
     (mul_le_mul_of_nonneg_left hℓ hD) (sq_nonneg |x - z|)
 
-/-- The sharp integrated estimate outside the triple interval.  The
+/-- The sharp integrated estimate outside the triple interval. The
 constant is absolute and the estimate is uniform in `lam`. -/
 theorem integral_norm_paperLowCZKernel_le_sharp
     {lam : ℝ} (hlam : lam ≠ 0) (B : ℕ)

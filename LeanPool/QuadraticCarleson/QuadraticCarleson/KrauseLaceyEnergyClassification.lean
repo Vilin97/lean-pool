@@ -13,12 +13,12 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardGenera
 The monomial proof, https://arxiv.org/pdf/1609.01564v2, Section 4 (Lemma
 4.6, pp. 8--9, and the diagonal calculation (4.16)--(4.18), p. 11), uses
 the near and far terms of the
-correlation estimate (2.4).  The a.e. pointwise predicate `IsNonstandard`
+correlation estimate (2.4). The a.e. pointwise predicate `IsNonstandard`
 in the older module has no valid complementary uniform pointwise bound.
 This module therefore introduces a distinct, explicitly scalar energy
-test.  It does not identify this test with the negation of that predicate.
+test. It does not identify this test with the negation of that predicate.
 
-We prove the actual near-plus-far energy inequality first.  Comparing
+We prove the actual near-plus-far energy inequality first. Comparing
 the actual energy with 100 times its positive near term then gives an
 exhaustive partition with both required energy consequences.
 
@@ -374,12 +374,15 @@ noncomputable def energyEligibleIntervals
   (goodCollection S f 0 I₀).filter fun I ↦
     I.length = (2 : ℝ) ^ (scale I + 2) ∧ k₀ ≤ scale I + 2 - s
 
+/-- The eligible intervals satisfying the nonstandard energy condition for their bad-scale
+input. -/
 noncomputable def energyNonstandardIntervals
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) : Finset RealInterval :=
   (energyEligibleIntervals S f I₀ k₀ s scale).filter fun I ↦
     IsEnergyNonstandard (scale I) I (badScaleInput S f I₀ k₀ (scale I + 2 - s))
 
+/-- The eligible intervals satisfying the standard energy condition for their bad-scale input. -/
 noncomputable def energyStandardIntervals
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) : Finset RealInterval :=

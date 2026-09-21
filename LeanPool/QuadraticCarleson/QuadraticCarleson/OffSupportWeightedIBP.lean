@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.OffSupportPacketDerivatives
 # Weighted off-support integration by parts
 
 The exact one-step recurrence for arbitrary packet derivatives and denominator
-powers.  All integrations by parts take place strictly away from the pole.
+powers. All integrations by parts take place strictly away from the pole.
 -/
 
 open Function MeasureTheory Set
@@ -19,6 +19,8 @@ open scoped Interval
 
 namespace QuadraticCarleson
 
+/-- The complex coefficient multiplying the spatial displacement when differentiating the
+quadratic phase. -/
 noncomputable def quadraticOscillatoryCoeff (lam : ℝ) : ℂ :=
   ((-(4 * Real.pi * lam) : ℝ) : ℂ) * Complex.I
 
@@ -34,6 +36,8 @@ theorem norm_quadraticOscillatoryCoeff (lam : ℝ) :
     Complex.norm_I, mul_one, abs_neg, abs_mul, abs_of_nonneg Real.pi_pos.le]
   norm_num
 
+/-- The oscillatory action with a differentiated wave packet and an inverse-power spatial
+weight. -/
 noncomputable def offSupportWeightedAction (lam : ℝ) (r q : ℕ) (s t x : ℝ) : ℂ :=
   ∫ u : ℝ, (iteratedWavePacketDeriv r s t u : ℂ) *
     phase (lam * (x - u) ^ 2) / ((x - u : ℝ) : ℂ) ^ q

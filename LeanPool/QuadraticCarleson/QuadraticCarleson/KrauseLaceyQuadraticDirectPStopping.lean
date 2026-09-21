@@ -31,7 +31,8 @@ open KrauseLaceyStoppingExtraction KrauseLaceyStoppingRecursion
 open KrauseLaceyThreeShiftGrid
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The universal extended-nonnegative coefficient remaining after the
 normalized offset summation. -/
@@ -80,7 +81,7 @@ theorem exists_nat_strictUpperBound_finset_int
   exact hle.trans_lt hlt
 
 /-- A localized quadratic piece depends only on the almost-everywhere class
-of its input.  Translation of the exceptional null set is justified by
+of its input. Translation of the exceptional null set is justified by
 Lebesgue invariance. -/
 theorem krauseLaceyLocalizedPiece_congr_ae
     {f g : ℝ → ℂ} (hfg : f =ᵐ[volume] g)
@@ -111,7 +112,7 @@ theorem localizedTailMaximal_congr_ae
   apply Finset.sum_congr rfl
   intro I hI
   by_cases hlen : (2 : ℝ) ^ ell.1 ≤ I.length
-  · simp only [localizedTailAction, hlen, if_pos]
+  · simp only [ hlen, ite_eq_left]
     exact krauseLaceyLocalizedPiece_congr_ae hfg (scale I) I x
   · simp [hlen]
 
@@ -124,7 +125,7 @@ theorem localizedTailMaximal_zero
     krauseLaceyLocalizedPiece]
 
 /-- A zero positive local `L^p` average means that the function vanishes
-almost everywhere on that interval.  The conclusion is phrased using the
+almost everywhere on that interval. The conclusion is phrased using the
 root restriction needed by the direct quadratic estimate. -/
 theorem intervalRestrictionL0Infinity_ae_eq_zero_of_localAverage_eq_zero
     (g : L0Infinity) (I : RealInterval) {p : ℝ} (hp : 0 < p)
@@ -184,7 +185,6 @@ theorem pStopping_good_part_pairing_directQuadratic_of_pos_averages
     (S : Finset RealInterval) (I : RealInterval) (f g : L0Infinity)
     (hell : 3 ≤ ell₀)
     (hS : S ⊆ completeFiniteShiftGridTree topScale shift maxDepth q₀)
-    (hI : I ∈ completeFiniteShiftGridTree topScale shift maxDepth q₀)
     (hsub : ∀ J ∈ S, J.carrier ⊆ I.carrier)
     (ha : 0 < localAverage 1 f I) (hb : 0 < localAverage p g I) :
     (∫⁻ x, localizedTailMaximal ell₀ (finiteShiftGridScale topScale shift)
@@ -395,7 +395,7 @@ theorem hasOneNodePStoppingGoodPartPairingBound_directQuadratic :
   · by_cases hb : 0 < localAverage p g I
     · exact pStopping_good_part_pairing_directQuadratic_of_pos_averages
         hp hp2 ell₀ topScale shift maxDepth q₀ S I f g
-        hell hS hI hsub ha hb
+        hell hS hsub ha hb
     · have hb0 : localAverage p g I = 0 :=
         le_antisymm (le_of_not_gt hb) (localAverage_nonneg p g I)
       have hgzero :=

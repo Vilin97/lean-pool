@@ -24,6 +24,7 @@ namespace PositiveLowFullEstimate
 open CalderonZygmundLevelAtoms LowKernelLevelSummation
 open PositiveEndpointOptimization PositiveLevelIntegration PositiveHighHeightEstimate
 
+/-- The decaying low-frequency atom bound outside the tripled supporting interval. -/
 noncomputable def lowAtomMajorant (B : ℕ) (b : ℝ → ℂ) (z R x : ℝ) : ℝ≥0∞ :=
   (tripleCenteredInterval z R)ᶜ.indicator (fun x ↦
     ENNReal.ofReal (lowKernelBadAtomConstant * ∫ y, ‖b y‖) *
@@ -84,6 +85,7 @@ theorem paperLowBadAtomMaximal_levelAtom_le_majorant
     (lowDecayMajorant_mono_length (by positivity) (by linarith : R ≤ 3 * R / 2))
     (mul_nonneg lowKernelBadAtomConstant_nonneg (integral_nonneg fun _ ↦ norm_nonneg _))
 
+/-- The sum of low-frequency atom majorants at a fixed magnitude level. -/
 noncomputable def lowLevelMajorant {ι : Type*} (B : ℕ) (A : ℕ → ℝ) (f : ℝ → ℂ)
     (k : ℕ) (z R : ι → ℝ) (x : ℝ) : ℝ≥0∞ :=
   ∑' i, lowAtomMajorant B (levelAtom A f k (z i) (R i)) (z i) (R i) x
@@ -116,6 +118,7 @@ theorem lintegral_lowLevelMajorant_le {ι : Type*} [Countable ι]
   congr 1
   ring
 
+/-- The sum of the low-frequency level majorants with the full endpoint cutoffs. -/
 noncomputable def fullLowMajorant {ι : Type*} (f : ℝ → ℂ) (z R : ι → ℝ)
     (x : ℝ) : ℝ≥0∞ :=
   ∑' k : ℕ, lowLevelMajorant (fullHighCutoff k) fullAmplitude f k z R x
@@ -124,6 +127,7 @@ theorem measurable_fullLowMajorant {ι : Type*} [Countable ι]
     (f : ℝ → ℂ) (z R : ι → ℝ) : Measurable (fullLowMajorant f z R) :=
   Measurable.tsum (fun k ↦ measurable_lowLevelMajorant (fullHighCutoff k) _ _ k z R)
 
+/-- The explicit constant for the full low-frequency endpoint estimate. -/
 noncomputable def fullLowEndpointConstant : ℝ≥0∞ :=
   ENNReal.ofReal (1280 * lowKernelBadAtomConstant)
 

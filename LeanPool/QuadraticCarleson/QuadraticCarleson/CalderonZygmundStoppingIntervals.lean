@@ -10,7 +10,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDyadicStoppin
 # Converting canonical dyadic stopping cells to centered intervals
 
 The analytic atom estimates use a center and a length, while the canonical
-stopping construction uses half-open dyadic cells.  The project's centered
+stopping construction uses half-open dyadic cells. The project's centered
 interval convention is also half-open, so this file supplies an exact set
 identity and transfers literal pairwise disjointness without a boundary loss.
 -/
@@ -24,7 +24,8 @@ namespace CalderonZygmundStoppingIntervals
 open CalderonZygmundDyadicStopping
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Center of the canonical half-open stopping interval. -/
 def stoppingCenter {f : ℝ → ℂ} (c : stoppingCell f) : ℝ :=

@@ -10,14 +10,14 @@ import Mathlib.Analysis.Distribution.TemperedDistribution
 # The principal-value distribution `p.v. (1 / x)`
 
 This file constructs the Hilbert-transform kernel directly from Parissis's
-cancelled integral formula.  On a Schwartz test function `f`, the pairing is
+cancelled integral formula. On a Schwartz test function `f`, the pairing is
 
 `∫_{|x|<1} (f(x)-f(0))/x dx + ∫_{|x|≥1} f(x)/x dx`.
 
 The cancellation controls the singularity by the first derivative Schwartz
-seminorm, while Schwartz decay controls the tail.  The resulting functional
-is continuous, hence a tempered distribution.  `PVSymmetricLimit.lean` proves
-that it is exactly the limit of symmetric truncations.  We also define the
+seminorm, while Schwartz decay controls the tail. The resulting functional
+is continuous, hence a tempered distribution. `PVSymmetricLimit.lean` proves
+that it is exactly the limit of symmetric truncations. We also define the
 Fourier-side candidate `-π i · 𝓕⁻ sign`; identifying it with the direct
 construction is kept as a theorem rather than assumed by definition.
 -/
@@ -59,13 +59,13 @@ theorem signTemperedDistribution_apply (f : 𝓢(ℝ, ℂ)) :
   rfl
 
 /-- The symmetric truncation of the principal-value pairing with a Schwartz
-test function.  The set of integration is exactly `{x | ε < |x|}`, so the
+test function. The set of integration is exactly `{x | ε < |x|}`, so the
 same radius is removed on the positive and negative sides of the origin. -/
 noncomputable def principalValueTruncation (ε : ℝ) (f : 𝓢(ℝ, ℂ)) : ℂ :=
   ∫ x in {x : ℝ | ε < |x|}, f x / (x : ℂ)
 
 /-- A symmetric truncation is an ordinary Bochner integral whenever the
-deleted radius is positive.  Thus no value is assigned at the singularity
+deleted radius is positive. Thus no value is assigned at the singularity
 and no principal-value limit is being assumed here. -/
 theorem integrableOn_schwartz_div_id {ε : ℝ} (hε : 0 < ε) (f : 𝓢(ℝ, ℂ)) :
     IntegrableOn (fun x : ℝ ↦ f x / (x : ℂ)) {x : ℝ | ε < |x|} := by
@@ -84,7 +84,7 @@ theorem integrableOn_schwartz_div_id {ε : ℝ} (hε : 0 < ε) (f : 𝓢(ℝ, �
         ((inv_le_inv₀ (hε.trans hx) hε).2 (le_of_lt hx)) (norm_nonneg _)
     _ = ε⁻¹ * ‖f x‖ := mul_comm _ _
 
-/-- The first Schwartz seminorm controls increments of a test function.  This
+/-- The first Schwartz seminorm controls increments of a test function. This
 is the mean-value estimate used to cancel the singularity in `p.v. (1 / x)`. -/
 theorem norm_schwartz_sub_le_derivSeminorm (f : 𝓢(ℝ, ℂ)) (x y : ℝ) :
     ‖f y - f x‖ ≤ SchwartzMap.seminorm ℂ 0 1 f * |y - x| := by
@@ -294,7 +294,7 @@ theorem principalValueOneDiv_apply (f : 𝓢(ℝ, ℂ)) :
     principalValueOneDiv f = principalValuePairing f := by
   rfl
 
-/-- The Fourier-side candidate for `p.v. (1 / x)`.  Its equality with the
+/-- The Fourier-side candidate for `p.v. (1 / x)`. Its equality with the
 direct symmetric-principal-value construction is a theorem, not a definition.
 The normalization is `𝓕 f(ξ) = ∫ exp(-2π i xξ) f(x) dx`. -/
 noncomputable def principalValueOneDivFourierCandidate : 𝓢'(ℝ, ℂ) :=

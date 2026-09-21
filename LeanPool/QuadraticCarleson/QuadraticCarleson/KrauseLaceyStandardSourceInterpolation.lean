@@ -10,8 +10,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardSourceLin
 # Source-faithful interpolation for the scalar-standard contribution
 
 At one physical scale the source proof combines a local-average `L∞` bound
-with the already established squared `L²` estimate.  The interpolation here
-is applied to that fixed output function itself.  This is important because
+with the already established squared `L²` estimate. The interpolation here
+is applied to that fixed output function itself. This is important because
 the stopping collection depends on the input, so it would be incorrect to
 silently treat the construction as a fixed operator and invoke an operator
 interpolation theorem.
@@ -30,7 +30,7 @@ attribute [local instance] Classical.propDecidable
 /-- Direct interpolation of one output function between a pointwise bound
 and its squared `L²` mass. -/
 theorem lintegral_enorm_rpow_le_linf_mul_sq
-    {E : Type*} [NormedAddCommGroup E] [MeasurableSpace E] [BorelSpace E]
+    {E : Type*} [NormedAddCommGroup E]
     (F : ℝ → E) {M q : ℝ} (hM : 0 ≤ M) (hq : 2 ≤ q)
     (hbound : ∀ x, ‖F x‖ ≤ M) :
     (∫⁻ x, ‖F x‖ₑ ^ q) ≤

@@ -24,6 +24,7 @@ namespace PositiveGoodOscillatory
 
 open OscillatoryReduction PositiveHighHeightEstimate
 
+/-- The sum of fixed-height quadratic maximal functions over all heights. -/
 noncomputable def allHeightMajorant (b : ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ∑' r : ℕ, paperFixedHeightQuadraticMaximal r b x
 
@@ -38,6 +39,7 @@ theorem measurable_allHeightMajorant {b : ℝ → ℂ} (hb : MemLp b 2) :
     Measurable (allHeightMajorant b) :=
   Measurable.tsum (fun r ↦ measurable_paperFixedHeightQuadraticMaximal r hb)
 
+/-- The L² constant obtained by adding the height-zero bound to the high-height tail bound. -/
 noncomputable def allHeightL2Constant : ℝ≥0∞ :=
   ENNReal.ofReal fixedHeightL2DecayConstant + highHeightTailConstant
 
@@ -141,6 +143,7 @@ theorem paperOscillatoryMaximal_levelSet_mul_le {b : ℝ → ℂ} (hb : MemLp b 
     ((measurable_allHeightMajorant hb).pow_const 2) (a ^ 2)).trans
   exact allHeightMajorant_sq_lintegral_le hb
 
+/-- The oscillatory maximal function with modulation restricted to integer powers of two. -/
 noncomputable def paperLacunaryOscillatoryMaximal (b : ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ⨆ m : ℤ, ‖paperOscillatoryAction (dyadicModulation m) (dyadicModulation_pos m).ne' b x‖ₑ
 
@@ -161,7 +164,8 @@ theorem paperLacunaryOscillatoryMaximal_eLpNorm_le {b : ℝ → ℂ} (hb : MemLp
     eLpNorm (paperLacunaryOscillatoryMaximal b) 2 ≤ allHeightL2Constant * eLpNorm b 2 := by
   exact (eLpNorm_mono_enorm (f := paperLacunaryOscillatoryMaximal b)
     (g := paperOscillatoryMaximal b)
-    (measurable_paperLacunaryOscillatoryMaximal hb).aestronglyMeasurable (fun x ↦ paperLacunaryOscillatoryMaximal_le_full b x)).trans
+    (measurable_paperLacunaryOscillatoryMaximal hb).aestronglyMeasurable (fun x ↦
+      paperLacunaryOscillatoryMaximal_le_full b x)).trans
       (paperOscillatoryMaximal_eLpNorm_le hb)
 
 theorem paperLacunaryOscillatoryMaximal_levelSet_mul_le {b : ℝ → ℂ} (hb : MemLp b 2)

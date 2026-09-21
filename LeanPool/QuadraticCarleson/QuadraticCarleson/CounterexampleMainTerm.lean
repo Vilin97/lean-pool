@@ -9,16 +9,16 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleBohrPhase
 /-!
 # A finite dyadic main-term level set for the negative endpoint
 
-The parameter `L` is the paper's base-two logarithm of `A`.  We keep exactly
+The parameter `L` is the paper's base-two logarithm of `A`. We keep exactly
 the half-open exponent windows `N * k + L ≤ n < N * k + L + N`, with `k` in
-`paperBohrIndices N`.  Natural ceilings implement those windows without any
-rounding enlargement.  The supremum is taken over the actual complex sums
+`paperBohrIndices N`. Natural ceilings implement those windows without any
+rounding enlargement. The supremum is taken over the actual complex sums
 `harmonicPhaseSum`, not over Bohr membership or an assumed operator estimate.
 
-The full level set has an extended-real Lebesgue-measure lower bound.  We
+The full level set has an extended-real Lebesgue-measure lower bound. We
 also give the real-valued measure bound after localization to `[0, N + 1]`,
-which already contains the entire translated Bohr set.  No finiteness of an
-unlocalized level set is tacitly assumed.  These are main-term estimates;
+which already contains the entire translated Bohr set. No finiteness of an
+unlocalized level set is tacitly assumed. These are main-term estimates;
 passing to the singular integral requires the separate analytic error bounds.
 -/
 
@@ -41,7 +41,7 @@ noncomputable def paperMainTermIndices (N : ℕ) (L : ℝ) : Finset (ℤ × ℕ)
       (n : ℝ) < (N : ℝ) * k + L + N := by
   simp [paperMainTermIndices, Nat.ceil_le, Nat.lt_ceil]
 
-/-- Distinct translate indices have disjoint exponent windows.  Thus the
+/-- Distinct translate indices have disjoint exponent windows. Thus the
 pair-indexed supremum does not introduce two truncations for one exponent. -/
 theorem paperMainTermIndices_unique_translate {N n : ℕ} {L : ℝ} {k l : ℤ}
     (hN : 0 < N) (hk : (k, n) ∈ paperMainTermIndices N L)
@@ -56,7 +56,7 @@ theorem paperMainTermIndices_unique_translate {N n : ℕ} {L : ℝ} {k l : ℤ}
   · have hstep : (l : ℝ) + 1 ≤ k := by exact_mod_cast Int.add_one_le_iff.mpr hlk
     nlinarith
 
-/-- The exact window recovers the truncation index by a floor.  In particular,
+/-- The exact window recovers the truncation index by a floor. In particular,
 the lower summation index `k + 1` is strictly above `(n - L) / N`, including
 when that quotient is itself an integer. -/
 theorem paperMainTermIndices_floor_eq {N n : ℕ} {L : ℝ} {k : ℤ}
@@ -83,7 +83,7 @@ theorem paperMainTermIndices_exponent_ge_two {N n : ℕ} {L : ℝ} {k : ℤ}
   exact_mod_cast hnreal
 
 /-- The finite supremum of the nonnegative norms, with value zero for an
-empty index set.  Using `ℝ≥0` internally supplies this canonical empty value. -/
+empty index set. Using `ℝ≥0` internally supplies this canonical empty value. -/
 noncomputable def paperMainTermSup (N : ℕ) (L x : ℝ) : ℝ :=
   ↑((paperMainTermIndices N L).sup fun p =>
     ‖harmonicPhaseSum N p.1.toNat ((2 ^ p.2 : ℕ) : ℤ) (x - p.1)‖₊)
@@ -194,7 +194,7 @@ theorem paperMainTermLevelSet_volume_ge {N : ℕ} {L : ℝ}
     _ ≤ _ := measure_mono (paperTranslatedBohrSet_subset_mainTermLevelSet hN)
 
 /-- The same linear bound in real-valued measure, already attained inside
-`[0, N + 1]`.  Its coefficient is `δ = 1 / (30720 * (2^100 + 1)) > 0`. -/
+`[0, N + 1]`. Its coefficient is `δ = 1 / (30720 * (2^100 + 1)) > 0`. -/
 theorem paperMainTermLevelSet_local_volume_real_ge {N : ℕ} {L : ℝ}
     (hN : 100 ≤ N) (hL : 2 ≤ 3 * (N : ℝ) ^ 2 / 5 + L) :
     (N : ℝ) / (30720 * ((2 : ℝ) ^ 100 + 1)) ≤

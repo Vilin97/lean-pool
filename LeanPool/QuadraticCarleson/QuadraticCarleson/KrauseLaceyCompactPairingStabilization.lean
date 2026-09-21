@@ -6,6 +6,14 @@ Authors: Anastasios Fragkos
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicSparseTransfer
 
+/-!
+# Stabilization of compactly supported dyadic pairings
+
+Compact support makes sufficiently high dyadic convolutions vanish uniformly on the pairing
+domain. Infinite high-pass actions and maximal tails therefore agree with finite models there,
+allowing finite sparse bounds to pass to the full operators.
+-/
+
 open Filter Function MeasureTheory Set
 open scoped ENNReal NNReal Topology
 
@@ -81,6 +89,7 @@ theorem exists_uniform_smoothHighPass_eq_finiteFullDyadicTail (j : ℤ) (f g : L
   rw [finiteFullDyadicTail_stable (hN lam x hx) hn]
   exact smoothHighPass_eq_finiteFullDyadicTail_of_zero lam j f x (hN lam x hx)
 
+/-- The finite full dyadic tail, viewed as an operator on test functions. -/
 noncomputable def finiteFullDyadicTailOperator (lam : ℝ) (j : ℤ) (N : ℕ) : TestOperator :=
   fun f x ↦ finiteFullDyadicTail lam j N f x
 
@@ -135,6 +144,7 @@ theorem fullDyadicTailSupEnorm_eq_finiteMax_of_zero
     intro n hn
     exact le_iSup (fun r : ℕ ↦ ‖finiteFullDyadicTail lam j r f x‖ₑ) n
 
+/-- The supremum of finite full dyadic tail norms, converted to a complex-valued test operator. -/
 noncomputable def fullDyadicTailSupTestOperator (lam : ℝ) (j : ℤ) : TestOperator :=
   fun f x ↦ ((fullDyadicTailSupEnorm lam j f x).toReal : ℂ)
 
@@ -282,10 +292,12 @@ theorem smoothHighPass_eq_finiteSuffix_of_zero
   have hmr : N ≤ m + r := by omega
   simpa only [Nat.cast_add, add_assoc] using hz (m + r) hmr
 
+/-- The supremum of smooth high-pass norms over dyadic radii starting at scale `j - 3`. -/
 noncomputable def dyadicSmoothHighPassMaxEnorm
     (lam : ℝ) (j : ℤ) (f : L0Infinity) (x : ℝ) : ℝ≥0∞ :=
   ⨆ m : ℕ, ‖smoothQuadraticHighPass lam ((2 : ℝ) ^ (j + (m : ℤ) - 3)) f x‖ₑ
 
+/-- The dyadic smooth high-pass maximal function, converted to a complex-valued test operator. -/
 noncomputable def dyadicSmoothHighPassMaxOperator (lam : ℝ) (j : ℤ) : TestOperator :=
   fun f x ↦ ((dyadicSmoothHighPassMaxEnorm lam j f x).toReal : ℂ)
 

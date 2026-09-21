@@ -23,7 +23,8 @@ namespace KrauseLaceyFiniteBlockSmoothIdentity
 open KrauseLaceySharpSmoothAdapter
 
 
-noncomputable section
+noncomputable
+section
 
 theorem finiteQuadraticDyadicBlock_eq_smoothHighPass_sub
     (lam : ℝ) (j : ℤ) (B : ℕ) {f : ℝ → ℂ} (hfi : Integrable f) (x : ℝ) :

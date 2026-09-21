@@ -12,8 +12,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticKernelLimit
 
 The singular integral in the paper is unambiguous on Schwartz functions when
 defined by pairing the quadratically modulated principal-value tempered
-distribution with `y ↦ f (x - y)`.  This file defines that action and proves
-that it is exactly the limit of the paper's symmetric truncations.  It then
+distribution with `y ↦ f (x - y)`. This file defines that action and proves
+that it is exactly the limit of the paper's symmetric truncations. It then
 defines the full and lacunary pointwise suprema.
 -/
 
@@ -69,7 +69,7 @@ noncomputable def dyadicModulation (n : ℤ) : ℝ :=
 theorem dyadicModulation_pos (n : ℤ) : 0 < dyadicModulation n := by
   exact zpow_pos (by norm_num) n
 
-/-- The full quadratic Carleson operator on Schwartz functions.  The value is
+/-- The full quadratic Carleson operator on Schwartz functions. The value is
 extended nonnegative real so an unbounded supremum is represented faithfully. -/
 noncomputable def quadraticCarlesonSchwartz (f : 𝓢(ℝ, ℂ)) (x : ℝ) : ℝ≥0∞ :=
   ⨆ modulation : ℝ, ENNReal.ofReal ‖quadraticHilbertSchwartz modulation f x‖

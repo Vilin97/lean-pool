@@ -12,9 +12,9 @@ import Mathlib.Analysis.Convolution
 # Weak `(1,1)` for finite annular Hilbert truncations
 
 The zero-modulation contribution of a finite dyadic block is an ordinary
-Hilbert kernel restricted to a finite annulus.  Such a kernel is genuinely
+Hilbert kernel restricted to a finite annulus. Such a kernel is genuinely
 `L¹`, so Young's inequality followed by Markov's inequality gives a fully
-concrete weak `(1,1)` estimate.  This is the finite-truncation statement; no
+concrete weak `(1,1)` estimate. This is the finite-truncation statement; no
 maximal-singular-integral hypothesis is introduced.
 -/
 
@@ -25,7 +25,8 @@ namespace QuadraticCarleson
 namespace HilbertFiniteTruncationWeakOneOne
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The ordinary Hilbert kernel restricted to `ε < |t| ≤ R`. -/
 def annularHilbertKernel (ε R t : ℝ) : ℂ :=
@@ -69,7 +70,7 @@ theorem integrable_annularHilbertKernel {ε R : ℝ} (hε : 0 < ε) :
     (1 / ε) (Filter.Eventually.of_forall (norm_annularHilbertKernel_le hε))
 
 /-- A convenient explicit upper bound for the `L¹` mass of the annular
-Hilbert kernel.  (The exact mass is logarithmic, but this elementary bound
+Hilbert kernel. (The exact mass is logarithmic, but this elementary bound
 is enough for a fixed finite truncation.) -/
 theorem integral_norm_annularHilbertKernel_le {ε R : ℝ} (hε : 0 < ε)
     (hR : 0 ≤ R) :
@@ -155,7 +156,7 @@ theorem integrableOn_zeroHilbertTail {ε : ℝ} (hε : 0 < ε)
   simpa only [div_eq_mul_inv, one_mul, mul_one, mul_comm] using hi
 
 /-- The annular convolution is exactly the difference of two sharp ordinary
-Hilbert truncations.  Thus this module's concrete operator is the `λ = 0`
+Hilbert truncations. Thus this module's concrete operator is the `λ = 0`
 operator already appearing in `quadraticHilbertTrunc`, not a surrogate. -/
 theorem annularHilbertTruncation_eq_zeroTrunc_sub {ε R : ℝ}
     (hε : 0 < ε) (hεR : ε ≤ R) {f : ℝ → ℂ} (hf : Integrable f) (x : ℝ) :
@@ -171,7 +172,7 @@ theorem annularHilbertTruncation_eq_zeroTrunc_sub {ε R : ℝ}
     exact hεR.trans_lt ht
   have hdiff : sε \ sR = A := by
     ext t
-    simp only [sε, sR, A, mem_diff, mem_setOf_eq, not_lt]
+    simp only [sε, sR, A, Set.mem_sdiff, mem_ofPred_eq, not_lt]
   have hA : MeasurableSet A :=
     (measurableSet_lt measurable_const measurable_norm).inter
       (measurableSet_le measurable_norm measurable_const)
@@ -186,16 +187,16 @@ theorem annularHilbertTruncation_eq_zeroTrunc_sub {ε R : ℝ}
       apply integral_congr_ae
       filter_upwards with t
       by_cases ht : t ∈ A
-      · simp only [indicator_of_mem ht, annularHilbertKernel, A, mem_setOf_eq] at ht ⊢
-        rw [if_pos ht]
+      · simp only [indicator_of_mem ht, annularHilbertKernel, A, mem_ofPred_eq] at ht ⊢
+        rw [ite_eq_left ht]
         simp [div_eq_mul_inv, mul_comm]
-      · simp only [indicator_of_notMem ht, annularHilbertKernel, A, mem_setOf_eq] at ht ⊢
-        rw [if_neg ht]
+      · simp only [indicator_of_notMem ht, annularHilbertKernel, A, mem_ofPred_eq] at ht ⊢
+        rw [ite_eq_right ht]
         change (0 : ℂ) * f (x - t) = 0
         rw [zero_mul]
     _ = ∫ t in sε \ sR, f (x - t) / (t : ℂ) := by rw [hdiff]
     _ = (∫ t in sε, f (x - t) / (t : ℂ)) -
-          ∫ t in sR, f (x - t) / (t : ℂ) := integral_diff hsR hint hsub
+          ∫ t in sR, f (x - t) / (t : ℂ) := setIntegral_sdiff hsR hint hsub
     _ = quadraticHilbertTrunc 0 ε f x - quadraticHilbertTrunc 0 R f x := by
       unfold quadraticHilbertTrunc
       simp only [zero_mul, phase_zero, mul_one, sε, sR]
@@ -229,7 +230,7 @@ theorem weak_one_one_annularHilbertTruncation_explicit {ε R α : ℝ}
         (integral_nonneg fun _ ↦ norm_nonneg _)
 
 /-- The pointwise maximum of a finite family of annular ordinary Hilbert
-truncations.  The empty maximum is zero. -/
+truncations. The empty maximum is zero. -/
 noncomputable def finiteAnnularHilbertMax {N : ℕ} (ε R : Fin N → ℝ)
     (f : ℝ → ℂ) (x : ℝ) : ℝ :=
   ↑(Finset.univ.sup fun i ↦ ‖annularHilbertTruncation (ε i) (R i) f x‖₊)
@@ -302,7 +303,7 @@ theorem integrable_finiteAnnularHilbertMax {N : ℕ} (ε R : Fin N → ℝ)
   exact hs Finset.univ
 
 /-- A concrete weak `(1,1)` estimate for a finite maximum of finite annular
-truncations.  Unlike the full maximal Hilbert theorem, this statement follows
+truncations. Unlike the full maximal Hilbert theorem, this statement follows
 only from `L¹` convolution and has the exact sum of the kernel masses. -/
 theorem weak_one_one_finiteAnnularHilbertMax {N : ℕ} (ε R : Fin N → ℝ)
     (hε : ∀ i, 0 < ε i) {α : ℝ} (_hα : 0 ≤ α)

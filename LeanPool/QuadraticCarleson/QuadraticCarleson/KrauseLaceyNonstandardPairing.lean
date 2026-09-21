@@ -120,7 +120,6 @@ theorem lintegral_nonstandard_pairing_le_sum_local_averages
       congr 1
       dsimp [C]
       field_simp [I.length_pos.ne']
-      <;> ring
     _ = _ := (ENNReal.ofReal_sum_of_nonneg (fun I _ ↦ mul_nonneg
       (mul_nonneg (mul_nonneg (by norm_num) positiveDyadicAmplitudeBound_nonneg)
         (intervalBadMass_nonneg S f I₀ k₀ s scale I)) (intervalL1Average_nonneg g I))).symm
@@ -172,7 +171,7 @@ theorem lintegral_nonstandard_good_pairing_le
     (nonstandardIntervals S f I₀ k₀ s scale ∩ goodCollection S f g I₀) Finset.inter_subset_left
     (mul_nonneg (by norm_num) (intervalL1Average_nonneg g I₀))
     (fun I hI ↦ (goodCollection_averages_le hsub (Finset.mem_inter.mp hI).2).2)
-  convert h using 1 <;> congr 1 <;> ring
+  convert h using 1; congr 1; ring
 
 
 end KrauseLaceyBadScale

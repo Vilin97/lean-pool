@@ -14,7 +14,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveFullOscillatoryScali
 # Passage from the oscillatory estimate to the full quadratic operator
 
 The canonical truncation limsup at each modulation is bounded by the genuine
-maximal truncation.  Combining this at modulation zero with the established
+maximal truncation. Combining this at modulation zero with the established
 oscillatory reduction gives a pointwise bound for the paper's full operator.
 -/
 
@@ -45,7 +45,7 @@ theorem quadraticHilbertL0Limsup_le_maximalTruncation
 
 /-- The full real-modulation principal-value limsup is pointwise controlled
 by the proved oscillatory part, the ordinary Hilbert maximal truncation, and
-the elementary Hardy--Littlewood error.  The zero modulation is included. -/
+the elementary Hardy--Littlewood error. The zero modulation is included. -/
 theorem quadraticCarlesonL0_le_oscillatory_add_hilbert_add_maximal
     (f : L0Infinity) (x : ℝ) :
     quadraticCarlesonL0 f x ≤
@@ -80,6 +80,7 @@ theorem quadraticCarlesonL0_le_oscillatory_add_hilbert_add_maximal
       (fun μ : {μ : ℝ // μ ≠ 0} ↦ ‖paperOscillatoryAction μ.1 μ.2 f x‖ₑ)
       ⟨lam, hlam⟩
 
+/-- The real-valued constant controlling the maximal regularization error. -/
 noncomputable def maximalErrorConstantReal : ℝ := 8 + 8 * Real.pi
 
 theorem maximalErrorConstantReal_pos : 0 < maximalErrorConstantReal := by
@@ -130,7 +131,7 @@ theorem scaled_half_fullOrlicz_lintegral_le
     _ = _ := lintegral_const_mul' _ _ (by finiteness)
 
 /-- Threshold-one full-operator endpoint, reduced only to a uniform ordinary
-Hilbert maximal weak constant.  This is the exact classical input proved in
+Hilbert maximal weak constant. This is the exact classical input proved in
 `HilbertMaximalWeakOneOne`; it is not an assumption about the target operator. -/
 theorem quadraticCarlesonL0_levelSet_one_le_orlicz_of_hilbertWeak
     (f : L0Infinity) {CH : ℝ} (hCH : 0 ≤ CH)
@@ -278,6 +279,7 @@ theorem quadraticCarlesonL0_smul
   simp_rw [quadraticHilbertL0Limsup_smul]
   exact (ENNReal.mul_iSup _ _).symm
 
+/-- A test function divided by the level parameter for the normalized endpoint estimate. -/
 noncomputable def normalizedL0Input (α : ℝ) (f : L0Infinity) : L0Infinity :=
   L0Infinity.smul (α : ℂ)⁻¹ f
 

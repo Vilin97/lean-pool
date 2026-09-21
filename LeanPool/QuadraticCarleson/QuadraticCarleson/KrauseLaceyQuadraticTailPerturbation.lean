@@ -10,7 +10,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticAnnularT
 # Perturbations of finite quadratic annular tails
 
 This file is deliberately independent of the concrete projection and
-remainder constructions.  It records the finite-dimensional fact that a
+remainder constructions. It records the finite-dimensional fact that a
 tail maximal function is stable under changing every piece, with the sum of
 the pointwise errors as the loss.
 -/
@@ -23,7 +23,8 @@ namespace QuadraticCarleson.KrauseLaceyQuadraticTailPerturbation
 open KrauseLaceyQuadraticAnnularTail
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The scalar pointwise loss incurred by replacing `u` with `v` in the
 first `N` pieces. -/
@@ -124,7 +125,7 @@ private theorem ennreal_add_sq_le_four_sum_sq (a b : ℝ≥0∞) :
 
 /-- An `L²` transfer principle: an `L²` tail estimate for `v` and an `L²`
 estimate for a measurable scalar error majorant give an `L²` estimate for
-`u`.  The deliberately harmless factor `4` avoids any finiteness side
+`u`. The deliberately harmless factor `4` avoids any finiteness side
 conditions on extended nonnegative values. -/
 theorem finitePieceTailMax_sq_lintegral_le_of_error_majorant
     (N : ℕ) (u v : ℕ → ℝ → ℂ) (E : ℝ → ℝ≥0∞)
@@ -150,7 +151,7 @@ theorem finitePieceTailMax_sq_lintegral_le_of_error_majorant
         lintegral_add_right _ (hEmeas.pow_const 2)]
     _ ≤ 4 * (B + C) := by gcongr
 
-/-- Almost-everywhere form of the `L²` tail transfer principle.  This is the
+/-- Almost-everywhere form of the `L²` tail transfer principle. This is the
 natural interface when the individual pieces are represented by `L²`
 functions and their projection/remainder decomposition holds only almost
 everywhere. -/

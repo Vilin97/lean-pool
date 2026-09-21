@@ -26,6 +26,7 @@ open PositiveEndpointOptimization PositiveLevelIntegration PositiveHighHeightEst
 open CalderonZygmundStoppingIntervals PositiveLowFullEstimate
 
 
+/-- The finite residue classes modulo the sparse modulation modulus. -/
 abbrev SparseResidue := Fin sparseModulus.toNat
 
 /-- A complete finite residue system for the source modulus. -/
@@ -123,6 +124,7 @@ theorem frozenLogSquaredMassBudget_le_levelMass
     (tsum_frozenBlockInputL1Mass_le_levelMass hf (lacunaryAmplitude_pos k).le (hB k) (hc k))
   simpa only [mul_left_comm] using h
 
+/-- The product of the frozen mass-packing constant and the lacunary low-level constant. -/
 noncomputable def frozenMiddleOrliczConstant : ℝ≥0∞ :=
   frozenMassPackingConstant * ENNReal.ofReal (lacunaryLowLevelConstant 20)
 
@@ -130,7 +132,7 @@ theorem frozenMiddleOrliczConstant_lt_top : frozenMiddleOrliczConstant < ∞ :=
   ENNReal.mul_lt_top frozenMassPackingConstant_lt_top ENNReal.ofReal_lt_top
 
 theorem lacunaryLowLevelConstant_twenty_nonneg : 0 ≤ lacunaryLowLevelConstant 20 := by
-  exact add_nonneg (lacunarySmallLevelConstant_nonneg (by norm_num))
+  exact add_nonneg (lacunarySmallLevelConstant_nonneg)
     (mul_nonneg (by norm_num) (sq_nonneg _))
 
 /-- Exact paper cutoff and complete sparse residue sum, with no assumed

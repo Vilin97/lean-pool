@@ -51,7 +51,7 @@ theorem HasExtendedWeakL1Bound.restrict
   exact (mul_le_mul' le_rfl (Measure.restrict_le_self _)).trans (h.2 a ha)
 
 /-- A directed countable supremum inherits any weak `L¹` constant which is
-uniform over the approximating family.  This is the distribution-function
+uniform over the approximating family. This is the distribution-function
 form of continuity from below and does not require choosing pointwise-finite
 representatives of the limiting extended-valued output. -/
 theorem hasExtendedWeakL1Bound_iSup_of_directed
@@ -70,7 +70,7 @@ theorem hasExtendedWeakL1Bound_iSup_of_directed
     exact ⟨k, fun x hx ↦ hx.trans_le (hik x), fun x hx ↦ hx.trans_le (hjk x)⟩
   have hEunion : (⋃ i, E i) = {x | ENNReal.ofReal a < ⨆ i, F i x} := by
     ext x
-    simp only [E, mem_iUnion, mem_setOf_eq, lt_iSup_iff]
+    simp only [E, mem_iUnion, mem_ofPred_eq, lt_iSup_iff]
   rw [← hEunion, hEdir.measure_iUnion, ENNReal.mul_iSup]
   exact iSup_le fun i ↦ (hweak i).2 a ha
 
@@ -161,7 +161,7 @@ theorem hasExtendedWeakL1Bound_of_le_two_mul_add_sixteen_mul
 /-- The concrete centered Hardy--Littlewood maximal function, applied to the
 norm of an integrable input, in the extended weak-bound interface. -/
 theorem hasExtendedWeakL1Bound_centeredHardyLittlewoodMaximal_enorm
-    {f : ℝ → ℂ} (hf : Measurable f) (hfi : Integrable f) :
+    {f : ℝ → ℂ} (hfi : Integrable f) :
     HasExtendedWeakL1Bound volume
       (4 * (∫⁻ x, ‖f x‖ₑ).toReal)
       (centeredHardyLittlewoodMaximal fun x ↦ ‖f x‖ₑ) := by

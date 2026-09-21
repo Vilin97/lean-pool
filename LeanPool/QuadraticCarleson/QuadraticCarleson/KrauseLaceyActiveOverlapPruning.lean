@@ -25,6 +25,7 @@ open KrauseLaceyStoppingExtraction KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The intervals containing at least one point where the overlap count is at most `M`. -/
 noncomputable def overlapPrunedFamily (A : Finset RealInterval) (M : ℕ) :
     Finset RealInterval :=
   A.filter fun I ↦ ∃ x ∈ I.carrier, overlapCount A x ≤ M

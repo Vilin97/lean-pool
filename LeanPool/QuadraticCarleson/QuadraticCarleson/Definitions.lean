@@ -47,6 +47,8 @@ theorem paperLog_succ (n : ℕ) (t : ℝ) :
 Only values on `[0, ∞)` are relevant. The final field includes the paper's
 exceptional Young function `Φ(t) = t` alongside the usual superlinear case. -/
 structure YoungFunction where
+  /-- The real-valued function whose restriction to the nonnegative half-line satisfies the
+  Young-function axioms. -/
   toFun : ℝ → ℝ
   continuousOn_nonneg : ContinuousOn toFun (Ici 0)
   convexOn_nonneg : ConvexOn ℝ (Ici 0) toFun
@@ -65,6 +67,7 @@ def GrowsSlowerThanEndpoint (Φ : YoungFunction) : Prop :=
 /-- The paper's space `L₀∞(ℝ)`: bounded, compactly supported measurable
 complex-valued functions. -/
 structure L0Infinity where
+  /-- The bounded, compactly supported measurable complex-valued test function. -/
   toFun : ℝ → ℂ
   measurable_toFun : Measurable toFun
   bounded_toFun : ∃ C : ℝ, ∀ x, ‖toFun x‖ ≤ C

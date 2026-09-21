@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 # Two-fold nonstationary phase away from a wave packet
 
 This file proves the `k = 2` instance of the oscillatory estimate used in
-equation (3.2) of the paper.  The proof differentiates the phase in the
+equation (3.2) of the paper. The proof differentiates the phase in the
 original kernel variable twice; it does not use the erroneous square-root
 substitution displayed in the paper.
 -/
@@ -74,7 +74,7 @@ theorem hasDerivAt_quadraticPhase (modulation x u : ℝ) :
       (fun v : ℝ ↦ ((2 * Real.pi * (modulation * (x - v) ^ 2) : ℝ) : ℂ) * Complex.I)
       (((-(4 * Real.pi * modulation * (x - u)) : ℝ) : ℂ) * Complex.I) u := by
     exact hreal.ofReal_comp.mul_const Complex.I
-  convert hcomplex.cexp using 1 <;> ring
+  convert hcomplex.cexp using 1; ring
 
 /-- The fixed explicit constant in the two-fold estimate. -/
 noncomputable def offSupportOscillatoryConstant : ℝ :=
@@ -208,13 +208,15 @@ private theorem twofold_integration_by_parts
     apply ContinuousOn.add
     · apply (Complex.continuous_ofReal.comp hp'cont).continuousOn.div
         (continuous_const.mul
-          ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow 2)).continuousOn
+          ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow
+            2)).continuousOn
       intro u hu
       exact mul_ne_zero (oscillatoryCoeff_ne_zero hmod)
         (pow_ne_zero 2 (Complex.ofReal_ne_zero.mpr (hxu u hu)))
     · apply (continuous_const.mul (Complex.continuous_ofReal.comp hpcont)).continuousOn.div
         (continuous_const.mul
-          ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow 3)).continuousOn
+          ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow
+            3)).continuousOn
       intro u hu
       exact mul_ne_zero (oscillatoryCoeff_ne_zero hmod)
         (pow_ne_zero 3 (Complex.ofReal_ne_zero.mpr (hxu u hu)))
@@ -225,19 +227,22 @@ private theorem twofold_integration_by_parts
     · apply ContinuousOn.add
       · apply (Complex.continuous_ofReal.comp hp''cont).continuousOn.div
           (continuous_const.mul
-            ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow 3)).continuousOn
+            ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow
+              3)).continuousOn
         intro u hu
         exact mul_ne_zero (pow_ne_zero 2 (oscillatoryCoeff_ne_zero hmod))
           (pow_ne_zero 3 (Complex.ofReal_ne_zero.mpr (hxu u hu)))
       · apply (continuous_const.mul (Complex.continuous_ofReal.comp hp'cont)).continuousOn.div
           (continuous_const.mul
-            ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow 4)).continuousOn
+            ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow
+              4)).continuousOn
         intro u hu
         exact mul_ne_zero (pow_ne_zero 2 (oscillatoryCoeff_ne_zero hmod))
           (pow_ne_zero 4 (Complex.ofReal_ne_zero.mpr (hxu u hu)))
     · apply (continuous_const.mul (Complex.continuous_ofReal.comp hpcont)).continuousOn.div
         (continuous_const.mul
-          ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow 5)).continuousOn
+          ((Complex.continuous_ofReal.comp (continuous_const.sub continuous_id)).pow
+            5)).continuousOn
       intro u hu
       exact mul_ne_zero (pow_ne_zero 2 (oscillatoryCoeff_ne_zero hmod))
         (pow_ne_zero 5 (Complex.ofReal_ne_zero.mpr (hxu u hu)))
@@ -629,7 +634,7 @@ theorem offSupportOscillatoryAction_norm_le
           (p := wavePacket s t) (p' := wavePacketDeriv s t)
           (p'' := wavePacketSecondDeriv s t) hmod ha hsep
         dsimp only [g, a, D]
-        convert hpoint using 1 <;> ring
+        convert hpoint using 1; ring
       · exact hg.intervalIntegrable
     _ ≤ ∫ u : ℝ, g u := by
       rw [intervalIntegral.integral_of_le hlr]

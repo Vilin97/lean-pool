@@ -10,8 +10,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleOffsetPointw
 # Smooth cutoffs in the normalized oscillatory range
 
 The paper's finite height blocks have normalized smooth radii at least
-`1/8`.  Upward rounding places those radii in the dyadic maximum starting
-at scale `1`.  Rounding in physical coordinates keeps its maximal-function
+`1/8`. Upward rounding places those radii in the dyadic maximum starting
+at scale `1`. Rounding in physical coordinates keeps its maximal-function
 error common across all modulations.
 -/
 
@@ -25,7 +25,8 @@ open KrauseLaceyFullDyadicSparseTransfer KrauseLaceyCompactPairingStabilization
 open KrauseLaceyScaleOffsetPointwise KrauseLaceySparseDilation
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Raising the first allowed scale reduces the smooth suffix maximum. -/
 theorem dyadicSmoothHighPassMaxEnorm_antitone_start

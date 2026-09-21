@@ -25,16 +25,20 @@ open KrauseLaceyStoppingRecursion KrauseLaceyNativePositiveSuffixClosure
 open KrauseLaceyThreeShiftGrid
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical decidable equality for the finite interval families used in the p-stopping
+construction. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
+/-- The contribution of one interval to the sparse form with local exponents one and `p`. -/
 noncomputable def pStoppingSparseAtom (p : ℝ) (f g : ℝ → ℂ)
     (I : RealInterval) : ℝ≥0∞ :=
   ENNReal.ofReal (I.length * localAverage 1 f I * localAverage p g I)
 
 /-- The public p-stopping atom is exactly the summand of the ambient sparse
-form.  This lets a recursive p-stopping witness be assembled without ever
+form. This lets a recursive p-stopping witness be assembled without ever
 returning to the old `L¹` monitor interface. -/
 theorem sparseForm_finset_pStoppingAtom (p : ℝ) (f g : ℝ → ℂ)
     (R : Finset RealInterval) :
@@ -94,7 +98,7 @@ theorem pStopping_good_part_pairing
   hlocal.2 p hp hp2 ell₀ topScale shift maxDepth q₀ S I f g hell hS hI hsub
 
 /-- One exact recursive p-stopping step with the local term closed by the
-new interface.  This is the induction step needed for the finite tree/forest
+new interface. This is the induction step needed for the finite tree/forest
 closure; recursive children retain the same monitor convention. -/
 theorem pStopping_one_step_pairing_bound
     {A p : ℝ} (hlocal : HasOneNodePStoppingGoodPartPairingBound A)
@@ -187,21 +191,21 @@ private theorem pStopping_isSparse_insert_root_biUnion
     refine ⟨heta0, heta1, E', ?_, ?_, ?_, ?_⟩
     · intro J
       by_cases hJI : J.1 = I
-      · simp only [E', dif_pos hJI]
+      · simp only [E', dite_eq_left hJI]
         exact I.measurableSet_carrier.diff
           (Finset.measurableSet_biUnion C fun K _ ↦ K.measurableSet_carrier)
-      · simp only [E', dif_neg hJI]
+      · simp only [E', dite_eq_right hJI]
         exact hEmeas _
     · intro J
       by_cases hJI : J.1 = I
-      · simp only [E', dif_pos hJI]
-        simpa only [hJI] using (diff_subset : I.carrier \ Uchildren ⊆ I.carrier)
-      · simp only [E', dif_neg hJI]
+      · simp only [E', dite_eq_left hJI]
+        simpa only [hJI] using (sdiff_subset : I.carrier \ Uchildren ⊆ I.carrier)
+      · simp only [E', dite_eq_right hJI]
         exact hEsub _
     · intro J L hJL
       by_cases hJI : J.1 = I
       · have hLI : L.1 ≠ I := fun h ↦ hJL (Subtype.ext (hJI.trans h.symm))
-        simp only [E', dif_pos hJI, dif_neg hLI]
+        simp only [E', dite_eq_left hJI, dite_eq_right hLI]
         apply Set.disjoint_left.mpr
         intro x hxroot hxL
         have hLB : L.1 ∈ B := (Finset.mem_insert.mp L.2).resolve_left hLI
@@ -209,7 +213,7 @@ private theorem pStopping_isSparse_insert_root_biUnion
         exact hxroot.2 (Set.mem_iUnion_of_mem K
           (Set.mem_iUnion_of_mem hK (hRsub K hK L.1 hLK (hEsub _ hxL))))
       · by_cases hLI : L.1 = I
-        · simp only [E', dif_neg hJI, dif_pos hLI]
+        · simp only [E', dite_eq_right hJI, dite_eq_left hLI]
           apply Disjoint.symm
           apply Set.disjoint_left.mpr
           intro x hxroot hxJ
@@ -217,7 +221,7 @@ private theorem pStopping_isSparse_insert_root_biUnion
           obtain ⟨K, hK, hJK⟩ := Finset.mem_biUnion.mp hJB
           exact hxroot.2 (Set.mem_iUnion_of_mem K
             (Set.mem_iUnion_of_mem hK (hRsub K hK J.1 hJK (hEsub _ hxJ))))
-        · simp only [E', dif_neg hJI, dif_neg hLI]
+        · simp only [E', dite_eq_right hJI, dite_eq_right hLI]
           apply hEdisj
           intro h
           apply hJL
@@ -226,7 +230,7 @@ private theorem pStopping_isSparse_insert_root_biUnion
             (fun z : {J : RealInterval // J ∈ (↑B : Set RealInterval)} ↦ z.1) h
     · intro J
       by_cases hJI : J.1 = I
-      · simp only [E', dif_pos hJI]
+      · simp only [E', dite_eq_left hJI]
         have hfour := stoppingMajorSubset_measure_ge_four_fifths f monitor I
           hf.integrableOn hm.integrableOn hlam
         have hquarter : (1 / 4 : ℝ) * I.length ≤
@@ -235,7 +239,7 @@ private theorem pStopping_isSparse_insert_root_biUnion
             (by norm_num : (1 / 4 : ℝ) ≤ 4 / 5) I.length_pos.le).trans
           simpa only [krauseLaceyStoppingMajorSubset, id_eq, C, Uchildren] using hfour
         simpa only [hJI] using hquarter
-      · simp only [E', dif_neg hJI]
+      · simp only [E', dite_eq_right hJI]
         exact hEmass ⟨J.1, (Finset.mem_insert.mp J.2).resolve_left hJI⟩
   · have hCempty : C = ∅ := Finset.not_nonempty_iff_eq_empty.mp hC
     simp only [C] at hCempty
@@ -254,7 +258,7 @@ private theorem pStopping_sparseForm_insert_biUnion
     Finset.sum_biUnion hRdisj]
   simp_rw [← sparseForm_finset_pStoppingAtom]
 
-/- Strong induction over the active finite collection.  The auxiliary
+/- Strong induction over the active finite collection. The auxiliary
 monitor is fixed throughout the recursion, while the integrand continues to
 pair with the original `g`. -/
 private theorem exists_pStopping_recursive_sparse_bound_of_root_mem
@@ -305,18 +309,18 @@ private theorem exists_pStopping_recursive_sparse_bound_of_root_mem
       have hRsparse' : ∀ K ∈ C,
           IsSparse (1 / 4) (↑(R' K) : Set RealInterval) := by
         intro K hK
-        simp only [R', dif_pos hK]
+        simp only [R', dite_eq_left hK]
         exact hRsparse K hK
       have hRsub' : ∀ K ∈ C, ∀ J ∈ R' K, J.carrier ⊆ K.carrier := by
         intro K hK
-        simp only [R', dif_pos hK]
+        simp only [R', dite_eq_left hK]
         exact hRsub K hK
       have hRbound' : ∀ K ∈ C,
           (∫⁻ x, localizedTailMaximal ell₀ scale (childCollection S K) f x * ‖g x‖ₑ) ≤
             ENNReal.ofReal (A * holderConjugate p) *
               sparseForm p f g (↑(R' K) : Set RealInterval) := by
         intro K hK
-        simp only [R', dif_pos hK]
+        simp only [R', dite_eq_left hK]
         exact hRbound K hK
       let B := C.biUnion R'
       let Rall := insert I B
@@ -408,18 +412,18 @@ theorem exists_pStopping_recursive_sparse_bound
   have hRsparse' : ∀ K ∈ C,
       IsSparse (1 / 4) (↑(R' K) : Set RealInterval) := by
     intro K hK
-    simp only [R', dif_pos hK]
+    simp only [R', dite_eq_left hK]
     exact hRsparse K hK
   have hRsub' : ∀ K ∈ C, ∀ J ∈ R' K, J.carrier ⊆ K.carrier := by
     intro K hK
-    simp only [R', dif_pos hK]
+    simp only [R', dite_eq_left hK]
     exact hRsub K hK
   have hRbound' : ∀ K ∈ C,
       (∫⁻ x, localizedTailMaximal ell₀ scale (childCollection S K) f x * ‖g x‖ₑ) ≤
         ENNReal.ofReal (A * holderConjugate p) *
           sparseForm p f g (↑(R' K) : Set RealInterval) := by
     intro K hK
-    simp only [R', dif_pos hK]
+    simp only [R', dite_eq_left hK]
     exact hRbound K hK
   let B := C.biUnion R'
   let Rall := insert I B
@@ -575,19 +579,19 @@ theorem exists_pStopping_recursive_sparse_bound_forest
   have hRsparse' : ∀ q₀ ∈ Q,
       IsSparse (1 / 4) (↑(R' q₀) : Set RealInterval) := by
     intro q₀ hq₀
-    simp only [R', dif_pos hq₀]
+    simp only [R', dite_eq_left hq₀]
     exact hRsparse q₀ hq₀
   have hRsub' : ∀ q₀ ∈ Q, ∀ I ∈ R' q₀,
       I.carrier ⊆ (finiteShiftGridInterval topScale shift 0 q₀).carrier := by
     intro q₀ hq₀
-    simp only [R', dif_pos hq₀]
+    simp only [R', dite_eq_left hq₀]
     exact hRsub q₀ hq₀
   have hRbound' : ∀ q₀ ∈ Q,
       (∫⁻ x, localizedTailMaximal ell₀ scale (branch q₀) f x * ‖g x‖ₑ) ≤
         ENNReal.ofReal (A * holderConjugate p) *
           sparseForm p f g (↑(R' q₀) : Set RealInterval) := by
     intro q₀ hq₀
-    simp only [R', dif_pos hq₀]
+    simp only [R', dite_eq_left hq₀]
     exact hRbound q₀ hq₀
   have hRdisjoint : Set.PairwiseDisjoint (↑Q : Set ℤ) R' := by
     intro q₀ hq₀ q₁ hq₁ hne

@@ -30,7 +30,8 @@ open QuadraticBlockConjugation FiniteSparseCommonErrorWeak
 open ExtendedWeakL1Combinators KaltonPaperApplication
 
 
-noncomputable section
+noncomputable
+section
 
 private theorem conjugate_add (f g : L0Infinity) :
     L0Infinity.conjugate (L0Infinity.add f g) =

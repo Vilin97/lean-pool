@@ -13,7 +13,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximalSparse
 # Corrected sparse transfer through the actual annular comparison
 
 The dyadic lower index is selected from the scaled radii, and both positive
-majorant pairings use `normInput g`.  These two corrections are essential:
+majorant pairings use `normInput g`. These two corrections are essential:
 an unshifted lower index does not describe arbitrary scale offsets, and
 arbitrary complex test functions can cancel in the majorant pairings.
 -/
@@ -30,7 +30,8 @@ open HardyLittlewoodBoundaryControl HardyLittlewoodSparseReduction
 open HardyLittlewoodMaximalSparse
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Sparse domination transfers through the actual norm-input comparison,
 with its proved annular coefficient `24`, and no radius-cardinality loss. -/
@@ -77,7 +78,7 @@ theorem hasSparseOnePBound_finiteSmoothMax_of_positiveSuffix_and_boundary
   · exact hboundary
 
 /-- Only the positive unit modulation is needed in the remaining native KL
-analytic input.  Neither other modulation signs nor scale offsets occur. -/
+analytic input. Neither other modulation signs nor scale offsets occur. -/
 def HasNativeUnitPositiveSuffixSparseBound (C : ℝ) : Prop :=
   0 ≤ C ∧ ∀ (p : ℝ), 1 < p → p < 2 → ∀ (j : ℤ) (N : ℕ),
     HasSparseOnePBound (C * holderConjugate p) p
@@ -107,7 +108,7 @@ theorem hasUniformFiniteRadiusSmoothSparseBound_of_native_and_boundary
   hasUniformFiniteRadiusSmoothSparseBound_of_unit
     (hasUnitFiniteSmoothSparseBound_of_native_and_boundary hC hD hboundary)
 
-/-- The ordinary maximal-average input is now fully discharged.  Native
+/-- The ordinary maximal-average input is now fully discharged. Native
 positive-unit integer-dyadic suffixes control arbitrary finite smooth radii;
 the explicit extra universal constant is `24 * 480 = 11520`. -/
 theorem hasUnitFiniteSmoothSparseBound_of_native

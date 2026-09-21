@@ -9,6 +9,14 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseReflection
 import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicReflection
 import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelComparison
 
+/-!
+# Sparse bounds for full dyadic tails
+
+Continuous finite-tail maximal operators combine positive kernels with their reflected copies.
+Their pointwise domination transfers uniform sparse bounds from positive dyadic tails to the
+full tails.
+-/
+
 open Function MeasureTheory Set
 open scoped ENNReal NNReal Topology Convolution
 
@@ -24,9 +32,11 @@ theorem memLp_two_L0Infinity (f : L0Infinity) : MemLp (f : ℝ → ℂ) 2 volume
     (ae_of_all _ fun x ↦ by simpa only [norm_norm] using hC x)
   simpa only [pow_two] using hi
 
+/-- The finite positive dyadic tail maximum, viewed as a complex-valued test operator. -/
 noncomputable def finitePositiveDyadicTailMaxOperator (lam : ℝ) (j : ℤ) (N : ℕ) :
     TestOperator := fun f x ↦ ((finitePositiveDyadicTailMaxNNNorm lam j N f x : ℝ) : ℂ)
 
+/-- The finite full dyadic tail maximum, viewed as a complex-valued test operator. -/
 noncomputable def finiteFullDyadicTailMaxOperator (lam : ℝ) (j : ℤ) (N : ℕ) :
     TestOperator := fun f x ↦ ((finiteFullDyadicTailMaxNNNorm lam j N f x : ℝ) : ℂ)
 
@@ -89,7 +99,8 @@ theorem norm_fullDyadicTailMax_le_positive_add_reflected
       ‖finitePositiveDyadicTailMaxOperator lam j N f x‖ +
         ‖reflectedOperator (finitePositiveDyadicTailMaxOperator lam j N) f x‖ := by
   simpa only [finiteFullDyadicTailMaxOperator, finitePositiveDyadicTailMaxOperator,
-    reflectedOperator, L0Infinity.reflect, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (NNReal.coe_nonneg _),
+    reflectedOperator, L0Infinity.reflect, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg
+      (NNReal.coe_nonneg _),
     ← NNReal.coe_add, NNReal.coe_le_coe] using
     finiteFullDyadicTailMaxNNNorm_le_positive_add_reflect lam j N (memLp_two_L0Infinity f) x
 
@@ -144,9 +155,11 @@ theorem uniform_hasSparseOnePBound_fullDyadicTailMax {C p : ℝ} (hC : 0 ≤ C)
   fun lam j N ↦ hasSparseOnePBound_fullDyadicTailMax lam j N hC (hpositive lam j N)
 
 
+/-- The finite positive dyadic suffix maximum, viewed as a complex-valued test operator. -/
 noncomputable def finitePositiveDyadicSuffixMaxOperator (lam : ℝ) (j : ℤ) (N : ℕ) :
     TestOperator := fun f x ↦ ((finitePositiveDyadicSuffixMaxNNNorm lam j N f x : ℝ) : ℂ)
 
+/-- The finite full dyadic suffix maximum, viewed as a complex-valued test operator. -/
 noncomputable def finiteFullDyadicSuffixMaxOperator (lam : ℝ) (j : ℤ) (N : ℕ) :
     TestOperator := fun f x ↦ ((finiteFullDyadicSuffixMaxNNNorm lam j N f x : ℝ) : ℂ)
 

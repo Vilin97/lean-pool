@@ -11,8 +11,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
 # Physical-scale summation for the scalar-standard contribution
 
 The source's fixed-physical-scale estimate contains the factor `j * 2⁻ʲ`
-before taking the `L^q` norm.  This module absorbs its `q`-th root into the
-same geometric ratio used by the rest of the Krause--Lacey summation.  The
+before taking the `L^q` norm. This module absorbs its `q`-th root into the
+same geometric ratio used by the rest of the Krause--Lacey summation. The
 last theorem is uniform over every finite set of nonnegative physical
 scales, so no interval-cardinality loss remains.
 -/
@@ -133,7 +133,7 @@ theorem int_ratio_rpow_le_two_mul_scaleDecayRatio_toNat_pow
       congr 1
       rw [← zpow_natCast, Int.toNat_of_nonneg hj]
 
-/-- Uniform source-scale summation.  The finite set need not be an interval;
+/-- Uniform source-scale summation. The finite set need not be an interval;
 only nonnegativity of its physical indices is used. -/
 theorem finite_int_ratio_rpow_sum_le_forty_mul_q
     {q : ℝ} (hq : 2 ≤ q) (S : Finset ℤ)
@@ -141,7 +141,7 @@ theorem finite_int_ratio_rpow_sum_le_forty_mul_q
     (∑ j ∈ S, ((j : ℝ) / (2 : ℝ) ^ j) ^ (1 / q)) ≤ 40 * q := by
   let r : ℝ := scaleDecayRatio q
   have hq0 : 0 < q := lt_of_lt_of_le (by norm_num) hq
-  have hr0 : 0 ≤ r := scaleDecayRatio_nonneg hq0
+  have hr0 : 0 ≤ r := scaleDecayRatio_nonneg
   have hr1 : r < 1 := scaleDecayRatio_lt_one hq0
   have hinj : Set.InjOn Int.toNat (↑S : Set ℤ) := by
     intro a ha b hb hab
@@ -242,14 +242,13 @@ theorem eLpNorm_energyStandardFixedPhysicalSourceAction_le_budget_mul_ratio
   rw [ENNReal.ofReal_rpow_of_nonneg hratio0 (by positivity : (0 : ℝ) ≤ 1 / q)]
   rfl
 
-/-- Minkowski aggregation of fixed-physical-scale source actions.  The
+/-- Minkowski aggregation of fixed-physical-scale source actions. The
 geometric estimate is deliberately separated from the definition of the
 scale-indexed actions, so it can be applied after the standard/nonstandard
 classification has been assembled. -/
 theorem eLpNorm_finset_sum_le_budget_mul_forty_mul_q
     {q : ℝ} (hq : 2 ≤ q) {B : ℝ≥0∞} (S : Finset ℤ)
     (F : ℤ → ℝ → ℂ)
-    (hF : ∀ j ∈ S, AEStronglyMeasurable (F j) volume)
     (hbound : ∀ j ∈ S,
       eLpNorm (F j) (ENNReal.ofReal q) volume ≤
         B * ENNReal.ofReal (((j : ℝ) / (2 : ℝ) ^ j) ^ (1 / q)))

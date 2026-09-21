@@ -11,8 +11,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectSu
 # Threshold pairing algebra for the direct quadratic proof
 
 This module isolates the low/high split in the direct proof supplied by the
-author.  The low portion uses only Holder and the `L²` estimate; the high
-portion is the already-proved local-average pairing estimate.  The final
+author. The low portion uses only Holder and the `L²` estimate; the high
+portion is the already-proved local-average pairing estimate. The final
 lemmas insert `A = δ^{-2}` and `Λ = δ^{-(p-1)}` exactly.
 -/
 
@@ -23,7 +23,7 @@ namespace QuadraticCarleson
 namespace KrauseLaceyBadScale
 
 
-/-- Holder together with the pointwise low truncation estimate.  This is the
+/-- Holder together with the pointwise low truncation estimate. This is the
 `L²` half of the direct threshold argument, independent of the particular
 maximal operator. -/
 theorem lintegral_pairing_interpolationLow_le
@@ -48,7 +48,7 @@ theorem lintegral_pairing_interpolationLow_le
       (eLpNorm_interpolationLow_le_rpow g ha hp hp2 hg)
 
 /-- The same low-truncation Holder estimate for a nonnegative
-extended-real-valued maximal function.  This is the form needed by
+extended-real-valued maximal function. This is the form needed by
 `offsetTailMaximalOn`, whose values are already norms. -/
 theorem lintegral_pairing_interpolationLow_ennreal_le
     {U : ℝ → ℝ≥0∞} {g : ℝ → ℂ} (hU : AEMeasurable U volume)
@@ -87,7 +87,7 @@ theorem sqrt_mul_rpow_mul_sqrt
         A ^ (1 - p / 2) * (Real.sqrt V * Real.sqrt V) := by ring
     _ = _ := by rw [Real.mul_self_sqrt hV]
 
-/-- The low part of the direct proof in its normalized form.  If `U` has
+/-- The low part of the direct proof in its normalized form. If `U` has
 `L²` size at most `δ √V` and `g` has `p`-mass at most `V`, then truncating
 at `A` costs exactly `δ A^{1-p/2} V`. -/
 theorem lintegral_pairing_interpolationLow_le_normalized
@@ -108,7 +108,7 @@ theorem lintegral_pairing_interpolationLow_le_normalized
         (ENNReal.ofReal (a ^ (2 - p)) * ENNReal.ofReal V) ^ (1 / 2 : ℝ) := by
       apply mul_le_mul' hU
       apply ENNReal.rpow_le_rpow
-      exact mul_le_mul' le_rfl hgp
+      · exact mul_le_mul' le_rfl hgp
       norm_num
     _ = _ := by
       rw [← ENNReal.ofReal_mul (Real.rpow_nonneg ha.le (2 - p))]
@@ -128,11 +128,10 @@ theorem lintegral_nonstandard_pairing_interpolationHigh_le
     (hg : Measurable g) (hgi : Integrable g) {a p G : ℝ}
     (ha : 0 < a) (hp : 1 < p) (hG : 0 ≤ G)
     (hgp : Integrable (fun x ↦ ‖g x‖ ^ p))
-    (I₀ : RealInterval) (k₀ : ℤ) (s : ℕ) (hk₀ : 3 ≤ k₀)
+    (I₀ : RealInterval) (k₀ : ℤ) (s : ℕ)
     (scale : RealInterval → ℤ)
     (hlam : Set.Pairwise (↑S : Set RealInterval) fun I J ↦
       I.carrier ⊆ J.carrier ∨ J.carrier ⊆ I.carrier ∨ Disjoint I.carrier J.carrier)
-    (hparent : HasDyadicParents S I₀) (hsub : ∀ I ∈ S, I.carrier ⊆ I₀.carrier)
     (N : Finset RealInterval) (hN : N ⊆ nonstandardIntervals S f I₀ k₀ s scale)
     (hgavg : ∀ I ∈ N, (∫ x in I.carrier, ‖g x‖ ^ p) ≤ G * I.length) :
     (∫⁻ x, ‖badLengthTailMaximal S f I₀ k₀ s scale N x‖ₑ *
@@ -195,11 +194,10 @@ theorem lintegral_pairing_interpolationLow_le_directQuadratic
 theorem lintegral_nonstandard_pairing_interpolationHigh_le_directQuadratic
     {S : Finset RealInterval} {f g : ℝ → ℂ} (hf : Integrable f)
     (hg : Measurable g) (hgi : Integrable g) {p : ℝ}
-    (hp : 1 < p) (I₀ : RealInterval) (k₀ : ℤ) (s : ℕ) (hk₀ : 3 ≤ k₀)
+    (hp : 1 < p) (I₀ : RealInterval) (k₀ : ℤ) (s : ℕ)
     (scale : RealInterval → ℤ)
     (hlam : Set.Pairwise (↑S : Set RealInterval) fun I J ↦
       I.carrier ⊆ J.carrier ∨ J.carrier ⊆ I.carrier ∨ Disjoint I.carrier J.carrier)
-    (hparent : HasDyadicParents S I₀) (hsub : ∀ I ∈ S, I.carrier ⊆ I₀.carrier)
     (N : Finset RealInterval) (hN : N ⊆ nonstandardIntervals S f I₀ k₀ s scale)
     (hgp : Integrable (fun x ↦ ‖g x‖ ^ p))
     (hgavg : ∀ I ∈ N, (∫ x in I.carrier, ‖g x‖ ^ p) ≤
@@ -217,7 +215,7 @@ theorem lintegral_nonstandard_pairing_interpolationHigh_le_directQuadratic
         (directQuadraticLowThreshold s ^ (1 - p) *
           directQuadraticExceptionalThreshold p s) * ∫ x, ‖f x‖) :=
       lintegral_nonstandard_pairing_interpolationHigh_le hf hg hgi ha hp hG hgp
-        I₀ k₀ s hk₀ scale hlam hparent hsub N hN hgavg
+        I₀ k₀ s scale hlam N hN hgavg
     _ = _ := by
       rw [directQuadratic_high_threshold_identity]
 

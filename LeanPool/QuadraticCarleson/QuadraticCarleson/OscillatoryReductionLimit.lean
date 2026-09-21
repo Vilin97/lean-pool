@@ -54,6 +54,7 @@ theorem tendsto_smallPhaseIntegral (lam : ℝ) (hlam : lam ≠ 0)
   · filter_upwards with y
     exact (tendsto_smallPhaseKernel lam (innerRadius lam hlam) (x - y)).mul_const (f y)
 
+/-- The regular remainder relating the quadratic and unmodulated Hilbert truncations. -/
 noncomputable def regularRemainder (lam : ℝ) (hlam : lam ≠ 0)
     (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   paperOscillatoryAction lam hlam f x +

@@ -89,7 +89,8 @@ theorem integrable_highPassKernel_mul (lam : ℝ) (hlam : lam ≠ 0)
     {f : ℝ → ℂ} (hf : Integrable f) (x : ℝ) :
     Integrable (fun y ↦ highPassKernel lam hlam (x - y) * f y) := by
   exact hf.bdd_mul
-    ((measurable_highPassKernel lam hlam).comp (measurable_const.sub measurable_id)).aestronglyMeasurable
+    ((measurable_highPassKernel lam hlam).comp (measurable_const.sub
+      measurable_id)).aestronglyMeasurable
     (Filter.Eventually.of_forall fun y ↦ highPassKernel_norm_le lam hlam (x-y))
 
 /-- Linearity of the genuine height series follows from its proved bounded

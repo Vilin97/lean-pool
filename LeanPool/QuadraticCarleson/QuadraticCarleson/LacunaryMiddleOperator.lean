@@ -14,7 +14,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticHilbertMaximalMeasu
 
 This module realizes the three functions occurring in source lines 636--648:
 the actual middle-scale input, its frozen `R_{k,τ}` replacement, and the
-signed error.  It proves their exact algebraic recombination and the
+signed error. It proves their exact algebraic recombination and the
 disjoint-scale `L¹` packing needed before the finite-modulation estimate and
 Kalton log-convexity are applied.
 -/
@@ -33,7 +33,8 @@ open LowKernelLevelSummation PositiveLowFullEstimate
 open QuadraticHilbertMaximalMeasurable
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The genuine scale-sliced input `∑_{j∈S_{k,m}} b_{j,k}`. -/
 def middleRangeInput
@@ -136,7 +137,7 @@ def frozenBlockErrorLowAction
     frozenBlockErrorInput A f k B c τ m y
 
 /-- The genuine finite maximum over all dyadic modulations in the paper's
-block `Q_τ`.  The empty-block value is canonically zero. -/
+block `Q_τ`. The empty-block value is canonically zero. -/
 noncomputable def frozenBlockMaxEnorm
     (A : ℕ → ℝ) (f : ℝ → ℂ) (k B c : ℕ) (τ : ℤ) (x : ℝ) : ENNReal :=
   (Q B τ).sup fun m ↦ ‖frozenBlockLowAction A f k B c τ m x‖ₑ
@@ -219,7 +220,7 @@ theorem frozenBlockLowAction_enorm_le_max
 
 /-- One frozen low-kernel output is controlled by the corresponding
 maximally truncated quadratic Hilbert transform plus the elementary
-Hardy--Littlewood boundary term.  This is the exact analytic reduction used
+Hardy--Littlewood boundary term. This is the exact analytic reduction used
 before the finite-modulation sparse estimate in the paper. -/
 theorem frozenBlockLowAction_enorm_le_hilbertMax_add_maximal
     {A : ℕ → ℝ} {f : ℝ → ℂ} (hf : Measurable f) (hfi : Integrable f)
@@ -437,7 +438,7 @@ theorem tsum_sparseFrozenBlockInputL1Mass_le_levelMass
         sparseBlockMass B c ρ a τ := by
     intro τ
     by_cases hτρ : τ ≡ ρ [ZMOD sparseModulus]
-    · simp only [sparseFrozenBlockInputL1Mass, sparseBlockMass, hτρ, if_true]
+    · simp only [sparseFrozenBlockInputL1Mass, sparseBlockMass, hτρ, ite_true]
       exact frozenBlockInputL1Mass_le_scale_sum hf k B c τ
     · simp [sparseFrozenBlockInputL1Mass, sparseBlockMass, hτρ]
   calc

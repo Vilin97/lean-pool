@@ -6,15 +6,25 @@ Authors: Quadratic Carleson formalization contributors
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleLevelSet
 
+/-!
+# Parameters for endpoint counterexamples
+
+The paper's amplitude and exponent shifts satisfy the eventual positivity and scale-window
+conditions needed for the modular counterexamples. The resulting height is expressed in terms of
+these parameters.
+-/
+
 open Filter MeasureTheory Set
 
 namespace QuadraticCarleson
 
 
 /- The amplitude and logarithmic shift used in the paper's counterexample. -/
+/-- The counterexample amplitude `log N / 2^40` used in the paper. -/
 noncomputable def paperAmplitude (N : ℕ) : ℝ :=
   Real.log (N : ℝ) / (2 : ℝ) ^ 40
 
+/-- The base-two logarithm of the paper's counterexample amplitude. -/
 noncomputable def paperExponentShift (N : ℕ) : ℝ :=
   Real.logb 2 (paperAmplitude N)
 
@@ -68,6 +78,7 @@ theorem negativeEndpointHeightConstant_pos :
   unfold negativeEndpointHeightConstant
   norm_num
 
+/-- The negative-endpoint counterexample threshold, equal to `log N / (8 * N)`. -/
 noncomputable def negativeEndpointCounterexampleHeight (N : ℕ) : ℝ :=
   counterexampleHeight negativeEndpointHeightConstant N
 

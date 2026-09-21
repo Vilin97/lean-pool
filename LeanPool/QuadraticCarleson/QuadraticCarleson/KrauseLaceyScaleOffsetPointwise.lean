@@ -12,14 +12,14 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryContr
 # Arbitrary smooth radii versus adjacent dyadic radii
 
 Rounding an arbitrary positive smooth radius upward to the next dyadic radius
-costs at most `24` times the centered Hardy--Littlewood maximal function.  This
+costs at most `24` times the centered Hardy--Littlewood maximal function. This
 is a bound for the actual difference of the two smooth operators, obtained
 from the two cutoff-boundary terms and the sharp annular rounding term.
 
 The same single error bounds every finite maximum, with no cardinality loss.
 The lower index of the comparison dyadic maximum is taken from the actual
 radii, so a common real scale offset is not incorrectly treated as preserving
-the original integer-dyadic lower index.  Pairing comparisons use `normInput`
+the original integer-dyadic lower index. Pairing comparisons use `normInput`
 on their right sides, avoiding cancellation of complex test functions.
 -/
 
@@ -34,7 +34,8 @@ open KrauseLaceyCompactPairingStabilization KrauseLaceySparseReflection
 open HardyLittlewoodBoundaryControl
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The actual difference between adjacent smooth cutoffs is one annular
 error, uniformly dominated by the same maximal function. -/
@@ -164,7 +165,7 @@ theorem norm_finiteSmoothMax_le_dyadicMax_add_boundary
   funext f x
   simp [absoluteValueOperator, centeredHardyLittlewoodBoundaryOperator]
 
-/-- Pairing form of the actual annular comparison.  The right-hand test
+/-- Pairing form of the actual annular comparison. The right-hand test
 function is its norm, so this statement remains valid for complex inputs. -/
 theorem norm_pairing_finiteSmoothMax_le_dyadicMax_add_boundary
     (lam : ℝ) (s : Finset PositiveSmoothRadius) (f g : L0Infinity) :

@@ -68,7 +68,8 @@ theorem lintegral_enorm_stoppingScaleLevelBadPart_eq_atomScaleIntegralMass
     {A : ℕ → ℝ} {f : ℝ → ℂ} (hf : Measurable f) (j : ℤ) {k : ℕ} (hAk : 0 ≤ A k) :
     (∫⁻ x, ‖stoppingScaleLevelBadPart A f j k x‖ₑ) =
       atomScaleMass (stoppingLength (f := f))
-        (fun c ↦ ENNReal.ofReal (∫ x, ‖levelAtom A f k (stoppingCenter c) (stoppingLength c) x‖)) j := by
+        (fun c ↦ ENNReal.ofReal (∫ x, ‖levelAtom A f k (stoppingCenter c) (stoppingLength c)
+          x‖)) j := by
   rw [lintegral_enorm_stoppingScaleLevelBadPart_eq_atomScaleMass hf]
   congr 1
   funext c
@@ -81,7 +82,7 @@ theorem lintegral_enorm_stoppingScaleLevelBadPart_eq_atomScaleIntegralMass
 the actual canonical scale-sliced atoms, with no supplied atom family. -/
 theorem tsum_sparseBlock_stoppingScaleLevelBadPart_mass_le
     {A : ℕ → ℝ} {f : ℝ → ℂ} (hf : Measurable f) {k : ℕ} (hAk : 0 ≤ A k)
-    (B c : ℕ) (hB : 0 < B) (hc : 2*c ≤ 5*B) (ρ : ℤ) :
+    (B c : ℕ) (hB : 0 < B) (hc : 2 * c ≤ 5 * B) (ρ : ℤ) :
     (∑' τ : ℤ, sparseBlockMass B c ρ
       (fun j ↦ ∫⁻ x, ‖stoppingScaleLevelBadPart A f j k x‖ₑ) τ) ≤
       2 * PositiveLevelIntegration.magnitudeLevelL1Mass volume A f k := by

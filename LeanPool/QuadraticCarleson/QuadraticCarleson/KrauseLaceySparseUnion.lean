@@ -10,8 +10,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStoppingExtractio
 # Sparse unions over disjoint spatial branches
 
 The recursive Krause--Lacey stopping proof produces one sparse family inside
-each pairwise-disjoint stopping child.  This file proves that their union is
-sparse with exactly the same density.  The proof transports the individual
+each pairwise-disjoint stopping child. This file proves that their union is
+sparse with exactly the same density. The proof transports the individual
 major subsets through the unique branch containing each interval.
 -/
 
@@ -52,7 +52,7 @@ theorem IsSparse.iUnion_of_disjoint_carriers
     if hI : I ∈ F i then E i ⟨I, hI⟩ else ∅
   have hEambient (i : ι) (I : RealInterval) (hI : I ∈ F i) :
       Eambient i I = E i ⟨I, hI⟩ := by
-    simp only [Eambient, dif_pos hI]
+    simp only [Eambient, dite_eq_left hI]
   let E' (I : {I : RealInterval // I ∈ ⋃ i, F i}) : Set ℝ :=
     Eambient (idx I) I.1
   refine ⟨hη, hη1, E', ?_, ?_, ?_, ?_⟩

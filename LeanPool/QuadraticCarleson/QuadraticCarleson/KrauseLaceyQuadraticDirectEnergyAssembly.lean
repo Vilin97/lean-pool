@@ -22,8 +22,10 @@ namespace KrauseLaceyQuadraticDirectPartition
 open KrauseLaceyBadScale KrauseLaceyStoppingExtraction
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical decidable equality for the finite interval families in the direct energy assembly. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- In a laminar dyadic family, distinct intervals with one common scale

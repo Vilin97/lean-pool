@@ -13,9 +13,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftTreeInt
 # Native positive suffix closure from the one-node good estimate
 
 This module isolates the last analytic input in the Krause--Lacey stopping
-argument.  The hypothesis `HasOneNodeGoodPartPairingBound` is exactly the
+argument. The hypothesis `HasOneNodeGoodPartPairingBound` is exactly the
 estimate for the good collection at one node of one of the concrete shifted
-dyadic trees.  Everything after that hypothesis is finite and deterministic:
+dyadic trees. Everything after that hypothesis is finite and deterministic:
 the threshold-ten recursion, preservation of `1 / 4` sparseness, union over
 disjoint roots, and the three-shift reduction.
 -/
@@ -32,8 +32,11 @@ open KrauseLaceyStoppingRecursion
 open KrauseLaceyThreeShiftGrid
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical decidable equality for the finite interval families used in the suffix
+construction. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 private def sparseAtom (p : ℝ) (f g : ℝ → ℂ) (I : RealInterval) : ℝ≥0∞ :=
@@ -57,7 +60,7 @@ private theorem interval_eq_of_mutual_carrier_subset {I J : RealInterval}
   interval_eq_of_carrier_subset_of_length_le hIJ (length_le_of_carrier_subset hJI)
 
 /- A sparse family below each pairwise-disjoint child can be attached to a
-new root.  The root major subset is the actual threshold-ten stopping major
+new root. The root major subset is the actual threshold-ten stopping major
 subset, so the density remains exactly `1 / 4`. -/
 private theorem isSparse_insert_root_biUnion
     {S : Finset RealInterval} {f monitor : ℝ → ℂ} (I : RealInterval)
@@ -122,23 +125,22 @@ private theorem isSparse_insert_root_biUnion
     refine ⟨heta0, heta1, E', ?_, ?_, ?_, ?_⟩
     · intro J
       by_cases hJI : J.1 = I
-      · simp only [E', dif_pos hJI]
+      · simp only [E', dite_eq_left hJI]
         exact I.measurableSet_carrier.diff
           (Finset.measurableSet_biUnion C fun K _ ↦ K.measurableSet_carrier)
-      · simp only [E', dif_neg hJI]
+      · simp only [E', dite_eq_right hJI]
         exact hEmeas _
     · intro J
       by_cases hJI : J.1 = I
-      · simp only [E', dif_pos hJI]
-        simpa only [hJI] using (diff_subset : I.carrier \ Uchildren ⊆ I.carrier)
-      · simp only [E', dif_neg hJI]
+      · simp only [E', dite_eq_left hJI]
+        simpa only [hJI] using (sdiff_subset : I.carrier \ Uchildren ⊆ I.carrier)
+      · simp only [E', dite_eq_right hJI]
         exact hEsub _
     · intro J L hJL
       by_cases hJI : J.1 = I
-      ·
-        have hLI : L.1 ≠ I := fun h ↦
+      · have hLI : L.1 ≠ I := fun h ↦
           hJL (Subtype.ext (hJI.trans h.symm))
-        simp only [E', dif_pos hJI, dif_neg hLI]
+        simp only [E', dite_eq_left hJI, dite_eq_right hLI]
         apply Set.disjoint_left.mpr
         intro x hxroot hxL
         have hLB : L.1 ∈ B := (Finset.mem_insert.mp L.2).resolve_left hLI
@@ -146,8 +148,7 @@ private theorem isSparse_insert_root_biUnion
         exact hxroot.2 (Set.mem_iUnion_of_mem K
           (Set.mem_iUnion_of_mem hK (hRsub K hK L.1 hLK (hEsub _ hxL))))
       · by_cases hLI : L.1 = I
-        ·
-          simp only [E', dif_neg hJI, dif_pos hLI]
+        · simp only [E', dite_eq_right hJI, dite_eq_left hLI]
           apply Disjoint.symm
           apply Set.disjoint_left.mpr
           intro x hxroot hxJ
@@ -155,7 +156,7 @@ private theorem isSparse_insert_root_biUnion
           obtain ⟨K, hK, hJK⟩ := Finset.mem_biUnion.mp hJB
           exact hxroot.2 (Set.mem_iUnion_of_mem K
             (Set.mem_iUnion_of_mem hK (hRsub K hK J.1 hJK (hEsub _ hxJ))))
-        · simp only [E', dif_neg hJI, dif_neg hLI]
+        · simp only [E', dite_eq_right hJI, dite_eq_right hLI]
           apply hEdisj
           intro h
           apply hJL
@@ -163,7 +164,7 @@ private theorem isSparse_insert_root_biUnion
           exact congrArg (fun z : {J : RealInterval // J ∈ (↑B : Set RealInterval)} ↦ z.1) h
     · intro J
       by_cases hJI : J.1 = I
-      · simp only [E', dif_pos hJI]
+      · simp only [E', dite_eq_left hJI]
         have hfour := stoppingMajorSubset_measure_ge_four_fifths f monitor I
           hf.integrableOn hm.integrableOn hlam
         have hquarter : (1 / 4 : ℝ) * I.length ≤
@@ -172,7 +173,7 @@ private theorem isSparse_insert_root_biUnion
             (by norm_num : (1 / 4 : ℝ) ≤ 4 / 5) I.length_pos.le).trans
           simpa only [krauseLaceyStoppingMajorSubset, id_eq, C, Uchildren] using hfour
         simpa only [hJI] using hquarter
-      · simp only [E', dif_neg hJI]
+      · simp only [E', dite_eq_right hJI]
         exact hEmass ⟨J.1, (Finset.mem_insert.mp J.2).resolve_left hJI⟩
   · have hCempty : C = ∅ := Finset.not_nonempty_iff_eq_empty.mp hC
     simp only [C] at hCempty
@@ -182,8 +183,8 @@ private theorem isSparse_insert_root_biUnion
 /-- The sole analytic interface needed by the global closure theorem.
 
 At one node `I` of one concrete shifted dyadic tree, stop simultaneously on
-the `L¹` average of `f` and the `L¹` average of `‖g‖^p`.  The hypothesis asks
-only for the pairing of the surviving good collection.  Its right side is
+the `L¹` average of `f` and the `L¹` average of `‖g‖^p`. The hypothesis asks
+only for the pairing of the surviving good collection. Its right side is
 the single sparse atom at `I`, with the paper-facing `p'` dependence.
 
 The collection supplied to the node may be any subcollection of the ambient
@@ -191,7 +192,7 @@ complete tree contained in `I`; this closure under restriction is what makes
 the finite recursion composable. -/
 def HasOneNodeGoodPartPairingBound (A : ℝ) : Prop :=
   0 ≤ A ∧
-    ∀ (p : ℝ), ∀ hp : 1 < p, p ≤ 2 →
+    ∀ (p : ℝ), ∀ _hp : 1 < p, p ≤ 2 →
       ∀ (ell₀ topScale : ℤ) (shift : Fin 3) (maxDepth : ℕ) (q₀ : ℤ)
         (S : Finset RealInterval) (I : RealInterval) (f g : L0Infinity),
         3 ≤ ell₀ →
@@ -227,7 +228,7 @@ private theorem sparseForm_insert_biUnion
   simp_rw [← sparseForm_finset]
 
 /- The finite recursion below a node already belonging to the active
-collection.  Membership of the root makes every recursive child collection
+collection. Membership of the root makes every recursive child collection
 a strict sub-finset, so strong induction terminates after at most `S.card`
 steps. -/
 private theorem exists_recursive_sparse_bound_of_root_mem
@@ -283,18 +284,18 @@ private theorem exists_recursive_sparse_bound_of_root_mem
         fun K => if hK : K ∈ C then R K hK else ∅
       have hRsparse' : ∀ K ∈ C, IsSparse (1 / 4) (↑(R' K) : Set RealInterval) := by
         intro K hK
-        simp only [R', dif_pos hK]
+        simp only [R', dite_eq_left hK]
         exact hRsparse K hK
       have hRsub' : ∀ K ∈ C, ∀ J ∈ R' K, J.carrier ⊆ K.carrier := by
         intro K hK
-        simp only [R', dif_pos hK]
+        simp only [R', dite_eq_left hK]
         exact hRsub K hK
       have hRbound' : ∀ K ∈ C,
           (∫⁻ x, localizedTailMaximal ell₀ scale (childCollection S K) f x * ‖g x‖ₑ) ≤
             ENNReal.ofReal (A * holderConjugate p) *
               sparseForm p f g (↑(R' K) : Set RealInterval) := by
         intro K hK
-        simp only [R', dif_pos hK]
+        simp only [R', dite_eq_left hK]
         exact hRbound K hK
       let B := C.biUnion R'
       let Rall := insert I B
@@ -339,7 +340,7 @@ private theorem exists_recursive_sparse_bound_of_root_mem
               rw [mul_add, Finset.mul_sum]
 
 /- One external root step reduces immediately to the root-member recursion
-on each selected child.  This is the form used for the depth-zero roots of a
+on each selected child. This is the form used for the depth-zero roots of a
 three-shift forest, which need not themselves occur in the localized input
 family. -/
 theorem exists_recursive_sparse_bound
@@ -393,18 +394,18 @@ theorem exists_recursive_sparse_bound
     fun K => if hK : K ∈ C then R K hK else ∅
   have hRsparse' : ∀ K ∈ C, IsSparse (1 / 4) (↑(R' K) : Set RealInterval) := by
     intro K hK
-    simp only [R', dif_pos hK]
+    simp only [R', dite_eq_left hK]
     exact hRsparse K hK
   have hRsub' : ∀ K ∈ C, ∀ J ∈ R' K, J.carrier ⊆ K.carrier := by
     intro K hK
-    simp only [R', dif_pos hK]
+    simp only [R', dite_eq_left hK]
     exact hRsub K hK
   have hRbound' : ∀ K ∈ C,
       (∫⁻ x, localizedTailMaximal ell₀ scale (childCollection S K) f x * ‖g x‖ₑ) ≤
         ENNReal.ofReal (A * holderConjugate p) *
           sparseForm p f g (↑(R' K) : Set RealInterval) := by
     intro K hK
-    simp only [R', dif_pos hK]
+    simp only [R', dite_eq_left hK]
     exact hRbound K hK
   let B := C.biUnion R'
   let Rall := insert I B
@@ -449,8 +450,9 @@ theorem exists_recursive_sparse_bound
           rw [mul_add, Finset.mul_sum]
 
 /- The scalar-valued test operator associated with one localized shifted
-   tree.  The `toReal` coercion is harmless even before finiteness is known:
+   tree. The `toReal` coercion is harmless even before finiteness is known:
    `ENNReal.ofReal_toReal_le` is enough for every domination below. -/
+/-- The localized tail maximal function, converted to a complex-valued test operator. -/
 noncomputable def localizedTailMaximalTestOperator
     (ell₀ : ℤ) (scale : RealInterval → ℤ) (S : Finset RealInterval) : TestOperator :=
   fun f x ↦ ((localizedTailMaximal ell₀ scale S f x).toReal : ℂ)

@@ -6,6 +6,13 @@ Authors: Anastasios Fragkos
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximal
 
+/-!
+# Combining three sparse operator bounds
+
+A pairing dominated by three component pairings inherits a sparse bound by combining the three
+sparse families and their quantitative estimates.
+-/
+
 open MeasureTheory Set
 
 namespace QuadraticCarleson
@@ -39,8 +46,8 @@ theorem exists_three_sparseBounds_of_pairing_le_three
 /-- Three sparse operator bounds combine into one sparse operator bound.
 
 For the given test functions, choose whichever of the three sparse forms is
-largest.  Its family remains `1 / 4`-sparse, and the sum of the three
-coefficients absorbs the other two forms.  Thus no geometric union, and in
+largest. Its family remains `1 / 4`-sparse, and the sum of the three
+coefficients absorbs the other two forms. Thus no geometric union, and in
 particular no false disjointness assertion about the three shifted grids, is
 needed. -/
 theorem hasSparseOnePBound_of_pairing_le_three

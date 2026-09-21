@@ -12,11 +12,11 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPrunedPhysicalMax
 /-!
 # Scalar-standard local estimates
 
-This is the complementary scalar branch of the energy classification.  It
-uses the proved standard diagonal-energy estimate directly.  Cross-scale
+This is the complementary scalar branch of the energy classification. It
+uses the proved standard diagonal-energy estimate directly. Cross-scale
 orthogonality is not assumed: finite Rademacher--Menshov is applied to the
 concrete minimal-generation `Lp` vectors, with the finite cardinality loss
-made explicit.  Thus the result is a genuine finite physical-tail estimate,
+made explicit. Thus the result is a genuine finite physical-tail estimate,
 not a sparse or oscillatory conclusion.
 -/
 
@@ -31,6 +31,7 @@ open KrauseLaceyStoppingExtraction KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The sum in L² of the standard bad pieces belonging to one generation. -/
 noncomputable def energyStandardGenerationLp
     (S : Finset RealInterval) (f : ℝ → ℂ) (hf : Integrable f) (I₀ : RealInterval)
     (k₀ s : ℤ) (scale : RealInterval → ℤ) (N : Finset RealInterval) (n : ℕ) :
@@ -53,6 +54,7 @@ theorem energyStandardGenerationLp_ae_eq
   simp only [Finset.sum_apply, krauseLaceyCollectionAction]
   exact Finset.sum_congr rfl hx
 
+/-- The pointwise maximum of norms of the finite generation-prefix sums. -/
 noncomputable def energyStandardGenerationPrefixMaximal
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (N : Finset RealInterval) (x : ℝ) : ℝ :=
@@ -78,7 +80,7 @@ theorem energyStandardGenerationPrefixMaximal_ae_eq
   exact Finset.sum_congr rfl fun i _ ↦ (hx i).symm
 
 /-- The finite signed-sum input required by Rademacher--Menshov follows from
-the already proved standard diagonal estimate.  The visible `N.card` is the
+the already proved standard diagonal estimate. The visible `N.card` is the
 only loss introduced here; no cross-scale cancellation is asserted. -/
 theorem hasSignedSumSquareBound_energyStandardGenerations
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
@@ -139,7 +141,7 @@ theorem eLpNorm_energyStandardGenerationPrefixMaximal_le
   · positivity [intervalL1Average_nonneg f I₀]
 
 /-- The source-oriented physical suffix maximum for the scalar-standard
-collection.  The subtype keeps the required orientation `ell ≥ k₀ + s`. -/
+collection. The subtype keeps the required orientation `ell ≥ k₀ + s`. -/
 noncomputable def energyStandardSourceTailMaximal
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (N : Finset RealInterval) (x : ℝ) : ℝ :=
@@ -216,7 +218,7 @@ theorem aemeasurable_energyStandardSourceTailMaximal
   · simp only [ite_eq_right he]
     exact aestronglyMeasurable_const
 
-/-- The standard physical tail has the genuine `L²` pairing estimate.  This
+/-- The standard physical tail has the genuine `L²` pairing estimate. This
 is Hölder applied to the actual source-oriented maximum; the preceding
 theorem supplies its fully concrete first factor. -/
 theorem lintegral_energyStandardSourceTail_pairing_le

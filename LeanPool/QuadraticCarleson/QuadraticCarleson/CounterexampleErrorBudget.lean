@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexamplePointwise
 
 For the explicit choice `A_N = 2⁻⁴⁰ log N`, the stationary error is a
 small fixed fraction of the harmonic main term, the packet-scale error decays
-geometrically, and the two-fold oscillatory error is `O((log N)⁻²)`.  This
+geometrically, and the two-fold oscillatory error is `O((log N)⁻²)`. This
 module proves that their sum eventually fits below the unused half of the
 main-term lower bound.
 -/

@@ -7,6 +7,14 @@ Authors: Anastasios Fragkos
 import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertRepresentativeBridge
 import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoints
 
+/-!
+# Weak bounds and principal-value endpoint conclusions
+
+The stopping good-part L² estimate and the maximal-function distribution bound give an explicit
+weak (1,1) constant for the ordinary Hilbert maximal operator. The resulting uniform bound
+closes the simultaneous principal-value existence and endpoint assertions.
+-/
+
 open Filter Function MeasureTheory Set FourierTransform
 open scoped ENNReal Topology
 
@@ -58,9 +66,12 @@ theorem volume_maximal_gt_one_le_sq {g : ℝ → ℝ≥0∞} (hg : Measurable g)
         ((measurable_centeredHardyLittlewoodMaximal hg).pow_const 2).aemeasurable 1
     _ ≤ _ := centeredHardyLittlewoodMaximal_sq_lintegral_le hg
 
+/-- The output threshold used in the height-one weak-type estimate. -/
 noncomputable def normalizedThreshold : ℝ := 32 + 20 * Real.pi⁻¹ + 44 / 3
+/-- The measure-bound constant for the normalized weak-type estimate. -/
 noncomputable def normalizedWeakConstant : ℝ :=
   160 * (Real.pi ^ 2 + 1) + 96 + 2 * (32 / 3 + 128)
+/-- The weak-`(1,1)` constant obtained by rescaling the normalized estimate. -/
 noncomputable def hilbertWeakConstant : ℝ := normalizedThreshold * normalizedWeakConstant
 
 theorem normalizedThreshold_pos : 0 < normalizedThreshold := by

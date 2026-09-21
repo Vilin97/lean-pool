@@ -58,7 +58,8 @@ theorem paperOscillatoryAction_stoppingBadPart_eq_tsum
     rw [← tsum_stoppingLevelBadPart hf hfi y, tsum_mul_left]
   simp_rw [hp]
   exact integral_tsum
-    (fun k ↦ (integrable_highPassKernel_mul lam hlam (integrable_stoppingLevelBadPart hf hfi k) x).1)
+    (fun k ↦ (integrable_highPassKernel_mul lam hlam (integrable_stoppingLevelBadPart hf hfi k)
+      x).1)
     (tsum_lintegral_enorm_highPass_stoppingLevels_lt_top hf hfi lam hlam x).ne
 
 theorem paperOscillatoryAction_eq_low_add_high {b : ℝ → ℂ} (hb : Integrable b)

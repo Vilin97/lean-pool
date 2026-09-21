@@ -10,13 +10,13 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelati
 # The fixed-scale endpoint in Krause--Lacey Proposition 4.1
 
 This module proves the `L∞ → L∞` endpoint paired with the oscillatory
-`L² → L²` estimate in the proof of KL18 Proposition 4.1.  The kernel's
-`L¹` mass is bounded directly from the concrete dyadic cutoff.  At a fixed
+`L² → L²` estimate in the proof of KL18 Proposition 4.1. The kernel's
+`L¹` mass is bounded directly from the concrete dyadic cutoff. At a fixed
 scale, the localized outputs have disjoint parent supports, so at most one
 summand contributes at any point.
 
 Mathlib currently has no Riesz--Thorin or Marcinkiewicz operator
-interpolation theorem in its `MemLp` API.  Accordingly this file proves both
+interpolation theorem in its `MemLp` API. Accordingly this file proves both
 actual endpoints but does not introduce the desired intermediate `L^q`
 operator estimate as a hypothesis.
 -/
@@ -28,7 +28,7 @@ namespace QuadraticCarleson
 
 
 /-- The concrete positive-half unit-quadratic kernel has uniformly bounded
-`L¹` action on bounded inputs.  This is the trivial endpoint immediately
+`L¹` action on bounded inputs. This is the trivial endpoint immediately
 following the oscillatory estimate (2.4) in KL18. -/
 theorem norm_krauseLaceyLocalizedPiece_le
     (j : ℤ) (I : RealInterval) (f : ℝ → ℂ) {M : ℝ} (hM : 0 ≤ M)
@@ -85,7 +85,7 @@ theorem norm_krauseLaceyLocalizedPiece_le
       have hDM : 0 ≤ positiveDyadicAmplitudeBound * M := mul_nonneg hD hM
       nlinarith
 
-/-- Fixed-scale localized `L∞` endpoint.  The exact scale relation supplies
+/-- Fixed-scale localized `L∞` endpoint. The exact scale relation supplies
 support in each parent interval, and pairwise-disjoint parents ensure that at
 most one localized output is nonzero at a point. -/
 theorem norm_krauseLaceyFixedScaleLocalizedSum_le
@@ -122,7 +122,7 @@ theorem norm_krauseLaceyFixedScaleLocalizedSum_le
     rw [hzero, norm_zero]
     exact mul_nonneg positiveDyadicAmplitudeBound_nonneg hM
 
-/-- Finite maximum of fixed-scale localized outputs.  This is useful for
+/-- Finite maximum of fixed-scale localized outputs. This is useful for
 finite approximations, while KL18's actual maximal truncation additionally
 requires control of partial sums across scales. -/
 noncomputable def krauseLaceyFiniteScaleMaximal

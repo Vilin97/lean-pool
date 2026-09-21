@@ -10,7 +10,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
 # Numerical closure for the direct quadratic one-node proof
 
 The author's direct proof produces the exact offset decay
-`2 ^ (-(p - 1) / 2)` for `1 < p ≤ 2`.  This file records that decay,
+`2 ^ (-(p - 1) / 2)` for `1 < p ≤ 2`. This file records that decay,
 the two threshold identities used in the pairing argument, and the final
 geometric summation by comparison with the already verified project-wide
 scale ratio.
@@ -21,7 +21,8 @@ open scoped BigOperators
 namespace QuadraticCarleson
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The exact decay ratio `2^{-(p-1)/2}` from the direct quadratic proof. -/
 def directQuadraticDecayRatio (p : ℝ) : ℝ :=
@@ -160,7 +161,7 @@ theorem finite_directQuadraticDecayRatio_sum_le_twenty_mul_holderConjugate
     linarith
 
 /-- The exact direct decay summed over an arbitrary finite set of
-nonnegative integer offsets.  This is the form produced by the finite
+nonnegative integer offsets. This is the form produced by the finite
 selected-interval reconstruction: its offsets need not fill an initial
 segment of `ℕ`. -/
 theorem finite_int_directQuadraticDecayRatio_sum_le_twenty_mul_holderConjugate

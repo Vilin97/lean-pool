@@ -28,7 +28,7 @@ theorem ennreal_add_sq_le (a b : ℝ≥0∞) : (a + b) ^ 2 ≤ 2 * (a ^ 2 + b ^ 
     nlinarith [sq_nonneg ((a : ℝ) - (b : ℝ))])
 
 theorem lintegral_sq_le_of_le_add {F G H : ℝ → ℝ≥0∞}
-    (hF : Measurable F) (hG : Measurable G) (h : ∀ x, H x ≤ F x + G x) :
+    (hF : Measurable F) (h : ∀ x, H x ≤ F x + G x) :
     (∫⁻ x, H x ^ 2) ≤ 2 * ((∫⁻ x, F x ^ 2) + ∫⁻ x, G x ^ 2) := by
   calc
     _ ≤ ∫⁻ x, 2 * (F x ^ 2 + G x ^ 2) := by
@@ -106,7 +106,8 @@ theorem finiteConvolutionMaximal_sub_reflect_sq_bound {N : ℕ}
     {f : ℝ → ℂ} (hfm : Measurable f) (hf : MemLp f 2) :
     (∫⁻ x, finiteConvolutionMaximal (fun i t ↦ κ i t - κ i (-t)) f x ^ 2) ≤
       (4 * C) * ∫⁻ x, ‖f x‖ₑ ^ 2 := by
-  have hfr : MemLp (fun t ↦ f (-t)) 2 := hf.comp_measurePreserving (Measure.measurePreserving_neg volume)
+  have hfr : MemLp (fun t ↦ f (-t)) 2 := hf.comp_measurePreserving
+    (Measure.measurePreserving_neg volume)
   have hmr := measurable_finiteConvolutionMaximal κ (fun i ↦ (hc i).measurable)
     (hfm.comp measurable_neg)
   have hmf := measurable_finiteConvolutionMaximal κ (fun i ↦ (hc i).measurable) hfm
@@ -119,7 +120,7 @@ theorem finiteConvolutionMaximal_sub_reflect_sq_bound {N : ℕ}
   calc
     _ ≤ 2 * ((∫⁻ x, finiteConvolutionMaximal κ f x ^ 2) +
         ∫⁻ x, finiteConvolutionMaximal κ (fun t ↦ f (-t)) (-x) ^ 2) :=
-      lintegral_sq_le_of_le_add hmf (hmr.comp measurable_neg) hpoint
+      lintegral_sq_le_of_le_add hmf hpoint
     _ = 2 * ((∫⁻ x, finiteConvolutionMaximal κ f x ^ 2) +
         ∫⁻ x, finiteConvolutionMaximal κ (fun t ↦ f (-t)) x ^ 2) := by
       rw [lintegral_neg_eq_self (fun x ↦ finiteConvolutionMaximal κ (fun t ↦ f (-t)) x ^ 2)]
@@ -160,7 +161,6 @@ theorem finiteConvolutionMaximal_eq_or_conj_sq_bound {N : ℕ}
     _ ≤ 2 * ((∫⁻ x, finiteConvolutionMaximal κ f x ^ 2) +
         ∫⁻ x, finiteConvolutionMaximal κ (fun t ↦ conj (f t)) x ^ 2) :=
       lintegral_sq_le_of_le_add (measurable_finiteConvolutionMaximal κ hκ hfm)
-        (measurable_finiteConvolutionMaximal κ hκ hfmconj)
         (finiteConvolutionMaximal_eq_or_conj_le κ τ hτ f)
     _ ≤ 2 * (C * (∫⁻ x, ‖f x‖ₑ ^ 2) + C * ∫⁻ x, ‖conj (f x)‖ₑ ^ 2) :=
       mul_le_mul' le_rfl (add_le_add (hbound f hf) (hbound _ hfc))
@@ -253,7 +253,8 @@ theorem finite_fixedHeightQuadraticKernel_positive_maximal_sq_decay
     (fun i ↦ hasCompactSupport_positiveFixedHeightQuadraticKernel _ _ _)
     (ENNReal.ofReal (4437295368 * positiveDyadicAmplitudeBound ^ 2 /
       (2 : ℝ) ^ ((height - 1) / 5)))
-    (fun g hg ↦ finite_positiveFixedHeightQuadraticKernel_maximal_sq_decay n height hh lam hlam hg) hgm hg
+    (fun g hg ↦ finite_positiveFixedHeightQuadraticKernel_maximal_sq_decay n height hh lam hlam
+      hg) hgm hg
   have hk : (fun i t ↦ fixedHeightQuadraticKernel (lam i) height (hlam i).ne' t) =
       (fun i t ↦ positiveFixedHeightQuadraticKernel (lam i) height (hlam i).ne' t -
         positiveFixedHeightQuadraticKernel (lam i) height (hlam i).ne' (-t)) := by

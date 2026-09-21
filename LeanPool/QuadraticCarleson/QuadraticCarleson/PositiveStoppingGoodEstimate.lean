@@ -47,6 +47,7 @@ theorem lintegral_sq_enorm_stoppingGoodPart_le {f : ℝ → ℂ} (hf : Integrabl
       (integral_sq_norm_stoppingGoodPart_le_five_l1 hf)
     _ = _ := by rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 5), hmass]; norm_num
 
+/-- The stopping good-part constant obtained from the squared all-height L² bound. -/
 noncomputable def stoppingGoodOscillatoryConstant : ℝ≥0∞ := 5 * allHeightL2Constant ^ 2
 
 theorem stoppingGoodOscillatoryConstant_lt_top : stoppingGoodOscillatoryConstant < ∞ :=

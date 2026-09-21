@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectTh
 # Low-truncation pairing for the direct quadratic tail
 
 This module joins the checked direct-tail `L²` estimate to the scalar Holder
-interface.  Constant normalization is deliberately kept separate from this
+interface. Constant normalization is deliberately kept separate from this
 analytic step.
 -/
 
@@ -28,7 +28,8 @@ open KrauseLaceyQuadraticProjectionRemainder
 open KrauseLaceyQuadraticSmoothProjection
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The scale-independent extended-nonnegative energy constant obtained by
 factoring the common spatial mass and dyadic decay out of the direct-tail
@@ -249,7 +250,7 @@ theorem lintegral_pairing_interpolationLow_ennreal_le_normalized_mul
           (1 / 2 : ℝ) := by
       apply mul_le_mul' hU
       apply ENNReal.rpow_le_rpow
-      exact mul_le_mul' le_rfl hgp
+      · exact mul_le_mul' le_rfl hgp
       norm_num
     _ = C * ENNReal.ofReal (delta * a ^ (1 - p / 2) * V) := by
       rw [mul_assoc, halg]
@@ -335,7 +336,7 @@ theorem lintegral_offsetTailMaximalOn_interpolationLow_le_directQuadratic
           directQuadraticLowThreshold n ^ (1 - p / 2)) * V by ring,
         directQuadratic_low_threshold_identity]
 
-/-- The same paper-facing low estimate with no per-offset gap premise.  It is
+/-- The same paper-facing low estimate with no per-offset gap premise. It is
 the form used when summing over the arbitrary finite set `offsetSet`. -/
 theorem lintegral_offsetTailMaximalOn_interpolationLow_le_directQuadratic_of_nonnegative_scales
     {S A : Finset RealInterval} (hA : A ⊆ S)
@@ -412,7 +413,7 @@ theorem lintegral_offsetTailMaximalOn_interpolationLow_le_directQuadratic_of_non
         directQuadratic_low_threshold_identity]
 
 /-- The genuine direct localized tail paired with the low truncation of the
-testing function.  The right side is exactly the square root of the checked
+testing function. The right side is exactly the square root of the checked
 projected-plus-remainder energy times the standard low-truncation factor. -/
 theorem lintegral_offsetTailMaximalOn_interpolationLow_le_root
     {S A : Finset RealInterval} (hA : A ⊆ S)

@@ -27,8 +27,11 @@ open KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The overlap block size `2 * (1 + 2^s)` used for exponential pruning. -/
 def activeOverlapBlock (s : ℕ) : ℕ := 2 * (1 + 2 ^ s)
 
+/-- The overlap cutoff used in exponential pruning, equal to sixteen times the basic active
+cutoff. -/
 def activeExponentialCutoff (s : ℕ) : ℕ := 16 * activeOverlapCutoff s
 
 theorem activeOverlapBlock_pred_add_one (s : ℕ) :

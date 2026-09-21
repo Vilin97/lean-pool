@@ -16,7 +16,7 @@ derived from this test and the proved stopping-cell local-mass bound.
 -/
 
 open Function MeasureTheory Set
-open scoped ComplexConjugate Classical
+open scoped ComplexConjugate
 
 namespace QuadraticCarleson
 namespace KrauseLaceyBadScale
@@ -24,10 +24,12 @@ namespace KrauseLaceyBadScale
 open KrauseLaceyStoppingExtraction
 
 
+open Classical in
 /-- The near-diagonal positive convolution in the source nonstandard test. -/
 noncomputable def localUnitMass (I : RealInterval) (b : ℝ → ℂ) (x : ℝ) : ℝ :=
   ∫ t in Icc (x - 1 / 2) (x + 1 / 2), ‖I.centralThird.indicator b t‖
 
+open Classical in
 /-- Literal source nonstandard condition, with the concrete near-diagonal
 constant multiplied by `100`. We use the equivalent a.e. form. -/
 def IsNonstandard (k : ℤ) (I : RealInterval) (b : ℝ → ℂ) : Prop :=
@@ -36,6 +38,7 @@ def IsNonstandard (k : ℤ) (I : RealInterval) (b : ℝ → ℂ) : Prop :=
       (krauseLaceyLocalizedPiece 1 k I b) x‖ ≤
       (1600 * positiveDyadicAmplitudeBound ^ 2 / I.length) * localUnitMass I b x
 
+open Classical in
 /-- The actual nonstandard collection at kernel index `k` and bad-scale
 gap `s`. Interval length has exponent `k + 2` in our kernel normalization. -/
 noncomputable def nonstandardCollection
@@ -45,6 +48,7 @@ noncomputable def nonstandardCollection
     I.length = (2 : ℝ) ^ (k + 2) ∧ k₀ ≤ k + 2 - s ∧
       IsNonstandard k I (badScaleInput S f I₀ k₀ (k + 2 - s))
 
+open Classical in
 /-- All actual nonstandard intervals at one fixed bad-scale gap. The
 finite candidate collection supplies the finite physical scale range. -/
 noncomputable def nonstandardIntervals
@@ -54,12 +58,14 @@ noncomputable def nonstandardIntervals
     I.length = (2 : ℝ) ^ (scale I + 2) ∧ k₀ ≤ scale I + 2 - s ∧
       IsNonstandard (scale I) I (badScaleInput S f I₀ k₀ (scale I + 2 - s))
 
+open Classical in
 theorem nonstandardIntervals_subset (S : Finset RealInterval) (f : ℝ → ℂ)
     (I₀ : RealInterval) (k₀ s : ℤ) (scale : RealInterval → ℤ) :
     nonstandardIntervals S f I₀ k₀ s scale ⊆ S := by
   intro I hI
   exact (Finset.mem_filter.mp (Finset.mem_filter.mp hI).1).1
 
+open Classical in
 theorem localUnitMass_le (I : RealInterval) {b : ℝ → ℂ} (hb : Integrable b) (x : ℝ) :
     localUnitMass I b x ≤ ∫ t in Icc (x - 1 / 2) (x + 1 / 2), ‖b t‖ := by
   apply integral_mono (hb.indicator I.measurableSet_centralThird).norm.integrableOn
@@ -67,6 +73,7 @@ theorem localUnitMass_le (I : RealInterval) {b : ℝ → ℂ} (hb : Integrable b
   intro t
   exact norm_indicator_le_norm_self _ _
 
+open Classical in
 theorem integral_sq_localizedPiece_eq_norm_pairing
     (k : ℤ) (I : RealInterval) (b : ℝ → ℂ) :
     (∫ x, ‖krauseLaceyLocalizedPiece 1 k I b x‖ ^ 2) =
@@ -76,12 +83,13 @@ theorem integral_sq_localizedPiece_eq_norm_pairing
   rw [integral_complex_ofReal, Complex.norm_real,
     Real.norm_of_nonneg (integral_nonneg fun _ ↦ sq_nonneg _)]
 
+open Classical in
 /-- A bound on the actual adjoint action controls the energy of the
 localized piece. The integral identity, integrability, and null-set handling
 are all proved here. -/
 theorem integral_sq_localizedPiece_le_of_adjoint_bound
     (k : ℤ) (I : RealInterval) {b : ℝ → ℂ} (hb : Integrable b)
-    {H : ℝ} (hH : 0 ≤ H)
+    {H : ℝ}
     (hadj : ∀ᵐ x ∂volume, x ∈ I.centralThird →
       ‖(krauseLaceyPositiveKernel k).adjoint.applyIntegral
         (krauseLaceyLocalizedPiece 1 k I b) x‖ ≤ H) :
@@ -101,9 +109,9 @@ theorem integral_sq_localizedPiece_le_of_adjoint_bound
   have hg : Integrable (fun x ↦ c x * conj (K.adjoint.applyIntegral
       (krauseLaceyLocalizedPiece 1 k I b) x)) := by
     apply hc.mul_bdd (Complex.continuous_conj.comp_aestronglyMeasurable hm)
-    filter_upwards with x
-    simpa only [RCLike.norm_conj] using K.adjoint.norm_applyIntegral_le
-      (integrable_krauseLaceyLocalizedPiece k I hb) x
+    · filter_upwards with x
+      simpa only [RCLike.norm_conj] using K.adjoint.norm_applyIntegral_le
+        (integrable_krauseLaceyLocalizedPiece k I hb) x
   calc
     _ ≤ ∫ x, ‖c x * conj (K.adjoint.applyIntegral (krauseLaceyLocalizedPiece 1 k I b) x)‖ :=
       norm_integral_le_integral_norm _
@@ -117,8 +125,10 @@ theorem integral_sq_localizedPiece_le_of_adjoint_bound
     _ = _ := by
       rw [integral_const_mul]
       congr 1
-      simp only [c, norm_indicator_eq_indicator_norm, integral_indicator I.measurableSet_centralThird]
+      simp only [c, norm_indicator_eq_indicator_norm, integral_indicator
+        I.measurableSet_centralThird]
 
+open Classical in
 /-- The diagonal estimate for an actual nonstandard bad piece. The
 `2^(-s)` gain is derived from its literal bad-scale index. -/
 theorem nonstandard_badPiece_diagonalEnergy_le
@@ -142,7 +152,7 @@ theorem nonstandard_badPiece_diagonalEnergy_le
     positivity [I.length_pos]
   have hH : 0 ≤ 96000 * positiveDyadicAmplitudeBound ^ 2 * intervalL1Average f I₀ *
       (2 : ℝ) ^ (-s) := by positivity [intervalL1Average_nonneg f I₀]
-  apply integral_sq_localizedPiece_le_of_adjoint_bound k I hb hH
+  apply integral_sq_localizedPiece_le_of_adjoint_bound k I hb
   filter_upwards [hNS] with x hx hxI
   apply (hx hxI).trans
   calc
@@ -156,8 +166,9 @@ theorem nonstandard_badPiece_diagonalEnergy_le
         rw [show k + 2 - s = (k + 2) + (-s) by ring,
           zpow_add₀ (by norm_num : (2 : ℝ) ≠ 0)]
       rw [hscale, hpow]
-      field_simp <;> ring
+      field_simp; ring
 
+open Classical in
 /-- The full diagonal energy has no dependence on the number of intervals
 or physical scales. The actual restricted-input mass packing supplies it. -/
 theorem sum_nonstandard_badPiece_diagonalEnergy_le

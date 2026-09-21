@@ -44,6 +44,7 @@ theorem paperOscillatoryMaximal_const_mul {f : ℝ → ℂ} (hf : Integrable f)
   simp_rw [paperOscillatoryAction_const_mul _ _ hf, enorm_mul]
   exact (ENNReal.mul_iSup _ _).symm
 
+/-- Pointwise division of an input by the oscillatory endpoint level parameter. -/
 noncomputable def normalizedOscillatoryInput (α : ℝ) (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   (α : ℂ)⁻¹ * f x
 

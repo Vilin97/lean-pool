@@ -20,9 +20,11 @@ open scoped ENNReal NNReal Topology
 
 namespace QuadraticCarleson
 
+/-- A square modulation with sign selected by a Boolean flag. -/
 def signedSquareModulation (negative : Bool) (r : ℝ) : ℝ :=
   if negative then -(r ^ 2) else r ^ 2
 
+/-- A rational square modulation with sign selected by a Boolean flag. -/
 def signedRationalSquareModulation (negative : Bool) (q : ℚ) : ℚ :=
   if negative then -(q ^ 2) else q ^ 2
 
@@ -62,6 +64,7 @@ theorem oscillatoryScaleSpec_signedSquareModulation (negative : Bool)
     OscillatoryScaleSpec (signedSquareModulation negative r) height j := by
   simpa only [OscillatoryScaleSpec, abs_signedSquareModulation, Real.sqrt_sq hr] using hscale
 
+/-- The fixed-height maximal convolution over the enumerated nonzero rational modulations. -/
 noncomputable def rationalFixedHeightQuadraticMaximal
     (height : ℕ) (f : ℝ → ℂ) : ℝ → ℝ≥0∞ :=
   countableConvolutionMaximal (fun n ↦ fixedHeightQuadraticKernel
@@ -81,7 +84,7 @@ theorem fixedHeightQuadratic_integral_rational_le
 /-- On either signed modulation band, rational roots strictly inside the band
 control every point of the half-open band, with its lower endpoint included. -/
 theorem fixedScale_signedSquare_integral_enorm_le_rational
-    (height : ℕ) (j : ℤ) (negative : Bool) {r : ℝ} (hr : 0 < r)
+    (height : ℕ) (j : ℤ) (negative : Bool) {r : ℝ}
     (hscale : (2 : ℝ) ^ height ≤ (2 : ℝ) ^ j * r ∧
       (2 : ℝ) ^ j * r < (2 : ℝ) ^ (height + 1))
     {f : ℝ → ℂ} (hf : LocallyIntegrable f) (x : ℝ) :
@@ -123,7 +126,7 @@ theorem fixedScale_signedSquare_integral_enorm_le_rational
     have hbound := fixedHeightQuadratic_integral_rational_le
       height (signedRationalSquareModulation negative q) hqR f x
     simp only [fixedHeightQuadraticKernel, hidx] at hbound
-    simpa only [F, Set.mem_setOf_eq,
+    simpa only [F, Set.mem_ofPred_eq,
       coe_signedRationalSquareModulation] using hbound
   exact closure_minimal hsub hclosed (Ico_subset_closure_rational_Ioo hab hmem)
 
@@ -137,7 +140,7 @@ theorem fixedHeightQuadratic_integral_enorm_le_rational
   have hs := oscillatoryScaleIndex_spec lam height hlam
   have h := fixedScale_signedSquare_integral_enorm_le_rational
     height (oscillatoryScaleIndex lam height hlam) (decide (lam < 0))
-    (Real.sqrt_pos.mpr (abs_pos.mpr hlam)) hs hf x
+    hs hf x
   simpa only [signedSquareModulation_sqrt_abs, fixedHeightQuadraticKernel] using h
 
 end QuadraticCarleson

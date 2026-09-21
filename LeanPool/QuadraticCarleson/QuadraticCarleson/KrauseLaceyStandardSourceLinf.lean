@@ -49,7 +49,7 @@ theorem krauseLaceyLocalizedPiece_eq_applyIntegral_intervalBadInput
       (scale I) I (badScaleInput S f I₀ k₀ (scale I + 2 - s)) y).symm
   exact (congrFun ha x).symm
 
-/-- A fixed-scale endpoint with one bounded input per parent.  This is the
+/-- A fixed-scale endpoint with one bounded input per parent. This is the
 same support-disjoint argument as the common-input endpoint, with no loss
 from the number of parents. -/
 theorem norm_krauseLaceyFixedScaleLocalizedSum_variable_le
@@ -102,7 +102,7 @@ theorem norm_energyStandardSourceParentInput_le
     (hNS : ∀ s ∈ R, N s ⊆ S)
     (hscale : ∀ s ∈ R, ∀ I ∈ N s, I.length = (2 : ℝ) ^ (scale I + 2))
     (j : ℤ) (hfixed : ∀ s ∈ R, ∀ I ∈ N s, scale I + 2 = j)
-    {I : RealInterval} (hI : I ∈ R.biUnion N) (x : ℝ) :
+    {I : RealInterval} (x : ℝ) :
     ‖energyStandardSourceParentInput S f I₀ k₀ scale R N I x‖ ≤ ‖f x‖ := by
   let NI : ℤ → Finset RealInterval := fun s ↦ if I ∈ N s then {I} else ∅
   have hNIS : ∀ s ∈ R, NI s ⊆ S := by
@@ -150,10 +150,10 @@ theorem integrable_energyStandardSourceParentInput
   apply integrable_finsetSum
   intro s hs
   by_cases hIs : I ∈ N s
-  · simp only [hIs, if_pos, intervalBadInput]
+  · simp only [hIs, ite_eq_left, intervalBadInput]
     exact (integrable_badScaleInput S hf I₀ k₀ (scale I + 2 - s)).indicator
       I.measurableSet_centralThird
-  · simp only [hIs, if_neg]
+  · simp only [hIs]
     exact integrable_zero ℝ ℂ volume
 
 theorem centralThird_indicator_energyStandardSourceParentInput
@@ -168,7 +168,7 @@ theorem centralThird_indicator_energyStandardSourceParentInput
     simp [energyStandardSourceParentInput, intervalBadInput, hx]
 
 /-- The regrouped input has the same local mass bound as a single source
-bad piece.  Disjointness across source gaps removes any gap-count loss. -/
+bad piece. Disjointness across source gaps removes any gap-count loss. -/
 theorem integral_norm_energyStandardSourceParentInput_le
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
     (I₀ : RealInterval) (k₀ j : ℤ) (scale : RealInterval → ℤ)
@@ -199,7 +199,7 @@ theorem integral_norm_energyStandardSourceParentInput_le
     by_cases hx : x ∈ I.centralThird
     · rw [Set.indicator_of_mem hx]
       exact norm_energyStandardSourceParentInput_le f I₀ k₀ scale hlam R N hNS
-        hscale j hfixed hIU x
+        hscale j hfixed x
     · rw [Set.indicator_of_notMem hx]
       have hz : energyStandardSourceParentInput S f I₀ k₀ scale R N I x = 0 := by
         have hfun := centralThird_indicator_energyStandardSourceParentInput
@@ -231,7 +231,7 @@ noncomputable def energyStandardRegroupedSourceAction
     (energyStandardSourceParentInput S f I₀ k₀ scale R N I) x
 
 /-- Uniform fixed-physical-scale `L∞` endpoint for the regrouped source
-action.  The source-gap count is absent: it was eliminated pointwise before
+action. The source-gap count is absent: it was eliminated pointwise before
 the fixed-scale support argument. -/
 theorem norm_energyStandardRegroupedSourceAction_le
     {S : Finset RealInterval} (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ j : ℤ)
@@ -267,7 +267,7 @@ theorem norm_energyStandardRegroupedSourceAction_le
     (energyStandardSourceParentInput S f I₀ k₀ scale R N) hM
   · intro I hI t
     exact (norm_energyStandardSourceParentInput_le f I₀ k₀ scale hlam R N hNS hscale j
-      hfixed hI t).trans (hfTop t)
+      hfixed t).trans (hfTop t)
   · exact hscaleU
   · exact hdisj
 
@@ -306,14 +306,14 @@ theorem energyStandardFixedPhysicalSourceAction_reindex
           else 0 := by
         apply Finset.sum_subset (hsub s hs)
         intro I hIU hIN
-        simp only [if_neg hIN]
+        simp only [ite_eq_right hIN]
       rw [← hext]
       simp
     _ = _ := by
       rw [Finset.sum_comm]
 
 /-- At one fixed physical scale, the source's outer gap sum is exactly the
-single regrouped action.  This is finite kernel linearity; no estimate and no
+single regrouped action. This is finite kernel linearity; no estimate and no
 triangle inequality is used. -/
 theorem energyStandardFixedPhysicalSourceAction_eq_regrouped
     (S : Finset RealInterval) (f : ℝ → ℂ) (hf : Integrable f)
@@ -338,10 +338,10 @@ theorem energyStandardFixedPhysicalSourceAction_eq_regrouped
   have hb : ∀ s ∈ R, Integrable (b s) := by
     intro s hs
     by_cases hIs : I ∈ N s
-    · simpa only [b, hIs, if_pos, intervalBadInput] using
+    · simpa only [b, hIs, ite_eq_left, intervalBadInput] using
         (integrable_badScaleInput S hf I₀ k₀ (scale I + 2 - s)).indicator
           I.measurableSet_centralThird
-    · simp only [b, hIs, if_neg]
+    · simp only [b, hIs]
       exact integrable_zero ℝ ℂ volume
   have hparent : (fun t ↦ ∑ s ∈ R, b s t) = parent := by
     funext t
@@ -373,11 +373,11 @@ theorem energyStandardFixedPhysicalSourceAction_eq_regrouped
       apply Finset.sum_congr rfl
       intro s hs
       by_cases hIs : I ∈ N s
-      · simp only [hIs, if_pos]
-        simpa only [K, b, hIs, if_pos, hk] using
+      · simp only [hIs, ite_eq_left]
+        simpa only [K, b, hIs, ite_eq_left, hk] using
           (krauseLaceyLocalizedPiece_eq_applyIntegral_intervalBadInput
             S f I₀ k₀ s scale I x)
-      · simp only [hIs, if_neg, b, FiniteRangeKernel.applyIntegral]
+      · simp only [hIs, b, FiniteRangeKernel.applyIntegral]
         simp
     _ = K.applyIntegral (fun t ↦ ∑ s ∈ R, b s t) x :=
       (FiniteRangeKernel.applyIntegral_finsetSum K R b hb x).symm
@@ -386,7 +386,7 @@ theorem energyStandardFixedPhysicalSourceAction_eq_regrouped
 
 /-- The source-faithful fixed-scale endpoint for a single regrouped parent.
 Unlike the preliminary global-`L∞` estimate above, this uses only the
-stopping-time average on the ambient interval.  The factor eight is exactly
+stopping-time average on the ambient interval. The factor eight is exactly
 the ratio between the parent length `2^j` and the kernel radius `2^(j-3)`. -/
 theorem norm_energyStandardRegroupedSourcePiece_le_localAverage
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
@@ -436,12 +436,11 @@ theorem norm_energyStandardRegroupedSourcePiece_le_localAverage
     _ = 80 * positiveDyadicAmplitudeBound * intervalL1Average f I₀ := by
       rw [hlen, show j = (j - 2) + 2 by ring,
         krauseLacey_scale_eq_eight_mul_radius (j - 2)]
-      field_simp
-      <;> ring
+      field_simp; ring
 
 /-- At one fixed physical scale, the complete scalar-standard source sum is
 bounded by the local stopping average, with no loss in the number of source
-gaps or parents.  Equal-length laminar parents have disjoint carriers, so at
+gaps or parents. Equal-length laminar parents have disjoint carriers, so at
 most one regrouped output is nonzero at each point. -/
 theorem norm_energyStandardRegroupedSourceAction_le_localAverage
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
@@ -507,7 +506,7 @@ theorem norm_energyStandardRegroupedSourceAction_le_localAverage
       (intervalL1Average_nonneg f I₀)
 
 /-- Source-faithful fixed-physical-scale `L∞` estimate in the original
-outer-gap presentation.  Exact regrouping transfers the preceding local
+outer-gap presentation. Exact regrouping transfers the preceding local
 average bound without any triangle-inequality loss. -/
 theorem norm_energyStandardFixedPhysicalSourceAction_le_localAverage
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)

@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.MeanValue
 # Calderón--Zygmund regularity of the low oscillatory kernel
 
 This file turns the derivative estimate for the paper's low kernel into the
-kernel-difference estimate used on a mean-zero Calderón--Zygmund atom.  The
+kernel-difference estimate used on a mean-zero Calderón--Zygmund atom. The
 mean-value theorem is applied on the segment joining `x - y` and `x - z`.
 When `y` belongs to the interval centered at `z` and `x` is outside its
 triple, every point of that segment stays quantitatively away from zero.

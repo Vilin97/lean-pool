@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryContr
 # Deterministic closure of the positive-suffix sparse input
 
 This file only packages the positive dyadic suffix input into the smooth
-finite-radius hypothesis used by the endpoint assembly.  The factor two is
+finite-radius hypothesis used by the endpoint assembly. The factor two is
 exactly the positive/reflected suffix comparison.
 -/
 
@@ -27,7 +27,8 @@ open OscillatoryReduction
 open HardyLittlewoodBoundaryControl
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Uniform positive-suffix sparse input, with the finite-radius local
 integrability clause made explicit. -/

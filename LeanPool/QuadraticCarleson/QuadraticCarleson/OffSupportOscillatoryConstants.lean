@@ -19,12 +19,14 @@ open MeasureTheory
 namespace QuadraticCarleson
 
 
+/-- The L¹ mass of the indicated derivative of the base bump. -/
 noncomputable def offSupportDerivativeMass (r : ℕ) : ℝ :=
   ∫ u : ℝ, |iteratedDeriv r baseBump u|
 
 theorem offSupportDerivativeMass_nonneg (r : ℕ) : 0 ≤ offSupportDerivativeMass r :=
   integral_nonneg fun _ ↦ abs_nonneg _
 
+/-- The recursive constants controlling repeated off-support integration by parts. -/
 noncomputable def offSupportDecayConstant : ℕ → ℕ → ℕ → ℝ
   | 0, r, q => 3 ^ q * offSupportDerivativeMass r
   | k + 1, r, q =>

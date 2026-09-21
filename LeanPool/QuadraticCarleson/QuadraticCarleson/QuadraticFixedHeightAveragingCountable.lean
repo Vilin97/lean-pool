@@ -19,6 +19,7 @@ open scoped ENNReal NNReal
 
 namespace QuadraticCarleson
 
+/-- The supremum of convolution norms over a countable family of kernels. -/
 noncomputable def countableConvolutionMaximal
     (κ : ℕ → ℝ → ℂ) (f : ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ⨆ i : ℕ, ‖∫ t, κ i (x - t) * f t‖ₑ

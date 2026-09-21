@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
 # From a pointwise dyadic witness to the lacunary level-set lower bound
 
 This module isolates the final measure-theoretic transfer in the negative
-endpoint argument.  Once the analytic packet estimates supply a dyadic
+endpoint argument. Once the analytic packet estimates supply a dyadic
 modulation at every point of `E_N`, the actual lacunary operator has a level
 set of measure at least an explicit positive multiple of `N`.
 -/
@@ -60,7 +60,7 @@ theorem paperTranslatedBohrSet_subset_lacunaryLevelSet_of_pointwise
       n (counterexampleSchwartz N) x)
 
 /-- The full linear-in-`N` analytic level-set estimate follows from the
-pointwise packet estimate on `E_N`.  The coefficient is the same explicit
+pointwise packet estimate on `E_N`. The coefficient is the same explicit
 positive constant already obtained from the Bohr second-moment argument. -/
 theorem lacunary_counterexample_level_volume_ge_of_pointwise
     {N : ℕ} {L c : ℝ} (hN : 100 ≤ N)

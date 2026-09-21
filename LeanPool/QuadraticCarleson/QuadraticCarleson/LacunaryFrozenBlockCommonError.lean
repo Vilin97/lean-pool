@@ -11,9 +11,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleKalton
 /-!
 # Passing a common-error finite maximum to the actual frozen block
 
-This adapter retains the exact frozen input and its mass.  It uses a
+This adapter retains the exact frozen input and its mass. It uses a
 logarithm-squared weak estimate for a finite family and a pointwise comparison
-with one common maximal-function error.  The hypotheses are exposed until
+with one common maximal-function error. The hypotheses are exposed until
 the concrete high-scale family is supplied.
 -/
 
@@ -30,7 +30,7 @@ open FiniteSparseCommonErrorWeak
 
 
 /-- The exact frozen-block weak hypothesis follows from the finite-family
-estimate and a single `48 M` comparison error.  No positivity of the block
+estimate and a single `48 M` comparison error. No positivity of the block
 size is required: `paperLog 1 B ≥ 1` holds also for the empty block. -/
 theorem hasLogSquaredFrozenBlockWeakBounds_of_common_error
     (f : L0Infinity) (B : ℕ → ℕ) (c : ℕ) {D : ℝ} (hD : 0 ≤ D)

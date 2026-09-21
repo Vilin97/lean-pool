@@ -10,10 +10,10 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.L0LacunaryOperator
 /-!
 # Failure of sub-`L log₂ L` modular estimates
 
-This file closes the negative-endpoint counterexample.  It first proves the
+This file closes the negative-endpoint counterexample. It first proves the
 linear-in-`N` level-set lower bound for the canonical distributional
 lacunary quadratic Carleson operator on the paper's smooth compactly
-supported counterexamples.  The abstract modular contradiction then gives
+supported counterexamples. The abstract modular contradiction then gives
 failure for every Young function growing strictly slower than `t log₂ t`,
 together with the normalized unit-height witnesses stated in the paper.
 -/
@@ -51,7 +51,7 @@ theorem negativeEndpoint_not_hasSchwartzPhiModularEstimate
     Phi hPhi negativeEndpointHeightConstant_pos negativeEndpointDelta_pos
       eventually_lacunary_counterexample_level_volume_ge
 
-/-- The paper's normalized `f_kappa` conclusion.  The formal statement is
+/-- The paper's normalized `f_kappa` conclusion. The formal statement is
 slightly stronger in allowing every `kappa > 0`, rather than additionally
 requiring `kappa < 1`. -/
 theorem negativeEndpoint_exists_unit_schwartz_modular_witness
@@ -126,7 +126,7 @@ theorem negativeEndpoint_exists_paper_modular_witness
   negativeEndpoint_exists_unit_modular_witness Phi hPhi hkappa.1
 
 /-- Every measurable operator which pointwise dominates the lacunary
-quadratic operator also fails the same modular estimate.  Instantiating `T`
+quadratic operator also fails the same modular estimate. Instantiating `T`
 with the full quadratic supremum gives the “therefore `C₂` as well” clause of
 the paper. -/
 theorem negativeEndpoint_not_hasPhiModularEstimate_of_dominates_lacunary

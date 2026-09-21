@@ -23,7 +23,8 @@ namespace QuadraticCarleson.PositiveFullMaximalMeasurability
 open PositivePrincipalValueEndpoints HilbertFiniteTruncationWeakOneOne
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The regular difference between the modulated and ordinary Hilbert
 kernels. At zero, field division gives the removable value zero. -/
@@ -71,6 +72,7 @@ theorem quadraticDifferenceKernel_norm_le (lam t : ℝ) :
       (div_le_iff₀ (lt_trans zero_lt_one ht1)).mpr (by linarith)
     exact hb.trans (le_add_of_nonneg_left hC)
 
+/-- Convolution of a test function with the quadratic difference kernel. -/
 def quadraticDifferenceIntegral (lam : ℝ) (f : L0Infinity) (x : ℝ) : ℂ :=
   ∫ t, f (x - t) * quadraticDifferenceKernel lam t
 

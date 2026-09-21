@@ -72,6 +72,7 @@ theorem exists_generation_cutoff_for_length
       (by omega : generationIndex N I ≤ generationIndex N J)
     exact (length_le_of_carrier_subset_physical hsub).trans_lt hj.2.1
 
+/-- The largest norm of a prefix sum taken in the minimal-generation order of `N`. -/
 noncomputable def generationPrefixNormMax
     (N : Finset RealInterval) (v : RealInterval → ℂ) : ℝ :=
   ⨆ n : Fin (N.card + 1), ‖∑ i ∈ Finset.range n.val, ∑ I ∈ generation N i, v I‖

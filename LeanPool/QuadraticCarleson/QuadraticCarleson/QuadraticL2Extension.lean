@@ -54,8 +54,8 @@ theorem sq_lintegral_bound_of_integrable (K : FiniteRangeKernel) (A : ℝ≥0∞
     apply lintegral_mono
     intro t
     by_cases ht : t ∈ Icc (-(n : ℝ)) (n : ℝ)
-    · simp [fN, Set.indicator, ht]
-    · simp [fN, Set.indicator, ht]
+    · simp [fN, ht]
+    · simp [fN, ht]
   have hevent (t : ℝ) :
       (fun n : ℕ ↦ ‖K.applyIntegral (fN n) t‖ₑ ^ 2) =ᶠ[atTop]
         (fun _ ↦ ‖K.applyIntegral f t‖ₑ ^ 2) := by

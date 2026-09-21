@@ -13,7 +13,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
 
 This file identifies the distributionally defined quadratic Hilbert transform
 with the ordinary off-support kernel integrals used in the negative endpoint
-argument.  No pointwise value is assigned by convention: the equality follows
+argument. No pointwise value is assigned by convention: the equality follows
 from the proved symmetric-truncation limit because the test function vanishes
 near the singularity.
 -/

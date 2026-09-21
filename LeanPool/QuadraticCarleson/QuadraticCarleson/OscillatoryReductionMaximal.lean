@@ -124,6 +124,7 @@ theorem quadraticHilbertTrunc_eq_oscillatory_reduction
       rw [quadraticHilbertConvolutionTrunc_eq_quadraticHilbertTrunc,
         quadraticHilbertConvolutionTrunc_eq_quadraticHilbertTrunc]
 
+/-- The uniform maximal-function constant controlling the regularization error. -/
 noncomputable def maximalErrorConstant : ℝ≥0∞ := 8 + ENNReal.ofReal (8 * Real.pi)
 
 theorem maximalErrorConstant_lt_top : maximalErrorConstant < ∞ := by
@@ -183,6 +184,7 @@ theorem quadraticHilbertL0Limsup_le_oscillatory
     quadraticHilbertTrunc_enorm_le_oscillatory lam (principalValueRadius m) hlam
       (principalValueRadius_pos m) hm f x
 
+/-- The supremum of oscillatory actions over all nonzero real modulations. -/
 noncomputable def paperOscillatoryMaximal (f : ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ⨆ lam : {lam : ℝ // lam ≠ 0}, ‖paperOscillatoryAction lam.1 lam.2 f x‖ₑ
 

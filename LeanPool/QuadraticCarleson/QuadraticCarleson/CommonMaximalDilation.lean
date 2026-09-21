@@ -21,7 +21,8 @@ namespace QuadraticCarleson
 namespace CommonMaximalDilation
 
 
-noncomputable section
+noncomputable
+section
 
 theorem quadraticHilbertTrunc_zero_dilate (a : ℝ) (ha : 0 < a)
     (ε : ℝ) (f : ℝ → ℂ) (x : ℝ) :

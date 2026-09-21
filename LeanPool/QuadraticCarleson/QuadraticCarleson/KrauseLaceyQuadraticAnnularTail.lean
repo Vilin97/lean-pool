@@ -12,16 +12,16 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragin
 # Maximal tails of separated quadratic frequency pieces
 
 This file isolates the frequency-projection part of the direct quadratic
-one-node argument.  A finite tail is written as the total sum minus a
-prefix.  If every prefix is a smooth low-pass projection of the total sum,
+one-node argument. A finite tail is written as the total sum minus a
+prefix. If every prefix is a smooth low-pass projection of the total sum,
 and the low-pass kernels are pointwise dominated by a fixed multiple of the
 centered Hardy--Littlewood maximal function, then the whole family of tails
 has a cardinality-free `L²` bound.
 
 The application-specific input may be supplied either pointwise through
 `HasLowPassPrefixControl` or almost everywhere through
-`HasAELowPassPrefixControl`.  The latter is the natural interface for `L²`
-Fourier multipliers.  No maximal-tail theorem or orthogonality principle is
+`HasAELowPassPrefixControl`. The latter is the natural interface for `L²`
+Fourier multipliers. No maximal-tail theorem or orthogonality principle is
 assumed here.
 -/
 
@@ -31,7 +31,8 @@ open scoped ENNReal NNReal ComplexConjugate
 namespace QuadraticCarleson.KrauseLaceyQuadraticAnnularTail
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The pointwise total of a finite sequence of frequency pieces. -/
 def finitePieceTotal (N : ℕ) (u : ℕ → ℝ → ℂ) (x : ℝ) : ℂ :=
@@ -85,7 +86,7 @@ theorem HasLowPassPrefixControl.ae
 
 /-- Convolution with a kernel supported in a centered rational interval and
 bounded by `A / (2r)` is pointwise controlled by `A` times the centered
-Hardy--Littlewood maximal function.  This is the basic estimate used for
+Hardy--Littlewood maximal function. This is the basic estimate used for
 each smooth low-pass cutoff after decomposing its rapidly decaying kernel
 into centered dyadic shells. -/
 theorem enorm_convolution_le_maximal_of_supported_kernel
@@ -273,7 +274,7 @@ private theorem ennreal_add_sq_le_four_sum_sq (a b : ℝ≥0∞) :
     _ = 4 * (max a b) ^ 2 := by ring
     _ ≤ 4 * (a ^ 2 + b ^ 2) := mul_le_mul' le_rfl hmax
 
-/-- Cardinality-free maximal-tail `L²` estimate.  The explicit coefficient
+/-- Cardinality-free maximal-tail `L²` estimate. The explicit coefficient
 is `4 + 128 A²`, coming from a top-safe ENNReal square estimate and the proved centered
 Hardy--Littlewood constant `32`. -/
 theorem finitePieceTailMax_sq_lintegral_le
@@ -308,7 +309,7 @@ theorem finitePieceTailMax_sq_lintegral_le
     _ = (4 + 128 * A ^ 2) * ∫⁻ x, F x ^ 2 := by ring
 
 /-- Cardinality-free maximal-tail `L²` estimate from almost-everywhere
-low-pass prefix control.  This is the form used by Fourier multiplier
+low-pass prefix control. This is the form used by Fourier multiplier
 applications, whose canonical representatives agree only almost everywhere. -/
 theorem finitePieceTailMax_sq_lintegral_le_ae
     {N : ℕ} {u : ℕ → ℝ → ℂ} {A : ℝ≥0∞}
@@ -359,7 +360,7 @@ def HasFourierSupportIn (v : Lp (α := ℝ) ℂ 2 volume) (E : Set ℝ) : Prop :
     (Lp.fourierTransformₗᵢ ℝ ℂ v) ξ = 0
 
 /-- Pairwise disjoint measurable-frequency regions imply the Fourier
-orthogonality predicate used below.  Thus callers may work with literal
+orthogonality predicate used below. Thus callers may work with literal
 annuli instead of proving inner products directly. -/
 theorem hasPairwiseSeparatedFourierSupport_of_disjoint_regions
     {ι : Type*} (v : ι → Lp (α := ℝ) ℂ 2 volume) (E : ι → Set ℝ)
@@ -483,7 +484,7 @@ theorem finitePieceTotal_sq_lintegral_eq_sum
   simp_rw [← eLpNorm_two_sq_lintegral _ (hu _).aestronglyMeasurable]
   exact eLpNorm_finitePieceTotal_sq_eq_sum hu hsep
 
-/-- Final modular maximal-tail theorem for a separated finite family.  Once
+/-- Final modular maximal-tail theorem for a separated finite family. Once
 the smooth cutoff proves `HasLowPassPrefixControl`, the maximal tails are
 bounded by the square-sum of the individual `L²` energies with no dependence
 on the number of pieces. -/

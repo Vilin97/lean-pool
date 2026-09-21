@@ -10,7 +10,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
 # Regularity and sublinearity under positive dilation
 
 The finite high-scale sparse family is transferred to the paper's positive
-modulations by positive spatial dilation.  These elementary identities retain
+modulations by positive spatial dilation. These elementary identities retain
 the original test-function addition, scalar multiplication and absolute-value
 operator, and transfer continuity and local integrability of the outputs.
 -/
@@ -20,7 +20,8 @@ open Function MeasureTheory
 namespace QuadraticCarleson
 
 
-noncomputable section
+noncomputable
+section
 
 namespace L0Infinity
 

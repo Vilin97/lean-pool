@@ -6,6 +6,13 @@ Authors: Anastasios Fragkos
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseInterface
 
+/-!
+# Reflection of sparse bounds
+
+Reflection preserves the test-function class, interval lengths, sparsity, and local averages.
+These identities transfer sparse estimates between an operator and its reflected counterpart.
+-/
+
 open Function MeasureTheory Set
 open scoped ENNReal Topology ComplexConjugate
 
@@ -14,6 +21,7 @@ namespace QuadraticCarleson
 
 namespace L0Infinity
 
+/-- Reflection of a bounded, compactly supported test function about the origin. -/
 def reflect (f : L0Infinity) : L0Infinity where
   toFun := fun x ↦ f (-x)
   measurable_toFun := f.measurable_toFun.comp measurable_neg
@@ -32,6 +40,7 @@ end L0Infinity
 
 namespace RealInterval
 
+/-- Reflection of an interval about the origin, with the endpoint order reversed. -/
 def reflect (I : RealInterval) : RealInterval :=
   ⟨-I.right, -I.left, neg_lt_neg I.left_lt_right⟩
 
@@ -63,6 +72,7 @@ end RealInterval
 
 namespace KrauseLaceySparseReflection
 
+/-- The interval family pulled back under reflection. -/
 def reflectedFamily (S : Set RealInterval) : Set RealInterval := RealInterval.reflect ⁻¹' S
 
 @[simp] theorem reflectedFamily_reflectedFamily (S : Set RealInterval) :
@@ -70,6 +80,7 @@ def reflectedFamily (S : Set RealInterval) : Set RealInterval := RealInterval.re
   ext I
   simp [reflectedFamily]
 
+/-- The index equivalence between a reflected interval family and the original family. -/
 def reflectedIndexEquiv (S : Set RealInterval) :
     {I : RealInterval // I ∈ reflectedFamily S} ≃ {I : RealInterval // I ∈ S} where
   toFun I := ⟨I.1.reflect, I.2⟩
@@ -137,6 +148,7 @@ theorem sparseForm_reflectedFamily (p : ℝ) (f g : ℝ → ℂ) (S : Set RealIn
       localAverage p (fun x ↦ g (-x)) I.1.reflect)
   rw [RealInterval.reflect_length, localAverage_reflect, localAverage_reflect]
 
+/-- Transport of a test operator by reflection of its input and output coordinates. -/
 def reflectedOperator (T : TestOperator) : TestOperator :=
   fun f x ↦ T (L0Infinity.reflect f) (-x)
 
@@ -197,6 +209,7 @@ theorem hasSparseOnePBound_of_pairing_le_add
     rw [ENNReal.ofReal_add hC hD, add_mul]
     exact add_le_add le_rfl (mul_le_mul' le_rfl hRS)
 
+/-- The difference between an operator and its reflected operator. -/
 def reflectionDifference (T : TestOperator) : TestOperator :=
   fun f x ↦ T f x - reflectedOperator T f x
 
@@ -222,6 +235,7 @@ theorem hasSparseOnePBound_reflectionDifference
   exact norm_sub_le _ _
 
 
+/-- The pointwise norm of a test function, embedded back into the complex test-function class. -/
 noncomputable def normInput (g : L0Infinity) : L0Infinity where
   toFun := fun x ↦ (‖g x‖ : ℂ)
   measurable_toFun := Complex.measurable_ofReal.comp g.measurable_toFun.norm

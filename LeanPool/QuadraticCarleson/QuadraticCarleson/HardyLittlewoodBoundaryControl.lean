@@ -18,7 +18,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoi
 
 The smooth-to-sharp comparison produces one copy of the centered
 Hardy--Littlewood maximal function, common to all modulations and truncation
-radii.  This file packages that concrete boundary operator on `L0Infinity`.
+radii. This file packages that concrete boundary operator on `L0Infinity`.
 In particular, its output is finite everywhere, measurable and locally
 integrable, and it has the explicit weak `(1,1)` constant `4`.
 
@@ -44,7 +44,8 @@ open LacunaryOscillatoryScaling
 open PositivePrincipalValueEndpoints HilbertPrincipalValueClosure
 
 
-noncomputable section
+noncomputable
+section
 
 /-- A pointwise bound passes through every positive centered average. -/
 theorem centeredAverage_le_of_forall_le {F : ℝ → ℝ≥0∞} {D : ℝ≥0∞}
@@ -63,7 +64,7 @@ theorem centeredAverage_le_of_forall_le {F : ℝ → ℝ≥0∞} {D : ℝ≥0∞
     _ = D := ENNReal.mul_div_cancel_right hd htop
 
 /-- The centered rational-radius maximal function preserves a uniform
-pointwise bound.  In particular it never takes the value `∞` on a bounded
+pointwise bound. In particular it never takes the value `∞` on a bounded
 input. -/
 theorem centeredHardyLittlewoodMaximal_le_of_forall_le
     {F : ℝ → ℝ≥0∞} {D : ℝ≥0∞} (hF : ∀ x, F x ≤ D) (x : ℝ) :
@@ -77,7 +78,7 @@ theorem centeredHardyLittlewoodMaximal_enorm_ne_top (f : L0Infinity) (x : ℝ) :
   rcases f.bounded_toFun with ⟨C, hC⟩
   have hC0 : 0 ≤ C := le_trans (norm_nonneg (f 0)) (hC 0)
   have hpoint (y : ℝ) : ‖f y‖ₑ ≤ ENNReal.ofReal C := by
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (hC y)
   exact ne_of_lt ((centeredHardyLittlewoodMaximal_le_of_forall_le hpoint x).trans_lt
     ENNReal.ofReal_lt_top)
@@ -97,7 +98,7 @@ noncomputable def centeredHardyLittlewoodBoundaryOperator : TestOperator :=
     (f : L0Infinity) (x : ℝ) :
     ‖centeredHardyLittlewoodBoundaryOperator f x‖ₑ =
       centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ) x := by
-  rw [← ofReal_norm_eq_enorm, norm_centeredHardyLittlewoodBoundaryOperator,
+  rw [← ofReal_norm, norm_centeredHardyLittlewoodBoundaryOperator,
     ENNReal.ofReal_toReal (centeredHardyLittlewoodMaximal_enorm_ne_top f x)]
 
 theorem measurable_centeredHardyLittlewoodBoundaryOperator (f : L0Infinity) :
@@ -113,7 +114,7 @@ private theorem eLpNorm_two_sq_lintegral_boundary {E : Type*} [TopologicalSpace 
   rw [← ENNReal.rpow_mul_natCast]
   norm_num
 
-/-- The boundary operator is locally integrable.  The proof uses the already
+/-- The boundary operator is locally integrable. The proof uses the already
 proved strong `L²` maximal theorem. -/
 theorem centeredHardyLittlewoodBoundaryOperator_locallyIntegrable
     (f : L0Infinity) :
@@ -164,7 +165,7 @@ theorem centeredHardyLittlewoodBoundaryOperator_hasWeakOneOneBound :
         {x | ENNReal.ofReal a <
           centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ) x} := by
     ext x
-    simp only [mem_setOf_eq, norm_centeredHardyLittlewoodBoundaryOperator]
+    simp only [mem_ofPred_eq, norm_centeredHardyLittlewoodBoundaryOperator]
     exact (ENNReal.ofReal_lt_iff_lt_toReal ha.le (htop x)).symm
   rw [hset]
   simpa only [ENNReal.ofReal_ofNat] using
@@ -184,7 +185,7 @@ theorem finiteRadiusSharpMax_enorm_le_smoothHighPassMax_add_boundary
     finiteRadiusSharpMax_enorm_le_smoothHighPassMax_add_maximal
       lam s f x
 
-/-- Operational endpoint transfer for one finite radius family.  A weak
+/-- Operational endpoint transfer for one finite radius family. A weak
 bound for the smooth KL output plus the common Hardy--Littlewood boundary
 term gives a weak bound for the genuine sharp truncation output, with no
 dependence on the number of radii or modulations. -/
@@ -197,8 +198,7 @@ theorem finiteRadiusSharpMax_hasExtendedWeakL1Bound_of_smooth
       (4 * A + 128 * (∫⁻ x, ‖f x‖ₑ).toReal)
       (fun x ↦ ENNReal.ofReal
         ‖finiteRadiusQuadraticHilbertMaxTestOperator lam s f x‖) := by
-  have hM := hasExtendedWeakL1Bound_centeredHardyLittlewoodMaximal_enorm
-    f.measurable_toFun f.integrable
+  have hM := hasExtendedWeakL1Bound_centeredHardyLittlewoodMaximal_enorm f.integrable
   have hpoint (x : ℝ) :
       ENNReal.ofReal
           ‖finiteRadiusQuadraticHilbertMaxTestOperator lam s f x‖ ≤
@@ -212,7 +212,7 @@ theorem finiteRadiusSharpMax_hasExtendedWeakL1Bound_of_smooth
             ‖finiteRadiusSmoothHighPassMaxTestOperator lam s f x‖)))) le_rfl)
   have h := hasExtendedWeakL1Bound_of_le_two_mul_add_sixteen_mul
     hpoint hSmooth hM
-  convert h using 1 <;> ring
+  convert h using 1; ring
 
 /-- The finite smooth high-pass family indexed by one paper modulation block.
 This is the family to which the genuine KL sparse recursion applies. -/
@@ -222,7 +222,7 @@ def finiteRadiusSmoothHighPassBlockFamily
   fun j ↦ finiteRadiusSmoothHighPassMaxTestOperator
     (dyadicModulation (modulationBlockIndex B tau j)) s
 
-/-- Exact remaining smooth KL input.  Unlike the old sharp-truncation
+/-- Exact remaining smooth KL input. Unlike the old sharp-truncation
 interface, this contains no Hardy--Littlewood boundary term. -/
 def HasUniformFiniteRadiusSmoothSparseBound (A : ℝ) : Prop :=
   0 ≤ A ∧ ∀ (lam : ℝ), lam ≠ 0 → ∀ s : Finset densePositiveRadii,
@@ -263,9 +263,10 @@ theorem finiteRadiusSmoothHighPassBlockFamily_hasWeakOneOneBound
     (finiteRadiusSmoothHighPassBlockFamily_sparseHypothesis hA B tau s)
   simpa only [card_Q] using h
 
-private theorem coe_nnreal_finset_sup_boundary {alpha : Type*} [DecidableEq alpha]
+private theorem coe_nnreal_finset_sup_boundary {alpha : Type*}
     (s : Finset alpha) (u : alpha → NNReal) :
     (↑(s.sup u) : ℝ≥0∞) = s.sup fun a ↦ (u a : ℝ≥0∞) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [Finset.sup_insert, ih]
@@ -284,10 +285,10 @@ theorem ofReal_finiteMax_le_of_common_error {N : ℕ}
   intro j hj
   calc
     (↑‖T j f x‖₊ : ℝ≥0∞) = ENNReal.ofReal ‖T j f x‖ := by
-      rw [ofReal_norm_eq_enorm, enorm_eq_nnnorm]
+      rw [ofReal_norm, enorm_eq_nnnorm]
     _ ≤ ENNReal.ofReal ‖U j f x‖ + E := hTU j
     _ = (↑‖U j f x‖₊ : ℝ≥0∞) + E := by
-      rw [ofReal_norm_eq_enorm, enorm_eq_nnnorm]
+      rw [ofReal_norm, enorm_eq_nnnorm]
     _ ≤ (Finset.univ.sup fun i : Fin N ↦ (↑‖U i f x‖₊ : ℝ≥0∞)) + E := by
       gcongr
       exact Finset.le_sup (s := Finset.univ)
@@ -310,7 +311,7 @@ theorem finiteRadiusSharpBlock_finiteMax_le_smooth_add_boundary
 
 /-- The full finite modulation maximum of genuine sharp truncations inherits
 the logarithmic smooth sparse-maximal bound, plus one universal boundary
-constant.  Crucially, `128` is not multiplied by the block cardinality. -/
+constant. Crucially, `128` is not multiplied by the block cardinality. -/
 theorem finiteRadiusSharpBlockFamily_hasWeakOneOneBound_of_smoothSparse
     {A : ℝ} (hA : HasUniformFiniteRadiusSmoothSparseBound A)
     (B : ℕ) (tau : ℤ) (s : Finset densePositiveRadii) :
@@ -344,7 +345,7 @@ theorem finiteRadiusSharpBlockFamily_hasWeakOneOneBound_of_smoothSparse
               (finiteRadiusSmoothHighPassBlockFamily B tau s) f x} := by
         congr 2
         ext x
-        simp only [mem_setOf_eq]
+        simp only [mem_ofPred_eq]
         rw [ENNReal.ofReal_lt_iff_lt_toReal hb.le ENNReal.ofReal_ne_top,
           ENNReal.toReal_ofReal (by
             unfold finiteMax
@@ -352,8 +353,7 @@ theorem finiteRadiusSharpBlockFamily_hasWeakOneOneBound_of_smoothSparse
       _ ≤ ENNReal.ofReal C * mass := hsmooth f b hb
       _ = ENNReal.ofReal (C * mass.toReal) := by
         rw [ENNReal.ofReal_mul hC, ENNReal.ofReal_toReal hmass]
-  have hmaximal := hasExtendedWeakL1Bound_centeredHardyLittlewoodMaximal_enorm
-    f.measurable_toFun f.integrable
+  have hmaximal := hasExtendedWeakL1Bound_centeredHardyLittlewoodMaximal_enorm f.integrable
   have hpoint (x : ℝ) :
       ENNReal.ofReal
           (finiteMax (finiteRadiusQuadraticHilbertBlockFamily B tau s) f x) ≤
@@ -382,7 +382,7 @@ theorem finiteRadiusSharpBlockFamily_hasWeakOneOneBound_of_smoothSparse
           (finiteMax (finiteRadiusQuadraticHilbertBlockFamily B tau s) f x)} := by
       congr 2
       ext x
-      simp only [mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       rw [ENNReal.ofReal_lt_iff_lt_toReal ha.le ENNReal.ofReal_ne_top,
         ENNReal.toReal_ofReal (by
           unfold finiteMax
@@ -395,7 +395,7 @@ theorem finiteRadiusSharpBlockFamily_hasWeakOneOneBound_of_smoothSparse
         ∫⁻ x, ‖f x‖ₑ := by rfl
 
 /-- The smooth KL sparse theorem supplies the all-radius frozen quadratic-
-Hilbert block.  The common boundary constant is absorbed into the existing
+Hilbert block. The common boundary constant is absorbed into the existing
 `log₁(B)²` factor using `log₁(B) ≥ 1`. -/
 theorem hasLogSquaredFrozenHilbertBlockWeakBounds_of_smoothSparse
     {A : ℝ} (hA : HasUniformFiniteRadiusSmoothSparseBound A)
@@ -431,7 +431,7 @@ theorem hasLogSquaredFrozenHilbertBlockWeakBounds_of_smoothSparse
 
 /-- Paper-facing uniform frozen-block conclusion with the finite sparse-
 maximal lemma and both deterministic Hardy--Littlewood boundary passages
-fully discharged.  Only the genuine smooth KL sparse estimate remains. -/
+fully discharged. Only the genuine smooth KL sparse estimate remains. -/
 theorem hasUniformL0LogSquaredFrozenBlockWeakBounds_of_smoothSparse
     {A : ℝ} (hA : HasUniformFiniteRadiusSmoothSparseBound A) :
     HasUniformL0LogSquaredFrozenBlockWeakBounds
@@ -442,7 +442,7 @@ theorem hasUniformL0LogSquaredFrozenBlockWeakBounds_of_smoothSparse
     (hasLogSquaredFrozenHilbertBlockWeakBounds_of_smoothSparse
       hA f PositiveHighHeightEstimate.lacunaryHighCutoff 0)
 
-/-- Strongest downstream lacunary endpoint exposed by this adapter.  Its only
+/-- Strongest downstream lacunary endpoint exposed by this adapter. Its only
 remaining analytic inputs are the ordinary Hilbert maximal theorem and the
 genuine smooth KL sparse estimate. -/
 theorem lacunary_principalValue_endpoint_of_smoothSparse

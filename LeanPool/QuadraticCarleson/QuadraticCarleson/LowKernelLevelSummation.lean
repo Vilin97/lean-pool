@@ -12,9 +12,9 @@ import Mathlib.MeasureTheory.Integral.Prod
 # Summing the sharp low-kernel estimate over a magnitude level
 
 This file applies the sharp atomwise `O(B + 1)` low-kernel estimate to an
-arbitrary countable pairwise-disjoint family of centered intervals.  The
+arbitrary countable pairwise-disjoint family of centered intervals. The
 atom `L¹` masses are then summed using the exact magnitude-level result from
-`CalderonZygmundLevelAtoms`.  Each output is integrated on the complement of
+`CalderonZygmundLevelAtoms`. Each output is integrated on the complement of
 the atom's triple interval; this is stronger than the paper's required
 complement of `5I` after restriction.
 -/
@@ -29,7 +29,8 @@ open CalderonZygmundLevelAtoms
 open PositiveEndpointOptimization PositiveLevelIntegration
 
 
-noncomputable section
+noncomputable
+section
 
 theorem continuous_paperLowOscillatoryKernel
     {lam : ℝ} (hlam : lam ≠ 0) (B : ℕ) :

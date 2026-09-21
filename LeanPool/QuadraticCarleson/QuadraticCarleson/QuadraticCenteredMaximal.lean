@@ -145,7 +145,7 @@ theorem centeredAverage_le_truncate_add {r : ℝ} (hr : 0 < r)
   have hden : ENNReal.ofReal (2 * r) ≠ 0 := ENNReal.ofReal_ne_zero_iff.mpr (by positivity)
   have hpoint (y : ℝ) : f y ≤ {y | b < f y}.indicator f y + b := by
     by_cases hy : b < f y
-    · simpa [Set.indicator, hy] using (le_add_right le_rfl : f y ≤ f y + b)
+    · simp [Set.indicator, hy]
     · simpa [Set.indicator, hy] using le_of_not_gt hy
   unfold centeredAverage
   calc

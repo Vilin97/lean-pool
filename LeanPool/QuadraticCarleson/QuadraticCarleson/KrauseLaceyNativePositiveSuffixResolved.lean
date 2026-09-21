@@ -13,9 +13,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyAnnularSparseTran
 # Native positive suffixes from the one-node Krause--Lacey estimate
 
 This module joins the two already checked halves of the native positive
-argument.  The concrete finite positive suffix maximum is pointwise bounded
-by three localized shifted-forest maxima.  The finite-forest stopping
-recursion supplies one sparse form for each shift.  For each pair of test
+argument. The concrete finite positive suffix maximum is pointwise bounded
+by three localized shifted-forest maxima. The finite-forest stopping
+recursion supplies one sparse form for each shift. For each pair of test
 functions we choose the largest of those three forms, absorbing their sum
 with the exact factor `3`; no union of overlapping shifted grids is used.
 -/
@@ -35,10 +35,11 @@ open KrauseLaceyPositiveSuffixThreeShift
 open KrauseLaceyStoppingRecursion KrauseLaceyThreeShiftGrid
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The one-node good-part estimate implies sparse domination of the actual
-finite unit-phase positive dyadic suffix maximum.  The factor `3` is exactly
+finite unit-phase positive dyadic suffix maximum. The factor `3` is exactly
 the cost of the three shifted grids. -/
 theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodeGoodPart
     {A p : ℝ} (hlocal : HasOneNodeGoodPartPairingBound A)
@@ -135,7 +136,7 @@ theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodeGoodP
     rw [hzero, norm_zero, ENNReal.ofReal_zero]
     exact bot_le
 
-/-- Genuine `p`-monitor version of the three-shift suffix closure.  The
+/-- Genuine `p`-monitor version of the three-shift suffix closure. The
 testing function remains `g`, but every recursive stopping family is selected
 using the local `p`-mass monitor. -/
 theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodePStoppingGoodPart
@@ -234,7 +235,7 @@ theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodePStop
     exact bot_le
 
 /-- Sparse control of the unit positive suffixes in precisely the high range
-where the quadratic one-node estimate applies.  Low scales must be kept in
+where the quadratic one-node estimate applies. Low scales must be kept in
 the full odd kernel and handled separately. -/
 def HasNativeUnitHighPositiveSuffixSparseBound (C : ℝ) : Prop :=
   0 ≤ C ∧ ∀ (p : ℝ), 1 < p → p < 2 → ∀ (j : ℤ), 1 ≤ j → ∀ (N : ℕ),
@@ -251,7 +252,7 @@ theorem hasNativeUnitHighPositiveSuffixSparseBound_of_oneNodeGoodPart
   have h :=
     hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodeGoodPart
       hlocal hp hp2 j hj N
-  convert h using 1 <;> ring
+  convert h using 1; ring
 
 /-- The genuine `p`-monitor one-node estimate closes all high positive
 suffixes, with only the three-shift factor. -/
@@ -263,7 +264,7 @@ theorem hasNativeUnitHighPositiveSuffixSparseBound_of_oneNodePStoppingGoodPart
   have h :=
     hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodePStoppingGoodPart
       hlocal hp hp2 j hj N
-  convert h using 1 <;> ring
+  convert h using 1; ring
 
 /-- The part of the downstream all-scale suffix interface not supplied by
 the source's high-scale one-node argument. -/

@@ -86,7 +86,7 @@ theorem sum_norm_intervalBadInput_over_gaps_le
     rw [hzero]
     exact norm_nonneg _
 
-/-- The corresponding integral packing.  This is the source-gap version of
+/-- The corresponding integral packing. This is the source-gap version of
 the bad-input mass estimate and is independent of `R.card`. -/
 theorem sum_intervalBadInput_mass_over_gaps_le
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
@@ -127,7 +127,7 @@ theorem sum_intervalBadInput_mass_over_gaps_le
       (sum_norm_intervalBadInput_over_gaps_le f I₀ k₀ scale hlam R N hNS hscale j hfixed)
 
 /-- Scalar-standard diagonal energy summed over every selected source gap at
-a fixed physical scale.  There is no gap-count loss at this stage. -/
+a fixed physical scale. There is no gap-count loss at this stage. -/
 theorem sum_energyStandard_fixedPhysical_diagonalEnergy_over_gaps_le
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
     (I₀ : RealInterval) (k₀ j : ℤ) (scale : RealInterval → ℤ)
@@ -258,7 +258,7 @@ theorem norm_energyStandard_fixedPhysical_layer_sq_eq
       · exact hd
     exact inner_localizedPieceLp_eq_zero_of_disjoint _ _ _ _ _ _ _ _ hlenI hlenJ hd
 
-/-- The paper's finite-Cauchy step.  The source-gap cardinality appears
+/-- The paper's finite-Cauchy step. The source-gap cardinality appears
 exactly once, while the diagonal energy is aggregated before that step. -/
 theorem norm_energyStandardFixedPhysicalSourceLp_sq_le
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
@@ -306,7 +306,7 @@ theorem norm_energyStandardFixedPhysicalSourceLp_sq_le
 noncomputable abbrev standardSourceGaps (k₀ j : ℤ) : Finset ℤ := Finset.Icc 0 (j - k₀)
 
 /-- With `1 ≤ k₀ ≤ j`, the finite Cauchy factor for the source gaps is at
-most `j`.  This is the single visible `j` in the scalar-standard squared
+most `j`. This is the single visible `j` in the scalar-standard squared
 `L²` estimate. -/
 theorem norm_energyStandardFixedPhysicalSourceLp_sq_le_j_mul
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)

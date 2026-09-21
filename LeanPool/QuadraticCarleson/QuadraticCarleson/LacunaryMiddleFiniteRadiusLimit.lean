@@ -11,9 +11,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleOperator
 # Passing finite truncation-radius estimates to a genuine frozen block
 
 Krause--Lacey's sparse theorem is applied first to finite, everywhere-finite
-maxima of sharp truncations.  This file proves the exact limiting step which
+maxima of sharp truncations. This file proves the exact limiting step which
 recovers the paper's supremum over every positive truncation radius without
-losing the uniform weak constant.  The limit uses the fixed countable dense
+losing the uniform weak constant. The limit uses the fixed countable dense
 family already proved to recover the full real-radius supremum.
 -/
 
@@ -28,7 +28,8 @@ open LacunaryMiddleOperator LacunaryMiddleRange
 open QuadraticHilbertMaximalMeasurable
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The frozen quadratic-Hilbert block with the truncation radii restricted
 to one finite subset of the fixed countable dense family. -/

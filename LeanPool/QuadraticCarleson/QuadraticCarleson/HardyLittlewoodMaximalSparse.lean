@@ -11,9 +11,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodSparseReducti
 # Sparse domination of the actual centered Hardy--Littlewood maximal operator
 
 The finite principal-interval selection costs `10`; the three-grid reduction
-and finite approximation cost `48`.  Thus the project-facing centered
+and finite approximation cost `48`. Thus the project-facing centered
 boundary operator has a genuine sparse `(1,1)` bound with constant `480`
-and exactly the approved `1/4` major-subset density.  All `p ≥ 1` follow by
+and exactly the approved `1/4` major-subset density. All `p ≥ 1` follow by
 monotonicity of normalized local averages.
 -/
 

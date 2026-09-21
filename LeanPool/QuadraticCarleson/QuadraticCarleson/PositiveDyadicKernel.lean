@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.BumpFunction.Basic
 # The dyadic kernels used in the positive estimate
 
 This file records the elementary, exact part of the dyadic decomposition of
-the quadratic Hilbert kernel.  The quotient defining a dyadic piece is given
+the quadratic Hilbert kernel. The quotient defining a dyadic piece is given
 the value zero at the origin; this is not an arbitrary extension, since the
 numerator vanishes on a whole neighbourhood of the origin.
 -/
@@ -24,11 +24,13 @@ open scoped ContDiff Topology
 namespace QuadraticCarleson
 
 /- The bump supplied by `ContDiffBump` is one on the inner closed ball and is
-supported in the outer open ball.  With these radii those balls are exactly
+supported in the outer open ball. With these radii those balls are exactly
 the two intervals required in the paper. -/
+/-- The smooth bump equal to one near zero and supported inside the half-unit interval. -/
 noncomputable def dyadicCutoffData : ContDiffBump (0 : ℝ) :=
   ⟨1 / 4, 1 / 2, by norm_num, by norm_num⟩
 
+/-- The real-valued cutoff underlying the dyadic kernel decomposition. -/
 noncomputable def dyadicCutoff : ℝ → ℝ := dyadicCutoffData
 
 theorem dyadicCutoff_smooth : ContDiff ℝ ∞ dyadicCutoff := by
@@ -65,6 +67,8 @@ theorem dyadicCutoff_support_subset :
   constructor <;> linarith
 
 /-! The quotient extension at the singular point. -/
+/-- The difference of adjacent dyadic cutoffs divided by the spatial variable, with value zero
+at zero. -/
 noncomputable def dyadicPsi (j : ℤ) (t : ℝ) : ℝ :=
   if t = 0 then 0 else
     (dyadicCutoff (2⁻¹ ^ j * t) - dyadicCutoff (2⁻¹ ^ (j - 1) * t)) / t
@@ -205,7 +209,7 @@ theorem dyadicPsi_odd (j : ℤ) : Function.Odd (dyadicPsi j) := by
 /-! ## The paper's uniquely selected scale
 
 For nonzero `lam` and `r ≥ 0`, the paper chooses the unique integer `j` for
-which `2^r ≤ 2^j √|lam| < 2^(r+1)`.  We record both existence and
+which `2^r ≤ 2^j √|lam| < 2^(r+1)`. We record both existence and
 uniqueness, rather than hiding a rounding convention inside the definition.
 -/
 
@@ -261,7 +265,7 @@ theorem existsUnique_oscillatoryScaleSpec (lam : ℝ) (r : ℕ) (hlam : lam ≠ 
       nlinarith
   exact ⟨n + 1, hnSpec, fun k hk ↦ oscillatoryScaleSpec_unique hk hnSpec⟩
 
-/-- The paper's integer `j(lam,r)`.  The proof argument records that the
+/-- The paper's integer `j(lam,r)`. The proof argument records that the
 frequency is nonzero; proof irrelevance makes its value independent of how
 that fact is supplied. -/
 noncomputable def oscillatoryScaleIndex (lam : ℝ) (r : ℕ) (hlam : lam ≠ 0) : ℤ :=
@@ -341,9 +345,10 @@ theorem dyadicPsi_oscillatoryScaleIndex_support_normalized
         div_lt_div_of_pos_right hs.2 (by norm_num)
       _ = (2 : ℝ) ^ r := by rw [pow_succ]; ring
 
-/-! A finite low-oscillatory kernel.  We first keep the selector `J` explicit
+/-! A finite low-oscillatory kernel. We first keep the selector `J` explicit
 so that the elementary kernel algebra can be reused, and then specialize it
 to `oscillatoryScaleIndex`. -/
+/-- The finite sum of oscillatory dyadic kernels through the chosen height. -/
 noncomputable def lowOscillatoryKernel (lam : ℝ) (B : ℕ) (J : ℕ → ℤ) (t : ℝ) : ℂ :=
   ∑ r ∈ Finset.range (B + 1),
     (dyadicPsi (J r) t : ℂ) * phase (lam * t ^ 2)
@@ -422,7 +427,7 @@ theorem lowOscillatoryKernel_support_annulus_subset (lam : ℝ) (B : ℕ) (J : �
     (lowOscillatoryKernel_support_subset lam B J ht)
   exact Set.mem_iUnion₂.2 ⟨r, hr, dyadicPsi_support_subset (J r) hrt⟩
 
-/-- Consecutive dyadic pieces telescope exactly.  This is the cancellation
+/-- Consecutive dyadic pieces telescope exactly. This is the cancellation
 behind the uniform size estimate for the finite low-oscillation kernel. -/
 theorem sum_dyadicPsi_consecutive (j : ℤ) (n : ℕ) {t : ℝ} (ht : t ≠ 0) :
     ∑ r ∈ Finset.range n, dyadicPsi (j + (r : ℤ)) t =

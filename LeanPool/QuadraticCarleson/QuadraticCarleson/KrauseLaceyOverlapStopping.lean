@@ -25,6 +25,7 @@ open KrauseLaceyStoppingExtraction KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The inclusion-maximal members of the finite interval family `A`. -/
 noncomputable def maximalIntervals (A : Finset RealInterval) : Finset RealInterval :=
   A.filter fun I ↦ ∀ J ∈ A, I.carrier ⊆ J.carrier → J = I
 
@@ -55,6 +56,7 @@ theorem maximalIntervals_pairwiseDisjoint {A : Finset RealInterval}
   · exact (hne (hj.2 I hi.1 h)).elim
   · exact h
 
+/-- The inclusion-maximal intervals removed by pruning at overlap threshold `M`. -/
 noncomputable def overlapStoppingIntervals (A : Finset RealInterval) (M : ℕ) :=
   maximalIntervals (A \ overlapPrunedFamily A M)
 
@@ -118,7 +120,7 @@ theorem overlapStoppingIntervals_pairwiseDisjoint
       J.carrier ⊆ K.carrier ∨ K.carrier ⊆ J.carrier ∨ Disjoint J.carrier K.carrier) :
     Set.Pairwise (↑(overlapStoppingIntervals A M) : Set RealInterval)
       (Disjoint on fun I : RealInterval ↦ I.carrier) :=
-  maximalIntervals_pairwiseDisjoint (fun I hI J hJ hne ↦
+  maximalIntervals_pairwiseDisjoint (fun _I hI _J hJ hne ↦
     hlam (Finset.mem_sdiff.mp hI).1 (Finset.mem_sdiff.mp hJ).1 hne)
 
 /-- A maximal removed interval has at most `M` strict covering ancestors.

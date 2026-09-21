@@ -124,6 +124,7 @@ theorem lintegral_lacunaryHighOrlicz_le_lowOrlicz (f : ℝ → ℂ) :
     (mul_nonneg (norm_nonneg _) (sq_nonneg _))
       (one_le_paperLog_succ 3 (norm_nonneg (f x))))
 
+/-- The combined endpoint constant for the low and high stopping bad parts. -/
 noncomputable def lacunaryBadEndpointConstant (C : ℝ) : ℝ≥0∞ :=
   lacunaryLowEndpointConstant C + lacunaryHighEndpointConstant
 
@@ -189,6 +190,7 @@ theorem paperLacunaryOscillatoryMaximal_le_good_add_bad
     _ ≤ _ := paperLacunaryOscillatoryMaximal_add_le
       (integrable_stoppingGoodPart hf hfi) (integrable_stoppingBadPart hf hfi) x
 
+/-- The endpoint constant combining the stopping good and bad oscillatory estimates. -/
 noncomputable def lacunaryOscillatoryEndpointConstant (C : ℝ) : ℝ≥0∞ :=
   stoppingGoodOscillatoryConstant + lacunaryBadEndpointConstant C
 

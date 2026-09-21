@@ -16,7 +16,7 @@ by
 `min (1 / d) (D * ℓ / d²)`.
 
 This file proves the exact one-dimensional integral behind the paper's
-`O(B)` estimate.  The transition occurs at distance `D * ℓ`: the first part
+`O(B)` estimate. The transition occurs at distance `D * ℓ`: the first part
 integrates to `log D`, and the inverse-square tail integrates to `1`.
 -/
 
@@ -282,7 +282,7 @@ theorem integrableOn_lowDecayMajorant_compl
     _ = D * ℓ * (1 / |x - z| ^ 2) := by ring
 
 /-- With the paper's choice `D = 2^(2B)`, the logarithmic mass is bounded by
-an explicit constant times `B + 1`.  This is the precise scalar content of
+an explicit constant times `B + 1`. This is the precise scalar content of
 the displayed `≲ B` estimate (including the harmless `B = 0` case). -/
 theorem integral_lowDecayMajorant_two_pow_le (B : ℕ) (ℓ z : ℝ) (hℓ : 0 < ℓ) :
     ∫ x in (Icc (z - ℓ) (z + ℓ))ᶜ,
@@ -301,7 +301,7 @@ theorem integral_lowDecayMajorant_two_pow_le (B : ℕ) (ℓ z : ℝ) (hℓ : 0 <
   nlinarith
 
 /-- A measurable nonnegative function dominated by the paper's dyadic
-low-oscillatory majorant has the required `O(B)` integral.  This packages the
+low-oscillatory majorant has the required `O(B)` integral. This packages the
 scalar calculation in the form used for each Calderón--Zygmund bad atom. -/
 theorem integral_le_four_mul_succ_of_le_lowDecayMajorant
     (F : ℝ → ℝ) (A ℓ z : ℝ) (B : ℕ)

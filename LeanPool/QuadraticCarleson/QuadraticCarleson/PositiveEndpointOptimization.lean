@@ -12,12 +12,12 @@ import Mathlib.Analysis.SpecificLimits.Normed
 # Scalar optimization in the positive endpoint argument
 
 This file isolates the numerical part of the high--low decomposition in the
-positive endpoint proof of arXiv:2609.04101v1.  In particular it records the
+positive endpoint proof of arXiv:2609.04101v1. In particular it records the
 two choices of magnitude thresholds and scale cutoffs made at the end of the
 proof and turns membership in a magnitude level into the corresponding Orlicz
 weight.
 
-We use exponential notation for real powers of two.  Thus
+We use exponential notation for real powers of two. Thus
 `lacunaryScale k = 2^(2^k)` and
 `lacunaryAmplitude k = 2^(2^(2^k))`, exactly the paper's lacunary choice.
 -/
@@ -29,7 +29,7 @@ namespace QuadraticCarleson
 namespace PositiveEndpointOptimization
 
 
-/-- Membership in the `k`th magnitude band.  This is the scalar content of
+/-- Membership in the `k`th magnitude band. This is the scalar content of
 the paper's set `F_k`, applied to `t = |f x|`. -/
 def InMagnitudeLevel (A : ℕ → ℝ) (k : ℕ) (t : ℝ) : Prop :=
   if k = 0 then 0 ≤ t ∧ t ≤ A 0
@@ -67,9 +67,9 @@ theorem paperLog_mono {n : ℕ} {s t : ℝ} (hs : 0 ≤ s) (hst : s ≤ t) :
   | succ n ih =>
       rw [paperLog_succ, paperLog_succ]
       apply Real.strictMonoOn_log.monotoneOn
-      · show 0 < 10 + paperLog n s
+      · change 0 < 10 + paperLog n s
         linarith [paperLog_nonnegative n hs]
-      · show 0 < 10 + paperLog n t
+      · change 0 < 10 + paperLog n t
         linarith [paperLog_nonnegative n ht]
       · simpa [add_comm] using add_le_add_left ih 10
 
@@ -207,7 +207,7 @@ theorem paperLog_one_lacunary_lower
   exact (le_of_lt hlower).trans (by linarith)
 
 /-- At a nontrivial lacunary magnitude level, `log₂` dominates the dyadic
-index scale.  The factor `8` only absorbs the shift from `k` to `k-1` and the
+index scale. The factor `8` only absorbs the shift from `k` to `k-1` and the
 fact that `log 2 > 1/2`. -/
 theorem dyadicScale_le_eight_mul_paperLog_two_of_mem
     {t : ℝ} {k : ℕ} (hk : 2 ≤ k)
@@ -280,10 +280,10 @@ theorem paperLog_one_lacunaryCutoff_le
     Real.log (10 + lacunaryCutoff C k)
         ≤ Real.log ((10 + C) * lacunaryScale k) := by
           apply Real.strictMonoOn_log.monotoneOn
-          · show 0 < 10 + lacunaryCutoff C k
+          · change 0 < 10 + lacunaryCutoff C k
             dsimp [lacunaryCutoff]
             nlinarith [mul_nonneg hC (lacunaryScale_pos k).le]
-          · show 0 < (10 + C) * lacunaryScale k
+          · change 0 < (10 + C) * lacunaryScale k
             exact mul_pos htenC (lacunaryScale_pos k)
           · exact harg
     _ = Real.log (10 + C) + Real.log (lacunaryScale k) := by
@@ -347,12 +347,12 @@ theorem sub_three_mul_log_two_le_paperLog_three_of_mem
   rw [← hlogdiv]
   apply Real.strictMonoOn_log.monotoneOn
   · exact hdivpos
-  · show 0 < 10 + paperLog 2 t
+  · change 0 < 10 + paperLog 2 t
     linarith [paperLog_nonnegative 2 ht0]
   · exact harg
 
 /-- The fourth iterated logarithm supplies Kalton's additional
-`log₁(k+2)` loss.  This is the last numerical step behind the paper's
+`log₁(k+2)` loss. This is the last numerical step behind the paper's
 `L(log₂ L)^2 log₄ L` weight. -/
 theorem paperLog_one_index_le_two_mul_paperLog_four_of_mem
     {t : ℝ} {k : ℕ} (hk : 6 ≤ k)
@@ -378,14 +378,14 @@ theorem paperLog_one_index_le_two_mul_paperLog_four_of_mem
   have hlog :
       Real.log ((k : ℝ) + 12) ≤ Real.log ((10 + paperLog 3 t) ^ 2) := by
     apply Real.strictMonoOn_log.monotoneOn
-    · show 0 < (k : ℝ) + 12
+    · change 0 < (k : ℝ) + 12
       have hk0 : (0 : ℝ) ≤ k := by positivity
       linarith
     · exact sq_pos_of_pos hbase
     · exact hsq
   rw [Real.log_pow] at hlog
   norm_num at hlog ⊢
-  convert hlog using 1 <;> ring
+  convert hlog using 1; ring
 
 /-- Complete pointwise conversion of the lacunary low-frequency loss on a
 magnitude band into the paper's endpoint Orlicz weight. -/
@@ -469,7 +469,7 @@ theorem lacunaryLowWeight_smallLevel_le_L1
   exact mul_le_mul_of_nonneg_right hprod ht
 
 /-- The scalar prefactor produced by Cauchy--Schwarz in the high-frequency
-estimate.  The paper writes its first factor as `2^(-2 β B)`. -/
+estimate. The paper writes its first factor as `2^(-2 β B)`. -/
 noncomputable def highFrequencyPrefactor
     (β : ℝ) (A B : ℝ) : ℝ :=
   Real.exp (-2 * β * Real.log 2 * B) * A / B
@@ -616,7 +616,6 @@ theorem tsum_fullHighFrequencyPrefactor_le
           intro k
           rw [← Real.exp_nat_mul]
           congr 1
-          push_cast
           ring
     _ = (1 - Real.exp (-δ))⁻¹ := by
           rw [tsum_geometric_of_lt_one (Real.exp_pos _).le]
@@ -645,7 +644,6 @@ theorem tsum_lacunaryHighFrequencyPrefactor_le
           intro k
           rw [← Real.exp_nat_mul]
           congr 1
-          push_cast
           ring
     _ = (1 - Real.exp (-δ))⁻¹ := by
           rw [tsum_geometric_of_lt_one (Real.exp_pos _).le]
@@ -685,7 +683,7 @@ theorem sum_lacunaryHighWeight_le_sum_orlicz
         ∑ k ∈ s, mass k * paperLog 2 (mass k) ^ 2 := by
           rw [Finset.mul_sum]
 
-/-- Finite-sum form of the complete lacunary low-frequency conversion.  The
+/-- Finite-sum form of the complete lacunary low-frequency conversion. The
 six initial bands are deliberately omitted: in the analytic proof they are a
 finite `L¹` contribution. -/
 theorem sum_lacunaryLowWeight_le_sum_orlicz

@@ -10,8 +10,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleMainTerm
 # Identification of the stationary kernel main term
 
 The packet estimate produces phases `e(λ(x-j)²)`, whereas the Bohr argument
-uses `e(2λjx)`.  For dyadic (hence integer) `λ`, the `λj²` phase is one and
-the sign change is complex conjugation.  This file records the exact identity,
+uses `e(2λjx)`. For dyadic (hence integer) `λ`, the `λj²` phase is one and
+the sign change is complex conjugation. This file records the exact identity,
 so the two finite sums have precisely the same norm.
 -/
 

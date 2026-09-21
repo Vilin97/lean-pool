@@ -14,14 +14,14 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.NonstandardThresholdAlgebra
 # Summation of the actual nonstandard good collection
 
 This file performs the scale-parameter optimization left after the concrete
-nonstandard physical `L²` and local-average pairing estimates.  The numerical
+nonstandard physical `L²` and local-average pairing estimates. The numerical
 weight used below is the source weight
 
 `((s + 1)^2 2^(-s))^(1/q)`.
 
-Its polynomial factor is *inside* the `q`th root.  Consequently it is bounded
+Its polynomial factor is *inside* the `q`th root. Consequently it is bounded
 by a universal constant times `2^(-s/(5q))`, and summing costs only one Holder
-conjugate.  This is the point of the threshold used in the source argument.
+conjugate. This is the point of the threshold used in the source argument.
 -/
 
 open Function MeasureTheory Set
@@ -32,7 +32,8 @@ namespace KrauseLaceyBadScale
 
 attribute [local instance] Classical.propDecidable
 
-noncomputable section
+noncomputable
+section
 
 /-- The dimensionless scale weight before taking the Holder-conjugate root. -/
 def nonstandardScaleWeight (s : ℕ) : ℝ :=
@@ -137,16 +138,16 @@ theorem finite_sum_nonstandardScaleWeight_rpow_le
       rw [Finset.mul_sum]
     _ ≤ 8 * (20 * q) := by
       gcongr
-      simpa only [Finset.sum_filter, Finset.mem_range, if_pos] using
+      simpa only [Finset.sum_filter, Finset.mem_range, ite_eq_left] using
         finite_scaleDecayRatio_sum_le_twenty_mul_q hq N
     _ = 160 * q := by ring
 
-/-- The source threshold.  It balances the `L²` term carrying
+/-- The source threshold. It balances the `L²` term carrying
 `sqrt (nonstandardScaleWeight s)` against the local `L¹` term. -/
 def nonstandardScaleThreshold (a p : ℝ) (s : ℕ) : ℝ :=
   a * nonstandardScaleWeight s ^ (-1 / p)
 
-theorem nonstandardScaleThreshold_pos {a p : ℝ} (ha : 0 < a) (hp : 0 < p) (s : ℕ) :
+theorem nonstandardScaleThreshold_pos {a p : ℝ} (ha : 0 < a) (s : ℕ) :
     0 < nonstandardScaleThreshold a p s := by
   unfold nonstandardScaleThreshold
   exact mul_pos ha (Real.rpow_pos_of_pos (nonstandardScaleWeight_pos s) _)
@@ -166,7 +167,7 @@ theorem threshold_rpow_one_sub
   simpa only [nonstandardScaleThreshold] using
     positive_threshold_rpow_one_sub ha (nonstandardScaleWeight_pos s) hp
 
-theorem one_div_holderConjugate_eq {p : ℝ} (hp : 1 < p) :
+theorem one_div_holderConjugate_eq {p : ℝ} :
     1 / holderConjugate p = (p - 1) / p := by
   rw [holderConjugate]
   exact reciprocal_holder_quotient p

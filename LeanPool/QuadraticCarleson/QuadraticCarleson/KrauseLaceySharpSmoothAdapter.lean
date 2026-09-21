@@ -18,14 +18,14 @@ pieces, whereas the paper ultimately needs a maximum of sharp truncations.
 This file proves the deterministic part of that passage.
 
 Every positive radius is rounded upward to a dyadic radius lying between
-`ε` and `2ε`.  The resulting annular error is bounded by eight copies of the
-centered Hardy--Littlewood maximal function.  At the rounded radius, the
+`ε` and `2ε`. The resulting annular error is bounded by eight copies of the
+centered Hardy--Littlewood maximal function. At the rounded radius, the
 sharp tail is then decomposed exactly into a smooth high-pass cutoff and the
-already-controlled cutoff boundary error.  Thus the complete loss in the
+already-controlled cutoff boundary error. Thus the complete loss in the
 two deterministic replacements is sixteen copies of the maximal function.
 
 What is *not* asserted here is the analytic Krause--Lacey sparse estimate for
-the smooth high-pass maximum.  That is precisely the remaining oscillatory
+the smooth high-pass maximum. That is precisely the remaining oscillatory
 input, rather than an assumption hidden in this adapter.
 -/
 
@@ -39,7 +39,8 @@ open KrauseLaceyFiniteRadiusAdapter
 open QuadraticHilbertMaximalMeasurable
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The half-open dyadic scale immediately below a positive radius. -/
 def dyadicFloorScale (ε : ℝ) (hε : 0 < ε) : ℤ :=
@@ -105,7 +106,7 @@ theorem radiusRoundingBoundaryKernel_norm_le
     · simp [radiusRoundingBoundaryKernel, sharpQuadraticTailKernel, hεt, hρt,
         hε.le]
     · simp only [radiusRoundingBoundaryKernel, sharpQuadraticTailKernel,
-        if_pos hεt, if_neg hρt, sub_zero, norm_div, norm_phase,
+        ite_eq_left hεt, ite_eq_right hρt, sub_zero, norm_div, norm_phase,
         Complex.norm_real, Real.norm_eq_abs]
       exact one_div_le_one_div_of_le hε hεt.le
   · have htε : |t| ≤ ε := le_of_not_gt hεt
@@ -148,7 +149,7 @@ theorem quadraticHilbertTrunc_sub_rounded_eq_boundary
     ← integral_sub hεi hρi]
   apply integral_congr_ae
   exact Filter.Eventually.of_forall (fun y ↦ by
-    simp only [Pi.sub_apply, radiusRoundingBoundaryKernel, sub_mul])
+    simp only [ radiusRoundingBoundaryKernel, sub_mul])
 
 /-- Rounding a truncation radius upward by at most a factor two costs at
 most eight copies of the centered Hardy--Littlewood maximal function. -/
@@ -191,8 +192,7 @@ theorem radiusRoundingBoundaryOperator_enorm_le_maximal
           4 / ENNReal.ofReal (2 * (2 * ε)) by
         rw [← ENNReal.ofReal_ofNat, ← ENNReal.ofReal_div_of_pos (by positivity)]
         congr 1
-        field_simp
-        <;> ring]
+        field_simp; ring]
       simp only [ENNReal.div_eq_inv_mul]
       ac_rfl
     _ ≤ 8 * centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ) x := by
@@ -228,7 +228,7 @@ theorem quadraticHilbertTrunc_enorm_le_dyadicRounded_add_maximal
       enorm_add_le _ _
     _ ≤ _ := add_le_add le_rfl hb
 
-/-- Smooth high-pass truncation kernel at radius `ρ`.  For dyadic `ρ` this
+/-- Smooth high-pass truncation kernel at radius `ρ`. For dyadic `ρ` this
 is the infinite smooth tail whose scale-localized pieces enter KL18. -/
 def smoothQuadraticHighPassKernel (lam ρ t : ℝ) : ℂ :=
   if t = 0 then 0 else
@@ -249,7 +249,7 @@ theorem dyadicHighPass_cutoff_argument (j : ℤ) (t : ℝ) :
 
 /-- At a dyadic radius, the smooth high-pass kernel is exactly the infinite
 sum of the genuine dyadic quadratic kernels entering the KL stopping
-recursion.  Pointwise the sum has finite support, by
+recursion. Pointwise the sum has finite support, by
 `hasFiniteSupport_dyadicPsi_add_nat`. -/
 theorem smoothQuadraticHighPassKernel_two_pow_eq_tsum
     (lam : ℝ) (j : ℤ) (t : ℝ) :
@@ -265,7 +265,7 @@ theorem smoothQuadraticHighPassKernel_two_pow_eq_tsum
       Complex.hasSum_ofReal.mpr hr
     have hm := hc.mul_right (phase (lam * t ^ 2))
     rw [hm.tsum_eq]
-    rw [smoothQuadraticHighPassKernel, if_neg ht,
+    rw [smoothQuadraticHighPassKernel, ite_eq_right ht,
       dyadicHighPass_cutoff_argument]
 
 /-- Rounded-radius version of the exact dyadic-tail identity. -/
@@ -297,18 +297,16 @@ theorem sharpQuadraticTailKernel_eq_smoothHighPass_add_boundary
   by_cases ht0 : t = 0
   · simp [ht0, sharpQuadraticTailKernel, smoothQuadraticHighPassKernel,
       cutoffBoundaryKernel]
-  · rw [smoothQuadraticHighPassKernel, cutoffBoundaryKernel, if_neg ht0, if_neg ht0]
+  · rw [smoothQuadraticHighPassKernel, cutoffBoundaryKernel, ite_eq_right ht0, ite_eq_right ht0]
     by_cases ht : ρ < |t|
     · have hnot : ¬ |t| ≤ ρ := not_le.mpr ht
-      rw [sharpQuadraticTailKernel, if_pos ht, if_neg hnot]
+      rw [sharpQuadraticTailKernel, ite_eq_left ht, ite_eq_right hnot]
       push_cast
-      field_simp
-      <;> ring
+      field_simp; ring
     · have hle : |t| ≤ ρ := le_of_not_gt ht
-      rw [sharpQuadraticTailKernel, if_neg ht, if_pos hle]
+      rw [sharpQuadraticTailKernel, ite_eq_right ht, ite_eq_left hle]
       push_cast
-      field_simp
-      <;> ring
+      field_simp; ring
 
 /-- Smooth high-pass convolution operator. -/
 def smoothQuadraticHighPass
@@ -452,7 +450,7 @@ theorem exists_eventually_zero_dyadicTail_integrands
       dyadicPsi_eq_zero_of_abs_le ((hM y hy).trans (hN r hr).le)
     simp [hz]
 
-/-- Operator-level completion of the kernel telescoping bridge.  For a test
+/-- Operator-level completion of the kernel telescoping bridge. For a test
 input, compact support makes the sequence of integral summands eventually
 zero, so no unproved dominated-convergence premise is hidden here. -/
 theorem hasSum_dyadicQuadraticConvolutions_add_nat
@@ -486,7 +484,7 @@ theorem hasSum_dyadicQuadraticConvolutions_add_nat
   exact hs
 
 /-- Every finite positive-half dyadic tail is exactly a sum of three genuine
-localized KL tail actions on finite multiscale families.  This composes the
+localized KL tail actions on finite multiscale families. This composes the
 three-shift localization with the scale ordering used by the high-pass
 series; it is the finite-tree exhaustion bridge needed before invoking the
 stopping recursion. -/
@@ -530,7 +528,7 @@ theorem exists_threeShift_localizedTailActions_eq_positivePartialSum
             (x - t) * f t := by
       apply Finset.sum_congr rfl
       intro depth hdepth
-      rw [if_pos (hcut depth hdepth)]
+      rw [ite_eq_left (hcut depth hdepth)]
     _ = ∑ r ∈ Finset.range n, ∫ t,
         annularQuadraticKernel (positiveDyadicAmplitude (j + (r : ℤ))) 1
           (x - t) * f t := by
@@ -585,7 +583,7 @@ theorem quadraticHilbertTrunc_enorm_le_smoothHighPass_add_maximal
   exact (enorm_add_le _ _).trans (add_le_add le_rfl
     (cutoffBoundaryOperator_enorm_le_maximal lam hρ f hf x))
 
-/-- The complete deterministic sharp-to-smooth comparison.  Its constant
+/-- The complete deterministic sharp-to-smooth comparison. Its constant
 `16` is the sum of the radius-rounding and cutoff-boundary costs. -/
 theorem quadraticHilbertTrunc_enorm_le_dyadicSmoothHighPass_add_maximal
     (lam : ℝ) {ε : ℝ} (hε : 0 < ε) {f : ℝ → ℂ}
@@ -767,14 +765,15 @@ theorem finiteRadiusSmoothHighPassMaxTestOperator_isSublinear
     rw [finiteRadiusSmoothHighPassMaxNNNorm_smul]
     rfl
 
-private theorem coe_nnreal_finset_sup {α : Type*} [DecidableEq α]
+private theorem coe_nnreal_finset_sup {α : Type*}
     (s : Finset α) (u : α → NNReal) :
     (↑(s.sup u) : ℝ≥0∞) = s.sup fun a ↦ (u a : ℝ≥0∞) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih => simp [Finset.sup_insert, ih]
 
-/-- Finite-family form of the complete deterministic comparison.  This is
+/-- Finite-family form of the complete deterministic comparison. This is
 the direct bridge needed after proving a sparse theorem for the genuine
 smooth KL maximum: no cardinality-dependent loss appears. -/
 theorem finiteRadiusSharpMax_enorm_le_smoothHighPassMax_add_maximal

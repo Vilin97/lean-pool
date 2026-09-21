@@ -6,6 +6,14 @@ Authors: Anastasios Fragkos
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyCompactPairingStabilization
 
+/-!
+# Sparse control of finite-radius smooth maximal operators
+
+A common lower dyadic index controls any finite collection of positive radii. Pointwise
+domination by dyadic smooth high-pass maxima then yields sparse bounds for the finite-radius
+operator.
+-/
+
 open Filter Function MeasureTheory Set
 open scoped ENNReal NNReal Topology
 
@@ -23,7 +31,7 @@ noncomputable def finiteRadiusLowerIndex (s : Finset densePositiveRadii) : ℤ :
 theorem finiteRadiusLowerIndex_le (s : Finset densePositiveRadii)
     (ε : densePositiveRadii) (hε : ε ∈ s) :
     finiteRadiusLowerIndex s ≤ dyadicFloorScale ε.1.1 ε.1.2 + 4 := by
-  rw [finiteRadiusLowerIndex, dif_pos ⟨ε, hε⟩]
+  rw [finiteRadiusLowerIndex, dite_eq_left ⟨ε, hε⟩]
   exact Finset.inf'_le _ hε
 
 /-- Every selected rounded radius is one of the moving lower cutoffs of
@@ -95,7 +103,8 @@ theorem hasSparseOnePBound_of_norm_le_dyadicSmoothHighPassMax
       norm_operatorPairing_absolute_normInput (dyadicSmoothHighPassMaxOperator lam j) f g
   rw [hp, sparseForm_normInput] at hb
   have hi : Integrable (fun x ↦ ‖dyadicSmoothHighPassMaxOperator lam j f x‖ * ‖g x‖) := by
-    simpa only [norm_mul, norm_star] using (integrable_pairing_dyadicSmoothHighPassMax lam j f g).norm
+    simpa only [norm_mul, norm_star] using (integrable_pairing_dyadicSmoothHighPassMax lam j f
+      g).norm
   have hnorm : ‖operatorPairing U f g‖ ≤
       ∫ x, ‖dyadicSmoothHighPassMaxOperator lam j f x‖ * ‖g x‖ := by
     apply norm_integral_le_of_norm_le hi

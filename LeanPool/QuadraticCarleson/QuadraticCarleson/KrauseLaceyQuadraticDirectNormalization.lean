@@ -9,9 +9,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectRo
 /-!
 # Homogeneity for the direct quadratic one-node normalization
 
-The direct estimate is proved after normalizing the two root averages.  This
+The direct estimate is proved after normalizing the two root averages. This
 file isolates the exact operator identity needed to restore the original
-scales.  No stopping-time argument is used here.
+scales. No stopping-time argument is used here.
 -/
 
 open MeasureTheory
@@ -23,7 +23,8 @@ namespace KrauseLaceyQuadraticDirectNormalization
 open KrauseLaceyStoppingRecursion
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Exact scaling of a local real `p`-mass by a nonnegative real scalar. -/
 theorem integral_norm_rpow_smul
@@ -58,7 +59,7 @@ theorem localAverage_smul
   rw [hcancel, Real.rpow_one]
 
 private theorem localizedTailAction_smul
-    (c : ℂ) (ell₀ : ℤ) (scale : RealInterval → ℤ)
+    (c : ℂ) (scale : RealInterval → ℤ)
     (S : Finset RealInterval) (f : L0Infinity) (ell : ℤ) (x : ℝ) :
     localizedTailAction scale S (L0Infinity.smul c f) ell x =
       c * localizedTailAction scale S f ell x := by
@@ -83,8 +84,8 @@ private theorem localizedTailAction_smul
       apply Finset.sum_congr rfl
       intro I hI
       by_cases hlen : (2 : ℝ) ^ ell ≤ I.length
-      · simp only [if_pos hlen, hpiece]
-      · simp only [if_neg hlen, mul_zero]
+      · simp only [ite_eq_left hlen, hpiece]
+      · simp only [ite_eq_right hlen, mul_zero]
     _ = c * ∑ I ∈ S, if (2 : ℝ) ^ ell ≤ I.length then
           krauseLaceyLocalizedPiece 1 (scale I) I f x else 0 := by
       rw [Finset.mul_sum]
@@ -104,7 +105,7 @@ theorem localizedTailMaximal_smul
           ‖c‖ₑ * ‖localizedTailAction scale S f ell.1 x‖ₑ := by
       apply iSup_congr
       intro ell
-      rw [localizedTailAction_smul c ell₀ scale S f ell.1 x, enorm_mul]
+      rw [localizedTailAction_smul c scale S f ell.1 x, enorm_mul]
     _ = ‖c‖ₑ * ⨆ ell : {ell : ℤ // ell₀ ≤ ell},
           ‖localizedTailAction scale S f ell.1 x‖ₑ :=
       (ENNReal.mul_iSup _ _).symm

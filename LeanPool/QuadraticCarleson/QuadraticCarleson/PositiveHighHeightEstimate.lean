@@ -25,6 +25,7 @@ namespace PositiveHighHeightEstimate
 
 open CalderonZygmundLevelAtoms PositiveLevelIntegration
 
+/-- The sum of level atoms over the given family of centers and interval lengths. -/
 noncomputable def disjointLevelAtomSum {ι : Type*}
     (A : ℕ → ℝ) (f : ℝ → ℂ) (k : ℕ) (z R : ι → ℝ) (x : ℝ) : ℂ :=
   ∑' i, levelAtom A f k (z i) (R i) x

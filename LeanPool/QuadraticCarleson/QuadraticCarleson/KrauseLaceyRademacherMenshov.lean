@@ -78,6 +78,7 @@ finite sequence length retained. The last block is automatically truncated. -/
 noncomputable def dyadicBlock (N l q : ℕ) : Finset ℕ :=
   (Finset.range N).filter fun i ↦ i / 2 ^ l = q
 
+/-- The sum of the sequence over one truncated dyadic block. -/
 noncomputable def blockSum {E : Type*} [AddCommMonoid E]
     (N l q : ℕ) (v : ℕ → E) : E := ∑ i ∈ dyadicBlock N l q, v i
 
@@ -109,6 +110,7 @@ theorem sum_norm_sq_blocks_le_signedBound
   exact henergy.trans (hB (fun i ↦ c (i / 2 ^ l)) fun i _ ↦
     (hc (i / 2 ^ l)).elim (fun h ↦ Or.inr (Or.inl h)) (fun h ↦ Or.inr (Or.inr h)))
 
+/-- The indices below the dyadic block containing the prefix endpoint. -/
 noncomputable def coarsePrefix (N n l : ℕ) : Finset ℕ :=
   (Finset.range N).filter fun i ↦ i / 2 ^ l < n / 2 ^ l
 

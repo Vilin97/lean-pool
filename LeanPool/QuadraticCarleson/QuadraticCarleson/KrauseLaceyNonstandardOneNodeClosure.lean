@@ -11,11 +11,11 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyScaleSummation
 # Finite nonstandard one-node closure
 
 This file closes the numerical summation in the nonstandard half of the
-Krause--Lacey one-node argument.  The analytic operators remain in the
+Krause--Lacey one-node argument. The analytic operators remain in the
 source range: the gap is `s : ℕ`, the physical suffix starts at `k₀ + s`,
 and applications of the physical estimate retain `3 ≤ k₀`.
 
-The first theorem is the exact finite `p'` summation mechanism.  It is
+The first theorem is the exact finite `p'` summation mechanism. It is
 separated from the operator-specific normalization so that no low-scale or
 whole-good-part estimate is smuggled into the statement.
 -/
@@ -29,7 +29,8 @@ namespace KrauseLaceyNonstandardOneNodeClosure
 open KrauseLaceyBadScale KrauseLaceyScalarNear
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The dimensionless scale weight in the nonstandard interpolation. -/
 def oneNodeNonstandardScaleWeight (s : ℕ) : ℝ :=
@@ -130,7 +131,7 @@ theorem finite_sum_oneNodeNonstandardScaleWeight_rpow_le
       rw [Finset.mul_sum]
     _ ≤ 8 * (20 * q) := by
       gcongr
-      simpa only [Finset.sum_filter, Finset.mem_range, if_pos] using
+      simpa only [Finset.sum_filter, Finset.mem_range, ite_eq_left] using
         finite_scaleDecayRatio_sum_le_twenty_mul_q hq N
     _ = 160 * q := by ring
 

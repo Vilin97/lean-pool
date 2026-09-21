@@ -12,16 +12,16 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragin
 
 This module formalizes the geometric localization at the start of Section 3
 of Krause--Lacey, *Sparse bounds for maximal monomial oscillatory Hilbert
-transforms* (arXiv:1609.01564).  In their display (3.2), an interval `I` of
+transforms* (arXiv:1609.01564). In their display (3.2), an interval `I` of
 length `2^(k+2)` is assigned a genuine dyadic kernel piece at scale `k`, and
-the input is restricted to the central third `I'`.  The resulting piece is
+the input is restricted to the central third `I'`. The resulting piece is
 supported in `I`.
 
 The source first concentrates on the positive half-kernel `ρₖ⁺`, saying
-explicitly that the complementary negative half is symmetric.  Accordingly,
+explicitly that the complementary negative half is symmetric. Accordingly,
 our main localized piece uses the project's concrete `positiveDyadicAmplitude`;
 a separate signed companion below uses the full `dyadicPsi` and connects this
-localization to the genuine full dyadic Hilbert kernel.  Both have outer
+localization to the genuine full dyadic Hilbert kernel. Both have outer
 support radius `2^(j-1)`, exactly one eighth of `2^(j+2)` in the project's
 indexing.
 
@@ -38,7 +38,7 @@ namespace QuadraticCarleson
 
 
 /-- The interval `I'` in Krause--Lacey display (3.2): the central third of
-`I`.  We retain the project's canonical half-open representative. -/
+`I`. We retain the project's canonical half-open representative. -/
 def RealInterval.centralThird (I : RealInterval) : Set ℝ :=
   Ioc ((2 * I.left + I.right) / 3) ((I.left + 2 * I.right) / 3)
 
@@ -125,7 +125,7 @@ theorem krauseLaceyLocalizedPiece_support_subset
   exact hx (krauseLaceyLocalizedPiece_eq_zero_of_notMem lam j I f hscale hmem)
 
 /-- Full signed-project companion of the source's positive-half localized
-piece.  This is the same localization using the genuine `dyadicPsi` piece
+piece. This is the same localization using the genuine `dyadicPsi` piece
 which occurs in the project's smooth dyadic quadratic truncations. -/
 noncomputable def krauseLaceySignedLocalizedPiece
     (lam : ℝ) (j : ℤ) (I : RealInterval) (f : ℝ → ℂ) (x : ℝ) : ℂ :=
@@ -195,7 +195,7 @@ theorem intervalL1Average_mul_length (f : ℝ → ℂ) (I : RealInterval) :
   field_simp [I.length_pos.ne']
 
 /-- The one-function packing estimate behind the source's stopping-time
-argument.  Pairwise-disjoint children whose `L¹` average exceeds ten times
+argument. Pairwise-disjoint children whose `L¹` average exceeds ten times
 the parent's occupy at most one tenth of the parent.
 
 Maximality and dyadic provenance are what supply disjointness in the source;
@@ -257,8 +257,8 @@ theorem krauseLacey_stoppingChildren_length_le_tenth
     exact div_nonneg I.length_pos.le (by norm_num)
 
 /-- The exact two-function packing estimate in the stopping recursion for
-Krause--Lacey Lemma 3.5.  A child is stopped when either input average is more
-than ten times its parent average.  The two exceptional subfamilies each cost
+Krause--Lacey Lemma 3.5. A child is stopped when either input average is more
+than ten times its parent average. The two exceptional subfamilies each cost
 at most `|I|/10`, hence all stopping children cost at most `|I|/5`. -/
 theorem krauseLacey_stoppingChildren_length_le_fifth
     {ι : Type*} (s : Finset ι) (J : ι → RealInterval) (I : RealInterval)
@@ -317,7 +317,7 @@ theorem measurableSet_krauseLaceyStoppingMajorSubset
 
 /-- The quantitative invariant of the KL18 sparse recursion: the stopping
 children consume at most one fifth of their parent, so the retained major
-subset has measure at least `4|I|/5`.  This is stronger than the source's
+subset has measure at least `4|I|/5`. This is stronger than the source's
 declared `1/4` sparse convention. -/
 theorem krauseLacey_stoppingMajorSubset_measure_ge_four_fifths
     {ι : Type*} (s : Finset ι) (J : ι → RealInterval) (I : RealInterval)
@@ -383,9 +383,9 @@ theorem krauseLacey_stoppingMajorSubset_measure_ge_quarter
 
 The last hypothesis is the source's tree separation invariant: two selected
 intervals are either disjoint, or the smaller interval lies inside one of the
-larger's stopping children.  For a dyadic grid this follows from nesting and
-maximal selection.  Unlike an assumption of sparse domination, it is purely
-the structural invariant of the recursive construction.  The quantitative
+larger's stopping children. For a dyadic grid this follows from nesting and
+maximal selection. Unlike an assumption of sparse domination, it is purely
+the structural invariant of the recursive construction. The quantitative
 major-subset estimate is derived above from the actual threshold-ten average
 test. -/
 theorem krauseLacey_finiteStoppingTree_isSparse

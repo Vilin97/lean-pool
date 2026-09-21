@@ -23,12 +23,14 @@ open KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The sum of localized bad pieces over intervals of length at least `2^ell`. -/
 noncomputable def badLengthTailAction
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (N : Finset RealInterval) (ell : ℤ) (x : ℝ) : ℂ :=
   ∑ I ∈ N, if (2 : ℝ) ^ ell ≤ I.length then krauseLaceyLocalizedPiece 1 (scale I) I
     (badScaleInput S f I₀ k₀ (scale I + 2 - s)) x else 0
 
+/-- The supremum of bad length-tail norms over all integer cutoffs. -/
 noncomputable def badLengthTailMaximal
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (N : Finset RealInterval) (x : ℝ) : ℝ :=

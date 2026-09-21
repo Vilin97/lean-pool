@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectEn
 
 This module transfers the one-piece quadratic energy estimate from the
 global smallest-region scale pieces to the actual interval-dependent inputs
-appearing in the finite offset reconstruction.  It contains no frequency
+appearing in the finite offset reconstruction. It contains no frequency
 projection or maximal-tail argument.
 -/
 
@@ -25,7 +25,8 @@ open KrauseLaceyBadScale KrauseLaceyQuadraticDirectPartition
 open KrauseLaceyQuadraticDirectAction
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Applying the localized piece after restricting its input to the same
 central third does not change the output. -/
@@ -49,7 +50,7 @@ theorem localizedEnergy_indicator_centralThird
   rw [krauseLaceyLocalizedPiece_indicator_centralThird]
 
 /-- The actual interval-dependent fixed-offset input has the exact
-`2^{-s}` one-piece energy gain.  This is the per-output input to the smooth
+`2^{-s}` one-piece energy gain. This is the per-output input to the smooth
 annular square-function argument. -/
 theorem localizedEnergy_offsetGroupedInput_le
     {S : Finset RealInterval}

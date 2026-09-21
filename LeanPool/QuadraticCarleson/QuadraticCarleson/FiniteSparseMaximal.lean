@@ -13,7 +13,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.Definitions
 # Finite maxima of sparse operators
 
 This file develops the sparse-family and finite-maximal ingredients of Lemma
-`l:weak11sparse` in the paper.  In particular, it records measurability in the
+`l:weak11sparse` in the paper. In particular, it records measurability in the
 definition of a sparse family, proves that a sparse family of nondegenerate
 real intervals is countable, makes the infimum defining the sparse norm
 usable, and verifies the two quantitative finite-dimensional steps in the
@@ -78,11 +78,13 @@ def IsSublinear (T : TestOperator) : Prop :=
 
 /-- A bounded nondegenerate interval, represented by its left and right endpoints. -/
 structure RealInterval where
+  /-- The left endpoint of the interval. -/
   left : ℝ
+  /-- The right endpoint of the interval. -/
   right : ℝ
   left_lt_right : left < right
 
-/-- The interval itself.  Endpoint choices do not affect any later measure. -/
+/-- The interval itself. Endpoint choices do not affect any later measure. -/
 def RealInterval.carrier (I : RealInterval) : Set ℝ := Ioc I.left I.right
 
 /-- Lebesgue length of an interval. -/
@@ -98,7 +100,7 @@ theorem RealInterval.measurableSet_carrier (I : RealInterval) :
     volume I.carrier = ENNReal.ofReal I.length := by
   simp [RealInterval.carrier, RealInterval.length, Real.volume_Ioc]
 
-@[simp] theorem RealInterval.volume_carrier_toReal (I : RealInterval) :
+theorem RealInterval.volume_carrier_toReal (I : RealInterval) :
     (volume I.carrier).toReal = I.length := by
   rw [RealInterval.volume_carrier, ENNReal.toReal_ofReal I.length_pos.le]
 
@@ -120,7 +122,7 @@ def IsSparse (η : ℝ) (S : Set RealInterval) : Prop :=
 
 /-- Every sparse collection of nondegenerate real intervals is countable.
 
-This is what justifies the paper's unqualified sum over a sparse family.  The
+This is what justifies the paper's unqualified sum over a sparse family. The
 proof uses the major subsets: they are measurable, pairwise disjoint, and
 have strictly positive measure in the s-finite Lebesgue measure space. -/
 theorem IsSparse.countable {η : ℝ} {S : Set RealInterval} (hS : IsSparse η S) :
@@ -167,7 +169,7 @@ theorem ofReal_localAverage_le_intervalMaximalAverage (p : ℝ) (f : ℝ → ℂ
 
 /-- The basic sparse embedding used in Lemma `l:weak11sparse`:
 the sparse form is controlled by the integral of the two interval maximal
-averages.  This is the exact consequence of the disjoint major subsets in
+averages. This is the exact consequence of the disjoint major subsets in
 the definition of sparseness. -/
 theorem sparseForm_le_lintegral_intervalMaximalAverage {p η : ℝ}
     {S : Set RealInterval} (hS : IsSparse η S) (f g : ℝ → ℂ) :
@@ -485,7 +487,7 @@ theorem four_lt_paperLog_one {N : ℕ} (hN : 54 ≤ N) : 4 < paperLog 1 N := by
   exact Behrend.exp_four_lt.trans_le (by exact_mod_cast (show 64 ≤ 10 + N by omega))
 
 /-- High-cardinality specialization of the preceding optimization, in the
-paper's own `log₁` notation.  The finitely many smaller cardinalities are
+paper's own `log₁` notation. The finitely many smaller cardinalities are
 absorbed into the absolute implicit constant in the analytic argument. -/
 theorem finiteSparseFactor_paperLog_le {N : ℕ} (hN : 54 ≤ N) :
     finiteSparseFactor N (logarithmicP (paperLog 1 N))
@@ -495,7 +497,7 @@ theorem finiteSparseFactor_paperLog_le {N : ℕ} (hN : 54 ≤ N) :
   rw [paperLog_succ, paperLog_zero, Real.exp_log (by positivity : (0 : ℝ) < 10 + N)]
   norm_num
 
-/-- A uniformly safe logarithmic scale.  It agrees with the paper's scale
+/-- A uniformly safe logarithmic scale. It agrees with the paper's scale
 once `paperLog 1 N ≥ 5` and handles the finitely many smaller cardinalities
 without a separate hypothesis. -/
 noncomputable def safeLogScale (N : ℕ) : ℝ := max 5 (paperLog 1 N)
@@ -526,7 +528,7 @@ theorem safeLogScale_le_five_mul (N : ℕ) :
   · nlinarith [one_le_paperLog_one N]
 
 /-- The paper's finite-dimensional optimization, now valid for every family
-cardinality.  The harmless truncation of the logarithmic scale only changes
+cardinality. The harmless truncation of the logarithmic scale only changes
 the absolute constant. -/
 theorem finiteSparseFactor_paperLog_le_all (N : ℕ) :
     finiteSparseFactor N (logarithmicP (safeLogScale N))
@@ -559,7 +561,7 @@ theorem le_finiteMax {N : ℕ} (T : Fin N → TestOperator) (f : L0Infinity) (x 
     Finset.le_sup (s := Finset.univ) (f := fun k : Fin N ↦ ‖T k f x‖₊) (Finset.mem_univ j)
   exact_mod_cast h
 
-/-- A nonempty finite maximum is attained.  This is the pointwise content
+/-- A nonempty finite maximum is attained. This is the pointwise content
 behind the paper's linearizing index `j(x)`. -/
 theorem exists_norm_eq_finiteMax {N : ℕ} (hN : 0 < N) (T : Fin N → TestOperator)
     (f : L0Infinity) (x : ℝ) : ∃ j : Fin N, ‖T j f x‖ = finiteMax T f x := by
@@ -616,7 +618,7 @@ theorem exists_pointwiseMaximizer {X : Type*} (n : ℕ) (F : Fin (n + 1) → X �
   rw [hj, ← hcyclic] at hi
   exact_mod_cast hi
 
-/-- A canonical pointwise maximizing index.  `Nat.findGreatest` provides a
+/-- A canonical pointwise maximizing index. `Nat.findGreatest` provides a
 tie-breaking rule whose level sets can be proved measurable. -/
 noncomputable def measurableMaximizingIndex {X : Type*} (n : ℕ)
     (F : Fin (n + 1) → X → ℂ) (x : X) : Fin (n + 1) :=
@@ -731,7 +733,7 @@ theorem FiniteSparseMaximalHypothesis.hasSparseOnePBound_add {N : ℕ}
     (hnorm.trans_lt (lt_add_of_pos_right _ hε))
 
 /-- The formal proposition corresponding exactly to paper Lemma
-`l:weak11sparse`.  The witness `K` is outside the quantifiers over `N`, the
+`l:weak11sparse`. The witness `K` is outside the quantifiers over `N`, the
 operator family, and its sparse-growth constant, so it is genuinely absolute
 rather than being chosen separately for each family. -/
 def weak11sparseStatement : Prop :=

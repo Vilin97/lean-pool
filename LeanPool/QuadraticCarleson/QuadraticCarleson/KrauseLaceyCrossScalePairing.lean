@@ -87,8 +87,8 @@ theorem norm_crossPairing_le (K L : FiniteRangeKernel)
     (L.integrable_applyIntegral hg)).aestronglyMeasurable
   have hb : ∀ᵐ x ∂volume,
       ‖conj (K.adjoint.applyIntegral (L.applyIntegral g) x)‖ ≤ C * ∫ y, ‖g y‖ := by
-    filter_upwards with x
-    simpa only [RCLike.norm_conj] using hnorm x
+    · filter_upwards with x
+      simpa only [RCLike.norm_conj] using hnorm x
   have hi := hf.mul_bdd (Complex.continuous_conj.comp_aestronglyMeasurable hm) hb
   calc
     _ ≤ ∫ x, ‖f x * conj (K.adjoint.applyIntegral (L.applyIntegral g) x)‖ :=

@@ -7,13 +7,20 @@ Authors: Anastasios Fragkos
 import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertPoissonFourier
 import Mathlib.MeasureTheory.Function.LpSeminorm.Indicator
 
+/-!
+# From L² approximation to L¹ on finite supports
+
+Hölder's inequality bounds the L¹ norm by the L² norm times the square root of the support
+measure. The difference estimate preserves the common support in approximation arguments.
+-/
+
 open Filter MeasureTheory Set
 open scoped ENNReal
 
 namespace QuadraticCarleson
 
 
-/-- Cauchy--Schwarz on a common finite-measure support.  This is the
+/-- Cauchy--Schwarz on a common finite-measure support. This is the
 quantitative step converting an `L²` approximation into an `L¹`
 approximation without changing its support. -/
 theorem integral_norm_le_sqIntegral_mul_measureReal_sqrt

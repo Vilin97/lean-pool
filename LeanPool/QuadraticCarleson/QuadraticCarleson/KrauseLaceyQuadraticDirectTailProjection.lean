@@ -13,7 +13,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticTailPert
 # Projection perturbations of direct quadratic tails
 
 The direct scale output is split into its smooth annular projection and the
-explicit quadratic projection remainder.  This module only performs that
+explicit quadratic projection remainder. This module only performs that
 finite pointwise bookkeeping; estimates for the remainder itself remain in
 the projection-remainder module.
 -/
@@ -35,7 +35,8 @@ open KrauseLaceyQuadraticTailPerturbation
 open KrauseLaceyQuadraticSmoothProjection
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The explicit projection-remainder output associated with every member of
 one direct residue family. -/
@@ -175,7 +176,7 @@ theorem sum_projectionRemainder_residueWeight_le
       ring
 
 /-- The abstract centered-mass remainder estimate specialized to the genuine
-direct inputs along one residue class.  Actual scales use their inherited
+direct inputs along one residue class. Actual scales use their inherited
 unit-window mass bound; absent scales contribute exactly zero. -/
 theorem norm_finiteProjectionErrorMajorant_directResidue_le_centeredSum
     {S A : Finset RealInterval} (hA : A ⊆ S)
@@ -225,7 +226,7 @@ theorem norm_finiteProjectionErrorMajorant_directResidue_le_centeredSum
       centeredUnitMass (input n) z ≤ bound n := by
     dsimp only [input, bound]
     by_cases hk : residueScale r n ∈ A.image scale
-    · rw [if_pos hk]
+    · rw [ite_eq_left hk]
       obtain ⟨I, hIA, hIk⟩ := Finset.mem_image.mp hk
       have hgapk : 0 ≤ residueScale r n + 2 - s := by
         simpa only [hIk] using
@@ -233,7 +234,7 @@ theorem norm_finiteProjectionErrorMajorant_directResidue_le_centeredSum
             (Finset.mem_filter.mpr ⟨hIA, hIk⟩)
       exact centeredUnitMass_directScaleInput_le
         hA hlam scale hscale f hs hgapk hM hmass z
-    · rw [if_neg hk,
+    · rw [ite_eq_right hk,
         directScaleInput_eq_zero_of_not_mem_image S A scale f
           (residueScale r n) s hk]
       simp [centeredUnitMass]
@@ -245,7 +246,7 @@ theorem norm_finiteProjectionErrorMajorant_directResidue_le_centeredSum
       hbound hlocal
 
 /-- Cardinality-free `L²` bound for the real-valued projection-remainder
-majorant along one residue class.  This is the finite Cauchy--Schwarz step
+majorant along one residue class. This is the finite Cauchy--Schwarz step
 combining the centered mass, geometric scale weight, and total input mass. -/
 theorem norm_finiteProjectionErrorMajorant_directResidue_le_root
     {S A : Finset RealInterval} (hA : A ⊆ S)
@@ -324,7 +325,7 @@ theorem norm_finiteProjectionErrorMajorant_directResidue_le_root
           Real.sqrt (bound n) = Real.sqrt (3 * M) *
               Real.sqrt ((2 : ℝ) ^ (residueScale r n + 2 - s)) := by
         dsimp only [bound]
-        rw [if_pos hk, Real.sqrt_mul (mul_nonneg (by norm_num) hM)]
+        rw [ite_eq_left hk, Real.sqrt_mul (mul_nonneg (by norm_num) hM)]
       have hsqrtWeight :
           Real.sqrt (weight n) =
             ((2 : ℝ) ^ residueScale r n)⁻¹ ^ 2 *
@@ -572,7 +573,7 @@ theorem finitePieceTailMax_directResidueOutput_sq_lintegral_le_root
         hA hlam scale hscale f hs hM hmass I₀ hsub hgap r N)
 
 /-- The square of a sum of seven extended-nonnegative values is controlled by
-a universal multiple of the sum of their squares.  The maximum proof remains
+a universal multiple of the sum of their squares. The maximum proof remains
 valid even when one of the values is `∞`. -/
 private theorem sum_fin_seven_sq_le_fortynine_sum_sq (a : Fin 7 → ℝ≥0∞) :
     (∑ r : Fin 7, a r) ^ 2 ≤ 49 * ∑ r : Fin 7, (a r) ^ 2 := by
@@ -599,7 +600,7 @@ private theorem sum_fin_seven_sq_le_fortynine_sum_sq (a : Fin 7 → ℝ≥0∞) 
     _ ≤ 49 * ∑ r : Fin 7, (a r) ^ 2 := mul_le_mul' le_rfl hmaxsq
 
 /-- The seven direct residue-tail maxima have a uniform combined `L²`
-square-integral bound.  The factor `49` comes from the preceding
+square-integral bound. The factor `49` comes from the preceding
 extended-nonnegative maximum estimate. -/
 theorem sum_directResidueTailMax_sq_lintegral_le_root
     {S A : Finset RealInterval} (hA : A ⊆ S)
@@ -747,7 +748,7 @@ theorem offsetTailMaximalOn_sq_lintegral_le_root
       sum_directResidueTailMax_sq_lintegral_le_root
         hA hlam scale hscale f hs hM hmass I₀ hsub hgap N
 
-/-- Seminorm form of the direct localized-tail estimate.  The square root is
+/-- Seminorm form of the direct localized-tail estimate. The square root is
 taken in `ℝ≥0∞`, so this statement also avoids an unnecessary choice of a
 real-valued representative of the maximal function. -/
 theorem eLpNorm_offsetTailMaximalOn_le_root

@@ -39,6 +39,7 @@ def IsBadDescendant (f g : ℝ → ℂ) (I J : RealInterval) : Prop :=
     (10 * intervalL1Average f I < intervalL1Average f J ∨
       10 * intervalL1Average g I < intervalL1Average g J)
 
+/-- The selected intervals that satisfy the bad-descendant stopping criterion. -/
 noncomputable def badDescendants
     (S : Finset RealInterval) (f g : ℝ → ℂ) (I : RealInterval) : Finset RealInterval := by
   classical
@@ -177,6 +178,7 @@ theorem stoppingMajorSubset_measure_ge_four_fifths
     (fun _ hJ ↦ (stoppingChildren_bad hJ).1) hf hg
     (fun _ hJ ↦ (stoppingChildren_bad hJ).2)
 
+/-- The parent interval together with its immediate stopping children. -/
 noncomputable def stoppingStepFamily
     (S : Finset RealInterval) (f g : ℝ → ℂ) (I : RealInterval) : Finset RealInterval := by
   classical
@@ -218,6 +220,7 @@ theorem root_insert_stoppingChildren_isSparse
       · exact Or.inr (Or.inr ⟨J, by simpa [children] using hJ, Subset.rfl⟩)
       · exact Or.inl (hdis hJ hK hJK)
 
+/-- The selected intervals contained in a given parent interval. -/
 noncomputable def childCollection
     (S : Finset RealInterval) (K : RealInterval) : Finset RealInterval := by
   classical

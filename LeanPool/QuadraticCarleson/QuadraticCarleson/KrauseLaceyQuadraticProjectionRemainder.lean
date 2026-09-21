@@ -16,7 +16,7 @@ import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 # The smooth-projection remainder in the direct quadratic proof
 
 This file formalizes the explicit normalized integral formula used for the
-error kernel `(1 - P_R) κ_R`.  The amplitude is the project's fixed positive
+error kernel `(1 - P_R) κ_R`. The amplitude is the project's fixed positive
 dyadic base, and the smoothing kernel is the inverse Fourier transform of the
 concrete annular cutoff from `KrauseLaceyQuadraticSmoothProjection`.
 
@@ -24,9 +24,9 @@ The principal estimate is
 
 `‖r_R x‖ ≤ C R⁻³ (1 + |x| / R)⁻²`, for `1 ≤ R`,
 
-with a fixed, explicitly defined finite constant `C`.  The last section
+with a fixed, explicitly defined finite constant `C`. The last section
 records the finite square-summation argument for the errors: the paper's
-per-scale `L∞` and `L¹` bounds imply an `O(2⁻²ˢ V¹ᐟ²)` `L²` sum.
+per-scale `L∞` and `L¹` bounds imply an `O(2⁻²ˢ V^(1/2))` `L²` sum.
 -/
 
 open Function MeasureTheory Set FourierTransform Metric Convolution
@@ -35,14 +35,16 @@ open scoped ENNReal NNReal ContDiff SchwartzMap ComplexConjugate
 namespace QuadraticCarleson.KrauseLaceyQuadraticProjectionRemainder
 
 
-noncomputable section
+noncomputable
+section
 
 /-- A one-sided cutoff which is one on `[1/8,2]` and supported in
-`(1/16,33/16)`.  In particular it is one on twice the support of the fixed
+`(1/16,33/16)`. In particular it is one on twice the support of the fixed
 amplitude. -/
 def remainderFrequencyCutoffData : ContDiffBump (17 / 16 : ℝ) :=
   ⟨15 / 16, 1, by norm_num, by norm_num⟩
 
+/-- The complex-valued annular cutoff used to express the projection remainder. -/
 def remainderFrequencyCutoff (ξ : ℝ) : ℂ :=
   (remainderFrequencyCutoffData ξ : ℂ)
 
@@ -158,7 +160,7 @@ def scaledProjectionConvolution (k : ℤ) (f : ℝ → ℂ) : ℝ → ℂ :=
   scaledProjectionKernel k ⋆[ContinuousLinearMap.mul ℂ ℂ] f
 
 /-- The Fourier-defined annular projection agrees in `L²` with convolution
-by the concrete inverse-Fourier kernel.  The only extra premise is that this
+by the concrete inverse-Fourier kernel. The only extra premise is that this
 convolution belongs to `L²`; for the localized scale outputs this is supplied
 by their already established `L²` estimate. -/
 theorem annularProjectionL2_toLp_eq_scaledProjectionConvolution
@@ -623,7 +625,7 @@ theorem quadraticScaleOutputL2_sub_annularProjectionL2_eq_remainderOutputL2
     fourier_quadraticProjectionRemainder_two_zpow]
   ring
 
-/-- Representative form of the preceding identity.  This is the a.e.
+/-- Representative form of the preceding identity. This is the a.e.
 statement consumed by the a.e. prefix-control interface. -/
 theorem quadraticScaleOutput_sub_annularProjection_ae
     (k : ℤ) {f : ℝ → ℂ} (hf : Integrable f)
@@ -856,7 +858,7 @@ theorem projectionRemainderTailConstant_nonneg :
     (mul_nonneg (by norm_num) positiveDyadicAmplitudeBound_nonneg)
     projectionKernelSecondMoment_nonneg
 
-/-- The support of the amplitude gives two powers of spatial decay.  This
+/-- The support of the amplitude gives two powers of spatial decay. This
 version retains the stronger `R⁻⁵` factor delivered by the proof. -/
 theorem norm_quadraticProjectionRemainder_le_tail
     {R : ℝ} (hR : 1 ≤ R) {x : ℝ} (hx : 1 ≤ |x / R|) :
@@ -980,7 +982,6 @@ theorem norm_quadraticProjectionRemainder_le
           (1 + |x / R|)⁻¹ ^ 2 := by
         dsimp [v, projectionRemainderConstant]
         ring
-
   · have ht := norm_quadraticProjectionRemainder_le_tail hR (x := x) hv
     have hscale : R⁻¹ ^ 5 ≤ R⁻¹ ^ 3 := by
       simpa only [inv_pow] using inv_pow_le_inv_pow_of_le hR (by omega : 3 ≤ 5)
@@ -1088,7 +1089,7 @@ def centeredUnitMass (f : ℝ → ℂ) (x : ℝ) : ℝ :=
 uniform centered-unit mass at most `M` with size `O(R M)`. -/
 theorem integral_weight_mul_norm_le_of_centeredUnitMass
     {R : ℝ} (hR : 1 ≤ R) {f : ℝ → ℂ} (hf : Integrable f)
-    {M : ℝ} (hM : 0 ≤ M) (hlocal : ∀ z, centeredUnitMass f z ≤ M)
+    {M : ℝ} (hlocal : ∀ z, centeredUnitMass f z ≤ M)
     (x : ℝ) :
     (∫ t : ℝ, quadraticRemainderWeight R (x - t) * ‖f t‖) ≤
       2 * (R * Real.pi) * M := by
@@ -1125,7 +1126,7 @@ theorem integral_weight_mul_norm_le_of_centeredUnitMass
         |t - z| ≤ (1 / 2 : ℝ) := by
       rw [Set.mem_Icc, abs_le]
       constructor <;> intro hz <;> constructor <;> linarith [hz.1, hz.2]
-    simp only [H, S, g, Set.indicator_apply, Set.mem_setOf_eq, heq]
+    simp only [H, S, g, Set.indicator_apply, Set.mem_ofPred_eq, heq]
   have hinner_right (z : ℝ) :
       (∫ t : ℝ, H (t, z)) = q z * centeredUnitMass f z := by
     rw [centeredUnitMass, ← integral_const_mul,
@@ -1136,7 +1137,7 @@ theorem integral_weight_mul_norm_le_of_centeredUnitMass
         |t - z| ≤ (1 / 2 : ℝ) := by
       rw [Set.mem_Icc, abs_le]
       constructor <;> intro ht <;> constructor <;> linarith [ht.1, ht.2]
-    simp only [H, S, g, Set.indicator_apply, Set.mem_setOf_eq, heq]
+    simp only [H, S, g, Set.indicator_apply, Set.mem_ofPred_eq, heq]
   have hfixed (t : ℝ) :
       q t * g t ≤ 2 * ∫ z : ℝ, H (t, z) := by
     have hright : IntegrableOn (fun z : ℝ ↦ 2 * q z * g t)
@@ -1350,12 +1351,12 @@ theorem integral_norm_quadraticProjectionRemainderOutput_two_zpow_le
         (integral_norm_quadraticProjectionRemainder_two_zpow_le hk)
         (integral_nonneg fun _ ↦ norm_nonneg _)
 
-/-- The local-unit-mass replacement for a pointwise input bound.  At scale
+/-- The local-unit-mass replacement for a pointwise input bound. At scale
 `R = 2^k`, local mass `M` yields the uniform remainder bound
 `2 π C M R⁻²`. -/
 theorem norm_quadraticProjectionRemainderOutput_le_of_centeredUnitMass
     {k : ℤ} (hk : 0 ≤ k) {f : ℝ → ℂ} (hf : Integrable f)
-    {M : ℝ} (hM : 0 ≤ M) (hlocal : ∀ z, centeredUnitMass f z ≤ M)
+    {M : ℝ} (hlocal : ∀ z, centeredUnitMass f z ≤ M)
     (x : ℝ) :
     ‖quadraticProjectionRemainderOutput k f x‖ ≤
       2 * Real.pi * projectionRemainderConstant * M *
@@ -1412,7 +1413,7 @@ theorem norm_quadraticProjectionRemainderOutput_le_of_centeredUnitMass
     _ ≤ A * (2 * (R * Real.pi) * M) :=
       mul_le_mul_of_nonneg_left
         (integral_weight_mul_norm_le_of_centeredUnitMass
-          hR hf hM hlocal x) hA
+          hR hf hlocal x) hA
     _ = 2 * Real.pi * projectionRemainderConstant * M * R⁻¹ ^ 2 := by
       unfold A
       field_simp
@@ -1451,7 +1452,7 @@ theorem norm_quadraticProjectionRemainderOutput_le_of_bound
       mul_le_mul_of_nonneg_left
         (integral_norm_quadraticProjectionRemainder_two_zpow_le hk) hK
 
-/-- The interpolation step in squared form.  It combines the concrete
+/-- The interpolation step in squared form. It combines the concrete
 `L∞` and `L¹` output estimates and already has scale decay `R⁻⁴`. -/
 theorem integral_sq_norm_quadraticProjectionRemainderOutput_le
     {k : ℤ} (hk : 0 ≤ k) {f : ℝ → ℂ} (hf : Integrable f)
@@ -1524,7 +1525,7 @@ theorem integral_sq_norm_quadraticProjectionRemainderOutput_le_of_centeredUnitMa
       ‖quadraticProjectionRemainderOutput k f x‖ ≤ 2 * M * L := by
     filter_upwards [] with x
     have hx := norm_quadraticProjectionRemainderOutput_le_of_centeredUnitMass
-      hk hf hM hlocal x
+      hk hf hlocal x
     simpa only [L] using hx.trans_eq (by ring)
   have hbound' : ∀ᵐ x : ℝ ∂volume,
       ‖‖quadraticProjectionRemainderOutput k f x‖‖ ≤ 2 * M * L := by
@@ -1543,7 +1544,7 @@ theorem integral_sq_norm_quadraticProjectionRemainderOutput_le_of_centeredUnitMa
     rw [pow_two]
     exact mul_le_mul_of_nonneg_right
       (norm_quadraticProjectionRemainderOutput_le_of_centeredUnitMass
-        hk hf hM hlocal x |>.trans_eq (by unfold L; ring))
+        hk hf hlocal x |>.trans_eq (by unfold L; ring))
       (norm_nonneg _)
   calc
     (∫ x : ℝ, ‖quadraticProjectionRemainderOutput k f x‖ ^ 2) ≤
@@ -1579,7 +1580,7 @@ theorem memLp_two_quadraticProjectionRemainderOutput
   have hi := hconv.norm.bdd_mul hconv.norm.aestronglyMeasurable hbound'
   simpa only [pow_two] using hi
 
-/-- Quantitative `L²` interpolation for the concrete remainder output.  This
+/-- Quantitative `L²` interpolation for the concrete remainder output. This
 is the per-scale estimate used in the final finite sum. -/
 theorem norm_quadraticProjectionRemainderOutputL2_le
     {k : ℤ} (hk : 0 ≤ k) {f : ℝ → ℂ} (hf : Integrable f)
@@ -1725,7 +1726,7 @@ theorem quadraticScaleOutput_sub_annularProjection_ae_of_nonneg
     (memLp_two_quadraticProjectionRemainderOutput hk hf)
 
 /-- Pointwise sum of the absolute values of finitely many projection-error
-outputs.  This dominates every partial sum and every finite tail, without
+outputs. This dominates every partial sum and every finite tail, without
 using cancellation between errors. -/
 def finiteProjectionErrorMajorant
     (N : ℕ) (u : ℕ → ℝ → ℂ) (x : ℝ) : ℝ :=
@@ -1805,7 +1806,7 @@ theorem norm_finiteProjectionErrorMajorantL2_le
       rw [Lp.norm_toLp, Lp.norm_toLp, eLpNorm_norm (u n) (hu n).aestronglyMeasurable]
 
 /-- A finite pointwise remainder majorant is controlled in `L²` by the sum
-of the centered-unit-mass bounds for its individual scale outputs.  This is
+of the centered-unit-mass bounds for its individual scale outputs. This is
 the abstract bridge needed by the direct quadratic residue families; unlike
 the earlier bounded-input route, it assumes no pointwise bound on the inputs.
 -/
@@ -1954,9 +1955,9 @@ private theorem sqrt_sum_sixteenth_shift_le
     rw [mul_pow, hpow]
     nlinarith [show 0 ≤ (1 / 16 : ℝ) ^ s by positivity]
 
-/-- Finite `L²` summation of projection errors.  The hypothesis is exactly
+/-- Finite `L²` summation of projection errors. The hypothesis is exactly
 the per-scale bound obtained by interpolating the paper's
-`‖r_R * F_j‖∞ ≲ K R⁻²` and `‖r_R * F_j‖₁ ≲ R⁻² m_j` estimates.  The result is
+`‖r_R * F_j‖∞ ≲ K R⁻²` and `‖r_R * F_j‖₁ ≲ R⁻² m_j` estimates. The result is
 cardinality-free and has the required `(1/4)^s = 2^(-2s)` decay. -/
 theorem norm_finset_sum_projectionErrors_le
     (N s j₀ : ℕ) {K V C : ℝ}
@@ -2019,7 +2020,7 @@ private theorem inv_two_pow_sq_eq_sqrt_sixteenth_pow (q : ℕ) :
 
 /-- Fully concrete finite summation of the actual remainder convolutions.
 The inputs may vary with the scale, are bounded by `K`, and their `L¹`
-masses sum to at most `V`.  No cardinality factor remains. -/
+masses sum to at most `V`. No cardinality factor remains. -/
 theorem norm_finset_sum_nonnegativeDyadicProjectionRemainderOutputL2_le
     (N s j₀ : ℕ) {K V : ℝ} (hK : 0 ≤ K) (hV : 0 ≤ V)
     (f : ℕ → ℝ → ℂ) (hf : ∀ n, Integrable (f n))

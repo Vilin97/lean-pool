@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelCompar
 # A finite sparse maximum with one common maximal-function error
 
 The exact frozen block comparison leaves one Hardy--Littlewood error outside
-the finite modulation maximum.  Its weak bound therefore costs one absolute
+the finite modulation maximum. Its weak bound therefore costs one absolute
 constant, independently of the number of modulations.
 -/
 

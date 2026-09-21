@@ -10,7 +10,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftTreeInt
 # Finite compact-support localization into the three shifted grids
 
 At a fixed represented scale, every consecutive central-third tile has a
-unique address in one of the three translated dyadic grids.  This module
+unique address in one of the three translated dyadic grids. This module
 turns that global partition into three finite subfamilies for a compactly
 supported input and proves exact reconstruction, including endpoints.
 -/
@@ -24,8 +24,10 @@ open CalderonZygmundDyadicStopping
 open KrauseLaceyShiftedLocalization
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for interval indices in this finite stopping construction. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- The unique shifted-grid address chosen for a consecutive tile number. -/
@@ -208,7 +210,7 @@ theorem exists_finiteThreeShiftFamily_localization
     simpa only [L] using hcover
 
 /-- Exact fixed-scale global convolution split into the three finite shifted
-grid families.  This is the finite-support form of KL18 display (3.1). -/
+grid families. This is the finite-support form of KL18 display (3.1). -/
 theorem exists_finite_threeShift_localizedSum_eq_globalConvolution
     (f : L0Infinity) (topScale : ℤ) (depth : ℕ) :
     ∃ G : Fin 3 → Finset RealInterval,

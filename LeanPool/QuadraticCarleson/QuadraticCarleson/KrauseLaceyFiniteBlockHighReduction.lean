@@ -13,7 +13,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNormalizedBlockRa
 # Direct comparison of the paper's finite height blocks with high suffixes
 
 The two smooth endpoints are rounded in the original spatial coordinates.
-Their common maximal-function error is independent of the modulation.  Only
+Their common maximal-function error is independent of the modulation. Only
 the retained high block is dilated to unit phase.
 -/
 
@@ -28,7 +28,8 @@ open KrauseLaceyFullDyadicReflection KrauseLaceyFullDyadicSparseTransfer
 open KrauseLaceyZeroPhaseLowControl
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Dilation at a physical radius obtained by dividing a normalized radius. -/
 theorem smoothHighPass_square_div (a : ℝ) (ha : 0 < a) (ρ : ℝ)

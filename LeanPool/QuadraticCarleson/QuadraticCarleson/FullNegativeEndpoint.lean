@@ -9,14 +9,14 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.NegativeEndpoint
 /-!
 # The full negative endpoint by pointwise domination
 
-The full modulation set contains `2^ℤ`.  Thus the full quadratic Carleson
+The full modulation set contains `2^ℤ`. Thus the full quadratic Carleson
 supremum pointwise dominates the lacunary one, and failure of every
-sub-`L log₂ L` modular estimate transfers immediately.  No continuity or
+sub-`L log₂ L` modular estimate transfers immediately. No continuity or
 density argument in the modulation parameter is involved.
 
-We state the modular predicate directly for a function-valued operator.  This
+We state the modular predicate directly for a function-valued operator. This
 is slightly stronger than first bundling measurability: even the bare global
-outer-measure inequality is impossible.  Whenever the operator is measurable,
+outer-measure inequality is impossible. Whenever the operator is measurable,
 this predicate is definitionally the paper's `HasPhiModularEstimate`.
 -/
 
@@ -48,7 +48,7 @@ def functionOperatorLevelSet
   {x | ENNReal.ofReal α < T f x}
 
 /-- The paper's modular inequality, stated without a redundant measurability
-field on the operator.  Its failure therefore also covers every measurable
+field on the operator. Its failure therefore also covers every measurable
 realization of the same pointwise supremum. -/
 def HasFunctionPhiModularEstimate
     (Phi : YoungFunction) (T : L0Infinity → ℝ → ℝ≥0∞) : Prop :=

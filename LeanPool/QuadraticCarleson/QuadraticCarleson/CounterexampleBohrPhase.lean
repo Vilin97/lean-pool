@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.TranslatedBohrUnion
 # Phase witnesses on the counterexample's translated Bohr set
 
 This file joins the measure-theoretic construction of the paper's set `E_N`
-to the almost-constant finite harmonic sum.  Every point of `E_N` supplies an
+to the almost-constant finite harmonic sum. Every point of `E_N` supplies an
 integer translate, a dyadic modulation, and the explicit logarithmic lower
 bound needed in the negative endpoint argument.
 -/
@@ -23,7 +23,7 @@ namespace QuadraticCarleson
 
 
 /-- Every point of the paper's translated Bohr set carries a dyadic phase-sum
-witness.  The exponent inequalities record exactly the logarithmic window in
+witness. The exponent inequalities record exactly the logarithmic window in
 which that modulation was selected. -/
 theorem paperTranslatedBohrSet_phase_witness {N : ℕ} {L x : ℝ}
     (hN : 100 ≤ N) (hx : x ∈ paperTranslatedBohrSet N L) :
@@ -50,7 +50,7 @@ theorem paperTranslatedBohrSet_phase_witness {N : ℕ} {L x : ℝ}
   simpa only [hkcastR] using hbohr
 
 /-- The dyadic phase-sum lower-level set contains the full translated Bohr
-set.  This packages the preceding witness in the exact set-theoretic form
+set. This packages the preceding witness in the exact set-theoretic form
 used to transfer the already proved `|E_N| ≳ N` estimate. -/
 def paperPhaseWitnessSet (N : ℕ) (L : ℝ) : Set ℝ :=
   {x | ∃ (k : ℤ) (n : ℕ),

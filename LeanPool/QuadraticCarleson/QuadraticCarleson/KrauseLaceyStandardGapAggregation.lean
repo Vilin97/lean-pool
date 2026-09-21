@@ -10,7 +10,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassificat
 # Cardinality-free diagonal aggregation for the scalar-standard branch
 
 The scalar-standard far-energy estimate is summable over every physical tail
-without a cardinality loss.  Passing from this diagonal statement to a norm
+without a cardinality loss. Passing from this diagonal statement to a norm
 of the *sum* requires a signed cross-scale estimate; that estimate is kept
 separate here rather than being silently inferred from diagonal energy.
 -/
@@ -42,7 +42,7 @@ theorem scale_le_of_mem_energyStandard_physicalTail
   omega
 
 /-- The actual physical tail has a uniform scalar-standard *diagonal* energy
-bound.  Its constant is independent of `N.card` and of the number of scales.
+bound. Its constant is independent of `N.card` and of the number of scales.
 This is the precise far-energy aggregation available before cross-scale
 signed-sum control is supplied. -/
 theorem sum_energyStandard_physicalTail_diagonalEnergy_le
@@ -61,7 +61,7 @@ theorem sum_energyStandard_physicalTail_diagonalEnergy_le
     hlam hsub (N.filter fun I ↦ (2 : ℝ) ^ ell ≤ I.length)
     ((Finset.filter_subset _ N).trans hN)
     (fun I hI ↦ scale_le_of_mem_energyStandard_physicalTail I₀ k₀ s ell scale N hN hI)
-  convert h using 1 <;> congr 1 <;> ring
+  convert h using 1; congr 1; ring
 
 
 end KrauseLaceyBadScale

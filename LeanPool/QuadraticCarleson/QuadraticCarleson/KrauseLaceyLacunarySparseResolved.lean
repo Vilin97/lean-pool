@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyLacunaryBlock
 # The finite sparse-maximal input in the lacunary endpoint
 
 This module installs the proved finite sparse-maximal lemma into the precise
-interface used by the frozen lacunary block.  Consequently, the strongest
+interface used by the frozen lacunary block. Consequently, the strongest
 paper-facing endpoint below retains only the two genuinely analytic inputs
 which are independent of that lemma: the individual Krause--Lacey sparse
 bound for finite-radius quadratic Hilbert transforms and the ordinary
@@ -30,7 +30,8 @@ open LacunaryMiddleBlockWeak
 open LacunaryOscillatoryScaling
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The operational finite sparse-maximal hypothesis used by the lacunary
 block, with the explicit universal constant proved in

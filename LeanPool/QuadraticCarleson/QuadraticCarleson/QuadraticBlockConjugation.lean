@@ -21,7 +21,8 @@ open scoped ENNReal ComplexConjugate
 namespace QuadraticCarleson.QuadraticBlockConjugation
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The paper's selected spatial scales depend only on absolute modulation. -/
 theorem oscillatoryScaleIndex_neg (lam : ℝ) (hlam : lam ≠ 0) (r : ℕ) :

@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleStationaryMain
 # Stationary packet sum
 
 The packets to the right of a translate are off support at `k + τ`, and their
-kernel actions can be replaced by their finite phase main terms.  This file
+kernel actions can be replaced by their finite phase main terms. This file
 keeps the dyadic window and its resulting geometric decay explicit.
 -/
 
@@ -256,7 +256,7 @@ theorem stationaryPacketSum_sub_kernelMain_le {N n : ℕ} {L A τ : ℝ} {k : �
       ring
 
 /-- In the stationary window the normalized action retains the norm of the
-harmonic phase main term up to the explicit packet error.  This is the form
+harmonic phase main term up to the explicit packet error. This is the form
 used when transferring the main-term lower bound to the operator. -/
 theorem norm_stationaryPacketAction_ge_harmonicPhaseSum_sub_error
     {N n : ℕ} {L A τ : ℝ} {k : ℤ}

@@ -15,14 +15,14 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.Bohr
 
 The result cited as `KL18`, Theorem 1.1, in the endpoint paper is Ben Krause
 and Michael T. Lacey, *Sparse bounds for maximal monomial oscillatory Hilbert
-transforms*, Studia Math. 242 (2018), 217--229, arXiv:1609.01564.  In the
+transforms*, Studia Math. 242 (2018), 217--229, arXiv:1609.01564. In the
 arXiv version the main statement is Theorem 1.6: for `d ≥ 2` the maximal
 truncation with phase `exp (2 π i y^d)` has sparse `(1,r)` norm
 `O(1 / (r - 1))`, for `1 < r ≤ 2`.
 
-That theorem is not present in Mathlib.  Its proof uses oscillatory `TT*`, a
+That theorem is not present in Mathlib. Its proof uses oscillatory `TT*`, a
 three-shift dyadic localization, a Calderón--Zygmund stopping recursion,
-Carleson packing, John--Nirenberg, and Rademacher--Menshov.  This file begins
+Carleson packing, John--Nirenberg, and Rademacher--Menshov. This file begins
 the missing branch with the exact project-facing pieces that can be proved
 without postulating the analytic theorem:
 
@@ -35,7 +35,7 @@ without postulating the analytic theorem:
   the project's test-function space, and its finite truncation maxima.
 
 The sparseness conventions now agree exactly; no splitting or refinement is
-required.  The remaining genuine adapter gap is that the full pointwise
+required. The remaining genuine adapter gap is that the full pointwise
 supremum is naturally extended-real-valued until almost-everywhere finiteness
 is established, while `TestOperator` is a total complex-valued function.
 Fixed truncations avoid that issue.
@@ -101,7 +101,7 @@ theorem holderConjugate_le_two_mul_krauseLaceyFactor
   nlinarith
 
 /-- The kernel phase is unchanged when a positive scale is moved from the
-modulation into the spatial variable.  This is the algebraic core of the
+modulation into the spatial variable. This is the algebraic core of the
 dilation reduction used immediately after Corollary
 `c:finitemodulationsweak11` in the paper. -/
 theorem quadratic_phase_scale (sigma a t : ℝ) :
@@ -109,9 +109,9 @@ theorem quadratic_phase_scale (sigma a t : ℝ) :
   congr 1
   ring
 
-/-- The corresponding identity for the singular kernel density.  The factor
+/-- The corresponding identity for the singular kernel density. The factor
 `a` is precisely the Jacobian which cancels under the change of variables
-`u = a t`.  Division at `t = 0` follows Lean's usual zero convention, so the
+`u = a t`. Division at `t = 0` follows Lean's usual zero convention, so the
 identity is genuinely pointwise. -/
 theorem quadratic_kernel_density_scale (sigma a t : ℝ) (ha : a ≠ 0) :
     phase ((sigma * a ^ 2) * t ^ 2) / (t : ℂ) =
@@ -124,7 +124,7 @@ theorem quadratic_kernel_density_scale (sigma a t : ℝ) (ha : a ≠ 0) :
     ring
 
 /-- Every nonzero real modulation is a signed square, with scale
-`sqrt |lambda|`.  Thus the degree-two Krause--Lacey theorem at phase `+t²`
+`sqrt |lambda|`. Thus the degree-two Krause--Lacey theorem at phase `+t²`
 (and its conjugate at `-t²`) covers exactly the nonzero convention fixed by
 the endpoint paper. -/
 theorem nonzero_modulation_eq_signed_sqrt_square {lam : ℝ} (hlam : lam ≠ 0) :
@@ -136,7 +136,7 @@ theorem nonzero_modulation_eq_signed_sqrt_square {lam : ℝ} (hlam : lam ≠ 0) 
     simp [hneg, abs_of_pos hpos]
 
 /-- Pointwise normalization of the singular density for an arbitrary
-nonzero modulation.  This makes the paper's exclusion of `lambda = 0`
+nonzero modulation. This makes the paper's exclusion of `lambda = 0`
 explicit: no scale selector is defined at zero. -/
 theorem quadratic_kernel_density_normalize_nonzero {lam : ℝ} (hlam : lam ≠ 0)
     (t : ℝ) :
@@ -247,7 +247,7 @@ theorem phase_neg_eq_conj (s : ℝ) : phase (-s) = conj (phase s) := by
   ring
 
 /-- The negative unit quadratic truncation is obtained from the positive
-one by conjugating both the input and output.  Consequently the even-degree
+one by conjugating both the input and output. Consequently the even-degree
 Krause--Lacey estimate for its displayed `+t²` phase also controls the `-t²`
 case with the identical constant. -/
 theorem quadraticHilbertTrunc_neg_one_eq_conj (ε : ℝ) (f : ℝ → ℂ) (x : ℝ) :
@@ -265,7 +265,7 @@ theorem quadraticHilbertTrunc_neg_one_eq_conj (ε : ℝ) (f : ℝ → ℂ) (x : 
     ring_nf)
 
 /-- A fixed truncation, represented in the project's complex-valued operator
-type.  Unlike the full supremum this is everywhere finite on `L₀∞`. -/
+type. Unlike the full supremum this is everywhere finite on `L₀∞`. -/
 noncomputable def quadraticHilbertTruncTestOperator
     (lam ε : ℝ) : TestOperator :=
   fun f x ↦ quadraticHilbertTrunc lam ε f x
@@ -348,7 +348,7 @@ theorem quadraticHilbertTruncTestOperator_isSublinear
   · intro c f x
     rw [quadraticHilbertTrunc_smul lam hε, norm_mul]
 
-/-- A finite maximum over positive truncation parameters.  This is an
+/-- A finite maximum over positive truncation parameters. This is an
 everywhere-finite surrogate for the full maximal truncation and therefore
 fits the project's real-valued finite-maximal framework without choosing an
 almost-everywhere representative. -/

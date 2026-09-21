@@ -11,9 +11,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticHilbertMaximalMeasu
 # Finite-radius test operators for the Krause--Lacey argument
 
 The genuine maximal truncation is naturally `ENNReal`-valued until its
-almost-everywhere finiteness is known.  To apply the finite sparse-maximal
+almost-everywhere finiteness is known. To apply the finite sparse-maximal
 lemma without any circular finiteness assumption, we first take a finite
-maximum of sharp truncations.  Its value is an ordinary nonnegative real,
+maximum of sharp truncations. Its value is an ordinary nonnegative real,
 embedded in `ℂ`, and this module verifies the exact sublinearity required by
 the sparse framework.
 -/
@@ -27,7 +27,8 @@ namespace KrauseLaceyFiniteRadiusAdapter
 open QuadraticHilbertMaximalMeasurable
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Finite maximum of sharp quadratic truncation norms, before embedding it
 as a test-operator output. -/

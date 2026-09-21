@@ -13,16 +13,16 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.IntervalMaximalComparison
 This is the elementary pointwise reduction at the start of the proof of the
 finite-modulation weak-type corollary in the accompanying article
 ([arXiv:2609.04101v1](https://arxiv.org/abs/2609.04101v1)). A
-consecutive block of the paper's smooth dyadic kernels telescopes.  Replacing
+consecutive block of the paper's smooth dyadic kernels telescopes. Replacing
 its two smooth cutoffs by sharp cutoffs produces the difference of two
 quadratic Hilbert truncations; the two transition annuli are controlled by
 the centered Hardy--Littlewood maximal function.
 
 The later sparse input in the paper is [Krause--Lacey, Theorem 1.1], namely a
 uniform sparse `(1,p)` estimate for the maximally truncated quadratic Hilbert
-transform.  Mathlib has no Carleson or oscillatory sparse-bound development,
+transform. Mathlib has no Carleson or oscillatory sparse-bound development,
 and the project currently only defines the abstract sparse premise in
-`FiniteSparseMaximal`.  Accordingly, this file proves the concrete pointwise
+`FiniteSparseMaximal`. Accordingly, this file proves the concrete pointwise
 comparison without postulating that external theorem.
 -/
 
@@ -124,7 +124,7 @@ theorem cutoffBoundaryKernel_eq_zero_of_abs_le
       rw [abs_div, abs_of_pos hden]
       apply (div_le_iff₀ hden).2
       nlinarith
-    rw [cutoffBoundaryKernel, if_neg ht0, if_pos ht,
+    rw [cutoffBoundaryKernel, ite_eq_right ht0, ite_eq_left ht,
       dyadicCutoff_eq_one harg]
     simp
 
@@ -142,7 +142,7 @@ theorem cutoffBoundaryKernel_eq_zero_of_two_mul_le_abs
     rw [abs_div, abs_of_pos hden]
     apply (le_div_iff₀ hden).2
     nlinarith
-  rw [cutoffBoundaryKernel, if_neg ht0, if_neg hnball,
+  rw [cutoffBoundaryKernel, ite_eq_right ht0, ite_eq_right hnball,
     dyadicCutoff_eq_zero harg]
   simp
 
@@ -160,7 +160,7 @@ theorem cutoffBoundaryKernel_norm_le
         apply hin
         simp [h, hρ.le]
       have hρt : ρ < |t| := lt_of_not_ge hin
-      rw [cutoffBoundaryKernel, if_neg ht0, if_neg hin, norm_mul, norm_phase,
+      rw [cutoffBoundaryKernel, ite_eq_right ht0, ite_eq_right hin, norm_mul, norm_phase,
         mul_one, Complex.norm_real, Real.norm_eq_abs, abs_div]
       simp only [sub_zero]
       rw [abs_of_nonneg (dyadicCutoff_nonneg _)]
@@ -187,10 +187,10 @@ theorem sharpQuadraticTailKernel_norm_le
       intro h
       subst t
       exact (not_lt_of_ge hε.le) (by simpa only [abs_zero] using ht)
-    rw [sharpQuadraticTailKernel, if_pos ht, norm_div, norm_phase,
+    rw [sharpQuadraticTailKernel, ite_eq_left ht, norm_div, norm_phase,
       Complex.norm_real, Real.norm_eq_abs]
     exact one_div_le_one_div_of_le hε ht.le
-  · rw [sharpQuadraticTailKernel, if_neg ht]
+  · rw [sharpQuadraticTailKernel, ite_eq_right ht]
     simpa using one_div_nonneg.mpr hε.le
 
 theorem measurable_cutoffBoundaryKernel (lam ρ : ℝ) :
@@ -233,7 +233,7 @@ theorem quadraticHilbertConvolutionTrunc_eq_quadraticHilbertTrunc
         ∫ t, s.indicator
           (fun u ↦ f (x - u) * phase (lam * u ^ 2) / (u : ℂ)) t := by
       simpa only [s, sharpQuadraticTailKernel, Set.indicator, sub_sub_cancel,
-        Set.mem_setOf_eq, mul_comm, mul_left_comm, div_eq_mul_inv, mul_ite, mul_zero] using
+        Set.mem_ofPred_eq, mul_comm, mul_left_comm, div_eq_mul_inv, mul_ite, mul_zero] using
         (integral_sub_left_eq_self
           (fun t : ℝ ↦ s.indicator
             (fun u ↦ f (x - u) * phase (lam * u ^ 2) / (u : ℂ)) t)
@@ -289,8 +289,7 @@ theorem cutoffBoundaryOperator_enorm_le_maximal
           4 / ENNReal.ofReal (2 * (2 * ρ)) by
         rw [← ENNReal.ofReal_ofNat, ← ENNReal.ofReal_div_of_pos (by positivity)]
         congr 1
-        field_simp
-        <;> ring]
+        field_simp; ring]
       simp only [ENNReal.div_eq_inv_mul]
       ac_rfl
     _ ≤ 8 * centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ) x := by
@@ -345,27 +344,24 @@ theorem lowOscillatoryKernel_consecutive_eq_truncations_add_boundaries
       scale_cutoff_eq_radius_cutoff (j - 1) t]
     rw [show j - 1 - 2 = j - 3 by ring]
     have hεR := dyadic_block_innerRadius_le_outerRadius j B
-    simp only [cutoffBoundaryKernel, if_neg ht0]
+    simp only [cutoffBoundaryKernel, ite_eq_right ht0]
     push_cast
     by_cases hε : (2 : ℝ) ^ (j - 3) < |t|
     · have hnε : ¬ |t| ≤ (2 : ℝ) ^ (j - 3) := not_le.mpr hε
-      rw [if_pos hε, if_neg hnε]
+      rw [ite_eq_left hε, ite_eq_right hnε]
       by_cases hR : (2 : ℝ) ^ (j + (B : ℤ) - 2) < |t|
       · have hnR : ¬ |t| ≤ (2 : ℝ) ^ (j + (B : ℤ) - 2) := not_le.mpr hR
-        rw [if_pos hR, if_neg hnR]
-        field_simp
-        <;> norm_num <;> ring
+        rw [ite_eq_left hR, ite_eq_right hnR]
+        field_simp; norm_num; ring
       · have hyR : |t| ≤ (2 : ℝ) ^ (j + (B : ℤ) - 2) := le_of_not_gt hR
-        rw [if_neg hR, if_pos hyR]
-        field_simp
-        <;> norm_num <;> ring
+        rw [ite_eq_right hR, ite_eq_left hyR]
+        field_simp; norm_num; ring
     · have hyε : |t| ≤ (2 : ℝ) ^ (j - 3) := le_of_not_gt hε
       have hR : ¬ (2 : ℝ) ^ (j + (B : ℤ) - 2) < |t| :=
         not_lt.mpr (hyε.trans hεR)
       have hyR : |t| ≤ (2 : ℝ) ^ (j + (B : ℤ) - 2) := hyε.trans hεR
-      rw [if_neg hε, if_neg hR, if_pos hyε, if_pos hyR]
-      field_simp
-      <;> norm_num <;> ring
+      rw [ite_eq_right hε, ite_eq_right hR, ite_eq_left hyε, ite_eq_left hyR]
+      field_simp; norm_num; ring
 
 /-- Operator-level exact decomposition of a consecutive smooth dyadic block
 into two sharp truncations and two cutoff boundary errors. -/

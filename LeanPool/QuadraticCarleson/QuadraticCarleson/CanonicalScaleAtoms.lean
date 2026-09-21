@@ -26,6 +26,7 @@ open CalderonZygmundLevelAtoms CalderonZygmundLevelRecombination
 open PositiveEndpointOptimization PositiveLevelIntegration PositiveHighHeightEstimate
 open PositiveStoppingBadEstimate
 
+/-- The sum of the level-`k` atoms over the disjoint canonical stopping intervals. -/
 noncomputable def canonicalLevelBadPart (A : ℕ → ℝ) (f : ℝ → ℂ) (k : ℕ) : ℝ → ℂ :=
   disjointLevelAtomSum A f k (stoppingCenter (f := f)) stoppingLength
 
@@ -143,7 +144,8 @@ theorem measurable_stoppingScaleLevelBadPart {A : ℕ → ℝ} {f : ℝ → ℂ}
   apply Measurable.tsum
   intro c
   by_cases hc : c ∈ dyadicAtomScaleClass stoppingLength j
-  · simpa only [indicator_of_mem hc] using measurable_levelAtom hf k (stoppingCenter c) (stoppingLength c)
+  · simpa only [indicator_of_mem hc] using measurable_levelAtom hf k (stoppingCenter c)
+      (stoppingLength c)
   · simp only [indicator_of_notMem hc]
     exact measurable_const
 
@@ -203,6 +205,7 @@ theorem tsum_stoppingScaleLevelBadPart_full (f : ℝ → ℂ) (k : ℕ) (x : ℝ
     (∑' j : ℤ, stoppingScaleLevelBadPart fullAmplitude f j k x) = stoppingLevelBadPart f k x :=
   tsum_stoppingScaleLevelBadPart fullAmplitude f k x
 
+/-- The canonical stopping bad part at lacunary magnitude level `k`. -/
 noncomputable def lacunaryStoppingLevelBadPart (f : ℝ → ℂ) (k : ℕ) : ℝ → ℂ :=
   canonicalLevelBadPart lacunaryAmplitude f k
 
@@ -212,14 +215,14 @@ theorem tsum_stoppingScaleLevelBadPart_lacunary (f : ℝ → ℂ) (k : ℕ) (x :
   tsum_stoppingScaleLevelBadPart lacunaryAmplitude f k x
 
 theorem hasSum_canonicalLevelBadPart {A : ℕ → ℝ}
-    (hA0 : 0 ≤ A 0) (hA : StrictMono A)
+     (hA : StrictMono A)
     (hcofinal : ∀ t : ℝ, 0 ≤ t → ∃ k, t ≤ A k)
     {f : ℝ → ℂ} (hf : Measurable f) (hfi : Integrable f) (x : ℝ) :
     HasSum (fun k ↦ canonicalLevelBadPart A f k x) (stoppingBadPart f x) := by
   by_cases hx : x ∈ stoppingBadUnion f
   · obtain ⟨c, hc⟩ := mem_iUnion.mp hx
     simp_rw [canonicalLevelBadPart_eq_atom_of_mem A c hc]
-    have hs := hasSum_levelAtom_apply hA0 hA hcofinal hf
+    have hs := hasSum_levelAtom_apply hA hcofinal hf
       (stoppingCenter c) (stoppingLength c) hfi.integrableOn x
     convert hs using 1
     unfold stoppingBadPart centeredAtom
@@ -233,8 +236,8 @@ theorem hasSum_canonicalLevelBadPart {A : ℕ → ℝ}
 theorem hasSum_lacunaryStoppingLevelBadPart {f : ℝ → ℂ}
     (hf : Measurable f) (hfi : Integrable f) (x : ℝ) :
     HasSum (fun k ↦ lacunaryStoppingLevelBadPart f k x) (stoppingBadPart f x) :=
-  hasSum_canonicalLevelBadPart (lacunaryAmplitude_pos 0).le strictMono_lacunaryAmplitude
-    lacunaryAmplitude_cofinal hf hfi x
+  hasSum_canonicalLevelBadPart strictMono_lacunaryAmplitude
+    (fun t _ ↦ lacunaryAmplitude_cofinal t) hf hfi x
 
 /-- Summing both the exact spatial slices and the lacunary magnitude
 levels loses only the usual atom mass factor two. -/
@@ -247,8 +250,8 @@ theorem tsum_lacunary_scale_level_L1Mass_le {f : ℝ → ℂ} (hf : Measurable f
     unfold magnitudeLevelL1Mass
     rw [← lintegral_iUnion (fun k ↦ measurableSet_magnitudeLevelSet hf k)
       (fun k l hkl ↦ magnitudeLevelSet_disjoint strictMono_lacunaryAmplitude f hkl),
-      iUnion_magnitudeLevelSet_eq_univ (lacunaryAmplitude_pos 0).le
-        strictMono_lacunaryAmplitude lacunaryAmplitude_cofinal f]
+      iUnion_magnitudeLevelSet_eq_univ
+        strictMono_lacunaryAmplitude (fun t _ ↦ lacunaryAmplitude_cofinal t) f]
     simp only [Measure.restrict_univ, ofReal_norm]
   have hs := ENNReal.tsum_le_tsum (fun k ↦
     lintegral_enorm_canonicalLevelBadPart_le hf (lacunaryAmplitude_pos k).le)

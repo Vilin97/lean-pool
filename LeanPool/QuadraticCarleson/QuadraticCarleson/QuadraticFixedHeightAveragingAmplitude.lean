@@ -89,7 +89,8 @@ theorem exists_positiveDyadicBase_bound : ∃ D : ℝ, 0 ≤ D ∧
     (∀ t, ‖positiveDyadicBase t‖ ≤ D) ∧ (∀ t, ‖deriv positiveDyadicBase t‖ ≤ D) := by
   have hc : Continuous positiveDyadicBase := positiveDyadicBase_smooth.continuous
   have hdc : Continuous (deriv positiveDyadicBase) := continuous_deriv_positiveDyadicBase
-  obtain ⟨C, hC⟩ := hc.norm.bddAbove_range_of_hasCompactSupport positiveDyadicBase_hasCompactSupport.norm
+  obtain ⟨C, hC⟩ := hc.norm.bddAbove_range_of_hasCompactSupport
+    positiveDyadicBase_hasCompactSupport.norm
   obtain ⟨C', hC'⟩ := hdc.norm.bddAbove_range_of_hasCompactSupport
     positiveDyadicBase_hasCompactSupport.deriv.norm
   refine ⟨max (max C C') 0, le_max_right _ _, ?_, ?_⟩
@@ -98,12 +99,15 @@ theorem exists_positiveDyadicBase_bound : ∃ D : ℝ, 0 ≤ D ∧
   · intro t
     exact (hC' (mem_range_self t)).trans ((le_max_right C C').trans (le_max_left _ _))
 
-noncomputable def positiveDyadicAmplitudeBound : ℝ := Classical.choose exists_positiveDyadicBase_bound
+/-- A chosen uniform bound for the positive dyadic base amplitude. -/
+noncomputable def positiveDyadicAmplitudeBound : ℝ := Classical.choose
+  exists_positiveDyadicBase_bound
 
 theorem positiveDyadicAmplitudeBound_nonneg : 0 ≤ positiveDyadicAmplitudeBound :=
   (Classical.choose_spec exists_positiveDyadicBase_bound).1
 
-theorem norm_positiveDyadicBase_le (t : ℝ) : ‖positiveDyadicBase t‖ ≤ positiveDyadicAmplitudeBound :=
+theorem norm_positiveDyadicBase_le (t : ℝ) : ‖positiveDyadicBase t‖ ≤
+  positiveDyadicAmplitudeBound :=
   (Classical.choose_spec exists_positiveDyadicBase_bound).2.1 t
 
 theorem norm_deriv_positiveDyadicBase_le (t : ℝ) :
@@ -114,6 +118,7 @@ theorem norm_deriv_positiveDyadicBase_le (t : ℝ) :
 noncomputable def positiveDyadicAmplitude (j : ℤ) (t : ℝ) : ℂ :=
   (((2⁻¹ : ℝ) ^ j : ℝ) : ℂ) * positiveDyadicBase ((2⁻¹ : ℝ) ^ j * t)
 
+/-- The spatial derivative of the dyadically scaled positive amplitude. -/
 noncomputable def positiveDyadicAmplitudeDerivative (j : ℤ) (t : ℝ) : ℂ :=
   (((2⁻¹ : ℝ) ^ j : ℝ) : ℂ) ^ 2 * deriv positiveDyadicBase ((2⁻¹ : ℝ) ^ j * t)
 
@@ -135,7 +140,7 @@ theorem hasDerivAt_positiveDyadicAmplitude (j : ℤ) (t : ℝ) :
     (positiveDyadicBase_smooth.differentiable (by norm_num)).differentiableAt.hasDerivAt
   have hc := h.scomp t ((hasDerivAt_id t).const_mul ((2⁻¹ : ℝ) ^ j))
   apply (hc.const_mul ((((2⁻¹ : ℝ) ^ j : ℝ) : ℂ))).congr_deriv
-  simp only [positiveDyadicAmplitudeDerivative, id_eq, mul_one, Complex.real_smul]
+  simp only [positiveDyadicAmplitudeDerivative, mul_one, Complex.real_smul]
   ring
 
 theorem continuous_positiveDyadicAmplitudeDerivative (j : ℤ) :
@@ -183,7 +188,8 @@ theorem norm_positiveDyadicAmplitude_le (j : ℤ) (t : ℝ) :
     norm_num
   calc
     _ = (2⁻¹ : ℝ) ^ j * ‖positiveDyadicBase ((2⁻¹ : ℝ) ^ j * t)‖ := by
-      simp only [positiveDyadicAmplitude, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hc]
+      simp only [positiveDyadicAmplitude, norm_mul, Complex.norm_real, Real.norm_eq_abs,
+        abs_of_pos hc]
     _ ≤ (2⁻¹ : ℝ) ^ j * positiveDyadicAmplitudeBound :=
       mul_le_mul_of_nonneg_left (norm_positiveDyadicBase_le _) hc.le
     _ ≤ (1 / (2 : ℝ) ^ (j - 1)) * positiveDyadicAmplitudeBound :=

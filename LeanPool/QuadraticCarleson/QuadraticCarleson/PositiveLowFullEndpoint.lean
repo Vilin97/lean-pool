@@ -27,6 +27,7 @@ namespace PositiveLowFullEstimate
 open CalderonZygmundLevelAtoms LowKernelLevelSummation
 open PositiveEndpointOptimization PositiveLevelIntegration PositiveHighHeightEstimate
 
+/-- The union of the fivefold enlargements of the atom intervals. -/
 def fivefoldExceptionalSet {ι : Type*} (z R : ι → ℝ) : Set ℝ :=
   ⋃ i, centeredInterval (z i) (5 * R i)
 

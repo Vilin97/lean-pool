@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteModulationKernelCompar
 # Stopping recursion with a separate `L^p` monitor
 
 The sparse pairing is tested against `g`, while the stopping family must
-control the local average of `‖g‖^p`.  This file separates those two roles.
+control the local average of `‖g‖^p`. This file separates those two roles.
 The children are selected using the compactly supported monitor
 `x ↦ ‖g x‖^p`, whereas the exact recursive pairing still contains the
 original test function `g`.
@@ -48,7 +48,7 @@ noncomputable def pStoppingMonitor (g : L0Infinity) (p : ℝ) (hp : 0 < p) : L0I
 @[simp] theorem pStoppingMonitor_apply (g : L0Infinity) (p : ℝ) (hp : 0 < p) (x : ℝ) :
     pStoppingMonitor g p hp x = ((‖g x‖ ^ p : ℝ) : ℂ) := rfl
 
-@[simp] theorem norm_pStoppingMonitor (g : L0Infinity) (p : ℝ) (hp : 0 < p) (x : ℝ) :
+theorem norm_pStoppingMonitor (g : L0Infinity) (p : ℝ) (hp : 0 < p) (x : ℝ) :
     ‖pStoppingMonitor g p hp x‖ = ‖g x‖ ^ p := by
   rw [pStoppingMonitor_apply, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (Real.rpow_nonneg (norm_nonneg _) _)]

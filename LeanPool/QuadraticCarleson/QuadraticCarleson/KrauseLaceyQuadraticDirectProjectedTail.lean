@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticSmoothPr
 # Projected scale tails for the direct quadratic action
 
 This module instantiates the seven separated annular families with the
-actual fixed-scale outputs of an arbitrary retained subcollection `A`.  The
+actual fixed-scale outputs of an arbitrary retained subcollection `A`. The
 smallest-selected-region partition continues to be formed from the ambient
 family `S`.
 -/
@@ -30,8 +30,10 @@ open KrauseLaceyQuadraticAnnularTail
 open KrauseLaceyQuadraticSmoothProjection
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for the interval indices of the projected tail. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 theorem norm_annularProjectionL2_le
@@ -61,9 +63,11 @@ theorem norm_annularProjectionL2_le
 
 /-! ## Integrable representatives of annular projections -/
 
+/-- The Schwartz kernel obtained by inverse Fourier transform of the scaled annular cutoff. -/
 def scaledAnnularKernelSchwartz (j : ℤ) : 𝓢(ℝ, ℂ) :=
   𝓕⁻ (scaledAnnularFrequencySchwartz j)
 
+/-- The function underlying the scaled annular Schwartz kernel. -/
 def scaledAnnularKernel (j : ℤ) : ℝ → ℂ :=
   scaledAnnularKernelSchwartz j
 
@@ -79,6 +83,7 @@ theorem fourier_scaledAnnularKernel (j : ℤ) (ξ : ℝ) :
   rw [fourier_fourierInv_eq]
   rfl
 
+/-- A uniform bound for the scaled annular kernel, given by its zeroth Schwartz seminorm. -/
 def scaledAnnularKernelBound (j : ℤ) : ℝ :=
   SchwartzMap.seminorm ℂ 0 0 (scaledAnnularKernelSchwartz j)
 
@@ -91,6 +96,7 @@ theorem norm_scaledAnnularKernel_le (j : ℤ) (x : ℝ) :
     ‖scaledAnnularKernel j x‖ ≤ scaledAnnularKernelBound j := by
   exact SchwartzMap.norm_le_seminorm ℂ (scaledAnnularKernelSchwartz j) x
 
+/-- Convolution of an input with the scaled annular kernel. -/
 def annularKernelConvolution (j : ℤ) (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   ∫ y, scaledAnnularKernel j (x - y) * f y
 
@@ -203,7 +209,7 @@ theorem annularProjectionL2_ae_eq_annularKernelConvolution
 /-! ## The actual projected fixed-scale outputs -/
 
 /-- The genuine fixed-scale `L²` outputs, enumerated in one of the seven
-residue classes.  Both the grouped inputs and their smallest-region
+residue classes. Both the grouped inputs and their smallest-region
 partition are formed from the fixed ambient family `S`; only the output sum
 is restricted to `A`. -/
 def offsetScaleFamily
@@ -420,7 +426,7 @@ theorem projectedOffsetResidueTailMax_sq_lintegral_le_allScales
         (sum_lintegral_projectedOffsetResidueOutput_le_allScales
           S A scale f r s N) bot_le)
 
-/-- Final root-mass form of the projected maximal-tail estimate.  It is
+/-- Final root-mass form of the projected maximal-tail estimate. It is
 uniform in the retained output subcollection `A ⊆ S`, in the residue class,
 and in the finite truncation length. -/
 theorem projectedOffsetResidueTailMax_sq_lintegral_le_root_mass

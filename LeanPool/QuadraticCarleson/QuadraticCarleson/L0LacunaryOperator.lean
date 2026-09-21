@@ -10,9 +10,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzModularOperator
 # The lacunary quadratic Carleson operator on the paper's full test domain
 
 For a bounded, compactly supported measurable input, every positive symmetric
-truncation is an ordinary integral.  We take the `limsup` of their norms along
+truncation is an ordinary integral. We take the `limsup` of their norms along
 the canonical cofinal sequence `epsilon_m = 1 / (m + 1)`, then the supremum
-over dyadic modulations.  This gives an everywhere-defined measurable
+over dyadic modulations. This gives an everywhere-defined measurable
 extended-nonnegative representative without inserting an arbitrary value when
 a pointwise principal value is unavailable.
 
@@ -67,7 +67,7 @@ theorem measurable_quadraticHilbertL0TruncNorm
   exact ENNReal.continuous_ofReal.measurable.comp
     (measurable_quadraticHilbertTrunc_l0 modulation (principalValueRadius m) f).norm
 
-/-- Canonical magnitude of the fixed-modulation principal value.  At points
+/-- Canonical magnitude of the fixed-modulation principal value. At points
 where the principal value exists, this is exactly its norm. -/
 noncomputable def quadraticHilbertL0Limsup
     (modulation : ℝ) (f : L0Infinity) (x : ℝ) : ℝ≥0∞ :=

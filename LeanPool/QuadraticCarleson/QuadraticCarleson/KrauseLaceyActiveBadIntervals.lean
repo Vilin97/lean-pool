@@ -25,6 +25,7 @@ open KrauseLaceyStoppingExtraction KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The members of `N` whose interval bad input is nonzero somewhere. -/
 noncomputable def activeBadIntervals
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (N : Finset RealInterval) : Finset RealInterval :=

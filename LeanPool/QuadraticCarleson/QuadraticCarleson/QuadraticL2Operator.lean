@@ -25,10 +25,13 @@ namespace QuadraticCarleson
 /-- The elementary kernel properties enjoyed by every finite linearization of
 a family of bounded, compactly supported convolution kernels. -/
 structure FiniteRangeKernel where
+  /-- The jointly measurable complex kernel in the two spatial variables. -/
   toFun : ℝ → ℝ → ℂ
   measurable_toFun : Measurable (Function.uncurry toFun)
+  /-- The positive radius beyond which the kernel vanishes off the diagonal. -/
   radius : ℝ
   radius_pos : 0 < radius
+  /-- The nonnegative uniform bound on the kernel norm. -/
   bound : ℝ
   bound_nonneg : 0 ≤ bound
   norm_le : ∀ x t, ‖toFun x t‖ ≤ bound

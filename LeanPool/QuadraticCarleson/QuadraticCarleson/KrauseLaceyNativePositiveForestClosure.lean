@@ -10,9 +10,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNativePositiveSuf
 # Native positive sparse closure on a finite shifted forest
 
 The one-node Krause--Lacey estimate has already been iterated down one
-complete shifted tree.  This module performs the next exact structural step:
+complete shifted tree. This module performs the next exact structural step:
 split a finite forest into its depth-zero roots, apply that tree recursion on
-each component, and unite the resulting sparse families.  Distinct roots in
+each component, and unite the resulting sparse families. Distinct roots in
 one shifted grid have disjoint carriers, so the sparsity density and analytic
 constant are unchanged.
 -/
@@ -27,8 +27,11 @@ open KrauseLaceyNativePositiveSuffixClosure KrauseLaceyStoppingRecursion
 open KrauseLaceyThreeShiftGrid
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical decidable equality for the finite interval families used in the forest
+construction. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 private noncomputable def rootSubfamily
@@ -110,7 +113,7 @@ private theorem localizedTailMaximal_le_sum_rootSubfamilies
     ell
 
 /-- The checked one-tree recursion extends to an arbitrary finite forest in
-one shifted grid.  The sparse witness is the disjoint union of the rootwise
+one shifted grid. The sparse witness is the disjoint union of the rootwise
 witnesses, so neither its `1 / 4` density nor its coefficient is degraded. -/
 theorem exists_recursive_sparse_bound_forest
     {A p : ℝ} (hlocal : HasOneNodeGoodPartPairingBound A)
@@ -146,19 +149,19 @@ theorem exists_recursive_sparse_bound_forest
   have hRsparse' : ∀ q₀ ∈ Q,
       IsSparse (1 / 4) (↑(R' q₀) : Set RealInterval) := by
     intro q₀ hq₀
-    simp only [R', dif_pos hq₀]
+    simp only [R', dite_eq_left hq₀]
     exact hRsparse q₀ hq₀
   have hRsub' : ∀ q₀ ∈ Q, ∀ I ∈ R' q₀,
       I.carrier ⊆ (finiteShiftGridInterval topScale shift 0 q₀).carrier := by
     intro q₀ hq₀
-    simp only [R', dif_pos hq₀]
+    simp only [R', dite_eq_left hq₀]
     exact hRsub q₀ hq₀
   have hRbound' : ∀ q₀ ∈ Q,
       (∫⁻ x, localizedTailMaximal ell₀ scale (branch q₀) f x * ‖g x‖ₑ) ≤
         ENNReal.ofReal (A * holderConjugate p) *
           sparseForm p f g (↑(R' q₀) : Set RealInterval) := by
     intro q₀ hq₀
-    simp only [R', dif_pos hq₀]
+    simp only [R', dite_eq_left hq₀]
     exact hRbound q₀ hq₀
   have hRdisjoint : Set.PairwiseDisjoint (↑Q : Set ℤ) R' := by
     intro q₀ hq₀ q₁ hq₁ hne

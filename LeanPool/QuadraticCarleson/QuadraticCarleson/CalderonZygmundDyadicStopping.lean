@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.CalderonZygmundDecomposition
 # Dyadic stopping intervals for the Calderón--Zygmund decomposition
 
 This module supplies an explicit global dyadic grid and proves the quantitative
-parent/child facts behind the height-one stopping rule.  In particular, a
+parent/child facts behind the height-one stopping rule. In particular, a
 child of a good parent has `‖f‖`-average at most two.
 -/
 
@@ -22,7 +22,8 @@ namespace QuadraticCarleson
 namespace CalderonZygmundDyadicStopping
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Length of a depth-`n` cell in the dyadic grid with root length `L`. -/
 def dyadicLength (L : ℝ) (n : ℕ) : ℝ := L / (2 : ℝ) ^ n
@@ -91,7 +92,7 @@ theorem dyadicLength_eq_pow_mul {L : ℝ} {n m : ℕ} (hnm : n ≤ m) :
   field_simp
 
 /-- At different depths, a fine dyadic cell is either contained in a given
-coarser cell or disjoint from it.  This is the arithmetic laminarity property
+coarser cell or disjoint from it. This is the arithmetic laminarity property
 of the half-open global dyadic grid. -/
 theorem dyadicInterval_subset_or_disjoint_of_le {L : ℝ} (hL : 0 < L)
     {n m : ℕ} (hnm : n ≤ m) (q r : ℤ) :
@@ -186,7 +187,7 @@ theorem dyadicInterval_nonempty {L : ℝ} (hL : 0 < L) (n : ℕ) (q : ℤ) :
   have hd := dyadicLength_pos hL n
   nlinarith
 
-/-- The data-dependent root length.  It is strictly larger than the global
+/-- The data-dependent root length. It is strictly larger than the global
 `L¹` mass, so every depth-zero cell has average at most one. -/
 def rootLength (f : ℝ → ℂ) : ℝ :=
   (∫ x, ‖f x‖) + 1
@@ -260,7 +261,7 @@ theorem rightChild_dyadicNormAverage_le_two
 
 /-! ## The intrinsic first-crossing stopping predicate -/
 
-/-- An address in the global dyadic forest.  Every tree starts at a depth-zero
+/-- An address in the global dyadic forest. Every tree starts at a depth-zero
 cell, and `left`/`right` record successive bisections. -/
 inductive DyadicNode where
   | root (q : ℤ)
@@ -362,7 +363,7 @@ def IsStoppingNode (f : ℝ → ℂ) (L : ℝ) (p : DyadicNode) : Prop :=
   ancestorsGood f L p ∧ 1 < p.normAverage f L
 
 /-- The subtype of intrinsic stopping nodes for the data-dependent root
-length.  It is countable because the dyadic forest itself is encodable. -/
+length. It is countable because the dyadic forest itself is encodable. -/
 def stoppingNode (f : ℝ → ℂ) :=
   {p : DyadicNode // IsStoppingNode f (rootLength f) p}
 
@@ -473,18 +474,22 @@ theorem stoppingNode_pairwiseDisjoint {f : ℝ → ℂ} :
 
 /-! ## Canonically indexed stopping cells
 
-The following pair index has no redundant representations.  It is used for
+The following pair index has no redundant representations. It is used for
 the actual selected family and its countable union. -/
 
 /-- A canonical cell is its depth and global integer index. -/
 structure DyadicCell where
+  /-- The dyadic depth of the cell relative to the root scale. -/
   depth : ℕ
+  /-- The global integer index locating the cell at its dyadic depth. -/
   index : ℤ
   deriving DecidableEq, Encodable
 
+/-- The dyadic interval represented by the cell at root length `L`. -/
 def DyadicCell.interval (L : ℝ) (c : DyadicCell) : Set ℝ :=
   dyadicInterval L c.depth c.index
 
+/-- The average of the norm of `f` over the cell at root length `L`. -/
 def DyadicCell.normAverage (f : ℝ → ℂ) (L : ℝ) (c : DyadicCell) : ℝ :=
   dyadicNormAverage f L c.depth c.index
 
@@ -493,6 +498,8 @@ def cellAncestorsGood (f : ℝ → ℂ) (L : ℝ) (c : DyadicCell) : Prop :=
   ∀ (m : ℕ) (r : ℤ), m < c.depth →
     c.interval L ⊆ dyadicInterval L m r → dyadicNormAverage f L m r ≤ 1
 
+/-- A first-crossing cell: its norm average exceeds one and every strictly coarser ancestor has
+average at most one. -/
 def IsStoppingCell (f : ℝ → ℂ) (L : ℝ) (c : DyadicCell) : Prop :=
   cellAncestorsGood f L c ∧ 1 < c.normAverage f L
 
@@ -579,6 +586,7 @@ theorem stoppingCell_pairwiseDisjoint {f : ℝ → ℂ} :
         (d.2.1 c.1.depth c.1.index hgt hsub)) c.2.2)
   · exact hdis
 
+/-- The union of all canonical stopping intervals for `f`. -/
 def stoppingBadUnion (f : ℝ → ℂ) : Set ℝ :=
   ⋃ c : stoppingCell f, c.1.interval (rootLength f)
 
@@ -660,7 +668,7 @@ def HasBadCellAtDepth (f : ℝ → ℂ) (x : ℝ) (n : ℕ) : Prop :=
     1 < dyadicNormAverage f (rootLength f) n q
 
 /-- A bad cell at some depth contains an intrinsic first-crossing stopping
-cell containing the same point.  The construction takes the least bad depth,
+cell containing the same point. The construction takes the least bad depth,
 so no maximality or selection principle is assumed. -/
 theorem exists_stoppingCell_mem_of_exists_badCell {f : ℝ → ℂ} {x : ℝ}
     (hx : ∃ n, HasBadCellAtDepth f x n) :
@@ -702,9 +710,11 @@ theorem mem_dyadicInterval_containingIndex {L : ℝ} (hL : 0 < L)
   · exact (le_div_iff₀ hd).mp (Int.floor_le (x / dyadicLength L n))
   · exact (div_lt_iff₀ hd).mp (Int.lt_floor_add_one (x / dyadicLength L n))
 
+/-- The midpoint of the depth-`n` dyadic interval containing `x`. -/
 def containingCenter (L : ℝ) (n : ℕ) (x : ℝ) : ℝ :=
   ((containingIndex L n x : ℝ) + 1 / 2) * dyadicLength L n
 
+/-- Half the length of a depth-`n` dyadic interval at root scale `L`. -/
 def containingRadius (L : ℝ) (n : ℕ) : ℝ :=
   dyadicLength L n / 2
 
@@ -799,6 +809,7 @@ theorem ae_highPoint_mem_stoppingBadUnion {f : ℝ → ℂ} (hf : Integrable f) 
 
 /-! ## The full good part -/
 
+/-- The complex average of `f` over a canonical stopping interval. -/
 def stoppingCellAverage (f : ℝ → ℂ) (c : stoppingCell f) : ℂ :=
   ⨍ y in c.1.interval (rootLength f), f y
 
@@ -822,7 +833,7 @@ theorem norm_stoppingCellAverage_le_two {f : ℝ → ℂ} (hf : Integrable f)
     (stoppingCell_upper_average hf c)
 
 /-- The usual Calderón--Zygmund good part: `f` off the stopping union and
-the interval average on each stopping cell.  The pointwise sum has at most
+the interval average on each stopping cell. The pointwise sum has at most
 one nonzero term because the cells are pairwise disjoint. -/
 def stoppingGoodPart (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   (stoppingBadUnion f)ᶜ.indicator f x +
@@ -947,7 +958,7 @@ theorem integrable_sq_norm_stoppingGoodPart {f : ℝ → ℂ} (hf : Integrable f
       have hnorm : ‖f x‖ ≤ 1 := le_of_not_gt fun hhigh ↦ hxu (hxcover hhigh)
       nlinarith [norm_nonneg (f x)]
 
-/-- A global squared-`L²` estimate for the complete good part.  The constant
+/-- A global squared-`L²` estimate for the complete good part. The constant
 five comes from the direct domination `‖g‖² ≤ ‖f‖ + 4⋅1_Ω`; it uses only
 integrability of `f` and the stopping-family length bound. -/
 theorem integral_sq_norm_stoppingGoodPart_le_five_l1 {f : ℝ → ℂ}

@@ -23,6 +23,7 @@ namespace PositiveHighHeightEstimate
 
 open CalderonZygmundLevelAtoms PositiveLevelIntegration PositiveEndpointOptimization
 
+/-- The doubly exponential height cutoff for the lacunary endpoint. -/
 def lacunaryHighCutoff (k : ℕ) : ℕ := 20 * 2 ^ (2 ^ k)
 
 theorem cast_lacunaryHighCutoff (k : ℕ) :
@@ -33,6 +34,7 @@ theorem lacunaryHighCutoff_pos (k : ℕ) : 0 < lacunaryHighCutoff k := by
   unfold lacunaryHighCutoff
   positivity
 
+/-- The series of exponentially decaying prefactors at the lacunary cutoffs. -/
 noncomputable def lacunaryHighPrefactorSeries : ℝ≥0∞ :=
   ∑' k : ℕ, ENNReal.ofReal
     (Real.exp (-2 * (1 / 10) * Real.log 2 * lacunaryCutoff 20 k) * lacunaryAmplitude k /
@@ -65,6 +67,7 @@ theorem tsum_lacunaryHighPrefactor :
   rw [ENNReal.tsum_mul_left]
   norm_num [lacunaryHighPrefactorSeries]
 
+/-- The lacunary high-height endpoint constant, including the weighted level-integration bound. -/
 noncomputable def lacunaryHighEndpointConstant : ℝ≥0∞ :=
   highHeightTailConstant ^ 2 * (4 * lacunaryHighPrefactorSeries) *
     ENNReal.ofReal (lacunaryHighLevelConstant 20)
@@ -93,7 +96,7 @@ theorem realHighContribution_lacunaryLevels_levelSet_le_orlicz
   rw [tsum_lacunaryHighPrefactor] at hmain
   have hc : 0 ≤ lacunaryHighLevelConstant 20 := by
     unfold lacunaryHighLevelConstant
-    exact add_nonneg (lacunarySmallLevelConstant_nonneg (by norm_num))
+    exact add_nonneg (lacunarySmallLevelConstant_nonneg)
       (mul_nonneg (by norm_num) (sq_nonneg _))
   have hweight : (∑' k : ℕ, ENNReal.ofReal (paperLog 1 (lacunaryCutoff 20 k) ^ 2) *
       magnitudeLevelL1Mass volume lacunaryAmplitude f k) ≤

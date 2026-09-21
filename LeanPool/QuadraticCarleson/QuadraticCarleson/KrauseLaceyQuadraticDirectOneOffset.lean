@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectLo
 # One-offset closure for the direct quadratic proof
 
 This module combines the checked low and high estimates for the regular
-output subcollection at one fixed offset.  Exceptional outputs and finite
+output subcollection at one fixed offset. Exceptional outputs and finite
 offset summation are kept as subsequent, separate steps.
 -/
 
@@ -28,7 +28,8 @@ open KrauseLaceyQuadraticDirectThresholdClosure
 open KrauseLaceyStoppingRecursion
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The regular output subcollection at one offset is controlled by the sum
 of the direct quadratic low estimate and the positive high estimate. -/
@@ -180,7 +181,7 @@ theorem lintegral_offsetTailMaximalOn_le_oneOffset_directQuadratic
       g (lt_trans zero_lt_one hp)
   have hexception :=
     lintegral_exceptional_offsetTailMaximalOn_le_directQuadratic
-      n hgpInt hlam scale hscale f (s := (n : ℤ)) (Int.ofNat_nonneg n)
+      n hgpInt hlam scale hscale f (s := (n : ℤ)) (Int.natCast_nonneg n)
         ell₀ I₀ hsub hgpRoot hF hG hfavg hgavg
   exact hsplit.trans (add_le_add hregular hexception)
 

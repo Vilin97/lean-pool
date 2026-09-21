@@ -13,7 +13,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.StationaryPacketSum
 # Pointwise lower bound for the negative-endpoint counterexample
 
 This module assembles the exact off-support operator identity, the oscillatory
-left tail, the stationary right tail, and the Bohr-set harmonic main term.  The
+left tail, the stationary right tail, and the Bohr-set harmonic main term. The
 only remaining numerical input is a single inequality saying that the two
 proved errors fit inside half of the main-term lower bound.
 -/

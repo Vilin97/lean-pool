@@ -29,7 +29,8 @@ open KrauseLaceyCompactPairingStabilization KrauseLaceySharpSmoothAdapter
 open KrauseLaceyFullDyadicReflection KrauseLaceyLowFullOddReduction
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Six times the checked one-node constant: three shifted grids and the two
 spatial halves of the full odd kernel. -/
@@ -59,7 +60,7 @@ theorem hasSparseOnePBound_highFullDyadicSuffixMax
     mul_nonneg (mul_nonneg (by norm_num) directQuadraticOneNodeConstant_nonneg)
       (holderConjugate_spec hp).symm.pos.le
   have hfull := hasSparseOnePBound_fullDyadicSuffixMax 1 j N hC hpositive
-  convert hfull using 1 <;> unfold highFullSuffixSparseConstant <;> ring
+  convert hfull using 1; unfold highFullSuffixSparseConstant; ring
 
 /-- The sparse norm has the same uniform high-scale bound. -/
 theorem sparseOnePNorm_highFullDyadicSuffixMax_le

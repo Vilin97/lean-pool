@@ -12,8 +12,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodMaximal
 
 The sparse-form argument is naturally stated using arbitrary intervals,
 whereas the measurable Hardy--Littlewood maximal operator uses centered balls
-of positive rational radius.  Every interval containing `x` lies in such a
-ball with radius less than twice the interval length.  This file records the
+of positive rational radius. Every interval containing `x` lies in such a
+ball with radius less than twice the interval length. This file records the
 resulting pointwise comparison.
 -/
 

@@ -12,8 +12,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyFullDyadicReflect
 
 At spatial scales below the unit oscillatory scale, the positive spatial
 half cannot be estimated independently: doing so discards the cancellation
-of the odd kernel.  This file keeps the complete odd dyadic sum and compares
-its unit quadratic phase with phase zero.  Consecutive dyadic amplitudes
+of the odd kernel. This file keeps the complete odd dyadic sum and compares
+its unit quadratic phase with phase zero. Consecutive dyadic amplitudes
 telescopically cancel, so the phase error has a compactly supported kernel
 whose bound is independent of the number of low scales.
 -/
@@ -27,7 +27,8 @@ namespace KrauseLaceyLowFullOddReduction
 open KrauseLaceyFullDyadicReflection
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The complete odd dyadic quadratic kernel is continuous. -/
 theorem continuous_fullDyadicQuadraticKernel (lam : ℝ) (j : ℤ) :
@@ -51,12 +52,12 @@ theorem hasCompactSupport_fullDyadicQuadraticKernel (lam : ℝ) (j : ℤ) :
     exact ht (by simp [annularQuadraticKernel, hz])
   have hsupp := (dyadicPsi_support_subset j) hpsi
   have hout : |t| < (2 : ℝ) ^ (j - 1) := by
-    simpa only [mem_setOf_eq] using hsupp.2
+    simpa only [mem_ofPred_eq] using hsupp.2
   rw [abs_lt] at hout
   exact ⟨hout.1.le, hout.2.le⟩
 
 /-- A finite full-odd tail is the convolution with the finite sum of its
-one-scale kernels.  This is the exact finite interchange needed before the
+one-scale kernels. This is the exact finite interchange needed before the
 unit phase can be compared with phase zero. -/
 theorem finiteFullDyadicTail_eq_integral_kernelSum
     (lam : ℝ) (j : ℤ) (n : ℕ) {f : ℝ → ℂ} (hf : MemLp f 2) (x : ℝ) :

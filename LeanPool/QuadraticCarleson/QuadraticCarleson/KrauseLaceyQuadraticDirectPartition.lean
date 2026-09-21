@@ -12,9 +12,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyBadScaleInputs
 # Smallest-selected-interval partition for the direct quadratic proof
 
 This is the finite set-theoretic partition used in the author's direct
-Fourier proof of the quadratic localized one-node estimate.  For every
+Fourier proof of the quadratic localized one-node estimate. For every
 selected interval `J`, its region is what remains of `J` after removing all
-strictly smaller selected intervals contained in `J`.  Laminarity makes these
+strictly smaller selected intervals contained in `J`. Laminarity makes these
 regions pairwise disjoint, and they partition the carrier of every selected
 root using only selected subintervals of that root.
 -/
@@ -27,8 +27,10 @@ namespace KrauseLaceyQuadraticDirectPartition
 open KrauseLaceyStoppingExtraction
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical decidable equality for the finite interval families in the direct partition. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- Strict selected descendants of `J`. -/
@@ -197,7 +199,7 @@ theorem sum_indicator_smallestSelectedRegion_eq
     rw [Finset.sum_eq_zero hzero, Set.indicator_of_notMem hxI]
 
 /-- The exact reconstruction remains true after the output interval's
-central-third restriction.  This is the paper's identity
+central-third restriction. This is the paper's identity
 `f 1_{I'} = ∑ b_m 1_{I'}` before grouping by scale. -/
 theorem sum_indicator_smallestSelectedRegion_centralThird_eq
     {S : Finset RealInterval}
@@ -218,7 +220,7 @@ theorem sum_indicator_smallestSelectedRegion_centralThird_eq
     exact Finset.sum_const_zero
 
 /-- The central-third reconstruction grouped by the selected intervals'
-scales.  This is the finite, exact form of the sum over `m ≤ j`. -/
+scales. This is the finite, exact form of the sum over `m ≤ j`. -/
 theorem sum_grouped_selectedRegions_centralThird_eq
     {S : Finset RealInterval}
     (hlam : Set.Pairwise (↑S : Set RealInterval) fun I J ↦
@@ -341,7 +343,7 @@ theorem norm_smallestScaleInput_le_norm
     exact norm_nonneg _
 
 /-- The regional masses are bounded by the mass of the root containing the
-selected family.  This is the formal finite version of
+selected family. This is the formal finite version of
 `∑ₘ ‖bₘ‖₁ ≤ ‖f 1_{I₀}‖₁`. -/
 theorem sum_integral_norm_smallestSelectedRegion_le
     {S : Finset RealInterval}

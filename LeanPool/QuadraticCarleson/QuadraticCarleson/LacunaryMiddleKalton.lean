@@ -123,6 +123,7 @@ def HasLogSquaredFrozenBlockWeakBounds
       ENNReal.ofReal (C * paperLog 1 (B k : ℝ) ^ 2) *
         frozenBlockInputL1Mass lacunaryAmplitude f k (B k) c τ
 
+/-- The logarithmic weak-bound constant weighted by the L¹ mass of a frozen block input. -/
 noncomputable def frozenBlockLogWeakConstant
     (f : ℝ → ℂ) (B : ℕ → ℕ) (c : ℕ) (C : ℝ) (k : ℕ) (τ : ℤ) : ℝ :=
   (C * paperLog 1 (B k : ℝ) ^ 2) *

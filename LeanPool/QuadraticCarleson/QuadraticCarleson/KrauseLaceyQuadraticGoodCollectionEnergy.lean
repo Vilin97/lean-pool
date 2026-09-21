@@ -26,8 +26,10 @@ open KrauseLaceyBadScale KrauseLaceyStoppingExtraction
 open KrauseLaceyThreeShiftGrid
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for intervals in the finite shifted-grid energy estimate. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 attribute [local instance] Classical.propDecidable
 
@@ -36,7 +38,7 @@ inside a complete finite shifted-grid tree.
 
 The energy estimate uses the exact gap hypothesis `0 ≤ k + 2 - s`.
 The stopping constant is explicitly the source constant `10` multiplying
-the parent `f` average.  The external tail cutoff is imposed later when
+the parent `f` average. The external tail cutoff is imposed later when
 these one-piece estimates are summed.
 -/
 theorem localizedEnergy_completeFiniteShiftGridTree_goodCollection_le

@@ -11,13 +11,13 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyStandardSourceSca
 # The scalar-standard maximal-tail closure at one Krause--Lacey node
 
 The fixed-physical-scale estimates are already proved in the standard-source
-modules.  This file performs the remaining finite maximal-tail bookkeeping in
-the high-scale regime used in the source proof.  It introduces no analytic
+modules. This file performs the remaining finite maximal-tail bookkeeping in
+the high-scale regime used in the source proof. It introduces no analytic
 hypothesis: a physical suffix is bounded by the sum of the norms of all of its
 layers, and the established geometric scale sum then removes the number of
 layers.
 
-This is only the scalar-standard contribution of the bad input.  It does not
+This is only the scalar-standard contribution of the bad input. It does not
 assert the complete one-node estimate, which additionally requires the exact
 good/bad input decomposition and the nonstandard contribution.
 -/
@@ -29,7 +29,8 @@ namespace QuadraticCarleson
 namespace KrauseLaceyBadScale
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The physical scales which can occur in a suffix whose lower endpoint is
 `k₀`. -/
@@ -38,7 +39,7 @@ def standardHighPhysicalScaleSupport
   (standardPhysicalScaleSupport S scale).filter fun j ↦ k₀ ≤ j
 
 /-- The source's standard maximal tail, restricted to the high regime
-`ell ≥ k₀`.  In the application `k₀ ≥ 3`, equivalently every amplitude index
+`ell ≥ k₀`. In the application `k₀ ≥ 3`, equivalently every amplitude index
 is at least one. -/
 noncomputable def energyStandardPhysicalTailMaximal
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ : ℤ)
@@ -114,7 +115,7 @@ theorem energyStandardPhysicalTailMaximal_le_sum
   exact norm_energyStandardPhysicalTailAction_le_sum S f I₀ k₀ scale ell x
 
 /-- The checked fixed-scale standard estimates imply the source's uniform
-maximal-tail `L^q` estimate.  There is no cardinality loss: the factor `40*q`
+maximal-tail `L^q` estimate. There is no cardinality loss: the factor `40*q`
 is the already proved geometric scale sum. -/
 theorem eLpNorm_energyStandardPhysicalTailMaximal_le
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
@@ -174,7 +175,7 @@ theorem eLpNorm_energyStandardPhysicalTailMaximal_le
       simpa only [P] using
         energyStandardPhysicalTailMaximal_le_sum S f I₀ k₀ scale x
     _ ≤ standardSourceNormBudget f I₀ q * ENNReal.ofReal (40 * q) := by
-      apply eLpNorm_finset_sum_le_budget_mul_forty_mul_q hq P F hF hbound
+      apply eLpNorm_finset_sum_le_budget_mul_forty_mul_q hq P F hbound
       intro j hj
       exact le_trans (by omega : 0 ≤ k₀) (hP j hj)
 

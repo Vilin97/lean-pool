@@ -14,7 +14,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveLowFullEndpoint
 # The genuine lacunary very-small low-kernel contribution
 
 This file combines the cancellation estimate for an actual magnitude-level
-atom with the compact support of the paper's telescoped low kernel.  It is the
+atom with the compact support of the paper's telescoped low kernel. It is the
 analytic step which produces the factor
 `2^(B + m/2) * length(I)` before the geometric summation in
 `LacunaryVerySmallRange`.
@@ -161,7 +161,7 @@ to both sides of `I`, then it is more than `D` from every point of `I`.
 The half-open convention supplies the required strict inequality at both
 endpoints. -/
 theorem radius_lt_distance_of_not_mem_expanded
-    {z R D x y : ℝ} (hR : 0 < R) (hD : 0 < D)
+    {z R D x y : ℝ} (hD : 0 < D)
     (hx : x ∉ centeredInterval z (2 * D + R))
     (hy : y ∈ centeredInterval z R) :
     D < |x - y| := by
@@ -178,7 +178,7 @@ theorem radius_lt_distance_of_not_mem_expanded
 /-- Outside the expanded interval, the actual low kernel is identically zero
 on the atom interval. -/
 theorem paperLowCZKernel_eq_zero_of_not_mem_expanded
-    (B : ℕ) (m : ℤ) {z R x y : ℝ} (hR : 0 < R)
+    (B : ℕ) (m : ℤ) {z R x y : ℝ}
     (hx : x ∉ centeredInterval z (2 * lowSupportRadius B m + R))
     (hy : y ∈ centeredInterval z R) :
     paperLowCZKernel (dyadicModulation m) (dyadicModulation_pos m).ne' B x y = 0 := by
@@ -190,7 +190,7 @@ theorem paperLowCZKernel_eq_zero_of_not_mem_expanded
     (dyadicModulation m) (dyadicModulation_pos m).ne' B ht).2
   rw [abs_of_pos (dyadicModulation_pos m)] at hs
   have hd : lowSupportRadius B m < |x - y| :=
-    radius_lt_distance_of_not_mem_expanded hR (lowSupportRadius_pos B m) hx hy
+    radius_lt_distance_of_not_mem_expanded (lowSupportRadius_pos B m) hx hy
   have hsqrt : 0 < Real.sqrt (dyadicModulation m) :=
     Real.sqrt_pos.2 (dyadicModulation_pos m)
   have hmul := mul_lt_mul_of_pos_right hd hsqrt
@@ -202,17 +202,17 @@ theorem paperLowCZKernel_eq_zero_of_not_mem_expanded
 the explicitly expanded interval. -/
 theorem integral_paperLowCZKernel_levelAtom_eq_zero_of_not_mem_expanded
     {A : ℕ → ℝ} {f : ℝ → ℂ} (k B : ℕ) (m : ℤ)
-    {z R x : ℝ} (hR : 0 < R)
+    {z R x : ℝ}
     (hx : x ∉ centeredInterval z (2 * lowSupportRadius B m + R)) :
     (∫ y in centeredInterval z R,
       paperLowCZKernel (dyadicModulation m) (dyadicModulation_pos m).ne' B x y *
         levelAtom A f k z R y) = 0 := by
   apply integral_eq_zero_of_ae
   filter_upwards [ae_restrict_mem measurableSet_Ico] with y hy
-  simp only [paperLowCZKernel_eq_zero_of_not_mem_expanded B m hR hx hy,
+  simp only [paperLowCZKernel_eq_zero_of_not_mem_expanded B m hx hy,
     zero_mul, Pi.zero_apply]
 
-/-- Raw integrated very-small estimate.  The first factor is exactly the
+/-- Raw integrated very-small estimate. The first factor is exactly the
 pointwise cancellation bound, and the second is the length of the only
 interval on which the output can be nonzero. -/
 theorem lintegral_enorm_paperLowCZKernel_levelAtom_compl_fivefold_le
@@ -249,7 +249,7 @@ theorem lintegral_enorm_paperLowCZKernel_levelAtom_compl_fivefold_le
           hf hAk m hR hx)
     · rw [indicator_of_notMem hxE,
         integral_paperLowCZKernel_levelAtom_eq_zero_of_not_mem_expanded
-          k B m hR hxE, enorm_zero]
+          k B m hxE, enorm_zero]
   calc
     (∫⁻ x in (centeredInterval z (5 * R))ᶜ,
       ‖∫ y in centeredInterval z R,
@@ -321,7 +321,7 @@ theorem lintegral_enorm_paperLowCZKernel_levelAtom_verySmall_le
 /-- Strong fixed-scale family form, retaining the actual atom mass rather
 than replacing it by the whole magnitude-level mass. -/
 theorem tsum_lintegral_enorm_paperLowCZKernel_levelAtom_verySmall_le_atomMass
-    {ι : Type*} [Countable ι]
+    {ι : Type*}
     {A : ℕ → ℝ} {f : ℝ → ℂ} (hf : Measurable f)
     {k c B : ℕ} (hAk : 0 ≤ A k) (hB : 0 < B) {m j : ℤ}
     (hj : j ∈ LacunaryMiddleRange.L B c m)
@@ -409,7 +409,7 @@ theorem tsum_lintegral_enorm_paperLowCZKernel_levelAtom_verySmall_le
     _ = _ := rfl
 
 /-- The preceding estimate applied to the actual canonical stopping cells in
-one exact dyadic scale class.  No auxiliary interval family is assumed. -/
+one exact dyadic scale class. No auxiliary interval family is assumed. -/
 theorem tsum_canonicalScaleCells_verySmall_le
     {A : ℕ → ℝ} {f : ℝ → ℂ} (hf : Measurable f)
     {k c B : ℕ} (hAk : 0 ≤ A k) (hB : 0 < B) {m j : ℤ}
@@ -436,6 +436,7 @@ theorem tsum_canonicalScaleCells_verySmall_le
   intro hcoe
   exact hIJ (Subtype.ext hcoe)
 
+/-- The total very-small output mass of canonical scale atoms outside their enlarged intervals. -/
 noncomputable def canonicalScaleVerySmallOutputMass
     (A : ℕ → ℝ) (f : ℝ → ℂ) (k B : ℕ) (m j : ℤ) : ENNReal :=
   ∑' I : {I : stoppingCell f //
@@ -648,7 +649,7 @@ theorem restrictedCanonicalVerySmallOutputMass_le
   · have hm : m ∉ verySmallModulations B c j := hj
     simp [restrictedCanonicalVerySmallOutputMass, restrictedVerySmallWeight, hj, hm]
 
-/-- Summation over all lacunary modulations and all atom scales.  This is the
+/-- Summation over all lacunary modulations and all atom scales. This is the
 paper's complete very-small double sum for one magnitude level. -/
 theorem tsum_tsum_restrictedCanonicalVerySmallOutputMass_le
     {A : ℕ → ℝ} {f : ℝ → ℂ} (hf : Measurable f)
@@ -808,7 +809,7 @@ theorem lintegral_restrictedCanonicalScaleLowActionEnorm_compl
   · simp [restrictedCanonicalScaleLowActionEnorm,
       restrictedCanonicalScaleLowActionMass, hj]
 
-/-- The paper's very-small triangle majorant at one magnitude level.  Every
+/-- The paper's very-small triangle majorant at one magnitude level. Every
 term is the actual low-kernel action on the genuine canonical `b_{j,k}`. -/
 noncomputable def verySmallLowContributionAtLevel
     (A : ℕ → ℝ) (f : ℝ → ℂ) (k B c : ℕ) (x : ℝ) : ENNReal :=
@@ -866,7 +867,7 @@ theorem measurable_lacunaryVerySmallLowContribution
     measurable_verySmallLowContributionAtLevel hf k (B k) c
 
 /-- Complete `L¹` estimate for the actual very-small lacunary contribution
-outside the global fivefold exceptional set.  The bound is uniform in the
+outside the global fivefold exceptional set. The bound is uniform in the
 positive cutoff sequence `B_k`. -/
 theorem lintegral_lacunaryVerySmallLowContribution_compl_le
     {f : ℝ → ℂ} (hf : Measurable f) (hfi : Integrable f)
@@ -888,9 +889,8 @@ theorem lintegral_lacunaryVerySmallLowContribution_compl_le
       (fun k l hkl ↦ PositiveLevelIntegration.magnitudeLevelSet_disjoint
         PositiveLevelIntegration.strictMono_lacunaryAmplitude f hkl),
       PositiveLevelIntegration.iUnion_magnitudeLevelSet_eq_univ
-        (lacunaryAmplitude_pos 0).le
         PositiveLevelIntegration.strictMono_lacunaryAmplitude
-        PositiveLevelIntegration.lacunaryAmplitude_cofinal f]
+        (fun t _ ↦ PositiveLevelIntegration.lacunaryAmplitude_cofinal t) f]
     simp only [Measure.restrict_univ, ofReal_norm]
   calc
     (∑' k : ℕ, ∫⁻ x in (fivefoldExceptionalSet

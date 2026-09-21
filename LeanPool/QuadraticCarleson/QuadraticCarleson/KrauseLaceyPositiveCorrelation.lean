@@ -19,9 +19,9 @@ correlation is `O(R⁻¹)` in a fixed neighborhood of the diagonal,
 multiple of the annular radius `R`.
 
 The off-diagonal gain is obtained from the project's proved quadratic
-integration-by-parts theorem.  When the two modulations are both one, the
+integration-by-parts theorem. When the two modulations are both one, the
 quadratic term in the `TT*` phase cancels and its slope is the constant
-`4π(y-x)`.  No local `L¹ → L^q` estimate or sparse bound is assumed here.
+`4π(y-x)`. No local `L¹ → L^q` estimate or sparse bound is assumed here.
 -/
 
 open Function MeasureTheory Set
@@ -31,7 +31,7 @@ namespace QuadraticCarleson
 
 
 /-- A source-normalized same-scale correlation estimate for a smooth
-positive-annular amplitude.  The constant `P` controls the product amplitude
+positive-annular amplitude. The constant `P` controls the product amplitude
 and `P/R` controls its derivative. -/
 theorem krauseLacey_sameScaleCorrelation_le
     {R P : ℝ} (hR : 0 < R) (hP : 0 ≤ P)
@@ -133,8 +133,8 @@ theorem krauseLacey_sameScaleCorrelation_le
     simp
 
 /-- KL18 (2.4), specialized to degree two and to the project's concrete
-positive-half dyadic amplitude.  Here `R = 2^(j-1)` is the proved outer
-support radius.  The explicit cutoff constant is finite and was constructed
+positive-half dyadic amplitude. Here `R = 2^(j-1)` is the proved outer
+support radius. The explicit cutoff constant is finite and was constructed
 from cutoff smoothness and compact support in
 `QuadraticFixedHeightAveragingAmplitude`. -/
 theorem krauseLacey_positiveDyadicCorrelation_le (j : ℤ) (x y : ℝ) :
@@ -216,7 +216,7 @@ theorem krauseLacey_positiveDyadicCorrelation_le (j : ℤ) (x y : ℝ) :
   simpa only [p, hPR, P, D, R] using h
 
 /-- Adapter from the sharp two-region KL18 correlation estimate to the
-project's integrable quadratic majorant.  Its small parameter is the exact
+project's integrable quadratic majorant. Its small parameter is the exact
 relative diagonal width `u = 1/(2R)`, so the resulting `TT*` mass is
 `O(D²/R)`, as in the source's `2^(-k)` estimate. -/
 theorem krauseLacey_positiveDyadicCorrelation_le_projectMajorant
@@ -265,7 +265,7 @@ theorem krauseLacey_positiveDyadicCorrelation_le_projectMajorant
 
 /-- The first `L²` consequence of KL18 (2.4): a concrete degree-two
 positive-half dyadic convolution has squared `L²` norm `O(R⁻¹)`, hence
-operator norm `O(R⁻¹/²)`.  This is the oscillatory endpoint used in the
+operator norm `O(R⁻¹/²)`. This is the oscillatory endpoint used in the
 interpolation step of Proposition 4.1. -/
 theorem krauseLacey_positiveDyadicConvolution_sq_lintegral_le
     (j : ℤ) {f : ℝ → ℂ} (hf : MemLp f 2) :
@@ -487,7 +487,7 @@ theorem krauseLaceyFixedScaleLocalizedSum_sq_lintegral_le_of_disjoint
     (norm_krauseLaceyFixedScaleInput_le S f hdisj x)
 
 /-- The localized operator in KL18 display (3.2) inherits the concrete
-fixed-scale squared-`L²` decay.  The right side retains the exact central-third
+fixed-scale squared-`L²` decay. The right side retains the exact central-third
 restriction, ready for the disjoint-grid summation in Proposition 4.1. -/
 theorem krauseLaceyLocalizedPiece_sq_lintegral_le
     (j : ℤ) (I : RealInterval) {f : ℝ → ℂ} (hf : MemLp f 2) :

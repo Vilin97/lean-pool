@@ -33,7 +33,7 @@ theorem sum_abs_inner_eq_diagonal_add_crossRows
         (if i = j then ‖v i‖ ^ 2 else 0) := by
     by_cases hij : i = j
     · subst j
-      simp [real_inner_self_eq_norm_sq]
+      simp []
     · by_cases hlt : rank j < rank i
       · simp [hij, hlt, not_lt_of_ge hlt.le]
       · by_cases hgt : rank i < rank j
@@ -60,7 +60,7 @@ theorem sum_abs_inner_eq_diagonal_add_crossRows
       rw [hswap]
       simp_rw [Finset.sum_ite_eq, Finset.sum_filter]
       have hdiag : (∑ i ∈ S, if i ∈ S then ‖v i‖ ^ 2 else 0) =
-          ∑ i ∈ S, ‖v i‖ ^ 2 := Finset.sum_congr rfl fun i hi ↦ if_pos hi
+          ∑ i ∈ S, ‖v i‖ ^ 2 := Finset.sum_congr rfl fun i hi ↦ ite_eq_left hi
       rw [hdiag]
       ring
 
@@ -85,7 +85,8 @@ theorem signed_sum_sq_le_diagonal_add_crossRows
       le_abs_self _
     _ = (|c i| * |c j|) * |inner ℝ (v i) (v j)| := by rw [abs_mul, abs_mul]; ring
     _ ≤ 1 * |inner ℝ (v i) (v j)| := mul_le_mul_of_nonneg_right
-      (mul_le_one₀ (hc i hi) (abs_nonneg _) (hc j hj)) (abs_nonneg _)
+      ((mul_le_mul_of_nonneg_right (hc i hi) (abs_nonneg _)).trans
+        (by simpa only [one_mul] using hc j hj)) (abs_nonneg _)
     _ = _ := one_mul _
 
 

@@ -10,13 +10,13 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyEnergyClassificat
 # The one-piece quadratic energy estimate
 
 This is the elementary `TT*` consequence used in the direct quadratic
-proof of the localized Krause--Lacey estimate.  It deliberately makes no
+proof of the localized Krause--Lacey estimate. It deliberately makes no
 Calderón--Zygmund, standard/nonstandard, packing, or Rademacher--Menshov
 classification: a unit-window mass bound and a total local mass bound are
 enough.
 
 If a piece at physical length `R` has both bounds at size `M`, its squared
-`L²` norm is `O(M/R)` times its `L¹` mass.  Substituting
+`L²` norm is `O(M/R)` times its `L¹` mass. Substituting
 `M = A R 2^{-s}` gives the required `2^{-s}` gain.
 -/
 
@@ -82,7 +82,7 @@ theorem localizedEnergy_le_of_localUnitMass_and_localMass
     _ = _ := rfl
 
 /-- The same estimate with the scale-gap substitution used in the direct
-quadratic argument.  Here the local mass constant is `A 2^(k+2-s)`, while
+quadratic argument. Here the local mass constant is `A 2^(k+2-s)`, while
 the output interval has length `2^(k+2)`. -/
 theorem localizedEnergy_le_of_gap_localMass
     (k s : ℤ) (I : RealInterval) (hscale : I.length = (2 : ℝ) ^ (k + 2))

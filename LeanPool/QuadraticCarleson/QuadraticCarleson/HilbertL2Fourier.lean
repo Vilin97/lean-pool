@@ -13,7 +13,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.Monotonicity
 # The ordinary Hilbert transform on `L²`
 
 This file constructs the Fourier-multiplier realization of convolution with
-the project's kernel `p.v. (1 / x)`.  Mathlib's Fourier normalization makes
+the project's kernel `p.v. (1 / x)`. Mathlib's Fourier normalization makes
 the multiplier `-π i sign(ξ)`, so its `L²` operator norm is at most `π`.
 -/
 
@@ -24,7 +24,8 @@ namespace QuadraticCarleson
 namespace HilbertL2Fourier
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The multiplier dictated by `fourier_principalValueOneDiv`. -/
 def ordinaryHilbertMultiplier (ξ : ℝ) : ℂ :=
@@ -52,7 +53,7 @@ theorem norm_ordinaryHilbertMultiplier_le (ξ : ℝ) :
     norm_nonneg (Real.sign ξ)]
 
 /-- Test-function form of the already-proved distributional identity
-`𝓕(p.v. 1/x) = -π i sign`.  This explicitly identifies the pointwise
+`𝓕(p.v. 1/x) = -π i sign`. This explicitly identifies the pointwise
 multiplier used below with the two half-line integrals defining the project's
 `signTemperedDistribution`. -/
 theorem fourier_principalValueOneDiv_apply_eq_multiplier_halfLines
@@ -93,6 +94,8 @@ theorem memLp_fourierL2Representative (f : Lp (α := ℝ) ℂ 2) :
     MemLp (fourierL2Representative f) 2 volume :=
   Lp.memLp (Lp.fourierTransformₗᵢ ℝ ℂ f)
 
+/-- The pointwise product of the ordinary Hilbert multiplier and a representative of the `L²`
+Fourier transform. -/
 def multipliedFourierRepresentative (f : Lp (α := ℝ) ℂ 2) : ℝ → ℂ :=
   fun ξ ↦ ordinaryHilbertMultiplier ξ * fourierL2Representative f ξ
 
@@ -162,7 +165,7 @@ theorem eLpNorm_multipliedFourierRepresentative_eq
     _ = _ := by
       congr 1
       rw [← ofReal_norm]
-      simp [Real.pi_pos.le]
+      simp []
 
 theorem enorm_ordinaryHilbertMultiplierL2_le (f : Lp (α := ℝ) ℂ 2) :
     ‖ordinaryHilbertMultiplierL2 f‖ₑ ≤
@@ -298,6 +301,8 @@ theorem ordinaryHilbertTransformL2_smul (c : ℂ)
   unfold ordinaryHilbertTransformL2
   rw [ordinaryHilbertMultiplierL2_smul, map_smul]
 
+/-- The Fourier realization of the ordinary Hilbert transform, bundled as a complex linear map
+on `L²`. -/
 def ordinaryHilbertTransformL2LinearMap :
     Lp (α := ℝ) ℂ 2 →ₗ[ℂ] Lp (α := ℝ) ℂ 2 where
   toFun := ordinaryHilbertTransformL2

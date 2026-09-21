@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
 # Spatial geometry of the negative-endpoint packets
 
 An admissible point has the form `x = k + τ`, where `k` is one of the paper's
-translate indices and `τ ∈ (1/4,1/2)`.  This file records the elementary
+translate indices and `τ ∈ (1/4,1/2)`. This file records the elementary
 separation from all packet intervals, together with lower bounds that retain
 the integer separation from the packet centre.
 -/

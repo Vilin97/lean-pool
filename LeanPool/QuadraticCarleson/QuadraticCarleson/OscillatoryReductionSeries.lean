@@ -82,6 +82,8 @@ theorem hasSum_oscillatoryIntegrals (lam : ℝ) (hlam : lam ≠ 0)
   intro r
   exact (fixedHeightQuadraticKernel_integral_eq_paper r lam hlam f x).symm
 
+/-- The infinite sum of dyadic oscillatory convolution actions at the modulation-dependent
+scales. -/
 noncomputable def paperOscillatoryAction (lam : ℝ) (hlam : lam ≠ 0)
     (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   ∑' r : ℕ, ∫ t, f (x - t) *

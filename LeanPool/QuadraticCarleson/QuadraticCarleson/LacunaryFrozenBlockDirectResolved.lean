@@ -30,7 +30,8 @@ open LacunaryMiddleRange LacunaryMiddleOperator LacunaryMiddleSparseAdapter
 open LacunaryFrozenInputL0 LacunaryMiddleKalton PositiveEndpointOptimization
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Exactly the positive normalization parameters of the paper modulation block. -/
 def blockDilation (B : ℕ) (τ : ℤ) (i : Fin (Q B τ).card) : ℝ :=
@@ -40,6 +41,7 @@ theorem blockDilation_pos (B : ℕ) (τ : ℤ) (i : Fin (Q B τ).card) :
     0 < blockDilation B τ i :=
   Real.sqrt_pos.mpr (dyadicModulation_pos _)
 
+/-- The high-suffix operator family at the dilation fixed by a frozen modulation block. -/
 def frozenHighSuffixFamily (B : ℕ) (τ : ℤ) : Fin (Q B τ).card → TestOperator :=
   dilatedHighSuffixFamily B (blockDilation B τ) (blockDilation_pos B τ)
 

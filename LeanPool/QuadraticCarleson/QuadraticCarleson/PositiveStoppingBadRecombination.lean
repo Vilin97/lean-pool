@@ -20,9 +20,11 @@ open CalderonZygmundDyadicStopping CalderonZygmundStoppingIntervals
 open CalderonZygmundLevelAtoms CalderonZygmundLevelRecombination
 open PositiveEndpointOptimization PositiveLevelIntegration PositiveHighHeightEstimate
 
+/-- The difference between an input and its stopping good part. -/
 noncomputable def stoppingBadPart (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   f x - stoppingGoodPart f x
 
+/-- The sum of full-amplitude level atoms on the stopping intervals. -/
 noncomputable def stoppingLevelBadPart (f : ℝ → ℂ) (k : ℕ) : ℝ → ℂ :=
   disjointLevelAtomSum fullAmplitude f k
     (stoppingCenter (f := f)) (stoppingLength (f := f))
@@ -54,8 +56,9 @@ theorem hasSum_stoppingLevelBadPart {f : ℝ → ℂ} (hf : Measurable f)
   by_cases hx : x ∈ stoppingBadUnion f
   · obtain ⟨c, hc⟩ := mem_iUnion.mp hx
     simp_rw [stoppingLevelBadPart_eq_atom_of_mem c hc]
-    have hs := hasSum_levelAtom_apply (fullAmplitude_pos 0).le strictMono_fullAmplitude
-      fullAmplitude_cofinal hf (stoppingCenter c) (stoppingLength c) hfi.integrableOn x
+    have hs := hasSum_levelAtom_apply strictMono_fullAmplitude
+      (fun t _ ↦ fullAmplitude_cofinal t) hf (stoppingCenter c) (stoppingLength c)
+        hfi.integrableOn x
     convert hs using 1
     unfold stoppingBadPart centeredAtom
     rw [centeredInterval_eq_stoppingInterval, indicator_of_mem hc,
@@ -93,7 +96,8 @@ theorem lintegral_enorm_stoppingLevelBadPart_le {f : ℝ → ℂ}
     ((measurable_levelAtom hf k (stoppingCenter c) (stoppingLength c)).enorm).aemeasurable)]
   have heq (c : stoppingCell f) :
       (∫⁻ x, ‖levelAtom fullAmplitude f k (stoppingCenter c) (stoppingLength c) x‖ₑ) =
-      ENNReal.ofReal (∫ x, ‖levelAtom fullAmplitude f k (stoppingCenter c) (stoppingLength c) x‖) := by
+      ENNReal.ofReal (∫ x, ‖levelAtom fullAmplitude f k (stoppingCenter c) (stoppingLength c)
+        x‖) := by
     symm
     simpa only [ofReal_norm] using ofReal_integral_eq_lintegral_ofReal
       (integrable_levelAtom hf (fullAmplitude_pos k).le (stoppingCenter c) (stoppingLength c)).norm
@@ -107,8 +111,8 @@ theorem tsum_fullMagnitudeLevelL1Mass {f : ℝ → ℂ} (hf : Measurable f) :
   unfold magnitudeLevelL1Mass
   rw [← lintegral_iUnion (fun k ↦ measurableSet_magnitudeLevelSet hf k)
     (fun k l hkl ↦ magnitudeLevelSet_disjoint strictMono_fullAmplitude f hkl),
-    iUnion_magnitudeLevelSet_eq_univ (fullAmplitude_pos 0).le strictMono_fullAmplitude
-      fullAmplitude_cofinal f]
+    iUnion_magnitudeLevelSet_eq_univ strictMono_fullAmplitude
+      (fun t _ ↦ fullAmplitude_cofinal t) f]
   simp only [Measure.restrict_univ, ofReal_norm]
 
 theorem tsum_lintegral_enorm_stoppingLevelBadPart_le {f : ℝ → ℂ} (hf : Measurable f) :

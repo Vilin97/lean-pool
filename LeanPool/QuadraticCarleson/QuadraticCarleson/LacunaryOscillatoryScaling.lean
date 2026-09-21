@@ -100,6 +100,7 @@ theorem lacunaryOrlicz_three_mul_le {t : ℝ} (ht : 0 ≤ t) :
       · positivity
     _ = _ := by ring
 
+/-- The oscillatory endpoint constant after the spatial scaling step. -/
 noncomputable def lacunaryScaledEndpointConstant (C : ℝ) : ℝ≥0∞ :=
   81 * lacunaryOscillatoryEndpointConstant C
 

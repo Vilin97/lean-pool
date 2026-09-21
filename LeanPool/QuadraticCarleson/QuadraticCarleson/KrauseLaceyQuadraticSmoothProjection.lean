@@ -14,9 +14,9 @@ import Mathlib.Analysis.Fourier.Convolution
 # Concrete smooth frequency cutoffs for the direct quadratic proof
 
 The positive quadratic kernel at physical scale `2^j` has stationary
-frequency in the normalized interval `[1/4, 1]`.  We choose a smooth cutoff
+frequency in the normalized interval `[1/4, 1]`. We choose a smooth cutoff
 which is identically one on the larger interval `[1/8, 2]` and is supported
-in `(1/16, 33/16)`.  Its dyadic dilates are exactly disjoint after separating
+in `(1/16, 33/16)`. Its dyadic dilates are exactly disjoint after separating
 the scales into seven residue classes.
 -/
 
@@ -28,15 +28,18 @@ namespace QuadraticCarleson.KrauseLaceyQuadraticSmoothProjection
 open HilbertMaximalWeakOneOne
 
 
-noncomputable section
+noncomputable
+section
 
-/-- A one-sided smooth frequency bump.  The inner ball is `[1/8,2]` and
+/-- A one-sided smooth frequency bump. The inner ball is `[1/8,2]` and
 the outer ball is `(1/16,33/16)`. -/
 def annularFrequencyCutoffData : ContDiffBump (17 / 16 : ℝ) :=
   ⟨15 / 16, 1, by norm_num, by norm_num⟩
 
+/-- The real-valued smooth cutoff supported near the positive frequency annulus. -/
 def annularFrequencyCutoffReal : ℝ → ℝ := annularFrequencyCutoffData
 
+/-- The complex-valued smooth cutoff for the positive frequency annulus. -/
 def annularFrequencyCutoff (ξ : ℝ) : ℂ :=
   (annularFrequencyCutoffReal ξ : ℂ)
 
@@ -144,7 +147,7 @@ def residueScale (r : Fin 7) (n : ℕ) : ℤ :=
   (r : ℕ) + 7 * (n : ℤ)
 
 /-- Within each of the seven residue classes, the concrete annuli are
-pairwise disjoint.  Seven classes leave a one-scale margin beyond the exact
+pairwise disjoint. Seven classes leave a one-scale margin beyond the exact
 six-scale disjointness threshold, which is used by the low-pass cutoff. -/
 theorem pairwiseDisjoint_scaledFrequencyAnnulus_residueScale (r : Fin 7) :
     Pairwise fun m n : ℕ ↦
@@ -254,7 +257,7 @@ theorem hasPairwiseSeparatedFourierSupport_annularProjection_residueScale
 /-! ## The boundary low-pass cutoff -/
 
 /-- A smooth low-pass cutoff placed three scales below the first omitted
-annulus.  The shift by three is chosen so that the cutoff is one on all
+annulus. The shift by three is chosen so that the cutoff is one on all
 earlier annuli in a seven-residue-class split and zero on the current and
 all later annuli. -/
 def scaledLowPassCutoff (k : ℤ) (ξ : ℝ) : ℂ :=
@@ -303,7 +306,7 @@ theorem scaledLowPassCutoff_eq_zero_on_current_or_later_annulus
     omega
   have hjid : (2 : ℝ) ^ j = 8 * (2 : ℝ) ^ (j - 3) := by
     calc
-      (2 : ℝ) ^ j = (2 : ℝ) ^ ((j - 3) + 3) := by congr 2 <;> omega
+      (2 : ℝ) ^ j = (2 : ℝ) ^ ((j - 3) + 3) := by congr 2; omega
       _ = (2 : ℝ) ^ (j - 3) * (2 : ℝ) ^ (3 : ℤ) := by
         rw [zpow_add₀ (by norm_num : (2 : ℝ) ≠ 0)]
       _ = 8 * (2 : ℝ) ^ (j - 3) := by norm_num; ring
@@ -335,6 +338,7 @@ theorem scaledLowPassCutoff_mul_scaledAnnularFrequencyCutoff_of_current_or_later
   · rw [scaledLowPassCutoff_eq_zero_on_current_or_later_annulus hkj
       (scaledAnnularFrequencyCutoff_support_subset j hcut), zero_mul]
 
+/-- The Fourier transform multiplied by the cutoff at the chosen low-pass scale. -/
 def lowPassFourierMultiplier (k : ℤ)
     (v : Lp (α := ℝ) ℂ 2 volume) : ℝ → ℂ :=
   fun ξ ↦ scaledLowPassCutoff k ξ *
@@ -365,6 +369,7 @@ theorem memLp_lowPassFourierMultiplier (k : ℤ)
       (norm_scaledLowPassCutoff_le_one k ξ)
       (norm_nonneg ((Lp.fourierTransformₗᵢ ℝ ℂ v) ξ))
 
+/-- The low-pass Fourier multiplier represented as an element of L². -/
 def lowPassMultiplierL2 (k : ℤ)
     (v : Lp (α := ℝ) ℂ 2 volume) : Lp (α := ℝ) ℂ 2 volume :=
   (memLp_lowPassFourierMultiplier k v).toLp (lowPassFourierMultiplier k v)
@@ -533,8 +538,8 @@ theorem lowPassProjectionL2_finite_total_eq_prefix
       apply Finset.sum_congr rfl
       intro m hm
       by_cases hmn : m < n
-      · rw [if_pos hmn, lowPassProjectionL2_annularResiduePiece_of_lt r v hmn]
-      · rw [if_neg hmn,
+      · rw [ite_eq_left hmn, lowPassProjectionL2_annularResiduePiece_of_lt r v hmn]
+      · rw [ite_eq_right hmn,
           lowPassProjectionL2_annularResiduePiece_of_le r v (Nat.le_of_not_gt hmn)]
     _ = ∑ m ∈ Finset.range n, annularResiduePiece r v m := by
       rw [← Finset.sum_filter]
@@ -545,6 +550,7 @@ theorem lowPassProjectionL2_finite_total_eq_prefix
 
 /-! ## The inverse-Fourier kernel and its maximal majorant -/
 
+/-- The complex-valued dyadic cutoff at the base frequency scale. -/
 def lowPassFrequencyCutoff (ξ : ℝ) : ℂ := (dyadicCutoff ξ : ℂ)
 
 theorem contDiff_lowPassFrequencyCutoff :
@@ -555,6 +561,7 @@ theorem hasCompactSupport_lowPassFrequencyCutoff :
     HasCompactSupport lowPassFrequencyCutoff := by
   exact dyadicCutoffData.hasCompactSupport.comp_left rfl
 
+/-- The base low-pass frequency cutoff as a Schwartz function. -/
 def lowPassFrequencySchwartz : 𝓢(ℝ, ℂ) :=
   hasCompactSupport_lowPassFrequencyCutoff.toSchwartzMap
     contDiff_lowPassFrequencyCutoff
@@ -665,8 +672,7 @@ theorem norm_scaledLowPassKernel_le_poisson (k : ℤ) (t : ℝ) :
       mul_le_mul_of_nonneg_left (norm_baseLowPassKernelSchwartz_le _) hR.le
     _ = baseLowPassKernelDecayConstant * cotlarPoissonKernel R⁻¹ t := by
       unfold cotlarPoissonKernel
-      field_simp
-      <;> ring
+      field_simp; ring
     _ = baseLowPassKernelDecayConstant *
         cotlarPoissonKernel ((2 : ℝ) ^ (-(k - 3))) t := by
       rw [show R⁻¹ = (2 : ℝ) ^ (-(k - 3)) by
@@ -691,7 +697,7 @@ theorem integrable_scaledLowPassKernel (k : ℤ) :
 
 /-- The inverse-Fourier low-pass kernels, uniformly over every integer
 scale, are pointwise dominated by the centered Hardy--Littlewood maximal
-operator.  The proof uses the already formalized dyadic-shell majorization
+operator. The proof uses the already formalized dyadic-shell majorization
 of the Poisson kernel. -/
 theorem enorm_scaledLowPassKernel_convolution_le_maximal
     (k : ℤ) {f : ℝ → ℂ} (hf : Measurable f) (x : ℝ) :
@@ -736,6 +742,7 @@ theorem enorm_scaledLowPassKernel_convolution_le_maximal
     _ = (20 * ENNReal.ofReal baseLowPassKernelDecayConstant) *
         centeredHardyLittlewoodMaximal (fun y ↦ ‖f y‖ₑ) x := by ring
 
+/-- Convolution with the low-pass kernel at the chosen scale. -/
 def lowPassKernelConvolution (k : ℤ) (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   ∫ y, scaledLowPassKernel k (x - y) * f y
 
@@ -759,7 +766,7 @@ theorem integrable_lowPassKernelConvolution
   exact (lowPassKernelConvolution_eq_convolution k f x).symm
 
 /-- The centered maximal function of the norm of an `L²` function is itself
-an `L²` ENNReal-valued function.  This packages the already proved strong
+an `L²` ENNReal-valued function. This packages the already proved strong
 `L²` maximal inequality for use in convolution estimates. -/
 theorem memLp_two_centeredHardyLittlewoodMaximal_enorm
     {f : ℝ → ℂ} (hfmeas : Measurable f) (hf₂ : MemLp f 2 volume) :
@@ -808,7 +815,7 @@ theorem fourier_lowPassKernelConvolution
   ring
 
 /-- For an `L¹ ∩ L²` representative, the concrete kernel convolution is
-exactly the canonical `L²` low-pass Fourier multiplier.  Both sides are
+exactly the canonical `L²` low-pass Fourier multiplier. Both sides are
 compared by their canonical `L²` Fourier transforms; the bridge from the
 integral Fourier transform is almost-everywhere, as it should be. -/
 theorem lowPassProjectionL2_eq_toLp_lowPassKernelConvolution
@@ -852,7 +859,7 @@ theorem memLp_annularResidueRepresentative
 
 /-- For a finite total of annular pieces which is also integrable, every
 prefix is almost everywhere convolution by the concrete boundary low-pass
-kernel.  This closes the representative-level bridge without imposing any
+kernel. This closes the representative-level bridge without imposing any
 pointwise choice on `L²` equivalence classes. -/
 theorem annularResiduePrefix_ae_eq_lowPassKernelConvolution
     (r : Fin 7) (v : ℕ → Lp (α := ℝ) ℂ 2 volume) {n N : ℕ}
@@ -920,7 +927,7 @@ theorem annularResiduePrefix_ae_eq_lowPassKernelConvolution
     _ = _ := hEq.trans hconv
 
 /-- Fully instantiated a.e. low-pass prefix control for one separated
-residue class.  The only application hypothesis is integrability of the
+residue class. The only application hypothesis is integrability of the
 finite total; its `L²` membership is automatic. -/
 theorem hasAELowPassPrefixControl_annularResidueRepresentative
     (r : Fin 7) (v : ℕ → Lp (α := ℝ) ℂ 2 volume) (N : ℕ)
@@ -943,7 +950,7 @@ theorem hasAELowPassPrefixControl_annularResidueRepresentative
     (residueScale r n) htotalMeas x
 
 /-- Concrete cardinality-free maximal-tail `L²` estimate for one residue
-class of annular projections.  Frequency separation, exact low-pass prefix
+class of annular projections. Frequency separation, exact low-pass prefix
 recovery, the inverse-Fourier convolution identity, and Hardy--Littlewood
 control have all been instantiated. -/
 theorem annularResidueTailMax_sq_lintegral_le_sum
@@ -968,7 +975,7 @@ theorem annularResidueTailMax_sq_lintegral_le_sum
 
 /-- Once a pointwise prefix is identified with convolution by the concrete
 scaled inverse-Fourier kernel, all analytic hypotheses of
-`HasLowPassPrefixControl` are discharged.  In particular, no compact-support
+`HasLowPassPrefixControl` are discharged. In particular, no compact-support
 fiction is imposed on the Schwartz kernel: the preceding dyadic-shell
 argument supplies the uniform constant. -/
 theorem hasLowPassPrefixControl_of_scaledLowPassKernel_representation

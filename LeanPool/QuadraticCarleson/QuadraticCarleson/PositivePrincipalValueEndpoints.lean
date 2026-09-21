@@ -55,6 +55,7 @@ theorem uniformHilbertMaximalWeakBound_of_all_integrable
   simpa only [ENNReal.ofReal_mul hH.1,
     ENNReal.ofReal_toReal f.integrable.hasFiniteIntegral.ne] using h
 
+/-- The full principal-value endpoint constant combining oscillatory, Hilbert, and error bounds. -/
 noncomputable def fullPrincipalValueEndpointConstant (CH : ℝ≥0∞) : ℝ≥0∞ :=
   4 * fullOscillatoryEndpointConstant + 8 * CH + 16 * maximalErrorConstant
 
@@ -105,6 +106,7 @@ theorem zeroHilbert_levelSet_sixth_le_lacunary_modular
   rw [heq] at hh
   exact hh.trans (mul_le_mul' le_rfl (lintegral_scaled_norm_le_lacunaryOrlicz f hα))
 
+/-- The lacunary principal-value endpoint constant combining Hilbert and remainder bounds. -/
 noncomputable def lacunaryPrincipalValueEndpointConstant
     (CH : ℝ≥0∞) (CB : ℝ) : ℝ≥0∞ :=
   6 * CH + lacunaryRemainderEndpointConstant CB
@@ -158,6 +160,7 @@ the harmless null-set convention of `principalValueRepresentative`. -/
 noncomputable def fullPrincipalValueMaximal (f : L0Infinity) (x : ℝ) : ℝ≥0∞ :=
   ⨆ lam : ℝ, ENNReal.ofReal ‖principalValueRepresentative lam f x‖
 
+/-- The supremum of principal-value representatives over dyadic modulations. -/
 noncomputable def lacunaryPrincipalValueMaximal (f : L0Infinity) (x : ℝ) : ℝ≥0∞ :=
   ⨆ m : ℤ, ENNReal.ofReal ‖principalValueRepresentative (dyadicModulation m) f x‖
 
@@ -190,8 +193,6 @@ theorem fullPrincipalValueMaximal_levelSet_le
   have hset : {x | ENNReal.ofReal α < fullPrincipalValueMaximal f x} =ᵐ[volume]
       {x | ENNReal.ofReal α < quadraticCarlesonL0 f x} := by
     filter_upwards [fullPrincipalValueMaximal_ae_eq hH f] with x hx
-    change (ENNReal.ofReal α < fullPrincipalValueMaximal f x) =
-      (ENNReal.ofReal α < quadraticCarlesonL0 f x)
     rw [hx]
   rw [measure_congr hset]
   exact quadraticCarlesonL0_levelSet_le_full_modular hH f hα
@@ -208,8 +209,6 @@ theorem lacunaryPrincipalValueMaximal_levelSet_le
   have hset : {x | ENNReal.ofReal α < lacunaryPrincipalValueMaximal f x} =ᵐ[volume]
       {x | ENNReal.ofReal α < lacunaryQuadraticCarlesonL0 f x} := by
     filter_upwards [lacunaryPrincipalValueMaximal_ae_eq hH f] with x hx
-    change (ENNReal.ofReal α < lacunaryPrincipalValueMaximal f x) =
-      (ENNReal.ofReal α < lacunaryQuadraticCarlesonL0 f x)
     rw [hx]
   rw [measure_congr hset]
   exact lacunaryQuadraticCarlesonL0_levelSet_le_lacunary_modular hH hB f hα

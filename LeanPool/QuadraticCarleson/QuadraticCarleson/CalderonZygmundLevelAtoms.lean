@@ -16,7 +16,7 @@ This file isolates the algebraic and measure-theoretic facts about the atoms
 
 `1_I (f 1_{F_k} - average_I (f 1_{F_k}))`
 
-used in the positive-endpoint argument.  It does not assert the existence of
+used in the positive-endpoint argument. It does not assert the existence of
 a Calderón--Zygmund decomposition: the interval (or a disjoint family of
 intervals) is supplied explicitly.
 -/
@@ -30,7 +30,8 @@ namespace CalderonZygmundLevelAtoms
 open PositiveEndpointOptimization PositiveLevelIntegration
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The part of `f` lying in the magnitude band `F_k`. -/
 def levelRestricted (A : ℕ → ℝ) (f : ℝ → ℂ) (k : ℕ) : ℝ → ℂ :=
@@ -269,7 +270,7 @@ theorem sqrt_integral_sq_norm_levelAtom_le
   Real.sqrt_le_sqrt (integral_sq_norm_levelAtom_le_four_mul_levelMass hf hAk hR)
 
 /-- For a countable disjoint interval family, the extended total of the atom
-`L¹` masses is at most twice the global mass of the magnitude level.  The
+`L¹` masses is at most twice the global mass of the magnitude level. The
 extended formulation avoids any global integrability hypothesis on `f`. -/
 theorem tsum_atomL1Mass_le_two_mul_global_level_mass
     {ι : Type*} [Countable ι] {A : ℕ → ℝ} {f : ℝ → ℂ}
@@ -333,9 +334,11 @@ abbrev fullLevelAtom (f : ℝ → ℂ) (k : ℕ) (z R : ℝ) : ℝ → ℂ :=
 abbrev lacunaryLevelAtom (f : ℝ → ℂ) (k : ℕ) (z R : ℝ) : ℝ → ℂ :=
   levelAtom lacunaryAmplitude f k z R
 
+/-- The mass on the chosen interval of the magnitude level defined by `fullAmplitude`. -/
 abbrev fullLevelMassOnInterval (f : ℝ → ℂ) (k : ℕ) (z R : ℝ) : ℝ :=
   levelMassOnInterval fullAmplitude f k z R
 
+/-- The mass on the chosen interval of the magnitude level defined by `lacunaryAmplitude`. -/
 abbrev lacunaryLevelMassOnInterval (f : ℝ → ℂ) (k : ℕ) (z R : ℝ) : ℝ :=
   levelMassOnInterval lacunaryAmplitude f k z R
 

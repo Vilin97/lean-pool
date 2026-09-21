@@ -24,7 +24,8 @@ namespace HilbertPoissonFourier
 open HilbertMaximalWeakOneOne
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The Fourier-side Poisson semigroup multiplier in Mathlib's
 `exp (-2π i x ξ)` convention. -/
@@ -37,7 +38,7 @@ theorem continuous_poissonSpectralKernel (r : ℝ) :
   fun_prop
 
 /-- The Poisson semigroup multiplier is integrable for every positive
-radius.  This is the elementary two-half-line exponential estimate. -/
+radius. This is the elementary two-half-line exponential estimate. -/
 theorem integrable_poissonSpectralKernel {r : ℝ} (hr : 0 < r) :
     Integrable (poissonSpectralKernel r) := by
   have hpos : IntegrableOn
@@ -372,7 +373,7 @@ theorem fourierInv_conjugatePoissonSpectralKernel {r : ℝ} (hr : 0 < r) (x : �
   simp
 
 /-- An absolutely convergent spectral realization of the conjugate-Poisson
-action on an `L¹` function.  The translated Fourier transform is retained
+action on an `L¹` function. The translated Fourier transform is retained
 explicitly, which makes the Fubini step completely transparent. -/
 noncomputable def cotlarShiftedSpectralAction
     (r : ℝ) (g : ℝ → ℂ) (x : ℝ) : ℂ :=

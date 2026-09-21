@@ -12,9 +12,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.PositivePrincipalValueEndpoi
 # From the two sparse inputs to the paper's frozen lacunary block
 
 This module isolates the final purely formal implication in the middle-range
-argument.  A uniform individual Krause--Lacey sparse estimate and the finite
+argument. A uniform individual Krause--Lacey sparse estimate and the finite
 sparse-maximal weak theorem imply the exact logarithm-squared estimate for the
-genuine all-radius frozen quadratic-Hilbert block.  Thus neither truncation
+genuine all-radius frozen quadratic-Hilbert block. Thus neither truncation
 radii nor the finite modulation enumeration remain hidden assumptions in the
 positive endpoint assembly.
 -/
@@ -31,10 +31,11 @@ open LacunaryOscillatoryScaling PositivePrincipalValueEndpoints
 open QuadraticHilbertMaximalMeasurable
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Operational distribution-function version of the finite sparse maximal
-lemma.  The constant is universal: it is outside the quantifiers over the
+lemma. The constant is universal: it is outside the quantifiers over the
 family size, operator family, and individual sparse constant. -/
 def HasFiniteSparseMaximalWeakBound (K : ℝ) : Prop :=
   0 ≤ K ∧ ∀ {N : ℕ} (T : Fin N → TestOperator) (A : ℝ),
@@ -42,7 +43,7 @@ def HasFiniteSparseMaximalWeakBound (K : ℝ) : Prop :=
       HasWeakOneOneBound (K * A * paperLog 1 N ^ 2) (finiteMax T)
 
 /-- The two analytic sparse inputs give the paper's exact frozen-block
-Hilbert estimate.  The proof includes the finite-radius approximation,
+Hilbert estimate. The proof includes the finite-radius approximation,
 enumeration of `Q B τ`, its exact cardinality `B`, and restriction away from
 the fivefold exceptional set. -/
 theorem hasLogSquaredFrozenHilbertBlockWeakBounds_of_sparse
@@ -63,7 +64,7 @@ theorem hasLogSquaredFrozenHilbertBlockWeakBounds_of_sparse
     (finiteRadiusQuadraticHilbertBlockFamily_sparseHypothesis hKL (B k) τ s)
   simpa only [card_Q] using hweak
 
-/-- Uniform version on exactly the paper's `L0Infinity` input class.  No
+/-- Uniform version on exactly the paper's `L0Infinity` input class. No
 estimate on arbitrary integrable functions is required. -/
 theorem hasUniformL0LogSquaredFrozenBlockWeakBounds_of_sparse
     {K A : ℝ} (hmax : HasFiniteSparseMaximalWeakBound K)

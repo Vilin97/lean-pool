@@ -6,6 +6,14 @@ Authors: Anastasios Fragkos
 
 import LeanPool.QuadraticCarleson.QuadraticCarleson.HilbertPoissonFourier
 
+/-!
+# Fourier and pointwise Hilbert representatives
+
+Fourier pairing identities identify the Poisson-smoothed Hilbert transform with its spectral
+representative. This gives Cotlar bounds for the stopping good part using the canonical L²
+Hilbert transform.
+-/
+
 open Filter Function MeasureTheory Set FourierTransform
 open scoped ENNReal SchwartzMap Topology ContDiff
 
@@ -22,7 +30,7 @@ theorem integral_fourier_mul_eq (f g : ℝ → ℂ)
   exact h
 
 /-- The integral Fourier transform of an `L¹ ∩ L²` function agrees almost
-everywhere with the canonical `L²` Fourier representative.  Schwartz-test
+everywhere with the canonical `L²` Fourier representative. Schwartz-test
 duality avoids making an additional approximation choice. -/
 theorem fourier_toLp_ae_eq {f : ℝ → ℂ} (hf : Integrable f)
     (hf₂ : MemLp f 2 volume) :

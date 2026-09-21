@@ -11,12 +11,12 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPrunedPhysicalMax
 # Exact physical-scale recombination of the scalar-standard collection
 
 The scalar-standard estimates are proved at one physical exponent `j`, with
-the source gap in the exact interval `0 ≤ s ≤ j - k₀`.  This file supplies
+the source gap in the exact interval `0 ≤ s ≤ j - k₀`. This file supplies
 the finite algebraic bridge from the original standard collections (one for
 each gap) to those fixed-`j` estimates.
 
 The outer tail condition is never reversed: a lower physical cutoff `ell`
-retains precisely the layers with `ell ≤ j`.  We also record the change of
+retains precisely the layers with `ell ≤ j`. We also record the change of
 variables `ℓ = j - s`, under which the source-gap interval becomes exactly
 `k₀ ≤ ℓ ≤ j`.
 -/
@@ -30,7 +30,7 @@ namespace KrauseLaceyBadScale
 attribute [local instance] Classical.propDecidable
 
 /-- The finite set of physical exponents represented by the ambient interval
-family.  The exponent is `scale I + 2`, matching the actual length relation
+family. The exponent is `scale I + 2`, matching the actual length relation
 used throughout the scalar energy classification. -/
 noncomputable def standardPhysicalScaleSupport
     (S : Finset RealInterval) (scale : RealInterval → ℤ) : Finset ℤ :=
@@ -99,7 +99,7 @@ theorem energyStandardPhysicalLayer_eq_empty_of_nonneg_not_mem
   exact hsj (mem_standardSourceGaps_of_mem_energyStandardPhysicalLayer hs hI)
 
 /-- Every scalar-standard collection at a fixed gap is exactly the disjoint
-sum of its physical layers.  The target scale set is finite because it is the
+sum of its physical layers. The target scale set is finite because it is the
 image of the ambient finite interval family. -/
 theorem sum_energyStandardPhysicalLayer_eq
     {E : Type*} [AddCommMonoid E]
@@ -125,7 +125,7 @@ theorem zpow_cutoff_iff_of_mem_energyStandardIntervals
   rw [he.2.1]
   exact zpow_le_zpow_iff_right₀ (by norm_num : (1 : ℝ) < 2)
 
-/-- Exact physical-layer recombination with a moving lower cutoff.  The
+/-- Exact physical-layer recombination with a moving lower cutoff. The
 orientation is `ell ≤ j`: large spatial scales survive the tail. -/
 theorem sum_energyStandardPhysicalLayer_tail_eq
     {E : Type*} [AddCommMonoid E]
@@ -195,7 +195,7 @@ theorem badLengthTailAction_energyStandardIntervals_eq_physicalLayers
         (badScaleInput S f I₀ k₀ (scale I + 2 - s)) x)).symm
 
 /-- At one physical exponent, use all and only the source gaps allowed by
-`k₀ ≤ j-s`.  This is the actual fixed-scale action to which the interpolation
+`k₀ ≤ j-s`. This is the actual fixed-scale action to which the interpolation
 theorems apply. -/
 noncomputable def energyStandardPhysicalLayerAction
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ : ℤ)
@@ -295,7 +295,7 @@ noncomputable def energyStandardPhysicalTailAction
 
 /-- Exact global recombination: summing the original standard physical tails
 over every represented nonnegative gap equals summing first by physical
-exponent.  The right side therefore has exactly the fixed-`j` functions used
+exponent. The right side therefore has exactly the fixed-`j` functions used
 by the source interpolation estimate. -/
 theorem sum_badLengthTailAction_energyStandardIntervals_eq_physicalTail
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ : ℤ)

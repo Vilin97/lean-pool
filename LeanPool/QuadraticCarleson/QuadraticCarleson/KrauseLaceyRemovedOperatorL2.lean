@@ -24,6 +24,7 @@ open KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The uniform bad-piece bound determined by the amplitude constant and the parent L¹ average. -/
 noncomputable def badPieceUniformBound (f : ℝ → ℂ) (I₀ : RealInterval) : ℝ :=
   80 * positiveDyadicAmplitudeBound * intervalL1Average f I₀
 
@@ -65,8 +66,7 @@ theorem norm_localizedBadPiece_le_uniform
     _ = badPieceUniformBound f I₀ := by
       rw [hscale, krauseLacey_scale_eq_eight_mul_radius]
       unfold badPieceUniformBound
-      field_simp
-      <;> ring
+      field_simp; ring
 
 theorem badLengthTailMaximal_le_uniform_mul_overlapCount
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)

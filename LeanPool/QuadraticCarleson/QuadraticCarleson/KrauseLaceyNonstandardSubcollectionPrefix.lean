@@ -24,6 +24,7 @@ open KrauseLaceyGenerationLayers KrauseLaceyRademacherMenshov
 
 attribute [local instance] Classical.propDecidable
 
+/-- The `L²` sum of the bad pieces in generation `n` of the subcollection `N`. -/
 noncomputable def badSubcollectionGenerationLp
     (S : Finset RealInterval) (f : ℝ → ℂ) (hf : Integrable f) (I₀ : RealInterval)
     (k₀ s : ℤ) (scale : RealInterval → ℤ) (N : Finset RealInterval) (n : ℕ) :
@@ -71,6 +72,7 @@ theorem hasSignedSumSquareBound_badSubcollectionGenerations
     · rcases hc _ hi with h | h | h <;> rw [h] <;> norm_num
     · norm_num
 
+/-- The largest norm of a prefix containing at most `M` generations of bad pieces from `N`. -/
 noncomputable def badSubcollectionPrefixMaximal
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (N : Finset RealInterval) (M : ℕ) (x : ℝ) : ℝ :=

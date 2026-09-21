@@ -70,6 +70,7 @@ theorem eLpNorm_tsum_two_le {ι : Type*} [Countable ι]
       exact pow_le_pow_left₀ bot_le
         (Finset.sum_le_sum_of_subset (f := fun i ↦ F i x) Finset.subset_union_right) 2
 
+/-- The geometric decay ratio in the high-height L² estimate. -/
 noncomputable def highHeightDecayRatio : ℝ≥0∞ :=
   ENNReal.ofReal ((2 : ℝ) ^ (-(1 : ℝ) / 10))
 
@@ -77,6 +78,7 @@ theorem highHeightDecayRatio_lt_one : highHeightDecayRatio < 1 := by
   rw [highHeightDecayRatio, ENNReal.ofReal_lt_one]
   exact Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by norm_num)
 
+/-- The constant obtained by summing the geometric fixed-height L² bounds. -/
 noncomputable def highHeightTailConstant : ℝ≥0∞ :=
   ENNReal.ofReal fixedHeightL2DecayConstant * highHeightDecayRatio *
     (1 - highHeightDecayRatio)⁻¹
@@ -111,6 +113,7 @@ theorem tsum_fixedHeightDecay_highHeight (B : ℕ) :
   unfold highHeightTailConstant
   ring
 
+/-- The sum of fixed-height quadratic maxima strictly above the cutoff height. -/
 noncomputable def highHeightMajorant (B : ℕ) (b : ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ∑' n : ℕ, paperFixedHeightQuadraticMaximal (B + n + 1) b x
 

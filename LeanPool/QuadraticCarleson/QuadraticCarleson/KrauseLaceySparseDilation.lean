@@ -12,17 +12,17 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.HardyLittlewoodBoundaryContr
 # Exact positive dilation and conjugation of smooth sparse bounds
 
 The change of variables normalizing a nonzero quadratic modulation is an
-arbitrary positive dilation, not necessarily a dyadic dilation.  Accordingly
+arbitrary positive dilation, not necessarily a dyadic dilation. Accordingly
 the exact operator identities below use finite sets of actual positive
-smooth radii.  The project's rounded-radius maximum is a special case,
+smooth radii. The project's rounded-radius maximum is a special case,
 but the rounded radii themselves are not asserted to commute with dilation.
 
 The geometric transfer proves the change of variables for the test space,
-intervals, major subsets, local averages, sparse forms, and pairings.  No
+intervals, major subsets, local averages, sparse forms, and pairings. No
 sparse conclusion or invariance property is postulated.
 
-The final unit input quantifies over arbitrary positive radii.  The existing
-unit dyadic-suffix sparse theorem supplies only rounded dyadic radii.  Passing
+The final unit input quantifies over arbitrary positive radii. The existing
+unit dyadic-suffix sparse theorem supplies only rounded dyadic radii. Passing
 from that latter input to this one still requires an annular comparison with
 a sparse maximal-average bound, or an extension of the unit analytic proof
 to arbitrary scale offsets; that additional implication is not assumed here.
@@ -34,7 +34,8 @@ open scoped ENNReal Topology ComplexConjugate
 namespace QuadraticCarleson
 
 
-noncomputable section
+noncomputable
+section
 
 namespace L0Infinity
 
@@ -63,6 +64,7 @@ def dilate (a : ℝ) (ha : 0 < a) (f : L0Infinity) : L0Infinity where
   cases f
   simp [dilate, div_eq_mul_inv, ha.ne']
 
+/-- Complex conjugation of a bounded, compactly supported measurable test function. -/
 def conjugate (f : L0Infinity) : L0Infinity where
   toFun := fun x ↦ conj (f x)
   measurable_toFun := Complex.continuous_conj.measurable.comp f.measurable_toFun
@@ -83,6 +85,7 @@ end L0Infinity
 
 namespace RealInterval
 
+/-- Dilation of both interval endpoints by a positive factor. -/
 def dilate (a : ℝ) (ha : 0 < a) (I : RealInterval) : RealInterval :=
   ⟨a * I.left, a * I.right, mul_lt_mul_of_pos_left I.left_lt_right ha⟩
 
@@ -130,6 +133,7 @@ def pullbackFamily (a : ℝ) (ha : 0 < a) (S : Set RealInterval) : Set RealInter
   ext I
   simp [pullbackFamily]
 
+/-- The index equivalence between the pulled-back interval family and the original family. -/
 def pullbackIndexEquiv (a : ℝ) (ha : 0 < a) (S : Set RealInterval) :
     {I : RealInterval // I ∈ pullbackFamily a ha S} ≃
       {I : RealInterval // I ∈ S} where
@@ -138,7 +142,7 @@ def pullbackIndexEquiv (a : ℝ) (ha : 0 < a) (S : Set RealInterval) :
   left_inv I := by ext; simp
   right_inv I := by ext; simp
 
-/-- The major subsets are pulled back by the same dilation.  In particular
+/-- The major subsets are pulled back by the same dilation. In particular
 the exact density parameter, including the source's `1/4`, is preserved. -/
 theorem isSparse_pullbackFamily (a : ℝ) (ha : 0 < a)
     {η : ℝ} {S : Set RealInterval} (hS : IsSparse η S) :
@@ -214,6 +218,7 @@ theorem sparseForm_pullbackFamily (p : ℝ) (a : ℝ) (ha : 0 < a)
   congr 1
   field_simp
 
+/-- Transport of a test operator by a positive spatial dilation. -/
 def dilatedOperator (a : ℝ) (ha : 0 < a) (T : TestOperator) : TestOperator :=
   fun f x ↦ T (L0Infinity.dilate a ha f) (a * x)
 
@@ -268,6 +273,7 @@ theorem sparseForm_conjugate (p : ℝ) (f g : ℝ → ℂ) (S : Set RealInterval
     sparseForm p (fun x ↦ conj (f x)) (fun x ↦ conj (g x)) S = sparseForm p f g S := by
   simp only [sparseForm, localAverage_conjugate]
 
+/-- The operator obtained by conjugating both its input and its output. -/
 def conjugatedOperator (T : TestOperator) : TestOperator :=
   fun f x ↦ conj (T (L0Infinity.conjugate f) x)
 
@@ -306,7 +312,7 @@ theorem sparseOnePNorm_conjugatedOperator (p : ℝ) (T : TestOperator) :
 
 /-- The cutoff ratio itself is invariant when the radius and space are
 scaled together; this follows from the actual definition, not dyadic
-telescoping.  The factor `a` is the kernel Jacobian. -/
+telescoping. The factor `a` is the kernel Jacobian. -/
 theorem smoothQuadraticHighPassKernel_scale (sigma : ℝ) (a : ℝ) (ha : 0 < a)
     (ρ t : ℝ) :
     smoothQuadraticHighPassKernel (sigma * a ^ 2) ρ t =
@@ -375,18 +381,22 @@ theorem smoothQuadraticHighPass_neg_one_eq_conj (ρ : ℝ) (f : ℝ → ℂ) (x 
 /-- Actual positive smooth radii, without a dyadic rounding operation. -/
 abbrev PositiveSmoothRadius := {ρ : ℝ // 0 < ρ}
 
+/-- Multiplication of a positive smoothing radius by a positive scale factor. -/
 def scaleRadius (a : ℝ) (ha : 0 < a) (ρ : PositiveSmoothRadius) : PositiveSmoothRadius :=
   ⟨a * ρ.1, mul_pos ha ρ.2⟩
 
+/-- The image of a finite family of positive radii under dilation. -/
 def scaleRadii (a : ℝ) (ha : 0 < a) (s : Finset PositiveSmoothRadius) :
     Finset PositiveSmoothRadius := by
   classical
   exact s.image (scaleRadius a ha)
 
+/-- The maximum of the nonnegative norms of smooth high-pass actions at finitely many radii. -/
 def finiteSmoothMaxNNNorm (lam : ℝ) (s : Finset PositiveSmoothRadius)
     (f : L0Infinity) (x : ℝ) : NNReal :=
   s.sup fun ρ ↦ ‖smoothQuadraticHighPass lam ρ.1 f x‖₊
 
+/-- The finite-radius smooth maximal operator, with its real output embedded in ℂ. -/
 def finiteSmoothMaxOperator (lam : ℝ) (s : Finset PositiveSmoothRadius) : TestOperator :=
   fun f x ↦ ((finiteSmoothMaxNNNorm lam s f x : ℝ) : ℂ)
 
@@ -452,6 +462,7 @@ theorem hasSparseOnePBound_finiteSmoothMaxOperator_nonzero {C p : ℝ}
     HasSparseOnePBound C p (finiteSmoothMaxOperator lam s) :=
   hasSparseOnePBound_finiteSmoothMaxOperator_nonzero_of_scaled_unit hlam s (hunit _)
 
+/-- The finite family obtained by rounding dense positive radii up to dyadic radii. -/
 def roundedRadii (s : Finset densePositiveRadii) : Finset PositiveSmoothRadius := by
   classical
   exact s.image fun ε ↦
@@ -546,7 +557,7 @@ def HasUnitFiniteSmoothSparseBound (A : ℝ) : Prop :=
     HasSparseOnePBound (A * holderConjugate p) p (finiteSmoothMaxOperator 1 s)
 
 /-- The sharper unit input needed by the paper-facing rounded maximum:
-one common positive dilation of each rounded family.  This permits arbitrary
+one common positive dilation of each rounded family. This permits arbitrary
 scale offsets but does not ask for unrelated arbitrary radii. -/
 def HasUnitScaleOffsetSmoothSparseBound (A : ℝ) : Prop :=
   0 ≤ A ∧ ∀ (a : ℝ) (ha : 0 < a) (s : Finset densePositiveRadii) (p : ℝ),
@@ -574,7 +585,7 @@ theorem hasUniformFiniteRadiusSmoothSparseBound_of_unit_scaleOffset
     KrauseLaceyFullDyadicSparseTransfer.sparseOnePNorm_le_of_bound hC hbound⟩
 
 /-- Convenient stronger unit-phase input with arbitrary finite positive
-radii.  The scale-offset theorem above records exactly which families this
+radii. The scale-offset theorem above records exactly which families this
 adapter actually uses. -/
 theorem hasUniformFiniteRadiusSmoothSparseBound_of_unit
     {A : ℝ} (hA : HasUnitFiniteSmoothSparseBound A) :

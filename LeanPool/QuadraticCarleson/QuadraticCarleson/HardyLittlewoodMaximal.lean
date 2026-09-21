@@ -9,7 +9,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticCenteredMaximal
 /-!
 # The centered Hardy--Littlewood maximal operator on the real line
 
-We use positive rational radii.  This makes the pointwise supremum measurably
+We use positive rational radii. This makes the pointwise supremum measurably
 countable while retaining arbitrarily small and arbitrarily large intervals.
 The weak `(1,1)` estimate is obtained from the bounded-radius Vitali estimate
 in `QuadraticCenteredMaximal` and continuity of measure from below.

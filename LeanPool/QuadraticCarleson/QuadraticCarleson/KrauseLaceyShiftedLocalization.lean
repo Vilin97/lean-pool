@@ -10,12 +10,12 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelati
 # Finite central-third localization at one dyadic scale
 
 This is the exact finite-support version of the three-shift decomposition in
-KL18 (3.1).  Intervals of length `L` are chosen so that their central thirds
-are the consecutive half-open tiles of length `L/3`.  Hence a compactly
+KL18 (3.1). Intervals of length `L` are chosen so that their central thirds
+are the consecutive half-open tiles of length `L/3`. Hence a compactly
 supported input is exactly the sum of finitely many central-third
 restrictions, with no overlap and no boundary exceptional set.
 
-Grouping the tile index modulo three recovers the three shifted grids.  The
+Grouping the tile index modulo three recovers the three shifted grids. The
 cross-scale nesting of each such group is left to the subsequent grid module;
 the results here close the finite, fixed-scale identity used before that step.
 -/
@@ -26,7 +26,8 @@ namespace QuadraticCarleson
 namespace KrauseLaceyShiftedLocalization
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The parent whose central third is the `n`th consecutive tile of width
 `L/3`. -/

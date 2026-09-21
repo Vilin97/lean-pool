@@ -14,9 +14,9 @@ import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
 # Geometric summation in the lacunary very-small range
 
 For `j ∈ L B c m`, the paper's very-small contribution has weight
-`2^(B + m/2 + j)`.  Here the exponent is interpreted in `ℝ`, exactly as in
-the displayed analytic estimate.  For fixed `j`, the allowed modulation
-indices form a left half-line.  Reindexing that half-line by `ℕ` gives a
+`2^(B + m/2 + j)`. Here the exponent is interpreted in `ℝ`, exactly as in
+the displayed analytic estimate. For fixed `j`, the allowed modulation
+indices form a left half-line. Reindexing that half-line by `ℕ` gives a
 geometric series of ratio `2^(-1/2)`.
 
 The final theorem is stated in `ℝ≥0∞`, so the exchange of the two countable

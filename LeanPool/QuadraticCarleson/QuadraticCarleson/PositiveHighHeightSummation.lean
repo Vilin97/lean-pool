@@ -24,9 +24,11 @@ namespace PositiveHighHeightEstimate
 
 open CalderonZygmundLevelAtoms PositiveLevelIntegration
 
+/-- The sum of high-height tails of the level inputs, with a separate cutoff at each level. -/
 noncomputable def paperHighContribution (B : ℕ → ℕ) (b : ℕ → ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ∑' k : ℕ, paperHighHeightTail (B k) (b k) x
 
+/-- The sum of the fixed-height majorants for all level inputs. -/
 noncomputable def highContributionMajorant (B : ℕ → ℕ) (b : ℕ → ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ∑' k : ℕ, highHeightMajorant (B k) (b k) x
 

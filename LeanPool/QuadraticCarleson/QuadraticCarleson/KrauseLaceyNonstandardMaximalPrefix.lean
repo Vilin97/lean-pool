@@ -31,6 +31,8 @@ open KrauseLaceyStoppingExtraction KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The explicit energy bound for signed sums of nonstandard generations, with decay factor
+`2^(-s)`. -/
 noncomputable def nonstandardSignedEnergyBudget
     (f : ℝ → ℂ) (I₀ : RealInterval) (s : ℤ) : ℝ :=
   (311040 * positiveDyadicAmplitudeBound ^ 2 * intervalL1Average f I₀ *

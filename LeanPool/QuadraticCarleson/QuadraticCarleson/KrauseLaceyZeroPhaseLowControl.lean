@@ -11,9 +11,9 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyCompactPairingSta
 # The phase-zero term in the low full-odd reduction
 
 The low unit-quadratic block is already reduced to a phase-zero full-odd
-block plus a Hardy--Littlewood maximal error.  This file keeps the phase-zero
+block plus a Hardy--Littlewood maximal error. This file keeps the phase-zero
 term common across all lacunary modulations and compares it directly with
-the ordinary maximal Hilbert transform.  It therefore does not introduce an
+the ordinary maximal Hilbert transform. It therefore does not introduce an
 unnecessary sparse-domination theorem for the ordinary Hilbert transform.
 -/
 
@@ -29,9 +29,10 @@ open KrauseLaceyFullDyadicReflection
 open KrauseLaceyLowFullOddReduction
 
 
-noncomputable section
+noncomputable
+section
 
-/-- Reverse direction of the sharp/smooth cutoff comparison.  The difference
+/-- Reverse direction of the sharp/smooth cutoff comparison. The difference
 is exactly the already controlled compact transition kernel. -/
 theorem smoothQuadraticHighPass_enorm_le_hilbertTrunc_add_maximal
     {ρ : ℝ} (hρ : 0 < ρ) {f : ℝ → ℂ}

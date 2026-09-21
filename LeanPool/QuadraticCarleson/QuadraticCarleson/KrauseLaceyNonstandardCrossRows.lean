@@ -24,6 +24,7 @@ open KrauseLaceyStoppingExtraction
 
 attribute [local instance] Classical.propDecidable
 
+/-- The norm integral of the associated bad-scale input over the central third of `I`. -/
 noncomputable def intervalBadMass
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (I : RealInterval) : ℝ :=

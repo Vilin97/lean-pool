@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleFiniteRadiusLi
 # Applying a finite sparse maximum to the genuine frozen block
 
 This module contains the exact adapter between the abstract finite sparse
-maximal theorem and the frozen quadratic-Hilbert block in the paper.  It
+maximal theorem and the frozen quadratic-Hilbert block in the paper. It
 indexes the modulation block `Q B τ` by a finite type, applies the resulting
 finite maximum to the genuine compactly supported frozen input, and passes a
 uniform finite-radius weak bound to the full real-radius supremum.
@@ -33,7 +33,8 @@ open CalderonZygmundStoppingIntervals
 open PositiveLowFullEstimate
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Canonical enumeration of the finite modulation block. -/
 def modulationBlockIndex (B : ℕ) (τ : ℤ) (j : Fin (Q B τ).card) : ℤ :=

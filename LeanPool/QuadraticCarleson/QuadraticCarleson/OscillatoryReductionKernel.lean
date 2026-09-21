@@ -23,6 +23,7 @@ open scoped ENNReal NNReal Topology
 namespace QuadraticCarleson
 namespace OscillatoryReduction
 
+/-- The inner cutoff radius determined by the modulation at height zero. -/
 noncomputable def innerRadius (lam : ℝ) (hlam : lam ≠ 0) : ℝ :=
   (2 : ℝ) ^ (oscillatoryScaleIndex lam 0 hlam - 3)
 
@@ -47,6 +48,7 @@ theorem innerRadius_phase_bound (lam : ℝ) (hlam : lam ≠ 0) :
   have hprod : 0 ≤ innerRadius lam hlam * Real.sqrt |lam| := mul_nonneg hr.le hsqrt
   nlinarith [sq_nonneg (innerRadius lam hlam * Real.sqrt |lam| - 1)]
 
+/-- The sharp quadratic tail kernel after subtraction of its cutoff boundary correction. -/
 noncomputable def highPassKernel (lam : ℝ) (hlam : lam ≠ 0) (t : ℝ) : ℂ :=
   sharpQuadraticTailKernel lam (innerRadius lam hlam) t -
     cutoffBoundaryKernel lam (innerRadius lam hlam) t
@@ -102,6 +104,7 @@ theorem highPassKernel_norm_le (lam : ℝ) (hlam : lam ≠ 0) (t : ℝ) :
   apply (add_le_add hs hb).trans_eq
   ring
 
+/-- The truncated small-phase correction kernel between the inner and outer radii. -/
 noncomputable def smallPhaseKernel (lam ε ρ t : ℝ) : ℂ :=
   if ε < |t| ∧ |t| ≤ ρ then (phase (lam * t ^ 2) - 1) / (t : ℂ) else 0
 

@@ -116,6 +116,7 @@ theorem maximalError_levelSet_third_le_scaled_orlicz
   rw [heq] at hh
   exact hh.trans (mul_le_mul' le_rfl (lintegral_scaled_norm_le_lacunaryOrlicz f hα))
 
+/-- The endpoint constant after adding the maximal regularization error. -/
 noncomputable def lacunaryRemainderEndpointConstant (C : ℝ) : ℝ≥0∞ :=
   81 * lacunaryScaledEndpointConstant C + 12 * maximalErrorConstant
 

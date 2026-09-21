@@ -13,7 +13,7 @@ import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 In the accompanying article ([arXiv:2609.04101v1](https://arxiv.org/abs/2609.04101v1)), the low kernel
 `K_{λ,B}` is asserted to satisfy
-`|K'_{λ,B}(t)| ≲ min {|λ|, 2^(2B)/|t|²}`.  This file records the exact
+`|K'_{λ,B}(t)| ≲ min {|λ|, 2^(2B)/|t|²}`. This file records the exact
 product/quotient-rule formula away from zero and derives its constants from
 the fixed smooth cutoff used by `PositiveDyadicKernel`.
 -/
@@ -68,6 +68,7 @@ theorem hasDerivAt_quadraticPhase_lowKernel (lam t : ℝ) :
 noncomputable def lowOuterScale (lam : ℝ) (hlam : lam ≠ 0) (B : ℕ) : ℝ :=
   (2⁻¹ : ℝ) ^ (oscillatoryScaleIndex lam 0 hlam + (B : ℤ))
 
+/-- The inverse dyadic inner scale determined by the modulation. -/
 noncomputable def lowInnerScale (lam : ℝ) (hlam : lam ≠ 0) : ℝ :=
   (2⁻¹ : ℝ) ^ (oscillatoryScaleIndex lam 0 hlam - 1)
 

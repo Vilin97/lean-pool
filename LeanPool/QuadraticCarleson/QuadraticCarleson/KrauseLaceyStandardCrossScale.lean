@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyNonstandardCrossR
 
 The scalar-standard diagonal estimate has an inverse parent-length factor.
 This file shows that the same factor persists after summing all separated
-smaller-scale rows in one physical tail.  The proof uses the actual
+smaller-scale rows in one physical tail. The proof uses the actual
 two-scale correlation estimate and the restricted bad-input packing lemma;
 in particular, neither the number of intervals nor the number of scales is
 charged to the estimate.
@@ -36,7 +36,7 @@ theorem energyStandardIntervals_subset
   exact energyEligibleIntervals_subset S f I₀ k₀ s scale
     (Finset.mem_filter.mp hI).1
 
-/-- One separated cross row for the scalar-standard family.  The only
+/-- One separated cross row for the scalar-standard family. The only
 classification use is membership in the actual good collection; the row
 itself follows from kernel separation and local bad-input mass packing. -/
 theorem sum_energyStandard_crossPairing_le
@@ -132,7 +132,7 @@ theorem sum_abs_inner_energyStandard_crossRow_le
   intro J hJ
   exact abs_inner_localizedPieceLp_le_crossPairing _ _ _ _ _ _ _ _
 
-/-- All separated cross rows inside one physical suffix.  The inverse
+/-- All separated cross rows inside one physical suffix. The inverse
 physical length survives the finite double sum, by restricted local packing
 followed by the global bad-input mass estimate. -/
 theorem sum_energyStandard_physicalTail_crossRows_le

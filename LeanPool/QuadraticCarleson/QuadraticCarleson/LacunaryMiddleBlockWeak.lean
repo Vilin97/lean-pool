@@ -45,11 +45,11 @@ theorem hasExtendedWeakL1Bound_frozenBlockMaxEnorm
   have hfm := measurable_frozenBlockInput (A := A) hf k B c τ
   have hfi' := integrable_frozenBlockInput (A := A) hf hfi hAk B c τ
   have hM := ExtendedWeakL1Combinators.HasExtendedWeakL1Bound.restrict
-    (hasExtendedWeakL1Bound_centeredHardyLittlewoodMaximal_enorm hfm hfi')
+    (hasExtendedWeakL1Bound_centeredHardyLittlewoodMaximal_enorm hfi')
     (fivefoldExceptionalSet (stoppingCenter (f := f)) stoppingLength)ᶜ
   have h := hasExtendedWeakL1Bound_of_le_two_mul_add_sixteen_mul
     (frozenBlockMaxEnorm_le_hilbertMax_add_maximal hf hfi hAk B c τ) hH hM
-  convert h using 1 <;> simp only [frozenBlockInputL1Mass] <;> ring
+  convert h using 1; simp only [frozenBlockInputL1Mass]; ring
 
 /-- The exact remaining Hilbert-block input: a single finite block has the
 paper's logarithm-squared weak constant. -/

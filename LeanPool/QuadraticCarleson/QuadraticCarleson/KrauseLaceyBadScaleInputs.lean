@@ -23,28 +23,32 @@ namespace KrauseLaceyBadScale
 
 open KrauseLaceyStoppingExtraction
 
-open scoped Classical
 
+open Classical in
 /-- The actual source family `B(ℓ)`. -/
 noncomputable def badScaleCells (S : Finset RealInterval) (f : ℝ → ℂ)
     (I₀ : RealInterval) (k₀ ℓ : ℤ) : Finset RealInterval :=
   (stoppingChildren S f 0 I₀).filter fun J ↦ max ((2 : ℝ) ^ k₀) J.length = (2 : ℝ) ^ ℓ
 
+open Classical in
 /-- The uncancelled bad input `B_ℓ = ∑_{J∈B(ℓ)} f 1_J`. -/
 noncomputable def badScaleInput (S : Finset RealInterval) (f : ℝ → ℂ)
     (I₀ : RealInterval) (k₀ ℓ : ℤ) (x : ℝ) : ℂ :=
   ∑ J ∈ badScaleCells S f I₀ k₀ ℓ, J.carrier.indicator f x
 
+open Classical in
 theorem badScaleCells_subset (S : Finset RealInterval) (f : ℝ → ℂ)
     (I₀ : RealInterval) (k₀ ℓ : ℤ) :
     badScaleCells S f I₀ k₀ ℓ ⊆ stoppingChildren S f 0 I₀ :=
   Finset.filter_subset _ _
 
+open Classical in
 theorem length_le_of_mem_badScaleCells
     {S : Finset RealInterval} {f : ℝ → ℂ} {I₀ J : RealInterval} {k₀ ℓ : ℤ}
     (hJ : J ∈ badScaleCells S f I₀ k₀ ℓ) : J.length ≤ (2 : ℝ) ^ ℓ :=
   (le_max_right _ _).trans_eq (Finset.mem_filter.mp hJ).2
 
+open Classical in
 theorem badScaleCells_pairwiseDisjoint
     {S : Finset RealInterval} (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ ℓ : ℤ)
     (hlam : Set.Pairwise (↑S : Set RealInterval) fun J K ↦
@@ -55,6 +59,7 @@ theorem badScaleCells_pairwiseDisjoint
   exact stoppingChildren_pairwiseDisjoint f 0 I₀ hlam
     (badScaleCells_subset S f I₀ k₀ ℓ hJ) (badScaleCells_subset S f I₀ k₀ ℓ hK) hne
 
+open Classical in
 theorem norm_sum_carrier_indicator_le (T : Finset RealInterval) (f : ℝ → ℂ)
     (hdisj : Set.Pairwise (↑T) (Disjoint on RealInterval.carrier)) (x : ℝ) :
     ‖∑ J ∈ T, J.carrier.indicator f x‖ ≤ ‖f x‖ := by
@@ -74,16 +79,19 @@ theorem norm_sum_carrier_indicator_le (T : Finset RealInterval) (f : ℝ → ℂ
     rw [Finset.sum_eq_zero hz, norm_zero]
     exact norm_nonneg _
 
+open Classical in
 theorem measurable_badScaleInput (S : Finset RealInterval) {f : ℝ → ℂ}
     (hf : Measurable f) (I₀ : RealInterval) (k₀ ℓ : ℤ) :
     Measurable (badScaleInput S f I₀ k₀ ℓ) := by
   exact Finset.measurable_sum _ (fun J _ ↦ hf.indicator J.measurableSet_carrier)
 
+open Classical in
 theorem integrable_badScaleInput (S : Finset RealInterval) {f : ℝ → ℂ}
     (hf : Integrable f) (I₀ : RealInterval) (k₀ ℓ : ℤ) :
     Integrable (badScaleInput S f I₀ k₀ ℓ) := by
   exact integrable_finsetSum _ (fun J _ ↦ hf.indicator J.measurableSet_carrier)
 
+open Classical in
 theorem norm_badScaleInput_le
     {S : Finset RealInterval} (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ ℓ : ℤ)
     (hlam : Set.Pairwise (↑S : Set RealInterval) fun J K ↦
@@ -91,6 +99,7 @@ theorem norm_badScaleInput_le
     (x : ℝ) : ‖badScaleInput S f I₀ k₀ ℓ x‖ ≤ ‖f x‖ :=
   norm_sum_carrier_indicator_le _ f (badScaleCells_pairwiseDisjoint f I₀ k₀ ℓ hlam) x
 
+open Classical in
 /-- Parent closure of the finite source dyadic tree. This is purely
 geometric: every non-root interval has a strictly larger candidate parent
 of at most twice its length. -/
@@ -98,6 +107,7 @@ def HasDyadicParents (S : Finset RealInterval) (I₀ : RealInterval) : Prop :=
   ∀ J ∈ S, J ≠ I₀ → ∃ K ∈ S,
     J.carrier ⊆ K.carrier ∧ J.length < K.length ∧ K.length ≤ 2 * J.length
 
+open Classical in
 /-- Maximality and the actual dyadic parent give the upper mass bound
 on each selected bad interval. It is not an additional stopping hypothesis. -/
 theorem stoppingChild_mass_le
@@ -127,6 +137,7 @@ theorem stoppingChild_mass_le
       mul_le_mul havg hlen' K.length_pos.le (by positivity [intervalL1Average_nonneg f I₀])
     _ = _ := by ring
 
+open Classical in
 /-- The actual bad-scale input inherits the controlled averages on every
 interval of the constructed good collection. -/
 theorem badScaleInput_localMass_le
@@ -152,6 +163,7 @@ theorem badScaleInput_localMass_le
     _ ≤ _ := mul_le_mul_of_nonneg_right
       (goodCollection_averages_le hsub hI).1 I.length_pos.le
 
+open Classical in
 /-- A local window sees only children inside the window expanded by their
 maximum length. Disjointness then turns upper child masses into a local
 mass bound, without any pointwise bound on `f`. -/
@@ -204,7 +216,8 @@ theorem integral_window_sum_indicators_le
           setIntegral_le_integral (hf.indicator J.measurableSet_carrier).norm
             (Filter.Eventually.of_forall fun _ ↦ norm_nonneg _)
         _ = _ := by rw [show (fun x ↦ ‖J.carrier.indicator f x‖) =
-            J.carrier.indicator (fun x ↦ ‖f x‖) by funext x; exact norm_indicator_eq_indicator_norm f x]
+            J.carrier.indicator (fun x ↦ ‖f x‖) by
+              funext x; exact norm_indicator_eq_indicator_norm f x]
                     rw [integral_indicator J.measurableSet_carrier]
     _ ≤ ∑ J ∈ U, M * J.length := Finset.sum_le_sum (fun J hJ ↦ hmass J (hUsub hJ))
     _ = M * ∑ J ∈ U, J.length := (Finset.mul_sum _ _ _).symm
@@ -213,6 +226,7 @@ theorem integral_window_sum_indicators_le
         (fun J hJ K hK hne ↦ hdisj (hUsub hJ) (hUsub hK) hne) hE) hM
     _ = _ := by dsimp [E, RealInterval.length]; ring
 
+open Classical in
 /-- The source local-mass estimate (4.4), here on the precise unit window
 needed by the diagonal kernel. It follows from the actual stopping parents. -/
 theorem badScaleInput_unitWindowMass_le
@@ -237,6 +251,7 @@ theorem badScaleInput_unitWindowMass_le
   have hnonneg := intervalL1Average_nonneg f I₀
   nlinarith
 
+open Classical in
 theorem exists_mem_badScaleCells_of_ne_zero
     {S : Finset RealInterval} {f : ℝ → ℂ} {I₀ : RealInterval} {k₀ ℓ : ℤ} {x : ℝ}
     (hx : badScaleInput S f I₀ k₀ ℓ x ≠ 0) :
@@ -247,6 +262,7 @@ theorem exists_mem_badScaleCells_of_ne_zero
   intro J hJ
   exact indicator_of_notMem (fun hxJ ↦ hn ⟨J, hJ, hxJ⟩) f
 
+open Classical in
 /-- Different actual bad scales have disjoint spatial supports. -/
 theorem badScale_indices_eq_of_ne_zero
     {S : Finset RealInterval} (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ : ℤ)
@@ -265,12 +281,14 @@ theorem badScale_indices_eq_of_ne_zero
     rw [← (Finset.mem_filter.mp hJ).2, ← (Finset.mem_filter.mp hK).2, heq]
   exact (zpow_right_inj₀ (by norm_num : (0 : ℝ) < 2) (by norm_num : (2 : ℝ) ≠ 1)).mp hp
 
+open Classical in
 /-- The precise restricted input to an interval's bad-scale piece. -/
 noncomputable def intervalBadInput
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (I : RealInterval) : ℝ → ℂ :=
   I.centralThird.indicator (badScaleInput S f I₀ k₀ (scale I + 2 - s))
 
+open Classical in
 /-- There is no overlap multiplicity in the actual interval bad inputs,
 even across different dyadic scales. -/
 theorem intervalBadInput_unique_of_ne_zero
@@ -294,6 +312,7 @@ theorem intervalBadInput_unique_of_ne_zero
   · exact Set.disjoint_left.mp hdisj (I.centralThird_subset_carrier hi.1)
       (J.centralThird_subset_carrier hj.1)
 
+open Classical in
 /-- Pointwise no-loss packing for all actual restricted bad inputs. -/
 theorem sum_norm_intervalBadInput_le
     {S : Finset RealInterval} (f : ℝ → ℂ)
@@ -321,6 +340,7 @@ theorem sum_norm_intervalBadInput_le
     rw [Finset.sum_eq_zero (fun I hI ↦ by rw [hz I hI, norm_zero])]
     exact norm_nonneg _
 
+open Classical in
 /-- Exact no-loss mass packing for all actual interval bad inputs. -/
 theorem sum_intervalBadInput_mass_le
     {S : Finset RealInterval} {f : ℝ → ℂ} (hf : Integrable f)
@@ -343,6 +363,7 @@ theorem sum_intervalBadInput_mass_le
   exact integral_mono (integrable_finsetSum _ (fun I _ ↦ (hint I).norm)) hf.norm
     (sum_norm_intervalBadInput_le f I₀ k₀ s scale hlam N hN hlen)
 
+open Classical in
 /-- The same no-loss packing holds locally for an arbitrary collection of
 descendants, even when their parent intervals overlap across scales. -/
 theorem sum_intervalBadInput_mass_le_local

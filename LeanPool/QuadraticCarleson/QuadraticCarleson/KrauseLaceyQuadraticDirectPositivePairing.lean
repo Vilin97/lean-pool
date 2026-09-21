@@ -10,14 +10,14 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectAc
 # Positive structural reduction for one direct offset
 
 This file contains the part of the direct argument which is genuinely
-positive.  It replaces the supremum of partial tails by the finite sum of
-the absolute values of its localized pieces.  Consequently every positive
+positive. It replaces the supremum of partial tails by the finite sum of
+the absolute values of its localized pieces. Consequently every positive
 pairing estimate for the individual pieces (for instance the elementary
 kernel-size/Tonelli estimate) may be summed without any stopping-time or
 orthogonality input.
 
 The final theorem is deliberately formulated with the one-piece positive
-estimate as an argument.  This makes its use independent of which concrete
+estimate as an argument. This makes its use independent of which concrete
 kernel-size implementation supplies that estimate.
 -/
 
@@ -31,11 +31,13 @@ open KrauseLaceyQuadraticDirectAction
 open KrauseLaceyQuadraticDirectPartition
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for the interval indices of the positive pairing. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
-/-- Finite grouped inputs are integrable.  This is the input-side finiteness
+/-- Finite grouped inputs are integrable. This is the input-side finiteness
 needed to distribute the positive pairing over output intervals. -/
 theorem integrable_offsetGroupedInput
     (S : Finset RealInterval) (scale : RealInterval → ℤ) (f : L0Infinity)
@@ -47,7 +49,7 @@ theorem integrable_offsetGroupedInput
   have hsum : Integrable (∑ J ∈ T,
       I.centralThird.indicator ((smallestSelectedRegion S J).indicator f)) := by
     induction T using Finset.induction_on with
-    | empty => simpa using (integrable_zero : Integrable (0 : ℝ → ℂ))
+    | empty => simp
     | @insert J T hJ ih =>
         have hterm : Integrable
             (I.centralThird.indicator ((smallestSelectedRegion S J).indicator f)) :=
@@ -64,7 +66,7 @@ theorem integrable_offsetGroupedInput
   simpa only [T] using hsum'
 
 /-- A tail at a fixed cutoff is bounded by the positive sum of *all* its
-localized pieces.  In particular, no cost is paid for the number of possible
+localized pieces. In particular, no cost is paid for the number of possible
 cutoffs in the definition of `offsetTailMaximal`. -/
 theorem enorm_offsetLocalizedActionOn_le_sum_enorm_piece
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : ℝ → ℂ)
@@ -110,7 +112,7 @@ theorem offsetGroupedInput_eq_zero_of_notMem_centralThird
   intro J hJ
   simp [Set.indicator_of_notMem hx]
 
-/-- The elementary kernel-size estimate for one direct offset piece.  The
+/-- The elementary kernel-size estimate for one direct offset piece. The
 factor `8` is exactly the ratio between the parent length and the positive
 annular outer radius. -/
 theorem norm_offsetLocalizedPiece_le_mass_of_scale
@@ -193,7 +195,7 @@ theorem offsetTailMaximalOn_le_massMajorant_of_scale
       exact bot_le
 
 /-- The direct positive pairing estimate for one fixed offset and an
-arbitrary output subcollection.  The proof uses only the localized kernel
+arbitrary output subcollection. The proof uses only the localized kernel
 size bound, its support in `I`, and Tonelli for a finite sum. -/
 theorem lintegral_offsetTailMaximalOn_pairing_le_sum_local_averages
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : L0Infinity)
@@ -297,12 +299,13 @@ theorem lintegral_sum_enorm_piece_mul
       apply lintegral_finsetSum'
       intro I hI
       exact (integrable_krauseLaceyLocalizedPiece (scale I) I
-        (integrable_offsetGroupedInput S scale f I s)).aestronglyMeasurable.enorm.mul hh.enorm.aemeasurable
+        (integrable_offsetGroupedInput S scale f I s)).aestronglyMeasurable.enorm.mul
+          hh.enorm.aemeasurable
 
-/-- The exact positive structural pairing inequality.  The hypothesis is
+/-- The exact positive structural pairing inequality. The hypothesis is
 the elementary per-piece kernel-size/Tonelli estimate; its conclusion has
 the paper's mass times local-`L¹` average form and is valid for every finite
-subcollection `T`.  No decomposition, packing, or maximal-tail theorem is
+subcollection `T`. No decomposition, packing, or maximal-tail theorem is
 used in this reduction. -/
 theorem lintegral_offsetTailMaximalOn_mul_le_mass_average_sum
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : L0Infinity)
@@ -350,7 +353,7 @@ theorem integral_norm_offsetGroupedInput_le_carrier
   rw [← integral_indicator I.measurableSet_carrier, hsupp]
 
 /-- Fixed-offset mass is controlled by the disjoint-region masses which
-generated it.  This form is stable when the output family is replaced by an
+generated it. This form is stable when the output family is replaced by an
 arbitrary subcollection: the regions are still those of the ambient family
 `S`, rather than a newly formed partition. -/
 theorem integral_norm_offsetGroupedInput_le_sum_region_mass
@@ -392,7 +395,7 @@ theorem integral_norm_offsetGroupedInput_le_sum_region_mass
     _ = _ := by rfl
 
 /-- The preceding fixed-offset mass estimate summed over any retained output
-subcollection.  It is the mass-sum form used for a maximal exceptional root;
+subcollection. It is the mass-sum form used for a maximal exceptional root;
 the right side explicitly records every ambient smallest-region contribution,
 so changing `A` never changes the partition. -/
 theorem sum_integral_norm_offsetGroupedInput_le_sum_region_mass

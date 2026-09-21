@@ -10,8 +10,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticSmoothPr
 # Arithmetic for the seven separated frequency classes
 
 The direct quadratic proof separates integer output scales into seven
-residue classes.  In each class, imposing a lower scale cutoff selects an
-ordinary suffix of the natural-number index.  This file records that exact
+residue classes. In each class, imposing a lower scale cutoff selects an
+ordinary suffix of the natural-number index. This file records that exact
 finite identity independently of the analytic estimates.
 -/
 

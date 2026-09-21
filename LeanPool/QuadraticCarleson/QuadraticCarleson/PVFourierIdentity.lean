@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.PVFourier
 # Fourier transform of the canonical principal-value distribution
 
 This file closes the final uniqueness step in the Fourier characterization of
-`p.v. (1 / x)`.  The analytic distribution identities are proved in
+`p.v. (1 / x)`. The analytic distribution identities are proved in
 `PVFourier`; the required one-dimensional Schwartz antiderivative theorem is
 proved in `OddSchwartzAntiderivative`.
 -/

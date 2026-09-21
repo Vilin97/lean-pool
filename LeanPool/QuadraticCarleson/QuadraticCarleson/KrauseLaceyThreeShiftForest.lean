@@ -10,8 +10,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftLocaliz
 # Finite forests in one translated Krause--Lacey grid
 
 A finite collection of depth/address pairs may meet several depth-zero
-ancestors.  This file enlarges it, without changing the grid, to the union of
-the corresponding complete parent-closed trees.  Thus the concrete
+ancestors. This file enlarges it, without changing the grid, to the union of
+the corresponding complete parent-closed trees. Thus the concrete
 three-shift localization can be fed root by root into the finite stopping
 recursion.
 -/
@@ -24,8 +24,10 @@ namespace KrauseLaceyThreeShiftGrid
 open CalderonZygmundDyadicStopping
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for interval indices in this finite stopping construction. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- The depth-zero ancestor address of a depth/address pair. -/
@@ -207,7 +209,7 @@ theorem finiteOneShiftMultiscaleFamily_subset_completeForest
     exact ⟨n, Finset.mem_filter.mpr ⟨hn, hshift⟩, rfl⟩
   · exact hdepths depth hdepth
 
-/-- A simultaneous finite localization exists at every grid depth.  This
+/-- A simultaneous finite localization exists at every grid depth. This
 choice packages the fixed-scale theorem without changing any operator. -/
 theorem exists_finiteThreeShiftFamily_localization_all_depths
     (f : L0Infinity) (topScale : ℤ) :

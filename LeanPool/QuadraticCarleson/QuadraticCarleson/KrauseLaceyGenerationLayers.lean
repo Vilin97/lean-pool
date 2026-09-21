@@ -61,6 +61,7 @@ noncomputable def remainingIntervals (S : Finset RealInterval) : ℕ → Finset 
   | 0 => S
   | n + 1 => by classical exact remainingIntervals S n \ minimalLayer (remainingIntervals S n)
 
+/-- The minimal intervals remaining after the first `n` layers have been removed from `S`. -/
 noncomputable def generation (S : Finset RealInterval) (n : ℕ) : Finset RealInterval :=
   minimalLayer (remainingIntervals S n)
 
@@ -124,7 +125,7 @@ theorem exists_generation_of_mem {S : Finset RealInterval} {I : RealInterval}
     (hI : I ∈ S) : ∃ n < S.card, I ∈ generation S n := by
   classical
   by_contra hn
-  push_neg at hn
+  push Not at hn
   have hremain : ∀ n ≤ S.card, I ∈ remainingIntervals S n := by
     intro n
     induction n with

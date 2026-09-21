@@ -20,7 +20,8 @@ namespace QuadraticCarleson
 namespace KrauseLaceyLowFullOddReduction
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The kernel error obtained by replacing the unit quadratic phase by the
 constant phase on a consecutive full-odd dyadic block. -/
@@ -28,7 +29,7 @@ def finiteLowFullPhaseErrorKernel (j : ℤ) (n : ℕ) (t : ℝ) : ℂ :=
   (∑ r ∈ Finset.range n, (dyadicPsi (j + (r : ℤ)) t : ℂ)) *
     (phase (t ^ 2) - 1)
 
-/-- The finite low-block phase error is continuous.  This is made explicit
+/-- The finite low-block phase error is continuous. This is made explicit
 rather than left to automation: every dyadic amplitude is smooth, coercion
 from `ℝ` to `ℂ` is continuous, and finite sums and products preserve
 continuity. -/

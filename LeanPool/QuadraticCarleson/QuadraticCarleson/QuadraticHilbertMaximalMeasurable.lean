@@ -13,8 +13,8 @@ import Mathlib.Topology.Order.IsLUB
 # Measurability of the quadratic maximal truncation
 
 For every real quadratic modulation, the sharp truncation is continuous in
-its positive radius.  Hence its supremum over all positive real radii equals
-a supremum over one fixed countable dense family and is measurable.  The
+its positive radius. Hence its supremum over all positive real radii equals
+a supremum over one fixed countable dense family and is measurable. The
 argument applies to every measurable integrable input.
 -/
 
@@ -27,8 +27,11 @@ namespace QuadraticHilbertMaximalMeasurable
 open HilbertFiniteTruncationWeakOneOne
 
 
-noncomputable section
+noncomputable
+section
 
+/-- The translated input multiplied by the quadratic phase and divided by the integration
+variable. -/
 def quadraticHilbertIntegrand
     (lam : ℝ) (f : ℝ → ℂ) (x t : ℝ) : ℂ :=
   f (x - t) * phase (lam * t ^ 2) / (t : ℂ)
@@ -161,6 +164,8 @@ theorem countable_densePositiveRadii : densePositiveRadii.Countable :=
 theorem dense_densePositiveRadii : Dense densePositiveRadii :=
   (TopologicalSpace.exists_countable_dense {ε : ℝ // 0 < ε}).choose_spec.2
 
+/-- The supremum of truncated quadratic Hilbert norms over a countable dense set of positive
+radii. -/
 def countableQuadraticHilbertMaximalTruncation
     (lam : ℝ) (f : ℝ → ℂ) (x : ℝ) : ENNReal :=
   ⨆ ε : densePositiveRadii, ‖quadraticHilbertTrunc lam ε.1.1 f x‖ₑ

@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticResidueA
 # Finite scale and residue tails for the direct quadratic action
 
 This is the finite bookkeeping layer between the genuine direct action and
-the seven separated annular tail families.  The ambient family `S` remains
+the seven separated annular tail families. The ambient family `S` remains
 fixed in every definition; only `A` is filtered as an output family.
 -/
 
@@ -28,11 +28,13 @@ open KrauseLaceyQuadraticAnnularTail
 open KrauseLaceyQuadraticSmoothProjection
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for interval indices in the scale-tail decomposition. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
-/-- The literal output of one fixed integer scale.  Its smallest-region
+/-- The literal output of one fixed integer scale. Its smallest-region
 input is still formed from `S`, not from the output subcollection. -/
 def directScaleOutput
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : ℝ → ℂ)
@@ -97,7 +99,7 @@ theorem offsetOutputScaleLp_ae_eq_directScaleOutput
   exact offsetOutputScaleLp_ae_eq S A scale f k s
 
 /-- Exact finite recombination of a thresholded direct action by its actual
-output scales.  This needs no scale geometry: it is a finite fiberwise sum. -/
+output scales. This needs no scale geometry: it is a finite fiberwise sum. -/
 theorem offsetLocalizedActionOn_eq_sum_scaleOutputs
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : ℝ → ℂ)
     (ell s : ℤ) (x : ℝ) :
@@ -246,7 +248,7 @@ theorem sum_range_filter_eq_sum_sevenResidues_of_zero_outside
         exact hzero (residueScale r n) (by unfold residueScale; omega) hnN
 
 /-- On nonnegative scales, the literal length threshold is the cutoff at
-`max 0 (ell - 2)`.  This is the point where the physical-scale convention
+`max 0 (ell - 2)`. This is the point where the physical-scale convention
 `length = 2^(scale + 2)` enters the residue bookkeeping. -/
 theorem length_threshold_iff_scale_cutoff_of_geometry
     (S A : Finset RealInterval) (scale : RealInterval → ℤ)
@@ -366,7 +368,7 @@ theorem offsetLocalizedActionOn_eq_sum_range_scaleOutputs_of_geometry
       rfl
 
 /-- The physical threshold action is exactly the sum of its seven residue
-cutoffs.  No decomposition hypothesis is left for the caller. -/
+cutoffs. No decomposition hypothesis is left for the caller. -/
 theorem offsetLocalizedActionOn_eq_sum_seven_residueCutoffs_of_geometry
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : ℝ → ℂ)
     (ell s : ℤ) (N : ℕ) (x : ℝ)
@@ -406,7 +408,7 @@ theorem offsetLocalizedActionOn_eq_sum_seven_residueCutoffs_of_geometry
 
 /-- Once a thresholded direct action has been written as the finite sum of
 its seven residue cutoffs, the triangle inequality and the residue arithmetic
-give the desired seven-tail majorization.  The equality premise is deliberately
+give the desired seven-tail majorization. The equality premise is deliberately
 separate: it is the remaining finite `Nat` division/modulo reindexing bridge. -/
 theorem enorm_offsetLocalizedActionOn_le_sum_seven_tailMax_of_residue_decomposition
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : ℝ → ℂ)
@@ -448,7 +450,7 @@ theorem enorm_offsetLocalizedActionOn_le_sum_seven_tailMax_of_geometry
       S A scale f ell s N x hA hscale hnonneg hbound)
 
 /-- The genuine threshold maximal action is pointwise controlled by the same
-seven finite residue-tail maxima.  The fixed-threshold geometric bound is
+seven finite residue-tail maxima. The fixed-threshold geometric bound is
 uniform in the index of the supremum. -/
 theorem offsetTailMaximalOn_le_sum_seven_tailMax_of_geometry
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : ℝ → ℂ)

@@ -10,7 +10,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.SparseMaximalLp
 /-!
 # The finite sparse maximal weak `(1,1)` lemma
 
-This file develops the analytic core of paper Lemma `l:weak11sparse`.  It is
+This file develops the analytic core of paper Lemma `l:weak11sparse`. It is
 organized around the paper's two genuine measure-theoretic operations:
 excision of a maximal-function exceptional set and foliation by a measurable
 maximizing index.
@@ -32,7 +32,7 @@ theorem L0Infinity.integrable_finiteSparseProof (f : L0Infinity) : Integrable f 
     (Filter.Eventually.of_forall hC)
 
 /-- A measurable bounded-set indicator as a member of the paper's test
-function class.  The containing compact set is kept explicit so that no
+function class. The containing compact set is kept explicit so that no
 topological regularity of the set itself is needed. -/
 noncomputable def setIndicatorL0Infinity (s K : Set ℝ) (hs : MeasurableSet s)
     (hK : IsCompact K) (hsK : s ⊆ K) : L0Infinity where
@@ -63,7 +63,7 @@ theorem weakOneOneNorm_le_of_hasWeakOneOneBound
   · exact ⟨hC, h⟩
 
 /-- The finite maximum is almost everywhere equal to the maximum formed from
-measurable representatives of the locally integrable outputs.  This is the
+measurable representatives of the locally integrable outputs. This is the
 representative bridge needed before applying the measurable selector. -/
 theorem finiteMax_ae_eq_measurable_representatives
     {N : ℕ} (T : Fin N → TestOperator) (f : L0Infinity)
@@ -83,10 +83,10 @@ theorem finiteMax_ae_eq_measurable_representatives
   rw [hx j]
 
 /-- Exhausting a measurable superlevel set by compact intervals is enough to
-prove its distribution bound.  This is the direct level-set replacement for
+prove its distribution bound. This is the direct level-set replacement for
 the restricted weak-type dual characterization quoted in the paper. -/
 theorem mul_measure_level_le_of_closedBall
-    (u : ℝ → ℝ) (hu : Measurable u) {a : ℝ} (ha : 0 < a) (C : ℝ≥0∞)
+    (u : ℝ → ℝ) (hu : Measurable u) {a : ℝ} (C : ℝ≥0∞)
     (h : ∀ n : ℕ, ENNReal.ofReal a *
       volume ({x | a < u x} ∩ Metric.closedBall 0 n) ≤ C) :
     ENNReal.ofReal a * volume {x | a < u x} ≤ C := by
@@ -105,9 +105,9 @@ theorem mul_measure_level_le_of_closedBall
   rw [ENNReal.mul_iSup]
   exact iSup_le h
 
-/-- Two-stage maximal-function excision.  The constants are deliberately
+/-- Two-stage maximal-function excision. The constants are deliberately
 generous: after removing a level set of `M F` and a level set of `M 1_H`, at
-least half of the original finite-measure set remains.  The second removal
+least half of the original finite-measure set remains. The second removal
 is what ensures that every interval meeting the good set has small density
 of the first exceptional set. -/
 theorem centeredMaximal_excision
@@ -183,7 +183,7 @@ theorem centeredMaximal_excision
   have hdiff : E \ (H ∪ Hwide) = E \ (E ∩ (H ∪ Hwide)) := by
     ext x
     simp
-  rw [hdiff, measure_diff (inter_subset_left) (hE.inter (hH.union hHwide)).nullMeasurableSet
+  rw [hdiff, measure_sdiff (inter_subset_left) (hE.inter (hH.union hHwide)).nullMeasurableSet
     (ne_top_of_le_ne_top hEtop (measure_mono inter_subset_left))]
   apply ENNReal.le_sub_of_add_le_left
     (ne_top_of_le_ne_top hEtop (measure_mono inter_subset_left))
@@ -193,7 +193,7 @@ theorem centeredMaximal_excision
       exact (measure_mono inter_subset_right).trans hbad
     _ = volume E := ENNReal.add_halves _
 
-/-- A localized version of the sparse embedding.  Only intervals for which
+/-- A localized version of the sparse embedding. Only intervals for which
 the second local average is nonzero need a large major subset; this is the
 form used after restricting the testing function to one leaf of the
 measurable foliation. -/
@@ -318,7 +318,7 @@ theorem exists_mem_carrier_inter_of_localAverage_indicator_ne_zero
     (havg : localAverage p (G.indicator fun _ ↦ (1 : ℂ)) I ≠ 0) :
     ∃ x, x ∈ I.carrier ∧ x ∈ G := by
   by_contra hnone
-  push_neg at hnone
+  push Not at hnone
   have hzero : ∀ x ∈ I.carrier,
       ‖G.indicator (fun _ ↦ (1 : ℂ)) x‖ ^ p = 0 := by
     intro x hx
@@ -334,7 +334,7 @@ theorem exists_mem_carrier_inter_of_localAverage_indicator_ne_zero
   exact Real.zero_rpow (one_div_ne_zero hp.ne')
 
 /-- Outside the second exceptional set, every interval through the point has
-at most one eighth of its length in the first exceptional set.  The factor
+at most one eighth of its length in the first exceptional set. The factor
 four is exactly the uncentered-to-centered interval comparison. -/
 theorem interval_indicator_density_le_eighth_of_maximal_le
     (H : Set ℝ) (hH : MeasurableSet H) (I : RealInterval) {x : ℝ}
@@ -411,7 +411,7 @@ theorem sparseForm_le_eight_lintegral_off_exceptional
         (volume (E I)).toReal - (volume (E I ∩ H)).toReal := by
       dsimp only [E']
       rw [show E I \ H = E I \ (E I ∩ H) by ext y; simp]
-      exact MeasureTheory.measureReal_diff inter_subset_left ((hEmeas I).inter hH) hEfinite
+      exact MeasureTheory.measureReal_sdiff inter_subset_left ((hEmeas I).inter hH) hEfinite
     rw [hdiff]
     have hquarter := hEsize I
     norm_num at hquarter ⊢
@@ -489,7 +489,7 @@ theorem centeredMaximal_capped_rpow_lintegral_le
       simp only [nonpos_iff_eq_zero]
       have hempty : {x | t < g x} = ∅ := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         intro hx
         have hule : u x ≤ ENNReal.ofReal b := by
           by_cases hxD : x ∈ D
@@ -799,7 +799,7 @@ theorem finiteMaxRep_compact_level_bound
     (n : ℕ) (T : Fin (n + 1) → TestOperator) (A : ℝ)
     (hT : FiniteSparseMaximalHypothesis T A)
     {p r ε a : ℝ} (hp : 1 < p) (hp2 : p < 2) (hr : 1 < r)
-    (hpr : p < r) (hε : 0 < ε) (ha : 0 < a)
+    (hpr : p < r) (hε : 0 < ε)
     (f : L0Infinity) (K E : Set ℝ) (hK : IsCompact K)
     (hE : MeasurableSet E) (hEK : E ⊆ K)
     (hElevel : E ⊆ {x | a < measurableFiniteMaxRep T f (fun j ↦ hT.2.1 j f) x})
@@ -858,7 +858,7 @@ theorem finiteMaxRep_compact_level_bound
   have hHwide : MeasurableSet Hwide := measurableSet_lt measurable_const
     (measurable_centeredHardyLittlewoodMaximal (measurable_const.indicator hH))
   have hG : MeasurableSet G := hE.diff (hH.union hHwide)
-  have hGE : G ⊆ E := diff_subset
+  have hGE : G ⊆ E := sdiff_subset
   have hGhalf : volume E / 2 ≤ volume G := by
     simpa [mass, bE, F, H, Hwide, G] using
       centeredMaximal_excision F hF hmassTop hmassZero E hE hEzero hEtop
@@ -980,6 +980,8 @@ theorem inv_holderConjugate_add_inv {r : ℝ} (hr : 1 < r) :
     1 / holderConjugate r + 1 / r = 1 := by
   simpa [one_div, add_comm] using (holderConjugate_spec hr).inv_add_inv_eq_one
 
+/-- The explicit factor obtained by combining the finite sparse, Hölder, and Hardy–Littlewood
+estimates before simplification. -/
 noncomputable def finiteSparseRawFactor (p r : ℝ) : ℝ :=
   8 *
     ((4 : ℝ) ^ holderConjugate r *
@@ -1066,8 +1068,7 @@ theorem finiteSparse_common_normalization
   rw [hinv, ENNReal.rpow_one]
   have hcoef_norm : holderConjugate r * (-1 + holderConjugate r)⁻¹ * 4 =
       4 * holderConjugate r / (holderConjugate r - 1) := by
-    field_simp
-    <;> ring
+    field_simp; ring
   rw [hcoef_norm]
   rw [ENNReal.ofReal_rpow_of_nonneg (p := (holderConjugate r)⁻¹)
       hcoef (inv_nonneg.mpr hq.le)]
@@ -1104,7 +1105,7 @@ theorem finiteSparse_common_normalization
 
 /-- The constants generated by the two maximal-function excisions are
 controlled by the four-factor expression already optimized in
-`FiniteSparseMaximal`.  The numerical constant is deliberately coarse and
+`FiniteSparseMaximal`. The numerical constant is deliberately coarse and
 universal. -/
 theorem finiteSparseRawFactor_le
     {p r : ℝ} (hp : 1 < p) (hr : 1 < r) (hpr : p < r) (hr4 : r ≤ 4) :
@@ -1230,7 +1231,7 @@ theorem finiteMaxRep_compact_level_bound_normalized
     (n : ℕ) (T : Fin (n + 1) → TestOperator) (A : ℝ)
     (hT : FiniteSparseMaximalHypothesis T A)
     {p r ε a : ℝ} (hp : 1 < p) (hp2 : p < 2) (hr : 1 < r)
-    (hpr : p < r) (hε : 0 < ε) (ha : 0 < a)
+    (hpr : p < r) (hε : 0 < ε)
     (f : L0Infinity) (K E : Set ℝ) (hK : IsCompact K)
     (hE : MeasurableSet E) (hEK : E ⊆ K)
     (hElevel : E ⊆ {x | a < measurableFiniteMaxRep T f (fun j ↦ hT.2.1 j f) x})
@@ -1258,7 +1259,7 @@ theorem finiteMaxRep_compact_level_bound_normalized
     exact ne_of_lt (by simpa [mass] using hfhi)
   have hEtop : volume E ≠ ∞ :=
     ne_top_of_le_ne_top hK.measure_lt_top.ne (measure_mono hEK)
-  have hbase := finiteMaxRep_compact_level_bound n T A hT hp hp2 hr hpr hε ha
+  have hbase := finiteMaxRep_compact_level_bound n T A hT hp hp2 hr hpr hε
     f K E hK hE hEK hElevel hmassZero hEzero
   have hnorm := finiteSparse_common_normalization hp hr hpr mass (volume E)
     hmassZero hmassTop hEzero hEtop
@@ -1344,7 +1345,7 @@ theorem finiteMaxRep_compact_level_bound_optimized
     (n : ℕ) (T : Fin (n + 1) → TestOperator) (A : ℝ)
     (hT : FiniteSparseMaximalHypothesis T A)
     {p r ε a : ℝ} (hp : 1 < p) (hp2 : p < 2) (hr : 1 < r)
-    (hpr : p < r) (hr4 : r ≤ 4) (hε : 0 < ε) (ha : 0 < a)
+    (hpr : p < r) (hr4 : r ≤ 4) (hε : 0 < ε)
     (f : L0Infinity) (K E : Set ℝ) (hK : IsCompact K)
     (hE : MeasurableSet E) (hEK : E ⊆ K)
     (hElevel : E ⊆ {x | a < measurableFiniteMaxRep T f (fun j ↦ hT.2.1 j f) x})
@@ -1354,7 +1355,7 @@ theorem finiteMaxRep_compact_level_bound_optimized
         ((2 : ℝ) ^ 37 * (A + ε) * finiteSparseFactor (n + 1) p r) *
           ∫⁻ y, ‖f y‖ₑ := by
   have hhalf := finiteMaxRep_compact_level_bound_normalized n T A hT hp hp2 hr
-    hpr hε ha f K E hK hE hEK hElevel hmassZero hEzero
+    hpr hε f K E hK hE hEK hElevel hmassZero hEzero
   have hfactor := finiteSparse_normalized_factor_le (N := n + 1) hT.1 hp hr hpr hr4 hε
   have hmassTop : (∫⁻ y, ‖f y‖ₑ) ≠ ∞ := by
     exact ne_of_lt (hasFiniteIntegral_iff_enorm.mp
@@ -1448,7 +1449,7 @@ theorem sparseForm_eq_zero_of_ae_eq_zero
   simp [localAverage_one_eq_zero_of_ae_eq_zero hf I.1]
 
 /-- Zero input mass forces every member of a finite sparse-bounded family to
-vanish almost everywhere.  This treats the normalization-degenerate case
+vanish almost everywhere. This treats the normalization-degenerate case
 without dividing by the mass. -/
 theorem finiteMaxRep_ae_eq_zero_of_mass_zero
     {N : ℕ} (T : Fin N → TestOperator) (A : ℝ)
@@ -1519,7 +1520,7 @@ theorem finiteMaxRep_level_bound_optimized
           ∫⁻ y, ‖f y‖ₑ := by
   let u := measurableFiniteMaxRep T f (fun j ↦ hT.2.1 j f)
   have hu : Measurable u := measurable_measurableFiniteMaxRep T f _
-  apply mul_measure_level_le_of_closedBall u hu ha _
+  apply mul_measure_level_le_of_closedBall u hu _
   intro k
   let K : Set ℝ := Metric.closedBall 0 k
   let E : Set ℝ := {x | a < u x} ∩ K
@@ -1548,7 +1549,7 @@ theorem finiteMaxRep_level_bound_optimized
       rw [hEzero, mul_zero]
       exact bot_le
     · exact finiteMaxRep_compact_level_bound_optimized n T A hT hp hp2 hr hpr
-        hr4 hε ha f K E hK hE hEK hElevel hmass hEzero
+        hr4 hε f K E hK hE hEK hElevel hmass hEzero
 
 /-- Explicit universal constant delivered by the proof. -/
 noncomputable def finiteSparseMaximalUniversalConstant : ℝ :=
@@ -1652,8 +1653,6 @@ theorem finiteSparseMaximal_hasWeakOneOneBound
       have hsets : {x | a < finiteMax T f x} =ᵐ[volume]
           {x | a < measurableFiniteMaxRep T f hlocal x} := by
         filter_upwards [hae] with x hx
-        change (a < finiteMax T f x) =
-          (a < measurableFiniteMaxRep T f hlocal x)
         rw [hx]
       rw [hsets.measure_eq]
       simpa only [hlocal, Nat.cast_add, Nat.cast_one] using

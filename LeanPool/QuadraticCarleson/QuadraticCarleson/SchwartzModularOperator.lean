@@ -72,16 +72,19 @@ theorem lacunaryQuadraticCarlesonSchwartz_real_smul (a : ℝ) (f : 𝓢(ℝ, ℂ
 
 /-- A measurable operator defined on all Schwartz functions. -/
 structure SchwartzNonnegativeOperator where
+  /-- The measurable nonnegative function assigned to each Schwartz input. -/
   toFun : 𝓢(ℝ, ℂ) → ℝ → ℝ≥0∞
   measurable_toFun : ∀ f, Measurable (toFun f)
 
 instance : CoeFun SchwartzNonnegativeOperator (fun _ ↦ 𝓢(ℝ, ℂ) → ℝ → ℝ≥0∞) :=
   ⟨SchwartzNonnegativeOperator.toFun⟩
 
+/-- The lacunary quadratic Carleson operator on Schwartz inputs. -/
 noncomputable def lacunarySchwartzOperator : SchwartzNonnegativeOperator where
   toFun := lacunaryQuadraticCarlesonSchwartz
   measurable_toFun := measurable_lacunaryQuadraticCarlesonSchwartz
 
+/-- Compatibility of the operator with multiplication of its input by a positive real scalar. -/
 def SchwartzNonnegativeOperator.PositivelyHomogeneous (T : SchwartzNonnegativeOperator) : Prop :=
   ∀ a : ℝ, 0 < a → ∀ (f : 𝓢(ℝ, ℂ)) (x : ℝ),
     T (a • f) x = ENNReal.ofReal a * T f x
@@ -106,6 +109,7 @@ noncomputable def compactSchwartzToL0Infinity (f : 𝓢(ℝ, ℂ))
     (hf : HasCompactSupport (f : ℝ → ℂ)) (x : ℝ) :
     compactSchwartzToL0Infinity f hf x = f x := rfl
 
+/-- The set where a nonnegative Schwartz operator exceeds the given real level. -/
 def schwartzOperatorLevelSet (T : SchwartzNonnegativeOperator) (f : 𝓢(ℝ, ℂ))
     (α : ℝ) : Set ℝ := {x | ENNReal.ofReal α < T f x}
 
@@ -113,6 +117,7 @@ theorem measurableSet_schwartzOperatorLevelSet (T : SchwartzNonnegativeOperator)
     (f : 𝓢(ℝ, ℂ)) (α : ℝ) : MeasurableSet (schwartzOperatorLevelSet T f α) :=
   measurableSet_lt measurable_const (T.measurable_toFun f)
 
+/-- The integral of the Young function of the input norm divided by the level parameter. -/
 noncomputable def schwartzModularMass (Φ : YoungFunction) (f : 𝓢(ℝ, ℂ)) (α : ℝ) : ℝ :=
   ∫ x : ℝ, Φ (‖f x‖ / α)
 

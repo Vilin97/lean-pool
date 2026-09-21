@@ -49,7 +49,7 @@ theorem sum_active_aboveBase_length_le
     (hbase : ∀ I ∈ N, k₀ < scale I + 2 - s)
     (K : RealInterval) (hsub : ∀ I ∈ N, I.carrier ⊆ K.carrier) :
     (∑ I ∈ N, I.length) ≤ (2 : ℝ) ^ s * K.length := by
-  letI : Nonempty RealInterval := ⟨I₀⟩
+  let : Nonempty RealInterval := ⟨I₀⟩
   have hex (I : RealInterval) (hI : I ∈ N) :=
     exists_chargedCell_of_active_above_base f I₀ k₀ s scale hlam (hN hI)
       (hbase I hI) (hactive I hI)

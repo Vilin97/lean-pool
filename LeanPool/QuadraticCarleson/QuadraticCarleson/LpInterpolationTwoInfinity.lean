@@ -11,9 +11,9 @@ import Mathlib.MeasureTheory.Function.LpSpace.Basic
 # The special Marcinkiewicz interpolation step from `L²` to `L∞`
 
 This file develops the truncation argument used between the two endpoints in
-Krause--Lacey Proposition 4.1.  It is deliberately stated for an additive
+Krause--Lacey Proposition 4.1. It is deliberately stated for an additive
 operator on measurable vector-valued functions, rather than postulating a
-bounded operator on an `Lp` completion.  This is the interface satisfied by
+bounded operator on an `Lp` completion. This is the interface satisfied by
 the concrete localized integral operator in the project.
 -/
 
@@ -35,6 +35,7 @@ noncomputable def interpolationHigh (f : α → E) (a : ℝ) (x : α) : E :=
 noncomputable def interpolationLow (f : α → E) (a : ℝ) (x : α) : E :=
   if ‖f x‖ ≤ a then f x else 0
 
+omit [MeasurableSpace α] in
 lemma interpolationHigh_add_low (f : α → E) (a : ℝ) :
     interpolationHigh f a + interpolationLow f a = f := by
   funext x
@@ -42,12 +43,14 @@ lemma interpolationHigh_add_low (f : α → E) (a : ℝ) :
   · simp [interpolationHigh, interpolationLow, hx, not_le.mpr hx]
   · simp [interpolationHigh, interpolationLow, hx, le_of_not_gt hx]
 
+omit [MeasurableSpace α] in
 lemma norm_interpolationLow_le (f : α → E) {a : ℝ} (ha : 0 ≤ a) (x : α) :
     ‖interpolationLow f a x‖ ≤ a := by
   by_cases hx : ‖f x‖ ≤ a
-  · simpa [interpolationLow, hx]
+  · simp [interpolationLow, hx]
   · simp [interpolationLow, hx, ha]
 
+omit [MeasurableSpace α] in
 lemma enorm_interpolationHigh (f : α → E) (a : ℝ) (x : α) :
     ‖interpolationHigh f a x‖ₑ =
       if a < ‖f x‖ then ‖f x‖ₑ else 0 := by
@@ -80,7 +83,7 @@ variable {α E : Type*} [MeasurableSpace α] [NormedAddCommGroup E]
   {μ : Measure α}
 
 /-- The distributional estimate at the heart of the `L²`--`L∞`
-Marcinkiewicz interpolation argument.  No interpolation result is assumed:
+Marcinkiewicz interpolation argument. No interpolation result is assumed:
 the proof is the source truncation, the `L∞` endpoint on the low part, and
 Chebyshev applied to the high part. -/
 theorem measure_norm_operator_gt_le_twoInfinity_tail
@@ -105,7 +108,7 @@ theorem measure_norm_operator_gt_le_twoInfinity_tail
   have hlo (x : α) : ‖T lo x‖ ≤ t / 2 := by
     have h := hLinf lo ha (norm_interpolationLow_le f ha) x
     dsimp [a] at h
-    convert h using 1 <;> field_simp
+    convert h using 1; field_simp
   have hdecomp : T f = T hi + T lo := by
     rw [← hadd hi lo]
     congr 1
@@ -125,7 +128,7 @@ theorem measure_norm_operator_gt_le_twoInfinity_tail
   have hsets : {x | ENNReal.ofReal ((t / 2) ^ 2) ≤ ‖T hi x‖ₑ ^ (2 : ℕ)} =
       {x | t / 2 ≤ ‖T hi x‖} := by
     ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _) 2]
     rw [ENNReal.ofReal_le_ofReal_iff (sq_nonneg _)]
     exact sq_le_sq₀ (by positivity) (norm_nonneg _)
@@ -147,7 +150,7 @@ variable {α E : Type*} [MeasurableSpace α] [NormedAddCommGroup E]
   {μ : Measure α}
 
 /-- Exact evaluation of the integrated high-tail term in the special
-`L²`--`L∞` interpolation argument.  The proof applies layer cake to the
+`L²`--`L∞` interpolation argument. The proof applies layer cake to the
 measure having density `‖f‖²`; this is the Tonelli step in the usual proof. -/
 theorem twoInfinity_high_tail_layercake
     (f : α → E) (hf : StronglyMeasurable f)
@@ -225,7 +228,7 @@ theorem twoInfinity_high_tail_layercake
                   ‖f x‖ ^ ((2 : ℝ) + (q - 2)) :=
                 (Real.rpow_add_of_nonneg (norm_nonneg _)
                   (by norm_num) (by linarith)).symm
-              _ = ‖f x‖ ^ q := by congr 1 <;> ring
+              _ = ‖f x‖ ^ q := by congr 1; ring
       _ = ENNReal.ofReal ((2 * MTop) ^ (q - 2)) *
           ENNReal.ofReal (‖f x‖ ^ q) :=
         ENNReal.ofReal_mul (Real.rpow_nonneg (by positivity) _)
@@ -244,10 +247,10 @@ private lemma twoInfinity_weight_identity {q t : ℝ} (ht : 0 < t) :
     (t / 2) ^ 2 * (4 * t ^ (q - 3)) = t ^ 2 * t ^ (q - 3) := by ring
     _ = t ^ (2 : ℝ) * t ^ (q - 3) := by rw [Real.rpow_two]
     _ = t ^ (2 + (q - 3)) := (Real.rpow_add ht 2 (q - 3)).symm
-    _ = t ^ (q - 1) := by congr 1 <;> ring
+    _ = t ^ (q - 1) := by congr 1; ring
 
 /-- Marcinkiewicz interpolation between strong `L²` and pointwise `L∞`,
-specialized to the finite exponents `q > 2`.  The conclusion is stated for
+specialized to the finite exponents `q > 2`. The conclusion is stated for
 the `q`-th power integral, with the explicit constant produced by the direct
 layer-cake proof. -/
 theorem lintegral_norm_rpow_operator_le_twoInfinity

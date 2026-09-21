@@ -13,8 +13,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyPositiveCorrelati
 # Finite offset grouping for the direct quadratic action
 
 The direct proof groups the input assigned to the smallest selected interval
-by the gap between the output kernel scale and the input scale.  This file
-records only finite, exact identities.  No maximal estimate or frequency
+by the gap between the output kernel scale and the input scale. This file
+records only finite, exact identities. No maximal estimate or frequency
 projection is used here.
 -/
 
@@ -28,12 +28,15 @@ open KrauseLaceyBadScale KrauseLaceyQuadraticDirectPartition
 open KrauseLaceyStoppingExtraction KrauseLaceyStoppingRecursion
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical decidable equality for the finite interval families in the direct quadratic
+action. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- The selected intervals at or above the source's fixed lower length
-cutoff.  The direct smallest-region partition is formed from this active
+cutoff. The direct smallest-region partition is formed from this active
 family: intervals below the cutoff never occur in any admissible tail and
 must not create artificial smaller regions. -/
 def activeHighCollection (ell₀ : ℤ) (S : Finset RealInterval) :
@@ -66,7 +69,7 @@ theorem localizedTailAction_activeHighCollection
   have hnotell : ¬(2 : ℝ) ^ ell ≤ I.length := by
     intro hIell
     exact hnot0 (hp.trans hIell)
-  rw [if_neg hnotell]
+  rw [ite_eq_right hnotell]
 
 /-- Hence the genuine maximal operator is exactly the one obtained from the
 active high-scale selected collection. -/
@@ -132,9 +135,9 @@ def offsetTailMaximal
   ⨆ ell : {ell : ℤ // ell₀ ≤ ell},
     ‖offsetLocalizedAction S scale f ell.1 s x‖ₑ
 
-/-- The fixed-offset action with two distinct collections.  `S` is the
+/-- The fixed-offset action with two distinct collections. `S` is the
 ambient selected family which defines the smallest-region partition, while
-`A` is the subcollection of output intervals retained in the action.  This
+`A` is the subcollection of output intervals retained in the action. This
 distinction is essential for the regular/exceptional split in the direct
 proof: passing to a subcollection must not repartition the input. -/
 def offsetLocalizedActionOn
@@ -153,7 +156,7 @@ def offsetTailMaximalOn
     ‖offsetLocalizedActionOn S A scale f ell.1 s x‖ₑ
 
 /-- If every ambient selected scale is nonnegative, then an output interval
-whose scale lies below `s - 2` has no input at offset `s`.  Such intervals
+whose scale lies below `s - 2` has no input at offset `s`. Such intervals
 must be removed before invoking the frequency-radius estimate, rather than
 being burdened with a false gap hypothesis. -/
 theorem offsetGroupedInput_eq_zero_of_scale_add_two_sub_neg
@@ -175,7 +178,7 @@ theorem offsetGroupedInput_eq_zero_of_scale_add_two_sub_neg
   omega
 
 /-- The output intervals on which the offset-`s` frequency-radius condition
-is valid.  All omitted outputs have zero grouped input under nonnegative
+is valid. All omitted outputs have zero grouped input under nonnegative
 ambient scales. -/
 def relevantOffsetOutputs (A : Finset RealInterval)
     (scale : RealInterval → ℤ) (s : ℤ) : Finset RealInterval :=
@@ -278,7 +281,7 @@ theorem memLp_two_offsetGroupedInput
         2 volume := by
     induction T using Finset.induction_on with
     | empty =>
-        simpa using (MemLp.zero : MemLp (0 : ℝ → ℂ) 2 volume)
+        simp
     | @insert J T hJ ih =>
         have hterm : MemLp
             (I.centralThird.indicator
@@ -299,7 +302,7 @@ theorem memLp_two_offsetGroupedInput
   exact hsum'
 
 /-- The scale of a selected subinterval cannot exceed the scale of its
-selected parent.  This is the exact monotonicity supplied by the length
+selected parent. This is the exact monotonicity supplied by the length
 identity, not an additional dyadic assumption. -/
 theorem scale_le_of_carrier_subset
     {S : Finset RealInterval} {scale : RealInterval → ℤ}
@@ -328,7 +331,7 @@ theorem offset_nonneg_of_selectedSubinterval
 
 /-- For a nonnegative offset, the interval-dependent grouped input is
 exactly the central-third restriction of the global smallest-region scale
-piece `b_{j-s}`.  This is the bridge from the finite reconstruction to the
+piece `b_{j-s}`. This is the bridge from the finite reconstruction to the
 one-piece energy estimate. -/
 theorem offsetGroupedInput_eq_indicator_smallestScaleInput
     {S : Finset RealInterval}
@@ -505,7 +508,7 @@ theorem localizedPiece_eq_sum_offset
       symm
       apply Finset.sum_eq_zero
       intro J hJ
-      simp only [Set.indicator_of_notMem ht, Pi.zero_apply]
+      simp only [Set.indicator_of_notMem ht]
   calc
     krauseLaceyLocalizedPiece 1 (scale I) I f x =
         ∫ t, κ (x - t) * I.centralThird.indicator f t := by
@@ -540,7 +543,7 @@ theorem localizedPiece_eq_sum_offset
       rw [hcentral s t]
 
 /-- The localized tail action decomposes exactly into the finitely many
-offset-grouped quadratic pieces.  The physical cutoff is unchanged. -/
+offset-grouped quadratic pieces. The physical cutoff is unchanged. -/
 theorem localizedTailAction_eq_sum_offsetLocalizedAction
     {S : Finset RealInterval} (scale : RealInterval → ℤ) (f : L0Infinity)
     (ell : ℤ) (hlam : Set.Pairwise (↑S : Set RealInterval) fun I J ↦
@@ -576,7 +579,7 @@ theorem localizedTailAction_eq_sum_offsetLocalizedAction
       exact Finset.sum_comm
 
 /-- The same exact decomposition with the paper's natural nonnegative offset
-range.  The scale/length relation proves that all negative offset groups
+range. The scale/length relation proves that all negative offset groups
 vanish, so no analytic estimate is hidden in this truncation. -/
 theorem localizedTailAction_eq_sum_nonnegativeOffsetLocalizedAction
     {S : Finset RealInterval} (scale : RealInterval → ℤ) (f : L0Infinity)

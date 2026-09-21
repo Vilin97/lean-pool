@@ -12,8 +12,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseReflection
 # Finite three-grid reduction for Hardy--Littlewood sparse domination
 
 Finite rational-radius maxima on the support of the testing input reduce
-to three actual finite laminar interval maxima.  The radius enlargement
-costs eight, independently of the number of radii.  Monotone convergence
+to three actual finite laminar interval maxima. The radius enlargement
+costs eight, independently of the number of radii. Monotone convergence
 then permits a finite approximation to the full positive pairing.
 -/
 
@@ -26,11 +26,15 @@ open KrauseLaceyThreeShiftGrid KrauseLaceySharpSmoothAdapter
 open HardyLittlewoodBoundaryControl KrauseLaceySparseReflection
 
 
-noncomputable section
+noncomputable
+section
 
+/-- The supremum of the norm averages over members of `S` containing the evaluation point. -/
 def finiteIntervalMaximal (S : Finset RealInterval) (f : ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ⨆ I ∈ S, ⨆ (_ : x ∈ I.carrier), ENNReal.ofReal (localAverage 1 f I)
 
+/-- The centered maximal average of the norm of `f`, restricted to the finite set of positive
+rational radii `s`. -/
 def finiteCenteredMaximal (s : Finset PositiveRational) (f : ℝ → ℂ) (x : ℝ) : ℝ≥0∞ :=
   ⨆ q ∈ s, centeredAverage (q : ℝ) (fun y ↦ ‖f y‖ₑ) x
 
@@ -71,6 +75,7 @@ theorem centeredAverage_le_eight_intervalAverage
       mul_le_mul' le_rfl hlen'
     _ = _ := by ring
 
+/-- The dyadic grid scale chosen to cover a ball of positive rational radius `q`. -/
 def radiusGridScale (q : PositiveRational) : ℤ :=
   dyadicFloorScale (q : ℝ) (by exact_mod_cast q.property) + 2
 
@@ -90,6 +95,7 @@ theorem radiusGridScale_bounds (q : PositiveRational) :
   · nlinarith [lt_dyadicCeilRadius (q : ℝ) hp]
   · nlinarith [dyadicCeilRadius_le_two_mul (q : ℝ) hp]
 
+/-- The largest grid scale associated with the radii in `s`, with value zero when `s` is empty. -/
 def radiusTopScale (s : Finset PositiveRational) : ℤ :=
   if hs : s.Nonempty then s.sup' hs radiusGridScale else 0
 
@@ -98,6 +104,7 @@ theorem radiusGridScale_le_top {s : Finset PositiveRational} {q : PositiveRation
   rw [radiusTopScale, dite_eq_left ⟨q, hq⟩]
   exact Finset.le_sup' radiusGridScale hq
 
+/-- The natural-number depth of the radius scale below the common top scale. -/
 def radiusDepth (s : Finset PositiveRational) (q : PositiveRational) : ℕ :=
   (radiusTopScale s - radiusGridScale q).toNat
 
@@ -119,7 +126,7 @@ theorem exists_mem_centralThird_of_fixedScaleInput_eq
   exact Set.indicator_of_notMem (fun hxi ↦ h ⟨I, hI, hxi⟩) g
 
 /-- Every finite radius maximum, when tested against a compactly supported
-function, is controlled by three finite laminar interval maxima.  No
+function, is controlled by three finite laminar interval maxima. No
 sparseness or stopping estimate is assumed in this geometric reduction. -/
 theorem exists_three_laminar_maxima_domination
     (s : Finset PositiveRational) (g : L0Infinity) :
@@ -217,7 +224,7 @@ theorem measurable_finiteIntervalMaximal (S : Finset RealInterval) (f : ℝ → 
   funext x
   by_cases hx : x ∈ I.carrier <;> simp [hx]
 
-/-- Normalized averages increase with the exponent.  The proof uses the
+/-- Normalized averages increase with the exponent. The proof uses the
 probability measure obtained by dividing the interval measure by its length. -/
 theorem localAverage_one_le (g : L0Infinity) (I : RealInterval) {p : ℝ} (hp : 1 ≤ p) :
     localAverage 1 g I ≤ localAverage p g I := by
@@ -259,7 +266,7 @@ theorem isSparse_empty : IsSparse (1 / 4) (∅ : Set RealInterval) := by
     exact I.2.elim
 
 /-- A finite laminar stopping theorem transfers to the full centered
-operator.  Three grids cost `3`, the radius enclosure costs `8`, and
+operator. Three grids cost `3`, the radius enclosure costs `8`, and
 selecting a finite approximation to half the pairing costs `2`. -/
 theorem hasSparseOneOneBound_centered_of_finite_laminar
     {K : ℝ}

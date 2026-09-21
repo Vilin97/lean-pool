@@ -25,8 +25,10 @@ open KrauseLaceyQuadraticDirectOffsetEnergy
 open KrauseLaceyQuadraticDirectPositivePairing
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for interval indices in the scale-energy decomposition. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- One genuine localized output, represented in `L²`. -/

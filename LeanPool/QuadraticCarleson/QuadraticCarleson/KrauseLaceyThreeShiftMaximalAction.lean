@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftAction
 
 The same three localization families work for every physical lower cutoff.
 Consequently the maximal finite global positive-half tail is pointwise bounded
-by the sum of the three genuine localized maximal tail operators.  This is the
+by the sum of the three genuine localized maximal tail operators. This is the
 maximal-operator form of the deterministic three-grid reduction.
 -/
 
@@ -24,7 +24,8 @@ namespace KrauseLaceyThreeShiftGrid
 open KrauseLaceyStoppingRecursion
 
 
-noncomputable section
+noncomputable
+section
 
 /-- A finite positive-half global tail, with the paper's physical lower
 length cutoff. -/
@@ -53,7 +54,7 @@ theorem measurable_finitePositiveGlobalTail
   intro depth hdepth
   by_cases hcut : (2 : ℝ) ^ ell ≤
       (2 : ℝ) ^ (topScale - (depth : ℤ) + 2)
-  · simp only [if_pos hcut]
+  · simp only [ite_eq_left hcut]
     have ha : Continuous (positiveDyadicAmplitude (topScale - (depth : ℤ))) :=
       continuous_iff_continuousAt.mpr fun t ↦
         (hasDerivAt_positiveDyadicAmplitude (topScale - (depth : ℤ)) t).continuousAt
@@ -73,7 +74,7 @@ theorem measurable_finitePositiveGlobalTail
         (hf.comp measurable_snd)
     simpa only [Function.comp_def] using
       hprod.stronglyMeasurable.integral_prod_right'.measurable
-  · simp only [if_neg hcut]
+  · simp only [ite_eq_right hcut]
     exact measurable_const
 
 theorem measurable_finitePositiveGlobalTailMaximal

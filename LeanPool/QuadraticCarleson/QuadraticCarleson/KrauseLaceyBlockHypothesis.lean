@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryMiddleSparseAdapter
 This file records the precise output that the analytic Krause--Lacey branch
 must supply for the already-constructed finite-radius test operators, and
 proves that it gives the abstract finite-family hypothesis used by the
-logarithmic sparse-maximal lemma.  It is deliberately below the desired weak
+logarithmic sparse-maximal lemma. It is deliberately below the desired weak
 endpoint: it asks only for the individual uniform sparse `(1,p)` estimate.
 -/
 
@@ -25,11 +25,12 @@ open KrauseLaceyFiniteRadiusAdapter LacunaryMiddleSparseAdapter
 open LacunaryMiddleRange
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Uniform individual-operator form of the degree-two Krause--Lacey sparse
 estimate, restricted to the finite-radius operators used in the limiting
-argument.  The constant is independent of modulation and of the finite set
+argument. The constant is independent of modulation and of the finite set
 of truncation radii. -/
 def HasUniformFiniteRadiusQuadraticSparseBound (A : ℝ) : Prop :=
   0 ≤ A ∧ ∀ (lam : ℝ), lam ≠ 0 → ∀ s : Finset

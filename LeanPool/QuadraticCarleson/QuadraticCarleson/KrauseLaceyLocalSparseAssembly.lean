@@ -13,17 +13,17 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftMaximal
 # Local assembly for the Krause--Lacey sparse argument
 
 This module collects the verified *local* ingredients, without making a
-global standard/nonstandard classification assumption.  At one stopping
+global standard/nonstandard classification assumption. At one stopping
 node, the constructed children are `1 / 4`-sparse, the remaining collection
 has the source's bounded averages, and the full localized maximal action
-satisfies the exact recursive inequality.  Independently, any selected
+satisfies the exact recursive inequality. Independently, any selected
 subcollection of the nonstandard part of that good collection has the
 physical-suffix `L²`, `L¹`, and interpolated pairing estimates.
 
 The only additional input in the interpolated conclusion is the genuinely
-separate local `p`-mass estimate for the test function.  It is deliberately
+separate local `p`-mass estimate for the test function. It is deliberately
 left visible rather than being replaced by a purported local oscillatory
-estimate.  In particular, the physical cutoff has the source orientation
+estimate. In particular, the physical cutoff has the source orientation
 `ell ≥ k₀ + s` throughout.
 -/
 
@@ -38,12 +38,12 @@ open KrauseLaceyBadScale KrauseLaceyStoppingExtraction KrauseLaceyStoppingRecurs
 attribute [local instance] Classical.propDecidable
 
 /-- One fully concrete local stopping step together with every currently
-verified estimate for its good nonstandard subcollection.  The parameter
+verified estimate for its good nonstandard subcollection. The parameter
 `G` and hypothesis `hgpmass` are precisely the separate local `p`-mass
 input needed by the threshold interpolation argument; no whole-good-part
 analytic estimate is assumed.
 
-The first recursive term remains the actual good-collection pairing.  Its
+The first recursive term remains the actual good-collection pairing. Its
 replacement by the desired sparse form is exactly the remaining local
 oscillatory estimate in the Krause--Lacey proof. -/
 theorem local_good_nonstandard_sparse_stopping_step
@@ -113,7 +113,7 @@ theorem local_good_nonstandard_sparse_stopping_step
 
 /-- The finite positive global tail is reduced, with no change in its
 physical lower cutoff, to the three localized maximal tails that feed the
-local stopping theorem above.  This reduction contains no classifier. -/
+local stopping theorem above. This reduction contains no classifier. -/
 theorem exists_three_shift_localized_tail_reduction
     (f : L0Infinity) (k₀ s topScale : ℤ) (depths : Finset ℕ) (maxDepth : ℕ)
     (hdepths : ∀ depth ∈ depths, depth ≤ maxDepth) :

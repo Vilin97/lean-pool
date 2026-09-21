@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.CounterexampleOperatorAction
 # The oscillatory packet sum in the negative endpoint example
 
 This file bounds the contribution of the packets to the left of an admissible
-observation point.  The exact lower edge of the paper's exponent window turns
+observation point. The exact lower edge of the paper's exponent window turns
 the two-fold oscillatory estimate into a geometric series.
 -/
 
@@ -170,7 +170,7 @@ private theorem oscillatory_packet_term_norm_le
           field_simp
 
 /-- The packets with indices `1 ≤ j ≤ k` are in the oscillatory regime at
-`x = k + τ`.  The exact lower exponent-window inequality gives geometric
+`x = k + τ`. The exact lower exponent-window inequality gives geometric
 decay as `j` moves left from `k`; after the counterexample normalization their
 total contribution is `O(1 / (N A²))`, uniformly in the witness `(k,n)`.
 

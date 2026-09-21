@@ -20,7 +20,7 @@ noncomputable def generationIndex (S : Finset RealInterval) (I : RealInterval) :
 
 theorem generationIndex_spec {S : Finset RealInterval} {I : RealInterval} (hI : I ∈ S) :
     generationIndex S I < S.card ∧ I ∈ generation S (generationIndex S I) := by
-  simp only [generationIndex, dif_pos hI]
+  simp only [generationIndex, dite_eq_left hI]
   exact Classical.choose_spec (exists_generation_of_mem hI)
 
 theorem generationIndex_eq_of_mem {S : Finset RealInterval} {I : RealInterval} {n : ℕ}

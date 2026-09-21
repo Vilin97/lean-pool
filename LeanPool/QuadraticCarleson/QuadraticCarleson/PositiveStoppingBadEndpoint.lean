@@ -84,6 +84,7 @@ theorem lintegral_norm_le_full_orlicz (f : ℝ → ℂ) :
     (le_mul_of_one_le_right (norm_nonneg _)
       (PositiveEndpointOptimization.one_le_paperLog_one (norm_nonneg _)))
 
+/-- The stopping bad-part endpoint constant combining the exceptional-set, low, and high bounds. -/
 noncomputable def stoppingBadOscillatoryConstant : ℝ≥0∞ :=
   5 + 2 * fullLowEndpointConstant + 4 * fullHighEndpointConstant
 

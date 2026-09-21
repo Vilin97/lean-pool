@@ -65,7 +65,7 @@ theorem angularQuadraticCorrelation_norm_le_split
         (2 * (μ * y - lam * x)) (lam * x ^ 2 - μ * y ^ 2)
         l r hlr hp hp' hδ hP hQ hbound hbound'
 
-/-- A monotone-slope estimate on a normalized interval.  The curvature bound
+/-- A monotone-slope estimate on a normalized interval. The curvature bound
 is precisely the one supplied by nearly equal modulations. -/
 theorem angularQuadraticCorrelation_norm_le_four_div
     (lam μ x y l r : ℝ) (hlr : l ≤ r) (hlen : r - l ≤ 1)

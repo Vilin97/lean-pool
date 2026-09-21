@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyZeroPhaseLowContr
 
 This file gives the exact finite-sum identities needed to separate the
 all-low part of a quadratic suffix from the already controlled positive-scale
-part.  The identities introduce no analytic hypothesis or estimate.
+part. The identities introduce no analytic hypothesis or estimate.
 -/
 
 open Function MeasureTheory Set
@@ -24,7 +24,8 @@ open KrauseLaceyFullDyadicReflection
 open KrauseLaceyZeroPhaseLowControl
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Number of consecutive scales starting at `j` that end immediately before
 the positive-scale block beginning at scale `1`. -/
@@ -61,7 +62,7 @@ theorem finiteFullDyadicTail_add
 
 /-- Splitting the available scale interval at `L ≤ N` bounds its moving
 suffix maximum by the two suffix maxima on the resulting consecutive
-subintervals.  The estimate has no dependence on either cardinality. -/
+subintervals. The estimate has no dependence on either cardinality. -/
 theorem coe_finiteFullDyadicSuffixMaxNNNorm_le_split
     (lam : ℝ) (j : ℤ) {N L : ℕ} (hLN : L ≤ N)
     (f : ℝ → ℂ) (x : ℝ) :
@@ -111,7 +112,7 @@ theorem coe_finiteFullDyadicSuffixMaxNNNorm_le_split
         exact le_add_left le_rfl
 
 /-- In the crossing case, choose the split length so that the second block
-starts at dyadic scale `1`.  The first block is then controlled entirely by
+starts at dyadic scale `1`. The first block is then controlled entirely by
 the phase-zero Hilbert term and the common maximal-function errors. -/
 theorem coe_finiteFullDyadicSuffixMaxNNNorm_one_le_lowControl_add_high
     {j : ℤ} {N L : ℕ} (hLN : L ≤ N) (hscale : j + (L : ℤ) = 1)

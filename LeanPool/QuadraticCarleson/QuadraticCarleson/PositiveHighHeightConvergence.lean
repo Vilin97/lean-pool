@@ -32,7 +32,8 @@ theorem ae_highHeightMajorant_lt_top (B : ℕ) {b : ℝ → ℂ} (hb : MemLp b 2
   have hnorm := (memLp_highHeightMajorant B hb).eLpNorm_lt_top
   have hsq : (∫⁻ x, highHeightMajorant B b x ^ 2) < ∞ := by
     simpa only [eLpNorm_two_sq_lintegral _
-      (measurable_highHeightMajorant B hb).aestronglyMeasurable, enorm_eq_self] using ENNReal.pow_lt_top (n := 2) hnorm
+      (measurable_highHeightMajorant B hb).aestronglyMeasurable, enorm_eq_self] using
+        ENNReal.pow_lt_top (n := 2) hnorm
   have ha := ae_lt_top ((measurable_highHeightMajorant B hb).pow_const 2) hsq.ne
   filter_upwards [ha] with x hx
   simpa only [ENNReal.pow_lt_top_iff, OfNat.ofNat_ne_zero, or_false] using hx

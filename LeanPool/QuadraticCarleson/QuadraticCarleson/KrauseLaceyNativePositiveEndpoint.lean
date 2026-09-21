@@ -12,8 +12,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.LacunaryEndpointSmoothResolv
 # The native positive-suffix route to the lacunary endpoint
 
 This interface records the two conditional entrances to the positive
-Krause--Lacey argument.  A one-node good-part estimate yields sparse control
-of each concrete localized shifted tail.  Independently, the native unit
+Krause--Lacey argument. A one-node good-part estimate yields sparse control
+of each concrete localized shifted tail. Independently, the native unit
 positive-suffix sparse estimate feeds the proved annular, dilation, and
 principal-value adapters.
 -/

@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.FiniteSparseMaximalProof
 
 Principal intervals are constructed by descending-length finite induction.
 After selecting a longest interval, retain only intervals outside it or with
-average more than ten times its average.  This gives both a covering estimate
+average more than ten times its average. This gives both a covering estimate
 and strict average separation of every nested pair of selected intervals.
 The actual maximal stopping children therefore supply the sparse major sets.
 -/
@@ -25,14 +25,17 @@ namespace QuadraticCarleson.FiniteLaminarMaximalSparse
 open KrauseLaceyStoppingExtraction
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Properly nested intervals in the family have norm averages separated by a factor greater
+than ten. -/
 def AverageSeparated (f : ℝ → ℂ) (R : Finset RealInterval) : Prop :=
   ∀ I ∈ R, ∀ J ∈ R, I ≠ J → J.carrier ⊆ I.carrier →
     10 * intervalL1Average f I < intervalL1Average f J
 
 /-- An actual principal family, together with its covering and average
-separation invariants.  No sparse or stopping-tree existence is assumed. -/
+separation invariants. No sparse or stopping-tree existence is assumed. -/
 theorem exists_principal_family (S : Finset RealInterval) (f : ℝ → ℂ)
     (hlam : Set.Pairwise (↑S : Set RealInterval) fun I J ↦
       I.carrier ⊆ J.carrier ∨ J.carrier ⊆ I.carrier ∨ Disjoint I.carrier J.carrier) :

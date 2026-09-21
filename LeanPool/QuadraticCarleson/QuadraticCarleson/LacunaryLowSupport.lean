@@ -15,7 +15,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzOperator
 # Support vanishing in the lacunary low branch
 
 This file proves the support observation used to discard atom scales above
-the paper's middle range.  With the project's concrete cutoff the resulting
+the paper's middle range. With the project's concrete cutoff the resulting
 constant is stronger than the unspecified source constant: a low kernel at
 modulation `2^m` cannot connect an atom interval of length in scale `j` to a
 point outside its fivefold dilation when `m + 2j > 2B`.
@@ -160,7 +160,7 @@ theorem norm_setIntegral_paperLowCZKernel_levelAtom_le_dyadic
         (dyadicModulation_pos m).ne' B hf hAk hR hx3)
       (LowKernelLevelSummation.setIntegral_levelAtom_eq_zero k z R)
 
-/-- Quantitative consequence of the normalized support annulus.  This is the
+/-- Quantitative consequence of the normalized support annulus. This is the
 squared form of `R sqrt |lambda| < 2^(B-1)`. -/
 theorem four_mul_abs_mul_length_sq_lt
     {lam : ℝ} (hlam : lam ≠ 0) (B : ℕ)
@@ -236,7 +236,7 @@ theorem paperLowCZKernel_eq_zero_of_mem_scale_tooLarge
   exact paperLowCZKernel_eq_zero_of_tooLarge B c m j hlarge hR hI.1 hx hy
 
 /-- Consequently the actual low-kernel action on one magnitude-level atom
-vanishes.  This is the operator-level support observation in the paper, not
+vanishes. This is the operator-level support observation in the paper, not
 merely a comparison of abstract supports. -/
 theorem integral_paperLowCZKernel_mul_levelAtom_eq_zero_of_tooLarge
     {A : ℕ → ℝ} {f : ℝ → ℂ} (k : ℕ)

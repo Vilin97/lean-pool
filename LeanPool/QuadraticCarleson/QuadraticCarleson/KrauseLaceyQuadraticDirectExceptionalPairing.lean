@@ -12,7 +12,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectTh
 # Exceptional pairing closure for the direct quadratic proof
 
 This file localizes the ambient smallest-selected-region partition to a
-maximal exceptional interval.  It is the combinatorial step which lets the
+maximal exceptional interval. It is the combinatorial step which lets the
 fixed-offset input mass under that interval be bounded by the mass of `f`
 on the interval itself, without redefining the ambient partition.
 -/
@@ -31,8 +31,11 @@ open KrauseLaceyQuadraticDirectThresholdClosure
 open KrauseLaceyBadScale
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical decidable equality for the interval families used in the exceptional pairing
+estimate. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- Every bounded compactly supported test function has globally integrable
@@ -121,7 +124,7 @@ theorem offsetGroupedInput_selectedInside_eq
   rw [smallestSelectedRegion_selectedInside_eq S Q J (hJI.trans hIQ)]
 
 /-- The fixed-offset masses of any output subcollection contained in `Q`
-are bounded by the `f`-mass of `Q`.  The smallest-region partition remains
+are bounded by the `f`-mass of `Q`. The smallest-region partition remains
 the one formed by the original ambient family `S`. -/
 theorem sum_offsetGroupedInput_mass_le_interval
     {S A : Finset RealInterval}
@@ -320,7 +323,7 @@ theorem sum_exceptional_offsetGroupedInput_mass_le_of_packing
         Q.length := by rw [Finset.mul_sum]
     _ ≤ F * L := mul_le_mul_of_nonneg_left hpack hF
 
-/-- The full positive pairing of the exceptional output family.  Uniform
+/-- The full positive pairing of the exceptional output family. Uniform
 `L¹` averages of the test function and of `f` on maximal exceptional roots,
 together with root packing, give the expected packing-sized contribution. -/
 theorem lintegral_exceptional_offsetTailMaximalOn_le_of_packing
@@ -388,7 +391,7 @@ theorem lintegral_exceptional_offsetTailMaximalOn_le_of_packing
         (8 * positiveDyadicAmplitudeBound * G * F * L) := by ring
 
 /-- The exceptional contribution at the author's exact threshold
-`Λ = δ^{-(p-1)}`.  The global `p`-mass supplies the maximal-root packing,
+`Λ = δ^{-(p-1)}`. The global `p`-mass supplies the maximal-root packing,
 so the result has the desired `δ^{p-1}` decay. -/
 theorem lintegral_exceptional_offsetTailMaximalOn_le_directQuadratic
     {S : Finset RealInterval} {g : L0Infinity} {p F G V : ℝ}
@@ -417,7 +420,7 @@ theorem lintegral_exceptional_offsetTailMaximalOn_le_directQuadratic
   exact directMaximalExceptional_length_le_directQuadratic_threshold
     n hgp hlam hsub hglobal
 
-/-- Direct high-truncation pairing on a regular output subcollection.  This
+/-- Direct high-truncation pairing on a regular output subcollection. This
 is the `(**)` half of the author's proof, with no standard/nonstandard
 classification: the local `p`-mass cutoff supplies `a^(1-p) G`, and the
 ambient partition supplies the total `f`-mass. -/

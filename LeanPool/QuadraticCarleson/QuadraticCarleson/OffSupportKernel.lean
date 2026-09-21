@@ -12,8 +12,8 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 # The quadratic kernel away from a wave packet
 
 This file formalizes the first (nonoscillatory) estimate in the first lemma of
-Section 3 of the paper.  An interval is represented by its centre `s` and its
-positive length `t`.  The hypothesis that `x` is outside that interval makes
+Section 3 of the paper. An interval is represented by its centre `s` and its
+positive length `t`. The hypothesis that `x` is outside that interval makes
 the singular kernel an ordinary integrable function on the support of the
 packet.
 -/
@@ -98,7 +98,7 @@ theorem half_abs_sub_center_le_abs_sub {s t x u : ℝ} (ht : 0 < t)
       _ ≤ |x - u| + |u - s| := abs_add_le _ _
   linarith
 
-/-- The zero-fold case of the oscillatory estimate in the paper.  It is also
+/-- The zero-fold case of the oscillatory estimate in the paper. It is also
 the uniform off-support size bound for the kernel action. -/
 theorem offSupportKernelAction_norm_le {modulation s t x : ℝ} (ht : 0 < t)
     (hx : x ∉ Icc (s - t / 2) (s + t / 2)) :
@@ -216,7 +216,7 @@ private theorem kernel_difference_bound {modulation s t x u : ℝ} (ht : 0 < t)
   exact (norm_add_le _ _).trans (add_le_add hfirst hrecip)
 
 /-- The first estimate in the off-support wave-packet lemma, with an explicit
-absolute constant.  This is the paper's
+absolute constant. This is the paper's
 `e(λ(x-c_Q)²)/(x-c_Q) + O(max{|λ|ℓ_Q, ℓ_Q/|x-c_Q|²})`.
 
 The value `7` is inessential; the paper suppresses it in `O(·)` notation. -/

@@ -13,7 +13,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectSc
 
 This file identifies the literal fixed-scale output in the direct proof with
 one convolution of the quadratic scale kernel against the corresponding
-assembled input.  It also records the pointwise and local-mass estimates for
+assembled input. It also records the pointwise and local-mass estimates for
 that assembled input which are needed by the projection-remainder argument.
 -/
 
@@ -31,8 +31,10 @@ open KrauseLaceyQuadraticProjectionRemainder
 open KrauseLaceyQuadraticSmoothProjection
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for the interval indices in the projection bridge. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- The input to the genuine quadratic convolution at one fixed output scale.
@@ -56,12 +58,12 @@ theorem memLp_two_directScaleInput
     (k s : ℤ) :
     MemLp (directScaleInput S A scale f k s) 2 volume := by
   unfold directScaleInput
-  apply memLp_finset_sum
+  apply memLp_finsetSum
   intro I hI
   exact memLp_two_offsetGroupedInput S scale f I s
 
 /-- A scale absent from the retained interval family has identically zero
-assembled input.  This lets later residue estimates ignore absent scales
+assembled input. This lets later residue estimates ignore absent scales
 without imposing the scale-gap hypothesis on them. -/
 theorem directScaleInput_eq_zero_of_not_mem_image
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : ℝ → ℂ)
@@ -387,7 +389,7 @@ theorem offsetOutputScaleLp_ae_eq_quadraticScaleOutput
   exact congrFun (directScaleOutput_eq_quadraticScaleOutput S A scale f k s) x
 
 /-- Exact `L²` projection-error identity for the actual direct fixed-scale
-output.  The right side is the explicit convolution by `r_{2^k}`. -/
+output. The right side is the explicit convolution by `r_{2^k}`. -/
 theorem offsetOutputScaleLp_sub_annularProjectionL2_eq_remainderOutputL2
     (S A : Finset RealInterval) (scale : RealInterval → ℤ) (f : L0Infinity)
     {k : ℤ} (hk : 0 ≤ k) (s : ℤ) :

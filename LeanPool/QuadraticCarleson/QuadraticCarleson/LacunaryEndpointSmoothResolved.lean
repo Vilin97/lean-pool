@@ -13,7 +13,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceySparseDilation
 # Lacunary endpoint with only the smooth sparse input remaining
 
 This module combines the unconditional ordinary Hilbert maximal theorem with
-the smooth Krause--Lacey adapter.  Thus the displayed theorem has exactly one
+the smooth Krause--Lacey adapter. Thus the displayed theorem has exactly one
 analytic input: the genuine uniform finite-radius smooth sparse estimate.
 -/
 
@@ -29,7 +29,7 @@ open KrauseLaceySparseDilation
 
 
 /-- The paper-facing lacunary principal-value endpoint, conditional only on
-the genuine smooth Krause--Lacey sparse estimate.  The ordinary Hilbert
+the genuine smooth Krause--Lacey sparse estimate. The ordinary Hilbert
 maximal input has already been discharged unconditionally. -/
 theorem lacunary_principalValue_endpoint_of_smoothSparse
     {A : ℝ} (hA : HasUniformFiniteRadiusSmoothSparseBound A) :

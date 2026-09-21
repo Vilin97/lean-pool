@@ -10,8 +10,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectSu
 # Exceptional-interval packing in the direct quadratic proof
 
 This is the stopping calculation used in the author's direct proof, stated
-without any standard/nonstandard classification.  The only geometry is a
-finite laminar selected family.  Intervals whose local `p`-mass exceeds
+without any standard/nonstandard classification. The only geometry is a
+finite laminar selected family. Intervals whose local `p`-mass exceeds
 `Λ |I|` are replaced by their inclusion-maximal members; those members are
 disjoint and have total length at most `Λ⁻¹ V`.
 -/
@@ -22,9 +22,11 @@ open scoped ENNReal BigOperators
 namespace QuadraticCarleson
 
 
+/-- Classical decidable equality for the selected exceptional interval families. -/
 noncomputable local instance : DecidableEq RealInterval := Classical.decEq _
 
-noncomputable section
+noncomputable
+section
 
 /-- Selected intervals on which the local `p`-mass of `g` exceeds `Λ`. -/
 def directExceptionalIntervals (S : Finset RealInterval) (g : ℝ → ℂ)
@@ -223,13 +225,13 @@ theorem directMaximalExceptionalIntervals_length_le
       field_simp [hΛ.ne']
     _ ≤ Λ⁻¹ * V := mul_le_mul_of_nonneg_left (hsum.trans hroot) (inv_nonneg.mpr hΛ.le)
 
-/-- Abstract direct pairing closure.  `P A` is the pairing contribution of a
+/-- Abstract direct pairing closure. `P A` is the pairing contribution of a
 subcollection `A`; its structural estimate is supplied separately by the
-future direct `U_s` construction.  The theorem records exactly the final
+future direct `U_s` construction. The theorem records exactly the final
 low/high threshold arithmetic, with no reference to the older split. -/
 theorem directQuadratic_pairing_threshold_closure
     {ι : Type*} (P : Finset ι → ℝ) (S L E : Finset ι)
-    {C p delta A Λ V : ℝ} (hC : 0 ≤ C) (hV : 0 ≤ V)
+    {C p delta A Λ V : ℝ}
     (hdecomp : P S ≤ P L + P E)
     (hlow : P L ≤ C * (delta * A ^ (1 - p / 2) * V))
     (hhigh : P E ≤ C * (A ^ (1 - p) * Λ * V))
@@ -250,14 +252,14 @@ theorem directQuadratic_pairing_threshold_closure
 `δ=2^{-s/2}`, `A=δ^{-2}`, `Λ=δ^{-(p-1)}`. -/
 theorem directQuadratic_pairing_threshold_closure_at_scale
     {ι : Type*} (P : Finset ι → ℝ) (S L E : Finset ι)
-    {C p V : ℝ} (s : ℕ) (hC : 0 ≤ C) (hV : 0 ≤ V)
+    {C p V : ℝ} (s : ℕ)
     (hdecomp : P S ≤ P L + P E)
     (hlow : P L ≤ C * (directQuadraticDelta s *
       directQuadraticLowThreshold s ^ (1 - p / 2) * V))
     (hhigh : P E ≤ C * (directQuadraticLowThreshold s ^ (1 - p) *
       directQuadraticExceptionalThreshold p s * V)) :
     P S ≤ 2 * C * directQuadraticDelta s ^ (p - 1) * V := by
-  exact directQuadratic_pairing_threshold_closure P S L E hC hV hdecomp hlow hhigh
+  exact directQuadratic_pairing_threshold_closure P S L E hdecomp hlow hhigh
     (directQuadratic_low_threshold_identity p s)
     (directQuadratic_high_threshold_identity p s)
 

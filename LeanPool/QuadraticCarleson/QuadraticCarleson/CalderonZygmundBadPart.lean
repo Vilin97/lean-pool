@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 This file formalizes the one-dimensional Lipschitz-kernel specialization of
 Lemma 6.12 on printed page 114 of the harmonic-analysis notes supplied by the
-author.  It is the form needed for the low oscillatory part of the positive
+author. It is the form needed for the low oscillatory part of the positive
 theorem: an atom supported on an interval has mean zero, so subtracting the
 kernel at the interval center converts cancellation into spatial decay.
 -/
@@ -62,7 +62,7 @@ theorem half_center_distance_le_distance {z R x y : ℝ} (hR : 0 ≤ R)
   linarith
 
 /-- Mean-zero cancellation allows subtraction of the kernel at the interval
-center.  All integrability assumptions are explicit. -/
+center. All integrability assumptions are explicit. -/
 theorem setIntegral_kernel_eq_sub_center
     (K : ℝ → ℝ → ℂ) (f : ℝ → ℂ) (x z R : ℝ)
     (hf : IntegrableOn f (centeredInterval z R))
@@ -110,7 +110,7 @@ theorem norm_setIntegral_kernel_sub_center_le
   simpa only [integral_const_mul] using h
 
 /-- The exact pointwise bad-part estimate obtained from a Lipschitz
-Calderón--Zygmund kernel.  The constant is explicit and uniform. -/
+Calderón--Zygmund kernel. The constant is explicit and uniform. -/
 theorem norm_setIntegral_kernel_sub_center_le_decay
     (K : ℝ → ℝ → ℂ) (f : ℝ → ℂ) (x z R C : ℝ)
     (hR : 0 < R) (hC : 0 ≤ C)
@@ -284,9 +284,9 @@ theorem integral_inv_abs_sub_sq_compl_tripleCenteredInterval
 /-! ## Integrated bad-part estimate -/
 
 /-- The integrated conclusion of Lemma 6.12 in the one-dimensional
-Lipschitz-kernel form used by the paper.  Measurability of the kernel output is
+Lipschitz-kernel form used by the paper. Measurability of the kernel output is
 kept explicit; in applications it follows from the measurable operator
-realization.  The proof gives the uniform constant `8C/3`. -/
+realization. The proof gives the uniform constant `8C/3`. -/
 theorem integral_norm_setIntegral_kernel_le
     (K : ℝ → ℝ → ℂ) (f : ℝ → ℂ) (z R C : ℝ)
     (hR : 0 < R) (hC : 0 ≤ C)

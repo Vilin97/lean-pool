@@ -33,7 +33,7 @@ theorem finiteConvolutionMaximal_le_centered {N : ℕ}
     have hp : ‖κ i (x - t)‖ ≤ 2 * L * realCenteredAverageKernel (r i) x t := by
       by_cases hd : |x - t| ≤ r i
       · have hid : 2 * L * (2 * r i)⁻¹ = L / r i := by field_simp
-        rw [realCenteredAverageKernel, if_pos hd, hid]
+        rw [realCenteredAverageKernel, ite_eq_left hd, hid]
         exact hbound i (x - t)
       · rw [hzero i (x - t) (lt_of_not_ge hd)]
         simp [realCenteredAverageKernel, hd]
@@ -68,7 +68,8 @@ theorem finiteConvolutionMaximal_sq_lintegral_le_interval_bound {N : ℕ}
     _ ≤ ∫⁻ x, (ENNReal.ofReal (2 * L) * finiteCenteredMaximal r (fun t ↦ ‖f t‖ₑ) x) ^ 2 := by
       apply lintegral_mono
       intro x
-      exact pow_le_pow_left₀ bot_le (finiteConvolutionMaximal_le_centered κ r hr hL hbound hzero hfm x) 2
+      exact pow_le_pow_left₀ bot_le (finiteConvolutionMaximal_le_centered κ r hr hL hbound hzero
+        hfm x) 2
     _ = ENNReal.ofReal (2 * L) ^ 2 * ∫⁻ x, finiteCenteredMaximal r (fun t ↦ ‖f t‖ₑ) x ^ 2 := by
       simp_rw [mul_pow]
       exact lintegral_const_mul' _ _ (by finiteness)
@@ -90,13 +91,16 @@ theorem norm_fixedHeightQuadraticKernel_le
         ‖positiveFixedHeightQuadraticKernel lam height hlam (-t)‖ := norm_sub_le _ _
     _ ≤ positiveDyadicAmplitudeBound / fixedHeightRadius lam height hlam +
         positiveDyadicAmplitudeBound / fixedHeightRadius lam height hlam := by
-      simp only [positiveFixedHeightQuadraticKernel, annularQuadraticKernel, norm_mul, norm_phase, mul_one]
-      exact add_le_add (norm_positiveDyadicAmplitude_le _ t) (norm_positiveDyadicAmplitude_le _ (-t))
+      simp only [positiveFixedHeightQuadraticKernel, annularQuadraticKernel, norm_mul,
+        norm_phase, mul_one]
+      exact add_le_add (norm_positiveDyadicAmplitude_le _ t) (norm_positiveDyadicAmplitude_le _
+        (-t))
     _ = _ := by ring
 
 theorem fixedHeightQuadraticKernel_eq_zero_of_radius_lt
     (lam : ℝ) (height : ℕ) (hlam : lam ≠ 0) (t : ℝ)
-    (ht : fixedHeightRadius lam height hlam < |t|) : fixedHeightQuadraticKernel lam height hlam t = 0 := by
+    (ht : fixedHeightRadius lam height hlam < |t|) : fixedHeightQuadraticKernel lam height hlam
+      t = 0 := by
   have hz : dyadicPsi (oscillatoryScaleIndex lam height hlam) t = 0 := by
     by_contra h
     have hs := dyadicPsi_support_subset (oscillatoryScaleIndex lam height hlam) h

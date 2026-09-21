@@ -15,7 +15,7 @@ We use the following half-open convention:
 `I ∈ 𝓘_j ↔ 2^j ≤ ℓ_I ∧ ℓ_I < 2^(j+1)`.
 
 In particular, the classes are half-open: the lower endpoint belongs to the
-class and the upper endpoint belongs to the next class.  This file develops
+class and the upper endpoint belongs to the next class. This file develops
 that convention for an abstract atom type equipped with a positive real
 length.
 -/

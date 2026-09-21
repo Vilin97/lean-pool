@@ -11,10 +11,10 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.QuadraticFixedHeightAveragin
 # Restoring the negative spatial half of the Krause--Lacey kernel
 
 Krause--Lacey carry out the local argument for the positive half of their odd
-dyadic kernel and state that the negative half is symmetric.  This file makes
-that symmetry exact.  A finite full dyadic tail is the positive-half tail on
+dyadic kernel and state that the negative half is symmetric. This file makes
+that symmetry exact. A finite full dyadic tail is the positive-half tail on
 `f` minus the same positive-half tail on the reflected input, evaluated at the
-reflected point.  Thus no analytic estimate is duplicated for the negative
+reflected point. Thus no analytic estimate is duplicated for the negative
 half.
 -/
 
@@ -25,7 +25,8 @@ namespace QuadraticCarleson
 namespace KrauseLaceyFullDyadicReflection
 
 
-noncomputable section
+noncomputable
+section
 
 /-- A single positive-half dyadic convolution at scale `j`. -/
 def positiveDyadicConvolution
@@ -47,7 +48,7 @@ def finiteFullDyadicTail
     (lam : ℝ) (j : ℤ) (n : ℕ) (f : ℝ → ℂ) (x : ℝ) : ℂ :=
   ∑ r ∈ Finset.range n, fullDyadicConvolution lam (j + (r : ℤ)) f x
 
-/-- Maximum over all initial finite tails of length at most `N`.  The value is
+/-- Maximum over all initial finite tails of length at most `N`. The value is
 kept in `NNReal`, matching the finite-maximal interfaces elsewhere in the
 project. -/
 def finitePositiveDyadicTailMaxNNNorm
@@ -59,7 +60,7 @@ def finiteFullDyadicTailMaxNNNorm
     (lam : ℝ) (j : ℤ) (N : ℕ) (f : ℝ → ℂ) (x : ℝ) : NNReal :=
   (Finset.range (N + 1)).sup fun n ↦ ‖finiteFullDyadicTail lam j n f x‖₊
 
-/-- A suffix ending at the common upper scale `j + N`.  Varying `m` is the
+/-- A suffix ending at the common upper scale `j + N`. Varying `m` is the
 finite version of the paper's physical lower-truncation parameter. -/
 def finitePositiveDyadicSuffix
     (lam : ℝ) (j : ℤ) (N m : ℕ) (f : ℝ → ℂ) (x : ℝ) : ℂ :=
@@ -160,7 +161,7 @@ theorem fullDyadicConvolution_eq_positive_sub_reflect
   filter_upwards [] with y
   rw [← sub_mul, ← fullDyadicKernel_eq_positive_sub_reflect]
 
-/-- Exact finite-tail identity.  This is the deterministic justification for
+/-- Exact finite-tail identity. This is the deterministic justification for
 using only the positive spatial half in the local KL argument. -/
 theorem finiteFullDyadicTail_eq_positive_sub_reflect
     (lam : ℝ) (j : ℤ) (n : ℕ) {f : ℝ → ℂ} (hf : MemLp f 2) (x : ℝ) :
@@ -182,7 +183,7 @@ theorem norm_finiteFullDyadicTail_le_positive_add_reflect
   exact norm_sub_le _ _
 
 /-- The maximum of the full odd-kernel tails is pointwise controlled by the
-positive-half maximum and its reflected-input copy.  The estimate is uniform
+positive-half maximum and its reflected-input copy. The estimate is uniform
 in the number of scales. -/
 theorem finiteFullDyadicTailMaxNNNorm_le_positive_add_reflect
     (lam : ℝ) (j : ℤ) (N : ℕ) {f : ℝ → ℂ} (hf : MemLp f 2) (x : ℝ) :
@@ -262,7 +263,7 @@ theorem tendsto_finiteFullDyadicTail_atTop
     (hasSum_fullDyadicConvolution_add_nat lam j f x).tendsto_sum_nat
 
 /-- The genuine smooth high-pass value is controlled by the supremum of its
-finite odd-kernel approximants.  This is the pointwise limit bridge used when
+finite odd-kernel approximants. This is the pointwise limit bridge used when
 passing a uniform finite sparse estimate to the actual operator. -/
 theorem smoothQuadraticHighPass_enorm_le_fullDyadicTailSupEnorm
     (lam : ℝ) (j : ℤ) (f : L0Infinity) (x : ℝ) :

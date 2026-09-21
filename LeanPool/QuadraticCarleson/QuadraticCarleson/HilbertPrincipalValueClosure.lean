@@ -49,6 +49,8 @@ theorem hasUniformHilbertMaximalWeakBound_of_real
   simpa only [ENNReal.ofReal_toReal hat] using
     hweak f a.toReal (ENNReal.toReal_pos ha hat)
 
+/-- The residual after subtracting a compactly supported Schwartz function from a bounded
+compactly supported test function. -/
 noncomputable def schwartzResidual (f : L0Infinity) (g : 𝓢(ℝ, ℂ))
     (hg : HasCompactSupport (g : ℝ → ℂ)) : L0Infinity where
   toFun := fun x ↦ f x - g x

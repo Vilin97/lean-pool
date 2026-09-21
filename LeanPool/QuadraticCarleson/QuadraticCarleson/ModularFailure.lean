@@ -27,6 +27,7 @@ namespace QuadraticCarleson
 /-- A measurable extended-nonnegative-valued operator on the paper's
 space of bounded compactly supported measurable functions. -/
 structure NonnegativeOperator where
+  /-- The nonnegative measurable operator acting on compactly supported bounded test functions. -/
   toFun : L0Infinity → ℝ → ℝ≥0∞
   measurable_toFun : ∀ f, Measurable (toFun f)
 
@@ -93,7 +94,7 @@ def HasPhiModularEstimate (Φ : YoungFunction) (T : NonnegativeOperator) : Prop 
       ENNReal.ofReal C * ∫⁻ x : ℝ, ENNReal.ofReal (Φ (‖f x‖ / α))
 
 /-- A modular estimate passes from an operator to every pointwise smaller
-operator.  This is the abstract step behind the paper's phrase “and therefore
+operator. This is the abstract step behind the paper's phrase “and therefore
 the full operator as well”: the full supremum dominates the lacunary one. -/
 theorem HasPhiModularEstimate.of_pointwise_le
     (Φ : YoungFunction) (S T : NonnegativeOperator)

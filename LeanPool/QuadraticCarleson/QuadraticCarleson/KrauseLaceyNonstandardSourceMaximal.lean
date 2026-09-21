@@ -23,6 +23,7 @@ namespace KrauseLaceyBadScale
 
 attribute [local instance] Classical.propDecidable
 
+/-- The supremum of bad length-tail norms over source cutoffs at least `k₀ + s`. -/
 noncomputable def nonstandardSourceTailMaximal
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (N : Finset RealInterval) (x : ℝ) : ℝ :=

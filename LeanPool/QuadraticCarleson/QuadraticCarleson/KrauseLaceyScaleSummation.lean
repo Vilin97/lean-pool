@@ -13,7 +13,7 @@ import Mathlib.Analysis.Complex.ExponentialBounds
 The nonstandard argument produces a geometric loss in the scale parameter.
 This file contains only the numerical step used after interpolation: a finite
 or infinite geometric tail with ratio `r` costs at most a constant multiple of
-the Holder conjugate `q`.  The analytic estimate supplying the ratio is kept
+the Holder conjugate `q`. The analytic estimate supplying the ratio is kept
 separate (and is not postulated here).
 -/
 
@@ -22,11 +22,13 @@ open scoped BigOperators
 namespace QuadraticCarleson
 
 
-noncomputable section
+noncomputable
+section
 
+/-- The geometric decay ratio used to sum the scale estimates. -/
 def scaleDecayRatio (q : ℝ) : ℝ := (2 : ℝ) ^ (-1 / (5 * q))
 
-theorem scaleDecayRatio_nonneg {q : ℝ} (hq : 0 < q) :
+theorem scaleDecayRatio_nonneg {q : ℝ} :
     0 ≤ scaleDecayRatio q := by
   exact (Real.rpow_nonneg (by norm_num) _)
 
@@ -36,13 +38,14 @@ theorem scaleDecayRatio_lt_one {q : ℝ} (hq : 0 < q) :
   apply Real.rpow_lt_one_of_one_lt_of_neg
   · norm_num
   · have h : 0 < (1 : ℝ) / (5 * q) := by positivity
-    convert neg_lt_zero.mpr h using 1 <;> ring
+    convert neg_lt_zero.mpr h using 1; ring
 
 theorem finite_scale_decay_sum_le_of_gap {r δ : ℝ} (hr : 0 ≤ r) (hr1 : r < 1)
     (hδ : 0 < δ) (hgap : δ ≤ 1 - r) (N : ℕ) :
     (Finset.sum (Finset.range N) (fun s ↦ r ^ s)) ≤ 1 / δ := by
   have hsum : (Finset.sum (Finset.range N) (fun s ↦ r ^ s)) ≤ ∑' s : ℕ, r ^ s := by
-    exact (summable_geometric_of_norm_lt_one (by simpa [Real.norm_eq_abs, abs_of_nonneg hr] using hr1)).sum_le_tsum
+    exact (summable_geometric_of_norm_lt_one (by
+      simpa [Real.norm_eq_abs, abs_of_nonneg hr] using hr1)).sum_le_tsum
       (Finset.range N) (fun s hs ↦ pow_nonneg hr s)
   rw [tsum_geometric_of_lt_one hr hr1] at hsum
   have hden : δ ≤ 1 - r := hgap
@@ -95,14 +98,14 @@ theorem scale_decay_sum_le_twenty_mul_holderConjugate {p r : ℝ}
 theorem scaleDecayRatio_sum_le_twenty_mul_q_of_gap {q : ℝ} (hq : 2 ≤ q)
     (hgap : 1 / (20 * q) ≤ 1 - scaleDecayRatio q) :
     (∑' s : ℕ, (scaleDecayRatio q) ^ s) ≤ 20 * q := by
-  exact scale_decay_sum_le_twenty_mul_q hq (scaleDecayRatio_nonneg (by linarith))
+  exact scale_decay_sum_le_twenty_mul_q hq (scaleDecayRatio_nonneg)
     (scaleDecayRatio_lt_one (by linarith)) hgap
 
 theorem finite_scaleDecayRatio_sum_le_twenty_mul_q_of_gap {q : ℝ} (hq : 2 ≤ q)
     (hgap : 1 / (20 * q) ≤ 1 - scaleDecayRatio q) (N : ℕ) :
     (Finset.sum (Finset.range N) (fun s ↦ (scaleDecayRatio q) ^ s)) ≤ 20 * q := by
   exact finite_scale_decay_sum_le_twenty_mul_q hq
-    (scaleDecayRatio_nonneg (by linarith)) (scaleDecayRatio_lt_one (by linarith)) hgap N
+    (scaleDecayRatio_nonneg) (scaleDecayRatio_lt_one (by linarith)) hgap N
 
 theorem scaleDecayRatio_gap {q : ℝ} (hq : 2 ≤ q) :
     1 / (20 * q) ≤ 1 - scaleDecayRatio q := by

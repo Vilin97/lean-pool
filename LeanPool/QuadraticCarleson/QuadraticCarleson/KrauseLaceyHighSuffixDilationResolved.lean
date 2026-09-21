@@ -24,7 +24,8 @@ open KrauseLaceyFullDyadicSparseTransfer KrauseLaceyHighFullSuffixResolved
 open KrauseLaceySparseDilation SparseDilationRegularity
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The normalized high full-odd suffix maximum transported to each positive
 dilation in a finite family. The upper scale count remains explicit. -/

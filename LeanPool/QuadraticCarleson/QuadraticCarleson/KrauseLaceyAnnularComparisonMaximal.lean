@@ -28,7 +28,8 @@ open KrauseLaceyFiniteRadiusSmoothSparse KrauseLaceyCompactPairingStabilization
 open HardyLittlewoodBoundaryControl HardyLittlewoodMaximalSparse
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The genuine finite maximum of smooth annular differences. -/
 def finiteAnnularComparisonMaxNNNorm (lam : ℝ) (s : Finset PositiveSmoothRadius)

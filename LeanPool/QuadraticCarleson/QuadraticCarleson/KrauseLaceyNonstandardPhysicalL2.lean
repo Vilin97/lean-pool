@@ -25,6 +25,7 @@ open KrauseLaceyGenerationLayers
 
 attribute [local instance] Classical.propDecidable
 
+/-- The energy bound for the bad intervals discarded by overlap pruning. -/
 noncomputable def badRemovedEnergyBudget (f : ℝ → ℂ) (I₀ : RealInterval) (s : ℕ) : ℝ :=
   badPieceUniformBound f I₀ ^ 2 *
     (2 * (1 + (2 : ℝ) ^ (s : ℤ)) ^ 2 * ((1 / 2 : ℝ) ^ (8 * (s + 1)) * I₀.length))
@@ -65,7 +66,7 @@ theorem eLpNorm_removed_badLengthTailMaximal_le_sqrt
 theorem badLengthTailAction_eq_pruned_add_removed
     (S : Finset RealInterval) (f : ℝ → ℂ) (I₀ : RealInterval) (k₀ s : ℤ)
     (scale : RealInterval → ℤ) (N : Finset RealInterval)
-    (hN : N ⊆ nonstandardIntervals S f I₀ k₀ s scale) (M : ℕ) (ell : ℤ) (x : ℝ) :
+     (M : ℕ) (ell : ℤ) (x : ℝ) :
     badLengthTailAction S f I₀ k₀ s scale N ell x =
       badLengthTailAction S f I₀ k₀ s scale
         (overlapPrunedFamily (activeBadIntervals S f I₀ k₀ s scale N) M) ell x +
@@ -99,7 +100,7 @@ theorem badLengthTailMaximal_le_pruned_add_removed
   have hA := (activeBadIntervals_subset S f I₀ k₀ s scale N).trans hN
   apply ciSup_le
   intro ell
-  rw [badLengthTailAction_eq_pruned_add_removed S f I₀ k₀ s scale N hN M ell x]
+  rw [badLengthTailAction_eq_pruned_add_removed S f I₀ k₀ s scale N M ell x]
   apply (norm_add_le _ _).trans
   exact add_le_add (le_ciSup (hbound _ ((overlapPrunedFamily_subset _ M).trans hA)) ell)
     (le_ciSup (hbound _ (Finset.sdiff_subset.trans hA)) ell)

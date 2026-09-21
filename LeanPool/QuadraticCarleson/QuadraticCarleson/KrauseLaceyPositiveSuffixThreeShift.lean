@@ -13,8 +13,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyThreeShiftMaximal
 The moving-lower-cutoff positive dyadic suffix used by the smooth sparse
 transfer is exactly a physical tail of a finite three-shift global family.
 The top scale is `j + N - 1`, depths are `range N`, and suffix `m` has the
-physical lower cutoff `j + m + 2`.  In particular the complete maximum starts
-at `j + 2`.  The empty case is included: when `N = 0`, both sides are zero.
+physical lower cutoff `j + m + 2`. In particular the complete maximum starts
+at `j + 2`. The empty case is included: when `N = 0`, both sides are zero.
 -/
 
 open Function MeasureTheory Set
@@ -28,7 +28,7 @@ open KrauseLaceyStoppingRecursion KrauseLaceyThreeShiftGrid
 
 
 /-- The physical tail at `j + m + 2` of the reversed depth family is exactly
-the consecutive positive suffix beginning at scale `j + m`.  This includes
+the consecutive positive suffix beginning at scale `j + m`. This includes
 `m = N`, where both sums are empty. -/
 theorem finitePositiveGlobalTail_eq_positiveDyadicSuffix
     (f : L0Infinity) (j : ℤ) (N m : ℕ) (hm : m ≤ N) (x : ℝ) :
@@ -102,7 +102,7 @@ theorem enorm_finitePositiveDyadicSuffixMaxOperator_le_globalTailMaximal
     ⟨j + (m : ℤ) + 2, by omega⟩
 
 /-- A concrete three-shift and parent-closed-forest reduction for the unit
-positive finite suffix operator.  No sparse estimate is assumed: the result
+positive finite suffix operator. No sparse estimate is assumed: the result
 is only the exact geometric/operator reduction needed before the local KL
 stopping argument. -/
 theorem exists_threeShiftForests_finitePositiveDyadicSuffixMax

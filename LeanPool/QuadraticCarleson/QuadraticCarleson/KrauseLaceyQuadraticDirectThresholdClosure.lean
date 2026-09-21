@@ -11,8 +11,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectEx
 # Threshold closure for the direct quadratic action
 
 This module keeps the ambient selected family `S` fixed while an output
-family is split into regular and exceptional intervals.  Its first results
-are exact finite union identities for the genuine offset tail.  The final
+family is split into regular and exceptional intervals. Its first results
+are exact finite union identities for the genuine offset tail. The final
 interface records the author's threshold argument: the low term is supplied
 by the boxed fixed-offset `L²` estimate, while the high term is supplied by
 the positive pairing estimate and maximal-exceptional packing.
@@ -30,8 +30,10 @@ open KrauseLaceyQuadraticDirectAction
 open KrauseLaceyQuadraticDirectPositivePairing
 
 
-noncomputable section
+noncomputable
+section
 
+/-- Classical equality for interval indices in the threshold decomposition. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
 /-- A fixed partial action is additive over disjoint output
@@ -74,7 +76,7 @@ theorem offsetTailMaximalOn_union_le
         (le_iSup (fun q : {q : ℤ // ell₀ ≤ q} ↦
           ‖offsetLocalizedActionOn S E scale f q.1 s x‖ₑ) ⟨ell, hell⟩)
 
-/-- The positive pairing inherits the union subadditivity.  Only
+/-- The positive pairing inherits the union subadditivity. Only
 measurability of the exceptional summand is needed to split its lintegral. -/
 theorem lintegral_offsetTailMaximalOn_union_le
     (S L E : Finset RealInterval) (scale : RealInterval → ℤ) (f : ℝ → ℂ)
@@ -143,7 +145,7 @@ theorem lintegral_offsetTailMaximalOn_directRegular_exceptional_le
       scale f ell₀ s g (directRegular_disjoint_exceptional S g p Λ) hE
 
 /-- The high half of the direct threshold proof, now directly instantiated
-with the concrete positive pairing estimate.  Projection work may provide a
+with the concrete positive pairing estimate. Projection work may provide a
 separate boxed `L²` estimate for the regular term. -/
 theorem lintegral_offsetTailMaximalOn_exceptional_le_mass_average
     (S E : Finset RealInterval) (scale : RealInterval → ℤ) (f : L0Infinity)
@@ -156,7 +158,7 @@ theorem lintegral_offsetTailMaximalOn_exceptional_le_mass_average
     S E scale f h hh ell₀ s hscale
 
 /-- At the author's exceptional threshold, the maximal exceptional roots
-occupy exactly the offset-decay fraction of the available `p`-mass.  This is
+occupy exactly the offset-decay fraction of the available `p`-mass. This is
 the packing input for the high half of the threshold argument. -/
 theorem directMaximalExceptional_length_le_directQuadratic_threshold
     {S : Finset RealInterval} {g : ℝ → ℂ} {p V : ℝ} {I₀ : RealInterval}
@@ -178,12 +180,12 @@ theorem directMaximalExceptional_length_le_directQuadratic_threshold
       rw [directQuadratic_exceptional_threshold_inv]
 
 /-- Numeric threshold closure with the genuine direct split kept as a
-separate hypothesis.  The `hlow` premise is precisely the boxed L²
+separate hypothesis. The `hlow` premise is precisely the boxed L²
 truncation estimate supplied by the projection step; `hhigh` is obtained
 from the preceding exceptional pairing and maximal-exceptional packing. -/
 theorem direct_threshold_closure_of_boxed_lowL2
     {ι : Type*} [DecidableEq ι] (P : Finset ι → ℝ) (S L E : Finset ι)
-    {C p V : ℝ} (n : ℕ) (hC : 0 ≤ C) (hV : 0 ≤ V)
+    {C p V : ℝ} (n : ℕ)
     (hunion : S = L ∪ E) (_hLE : Disjoint L E)
     (hlow : P L ≤ C * (directQuadraticDelta n *
       directQuadraticLowThreshold n ^ (1 - p / 2) * V))
@@ -193,7 +195,7 @@ theorem direct_threshold_closure_of_boxed_lowL2
     P S ≤ 2 * C * directQuadraticDelta n ^ (p - 1) * V := by
   subst S
   exact directQuadratic_pairing_threshold_closure_at_scale P (L ∪ E) L E
-    n hC hV hsubadd hlow hhigh
+    n hsubadd hlow hhigh
 
 
 end

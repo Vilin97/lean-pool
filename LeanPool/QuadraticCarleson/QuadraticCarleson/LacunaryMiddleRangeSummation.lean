@@ -23,8 +23,8 @@ The middle-range part of the paper uses three purely arithmetic facts:
 
 This file packages the corresponding finite and countable sum estimates.
 The last results use the author's exact half-open dyadic atom-scale partition
-to turn scale coefficients back into arbitrary atom coefficients.  No
-operator estimate is assumed.  The remaining analytic input in the paper is
+to turn scale coefficients back into arbitrary atom coefficients. No
+operator estimate is assumed. The remaining analytic input in the paper is
 the finite-modulation weak estimate on each `Q` block (and support vanishing
 for the too-large branch of the error); those are deliberately not encoded
 as arithmetic hypotheses here.
@@ -38,7 +38,8 @@ namespace QuadraticCarleson.LacunaryMiddleRangeSummation
 open QuadraticCarleson.LacunaryMiddleRange
 
 
-noncomputable section
+noncomputable
+section
 
 /-- A uniformly bounded nonnegative coefficient sums over one modulation
 block with the exact factor `B`. -/
@@ -142,7 +143,7 @@ def atomScaleMass {ι : Type*}
 /-- Tonelli plus uniqueness of the half-open dyadic scale gives an exact
 partition of arbitrary nonnegative atom mass. -/
 theorem tsum_atomScaleMass_eq
-    {ι : Type*} [Countable ι]
+    {ι : Type*}
     (length : ι → ℝ) (hlength : ∀ I, 0 < length I)
     (w : ι → ENNReal) :
     ∑' j : ℤ, atomScaleMass length w j = ∑' I : ι, w I := by
@@ -165,7 +166,7 @@ theorem tsum_atomScaleMass_eq
 countable atom family, with scales determined by the exact half-open
 convention. -/
 theorem tsum_sparseBlock_atomScaleMass_le
-    {ι : Type*} [Countable ι]
+    {ι : Type*}
     (B c : ℕ) (hB : 0 < B) (hc : 2 * c ≤ 5 * B)
     (ρ : ℤ) (length : ι → ℝ) (hlength : ∀ I, 0 < length I)
     (w : ι → ENNReal) :

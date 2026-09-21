@@ -9,7 +9,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyQuadraticDirectOn
 /-!
 # Root localization for the direct quadratic proof
 
-The localized tail is supported in its root interval.  This module replaces
+The localized tail is supported in its root interval. This module replaces
 the test function by its root indicator, allowing the direct `L²` proof to use
 the paper's root-local `p`-mass hypothesis without imposing a global one.
 -/
@@ -26,7 +26,8 @@ open KrauseLaceyQuadraticDirectOneOffset
 open KrauseLaceyStoppingRecursion
 
 
-noncomputable section
+noncomputable
+section
 
 /-- Restriction of a bounded compactly supported test function to a real
 interval, retained in the same test-function class. -/
@@ -129,7 +130,7 @@ theorem lintegral_localizedTailMaximal_mul_intervalRestrictionL0Infinity_eq
     simp only [zero_mul]
 
 /-- The complete geometric direct quadratic estimate under only the paper's
-root-local `p`-mass hypothesis.  No global `p`-mass premise remains. -/
+root-local `p`-mass hypothesis. No global `p`-mass premise remains. -/
 theorem lintegral_localizedTailMaximal_le_directQuadratic_geometric_local
     {S : Finset RealInterval}
     (hlam : Set.Pairwise (↑S : Set RealInterval) fun I J ↦

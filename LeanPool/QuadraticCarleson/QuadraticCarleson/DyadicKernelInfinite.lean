@@ -10,7 +10,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.PositiveDyadicKernel
 # Infinite telescoping of the positive-proof dyadic kernel
 
 For a fixed nonzero spatial point, only finitely many of the dyadic pieces
-`ψ_{j+r}` with `r ≥ 0` are nonzero.  Their infinite sum therefore telescopes
+`ψ_{j+r}` with `r ≥ 0` are nonzero. Their infinite sum therefore telescopes
 exactly to the high-pass kernel used in the paper's oscillatory reduction.
 -/
 
@@ -139,7 +139,7 @@ theorem paperNonoscillatoryKernel_add_paperOscillatoryKernel
     ring
 
 /-- The paper's complex-valued height kernels telescope pointwise to the
-high-pass oscillatory kernel.  At `t = 0` both sides use their canonical zero
+high-pass oscillatory kernel. At `t = 0` both sides use their canonical zero
 extension. -/
 theorem hasSum_selectedDyadicQuadraticKernel
     (lam : ℝ) (hlam : lam ≠ 0) (t : ℝ) :

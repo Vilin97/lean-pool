@@ -10,13 +10,13 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.LowKernelLevelSummation
 # The genuine real-modulation supremum for a low-kernel bad atom
 
 The pointwise estimate in `LowKernelBadAtomSharp` has a right-hand side that
-is independent of the nonzero real modulation parameter.  Consequently it
-controls the supremum over *all* such parameters directly.  This file takes
+is independent of the nonzero real modulation parameter. Consequently it
+controls the supremum over *all* such parameters directly. This file takes
 that supremum in `ℝ≥0∞`, where its outer integral is meaningful without first
 having to prove measurability of an uncountable supremum.
 
 This is the form needed in the low-oscillation part of the positive endpoint
-proof.  In particular, it does not replace the real supremum by a countable
+proof. In particular, it does not replace the real supremum by a countable
 or rational one.
 -/
 
@@ -26,7 +26,8 @@ open scoped ENNReal BigOperators Function
 namespace QuadraticCarleson
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The low-kernel output of one atom, maximized over every nonzero real
 quadratic modulation parameter. -/
@@ -59,7 +60,7 @@ theorem paperLowBadAtomMaximal_le_lowDecayMajorant
       lam.2 B f hR hx hf (hKf lam) hmean)
 
 /-- Integrated `O(B + 1)` bound for the genuine real-modulation supremum of
-one cancellative bad atom.  No measurability assumption on the supremum is
+one cancellative bad atom. No measurability assumption on the supremum is
 needed: the Lebesgue outer integral is bounded by the common measurable
 majorant. -/
 theorem lintegral_paperLowBadAtomMaximal_le_sharp

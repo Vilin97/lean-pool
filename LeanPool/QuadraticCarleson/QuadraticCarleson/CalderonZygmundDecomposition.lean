@@ -12,11 +12,11 @@ import Mathlib.MeasureTheory.Covering.DensityTheorem
 
 This module constructs, rather than assumes, a countable pairwise-disjoint
 family of positive-radius closed intervals on which the average of `‖f‖` is
-strictly larger than one.  The family covers `{x | 1 < ‖f x‖}` almost
+strictly larger than one. The family covers `{x | 1 < ‖f x‖}` almost
 everywhere and its total length is controlled by the `L¹` mass of `f`.
 
 The construction uses the Besicovitch Vitali family and the Lebesgue
-differentiation theorem.  Selection of intervals with the additional upper
+differentiation theorem. Selection of intervals with the additional upper
 average bound needed for the sharp height-two good part is deliberately left
 to a subsequent stopping-time refinement.
 -/
@@ -30,7 +30,8 @@ namespace CalderonZygmundDecomposition
 open CalderonZygmundLevelRecombination
 
 
-noncomputable section
+noncomputable
+section
 
 /-- The closed-ball Vitali family for Lebesgue measure on the line. -/
 abbrev realBallVitali : VitaliFamily (volume : Measure ℝ) :=

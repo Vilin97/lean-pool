@@ -13,8 +13,8 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.KrauseLaceyShiftedLocalizati
 For a largest scale, each of the three grids is an ordinary global dyadic
 grid translated by zero, one third, or two thirds of the largest length.
 At every finer scale the three translations are permuted modulo one, so the
-central thirds partition the line.  This file first establishes the exact
-laminar geometry within each translated grid.  The finite support and
+central thirds partition the line. This file first establishes the exact
+laminar geometry within each translated grid. The finite support and
 three-grid reconstruction are developed from this representation below.
 -/
 
@@ -26,7 +26,8 @@ namespace KrauseLaceyThreeShiftGrid
 open CalderonZygmundDyadicStopping
 
 
-noncomputable section
+noncomputable
+section
 
 /-- A half-open real interval in the global dyadic grid of root length `L`,
 translated by `origin`. -/
@@ -52,7 +53,7 @@ theorem translatedDyadicRealInterval_carrier
         (origin + ((q : ℝ) + 1) * dyadicLength L depth) := rfl
 
 /-- A fine translated dyadic cell is contained in a fixed coarse cell or is
-disjoint from it.  This is the exact half-open geometry needed by the finite
+disjoint from it. This is the exact half-open geometry needed by the finite
 stopping recursion. -/
 theorem translatedDyadicRealInterval_subset_or_disjoint_of_le
     {origin L : ℝ} (hL : 0 < L) {n m : ℕ} (hnm : n ≤ m) (q r : ℤ) :
@@ -244,7 +245,7 @@ private theorem pow_two_odd_three_mul_add_two (e : ℕ) :
   ring
 
 /-- At every depth, the three translated grids exhaust all consecutive
-central-third tile parents.  This is the integer content of the exact
+central-third tile parents. This is the integer content of the exact
 three-grid identity in KL18. -/
 theorem finiteShiftGridTileIndex_surjective (depth : ℕ) (n : ℤ) :
     ∃ shift : Fin 3, ∃ q : ℤ, finiteShiftGridTileIndex shift depth q = n := by
@@ -326,8 +327,6 @@ theorem existsUnique_mem_finiteShiftGridCentralThird
   · rintro ⟨shift', q'⟩ hx'
     have hindex' : finiteShiftGridTileIndex shift' depth q' = n := by
       apply hnunique
-      change x ∈ (KrauseLaceyShiftedLocalization.centralThirdTileParent L hL
-        (finiteShiftGridTileIndex shift' depth q')).centralThird
       rw [← finiteShiftGridInterval_eq_centralThirdTileParent]
       exact hx'
     rcases finiteShiftGridTileIndex_injective depth (hindex'.trans hindex.symm) with
@@ -380,10 +379,10 @@ theorem parent_mem_completeDescendantIndices
   let b : ℤ := (q₀ + 1) * (2 : ℤ) ^ e
   have hlo : 2 * a ≤ q := by
     dsimp [a]
-    convert hmem.2.1 using 1 <;> rw [hp] <;> ring
+    convert hmem.2.1 using 1; rw [hp]; ring
   have hhi : q ≤ 2 * b - 1 := by
     dsimp [b]
-    convert hmem.2.2 using 1 <;> rw [hp] <;> ring
+    convert hmem.2.2 using 1; rw [hp]; ring
   have hdecomp : q % 2 + 2 * (q / 2) = q := Int.emod_add_mul_ediv q 2
   have hrem0 : 0 ≤ q % 2 := Int.emod_nonneg q (by norm_num)
   have hrem2 : q % 2 < 2 := Int.emod_lt_of_pos q (by norm_num)

@@ -28,10 +28,12 @@ open PositiveEndpointOptimization PositiveHighHeightEstimate PositiveLowFullEsti
 open LowKernelLevelSummation
 
 
+/-- The supremum over dyadic modulations of the middle-range low action at one magnitude level. -/
 noncomputable def middleLowContributionAtLevel
     (A : ℕ → ℝ) (f : ℝ → ℂ) (k B c : ℕ) (x : ℝ) : ℝ≥0∞ :=
   ⨆ m : ℤ, ‖middleRangeLowAction A f k B c m x‖ₑ
 
+/-- The sum of the middle-range low contributions over all lacunary magnitude levels. -/
 noncomputable def lacunaryMiddleLowContribution
     (f : ℝ → ℂ) (B : ℕ → ℕ) (c : ℕ) (x : ℝ) : ℝ≥0∞ :=
   ∑' k : ℕ, middleLowContributionAtLevel lacunaryAmplitude f k (B k) c x
@@ -89,6 +91,7 @@ noncomputable def lacunaryLowActionAtLevel
   ∫ y, paperLowCZKernel (dyadicModulation m) (dyadicModulation_pos m).ne' B x y *
     canonicalLevelBadPart A f k y
 
+/-- The sum over magnitude levels of the maximal lacunary low actions. -/
 noncomputable def lacunaryLowContribution
     (f : ℝ → ℂ) (B : ℕ → ℕ) (x : ℝ) : ℝ≥0∞ :=
   ∑' k : ℕ, ⨆ m : ℤ, ‖lacunaryLowActionAtLevel lacunaryAmplitude f k (B k) m x‖ₑ
@@ -224,6 +227,7 @@ theorem lacunaryLowContribution_le_frozen_add_two_verySmall
     (lacunaryMiddleLowContribution_le_frozen_add_verySmall hf hfi hB c hx)
     (le_refl (lacunaryVerySmallLowContribution f B c x))
 
+/-- The endpoint constant combining the middle-range and very-small low contributions. -/
 noncomputable def lacunaryLowEndpointConstant (C : ℝ) : ℝ≥0∞ :=
   5 + 48 * ENNReal.ofReal C * frozenMiddleOrliczConstant + 4 * verySmallL1Constant
 

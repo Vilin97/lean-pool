@@ -85,6 +85,7 @@ theorem outerLevelSet_le_of_exceptional_majorants {F L H : ℝ → ℝ≥0∞}
     (add_le_add (half_levelSet_measure_le_two_lintegral hL)
       (half_levelSet_measure_le_four_sq_lintegral hH))
 
+/-- The stopping bad-part constant at the half-level used in the full endpoint estimate. -/
 noncomputable def stoppingBadHalfConstant : ℝ≥0∞ :=
   5 + 4 * fullLowEndpointConstant + 16 * fullHighEndpointConstant
 
@@ -167,6 +168,7 @@ theorem stoppingGoodPart_half_levelSet_le_orlicz {f : ℝ → ℂ}
       rw [mul_assoc]
       exact mul_le_mul' le_rfl (mul_le_mul' le_rfl (lintegral_norm_le_full_orlicz f))
 
+/-- The constant combining the full stopping good-part and bad-part endpoint bounds. -/
 noncomputable def fullOscillatoryEndpointConstant : ℝ≥0∞ :=
   4 * stoppingGoodOscillatoryConstant + stoppingBadHalfConstant
 

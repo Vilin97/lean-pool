@@ -11,7 +11,7 @@ import LeanPool.QuadraticCarleson.QuadraticCarleson.SchwartzOperator
 # The counterexample as a Schwartz function
 
 The paper's finite wave-packet superposition is smooth and compactly
-supported, hence belongs to Schwartz space.  Bundling it this way lets the
+supported, hence belongs to Schwartz space. Bundling it this way lets the
 canonical distributional quadratic Hilbert transform act on it directly.
 -/
 

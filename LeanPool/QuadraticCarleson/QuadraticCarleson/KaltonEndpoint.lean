@@ -16,8 +16,8 @@ import Mathlib.MeasureTheory.Integral.Layercake
 
 The lacunary positive-endpoint argument in arXiv:2609.04101v1 uses Kalton's
 log-convexity of weak `L^1` at exactly one point (lines 652--657 of the source
-TeX).  Its cited source is N. J. Kalton, *Convexity, type and the three space
-problem*, Studia Math. 69 (1981), Theorems 3.4 and 3.6.  Theorem 3.4 proves
+TeX). Its cited source is N. J. Kalton, *Convexity, type and the three space
+problem*, Studia Math. 69 (1981), Theorems 3.4 and 3.6. Theorem 3.4 proves
 that `L(1,∞)` is log-convex, and Theorem 3.6 gives the finite sequence form
 
 `‖x₁ + ... + xₙ‖ ≤ C ∑ k, (1 + log k) ‖xₖ‖`.
@@ -26,13 +26,13 @@ Victor Lie, *On the boundedness of the Carleson operator near L¹*, Rev. Mat.
 Iberoam. 29 (2013), equation (3.15), records the countable function-space
 version subsequently used by the source paper.
 
-Kalton states Theorem 3.4 on `[0,1]`.  His proof only uses distribution
-functions, restriction to measurable sets, and the layer-cake formula.  The
+Kalton states Theorem 3.4 on `[0,1]`. His proof only uses distribution
+functions, restriction to measurable sets, and the layer-cake formula. The
 development below therefore records the measure-space formulation directly;
 in particular it applies to Lebesgue measure on `ℝ`, as required here.
 
 The source paper writes `log₁(k+2)`, which under its convention is
-`log (10 + (k+2)) = log (k+12)`.  This is not definitionally Kalton's weight.
+`log (10 + (k+2)) = log (k+12)`. This is not definitionally Kalton's weight.
 The comparison is proved explicitly below and is not silently identified.
 -/
 
@@ -44,7 +44,7 @@ namespace KaltonEndpoint
 
 
 /-- Distribution-function formulation of `‖f‖_{L^{1,∞}(μ)} ≤ A` for a
-nonnegative real-valued function.  This is the convention used in Kalton's
+nonnegative real-valued function. This is the convention used in Kalton's
 Theorem 3.4: `sup a * μ {a < f}`. -/
 def HasWeakL1Bound {α : Type*} [MeasurableSpace α] (μ : Measure α)
     (A : ℝ) (f : α → ℝ) : Prop :=
@@ -110,7 +110,7 @@ theorem HasWeakL1Bound.restrict_measureReal_le_two_div
     _ ≤ A / (t / 2) := hweak
     _ = 2 * A / t := by field_simp
 
-/-- Restricted-integral estimate used in Kalton's proof.  The cutoff
+/-- Restricted-integral estimate used in Kalton's proof. The cutoff
 `q = 2A/m` is chosen so that the constant part of the layer-cake integral is
 exactly `2A`. -/
 theorem integralOn_le_of_weakL1Bound
@@ -126,7 +126,7 @@ theorem integralOn_le_of_weakL1Bound
   let q : ℝ := 2 * A / m
   have hq : 0 < q := by dsimp [q]; positivity
   have hM : 0 < M := lt_of_lt_of_le hq hqM
-  letI : IsFiniteMeasure ν :=
+  let : IsFiniteMeasure ν :=
     IsFiniteMeasure.mk (by
       dsimp [ν]
       rw [Measure.restrict_apply_univ]
@@ -240,7 +240,7 @@ theorem paper_outer_weight_eq (i : ℕ) :
   simp [paperLog]
   ring_nf
 
-/-- Kalton's weight is bounded by twice the paper's outer weight.  The factor
+/-- Kalton's weight is bounded by twice the paper's outer weight. The factor
 two keeps separate the two logarithm conventions in the cited arguments. -/
 theorem kaltonWeight_le_two_paperLog (i : ℕ) :
     kaltonWeight i ≤ 2 * paperLog 1 ((i : ℝ) + 2) := by
@@ -259,7 +259,7 @@ theorem kaltonWeight_le_two_paperLog (i : ℕ) :
     · linarith
   linarith
 
-/-- The entropy summand in Kalton's equivalent form (3.3.2).  Its value at
+/-- The entropy summand in Kalton's equivalent form (3.3.2). Its value at
 `A = 0` is the continuous value zero, rather than the raw expression
 `0 * log (S / 0)`. -/
 noncomputable def entropySummand (S A : ℝ) : ℝ :=
@@ -272,7 +272,7 @@ theorem entropySummand_eq {S A : ℝ} (hA : A ≠ 0) :
     entropySummand S A = A * Real.log (S / A) := by
   simp [entropySummand, hA]
 
-/-- The elementary pointwise estimate behind Kalton's Lemma 3.5.  We use
+/-- The elementary pointwise estimate behind Kalton's Lemma 3.5. We use
 `q_i = (i+1)⁻²`; the inequality is the tangent bound
 `-x log x ≤ 1-x`, applied to `x = (A/S)/q_i`. -/
 theorem entropySummand_le_index {S A : ℝ} (i : ℕ)
@@ -281,7 +281,7 @@ theorem entropySummand_le_index {S A : ℝ} (i : ℕ)
       S / ((i : ℝ) + 1) ^ 2 - A + 2 * A * Real.log ((i : ℝ) + 1) := by
   by_cases hA0 : A = 0
   · subst A
-    simp [entropySummand]
+    simp only [entropySummand, ↓reduceIte, sub_zero, mul_zero, zero_mul, add_zero]
     positivity
   have hApos : 0 < A := lt_of_le_of_ne hA (Ne.symm hA0)
   let p : ℝ := A / S
@@ -440,7 +440,7 @@ theorem hasWeakL1Bound_finset_sum_of_pos
   have hEsub : E ⊆ ⋃ i : Fin n, {x | u < f i x} := by
     intro x hx
     by_contra hxall
-    simp only [mem_iUnion, not_exists, mem_setOf_eq] at hxall
+    simp only [mem_iUnion, not_exists, mem_ofPred_eq] at hxall
     have hsum : F x ≤ ∑ _i : Fin n, u := by
       dsimp [F]
       exact Finset.sum_le_sum fun i _ ↦ le_of_not_gt (hxall i)
@@ -487,7 +487,7 @@ theorem hasWeakL1Bound_finset_sum_of_pos
         exact div_self (by simpa [S] using hS.ne')
   let D : Set α := E \ B
   have hDmeas : MeasurableSet D := hEmeas.diff hBmeas
-  have hDtop : μ D ≠ ∞ := ne_top_of_le_ne_top hEtop (measure_mono diff_subset)
+  have hDtop : μ D ≠ ∞ := ne_top_of_le_ne_top hEtop (measure_mono sdiff_subset)
   have hBtop : μ B ≠ ∞ := by
     apply ne_top_of_le_ne_top (b := ∑' i : Fin n, μ {x | M < f i x})
     · rw [tsum_fintype]
@@ -497,7 +497,7 @@ theorem hasWeakL1Bound_finset_sum_of_pos
     have hinter : E ∩ B ⊆ E := inter_subset_left
     have hintermeas : MeasurableSet (E ∩ B) := hEmeas.inter hBmeas
     have hdiff : μ.real (E \ (E ∩ B)) = μ.real E - μ.real (E ∩ B) :=
-      measureReal_diff hinter hintermeas hEtop
+      measureReal_sdiff hinter hintermeas hEtop
     have hDB : E \ (E ∩ B) = D := by ext x; simp [D]
     rw [hDB] at hdiff
     rw [hdiff]
@@ -519,7 +519,7 @@ theorem hasWeakL1Bound_finset_sum_of_pos
         exact hcap i x hx
   have hsumint : IntegrableOn F D μ := by
     dsimp [F]
-    exact integrable_finset_sum _ fun i _ ↦ hAD i
+    exact integrable_finsetSum _ fun i _ ↦ hAD i
   have hlower : a * μ.real D ≤ ∫ x in D, F x ∂μ := by
     rw [← show (∫ _x in D, a ∂μ) = a * μ.real D by
       rw [setIntegral_const]
@@ -532,7 +532,7 @@ theorem hasWeakL1Bound_finset_sum_of_pos
         ∑ i : Fin n, (2 * A i + 2 * A i * Real.log (S / A i)) := by
     rw [show (∫ x in D, F x ∂μ) = ∑ i : Fin n, ∫ x in D, f i x ∂μ by
       dsimp [F]
-      exact integral_finset_sum Finset.univ fun i _ ↦ hAD i]
+      exact integral_finsetSum Finset.univ fun i _ ↦ hAD i]
     apply Finset.sum_le_sum
     intro i _hi
     have hAiS : A i ≤ S := by
@@ -540,7 +540,7 @@ theorem hasWeakL1Bound_finset_sum_of_pos
       exact Finset.single_le_sum (fun j _ ↦ (hA j).le) (Finset.mem_univ i)
     have hqM : 2 * A i / m ≤ M := by dsimp [M]; gcongr
     have hi := integralOn_le_of_weakL1Bound (hf i) (hf0 i) (hweak i)
-      hDmeas hDtop (measureReal_mono diff_subset hEtop) (hcap i) (hA i) hm hqM
+      hDmeas hDtop (measureReal_mono sdiff_subset hEtop) (hcap i) (hA i) hm hqM
     have hratio : M * m / (2 * A i) = S / A i := by
       dsimp [M]
       field_simp [hm.ne', (hA i).ne']
@@ -587,7 +587,7 @@ theorem hasWeakL1Bound_finset_sum_of_pos
       (Or.inl (by simp [ENNReal.ofReal_eq_zero, not_le, ha]))
       (Or.inl ENNReal.ofReal_ne_top)).1 hμE
 
-/-- Finite Kalton inequality on an arbitrary measure space.  Zero individual
+/-- Finite Kalton inequality on an arbitrary measure space. Zero individual
 weak bounds are handled by positive regularization and passage to the exact
 endpoint; they are not excluded by an extra hypothesis. -/
 theorem hasWeakL1Bound_finset_sum
@@ -666,7 +666,7 @@ theorem hasWeakL1Bound_finset_sum
   simpa [E, measureReal_def] using hreal
 
 /-- The finite estimate in the logarithmic convention used by the source
-paper.  The factor `24 = 12 · 2` displays the explicit comparison with
+paper. The factor `24 = 12 · 2` displays the explicit comparison with
 Kalton's original `1 + log (i+1)` weight. -/
 theorem hasWeakL1Bound_finset_sum_paperLog
     {α : Type*} [MeasurableSpace α] {μ : Measure α} {n : ℕ}
@@ -694,7 +694,7 @@ theorem hasWeakL1Bound_finset_sum_paperLog
 
 /-- Countable form recorded by Lie, obtained exactly as in the source paper:
 apply the finite estimate to partial sums and then use continuity from below of
-measure.  Pointwise summability names the real-valued infinite sum and rules
+measure. Pointwise summability names the real-valued infinite sum and rules
 out the non-summable convention `tsum = 0`. -/
 theorem hasWeakL1Bound_tsum
     {α : Type*} [MeasurableSpace α] {μ : Measure α}
