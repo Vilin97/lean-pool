@@ -9966,3 +9966,40 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - title: Brill–Noether theory and gonality of finite graphs
+    summary: Formalizes Brill–Noether existence through genus five, chains of marked banana graphs and
+      loops, the treewidth lower bound for gonality, and a tricycle example whose gonality drops under
+      regular subdivision. Includes divisor and transmission infrastructure and the Demazure-product
+      support used by vertex gluing.
+    branch: combinatorics and tropical geometry
+    main_declarations:
+    - Highlights.brill_noether_existence_through_five
+    - Highlights.treewidth_le_gonality
+    - Highlights.gonality_drops_under_regular_subdivision
+    main_results:
+    - declaration: Highlights.brill_noether_existence_through_five
+      informal: Every finite connected graph of genus at most five satisfies the stated Brill–Noether
+        existence theorem.
+    - declaration: Highlights.treewidth_le_gonality
+      informal: The treewidth of a finite connected graph is at most its divisorial gonality.
+    - declaration: Highlights.gonality_drops_under_regular_subdivision
+      informal: There is a graph whose divisorial gonality strictly decreases under a regular subdivision.
+    tags:
+    - brill-noether-theory
+    - graph-theory
+    - chip-firing
+    - tropical-geometry
+    msc:
+    - 14T15
+    - 05C50
+    provenance: AI
+    slug: brill-noether-graphs
+    entry_module: LeanPool.BrillNoetherGraphs
+    authors:
+    - Nathan Pflueger
+    source:
+      url: https://github.com/npflueger/brill-noether-graphs
+      github_repo: npflueger/brill-noether-graphs
+      commit: ce62dd82fd499fcec9b5a4110a5312befd6e96e2
+    license: Apache-2.0
+    status: verified

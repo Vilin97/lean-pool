@@ -1,0 +1,217 @@
+/-
+Copyright (c) 2026 Nathan Pflueger. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nathan Pflueger
+-/
+
+-- The banana model: definitions, geometry, elementary structure
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaBasics
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaGeometry
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.BananaSameStrandLemma
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.DegreeOneRepresentatives
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.GraphIsoCuts
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.MarkedIso
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.ReducedCutCriterion
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.SegmentScript
+import LeanPool.BrillNoetherGraphs.Bananas.Basics.TwoEdgeCuts
+
+-- The Jacobian presentation and torsion slopes (Prop 2.14)
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianDiagonal
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianLatticeReduction
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianLeftJustification
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianPresentation
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianProposition214
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianQuotientCertificate
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedBridge
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedInjectivity
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReducedUniqueness
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianReductionTermination
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaJacobianSurjectivity
+import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaTorsionSlopes
+
+-- Transmission, torsion orders, rank witnesses
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainBalanceArithmetic
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameLeft
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ChainTwoLoopsSameRight
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.CycleTorsionOrder
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.EqualTorsionKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.ExactTorsionAPI
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.FarMarkAPI
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.FarMarkNegativeAPI
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.GenericFarWitness
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.GenericRankWitness
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralBNGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralGonality
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.KGeneralSwap
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.LengthTwoTorsion
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MidpointTorsion
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MixedTorsionChainBalance
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.MixedTorsionChains
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.NonrecurrenceDisjoint
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.NonrecurrenceWitness
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankDeltaDuality
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankDetermining
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroSupport
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroVertexBridge
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.RankZeroWitness
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionIso
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderExact
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TorsionOrderTwoGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionAPI
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBasics
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TransmissionBridge
+import LeanPool.BrillNoetherGraphs.Bananas.Transmission.TwoVertexGenusOneTorsion
+
+-- Same-strand marks: endpoint/interior analysis (Sections 3-4)
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.BananaEndpointDelta
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.BananaEndpointRankCriterion
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointBlock
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointCardinality
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.EndpointInversions
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMClassification
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMCrossWitness
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMFullClassification
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.NSMSecondCrossWitness
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandEndpointNegative
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrandInteriorNegative
+import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
+
+-- Cross and one-off marks: inversion growth (Section 4)
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineInversionFinite
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.AffineReduction
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.BananaCrossOneOffDeltaFamilies
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.BananaOneOffDeltaFamilies
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffArithmetic
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffBlock
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffCorrectedInversion
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffCorrectedKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffDelta
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffExtendedBlock
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteCountSol
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiniteRows
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffFiring
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffForcedCountArithmetic
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffForcedCountLengthTwo
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffInversions
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffPeriodSeparation
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffResidueDelta
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffShortStrandPeriod
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossOneOffTransmission
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossStrandNegative
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossStrandSupport
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossingInversionCount
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCross
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCrossBasePoint
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.LengthTwoCrossMonotonicity
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffInversionLowerBound
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffMultipleRows
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffPeriodBound
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffPositiveRows
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffRefinedInversion
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.OneOffTransmission
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.QuadraticInversionGrowth
+import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.SignChangingInversions
+
+-- Theta graphs: the genus-two exact theory
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.EvenlyMarkedThetaKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaArithmetic
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaBoundarySubmodularity
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaChipEval
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaCoordinateRigidity
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaCounterexampleNormalForm
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExactTorsion
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExactTorsionRelabel
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaExceptionalArithmetic
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoCornerSum
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaGenusTwoTwistIdentities
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInvTauCorrection
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionCount
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaInversionFiniteSum
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaJacobian
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaJacobianPresentation
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaKGeneralClassification
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaKGeneralCoordinates
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaLattice
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaMoment
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNegativeDivisorClasses
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNegativeDivisorClassesBoundary
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNegativeDivisorClassesTerminal
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaNonrecurrence
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrefix
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaPrincipal
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaReflectionRank
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaResidue
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaTorsionAPI
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaTransmissionAudit
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaTransmissionCases
+
+-- Wedge sums and their k-general classification
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.KGeneralWedgeGenerality
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OnceMarkedWedgeGenerality
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OppositeWedgeKGeneralClassification
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.OppositeWedgeRigidity
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgePeriod
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeRight
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.SameFactorWedgeSubmodularity
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.TwoVertexWedgeSubmodularity
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.VertexWedgeAssociativity
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralClassification
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralConverse
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeKGeneralSymmetric
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgePeriodRecurrence
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeSubmodularity
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeTorsionRestriction
+import LeanPool.BrillNoetherGraphs.Bananas.Wedge.ZeroGenusWedge
+
+-- Bridgeless low-genus classification and corrected theorems
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessDegreeOneClasses
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusOneTopology
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoClassification
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoCornerAlgebra
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoDegreeShape
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoKGeneralReduction
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoNonrecurrence
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoPseudocore
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.BridgelessGenusTwoTopology
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedBananaSimple
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedBananaTheorem117
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedBananaTorsion
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.CorrectedMidpointKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusOneKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusOneRankDelta
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoDegreeTwo
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.GenusTwoReduction
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.PointedGenusOneKGeneral
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.SciWeierstrass
+import LeanPool.BrillNoetherGraphs.Bananas.Classification.WeierstrassPartition
+
+-- Section 5 and Section 6 paper spines
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveDefinitions
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveInversionBound
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveStatements
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveSymmetries
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionFiveTransports
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixBananaCorollary
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixChainConclusion
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixDefinitions
+import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixFoundation
+
+-- Worked examples and audits
+import LeanPool.BrillNoetherGraphs.Bananas.Examples.ExampleBngChain
+import LeanPool.BrillNoetherGraphs.Bananas.Examples.MechanicalAPIAudit
+
+-- Downstream applications to named results in the tropical Brill--Noether
+-- literature.  These consume the Section 6 chain theorems as black boxes; they
+-- are not part of the twice-marked banana paper, which is why they are indexed here
+-- and not in `TwiceMarkedBananas.lean`.
+import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.CDPR
+import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.BridgeChainTransport
+import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.CommonPeriodGonality
+import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.Highlights
+
+/-! # Bananas -/

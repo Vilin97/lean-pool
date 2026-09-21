@@ -1,0 +1,190 @@
+/-
+Copyright (c) 2026 Nathan Pflueger. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Nathan Pflueger
+-/
+
+import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaJacobian
+
+/-! # Theta Lattice -/
+
+namespace Bananas
+
+open Utilities
+
+/-! The integer lattice in the paper's theta Jacobian presentation. -/
+def thetaLattice (a b c : ℕ) : AddSubgroup (ℤ × ℤ) :=
+  AddSubgroup.closure {
+    (((a + c : ℕ) : ℤ), (c : ℤ)),
+    (-(a : ℤ), (b : ℤ)) }
+
+/- TeX label: `prop-JacBanana` (theta Jacobian lattice presentation). -/
+theorem thetaLattice_mem_iff
+    (a b c : ℕ) (x y : ℤ) :
+    (x, y) ∈ thetaLattice a b c ↔
+      ∃ r s : ℤ,
+        x = r * ((a + c : ℕ) : ℤ) - s * (a : ℤ) ∧
+        y = r * (c : ℤ) + s * (b : ℤ) := by
+  unfold thetaLattice
+  constructor
+  · intro h
+    let p : (z : ℤ × ℤ) → z ∈ AddSubgroup.closure {
+        (((a + c : ℕ) : ℤ), (c : ℤ)), (-(a : ℤ), (b : ℤ)) } → Prop :=
+      fun z _ => ∃ r s : ℤ,
+        z.1 = r * ((a + c : ℕ) : ℤ) - s * (a : ℤ) ∧
+        z.2 = r * (c : ℤ) + s * (b : ℤ)
+    have hp := AddSubgroup.closure_induction (p := p)
+      (mem := by
+        intro z hz
+        simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hz
+        rcases hz with hz | hz
+        · exact ⟨1, 0, by simp [hz], by simp [hz]⟩
+        · exact ⟨0, 1, by simp [hz], by simp [hz]⟩)
+      (zero := by exact ⟨0, 0, by simp, by simp⟩)
+      (add := by
+        intro u v hu hv hpu hpv
+        rcases hpu with ⟨r, s, hxr, hyr⟩
+        rcases hpv with ⟨r', s', hxr', hyr'⟩
+        refine ⟨r + r', s + s', ?_, ?_⟩
+        · change u.1 + v.1 = _
+          rw [hxr, hxr']
+          ring
+        · change u.2 + v.2 = _
+          rw [hyr, hyr']
+          ring)
+      (neg := by
+        intro z hz hpz
+        rcases hpz with ⟨r, s, hxr, hyr⟩
+        refine ⟨-r, -s, ?_, ?_⟩
+        · change -z.1 = _
+          rw [hxr]
+          ring
+        · change -z.2 = _
+          rw [hyr]
+          ring) h
+    simpa [p] using hp
+  · rintro ⟨r, s, rfl, rfl⟩
+    have h1 : (((a + c : ℕ) : ℤ), (c : ℤ)) ∈
+        ({(((a + c : ℕ) : ℤ), (c : ℤ)), (-(a : ℤ), (b : ℤ))} : Set (ℤ × ℤ)) :=
+      by simp
+    have h2 : (-(a : ℤ), (b : ℤ)) ∈
+        ({(((a + c : ℕ) : ℤ), (c : ℤ)), (-(a : ℤ), (b : ℤ))} : Set (ℤ × ℤ)) :=
+      by simp
+    have hA : r • (((a + c : ℕ) : ℤ), (c : ℤ)) ∈ thetaLattice a b c :=
+      AddSubgroup.zsmul_mem _ (AddSubgroup.subset_closure h1) r
+    have hB : s • (-(a : ℤ), (b : ℤ)) ∈ thetaLattice a b c :=
+      AddSubgroup.zsmul_mem _ (AddSubgroup.subset_closure h2) s
+    have hmem := (thetaLattice a b c).add_mem hA hB
+    simpa [thetaLattice, sub_eq_add_neg] using hmem
+
+/- TeX label: `prop-JacBanana` / `cor:evenlyMarkedKGT` (minimal lattice
+coordinate calculation). -/
+theorem thetaLattice_evenlyMarked_multiple_mem_iff
+    (a b c i j n : ℕ)
+    (ha : 0 < a) (_hb : 0 < b) (hc : 0 < c)
+    (hi : 0 < i) (hi' : i < a)
+    (hj : 0 < j) (hj' : j < b)
+    (hcross : a * j = b * i) :
+    (((n * i : ℕ) : ℤ), -((n * j : ℕ) : ℤ)) ∈ thetaLattice a b c ↔
+      a / Nat.gcd a i ∣ n := by
+  constructor
+  · intro hmem
+    obtain ⟨r, s, hx, hy⟩ := (thetaLattice_mem_iff a b c
+      (n * i : ℤ) (-((n * j : ℕ) : ℤ))).mp hmem
+    have hcrossZ : (a : ℤ) * j = b * i := by exact_mod_cast hcross
+    have hy' : -((n : ℤ) * j) = r * (c : ℤ) + s * (b : ℤ) := by
+      simpa only [Nat.cast_mul] using hy
+    have hcomb : r * ((b : ℤ) * ((a + c : ℕ) : ℤ) +
+        (a : ℤ) * (c : ℤ)) = 0 := by
+      calc
+        r * ((b : ℤ) * ((a + c : ℕ) : ℤ) + (a : ℤ) * (c : ℤ)) =
+            (b : ℤ) * ((n : ℤ) * i) + (a : ℤ) * (-((n : ℤ) * j)) := by
+              calc
+                r * ((b : ℤ) * ((a + c : ℕ) : ℤ) + (a : ℤ) * (c : ℤ)) =
+                    (b : ℤ) * (r * ((a + c : ℕ) : ℤ) - s * (a : ℤ)) +
+                      (a : ℤ) * (r * (c : ℤ) + s * (b : ℤ)) := by ring
+                _ = (b : ℤ) * ((n : ℤ) * i) +
+                    (a : ℤ) * (-((n : ℤ) * j)) := by rw [← hx, ← hy']
+        _ = 0 := by
+          calc
+            (b : ℤ) * ((n : ℤ) * i) + (a : ℤ) * (-((n : ℤ) * j)) =
+                (n : ℤ) * ((b : ℤ) * i - (a : ℤ) * j) := by ring
+            _ = 0 := by rw [hcrossZ]; ring
+    have hDelta : 0 < (b : ℤ) * ((a + c : ℕ) : ℤ) +
+        (a : ℤ) * (c : ℤ) := by
+      push_cast
+      nlinarith
+    have hr : r = 0 := by
+      nlinarith
+    have hdivInt : (a : ℤ) ∣ (n * i : ℤ) := by
+      refine ⟨-s, ?_⟩
+      rw [hx, hr]
+      ring
+    have hdivNat : a ∣ n * i :=
+      Int.natCast_dvd_natCast.mp (by simpa using hdivInt)
+    let d := Nat.gcd a i
+    have hcop : Nat.Coprime (a / d) (i / d) := by
+      dsimp [d]
+      exact Nat.coprime_div_gcd_div_gcd (Nat.gcd_pos_of_pos_left i ha)
+    have haeq : a = d * (a / d) := by
+      dsimp [d]
+      rw [Nat.mul_div_cancel' (Nat.gcd_dvd_left a i)]
+    have hieq : i = d * (i / d) := by
+      dsimp [d]
+      rw [Nat.mul_div_cancel' (Nat.gcd_dvd_right a i)]
+    have hdpos : 0 < d := by
+      dsimp [d]
+      exact Nat.gcd_pos_of_pos_left i ha
+    have hdivReduced : a / d ∣ n * (i / d) := by
+      obtain ⟨q, hq⟩ := hdivNat
+      refine ⟨q, ?_⟩
+      apply Nat.mul_left_cancel hdpos
+      calc
+        d * (n * (i / d)) = n * (d * (i / d)) := by ring
+        _ = n * i := by rw [← hieq]
+        _ = a * q := hq
+        _ = (d * (a / d)) * q := congrArg (fun t => t * q) haeq
+        _ = d * ((a / d) * q) := by ring
+    exact (hcop.dvd_mul_right).mp hdivReduced
+  · intro hn
+    obtain ⟨t, ht⟩ := hn
+    let d := Nat.gcd a i
+    have hda : d ∣ a := Nat.gcd_dvd_left a i
+    have hdiva : a / d * d = a := by
+      exact Nat.div_mul_cancel hda
+    have hni : a ∣ n * i := by
+      refine ⟨t * (i / d), ?_⟩
+      rw [ht]
+      calc
+        (a / d * t) * i = (a / d) * (t * i) := by ring
+        _ = (a / d) * (t * (d * (i / d))) := by
+          rw [Nat.mul_div_cancel' (Nat.gcd_dvd_right a i)]
+        _ = ((a / d) * d) * (t * (i / d)) := by ring
+        _ = a * (t * (i / d)) := by rw [hdiva]
+    obtain ⟨q, hq⟩ := hni
+    have hnj : n * j = q * b := by
+      have hcross' : (a : ℤ) * j = b * i := by exact_mod_cast hcross
+      have hqZ : (n : ℤ) * i = a * q := by exact_mod_cast hq
+      have : (a : ℤ) * (n * j) = a * (q * b) := by
+        calc
+          (a : ℤ) * (n * j) = (n : ℤ) * (a * j) := by ring
+          _ = (n : ℤ) * (b * i) := by rw [hcross']
+          _ = b * ((n : ℤ) * i) := by ring
+          _ = b * (a * q) := by rw [hqZ]
+          _ = (a : ℤ) * (q * b) := by ring
+      have haZ : (a : ℤ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt ha)
+      apply Int.ofNat_inj.mp
+      apply (mul_left_cancel₀ haZ)
+      exact this
+    refine (thetaLattice_mem_iff a b c
+      (n * i : ℤ) (-((n * j : ℕ) : ℤ))).mpr ?_
+    refine ⟨0, -(q : ℤ), ?_, ?_⟩
+    · norm_num
+      have hq' : n * i = q * a := by simpa [Nat.mul_comm] using hq
+      exact_mod_cast hq'
+    · push_cast
+      norm_num
+      have hnjZ : (n * j : ℤ) = (q * b : ℤ) := by exact_mod_cast hnj
+      linarith
+
+end Bananas
