@@ -77,7 +77,7 @@ theorem exists_poincare_countersequence
     change (∫ x, (L n)⁻¹ * g n x ∂riemannianVolume (I := I)) = 0
     rw [integral_const_mul, hm n, mul_zero]
   · intro n
-    rw [Lp.norm_toLp, toReal_eLpNorm (hfLp n).1]
+    rw [Lp.norm_toLp, toReal_eLpNorm]
     change lpNorm ((L n)⁻¹ • g n) 2 (riemannianVolume (I := I)) = 1
     rw [lpNorm_const_smul]
     change |(L n)⁻¹| * L n = 1

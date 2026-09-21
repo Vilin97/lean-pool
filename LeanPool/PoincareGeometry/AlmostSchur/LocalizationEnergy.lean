@@ -48,10 +48,11 @@ theorem norm_chart_toLp_le_lpNorm
     (h : ∀ x ∈ (chartAt H (d.center i)).source,
       ‖g (extChartAt I (d.center i) x)‖ ≤ q x) :
     ‖hg.toLp g‖ ≤ lpNorm q 2 μ := by
-  rw [Lp.norm_toLp, ← toReal_eLpNorm hq.1]
+  rw [Lp.norm_toLp, ← toReal_eLpNorm]
   apply ENNReal.toReal_mono hq.eLpNorm_ne_top
-  rw [chartMeasure, eLpNorm_map_measure hg.1 (aemeasurable_extChartAt (d := d) μ i)]
-  refine (eLpNorm_mono_ae_real ?_).trans (eLpNorm_mono_measure q Measure.restrict_le_self)
+  rw [chartMeasure, eLpNorm_map_measure hg.aestronglyMeasurable (aemeasurable_extChartAt (d := d) μ i)]
+  refine (eLpNorm_mono_ae_real (hg.aestronglyMeasurable.comp_aemeasurable
+    (aemeasurable_extChartAt (d := d) μ i)) ?_).trans (eLpNorm_mono_measure q Measure.restrict_le_self)
   filter_upwards [ae_restrict_mem (isOpen_extChartAt_source (I := I) (d.center i)).measurableSet]
     with x hx
   exact h x (by simpa using hx)
@@ -70,7 +71,7 @@ theorem norm_h1GraphChart_fst_le
     (RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.memLp_of_mem_C1c
       (chartMeasure (d := d) μ i)
       (localize_mem_C1c (d := d) f.2 i)) (fun x => ‖f.1 x‖) hf.norm ?_
-  · simpa only [lpNorm_norm hf.1] using h
+  · simpa only [lpNorm_norm hf.aestronglyMeasurable] using h
   intro x hx
   have hx' : x ∈ (extChartAt I (d.center i)).source := by simpa using hx
   change ‖((extChartAt I (d.center i)).target.indicator
@@ -106,7 +107,8 @@ theorem norm_h1GraphChart_snd_le
   have h := lpNorm_add_le (hf.norm.const_smul D) (g := B • (fun x => ‖gradient (I := I) f.1 x‖))
     (by norm_num : (1 : ℝ≥0∞) ≤ 2)
   simpa only [lpNorm_const_smul, NNReal.coe_mk, coe_nnnorm, Real.norm_eq_abs,
-    abs_of_nonneg hD, abs_of_nonneg hB, lpNorm_norm hf.1, lpNorm_fun_abs hf.1] using h
+    abs_of_nonneg hD, abs_of_nonneg hB, lpNorm_norm hf.aestronglyMeasurable,
+    lpNorm_fun_abs hf.aestronglyMeasurable] using h
 
 omit [T2Space M] in
 /-- Uniform graph-norm control before identifying the gradient L² norm with energy. -/
@@ -175,7 +177,7 @@ theorem exists_norm_c1ToH1_le_energy (d : FiniteChartData (H := H) (M := M) I) :
   refine ⟨C, hC, fun f => ?_⟩
   have h := hb f (memLp_norm_gradient f.2)
   have he := norm_toLp_gradient (I := I) f.2
-  rw [Lp.norm_toLp, toReal_eLpNorm (memLp_norm_gradient f.2).1] at he
+  rw [Lp.norm_toLp, toReal_eLpNorm] at he
   simpa only [he] using h
 
 /-- The same bound written with the norm of the actual global L² class. -/
@@ -186,7 +188,7 @@ theorem exists_norm_c1ToH1_le_energy_toLp (d : FiniteChartData (H := H) (M := M)
         C * (‖hf.toLp f.1‖ + Real.sqrt (dirichletForm (I := I) f.1 f.1)) := by
   obtain ⟨C, hC, hb⟩ := exists_norm_c1ToH1_le_energy d
   refine ⟨C, hC, fun f hf => ?_⟩
-  simpa only [Lp.norm_toLp, toReal_eLpNorm hf.1] using hb f
+  simpa only [Lp.norm_toLp, toReal_eLpNorm] using hb f
 
 end Energy
 

@@ -1430,7 +1430,7 @@ instance instModule
   letI : AddCommGroup
       (ContinuousSectionSpace (𝕜 := 𝕜) (F := F) (V := V) et Kc hKc Ko hKo hKoEq hcover) :=
     instAddCommGroup (𝕜 := 𝕜) (F := F) et Kc hKc Ko hKo hKoEq hcover
-  exact e.module 𝕜
+  exact e.addEquiv.module 𝕜
 
 instance instNormedAddCommGroup
     {κ : Type*} [Finite κ] [T2Space M]
@@ -1478,7 +1478,7 @@ instance instNormedSpace
   letI : NormedAddCommGroup
       (ContinuousSectionSpace (𝕜 := 𝕜) (F := F) (V := V) et Kc hKc Ko hKo hKoEq hcover) :=
     instNormedAddCommGroup (𝕜 := 𝕜) (F := F) et Kc hKc Ko hKo hKoEq hcover
-  exact e.normedSpace 𝕜
+  exact e.addEquiv.normedSpace 𝕜
 
 instance instCompleteSpace
     {κ : Type*} [Finite κ] [T2Space M] [CompleteSpace F]

@@ -472,7 +472,7 @@ lemma vendorGeometryManifoldSobolevRellichKondrachovDensityChartwise_l2ChartToVo
         simpa using!
           (RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.memLp_of_mem_C1c
             (μ := (volume : Measure E).restrict K) (E := E) (f := g.1) g.2)
-      exact hgmem.1.aemeasurable
+      exact hgmem.aestronglyMeasurable.aemeasurable
   have hez :
       ((ez (e (r x)) : E →₂[(volume : Measure E)] ℝ) : E → ℝ) =ᵐ[(volume : Measure E)]
         K.indicator fun z : E => (e (r x) : E → ℝ) z := by
@@ -589,7 +589,7 @@ lemma vendorGeometryManifoldSobolevRellichKondrachovDensityChartwise_l2ChartToVo
         simpa using!
           (RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.memLp_grad_of_mem_C1c
             (μ := (volume : Measure E).restrict K) (E := E) (f := g.1) g.2)
-      exact hgmem.1.aemeasurable
+      exact hgmem.aestronglyMeasurable.aemeasurable
   have hez :
       ((ez (e (r x)) : E →₂[(volume : Measure E)] E) : E → E) =ᵐ[(volume : Measure E)]
         K.indicator fun z : E => (e (r x) : E → E) z := by

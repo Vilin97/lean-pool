@@ -70,13 +70,13 @@ theorem mlieBracket_tangent_symmL_eq_zero (c x : M)
       (contDiffAt_const (n := 1))).mdifferentiableAt (by simp))
     (contMDiffAt_extChartAt' (n := 2) hx) (by simp)]
   have hz : mlieBracket 𝓘(ℝ, E) (fun _ : E ↦ u) (fun _ : E ↦ v) = 0 := by
-    calc
-      mlieBracket 𝓘(ℝ, E) (fun _ : E ↦ u) (fun _ : E ↦ v) =
-          mlieBracketWithin 𝓘(ℝ, E) (fun _ : E ↦ u) (fun _ : E ↦ v) Set.univ :=
-        mlieBracketWithin_univ.symm
-      _ = lieBracketWithin ℝ (fun _ : E ↦ u) (fun _ : E ↦ v) Set.univ :=
-        mlieBracketWithin_eq_lieBracketWithin
-      _ = 0 := by ext z; simp [lieBracketWithin_eq]
+    have hc : lieBracketWithin ℝ (fun _ : E ↦ u) (fun _ : E ↦ v) Set.univ =
+        fun _ : E ↦ (0 : E) := by
+      funext z
+      simp [lieBracketWithin_eq]
+    exact (mlieBracketWithin_univ (I := 𝓘(ℝ, E))
+      (V := fun _ : E ↦ u) (W := fun _ : E ↦ v)).symm.trans
+      (mlieBracketWithin_eq_lieBracketWithin.trans hc)
   rw [hz, mpullback_zero]
   rfl
 

@@ -67,7 +67,7 @@ theorem exists_chartL2Pullback (c : M) {K : Set E} (hK : IsCompact K)
           (A • (Measure.map e (ν.restrict e.source)).restrict K) :=
         Measure.map_mono hdom hg
       _ = A • Measure.map g ((Measure.map e (ν.restrict e.source)).restrict K) :=
-        Measure.map_smul A _ g
+        Measure.map_smul A hg.aemeasurable
       _ ≤ A • Measure.map g (Measure.map e (ν.restrict e.source)) :=
         smul_le_smul_left A (Measure.map_mono Measure.restrict_le_self hg)
       _ = A • ν.restrict e.source := by rw [hback]
