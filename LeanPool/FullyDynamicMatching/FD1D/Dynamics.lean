@@ -115,7 +115,7 @@ def inventoryDeficit
   ∑ i, (y.1 i - x.1 i)
 
 theorem inventoryDeficit_eq_zero_iff
-    {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
+    {ι : Type*} [Fintype ι]  {m : ℕ}
     (x y : InventoryState ι m) :
     inventoryDeficit x y = 0 ↔ x = y := by
   constructor
@@ -141,7 +141,7 @@ theorem inventoryDeficit_eq_zero_iff
     simp [inventoryDeficit]
 
 private theorem exists_deficit_and_excess
-    {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
+    {ι : Type*} [Fintype ι] {m : ℕ}
     (x y : InventoryState ι m) (hxy : x ≠ y) :
     ∃ arrived deleted : ι,
       x.1 arrived < y.1 arrived ∧ y.1 deleted < x.1 deleted := by

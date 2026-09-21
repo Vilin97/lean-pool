@@ -19,7 +19,7 @@ The square-root estimates and explicit constants in the final cost bounds.
 -/
 
 theorem sqrt_div_sqrt_six_le_four_div
-    {x m : ℝ} (hm : 0 < m) (hx0 : 0 ≤ x)
+    {x m : ℝ} (hm : 0 < m)
     (hx : x ≤ 96 / m ^ 2) :
     Real.sqrt x / Real.sqrt 6 ≤ 4 / m := by
   have hsix : 0 < Real.sqrt 6 := Real.sqrt_pos.2 (by norm_num)
@@ -32,14 +32,13 @@ theorem sqrt_div_sqrt_six_le_four_div
       _ = (4 / m * Real.sqrt 6) ^ 2 := by
         rw [mul_pow, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 6)]
         field_simp
-        ; ring
+        ring
 
 theorem stationary_sqrt_term_le
     {H m : ℝ} (hm : 0 < m)
-    (hH0 : 1 / m ^ 2 ≤ H)
     (hH : H ≤ 206 / (3 * m ^ 2)) :
     Real.sqrt (H - 1 / m ^ 2) / Real.sqrt 6 ≤ 4 / m := by
-  apply sqrt_div_sqrt_six_le_four_div hm (sub_nonneg.2 hH0)
+  apply sqrt_div_sqrt_six_le_four_div hm
   calc
     H - 1 / m ^ 2 ≤ 206 / (3 * m ^ 2) - 1 / m ^ 2 :=
       sub_le_sub_right hH _
@@ -52,13 +51,12 @@ theorem stationary_cost_le_six
     {a m H cell cost : ℝ}
     (ha : 0 ≤ a) (hm : 0 < m)
     (hcell : cell ≤ 2 * a / m)
-    (hH0 : 1 / m ^ 2 ≤ H)
     (hH : H ≤ 206 / (3 * m ^ 2))
     (hcost :
       cost ≤ cell +
         a / Real.sqrt 6 * Real.sqrt (H - 1 / m ^ 2)) :
     cost ≤ 6 * a / m := by
-  have hsqrt := stationary_sqrt_term_le hm hH0 hH
+  have hsqrt := stationary_sqrt_term_le hm hH
   have hterm :
       a / Real.sqrt 6 * Real.sqrt (H - 1 / m ^ 2) ≤
         a * (4 / m) := by
@@ -81,10 +79,9 @@ theorem inv_horizon_le_inv_sq
 
 theorem transient_sqrt_term_le
     {H T m : ℝ} (hm : 0 < m) (hT : m ^ 2 ≤ T)
-    (hH0 : 1 / m ^ 2 ≤ H)
     (hH : H ≤ 206 / (3 * m ^ 2) + 1 / T) :
     Real.sqrt (H - 1 / m ^ 2) / Real.sqrt 6 ≤ 4 / m := by
-  apply sqrt_div_sqrt_six_le_four_div hm (sub_nonneg.2 hH0)
+  apply sqrt_div_sqrt_six_le_four_div hm
   have hInv := inv_horizon_le_inv_sq hm hT
   calc
     H - 1 / m ^ 2
@@ -101,13 +98,12 @@ theorem transient_cost_le_six
     {a m T H cell cost : ℝ}
     (ha : 0 ≤ a) (hm : 0 < m) (hT : m ^ 2 ≤ T)
     (hcell : cell ≤ 2 * a / m)
-    (hH0 : 1 / m ^ 2 ≤ H)
     (hH : H ≤ 206 / (3 * m ^ 2) + 1 / T)
     (hcost :
       cost ≤ cell +
         a / Real.sqrt 6 * Real.sqrt (H - 1 / m ^ 2)) :
     cost ≤ 6 * a / m := by
-  have hsqrt := transient_sqrt_term_le hm hT hH0 hH
+  have hsqrt := transient_sqrt_term_le hm hT hH
   have hterm :
       a / Real.sqrt 6 * Real.sqrt (H - 1 / m ^ 2) ≤
         a * (4 / m) := by

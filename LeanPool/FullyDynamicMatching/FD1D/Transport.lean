@@ -1272,16 +1272,8 @@ theorem branch_root_fiber {L : ℕ} (l r : DyadicMass L) (z : ℝ) :
   have he : e 0 = 0 := by
     apply Fin.ext
     norm_num [e]
-  rw [he]
-  let root : CompleteHaarNode (L + 1) :=
-    ⟨⟨0, Nat.zero_lt_succ L⟩, (0 : Fin 1)⟩
-  have hv :
-      (⟨(0 : Fin (L + 1)),
-        (0 : Fin (2 ^ (0 : Fin (L + 1)).val))⟩ :
-          CompleteHaarNode (L + 1)) = root := by
-    rfl
-  rw [hv]
-  norm_num [root, nodeCoefficient, nodeChildMasses, haarNodeLeft, haarNodeWidth]
+  rw [he, nodeCoefficient_root]
+  norm_num [haarNodeLeft, haarNodeWidth]
 
 /--
 The recursive Haar series is exactly the canonical finite sum over all

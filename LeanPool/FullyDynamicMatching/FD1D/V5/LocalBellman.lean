@@ -183,7 +183,7 @@ theorem uniform_rateIncrement {s ρ : ℝ}
 
 theorem uniform_residual_eq
     {s r ρ : ℝ}
-    (hs : 0 < s) (hr0 : -s < r) (hr1 : r ≤ 1 / 2)
+    (hs : 0 < s)
     (hρ0 : 0 ≤ ρ) (hρ1 : ρ < 1) :
     residual s r ρ (uniform s ρ) =
       r ^ 2 / 8 - (uniform s ρ) ^ 2 / 24 +
@@ -315,7 +315,7 @@ theorem uniform_case
     unfold uniform lambda
     ring
   rw [uniform_rateIncrement hs hρ0 hρ1, zero_add]
-  rw [uniform_residual_eq hs hr0 hr1 hρ0 hρ1]
+  rw [uniform_residual_eq hs hρ0 hρ1]
   by_cases hsHalf : 1 / 2 ≤ s
   · have hden := uniform_denominator_le hsHalf hρ0 hρ1 hactive
     have hdpos : 0 < d s ρ * (s + 1 / 2) := by
@@ -633,7 +633,8 @@ private theorem feedback_normalization
     {s r ρ : ℝ} (hs : 0 < s) (hρnonneg : 0 ≤ ρ) (hρ1 : ρ < 1) :
       (s / A s ρ) ^ 2 *
           ((r / (s / A s ρ)) ^ 2 / 8 +
-            lambda ρ / (d s ρ / (s * A s ρ)) * (1 + (1 / A s ρ) * (r / (s / A s ρ))) * ((r / (s / A s ρ)) + 13 / 2) -
+            lambda ρ / (d s ρ / (s * A s ρ)) * (1 + (1 / A s ρ) * (r / (s / A s ρ))) * ((r / (s /
+              A s ρ)) + 13 / 2) -
             8 / 3 * lambda ρ) =
         r ^ 2 / 8 - lambda ρ * (8 * s / A s ρ) ^ 2 / 24 +
           lambda ρ * g s r / d s ρ *
@@ -1011,7 +1012,7 @@ theorem floorJ_bound
 private theorem floorR_lower
     {K e u v : ℝ}
     (hK : 1 ≤ K) (he0 : 0 ≤ e)
-    (hEll0 : 0 ≤ floorEll u v K)
+
     (hEll1 : floorEll u v K ≤ 1)
     (hW0 : 0 ≤ floorW u v K)
     (hWUpper : floorW u v K ≤ (K + 1) / (2 * K))
@@ -1096,7 +1097,7 @@ private theorem floorR_lower
 
 private theorem floor_rate_bound
     {K e u v : ℝ}
-    (hK : 1 ≤ K) (he0 : 0 ≤ e)
+    (hK : 1 ≤ K)
     (hEll0 : 0 ≤ floorEll u v K)
     (hEll1 : floorEll u v K ≤ 1) :
     (floorEll u v K ^ 2 + ((K + 1) / 2) ^ 2) / 2 - 1 +
@@ -1380,7 +1381,7 @@ private theorem uniform_eq_floor_coordinates
   ring
 theorem floor_case
     {s r ρ : ℝ}
-    (hs : 0 < s) (hr0 : -s < r) (hr1 : r ≤ 1 / 2)
+    (hs : 0 < s)  (hr1 : r ≤ 1 / 2)
     (hρ0 : 0 < ρ) (hρ1 : ρ < 1)
     (hactiveU : floorCap s r ρ ≤ uniform s ρ)
     (hactiveF : floorCap s r ρ ≤ feedback s ρ) :
@@ -1420,9 +1421,9 @@ theorem floor_case
   obtain ⟨hEll0, hEll1, hW0, hWUpper, hEta⟩ :=
     floor_coordinate_bounds hK he0 hu hrel hfeedback
   have hResidual :=
-    floorR_lower hK he0 hEll0.le hEll1 hW0.le hWUpper hEta
+    floorR_lower hK he0 hEll1 hW0.le hWUpper hEta
   have hRate :=
-    floor_rate_bound hK he0 hEll0.le hEll1
+    floor_rate_bound (e := floorE r) hK hEll0.le hEll1
   have hResidual' :
       (floorK s r ρ ^ 2 + floorE r ^ 2) / 384 ≤
         residual s r ρ (floorCap s r ρ) := by
@@ -1512,7 +1513,7 @@ theorem threeCap_case
             floorCap s r ρ := by
         rw [min_eq_right hHU, min_eq_right hHF]
       rw [hchoice]
-      exact floor_case hs hr0 hr1 hρpos hρ1 hHU hHF
+      exact floor_case hs hr1 hρpos hρ1 hHU hHF
   · have hUF : uniform s ρ ≤ feedback s ρ := le_of_not_ge hFU
     by_cases hUH : uniform s ρ ≤ floorCap s r ρ
     · have hA8 : A s ρ ≤ 8 := by
@@ -1533,7 +1534,7 @@ theorem threeCap_case
             floorCap s r ρ := by
         rw [min_eq_right hHU, min_eq_right hHF]
       rw [hchoice]
-      exact floor_case hs hr0 hr1 hρpos hρ1 hHU hHF
+      exact floor_case hs hr1 hρpos hρ1 hHU hHF
 
 /-! ## Empty-child boundary -/
 
@@ -1716,7 +1717,7 @@ private theorem empty_floor_case
     have hden : 0 < 16 + 2 * s := by positivity
     exact (div_le_one hden).2 (by linarith)
   have hResidual :=
-    floorR_lower hK he0 (by rw [hEll]; norm_num)
+    floorR_lower hK he0
       (by rw [hEll]) hW0 hWUpper hEta
   have hResidual' :
       (K ^ 2 + e ^ 2) / 384 ≤
@@ -1724,7 +1725,7 @@ private theorem empty_floor_case
     rw [empty_floor_residual_eq hs]
     simpa [K, e] using hResidual
   have hRate :=
-    floor_rate_bound (u := 0) (v := 2 * s) hK he0
+    floor_rate_bound (e := e) (u := 0) (v := 2 * s) hK
       (by rw [hEll]; norm_num) (by rw [hEll])
   have hG : (K + 1) / 2 = g s r := by
     dsimp [K]
@@ -1750,12 +1751,12 @@ end Normalized
 
 /-- The left side of the manuscript's local Bellman inequality. -/
 def localResidual (a p h : ℝ) (x y : ℕ) : ℝ :=
-  ((discrepancyLeft a p h x y * regularizedMassLeft a p x y +
+  ((discrepancyLeft a p h x y * regularizedMassLeft a p x  +
         bellman (rateLeft a p h x y) (discrepancyLeft a p h x y)
-          (regularizedMassLeft a p x y)) +
-      (discrepancyRight a p h x y * regularizedMassRight a p x y +
+          (regularizedMassLeft a p x )) +
+      (discrepancyRight a p h x y * regularizedMassRight a p  y +
         bellman (rateRight a p h x y) (discrepancyRight a p h x y)
-          (regularizedMassRight a p x y))) / 2 -
+          (regularizedMassRight a p  y))) / 2 -
     bellman h (discrepancy a p h x y) (regularizedMass a p x y)
 
 /-- The rate increment plus squared deletion bias in the local inequality. -/
@@ -1782,12 +1783,12 @@ private theorem discrepancyRight_swap (a p h : ℝ) (x y : ℕ) :
   unfold discrepancyLeft discrepancyRight
   rw [massRight_swap]
 
-private theorem regularizedMassLeft_swap (a p : ℝ) (x y : ℕ) :
-    regularizedMassLeft a p y x = regularizedMassRight a p x y := by
+private theorem regularizedMassLeft_swap (a p : ℝ) (y : ℕ) :
+    regularizedMassLeft a p y  = regularizedMassRight a p  y := by
   rfl
 
-private theorem regularizedMassRight_swap (a p : ℝ) (x y : ℕ) :
-    regularizedMassRight a p y x = regularizedMassLeft a p x y := by
+private theorem regularizedMassRight_swap (a p : ℝ) (x : ℕ) :
+    regularizedMassRight a p  x = regularizedMassLeft a p x  := by
   rfl
 
 private theorem localResidual_swap (a p h : ℝ) (x y : ℕ) :
@@ -1795,8 +1796,8 @@ private theorem localResidual_swap (a p h : ℝ) (x y : ℕ) :
   unfold localResidual
   rw [discrepancyLeft_swap a p h x y,
     discrepancyRight_swap a p h x y,
-    regularizedMassLeft_swap a p x y,
-    regularizedMassRight_swap a p x y,
+    regularizedMassLeft_swap a p y,
+    regularizedMassRight_swap a p x,
     rateLeft_swap a p h x y, rateRight_swap a p h x y,
     discrepancy_swap a p h x y, regularizedMass_swap a p x y]
   ring
@@ -1876,7 +1877,7 @@ private theorem rateRight_normalization
 private theorem regularizedMassLeft_normalization
     {a p h : ℝ} {x y : ℕ}
     (ha : 0 < a) (hh : 0 < h) (hx : 0 < x) (hy : 0 < y) :
-    regularizedMassLeft a p x y =
+    regularizedMassLeft a p x  =
       h * Normalized.ZPlus
         (inventory x y / a)
         (discrepancy a p h x y / h)
@@ -1888,14 +1889,14 @@ private theorem regularizedMassLeft_normalization
   unfold regularizedMassLeft Normalized.ZPlus Normalized.g
     discrepancy parentMass inventory
   field_simp [ha.ne', hh.ne', hN.ne', hNden.ne', hxden.ne']
-  ; ring_nf
-  ; field_simp [ha.ne', hh.ne', hN.ne', hNden.ne', hxden.ne']
+ ; ring_nf
+ ; field_simp [ha.ne', hh.ne', hN.ne', hNden.ne', hxden.ne']
 
 
 private theorem regularizedMassRight_normalization
     {a p h : ℝ} {x y : ℕ}
     (ha : 0 < a) (hh : 0 < h) (hx : 0 < x) (hy : 0 < y) :
-    regularizedMassRight a p x y =
+    regularizedMassRight a p  y =
       h * Normalized.ZMinus
         (inventory x y / a)
         (discrepancy a p h x y / h)
@@ -1907,8 +1908,8 @@ private theorem regularizedMassRight_normalization
   unfold regularizedMassRight Normalized.ZMinus Normalized.g
     discrepancy parentMass inventory
   field_simp [ha.ne', hh.ne', hN.ne', hNden.ne', hyden.ne']
-  ; ring_nf
-  ; field_simp [ha.ne', hh.ne', hN.ne', hNden.ne', hyden.ne']
+ ; ring_nf
+ ; field_simp [ha.ne', hh.ne', hN.ne', hNden.ne', hyden.ne']
 
 
 private theorem regularizedMass_normalization
@@ -1993,9 +1994,9 @@ private theorem feedbackCandidate_normalization
   unfold feedbackCandidate parentMass Normalized.feedback Normalized.A
     Normalized.lambda inventory
   field_simp [ha.ne', hh.ne', hxr.ne', hyr.ne', hN.ne']
-  ; ring_nf
-  ; field_simp [ha.ne', hh.ne', hxr.ne', hyr.ne', hN.ne']
-  ; ring
+ ; ring_nf
+ ; field_simp [ha.ne', hh.ne', hxr.ne', hyr.ne', hN.ne']
+  ring
 
 private theorem uniformCandidate_normalization
     {a h : ℝ} {x y : ℕ}
@@ -2022,9 +2023,9 @@ private theorem floorCandidate_normalization
   have hden : 0 < 2 * (y : ℝ) + a := by positivity
   unfold floorCandidate discrepancy parentMass Normalized.floorCap inventory
   field_simp [ha.ne', hh.ne', hyr.ne', hN.ne', hden.ne']
-  ; ring_nf
-  ; field_simp [ha.ne', hh.ne', hyr.ne', hN.ne', hden.ne']
-  ; ring
+ ; ring_nf
+ ; field_simp [ha.ne', hh.ne', hyr.ne', hN.ne', hden.ne']
+  ring
 
 private theorem ordered_positive_case
     {a p h : ℝ} {x y : ℕ}
@@ -2147,7 +2148,7 @@ private theorem ordered_empty_residual_normalization
   rw [hb]
   unfold parentMass inventory
   field_simp [ha.ne', hh.ne', hxr.ne']
-  ; ring_nf
+ ; ring_nf
   <;> field_simp [ha.ne', hh.ne', hxr.ne']
 
 
@@ -2278,7 +2279,7 @@ private theorem empty_parent_energy_eq (a p h : ℝ) :
 
 private theorem empty_parent_case
     {a p h : ℝ}
-    (ha : 0 < a) (hp : 0 < p) (hh : 0 < h)
+    (ha : 0 < a) (hp : 0 < p)
     (ht : discrepancy a p h 0 0 ≤ h / 2) :
     localResidual a p h 0 0 ≥ localEnergy a p h 0 0 / 1000 := by
   have ht' : p / a ≤ h / 2 := by
@@ -2300,7 +2301,7 @@ private theorem ordered_case
   · subst y
     by_cases hx : x = 0
     · subst x
-      exact empty_parent_case ha hp hh ht
+      exact empty_parent_case ha hp ht
     · exact ordered_one_empty_case ha hp hh (Nat.pos_of_ne_zero hx) ht
   · have hypos : 0 < y := Nat.pos_of_ne_zero hy
     have hxpos : 0 < x := lt_of_lt_of_le hypos hxy

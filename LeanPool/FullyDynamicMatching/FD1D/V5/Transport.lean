@@ -97,7 +97,7 @@ theorem stateDyadicMassAt_leaf_probability
   rfl
 
 @[simp] theorem stateDyadicMass_total
-    (a : ℝ) (ha : 0 < a) (hm : 0 < m)
+    (a : ℝ)  (hm : 0 < m)
     (x : InventoryState (DyadicNode L) m) :
     (stateDyadicMass a x).total = 1 := by
   rw [stateDyadicMass, stateDyadicMassAt_total a x (by omega)]
@@ -110,7 +110,7 @@ theorem stateDyadicMass_isProbability
     (stateDyadicMass a x).IsProbability where
   nonneg :=
     stateDyadicMassAt_allNonneg a ha hm x (by omega) dyadicRoot
-  total_eq_one := stateDyadicMass_total a ha hm x
+  total_eq_one := stateDyadicMass_total a hm x
 
 theorem stateDyadicMassAt_rootCoefficient
     (a : ℝ) (x : InventoryState (DyadicNode L) m)

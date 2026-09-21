@@ -69,9 +69,8 @@ private theorem comap_comp_measure_from
 If `μ₀` projects to the finite count law `ν₀`, every later spatial marginal
 projects to the corresponding iterate of the finite count kernel.
 -/
-omit [MeasureTheory.IsProbabilityMeasure μ₀] in
 theorem map_spatialCount_spatialLawFrom
-    (μ₀ : Measure (SpatialState m)) [IsProbabilityMeasure μ₀]
+    (μ₀ : Measure (SpatialState m))
     (ν₀ : FiniteLaw (InventoryState (DyadicNode L) m))
     (hμ₀ : Measure.map (spatialCount L) μ₀ = ν₀.toMeasure)
     (a : ℝ) (ha : 0 < a) (hm : 0 < m)
@@ -151,9 +150,8 @@ theorem processLawFrom_eq_product
       rw [ih, processKernel_comp_product, spatialLawFrom_succ]
 
 /-- One path-space law for the joint process initialized by `μ₀`. -/
-omit [MeasureTheory.IsProbabilityMeasure μ₀] in
 def trajectoryLawFrom
-    (μ₀ : Measure (SpatialState m)) [IsProbabilityMeasure μ₀]
+    (μ₀ : Measure (SpatialState m))
     (a : ℝ) (fallback : Fin m) :
     Measure (ℕ → ProcessState m) :=
   TrajectoryBridge.trajectoryLaw
@@ -261,7 +259,7 @@ theorem integral_processSquaredCost_processLawFrom
 
 /-- One-period cost on the generalized path-space law. -/
 def trajectoryExpectedSquaredCostFrom
-    (μ₀ : Measure (SpatialState m)) [IsProbabilityMeasure μ₀]
+    (μ₀ : Measure (SpatialState m))
     (a : ℝ) (hm : 0 < m) (fallback : Fin m) (t : ℕ) : ℝ :=
   ∫ path : ℕ → ProcessState m,
     processSquaredCost L a (SupplyConfiguration.canonicalFallback hm) (path t)

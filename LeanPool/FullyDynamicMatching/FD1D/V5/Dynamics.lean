@@ -56,7 +56,7 @@ def deletionRule (a : ℝ) (ha : 0 < a) (hm : 0 < m) :
       (aggregatedInventory x) ha hm w (by simpa using hw)
   sum_prob x :=
     TreePolicy.sum_deletionMass
-      (aggregatedInventory x) ha hm le_rfl
+      (aggregatedInventory x) hm le_rfl
 
 @[simp] theorem deletionRule_prob
     (a : ℝ) (ha : 0 < a) (hm : 0 < m)
@@ -387,7 +387,7 @@ theorem deletionLabel_le_one
     {d : ℕ} (hdL : d ≤ L) (v : DyadicNode d) :
     deletionLabel a x d v ≤ 1 := by
   rw [← TreePolicy.sum_deletionMass
-    (aggregatedInventory x) ha hm hdL]
+    (aggregatedInventory x) hm hdL]
   exact Finset.single_le_sum
     (fun w _ =>
       TreePolicy.deletionMass_nonneg

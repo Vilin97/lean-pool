@@ -74,7 +74,7 @@ instance [Zero R] [One R] [Add R] [Mul R] : Pow (DPoly R) Nat := ⟨pow⟩
 instance (n : ℕ) [OfNat R (n + 2)] : OfNat (DPoly R) (n + 2) :=
   ⟨const (OfNat.ofNat (n + 2))⟩
 
-@[simp] theorem coeffs_zero [Zero R] :
+@[simp] theorem coeffs_zero  :
     (0 : DPoly R).coeffs = [] := rfl
 
 @[simp] theorem coeffs_one [One R] :
@@ -106,8 +106,8 @@ def eval [Zero S] [Add S] [Mul S]
     (f : R → S) (x : S) (a : R) (p : List R) :
     evalCoeffs f x (a :: p) = f a + x * evalCoeffs f x p := rfl
 
-theorem evalCoeffs_add [Zero R] [Add R] [CommRing S]
-    (f : R → S) (hf0 : f 0 = 0)
+theorem evalCoeffs_add  [Add R] [CommRing S]
+    (f : R → S)
     (hfadd : ∀ a b, f (a + b) = f a + f b)
     (x : S) (p q : List R) :
     evalCoeffs f x (addCoeffs p q) =
@@ -155,12 +155,12 @@ theorem evalCoeffs_mul [Zero R] [Add R] [Mul R] [CommRing S]
   induction p with
   | nil => simp [mulCoeffs, evalCoeffs]
   | cons a p ih =>
-      rw [mulCoeffs, evalCoeffs_add f hf0 hfadd]
+      rw [mulCoeffs, evalCoeffs_add f hfadd]
       rw [evalCoeffs_scale f hfmul]
       simp only [evalCoeffs, hf0, zero_add, ih]
       ring
 
-@[simp] theorem eval_zero [Zero R] [CommRing S]
+@[simp] theorem eval_zero  [CommRing S]
     (f : R → S) (x : S) :
     eval f x (0 : DPoly R) = 0 := rfl
 
@@ -169,12 +169,12 @@ theorem evalCoeffs_mul [Zero R] [Add R] [Mul R] [CommRing S]
     eval f x (const a) = f a := by
   simp [eval, const, evalCoeffs]
 
-theorem eval_add [Zero R] [Add R] [CommRing S]
-    (f : R → S) (hf0 : f 0 = 0)
+theorem eval_add [Add R] [CommRing S]
+    (f : R → S)
     (hfadd : ∀ a b, f (a + b) = f a + f b)
     (x : S) (p q : DPoly R) :
     eval f x (add p q) = eval f x p + eval f x q := by
-  exact evalCoeffs_add f hf0 hfadd x p.coeffs q.coeffs
+  exact evalCoeffs_add f hfadd x p.coeffs q.coeffs
 
 theorem eval_neg [Neg R] [CommRing S]
     (f : R → S) (hfneg : ∀ a, f (-a) = -f a)
@@ -234,8 +234,7 @@ def eval3 (p : Poly3) (u v z : ℝ) : ℝ :=
 @[simp] theorem eval1_add (p q : DPoly ℤ) (z : ℝ) :
     eval1 (p + q) z = eval1 p z + eval1 q z := by
   apply DPoly.eval_add
-  · simp
-  · simp
+  simp
 
 @[simp] theorem eval1_neg (p : DPoly ℤ) (z : ℝ) :
     eval1 (-p) z = -eval1 p z := by
@@ -265,9 +264,8 @@ def eval3 (p : Poly3) (u v z : ℝ) : ℝ :=
 @[simp] theorem eval2_add (p q : DPoly (DPoly ℤ)) (v z : ℝ) :
     eval2 (p + q) v z = eval2 p v z + eval2 q v z := by
   apply DPoly.eval_add
-  · exact eval1_zero z
-  · intro a b
-    exact eval1_add a b z
+  intro a b
+  exact eval1_add a b z
 
 @[simp] theorem eval2_neg (p : DPoly (DPoly ℤ)) (v z : ℝ) :
     eval2 (-p) v z = -eval2 p v z := by
@@ -302,9 +300,8 @@ def eval3 (p : Poly3) (u v z : ℝ) : ℝ :=
 @[simp] theorem eval3_add (p q : Poly3) (u v z : ℝ) :
     eval3 (p + q) u v z = eval3 p u v z + eval3 q u v z := by
   apply DPoly.eval_add
-  · exact eval2_zero v z
-  · intro a b
-    exact eval2_add a b v z
+  intro a b
+  exact eval2_add a b v z
 
 @[simp] theorem eval3_neg (p : Poly3) (u v z : ℝ) :
     eval3 (-p) u v z = -eval3 p u v z := by

@@ -54,9 +54,8 @@ def trajectoryLaw (μ₀ : Measure α) (κ : Kernel α α) [IsMarkovKernel κ] :
     Measure (ℕ → α) :=
   Kernel.trajMeasure (X := fun _ => α) μ₀ (historyKernel κ)
 
-omit [MeasureTheory.IsProbabilityMeasure μ₀] in
 theorem trajectoryLaw_marginal_zero
-    (μ₀ : Measure α) [IsProbabilityMeasure μ₀]
+    (μ₀ : Measure α)
     (κ : Kernel α α) [IsMarkovKernel κ] :
     Measure.map (fun path : ℕ → α => path 0) (trajectoryLaw μ₀ κ) = μ₀ := by
   rw [trajectoryLaw, Kernel.trajMeasure,

@@ -393,7 +393,7 @@ theorem reaches_trans [DecidableEq α] (K : FiniteKernel α)
 
 /-- Every state has positive mass under a stationary law of an irreducible
 finite kernel. -/
-theorem stationary_mass_pos [DecidableEq α] 
+theorem stationary_mass_pos [DecidableEq α]
     {K : FiniteKernel α} (hirr : K.Irreducible)
     {μ : FiniteLaw α} (hμ : K.IsStationary μ) (y : α) :
     0 < μ.mass y := by
@@ -515,7 +515,7 @@ theorem step_lawInvariant  {K : FiniteKernel α}
   intro x _
   rw [hμ, hK]
 
-theorem iterate_lawInvariant [DecidableEq α] {K : FiniteKernel α}
+theorem iterate_lawInvariant  {K : FiniteKernel α}
     {μ : FiniteLaw α} {e : Equiv.Perm α}
     (hK : K.Equivariant e) (hμ : LawInvariant μ e) (n : ℕ) :
     LawInvariant (K.iterate n μ) e := by
@@ -535,14 +535,14 @@ def GroupEquivariant {G : Type*} [Group G]
     (ρ : G →* Equiv.Perm α) (K : FiniteKernel α) : Prop :=
   ∀ g, K.Equivariant (ρ g)
 
-theorem step_groupInvariant [DecidableEq α]
+theorem step_groupInvariant
     {G : Type*} [Group G] (ρ : G →* Equiv.Perm α)
     {K : FiniteKernel α} {μ : FiniteLaw α}
     (hK : GroupEquivariant ρ K) (hμ : GroupInvariant ρ μ) :
     GroupInvariant ρ (K.step μ) :=
   fun g => step_lawInvariant (hK g) (hμ g)
 
-theorem iterate_groupInvariant [DecidableEq α]
+theorem iterate_groupInvariant
     {G : Type*} [Group G] (ρ : G →* Equiv.Perm α)
     {K : FiniteKernel α} {μ : FiniteLaw α}
     (hK : GroupEquivariant ρ K) (hμ : GroupInvariant ρ μ) (n : ℕ) :
@@ -572,7 +572,7 @@ theorem cesaroLaw_groupInvariant [DecidableEq α]
 /-- A finite equivariant Markov kernel has a stationary law invariant under
 the entire finite group action. -/
 theorem exists_stationary_groupInvariant [DecidableEq α] [Nonempty α]
-    {G : Type*} [Group G] 
+    {G : Type*} [Group G]
     (ρ : G →* Equiv.Perm α) (K : FiniteKernel α)
     (hK : GroupEquivariant ρ K) :
     ∃ μ : FiniteLaw α, K.IsStationary μ ∧ GroupInvariant ρ μ := by
@@ -639,6 +639,7 @@ namespace InventoryState
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
+omit [DecidableEq ι] in
 @[ext]
 theorem ext {m : ℕ} {x y : InventoryState ι m}
     (h : ∀ i, x.1 i = y.1 i) : x = y :=

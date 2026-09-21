@@ -47,6 +47,7 @@ private theorem pow_loop_pos
             mul_nonneg (K.pow_nonneg n x y) (K.pow_nonneg 1 y x))
           (Finset.mem_univ x))
 
+omit [Nonempty α] in
 /-- Irreducibility and positive one-step loops make one common kernel power
 strictly positive in every entry. -/
 theorem exists_pow_pos
@@ -99,6 +100,7 @@ private theorem mass_iterate_sub
   intro x _
   ring
 
+omit [Nonempty α] in
 private theorem lawL1_iterate_le
     (K : FiniteKernel α) (n : ℕ) (μ ν : FiniteLaw α) :
     lawL1 (K.iterate n μ) (K.iterate n ν) ≤ lawL1 μ ν := by
@@ -146,6 +148,7 @@ private theorem sum_mass_sub (μ ν : FiniteLaw α) :
     ∑ x, (μ.mass x - ν.mass x) = 0 := by
   rw [Finset.sum_sub_distrib, μ.sum_mass, ν.sum_mass, sub_self]
 
+omit [Nonempty α] in
 private theorem mass_iterate_sub_eq_residual
     (K : FiniteKernel α) (N : ℕ) (ε : ℝ)
     (μ ν : FiniteLaw α) (y : α) :
@@ -155,6 +158,7 @@ private theorem mass_iterate_sub_eq_residual
   simp_rw [mul_sub]
   rw [Finset.sum_sub_distrib, ← Finset.sum_mul, sum_mass_sub, zero_mul, sub_zero]
 
+omit [Nonempty α] in
 private theorem lawL1_block_contraction
     (K : FiniteKernel α) (N : ℕ) (ε : ℝ)
     (hε : ∀ x y, ε ≤ K.pow N x y)
@@ -223,7 +227,7 @@ private theorem lawL1_blocks_le
 private theorem lawL1_iterate_geometric
     (K : FiniteKernel α) (π μ : FiniteLaw α)
     (hπ : K.IsStationary π)
-    (N : ℕ) (hN : 0 < N)
+    (N : ℕ)
     (ε : ℝ) (hε : ∀ x y, ε ≤ K.pow N x y)
     (hc : (Fintype.card α : ℝ) * ε ≤ 1)
     (n : ℕ) :
@@ -263,7 +267,7 @@ private theorem tendsto_lawL1_zero
     (tendsto_pow_atTop_nhds_zero_of_lt_one hq0 hq1).comp
       (Nat.tendsto_div_const_atTop hN.ne')
   refine squeeze_zero (fun n => lawL1_nonneg (K.iterate n μ) π)
-    (fun n => lawL1_iterate_geometric K π μ hπ N hN ε hε hc n) ?_
+    (fun n => lawL1_iterate_geometric K π μ hπ N ε hε hc n) ?_
   simpa [q] using hpowlim.mul_const (lawL1 μ π)
 
 /-- Ordinary iterates of a finite irreducible kernel with positive loops

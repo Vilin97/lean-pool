@@ -96,7 +96,7 @@ upper bound have been combined.
 -/
 theorem stationary_hazard_bound
     {a L m H : ℝ}
-    (ha : 0 < a) (hm : 0 < m) (hL : 0 ≤ L) (hH : 0 ≤ H)
+    (ha : 0 < a) (hm : 0 < m)  (hH : 0 ≤ H)
     (haL : 200 * L ≤ a)
     (hmain :
       (a / 100 - L) * H ≤ 103 * a / (300 * m ^ 2)) :
@@ -115,13 +115,13 @@ theorem stationary_hazard_bound
     a / 200 * H ≤ 103 * a / (300 * m ^ 2) := hscaled
     _ = a / 200 * (206 / (3 * m ^ 2)) := by
       field_simp
-      ; ring
+      ring
 
 /-- Algebraic form of the transient averaged hazard estimate (12). -/
 theorem transient_hazard_bound
     {a L m T H logTerm : ℝ}
     (ha : 0 < a) (hm : 0 < m) (hT : 0 < T)
-    (hL : 0 ≤ L) (hH : 0 ≤ H) (hlog : 0 ≤ logTerm)
+     (hH : 0 ≤ H)
     (haL : 200 * L ≤ a) (hlogA : 200 * logTerm ≤ a)
     (hmain :
       (a / 100 - L) * H ≤

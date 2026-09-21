@@ -99,7 +99,7 @@ theorem sqrt_average_stateSquaredCostEnvelope_le
       _ = _ := by rw [Finset.mul_sum]
   rw [henvelope, hhaarAverage, hsum] at halgebra
   dsimp only [w] at halgebra
-  convert halgebra using 1 ; ring
+  convert halgebra using 1; ring
 
 end Transport
 

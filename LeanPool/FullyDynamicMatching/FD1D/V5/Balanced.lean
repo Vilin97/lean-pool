@@ -123,8 +123,7 @@ theorem statePotential_inventorySwap
           (show d < (d + 1) + r by omega) v =
         FD1D.TreeSymmetry.subtreeSwap v r := by
     unfold FD1D.TreeSymmetry.leafSwap
-    simp using
-      (FD1D.TreeSymmetry.leafSwapWithGap_rfl (n := r) v)
+    simp
   rw [FD1D.TreeSymmetry.inventorySwap, hleaf]
   exact statePotential_inventoryPerm_subtreeSwap v x a
 
@@ -185,10 +184,7 @@ def law (L m : ℕ) (a : ℝ) :
         split_ifs <;> ring
       _ = (1 / (S.card : ℝ)) * (S.card : ℝ) := by
         congr 1
-        simp using
-          (Finset.sum_boole
-            (R := ℝ) (fun x : InventoryState (DyadicNode L) m => x ∈ S)
-            Finset.univ)
+        simp
       _ = 1 := by field_simp
 
 @[simp]

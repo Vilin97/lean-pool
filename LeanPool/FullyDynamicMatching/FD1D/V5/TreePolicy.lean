@@ -205,14 +205,14 @@ theorem regularizedMass_leftChild (I : AggregatedInventory L m)
     regularizedMass I a (d + 1) (leftChild v) =
       regularizedMassLeft a (intervalMass d v)
         (I.count (d + 1) (leftChild v))
-        (I.count (d + 1) (rightChild v)) := by
+         := by
   simp [regularizedMass, regularizedMassLeft, inventory]
 
 theorem regularizedMass_rightChild (I : AggregatedInventory L m)
     (a : ℝ) (d : ℕ) (v : DyadicNode d) :
     regularizedMass I a (d + 1) (rightChild v) =
       regularizedMassRight a (intervalMass d v)
-        (I.count (d + 1) (leftChild v))
+
         (I.count (d + 1) (rightChild v)) := by
   simp [regularizedMass, regularizedMassRight, inventory]
 
@@ -269,12 +269,12 @@ theorem node_invariants
         LocalPolicy.child_invariants ha (nodeMass_pos d z.1)
           hp.1 htLocal
       have hZLpos :
-          0 < regularizedMassLeft a (intervalMass d z.1) x y := by
+          0 < regularizedMassLeft a (intervalMass d z.1) x  := by
         unfold regularizedMassLeft
         exact div_pos (div_pos (nodeMass_pos d z.1) (by norm_num))
           (by positivity)
       have hZRpos :
-          0 < regularizedMassRight a (intervalMass d z.1) x y := by
+          0 < regularizedMassRight a (intervalMass d z.1)  y := by
         unfold regularizedMassRight
         exact div_pos (div_pos (nodeMass_pos d z.1) (by norm_num))
           (by positivity)
@@ -342,7 +342,7 @@ theorem deletionMass_nonneg (I : AggregatedInventory L m)
     (rate_pos I ha hm hdL v).le
 
 theorem sum_deletionMass (I : AggregatedInventory L m)
-    {a : ℝ} (ha : 0 < a) (hm : 0 < m)
+    {a : ℝ}  (hm : 0 < m)
     {d : ℕ} (hdL : d ≤ L) :
     ∑ v, deletionMass I a d v = 1 := by
   let q : CoherentTreeLabel L ℝ :=
@@ -395,7 +395,7 @@ theorem local_rate_average_ge
   have ht := discrepancy_le_half I ha hm (by omega) v
   rw [discrepancy_eq_local I a d hdL v] at ht
   have hlocal :=
-    LocalPolicy.child_rate_average_ge ha hp hh ht
+    LocalPolicy.child_rate_average_ge ht
   unfold childAverage
   rw [rate_leftChild, rate_rightChild]
   exact hlocal
@@ -496,12 +496,12 @@ theorem local_bellman_inequality
   have hZL :
       regularizedMassLeft a (nodeMass d v)
           (I.count (d + 1) (leftChild v))
-          (I.count (d + 1) (rightChild v)) =
+           =
         regularizedMass I a (d + 1) (leftChild v) :=
     (regularizedMass_leftChild I a d v).symm
   have hZR :
       regularizedMassRight a (nodeMass d v)
-          (I.count (d + 1) (leftChild v))
+
           (I.count (d + 1) (rightChild v)) =
         regularizedMass I a (d + 1) (rightChild v) :=
     (regularizedMass_rightChild I a d v).symm
@@ -764,8 +764,8 @@ theorem deterministic_aggregate_estimate
           501 / (1000 * (m : ℝ) ^ 2) ≤
         restoringDrift I a / a := by
     have hmR : (m : ℝ) ≠ 0 := by exact_mod_cast hm.ne'
-    convert hminus using 1 ;
-      field_simp [hmR] ; ring
+    convert hminus using 1;
+      field_simp [hmR]; ring
   have hscaled := (le_div_iff₀ ha).mp hpre
   calc
     a / 1000 * hazardEnergy (rate I a) L +

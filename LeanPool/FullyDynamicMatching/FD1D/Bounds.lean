@@ -129,7 +129,7 @@ theorem stationary_expected_hazard_bound
     rw [hDR] at hD
     linarith
   exact stationary_hazard_bound ha (by exact_mod_cast hm)
-    (Nat.cast_nonneg L) hH haL hmain
+    hH haL hmain
 
 /-- The concrete count chain has a unique stationary law. -/
 theorem existsUnique_stationaryLaw
@@ -229,7 +229,7 @@ theorem finite_average_expected_hazard_bound
           ((∑ t ∈ Finset.range T, H t) / (T : ℝ)) ≤
         103 * a / (300 * (m : ℝ) ^ 2) +
           Real.log (1 + (m : ℝ) / a) / (T : ℝ) := by
-    convert hmain using 1 ; ring
+    convert hmain using 1; ring
   have hHave : 0 ≤ (∑ t ∈ Finset.range T, H t) / (T : ℝ) := by
     apply div_nonneg
     · apply Finset.sum_nonneg
@@ -246,7 +246,7 @@ theorem finite_average_expected_hazard_bound
     (H := (∑ t ∈ Finset.range T, H t) / (T : ℝ))
     (logTerm := Real.log (1 + (m : ℝ) / a))
     ha (by exact_mod_cast hm) (by exact_mod_cast hT)
-    (Nat.cast_nonneg L) hHave hlog haL hlogA hmain'
+    hHave haL hlogA hmain'
   simpa [H, μt, K] using hbound
 
 end HierarchicalDynamics

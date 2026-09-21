@@ -170,7 +170,7 @@ instance inventoryStateNonempty
   ⟨⟨fun i => if i = Classical.arbitrary ι then m else 0, by simp⟩⟩
 
 /-- Push a fixed-total count vector forward along a permutation. -/
-def inventoryPerm {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
+def inventoryPerm {ι : Type*} [Fintype ι]  {m : ℕ}
     (e : Equiv.Perm ι) : Equiv.Perm (InventoryState ι m) where
   toFun x :=
     ⟨fun i => x.1 (e.symm i), by
@@ -194,13 +194,13 @@ def inventoryPerm {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
     simp
 
 @[simp] theorem inventoryPerm_apply_count
-    {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
+    {ι : Type*} [Fintype ι] {m : ℕ}
     (e : Equiv.Perm ι) (x : InventoryState ι m) (i : ι) :
     (inventoryPerm e x).1 i = x.1 (e.symm i) :=
   rfl
 
 theorem inventoryPerm_apply_image_count
-    {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
+    {ι : Type*} [Fintype ι] {m : ℕ}
     (e : Equiv.Perm ι) (x : InventoryState ι m) (i : ι) :
     (inventoryPerm e x).1 (e i) = x.1 i := by
   simp [inventoryPerm]
@@ -316,7 +316,7 @@ theorem stateAggregate_count_subtreeSwap
   | h gap ih =>
       by_cases hre : r = n
       · subst r
-        simp
+        simp [stateAggregate_leaf_count]
       · have hrlt : r < n := lt_of_le_of_ne hrn hre
         have hlevel :
             (d + 1) + r < (d + 1) + n := by omega
@@ -1103,7 +1103,7 @@ theorem concrete_kernel_equivariant
 /-! ## Invariant stationary laws for a single permutation -/
 
 /-- Push a finite law forward along a permutation, in pointwise form. -/
-def permuteLaw {α : Type*} [Fintype α] 
+def permuteLaw {α : Type*} [Fintype α]
     (e : Equiv.Perm α) (μ : FiniteLaw α) : FiniteLaw α where
   mass x := μ.mass (e.symm x)
   mass_nonneg x := μ.mass_nonneg _
@@ -1114,13 +1114,13 @@ def permuteLaw {α : Type*} [Fintype α]
       _ = 1 := μ.sum_mass
 
 @[simp] theorem permuteLaw_mass
-    {α : Type*} [Fintype α] [DecidableEq α]
+    {α : Type*} [Fintype α]
     (e : Equiv.Perm α) (μ : FiniteLaw α) (x : α) :
     (permuteLaw e μ).mass x = μ.mass (e.symm x) :=
   rfl
 
 theorem permuteLaw_stationary
-    {α : Type*} [Fintype α] [DecidableEq α]
+    {α : Type*} [Fintype α]
     {K : FiniteKernel α} {μ : FiniteLaw α} {e : Equiv.Perm α}
     (hK : K.Equivariant e) (hμ : K.IsStationary μ) :
     K.IsStationary (permuteLaw e μ) := by

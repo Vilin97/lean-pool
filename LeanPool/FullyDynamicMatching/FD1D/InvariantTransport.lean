@@ -86,7 +86,7 @@ namespace TreeSymmetry
 /-- The inventory lift used by the symmetry module agrees with the canonical
 lift used by refreshed initialization. -/
 theorem inventoryPerm_eq_inventoryStatePerm
-    {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
+    {ι : Type*} [Fintype ι] {m : ℕ}
     (e : Equiv.Perm ι) :
     inventoryPerm (m := m) e = inventoryStatePerm (m := m) e := by
   apply Equiv.ext

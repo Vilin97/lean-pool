@@ -45,6 +45,74 @@ def refreshedIterate (m : ℕ) (hm : 1 ≤ m) (t : ℕ) :
   (parameterizedKernel m hm).iterate t
     (refreshedLaw (treeDepth m) m)
 
+/-- The root node gives a lower bound on expected hazard energy. -/
+theorem expected_hazard_root_lower_bound {m : ℕ} (hm : 1 ≤ m)
+    (μ : FiniteLaw (InventoryState (DyadicNode (treeDepth m)) m)) :
+    1 / (m : ℝ) ^ 2 ≤ μ.expect (parameterizedHazardEnergy m) := by
+  have ha := parameterA_cast_pos hm
+  have hRootPoint :
+      ∀ x : InventoryState (DyadicNode (treeDepth m)) m,
+        1 / (m : ℝ) ^ 2 ≤ parameterizedHazardEnergy m x := by
+    intro x
+    simpa [parameterizedHazardEnergy] using
+      (HierarchicalDynamics.stateHazardEnergy_root_le
+        (L := treeDepth m) (m := m)
+        (a := (parameterA m : ℝ)) ha x)
+  have hRoot :
+      1 / (m : ℝ) ^ 2 ≤
+        μ.expect (parameterizedHazardEnergy m) := by
+    calc
+      1 / (m : ℝ) ^ 2 =
+          μ.expect (fun _ => 1 / (m : ℝ) ^ 2) :=
+        (μ.expect_const _).symm
+      _ ≤ μ.expect (parameterizedHazardEnergy m) :=
+        μ.expect_mono hRootPoint
+  exact hRoot
+
+/-- The root lower bound also holds for a positive finite time average. -/
+theorem averaged_hazard_root_lower_bound {m T : ℕ} (hm : 1 ≤ m) (hT : 0 < T) :
+    1 / (m : ℝ) ^ 2 ≤
+      (∑ t ∈ Finset.range T,
+        (refreshedIterate m hm t).expect (parameterizedHazardEnergy m)) / (T : ℝ) := by
+  have ha := parameterA_cast_pos hm
+  have hTrealPos : 0 < (T : ℝ) := by exact_mod_cast hT
+  have hRootPoint :
+      ∀ x : InventoryState (DyadicNode (treeDepth m)) m,
+        1 / (m : ℝ) ^ 2 ≤ parameterizedHazardEnergy m x := by
+    intro x
+    simpa [parameterizedHazardEnergy] using
+      (HierarchicalDynamics.stateHazardEnergy_root_le
+        (L := treeDepth m) (m := m)
+        (a := (parameterA m : ℝ)) ha x)
+  have hRootAt (t : ℕ) :
+      1 / (m : ℝ) ^ 2 ≤
+        (refreshedIterate m hm t).expect
+          (parameterizedHazardEnergy m) := by
+    calc
+      1 / (m : ℝ) ^ 2 =
+          (refreshedIterate m hm t).expect
+            (fun _ => 1 / (m : ℝ) ^ 2) :=
+        ((refreshedIterate m hm t).expect_const _).symm
+      _ ≤ (refreshedIterate m hm t).expect
+          (parameterizedHazardEnergy m) :=
+        (refreshedIterate m hm t).expect_mono hRootPoint
+  have hRootSum :
+      ∑ t ∈ Finset.range T, (1 / (m : ℝ) ^ 2) ≤
+        ∑ t ∈ Finset.range T,
+          (refreshedIterate m hm t).expect
+            (parameterizedHazardEnergy m) := by
+    apply Finset.sum_le_sum
+    intro t ht
+    exact hRootAt t
+  have hRoot :
+      1 / (m : ℝ) ^ 2 ≤
+        (∑ t ∈ Finset.range T,
+            (refreshedIterate m hm t).expect
+              (parameterizedHazardEnergy m)) / (T : ℝ) := by
+    apply (le_div_iff₀ hTrealPos).2
+    simpa [mul_comm] using hRootSum
+  exact hRoot
+
 /--
 For the chosen parameters, stationary equation (3) implies the advertised
 stationary `6a/m` bound.  All hazard and parameter hypotheses are discharged
@@ -87,27 +155,10 @@ theorem stationary_expected_cost_le_six
       (L := treeDepth m) (m := m)
       (a := (parameterA m : ℝ))
       ha hmpos (parameterA_cast_ge_treeDepth hm) μ hμ'
-  have hRootPoint :
-      ∀ x : InventoryState (DyadicNode (treeDepth m)) m,
-        1 / (m : ℝ) ^ 2 ≤ parameterizedHazardEnergy m x := by
-    intro x
-    simpa [parameterizedHazardEnergy] using
-      (HierarchicalDynamics.stateHazardEnergy_root_le
-        (L := treeDepth m) (m := m)
-        (a := (parameterA m : ℝ)) ha x)
-  have hRoot :
-      1 / (m : ℝ) ^ 2 ≤
-        μ.expect (parameterizedHazardEnergy m) := by
-    calc
-      1 / (m : ℝ) ^ 2 =
-          μ.expect (fun _ => 1 / (m : ℝ) ^ 2) :=
-        (μ.expect_const _).symm
-      _ ≤ μ.expect (parameterizedHazardEnergy m) :=
-        μ.expect_mono hRootPoint
   exact stationary_cost_le_six
     ha.le hmreal
     (one_div_leafCount_le_two_mul_parameterA_div hm)
-    hRoot hHazard htransport
+    hHazard htransport
 
 /--
 For `T ≥ m²`, an averaged equation-(3)/Jensen estimate along the concrete
@@ -161,41 +212,6 @@ theorem finite_average_expected_cost_le_six
         (parameterA_cast_ge_treeDepth hm)
         (two_hundred_mul_log_one_add_le_parameterA hm)
         (refreshedLaw (treeDepth m) m) T hTpos)
-  have hRootPoint :
-      ∀ x : InventoryState (DyadicNode (treeDepth m)) m,
-        1 / (m : ℝ) ^ 2 ≤ parameterizedHazardEnergy m x := by
-    intro x
-    simpa [parameterizedHazardEnergy] using
-      (HierarchicalDynamics.stateHazardEnergy_root_le
-        (L := treeDepth m) (m := m)
-        (a := (parameterA m : ℝ)) ha x)
-  have hRootAt (t : ℕ) :
-      1 / (m : ℝ) ^ 2 ≤
-        (refreshedIterate m hm t).expect
-          (parameterizedHazardEnergy m) := by
-    calc
-      1 / (m : ℝ) ^ 2 =
-          (refreshedIterate m hm t).expect
-            (fun _ => 1 / (m : ℝ) ^ 2) :=
-        ((refreshedIterate m hm t).expect_const _).symm
-      _ ≤ (refreshedIterate m hm t).expect
-          (parameterizedHazardEnergy m) :=
-        (refreshedIterate m hm t).expect_mono hRootPoint
-  have hRootSum :
-      ∑ t ∈ Finset.range T, (1 / (m : ℝ) ^ 2) ≤
-        ∑ t ∈ Finset.range T,
-          (refreshedIterate m hm t).expect
-            (parameterizedHazardEnergy m) := by
-    apply Finset.sum_le_sum
-    intro t ht
-    exact hRootAt t
-  have hRoot :
-      1 / (m : ℝ) ^ 2 ≤
-        (∑ t ∈ Finset.range T,
-            (refreshedIterate m hm t).expect
-              (parameterizedHazardEnergy m)) / (T : ℝ) := by
-    apply (le_div_iff₀ hTrealPos).2
-    simpa [mul_comm] using hRootSum
   exact transient_cost_le_six
     (a := (parameterA m : ℝ))
     (m := (m : ℝ)) (T := (T : ℝ))
@@ -209,7 +225,7 @@ theorem finite_average_expected_cost_le_six
           (refreshedIterate m hm t).expect (cost t)) / (T : ℝ))
     ha.le hmreal hTreal
     (one_div_leafCount_le_two_mul_parameterA_div hm)
-    hRoot hHazard htransport
+    hHazard htransport
 
 /--
 For `N ≥ 2m²`, at most `m` initialization cost followed by the concrete main

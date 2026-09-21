@@ -87,11 +87,11 @@ def discrepancyRight (a p h : ℝ) (x y : ℕ) : ℝ :=
   (p / 2 - massRight a p h x y) / a
 
 /-- Left-child regularized inverse inventory. -/
-def regularizedMassLeft (a p : ℝ) (x y : ℕ) : ℝ :=
+def regularizedMassLeft (a p : ℝ) (x : ℕ) : ℝ :=
   (p / 2) / ((x : ℝ) + a / 2)
 
 /-- Right-child regularized inverse inventory. -/
-def regularizedMassRight (a p : ℝ) (x y : ℕ) : ℝ :=
+def regularizedMassRight (a p : ℝ) (y : ℕ) : ℝ :=
   (p / 2) / ((y : ℝ) + a / 2)
 
 /-- The quadratic Bellman correction in equation (15). -/
