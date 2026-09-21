@@ -107,8 +107,10 @@ theorem IsReinhardt.isCircular {ι : Type*} [Fintype ι] {U : Set (ι → ℂ)}
   exact hU hz (fun i => by simp [hc])
 
 /-- Complete Reinhardt sets are balanced for complex scalar multiplication. -/
-theorem IsCompleteReinhardt.balanced {ι : Type*} [Fintype ι] {U : Set (ι → ℂ)}
+theorem IsCompleteReinhardt.balanced {ι : Type*} [Finite ι] {U : Set (ι → ℂ)}
     (hU : IsCompleteReinhardt U) : Balanced ℂ U := by
+  classical
+  let := Fintype.ofFinite ι
   rw [balanced_iff_smul_mem]
   intro c hc z hz
   apply hU hz

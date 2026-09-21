@@ -207,7 +207,7 @@ theorem IsLocalDefiningFunction.fderiv_fderiv_nonneg_of_convex (hU : IsOpen U)
   obtain ⟨δ₁, hδ₁, htaylor⟩ := exists_taylor_bound hgc (ε := -A / 4) (by linarith)
   obtain ⟨δ₂, hδ₂, hV⟩ := Metric.mem_nhds_iff.mp
     ((by fun_prop : Continuous fun t : ℂ => p + t • w).continuousAt.preimage_mem_nhds (by
-      show V ∈ 𝓝 ((fun t : ℂ => p + t • w) 0)
+      change V ∈ 𝓝 ((fun t : ℂ => p + t • w) 0)
       simpa using h.isOpen.mem_nhds h.mem))
   have hD1 : fderiv ℝ g 0 = (fderiv ℝ ρ p).comp ((ContinuousLinearMap.id ℝ ℂ).smulRight w) := by
     have := fderiv_slice (f := ρ) (a := p) (w := w) (t₀ := 0) (hρp.differentiableAt (by norm_num))

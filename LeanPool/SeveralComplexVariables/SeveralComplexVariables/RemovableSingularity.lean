@@ -144,7 +144,7 @@ omit [NormedSpace ℂ F] [CompleteSpace F] in
 /-- Extensions across a scalar zero set are unique on the domain. The defining germs are assumed
 nonzero locally, so the domain may have several connected components. -/
 theorem eqOn_of_extension_across_zeroSet
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    {E : Type*} [NormedAddCommGroup E]
     {U : Set E} (hU : IsOpen U) {g : E → ℂ} (hne : ∀ a ∈ U, ¬ g =ᶠ[𝓝 a] 0)
     {f f₁ f₂ : E → F} (h₁ : ContinuousOn f₁ U) (h₂ : ContinuousOn f₂ U)
     (he₁ : EqOn f₁ f (U \ g ⁻¹' {0})) (he₂ : EqOn f₂ f (U \ g ⁻¹' {0})) :

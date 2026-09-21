@@ -233,10 +233,12 @@ theorem exists_regular_coordinate_change [FiniteDimensional ℂ E]
 regular in the last variable. Empty families and unit germs are allowed. Apply single-germ
 normalization to the product, then use that no factor slice can vanish. -/
 theorem exists_regular_coordinate_change_finite [FiniteDimensional ℂ E]
-    {κ : Type*} [Fintype κ] {f : κ → E × ℂ → ℂ}
+    {κ : Type*} [Finite κ] {f : κ → E × ℂ → ℂ}
     (hf : ∀ i, AnalyticAt ℂ (f i) 0) (hne : ∀ i, ¬ f i =ᶠ[𝓝 0] 0) :
     ∃ (L : (E × ℂ) ≃L[ℂ] (E × ℂ)) (d : κ → ℕ),
       ∀ i, analyticOrderAt (fun w : ℂ => f i (L (0, w))) 0 = d i := by
+  classical
+  let := Fintype.ofFinite κ
   classical
   have hp : ∀ s : Finset κ, ¬ (fun z => ∏ i ∈ s, f i z) =ᶠ[𝓝 0] 0 := by
     intro s

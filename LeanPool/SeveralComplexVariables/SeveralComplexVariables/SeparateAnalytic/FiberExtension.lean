@@ -281,7 +281,7 @@ theorem exists_eventually_norm_le_of_fiber_analytic {D : Set E} (hD : IsOpen D) 
   have hwσ : ‖w - b‖ < σ := by rwa [← dist_eq_norm]
   have hps := hasFPowerSeriesOnBall_cauchyPowerSeries_of_analyticOnNhd hρ (hgρ z hzD)
   have hsum := hps.hasSum (y := w - b) (by
-    show edist (w - b) 0 < ENNReal.ofReal ρ
+    change edist (w - b) 0 < ENNReal.ofReal ρ
     rw [edist_lt_ofReal, dist_zero_right]
     exact hwσ.trans hσρ)
   rw [add_sub_cancel] at hsum

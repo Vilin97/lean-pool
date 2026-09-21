@@ -115,7 +115,7 @@ theorem IsWeierstrassDivisionAt.unique_zero {f g q q' : E × ℂ → ℂ}
   exact mul_right_cancel₀ hne he
 
 /-- The Weierstrass remainder is linear (here, additive) in its coefficient tuple. -/
-theorem weierstrassRemainder_sub {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+theorem weierstrassRemainder_sub {E : Type*}
     {d : ℕ} (a b : Fin d → E → ℂ) (z : E × ℂ) :
     weierstrassRemainder a z - weierstrassRemainder b z =
       weierstrassRemainder (fun j => a j - b j) z := by
@@ -125,11 +125,14 @@ theorem weierstrassRemainder_sub {E : Type*} [NormedAddCommGroup E] [NormedSpace
 
 variable {ι : Type*} [Fintype ι]
 
+omit [Fintype ι] in
 /-- Every open neighborhood of the origin in `(ι → ℂ) × ℂ` contains a product of a constant-radius
 polydisc and a ball of the same radius. -/
-theorem exists_polydisc_ball_subset {U : Set ((ι → ℂ) × ℂ)}
+theorem exists_polydisc_ball_subset [Finite ι] {U : Set ((ι → ℂ) × ℂ)}
     (hU : IsOpen U) (h0 : (0 : (ι → ℂ) × ℂ) ∈ U) :
     ∃ ε : ℝ, 0 < ε ∧ polydisc (0 : ι → ℂ) (fun _ => ε) ×ˢ ball (0 : ℂ) ε ⊆ U := by
+  classical
+  let := Fintype.ofFinite ι
   obtain ⟨ε, hε, hsub⟩ := Metric.mem_nhds_iff.mp (hU.mem_nhds h0)
   refine ⟨ε, hε, fun z hz => hsub ?_⟩
   rw [mem_ball, dist_zero_right, Prod.norm_def]

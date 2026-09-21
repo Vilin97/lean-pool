@@ -39,9 +39,11 @@ namespace SeveralComplexVariables
 variable {ι : Type*} {U V : Set (ι → ℂ)}
 
 /-- An open Reinhardt set contains a strictly larger positive modulus vector above each point. -/
-theorem IsReinhardt.exists_strict_modulus_majorant [Fintype ι]
+theorem IsReinhardt.exists_strict_modulus_majorant [Finite ι]
     (hU : IsReinhardt U) (ho : IsOpen U) {z : ι → ℂ} (hz : z ∈ U) :
     ∃ r : ι → ℝ≥0, (fun i => (r i : ℂ)) ∈ U ∧ ∀ i, ‖z i‖₊ < r i := by
+  classical
+  let := Fintype.ofFinite ι
   have hz' : (fun i => (‖z i‖ : ℂ)) ∈ U := hU hz (fun i => by simp)
   obtain ⟨δ, hδ, hball⟩ := Metric.isOpen_iff.mp ho _ hz'
   let r : ι → ℝ≥0 := fun i => ‖z i‖₊ + ⟨δ / 2, by positivity⟩
@@ -82,9 +84,11 @@ theorem IsLogarithmicallyConvex.geometricCombination_mem {r s : ι → ℝ≥0}
   exact he ▸ hm
 
 /-- On open complete Reinhardt sets the logarithmic-image convention also controls zeros. -/
-theorem IsLogarithmicallyConvex.hasGeometricallyConvexModuli [Fintype ι]
+theorem IsLogarithmicallyConvex.hasGeometricallyConvexModuli [Finite ι]
     (h : IsLogarithmicallyConvex U) (ho : IsOpen U) (hc : IsCompleteReinhardt U) :
     HasGeometricallyConvexModuli U := by
+  classical
+  let := Fintype.ofFinite ι
   rintro r ⟨z, hz, rfl⟩ s ⟨w, hw, rfl⟩ a b ha hb hab
   obtain ⟨r, hr, hzr⟩ := hc.isReinhardt.exists_strict_modulus_majorant ho hz
   obtain ⟨s, hs, hws⟩ := hc.isReinhardt.exists_strict_modulus_majorant ho hw
@@ -98,11 +102,14 @@ theorem IsLogarithmicallyConvex.hasGeometricallyConvexModuli [Fintype ι]
     (NNReal.rpow_le_rpow (hws i).le hb)
 
 /-- Equivalence of the two conventions on open complete Reinhardt sets. -/
-theorem hasGeometricallyConvexModuli_iff [Fintype ι] (ho : IsOpen U)
+theorem hasGeometricallyConvexModuli_iff [Finite ι] (ho : IsOpen U)
     (hc : IsCompleteReinhardt U) :
-    HasGeometricallyConvexModuli U ↔ IsLogarithmicallyConvex U :=
-  ⟨fun h => h.isLogarithmicallyConvex hc.isReinhardt,
-    fun h => h.hasGeometricallyConvexModuli ho hc⟩
+    HasGeometricallyConvexModuli U ↔ IsLogarithmicallyConvex U := by
+  classical
+  let := Fintype.ofFinite ι
+  exact
+    ⟨fun h => h.isLogarithmicallyConvex hc.isReinhardt,
+        fun h => h.hasGeometricallyConvexModuli ho hc⟩
 
 /-- Away from all coordinate hyperplanes, the two convexity conventions coincide without openness or
 completeness assumptions. -/
@@ -143,8 +150,10 @@ theorem IsCompleteReinhardt.hull_eq (h : IsCompleteReinhardt U) : completeReinha
   Subset.antisymm (completeReinhardtHull_min Subset.rfl h) subset_completeReinhardtHull
 
 /-- Completing an open Reinhardt set preserves openness. -/
-theorem isOpen_completeReinhardtHull [Fintype ι] (ho : IsOpen U) (hR : IsReinhardt U) :
+theorem isOpen_completeReinhardtHull [Finite ι] (ho : IsOpen U) (hR : IsReinhardt U) :
     IsOpen (completeReinhardtHull U) := by
+  classical
+  let := Fintype.ofFinite ι
   rw [isOpen_iff_mem_nhds]
   rintro w ⟨z, hz, hwz⟩
   obtain ⟨r, hrU, hzr⟩ := hR.exists_strict_modulus_majorant ho hz
@@ -208,8 +217,10 @@ theorem logarithmicReinhardtHull_eq (hU : IsReinhardt U) (hg : HasGeometricallyC
 
 /-- Openness of the geometric logarithmic hull in finite dimension, including zero coordinates. The
 modulus trace of an open Reinhardt set is open, and so is its geometric convex hull. -/
-theorem isOpen_logarithmicReinhardtHull [Fintype ι] (ho : IsOpen U) (hU : IsReinhardt U) :
+theorem isOpen_logarithmicReinhardtHull [Finite ι] (ho : IsOpen U) (hU : IsReinhardt U) :
     IsOpen (logarithmicReinhardtHull U) := by
+  classical
+  let := Fintype.ofFinite ι
   have htrace : modulusTrace U =
       (fun r : ι → ℝ≥0 => fun i => (r i : ℂ)) ⁻¹' U := by
     ext r

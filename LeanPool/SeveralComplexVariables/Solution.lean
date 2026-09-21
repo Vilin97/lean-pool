@@ -3,7 +3,6 @@ Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bastiaan J Braams
 -/
-import Mathlib
 import LeanPool.SeveralComplexVariables.SeveralComplexVariables
 
 /-!
@@ -126,7 +125,7 @@ theorem maximum_modulus [StrictConvexSpace ℝ F] {U : Set E} (hU : IsOpen U)
   exact SeveralComplexVariables.eqOn_const_of_holomorphic_of_isLocalMax_norm hU hconn hf ha hmax
 
 /-- **9. Cauchy–Pompeiu identity** for a compactly supported `C¹` function, with
-`∂φ/∂w̄ = (∂φ/∂x + i ∂φ/∂y) / 2` written through the real derivative. -/
+the antiholomorphic derivative `(∂φ/∂x + i ∂φ/∂y) / 2` written via the real derivative. -/
 theorem cauchy_pompeiu {φ : ℂ → F} (hφ : ContDiff ℝ 1 φ) (hsupp : HasCompactSupport φ) :
     ∫ w, w⁻¹ • ((2 : ℂ)⁻¹ • (fderiv ℝ φ w 1 + I • fderiv ℝ φ w I)) = -((π : ℂ) • φ 0) := by
   have h := SeveralComplexVariables.integral_inv_smul_dbarAlong_fderiv hφ hsupp
@@ -304,13 +303,16 @@ theorem IsCompleteReinhardt.isReinhardt_and_isPathConnected {U : Set (ι → ℂ
   have h : SeveralComplexVariables.IsCompleteReinhardt U := hU
   exact ⟨h.isReinhardt, fun hne => h.isPathConnected hne⟩
 
+omit [Fintype ι] in
 /-- **18. Logarithmic convexity including zero coordinates**: for an open complete Reinhardt set,
 logarithmic convexity is closure under weighted geometric means of the coordinate moduli, with the
 convention `0 ^ 0 = 1`. -/
-theorem isLogarithmicallyConvex_iff_geometric {U : Set (ι → ℂ)} (ho : IsOpen U)
+theorem isLogarithmicallyConvex_iff_geometric [Finite ι] {U : Set (ι → ℂ)} (ho : IsOpen U)
     (hc : IsCompleteReinhardt U) :
     IsLogarithmicallyConvex U ↔ ∀ z ∈ U, ∀ w ∈ U, ∀ a b : ℝ, 0 ≤ a → 0 ≤ b → a + b = 1 →
       ∀ v : ι → ℂ, (∀ i, ‖v i‖ = ‖z i‖ ^ a * ‖w i‖ ^ b) → v ∈ U := by
+  classical
+  let := Fintype.ofFinite ι
   have hc' : SeveralComplexVariables.IsCompleteReinhardt U := hc
   rw [show IsLogarithmicallyConvex U ↔ SeveralComplexVariables.IsLogarithmicallyConvex U from
     Iff.rfl, ← SeveralComplexVariables.hasGeometricallyConvexModuli_iff ho hc']
@@ -584,9 +586,11 @@ theorem taylorSeries_mul_and_eq_zero_iff {n : ℕ} {x : Fin n → ℂ} {f g : (F
       ofAnalyticAt_eq_iff] at h
     exact h
 
+omit [Fintype ι] in
 /-- **39. Division by a power of the last coordinate** on a product of a polydisc `P` and a disc,
 with a bound for the quotient. -/
-theorem coordinatePower_division (d : ℕ) {r : ι → ℝ} {R : ℝ} (hR : 0 < R) {P : Set (ι → ℂ)}
+theorem coordinatePower_division [Finite ι] (d : ℕ) {r : ι → ℝ} {R : ℝ} (hR : 0 < R)
+    {P : Set (ι → ℂ)}
     (hP : P = Set.pi univ fun i => ball (0 : ℂ) (r i)) {g : (ι → ℂ) × ℂ → ℂ}
     (hg : DifferentiableOn ℂ g (P ×ˢ ball 0 R)) :
     ∃ (q : (ι → ℂ) × ℂ → ℂ) (a : Fin d → (ι → ℂ) → ℂ), DifferentiableOn ℂ q (P ×ˢ ball 0 R) ∧
@@ -594,6 +598,8 @@ theorem coordinatePower_division (d : ℕ) {r : ι → ℝ} {R : ℝ} (hR : 0 < 
       EqOn g (fun z => q z * z.2 ^ d + weierstrassRemainder a z) (P ×ˢ ball 0 R) ∧
       ∀ M : ℝ, 0 ≤ M → (∀ z ∈ P ×ˢ ball (0 : ℂ) R, ‖g z‖ ≤ M) →
         ∀ z ∈ P ×ˢ ball (0 : ℂ) R, ‖q z‖ ≤ ((d + 1 : ℕ) : ℝ) / R ^ d * M := by
+  classical
+  let := Fintype.ofFinite ι
   subst hP
   obtain ⟨q, a, hdiv, hb, -⟩ := SeveralComplexVariables.coordinatePower_division d (r := r) hR hg
   exact ⟨q, a, hdiv.1, hdiv.2, hdiv.3, hb⟩
@@ -716,6 +722,7 @@ def IsDomainOfExistence (U : Set E) (f : E → ℂ) : Prop :=
     ∀ V W : Set E, IsOpen V → IsConnected V → IsOpen W → W.Nonempty → W ⊆ U → W ⊆ V →
       (∃ g, AnalyticOnNhd ℂ g V ∧ EqOn g f W) → V ⊆ U
 
+omit [FiniteDimensional ℂ E] in
 /-- **51. Common extension domains**: if every holomorphic function on a nonempty open `U` extends
 to the connected set `V ⊇ U`, then `V` lies in the convex hull of `U` and holomorphic functions on
 `V` take no new values. -/
@@ -738,6 +745,7 @@ theorem isHolomorphicallyConvex_of_completeReinhardt {U : Set (ι → ℂ)} (ho 
     (hc : IsCompleteReinhardt U) (hl : IsLogarithmicallyConvex U) : IsHolomorphicallyConvex U := by
   exact SeveralComplexVariables.isHolomorphicallyConvex_of_completeReinhardt ho hc hl
 
+omit [FiniteDimensional ℂ E] in
 /-- **53. Elementary continuation obstructions.** Convex open sets and finite products of arbitrary
 plane sets satisfy `IsDomainOfHolomorphy`, the continuation-obstruction predicate defined above.
 This predicate does not require openness, connectedness, or nonemptiness. It holds vacuously

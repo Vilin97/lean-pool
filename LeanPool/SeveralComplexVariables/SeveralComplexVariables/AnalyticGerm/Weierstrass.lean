@@ -37,12 +37,14 @@ finite normalization theorem and the existing analytic preparation theorem.
   members of a finite family.
 -/
 
-public noncomputable section
+public noncomputable
+section
 
 open Filter
 open scoped Topology
 
-namespace SeveralComplexVariables.AnalyticGerm
+namespace SeveralComplexVariables
+namespace AnalyticGerm
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
@@ -74,7 +76,7 @@ theorem existsUnique_division [FiniteDimensional ℂ E]
     have hcentral : (fun t : ℂ => weierstrassPolynomial a0 (0, t)) = fun t : ℂ => t ^ d :=
       funext (weierstrassPolynomial_central ha00)
     rw [hcentral]
-    show analyticOrderAt ((id : ℂ → ℂ) ^ d) 0 = d
+    change analyticOrderAt ((id : ℂ → ℂ) ^ d) 0 = d
     rw [analyticOrderAt_pow (analyticAt_id (𝕜 := ℂ)) d, analyticOrderAt_id]; simp
   obtain ⟨f0, hf0, rfl⟩ := exists_rep f
   obtain ⟨q, a, Hdiv, huniqdiv⟩ :=
@@ -406,12 +408,14 @@ end AnalyticGerm
 /-- One coordinate system permits preparation of all members of a finite family. This depends on the
 preparation theorem and hence on analytic division. Empty parameter types, empty families, and
 unit germs are all included. -/
-theorem exists_equiv_forall_isWeierstrassPreparationAt {ι κ : Type*} [Fintype ι] [Fintype κ]
+theorem exists_equiv_forall_isWeierstrassPreparationAt {ι κ : Type*} [Fintype ι] [Finite κ]
     {f : κ → (ι → ℂ) × ℂ → ℂ} (hf : ∀ i, AnalyticAt ℂ (f i) 0)
     (hne : ∀ i, ¬ f i =ᶠ[𝓝 0] 0) :
     ∃ (L : ((ι → ℂ) × ℂ) ≃L[ℂ] ((ι → ℂ) × ℂ)) (d : κ → ℕ), ∀ i,
       ∃ (u : (ι → ℂ) × ℂ → ℂ) (a : Fin (d i) → (ι → ℂ) → ℂ),
         IsWeierstrassPreparationAt (fun z => f i (L z)) u a := by
+  classical
+  let := Fintype.ofFinite κ
   obtain ⟨L, d, hd⟩ := exists_regular_coordinate_change_finite hf hne
   refine ⟨L, d, fun i => ?_⟩
   have ha : AnalyticAt ℂ (fun z => f i (L z)) 0 :=

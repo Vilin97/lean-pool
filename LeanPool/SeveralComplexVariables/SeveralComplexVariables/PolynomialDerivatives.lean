@@ -42,8 +42,10 @@ theorem hasDerivAt_eval_update [DecidableEq ι] (p : MvPolynomial ι ℂ) (z : �
     · simpa [pderiv_mul, h, Ne.symm h, mul_comm] using! hp.mul (hasDerivAt_const x (z j))
 
 /-- Coordinate differentiation of a polynomial is evaluation of its formal derivative. -/
-theorem partialDeriv_eval [Fintype ι] [DecidableEq ι] (p : MvPolynomial ι ℂ) (z : ι → ℂ) (i : ι) :
+theorem partialDeriv_eval [Finite ι] [DecidableEq ι] (p : MvPolynomial ι ℂ) (z : ι → ℂ) (i : ι) :
     SeveralComplexVariables.partialDeriv i (fun w => p.eval w) z = (pderiv i p).eval z := by
+  classical
+  let := Fintype.ofFinite ι
   simpa [SeveralComplexVariables.partialDeriv] using (p.hasDerivAt_eval_update z i (z i)).deriv
 
 end MvPolynomial

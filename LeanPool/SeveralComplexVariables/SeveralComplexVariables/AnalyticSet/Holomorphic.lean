@@ -49,10 +49,13 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 /-- Holomorphic finite-coordinate equations on an open finite-dimensional domain define an analytic
 subset, using Mathlib's equivalence of holomorphy and analyticity. -/
 theorem isAnalyticSet_zeroSet_pi_of_differentiableOn [FiniteDimensional ℂ E]
-    {ι : Type*} [Fintype ι] {U : Set E} (hU : IsOpen U)
+    {ι : Type*} [Finite ι] {U : Set E} (hU : IsOpen U)
     {f : E → (ι → ℂ)} (hf : DifferentiableOn ℂ f U) :
-    IsAnalyticSet U (U ∩ f ⁻¹' {0}) :=
-  isAnalyticSet_zeroSet_pi hU (hf.analyticOnNhd_of_finiteDimensional hU)
+    IsAnalyticSet U (U ∩ f ⁻¹' {0}) := by
+  classical
+  let := Fintype.ofFinite ι
+  exact
+    isAnalyticSet_zeroSet_pi hU (hf.analyticOnNhd_of_finiteDimensional hU)
 
 /-- Biholomorphic changes of ambient coordinates preserve analytic subsets. -/
 theorem IsAnalyticSet.image_biholomorphic [FiniteDimensional ℂ E] [FiniteDimensional ℂ F]

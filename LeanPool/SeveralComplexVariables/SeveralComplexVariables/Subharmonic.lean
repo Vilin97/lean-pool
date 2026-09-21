@@ -348,7 +348,7 @@ theorem SubharmonicOn.eqOn_const_of_isMaxOn (hU : IsOpen U) (hc : IsPreconnected
     have heq : u z = u a := le_antisymm (hmax z hzU) hle
     refine ⟨hzU, ?_⟩
     have := hu.eventually_eq_of_isMaxOn hU hzU (fun w hw => (hmax w hw).trans heq.ge)
-    show ∀ᶠ w in 𝓝 z, u w = u a
+    change ∀ᶠ w in 𝓝 z, u w = u a
     simpa only [heq] using this
   intro z hz
   exact hWval z (hc.subset_of_closure_inter_subset hWo hWne hcl hz)

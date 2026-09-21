@@ -204,7 +204,7 @@ theorem isDomainOfHolomorphy_pi {ι : Type*} [Fintype ι] (S : ι → Set ℂ) :
 
 /-- Every real-convex open subset of a finite-dimensional complex normed space is a domain of
 holomorphy. A separating real functional is complexified to give a pole. -/
-theorem isDomainOfHolomorphy_of_convex [FiniteDimensional ℂ E] {U : Set E}
+theorem isDomainOfHolomorphy_of_convex {U : Set E}
     (hU : Convex ℝ U) (ho : IsOpen U) : IsDomainOfHolomorphy U := by
   apply isDomainOfHolomorphy_of_entire_separators
   intro a ha

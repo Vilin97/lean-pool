@@ -46,22 +46,32 @@ nontrivially normed field; the several-complex-variables theory uses `𝕜 = ℂ
 @[expose] def partialDeriv (i : ι) (f : (ι → 𝕜) → F) (z : ι → 𝕜) : F :=
   deriv (fun w => f (update z i w)) (z i)
 
+omit [Fintype ι] in
 /-- The derivative of a coordinate slice is the corresponding Fréchet derivative value. -/
-theorem hasDerivAt_update_of_differentiableAt {f : (ι → 𝕜) → F} {z : ι → 𝕜}
+theorem hasDerivAt_update_of_differentiableAt [Finite ι] {f : (ι → 𝕜) → F} {z : ι → 𝕜}
     (hf : DifferentiableAt 𝕜 f z) (i : ι) :
     HasDerivAt (fun w => f (update z i w)) (fderiv 𝕜 f z (Pi.single i 1)) (z i) := by
+  classical
+  let := Fintype.ofFinite ι
   have hf' : HasFDerivAt f (fderiv 𝕜 f z) (update z i (z i)) := by simpa using hf.hasFDerivAt
   exact hf'.comp_hasDerivAt (z i) (hasDerivAt_update z i (z i))
 
+omit [Fintype ι] in
 /-- Coordinate derivatives are Fréchet derivatives evaluated on coordinate vectors. -/
-theorem partialDeriv_eq_fderiv {f : (ι → 𝕜) → F} {z : ι → 𝕜}
+theorem partialDeriv_eq_fderiv [Finite ι] {f : (ι → 𝕜) → F} {z : ι → 𝕜}
     (hf : DifferentiableAt 𝕜 f z) (i : ι) :
-    partialDeriv i f z = fderiv 𝕜 f z (Pi.single i 1) :=
-  (hasDerivAt_update_of_differentiableAt hf i).deriv
+    partialDeriv i f z = fderiv 𝕜 f z (Pi.single i 1) := by
+  classical
+  let := Fintype.ofFinite ι
+  exact
+    (hasDerivAt_update_of_differentiableAt hf i).deriv
 
+omit [Fintype ι] in
 /-- A coordinate derivative only depends on the germ of the function. -/
-theorem partialDeriv_congr {f g : (ι → 𝕜) → F} {z : ι → 𝕜}
+theorem partialDeriv_congr [Finite ι] {f g : (ι → 𝕜) → F} {z : ι → 𝕜}
     (hfg : f =ᶠ[𝓝 z] g) (i : ι) : partialDeriv i f z = partialDeriv i g z := by
+  classical
+  let := Fintype.ofFinite ι
   apply Filter.EventuallyEq.deriv_eq
   have ht : Tendsto (update z i) (𝓝 (z i)) (𝓝 z) := by
     simpa using (hasDerivAt_update z i (z i)).continuousAt.tendsto
@@ -76,27 +86,36 @@ theorem fderiv_eq_sum_partialDeriv {f : (ι → 𝕜) → F} {z : ι → 𝕜}
   ext j
   simp [Pi.single_apply]
 
+omit [Fintype ι] in
 /-- Coordinate differentiation respects subtraction at differentiability points. -/
-theorem partialDeriv_sub {f g : (ι → 𝕜) → F} {z : ι → 𝕜}
+theorem partialDeriv_sub [Finite ι] {f g : (ι → 𝕜) → F} {z : ι → 𝕜}
     (hf : DifferentiableAt 𝕜 f z) (hg : DifferentiableAt 𝕜 g z) (i : ι) :
     partialDeriv i (f - g) z = partialDeriv i f z - partialDeriv i g z := by
+  classical
+  let := Fintype.ofFinite ι
   exact deriv_sub (hasDerivAt_update_of_differentiableAt hf i).differentiableAt
     (hasDerivAt_update_of_differentiableAt hg i).differentiableAt
 
+omit [Fintype ι] in
 /-- Coordinate differentiation of a product of scalar functions follows the ordinary product rule,
 holding the other coordinates fixed. -/
-theorem partialDeriv_mul {f g : (ι → 𝕜) → 𝕜} {z : ι → 𝕜}
+theorem partialDeriv_mul [Finite ι] {f g : (ι → 𝕜) → 𝕜} {z : ι → 𝕜}
     (hf : DifferentiableAt 𝕜 f z) (hg : DifferentiableAt 𝕜 g z) (i : ι) :
     partialDeriv i (f * g) z = partialDeriv i f z * g z + f z * partialDeriv i g z := by
+  classical
+  let := Fintype.ofFinite ι
   have hf' := hasDerivAt_update_of_differentiableAt hf i
   have hg' := hasDerivAt_update_of_differentiableAt hg i
   have h := deriv_fun_mul hf'.differentiableAt hg'.differentiableAt
   simpa [partialDeriv, update_eq_self] using h
 
+omit [Fintype ι] in
 /-- Coordinate differentiation commutes with a finite sum of differentiable functions. -/
-theorem partialDeriv_finset_sum {α : Type*} {f : α → (ι → 𝕜) → F}
+theorem partialDeriv_finset_sum [Finite ι] {α : Type*} {f : α → (ι → 𝕜) → F}
     (t : Finset α) {z : ι → 𝕜} (hf : ∀ a ∈ t, DifferentiableAt 𝕜 (f a) z) (i : ι) :
     partialDeriv i (fun w => ∑ a ∈ t, f a w) z = ∑ a ∈ t, partialDeriv i (f a) z := by
+  classical
+  let := Fintype.ofFinite ι
   exact deriv_fun_sum fun a ha => (hasDerivAt_update_of_differentiableAt (hf a ha)
     i).differentiableAt
 
@@ -183,10 +202,13 @@ theorem iteratedPartialDeriv_perm {U : Set (ι → ℂ)} {f : (ι → ℂ) → F
   | trans h₁ h₂ ih₁ ih₂ => exact ih₁.trans ih₂
 
 omit [CompleteSpace F] in
+omit [Fintype ι] in
 /-- Iterated coordinate derivatives agree on an open set where the original functions agree. -/
-theorem iteratedPartialDeriv_congrOn {U : Set (ι → ℂ)} {f g : (ι → ℂ) → F}
+theorem iteratedPartialDeriv_congrOn [Finite ι] {U : Set (ι → ℂ)} {f g : (ι → ℂ) → F}
     (hU : IsOpen U) (hfg : EqOn f g U) (is : List ι) :
     EqOn (iteratedPartialDeriv is f) (iteratedPartialDeriv is g) U := by
+  classical
+  let := Fintype.ofFinite ι
   induction is with
   | nil => exact hfg
   | cons i is ih =>
@@ -242,12 +264,16 @@ private theorem sum_choose_shift (k : ℕ) (X : ℕ → ℂ) :
   rw [Finset.sum_congr rfl hexpand, Finset.sum_add_distrib, hstep1]
   ring
 
+omit [Fintype ι] in
 /-- Coordinate differentiation of a scalar multiple follows the ordinary constant-multiple rule,
 holding the other coordinates fixed. -/
-theorem partialDeriv_const_mul {f : (ι → ℂ) → ℂ} {z : ι → ℂ} (c : ℂ)
+theorem partialDeriv_const_mul [Finite ι] {f : (ι → ℂ) → ℂ} {z : ι → ℂ} (c : ℂ)
     (hf : DifferentiableAt ℂ f z) (i : ι) :
-    partialDeriv i (fun w => c * f w) z = c * partialDeriv i f z :=
-  deriv_const_mul c (hasDerivAt_update_of_differentiableAt hf i).differentiableAt
+    partialDeriv i (fun w => c * f w) z = c * partialDeriv i f z := by
+  classical
+  let := Fintype.ofFinite ι
+  exact
+    deriv_const_mul c (hasDerivAt_update_of_differentiableAt hf i).differentiableAt
 
 /-- Repeated differentiation of a product of scalar functions in a single coordinate follows the
 ordinary Leibniz binomial rule, since each step is the ordinary product rule. -/
@@ -355,29 +381,40 @@ end MultiIndex
 @[expose] def complexJacobian {κ : Type*} (f : (ι → ℂ) → (κ → ℂ)) (z : ι → ℂ) : Matrix κ ι ℂ :=
   fun j i => partialDeriv i (fun w => f w j) z
 
+omit [Fintype ι] in
 /-- Entries of the complex Jacobian are the coordinate entries of the Fréchet derivative. -/
-theorem complexJacobian_apply {κ : Type*} [Fintype κ]
+theorem complexJacobian_apply [Finite ι] {κ : Type*} [Finite κ]
     {f : (ι → ℂ) → (κ → ℂ)} {z : ι → ℂ} (hf : DifferentiableAt ℂ f z)
     (j : κ) (i : ι) : complexJacobian f z j i = fderiv ℂ f z (Pi.single i 1) j := by
+  classical
+  let := Fintype.ofFinite ι
+  let := Fintype.ofFinite κ
   rw [complexJacobian, partialDeriv_eq_fderiv (differentiableAt_pi.mp hf j), fderiv_apply hf j]
   rfl
 
 omit [CompleteSpace F] in
+omit [Fintype ι] in
 /-- The coordinate chain rule, with an arbitrary complex normed outer target. -/
-theorem partialDeriv_comp {κ : Type*} [Fintype κ] [DecidableEq κ]
+theorem partialDeriv_comp [Finite ι] {κ : Type*} [Fintype κ] [DecidableEq κ]
     {f : (ι → ℂ) → (κ → ℂ)} {g : (κ → ℂ) → F} {z : ι → ℂ}
     (hg : DifferentiableAt ℂ g (f z)) (hf : DifferentiableAt ℂ f z) (i : ι) :
     partialDeriv i (g ∘ f) z = ∑ j, complexJacobian f z j i • partialDeriv j g (f z) := by
+  classical
+  let := Fintype.ofFinite ι
   rw [partialDeriv_eq_fderiv (hg.comp z hf), fderiv_comp z hg hf]
   simp only [ContinuousLinearMap.comp_apply]
   rw [fderiv_eq_sum_partialDeriv hg]
   simp_rw [complexJacobian_apply hf]
 
+omit [Fintype ι] in
 /-- Jacobians compose by matrix multiplication. -/
-theorem complexJacobian_comp {κ ν : Type*} [Fintype κ] [DecidableEq κ] [Fintype ν]
+theorem complexJacobian_comp [Finite ι] {κ ν : Type*} [Fintype κ] [DecidableEq κ] [Finite ν]
     {f : (ι → ℂ) → (κ → ℂ)} {g : (κ → ℂ) → (ν → ℂ)} {z : ι → ℂ}
     (hg : DifferentiableAt ℂ g (f z)) (hf : DifferentiableAt ℂ f z) :
     complexJacobian (g ∘ f) z = complexJacobian g (f z) * complexJacobian f z := by
+  classical
+  let := Fintype.ofFinite ι
+  let := Fintype.ofFinite ν
   ext j i
   change partialDeriv i ((fun w => g w j) ∘ f) z = _
   rw [partialDeriv_comp (differentiableAt_pi.mp hg j) hf]
@@ -385,14 +422,19 @@ theorem complexJacobian_comp {κ ν : Type*} [Fintype κ] [DecidableEq κ] [Fint
 
 /-- The complex Jacobian is Mathlib's matrix of the complex Fréchet derivative in the standard
 coordinate bases. -/
-theorem complexJacobian_eq_toMatrix {κ : Type*} [Fintype κ]
+theorem complexJacobian_eq_toMatrix {κ : Type*} [Finite κ]
     {f : (ι → ℂ) → (κ → ℂ)} {z : ι → ℂ} (hf : DifferentiableAt ℂ f z) :
     complexJacobian f z = LinearMap.toMatrix' (fderiv ℂ f z).toLinearMap := by
+  classical
+  let := Fintype.ofFinite κ
   ext j i
   exact complexJacobian_apply hf j i
 
+omit [Fintype ι] in
 /-- The Jacobian of the identity map is the identity matrix, including with no coordinates. -/
-theorem complexJacobian_id (z : ι → ℂ) : complexJacobian id z = 1 := by
+theorem complexJacobian_id [Finite ι] (z : ι → ℂ) : complexJacobian id z = 1 := by
+  classical
+  let := Fintype.ofFinite ι
   rw [complexJacobian_eq_toMatrix differentiableAt_id]
   simp
 

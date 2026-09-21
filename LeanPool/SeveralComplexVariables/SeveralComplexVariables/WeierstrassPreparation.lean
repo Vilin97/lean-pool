@@ -251,7 +251,7 @@ theorem IsWeierstrassPreparationAt.comp_equiv {F : Type*} [NormedAddCommGroup F]
   have ht : Tendsto (fun z : F × ℂ => (φ z.1, z.2)) (𝓝 0) (𝓝 (0 : E × ℂ)) := by
     rw [← h0]; exact hpair.continuousAt.tendsto
   refine ⟨h.analyticAt_unit.comp_of_eq hpair h0,
-    by show u (φ 0, (0 : ℂ)) ≠ 0; rw [hφmap]; exact h.unit_ne_zero,
+    by change u (φ 0, (0 : ℂ)) ≠ 0; rw [hφmap]; exact h.unit_ne_zero,
     fun j => (h.analyticAt_coeff j).comp_of_eq hφ hφmap,
     fun j => by show a j (φ (0 : F)) = 0; rw [hφmap]; exact h.coeff_zero j,
     (h.eq.comp_tendsto ht).mono fun z hz => by

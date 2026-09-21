@@ -59,7 +59,7 @@ theorem ideal_fg_of_orderInLastVariable_eq_nat [FiniteDimensional ℂ E]
   let M : Submodule (AnalyticGerm ℂ (0 : E)) (Fin d → AnalyticGerm ℂ (0 : E)) :=
     { carrier := {a | polynomialHom (remainderOfCoefficients a) ∈ J}
       zero_mem' := by
-        show polynomialHom (remainderOfCoefficients 0) ∈ J
+        change polynomialHom (remainderOfCoefficients 0) ∈ J
         simp [remainderOfCoefficients]
       add_mem' := by
         intro a b ha hb
@@ -80,7 +80,7 @@ theorem ideal_fg_of_orderInLastVariable_eq_nat [FiniteDimensional ℂ E]
       Finset.mem_coe] at hx
     rcases hx with rfl | ⟨a, haS, rfl⟩
     · exact hgJ
-    · show a ∈ M
+    · change a ∈ M
       rw [← hS]
       exact Submodule.subset_span haS
   · intro h hhJ
@@ -95,7 +95,7 @@ theorem ideal_fg_of_orderInLastVariable_eq_nat [FiniteDimensional ℂ E]
     have har : r = remainderOfCoefficients (fun j : Fin d => r.coeff (j : ℕ)) :=
       eq_remainderOfCoefficients_of_degree_lt hrdeg
     have hmemM : (fun j : Fin d => r.coeff (j : ℕ)) ∈ M := by
-      show polynomialHom (remainderOfCoefficients _) ∈ J
+      change polynomialHom (remainderOfCoefficients _) ∈ J
       rwa [← har]
     rw [← hS] at hmemM
     obtain ⟨f, hf⟩ := Submodule.mem_span_finset'.mp hmemM

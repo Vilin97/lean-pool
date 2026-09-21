@@ -189,7 +189,7 @@ theorem IsDomainOfHolomorphy.plurisubharmonicOn_neg_log_infDist {U : Set (Fin n 
   obtain ⟨i, hi⟩ := Function.ne_iff.mp hw
   have hline : Continuous fun t : ℂ => a + t • w := by fun_prop
   obtain ⟨ρ, hρ, hball⟩ := Metric.mem_nhds_iff.mp (hline.continuousAt.preimage_mem_nhds (by
-    show U ∈ 𝓝 ((fun t : ℂ => a + t • w) 0)
+    change U ∈ 𝓝 ((fun t : ℂ => a + t • w) 0)
     simp only [zero_smul, add_zero]
     exact ho.mem_nhds ha))
   refine hasSubmeanAt_of_forall_lt hρ fun r hr hrρ => ?_
@@ -223,7 +223,7 @@ theorem IsDomainOfHolomorphy.plurisubharmonicOn_neg_log_infDist {U : Set (Fin n 
     rintro _ ⟨t, ht, rfl⟩
     have h1 := hQ t ht
     rw [← hFline t] at h1
-    show ball (a + t • w) ‖q (a + t • w)‖ ⊆ U
+    change ball (a + t • w) ‖q (a + t • w)‖ ⊆ U
     rw [hqnorm]
     have hδ : 0 < infDist (a + t • w) Uᶜ := hpos _ (hdisc t (sphere_subset_closedBall ht))
     have h2 : Real.exp (-(F (a + t • w)).re) ≤ infDist (a + t • w) Uᶜ := by
@@ -481,7 +481,7 @@ theorem IsDomainOfHolomorphy.satisfiesHolomorphicContinuityPrinciple_fin {U : Se
         exact (ball_subset_ball (hmK z (hKt hz))).trans
           (by simpa using ball_infDist_subset_compl (x := z) (s := Uᶜ))) _ hhull
     rw [hmC] at hrad
-    show m ≤ infDist (φ (p t) ζ) Uᶜ
+    change m ≤ infDist (φ (p t) ζ) Uᶜ
     by_contra hlt
     push Not at hlt
     obtain ⟨y, hy, hdy⟩ := (infDist_lt_iff hc).mp hlt

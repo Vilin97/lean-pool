@@ -102,7 +102,7 @@ private theorem exists_extension_tubeDomain_convexHull_nonempty {F : Type*} [Nor
   have hz' : z ∘ e.symm ∈ tubeDomain (L '' Ω) := by
     rw [mem_tubeDomain, hre]
     exact mem_image_of_mem L hz
-  show g' (z ∘ e.symm) = f z
+  change g' (z ∘ e.symm) = f z
   rw [hg'f hz']
   simp only [Function.comp_assoc, e.symm_comp_self, Function.comp_id]
 
@@ -123,7 +123,7 @@ theorem exists_extension_tubeDomain_convexHull {F : Type*} [NormedAddCommGroup F
 /-- Uniqueness of a tube extension to the convexified base, independently of Bochner's existence
 theorem. Only a nonempty open original base is needed. -/
 theorem eqOn_of_tubeDomain_extension {F : Type*} [NormedAddCommGroup F]
-    [NormedSpace ℂ F] [CompleteSpace F] {Ω : Set (ι → ℝ)}
+    [NormedSpace ℂ F] {Ω : Set (ι → ℝ)}
     (ho : IsOpen Ω) (hn : Ω.Nonempty) {f g : (ι → ℂ) → F}
     (hf : AnalyticOnNhd ℂ f (tubeDomain (convexHull ℝ Ω)))
     (hg : AnalyticOnNhd ℂ g (tubeDomain (convexHull ℝ Ω)))

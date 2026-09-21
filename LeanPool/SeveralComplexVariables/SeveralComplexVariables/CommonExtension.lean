@@ -118,7 +118,7 @@ theorem IsCommonAnalyticExtension.image_eq {U V : Set E} (h : IsCommonAnalyticEx
 /-- A common extension domain lies in the real convex hull of the original domain. The proof uses
 real convex separation, complexification of the separating functional, and preservation of
 omitted values. This assertion involves no abstract envelopes. -/
-theorem IsCommonAnalyticExtension.subset_convexHull [FiniteDimensional ℂ E]
+theorem IsCommonAnalyticExtension.subset_convexHull
     {U V : Set E} (h : IsCommonAnalyticExtension U V) (ho : IsOpen U)
     (hne : U.Nonempty) (hc : IsPreconnected V) : V ⊆ convexHull ℝ U := by
   intro z hz

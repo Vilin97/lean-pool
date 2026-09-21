@@ -46,6 +46,7 @@ open Filter Set
 variable {ι κ F : Type*} [Fintype ι] [DecidableEq ι]
   [NormedAddCommGroup F] [NormedSpace ℂ F] [CompleteSpace F]
 
+omit [DecidableEq ι] in
 /-- **Weierstrass convergence theorem, finite-coordinate form.** A locally uniform limit of
 analytic maps on an open subset of a finite complex coordinate space is analytic. -/
 theorem TendstoLocallyUniformlyOn.analyticOnNhd_pi
@@ -54,6 +55,7 @@ theorem TendstoLocallyUniformlyOn.analyticOnNhd_pi
     (hlim : TendstoLocallyUniformlyOn f g l U)
     (hf : ∀ᶠ n in l, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) :
     AnalyticOnNhd ℂ g U := by
+  classical
   classical
   have hg : ContinuousOn g U :=
     hlim.continuousOn (hf.frequently.mono fun _ hn => hn.continuousOn)
@@ -79,6 +81,7 @@ theorem TendstoLocallyUniformlyOn.analyticOnNhd_pi
   exact (hlim'.differentiableOn hfdiff hV).analyticAt
     (hV.mem_nhds (show update (z i) ∈ U by simpa [update] using hz))
 
+omit [DecidableEq ι] in
 /-- A locally uniformly convergent sum of analytic maps on an open finite complex coordinate space
 is analytic. -/
 theorem HasSumLocallyUniformlyOn.analyticOnNhd_pi
@@ -86,10 +89,12 @@ theorem HasSumLocallyUniformlyOn.analyticOnNhd_pi
     (hsum : HasSumLocallyUniformlyOn f g U)
     (hf : ∀ n, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) :
     AnalyticOnNhd ℂ g U := by
+  classical
   apply TendstoLocallyUniformlyOn.analyticOnNhd_pi hsum _ hU
   filter_upwards with s
   exact Finset.analyticOnNhd_fun_sum s fun n _ ↦ hf n
 
+omit [DecidableEq ι] in
 /-- A series of analytic maps is analytic when its terms admit a summable uniform majorant on every
 compact subset of the domain. -/
 theorem analyticOnNhd_tsum_of_summable_norm_on_compacts
@@ -98,6 +103,7 @@ theorem analyticOnNhd_tsum_of_summable_norm_on_compacts
     (hmajorant : ∀ K ⊆ U, IsCompact K → ∃ M : κ → ℝ,
       Summable M ∧ ∀ n x, x ∈ K → ‖f n x‖ ≤ M n) :
     AnalyticOnNhd ℂ (fun x ↦ ∑' n, f n x) U := by
+  classical
   have hs : SummableLocallyUniformlyOn f U :=
     SummableLocallyUniformlyOn_of_locally_bounded hU hmajorant
   exact hs.hasSumLocallyUniformlyOn.analyticOnNhd_pi hf hU
@@ -143,6 +149,7 @@ theorem TendstoLocallyUniformlyOn.iteratedPartialDeriv
   | cons i is ih =>
       exact ih.partialDeriv (hf.mono fun n hn => hn.iteratedPartialDeriv hU is) hU i
 
+omit [DecidableEq ι] in
 /-- Locally uniform convergence of holomorphic maps gives locally uniform convergence of their
 Fréchet derivatives in operator norm. -/
 theorem TendstoLocallyUniformlyOn.fderiv_pi
@@ -151,6 +158,7 @@ theorem TendstoLocallyUniformlyOn.fderiv_pi
     (hlim : TendstoLocallyUniformlyOn f g l U)
     (hf : ∀ᶠ n in l, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) :
     TendstoLocallyUniformlyOn (fun n => fderiv ℂ (f n)) (fderiv ℂ g) l U := by
+  classical
   classical
   let L (i : ι) : F →L[ℂ] ((ι → ℂ) →L[ℂ] F) :=
     ContinuousLinearMap.smulRightL ℂ (ι → ℂ) F (ContinuousLinearMap.proj i)
@@ -172,6 +180,7 @@ theorem TendstoLocallyUniformlyOn.fderiv_pi
     Inseparable.of_eq (heq (hn z hz).differentiableAt))
   exact h.congr_right fun z hz => heq ((hlim.analyticOnNhd_pi hf hU) z hz).differentiableAt
 
+omit [DecidableEq ι] in
 /-- All iterated Fréchet derivatives converge locally uniformly in multilinear operator norm. -/
 theorem TendstoLocallyUniformlyOn.iteratedFDeriv_pi
     {U : Set (ι → ℂ)} {l : Filter κ} [l.NeBot]
@@ -180,6 +189,7 @@ theorem TendstoLocallyUniformlyOn.iteratedFDeriv_pi
     (hf : ∀ᶠ n in l, AnalyticOnNhd ℂ (f n) U) (hU : IsOpen U) (k : ℕ) :
     TendstoLocallyUniformlyOn (fun n => iteratedFDeriv ℂ k (f n))
       (iteratedFDeriv ℂ k g) l U := by
+  classical
   induction k with
   | zero =>
     simpa only [iteratedFDeriv_zero_eq_comp] using

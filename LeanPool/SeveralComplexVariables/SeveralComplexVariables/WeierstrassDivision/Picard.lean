@@ -163,7 +163,7 @@ theorem picardApprox_diff_bound (d : ℕ) (r : ι → ℝ) (R : ℝ) (hr : ∀ i
     have hb : ∀ z ∈ polydisc 0 r ×ˢ ball 0 R,
         ‖(g - h * (picardApprox d r R hr hR h g hg hh 0).1) z‖ ≤ M := by
       intro z hz
-      show ‖g z - h z * (picardApprox d r R hr hR h g hg hh 0).1 z‖ ≤ M
+      change ‖g z - h z * (picardApprox d r R hr hR h g hg hh 0).1 z‖ ≤ M
       simpa [picardApprox] using hgb z hz
     have hbnd := picardApprox_succ_bound d r R hr hR h g hg hh 0 M hM0 hb z hz
     simpa [picardApprox] using hbnd
@@ -184,7 +184,7 @@ theorem picardApprox_diff_bound (d : ℕ) (r : ι → ℝ) (R : ℝ) (hr : ∀ i
       intro w hw
       have e1 := hdivk.eq hw
       have e2 := hdivk1.eq hw
-      show h w * (sk1 w - sk w) = (sk1 w - sk2 w) * w.2 ^ d +
+      change h w * (sk1 w - sk w) = (sk1 w - sk2 w) * w.2 ^ d +
         weierstrassRemainder (fun j => ak j - ak1 j) w
       rw [← weierstrassRemainder_sub]
       have e1' : g w - h w * sk w = sk1 w * w.2 ^ d + weierstrassRemainder ak w := e1
@@ -201,7 +201,7 @@ theorem picardApprox_diff_bound (d : ℕ) (r : ι → ℝ) (R : ℝ) (hr : ∀ i
         ‖(h * (sk1 - sk)) z‖ ≤ (R ^ d / (2 * (d + 1))) *
           (((d + 1 : ℕ) : ℝ) / R ^ d * M * (1 / 2) ^ k) := by
       intro z hz
-      show ‖h z * (sk1 z - sk z)‖ ≤ _
+      change ‖h z * (sk1 z - sk z)‖ ≤ _
       rw [norm_mul]
       exact mul_le_mul (hhb z hz) (ih z hz) (norm_nonneg _) (by positivity)
     have hq''bound := hbound'' _ (by positivity) hbndM z hz
@@ -329,7 +329,7 @@ private theorem tendstoUniformlyOn_picardRemainder
     have hdiff_eq : Fk k ζ' - rFun (w, ζ') =
         -(h (w, ζ') * ((sSeq k).1 (w, ζ') - S (w, ζ'))) -
           ζ' ^ d * ((sSeq (k + 1)).1 (w, ζ') - S (w, ζ')) := by
-      show (g (w, ζ') - h (w, ζ') * (sSeq k).1 (w, ζ') -
+      change (g (w, ζ') - h (w, ζ') * (sSeq k).1 (w, ζ') -
           ζ' ^ d * (sSeq (k + 1)).1 (w, ζ')) -
         (g (w, ζ') - h (w, ζ') * S (w, ζ') - ζ' ^ d * S (w, ζ')) = _
       ring
@@ -442,7 +442,7 @@ theorem exists_weierstrassRemainder_eq_of_tendstoUniformlyOn_picardApprox
     intro k ζ' hζ'
     have hthis := (picardApprox_succ_isWeierstrassDivisionOn d r R hr hR h g hg hh k).eq
       (⟨hw, hζ'⟩ : (w, ζ') ∈ polydisc 0 r ×ˢ ball 0 R)
-    show g (w, ζ') - h (w, ζ') * (sSeq k).1 (w, ζ') - ζ' ^ d * (sSeq (k + 1)).1 (w, ζ') = _
+    change g (w, ζ') - h (w, ζ') * (sSeq k).1 (w, ζ') - ζ' ^ d * (sSeq (k + 1)).1 (w, ζ') = _
     have hthis' : g (w, ζ') - h (w, ζ') * (sSeq k).1 (w, ζ') =
         (sSeq (k + 1)).1 (w, ζ') * ζ' ^ d +
           weierstrassRemainder (picardApproxCoeff d r R hr hR h g hg hh k) (w, ζ') := hthis
@@ -484,7 +484,7 @@ theorem eqOn_of_isWeierstrassDivisionOn_selfPerturbed {d : ℕ} {r : ι → ℝ}
       ⟨hdiv'.differentiableOn_quotient,
         hdiv'.differentiableOn_coeff,
         fun z hz => by
-          show (g z - h z * s z) = s' z * z.2 ^ d + weierstrassRemainder a' z
+          change (g z - h z * s z) = s' z * z.2 ^ d + weierstrassRemainder a' z
           rw [hs hz]
           exact hdiv'.eq hz⟩
     exact (unique_coordinatePower_division hdiv hdiv2 hR).2
@@ -499,7 +499,7 @@ theorem eqOn_of_isWeierstrassDivisionOn_selfPerturbed {d : ℕ} {r : ι → ℝ}
       intro w hw
       have e1 : g w - h w * s w = s w * w.2 ^ d + weierstrassRemainder a w := hdiv.eq hw
       have e2 : g w - h w * s' w = s' w * w.2 ^ d + weierstrassRemainder a' w := hdiv'.eq hw
-      show h w * (s' w - s w) = (s w - s' w) * w.2 ^ d + weierstrassRemainder (fun j => a j - a'
+      change h w * (s' w - s w) = (s w - s' w) * w.2 ^ d + weierstrassRemainder (fun j => a j - a'
         j) w
       rw [← weierstrassRemainder_sub]
       have : h w * (s' w - s w) = (s w * w.2 ^ d + weierstrassRemainder a w) -
@@ -512,7 +512,7 @@ theorem eqOn_of_isWeierstrassDivisionOn_selfPerturbed {d : ℕ} {r : ι → ℝ}
     have hb : ∀ z ∈ polydisc 0 r ×ˢ ball 0 R, ‖(h * (s' - s)) z‖ ≤
         (R ^ d / (2 * (d + 1))) * M' := by
       intro z hz
-      show ‖h z * (s' z - s z)‖ ≤ _
+      change ‖h z * (s' z - s z)‖ ≤ _
       rw [norm_mul, ← norm_sub_rev (s z) (s' z)]
       exact mul_le_mul (hhb z hz) (hM' z hz) (norm_nonneg _) (by positivity)
     have hq''bound := hbound'' _ (by positivity) hb z hz

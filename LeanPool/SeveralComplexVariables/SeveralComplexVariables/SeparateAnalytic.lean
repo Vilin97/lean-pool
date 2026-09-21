@@ -182,7 +182,7 @@ theorem analyticOnNhd_of_separately_analytic_option {κ : Type*} [Fintype κ] [D
   have hg1 : AnalyticOnNhd ℂ (f ∘ L.symm) (ball z₀ R ×ˢ ball b ε₁) := by
     intro q hq
     have hq' : L.symm q ∈ Ω := by
-      show L (L.symm q) ∈ ball z₀ R ×ˢ W
+      change L (L.symm q) ∈ ball z₀ R ×ˢ W
       rw [L.apply_symm_apply]
       exact ⟨hq.1, hbW (ball_subset_closedBall hq.2)⟩
     exact (hfΩ _ hq').comp_of_eq (L.symm.analyticAt q) rfl
@@ -236,7 +236,7 @@ theorem analyticOnNhd_of_separately_analytic_of_equiv {α β : Type*}
     simp only [Function.comp_apply, hL_update]
   intro z hz
   have hzV : L.symm z ∈ L ⁻¹' U := by
-    show L (L.symm z) ∈ U
+    change L (L.symm z) ∈ U
     simpa
   have := (hg _ hzV).comp_of_eq (L.symm.analyticAt z) rfl
   simpa only [Function.comp_def, L.apply_symm_apply] using this

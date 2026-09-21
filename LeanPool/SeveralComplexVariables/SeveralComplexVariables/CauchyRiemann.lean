@@ -56,13 +56,16 @@ variable {ι F : Type*} [Fintype ι] [DecidableEq ι] [NormedAddCommGroup F] [No
 @[expose] def conjWirtingerDeriv (i : ι) (f : (ι → ℂ) → F) (z : ι → ℂ) : F :=
   (1 / 2 : ℂ) • (fderiv ℝ f z (Pi.single i 1) + I • fderiv ℝ f z (Pi.single i I))
 
+omit [Fintype ι] in
 /-- The real derivative of a coordinate slice is the restriction of the real derivative to that
 coordinate's complex plane. -/
-theorem hasFDerivAt_update_real {f : (ι → ℂ) → F} (z : ι → ℂ) (i : ι) (w : ℂ)
+theorem hasFDerivAt_update_real [Finite ι] {f : (ι → ℂ) → F} (z : ι → ℂ) (i : ι) (w : ℂ)
     (hf : DifferentiableAt ℝ f (update z i w)) :
     HasFDerivAt (fun v => f (update z i v))
       ((fderiv ℝ f (update z i w)).comp
         ((ContinuousLinearMap.single ℂ (fun _ : ι => ℂ) i).restrictScalars ℝ)) w := by
+  classical
+  let := Fintype.ofFinite ι
   have hs : HasFDerivAt (update z i)
       ((ContinuousLinearMap.single ℂ (fun _ : ι => ℂ) i).restrictScalars ℝ) w := by
     convert! (hasDerivAt_update z i w).hasFDerivAt.restrictScalars ℝ using 1

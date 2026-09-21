@@ -52,6 +52,56 @@ variable {n : ℕ} {F : Type*} [NormedAddCommGroup F] [NormedSpace ℂ F] [Compl
 @[expose] def taylorCoefficientsAtZero (f : (Fin n → ℂ) → F) : MvPowerSeries (Fin n) F :=
   fun m => (∏ i, (m i).factorial : ℂ)⁻¹ • multiIndexDeriv m f 0
 
+omit [CompleteSpace F] in
+private theorem summable_polydiscTaylor_terms {f : (Fin n → ℂ) → F}
+    (z : Fin n → ℂ) (r : Fin n → ℝ≥0) (M : ℝ)
+    (hr : ∀ i, (0 : ℝ) < r i) (hM0 : 0 ≤ M)
+    (hMb : ∀ y ∈ closedPolydisc 0 (fun i => (r i : ℝ)), ‖f y‖ ≤ M)
+    (hq : ∀ i, ‖‖z i‖ / (r i : ℝ)‖ < 1) :
+    Summable (fun m : Fin n → ℕ =>
+      ‖(∏ i, z i ^ m i) • polydiscCauchyCoeffWithRadii f 0 (fun i => (r i : ℝ)) m‖) :=
+  ((hasSum_pi_geometric (fun i => ‖z i‖ / (r i : ℝ)) hq).summable.mul_left M).of_nonneg_of_le
+    (fun _ => norm_nonneg _) (fun m => norm_polydiscTaylor_term_le hr hM0 hMb
+      (fun _ => le_rfl) m)
+
+private theorem summable_finsupp_equiv {a : (Fin n → ℕ) → ℝ} (h : Summable a) :
+    Summable (fun m : Fin n →₀ ℕ => a m) :=
+  (Finsupp.equivFunOnFinite : (Fin n →₀ ℕ) ≃ (Fin n → ℕ)).summable_iff.mpr h
+
+omit [CompleteSpace F] in
+omit [NormedSpace ℂ F] in
+private theorem hasSum_finsupp_equiv {a : (Fin n → ℕ) → F} {x : F} (h : HasSum a x) :
+    HasSum (fun m : Fin n →₀ ℕ => a m) x :=
+  (Finsupp.equivFunOnFinite : (Fin n →₀ ℕ) ≃ (Fin n → ℕ)).hasSum_iff.mpr h
+
+private theorem taylorCoefficientsAtZero_polydisc {f : (Fin n → ℂ) → F}
+    (z : Fin n → ℂ) (r : Fin n → ℝ≥0) (M : ℝ)
+    (hr : ∀ i, (0 : ℝ) < r i) (hzr : ∀ i, ‖z i‖ < r i)
+    (hfc : ContinuousOn f (closedPolydisc 0 (fun i => (r i : ℝ))))
+    (hfa : ∀ y ∈ closedPolydisc 0 (fun i => (r i : ℝ)), ∀ i,
+      AnalyticAt ℂ (fun v => f (Function.update y i v)) (y i))
+    (hMb : ∀ y ∈ closedPolydisc 0 (fun i => (r i : ℝ)), ‖f y‖ ≤ M) (hM0 : 0 ≤ M) :
+    Summable (fun m : Fin n →₀ ℕ => ‖(∏ i, z i ^ m i) • taylorCoefficientsAtZero f m‖) ∧
+      HasSum (fun m : Fin n →₀ ℕ => (∏ i, z i ^ m i) • taylorCoefficientsAtZero f m) (f z) := by
+  classical
+  have he : ∀ m : Fin n →₀ ℕ, taylorCoefficientsAtZero f m =
+      polydiscCauchyCoeffWithRadii f 0 (fun i => (r i : ℝ)) m :=
+    fun m => (polydiscCauchyCoeffWithRadii_eq_multiIndexDeriv hr hfc hfa m).symm
+  have hq : ∀ i, ‖‖z i‖ / (r i : ℝ)‖ < 1 := by
+    intro i
+    rw [Real.norm_eq_abs, abs_of_nonneg (div_nonneg (norm_nonneg _) (hr i).le), div_lt_one (hr i)]
+    exact hzr i
+  have hnorm := summable_polydiscTaylor_terms z r M hr hM0 hMb hq
+  have hsum := hasSum_polydiscTaylor (f := f) (c := 0) (h := z) hr (fun i => hzr i) hfc hfa hMb
+  constructor
+  · simp_rw [he]
+    exact summable_finsupp_equiv hnorm
+  · simp_rw [he]
+    have hs : HasSum (fun m : Fin n → ℕ =>
+        (∏ i, z i ^ m i) • polydiscCauchyCoeffWithRadii f 0 (fun i => (r i : ℝ)) m) (f z) := by
+      simpa only [zero_add] using hsum
+    exact hasSum_finsupp_equiv hs
+
 /-- On a complete Reinhardt open set, the Taylor series at zero represents the function, and the
 entire set lies inside its absolute-convergence domain. The proof applies the existing polydisc
 Taylor theorem and coefficient estimates. -/
@@ -88,28 +138,7 @@ theorem IsCompleteReinhardt.subset_convergenceDomain_and_eqOn_powerSeriesSum {U 
     have hM0 : 0 ≤ M := (norm_nonneg (f 0)).trans
       (hMb 0 (mem_closedPolydisc.mpr (fun i => by simpa only [Pi.zero_apply, dist_self]
         using (hr i).le)))
-    have he : ∀ m : Fin n →₀ ℕ, taylorCoefficientsAtZero f m =
-        polydiscCauchyCoeffWithRadii f 0 (fun i => (r i : ℝ)) m :=
-      fun m => (polydiscCauchyCoeffWithRadii_eq_multiIndexDeriv hr hfc hfa m).symm
-    have hq : ∀ i, ‖‖z i‖ / (r i : ℝ)‖ < 1 := by
-      intro i
-      rw [Real.norm_eq_abs, abs_of_nonneg (div_nonneg (norm_nonneg _) (hr i).le), div_lt_one (hr i)]
-      exact hzr i
-    have hnorm : Summable (fun m : Fin n → ℕ =>
-        ‖(∏ i, z i ^ m i) • polydiscCauchyCoeffWithRadii f 0 (fun i => (r i : ℝ)) m‖) :=
-      ((hasSum_pi_geometric (fun i => ‖z i‖ / (r i : ℝ)) hq).summable.mul_left M).of_nonneg_of_le
-        (fun _ => norm_nonneg _) (fun m => norm_polydiscTaylor_term_le hr hM0 hMb (fun _ =>
-          le_rfl) m)
-    have hsum := hasSum_polydiscTaylor (f := f) (c := 0) (h := z) hr (fun i => hzr i) hfc hfa hMb
-    let e : (Fin n →₀ ℕ) ≃ (Fin n → ℕ) := Finsupp.equivFunOnFinite
-    constructor
-    · simp_rw [he]
-      exact e.summable_iff.mpr hnorm
-    · simp_rw [he]
-      have hs : HasSum (fun m : Fin n → ℕ =>
-          (∏ i, z i ^ m i) • polydiscCauchyCoeffWithRadii f 0 (fun i => (r i : ℝ)) m) (f z) := by
-        simpa only [zero_add] using hsum
-      exact e.hasSum_iff.mpr hs
+    exact taylorCoefficientsAtZero_polydisc z r M hr hzr hfc hfa hMb hM0
   refine ⟨ho.subset_interior_iff.mpr (fun z hz => ?_), fun z hz => (hpoint z hz).2.tsum_eq⟩
   exact mem_powerSeriesAbsConvergenceSet_iff.mpr (hpoint z hz).1
 

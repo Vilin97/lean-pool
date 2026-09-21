@@ -72,7 +72,6 @@ namespace SeveralComplexVariables
 variable {𝕜 E : Type*} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 variable (𝕜) in
-
 /-- The subring of germs admitting a representative analytic at the base point. -/
 @[expose] def analyticGermSubring (x : E) : Subring (Germ (𝓝 x) 𝕜) where
   carrier := {φ | ∃ f : E → 𝕜, AnalyticAt 𝕜 f x ∧ (f : Germ (𝓝 x) 𝕜) = φ}
@@ -144,7 +143,7 @@ theorem ofAnalyticAt_sum {κ : Type*} (s : Finset κ) (f : κ → E → 𝕜)
     (hf : ∀ i, AnalyticAt 𝕜 (f i) x) (hs : AnalyticAt 𝕜 (∑ i ∈ s, f i) x) :
     ofAnalyticAt (∑ i ∈ s, f i) hs = ∑ i ∈ s, ofAnalyticAt (f i) (hf i) := by
   apply Subtype.ext
-  show ((∑ i ∈ s, f i : E → 𝕜) : Germ (𝓝 x) 𝕜) =
+  change ((∑ i ∈ s, f i : E → 𝕜) : Germ (𝓝 x) 𝕜) =
       ((∑ i ∈ s, ofAnalyticAt (f i) (hf i) : AnalyticGerm 𝕜 x) : Germ (𝓝 x) 𝕜)
   rw [AddSubmonoidClass.coe_finsetSum]
   exact map_sum (Filter.Germ.coeRingHom (𝓝 x)) f s
@@ -233,7 +232,7 @@ def pullbackOfEq (f : E → F) (hf : AnalyticAt 𝕜 f x) {y : F} (hy : f x = y)
 
 /-- Pullback by the identity fixes every analytic germ. -/
 @[simp] theorem pullback_id (φ : AnalyticGerm 𝕜 x) :
-    pullback id analyticAt_id φ = φ := by
+    pullback (fun y : E => y) analyticAt_id φ = φ := by
   obtain ⟨f, hf, rfl⟩ := exists_rep φ
   rfl
 
@@ -281,7 +280,7 @@ instance : IsLocalRing (AnalyticGerm 𝕜 x) where
     · exact Or.inl ha
 
 /-- The unique maximal ideal consists precisely of germs vanishing at the base point. -/
-@[simp] theorem mem_maximalIdeal_iff (φ : AnalyticGerm 𝕜 x) :
+theorem mem_maximalIdeal_iff (φ : AnalyticGerm 𝕜 x) :
     φ ∈ IsLocalRing.maximalIdeal (AnalyticGerm 𝕜 x) ↔ eval x φ = 0 := by
   simp [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, isUnit_iff]
 

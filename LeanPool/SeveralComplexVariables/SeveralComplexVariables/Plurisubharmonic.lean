@@ -201,7 +201,7 @@ theorem _root_.ConvexOn.plurisubharmonicOn (hU : IsOpen U) (hf : ConvexOn ℝ U 
   refine ⟨hc.upperSemicontinuousOn, fun a ha w => ?_⟩
   apply ConvexOn.subharmonicOn (hU.preimage (by fun_prop : Continuous fun t : ℂ => a + t • w))
   · refine ⟨fun s hs t ht α β hα hβ hαβ => ?_, fun s hs t ht α β hα hβ hαβ => ?_⟩
-    · show a + (α • s + β • t) • w ∈ U
+    · change a + (α • s + β • t) • w ∈ U
       rw [line_combo a w s t hαβ]
       exact hf.1 hs ht hα hβ hαβ
     · have := hf.2 hs ht hα hβ hαβ

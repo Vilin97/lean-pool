@@ -92,10 +92,12 @@ theorem analyticOnNhd_det_complexJacobian {ι : Type*} [Fintype ι] [DecidableEq
   exact ((analyticOnNhd_pi_iff.mp hf (σ i)).partialDeriv hU i) a ha
 
 /-- An injective holomorphic map between equal complex coordinate spaces has no critical points. -/
-theorem isInvertible_fderiv_of_injOn_coordinates {ι : Type*} [Fintype ι]
+theorem isInvertible_fderiv_of_injOn_coordinates {ι : Type*} [Finite ι]
     {U : Set (ι → ℂ)} (hU : IsOpen U) {f : (ι → ℂ) → (ι → ℂ)}
     (hf : DifferentiableOn ℂ f U) (hi : InjOn f U) {a : ι → ℂ} (ha : a ∈ U) :
     (fderiv ℂ f a).IsInvertible := by
+  classical
+  let := Fintype.ofFinite ι
   classical
   obtain ⟨r, hr, hball⟩ := Metric.mem_nhds_iff.mp (hU.mem_nhds ha)
   let V := Metric.ball a r

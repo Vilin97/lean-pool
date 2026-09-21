@@ -46,11 +46,14 @@ private theorem continuous_faceExp (z : ι → ℂ) : Continuous (faceExp z) := 
   · exact continuous_const
   · fun_prop
 
+omit [Fintype ι] in
 /-- A face point in an open complete Reinhardt set has a positive lift with the same nonzero
 coordinates. -/
-private theorem exists_logarithmic_lift {U : Set (ι → ℂ)} (ho : IsOpen U)
+private theorem exists_logarithmic_lift [Finite ι] {U : Set (ι → ℂ)} (ho : IsOpen U)
     (hc : IsCompleteReinhardt U) {z : ι → ℂ} {t : ι → ℝ} (ht : faceExp z t ∈ U) :
     ∃ y ∈ logarithmicImage U, ∀ i, z i ≠ 0 → y i = t i := by
+  classical
+  let := Fintype.ofFinite ι
   classical
   obtain ⟨r, hrU, hr⟩ := hc.isReinhardt.exists_strict_modulus_majorant ho ht
   have hrpos (i) : 0 < (r i : ℝ) := by
@@ -65,10 +68,13 @@ private theorem exists_logarithmic_lift {U : Set (ι → ℂ)} (ho : IsOpen U)
   · intro i hi
     simp [y, hi]
 
+omit [Fintype ι] in
 /-- Logarithmic coordinates on any coordinate face form an open convex lower set. -/
-private theorem convex_faceLog {U : Set (ι → ℂ)} (ho : IsOpen U)
+private theorem convex_faceLog [Finite ι] {U : Set (ι → ℂ)} (ho : IsOpen U)
     (hc : IsCompleteReinhardt U) (hl : IsLogarithmicallyConvex U) (z : ι → ℂ) :
     Convex ℝ {t | faceExp z t ∈ U} := by
+  classical
+  let := Fintype.ofFinite ι
   classical
   intro x hx y hy a b ha hb hab
   obtain ⟨x', hx', hxx⟩ := exists_logarithmic_lift ho hc hx
@@ -143,11 +149,13 @@ private theorem linear_functional_eq_sum [DecidableEq ι] (l : (ι → ℝ) →L
 
 /-- Finitely many strict inequalities with nonnegative real weights persist for suitable nonnegative
 integer weights. Zero weights remain zero. -/
-private theorem exists_nat_weights {κ : Type*} [Fintype κ] {a x : ι → ℝ}
+private theorem exists_nat_weights {κ : Type*} [Finite κ] {a x : ι → ℝ}
     {y : κ → ι → ℝ} (ha : ∀ i, 0 ≤ a i)
     (hxy : ∀ j, (∑ i, a i * y j i) < ∑ i, a i * x i) :
     ∃ m : ι → ℕ, (∀ i, a i = 0 → m i = 0) ∧
       ∀ j, (∑ i, (m i : ℝ) * y j i) < ∑ i, (m i : ℝ) * x i := by
+  classical
+  let := Fintype.ofFinite κ
   have hlim (j : κ) : Tendsto
       (fun t : ℝ => ∑ i, ((⌊a i * t⌋₊ : ℝ) / t) * (x i - y j i)) atTop
       (𝓝 (∑ i, a i * (x i - y j i))) :=
@@ -165,12 +173,14 @@ private theorem exists_nat_weights {κ : Type*} [Fintype κ] {a x : ι → ℝ}
 
 /-- A monomial separates an exterior point from finitely many positive radius vectors in an open
 complete logarithmically convex Reinhardt set. -/
-theorem exists_monomial_separator_of_finite_radii {κ : Type*} [Fintype κ] [Nonempty κ]
+theorem exists_monomial_separator_of_finite_radii {κ : Type*} [Finite κ] [Nonempty κ]
     {U : Set (ι → ℂ)} (ho : IsOpen U) (hc : IsCompleteReinhardt U)
     (hl : IsLogarithmicallyConvex U) {r : κ → ι → ℝ}
     (hr : ∀ j i, 0 < r j i) (hrU : ∀ j, (fun i => (r j i : ℂ)) ∈ U)
     {z : ι → ℂ} (hz : z ∉ U) :
     ∃ m : ι → ℕ, ∀ j, (∏ i, r j i ^ m i) < ∏ i, ‖z i‖ ^ m i := by
+  classical
+  let := Fintype.ofFinite κ
   classical
   let x (i : ι) := Real.log ‖z i‖
   let y (j : κ) (i : ι) := Real.log (r j i)

@@ -222,14 +222,17 @@ theorem unique_coordinatePower_division {d : ℕ} {V : Set (ι → ℂ)} {R : �
     exact heq0
   · exact mul_right_cancel₀ (pow_ne_zero d hw) hmul
 
+omit [Fintype ι] in
 /-- Mixed last-coordinate derivatives at the origin are Cauchy integrals on a smaller circle. -/
-theorem iteratedDeriv_snd_slice_circleIntegral
+theorem iteratedDeriv_snd_slice_circleIntegral [Finite ι]
     {V : Set (ι → ℂ)} {R ρ : ℝ} {g : (ι → ℂ) × ℂ → ℂ}
     (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R)) {z : ι → ℂ} (hz : z ∈ V)
     (hρ : 0 < ρ) (hρR : ρ < R) (n : ℕ) :
     iteratedDeriv n (fun w => g (z, w)) 0 =
       (n.factorial : ℂ) * (2 * Real.pi * I : ℂ)⁻¹ *
         ∮ s in C(0, ρ), s ^ (-(n + 1 : ℤ)) * g (z, s) := by
+  classical
+  let := Fintype.ofFinite ι
   simpa [sub_zero] using
     (diffContOnCl_snd_slice hg hz hρ hρR).iteratedDeriv_eq_circleIntegral_sub_zpow_mul
       hρ n (mem_ball_self hρ)
@@ -255,12 +258,15 @@ theorem analyticOnNhd_circleIntegral_snd_zpow_mul
   refine hI.congr hV fun z hz => ?_
   exact circleIntegral.integral_congr hρ.le fun s _ => mul_comm _ _
 
+omit [Fintype ι] in
 /-- The Taylor remainder coefficients of a last-coordinate slice depend holomorphically on the
 remaining coordinates. -/
-theorem differentiableOn_iteratedDeriv_snd_slice
+theorem differentiableOn_iteratedDeriv_snd_slice [Finite ι]
     {V : Set (ι → ℂ)} (hV : IsOpen V) {R : ℝ} {g : (ι → ℂ) × ℂ → ℂ}
     (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R)) (hR : 0 < R) (n : ℕ) :
     DifferentiableOn ℂ (fun z => iteratedDeriv n (fun w => g (z, w)) 0) V := by
+  classical
+  let := Fintype.ofFinite ι
   let ρ := R / 2
   have hρ : 0 < ρ := half_pos hR
   have hρR : ρ < R := half_lt_self hR
@@ -336,12 +342,15 @@ theorem le_div_pow_of_forall_lt {M : ℝ} {R : ℝ} (hR : 0 < R) (n : ℕ) {x : 
     (eventually_gt_nhds hR).filter_mono nhdsWithin_le_nhds] with ρ hρR hρ0
   exact h ρ hρ0 hρR
 
+omit [Fintype ι] in
 /-- Cauchy's estimate for the Taylor coefficients of a last-coordinate slice, uniform up to the
 boundary radius `R` even though the function is only assumed holomorphic on the open polydisc. -/
-theorem norm_iteratedDeriv_snd_slice_le {V : Set (ι → ℂ)} {R : ℝ} {g : (ι → ℂ) × ℂ → ℂ}
+theorem norm_iteratedDeriv_snd_slice_le [Finite ι] {V : Set (ι → ℂ)} {R : ℝ} {g : (ι → ℂ) × ℂ → ℂ}
     {M : ℝ} (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R)) (hR : 0 < R) {z : ι → ℂ} (hz : z ∈ V)
     (hM : ∀ w ∈ ball (0 : ℂ) R, ‖g (z, w)‖ ≤ M) (n : ℕ) :
     ‖iteratedDeriv n (fun w => g (z, w)) 0‖ ≤ (n.factorial : ℝ) * M / R ^ n := by
+  classical
+  let := Fintype.ofFinite ι
   apply le_div_pow_of_forall_lt hR
   intro ρ hρ hρR
   rw [iteratedDeriv_snd_slice_circleIntegral hg hz hρ hρR n, mul_assoc, norm_mul]
@@ -368,18 +377,22 @@ theorem norm_iteratedDeriv_snd_slice_le {V : Set (ι → ℂ)} {R : ℝ} {g : (�
       ≤ (n.factorial : ℝ) * (M / ρ ^ n) := mul_le_mul_of_nonneg_left hkernel (by positivity)
     _ = (n.factorial : ℝ) * M / ρ ^ n := by ring
 
+omit [Fintype ι] in
 /-- The Cauchy coefficient of a last-coordinate slice equals a division-kernel circle integral,
 matching the shape used by the coordinate-power kernel identity. -/
-theorem cauchyCoeff_eq_of_lt {V : Set (ι → ℂ)} {R ρ : ℝ} {g : (ι → ℂ) × ℂ → ℂ}
+theorem cauchyCoeff_eq_of_lt [Finite ι]
+    {V : Set (ι → ℂ)} {R ρ : ℝ} {g : (ι → ℂ) × ℂ → ℂ}
     (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R)) {w : ι → ℂ} (hw : w ∈ V)
     (hρ : 0 < ρ) (hρR : ρ < R) (j : ℕ) :
     (2 * Real.pi * I : ℂ)⁻¹ * ∮ s in C(0, ρ), g (w, s) / s ^ (j + 1) =
       ((j : ℕ).factorial : ℂ)⁻¹ * iteratedDeriv j (fun s => g (w, s)) 0 := by
+  classical
+  let := Fintype.ofFinite ι
   rw [iteratedDeriv_snd_slice_circleIntegral hg hw hρ hρR j]
   have hEq : EqOn (fun s : ℂ => g (w, s) / s ^ (j + 1))
       (fun s => s ^ (-(j + 1 : ℤ)) * g (w, s)) (sphere (0 : ℂ) ρ) := by
     intro s _
-    show g (w, s) / s ^ (j + 1) = s ^ (-(j + 1 : ℤ)) * g (w, s)
+    change g (w, s) / s ^ (j + 1) = s ^ (-(j + 1 : ℤ)) * g (w, s)
     rw [div_eq_inv_mul, show (-(j + 1 : ℤ)) = -((j + 1 : ℕ) : ℤ) by push_cast; ring,
       zpow_neg, zpow_natCast]
   rw [circleIntegral.integral_congr hρ.le hEq,
@@ -387,15 +400,19 @@ theorem cauchyCoeff_eq_of_lt {V : Set (ι → ℂ)} {R ρ : ℝ} {g : (ι → �
     inv_mul_cancel_left₀ (by exact_mod_cast j.factorial_ne_zero :
       ((j : ℕ).factorial : ℂ) ≠ 0)]
 
+omit [Fintype ι] in
 /-- The Cauchy quotient at a fixed admissible radius solves the coordinate-power division identity
 there, with remainder coefficients given by Taylor coefficients of the last-coordinate slice. -/
-private theorem coordinatePower_eq_of_lt {V : Set (ι → ℂ)} {R ρ : ℝ} {g : (ι → ℂ) × ℂ → ℂ}
+private theorem coordinatePower_eq_of_lt [Finite ι]
+    {V : Set (ι → ℂ)} {R ρ : ℝ} {g : (ι → ℂ) × ℂ → ℂ}
     (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R)) (hρ : 0 < ρ) (hρR : ρ < R) (d : ℕ)
     {w : ι → ℂ} (hw : w ∈ V) {ζ : ℂ} (hζ : ζ ∈ ball (0 : ℂ) ρ) :
     g (w, ζ) = weierstrassRemainder
         (fun j : Fin d => fun v : ι → ℂ => ((j : ℕ).factorial : ℂ)⁻¹ *
           iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ) +
       ζ ^ d * weierstrassCauchyQuotient d g ρ (w, ζ) := by
+  classical
+  let := Fintype.ofFinite ι
   have hζρ : ‖ζ‖ < ρ := by simpa [mem_ball, dist_eq_norm] using hζ
   have hslice : DiffContOnCl ℂ (fun s => g (w, s)) (ball 0 ρ) :=
     diffContOnCl_snd_slice hg hw hρ hρR
@@ -416,7 +433,7 @@ private theorem coordinatePower_eq_of_lt {V : Set (ι → ℂ)} {R ρ : ℝ} {g 
       (fun s => (∑ j ∈ range d, ζ ^ j / s ^ (j + 1)) * g (w, s) +
         ζ ^ d / (s ^ d * (s - ζ)) * g (w, s)) (sphere (0 : ℂ) ρ) := by
     intro s hs
-    show (s - ζ)⁻¹ * g (w, s) =
+    change (s - ζ)⁻¹ * g (w, s) =
       (∑ j ∈ range d, ζ ^ j / s ^ (j + 1)) * g (w, s) + ζ ^ d / (s ^ d * (s - ζ)) * g (w, s)
     rw [← add_mul, weierstrass_kernel_identity d (hne0 s hs) (hnesw s hs)]
   rw [circleIntegral.integral_congr hρ.le hEqOn] at hcauchy
@@ -444,7 +461,7 @@ private theorem coordinatePower_eq_of_lt {V : Set (ι → ℂ)} {R ρ : ℝ} {g 
         ∮ s in C(0, ρ), ∑ j ∈ range d, ζ ^ j * (g (w, s) / s ^ (j + 1)) := by
       apply circleIntegral.integral_congr hρ.le
       intro s _
-      show (∑ j ∈ range d, ζ ^ j / s ^ (j + 1)) * g (w, s) =
+      change (∑ j ∈ range d, ζ ^ j / s ^ (j + 1)) * g (w, s) =
         ∑ j ∈ range d, ζ ^ j * (g (w, s) / s ^ (j + 1))
       rw [Finset.sum_mul]
       exact Finset.sum_congr rfl fun j _ => by ring
@@ -472,14 +489,17 @@ private theorem coordinatePower_eq_of_lt {V : Set (ι → ℂ)} {R ρ : ℝ} {g 
       iteratedDeriv j (fun s => g (w, s)) 0 * ζ ^ j)]
   ring
 
+omit [Fintype ι] in
 /-- The Cauchy quotient at two admissible radii agrees at every nonzero point where both are
 defined. -/
-private theorem weierstrassCauchyQuotient_eq_of_ne {V : Set (ι → ℂ)} {R ρ₁ ρ₂ : ℝ}
+private theorem weierstrassCauchyQuotient_eq_of_ne [Finite ι] {V : Set (ι → ℂ)} {R ρ₁ ρ₂ : ℝ}
     {g : (ι → ℂ) × ℂ → ℂ} (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R))
     (hρ₁ : 0 < ρ₁) (hρ₁R : ρ₁ < R) (hρ₂ : 0 < ρ₂) (hρ₂R : ρ₂ < R) (d : ℕ)
     {w : ι → ℂ} (hw : w ∈ V) {ζ : ℂ} (hζ0 : ζ ≠ 0)
     (hζ₁ : ζ ∈ ball (0 : ℂ) ρ₁) (hζ₂ : ζ ∈ ball (0 : ℂ) ρ₂) :
     weierstrassCauchyQuotient d g ρ₁ (w, ζ) = weierstrassCauchyQuotient d g ρ₂ (w, ζ) := by
+  classical
+  let := Fintype.ofFinite ι
   have h1 := coordinatePower_eq_of_lt hg hρ₁ hρ₁R d hw hζ₁
   have h2 := coordinatePower_eq_of_lt hg hρ₂ hρ₂R d hw hζ₂
   have heq : ζ ^ d * weierstrassCauchyQuotient d g ρ₁ (w, ζ) =
@@ -489,12 +509,16 @@ private theorem weierstrassCauchyQuotient_eq_of_ne {V : Set (ι → ℂ)} {R ρ�
       (w, ζ)), ← h1, ← h2]
   exact mul_left_cancel₀ (pow_ne_zero d hζ0) heq
 
+omit [Fintype ι] in
 /-- The Cauchy quotient at two admissible radii agrees wherever both are defined. -/
-private theorem weierstrassCauchyQuotient_eq_of_lt {V : Set (ι → ℂ)} (hV : IsOpen V) {R ρ₁ ρ₂ : ℝ}
+private theorem weierstrassCauchyQuotient_eq_of_lt [Finite ι]
+    {V : Set (ι → ℂ)} (hV : IsOpen V) {R ρ₁ ρ₂ : ℝ}
     {g : (ι → ℂ) × ℂ → ℂ} (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R))
     (hρ₁ : 0 < ρ₁) (hρ₁R : ρ₁ < R) (hρ₂ : 0 < ρ₂) (hρ₂R : ρ₂ < R) (d : ℕ)
     {w : ι → ℂ} (hw : w ∈ V) {ζ : ℂ} (hζ₁ : ζ ∈ ball (0 : ℂ) ρ₁) (hζ₂ : ζ ∈ ball (0 : ℂ) ρ₂) :
     weierstrassCauchyQuotient d g ρ₁ (w, ζ) = weierstrassCauchyQuotient d g ρ₂ (w, ζ) := by
+  classical
+  let := Fintype.ofFinite ι
   rcases eq_or_ne ζ 0 with hζ0 | hζ0
   · subst hζ0
     set ρ₀ := min ρ₁ ρ₂ / 2 with hρ₀def
@@ -531,69 +555,78 @@ private theorem weierstrassCauchyQuotient_eq_of_lt {V : Set (ι → ℂ)} (hV : 
     exact tendsto_nhds_unique (hlim1.congr' heqn) hlim2
   · exact weierstrassCauchyQuotient_eq_of_ne hg hρ₁ hρ₁R hρ₂ hρ₂R d hw hζ0 hζ₁ hζ₂
 
+omit [Fintype ι] in
 /-- Subtracting the Taylor polynomial of degree less than `d` from a function bounded by `M` gives a
 numerator bounded by `(d + 1) * M`. The triangle inequality and Cauchy's coefficient bounds
 control each of the `d` remainder terms on the smaller disc. -/
-theorem norm_sub_weierstrassRemainder_iteratedDeriv_le {V : Set (ι → ℂ)} {R ρ M : ℝ}
+theorem norm_sub_weierstrassRemainder_iteratedDeriv_le [Finite ι] {V : Set (ι → ℂ)} {R ρ M : ℝ}
     {g : (ι → ℂ) × ℂ → ℂ} (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R)) (hρR : ρ < R) (d : ℕ)
     (hM : ∀ z ∈ V ×ˢ ball (0 : ℂ) R, ‖g z‖ ≤ M) {w : ι → ℂ} (hw : w ∈ V) {ζ' : ℂ}
     (hζ' : ζ' ∈ ball (0 : ℂ) ρ) :
-    ‖g (w, ζ') - weierstrassRemainder (d := d) (fun j v => ((j : ℕ).factorial : ℂ)⁻¹ *
-      iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ')‖ ≤ ((d + 1 : ℕ) : ℝ) * M := by
-  have hζ'ρ : ‖ζ'‖ < ρ := by simpa [mem_ball, dist_eq_norm] using hζ'
-  have hζ'R : ‖ζ'‖ < R := hζ'ρ.trans hρR
-  have hR0 : 0 < R := (norm_nonneg ζ').trans_lt hζ'R
-  have hgb : ‖g (w, ζ')‖ ≤ M := hM (w, ζ') ⟨hw, mem_ball_zero_iff.mpr hζ'R⟩
-  have hMnn : 0 ≤ M := (norm_nonneg _).trans hgb
-  have haj : ∀ j : Fin d, ‖(((j : ℕ).factorial : ℂ)⁻¹ *
-      iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0)‖ ≤ M / R ^ (j : ℕ) := by
-    intro j
-    have hb := norm_iteratedDeriv_snd_slice_le hg hR0 hw (fun s hs => hM (w, s) ⟨hw, hs⟩)
-      (j : ℕ)
-    rw [norm_mul, norm_inv, Complex.norm_natCast]
-    calc ((j : ℕ).factorial : ℝ)⁻¹ * ‖iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0‖
-        ≤ ((j : ℕ).factorial : ℝ)⁻¹ * (((j : ℕ).factorial : ℝ) * M / R ^ (j : ℕ)) :=
-          mul_le_mul_of_nonneg_left hb (by positivity)
-      _ = M / R ^ (j : ℕ) := by field_simp
-  have hrem : ‖weierstrassRemainder (d := d) (fun j v => ((j : ℕ).factorial : ℂ)⁻¹ *
-      iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ')‖ ≤ (d : ℝ) * M := by
-    unfold weierstrassRemainder
-    calc ‖∑ j : Fin d, (((j : ℕ).factorial : ℂ)⁻¹ *
-            iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0) * ζ' ^ (j : ℕ)‖
-        ≤ ∑ j : Fin d, ‖(((j : ℕ).factorial : ℂ)⁻¹ *
-            iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0) * ζ' ^ (j : ℕ)‖ := norm_sum_le _ _
-      _ = ∑ j : Fin d, ‖(((j : ℕ).factorial : ℂ)⁻¹ *
-            iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0)‖ * ‖ζ'‖ ^ (j : ℕ) := by
-            simp [norm_pow]
-      _ ≤ ∑ _j : Fin d, (M / R ^ (0 : ℕ)) * R ^ (0 : ℕ) := by
-            apply Finset.sum_le_sum
-            intro j _
-            calc ‖(((j : ℕ).factorial : ℂ)⁻¹ * iteratedDeriv (j : ℕ)
-                  (fun s => g (w, s)) 0)‖ * ‖ζ'‖ ^ (j : ℕ)
-                ≤ (M / R ^ (j : ℕ)) * R ^ (j : ℕ) :=
-                  mul_le_mul (haj j) (pow_le_pow_left₀ (norm_nonneg _)
-                    (hζ'ρ.trans hρR).le _) (by positivity) (by positivity)
-              _ = M := by field_simp
-              _ = (M / R ^ (0 : ℕ)) * R ^ (0 : ℕ) := by simp
-      _ = (d : ℝ) * M := by simp [Finset.sum_const, Finset.card_univ, mul_comm]
-  calc ‖g (w, ζ') - weierstrassRemainder (fun j v => ((j : ℕ).factorial : ℂ)⁻¹ *
-        iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ')‖
-      ≤ ‖g (w, ζ')‖ + ‖weierstrassRemainder (fun j v => ((j : ℕ).factorial : ℂ)⁻¹ *
-        iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ')‖ := norm_sub_le _ _
-    _ ≤ M + (d : ℝ) * M := add_le_add hgb hrem
-    _ = ((d + 1 : ℕ) : ℝ) * M := by push_cast; ring
+    ‖g (w, ζ') - weierstrassRemainder (d := by
+  classical
+  let := Fintype.ofFinite ι
+  exact
+    d) (fun j v => ((j : ℕ).factorial : ℂ)⁻¹ *
+          iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ')‖ ≤ ((d + 1 : ℕ) : ℝ) * M := by
+      have hζ'ρ : ‖ζ'‖ < ρ := by simpa [mem_ball, dist_eq_norm] using hζ'
+      have hζ'R : ‖ζ'‖ < R := hζ'ρ.trans hρR
+      have hR0 : 0 < R := (norm_nonneg ζ').trans_lt hζ'R
+      have hgb : ‖g (w, ζ')‖ ≤ M := hM (w, ζ') ⟨hw, mem_ball_zero_iff.mpr hζ'R⟩
+      have hMnn : 0 ≤ M := (norm_nonneg _).trans hgb
+      have haj : ∀ j : Fin d, ‖(((j : ℕ).factorial : ℂ)⁻¹ *
+          iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0)‖ ≤ M / R ^ (j : ℕ) := by
+        intro j
+        have hb := norm_iteratedDeriv_snd_slice_le hg hR0 hw (fun s hs => hM (w, s) ⟨hw, hs⟩)
+          (j : ℕ)
+        rw [norm_mul, norm_inv, Complex.norm_natCast]
+        calc ((j : ℕ).factorial : ℝ)⁻¹ * ‖iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0‖
+            ≤ ((j : ℕ).factorial : ℝ)⁻¹ * (((j : ℕ).factorial : ℝ) * M / R ^ (j : ℕ)) :=
+              mul_le_mul_of_nonneg_left hb (by positivity)
+          _ = M / R ^ (j : ℕ) := by field_simp
+      have hrem : ‖weierstrassRemainder (d := d) (fun j v => ((j : ℕ).factorial : ℂ)⁻¹ *
+          iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ')‖ ≤ (d : ℝ) * M := by
+        unfold weierstrassRemainder
+        calc ‖∑ j : Fin d, (((j : ℕ).factorial : ℂ)⁻¹ *
+                iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0) * ζ' ^ (j : ℕ)‖
+            ≤ ∑ j : Fin d, ‖(((j : ℕ).factorial : ℂ)⁻¹ *
+                iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0) * ζ' ^ (j : ℕ)‖ := norm_sum_le _ _
+          _ = ∑ j : Fin d, ‖(((j : ℕ).factorial : ℂ)⁻¹ *
+                iteratedDeriv (j : ℕ) (fun s => g (w, s)) 0)‖ * ‖ζ'‖ ^ (j : ℕ) := by
+                simp [norm_pow]
+          _ ≤ ∑ _j : Fin d, (M / R ^ (0 : ℕ)) * R ^ (0 : ℕ) := by
+                apply Finset.sum_le_sum
+                intro j _
+                calc ‖(((j : ℕ).factorial : ℂ)⁻¹ * iteratedDeriv (j : ℕ)
+                      (fun s => g (w, s)) 0)‖ * ‖ζ'‖ ^ (j : ℕ)
+                    ≤ (M / R ^ (j : ℕ)) * R ^ (j : ℕ) :=
+                      mul_le_mul (haj j) (pow_le_pow_left₀ (norm_nonneg _)
+                        (hζ'ρ.trans hρR).le _) (by positivity) (by positivity)
+                  _ = M := by field_simp
+                  _ = (M / R ^ (0 : ℕ)) * R ^ (0 : ℕ) := by simp
+          _ = (d : ℝ) * M := by simp [Finset.sum_const, Finset.card_univ, mul_comm]
+      calc ‖g (w, ζ') - weierstrassRemainder (fun j v => ((j : ℕ).factorial : ℂ)⁻¹ *
+            iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ')‖
+          ≤ ‖g (w, ζ')‖ + ‖weierstrassRemainder (fun j v => ((j : ℕ).factorial : ℂ)⁻¹ *
+            iteratedDeriv (j : ℕ) (fun s => g (v, s)) 0) (w, ζ')‖ := norm_sub_le _ _
+        _ ≤ M + (d : ℝ) * M := add_le_add hgb hrem
+        _ = ((d + 1 : ℕ) : ℝ) * M := by push_cast; ring
 
+omit [Fintype ι] in
 /-- The **uniform coordinate-power quotient bound**: the Cauchy quotient at radius `ρ` is bounded by
 `(d+1) M / ρ ^ d` throughout the disc, using a bound `M` on the numerator over the whole domain.
 The proof compares the numerator to its degree-`< d` Taylor polynomial, bounded by `(d+1) M` via
 `norm_sub_weierstrassRemainder_iteratedDeriv_le`, then applies the maximum modulus principle to
 the quotient itself and lets the comparison radius approach `ρ`. -/
-private theorem norm_weierstrassCauchyQuotient_le {V : Set (ι → ℂ)} (hV : IsOpen V) {R ρ M : ℝ}
+private theorem norm_weierstrassCauchyQuotient_le [Finite ι]
+    {V : Set (ι → ℂ)} (hV : IsOpen V) {R ρ M : ℝ}
     {g : (ι → ℂ) × ℂ → ℂ} (hg : DifferentiableOn ℂ g (V ×ˢ ball 0 R))
     (hρ : 0 < ρ) (hρR : ρ < R) (d : ℕ)
     (hM : ∀ z ∈ V ×ˢ ball (0 : ℂ) R, ‖g z‖ ≤ M) {w : ι → ℂ} (hw : w ∈ V) {ζ0 : ℂ}
     (hζ0 : ζ0 ∈ ball (0 : ℂ) ρ) :
     ‖weierstrassCauchyQuotient d g ρ (w, ζ0)‖ ≤ ((d + 1 : ℕ) : ℝ) * M / ρ ^ d := by
+  classical
+  let := Fintype.ofFinite ι
   have hR0 : 0 < R := hρ.trans hρR
   have hMnn : 0 ≤ M := (norm_nonneg _).trans (hM (w, 0) ⟨hw, mem_ball_self hR0⟩)
   have hgA : AnalyticOnNhd ℂ g (V ×ˢ ball 0 R) := hg.analyticOnNhd_of_finiteDimensional
@@ -695,7 +728,7 @@ theorem coordinatePower_division (d : ℕ) {r : ι → ℝ} {R : ℝ} (hR : 0 < 
       obtain ⟨hρypos, hρyζ, hρyR⟩ := hρz y.2 hy2R
       have hyρbig : ‖y.2‖ < ρbig := hy2'.trans hρ0'ρbig
       have hρylt : (‖y.2‖ + R) / 2 < ρbig := by linarith
-      show weierstrassCauchyQuotient d g ((‖y.2‖ + R) / 2) y =
+      change weierstrassCauchyQuotient d g ((‖y.2‖ + R) / 2) y =
         weierstrassCauchyQuotient d g ρbig y
       exact weierstrassCauchyQuotient_eq_of_lt hVo hg hρypos hρyR
         ((norm_nonneg y.2).trans_lt hyρbig) hρbigR d hy1
@@ -713,7 +746,7 @@ theorem coordinatePower_division (d : ℕ) {r : ι → ℝ} {R : ℝ} (hR : 0 < 
     have hζR : ‖z.2‖ < R := by simpa [mem_ball, dist_eq_norm] using hz2
     obtain ⟨hρ0pos, hρ0ζ, hρ0R⟩ := hρz z.2 hζR
     have := coordinatePower_eq_of_lt hg hρ0pos hρ0R d hz1 (mem_ball_zero_iff.mpr hρ0ζ)
-    show g z = q z * z.2 ^ d + weierstrassRemainder a z
+    change g z = q z * z.2 ^ d + weierstrassRemainder a z
     rw [this]; ring
   refine ⟨q, a, ⟨hqholo, haholo, heqOnV⟩, ?_, ?_⟩
   · intro M hM0 hMb z hz

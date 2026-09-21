@@ -220,7 +220,7 @@ theorem ball_subset_tubeDomain {Ω : Set (ι → ℝ)} {z : ι → ℂ} {r : ℝ
   intro w hw
   apply h
   rw [Metric.mem_ball, dist_eq_norm] at hw ⊢
-  show ‖rePi w - rePi z‖ < r
+  change ‖rePi w - rePi z‖ < r
   rw [← rePi_sub]
   exact (norm_rePi_le _).trans_lt hw
 

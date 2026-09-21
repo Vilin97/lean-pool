@@ -171,10 +171,11 @@ private theorem norm_weierstrassRemainder_le {d : ℕ} {c : Fin d → (ι → �
       exact mul_le_mul (hc j) (hpow j) (by positivity) hε
     _ = (d : ℝ) * ε * (max R 1) ^ d := by simp; ring
 
+omit [Fintype ι] in
 /-- If the remainder coefficients tend to zero and the leading factor is bounded away from zero,
 shrinking only the parameter polydisc gives the contraction bound. The scalar radius and an
 upper bound for the parameter radius can be prescribed. -/
-private theorem exists_small_remainder_div {d : ℕ} {c : Fin d → (ι → ℂ) → ℂ}
+private theorem exists_small_remainder_div [Finite ι] {d : ℕ} {c : Fin d → (ι → ℂ) → ℂ}
     {f1 : (ι → ℂ) × ℂ → ℂ} {R δ r₀ : ℝ} (hR : 0 < R) (hδ : 0 < δ) (hr₀ : 0 < r₀)
     (hc : ∀ j, Tendsto (c j) (𝓝 0) (𝓝 0))
     (hlower : ∀ z ∈ polydisc (0 : ι → ℂ) (fun _ => r₀) ×ˢ ball (0 : ℂ) R,
@@ -182,6 +183,8 @@ private theorem exists_small_remainder_div {d : ℕ} {c : Fin d → (ι → ℂ)
     ∃ r : ℝ, 0 < r ∧ r ≤ r₀ ∧
       ∀ z ∈ polydisc (0 : ι → ℂ) (fun _ => r) ×ˢ ball (0 : ℂ) R,
         ‖weierstrassRemainder c z / f1 z‖ ≤ R ^ d / (2 * (d + 1)) := by
+  classical
+  let := Fintype.ofFinite ι
   let ε := δ * R ^ d / (2 * (d + 1) * (d + 1) * (max R 1) ^ d)
   have hε : 0 < ε := by dsimp [ε]; positivity
   have hev : ∀ᶠ w in 𝓝 (0 : ι → ℂ), ∀ j, ‖c j w‖ < ε := by
@@ -278,7 +281,6 @@ theorem exists_perturbation_bound_of_coordinatePower_leadingFactor {d : ℕ} {f 
       (fun z hz => hδle z ⟨mem_closedPolydisc.mpr (fun i => (mem_polydisc.mp
         hz.1 i).le),
         ball_subset_closedBall hz.2⟩)
-
   exact ⟨R₂, δ, r₃, hR₂pos, hR₂ε₁, hδpos, hr₃pos, hr₃ε₁, hhA1, hcj0', hδle,
     fun w hw ζ hζ => hhbound (w, ζ) ⟨hw, hζ⟩⟩
 
@@ -343,7 +345,7 @@ private theorem normalized_division_germ_unique {d : ℕ} {r₃ R₂ δ : ℝ}
     intro z hz
     have heqz : g z = q' z * f z + weierstrassRemainder a' z := hlocal.eq (hlocalSub hz)
     have heqf5 : f z = f1 z * (z.2 ^ d + hh z) := hf_eq2 z (hdomsub5 hz)
-    show g z - hh z * s' z = s' z * z.2 ^ d + weierstrassRemainder a' z
+    change g z - hh z * s' z = s' z * z.2 ^ d + weierstrassRemainder a' z
     simp only [hs'def]
     rw [heqz, heqf5]
     ring
@@ -373,7 +375,7 @@ private theorem normalized_division_germ_unique {d : ℕ} {r₃ R₂ δ : ℝ}
     hρpos hh g S s' aOut a' hhFINAL5 hhb3 hSdiv hdiv' (max C1 0) (le_max_right _ _) hM3b
   have hqeqq' : EqOn q q' dom5 := by
     intro z hz
-    show S z / f1 z = q' z
+    change S z / f1 z = q' z
     rw [hSeqs' hz]
     show s' z / f1 z = q' z
     rw [hs'def]
@@ -474,7 +476,7 @@ theorem exists_isWeierstrassDivisionOn_of_bounded {d : ℕ} {f : (ι → ℂ) ×
       hε₁ε₀ (hFINALsubε₁ hz)
     have h1 : f z = f1 z * z.2 ^ d + weierstrassRemainder c z := hfdiv.eq hz0
     have h2 : weierstrassRemainder c z = hh z * f1 z := by
-      show weierstrassRemainder c z = weierstrassRemainder c z / f1 z * f1 z
+      change weierstrassRemainder c z = weierstrassRemainder c z / f1 z * f1 z
       rw [div_mul_cancel₀ _ (hf1ne0FINAL z hz)]
     rw [h2] at h1
     rw [h1]; ring
@@ -507,7 +509,7 @@ theorem exists_isWeierstrassDivisionOn_of_bounded {d : ℕ} {f : (ι → ℂ) ×
       linarith
     have hf1ge : δ ≤ ‖f1 z‖ := hδle _ (hdomFINALsubK hz)
     have hf1pos' : 0 < ‖f1 z‖ := hδpos.trans_le hf1ge
-    show ‖S z / f1 z‖ ≤ 2 * ((d:ℝ) + 1) / (R₂ ^ d * δ) * M
+    change ‖S z / f1 z‖ ≤ 2 * ((d:ℝ) + 1) / (R₂ ^ d * δ) * M
     rw [norm_div]
     calc ‖S z‖ / ‖f1 z‖ ≤ (2 * B) / ‖f1 z‖ := div_le_div_of_nonneg_right hSb hf1pos'.le
       _ ≤ (2 * B) / δ := div_le_div_of_nonneg_left (by positivity) hδpos hf1ge
