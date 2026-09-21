@@ -9966,3 +9966,30 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: nagatafactoriality
+    title: Nagata's prime-generated factoriality theorem
+    summary: Nagata’s factoriality criterion for noetherian domains localized at prime-generated
+      multiplicative sets, with concrete and abstract localization interfaces and applications
+      to polynomial rings through Laurent and fraction-field localizations.
+    branch: commutative algebra
+    entry_module: LeanPool.NagataFactoriality
+    authors:
+    - Arthur F. Ramos
+    - Ruy J. G. B. de Queiroz
+    - Anjolina G. de Oliveira
+    source:
+      url: https://github.com/arthur742ramos/nagatafactoriality
+      github_repo: arthur742ramos/nagatafactoriality
+      commit: 2efdf7f86085972bd758449ca43c76a2e7bdf4af
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - NagataFactoriality.nagata_theorem
+    main_results:
+    - declaration: NagataFactoriality.nagata_theorem
+      informal: A noetherian integral domain is a unique factorization domain when localization
+        at a prime-generated multiplicative set is a unique factorization domain.
+    tags:
+    - commutative-algebra
+    msc:
+    - 13F15

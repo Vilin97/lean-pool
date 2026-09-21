@@ -3840,6 +3840,7 @@ import LeanPool.MoserLatticeColorings
 import LeanPool.MoserLatticeColorings.Basic
 import LeanPool.MoserLatticeColorings.Ring
 import LeanPool.MulticolorTriangleRamsey
+import LeanPool.NagataFactoriality
 import LeanPool.NashWilliams
 import LeanPool.NashWilliams.Combinatorics
 import LeanPool.NashWilliams.Combinatorics.Front
