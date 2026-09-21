@@ -40,15 +40,13 @@ theorem sub_pureMonomial_mem_span_X
   by_contra haux
   push_neg at haux
   have hdiff :
-      MvPolynomial.coeff m
-        (P - MvPolynomial.monomial (Finsupp.single t N) c) ≠ 0 :=
+      (P - MvPolynomial.monomial (Finsupp.single t N) c).coeff m ≠ 0 :=
     MvPolynomial.mem_support_iff.mp hm
   by_cases hmt : m = Finsupp.single t N
   · subst m
     simp [hcoeff] at hdiff
   have hmono :
-      MvPolynomial.coeff m
-        (MvPolynomial.monomial (Finsupp.single t N) c) = 0 := by
+      (MvPolynomial.monomial (Finsupp.single t N) c).coeff m = 0 := by
     simp [MvPolynomial.coeff_monomial, Ne.symm hmt]
   have hmP : m ∈ P.support := by
     apply MvPolynomial.mem_support_iff.mpr

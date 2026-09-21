@@ -86,7 +86,7 @@ theorem finiteLength_of_maximalIdeal_pow_smul_eq_bot
                   exact p.smul_mem a hx }
             left_inv := by intro p; ext; rfl
             right_inv := by intro p; ext; rfl }
-        exact ⟨e.symm.toOrderEmbedding.wellFounded hQartinianQuot.wf⟩
+        exact e.symm.toOrderEmbedding.wellFounded hQartinianQuot
       rw [isFiniteLength_iff_isNoetherian_isArtinian]
       exact ⟨inferInstance,
         (isArtinian_iff_submodule_quotient N).mpr

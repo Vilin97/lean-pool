@@ -223,7 +223,7 @@ theorem freeWeylGenerator_commutator
       rw [hmap]
       rfl
 
-def freeWeylLinearCombination
+def freeWeylLinearCombination {omega : Matrix ι ι k}
     (M : Matrix ι ι k) (z : ι → FreeWeyl k ι omega) (i : ι) :
     FreeWeyl k ι omega :=
   ∑ j, algebraMap k (FreeWeyl k ι omega) (M i j) * z j
