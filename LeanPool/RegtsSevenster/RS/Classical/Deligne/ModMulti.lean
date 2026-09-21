@@ -1335,9 +1335,8 @@ lemma modListHeadAct_slotwise
     simp only [List.nil_append, modListCast_rfl, Category.id_comp]
       at hrel
     rw [modMultiLegM, modMultiLegN] at hrel
-    exact (Category.assoc _ _ _).trans
-      ((congrArg (modMultiHeadShuffle A X N post ≫ ·) hrel).trans
-        (Category.assoc _ _ _).symm)
+    simpa only [modMultiHeadShuffle, Category.assoc] using
+      congrArg (modMultiHeadShuffle A X N post ≫ ·) hrel
   · rw [List.cons_append] at hd
     injection hd with h1 h2
     subst h1
@@ -1353,8 +1352,9 @@ lemma modListHeadAct_slotwise
           𝟙 (X.X ⊗ modList A (pre' ++ M :: N :: post)))) ≫
         (modListHeadAct A X (pre' ++ M :: N :: post) ≫
           modMultiπ A (X :: (pre' ++ M :: N :: post)))
-    rw [Category.comp_id, Category.comp_id,
-      modListHeadAct_tail_assoc A X _, modListHeadAct_tail_assoc A X _]
+    rw [Category.comp_id, Category.comp_id]
+    erw [← Category.assoc, modListHeadAct_tail_assoc A X _]
+    conv_rhs => erw [← Category.assoc, modListHeadAct_tail_assoc A X _]
     have hrel := modMulti_rel A (X :: pre') M N post
       (show X :: (pre' ++ M :: N :: post) =
         (X :: pre') ++ M :: N :: post by simp)

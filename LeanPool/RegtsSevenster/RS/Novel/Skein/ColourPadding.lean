@@ -97,6 +97,7 @@ theorem oddListAt_map (e : MixedColourEmbedding k ℓ K L)
   congr 1
   funext a
   simp [EdgeSubset.oddPairFn, oddColouring, e.partner_eq]
+  exact ⟨rfl, rfl⟩
 
 /-- The odd vertex sign is preserved by embedding colours. -/
 theorem oddSignAt_map (e : MixedColourEmbedding k ℓ K L)

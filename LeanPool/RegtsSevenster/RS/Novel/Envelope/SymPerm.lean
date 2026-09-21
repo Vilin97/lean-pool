@@ -55,12 +55,14 @@ theorem swapTop_swapTop
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (X : A) (n : ℕ) :
     swapTop X n ≫ swapTop X n = 𝟙 (tensorPow A X (n + 2)) := by
-  unfold swapTop
-  slice_lhs 3 4 => rw [Iso.inv_hom_id]
-  rw [Category.id_comp]
-  slice_lhs 2 3 => rw [← MonoidalCategory.whiskerLeft_comp,
-    SymmetricCategory.symmetry, MonoidalCategory.whiskerLeft_id]
-  rw [Category.id_comp, Iso.hom_inv_id]
+  change ((α_ (tensorPow A X n) X X).hom ≫
+      (tensorPow A X n ◁ (β_ X X).hom) ≫ (α_ (tensorPow A X n) X X).inv) ≫
+      ((α_ (tensorPow A X n) X X).hom ≫
+      (tensorPow A X n ◁ (β_ X X).hom) ≫ (α_ (tensorPow A X n) X X).inv) =
+    𝟙 ((tensorPow A X n ⊗ X) ⊗ X)
+  simp only [Category.assoc, Iso.inv_hom_id_assoc]
+  rw [← MonoidalCategory.whiskerLeft_comp_assoc, SymmetricCategory.symmetry,
+    MonoidalCategory.whiskerLeft_id, Category.id_comp, Iso.hom_inv_id]
 
 /-! ## Bubbling the top factor down -/
 
@@ -369,7 +371,7 @@ theorem permMor_one [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
   | zero => rfl
   | succ n ih =>
     rw [permMor_succ, restPerm_one, ih, topImage_one]
-    simp [Fin.last]
+    simp [Fin.last, tensorPow]
 
 /-- **A top-fixing permutation acts on the lower factors alone.** -/
 @[simp]
@@ -392,7 +394,7 @@ theorem permMor_mul_extPerm
     (σ : Equiv.Perm (Fin (n + 1))) (τ : Equiv.Perm (Fin n)) :
     permMor X (n + 1) (σ * extPerm τ) =
       permMor X (n + 1) (extPerm τ) ≫ permMor X (n + 1) σ := by
-  rw [permMor_succ, restPerm_mul_extPerm, topImage_mul_extPerm,
+  erw [permMor_succ, restPerm_mul_extPerm, topImage_mul_extPerm,
     ih (restPerm σ) τ, MonoidalCategory.comp_whiskerRight,
     permMor_extPerm, permMor_succ, Category.assoc]
   rfl
@@ -411,7 +413,7 @@ theorem permMor_topCycle
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (X : A) (n : ℕ) (q : Fin (n + 1)) :
     permMor X (n + 1) (topCycle q) = insertTop X n (n - (q : ℕ)) := by
-  rw [permMor_succ, restPerm_topCycle, topImage_topCycle, permMor_one,
+  erw [permMor_succ, restPerm_topCycle, topImage_topCycle, permMor_one,
     MonoidalCategory.id_whiskerRight, Category.id_comp]
 
 /-- **The top transposition acts by the top braiding.**  It is the
