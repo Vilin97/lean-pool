@@ -33,7 +33,8 @@ global simplex tower use its onto branch.  Order zero supplies constants, and
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace Topology symmDiff
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -219,7 +220,7 @@ def constantRandomVariables (P : Measure Ω) [IsFiniteMeasure P] :
 theorem homogeneousChaos_zero_eq_constants (hB : IsPreBrownianReal B P) :
     letI : IsProbabilityMeasure P := (hB.hasLaw ∅).isProbabilityMeasure
     (homogeneousChaos hB 0 : Submodule ℝ (RandomL2 P)) = constantRandomVariables P := by
-  letI : IsProbabilityMeasure P := (hB.hasLaw ∅).isProbabilityMeasure
+  let : IsProbabilityMeasure P := (hB.hasLaw ∅).isProbabilityMeasure
   unfold homogeneousChaos multipleIntegralRange constantRandomVariables
   apply le_antisymm <;> apply Submodule.topologicalClosure_mono
   · rintro x ⟨f, rfl⟩
@@ -388,7 +389,6 @@ private theorem exists_countableProcess_measurableSet_ae_eq
         have hall : ∀ᵐ ω ∂P, ∀ i, ω ∈ f i ↔ ω ∈ g i :=
           ae_all_iff.mpr fun i ↦ (hfg i).mono fun _ h ↦ h.to_iff
         filter_upwards [hall] with ω hω
-        change (ω ∈ ⋃ i, f i) = (ω ∈ ⋃ i, g i)
         apply propext
         constructor
         · intro hw

@@ -25,7 +25,7 @@ Beyond the first chaos, `CylindricalGrowth.lean` identifies the Malliavin deriva
 (`clarkOcone_comp_brownian`, and `clarkOcone_polynomial_brownian` for polynomials); likewise
 `φ (∫ g dB) = E[φ (∫ g dB)] + ∫ Π (φ' (∫ g dB) g) dB` for `φ` of class `C¹` with bounded
 derivative (`clarkOcone_comp_wienerIntegral`, via the chain rule of `ChainRule.lean`), with the
-Poincaré-type consequence `‖φ (F) - E[φ (F)]‖ ≤ K ‖D̄ F‖` for every `F ∈ 𝔻₁,₂`
+Poincaré-type consequence `‖φ (F) - E[φ (F)]‖ ≤ K ‖D_cl F‖` for every `F ∈ 𝔻₁,₂`
 (`norm_comp_sub_expectationL2_le`).  With the time-form chain and product rules of
 `ChainRule.lean` the representation is explicit for `φ (F)`, `f (F₁, …, Fₙ)` and `F · f (B)` with
 `F, Fᵢ ∈ 𝔻₁,₂` arbitrary (`clarkOcone_comp`, `clarkOcone_comp_pi`, `clarkOcone_mul_cylinder`),
@@ -454,7 +454,7 @@ theorem clarkOcone_mul_cylinder {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W�
   rwa [timeDerivative_mderivClosure_mul_cylinder C.isPreBrownian C.coordinate
     C.coordinate_apply C.generated f hf hb hb' t hF] at h
 
-/-- **Poincaré-type estimate for composites**: `‖φ (F) - E[φ (F)]‖ ≤ K ‖D̄ F‖` for every
+/-- **Poincaré-type estimate for composites**: `‖φ (F) - E[φ (F)]‖ ≤ K ‖D_cl F‖` for every
 `F ∈ 𝔻₁,₂` and `φ` of class `C¹` with `|φ'| ≤ K`, via the abstract representation. -/
 theorem norm_comp_sub_expectationL2_le {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) {φ : ℝ → ℝ} {K : ℝ≥0} (hφ : ContDiff ℝ 1 φ)
@@ -465,7 +465,7 @@ theorem norm_comp_sub_expectationL2_le {𝓕 : Filtration ℝ≥0 ‹MeasurableS
     (norm_mderivClosure_comp_le P hφ hK F.2)
 
 /-- **Poincaré-type estimate for multivariate composites**:
-`‖f (F) - E[f (F)]‖ ≤ K ∑ᵢ ‖D̄ Fᵢ‖` for `F₁, …, Fₙ ∈ 𝔻₁,₂` and `f` of class `C¹` with
+`‖f (F) - E[f (F)]‖ ≤ K ∑ᵢ ‖D_cl Fᵢ‖` for `F₁, …, Fₙ ∈ 𝔻₁,₂` and `f` of class `C¹` with
 `‖f'‖ ≤ K`. -/
 theorem norm_compPi_sub_expectationL2_le {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : ContDiff ℝ 1 f) {K : ℝ}

@@ -19,7 +19,8 @@ that this exact assertion implies canonical-chaos totality and natural martingal
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 

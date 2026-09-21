@@ -18,7 +18,8 @@ identity and the pure-power Itô recurrence.
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 
@@ -76,6 +77,7 @@ theorem brownianWickPurePowerMixedInner_zero
   exact (brownianWickPowerLp_eq_purePowerIntegral_iff_inner
     hB hsm v 0).1 (brownianPurePowerIntegral_zero_step hB v).symm
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- The mixed-inner formula is automatic at order one. -/
 theorem brownianWickPurePowerMixedInner_one
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
@@ -102,6 +104,7 @@ def BrownianHigherWickPurePowerMixedInnerIdentity
         (brownianPurePowerIntegral hB n (stepToLp v)) =
       (n.factorial : ℝ) * (‖stepToLp v‖ ^ 2) ^ n
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- Since the mixed-inner formula is automatic in orders zero and one, its all-orders and
 genuinely higher-order forms are equivalent. -/
 theorem wickPurePowerMixedInnerIdentity_iff_higher
@@ -133,6 +136,7 @@ theorem higherHermiteMultipleIntegralIdentity_iff_mixedInner
     exact (brownianWickPowerLp_eq_purePowerIntegral_iff_inner
       hB hsm v n).2 (hinner v n hn)
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- Including the automatic base orders, the Hermite/multiple-integral identity is exactly the
 full mixed-inner scalar formula. -/
 theorem higherHermiteMultipleIntegralIdentity_iff_fullMixedInner
@@ -146,6 +150,7 @@ theorem higherHermiteMultipleIntegralIdentity_iff_fullMixedInner
     _ ↔ BrownianWickPurePowerMixedInnerIdentity hB :=
       (wickPurePowerMixedInnerIdentity_iff_higher hB hsm).symm
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- Equivalently, the pure-power Itô recurrence is exactly the higher mixed-inner formula. -/
 theorem purePowerRecurrence_iff_mixedInner
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t)) :
@@ -154,6 +159,7 @@ theorem purePowerRecurrence_iff_mixedInner
   rw [purePowerRecurrence_iff_higherHermiteMultipleIntegralIdentity hB hsm,
     higherHermiteMultipleIntegralIdentity_iff_mixedInner hB hsm]
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- Equivalently, the pure-power Itô recurrence is exactly the full mixed-inner scalar
 formula, whose base orders hold automatically. -/
 theorem purePowerRecurrence_iff_fullMixedInner

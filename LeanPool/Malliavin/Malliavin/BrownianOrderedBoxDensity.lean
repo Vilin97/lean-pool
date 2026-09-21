@@ -466,7 +466,7 @@ theorem positiveOrderedBoxDense : PositiveOrderedBoxDense :=
 discharged. -/
 noncomputable def brownianIteratedIntegralFamily
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
+    [MeasurableSpace W]
     [SecondCountableTopology W]
     {P : Measure W} [IsGaussian P] {B : ℝ≥0 → W → ℝ}
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t)) :
@@ -477,7 +477,7 @@ noncomputable def brownianIteratedIntegralFamily
 box. -/
 theorem brownianIteratedIntegralFamily_isBrownian
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
+    [MeasurableSpace W]
     [SecondCountableTopology W]
     {P : Measure W} [IsGaussian P] {B : ℝ≥0 → W → ℝ}
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t)) :

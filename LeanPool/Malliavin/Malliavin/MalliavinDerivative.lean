@@ -69,16 +69,16 @@ and agreeing with `D` on smooth bounded functionals.
 * `Malliavin.InGraphClosure.unique`, `mderivClosure_toLp`, `mderivClosure_add`,
   `mderivClosure_smul`: the closed extension is well defined, extends `D`, and is linear;
 * `Malliavin.inner_mderivClosure_simpleVec`, `mderivClosure_eq_of_forall_inner`: duality
-  `⟪D̄F, G • h⟫ = ⟪F, G h - ⟪DG, h⟫⟫` on `𝔻₁,₂`, which characterizes `D̄F`;
+  `⟪D_clF, G • h⟫ = ⟪F, G h - ⟪DG, h⟫⟫` on `𝔻₁,₂`, which characterizes `D_clF`;
 * `Malliavin.dense_domD12`, `InGraphClosure.of_tendsto`, `mem_domD12_of_tendsto`,
   `isClosed_graph_mderivClosure`: the Sobolev domain is dense and the closed extension is a
   closed operator; `mderivD12` bundles it as a linear map `D12 μ →ₗ[ℝ] L²(μ; H)`;
 * `Malliavin.dense_mderivPMap_domain`, `isClosed_mderivPMap_graph`: the bundled partial linear
   map is densely defined and closed;
-* `Malliavin.inner_mderivClosure_const`: integration by parts `∫ ⟪D̄F, h⟫ dμ = ∫ F · h dμ` on
+* `Malliavin.inner_mderivClosure_const`: integration by parts `∫ ⟪D_clF, h⟫ dμ = ∫ F · h dμ` on
   `𝔻₁,₂`;
 * `Malliavin.norm_firstChaos_starProjection_le_mderivClosure`: the order-one Gaussian
-  Poincaré bound `‖proj₁ F‖₂ ≤ ‖D̄F‖₂`;
+  Poincaré bound `‖proj₁ F‖₂ ≤ ‖D_clF‖₂`;
 * `Malliavin.ae_eq_zero_of_forall_integral_cos_sin`, `denseRange_toLp`: Fourier uniqueness in
   `L¹(μ)` and the density of smooth bounded functionals in `L²(μ)`;
 * `Malliavin.integral_fderiv_inclusion_ofDual`, `integral_inner_mderiv`: Gaussian integration
@@ -397,7 +397,8 @@ noncomputable def mderiv (F : W → ℝ) (x : W) : Space μ :=
 
 theorem inner_mderiv (F : W → ℝ) (x : W) (h : Space μ) :
     ⟪mderiv μ F x, h⟫_ℝ = fderiv ℝ F x (inclusion μ h) := by
-  simp only [mderiv, InnerProductSpace.toDual_symm_apply, ContinuousLinearMap.comp_apply, inclusion_apply]
+  simp only [mderiv, InnerProductSpace.toDual_symm_apply, ContinuousLinearMap.comp_apply,
+    inclusion_apply]
 
 /-- Norm bound: `‖DF x‖ ≤ ‖fderiv ℝ F x‖ * ‖inclusion μ‖`. -/
 theorem norm_mderiv_le (F : W → ℝ) (x : W) :
@@ -498,7 +499,8 @@ theorem mderiv_cylindrical {n : ℕ} (f : (Fin n → ℝ) → ℝ) (L : Fin n �
   rw [hcomp, fderiv_comp x hf Λ.differentiableAt, ContinuousLinearMap.comp_apply, Λ.fderiv]
   have hpi : Λ (inclusion μ v) = ∑ i, L i (inclusion μ v) • (Pi.single i (1 : ℝ)) := by
     ext j
-    simp only [hΛ, inclusion_apply, ContinuousLinearMap.coe_pi', Finset.sum_apply, Pi.smul_apply, Pi.single_apply,
+    simp only [hΛ, inclusion_apply, ContinuousLinearMap.coe_pi', Finset.sum_apply,
+      Pi.smul_apply, Pi.single_apply,
       smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
   rw [hpi, map_sum]
   simp_rw [map_smul, smul_eq_mul]
@@ -600,7 +602,7 @@ theorem integrable_mul (hF : IsSmoothBounded F) {g : W → ℝ} (hg : Integrable
 omit [CompleteSpace W] [SecondCountableTopology W] in
 theorem memLp_mul_coe (hF : IsSmoothBounded F) (g : Lp ℝ 2 μ) :
     MemLp (fun x ↦ F x * g x) 2 μ :=
-  (Lp.memLp g).mul' (hF.memLp μ ∞)
+  (hF.memLp μ ∞).fun_mul (Lp.memLp g)
 
 /-- The `L²(μ)` class of a smooth bounded functional. -/
 noncomputable def toLp (hF : IsSmoothBounded F) : Lp ℝ 2 μ := (hF.memLp μ 2).toLp F
@@ -1137,7 +1139,7 @@ theorem inGraphClosure_mderivClosure {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) :
     InGraphClosure μ F (mderivClosure μ F) := by
   have h' : ∃ η, InGraphClosure μ F η := hF
   unfold mderivClosure
-  rw [dif_pos h']
+  rw [dite_eq_left h']
   exact h'.choose_spec
 
 /-- `mderivClosure` is characterized by the graph closure. -/
@@ -1198,7 +1200,7 @@ theorem mderivClosure_smul {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) (c : ℝ) :
     mderivClosure μ (c • F) = c • mderivClosure μ F :=
   mderivClosure_eq μ ((inGraphClosure_mderivClosure μ hF).smul μ c)
 
-/-- **Duality on `𝔻₁,₂`**: the adjoint relation `⟪D̄F, G • h⟫ = ⟪F, G h - ⟪DG, h⟫⟫` extends by
+/-- **Duality on `𝔻₁,₂`**: the adjoint relation `⟪D_clF, G • h⟫ = ⟪F, G h - ⟪DG, h⟫⟫` extends by
 continuity from smooth bounded functionals to the whole Sobolev space. -/
 theorem inner_mderivClosure_simpleVec {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) (k : SimpleIndex μ) :
     ⟪mderivClosure μ F, simpleVec μ k⟫_ℝ = ⟪F, simpleDiv μ k⟫_ℝ := by
@@ -1215,7 +1217,7 @@ theorem inner_mderivClosure_simpleVec {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) (
   rw [e] at h1
   exact tendsto_nhds_unique h1 h2
 
-/-- `D̄F` is determined by the duality relation, by totality of the simple vectors. -/
+/-- `D_clF` is determined by the duality relation, by totality of the simple vectors. -/
 theorem mderivClosure_eq_of_forall_inner {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ)
     {η : Lp (Space μ) 2 μ} (hη : ∀ k, ⟪η, simpleVec μ k⟫_ℝ = ⟪F, simpleDiv μ k⟫_ℝ) :
     mderivClosure μ F = η := by
@@ -1465,8 +1467,8 @@ theorem simpleDiv_one (h : Space μ) :
   rw [hx]
   simp only [one_mul, mderiv_const, inner_zero_left, sub_zero]
 
-/-- **Integration by parts on `𝔻₁,₂`**: `∫ ⟪D̄F, h⟫ dμ = ∫ F · h dμ`, i.e.
-`⟪D̄F, const h⟫_{L²(μ;H)} = ⟪F, h⟫_{L²(μ)}`. -/
+/-- **Integration by parts on `𝔻₁,₂`**: `∫ ⟪D_clF, h⟫ dμ = ∫ F · h dμ`, i.e.
+`⟪D_clF, const h⟫_{L²(μ;H)} = ⟪F, h⟫_{L²(μ)}`. -/
 theorem inner_mderivClosure_const {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) (h : Space μ) :
     ⟪mderivClosure μ F, (memLp_const h).toLp (fun _ ↦ h)⟫_ℝ = ⟪F, (h : Lp ℝ 2 μ)⟫_ℝ := by
   have := inner_mderivClosure_simpleVec μ hF (⟨fun _ ↦ 1, IsSmoothBounded.const 1⟩, h)

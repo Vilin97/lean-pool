@@ -16,7 +16,8 @@ random `L²`; its range is exactly the closed supremum of the positive canonical
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 

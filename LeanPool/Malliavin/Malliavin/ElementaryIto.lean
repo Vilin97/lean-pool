@@ -25,7 +25,8 @@ comparison theorems connect these genuine Brownian values back to the family-lev
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -82,10 +83,52 @@ theorem ClarkOconeFamily.inner_elementaryIntegralValue_eq_zero_of_le
           (C.isPreBrownian.integrable_eval c),
         C.isPreBrownian.integral_eval, C.isPreBrownian.integral_eval, sub_zero, zero_mul]
 
+namespace LegacyTensor
+
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
 /-- Chronologically disjoint elementary predictable terms are orthogonal in product `L²`. -/
 theorem inner_elementaryPredictable_eq_zero_of_le
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) {a b c d : ℝ≥0} (hbc : b ≤ c)
+    (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) (Y : lpMeas ℝ ℝ (𝓕 c) 2 P) :
+    inner ℝ (elementaryPredictable 𝓕 a b Z) (elementaryPredictable 𝓕 c d Y) = 0 := by
+  change inner ℝ (elementaryPredictable 𝓕 a b Z : TimeProcessL2 P)
+    (elementaryPredictable 𝓕 c d Y : TimeProcessL2 P) = 0
+  rw [elementaryPredictable_coeLp, elementaryPredictable_coeLp, L2.inner_def]
+  apply integral_eq_zero_of_ae
+  have habInd : ∀ᵐ p : ℝ≥0 × W ∂legacyProduct nonnegativeLebesgueMeasure P,
+      (iocIndicator a b : ℝ≥0 → ℝ) p.1 =
+        (Set.Ioc a b).indicator (1 : ℝ≥0 → ℝ) p.1 :=
+    legacyProduct_quasiMeasurePreserving_fst.ae_eq_comp
+      (indicatorConstLp_coeFn (p := 2) (hs := measurableSet_Ioc)
+        (hμs := nonnegativeLebesgueMeasure_Ioc_ne_top a b) (c := (1 : ℝ)))
+  have hcdInd : ∀ᵐ p : ℝ≥0 × W ∂legacyProduct nonnegativeLebesgueMeasure P,
+      (iocIndicator c d : ℝ≥0 → ℝ) p.1 =
+        (Set.Ioc c d).indicator (1 : ℝ≥0 → ℝ) p.1 :=
+    legacyProduct_quasiMeasurePreserving_fst.ae_eq_comp
+      (indicatorConstLp_coeFn (p := 2) (hs := measurableSet_Ioc)
+        (hμs := nonnegativeLebesgueMeasure_Ioc_ne_top c d) (c := (1 : ℝ)))
+  have hdisj : Disjoint (Set.Ioc a b) (Set.Ioc c d) := by
+    rw [Set.Ioc_disjoint_Ioc]
+    exact (min_le_left b d).trans (hbc.trans (le_max_right a c))
+  filter_upwards [coeFn_tensor (iocIndicator a b) (Z : RandomL2 P),
+    coeFn_tensor (iocIndicator c d) (Y : RandomL2 P), habInd, hcdInd]
+    with p hfirst hsecond habp hcdp
+  rw [hfirst, hsecond, habp, hcdp]
+  simp only [RCLike.inner_apply, conj_trivial]
+  by_cases hp : p.1 ∈ Set.Ioc a b
+  · have hp' : p.1 ∉ Set.Ioc c d := Set.disjoint_left.mp hdisj hp
+    simp only [hp', not_false_eq_true, Set.indicator_of_notMem, zero_mul, hp,
+      Set.indicator_of_mem, Pi.one_apply,
+      one_mul, Pi.zero_apply]
+  · simp only [hp, not_false_eq_true, Set.indicator_of_notMem, zero_mul, mul_zero, Pi.zero_apply]
+
+end LegacyTensor
+
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
+    [SecondCountableTopology W] [IsGaussian P] in
+/-- Chronologically disjoint elementary predictable terms are orthogonal in product `L²`. -/
+theorem inner_elementaryPredictable_eq_zero_of_le [SFinite P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) {a b c d : ℝ≥0} (hbc : b ≤ c)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) (Y : lpMeas ℝ ℝ (𝓕 c) 2 P) :
     inner ℝ (elementaryPredictable 𝓕 a b Z) (elementaryPredictable 𝓕 c d Y) = 0 := by
@@ -115,7 +158,8 @@ theorem inner_elementaryPredictable_eq_zero_of_le
   simp only [RCLike.inner_apply, conj_trivial]
   by_cases hp : p.1 ∈ Set.Ioc a b
   · have hp' : p.1 ∉ Set.Ioc c d := Set.disjoint_left.mp hdisj hp
-    simp only [hp', not_false_eq_true, Set.indicator_of_notMem, zero_mul, hp, Set.indicator_of_mem, Pi.one_apply,
+    simp only [hp', not_false_eq_true, Set.indicator_of_notMem, zero_mul, hp,
+      Set.indicator_of_mem, Pi.one_apply,
       one_mul, Pi.zero_apply]
   · simp only [hp, not_false_eq_true, Set.indicator_of_notMem, zero_mul, mul_zero, Pi.zero_apply]
 
@@ -526,10 +570,14 @@ theorem inner_elementaryBrownianValue_eq_inner_elementaryPredictable_of_le
     (hnat : 𝓕 = Filtration.natural B hsm)
     {a b c d : ℝ≥0} (hab : a ≤ b) (hbc : b ≤ c) (hcd : c ≤ d)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) (Y : lpMeas ℝ ℝ (𝓕 c) 2 P) :
+    let : SFinite P :=
+      @probability_sFinite W _ P hB.isGaussianProcess.isProbabilityMeasure
     inner ℝ (elementaryBrownianValue hB hsm hnat hab Z)
       (elementaryBrownianValue hB hsm hnat hcd Y) =
     inner ℝ (elementaryPredictable 𝓕 a b Z)
       (elementaryPredictable 𝓕 c d Y) := by
+  let : SFinite P :=
+      @probability_sFinite W _ P hB.isGaussianProcess.isProbabilityMeasure
   rw [inner_elementaryBrownianValue_eq_zero_of_le hB hsm hnat hab hbc hcd Z Y,
     inner_elementaryPredictable_eq_zero_of_le 𝓕 hbc Z Y]
 

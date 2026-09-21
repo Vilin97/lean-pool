@@ -277,7 +277,7 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
 theorem aemeasurable_spaceVector (hB : IsPreBrownianReal B P) (Z : RandomL2 P)
     (I : Finset ℝ≥0) : AEMeasurable (spaceVector B Z I) P := by
   refine AEMeasurable.prodMk (Lp.aestronglyMeasurable Z).aemeasurable ?_
-  exact aemeasurable_pi_lambda _ fun i ↦ hB.aemeasurable i
+  exact aemeasurable_pi_iff.mpr fun i ↦ hB.aemeasurable i
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
   [SecondCountableTopology W] [IsGaussian P] in
@@ -304,10 +304,13 @@ theorem coeFn_combination_spaceVector (hB : IsPreBrownianReal B P) (Z : RandomL2
   have hdec : spaceVector B Z I w =
       Z w • ((1 : ℝ), (0 : I → ℝ)) + ∑ i : I, B i w • ((0 : ℝ), Pi.single i (1 : ℝ)) := by
     ext x
-    · simp only [spaceVector, Prod.smul_mk, smul_eq_mul, mul_one, smul_zero, Finset.univ_eq_attach, mul_zero,
+    · simp only [spaceVector, Prod.smul_mk, smul_eq_mul, mul_one, smul_zero,
+        Finset.univ_eq_attach, mul_zero,
         Prod.fst_add, Prod.fst_sum, Finset.sum_const_zero, add_zero]
-    · simp only [spaceVector, Prod.smul_mk, smul_eq_mul, mul_one, smul_zero, Finset.univ_eq_attach, mul_zero,
-        Prod.snd_add, Prod.snd_sum, Pi.add_apply, Pi.zero_apply, Finset.sum_apply, Pi.smul_apply, Pi.single_apply, mul_ite,
+    · simp only [spaceVector, Prod.smul_mk, smul_eq_mul, mul_one, smul_zero,
+        Finset.univ_eq_attach, mul_zero,
+        Prod.snd_add, Prod.snd_sum, Pi.add_apply, Pi.zero_apply, Finset.sum_apply,
+        Pi.smul_apply, Pi.single_apply, mul_ite,
         Finset.sum_ite_eq, Finset.mem_attach, ↓reduceIte, zero_add]
   rw [hdec, map_add, map_smul, map_sum]
   simp_rw [map_smul, smul_eq_mul]
@@ -318,7 +321,8 @@ Brownian coordinates, the vector `(Z, (B i)_{i ∈ I})` is Gaussian. -/
 theorem hasGaussianLaw_spaceVector (hB : IsPreBrownianReal B P) (L : ℝ≥0 → StrongDual ℝ W)
     (hL : ∀ t w, B t w = L t w) {Z : RandomL2 P} (hZ : Z ∈ Space P) (I : Finset ℝ≥0) :
     HasGaussianLaw (spaceVector B Z I) P := by
-  refine ⟨isGaussian_of_isGaussian_map fun ℓ ↦ ?_⟩
+  refine ⟨aemeasurable_spaceVector hB Z I,
+    isGaussian_of_isGaussian_map fun ℓ ↦ ?_⟩
   have hmeas := aemeasurable_spaceVector hB Z I
   rw [AEMeasurable.map_map_of_aemeasurable ℓ.continuous.measurable.aemeasurable hmeas]
   have hmem : ℓ (1, 0) • Z + ∑ i : I, ℓ (0, Pi.single i 1) • brownianLp hB i ∈ Space P :=
@@ -355,7 +359,8 @@ theorem indepFun_of_orthogonal (hB : IsPreBrownianReal B P) (L : ℝ≥0 → Str
     rw [Function.comp_apply]
     have : (fun i : I ↦ B i w) = ∑ i : I, B i w • Pi.single i (1 : ℝ) := by
       funext x
-      simp only [Finset.univ_eq_attach, Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite,
+      simp only [Finset.univ_eq_attach, Finset.sum_apply, Pi.smul_apply, Pi.single_apply,
+        smul_eq_mul, mul_ite,
         mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_attach, ↓reduceIte]
     rw [this, map_sum]
     simp_rw [map_smul, smul_eq_mul, mul_comm]

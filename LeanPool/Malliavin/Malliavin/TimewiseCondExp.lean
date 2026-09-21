@@ -31,7 +31,8 @@ left-continuity or usual-augmentation result for the natural filtration is assum
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 

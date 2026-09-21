@@ -23,8 +23,7 @@ open scoped ENNReal NNReal Real Topology InnerProductSpace
 centered continuous linear functionals in L²(μ). -/
 noncomputable def CameronMartin.Space
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
+    [MeasurableSpace W] [BorelSpace W]
     (μ : Measure W) [IsGaussian μ] :
     Submodule ℝ (Lp ℝ 2 μ) :=
   (StrongDual.toLp μ 2 -
@@ -36,9 +35,8 @@ namespace CameronMartin
 /-- The identity random variable centered by its Bochner mean. -/
 noncomputable def centeredId
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
-    (μ : Measure W) [IsGaussian μ] : W → W :=
+    [MeasurableSpace W]
+    (μ : Measure W) : W → W :=
   id - fun _ ↦ ∫ x, x ∂μ
 
 /-- The centered identity is square-integrable under a Gaussian measure. -/
@@ -80,8 +78,7 @@ noncomputable def inclusion
 /-- The Cameron–Martin space is complete because it is a closed subspace of `L²(μ)`. -/
 instance instCompleteSpaceSpace
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
+    [MeasurableSpace W] [BorelSpace W]
     (μ : Measure W) [IsGaussian μ] : CompleteSpace (Space μ) :=
   inferInstanceAs (CompleteSpace
     ((StrongDual.toLp μ 2 -
@@ -166,8 +163,7 @@ theorem memLp_mderiv
 /-- The L²(μ) equivalence class of a smooth bounded functional. -/
 noncomputable def toLp
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
+    [MeasurableSpace W] [BorelSpace W]
     {F : W → ℝ} (μ : Measure W) [IsGaussian μ]
     (hF : IsSmoothBounded F) :
     Lp ℝ 2 μ :=

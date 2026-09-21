@@ -16,7 +16,7 @@ for `f : ℝⁿ → ℝ` of class `C¹` with `|f|` and `‖f'‖` of polynomial 
 functionals `L₁, …, Lₙ`, the functional `x ↦ f (L₁ x, …, Lₙ x)` belongs to `𝔻₁,₂` and its
 closed derivative is the classical one,
 
-  `D̄ (f ∘ L) = ∑ᵢ ∂ᵢ f (L x) • ofDual Lᵢ`  (`cylinder_growth_mem_domD12`).
+  `D_cl (f ∘ L) = ∑ᵢ ∂ᵢ f (L x) • ofDual Lᵢ`  (`cylinder_growth_mem_domD12`).
 
 In particular every polynomial in finitely many Brownian coordinates `B t₁, …, B tₙ` lies in
 `𝔻₁,₂`, with the textbook time derivative
@@ -880,7 +880,8 @@ theorem cylinderPartialExp_oneCoord (hg : ContDiff ℝ 1 g) {C c : ℝ} (hC : 0 
       (integrable_expGrowth_sq P C c _) 0),
     MemLp.coeFn_toLp hd] with w h1 h2
   rw [cylinderPartialExp, cylinderPartialD, h1, h2, fderiv_oneCoord hg]
-  simp only [Fin.isValue, smul_apply, ContinuousLinearMap.proj_apply, Pi.single_eq_same, smul_eq_mul, mul_one]
+  simp only [Fin.isValue, smul_apply, ContinuousLinearMap.proj_apply, Pi.single_eq_same,
+    smul_eq_mul, mul_one]
 
 /-- **`Dₜ g (B T) = g' (B T) 1_{(0, T]}(t)`** for `C¹` functions `g` of exponential growth. -/
 theorem timeDerivative_mderivClosure_comp_brownian (hgen : IsWienerGenerated B)
@@ -1113,8 +1114,10 @@ theorem cylinderPartialGrowth_mulCoord_zero (S T : ℝ≥0) :
       (integrable_growth_sq P 2 _) 0),
     MemLp.coeFn_toLp (memLp_brownian L hL T)] with w h1 h2
   rw [cylinderPartialGrowth, cylinderPartialD, h1, h2, fderiv_mulCoord]
-  simp only [Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.cons_val_zero, add_apply,
-    smul_apply, ContinuousLinearMap.proj_apply, Pi.single_eq_same, smul_eq_mul, mul_one, ne_eq, one_ne_zero,
+  simp only [Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.cons_val_zero,
+    add_apply,
+    smul_apply, ContinuousLinearMap.proj_apply, Pi.single_eq_same, smul_eq_mul, mul_one, ne_eq,
+    one_ne_zero,
     not_false_eq_true, Pi.single_eq_of_ne, mul_zero, add_zero]
 
 omit [CompleteSpace W] [SecondCountableTopology W] in
@@ -1127,8 +1130,10 @@ theorem cylinderPartialGrowth_mulCoord_one (S T : ℝ≥0) :
       (integrable_growth_sq P 2 _) 1),
     MemLp.coeFn_toLp (memLp_brownian L hL S)] with w h1 h2
   rw [cylinderPartialGrowth, cylinderPartialD, h1, h2, fderiv_mulCoord]
-  simp only [Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.cons_val_zero, add_apply,
-    smul_apply, ContinuousLinearMap.proj_apply, ne_eq, zero_ne_one, not_false_eq_true, Pi.single_eq_of_ne, smul_eq_mul,
+  simp only [Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.cons_val_zero,
+    add_apply,
+    smul_apply, ContinuousLinearMap.proj_apply, ne_eq, zero_ne_one, not_false_eq_true,
+    Pi.single_eq_of_ne, smul_eq_mul,
     mul_zero, Pi.single_eq_same, mul_one, zero_add]
 
 /-- **`Dₜ (B S · B T) = B T 1_{(0, S]}(t) + B S 1_{(0, T]}(t)`**. -/

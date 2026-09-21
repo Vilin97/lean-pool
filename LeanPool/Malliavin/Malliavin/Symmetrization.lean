@@ -13,8 +13,8 @@ For a function `f : (Fin n → T) → E` of `n` variables, its *symmetrization* 
 
   `symmetrize n f t = (n!)⁻¹ • ∑ σ : Equiv.Perm (Fin n), f (t ∘ σ)`.
 
-This is the operator `f ↦ f̃` of Nualart, *The Malliavin Calculus and Related Topics*, §1.1.2:
-the multiple Wiener–Itô integral satisfies `Iₙ(f) = Iₙ(f̃)` and `E[Iₙ(f)²] = n! ‖f̃‖²`, so
+This is the operator `f ↦ f_sym` of Nualart, *The Malliavin Calculus and Related Topics*, §1.1.2:
+the multiple Wiener–Itô integral satisfies `Iₙ(f) = Iₙ(f_sym)` and `E[Iₙ(f)²] = n! ‖f_sym‖²`, so
 symmetrization is the first ingredient of the Wiener chaos decomposition.
 
 On the function side the "`n`-fold tensor product" `L²(T)^{⊗n} ≅ L²(Tⁿ)` is the product measure
@@ -31,8 +31,8 @@ functions, and `symmetrize` is the projection onto them.
 * `Malliavin.symmetrize_symmetrize` — idempotence; `Malliavin.symmetrizeₗ_isProj` — `symmetrizeₗ`
   is a projection onto the submodule `Malliavin.symmetricSubmodule` of symmetric functions.
 * `Malliavin.measurePreserving_comp_perm` — permuting coordinates preserves `μ^{⊗n}`.
-* `Malliavin.eLpNorm_symmetrize_le` — contraction: `‖f̃‖_p ≤ ‖f‖_p` for `1 ≤ p`.
-* `Malliavin.memLp_symmetrize` — `f ∈ Lᵖ(μ^{⊗n}) → f̃ ∈ Lᵖ(μ^{⊗n})`.
+* `Malliavin.eLpNorm_symmetrize_le` — contraction: `‖f_sym‖_p ≤ ‖f‖_p` for `1 ≤ p`.
+* `Malliavin.memLp_symmetrize` — `f ∈ Lᵖ(μ^{⊗n}) → f_sym ∈ Lᵖ(μ^{⊗n})`.
 * `Malliavin.permL` — the coordinate-permutation isometries of `Lp E p μ^{⊗n}`.
 * `Malliavin.symmetrizeL` — the operator as a continuous linear map
   `Lp E p μ^{⊗n} →L[ℝ] Lp E p μ^{⊗n}`, with `‖symmetrizeL‖ ≤ 1` (`norm_symmetrizeL_le`),
@@ -43,7 +43,8 @@ functions, and `symmetrize` is the projection onto them.
 open MeasureTheory Finset
 open scoped ENNReal
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -219,7 +220,7 @@ recall MeasureTheory.eLpNorm_comp_measurePreserving {α : Type*} {m0 : Measurabl
 
 recall ENNReal.inv_mul_cancel {a : ℝ≥0∞} (h0 : a ≠ 0) (ht : a ≠ ∞) : a⁻¹ * a = 1
 
-/-- Symmetrization is an `Lᵖ`-contraction: `‖f̃‖_p ≤ ‖f‖_p` for `1 ≤ p`. -/
+/-- Symmetrization is an `Lᵖ`-contraction: `‖f_sym‖_p ≤ ‖f‖_p` for `1 ≤ p`. -/
 theorem eLpNorm_symmetrize_le {n : ℕ} {f : (Fin n → T) → E}
     (hf : AEStronglyMeasurable f (Measure.pi fun _ : Fin n => μ)) {p : ℝ≥0∞} (hp : 1 ≤ p) :
     eLpNorm (symmetrize n f) p (Measure.pi fun _ : Fin n => μ) ≤
@@ -232,7 +233,7 @@ theorem eLpNorm_symmetrize_le {n : ℕ} {f : (Fin n → T) → E}
       ≤ ‖(n.factorial : ℝ)⁻¹‖ₑ *
         ∑ σ : Equiv.Perm (Fin n), eLpNorm (f ∘ fun t : Fin n → T => t ∘ σ) p ν := by
         gcongr
-        exact eLpNorm_sum_le (fun σ _ => aestronglyMeasurable_comp_perm hf σ) hp
+        exact eLpNorm_sum_le hp
     _ = ‖(n.factorial : ℝ)⁻¹‖ₑ * ∑ _σ : Equiv.Perm (Fin n), eLpNorm f p ν := by
         congr 1
         exact Finset.sum_congr rfl fun σ _ =>
@@ -442,7 +443,7 @@ theorem inner_symmetrizeL_sub_symmetrizeL (n : ℕ) (f : Lp E 2 (Measure.pi fun 
   rw [inner_sub_right, inner_symmetrizeL_left n f (symmetrizeL E (μ := μ) n 2 f),
     symmetrizeL_symmetrizeL, inner_symmetrizeL_left, sub_self]
 
-/-- Orthogonal decomposition: `‖f‖² = ‖f̃‖² + ‖f - f̃‖²` on `L²`. -/
+/-- Orthogonal decomposition: `‖f‖² = ‖f_sym‖² + ‖f - f_sym‖²` on `L²`. -/
 theorem norm_sq_eq_norm_sq_symmetrizeL_add (n : ℕ)
     (f : Lp E 2 (Measure.pi fun _ : Fin n => μ)) :
     ‖f‖ ^ 2 = ‖symmetrizeL E (μ := μ) n 2 f‖ ^ 2 + ‖f - symmetrizeL E (μ := μ) n 2 f‖ ^ 2 := by

@@ -164,7 +164,8 @@ theorem tendsto_toLp_of_dominated {f : ℕ → α → E} {g : α → E} (hf : �
     rw [h4, Pi.sub_apply, h2, h3]
   have hint : Tendsto (fun n ↦ ∫ x, ‖f n x - g x‖ ^ 2 ∂μ) atTop (𝓝 (∫ _, (0 : ℝ) ∂μ)) := by
     refine tendsto_integral_of_dominated_convergence bound
-      (fun n ↦ ((hf n).1.sub hg.1).norm.pow 2) hbound (fun n ↦ (h n).mono fun x hx ↦ ?_)
+      (fun n ↦ ((hf n).aestronglyMeasurable.sub hg.aestronglyMeasurable).norm.pow 2) hbound
+      (fun n ↦ (h n).mono fun x hx ↦ ?_)
       (hlim.mono fun x hx ↦ ?_)
     · rwa [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
     · have := (tendsto_iff_norm_sub_tendsto_zero.mp hx).pow 2

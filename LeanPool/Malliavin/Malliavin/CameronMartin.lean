@@ -303,7 +303,7 @@ theorem integrable_smul_centeredId (f : Lp ℝ 2 μ) :
   change Integrable (((fun x ↦ f x) • centeredId μ)) μ
   have h_one :
       MemLp ((fun x ↦ f x) • centeredId μ) 1 μ :=
-    (memLp_centeredId μ).smul (Lp.memLp f)
+    (Lp.memLp f).smul (memLp_centeredId μ)
   have h_integrable : Integrable (((fun x ↦ f x) • centeredId μ)) μ :=
     memLp_one_iff_integrable.mp h_one
   exact h_integrable
@@ -363,7 +363,8 @@ theorem apply_inclusion (L : StrongDual ℝ W) (h : Space μ) :
   filter_upwards [centeredDualToLp_ae_eq μ L] with x hx
   simp only [coe_ofDual]
   rw [hx]
-  simp only [centeredId, Pi.sub_apply, id_eq, map_smul, map_sub, smul_eq_mul, RCLike.inner_apply, conj_trivial]
+  simp only [centeredId, Pi.sub_apply, id_eq, map_smul, map_sub, smul_eq_mul,
+    RCLike.inner_apply, conj_trivial]
 
 /-- The covariance embedding is injective on the closed first chaos. -/
 theorem inclusion_injective : Function.Injective (inclusion μ) := by

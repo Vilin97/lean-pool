@@ -18,7 +18,8 @@ for identifying generalized Hermite values with canonical Brownian multiple inte
 open MeasureTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 

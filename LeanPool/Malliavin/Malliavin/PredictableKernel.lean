@@ -102,7 +102,8 @@ theorem condExpKernel_predictable_ae_same_time
     rw [@Measure.map_apply_of_aemeasurable (ℝ≥0 × S)
       ((ℝ≥0 × S) × (ℝ≥0 × S)) mΩ (𝓕.predictable.prod mΩ)
       μ Function.diag hdiag_ae _ hbad_time_meas]
-    simp only [Set.preimage_ofPred_eq, Function.diag, not_true_eq_false, Set.ofPred_false, measure_empty]
+    simp only [Set.preimage_ofPred_eq, Function.diag, not_true_eq_false, Set.ofPred_false,
+      measure_empty]
   rw [← compProd_trim_condExpKernel hm] at hdiag
   exact ae_of_ae_trim hm (Measure.ae_ae_of_ae_compProd hdiag)
 

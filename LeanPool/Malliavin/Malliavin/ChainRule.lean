@@ -11,13 +11,13 @@ import LeanPool.Malliavin.Malliavin.DualDerivative
 For `φ : ℝ → ℝ` of class `C¹` with bounded derivative and `F ∈ 𝔻₁,₂`, the composite `φ ∘ F`
 belongs to `𝔻₁,₂` and
 
-  `D̄ (φ ∘ F) = φ' (F) • D̄ F`  (`comp_mem_domD12`),
+  `D_cl (φ ∘ F) = φ' (F) • D_cl F`  (`comp_mem_domD12`),
 
 the `C¹` case of Nualart, *The Malliavin calculus and related topics*, Proposition 1.2.3.
-The file also contains the product rule `D̄ (F G) = G • D̄ F + F • D G` for `F ∈ 𝔻₁,₂` and
+The file also contains the product rule `D_cl (F G) = G • D_cl F + F • D G` for `F ∈ 𝔻₁,₂` and
 smooth bounded `G` (`mul_mem_domD12`), the multivariate chain rule
-`D̄ f(F₁, …, Fₙ) = ∑ᵢ ∂ᵢ f (F) • D̄ Fᵢ` (`comp_pi_mem_domD12`), the norm bounds
-`‖D̄ (φ ∘ F)‖ ≤ K ‖D̄ F‖` and `‖D̄ f(F)‖ ≤ K ∑ᵢ ‖D̄ Fᵢ‖`, the bounded arctan truncations
+`D_cl f(F₁, …, Fₙ) = ∑ᵢ ∂ᵢ f (F) • D_cl Fᵢ` (`comp_pi_mem_domD12`), the norm bounds
+`‖D_cl (φ ∘ F)‖ ≤ K ‖D_cl F‖` and `‖D_cl f(F)‖ ≤ K ∑ᵢ ‖D_cl Fᵢ‖`, the bounded arctan truncations
 `cutoff m ∘ F ∈ 𝔻₁,₂` (`cutoff_comp_mem_domD12`), the corresponding operations on the subtype
 `D12 μ` (`D12.comp`, `D12.mulSmooth`, `D12.compPi`), and the time forms: the chain rules
 `Dₜ φ (F) = φ' (F) Dₜ F` and `Dₜ f (F₁, …, Fₙ) = ∑ᵢ ∂ᵢ f (F) Dₜ Fᵢ`
@@ -29,12 +29,13 @@ formulas `Dₜ φ (∫ g dB) = φ' (∫ g dB) g(t)`, `Dₜ f (∫ g₁ dB, …) 
 
 ## Proof
 
-Pick smooth bounded cylindrical `Fₖ` with `Fₖ → F` and `D Fₖ → D̄ F` in `L²` (the definition of
+Pick smooth bounded cylindrical `Fₖ` with `Fₖ → F` and `D Fₖ → D_cl F` in `L²` (the definition of
 the graph closure), and pass to a subsequence converging almost everywhere.  Each `φ ∘ Fₖ` is
 smooth bounded with derivative `φ' (Fₖ) • D Fₖ` (`IsSmoothBounded.comp_of_deriv_le`,
 `mderiv_comp`).  Since `φ` is `K`-Lipschitz, `φ ∘ Fₖ → φ ∘ F` in `L²`.  For the derivatives,
-`‖φ' (Fₖ) • D Fₖ - φ' (Fₖ) • D̄ F‖ ≤ K ‖D Fₖ - D̄ F‖ → 0`, while `φ' (Fₖ) • D̄ F → φ' (F) • D̄ F`
-by dominated convergence (`tendsto_toLp_of_dominated`, bound `(2K)² ‖D̄ F‖²`) along the almost
+`‖φ' (Fₖ) • D Fₖ - φ' (Fₖ) • D_cl F‖ ≤ K ‖D Fₖ - D_cl F‖ → 0`, while
+`φ' (Fₖ) • D_cl F → φ' (F) • D_cl F`
+by dominated convergence (`tendsto_toLp_of_dominated`, bound `(2K)² ‖D_cl F‖²`) along the almost
 everywhere convergent subsequence.  Closedness of the graph (`mem_domD12_of_tendsto`) concludes.
 -/
 
@@ -63,7 +64,8 @@ theorem fderiv_comp_real {F : W → ℝ} {x : W} (hφ : DifferentiableAt ℝ φ 
   have hcomp : (fun y ↦ φ (F y)) = φ ∘ F := rfl
   rw [hcomp, fderiv_comp x hφ hF]
   ext v
-  simp only [ContinuousLinearMap.comp_apply, fderiv_eq_smul_deriv, smul_eq_mul, mul_comm, smul_apply]
+  simp only [ContinuousLinearMap.comp_apply, fderiv_eq_smul_deriv, smul_eq_mul, mul_comm,
+    smul_apply]
 
 omit [CompleteSpace W] [MeasurableSpace W] [BorelSpace W] [SecondCountableTopology W]
   [IsGaussian μ] in
@@ -141,7 +143,7 @@ theorem memLp_deriv_smul_of_deriv_le (hφ : ContDiff ℝ 1 φ) (hK : ∀ x, ‖d
   memLp_deriv_smul_of_deriv_le' μ hφ hK (Lp.aestronglyMeasurable F) η
 
 /-- **Chain rule in `𝔻₁,₂`** (Nualart, Proposition 1.2.3, `C¹` case): for `φ` of class `C¹` with
-bounded derivative and `F ∈ 𝔻₁,₂`, `φ ∘ F ∈ 𝔻₁,₂` with `D̄ (φ ∘ F) = φ' (F) • D̄ F`. -/
+bounded derivative and `F ∈ 𝔻₁,₂`, `φ ∘ F ∈ 𝔻₁,₂` with `D_cl (φ ∘ F) = φ' (F) • D_cl F`. -/
 theorem comp_mem_domD12 (hφ : ContDiff ℝ 1 φ) (hK : ∀ x, ‖deriv φ x‖₊ ≤ K)
     {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) :
     (memLp_comp_of_deriv_le μ hφ hK F).toLp _ ∈ domD12 μ ∧
@@ -233,7 +235,7 @@ theorem comp_mem_domD12 (hφ : ContDiff ℝ 1 φ) (hK : ∀ x, ‖deriv φ x‖�
       rwa [sub_add_sub_cancel] at this
     exact htri.trans (add_le_add_left (hA i) _)
 
-/-- The closed derivative of `φ ∘ F` is controlled by that of `F`: `‖D̄ (φ ∘ F)‖ ≤ K ‖D̄ F‖`. -/
+/-- The closed derivative of `φ ∘ F` is controlled by that of `F`: `‖D_cl (φ ∘ F)‖ ≤ K ‖D_cl F‖`. -/
 theorem norm_mderivClosure_comp_le (hφ : ContDiff ℝ 1 φ) (hK : ∀ x, ‖deriv φ x‖₊ ≤ K)
     {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) :
     ‖mderivClosure μ ((memLp_comp_of_deriv_le μ hφ hK F).toLp _)‖ ≤ K * ‖mderivClosure μ F‖ := by
@@ -265,7 +267,7 @@ theorem nnnorm_deriv_cutoff_le (m : ℕ) (x : ℝ) : ‖deriv (cutoff m) x‖₊
   exact abs_deriv_cutoff_le m x
 
 /-- **Bounded truncations stay in `𝔻₁,₂`**: `cutoff m ∘ F ∈ 𝔻₁,₂` for every `F ∈ 𝔻₁,₂`, with
-derivative `cutoff m' (F) • D̄ F`; these are bounded by `(m + 1) π / 2`. -/
+derivative `cutoff m' (F) • D_cl F`; these are bounded by `(m + 1) π / 2`. -/
 theorem cutoff_comp_mem_domD12 (m : ℕ) {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) :
     (memLp_comp_of_deriv_le μ (cutoff_contDiff m) (nnnorm_deriv_cutoff_le m) F).toLp _ ∈
         domD12 μ ∧
@@ -280,7 +282,7 @@ end Chain
 /-! ### The product rule
 
 `𝔻₁,₂` is stable under multiplication by smooth bounded functionals, with the Leibniz rule
-`D̄ (F G) = G • D̄ F + F • D G` (`mul_mem_domD12`): the approximating products `Fₖ G` converge
+`D_cl (F G) = G • D_cl F + F • D G` (`mul_mem_domD12`): the approximating products `Fₖ G` converge
 since `G` is bounded, and their derivatives `Fₖ • DG + G • DFₖ` converge since `G` and `DG` are
 bounded. -/
 
@@ -333,7 +335,7 @@ theorem memLp_mul_deriv (hG : IsSmoothBounded G) (F : Lp ℝ 2 μ) (η : Lp (Spa
   exact h1.add h2
 
 /-- **Product rule in `𝔻₁,₂`**: for `F ∈ 𝔻₁,₂` and a smooth bounded `G`, the product `F · G`
-lies in `𝔻₁,₂` with `D̄ (F G) = G • D̄ F + F • D G`. -/
+lies in `𝔻₁,₂` with `D_cl (F G) = G • D_cl F + F • D G`. -/
 theorem mul_mem_domD12 (hG : IsSmoothBounded G) {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ) :
     (memLp_mul_smoothBounded μ hG F).toLp _ ∈ domD12 μ ∧
       mderivClosure μ ((memLp_mul_smoothBounded μ hG F).toLp _) =
@@ -412,7 +414,7 @@ theorem mul_mem_domD12 (hG : IsSmoothBounded G) {F : Lp ℝ 2 μ} (hF : F ∈ do
       rwa [sub_add_sub_cancel] at this
     exact htri.trans (add_le_add (hA k) (hB k))
 
-/-- Norm bound for the product rule: `‖D̄ (F G)‖ ≤ D' ‖F‖ + D ‖D̄ F‖` where `|G| ≤ D` and
+/-- Norm bound for the product rule: `‖D_cl (F G)‖ ≤ D' ‖F‖ + D ‖D_cl F‖` where `|G| ≤ D` and
 `‖D G‖ ≤ D'`. -/
 theorem norm_mderivClosure_mul_le (hG : IsSmoothBounded G) {F : Lp ℝ 2 μ} (hF : F ∈ domD12 μ)
     {D D' : ℝ} (hD : ∀ x, |G x| ≤ D) (hD' : ∀ x, ‖mderiv μ G x‖ ≤ D') :
@@ -469,7 +471,7 @@ end Product
 
 /-! ### The multivariate chain rule
 
-`f (F₁, …, Fₙ) ∈ 𝔻₁,₂` with `D̄ f(F) = ∑ᵢ ∂ᵢ f (F) • D̄ Fᵢ` for `f : ℝⁿ → ℝ` of class `C¹` with
+`f (F₁, …, Fₙ) ∈ 𝔻₁,₂` with `D_cl f(F) = ∑ᵢ ∂ᵢ f (F) • D_cl Fᵢ` for `f : ℝⁿ → ℝ` of class `C¹` with
 bounded derivative and `Fᵢ ∈ 𝔻₁,₂` (`comp_pi_mem_domD12`).  The proof follows the scalar case;
 the almost everywhere convergent subsequence is extracted from convergence in measure of the
 tuple `(Fₖ,ᵢ)ᵢ` (`tendstoInMeasure_pi`), and the `L²` estimates are carried out on `eLpNorm`. -/
@@ -492,7 +494,8 @@ theorem fderiv_pi_apply_eq_sum {n : ℕ} {G : Fin n → W → ℝ} {x : W}
   rw [fderiv_pi hG]
   ext j
   rw [ContinuousLinearMap.pi_apply, Finset.sum_apply]
-  simp only [Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+  simp only [Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
+    Finset.sum_ite_eq,
     Finset.mem_univ, ↓reduceIte]
 
 /-- **Chain rule for a `C¹` function of finitely many differentiable functionals**:
@@ -683,7 +686,8 @@ theorem tendsto_comp_pi_of_tendsto {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf :
             with x h1 h2
           rw [Pi.sub_apply, h1, h2]
       _ ≤ eLpNorm (K • ∑ i, fun x ↦ ‖(⇑((hG k i).toLp _) - ⇑(F i)) x‖) 2 μ := by
-          refine eLpNorm_mono_ae ?_
+          refine eLpNorm_mono_ae ((hGk k).aestronglyMeasurable.sub
+            (memLp_comp_pi μ hf hK F).aestronglyMeasurable) ?_
           have hae := ae_all_iff.2 fun i ↦ MemLp.coeFn_toLp (hG k i)
           filter_upwards [hae] with x hx
           rw [Pi.smul_apply, Finset.sum_apply, Real.norm_eq_abs, smul_eq_mul]
@@ -699,11 +703,11 @@ theorem tendsto_comp_pi_of_tendsto {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf :
           eLpNorm_const_smul _ _ _ _
       _ ≤ ‖K‖ₑ * ∑ i, eLpNorm (fun x ↦ ‖(⇑((hG k i).toLp _) - ⇑(F i)) x‖) 2 μ := by
           gcongr
-          exact eLpNorm_sum_le (fun i _ ↦ (Lp.aestronglyMeasurable _).sub
-            (Lp.aestronglyMeasurable _) |>.norm) one_le_two
+          exact eLpNorm_sum_le one_le_two
       _ = ‖K‖ₑ * ∑ i, eLpNorm (⇑((hG k i).toLp _) - ⇑(F i)) 2 μ := by
           congr 1
           exact Finset.sum_congr rfl fun i _ ↦ eLpNorm_norm _
+            ((Lp.aestronglyMeasurable _).sub (Lp.aestronglyMeasurable _))
   have hlim : Tendsto (fun k ↦ ‖K‖ₑ * ∑ i, eLpNorm (⇑((hG k i).toLp _) - ⇑(F i)) 2 μ) atTop
       (𝓝 0) := by
     have h := tendsto_finsetSum Finset.univ fun i (_ : i ∈ Finset.univ) ↦
@@ -714,7 +718,7 @@ theorem tendsto_comp_pi_of_tendsto {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf :
 
 /-- **Multivariate chain rule in `𝔻₁,₂`** (Nualart, Proposition 1.2.3): for `f : ℝⁿ → ℝ` of
 class `C¹` with bounded derivative and `F₁, …, Fₙ ∈ 𝔻₁,₂`, `f (F₁, …, Fₙ) ∈ 𝔻₁,₂` with
-`D̄ f(F) = ∑ᵢ ∂ᵢ f (F) • D̄ Fᵢ`. -/
+`D_cl f(F) = ∑ᵢ ∂ᵢ f (F) • D_cl Fᵢ`. -/
 theorem comp_pi_mem_domD12 {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : ContDiff ℝ 1 f) {K : ℝ}
     (hK : ∀ y, ‖fderiv ℝ f y‖ ≤ K) {F : Fin n → Lp ℝ 2 μ} (hF : ∀ i, F i ∈ domD12 μ) :
     (memLp_comp_pi μ hf hK F).toLp _ ∈ domD12 μ ∧
@@ -811,14 +815,16 @@ theorem comp_pi_mem_domD12 {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : ContDif
               rw [IsSmoothBounded.mderivLp, Pi.sub_apply, h5 i, smul_sub]
           _ ≤ ∑ i, eLpNorm (fun x ↦ fderiv ℝ f (fun i ↦ (Fk i (ns j)).1 x) (Pi.single i 1) •
                 (⇑((Fk i (ns j)).2.mderivLp μ) - ⇑(η i)) x) 2 μ := by
-              refine eLpNorm_sum_le (fun i _ ↦ ?_) one_le_two
+              exact eLpNorm_sum_le one_le_two
+          _ ≤ ∑ i, eLpNorm (K • (⇑((Fk i (ns j)).2.mderivLp μ) - ⇑(η i))) 2 μ := by
+              refine Finset.sum_le_sum fun i _ ↦ ?_
               have hc : AEStronglyMeasurable
                   (fun x ↦ fderiv ℝ f (fun i ↦ (Fk i (ns j)).1 x) (Pi.single i (1 : ℝ))) μ :=
                 (((hf.continuous_fderiv one_ne_zero).comp (continuous_pi fun i ↦
                   (Fk i (ns j)).2.continuous)).clm_apply continuous_const).aestronglyMeasurable
-              exact hc.smul ((Lp.aestronglyMeasurable _).sub (Lp.aestronglyMeasurable _))
-          _ ≤ ∑ i, eLpNorm (K • (⇑((Fk i (ns j)).2.mderivLp μ) - ⇑(η i))) 2 μ := by
-              refine Finset.sum_le_sum fun i _ ↦ eLpNorm_mono fun x ↦ ?_
+              refine eLpNorm_mono
+                (hc.smul ((Lp.aestronglyMeasurable _).sub (Lp.aestronglyMeasurable _))) ?_
+              intro x
               rw [norm_smul, Pi.smul_apply, norm_smul, Real.norm_eq_abs, Real.norm_eq_abs,
                 abs_of_nonneg hK0]
               exact mul_le_mul_of_nonneg_right (abs_fderiv_pi_single_le hK _ i) (norm_nonneg _)
@@ -837,7 +843,7 @@ theorem comp_pi_mem_domD12 {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : ContDif
     simp only [sub_add_cancel, zero_add] at this
     exact this
 
-/-- `‖D̄ f(F)‖ ≤ K ∑ᵢ ‖D̄ Fᵢ‖`. -/
+/-- `‖D_cl f(F)‖ ≤ K ∑ᵢ ‖D_cl Fᵢ‖`. -/
 theorem norm_mderivClosure_comp_pi_le {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : ContDiff ℝ 1 f)
     {K : ℝ} (hK : ∀ y, ‖fderiv ℝ f y‖ ≤ K) {F : Fin n → Lp ℝ 2 μ} (hF : ∀ i, F i ∈ domD12 μ) :
     ‖mderivClosure μ ((memLp_comp_pi μ hf hK F).toLp _)‖ ≤
@@ -862,9 +868,9 @@ theorem norm_mderivClosure_comp_pi_le {n : ℕ} {f : (Fin n → ℝ) → ℝ} (h
           funext x
           simp only [Finset.sum_apply]
       _ ≤ ∑ i, eLpNorm (fun x ↦ fderiv ℝ f (fun i ↦ F i x) (Pi.single i 1) •
-            (mderivClosure μ (F i)) x) 2 μ := eLpNorm_sum_le (fun i _ ↦ hmeas i) one_le_two
+            (mderivClosure μ (F i)) x) 2 μ := eLpNorm_sum_le one_le_two
       _ ≤ ∑ i, eLpNorm (K • ⇑(mderivClosure μ (F i))) 2 μ := by
-          refine Finset.sum_le_sum fun i _ ↦ eLpNorm_mono fun x ↦ ?_
+          refine Finset.sum_le_sum fun i _ ↦ eLpNorm_mono (hmeas i) fun x ↦ ?_
           rw [norm_smul, Pi.smul_apply, norm_smul, Real.norm_eq_abs, Real.norm_eq_abs,
             abs_of_nonneg hK0]
           exact mul_le_mul_of_nonneg_right (abs_fderiv_pi_single_le hK _ i) (norm_nonneg _)
@@ -949,7 +955,8 @@ theorem timeDerivative_mderivClosure_comp_wienerIntegral (hB : IsPreBrownianReal
 
 /-! #### The time-form chain rule -/
 
-/-- `D̄ (φ ∘ F)` as a bounded multiple of `D̄ F`: `D̄ (φ ∘ F) = φ' (F) • D̄ F` in `L²(P; H)`. -/
+/-- `D_cl (φ ∘ F)` as a bounded multiple of `D_cl F`:
+`D_cl (φ ∘ F) = φ' (F) • D_cl F` in `L²(P; H)`. -/
 theorem mderivClosure_comp_eq_boundedSMul (hφ : ContDiff ℝ 1 φ) (hK : ∀ x, ‖deriv φ x‖₊ ≤ K)
     {F : Lp ℝ 2 P} (hF : F ∈ domD12 P) :
     mderivClosure P ((memLp_comp_of_deriv_le P hφ hK F).toLp _) =
@@ -1076,7 +1083,7 @@ theorem memLp_fderiv_pi_comp {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : ContD
   exact MemLp.of_bound hmeas K (Filter.Eventually.of_forall fun x ↦ by
     rw [Real.norm_eq_abs]; exact abs_fderiv_pi_single_le hK _ i)
 
-/-- `D̄ f(F)` as a sum of bounded multiples of the `D̄ Fᵢ`. -/
+/-- `D_cl f(F)` as a sum of bounded multiples of the `D_cl Fᵢ`. -/
 theorem mderivClosure_comp_pi_eq_sum_boundedSMul {n : ℕ} {f : (Fin n → ℝ) → ℝ}
     (hf : ContDiff ℝ 1 f) {K : ℝ} (hK : ∀ y, ‖fderiv ℝ f y‖ ≤ K) {F : Fin n → Lp ℝ 2 P}
     (hF : ∀ i, F i ∈ domD12 P) :

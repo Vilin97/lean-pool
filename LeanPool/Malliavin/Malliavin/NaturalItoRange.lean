@@ -16,7 +16,8 @@ representation as triviality of the corresponding orthogonal complement.
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 

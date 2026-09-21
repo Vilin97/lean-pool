@@ -18,7 +18,8 @@ Thus the remaining all-order stochastic input can be stated as the usual Itô pr
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 
@@ -94,6 +95,7 @@ def BrownianPurePowerHermiteRecurrence (hB : IsPreBrownianReal B P) : Prop :=
         (‖stepToLp v‖ ^ 2 * ((n + 1 : ℕ) : ℝ)) •
           brownianPurePowerIntegral hB n (stepToLp v)
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- The pure-power recurrence and the automatic base orders identify every canonical pure-power
 integral with its Wick power. -/
 theorem brownianPurePowerIntegral_eq_wickPower_of_recurrence
@@ -108,6 +110,7 @@ theorem brownianPurePowerIntegral_eq_wickPower_of_recurrence
   | more n hn _hn1 =>
       rw [hrec v n, brownianWickPowerLp_add_two, hn]
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- The matching pure-power recurrence implies the full higher Hermite/multiple-integral
 identity. -/
 theorem higherHermiteMultipleIntegralIdentity_of_purePowerRecurrence
@@ -118,6 +121,7 @@ theorem higherHermiteMultipleIntegralIdentity_of_purePowerRecurrence
   exact (brownianPurePowerIntegral_eq_wickPower_of_recurrence
     hB hsm hrec v n).symm
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- Conversely, the higher Hermite/multiple-integral identity forces the matching pure-power
 recurrence. -/
 theorem purePowerRecurrence_of_higherHermiteMultipleIntegralIdentity
@@ -131,6 +135,7 @@ theorem purePowerRecurrence_of_higherHermiteMultipleIntegralIdentity
       hB hsm hid v n,
     brownianWickPowerLp_add_two]
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- The all-order identity is exactly the pure-power Itô product recurrence. -/
 theorem purePowerRecurrence_iff_higherHermiteMultipleIntegralIdentity
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t)) :

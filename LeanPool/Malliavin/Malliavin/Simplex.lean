@@ -17,7 +17,7 @@ for symmetric `g`,
 
   `∫ g dμ^{⊗n} = n! • ∫_{Δₙ} g dμ^{⊗n}`,
 
-which is what turns `E[Jₙ(f̃)²] = ‖f̃‖²_{L²(Δₙ)}` into `E[Iₙ(f)²] = n! ‖f̃‖²_{L²(Tⁿ)}`
+which is what turns `E[Jₙ(f_sym)²] = ‖f_sym‖²_{L²(Δₙ)}` into `E[Iₙ(f)²] = n! ‖f_sym‖²_{L²(Tⁿ)}`
 (Nualart, *The Malliavin Calculus and Related Topics*, §1.1.2).
 
 ## Main results
@@ -32,7 +32,7 @@ which is what turns `E[Jₙ(f̃)²] = ‖f̃‖²_{L²(Δₙ)}` into `E[Iₙ(f)�
 * `Malliavin.measure_diagonal_eq_zero` — the diagonal is `μ^{⊗n}`-null for `NullSingletonClass μ`.
 * `Malliavin.integral_eq_factorial_smul_setIntegral_simplex` — `∫ g = n! • ∫_{Δₙ} g` for
   symmetric `g`;
-* `Malliavin.integral_eq_factorial_smul_setIntegral_symmetrize` — `∫ g = n! • ∫_{Δₙ} g̃` for any
+* `Malliavin.integral_eq_factorial_smul_setIntegral_symmetrize` — `∫ g = n! • ∫_{Δₙ} g_sym` for any
   integrable `g`;
   `Malliavin.integral_sq_norm_eq_factorial_smul` — its `L²` form `∫ ‖g‖² = n! • ∫_{Δₙ} ‖g‖²`.
 -/
@@ -40,7 +40,8 @@ which is what turns `E[Jₙ(f̃)²] = ‖f̃‖²_{L²(Δₙ)}` into `E[Iₙ(f)�
 open MeasureTheory Finset Set
 open scoped ENNReal
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -117,7 +118,7 @@ theorem perm_eq_of_strictMono_comp {n : ℕ} {t : Fin n → T} (ht : Function.In
     {σ τ : Equiv.Perm (Fin n)} (hσ : StrictMono (t ∘ σ)) (hτ : StrictMono (t ∘ τ)) : σ = τ := by
   have hrange : Set.range (t ∘ σ) = Set.range (t ∘ τ) := by
     rw [σ.surjective.range_comp, τ.surjective.range_comp]
-  have h : t ∘ σ = t ∘ τ := (hσ.range_inj hτ).1 hrange
+  have h : t ∘ σ = t ∘ τ := (hσ.range_inj_of_wellFoundedLT hτ).1 hrange
   exact Equiv.coe_fn_injective (ht.comp_left h)
 
 theorem disjoint_sortedBy {n : ℕ} {σ τ : Equiv.Perm (Fin n)} (h : σ ≠ τ) :
@@ -148,7 +149,7 @@ variable [MeasurableSpace T]
 
 theorem measurable_comp_perm (n : ℕ) (σ : Equiv.Perm (Fin n)) :
     Measurable fun t : Fin n → T => t ∘ σ :=
-  measurable_pi_lambda _ fun i => measurable_pi_apply (σ i)
+  Measurable.of_eval fun i => measurable_pi_apply (σ i)
 
 end MeasurableComp
 
@@ -297,7 +298,7 @@ theorem integral_eq_factorial_smul_setIntegral_simplex [NullSingletonClass μ] {
 
 /-- **Tiling identity, general form**: for any integrable `g`,
 `∫ g dμ^{⊗n} = n! • ∫_{Δₙ} (symmetrize n g) dμ^{⊗n}` — the deterministic shadow of
-`Iₙ(f) = Iₙ(f̃)`. -/
+`Iₙ(f) = Iₙ(f_sym)`. -/
 theorem integral_eq_factorial_smul_setIntegral_symmetrize [NullSingletonClass μ] {n : ℕ}
     {g : (Fin n → T) → E} (hint : Integrable g (Measure.pi fun _ : Fin n => μ)) :
     ∫ t, g t ∂(Measure.pi fun _ : Fin n => μ) =
@@ -353,9 +354,9 @@ theorem integral_sq_norm_eq_factorial_smul [NullSingletonClass μ] {n : ℕ} {g 
     ∫ t, ‖g t‖ ^ 2 ∂(Measure.pi fun _ : Fin n => μ) =
       n.factorial • ∫ t in simplex T n, ‖g t‖ ^ 2 ∂(Measure.pi fun _ : Fin n => μ) :=
   integral_eq_factorial_smul_setIntegral_simplex (E := ℝ) (hg.comp_left fun x => ‖x‖ ^ 2)
-    ((memLp_two_iff_integrable_sq_norm hg2.1).1 hg2)
+    ((memLp_two_iff_integrable_sq_norm hg2.aestronglyMeasurable).1 hg2)
 
-/-- Specialisation to a symmetrized function: `∫ f̃ = n! • ∫_{Δₙ} f̃`. -/
+/-- Specialisation to a symmetrized function: `∫ f_sym = n! • ∫_{Δₙ} f_sym`. -/
 theorem integral_symmetrize_eq_factorial_smul [NullSingletonClass μ] {n : ℕ} {f : (Fin n → T) → E}
     (hint : Integrable (symmetrize n f) (Measure.pi fun _ : Fin n => μ)) :
     ∫ t, symmetrize n f t ∂(Measure.pi fun _ : Fin n => μ) =

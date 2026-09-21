@@ -279,9 +279,9 @@ lemma integral_cov_partition (hW : IsWienerCov W) {n : ℕ} (P : Partition n) (i
   have hci : P.t i.castSucc ≤ P.t i.succ := P.mono.monotone (Fin.castSucc_le_succ i)
   by_cases h : i = j
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact integral_cov_incr_self hW hci
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     rcases lt_or_gt_of_ne h with hlt | hgt
     · exact integral_cov_incr_after hW hci (partition_succ_le_castSucc P hlt)
         (P.mono.monotone (Fin.castSucc_le_succ j))
@@ -433,10 +433,10 @@ theorem ito_isometry (hW : IsWienerCov W) {n : ℕ} (P : Partition n) (a b : Fin
             a i * b j *
               (if i = j then (P.t i.succ : ℝ) - (P.t i.castSucc : ℝ) else 0) = 0 := by
           intro j hj
-          rw [if_neg (Ne.symm hj), mul_zero]
+          rw [ite_eq_right (Ne.symm hj), mul_zero]
         have hsingle := Finset.sum_eq_single i (fun j _ hj => h0 j hj)
           (fun hni => absurd (Finset.mem_univ i) hni)
-        rw [hsingle, if_pos rfl]
+        rw [hsingle, ite_eq_left rfl]
 
 end Step
 
@@ -993,9 +993,9 @@ private theorem unitIncrementL2_orthonormal (hB : IsPreBrownianReal B P) :
   rw [integral_congr_ae hcoe]
   by_cases hkl : k = l
   · subst l
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact integral_unitIncrement_sq hB k
-  · rw [if_neg hkl]
+  · rw [ite_eq_right hkl]
     exact integral_unitIncrement_mul_of_ne hB hkl
 
 
@@ -1254,7 +1254,7 @@ theorem positiveIteratedTowerLI_surjective_of_processLpEmbedding
     Function.Surjective (positiveIteratedTowerLI hB) := by
   classical
   have hcondition : processMeasurableL2Exhausts P B := ⟨hmeas, hexhausts⟩
-  rw [positiveIteratedTowerLI, dif_pos ⟨⟨inferInstance⟩, hcondition⟩]
+  rw [positiveIteratedTowerLI, dite_eq_left ⟨⟨inferInstance⟩, hcondition⟩]
   exact (Classical.choice (nonempty_positiveKernelSum_equiv_centered hB)).surjective
 
 /-- If the Brownian coordinates generate a second-countable ambient `L²` space, the selected

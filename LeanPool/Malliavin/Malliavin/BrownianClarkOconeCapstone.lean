@@ -23,7 +23,8 @@ standing hypotheses alone, with no remaining identity-family input.
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 

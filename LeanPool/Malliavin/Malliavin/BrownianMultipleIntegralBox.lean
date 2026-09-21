@@ -16,7 +16,8 @@ multiple-integral operator cancels that average and recovers the Brownian increm
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 

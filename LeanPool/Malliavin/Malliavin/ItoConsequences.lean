@@ -25,7 +25,8 @@ are linearly isometrically equivalent.
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -278,7 +279,8 @@ theorem expectationMap_expectationL2 (G : RandomL2 P) :
       CameronMartin.expectationMap P G := by
   rw [CameronMartin.expectationMap_apply, CameronMartin.expectationMap_apply,
     expectationL2]
-  simp only [Lp.const_val, AEEqFun.coeFn_const_eq, integral_const, probReal_univ, smul_eq_mul, one_mul]
+  simp only [Lp.const_val, AEEqFun.coeFn_const_eq, integral_const, probReal_univ, smul_eq_mul,
+    one_mul]
 
 omit [CompleteSpace W] [BorelSpace W] in
 /-- Martingale representation is exactly surjectivity onto the centered subspace. -/

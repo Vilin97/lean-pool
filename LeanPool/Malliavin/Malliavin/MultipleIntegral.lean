@@ -27,7 +27,8 @@ ordered-box property; that property is not part of `IteratedIntegralFamily` itse
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 

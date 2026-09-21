@@ -18,7 +18,8 @@ open MeasureTheory ProbabilityTheory Filter Topology
 open NormedSpace
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -348,7 +349,7 @@ theorem indicator_brownianCylinder_mem_closure
   rcases (mem_measurableCylinders C).mp hC with ⟨I, A, hA, rfl⟩
   let L : W → (I → ℝ) := fun w i ↦ B i w
   have hL : Measurable L := by
-    apply measurable_pi_lambda
+    apply Measurable.of_eval
     intro i
     exact hgen.measurable i
   let ν : Measure (I → ℝ) := P.map L

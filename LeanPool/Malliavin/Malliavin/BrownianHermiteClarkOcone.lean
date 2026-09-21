@@ -18,7 +18,8 @@ predictable Malliavin derivative and yields the concrete Clark--Ocone formula.
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 

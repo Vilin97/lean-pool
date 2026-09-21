@@ -260,7 +260,8 @@ theorem measurable_section_predictable (t : ℝ≥0) :
       exact 𝓕.mono (by simp [ht]) A hA
     · have : (fun ω : W ↦ ((t, ω) : ℝ≥0 × W)) ⁻¹' ({⊥} ×ˢ A) = ∅ := by
         ext ω
-        simp only [bot_eq_zero', Set.mem_singleton_iff, ht, not_false_eq_true, Set.mk_preimage_prod_right_eq_empty,
+        simp only [bot_eq_zero', Set.mem_singleton_iff, ht, not_false_eq_true,
+          Set.mk_preimage_prod_right_eq_empty,
     Set.mem_empty_iff_false]
       rw [this]
       exact @MeasurableSet.empty _ (𝓕 t)
@@ -274,7 +275,8 @@ theorem measurable_section_predictable (t : ℝ≥0) :
       exact 𝓕.mono hit.le A hA
     · have : (fun ω : W ↦ ((t, ω) : ℝ≥0 × W)) ⁻¹' (Set.Ioi i ×ˢ A) = ∅ := by
         ext ω
-        simp only [Set.mem_Ioi, not_lt.mpr hit, not_false_eq_true, Set.mk_preimage_prod_right_eq_empty,
+        simp only [Set.mem_Ioi, not_lt.mpr hit, not_false_eq_true,
+          Set.mk_preimage_prod_right_eq_empty,
     Set.mem_empty_iff_false]
       rw [this]
       exact @MeasurableSet.empty _ (𝓕 t)
@@ -665,7 +667,8 @@ theorem measurable_section_filtrationPred {t : ℝ≥0} (ht : 0 < t) :
     · exact absurd ht0 ht.ne'
     · have : (fun ω : W ↦ ((t, ω) : ℝ≥0 × W)) ⁻¹' ({⊥} ×ˢ A) = ∅ := by
         ext ω
-        simp only [bot_eq_zero', Set.mem_singleton_iff, ht0, not_false_eq_true, Set.mk_preimage_prod_right_eq_empty,
+        simp only [bot_eq_zero', Set.mem_singleton_iff, ht0, not_false_eq_true,
+          Set.mk_preimage_prod_right_eq_empty,
     Set.mem_empty_iff_false]
       rw [this]
       exact @MeasurableSet.empty _ (filtrationPred 𝓕 t)
@@ -679,7 +682,8 @@ theorem measurable_section_filtrationPred {t : ℝ≥0} (ht : 0 < t) :
       exact le_filtrationPred 𝓕 hit A hA
     · have : (fun ω : W ↦ ((t, ω) : ℝ≥0 × W)) ⁻¹' (Set.Ioi i ×ˢ A) = ∅ := by
         ext ω
-        simp only [Set.mem_Ioi, not_lt.mpr hit, not_false_eq_true, Set.mk_preimage_prod_right_eq_empty,
+        simp only [Set.mem_Ioi, not_lt.mpr hit, not_false_eq_true,
+          Set.mk_preimage_prod_right_eq_empty,
     Set.mem_empty_iff_false]
       rw [this]
       exact @MeasurableSet.empty _ (filtrationPred 𝓕 t)

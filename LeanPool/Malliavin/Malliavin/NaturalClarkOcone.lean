@@ -15,7 +15,8 @@ This file records exact formulations of the analytic inputs still required to co
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -134,7 +135,7 @@ noncomputable def pastCylinderLpMeas
   have hvec : Measurable[𝓅 a] (fun w ↦ fun i ↦ B (t i) w) :=
     by
       let _ : MeasurableSpace W := 𝓅 a
-      exact measurable_pi_lambda _ hcoord
+      exact measurable_pi_iff.mpr hcoord
   have hZmeas : StronglyMeasurable[𝓅 a]
       (fun w ↦ f (fun i ↦ B (t i) w)) :=
     (hf.continuous.measurable.comp hvec).stronglyMeasurable

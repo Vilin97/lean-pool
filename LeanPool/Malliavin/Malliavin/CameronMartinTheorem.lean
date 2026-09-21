@@ -32,7 +32,8 @@ and the almost-everywhere logarithmic density formula used by the closability ru
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal Real Topology
 
-noncomputable section
+noncomputable
+section
 
 universe u v u_1 u_2 u_3 u_4 u_5 u_6 u_8
 
@@ -177,7 +178,7 @@ recall MeasureTheory.withDensity_one {α : Type u_1} {m₀ : MeasurableSpace α}
 
 recall ProbabilityTheory.mgf_gaussianReal {Ω : Type u_1}
     {mΩ : MeasurableSpace Ω} {p : Measure Ω} {μ : ℝ} {v : NNReal} {X : Ω → ℝ}
-    (hX : Measure.map X p = gaussianReal μ v) (t : ℝ) :
+    (hX : HasLaw X (gaussianReal μ v) p) (t : ℝ) :
     mgf X p t = Real.exp (μ * t + (v : ℝ) * t ^ 2 / 2)
 
 recall ProbabilityTheory.HasGaussianLaw.map_eq_gaussianReal {Ω : Type u_1}
@@ -208,10 +209,7 @@ recall NNReal.tendsto_coe {α : Type u_2} {f : Filter α} {m : α → NNReal}
     {x : NNReal} : Tendsto (fun a ↦ (m a : ℝ)) f (𝓝 (x : ℝ)) ↔
     Tendsto m f (𝓝 x)
 
-recall MeasureTheory.Measure.isProbabilityMeasure_map {α : Type u_1} {β : Type u_2}
-    {m₀ : MeasurableSpace α} [MeasurableSpace β] {μ : Measure α}
-    [IsProbabilityMeasure μ] {f : α → β} (hf : AEMeasurable f μ) :
-    IsProbabilityMeasure (μ.map f)
+-- Probability of a mapped probability measure is now provided by a Mathlib instance.
 
 recall ProbabilityTheory.variance_eq_integral {Ω : Type u_1}
     {mΩ : MeasurableSpace Ω} {X : Ω → ℝ} {μ : Measure Ω}
@@ -585,7 +583,8 @@ theorem variance_coe_eq_norm_sq (h : Space μ) :
       rw [L2.inner_def]
       apply integral_congr_ae
       filter_upwards with x
-      simp only [pow_two, inner_self_eq_norm_sq_to_K, Real.norm_eq_abs, RCLike.ofReal_real_eq_id, id_eq,
+      simp only [pow_two, inner_self_eq_norm_sq_to_K, Real.norm_eq_abs,
+        RCLike.ofReal_real_eq_id, id_eq,
         abs_mul_abs_self]
     _ = ‖(h : Lp ℝ 2 μ)‖ ^ 2 := real_inner_self_eq_norm_sq _
     _ = ‖h‖ ^ 2 := by rfl
@@ -611,8 +610,8 @@ private lemma tendsto_centeredGaussianPM {v : ℕ → ℝ≥0} {v₀ : ℝ≥0}
 /-- The law of a real random variable, bundled as a probability measure. -/
 private noncomputable def lawPM {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] (f : Ω → ℝ)
-    (hf : AEMeasurable f μ) : ProbabilityMeasure ℝ :=
-  ⟨μ.map f, Measure.isProbabilityMeasure_map hf⟩
+    (_hf : AEMeasurable f μ) : ProbabilityMeasure ℝ :=
+  ⟨μ.map f, inferInstance⟩
 
 private theorem variance_coe_L2_eq_norm_sq {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) (f : Lp ℝ 2 μ) (hf₀ : ∫ x, f x ∂μ = 0) :
@@ -661,7 +660,7 @@ lemma hasGaussianLaw_L2_limit_of_centered
   have hprobEq := tendsto_nhds_unique hlaw hgauss
   have hmeasureEq : μ.map (g : Ω → ℝ) = gaussianReal 0 (‖g‖₊ ^ 2) :=
     congrArg Subtype.val hprobEq
-  refine ⟨?_⟩
+  refine ⟨(Lp.aestronglyMeasurable g).aemeasurable, ?_⟩
   rw [hmeasureEq]
   infer_instance
 
@@ -670,7 +669,7 @@ private theorem hasGaussianLaw_centeredDualToLp (L : StrongDual ℝ W) :
   apply HasGaussianLaw.congr (Y :=
     ((centeredDualToLp μ L : Lp ℝ 2 μ) : W → ℝ)) ?_
     (centeredDualToLp_ae_eq μ L).symm
-  refine ⟨?_⟩
+  refine ⟨(L.measurable.sub_const _).aemeasurable, ?_⟩
   have h_eq :
       μ.map (fun x ↦ L x - L (mean μ)) =
         (μ.map L).map (fun y ↦ y - L (mean μ)) := by
@@ -718,7 +717,9 @@ theorem map_coe_eq_gaussianReal (h : Space μ) :
 /-- The exponential moment of a first-chaos representative is its Gaussian normalizer. -/
 theorem integral_exp_coe (h : Space μ) :
     ∫ x, Real.exp ((h : Lp ℝ 2 μ) x) ∂μ = Real.exp (‖h‖ ^ 2 / 2) := by
-  have hmgf := mgf_gaussianReal (space_hasGaussianLaw μ h).map_eq_gaussianReal 1
+  have hmgf := mgf_gaussianReal
+    ⟨(space_hasGaussianLaw μ h).aemeasurable,
+      (space_hasGaussianLaw μ h).map_eq_gaussianReal⟩ 1
   rw [integral_coe_eq_zero μ h, Real.coe_toNNReal _
     (variance_nonneg (fun x ↦ (h : Lp ℝ 2 μ) x) μ),
     variance_coe_eq_norm_sq μ h] at hmgf
@@ -836,7 +837,7 @@ theorem map_tilted_dual (h : Space μ) (L : StrongDual ℝ W) :
     isProbabilityMeasure_tilted (integrable_exp_coe μ h)
   apply map_eq_gaussianReal_of_mgf_eq L.continuous.measurable.aemeasurable
   funext t
-  rw [mgf_tilted_dual, mgf_gaussianReal Measure.map_id t]
+  rw [mgf_tilted_dual, mgf_gaussianReal HasLaw.id t]
 
 /-- The analytic core of the Cameron--Martin theorem: translating by the covariance image of `h`
 is the same as exponentially tilting by its first-chaos representative.  Both measures give
@@ -846,8 +847,9 @@ theorem translated_eq_tilted (h : Space μ) :
     translated μ h = μ.tilted (fun x ↦ (h : Lp ℝ 2 μ) x) := by
   have : IsProbabilityMeasure (μ.tilted (fun x ↦ (h : Lp ℝ 2 μ) x)) :=
     isProbabilityMeasure_tilted (integrable_exp_coe μ h)
-  have : IsProbabilityMeasure (translated μ h) :=
-    Measure.isProbabilityMeasure_map (measurable_translate _).aemeasurable
+  have : IsProbabilityMeasure (translated μ h) := by
+    unfold translated translatedMeasure
+    infer_instance
   apply measure_eq_of_forall_map_dual_eq
   intro L
   rw [map_translated_dual, map_tilted_dual, apply_inclusion]

@@ -17,7 +17,8 @@ This file proves the finite-coordinate density input isolated in
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -39,6 +40,48 @@ theorem IsSmoothBounded.comp_continuousLinearMap
     rw [fderiv_comp x (hf.differentiable (L x)) L.differentiableAt, L.fderiv]
     exact (ContinuousLinearMap.opNorm_comp_le _ _).trans
       (mul_le_mul_of_nonneg_right (hC (L x)) (ContinuousLinearMap.opNorm_nonneg L))
+
+/-- Finite-measure set indicators generate the real square-integrable functions. -/
+private theorem closure_eq_top_of_indicators
+    {α : Type*} [MeasurableSpace α] (μ : Measure α) (R : Submodule ℝ (Lp ℝ 2 μ))
+    (hone : ∀ (s : Set α) (hs : MeasurableSet s) (hμs : μ s ≠ ∞),
+      indicatorConstLp 2 hs hμs (1 : ℝ) ∈ R.topologicalClosure) :
+    R.topologicalClosure = ⊤ := by
+  have hall : ∀ f : Lp ℝ 2 μ, f ∈ R.topologicalClosure := by
+    refine Lp.induction (by norm_num) (fun f ↦ f ∈ R.topologicalClosure) ?_ ?_
+      R.isClosed_topologicalClosure
+    · intro c s hs hμs
+      change indicatorConstLp 2 hs hμs.ne c ∈ R.topologicalClosure
+      have heq : indicatorConstLp 2 hs hμs.ne c =
+          c • indicatorConstLp 2 hs hμs.ne (1 : ℝ) := by
+        ext1
+        grw [Lp.coeFn_smul, indicatorConstLp_coeFn, indicatorConstLp_coeFn]
+        filter_upwards [] with x
+        by_cases hx : x ∈ s <;> simp [hx]
+      rw [heq]
+      exact R.topologicalClosure.smul_mem c (hone s hs hμs.ne)
+    · intro f g _hf _hg _hdisjoint hfm hgm
+      exact R.topologicalClosure.add_mem hfm hgm
+  apply le_antisymm le_top
+  intro f _hf
+  exact hall f
+
+/-- A linear isometry equivalence reflects density of subspaces. -/
+private theorem dense_of_closure_map_eq_top (e : E ≃ₗᵢ[ℝ] F) (K : Submodule ℝ E)
+    (hRtop : (K.map (e : E →ₗ[ℝ] F)).topologicalClosure = ⊤) : Dense (K : Set E) := by
+  let R := K.map (e : E →ₗ[ℝ] F)
+  have hback : (R.map (e.symm : F →ₗ[ℝ] E)).topologicalClosure = ⊤ :=
+    (e.symm.surjective.denseRange).topologicalClosure_map_submodule hRtop
+  have hmap : R.map (e.symm : F →ₗ[ℝ] E) = K := by
+    apply le_antisymm
+    · rintro z ⟨y, ⟨x, hx, rfl⟩, hy⟩
+      have hxz : x = z := (e.symm_apply_apply x).symm.trans hy
+      rwa [← hxz]
+    · intro x hx
+      refine ⟨e x, ⟨x, hx, rfl⟩, ?_⟩
+      exact e.symm_apply_apply x
+  rw [hmap] at hback
+  exact Submodule.dense_iff_topologicalClosure_eq_top.mpr hback
 
 section PastProcess
 
@@ -208,7 +251,6 @@ theorem adaptedIndicator_pastCylinder_mem_closure
     rw [hI, hZ, (Lp.isometry_compMeasurePreserving hmp).dist_eq]
     exact hdist
 
--- The explicit transports between the ambient and trimmed measurable spaces are elaboration-heavy.
 omit [CompleteSpace W] [SecondCountableTopology W] in
 /-- Smooth bounded functions of finitely many Brownian coordinates are dense in every time
 section of the natural filtration. -/
@@ -257,43 +299,9 @@ theorem pastCylinderDense
       (e : lpMeas ℝ ℝ (𝓕 a) 2 P →L[ℝ]
         @Lp W ℝ (𝓕 a) _ 2 (P.trim (𝓕.le a)))
     exact ⟨Z, hZ, rfl⟩
-  have hall : ∀ f : @Lp W ℝ (𝓕 a) _ 2 (P.trim (𝓕.le a)),
-      f ∈ R.topologicalClosure := by
-    refine @Lp.induction W ℝ (𝓕 a) _ 2 (P.trim (𝓕.le a)) _
-      (by norm_num) (fun f ↦ f ∈ R.topologicalClosure) ?_ ?_
-        R.isClosed_topologicalClosure
-    · intro c s hs hPs
-      change indicatorConstLp 2 hs hPs.ne c ∈ R.topologicalClosure
-      have heq : indicatorConstLp 2 hs hPs.ne c =
-          c • indicatorConstLp 2 hs hPs.ne (1 : ℝ) := by
-        ext1
-        grw [Lp.coeFn_smul, indicatorConstLp_coeFn, indicatorConstLp_coeFn]
-        filter_upwards [] with x
-        by_cases hx : x ∈ s <;> simp [hx]
-      rw [heq]
-      exact R.topologicalClosure.smul_mem c (hone hs hPs.ne)
-    · intro f g _hf _hg _hdisjoint hfm hgm
-      exact R.topologicalClosure.add_mem hfm hgm
-  have hRtop : R.topologicalClosure = ⊤ := by
-    apply le_antisymm le_top
-    intro f _hf
-    exact hall f
-  have hback :
-      (R.map (e.symm : @Lp W ℝ (𝓕 a) _ 2 (P.trim (𝓕.le a)) →ₗ[ℝ]
-        lpMeas ℝ ℝ (𝓕 a) 2 P)).topologicalClosure = ⊤ :=
-    (e.symm.surjective.denseRange).topologicalClosure_map_submodule hRtop
-  have hmap :
-      R.map (e.symm : @Lp W ℝ (𝓕 a) _ 2 (P.trim (𝓕.le a)) →ₗ[ℝ]
-        lpMeas ℝ ℝ (𝓕 a) 2 P) = K := by
-    apply le_antisymm
-    · rintro z ⟨y, ⟨x, hx, rfl⟩, hy⟩
-      have hxz : x = z := (e.symm_apply_apply x).symm.trans hy
-      rwa [← hxz]
-    · intro x hx
-      refine ⟨e x, ⟨x, hx, rfl⟩, ?_⟩
-      exact e.symm_apply_apply x
-  rw [hmap] at hback
-  exact Submodule.dense_iff_topologicalClosure_eq_top.mpr hback
+  exact dense_of_closure_map_eq_top e K
+    (@closure_eq_top_of_indicators W (𝓕 a) (P.trim (𝓕.le a)) R
+      fun _ hs hPs => hone hs hPs)
 
 /-- Malliavin--Itô duality against elementary processes in the natural filtration. -/
 theorem smoothElementaryNaturalItoDuality_natural

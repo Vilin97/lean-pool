@@ -17,7 +17,8 @@ operator range, so its closed ranges are the canonical Brownian homogeneous chao
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 
@@ -167,6 +168,7 @@ theorem brownianHomogeneousChaos_eq_symmetricMultipleIntegralRange_closure
     (brownianSymmetricMultipleIntegralRange hB n).topologicalClosure
   rw [brownianSymmetricMultipleIntegralRange_eq hB n]
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- At order one the canonical Brownian multiple operator is the genuine Wiener integral. -/
 theorem brownianMultipleIntegralCLM_one_eq_wienerIntegralKernel
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t)) :

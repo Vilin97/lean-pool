@@ -3589,6 +3589,7 @@ import LeanPool.Malliavin.Malliavin.IteratedKernelPurePower
 import LeanPool.Malliavin.Malliavin.ItoConsequences
 import LeanPool.Malliavin.Malliavin.ItoConstruction
 import LeanPool.Malliavin.Malliavin.KernelIdentification
+import LeanPool.Malliavin.Malliavin.LegacyProduct
 import LeanPool.Malliavin.Malliavin.MalliavinDerivative
 import LeanPool.Malliavin.Malliavin.MultipleIntegral
 import LeanPool.Malliavin.Malliavin.NaturalClarkOcone

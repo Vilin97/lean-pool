@@ -3,6 +3,7 @@ Copyright (c) 2026 The lean-malliavin contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: The lean-malliavin contributors
 -/
+import LeanPool.Malliavin.Malliavin.LegacyProduct
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Function.SimpleFuncDenseLp
 import Mathlib.MeasureTheory.Integral.Prod
@@ -47,13 +48,15 @@ recall MeasureTheory.integral_prod_mul {α : Type u_1} {β : Type u_2} [Measurab
     ∫ z, f z.1 * g z.2 ∂μ.prod ν = (∫ x, f x ∂μ) * ∫ y, g y ∂ν
 
 recall MeasureTheory.Integrable.mul_prod {α : Type u_1} {β : Type u_2} [MeasurableSpace α]
-    [MeasurableSpace β] {μ : Measure α} {ν : Measure β} {L : Type u_3} [NormedRing L] {f : α → L}
+    [MeasurableSpace β] {μ : Measure α} {ν : Measure β} [SFinite ν]
+    {L : Type u_3} [NormedRing L] {f : α → L}
     {g : β → L} (hf : Integrable f μ) (hg : Integrable g ν) :
     Integrable (fun z : α × β ↦ f z.1 * g z.2) (μ.prod ν)
 
 recall MeasureTheory.tendsto_measure_iInter_atTop {α : Type u_1} {ι : Type u_2}
-    {m : MeasurableSpace α} {μ : Measure α} [Preorder ι] [(atTop : Filter ι).IsCountablyGenerated]
-    {s : ι → Set α} (hs : ∀ i, NullMeasurableSet (s i) μ) (hm : Antitone s)
+    {m : MeasurableSpace α} {μ : Measure α} {s : ι → Set α}
+    [Preorder ι] [(atTop : Filter ι).IsCountablyGenerated]
+    (hs : ∀ i, NullMeasurableSet (s i) μ) (hm : Antitone s)
     (hf : ∃ i, μ (s i) ≠ ∞) : Tendsto (μ ∘ s) atTop (𝓝 (μ (⋂ n, s n)))
 
 recall MeasurableSpace.induction_on_inter {α : Type u_1} {m : MeasurableSpace α}
@@ -76,23 +79,59 @@ abbrev FiniteMeasurableSet (μ : Measure Ω) := {A : Set Ω // MeasurableSet A �
 
 /-! ### Simple tensors -/
 
+/-! The upstream arbitrary-measure tensor API is retained in `LegacyTensor`.
+The standard-product API below uses the equality of products under s-finiteness. -/
+
+namespace LegacyTensor
+
 /-- The simple tensor `(t, ω) ↦ g t · 1_A ω` is square integrable on the product. -/
 theorem memLp_tensor (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 ν) :
-    MemLp (fun p : T × Ω ↦ g p.1 * A.1.indicator (1 : Ω → ℝ) p.2) 2 (ν.prod μ) := by
+    MemLp (fun p : T × Ω ↦ g p.1 * A.1.indicator (1 : Ω → ℝ) p.2) 2 (legacyProduct ν μ) := by
   have hg : MemLp (g : T → ℝ) 2 ν := Lp.memLp g
   have hA : MemLp (A.1.indicator (1 : Ω → ℝ)) 2 μ :=
     memLp_indicator_const 2 A.2.1 (1 : ℝ) (Or.inr A.2.2)
-  refine (memLp_two_iff_integrable_sq (hg.1.comp_fst.mul hA.1.comp_snd)).mpr ?_
-  refine (hg.integrable_sq.mul_prod hA.integrable_sq).congr ?_
+  refine (memLp_two_iff_integrable_sq ((hg.aestronglyMeasurable.comp_quasiMeasurePreserving
+    legacyProduct_quasiMeasurePreserving_fst).mul
+      (hA.aestronglyMeasurable.comp_quasiMeasurePreserving
+        legacyProduct_quasiMeasurePreserving_snd))).mpr ?_
+  refine (integrable_mul_legacyProduct hg.integrable_sq hA.integrable_sq).congr ?_
   filter_upwards with p
-  simp only [Pi.mul_apply]
+  simp only [Pi.mul_apply, Function.comp_apply]
   ring
 
 /-- The simple tensor `(t, ω) ↦ g t · 1_A ω` as an element of `L²(ν × μ)`. -/
-noncomputable def tensorLp (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 ν) : Lp ℝ 2 (ν.prod μ) :=
+noncomputable def tensorLp (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 ν) :
+    Lp ℝ 2 (legacyProduct ν μ) :=
   (memLp_tensor A g).toLp _
 
 theorem coeFn_tensorLp (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 ν) :
+    (tensorLp A g : T × Ω → ℝ) =ᵐ[legacyProduct ν μ]
+      fun p ↦ g p.1 * A.1.indicator (1 : Ω → ℝ) p.2 :=
+  MemLp.coeFn_toLp _
+
+/-- Formal combinations of simple tensors for the upstream arbitrary-measure convention. -/
+noncomputable def tensorStepToProd :
+    (FiniteMeasurableSet μ × Lp ℝ 2 ν →₀ ℝ) →ₗ[ℝ] Lp ℝ 2 (legacyProduct ν μ) :=
+  Finsupp.linearCombination ℝ fun x ↦ tensorLp x.1 x.2
+
+/-- A single formal legacy tensor is sent to the corresponding scalar multiple. -/
+theorem tensorStepToProd_single (x : FiniteMeasurableSet μ × Lp ℝ 2 ν) (c : ℝ) :
+    tensorStepToProd (Finsupp.single x c) = c • tensorLp x.1 x.2 :=
+  Finsupp.linearCombination_single _ _ _
+
+end LegacyTensor
+
+/-- The simple tensor `(t, ω) ↦ g t · 1_A ω` is square integrable on the product. -/
+theorem memLp_tensor [SFinite μ] (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 ν) :
+    MemLp (fun p : T × Ω ↦ g p.1 * A.1.indicator (1 : Ω → ℝ) p.2) 2 (ν.prod μ) := by
+  simpa only [legacyProduct_eq_prod] using LegacyTensor.memLp_tensor A g
+
+/-- The simple tensor `(t, ω) ↦ g t · 1_A ω` as an element of `L²(ν × μ)`. -/
+noncomputable def tensorLp [SFinite μ] (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 ν) :
+    Lp ℝ 2 (ν.prod μ) :=
+  (memLp_tensor A g).toLp _
+
+theorem coeFn_tensorLp [SFinite μ] (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 ν) :
     (tensorLp A g : T × Ω → ℝ) =ᵐ[ν.prod μ]
       fun p ↦ g p.1 * A.1.indicator (1 : Ω → ℝ) p.2 :=
   MemLp.coeFn_toLp _
@@ -116,7 +155,7 @@ noncomputable def tensorStepToLp :
   Finsupp.linearCombination ℝ fun x ↦ indicatorLp x.1 x.2
 
 /-- Formal combinations of simple tensors, realized in `L²(ν × μ)`. -/
-noncomputable def tensorStepToProd :
+noncomputable def tensorStepToProd [SFinite μ] :
     (FiniteMeasurableSet μ × Lp ℝ 2 ν →₀ ℝ) →ₗ[ℝ] Lp ℝ 2 (ν.prod μ) :=
   Finsupp.linearCombination ℝ fun x ↦ tensorLp x.1 x.2
 
@@ -124,7 +163,7 @@ theorem tensorStepToLp_single (x : FiniteMeasurableSet μ × Lp ℝ 2 ν) (c : �
     tensorStepToLp (Finsupp.single x c) = c • indicatorLp x.1 x.2 :=
   Finsupp.linearCombination_single _ _ _
 
-theorem tensorStepToProd_single (x : FiniteMeasurableSet μ × Lp ℝ 2 ν) (c : ℝ) :
+theorem tensorStepToProd_single [SFinite μ] (x : FiniteMeasurableSet μ × Lp ℝ 2 ν) (c : ℝ) :
     tensorStepToProd (Finsupp.single x c) = c • tensorLp x.1 x.2 :=
   Finsupp.linearCombination_single _ _ _
 
@@ -268,25 +307,69 @@ theorem smulLp_indicatorConstLp (e : E) {A : Set Ω} (hA : MeasurableSet A)
   rw [h1, h2, h3]
   by_cases hω : ω ∈ A <;> simp [hω]
 
+namespace LegacyTensor
+
 /-- The product `(t, ω) ↦ g t * G ω` is square integrable on the product. -/
 theorem memLp_tensor' (g : Lp ℝ 2 ν) (G : Lp ℝ 2 μ) :
-    MemLp (fun p : T × Ω ↦ g p.1 * G p.2) 2 (ν.prod μ) := by
+    MemLp (fun p : T × Ω ↦ g p.1 * G p.2) 2 (legacyProduct ν μ) := by
   refine (memLp_two_iff_integrable_sq
-    ((Lp.aestronglyMeasurable g).comp_fst.mul (Lp.aestronglyMeasurable G).comp_snd)).mpr ?_
-  refine ((Lp.memLp g).integrable_sq.mul_prod (Lp.memLp G).integrable_sq).congr ?_
+    ((Lp.aestronglyMeasurable g).comp_quasiMeasurePreserving
+      legacyProduct_quasiMeasurePreserving_fst |>.mul
+        ((Lp.aestronglyMeasurable G).comp_quasiMeasurePreserving
+          legacyProduct_quasiMeasurePreserving_snd))).mpr ?_
+  refine (integrable_mul_legacyProduct (Lp.memLp g).integrable_sq
+    (Lp.memLp G).integrable_sq).congr ?_
   filter_upwards with p
-  simp only [Pi.mul_apply]
+  simp only [Pi.mul_apply, Function.comp_apply]
   ring
 
 /-- The tensor `(t, ω) ↦ g t * G ω` in `L²(ν × μ)`. -/
-noncomputable def tensor (g : Lp ℝ 2 ν) (G : Lp ℝ 2 μ) : Lp ℝ 2 (ν.prod μ) :=
+noncomputable def tensor (g : Lp ℝ 2 ν) (G : Lp ℝ 2 μ) : Lp ℝ 2 (legacyProduct ν μ) :=
   (memLp_tensor' g G).toLp _
 
 theorem coeFn_tensor (g : Lp ℝ 2 ν) (G : Lp ℝ 2 μ) :
-    (tensor g G : T × Ω → ℝ) =ᵐ[ν.prod μ] fun p ↦ g p.1 * G p.2 :=
+    (tensor g G : T × Ω → ℝ) =ᵐ[legacyProduct ν μ] fun p ↦ g p.1 * G p.2 :=
   MemLp.coeFn_toLp _
 
 theorem tensor_add (g : Lp ℝ 2 ν) (G G' : Lp ℝ 2 μ) :
+    tensor g (G + G') = tensor g G + tensor g G' := by
+  apply Lp.ext
+  have h5 : (fun p : T × Ω ↦ (G + G' : Lp ℝ 2 μ) p.2) =ᵐ[legacyProduct ν μ]
+      fun p ↦ G p.2 + G' p.2 :=
+    legacyProduct_quasiMeasurePreserving_snd.ae_eq_comp (Lp.coeFn_add G G')
+  filter_upwards [coeFn_tensor g (G + G'), coeFn_tensor g G, coeFn_tensor g G',
+    Lp.coeFn_add (tensor g G) (tensor g G'), h5] with p h1 h2 h3 h4 h5
+  rw [h1, h4, Pi.add_apply, h2, h3, h5]
+  ring
+
+theorem tensor_smul (g : Lp ℝ 2 ν) (c : ℝ) (G : Lp ℝ 2 μ) :
+    tensor g (c • G) = c • tensor g G := by
+  apply Lp.ext
+  have h5 : (fun p : T × Ω ↦ (c • G : Lp ℝ 2 μ) p.2) =ᵐ[legacyProduct ν μ] fun p ↦ c * G p.2 := by
+    have h : (c • (G : Ω → ℝ)) =ᵐ[μ] fun ω ↦ c * G ω :=
+      Filter.Eventually.of_forall fun ω ↦ by simp
+    exact legacyProduct_quasiMeasurePreserving_snd.ae_eq_comp ((Lp.coeFn_smul c G).trans h)
+  filter_upwards [coeFn_tensor g (c • G), coeFn_tensor g G, Lp.coeFn_smul c (tensor g G), h5]
+    with p h1 h2 h3 h5
+  rw [h1, h3, Pi.smul_apply, h2, h5, smul_eq_mul]
+  ring
+
+end LegacyTensor
+
+/-- The product `(t, ω) ↦ g t * G ω` is square integrable on the product. -/
+theorem memLp_tensor' [SFinite μ] (g : Lp ℝ 2 ν) (G : Lp ℝ 2 μ) :
+    MemLp (fun p : T × Ω ↦ g p.1 * G p.2) 2 (ν.prod μ) := by
+  simpa only [legacyProduct_eq_prod] using LegacyTensor.memLp_tensor' g G
+
+/-- The tensor `(t, ω) ↦ g t * G ω` in `L²(ν × μ)`. -/
+noncomputable def tensor [SFinite μ] (g : Lp ℝ 2 ν) (G : Lp ℝ 2 μ) : Lp ℝ 2 (ν.prod μ) :=
+  (memLp_tensor' g G).toLp _
+
+theorem coeFn_tensor [SFinite μ] (g : Lp ℝ 2 ν) (G : Lp ℝ 2 μ) :
+    (tensor g G : T × Ω → ℝ) =ᵐ[ν.prod μ] fun p ↦ g p.1 * G p.2 :=
+  MemLp.coeFn_toLp _
+
+theorem tensor_add [SFinite μ] (g : Lp ℝ 2 ν) (G G' : Lp ℝ 2 μ) :
     tensor g (G + G') = tensor g G + tensor g G' := by
   apply Lp.ext
   have h5 : (fun p : T × Ω ↦ (G + G' : Lp ℝ 2 μ) p.2) =ᵐ[ν.prod μ]
@@ -297,7 +380,7 @@ theorem tensor_add (g : Lp ℝ 2 ν) (G G' : Lp ℝ 2 μ) :
   rw [h1, h4, Pi.add_apply, h2, h3, h5]
   ring
 
-theorem tensor_smul (g : Lp ℝ 2 ν) (c : ℝ) (G : Lp ℝ 2 μ) :
+theorem tensor_smul [SFinite μ] (g : Lp ℝ 2 ν) (c : ℝ) (G : Lp ℝ 2 μ) :
     tensor g (c • G) = c • tensor g G := by
   apply Lp.ext
   have h5 : (fun p : T × Ω ↦ (c • G : Lp ℝ 2 μ) p.2) =ᵐ[ν.prod μ] fun p ↦ c * G p.2 := by
@@ -762,6 +845,12 @@ variable {Ω T : Type*} [MeasurableSpace Ω] [MeasurableSpace T] {μ : Measure �
   [SFinite μ] [SFinite ν]
 
 omit [SFinite μ] [SFinite ν] in
+/-- A bounded measurable function of `ω`, viewed on `T × Ω`. -/
+theorem LegacyTensor.aestronglyMeasurable_comp_snd {G : Ω → ℝ} (hG : AEStronglyMeasurable G μ) :
+    AEStronglyMeasurable (fun p : T × Ω ↦ G p.2) (legacyProduct ν μ) :=
+  hG.comp_quasiMeasurePreserving legacyProduct_quasiMeasurePreserving_snd
+
+omit [SFinite ν] in
 /-- A bounded measurable function of `ω`, viewed on `T × Ω`. -/
 theorem aestronglyMeasurable_comp_snd {G : Ω → ℝ} (hG : AEStronglyMeasurable G μ) :
     AEStronglyMeasurable (fun p : T × Ω ↦ G p.2) (ν.prod μ) :=

@@ -491,7 +491,8 @@ theorem IteratedIntegralFamily.box_zero (J : IteratedIntegralFamily P) (u v : Fi
   have hint : ∫ t, boxKernel u v t ∂iteratedKernelMeasure 0 = 1 := by
     have hbox : orderedBox u v = Set.univ := by
       ext t
-      simp only [orderedBox, Set.mem_pi, Set.mem_univ, Set.mem_Ioc, forall_const, IsEmpty.forall_iff]
+      simp only [orderedBox, Set.mem_pi, Set.mem_univ, Set.mem_Ioc, forall_const,
+        IsEmpty.forall_iff]
     rw [boxKernel, integral_congr_ae indicatorConstLp_coeFn, hbox, Set.indicator_univ,
       integral_const, measureReal_def, iteratedKernelMeasure, Measure.pi_empty_univ]
     simp only [ENNReal.toReal_one, smul_eq_mul, mul_one]
@@ -596,7 +597,8 @@ theorem kernelToLine_boxKernel {a b : ℝ≥0} :
   have hset : (MeasurableEquiv.funUnique (Fin 1) ℝ≥0).symm ⁻¹'
       orderedBox (fun _ : Fin 1 ↦ a) (fun _ ↦ b) = Set.Ioc a b := by
     ext t
-    simp only [MeasurableEquiv.funUnique_symm_apply, orderedBox, Set.mem_preimage, Set.mem_pi, Set.mem_univ,
+    simp only [MeasurableEquiv.funUnique_symm_apply, orderedBox, Set.mem_preimage, Set.mem_pi,
+      Set.mem_univ,
       uniqueElim_const, Set.mem_Ioc, forall_const]
   unfold kernelToLine boxKernel
   change Lp.compMeasurePreserving _ measurePreserving_funUnique_symm_nnreal _ = _
@@ -731,10 +733,10 @@ theorem memLp_eval (hB : IsPreBrownianReal B P) (t : ℝ≥0) {p : ℝ≥0∞} (
 theorem memLp_two_incr_mul_incr (hB : IsPreBrownianReal B P) (a b c d : ℝ≥0) :
     MemLp (fun ω ↦ (B b ω - B a ω) * (B d ω - B c ω)) 2 P :=
   have := holderTriple_four_four_two
-  MemLp.mul' ((memLp_eval hB d (p := 4) ENNReal.ofNat_ne_top).sub
-      (memLp_eval hB c (p := 4) ENNReal.ofNat_ne_top))
-    ((memLp_eval hB b (p := 4) ENNReal.ofNat_ne_top).sub
+  MemLp.fun_mul ((memLp_eval hB b (p := 4) ENNReal.ofNat_ne_top).sub
       (memLp_eval hB a (p := 4) ENNReal.ofNat_ne_top))
+    ((memLp_eval hB d (p := 4) ENNReal.ofNat_ne_top).sub
+      (memLp_eval hB c (p := 4) ENNReal.ofNat_ne_top))
 
 /-- The product of two Brownian increments as an element of `L²(P)`. -/
 noncomputable def incrementProductLp (hB : IsPreBrownianReal B P) (a b c d : ℝ≥0) :
@@ -1048,7 +1050,8 @@ theorem IteratedIntegralFamily.IsBrownian.integral_two_boxKernel {J : IteratedIn
   refine h.trans ?_
   refine (coeFn_incrementProductLp hB a b c d).symm.mono fun ω hω ↦ ?_
   rw [← hω]
-  simp only [chainIntegral, Fin.prod_univ_two, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+  simp only [chainIntegral, Fin.prod_univ_two, Fin.isValue, Matrix.cons_val_zero,
+    Matrix.cons_val_one,
     Matrix.cons_val_fin_one]
 
 /-- For a Brownian-linked family, the conditional order-two box value has squared norm
@@ -1113,7 +1116,7 @@ theorem brownianLp_half_notMem_closure_span_unitIncrementLp (hB : IsPreBrownianR
     rcases Nat.eq_zero_or_pos k with rfl | hk
     · norm_num
     · have h1 : (1 : ℝ) ≤ k := by exact_mod_cast hk
-      rw [if_neg hk.ne', min_eq_left (by linarith), min_eq_left h1, min_eq_left (by linarith),
+      rw [ite_eq_right hk.ne', min_eq_left (by linarith), min_eq_left h1, min_eq_left (by linarith),
         min_eq_left (by linarith)]
       ring
   -- `y := x - (1/2) e₀` lies in the closed span and is orthogonal to every generator
@@ -1125,9 +1128,9 @@ theorem brownianLp_half_notMem_closure_span_unitIncrementLp (hB : IsPreBrownianR
     intro k
     rw [hy, inner_sub_left, real_inner_smul_left, hee]
     rcases Nat.eq_zero_or_pos k with rfl | hk
-    · rw [if_pos rfl, ← he₀, hx0]
+    · rw [ite_eq_left rfl, ← he₀, hx0]
       ring
-    · rw [if_neg hk.ne', hxk k hk]
+    · rw [ite_eq_right hk.ne', hxk k hk]
       ring
   have hyorth : y ∈ (Submodule.span ℝ (Set.range (unitIncrementLp hB))).topologicalClosureᗮ := by
     rw [Submodule.orthogonal_closure, Submodule.mem_orthogonal']
@@ -1151,7 +1154,7 @@ theorem brownianLp_half_notMem_closure_span_unitIncrementLp (hB : IsPreBrownianR
     exact sub_eq_zero.mp hy0
   have he₀e₀ : ⟪e₀, e₀⟫_ℝ = 1 := by
     have := hee 0
-    rwa [if_pos rfl, ← he₀] at this
+    rwa [ite_eq_left rfl, ← he₀] at this
   rw [hx', real_inner_smul_left, real_inner_smul_right, he₀e₀] at hxx
   norm_num at hxx
 

@@ -16,7 +16,8 @@ orthogonality to the concrete `L²` Wick powers used in the Brownian chaos reduc
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 
@@ -137,7 +138,7 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
 theorem inner_brownianWickPowerLp_of_ne (hB : IsPreBrownianReal B P)
     (v : ℝ≥0 →₀ ℝ) {m n : ℕ} (hmn : m ≠ n) :
     inner ℝ (brownianWickPowerLp hB v m) (brownianWickPowerLp hB v n) = 0 := by
-  rw [inner_brownianWickPowerLp, if_neg hmn]
+  rw [inner_brownianWickPowerLp, ite_eq_right hmn]
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
@@ -146,7 +147,7 @@ theorem norm_sq_brownianWickPowerLp (hB : IsPreBrownianReal B P)
     (v : ℝ≥0 →₀ ℝ) (n : ℕ) :
     ‖brownianWickPowerLp hB v n‖ ^ 2 =
       (n.factorial : ℝ) * (‖stepToLp v‖ ^ 2) ^ n := by
-  rw [← real_inner_self_eq_norm_sq, inner_brownianWickPowerLp, if_pos rfl]
+  rw [← real_inner_self_eq_norm_sq, inner_brownianWickPowerLp, ite_eq_left rfl]
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
@@ -172,7 +173,7 @@ theorem integral_brownianWickPowerLp (hB : IsPreBrownianReal B P)
       have hcenter :=
         integral_varianceHermite_centeredGaussian (‖stepToLp v‖₊ ^ 2) n
       rw [hvariance] at hcenter
-      rw [hcenter, if_neg (Nat.ne_of_gt hn)]
+      rw [hcenter, ite_eq_right (Nat.ne_of_gt hn)]
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in

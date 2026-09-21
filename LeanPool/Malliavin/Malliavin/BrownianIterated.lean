@@ -16,7 +16,8 @@ required images of ordered-box kernels in `IteratedIntegralFamily.IsBrownian`.
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -25,6 +26,8 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   [SecondCountableTopology W]
   {P : Measure W} [IsGaussian P]
   {B : ℝ≥0 → W → ℝ}
+
+attribute [local instance] gaussianSFinite
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
@@ -48,7 +51,7 @@ theorem memLp_chainIntegral (hB : IsPreBrownianReal B P) {n : ℕ}
       intro i _
       exact hB.isGaussianProcess.hasGaussianLaw_sub.memLp hq
     have hprod :=
-      MeasureTheory.MemLp.prod' (s := (Finset.univ : Finset (Fin (n + 1)))) hf
+      MeasureTheory.MemLp.fun_prod (s := (Finset.univ : Finset (Fin (n + 1)))) hf
     have hqinv : q⁻¹ = (2 : ℝ≥0∞)⁻¹ * (n + 1 : ℝ≥0∞)⁻¹ := by
       dsimp only [q]
       exact ENNReal.mul_inv (Or.inl (by norm_num)) (Or.inl (by norm_num))
@@ -362,9 +365,13 @@ namespace BrownianIteratedConstruction
 
 /-- Endpoint data for an ordered time box contained in the strict simplex. -/
 structure OrderedBoxIndex (n : ℕ) where
+  /-- The lower endpoint of each component interval. -/
   u : Fin n → ℝ≥0
+  /-- The upper endpoint of each component interval. -/
   v : Fin n → ℝ≥0
+  /-- Each component interval has ordered endpoints. -/
   valid : ∀ i, u i ≤ v i
+  /-- Earlier intervals lie entirely before later intervals. -/
   ordered : ∀ i j, i < j → v i ≤ u j
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]

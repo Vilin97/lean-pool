@@ -18,7 +18,8 @@ ordered-chain compatibility and hence natural martingale representation.
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 
@@ -36,6 +37,7 @@ def BrownianHigherHermiteMultipleIntegralIdentity
     brownianWickPowerLp hB v n =
       brownianPurePowerIntegral hB n (stepToLp v)
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- The higher-order identity, together with the automatic base orders, identifies every Wick
 power with its canonical pure-power multiple integral. -/
 theorem brownianWickPowerLp_eq_purePowerIntegral_of_hermiteMultipleIntegralIdentity

@@ -17,7 +17,8 @@ factorial cancels and the result is the matching finite combination of Brownian 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 

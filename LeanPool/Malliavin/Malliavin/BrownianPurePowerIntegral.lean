@@ -18,7 +18,8 @@ operator is identified with the concrete Brownian Wick power of a finite step ke
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 
@@ -163,6 +164,7 @@ theorem brownianPurePowerIntegral_zero_step
     brownianPurePowerIntegral hB 0 (stepToLp v) = brownianWickPowerLp hB v 0 := by
   rw [brownianPurePowerIntegral_zero, brownianWickPowerLp_zero]
 
+omit [CompleteSpace W] [BorelSpace W] in
 /-- The genuine first multiple integral of a Brownian step kernel is its first Wick power. -/
 theorem brownianPurePowerIntegral_one_step
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))

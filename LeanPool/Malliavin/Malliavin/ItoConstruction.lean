@@ -27,7 +27,8 @@ contract concerns martingale representation and Malliavin--Itô duality.
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -77,10 +78,53 @@ theorem elementaryBrownianValue_split
       (Z : W → ℝ) w * (B b w - B c w)
   ring
 
+namespace LegacyTensor
+
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
 /-- An elementary predictable process splits at an intermediate time. -/
 theorem elementaryPredictable_split
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›)
+    {a c b : ℝ≥0} (hac : a ≤ c) (hcb : c ≤ b)
+    (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) :
+    elementaryPredictable 𝓕 a b Z =
+      elementaryPredictable 𝓕 a c Z +
+        elementaryPredictable 𝓕 c b (adaptedMono 𝓕 hac Z) := by
+  apply Subtype.ext
+  change (elementaryPredictable 𝓕 a b Z : TimeProcessL2 P) =
+    (elementaryPredictable 𝓕 a c Z : TimeProcessL2 P) +
+      (elementaryPredictable 𝓕 c b (adaptedMono 𝓕 hac Z) : TimeProcessL2 P)
+  apply Lp.ext
+  filter_upwards [elementaryPredictable_coeFn 𝓕 a b Z,
+    elementaryPredictable_coeFn 𝓕 a c Z,
+    elementaryPredictable_coeFn 𝓕 c b (adaptedMono 𝓕 hac Z),
+    Lp.coeFn_add (elementaryPredictable 𝓕 a c Z : TimeProcessL2 P)
+      (elementaryPredictable 𝓕 c b (adaptedMono 𝓕 hac Z) : TimeProcessL2 P)]
+    with p habp hacp hcbp hadd
+  rw [habp, hadd, Pi.add_apply, hacp, hcbp]
+  change (if p.1 ∈ Set.Ioc a b then (Z : W → ℝ) p.2 else 0) =
+    (if p.1 ∈ Set.Ioc a c then (Z : W → ℝ) p.2 else 0) +
+      if p.1 ∈ Set.Ioc c b then (Z : W → ℝ) p.2 else 0
+  by_cases hpac : p.1 ∈ Set.Ioc a c
+  · have hpab : p.1 ∈ Set.Ioc a b := ⟨hpac.1, hpac.2.trans hcb⟩
+    have hpcb : p.1 ∉ Set.Ioc c b := fun hp ↦ (not_lt_of_ge hpac.2) hp.1
+    simp only [hpab, ↓reduceIte, hpac, hpcb, add_zero]
+  · by_cases hpcb : p.1 ∈ Set.Ioc c b
+    · have hpab : p.1 ∈ Set.Ioc a b := ⟨lt_of_le_of_lt hac hpcb.1, hpcb.2⟩
+      simp only [hpab, ↓reduceIte, hpac, hpcb, zero_add]
+    · have hpab : p.1 ∉ Set.Ioc a b := by
+        intro hp
+        rcases lt_or_ge c p.1 with hcp | hpc
+        · exact hpcb ⟨hcp, hp.2⟩
+        · exact hpac ⟨hp.1, hpc⟩
+      simp only [hpab, ↓reduceIte, hpac, hpcb, add_zero]
+
+end LegacyTensor
+
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
+    [SecondCountableTopology W] [IsGaussian P] in
+/-- An elementary predictable process splits at an intermediate time. -/
+theorem elementaryPredictable_split [SFinite P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›)
     {a c b : ℝ≥0} (hac : a ≤ c) (hcb : c ≤ b)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) :
@@ -214,9 +258,35 @@ abbrev ElementaryPredictableIndex
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W) :=
   Σ a : ℝ≥0, {b : ℝ≥0 // a ≤ b} × lpMeas ℝ ℝ (𝓕 a) 2 P
 
+namespace LegacyTensor
+
 /-- The predictable-process realization of one formal elementary generator. -/
 noncomputable def elementaryPredictableGenerator
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W) :
+    ElementaryPredictableIndex 𝓕 P → PredictableProcessL2 𝓕 P :=
+  fun x ↦ elementaryPredictable 𝓕 x.1 x.2.1.1 x.2.2
+
+/-- Formal finite combinations realized as predictable processes. -/
+noncomputable def elementaryFinsuppToPredictable
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W) :
+    (ElementaryPredictableIndex 𝓕 P →₀ ℝ) →ₗ[ℝ] PredictableProcessL2 𝓕 P :=
+  Finsupp.linearCombination ℝ (elementaryPredictableGenerator 𝓕 P)
+
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
+    [SecondCountableTopology W] in
+/-- The predictable realization of a single formal generator. -/
+theorem elementaryFinsuppToPredictable_single
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W)
+    (x : ElementaryPredictableIndex 𝓕 P) (c : ℝ) :
+    elementaryFinsuppToPredictable 𝓕 P (Finsupp.single x c) =
+      c • elementaryPredictableGenerator 𝓕 P x :=
+  Finsupp.linearCombination_single _ _ _
+
+end LegacyTensor
+
+/-- The predictable-process realization of one formal elementary generator. -/
+noncomputable def elementaryPredictableGenerator
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W) [SFinite P] :
     ElementaryPredictableIndex 𝓕 P → PredictableProcessL2 𝓕 P :=
   fun x ↦ elementaryPredictable 𝓕 x.1 x.2.1.1 x.2.2
 
@@ -230,7 +300,7 @@ noncomputable def elementaryBrownianGenerator
 
 /-- Formal finite combinations realized as predictable processes. -/
 noncomputable def elementaryFinsuppToPredictable
-    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W) :
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W) [SFinite P] :
     (ElementaryPredictableIndex 𝓕 P →₀ ℝ) →ₗ[ℝ] PredictableProcessL2 𝓕 P :=
   Finsupp.linearCombination ℝ (elementaryPredictableGenerator 𝓕 P)
 
@@ -246,7 +316,7 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] in
 /-- The predictable realization of a single formal generator. -/
 theorem elementaryFinsuppToPredictable_single
-    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W)
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W) [SFinite P]
     (x : ElementaryPredictableIndex 𝓕 P) (c : ℝ) :
     elementaryFinsuppToPredictable 𝓕 P (Finsupp.single x c) =
       c • elementaryPredictableGenerator 𝓕 P x :=

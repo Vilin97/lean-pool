@@ -129,7 +129,8 @@ recall ContinuousLinearMap.ext_on
     {s : Set M₁} (hs : Dense (Submodule.span R₁ s : Set M₁))
     {f g : M₁ →SL[σ₁₂] M₂} (h : Set.EqOn f g s) : f = g
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -137,6 +138,11 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
   [SecondCountableTopology W]
   {P : Measure W} [IsGaussian P]
+
+/-- The probability structure supplied directly by the Gaussian measure. -/
+local instance gaussianSFinite : SFinite P :=
+  @probability_sFinite W _ P (IsGaussian.toIsProbabilityMeasure P)
+
 
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
@@ -252,6 +258,7 @@ lemma adaptedIndicator_coeFn
     (hμs := measure_ne_top P F) (c := (1 : ℝ))
 
 omit [CompleteSpace W] [BorelSpace W] in
+omit [SecondCountableTopology W] in
 /-- An elementary process with an event-indicator coefficient is the indicator of its
 predictable rectangle. -/
 theorem elementaryPredictable_adaptedIndicator
@@ -313,6 +320,8 @@ lemma inner_elementaryPredictable_adaptedIndicator
   rw [integral_congr_ae hae]
   exact integral_indicator (measurableSet_Ioc.prod (𝓕.le a F hF))
 
+namespace LegacyTensor
+
 /-- The algebraic span of all one-step adapted predictable processes. -/
 def elementaryPredictableSpan
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) :
@@ -331,7 +340,28 @@ lemma elementaryPredictable_mem_span
   apply Submodule.subset_span
   exact ⟨a, b, hab, Z, rfl⟩
 
+end LegacyTensor
+
+/-- The algebraic span of all one-step adapted predictable processes. -/
+def elementaryPredictableSpan [SFinite P]
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) :
+    Submodule ℝ (PredictableProcessL2 𝓕 P) :=
+  Submodule.span ℝ {U | ∃ a b : ℝ≥0,
+    ∃ _hab : a ≤ b, ∃ Z : lpMeas ℝ ℝ (𝓕 a) 2 P,
+      U = elementaryPredictable 𝓕 a b Z}
+
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
+    [SecondCountableTopology W] [IsGaussian P] in
+lemma elementaryPredictable_mem_span [SFinite P]
+    (𝓕 : Filtration ℝ≥0 (inferInstance : MeasurableSpace W)) (a b : ℝ≥0)
+    (hab : a ≤ b)
+    (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) :
+    elementaryPredictable 𝓕 a b Z ∈ elementaryPredictableSpan (P := P) 𝓕 := by
+  apply Submodule.subset_span
+  exact ⟨a, b, hab, Z, rfl⟩
+
 omit [CompleteSpace W] [BorelSpace W] in
+omit [SecondCountableTopology W] in
 lemma integral_rectangle_eq_zero_of_orthogonal
     (𝓕 : Filtration ℝ≥0 (inferInstance : MeasurableSpace W))
     (g : PredictableProcessL2 𝓕 P)
@@ -349,6 +379,7 @@ lemma integral_rectangle_eq_zero_of_orthogonal
       (adaptedIndicator (P := P) 𝓕 a hF))
 
 omit [CompleteSpace W] [BorelSpace W] in
+omit [SecondCountableTopology W] in
 /-- Vanishing on generating rectangles propagates to every predictable set after restriction
 to a finite time frame. -/
 lemma integral_restrict_frame_eq_zero_of_rectangles
@@ -410,6 +441,7 @@ lemma integral_restrict_frame_eq_zero_of_rectangles
     simp only [hzero, tsum_zero]
 
 omit [CompleteSpace W] [BorelSpace W] in
+omit [SecondCountableTopology W] in
 /-- Vanishing on the generating predictable rectangles implies vanishing on every
 finite-measure predictable set. -/
 lemma integral_set_eq_zero_of_rectangles
@@ -480,6 +512,7 @@ lemma integral_set_eq_zero_of_rectangles
   exact (setIntegral_congr_set hset).trans hzeroUnion
 
 omit [CompleteSpace W] [BorelSpace W] in
+omit [SecondCountableTopology W] in
 /-- A predictable process orthogonal to every one-step adapted process vanishes almost
 everywhere. -/
 lemma ae_eq_zero_of_orthogonal_elementaryPredictable
@@ -498,6 +531,7 @@ lemma ae_eq_zero_of_orthogonal_elementaryPredictable
       (integral_rectangle_eq_zero_of_orthogonal 𝓕 g horth) s hs hμs
 
 omit [CompleteSpace W] [BorelSpace W] in
+omit [SecondCountableTopology W] in
 /-- Finite linear combinations of one-step adapted processes are dense in predictable `L²`. -/
 theorem dense_elementaryPredictableSpan
     (𝓕 : Filtration ℝ≥0 (inferInstance : MeasurableSpace W)) :
@@ -533,18 +567,22 @@ theorem ClarkOconeFamily.IsBrownianOnElementary.itoIntegral_eq
     {B : ℝ≥0 → W → ℝ} {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     {C D : ClarkOconeFamily B P 𝓕}
     (hC : C.IsBrownianOnElementary) (hD : D.IsBrownianOnElementary) :
-    C.itoIntegral = D.itoIntegral := by
-  -- isDefEq on ContinuousLinearMap.ext_on costs >200k heartbeats inherently (type
-  -- unification of C.itoIntegral and D.itoIntegral). suffices+ext, isClosed_property,
-  -- and explicit type annotation all hit the same floor.
-  apply ContinuousLinearMap.ext_on
-    (s := {U | ∃ a b : ℝ≥0, ∃ _hab : a ≤ b,
-      ∃ Z : lpMeas ℝ ℝ (𝓕 a) 2 P, U = elementaryPredictable 𝓕 a b Z})
-  · simpa only [elementaryPredictableSpan] using
-      (dense_elementaryPredictableSpan (P := P) 𝓕)
-  · rintro U ⟨a, b, hab, Z, rfl⟩
+    @Eq (PredictableProcessL2 𝓕 P →L[ℝ] RandomL2 P)
+      (ClarkOconeFamily.itoIntegral C) (ClarkOconeFamily.itoIntegral D) := by
+  have hOn : Set.EqOn C.itoIntegral D.itoIntegral
+      {U | ∃ a b : ℝ≥0, ∃ _hab : a ≤ b,
+        ∃ Z : lpMeas ℝ ℝ (𝓕 a) 2 P, U = elementaryPredictable 𝓕 a b Z} := by
+    rintro U ⟨a, b, hab, Z, rfl⟩
     rw [hC hab Z, hD hab Z]
     exact C.elementaryIntegralValue_eq D hab Z
+  apply ContinuousLinearMap.ext
+  intro U
+  apply ContinuousLinearMap.eqOn_closure_span hOn
+  have hDense := dense_elementaryPredictableSpan (P := P) 𝓕
+  rw [Submodule.dense_iff_topologicalClosure_eq_top] at hDense
+  change U ∈ (elementaryPredictableSpan (P := P) 𝓕).topologicalClosure
+  rw [hDense]
+  exact Submodule.mem_top
 
 end Malliavin
 

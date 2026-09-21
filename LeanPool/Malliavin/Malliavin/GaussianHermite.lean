@@ -16,7 +16,8 @@ Hermite polynomials used by the Brownian chaos construction.
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin.BrownianIteratedConstruction
 
@@ -131,7 +132,7 @@ theorem integral_varianceHermite_centeredGaussian (variance : ℝ≥0) (n : ℕ)
   cases n with
   | zero => simp [varianceHermite]
   | succ n =>
-      simp only [Nat.succ_ne_zero, if_false]
+      simp only [Nat.succ_ne_zero, ite_false]
       rw [varianceHermite_succ]
       simp only [Polynomial.eval_sub, Polynomial.eval_mul, Polynomial.eval_X,
         Polynomial.eval_C]

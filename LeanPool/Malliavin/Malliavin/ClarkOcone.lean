@@ -167,13 +167,14 @@ recall ProbabilityTheory.IndepFun.integral_mul_eq_mul_integral
     μ[X * Y] = μ[X] * μ[Y]
 
 recall MeasureTheory.Measure.QuasiMeasurePreserving.ae_eq_comp
-    {α : Type u_2} {β : Type u_3} {δ : Type u_4}
-    {m0 : MeasurableSpace α} [MeasurableSpace β]
-    {μ : Measure α} {ν : Measure β} {f : α → β} {g g' : β → δ}
-    (hf : Measure.QuasiMeasurePreserving f μ ν) (h : g =ᵐ[ν] g') :
-    g ∘ f =ᵐ[μ] g' ∘ f
+    {α : Type u_1} {β : Type u_2} {δ : Type u_4}
+    {mα : MeasurableSpace α} {mβ : MeasurableSpace β}
+    {μa : Measure α} {μb : Measure β} {f : α → β}
+    (h : Measure.QuasiMeasurePreserving f μa μb) {g₁ g₂ : β → δ}
+    (hg : g₁ =ᵐ[μb] g₂) : g₁ ∘ f =ᵐ[μa] g₂ ∘ f
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -300,9 +301,11 @@ theorem stronglyMeasurable_elementaryRepresentative
         (Set.Ioc a b ×ˢ (Z ⁻¹' Set.Ioi c))ᶜ := by
       ext p
       by_cases hp : p.1 ∈ Set.Ioc a b
-      · simp only [Set.mem_preimage, elementaryRepresentative, hp, ↓reduceIte, Set.mem_Iic, Set.mem_compl_iff,
+      · simp only [Set.mem_preimage, elementaryRepresentative, hp, ↓reduceIte, Set.mem_Iic,
+          Set.mem_compl_iff,
           Set.mem_prod, Set.mem_Ioi, true_and, not_lt]
-      · simp only [Set.mem_preimage, elementaryRepresentative, hp, ↓reduceIte, Set.mem_Iic, hc, Set.mem_compl_iff,
+      · simp only [Set.mem_preimage, elementaryRepresentative, hp, ↓reduceIte, Set.mem_Iic, hc,
+          Set.mem_compl_iff,
           Set.mem_prod, Set.mem_Ioi, false_and, not_false_eq_true]
     rw [hset]
     exact (measurableSet_predictable_Ioc_prod a b
@@ -312,8 +315,10 @@ theorem stronglyMeasurable_elementaryRepresentative
         Set.Ioc a b ×ˢ (Z ⁻¹' Set.Iic c) := by
       ext p
       by_cases hp : p.1 ∈ Set.Ioc a b
-      · simp only [Set.mem_preimage, elementaryRepresentative, hp, ↓reduceIte, Set.mem_Iic, Set.mem_prod, true_and]
-      · simp only [Set.mem_preimage, elementaryRepresentative, hp, ↓reduceIte, Set.mem_Iic, Set.mem_prod, false_and,
+      · simp only [Set.mem_preimage, elementaryRepresentative, hp, ↓reduceIte, Set.mem_Iic,
+          Set.mem_prod, true_and]
+      · simp only [Set.mem_preimage, elementaryRepresentative, hp, ↓reduceIte, Set.mem_Iic,
+          Set.mem_prod, false_and,
           iff_false, not_le, hc']
     rw [hset]
     exact measurableSet_predictable_Ioc_prod a b (hZ.measurable measurableSet_Iic)
@@ -324,9 +329,83 @@ noncomputable def iocIndicator (a b : ℝ≥0) :
   indicatorConstLp 2 measurableSet_Ioc
     (nonnegativeLebesgueMeasure_Ioc_ne_top a b) (1 : ℝ)
 
+namespace LegacyTensor
+
+/-- Time-process classes for the upstream arbitrary-measure product convention. -/
+abbrev TimeProcessL2 (P : Measure W) := Lp ℝ 2 (legacyProduct nonnegativeLebesgueMeasure P)
+
+/-- Predictable classes for the upstream arbitrary-measure product convention. -/
+abbrev PredictableProcessL2 (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (P : Measure W) :=
+  lpMeas ℝ ℝ 𝓕.predictable 2 (legacyProduct nonnegativeLebesgueMeasure P)
+
 /-- The predictable `L²` class represented by `(t, ω) ↦ 1_(a,b](t) Z(ω)` for an
 `𝓕_a`-measurable square-integrable coefficient `Z`. -/
 noncomputable def elementaryPredictable
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0)
+    (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) : PredictableProcessL2 𝓕 P := by
+  let hZ : AEStronglyMeasurable[𝓕 a] (Z : W → ℝ) P :=
+    lpMeas.aestronglyMeasurable Z
+  let Zm : W → ℝ := hZ.mk (Z : W → ℝ)
+  let H : ℝ≥0 × W → ℝ := elementaryRepresentative 𝓕 a b Zm
+  let V : Lp ℝ 2 (legacyProduct nonnegativeLebesgueMeasure P) :=
+    tensor (iocIndicator a b) (Z : Lp ℝ 2 P)
+  have hV : (V : ℝ≥0 × W → ℝ) =ᵐ[legacyProduct nonnegativeLebesgueMeasure P] H := by
+    have hg : ∀ᵐ p : ℝ≥0 × W ∂legacyProduct nonnegativeLebesgueMeasure P,
+        (iocIndicator a b : ℝ≥0 → ℝ) p.1 =
+          (Set.Ioc a b).indicator (1 : ℝ≥0 → ℝ) p.1 :=
+      legacyProduct_quasiMeasurePreserving_fst.ae_eq_comp
+        (indicatorConstLp_coeFn (p := 2) (hs := measurableSet_Ioc)
+          (hμs := nonnegativeLebesgueMeasure_Ioc_ne_top a b) (c := (1 : ℝ)))
+    have hZm : ∀ᵐ p : ℝ≥0 × W ∂legacyProduct nonnegativeLebesgueMeasure P,
+        (Z : W → ℝ) p.2 = Zm p.2 :=
+      legacyProduct_quasiMeasurePreserving_snd.ae_eq_comp hZ.ae_eq_mk
+    filter_upwards [coeFn_tensor (iocIndicator a b) (Z : Lp ℝ 2 P), hg, hZm]
+      with p hp hg' hZm'
+    rw [hp, hg', hZm']
+    by_cases ht : p.1 ∈ Set.Ioc a b <;>
+      simp [H, elementaryRepresentative, ht]
+  exact ⟨V,
+    (stronglyMeasurable_elementaryRepresentative 𝓕 a b hZ.stronglyMeasurable_mk)
+      |>.aestronglyMeasurable.congr hV.symm⟩
+
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
+    [SecondCountableTopology W] [IsGaussian P] in
+/-- Forgetting predictability, an elementary process is the product-space tensor
+`1_(a,b] ⊗ Z`. -/
+theorem elementaryPredictable_coeLp
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0)
+    (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) :
+    (elementaryPredictable 𝓕 a b Z : TimeProcessL2 P) =
+      tensor (iocIndicator a b) (Z : RandomL2 P) := rfl
+
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
+    [SecondCountableTopology W] [IsGaussian P] in
+/-- A pointwise representative of an elementary predictable process. -/
+theorem elementaryPredictable_coeFn
+    (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0)
+    (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) :
+    (elementaryPredictable 𝓕 a b Z : ℝ≥0 × W → ℝ) =ᵐ[
+      legacyProduct nonnegativeLebesgueMeasure P]
+      fun p => if p.1 ∈ Set.Ioc a b then (Z : W → ℝ) p.2 else 0 := by
+  change (tensor (iocIndicator a b) (Z : Lp ℝ 2 P) : ℝ≥0 × W → ℝ) =ᵐ[_] _
+  have hg : ∀ᵐ p : ℝ≥0 × W ∂legacyProduct nonnegativeLebesgueMeasure P,
+      (iocIndicator a b : ℝ≥0 → ℝ) p.1 =
+        (Set.Ioc a b).indicator (1 : ℝ≥0 → ℝ) p.1 :=
+    legacyProduct_quasiMeasurePreserving_fst.ae_eq_comp
+      (indicatorConstLp_coeFn (p := 2) (hs := measurableSet_Ioc)
+        (hμs := nonnegativeLebesgueMeasure_Ioc_ne_top a b) (c := (1 : ℝ)))
+  filter_upwards [coeFn_tensor (iocIndicator a b) (Z : Lp ℝ 2 P), hg]
+    with p hp hg'
+  rw [hp, hg']
+  by_cases ht : p.1 ∈ Set.Ioc a b <;> simp [ht]
+
+end LegacyTensor
+
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
+    [SecondCountableTopology W] [IsGaussian P] in
+/-- The predictable `L²` class represented by `(t, ω) ↦ 1_(a,b](t) Z(ω)` for an
+`𝓕_a`-measurable square-integrable coefficient `Z`. -/
+noncomputable def elementaryPredictable [SFinite P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) : PredictableProcessL2 𝓕 P := by
   let hZ : AEStronglyMeasurable[𝓕 a] (Z : W → ℝ) P :=
@@ -358,7 +437,7 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
 /-- Forgetting predictability, an elementary process is the product-space tensor
 `1_(a,b] ⊗ Z`. -/
-theorem elementaryPredictable_coeLp
+theorem elementaryPredictable_coeLp [SFinite P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) :
     (elementaryPredictable 𝓕 a b Z : TimeProcessL2 P) =
@@ -367,7 +446,7 @@ theorem elementaryPredictable_coeLp
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
 /-- A pointwise representative of an elementary predictable process. -/
-theorem elementaryPredictable_coeFn
+theorem elementaryPredictable_coeFn [SFinite P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) :
     (elementaryPredictable 𝓕 a b Z : ℝ≥0 × W → ℝ) =ᵐ[

@@ -3,7 +3,7 @@ Copyright (c) 2026 Ezzeri Esa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ezzeri Esa
 -/
-import LeanPool.Malliavin.Malliavin
+import LeanPool.Malliavin.ClarkOconeSolution
 
 /-!
 Manifest-driven boundary for the Clark-Ocone surface.
@@ -15,7 +15,8 @@ the manifest separately audits the production declaration's axioms.
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal Real Topology InnerProductSpace
-noncomputable section
+noncomputable
+section
 
 namespace ClarkOconeBoundary
 
@@ -26,11 +27,15 @@ variable {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
   [SecondCountableTopology W]
   {P : Measure W} [IsGaussian P]
 
+omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W]
+  [BorelSpace W] [SecondCountableTopology W] in
+/-- The standalone predictable sigma-algebra embeds in the ambient product space. -/
 theorem predictable_le_prod_boundary
     (filtration : Filtration ℝ≥0 ‹MeasurableSpace W›) :
     filtration.predictable ≤ (inferInstance : MeasurableSpace (ℝ≥0 × W)) :=
   PalomarClarkOcone.predictable_le_prod filtration
 
+/-- The standalone capstone supplies time-derivative and Itô-integral operators. -/
 theorem generated_clark_ocone_boundary
     {B : ℝ≥0 → W → ℝ}
     (hB : IsPreBrownianReal B P)
@@ -40,10 +45,10 @@ theorem generated_clark_ocone_boundary
     (hsm : ∀ t, StronglyMeasurable (B t))
     {filtration : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (hnat : filtration = Filtration.natural B hsm) :
-    ∃ (timeDerivative :
+    ∃ (_timeDerivative :
           Lp (PalomarClarkOcone.CameronMartin.Space P) 2 P →ₗᵢ[ℝ]
             PalomarClarkOcone.TimeProcessL2 P)
-        (itoIntegral :
+        (_itoIntegral :
           PalomarClarkOcone.PredictableProcessL2 filtration P →L[ℝ]
             PalomarClarkOcone.RandomL2 P),
       True :=

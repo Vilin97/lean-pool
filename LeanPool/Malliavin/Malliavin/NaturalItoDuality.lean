@@ -31,7 +31,8 @@ whose final input is this textbook statement instead of an inner-product duality
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace Malliavin
 
@@ -126,7 +127,8 @@ theorem bestNaturalItoIntegrand_firstChaos_eq_predictableProjection
   rw [hZ]
   have hcentered : centeredPartL2 (wienerIntegral hB g) = centeredWienerIntegral hB g := by
     apply Subtype.ext
-    simp only [centeredPartL2_coe, expectationL2_wienerIntegral, sub_zero, centeredWienerIntegral_coe]
+    simp only [centeredPartL2_coe, expectationL2_wienerIntegral, sub_zero,
+      centeredWienerIntegral_coe]
   rw [hcentered]
   exact bestNaturalItoIntegrand_centeredWienerIntegral_eq_predictableProjection
     hB L hL hgen hsm hnat g

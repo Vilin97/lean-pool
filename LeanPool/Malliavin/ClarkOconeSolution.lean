@@ -22,7 +22,8 @@ representation together with the Clark--Ocone identity on the closed graph.
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal Real Topology InnerProductSpace
 
-noncomputable section
+noncomputable
+section
 
 namespace PalomarClarkOcone
 
@@ -62,8 +63,7 @@ noncomputable def expectationL2
 /-- The Cameron--Martin Hilbert space. -/
 noncomputable def CameronMartin.Space
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
+    [MeasurableSpace W] [BorelSpace W]
     (P : Measure W) [IsGaussian P] : Submodule ℝ (Lp ℝ 2 P) :=
   (StrongDual.toLp P 2 -
     (Lp.constL 2 P ℝ).comp
@@ -74,9 +74,8 @@ namespace CameronMartin
 /-- The identity random variable centered by its Bochner mean. -/
 noncomputable def centeredId
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
-    (P : Measure W) [IsGaussian P] : W → W :=
+    [MeasurableSpace W]
+    (P : Measure W) : W → W :=
   id - fun _ ↦ ∫ x, x ∂P
 
 /-- The centered identity is square-integrable. -/
@@ -114,8 +113,7 @@ noncomputable def inclusion
 /-- A continuous linear functional as its centered Cameron--Martin class. -/
 noncomputable def ofDual
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
+    [MeasurableSpace W] [BorelSpace W]
     (P : Measure W) [IsGaussian P] : StrongDual ℝ W →L[ℝ] Space P :=
   (StrongDual.toLp P 2 - (Lp.constL 2 P ℝ).comp
     (ContinuousLinearMap.apply ℝ ℝ (∫ x, x ∂P))).codRestrict (Space P)
@@ -123,8 +121,7 @@ noncomputable def ofDual
 
 instance instCompleteSpaceSpace
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
+    [MeasurableSpace W] [BorelSpace W]
     (P : Measure W) [IsGaussian P] : CompleteSpace (Space P) :=
   inferInstanceAs (CompleteSpace
     ((StrongDual.toLp P 2 -
@@ -208,8 +205,7 @@ theorem memLp_mderiv
 /-- A smooth functional as a scalar `L²` class. -/
 noncomputable def toLp
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
-    [SecondCountableTopology W]
+    [MeasurableSpace W] [BorelSpace W]
     {F : W → ℝ} (P : Measure W) [IsGaussian P]
     (hF : IsSmoothBounded F) : Lp ℝ 2 P :=
   (hF.memLp P 2).toLp F
@@ -254,7 +250,55 @@ noncomputable def predictableProjection
     TimeProcessL2 P →L[ℝ] PredictableProcessL2 filtration P :=
   condExpL2 ℝ ℝ (predictable_le_prod filtration)
 
--- Elaborating the dependent sectionwise conditional-expectation statement needs extra heartbeats.
+/-- The sectionwise conditional-expectation identity for a closed-graph pair. -/
+private theorem clarkOcone_of_graphClosure
+    {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
+    [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
+    [SecondCountableTopology W]
+    {P : Measure W} [IsGaussian P] {B : ℝ≥0 → W → ℝ}
+    (hB : IsPreBrownianReal B P)
+    (coordinate : ℝ≥0 → StrongDual ℝ W)
+    (coordinate_apply : ∀ t w, B t w = coordinate t w)
+    (hgenerated : Malliavin.IsWienerGenerated B)
+    (hsm : ∀ t, StronglyMeasurable (B t))
+    {filtration : Filtration ℝ≥0 ‹MeasurableSpace W›}
+    (hnat : filtration = Filtration.natural B hsm) :
+    let T : Lp (CameronMartin.Space P) 2 P →ₗᵢ[ℝ] TimeProcessL2 P :=
+      Malliavin.timeDerivative hB coordinate coordinate_apply hgenerated
+    let I : PredictableProcessL2 filtration P →L[ℝ] RandomL2 P := by
+      change Malliavin.PredictableProcessL2 filtration P →L[ℝ] Malliavin.RandomL2 P
+      exact Malliavin.naturalItoIntegral hB hsm hnat
+    ∀ {F : RandomL2 P} {η : Lp (CameronMartin.Space P) 2 P},
+        InGraphClosure P F η →
+          ∃ G : ℝ≥0 × W → ℝ,
+            StronglyMeasurable[filtration.predictable] G ∧
+            (predictableProjection (P := P) filtration (T η) :
+                ℝ≥0 × W → ℝ) =ᵐ[nonnegativeLebesgueMeasure.prod P] G ∧
+            (∀ᵐ t ∂nonnegativeLebesgueMeasure, 0 < t →
+              (fun w ↦ G (t, w)) =ᵐ[P]
+                P[(fun w ↦ (T η : ℝ≥0 × W → ℝ) (t, w)) |
+                  filtration t]) ∧
+            F = expectationL2 F +
+              I (predictableProjection (P := P) filtration (T η)) := by
+  dsimp only
+  intro F η hgraph
+  have hgraph' : Malliavin.InGraphClosure P F η := by
+    rcases hgraph with ⟨Fk, hFk, hDk⟩
+    let Fk' : ℕ → {f : W → ℝ // Malliavin.IsSmoothBounded f} := fun k ↦
+      ⟨(Fk k).1, ⟨(Fk k).2.contDiff, (Fk k).2.bounded,
+        (Fk k).2.bounded_fderiv⟩⟩
+    refine ⟨Fk', ?_, ?_⟩
+    · exact hFk
+    · exact hDk
+  let F' : Malliavin.D12 P := ⟨F, ⟨η, hgraph'⟩⟩
+  have hderiv : Malliavin.mderivD12 P F' = η :=
+    Malliavin.mderivClosure_eq P hgraph'
+  obtain ⟨G, hG, hGae, hsection, hformula⟩ :=
+    Malliavin.naturalClarkOcone_condExp_of_generated
+      hB coordinate coordinate_apply hgenerated hsm hnat F'
+  rw [hderiv] at hGae hsection hformula
+  exact ⟨G, hG, hGae, hsection, hformula⟩
+
 /-- **Generated-space martingale representation and textbook Clark--Ocone.** There are
 a time realization of the closed Malliavin derivative and a Brownian Itô
 isometry such that every terminal `L²` variable has a stochastic-integral
@@ -299,21 +343,21 @@ theorem generated_clark_ocone
         InGraphClosure P F η →
           ∃ G : ℝ≥0 × W → ℝ,
             StronglyMeasurable[filtration.predictable] G ∧
-            (predictableProjection filtration (timeDerivative η) :
+            (predictableProjection (P := P) filtration (timeDerivative η) :
                 ℝ≥0 × W → ℝ) =ᵐ[nonnegativeLebesgueMeasure.prod P] G ∧
             (∀ᵐ t ∂nonnegativeLebesgueMeasure, 0 < t →
               (fun w ↦ G (t, w)) =ᵐ[P]
                 P[(fun w ↦ (timeDerivative η : ℝ≥0 × W → ℝ) (t, w)) |
                   filtration t]) ∧
             F = expectationL2 F +
-              itoIntegral (predictableProjection filtration (timeDerivative η)) := by
+              itoIntegral (predictableProjection (P := P) filtration (timeDerivative η)) := by
   have hgenerated : Malliavin.IsWienerGenerated B := by
     simpa [IsWienerGenerated, processMeasurableSpace,
       Malliavin.IsWienerGenerated, Malliavin.processMeasurableSpace] using generated
   let T : Lp (CameronMartin.Space P) 2 P →ₗᵢ[ℝ] TimeProcessL2 P :=
     Malliavin.timeDerivative hB coordinate coordinate_apply hgenerated
   let I : PredictableProcessL2 filtration P →L[ℝ] RandomL2 P :=
-    Malliavin.naturalItoIntegral hB hsm hnat
+    Malliavin.naturalItoIntegral (P := P) hB hsm (𝓕 := filtration) hnat
   refine ⟨T, I, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro h horth
     apply Subtype.ext
@@ -348,7 +392,7 @@ theorem generated_clark_ocone
     · simpa [U, nonnegativeLebesgueMeasure,
         Malliavin.nonnegativeLebesgueMeasure, Set.indicator] using
         (Malliavin.elementaryPredictable_coeFn filtration a b Z)
-    · change (Malliavin.naturalItoIntegral hB hsm hnat
+    · change (Malliavin.naturalItoIntegral (P := P) hB hsm (𝓕 := filtration) hnat
           (Malliavin.elementaryPredictable filtration a b Z) : W → ℝ) =ᵐ[P] _
       rw [Malliavin.naturalItoIntegral_elementaryPredictable hB hsm hnat hab Z]
       exact Malliavin.coeFn_elementaryBrownianValue hB hsm hnat hab Z
@@ -357,25 +401,9 @@ theorem generated_clark_ocone
       hB coordinate coordinate_apply hgenerated hsm hnat G
     refine ⟨U, ?_⟩
     change G = Malliavin.expectationL2 G +
-      Malliavin.naturalItoIntegral hB hsm hnat U
+      Malliavin.naturalItoIntegral (P := P) hB hsm (𝓕 := filtration) hnat U
     exact hU
-  · intro F η hgraph
-    have hgraph' : Malliavin.InGraphClosure P F η := by
-      rcases hgraph with ⟨Fk, hFk, hDk⟩
-      let Fk' : ℕ → {f : W → ℝ // Malliavin.IsSmoothBounded f} := fun k ↦
-        ⟨(Fk k).1, ⟨(Fk k).2.contDiff, (Fk k).2.bounded,
-          (Fk k).2.bounded_fderiv⟩⟩
-      refine ⟨Fk', ?_, ?_⟩
-      · exact hFk
-      · exact hDk
-    let F' : Malliavin.D12 P := ⟨F, ⟨η, hgraph'⟩⟩
-    have hderiv : Malliavin.mderivD12 P F' = η :=
-      Malliavin.mderivClosure_eq P hgraph'
-    obtain ⟨G, hG, hGae, hsection, hformula⟩ :=
-      Malliavin.naturalClarkOcone_condExp_of_generated
-        hB coordinate coordinate_apply hgenerated hsm hnat F'
-    rw [hderiv] at hGae hsection hformula
-    exact ⟨G, hG, hGae, hsection, hformula⟩
+  · exact clarkOcone_of_graphClosure hB coordinate coordinate_apply hgenerated hsm hnat
 
 end PalomarClarkOcone
 
