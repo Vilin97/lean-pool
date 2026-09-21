@@ -54,7 +54,7 @@ theorem IsCentrallyThick.exists_basis {p d K : ℕ}
   let I : Set (FpCoord p d) := (linearIndepOn_empty (ZMod p) id).extend
     (Set.empty_subset {v | 0 < w v})
   let B : Basis I (ZMod p) (FpCoord p d) := Basis.ofSpan hs
-  letI : Fintype I := Fintype.ofFinite I
+  let : Fintype I := Fintype.ofFinite I
   have hcard : Fintype.card I = d := by
     have hh := Module.finrank_eq_card_basis B
     simpa using hh.symm

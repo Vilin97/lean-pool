@@ -21,10 +21,10 @@ maps its proper points to the original decomposition.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecomposition
 
+open Classical in
 /-- Reduced nodes depend only on the bases carrying nonzero local weight,
 and are unchanged when the coordinate maps or polytopes are replaced. -/
 theorem isReducedElement_iff_sup'_localWeight {p d : ℕ} [NeZero p]
@@ -63,12 +63,14 @@ variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
 include hp
 
+open Classical in
 theorem lift_eq_centeredLift (x : Φ.flag.Node) (v : FpCoord p d) :
     lift Φ e ξ x v = FpCoord.centeredLift (map Φ e ξ x v) :=
   (lift_centered Φ e ξ hp x v).eq_of_mod_eq
     (FpCoord.isCenteredLift_centeredLift hp _)
     ((lift_mod Φ e ξ x v).trans (FpCoord.mod_centeredLift _).symm)
 
+open Classical in
 /-- The augmented supports are exactly the nonzero centered cumulative
 fibres, even though the augmented affine maps need not be surjective. -/
 theorem support_spec_centeredFibreMass (x : Φ.flag.Node)
@@ -83,12 +85,14 @@ theorem support_spec_centeredFibreMass (x : Φ.flag.Node)
     exact ⟨v, hv, (lift_centered Φ e ξ hp x v).eq_of_mod_eq hc
       ((lift_mod Φ e ξ x v).trans hmap)⟩
 
+open Classical in
 theorem centeredLift_map_mem_support (x : Φ.flag.Node) (v : FpCoord p d)
     (hv : Φ.cumulativeWeight x v ≠ 0) :
     FpCoord.centeredLift (map Φ e ξ x v) ∈ support Φ e ξ x := by
   rw [← lift_eq_centeredLift Φ e ξ hp]
   exact (mem_support Φ e ξ x _).mpr ⟨v, hv, rfl⟩
 
+open Classical in
 /-- Forgetting the additional coordinates sends a nonzero augmented local
 fibre to a nonzero original local fibre. -/
 theorem localLift_first_ne_zero (x : Φ.flag.Node)
@@ -108,12 +112,14 @@ theorem localLift_first_ne_zero (x : Φ.flag.Node)
 variable (he : Antitone e)
     (C : ∀ x, IntegerLatticeChart (support Φ e ξ x))
 
+open Classical in
 /-- The map from charted augmented coordinates to the original coordinates. -/
 noncomputable def forget (x : Φ.flag.Node) :
     IntegralAffineMap (C x).rank (Φ.flag.rank x) :=
   (IntegralAffineMap.first (Φ.flag.rank x) (e x)).comp
     ((diagram Φ e ξ hp he).chart C x)
 
+open Classical in
 theorem forget_image_polytope (x : Φ.flag.Node) :
     (forget Φ e ξ hp he C x).real ''
         (((diagram Φ e ξ hp he).chartedFlag C).polytope x).carrier =
@@ -123,6 +129,7 @@ theorem forget_image_polytope (x : Φ.flag.Node) :
   rw [Set.image_comp, (diagram Φ e ξ hp he).chart_image_polytope,
     first_image_polytope]
 
+open Classical in
 theorem forget_mem_polytope (x : Φ.flag.Node) :
     Set.MapsTo (forget Φ e ξ hp he C x).real
       (((diagram Φ e ξ hp he).chartedFlag C).polytope x).carrier
@@ -131,6 +138,7 @@ theorem forget_mem_polytope (x : Φ.flag.Node) :
   rw [← forget_image_polytope Φ e ξ hp he C x]
   exact ⟨q, hq, rfl⟩
 
+open Classical in
 theorem forget_transition {x y : Φ.flag.Node} (h : x ≤ y)
     (q : RealCoord (C x).rank) :
     (forget Φ e ξ hp he C y).real
@@ -148,6 +156,7 @@ variable [Fact p.Prime]
     (hmod : ∀ x, Function.Injective ((IntegralAffineMap.ofIntAffineMap (C x).map).modp p))
     (hcenter : ∀ x q, q ∈ (C x).coordinateSupport → IsCenteredLift p q)
 
+open Classical in
 /-- The new represented space is the cumulative support span and is
 contained in the old represented space. -/
 theorem representation_space_le_original (x : Φ.flag.Node) :
@@ -155,6 +164,7 @@ theorem representation_space_le_original (x : Φ.flag.Node) :
   change affineSpan (ZMod p) {v | Φ.cumulativeWeight x v ≠ 0} ≤ _
   exact affineSpan_le.mpr (fun v hv ↦ Φ.originalWeights.cumulative_supported x v hv)
 
+open Classical in
 /-- The modular chart retracts to the augmented affine map on the full
 represented affine space, not only on its nonzero cumulative atoms. -/
 theorem chart_representation_map (x : Φ.flag.Node) (v : FpCoord p d)
@@ -168,6 +178,7 @@ theorem chart_representation_map (x : Φ.flag.Node) (v : FpCoord p d)
   exact (diagram Φ e ξ hp he).chart_coordinateMap C Φ.localWeight (map Φ e ξ) hmod
     (fun y ↦ (support_mod Φ e ξ y).symm) x w hw
 
+open Classical in
 theorem representation_map_eq_iff (x : Φ.flag.Node) (v w : FpCoord p d)
     (hv : v ∈ (representation Φ e ξ hp he C hmod).space x)
     (hw : w ∈ (representation Φ e ξ hp he C hmod).space x) :
@@ -182,6 +193,7 @@ theorem representation_map_eq_iff (x : Φ.flag.Node) (v w : FpCoord p d)
     exact congrArg (affineLeftInverse
       ((IntegralAffineMap.ofIntAffineMap (C x).map).modp p)) heq
 
+open Classical in
 /-- The forgotten new coordinate is exactly the original coordinate on
 the new represented affine space. -/
 theorem forget_representation_map (x : Φ.flag.Node) (v : FpCoord p d)
@@ -192,6 +204,7 @@ theorem forget_representation_map (x : Φ.flag.Node) (v : FpCoord p d)
     (chart_representation_map Φ e ξ hp he C hmod x v hv)
   exact h.trans (Coord.first_append _ _ _)
 
+open Classical in
 /-- The charted augmented flag has the exact cumulative support required by
 the decomposition constructor. -/
 noncomputable def supportData : FlagDecompositionRaw.SupportData
@@ -204,38 +217,46 @@ noncomputable def supportData : FlagDecompositionRaw.SupportData
   transition_support h _q hq := (diagram Φ e ξ hp he).chartedTransition_support C h hq
   local_supported := local_supported Φ e ξ hp he C hmod
 
+open Classical in
 /-- The actual augmented and minimalized decomposition, with unchanged
 nodes and unchanged local weights. -/
 noncomputable abbrev decomposition : FlagDecomposition p d f :=
   (supportData Φ e ξ hp he C hmod hcenter).decomposition hp f Φ.retained_le
 
+open Classical in
 theorem decomposition_isMinimal : (decomposition Φ e ξ hp he C hmod hcenter).IsMinimal := by
   intro x
   exact ⟨rfl, (C x).coordinateSupport_affineIntSpans⟩
 
+open Classical in
 @[simp]
 theorem decomposition_retainedWeight :
     (decomposition Φ e ξ hp he C hmod hcenter).retainedWeight = Φ.retainedWeight := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_retainedMass :
     (decomposition Φ e ξ hp he C hmod hcenter).retainedMass = Φ.retainedMass := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_cumulativeWeight (x : Φ.flag.Node) :
     (decomposition Φ e ξ hp he C hmod hcenter).cumulativeWeight x =
       Φ.cumulativeWeight x := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_localWeight (x : Φ.flag.Node) :
     (decomposition Φ e ξ hp he C hmod hcenter).localWeight x = Φ.localWeight x := rfl
 
+open Classical in
 @[simp]
 theorem card_decomposition :
     @Fintype.card (decomposition Φ e ξ hp he C hmod hcenter).flag.Node
         (decomposition Φ e ξ hp he C hmod hcenter).flag.nodeFintype =
       Fintype.card Φ.flag.Node := rfl
 
+open Classical in
 /-- The new centered cumulative mass is the old augmented centered mass at
 the image under the integer chart. -/
 theorem decomposition_hat (x : Φ.flag.Node) (q : IntCoord (C x).rank) :
@@ -245,6 +266,7 @@ theorem decomposition_hat (x : Φ.flag.Node) (q : IntCoord (C x).rank) :
   (C x).centeredFibreMass_rechart (map Φ e ξ x) (hmod x) hp (hcenter x)
     (Φ.cumulativeWeight x) (centeredLift_map_mem_support Φ e ξ hp x) q
 
+open Classical in
 theorem decomposition_localLift (x : Φ.flag.Node) (q : IntCoord (C x).rank) :
     (decomposition Φ e ξ hp he C hmod hcenter).localLift x q =
       FlagDecompositionRaw.centeredFibreMass (Φ.localWeight x)
@@ -254,6 +276,7 @@ theorem decomposition_localLift (x : Φ.flag.Node) (q : IntCoord (C x).rank) :
       (ne_of_gt ((Nat.pos_of_ne_zero hv).trans_le
         (FlagDecompositionRaw.localWeight_le_cumulative Φ.localWeight x v)))) q
 
+open Classical in
 /-- Changing coordinates leaves the set of reduced nodes exactly unchanged. -/
 theorem decomposition_isReducedElement_iff (x : Φ.flag.Node) :
     (decomposition Φ e ξ hp he C hmod hcenter).IsReducedElement x ↔
@@ -261,10 +284,12 @@ theorem decomposition_isReducedElement_iff (x : Φ.flag.Node) :
   rw [(decomposition Φ e ξ hp he C hmod hcenter).isReducedElement_iff_sup'_localWeight hp,
     Φ.isReducedElement_iff_sup'_localWeight hp]
 
+open Classical in
 theorem decomposition_isReduced_iff :
     (decomposition Φ e ξ hp he C hmod hcenter).IsReduced ↔ Φ.IsReduced :=
   forall_congr' (decomposition_isReducedElement_iff Φ e ξ hp he C hmod hcenter)
 
+open Classical in
 /-- Completeness of an old element persists when the coordinate fibres are
 refined by the additional affine directions. -/
 theorem decomposition_isCompleteElement (x : Φ.flag.Node) (t : ℕ) (δ : ℝ)
@@ -279,6 +304,7 @@ theorem decomposition_isCompleteElement (x : Φ.flag.Node) (t : ℕ) (δ : ℝ)
     ← forget_representation_map Φ e ξ hp he C hmod x w hw]
   exact congrArg ((forget Φ e ξ hp he C x).modp p) heq
 
+open Classical in
 /-- Bounds for the slab block and the chart inverse bound every integer
 point of the new polytope. -/
 theorem decomposition_isKBounded {K L B : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K)
@@ -290,12 +316,14 @@ theorem decomposition_isKBounded {K L B : Φ.flag.Node → ℕ} (hK : Φ.IsKBoun
   (diagram Φ e ξ hp he).charted_polytope_bound C
     ((diagram Φ e ξ hp he).polytope_bound (support_bound Φ e ξ hp hK hL)) hC
 
+open Classical in
 /-- Project a new flag point by forgetting the augmented coordinate block. -/
 noncomputable def forwardPoint
     (q : (decomposition Φ e ξ hp he C hmod hcenter).flag.Point) : Φ.flag.Point :=
   q.map (SupHom.id _) (fun x ↦ (forget Φ e ξ hp he C x).real)
     (forget_mem_polytope Φ e ξ hp he C)
 
+open Classical in
 theorem forwardPoint_mem_omegaZero
     {q : (decomposition Φ e ξ hp he C hmod hcenter).flag.Point}
     (hq : q ∈ (decomposition Φ e ξ hp he C hmod hcenter).omegaZero) :
@@ -309,6 +337,7 @@ theorem forwardPoint_mem_omegaZero
     change (decomposition Φ e ξ hp he C hmod hcenter).localLift q.base z ≠ 0 at hw
     rwa [decomposition_localLift] at hw
 
+open Classical in
 /-- Forgetting the slab block is a subdivision map to the original flag. -/
 noncomputable def subdivisionMap :
     SubdivisionMap Φ (decomposition Φ e ξ hp he C hmod hcenter) :=
@@ -318,6 +347,7 @@ noncomputable def subdivisionMap :
     (fun _ hq ↦ forwardPoint_mem_omegaZero Φ e ξ hp he C hmod hcenter hq)
 
 omit [Fact p.Prime] hmod hcenter in
+open Classical in
 theorem face_preimage_nonempty (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face) :
     ((((diagram Φ e ξ hp he).chartedFlag C).polytope x).carrier ∩
       (forget Φ e ξ hp he C x).real ⁻¹' Γ.carrier).Nonempty := by
@@ -327,6 +357,7 @@ theorem face_preimage_nonempty (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Fac
   obtain ⟨r, hr, rfl⟩ := hpoly
   exact ⟨r, hr, hq⟩
 
+open Classical in
 /-- Previously realized faces remain realized after pulling back along the
 old-coordinate projection. -/
 theorem decomposition_isRealizedFace (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face)

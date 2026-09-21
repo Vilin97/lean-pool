@@ -19,12 +19,12 @@ bounded by the cumulative weight, including the local summand.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ
 
 namespace FlagDecompositionRaw
 
+open Classical in
 /-- The centered lift of a weight through one coordinate map. -/
 noncomputable def centeredFibreMass {p d n : ℕ} [NeZero p]
     (w : FpCoord p d → ℕ) (φ : FpCoord p d → FpCoord p n)
@@ -32,6 +32,7 @@ noncomputable def centeredFibreMass {p d n : ℕ} [NeZero p]
   classical
   exact if IsCenteredLift p q then affineFibreMass w φ (q.mod p) else 0
 
+open Classical in
 theorem centeredFibreMass_eq_sum {p d n : ℕ} [NeZero p]
     (w : FpCoord p d → ℕ) (φ : FpCoord p d → FpCoord p n) (q : IntCoord n) :
     centeredFibreMass w φ q =
@@ -45,6 +46,7 @@ end FlagDecompositionRaw
 
 namespace IntegerLatticeChart
 
+open Classical in
 /-- Express a finite-field representation map in the chart coordinates. -/
 noncomputable def rechartMap {p d n : ℕ} [Fact p.Prime]
     {S : Finset (IntCoord n)} (C : IntegerLatticeChart S)
@@ -59,6 +61,7 @@ namespace FlagDecomposition
 variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
 
 omit [Fact p.Prime] in
+open Classical in
 /-- Every ambient atom carrying cumulative mass lifts into the stored support. -/
 theorem centeredLift_mem_liftedSupport (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.flag.Node) {v : FpCoord p d} (hv : Φ.cumulativeWeight x v ≠ 0) :
@@ -77,6 +80,7 @@ theorem centeredLift_mem_liftedSupport (Φ : FlagDecomposition p d f) (hp : Odd 
         (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ v)
   exact ne_of_gt ((Nat.pos_of_ne_zero hv).trans_le hle)
 
+open Classical in
 /-- On a supported atom the new finite-field coordinate is the reduction of
 the inverse chart coordinate of its old centered lift. -/
 theorem rechartMap_eq_coordinates_mod (Φ : FlagDecomposition p d f) (hp : Odd p)
@@ -97,6 +101,7 @@ theorem rechartMap_eq_coordinates_mod (Φ : FlagDecomposition p d f) (hp : Odd p
   conv_lhs => rw [← hchart]
   exact affineLeftInverse_apply _ hmod _
 
+open Classical in
 /-- Centered old and new fibre conditions agree on every supported atom,
 including when the displayed test coordinate is outside a centered box. -/
 theorem rechart_centered_fibre_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
@@ -126,6 +131,7 @@ theorem rechart_centered_fibre_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
     rw [hqcoord]
     exact ⟨hc, hnew⟩
 
+open Classical in
 /-- Exact transport of any centered lifted weight dominated by the old
 cumulative weight. The equality holds at every integer coordinate. -/
 theorem centeredFibreMass_rechart (Φ : FlagDecomposition p d f) (hp : Odd p)
@@ -147,6 +153,7 @@ theorem centeredFibreMass_rechart (Φ : FlagDecomposition p d f) (hp : Odd p)
     have heq := Φ.rechart_centered_fibre_iff hp x C hmod hcenter hvold q
     simp only [heq]
 
+open Classical in
 /-- Cumulative lifted mass is unchanged after expressing the support in its
 own integer lattice coordinates. -/
 theorem hat_rechart (Φ : FlagDecomposition p d f) (hp : Odd p)
@@ -157,6 +164,7 @@ theorem hat_rechart (Φ : FlagDecomposition p d f) (hp : Odd p)
       (C.rechartMap (Φ.representation.map x)) q = Φ.hat x (C.map q) :=
   Φ.centeredFibreMass_rechart hp x C hmod hcenter (Φ.cumulativeWeight x) le_rfl q
 
+open Classical in
 /-- The same exact transport holds for the local lift defining proper-point
 generators, not just for cumulative mass. -/
 theorem localLift_rechart (Φ : FlagDecomposition p d f) (hp : Odd p)
@@ -168,6 +176,7 @@ theorem localLift_rechart (Φ : FlagDecomposition p d f) (hp : Odd p)
   Φ.centeredFibreMass_rechart hp x C hmod hcenter (Φ.localWeight x)
     (Φ.localWeight_le_cumulativeWeight x) q
 
+open Classical in
 /-- The support transported by the chart is exactly the nonzero support of
 the recharted cumulative lift. -/
 theorem coordinateSupport_spec_rechart (Φ : FlagDecomposition p d f) (hp : Odd p)

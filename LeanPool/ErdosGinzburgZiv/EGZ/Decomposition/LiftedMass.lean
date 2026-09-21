@@ -16,13 +16,13 @@ can be computed directly on the ambient finite-field space.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f)
 
+open Classical in
 theorem liftedMassOn_eq_natMassOn (hp : Odd p) (x : Φ.flag.Node)
     (S : Set (RealCoord (Φ.flag.rank x))) :
     Φ.liftedMassOn x S = natMassOn (Φ.cumulativeWeight x)
@@ -71,6 +71,7 @@ theorem liftedMassOn_eq_natMassOn (hp : Odd p) (x : Φ.flag.Node)
       simp only [hneq, and_false, ite_false]
     · exact fun h ↦ (h hq).elim
 
+open Classical in
 theorem liftedMassOn_mono (x : Φ.flag.Node) {S T : Set (RealCoord (Φ.flag.rank x))}
     (h : S ⊆ T) : Φ.liftedMassOn x S ≤ Φ.liftedMassOn x T := by
   apply Finset.sum_le_sum

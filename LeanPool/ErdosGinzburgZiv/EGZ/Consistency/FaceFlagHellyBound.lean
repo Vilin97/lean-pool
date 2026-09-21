@@ -164,7 +164,6 @@ theorem FiniteHullModel.nonvertex_intrinsic_combination
         simp [faceIndices, hyF]
       change 0 < weight i
       simp only [weight, faceWeight, hi, ite_eq_left]
-      change (0 : ℝ) < (faceIndices.card : ℝ)⁻¹
       apply inv_pos.mpr
       exact_mod_cast (Finset.card_pos.mpr hfaceIndices)
     refine ⟨{
@@ -235,7 +234,6 @@ theorem FiniteHullModel.nonvertex_intrinsic_combination
       have hi : i ∈ faceIndices := by simp [faceIndices, hyF]
       have hfacepos : 0 < faceWeight i := by
         simp only [faceWeight, hi, ite_eq_left]
-        change (0 : ℝ) < (faceIndices.card : ℝ)⁻¹
         apply inv_pos.mpr
         exact_mod_cast (Finset.card_pos.mpr hfaceIndices)
       exact add_pos_of_pos_of_nonneg (mul_pos ha hfacepos)

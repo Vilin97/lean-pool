@@ -106,6 +106,7 @@ theorem cutoff_le_square (E : s.Event) : E.cutoff ≤ (d + 1) ^ 2 := by
 
 end Event
 
+omit [Fact (Nat.Prime p)] in
 theorem exists_valid_event (ε δ : ℝ) (g : ℕ → ℕ) (h : ¬ s.Finished ε δ g) :
     ∃ E : s.Event, E.Valid ε δ g := by
   classical

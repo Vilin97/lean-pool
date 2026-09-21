@@ -34,8 +34,8 @@ theorem IsLeastFaceAt.mem_relInterior {d : ℕ} {P : RationalPolytope d}
   let qA : A := ⟨q, by
     dsimp [A]
     exact subset_affineSpan ℝ F.carrier hqF⟩
-  letI : Nonempty A := ⟨qA⟩
-  letI : Nonempty F.carrier := ⟨⟨q, hqF⟩⟩
+  let : Nonempty A := ⟨qA⟩
+  let : Nonempty F.carrier := ⟨⟨q, hqF⟩⟩
   let C : Set A := ((↑) : A → RealCoord d) ⁻¹' F.carrier
   have hCint : (interior C).Nonempty := by
     obtain ⟨r, hr⟩ := F.nonempty.intrinsicInterior F.convex

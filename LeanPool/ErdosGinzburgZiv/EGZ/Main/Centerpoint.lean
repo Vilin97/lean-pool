@@ -20,12 +20,12 @@ integer transitions identify its upper masses with cumulative lifted mass.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ
 
 namespace ConvexFlag
 
+open Classical in
 theorem flagCenterpoint_fintype {F : ConvexFlag} (Ω : F.ProperPointSet)
     {I : Type*} [Fintype I] (points : I → F.Point)
     (hproper : ∀ i, points i ∈ Ω) (hintegral : ∀ i, (points i).IsIntegral)
@@ -54,9 +54,11 @@ namespace FlagDecomposition
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f)
 
+open Classical in
 /-- The nonzero local ambient atoms, with node labels retained. -/
 abbrev LocalAtom := {a : Φ.flag.Node × FpCoord p d // Φ.localWeight a.1 a.2 ≠ 0}
 
+open Classical in
 theorem localLift_centeredLift_ne_zero (hp : Odd p) (x : Φ.flag.Node)
     (v : FpCoord p d) (hv : Φ.localWeight x v ≠ 0) :
     Φ.localLift x (FpCoord.centeredLift (Φ.representation.map x v)) ≠ 0 := by
@@ -71,21 +73,25 @@ theorem localLift_centeredLift_ne_zero (hp : Odd p) (x : Φ.flag.Node)
       then Φ.localWeight x w else 0)
     (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ v)
 
+open Classical in
 def localAtomPoint (hp : Odd p) (a : Φ.LocalAtom) : Φ.flag.Point where
   base := a.1.1
   val := (FpCoord.centeredLift (Φ.representation.map a.1.1 a.1.2)).real
   val_mem := Φ.mem_polytope_of_localLift_ne_zero _ _
     (Φ.localLift_centeredLift_ne_zero hp _ _ a.2)
 
+open Classical in
 theorem localAtomPoint_proper (hp : Odd p) (a : Φ.LocalAtom) :
     Φ.localAtomPoint hp a ∈ Φ.properPoints :=
   ConvexFlag.subset_convexHull Φ.flag Φ.omegaZero
     ⟨_, rfl, Φ.localLift_centeredLift_ne_zero hp _ _ a.2⟩
 
+open Classical in
 theorem localAtomPoint_integral (hp : Odd p) (a : Φ.LocalAtom) :
     (Φ.localAtomPoint hp a).IsIntegral :=
   (Φ.representation.lattice_eq_standard _ _).mpr ⟨_, rfl⟩
 
+open Classical in
 theorem sum_localAtom_weight : (∑ a : Φ.LocalAtom, Φ.localWeight a.1.1 a.1.2) = Φ.retainedMass := by
   have hz : (∑ a : {a : Φ.flag.Node × FpCoord p d // ¬ Φ.localWeight a.1 a.2 ≠ 0},
       Φ.localWeight a.1.1 a.1.2) = 0 := by
@@ -100,6 +106,7 @@ theorem sum_localAtom_weight : (∑ a : Φ.LocalAtom, Φ.localWeight a.1.1 a.1.2
   unfold retainedMass retainedWeight FlagDecompositionRaw.retainedWeight natMass
   exact Finset.sum_comm
 
+open Classical in
 theorem localAtomPoint_coord (hp : Odd p) (a : Φ.LocalAtom) {x : Φ.flag.Node}
     (h : a.1.1 ≤ x) :
     (Φ.localAtomPoint hp a).coord h =
@@ -113,6 +120,7 @@ theorem localAtomPoint_coord (hp : Odd p) (a : Φ.LocalAtom) {x : Φ.flag.Node}
   change (Φ.flag.transition h).real z.real = _
   rw [(Φ.flag.transition h).real_integer, ← FpCoord.centeredLift_mod hc, hm]
 
+open Classical in
 /-- Grouping local ambient atoms below a node gives exactly its cumulative
 lifted mass on any set of real coordinates. -/
 theorem sum_localAtom_on (hp : Odd p) (x : Φ.flag.Node)
@@ -141,6 +149,7 @@ theorem sum_localAtom_on (hp : Odd p) (x : Φ.flag.Node)
   · simp only [w, hv, and_true, Set.mem_ofPred_eq, ite_true]
   · simp only [w, hv, and_false, Set.mem_ofPred_eq, ite_false, Finset.sum_const_zero]
 
+open Classical in
 /-- The flag centerpoint has an integral base coordinate, and every closed
 halfspace through it carries at least retained mass divided by the flag's
 Helly constant in the cumulative lift at that base. -/
@@ -181,6 +190,7 @@ theorem exists_cumulative_centerpoint_helly (hp : Odd p) :
     exact_mod_cast hmass
   exact h.trans_eq hmassR
 
+open Classical in
 /-- Proposition 7.1 converts the cumulative centerpoint bound to the hollow
 constant of the original finite-field space. -/
 theorem exists_cumulative_centerpoint (hp : p.Prime) (hodd : Odd p) :
@@ -196,6 +206,7 @@ theorem exists_cumulative_centerpoint (hp : p.Prime) (hodd : Odd p) :
   exact div_le_div_of_nonneg_left (Nat.cast_nonneg _) (by exact_mod_cast hH)
     (by exact_mod_cast Φ.propositionSevenOne hp)
 
+open Classical in
 /-- The constant zero functional detects the entire cumulative mass,
 including when the base lattice has dimension zero. -/
 theorem cumulativeMass_lower_of_halfspace_lower (hodd : Odd p)
@@ -208,6 +219,7 @@ theorem cumulativeMass_lower_of_halfspace_lower (hodd : Odd p)
   rw [Φ.liftedMassOn_eq_natMassOn hodd] at hz
   simpa only [natMassOn, Set.mem_ofPred_eq, Set.mem_univ, ite_true, natMass] using hz
 
+open Classical in
 theorem isLargeElement_of_halfspace_lower (hodd : Odd p)
     (q : Φ.flag.Point) {ε : ℝ}
     (h : ∀ ξ : RealCoord (Φ.flag.rank q.base) →ᵃ[ℝ] ℝ,
@@ -216,6 +228,7 @@ theorem isLargeElement_of_halfspace_lower (hodd : Odd p)
   rw [Φ.isLargeElement_iff_natMass hodd]
   exact Φ.cumulativeMass_lower_of_halfspace_lower hodd q h
 
+open Classical in
 /-- The cumulative centerpoint lies at a node large at inverse-hollow scale. -/
 theorem exists_cumulative_centerpoint_large (hp : p.Prime) (hodd : Odd p) :
     ∃ q : Φ.flag.Point, q ∈ Φ.omega ∧ q.IsIntegral ∧

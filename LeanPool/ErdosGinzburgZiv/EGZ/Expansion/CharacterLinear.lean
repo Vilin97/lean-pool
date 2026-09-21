@@ -24,6 +24,7 @@ noncomputable def scalarCharacter (χ : AddChar (FpCoord p d) ℂ) (a : FpCoord 
     AddChar (ZMod p) ℂ :=
   χ.compAddMonoidHom (LinearMap.toSpanSingleton (ZMod p) (FpCoord p d) a).toAddMonoidHom
 
+omit [NeZero p] in
 @[simp] theorem scalarCharacter_apply (χ : AddChar (FpCoord p d) ℂ)
     (a : FpCoord p d) (z : ZMod p) : scalarCharacter χ a z = χ (z • a) := rfl
 

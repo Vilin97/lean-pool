@@ -15,7 +15,6 @@ old support. The original finite-field affine map need not be surjective.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ
 
@@ -23,6 +22,7 @@ namespace FlagDecompositionRaw
 
 variable {p d n : ℕ} [NeZero p]
 
+open Classical in
 theorem centeredFibreMass_ne_zero_iff (w : FpCoord p d → ℕ)
     (φ : FpCoord p d → FpCoord p n) (q : IntCoord n) :
     centeredFibreMass w φ q ≠ 0 ↔ IsCenteredLift p q ∧
@@ -46,6 +46,7 @@ theorem centeredFibreMass_ne_zero_iff (w : FpCoord p d → ℕ)
     simp only [ne_eq, not_true_eq_false, false_iff, not_and]
     exact fun h ↦ (hc h).elim
 
+open Classical in
 theorem centeredLift_mem_of_support_spec (hp : Odd p)
     (w : FpCoord p d → ℕ) (φ : FpCoord p d → FpCoord p n)
     (S : Finset (IntCoord n))
@@ -67,6 +68,7 @@ variable {p d n : ℕ} [NeZero p] [Fact p.Prime] {S : Finset (IntCoord n)}
 include hmod
 
 omit [NeZero p] in
+open Classical in
 theorem rechartMap_eq_coordinates_mod_of_mem {v : FpCoord p d}
     (hv : FpCoord.centeredLift (φ v) ∈ S) :
     C.rechartMap φ v = (C.coordinates (FpCoord.centeredLift (φ v))).mod p := by
@@ -79,6 +81,7 @@ theorem rechartMap_eq_coordinates_mod_of_mem {v : FpCoord p d}
   conv_lhs => rw [← hchart]
   exact affineLeftInverse_apply _ hmod _
 
+open Classical in
 theorem rechart_centered_fibre_iff (hp : Odd p)
     (hcenter : ∀ q ∈ C.coordinateSupport, IsCenteredLift p q)
     {v : FpCoord p d} (hv : FpCoord.centeredLift (φ v) ∈ S) (q : IntCoord C.rank) :
@@ -103,6 +106,7 @@ theorem rechart_centered_fibre_iff (hp : Odd p)
     rw [hqcoord]
     exact ⟨hc, hnew⟩
 
+open Classical in
 /-- Exact mass transport for arbitrary supported weights and an affine map
 which is not required to be surjective. -/
 theorem centeredFibreMass_rechart (hp : Odd p)
@@ -120,6 +124,7 @@ theorem centeredFibreMass_rechart (hp : Odd p)
   · have heq := C.rechart_centered_fibre_iff φ hmod hp hcenter (hwS v hv) q
     simp only [heq]
 
+open Classical in
 /-- If the old support is exactly the nonzero centered fibre support, its
 chart-coordinate support is exactly the new nonzero centered fibre support. -/
 theorem coordinateSupport_spec_rechart (hp : Odd p)

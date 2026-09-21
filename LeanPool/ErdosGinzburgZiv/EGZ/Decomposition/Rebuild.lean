@@ -16,12 +16,12 @@ flag decomposition, including visibility of every face.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecompositionRaw
 
 variable {p d : ℕ} [NeZero p] {F : ConvexFlag}
 
+open Classical in
 /-- The algebraic conditions needed to rebuild the support polytopes. -/
 structure RebuildData (R : FpRepresentation p d F)
     (pieces : F.Node → FpCoord p d → ℕ) (f : FpCoord p d → ℕ) where
@@ -44,35 +44,44 @@ variable {R : FpRepresentation p d F} {pieces : F.Node → FpCoord p d → ℕ}
 
 include D
 
+open Classical in
 /-- A node is active when it has a nonzero local contribution below it. -/
 def Active (_D : RebuildData R pieces f) (x : F.Node) : Prop :=
   ∃ y, y ≤ x ∧ ∃ v, pieces y v ≠ 0
 
+open Classical in
 theorem active_mono {x y : F.Node} (h : x ≤ y) (hx : D.Active x) :
     D.Active y := by
   obtain ⟨z, hzx, v, hv⟩ := hx
   exact ⟨z, hzx.trans h, v, hv⟩
 
+open Classical in
 theorem active_top : D.Active ⊤ := by
   obtain ⟨x, v, hv⟩ := D.nonzero
   exact ⟨x, le_top, v, hv⟩
 
+open Classical in
 abbrev ActiveNode := {x : F.Node // D.Active x}
 
+open Classical in
 noncomputable instance : Fintype D.ActiveNode := Subtype.fintype _
 
+open Classical in
 instance : SemilatticeSup D.ActiveNode :=
   Subtype.semilatticeSup fun _ _ hx _ ↦ D.active_mono le_sup_left hx
 
+open Classical in
 instance : OrderTop D.ActiveNode where
   top := ⟨⊤, D.active_top⟩
   le_top _ := le_top
 
+open Classical in
 theorem pieces_eq_zero_of_not_active {x : F.Node} (hx : ¬ D.Active x)
     (v : FpCoord p d) : pieces x v = 0 := by
   by_contra hv
   exact hx ⟨x, le_rfl, v, hv⟩
 
+open Classical in
 theorem cumulative_pos_of_active {x : F.Node} (hx : D.Active x) :
     ∃ v, cumulativeWeight pieces x v ≠ 0 := by
   obtain ⟨y, hyx, v, hv⟩ := hx
@@ -82,6 +91,7 @@ theorem cumulative_pos_of_active {x : F.Node} (hx : D.Active x) :
     (f := fun y ↦ if y ≤ x then pieces y v else 0)
     (fun y _ ↦ Nat.zero_le _) (Finset.mem_univ y)
 
+open Classical in
 theorem hatSupport_nonempty {x : F.Node} (hx : D.Active x) :
     (hatSupport R pieces x).Nonempty := by
   obtain ⟨v, hv⟩ := D.cumulative_pos_of_active hx
@@ -96,6 +106,7 @@ theorem hatSupport_nonempty {x : F.Node} (hx : D.Active x) :
     (f := fun w ↦ if R.map x w = R.map x v then cumulativeWeight pieces x w else 0)
     (fun w _ ↦ Nat.zero_le _) (Finset.mem_univ v)
 
+open Classical in
 theorem active_of_localLift_ne_zero {x : F.Node} {z : IntCoord (F.rank x)}
     (hz : localLift R pieces x z ≠ 0) : D.Active x := by
   by_contra hx
@@ -103,6 +114,8 @@ theorem active_of_localLift_ne_zero {x : F.Node} {z : IntCoord (F.rank x)}
   unfold localLift affineFibreMass
   simp [D.pieces_eq_zero_of_not_active hx]
 
+omit D in
+open Classical in
 theorem localLift_le_hat (x : F.Node) (z : IntCoord (F.rank x)) :
     localLift R pieces x z ≤ hat R pieces x z := by
   unfold localLift hat
@@ -118,6 +131,7 @@ theorem localLift_le_hat (x : F.Node) (z : IntCoord (F.rank x)) :
     · exact le_rfl
   · exact le_rfl
 
+open Classical in
 /-- The new polytope has exactly the surviving cumulative support as generators. -/
 noncomputable def polytope (x : D.ActiveNode) : RationalPolytope (F.rank x.1) :=
   RationalPolytope.ofFinsetConvexHull ((hatSupport R pieces x.1).image IntCoord.real)
@@ -128,6 +142,7 @@ noncomputable def polytope (x : D.ActiveNode) : RationalPolytope (F.rank x.1) :=
       intro i
       exact ⟨(z i : ℚ), by simp⟩)
 
+open Classical in
 @[simp]
 theorem polytope_carrier (x : D.ActiveNode) :
     (D.polytope x).carrier =
@@ -136,14 +151,16 @@ theorem polytope_carrier (x : D.ActiveNode) :
   simp only [polytope, RationalPolytope.ofFinsetConvexHull_carrier,
     Finset.coe_image]
 
+open Classical in
 theorem mem_polytope_of_localLift_ne_zero (x : D.ActiveNode)
     (z : IntCoord (F.rank x.1)) (hz : localLift R pieces x.1 z ≠ 0) :
     z.real ∈ (D.polytope x).carrier := by
   rw [D.polytope_carrier]
   apply subset_convexHull ℝ
   exact ⟨z, (mem_hatSupport R pieces x.1 z).mpr
-    (ne_of_gt ((Nat.pos_of_ne_zero hz).trans_le (D.localLift_le_hat x.1 z))), rfl⟩
+    (ne_of_gt ((Nat.pos_of_ne_zero hz).trans_le (localLift_le_hat (R := R) (pieces := pieces) x.1 z))), rfl⟩
 
+open Classical in
 theorem transition_mem {x y : D.ActiveNode} (h : x ≤ y) {q : RealCoord (F.rank x.1)}
     (hq : q ∈ (D.polytope x).carrier) :
     (F.transition h).real q ∈ (D.polytope y).carrier := by
@@ -157,6 +174,7 @@ theorem transition_mem {x y : D.ActiveNode} (h : x ≤ y) {q : RealCoord (F.rank
   exact ⟨(F.transition h).integer z, (mem_hatSupport R pieces y.1 _).mpr
     (D.transition_hat_nonzero h z ((mem_hatSupport R pieces x.1 z).mp hz)), rfl⟩
 
+open Classical in
 /-- Retain active nodes and rebuild each support hull. -/
 noncomputable abbrev flag : ConvexFlag where
   Node := D.ActiveNode
@@ -169,6 +187,7 @@ noncomputable abbrev flag : ConvexFlag where
   transition_refl x := F.transition_refl x.1
   transition_trans hxy hyz := F.transition_trans hxy hyz
 
+open Classical in
 noncomputable def representation : FpRepresentation p d D.flag where
   space x := R.space x.1
   map x := R.map x.1
@@ -177,6 +196,7 @@ noncomputable def representation : FpRepresentation p d D.flag where
   compatible h := R.compatible h
   lattice_eq_standard x := R.lattice_eq_standard x.1
 
+open Classical in
 theorem sum_activeNode_eq (v : FpCoord p d) :
     ∑ x : D.ActiveNode, pieces x.1 v = ∑ x, pieces x v := by
   have h := Fintype.sum_subtype_add_sum_subtype D.Active (fun x ↦ pieces x v)
@@ -186,6 +206,7 @@ theorem sum_activeNode_eq (v : FpCoord p d) :
     exact D.pieces_eq_zero_of_not_active x.2 v
   simpa only [hz, add_zero] using h
 
+open Classical in
 theorem cumulativeWeight_activeNode (x : D.ActiveNode) (v : FpCoord p d) :
     cumulativeWeight (F := D.flag) (fun y ↦ pieces y.1) x v =
       cumulativeWeight pieces x.1 v := by
@@ -197,6 +218,7 @@ theorem cumulativeWeight_activeNode (x : D.ActiveNode) (v : FpCoord p d) :
     simp [D.pieces_eq_zero_of_not_active y.2 v]
   simpa only [cumulativeWeight, hz, add_zero, Subtype.coe_le_coe] using h
 
+open Classical in
 theorem hat_activeNode (x : D.ActiveNode) (z : IntCoord (F.rank x.1)) :
     hat D.representation (fun y ↦ pieces y.1) x z = hat R pieces x.1 z := by
   unfold hat
@@ -205,6 +227,7 @@ theorem hat_activeNode (x : D.ActiveNode) (z : IntCoord (F.rank x.1)) :
   rw [hw]
   rfl
 
+open Classical in
 /-- Every face of a rebuilt support hull contains a projection of a surviving
 local generator, so it remains visible to the proper-point set. -/
 theorem faces_visible (x : D.ActiveNode) (Γ : (D.polytope x).Face) :
@@ -222,6 +245,7 @@ theorem faces_visible (x : D.ActiveNode) (Γ : (D.polytope x).Face) :
     rw [(F.transition hyx).real_integer, hwz]
     exact hq'.2
 
+open Classical in
 /-- Rebuild a decomposition with precisely the surviving mass at active
 nodes.  The constructor proves all flag and visibility invariants. -/
 noncomputable abbrev decomposition : FlagDecomposition p d f where
@@ -241,20 +265,24 @@ noncomputable abbrev decomposition : FlagDecomposition p d f where
   polytope_eq_liftedSupport x := D.polytope_carrier x
   faces_visible := D.faces_visible
 
+open Classical in
 @[simp]
 theorem decomposition_cumulativeWeight (x : D.ActiveNode) :
     D.decomposition.cumulativeWeight x = cumulativeWeight pieces x.1 :=
   funext (D.cumulativeWeight_activeNode x)
 
+open Classical in
 @[simp]
 theorem decomposition_hat (x : D.ActiveNode) :
     D.decomposition.hat x = hat R pieces x.1 := funext (D.hat_activeNode x)
 
+open Classical in
 @[simp]
 theorem decomposition_retainedWeight :
     D.decomposition.retainedWeight = retainedWeight pieces :=
   funext (D.sum_activeNode_eq)
 
+open Classical in
 theorem card_decomposition_le : Fintype.card D.decomposition.flag.Node ≤ Fintype.card F.Node :=
   Fintype.card_subtype_le _
 

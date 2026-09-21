@@ -15,7 +15,7 @@ set from every sample space retains positive mass and preserves thickness
 provided one component witnesses escape from each central slab.
 -/
 
-open scoped BigOperators Classical
+open scoped BigOperators
 
 namespace EGZ.Expansion
 
@@ -25,13 +25,17 @@ variable {I β : Type*} [Fintype I] [Fintype β]
   (A : I → Type*) [∀ i, Fintype (A i)]
   (value : ∀ i, A i → β) (valid : ∀ i, A i → Prop)
 
+open Classical in
 /-- Equal mixture of the valid samples, retaining their vector values. -/
 noncomputable def sampleWeight (v : β) : ℝ :=
   ∑ i, finiteProb (fun x : A i ↦ valid i x ∧ value i x = v)
 
+omit [Fintype β] in
+open Classical in
 theorem sampleWeight_nonneg (v : β) : 0 ≤ sampleWeight A value valid v :=
-  Finset.sum_nonneg (fun i _ ↦ finiteProb_nonneg _)
+  Finset.sum_nonneg (fun _i _ ↦ finiteProb_nonneg _)
 
+open Classical in
 theorem finiteProb_sum_fibres {α : Type*} [Fintype α]
     (f : α → β) (Q : α → Prop) (P : β → Prop) :
     (∑ v, if P v then finiteProb (fun x ↦ Q x ∧ f x = v) else 0) =
@@ -60,6 +64,7 @@ theorem finiteProb_sum_fibres {α : Type*} [Fintype α]
       simp only [heq, ↓reduceIte, Finset.sum_const_zero, ite_eq_right hp]
   · simp [hx]
 
+open Classical in
 /-- Mass on a set of vectors is the sum of the corresponding valid-sample
 probabilities over all components. -/
 theorem sampleWeight_massOn (P : β → Prop) :
@@ -76,12 +81,14 @@ theorem sampleWeight_massOn (P : β → Prop) :
   intro i _
   exact finiteProb_sum_fibres (value i) (valid i) P
 
+open Classical in
 theorem sampleWeight_mass : (∑ v, sampleWeight A value valid v) =
     ∑ i, finiteProb (valid i) := by
   simpa using sampleWeight_massOn A value valid (fun _ ↦ True)
 
 variable [∀ i, Nonempty (A i)]
 
+open Classical in
 theorem sampleWeight_mass_le : (∑ v, sampleWeight A value valid v) ≤ Fintype.card I := by
   rw [sampleWeight_mass]
   calc
@@ -89,6 +96,7 @@ theorem sampleWeight_mass_le : (∑ v, sampleWeight A value valid v) ≤ Fintype
       Finset.sum_le_sum fun i _ ↦ finiteProb_le_one _
     _ = _ := by simp
 
+open Classical in
 theorem sampleWeight_mass_ge {e : ℝ}
     (hbad : ∀ i, finiteProb (fun x : A i ↦ ¬valid i x) ≤ e) :
     (Fintype.card I : ℝ) * (1 - e) ≤ ∑ v, sampleWeight A value valid v := by
@@ -102,6 +110,8 @@ theorem sampleWeight_mass_ge {e : ℝ}
       rw [finiteProb_not] at hh
       linarith
 
+omit [Fintype β] [∀ (i : I), Nonempty (A i)] in
+open Classical in
 theorem sampleWeight_pos_exists {v : β} (hv : 0 < sampleWeight A value valid v) :
     ∃ (i : I) (x : A i), valid i x ∧ value i x = v := by
   classical
@@ -117,6 +127,7 @@ theorem sampleWeight_pos_exists {v : β} (hv : 0 < sampleWeight A value valid v)
 
 end FiniteSamples
 
+open Classical in
 /-- Removing an exceptional set loses at most its probability from any
 event, without any independence assumption. -/
 theorem finiteProb_and_ge_sub {A : Type*} [Fintype A]
@@ -140,12 +151,15 @@ variable {p d W : ℕ} [NeZero p]
 
 include hη hηone hbad
 
+omit hη in
+open Classical in
 theorem sampleWeight_mass_pos : 0 < ∑ v, sampleWeight A value valid v := by
   have hh := sampleWeight_mass_ge A value valid hbad
   have hI : (0 : ℝ) < Fintype.card I := by exact_mod_cast Fintype.card_pos
   have : 0 < (Fintype.card I : ℝ) * (1 - η / 2) := mul_pos hI (by linarith)
   linarith
 
+open Classical in
 theorem sampleWeight_centrallyThick
     (hout : ∀ ξ : FpCoord p d →ₗ[ZMod p] ZMod p, ξ ≠ 0 →
       ∃ i, η ≤ finiteProb (fun x : A i ↦

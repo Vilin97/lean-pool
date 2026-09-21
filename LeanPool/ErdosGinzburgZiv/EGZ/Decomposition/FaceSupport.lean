@@ -15,13 +15,13 @@ The support/polytope invariant nevertheless identifies every face with the
 convex hull of precisely the lifted support points lying on that face.
 -/
 
-open Classical
 
 namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f)
 
+open Classical in
 theorem face_eq_convexHull_liftedSupport (x : Φ.flag.Node)
     (Γ : (Φ.flag.polytope x).Face) :
     Γ.carrier = convexHull ℝ (IntCoord.real ''
@@ -61,6 +61,7 @@ theorem face_eq_convexHull_liftedSupport (x : Φ.flag.Node)
       RationalPolytope.convexHull_supportingLevel_eq S ξ c hleS
     _ = _ := by rw [hfilter]
 
+open Classical in
 theorem liftedSupport_face_nonempty (x : Φ.flag.Node)
     (Γ : (Φ.flag.polytope x).Face) :
     ((Φ.liftedSupport x).filter (fun q ↦ q.real ∈ Γ.carrier)).Nonempty := by

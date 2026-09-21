@@ -108,6 +108,7 @@ noncomputable def setIndicator (Y : Finset G) (x : G) : ℂ := if x ∈ Y then 1
 
 noncomputable def density (Y : Finset G) : ℝ := Y.card / Fintype.card G
 
+omit [AddCommGroup G] in
 theorem sum_setIndicator (Y : Finset G) : (∑ x, setIndicator Y x) = (Y.card : ℂ) := by
   simp [setIndicator]
 

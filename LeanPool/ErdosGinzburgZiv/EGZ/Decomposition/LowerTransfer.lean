@@ -15,19 +15,21 @@ local summand below the anchor to the lower layer. The lower anchor keeps
 the same cumulative function, while its upper copy ceases to be reduced.
 -/
 
-open Classical
 
 namespace EGZ.FlagDecomposition.LowerTransfer
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node) (hp : Odd p)
 
+open Classical in
 noncomputable abbrev decomposition : FlagDecomposition p d f :=
   FaceRefinement.decomposition Φ anchor (fun _ ↦ True) hp
 
+open Classical in
 noncomputable abbrev upper (x : Φ.flag.Node) :=
   FaceRefinement.upper Φ anchor (fun _ ↦ True) hp x
 
+open Classical in
 theorem active_lowerAnchor :
     ((FaceRefinement.splitWeights Φ anchor (fun _ ↦ True)).rebuildData hp).Active
       (TwoLayer.lower anchor anchor le_rfl) := by
@@ -36,12 +38,15 @@ theorem active_lowerAnchor :
     ((Φ.liftedSupport_spec anchor q).mp hq)
   exact FaceRefinement.active_lower Φ anchor (fun _ ↦ True) hp anchor le_rfl v hv trivial
 
+open Classical in
 def lowerAnchor : (decomposition Φ anchor hp).flag.Node :=
   ⟨TwoLayer.lower anchor anchor le_rfl, active_lowerAnchor Φ anchor hp⟩
 
+open Classical in
 theorem lowerAnchor_le_upper : lowerAnchor Φ anchor hp ≤ upper Φ anchor hp anchor := by
   exact (TwoLayer.lower_le_upper anchor anchor anchor le_rfl).mpr le_rfl
 
+open Classical in
 @[simp]
 theorem lowerAnchor_cumulativeWeight :
     (decomposition Φ anchor hp).cumulativeWeight (lowerAnchor Φ anchor hp) =
@@ -52,6 +57,7 @@ theorem lowerAnchor_cumulativeWeight :
   exact (FaceRefinement.cumulative_lower Φ anchor (fun _ ↦ True) anchor le_rfl v).trans
     (ite_eq_left trivial)
 
+open Classical in
 /-- Moving all atoms down preserves the old cumulative function at both
 copies of every surviving node. -/
 theorem cumulativeWeight_projection (x : (decomposition Φ anchor hp).flag.Node) :
@@ -70,6 +76,7 @@ theorem cumulativeWeight_projection (x : (decomposition Φ anchor hp).flag.Node)
       exact (FaceRefinement.cumulative_lower Φ anchor (fun _ ↦ True) a.1 a.2 v).trans
         (ite_eq_left trivial)
 
+open Classical in
 /-- Every local generator below the upper anchor has lower-layer base. -/
 theorem local_layer_zero (q : (decomposition Φ anchor hp).flag.Point)
     (hq : q ∈ (decomposition Φ anchor hp).omegaZero)
@@ -82,6 +89,7 @@ theorem local_layer_zero (q : (decomposition Φ anchor hp).flag.Point)
   simp only [TwoLayer.splitWeight, ite_eq_right hlayer, hbase, and_self, ite_eq_left] at hv
   exact hv rfl
 
+open Classical in
 /-- The old upper anchor has no proper point based there after all its
 local generators have moved down to the lower layer. -/
 theorem upperAnchor_not_isReducedElement :
@@ -99,10 +107,12 @@ theorem upperAnchor_not_isReducedElement :
   rw [hbase] at hle
   exact TwoLayer.not_upper_le_lower anchor anchor anchor le_rfl hle
 
+open Classical in
 /-- Additional slab coordinates are carried only by lower nodes. -/
 noncomputable def extra (k : ℕ) (x : (decomposition Φ anchor hp).flag.Node) : ℕ :=
   if x.1.1.2 = 0 then k else 0
 
+open Classical in
 theorem extra_antitone (k : ℕ) : Antitone (extra Φ anchor hp k) := by
   intro x y hxy
   unfold extra
@@ -115,11 +125,13 @@ theorem extra_antitone (k : ℕ) : Antitone (extra Φ anchor hp k) := by
   · rw [ite_eq_right hy]
     exact Nat.zero_le _
 
+open Classical in
 @[simp]
 theorem extra_upper (k : ℕ) (x : Φ.flag.Node) :
     extra Φ anchor hp k (upper Φ anchor hp x) = 0 := by
   simp [extra, upper, FaceRefinement.upper, TwoLayer.upper]
 
+open Classical in
 @[simp]
 theorem extra_lowerAnchor (k : ℕ) :
     extra Φ anchor hp k (lowerAnchor Φ anchor hp) = k := by

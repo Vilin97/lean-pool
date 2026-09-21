@@ -95,7 +95,6 @@ theorem convexHull_convex_closed (F : ConvexFlag) (S : Set F.Point) :
   let flatPoint (k : Flat) : F.Point := innerPoint k.1.1 k.2.1
   let flatWeight (k : Flat) : ℝ :=
     outerWeight k.1.1 * innerWeight k.1.1 k.2.1
-
   have outerBase (i : OuterActive) : (outerPoint i.1).base ≤ result.base :=
     outerComb.base_isLUB.1 i.1 i.2
   have innerBase (k : Flat) :
@@ -105,7 +104,6 @@ theorem convexHull_convex_closed (F : ConvexFlag) (S : Set F.Point) :
     (innerBase k).trans (outerBase k.1)
   have flatWeight_pos (k : Flat) : 0 < flatWeight k :=
     mul_pos k.1.2 k.2.2
-
   have flatWeight_sum : (∑ k : Flat, flatWeight k) = 1 := by
     calc
       (∑ k : Flat, flatWeight k) =
@@ -124,7 +122,6 @@ theorem convexHull_convex_closed (F : ConvexFlag) (S : Set F.Point) :
         intro i
         rw [(innerComb i.1).sum_active, mul_one]
       _ = 1 := outerComb.sum_active
-
   have flatBase_isLUB : IsLeast
       {x : F.Node | ∀ k, 0 < flatWeight k → (flatPoint k).base ≤ x}
       result.base := by
@@ -138,7 +135,6 @@ theorem convexHull_convex_closed (F : ConvexFlag) (S : Set F.Point) :
       intro j hj
       let k : Flat := ⟨⟨i, hi⟩, ⟨j, hj⟩⟩
       exact hx k (flatWeight_pos k)
-
   have flatVal : result.val =
       ∑ k : Flat, flatWeight k • (flatPoint k).coord (flatBase k) := by
     calc
@@ -167,7 +163,6 @@ theorem convexHull_convex_closed (F : ConvexFlag) (S : Set F.Point) :
       _ = ∑ k : Flat,
           flatWeight k • (flatPoint k).coord (flatBase k) := by
         rw [Fintype.sum_sigma]
-
   have flatComb : ConvexCombination flatPoint flatWeight result := by
     refine ⟨fun k ↦ (flatWeight_pos k).le, flatWeight_sum,
       flatBase_isLUB, ?_⟩
@@ -178,7 +173,6 @@ theorem convexHull_convex_closed (F : ConvexFlag) (S : Set F.Point) :
     exact flatVal.trans (by
       simpa only [allActive, Equiv.subtypeUnivEquiv,
         Equiv.coe_fn_mk] using hsum.symm)
-
   let toFlat : Fin (Fintype.card Flat) ≃ Flat :=
     (Fintype.equivFin Flat).symm
   refine ⟨Fintype.card Flat, flatPoint ∘ toFlat, flatWeight ∘ toFlat,

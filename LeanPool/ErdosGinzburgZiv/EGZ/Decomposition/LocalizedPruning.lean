@@ -17,16 +17,17 @@ surviving weights can be rebuilt using the geometric pruning construction.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecomposition.LocalizedPruning
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node) (S : Set (FpCoord p d))
 
+open Classical in
 noncomputable def weight (y : Φ.flag.Node) (v : FpCoord p d) : ℕ :=
   if y ≤ anchor then restrictWeight (Φ.localWeight y) S v else Φ.localWeight y v
 
+open Classical in
 theorem weight_le (y : Φ.flag.Node) (v : FpCoord p d) :
     weight Φ anchor S y v ≤ Φ.localWeight y v := by
   unfold weight
@@ -34,6 +35,7 @@ theorem weight_le (y : Φ.flag.Node) (v : FpCoord p d) :
   · exact restrictWeight_le _ _ v
   · exact le_rfl
 
+open Classical in
 theorem cumulative_below (y : Φ.flag.Node) (hy : y ≤ anchor) (v : FpCoord p d) :
     FlagDecompositionRaw.cumulativeWeight (weight Φ anchor S) y v =
       restrictWeight (Φ.cumulativeWeight y) S v := by
@@ -52,10 +54,12 @@ theorem cumulative_below (y : Φ.flag.Node) (hy : y ≤ anchor) (v : FpCoord p d
     · simp only [weight, hz, ite_eq_left, hz.trans hy, restrictWeight, ite_eq_right hv]
     · simp only [ite_eq_right hz]
 
+open Classical in
 theorem retainedWeight_le (v : FpCoord p d) :
     FlagDecompositionRaw.retainedWeight (weight Φ anchor S) v ≤ Φ.retainedWeight v :=
   Finset.sum_le_sum fun y _ ↦ weight_le Φ anchor S y v
 
+open Classical in
 /-- At every ambient point, all loss occurs in the cumulative summand at the
 anchor and is exactly its excluded part. -/
 theorem retainedWeight_loss (v : FpCoord p d) :
@@ -75,6 +79,7 @@ theorem retainedWeight_loss (v : FpCoord p d) :
     intro y _
     by_cases hy : y ≤ anchor <;> simp [weight, hy, restrictWeight, hv]
 
+open Classical in
 theorem retainedMass_loss :
     Φ.retainedMass - natMass (FlagDecompositionRaw.retainedWeight (weight Φ anchor S)) =
       natMass (Φ.cumulativeWeight anchor) - natMass (restrictWeight (Φ.cumulativeWeight anchor) S) := by
@@ -87,6 +92,7 @@ variable (hne : ∃ v, restrictWeight (Φ.cumulativeWeight anchor) S v ≠ 0)
 
 include hne
 
+open Classical in
 theorem nonzero : ∃ y v, weight Φ anchor S y v ≠ 0 := by
   obtain ⟨v, hv⟩ := hne
   have hc : FlagDecompositionRaw.cumulativeWeight (weight Φ anchor S) anchor v ≠ 0 := by
@@ -95,6 +101,7 @@ theorem nonzero : ∃ y v, weight Φ anchor S y v ≠ 0 := by
     (F := Φ.flag) (weight Φ anchor S) anchor v).mp hc
   exact ⟨y, v, hy⟩
 
+open Classical in
 /-- The surviving local weights, ready for geometric rebuilding. -/
 noncomputable abbrev prunedWeights : Φ.PrunedWeights where
   weight := weight Φ anchor S
@@ -103,9 +110,11 @@ noncomputable abbrev prunedWeights : Φ.PrunedWeights where
 
 variable (hp : Odd p)
 
+open Classical in
 noncomputable abbrev decomposition : FlagDecomposition p d f :=
   (prunedWeights Φ anchor S hne).rebuilt hp
 
+open Classical in
 theorem active_anchor :
     ((prunedWeights Φ anchor S hne).rebuildData hp).Active anchor := by
   obtain ⟨v, hv⟩ := hne
@@ -115,9 +124,11 @@ theorem active_anchor :
     (F := Φ.flag) (weight Φ anchor S) anchor v).mp hc
   exact ⟨y, hy, v, hw⟩
 
+open Classical in
 def anchorNode : (decomposition Φ anchor S hne hp).flag.Node :=
   ⟨anchor, active_anchor Φ anchor S hne hp⟩
 
+open Classical in
 @[simp]
 theorem cumulativeWeight_anchorNode :
     (decomposition Φ anchor S hne hp).cumulativeWeight (anchorNode Φ anchor S hne hp) =
@@ -125,6 +136,7 @@ theorem cumulativeWeight_anchorNode :
   rw [(prunedWeights Φ anchor S hne).rebuildData hp |>.decomposition_cumulativeWeight]
   exact funext (cumulative_below Φ anchor S anchor le_rfl)
 
+open Classical in
 theorem cumulativeWeight_below (x : (decomposition Φ anchor S hne hp).flag.Node)
     (hx : x ≤ anchorNode Φ anchor S hne hp) :
     (decomposition Φ anchor S hne hp).cumulativeWeight x =
@@ -132,6 +144,7 @@ theorem cumulativeWeight_below (x : (decomposition Φ anchor S hne hp).flag.Node
   rw [((prunedWeights Φ anchor S hne).rebuildData hp).decomposition_cumulativeWeight x]
   exact funext (cumulative_below Φ anchor S x.1 hx)
 
+open Classical in
 theorem decomposition_retainedMass_loss :
     (Φ.retainedMass : ℝ) - (decomposition Φ anchor S hne hp).retainedMass =
       (natMass (Φ.cumulativeWeight anchor) : ℝ) -

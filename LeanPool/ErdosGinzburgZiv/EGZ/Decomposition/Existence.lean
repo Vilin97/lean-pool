@@ -6,6 +6,10 @@ Authors: Dmitrii Zakharov
 
 import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FinalConstruction
 
+/-!
+# Existence
+-/
+
 namespace EGZ
 
 /-- Theorem 4.13, the Flag Decomposition Lemma, with all uniformity made

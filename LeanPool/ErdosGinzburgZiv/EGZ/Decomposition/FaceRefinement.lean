@@ -19,12 +19,12 @@ a lower layer to realize the face while retaining the old upper fibres.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ
 
 namespace ConvexFlag.ConvexCombination
 
+open Classical in
 /-- Every positively weighted generator of a flag combination lies on any
 upper face containing the combination. -/
 theorem mem_face_of_pos {F : ConvexFlag} {I : Type*} [Fintype I]
@@ -48,6 +48,7 @@ namespace FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
+open Classical in
 /-- Bounding the bases of the local generators over a face bounds its face
 index. The same bound passes to every proper convex combination. -/
 theorem faceIndex_le_of_local_bases (Φ : FlagDecomposition p d f)
@@ -65,6 +66,7 @@ theorem faceIndex_le_of_local_bases (Φ : FlagDecomposition p d f)
   exact hlocal (points i) (hpoints i) ((hcomb.base_isLUB.1 i hi).trans hx)
     (hcomb.mem_face_of_pos hx Γ hface hi)
 
+open Classical in
 /-- A node containing every local-generator base over a face realizes the
 face as soon as its whole polytope maps into that face. -/
 theorem isRealizedFace_of_local_bases (Φ : FlagDecomposition p d f)
@@ -87,11 +89,13 @@ namespace FaceRefinement
 variable (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node)
     (selected : FpCoord p d → Prop)
 
+open Classical in
 /-- The layer-forgetting order map. -/
 def projection : TwoLayer.Node anchor →o Φ.flag.Node where
   toFun := TwoLayer.projection anchor
   monotone' := OrderHomClass.monotone (TwoLayer.projection anchor)
 
+open Classical in
 /-- Split the local atoms selected below the anchor into lower copies. -/
 noncomputable abbrev splitWeights : Φ.SplitWeights (projection Φ anchor) where
   weight := TwoLayer.splitWeight anchor Φ.localWeight selected
@@ -104,18 +108,21 @@ noncomputable abbrev splitWeights : Φ.SplitWeights (projection Φ anchor) where
     rw [TwoLayer.sum_splitWeight]
     exact Φ.retained_le v
 
+open Classical in
 @[simp]
 theorem cumulative_upper (x : Φ.flag.Node) (v : FpCoord p d) :
     (splitWeights Φ anchor selected).cumulative (TwoLayer.upper anchor x) v =
       Φ.cumulativeWeight x v :=
   TwoLayer.cumulativeWeight_upper anchor Φ.localWeight selected x v
 
+open Classical in
 @[simp]
 theorem cumulative_lower (x : Φ.flag.Node) (hx : x ≤ anchor) (v : FpCoord p d) :
     (splitWeights Φ anchor selected).cumulative (TwoLayer.lower anchor x hx) v =
       if selected v then Φ.cumulativeWeight x v else 0 :=
   TwoLayer.cumulativeWeight_lower anchor Φ.localWeight selected x hx v
 
+open Classical in
 @[simp]
 theorem hat_upper (x : Φ.flag.Node) (q : IntCoord (Φ.flag.rank x)) :
     (splitWeights Φ anchor selected).hat (TwoLayer.upper anchor x) q = Φ.hat x q := by
@@ -128,10 +135,12 @@ theorem hat_upper (x : Φ.flag.Node) (q : IntCoord (Φ.flag.rank x)) :
 
 variable (hp : Odd p)
 
+open Classical in
 /-- Rebuild the selected split on its active nodes. -/
 noncomputable abbrev decomposition : FlagDecomposition p d f :=
   (splitWeights Φ anchor selected).decomposition hp
 
+open Classical in
 /-- Every old node survives in the upper layer. -/
 theorem active_upper (x : Φ.flag.Node) :
     ((splitWeights Φ anchor selected).rebuildData hp).Active (TwoLayer.upper anchor x) := by
@@ -145,6 +154,7 @@ theorem active_upper (x : Φ.flag.Node) :
     (splitWeights Φ anchor selected).weight (TwoLayer.upper anchor x) v).mp hv'
   exact ⟨a, ha, v, hav⟩
 
+open Classical in
 /-- A lower node is active whenever its old cumulative mass contains a
 selected atom. -/
 theorem active_lower (x : Φ.flag.Node) (hx : x ≤ anchor) (v : FpCoord p d)
@@ -157,10 +167,12 @@ theorem active_lower (x : Φ.flag.Node) (hx : x ≤ anchor) (v : FpCoord p d)
     (splitWeights Φ anchor selected).weight (TwoLayer.lower anchor x hx) v).mp hv'
   exact ⟨a, ha, v, hav⟩
 
+open Classical in
 /-- The active upper copy of an old node. -/
 noncomputable def upper (x : Φ.flag.Node) : (decomposition Φ anchor selected hp).flag.Node :=
   ⟨TwoLayer.upper anchor x, active_upper Φ anchor selected hp x⟩
 
+open Classical in
 /-- The original node order embeds into the active upper layer. -/
 noncomputable def upperOrderEmbedding :
     Φ.flag.Node ↪o (decomposition Φ anchor selected hp).flag.Node where
@@ -172,6 +184,7 @@ noncomputable def upperOrderEmbedding :
     intro x y
     exact TwoLayer.upper_le_upper anchor x y
 
+open Classical in
 @[simp]
 theorem upper_cumulativeWeight (x : Φ.flag.Node) :
     (decomposition Φ anchor selected hp).cumulativeWeight (upper Φ anchor selected hp x) =
@@ -179,22 +192,26 @@ theorem upper_cumulativeWeight (x : Φ.flag.Node) :
   rw [SplitWeights.decomposition_cumulativeWeight]
   exact funext (cumulative_upper Φ anchor selected x)
 
+open Classical in
 @[simp]
 theorem upper_hat (x : Φ.flag.Node) (q : IntCoord (Φ.flag.rank x)) :
     (decomposition Φ anchor selected hp).hat (upper Φ anchor selected hp x) q = Φ.hat x q := by
   rw [SplitWeights.decomposition_hat]
   exact hat_upper Φ anchor selected x q
 
+open Classical in
 @[simp]
 theorem upper_space (x : Φ.flag.Node) :
     (decomposition Φ anchor selected hp).representation.space (upper Φ anchor selected hp x) =
       Φ.representation.space x := rfl
 
+open Classical in
 @[simp]
 theorem upper_map (x : Φ.flag.Node) :
     (decomposition Φ anchor selected hp).representation.map (upper Φ anchor selected hp x) =
       Φ.representation.map x := rfl
 
+open Classical in
 @[simp]
 theorem upper_liftedSupport (x : Φ.flag.Node) :
     (decomposition Φ anchor selected hp).liftedSupport (upper Φ anchor selected hp x) =
@@ -204,6 +221,7 @@ theorem upper_liftedSupport (x : Φ.flag.Node) :
     ((Iff.of_eq (congrArg (fun m : ℕ ↦ m ≠ 0) (upper_hat Φ anchor selected hp x q))).trans
       (Φ.liftedSupport_spec x q).symm)
 
+open Classical in
 @[simp]
 theorem upper_gap (x : Φ.flag.Node) :
     (decomposition Φ anchor selected hp).gap (upper Φ anchor selected hp x) = Φ.gap x := by
@@ -217,6 +235,7 @@ theorem upper_gap (x : Φ.flag.Node) :
     rfl
   exact hmin _ _ hmass
 
+open Classical in
 /-- The upper copy retains its original polytope. -/
 @[simp]
 theorem upper_polytope (x : Φ.flag.Node) :
@@ -226,6 +245,7 @@ theorem upper_polytope (x : Φ.flag.Node) :
     upper_liftedSupport, Φ.polytope_eq_liftedSupport]
   rfl
 
+open Classical in
 /-- An original face, viewed in its unchanged upper polytope. -/
 noncomputable def upperFace (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face) :
     ((decomposition Φ anchor selected hp).flag.polytope (upper Φ anchor selected hp x)).Face where
@@ -239,10 +259,12 @@ noncomputable def upperFace (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face) 
       exact hcarrier
   nonempty := Γ.nonempty
 
+open Classical in
 @[simp]
 theorem upperFace_carrier (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face) :
     (upperFace Φ anchor selected hp x Γ).carrier = Γ.carrier := rfl
 
+open Classical in
 @[simp]
 theorem retainedWeight :
     (decomposition Φ anchor selected hp).retainedWeight = Φ.retainedWeight := by
@@ -250,10 +272,12 @@ theorem retainedWeight :
   rw [SplitWeights.decomposition_retainedWeight, TwoLayer.sum_splitWeight]
   rfl
 
+open Classical in
 @[simp]
 theorem retainedMass : (decomposition Φ anchor selected hp).retainedMass = Φ.retainedMass :=
   congrArg natMass (retainedWeight Φ anchor selected hp)
 
+open Classical in
 /-- At most two copies of each old node survive. -/
 theorem card_le :
     @Fintype.card (decomposition Φ anchor selected hp).flag.Node
@@ -261,16 +285,19 @@ theorem card_le :
   ((splitWeights Φ anchor selected).decomposition_card_le hp).trans
     (TwoLayer.card_nodes_le anchor)
 
+open Classical in
 /-- Both layers retain the old nodewise coordinate bounds. -/
 theorem isKBounded {K : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K) :
     (decomposition Φ anchor selected hp).IsKBounded
       (fun x ↦ K (projection Φ anchor x.1)) :=
   (splitWeights Φ anchor selected).decomposition_isKBounded hp hK
 
+open Classical in
 /-- Forgetting layers maps the split decomposition into the old one. -/
 noncomputable def subdivisionMap : SubdivisionMap Φ (decomposition Φ anchor selected hp) :=
   (splitWeights Φ anchor selected).subdivisionMap hp (fun _ _ ↦ rfl)
 
+open Classical in
 /-- Complete upper elements retain the same cumulative weight and
 representation fibres. -/
 theorem upper_isCompleteElement (x : Φ.flag.Node) (t : ℕ) (δ : ℝ)
@@ -280,6 +307,7 @@ theorem upper_isCompleteElement (x : Φ.flag.Node) (t : ℕ) (δ : ℝ)
   rw [upper_cumulativeWeight]
   exact hc ξ hξ
 
+open Classical in
 /-- Realized old faces remain realized at the unchanged upper nodes. -/
 theorem upper_isRealizedFace (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face)
     (hΓ : Φ.IsRealizedFace x Γ) :
@@ -304,6 +332,7 @@ theorem upper_isRealizedFace (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face)
 
 include hp
 
+open Classical in
 /-- On the face-selected lower layer, a cumulative lifted fibre is either
 retained in full or deleted according to its upper transition coordinate. -/
 theorem face_hat_lower (Γ : (Φ.flag.polytope anchor).Face)
@@ -317,6 +346,7 @@ theorem face_hat_lower (Γ : (Φ.flag.polytope anchor).Face)
   rw [hc]
   exact Φ.centeredFibreMass_faceSelector hp hx Γ q
 
+open Classical in
 /-- The lower anchor keeps precisely the lifted support points on its face. -/
 theorem face_hat_lower_anchor (Γ : (Φ.flag.polytope anchor).Face)
     (q : IntCoord (Φ.flag.rank anchor)) :
@@ -326,6 +356,7 @@ theorem face_hat_lower_anchor (Γ : (Φ.flag.polytope anchor).Face)
   simpa only [Φ.flag.transition_refl, IntegralAffineMap.id_real, AffineMap.id_apply] using
     face_hat_lower Φ anchor hp Γ anchor le_rfl q
 
+open Classical in
 /-- A surviving local generator projecting onto the selected face lies in
 the lower layer: its selected ambient atoms were removed from the upper
 copy of its base. -/
@@ -354,6 +385,7 @@ theorem face_local_layer_zero (Γ : (Φ.flag.polytope anchor).Face)
   change TwoLayer.splitWeight anchor Φ.localWeight (Φ.faceSelector anchor Γ) q.base.1 v = 0
   rw [TwoLayer.splitWeight, ite_eq_right hlayer, ite_eq_left ⟨hproj, hs⟩]
 
+open Classical in
 /-- Every nonempty face supplies a selected cumulative atom at the lower
 anchor, so that anchor survives the rebuilding. -/
 theorem face_active_lower_anchor (Γ : (Φ.flag.polytope anchor).Face) :
@@ -368,16 +400,19 @@ theorem face_active_lower_anchor (Γ : (Φ.flag.polytope anchor).Face) :
       simpa only [Φ.flag.transition_refl, IntegralAffineMap.id_real, AffineMap.id_apply] using hzΓ)
   exact active_lower Φ anchor (Φ.faceSelector anchor Γ) hp anchor le_rfl v hv hs
 
+open Classical in
 /-- The active lower copy of the selected anchor. -/
 noncomputable def lowerAnchor (Γ : (Φ.flag.polytope anchor).Face) :
     (decomposition Φ anchor (Φ.faceSelector anchor Γ) hp).flag.Node :=
   ⟨TwoLayer.lower anchor anchor le_rfl, face_active_lower_anchor Φ anchor hp Γ⟩
 
+open Classical in
 theorem lowerAnchor_le_upper (Γ : (Φ.flag.polytope anchor).Face) :
     lowerAnchor Φ anchor hp Γ ≤ upper Φ anchor (Φ.faceSelector anchor Γ) hp anchor := by
   change TwoLayer.lower anchor anchor le_rfl ≤ TwoLayer.upper anchor anchor
   exact (TwoLayer.lower_le_upper anchor anchor anchor le_rfl).mpr le_rfl
 
+open Classical in
 @[simp]
 theorem lowerAnchor_liftedSupport (Γ : (Φ.flag.polytope anchor).Face) :
     (decomposition Φ anchor (Φ.faceSelector anchor Γ) hp).liftedSupport
@@ -400,6 +435,7 @@ theorem lowerAnchor_liftedSupport (Γ : (Φ.flag.polytope anchor).Face) :
   · rw [ite_eq_right hqΓ]
     exact ⟨fun h ↦ (h rfl).elim, fun h ↦ (hqΓ (Finset.mem_filter.mp h).2).elim⟩
 
+open Classical in
 /-- The new lower anchor polytope is exactly the selected old face. -/
 @[simp]
 theorem lowerAnchor_polytope (Γ : (Φ.flag.polytope anchor).Face) :
@@ -409,6 +445,7 @@ theorem lowerAnchor_polytope (Γ : (Φ.flag.polytope anchor).Face) :
     lowerAnchor_liftedSupport]
   exact (Φ.face_eq_convexHull_liftedSupport anchor Γ).symm
 
+open Classical in
 /-- Splitting all atoms over the face into the lower layer realizes that
 face at the unchanged upper anchor. -/
 theorem face_isRealized (Γ : (Φ.flag.polytope anchor).Face) :
@@ -428,6 +465,7 @@ theorem face_isRealized (Γ : (Φ.flag.polytope anchor).Face) :
 
 end FaceRefinement
 
+open Classical in
 /-- Splitting the atoms over a chosen face realizes it at an upper copy of
 the anchor. This operation retains every old upper fibre and all mass, uses
 at most twice as many nodes, and preserves the old coordinate bounds. -/

@@ -19,7 +19,6 @@ has minimal ambient affine spaces and integer lattices.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecomposition.Rechart
 
@@ -32,16 +31,19 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
 
 include hp hinj hcenter
 
+open Classical in
 theorem raw_hat (x : Φ.flag.Node) (q : IntCoord (C x).rank) :
     FlagDecompositionRaw.hat (representation Φ C hp hinj) Φ.localWeight x q =
       Φ.hat x ((C x).map q) :=
   Φ.hat_rechart hp x (C x) (hinj x) (hcenter x) q
 
+open Classical in
 theorem raw_localLift (x : Φ.flag.Node) (q : IntCoord (C x).rank) :
     FlagDecompositionRaw.localLift (representation Φ C hp hinj) Φ.localWeight x q =
       Φ.localLift x ((C x).map q) :=
   Φ.localLift_rechart hp x (C x) (hinj x) (hcenter x) q
 
+open Classical in
 /-- Every new face is visible to a local generator transported from the old
 decomposition. This proves the visibility field of the new decomposition. -/
 theorem faces_visible (x : Φ.flag.Node) (Γ : (polytope Φ C x).Face) :
@@ -79,6 +81,7 @@ theorem faces_visible (x : Φ.flag.Node) (Γ : (polytope Φ C x).Face) :
     rw [htransition]
     exact hq'.2
 
+open Classical in
 /-- Replace every fibre by its support-generated integer lattice coordinates
 and every ambient affine space by its cumulative support span. -/
 noncomputable abbrev decomposition : FlagDecomposition p d f where
@@ -95,48 +98,58 @@ noncomputable abbrev decomposition : FlagDecomposition p d f where
   polytope_eq_liftedSupport := polytope_carrier Φ C
   faces_visible := faces_visible Φ C hp hinj hcenter
 
+open Classical in
 @[simp]
 theorem decomposition_localWeight (x : Φ.flag.Node) :
     (decomposition Φ C hp hinj hcenter).localWeight x = Φ.localWeight x := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_cumulativeWeight (x : Φ.flag.Node) :
     (decomposition Φ C hp hinj hcenter).cumulativeWeight x = Φ.cumulativeWeight x := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_retainedWeight :
     (decomposition Φ C hp hinj hcenter).retainedWeight = Φ.retainedWeight := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_retainedMass :
     (decomposition Φ C hp hinj hcenter).retainedMass = Φ.retainedMass := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_liftedSupport (x : Φ.flag.Node) :
     (decomposition Φ C hp hinj hcenter).liftedSupport x = (C x).coordinateSupport := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_hat (x : Φ.flag.Node) (q : IntCoord (C x).rank) :
     (decomposition Φ C hp hinj hcenter).hat x q = Φ.hat x ((C x).map q) :=
   raw_hat Φ C hp hinj hcenter x q
 
+open Classical in
 @[simp]
 theorem decomposition_localLift (x : Φ.flag.Node) (q : IntCoord (C x).rank) :
     (decomposition Φ C hp hinj hcenter).localLift x q = Φ.localLift x ((C x).map q) :=
   raw_localLift Φ C hp hinj hcenter x q
 
+open Classical in
 /-- The new ambient spaces and integer coordinate supports satisfy both
 minimality conditions. -/
 theorem decomposition_isMinimal : (decomposition Φ C hp hinj hcenter).IsMinimal := by
   intro x
   exact ⟨rfl, (C x).coordinateSupport_affineIntSpans⟩
 
+open Classical in
 theorem decomposition_isKBounded {K B : Φ.flag.Node → ℕ} (hΦ : Φ.IsKBounded K)
     (hC : ∀ x (q : IntCoord (C x).rank),
       latticeSupNorm ((C x).map q) ≤ K x → latticeSupNorm q ≤ B x) :
     (decomposition Φ C hp hinj hcenter).IsKBounded B :=
   polytope_bound Φ C hΦ hC
 
+open Classical in
 /-- Recharting preserves the complete finite set of positive lifted masses,
 so in particular it preserves their minimum. -/
 theorem decomposition_gap (x : Φ.flag.Node) :

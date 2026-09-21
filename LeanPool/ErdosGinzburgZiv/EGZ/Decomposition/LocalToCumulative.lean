@@ -18,12 +18,12 @@ of a nonzero local lift from wrapping around modulo `p`.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecompositionRaw
 
 variable {p d : ℕ} [NeZero p] {F : ConvexFlag}
 
+open Classical in
 /-- Local lifted masses below a node, transported by the integer transition
 maps and summed over the finite centered boxes. -/
 noncomputable def localIntegerMassBelow (R : FpRepresentation p d F)
@@ -35,6 +35,7 @@ noncomputable def localIntegerMassBelow (R : FpRepresentation p d F)
       if (F.transition h).integer z = q then localLift R pieces y z else 0
     else 0
 
+open Classical in
 /-- A residue fibre can be summed over centered integer representatives in
 the source. -/
 theorem sum_transitionFibres_eq_sum_localLift (hp : Odd p)
@@ -55,6 +56,7 @@ theorem sum_transitionFibres_eq_sum_localLift (hp : Odd p)
   congr 1
   exact (ite_eq_left hcentered).symm
 
+open Classical in
 /-- If a transition stays in the centered box on the local support,
 congruence to a centered upper point is equality of integer coordinates. -/
 theorem transition_mod_eq_iff_of_localLift_ne_zero
@@ -71,6 +73,7 @@ theorem transition_mod_eq_iff_of_localLift_ne_zero
   · intro heq
     rw [heq]
 
+open Classical in
 /-- The quotient-level partition is the exact integer-transition partition
 when nonzero local lifts remain centered after transition. -/
 theorem localTransitionMassBelow_eq_localIntegerMassBelow (hp : Odd p)
@@ -96,6 +99,7 @@ theorem localTransitionMassBelow_eq_localIntegerMassBelow (hp : Odd p)
         (hcentered y h z) hz]
   · rw [dite_eq_right h, dite_eq_right h]
 
+open Classical in
 /-- Exact local-to-cumulative identity using local lifted weights. -/
 theorem hat_eq_localIntegerMassBelow_of_centered (hp : Odd p)
     (R : FpRepresentation p d F) (pieces : F.Node → FpCoord p d → ℕ)
@@ -108,6 +112,7 @@ theorem hat_eq_localIntegerMassBelow_of_centered (hp : Odd p)
   rw [hat_eq_localTransitionMassBelow_of_centered R pieces hsupported x q hq]
   exact localTransitionMassBelow_eq_localIntegerMassBelow hp R pieces x q hq hcentered
 
+open Classical in
 /-- The local integer-transition sum has no mass outside the centered
 upper box if all transitions of its nonzero local terms stay centered. -/
 theorem localIntegerMassBelow_eq_zero_of_not_centered
@@ -129,6 +134,7 @@ theorem localIntegerMassBelow_eq_zero_of_not_centered
     · rfl
   · rfl
 
+open Classical in
 /-- The exact local-to-cumulative identity holds for every integer upper
 coordinate; outside the centered box both sides vanish. -/
 theorem hat_eq_localIntegerMassBelow (hp : Odd p)
@@ -150,6 +156,7 @@ namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
+open Classical in
 /-- At an upper node of radius less than `p / 2`, every nonzero local lift
 below it has centered integer transition coordinates. -/
 theorem isCenteredLift_transition_of_localLift_ne_zero
@@ -164,6 +171,7 @@ theorem isCenteredLift_transition_of_localLift_ne_zero
   unfold IsCenteredLift
   omega
 
+open Classical in
 /-- Section 4's corrected identity: the cumulative lift at `q` is the sum
 of local lifts at all lower nodes whose integer transitions equal `q`. -/
 theorem hat_eq_sum_localLift_of_centered (hp : Odd p)
@@ -180,6 +188,7 @@ theorem hat_eq_sum_localLift_of_centered (hp : Odd p)
     Φ.representation Φ.localWeight Φ.local_supported x q hq
     (fun y h z hz ↦ Φ.isCenteredLift_transition_of_localLift_ne_zero K hbounded h hK z hz)
 
+open Classical in
 /-- The corrected local-to-cumulative identity for arbitrary integer
 coordinates, with the large-prime condition expressed by `2 * K x < p`. -/
 theorem hat_eq_sum_localLift (hp : Odd p)

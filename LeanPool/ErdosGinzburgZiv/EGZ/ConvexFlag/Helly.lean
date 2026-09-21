@@ -239,7 +239,7 @@ private theorem ConvexCombination.result_eq_of_active_eq {F : ConvexFlag}
   classical
   have hactive : ∃ i, 0 < weight i := by
     by_contra hn
-    push_neg at hn
+    push Not at hn
     have hz : ∀ i, weight i = 0 := fun i ↦
       le_antisymm (hn i) (c.nonnegative i)
     have hs := c.sum_eq_one
@@ -282,7 +282,7 @@ private theorem exists_strictSeparator_of_not_mem_weakConvexHull
       ∀ s ∈ S, ∀ hs : xi.EvaluableAt s, xi.eval s hs < xi.eval q hq := by
   unfold weakConvexHull at h
   simp only [Set.mem_setOf_eq] at h
-  push_neg at h
+  push Not at h
   obtain ⟨xi, hq, hxi⟩ := h
   refine ⟨xi, hq, ?_⟩
   intro s hsS hs
@@ -442,7 +442,7 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
       ∀ i, q ∈ F.weakConvexHull (deletion points i) := by
   classical
   by_contra hconclusion
-  push_neg at hconclusion
+  push Not at hconclusion
   let Counterexample : (I → F.Point) → Prop := fun p ↦
     Function.Injective p ∧
     (∀ i, p i ∈ Ω) ∧
@@ -633,7 +633,7 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
           rcases hpiProjection with ⟨hupi, -⟩
           have hrpi : r.1.base ≤ (p i).base := hru.trans hupi
           exact hrNotRange ⟨i, (r.1.eq_of_projection_of_base_le hri hrpi).symm⟩
-        · push_neg at husesR
+        · push Not at husesR
           have huDelete : u ∈ F.convexHull (deletion p i) := by
             apply huComb.mem_convexHull_of_active_mem
             intro a ha
@@ -685,7 +685,7 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
       have hgoodNew : ∃ q, q ∈ Ω ∧ q.IsIntegral ∧
           ∀ k, q ∈ F.weakConvexHull (deletion p' k) := by
         by_contra hnone
-        push_neg at hnone
+        push Not at hnone
         have hp'counter : Counterexample p' :=
           ⟨hp'injective, hp'proper, hp'integral, hnone⟩
         exact (not_le_of_gt hscoreLt) (hminimal hp'counter)
@@ -895,7 +895,7 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
     have hgoodNew : ∃ q, q ∈ Ω ∧ q.IsIntegral ∧
         ∀ k, q ∈ F.weakConvexHull (deletion p' k) := by
       by_contra hnone
-      push_neg at hnone
+      push Not at hnone
       have hp'counter : Counterexample p' :=
         ⟨hp'injective, hp'proper, hp'integral, hnone⟩
       exact (not_le_of_gt hscoreLt) (hminimal hp'counter)
@@ -974,7 +974,7 @@ induction once the flagged Doignon step is available. -/
 private theorem flagHelly_finset {F : ConvexFlag} (Ω : F.ProperPointSet)
     (hnonempty : ∃ q, q ∈ Ω ∧ q.IsIntegral)
     (ℱ : Set (Set F.Point))
-    (hproper : ∀ S ∈ ℱ, S ⊆ Ω.carrier)
+    (_hproper : ∀ S ∈ ℱ, S ⊆ Ω.carrier)
     (hlocal : ∀ G : Finset (Set F.Point),
       (G : Set (Set F.Point)) ⊆ ℱ → G.Nonempty →
       G.card ≤ hellyConstant Ω →
@@ -1051,10 +1051,10 @@ theorem flagHelly {F : ConvexFlag} (Ω : F.ProperPointSet)
       ∃ S, S ∈ ℱ ∧ q ∉ F.weakConvexHull S := by
     intro q hqΩ hqint
     by_contra hq
-    push_neg at hq
+    push Not at hq
     exact hfail ⟨q, hqΩ, hqint, hq⟩
   let A := {q : {q : F.Point // q.IsIntegral} // q.1 ∈ Ω}
-  letI : Fintype A := Fintype.ofFinite A
+  let : Fintype A := Fintype.ofFinite A
   have hmissA (q : A) : ∃ S, S ∈ ℱ ∧ q.1.1 ∉ F.weakConvexHull S :=
     hmiss q.1.1 q.2 q.1.2
   choose badSet hbadSetFamily hbadSet using hmissA

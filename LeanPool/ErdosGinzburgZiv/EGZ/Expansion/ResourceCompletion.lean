@@ -13,27 +13,31 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.PrescribedCounts
 # Converting exchange coverage to multiplicity bounds
 -/
 
-open scoped BigOperators Classical
+open scoped BigOperators
 
 namespace EGZ.Expansion
 
+open Classical in
 noncomputable def selectionWeight {A G : Type*} [Fintype A]
     (point : A → G) (J : Finset A) : G → ℕ := by
   classical
   exact pushWeight point (fun a ↦ if a ∈ J then 1 else 0)
 
+open Classical in
 theorem natMass_selectionWeight {A G : Type*} [Fintype A] [Fintype G]
     (point : A → G) (J : Finset A) : natMass (selectionWeight point J) = J.card := by
   classical
   rw [selectionWeight, natMass_pushWeight]
   simp [natMass]
 
+open Classical in
 theorem vectorSum_selectionWeight {A G : Type*} [Fintype A] [Fintype G] [AddCommMonoid G]
     (point : A → G) (J : Finset A) : vectorSum (selectionWeight point J) = ∑ a ∈ J, point a := by
   classical
   rw [selectionWeight, vectorSum, sum_pushWeight]
   simp
 
+open Classical in
 theorem exchange_position_capacity {A : Type*} [Fintype A]
     {p r t B : ℕ} (point : A → FpCoord p (r + t))
     (F : Finset (Exchange point B))
@@ -69,6 +73,7 @@ theorem exchange_position_capacity {A : Type*} [Fintype A]
     intro he
     exact ha (Finset.mem_biUnion.mpr ⟨e.val, e.property, he⟩)
 
+open Classical in
 theorem exchange_weight_capacity {A : Type*} [Fintype A]
     {p r t B : ℕ} [NeZero p] (point : A → FpCoord p (r + t))
     (F : Finset (Exchange point B))
@@ -81,6 +86,7 @@ theorem exchange_weight_capacity {A : Type*} [Fintype A]
   have h := pushWeight_mono point (exchange_position_capacity point F hF)
   simpa only [pushWeight_add, pushWeight_sum, selectionWeight] using h
 
+open Classical in
 theorem exchange_difference_coverage {A : Type*} [Fintype A]
     {p r t B : ℕ} [NeZero p] (point : A → FpCoord p (r + t))
     (F : Finset (Exchange point B))
@@ -112,6 +118,7 @@ theorem exchange_difference_coverage {A : Type*} [Fintype A]
   · simp [map_sum, Exchange.first_difference, hv]
   · simpa only [map_sum, Exchange.shift] using hsum
 
+open Classical in
 /-- Each quotient fibre contains at most the total mass. -/
 theorem pushWeight_le_natMass {X Y : Type*} [Fintype X]
     (f : X → Y) (u : X → ℕ) (y : Y) : pushWeight f u y ≤ natMass u := by
@@ -120,6 +127,7 @@ theorem pushWeight_le_natMass {X Y : Type*} [Fintype X]
   intro x _
   split_ifs <;> omega
 
+open Classical in
 theorem selectionWeight_le_all {A G : Type*} [Fintype A]
     (point : A → G) (J : Finset A) :
     selectionWeight point J ≤ pushWeight point (fun _ ↦ 1) := by
@@ -130,6 +138,7 @@ theorem selectionWeight_le_all {A G : Type*} [Fintype A]
   dsimp only
   split_ifs <;> norm_num
 
+open Classical in
 /-- Full coverage by disjoint exchanges gives a zero-sum submultiset when
 the reserved positions fit inside the margins of the prescribed counts. -/
 theorem complete_exchange_resources {A : Type*} [Fintype A]
@@ -198,6 +207,7 @@ theorem complete_exchange_resources {A : Type*} [Fintype A]
     hlo hhi haz (exchange_difference_coverage point F hcover)
   exact ⟨u, hu, hum.trans ham, huz⟩
 
+open Classical in
 /-- The prescribed integer coefficients give quotient multiplicities with
 the same real margins on every nonempty quotient fibre. -/
 theorem prescribed_quotient_counts_with_margin {p r t : ℕ} [NeZero p]

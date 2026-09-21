@@ -7,6 +7,10 @@ Authors: Dmitrii Zakharov
 import LeanPool.ErdosGinzburgZiv.EGZ.Main.UpperBound
 import LeanPool.ErdosGinzburgZiv.EGZ.Main.Parameters
 
+/-!
+# Input
+-/
+
 open scoped BigOperators
 
 namespace EGZ

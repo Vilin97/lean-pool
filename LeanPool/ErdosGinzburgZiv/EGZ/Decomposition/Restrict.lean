@@ -17,35 +17,41 @@ through the inclusion of its nodes in the original flag.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
+open Classical in
 theorem exists_isReducedElement (Φ : FlagDecomposition p d f) :
     ∃ x, Φ.IsReducedElement x := by
   obtain ⟨q, hq⟩ := Φ.faces_visible ⊤ (RationalPolytope.Face.top _)
   exact ⟨q.base, q, hq.1, rfl⟩
 
+open Classical in
 /-- The join-closed set of bases which occur among the proper points. -/
 abbrev ReducedNode (Φ : FlagDecomposition p d f) :=
   {x : Φ.flag.Node // Φ.IsReducedElement x}
 
+open Classical in
 noncomputable instance (Φ : FlagDecomposition p d f) : Fintype Φ.ReducedNode :=
   Subtype.fintype _
 
+open Classical in
 instance (Φ : FlagDecomposition p d f) : Nonempty Φ.ReducedNode :=
   let ⟨x, hx⟩ := Φ.exists_isReducedElement
   ⟨⟨x, hx⟩⟩
 
+open Classical in
 instance (Φ : FlagDecomposition p d f) : SemilatticeSup Φ.ReducedNode :=
   Subtype.semilatticeSup fun _ _ hx hy ↦ Φ.isReducedElement_sup hx hy
 
+open Classical in
 noncomputable instance (Φ : FlagDecomposition p d f) : OrderTop Φ.ReducedNode where
   top := Finset.univ.sup' Finset.univ_nonempty id
   le_top x := Finset.le_sup' id (Finset.mem_univ x)
 
+open Classical in
 /-- The convex flag obtained by retaining just the reduced nodes. -/
 noncomputable abbrev reducedFlag (Φ : FlagDecomposition p d f) : ConvexFlag where
   Node := Φ.ReducedNode
@@ -58,21 +64,25 @@ noncomputable abbrev reducedFlag (Φ : FlagDecomposition p d f) : ConvexFlag whe
   transition_refl x := Φ.flag.transition_refl x.1
   transition_trans hxy hyz := Φ.flag.transition_trans hxy hyz
 
+open Classical in
 /-- The inclusion of points of the restricted flag in the original flag. -/
 def reducedPointInclusion (Φ : FlagDecomposition p d f)
     (q : Φ.reducedFlag.Point) : Φ.flag.Point :=
   ⟨q.base.1, q.val, q.val_mem⟩
 
+open Classical in
 /-- A point whose base is reduced can be viewed in the restricted flag. -/
 def toReducedPoint (Φ : FlagDecomposition p d f) (q : Φ.flag.Point)
     (hq : Φ.IsReducedElement q.base) : Φ.reducedFlag.Point :=
   ⟨⟨q.base, hq⟩, q.val, q.val_mem⟩
 
+open Classical in
 @[simp]
 theorem reducedPointInclusion_toReducedPoint (Φ : FlagDecomposition p d f)
     (q : Φ.flag.Point) (hq : Φ.IsReducedElement q.base) :
     Φ.reducedPointInclusion (Φ.toReducedPoint q hq) = q := rfl
 
+open Classical in
 /-- Convex combinations in the original flag descend to the restricted
 flag whenever all the displayed bases are reduced. -/
 theorem convexCombination_toReducedPoint (Φ : FlagDecomposition p d f)
@@ -91,6 +101,7 @@ theorem convexCombination_toReducedPoint (Φ : FlagDecomposition p d f)
   · intro x hx
     exact hcomb.base_isLUB.2 hx
 
+open Classical in
 /-- Inclusion into the original flag preserves convex combinations.  The
 finite join of the active bases is reduced, so it can be used to compare
 the two least-upper-bound conditions. -/
@@ -133,6 +144,7 @@ theorem convexCombination_reducedPointInclusion (Φ : FlagDecomposition p d f)
     obtain ⟨i, hi, rfl⟩ := Finset.mem_image.mp hy
     exact hx i (Finset.mem_filter.mp hi).2
 
+open Classical in
 /-- The original representation restricted to the reduced nodes. -/
 noncomputable def reducedRepresentation (Φ : FlagDecomposition p d f) :
     FpRepresentation p d Φ.reducedFlag where
@@ -143,6 +155,7 @@ noncomputable def reducedRepresentation (Φ : FlagDecomposition p d f) :
   compatible h := Φ.representation.compatible h
   lattice_eq_standard x := Φ.representation.lattice_eq_standard x.1
 
+open Classical in
 theorem sum_reducedNode_eq (Φ : FlagDecomposition p d f) (hp : Odd p)
     (v : FpCoord p d) :
     ∑ x : Φ.ReducedNode, Φ.localWeight x.1 v = ∑ x, Φ.localWeight x v := by
@@ -154,6 +167,7 @@ theorem sum_reducedNode_eq (Φ : FlagDecomposition p d f) (hp : Odd p)
     exact Φ.localWeight_eq_zero_of_not_isReducedElement hp x.2 v
   simpa only [hz, add_zero] using h
 
+open Classical in
 theorem cumulativeWeight_reducedNode (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) (v : FpCoord p d) :
     FlagDecompositionRaw.cumulativeWeight (F := Φ.reducedFlag)
@@ -168,6 +182,7 @@ theorem cumulativeWeight_reducedNode (Φ : FlagDecomposition p d f) (hp : Odd p)
   simpa only [cumulativeWeight, FlagDecompositionRaw.cumulativeWeight,
     hz, add_zero, Subtype.coe_le_coe] using h
 
+open Classical in
 theorem hat_reducedNode (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) (z : IntCoord (Φ.flag.rank x.1)) :
     FlagDecompositionRaw.hat Φ.reducedRepresentation
@@ -179,12 +194,14 @@ theorem hat_reducedNode (Φ : FlagDecomposition p d f) (hp : Odd p)
   rw [hw]
   rfl
 
+open Classical in
 theorem omegaZero_reducedPointInclusion_iff (Φ : FlagDecomposition p d f)
     (q : Φ.reducedFlag.Point) :
     q ∈ FlagDecompositionRaw.omegaZero Φ.reducedRepresentation
         (fun x ↦ Φ.localWeight x.1) ↔
       Φ.reducedPointInclusion q ∈ Φ.omegaZero := Iff.rfl
 
+open Classical in
 /-- Inclusion identifies the proper-point set of the restricted data with
 the original proper points whose bases lie in the restriction. -/
 theorem omega_reducedPointInclusion_iff (Φ : FlagDecomposition p d f)
@@ -206,6 +223,7 @@ theorem omega_reducedPointInclusion_iff (Φ : FlagDecomposition p d f)
     · exact Φ.convexCombination_toReducedPoint points weight
         (Φ.reducedPointInclusion q) hred q.base.2 hcomb
 
+open Classical in
 /-- Restrict a decomposition to its reduced nodes.  No local mass is lost.
 The odd-modulus assumption ensures that zero local lifts detect exactly
 zero local finite-field weights. -/
@@ -231,47 +249,56 @@ noncomputable abbrev reduced (Φ : FlagDecomposition p d f) (hp : Odd p) :
     refine ⟨Φ.toReducedPoint q hred, ?_, hbase, hcoord⟩
     exact (Φ.omega_reducedPointInclusion_iff _).mpr hq
 
+open Classical in
 @[simp]
 theorem reduced_localWeight (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) : (Φ.reduced hp).localWeight x = Φ.localWeight x.1 := rfl
 
+open Classical in
 @[simp]
 theorem reduced_cumulativeWeight (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) :
     (Φ.reduced hp).cumulativeWeight x = Φ.cumulativeWeight x.1 :=
   funext (Φ.cumulativeWeight_reducedNode hp x)
 
+open Classical in
 @[simp]
 theorem reduced_retainedWeight (Φ : FlagDecomposition p d f) (hp : Odd p) :
     (Φ.reduced hp).retainedWeight = Φ.retainedWeight :=
   funext (Φ.sum_reducedNode_eq hp)
 
+open Classical in
 @[simp]
 theorem reduced_retainedMass (Φ : FlagDecomposition p d f) (hp : Odd p) :
     (Φ.reduced hp).retainedMass = Φ.retainedMass := by
   simp only [retainedMass, Φ.reduced_retainedWeight hp]
 
+open Classical in
 /-- Removing non-reduced nodes cannot increase the number of nodes. -/
 theorem card_reduced_le (Φ : FlagDecomposition p d f) (hp : Odd p) :
     Fintype.card (Φ.reduced hp).flag.Node ≤ Fintype.card Φ.flag.Node :=
   Fintype.card_subtype_le _
 
+open Classical in
 @[simp]
 theorem reduced_hat (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) : (Φ.reduced hp).hat x = Φ.hat x.1 :=
   funext (Φ.hat_reducedNode hp x)
 
+open Classical in
 @[simp]
 theorem reduced_gap (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) : (Φ.reduced hp).gap x = Φ.gap x.1 := by
   simp only [gap, Φ.reduced_hat hp]
 
+open Classical in
 @[simp]
 theorem reduced_omega_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
     (q : Φ.reducedFlag.Point) :
     q ∈ (Φ.reduced hp).omega ↔ Φ.reducedPointInclusion q ∈ Φ.omega :=
   Φ.omega_reducedPointInclusion_iff q
 
+open Classical in
 /-- Every original proper point is retained: its base is reduced by
 definition.  Thus inclusion identifies the two full proper-point sets. -/
 theorem image_reduced_omega (Φ : FlagDecomposition p d f) (hp : Odd p) :
@@ -284,6 +311,7 @@ theorem image_reduced_omega (Φ : FlagDecomposition p d f) (hp : Odd p) :
     have hred : Φ.IsReducedElement q.base := ⟨q, hq, rfl⟩
     exact ⟨Φ.toReducedPoint q hred, (Φ.reduced_omega_iff hp _).mpr hq, rfl⟩
 
+open Classical in
 /-- Every retained node is reduced in the restricted decomposition. -/
 theorem reduced_isReduced (Φ : FlagDecomposition p d f) (hp : Odd p) :
     (Φ.reduced hp).IsReduced := by
@@ -293,12 +321,14 @@ theorem reduced_isReduced (Φ : FlagDecomposition p d f) (hp : Odd p) :
   refine ⟨Φ.toReducedPoint q hred, (Φ.reduced_omega_iff hp _).mpr hq, ?_⟩
   exact Subtype.ext hbase
 
+open Classical in
 /-- Restriction preserves the same coordinate bound at every retained node. -/
 theorem reduced_isKBounded (Φ : FlagDecomposition p d f) (hp : Odd p)
     {K : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K) :
     (Φ.reduced hp).IsKBounded (fun x ↦ K x.1) :=
   fun x z hz ↦ hK x.1 z hz
 
+open Classical in
 @[simp]
 theorem reduced_liftedMassOn (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) (S : Set (RealCoord (Φ.flag.rank x.1))) :
@@ -306,18 +336,21 @@ theorem reduced_liftedMassOn (Φ : FlagDecomposition p d f) (hp : Odd p)
   unfold liftedMassOn
   rw [Φ.reduced_hat hp]
 
+open Classical in
 @[simp]
 theorem reduced_isLargeElement_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
     (ε : ℝ) (x : Φ.ReducedNode) :
     (Φ.reduced hp).IsLargeElement ε x ↔ Φ.IsLargeElement ε x.1 := by
   simp only [IsLargeElement, Φ.reduced_liftedMassOn hp, Φ.reduced_retainedMass hp]
 
+open Classical in
 @[simp]
 theorem reduced_isLargeFace_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
     (ε : ℝ) (x : Φ.ReducedNode) (Γ : (Φ.flag.polytope x.1).Face) :
     (Φ.reduced hp).IsLargeFace ε x Γ ↔ Φ.IsLargeFace ε x.1 Γ := by
   simp only [IsLargeFace, Φ.reduced_liftedMassOn hp, Φ.reduced_retainedMass hp]
 
+open Classical in
 @[simp]
 theorem reduced_isCompleteElement_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) (t : ℕ) (δ : ℝ) :
@@ -325,6 +358,7 @@ theorem reduced_isCompleteElement_iff (Φ : FlagDecomposition p d f) (hp : Odd p
   simp only [IsCompleteElement, Φ.reduced_cumulativeWeight hp]
   rfl
 
+open Classical in
 /-- The ambient affine spans and affine integer generating sets at retained
 nodes are unchanged, so minimality is preserved. -/
 theorem reduced_isMinimal (Φ : FlagDecomposition p d f) (hp : Odd p)
@@ -335,6 +369,7 @@ theorem reduced_isMinimal (Φ : FlagDecomposition p d f) (hp : Odd p)
   rw [Φ.reduced_cumulativeWeight hp]
   exact hspace
 
+open Classical in
 theorem reduced_pointsOnFace_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) (Γ : (Φ.flag.polytope x.1).Face)
     (q : Φ.reducedFlag.Point) :
@@ -347,6 +382,7 @@ theorem reduced_pointsOnFace_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
   rw [Φ.reduced_omega_iff hp]
   rfl
 
+open Classical in
 theorem reduced_faceBases_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x y : Φ.ReducedNode) (Γ : (Φ.flag.polytope x.1).Face) :
     y ∈ (Φ.reduced hp).faceBases x Γ ↔ y.1 ∈ Φ.faceBases x.1 Γ := by
@@ -362,6 +398,7 @@ theorem reduced_faceBases_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
       (Φ.reduced_pointsOnFace_iff hp x Γ _).mpr hq,
       Subtype.ext hbase⟩
 
+open Classical in
 /-- The face index computed after restriction is the same original node.
 Every face index is reduced, which makes it available in the restriction. -/
 theorem reduced_faceIndex_val (Φ : FlagDecomposition p d f) (hp : Odd p)
@@ -387,12 +424,14 @@ theorem reduced_faceIndex_val (Φ : FlagDecomposition p d f) (hp : Odd p)
       Finset.le_sup' id hynew
     exact hle
 
+open Classical in
 theorem reduced_faceIndex (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) (Γ : (Φ.flag.polytope x.1).Face) :
     (Φ.reduced hp).faceIndex x Γ =
       (⟨Φ.faceIndex x.1 Γ, Φ.isReducedElement_faceIndex x.1 Γ⟩ : Φ.ReducedNode) :=
   Subtype.ext (Φ.reduced_faceIndex_val hp x Γ)
 
+open Classical in
 @[simp]
 theorem reduced_isRealizedFace_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.ReducedNode) (Γ : (Φ.flag.polytope x.1).Face) :
@@ -406,6 +445,7 @@ theorem reduced_isRealizedFace_iff (Φ : FlagDecomposition p d f) (hp : Odd p)
   exact hcongr _ _ ((Φ.reduced hp).faceIndex_le x Γ) (Φ.faceIndex_le x.1 Γ)
     (Φ.reduced_faceIndex_val hp x Γ)
 
+open Classical in
 /-- Restriction preserves completeness with the same thresholds at every
 retained node and the same parameters. -/
 theorem reduced_isComplete (Φ : FlagDecomposition p d f) (hp : Odd p)

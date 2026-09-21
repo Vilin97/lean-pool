@@ -28,7 +28,7 @@ noncomputable def lineageMassMaps : LineageMassMaps (fun i ↦ (s i).decompositi
   level_parent i := (P i).level_parent
   stable i := (P i).stable
   stable_real i := (P i).stable_real
-  injective_below i L hL := (P i).parent_injective.mono (fun _ hx ↦ hx.trans hL)
+  injective_below i _L hL := (P i).parent_injective.mono (fun _ hx ↦ hx.trans hL)
 
 theorem cutoff_ge_of_colors_ge {L : ℕ} (h : ∀ i, 2 * L ≤ (P i).event.color) :
     ∀ i, L ≤ (lineageMassMaps P).cutoff i :=

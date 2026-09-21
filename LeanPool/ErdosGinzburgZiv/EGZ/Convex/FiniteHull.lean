@@ -42,7 +42,7 @@ theorem convexIndependent {d n : ℕ} {points : Fin n → RealCoord d}
   rw [convexIndependent_iff_finset]
   intro s i hi
   classical
-  letI : DecidableEq (RealCoord d) := Classical.decEq _
+  let : DecidableEq (RealCoord d) := Classical.decEq _
   rw [Finset.mem_convexHull'] at hi
   obtain ⟨w, hw0, hwsum, hwbar⟩ := hi
   let weight : Fin n → ℝ := fun j ↦ if j ∈ s then w (points j) else 0
@@ -185,7 +185,7 @@ theorem exists_openSegment_of_mem_intrinsicInterior {d : ℕ}
     ∃ z ∈ C, q ∈ openSegment ℝ x z := by
   rw [mem_intrinsicInterior] at hq
   obtain ⟨qA, hqAint, rfl⟩ := hq
-  letI : Nonempty (affineSpan ℝ C) := ⟨qA⟩
+  let : Nonempty (affineSpan ℝ C) := ⟨qA⟩
   let xA : affineSpan ℝ C := ⟨x, subset_affineSpan ℝ C hx⟩
   rw [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at hqAint
   obtain ⟨ε, hε, hball⟩ := hqAint

@@ -41,10 +41,12 @@ omit [DecidableEq G] in
 @[simp] theorem card_translate (Y : Finset G) (a : G) :
     (translate Y a).card = Y.card := Finset.card_map _
 
+omit [DecidableEq G] in
 @[simp] theorem translate_zero (Y : Finset G) : translate Y 0 = Y := by
   ext x
   simp
 
+omit [DecidableEq G] in
 theorem translate_add (Y : Finset G) (a b : G) :
     translate Y (a + b) = translate (translate Y a) b := by
   ext x
@@ -164,6 +166,7 @@ noncomputable def basisBox (E : Basis (Fin d) (ZMod p) (FpCoord p d)) (m : ℕ) 
   exact Finset.univ.image fun a : Fin d → Fin m ↦
     E.equivFun.symm (fun i ↦ (a i : ℕ))
 
+omit [NeZero p] in
 theorem basisBox_injective (E : Basis (Fin d) (ZMod p) (FpCoord p d))
     {m : ℕ} (hm : m ≤ p) : Function.Injective
       (fun a : Fin d → Fin m ↦ E.equivFun.symm (fun i ↦ (a i : ℕ))) := by
@@ -182,12 +185,14 @@ theorem card_basisBox (E : Basis (Fin d) (ZMod p) (FpCoord p d))
   rw [basisBox, Finset.card_image_of_injective _ (basisBox_injective E hm)]
   simp
 
+omit [NeZero p] in
 theorem basisBox_nonempty (E : Basis (Fin d) (ZMod p) (FpCoord p d))
     {m : ℕ} (hm : 0 < m) : (basisBox E m).Nonempty := by
   classical
   let a : Fin d → Fin m := fun _ ↦ ⟨0, hm⟩
   exact ⟨_, Finset.mem_image.mpr ⟨a, Finset.mem_univ _, rfl⟩⟩
 
+omit [NeZero p] in
 /-- A member of a basis box adds at most the sum of the boundaries of its
 individual basis steps, counted with their multiplicities. -/
 theorem boundary_basisBox_le (E : Basis (Fin d) (ZMod p) (FpCoord p d))

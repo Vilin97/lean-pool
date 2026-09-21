@@ -6,6 +6,10 @@ Authors: Dmitrii Zakharov
 
 import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
 
+/-!
+# Thickness
+-/
+
 namespace EGZ
 
 theorem natMassOn_mono_set {α : Type*} [Fintype α] (w : α → ℕ)

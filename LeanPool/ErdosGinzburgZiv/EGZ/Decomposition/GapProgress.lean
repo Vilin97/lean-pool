@@ -41,7 +41,7 @@ theorem gapState_gapCondition {i : ℕ} (hi : 1 ≤ i)
     (by exact_mod_cast Fintype.card_pos : (0 : ℝ) < Fintype.card s.decomposition.flag.Node)
     (by exact_mod_cast hcard) (Nat.cast_nonneg _) hretained hscale hgap
 
-noncomputable def gapProgress (hε : 0 ≤ ε) (hδ : 0 ≤ δ)
+noncomputable def gapProgress (_hε : 0 ≤ ε) (hδ : 0 ≤ δ)
     (hvalid : ¬ s.GapCondition δ) (hgap : (gapState s D).GapCondition δ)
     (g : ℕ → ℕ) : Progress s (gapState s D) ε δ g where
   event := .gap

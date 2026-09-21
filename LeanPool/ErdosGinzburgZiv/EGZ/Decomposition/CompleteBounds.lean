@@ -17,7 +17,6 @@ support has rank at most twice the ambient dimension and lies in the last
 selected width box.
 -/
 
-open Classical
 
 namespace EGZ.FlagDecomposition.CompletePreparation
 
@@ -26,11 +25,13 @@ variable {p d : ℕ} [Fact p.Prime] {f : FpCoord p d → ℕ}
     (D : CompletePreparation Φ anchor t δ)
     (hp : Odd p) (hδ : 0 ≤ δ) (hsmall : (3 : ℝ) ^ (d + 1) * δ < 1)
 
+open Classical in
 theorem extra_le_count (x : (D.split hp hδ hsmall).flag.Node) :
     D.extra hp hδ hsmall x ≤ D.count := by
   change (if x.1.1.2 = 0 then D.count else 0) ≤ D.count
   split_ifs <;> omega
 
+open Classical in
 theorem selected_of_extra_pos (x : (D.split hp hδ hsmall).flag.Node)
     (hx : 0 < D.extra hp hδ hsmall x) (v : FpCoord p d)
     (hv : (D.split hp hδ hsmall).cumulativeWeight x v ≠ 0) : v ∈ D.selectedSet := by
@@ -46,6 +47,7 @@ theorem selected_of_extra_pos (x : (D.split hp hδ hsmall).flag.Node)
   by_contra h
   exact hv (ite_eq_right h)
 
+open Classical in
 theorem slabCoordinates_bound (ht : Monotone t)
     (htsmall : ∀ i : Fin D.count, 2 * t (i + 1) < p)
     (x : (D.split hp hδ hsmall).flag.Node) (v : FpCoord p d)
@@ -72,16 +74,19 @@ theorem slabCoordinates_bound (ht : Monotone t)
     have hi := i.isLt
     omega
 
+open Classical in
 theorem split_isKBounded {K : ℕ} (hK : Φ.IsKBounded (fun _ ↦ K)) :
     (D.split hp hδ hsmall).IsKBounded (fun _ ↦ K) := by
   intro x q hq
   have hold := (D.subdivisionMap hp hδ hsmall).polytope_mem x hq
   exact hK _ q hold
 
+open Classical in
 noncomputable abbrev diagram : LatticeSupportDiagram :=
   Augmented.diagram (D.split hp hδ hsmall) (D.extra hp hδ hsmall) D.chain.direction hp
     (D.extra_antitone hp hδ hsmall)
 
+open Classical in
 theorem diagram_rank_le (x : (D.diagram hp hδ hsmall).Node) :
     (D.diagram hp hδ hsmall).rank x ≤ 2 * d := by
   change (D.split hp hδ hsmall).flag.rank x + D.extra hp hδ hsmall x ≤ 2 * d
@@ -89,6 +94,7 @@ theorem diagram_rank_le (x : (D.diagram hp hδ hsmall).Node) :
   have he := (D.extra_le_count hp hδ hsmall x).trans D.count_le
   omega
 
+open Classical in
 theorem diagram_support_bound {K : ℕ} (hK : Φ.IsKBounded (fun _ ↦ K))
     (ht : Monotone t) (hKt : K ≤ t D.count)
     (htsmall : ∀ i : Fin D.count, 2 * t (i + 1) < p)

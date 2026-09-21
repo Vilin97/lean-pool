@@ -11,24 +11,27 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationGapCapacity
 
 namespace EGZ.FlagDecomposition.Iteration
 
-open Classical
 
 variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
     {s : ℕ → State p d f} {ε : ℝ} {δ : ℕ → ℝ} {g : ℕ → ℕ} {N : ℕ}
     (P : ∀ i, i < N → Progress (s i) (s (i + 1)) ε (δ i) g)
 
+open Classical in
 /-- Colors outside the finite run are arbitrary and never used. -/
 noncomputable def progressColor (i : ℕ) : ℕ :=
   if hi : i < N then (P i hi).event.color else 2 * (d + 1) ^ 2
 
+open Classical in
 theorem progressColor_eq (i : ℕ) (hi : i < N) :
     progressColor P i = (P i hi).event.color := dite_eq_left hi
 
+open Classical in
 theorem progressColor_lt (i : ℕ) (hi : i < N) :
     progressColor P i < 2 * (d + 1) ^ 2 + 1 := by
   rw [progressColor_eq P i hi]
   exact (P i hi).event.color_lt
 
+open Classical in
 /-- Complete and face event bounds, together with the checked gap bound,
 give precisely the interval-capacity hypothesis of the finite-color lemma. -/
 theorem hasIntervalCapacity_of_event_bounds
@@ -64,6 +67,7 @@ theorem hasIntervalCapacity_of_event_bounds
   · rw [Finset.not_nonempty_iff_eq_empty.mp hn]
     exact Nat.zero_le _
 
+open Classical in
 theorem length_lt_stoppingBound_of_event_bounds
     (hδ : Antitone δ) (hδnonneg : ∀ i, 0 ≤ δ i)
     (hcomplete : ∀ a b L, a ≤ b → b < N → L < (d + 1) ^ 2 →

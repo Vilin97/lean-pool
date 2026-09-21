@@ -8,6 +8,10 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Main.Assembly
 import LeanPool.ErdosGinzburgZiv.EGZ.Balanced.Existence
 import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.RelativeProof
 
+/-!
+# Main Theorem
+-/
+
 namespace EGZ
 
 /-- The unconditional upper bound, combining relative expansion and

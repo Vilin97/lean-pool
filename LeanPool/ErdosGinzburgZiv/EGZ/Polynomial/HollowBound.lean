@@ -440,7 +440,7 @@ theorem card_le_choose_add_one {p d s : ℕ} (hp : p.Prime) (hd : 1 ≤ d)
   cases p with
   | zero => exact (hp.ne_zero rfl).elim
   | succ q =>
-      letI : Fact (q + 1).Prime := ⟨by simpa using hp⟩
+      let : Fact (q + 1).Prime := ⟨by simpa using hp⟩
       exact Polynomial.phollow_length_le_succ_choose hd hv
 
 end IsPHollow

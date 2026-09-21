@@ -7,15 +7,17 @@ Authors: Dmitrii Zakharov
 import Mathlib.Combinatorics.Additive.ErdosGinzburgZiv
 import Lean.Elab.Tactic.Omega
 
-open scoped BigOperators
-
-namespace PrimeEGZ
-
 /-!
 This completed file is a regression example, not the paper's Theorem 1.2.
 It proves the classical one-dimensional Erdős--Ginzburg--Ziv theorem already
 supported by Mathlib.
 -/
+
+open scoped BigOperators
+
+namespace PrimeEGZ
+
+
 
 /-- A sequence `a` contains `p` terms, at distinct positions, whose sum is
 zero in `ZMod p`. -/
@@ -75,22 +77,17 @@ theorem not_forcesZeroSum_two_mul_sub_two {p : ℕ} (hp : 2 ≤ p) :
     ¬ForcesZeroSum p (2 * p - 2) := by
   classical
   intro h
-
   let ι := Fin (p - 1) × Bool
   let a : ι → ZMod p := fun x => if x.2 = true then 1 else 0
-
   have hcard : 2 * p - 2 ≤ Fintype.card ι := by
     simp [ι]
     omega
-
   obtain ⟨t, htcard, htsum⟩ := h a hcard
-
   let rightTerms : Finset ι := t.filter fun x => x.2 = true
   have hrightCast : (rightTerms.card : ZMod p) = 0 := by
     simpa [a, rightTerms, Finset.sum_ite] using htsum
   have hp_dvd_right : p ∣ rightTerms.card :=
     (ZMod.natCast_eq_zero_iff rightTerms.card p).mp hrightCast
-
   let rightSide : Finset ι :=
     (Finset.univ : Finset (Fin (p - 1))).product {true}
   have hright_sub : rightTerms ⊆ rightSide := by
@@ -113,7 +110,6 @@ theorem not_forcesZeroSum_two_mul_sub_two {p : ℕ} (hp : 2 ≤ p) :
     exact hmod
   have hright_empty : rightTerms = ∅ :=
     Finset.card_eq_zero.mp hright_zero
-
   let leftSide : Finset ι :=
     (Finset.univ : Finset (Fin (p - 1))).product {false}
   have ht_sub_left : t ⊆ leftSide := by
@@ -128,7 +124,6 @@ theorem not_forcesZeroSum_two_mul_sub_two {p : ℕ} (hp : 2 ≤ p) :
           simp [rightTerms, hx]
         rw [hright_empty] at hxr
         simp at hxr
-
   have ht_le : t.card ≤ p - 1 := by
     calc
       t.card ≤ leftSide.card := Finset.card_le_card ht_sub_left

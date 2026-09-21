@@ -19,23 +19,25 @@ combinations. The bounds retain the selected node's own radius.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f)
 
+open Classical in
 theorem integralPoint_coordinates (q : Φ.flag.Point) (hq : q.IsIntegral) :
     ∃ c : IntCoord (Φ.flag.rank q.base), c.real = q.val :=
   (Φ.representation.lattice_eq_standard _ _).mp hq
 
+open Classical in
 theorem integer_mem_affineSpan_liftedSupport (hmin : Φ.IsMinimal)
     (x : Φ.flag.Node) (c : IntCoord (Φ.flag.rank x)) :
     c ∈ affineSpan ℤ (↑(Φ.liftedSupport x) : Set (IntCoord (Φ.flag.rank x))) := by
   rw [(affineIntSpans_iff_affineSpan_eq_top _).mp (hmin x).2]
   exact AffineSubspace.mem_top _ _ _
 
+open Classical in
 theorem liftedSupport_bound {K : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K)
     (x : Φ.flag.Node) : ∀ z ∈ Φ.liftedSupport x, latticeSupNorm z ≤ K x := by
   intro z hz
@@ -43,19 +45,23 @@ theorem liftedSupport_bound {K : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K)
   rw [Φ.polytope_eq_liftedSupport]
   exact subset_convexHull ℝ _ ⟨z, hz, rfl⟩
 
+open Classical in
 theorem liftedSupport_subset_latticeBox {K : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K)
     (x : Φ.flag.Node) : Φ.liftedSupport x ⊆ latticeBox (Φ.flag.rank x) (K x) := by
   intro z hz
   exact mem_latticeBox.mpr (Φ.liftedSupport_bound hK x z hz)
 
+open Classical in
 theorem integralPoint_bound {K : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K)
     (q : Φ.flag.Point) (c : IntCoord (Φ.flag.rank q.base)) (hc : c.real = q.val) :
     latticeSupNorm c ≤ K q.base := hK q.base c (hc.symm ▸ q.val_mem)
 
+open Classical in
 theorem cumulativeSupport_sum (hodd : Odd p) (x : Φ.flag.Node) :
     (∑ q : Φ.liftedSupport x, Φ.hat x q) = natMass (Φ.cumulativeWeight x) := by
   simpa only [Finset.sum_coe_sort] using Φ.sum_liftedSupport hodd x
 
+open Classical in
 /-- The cumulative mass profile at an interior lattice center, in the
 balanced-combination interface. -/
 noncomputable def cumulativeBalancedData (hmin : Φ.IsMinimal) (x : Φ.flag.Node)
@@ -70,11 +76,13 @@ noncomputable def cumulativeBalancedData (hmin : Φ.IsMinimal) (x : Φ.flag.Node
   center_mem_span := Φ.integer_mem_affineSpan_liftedSupport hmin x c
   center_mem_interior := by rwa [← Φ.polytope_eq_liftedSupport]
 
+open Classical in
 /-- Centrality normalized by the selected cumulative mass. -/
 noncomputable def cumulativeCentrality (x : Φ.flag.Node) : ℝ :=
   (Φ.retainedMass : ℝ) /
     ((hollowConstant p d : ℝ) * (natMass (Φ.cumulativeWeight x) : ℝ))
 
+open Classical in
 theorem cumulativeCentrality_mul_mass (hodd : Odd p) (x : Φ.flag.Node) :
     Φ.cumulativeCentrality x * (natMass (Φ.cumulativeWeight x) : ℝ) =
       (Φ.retainedMass : ℝ) / (hollowConstant p d : ℝ) := by
@@ -83,12 +91,14 @@ theorem cumulativeCentrality_mul_mass (hodd : Odd p) (x : Φ.flag.Node) :
   unfold cumulativeCentrality
   rw [div_mul_eq_div_mul_one_div, mul_assoc, one_div, inv_mul_cancel₀ hm, mul_one]
 
+open Classical in
 theorem cumulativeCentrality_pos (hodd : Odd p) (hw : 0 < hollowConstant p d)
     (x : Φ.flag.Node) : 0 < Φ.cumulativeCentrality x := by
   unfold cumulativeCentrality
   exact div_pos (by exact_mod_cast Φ.retainedMass_pos hodd)
     (mul_pos (by exact_mod_cast hw) (by exact_mod_cast Φ.cumulativeMass_pos hodd x))
 
+open Classical in
 theorem inv_hollowConstant_le_cumulativeCentrality (hodd : Odd p) (x : Φ.flag.Node) :
     (hollowConstant p d : ℝ)⁻¹ ≤ Φ.cumulativeCentrality x := by
   have hm : 0 < (natMass (Φ.cumulativeWeight x) : ℝ) := by
@@ -100,6 +110,7 @@ theorem inv_hollowConstant_le_cumulativeCentrality (hodd : Odd p) (x : Φ.flag.N
   simpa only [div_eq_mul_inv, mul_comm] using
     mul_le_mul_of_nonneg_right hmass (inv_nonneg.mpr (Nat.cast_nonneg (hollowConstant p d)))
 
+open Classical in
 theorem cumulativeBalancedData_isCentral (hodd : Odd p) (hmin : Φ.IsMinimal)
     (x : Φ.flag.Node) (c : IntCoord (Φ.flag.rank x))
     (hc : c.real ∈ intrinsicInterior ℝ (Φ.flag.polytope x).carrier)
@@ -120,6 +131,7 @@ theorem cumulativeBalancedData_isCentral (hodd : Odd p) (hmin : Φ.IsMinimal)
       (fun z ↦ if ξ c.real ≤ ξ z.real then (Φ.hat x z : ℝ) else 0)).symm
   exact (hcentral ξ).trans_eq hm
 
+open Classical in
 /-- The concrete cumulative fibre selected for the balanced-combination
 and relative-expansion arguments. All bounds use its own node radius. -/
 structure CumulativeSelection (T K : Φ.flag.Node → ℕ) (δ : ℝ) where
@@ -140,6 +152,7 @@ namespace CumulativeSelection
 
 variable {Φ} {T K : Φ.flag.Node → ℕ} {δ : ℝ}
 
+open Classical in
 noncomputable def data (D : Φ.CumulativeSelection T K δ) :
     BalancedCombination.Data (Φ.flag.rank D.node) where
   support := Φ.liftedSupport D.node
@@ -150,19 +163,23 @@ noncomputable def data (D : Φ.CumulativeSelection T K δ) :
   center_mem_span := D.center_mem_span
   center_mem_interior := D.center_mem_interior
 
+open Classical in
 theorem centrality_le_one (D : Φ.CumulativeSelection T K δ) :
     Φ.cumulativeCentrality D.node ≤ 1 := D.data.centrality_le_one D.central
 
+open Classical in
 theorem mass_pos (D : Φ.CumulativeSelection T K δ) (hodd : Odd p) :
     0 < ∑ q : Φ.liftedSupport D.node, (Φ.hat D.node q : ℝ) := by
   exact_mod_cast (Φ.cumulativeSupport_sum hodd D.node).symm ▸ Φ.cumulativeMass_pos hodd D.node
 
+open Classical in
 theorem mass_le_retained (D : Φ.CumulativeSelection T K δ) (hodd : Odd p) :
     (∑ q : Φ.liftedSupport D.node, (Φ.hat D.node q : ℝ)) ≤ Φ.retainedMass := by
   have h := (Φ.cumulativeSupport_sum hodd D.node).le.trans
     (Φ.cumulativeMass_le_retainedMass D.node)
   exact_mod_cast h
 
+open Classical in
 theorem centrality_mul_mass (D : Φ.CumulativeSelection T K δ) (hodd : Odd p) :
     Φ.cumulativeCentrality D.node *
       (∑ q : Φ.liftedSupport D.node, (Φ.hat D.node q : ℝ)) =
@@ -175,6 +192,7 @@ theorem centrality_mul_mass (D : Φ.CumulativeSelection T K δ) (hodd : Odd p) :
 
 end CumulativeSelection
 
+open Classical in
 /-- Completeness and the flag centerpoint theorem select a full-dimensional
 interior lattice center in an element complete at the requested scale. -/
 theorem select_cumulative_node (hp : p.Prime) (hodd : Odd p)

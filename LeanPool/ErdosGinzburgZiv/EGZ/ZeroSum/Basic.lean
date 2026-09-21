@@ -8,6 +8,10 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Combinatorics.Pigeonhole
 import Mathlib.Data.ZMod.Basic
 
+/-!
+# Basic
+-/
+
 open scoped BigOperators
 
 namespace EGZ
@@ -101,7 +105,7 @@ theorem injective {p d s : ℕ} {v : Fin s → FpVec p d}
 /-- A prime-field `p`-hollow family has at most all the vectors in the space. -/
 theorem card_le {p d s : ℕ} {v : Fin s → FpVec p d}
     (hv : IsPHollow p v) (hp : Nat.Prime p) : s ≤ p ^ d := by
-  letI : NeZero p := ⟨hp.ne_zero⟩
+  let : NeZero p := ⟨hp.ne_zero⟩
   rw [← Fintype.card_fin s, ← FpVec.card p d]
   exact Fintype.card_le_of_injective v (hv.injective hp.two_le)
 
@@ -209,7 +213,7 @@ theorem pigeonhole_bound (p d : ℕ) :
     intro a
     refine ⟨∅, by simp, ?_⟩
     simp
-  · letI : NeZero p := ⟨hp0⟩
+  · let : NeZero p := ⟨hp0⟩
     intro a
     have hpigeon : Fintype.card (FpVec p d) * (p - 1) <
         Fintype.card (Fin ((p - 1) * p ^ d + 1)) := by

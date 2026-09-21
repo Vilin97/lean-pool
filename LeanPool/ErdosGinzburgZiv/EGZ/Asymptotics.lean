@@ -9,6 +9,8 @@ import Mathlib.Analysis.Asymptotics.Defs
 import Mathlib.Algebra.Order.Archimedean.Basic
 import Mathlib.Order.Filter.AtTopBot.Basic
 
+/-! ## Consequences of the polynomial bound -/
+
 namespace EGZ
 
 /-- The filter for a natural number tending to infinity through prime values. -/
@@ -33,7 +35,7 @@ def MainAsymptotic (d : ℕ) : Prop :=
         (p : ℝ) * (hollowConstant p d : ℝ)) =o[atTopAlongPrimes]
     (fun p : ℕ => (p : ℝ))
 
-/-! ## Consequences of the polynomial bound -/
+
 
 /-- The polynomial-method bound holds eventually (in fact, pointwise) along
 the primes. -/

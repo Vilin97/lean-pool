@@ -18,17 +18,19 @@ mass and every upper cumulative weight.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.TwoLayer
 
 variable {α : Type*} [SemilatticeSup α]
 
+open Classical in
 /-- Upper copies of every node and lower copies below the chosen anchor. -/
 abbrev Node (anchor : α) := {a : α × Fin 2 // a.2 = 0 → a.1 ≤ anchor}
 
+open Classical in
 noncomputable instance (anchor : α) [Fintype α] : Fintype (Node anchor) := Subtype.fintype _
 
+open Classical in
 instance (anchor : α) : SemilatticeSup (Node anchor) :=
   Subtype.semilatticeSup fun a b ha hb h ↦ by
     have ha0 : a.2 = 0 := by
@@ -41,6 +43,7 @@ instance (anchor : α) : SemilatticeSup (Node anchor) :=
       omega
     exact sup_le (ha ha0) (hb hb0)
 
+open Classical in
 instance (anchor : α) [OrderTop α] : OrderTop (Node anchor) where
   top := ⟨(⊤, 1), by simp⟩
   le_top a := by
@@ -50,14 +53,17 @@ instance (anchor : α) [OrderTop α] : OrderTop (Node anchor) where
       have := a.1.2.isLt
       omega
 
+open Classical in
 /-- Forget the layer; this preserves joins. -/
 def projection (anchor : α) : SupHom (Node anchor) α where
   toFun a := a.1.1
   map_sup' _ _ := rfl
 
+open Classical in
 /-- The upper copy of an old node. -/
 def upper (anchor : α) (a : α) : Node anchor := ⟨(a, 1), by simp⟩
 
+open Classical in
 /-- The lower copy of a node below the anchor. -/
 def lower (anchor : α) (a : α) (ha : a ≤ anchor) : Node anchor := ⟨(a, 0), fun _ ↦ ha⟩
 
@@ -85,16 +91,19 @@ def lower (anchor : α) (a : α) (ha : a ≤ anchor) : Node anchor := ⟨(a, 0),
   change ¬ (a ≤ b ∧ (1 : Fin 2) ≤ 0)
   simp
 
+open Classical in
 def upperEmbedding (anchor : α) : α ↪o Node anchor where
   toFun := upper anchor
   inj' _ _ h := congrArg (projection anchor) h
   map_rel_iff' := upper_le_upper anchor _ _
 
+open Classical in
 def lowerEmbedding (anchor : α) : {a : α // a ≤ anchor} ↪o Node anchor where
   toFun a := lower anchor a.1 a.2
   inj' _ _ h := Subtype.ext (congrArg (projection anchor) h)
   map_rel_iff' := lower_le_lower anchor _ _ _ _
 
+open Classical in
 /-- Every layered node is uniquely either an upper copy or a lower copy. -/
 noncomputable def layerEquiv (anchor : α) : α ⊕ {a : α // a ≤ anchor} ≃ Node anchor where
   toFun := Sum.elim (upper anchor) (fun a ↦ lower anchor a.1 a.2)
@@ -114,15 +123,18 @@ section Finite
 
 variable [Fintype α]
 
+open Classical in
 theorem card_nodes (anchor : α) :
     Fintype.card (Node anchor) = Fintype.card α + Fintype.card {a : α // a ≤ anchor} := by
   rw [← Fintype.card_congr (layerEquiv anchor), Fintype.card_sum]
 
+open Classical in
 theorem card_nodes_le (anchor : α) : Fintype.card (Node anchor) ≤ 2 * Fintype.card α := by
   rw [card_nodes]
   have := Fintype.card_subtype_le (fun a : α ↦ a ≤ anchor)
   omega
 
+open Classical in
 /-- Split a sum over layered nodes into upper and lower contributions. -/
 theorem sum_nodes {M : Type*} [AddCommMonoid M] (anchor : α) (g : Node anchor → M) :
     ∑ a, g a = (∑ a : α, g (upper anchor a)) +
@@ -130,6 +142,7 @@ theorem sum_nodes {M : Type*} [AddCommMonoid M] (anchor : α) (g : Node anchor �
   rw [← (layerEquiv anchor).sum_comp g, Fintype.sum_sum_type]
   rfl
 
+open Classical in
 theorem sum_below_eq {M : Type*} [AddCommMonoid M] (anchor : α) (g : α → M) :
     ∑ a : {a : α // a ≤ anchor}, g a = ∑ a : α, if a ≤ anchor then g a else 0 := by
   rw [← Finset.sum_filter]
@@ -140,12 +153,14 @@ end Finite
 
 variable {β : Type*}
 
+open Classical in
 /-- Move selected atoms below the anchor into the lower layer. -/
 noncomputable def splitWeight (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : Node anchor) (v : β) : ℕ :=
   if a.1.2 = 0 then (if S v then w a.1.1 v else 0)
   else if a.1.1 ≤ anchor ∧ S v then 0 else w a.1.1 v
 
+open Classical in
 @[simp] theorem splitWeight_upper (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : α) (v : β) :
     splitWeight anchor w S (upper anchor a) v =
@@ -153,17 +168,20 @@ noncomputable def splitWeight (anchor : α) (w : α → β → ℕ) (S : β → 
   simp only [splitWeight, upper]
   split_ifs <;> rfl
 
+open Classical in
 @[simp] theorem splitWeight_lower (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : α) (ha : a ≤ anchor) (v : β) :
     splitWeight anchor w S (lower anchor a ha) v = if S v then w a v else 0 := by
   simp [splitWeight, lower]
 
+open Classical in
 theorem splitWeight_le (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : Node anchor) (v : β) : splitWeight anchor w S a v ≤ w (projection anchor a) v := by
   change splitWeight anchor w S a v ≤ w a.1.1 v
   unfold splitWeight
   split_ifs <;> omega
 
+open Classical in
 /-- Every old atom retains its full weight at one of the two copies. -/
 theorem exists_splitWeight_eq (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : α) (v : β) :
@@ -176,6 +194,7 @@ section Finite
 
 variable [Fintype α]
 
+open Classical in
 /-- Splitting atoms between the two layers preserves every retained weight. -/
 theorem sum_splitWeight (anchor : α) (w : α → β → ℕ) (S : β → Prop) (v : β) :
     ∑ a : Node anchor, splitWeight anchor w S a v = ∑ a : α, w a v := by
@@ -186,10 +205,12 @@ theorem sum_splitWeight (anchor : α) (w : α → β → ℕ) (S : β → Prop) 
   intro a _
   by_cases ha : a ≤ anchor <;> by_cases hv : S v <;> simp [ha, hv]
 
+open Classical in
 /-- Cumulative weight in an arbitrary finite node order. -/
 noncomputable def cumulativeWeight (w : α → β → ℕ) (a : α) (v : β) : ℕ :=
   ∑ b, if b ≤ a then w b v else 0
 
+open Classical in
 /-- Every upper node retains its entire old cumulative weight. -/
 theorem cumulativeWeight_upper (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : α) (v : β) :
@@ -204,6 +225,7 @@ theorem cumulativeWeight_upper (anchor : α) (w : α → β → ℕ) (S : β →
   by_cases hba : b ≤ a <;> by_cases hb : b ≤ anchor <;> by_cases hv : S v <;>
     simp [hba, hb, hv]
 
+open Classical in
 /-- A lower node has precisely the selected part of its old cumulative weight. -/
 theorem cumulativeWeight_lower (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : α) (ha : a ≤ anchor) (v : β) :
@@ -223,6 +245,7 @@ theorem cumulativeWeight_lower (anchor : α) (w : α → β → ℕ) (S : β →
     · simp [hb]
   · simp [hv]
 
+open Classical in
 /-- Every layered cumulative weight is bounded by its old projected weight. -/
 theorem cumulativeWeight_projection_le (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : Node anchor) (v : β) :

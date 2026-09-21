@@ -6,6 +6,10 @@ Authors: Dmitrii Zakharov
 
 import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Basic
 
+/-!
+# Constants
+-/
+
 namespace EGZ
 
 /-- The Erdős--Ginzburg--Ziv constant `𝔰(𝔽_p^d)`: the least exact sequence

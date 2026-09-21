@@ -45,14 +45,17 @@ abbrev Sample (P : ExchangePattern S) (X : S → Type*) := ∀ i : P.Position, X
 
 def size (P : ExchangePattern S) : ℕ := (∑ q, P.positive q) + ∑ q, P.negative q
 
+omit [DecidableEq S] in
 @[simp] theorem card_position (P : ExchangePattern S) : Fintype.card P.Position = P.size := by
   rw [Fintype.card_congr (show P.Position ≃
       ((Σ q, Fin (P.positive q)) ⊕ (Σ q, Fin (P.negative q))) from Equiv.refl _)]
   simp only [Fintype.card_sum, Fintype.card_sigma, Fintype.card_fin, size]
 
+omit [Fintype S] [DecidableEq S] in
 @[simp] theorem sign_natAbs (P : ExchangePattern S) (i : P.Position) : (P.sign i).natAbs = 1 := by
   cases i <;> simp [sign]
 
+omit [DecidableEq S] in
 theorem sum_sign_smul {G : Type*} [AddCommGroup G] (P : ExchangePattern S) (r : S → G) :
     (∑ i : P.Position, P.sign i • r (P.label i)) =
       (∑ q, P.positive q • r q) - ∑ q, P.negative q • r q := by
@@ -80,6 +83,7 @@ theorem ofRelation_sum {G : Type*} [AddCommGroup G] (b : S → ℤ) (r : S → G
   · rw [Int.toNat_eq_zero.mpr h, zero_smul, zero_sub]
     rw [← natCast_zsmul, Int.toNat_of_nonneg (neg_nonneg.mpr h), neg_smul, neg_neg]
 
+omit [DecidableEq S] in
 theorem ofRelation_size (b : S → ℤ) : (ofRelation b).size = ∑ q, (b q).natAbs := by
   rw [size, ← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl

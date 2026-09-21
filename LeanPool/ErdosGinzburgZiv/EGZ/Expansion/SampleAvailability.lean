@@ -110,7 +110,7 @@ theorem exists_thick_exchange_weight {p r t N B W : ℕ} [Fact p.Prime]
   let ν := sampleWeight C value valid
   have hνthick := sampleWeight_centrallyThick C value valid hη hηone hbad hout
   refine ⟨ν, sampleWeight_nonneg C value valid,
-    sampleWeight_mass_pos C value valid hη hηone hbad, ?_, ?_⟩
+    sampleWeight_mass_pos C value valid hηone hbad, ?_, ?_⟩
   · convert hνthick using 1
     simp only [Fintype.card_sum, Fintype.card_coe, Nat.cast_add]
     congr 1

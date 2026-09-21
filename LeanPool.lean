@@ -1704,7 +1704,7 @@ import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.DimensionOne
 import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Multiplicity
 import LeanPool.ErdosGinzburgZiv.ErdosGinzburgZivPrime
 import LeanPool.ErdosGinzburgZiv.Solution
-import LeanPool.ErdosGinzburgZiv.ZakharovTheorem1_2
+import LeanPool.ErdosGinzburgZiv.ZakharovTheorem12
 import LeanPool.ErdosMoser
 import LeanPool.ErdosMoser.Basic
 import LeanPool.ErdosMoser.Bounds

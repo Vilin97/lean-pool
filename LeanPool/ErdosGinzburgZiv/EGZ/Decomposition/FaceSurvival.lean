@@ -16,7 +16,6 @@ other generators witnessing old reducedness still have active copies, so
 their join together with this upper generator is the old upper node.
 -/
 
-open Classical
 
 namespace EGZ.FlagDecomposition.FaceRefinement
 
@@ -24,6 +23,7 @@ variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node)
     (selected : FpCoord p d → Prop) (hp : Odd p)
 
+open Classical in
 /-- A reduced old node remains reduced upstairs when some cumulative atom
 at that node is not moved to the lower layer. -/
 theorem upper_isReducedElement_of_unselected (x : Φ.flag.Node)
@@ -81,6 +81,7 @@ theorem upper_isReducedElement_of_unselected (x : Φ.flag.Node)
   exact Ψ.isReducedElement_faceIndex _ _
 
 omit selected in
+open Classical in
 /-- A proper face leaves an unselected cumulative atom. -/
 theorem exists_unselected_of_ne_top (Γ : (Φ.flag.polytope anchor).Face) (hΓ : Γ ≠ ⊤) :
     ∃ v, Φ.cumulativeWeight anchor v ≠ 0 ∧ ¬ Φ.faceSelector anchor Γ v := by
@@ -101,6 +102,7 @@ theorem exists_unselected_of_ne_top (Γ : (Φ.flag.polytope anchor).Face) (hΓ :
   rwa [hmap, FpCoord.centeredLift_mod hc]
 
 omit selected in
+open Classical in
 /-- The upper anchor of a proper-face refinement survives restriction to
 the reduced nodes. -/
 theorem face_upperAnchor_isReduced (Γ : (Φ.flag.polytope anchor).Face) (hΓ : Γ ≠ ⊤)

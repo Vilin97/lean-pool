@@ -6,6 +6,10 @@ Authors: Dmitrii Zakharov
 
 import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
 
+/-!
+# Slab Arithmetic
+-/
+
 open scoped BigOperators
 
 namespace EGZ.HasBoundedRepresentative

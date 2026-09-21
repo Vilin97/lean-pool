@@ -16,7 +16,6 @@ supports imply face visibility, so visibility is not an extra input.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ
 
@@ -24,6 +23,7 @@ namespace RationalPolytope.Face
 
 variable {n : ℕ} {P : RationalPolytope n}
 
+open Classical in
 /-- Every nonempty face of a finite hull contains one of its generators,
 even when that finite hull differs from the polytope's stored presentation. -/
 theorem exists_mem_of_eq_convexHull (Γ : P.Face) (S : Finset (RealCoord n))
@@ -56,6 +56,7 @@ namespace FlagDecompositionRaw
 
 variable {p d : ℕ} [NeZero p] {F : ConvexFlag}
 
+open Classical in
 /-- A local lifted fibre contributes to its cumulative lifted fibre. -/
 theorem localLift_le_hat (R : FpRepresentation p d F)
     (pieces : F.Node → FpCoord p d → ℕ) (x : F.Node)
@@ -73,6 +74,7 @@ theorem localLift_le_hat (R : FpRepresentation p d F)
     · exact le_rfl
   · exact le_rfl
 
+open Classical in
 /-- Exact support data on the nodes of a prescribed flag. -/
 structure SupportData (R : FpRepresentation p d F)
     (pieces : F.Node → FpCoord p d → ℕ) where
@@ -93,30 +95,35 @@ variable {R : FpRepresentation p d F} {pieces : F.Node → FpCoord p d → ℕ}
 
 include D
 
+open Classical in
 theorem support_centered (x : F.Node) (q : IntCoord (F.rank x))
     (hq : q ∈ D.support x) : IsCenteredLift p q := by
   have hne := (D.support_spec x q).mp hq
   by_contra hc
   exact hne (ite_eq_right hc)
 
+open Classical in
 theorem mem_support_of_localLift_ne_zero (x : F.Node) (q : IntCoord (F.rank x))
     (hq : localLift R pieces x q ≠ 0) : q ∈ D.support x := by
   apply (D.support_spec x q).mpr
   exact ne_of_gt ((Nat.pos_of_ne_zero hq).trans_le
     (localLift_le_hat R pieces x q))
 
+open Classical in
 theorem mem_polytope_of_localLift_ne_zero (x : F.Node) (q : IntCoord (F.rank x))
     (hq : localLift R pieces x q ≠ 0) : q.real ∈ (F.polytope x).carrier := by
   rw [D.polytope_eq]
   apply subset_convexHull ℝ
   exact ⟨q, D.mem_support_of_localLift_ne_zero x q hq, rfl⟩
 
+open Classical in
 theorem transition_centered_of_localLift_ne_zero {x y : F.Node} (h : x ≤ y)
     (q : IntCoord (F.rank x)) (hq : localLift R pieces x q ≠ 0) :
     IsCenteredLift p ((F.transition h).integer q) :=
   D.support_centered y _
     (D.transition_support h q (D.mem_support_of_localLift_ne_zero x q hq))
 
+open Classical in
 /-- A cumulative support atom has a local antecedent with exact integer
 transition coordinates. -/
 theorem exists_localLift_of_hat_ne_zero (hp : Odd p) (x : F.Node)
@@ -135,6 +142,7 @@ theorem exists_localLift_of_hat_ne_zero (hp : Odd p) (x : F.Node)
     · exact (hz (ite_eq_right heq)).elim
   · exact (hy (dite_eq_right hyx)).elim
 
+open Classical in
 /-- Support generation and transition compatibility imply that every face
 contains a proper point. -/
 theorem faces_visible (hp : Odd p) (x : F.Node) (Γ : (F.polytope x).Face) :
@@ -152,6 +160,7 @@ theorem faces_visible (hp : Odd p) (x : F.Node) (Γ : (F.polytope x).Face) :
     rw [(F.transition hyx).real_integer, hwz]
     exact hface
 
+open Classical in
 /-- Package a decomposition while retaining the prescribed flag, its nodes,
 its representation, and all local weights definitionally. -/
 noncomputable abbrev decomposition (hp : Odd p) (f : FpCoord p d → ℕ)
@@ -167,21 +176,25 @@ noncomputable abbrev decomposition (hp : Odd p) (f : FpCoord p d → ℕ)
   polytope_eq_liftedSupport := D.polytope_eq
   faces_visible := D.faces_visible hp
 
+open Classical in
 @[simp]
 theorem decomposition_retainedWeight (hp : Odd p) (f : FpCoord p d → ℕ)
     (hretained : ∀ v, retainedWeight pieces v ≤ f v) :
     (D.decomposition hp f hretained).retainedWeight = retainedWeight pieces := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_cumulativeWeight (hp : Odd p) (f : FpCoord p d → ℕ)
     (hretained : ∀ v, retainedWeight pieces v ≤ f v) (x : F.Node) :
     (D.decomposition hp f hretained).cumulativeWeight x = cumulativeWeight pieces x := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_hat (hp : Odd p) (f : FpCoord p d → ℕ)
     (hretained : ∀ v, retainedWeight pieces v ≤ f v) (x : F.Node) :
     (D.decomposition hp f hretained).hat x = hat R pieces x := rfl
 
+open Classical in
 @[simp]
 theorem decomposition_localLift (hp : Odd p) (f : FpCoord p d → ℕ)
     (hretained : ∀ v, retainedWeight pieces v ≤ f v) (x : F.Node) :

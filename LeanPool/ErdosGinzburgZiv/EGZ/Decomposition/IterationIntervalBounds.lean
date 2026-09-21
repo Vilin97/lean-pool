@@ -10,8 +10,8 @@ import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.StoppedLineages
 
 namespace EGZ.FlagDecomposition.Iteration
 
-open Classical
 
+open Classical in
 theorem card_filter_range_offset (χ : ℕ → ℕ) (a b l : ℕ) (hab : a ≤ b) :
     ((Finset.range (b + 1 - a)).filter fun i ↦ χ (a + i) = l).card =
       ((Finset.Icc a b).filter fun i ↦ χ i = l).card := by
@@ -30,6 +30,7 @@ theorem card_filter_range_offset (χ : ℕ → ℕ) (a b l : ℕ) (hab : a ≤ b
 
 variable {p d : ℕ} [Fact p.Prime] {f : FpCoord p d → ℕ}
 
+open Classical in
 theorem intervalState_mass_tail {s : ℕ → State p d f} {ε : ℝ} {a n N : ℕ}
     (hbound : a + n ≤ N)
     (htail : ∀ i j, i ≤ j → j ≤ N →
@@ -43,6 +44,7 @@ theorem intervalState_mass_tail {s : ℕ → State p d f} {ε : ℝ} {a n N : �
     (Nat.add_le_add_left (min_le_min_right n hij) a)
     ((Nat.add_le_add_left (min_le_right j n) a).trans hbound)
 
+open Classical in
 @[simp]
 theorem intervalState_zero (s : ℕ → State p d f) (a n : ℕ) :
     intervalState s a n 0 = s a := by simp [intervalState]

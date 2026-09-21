@@ -128,7 +128,7 @@ theorem mem_weakConvexHull_iff_exists_projection {F : ConvexFlag}
       · rintro ⟨s, hs, hb, rfl⟩
         exact ⟨⟨s, hs, hb⟩, Set.mem_univ _, rfl⟩
     rw [← himage]
-    letI : Fintype U := hU.fintype
+    let : Fintype U := hU.fintype
     exact Set.Finite.image f Set.finite_univ
   constructor
   · intro hq
@@ -147,7 +147,7 @@ theorem mem_weakConvexHull_iff_exists_projection {F : ConvexFlag}
       linarith
     obtain ⟨ι, hι, weight, z, hnonneg, hsum, hzT, hvalue⟩ :=
       mem_convexHull_iff_exists_fintype.mp hqT
-    letI : Fintype ι := hι
+    let : Fintype ι := hι
     let e : Fin (Fintype.card ι) ≃ ι := (Fintype.equivFin ι).symm
     let weight' : Fin (Fintype.card ι) → ℝ := fun i ↦ weight (e i)
     have hzData (i : Fin (Fintype.card ι)) :
@@ -212,7 +212,7 @@ theorem mem_weakConvexHull_iff_exists_projection {F : ConvexFlag}
         xi.eval q hxi ≤
           xi.eval (points i) ((hc.base_isLUB.1 i i.property).trans (hbase.trans hxi)) := by
       by_contra hnone
-      push_neg at hnone
+      push Not at hnone
       have hlt :
           (∑ i : A, weight i * xi.eval (points i)
               ((hc.base_isLUB.1 i i.property).trans (hbase.trans hxi))) <

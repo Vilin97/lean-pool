@@ -16,12 +16,13 @@ equal first-coordinate sums.  Its shift lies in the remaining coordinates.
 Injective samples of a balanced pattern produce such exchanges.
 -/
 
-open scoped BigOperators Classical
+open scoped BigOperators
 
 namespace EGZ.Expansion
 
 variable {p r t : ℕ} {A : Type*} [Fintype A]
 
+open Classical in
 /-- The finite collection of exchanges of bounded size in a fixed atom
 family.  Multiplicity is represented by distinct atom positions. -/
 def Exchange (point : A → FpCoord p (r + t)) (B : ℕ) :=
@@ -29,6 +30,7 @@ def Exchange (point : A → FpCoord p (r + t)) (B : ℕ) :=
     (∑ x ∈ J.1, Coord.first r t (point x)) = (∑ x ∈ J.2, Coord.first r t (point x)) ∧
     J.1.card + J.2.card ≤ B}
 
+open Classical in
 noncomputable instance (point : A → FpCoord p (r + t)) (B : ℕ) : Fintype (Exchange point B) := by
   unfold Exchange
   infer_instance
@@ -37,30 +39,48 @@ namespace Exchange
 
 variable {point : A → FpCoord p (r + t)} {B : ℕ}
 
+open Classical in
 def left (E : Exchange point B) : Finset A := E.val.1
+open Classical in
 def right (E : Exchange point B) : Finset A := E.val.2
+open Classical in
 noncomputable def support (E : Exchange point B) : Finset A := E.left ∪ E.right
+open Classical in
 noncomputable def difference (E : Exchange point B) : FpCoord p (r + t) :=
   (∑ x ∈ E.left, point x) - ∑ x ∈ E.right, point x
+open Classical in
 noncomputable def shift (E : Exchange point B) : FpCoord p t := Coord.last r t E.difference
 
+omit [Fintype A] in
+open Classical in
 theorem disjoint (E : Exchange point B) : Disjoint E.left E.right := E.property.1
+omit [Fintype A] in
+open Classical in
 theorem card_eq (E : Exchange point B) : E.left.card = E.right.card := E.property.2.1
+omit [Fintype A] in
+open Classical in
 theorem first_sum_eq (E : Exchange point B) :
     (∑ x ∈ E.left, Coord.first r t (point x)) = ∑ x ∈ E.right, Coord.first r t (point x) :=
   E.property.2.2.1
+omit [Fintype A] in
+open Classical in
 theorem size_le (E : Exchange point B) : E.left.card + E.right.card ≤ B := E.property.2.2.2
 
+open Classical in
 theorem support_card_le (E : Exchange point B) : E.support.card ≤ B :=
   (Finset.card_union_le _ _).trans E.size_le
 
+open Classical in
 theorem first_difference (E : Exchange point B) : Coord.first r t E.difference = 0 := by
   simp only [difference, map_sub, map_sum, E.first_sum_eq, sub_self]
 
+omit [Fintype A] in
+open Classical in
 theorem shift_eq_zero_of_support_eq_empty (E : Exchange point B) (h : E.support = ∅) : E.shift = 0 := by
   have hh : E.left = ∅ ∧ E.right = ∅ := Finset.union_eq_empty.mp h
   simp [shift, difference, hh.1, hh.2]
 
+open Classical in
 /-- Exchange one atom for a distinct atom in the same first-coordinate
 fibre.  The shift has the orientation `point y - point x`. -/
 noncomputable def ofPair (point : A → FpCoord p (r + t)) {B : ℕ}
@@ -69,12 +89,15 @@ noncomputable def ofPair (point : A → FpCoord p (r + t)) {B : ℕ}
     Exchange point B :=
   ⟨({y}, {x}), by simpa using hxy.symm, by simp, by simpa using hfirst, by simpa using hB⟩
 
+omit [Fintype A] in
 @[simp] theorem ofPair_shift (point : A → FpCoord p (r + t)) {B : ℕ}
     (x y : A) (hxy : x ≠ y)
     (hfirst : Coord.first r t (point y) = Coord.first r t (point x)) (hB : 2 ≤ B) :
     (ofPair point x y hxy hfirst hB).shift = Coord.last r t (point y - point x) := by
   simp [ofPair, shift, difference, left, right]
 
+omit [Fintype A] in
+open Classical in
 theorem ofPair_support_avoids (point : A → FpCoord p (r + t)) {B : ℕ}
     (x y : A) (hxy : x ≠ y)
     (hfirst : Coord.first r t (point y) = Coord.first r t (point x)) (hB : 2 ≤ B)
@@ -93,26 +116,34 @@ variable {S : Type*} [Fintype S] [DecidableEq S]
   (P : ExchangePattern S) (point : A → FpCoord p (r + t))
   (atom : P.Position → A) (hinj : Function.Injective atom)
 
+open Classical in
 noncomputable def positiveAtoms : Finset A :=
   Finset.univ.image (fun i : Σ q, Fin (P.positive q) ↦ atom (Sum.inl i))
 
+open Classical in
 noncomputable def negativeAtoms : Finset A :=
   Finset.univ.image (fun i : Σ q, Fin (P.negative q) ↦ atom (Sum.inr i))
 
 include hinj
 
+omit [Fintype A] [DecidableEq S] in
+open Classical in
 theorem positiveAtoms_card : (positiveAtoms P atom).card = ∑ q, P.positive q := by
   calc
     _ = Fintype.card (Σ q, Fin (P.positive q)) :=
       Finset.card_image_of_injective _ (fun i j h ↦ Sum.inl_injective (hinj h))
     _ = _ := by simp
 
+omit [Fintype A] [DecidableEq S] in
+open Classical in
 theorem negativeAtoms_card : (negativeAtoms P atom).card = ∑ q, P.negative q := by
   calc
     _ = Fintype.card (Σ q, Fin (P.negative q)) :=
       Finset.card_image_of_injective _ (fun i j h ↦ Sum.inr_injective (hinj h))
     _ = _ := by simp
 
+omit [Fintype A] [DecidableEq S] in
+open Classical in
 theorem pattern_atoms_disjoint : Disjoint (positiveAtoms P atom) (negativeAtoms P atom) := by
   apply Finset.disjoint_left.mpr
   intro a ha hb
@@ -122,16 +153,21 @@ theorem pattern_atoms_disjoint : Disjoint (positiveAtoms P atom) (negativeAtoms 
       Sum.inr j := hinj (hi.trans hj.symm)
   cases hh
 
+omit [Fintype A] [DecidableEq S] in
+open Classical in
 theorem positiveAtoms_sum {G : Type*} [AddCommMonoid G] (f : A → G) :
     (∑ a ∈ positiveAtoms P atom, f a) = ∑ i : Σ q, Fin (P.positive q), f (atom (Sum.inl i)) := by
   rw [positiveAtoms, Finset.sum_image]
   exact fun i _ j _ h ↦ Sum.inl_injective (hinj h)
 
+omit [Fintype A] [DecidableEq S] in
+open Classical in
 theorem negativeAtoms_sum {G : Type*} [AddCommMonoid G] (f : A → G) :
     (∑ a ∈ negativeAtoms P atom, f a) = ∑ i : Σ q, Fin (P.negative q), f (atom (Sum.inr i)) := by
   rw [negativeAtoms, Finset.sum_image]
   exact fun i _ j _ h ↦ Sum.inr_injective (hinj h)
 
+open Classical in
 /-- Every injective balanced pattern is an actual exchange. -/
 noncomputable def ofPattern (label : S → FpCoord p r)
     (hatom : ∀ i, Coord.first r t (point (atom i)) = label (P.label i))
@@ -152,6 +188,7 @@ noncomputable def ofPattern (label : S → FpCoord p r)
   · rw [positiveAtoms_card P atom hinj, negativeAtoms_card P atom hinj]
     exact hsize
 
+open Classical in
 theorem ofPattern_shift (label : S → FpCoord p r)
     (hatom : ∀ i, Coord.first r t (point (atom i)) = label (P.label i))
     (hmass : (∑ q, P.positive q) = ∑ q, P.negative q)
@@ -164,6 +201,7 @@ theorem ofPattern_shift (label : S → FpCoord p r)
   change _ = ∑ i : (Σ q, Fin (P.positive q)) ⊕ (Σ q, Fin (P.negative q)), _
   simp [Fintype.sum_sum_type, ExchangePattern.sign, sub_eq_add_neg, Finset.sum_neg_distrib]
 
+open Classical in
 theorem ofPattern_support_avoids (label : S → FpCoord p r)
     (hatom : ∀ i, Coord.first r t (point (atom i)) = label (P.label i))
     (hmass : (∑ q, P.positive q) = ∑ q, P.negative q)
@@ -185,6 +223,7 @@ section Relation
 
 variable {S : Type*} [Fintype S] [DecidableEq S]
 
+open Classical in
 theorem relation_mass_eq (b : S → ℤ) (hb : ∑ q, b q = 0) :
     (∑ q, (ExchangePattern.ofRelation b).positive q) =
       ∑ q, (ExchangePattern.ofRelation b).negative q := by
@@ -194,6 +233,7 @@ theorem relation_mass_eq (b : S → ℤ) (hb : ∑ q, b q = 0) :
   have heq := sub_eq_zero.mp hh
   exact_mod_cast heq
 
+open Classical in
 theorem relation_label_eq {G : Type*} [AddCommGroup G]
     (b : S → ℤ) (label : S → G) (hb : ∑ q, b q • label q = 0) :
     (∑ q, (ExchangePattern.ofRelation b).positive q • label q) =
@@ -202,12 +242,15 @@ theorem relation_label_eq {G : Type*} [AddCommGroup G]
   rw [ExchangePattern.sum_sign_smul, hb] at hh
   exact sub_eq_zero.mp hh
 
+omit [DecidableEq S] in
+open Classical in
 theorem relation_mod_sum (b : S → ℤ) (label : S → IntCoord r)
     (hb : ∑ q, b q • label q = 0) : ∑ q, b q • (label q).mod p = 0 := by
   ext j
   have hh := congrArg (fun z : ℤ ↦ (z : ZMod p)) (congrFun hb j)
   simpa [Finset.sum_apply, Pi.smul_apply, IntCoord.mod, zsmul_eq_mul] using hh
 
+open Classical in
 /-- An injective sample of an integer affine relation gives a bounded
 exchange in the original atom family. -/
 noncomputable def ofRelation (point : A → FpCoord p (r + t))
@@ -223,6 +266,7 @@ noncomputable def ofRelation (point : A → FpCoord p (r + t))
     (relation_label_eq b _ (relation_mod_sum b label hlabel))
     ((ExchangePattern.ofRelation_size b).trans_le hsize)
 
+open Classical in
 theorem ofRelation_shift (point : A → FpCoord p (r + t))
     (b : S → ℤ) (label : S → IntCoord r)
     (atom : (ExchangePattern.ofRelation b).Position → A)
@@ -236,6 +280,7 @@ theorem ofRelation_shift (point : A → FpCoord p (r + t))
         (ExchangePattern.ofRelation b).sign i • Coord.last r t (point (atom i)) :=
   ofPattern_shift _ _ _ _ _ _ _ _ _
 
+open Classical in
 theorem ofRelation_support_avoids (point : A → FpCoord p (r + t))
     (b : S → ℤ) (label : S → IntCoord r)
     (atom : (ExchangePattern.ofRelation b).Position → A)

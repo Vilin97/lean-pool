@@ -16,18 +16,19 @@ the selected cumulative support with the inverse image of the target face.
 -/
 
 open scoped BigOperators
-open Classical
 
 namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f)
 
+open Classical in
 /-- Ambient atoms whose centered coordinate at the anchor lies on its face. -/
 def faceSelector (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face)
     (v : FpCoord p d) : Prop :=
   (FpCoord.centeredLift (Φ.representation.map x v)).real ∈ Γ.carrier
 
+open Classical in
 /-- On supported atoms, taking centered representatives commutes with every
 transition of the old decomposition. -/
 theorem transition_centeredLift (hp : Odd p) {y x : Φ.flag.Node} (h : y ≤ x)
@@ -44,6 +45,7 @@ theorem transition_centeredLift (hp : Odd p) {y x : Φ.flag.Node} (h : y ≤ x)
     FpCoord.mod_centeredLift]
   exact (Φ.representation.compatible h (Φ.originalWeights.cumulative_supported y v hv)).symm
 
+open Classical in
 theorem faceSelector_iff (hp : Odd p) {y x : Φ.flag.Node} (h : y ≤ x)
     (Γ : (Φ.flag.polytope x).Face) (q : IntCoord (Φ.flag.rank y))
     (hc : IsCenteredLift p q) (v : FpCoord p d)
@@ -54,6 +56,7 @@ theorem faceSelector_iff (hp : Odd p) {y x : Φ.flag.Node} (h : y ≤ x)
   unfold faceSelector
   rw [← Φ.transition_centeredLift hp h v hv, hz, ← (Φ.flag.transition h).real_integer]
 
+open Classical in
 /-- Selecting a face does not split any nonzero cumulative fibre below the
 anchor: the entire fibre is retained or the entire fibre is removed. -/
 theorem centeredFibreMass_faceSelector (hp : Odd p) {y x : Φ.flag.Node} (h : y ≤ x)
@@ -92,6 +95,7 @@ theorem centeredFibreMass_faceSelector (hp : Odd p) {y x : Φ.flag.Node} (h : y 
   · rw [ite_eq_right hc, ite_eq_right hc]
     simp only [ite_self]
 
+open Classical in
 /-- The selected support at the anchor is precisely its old support on the
 chosen face. -/
 theorem centeredFibreMass_faceSelector_self (hp : Odd p)

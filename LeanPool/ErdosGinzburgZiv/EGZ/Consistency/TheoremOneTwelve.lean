@@ -286,7 +286,6 @@ theorem polytopeCenterpointConclusion_of_supportHullFaceFlagAdapter
     A.model.lift (e i).1 (A.support_mem_working (e i).2)
   let weight (i : Fin (Fintype.card (Function.support w))) : ℝ :=
     (w (e i) : ℝ)
-
   have hproper : ∀ i, points i ∈ A.model.proper := by
     intro i
     exact A.model.lift_proper (e i).1 (A.support_mem_working (e i).2)
@@ -324,7 +323,6 @@ theorem polytopeCenterpointConclusion_of_supportHullFaceFlagAdapter
     let i := e.symm ⟨x, hx⟩
     exact lt_of_lt_of_le (hweight_pos i)
       (Finset.single_le_sum (fun j _ ↦ hweight j) (Finset.mem_univ i))
-
   obtain ⟨q, hqproper, hqintegral, hqcenter⟩ :=
     ConvexFlag.flagCenterpoint A.model.proper points hpoints_injective hproper
       hintegral weight hweight htotal_pos
