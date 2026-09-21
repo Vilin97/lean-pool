@@ -3889,6 +3889,12 @@ import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.GuntherOperator
 import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.Main
 import LeanPool.NashEmbedding.NashEmbedding.Torus.Perturbation.SeqVector
 import LeanPool.NashEmbedding.NashEmbedding.Torus.RealizableMetrics
+import LeanPool.NashEmbedding.NashEmbeddingTest
+import LeanPool.NashEmbedding.NashEmbeddingTest.Encoding
+import LeanPool.NashEmbedding.NashEmbeddingTest.MollifierConvergence
+import LeanPool.NashEmbedding.NashEmbeddingTest.NashCompact
+import LeanPool.NashEmbedding.NashEmbeddingTest.NashTorus
+import LeanPool.NashEmbedding.NashEmbeddingTest.RealizableMetrics
 import LeanPool.NashEmbedding.Solution
 import LeanPool.NashWilliams
 import LeanPool.NashWilliams.Combinatorics
