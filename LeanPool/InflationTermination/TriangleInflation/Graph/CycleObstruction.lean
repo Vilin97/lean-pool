@@ -10,7 +10,11 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.CycleWitness
 /-!
 # Cycle witnesses at every order, incompatibility and distance
 
-AUDIT-NOTES A5 / Theorem `thm:cycle`: the parity witness `cycle_witness` (from `CycleWitness.lean`), the incompatibility of the cycle target (`cycle_not_compatible`) and the distance bound `q/10 ≤ d_TV` (`cycle_distance`), the last two through the quantitative parity rigidity `CycleModelAux.quant_rigidity` (Lemma `lem:quantrigidity`). Everything here is proved.
+AUDIT-NOTES A5 / Theorem `thm:cycle`: the parity witness `cycle_witness` (from
+`CycleWitness.lean`), the incompatibility of the cycle target (`cycle_not_compatible`) and
+the distance bound `q/10 ≤ d_TV` (`cycle_distance`), the last two through the quantitative
+parity rigidity `CycleModelAux.quant_rigidity` (Lemma `lem:quantrigidity`). Everything here
+is proved.
 -/
 
 namespace TriangleInflation.Graph
@@ -49,6 +53,7 @@ namespace CycleModelAux
 section Av
 variable {X : Type*} [Fintype X] {μ f g : X → ℝ}
 
+/-- Weighted average of a function over a finite latent alphabet. -/
 def av {X : Type*} [Fintype X] (μ f : X → ℝ) : ℝ := ∑ x, μ x * f x
 
 theorem av_mono (hμ : ∀ x, 0 ≤ μ x) (h : ∀ x, f x ≤ g x) : av μ f ≤ av μ g :=
@@ -961,8 +966,9 @@ theorem moment_transfer {α : Type*} [Fintype α] (P Q f : α → ℝ) (hf : ∀
   rw [dTV]
   linarith
 
-theorem abs_prod_sgn {α : Type*} [Fintype α] (F : Finset α) (w : α → Bool) :
+theorem abs_prod_sgn {α : Type*} (F : Finset α) (w : α → Bool) :
     |∏ v ∈ F, sgn (w v)| ≤ 1 := by
+  classical
   rw [Finset.abs_prod]
   refine Finset.prod_le_one₀ (fun v _ => abs_nonneg _) (fun v _ => ?_)
   cases w v <;> simp [sgn]
@@ -1014,8 +1020,7 @@ open CycleModelAux in
 `d_TV(P_{m,q}, C_{C_m}) ≥ q/12`. The proof below replaces the repair construction by the
 moment form `CycleModelAux.quant_rigidity`, which gives the sharper constant `q/10`; the
 hypothesis `m² q ≤ 1/4` (which makes `cycleTarget` a law) is not needed for the bound. -/
-theorem cycle_distance (m : ℕ) (hm : 3 ≤ m) (q : ℝ) (hq0 : 0 < q)
-    (hq : (m : ℝ) ^ 2 * q ≤ 1 / 4) :
+theorem cycle_distance (m : ℕ) (hm : 3 ≤ m) (q : ℝ) (hq0 : 0 < q) :
     q / 12 ≤ distToCompatible (cycle m hm) (cycleTarget m q) := by
   have hset : distToCompatible (cycle m hm) (cycleTarget m q)
       = sInf {d : ℝ | ∃ Q : GTarget (cycle m hm), GCompatible (cycle m hm) Q ∧

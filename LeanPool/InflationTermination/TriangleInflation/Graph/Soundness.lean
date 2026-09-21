@@ -118,7 +118,7 @@ end Push
 /-- The marginal of a product weight on an injectively selected set of coordinates is the
 product weight of the selected coordinates. -/
 theorem pushforward_prodLaw_sel {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ]
-    [DecidableEq κ] {w : ι → Bool → ℝ} (hw : ∀ i, ∑ b, w i b = 1) {ν : κ → ι}
+     {w : ι → Bool → ℝ} (hw : ∀ i, ∑ b, w i b = 1) {ν : κ → ι}
     (hν : Function.Injective ν) :
     pushforward (prodLaw w) (fun x k => x (ν k)) = prodLaw (fun k => w (ν k)) := by
   classical
@@ -303,7 +303,8 @@ theorem sum_sel_coord {B : Type*} [Fintype B] [DecidableEq B] {n : Type*} [Finty
       (fun r => if v r = b₀ then (1 : ℝ) else 0)]
     simp [mul_comm]
   rw [Finset.sum_congr rfl (fun v _ => hstep v),
-    sum_pi_prod (fun (r : n) (b : B) => ρ b * if r = r₀ then (if b = b₀ then (1 : ℝ) else 0) else 1)]
+    sum_pi_prod (fun (r : n) (b : B) =>
+      ρ b * if r = r₀ then (if b = b₀ then (1 : ℝ) else 0) else 1)]
   have hcol : ∀ r : n, (∑ b, ρ b * if r = r₀ then (if b = b₀ then (1 : ℝ) else 0) else 1)
       = if r = r₀ then ρ b₀ else 1 := by
     intro r

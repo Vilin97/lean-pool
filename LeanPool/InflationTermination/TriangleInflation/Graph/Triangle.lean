@@ -34,15 +34,24 @@ naming follows the file header of `InflationGraph.Defs`: the source `{0,1}` is t
 
 universe u
 
+/-- The triangle source shared by parties A and B. -/
 def triEdgeX : triangleGraph.Edge := ⟨s((0 : Fin 3), (1 : Fin 3)), by decide⟩
+/-- The triangle source shared by parties B and C. -/
 def triEdgeY : triangleGraph.Edge := ⟨s((1 : Fin 3), (2 : Fin 3)), by decide⟩
+/-- The triangle source shared by parties A and C. -/
 def triEdgeZ : triangleGraph.Edge := ⟨s((0 : Fin 3), (2 : Fin 3)), by decide⟩
 
+/-- Source X viewed as an edge incident to vertex 0. -/
 def triInc0X : (triangleGraph.inc (0 : Fin 3)) := ⟨triEdgeX, by decide⟩
+/-- Source Z viewed as an edge incident to vertex 0. -/
 def triInc0Z : (triangleGraph.inc (0 : Fin 3)) := ⟨triEdgeZ, by decide⟩
+/-- Source X viewed as an edge incident to vertex 1. -/
 def triInc1X : (triangleGraph.inc (1 : Fin 3)) := ⟨triEdgeX, by decide⟩
+/-- Source Y viewed as an edge incident to vertex 1. -/
 def triInc1Y : (triangleGraph.inc (1 : Fin 3)) := ⟨triEdgeY, by decide⟩
+/-- Source Z viewed as an edge incident to vertex 2. -/
 def triInc2Z : (triangleGraph.inc (2 : Fin 3)) := ⟨triEdgeZ, by decide⟩
+/-- Source Y viewed as an edge incident to vertex 2. -/
 def triInc2Y : (triangleGraph.inc (2 : Fin 3)) := ⟨triEdgeY, by decide⟩
 
 theorem triInc0_cases :
@@ -52,6 +61,7 @@ theorem triInc1_cases :
 theorem triInc2_cases :
     ∀ e : triangleGraph.inc (2 : Fin 3), e = triInc2Z ∨ e = triInc2Y := by decide
 
+/-- Translate a graph observation into the named triangle observation. -/
 def triObs {t : ℕ} (o : GObs triangleGraph t) : Obs t :=
   match o with
   | ⟨⟨0, _⟩, f⟩ => Obs.A (f triInc0X) (f triInc0Z)
@@ -59,11 +69,13 @@ def triObs {t : ℕ} (o : GObs triangleGraph t) : Obs t :=
   | ⟨⟨2, _⟩, f⟩ => Obs.C (f triInc2Z) (f triInc2Y)
   | ⟨⟨_+3, h⟩, _⟩ => absurd h (by omega)
 
+/-- Translate a named triangle observation into its graph representation. -/
 def triObsInv {t : ℕ} : Obs t → GObs triangleGraph t
   | Obs.A i j => ⟨(0 : Fin 3), fun e => if e = triInc0X then i else j⟩
   | Obs.B i k => ⟨(1 : Fin 3), fun e => if e = triInc1X then i else k⟩
   | Obs.C j k => ⟨(2 : Fin 3), fun e => if e = triInc2Z then j else k⟩
 
+/-- Identify graph observations with the named triangle observations. -/
 def triEquiv (t : ℕ) : GObs triangleGraph t ≃ Obs t where
   toFun := triObs
   invFun := triObsInv
@@ -102,6 +114,7 @@ theorem triEdge_cases :
 theorem triEdge_eq_Y :
     ∀ e : triangleGraph.Edge, ¬ e = triEdgeX → ¬ e = triEdgeZ → e = triEdgeY := by decide
 
+/-- Identify an edge-indexed latent assignment with its X, Z, Y coordinates. -/
 def triPiEdgeEquiv (L : triangleGraph.Edge → Type u) :
     (∀ e, L e) ≃ (L triEdgeX × L triEdgeZ × L triEdgeY) where
   toFun x := (x triEdgeX, x triEdgeZ, x triEdgeY)
@@ -243,14 +256,17 @@ theorem tri_diag_transport {t : ℕ} (Δ : GAssign triangleGraph t → ℝ) (P :
 
 /-! ## Sets of copied observations -/
 
+/-- Transport finite observation sets to the named triangle representation. -/
 def triFinsetEquiv (t : ℕ) : Finset (GObs triangleGraph t) ≃ Finset (Obs t) :=
   Equiv.finsetCongr (triEquiv t)
 
+/-- Identify observations in a finite graph set with their triangle counterparts. -/
 def triSubEquiv {t : ℕ} (S : Finset (GObs triangleGraph t)) :
     ↥S ≃ ↥((triFinsetEquiv t) S) :=
   Equiv.subtypeEquiv (triEquiv t) (fun a => by
     simp [triFinsetEquiv, Equiv.finsetCongr_apply])
 
+/-- Transport Boolean assignments on a finite observation set. -/
 def triBoolEquiv {t : ℕ} (S : Finset (GObs triangleGraph t)) :
     (↥S → Bool) ≃ (↥((triFinsetEquiv t) S) → Bool) :=
   Equiv.arrowCongr (triSubEquiv S) (Equiv.refl Bool)
@@ -303,6 +319,7 @@ theorem tri_gInjectable_map {t : ℕ} (S : Finset (GObs triangleGraph t)) :
 
 /-! ## Copied latent sources -/
 
+/-- Identify copied graph sources with named triangle latent sources. -/
 def triLatentEquiv (t : ℕ) : GLatent triangleGraph t ≃ Latent t where
   toFun p :=
     if p.1 = triEdgeX then Latent.X p.2
@@ -408,6 +425,7 @@ theorem tri_injMarg_transport {t : ℕ} (Δ : GAssign triangleGraph t → ℝ)
     rw [tri_restrict_pushforward, tri_partyRead_pushforward, H S ((tri_gInjectable_map S).1 hS')]
     rfl
 
+/-- Transport families of Boolean assignments on finite observation sets. -/
 def triPiEquiv {t : ℕ} {n : ℕ} (S : Fin n → Finset (GObs triangleGraph t)) :
     (∀ m, ↥(S m) → Bool) ≃ (∀ m, ↥((triFinsetEquiv t) (S m)) → Bool) :=
   Equiv.piCongrRight (fun m => triBoolEquiv (S m))
@@ -458,6 +476,7 @@ theorem triInc2_ne :
     ∀ e : triangleGraph.inc (2 : Fin 3), ¬ e = triInc2Z → e = triInc2Y := by decide
 
 
+/-- Identify the latent inputs at vertex 0 with its two named sources. -/
 def triInc0Equiv (L : triangleGraph.Edge → Type u) :
     ((e : triangleGraph.inc (0:Fin 3)) → L e.1) ≃ (L triEdgeX × L triEdgeZ) where
   toFun c := (c triInc0X, c triInc0Z)
@@ -471,6 +490,7 @@ def triInc0Equiv (L : triangleGraph.Edge → Type u) :
       simp [show ¬ (triInc0Z = triInc0X) by decide]
   right_inv p := rfl
 
+/-- Identify the latent inputs at vertex 1 with its two named sources. -/
 def triInc1Equiv (L : triangleGraph.Edge → Type u) :
     ((e : triangleGraph.inc (1:Fin 3)) → L e.1) ≃ (L triEdgeX × L triEdgeY) where
   toFun c := (c triInc1X, c triInc1Y)
@@ -484,6 +504,7 @@ def triInc1Equiv (L : triangleGraph.Edge → Type u) :
       simp [show ¬ (triInc1Y = triInc1X) by decide]
   right_inv p := rfl
 
+/-- Identify the latent inputs at vertex 2 with its two named sources. -/
 def triInc2Equiv (L : triangleGraph.Edge → Type u) :
     ((e : triangleGraph.inc (2:Fin 3)) → L e.1) ≃ (L triEdgeZ × L triEdgeY) where
   toFun c := (c triInc2Z, c triInc2Y)
@@ -638,7 +659,8 @@ theorem triOfModel_law (N : TriangleModel) (w : Fin 3 → Bool) :
 
 
 /-- AUDIT-NOTES A1/A2. The copied observations of the order-`t` inflation of `C₃` are in
-bijection with `TriangleInflation.Obs t`, by a bijection that intertwines the per-source copy-index
+bijection with `TriangleInflation.Obs t`, by a bijection that intertwines the per-source
+copy-index
 actions and matches the vertex of a copied observation with the party of its image. -/
 theorem exists_triObsEquiv (t : ℕ) :
     ∃ (e : GObs triangleGraph t ≃ TriangleInflation.Obs t)
@@ -654,8 +676,8 @@ theorem exists_triObsEquiv (t : ℕ) :
 `TriangleInflation`, under the re-encoding `threeBitEquiv` of three-bit outcomes as
 functions on `Fin 3`. -/
 theorem gNWFeasible_triangle_iff (t : ℕ) (P : ThreeBit → ℝ) :
-    GNWFeasible triangleGraph t (fun w => P (threeBitEquiv w)) ↔ TriangleInflation.NWFeasible t P := by
-
+    GNWFeasible triangleGraph t (fun w => P (threeBitEquiv w)) ↔
+      TriangleInflation.NWFeasible t P := by
   constructor
   · rintro ⟨Δ, h1, h2, h3⟩
     exact ⟨fun ω => Δ ((triAssignEquiv t).symm ω), (tri_isLaw_transport Δ).2 h1,
@@ -668,8 +690,8 @@ theorem gNWFeasible_triangle_iff (t : ℕ) (P : ThreeBit → ℝ) :
 
 /-- The pair-source AI test on `C₃` is the triangle AI test. -/
 theorem gAIFeasible_triangle_iff (t : ℕ) (P : ThreeBit → ℝ) :
-    GAIFeasible triangleGraph t (fun w => P (threeBitEquiv w)) ↔ TriangleInflation.AIFeasible t P := by
-
+    GAIFeasible triangleGraph t (fun w => P (threeBitEquiv w)) ↔
+      TriangleInflation.AIFeasible t P := by
   constructor
   · rintro ⟨Δ, h1, h2, h3, h4, h5⟩
     exact ⟨fun ω => Δ ((triAssignEquiv t).symm ω), (tri_isLaw_transport Δ).2 h1,
@@ -681,12 +703,12 @@ theorem gAIFeasible_triangle_iff (t : ℕ) (P : ThreeBit → ℝ) :
       (tri_injMarg_transport _ P).1 (by simpa using h4),
       (tri_ancProd_transport _ P).1 (by simpa using h5)⟩
 
-/-- The pair-source compatible set of `C₃` is `TriangleInflation.TriangleCompatible`, both with finite
+/-- The pair-source compatible set of `C₃` is `TriangleInflation.TriangleCompatible`, both
+with finite
 latent alphabets (AUDIT-NOTES D1). -/
 theorem gCompatible_triangle_iff (P : ThreeBit → ℝ) :
     GCompatible triangleGraph (fun w => P (threeBitEquiv w)) ↔
       TriangleInflation.TriangleCompatible P := by
-
   constructor
   · rintro ⟨M, hV, hlaw⟩
     refine ⟨triToModel M, ⟨hV.1 triEdgeX, hV.1 triEdgeY, hV.1 triEdgeZ, fun p => hV.2 _ _,

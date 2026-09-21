@@ -11,7 +11,9 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStar
 # The five-observer path (A4)
 
 Statements split from the original `Statements.lean` skeleton (one file per proving task).
-Everything in this file is proved; the order-`t` witness `fivePath_witness` and its expressible form live in `InflationGraphOpen/FivePath.lean`. See AUDIT-NOTES A4 for the mathematics.
+Everything in this file is proved; the order-`t` witness `fivePath_witness` and its
+expressible form live in `InflationGraphOpen/FivePath.lean`. See AUDIT-NOTES A4 for the
+mathematics.
 
 `FivePathAux` collects the auxiliary material: the explicit enumeration of the 32 atoms and of
 the four sources of `P₅`, the decomposition of a `GModel` of `P₅` into its four latent
@@ -29,6 +31,7 @@ variable {Γ : PairGraph} {t : ℕ}
 
 namespace FivePathAux
 
+/-- Identify a five-bit tuple with a Boolean assignment on five vertices. -/
 def fiveEquiv : (Bool × Bool × Bool × Bool × Bool) ≃ (Fin 5 → Bool) where
   toFun p := ![p.1, p.2.1, p.2.2.1, p.2.2.2.1, p.2.2.2.2]
   invFun w := (w 0, w 1, w 2, w 3, w 4)
@@ -155,9 +158,13 @@ theorem bilocal_core (ν : Λ → ℝ) (ν' : Λ' → ℝ) (hν : IsLaw ν) (hν
     _ = 1 := Real.sqrt_one
 
 
+/-- The source edge joining vertices zero and one. -/
 def E01 : fivePathGraph.Edge := ⟨s((0 : Fin 5), (1 : Fin 5)), by decide⟩
+/-- The source edge joining vertices one and two. -/
 def E12 : fivePathGraph.Edge := ⟨s((1 : Fin 5), (2 : Fin 5)), by decide⟩
+/-- The source edge joining vertices two and three. -/
 def E23 : fivePathGraph.Edge := ⟨s((2 : Fin 5), (3 : Fin 5)), by decide⟩
+/-- The source edge joining vertices three and four. -/
 def E34 : fivePathGraph.Edge := ⟨s((3 : Fin 5), (4 : Fin 5)), by decide⟩
 
 theorem edge_cases (e : fivePathGraph.Edge) : e = E01 ∨ e = E12 ∨ e = E23 ∨ e = E34 := by
@@ -207,6 +214,7 @@ def ofTup (p : GTup M) : ∀ e : fivePathGraph.Edge, M.L e :=
 theorem tup_congr {x y : ∀ e : fivePathGraph.Edge, M.L e} {f g : fivePathGraph.Edge}
     (h : f = g) (hxy : x g = y g) : x f = y f := by subst h; exact hxy
 
+/-- Identify the four latent coordinates with an assignment to the path edges. -/
 def latEquiv : GTup M ≃ (∀ e : fivePathGraph.Edge, M.L e) where
   toFun := ofTup M
   invFun x := (x E01, x E12, x E23, x E34)
@@ -227,10 +235,15 @@ def gResp (v : fivePathGraph.V) (p : GTup M) : ℝ := M.resp v (fun e => ofTup M
 
 variable (q : GTup M)
 
+/-- Response at the first endpoint, with the remaining coordinates fixed by `q`. -/
 def fA (a : M.L E01) : ℝ := gResp M (0 : Fin 5) (a, q.2.1, q.2.2.1, q.2.2.2)
+/-- Response at vertex one, with the remaining coordinates fixed by `q`. -/
 def fB (a : M.L E01) (b : M.L E12) : ℝ := gResp M (1 : Fin 5) (a, b, q.2.2.1, q.2.2.2)
+/-- Response at the middle vertex, with the remaining coordinates fixed by `q`. -/
 def fC (b : M.L E12) (c : M.L E23) : ℝ := gResp M (2 : Fin 5) (q.1, b, c, q.2.2.2)
+/-- Response at vertex three, with the remaining coordinates fixed by `q`. -/
 def fD (c : M.L E23) (d : M.L E34) : ℝ := gResp M (3 : Fin 5) (q.1, q.2.1, c, d)
+/-- Response at the last endpoint, with the remaining coordinates fixed by `q`. -/
 def fE (d : M.L E34) : ℝ := gResp M (4 : Fin 5) (q.1, q.2.1, q.2.2.1, d)
 
 theorem gResp0 (p : GTup M) : gResp M (0 : Fin 5) p = fA M q p.1 := by
@@ -335,7 +348,11 @@ theorem num_step (x z : Bool) :
         = (∏ e, M.μ e (X e)) *
             (if w 0 = x ∧ w 4 = z then sgn (w 1) * sgn (w 2) * sgn (w 3) *
               (∏ v, respMass (M.resp v fun e => X e.1) (w v)) else 0) := by
-    intro w; by_cases hcond : w 0 = x ∧ w 4 = z <;> simp [hcond] <;> ring
+    intro w
+    by_cases hcond : w 0 = x ∧ w 4 = z
+    · simp only [hcond, and_self, ite_true]
+      ring
+    · simp [hcond]
   simp only [hpull, ← Finset.mul_sum]
   congr 1
   simp only [prod_vert]
@@ -574,7 +591,11 @@ theorem tv_bound (P Q G : (Fin 5 → Bool) → ℝ) (hG : ∀ w, |G w| ≤ 1) (x
   have hterm : ∀ w : Fin 5 → Bool,
       ((if w 0 = x ∧ w 4 = z then G w * Q w else 0) - if w 0 = x ∧ w 4 = z then G w * P w else 0)
         = if w 0 = x ∧ w 4 = z then G w * (Q w - P w) else 0 := by
-    intro w; by_cases hcond : w 0 = x ∧ w 4 = z <;> simp [hcond] <;> ring
+    intro w
+    by_cases hcond : w 0 = x ∧ w 4 = z
+    · simp only [hcond, and_self, ite_true]
+      ring
+    · simp [hcond]
   simp only [hterm]
   refine le_trans (Finset.abs_sum_le_sum_abs _ _) ?_
   have hbd : ∀ w : Fin 5 → Bool,
@@ -724,7 +745,7 @@ theorem fivePathTarget_isLaw (h : ℝ) (h0 : 0 ≤ h) (h1 : h < 1) :
 
 /-- AUDIT-NOTES A4, the correlators of the target: `f_{xz} = (1+h)/2` when `x = z` and `0`
 otherwise, so `I = J = (1+h)/4`. -/
-theorem fivePathTarget_corr (h : ℝ) (h0 : 0 ≤ h) (h1 : h < 1) :
+theorem fivePathTarget_corr (h : ℝ) :
     fivePathI (fivePathTarget h) = (1 + h) / 4 ∧ fivePathJ (fivePathTarget h) = (1 + h) / 4 := by
   constructor
   · change (1 / 4 : ℝ) * ∑ x : Bool, ∑ z : Bool, fivePathCorr (fivePathTarget h) x z = _
@@ -746,7 +767,7 @@ theorem fivePath_not_compatible (h : ℝ) (h0 : 0 < h) (h1 : h < 1) :
       0 < ∑ w : Fin 5 → Bool, if w 0 = x ∧ w 4 = z then fivePathTarget h w else 0 := by
     intro x z; rw [target_cell]; norm_num
   have hb := bilocal_of_compatible (fivePathTarget h) hlaw hc hcellpos
-  obtain ⟨hI, hJ⟩ := fivePathTarget_corr h h0.le h1
+  obtain ⟨hI, hJ⟩ := fivePathTarget_corr h
   rw [hI, hJ, abs_of_nonneg (by linarith : (0:ℝ) ≤ (1 + h) / 4)] at hb
   have hnn : (0:ℝ) ≤ (1 + h) / 4 := by linarith
   have hsq := Real.sq_sqrt hnn
@@ -824,7 +845,7 @@ theorem fivePath_distance (h : ℝ) (h0 : 0 < h) (h1 : h < 1) :
       have e3 := abs_le.mp (hcorrdiff true false)
       have e4 := abs_le.mp (hcorrdiff true true)
       have ht : fivePathI (fivePathTarget h) = (1 + h) / 4 :=
-        (fivePathTarget_corr h h0.le h1).1
+        (fivePathTarget_corr h).1
       have hexp := fivePathI_expand Q
       rw [fivePathI_expand] at ht
       rw [hexp]
@@ -835,7 +856,7 @@ theorem fivePath_distance (h : ℝ) (h0 : 0 < h) (h1 : h < 1) :
       have e3 := abs_le.mp (hcorrdiff true false)
       have e4 := abs_le.mp (hcorrdiff true true)
       have ht : fivePathJ (fivePathTarget h) = (1 + h) / 4 :=
-        (fivePathTarget_corr h h0.le h1).2
+        (fivePathTarget_corr h).2
       have hexp := fivePathJ_expand Q
       rw [fivePathJ_expand] at ht
       rw [hexp]

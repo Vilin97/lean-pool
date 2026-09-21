@@ -195,21 +195,21 @@ theorem injectable_iff_injectableRaw {t : ℕ} (ht : 1 ≤ t) (S : Finset (Obs t
 /-- The defect law with `s = 1 - r/(1-ε)^{t-1}` witnesses the ancestral-independence
 conditions for `Q(ε,r)`: this is the content of paper Section 5.3 for the two formalized
 hierarchies. -/
-theorem defectLaw_witnesses_AI (t : ℕ) (ht : 1 ≤ t) {ε r : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1)
+theorem defectLaw_witnesses_AI (t : ℕ) {ε r : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1)
     (hr0 : 0 ≤ r) (hr1 : r ≤ (1 - ε) ^ (t - 1)) :
     IsLaw (defectLaw t ε (sParam t ε r)) ∧
       SymmetricLaw t (defectLaw t ε (sParam t ε r)) ∧
       pushforward (defectLaw t ε (sParam t ε r)) readDiagonal = tensorPow t (Q ε r) ∧
       InjectableMarginals t (defectLaw t ε (sParam t ε r)) (Q ε r) ∧
       AncestralProducts t (defectLaw t ε (sParam t ε r)) (Q ε r) := by
-  obtain ⟨hs0, hs1⟩ := sParam_mem_Icc t ht hε0 hε1 hr0 hr1
+  obtain ⟨hs0, hs1⟩ := sParam_mem_Icc t hε1 hr0 hr1
   have hlaw : IsLaw (defectLaw t ε (sParam t ε r)) :=
     defectLaw_isLaw hε0.le hε1.le hs0 hs1
   have hsym : SymmetricLaw t (defectLaw t ε (sParam t ε r)) :=
     defect_symmetric ε (sParam t ε r)
   have hdiag : pushforward (defectLaw t ε (sParam t ε r)) readDiagonal
       = tensorPow t (Q ε r) := by
-    rw [defect_diagonal_law ht hε0.le hε1.le hs0 hs1, one_sub_sParam_mul t ht hε1]
+    rw [defect_diagonal_law hε0.le hε1.le hs0 hs1, one_sub_sParam_mul t hε1]
   have hinjm : InjectableMarginals t (defectLaw t ε (sParam t ε r)) (Q ε r) := by
     rintro S ⟨i, j, k, hS⟩
     calc pushforward (defectLaw t ε (sParam t ε r)) (restrictAssign S)
@@ -220,8 +220,8 @@ theorem defectLaw_witnesses_AI (t : ℕ) (ht : 1 ≤ t) {ε r : ℝ} (hε0 : 0 <
             (partyRead S) :=
           (pushforward_comp _ _ _).symm
       _ = pushforward (Q ε r) (partyRead S) := by
-          rw [defect_copiedTriangle_law ht hε0.le hε1.le hs0 hs1 i j k,
-            one_sub_sParam_mul t ht hε1]
+          rw [defect_copiedTriangle_law hε0.le hε1.le hs0 hs1 i j k,
+            one_sub_sParam_mul t hε1]
   refine ⟨hlaw, hsym, hdiag, hinjm, ?_⟩
   intro n S hInj hIndep
   rw [defect_independence_family hε0.le hε1.le hs0 hs1 S hIndep]
@@ -231,14 +231,14 @@ theorem defectLaw_witnesses_AI (t : ℕ) (ht : 1 ≤ t) {ε r : ℝ} (hε0 : 0 <
 /-- Paper Theorem 5.1 (`thm:membership`), ancestral-independence half: for `t ≥ 1`,
 `0 < ε < 1` and `0 ≤ r ≤ (1-ε)^{t-1}`, the law `Q(ε,r)` is feasible at order `t` for the
 ancestral-independence hierarchy. -/
-theorem membership_AI (t : ℕ) (ht : 1 ≤ t) {ε r : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1)
+theorem membership_AI (t : ℕ) {ε r : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1)
     (hr0 : 0 ≤ r) (hr1 : r ≤ (1 - ε) ^ (t - 1)) : AIFeasible t (Q ε r) :=
-  ⟨defectLaw t ε (sParam t ε r), defectLaw_witnesses_AI t ht hε0 hε1 hr0 hr1⟩
+  ⟨defectLaw t ε (sParam t ε r), defectLaw_witnesses_AI t hε0 hε1 hr0 hr1⟩
 
 /-- Paper Theorem 5.1 (`thm:membership`), Navascués–Wolfe half. -/
-theorem membership_NW (t : ℕ) (ht : 1 ≤ t) {ε r : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1)
+theorem membership_NW (t : ℕ) {ε r : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1)
     (hr0 : 0 ≤ r) (hr1 : r ≤ (1 - ε) ^ (t - 1)) : NWFeasible t (Q ε r) :=
-  nwFeasible_of_aiFeasible (membership_AI t ht hε0 hε1 hr0 hr1)
+  nwFeasible_of_aiFeasible (membership_AI t hε0 hε1 hr0 hr1)
 
 /-! ## Theorem 5.2: no finite characterizing order -/
 
@@ -271,7 +271,7 @@ theorem main_membership (t : ℕ) (ht : 1 ≤ t) : AIFeasible t (Pfam t) ∧ NWF
   obtain ⟨h0, h1⟩ := epsFam_mem t ht
   have hr0 : (0 : ℝ) ≤ (1 - epsFam t) ^ (t - 1) := pow_nonneg (by linarith) _
   have hai : AIFeasible t (Q (epsFam t) (rFam t)) :=
-    membership_AI t ht h0 h1 hr0 le_rfl
+    membership_AI t h0 h1 hr0 le_rfl
   exact ⟨hai, nwFeasible_of_aiFeasible hai⟩
 
 /-- Paper Theorem 5.2 (`thm:main`), violation half: the Finner margin of `P_t` is at least

@@ -9,7 +9,10 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
 /-!
 # The triangle witness at q = Θ(1/t)
 
-AUDIT-NOTES B2(ii) / Theorem `thm:trianglelinear`: with the corrected density of `Linear.lean` (`m = 3`, `c = 4`) the parity-perfect triangle target `Π(−q,−q,−q)` lies in the ancestral-independence feasible set of the triangle module at every order `t` for `q = 1/(16t)` (`triangle_linear_witness`). Everything here is proved.
+AUDIT-NOTES B2(ii) / Theorem `thm:trianglelinear`: with the corrected density of
+`Linear.lean` (`m = 3`, `c = 4`) the parity-perfect triangle target `Π(−q,−q,−q)` lies in
+the ancestral-independence feasible set of the triangle module at every order `t` for `q =
+1/(16t)` (`triangle_linear_witness`). Everything here is proved.
 -/
 
 namespace TriangleInflation.Graph
@@ -63,9 +66,11 @@ theorem pushforward_isLaw {α β : Type*} [Fintype α] [Fintype β] [DecidableEq
 
 /-- Fourier uniqueness transported along an identification of a finite type with a sign
 cube. -/
-theorem funext_of_walsh_moments_equiv {α : Type*} [Fintype α] [DecidableEq α]
-    {ι : Type*} [Fintype ι] [DecidableEq ι] (e : α ≃ (ι → Bool)) (P Q : α → ℝ)
+theorem funext_of_walsh_moments_equiv {α : Type*} [Fintype α]
+    {ι : Type*} [Finite ι] (e : α ≃ (ι → Bool)) (P Q : α → ℝ)
     (h : ∀ S : Finset ι, ∑ a, walsh S (e a) * P a = ∑ a, walsh S (e a) * Q a) : P = Q := by
+  classical
+  let := Fintype.ofFinite ι
   have key : (fun w => P (e.symm w)) = (fun w => Q (e.symm w)) := by
     refine funext_of_walsh_moments _ _ (fun S => ?_)
     have hP : ∑ w : ι → Bool, walsh S w * P (e.symm w) = ∑ a, walsh S (e a) * P a :=
@@ -150,8 +155,9 @@ theorem triParity_momABC (q : ℝ) :
 
 /-! ### The boundary of an injectable block -/
 
-theorem walsh_pair {ι : Type*} [Fintype ι] [DecidableEq ι] {v w : ι} (h : v ≠ w)
+theorem walsh_pair {ι : Type*} [DecidableEq ι] {v w : ι} (h : v ≠ w)
     (s : ι → Bool) : walsh {v, w} s = sgn (s v) * sgn (s w) := by
+  classical
   rw [walsh, Finset.prod_insert (by simpa using h), Finset.prod_singleton]
 
 theorem pair_ne {v w : TriSign t} (h : v.1 ≠ w.1) : v ≠ w := fun hh => h (by rw [hh])
@@ -282,7 +288,8 @@ theorem block_boundary (q : ℝ) (i j k : Fin t) (U : Finset (Obs t))
       linear_combination (sgn (s (1, j)) * sgn (s (1, j)) * sgn (s (2, k)) * sgn (s (2, k))) * h0
         + (sgn (s (2, k)) * sgn (s (2, k))) * h1 + h2
     · rw [Finset.card_empty, triMom_zero, tgt]
-      simp only [Finset.prod_insert (by simp : Obs.A i j ∉ ({Obs.B i k, Obs.C j k} : Finset (Obs t))),
+      simp only [Finset.prod_insert
+        (by simp : Obs.A i j ∉ ({Obs.B i k, Obs.C j k} : Finset (Obs t))),
         Finset.prod_insert (by simp : Obs.B i k ∉ ({Obs.C j k} : Finset (Obs t))),
         Finset.prod_singleton]
       rw [← triParity_momABC q]
@@ -296,7 +303,7 @@ theorem triMom_add (q : ℝ) {a b : ℕ} (ha : a % 2 = 0) (hb : b % 2 = 0) :
   have hd : (a + b) / 2 = a / 2 + b / 2 := by omega
   simp [triMom, ha, hb, hab, hd, pow_add]
 
-theorem triMom_sum {ι : Type*} [DecidableEq ι] (q : ℝ) (s : Finset ι) (c : ι → ℕ)
+theorem triMom_sum {ι : Type*} (q : ℝ) (s : Finset ι) (c : ι → ℕ)
     (h : ∀ m ∈ s, c m % 2 = 0) :
     triMom q (∑ m ∈ s, c m) = ∏ m ∈ s, triMom q (c m) := by
   classical
@@ -508,7 +515,7 @@ theorem triGamma_injectable (t : ℕ) (q : ℝ) (hq : 0 ≤ q) :
 /-! ### The ancestral-independence products -/
 
 /-- Uncurrying a family of sign assignments. -/
-def sigmaFun {n : ℕ} (β : Fin n → Type) [∀ m, Fintype (β m)] :
+def sigmaFun {n : ℕ} (β : Fin n → Type) :
     (∀ m, β m → Bool) ≃ ((Σ m, β m) → Bool) where
   toFun φ := fun x => φ x.1 x.2
   invFun u := fun m v => u ⟨m, v⟩

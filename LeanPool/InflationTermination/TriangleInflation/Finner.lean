@@ -36,7 +36,8 @@ theorem bern_isLaw {r : ℝ} (h0 : 0 ≤ r) (h1 : r ≤ 1) : IsLaw (bern r) := b
   simp [bern]
 
 /-- A product of per-coordinate laws is a law. -/
-theorem prodLaw_isLaw {ι : Type*} [Fintype ι] [DecidableEq ι] {w : ι → Bool → ℝ} (hw : ∀ i, IsLaw (w i)) :
+theorem prodLaw_isLaw {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {w : ι → Bool → ℝ} (hw : ∀ i, IsLaw (w i)) :
     IsLaw (prodLaw w) := by
   refine ⟨fun x => Finset.prod_nonneg fun i _ => (hw i).1 _, ?_⟩
   have key : (∏ i, ∑ b : Bool, w i b) = ∑ x : ι → Bool, prodLaw w x := by

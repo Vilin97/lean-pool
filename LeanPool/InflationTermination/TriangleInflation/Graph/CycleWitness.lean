@@ -55,9 +55,11 @@ theorem fourier_moment (c : Finset ι → ℝ) (F : Finset ι) :
     rw [← mul_pow]; norm_num
   linear_combination (c F) * h2
 
+omit [DecidableEq ι] in
 /-- The generating identity `∑_F ρ^{|F|} = (1+ρ)^n`. -/
 theorem sum_pow_card (ρ : ℝ) :
     (∑ F : Finset ι, ρ ^ F.card) = (1 + ρ) ^ Fintype.card ι := by
+  classical
   have h := Fintype.prod_add (fun _ : ι => ρ) (fun _ : ι => (1 : ℝ))
   simp only [Finset.prod_const_one, mul_one, Finset.prod_const] at h
   rw [← h]
@@ -83,11 +85,13 @@ theorem one_add_pow_le_two {ρ : ℝ} {N : ℕ} (hρ0 : 0 ≤ ρ) (h : (N : ℝ)
   have hpos : (0 : ℝ) ≤ (1 + ρ) ^ N := by positivity
   nlinarith
 
+omit [DecidableEq ι] in
 /-- Positivity of a Fourier synthesis whose nonconstant coefficients are dominated by a
 geometric series summing to at most the constant coefficient. -/
 theorem fourier_nonneg (c : Finset ι → ℝ) (ρ : ℝ) (_hρ0 : 0 ≤ ρ)
     (h0 : c ∅ = 1) (hc : ∀ F : Finset ι, F ≠ ∅ → |c F| ≤ ρ ^ F.card)
     (hexp : (1 + ρ) ^ Fintype.card ι ≤ 2) (s : ι → Bool) : 0 ≤ fourier c s := by
+  classical
   set T : Finset ι → ℝ := fun F => c F * ∏ v ∈ F, sgn (s v) with hT
   have habs : ∀ F : Finset ι, F ≠ ∅ → |T F| ≤ ρ ^ F.card := by
     intro F hF
@@ -132,7 +136,7 @@ section AuxH
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The auxiliary density `H_{N,q}(s) = 2^{−N} ∑_{|S| even} (−q)^{|S|/2} ∏_S s`. -/
-noncomputable def auxH (ι : Type*) [Fintype ι] [DecidableEq ι] (q : ℝ) : (ι → Bool) → ℝ :=
+noncomputable def auxH (ι : Type*) [Fintype ι] (q : ℝ) : (ι → Bool) → ℝ :=
   fourier (fun S : Finset ι => if Even S.card then (-q) ^ (S.card / 2) else 0)
 
 /-- The Walsh moments of the auxiliary density. -/
@@ -146,9 +150,11 @@ theorem auxH_sum (q : ℝ) : (∑ s : ι → Bool, auxH ι q s) = 1 := by
   have h := auxH_moment (ι := ι) q ∅
   simpa using h
 
+omit [DecidableEq ι] in
 /-- The auxiliary density is nonnegative when `N²q ≤ 1/4`. -/
 theorem auxH_nonneg (q : ℝ) (hq0 : 0 ≤ q)
     (hq : ((Fintype.card ι : ℝ)) ^ 2 * q ≤ 1 / 4) (s : ι → Bool) : 0 ≤ auxH ι q s := by
+  classical
   set ρ := Real.sqrt q with hρdef
   have hρ0 : 0 ≤ ρ := Real.sqrt_nonneg q
   have hρsq : ρ * ρ = q := Real.mul_self_sqrt hq0
@@ -179,8 +185,9 @@ section Parity
 variable {Γ : PairGraph} {t : ℕ}
 
 /-- A Walsh character as a power of `-1`. -/
-theorem prod_sgn_eq_neg_one_pow {L : Type*} [DecidableEq L] (A : Finset L) (s : L → Bool) :
+theorem prod_sgn_eq_neg_one_pow {L : Type*} (A : Finset L) (s : L → Bool) :
     (∏ l ∈ A, sgn (s l)) = (-1 : ℝ) ^ (A.filter (fun l => s l = true)).card := by
+  classical
   rw [← Finset.prod_filter_mul_prod_filter_not A (fun l => s l = true)]
   have h1 : (∏ l ∈ A.filter (fun l => s l = true), sgn (s l))
       = (-1 : ℝ) ^ (A.filter (fun l => s l = true)).card := by
@@ -259,8 +266,9 @@ theorem prod_sgn_parityRead (A : Finset (GObs Γ t)) (s : GLatent Γ t → Bool)
 
 
 /-- The auxiliary density is invariant under every permutation of its signs. -/
-theorem auxH_perm {ι : Type*} [Fintype ι] [DecidableEq ι] (q : ℝ) (e : ι ≃ ι)
+theorem auxH_perm {ι : Type*} [Fintype ι] (q : ℝ) (e : ι ≃ ι)
     (s : ι → Bool) : auxH ι q (fun l => s (e l)) = auxH ι q s := by
+  classical
   simp only [auxH, fourier]
   congr 1
   refine Fintype.sum_bijective (Equiv.finsetCongr e) (Equiv.finsetCongr e).bijective _ _
@@ -359,9 +367,10 @@ theorem latBd_subset_anc (A : Finset (GObs Γ t)) : latBd A ⊆ gAncestorsOf A :
   rw [hemp] at hl
   simp at hl
 
-theorem latBd_biUnion {n : Type*} [Fintype n] [DecidableEq n] (A : n → Finset (GObs Γ t))
+theorem latBd_biUnion {n : Type*} [Fintype n] (A : n → Finset (GObs Γ t))
     (hd : ∀ k k', k ≠ k' → Disjoint (gAncestorsOf (A k)) (gAncestorsOf (A k'))) :
     latBd (Finset.univ.biUnion A) = Finset.univ.biUnion (fun k => latBd (A k)) := by
+  classical
   have hdA : ∀ k k', k ≠ k' → Disjoint (A k) (A k') := fun k k' h =>
     Sound.disjoint_of_gAI (hd k k' h)
   have hsplit : ∀ l : GLatent Γ t,
@@ -401,9 +410,10 @@ theorem latBd_biUnion {n : Type*} [Fintype n] [DecidableEq n] (A : n → Finset 
     rw [Finset.sum_eq_single k (fun k' _ h => hother k' h) (fun h => absurd (Finset.mem_univ k) h)]
     exact hk
 
-theorem latBd_biUnion_card {n : Type*} [Fintype n] [DecidableEq n] (A : n → Finset (GObs Γ t))
+theorem latBd_biUnion_card {n : Type*} [Fintype n] (A : n → Finset (GObs Γ t))
     (hd : ∀ k k', k ≠ k' → Disjoint (gAncestorsOf (A k)) (gAncestorsOf (A k'))) :
     (latBd (Finset.univ.biUnion A)).card = ∑ k : n, (latBd (A k)).card := by
+  classical
   rw [latBd_biUnion A hd, Finset.card_biUnion]
   intro k _ k' _ hkk
   exact Finset.disjoint_of_subset_left (latBd_subset_anc (A k))
@@ -704,10 +714,12 @@ variable {m t : ℕ}
 
 /-- Walsh uniqueness transported along an identification of the sample space with a Boolean
 cube. -/
-theorem eq_of_moments {α : Type*} [Fintype α] {ι : Type*} [Fintype ι] [DecidableEq ι]
+theorem eq_of_moments {α : Type*} [Fintype α] {ι : Type*} [Finite ι]
     (E : α ≃ (ι → Bool)) (P Q : α → ℝ)
     (h : ∀ F : Finset ι, (∑ a, P a * ∏ v ∈ F, sgn (E a v))
       = ∑ a, Q a * ∏ v ∈ F, sgn (E a v)) : P = Q := by
+  classical
+  let := Fintype.ofFinite ι
   have key : (fun s => P (E.symm s)) = (fun s => Q (E.symm s)) := by
     refine eq_of_walsh_moments_eq _ _ fun F => ?_
     have e : ∀ R : α → ℝ, (∑ s : ι → Bool, R (E.symm s) * ∏ v ∈ F, sgn (s v))
@@ -727,13 +739,14 @@ theorem parWit_block_moment (hm : 3 ≤ m) (q : ℝ) (ι : (cycle m hm).Edge →
       = (-q) ^ ((cycleBoundary m (vertSet hm A)).card / 2) := by
   rw [parWit_moment, latBd_copy_card hm ι hA, ite_eq_left (cycleBoundary_card_even _)]
 
-theorem parWit_family_moment (hm : 3 ≤ m) (q : ℝ) {n : Type*} [Fintype n] [DecidableEq n]
+theorem parWit_family_moment (hm : 3 ≤ m) (q : ℝ) {n : Type*} [Fintype n]
     (A : n → Finset (GObs (cycle m hm) t)) (ιf : n → (cycle m hm).Edge → Fin t)
     (hA : ∀ k, A k ⊆ copySet (ιf k))
     (hd : ∀ k k', k ≠ k' → Disjoint (gAncestorsOf (A k)) (gAncestorsOf (A k'))) :
     (∑ ω : GAssign (cycle m hm) t, parWit (cycle m hm) t q ω
         * ∏ o ∈ Finset.univ.biUnion A, sgn (ω o))
       = ∏ k : n, (-q) ^ ((cycleBoundary m (vertSet hm (A k))).card / 2) := by
+  classical
   rw [parWit_moment, latBd_biUnion_card A hd,
     Finset.sum_congr rfl (fun k _ => latBd_copy_card hm (ιf k) (hA k))]
   set b : n → ℕ := fun k => (cycleBoundary m (vertSet hm (A k))).card with hb

@@ -9,7 +9,9 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
 /-!
 # The five-path witness at every order
 
-AUDIT-NOTES A4 / Theorem `thm:fivepath`: the order-`t` witness `fivePath_witness` for the five-path target with `h = 1/(16t²)`, built as the inflated law of a complex-weighted pair-source model, and its recursively expressible form. Everything here is proved.
+AUDIT-NOTES A4 / Theorem `thm:fivepath`: the order-`t` witness `fivePath_witness` for the
+five-path target with `h = 1/(16t²)`, built as the inflated law of a complex-weighted
+pair-source model, and its recursively expressible form. Everything here is proved.
 -/
 
 namespace TriangleInflation.Graph
@@ -110,7 +112,7 @@ end Push
 /-! ## Marginals of a product weight along an injective selection -/
 
 theorem cpush_prodLaw_sel {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ]
-    [DecidableEq κ] {w : ι → Bool → ℂ} (hw : ∀ i, ∑ b, w i b = 1) {ν : κ → ι}
+     {w : ι → Bool → ℂ} (hw : ∀ i, ∑ b, w i b = 1) {ν : κ → ι}
     (hν : Function.Injective ν) :
     cpush (cprodLaw w) (fun x k => x (ν k)) = cprodLaw (fun k => w (ν k)) := by
   classical
@@ -292,7 +294,8 @@ theorem sum_sel_coord {B : Type*} [Fintype B] [DecidableEq B] {n : Type*} [Finty
       (fun r => if v r = b₀ then (1 : ℂ) else 0)]
     simp [mul_comm]
   rw [Finset.sum_congr rfl (fun v _ => hstep v),
-    sum_pi_prod (fun (r : n) (b : B) => ρ b * if r = r₀ then (if b = b₀ then (1 : ℂ) else 0) else 1)]
+    sum_pi_prod (fun (r : n) (b : B) =>
+      ρ b * if r = r₀ then (if b = b₀ then (1 : ℂ) else 0) else 1)]
   have hcol : ∀ r : n, (∑ b, ρ b * if r = r₀ then (if b = b₀ then (1 : ℂ) else 0) else 1)
       = if r = r₀ then ρ b₀ else 1 := by
     intro r
@@ -366,7 +369,8 @@ theorem cInflCond_sum (x : CCfg M t) (o : GObs Γ t) : ∑ b, cInflCond M x o b 
 theorem sum_ccfgW (hM : M.Valid) : ∑ x : CCfg M t, ccfgW M t x = 1 :=
   sum_dprod (fun l => hM l.1)
 
-theorem sum_cprodLaw {ι : Type*} [Fintype ι] [DecidableEq ι] {w : ι → Bool → ℂ} (hw : ∀ i, ∑ b, w i b = 1) :
+theorem sum_cprodLaw {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {w : ι → Bool → ℂ} (hw : ∀ i, ∑ b, w i b = 1) :
     ∑ x : ι → Bool, cprodLaw w x = 1 := by
   rw [show (∑ x : ι → Bool, cprodLaw w x) = ∏ i, ∑ b, w i b from sum_pi_prod _]
   exact Finset.prod_eq_one fun i _ => hw i
@@ -526,7 +530,8 @@ theorem cInflLaw_ai (hM : M.Valid) (n : ℕ) (S : Fin n → Finset (GObs Γ t))
     intro m x y hxy
     refine Finset.prod_congr rfl fun o _ => ?_
     congr 1
-    exact congrArg (M.resp o.1.1) (funext fun e => hxy (e.1, o.1.2 e) (Sound.mem_gAncestorsOf o.2 e))
+    exact congrArg (M.resp o.1.1)
+      (funext fun e => hxy (e.1, o.1.2 e) (Sound.mem_gAncestorsOf o.2 e))
   have h3 : ∑ x : CCfg M t,
         ccfgW M t x * ∏ m : Fin n, ∏ o : ↥(S m), crespMass (cObsResp M o.1 x) (φ m o)
       = ∏ m : Fin n, ∑ x : CCfg M t,
@@ -810,7 +815,7 @@ private theorem lawSum_00001 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_00010 (γ : ℝ) :
@@ -834,7 +839,7 @@ private theorem lawSum_00011 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_00100 (γ : ℝ) :
@@ -858,7 +863,7 @@ private theorem lawSum_00101 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_00110 (γ : ℝ) :
@@ -882,7 +887,7 @@ private theorem lawSum_00111 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_01000 (γ : ℝ) :
@@ -906,7 +911,7 @@ private theorem lawSum_01001 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_01010 (γ : ℝ) :
@@ -930,7 +935,7 @@ private theorem lawSum_01011 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_01100 (γ : ℝ) :
@@ -954,7 +959,7 @@ private theorem lawSum_01101 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_01110 (γ : ℝ) :
@@ -978,7 +983,7 @@ private theorem lawSum_01111 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_10000 (γ : ℝ) :
@@ -990,7 +995,7 @@ private theorem lawSum_10000 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_10001 (γ : ℝ) :
@@ -1014,7 +1019,7 @@ private theorem lawSum_10010 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_10011 (γ : ℝ) :
@@ -1038,7 +1043,7 @@ private theorem lawSum_10100 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_10101 (γ : ℝ) :
@@ -1062,7 +1067,7 @@ private theorem lawSum_10110 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_10111 (γ : ℝ) :
@@ -1086,7 +1091,7 @@ private theorem lawSum_11000 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_11001 (γ : ℝ) :
@@ -1110,7 +1115,7 @@ private theorem lawSum_11010 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_11011 (γ : ℝ) :
@@ -1134,7 +1139,7 @@ private theorem lawSum_11100 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_11101 (γ : ℝ) :
@@ -1158,7 +1163,7 @@ private theorem lawSum_11110 (γ : ℝ) :
   norm_num
   all_goals try rw [Complex.ext_iff]
   all_goals try constructor
-  all_goals try simp [← Complex.ofReal_pow]
+  all_goals try simp
   all_goals ring
 
 private theorem lawSum_11111 (γ : ℝ) :
@@ -1239,9 +1244,10 @@ less than `A^n` for `γ = 1/(4t)`, `n = 2t`. -/
 
 /-- The telescoped bound `‖A^{|s|} − ∏ f‖ · A ≤ |s| A^{|s|} d` for factors of modulus `A`
 each within `d` of `A`. -/
-theorem tel_bound {ι : Type*} [DecidableEq ι] (A d : ℝ) (hA : 0 ≤ A) (_hd0 : 0 ≤ d)
+theorem tel_bound {ι : Type*} (A d : ℝ) (hA : 0 ≤ A) (_hd0 : 0 ≤ d)
     (f : ι → ℂ) (hn : ∀ i, ‖f i‖ = A) (hdi : ∀ i, ‖(A : ℂ) - f i‖ ≤ d) (s : Finset ι) :
     ‖(A : ℂ) ^ s.card - ∏ i ∈ s, f i‖ * A ≤ s.card * A ^ s.card * d := by
+  classical
   have hAC : ‖(A : ℂ)‖ = A := by
     rw [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hA]
   induction s using Finset.cons_induction with
@@ -1273,11 +1279,12 @@ theorem tel_bound {ι : Type*} [DecidableEq ι] (A d : ℝ) (hA : 0 ≤ A) (_hd0
 
 /-- If every factor has modulus `A ≥ 1` and lies within `√(2A(A−1))` of `A`, and
 `n²(A−1) ≤ A` for `n` the number of factors, then the product has nonnegative real part. -/
-theorem re_prod_nonneg {ι : Type*} [Fintype ι] [DecidableEq ι] (A : ℝ) (hA1 : 1 ≤ A)
+theorem re_prod_nonneg {ι : Type*} [Fintype ι] (A : ℝ) (hA1 : 1 ≤ A)
     (f : ι → ℂ) (hn : ∀ i, ‖f i‖ = A)
     (hdsq : ∀ i, ‖(A : ℂ) - f i‖ ^ 2 = 2 * A * (A - 1))
     (hkey : ((Fintype.card ι : ℝ)) ^ 2 * (A - 1) ≤ A) :
     0 ≤ (∏ i, f i).re := by
+  classical
   have hA0 : (0 : ℝ) < A := lt_of_lt_of_le one_pos hA1
   set n : ℕ := Fintype.card ι with hncard
   set d : ℝ := Real.sqrt (2 * A * (A - 1)) with hd
@@ -1304,7 +1311,8 @@ theorem re_prod_nonneg {ι : Type*} [Fintype ι] [DecidableEq ι] (A : ℝ) (hA1
   have hsq2 : (‖((A : ℂ)) ^ n - P‖ * A) ^ 2 ≤ ((n : ℝ) * A ^ n * d) ^ 2 := by
     have h1 : (0 : ℝ) ≤ ‖((A : ℂ)) ^ n - P‖ * A := by positivity
     nlinarith [htel, h1]
-  have hexp : (2 * A ^ n * (A ^ n - P.re)) * A ^ 2 ≤ (n : ℝ) ^ 2 * (A ^ n) ^ 2 * (2 * A * (A - 1)) := by
+  have hexp : (2 * A ^ n * (A ^ n - P.re)) * A ^ 2 ≤
+      (n : ℝ) ^ 2 * (A ^ n) ^ 2 * (2 * A * (A - 1)) := by
     have := hsq2
     rw [mul_pow, hsq, mul_pow, mul_pow, hdsq'] at this
     nlinarith [this]

@@ -266,8 +266,10 @@ theorem sqDensity_sum (q : ℝ) (hq : 0 ≤ q) :
   have h := sqDensity_moment (t := t) (κ := κ) q hq ∅ (fun l hl => absurd hl (by simp))
   simpa using h
 
+omit [DecidableEq κ] in
 theorem sqW_ge (e : κ ≃ Fin 4) (q : ℝ) (hq0 : 0 ≤ q) (hq : (t : ℝ) * q ≤ 1 / 16)
     (s : κ × Fin t → Bool) : 1 / 3 ≤ sqW t q s := by
+  classical
   have hsq : (0 : ℝ) ≤ 1 + q := by linarith
   set R := Real.sqrt (1 + q) ^ t with hR
   have hR1 : 1 ≤ R := one_le_pow₀ (by rw [Real.one_le_sqrt]; linarith)
@@ -284,8 +286,10 @@ theorem sqW_ge (e : κ ≃ Fin 4) (q : ℝ) (hq0 : 0 ≤ q) (hq : (t : ℝ) * q 
     (fam_norm q hq0 s (e.symm 1)) (fam_norm q hq0 s (e.symm 2)) (fam_norm q hq0 s (e.symm 3))
   linarith
 
+omit [DecidableEq κ] in
 theorem sqDensity_nonneg (e : κ ≃ Fin 4) (q : ℝ) (hq0 : 0 ≤ q) (hq : (t : ℝ) * q ≤ 1 / 16)
     (s : κ × Fin t → Bool) : 0 ≤ sqDensity t q s := by
+  classical
   have := sqW_ge e q hq0 hq s
   rw [sqDensity]
   have : 0 ≤ sqW t q s := le_trans (by norm_num) this
@@ -320,11 +324,14 @@ theorem sqWit_moment (hm : 3 ≤ m) (q : ℝ) (hq0 : 0 ≤ q) (A : Finset (GObs 
 
 /-- A pushforward whose characters all pull back to characters with spread latent boundary is
 the same for the new witness and for `parWit`. -/
-theorem push_eq (hm : 3 ≤ m) (q : ℝ) (hq0 : 0 ≤ q) {β : Type} [Fintype β] [DecidableEq β]
-    {ι : Type} [Fintype ι] [DecidableEq ι] (f : GAssign (cycle m hm) t → β) (E : β ≃ (ι → Bool))
+theorem push_eq (hm : 3 ≤ m) (q : ℝ) (hq0 : 0 ≤ q) {β : Type} [Finite β] [DecidableEq β]
+    {ι : Type} [Finite ι] (f : GAssign (cycle m hm) t → β) (E : β ≃ (ι → Bool))
     (h : ∀ F : Finset ι, ∃ A : Finset (GObs (cycle m hm) t), Spread (latBd A) ∧
       ∀ ω, (∏ v ∈ F, sgn (E (f ω) v)) = ∏ o ∈ A, sgn (ω o)) :
     pushforward (sqWit hm t q) f = pushforward (parWit (cycle m hm) t q) f := by
+  classical
+  let := Fintype.ofFinite β
+  let := Fintype.ofFinite ι
   refine eq_of_moments E _ _ fun F => ?_
   obtain ⟨A, hA, hprod⟩ := h F
   rw [← Sound.sum_mul_comp (G := fun b => ∏ v ∈ F, sgn (E b v)),
@@ -344,11 +351,12 @@ theorem spread_copy (hm : 3 ≤ m) (ι : (cycle m hm).Edge → Fin t)
   obtain ⟨j', hj', hne⟩ := Finset.exists_mem_ne h2 j
   exact ⟨_, Finset.mem_image_of_mem _ hj', fun h => hne (ce_injective hm h)⟩
 
-theorem spread_family (hm : 3 ≤ m) {n : Type*} [Fintype n] [DecidableEq n]
+theorem spread_family (hm : 3 ≤ m) {n : Type*} [Fintype n]
     (A : n → Finset (GObs (cycle m hm) t)) (ιf : n → (cycle m hm).Edge → Fin t)
     (hA : ∀ k, A k ⊆ copySet (ιf k))
     (hd : ∀ k k', k ≠ k' → Disjoint (gAncestorsOf (A k)) (gAncestorsOf (A k'))) :
     Spread (latBd (Finset.univ.biUnion A)) := by
+  classical
   intro l hl
   rw [latBd_biUnion A hd] at hl ⊢
   obtain ⟨k, -, hk⟩ := Finset.mem_biUnion.1 hl

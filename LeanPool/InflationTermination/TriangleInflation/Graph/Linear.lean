@@ -20,7 +20,8 @@ density for `tq ≤ 1/16` (`triW_ge`), through the division-free form `triW_core
 packet's `1 − cos ∑θ_g ≤ 3 ∑ (1 − cos θ_g)`; the complete moment table `triW_moment`; the
 normalization `triW_sum` and hence `triDensity_isLaw`; and `triParity_isLaw`.
 
-Not proved here (moved to `InflationGraphOpen/Linear.lean`): `triangle_linear_witness` and `square_linear_witness`, which need the
+Not proved here (moved to `InflationGraphOpen/Linear.lean`): `triangle_linear_witness` and
+`square_linear_witness`, which need the
 pushforward of the density along the copied-observation map together with the symmetry, the
 diagonal law and the injectable/ancestral prescriptions.
 -/
@@ -51,16 +52,20 @@ theorem sgn_ne_zero (b : Bool) : sgn b ≠ 0 := by cases b <;> norm_num [sgn]
 theorem sgn_mul_sgn (a b : Bool) : sgn a * sgn b = if a = b then 1 else -1 := by
   cases a <;> cases b <;> norm_num [sgn]
 
+omit [DecidableEq ι] in
 /-- The sum of a product over all subsets is the product of `1 + f i`. -/
 theorem sum_prod_subsets (f : ι → ℝ) :
     ∑ S : Finset ι, ∏ i ∈ S, f i = ∏ i, (f i + 1) := by
+  classical
   have h := Finset.prod_add (f := f) (g := fun _ : ι => (1 : ℝ)) (s := (univ : Finset ι))
   simpa [Finset.powerset_univ] using h.symm
 
+omit [DecidableEq ι] in
 /-- Orthogonality of the Walsh characters. -/
 theorem walsh_orthogonality (w v : ι → Bool) :
     ∑ S : Finset ι, walsh S w * walsh S v =
       if w = v then (2 : ℝ) ^ (Fintype.card ι) else 0 := by
+  classical
   have hrw : ∀ S : Finset ι, walsh S w * walsh S v = ∏ i ∈ S, (sgn (w i) * sgn (v i)) := by
     intro S; rw [walsh, walsh, ← Finset.prod_mul_distrib]
   simp only [hrw]
@@ -476,7 +481,8 @@ theorem triW_moment (t : ℕ) (q : ℝ) (hq : 0 ≤ q) (S : Finset (TriSign t)) 
   · subst hS
     have htriv : ∀ g : Fin 3, ∀ v ∈ (∅ : Finset (TriSign t)), v.1 = g := by
       intro g v hv; exact absurd hv (Finset.notMem_empty v)
-    rw [ite_eq_left (htriv 0), ite_eq_left (htriv 1), ite_eq_left (htriv 2), ite_eq_left rfl, hA, hone,
+    rw [ite_eq_left (htriv 0), ite_eq_left (htriv 1), ite_eq_left (htriv 2),
+      ite_eq_left rfl, hA, hone,
       triCoeff, ite_eq_left rfl]
     simp only [Finset.card_empty, triMom]
     norm_num

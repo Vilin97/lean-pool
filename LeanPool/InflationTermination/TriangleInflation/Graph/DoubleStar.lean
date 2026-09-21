@@ -29,7 +29,9 @@ indices of each source by an arbitrary permutation, the `t` rows read on the dia
 * `DSStruct.gCompatible_of_dsStruct` — the reconstruction (step (iv)).
 
 What is *not* proved here is the purely graph-theoretic step `exists_dsStruct`: that a
-double-star forest carries the combinatorial data `DSStruct`.  That step, `exists_dsStruct`, and the theorem `doubleStar_terminates` assembled from it, live in `InflationGraphOpen/DoubleStar.lean`; everything in this file is proved.
+double-star forest carries the combinatorial data `DSStruct`.  That step, `exists_dsStruct`,
+and the theorem `doubleStar_terminates` assembled from it, live in
+`InflationGraphOpen/DoubleStar.lean`; everything in this file is proved.
 -/
 
 namespace TriangleInflation.Graph
@@ -282,11 +284,12 @@ theorem blockMarg_union_of_sourceDisjoint {Δ : GAssign Γ 2 → ℝ} {P : GTarg
 are mutually independent under the target. -/
 theorem blockMarg_biUnion_of_sourceDisjoint {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ}
     (hP : IsLaw P) (hsym : GSymmetric 2 Δ)
-    (hdiag : pushforward Δ readDiag = gTensorPow 2 P) {ι : Type*} [DecidableEq ι]
+    (hdiag : pushforward Δ readDiag = gTensorPow 2 P) {ι : Type*}
     (A : ι → Finset Γ.V)
     (hA : ∀ i j, i ≠ j → Disjoint ((A i).biUnion Γ.inc) ((A j).biUnion Γ.inc)) :
     ∀ (S : Finset ι) (w : Γ.V → Bool),
       blockMarg (S.biUnion A) P w = ∏ i ∈ S, blockMarg (A i) P w := by
+  classical
   intro S
   induction S using Finset.induction_on with
   | empty => intro w; simp [blockMarg_empty hP]
@@ -318,7 +321,8 @@ def flipIdx : Fin 2 → Fin 2 := fun r => if r = 0 then 1 else 0
 theorem forall_fin_two_of_flip (r : Fin 2) (p : Fin 2 → Prop) :
     (∀ m, p m) ↔ (p r ∧ p (flipIdx r)) := by
   revert p
-  have : ∀ (r : Fin 2) (p : Fin 2 → Bool), (∀ m, p m = true) ↔ (p r = true ∧ p (flipIdx r) = true) := by
+  have : ∀ (r : Fin 2) (p : Fin 2 → Bool),
+      (∀ m, p m = true) ↔ (p r = true ∧ p (flipIdx r) = true) := by
     decide
   intro p
   classical
@@ -441,7 +445,7 @@ theorem respMass_ite (d b : Bool) :
 independent law `ν e` and the outcome at each vertex `v` is a function `dec` of the source
 values that depends only on the sources incident to `v`, then the pushforward of the product
 law along `dec` is compatible. -/
-theorem gCompatible_of_localDecoder {A : Type} [Fintype A] [DecidableEq A] [Inhabited A]
+theorem gCompatible_of_localDecoder {A : Type} [Fintype A] [Inhabited A]
     (ν : Γ.Edge → A → ℝ) (hν : ∀ e, IsLaw (ν e)) (dec : (Γ.Edge → A) → (Γ.V → Bool))
     (hloc : ∀ (z z' : Γ.Edge → A) (v : Γ.V), (∀ e ∈ Γ.inc v, z e = z' e) → dec z v = dec z' v)
     (P : GTarget Γ)
@@ -1133,7 +1137,8 @@ theorem dec_local (z z' : Γ.Edge → DSLat Γ) (v : Γ.V)
     funext u
     unfold DSStruct.locVec
     by_cases hu : D.leaf u = true ∧ D.mate u = v
-    · rw [ite_eq_left hu, ite_eq_left hu, h (D.edgeAt u) (by rw [← hu.2]; exact D.edgeAt_inc_mate u)]
+    · rw [ite_eq_left hu, ite_eq_left hu,
+        h (D.edgeAt u) (by rw [← hu.2]; exact D.edgeAt_inc_mate u)]
     · rw [ite_eq_right hu, ite_eq_right hu]
   unfold DSStruct.dec
   rw [hv, hloc]

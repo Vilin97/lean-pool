@@ -43,9 +43,12 @@ theorem prod_sgn_eq_prod_univ (F : Finset ι) (w : ι → Bool) :
     (∏ v ∈ F, sgn (w v)) = ∏ v : ι, (if v ∈ F then sgn (w v) else 1) := by
   rw [Finset.prod_ite_mem, Finset.univ_inter]
 
+omit [Fintype ι] in
 /-- The product of two Walsh characters is the character of their symmetric difference. -/
-theorem prod_sgn_mul_prod_sgn (F F' : Finset ι) (w : ι → Bool) :
+theorem prod_sgn_mul_prod_sgn [Finite ι] (F F' : Finset ι) (w : ι → Bool) :
     (∏ v ∈ F', sgn (w v)) * (∏ v ∈ F, sgn (w v)) = ∏ v ∈ symmDiff F' F, sgn (w v) := by
+  classical
+  let := Fintype.ofFinite ι
   rw [prod_sgn_eq_prod_univ, prod_sgn_eq_prod_univ, prod_sgn_eq_prod_univ,
     ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun v _ => ?_
@@ -65,10 +68,12 @@ theorem sum_prod_sgn (F : Finset ι) :
     refine Finset.prod_eq_zero (Finset.mem_univ v) ?_
     simp [hv, sgn]
 
+omit [DecidableEq ι] in
 /-- The Walsh characters are their own dual basis. -/
 theorem sum_prod_sgn_mul (u w : ι → Bool) :
     (∑ F : Finset ι, ∏ v ∈ F, (sgn (u v) * sgn (w v)))
       = if u = w then (2 : ℝ) ^ Fintype.card ι else 0 := by
+  classical
   have h := Fintype.prod_add (fun v : ι => sgn (u v) * sgn (w v)) (fun _ : ι => (1 : ℝ))
   simp only [Finset.prod_const_one, mul_one] at h
   rw [← h]
@@ -112,7 +117,9 @@ theorem eq_of_walsh_moments_eq (P Q : (ι → Bool) → ℝ)
   simp_rw [h] at h1
   rw [h2] at h1
   have hpow : (0 : ℝ) < (2 : ℝ) ^ Fintype.card ι := by positivity
-  exact (mul_right_cancel₀ (ne_of_gt hpow) (by linarith [h1] : Q w * (2:ℝ)^Fintype.card ι = P w * (2:ℝ)^Fintype.card ι)).symm
+  exact (mul_right_cancel₀ (ne_of_gt hpow)
+    (by linarith [h1] : Q w * (2:ℝ)^Fintype.card ι =
+      P w * (2:ℝ)^Fintype.card ι)).symm
 
 end Walsh
 

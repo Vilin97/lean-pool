@@ -32,10 +32,13 @@ variable {Γ : PairGraph} {t : ℕ}
 
 /-! ### Infrastructure for transport
 
-The machinery of `lem:transport`, kept in the `Transport` namespace so that its generic names do
-not collide with the rest of the library: pushforward algebra and pi-type splitting, the edge map
+The machinery of `lem:transport`, kept in the `Transport` namespace so that its generic
+names do
+not collide with the rest of the library: pushforward algebra and pi-type splitting, the
+edge map
 of an induced embedding, the extended witness (`transportWitness`) with its symmetry, diagonal
-law and ancestral prescriptions, and the restricted model (`restrictModel`) with its validity and
+law and ancestral prescriptions, and the restricted model (`restrictModel`) with its
+validity and
 observed law. -/
 
 namespace Transport
@@ -143,13 +146,14 @@ theorem sum_sum_prod' {κ ν : Type*} [Fintype κ] [Fintype ν] (Pa : κ → ℝ
 
 theorem sum_pi_two_block {ι : Type*} [Fintype ι] [DecidableEq ι] {α : ι → Type*}
     [∀ i, Fintype (α i)]
-    (p : ι → Prop) [DecidablePred p] (w : ∀ i, α i → ℝ) (hw : ∀ i, ∑ a, w i a = 1)
+    (p : ι → Prop) (w : ∀ i, α i → ℝ) (hw : ∀ i, ∑ a, w i a = 1)
     (A B : (∀ i, α i) → ℝ)
     (hA : ∀ z z' : (∀ i, α i), (∀ i, p i → z i = z' i) → A z = A z')
     (hB : ∀ z z' : (∀ i, α i), (∀ i, ¬ p i → z i = z' i) → B z = B z') :
     (∑ z : (∀ i, α i), (∏ i, w i (z i)) * (A z * B z))
       = (∑ z : (∀ i, α i), (∏ i, w i (z i)) * A z)
         * (∑ z : (∀ i, α i), (∏ i, w i (z i)) * B z) := by
+  classical
   have hprod : ∀ (a : ∀ i : {x : ι // p x}, α i) (b : ∀ i : {x : ι // ¬ p x}, α i),
       (∏ i, w i (piMerge p α a b i))
         = (∏ i : {x : ι // p x}, w i.1 (a i)) * (∏ i : {x : ι // ¬ p x}, w i.1 (b i)) := by
@@ -183,7 +187,7 @@ theorem sum_pi_two_block {ι : Type*} [Fintype ι] [DecidableEq ι] {α : ι →
 factorizes. -/
 theorem sum_pi_prod_indep {ι : Type*} [Fintype ι] [DecidableEq ι] {α : ι → Type*}
     [∀ i, Fintype (α i)]
-    {ν : Type*} [DecidableEq ν] (blk : ν → ι → Prop) [∀ u, DecidablePred (blk u)]
+    {ν : Type*} (blk : ν → ι → Prop)
     (w : ∀ i, α i → ℝ) (hw : ∀ i, ∑ a, w i a = 1)
     (g : ν → (∀ i, α i) → ℝ)
     (hdisj : ∀ u u' : ν, u ≠ u' → ∀ i, blk u i → ¬ blk u' i)
@@ -191,6 +195,7 @@ theorem sum_pi_prod_indep {ι : Type*} [Fintype ι] [DecidableEq ι] {α : ι �
     (s : Finset ν) :
     (∑ z : (∀ i, α i), (∏ i, w i (z i)) * ∏ u ∈ s, g u z)
       = ∏ u ∈ s, (∑ z : (∀ i, α i), (∏ i, w i (z i)) * g u z) := by
+  classical
   refine Finset.induction_on s ?_ ?_
   · simp only [Finset.prod_empty, mul_one]
     rw [sum_prod_pi w]
@@ -651,9 +656,10 @@ theorem unifLaw_isLaw (A : Type*) [Fintype A] [DecidableEq A] : IsLaw (unifLaw A
   norm_num
 
 /-- Restricting independent fair bits along an injection again gives independent fair bits. -/
-theorem unifLaw_restrict {A B : Type*} [Fintype A] [DecidableEq A] [Fintype B] [DecidableEq B]
+theorem unifLaw_restrict {A B : Type*} [Fintype A] [DecidableEq A] [Fintype B]
     (ρ : B → A) (hρ : Function.Injective ρ) :
     pushforward (unifLaw A) (fun ξ => fun b => ξ (ρ b)) = unifLaw B := by
+  classical
   funext η
   simp only [pushforward, unifLaw]
   have key : ∀ ξ : A → Bool,
@@ -706,7 +712,8 @@ theorem unifLaw_restrict {A B : Type*} [Fintype A] [DecidableEq A] [Fintype B] [
       norm_num
   rw [Finset.prod_congr rfl (fun a _ => h3 a), ← Finset.prod_filter, Finset.prod_const]
   congr 1
-  have : (Finset.univ.filter (fun a => a ∈ Finset.image ρ Finset.univ)) = Finset.image ρ Finset.univ := by
+  have : (Finset.univ.filter (fun a => a ∈ Finset.image ρ Finset.univ)) =
+      Finset.image ρ Finset.univ := by
     ext a; simp
   rw [this, Finset.card_image_of_injective _ hρ, Finset.card_univ]
 
@@ -997,7 +1004,8 @@ theorem mergeVert_out (G H : PairGraph) (φ : H.V → G.V)
     mergeVert G H φ q v = q.2 ⟨v, h⟩ := by
   rw [mergeVert, dite_eq_right h]
 
-/-- Outcomes of `G` split as an `H`-outcome together with an outcome on the outside vertices. -/
+/-- Outcomes of `G` split as an `H`-outcome together with an outcome on the outside
+vertices. -/
 noncomputable def vertEquiv (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Injective φ) :
     ((H.V → Bool) × (OutVert G H φ → Bool)) ≃ (G.V → Bool) where
   toFun := mergeVert G H φ
@@ -1315,7 +1323,7 @@ theorem injPart_ai (G H : PairGraph) (φ : H.V → G.V)
 
 /-- Independent fair bits restricted along a family of injections indexed by a sigma type. -/
 theorem unifLaw_restrictPi {A : Type*} [Fintype A] [DecidableEq A] {n : ℕ}
-    {β : Fin n → Type*} [∀ m, Fintype (β m)] [∀ m, DecidableEq (β m)]
+    {β : Fin n → Type*} [∀ m, Fintype (β m)]
     (ρ : (Σ m : Fin n, β m) → A) (hρ : Function.Injective ρ) (η : ∀ m, β m → Bool) :
     pushforward (unifLaw A) (fun ξ => fun (m : Fin n) (b : β m) => ξ (ρ ⟨m, b⟩)) η
       = (1 / 2 : ℝ) ^ (∑ m : Fin n, Fintype.card (β m)) := by
@@ -1429,7 +1437,8 @@ end Transport
 open Transport Transport.TransportFeasible in
 /-- Transport of a witness (AUDIT-NOTES A6, forward half; paper `lem:transport`(ii)). An
 `H`-witness extends to a `G`-witness: a copied observation at an `H`-vertex ignores the copy
-indices of the edges leaving `H`, and every copied observation at an outside vertex gets its own
+indices of the edges leaving `H`, and every copied observation at an outside vertex gets its
+own
 independent fair bit. -/
 theorem transport_ai_feasible (G H : PairGraph) (φ : H.V → G.V)
     (hφ : Function.Injective φ) (hind : ∀ u v : H.V, H.G.Adj u v ↔ G.G.Adj (φ u) (φ v))
@@ -1445,7 +1454,8 @@ theorem transport_ai_feasible (G H : PairGraph) (φ : H.V → G.V)
 open Transport in
 /-- Restriction of a model (AUDIT-NOTES A6, backward half; paper `lem:transport`(i)). A
 `G`-model for `P ⊗ fair` restricts to an `H`-model for `P`: by inducedness a source of `G`
-outside the image of `H` is read by at most one `H`-vertex, so it can be averaged out locally as
+outside the image of `H` is read by at most one `H`-vertex, so it can be averaged out
+locally as
 private randomness at that vertex, and the fair bits outside integrate to one. -/
 theorem transport_compatible_restrict (G H : PairGraph) (φ : H.V → G.V)
     (hφ : Function.Injective φ) (hind : ∀ u v : H.V, H.G.Adj u v ↔ G.G.Adj (φ u) (φ v))
@@ -1512,10 +1522,12 @@ private theorem arc_isPath {V : Type} {G : SimpleGraph V} {a : V} {w : G.Walk a 
   · rwa [SimpleGraph.Walk.isPath_copy]
   · rwa [SimpleGraph.Walk.length_copy]
 
-theorem induced_cycle_of_not_acyclic {V : Type} [Fintype V] [DecidableEq V]
-    (G : SimpleGraph V) [DecidableRel G.Adj] (hnac : ¬ G.IsAcyclic) :
+theorem induced_cycle_of_not_acyclic {V : Type} [Finite V]
+    (G : SimpleGraph V) (hnac : ¬ G.IsAcyclic) :
     ∃ (m : ℕ) (_ : 3 ≤ m) (ψ : Fin m → V), Function.Injective ψ ∧
       ∀ a b : Fin m, (cycleAdj m).Adj a b ↔ G.Adj (ψ a) (ψ b) := by
+  classical
+  let := Fintype.ofFinite V
   classical
   -- a cycle exists
   obtain ⟨v₀, c₀, hc₀⟩ : ∃ (v : V) (c : G.Walk v v), c.IsCycle := by
@@ -1628,10 +1640,11 @@ theorem dist_getVert_of_shortest' {V : Type} (G : SimpleGraph V) {u v : V}
   · rw [max_eq_left h, min_eq_right h, SimpleGraph.dist_comm]
     exact dist_getVert_of_shortest G p hp h hi
 
-theorem induced_path5_of_dist {V : Type} [Fintype V] [DecidableEq V]
-    (G : SimpleGraph V) [DecidableRel G.Adj] (u v : V) (hd : 4 ≤ G.dist u v) :
+theorem induced_path5_of_dist {V : Type}
+    (G : SimpleGraph V) (u v : V) (hd : 4 ≤ G.dist u v) :
     ∃ ψ : Fin 5 → V, Function.Injective ψ ∧
       ∀ a b : Fin 5, (pathAdj 5).Adj a b ↔ G.Adj (ψ a) (ψ b) := by
+  classical
   -- `4 ≤ dist` forces reachability.
   have hreach : G.Reachable u v := by
     by_contra hnr

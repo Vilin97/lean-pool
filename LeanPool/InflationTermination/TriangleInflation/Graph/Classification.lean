@@ -143,12 +143,14 @@ theorem distToCompatible_le (Γ : PairGraph) (P Q : GTarget Γ) (hQ : GCompatibl
 
 /-! ### Bridging lemmas: how far a local flip moves a law -/
 
-private theorem flipKernel_nonneg {ι : Type} [Fintype ι] [DecidableEq ι] {η : ℝ}
-    (h0 : 0 ≤ η) (h1 : η ≤ 1) (x y : ι → Bool) : 0 ≤ flipKernel η x y :=
-  Finset.prod_nonneg fun i _ => by
-    rcases eq_or_ne (x i) (y i) with h | h
-    · rw [ite_eq_left h]; linarith
-    · rw [ite_eq_right h]; linarith
+private theorem flipKernel_nonneg {ι : Type} [Fintype ι] {η : ℝ}
+    (h0 : 0 ≤ η) (h1 : η ≤ 1) (x y : ι → Bool) : 0 ≤ flipKernel η x y := by
+  classical
+  exact
+    Finset.prod_nonneg fun i _ => by
+        rcases eq_or_ne (x i) (y i) with h | h
+        · rw [ite_eq_left h]; linarith
+        · rw [ite_eq_right h]; linarith
 
 private theorem sum_flipKernel {ι : Type} [Fintype ι] [DecidableEq ι] (η : ℝ) (x : ι → Bool) :
     ∑ y : ι → Bool, flipKernel η x y = 1 := by
@@ -160,8 +162,9 @@ private theorem sum_flipKernel {ι : Type} [Fintype ι] [DecidableEq ι] (η : �
   rw [Fintype.sum_bool]
   cases x i <;> simp
 
-private theorem flipKernel_self {ι : Type} [Fintype ι] [DecidableEq ι] (η : ℝ) (x : ι → Bool) :
+private theorem flipKernel_self {ι : Type} [Fintype ι] (η : ℝ) (x : ι → Bool) :
     flipKernel η x x = (1 - η) ^ Fintype.card ι := by
+  classical
   simp [flipKernel]
 
 /-- Independent flips with probability `η` move a law by at most `|ι| η` in total variation. -/

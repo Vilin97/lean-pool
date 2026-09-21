@@ -9,7 +9,10 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.DoubleStar
 /-!
 # Double-star forests carry the reconstruction data
 
-The graph-theoretic step of the double-star reconstruction (AUDIT-NOTES A3, Theorem `thm:doublestar` in the binary case): every double-star forest carries a `DSStruct` (`exists_dsStruct`), and hence order-two Navascués–Wolfe feasibility characterizes compatibility on such scenarios (`doubleStar_terminates`). Everything here is proved.
+The graph-theoretic step of the double-star reconstruction (AUDIT-NOTES A3, Theorem
+`thm:doublestar` in the binary case): every double-star forest carries a `DSStruct`
+(`exists_dsStruct`), and hence order-two Navascués–Wolfe feasibility characterizes
+compatibility on such scenarios (`doubleStar_terminates`). Everything here is proved.
 -/
 
 namespace TriangleInflation.Graph
@@ -99,7 +102,8 @@ theorem adj_of_big (hac : G.IsAcyclic) (hdiam : ∀ u v : V, G.Reachable u v →
     · exact h' huv
   exact SimpleGraph.dist_eq_one_iff_adj.mp (by omega)
 
-/-- The neighbour of a degree-one vertex is either the base point or has degree at least two. -/
+/-- The neighbour of a degree-one vertex is either the base point or has degree at least
+two. -/
 theorem nbr_eq_or_big {a u c : V} (hau : G.Reachable u a) (hne : u ≠ a)
     (huniq : ∀ x, G.Adj u x → x = c) : c = a ∨ Big G c := by
   obtain ⟨p, hp, hplen⟩ := hau.exists_path_of_dist

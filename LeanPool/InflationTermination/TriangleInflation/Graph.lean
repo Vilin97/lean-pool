@@ -28,7 +28,8 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.ClassificationTheor
 
 The pair-source generalization of `TriangleInflation`: a finite simple graph without
 isolated vertices, one binary observed variable per vertex, one independent latent source per
-edge. `TriangleInflation/Graph/Defs.lean` carries the definitions (scenarios, copied observations, the
+edge. `TriangleInflation/Graph/Defs.lean` carries the definitions (scenarios, copied
+observations, the
 `NW`, `AI` and recursively expressible tests, compatibility, the named scenarios and the
 explicit targets). The other modules carry the proved results of the manuscript's pair-source
 sections: local flips, soundness and nesting of the three tests, the root-sink lemma

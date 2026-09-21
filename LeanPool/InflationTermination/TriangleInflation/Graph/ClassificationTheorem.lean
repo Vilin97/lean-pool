@@ -12,7 +12,13 @@ import LeanPool.InflationTermination.TriangleInflation.Graph.CycleObstruction
 /-!
 # The classification theorem (A7)
 
-Theorem `thm:classification`: for a pair-source scenario with binary observations, some finite order of the Navascués–Wolfe test (equivalently of the ancestral-independence test, equivalently of the recursively expressible test) equals the compatible set iff every connected component is a double-star (`classification_NW_lib`, `classification_AI`, `classification_exp`), with the nontermination half `nontermination_of_not_doubleStar` assembled from the cycle and five-path witnesses, transport, exhaustion, and local flips. Everything here is proved.
+Theorem `thm:classification`: for a pair-source scenario with binary observations, some
+finite order of the Navascués–Wolfe test (equivalently of the ancestral-independence test,
+equivalently of the recursively expressible test) equals the compatible set iff every
+connected component is a double-star (`classification_NW_lib`, `classification_AI`,
+`classification_exp`), with the nontermination half `nontermination_of_not_doubleStar`
+assembled from the cycle and five-path witnesses, transport, exhaustion, and local flips.
+Everything here is proved.
 -/
 
 namespace TriangleInflation.Graph
@@ -75,7 +81,7 @@ theorem nontermination_of_not_doubleStar (Γ : PairGraph) (hnot : ¬ IsDoubleSta
       flip_gAIFeasible (cycle m hm) t (cycleTarget m q) η hη0.le hη1.le
         (cycle_witness m t hm ht q hqdef), ?_⟩
     intro hcomp
-    have hd1 := cycle_distance m hm q hq0 hqm
+    have hd1 := cycle_distance m hm q hq0
     have hd2 := distToCompatible_le (cycle m hm) (cycleTarget m q) _ hcomp
     have hd3 := dTV_flipLaw_le (ι := (cycle m hm).V) η hη0.le hη1.le (cycleTarget m q) hlaw0
     have hcard : Fintype.card (cycle m hm).V = m := Fintype.card_fin m

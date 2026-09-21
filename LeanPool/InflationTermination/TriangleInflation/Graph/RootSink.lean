@@ -330,7 +330,7 @@ theorem exists_activeTrail {X Y Z : Finset (GObs Γ t)} :
       intro a b mid hlen ha hb hmem hchain
       by_cases hz : ∀ c ∈ mid, c ∈ Z
       · exact ⟨a, mid, b, ha, hb, hz, hchain⟩
-      · push_neg at hz
+      · push Not at hz
         obtain ⟨c, hcmid, hcZ⟩ := hz
         obtain ⟨l₁, l₂, rfl⟩ := List.append_of_mem hcmid
         have hlen₁ : l₁.length ≤ n := by
@@ -424,9 +424,10 @@ private theorem pushforward_comp' {α β γ : Type*} [Fintype α] [Fintype β] [
   rw [Finset.sum_ite_eq Finset.univ (F a) (fun b => if G b = c then w a else 0)]
   simp
 
-private theorem pushforward_injective {α β : Type*} [Fintype α] [DecidableEq α] [DecidableEq β]
+private theorem pushforward_injective {α β : Type*} [Fintype α] [DecidableEq β]
     (w : α → ℝ) {F : α → β} (hF : Function.Injective F) (a : α) :
     pushforward w F (F a) = w a := by
+  classical
   have hkey : ∀ x : α, (if F x = F a then w x else 0) = (if x = a then w x else 0) := by
     intro x
     by_cases h : x = a
@@ -566,7 +567,7 @@ shared-parent graph on `X ∪ Y ∪ Z` lies inside `X ∪ Z` or inside `Y ∪ Z`
 injectable, so `X ∪ Y ∪ Z` is again an AI set. (Take a shortest path inside a component from
 `X` to `Y`: its internal vertices lie in `Z`, so it is an active trail.) -/
 theorem isAISet_glue {X Y Z : Finset (GObs Γ t)} (hX : IsAISet (X ∪ Z)) (hY : IsAISet (Y ∪ Z))
-    (hXY : Disjoint X Y) (hXZ : Disjoint X Z) (hYZ : Disjoint Y Z) (hd : dsep X Y Z) :
+    (hXY : Disjoint X Y) (hd : dsep X Y Z) :
     IsAISet (X ∪ Y ∪ Z) := by
   rw [isAISet_iff_conn]
   intro o ho
@@ -614,7 +615,7 @@ theorem Expressible.isAISet {P : GTarget Γ} {S : Finset (GObs Γ t)} {μ : (S �
     (h : Expressible t P S μ) : IsAISet S := by
   induction h with
   | inj hS => exact isAISet_of_injectable hS
-  | glue _ _ hXY hXZ hYZ hd ih₁ ih₂ => exact isAISet_glue ih₁ ih₂ hXY hXZ hYZ hd
+  | glue _ _ hXY hXZ hYZ hd ih₁ ih₂ => exact isAISet_glue ih₁ ih₂ hXY hd
   | marg hST _ ih => exact isAISet_subset ih hST
 
 /-! ### From the AI prescriptions to the expressible prescriptions -/
@@ -670,7 +671,7 @@ theorem expPrescriptions_of_ai {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (hla
       have hYZW : Y ∪ Z ⊆ X ∪ Y ∪ Z := sub_right_union X Y Z
       have hZW : Z ⊆ X ∪ Y ∪ Z := sub_mid_union X Y Z
       obtain ⟨D, hDcomp⟩ := exists_aiDecomposition_aux (X ∪ Y ∪ Z).card (X ∪ Y ∪ Z) le_rfl
-        (isAISet_glue (Expressible.isAISet h₁) (Expressible.isAISet h₂) hXY hXZ hYZ hd)
+        (isAISet_glue (Expressible.isAISet h₁) (Expressible.isAISet h₂) hXY hd)
       have hbs : ∀ m : Fin D.n, D.block m ⊆ X ∪ Y ∪ Z := by
         intro m p hp
         rw [D.cover]
@@ -834,7 +835,8 @@ theorem marginal_union_of_ai {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (hlaw 
   have hg := Expressible.glue h1 h2 (disjoint_of_ai hAB) (Finset.disjoint_empty_right A)
     (Finset.disjoint_empty_right B) (dsep_empty_of_ai hAB)
   have hset : A ∪ B ∪ ∅ = A ∪ B := Finset.union_empty _
-  have hval := congrFun (hexp _ _ hg) (fun o : (A ∪ B ∪ ∅ : Finset (GObs Γ t)) => φ ⟨o.1, castMem hset o.2⟩)
+  have hval := congrFun (hexp _ _ hg)
+    (fun o : (A ∪ B ∪ ∅ : Finset (GObs Γ t)) => φ ⟨o.1, castMem hset o.2⟩)
   rw [pushforward_gRestrict_reindex hset Δ φ] at hval
   rw [hval]
   -- the `Z = ∅` fibre mass is the total mass of `Δ`, namely one

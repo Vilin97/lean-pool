@@ -21,7 +21,8 @@ The mathematics formalized here is the 2026-09-13 packet as corrected in
 `papers/inflation-nontermination/research-handoffs/2026-09-13/claude-code/review/AUDIT-NOTES.md`,
 items A1–A7 and B; the source is `sources/B5-pair-source-classification.md` (§1, §3, §5).
 This file carries definitions only. The statements live in
-the per-topic modules of this directory (proved) and `InflationGraphOpen/` (statements not yet proved).
+the per-topic modules of this directory (proved) and `InflationGraphOpen/` (statements not
+yet proved).
 
 ## Representational decisions
 
@@ -38,7 +39,8 @@ the per-topic modules of this directory (proved) and `InflationGraphOpen/` (stat
 
 * **Copied observations are dependent pairs.** `GObs Γ t = Σ v : Γ.V, (Γ.inc v → Fin t)`: a
   copied observation is a vertex together with one copy index per incident edge. For the
-  triangle this has `3t²` elements, matching `TriangleInflation.Obs t`, but the identification is a
+  triangle this has `3t²` elements, matching `TriangleInflation.Obs t`, but the
+  identification is a
   theorem (`Statements.exists_triObsEquiv`) and not a definitional coincidence: `GObs`
   carries the incidence structure in its second component, `TriangleInflation.Obs` in its
   constructor names.
@@ -157,7 +159,8 @@ def gAncestors (o : GObs Γ t) : Finset (GLatent Γ t) :=
 def gAncestorsOf (S : Finset (GObs Γ t)) : Finset (GLatent Γ t) := S.biUnion gAncestors
 
 /-- Two sets of copied observations are ancestrally independent when their copied latent
-ancestors are disjoint (`TriangleInflation.AncestrallyIndependent` for a general pair graph). -/
+ancestors are disjoint (`TriangleInflation.AncestrallyIndependent` for a general pair
+graph). -/
 def GAncestrallyIndependent (S T : Finset (GObs Γ t)) : Prop :=
   Disjoint (gAncestorsOf S) (gAncestorsOf T)
 
@@ -488,7 +491,7 @@ def IsDoubleStarForest {V : Type} (G : SimpleGraph V) : Prop :=
 def sgn (b : Bool) : ℝ := if b then -1 else 1
 
 /-- The kernel of independent flips with probability `η` at every coordinate. -/
-def flipKernel {ι : Type} [Fintype ι] [DecidableEq ι] (η : ℝ) (x y : ι → Bool) : ℝ :=
+def flipKernel {ι : Type} [Fintype ι] (η : ℝ) (x y : ι → Bool) : ℝ :=
   ∏ i, (if x i = y i then 1 - η else η)
 
 /-- A law after independent flips of each coordinate with probability `η`. Applied to a

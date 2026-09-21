@@ -621,8 +621,8 @@ theorem Peps_not_compatibleM {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) :
   intro hc
   have hε1 : ε < 1 := by linarith
   have hfin := finner_of_compatibleM hc
-  obtain ⟨hA, hB, hC⟩ := mEps_eq_marg h0 hε1
-  rw [zEps_eq_atom h0 hε1, hA, hB, hC] at hfin
+  obtain ⟨hA, hB, hC⟩ := mEps_eq_marg (ε := ε)
+  rw [zEps_eq_atom (ε := ε), hA, hB, hC] at hfin
   obtain ⟨u, hu0, hu3, hσ⟩ := exists_cube_rootM h0
   have hu2 : u < 1 / 2 := by nlinarith [hu3, h1, hu0, sq_nonneg u, mul_pos hu0 hu0]
   have hu2pos : (0 : ℝ) < u ^ 2 := pow_pos hu0 2

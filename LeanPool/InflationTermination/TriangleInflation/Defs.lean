@@ -21,7 +21,8 @@ only; the statements live in `Finner.lean`, `Defect.lean`, `Main.lean`, `Fan.lea
 ## Representational decisions
 
 * **Laws are bare real weight functions.** A law on a `Fintype` `α` is a function `α → ℝ`
-  together with the predicate `IsLaw` (nonnegative, sums to `1`). The unbundled form is used here
+  together with the predicate `IsLaw` (nonnegative, sums to `1`). The unbundled form is used
+  here
   because the paper's families `Q(ε,r)`, `P_ε`, `R_p` are written for parameter ranges in
   which normalization is a hypothesis of the statement rather than part of the datum, and
   because the feasibility definitions quantify over witnesses on large index types where
@@ -41,9 +42,11 @@ only; the statements live in `Finner.lean`, `Defect.lean`, `Main.lean`, `Fan.lea
   for the latter where it exists.
 
 * **The recursively expressible set is not formalized.** Definition 2.3 of the paper
-  (Definition 2.5, `def:gexp`, the `I^exp_t` hierarchy) needs `d`-separation in the inflated causal graph and
+  (Definition 2.5, `def:gexp`, the `I^exp_t` hierarchy) needs `d`-separation in the inflated
+  causal graph and
   the recursion of Wolfe–Spekkens–Fritz Definition 7. That machinery is deliberately out of
-  scope here, so the membership `Q(ε,r) ∈ I^exp_t` of Theorem 5.1 (Lemma 5.10, `lem:expressible`)
+  scope here, so the membership `Q(ε,r) ∈ I^exp_t` of Theorem 5.1 (Lemma 5.10,
+  `lem:expressible`)
   is an unformalized boundary. Only the two weaker hierarchies `I^NW_t` (`NWFeasible`) and
   `I^AI_t` (`AIFeasible`) are defined, and every statement that the paper phrases for all
   three hierarchies is formalized for those two. Since `I^exp_t ⊆ I^AI_t ⊆ I^NW_t`, the
@@ -282,7 +285,8 @@ def rFam (t : ℕ) : ℝ := (1 - epsFam t) ^ (t - 1)
 /-- The nontermination family `P_t = Q(ε_t, r_t)` (paper Theorem 5.2). -/
 def Pfam (t : ℕ) : ThreeBit → ℝ := Q (epsFam t) (rFam t)
 
-/-- The divergent-rejecting-order family `P_ε = Q(ε, 1 - ε^{2/3}/2)` (paper Proposition 5.13). -/
+/-- The divergent-rejecting-order family `P_ε = Q(ε, 1 - ε^{2/3}/2)` (paper Proposition
+5.13). -/
 def Peps (ε : ℝ) : ThreeBit → ℝ := Q ε (1 - ε ^ ((2 : ℝ) / 3) / 2)
 
 /-- `R_p = (1-p) δ_{111} + p δ_{000}` (paper Proposition 5.12). -/
@@ -299,17 +303,26 @@ def sParam (t : ℕ) (ε r : ℝ) : ℝ := 1 - r / (1 - ε) ^ (t - 1)
 functions, and the three response probabilities `f(x,z) = Pr(A = 0 | x,z)`,
 `g(x,y) = Pr(B = 0 | x,y)`, `h(z,y) = Pr(C = 0 | z,y)`. -/
 structure TriangleModel where
+  /-- Latent alphabet shared by parties A and B. -/
   X : Type
+  /-- Latent alphabet shared by parties B and C. -/
   Y : Type
+  /-- Latent alphabet shared by parties A and C. -/
   Z : Type
   fintypeX : Fintype X
   fintypeY : Fintype Y
   fintypeZ : Fintype Z
+  /-- Probability weight of the source shared by A and B. -/
   μX : X → ℝ
+  /-- Probability weight of the source shared by B and C. -/
   μY : Y → ℝ
+  /-- Probability weight of the source shared by A and C. -/
   μZ : Z → ℝ
+  /-- Conditional probability of outcome zero at A, given sources X and Z. -/
   f : X × Z → ℝ
+  /-- Conditional probability of outcome zero at B, given sources X and Y. -/
   g : X × Y → ℝ
+  /-- Conditional probability of outcome zero at C, given sources Z and Y. -/
   h : Z × Y → ℝ
 
 attribute [instance] TriangleModel.fintypeX TriangleModel.fintypeY TriangleModel.fintypeZ
@@ -339,7 +352,8 @@ def TriangleCompatible (P : ThreeBit → ℝ) : Prop :=
 /-! ## The finite inflation tests -/
 
 /-- Paper Definition 2.3: the Navascués–Wolfe feasible set `I^NW_t`. A law `Γ_t` on the
-copied observations, invariant under `S_t³`, whose diagonal law is the tensor power `P^{⊗t}`. -/
+copied observations, invariant under `S_t³`, whose diagonal law is the tensor power
+`P^{⊗t}`. -/
 def NWFeasible (t : ℕ) (P : ThreeBit → ℝ) : Prop :=
   ∃ Γ : Assign t → ℝ, IsLaw Γ ∧ SymmetricLaw t Γ ∧
     pushforward Γ readDiagonal = tensorPow t P

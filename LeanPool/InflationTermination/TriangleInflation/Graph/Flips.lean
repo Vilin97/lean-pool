@@ -70,14 +70,16 @@ theorem pushforward_equiv' {α β γ : Type*} [Fintype α] [DecidableEq β] [Dec
 /-! ## The flip kernel -/
 
 /-- Every transition probability of the flip kernel is nonnegative for `η ∈ [0,1]`. -/
-theorem flipKernel_nonneg {ι : Type} [Fintype ι] [DecidableEq ι] {η : ℝ} (h0 : 0 ≤ η)
+theorem flipKernel_nonneg {ι : Type} [Fintype ι] {η : ℝ} (h0 : 0 ≤ η)
     (h1 : η ≤ 1) (x y : ι → Bool) : 0 ≤ flipKernel η x y := by
+  classical
   unfold flipKernel
   exact Finset.prod_nonneg fun i _ => by split <;> linarith
 
 /-- Every transition probability of the flip kernel is positive for `η ∈ (0,1)`. -/
-theorem flipKernel_pos {ι : Type} [Fintype ι] [DecidableEq ι] {η : ℝ} (h0 : 0 < η)
+theorem flipKernel_pos {ι : Type} [Fintype ι] {η : ℝ} (h0 : 0 < η)
     (h1 : η < 1) (x y : ι → Bool) : 0 < flipKernel η x y := by
+  classical
   unfold flipKernel
   exact Finset.prod_pos fun i _ => by split <;> linarith
 
@@ -92,15 +94,16 @@ theorem flipKernel_sum {ι : Type} [Fintype ι] [DecidableEq ι] (η : ℝ) (x :
 
 /-- The flip kernel is exchangeable: relabelling the coordinates by a bijection leaves it
 unchanged. -/
-theorem flipKernel_comp {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
+theorem flipKernel_comp {ι κ : Type} [Fintype ι] [Fintype κ]
     (η : ℝ) (e : κ ≃ ι) (x y : ι → Bool) :
     flipKernel η (fun j => x (e j)) (fun j => y (e j)) = flipKernel η x y := by
+  classical
   simpa [flipKernel] using Equiv.prod_comp e (fun i => if x i = y i then 1 - η else η)
 
 /-- Marginalizing the flip kernel to an injectively selected set of coordinates gives the
 flip kernel of the selected coordinates: the unselected coordinates sum out. -/
 theorem flipKernel_marginal {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintype κ]
-    [DecidableEq κ] (η : ℝ) {f : κ → ι} (hf : Function.Injective f) (x : ι → Bool)
+     (η : ℝ) {f : κ → ι} (hf : Function.Injective f) (x : ι → Bool)
     (z : κ → Bool) :
     pushforward (flipKernel η x) (fun ω j => ω (f j)) z = flipKernel η (fun j => x (f j)) z := by
   classical

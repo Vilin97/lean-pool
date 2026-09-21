@@ -233,8 +233,11 @@ private theorem disjoint_roots {t : ℕ} {v v' : Obs t} {L L' : Finset (Cell t)}
   rw [Finset.disjoint_left]
   rintro u hu hu'
   simp only [Finset.mem_insert, Finset.mem_image] at hu hu'
-  rcases hu with rfl | ⟨c, hc, rfl⟩ <;> rcases hu' with h | ⟨c', hc', h⟩ <;> simp_all
-  · exact (Finset.disjoint_left.mp hL hc) (h ▸ hc')
+  rcases hu with rfl | ⟨c, hc, rfl⟩ <;> rcases hu' with h | ⟨c', hc', h⟩
+  · exact hv (Sum.inr.inj h)
+  · cases h
+  · cases h
+  · exact (Finset.disjoint_left.mp hL hc) (Sum.inl.inj h ▸ hc')
 
 private theorem disjoint_rootsD_roots {t : ℕ} {c₀ : Cell t} {v : Obs t} {L : Finset (Cell t)}
     (h : c₀ ∉ L) :
@@ -491,7 +494,7 @@ section
 
 /-- Paper Lemma 5.5 (`lem:triangle-law`): under the defect law every copied triangle
 `Δ_{ijk}` has law `Q(ε, r)` with `r = (1-s)(1-ε)^{t-1}`. -/
-theorem defect_copiedTriangle_law {t : ℕ} (ht : 1 ≤ t) {ε s : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1)
+theorem defect_copiedTriangle_law {t : ℕ} {ε s : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1)
     (hs0 : 0 ≤ s) (hs1 : s ≤ 1) (i j k : Fin t) :
     pushforward (defectLaw t ε s) (readTriangle i j k) = Q ε ((1 - s) * (1 - ε) ^ (t - 1)) := by
   have hw : ∀ u : Root t, IsLaw (rootWeight t ε s u) := isLaw_rootWeight hε0 hε1 hs0 hs1
@@ -571,19 +574,22 @@ theorem defect_copiedTriangle_law {t : ℕ} (ht : 1 ≤ t) {ε s : ℝ} (hε0 : 
         funext y
         obtain ⟨y1, y2, y3⟩ := y
         simp only [pushforward, Fintype.sum_prod_type, Fintype.sum_bool, Q, bern]
-        cases y1 <;> cases y2 <;> cases y3 <;> simp <;>
+        cases y1 <;> cases y2 <;> cases y3 <;>
+          simp only [Bool.and_self, Prod.mk.injEq, Bool.true_eq_false, Bool.false_eq_true,
+            and_self, Bool.and_false, Bool.and_true, and_true, and_false, ite_true, ite_false,
+            add_zero, zero_add, mul_zero, sub_sub_cancel, mul_one, mul_eq_mul_left_iff] <;>
           first | ring1 | exact Or.inl (by ring1)
 
 /-- Paper equation (eq:s): with `s = 1 - r/(1-ε)^{t-1}` the copied-triangle parameter
 `(1-s)(1-ε)^{t-1}` is `r`. -/
-theorem one_sub_sParam_mul (t : ℕ) (ht : 1 ≤ t) {ε r : ℝ} (hε : ε < 1) :
+theorem one_sub_sParam_mul (t : ℕ) {ε r : ℝ} (hε : ε < 1) :
     (1 - sParam t ε r) * (1 - ε) ^ (t - 1) = r := by
   have hpos : (0:ℝ) < (1 - ε) ^ (t - 1) := pow_pos (by linarith) _
   simp only [sParam, sub_sub_cancel]
   exact div_mul_cancel₀ _ (ne_of_gt hpos)
 
 /-- Paper equation (eq:s): `s ∈ [0,1]` exactly in the parameter range of Theorem 5.1. -/
-theorem sParam_mem_Icc (t : ℕ) (ht : 1 ≤ t) {ε r : ℝ} (hε0 : 0 < ε) (hε1 : ε < 1)
+theorem sParam_mem_Icc (t : ℕ) {ε r : ℝ} (hε1 : ε < 1)
     (hr0 : 0 ≤ r) (hr1 : r ≤ (1 - ε) ^ (t - 1)) :
     0 ≤ sParam t ε r ∧ sParam t ε r ≤ 1 := by
   have hpos : (0:ℝ) < (1 - ε) ^ (t - 1) := pow_pos (by linarith) _
@@ -635,7 +641,7 @@ theorem inDiagRegion_iff {t : ℕ} (l : Fin t) (c : Cell t) :
 /-- Paper Lemma 5.9 (`lem:diag`): the `t` diagonal triangles are mutually independent under
 the defect law and their joint law is `Q(ε,r)^{⊗t}` with `r = (1-s)(1-ε)^{t-1}`. This is the
 tensor-power diagonal condition of Definition 2.3(ii). -/
-theorem defect_diagonal_law {t : ℕ} (ht : 1 ≤ t) {ε s : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1)
+theorem defect_diagonal_law {t : ℕ} {ε s : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1)
     (hs0 : 0 ≤ s) (hs1 : s ≤ 1) :
     pushforward (defectLaw t ε s) readDiagonal
       = tensorPow t (Q ε ((1 - s) * (1 - ε) ^ (t - 1))) := by
@@ -667,7 +673,7 @@ theorem defect_diagonal_law {t : ℕ} (ht : 1 ≤ t) {ε s : ℝ} (hε0 : 0 ≤ 
         (fun x => readTriangle l l l (outputsOf x))
         = pushforward (defectLaw t ε s) (readTriangle l l l) from by
       simp only [defectLaw, rootLaw]; rw [pushforward_comp]]
-    exact defect_copiedTriangle_law ht hε0 hε1 hs0 hs1 l l l
+    exact defect_copiedTriangle_law hε0 hε1 hs0 hs1 l l l
   calc pushforward (defectLaw t ε s) readDiagonal
       = pushforward (prodLaw (rootWeight t ε s))
           (fun x l => readTriangle l l l (outputsOf x)) := by

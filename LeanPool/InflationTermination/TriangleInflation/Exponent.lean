@@ -168,7 +168,7 @@ private theorem Peps_disc {ε : ℝ} (h0 : 0 < ε) (h1 : ε ≤ 1 / 64) :
 theorem Peps_eq (ε : ℝ) : Peps ε = Q ε (1 - sigmaEps ε) := rfl
 
 /-- `m` is the common one-variable zero marginal of `P_ε`. -/
-theorem mEps_eq_marg {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1) :
+theorem mEps_eq_marg {ε : ℝ} :
     margA (Peps ε) = mEps ε ∧ margB (Peps ε) = mEps ε ∧ margC (Peps ε) = mEps ε := by
   refine ⟨?_, ?_, ?_⟩ <;>
     · simp only [margA, margB, margC, Peps, Q, bern, mEps, sigmaEps, Fintype.sum_bool]
@@ -176,7 +176,7 @@ theorem mEps_eq_marg {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1) :
       ring
 
 /-- `z` is the all-zero atom of `P_ε`. -/
-theorem zEps_eq_atom {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1) : atom000 (Peps ε) = zEps ε := by
+theorem zEps_eq_atom {ε : ℝ} : atom000 (Peps ε) = zEps ε := by
   simp only [atom000, Peps, Q, bern, zEps, sigmaEps]
   norm_num [-mul_eq_mul_left_iff]
   ring
@@ -212,7 +212,7 @@ theorem Peps_aiFeasible {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) (t : ℕ) (ht
       _ ≤ (1 + -ε) ^ (t - 1) := h
       _ = (1 - ε) ^ (t - 1) := by ring_nf
   change AIFeasible t (Q ε (1 - sigmaEps ε))
-  exact membership_AI t ht h0 hε1 (by linarith) (by linarith)
+  exact membership_AI t h0 hε1 (by linarith) (by linarith)
 
 /-- The Navascués–Wolfe form of the same lower bound. -/
 theorem Peps_nwFeasible {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) (t : ℕ) (ht : 1 ≤ t)
@@ -260,8 +260,8 @@ theorem Peps_not_nwFeasible {ε : ℝ} (h0 : 0 < ε) (h1 : ε ≤ 1 / 64) :
   have hpos := fan_gap hm0 hs2 hlow hhigh
   -- but the first fan inequality at order `T` says the opposite
   have hfan := fan_first T hT1 (Peps_isLaw h0 hε1) hfeas
-  obtain ⟨hA, hB, hC⟩ := mEps_eq_marg h0 hε1
-  rw [zEps_eq_atom h0 hε1, hA, hB, hC, Nat.cast_choose_two] at hfan
+  obtain ⟨hA, hB, hC⟩ := mEps_eq_marg (ε := ε)
+  rw [zEps_eq_atom (ε := ε), hA, hB, hC, Nat.cast_choose_two] at hfan
   linarith
 
 /-- Paper Proposition 5.13 (`prop:family`), part (c): `P_ε` violates the Finner inequality,
@@ -271,8 +271,8 @@ theorem Peps_not_compatible {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) :
   intro hc
   have hε1 : ε < 1 := by linarith
   have hfin := finner_of_compatible hc
-  obtain ⟨hA, hB, hC⟩ := mEps_eq_marg h0 hε1
-  rw [zEps_eq_atom h0 hε1, hA, hB, hC] at hfin
+  obtain ⟨hA, hB, hC⟩ := mEps_eq_marg (ε := ε)
+  rw [zEps_eq_atom (ε := ε), hA, hB, hC] at hfin
   obtain ⟨u, hu0, hu3, hσ⟩ := exists_cube_root h0
   have hu2 : u < 1 / 2 := by nlinarith [hu3, h1, hu0, sq_nonneg u, mul_pos hu0 hu0]
   have hu2pos : (0 : ℝ) < u ^ 2 := pow_pos hu0 2

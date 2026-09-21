@@ -168,13 +168,14 @@ end ProductWeight
 
 /-- Two functions of disjoint coordinate sets are independent under a product weight. -/
 theorem indep_of_disjoint_support {ι α β : Type*} [Fintype ι] [DecidableEq ι]
-    [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β]
+    [DecidableEq α] [DecidableEq β]
     {w : ι → Bool → ℝ} (hw : ∀ i, IsLaw (w i)) {I J : Finset ι} (hIJ : Disjoint I J)
     {F : (ι → Bool) → α} {G : (ι → Bool) → β}
     (hF : ∀ x y, (∀ i ∈ I, x i = y i) → F x = F y)
     (hG : ∀ x y, (∀ i ∈ J, x i = y i) → G x = G y) :
     pushforward (prodLaw w) (fun x => (F x, G x))
       = fun q => pushforward (prodLaw w) F q.1 * pushforward (prodLaw w) G q.2 := by
+  classical
   funext q
   obtain ⟨a, b⟩ := q
   have hL : pushforward (prodLaw w) (fun x => (F x, G x)) (a, b)
@@ -209,7 +210,7 @@ theorem prod_ite_eq_ite_funext {n : ℕ} {β : Fin n → Type*} [∀ m, Decidabl
 /-- The finite-family form: functions of pairwise disjoint coordinate sets are mutually
 independent under a product weight. -/
 theorem indep_of_disjoint_family {ι : Type*} [Fintype ι] [DecidableEq ι] {n : ℕ}
-    {β : Fin n → Type*} [∀ m, Fintype (β m)] [∀ m, DecidableEq (β m)]
+    {β : Fin n → Type*} [∀ m, DecidableEq (β m)]
     {w : ι → Bool → ℝ} (hw : ∀ i, IsLaw (w i)) {I : Fin n → Finset ι}
     (hI : ∀ m m', m ≠ m' → Disjoint (I m) (I m'))
     {F : ∀ m, (ι → Bool) → β m}
