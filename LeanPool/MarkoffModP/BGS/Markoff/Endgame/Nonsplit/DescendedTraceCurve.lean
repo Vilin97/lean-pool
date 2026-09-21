@@ -707,8 +707,9 @@ theorem existingConicSeedNonsplitTraceCurveSolutions_eq_seeded
       seededNonsplitTraceCurveSolutions p
         (quadraticFiberProductUnit p t ht ht0) s d e := by
   ext z
-  simp [existingConicSeedNonsplitTraceCurveSolutions,
-    seededNonsplitTraceCurveSolutions, ExistingConicSeedNonsplitTraceCoverEquation]
+  rw [mem_existingConicSeedNonsplitTraceCurveSolutions_iff]
+  erw [mem_seededNonsplitTraceCurveSolutions_iff]
+  rfl
 
 /-- Exact existing-conic count comparison with both affine boundaries exposed: `u = 0`
 contributes nothing for positive exponents, while `w = 1` is the displayed boundary term. -/
@@ -722,7 +723,7 @@ theorem existingConicSeedNonsplitTraceCurveSolutions_card_eq_affine_add_identity
       (seededNonsplitIdentityBoundarySolutions p
         (quadraticFiberProductUnit p t ht ht0) s d e).card := by
   rw [existingConicSeedNonsplitTraceCurveSolutions_eq_seeded]
-  rw [seededNonsplitTraceCurveSolutions_card_eq_descended_add_identityBoundary]
+  erw [seededNonsplitTraceCurveSolutions_card_eq_descended_add_identityBoundary]
   rw [← affinePlaneCurveZeros_seededNonsplitDescendedPolynomial_card_eq p s.1 d e hd he]
 
 end

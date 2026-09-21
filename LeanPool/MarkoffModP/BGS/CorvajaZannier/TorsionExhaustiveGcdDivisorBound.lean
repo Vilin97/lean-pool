@@ -290,7 +290,9 @@ theorem finitePlaceOrder_dominatingIntegralClosurePlace_pos_of_mem
   rw [horder, ← exp_zero, exp_lt_exp] at hqlt
   omega
 
-private theorem exists_integralClosurePlace_orders_positive
+/-- A nonzero integral element at a maximal ideal gives a centered finite place
+where both prescribed elements have positive order. -/
+theorem exists_integralClosurePlace_orders_positive
     (m : MaximalSpectrum A)
     (hbase : ∀ p : P, algebraMap P L p ∈ (algebraMap A L).range)
     (r s : A) (hr : r ∈ m.asIdeal) (hs : s ∈ m.asIdeal)

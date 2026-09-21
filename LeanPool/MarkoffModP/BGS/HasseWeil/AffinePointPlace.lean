@@ -93,6 +93,17 @@ theorem secondCoordinate_sub_affinePoint_ne_zero
   rw [sub_eq_zero.mp hzero]
   exact isAlgebraic_algebraMap z.1.2
 
+private theorem ratFuncSpecialization_X_sub_C
+    {K E : Type*} [Field K] [Field E] [Algebra K E]
+    (x : E) (hx : Transcendental K x) (c : K) :
+    ratFuncSpecialization x hx
+      (algebraMap (Polynomial K) (RatFunc K) (Polynomial.X - Polynomial.C c)) =
+      x - algebraMap K E c := by
+  have hcomp := congrArg
+    (fun h : Polynomial K →+* E => h (Polynomial.X - Polynomial.C c))
+    (ratFuncSpecialization_comp_polynomial_algebraMap x hx)
+  simpa using hcomp
+
 /-- Every affine rational point has an exhaustive finite place centered at
 that point where both coordinate differences have positive order. -/
 theorem exists_affinePoint_exhaustiveFinitePlace_orders_positive
@@ -100,26 +111,26 @@ theorem exists_affinePoint_exhaustiveFinitePlace_orders_positive
     (hpartialFirst : MvPolynomial.pderiv 0 f ≠ 0)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (z : AffinePlaneCurvePoint f) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
       RingHom.toAlgebra
         ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
           (algebraMap (Polynomial K) (RatFunc K)))
-    letI : IsScalarTower (Polynomial K) (RatFunc K)
+    let : IsScalarTower (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
       finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
+    let : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
       separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-    letI : IsDedekindDomain
+    let : IsDedekindDomain
         (integralClosure (Polynomial K) (PlaneCurveFunctionField f)) :=
       integralClosure.isDedekindDomain (Polynomial K) (RatFunc K)
         (PlaneCurveFunctionField f)
-    letI : IsFractionRing
+    let : IsFractionRing
         (integralClosure (Polynomial K) (PlaneCurveFunctionField f))
         (PlaneCurveFunctionField f) :=
       integralClosure.isFractionRing_of_finite_extension (RatFunc K)
@@ -136,32 +147,8 @@ theorem exists_affinePoint_exhaustiveFinitePlace_orders_positive
         0 < finitePlaceOrder q
           (planeCurveFunction f 1 -
             algebraMap K (PlaneCurveFunctionField f) z.1.2) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
-    planeCurveCoordinateRing_isDomain hf
-  let hx := firstCoordinate_transcendental hf
-    (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-  letI : Algebra (RatFunc K) (PlaneCurveFunctionField f) :=
-    planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : Algebra (Polynomial K) (PlaneCurveFunctionField f) :=
-    RingHom.toAlgebra
-      ((algebraMap (RatFunc K) (PlaneCurveFunctionField f)).comp
-        (algebraMap (Polynomial K) (RatFunc K)))
-  letI : IsScalarTower (Polynomial K) (RatFunc K)
-      (PlaneCurveFunctionField f) :=
-    IsScalarTower.of_algebraMap_eq' rfl
-  letI : FiniteDimensional (RatFunc K) (PlaneCurveFunctionField f) :=
-    finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) (PlaneCurveFunctionField f) :=
-    separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : IsDedekindDomain
-      (integralClosure (Polynomial K) (PlaneCurveFunctionField f)) :=
-    integralClosure.isDedekindDomain (Polynomial K) (RatFunc K)
-      (PlaneCurveFunctionField f)
-  letI : IsFractionRing
-      (integralClosure (Polynomial K) (PlaneCurveFunctionField f))
-      (PlaneCurveFunctionField f) :=
-    integralClosure.isFractionRing_of_finite_extension (RatFunc K)
-      (PlaneCurveFunctionField f)
+  intro domain hx ratFuncAlgebra polynomialAlgebra scalarTower finiteDimension separable
+    dedekind fraction
   let A := PlaneCurveCoordinateRing f
   let E := PlaneCurveFunctionField f
   let B := integralClosure (Polynomial K) E
@@ -169,7 +156,6 @@ theorem exists_affinePoint_exhaustiveFinitePlace_orders_positive
   let hbase : ∀ P : Polynomial K,
       algebraMap (Polynomial K) E P ∈ (algebraMap A E).range :=
     polynomial_algebraMap_mem_planeCurveCoordinateRing_range hf hpartialSecond
-  let V := dominatingValuationSubring (A := A) (L := E) m
   let rfirst : A := planeCurveCoordinate f 0 - algebraMap K A z.1.1
   let rsecond : A := planeCurveCoordinate f 1 - algebraMap K A z.1.2
   let Pfirst : Polynomial K := Polynomial.X - Polynomial.C z.1.1
@@ -196,69 +182,22 @@ theorem exists_affinePoint_exhaustiveFinitePlace_orders_positive
       planeCurveFunction f 0 - algebraMap K E z.1.1 := by
     change ratFuncSpecialization (planeCurveFunction f 0) hx
       (algebraMap (Polynomial K) (RatFunc K) Pfirst) = _
-    have hcomp := congrArg
-      (fun h : Polynomial K →+* E => h Pfirst)
-      (ratFuncSpecialization_comp_polynomial_algebraMap
-        (planeCurveFunction f 0) hx)
-    simpa [Pfirst] using hcomp
+    exact ratFuncSpecialization_X_sub_C (planeCurveFunction f 0) hx z.1.1
   have hbfirstMap : algebraMap B E bfirst =
       planeCurveFunction f 0 - algebraMap K E z.1.1 := by
     rw [show algebraMap B E bfirst =
       algebraMap (Polynomial K) E Pfirst by
         exact IsScalarTower.algebraMap_apply (Polynomial K) B E Pfirst]
     exact hPfirstMap
-  have hbfirst0 : bfirst ≠ 0 := by
-    intro hb
-    apply hfirstNonzero
-    rw [← hbfirstMap, hb, map_zero]
-  have hfirstNonunits :
-      planeCurveFunction f 0 - algebraMap K E z.1.1 ∈ V.nonunits := by
-    rw [← hrfirstMap]
-    exact algebraMap_mem_dominatingValuationSubring_nonunits_of_mem
-      (A := A) m rfirst hrfirst
-  have hsecondNonunits :
-      planeCurveFunction f 1 - algebraMap K E z.1.2 ∈ V.nonunits := by
-    rw [← hrsecondMap]
-    exact algebraMap_mem_dominatingValuationSubring_nonunits_of_mem
-      (A := A) m rsecond hrsecond
-  have hV : V ≠ ⊤ := by
-    intro htop
-    have hnontrivial : V.valuation.IsNontrivial :=
-      (Valuation.isNontrivial_iff_exists_lt_one V.valuation).2
-        ⟨planeCurveFunction f 0 - algebraMap K E z.1.1,
-          hfirstNonzero, hfirstNonunits⟩
-    exact ((ValuationSubring.eq_top_iff V).mp htop) hnontrivial
-  have hbfirstMem : bfirst ∈ dominatingIntegralClosurePrime m hbase := by
-    change integralClosureToDominatingValuationSubring m hbase bfirst ∈
-      IsLocalRing.maximalIdeal V
-    apply ValuationSubring.coe_mem_nonunits_iff.mp
-    have hcoe :
-        ((integralClosureToDominatingValuationSubring
-          m hbase bfirst : V) : E) = algebraMap B E bfirst := by
-      rfl
-    rw [hcoe, hbfirstMap]
-    exact hfirstNonunits
-  have hqne : dominatingIntegralClosurePrime m hbase ≠ ⊥ := by
-    intro hbot
-    have : bfirst = 0 := by simpa [hbot] using hbfirstMem
-    exact hbfirst0 this
-  let q : HeightOneSpectrum B :=
-    dominatingIntegralClosurePlace m hbase hqne
   have hrfirstMap0 : algebraMap A E rfirst ≠ 0 := by
-    rw [hrfirstMap]
-    exact hfirstNonzero
+    rwa [hrfirstMap]
   have hrsecondMap0 : algebraMap A E rsecond ≠ 0 := by
-    rw [hrsecondMap]
-    exact hsecondNonzero
-  refine ⟨q, ?_, ?_, ?_⟩
-  · exact valuationSubringAt_dominatingIntegralClosurePlace_eq
-      m hbase hqne hV
-  · rw [← hrfirstMap]
-    exact finitePlaceOrder_dominatingIntegralClosurePlace_pos_of_mem
-      m hbase hqne hV rfirst hrfirst hrfirstMap0
-  · rw [← hrsecondMap]
-    exact finitePlaceOrder_dominatingIntegralClosurePlace_pos_of_mem
-      m hbase hqne hV rsecond hrsecond hrsecondMap0
+    rwa [hrsecondMap]
+  have hb : algebraMap B E bfirst = algebraMap A E rfirst :=
+    hbfirstMap.trans hrfirstMap.symm
+  obtain ⟨q, hq, hfirst, hsecond⟩ := exists_integralClosurePlace_orders_positive
+    m hbase rfirst rsecond hrfirst hrsecond hrfirstMap0 hrsecondMap0 bfirst hb
+  exact ⟨q, hq, hrfirstMap ▸ hfirst, hrsecondMap ▸ hsecond⟩
 
 variable [DecidableEq K]
 
@@ -536,6 +475,7 @@ theorem affinePointFamily_card_le_finiteExtensionGcdWeightedDegree
   let finitePlace : ι → FiniteExtensionFinitePlace K E := fun i =>
     affinePointExhaustiveFinitePlace
       hf hpartialFirst hpartialSecond (point i)
+  let _ : DecidableEq (FiniteExtensionPlace K E) := Classical.decEq _
   let place : ι → FiniteExtensionPlace K E := fun i => .inl (finitePlace i)
   have hFinitePlaceInjective : Function.Injective finitePlace :=
     (affinePointExhaustiveFinitePlace_injective

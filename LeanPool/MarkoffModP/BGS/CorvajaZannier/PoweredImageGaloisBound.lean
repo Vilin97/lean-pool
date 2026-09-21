@@ -102,15 +102,14 @@ theorem finiteDimensional_poweredCoordinateImageField
     (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (m n : ℕ) (hm : 0 < m) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     FiniteDimensional (PoweredCoordinateImageField f m n)
       (PlaneCurveFunctionField f) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
-    planeCurveCoordinateRing_isDomain hf
+  intro domain
   let L := PlaneCurveFunctionField f
   let E0 := FirstPoweredCoordinateSubfield f m
   let B := PoweredCoordinateImageField f m n
-  letI : FiniteDimensional E0 L :=
+  let : FiniteDimensional E0 L :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
   have hE0B : E0 ≤ B := by
     apply IntermediateField.adjoin.mono F
@@ -118,9 +117,9 @@ theorem finiteDimensional_poweredCoordinateImageField
     simp only [Set.mem_singleton_iff] at hz
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
     exact Or.inl hz
-  letI : Algebra E0 B :=
+  let : Algebra E0 B :=
     (IntermediateField.inclusion hE0B).toRingHom.toAlgebra
-  letI : IsScalarTower E0 B L := by
+  let : IsScalarTower E0 B L := by
     apply IsScalarTower.of_algebraMap_eq'
     ext z
     rfl

@@ -168,29 +168,35 @@ omit [DecidableEq K] in
 omit [DecidableEq K] in
 theorem finiteExtensionInfinityPlaceLocalIsFractionRing
     (P : FiniteExtensionInfinityPlace K L) :
-    letI := finiteExtensionInfinityPlaceLocalAlgebra
+    let _ := finiteExtensionInfinityPlaceLocalAlgebra
       (K := K) (L := L) P
     IsFractionRing (FiniteExtensionInfinityPlaceLocalRing K L P) L := by
-  letI hIntegralClosureLocalAlgebra :
+  let hIntegralClosureLocalAlgebra :
       Algebra (RatFuncInfinityIntegralClosure K L)
         (FiniteExtensionInfinityPlaceLocalRing K L P) := inferInstance
-  letI := finiteExtensionInfinityPlaceLocalAlgebra
+  let _ := finiteExtensionInfinityPlaceLocalAlgebra
     (K := K) (L := L) P
+  let _ : SMul (RatFuncInfinityIntegralClosure K L)
+      (FiniteExtensionInfinityPlaceLocalRing K L P) := Algebra.toSMul
+  let _ : SMul (FiniteExtensionInfinityPlaceLocalRing K L P) L := Algebra.toSMul
+  let _ : SMul (RatFuncInfinityIntegralClosure K L) L := Algebra.toSMul
   letI : IsScalarTower (RatFuncInfinityIntegralClosure K L)
       (FiniteExtensionInfinityPlaceLocalRing K L P) L := by
-    exact IsScalarTower.of_algebraMap_eq'
+    have htower := IsScalarTower.of_algebraMap_eq'
       (R := RatFuncInfinityIntegralClosure K L)
       (S := FiniteExtensionInfinityPlaceLocalRing K L P) (A := L)
       (finiteExtensionInfinityPlaceLocalizationToField_comp_algebraMap
         (K := K) (L := L) P).symm
-  exact IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
+    exact htower
+  have hFraction := IsFractionRing.isFractionRing_of_isDomain_of_isLocalization
     (R := RatFuncInfinityIntegralClosure K L)
     (primeOverHeightOne (ratFuncInfinityPlace K) P).asIdeal.primeCompl
       (FiniteExtensionInfinityPlaceLocalRing K L P) L
+  exact hFraction
 
 noncomputable def finiteExtensionInfinityPlaceLocalOrderTop
     (P : FiniteExtensionInfinityPlace K L) (x : L) : WithTop ℤ := by
-  letI := finiteExtensionInfinityPlaceLocalAlgebra
+  let _ := finiteExtensionInfinityPlaceLocalAlgebra
     (K := K) (L := L) P
   letI := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
@@ -206,7 +212,7 @@ noncomputable def finiteExtensionInfinityPlaceLocalOrderTop
 
 noncomputable def finiteExtensionInfinityPlaceLocalOrder
     (P : FiniteExtensionInfinityPlace K L) (x : L) : ℤ := by
-  letI := finiteExtensionInfinityPlaceLocalAlgebra
+  let _ := finiteExtensionInfinityPlaceLocalAlgebra
     (K := K) (L := L) P
   letI := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
@@ -225,7 +231,7 @@ theorem finiteExtensionInfinityPlaceLocalOrder_eq_globalOrder
     (P : FiniteExtensionInfinityPlace K L) (x : L) :
     finiteExtensionInfinityPlaceLocalOrder (K := K) (L := L) P x =
       finitePlaceOrder (primeOverHeightOne (ratFuncInfinityPlace K) P) x := by
-  letI := finiteExtensionInfinityPlaceLocalAlgebra
+  let _ := finiteExtensionInfinityPlaceLocalAlgebra
     (K := K) (L := L) P
   letI := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
@@ -235,18 +241,25 @@ theorem finiteExtensionInfinityPlaceLocalOrder_eq_globalOrder
       (RatFuncInfinityIntegralClosure K L)
       (primeOverHeightOne (ratFuncInfinityPlace K) P).ne_bot
       (FiniteExtensionInfinityPlaceLocalRing K L P)
+  let _ : SMul (RatFuncInfinityIntegralClosure K L)
+      (FiniteExtensionInfinityPlaceLocalRing K L P) := Algebra.toSMul
+  let _ : SMul (FiniteExtensionInfinityPlaceLocalRing K L P) L := Algebra.toSMul
+  let _ : SMul (RatFuncInfinityIntegralClosure K L) L := Algebra.toSMul
   letI : IsScalarTower (RatFuncInfinityIntegralClosure K L)
       (FiniteExtensionInfinityPlaceLocalRing K L P) L := by
-    exact IsScalarTower.of_algebraMap_eq'
+    have htower := IsScalarTower.of_algebraMap_eq'
       (R := RatFuncInfinityIntegralClosure K L)
       (S := FiniteExtensionInfinityPlaceLocalRing K L P) (A := L)
       (finiteExtensionInfinityPlaceLocalizationToField_comp_algebraMap
         (K := K) (L := L) P).symm
+    exact htower
   change finitePlaceOrder
       (IsDiscreteValuationRing.maximalIdeal
         (FiniteExtensionInfinityPlaceLocalRing K L P)) x = _
-  exact localizationAtPrime_finitePlaceOrder_eq
+  have hOrder := localizationAtPrime_finitePlaceOrder_eq
+    (S := FiniteExtensionInfinityPlaceLocalRing K L P)
     (primeOverHeightOne (ratFuncInfinityPlace K) P) x
+  exact hOrder
 
 omit [DecidableEq K] in
 theorem finiteExtensionInfinityPlaceLocalOrderTop_eq_globalOrder
@@ -254,7 +267,7 @@ theorem finiteExtensionInfinityPlaceLocalOrderTop_eq_globalOrder
     finiteExtensionInfinityPlaceLocalOrderTop (K := K) (L := L) P x =
       (finitePlaceOrder
         (primeOverHeightOne (ratFuncInfinityPlace K) P) x : WithTop ℤ) := by
-  letI := finiteExtensionInfinityPlaceLocalAlgebra
+  let _ := finiteExtensionInfinityPlaceLocalAlgebra
     (K := K) (L := L) P
   letI := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
@@ -309,19 +322,25 @@ theorem finiteExtensionInfinityPlace_local_preserves_of_global_preserves
             (K := K) (L := L) P r) =
           finiteExtensionInfinityPlaceLocalizationToField
             (K := K) (L := L) P s := by
-  letI hLocalAlgebra := finiteExtensionInfinityPlaceLocalAlgebra
+  let hLocalAlgebra := finiteExtensionInfinityPlaceLocalAlgebra
     (K := K) (L := L) P
   letI hLocalFraction := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
+  let _ : SMul (RatFuncInfinityIntegralClosure K L)
+      (FiniteExtensionInfinityPlaceLocalRing K L P) := Algebra.toSMul
+  let _ : SMul (FiniteExtensionInfinityPlaceLocalRing K L P) L := Algebra.toSMul
+  let _ : SMul (RatFuncInfinityIntegralClosure K L) L := Algebra.toSMul
   letI : IsScalarTower (RatFuncInfinityIntegralClosure K L)
       (FiniteExtensionInfinityPlaceLocalRing K L P) L := by
-    exact IsScalarTower.of_algebraMap_eq'
+    have htower := IsScalarTower.of_algebraMap_eq'
       (R := RatFuncInfinityIntegralClosure K L)
       (S := FiniteExtensionInfinityPlaceLocalRing K L P) (A := L)
       (finiteExtensionInfinityPlaceLocalizationToField_comp_algebraMap
         (K := K) (L := L) P).symm
-  exact ambientDerivation_preserves_localizationAtPrime_of_preserves
+    exact htower
+  have hPreserves := ambientDerivation_preserves_localizationAtPrime_of_preserves
     (primeOverHeightOne (ratFuncInfinityPlace K) P).asIdeal E hE
+  exact hPreserves
 
 /-- The infinity different supplies the exact canonical scaling coefficient.
 The reciprocal-parameter derivations are explicit inputs: `Es` preserves the
@@ -439,7 +458,7 @@ theorem finiteExtensionInfinityPlace_auxiliaryFamily_caseIII_of_scaled_preserves
         finiteExtensionInfinityPlaceLocalOrderTop (K := K) (L := L) P
           (indexedDedekindLocalWronskian D epsilon
             (auxiliaryFamily u v h k)).det := by
-  letI hLocalAlgebra := finiteExtensionInfinityPlaceLocalAlgebra
+  let hLocalAlgebra := finiteExtensionInfinityPlaceLocalAlgebra
     (K := K) (L := L) P
   letI hLocalFraction := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
@@ -491,7 +510,7 @@ theorem finiteExtensionInfinityPlace_auxiliaryFamily_caseIV_of_scaled_preserves
         finiteExtensionInfinityPlaceLocalOrderTop (K := K) (L := L) P
           (indexedDedekindLocalWronskian D epsilon
             (auxiliaryFamily u v h k)).det := by
-  letI hLocalAlgebra := finiteExtensionInfinityPlaceLocalAlgebra
+  let hLocalAlgebra := finiteExtensionInfinityPlaceLocalAlgebra
     (K := K) (L := L) P
   letI hLocalFraction := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
@@ -736,7 +755,7 @@ theorem finiteExtensionInfinityPlace_exists_local_lift_of_orderTop_nonnegative
     ∃ x₀ : FiniteExtensionInfinityPlaceLocalRing K L P,
       x = finiteExtensionInfinityPlaceLocalizationToField
         (K := K) (L := L) P x₀ := by
-  letI := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
+  let _ := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
   letI := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
   letI : IsDiscreteValuationRing
@@ -793,7 +812,7 @@ theorem finiteExtensionInfinityPlace_auxiliaryFamily_caseII_of_scaled_preserves
         finiteExtensionInfinityPlaceLocalOrderTop (K := K) (L := L) P
           (indexedDedekindLocalWronskian D epsilon
             (auxiliaryFamily u v h k)).det := by
-  letI := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
+  let _ := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
   letI := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
   letI : IsDiscreteValuationRing
@@ -914,7 +933,8 @@ theorem finiteExtensionInfinityPlace_residueField_finite [Fintype K]
     simpa [p] using Ideal.primesOver.liesOver
       (ratFuncInfinityPlace K).asIdeal P
   letI hLocalAlg := Localization.AtPrime.algebraOfLiesOver p P.1
-  letI : Localization.AtPrime.IsLiesOverAlgebra p P.1 := ⟨rfl⟩
+  have : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
+      (Localization.AtPrime P.1) := inferInstance
   letI : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 := inferInstance
   letI : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
   exact Module.finite_of_finite p.ResidueField
@@ -1033,7 +1053,7 @@ theorem finiteExtensionInfinityPlace_auxiliaryFamily_caseI_of_scaled_preserves
         finiteExtensionInfinityPlaceLocalOrderTop (K := K) (L := L) P
           (indexedDedekindLocalWronskian D epsilonOrder
             (auxiliaryFamily u v h k)).det := by
-  letI := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
+  let _ := finiteExtensionInfinityPlaceLocalAlgebra (K := K) (L := L) P
   letI := finiteExtensionInfinityPlaceLocalIsFractionRing
     (K := K) (L := L) P
   letI : IsDiscreteValuationRing

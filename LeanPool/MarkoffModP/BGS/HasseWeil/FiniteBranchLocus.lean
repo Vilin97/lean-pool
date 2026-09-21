@@ -59,7 +59,7 @@ theorem dedekindRamificationLocus_finite :
   have hdiv : Q.asIdeal ∣ differentIdeal A B :=
     dvd_differentIdeal_iff.mpr hQ
   simpa [D, BGS.CorvajaZannier.differentMultiplicityDivisor_apply] using
-    (multiplicity_pos_of_dvd hdiv).ne'
+    (multiplicity_pos_of_dvd hdiv (FiniteMultiplicity.of_prime_left Q.prime hDifferent)).ne'
 
 /-- The branch locus downstairs is the image of the ramification locus under
 contraction of height-one primes. -/

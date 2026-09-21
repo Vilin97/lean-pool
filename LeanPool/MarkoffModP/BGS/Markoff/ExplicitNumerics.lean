@@ -23,13 +23,13 @@ open scoped Topology
 namespace Legacy
 
 /-- Sealed data for the deliberately conservative project cutoff. -/
-@[irreducible] def explicitStrongApproximationCutoffData :
+@[irreducible] noncomputable def explicitStrongApproximationCutoffData :
     {n : ℕ // n = BGS.NumberTheory.explicitDivisorConstant + 1} :=
   ⟨BGS.NumberTheory.explicitDivisorConstant + 1, rfl⟩
 
 /-- The deliberately conservative project cutoff.  It is not the primorial
 constant from arXiv:2308.07579. -/
-def explicitStrongApproximationCutoff : ℕ :=
+noncomputable def explicitStrongApproximationCutoff : ℕ :=
   explicitStrongApproximationCutoffData.1
 
 theorem explicitStrongApproximationCutoff_eq :
@@ -167,14 +167,14 @@ theorem explicitDivisorMomentConstant_pos :
   positivity
 
 /-- Sealed data for the improved project cutoff. -/
-@[irreducible] def explicitStrongApproximationCutoffData :
+@[irreducible] noncomputable def explicitStrongApproximationCutoffData :
     {n : ℕ // n =
       2 ^ 9 * (48 ^ 3 + 1) ^ 18 * explicitDivisorMomentConstant ^ 8 + 1} :=
   ⟨2 ^ 9 * (48 ^ 3 + 1) ^ 18 * explicitDivisorMomentConstant ^ 8 + 1, rfl⟩
 
 /-- The explicit project cutoff.  It is deliberately different from the
 primorial constant in arXiv:2308.07579. -/
-def explicitStrongApproximationCutoff : ℕ :=
+noncomputable def explicitStrongApproximationCutoff : ℕ :=
   explicitStrongApproximationCutoffData.1
 
 theorem explicitStrongApproximationCutoff_eq :

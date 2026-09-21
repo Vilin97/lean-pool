@@ -93,13 +93,13 @@ theorem planeCurve_canonicalDifferentDivisor_degree_le
     {f : MvPolynomial (Fin 2) K} (hf : Irreducible f)
     (hpartialSecond : MvPolynomial.pderiv 1 f ≠ 0)
     (hcardK : MvPolynomial.degreeOf 1 f < Fintype.card K) :
-    letI := planeCurveCoordinateRing_isDomain hf
+    let := planeCurveCoordinateRing_isDomain hf
     let hx := firstCoordinate_transcendental hf
       (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
-    letI := planeCurveFirstCoordinateRatFuncAlgebra f hx
-    letI := finiteDimensional_planeCurveFunctionField_over_ratFunc
+    let := planeCurveFirstCoordinateRatFuncAlgebra f hx
+    let := finiteDimensional_planeCurveFunctionField_over_ratFunc
       hf hpartialSecond
-    letI := separable_planeCurveFunctionField_over_ratFunc
+    let := separable_planeCurveFunctionField_over_ratFunc
       hf hpartialSecond
     finiteExtensionDivisorDegree K (PlaneCurveFunctionField f)
         (finiteExtensionCanonicalDifferentDivisor K
@@ -110,17 +110,8 @@ theorem planeCurve_canonicalDifferentDivisor_degree_le
           (MvPolynomial.degreeOf 1 f : ℤ) -
         2 * (MvPolynomial.degreeOf 0 f : ℤ) -
           2 * (MvPolynomial.degreeOf 1 f : ℤ) := by
-  letI : IsDomain (PlaneCurveCoordinateRing f) :=
-    planeCurveCoordinateRing_isDomain hf
-  let hx := firstCoordinate_transcendental hf
-    (degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond)
+  intro domain hx ratFuncAlgebra finiteDimension separable
   let L := PlaneCurveFunctionField f
-  letI : Algebra (RatFunc K) L :=
-    planeCurveFirstCoordinateRatFuncAlgebra f hx
-  letI : FiniteDimensional (RatFunc K) L :=
-    finiteDimensional_planeCurveFunctionField_over_ratFunc hf hpartialSecond
-  letI : Algebra.IsSeparable (RatFunc K) L :=
-    separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
   let F : K[X][X] := planeCurvePolynomialInSecondCoordinate f
   let firstDegree := MvPolynomial.degreeOf 0 f
   let secondDegree := MvPolynomial.degreeOf 1 f
@@ -160,9 +151,14 @@ theorem planeCurve_canonicalDifferentDivisor_degree_le
       (infinityNormalizedPolynomial K localFirstDegree F) = 0 := by
     rw [infinityNormalizedPolynomial]
     simp only [map_mul, aeval_C, hrootF, mul_zero]
+  let _ : SMul (RatFunc K) L := Algebra.toSMul
+  let _ : MulAction (RatFunc K) L :=
+    (Algebra.toModule : Module (RatFunc K) L).toMulAction
   have hrootIntegral : Polynomial.aeval v
       (infinityNormalizedIntegralPolynomial K localFirstDegree F hcoeff) = 0 := by
-    rw [← Polynomial.aeval_map_algebraMap (RatFunc K) v]
+    have hmap := Polynomial.aeval_map_algebraMap (RatFunc K) v
+      (infinityNormalizedIntegralPolynomial K localFirstDegree F hcoeff)
+    rw [← hmap]
     rw [infinityNormalizedIntegralPolynomial_map]
     exact hrootNormalized
   have hprimitive : Algebra.adjoin (RatFunc K) {v} = ⊤ := by

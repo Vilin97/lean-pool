@@ -360,7 +360,7 @@ theorem deg_polarDivisor_XK_eq_primesOverFinset_sum :
       letI : v.asIdeal.LiesOver p := ⟨hpw.symm⟩
       have hinertia :
           Ideal.inertiaDeg' p v.asIdeal = v.asIdeal.inertiaDeg A :=
-        Ideal.inertiaDeg'_eq_inertiaDeg (p := p) (q := v.asIdeal)
+        Ideal.inertiaDeg'_eq_inertiaDeg (p := p) (P := v.asIdeal)
       rw [polarDivisor_XK_at_infinite k K v, ramIdxInfty,
         placeDegree_infinite_eq_inertiaDeg, ← hinertia]
 

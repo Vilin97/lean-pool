@@ -63,7 +63,9 @@ noncomputable def planeCurveCoordinateRingMap
   obtain ⟨r, rfl⟩ := Ideal.mem_span_singleton.mp hq
   apply Ideal.mem_span_singleton.mpr
   refine ⟨MvPolynomial.map (algebraMap K E) r, ?_⟩
-  simp [ι]
+  change MvPolynomial.map (algebraMap K E) (f * r) =
+    MvPolynomial.map (algebraMap K E) f * MvPolynomial.map (algebraMap K E) r
+  exact map_mul _ _ _
 
 /-- The coordinate-ring base-change map preserves the two coordinate
 classes. -/
@@ -74,6 +76,9 @@ classes. -/
       planeCurveCoordinate (MvPolynomial.map (algebraMap K E) f) i := by
   simp [planeCurveCoordinateRingMap, planeCurveCoordinate,
     planeCurveQuotientMap]
+  change Ideal.Quotient.mk (Ideal.span {MvPolynomial.map (algebraMap K E) f})
+    (MvPolynomial.map (algebraMap K E) (MvPolynomial.X i)) = _
+  rw [MvPolynomial.map_X]
 
 /-- The coefficient base change of the canonical powered-image relation
 vanishes on the generic powered coordinates of the base-changed curve. -/
@@ -183,7 +188,7 @@ theorem poweredCoordinateImageRelation_map_associated_baseChange
   letI : FiniteDimensional (FirstPoweredCoordinateSubfield fE m) LE :=
     finiteDimensional_over_firstPoweredCoordinate hfE hpartialSecondE m hm
   have hv : IsIntegral (FirstPoweredCoordinateSubfield fE m)
-      ((planeCurveFunction fE 1) ^ n) := Algebra.IsIntegral.isIntegral _
+      ((planeCurveFunction fE 1) ^ n) := IsIntegral.of_finite _ _
   have hdvd :
       poweredCoordinateImageRelation hfE hpartialSecondE m hm n ∣
         (poweredCoordinateImageRelation hf hpartialSecond m hm n).map

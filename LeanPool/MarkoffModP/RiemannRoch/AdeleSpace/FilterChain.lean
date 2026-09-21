@@ -264,9 +264,10 @@ noncomputable def infiniteAdeleLocalResidueToSubring (D : DivisorA k K)
       rw [map_zpow₀, Classical.choose_spec (v.valuation_exists_uniformizer K)]
     rw [map_mul, hπpow]
     have hf : v.valuation K ((a.val : AdeleSpace k K).val (Sum.inr v)) ≤ WithZero.exp n := by
-      have := a.property (Sum.inr v)
-      simpa [memAdeleFilt, placeValuation, n, Finsupp.add_apply, Finsupp.single_apply,
-        add_comm] using this
+      have h := a.property (Sum.inr v)
+      change v.valuation K ((a.val : AdeleSpace k K).val (Sum.inr v)) ≤
+        WithZero.exp ((D + Finsupp.single (Sum.inr v) 1 : DivisorA k K) (Sum.inr v)) at h
+      simpa only [Finsupp.add_apply, Finsupp.single_eq_same] using h
     calc
       WithZero.exp (-1) ^ n * v.valuation K ((a.val : AdeleSpace k K).val (Sum.inr v))
           ≤ WithZero.exp (-1) ^ n * WithZero.exp n := mul_le_mul_right hf _

@@ -206,13 +206,19 @@ def weightedSplitTraceLeftInversionAffineMap (alpha beta : K) (d e : ℕ) :
 theorem weightedSplitTraceLeftInversionAffineMap_x (alpha beta : K) (d e : ℕ) :
     weightedSplitTraceLeftInversionAffineMap alpha beta d e (weightedSplitTraceAffineX alpha beta d e) =
       weightedSplitTraceLaurentXInverse alpha beta d e := by
-  simp [weightedSplitTraceLeftInversionAffineMap, weightedSplitTraceLeftInversionPolynomialMap, weightedSplitTraceAffineX]
+  change MvPolynomial.aeval
+    ![weightedSplitTraceLaurentXInverse alpha beta d e,
+      weightedSplitTraceLaurentY alpha beta d e] (MvPolynomial.X 0) = _
+  simp
 
 @[simp]
 theorem weightedSplitTraceLeftInversionAffineMap_y (alpha beta : K) (d e : ℕ) :
     weightedSplitTraceLeftInversionAffineMap alpha beta d e (weightedSplitTraceAffineY alpha beta d e) =
       weightedSplitTraceLaurentY alpha beta d e := by
-  simp [weightedSplitTraceLeftInversionAffineMap, weightedSplitTraceLeftInversionPolynomialMap, weightedSplitTraceAffineY]
+  change MvPolynomial.aeval
+    ![weightedSplitTraceLaurentXInverse alpha beta d e,
+      weightedSplitTraceLaurentY alpha beta d e] (MvPolynomial.X 1) = _
+  simp
 
 theorem weightedSplitTraceLeftInversionAffineMap_coordinateProduct_isUnit (alpha beta : K) (d e : ℕ) :
     IsUnit (weightedSplitTraceLeftInversionAffineMap alpha beta d e (weightedSplitTraceAffineCoordinateProduct alpha beta d e)) := by
@@ -399,8 +405,10 @@ theorem weightedSplitTraceRightInversionAffineMap_x
     weightedSplitTraceRightInversionAffineMap alpha beta d e
         (weightedSplitTraceAffineX beta alpha d e) =
       weightedSplitTraceLaurentX alpha beta d e := by
-  simp [weightedSplitTraceRightInversionAffineMap,
-    weightedSplitTraceRightInversionPolynomialMap, weightedSplitTraceAffineX]
+  change MvPolynomial.aeval
+    ![weightedSplitTraceLaurentX alpha beta d e,
+      weightedSplitTraceLaurentYInverse alpha beta d e] (MvPolynomial.X 0) = _
+  simp
 
 @[simp]
 theorem weightedSplitTraceRightInversionAffineMap_y
@@ -408,8 +416,10 @@ theorem weightedSplitTraceRightInversionAffineMap_y
     weightedSplitTraceRightInversionAffineMap alpha beta d e
         (weightedSplitTraceAffineY beta alpha d e) =
       weightedSplitTraceLaurentYInverse alpha beta d e := by
-  simp [weightedSplitTraceRightInversionAffineMap,
-    weightedSplitTraceRightInversionPolynomialMap, weightedSplitTraceAffineY]
+  change MvPolynomial.aeval
+    ![weightedSplitTraceLaurentX alpha beta d e,
+      weightedSplitTraceLaurentYInverse alpha beta d e] (MvPolynomial.X 1) = _
+  simp
 
 theorem weightedSplitTraceRightInversionAffineMap_coordinateProduct_isUnit
     (alpha beta : K) (d e : ℕ) :
