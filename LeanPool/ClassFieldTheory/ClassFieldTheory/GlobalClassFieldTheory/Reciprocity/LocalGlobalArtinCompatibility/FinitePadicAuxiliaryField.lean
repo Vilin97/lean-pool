@@ -1009,7 +1009,7 @@ private theorem globalNormResidueMonoidHomOfEmbedding_norm_restriction_apply
 /-- The auxiliary-field construction produces a lower local unit
 whose chosen local Artin value and global norm-residue value are both
 the finite quotient coordinate of the distinguished lift. -/
-theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative
+private theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative_nonempty
     (v : HeightOneSpectrum (𝓞 K))
     (p : Nat.Primes)
     (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup)
@@ -1038,7 +1038,7 @@ theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative
               (numberFieldTowerTopSubgroup L)
               (numberFieldTowerTopSubgroup_le_baseSubgroup K L))
           p.1) :
-    {z : (v.adicCompletion K)ˣ //
+    Nonempty {z : (v.adicCompletion K)ˣ //
       chosenFinitePlaceArtinMonoidHom (K := K) (L := L) v z =
           numberFieldTowerExtensionQuotientEquivGaloisGroup K L
             (numberFieldTowerFiniteQuotientCoordinate
@@ -1048,6 +1048,7 @@ theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative
           numberFieldTowerExtensionQuotientEquivGaloisGroup K L
             (numberFieldTowerFiniteQuotientCoordinate
               (K := K) (L := L) τ)} := by
+  refine ⟨?_⟩
   let H :=
     numberFieldTowerFinitePadicAuxiliaryAbstractField
       (K := K) (L := L) p τ hτ
@@ -1259,6 +1260,48 @@ theorem numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative
       _ = σK := hrestrict
   exact ⟨z, hlocal, hglobal⟩
 
+
+noncomputable def numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative
+    (v : HeightOneSpectrum (𝓞 K))
+    (p : Nat.Primes)
+    (τ : (numberFieldTowerBaseSubgroup K L).toSubgroup)
+    (hτ :
+      numberFieldTowerBaseSubgroupPadicCyclotomicDegree
+          (K := K) (L := L) p τ ≠ 1)
+    (hdecomposition :
+      letI : Algebra K (SeparableClosure ℚ) :=
+        numberFieldTowerSeparableClosureBaseAlgebra K L
+      (numberFieldTowerSeparableClosureEquivBaseSubgroup K L).symm τ ∈
+        absoluteValueDecompositionGroup K
+          (numberFieldTowerFinitePlaceExtensionToSeparableClosure
+            K L v (chosenFinitePlaceExtension (L := L) v)).1)
+    (n : ℕ) (hn : 0 < n)
+    (hdegree :
+      numberFieldTowerBaseSubgroupPadicCyclotomicDegree
+          (K := K) (L := L) p τ =
+        (Multiplicative.ofAdd (1 : ℤ_[p.1])) ^ n)
+    (hprimaryQuotient :
+      numberFieldTowerFiniteQuotientCoordinate
+          (K := K) (L := L) τ ∈
+        CommGroup.primaryComponent
+          ((numberFieldTowerBaseSubgroup K L).toSubgroup ⧸
+            extensionSubgroup
+              (numberFieldTowerBaseSubgroup K L)
+              (numberFieldTowerTopSubgroup L)
+              (numberFieldTowerTopSubgroup_le_baseSubgroup K L))
+          p.1) :
+    {z : (v.adicCompletion K)ˣ //
+      chosenFinitePlaceArtinMonoidHom (K := K) (L := L) v z =
+          numberFieldTowerExtensionQuotientEquivGaloisGroup K L
+            (numberFieldTowerFiniteQuotientCoordinate
+              (K := K) (L := L) τ) ∧
+      globalNormResidueMonoidHom K L
+          (IdeleGroup.finitePlaceIdeleClass v z) =
+          numberFieldTowerExtensionQuotientEquivGaloisGroup K L
+            (numberFieldTowerFiniteQuotientCoordinate
+              (K := K) (L := L) τ)} :=
+  Classical.choice (numberFieldTowerFinitePadicAuxiliaryLocalGlobalRepresentative_nonempty
+    v p τ hτ hdecomposition n hn hdegree hprimaryQuotient)
 
 /-- Every genuine finite-place decomposition automorphism has a
 compatible embedded absolute lift with the same finite quotient class

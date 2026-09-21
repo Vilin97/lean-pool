@@ -351,7 +351,8 @@ private theorem rationalFiniteTower_representativeAction
     sigma.1 •
         (⟦⟨U₀, RelativeIdeleGroup.classEmbedding jEU dℚ⟩⟧ :
           rationalIdeleClassDirectLimit) = _
-  rw [DirectLimit.smul_def]
+  change (⟦⟨U₀, sigma.1 • RelativeIdeleGroup.classEmbedding jEU dℚ⟩⟧ :
+    rationalIdeleClassDirectLimit) = _
   apply congrArg
     (fun z : RelativeIdeleGroup.ClassGroup ℚ U₀ =>
       (⟦⟨U₀, z⟩⟧ : rationalIdeleClassDirectLimit))
