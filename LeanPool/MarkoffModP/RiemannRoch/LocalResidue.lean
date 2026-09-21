@@ -90,7 +90,12 @@ theorem residueHom_mk'_residue (v : HeightOneSpectrum R) (n : R) (d : v.asIdeal.
   have h := congrArg (IsLocalRing.residue (Localization.AtPrime v.asIdeal))
     (IsLocalization.mk'_spec (S := Localization.AtPrime v.asIdeal) n d)
   simp only [map_mul, IsLocalRing.residue_def] at h
-  field_simp [hdunit] at h ⊢
+  field_simp [hdunit]
+  change IsLocalRing.residue (Localization.AtPrime v.asIdeal)
+      (IsLocalization.mk' (Localization.AtPrime v.asIdeal) n d) *
+        algebraMap R v.asIdeal.ResidueField (d : R) =
+      algebraMap R v.asIdeal.ResidueField n at h
+  rw [mul_comm] at h
   exact h.symm
 
 /-- `residueHom` agrees with the residue map on the localization model. -/

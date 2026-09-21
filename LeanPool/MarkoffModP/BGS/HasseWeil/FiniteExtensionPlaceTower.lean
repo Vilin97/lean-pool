@@ -1146,7 +1146,8 @@ private theorem finitePlaceResidueField_finite
     ratFuncFinitePlaceResidueField_finite K p
   letI : P.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
   letI := Localization.AtPrime.algebraOfLiesOver p.asIdeal P.asIdeal
-  letI : Localization.AtPrime.IsLiesOverAlgebra p.asIdeal P.asIdeal := ⟨rfl⟩
+  have : IsScalarTower K[X] (Localization.AtPrime p.asIdeal)
+      (Localization.AtPrime P.asIdeal) := inferInstance
   letI : Algebra.QuasiFiniteAt K[X] P.asIdeal := inferInstance
   letI : Module.Finite p.asIdeal.ResidueField P.asIdeal.ResidueField :=
     inferInstance
@@ -1166,7 +1167,8 @@ private theorem infinityPlaceResidueField_finite
     simpa [p] using Ideal.primesOver.liesOver
       (ratFuncInfinityPlace K).asIdeal P
   letI := Localization.AtPrime.algebraOfLiesOver p P.1
-  letI : Localization.AtPrime.IsLiesOverAlgebra p P.1 := ⟨rfl⟩
+  have : IsScalarTower (RatFuncInfinityIntegers K) (Localization.AtPrime p)
+      (Localization.AtPrime P.1) := inferInstance
   letI : Algebra.QuasiFiniteAt (RatFuncInfinityIntegers K) P.1 := inferInstance
   letI : Module.Finite p.ResidueField P.1.ResidueField := inferInstance
   exact Module.finite_of_finite p.ResidueField

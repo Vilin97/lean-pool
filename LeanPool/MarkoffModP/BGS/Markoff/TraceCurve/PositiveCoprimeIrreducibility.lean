@@ -109,6 +109,7 @@ lemma splitTraceEtaFunctionField_finrank_of_sqrt_neg_one
     sigma hsigma i hi e he
   letI : Fact (Irreducible (splitTraceEtaKummerPolynomial sigma e)) := ⟨hEtaIrred⟩
   rw [PowerBasis.finrank (AdjoinRoot.powerBasis hEtaIrred.ne_zero)]
+  change (splitTraceEtaKummerPolynomial sigma e).natDegree = e
   simp [splitTraceEtaKummerPolynomial]
 
 /-- The norm-degree obstruction for the second radicand does not depend on parity.  It applies

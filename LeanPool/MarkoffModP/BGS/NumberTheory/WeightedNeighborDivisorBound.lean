@@ -83,10 +83,7 @@ def neighboringDivisorSumWeightedMomentConstant : ℕ :=
 
 theorem neighboringDivisorSumWeightedMomentConstant_eq :
     neighboringDivisorSumWeightedMomentConstant = 2 ^ 781 * 32769 := by
-  rw [neighboringDivisorSumWeightedMomentConstant,
-    show (796 : ℕ) = 781 + 15 by norm_num, pow_add]
-  norm_num
-  ring
+  decide +kernel
 
 private def neighboringDivisorSumWeightedSplit : ℕ :=
   716198
@@ -94,8 +91,7 @@ private def neighboringDivisorSumWeightedSplit : ℕ :=
 private theorem neighboringDivisorSumWeighted_balanced_constant :
     (neighboringDivisorSumWeightedSplit + 1) ^ 20 * 2 ^ 407 ≤
       neighboringDivisorSumWeightedMomentConstant := by
-  norm_num [neighboringDivisorSumWeightedSplit,
-    neighboringDivisorSumWeightedMomentConstant]
+  decide +kernel
 
 private theorem neighboringDivisorSumWeighted_dominant_constant
     {p : ℕ} (hp : 794039 ≤ p) :
@@ -110,8 +106,7 @@ private theorem neighboringDivisorSumWeighted_dominant_constant
   have hground :
       (R + 1) ^ 20 * K * (P + 1) ^ 2 ≤
         R ^ 20 * D * P ^ 2 := by
-    norm_num [R, K, D, P, neighboringDivisorSumWeightedSplit,
-      neighboringDivisorSumWeightedMomentConstant]
+    decide +kernel
   have hlinear : P * (p + 1) ≤ (P + 1) * p := by
     dsimp [P]
     omega

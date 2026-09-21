@@ -107,6 +107,10 @@ theorem finrank_poweredImageOverFirst_le_firstProjectionPowerDegree
   letI : FiniteDimensional (FirstPoweredCoordinateSubfield f m)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_firstPoweredCoordinate hf hpartialSecond m hm
+  have : Module.Free (FirstPoweredCoordinateSubfield f m)
+      (PoweredImageOverFirst f m n) := Module.Free.of_divisionRing _ _
+  have : Module.Free (PoweredImageOverFirst f m n) (PlaneCurveFunctionField f) :=
+    Module.Free.of_divisionRing _ _
   have htower := Module.finrank_mul_finrank
     (FirstPoweredCoordinateSubfield f m)
     (PoweredImageOverFirst f m n)
@@ -145,6 +149,10 @@ theorem finrank_poweredImageOverSecond_le_secondProjectionPowerDegree
   letI : FiniteDimensional (SecondPoweredCoordinateSubfield f n)
       (PlaneCurveFunctionField f) :=
     finiteDimensional_over_secondPoweredCoordinate hf hpartialFirst n hn
+  have : Module.Free (SecondPoweredCoordinateSubfield f n)
+      (PoweredImageOverSecond f m n) := Module.Free.of_divisionRing _ _
+  have : Module.Free (PoweredImageOverSecond f m n) (PlaneCurveFunctionField f) :=
+    Module.Free.of_divisionRing _ _
   have htower := Module.finrank_mul_finrank
     (SecondPoweredCoordinateSubfield f n)
     (PoweredImageOverSecond f m n)

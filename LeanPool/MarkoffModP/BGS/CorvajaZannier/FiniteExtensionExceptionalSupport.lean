@@ -605,7 +605,7 @@ theorem sum_finiteExtensionFamilyMemberSupport_placeDegree
         finiteExtensionPlaceDegree K L w := by
   classical
   rw [finiteExtensionFamilyMemberSupport, Finset.sum_map]
-  simpa [finiteExtensionFamilyMemberSupportEmbedding] using
+  simpa [finiteExtensionFamilyMemberSupportEmbedding] using!
     (Finset.sum_attach
       (finiteExtensionPrincipalDivisor K L (f a)).support
       (fun w => finiteExtensionPlaceDegree K L w))
