@@ -350,6 +350,9 @@ theorem retainedLaurentLift_comp_algebraMap
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   letI : Algebra k (ResidueField V) :=
     retainedResidueGroundAlgebra P i W
+  letI : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
+  letI : SMul (CoordinateZeroLocalRing W.coefficientField) (ComponentFractionField P) := Algebra.toSMul
+  letI : SMul W.coefficientField (ComponentFractionField P) := Algebra.toSMul
   letI : IsScalarTower W.coefficientField
       (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.coefficientTower
@@ -377,8 +380,9 @@ theorem retainedLaurentLift_comp_algebraMap
       retainedLaurentCoefficientMap P i W := by
     refine RingHom.ext fun c ↦ ?_
     change retainedLaurentLift P i W (algebraMap k (ComponentFractionField P) c) = _
-    rw [hcoeff, retainedLaurentLift_algebraMap]
-    rfl
+    have h := retainedLaurentLift_algebraMap P i W (retainedComponentCoefficientMap P i W c)
+    have result := (congrArg (retainedLaurentLift P i W) (hcoeff c)).trans h
+    exact result
   exact hlift.trans (retainedLaurentCoefficientMap_eq_groundLaurentMap P i W)
 
 /-- The transported generic point is the dehomogenized completed projective

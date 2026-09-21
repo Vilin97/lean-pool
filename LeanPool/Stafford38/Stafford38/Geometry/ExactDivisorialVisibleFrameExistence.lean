@@ -325,6 +325,10 @@ theorem exactDivisorialVisibleFrameExistence :
   letI : Algebra k V.toSubring :=
     (Stafford38.Geometry.LaneC.groundHom E V hEV).toAlgebra
   letI : Algebra V.toSubring K := V.toSubring.subtype.toAlgebra
+  let : SMul V.toSubring K := V.toSubring.subtype.toAlgebra.toSMul
+  let : SMul k V.toSubring :=
+    (Stafford38.Geometry.LaneC.groundHom E V hEV).toAlgebra.toSMul
+  let : SMul k K := (inferInstance : Algebra k K).toSMul
   letI : IsScalarTower k V.toSubring K :=
     IsScalarTower.of_algebraMap_eq fun c => by
       change algebraMap k K c = (algebraMap k E c : K)

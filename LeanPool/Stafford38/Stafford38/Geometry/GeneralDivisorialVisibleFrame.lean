@@ -64,6 +64,10 @@ theorem generalDivisorialVisibleFrameExistence
   letI : Algebra k V.toSubring :=
     (Stafford38.Geometry.LaneC.groundHom E V hEV).toAlgebra
   letI : Algebra V.toSubring K := V.toSubring.subtype.toAlgebra
+  let : SMul V.toSubring K := V.toSubring.subtype.toAlgebra.toSMul
+  let : SMul k V.toSubring :=
+    (Stafford38.Geometry.LaneC.groundHom E V hEV).toAlgebra.toSMul
+  let : SMul k K := (inferInstance : Algebra k K).toSMul
   letI : IsScalarTower k V.toSubring K :=
     IsScalarTower.of_algebraMap_eq fun c => by
       change algebraMap k K c = (algebraMap k E c : K)
@@ -102,6 +106,12 @@ theorem generalDivisorialVisibleFrameExistence
     let F := K
     letI : Algebra (CoordinateZeroLocalRing W.coefficientField) F :=
       W.ambientAlgebra
+    let : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) :=
+      (inferInstance : Algebra W.coefficientField
+        (CoordinateZeroLocalRing W.coefficientField)).toSMul
+    let : SMul (CoordinateZeroLocalRing W.coefficientField) F := W.ambientAlgebra.toSMul
+    let : SMul W.coefficientField F :=
+      (inferInstance : Algebra W.coefficientField F).toSMul
     letI : IsScalarTower W.coefficientField
         (CoordinateZeroLocalRing W.coefficientField) F := W.coefficientTower
     let phi : MvPolynomial (Fin m) k →+* F :=

@@ -250,6 +250,11 @@ theorem exists_finiteGradientBoundaryCertificateOver_of_hasVisibleDivisorFrame
     intro g hg
     rw [← componentAffineGenericPointMap_eq_eval₂]
     exact componentAffineGenericPointMap_eq_zero_of_mem P (hP.1.2 hg)
+  let : SMul V (ComponentFractionField P) :=
+    (inferInstance : Algebra V (ComponentFractionField P)).toSMul
+  let : SMulCommClass k V (ComponentFractionField P) := ⟨fun a b c ↦ by
+    simp only [Algebra.smul_def]
+    ring⟩
   obtain ⟨R⟩ := regularizedOneRowConormalData_of_transport hm I (componentCoordinate P)
     hIy Subtype.val_injective (retainedToCompletedPowerSeries W)
     (retainedToCompletedPowerSeries_injective W)
