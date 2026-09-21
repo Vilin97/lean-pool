@@ -114,12 +114,14 @@ theorem localized_cofactor_mem
     | _ b => exact mul_smul a b v
   letI : Module.Finite Rq G := Module.Finite.of_restrictScalars_finite R Rq G
   letI : Module (C q) Wₗ := localizedTwoBlockModule D S q hpow
+  letI : SMul (C q) Wₗ :=
+    (localizedTwoBlockModule D S q hpow).toDistribMulAction.toDistribSMul.toSMul
   let E := concreteLeftPrincipalParameterReduction k I S q
   let rho := localizedDoubledPowerModuleSpecialization D S q hpow
   have hparam : parameterAct (W := Wₗ) E.parameter = localizedCAct D S := by
     ext w
     exact localizedTwoBlock_parameter_smul D S q hpow w
-  have hact : ∀ a w, rho (a • w) = E.modParameter a • rho w :=
+  have hact : ∀ (a : C q) (w : Wₗ), rho (a • w) = E.modParameter a • rho w :=
     localizedDoubledPowerModuleSpecialization_action D S q hpow
   have hker : AddMonoidHom.ker rho = AddMonoidHom.range (parameterAct (W := Wₗ) E.parameter) := by
     rw [hparam]

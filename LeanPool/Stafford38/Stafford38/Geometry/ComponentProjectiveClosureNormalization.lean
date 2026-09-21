@@ -142,6 +142,9 @@ theorem retained_eval₂_eq_zero_of_commonScale
         MvPolynomial.eval₂ (retainedComponentCoefficientMap P i W) q H = 0 := by
   letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
+  letI : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
+  letI : SMul (CoordinateZeroLocalRing W.coefficientField) (ComponentFractionField P) := Algebra.toSMul
+  letI : SMul W.coefficientField (ComponentFractionField P) := Algebra.toSMul
   letI : IsScalarTower W.coefficientField
       (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.coefficientTower
@@ -192,6 +195,17 @@ def retainedCompletedCoefficientMap
   exact (retainedToCompletedPowerSeries W).comp
     (retainedComponentCoefficientMap P i W)
 
+private theorem map_eval_zero {R V S : Type*} {σ : Type*}
+    [CommRing R] [CommRing V] [CommRing S]
+    (ψ : V →+* S) (coeff : R →+* V) (q : σ → V) (H : MvPolynomial σ R)
+    (h : MvPolynomial.eval₂ coeff q H = 0) :
+    MvPolynomial.eval₂ (ψ.comp coeff) (fun a => ψ (q a)) H = 0 := by
+  calc
+    _ = ψ (MvPolynomial.eval₂ coeff q H) := by
+      simpa only [Function.comp_apply, Function.comp_def] using
+        (MvPolynomial.eval₂_comp_left ψ coeff q H).symm
+    _ = 0 := by rw [h, map_zero]
+
 /-- The same equation vanishes when evaluated at the transported completed
 coordinates with the explicit transported coefficient map. -/
 theorem retainedCompleted_eval₂_eq_zero_of_commonScale
@@ -223,15 +237,10 @@ theorem retainedCompleted_eval₂_eq_zero_of_commonScale
       ((retainedToCompletedPowerSeries W).comp
         (retainedComponentCoefficientMap P i W))
       (fun a ↦ retainedToCompletedPowerSeries W (q a)) H = 0
-  calc
-    _ = retainedToCompletedPowerSeries W
-        (MvPolynomial.eval₂ (retainedComponentCoefficientMap P i W) q H) := by
-      simpa only [Function.comp_apply, Function.comp_def] using
-        (MvPolynomial.eval₂_comp_left (retainedToCompletedPowerSeries W)
-          (retainedComponentCoefficientMap P i W) q H).symm
-    _ = 0 := by
-      rw [retained_eval₂_eq_zero_of_commonScale P i W
-        hhomogeneous hH q scale hq, map_zero]
+  have h := retained_eval₂_eq_zero_of_commonScale P i W hhomogeneous hH q scale hq
+  have result := map_eval_zero (retainedToCompletedPowerSeries W)
+    (retainedComponentCoefficientMap P i W) q H h
+  exact result
 
 /-- The explicit ground-field coefficient map after the retained completion
 and canonical Laurent-series embedding. -/

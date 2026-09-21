@@ -65,6 +65,17 @@ def retainedResidueGroundAlgebra
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   exact ((residue V).comp (retainedComponentCoefficientMap P i W)).toAlgebra
 
+private theorem completedDVRPowerSeriesMap_ground
+    (E V : Type u) [Field E] [CommRing V] [IsDomain V] [IsLocalRing V]
+    [IsDiscreteValuationRing V] [Algebra E V]
+    (hsep : Algebra.IsSeparable E (ResidueField V)) (c : E) :
+    algebraMap V (AdicCompletion (maximalIdeal V) V) (algebraMap E V c) =
+      completedDVRPowerSeriesMap E V hsep
+        (PowerSeries.C (algebraMap E (ResidueField V) c)) := by
+  rw [completedDVRPowerSeriesMap_C]
+  exact (IsScalarTower.algebraMap_apply E V (AdicCompletion (maximalIdeal V) V) c).trans
+    ((completedCoefficientSection E V hsep).commutes c).symm
+
 /-- Ground coefficients transported through the retained valuation ring become
 the corresponding constant power series for the induced residue-field map. -/
 theorem retainedToCompletedPowerSeries_ground
@@ -108,31 +119,9 @@ theorem retainedToCompletedPowerSeries_ground
         (residue V
           (relativeCoefficientMap W.coefficientField W.place
             (algebraMap k W.coefficientField c))))
-  rw [completedDVRPowerSeriesMap_C]
-  change algebraMap V (AdicCompletion (maximalIdeal V) V)
-      (algebraMap W.coefficientField V
-        (algebraMap k W.coefficientField c)) =
-    completedCoefficientSection W.coefficientField V
-      (relativeResidue_isSeparable W.coefficientField W.place)
-      (algebraMap W.coefficientField (ResidueField V)
-        (algebraMap k W.coefficientField c))
-  calc
-    algebraMap V (AdicCompletion (maximalIdeal V) V)
-        (algebraMap W.coefficientField V
-          (algebraMap k W.coefficientField c)) =
-      algebraMap W.coefficientField
-          (AdicCompletion (maximalIdeal V) V)
-          (algebraMap k W.coefficientField c) :=
-        IsScalarTower.algebraMap_apply W.coefficientField V
-          (AdicCompletion (maximalIdeal V) V)
-          (algebraMap k W.coefficientField c)
-    _ = completedCoefficientSection W.coefficientField V
-        (relativeResidue_isSeparable W.coefficientField W.place)
-        (algebraMap W.coefficientField (ResidueField V)
-          (algebraMap k W.coefficientField c)) :=
-      ((completedCoefficientSection W.coefficientField V
-        (relativeResidue_isSeparable W.coefficientField W.place)).commutes
-          (algebraMap k W.coefficientField c)).symm
+  have h := completedDVRPowerSeriesMap_ground W.coefficientField V
+    (relativeResidue_isSeparable W.coefficientField W.place) (algebraMap k W.coefficientField c)
+  exact h
 
 /-- With the residue-induced `Algebra` structure, the explicit retained
 Laurent coefficient map is definitionally the terminal consumer's ground map. -/

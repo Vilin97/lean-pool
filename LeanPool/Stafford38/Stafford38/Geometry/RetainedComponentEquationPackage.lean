@@ -35,12 +35,6 @@ open Stafford38.Geometry.RetainedProjectiveCompletion
 
 noncomputable section
 
--- The single theorem below carries a tower of `letI` instances in its
--- statement and elaborates just past the previous 10000000 limit under Lean
--- 4.33.  Measured cost at this limit: about 2m40s for the file.  Heartbeats
--- are a deterministic step count, so this bound is machine-independent and is
--- kept snug deliberately, to stay a regression tripwire.
-
 universe u
 
 variable {k : Type u} [Field k] {m : ℕ}
@@ -108,6 +102,30 @@ structure EquationPackage
     dehomogenizedEquationIdeal equations =
       I.map (MvPolynomial.map coeff)
 
+private theorem equationPackage_of_vanishing {S : Type u} [Field S]
+    (I : Ideal (MvPolynomial (Fin m) k)) (coeff : k →+* S) (q : Fin (m + 1) → S)
+    (hvanish : ∀ f ∈ I, MvPolynomial.eval q
+      (MvPolynomial.map coeff (homogenizeAtZero f)) = 0) :
+    Nonempty (EquationPackage I coeff q) := by
+  obtain ⟨r, generators, hgenerators⟩ :=
+    Submodule.fg_iff_exists_fin_generating_family.mp
+      (IsNoetherian.noetherian (I : Submodule _ _))
+  have hgenerator_mem : ∀ j, generators j ∈ I := by
+    intro j
+    rw [← hgenerators]
+    exact Submodule.subset_span (Set.mem_range_self j)
+  refine ⟨{
+    equationCount := r
+    equations := fun j ↦ MvPolynomial.map coeff (homogenizeAtZero (generators j))
+    degree := fun j ↦ (generators j).totalDegree
+    homogeneous := fun j ↦ (homogenizeAtZero_isHomogeneous (generators j)).map coeff
+    equations_vanish := fun j ↦ hvanish (generators j) (hgenerator_mem j)
+    dehomogenizedEquationIdeal_eq := ?_ }⟩
+  rw [dehomogenizedEquationIdeal_mapped_homogenizations]
+  change Ideal.map (MvPolynomial.map coeff)
+      (Submodule.span _ (Set.range generators)) = I.map (MvPolynomial.map coeff)
+  rw [hgenerators]
+
 /-- Exact finite equation package obtained from ground-field generators of
 `I`.  The coefficient map in both the equations and the ideal equality is the
 displayed retained Laurent coefficient map. -/
@@ -126,7 +144,7 @@ theorem retainedComponentEquationPackage
     ∀ (q : Fin (m + 1) → V) (scale : ComponentFractionField P),
       (∀ a, (q a : ComponentFractionField P) =
         scale * componentProjectivePoint P a) →
-      Nonempty (EquationPackage I
+      Nonempty (EquationPackage (S := LaurentSeries (ResidueField V)) I
         (retainedLaurentCoefficientMap P i W)
         (fun a ↦ algebraMap (PowerSeries (ResidueField V))
           (LaurentSeries (ResidueField V))
@@ -139,51 +157,20 @@ theorem retainedComponentEquationPackage
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
   dsimp only
   intro q scale hq
-  obtain ⟨r, generators, hgenerators⟩ :=
-    Submodule.fg_iff_exists_fin_generating_family.mp
-      (IsNoetherian.noetherian (I : Submodule _ _))
-  let coeff : k →+* LaurentSeries (ResidueField V) :=
-    retainedLaurentCoefficientMap P i W
-  let equations : Fin r →
-      MvPolynomial (Fin (m + 1)) (LaurentSeries (ResidueField V)) :=
-    fun j ↦ MvPolynomial.map coeff
-      (homogenizeAtZero (generators j))
-  let degree : Fin r → ℕ :=
-    fun j ↦ (generators j).totalDegree
-  have hgenerator_mem : ∀ j, generators j ∈ I := by
-    intro j
-    rw [← hgenerators]
-    exact Submodule.subset_span (Set.mem_range_self j)
-  refine ⟨{
-    equationCount := r
-    equations := equations
-    degree := degree
-    homogeneous := ?_
-    equations_vanish := ?_
-    dehomogenizedEquationIdeal_eq := ?_ }⟩
-  · intro j
-    exact (homogenizeAtZero_isHomogeneous
-      (generators j)).map coeff
-  · intro j
-    change MvPolynomial.eval _
-      (MvPolynomial.map coeff
-        (homogenizeAtZero
-          (generators j))) = 0
+  let coeff : k →+* LaurentSeries (ResidueField V) := retainedLaurentCoefficientMap P i W
+  let point : Fin (m + 1) → LaurentSeries (ResidueField V) := fun a ↦
+    algebraMap (PowerSeries (ResidueField V)) (LaurentSeries (ResidueField V))
+      (retainedToCompletedPowerSeries W (q a))
+  have hvanish : ∀ f ∈ I,
+      MvPolynomial.eval point (MvPolynomial.map coeff (homogenizeAtZero f)) = 0 := by
+    intro f hf
     rw [MvPolynomial.eval_map]
-    exact retainedLaurent_eval₂_eq_zero_of_commonScale P i W
-      (homogenizeAtZero_isHomogeneous
-        (generators j))
-      (homogenizeAtZero_mem_componentProjectiveClosureIdeal P
-        (hIP (hgenerator_mem j))) q scale hq
-  · change dehomogenizedEquationIdeal
-        (fun j ↦ MvPolynomial.map coeff
-          (homogenizeAtZero (generators j))) =
-      I.map (MvPolynomial.map coeff)
-    rw [dehomogenizedEquationIdeal_mapped_homogenizations]
-    change Ideal.map (MvPolynomial.map coeff)
-        (Submodule.span _ (Set.range generators)) =
-      I.map (MvPolynomial.map coeff)
-    rw [hgenerators]
+    have h := retainedLaurent_eval₂_eq_zero_of_commonScale P i W
+      (homogenizeAtZero_isHomogeneous f)
+      (homogenizeAtZero_mem_componentProjectiveClosureIdeal P (hIP hf)) q scale hq
+    exact h
+  have package := equationPackage_of_vanishing I coeff point hvanish
+  exact package
 
 
 end

@@ -193,6 +193,9 @@ theorem normalizedComponentProjectivePoint_zero_nonunit
   letI : Algebra (CoordinateZeroLocalRing W.coefficientField) F :=
     W.ambientAlgebra
   intro q scale hq
+  letI : SMul W.coefficientField (CoordinateZeroLocalRing W.coefficientField) := Algebra.toSMul
+  letI : SMul (CoordinateZeroLocalRing W.coefficientField) F := Algebra.toSMul
+  letI : SMul W.coefficientField F := Algebra.toSMul
   letI : IsScalarTower W.coefficientField
       (CoordinateZeroLocalRing W.coefficientField) F := W.coefficientTower
   let V := W.place.valuation.toSubring

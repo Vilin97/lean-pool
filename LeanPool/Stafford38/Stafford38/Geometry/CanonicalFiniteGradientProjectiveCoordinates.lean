@@ -76,8 +76,8 @@ theorem exists_completed_normalized_projective_coordinates
          PowerSeries.constantCoeff (qhat 0) = 0 ∧
          PowerSeries.constantCoeff ratio = 0 ∧
          qhat (Fin.succ i) = qhat 0 * ratio) := by
-  obtain ⟨W, chart, q, scale, hscale, hchart, hzero, hq, hratio⟩ :=
-    exists_normalizedProjectivePoint_relativeRetainedBoundaryPlace P i hi
+  have hnormalized := exists_normalizedProjectivePoint_relativeRetainedBoundaryPlace P i hi
+  obtain ⟨W, chart, q, scale, hscale, hchart, hzero, hq, hratio⟩ := hnormalized
   letI : Algebra (CoordinateZeroLocalRing W.coefficientField)
       (ComponentFractionField P) := W.ambientAlgebra
   have hzero_nonunit : ¬IsUnit (q 0) :=
@@ -88,9 +88,10 @@ theorem exists_completed_normalized_projective_coordinates
   letI : IsDiscreteValuationRing V := W.place.isDiscrete
   letI : Algebra W.coefficientField V :=
     (relativeCoefficientMap W.coefficientField W.place).toAlgebra
-  exact retainedCompleted_projective_order_properties W (ι := Fin (n + 1))
+  have h := retainedCompleted_projective_order_properties W (ι := Fin (n + 1))
     (q := q) (chart := chart) (zero := 0) (axis := Fin.succ i)
     hchart hzero hzero_nonunit hratio
+  exact h
 
 
 end
