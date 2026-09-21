@@ -394,18 +394,6 @@ private lemma tsum_zeroWithMultiplicity_eq_weighted_tsum_of_nonneg
   simpa [hinner] using hsigma_tsum
 
 
-private theorem cutoff_finsum_eq_sum {ι : Type*} (s : Finset ι)
-    (P : ι → Prop) [DecidablePred P] (f : ι → ℝ) (hs : ∀ a, a ∈ s ↔ P a) :
-    (∑ᶠ a, if P a then f a else 0) = ∑ a ∈ s, f a := by
-  classical
-  have hsupp : Function.support (fun a => if P a then f a else 0) ⊆ s := by
-    intro a ha
-    by_contra hnot
-    have hp : ¬P a := fun h => hnot ((hs a).2 h)
-    simp [hp, Function.mem_support] at ha
-  rw [finsum_eq_sum_of_support_subset (f := fun a => if P a then f a else 0) (s := s) hsupp]
-  exact Finset.sum_congr rfl fun a ha => ite_eq_left ((hs a).1 ha)
-
 private theorem sum_mult_div_norm_pow_le_rpow_of_two_pow
     {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
     (hf_finite : hasFiniteOrder f)

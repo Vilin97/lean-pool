@@ -32,38 +32,154 @@ open scoped Topology
 
 namespace LiCriterion
 
-/-- Paired sum formula via the `ξ²` paired-factor route (M-test + Cauchy). -/
-theorem paired_sum_formula_of_mtest_and_cauchy
+private theorem paired_factor_derivative_norm_le (ρ : NontrivialZero) (r : ℝ) (z : ℂ)
+    (hρlarge : (1 : ℝ) ≤ ‖ρ.val‖) (hzsub : (1 : ℂ) - z ≠ 0)
+    (hA : ‖(1 : ℂ) / (1 - z) - (1 / 2 : ℂ)‖ ≤ (1 : ℝ) / (1 - r) + 1 / 2)
+    (h_inv_sq : ‖(1 : ℂ) / (1 - z) ^ 2‖ ≤ ((1 : ℝ) / (1 - r)) ^ 2) :
+    ‖deriv (fun w => xiPairedFactor ρ (1 / (1 - w))) z‖ ≤
+      8 * ((1 : ℝ) / (1 - r) + 1 / 2) * ((1 : ℝ) / (1 - r)) ^ 2 *
+        ((1 : ℝ) / ‖ρ.val‖ ^ 2) := by
+  let fac : NontrivialZero → ℂ → ℂ := fun ρ z => xiPairedFactor ρ (1 / (1 - z))
+  let A : ℝ := (1 : ℝ) / (1 - r) + (1 / 2 : ℝ)
+  have hdf :
+      deriv (fac ρ) z =
+        deriv (xiPairedFactor ρ) ((1 : ℂ) / ((1 : ℂ) - z)) *
+          deriv (fun w : ℂ => (1 : ℂ) / ((1 : ℂ) - w)) z := by
+    have h_outer : DifferentiableAt ℂ (xiPairedFactor ρ) ((1 : ℂ) / ((1 : ℂ) - z)) :=
+      (xiPairedFactor_differentiable ρ).differentiableAt
+    have h_inner : DifferentiableAt ℂ (fun w : ℂ => (1 : ℂ) / ((1 : ℂ) - w)) z := by
+      apply DifferentiableAt.div
+      · exact differentiableAt_const (c := (1 : ℂ))
+      · exact
+          (DifferentiableAt.sub
+            (differentiableAt_const (c := (1 : ℂ))) differentiableAt_id)
+      · exact hzsub
+    -- `deriv_comp` is the chain rule.
+    simpa [fac, Function.comp_def] using (deriv_comp z h_outer h_inner)
+  have hderiv_inner :
+      deriv (fun w : ℂ => (1 : ℂ) / ((1 : ℂ) - w)) z
+        = (1 : ℂ) / ((1 : ℂ) - z) ^ 2 := by
+    simpa [one_div] using (deriv_one_div_one_sub (z := z) hzsub)
+  have hderiv_outer :
+      deriv (xiPairedFactor ρ) ((1 : ℂ) / ((1 : ℂ) - z)) =
+        -(2 : ℂ) *
+          ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) / ((ρ.val - (1 / 2 : ℂ)) ^ 2)) := by
+    simpa using (deriv_xiPairedFactor ρ ((1 : ℂ) / ((1 : ℂ) - z)))
+  have hderiv_bound :
+      ‖deriv (fac ρ) z‖ ≤
+        (8 : ℝ) * A * ((1 : ℝ) / (1 - r)) ^ 2 * ((1 : ℝ) / ‖ρ.val‖ ^ 2) := by
+    -- combine the explicit derivative formulas and the `‖ρ-1/2‖` estimate
+    have hρhalf_le :
+        (1 : ℝ) / ‖(ρ.val : ℂ) - (1 / 2 : ℂ)‖ ^ 2
+          ≤ (4 : ℝ) * ((1 : ℝ) / ‖ρ.val‖ ^ 2) :=
+      inv_norm_sub_half_sq_le (ρ := ρ) hρlarge
+    -- rewrite `‖((ρ - 1/2)^2)‖ = ‖ρ-1/2‖^2`
+    have hρhalf' :
+        ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖ = ‖(ρ.val : ℂ) - (1 / 2 : ℂ)‖ ^ 2 := by
+      simp [pow_two]
+    -- `‖deriv fac‖ = ‖deriv outer * deriv inner‖`
+    rw [hdf, hderiv_outer, hderiv_inner]
+    -- bound by product of norms
+    have := (norm_mul
+      (-(2 : ℂ) * ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) / ((ρ.val - (1 / 2 : ℂ)) ^ 2)))
+      ((1 : ℂ) / ((1 : ℂ) - z) ^ 2))
+    -- use `norm_mul` + crude bounds
+    calc
+      ‖(-(2 : ℂ) *
+            ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) /
+              ((ρ.val - (1 / 2 : ℂ)) ^ 2))) *
+          ((1 : ℂ) / ((1 : ℂ) - z) ^ 2)‖
+          =
+            ‖-(2 : ℂ) *
+                ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) /
+                  ((ρ.val - (1 / 2 : ℂ)) ^ 2))‖ *
+              ‖(1 : ℂ) / ((1 : ℂ) - z) ^ 2‖ := by
+        simp
+      _ ≤ (2 : ℝ) *
+            (‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖ / ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖) *
+            ‖(1 : ℂ) / ((1 : ℂ) - z) ^ 2‖ := by
+              -- `‖-2 * x‖ = 2 * ‖x‖` and `‖a/b‖ = ‖a‖/‖b‖`
+              have :
+                  ‖-(2 : ℂ) *
+                      ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) /
+                        ((ρ.val - (1 / 2 : ℂ)) ^ 2))‖
+                    =
+                      (2 : ℝ) *
+                        ‖(((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) /
+                          ((ρ.val - (1 / 2 : ℂ)) ^ 2)‖ := by
+                simp
+              rw [this]
+              gcongr
+              simp
+      _ ≤ (2 : ℝ) *
+            (A * ((4 : ℝ) * ((1 : ℝ) / ‖ρ.val‖ ^ 2))) *
+            ((1 : ℝ) / (1 - r)) ^ 2 := by
+              -- Use `h_inv_sq`, `hA`, and the `‖ρ-1/2‖` reciprocal bound.
+              have hden_ne : ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖ ≠ 0 := by
+                have : ((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2 ≠ 0 := by
+                  apply pow_ne_zero 2
+                  have hρne : (ρ.val : ℂ) ≠ (1 / 2 : ℂ) := by
+                    intro hEq
+                    have hnorm : (‖ρ.val‖ : ℝ) = (1 / 2 : ℝ) := by
+                      simp [hEq]
+                    have : (1 : ℝ) ≤ (1 / 2 : ℝ) := by simpa [hnorm] using hρlarge
+                    nlinarith
+                  exact sub_ne_zero.mpr hρne
+                exact norm_ne_zero_iff.2 this
+              have hdiv :
+                  ‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖ /
+                      ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖
+                    =
+                      ‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖ *
+                        ((1 : ℝ) / ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖) := by
+                simp [div_eq_mul_inv]
+              rw [hdiv]
+              have hρhalf'' :
+                  (1 : ℝ) / ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖
+                    = (1 : ℝ) / ‖(ρ.val : ℂ) - (1 / 2 : ℂ)‖ ^ 2 := by
+                rw [hρhalf']
+              -- Use the bounds (reassociate to apply `mul_le_mul_of_nonneg_left` cleanly).
+              have h_inner :
+                  (‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖ *
+                      ((1 : ℝ) / ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖)) *
+                        ‖(1 : ℂ) / ((1 : ℂ) - z) ^ 2‖
+                    ≤
+                      (A * ((4 : ℝ) * ((1 : ℝ) / ‖ρ.val‖ ^ 2))) *
+                        ((1 : ℝ) / (1 - r)) ^ 2 := by
+                have hA0 : 0 ≤ A :=
+                  le_trans
+                    (by positivity :
+                      (0 : ℝ) ≤ ‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖)
+                    hA
+                have hb0 : 0 ≤ A * ((4 : ℝ) * ((1 : ℝ) / ‖ρ.val‖ ^ 2)) :=
+                  mul_nonneg hA0 (by positivity)
+                refine mul_le_mul ?_ h_inv_sq (by positivity) hb0
+                · refine mul_le_mul hA ?_ (by positivity) hA0
+                  -- `1/‖ρ-1/2‖² ≤ 4/‖ρ‖²`
+                  simpa [hρhalf''] using hρhalf_le
+              simpa [mul_assoc] using
+                (mul_le_mul_of_nonneg_left h_inner (by positivity : (0 : ℝ) ≤ (2 : ℝ)))
+      _ = (8 : ℝ) * A * ((1 : ℝ) / (1 - r)) ^ 2 * ((1 : ℝ) / ‖ρ.val‖ ^ 2) := by
+            ring
+  exact hderiv_bound
+
+private theorem paired_log_deriv_cofinite_bound
     (hgenus : Summable (fun ρ : NontrivialZero => (1 : ℝ) / ‖ρ.val‖ ^ 2))
-    (hsep : ∃ r : ℝ, 0 < r ∧ r < 1 ∧ ∀ z ∈ Metric.ball (0 : ℂ) r,
+    (r : ℝ) (hr_lt_one : r < 1)
+    (havoid : ∀ z ∈ Metric.ball (0 : ℂ) r,
       (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
-    (_hpair : ∀ ρ : NontrivialZero, ∃ ρ' : NontrivialZero, ρ'.val = 1 - ρ.val)
-    (hhad : ∃ a : ℂ, ∀ s : ℂ, riemannXi s = Complex.exp a * xiE1ShiftedProd s) :
-    ∀ n : ℕ,
-      taylorCoeff riemannXi n
-        = (2⁻¹ : ℂ) * ∑' ρ : NontrivialZero, liPairedSummand n ρ := by
-  intro n
+    : ∀ᶠ ρ : NontrivialZero in Filter.cofinite, ∀ z ∈ Metric.ball (0 : ℂ) r,
+      ‖logDeriv (fun w => xiPairedFactor ρ (1 / (1 - w))) z‖ ≤
+        (16 * ((1 : ℝ) / (1 - r) + 1 / 2) * ((1 : ℝ) / (1 - r)) ^ 2) *
+          ((1 : ℝ) / ‖ρ.val‖ ^ 2) := by
   classical
-  -- Provide the shifted-product factorization as a typeclass instance for derived lemmas.
-  have hhad' : xiFactorizationShiftedProd := by
-    simpa [xiFactorizationShiftedProd] using hhad
-  let : Fact xiFactorizationShiftedProd := ⟨hhad'⟩
-  -- Choose an increasing exhaustion of the zero set by finite subsets.
-  obtain ⟨T, monoT, coverT⟩ := exists_increasing_finite_cover_zeros
-  -- Choose a separation radius (inside the unit disk) to avoid all points `1 - 1/ρ`.
-  obtain ⟨r, hrpos, hr_lt_one, havoid⟩ := hsep
   let K : Set ℂ := Metric.ball (0 : ℂ) r
-  have h0K : (0 : ℂ) ∈ K := Metric.mem_ball_self hrpos
-  -- The pulled-back paired factor and its logarithmic derivative.
   let fac : NontrivialZero → ℂ → ℂ := fun ρ z => xiPairedFactor ρ (1 / (1 - z))
   let term : NontrivialZero → ℂ → ℂ := fun ρ z => logDeriv (fac ρ) z
-  -- A summable majorant for the M-test bounds on `logDeriv (fac ρ)`.
   let A : ℝ := (1 : ℝ) / (1 - r) + (1 / 2 : ℝ)
   let Cfac : ℝ := 4 * A ^ 2
   let C : ℝ := 16 * A * ((1 : ℝ) / (1 - r)) ^ 2
   let u : NontrivialZero → ℝ := fun ρ => C * ((1 : ℝ) / ‖ρ.val‖ ^ 2)
-  have hu : Summable u := by
-    simpa [u] using (hgenus.mul_left C)
   -- Eventual bound `‖ρ‖ ≥ 1` from genus-1 summability.
   have hlarge :
       ∀ᶠ ρ : NontrivialZero in Filter.cofinite, (1 : ℝ) ≤ ‖ρ.val‖ :=
@@ -135,126 +251,10 @@ theorem paired_sum_formula_of_mtest_and_cauchy
       have : (1 : ℝ) - ‖fac ρ z‖ ≤ (1 / 2 : ℝ) := le_trans htri' hfac_sub'
       linarith
     -- Bound the derivative of `fac ρ` by chain rule and crude norm estimates.
-    have hdf :
-        deriv (fac ρ) z =
-          deriv (xiPairedFactor ρ) ((1 : ℂ) / ((1 : ℂ) - z)) *
-            deriv (fun w : ℂ => (1 : ℂ) / ((1 : ℂ) - w)) z := by
-      have h_outer : DifferentiableAt ℂ (xiPairedFactor ρ) ((1 : ℂ) / ((1 : ℂ) - z)) :=
-        (xiPairedFactor_differentiable ρ).differentiableAt
-      have h_inner : DifferentiableAt ℂ (fun w : ℂ => (1 : ℂ) / ((1 : ℂ) - w)) z := by
-        apply DifferentiableAt.div
-        · exact differentiableAt_const (c := (1 : ℂ))
-        · exact
-            (DifferentiableAt.sub
-              (differentiableAt_const (c := (1 : ℂ))) differentiableAt_id)
-        · exact hzsub
-      -- `deriv_comp` is the chain rule.
-      simpa [fac, Function.comp_def] using (deriv_comp z h_outer h_inner)
-    have hderiv_inner :
-        deriv (fun w : ℂ => (1 : ℂ) / ((1 : ℂ) - w)) z
-          = (1 : ℂ) / ((1 : ℂ) - z) ^ 2 := by
-      simpa [one_div] using (deriv_one_div_one_sub (z := z) hzsub)
-    have hderiv_outer :
-        deriv (xiPairedFactor ρ) ((1 : ℂ) / ((1 : ℂ) - z)) =
-          -(2 : ℂ) *
-            ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) / ((ρ.val - (1 / 2 : ℂ)) ^ 2)) := by
-      simpa using (deriv_xiPairedFactor ρ ((1 : ℂ) / ((1 : ℂ) - z)))
     have hderiv_bound :
         ‖deriv (fac ρ) z‖ ≤
-          (8 : ℝ) * A * ((1 : ℝ) / (1 - r)) ^ 2 * ((1 : ℝ) / ‖ρ.val‖ ^ 2) := by
-      -- combine the explicit derivative formulas and the `‖ρ-1/2‖` estimate
-      have hρhalf_le :
-          (1 : ℝ) / ‖(ρ.val : ℂ) - (1 / 2 : ℂ)‖ ^ 2
-            ≤ (4 : ℝ) * ((1 : ℝ) / ‖ρ.val‖ ^ 2) :=
-        inv_norm_sub_half_sq_le (ρ := ρ) hρlarge
-      -- rewrite `‖((ρ - 1/2)^2)‖ = ‖ρ-1/2‖^2`
-      have hρhalf' :
-          ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖ = ‖(ρ.val : ℂ) - (1 / 2 : ℂ)‖ ^ 2 := by
-        simp [pow_two]
-      -- `‖deriv fac‖ = ‖deriv outer * deriv inner‖`
-      rw [hdf, hderiv_outer, hderiv_inner]
-      -- bound by product of norms
-      have := (norm_mul
-        (-(2 : ℂ) * ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) / ((ρ.val - (1 / 2 : ℂ)) ^ 2)))
-        ((1 : ℂ) / ((1 : ℂ) - z) ^ 2))
-      -- use `norm_mul` + crude bounds
-      calc
-        ‖(-(2 : ℂ) *
-              ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) /
-                ((ρ.val - (1 / 2 : ℂ)) ^ 2))) *
-            ((1 : ℂ) / ((1 : ℂ) - z) ^ 2)‖
-            =
-              ‖-(2 : ℂ) *
-                  ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) /
-                    ((ρ.val - (1 / 2 : ℂ)) ^ 2))‖ *
-                ‖(1 : ℂ) / ((1 : ℂ) - z) ^ 2‖ := by
-          simp
-        _ ≤ (2 : ℝ) *
-              (‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖ / ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖) *
-              ‖(1 : ℂ) / ((1 : ℂ) - z) ^ 2‖ := by
-                -- `‖-2 * x‖ = 2 * ‖x‖` and `‖a/b‖ = ‖a‖/‖b‖`
-                have :
-                    ‖-(2 : ℂ) *
-                        ((((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) /
-                          ((ρ.val - (1 / 2 : ℂ)) ^ 2))‖
-                      =
-                        (2 : ℝ) *
-                          ‖(((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)) /
-                            ((ρ.val - (1 / 2 : ℂ)) ^ 2)‖ := by
-                  simp
-                rw [this]
-                gcongr
-                simp
-        _ ≤ (2 : ℝ) *
-              (A * ((4 : ℝ) * ((1 : ℝ) / ‖ρ.val‖ ^ 2))) *
-              ((1 : ℝ) / (1 - r)) ^ 2 := by
-                -- Use `h_inv_sq`, `hA`, and the `‖ρ-1/2‖` reciprocal bound.
-                have hden_ne : ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖ ≠ 0 := by
-                  have : ((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2 ≠ 0 := by
-                    apply pow_ne_zero 2
-                    have hρne : (ρ.val : ℂ) ≠ (1 / 2 : ℂ) := by
-                      intro hEq
-                      have hnorm : (‖ρ.val‖ : ℝ) = (1 / 2 : ℝ) := by
-                        simp [hEq]
-                      have : (1 : ℝ) ≤ (1 / 2 : ℝ) := by simpa [hnorm] using hρlarge
-                      nlinarith
-                    exact sub_ne_zero.mpr hρne
-                  exact norm_ne_zero_iff.2 this
-                have hdiv :
-                    ‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖ /
-                        ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖
-                      =
-                        ‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖ *
-                          ((1 : ℝ) / ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖) := by
-                  simp [div_eq_mul_inv]
-                rw [hdiv]
-                have hρhalf'' :
-                    (1 : ℝ) / ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖
-                      = (1 : ℝ) / ‖(ρ.val : ℂ) - (1 / 2 : ℂ)‖ ^ 2 := by
-                  rw [hρhalf']
-                -- Use the bounds (reassociate to apply `mul_le_mul_of_nonneg_left` cleanly).
-                have h_inner :
-                    (‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖ *
-                        ((1 : ℝ) / ‖((ρ.val : ℂ) - (1 / 2 : ℂ)) ^ 2‖)) *
-                          ‖(1 : ℂ) / ((1 : ℂ) - z) ^ 2‖
-                      ≤
-                        (A * ((4 : ℝ) * ((1 : ℝ) / ‖ρ.val‖ ^ 2))) *
-                          ((1 : ℝ) / (1 - r)) ^ 2 := by
-                  have hA0 : 0 ≤ A :=
-                    le_trans
-                      (by positivity :
-                        (0 : ℝ) ≤ ‖((1 : ℂ) / ((1 : ℂ) - z)) - (1 / 2 : ℂ)‖)
-                      hA
-                  have hb0 : 0 ≤ A * ((4 : ℝ) * ((1 : ℝ) / ‖ρ.val‖ ^ 2)) :=
-                    mul_nonneg hA0 (by positivity)
-                  refine mul_le_mul ?_ h_inv_sq (by positivity) hb0
-                  · refine mul_le_mul hA ?_ (by positivity) hA0
-                    -- `1/‖ρ-1/2‖² ≤ 4/‖ρ‖²`
-                    simpa [hρhalf''] using hρhalf_le
-                simpa [mul_assoc] using
-                  (mul_le_mul_of_nonneg_left h_inner (by positivity : (0 : ℝ) ≤ (2 : ℝ)))
-        _ = (8 : ℝ) * A * ((1 : ℝ) / (1 - r)) ^ 2 * ((1 : ℝ) / ‖ρ.val‖ ^ 2) := by
-              ring
+          (8 : ℝ) * A * ((1 : ℝ) / (1 - r)) ^ 2 * ((1 : ℝ) / ‖ρ.val‖ ^ 2) :=
+      paired_factor_derivative_norm_le ρ r z hρlarge hzsub hA h_inv_sq
     -- Finally bound `logDeriv (fac ρ)` using `‖fac‖ ≥ 1/2`.
     have hinv_fac : ‖(fac ρ z)⁻¹‖ ≤ (2 : ℝ) := by
       have hpos_half : 0 < (1 / 2 : ℝ) := by norm_num
@@ -297,6 +297,237 @@ theorem paired_sum_formula_of_mtest_and_cauchy
               simp [u, C]
               ring
     simpa using this
+  exact hbound
+
+private theorem paired_log_deriv_limit_eq
+    (hgenus : Summable (fun ρ : NontrivialZero => (1 : ℝ) / ‖ρ.val‖ ^ 2))
+    (hhad : ∃ a : ℂ, ∀ s : ℂ, riemannXi s = Complex.exp a * xiE1ShiftedProd s)
+    (r : ℝ) (hr_lt_one : r < 1)
+    (havoid : ∀ z ∈ Metric.ball (0 : ℂ) r,
+      (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
+    : Set.EqOn (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
+      (fun z => ∑' ρ : NontrivialZero, logDeriv (fun w => xiPairedFactor ρ (1 / (1 - w))) z)
+      (Metric.ball (0 : ℂ) r) := by
+  classical
+  let K : Set ℂ := Metric.ball (0 : ℂ) r
+  let fac : NontrivialZero → ℂ → ℂ := fun ρ z => xiPairedFactor ρ (1 / (1 - z))
+  let term : NontrivialZero → ℂ → ℂ := fun ρ z => logDeriv (fac ρ) z
+  let A : ℝ := (1 : ℝ) / (1 - r) + (1 / 2 : ℝ)
+  let Cfac : ℝ := 4 * A ^ 2
+  let C : ℝ := 16 * A * ((1 : ℝ) / (1 - r)) ^ 2
+  let u : NontrivialZero → ℝ := fun ρ => C * ((1 : ℝ) / ‖ρ.val‖ ^ 2)
+  have hu : Summable u := hgenus.mul_left C
+  have hbound := paired_log_deriv_cofinite_bound hgenus r hr_lt_one havoid
+  intro z hz
+  have hz1 : z ≠ (1 : ℂ) := (havoid z hz).1
+  have hzavoid : ∀ ρ : NontrivialZero, z ≠ 1 - 1 / (ρ.val : ℂ) := (havoid z hz).2
+  have hzsub : (1 : ℂ) - z ≠ 0 := sub_ne_zero.mpr hz1.symm
+  -- Factor ξ² via the paired quadratic product.
+  obtain ⟨a₂, hξ₂⟩ := xi_sq_factorization_paired_of_genus_one hgenus hhad
+  have hφ :
+      (fun w => (riemannXi (1 / (1 - w))) ^ 2)
+        = fun w => Complex.exp a₂ * ∏' ρ : NontrivialZero, fac ρ w := by
+    funext w
+    simpa [fac] using (hξ₂ (1 / (1 - w)))
+  -- Drop the constant prefactor.
+  have h_drop :
+      logDeriv (fun w => Complex.exp a₂ * (∏' ρ : NontrivialZero, fac ρ w)) z
+        = logDeriv (fun w => ∏' ρ : NontrivialZero, fac ρ w) z := by
+    -- Translate the mathlib lemma to our local `logDeriv` definition.
+    simpa [logDeriv, _root_.logDeriv, _root_.logDeriv_apply] using
+      (_root_.logDeriv_const_mul (x := z) (a := Complex.exp a₂)
+        (f := fun w => ∏' ρ : NontrivialZero, fac ρ w) (ha := Complex.exp_ne_zero a₂))
+  -- Summability of the log-derivative terms at this `z` from the cofinite M-test bound.
+  have hm : Summable (fun ρ : NontrivialZero => logDeriv (fac ρ) z) := by
+    have hbound_z :
+        ∀ᶠ ρ : NontrivialZero in Filter.cofinite, ‖term ρ z‖ ≤ u ρ := by
+      filter_upwards [hbound] with ρ hρ using hρ z hz
+    exact Summable.of_norm_bounded_eventually hu hbound_z
+  have hf_ne : ∀ ρ : NontrivialZero, fac ρ z ≠ 0 :=
+    fun ρ => xiPairedFactor_phi_ne_zero_of_separation (z := z) hz1 hzavoid ρ
+  have hd : ∀ ρ : NontrivialZero, DifferentiableOn ℂ (fac ρ) K := fun ρ =>
+    xiPairedFactor_phi_differentiableOn_ball (r := r) hr_lt_one ρ
+  have htend : MultipliableLocallyUniformlyOn fac K :=
+    xiPairedFactor_phi_multipliableLocallyUniformlyOn_ball_of_genus_one
+      (r := r) hr_lt_one hgenus
+  have hnez : (∏' ρ : NontrivialZero, fac ρ z) ≠ 0 :=
+    xiPairedFactor_phi_tprod_ne_zero_of_separation_of_genus_one
+      (r := r) hr_lt_one hgenus (z := z) hz
+      hzavoid
+  have h_log :
+      logDeriv (fun w => ∏' ρ : NontrivialZero, fac ρ w) z
+        = ∑' ρ : NontrivialZero, logDeriv (fac ρ) z := by
+    -- Apply `logDeriv_tprod_eq_tsum` pointwise at `z`.
+    let s : Set ℂ := K
+    have hs : IsOpen s := Metric.isOpen_ball
+    simpa [s, logDeriv_eq_rootLogDeriv] using
+      (logDeriv_tprod_eq_tsum (ι := NontrivialZero) (s := s) hs (x := z) (hx := hz)
+        (f := fac)
+        (hf := fun ρ => hf_ne ρ)
+        (hd := fun ρ => hd ρ)
+        (hm := by simpa [term, logDeriv_eq_rootLogDeriv] using hm)
+        (htend := htend) (hnez := hnez))
+  -- Combine everything.
+  calc
+    logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)) z
+        = logDeriv (fun w => Complex.exp a₂ * (∏' ρ : NontrivialZero, fac ρ w)) z := by
+            have hphi_def :
+                phi (fun s : ℂ => (riemannXi s) ^ 2) =
+                  fun w => (riemannXi (1 / (1 - w))) ^ 2 := by
+              funext w
+              rfl
+            calc
+              logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)) z
+                  = logDeriv (fun w => (riemannXi (1 / (1 - w))) ^ 2) z := by
+                      simp [hphi_def]
+              _ = logDeriv (fun w => Complex.exp a₂ * (∏' ρ : NontrivialZero, fac ρ w)) z := by
+                      have := congrArg (fun F : ℂ → ℂ => logDeriv F z) hφ
+                      simpa [one_div] using this
+    _ = logDeriv (fun w => ∏' ρ : NontrivialZero, fac ρ w) z := h_drop
+    _ = ∑' ρ : NontrivialZero, term ρ z := by
+          simpa [term] using h_log
+
+private theorem paired_finite_coefficient [Fact xiFactorizationShiftedProd]
+    (S : Finset NontrivialZero) (n : ℕ)
+    (r : ℝ) (hrpos : 0 < r) (hr_lt_one : r < 1)
+    (hpartial : Set.EqOn
+      (fun z => logDeriv (fun w => ∏ ρ ∈ S, xiPairedFactor ρ (1 / (1 - w))) z)
+      (fun z => ∑ ρ ∈ S, logDeriv (fun w => xiPairedFactor ρ (1 / (1 - w))) z)
+      (Metric.ball (0 : ℂ) r)) :
+    (deriv^[n] (fun z => logDeriv (fun w => ∏ ρ ∈ S, xiPairedFactor ρ (1 / (1 - w))) z)) 0 /
+      n.factorial = ∑ ρ ∈ S, liPairedSummand n ρ := by
+  classical
+  let K : Set ℂ := Metric.ball (0 : ℂ) r
+  let fac : NontrivialZero → ℂ → ℂ := fun ρ z => xiPairedFactor ρ (1 / (1 - z))
+  let term : NontrivialZero → ℂ → ℂ := fun ρ z => logDeriv (fac ρ) z
+  have h0K : (0 : ℂ) ∈ K := Metric.mem_ball_self hrpos
+  -- On the ball, `logDeriv` of the product equals the finite sum of `logDeriv`s.
+  have hEqOn :
+      Set.EqOn
+          (fun z => logDeriv (fun w => ∏ ρ ∈ S, fac ρ w) z)
+          (fun z => ∑ ρ ∈ S, logDeriv (fac ρ) z) K := by
+    intro z hz
+    exact hpartial hz
+  have hsopen : IsOpen K := Metric.isOpen_ball
+  have hEqIter : iteratedDeriv n (fun z => logDeriv (fun w => ∏ ρ ∈ S, fac ρ w) z) 0
+      = iteratedDeriv n (fun z => ∑ ρ ∈ S, logDeriv (fac ρ) z) 0 := by
+    have hEqOn' :=
+      Set.EqOn.iteratedDeriv_of_isOpen
+        (f := fun z => logDeriv (fun w => ∏ ρ ∈ S, fac ρ w) z)
+        (g := fun z => ∑ ρ ∈ S, logDeriv (fac ρ) z)
+        (s := K) hEqOn hsopen n
+    exact hEqOn' h0K
+  have hEqIter' :
+      (deriv^[n] (fun z => logDeriv (fun w => ∏ ρ ∈ S, fac ρ w) z)) 0
+        =
+      (deriv^[n] (fun z => ∑ ρ ∈ S, logDeriv (fac ρ) z)) 0 := by
+    simpa [iteratedDeriv_eq_iterate] using hEqIter
+  -- The iterated derivative of the finite sum is the finite sum of iterated derivatives.
+  have hsum_iter :
+      (deriv^[n] (fun z => ∑ ρ ∈ S, logDeriv (fac ρ) z)) 0
+        =
+      ∑ ρ ∈ S, (deriv^[n] (fun z => logDeriv (fac ρ) z)) 0 := by
+    -- Use `iteratedDeriv_add` repeatedly via `Finset.induction_on`.
+    have hsum_iter' :
+        iteratedDeriv n (fun z => ∑ ρ ∈ S, logDeriv (fac ρ) z) 0
+          =
+        ∑ ρ ∈ S, iteratedDeriv n (fun z => logDeriv (fac ρ) z) 0 := by
+      classical
+      -- Each summand is analytic on `K`, hence `C^n` at `0`.
+      have hterm_contDiff :
+          ∀ ρ ∈ S, ContDiffAt ℂ n (fun z => logDeriv (fac ρ) z) 0 := by
+        intro ρ hρ
+        have hA : AnalyticAt ℂ (fun z => logDeriv (fac ρ) z) 0 := by
+          -- `fac ρ` is differentiable on `K` and nonzero on `K`.
+          have hfac_diff : DifferentiableOn ℂ (fac ρ) K :=
+            xiPairedFactor_phi_differentiableOn_ball (r := r) hr_lt_one ρ
+          have hfac_an : AnalyticAt ℂ (fac ρ) 0 :=
+            (hfac_diff.analyticOnNhd Metric.isOpen_ball 0 h0K)
+          have hfac_ne : fac ρ 0 ≠ 0 := by
+            have hz1 : (0 : ℂ) ≠ (1 : ℂ) := by norm_num
+            have hzavoid : ∀ ρ : NontrivialZero, (0 : ℂ) ≠ 1 - 1 / (ρ.val : ℂ) := by
+              intro ρ h0eq
+              -- `0 = 1 - 1/ρ` would force `ρ = 1`, impossible for nontrivial zeros.
+              have : (ρ.val : ℂ) = 1 := by
+                have hρ0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
+                have h : (1 : ℂ) = (1 : ℂ) / ρ.val := sub_eq_zero.mp h0eq.symm
+                have : (ρ.val : ℂ) = (1 : ℂ) := by
+                  have : (1 : ℂ) * ρ.val = (1 : ℂ) := (eq_div_iff hρ0).1 h
+                  simpa using this
+                simpa using this
+              exact (NontrivialZero.ne_one ρ) this
+            exact xiPairedFactor_phi_ne_zero_of_separation (z := (0 : ℂ)) hz1 hzavoid ρ
+          unfold logDeriv
+          apply AnalyticAt.fun_div
+          · exact hfac_an.deriv
+          · exact hfac_an
+          · exact hfac_ne
+        -- Analytic ⇒ smooth.
+        simpa [ContDiffAt] using hA.contDiffAt
+      -- Now distribute `iteratedDeriv` over the Finset sum.
+      simpa using
+        (iteratedDeriv_finset_sum
+          (T := S) (f := fun ρ z => logDeriv (fac ρ) z) (n := n) hterm_contDiff)
+    -- Convert to `deriv^[n]`.
+    simpa [iteratedDeriv_eq_iterate] using hsum_iter'
+  -- Finish: rewrite each term with `taylorCoeff_xiPairedFactor`.
+  have hterm_coeff :
+      ∀ ρ, (deriv^[n] (fun z => logDeriv (fac ρ) z)) 0 / n.factorial = liPairedSummand n ρ := by
+    intro ρ
+    have h' :
+        (deriv^[n] (logDeriv (phi (xiPairedFactor ρ)))) 0 / n.factorial =
+          liPairedSummand n ρ := by
+      simpa [taylorCoeff] using (taylorCoeff_xiPairedFactor (ρ := ρ) (n := n))
+    have hphi_fac : phi (xiPairedFactor ρ) = fac ρ := by
+      funext z
+      rfl
+    simpa [hphi_fac] using h'
+  calc
+    (deriv^[n] (fun z => logDeriv (fun w => ∏ ρ ∈ S, fac ρ w) z)) 0 / n.factorial
+        = (deriv^[n] (fun z => ∑ ρ ∈ S, logDeriv (fac ρ) z)) 0 / n.factorial := by
+            simp [hEqIter']
+    _ = ∑ ρ ∈ S, (deriv^[n] (fun z => logDeriv (fac ρ) z)) 0 / n.factorial := by
+          -- distribute division by `n!` and use `hsum_iter`
+          simp [hsum_iter, Finset.sum_div]
+    _ = ∑ ρ ∈ S, liPairedSummand n ρ := by
+          classical
+          simp [hterm_coeff]
+
+/-- Paired sum formula via the `ξ²` paired-factor route (M-test + Cauchy). -/
+theorem paired_sum_formula_of_mtest_and_cauchy
+    (hgenus : Summable (fun ρ : NontrivialZero => (1 : ℝ) / ‖ρ.val‖ ^ 2))
+    (hsep : ∃ r : ℝ, 0 < r ∧ r < 1 ∧ ∀ z ∈ Metric.ball (0 : ℂ) r,
+      (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
+    (_hpair : ∀ ρ : NontrivialZero, ∃ ρ' : NontrivialZero, ρ'.val = 1 - ρ.val)
+    (hhad : ∃ a : ℂ, ∀ s : ℂ, riemannXi s = Complex.exp a * xiE1ShiftedProd s) :
+    ∀ n : ℕ,
+      taylorCoeff riemannXi n
+        = (2⁻¹ : ℂ) * ∑' ρ : NontrivialZero, liPairedSummand n ρ := by
+  intro n
+  classical
+  -- Provide the shifted-product factorization as a typeclass instance for derived lemmas.
+  have hhad' : xiFactorizationShiftedProd := by
+    simpa [xiFactorizationShiftedProd] using hhad
+  let : Fact xiFactorizationShiftedProd := ⟨hhad'⟩
+  -- Choose an increasing exhaustion of the zero set by finite subsets.
+  obtain ⟨T, monoT, coverT⟩ := exists_increasing_finite_cover_zeros
+  -- Choose a separation radius (inside the unit disk) to avoid all points `1 - 1/ρ`.
+  obtain ⟨r, hrpos, hr_lt_one, havoid⟩ := hsep
+  let K : Set ℂ := Metric.ball (0 : ℂ) r
+  have h0K : (0 : ℂ) ∈ K := Metric.mem_ball_self hrpos
+  -- The pulled-back paired factor and its logarithmic derivative.
+  let fac : NontrivialZero → ℂ → ℂ := fun ρ z => xiPairedFactor ρ (1 / (1 - z))
+  let term : NontrivialZero → ℂ → ℂ := fun ρ z => logDeriv (fac ρ) z
+  -- A summable majorant for the M-test bounds on `logDeriv (fac ρ)`.
+  let A : ℝ := (1 : ℝ) / (1 - r) + (1 / 2 : ℝ)
+  let Cfac : ℝ := 4 * A ^ 2
+  let C : ℝ := 16 * A * ((1 : ℝ) / (1 - r)) ^ 2
+  let u : NontrivialZero → ℝ := fun ρ => C * ((1 : ℝ) / ‖ρ.val‖ ^ 2)
+  have hu : Summable u := by
+    simpa [u] using (hgenus.mul_left C)
+  have hbound :
+      ∀ᶠ ρ : NontrivialZero in Filter.cofinite, ∀ z ∈ K, ‖term ρ z‖ ≤ u ρ :=
+    paired_log_deriv_cofinite_bound hgenus r hr_lt_one havoid
   -- Uniform convergence of the partial sums of `term` to the `tsum` on the ball.
   have hsum_unif :
       TendstoUniformlyOn
@@ -338,75 +569,8 @@ theorem paired_sum_formula_of_mtest_and_cauchy
   -- The ξ² factorization identifies the limit log-derivative with the `tsum` of `term`.
   have h_limit_eq : Set.EqOn
       (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
-      (fun z => ∑' ρ : NontrivialZero, term ρ z) K := by
-    intro z hz
-    have hz1 : z ≠ (1 : ℂ) := (havoid z hz).1
-    have hzavoid : ∀ ρ : NontrivialZero, z ≠ 1 - 1 / (ρ.val : ℂ) := (havoid z hz).2
-    have hzsub : (1 : ℂ) - z ≠ 0 := sub_ne_zero.mpr hz1.symm
-    -- Factor ξ² via the paired quadratic product.
-    obtain ⟨a₂, hξ₂⟩ := xi_sq_factorization_paired_of_genus_one hgenus hhad
-    have hφ :
-        (fun w => (riemannXi (1 / (1 - w))) ^ 2)
-          = fun w => Complex.exp a₂ * ∏' ρ : NontrivialZero, fac ρ w := by
-      funext w
-      simpa [fac] using (hξ₂ (1 / (1 - w)))
-    -- Drop the constant prefactor.
-    have h_drop :
-        logDeriv (fun w => Complex.exp a₂ * (∏' ρ : NontrivialZero, fac ρ w)) z
-          = logDeriv (fun w => ∏' ρ : NontrivialZero, fac ρ w) z := by
-      -- Translate the mathlib lemma to our local `logDeriv` definition.
-      simpa [logDeriv, _root_.logDeriv, _root_.logDeriv_apply] using
-        (_root_.logDeriv_const_mul (x := z) (a := Complex.exp a₂)
-          (f := fun w => ∏' ρ : NontrivialZero, fac ρ w) (ha := Complex.exp_ne_zero a₂))
-    -- Summability of the log-derivative terms at this `z` from the cofinite M-test bound.
-    have hm : Summable (fun ρ : NontrivialZero => logDeriv (fac ρ) z) := by
-      have hbound_z :
-          ∀ᶠ ρ : NontrivialZero in Filter.cofinite, ‖term ρ z‖ ≤ u ρ := by
-        filter_upwards [hbound] with ρ hρ using hρ z hz
-      exact Summable.of_norm_bounded_eventually hu hbound_z
-    have hf_ne : ∀ ρ : NontrivialZero, fac ρ z ≠ 0 :=
-      fun ρ => xiPairedFactor_phi_ne_zero_of_separation (z := z) hz1 hzavoid ρ
-    have hd : ∀ ρ : NontrivialZero, DifferentiableOn ℂ (fac ρ) K := fun ρ =>
-      xiPairedFactor_phi_differentiableOn_ball (r := r) hr_lt_one ρ
-    have htend : MultipliableLocallyUniformlyOn fac K :=
-      xiPairedFactor_phi_multipliableLocallyUniformlyOn_ball_of_genus_one
-        (r := r) hr_lt_one hgenus
-    have hnez : (∏' ρ : NontrivialZero, fac ρ z) ≠ 0 :=
-      xiPairedFactor_phi_tprod_ne_zero_of_separation_of_genus_one
-        (r := r) hr_lt_one hgenus (z := z) hz
-        hzavoid
-    have h_log :
-        logDeriv (fun w => ∏' ρ : NontrivialZero, fac ρ w) z
-          = ∑' ρ : NontrivialZero, logDeriv (fac ρ) z := by
-      -- Apply `logDeriv_tprod_eq_tsum` pointwise at `z`.
-      let s : Set ℂ := K
-      have hs : IsOpen s := Metric.isOpen_ball
-      simpa [s, logDeriv_eq_rootLogDeriv] using
-        (logDeriv_tprod_eq_tsum (ι := NontrivialZero) (s := s) hs (x := z) (hx := hz)
-          (f := fac)
-          (hf := fun ρ => hf_ne ρ)
-          (hd := fun ρ => hd ρ)
-          (hm := by simpa [term, logDeriv_eq_rootLogDeriv] using hm)
-          (htend := htend) (hnez := hnez))
-    -- Combine everything.
-    calc
-      logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)) z
-          = logDeriv (fun w => Complex.exp a₂ * (∏' ρ : NontrivialZero, fac ρ w)) z := by
-              have hphi_def :
-                  phi (fun s : ℂ => (riemannXi s) ^ 2) =
-                    fun w => (riemannXi (1 / (1 - w))) ^ 2 := by
-                funext w
-                rfl
-              calc
-                logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)) z
-                    = logDeriv (fun w => (riemannXi (1 / (1 - w))) ^ 2) z := by
-                        simp [hphi_def]
-                _ = logDeriv (fun w => Complex.exp a₂ * (∏' ρ : NontrivialZero, fac ρ w)) z := by
-                        have := congrArg (fun F : ℂ → ℂ => logDeriv F z) hφ
-                        simpa [one_div] using this
-      _ = logDeriv (fun w => ∏' ρ : NontrivialZero, fac ρ w) z := h_drop
-      _ = ∑' ρ : NontrivialZero, term ρ z := by
-            simpa [term] using h_log
+      (fun z => ∑' ρ : NontrivialZero, term ρ z) K :=
+    paired_log_deriv_limit_eq hgenus hhad r hr_lt_one havoid
   -- Uniform convergence of the partial log-derivatives to the ξ² log-derivative.
   have hunif :
       TendstoUniformlyOn
@@ -507,100 +671,8 @@ theorem paired_sum_formula_of_mtest_and_cauchy
   have h_partial_coeff :
       ∀ k,
         (deriv^[n] (fun z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z)) 0 / n.factorial
-          =
-        ∑ ρ ∈ T k, liPairedSummand n ρ := by
-    intro k
-    -- On the ball, `logDeriv` of the product equals the finite sum of `logDeriv`s.
-    have hEqOn :
-        Set.EqOn
-            (fun z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z)
-            (fun z => ∑ ρ ∈ T k, logDeriv (fac ρ) z) K := by
-      intro z hz
-      simpa [term] using (h_partial_eq k hz)
-    have hsopen : IsOpen K := Metric.isOpen_ball
-    have hEqIter : iteratedDeriv n (fun z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z) 0
-        = iteratedDeriv n (fun z => ∑ ρ ∈ T k, logDeriv (fac ρ) z) 0 := by
-      have hEqOn' :=
-        Set.EqOn.iteratedDeriv_of_isOpen
-          (f := fun z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z)
-          (g := fun z => ∑ ρ ∈ T k, logDeriv (fac ρ) z)
-          (s := K) hEqOn hsopen n
-      exact hEqOn' h0K
-    have hEqIter' :
-        (deriv^[n] (fun z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z)) 0
-          =
-        (deriv^[n] (fun z => ∑ ρ ∈ T k, logDeriv (fac ρ) z)) 0 := by
-      simpa [iteratedDeriv_eq_iterate] using hEqIter
-    -- The iterated derivative of the finite sum is the finite sum of iterated derivatives.
-    have hsum_iter :
-        (deriv^[n] (fun z => ∑ ρ ∈ T k, logDeriv (fac ρ) z)) 0
-          =
-        ∑ ρ ∈ T k, (deriv^[n] (fun z => logDeriv (fac ρ) z)) 0 := by
-      -- Use `iteratedDeriv_add` repeatedly via `Finset.induction_on`.
-      have hsum_iter' :
-          iteratedDeriv n (fun z => ∑ ρ ∈ T k, logDeriv (fac ρ) z) 0
-            =
-          ∑ ρ ∈ T k, iteratedDeriv n (fun z => logDeriv (fac ρ) z) 0 := by
-        classical
-        -- Each summand is analytic on `K`, hence `C^n` at `0`.
-        have hterm_contDiff :
-            ∀ ρ ∈ T k, ContDiffAt ℂ n (fun z => logDeriv (fac ρ) z) 0 := by
-          intro ρ hρ
-          have hA : AnalyticAt ℂ (fun z => logDeriv (fac ρ) z) 0 := by
-            -- `fac ρ` is differentiable on `K` and nonzero on `K`.
-            have hfac_diff : DifferentiableOn ℂ (fac ρ) K :=
-              xiPairedFactor_phi_differentiableOn_ball (r := r) hr_lt_one ρ
-            have hfac_an : AnalyticAt ℂ (fac ρ) 0 :=
-              (hfac_diff.analyticOnNhd Metric.isOpen_ball 0 h0K)
-            have hfac_ne : fac ρ 0 ≠ 0 := by
-              have hz1 : (0 : ℂ) ≠ (1 : ℂ) := by norm_num
-              have hzavoid : ∀ ρ : NontrivialZero, (0 : ℂ) ≠ 1 - 1 / (ρ.val : ℂ) := by
-                intro ρ h0eq
-                -- `0 = 1 - 1/ρ` would force `ρ = 1`, impossible for nontrivial zeros.
-                have : (ρ.val : ℂ) = 1 := by
-                  have hρ0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
-                  have h : (1 : ℂ) = (1 : ℂ) / ρ.val := sub_eq_zero.mp h0eq.symm
-                  have : (ρ.val : ℂ) = (1 : ℂ) := by
-                    have : (1 : ℂ) * ρ.val = (1 : ℂ) := (eq_div_iff hρ0).1 h
-                    simpa using this
-                  simpa using this
-                exact (NontrivialZero.ne_one ρ) this
-              exact xiPairedFactor_phi_ne_zero_of_separation (z := (0 : ℂ)) hz1 hzavoid ρ
-            unfold logDeriv
-            apply AnalyticAt.fun_div
-            · exact hfac_an.deriv
-            · exact hfac_an
-            · exact hfac_ne
-          -- Analytic ⇒ smooth.
-          simpa [ContDiffAt] using hA.contDiffAt
-        -- Now distribute `iteratedDeriv` over the Finset sum.
-        simpa using
-          (iteratedDeriv_finset_sum
-            (T := T k) (f := fun ρ z => logDeriv (fac ρ) z) (n := n) hterm_contDiff)
-      -- Convert to `deriv^[n]`.
-      simpa [iteratedDeriv_eq_iterate] using hsum_iter'
-    -- Finish: rewrite each term with `taylorCoeff_xiPairedFactor`.
-    have hterm_coeff :
-        ∀ ρ, (deriv^[n] (fun z => logDeriv (fac ρ) z)) 0 / n.factorial = liPairedSummand n ρ := by
-      intro ρ
-      have h' :
-          (deriv^[n] (logDeriv (phi (xiPairedFactor ρ)))) 0 / n.factorial =
-            liPairedSummand n ρ := by
-        simpa [taylorCoeff] using (taylorCoeff_xiPairedFactor (ρ := ρ) (n := n))
-      have hphi_fac : phi (xiPairedFactor ρ) = fac ρ := by
-        funext z
-        rfl
-      simpa [hphi_fac] using h'
-    calc
-      (deriv^[n] (fun z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z)) 0 / n.factorial
-          = (deriv^[n] (fun z => ∑ ρ ∈ T k, logDeriv (fac ρ) z)) 0 / n.factorial := by
-              simp [hEqIter']
-      _ = ∑ ρ ∈ T k, (deriv^[n] (fun z => logDeriv (fac ρ) z)) 0 / n.factorial := by
-            -- distribute division by `n!` and use `hsum_iter`
-            simp [hsum_iter, Finset.sum_div]
-      _ = ∑ ρ ∈ T k, liPairedSummand n ρ := by
-            classical
-            simp [hterm_coeff]
+          = ∑ ρ ∈ T k, liPairedSummand n ρ :=
+    fun k => paired_finite_coefficient (T k) n r hrpos hr_lt_one (h_partial_eq k)
   -- The `tsum` limit of the finite sums over `T k`.
   have hsum_paired : Summable (fun ρ : NontrivialZero => liPairedSummand n ρ) :=
     summable_Li_paired_summand_of_genus_one hgenus n
@@ -650,33 +722,19 @@ theorem paired_sum_formula_of_mtest_and_cauchy
     _ = (2⁻¹ : ℂ) * ∑' ρ : NontrivialZero, liPairedSummand n ρ := by
           simp [h_xi_sq]
 
-/-- Weighted paired sum formula via the multiplicity-aware paired-linear-factor route. -/
-theorem weighted_paired_sum_formula_of_mtest_and_cauchy
-    (hgenus : Summable
-      (fun ρ : NontrivialZero => (analyticOrderNatAt riemannXi ρ.val : ℝ) / ‖ρ.val‖ ^ 2))
-    (hsep : ∃ r : ℝ, 0 < r ∧ r < 1 ∧ ∀ z ∈ Metric.ball (0 : ℂ) r,
+private theorem weighted_paired_factor_cofinite_bound
+    (hsigma_genus : Summable (fun i : XiZeroWithMultiplicity => (1 : ℝ) / ‖i.1.val‖ ^ 2))
+    (r : ℝ) (hr_lt_one : r < 1)
+    (havoid : ∀ z ∈ Metric.ball (0 : ℂ) r,
       (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
-    (hhad : xiFactorizationProdWithMultiplicity) :
-    ∀ n : ℕ,
-      taylorCoeff riemannXi n
-        = (2⁻¹ : ℂ) * ∑' ρ : NontrivialZero,
-            (analyticOrderNatAt riemannXi ρ.val : ℂ) * liPairedSummand n ρ := by
-  intro n
+    : ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, ∀ z ∈ Metric.ball (0 : ℂ) r,
+      ‖xiPairedLinearFactor i.1 (1 / (1 - z)) - 1‖ ≤
+        (2 * ((1 : ℝ) / (1 - r)) ^ 2) * ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
   classical
-  have hsigma_genus := summable_inv_norm_sq_zeros_with_multiplicity_of_weighted_genus hgenus
-  obtain ⟨T, monoT, coverT⟩ := exists_increasing_finite_cover_zeros_with_multiplicity
-  obtain ⟨r, hrpos, hr_lt_one, havoid⟩ := hsep
   let K : Set ℂ := Metric.ball (0 : ℂ) r
-  have h0K : (0 : ℂ) ∈ K := Metric.mem_ball_self hrpos
   let fac : XiZeroWithMultiplicity → ℂ → ℂ :=
     fun i z => xiPairedLinearFactor i.1 (1 / (1 - z))
-  let term : XiZeroWithMultiplicity → ℂ → ℂ := fun i z => logDeriv (fac i) z
-  let B : ℝ := 2 * ((1 : ℝ) / (1 - r)) + 1
   let Cfac : ℝ := 2 * ((1 : ℝ) / (1 - r)) ^ 2
-  let C : ℝ := 4 * B * ((1 : ℝ) / (1 - r)) ^ 2
-  let u : XiZeroWithMultiplicity → ℝ := fun i => C * ((1 : ℝ) / ‖i.1.val‖ ^ 2)
-  have hu : Summable u := by
-    simpa [u] using (hsigma_genus.mul_left C)
   have hlarge :
       ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, (2 : ℝ) ≤ ‖i.1.val‖ :=
     eventually_le_norm_of_summable_inv_norm_sq_withMultiplicity hsigma_genus (R := 2) (by norm_num)
@@ -735,6 +793,33 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
       _ = Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
             simp [Cfac]
             ring
+  exact hfac_sub_bound
+
+private theorem weighted_paired_log_deriv_cofinite_bound
+    (hsigma_genus : Summable (fun i : XiZeroWithMultiplicity => (1 : ℝ) / ‖i.1.val‖ ^ 2))
+    (r : ℝ) (hr_lt_one : r < 1)
+    (havoid : ∀ z ∈ Metric.ball (0 : ℂ) r,
+      (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
+    : ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, ∀ z ∈ Metric.ball (0 : ℂ) r,
+      ‖logDeriv (fun w => xiPairedLinearFactor i.1 (1 / (1 - w))) z‖ ≤
+        (4 * (2 * ((1 : ℝ) / (1 - r)) + 1) * ((1 : ℝ) / (1 - r)) ^ 2) *
+          ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
+  classical
+  let K : Set ℂ := Metric.ball (0 : ℂ) r
+  let fac : XiZeroWithMultiplicity → ℂ → ℂ :=
+    fun i z => xiPairedLinearFactor i.1 (1 / (1 - z))
+  let term : XiZeroWithMultiplicity → ℂ → ℂ := fun i z => logDeriv (fac i) z
+  let B : ℝ := 2 * ((1 : ℝ) / (1 - r)) + 1
+  let Cfac : ℝ := 2 * ((1 : ℝ) / (1 - r)) ^ 2
+  let C : ℝ := 4 * B * ((1 : ℝ) / (1 - r)) ^ 2
+  let u : XiZeroWithMultiplicity → ℝ := fun i => C * ((1 : ℝ) / ‖i.1.val‖ ^ 2)
+  have hlarge :
+      ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, (2 : ℝ) ≤ ‖i.1.val‖ :=
+    eventually_le_norm_of_summable_inv_norm_sq_withMultiplicity hsigma_genus (R := 2) (by norm_num)
+  have hfac_sub_bound :
+      ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, ∀ z ∈ K,
+        ‖fac i z - (1 : ℂ)‖ ≤ Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2) :=
+    weighted_paired_factor_cofinite_bound hsigma_genus r hr_lt_one havoid
   have hsmallCfac :
       ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite,
         Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2) ≤ (1 / 2 : ℝ) := by
@@ -865,6 +950,308 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
               simp [u, C]
               ring
     simpa using this
+  exact hbound
+
+private theorem weighted_paired_log_deriv_limit_eq
+    (hgenus : Summable
+      (fun ρ : NontrivialZero => (analyticOrderNatAt riemannXi ρ.val : ℝ) / ‖ρ.val‖ ^ 2))
+    (hhad : xiFactorizationProdWithMultiplicity) (r : ℝ) (hr_lt_one : r < 1)
+    (havoid : ∀ z ∈ Metric.ball (0 : ℂ) r,
+      (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
+    : Set.EqOn (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
+      (fun z => ∑' i : XiZeroWithMultiplicity,
+        logDeriv (fun w => xiPairedLinearFactor i.1 (1 / (1 - w))) z)
+      (Metric.ball (0 : ℂ) r) := by
+  classical
+  let K : Set ℂ := Metric.ball (0 : ℂ) r
+  let fac : XiZeroWithMultiplicity → ℂ → ℂ :=
+    fun i z => xiPairedLinearFactor i.1 (1 / (1 - z))
+  let term : XiZeroWithMultiplicity → ℂ → ℂ := fun i z => logDeriv (fac i) z
+  let B : ℝ := 2 * ((1 : ℝ) / (1 - r)) + 1
+  let Cfac : ℝ := 2 * ((1 : ℝ) / (1 - r)) ^ 2
+  let C : ℝ := 4 * B * ((1 : ℝ) / (1 - r)) ^ 2
+  let u : XiZeroWithMultiplicity → ℝ := fun i => C * ((1 : ℝ) / ‖i.1.val‖ ^ 2)
+  have hsigma_genus := summable_inv_norm_sq_zeros_with_multiplicity_of_weighted_genus hgenus
+  have hu : Summable u := hsigma_genus.mul_left C
+  have hbound := weighted_paired_log_deriv_cofinite_bound hsigma_genus r hr_lt_one havoid
+  have hfac_sub_bound := weighted_paired_factor_cofinite_bound hsigma_genus r hr_lt_one havoid
+  intro z hz
+  have hz1 : z ≠ (1 : ℂ) := (havoid z hz).1
+  have hzavoid : ∀ ρ : NontrivialZero, z ≠ 1 - 1 / (ρ.val : ℂ) := (havoid z hz).2
+  obtain ⟨b₂, hξ₂⟩ :=
+    xi_sq_factorization_pairedLinear_withMultiplicity_of_weighted_genus hgenus hhad
+  have hφ :
+      (fun w => (riemannXi (1 / (1 - w))) ^ 2)
+        = fun w => Complex.exp b₂ * ∏' i : XiZeroWithMultiplicity, fac i w := by
+    funext w
+    simpa [fac] using (hξ₂ (1 / (1 - w)))
+  have h_drop :
+      logDeriv (fun w => Complex.exp b₂ * (∏' i : XiZeroWithMultiplicity, fac i w)) z
+        = logDeriv (fun w => ∏' i : XiZeroWithMultiplicity, fac i w) z := by
+    simpa [logDeriv, _root_.logDeriv, _root_.logDeriv_apply] using
+      (_root_.logDeriv_const_mul (x := z) (a := Complex.exp b₂)
+        (f := fun w => ∏' i : XiZeroWithMultiplicity, fac i w) (ha := Complex.exp_ne_zero b₂))
+  have hm : Summable (fun i : XiZeroWithMultiplicity => logDeriv (fac i) z) := by
+    have hbound_z :
+        ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, ‖term i z‖ ≤ u i := by
+      filter_upwards [hbound] with i hi using hi z hz
+    exact Summable.of_norm_bounded_eventually hu hbound_z
+  have hf_ne : ∀ i : XiZeroWithMultiplicity, fac i z ≠ 0 :=
+    fun i => xiPairedLinearFactor_phi_ne_zero_of_separation (z := z) hz1 hzavoid i.1
+  have hd : ∀ i : XiZeroWithMultiplicity, DifferentiableOn ℂ (fac i) K := fun i =>
+    xiPairedLinearFactor_phi_differentiableOn_ball (r := r) hr_lt_one i.1
+  have htend : MultipliableLocallyUniformlyOn fac K := by
+    let g : XiZeroWithMultiplicity → ℂ → ℂ := fun i w => fac i w - 1
+    have hu' : Summable (fun i : XiZeroWithMultiplicity => Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2)) := by
+      simpa [Cfac] using (hsigma_genus.mul_left Cfac)
+    have hbound_g :
+        ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, ∀ w ∈ K,
+          ‖g i w‖ ≤ Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
+      filter_upwards [hfac_sub_bound] with i hi w hw
+      exact hi w hw
+    have hcts : ∀ i : XiZeroWithMultiplicity, ContinuousOn (g i) K := by
+      intro i
+      have hdiff : DifferentiableOn ℂ (fac i) K :=
+        xiPairedLinearFactor_phi_differentiableOn_ball (r := r) hr_lt_one i.1
+      simpa [g, Pi.sub_def] using (hdiff.continuousOn.sub continuousOn_const)
+    have ht : MultipliableLocallyUniformlyOn (fun i w ↦ (1 : ℂ) + g i w) K :=
+      Summable.multipliableLocallyUniformlyOn_one_add
+        (K := K) Metric.isOpen_ball hu' hbound_g hcts
+    simpa [g, fac, sub_eq_add_neg] using ht
+  have hnez : (∏' i : XiZeroWithMultiplicity, fac i z) ≠ 0 := by
+    let g : XiZeroWithMultiplicity → ℂ := fun i => fac i z - 1
+    have hdom :
+        Summable (fun i : XiZeroWithMultiplicity => Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2)) := by
+      simpa [Cfac] using (hsigma_genus.mul_left Cfac)
+    have hsum_g : Summable g := by
+      have hbound_z :
+          ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite,
+            ‖g i‖ ≤ Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
+        filter_upwards [hfac_sub_bound] with i hi
+        exact hi z hz
+      exact Summable.of_norm_bounded_eventually hdom hbound_z
+    have hterm_ne : ∀ i : XiZeroWithMultiplicity, (1 : ℂ) + g i ≠ 0 := by
+      intro i
+      have hne : fac i z ≠ 0 := by
+        simpa [fac] using
+          xiPairedLinearFactor_phi_ne_zero_of_separation (z := z) hz1 hzavoid i.1
+      simpa [g, sub_eq_add_neg] using hne
+    have hprod_ne :
+        (∏' i : XiZeroWithMultiplicity, ((1 : ℂ) + g i)) ≠ 0 :=
+      _root_.tprod_one_add_ne_zero_of_summable (ι := XiZeroWithMultiplicity) (R := ℂ)
+        (f := g) (hf := hterm_ne) (hu := hsum_g.norm)
+    have hprod_eq :
+        (∏' i : XiZeroWithMultiplicity, ((1 : ℂ) + g i))
+          = ∏' i : XiZeroWithMultiplicity, fac i z := by
+      refine tprod_congr ?_
+      intro i
+      simp [g, sub_eq_add_neg]
+    simpa [hprod_eq] using hprod_ne
+  have h_log :
+      logDeriv (fun w => ∏' i : XiZeroWithMultiplicity, fac i w) z
+        = ∑' i : XiZeroWithMultiplicity, logDeriv (fac i) z := by
+    let s : Set ℂ := K
+    have hs : IsOpen s := Metric.isOpen_ball
+    simpa [s, logDeriv_eq_rootLogDeriv] using
+      (logDeriv_tprod_eq_tsum
+        (ι := XiZeroWithMultiplicity) (s := s) hs (x := z) (hx := hz) (f := fac)
+        (hf := fun i => hf_ne i)
+        (hd := fun i => hd i)
+        (hm := hm) (htend := htend) (hnez := hnez))
+  calc
+    logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)) z
+        =
+          logDeriv
+            (fun w => Complex.exp b₂ * (∏' i : XiZeroWithMultiplicity, fac i w)) z := by
+            have hphi_def :
+                phi (fun s : ℂ => (riemannXi s) ^ 2) =
+                  fun w => (riemannXi (1 / (1 - w))) ^ 2 := by
+              funext w
+              rfl
+            calc
+              logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)) z
+                  = logDeriv (fun w => (riemannXi (1 / (1 - w))) ^ 2) z := by
+                      simp [hphi_def]
+              _ =
+                  logDeriv
+                    (fun w => Complex.exp b₂ * (∏' i : XiZeroWithMultiplicity, fac i w)) z := by
+                      have := congrArg (fun F : ℂ → ℂ => logDeriv F z) hφ
+                      simpa [one_div] using this
+    _ = logDeriv (fun w => ∏' i : XiZeroWithMultiplicity, fac i w) z := h_drop
+    _ = ∑' i : XiZeroWithMultiplicity, term i z := by
+          simpa [term] using h_log
+
+private theorem xi_sq_log_deriv_analytic_on_separated_ball
+    (r : ℝ) (hr_lt_one : r < 1)
+    (havoid : ∀ z ∈ Metric.ball (0 : ℂ) r,
+      (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
+    : AnalyticOnNhd ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
+      (Metric.ball (0 : ℂ) r) := by
+  let K : Set ℂ := Metric.ball (0 : ℂ) r
+  intro z hz
+  have hz' : ‖z‖ < 1 := by
+    have : ‖z‖ < r := by
+      simpa [K, Metric.mem_ball, dist_eq_norm] using hz
+    exact lt_of_lt_of_le this hr_lt_one.le
+  have hf_entire : Differentiable ℂ (fun s : ℂ => (riemannXi s) ^ 2) := xi_entire.pow 2
+  have hphi_an : AnalyticAt ℂ (phi (fun s : ℂ => (riemannXi s) ^ 2)) z :=
+    phi_analytic hf_entire hz'
+  have hphi_ne : phi (fun s : ℂ => (riemannXi s) ^ 2) z ≠ 0 := by
+    have hneq : ∀ ρ : NontrivialZero, (1 / (1 - z) : ℂ) ≠ ρ.val := by
+      intro ρ hEq
+      have hz1 : z ≠ (1 : ℂ) := (havoid z hz).1
+      have hzsub : (1 : ℂ) - z ≠ 0 := sub_ne_zero.mpr hz1.symm
+      have hρ0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
+      have : z = 1 - 1 / (ρ.val : ℂ) := by
+        have h1 : (ρ.val : ℂ) * ((1 : ℂ) - z) = 1 := by
+          calc
+            (ρ.val : ℂ) * ((1 : ℂ) - z) = (1 / (1 - z) : ℂ) * ((1 : ℂ) - z) := by
+                  simp [hEq]
+            _ = 1 := by field_simp [hzsub]
+        have h2 : (1 : ℂ) - z = (1 : ℂ) / ρ.val := by
+          apply (eq_div_iff hρ0).2
+          simpa [mul_comm] using h1
+        calc
+          z = 1 - ((1 : ℂ) - z) := by ring
+          _ = 1 - 1 / (ρ.val : ℂ) := by simp [h2]
+      exact (havoid z hz).2 ρ this
+    have hxi_ne : riemannXi (1 / (1 - z) : ℂ) ≠ 0 :=
+      xi_nonzero_away_from_nontrivial_zeros (w := (1 / (1 - z) : ℂ)) hneq
+    simpa [phi] using pow_ne_zero 2 hxi_ne
+  have : AnalyticAt ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2))) z := by
+    unfold logDeriv
+    apply AnalyticAt.fun_div
+    · exact hphi_an.deriv
+    · exact hphi_an
+    · exact hphi_ne
+  exact this
+
+private theorem weighted_paired_finite_coefficient
+    (S : Finset XiZeroWithMultiplicity) (n : ℕ) (r : ℝ) (hrpos : 0 < r) (hr_lt_one : r < 1)
+    (hpartial : Set.EqOn
+      (fun z => logDeriv (fun w => ∏ i ∈ S, xiPairedLinearFactor i.1 (1 / (1 - w))) z)
+      (fun z => ∑ i ∈ S, logDeriv (fun w => xiPairedLinearFactor i.1 (1 / (1 - w))) z)
+      (Metric.ball (0 : ℂ) r)) :
+    (deriv^[n] (fun z => logDeriv (fun w => ∏ i ∈ S, xiPairedLinearFactor i.1 (1 / (1 - w))) z)) 0 /
+      n.factorial = ∑ i ∈ S, liPairedSummand n i.1 := by
+  classical
+  let K : Set ℂ := Metric.ball (0 : ℂ) r
+  let fac : XiZeroWithMultiplicity → ℂ → ℂ :=
+    fun i z => xiPairedLinearFactor i.1 (1 / (1 - z))
+  let term : XiZeroWithMultiplicity → ℂ → ℂ := fun i z => logDeriv (fac i) z
+  have h0K : (0 : ℂ) ∈ K := Metric.mem_ball_self hrpos
+  have hEqOn :
+      Set.EqOn
+          (fun z => logDeriv (fun w => ∏ i ∈ S, fac i w) z)
+          (fun z => ∑ i ∈ S, logDeriv (fac i) z) K := by
+    intro z hz
+    exact hpartial hz
+  have hsopen : IsOpen K := Metric.isOpen_ball
+  have hEqIter : iteratedDeriv n (fun z => logDeriv (fun w => ∏ i ∈ S, fac i w) z) 0
+      = iteratedDeriv n (fun z => ∑ i ∈ S, logDeriv (fac i) z) 0 := by
+    have hEqOn' :=
+      Set.EqOn.iteratedDeriv_of_isOpen
+        (f := fun z => logDeriv (fun w => ∏ i ∈ S, fac i w) z)
+        (g := fun z => ∑ i ∈ S, logDeriv (fac i) z)
+        (s := K) hEqOn hsopen n
+    exact hEqOn' h0K
+  have hEqIter' :
+      (deriv^[n] (fun z => logDeriv (fun w => ∏ i ∈ S, fac i w) z)) 0
+        =
+      (deriv^[n] (fun z => ∑ i ∈ S, logDeriv (fac i) z)) 0 := by
+    simpa [iteratedDeriv_eq_iterate] using hEqIter
+  have hsum_iter :
+      (deriv^[n] (fun z => ∑ i ∈ S, logDeriv (fac i) z)) 0
+        =
+      ∑ i ∈ S, (deriv^[n] (fun z => logDeriv (fac i) z)) 0 := by
+    have hsum_iter' :
+        iteratedDeriv n (fun z => ∑ i ∈ S, logDeriv (fac i) z) 0
+          =
+        ∑ i ∈ S, iteratedDeriv n (fun z => logDeriv (fac i) z) 0 := by
+      classical
+      have hterm_contDiff :
+          ∀ i ∈ S, ContDiffAt ℂ n (fun z => logDeriv (fac i) z) 0 := by
+        intro i hi
+        have hA : AnalyticAt ℂ (fun z => logDeriv (fac i) z) 0 := by
+          have hfac_diff : DifferentiableOn ℂ (fac i) K :=
+            xiPairedLinearFactor_phi_differentiableOn_ball (r := r) hr_lt_one i.1
+          have hfac_an : AnalyticAt ℂ (fac i) 0 :=
+            (hfac_diff.analyticOnNhd Metric.isOpen_ball 0 h0K)
+          have hfac_ne : fac i 0 ≠ 0 := by
+            have hz1 : (0 : ℂ) ≠ (1 : ℂ) := by norm_num
+            have hzavoid : ∀ ρ : NontrivialZero, (0 : ℂ) ≠ 1 - 1 / (ρ.val : ℂ) := by
+              intro ρ h0eq
+              have : (ρ.val : ℂ) = 1 := by
+                have hρ0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
+                have h : (1 : ℂ) = (1 : ℂ) / ρ.val := sub_eq_zero.mp h0eq.symm
+                have : (ρ.val : ℂ) = (1 : ℂ) := by
+                  have : (1 : ℂ) * ρ.val = (1 : ℂ) := (eq_div_iff hρ0).1 h
+                  simpa using this
+                simpa using this
+              exact (NontrivialZero.ne_one ρ) this
+            exact xiPairedLinearFactor_phi_ne_zero_of_separation (z := (0 : ℂ)) hz1 hzavoid i.1
+          unfold logDeriv
+          apply AnalyticAt.fun_div
+          · exact hfac_an.deriv
+          · exact hfac_an
+          · exact hfac_ne
+        simpa [ContDiffAt] using hA.contDiffAt
+      simpa using
+        (iteratedDeriv_finset_sum (T := S) (f := fun i z => logDeriv (fac i) z) (n := n)
+          hterm_contDiff)
+    simpa [iteratedDeriv_eq_iterate] using hsum_iter'
+  have hterm_coeff :
+      ∀ i : XiZeroWithMultiplicity,
+        (deriv^[n] (fun z => logDeriv (fac i) z)) 0 / n.factorial = liPairedSummand n i.1 := by
+    intro i
+    have h' :
+        (deriv^[n] (logDeriv (phi (xiPairedLinearFactor i.1)))) 0 / n.factorial
+          = liPairedSummand n i.1 := by
+      simpa [taylorCoeff] using (taylorCoeff_xiPairedLinearFactor (ρ := i.1) (n := n))
+    have hphi_fac : phi (xiPairedLinearFactor i.1) = fac i := by
+      funext z
+      rfl
+    simpa [hphi_fac] using h'
+  calc
+    (deriv^[n] (fun z => logDeriv (fun w => ∏ i ∈ S, fac i w) z)) 0 / n.factorial
+        = (deriv^[n] (fun z => ∑ i ∈ S, logDeriv (fac i) z)) 0 / n.factorial := by
+            simp [hEqIter']
+    _ = ∑ i ∈ S, (deriv^[n] (fun z => logDeriv (fac i) z)) 0 / n.factorial := by
+          simp [hsum_iter, Finset.sum_div]
+    _ = ∑ i ∈ S, liPairedSummand n i.1 := by
+          classical
+          simp [hterm_coeff]
+
+/-- Weighted paired sum formula via the multiplicity-aware paired-linear-factor route. -/
+theorem weighted_paired_sum_formula_of_mtest_and_cauchy
+    (hgenus : Summable
+      (fun ρ : NontrivialZero => (analyticOrderNatAt riemannXi ρ.val : ℝ) / ‖ρ.val‖ ^ 2))
+    (hsep : ∃ r : ℝ, 0 < r ∧ r < 1 ∧ ∀ z ∈ Metric.ball (0 : ℂ) r,
+      (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
+    (hhad : xiFactorizationProdWithMultiplicity) :
+    ∀ n : ℕ,
+      taylorCoeff riemannXi n
+        = (2⁻¹ : ℂ) * ∑' ρ : NontrivialZero,
+            (analyticOrderNatAt riemannXi ρ.val : ℂ) * liPairedSummand n ρ := by
+  intro n
+  classical
+  have hsigma_genus := summable_inv_norm_sq_zeros_with_multiplicity_of_weighted_genus hgenus
+  obtain ⟨T, monoT, coverT⟩ := exists_increasing_finite_cover_zeros_with_multiplicity
+  obtain ⟨r, hrpos, hr_lt_one, havoid⟩ := hsep
+  let K : Set ℂ := Metric.ball (0 : ℂ) r
+  have h0K : (0 : ℂ) ∈ K := Metric.mem_ball_self hrpos
+  let fac : XiZeroWithMultiplicity → ℂ → ℂ :=
+    fun i z => xiPairedLinearFactor i.1 (1 / (1 - z))
+  let term : XiZeroWithMultiplicity → ℂ → ℂ := fun i z => logDeriv (fac i) z
+  let B : ℝ := 2 * ((1 : ℝ) / (1 - r)) + 1
+  let Cfac : ℝ := 2 * ((1 : ℝ) / (1 - r)) ^ 2
+  let C : ℝ := 4 * B * ((1 : ℝ) / (1 - r)) ^ 2
+  let u : XiZeroWithMultiplicity → ℝ := fun i => C * ((1 : ℝ) / ‖i.1.val‖ ^ 2)
+  have hu : Summable u := by
+    simpa [u] using (hsigma_genus.mul_left C)
+  have hbound :
+      ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, ∀ z ∈ K, ‖term i z‖ ≤ u i :=
+    weighted_paired_log_deriv_cofinite_bound hsigma_genus r hr_lt_one havoid
   have hsum_unif :
       TendstoUniformlyOn
         (fun t : Finset XiZeroWithMultiplicity => fun z => ∑ i ∈ t, term i z)
@@ -902,112 +1289,8 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
       (_root_.logDeriv_fun_prod (s := T k) (f := fac) (x := z) hfac_ne hfac_diff)
   have h_limit_eq : Set.EqOn
       (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
-      (fun z => ∑' i : XiZeroWithMultiplicity, term i z) K := by
-    intro z hz
-    have hz1 : z ≠ (1 : ℂ) := (havoid z hz).1
-    have hzavoid : ∀ ρ : NontrivialZero, z ≠ 1 - 1 / (ρ.val : ℂ) := (havoid z hz).2
-    obtain ⟨b₂, hξ₂⟩ :=
-      xi_sq_factorization_pairedLinear_withMultiplicity_of_weighted_genus hgenus hhad
-    have hφ :
-        (fun w => (riemannXi (1 / (1 - w))) ^ 2)
-          = fun w => Complex.exp b₂ * ∏' i : XiZeroWithMultiplicity, fac i w := by
-      funext w
-      simpa [fac] using (hξ₂ (1 / (1 - w)))
-    have h_drop :
-        logDeriv (fun w => Complex.exp b₂ * (∏' i : XiZeroWithMultiplicity, fac i w)) z
-          = logDeriv (fun w => ∏' i : XiZeroWithMultiplicity, fac i w) z := by
-      simpa [logDeriv, _root_.logDeriv, _root_.logDeriv_apply] using
-        (_root_.logDeriv_const_mul (x := z) (a := Complex.exp b₂)
-          (f := fun w => ∏' i : XiZeroWithMultiplicity, fac i w) (ha := Complex.exp_ne_zero b₂))
-    have hm : Summable (fun i : XiZeroWithMultiplicity => logDeriv (fac i) z) := by
-      have hbound_z :
-          ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, ‖term i z‖ ≤ u i := by
-        filter_upwards [hbound] with i hi using hi z hz
-      exact Summable.of_norm_bounded_eventually hu hbound_z
-    have hf_ne : ∀ i : XiZeroWithMultiplicity, fac i z ≠ 0 :=
-      fun i => xiPairedLinearFactor_phi_ne_zero_of_separation (z := z) hz1 hzavoid i.1
-    have hd : ∀ i : XiZeroWithMultiplicity, DifferentiableOn ℂ (fac i) K := fun i =>
-      xiPairedLinearFactor_phi_differentiableOn_ball (r := r) hr_lt_one i.1
-    have htend : MultipliableLocallyUniformlyOn fac K := by
-      let g : XiZeroWithMultiplicity → ℂ → ℂ := fun i w => fac i w - 1
-      have hu' : Summable (fun i : XiZeroWithMultiplicity => Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2)) := by
-        simpa [Cfac] using (hsigma_genus.mul_left Cfac)
-      have hbound_g :
-          ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite, ∀ w ∈ K,
-            ‖g i w‖ ≤ Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
-        filter_upwards [hfac_sub_bound] with i hi w hw
-        simpa [g] using hi w hw
-      have hcts : ∀ i : XiZeroWithMultiplicity, ContinuousOn (g i) K := by
-        intro i
-        have hdiff : DifferentiableOn ℂ (fac i) K :=
-          xiPairedLinearFactor_phi_differentiableOn_ball (r := r) hr_lt_one i.1
-        simpa [g, Pi.sub_def] using (hdiff.continuousOn.sub continuousOn_const)
-      have ht : MultipliableLocallyUniformlyOn (fun i w ↦ (1 : ℂ) + g i w) K :=
-        Summable.multipliableLocallyUniformlyOn_one_add
-          (K := K) Metric.isOpen_ball hu' hbound_g hcts
-      simpa [g, fac, sub_eq_add_neg] using ht
-    have hnez : (∏' i : XiZeroWithMultiplicity, fac i z) ≠ 0 := by
-      let g : XiZeroWithMultiplicity → ℂ := fun i => fac i z - 1
-      have hdom :
-          Summable (fun i : XiZeroWithMultiplicity => Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2)) := by
-        simpa [Cfac] using (hsigma_genus.mul_left Cfac)
-      have hsum_g : Summable g := by
-        have hbound_z :
-            ∀ᶠ i : XiZeroWithMultiplicity in Filter.cofinite,
-              ‖g i‖ ≤ Cfac * ((1 : ℝ) / ‖i.1.val‖ ^ 2) := by
-          filter_upwards [hfac_sub_bound] with i hi
-          simpa [g] using hi z hz
-        exact Summable.of_norm_bounded_eventually hdom hbound_z
-      have hterm_ne : ∀ i : XiZeroWithMultiplicity, (1 : ℂ) + g i ≠ 0 := by
-        intro i
-        have hne : fac i z ≠ 0 := by
-          simpa [fac] using
-            xiPairedLinearFactor_phi_ne_zero_of_separation (z := z) hz1 hzavoid i.1
-        simpa [g, sub_eq_add_neg] using hne
-      have hprod_ne :
-          (∏' i : XiZeroWithMultiplicity, ((1 : ℂ) + g i)) ≠ 0 :=
-        _root_.tprod_one_add_ne_zero_of_summable (ι := XiZeroWithMultiplicity) (R := ℂ)
-          (f := g) (hf := hterm_ne) (hu := hsum_g.norm)
-      have hprod_eq :
-          (∏' i : XiZeroWithMultiplicity, ((1 : ℂ) + g i))
-            = ∏' i : XiZeroWithMultiplicity, fac i z := by
-        refine tprod_congr ?_
-        intro i
-        simp [g, sub_eq_add_neg]
-      simpa [hprod_eq] using hprod_ne
-    have h_log :
-        logDeriv (fun w => ∏' i : XiZeroWithMultiplicity, fac i w) z
-          = ∑' i : XiZeroWithMultiplicity, logDeriv (fac i) z := by
-      let s : Set ℂ := K
-      have hs : IsOpen s := Metric.isOpen_ball
-      simpa [s, logDeriv_eq_rootLogDeriv] using
-        (logDeriv_tprod_eq_tsum
-          (ι := XiZeroWithMultiplicity) (s := s) hs (x := z) (hx := hz) (f := fac)
-          (hf := fun i => hf_ne i)
-          (hd := fun i => hd i)
-          (hm := hm) (htend := htend) (hnez := hnez))
-    calc
-      logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)) z
-          =
-            logDeriv
-              (fun w => Complex.exp b₂ * (∏' i : XiZeroWithMultiplicity, fac i w)) z := by
-              have hphi_def :
-                  phi (fun s : ℂ => (riemannXi s) ^ 2) =
-                    fun w => (riemannXi (1 / (1 - w))) ^ 2 := by
-                funext w
-                rfl
-              calc
-                logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)) z
-                    = logDeriv (fun w => (riemannXi (1 / (1 - w))) ^ 2) z := by
-                        simp [hphi_def]
-                _ =
-                    logDeriv
-                      (fun w => Complex.exp b₂ * (∏' i : XiZeroWithMultiplicity, fac i w)) z := by
-                        have := congrArg (fun F : ℂ → ℂ => logDeriv F z) hφ
-                        simpa [one_div] using this
-      _ = logDeriv (fun w => ∏' i : XiZeroWithMultiplicity, fac i w) z := h_drop
-      _ = ∑' i : XiZeroWithMultiplicity, term i z := by
-            simpa [term] using h_log
+      (fun z => ∑' i : XiZeroWithMultiplicity, term i z) K :=
+    weighted_paired_log_deriv_limit_eq hgenus hhad r hr_lt_one havoid
   have hunif :
       TendstoUniformlyOn
         (fun k z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)
@@ -1024,44 +1307,8 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
       exact (h_partial_eq k).symm
     exact hunif'.congr_right h_limit_eq.symm
   have han_limit :
-      AnalyticOnNhd ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2))) K := by
-    intro z hz
-    have hz' : ‖z‖ < 1 := by
-      have : ‖z‖ < r := by
-        simpa [K, Metric.mem_ball, dist_eq_norm] using hz
-      exact lt_of_lt_of_le this hr_lt_one.le
-    have hf_entire : Differentiable ℂ (fun s : ℂ => (riemannXi s) ^ 2) := xi_entire.pow 2
-    have hphi_an : AnalyticAt ℂ (phi (fun s : ℂ => (riemannXi s) ^ 2)) z :=
-      phi_analytic hf_entire hz'
-    have hphi_ne : phi (fun s : ℂ => (riemannXi s) ^ 2) z ≠ 0 := by
-      have hneq : ∀ ρ : NontrivialZero, (1 / (1 - z) : ℂ) ≠ ρ.val := by
-        intro ρ hEq
-        have hz1 : z ≠ (1 : ℂ) := (havoid z hz).1
-        have hzsub : (1 : ℂ) - z ≠ 0 := sub_ne_zero.mpr hz1.symm
-        have hρ0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
-        have : z = 1 - 1 / (ρ.val : ℂ) := by
-          have h1 : (ρ.val : ℂ) * ((1 : ℂ) - z) = 1 := by
-            calc
-              (ρ.val : ℂ) * ((1 : ℂ) - z) = (1 / (1 - z) : ℂ) * ((1 : ℂ) - z) := by
-                    simp [hEq]
-              _ = 1 := by field_simp [hzsub]
-          have h2 : (1 : ℂ) - z = (1 : ℂ) / ρ.val := by
-            apply (eq_div_iff hρ0).2
-            simpa [mul_comm] using h1
-          calc
-            z = 1 - ((1 : ℂ) - z) := by ring
-            _ = 1 - 1 / (ρ.val : ℂ) := by simp [h2]
-        exact (havoid z hz).2 ρ this
-      have hxi_ne : riemannXi (1 / (1 - z) : ℂ) ≠ 0 :=
-        xi_nonzero_away_from_nontrivial_zeros (w := (1 / (1 - z) : ℂ)) hneq
-      simpa [phi] using pow_ne_zero 2 hxi_ne
-    have : AnalyticAt ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2))) z := by
-      unfold logDeriv
-      apply AnalyticAt.fun_div
-      · exact hphi_an.deriv
-      · exact hphi_an
-      · exact hphi_ne
-    exact this
+      AnalyticOnNhd ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2))) K :=
+    xi_sq_log_deriv_analytic_on_separated_ball r hr_lt_one havoid
   have han_partial :
       ∀ k, AnalyticOnNhd ℂ (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z) K := by
     intro k z hz
@@ -1096,90 +1343,8 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
   have h_partial_coeff :
       ∀ k,
         (deriv^[n] (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)) 0 / n.factorial
-          =
-        ∑ i ∈ T k, liPairedSummand n i.1 := by
-    intro k
-    have hEqOn :
-        Set.EqOn
-            (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)
-            (fun z => ∑ i ∈ T k, logDeriv (fac i) z) K := by
-      intro z hz
-      simpa [term] using (h_partial_eq k hz)
-    have hsopen : IsOpen K := Metric.isOpen_ball
-    have hEqIter : iteratedDeriv n (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z) 0
-        = iteratedDeriv n (fun z => ∑ i ∈ T k, logDeriv (fac i) z) 0 := by
-      have hEqOn' :=
-        Set.EqOn.iteratedDeriv_of_isOpen
-          (f := fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)
-          (g := fun z => ∑ i ∈ T k, logDeriv (fac i) z)
-          (s := K) hEqOn hsopen n
-      exact hEqOn' h0K
-    have hEqIter' :
-        (deriv^[n] (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)) 0
-          =
-        (deriv^[n] (fun z => ∑ i ∈ T k, logDeriv (fac i) z)) 0 := by
-      simpa [iteratedDeriv_eq_iterate] using hEqIter
-    have hsum_iter :
-        (deriv^[n] (fun z => ∑ i ∈ T k, logDeriv (fac i) z)) 0
-          =
-        ∑ i ∈ T k, (deriv^[n] (fun z => logDeriv (fac i) z)) 0 := by
-      have hsum_iter' :
-          iteratedDeriv n (fun z => ∑ i ∈ T k, logDeriv (fac i) z) 0
-            =
-          ∑ i ∈ T k, iteratedDeriv n (fun z => logDeriv (fac i) z) 0 := by
-        classical
-        have hterm_contDiff :
-            ∀ i ∈ T k, ContDiffAt ℂ n (fun z => logDeriv (fac i) z) 0 := by
-          intro i hi
-          have hA : AnalyticAt ℂ (fun z => logDeriv (fac i) z) 0 := by
-            have hfac_diff : DifferentiableOn ℂ (fac i) K :=
-              xiPairedLinearFactor_phi_differentiableOn_ball (r := r) hr_lt_one i.1
-            have hfac_an : AnalyticAt ℂ (fac i) 0 :=
-              (hfac_diff.analyticOnNhd Metric.isOpen_ball 0 h0K)
-            have hfac_ne : fac i 0 ≠ 0 := by
-              have hz1 : (0 : ℂ) ≠ (1 : ℂ) := by norm_num
-              have hzavoid : ∀ ρ : NontrivialZero, (0 : ℂ) ≠ 1 - 1 / (ρ.val : ℂ) := by
-                intro ρ h0eq
-                have : (ρ.val : ℂ) = 1 := by
-                  have hρ0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
-                  have h : (1 : ℂ) = (1 : ℂ) / ρ.val := sub_eq_zero.mp h0eq.symm
-                  have : (ρ.val : ℂ) = (1 : ℂ) := by
-                    have : (1 : ℂ) * ρ.val = (1 : ℂ) := (eq_div_iff hρ0).1 h
-                    simpa using this
-                  simpa using this
-                exact (NontrivialZero.ne_one ρ) this
-              exact xiPairedLinearFactor_phi_ne_zero_of_separation (z := (0 : ℂ)) hz1 hzavoid i.1
-            unfold logDeriv
-            apply AnalyticAt.fun_div
-            · exact hfac_an.deriv
-            · exact hfac_an
-            · exact hfac_ne
-          simpa [ContDiffAt] using hA.contDiffAt
-        simpa using
-          (iteratedDeriv_finset_sum (T := T k) (f := fun i z => logDeriv (fac i) z) (n := n)
-            hterm_contDiff)
-      simpa [iteratedDeriv_eq_iterate] using hsum_iter'
-    have hterm_coeff :
-        ∀ i : XiZeroWithMultiplicity,
-          (deriv^[n] (fun z => logDeriv (fac i) z)) 0 / n.factorial = liPairedSummand n i.1 := by
-      intro i
-      have h' :
-          (deriv^[n] (logDeriv (phi (xiPairedLinearFactor i.1)))) 0 / n.factorial
-            = liPairedSummand n i.1 := by
-        simpa [taylorCoeff] using (taylorCoeff_xiPairedLinearFactor (ρ := i.1) (n := n))
-      have hphi_fac : phi (xiPairedLinearFactor i.1) = fac i := by
-        funext z
-        rfl
-      simpa [hphi_fac] using h'
-    calc
-      (deriv^[n] (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)) 0 / n.factorial
-          = (deriv^[n] (fun z => ∑ i ∈ T k, logDeriv (fac i) z)) 0 / n.factorial := by
-              simp [hEqIter']
-      _ = ∑ i ∈ T k, (deriv^[n] (fun z => logDeriv (fac i) z)) 0 / n.factorial := by
-            simp [hsum_iter, Finset.sum_div]
-      _ = ∑ i ∈ T k, liPairedSummand n i.1 := by
-            classical
-            simp [hterm_coeff]
+          = ∑ i ∈ T k, liPairedSummand n i.1 :=
+    fun k => weighted_paired_finite_coefficient (T k) n r hrpos hr_lt_one (h_partial_eq k)
   have hsum_sigma : Summable (fun i : XiZeroWithMultiplicity => liPairedSummand n i.1) :=
     summable_Li_paired_summand_withMultiplicity_of_genus_one hsigma_genus n
   have hright :

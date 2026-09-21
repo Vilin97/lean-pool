@@ -206,4 +206,61 @@ theorem tsum_le_of_cofinal_finset_bound {ι : Type*}
   obtain ⟨n, hn⟩ := hcofinal t
   exact (Finset.sum_le_sum_of_subset_of_nonneg hn (fun i _ _ => hg i)).trans (hball n)
 
+/-- A cutoff supported on a finite set has the corresponding finite sum. -/
+theorem cutoff_finsum_eq_sum {ι : Type*} (s : Finset ι)
+    (P : ι → Prop) [DecidablePred P] (f : ι → ℝ) (hs : ∀ a, a ∈ s ↔ P a) :
+    (∑ᶠ a, if P a then f a else 0) = ∑ a ∈ s, f a := by
+  classical
+  have hsupp : Function.support (fun a => if P a then f a else 0) ⊆ s := by
+    intro a ha
+    by_contra hnot
+    have hp : ¬P a := fun h => hnot ((hs a).2 h)
+    simp [hp, Function.mem_support] at ha
+  rw [finsum_eq_sum_of_support_subset (f := fun a => if P a then f a else 0) (s := s) hsupp]
+  exact Finset.sum_congr rfl fun a ha => ite_eq_left ((hs a).1 ha)
+
+/-- A nested sequence of finite sets with geometrically bounded shells has a bounded tail. -/
+theorem sum_le_of_geometric_shells {ι : Type*} [DecidableEq ι]
+    (ball : ℕ → Finset ι) (g : ι → ℝ) (A q : ℝ) (hA : 0 ≤ A)
+    (hq_pos : 0 < q) (hq_lt : q < 1) (n m : ℕ)
+    (hsub : ∀ k, ball k ⊆ ball (k + 1))
+    (hzero : ∀ k, k ≤ n + 1 → ∑ i ∈ ball k, g i = 0)
+    (hshell : ∀ k, n + 1 ≤ k → ∑ i ∈ ball (k + 1) \ ball k, g i ≤ A * q ^ k) :
+    (∑ i ∈ ball m, g i) ≤ A * q / (1 - q) * q ^ n := by
+  by_cases hm : m ≤ n + 1
+  · rw [hzero m hm]
+    exact mul_nonneg (div_nonneg (mul_nonneg hA hq_pos.le) (sub_pos.mpr hq_lt).le)
+      (pow_nonneg hq_pos.le _)
+  have hind : ∀ t, (∑ i ∈ ball (n + 1 + t), g i) ≤
+      A * ∑ j ∈ Finset.range t, q ^ (n + 1 + j) := by
+    intro t
+    induction t with
+    | zero => simp [hzero (n + 1) le_rfl]
+    | succ t ih =>
+      have hdecomp := Finset.sum_sdiff (f := g) (hsub (n + 1 + t))
+      have hs := hshell (n + 1 + t) (Nat.le_add_right _ _)
+      rw [Finset.sum_range_succ, mul_add]
+      have heq : n + 1 + (t + 1) = n + 1 + t + 1 := by omega
+      rw [heq]
+      linarith
+  have hm_ge : n + 1 ≤ m := (lt_of_not_ge hm).le
+  have hfinite := hind (m - (n + 1))
+  rw [Nat.add_sub_of_le hm_ge] at hfinite
+  have hgeom := geometric_sum_from_le q hq_pos hq_lt n (m - (n + 1))
+  calc
+    (∑ i ∈ ball m, g i) ≤ A * (q ^ (n + 1) * (1 - q)⁻¹) :=
+      hfinite.trans (mul_le_mul_of_nonneg_left hgeom hA)
+    _ = A * q / (1 - q) * q ^ n := by rw [pow_succ]; ring
+
+/-- Every finite set lies in one member of a dyadic ball exhaustion. -/
+theorem dyadic_ball_cofinal {ι : Type*} (z : ι → ℂ) (ball : ℕ → Finset ι)
+    (hmem : ∀ k ρ, ρ ∈ ball k ↔ ‖z ρ‖ ≤ (2 : ℝ) ^ k)
+    (t : Finset ι) : ∃ m, t ⊆ ball m := by
+  classical
+  by_cases ht : t.Nonempty
+  · obtain ⟨m, hm⟩ := pow_unbounded_of_one_lt (t.sup' ht fun i => ‖z i‖)
+      (by norm_num : (1 : ℝ) < 2)
+    exact ⟨m, fun i hi => (hmem m i).2 ((Finset.le_sup' (f := fun i => ‖z i‖) hi).trans hm.le)⟩
+  · exact ⟨0, by simp [Finset.not_nonempty_iff_eq_empty.mp ht]⟩
+
 end Hadamard.DyadicBounds
