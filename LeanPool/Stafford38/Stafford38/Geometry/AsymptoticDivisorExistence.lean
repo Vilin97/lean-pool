@@ -72,6 +72,12 @@ instance coordinateZeroPrime_isPrime : (coordinateZeroPrime k).IsPrime := by
 /-- The local ring of the affine line at the origin. -/
 abbrev CoordinateZeroLocalRing := Localization.AtPrime (coordinateZeroPrime k)
 
+instance coordinateZeroLocalRing_isDomain : IsDomain (CoordinateZeroLocalRing k) :=
+  inferInstance
+
+instance coordinateZeroLocalRing_smul : SMul k (CoordinateZeroLocalRing k) :=
+  Algebra.toSMul
+
 instance coordinateZeroLocalRing_isDiscreteValuationRing :
     IsDiscreteValuationRing (CoordinateZeroLocalRing k) := by
   apply IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain

@@ -53,6 +53,26 @@ private theorem localized_boundary_subsingleton
     (fun z => tangentialBoundaryMap_eventually_zero k n N d hd z)
     (fun r => tangentialBoundaryMap_surjective k n N d hd r)
 
+private theorem page_inequality_of_subsingleton
+    (r : ℕ) (hr : Subsingleton
+      (LocalizedModule S ((complex k n N d hd).TargetTotal (r + 1)))) : ∀
+    (hA0 : IsFiniteLength (Localization S)
+      (LocalizedModule S ((complex k n N d hd).SourceTotal 1)))
+    (hC0 : IsFiniteLength (Localization S)
+      (LocalizedModule S ((complex k n N d hd).TargetTotal 1))),
+    Module.length (Localization S) (LocalizedModule S ((complex k n N d hd).TargetTotal 1)) ≤
+      Module.length (Localization S) (LocalizedModule S ((complex k n N d hd).SourceTotal 1)) := by
+  intro hA0 hC0
+  have h := @twoTermPage_length_target_le_source (Localization S) _
+    (fun r => LocalizedModule S ((complex k n N d hd).SourceTotal (r + 1)))
+    (fun r => LocalizedModule S ((complex k n N d hd).TargetTotal (r + 1)))
+    (fun _ => inferInstance) (fun _ => inferInstance)
+    (fun _ => inferInstance) (fun _ => inferInstance)
+    hA0 hC0 (fun r => localizedMap S (tangentialDrop k n N d hd (r + 1)))
+    (sourceSuccLocalized k n N d hd S) (targetSuccLocalized k n N d hd S) r hr
+  exact h
+
+
 theorem canonicalPage_length_target_le_source : ∀
     (hA0 : IsFiniteLength (Localization S)
       (LocalizedModule S ((complex k n N d hd).SourceTotal 1)))
@@ -62,13 +82,7 @@ theorem canonicalPage_length_target_le_source : ∀
       Module.length (Localization S) (LocalizedModule S ((complex k n N d hd).SourceTotal 1)) := by
   intro hA0 hC0
   obtain ⟨r, hr⟩ := localized_boundary_subsingleton k n N d hd S hC0
-  exact @twoTermPage_length_target_le_source (Localization S) _
-    (fun r => LocalizedModule S ((complex k n N d hd).SourceTotal (r + 1)))
-    (fun r => LocalizedModule S ((complex k n N d hd).TargetTotal (r + 1)))
-    (fun _ => inferInstance) (fun _ => inferInstance)
-    (fun _ => inferInstance) (fun _ => inferInstance)
-    hA0 hC0 (fun r => localizedMap S (tangentialDrop k n N d hd (r + 1)))
-    (sourceSuccLocalized k n N d hd S) (targetSuccLocalized k n N d hd S) r hr
+  exact page_inequality_of_subsingleton k n N d hd S r hr hA0 hC0
 
 end
 end Stafford38.Characteristic.CanonicalPageEulerInequality
