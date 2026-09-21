@@ -145,7 +145,7 @@ theorem existsUnique_stationaryLaw
 
 /--
 Equation (12) for the actual kernel iterates, from an arbitrary initial count
-law.  No invariance assumption is needed for this potential estimate.
+law. No invariance assumption is needed for this potential estimate.
 -/
 theorem finite_average_expected_hazard_bound
     (a : ℝ) (ha : 0 < a) (hm : 0 < m)

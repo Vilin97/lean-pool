@@ -25,9 +25,9 @@ open scoped BigOperators ENNReal ProbabilityTheory unitInterval
 /-!
 # The continuous-coordinate matching process
 
-This module constructs the policy on one probability space.  A state records
+This module constructs the policy on one probability space. A state records
 the live supply coordinates together with the current independent demand and
-replenishment coordinates.  The reward and the inventory update therefore
+replenishment coordinates. The reward and the inventory update therefore
 use the same demand sample.
 -/
 
@@ -65,7 +65,7 @@ theorem map_selectedIndex_volume
       (q.selectedIndexLaw hq).toMeasure
   rw [← Measure.map_map q.selectedIndex_measurable measurable_subtype_coe]
   rw [map_coe_volume]
-  letI : IsProbabilityMeasure DyadicMass.uniformDemand := by
+  let : IsProbabilityMeasure DyadicMass.uniformDemand := by
     rw [← map_coe_volume]
     infer_instance
   apply FiniteLaw.measure_ext_of_singletons
@@ -230,7 +230,7 @@ theorem noise_demand_ne_zero_ae :
       {z : Noise | ¬(z.1 : ℝ) ≠ 0} =
         ({⟨0, by norm_num⟩} : Set unitInterval) ×ˢ Set.univ := by
     ext z
-    simp only [mem_setOf_eq, mem_prod, mem_singleton_iff, mem_univ,
+    simp only [mem_ofPred_eq, mem_prod, mem_singleton_iff, mem_univ,
       and_true, not_ne_iff]
     constructor
     · intro hz
@@ -507,7 +507,7 @@ instance processLaw.isProbabilityMeasure
       rw [processLaw, TrajectoryBridge.iterateLaw_zero]
       infer_instance
   | succ t ih =>
-      letI : IsProbabilityMeasure
+      let : IsProbabilityMeasure
           (processLaw (L := L) a fallback t) := ih
       rw [processLaw, TrajectoryBridge.iterateLaw_succ]
       change IsProbabilityMeasure
@@ -540,9 +540,9 @@ def trajectoryLaw (a : ℝ) (fallback : Fin m) :
 instance trajectoryLaw.isProbabilityMeasure
     (a : ℝ) (fallback : Fin m) :
     IsProbabilityMeasure (trajectoryLaw (L := L) a fallback) := by
-  letI : IsProbabilityMeasure (initialProcessLaw m) :=
+  let : IsProbabilityMeasure (initialProcessLaw m) :=
     initialProcessLaw.isProbabilityMeasure
-  letI : IsMarkovKernel (processKernel (L := L) a fallback) :=
+  let : IsMarkovKernel (processKernel (L := L) a fallback) :=
     processKernel.isMarkovKernel a fallback
   unfold trajectoryLaw TrajectoryBridge.trajectoryLaw
   infer_instance

@@ -495,7 +495,7 @@ private theorem expected_internalWeightedSum_eq
   ring
 
 /-- Expected equation (2), derived pointwise from the concrete policy's
-hazard-energy telescope.  The sample type may contain data besides the count
+hazard-energy telescope. The sample type may contain data besides the count
 state, which is useful for time averages and spatial configurations. -/
 theorem expected_equation_two
     {Ω : Type*} [Fintype Ω]
@@ -548,7 +548,7 @@ theorem expected_hazard_gap_nonneg
 
 /--
 Concrete equation (3) for an arbitrary finite sample space and state
-projection.  Callers supply only the pointwise cost comparison and the
+projection. Callers supply only the pointwise cost comparison and the
 law-level separated-or-odd `hsym` condition; equation (2) is discharged
 internally by `expected_equation_two`.
 -/

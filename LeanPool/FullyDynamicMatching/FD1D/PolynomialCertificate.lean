@@ -11,7 +11,7 @@ import Mathlib.Tactic
 # Sparse exact polynomial certificate
 
 This module implements a computable dense representation of trivariate
-integer polynomials.  Its proved evaluator is used to kernel-check every
+integer polynomials. Its proved evaluator is used to kernel-check every
 coefficient in the four Bellman charts without materializing enormous
 `ring_nf` goals.
 -/
@@ -74,7 +74,7 @@ instance [Zero R] [One R] [Add R] [Mul R] : Pow (DPoly R) Nat := ⟨pow⟩
 instance (n : ℕ) [OfNat R (n + 2)] : OfNat (DPoly R) (n + 2) :=
   ⟨const (OfNat.ofNat (n + 2))⟩
 
-@[simp] theorem coeffs_zero  :
+@[simp] theorem coeffs_zero :
     (0 : DPoly R).coeffs = [] := rfl
 
 @[simp] theorem coeffs_one [One R] :
@@ -106,7 +106,7 @@ def eval [Zero S] [Add S] [Mul S]
     (f : R → S) (x : S) (a : R) (p : List R) :
     evalCoeffs f x (a :: p) = f a + x * evalCoeffs f x p := rfl
 
-theorem evalCoeffs_add  [Add R] [CommRing S]
+theorem evalCoeffs_add [Add R] [CommRing S]
     (f : R → S)
     (hfadd : ∀ a b, f (a + b) = f a + f b)
     (x : S) (p q : List R) :
@@ -160,7 +160,7 @@ theorem evalCoeffs_mul [Zero R] [Add R] [Mul R] [CommRing S]
       simp only [evalCoeffs, hf0, zero_add, ih]
       ring
 
-@[simp] theorem eval_zero  [CommRing S]
+@[simp] theorem eval_zero [CommRing S]
     (f : R → S) (x : S) :
     eval f x (0 : DPoly R) = 0 := rfl
 

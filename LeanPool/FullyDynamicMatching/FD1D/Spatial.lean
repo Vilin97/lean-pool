@@ -21,8 +21,8 @@ open Set MeasureTheory
 # Concrete spatial inventory and dyadic quantile selection
 
 This module connects the recursive transport construction to an inventory of
-actual points.  A supply configuration retains both each real location and
-its certified depth-`L` cell label.  The recursive quantile selector is given
+actual points. A supply configuration retains both each real location and
+its certified depth-`L` cell label. The recursive quantile selector is given
 a finite leaf index, and its law under Lebesgue-uniform demand is computed
 exactly, including zero-mass leaves.
 -/
@@ -223,7 +223,7 @@ theorem selectedLeaf_le_quantile {L : ℕ} (q : DyadicMass L)
 
 /--
 Away from the single boundary point `u = 0`, a leaf is selected exactly on
-its right-closed cumulative-mass interval.  This formulation handles
+its right-closed cumulative-mass interval. This formulation handles
 zero-mass leaves without any positivity assumption on individual masses.
 -/
 theorem selectedIndex_eq_iff_mem_massInterval {L : ℕ} (q : DyadicMass L)
@@ -314,7 +314,7 @@ private theorem ae_ne_zero : ∀ᵐ u : ℝ ∂volume, u ≠ 0 := by
 
 /--
 The pushforward of Lebesgue-uniform demand assigns exactly the declared mass
-to every leaf.  The only discrepancy between recursive `≤` tie-breaking and
+to every leaf. The only discrepancy between recursive `≤` tie-breaking and
 the half-open mass intervals is the null singleton `u = 0`.
 -/
 theorem selectedIndexPushforwardMass_eq_leafMass {L : ℕ}
@@ -448,7 +448,7 @@ theorem countState_apply (C : SupplyConfiguration L m) (i : DyadicNode L) :
   rfl
 
 /--
-A total representative of a leaf.  If the leaf is empty, the supplied
+A total representative of a leaf. If the leaf is empty, the supplied
 fallback is returned; the later a.e. feasibility theorem proves that this
 case occurs only on the null exceptional demand set.
 -/
@@ -634,7 +634,7 @@ theorem quantileDistance_integrable
 
 /--
 Selecting an actual occupied point costs at most the exact CDF quantile area
-plus one cell width.  There is only one discretization term.
+plus one cell width. There is only one discretization term.
 -/
 theorem expectedActualDistance_le_one_cell
     (C : SupplyConfiguration L m) (q : DyadicMass L)

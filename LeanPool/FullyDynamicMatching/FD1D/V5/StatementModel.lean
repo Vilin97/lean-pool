@@ -110,7 +110,7 @@ instance historyKernel_isMarkovKernel (P : OnlinePolicy m) (n : ℕ) :
 
 /-- The path-space law generated from an arbitrary initial inventory law. -/
 def trajectoryFrom (P : OnlinePolicy m)
-    (μ₀ : Measure (Inventory m))  :
+    (μ₀ : Measure (Inventory m)) :
     Measure (ℕ → ProcessState m) :=
   Kernel.trajMeasure (X := fun _ => ProcessState m)
     (initialProcessLaw μ₀) (historyKernel P)

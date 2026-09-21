@@ -9,8 +9,8 @@ import LeanPool.FullyDynamicMatching.FD1D.V5.Parameters
 /-!
 # The local three-cap policy from manuscript bundle v5
 
-The two child counts are ordered only inside `orderedBias`.  `bias` restores
-the fixed left/right spatial sign.  Empty-child rates are auxiliary analytic
+The two child counts are ordered only inside `orderedBias`. `bias` restores
+the fixed left/right spatial sign. Empty-child rates are auxiliary analytic
 rates; empty children still receive zero deletion mass.
 -/
 

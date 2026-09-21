@@ -20,7 +20,7 @@ open Set MeasureTheory
 # One-step spatial dynamics
 
 This module lifts one transition of the hierarchical count chain to the
-actual labeled supply configuration.  The selected label is retained, so
+actual labeled supply configuration. The selected label is retained, so
 replacing its coordinate and dyadic leaf gives a pathwise update rather than
 only a count-law coupling.
 -/
@@ -179,7 +179,7 @@ private theorem leafCount_update
 
 /--
 Replace the fixed representative of an occupied deletion leaf by an arbitrary
-point certified to lie in the arrival leaf.  On an empty deletion leaf this
+point certified to lie in the arrival leaf. On an empty deletion leaf this
 is a no-op, matching `InventoryState.move`.
 -/
 def actualLeafStep (C : SupplyConfiguration L m) (fallback : Fin m)

@@ -25,7 +25,7 @@ open scoped BigOperators ENNReal
 # Finite laws as measures
 
 This file connects the project's elementary `FiniteLaw` API to Mathlib
-probability measures.  It also transfers bounds indexed by a finite count
+probability measures. It also transfers bounds indexed by a finite count
 state to arbitrary random spatial configurations having that count
 pushforward.
 -/
@@ -91,7 +91,7 @@ theorem integrable_toMeasure [MeasurableSpace α]
   Integrable.of_finite
 
 /--
-A generic pushforward bridge.  If `X` has finite law `μ`, then any integrable
+A generic pushforward bridge. If `X` has finite law `μ`, then any integrable
 random cost bounded by a state observable has expectation bounded by the
 corresponding `FiniteLaw.expect`.
 -/
@@ -222,7 +222,7 @@ theorem integral_actualConfigurationCost_le_expect
   · exact hmap
 
 /--
-Stationary equation (3) for an arbitrary random spatial configuration.  Only
+Stationary equation (3) for an arbitrary random spatial configuration. Only
 the count pushforward is required to be stationary; configurations in the
 same count-state fiber may have any distribution.
 -/

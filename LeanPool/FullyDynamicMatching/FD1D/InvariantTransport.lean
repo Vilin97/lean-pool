@@ -97,7 +97,7 @@ theorem inventoryPerm_eq_inventoryStatePerm
 
 end TreeSymmetry
 
-/-- Abstract complete-tree cancellation criterion.  A swap at a node negates
+/-- Abstract complete-tree cancellation criterion. A swap at a node negates
 that node's coefficient and fixes every strictly shallower coefficient. -/
 theorem completeHaar_crossTerm_symmetry_of_invariant_swaps
     {L : ℕ} {Ω : Type*} [Fintype Ω]

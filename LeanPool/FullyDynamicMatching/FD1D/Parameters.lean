@@ -10,7 +10,7 @@ import LeanPool.FullyDynamicMatching.FD1D.Basic
 # Parameter choices
 
 This file makes the parameter choices in the hierarchical matching argument
-computationally exact.  Natural-number division is the floor in the definition
+computationally exact. Natural-number division is the floor in the definition
 of the tree depth.
 -/
 

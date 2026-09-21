@@ -18,7 +18,7 @@ open Set MeasureTheory
 # Uniform continuous arrivals and dyadic leaf labels
 
 This module identifies a uniform point of `[0,1]` with its depth-`L`
-dyadic leaf.  The continuous arrival law pushes forward to the uniform
+dyadic leaf. The continuous arrival law pushes forward to the uniform
 finite law on `DyadicNode L`, and the point lies in the closed cell
 certified by its selected label.
 -/

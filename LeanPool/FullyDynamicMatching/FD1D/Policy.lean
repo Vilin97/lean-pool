@@ -18,7 +18,7 @@ noncomputable section
 # The hierarchical deletion policy
 
 This module assembles the local two-child formulas into labels on a complete
-dyadic tree.  Counts come from a coherent `AggregatedInventory`; hazards are
+dyadic tree. Counts come from a coherent `AggregatedInventory`; hazards are
 defined recursively from the root, and all other policy quantities are then
 derived from the counts and hazards.
 -/
@@ -484,7 +484,7 @@ theorem hazard_energy_bound
     (local_hazard_inequality I ha)
 
 /--
-The one isolated interface to the polynomial Bellman certificate.  A module
+The one isolated interface to the polynomial Bellman certificate. A module
 importing both this policy and `FD1D.Bellman` can prove this proposition from
 `FD1D.local_bellman_inequality`; no certificate algebra is duplicated here.
 -/
@@ -597,7 +597,7 @@ private theorem childY_right_normalized
       field_simp [ha.ne', hh.ne', hC.ne']
 
 /-!
-This is the only proof tied to `FD1D.Bellman`.  It converts the concrete
+This is the only proof tied to `FD1D.Bellman`. It converts the concrete
 policy labels into the normalized coordinates of the polynomial certificate.
 -/
 theorem localBellmanHypothesis

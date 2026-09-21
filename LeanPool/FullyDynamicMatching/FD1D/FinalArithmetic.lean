@@ -13,7 +13,7 @@ import LeanPool.FullyDynamicMatching.FD1D.Initialization
 # Final arithmetic for the chosen parameters
 
 This file turns the concrete stationary and finite-time hazard estimates into
-the advertised `6a/m` and `7a/m` bounds.  Transport enters only through an
+the advertised `6a/m` and `7a/m` bounds. Transport enters only through an
 equation-(3) inequality supplied as a hypothesis.
 -/
 
@@ -115,7 +115,7 @@ theorem averaged_hazard_root_lower_bound {m T : ℕ} (hm : 1 ≤ m) (hT : 0 < T)
 
 /--
 For the chosen parameters, stationary equation (3) implies the advertised
-stationary `6a/m` bound.  All hazard and parameter hypotheses are discharged
+stationary `6a/m` bound. All hazard and parameter hypotheses are discharged
 internally.
 -/
 theorem stationary_expected_cost_le_six

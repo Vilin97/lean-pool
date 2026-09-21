@@ -10,7 +10,7 @@ import LeanPool.FullyDynamicMatching.FD1D.V5.LocalBellman
 # The v5 hierarchical tree policy
 
 This module propagates the local three-cap rule through a complete dyadic
-tree.  It proves the invariant domain, rate-energy monotonicity, the lifted
+tree. It proves the invariant domain, rate-energy monotonicity, the lifted
 local Bellman inequality, and the deterministic aggregate estimate.
 -/
 
@@ -212,7 +212,6 @@ theorem regularizedMass_rightChild (I : AggregatedInventory L m)
     (a : ℝ) (d : ℕ) (v : DyadicNode d) :
     regularizedMass I a (d + 1) (rightChild v) =
       regularizedMassRight a (intervalMass d v)
-
         (I.count (d + 1) (rightChild v)) := by
   simp [regularizedMass, regularizedMassRight, inventory]
 
@@ -269,12 +268,12 @@ theorem node_invariants
         LocalPolicy.child_invariants ha (nodeMass_pos d z.1)
           hp.1 htLocal
       have hZLpos :
-          0 < regularizedMassLeft a (intervalMass d z.1) x  := by
+          0 < regularizedMassLeft a (intervalMass d z.1) x := by
         unfold regularizedMassLeft
         exact div_pos (div_pos (nodeMass_pos d z.1) (by norm_num))
           (by positivity)
       have hZRpos :
-          0 < regularizedMassRight a (intervalMass d z.1)  y := by
+          0 < regularizedMassRight a (intervalMass d z.1) y := by
         unfold regularizedMassRight
         exact div_pos (div_pos (nodeMass_pos d z.1) (by norm_num))
           (by positivity)
@@ -342,7 +341,7 @@ theorem deletionMass_nonneg (I : AggregatedInventory L m)
     (rate_pos I ha hm hdL v).le
 
 theorem sum_deletionMass (I : AggregatedInventory L m)
-    {a : ℝ}  (hm : 0 < m)
+    {a : ℝ} (hm : 0 < m)
     {d : ℕ} (hdL : d ≤ L) :
     ∑ v, deletionMass I a d v = 1 := by
   let q : CoherentTreeLabel L ℝ :=
@@ -501,7 +500,6 @@ theorem local_bellman_inequality
     (regularizedMass_leftChild I a d v).symm
   have hZR :
       regularizedMassRight a (nodeMass d v)
-
           (I.count (d + 1) (rightChild v)) =
         regularizedMass I a (d + 1) (rightChild v) :=
     (regularizedMass_rightChild I a d v).symm

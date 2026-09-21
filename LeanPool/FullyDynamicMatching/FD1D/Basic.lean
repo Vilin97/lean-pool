@@ -18,7 +18,7 @@ import Mathlib.Tactic
 # Fully dynamic matching on the line
 
 Common definitions for the formal proof of the hierarchical quantile matching
-bound.  All analytic quantities are represented in `ℝ`; finite probability
+bound. All analytic quantities are represented in `ℝ`; finite probability
 laws are represented by weighted sums over finite types.
 -/
 

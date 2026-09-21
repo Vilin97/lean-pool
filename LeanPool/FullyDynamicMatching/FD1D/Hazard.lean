@@ -16,7 +16,7 @@ noncomputable section
 # Local two-child hazard algebra
 
 This file formalizes equations (1), (4), and (5) from
-`hierarchical_quantile_matching.md`.  The namespace contains only local
+`hierarchical_quantile_matching.md`. The namespace contains only local
 quantities for a parent with natural-valued child counts `x` and `y`.
 
 At an empty parent the paper extends both child hazards by the parent hazard.

@@ -75,7 +75,7 @@ theorem limsup_trajectoryRMSCostFromState_le_log_succ
       div_le_div_of_nonneg_right hscaled hmpos.le
 
 /--
-Natural-log form of manuscript part (ii).  The scheduled replacement phase
+Natural-log form of manuscript part (ii). The scheduled replacement phase
 is joined pathwise to the same post-refresh trajectory.
 -/
 theorem finite_horizon_expected_joinedTrajectoryCost_le_log_succ

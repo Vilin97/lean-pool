@@ -18,13 +18,13 @@ open scoped BigOperators
 # Explicit initialization by labeled refresh
 
 During the first `m` requests, label `k` is matched and replaced at step
-`k < m`.  Labels below `k` have already been refreshed, while labels at or
-above `k` still denote the original supply.  This makes it impossible for
+`k < m`. Labels below `k` have already been refreshed, while labels at or
+above `k` still denote the original supply. This makes it impossible for
 the initialization schedule to delete a previously refreshed label.
 
 `Spatial.lean` is deliberately not imported here: its current dependency on
-the transport development is transient.  Exact coordinates are instead
-parameterized by a unit-interval location rule.  The count projection and
+the transport development is transient. Exact coordinates are instead
+parameterized by a unit-interval location rule. The count projection and
 its law are independent of that rule.
 -/
 
@@ -75,7 +75,7 @@ theorem refreshAssignment_current_is_replenished {ι : Type*} {m k : ℕ}
   simp [refreshAssignment]
 
 /--
-Advancing the schedule cannot alter a previously refreshed label.  Both
+Advancing the schedule cannot alter a previously refreshed label. Both
 sides equal that label's prescribed replenishment.
 -/
 theorem refreshAssignment_preserves_refreshed {ι : Type*} {m k : ℕ}
@@ -117,7 +117,7 @@ theorem refreshState_at_card {L m : ℕ}
 
 /--
 An arbitrary labeled supply configuration at the resolution used by the
-count chain.  No distributional assumption is imposed on the initial supply.
+count chain. No distributional assumption is imposed on the initial supply.
 -/
 structure RefreshSupply (L m : ℕ) where
   /-- Spatial coordinate of each labeled supply item. -/
@@ -128,7 +128,7 @@ structure RefreshSupply (L m : ℕ) where
     ∀ j, location j ∈ Set.Icc (0 : ℝ) 1
 
 /--
-Coordinates for every possible replenishment-leaf assignment.  This is the
+Coordinates for every possible replenishment-leaf assignment. This is the
 coordinate-level parameter used while `Spatial.lean` is unavailable.
 -/
 structure ReplenishmentCoordinates (L m : ℕ) where
@@ -325,7 +325,7 @@ theorem initializationMatchingCost_le_card {L m : ℕ}
     _ = (m : ℝ) := by simp
 
 /--
-The final finite-horizon wrapper.  Its first conclusion identifies the
+The final finite-horizon wrapper. Its first conclusion identifies the
 explicit schedule's terminal count law with `refreshedLaw`; its second
 conclusion invokes the main arithmetic theorem with the initialization bound
 proved above, so neither fact remains a hypothesis.

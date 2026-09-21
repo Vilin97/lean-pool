@@ -18,7 +18,7 @@ open Set
 # Realizing fixed-total count states by spatial configurations
 
 Every unit of a count vector is represented by one slot in the sigma type
-`Σ i, Fin (x i)`.  An equivalence with `Fin m` enumerates those slots, and
+`Σ i, Fin (x i)`. An equivalence with `Fin m` enumerates those slots, and
 placing each enumerated point at its cell's left endpoint gives an exact
 spatial realization.
 -/

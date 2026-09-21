@@ -102,8 +102,8 @@ theorem orderedBias_nonneg
   by_cases hy : y = 0
   · subst y
     have hx : x ≠ 0 := by omega
-    simp [orderedBias, hx, parentMass, inventory]
-    positivity
+    rw [orderedBias, ite_eq_right hx, ite_eq_right (by omega), ite_eq_left rfl]
+    exact mul_nonneg (inventory_nonneg x 0) hh.le
   · have hypos : 0 < y := Nat.pos_of_ne_zero hy
     rw [orderedBias_eq_caps hlt hypos]
     apply le_min
@@ -176,8 +176,8 @@ private theorem ordered_child_invariants
     (ha : 0 < a) (hp : 0 < p) (hh : 0 < h)
     (hxy : y ≤ x)
     (ht : discrepancy a p h x y ≤ h / 2) :
-    regularizedMassLeft a p x  ≤ rateLeft a p h x y ∧
-      regularizedMassRight a p  y ≤ rateRight a p h x y := by
+    regularizedMassLeft a p x ≤ rateLeft a p h x y ∧
+      regularizedMassRight a p y ≤ rateRight a p h x y := by
   by_cases hy : y = 0
   · subst y
     by_cases hx0 : x = 0
@@ -290,11 +290,10 @@ theorem massRight_eq_count_mul_rateRight
 
 private theorem discrepancyLeft_le_half_of_regularized
     {a p h : ℝ} {x y : ℕ} (ha : 0 < a)
-    (hZ : regularizedMassLeft a p x  ≤ rateLeft a p h x y) :
+    (hZ : regularizedMassLeft a p x ≤ rateLeft a p h x y) :
     discrepancyLeft a p h x y ≤ rateLeft a p h x y / 2 := by
   have hden : 0 < (x : ℝ) + a / 2 := by positivity
   have hmul := (div_le_iff₀ hden).1 hZ
-  unfold regularizedMassLeft at hmul
   unfold discrepancyLeft
   apply (div_le_iff₀ ha).2
   rw [massLeft_eq_count_mul_rateLeft]
@@ -302,11 +301,10 @@ private theorem discrepancyLeft_le_half_of_regularized
 
 private theorem discrepancyRight_le_half_of_regularized
     {a p h : ℝ} {x y : ℕ} (ha : 0 < a)
-    (hZ : regularizedMassRight a p  y ≤ rateRight a p h x y) :
+    (hZ : regularizedMassRight a p y ≤ rateRight a p h x y) :
     discrepancyRight a p h x y ≤ rateRight a p h x y / 2 := by
   have hden : 0 < (y : ℝ) + a / 2 := by positivity
   have hmul := (div_le_iff₀ hden).1 hZ
-  unfold regularizedMassRight at hmul
   unfold discrepancyRight
   apply (div_le_iff₀ ha).2
   rw [massRight_eq_count_mul_rateRight]
@@ -317,12 +315,12 @@ theorem child_invariants
     (ha : 0 < a) (hp : 0 < p) (hh : 0 < h)
     (ht : discrepancy a p h x y ≤ h / 2) :
     discrepancyLeft a p h x y ≤ rateLeft a p h x y / 2 ∧
-      regularizedMassLeft a p x  ≤ rateLeft a p h x y ∧
+      regularizedMassLeft a p x ≤ rateLeft a p h x y ∧
       discrepancyRight a p h x y ≤ rateRight a p h x y / 2 ∧
-      regularizedMassRight a p  y ≤ rateRight a p h x y := by
+      regularizedMassRight a p y ≤ rateRight a p h x y := by
   have hZ :
-      regularizedMassLeft a p x  ≤ rateLeft a p h x y ∧
-        regularizedMassRight a p  y ≤ rateRight a p h x y := by
+      regularizedMassLeft a p x ≤ rateLeft a p h x y ∧
+        regularizedMassRight a p y ≤ rateRight a p h x y := by
     by_cases hxy : y ≤ x
     · exact ordered_child_invariants ha hp hh hxy ht
     · have hyx : x ≤ y := Nat.le_of_not_ge hxy
@@ -332,14 +330,14 @@ theorem child_invariants
       have hs := ordered_child_invariants ha hp hh hyx htSwap
       constructor
       · calc
-          regularizedMassLeft a p x  =
-              regularizedMassRight a p  x := by
+          regularizedMassLeft a p x =
+              regularizedMassRight a p x := by
                 rfl
           _ ≤ rateRight a p h y x := hs.2
           _ = rateLeft a p h x y := rateRight_swap a p h x y
       · calc
-          regularizedMassRight a p  y =
-              regularizedMassLeft a p y  := by
+          regularizedMassRight a p y =
+              regularizedMassLeft a p y := by
                 rfl
           _ ≤ rateLeft a p h y x := hs.1
           _ = rateRight a p h x y := rateLeft_swap a p h x y
@@ -357,17 +355,16 @@ theorem child_rates_nonneg
     (ht : discrepancy a p h x y ≤ h / 2) :
     0 ≤ rateLeft a p h x y ∧ 0 ≤ rateRight a p h x y := by
   have hchild := child_invariants ha hp hh ht
-  have hZL : 0 ≤ regularizedMassLeft a p x  := by
+  have hZL : 0 ≤ regularizedMassLeft a p x := by
     unfold regularizedMassLeft
     positivity
-  have hZR : 0 ≤ regularizedMassRight a p  y := by
+  have hZR : 0 ≤ regularizedMassRight a p y := by
     unfold regularizedMassRight
     positivity
   exact ⟨hZL.trans hchild.2.1, hZR.trans hchild.2.2.2⟩
 
 private theorem ordered_child_rate_average_ge
     {a p h : ℝ} {x y : ℕ}
-
     (hxy : y ≤ x)
     (ht : discrepancy a p h x y ≤ h / 2) :
     h ≤ (rateLeft a p h x y + rateRight a p h x y) / 2 := by

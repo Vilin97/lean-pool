@@ -17,9 +17,9 @@ open scoped BigOperators
 /-!
 # Local child-swap symmetries
 
-A swap at a depth-`d` node exchanges its two child subtrees.  The
+A swap at a depth-`d` node exchanges its two child subtrees. The
 permutation is propagated to deeper levels by preserving every subsequent
-left/right choice.  This file also lifts the permutations to inventory
+left/right choice. This file also lifts the permutations to inventory
 states and records the equivariance of the hierarchical policy.
 -/
 
@@ -165,12 +165,13 @@ theorem conjugate_involutive
 /-! ## Relabeling finite inventories -/
 
 instance inventoryStateNonempty
-    {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι] {m : ℕ} :
-    Nonempty (InventoryState ι m) :=
-  ⟨⟨fun i => if i = Classical.arbitrary ι then m else 0, by simp⟩⟩
+    {ι : Type*} [Fintype ι] [Nonempty ι] {m : ℕ} :
+    Nonempty (InventoryState ι m) := by
+  classical
+  exact ⟨⟨fun i => if i = Classical.arbitrary ι then m else 0, by simp⟩⟩
 
 /-- Push a fixed-total count vector forward along a permutation. -/
-def inventoryPerm {ι : Type*} [Fintype ι]  {m : ℕ}
+def inventoryPerm {ι : Type*} [Fintype ι] {m : ℕ}
     (e : Equiv.Perm ι) : Equiv.Perm (InventoryState ι m) where
   toFun x :=
     ⟨fun i => x.1 (e.symm i), by

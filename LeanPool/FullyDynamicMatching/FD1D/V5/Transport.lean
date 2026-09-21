@@ -97,7 +97,7 @@ theorem stateDyadicMassAt_leaf_probability
   rfl
 
 @[simp] theorem stateDyadicMass_total
-    (a : ℝ)  (hm : 0 < m)
+    (a : ℝ) (hm : 0 < m)
     (x : InventoryState (DyadicNode L) m) :
     (stateDyadicMass a x).total = 1 := by
   rw [stateDyadicMass, stateDyadicMassAt_total a x (by omega)]

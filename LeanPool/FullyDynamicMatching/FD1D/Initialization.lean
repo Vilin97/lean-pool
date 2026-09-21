@@ -20,7 +20,7 @@ open scoped BigOperators
 
 The refreshed inventory is obtained from `m` labeled, independently uniform
 leaf assignments by forgetting the labels and retaining only the fiber
-cardinalities.  The resulting law is invariant under every leaf relabeling.
+cardinalities. The resulting law is invariant under every leaf relabeling.
 -/
 
 /-- Assignments of `m` labeled inventory items to a finite set of locations. -/

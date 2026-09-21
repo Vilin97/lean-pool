@@ -17,9 +17,9 @@ noncomputable section
 # Global harmonic-potential bookkeeping
 
 This file lifts the one-coordinate identity from `FD1D.Drift` to all
-nonroot nodes of a finite dyadic tree.  The stochastic input is deliberately
+nonroot nodes of a finite dyadic tree. The stochastic input is deliberately
 minimal: at a node, deletion and arrival are independent Bernoulli events
-with probabilities `q` and `p`.  Linearity then gives the global identity;
+with probabilities `q` and `p`. Linearity then gives the global identity;
 no independence between different tree nodes is needed.
 -/
 
@@ -32,7 +32,7 @@ def bernoulliMass (r : ℝ) (outcome : Bool) : ℝ :=
   if outcome then r else 1 - r
 
 /--
-The new count after a deletion followed by an arrival.  The hypotheses used
+The new count after a deletion followed by an arrival. The hypotheses used
 below ensure that deletion has probability zero when the old count is zero.
 -/
 def updateCount (N : ℕ) (deleted arrived : Bool) : ℕ :=
@@ -88,7 +88,7 @@ def potentialRemainder
 
 /--
 The conditional expected global change, obtained by summing the independent
-one-node deletion/arrival experiment.  Correlations between distinct nodes
+one-node deletion/arrival experiment. Correlations between distinct nodes
 do not enter this expression.
 -/
 def expectedGlobalPotentialChange
@@ -211,7 +211,7 @@ theorem potentialRemainder_bounds
 
 /--
 Explicit finite-state stationarity: `K` has row sum one, `mu K = mu`, and
-its conditional potential drift is `D-R`.  Then `E_mu D = E_mu R`.
+its conditional potential drift is `D-R`. Then `E_mu D = E_mu R`.
 -/
 theorem stationary_expect_drift_eq_remainder
     {α : Type*} [Fintype α]
@@ -293,7 +293,7 @@ theorem finite_time_drift_telescope
   linarith
 
 /--
-The finite-`T` inequality used in Section 5.  Here `Phi`, `D`, `R`, and `H`
+The finite-`T` inequality used in Section 5. Here `Phi`, `D`, `R`, and `H`
 are already expectations at time `t`; the preceding theorem supplies their
 telescoped drift equation.
 -/

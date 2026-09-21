@@ -15,9 +15,9 @@ noncomputable section
 /-!
 # Finite inventory Markov chains
 
-This file uses elementary finite sums throughout.  A `FiniteKernel` is a
+This file uses elementary finite sums throughout. A `FiniteKernel` is a
 row-stochastic matrix, and `FiniteLaw.step` is left multiplication by that
-matrix.  The inventory chain near the end of the file removes one item and
+matrix. The inventory chain near the end of the file removes one item and
 then adds an independent uniformly distributed item.
 -/
 
@@ -326,11 +326,12 @@ private theorem compact_probability_vectors :
   exact (Finset.single_le_sum (fun j _ => hw.1 j) (Finset.mem_univ i)).trans_eq hw.2
 
 /-- Every finite stochastic kernel on a nonempty state space has a stationary
-law.  The proof takes a convergent subsequence of Cesaro averages in the
+law. The proof takes a convergent subsequence of Cesaro averages in the
 compact finite probability simplex. -/
-theorem exists_stationary [DecidableEq α] [Nonempty α]
+theorem exists_stationary [Nonempty α]
     (K : FiniteKernel α) :
     ∃ μ : FiniteLaw α, K.IsStationary μ := by
+  classical
   let μ0 : FiniteLaw α := FiniteLaw.dirac (Classical.arbitrary α)
   let A : ℕ → α → ℝ := fun n => (K.cesaroLaw μ0 n).mass
   have hA (n : ℕ) : (∀ i, 0 ≤ A n i) ∧ ∑ i, A n i = 1 :=
@@ -504,7 +505,7 @@ def Equivariant (K : FiniteKernel α) (e : Equiv.Perm α) : Prop :=
 def LawInvariant (μ : FiniteLaw α) (e : Equiv.Perm α) : Prop :=
   ∀ x, μ.mass (e x) = μ.mass x
 
-theorem step_lawInvariant  {K : FiniteKernel α}
+theorem step_lawInvariant {K : FiniteKernel α}
     {μ : FiniteLaw α} {e : Equiv.Perm α}
     (hK : K.Equivariant e) (hμ : LawInvariant μ e) :
     LawInvariant (K.step μ) e := by
@@ -515,7 +516,7 @@ theorem step_lawInvariant  {K : FiniteKernel α}
   intro x _
   rw [hμ, hK]
 
-theorem iterate_lawInvariant  {K : FiniteKernel α}
+theorem iterate_lawInvariant {K : FiniteKernel α}
     {μ : FiniteLaw α} {e : Equiv.Perm α}
     (hK : K.Equivariant e) (hμ : LawInvariant μ e) (n : ℕ) :
     LawInvariant (K.iterate n μ) e := by
@@ -571,11 +572,12 @@ theorem cesaroLaw_groupInvariant [DecidableEq α]
 
 /-- A finite equivariant Markov kernel has a stationary law invariant under
 the entire finite group action. -/
-theorem exists_stationary_groupInvariant [DecidableEq α] [Nonempty α]
+theorem exists_stationary_groupInvariant [Nonempty α]
     {G : Type*} [Group G]
     (ρ : G →* Equiv.Perm α) (K : FiniteKernel α)
     (hK : GroupEquivariant ρ K) :
     ∃ μ : FiniteLaw α, K.IsStationary μ ∧ GroupInvariant ρ μ := by
+  classical
   let μ0 : FiniteLaw α := FiniteLaw.uniform
   let A : ℕ → α → ℝ := fun n => (K.cesaroLaw μ0 n).mass
   have hμ0 : GroupInvariant ρ μ0 :=
@@ -768,11 +770,8 @@ def kernel (R : DeletionRule ι m) : FiniteKernel (InventoryState ι m) where
         intro d _
         rw [Finset.sum_comm]
       _ = ∑ d, ∑ a, R.prob x d * (1 / Fintype.card ι : ℝ) := by
-        apply Finset.sum_congr rfl
-        intro d _
-        apply Finset.sum_congr rfl
-        intro a _
-        simp
+        exact Finset.sum_congr rfl fun d _ =>
+          Finset.sum_congr rfl fun a _ => by simp
       _ = 1 := by
         have hinner (d : ι) :
             (∑ _a : ι, R.prob x d * (1 / Fintype.card ι : ℝ)) =

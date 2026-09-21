@@ -100,10 +100,11 @@ private theorem mass_iterate_sub
   intro x _
   ring
 
-omit [Nonempty α] in
+omit [Nonempty α] [DecidableEq α] in
 private theorem lawL1_iterate_le
     (K : FiniteKernel α) (n : ℕ) (μ ν : FiniteLaw α) :
     lawL1 (K.iterate n μ) (K.iterate n ν) ≤ lawL1 μ ν := by
+  classical
   unfold lawL1
   simp_rw [mass_iterate_sub]
   calc
@@ -193,6 +194,7 @@ private theorem lawL1_block_contraction
       rw [← Finset.sum_mul]
       ring
 
+omit [Nonempty α] in
 private theorem lawL1_blocks_le
     (K : FiniteKernel α) (π μ : FiniteLaw α)
     (hπ : K.IsStationary π)
@@ -224,6 +226,7 @@ private theorem lawL1_blocks_le
       rw [← K.iterate_add] at hstep
       simpa [q, Nat.succ_mul, Nat.add_comm] using hstep
 
+omit [Nonempty α] in
 private theorem lawL1_iterate_geometric
     (K : FiniteKernel α) (π μ : FiniteLaw α)
     (hπ : K.IsStationary π)

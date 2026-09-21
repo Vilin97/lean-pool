@@ -24,8 +24,8 @@ variable {L m : ℕ}
 # Initialization joined to the continuous trajectory
 
 The time-zero spatial coordinate of `trajectoryLaw` is the iid refreshed
-inventory.  We use that exact coordinate vector as the replenishment supply
-for the first `m` scheduled matches.  Thus initialization and the main policy
+inventory. We use that exact coordinate vector as the replenishment supply
+for the first `m` scheduled matches. Thus initialization and the main policy
 live on one path space, with a pathwise (not merely count-law) phase boundary.
 -/
 

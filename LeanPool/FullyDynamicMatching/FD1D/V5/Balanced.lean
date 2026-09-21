@@ -9,10 +9,10 @@ import LeanPool.FullyDynamicMatching.FD1D.V5.CostBounds
 /-!
 # Balanced initial count laws for every inventory size
 
-For arbitrary `m`, divisibility by the leaf count need not hold.  We avoid
+For arbitrary `m`, divisibility by the leaf count need not hold. We avoid
 that restriction by taking the uniform law on the finite set of global
-maximizers of the harmonic tree potential.  Child-subtree swaps preserve the
-potential, so this law is tree invariant.  Its initial expected potential is
+maximizers of the harmonic tree potential. Child-subtree swaps preserve the
+potential, so this law is tree invariant. Its initial expected potential is
 maximal, which removes the endpoint term from the finite-horizon energy
 telescope.
 -/

@@ -20,7 +20,7 @@ namespace V5
 /-!
 # Continuous coordinate state
 
-The spatial state records only the live coordinates.  Their dyadic labels are
+The spatial state records only the live coordinates. Their dyadic labels are
 recovered deterministically, so replacing one coordinate updates the exact
 spatial configuration and its finite count projection pathwise.
 -/
@@ -219,7 +219,7 @@ theorem spatialSelectedLabel_demand_measurable
     (measurable_const.prodMk measurable_id)
 
 /--
-Replace the selected supply coordinate by a replenishment coordinate.  The
+Replace the selected supply coordinate by a replenishment coordinate. The
 noise pair consists of demand first and replenishment second.
 -/
 def spatialStep (L : ℕ) (a : ℝ) (fallback : Fin m)

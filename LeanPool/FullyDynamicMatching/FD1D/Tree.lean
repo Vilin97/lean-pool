@@ -17,7 +17,7 @@ noncomputable section
 
 Nodes at depth `d` are numbered from left to right by `Fin (2 ^ d)`.
 The module supplies the finite-tree bookkeeping used by the hazard and
-Bellman arguments.  All global estimates are consequences of explicit local
+Bellman arguments. All global estimates are consequences of explicit local
 hypotheses; no policy-specific algebra is hidden here.
 -/
 
@@ -152,7 +152,7 @@ theorem mem_leafBlock_interval {d L : ℕ} (hdL : d ≤ L)
     · have := j.isLt
       simp [Nat.add_mul]
   · intro hw
-    simp [Nat.add_mul] at hw
+    simp only [Nat.add_mul, one_mul] at hw
     have hk : 0 < 2 ^ (L - d) := Nat.two_pow_pos _
     let j : Fin (2 ^ (L - d)) :=
       ⟨w.val - v.val * 2 ^ (L - d), by omega⟩
@@ -254,7 +254,7 @@ structure LeafInventory (L m : ℕ) where
   total_count : ∑ v, count v = m
 
 /--
-Aggregated counts at every level.  The explicit child equation states exactly
+Aggregated counts at every level. The explicit child equation states exactly
 that each internal count is the sum of the inventory in its two child blocks.
 -/
 structure AggregatedInventory (L m : ℕ) where
@@ -327,7 +327,7 @@ def aggregate {L m : ℕ} (I : LeafInventory L m) :
 end LeafInventory
 
 /--
-An abstract additive tree labeling.  It is useful for `q`, inventory counts,
+An abstract additive tree labeling. It is useful for `q`, inventory counts,
 or any other quantity whose parent is the sum of its children.
 -/
 structure CoherentTreeLabel (L : ℕ) (A : Type*) [AddCommMonoid A] where
@@ -529,7 +529,7 @@ theorem hazard_energy_bound_of_root
 /-! ## Bellman telescope and deterministic estimate -/
 
 /--
-The exact generic Bellman telescope.  `c` is the child cost (`t Z` in the
+The exact generic Bellman telescope. `c` is the child cost (`t Z` in the
 paper), while `B` is any node potential.
 -/
 theorem bellman_tree_telescope
@@ -560,7 +560,7 @@ theorem bellman_tree_telescope
   ring
 
 /--
-Global form of the local Bellman inequality (7).  This is the telescope used
+Global form of the local Bellman inequality (7). This is the telescope used
 immediately before equation (9).
 -/
 theorem bellman_global_bound
@@ -647,7 +647,7 @@ theorem bellman_cost_eq_drift_div
   ring
 
 /--
-The deterministic Bellman estimate (9).  The hypotheses are exactly the
+The deterministic Bellman estimate (9). The hypotheses are exactly the
 local certificate (7), the definitions of `t` and `Z`, and the terminal/root
 sign bounds proved in the paper.
 -/

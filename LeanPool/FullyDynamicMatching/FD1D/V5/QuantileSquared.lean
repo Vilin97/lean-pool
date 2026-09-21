@@ -14,7 +14,7 @@ For a dyadic probability mass `q`, this module proves
 `∫₀¹ (q.quantile u - u)² du = ∫₀¹ (q.piecewiseCDF z - z)² dz`.
 
 The proof keeps track of an affine spatial interval and a cumulative-mass
-offset.  On each leaf it is an elementary polynomial identity.  At a branch,
+offset. On each leaf it is an elementary polynomial identity. At a branch,
 the two boundary cubic terms cancel.
 -/
 
@@ -65,7 +65,7 @@ private def quantileEnergyAt {L : ℕ}
 
 /--
 Spatial squared CDF discrepancy, recursively split into the physical leaf
-intervals.  The arguments are the left endpoint, width, and cumulative mass
+intervals. The arguments are the left endpoint, width, and cumulative mass
 to the left of the subtree.
 -/
 private def spatialEnergyAt :

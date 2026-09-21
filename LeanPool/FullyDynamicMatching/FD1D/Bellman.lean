@@ -16,7 +16,7 @@ noncomputable section
 # The deterministic Bellman certificate
 
 This file formalizes the local Bellman inequality and the exact four-chart
-certificate in `optimal_dynamic_matching.tex`.  The coefficient checks use
+certificate in `optimal_dynamic_matching.tex`. The coefficient checks use
 the kernel-checked integer polynomials in `FD1D.PolynomialCertificate`; the
 surrounding lemmas connect them to the real-valued Bellman residual.
 -/
@@ -108,7 +108,7 @@ theorem normalizedResidual_eq_div
 /-!
 ## Exact four-chart certificate
 
-Each transformed polynomial has nonnegative integer coefficients.  The
+Each transformed polynomial has nonnegative integer coefficients. The
 certificate module computes and kernel-checks those coefficients, proves its
 evaluator sound, and exposes the resulting real nonnegativity theorems.
 -/
@@ -347,7 +347,7 @@ theorem localBellmanGap_nonnegative
     (normalizedResidual_nonnegative hs hrLower hrUpper hv hvUpper)
 
 /--
-A reusable form of (7).  Callers need only provide the normalized identities
+A reusable form of (7). Callers need only provide the normalized identities
 for their parent and two children.
 -/
 theorem local_bellman_inequality

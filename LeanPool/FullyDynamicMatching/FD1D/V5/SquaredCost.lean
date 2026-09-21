@@ -10,7 +10,7 @@ import LeanPool.FullyDynamicMatching.FD1D.V5.QuantileSquared
 # Squared matching cost for the v5 policy
 
 This module combines the exact squared-quantile identity with the one-cell
-spatial coupling.  It proves the manuscript's conditional and count-law RMS
+spatial coupling. It proves the manuscript's conditional and count-law RMS
 bounds while allowing arbitrary occupied locations inside their certified
 dyadic cells.
 -/
@@ -286,7 +286,7 @@ theorem sqrt_expect_add_sqrt_sq_le
     ⟨add_nonneg hw (Real.sqrt_nonneg _), hbound⟩
 
 /--
-The count-law RMS envelope.  Tree symmetry converts its mean Haar energy to
+The count-law RMS envelope. Tree symmetry converts its mean Haar energy to
 `E[G]/12`, yielding exactly the transport-cost inequality in the manuscript.
 -/
 theorem sqrt_expected_stateSquaredCostEnvelope_le

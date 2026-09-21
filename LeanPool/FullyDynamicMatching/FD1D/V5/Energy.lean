@@ -182,7 +182,7 @@ theorem existsUnique_stationaryLaw
     (a : ℝ) (ha : 0 < a) (hm : 0 < m) :
     ∃! μ : FiniteLaw (InventoryState (DyadicNode L) m),
       (kernel a ha hm).IsStationary μ := by
-  letI : Nonempty (InventoryState (DyadicNode L) m) :=
+  let : Nonempty (InventoryState (DyadicNode L) m) :=
     ⟨⟨fun i => if i = 0 then m else 0, by simp⟩⟩
   obtain ⟨μ, hμ⟩ :=
     (kernel (L := L) a ha hm).exists_stationary

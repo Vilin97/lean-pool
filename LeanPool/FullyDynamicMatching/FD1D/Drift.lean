@@ -15,7 +15,7 @@ noncomputable section
 /-!
 # Harmonic-potential drift
 
-This module separates the stochastic bookkeeping from the concrete tree.  The
+This module separates the stochastic bookkeeping from the concrete tree. The
 tree module supplies `D`, `R`, and `H`; the lemmas below prove the exact
 one-coordinate drift identity and the arithmetic implications used in the
 stationary and finite-horizon arguments.
@@ -81,7 +81,6 @@ theorem node_remainder_le
             exact div_le_div_of_nonneg_right hnum (by positivity)
       _ = p * (p / (N + a)) * (p / (N + a + 1)) := by
             field_simp
-
       _ ≤ p * h ^ 2 := by
             have hmul :
                 (p / (N + a)) * (p / (N + a + 1)) ≤ h * h :=
@@ -90,13 +89,13 @@ theorem node_remainder_le
               mul_le_mul_of_nonneg_left hmul hp
 
 /--
-The numerical core of the stationary hazard estimate.  This is equation (11)
+The numerical core of the stationary hazard estimate. This is equation (11)
 after the deterministic Bellman lower bound and the stochastic remainder
 upper bound have been combined.
 -/
 theorem stationary_hazard_bound
     {a L m H : ℝ}
-    (ha : 0 < a) (hm : 0 < m)  (hH : 0 ≤ H)
+    (ha : 0 < a) (hm : 0 < m) (hH : 0 ≤ H)
     (haL : 200 * L ≤ a)
     (hmain :
       (a / 100 - L) * H ≤ 103 * a / (300 * m ^ 2)) :

@@ -29,7 +29,7 @@ variable {L m : ℕ}
 namespace Transport
 
 /--
-RMS transport for a uniform mixture of finite count laws.  Each law may be
+RMS transport for a uniform mixture of finite count laws. Each law may be
 different, but each must retain the child-subtree swap symmetries.
 -/
 theorem sqrt_average_stateSquaredCostEnvelope_le

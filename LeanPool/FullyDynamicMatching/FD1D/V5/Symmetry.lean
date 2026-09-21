@@ -11,7 +11,7 @@ import LeanPool.FullyDynamicMatching.FD1D.Symmetry
 # Tree symmetry for the v5 policy
 
 The underlying subtree permutations are policy-independent and live in
-`FD1D.TreeSymmetry`.  This module proves that the recursively propagated v5
+`FD1D.TreeSymmetry`. This module proves that the recursively propagated v5
 rates and deletion masses are equivariant under those permutations.
 -/
 

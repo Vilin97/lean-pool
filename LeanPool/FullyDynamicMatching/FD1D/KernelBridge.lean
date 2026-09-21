@@ -27,8 +27,9 @@ namespace FiniteLaw
 
 variable {α β : Type*} [Fintype α] [Fintype β]
 
+omit [Fintype α] in
 /-- Measures on a finite measurable-singleton space are determined by point masses. -/
-theorem measure_ext_of_singletons [MeasurableSpace α]
+theorem measure_ext_of_singletons [Finite α] [MeasurableSpace α]
      {μ ν : Measure α}
     (h : ∀ x, μ ({x} : Set α) = ν ({x} : Set α)) :
     μ = ν :=

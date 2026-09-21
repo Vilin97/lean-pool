@@ -19,7 +19,7 @@ noncomputable section
 # Concrete hierarchical inventory dynamics
 
 This module instantiates the finite inventory chain with the hierarchical
-deletion masses.  It also connects the actual delete-then-arrive kernel to
+deletion masses. It also connects the actual delete-then-arrive kernel to
 the harmonic-potential drift identity.
 -/
 
@@ -115,7 +115,7 @@ def inventoryDeficit
   ∑ i, (y.1 i - x.1 i)
 
 theorem inventoryDeficit_eq_zero_iff
-    {ι : Type*} [Fintype ι]  {m : ℕ}
+    {ι : Type*} [Fintype ι] {m : ℕ}
     (x y : InventoryState ι m) :
     inventoryDeficit x y = 0 ↔ x = y := by
   constructor

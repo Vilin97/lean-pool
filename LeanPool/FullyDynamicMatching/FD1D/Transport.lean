@@ -20,13 +20,13 @@ open Set MeasureTheory intervalIntegral
 /-!
 # Dyadic Haar transport on the unit interval
 
-This file isolates the analytic part of Section 2.  A `DyadicMass L` is a
-binary tree with exactly `2^L` leaf masses.  Its recursive CDF is the CDF of
+This file isolates the analytic part of Section 2. A `DyadicMass L` is a
+binary tree with exactly `2^L` leaf masses. Its recursive CDF is the CDF of
 the measure which spreads every leaf mass uniformly over its dyadic cell.
 
-The second half of the file proves the finite-family Haar calculation.  Tree
+The second half of the file proves the finite-family Haar calculation. Tree
 symmetry is expressed by mass-preserving child-swap equivalences on the
-finite state space.  This is exactly the property used to kill a nested
+finite state space. This is exactly the property used to kill a nested
 cross term; disjoint tents vanish pointwise.
 -/
 
@@ -121,7 +121,7 @@ theorem isProbability_ofLeafVector (L : ℕ) (f : Fin (2 ^ L) → ℝ)
   total_eq_one := by simpa using hsum
 
 /--
-The explicit piecewise-linear CDF.  Outside `[0,1]` this is merely a
+The explicit piecewise-linear CDF. Outside `[0,1]` this is merely a
 piecewise-linear extension; all CDF statements below are restricted to the
 unit interval.
 -/
@@ -212,7 +212,7 @@ theorem piecewiseCDF_monotoneOn {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg) 
           ⟨by linarith, by linarith [hy.2]⟩ (by linarith)) l.total
 
 /--
-The explicit generalized inverse in mass coordinates.  Its input ranges
+The explicit generalized inverse in mass coordinates. Its input ranges
 from `0` to `q.total`; at a branch the interval is split at the left mass.
 -/
 def quantile : {L : ℕ} → DyadicMass L → ℝ → ℝ
@@ -222,7 +222,7 @@ def quantile : {L : ℕ} → DyadicMass L → ℝ → ℝ
       else (1 + r.quantile (u - l.total)) / 2
 
 /--
-The actual selected-leaf policy.  It returns the left endpoint of the leaf
+The actual selected-leaf policy. It returns the left endpoint of the leaf
 whose cumulative-mass interval contains `u`.
 -/
 def selectedLeaf : {L : ℕ} → DyadicMass L → ℝ → ℝ
@@ -337,7 +337,7 @@ theorem quantile_pos {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
         linarith
 
 /--
-Generalized-inverse relation for the explicit recursive map.  This includes
+Generalized-inverse relation for the explicit recursive map. This includes
 zero-mass leaves and therefore does not require strict positivity.
 -/
 theorem quantile_le_iff {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg)
@@ -457,7 +457,7 @@ def unitTent (z : ℝ) : ℝ :=
   if z ≤ 1 / 2 then z else 1 - z
 
 /--
-The integrated Haar series, written recursively.  At a branch it adds the
+The integrated Haar series, written recursively. At a branch it adds the
 root imbalance and then evaluates the unique child series whose support
 contains `z`.
 -/
@@ -498,7 +498,7 @@ end DyadicMass
 /-! ## Dyadic tents and their elementary integrals -/
 
 /--
-The height-`1/2` tent on `[l,l+p]`.  Splitting into `Icc` and `Ioc` makes
+The height-`1/2` tent on `[l,l+p]`. Splitting into `Icc` and `Ioc` makes
 the two affine pieces disjoint without changing any Lebesgue integral.
 -/
 def dyadicTent (l p z : ℝ) : ℝ :=
@@ -720,7 +720,7 @@ def haarTermSum (ts : List HaarTerm) (z : ℝ) : ℝ :=
 
 /--
 List every internal node, placing the root on `[a,a+p]` and recursively
-placing the two child lists on its two halves.  The coefficient at each
+placing the two child lists on its two halves. The coefficient at each
 node is exactly its left-subtree mass minus its right-subtree mass.
 -/
 def DyadicMass.haarTermsAt :
@@ -1060,7 +1060,7 @@ def InvariantUnder (μ : FiniteLaw Ω) (e : Ω ≃ Ω) : Prop :=
 
 /--
 An observable has an odd symmetry if a mass-preserving child swap changes
-its sign.  A local tree automorphism supplies precisely such an equivalence
+its sign. A local tree automorphism supplies precisely such an equivalence
 for an ancestor-descendant coefficient product.
 -/
 def OddSymmetry (μ : FiniteLaw Ω) (f : Ω → ℝ) : Prop :=
@@ -1374,9 +1374,9 @@ private theorem expect_double_sum (μ : FiniteLaw Ω) (b : Ω → ι → ℝ)
   ring
 
 /--
-Expected Parseval identity for integrated Haar functions.  For unequal
+Expected Parseval identity for integrated Haar functions. For unequal
 nodes, either their interiors are disjoint or a tree child swap makes the
-coefficient product odd.  Thus every cross term vanishes.
+coefficient product odd. Thus every cross term vanishes.
 -/
 theorem expected_haarL2 (μ : FiniteLaw Ω) (l p : ι → ℝ)
     (b : Ω → ι → ℝ) (hp : ∀ i, 0 < p i)
@@ -1416,7 +1416,7 @@ theorem expected_haarL2 (μ : FiniteLaw Ω) (l p : ι → ℝ)
 
 /--
 The elementary one-dimensional monotone-transport cost: the area between
-the source and target CDFs.  This representation avoids introducing a
+the source and target CDFs. This representation avoids introducing a
 separate Wasserstein API.
 -/
 def cdfTransportArea (f : ℝ → ℝ) : ℝ :=
@@ -1758,7 +1758,7 @@ theorem integral_abs_sq_le_integral_sq {f : ℝ → ℝ}
     (hfsq : IntegrableOn (fun z => f z ^ 2) (Icc 0 1)) :
     cdfTransportArea f ^ 2 ≤ ∫ z in Icc (0 : ℝ) 1, f z ^ 2 := by
   let ν : Measure ℝ := volume.restrict (Icc 0 1)
-  letI : IsProbabilityMeasure ν := ⟨by
+  let : IsProbabilityMeasure ν := ⟨by
     simp [ν, Real.volume_Icc]⟩
   have habs : Integrable (fun z => |f z|) ν := hf.norm
   have habssq : Integrable (fun z => |f z| ^ 2) ν := by
@@ -1839,12 +1839,12 @@ theorem expected_area_le_sqrt_l2 (μ : FiniteLaw Ω) (l p : ι → ℝ)
 
 /-!
 `gap` below is the abstract hazard telescope
-`E[H_L] - m⁻²`.  The hypothesis `htelescope` is equation (2):
+`E[H_L] - m⁻²`. The hypothesis `htelescope` is equation (2):
 `Σ p_v E[b_v²] ≤ 2 a² gap`.
 -/
 
 /--
-Equation (3), with the exact constant.  `hcost` is the conditional monotone
+Equation (3), with the exact constant. `hcost` is the conditional monotone
 quantile bound plus the deterministic within-cell error `1/n`.
 -/
 theorem transport_cost_equation_three
