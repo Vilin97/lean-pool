@@ -31,3 +31,9 @@ import LeanPool.BicausalOT.BicausalOT.SemianalyticValue
 import LeanPool.BicausalOT.BicausalOT.MeasurableStrategy
 import LeanPool.BicausalOT.BicausalOT.LscBellman
 import LeanPool.BicausalOT.BicausalOT.MeasurableFeasibleStrategy
+
+/-!
+# Basic
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/

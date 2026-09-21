@@ -29,12 +29,14 @@ import Mathlib.Probability.Kernel.MeasurableLIntegral
 import Mathlib.Tactic.Finiteness
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
 
+/-! ## Part I: Bounded branch sets in Baire space -/
+
 open Set Topology MeasureTheory Filter
-open scoped Classical ENNReal
+open scoped ENNReal
 
 noncomputable section
 
-/-! ## Part I: Bounded branch sets in Baire space -/
+
 
 /-- Branches bounded by `β` everywhere: the compact set Σ(β). -/
 def capBelow (β : ℕ → ℕ) : Set (ℕ → ℕ) := {σ | ∀ i, σ i ≤ β i}
@@ -101,7 +103,7 @@ def capSeqs (β : ℕ → ℕ) (n : ℕ) : Set (ℕ → ℕ) :=
 theorem capTrunc_mem_capSeqs {β : ℕ → ℕ} {n : ℕ} {σ : ℕ → ℕ}
     (h : σ ∈ capBelowN β n) : capTrunc σ n ∈ capSeqs β n := by
   refine ⟨fun i hi => ?_, fun i hi => ?_⟩
-  · simp only [capTrunc, if_pos hi]; exact h i hi
+  · simp only [capTrunc, ite_eq_left hi]; exact h i hi
   · have hn : ¬ i < n := by omega
     simp [capTrunc, hn]
 
@@ -152,7 +154,7 @@ theorem capScheme_congr (π : (ℕ → ℕ) → Z) {f g : ℕ → ℕ} {n : ℕ}
 
 theorem capScheme_trunc (π : (ℕ → ℕ) → Z) (σ : ℕ → ℕ) (n : ℕ) :
     capScheme π (capTrunc σ n) n = capScheme π σ n :=
-  capScheme_congr π fun i hi => by simp [capTrunc, if_pos hi]
+  capScheme_congr π fun i hi => by simp [capTrunc, ite_eq_left hi]
 
 /-- The n-th bounded approximation: finite union of scheme pieces with
     prefix bounded by `β`. Closed. -/
@@ -185,7 +187,7 @@ theorem capW_congr (π : (ℕ → ℕ) → Z) {β β' : ℕ → ℕ} {n : ℕ}
 theorem iInter_capW_subset {Z : Type*} [TopologicalSpace Z] [PolishSpace Z]
     {π : (ℕ → ℕ) → Z} (hπ : Continuous π) (β : ℕ → ℕ) :
     (⋂ n, capW π β n) ⊆ π '' capBelow β := by
-  letI := TopologicalSpace.upgradeIsCompletelyMetrizable Z
+  let := TopologicalSpace.upgradeIsCompletelyMetrizable Z
   intro y hy
   -- for each n, obtain a normalized bounded prefix sₙ with y ∈ closure (π '' N_{sₙ,n})
   have hsel : ∀ n : ℕ, ∃ s ∈ capSeqs β n, y ∈ capScheme π s n := by

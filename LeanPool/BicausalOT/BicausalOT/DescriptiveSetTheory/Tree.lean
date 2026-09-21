@@ -16,15 +16,17 @@ import Mathlib.Topology.MetricSpace.PiNat
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSigmaAlgebra
 
+/-! ## Part I: Fibers (generic domain X, codomain ℕᴺ) -/
+
 open Set Topology MeasureTheory
-open scoped Classical
 
 noncomputable section
 
 variable {X : Type*} [TopologicalSpace X]
 
-/-! ## Part I: Fibers (generic domain X, codomain ℕᴺ) -/
 
+
+/-- The fiber of a subset of the product with Baire space over the given point. -/
 def closedFiberG (F : Set (X × (ℕ → ℕ))) (x : X) : Set (ℕ → ℕ) :=
   { y | (x, y) ∈ F }
 
@@ -33,7 +35,7 @@ theorem closedFiberG_nonempty_iff (F : Set (X × (ℕ → ℕ))) (x : X) :
     (closedFiberG F x).Nonempty ↔ x ∈ Prod.fst '' F := by
   constructor
   · rintro ⟨y, hy⟩; exact ⟨(x, y), hy, rfl⟩
-  · rintro ⟨⟨x', y⟩, hm, hx⟩; simp at hx; exact ⟨y, hx ▸ hm⟩
+  · rintro ⟨⟨x', y⟩, hm, rfl⟩; exact ⟨y, hm⟩
 
 theorem isClosed_closedFiberG {F : Set (X × (ℕ → ℕ))} (hF : IsClosed F) (x : X) :
     IsClosed (closedFiberG F x) :=
@@ -41,6 +43,7 @@ theorem isClosed_closedFiberG {F : Set (X × (ℕ → ℕ))} (hF : IsClosed F) (
 
 /-! ## Part II: Leftmost branch (generic domain) -/
 
+/-- The fiber restricted to sequences agreeing with a prescribed prefix. -/
 def fiberRestNG (F : Set (X × (ℕ → ℕ))) (x : X) (f : ℕ → ℕ) (n : ℕ) : Set (ℕ → ℕ) :=
   { y | (x, y) ∈ F ∧ ∀ i < n, y i = f i }
 
@@ -59,6 +62,8 @@ theorem exists_extNG {F : Set (X × (ℕ → ℕ))} {x : X} {f : ℕ → ℕ} {n
   · rw [Function.update_of_ne (by omega)]; exact hy_ext i h
   · subst h; simp [Function.update_self]
 
+open scoped Classical in
+/-- Recursively choose the smallest extendible next coordinate in each nonempty fiber. -/
 def leftmostAuxG (F : Set (X × (ℕ → ℕ))) (x : X)
     (h₀ : (closedFiberG F x).Nonempty) :
     (n : ℕ) → { f : ℕ → ℕ // (fiberRestNG F x f n).Nonempty }
@@ -68,6 +73,8 @@ def leftmostAuxG (F : Set (X × (ℕ → ℕ))) (x : X)
     ⟨Function.update f n (Nat.find (exists_extNG hf)),
      Nat.find_spec (exists_extNG hf)⟩
 
+open scoped Classical in
+/-- The sequence obtained by choosing the smallest extendible coordinate at every step. -/
 def leftmostBranchG (F : Set (X × (ℕ → ℕ))) (x : X)
     (h₀ : (closedFiberG F x).Nonempty) (n : ℕ) : ℕ :=
   Nat.find (exists_extNG (leftmostAuxG F x h₀ n).2)
@@ -85,6 +92,7 @@ theorem leftmostAuxG_eq (F : Set (X × (ℕ → ℕ))) (x : X)
     · rw [Function.update_of_ne (by omega)]; exact ih i h
     · subst h; simp [Function.update_self]
 
+/-- Choose a fiber element extending the specified finite prefix of the leftmost branch. -/
 def leftmostWitnessG (F : Set (X × (ℕ → ℕ))) (x : X)
     (h₀ : (closedFiberG F x).Nonempty) (n : ℕ) : ℕ → ℕ :=
   (leftmostAuxG F x h₀ n).2.some
@@ -112,6 +120,7 @@ theorem leftmostBranchG_mem
     (Filter.Eventually.of_forall (leftmostWitnessG_mem F x h₀))
 
 omit [TopologicalSpace X] in
+open scoped Classical in
 theorem leftmostBranchG_least (F : Set (X × (ℕ → ℕ))) (x : X)
     (h₀ : (closedFiberG F x).Nonempty) (n k : ℕ)
     (hk : k < leftmostBranchG F x h₀ n) :
@@ -120,6 +129,7 @@ theorem leftmostBranchG_least (F : Set (X × (ℕ → ℕ))) (x : X)
 
 /-! ## Part III: Fiber-cylinder projections (generic domain) -/
 
+/-- The domain points whose fibers meet a prescribed finite cylinder. -/
 def projFiberCylNG (F : Set (X × (ℕ → ℕ))) (f : ℕ → ℕ) (n : ℕ) : Set X :=
   { x | (fiberRestNG F x f n).Nonempty }
 
@@ -140,6 +150,8 @@ theorem analyticSet_projFiberCylNG [PolishSpace X]
 
 /-! ## Part IV: Closed uniformizer (generic domain) -/
 
+open scoped Classical in
+/-- Select the leftmost branch in a nonempty fiber, with a fixed fallback outside the projection. -/
 def closedUniformizerG (F : Set (X × (ℕ → ℕ))) (_hF : IsClosed F)
     (hne : F.Nonempty) : X → (ℕ → ℕ) :=
   fun x => if h : (closedFiberG F x).Nonempty then leftmostBranchG F x h
@@ -149,10 +161,11 @@ theorem closedUniformizerG_selection
     {F : Set (X × (ℕ → ℕ))} (hF : IsClosed F) (hne : F.Nonempty)
     {x : X} (hx : x ∈ Prod.fst '' F) :
     (x, closedUniformizerG F hF hne x) ∈ F := by
-  simp only [closedUniformizerG, dif_pos ((closedFiberG_nonempty_iff F x).mpr hx)]
+  simp only [closedUniformizerG, dite_eq_left ((closedFiberG_nonempty_iff F x).mpr hx)]
   exact leftmostBranchG_mem hF x _
 
-theorem closedUniformizerG_cylinder_eq [PolishSpace X]
+open scoped Classical in
+theorem closedUniformizerG_cylinder_eq
     {F : Set (X × (ℕ → ℕ))} (hF : IsClosed F) (hne : F.Nonempty)
     (f : ℕ → ℕ) (n : ℕ) :
     { x | ∀ i < n, closedUniformizerG F hF hne x i = f i } =
@@ -169,7 +182,7 @@ theorem closedUniformizerG_cylinder_eq [PolishSpace X]
     · left
       have hx' : ∀ i < n, leftmostBranchG F x hcf i = f i := by
         intro i hi; have := hx i hi
-        simp only [closedUniformizerG, dif_pos hcf] at this; exact this
+        simp only [closedUniformizerG, dite_eq_left hcf] at this; exact this
       constructor
       · have := (leftmostAuxG F x hcf n).2; rw [fiberRestNG] at this
         obtain ⟨y, hy_mem, hy_ext⟩ := this
@@ -185,8 +198,10 @@ theorem closedUniformizerG_cylinder_eq [PolishSpace X]
           rwa [leftmostAuxG_eq F x hcf m i h, hx' i (by omega)]
         · subst h; rwa [Function.update_self] at hye ⊢
     · right
-      exact ⟨fun h => hcf ((closedFiberG_nonempty_iff F x).mpr h),
-             fun i hi => by have := hx i hi; simp [closedUniformizerG, dif_neg hcf] at this; exact this⟩
+      refine ⟨fun h => hcf ((closedFiberG_nonempty_iff F x).mpr h), ?_⟩
+      intro i hi
+      have hvalue := hx i hi
+      simpa only [closedUniformizerG, dite_eq_right hcf] using hvalue
   · rintro (⟨hproj, hmin⟩ | ⟨hnotproj, hdef⟩)
     · intro i hi
       simp only [closedUniformizerG]
@@ -222,7 +237,7 @@ theorem closedUniformizerG_cylinder_eq [PolishSpace X]
         exfalso; apply hncf
         obtain ⟨y, hy_mem, _⟩ := hproj; exact ⟨y, hy_mem⟩
     · intro i hi
-      simp only [closedUniformizerG, dif_neg (by
+      simp only [closedUniformizerG, dite_eq_right (by
         intro h; exact hnotproj ((closedFiberG_nonempty_iff F x).mp h))]
       exact hdef i hi
 
@@ -288,7 +303,7 @@ For P analytic in X × Y (Polish spaces), there exists a σ(Σ₁¹)-measurable
 function φ : X → Y uniformizing P on its projection. -/
 theorem jankov_von_neumann
     {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
-    [PolishSpace X] [PolishSpace Y]
+    [PolishSpace X]
     (P : Set (X × Y)) (hP : AnalyticSet P) (hne : P.Nonempty) :
     ∃ (φ : X → Y), AnalyticallyMeasurable φ ∧
       ∀ x ∈ Prod.fst '' P, (x, φ x) ∈ P := by

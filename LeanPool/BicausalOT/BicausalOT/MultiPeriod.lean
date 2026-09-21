@@ -14,6 +14,12 @@ import LeanPool.BicausalOT.BicausalOT.Defs
 import LeanPool.BicausalOT.BicausalOT.UpperBound
 import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
+/-!
+# MultiPeriod
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 open MeasureTheory Set ENNReal
 
 noncomputable section
@@ -104,7 +110,7 @@ theorem VGo_le_pointwise {t k : ℕ} {h : PairHist X Y t}
     {γm : Measure (X (t + 1) × Y (t + 1))} (hγ : γm ∈ Feas κμ κν t h) :
     VGo c κμ κν (k + 1) t h
       ≤ c t h + ∫⁻ z, VGo c κμ κν k (t + 1) (h, z) ∂γm := by
-  show c t h + _ ≤ _
+  change c t h + _ ≤ _
   gcongr
   exact iInf₂_le γm hγ
 
@@ -117,7 +123,7 @@ theorem VGo_le_costGo (γ : Strat X Y)
   | 0, _, _ => le_of_eq rfl
   | k + 1, t, h => by
     refine le_trans (VGo_le_pointwise κμ κν c (hfeas t h)) ?_
-    show c t h + _ ≤ c t h + _
+    change c t h + _ ≤ c t h + _
     gcongr with z
     exact VGo_le_costGo γ hfeas k (t + 1) (h, z)
 
@@ -182,7 +188,7 @@ theorem costGo_le_VGo_add (T : ℕ)
           rw [hdepth] at hstep
           exact hstep
       _ = VGo c κμ κν (k + 1) t h + ((k : ℕ) + 1 : ℝ≥0∞) * ε := by
-          show c t h + _ = (c t h + _) + _
+          change c t h + _ = (c t h + _) + _
           ring
       _ = VGo c κμ κν (k + 1) t h + ((k + 1 : ℕ) : ℝ≥0∞) * ε := by
           push_cast
@@ -194,7 +200,7 @@ theorem costGo_le_VGo_add (T : ℕ)
     integrated Bellman value. -/
 theorem bellman_value_eq_multi (T : ℕ)
     (μ₀ : Measure (X 0)) [IsProbabilityMeasure μ₀]
-    (ν₀ : Measure (Y 0)) [IsProbabilityMeasure ν₀]
+    (ν₀ : Measure (Y 0))
     (hκμ : ∀ t x, IsProbabilityMeasure (κμ t x))
     (hne : ∀ t (h : PairHist X Y t), (Feas κμ κν t h).Nonempty) :
     ⨅ (γ₀ : Measure (X 0 × Y 0)) (γ : Strat X Y)

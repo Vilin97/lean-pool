@@ -3,7 +3,7 @@ Copyright (c) 2026 KT. Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KT. Wu
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
 
 /-!

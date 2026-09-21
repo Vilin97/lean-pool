@@ -11,7 +11,7 @@ Authors: KT. Wu
 
   Structure:
     Defs.lean                              — definitions
-    Proposition1.lean                      — bicausal ⟺ kernel decomposition
+    Proposition1.lean                      — bicausal ↔ kernel decomposition
     LowerBound.lean                        — Step 2: ∫V₀ ≤ totalCost
     UpperBound.lean                        — Step 3: ε-optimal construction
     ValueRepresentation.lean               — Step 4: equality (main theorem)
@@ -35,3 +35,9 @@ import LeanPool.BicausalOT.BicausalOT.LowerBound
 import LeanPool.BicausalOT.BicausalOT.UpperBound
 import LeanPool.BicausalOT.BicausalOT.ValueRepresentation
 import LeanPool.BicausalOT.BicausalOT.Existence
+
+/-!
+# BicausalOT
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/

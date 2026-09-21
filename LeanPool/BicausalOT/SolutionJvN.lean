@@ -3,7 +3,7 @@ Copyright (c) 2026 KT. Wu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KT. Wu
 -/
-import Mathlib
+import Mathlib.Tactic
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Tree
 
 /-!
@@ -95,7 +95,7 @@ Both σ-algebras in the measurability clause are written out explicitly, so the 
 mentions only Mathlib notions: `MeasurableSpace.generateFrom {s | MeasureTheory.AnalyticSet s}`
 is the analytic σ-algebra `σ(Σ¹₁)` of `X`, and `borel Y` is the Borel σ-algebra of `Y`. -/
 theorem jankov_von_neumann {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
-    [PolishSpace X] [PolishSpace Y] (P : Set (X × Y))
+    [PolishSpace X] (P : Set (X × Y))
     (hP : MeasureTheory.AnalyticSet P) (hne : P.Nonempty) :
     ∃ φ : X → Y,
       @Measurable X Y

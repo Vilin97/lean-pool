@@ -4,9 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: KT. Wu
 -/
 /-
-  Proposition 1: Bicausal ⟺ Kernel Decomposition  ✓ FULLY VERIFIED
+  Proposition 1: Bicausal ↔ Kernel Decomposition  ✓ FULLY VERIFIED
 -/
 import LeanPool.BicausalOT.BicausalOT.Defs
+
+/-!
+# Proposition1
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

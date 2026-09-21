@@ -12,6 +12,12 @@ import LeanPool.BicausalOT.BicausalOT.LowerBound
 import LeanPool.BicausalOT.BicausalOT.UpperBound
 import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
+/-!
+# ValueRepresentation
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 open MeasureTheory ProbabilityTheory Set ENNReal
 
 noncomputable section
@@ -64,8 +70,8 @@ theorem bellman_value_leq_aux
         totalCost_le_V₀_plus_eps c₀ c₁ κ_μ κ_ν γ₀ γ₁_sel ε hγ₁_opt
 
 theorem bellman_value_leq
-    (μ₀ : Measure X₀) [IsProbabilityMeasure μ₀]
-    (ν₀ : Measure Y₀) [IsProbabilityMeasure ν₀]
+    (μ₀ : Measure X₀)
+    (ν₀ : Measure Y₀)
     (κ_μ : X₀ → Measure X₁) (κ_ν : Y₀ → Measure Y₁)
     (h_Gamma_ne : ∀ z₀, (FeasibleSet₀ κ_μ κ_ν z₀).Nonempty)
     (h_prob : ∀ γ₀ ∈ CouplingSet₀ μ₀ ν₀, γ₀ Set.univ ≤ 1) :
@@ -99,8 +105,7 @@ theorem bellman_value_leq
 
 /-- **Main Theorem**: Bellman value representation (equality). -/
 theorem bellman_value_eq
-    (μ₀ : Measure X₀) [IsProbabilityMeasure μ₀]
-    (ν₀ : Measure Y₀) [IsProbabilityMeasure ν₀]
+    (μ₀ : Measure X₀) (ν₀ : Measure Y₀)
     (κ_μ : X₀ → Measure X₁) (κ_ν : Y₀ → Measure Y₁)
     (h_Gamma_ne : ∀ z₀, (FeasibleSet₀ κ_μ κ_ν z₀).Nonempty)
     (h_prob : ∀ γ₀ ∈ CouplingSet₀ μ₀ ν₀, γ₀ Set.univ ≤ 1) :

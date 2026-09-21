@@ -24,15 +24,17 @@ import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LsaAlgebra
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
 
-open MeasureTheory Set ENNReal
-
-noncomputable section
-
 /-! ## The Polish space of probability measures with its Borel σ-algebra
 
 `ProbabilityMeasure W` carries Mathlib's Giry-subtype σ-algebra, which is
 not the Borel σ-algebra of the weak topology; the type synonym `WeakP`
 installs the Borel structure (Polish by W1). -/
+
+open MeasureTheory Set ENNReal
+
+noncomputable section
+
+
 
 /-- Probability measures on `W`, considered with the topology of weak
     convergence and its Borel σ-algebra. -/
@@ -64,7 +66,7 @@ instance (γ : WeakP W) : IsProbabilityMeasure γ.toMeasure :=
     Borel σ-algebra of the weak topology to the Giry σ-algebra. -/
 theorem measurable_toMeasure [PolishSpace W] [BorelSpace W] :
     Measurable (toMeasure : WeakP W → Measure W) := by
-  letI := TopologicalSpace.upgradeIsCompletelyMetrizable W
+  let := TopologicalSpace.upgradeIsCompletelyMetrizable W
   exact probabilityMeasure_borel_measurable_toMeasure (Ω := W)
 
 end WeakP
@@ -102,7 +104,7 @@ theorem measurableSet_feasGraph
         (WeakP.measurable_toMeasure.comp measurable_snd)
     · exact (hκμ_meas t).comp ((measurable_projX t).comp measurable_fst)
     · intro p
-      exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
+      infer_instance
     · intro p
       exact hκμ_prob t _
   have h2 : MeasurableSet {p : PairHist X Y t × WeakP (X (t + 1) × Y (t + 1)) |
@@ -112,7 +114,7 @@ theorem measurableSet_feasGraph
         (WeakP.measurable_toMeasure.comp measurable_snd)
     · exact (hκν_meas t).comp ((measurable_projY t).comp measurable_fst)
     · intro p
-      exact Measure.isProbabilityMeasure_map measurable_snd.aemeasurable
+      infer_instance
     · intro p
       exact hκν_prob t _
   exact h1.inter h2
@@ -156,7 +158,7 @@ theorem iInf_feas_eq_iInf_feasGraph
   apply le_antisymm
   · exact le_iInf₂ fun γ hγ => iInf₂_le γ.toMeasure hγ
   · refine le_iInf₂ fun γm hγm => ?_
-    haveI hpm : IsProbabilityMeasure γm :=
+    have hpm : IsProbabilityMeasure γm :=
       ⟨Feas.measure_univ κμ κν hκμ_prob hγm⟩
     exact iInf₂_le
       (show WeakP (X (t + 1) × Y (t + 1)) from
@@ -175,7 +177,7 @@ theorem VGo_succ_eq_weakP
       = c t h + ⨅ (γ : WeakP (X (t + 1) × Y (t + 1)))
           (_ : (h, γ) ∈ FeasGraph κμ κν t),
           ∫⁻ z, VGo c κμ κν k (t + 1) (h, z) ∂γ.toMeasure := by
-  show c t h + _ = c t h + _
+  change c t h + _ = c t h + _
   congr 1
   exact iInf_feas_eq_iInf_feasGraph κμ κν hκμ_prob t h _
 

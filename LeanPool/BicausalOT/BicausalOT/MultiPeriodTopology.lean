@@ -21,6 +21,10 @@ import LeanPool.BicausalOT.BicausalOT.MultiPeriod
 import Mathlib.Topology.MetricSpace.Polish
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
+/-! ### Topological structure
+
+The product topology on histories, by recursion on the time index. -/
+
 open MeasureTheory
 
 noncomputable section
@@ -29,9 +33,7 @@ namespace MultiPeriod
 
 variable (X Y : ℕ → Type*)
 
-/-! ### Topological structure
 
-The product topology on histories, by recursion on the time index. -/
 
 section Topology
 
@@ -42,7 +44,7 @@ variable [∀ n, TopologicalSpace (X n)] [∀ n, TopologicalSpace (Y n)]
 instance instTopologicalSpacePairHist : ∀ t, TopologicalSpace (PairHist X Y t)
   | 0 => inferInstanceAs (TopologicalSpace (X 0 × Y 0))
   | t + 1 =>
-    letI := instTopologicalSpacePairHist t
+    let := instTopologicalSpacePairHist t
     inferInstanceAs
       (TopologicalSpace (PairHist X Y t × (X (t + 1) × Y (t + 1))))
 
@@ -50,14 +52,14 @@ instance instTopologicalSpacePairHist : ∀ t, TopologicalSpace (PairHist X Y t)
 instance instTopologicalSpaceXHist : ∀ t, TopologicalSpace (XHist X t)
   | 0 => inferInstanceAs (TopologicalSpace (X 0))
   | t + 1 =>
-    letI := instTopologicalSpaceXHist t
+    let := instTopologicalSpaceXHist t
     inferInstanceAs (TopologicalSpace (XHist X t × X (t + 1)))
 
 /-- Recursive product topology on Y-side histories. -/
 instance instTopologicalSpaceYHist : ∀ t, TopologicalSpace (YHist Y t)
   | 0 => inferInstanceAs (TopologicalSpace (Y 0))
   | t + 1 =>
-    letI := instTopologicalSpaceYHist t
+    let := instTopologicalSpaceYHist t
     inferInstanceAs (TopologicalSpace (YHist Y t × Y (t + 1)))
 
 variable {X Y}
@@ -92,21 +94,21 @@ variable [∀ n, TopologicalSpace (Y n)] [∀ n, PolishSpace (Y n)]
 instance instPolishSpacePairHist : ∀ t, PolishSpace (PairHist X Y t)
   | 0 => inferInstanceAs (PolishSpace (X 0 × Y 0))
   | t + 1 =>
-    letI := instPolishSpacePairHist t
+    let := instPolishSpacePairHist t
     inferInstanceAs (PolishSpace (PairHist X Y t × (X (t + 1) × Y (t + 1))))
 
 /-- X-side histories of Polish coordinates are Polish. -/
 instance instPolishSpaceXHist : ∀ t, PolishSpace (XHist X t)
   | 0 => inferInstanceAs (PolishSpace (X 0))
   | t + 1 =>
-    letI := instPolishSpaceXHist t
+    let := instPolishSpaceXHist t
     inferInstanceAs (PolishSpace (XHist X t × X (t + 1)))
 
 /-- Y-side histories of Polish coordinates are Polish. -/
 instance instPolishSpaceYHist : ∀ t, PolishSpace (YHist Y t)
   | 0 => inferInstanceAs (PolishSpace (Y 0))
   | t + 1 =>
-    letI := instPolishSpaceYHist t
+    let := instPolishSpaceYHist t
     inferInstanceAs (PolishSpace (YHist Y t × Y (t + 1)))
 
 end Polish
@@ -125,7 +127,7 @@ variable [∀ n, MeasurableSpace (X n)] [∀ n, MeasurableSpace (Y n)]
 instance instMeasurableSpacePairHist : ∀ t, MeasurableSpace (PairHist X Y t)
   | 0 => inferInstanceAs (MeasurableSpace (X 0 × Y 0))
   | t + 1 =>
-    letI := instMeasurableSpacePairHist t
+    let := instMeasurableSpacePairHist t
     inferInstanceAs
       (MeasurableSpace (PairHist X Y t × (X (t + 1) × Y (t + 1))))
 
@@ -133,14 +135,14 @@ instance instMeasurableSpacePairHist : ∀ t, MeasurableSpace (PairHist X Y t)
 instance instMeasurableSpaceXHist : ∀ t, MeasurableSpace (XHist X t)
   | 0 => inferInstanceAs (MeasurableSpace (X 0))
   | t + 1 =>
-    letI := instMeasurableSpaceXHist t
+    let := instMeasurableSpaceXHist t
     inferInstanceAs (MeasurableSpace (XHist X t × X (t + 1)))
 
 /-- Recursive product σ-algebra on Y-side histories. -/
 instance instMeasurableSpaceYHist : ∀ t, MeasurableSpace (YHist Y t)
   | 0 => inferInstanceAs (MeasurableSpace (Y 0))
   | t + 1 =>
-    letI := instMeasurableSpaceYHist t
+    let := instMeasurableSpaceYHist t
     inferInstanceAs (MeasurableSpace (YHist Y t × Y (t + 1)))
 
 variable {X Y}
@@ -181,21 +183,21 @@ variable [∀ n, MeasurableSpace (Y n)] [∀ n, BorelSpace (Y n)]
 instance instBorelSpacePairHist : ∀ t, BorelSpace (PairHist X Y t)
   | 0 => inferInstanceAs (BorelSpace (X 0 × Y 0))
   | t + 1 =>
-    letI := instBorelSpacePairHist t
+    let := instBorelSpacePairHist t
     inferInstanceAs (BorelSpace (PairHist X Y t × (X (t + 1) × Y (t + 1))))
 
 /-- X-side histories of Polish Borel coordinates are Borel. -/
 instance instBorelSpaceXHist : ∀ t, BorelSpace (XHist X t)
   | 0 => inferInstanceAs (BorelSpace (X 0))
   | t + 1 =>
-    letI := instBorelSpaceXHist t
+    let := instBorelSpaceXHist t
     inferInstanceAs (BorelSpace (XHist X t × X (t + 1)))
 
 /-- Y-side histories of Polish Borel coordinates are Borel. -/
 instance instBorelSpaceYHist : ∀ t, BorelSpace (YHist Y t)
   | 0 => inferInstanceAs (BorelSpace (Y 0))
   | t + 1 =>
-    letI := instBorelSpaceYHist t
+    let := instBorelSpaceYHist t
     inferInstanceAs (BorelSpace (YHist Y t × Y (t + 1)))
 
 end Borel

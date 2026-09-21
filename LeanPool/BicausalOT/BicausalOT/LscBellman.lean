@@ -30,12 +30,14 @@ import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.CouplingsUHC
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LscIntegral
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.MeasurableSelection
 
+/-! ## KRN on the Polish space of probability measures -/
+
 open MeasureTheory Set Filter Topology
 open scoped ENNReal
 
 noncomputable section
 
-/-! ## KRN on the Polish space of probability measures -/
+
 
 /-- Kuratowski–Ryll-Nardzewski selection with `WeakP` targets: the Polish
     wrapper of `exists_measurable_selection` (the metric upgrade keeps the
@@ -48,7 +50,7 @@ theorem WeakP.exists_measurable_selection {α : Type*} [MeasurableSpace α]
     (hmeas : ∀ U : Set (WeakP W), IsOpen U →
       MeasurableSet {a | (Φ a ∩ U).Nonempty}) :
     ∃ f : α → WeakP W, Measurable f ∧ ∀ a, f a ∈ Φ a := by
-  letI := TopologicalSpace.upgradeIsCompletelyMetrizable (WeakP W)
+  let := TopologicalSpace.upgradeIsCompletelyMetrizable (WeakP W)
   exact _root_.exists_measurable_selection hne hclosed hmeas
 
 namespace MultiPeriod
@@ -552,7 +554,7 @@ theorem iInf_couplingSet₀_eq_iInf_weakP
           ∫⁻ h₀, f h₀ ∂γ.toMeasure := by
   refine le_antisymm (le_iInf₂ fun γ hγ => iInf₂_le γ.toMeasure hγ) ?_
   refine le_iInf₂ fun γm hγm => ?_
-  haveI hpm : IsProbabilityMeasure γm := ⟨CouplingSet₀.measure_univ hγm⟩
+  have hpm : IsProbabilityMeasure γm := ⟨CouplingSet₀.measure_univ hγm⟩
   exact iInf₂_le
     (show WeakP (X 0 × Y 0) from
       (⟨γm, hpm⟩ : ProbabilityMeasure (X 0 × Y 0))) hγm

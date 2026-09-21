@@ -22,15 +22,17 @@ import LeanPool.BicausalOT.BicausalOT.MultiPeriod
 import LeanPool.BicausalOT.BicausalOT.ValueRepresentation
 import Mathlib.MeasureTheory.Measure.Prod
 
-open MeasureTheory Set ENNReal
-
-noncomputable section
-
 /-! ### General marginal lemmas for product measures
 
 Mathlib's `Measure.map_fst_prod : (μ.prod ν).map Prod.fst = (ν univ) • μ`
 (and symmetrically `Measure.map_snd_prod`) carry a total-mass scalar; for
 probability factors the scalar is `1` and disappears. -/
+
+open MeasureTheory Set ENNReal
+
+noncomputable section
+
+
 
 /-- The first marginal of a product measure is the first factor, when the
     second factor is a probability measure. -/
@@ -74,8 +76,8 @@ theorem FeasibleSet₀.nonempty
     (hκν : ∀ y, IsProbabilityMeasure (κ_ν y))
     (z₀ : X₀ × Y₀) :
     (FeasibleSet₀ κ_μ κ_ν z₀).Nonempty := by
-  haveI := hκμ z₀.1
-  haveI := hκν z₀.2
+  have := hκμ z₀.1
+  have := hκν z₀.2
   exact ⟨(κ_μ z₀.1).prod (κ_ν z₀.2),
     Measure.map_fst_prod_of_isProbabilityMeasure _ _,
     Measure.map_snd_prod_of_isProbabilityMeasure _ _⟩
@@ -101,7 +103,7 @@ variable (c₀ : X₀ × Y₀ → ENNReal) (c₁ : (X₀ × Y₀) × (X₁ × Y�
     `h_prob` from the probability marginals (`CouplingSet₀.measure_univ`). -/
 theorem bellman_value_eq'
     (μ₀ : Measure X₀) [IsProbabilityMeasure μ₀]
-    (ν₀ : Measure Y₀) [IsProbabilityMeasure ν₀]
+    (ν₀ : Measure Y₀)
     (κ_μ : X₀ → Measure X₁) (κ_ν : Y₀ → Measure Y₁)
     (hκμ : ∀ x, IsProbabilityMeasure (κ_μ x))
     (hκν : ∀ y, IsProbabilityMeasure (κ_ν y)) :
@@ -134,8 +136,8 @@ theorem Feas.nonempty
     (hκν : ∀ t y, IsProbabilityMeasure (κν t y))
     (t : ℕ) (h : PairHist X Y t) :
     (Feas κμ κν t h).Nonempty := by
-  haveI := hκμ t (projX t h)
-  haveI := hκν t (projY t h)
+  have := hκμ t (projX t h)
+  have := hκν t (projY t h)
   exact ⟨(κμ t (projX t h)).prod (κν t (projY t h)),
     Measure.map_fst_prod_of_isProbabilityMeasure _ _,
     Measure.map_snd_prod_of_isProbabilityMeasure _ _⟩
@@ -149,7 +151,7 @@ variable (c : (t : ℕ) → PairHist X Y t → ℝ≥0∞)
     fiber follows via `Feas.nonempty`. -/
 theorem bellman_value_eq_multi' (T : ℕ)
     (μ₀ : Measure (X 0)) [IsProbabilityMeasure μ₀]
-    (ν₀ : Measure (Y 0)) [IsProbabilityMeasure ν₀]
+    (ν₀ : Measure (Y 0))
     (hκμ : ∀ t x, IsProbabilityMeasure (κμ t x))
     (hκν : ∀ t y, IsProbabilityMeasure (κν t y)) :
     ⨅ (γ₀ : Measure (X 0 × Y 0)) (γ : Strat X Y)

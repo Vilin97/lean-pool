@@ -9,8 +9,25 @@ Authors: KT. Wu
   Reference: Bertsekas–Shreve, Definition 7.21, Lemma 7.30, Props 7.47–7.48
 -/
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.MeasureTheory.Measure.Prod
+
+/-! ### On BS Prop 7.48 (integration of lower semianalytic functions)
+
+An earlier draft stated Bertsekas–Shreve Prop 7.48 as an `axiom`
+(`lintegral_lowerSemianalytic`). It is now a fully verified THEOREM —
+see `BicausalOT.DescriptiveSetTheory.KernelIntegral`. The missing
+ingredient, Choquet's capacitability theorem for analytic sets
+(μ(A) = sup{μ(K) | K compact ⊆ A}, not available in Mathlib), is proved
+from scratch in `BicausalOT.DescriptiveSetTheory.Capacitability`
+(`MeasureTheory.AnalyticSet.measure_eq_iSup_isCompact`), together with
+universal measurability (`MeasureTheory.AnalyticSet.nullMeasurableSet`)
+and the parametrized kernel version
+(`MeasureTheory.AnalyticSet.kernel_section_gt`). -/
 
 open MeasureTheory Set ENNReal
 
@@ -38,7 +55,7 @@ theorem LowerSemicontinuous.isLowerSemianalytic
     Proof: {x | inf < c} = projₓ({(x,y) ∈ D | f(x,y) < c}).
     Intersection of two analytic sets is analytic; projection preserves analytic. -/
 theorem IsLowerSemianalytic.iInf_fiber
-    {Y : Type*} [TopologicalSpace Y] [PolishSpace X] [PolishSpace Y]
+    {Y : Type*} [TopologicalSpace Y] [PolishSpace Y]
     [T2Space X]
     {D : Set (X × Y)} (hD : AnalyticSet D)
     {f : X × Y → ENNReal} (hf : IsLowerSemianalytic (X := X × Y) f) :
@@ -61,21 +78,15 @@ theorem IsLowerSemianalytic.iInf_fiber
     have h1 := hD
     have h2 := hf c
     rw [show D ∩ {p | f p < c} = ⋂ (i : Fin 2),
-        (![D, {p | f p < c}]) i from by ext x; simp [Fin.forall_fin_two, Matrix.cons_val_zero, Matrix.cons_val_one]]
-    exact AnalyticSet.iInter (fun i => by fin_cases i <;> simp [Matrix.cons_val_zero, Matrix.cons_val_one] <;> assumption)
+        (![D, {p | f p < c}]) i from by ext x; simp [Fin.forall_fin_two, Matrix.cons_val_zero,
+            Matrix.cons_val_one]]
+    apply AnalyticSet.iInter
+    intro i
+    fin_cases i
+    · exact h1
+    · exact h2
   exact h_inter.image_of_continuous continuous_fst
 
-/-! ### On BS Prop 7.48 (integration of lower semianalytic functions)
 
-An earlier draft stated Bertsekas–Shreve Prop 7.48 as an `axiom`
-(`lintegral_lowerSemianalytic`). It is now a fully verified THEOREM —
-see `BicausalOT.DescriptiveSetTheory.KernelIntegral`. The missing
-ingredient, Choquet's capacitability theorem for analytic sets
-(μ(A) = sup{μ(K) | K compact ⊆ A}, not available in Mathlib), is proved
-from scratch in `BicausalOT.DescriptiveSetTheory.Capacitability`
-(`MeasureTheory.AnalyticSet.measure_eq_iSup_isCompact`), together with
-universal measurability (`MeasureTheory.AnalyticSet.nullMeasurableSet`)
-and the parametrized kernel version
-(`MeasureTheory.AnalyticSet.kernel_section_gt`). -/
 
 end

@@ -25,6 +25,8 @@ Authors: KT. Wu
 -/
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LintegralLsc
 
+/-! ## J1: joint continuity of the pairing -/
+
 open MeasureTheory Set Filter Topology
 open scoped ENNReal
 
@@ -34,14 +36,14 @@ variable {H W : Type*}
   [TopologicalSpace H] [PolishSpace H] [MeasurableSpace H] [BorelSpace H]
   [TopologicalSpace W] [PolishSpace W] [MeasurableSpace W] [BorelSpace W]
 
-/-! ## J1: joint continuity of the pairing -/
+
 
 /-- **Joint continuity of the pairing** `(x, γ) ↦ γ.map (Prod.mk x)` from
     `H × P(W)` to `P(H × W)` (weak topologies, Polish spaces). -/
 theorem continuous_probabilityMeasure_map_prodMk :
     Continuous (fun p : H × ProbabilityMeasure W =>
       ProbabilityMeasure.map p.2
-        (measurable_prodMk_left (x := p.1)).aemeasurable) := by
+        (Prod.mk p.1)) := by
   refine SeqContinuous.continuous fun ps p hps => ?_
   have hx : Tendsto (fun n => (ps n).1) atTop (𝓝 p.1) :=
     (continuous_fst.tendsto p).comp hps
@@ -96,7 +98,7 @@ theorem lowerSemicontinuous_lintegral_prodMk
           ∫⁻ q, f q ∂(γ : Measure (H × W)))
         ∘ (fun p : H × ProbabilityMeasure W =>
             ProbabilityMeasure.map p.2
-              (measurable_prodMk_left (x := p.1)).aemeasurable) := by
+              (Prod.mk p.1)) := by
     funext p
     simp only [Function.comp_apply, ProbabilityMeasure.toMeasure_map]
     rw [lintegral_map hf.measurable measurable_prodMk_left]

@@ -12,6 +12,12 @@ Authors: KT. Wu
 -/
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
 
+/-!
+# AnalyticSigmaAlgebra
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 open MeasureTheory Set
 
 noncomputable section

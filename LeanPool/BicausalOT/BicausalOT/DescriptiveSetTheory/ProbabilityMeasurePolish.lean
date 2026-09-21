@@ -19,15 +19,17 @@ import Mathlib.MeasureTheory.Measure.Prokhorov
 import Mathlib.MeasureTheory.PiSystem
 import Mathlib.MeasureTheory.Measure.GiryMonad
 
+/-! ## Node A: Lévy-Prokhorov Cauchy sequences are uniformly tight -/
+
 open MeasureTheory Topology TopologicalSpace Metric Filter Set
-open scoped ENNReal NNReal Classical
+open scoped ENNReal NNReal
 
 noncomputable section
 
 variable {Ω : Type*} [MetricSpace Ω] [SeparableSpace Ω] [CompleteSpace Ω]
   [MeasurableSpace Ω] [BorelSpace Ω]
 
-/-! ## Node A: Lévy-Prokhorov Cauchy sequences are uniformly tight -/
+
 
 omit [SeparableSpace Ω] [CompleteSpace Ω] in
 /-- A1, heads: any single probability measure puts mass `≥ 1 - ε` on a
@@ -65,6 +67,7 @@ theorem exists_range_measure_ball_compl_lt
   exact (htendsto.eventually_lt_const hε).exists
 
 omit [CompleteSpace Ω] in
+open scoped Classical in
 /-- A1: for a Lévy-Prokhorov Cauchy sequence of probability measures on a
     Polish space, all measures simultaneously put mass `≥ 1 - δ` on one
     common finite union of `η`-balls. Heads are covered by density and
@@ -294,7 +297,7 @@ theorem diracMix_sum_ne_zero (x₀ : Ω) {N : ℕ} (x : Fin N → Ω) (a : Fin N
     (h : (∑ i, a i) ≠ 0) :
     diracMix x₀ x a
       = (∑ i, (a i : ℝ≥0∞))⁻¹ • ∑ i, (a i : ℝ≥0∞) • Measure.dirac (x i) := by
-  rw [diracMix, if_neg h]
+  rw [diracMix, ite_eq_right h]
 
 instance diracMix_isProbabilityMeasure (x₀ : Ω) {N : ℕ}
     (x : Fin N → Ω) (a : Fin N → ℕ) :
@@ -319,6 +322,7 @@ instance diracMix_isProbabilityMeasure (x₀ : Ω) {N : ℕ}
     exact ENNReal.inv_mul_cancel hsum htop
 
 omit [MetricSpace Ω] [SeparableSpace Ω] [CompleteSpace Ω] [BorelSpace Ω] in
+open scoped Classical in
 /-- Lower bound for a Dirac mixture on a measurable set: the normalized
     weight of the atoms lying in the set, with any upper bound `m` on the
     total weight. -/
@@ -388,6 +392,7 @@ theorem exists_measure_compl_partial_iUnion_lt
   exact (htendsto.eventually_lt_const hε).exists
 
 omit [CompleteSpace Ω] in
+open scoped Classical in
 /-- B1+B2: every probability measure on a Polish space is within `3ε` in
     Lévy-Prokhorov distance of a normalized natural-weight Dirac mixture
     at points of any dense sequence. -/
@@ -581,13 +586,13 @@ theorem exists_diracMix_levyProkhorovDist_le
 
 instance : SeparableSpace (LevyProkhorov (ProbabilityMeasure Ω)) := by
   rcases isEmpty_or_nonempty Ω with hΩ | hΩ
-  · haveI : IsEmpty (ProbabilityMeasure Ω) := by
+  · have : IsEmpty (ProbabilityMeasure Ω) := by
       constructor
       intro μ
       have h1 : (μ : Measure Ω) univ = 1 := measure_univ
       rw [Set.univ_eq_empty_iff.mpr hΩ, measure_empty] at h1
       exact zero_ne_one h1
-    haveI : IsEmpty (LevyProkhorov (ProbabilityMeasure Ω)) :=
+    have : IsEmpty (LevyProkhorov (ProbabilityMeasure Ω)) :=
       ⟨fun x => IsEmpty.elim ‹_› x.toMeasure⟩
     exact ⟨⟨∅, countable_empty, by
       rw [dense_iff_closure_eq, closure_empty]
@@ -632,7 +637,7 @@ instance ProbabilityMeasure.instPolishSpace
     {X : Type*} [TopologicalSpace X] [PolishSpace X]
     [MeasurableSpace X] [BorelSpace X] :
     PolishSpace (ProbabilityMeasure X) := by
-  letI := TopologicalSpace.upgradeIsCompletelyMetrizable X
+  let := TopologicalSpace.upgradeIsCompletelyMetrizable X
   exact (LevyProkhorov.probabilityMeasureHomeomorph
     (Ω := X)).isClosedEmbedding.polishSpace
 
@@ -669,8 +674,8 @@ theorem probabilityMeasure_borel_measurable_apply_isClosed
     @Measurable (ProbabilityMeasure Ω) ℝ≥0∞
       (borel (ProbabilityMeasure Ω)) inferInstance
       (fun γ => (γ : Measure Ω) F) := by
-  letI : MeasurableSpace (ProbabilityMeasure Ω) := borel _
-  haveI : BorelSpace (ProbabilityMeasure Ω) := ⟨rfl⟩
+  let : MeasurableSpace (ProbabilityMeasure Ω) := borel _
+  have : BorelSpace (ProbabilityMeasure Ω) := ⟨rfl⟩
   have hlim : Tendsto
       (fun n => fun γ : ProbabilityMeasure Ω =>
         ∫⁻ x, (hF.apprSeq n x : ℝ≥0∞) ∂(γ : Measure Ω))
@@ -690,8 +695,8 @@ theorem probabilityMeasure_borel_measurable_apply
     @Measurable (ProbabilityMeasure Ω) ℝ≥0∞
       (borel (ProbabilityMeasure Ω)) inferInstance
       (fun γ => (γ : Measure Ω) s) := by
-  letI : MeasurableSpace (ProbabilityMeasure Ω) := borel _
-  haveI : BorelSpace (ProbabilityMeasure Ω) := ⟨rfl⟩
+  let : MeasurableSpace (ProbabilityMeasure Ω) := borel _
+  have : BorelSpace (ProbabilityMeasure Ω) := ⟨rfl⟩
   induction s, hs using MeasurableSpace.induction_on_inter
     (m := (inferInstance : MeasurableSpace Ω))
     (s := {t : Set Ω | IsClosed t})
@@ -724,7 +729,7 @@ theorem probabilityMeasure_borel_measurable_toMeasure :
     @Measurable (ProbabilityMeasure Ω) (Measure Ω)
       (borel (ProbabilityMeasure Ω)) inferInstance
       ((↑) : ProbabilityMeasure Ω → Measure Ω) := by
-  letI : MeasurableSpace (ProbabilityMeasure Ω) := borel _
+  let : MeasurableSpace (ProbabilityMeasure Ω) := borel _
   exact Measure.measurable_measure.mpr
     fun s hs => probabilityMeasure_borel_measurable_apply hs
 
@@ -784,7 +789,7 @@ theorem measurableSet_eq_measure {α : Type*} [MeasurableSpace α] {W : Type*}
     ext a
     simp only [mem_ofPred_eq, mem_iInter]
     refine ⟨fun h s _ => by rw [h], fun h => ?_⟩
-    haveI := hFfin a
+    have := hFfin a
     exact ext_of_generate_finite _ hCgen hCpi h
       (by rw [(hFfin a).measure_univ, (hGfin a).measure_univ])
   rw [hset]

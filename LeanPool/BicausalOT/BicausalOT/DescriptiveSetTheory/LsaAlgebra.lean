@@ -13,6 +13,12 @@ Authors: KT. Wu
 -/
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
 
+/-!
+# LsaAlgebra
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 open Set MeasureTheory
 open scoped ENNReal
 
@@ -28,7 +34,7 @@ theorem IsLowerSemianalytic.add [T2Space X] {f g : X → ℝ≥0∞}
     (hf : IsLowerSemianalytic f) (hg : IsLowerSemianalytic g) :
     IsLowerSemianalytic (fun x => f x + g x) := by
   intro c
-  show AnalyticSet {x | f x + g x < c}
+  change AnalyticSet {x | f x + g x < c}
   have hdecomp : {x | f x + g x < c}
       = ⋃ q : ℚ, ({x | f x < (Real.toNNReal q : ℝ≥0∞)}
           ∩ {x | g x < c - (Real.toNNReal q : ℝ≥0∞)}) := by

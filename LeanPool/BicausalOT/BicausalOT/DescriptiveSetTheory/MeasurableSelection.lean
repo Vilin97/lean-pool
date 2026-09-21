@@ -26,13 +26,19 @@ open-set measurability hypothesis applies directly.  The limit `f = lim fₙ` is
 measurable as a pointwise limit of measurable functions into a metrizable space, and
 `f a ∈ Φ a` because `Φ a` is closed.
 -/
-import Mathlib
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
+import Mathlib.Analysis.Normed.Order.Lattice
+import Mathlib.MeasureTheory.Constructions.BorelSpace.Metrizable
+import Mathlib.Tactic
+
+/-! ### Least-index choice over `ℕ`, classical-decidability wrapper -/
 
 open Metric Set Filter Topology TopologicalSpace
 
 namespace MeasurableSelection
 
-/-! ### Least-index choice over `ℕ`, classical-decidability wrapper -/
+
 
 /-- The least `n : ℕ` satisfying `p`, with classical decidability baked in (so that it
 can be used in `noncomputable` constructions without carrying instances around). -/
@@ -40,12 +46,12 @@ noncomputable def firstIdx (p : ℕ → Prop) (h : ∃ n, p n) : ℕ :=
   @Nat.find p (Classical.decPred p) h
 
 theorem firstIdx_spec {p : ℕ → Prop} (h : ∃ n, p n) : p (firstIdx p h) := by
-  letI := Classical.decPred p
+  let := Classical.decPred p
   exact Nat.find_spec h
 
 theorem firstIdx_eq_iff {p : ℕ → Prop} (h : ∃ n, p n) {k : ℕ} :
     firstIdx p h = k ↔ p k ∧ ∀ j < k, ¬p j := by
-  letI := Classical.decPred p
+  let := Classical.decPred p
   exact Nat.find_eq_iff h
 
 variable {α : Type*} [MeasurableSpace α]
@@ -252,9 +258,9 @@ theorem exists_measurable_selection {α : Type*} [MeasurableSpace α] {Y : Type*
     (hmeas : ∀ U : Set Y, IsOpen U → MeasurableSet {a | (Φ a ∩ U).Nonempty}) :
     ∃ f : α → Y, Measurable f ∧ ∀ a, f a ∈ Φ a := by
   rcases isEmpty_or_nonempty α with hα | hα
-  · haveI := hα
+  · have := hα
     exact ⟨fun a => (hne a).some, measurable_of_empty _, fun a => (hne a).some_mem⟩
   · obtain ⟨a₀⟩ := hα
-    haveI : Nonempty Y := ⟨(hne a₀).some⟩
+    have : Nonempty Y := ⟨(hne a₀).some⟩
     obtain ⟨u, hu⟩ := TopologicalSpace.exists_dense_seq Y
     exact MeasurableSelection.exists_selection_of_denseRange hu hne hclosed hmeas

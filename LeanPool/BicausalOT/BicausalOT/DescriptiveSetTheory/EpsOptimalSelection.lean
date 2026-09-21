@@ -26,14 +26,15 @@ import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Tree
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
 import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 
+/-! ## Fiber infimum approximation -/
+
 open MeasureTheory Set ENNReal
-open scoped Classical
 
 noncomputable section
 
 variable {H E : Type*} [TopologicalSpace H] [TopologicalSpace E]
 
-/-! ## Fiber infimum approximation -/
+
 
 omit [TopologicalSpace H] [TopologicalSpace E] in
 /-- Any value strictly above the fiber infimum is beaten by some element
@@ -52,7 +53,7 @@ theorem iInf_fiber_lt {Γ : Set (H × E)} {F : H × E → ℝ≥0∞} {h : H}
 /-- A σ(Σ¹₁)-measurable everywhere-feasible selector exists as soon as the
     graph is analytic, nonempty, and has nonempty fibers
     (Jankov–von Neumann). -/
-theorem exists_fallback_selector [PolishSpace H] [PolishSpace E]
+theorem exists_fallback_selector [PolishSpace H]
     {Γ : Set (H × E)} (hΓ : AnalyticSet Γ) (hΓne : Γ.Nonempty)
     (hfib : ∀ h : H, ∃ e : E, (h, e) ∈ Γ) :
     ∃ φ : H → E, AnalyticallyMeasurable φ ∧ ∀ h, (h, φ h) ∈ Γ := by
@@ -94,8 +95,8 @@ theorem AnalyticallyMeasurable.find
     (hp : ∀ m, @MeasurableSet H (analyticMeasurableSpace H) {h | p m h})
     (hex : ∀ h, ∃ m, p m h) :
     AnalyticallyMeasurable (fun h => ψ (Nat.find (hex h)) h) := by
-  letI : MeasurableSpace H := analyticMeasurableSpace H
-  letI : MeasurableSpace E := borel E
+  let : MeasurableSpace H := analyticMeasurableSpace H
+  let : MeasurableSpace E := borel E
   exact Measurable.find hψ hp hex
 
 /-! ## Band bookkeeping in ℝ≥0∞ -/
@@ -137,6 +138,7 @@ end EpsOptimalSelection
 /-! ## The main theorem: BS Proposition 7.50, ε-optimal half -/
 
 open EpsOptimalSelection in
+open scoped Classical in
 /-- **ε-optimal analytically measurable selection** (Bertsekas–Shreve,
     Proposition 7.50 analogue, ε-optimal half, in `ℝ≥0∞`). If `Γ ⊆ H × E`
     is analytic with nonempty fibers (H, E Polish) and `F` is lower
@@ -159,9 +161,9 @@ theorem exists_eps_optimal_selector [PolishSpace H] [PolishSpace E]
       ∀ h, F (h, φ h) ≤ (⨅ (e : E) (_ : (h, e) ∈ Γ), F (h, e)) + ε := by
   rcases isEmpty_or_nonempty H with hH | hH
   · -- degenerate domain: everything is vacuous
-    haveI := hH
-    letI : MeasurableSpace H := analyticMeasurableSpace H
-    letI : MeasurableSpace E := borel E
+    have := hH
+    let : MeasurableSpace H := analyticMeasurableSpace H
+    let : MeasurableSpace E := borel E
     exact ⟨fun h => isEmptyElim h, measurable_of_empty _,
       fun h => isEmptyElim h, fun h => isEmptyElim h⟩
   · obtain ⟨h₀⟩ := hH
@@ -198,7 +200,7 @@ theorem exists_eps_optimal_selector [PolishSpace H] [PolishSpace E]
       | zero =>
         have hset : {h : H | bandPred ε' 0 (g h)} = {h : H | g h < ⊤}ᶜ := by
           ext h
-          show g h = ∞ ↔ ¬ g h < ⊤
+          change g h = ∞ ↔ ¬ g h < ⊤
           simp [lt_top_iff_ne_top]
         rw [hset]
         exact (hg ⊤).compl_mem_analyticMeasurableSpace

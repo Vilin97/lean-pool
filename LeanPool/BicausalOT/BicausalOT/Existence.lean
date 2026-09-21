@@ -10,6 +10,12 @@ Authors: KT. Wu
 import LeanPool.BicausalOT.BicausalOT.Defs
 import Mathlib.Topology.Semicontinuity.Basic
 
+/-!
+# Existence
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 open MeasureTheory ProbabilityTheory Set ENNReal
 
 noncomputable section
@@ -19,6 +25,7 @@ variable [MeasurableSpace X₀] [MeasurableSpace X₁]
 variable [MeasurableSpace Y₀] [MeasurableSpace Y₁]
 variable (c₁ : (X₀ × Y₀) × (X₁ × Y₁) → ENNReal)
 
+omit [MeasurableSpace X₀] [MeasurableSpace Y₀] in
 theorem optimal_kernel_exists_pointwise
     [TopologicalSpace (Measure (X₁ × Y₁))]
     (κ_μ : X₀ → Measure X₁) (κ_ν : Y₀ → Measure Y₁)

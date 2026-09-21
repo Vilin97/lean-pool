@@ -9,6 +9,12 @@ Authors: KT. Wu
 import LeanPool.BicausalOT.BicausalOT.Defs
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.JankovVonNeumann
 
+/-!
+# UpperBound
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 open MeasureTheory ProbabilityTheory Set ENNReal
 
 noncomputable section
@@ -32,6 +38,7 @@ theorem eps_optimal_element
   · simp [htop] at hlt
   · exact absurd this (not_le.mpr (ENNReal.lt_add_right htop hε.ne'))
 
+omit [MeasurableSpace X₀] [MeasurableSpace Y₀] in
 theorem eps_optimal_kernel_bound
     (κ_μ : X₀ → Measure X₁) (κ_ν : Y₀ → Measure Y₁)
     (h_ne : ∀ z₀ : X₀ × Y₀, (FeasibleSet₀ κ_μ κ_ν z₀).Nonempty)
@@ -57,7 +64,7 @@ theorem totalCost_le_V₀_plus_eps
     totalCost c₀ c₁ γ₀ γ₁
     ≤ ∫⁻ z₀, (V₀ c₀ c₁ κ_μ κ_ν z₀ + ε) ∂γ₀ := by
   unfold totalCost; apply lintegral_mono; intro z₀
-  show c₀ z₀ + ∫⁻ z₁, c₁ (z₀, z₁) ∂(γ₁ z₀) ≤ V₀ c₀ c₁ κ_μ κ_ν z₀ + ε
+  change c₀ z₀ + ∫⁻ z₁, c₁ (z₀, z₁) ∂(γ₁ z₀) ≤ V₀ c₀ c₁ κ_μ κ_ν z₀ + ε
   have h := h_opt z₀
   have hV : V₀ c₀ c₁ κ_μ κ_ν z₀ = c₀ z₀ +
     ⨅ (m : Measure (X₁ × Y₁)) (_ : m ∈ FeasibleSet₀ κ_μ κ_ν z₀),

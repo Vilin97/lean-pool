@@ -27,12 +27,14 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Probability.Kernel.Composition.Prod
 import Mathlib.MeasureTheory.Integral.Lebesgue.Sub
 
+/-! ## Binary closure properties of analytic sets -/
+
 open Set Topology MeasureTheory ProbabilityTheory Filter
-open scoped Classical ENNReal
+open scoped ENNReal
 
 noncomputable section
 
-/-! ## Binary closure properties of analytic sets -/
+
 
 theorem MeasureTheory.AnalyticSet.inter'
     {W : Type*} [TopologicalSpace W] [T2Space W]
@@ -292,7 +294,7 @@ theorem lintegral_lowerSemianalytic
     IsLowerSemianalytic (fun x => ∫⁻ y, f (x, y) ∂(κ x)) := by
   -- kernel packaging
   set κK : Kernel X Y := ⟨κ, hκ⟩ with hκK
-  haveI : IsMarkovKernel κK := ⟨fun a => hκp a⟩
+  have : IsMarkovKernel κK := ⟨fun a => hκp a⟩
   -- transported epigraph pieces Eₙ ⊆ X × (Y × ℝ)
   set E : ℕ → Set (X × (Y × ℝ)) := fun n =>
     (Homeomorph.prodAssoc X Y ℝ).symm ⁻¹'
@@ -317,7 +319,7 @@ theorem lintegral_lowerSemianalytic
       exact ⟨h1, mem_univ _, h2⟩
   -- the Lebesgue factors
   set lam : ℕ → Measure ℝ := fun n => volume.restrict (Icc (0 : ℝ) n) with hlam
-  haveI hlam_fin : ∀ n, IsFiniteMeasure (lam n) := fun n => by
+  have hlam_fin : ∀ n, IsFiniteMeasure (lam n) := fun n => by
     rw [hlam]; infer_instance
   -- truncated integrals
   set a : ℕ → X → ℝ≥0∞ :=

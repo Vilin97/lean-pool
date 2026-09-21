@@ -8,6 +8,12 @@ Authors: KT. Wu
 -/
 import LeanPool.BicausalOT.BicausalOT.Defs
 
+/-!
+# LowerBound
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 open MeasureTheory ProbabilityTheory Set ENNReal
 
 noncomputable section
@@ -17,6 +23,7 @@ variable [MeasurableSpace X₀] [MeasurableSpace X₁]
 variable [MeasurableSpace Y₀] [MeasurableSpace Y₁]
 variable (c₀ : X₀ × Y₀ → ENNReal) (c₁ : (X₀ × Y₀) × (X₁ × Y₁) → ENNReal)
 
+omit [MeasurableSpace X₀] [MeasurableSpace Y₀] in
 theorem V₀_le_cost_pointwise
     (κ_μ : X₀ → Measure X₁) (κ_ν : Y₀ → Measure Y₁)
     (z₀ : X₀ × Y₀) (γ : Measure (X₁ × Y₁))

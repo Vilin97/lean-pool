@@ -20,6 +20,12 @@ Authors: KT. Wu
 -/
 import LeanPool.BicausalOT.BicausalOT.LscBellman
 
+/-!
+# MeasurableFeasibleStrategy
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 open MeasureTheory Set Filter Topology
 open scoped ENNReal
 

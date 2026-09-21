@@ -21,5 +21,11 @@ Authors: KT. Wu
 -/
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
+/-!
+# AnalyticSet
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
+
 -- Re-export for downstream modules
 open MeasureTheory

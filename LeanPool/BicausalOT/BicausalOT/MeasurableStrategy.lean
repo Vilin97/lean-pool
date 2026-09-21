@@ -22,6 +22,8 @@ Authors: KT. Wu
 import LeanPool.BicausalOT.BicausalOT.SemianalyticValue
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.EpsOptimalSelection
 
+/-! ## Fibers of the feasibility graph -/
+
 open MeasureTheory Set ENNReal
 
 noncomputable section
@@ -38,7 +40,7 @@ variable (κμ : (t : ℕ) → XHist X t → Measure (X (t + 1)))
 variable (κν : (t : ℕ) → YHist Y t → Measure (Y (t + 1)))
 variable (c : (t : ℕ) → PairHist X Y t → ℝ≥0∞)
 
-/-! ## Fibers of the feasibility graph -/
+
 
 omit [∀ n, TopologicalSpace (X n)] [∀ n, PolishSpace (X n)]
   [∀ n, BorelSpace (X n)] [∀ n, TopologicalSpace (Y n)]
@@ -52,7 +54,7 @@ theorem feasGraph_fiber_nonempty
     (t : ℕ) (h : PairHist X Y t) :
     ∃ γ : WeakP (X (t + 1) × Y (t + 1)), (h, γ) ∈ FeasGraph κμ κν t := by
   obtain ⟨γm, hγm⟩ := hne t h
-  haveI hpm : IsProbabilityMeasure γm :=
+  have hpm : IsProbabilityMeasure γm :=
     ⟨Feas.measure_univ κμ κν hκμ_prob hγm⟩
   exact ⟨show WeakP (X (t + 1) × Y (t + 1)) from
     (⟨γm, hpm⟩ : ProbabilityMeasure (X (t + 1) × Y (t + 1))), hγm⟩
@@ -133,7 +135,7 @@ theorem exists_eps_strategy_analyticallyMeasurable (T : ℕ)
     strategy and L4; lower bound inherited from `bellman_value_eq_multi`. -/
 theorem bellman_value_eq_multi_measurable (T : ℕ)
     (μ₀ : Measure (X 0)) [IsProbabilityMeasure μ₀]
-    (ν₀ : Measure (Y 0)) [IsProbabilityMeasure ν₀]
+    (ν₀ : Measure (Y 0))
     (hκμ_meas : ∀ t, Measurable (κμ t))
     (hκν_meas : ∀ t, Measurable (κν t))
     (hκμ_prob : ∀ t x, IsProbabilityMeasure (κμ t x))

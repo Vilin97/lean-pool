@@ -38,14 +38,18 @@ Authors: KT. Wu
   front F2's draft_FeasClosed.lean (scratch files cannot import each
   other); keep a single copy when integrating both fronts.
 -/
-import Mathlib
+import Mathlib.MeasureTheory.Measure.FiniteMeasureProd
+import Mathlib.MeasureTheory.Measure.Prokhorov
+import Mathlib.Tactic
+
+/-! ## Translation between `ProbabilityMeasure.map` and `Measure.map` constraints
+(verbatim copy of front F2's lemma — dedupe at integration) -/
 
 open MeasureTheory Topology
 
 noncomputable section
 
-/-! ## Translation between `ProbabilityMeasure.map` and `Measure.map` constraints
-(verbatim copy of front F2's lemma — dedupe at integration) -/
+
 
 section Translation
 
@@ -54,8 +58,8 @@ variable {Ω Ω' : Type*} [MeasurableSpace Ω] [MeasurableSpace Ω']
 /-- A marginal-type constraint on a `ProbabilityMeasure` can be stated equivalently via
 `ProbabilityMeasure.map` or via `Measure.map` on the underlying measures. -/
 theorem probabilityMeasure_map_eq_iff (γ : ProbabilityMeasure Ω) (μ : ProbabilityMeasure Ω')
-    {f : Ω → Ω'} (hf : Measurable f) :
-    γ.map hf.aemeasurable = μ ↔ (γ : Measure Ω).map f = (μ : Measure Ω') := by
+    (f : Ω → Ω') :
+    γ.map f = μ ↔ (γ : Measure Ω).map f = (μ : Measure Ω') := by
   constructor
   · rintro rfl
     rfl
@@ -80,12 +84,12 @@ convergence. -/
 theorem isClosed_probabilityMeasure_couplings
     (mu : ProbabilityMeasure A) (nu : ProbabilityMeasure B) :
     IsClosed {γ : ProbabilityMeasure (A × B) |
-      γ.map measurable_fst.aemeasurable = mu ∧ γ.map measurable_snd.aemeasurable = nu} := by
+      γ.map Prod.fst = mu ∧ γ.map Prod.snd = nu} := by
   have hfst : IsClosed {γ : ProbabilityMeasure (A × B) |
-      γ.map measurable_fst.aemeasurable = mu} :=
+      γ.map Prod.fst = mu} :=
     isClosed_singleton.preimage (ProbabilityMeasure.continuous_map continuous_fst)
   have hsnd : IsClosed {γ : ProbabilityMeasure (A × B) |
-      γ.map measurable_snd.aemeasurable = nu} :=
+      γ.map Prod.snd = nu} :=
     isClosed_singleton.preimage (ProbabilityMeasure.continuous_map continuous_snd)
   exact hfst.inter hsnd
 
@@ -100,11 +104,11 @@ theorem probabilityMeasure_couplings_toMeasure_eq
         (γ : Measure (A × B)).map Prod.fst = (mu : Measure A) ∧
         (γ : Measure (A × B)).map Prod.snd = (nu : Measure B)}
       = {γ : ProbabilityMeasure (A × B) |
-          γ.map measurable_fst.aemeasurable = mu ∧
-          γ.map measurable_snd.aemeasurable = nu} := by
+          γ.map Prod.fst = mu ∧
+          γ.map Prod.snd = nu} := by
   ext γ
-  exact and_congr (probabilityMeasure_map_eq_iff γ mu measurable_fst).symm
-    (probabilityMeasure_map_eq_iff γ nu measurable_snd).symm
+  exact and_congr (probabilityMeasure_map_eq_iff γ mu Prod.fst).symm
+    (probabilityMeasure_map_eq_iff γ nu Prod.snd).symm
 
 /-! ## Tightness of coupling sets (front F3, new) -/
 
@@ -145,12 +149,12 @@ theorem isTightMeasureSet_probabilityMeasure_couplings
     (mu : ProbabilityMeasure A) (nu : ProbabilityMeasure B) :
     IsTightMeasureSet {((γ : ProbabilityMeasure (A × B)) : Measure (A × B)) |
       γ ∈ {γ' : ProbabilityMeasure (A × B) |
-        γ'.map measurable_fst.aemeasurable = mu ∧
-        γ'.map measurable_snd.aemeasurable = nu}} := by
+        γ'.map Prod.fst = mu ∧
+        γ'.map Prod.snd = nu}} := by
   refine (isTightMeasureSet_couplings mu nu).subset ?_
   rintro x ⟨γ, ⟨h₁, h₂⟩, rfl⟩
-  exact ⟨(probabilityMeasure_map_eq_iff γ mu measurable_fst).1 h₁,
-    (probabilityMeasure_map_eq_iff γ nu measurable_snd).1 h₂⟩
+  exact ⟨(probabilityMeasure_map_eq_iff γ mu Prod.fst).1 h₁,
+    (probabilityMeasure_map_eq_iff γ nu Prod.snd).1 h₂⟩
 
 /-! ## Compactness of coupling sets (front F3, main results) -/
 
@@ -162,9 +166,9 @@ equals its closure. -/
 theorem isCompact_probabilityMeasure_couplings
     (mu : ProbabilityMeasure A) (nu : ProbabilityMeasure B) :
     IsCompact {γ : ProbabilityMeasure (A × B) |
-      γ.map measurable_fst.aemeasurable = mu ∧ γ.map measurable_snd.aemeasurable = nu} := by
+      γ.map Prod.fst = mu ∧ γ.map Prod.snd = nu} := by
   have hcompact : IsCompact (closure {γ : ProbabilityMeasure (A × B) |
-      γ.map measurable_fst.aemeasurable = mu ∧ γ.map measurable_snd.aemeasurable = nu}) :=
+      γ.map Prod.fst = mu ∧ γ.map Prod.snd = nu}) :=
     isCompact_closure_of_isTightMeasureSet
       (isTightMeasureSet_probabilityMeasure_couplings mu nu)
   rwa [(isClosed_probabilityMeasure_couplings mu nu).closure_eq] at hcompact
@@ -197,8 +201,7 @@ theorem isCompact_probabilityMeasure_marginals (m : Measure A) (n : Measure B) :
         ext γ
         simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
         intro _ h2
-        exact hn (h2 ▸ (γ : Measure (A × B)).isProbabilityMeasure_map
-          measurable_snd.aemeasurable)
+        exact hn (h2 ▸ (inferInstance : IsProbabilityMeasure ((γ : Measure (A × B)).map Prod.snd)))
       rw [hempty]
       exact isCompact_empty
   · have hempty : {γ : ProbabilityMeasure (A × B) |
@@ -207,8 +210,7 @@ theorem isCompact_probabilityMeasure_marginals (m : Measure A) (n : Measure B) :
       ext γ
       simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
       intro h1 _
-      exact hm (h1 ▸ (γ : Measure (A × B)).isProbabilityMeasure_map
-        measurable_fst.aemeasurable)
+      exact hm (h1 ▸ (inferInstance : IsProbabilityMeasure ((γ : Measure (A × B)).map Prod.fst)))
     rw [hempty]
     exact isCompact_empty
 
@@ -223,8 +225,8 @@ coupling set — the Existence-upgrade prize. -/
 theorem probabilityMeasure_couplings_nonempty
     (mu : ProbabilityMeasure A) (nu : ProbabilityMeasure B) :
     {γ : ProbabilityMeasure (A × B) |
-      γ.map measurable_fst.aemeasurable = mu ∧
-      γ.map measurable_snd.aemeasurable = nu}.Nonempty :=
+      γ.map Prod.fst = mu ∧
+      γ.map Prod.snd = nu}.Nonempty :=
   ⟨mu.prod nu, ProbabilityMeasure.map_fst_prod mu nu, ProbabilityMeasure.map_snd_prod mu nu⟩
 
 end Couplings

@@ -23,11 +23,13 @@ Authors: KT. Wu
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.CouplingsCompact
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMeasurePolish
 
+/-! ## U1: convergent sequences of probability measures are tight -/
+
 open MeasureTheory Set Filter Topology
 
 noncomputable section
 
-/-! ## U1: convergent sequences of probability measures are tight -/
+
 
 /-- A convergent sequence of probability measures on a Polish space is a
     tight family (converse Prokhorov on the compact closure of its range). -/
@@ -40,7 +42,7 @@ theorem isTightMeasureSet_range_of_tendsto {Ω : Type*}
   have hclos : IsCompact (closure (Set.range γs)) :=
     hins.of_isClosed_subset isClosed_closure
       (closure_minimal (Set.subset_insert γ (Set.range γs)) hins.isClosed)
-  letI := TopologicalSpace.upgradeIsCompletelyMetrizable Ω
+  let := TopologicalSpace.upgradeIsCompletelyMetrizable Ω
   have htight := isTightMeasureSet_of_isCompact_closure hclos
   have hset : {((μ : ProbabilityMeasure Ω) : Measure Ω) | μ ∈ Set.range γs}
       = {((γs n : ProbabilityMeasure Ω) : Measure Ω) | n : ℕ} := by
@@ -124,21 +126,21 @@ theorem exists_tendsto_subseq_couplings
     hcomp.tendsto_subseq (fun n => subset_closure (Set.mem_range_self n))
   -- identify the marginals of the limit by continuity of the pushforward
   have hfst' : (γ : Measure (A × B)).map Prod.fst = (μ : Measure A) := by
-    refine (probabilityMeasure_map_eq_iff γ μ measurable_fst).mp ?_
+    refine (probabilityMeasure_map_eq_iff γ μ Prod.fst).mp ?_
     refine tendsto_nhds_unique ?_ (hμ.comp hφmono.tendsto_atTop)
     have hc := MeasureTheory.ProbabilityMeasure.continuous_map
       (Ω := A × B) (Ω' := A) continuous_fst
     have := (hc.tendsto γ).comp hφt
     refine (tendsto_congr fun k => ?_).mp this
-    exact (probabilityMeasure_map_eq_iff _ _ measurable_fst).mpr (hfst (φ k))
+    exact (probabilityMeasure_map_eq_iff _ _ Prod.fst).mpr (hfst (φ k))
   have hsnd' : (γ : Measure (A × B)).map Prod.snd = (ν : Measure B) := by
-    refine (probabilityMeasure_map_eq_iff γ ν measurable_snd).mp ?_
+    refine (probabilityMeasure_map_eq_iff γ ν Prod.snd).mp ?_
     refine tendsto_nhds_unique ?_ (hν.comp hφmono.tendsto_atTop)
     have hc := MeasureTheory.ProbabilityMeasure.continuous_map
       (Ω := A × B) (Ω' := B) continuous_snd
     have := (hc.tendsto γ).comp hφt
     refine (tendsto_congr fun k => ?_).mp this
-    exact (probabilityMeasure_map_eq_iff _ _ measurable_snd).mpr (hsnd (φ k))
+    exact (probabilityMeasure_map_eq_iff _ _ Prod.snd).mpr (hsnd (φ k))
   exact ⟨γ, hfst', hsnd', φ, hφmono, hφt⟩
 
 /-! ## U4: hit-sets of closed targets are closed -/

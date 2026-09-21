@@ -14,8 +14,18 @@ Authors: KT. Wu
   call site (UpperBound.lean uses `_`), we drop it and prove the rest.
 -/
 import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.Algebra.Order.Module.Field
+import Mathlib.Data.EReal.Inv
+import Mathlib.Tactic.Measurability
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.MeasureTheory.Measure.Prod
+
+/-!
+# JankovVonNeumann
+
+Supporting results for bicausal optimal transport and measurable selection.
+-/
 
 open MeasureTheory Set ENNReal
 
@@ -38,7 +48,7 @@ private theorem eps_optimal_element'
 
 /-- ε-optimal selection: for each a, choose m ∈ S(a) with f(a,m) ≤ inf + ε. -/
 theorem eps_optimal_selection
-    {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
+    {α β : Type*} [MeasurableSpace β]
     (S : α → Set (Measure β))
     (h_ne : ∀ a, (S a).Nonempty)
     (f : α → Measure β → ENNReal)
