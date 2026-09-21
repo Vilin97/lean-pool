@@ -9966,3 +9966,52 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+
+  - slug: regts-sevenster
+    title: A proof of the Regts–Sevenster conjecture, formalized
+    summary: A Lean 4 proof of the Regts–Sevenster conjecture. A complex-valued graph
+      parameter, normalized at the empty graph and invariant under isomorphism, has
+      exponentially bounded edge-connection rank if and only if it is a mixed partition
+      function. For a natural rank base R, a representing model can be chosen with k
+      even and 2ℓ odd colours satisfying k + 2ℓ ≤ R. The development also proves the
+      even connection-rank growth limit, minimum total colour dimension, minimal parity
+      formulas and prescribed-dimension criterion. Schrijver's factorial argument supplies
+      nilpotent-trace vanishing; semisimplicity and Deligne's fibre-functor theorem
+      give the model; a polynomial commutant estimate gives the sharp colour budget.
+      Deligne's theorem and the required symmetric-group character theory are proved
+      within the development. The appendix's trace-zeta results give rationality and
+      degree bounds, with an independent proof of nilpotent-trace vanishing. The theorems
+      of record use only propext, Classical.choice and Quot.sound, checked by pinned
+      audits.
+    branch: algebraic graph theory
+    entry_module: LeanPool.RegtsSevenster
+    authors:
+    - William Whistler
+    source:
+      url: https://github.com/willwhistler/regts-sevenster
+      github_repo: willwhistler/regts-sevenster
+      commit: bb0a60543d48afac3f36938104b5c85c7c0396c7
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - RS.regts_sevenster_characterisation
+    - RS.regts_sevenster_total
+    - RS.deligne_theorem
+    main_results:
+    - declaration: RS.regts_sevenster_characterisation
+      informal: Normalized isomorphism-invariant complex graph parameters with exponentially
+        bounded edge-connection ranks are precisely mixed partition functions.
+    - declaration: RS.regts_sevenster_total
+      informal: A natural rank bound R admits a representing mixed model with total
+        color dimension at most R.
+    - declaration: RS.deligne_theorem
+      informal: The development proves its stated Deligne fiber-functor theorem for
+        the symmetric tensor categories used in the representation.
+    tags:
+    - graph-parameters
+    - tensor-categories
+    - partition-functions
+    msc:
+    - 05C50
+    - 18M20
