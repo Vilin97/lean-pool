@@ -1,4 +1,76 @@
 projects:
+  - slug: kurosh
+    title: Kurosh and Schreier subgroup theorems via covering graphs
+    summary: >-
+      Proves the Kurosh subgroup theorem for arbitrary subgroups of indexed
+      free products, with factors given by actual intersections with conjugates
+      of the original factors and with the decomposition maps induced by their
+      inclusions. The development constructs Bass–Serre trees, quotient graphs,
+      graph-of-groups covers, path lifting, and normal forms. It also gives an
+      explicit finite Schreier basis and classifies automorphisms of a finite
+      regular Schreier action by its quotient group. The finite-graph basis
+      infrastructure is reused from LeanPool.FiniteGraphFundamentalGroup.
+    branch: combinatorial group theory
+    entry_module: LeanPool.Kurosh
+    authors:
+      - Arthur Freitas Ramos
+      - David Barros Hulak
+      - Ruy J. G. B. de Queiroz
+    source:
+      title: Schreier and Kurosh subgroup theorems via covering graphs
+      url: https://github.com/Arthur742Ramos/KuroshSubgroupTheorem
+      doi: 10.1007/BF01449159
+      github_repo: Arthur742Ramos/KuroshSubgroupTheorem
+      commit: 911707126c8b9bb0c764bf853008fe1053c0aad9
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GraphCoveringTheory.KuroshStatement.kurosh_decomposition_with_inclusions
+    main_results:
+      - declaration: GraphCoveringTheory.KuroshStatement.kurosh_decomposition_with_inclusions
+        informal: >-
+          Every subgroup H of an arbitrary indexed free product admits a free
+          product decomposition into a free group and subgroups of H that are
+          intersections with conjugates of the original factors. The isomorphism
+          to H is induced by the actual subgroup inclusions and a homomorphism
+          from the free factor.
+        source_ref: Kurosh subgroup theorem; upstream inclusion-preserving statement.
+      - declaration: GraphCoveringTheory.Kurosh.kurosh_decomposition
+        informal: >-
+          H is isomorphic to the free product of its nontrivial vertex stabilizers
+          in the quotient Bass–Serre graph and the free group of that graph.
+      - declaration: GraphCoveringTheory.schreier_basis_fintype
+        informal: >-
+          A finite-index subgroup H of a free group on any finite generator type
+          of cardinality r has an explicit free basis of size d*r + 1 - d,
+          where d is its index and subtraction is natural-number subtraction.
+          This formulation also covers the empty generator type.
+      - declaration: GraphCoveringTheory.schreier_basis_fintype_proved
+        informal: >-
+          If the finite generator type is nonempty, the basis has the classical
+          Schreier size 1 + d*(r - 1).
+        source_ref: Schreier index formula; DOI 10.1007/BF02952517.
+      - declaration: GraphCoveringTheory.finiteIndexQuotientDeckGroupEquiv
+        informal: >-
+          For a finite-index normal subgroup H of a group G, the automorphism
+          group of the finite regular Schreier G-action is isomorphic to G/H
+          by right translations. This is a theorem about the action, not a
+          classification of general topological covers.
+      - declaration: GraphCoveringTheory.Kurosh.kurosh_subgroup_is_free_of_trivial_stabilizers
+        informal: >-
+          A subgroup with trivial stabilizers at every vertex of its quotient
+          Bass–Serre graph is a free group.
+    tags:
+      - group-theory
+      - free-products
+      - bass-serre-theory
+      - schreier-index-formula
+      - covering-graphs
+    msc:
+      - 20E07
+      - 05C25
+      - 18B40
   - slug: komlos
     title: The Komlós and Beck–Fiala bounds with constant 36
     summary: >-
@@ -9284,6 +9356,489 @@ projects:
       - cycle-decompositions
     msc:
       - "05C45"
+  - slug: naslund-counterexample
+    title: Square-difference-free polynomials beyond Naslund's conjectured bound
+    summary: >-
+      Constructs square-difference-free subsets of polynomials over the field with three elements
+      that refute Naslund's Conjecture 13 at every degree bound divisible by four and at least
+      eight. An explicit degree-eight lift multiplies cardinality by 810 and yields a lower
+      bound of 16/21 for the lower limiting normalized logarithmic growth rate.
+    branch: additive combinatorics and number theory
+    entry_module: LeanPool.NaslundCounterexample
+    authors:
+      - JD Jones
+    source:
+      title: Square-difference-free sets in F_3[T] past the conjectured bound
+      authors:
+        - JD Jones
+      url: https://github.com/JD-Jones-ASES/ns-lean
+      github_repo: JD-Jones-ASES/ns-lean
+      commit: 035e9b0c147630e35631e4401433660f695d1fba
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - NaslundCounterexample.conjecture_fails
+      - NaslundCounterexample.liminf_ge
+    main_results:
+      - declaration: NaslundCounterexample.exists_card_810
+        informal: >-
+          There is a square-difference-free set of 810 polynomials over F_3 with degree less
+          than eight.
+      - declaration: NaslundCounterexample.conjecture_fails_at_eight
+        informal: >-
+          The upper bound 3^6 = 729 in Naslund's Conjecture 13 fails for square differences
+          over F_3 at degree bound eight.
+      - declaration: NaslundCounterexample.exists_card_pow
+        informal: >-
+          For every positive integer e, there is a square-difference-free set of 810^e
+          polynomials over F_3 with degree less than 8e.
+      - declaration: NaslundCounterexample.exists_card_twenty_seven_mul_pow
+        informal: >-
+          For every natural number e, there is a square-difference-free set of 27 times 810^e
+          polynomials over F_3 with degree less than 8e + 4.
+      - declaration: NaslundCounterexample.conjecture_fails
+        informal: >-
+          For every n divisible by four with n at least eight, there is a square-difference-free
+          set of polynomials over F_3 of degree less than n whose cardinality exceeds 3^(3n/4).
+      - declaration: NaslundCounterexample.liminf_ge
+        informal: >-
+          If D(n) is the largest cardinality of a square-difference-free set of polynomials over
+          F_3 of degree less than n, then the lower limit of log D(n) divided by n log 3 is at
+          least 16/21.
+    tags:
+      - additive-combinatorics
+      - square-difference-free
+      - function-fields
+      - polynomial-constructions
+    msc:
+      - "11B75"
+      - "05D05"
+  - slug: dilatations
+    title: Dilatations of categories and commutative rings
+    summary: >-
+      Constructs categorical dilatations from sieves of permitted numerators
+      and denominator morphisms, and proves their universal property for
+      Sigma-regular functors satisfying the sieve containment condition.
+      Develops restriction and union of centers, dual codilatations, and
+      ordinary localization as a special case. The composition isomorphism
+      retains the explicit Sigma-regularity hypothesis left open in the
+      original paper. For commutative rings, an exponent-profile center
+      recovers the ring dilatation; the naive single-index comparison is
+      refuted over Z[X]. A finite category example refutes a general
+      intermediate-category characterization. Independent ring modules
+      provide fraction arithmetic, a universal property, reindexing, and
+      the unique isomorphism for two-stage dilatations.
+    branch: category theory and commutative algebra
+    entry_module: LeanPool.Dilatations
+    authors:
+      - Arnaud Mayeux
+      - Jujian Zhang
+    source:
+      title: Dilatations of categories, via their Lean formalization
+      authors:
+        - Arnaud Mayeux
+      arxiv: '2608.09305'
+      url: https://github.com/rndmx/DilCat
+      github_repo: rndmx/DilCat
+      commit: 604559654c948566675da3f7709b8ad3126bd487
+      announced: '2026-08-10T08:52:54Z'
+      prior_formalization:
+        url: https://github.com/ProjConstruction/Proj
+        commit: 6bfe4ef61d50c20cb3b91f4ef58649c9490b594f
+        authors:
+          - Arnaud Mayeux
+          - Jujian Zhang
+        arxiv: '2606.01438'
+        license: Apache-2.0
+        note: >-
+          The upstream single-file development incorporates the ring
+          construction from Project/Dilatation/lemma.lean, Family.lean,
+          and Multicenter.lean, introduced by Jujian Zhang on 2025-03-03;
+          both prior authors are credited here.
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    provenance_note: >-
+      Mayeux's paper discloses Claude assistance under the author's direction;
+      it does not quantify the share of generated proofs. The development
+      incorporates Mayeux and Zhang's earlier ring formalization. This port
+      includes substantial AI proof repair, optimization, and documentation.
+    main_declarations:
+      - CategoryTheory.Dilatations.Dila_universal_property
+    main_results:
+      - declaration: CategoryTheory.Dilatations.Dila_universal_property
+        informal: >-
+          For a nonempty indexed center in a category C and a functor F from
+          C to D, assume that localization of D at the images of the chosen
+          denominators is faithful and that each pushed-forward numerator
+          sieve lies in the sieve generated by its mapped denominator.
+          There is a unique functor from the dilatation to D whose composite
+          with the canonical functor from C is F.
+        source_ref: Section 5; original Theorem 3.10.
+      - declaration: CategoryTheory.Dilatations.Iso315
+        informal: >-
+          The successive dilatation at Z and the pushforward of W is
+          isomorphic to the dilatation at the combined center Z.sum W,
+          assuming that the composite canonical functor to the successive
+          dilatation is Sigma-regular for Z.sum W. This regularity is an
+          explicit hypothesis, not a theorem of the development.
+        source_ref: Section 8.2 and Appendix B; conditional original Proposition 3.15.
+      - declaration: CategoryTheory.Dilatations.Iso318
+        informal: >-
+          For two families of numerator sieves with the same denominator
+          morphisms, dilating at their combined two-copy center is isomorphic
+          to dilating at the pointwise union of the sieves.
+        source_ref: Section 8.3; original Proposition 3.18.
+      - declaration: CategoryTheory.Dilatations.Prop51.Iso51
+        informal: >-
+          For any multicenter in a commutative ring A, the categorical
+          dilatation of the multiplicative one-object category of A at
+          all finitely supported exponent profiles is isomorphic to the
+          one-object category of the ring dilatation A[M]. At profile nu,
+          the denominator is the product of a_i raised to nu_i and the
+          numerator ideal is the product of (M_i + (a_i)) raised to nu_i.
+        source_ref: Theorem 10.1; corrected original Proposition 5.1.
+      - declaration: CategoryTheory.Dilatations.NaiveCenterCounterexample.no_C_compatible_equiv
+        informal: >-
+          For A = Z[X], ideal (X), and denominator 2, there is no equivalence
+          from the categorical dilatation at the naive one-index center to
+          the one-object category of the ring dilatation that commutes
+          strictly with the canonical functors from the base category.
+        source_ref: Section 10.2 and Appendix B.
+      - declaration: CategoryTheory.Dilatations.Fact52.no_realizing_center
+        informal: >-
+          The constructed category with three arrows from X to Y admits
+          no equivalence to a dilatation of the base category with two such
+          arrows that commutes strictly with the canonical base functors.
+          This is an explicit counterexample, not a classification of
+          intermediate categories up to arbitrary equivalence.
+        source_ref: Theorem 11.1.
+      - declaration: CategoryTheory.Dilatations.iteratedDilatationEquiv_existsUnique
+        informal: >-
+          For a multicenter M in any commutative ring A and any subset K of
+          its indices, first dilate along K and then along the complementary
+          ideals and denominators mapped to the first-stage ring. There is
+          exactly one isomorphism of algebras over the first-stage ring from
+          this two-stage dilatation to A[M], compatible with its canonical map.
+        source_ref: Appendix C, Proposition C.1 and Lemma C.2.
+    tags:
+      - categories
+      - localization
+      - dilatations
+      - commutative-algebra
+      - universal-properties
+    msc:
+      - 18A30
+      - 13B30
+  - slug: gaussian-moments-counterexamples
+    title: Gaussian Moments Conjecture counterexamples
+    summary: >-
+      Proves explicit complex polynomial counterexamples to the Gaussian Moments
+      Conjecture in every dimension at least three, using genuine expectations
+      under finite products of standard real Gaussian measures. Retains reusable
+      polynomial integrability, Stein identities, complex contractions, coefficient
+      formulas, injective-coordinate marginals, and related moment results.
+    branch: probability and polynomial algebra
+    entry_module: LeanPool.GaussianMomentsCounterexamples
+    authors:
+      - Christopher D. Long
+    source:
+      arxiv: '2607.18186'
+      url: https://github.com/long-mathematics/gaussian-moments-counterexamples
+      github_repo: long-mathematics/gaussian-moments-counterexamples
+      commit: c31bb63aaa7cfccf1191893f8e7d04fa71bae025
+      announcement: https://github.com/long-mathematics/gaussian-moments-counterexamples/pull/2
+      completion_date: '2026-09-17T15:47:31Z'
+      notes: >-
+        Imports the completed Gaussian core and related moment infrastructure.
+        The July manuscript predates the September Lean proof release. Five and
+        six term counts refer to the natural complex coordinates; total degrees
+        four and three also hold in the original real coordinates. The separate
+        Jacobian-map and route-arithmetic files are excluded. No general inversion,
+        Jacobian-reduction route, or resolution of the two-dimensional conjecture
+        is claimed. Upstream MIT notice is retained in the project entry module.
+        Upstream Lean authorship is inferred from the public
+        codex/lean-formalization branch; its exact proof-authoring model and extent
+        of human editing are unreported. This port and optimization are Codex-authored.
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GaussianMomentsCounterexamples.not_GMC_of_three_le
+    main_results:
+      - declaration: GaussianMomentsCounterexamples.not_GMC_of_three_le
+        informal: >-
+          For every n at least three, the Gaussian Moments Conjecture fails:
+          some complex polynomial has all positive pure Gaussian moments zero,
+          while a polynomial multiplier prevents eventual mixed-moment vanishing.
+      - declaration: GaussianMomentsCounterexamples.master_three
+        informal: >-
+          For every complex univariate polynomial A and positive m, the expectation
+          of A(Q3) times P3 to power m equals m! times the degree-m coefficient of
+          A(X) times (1+X) to power m-1. The explicit P3 has degree four and five
+          terms in its natural complex coordinates.
+      - declaration: GaussianMomentsCounterexamples.master_four
+        informal: >-
+          The analogous arbitrary-A coefficient identity for the explicit
+          four-variable polynomial P4, of degree three and six terms in its
+          natural complex coordinates, gives an independent counterexample.
+    tags:
+      - gaussian-measure
+      - polynomial-moments
+      - counterexamples
+      - formal-power-series
+    msc:
+      - '60E05'
+      - '13F20'
+  - slug: centered-maximal-constant
+    title: Bounds for the centered Hardy-Littlewood maximal constant
+    summary: >-
+      Proves that the weak type (1,1) constant c_2 of the centered maximal
+      operator over axis-parallel squares is at least the explicit radical
+      phi, approximately 1.68551, using a weighted periodic lattice and
+      integrable approximations. Also proves c_d <= 2^d in every natural
+      dimension and 1.685 < phi < 1.686. The operator acts on real-valued
+      integrable functions, with Lebesgue outer measure of strict level
+      sets. Includes the maximal-function API, a Vitali covering argument,
+      lattice witnesses, smearing estimates, and the limiting lower bound.
+      No optimality of phi is claimed.
+    branch: harmonic analysis
+    entry_module: LeanPool.CenteredMaximal
+    authors:
+      - Yongxi Lin
+    source:
+      title: A lower bound 1.6855 for the planar centred maximal constant over squares
+      authors:
+        - Yongxi Lin
+      url: https://github.com/CoolRmal/centered-maximal-constant
+      github_repo: CoolRmal/centered-maximal-constant
+      commit: c6a8cb29e8ecce9ac4614a8c7e4bf6938366f986
+      notes: >-
+        First completed publicly on 2026-09-18 at 22:15:07 UTC in commit
+        06a726f113241d445903f0c0eae1ebe40d8b539f.
+        The lower bound is documented and proved in upstream docs/PROOF.md;
+        the weighted smearing argument adapts Aldaz (2000), Lemma 1.1,
+        and the covering upper bound follows Tao's 245A Notes 5, Exercise 42.
+        Upstream formalization.yaml and docs/HISTORY.md disclose AI generation
+        of the configuration and proofs under Yongxi Lin's direction.
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.CenteredMaximal.ofReal_phi_le_weakTypeConstant_two
+    main_results:
+      - declaration: LeanPool.CenteredMaximal.ofReal_phi_le_weakTypeConstant_two
+        informal: >-
+          The explicit radical phi is a lower bound for c_2, the infimum of
+          all weak type (1,1) bounds for the centered maximal operator over
+          axis-parallel squares in the real plane.
+      - declaration: LeanPool.CenteredMaximal.weakTypeConstant_le_two_pow
+        informal: >-
+          For every natural number d, including zero, the centered maximal
+          operator over axis-parallel cubes in real d-space has weak type
+          (1,1) constant c_d at most 2^d.
+      - declaration: LeanPool.CenteredMaximal.phi_mem_Ioo
+        informal: The explicit radical constant phi lies strictly between 1.685 and 1.686.
+    tags:
+      - harmonic-analysis
+      - maximal-functions
+      - weak-type-inequalities
+      - lattice-constructions
+    msc:
+      - 42B25
+      - 26D15
+  - slug: pentagonal-number-theorem-analytic
+    title: Euler's pentagonal number theorem, two independent proofs, and the Jacobi triple product
+    summary: >-
+      Two independent proofs of Euler's pentagonal number theorem that share no lemmas, so each
+      confirms the result on its own. The primary development is combinatorial: Franklin's sign-reversing involution on partitions into distinct parts,
+      giving p_e(n) - p_o(n) = (-1)^|k| when n is the generalized pentagonal number k(3k-1)/2
+      and 0 otherwise, stated under a single integer index, together with the identification of
+      that signed count with the coefficient of X^n in the truncated product over ℤ⟦X⟧. It
+      builds on Mathlib's Nat.Partition.genFun. The second route develops q-Pochhammer symbols,
+      the Gaussian binomial coefficient, Euler's two identities and the Cauchy identity, proves
+      the Jacobi triple product both as a formal power series identity in
+      (LaurentPolynomial ℂ)⟦X⟧ and analytically over ℂ for ‖q‖ < 1, and reaches the same
+      theorem for the infinite product by specialization. The Lean proofs in both routes were largely
+      generated by Aristotle; the Franklin route additionally has an author-written blueprint
+      that the formalization follows lemma by lemma, and carries substantially more manual
+      intervention and review, whereas the q-series route is machine-generated blueprint and
+      all. The Franklin route and the analytic pentagonal number theorem overlap the pooled
+      `pentagonal-number-theorem` development, which states its analytic form over RCLike fields
+      rather than only over the complex numbers; the q-Pochhammer, Gaussian binomial and Euler
+      identity definitions overlap arXiv:2607.01544. The project's distinct contribution is the
+      complex-analytic layer: an analytic Jacobi triple product over the complex numbers for
+      norm q < 1, its extension to the punctured disc, the analytic Cauchy identity, and the
+      summability and locally-uniform-convergence machinery they require. Neither the pooled
+      entry nor the non-archimedean development of arXiv:2607.01544 covers that setting.
+    branch: number theory and enumerative combinatorics
+    entry_module: LeanPool.PentagonalNumberTheoremAnalytic
+    authors:
+      - Jonathan Conrad
+      - Paula Muermann
+      - Maryna Viazovska
+    source:
+      title: Pentagonal Number Theorem
+      authors:
+        - Jonathan Conrad
+        - Paula Muermann
+        - Maryna Viazovska
+      url: https://viazovska.github.io/PentagonalNumberTheorem
+      github_repo: viazovska/PentagonalNumberTheorem
+      revision: "5c3413265fcb44f74e67ebb5abddcac4b82e611b"
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - PentagonalNumberTheorem.Franklin.euler_pentagonal_number_theorem_packaged
+    main_results:
+      - declaration: PentagonalNumberTheorem.Franklin.euler_pentagonal_number_theorem_packaged
+        informal: >-
+          The primary result. For every n, either n is a generalized pentagonal number
+          k(3k-1)/2 for some integer k, in which case the number of partitions of n into an
+          even number of distinct parts exceeds the number with an odd number of distinct
+          parts by exactly (-1)^|k|; or n is not of that form, in which case the two counts
+          are equal. Proved by Franklin's sign-reversing involution.
+      - declaration: PentagonalNumberTheorem.Franklin.coeff_prod_eq_pe_sub_po
+        informal: >-
+          The coefficient of X^n in the truncated product ∏_{k=1}^{n}(1 - X^k) over ℤ⟦X⟧ equals
+          p_e(n) - p_o(n), the signed count of partitions of n into distinct parts. Truncating
+          at n is harmless because the omitted factors are ≡ 1 mod X^{n+1}.
+      - declaration: QSeries.jacobiTripleProduct
+        informal: >-
+          For ‖q‖ < 1, ‖z‖ < 1 and z ≠ 0, the product (q;q)_∞ (-z;q)_∞ (-q/z;q)_∞ equals the
+          bilateral theta series ∑_{k ∈ ℤ} z^k q^{k(k-1)/2}.
+      - declaration: QSeries.euler_pentagonal_number
+        informal: >-
+          For ‖q‖ < 1, the infinite product (q;q)_∞ equals ∑_{k ∈ ℤ} (-1)^k q^{ω(k)} over the
+          generalized pentagonal numbers ω(k) = k(3k-1)/2, written as two one-sided sums.
+          Obtained from the Jacobi triple product by specialization.
+      - declaration: QSeries.FormalPowerSeries.jacobiTripleProduct
+        informal: >-
+          The Jacobi triple product as an identity of formal power series in
+          (LaurentPolynomial ℂ)-coefficient power series, with no convergence hypothesis: the
+          product of q-Pochhammer symbols equals the bilateral theta series coefficientwise.
+    tags:
+      - number-theory
+      - partitions
+      - q-series
+      - pentagonal-number-theorem
+      - jacobi-triple-product
+    msc:
+      - "11P81"
+      - "11P84"
+      - "05A17"
+      - "05A19"
+      - "33D15"
+  - slug: acmax-conjecture
+    title: Kolokolnikov's ACMAX conjecture
+    summary: >-
+      Proves that every simple graph on n ≥ 4 vertices with 2(n−2) edges has algebraic
+      connectivity at most 2, attained by the complete bipartite graph K₂,ₙ₋₂. Develops
+      Laplacian test-vector bounds, sparse cut certificates, and non-backtracking walk
+      estimates used in the proof.
+    branch: spectral and extremal graph theory
+    entry_module: LeanPool.ACMax
+    authors:
+      - Zeru Zhu
+      - Jinzheng Li
+      - Yuanjie Ren
+    source:
+      title: Maximizing algebraic connectivity for certain families of graphs, Conjecture 1.5
+      authors:
+        - Theodore Kolokolnikov
+      arxiv: '1412.6147'
+      doi: 10.1016/j.laa.2014.12.023
+      url: https://github.com/MerLeanProver/ACMaxConjecture/tree/78736ca2f5c29a4d5ad7dfdee4ac715bbfcde770
+      github_repo: MerLeanProver/ACMaxConjecture
+      commit: 78736ca2f5c29a4d5ad7dfdee4ac715bbfcde770
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - ACMax.acmax_conjecture
+    main_results:
+      - declaration: ACMax.acmax_conjecture
+        informal: >-
+          For n ≥ 4, the algebraic connectivity of K₂,ₙ₋₂ is 2, and every simple graph
+          on Fin n with exactly 2(n−2) edges has algebraic connectivity at most 2.
+          Algebraic connectivity is the second-smallest eigenvalue of the combinatorial
+          Laplacian, defined using Mathlib's ordered spectrum.
+      - declaration: ACMax.algConn_mul_sq_le
+        informal: >-
+          For a graph on any nonempty finite vertex type and any real vector whose
+          coordinates sum to zero, algebraic connectivity times the squared norm is at
+          most the Laplacian quadratic form.
+      - declaration: ACMax.algConn_le_two_of_testvector
+        informal: >-
+          A nonzero real vector with coordinate sum zero and Laplacian quadratic form
+          at most twice its squared norm certifies algebraic connectivity at most 2.
+      - declaration: ACMax.algConn_completeBipartite_two
+        informal: >-
+          For n ≥ 4, the complete bipartite graph with parts of sizes 2 and n−2 has
+          algebraic connectivity exactly 2.
+    tags:
+      - spectral-graph-theory
+      - extremal-graph-theory
+      - laplacian
+      - non-backtracking-walks
+    msc:
+      - '05C50'
+      - '05C35'
+  - slug: hopf-problem
+    title: A complex structure on the six-sphere
+    summary: >-
+      Formalizes Levent Alpöge's construction of a complex-analytic atlas on
+      the standard six-sphere. The development builds a compact complex
+      threefold from torus fibrations with cusp and elliptic fibres, computes
+      its homology and fundamental group, proves that its underlying
+      topological space is homeomorphic to the six-sphere, and transports the
+      complex atlas across that homeomorphism. It adapts Lean developments by Yury G.
+      Kudryashov and Sebastian Kumar, together with the statement from the
+      Formal Conjectures Authors.
+    branch: complex geometry and differential topology
+    entry_module: LeanPool.HopfProblem
+    authors:
+      - Boris Alexeev
+      - Yury G. Kudryashov
+      - Sebastian Kumar
+      - The Formal Conjectures Authors
+    source:
+      title: "HopfProblem: formalization of Alpöge's six-sphere construction"
+      authors:
+        - Boris Alexeev
+      url: https://github.com/plby/HopfProblem/tree/9ac8a456b526527837d7082ff775213ca8bc9809
+      github_repo: plby/HopfProblem
+      commit: 9ac8a456b526527837d7082ff775213ca8bc9809
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Mathoverflow1973.mathoverflow_1973
+    main_results:
+      - declaration: Mathoverflow1973.SixSphereComplexAtlas.exists_complex_analytic_atlas
+        informal: >-
+          The standard unit six-sphere admits a complex three-dimensional
+          charted-space structure making it a complex-analytic manifold.
+      - declaration: Mathoverflow1973.SixSphereComplexAtlas.exists_complex_atlas
+        informal: >-
+          The standard unit six-sphere admits a complex three-dimensional
+          charted-space structure making it a continuously differentiable
+          complex manifold.
+      - declaration: Mathoverflow1973.mathoverflow_1973
+        informal: >-
+          The formalized statement of MathOverflow question 1973: the standard
+          six-sphere carries a complex three-dimensional manifold atlas.
+    tags:
+      - complex-geometry
+      - differential-topology
+      - complex-manifolds
+      - six-sphere
+      - torus-fibrations
+    msc:
+      - "32Q55"
+      - "57R15"
   - slug: champernowne-normality
     title: Champernowne normality in every base
     summary: >-
