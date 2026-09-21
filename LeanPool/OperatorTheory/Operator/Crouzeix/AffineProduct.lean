@@ -17,7 +17,7 @@ its center.
 
 ## Main declaration
 
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_le_of_auxiliary_eq_eval_center_smul_one`
+* `norm_aeval_mul_auxiliary_ball_le_of_auxiliary_eq_eval_center_smul_one`
   -- the sharp product estimate on an arbitrary positive-radius disk from
   the explicit scalar auxiliary identity.
 * `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le` -- the unconditional
@@ -34,7 +34,7 @@ variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
 /-- On a disk centered at `c`, the scalar auxiliary identity
 `G = star (p(c)) • 1` implies the sharp L4.2e product estimate. -/
-theorem norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_le_of_auxiliary_eq_eval_center_smul_one
+theorem norm_aeval_mul_auxiliary_ball_le_of_auxiliary_eq_eval_center_smul_one
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ} (hR : 0 < R)
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ ≤ R) (p : Polynomial ℂ)
     (hG : crouzeixPolynomialAuxiliaryOperator A (SmoothJordanDomain.ball c R hR) p =
@@ -78,7 +78,7 @@ theorem norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le
         crouzeixPolynomialAuxiliaryOperator A
           (SmoothJordanDomain.ball c R ((norm_nonneg (A - c • 1)).trans_lt hA)) p‖ ≤
       polynomialSupNorm p (Metric.closedBall c R) ^ 2 :=
-  norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_le_of_auxiliary_eq_eval_center_smul_one
+  norm_aeval_mul_auxiliary_ball_le_of_auxiliary_eq_eval_center_smul_one
     A c ((norm_nonneg (A - c • 1)).trans_lt hA) hA.le p
       (crouzeixPolynomialAuxiliaryOperator_ball_center_eq_eval_center_smul_one A c hA p)
 

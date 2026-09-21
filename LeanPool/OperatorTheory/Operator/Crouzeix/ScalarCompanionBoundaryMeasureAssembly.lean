@@ -21,24 +21,24 @@ frontier-sup normalization.
 
 ## Main declaration
 
-* `crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayerDensity_radial_vanishingAtZero`
+* `crouzeixPalencia_of_thickening_cauchy_support_doubleLayerDensity_radialZero`
   -- the radial Crouzeix--Palencia capstone with the opaque phase hypothesis
   replaced by integrability, unit mass, and oriented frontier support of the
   explicit scalar double-layer density.
-* `crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayerMass_radial_vanishingAtZero`
+* `crouzeixPalencia_of_thickening_cauchy_support_doubleLayerMass_radialZero`
   -- the strongest form, where the existing numerical-range support fixes the
   boundary orientation and unit density mass is the only remaining phase
   geometry.
-* `crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayer_radial_vanishingAtZero`
+* `crouzeixPalencia_of_thickening_cauchy_support_doubleLayer_radialZero`
   -- oriented convexity also forces unit mass, leaving no separate boundary
   probability-measure premise.
-* `crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_radial_vanishingAtZero`
+* `crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_radialZero`
   -- a single resolvent-mass identity also supplies the all-polynomial Cauchy
   representation used by the strongest capstone.
-* `crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_basepointWinding_radial_vanishingAtZero`
+* `crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_basepointWinding_radialZero`
   -- winding normalization at one carrier point per stage propagates across
   the whole strictly convex carrier.
-* `crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_automaticWinding_radial_vanishingAtZero`
+* `crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_automaticWinding_radialZero`
   -- oriented numerical-range support also supplies that basepoint
   normalization, so no separate winding premise remains.
 -/
@@ -55,7 +55,7 @@ variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 contractivity supplied by the explicit boundary double-layer probability
 measure. -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayerDensity_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_doubleLayerDensity_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -104,7 +104,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_normalized_boundaryPhase_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_normalized_boundaryPhase_radialZero
       A Omega hcarrier hCauchyP hsupport hkernel
   · intro n p _hp _hnorm
     exact
@@ -118,7 +118,7 @@ double layer a probability measure: integrability follows because a
 nonintegrable Bochner integral is zero.  Thus no separate density
 integrability witness is needed in this strongest capstone. -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayerProbability_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_doubleLayerProbability_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -162,7 +162,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayerDensity_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_doubleLayerDensity_radialZero
       A Omega hcarrier hCauchyP hsupport hkernel
   · intro n xi hxi
     exact
@@ -241,7 +241,7 @@ already determines the oriented frontier support needed for density
 nonnegativity.  Thus unit mass is the only remaining explicit geometric
 premise for the boundary double-layer probability measure. -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayerMass_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_doubleLayerMass_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -280,7 +280,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayerProbability_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_doubleLayerProbability_radialZero
       A Omega hcarrier hCauchyP hsupport hkernel hmass
   · exact
       boundary_support_of_convexThickening_numericalRange_support
@@ -294,7 +294,7 @@ forces the double-layer density to have unit mass.  Thus phase contractivity
 requires neither an abstract phase witness nor any separate density
 integrability, positivity, support, or mass premise. -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayer_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_doubleLayer_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -329,7 +329,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayerMass_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_doubleLayerMass_radialZero
       A Omega hcarrier hCauchyP hsupport hkernel
   · intro n xi hxi
     obtain ⟨w, hw, hwside⟩ :=
@@ -346,7 +346,7 @@ double-layer capstone can be reduced to a single resolvent-mass identity at
 each smooth stage.  The exact polynomial resolvent splitting and vanishing
 of its closed-contour remainder supply every polynomial case internally. -/
 theorem
-    crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -378,7 +378,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryDoubleLayer_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_doubleLayer_radialZero
       A Omega hcarrier
   · intro p n
     apply polynomial_aeval_eq_normalized_contourIntegral_of_resolvent_mass
@@ -398,7 +398,7 @@ each carrier.  Hence the strongest resolvent-mass boundary-double-layer
 capstone needs winding normalization only at one carrier basepoint per
 stage, rather than at every point. -/
 theorem
-    crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_basepointWinding_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_basepointWinding_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -430,7 +430,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_radialZero
       A Omega hcarrier hmass hsupport
   · intro n z hz
     obtain ⟨c, hc, hkc⟩ := hwind n
@@ -444,7 +444,7 @@ of every smooth carrier, and oriented convex geometry forces the scalar
 Cauchy kernel there to have winding one.  Thus the resolvent-mass
 boundary-double-layer capstone needs no separate winding hypothesis. -/
 theorem
-    crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_automaticWinding_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_automaticWinding_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -474,7 +474,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_basepointWinding_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_basepointWinding_radialZero
       A Omega hcarrier hmass hsupport
   · intro n
     obtain ⟨c, hc, hcside⟩ :=
@@ -492,7 +492,7 @@ the scalar Cauchy kernel, while affine resolvent homotopy gives the operator
 resolvent mass.  Only polynomial approximation and auxiliary reproduction
 remain explicit beyond the exact smooth carrier realization. -/
 theorem
-    crouzeix_palencia_of_convexThickening_support_boundaryDoubleLayer_automaticMass_automaticWinding_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_support_doubleLayer_automaticMass_automaticWinding_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -519,7 +519,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_resolventMass_support_boundaryDoubleLayer_automaticWinding_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_resolventMass_support_doubleLayer_automaticWinding_radialZero
       A Omega hcarrier
   · intro n
     obtain ⟨c, hc, hcside⟩ :=

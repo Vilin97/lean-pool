@@ -23,9 +23,9 @@ of the numerical range lies in the open disk `ball c r`.
 ## Main declarations
 
 * `spectrum_sub_smul_one_subset_ball_of_subset_ball` — the spectrum shift.
-* `crouzeixPolynomialAuxiliaryOperator_ball_center_eq_eval_center_smul_one_of_spectrum_subset_ball`
+* `auxiliary_ball_center_eq_eval_center_smul_one_of_spectrum_subset_ball`
 * `norm_aeval_add_eval_center_smul_one_le_of_closure_numericalRange_subset_ball`
-* `norm_aeval_le_three_mul_polynomialSupNorm_closedBall_of_closure_numericalRange_subset_ball`,
+* `norm_aeval_le_three_mul_polynomialSupNorm_of_numericalRange_subset_ball`,
   `isKPolynomialSpectralSet_three_closedBall_of_closure_numericalRange_subset_ball` — an open disk
   containing `closure (numericalRange A)` yields a `3`-polynomial-spectral set (from the
   symmetrized bound and `|p(c)| ≤ sup`; the sharp constant needs the product estimate).
@@ -55,7 +55,7 @@ theorem spectrum_sub_smul_one_subset_ball_of_subset_ball (A : E →L[ℂ] E) {c 
 
 /-- The disk auxiliary operator with center `c` under spectral enclosure equals
 `star (p.eval c) • 1`. -/
-theorem crouzeixPolynomialAuxiliaryOperator_ball_center_eq_eval_center_smul_one_of_spectrum_subset_ball
+theorem auxiliary_ball_center_eq_eval_center_smul_one_of_spectrum_subset_ball
     (A : E →L[ℂ] E) (c : ℂ) {r : ℝ} (hr : 0 < r) (hσ : spectrum ℂ A ⊆ Metric.ball c r)
     (p : ℂ[X]) :
     crouzeixPolynomialAuxiliaryOperator A (SmoothJordanDomain.ball c r hr) p =
@@ -74,16 +74,16 @@ theorem norm_aeval_add_eval_center_smul_one_le_of_closure_numericalRange_subset_
       2 * polynomialSupNorm p (Metric.closedBall c r) := by
   have hσ : spectrum ℂ A ⊆ Metric.ball c r :=
     (spectrum_subset_closure_numericalRange A).trans hW
-  have h := norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_ball_le_of_closure_numericalRange_subset_ball_center
+  have h := norm_aeval_add_star_auxiliary_ball_le_of_closedNumericalRange_subset_ball_center
     A hr hW p
-  rw [crouzeixPolynomialAuxiliaryOperator_ball_center_eq_eval_center_smul_one_of_spectrum_subset_ball
+  rw [auxiliary_ball_center_eq_eval_center_smul_one_of_spectrum_subset_ball
     A c hr hσ p, star_smul, star_one, star_star] at h
   exact h
 
 /-! ### A `3`-polynomial-spectral set from the symmetrized bound alone -/
 
 /-- If `closure W(A) ⊆ ball c r`, then `‖p(A)‖ ≤ 3 * sup_{|z - c| ≤ r} ‖p(z)‖`. -/
-theorem norm_aeval_le_three_mul_polynomialSupNorm_closedBall_of_closure_numericalRange_subset_ball
+theorem norm_aeval_le_three_mul_polynomialSupNorm_of_numericalRange_subset_ball
     (A : E →L[ℂ] E) {c : ℂ} {r : ℝ} (hr : 0 < r)
     (hW : closure (numericalRange A) ⊆ Metric.ball c r) (p : ℂ[X]) :
     ‖aeval A p‖ ≤ 3 * polynomialSupNorm p (Metric.closedBall c r) := by
@@ -96,7 +96,8 @@ theorem norm_aeval_le_three_mul_polynomialSupNorm_closedBall_of_closure_numerica
   have hconst : ‖(p.eval c) • (1 : E →L[ℂ] E)‖ ≤ ‖p.eval c‖ := by
     rw [norm_smul]
     exact mul_le_of_le_one_right (norm_nonneg _) ContinuousLinearMap.norm_id_le
-  calc ‖aeval A p‖ = ‖(aeval A p + (p.eval c) • (1 : E →L[ℂ] E)) - (p.eval c) • (1 : E →L[ℂ] E)‖ := by
+  calc ‖aeval A p‖ = ‖(aeval A p + (p.eval c) • (1 : E →L[ℂ] E)) - (p.eval c) • (1 : E →L[ℂ] E)‖
+    := by
         rw [add_sub_cancel_right]
     _ ≤ ‖aeval A p + (p.eval c) • (1 : E →L[ℂ] E)‖ + ‖(p.eval c) • (1 : E →L[ℂ] E)‖ :=
         norm_sub_le _ _
@@ -111,7 +112,7 @@ theorem isKPolynomialSpectralSet_three_closedBall_of_closure_numericalRange_subs
     (hW : closure (numericalRange A) ⊆ Metric.ball c r) :
     IsKPolynomialSpectralSet A 3 (Metric.closedBall c r) :=
   ⟨((spectrum_subset_closure_numericalRange A).trans hW).trans Metric.ball_subset_closedBall,
-    fun p => norm_aeval_le_three_mul_polynomialSupNorm_closedBall_of_closure_numericalRange_subset_ball
+    fun p => norm_aeval_le_three_mul_polynomialSupNorm_of_numericalRange_subset_ball
       A hr hW p⟩
 
 /-! ### Closed disks, by passing to the limit -/
@@ -131,8 +132,9 @@ theorem iInter_closedBall_add_inv_succ (c : ℂ) (r : ℝ) :
     have : (0 : ℝ) < 1 / ((n : ℝ) + 1) := by positivity
     linarith
 
-/-- If `closure W(A) ⊆ closedBall c r` with `0 ≤ r`, then `‖p(A)‖ ≤ 3 * sup_{|z - c| ≤ r} ‖p(z)‖`. -/
-theorem norm_aeval_le_three_mul_polynomialSupNorm_closedBall_of_closure_numericalRange_subset_closedBall
+/-- If `closure W(A) ⊆ closedBall c r` with `0 ≤ r`, then `‖p(A)‖ ≤ 3 * sup_{|z - c| ≤ r}
+  ‖p(z)‖`. -/
+theorem norm_aeval_le_three_mul_polynomialNorm_of_numericalRange_subset_closedBall
     (A : E →L[ℂ] E) {c : ℂ} {r : ℝ} (hr : 0 ≤ r)
     (hW : closure (numericalRange A) ⊆ Metric.closedBall c r) (p : ℂ[X]) :
     ‖aeval A p‖ ≤ 3 * polynomialSupNorm p (Metric.closedBall c r) := by
@@ -152,7 +154,7 @@ theorem norm_aeval_le_three_mul_polynomialSupNorm_closedBall_of_closure_numerica
   have hbound : ∀ n, ‖aeval A p‖ ≤ 3 * polynomialSupNorm p (K n) := by
     intro n
     have hpos : (0 : ℝ) < r + 1 / ((n : ℝ) + 1) := by positivity
-    refine norm_aeval_le_three_mul_polynomialSupNorm_closedBall_of_closure_numericalRange_subset_ball
+    refine norm_aeval_le_three_mul_polynomialSupNorm_of_numericalRange_subset_ball
       A hpos (hW.trans ?_) p
     intro z hz
     rw [Metric.mem_closedBall] at hz
@@ -167,7 +169,7 @@ theorem isKPolynomialSpectralSet_three_closedBall_of_closure_numericalRange_subs
     (hW : closure (numericalRange A) ⊆ Metric.closedBall c r) :
     IsKPolynomialSpectralSet A 3 (Metric.closedBall c r) :=
   ⟨(spectrum_subset_closure_numericalRange A).trans hW,
-    fun p => norm_aeval_le_three_mul_polynomialSupNorm_closedBall_of_closure_numericalRange_subset_closedBall
+    fun p => norm_aeval_le_three_mul_polynomialNorm_of_numericalRange_subset_closedBall
       A hr hW p⟩
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

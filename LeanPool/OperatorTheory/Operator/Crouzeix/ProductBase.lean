@@ -26,7 +26,7 @@ the polynomial sup norm on every nonempty set.
   the raw resolvent Cauchy mass identity.
 * `crouzeixPolynomialAuxiliaryOperator_C_eq_star_smul_one` -- the auxiliary
   operator for a constant polynomial.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_le_polynomialSupNorm_sq_of_natDegree_eq_zero`
+* `norm_aeval_mul_auxiliary_le_polynomialNorm_sq_of_natDegree_eq_zero`
   -- the sharp L4.2e base case.
 -/
 
@@ -122,7 +122,7 @@ theorem aeval_mul_crouzeixPolynomialAuxiliaryOperator_add_C
 auxiliary product bound on every nonempty control set, provided the smooth
 contour has the resolvent Cauchy mass identity. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_le_polynomialSupNorm_sq_of_natDegree_eq_zero
+    norm_aeval_mul_auxiliary_le_polynomialNorm_sq_of_natDegree_eq_zero
     [CompleteSpace E] (A : E →L[ℂ] E) (Omega : SmoothJordanDomain)
     (p : Polynomial ℂ) {K : Set ℂ} (hK : K.Nonempty) (hp : p.natDegree = 0)
     (hCauchy : contourIntegral (resolvent A) Omega.boundaryParam =

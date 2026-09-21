@@ -413,7 +413,7 @@ theorem contourIntegral_resolvent_eq_scalar_of_convex_carrier
 
 omit [CompleteSpace E] in
 theorem resolvent_smul_one_eq_inv_smul_one
-    [Nontrivial E] (c z : ℂ) (hz : z ≠ c) :
+    (c z : ℂ) (hz : z ≠ c) :
     resolvent (c • (1 : E →L[ℂ] E)) z =
       (z - c)⁻¹ • (1 : E →L[ℂ] E) := by
   have hzc : z - c ≠ 0 := sub_ne_zero.mpr hz
@@ -428,7 +428,7 @@ theorem resolvent_smul_one_eq_inv_smul_one
   rw [smul_mul_smul_comm, mul_inv_cancel₀ hzc, one_smul, one_mul]
 
 theorem contourIntegral_resolvent_smul_one_eq_scalar
-    [Nontrivial E] (Omega : SmoothJordanDomain) (c : ℂ)
+    (Omega : SmoothJordanDomain) (c : ℂ)
     (hc : c ∈ Omega.carrier) :
     contourIntegral (resolvent (c • (1 : E →L[ℂ] E)))
         Omega.boundaryParam =
@@ -514,3 +514,4 @@ theorem contourIntegral_resolvent_eq_two_pi_I_smul_one_of_oriented_convex_carrie
         A Omega c hc hcside hOmega
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/
+

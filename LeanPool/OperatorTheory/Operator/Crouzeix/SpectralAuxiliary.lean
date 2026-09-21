@@ -148,7 +148,7 @@ theorem norm_aeval_add_eval_zero_smul_one_le_two_mul_polynomialSupNorm_closedBal
   have hσ : spectrum ℂ A ⊆ Metric.ball (0 : ℂ) r :=
     (spectrum_subset_closure_numericalRange A).trans hW
   have hbound :=
-    norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_ball_le_of_closure_numericalRange_subset_ball
+    norm_aeval_add_star_auxiliary_ball_le_of_closedNumericalRange_subset_ball
       A hr hW p
   rw [crouzeixPolynomialAuxiliaryOperator_ball_eq_eval_zero_smul_one_of_spectrum_subset_ball
     A hr hσ p] at hbound

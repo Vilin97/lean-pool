@@ -19,13 +19,16 @@ open scoped Polynomial
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
+/-- The supremum of the norm of a polynomial over a complex set. -/
 noncomputable def polynomialSupNorm (p : Polynomial ℂ) (X : Set ℂ) : ℝ :=
   ⨆ z ∈ X, ‖Polynomial.eval z p‖
 
+/-- Spectrum containment and a polynomial-calculus bound with constant `K`. -/
 def IsKPolynomialSpectralSet (A : E →L[ℂ] E) (K : ℝ) (X : Set ℂ) : Prop :=
   spectrum ℂ (A : E →L[ℂ] E) ⊆ X ∧
   ∀ p : Polynomial ℂ, ‖Polynomial.aeval A p‖ ≤ K * polynomialSupNorm p X
 
+/-- A polynomial spectral set with multiplicative constant one. -/
 def IsPolynomialSpectralSet (A : E →L[ℂ] E) (X : Set ℂ) : Prop :=
   IsKPolynomialSpectralSet A 1 X
 

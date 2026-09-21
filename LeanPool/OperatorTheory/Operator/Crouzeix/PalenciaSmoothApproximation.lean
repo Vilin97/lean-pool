@@ -42,7 +42,7 @@ from the set-theoretic approximation alone.
   polynomial companions.
 * `crouzeix_palencia_of_convexThickening_cauchy_support_approximate_polynomial_companions`
   -- the natural additive-error polynomial-approximation interface.
-* `crouzeix_palencia_of_convexThickening_cauchy_support_contractive_scalar_companion_approximation`
+* `crouzeixPalencia_of_thickening_cauchy_support_contractive_companion_approximation`
   -- the published-route interface in terms of contractive interior scalar
   companions, uniform polynomial approximation, and calculus identification.
 -/
@@ -147,7 +147,7 @@ theorem
   refine ⟨crouzeixPolynomialAuxiliaryOperator A (Omega n) p,
     q, hq, hq_lim, ?_⟩
   apply
-    norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_polynomialSupNorm_of_frontier_subset_of_cauchy_support
+    norm_aeval_add_star_auxiliary_le_two_mul_polynomialNorm_of_frontier_subset_of_cauchy_support
       A (Omega n) p
       (compactThickeningApprox (closure (numericalRange A)) n)
       (by simpa only [K] using hstageCompact n)
@@ -259,7 +259,7 @@ This theorem leaves precisely the analytic companion contraction, polynomial
 approximation, and functional-calculus identification as explicit inputs; the
 additive-to-exact normalization and fourth-power bootstrap are internal. -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_contractive_scalar_companion_approximation
+    crouzeixPalencia_of_thickening_cauchy_support_contractive_companion_approximation
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -311,10 +311,10 @@ conjugate-polynomial auxiliary.
 
 The quantitative contour convergence theorem turns these data into the
 operator-limit premise of
-`crouzeix_palencia_of_convexThickening_cauchy_support_contractive_scalar_companion_approximation`.
+`crouzeixPalencia_of_thickening_cauchy_support_contractive_companion_approximation`.
 -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_continuous_scalar_companion_approximation
+    crouzeixPalencia_of_thickening_cauchy_support_continuous_companion_approximation
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -350,7 +350,7 @@ theorem
   have hKconvex : Convex ℝ K := by
     simpa only [K] using (convex_numericalRange A).closure
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_contractive_scalar_companion_approximation
+    crouzeixPalencia_of_thickening_cauchy_support_contractive_companion_approximation
       A Omega hcarrier hCauchyP hsupport
   intro p n
   obtain ⟨g, r, hgcont, hgbound, happrox, hPlemelj⟩ := hcompanion p n
@@ -431,7 +431,7 @@ theorem crouzeix_palencia_of_convexThickening_cauchy_support_product
   intro p n
   refine ⟨crouzeixPolynomialAuxiliaryOperator A (Omega n) p, ?_, ?_⟩
   · apply
-      norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_polynomialSupNorm_of_frontier_subset_of_cauchy_support
+      norm_aeval_add_star_auxiliary_le_two_mul_polynomialNorm_of_frontier_subset_of_cauchy_support
         A (Omega n) p (compactThickeningApprox K n) (hstageCompact n)
     · rw [hcarrier n]
       exact frontier_convexThickeningApprox_subset_compactThickeningApprox K n
@@ -465,7 +465,7 @@ theorem crouzeix_palencia_of_convexThickening_cauchy_support_product
             (Metric.self_subset_cthickening
               (E := K) (δ := smoothApproxRadius n))
         exact
-          norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_le_polynomialSupNorm_sq_of_natDegree_eq_zero
+          norm_aeval_mul_auxiliary_le_polynomialNorm_sq_of_natDegree_eq_zero
             A (Omega n) p hstageNonempty hp (hCauchy n)
     · simpa only [K] using hprod p n (Nat.pos_of_ne_zero hp)
 

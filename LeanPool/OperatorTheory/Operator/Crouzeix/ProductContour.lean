@@ -269,7 +269,8 @@ theorem crouzeixProductRemainderPolynomial_add_C
     apply Finset.sum_congr rfl
     intro j hj
     have hjpos : 0 < j := lt_of_lt_of_le (Nat.zero_lt_succ i) (Finset.mem_Icc.mp hj).1
-    simp only [Polynomial.coeff_add, Polynomial.coeff_C, ite_eq_right (Nat.ne_of_gt hjpos), add_zero]
+    simp only [Polynomial.coeff_add, Polynomial.coeff_C, ite_eq_right (Nat.ne_of_gt hjpos),
+      add_zero]
   have hintegral (i : ℕ) :
       contourIntegral
           (fun z => star (Polynomial.eval z (p + Polynomial.C a)) *

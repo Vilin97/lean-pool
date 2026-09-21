@@ -489,7 +489,8 @@ theorem analyticOn_crouzeixPolynomialScalarCompanion
       Omega.carrier := by
   rw [analyticOn_iff_differentiableOn]
   · intro z hz
-    exact (hasDerivAt_crouzeixPolynomialScalarCompanion Omega p hz).differentiableAt.differentiableWithinAt
+    exact (hasDerivAt_crouzeixPolynomialScalarCompanion Omega p
+      hz).differentiableAt.differentiableWithinAt
   · exact Omega.isOpen_carrier
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

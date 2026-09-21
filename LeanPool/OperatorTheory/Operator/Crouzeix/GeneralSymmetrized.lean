@@ -43,9 +43,9 @@ Cauchy or Plemelj theorem is hidden here.
   constant on the fixed smooth domain;
 * `norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_of_cauchy_support`
   -- the generic smooth-domain L4.2d bound from Cauchy and support data.
-* `norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_polynomialSupNorm_frontier_of_cauchy_support`
+* `norm_aeval_add_star_auxiliary_le_two_mul_polynomialNorm_frontier_of_cauchy_support`
   -- the same estimate with the canonical frontier sup norm.
-* `norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_polynomialSupNorm_of_frontier_subset_of_cauchy_support`
+* `norm_aeval_add_star_auxiliary_le_two_mul_polynomialNorm_of_frontier_subset_of_cauchy_support`
   -- control by any compact set containing the frontier.
 * `isPositive_aeval_crouzeixProductRemainderPolynomial_add_adjoint_of_cauchy_support`
   -- the Hermitian product remainder is an integrated positive variance.
@@ -489,6 +489,84 @@ theorem neg_re_inner_aeval_crouzeixProductRemainderPolynomial_le_re_inner_produc
   rw [hidentity, sub_apply, inner_sub_right, map_sub]
   linarith
 
+private lemma intervalIntegrable_operator_variance
+    (B D : ℝ → E →L[ℂ] E) (hB : IntervalIntegrable B volume 0 (2 * Real.pi))
+    (hD : Continuous D) :
+    IntervalIntegrable (fun t => star (D t) * B t * D t) volume 0 (2 * Real.pi) := by
+  have hBD : IntervalIntegrable (fun t => B t * D t)
+      volume 0 (2 * Real.pi) := hB.mul_continuousOn hD.continuousOn
+  have hstarD : Continuous (fun t => star (D t)) := by fun_prop
+  simpa only [mul_assoc] using hBD.continuousOn_mul hstarD.continuousOn
+
+private lemma isPositive_integral_operator_variance
+    (B D : ℝ → E →L[ℂ] E) (hB : IntervalIntegrable B volume 0 (2 * Real.pi))
+    (hD : Continuous D)
+    (hKpos : ∀ t ∈ Ioc (0 : ℝ) (2 * Real.pi),
+      ContinuousLinearMap.IsPositive (B t + ContinuousLinearMap.adjoint (B t))) :
+    ContinuousLinearMap.IsPositive (∫ t in (0 : ℝ)..(2 * Real.pi),
+      (star (D t) * B t * D t) + star (star (D t) * B t * D t)) := by
+  let Q : ℝ → E →L[ℂ] E := fun t => star (D t) * B t * D t
+  have hQ := intervalIntegrable_operator_variance B D hB hD
+  have hQadd : (fun t => Q t + star (Q t)) =
+      fun t => star (D t) * (B t + ContinuousLinearMap.adjoint (B t)) * D t := by
+    funext t
+    simp only [Q, star_mul, star_star, mul_add, add_mul, mul_assoc]
+    rw [show star (B t) = ContinuousLinearMap.adjoint (B t) by rfl]
+  apply ContinuousLinearMap.isPositive_intervalIntegral
+    (f := fun t => Q t + star (Q t)) Real.two_pi_pos.le
+    (hQ.add (intervalIntegrable_adjoint hQ))
+  apply (ae_restrict_mem measurableSet_Ioc).mono
+  intro t ht
+  rw [congrFun hQadd t]
+  exact (hKpos t ht).adjoint_conj (D t)
+
+private lemma inverse_two_pi_times_neg_I :
+    ((((2 * Real.pi)⁻¹ : ℝ) : ℂ) * (-I)) = (2 * (Real.pi : ℂ) * I)⁻¹ := by
+  symm
+  calc
+    (2 * (Real.pi : ℂ) * I)⁻¹ = I⁻¹ * (2 * (Real.pi : ℂ))⁻¹ := mul_inv_rev _ _
+    _ = (-I) * (2 * (Real.pi : ℂ))⁻¹ := by rw [inv_I]
+    _ = (-I) * ((((2 * Real.pi)⁻¹ : ℝ) : ℂ)) := by
+      rw [Complex.ofReal_inv]
+      push_cast
+      rfl
+    _ = ((((2 * Real.pi)⁻¹ : ℝ) : ℂ) * (-I)) := mul_comm _ _
+
+private lemma auxiliary_eq_normalized_outward_integral
+    (A : E →L[ℂ] E) (Omega : SmoothJordanDomain) (h : ℂ → ℂ) :
+    crouzeixAuxiliaryOperator A Omega h =
+      (((2 * Real.pi)⁻¹ : ℝ) : ℂ) • (∫ t in (0 : ℝ)..(2 * Real.pi),
+        h (Omega.boundaryParam t) •
+          ((-I * deriv Omega.boundaryParam t) • resolvent A (Omega.boundaryParam t))) := by
+  unfold crouzeixAuxiliaryOperator contourIntegral
+  have hfun :
+      (fun t => h (Omega.boundaryParam t) •
+        ((-I * deriv Omega.boundaryParam t) • resolvent A (Omega.boundaryParam t))) =
+      fun t => (-I) • (deriv Omega.boundaryParam t •
+        (h (Omega.boundaryParam t) • resolvent A (Omega.boundaryParam t))) := by
+    funext t
+    simp only [smul_smul]
+    congr 1
+    ring
+  rw [hfun, intervalIntegral.integral_smul, smul_smul, inverse_two_pi_times_neg_I]
+
+private lemma integral_operator_mul_const (u : ℝ → E →L[ℂ] E) (C : E →L[ℂ] E)
+    (hu : IntervalIntegrable u volume 0 (2 * Real.pi)) :
+    (∫ t in (0 : ℝ)..(2 * Real.pi), u t * C) =
+      (∫ t in (0 : ℝ)..(2 * Real.pi), u t) * C := by
+  let L := (ContinuousLinearMap.mul ℝ (E →L[ℂ] E)).flip C
+  change (∫ t in (0 : ℝ)..(2 * Real.pi), L (u t)) =
+    L (∫ t in (0 : ℝ)..(2 * Real.pi), u t)
+  exact L.intervalIntegral_comp_comm hu
+private lemma integral_operator_const_mul (C : E →L[ℂ] E) (u : ℝ → E →L[ℂ] E)
+    (hu : IntervalIntegrable u volume 0 (2 * Real.pi)) :
+    (∫ t in (0 : ℝ)..(2 * Real.pi), C * u t) =
+      C * (∫ t in (0 : ℝ)..(2 * Real.pi), u t) := by
+  let L := ContinuousLinearMap.mul ℝ (E →L[ℂ] E) C
+  change (∫ t in (0 : ℝ)..(2 * Real.pi), L (u t)) =
+    L (∫ t in (0 : ℝ)..(2 * Real.pi), u t)
+  exact L.intervalIntegral_comp_comm hu
+
 /-- The Hermitian part of the product remainder is positive.  More
 precisely, it is the normalized integral of the positive operator-valued
 variance `(p(z) - p(A))† K(z) (p(z) - p(A))`, where `K` is the
@@ -532,13 +610,8 @@ theorem
     change Continuous (fun t => f t • (1 : E →L[ℂ] E) - F)
     have hf : Continuous f := p.continuous.comp hgamma
     fun_prop
-  have hQ : IntervalIntegrable Q volume 0 (2 * Real.pi) := by
-    have hBD : IntervalIntegrable (fun t => B t * D t)
-        volume 0 (2 * Real.pi) := hB.mul_continuousOn hD.continuousOn
-    have hstarD : Continuous (fun t => star (D t)) := by
-      fun_prop
-    simpa only [Q, mul_assoc] using
-      hBD.continuousOn_mul hstarD.continuousOn
+  have hQ : IntervalIntegrable Q volume 0 (2 * Real.pi) :=
+    intervalIntegrable_operator_variance B D hB hD
   have hKpos : ∀ t ∈ Ioc (0 : ℝ) (2 * Real.pi),
       ContinuousLinearMap.IsPositive (K t) := by
     intro t ht
@@ -548,22 +621,9 @@ theorem
           ((-I * deriv gamma t) • resolvent A (gamma t)))
     apply isPositive_add_adjoint_smul_resolvent A
     simpa only [gamma] using hsupport t ht
-  have hQadd : (fun t => Q t + star (Q t)) =
-      fun t => star (D t) * K t * D t := by
-    funext t
-    simp only [Q, K, star_mul, star_star, mul_add, add_mul, mul_assoc]
-    rw [show star (B t) = ContinuousLinearMap.adjoint (B t) by rfl]
-  have hQpos : ∀ t ∈ Ioc (0 : ℝ) (2 * Real.pi),
-      ContinuousLinearMap.IsPositive (Q t + star (Q t)) := by
-    intro t ht
-    rw [congrFun hQadd t]
-    exact (hKpos t ht).adjoint_conj (D t)
   have hQsymm : ContinuousLinearMap.IsPositive
-      (∫ t in (0 : ℝ)..(2 * Real.pi), Q t + star (Q t)) := by
-    apply ContinuousLinearMap.isPositive_intervalIntegral
-      (f := fun t => Q t + star (Q t)) Real.two_pi_pos.le
-      (hQ.add (intervalIntegrable_adjoint hQ))
-    exact (ae_restrict_mem measurableSet_Ioc).mono fun t ht => hQpos t ht
+      (∫ t in (0 : ℝ)..(2 * Real.pi), Q t + star (Q t)) :=
+    isPositive_integral_operator_variance B D hB hD hKpos
   have hQexpand : Q = fun t =>
       (star (f t) * f t) • B t -
         (star (f t) • B t) * F -
@@ -576,32 +636,12 @@ theorem
     rw [mul_comm (f t) (star (f t))]
     module
   let c : ℂ := (((2 * Real.pi)⁻¹ : ℝ) : ℂ)
-  have hcoeff : c * (-I) = (2 * (Real.pi : ℂ) * I)⁻¹ := by
-    dsimp only [c]
-    symm
-    calc
-      (2 * (Real.pi : ℂ) * I)⁻¹ = I⁻¹ * (2 * (Real.pi : ℂ))⁻¹ :=
-        mul_inv_rev _ _
-      _ = (-I) * (2 * (Real.pi : ℂ))⁻¹ := by rw [inv_I]
-      _ = (-I) * ((((2 * Real.pi)⁻¹ : ℝ) : ℂ)) := by
-        rw [Complex.ofReal_inv]
-        push_cast
-        rfl
-      _ = ((((2 * Real.pi)⁻¹ : ℝ) : ℂ) * (-I)) := mul_comm _ _
+  have hcoeff : c * (-I) = (2 * (Real.pi : ℂ) * I)⁻¹ :=
+    inverse_two_pi_times_neg_I
   have hnormalized (h : ℂ → ℂ) :
       crouzeixAuxiliaryOperator A Omega h =
-        c • (∫ t in (0 : ℝ)..(2 * Real.pi),
-          h (gamma t) • B t) := by
-    unfold crouzeixAuxiliaryOperator contourIntegral
-    have hfun :
-        (fun t => h (gamma t) • B t) = fun t =>
-          (-I) • (deriv gamma t •
-            (h (gamma t) • resolvent A (gamma t))) := by
-      funext t
-      simp only [B, smul_smul]
-      congr 1
-      ring
-    rw [hfun, intervalIntegral.integral_smul, smul_smul, hcoeff]
+        c • (∫ t in (0 : ℝ)..(2 * Real.pi), h (gamma t) • B t) :=
+    auxiliary_eq_normalized_outward_integral A Omega h
   have habsB : IntervalIntegrable
       (fun t => (star (f t) * f t) • B t)
       volume 0 (2 * Real.pi) := by
@@ -664,22 +704,6 @@ theorem
       (fun t => star F * B t * F) volume 0 (2 * Real.pi) := by
     exact (hB.continuousOn_mul continuous_const.continuousOn).mul_continuousOn
       continuous_const.continuousOn
-  have hintegral_mul_const (u : ℝ → E →L[ℂ] E) (C : E →L[ℂ] E)
-      (hu : IntervalIntegrable u volume 0 (2 * Real.pi)) :
-      (∫ t in (0 : ℝ)..(2 * Real.pi), u t * C) =
-        (∫ t in (0 : ℝ)..(2 * Real.pi), u t) * C := by
-    let L := (ContinuousLinearMap.mul ℝ (E →L[ℂ] E)).flip C
-    change (∫ t in (0 : ℝ)..(2 * Real.pi), L (u t)) =
-      L (∫ t in (0 : ℝ)..(2 * Real.pi), u t)
-    exact L.intervalIntegral_comp_comm hu
-  have hintegral_const_mul (C : E →L[ℂ] E) (u : ℝ → E →L[ℂ] E)
-      (hu : IntervalIntegrable u volume 0 (2 * Real.pi)) :
-      (∫ t in (0 : ℝ)..(2 * Real.pi), C * u t) =
-        C * (∫ t in (0 : ℝ)..(2 * Real.pi), u t) := by
-    let L := ContinuousLinearMap.mul ℝ (E →L[ℂ] E) C
-    change (∫ t in (0 : ℝ)..(2 * Real.pi), L (u t)) =
-      L (∫ t in (0 : ℝ)..(2 * Real.pi), u t)
-    exact L.intervalIntegral_comp_comm hu
   have hIntegralQ :
       (∫ t in (0 : ℝ)..(2 * Real.pi), Q t) =
         (∫ t in (0 : ℝ)..(2 * Real.pi),
@@ -692,11 +716,11 @@ theorem
       ((habsB.sub hstarBF).sub hFstarfB) hFBF]
     rw [intervalIntegral.integral_sub (habsB.sub hstarBF) hFstarfB]
     rw [intervalIntegral.integral_sub habsB hstarBF]
-    rw [hintegral_mul_const (fun t => star (f t) • B t) F hstarfB]
-    rw [hintegral_const_mul (star F) (fun t => f t • B t) hfB]
-    rw [hintegral_mul_const (fun t => star F * B t) F
+    rw [integral_operator_mul_const (fun t => star (f t) • B t) F hstarfB]
+    rw [integral_operator_const_mul (star F) (fun t => f t • B t) hfB]
+    rw [integral_operator_mul_const (fun t => star F * B t) F
       (hB.continuousOn_mul continuous_const.continuousOn)]
-    rw [hintegral_const_mul (star F) B hB]
+    rw [integral_operator_const_mul (star F) B hB]
   have hStarF : c •
         ((∫ t in (0 : ℝ)..(2 * Real.pi), star (f t) • B t) * F) =
       crouzeixPolynomialAuxiliaryOperator A Omega p * F := by
@@ -799,7 +823,7 @@ theorem re_inner_aeval_crouzeixProductRemainderPolynomial_nonneg_of_cauchy_suppo
 boundary constant.  The Cauchy and outward-support inputs imply
 `‖p(A) + G†‖ ≤ 2 * sup_{z ∈ frontier Ω} ‖p(z)‖`. -/
 theorem
-    norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_polynomialSupNorm_frontier_of_cauchy_support
+    norm_aeval_add_star_auxiliary_le_two_mul_polynomialNorm_frontier_of_cauchy_support
     (A : E →L[ℂ] E) (Omega : SmoothJordanDomain) (p : Polynomial ℂ)
     (hOmega : closure (numericalRange A) ⊆ Omega.carrier)
     (hCauchyP : Polynomial.aeval A p =
@@ -827,7 +851,7 @@ theorem
 symmetrized estimate is controlled by the polynomial sup norm on `L`.  This
 is the stagewise form consumed by compact-exhaustion arguments. -/
 theorem
-    norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_polynomialSupNorm_of_frontier_subset_of_cauchy_support
+    norm_aeval_add_star_auxiliary_le_two_mul_polynomialNorm_of_frontier_subset_of_cauchy_support
     (A : E →L[ℂ] E) (Omega : SmoothJordanDomain) (p : Polynomial ℂ)
     (L : Set ℂ) (hL : IsCompact L) (hfrontier : frontier Omega.carrier ⊆ L)
     (hOmega : closure (numericalRange A) ⊆ Omega.carrier)
@@ -849,7 +873,7 @@ theorem
     ‖Polynomial.aeval A p +
         star (crouzeixPolynomialAuxiliaryOperator A Omega p)‖ ≤
         2 * polynomialSupNorm p (frontier Omega.carrier) :=
-      norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_polynomialSupNorm_frontier_of_cauchy_support
+      norm_aeval_add_star_auxiliary_le_two_mul_polynomialNorm_frontier_of_cauchy_support
         A Omega p hOmega hCauchyP hCauchyOne hsupport
     _ ≤ 2 * polynomialSupNorm p L :=
       mul_le_mul_of_nonneg_left

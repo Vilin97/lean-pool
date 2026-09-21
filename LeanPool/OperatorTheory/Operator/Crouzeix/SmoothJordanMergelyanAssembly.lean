@@ -33,7 +33,7 @@ theorem crouzeix_palencia_of_strictNestedSmoothJordanExhaustion
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_strictNestedSmoothJordanExhaustion_canonicalOrientation_hasMergelyanPolynomialApproximation
+    crouzeixPalencia_of_nestedExhaustion_canonical_mergelyanApproximation
       A Omega
   intro n
   exact (Omega.domain n).hasMergelyanPolynomialApproximation

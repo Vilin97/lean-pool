@@ -37,9 +37,11 @@ parametrization.  Injectivity is imposed on the half-open fundamental interval
 `[0, 2π)`, so the periodic identification of its two endpoints is the only
 allowed repetition there. -/
 structure SmoothJordanDomain where
+  /-- The open strictly convex region bounded by the curve. -/
   carrier : Set ℂ
   isOpen_carrier : IsOpen carrier
   strictConvex_carrier : StrictConvex ℝ carrier
+  /-- The regular periodic parametrization of the frontier. -/
   boundaryParam : ℝ → ℂ
   boundaryParam_periodic : Function.Periodic boundaryParam (2 * Real.pi)
   boundaryParam_contDiff : ContDiff ℝ ∞ boundaryParam
@@ -151,6 +153,7 @@ every stage and has intersection exactly `K`.  Existence of this structure for
 an arbitrary compact convex planar set is the remaining geometric content of
 L4.2b. -/
 structure SmoothConvexApproximation (K : Set ℂ) where
+  /-- The approximating smooth Jordan domain at each stage. -/
   domain : ℕ → SmoothJordanDomain
   subset_domain : ∀ n, K ⊆ (domain n).carrier
   iInter_domain : (⋂ n, (domain n).carrier) = K

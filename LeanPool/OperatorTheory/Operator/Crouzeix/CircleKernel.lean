@@ -74,7 +74,8 @@ theorem continuous_circleKernel_add_adjoint (A : E →L[ℂ] E) {c : ℂ} {R : �
     (hρ : Metric.sphere c R ⊆ resolventSet ℂ A) (hR : 0 ≤ R) :
     Continuous (fun t : ℝ =>
       (-I * deriv (circleMap c R) t) • resolvent A (circleMap c R t) +
-        ContinuousLinearMap.adjoint ((-I * deriv (circleMap c R) t) • resolvent A (circleMap c R t))) :=
+        ContinuousLinearMap.adjoint ((-I * deriv (circleMap c R) t) • resolvent A (circleMap c R
+          t))) :=
   (continuous_circleKernel A hρ hR).add
     ((ContinuousLinearMap.adjoint : (E →L[ℂ] E) ≃ₗᵢ⋆[ℂ] (E →L[ℂ] E)).continuous.comp
       (continuous_circleKernel A hρ hR))
@@ -91,7 +92,8 @@ theorem intervalIntegrable_circleKernel_add_adjoint (A : E →L[ℂ] E) {c : ℂ
     (hρ : Metric.sphere c R ⊆ resolventSet ℂ A) (hR : 0 ≤ R) :
     IntervalIntegrable (fun t : ℝ =>
       (-I * deriv (circleMap c R) t) • resolvent A (circleMap c R t) +
-        ContinuousLinearMap.adjoint ((-I * deriv (circleMap c R) t) • resolvent A (circleMap c R t)))
+        ContinuousLinearMap.adjoint ((-I * deriv (circleMap c R) t) • resolvent A (circleMap c R
+          t)))
       MeasureTheory.volume 0 (2 * Real.pi) :=
   (continuous_circleKernel_add_adjoint A hρ hR).intervalIntegrable 0 (2 * Real.pi)
 
@@ -100,7 +102,8 @@ theorem intervalIntegrable_eval_smul_circleKernel_add_adjoint (A : E →L[ℂ] E
     (hρ : Metric.sphere c R ⊆ resolventSet ℂ A) (hR : 0 ≤ R) (p : ℂ[X]) :
     IntervalIntegrable (fun t : ℝ => p.eval (circleMap c R t) •
       ((-I * deriv (circleMap c R) t) • resolvent A (circleMap c R t) +
-        ContinuousLinearMap.adjoint ((-I * deriv (circleMap c R) t) • resolvent A (circleMap c R t))))
+        ContinuousLinearMap.adjoint ((-I * deriv (circleMap c R) t) • resolvent A (circleMap c R
+          t))))
       MeasureTheory.volume 0 (2 * Real.pi) :=
   ((p.continuous.comp (continuous_circleMap c R)).smul
     (continuous_circleKernel_add_adjoint A hρ hR)).intervalIntegrable 0 (2 * Real.pi)

@@ -77,7 +77,7 @@ theorem
     calc
       ‖crouzeixPolynomialScalarCompanionClosedExtension Omega p z‖ ≤
           polynomialSupNorm p (frontier Omega.carrier) :=
-        norm_crouzeixPolynomialScalarCompanionClosedExtension_le_of_boundaryPhaseTransform_radial
+        norm_companionClosedExtension_le_of_boundaryPhaseTransform_radial
           Omega p hkernel hphase hz
       _ = polynomialSupNorm p (closure Omega.carrier) :=
         (polynomialSupNorm_closure_carrier_eq_frontier
@@ -606,7 +606,7 @@ theorem
 strict degree descent reduces every remaining companion input to positive
 degree. -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_boundaryPhase_induction_radial_positiveDegree
+    crouzeixPalencia_of_thickening_cauchy_support_boundaryPhase_induction_radial_positiveDegree
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -657,7 +657,7 @@ phase, approximation, and contour-reproduction input is restricted to
 positive-degree polynomials; the phase input may moreover be normalized to
 frontier sup norm one. -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_normalized_boundaryPhase_radial_positiveDegree
+    crouzeixPalencia_of_thickening_cauchy_support_normalized_boundaryPhase_radial_positiveDegree
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -707,7 +707,7 @@ polynomials vanishing at zero.  Scaling invariance further restricts contour
 reproduction to that subclass at frontier sup norm one; the sharp phase input
 is likewise normalized to frontier sup norm one. -/
 theorem
-    crouzeix_palencia_of_convexThickening_cauchy_support_normalized_boundaryPhase_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_cauchy_support_normalized_boundaryPhase_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -762,7 +762,7 @@ theorem
       unfold smoothApproxRadius
       positivity) _
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_normalized_boundaryPhase_radial_positiveDegree
+    crouzeixPalencia_of_thickening_cauchy_support_normalized_boundaryPhase_radial_positiveDegree
       A Omega hcarrier hCauchyP hsupport hkernel hphaseNormalized
   · intro p n hp
     let q := p - Polynomial.C (Polynomial.eval 0 p)
@@ -830,7 +830,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_normalized_boundaryPhase_radial_positiveDegree
+    crouzeixPalencia_of_thickening_cauchy_support_normalized_boundaryPhase_radial_positiveDegree
       A Omega hcarrier hCauchyP hsupport hkernel
   · exact hphaseNormalized
   · intro p n _hp

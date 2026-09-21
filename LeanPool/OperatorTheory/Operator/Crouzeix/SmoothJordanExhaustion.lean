@@ -55,6 +55,7 @@ adjacent closure containment gives their antitonicity automatically.
 Constructing this bundle for an arbitrary compact convex planar set is the
 remaining geometric smooth-approximation input to the terminal assembly. -/
 structure StrictNestedSmoothJordanExhaustion (K : Set ℂ) where
+  /-- The nested smooth Jordan domain at each stage of the exhaustion. -/
   domain : ℕ → SmoothJordanDomain
   target_subset : ∀ n, K ⊆ (domain n).carrier
   isCompact_closure : ∀ n, IsCompact (closure (domain n).carrier)
@@ -144,7 +145,7 @@ circle parametrization. -/
 
 /-- The derivative of a closed-disk exhaustion contour is the usual tangent
 to its standard circle parametrization. -/
-@[simp] theorem StrictNestedSmoothJordanExhaustion.closedBall_domain_boundaryParam_deriv
+theorem StrictNestedSmoothJordanExhaustion.closedBall_domain_boundaryParam_deriv
     (c : ℂ) (R : ℝ) (hR : 0 ≤ R) (n : ℕ) (t : ℝ) :
     deriv
         ((StrictNestedSmoothJordanExhaustion.closedBall c R hR).domain n).boundaryParam t =
@@ -154,7 +155,7 @@ to its standard circle parametrization. -/
 
 /-- The compact control set of a closed-disk exhaustion stage is its
 concentric radius-enlarged closed disk. -/
-@[simp] theorem StrictNestedSmoothJordanExhaustion.closedBall_domain_closure_carrier
+theorem StrictNestedSmoothJordanExhaustion.closedBall_domain_closure_carrier
     (c : ℂ) (R : ℝ) (hR : 0 ≤ R) (n : ℕ) :
     closure
         ((StrictNestedSmoothJordanExhaustion.closedBall c R hR).domain n).carrier =
@@ -166,7 +167,7 @@ concentric radius-enlarged closed disk. -/
 
 /-- The frontier of a closed-disk exhaustion stage is its concentric metric
 sphere. -/
-@[simp] theorem StrictNestedSmoothJordanExhaustion.closedBall_domain_frontier_carrier
+theorem StrictNestedSmoothJordanExhaustion.closedBall_domain_frontier_carrier
     (c : ℂ) (R : ℝ) (hR : 0 ≤ R) (n : ℕ) :
     frontier
         ((StrictNestedSmoothJordanExhaustion.closedBall c R hR).domain n).carrier =
@@ -178,7 +179,7 @@ sphere. -/
 
 /-- Multiplication of the disk-contour tangent by `-I` yields the radial
 outward normal. -/
-@[simp] theorem StrictNestedSmoothJordanExhaustion.closedBall_domain_boundaryParam_outwardNormal
+theorem StrictNestedSmoothJordanExhaustion.closedBall_domain_boundaryParam_outwardNormal
     (c : ℂ) (R : ℝ) (hR : 0 ≤ R) (n : ℕ) (t : ℝ) :
     -I * deriv
         ((StrictNestedSmoothJordanExhaustion.closedBall c R hR).domain n).boundaryParam t =
@@ -310,13 +311,13 @@ theorem crouzeix_palencia_of_smoothJordan_exhaustion_cauchy_support_tendsto_poly
   refine ⟨crouzeixPolynomialAuxiliaryOperator A (Omega n) p,
     q, hq, hqLim, ?_⟩
   exact
-    norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_le_two_mul_polynomialSupNorm_of_frontier_subset_of_cauchy_support
+    norm_aeval_add_star_auxiliary_le_two_mul_polynomialNorm_of_frontier_subset_of_cauchy_support
       A (Omega n) p (K n) (hcompact n) (hfrontier n) (hOmega n)
         (hCauchyP p n) (hCauchyOne n) (hsupport n)
 
 /-- An oriented point in every smooth Jordan carrier supplies the resolvent
 mass, hence the polynomial Cauchy formula needed by the exhaustion theorem. -/
-theorem crouzeix_palencia_of_smoothJordan_exhaustion_oriented_support_tendsto_polynomial_companions
+theorem crouzeixPalencia_of_smoothExhaustion_oriented_support_tendsto_polynomial_companions
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain) (K : ℕ → Set ℂ)
     (hanti : Antitone K) (hcompact : ∀ n, IsCompact (K n))
     (hnonempty : ∀ n, (K n).Nonempty)
@@ -397,7 +398,7 @@ theorem crouzeix_palencia_of_smoothJordan_exhaustion_support_tendsto_polynomial_
     have hcW : c ∈ numericalRange A :=
       (mem_numericalRange A c).mpr ⟨x, hxnorm, rfl⟩
     apply
-      crouzeix_palencia_of_smoothJordan_exhaustion_oriented_support_tendsto_polynomial_companions
+      crouzeixPalencia_of_smoothExhaustion_oriented_support_tendsto_polynomial_companions
         A Omega K hanti hcompact hnonempty hinter hfrontier hOmega hsupport
     · intro n
       refine ⟨c, hOmega n (subset_closure hcW), ?_⟩
@@ -549,7 +550,7 @@ theorem crouzeix_palencia_of_smoothJordan_exhaustion_support_scalarCompanion_app
 over a smooth Jordan exhaustion to positive-degree polynomials that vanish at
 zero; contour reproduction need only be checked after frontier normalization. -/
 theorem
-    crouzeix_palencia_of_smoothJordan_exhaustion_support_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_smoothExhaustion_support_companion_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain) (K : ℕ → Set ℂ)
     (hanti : Antitone K) (hcompact : ∀ n, IsCompact (K n))
     (hnonempty : ∀ n, (K n).Nonempty)
@@ -764,7 +765,7 @@ theorem
           ‖g z‖ ≤ polynomialSupNorm p (frontier (Omega n).carrier) := by
             dsimp only [g]
             exact
-              norm_crouzeixPolynomialScalarCompanionClosedExtension_le_of_boundaryPhaseTransform_radial
+              norm_companionClosedExtension_le_of_boundaryPhaseTransform_radial
                 (Omega n) p hkernel hphase hzclosure
           _ = polynomialSupNorm p (closure (Omega n).carrier) :=
             (polynomialSupNorm_closure_carrier_eq_frontier
@@ -822,7 +823,7 @@ theorem
 /-- Constant shifts reduce the approximation input in the strictly nested
 assembly to positive-degree polynomials vanishing at zero. -/
 theorem
-    crouzeix_palencia_of_smoothJordan_exhaustion_support_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_smoothExhaustion_support_nested_companion_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain) (K : ℕ → Set ℂ)
     (hanti : Antitone K) (hcompact : ∀ n, IsCompact (K n))
     (hnonempty : ∀ n, (K n).Nonempty)
@@ -924,7 +925,7 @@ normalization, or exhaustion data is required.  The remaining analytic input
 is uniform polynomial approximation of positive-degree closed companions that
 vanish at zero. -/
 theorem
-    crouzeix_palencia_of_convexThickening_support_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_support_nested_companion_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -970,7 +971,7 @@ theorem
     obtain ⟨hanti, hstageCompact, hstageNonempty, hinter⟩ :=
       compactThickeningApprox_spec (closure (numericalRange A)) hcompact hnonempty
     apply
-      crouzeix_palencia_of_smoothJordan_exhaustion_support_nested_scalarCompanion_radial_vanishingAtZero
+      crouzeixPalencia_of_smoothExhaustion_support_nested_companion_radialZero
         A Omega (compactThickeningApprox (closure (numericalRange A)))
           hanti hstageCompact hstageNonempty hinter
     · intro n
@@ -997,7 +998,7 @@ carrier whose canonical normal has the supporting sign at parameter zero.
 Strict convexity and continuity propagate that single sign to the whole trace
 and then to every point of the numerical range. -/
 theorem
-    crouzeix_palencia_of_convexThickening_pointOriented_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_pointOriented_nested_companion_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -1015,7 +1016,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_support_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_support_nested_companion_radialZero
       A Omega hcarrier
   · intro n t _ht w hw
     obtain ⟨c, hc, hc0⟩ := horientation n
@@ -1037,7 +1038,7 @@ support premise from the metric-thickening capstone.  Any supplied smooth
 realization is reoriented automatically; uniform approximation is required
 only for the resulting canonically oriented closed scalar companions. -/
 theorem
-    crouzeix_palencia_of_convexThickening_canonicalOrientation_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_canonical_nested_companion_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain)
     (hcarrier : ∀ n, (Omega n).carrier =
       convexThickeningApprox (closure (numericalRange A)) n)
@@ -1053,7 +1054,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_convexThickening_pointOriented_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_thickening_pointOriented_nested_companion_radialZero
       A (fun n ↦ (Omega n).canonicalOrientation)
   · intro n
     rw [SmoothJordanDomain.canonicalOrientation_carrier, hcarrier n]
@@ -1066,7 +1067,7 @@ does not require the carriers to be particular metric thickenings: compact
 exhaustion, numerical-range containment, strict adjacent nesting, and uniform
 approximation of the canonically oriented closed companions suffice. -/
 theorem
-    crouzeix_palencia_of_smoothJordan_exhaustion_canonicalOrientation_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_smoothExhaustion_canonical_nested_companion_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain) (K : ℕ → Set ℂ)
     (hanti : Antitone K) (hcompact : ∀ n, IsCompact (K n))
     (hnonempty : ∀ n, (K n).Nonempty)
@@ -1086,7 +1087,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_smoothJordan_exhaustion_support_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_smoothExhaustion_support_nested_companion_radialZero
       A (fun n ↦ (Omega n).canonicalOrientation) K hanti hcompact hnonempty hinter
   · intro n
     rw [SmoothJordanDomain.canonicalOrientation_carrier]
@@ -1113,7 +1114,7 @@ theorem
 canonically oriented nested-exhaustion capstone.  A subsequence realizes the
 quantitative error schedule required by the preceding theorem. -/
 theorem
-    crouzeix_palencia_of_smoothJordan_exhaustion_canonicalOrientation_nested_scalarCompanion_tendstoUniformlyOn_radial_vanishingAtZero
+    crouzeixPalencia_of_smoothExhaustion_canonical_nested_companion_uniformLimit_radialZero
     (A : E →L[ℂ] E) (Omega : ℕ → SmoothJordanDomain) (K : ℕ → Set ℂ)
     (hanti : Antitone K) (hcompact : ∀ n, IsCompact (K n))
     (hnonempty : ∀ n, (K n).Nonempty)
@@ -1133,7 +1134,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_smoothJordan_exhaustion_canonicalOrientation_nested_scalarCompanion_radial_vanishingAtZero
+    crouzeixPalencia_of_smoothExhaustion_canonical_nested_companion_radialZero
       A Omega K hanti hcompact hnonempty hinter hK hOmega hnest
   intro p n hp hp0
   obtain ⟨q, hq⟩ := happrox p n hp hp0
@@ -1147,7 +1148,7 @@ strictly nested smooth Jordan exhaustion of the closed numerical range and
 compact-uniform polynomial approximation of its canonically oriented closed
 scalar companions imply the exact `1 + sqrt 2` spectral-set bound. -/
 theorem
-    crouzeix_palencia_of_strictNestedSmoothJordanExhaustion_canonicalOrientation_scalarCompanion_tendstoUniformlyOn_radial_vanishingAtZero
+    crouzeixPalencia_of_nestedExhaustion_canonical_companion_uniformLimit_radialZero
     (A : E →L[ℂ] E)
     (Omega : StrictNestedSmoothJordanExhaustion
       (closure (numericalRange A)))
@@ -1169,7 +1170,7 @@ theorem
   have hnonempty : ∀ n, (K n).Nonempty := fun n ↦
     (Omega.domain n).carrier_nonempty.mono subset_closure
   apply
-    crouzeix_palencia_of_smoothJordan_exhaustion_canonicalOrientation_nested_scalarCompanion_tendstoUniformlyOn_radial_vanishingAtZero
+    crouzeixPalencia_of_smoothExhaustion_canonical_nested_companion_uniformLimit_radialZero
       A Omega.domain K hanti Omega.isCompact_closure hnonempty
         Omega.iInter_closure (fun _ ↦ rfl) Omega.target_subset
           Omega.closure_succ_subset
@@ -1180,7 +1181,7 @@ canonically oriented stages satisfy the Mergelyan polynomial approximation
 property yields the exact Crouzeix--Palencia bound.  The regularity theorem
 above applies that property automatically to every closed scalar companion. -/
 theorem
-    crouzeix_palencia_of_strictNestedSmoothJordanExhaustion_canonicalOrientation_hasMergelyanPolynomialApproximation
+    crouzeixPalencia_of_nestedExhaustion_canonical_mergelyanApproximation
     (A : E →L[ℂ] E)
     (Omega : StrictNestedSmoothJordanExhaustion
       (closure (numericalRange A)))
@@ -1189,7 +1190,7 @@ theorem
     IsKPolynomialSpectralSet A (1 + Real.sqrt 2)
       (closure (numericalRange A)) := by
   apply
-    crouzeix_palencia_of_strictNestedSmoothJordanExhaustion_canonicalOrientation_scalarCompanion_tendstoUniformlyOn_radial_vanishingAtZero
+    crouzeixPalencia_of_nestedExhaustion_canonical_companion_uniformLimit_radialZero
       A Omega
   intro p n _hp _hp0
   have hcanonical :
@@ -1221,7 +1222,7 @@ theorem crouzeix_palencia_of_convexThickening_hasMergelyanPolynomialApproximatio
     StrictNestedSmoothJordanExhaustion.ofConvexThickening
       (closure (numericalRange A)) hcompact Omega hcarrier
   apply
-    crouzeix_palencia_of_strictNestedSmoothJordanExhaustion_canonicalOrientation_hasMergelyanPolynomialApproximation
+    crouzeixPalencia_of_nestedExhaustion_canonical_mergelyanApproximation
       A exhaustion
   intro n
   change (Omega n).HasMergelyanPolynomialApproximation

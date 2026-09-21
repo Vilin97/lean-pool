@@ -24,7 +24,8 @@ section NumericalRange
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
-noncomputable def numericalRange_boundary (A : E →L[ℂ] E) : Set ℂ :=
+/-- Numerical range exposed at the public boundary of the development. -/
+noncomputable def numericalRangeBoundary (A : E →L[ℂ] E) : Set ℂ :=
   numericalRange A
 
 theorem mem_numericalRange_boundary (A : E →L[ℂ] E) (z : ℂ) :
@@ -46,15 +47,18 @@ section SpectralSet
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
-noncomputable def polynomialSupNorm_boundary
+/-- Polynomial supremum norm exposed at the public boundary. -/
+noncomputable def polynomialSupNormBoundary
     (p : Polynomial ℂ) (X : Set ℂ) : ℝ :=
   polynomialSupNorm p X
 
-def IsKPolynomialSpectralSet_boundary
+/-- Polynomial spectral-set estimate with a specified multiplicative constant. -/
+def IsKPolynomialSpectralSetBoundary
     (A : E →L[ℂ] E) (K : ℝ) (X : Set ℂ) : Prop :=
   IsKPolynomialSpectralSet A K X
 
-def IsPolynomialSpectralSet_boundary
+/-- Polynomial spectral-set estimate with constant one. -/
+def IsPolynomialSpectralSetBoundary
     (A : E →L[ℂ] E) (X : Set ℂ) : Prop :=
   IsPolynomialSpectralSet A X
 
@@ -110,10 +114,12 @@ section Contours
 
 variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℂ F]
 
-def ContourIntegrable_boundary (f : ℂ → F) (γ : ℝ → ℂ) : Prop :=
+/-- Integrability along a parametrized complex contour. -/
+def ContourIntegrableBoundary (f : ℂ → F) (γ : ℝ → ℂ) : Prop :=
   ContourIntegrable f γ
 
-noncomputable def contourIntegral_boundary (f : ℂ → F) (γ : ℝ → ℂ) : F :=
+/-- The contour integral exposed at the public boundary. -/
+noncomputable def contourIntegralBoundary (f : ℂ → F) (γ : ℝ → ℂ) : F :=
   contourIntegral f γ
 
 theorem contourIntegral_eq_zero_of_hasDerivAt_of_closed_boundary
@@ -136,7 +142,8 @@ theorem convexThickeningApprox_spec_boundary
       (⋂ n, convexThickeningApprox K n) = K :=
   convexThickeningApprox_spec K hcompact hconvex
 
-noncomputable def smoothClosedBallApproximation_boundary
+/-- Smooth convex approximations of a closed complex disk. -/
+noncomputable def smoothClosedBallApproximationBoundary
     (c : ℂ) (R : ℝ) (hR : 0 ≤ R) :
     SmoothConvexApproximation (Metric.closedBall c R) :=
   smoothClosedBallApproximation c R hR
@@ -147,11 +154,13 @@ section Auxiliary
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
-noncomputable def crouzeixAuxiliaryOperator_boundary
+/-- The contour auxiliary operator exposed at the public boundary. -/
+noncomputable def crouzeixAuxiliaryOperatorBoundary
     (A : E →L[ℂ] E) (Omega : SmoothJordanDomain) (h : ℂ → ℂ) : E →L[ℂ] E :=
   crouzeixAuxiliaryOperator A Omega h
 
-noncomputable def crouzeixPolynomialAuxiliaryOperator_boundary
+/-- The polynomial contour auxiliary operator exposed at the public boundary. -/
+noncomputable def crouzeixPolynomialAuxiliaryOperatorBoundary
     (A : E →L[ℂ] E) (Omega : SmoothJordanDomain)
     (p : Polynomial ℂ) : E →L[ℂ] E :=
   crouzeixPolynomialAuxiliaryOperator A Omega p

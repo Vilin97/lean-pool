@@ -29,18 +29,18 @@ auxiliary product estimate.
 * `circle_center_mem_of_isCompact_nonempty_convex_of_forall_symmetrized_bound`
   proves alignment over a compact nonempty convex control set directly from
   universal symmetrization.
-* `circle_center_mem_of_isCompact_nonempty_convex_of_global_polynomial_bound_of_forall_symmetrized_bound`
+* `circle_center_mem_of_compactConvex_of_globalBound_of_symmetrization`
   retains the earlier finite-calculus interface as a corollary.
-* `circle_center_mem_closure_numericalRange_of_global_polynomial_bound_of_forall_symmetrized_bound`
+* `circle_center_mem_closedNumericalRange_of_globalBound_of_symmetrization`
   specializes that result to the closed numerical range.
 * `circle_center_mem_closure_numericalRange_of_forall_symmetrized_bound`
   specializes direct center alignment to the closed numerical range.
-* `norm_pow_aeval_le_two_mul_pow_polynomialSupNorm_of_eval_eq_zero_of_forall_symmetrized_bound`
+* `norm_pow_aeval_le_two_mul_pow_polynomialNorm_of_eval_eq_zero_of_symmetrization`
   gives a uniform power bound on the polynomial ideal vanishing at the circle
   center.
-* `norm_shifted_aeval_pow_add_shifted_eval_pow_smul_one_le_two_mul_pow_polynomialSupNorm_of_forall_symmetrized_bound`
+* `norm_shifted_aeval_pow_add_shifted_eval_pow_le_two_mul_pow_norm_of_symmetrization`
   preserves the coupled operator/scalar cancellation for every shifted power.
-* `norm_pow_aeval_sub_eval_smul_one_le_two_mul_pow_polynomialSupNorm_sub_C_of_forall_symmetrized_bound`
+* `norm_pow_aeval_sub_eval_smul_one_le_two_mul_pow_polynomialNorm_sub_C_of_symmetrization`
   gives the corresponding centered power bound for every polynomial.
 * `spectrum_aeval_sub_eval_smul_one_subset_closedBall_of_forall_symmetrized_bound`
   derives the sharp centered spectral inclusion from those power bounds.
@@ -48,44 +48,44 @@ auxiliary product estimate.
   translates that inclusion back to the spectrum of `p(A)`.
 * `spectrum_aeval_subset_closedBall_shift_of_mem_of_forall_symmetrized_bound`
   gives the analogous sharp spectral disk around every scalar shift.
-* `spectrum_aeval_subset_closedBall_shift_of_isCompact_nonempty_convex_of_forall_symmetrized_bound`
+* `spectrum_aeval_subset_closedBall_shift_of_compactConvex_of_symmetrization`
   discharges center membership from compact convex geometry.
-* `spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_of_mem_of_forall_symmetrized_bound`
+* `spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_of_mem_of_symmetrization`
   converts a shifted disk and center membership to a shifted spectral radius.
-* `spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_of_isCompact_nonempty_convex_of_forall_symmetrized_bound`
+* `spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_of_compactConvex_of_symmetrization`
   gives the sharp spectral-radius bound after every scalar shift.
-* `spectralRadius_aeval_le_polynomialSupNorm_of_isCompact_nonempty_convex_of_forall_symmetrized_bound`
+* `spectralRadius_aeval_le_polynomialNorm_of_compactConvex_of_symmetrization`
   records its zero-shift specialization.
 * `spectrum_aeval_subset_closedBall_shift_closure_numericalRange_of_forall_symmetrized_bound`
   specializes every shifted disk to the closed numerical range.
-* `spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_closure_numericalRange_of_forall_symmetrized_bound`
+* `spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_closedNumericalRange_of_symmetrization`
   gives the corresponding sharp shifted spectral-radius bound.
-* `spectralRadius_aeval_le_polynomialSupNorm_closure_numericalRange_of_forall_symmetrized_bound`
+* `spectralRadius_aeval_le_polynomialNorm_closedNumericalRange_of_symmetrization`
   gives its zero-shift consequence.
 * `spectrum_subset_of_isCompact_nonempty_convex_of_forall_symmetrized_bound`
   proves that the compact convex control set itself contains the spectrum.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_eval_center_le_sqrt_two_sub_one_mul`
+* `norm_aeval_mul_auxiliary_ball_center_le_of_eval_center_le_sqrt_two_sub_one_mul`
   proves the sharp product bound without normality when the center value is
   at most `sqrt 2 - 1` times the control norm.
-* `norm_aeval_le_two_mul_polynomialSupNorm_sub_C_add_norm_eval_sub_two_mul_of_forall_symmetrized_bound`
+* `norm_aeval_le_two_mul_polynomialNorm_sub_C_add_norm_eval_sub_two_mul_of_symmetrization`
   extracts the operator-norm estimate obtained from any scalar shift.
 * `isKPolynomialSpectralSet_three_of_isCompact_nonempty_convex_of_forall_symmetrized_bound`
   packages universal symmetrization as a constant-three polynomial spectral set.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_shifted_scalar_bound_of_forall_symmetrized_bound`
+* `norm_aeval_mul_auxiliary_ball_center_le_of_shifted_scalar_bound_of_symmetrization`
   exposes an arbitrary scalar shift for optimizing the product estimate.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_half_centered_scalar_bound_of_forall_symmetrized_bound`
+* `norm_aeval_mul_auxiliary_ball_center_le_of_half_centered_scalar_bound_of_symmetrization`
   specializes the shift to `p(c) / 2`, eliminating the residual scalar term.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_centered_scalar_bound_of_forall_symmetrized_bound`
+* `norm_aeval_mul_auxiliary_ball_center_le_of_centered_scalar_bound_of_symmetrization`
   isolates the exact adaptive scalar criterion obtained by centering `p`.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_centered_polynomialSupNorm_le_sub_of_forall_symmetrized_bound`
+* `norm_aeval_mul_auxiliary_ball_center_le_of_centered_polynomialNorm_le_sub_of_symmetrization`
   proves the complementary sharp near-constant branch.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_one_add_sqrt_two_mul_sq_of_forall_symmetrized_bound`
+* `norm_aeval_mul_auxiliary_ball_center_le_one_add_sqrt_two_mul_sq_of_symmetrization`
   gives the resulting product estimate for an arbitrary operator at the
   global Crouzeix--Palencia factor.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_isStarNormal_aeval_of_forall_symmetrized_bound`
+* `norm_aeval_mul_auxiliary_ball_center_le_of_isStarNormal_aeval_of_symmetrization`
   gives the sharp product estimate whenever the individual value `p(A)` is
   star-normal.
-* `norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_isStarNormal_of_forall_symmetrized_bound`
+* `norm_aeval_mul_auxiliary_ball_center_le_of_isStarNormal_of_symmetrization`
   specializes the sharp estimate to a star-normal operator.
 -/
 
@@ -211,7 +211,7 @@ together with universal sharp symmetrization on an enclosing circle controlled
 by the same set, forces the circle center into that set.  No normality or
 particular value of the finite constant is needed. -/
 theorem
-    circle_center_mem_of_isCompact_nonempty_convex_of_global_polynomial_bound_of_forall_symmetrized_bound
+    circle_center_mem_of_compactConvex_of_globalBound_of_symmetrization
     [Nontrivial E] (A : E →L[ℂ] E) {K : Set ℂ}
     (hcompact : IsCompact K) (hnonempty : K.Nonempty) (hconvex : Convex ℝ K)
     (c : ℂ) {R : ℝ}
@@ -235,7 +235,7 @@ symmetrization on an enclosing circle, forces the circle center into the
 closed numerical range.  No normality or particular value of the finite
 constant is needed. -/
 theorem
-    circle_center_mem_closure_numericalRange_of_global_polynomial_bound_of_forall_symmetrized_bound
+    circle_center_mem_closedNumericalRange_of_globalBound_of_symmetrization
     [Nontrivial E] (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     (C : ℝ) (_hC : 0 ≤ C)
@@ -278,7 +278,7 @@ power-bounded on the ideal of polynomials vanishing at the circle center.  If
 `p(c) = 0`, every positive power of `p(A)` has norm at most twice the
 corresponding power of the sup norm on the compact control set. -/
 theorem
-    norm_pow_aeval_le_two_mul_pow_polynomialSupNorm_of_eval_eq_zero_of_forall_symmetrized_bound
+    norm_pow_aeval_le_two_mul_pow_polynomialNorm_of_eval_eq_zero_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ} (hK : IsCompact K)
@@ -304,7 +304,7 @@ for every positive power after an arbitrary shift `b`.  This is stronger
 than separately bounding the two summands and retains the cancellation that
 is relevant to the sharp product problem. -/
 theorem
-    norm_shifted_aeval_pow_add_shifted_eval_pow_smul_one_le_two_mul_pow_polynomialSupNorm_of_forall_symmetrized_bound
+    norm_shifted_aeval_pow_add_shifted_eval_pow_le_two_mul_pow_norm_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ} (hK : IsCompact K)
@@ -334,7 +334,7 @@ functional calculus.  For every polynomial `p`, positive powers of
 `p(A) - p(c)I` are controlled by twice the corresponding power of the sup
 norm of `p - p(c)` on the compact control set. -/
 theorem
-    norm_pow_aeval_sub_eval_smul_one_le_two_mul_pow_polynomialSupNorm_sub_C_of_forall_symmetrized_bound
+    norm_pow_aeval_sub_eval_smul_one_le_two_mul_pow_polynomialNorm_sub_C_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ} (hK : IsCompact K)
@@ -350,7 +350,7 @@ theorem
       2 * polynomialSupNorm
         (p - Polynomial.C (Polynomial.eval c p)) K ^ (n + 1) := by
   have hpow :=
-    norm_shifted_aeval_pow_add_shifted_eval_pow_smul_one_le_two_mul_pow_polynomialSupNorm_of_forall_symmetrized_bound
+    norm_shifted_aeval_pow_add_shifted_eval_pow_le_two_mul_pow_norm_of_symmetrization
       A c hA hK hsymm p (Polynomial.eval c p) n
   simpa only [sub_self, zero_pow (Nat.succ_ne_zero n), zero_smul,
     add_zero] using hpow
@@ -407,7 +407,7 @@ theorem
     simpa only [norm_pow] using spectrum.norm_le_norm_of_mem hzpow_mem
   have hTpow : ‖T ^ (n + 1)‖ ≤ 2 * m ^ (n + 1) := by
     simpa only [T, m] using
-      norm_pow_aeval_sub_eval_smul_one_le_two_mul_pow_polynomialSupNorm_sub_C_of_forall_symmetrized_bound
+      norm_pow_aeval_sub_eval_smul_one_le_two_mul_pow_polynomialNorm_sub_C_of_symmetrization
         A c hA hK hsymm p n
   have hstrict : 2 * m ^ (n + 1) < ‖z‖ ^ (n + 1) := by
     calc
@@ -525,7 +525,7 @@ theorem spectrum_aeval_subset_closedBall_shift_of_mem_of_forall_symmetrized_boun
   have hmoment : ‖T ^ (n + 1) +
       a ^ (n + 1) • (1 : E →L[ℂ] E)‖ ≤ 2 * m ^ (n + 1) := by
     simpa only [T, a, m] using
-      norm_shifted_aeval_pow_add_shifted_eval_pow_smul_one_le_two_mul_pow_polynomialSupNorm_of_forall_symmetrized_bound
+      norm_shifted_aeval_pow_add_shifted_eval_pow_le_two_mul_pow_norm_of_symmetrization
         A c hA hK hsymm p b n
   have hapow : ‖a‖ ^ (n + 1) ≤ m ^ (n + 1) :=
     pow_le_pow_left₀ (norm_nonneg _) ha (n + 1)
@@ -554,7 +554,7 @@ theorem spectrum_aeval_subset_closedBall_shift_of_mem_of_forall_symmetrized_boun
 symmetrization gives a sharp factor-one spectral-radius bound after every
 scalar shift. -/
 theorem
-    spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_of_mem_of_forall_symmetrized_bound
+    spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_of_mem_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ} (hK : IsCompact K) (hc : c ∈ K)
@@ -592,7 +592,7 @@ theorem
 symmetrization supplies the center membership needed by the arbitrary-shift
 spectral localization theorem; the zero Hilbert space has empty spectrum. -/
 theorem
-    spectrum_aeval_subset_closedBall_shift_of_isCompact_nonempty_convex_of_forall_symmetrized_bound
+    spectrum_aeval_subset_closedBall_shift_of_compactConvex_of_symmetrization
     (A : E →L[ℂ] E) {K : Set ℂ}
     (hcompact : IsCompact K) (hnonempty : K.Nonempty) (hconvex : Convex ℝ K)
     (c : ℂ) {R : ℝ}
@@ -621,7 +621,7 @@ theorem
 /-- Universal circle symmetrization over a compact nonempty convex control set
 gives a sharp factor-one spectral-radius bound after every scalar shift. -/
 theorem
-    spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_of_isCompact_nonempty_convex_of_forall_symmetrized_bound
+    spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_of_compactConvex_of_symmetrization
     (A : E →L[ℂ] E) {K : Set ℂ}
     (hcompact : IsCompact K) (hnonempty : K.Nonempty) (hconvex : Convex ℝ K)
     (c : ℂ) {R : ℝ}
@@ -643,7 +643,7 @@ theorem
     exact bot_le
   let _ := hE
   exact
-    spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_of_mem_of_forall_symmetrized_bound
+    spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_of_mem_of_symmetrization
       A c hA hcompact
         (circle_center_mem_of_isCompact_nonempty_convex_of_forall_symmetrized_bound
           A hcompact hnonempty hconvex c hA hsymm)
@@ -654,7 +654,7 @@ gives the sharp factor-one spectral-radius bound for every polynomial value.
 This is a spectral conclusion and therefore also covers the zero Hilbert
 space. -/
 theorem
-    spectralRadius_aeval_le_polynomialSupNorm_of_isCompact_nonempty_convex_of_forall_symmetrized_bound
+    spectralRadius_aeval_le_polynomialNorm_of_compactConvex_of_symmetrization
     (A : E →L[ℂ] E) {K : Set ℂ}
     (hcompact : IsCompact K) (hnonempty : K.Nonempty) (hconvex : Convex ℝ K)
     (c : ℂ) {R : ℝ}
@@ -669,7 +669,7 @@ theorem
     spectralRadius ℂ (Polynomial.aeval A p) ≤
       ((polynomialSupNorm p K).toNNReal : ENNReal) := by
   simpa only [zero_smul, sub_zero, Polynomial.C_0] using
-    spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_of_isCompact_nonempty_convex_of_forall_symmetrized_bound
+    spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_of_compactConvex_of_symmetrization
       A hcompact hnonempty hconvex c hA hsymm p 0
 
 /-- Universal circle symmetrization controlled by the closed numerical range
@@ -696,7 +696,7 @@ theorem
     exact Set.empty_subset _
   let _ := hE
   exact
-    spectrum_aeval_subset_closedBall_shift_of_isCompact_nonempty_convex_of_forall_symmetrized_bound
+    spectrum_aeval_subset_closedBall_shift_of_compactConvex_of_symmetrization
       A (isBounded_numericalRange A).isCompact_closure
         ((closure_numericalRange_nonempty_iff_nontrivial A).2 inferInstance)
         (convex_numericalRange A).closure c hA hsymm p b
@@ -704,7 +704,7 @@ theorem
 /-- Universal circle symmetrization controlled by the closed numerical range
 gives a sharp factor-one spectral-radius bound after every scalar shift. -/
 theorem
-    spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_closure_numericalRange_of_forall_symmetrized_bound
+    spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_closedNumericalRange_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     (hsymm : ∀ q : Polynomial ℂ,
@@ -742,7 +742,7 @@ theorem
 gives the sharp factor-one spectral-radius bound for every polynomial value,
 including on the zero Hilbert space. -/
 theorem
-    spectralRadius_aeval_le_polynomialSupNorm_closure_numericalRange_of_forall_symmetrized_bound
+    spectralRadius_aeval_le_polynomialNorm_closedNumericalRange_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     (hsymm : ∀ q : Polynomial ℂ,
@@ -755,7 +755,7 @@ theorem
     spectralRadius ℂ (Polynomial.aeval A p) ≤
       ((polynomialSupNorm p (closure (numericalRange A))).toNNReal : ENNReal) := by
   simpa only [zero_smul, sub_zero, Polynomial.C_0] using
-    spectralRadius_aeval_sub_smul_one_le_polynomialSupNorm_sub_C_closure_numericalRange_of_forall_symmetrized_bound
+    spectralRadius_aeval_sub_smul_one_le_polynomialNorm_sub_C_closedNumericalRange_of_symmetrization
       A c hA hsymm p 0
 
 /-- Universal circle symmetrization controlled by a compact nonempty convex
@@ -795,7 +795,7 @@ theorem spectrum_subset_of_isCompact_nonempty_convex_of_forall_symmetrized_bound
     rw [spectrum.map_polynomial_aeval]
     exact ⟨z, hz, rfl⟩
   have hpzball :=
-    spectrum_aeval_subset_closedBall_shift_of_isCompact_nonempty_convex_of_forall_symmetrized_bound
+    spectrum_aeval_subset_closedBall_shift_of_compactConvex_of_symmetrization
       A hcompact hnonempty hconvex c hA hsymm p 0 hpzspec
   rw [Metric.mem_closedBall, dist_zero_right] at hpzball
   have hone : 1 ≤ polynomialSupNorm p K := by
@@ -807,7 +807,7 @@ whenever the center value is small: if `|p(c)| ≤ (sqrt 2 - 1) m`, the
 same-polynomial symmetrized estimate bounds `‖p(A)‖` by `2m + |p(c)|`, and the
 identity `(sqrt 2 - 1)^2 + 2 (sqrt 2 - 1) = 1` closes the product estimate. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_eval_center_le_sqrt_two_sub_one_mul
+    norm_aeval_mul_auxiliary_ball_center_le_of_eval_center_le_sqrt_two_sub_one_mul
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ} (p : Polynomial ℂ)
@@ -886,7 +886,7 @@ theorem
 after an arbitrary scalar shift.  The symmetrized operator is exactly
 `p(A) + (p(c) - 2b)I`, giving the displayed quantitative estimate. -/
 theorem
-    norm_aeval_le_two_mul_polynomialSupNorm_sub_C_add_norm_eval_sub_two_mul_of_forall_symmetrized_bound
+    norm_aeval_le_two_mul_polynomialNorm_sub_C_add_norm_eval_sub_two_mul_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ}
@@ -976,7 +976,7 @@ theorem
   intro p
   let m : ℝ := polynomialSupNorm p K
   have hpA :=
-    norm_aeval_le_two_mul_polynomialSupNorm_sub_C_add_norm_eval_sub_two_mul_of_forall_symmetrized_bound
+    norm_aeval_le_two_mul_polynomialNorm_sub_C_add_norm_eval_sub_two_mul_of_symmetrization
       A c hA hsymm p 0
   have hpc : ‖Polynomial.eval c p‖ ≤ m :=
     norm_eval_le_polynomialSupNorm p
@@ -992,7 +992,7 @@ symmetrization gives a family of sharp-product criteria.  The shift `b`
 controls `p(A)` through `p(A) + (p(c) - 2b)I`; the displayed scalar
 inequality is exactly what is needed after the triangle estimate. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_shifted_scalar_bound_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_shifted_scalar_bound_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ}
@@ -1028,7 +1028,7 @@ theorem
   have hpA : ‖Polynomial.aeval A p‖ ≤
       2 * polynomialSupNorm (p - Polynomial.C b) K +
         ‖Polynomial.eval c p - 2 * b‖ :=
-    norm_aeval_le_two_mul_polynomialSupNorm_sub_C_add_norm_eval_sub_two_mul_of_forall_symmetrized_bound
+    norm_aeval_le_two_mul_polynomialNorm_sub_C_add_norm_eval_sub_two_mul_of_symmetrization
       A c hA hsymm p b
   rw [crouzeixPolynomialAuxiliaryOperator_ball_center_eq_eval_center_smul_one
     A c hA p]
@@ -1049,7 +1049,7 @@ theorem
 shifted symmetrization estimate.  Thus the displayed bound on
 `sup_K |p - p(c)/2|` alone suffices for the literal sharp product. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_half_centered_scalar_bound_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_half_centered_scalar_bound_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ}
@@ -1070,7 +1070,7 @@ theorem
             ((norm_nonneg (A - c • 1)).trans_lt hA)) p‖ ≤
       polynomialSupNorm p K ^ 2 := by
   apply
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_shifted_scalar_bound_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_shifted_scalar_bound_of_symmetrization
       A c hA hsymm p (Polynomial.eval c p / 2)
   have hzero : Polynomial.eval c p - 2 * (Polynomial.eval c p / 2) = 0 := by
     ring
@@ -1081,7 +1081,7 @@ normality.  Universal symmetrization bounds `p(A) - p(c)I` by twice the sup
 norm of `p - p(c)`; hence the displayed scalar inequality suffices for the
 literal auxiliary product bound. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_centered_scalar_bound_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_centered_scalar_bound_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ}
@@ -1103,7 +1103,7 @@ theorem
             ((norm_nonneg (A - c • 1)).trans_lt hA)) p‖ ≤
       polynomialSupNorm p K ^ 2 := by
   apply
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_shifted_scalar_bound_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_shifted_scalar_bound_of_symmetrization
       A c hA hsymm p (Polynomial.eval c p)
   have hnorm : ‖Polynomial.eval c p - 2 * Polynomial.eval c p‖ =
       ‖Polynomial.eval c p‖ := by
@@ -1116,7 +1116,7 @@ near-constant regime.  If the sup norm of `p - p(c)` is at most
 `m - |p(c)|`, universal symmetrization bounds the centered operator by twice
 that variation, and `(m - |p(c)|)^2 ≥ 0` closes the exact product estimate. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_centered_polynomialSupNorm_le_sub_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_centered_polynomialNorm_le_sub_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     {K : Set ℂ}
@@ -1141,7 +1141,7 @@ theorem
   let r : ℝ := polynomialSupNorm q K
   have ha : 0 ≤ a := norm_nonneg _
   apply
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_centered_scalar_bound_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_centered_scalar_bound_of_symmetrization
       A c hA hsymm p
   have hrma : r ≤ m - a := hcentered
   have hmul : 2 * r ≤ 2 * (m - a) :=
@@ -1159,7 +1159,7 @@ circle implies an auxiliary product bound with the global
 circle center with the closed numerical range; scalar evaluation is then
 sharp, while polynomial evaluation uses the unconditional global bound. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_one_add_sqrt_two_mul_sq_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_one_add_sqrt_two_mul_sq_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     (hsymm : ∀ q : Polynomial ℂ,
@@ -1218,7 +1218,7 @@ theorem
 sharp auxiliary product bound for every polynomial whose individual value
 `p(A)` is star-normal.  The ambient operator need not be star-normal. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_isStarNormal_aeval_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_isStarNormal_aeval_of_symmetrization
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     (hsymm : ∀ q : Polynomial ℂ,
@@ -1253,7 +1253,7 @@ theorem
 /-- In the star-normal branch, universal sharp symmetrization on an enclosing
 circle implies the literal sharp auxiliary product bound for every polynomial. -/
 theorem
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_isStarNormal_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_isStarNormal_of_symmetrization
     (A : E →L[ℂ] E) [IsStarNormal A] (c : ℂ) {R : ℝ}
     (hA : ‖A - c • (1 : E →L[ℂ] E)‖ < R)
     (hsymm : ∀ q : Polynomial ℂ,
@@ -1273,7 +1273,7 @@ theorem
     exact cfc_predicate _ A
   let _ := hnormal
   exact
-    norm_aeval_mul_crouzeixPolynomialAuxiliaryOperator_ball_center_le_of_isStarNormal_aeval_of_forall_symmetrized_bound
+    norm_aeval_mul_auxiliary_ball_center_le_of_isStarNormal_aeval_of_symmetrization
       A c hA hsymm p
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

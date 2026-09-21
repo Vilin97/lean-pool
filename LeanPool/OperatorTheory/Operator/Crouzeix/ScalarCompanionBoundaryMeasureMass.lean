@@ -109,6 +109,175 @@ private theorem boundaryParam_ne_of_mem_Ioo_period
     exact hus.ne (Omega.boundaryParam_injOn
       ⟨hu0, huT⟩ hs (hperiod.trans heq))
 
+private lemma chord_angle_limit_right
+    (gamma : ℝ → ℂ) (theta : ℝ → ℝ) (r s b : ℝ)
+    (hsb : s < b) (hdiff : DifferentiableAt ℝ gamma s)
+    (hD0 : deriv gamma s ≠ 0) (hrep : gamma s = gamma r)
+    (htheta_eq : ∀ t ∈ Ioo s b,
+      theta t = Complex.arg (-I * ((gamma t - gamma r) / deriv gamma s)) + Real.pi / 2) :
+    Tendsto theta (nhdsWithin s (Ioi s)) (nhds 0) := by
+  let D0 := deriv gamma s
+  let q : ℝ → ℂ := fun t => (gamma t - gamma r) / D0
+  let w : ℝ → ℂ := fun t => -I * q t
+  let vS : ℝ → ℂ := fun t => -I * (dslope gamma s t / D0)
+  have hvSVal : vS s = -I := by
+    simp only [neg_mul, dslope_same, ne_eq, hD0, not_false_eq_true, div_self,
+      mul_one, vS, D0]
+  have hvSContinuous : ContinuousAt vS s := by
+    dsimp only [vS]
+    exact continuousAt_const.mul
+      ((continuousAt_dslope_same.mpr
+        hdiff).div_const D0)
+  have hwFactorS : ∀ t : ℝ, w t = (t - s) * vS t := by
+    intro t
+    dsimp only [w, q, vS]
+    rw [← hrep, ← sub_smul_dslope gamma s t]
+    simp only [Complex.real_smul]
+    push_cast
+    ring
+  have hthetaStartEq : ∀ t, s < t → t < b →
+      theta t = Complex.arg (vS t) + Real.pi / 2 := by
+    intro t hst htb
+    rw [htheta_eq t ⟨hst, htb⟩]
+    change Complex.arg (w t) + Real.pi / 2 = _
+    rw [hwFactorS t, ← Complex.ofReal_sub,
+      Complex.arg_real_mul (vS t) (sub_pos.mpr hst)]
+  have hvSTend : Tendsto vS (nhds s) (nhds (-I)) := by
+    rw [← hvSVal]
+    exact hvSContinuous
+  have hminusISlit : (-I : ℂ) ∈ Complex.slitPlane := by
+    simp only [Complex.mem_slitPlane_iff, neg_re, I_re, neg_zero,
+      lt_self_iff_false, neg_im, I_im, ne_eq, neg_eq_zero, one_ne_zero,
+      not_false_eq_true, or_true]
+  have hargSTend : Tendsto (fun t => Complex.arg (vS t))
+      (nhds s) (nhds (Complex.arg (-I))) :=
+    Filter.Tendsto.comp (Complex.continuousAt_arg hminusISlit) hvSTend
+  have hangleSTend : Tendsto
+      (fun t => Complex.arg (vS t) + Real.pi / 2)
+      (nhds s) (nhds 0) := by
+    convert hargSTend.add
+      (tendsto_const_nhds : Tendsto (fun _ : ℝ => Real.pi / 2)
+        (nhds s) (nhds (Real.pi / 2))) using 1
+    rw [Complex.arg_neg_I]
+    ring_nf
+  apply Tendsto.congr' ?_
+    (hangleSTend.mono_left nhdsWithin_le_nhds)
+  filter_upwards [self_mem_nhdsWithin,
+    mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds hsb)] with t hst htb
+  exact (hthetaStartEq t hst htb).symm
+
+private lemma chord_angle_limit_left
+    (gamma : ℝ → ℂ) (theta : ℝ → ℝ) (D0 : ℂ) (r s b : ℝ)
+    (hsb : s < b) (hdiff : DifferentiableAt ℝ gamma b)
+    (hD0 : D0 ≠ 0) (hDB : deriv gamma b = D0) (hgammaB : gamma b = gamma r)
+    (htheta_eq : ∀ t ∈ Ioo s b,
+      theta t = Complex.arg (-I * ((gamma t - gamma r) / D0)) + Real.pi / 2) :
+    Tendsto theta (nhdsWithin b (Iio b)) (nhds Real.pi) := by
+  let q : ℝ → ℂ := fun t => (gamma t - gamma r) / D0
+  let w : ℝ → ℂ := fun t => -I * q t
+  let vB : ℝ → ℂ := fun t => I * (dslope gamma b t / D0)
+  have hvBVal : vB b = I := by
+    simp only [dslope_same, hDB, ne_eq, hD0, not_false_eq_true, div_self,
+      mul_one, vB]
+  have hvBContinuous : ContinuousAt vB b := by
+    dsimp only [vB]
+    exact continuousAt_const.mul
+      ((continuousAt_dslope_same.mpr
+        hdiff).div_const D0)
+  have hwFactorB : ∀ t : ℝ, w t = (b - t) * vB t := by
+    intro t
+    dsimp only [w, q, vB]
+    rw [← hgammaB, ← sub_smul_dslope gamma b t]
+    simp only [Complex.real_smul]
+    push_cast
+    ring
+  have hthetaEndEq : ∀ t, s < t → t < b →
+      theta t = Complex.arg (vB t) + Real.pi / 2 := by
+    intro t hst htb
+    rw [htheta_eq t ⟨hst, htb⟩]
+    change Complex.arg (w t) + Real.pi / 2 = _
+    rw [hwFactorB t, ← Complex.ofReal_sub,
+      Complex.arg_real_mul (vB t) (sub_pos.mpr htb)]
+  have hvBTend : Tendsto vB (nhds b) (nhds I) := by
+    rw [← hvBVal]
+    exact hvBContinuous
+  have hISlit : (I : ℂ) ∈ Complex.slitPlane := by
+    simp only [Complex.mem_slitPlane_iff, I_re, lt_self_iff_false, I_im,
+      ne_eq, one_ne_zero, not_false_eq_true, or_true]
+  have hargBTend : Tendsto (fun t => Complex.arg (vB t))
+      (nhds b) (nhds (Complex.arg I)) :=
+    Filter.Tendsto.comp (Complex.continuousAt_arg hISlit) hvBTend
+  have hangleBTend : Tendsto
+      (fun t => Complex.arg (vB t) + Real.pi / 2)
+      (nhds b) (nhds Real.pi) := by
+    convert hargBTend.add
+      (tendsto_const_nhds : Tendsto (fun _ : ℝ => Real.pi / 2)
+        (nhds b) (nhds (Real.pi / 2))) using 1
+    rw [Complex.arg_I]
+    ring_nf
+  apply Tendsto.congr' ?_
+    (hangleBTend.mono_left nhdsWithin_le_nhds)
+  filter_upwards [self_mem_nhdsWithin,
+    mem_nhdsWithin_of_mem_nhds (Ioi_mem_nhds hsb)] with t htb hst
+  exact (hthetaEndEq t hst htb).symm
+
+private lemma monotoneOn_closed_angle_interval
+    (theta : ℝ → ℝ) (s b : ℝ) (hthetaS : theta s = 0) (hthetaB : theta b = Real.pi)
+    (hthetaBounds : ∀ t ∈ Ioo s b, theta t ∈ Icc (0 : ℝ) Real.pi)
+    (hthetaMonoInterior : MonotoneOn theta (Ioo s b)) :
+    MonotoneOn theta (Icc s b) := by
+    intro x hx y hy hxy
+    by_cases hxs : x = s
+    · subst x
+      by_cases hys : y = s
+      · subst y
+        exact le_rfl
+      · rw [hthetaS]
+        by_cases hyb : y = b
+        · subst y
+          rw [hthetaB]
+          exact Real.pi_pos.le
+        · have hyoo : y ∈ Ioo s b := by
+            exact ⟨lt_of_le_of_ne hy.1 (Ne.symm hys),
+              lt_of_le_of_ne hy.2 hyb⟩
+          exact (hthetaBounds y hyoo).1
+    · by_cases hyb : y = b
+      · subst y
+        by_cases hxb : x = b
+        · subst x
+          exact le_rfl
+        · rw [hthetaB]
+          have hxoo : x ∈ Ioo s b := by
+            exact ⟨lt_of_le_of_ne hx.1 (Ne.symm hxs),
+              lt_of_le_of_ne hx.2 hxb⟩
+          exact (hthetaBounds x hxoo).2
+      · have hxoo : x ∈ Ioo s b := by
+          refine ⟨lt_of_le_of_ne hx.1 (Ne.symm hxs), ?_⟩
+          exact lt_of_le_of_lt hxy (lt_of_le_of_ne hy.2 hyb)
+        have hyoo : y ∈ Ioo s b := by
+          refine ⟨lt_of_lt_of_le hxoo.1 hxy, ?_⟩
+          exact lt_of_le_of_ne hy.2 hyb
+        exact hthetaMonoInterior hxoo hyoo hxy
+
+private lemma negI_mul_mem_slitPlane {q : ℂ} (hq0 : q ≠ 0) (hqim : 0 ≤ q.im) :
+    -I * q ∈ Complex.slitPlane := by
+  have hw0 : -I * q ≠ 0 := mul_ne_zero (neg_ne_zero.mpr I_ne_zero) hq0
+  rw [Complex.mem_slitPlane_iff]
+  by_cases hpos : 0 < (-I * q).re
+  · exact Or.inl hpos
+  · right
+    have hwre_nonneg : 0 ≤ (-I * q).re := by simpa using hqim
+    have hwre : (-I * q).re = 0 := le_antisymm (le_of_not_gt hpos) hwre_nonneg
+    intro hwim
+    exact hw0 (Complex.ext hwre hwim)
+
+private lemma shifted_arg_negI_mul_mem_Icc {q : ℂ} (hqim : 0 ≤ q.im) :
+    Complex.arg (-I * q) + Real.pi / 2 ∈ Icc (0 : ℝ) Real.pi := by
+  have hwre : 0 ≤ (-I * q).re := by simpa using hqim
+  have harg := Complex.abs_arg_le_pi_div_two_iff.mpr hwre
+  rw [abs_le] at harg
+  constructor <;> linarith
+
 /-- If one point of the open carrier lies consistently on the inward side of
 the canonical oriented tangent line, then the boundary double-layer density
 based at every frontier point has interval-integral mass one. -/
@@ -178,25 +347,8 @@ theorem
       linarith [hnormal']
     rw [← sub_div]
     exact div_nonneg hnum hnormSq.le
-  have hwslit : ∀ t ∈ Ioo s b, w t ∈ Complex.slitPlane := by
-    intro t ht
-    have hq0 := hqne t ht
-    have hqim0 := hqim t ht
-    have hw0 : w t ≠ 0 := mul_ne_zero (neg_ne_zero.mpr I_ne_zero) hq0
-    rw [Complex.mem_slitPlane_iff]
-    by_cases hpos : 0 < (w t).re
-    · exact Or.inl hpos
-    · right
-      have hwre_nonneg : 0 ≤ (w t).re := by
-        have hwre_eq : (w t).re = (q t).im := by
-          simp only [neg_mul, neg_re, mul_re, I_re, zero_mul, I_im, one_mul,
-            zero_sub, neg_neg, w]
-        rwa [hwre_eq]
-      have hwre : (w t).re = 0 :=
-        le_antisymm (le_of_not_gt hpos) hwre_nonneg
-      intro hwim
-      apply hw0
-      exact Complex.ext hwre hwim
+  have hwslit : ∀ t ∈ Ioo s b, w t ∈ Complex.slitPlane :=
+    fun t ht => negI_mul_mem_slitPlane (hqne t ht) (hqim t ht)
   let rawTheta : ℝ → ℝ := fun t => Complex.arg (w t) + Real.pi / 2
   let theta : ℝ → ℝ :=
     Function.update (Function.update rawTheta s 0) b Real.pi
@@ -255,17 +407,8 @@ theorem
       rw [hratio, hrho])
   have hthetaBounds : ∀ t ∈ Ioo s b, theta t ∈ Icc (0 : ℝ) Real.pi := by
     intro t ht
-    have hwre : 0 ≤ (w t).re := by
-      have hwre_eq : (w t).re = (q t).im := by
-        simp only [neg_mul, neg_re, mul_re, I_re, zero_mul, I_im, one_mul,
-          zero_sub, neg_neg, w]
-      rw [hwre_eq]
-      exact hqim t ht
-    have harg := Complex.abs_arg_le_pi_div_two_iff.mpr hwre
-    rw [abs_le] at harg
     rw [htheta_eq t ht]
-    dsimp only [rawTheta]
-    constructor <;> linarith
+    exact shifted_arg_negI_mul_mem_Icc (hqim t ht)
   have hrhoNonneg : ∀ t ∈ Ioo s b,
       0 ≤ crouzeixBoundaryDoubleLayerDensity Omega (gamma r) t := by
     intro t _
@@ -284,39 +427,8 @@ theorem
       have ht' : t ∈ Ioo s b := by
         simpa only [interior_Ioo] using ht
       exact mul_nonneg Real.pi_pos.le (hrhoNonneg t ht')
-  have hthetaMono : MonotoneOn theta (Icc s b) := by
-    intro x hx y hy hxy
-    by_cases hxs : x = s
-    · subst x
-      by_cases hys : y = s
-      · subst y
-        exact le_rfl
-      · rw [hthetaS]
-        by_cases hyb : y = b
-        · subst y
-          rw [hthetaB]
-          exact Real.pi_pos.le
-        · have hyoo : y ∈ Ioo s b := by
-            exact ⟨lt_of_le_of_ne hy.1 (Ne.symm hys),
-              lt_of_le_of_ne hy.2 hyb⟩
-          exact (hthetaBounds y hyoo).1
-    · by_cases hyb : y = b
-      · subst y
-        by_cases hxb : x = b
-        · subst x
-          exact le_rfl
-        · rw [hthetaB]
-          have hxoo : x ∈ Ioo s b := by
-            exact ⟨lt_of_le_of_ne hx.1 (Ne.symm hxs),
-              lt_of_le_of_ne hx.2 hxb⟩
-          exact (hthetaBounds x hxoo).2
-      · have hxoo : x ∈ Ioo s b := by
-          refine ⟨lt_of_le_of_ne hx.1 (Ne.symm hxs), ?_⟩
-          exact lt_of_le_of_lt hxy (lt_of_le_of_ne hy.2 hyb)
-        have hyoo : y ∈ Ioo s b := by
-          refine ⟨lt_of_lt_of_le hxoo.1 hxy, ?_⟩
-          exact lt_of_le_of_ne hy.2 hyb
-        exact hthetaMonoInterior hxoo hyoo hxy
+  have hthetaMono : MonotoneOn theta (Icc s b) :=
+    monotoneOn_closed_angle_interval theta s b hthetaS hthetaB hthetaBounds hthetaMonoInterior
   have hthetaMonoU : MonotoneOn theta [[s, b]] := by
     simpa [uIcc_of_le hsb.le] using hthetaMono
   have hintDeriv : IntervalIntegrable (deriv theta) volume s b :=
@@ -333,105 +445,16 @@ theorem
         crouzeixBoundaryDoubleLayerDensity Omega (gamma r) t)
       volume s b :=
     hintDeriv.congr_uIoo hderivEq
-  let vS : ℝ → ℂ := fun t => -I * (dslope gamma s t / D0)
-  have hvSVal : vS s = -I := by
-    simp only [neg_mul, dslope_same, ne_eq, hD0, not_false_eq_true, div_self,
-      mul_one, vS, D0]
-  have hvSContinuous : ContinuousAt vS s := by
-    dsimp only [vS]
-    exact continuousAt_const.mul
-      ((continuousAt_dslope_same.mpr
-        (Omega.boundaryParam_contDiff.differentiable
-          (by norm_num) s)).div_const D0)
-  have hwFactorS : ∀ t : ℝ, w t = (t - s) * vS t := by
-    intro t
-    dsimp only [w, q, vS]
-    rw [← hrep, ← sub_smul_dslope gamma s t]
-    simp only [Complex.real_smul]
-    push_cast
-    ring
-  have hthetaStartEq : ∀ t, s < t → t < b →
-      theta t = Complex.arg (vS t) + Real.pi / 2 := by
-    intro t hst htb
-    rw [htheta_eq t ⟨hst, htb⟩]
-    dsimp only [rawTheta]
-    rw [hwFactorS t, ← Complex.ofReal_sub,
-      Complex.arg_real_mul (vS t) (sub_pos.mpr hst)]
-  have hvSTend : Tendsto vS (nhds s) (nhds (-I)) := by
-    rw [← hvSVal]
-    exact hvSContinuous
-  have hminusISlit : (-I : ℂ) ∈ Complex.slitPlane := by
-    simp only [Complex.mem_slitPlane_iff, neg_re, I_re, neg_zero,
-      lt_self_iff_false, neg_im, I_im, ne_eq, neg_eq_zero, one_ne_zero,
-      not_false_eq_true, or_true]
-  have hargSTend : Tendsto (fun t => Complex.arg (vS t))
-      (nhds s) (nhds (Complex.arg (-I))) :=
-    Filter.Tendsto.comp (Complex.continuousAt_arg hminusISlit) hvSTend
-  have hangleSTend : Tendsto
-      (fun t => Complex.arg (vS t) + Real.pi / 2)
-      (nhds s) (nhds 0) := by
-    convert hargSTend.add
-      (tendsto_const_nhds : Tendsto (fun _ : ℝ => Real.pi / 2)
-        (nhds s) (nhds (Real.pi / 2))) using 1
-    rw [Complex.arg_neg_I]
-    ring_nf
-  have hthetaStart : Tendsto theta (nhdsWithin s (Ioi s)) (nhds 0) := by
-    apply Tendsto.congr' ?_
-      (hangleSTend.mono_left nhdsWithin_le_nhds)
-    filter_upwards [self_mem_nhdsWithin,
-      mem_nhdsWithin_of_mem_nhds (Iio_mem_nhds hsb)] with t hst htb
-    exact (hthetaStartEq t hst htb).symm
+  have hthetaStart : Tendsto theta (nhdsWithin s (Ioi s)) (nhds 0) :=
+    chord_angle_limit_right gamma theta r s b hsb
+      (Omega.boundaryParam_contDiff.differentiable (by norm_num) s) hD0 hrep htheta_eq
   have hDB : deriv gamma b = D0 := by
     dsimp only [gamma, b, T, D0]
     exact periodic_deriv_boundaryParam Omega s
-  let vB : ℝ → ℂ := fun t => I * (dslope gamma b t / D0)
-  have hvBVal : vB b = I := by
-    simp only [dslope_same, hDB, ne_eq, hD0, not_false_eq_true, div_self,
-      mul_one, vB]
-  have hvBContinuous : ContinuousAt vB b := by
-    dsimp only [vB]
-    exact continuousAt_const.mul
-      ((continuousAt_dslope_same.mpr
-        (Omega.boundaryParam_contDiff.differentiable
-          (by norm_num) b)).div_const D0)
-  have hwFactorB : ∀ t : ℝ, w t = (b - t) * vB t := by
-    intro t
-    dsimp only [w, q, vB]
-    rw [← hgammaB, ← sub_smul_dslope gamma b t]
-    simp only [Complex.real_smul]
-    push_cast
-    ring
-  have hthetaEndEq : ∀ t, s < t → t < b →
-      theta t = Complex.arg (vB t) + Real.pi / 2 := by
-    intro t hst htb
-    rw [htheta_eq t ⟨hst, htb⟩]
-    dsimp only [rawTheta]
-    rw [hwFactorB t, ← Complex.ofReal_sub,
-      Complex.arg_real_mul (vB t) (sub_pos.mpr htb)]
-  have hvBTend : Tendsto vB (nhds b) (nhds I) := by
-    rw [← hvBVal]
-    exact hvBContinuous
-  have hISlit : (I : ℂ) ∈ Complex.slitPlane := by
-    simp only [Complex.mem_slitPlane_iff, I_re, lt_self_iff_false, I_im,
-      ne_eq, one_ne_zero, not_false_eq_true, or_true]
-  have hargBTend : Tendsto (fun t => Complex.arg (vB t))
-      (nhds b) (nhds (Complex.arg I)) :=
-    Filter.Tendsto.comp (Complex.continuousAt_arg hISlit) hvBTend
-  have hangleBTend : Tendsto
-      (fun t => Complex.arg (vB t) + Real.pi / 2)
-      (nhds b) (nhds Real.pi) := by
-    convert hargBTend.add
-      (tendsto_const_nhds : Tendsto (fun _ : ℝ => Real.pi / 2)
-        (nhds b) (nhds (Real.pi / 2))) using 1
-    rw [Complex.arg_I]
-    ring_nf
-  have hthetaEnd : Tendsto theta (nhdsWithin b (Iio b))
-      (nhds Real.pi) := by
-    apply Tendsto.congr' ?_
-      (hangleBTend.mono_left nhdsWithin_le_nhds)
-    filter_upwards [self_mem_nhdsWithin,
-      mem_nhdsWithin_of_mem_nhds (Ioi_mem_nhds hsb)] with t htb hst
-    exact (hthetaEndEq t hst htb).symm
+  have hthetaEnd : Tendsto theta (nhdsWithin b (Iio b)) (nhds Real.pi) :=
+    chord_angle_limit_left gamma theta D0 r s b hsb
+      (Omega.boundaryParam_contDiff.differentiable (by norm_num) b)
+      hD0 hDB hgammaB htheta_eq
   have hscaledIntegral :
       (∫ t in s..b, Real.pi *
         crouzeixBoundaryDoubleLayerDensity Omega (gamma r) t) =

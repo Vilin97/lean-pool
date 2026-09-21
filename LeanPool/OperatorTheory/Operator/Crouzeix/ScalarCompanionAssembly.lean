@@ -172,7 +172,7 @@ theorem
       unfold smoothApproxRadius
       positivity) K
   apply
-    crouzeix_palencia_of_convexThickening_cauchy_support_continuous_scalar_companion_approximation
+    crouzeixPalencia_of_thickening_cauchy_support_continuous_companion_approximation
       A Omega hcarrier hCauchyP hsupport
   intro p n
   obtain ⟨r, hr⟩ := happrox p n

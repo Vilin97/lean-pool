@@ -69,7 +69,7 @@ noncomputable def linearImage (Omega : SmoothJordanDomain)
     (e : ℂ ≃L[ℝ] ℂ) (t : ℝ) :
     (Omega.linearImage e).boundaryParam t = e (Omega.boundaryParam t) := rfl
 
-@[simp] theorem linearImage_boundaryParam_deriv (Omega : SmoothJordanDomain)
+theorem linearImage_boundaryParam_deriv (Omega : SmoothJordanDomain)
     (e : ℂ ≃L[ℝ] ℂ) (t : ℝ) :
     deriv (Omega.linearImage e).boundaryParam t =
       e (deriv Omega.boundaryParam t) := by
@@ -116,7 +116,7 @@ noncomputable def translate (Omega : SmoothJordanDomain)
     (c : ℂ) (t : ℝ) :
     (Omega.translate c).boundaryParam t = c + Omega.boundaryParam t := rfl
 
-@[simp] theorem translate_boundaryParam_deriv (Omega : SmoothJordanDomain)
+theorem translate_boundaryParam_deriv (Omega : SmoothJordanDomain)
     (c : ℂ) (t : ℝ) :
     deriv (Omega.translate c).boundaryParam t =
       deriv Omega.boundaryParam t := by
@@ -138,7 +138,7 @@ noncomputable def ellipse (c : ℂ) (e : ℂ ≃L[ℝ] ℂ)
     (ellipse c e R hR).boundaryParam =
       fun t => c + e (circleMap 0 R t) := rfl
 
-@[simp] theorem ellipse_boundaryParam_deriv (c : ℂ)
+theorem ellipse_boundaryParam_deriv (c : ℂ)
     (e : ℂ ≃L[ℝ] ℂ) (R : ℝ) (hR : 0 < R) (t : ℝ) :
     deriv (ellipse c e R hR).boundaryParam t =
       e (circleMap 0 R t * I) := by

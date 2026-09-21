@@ -68,7 +68,7 @@ value.
   unrestricted full Plemelj convergence under winding normalization alone.
 * `continuousOn_crouzeixPolynomialScalarCompanionClosedExtension_of_cauchyKernel_eq_one`
   -- the resulting canonical closed extension is continuous.
-* `norm_crouzeixPolynomialScalarCompanionClosedExtension_le_of_boundaryPhaseTransform_radial`
+* `norm_companionClosedExtension_le_of_boundaryPhaseTransform_radial`
   -- the sharp phase inequality controls that extension on the closure.
 -/
 
@@ -1854,7 +1854,7 @@ theorem
 /-- The same sharp boundary-phase inequality controls the canonical closed
 extension on the entire closure of a bounded normalized carrier. -/
 theorem
-    norm_crouzeixPolynomialScalarCompanionClosedExtension_le_of_boundaryPhaseTransform_radial
+    norm_companionClosedExtension_le_of_boundaryPhaseTransform_radial
     (Omega : SmoothJordanDomain) (p : Polynomial ℂ)
     (hkernel : ∀ z ∈ Omega.carrier,
       crouzeixScalarCauchyKernel Omega z = 1)

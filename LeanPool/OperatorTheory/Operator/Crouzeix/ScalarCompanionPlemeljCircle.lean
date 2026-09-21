@@ -117,7 +117,8 @@ theorem crouzeixPolynomialScalarCompanionRegularized_ball_boundary_eq
           (s := Metric.sphere (0 : ℂ) |R|) xi,
         Filter.self_mem_codiscreteWithin (Metric.sphere (0 : ℂ) |R|)]
         with sigma hsigma_ne hsigma
-      have hsigma_ne' : sigma ≠ xi := by simpa only [mem_compl_iff, mem_singleton_iff] using hsigma_ne
+      have hsigma_ne' : sigma ≠ xi := by simpa only [mem_compl_iff, mem_singleton_iff] using
+        hsigma_ne
       have hsigma0 := ne_zero_of_mem_centered_sphere hR hsigma
       have hxi0 := ne_zero_of_mem_centered_sphere hR hxi'
       have hstar_sigma := star_eq_sq_mul_inv_of_mem_centered_sphere hR hsigma

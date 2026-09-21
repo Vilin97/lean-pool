@@ -32,7 +32,7 @@ operator-norm enclosure of `CircleSymmetrized.lean`.
 * `normalized_circleIntegral_eval_smul_resolvent_eq_aeval_of_spectrum_subset_ball`,
   `circleIntegral_resolvent_eq_two_pi_I_smul_one_of_spectrum_subset_ball` — the Cauchy formulas
   on `C(0, r)` for `σ(A) ⊆ ball 0 r`.
-* `norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_ball_le_of_closure_numericalRange_subset_ball`
+* `norm_aeval_add_star_auxiliary_ball_le_of_closedNumericalRange_subset_ball`
   — `‖p(A) + G†‖ ≤ 2 * sup_{|z| ≤ r} ‖p(z)‖` whenever `closure (numericalRange A) ⊆ ball 0 r`.
 * `circleIntegral_smul_resolvent_eq_of_spectrum_subset_ball` — the deformation for a general
   scalar weight `g` holomorphic off the disk, and
@@ -43,7 +43,7 @@ operator-norm enclosure of `CircleSymmetrized.lean`.
   `normalized_circleIntegral_eval_smul_resolvent_eq_aeval_of_spectrum_subset_ball_center`,
   `circleIntegral_resolvent_eq_two_pi_I_smul_one_of_spectrum_subset_ball_center` — the same
   formulas on a circle `C(c, r)` with arbitrary center, and
-  `norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_ball_le_of_closure_numericalRange_subset_ball_center`
+  `norm_aeval_add_star_auxiliary_ball_le_of_closedNumericalRange_subset_ball_center`
   — the symmetrized bound for an arbitrary open disk containing `closure (numericalRange A)`.
 
 The product side of the Crouzeix–Palencia argument is *not* upgraded here: the disk product bound
@@ -79,7 +79,8 @@ theorem circleIntegral_eval_smul_resolvent_eq_of_spectrum_subset_ball (A : E →
     (s := ∅) Set.countable_empty ?_ ?_).symm
   · intro z hz
     exact (differentiableAt_eval_smul_resolvent A p
-      (mem_resolventSet_of_notMem_ball_of_spectrum_subset A hσ hz.2)).continuousAt.continuousWithinAt
+      (mem_resolventSet_of_notMem_ball_of_spectrum_subset A hσ
+        hz.2)).continuousAt.continuousWithinAt
   · intro z hz
     refine differentiableAt_eval_smul_resolvent A p
       (mem_resolventSet_of_notMem_ball_of_spectrum_subset A hσ ?_)
@@ -94,7 +95,8 @@ theorem circleIntegral_resolvent_eq_of_spectrum_subset_ball (A : E →L[ℂ] E) 
     (s := ∅) Set.countable_empty ?_ ?_).symm
   · intro z hz
     exact (spectrum.hasDerivAt_resolvent_const_left
-      (mem_resolventSet_of_notMem_ball_of_spectrum_subset A hσ hz.2)).continuousAt.continuousWithinAt
+      (mem_resolventSet_of_notMem_ball_of_spectrum_subset A hσ
+        hz.2)).continuousAt.continuousWithinAt
   · intro z hz
     refine (spectrum.hasDerivAt_resolvent_const_left
       (mem_resolventSet_of_notMem_ball_of_spectrum_subset A hσ ?_)).differentiableAt
@@ -126,7 +128,7 @@ theorem circleIntegral_resolvent_eq_two_pi_I_smul_one_of_spectrum_subset_ball
 /-- **Symmetrized Crouzeix–Palencia bound under the numerical-range hypothesis.** If the closure
 of the numerical range lies in the open disk `ball 0 r`, then for the auxiliary operator `G` of
 that disk, `‖p(A) + G†‖ ≤ 2 * sup_{|z| ≤ r} ‖p(z)‖`. -/
-theorem norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_ball_le_of_closure_numericalRange_subset_ball
+theorem norm_aeval_add_star_auxiliary_ball_le_of_closedNumericalRange_subset_ball
     (A : E →L[ℂ] E) {r : ℝ} (hr : 0 < r)
     (hW : closure (numericalRange A) ⊆ Metric.ball (0 : ℂ) r) (p : ℂ[X]) :
     ‖aeval A p + star (crouzeixPolynomialAuxiliaryOperator A
@@ -235,7 +237,7 @@ theorem circleIntegral_resolvent_eq_two_pi_I_smul_one_of_spectrum_subset_ball_ce
 /-- **Symmetrized Crouzeix–Palencia bound for an arbitrary disk containing the numerical range.**
 If `closure W(A) ⊆ ball c r`, then for the auxiliary operator `G` of that disk,
 `‖p(A) + G†‖ ≤ 2 * sup_{|z - c| ≤ r} ‖p(z)‖`. -/
-theorem norm_aeval_add_star_crouzeixPolynomialAuxiliaryOperator_ball_le_of_closure_numericalRange_subset_ball_center
+theorem norm_aeval_add_star_auxiliary_ball_le_of_closedNumericalRange_subset_ball_center
     (A : E →L[ℂ] E) {c : ℂ} {r : ℝ} (hr : 0 < r)
     (hW : closure (numericalRange A) ⊆ Metric.ball c r) (p : ℂ[X]) :
     ‖aeval A p + star (crouzeixPolynomialAuxiliaryOperator A

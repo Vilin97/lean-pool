@@ -9982,8 +9982,6 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-    - PalomarCrouzeixPalencia.exists_unitary_power_dilation
-    - PalomarCrouzeixPalencia.vonNeumann_inequality
     - PalomarCrouzeixPalencia.crouzeix_palencia
     main_results:
     - declaration: PalomarCrouzeixPalencia.exists_unitary_power_dilation

@@ -25,7 +25,8 @@ after the `1 / (2π)` normalization of the contour integral the estimate carries
 
 Route: for a positive `K`, `⟪x, K y⟫ = ⟪√K x, √K y⟫`, hence
 `‖⟪x, K y⟫‖ ≤ √(re ⟪x, K x⟫) * √(re ⟪y, K y⟫)` (Cauchy–Schwarz for the positive form); the weighted
-AM–GM inequality `√A * √B ≤ (s * A + B / s) / 2` turns this into an integrable majorant with integral
+AM–GM inequality `√A * √B ≤ (s * A + B / s) / 2` turns this into an integrable majorant with
+  integral
 `M * ((s * c * ‖x‖ ^ 2 + c * ‖y‖ ^ 2 / s) / 2)`; optimizing `s = ‖y‖ / ‖x‖` gives
 `‖⟪x, T y⟫‖ ≤ c * M * ‖x‖ * ‖y‖`, and an operator with such matrix coefficients has norm at most
 `c * M`.

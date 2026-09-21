@@ -449,8 +449,10 @@ omit [Nontrivial E] in
 preserved and reflected by complex conjugation. -/
 @[simp] theorem star_mem_centeredNumericalRadiusMinimizers_iff
     [CompleteSpace E] (A : E →L[ℂ] E) (hA : IsSelfAdjoint A) (c : ℂ) :
-    star c ∈ centeredNumericalRadiusMinimizers A ↔
+    (starRingEnd ℂ) c ∈ centeredNumericalRadiusMinimizers A ↔
       c ∈ centeredNumericalRadiusMinimizers A := by
+  change star c ∈ centeredNumericalRadiusMinimizers A ↔
+    c ∈ centeredNumericalRadiusMinimizers A
   have hmap {z : ℂ} (hz : z ∈ centeredNumericalRadiusMinimizers A) :
       star z ∈ centeredNumericalRadiusMinimizers A := by
     have himage :
@@ -510,8 +512,10 @@ reflected by reflection across the imaginary axis. -/
 @[simp] theorem neg_star_mem_centeredNumericalRadiusMinimizers_iff
     [CompleteSpace E] (A : E →L[ℂ] E)
     (hA : A ∈ skewAdjoint (E →L[ℂ] E)) (c : ℂ) :
-    -star c ∈ centeredNumericalRadiusMinimizers A ↔
+    -(starRingEnd ℂ) c ∈ centeredNumericalRadiusMinimizers A ↔
       c ∈ centeredNumericalRadiusMinimizers A := by
+  change -star c ∈ centeredNumericalRadiusMinimizers A ↔
+    c ∈ centeredNumericalRadiusMinimizers A
   have hAadj : A† = -A := skewAdjoint.mem_iff.mp hA
   have himages :
       (fun z : ℂ => -z) '' centeredNumericalRadiusMinimizers A =

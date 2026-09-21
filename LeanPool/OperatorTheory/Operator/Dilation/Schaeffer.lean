@@ -31,7 +31,7 @@ variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
 /-- The Hilbert sum used for the Schäffer dilation. -/
-abbrev SchaefferSpace (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℂ E] :=
+abbrev SchaefferSpace (E : Type u) [NormedAddCommGroup E] :=
   lp (fun _ : ℤ => E) 2
 
 /-- Embed `E` isometrically as coordinate zero of its bilateral Hilbert sum. -/
@@ -141,11 +141,11 @@ theorem schaefferBilateralShift_apply (f : SchaefferSpace E) (j : ℤ) :
   exact schaefferBilateralShiftEquiv_apply f j
 
 /-- One site in the repeated-interaction model: a system and one environment copy. -/
-abbrev SchaefferNetworkFiber (E : Type u) [NormedAddCommGroup E] := WithLp 2 (E × E)
+abbrev SchaefferNetworkFiber (E : Type u) := WithLp 2 (E × E)
 
 /-- The bilateral Hilbert sum of system-environment sites. -/
-abbrev SchaefferNetworkSpace (E : Type u) [NormedAddCommGroup E]
-    [InnerProductSpace ℂ E] := lp (fun _ : ℤ => SchaefferNetworkFiber E) 2
+abbrev SchaefferNetworkSpace (E : Type u) [NormedAddCommGroup E] :=
+  lp (fun _ : ℤ => SchaefferNetworkFiber E) 2
 
 private noncomputable def schaefferFiberEmbedding :
     E →L[ℂ] SchaefferNetworkFiber E :=
@@ -250,6 +250,7 @@ private def schaefferPointwiseUnitary
     (lpPointwiseEquiv (Unitary.linearIsometryEquiv J))
 
 omit [CompleteSpace E] in
+omit [InnerProductSpace ℂ E] in
 private theorem summable_network_fst_sq (f : SchaefferNetworkSpace E) :
     Summable fun i : ℤ => ‖(f i).fst‖ ^ (2 : ℕ) := by
   have hf : Summable fun i : ℤ => ‖f i‖ ^ (2 : ℕ) := by
@@ -260,6 +261,7 @@ private theorem summable_network_fst_sq (f : SchaefferNetworkSpace E) :
   nlinarith only [h, sq_nonneg ‖(f i).snd‖]
 
 omit [CompleteSpace E] in
+omit [InnerProductSpace ℂ E] in
 private theorem summable_network_snd_sq (f : SchaefferNetworkSpace E) :
     Summable fun i : ℤ => ‖(f i).snd‖ ^ (2 : ℕ) := by
   have hf : Summable fun i : ℤ => ‖f i‖ ^ (2 : ℕ) := by
@@ -286,6 +288,7 @@ private def schaefferRouteForward (f : SchaefferNetworkSpace E) :
       (summable_network_fst_sq f).add hs⟩
 
 omit [CompleteSpace E] in
+omit [InnerProductSpace ℂ E] in
 @[simp]
 private theorem schaefferRouteForward_apply (f : SchaefferNetworkSpace E) (i : ℤ) :
     schaefferRouteForward f i =
@@ -304,12 +307,14 @@ private def schaefferRouteBackward (f : SchaefferNetworkSpace E) :
       (summable_network_fst_sq f).add hs⟩
 
 omit [CompleteSpace E] in
+omit [InnerProductSpace ℂ E] in
 @[simp]
 private theorem schaefferRouteBackward_apply (f : SchaefferNetworkSpace E) (i : ℤ) :
     schaefferRouteBackward f i =
       WithLp.toLp 2 ((f i).fst, (f (schaefferIntShift i)).snd) := rfl
 
 omit [CompleteSpace E] in
+omit [InnerProductSpace ℂ E] in
 private theorem norm_schaefferRouteForward (f : SchaefferNetworkSpace E) :
     ‖schaefferRouteForward f‖ = ‖f‖ := by
   apply (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp

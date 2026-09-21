@@ -124,7 +124,7 @@ theorem
 /-- Direct polynomial form of the Crouzeix--Palencia bound on any disk whose
 radius dominates `w(A-cI)`. -/
 theorem
-    norm_aeval_le_one_add_sqrt_two_mul_polynomialSupNorm_closedBall_of_centered_numericalRadius_le
+    norm_aeval_le_one_add_sqrt_two_mul_polynomialNorm_closedBall_of_centered_numericalRadius_le
     (A : E →L[ℂ] E) (c : ℂ) {R : ℝ}
     (hR : numericalRadius (A - c • 1) ≤ R) (p : Polynomial ℂ) :
     ‖Polynomial.aeval A p‖ ≤

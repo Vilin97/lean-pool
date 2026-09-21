@@ -144,7 +144,7 @@ import LeanPool.OperatorTheory.Operator
 Source: url:https://github.com/savarin/lean-operator-theory
 Authors: Ezzeri Esa
 Status: verified
-Main declarations: `PalomarCrouzeixPalencia.exists_unitary_power_dilation`, `PalomarCrouzeixPalencia.vonNeumann_inequality`, `PalomarCrouzeixPalencia.crouzeix_palencia`
+Main declarations: `PalomarCrouzeixPalencia.crouzeix_palencia`
 Tags: operator-theory, functional-analysis, spectral-theory
 MSC: 47A12, 47A20, 47A25
 -/

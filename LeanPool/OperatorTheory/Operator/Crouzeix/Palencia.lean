@@ -117,7 +117,7 @@ theorem norm_le_one_add_sqrt_two_mul_of_auxiliary_bounds
 the Crouzeix--Palencia argument.  In the intended application `F = f(A)` and
 `G = g(A)`, so multiplicativity identifies `F * G * F` with `(f g f)(A)`. -/
 theorem mul_adjoint_fourth_power_eq_symmetrized_sub_triple
-    {B : Type*} [NonUnitalNormedRing B] [StarRing B] [CStarRing B]
+    {B : Type*} [NonUnitalNormedRing B] [StarRing B]
     (F G : B) :
     F * star F * F * star F =
       F * star (F + star G) * F * star F - F * G * F * star F := by
