@@ -59,7 +59,8 @@ theorem coeFn_star_lp (F : Lp R p μ) :
 theorem norm_star_lp (F : Lp R p μ) : ‖star F‖ = ‖F‖ := by
   rw [Lp.norm_def, Lp.norm_def]
   congr 1
-  refine eLpNorm_congr_norm_ae ?_
+  refine eLpNorm_congr_norm_ae (Lp.aestronglyMeasurable (star F))
+    (Lp.aestronglyMeasurable F) ?_
   filter_upwards [coeFn_star_lp F] with x hx
   rw [hx, norm_star]
 

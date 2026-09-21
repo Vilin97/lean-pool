@@ -84,10 +84,10 @@ theorem integral_norm_coeFn_le (W : Lp 𝕜 2 unitIocMeasure) :
   have hmeas := (Lp.memLp W).aestronglyMeasurable
   have h1 : ∫ t, ‖W t‖ ∂unitIocMeasure
       = (eLpNorm (W : ℝ → 𝕜) 1 unitIocMeasure).toReal := by
-    rw [integral_norm_eq_lintegral_enorm hmeas, eLpNorm_one_eq_lintegral_enorm]
+    rw [integral_norm_eq_lintegral_enorm hmeas, eLpNorm_one_eq_lintegral_enorm hmeas]
   have h2 : eLpNorm (W : ℝ → 𝕜) 1 unitIocMeasure
       ≤ eLpNorm (W : ℝ → 𝕜) 2 unitIocMeasure :=
-    eLpNorm_le_eLpNorm_of_exponent_le (by norm_num) hmeas
+    eLpNorm_le_eLpNorm_of_exponent_le (by norm_num)
   rw [h1, Lp.norm_def]
   exact ENNReal.toReal_mono (Lp.eLpNorm_ne_top W) h2
 
@@ -117,7 +117,9 @@ theorem ae_norm_secondPrimitive_coeFn_le (W : Lp 𝕜 2 unitIocMeasure) :
 theorem norm_secondPrimitiveLp_le (W : Lp 𝕜 2 unitIocMeasure) :
     ‖secondPrimitiveLp W‖ ≤ ‖W‖ := by
   rw [secondPrimitiveLp, Lp.norm_def]
-  have hbound := eLpNorm_le_of_ae_bound (p := 2) (ae_norm_secondPrimitive_coeFn_le W)
+  have hbound := eLpNorm_le_of_ae_bound (p := 2)
+    (memLp_secondPrimitive (integrable_coeFn W)).aestronglyMeasurable
+    (ae_norm_secondPrimitive_coeFn_le W)
   have hμ : (unitIocMeasure Set.univ) ^ ((2 : ℝ≥0∞).toReal)⁻¹ = 1 := by
     rw [measure_univ]
     simp
@@ -434,7 +436,7 @@ theorem norm_secondPrimitiveApprox_sub_le (n : ℕ) :
       with t h1 h2 h3
     rw [h1, Pi.sub_apply, h2, norm_sub_rev]
     exact h3
-  have hb := eLpNorm_le_of_ae_bound (p := 2) hae
+  have hb := eLpNorm_le_of_ae_bound (p := 2) (Lp.aestronglyMeasurable _) hae
   rw [measure_univ, ENNReal.one_rpow, one_mul] at hb
   rw [Lp.norm_def]
   calc (eLpNorm ((secondPrimitiveApprox n W - secondPrimitiveCLM W

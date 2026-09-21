@@ -213,7 +213,7 @@ theorem exists_continuous_integral_norm_sub_le (ν : Measure (spectrum ℂ a))
   -- names the application so the norm bound applies to it directly.
   change (∫ x, ‖f x - g x‖ ∂ν) ≤ ε
   have hint : ∫ x, ‖f x - g x‖ ∂ν = (eLpNorm (f - ⇑g) 1 ν).toReal := by
-    rw [eLpNorm_one_eq_lintegral_enorm,
+    rw [eLpNorm_one_eq_lintegral_enorm (hf.sub hgint).aestronglyMeasurable,
       integral_norm_eq_lintegral_enorm (μ := ν) (f := fun x => f x - g x)
         (hf.sub hgint).aestronglyMeasurable]
     rfl

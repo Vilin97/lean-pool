@@ -319,7 +319,7 @@ theorem norm_apply_le_of_gram_le (x : E) : ‖T x‖ ≤ ‖A x‖ := by
   have hAadj : adjoint A = A := by
     rw [← ContinuousLinearMap.star_eq_adjoint]; exact hA.star_eq
   have hpos : (A ∘L A - adjoint T ∘L T).IsPositive :=
-    (ContinuousLinearMap.le_def _ _).mp hle
+    ContinuousLinearMap.le_def.mp hle
   have hAA : ⟪x, A (A x)⟫_𝕜 = ⟪A x, A x⟫_𝕜 := by
     have h := adjoint_inner_right A x (A x)
     rwa [hAadj] at h

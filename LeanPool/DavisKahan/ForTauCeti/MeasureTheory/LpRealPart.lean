@@ -216,7 +216,8 @@ Mathlib supplies only the bound `‖L.compLp f‖ ≤ ‖L‖ * ‖f‖`. -/
 theorem norm_ofRealLp (f : Lp ℝ p μ) : ‖(ofRealLp f : Lp K p μ)‖ = ‖f‖ := by
   rw [Lp.norm_def, Lp.norm_def]
   congr 1
-  refine eLpNorm_congr_norm_ae ?_
+  refine eLpNorm_congr_norm_ae (Lp.aestronglyMeasurable (ofRealLp f : Lp K p μ))
+    (Lp.aestronglyMeasurable f) ?_
   filter_upwards [coeFn_ofRealLp (K := K) f] with x hx
   rw [hx, RCLike.norm_ofReal, Real.norm_eq_abs]
 

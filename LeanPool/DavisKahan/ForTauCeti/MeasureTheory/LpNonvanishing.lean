@@ -55,11 +55,13 @@ theorem exists_ae_ne_zero_memLp_two (ρ : Measure α) [SigmaFinite ρ] :
     ∃ f : α → ℂ, MemLp f 2 ρ ∧ ∀ x, f x ≠ 0 := by
   obtain ⟨w, hwpos, hwmeas, hwint⟩ :=
     MeasureTheory.exists_pos_lintegral_lt_of_sigmaFinite ρ (ε := 1) one_ne_zero
-  refine ⟨fun x => ((Real.sqrt (w x) : ℝ) : ℂ), ⟨?_, ?_⟩, ?_⟩
-  · exact (Complex.continuous_ofReal.measurable.comp
+  have hmeas : AEStronglyMeasurable (fun x => ((Real.sqrt (w x) : ℝ) : ℂ)) ρ :=
+    (Complex.continuous_ofReal.measurable.comp
       (Real.continuous_sqrt.measurable.comp
         (measurable_coe_nnreal_real.comp hwmeas))).aestronglyMeasurable
-  · rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num)]
+  refine ⟨fun x => ((Real.sqrt (w x) : ℝ) : ℂ), ?_, ?_⟩
+  · change eLpNorm (fun x => ((Real.sqrt (w x) : ℝ) : ℂ)) 2 ρ < ∞
+    rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num) hmeas]
     have hcongr : ∫⁻ x, ‖((Real.sqrt (w x) : ℝ) : ℂ)‖ₑ ^ ((2 : ℝ≥0∞).toReal) ∂ρ
         = ∫⁻ x, (w x : ℝ≥0∞) ∂ρ := by
       refine lintegral_congr fun x => ?_
