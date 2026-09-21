@@ -58,6 +58,11 @@ See [Challenge mode](CONTRIBUTING.md#challenge-mode) in `CONTRIBUTING.md`.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
+Import PRs can be refreshed automatically after other projects merge. The
+[rebase helper](python/lean_pool/rebase.py) resolves conflicts in the project registry
+and generated index, preserving module headers and public imports when the index uses them.
+Conflicts in proof files require a manual rebase.
+
 ### Credits
 
 Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io/) by [Vasily Ilin](https://github.com/Vilin97) and [Justin Asher](https://github.com/justincasher).
