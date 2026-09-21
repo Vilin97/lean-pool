@@ -67,15 +67,15 @@ theorem walsh_orthogonality (w v : ι → Bool) :
   rw [sum_prod_subsets]
   by_cases h : w = v
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     simp only [sgn_mul_self]
     norm_num [Finset.prod_const, Finset.card_univ]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     obtain ⟨i, hi⟩ : ∃ i, w i ≠ v i := by
       by_contra hc
       exact h (funext (fun i => not_not.1 (fun hne => hc ⟨i, hne⟩)))
     refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
-    rw [sgn_mul_sgn, if_neg hi]; ring
+    rw [sgn_mul_sgn, ite_eq_right hi]; ring
 
 /-- A weight function on `ι → Bool` is determined by its Walsh moments. -/
 theorem funext_of_walsh_moments (P Q : (ι → Bool) → ℝ)
@@ -97,7 +97,7 @@ theorem funext_of_walsh_moments (P Q : (ι → Bool) → ℝ)
         = (if w = v then (2 : ℝ) ^ (Fintype.card ι) else 0) * (P w - Q w) := by
       intro w; rw [← Finset.sum_mul, walsh_orthogonality]
     simp only [this]
-    simp only [ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   simp only [hzero, mul_zero, Finset.sum_const_zero] at key
   have h2 : (0:ℝ) < (2 : ℝ) ^ (Fintype.card ι) := by positivity
   have : P v - Q v = 0 := by
@@ -339,8 +339,8 @@ theorem prod_ite_mem_const {ι : Type*} [Fintype ι] [DecidableEq ι] (S : Finse
     ∏ v : ι, (if v ∈ S then A else B) = A ^ S.card * B ^ (Fintype.card ι - S.card) := by
   rw [← Finset.prod_mul_prod_compl S (fun v => if v ∈ S then A else B)]
   congr 1
-  · rw [Finset.prod_congr rfl (fun v hv => if_pos hv), Finset.prod_const]
-  · rw [Finset.prod_congr rfl (fun v hv => if_neg (Finset.mem_compl.1 hv)), Finset.prod_const,
+  · rw [Finset.prod_congr rfl (fun v hv => ite_eq_left hv), Finset.prod_const]
+  · rw [Finset.prod_congr rfl (fun v hv => ite_eq_right (Finset.mem_compl.1 hv)), Finset.prod_const,
       Finset.card_compl]
 
 theorem card_triSign (t : ℕ) : Fintype.card (TriSign t) = 3 * t := by
@@ -373,8 +373,8 @@ theorem sum_walsh_triProd (t : ℕ) (q : ℝ) (S : Finset (TriSign t)) :
   rw [sum_walsh_mul_prod S (fun _ b => triAtom q b), ← prod_two_zeta t q S]
   refine Finset.prod_congr rfl (fun v _ => ?_)
   by_cases hv : v ∈ S
-  · simp only [if_pos hv, triAtom_sub]
-  · simp only [if_neg hv, triAtom_add]
+  · simp only [ite_eq_left hv, triAtom_sub]
+  · simp only [ite_eq_right hv, triAtom_add]
 
 /-- The family factor as a product over all auxiliary signs. -/
 theorem triFactor_as_prod (t : ℕ) (q : ℝ) (s : TriSign t → Bool) (g : Fin 3) :
@@ -389,7 +389,7 @@ theorem triFactor_as_prod (t : ℕ) (q : ℝ) (s : TriSign t → Bool) (g : Fin 
     · simp [h]
   rw [Finset.prod_congr rfl (fun g' (_ : g' ∈ (Finset.univ : Finset (Fin 3))) => hstep g'),
     Finset.prod_ite_eq' (Finset.univ : Finset (Fin 3)) g
-      (fun g' => ∏ i : Fin t, triAtom q (s (g', i))), if_pos (Finset.mem_univ g)]
+      (fun g' => ∏ i : Fin t, triAtom q (s (g', i))), ite_eq_left (Finset.mem_univ g)]
   rfl
 
 /-- The Walsh moment of a single family factor: zero unless `S` lies inside that family. -/
@@ -399,22 +399,22 @@ theorem sum_walsh_triFactor (t : ℕ) (q : ℝ) (S : Finset (TriSign t)) (g : Fi
   simp only [triFactor_as_prod]
   rw [sum_walsh_mul_prod S (fun v b => if v.1 = g then triAtom q b else 1)]
   by_cases hS : ∀ v ∈ S, v.1 = g
-  · rw [if_pos hS, ← prod_two_zeta t q S]
+  · rw [ite_eq_left hS, ← prod_two_zeta t q S]
     refine Finset.prod_congr rfl (fun v _ => ?_)
     by_cases hv : v ∈ S
-    · simp only [if_pos hv, if_pos (hS v hv), triAtom_sub]
-    · simp only [if_neg hv]
+    · simp only [ite_eq_left hv, ite_eq_left (hS v hv), triAtom_sub]
+    · simp only [ite_eq_right hv]
       by_cases hg : v.1 = g
-      · simp only [if_pos hg, triAtom_add]
-      · simp only [if_neg hg]; norm_num
-  · rw [if_neg hS]
+      · simp only [ite_eq_left hg, triAtom_add]
+      · simp only [ite_eq_right hg]; norm_num
+  · rw [ite_eq_right hS]
     obtain ⟨v, hvS, hvg⟩ : ∃ v ∈ S, v.1 ≠ g := by
       by_contra hc
       exact hS (fun v hv => by
         by_contra h
         exact hc ⟨v, hv, h⟩)
     refine Finset.prod_eq_zero (Finset.mem_univ v) ?_
-    simp only [if_pos hvS, if_neg hvg]
+    simp only [ite_eq_left hvS, ite_eq_right hvg]
     ring
 
 /-- The Walsh moment of the constant density. -/
@@ -426,11 +426,11 @@ theorem sum_walsh_triOne (t : ℕ) (S : Finset (TriSign t)) :
   rw [hb]
   by_cases hS : S = ∅
   · subst hS
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     simp only [Finset.prod_const, Finset.card_univ, card_triSign, Finset.notMem_empty,
-      if_false]
+      ite_false]
     norm_num
-  · rw [if_neg hS]
+  · rw [ite_eq_right hS]
     obtain ⟨v, hv⟩ := Finset.nonempty_iff_ne_empty.2 hS
     refine Finset.prod_eq_zero (Finset.mem_univ v) ?_
     simp [hv]
@@ -476,12 +476,12 @@ theorem triW_moment (t : ℕ) (q : ℝ) (hq : 0 ≤ q) (S : Finset (TriSign t)) 
   · subst hS
     have htriv : ∀ g : Fin 3, ∀ v ∈ (∅ : Finset (TriSign t)), v.1 = g := by
       intro g v hv; exact absurd hv (Finset.notMem_empty v)
-    rw [if_pos (htriv 0), if_pos (htriv 1), if_pos (htriv 2), if_pos rfl, hA, hone,
-      triCoeff, if_pos rfl]
+    rw [ite_eq_left (htriv 0), ite_eq_left (htriv 1), ite_eq_left (htriv 2), ite_eq_left rfl, hA, hone,
+      triCoeff, ite_eq_left rfl]
     simp only [Finset.card_empty, triMom]
     norm_num
     ring
-  · rw [triCoeff, if_neg hS, if_neg hS]
+  · rw [triCoeff, ite_eq_right hS, ite_eq_right hS]
     obtain ⟨v₀, hv₀⟩ := Finset.nonempty_iff_ne_empty.2 hS
     by_cases hone' : ∃ g : Fin 3, ∀ v ∈ S, v.1 = g
     · obtain ⟨g₀, hg₀⟩ := hone'
@@ -491,7 +491,7 @@ theorem triW_moment (t : ℕ) (q : ℝ) (hq : 0 ≤ q) (S : Finset (TriSign t)) 
         · intro h; rw [← h v₀ hv₀, hg₀ v₀ hv₀]
         · rintro rfl; exact hg₀
       rw [if_congr (hiff 0) rfl rfl, if_congr (hiff 1) rfl rfl, if_congr (hiff 2) rfl rfl,
-        if_pos (⟨g₀, hg₀⟩ : ∃ g : Fin 3, ∀ v ∈ S, v.1 = g)]
+        ite_eq_left (⟨g₀, hg₀⟩ : ∃ g : Fin 3, ∀ v ∈ S, v.1 = g)]
       have hsum : ∀ X : ℂ,
           (if (0 : Fin 3) = g₀ then X else 0).re + (if (1 : Fin 3) = g₀ then X else 0).re
             + (if (2 : Fin 3) = g₀ then X else 0).re = X.re := by
@@ -501,9 +501,9 @@ theorem triW_moment (t : ℕ) (q : ℝ) (hq : 0 ≤ q) (S : Finset (TriSign t)) 
       rw [hA]
       simp only [Complex.zero_re, mul_zero, add_zero]
       linear_combination (-4 : ℝ) * h3
-    · rw [if_neg hone']
+    · rw [ite_eq_right hone']
       have hz : ∀ g : Fin 3, ¬ (∀ v ∈ S, v.1 = g) := fun g h => hone' ⟨g, h⟩
-      rw [if_neg (hz 0), if_neg (hz 1), if_neg (hz 2), hA]
+      rw [ite_eq_right (hz 0), ite_eq_right (hz 1), ite_eq_right (hz 2), hA]
       simp
 
 /-- The density normalizes: `E W = 1` against the uniform sign cube. -/

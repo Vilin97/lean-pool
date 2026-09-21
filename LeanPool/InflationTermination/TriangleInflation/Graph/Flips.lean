@@ -130,12 +130,12 @@ theorem flipKernel_marginal {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintyp
     rw [Finset.prod_mul_distrib, Finset.prod_ite_mem, Finset.univ_inter, Finset.prod_boole]
     simp only [flipKernel]
     by_cases hcc : (∀ i ∈ s, ω i = Z i)
-    · rw [if_pos hcc, if_pos ((hcond ω).mpr hcc), one_mul]
-    · rw [if_neg hcc, if_neg (fun hh => hcc ((hcond ω).mp hh)), zero_mul]
+    · rw [ite_eq_left hcc, ite_eq_left ((hcond ω).mpr hcc), one_mul]
+    · rw [ite_eq_right hcc, ite_eq_right (fun hh => hcc ((hcond ω).mp hh)), zero_mul]
   have hstep : ∀ i, (∑ b, g i b) = if i ∈ s then (if x i = Z i then 1 - η else η) else 1 := by
     intro i
     rw [hg]
-    by_cases hi : i ∈ s <;> simp only [hi, if_true, if_false, Fintype.sum_bool] <;>
+    by_cases hi : i ∈ s <;> simp only [hi, ite_true, ite_false, Fintype.sum_bool] <;>
       cases hzi : Z i <;> cases hxi : x i <;> norm_num
   simp only [pushforward]
   rw [Finset.sum_congr rfl (fun ω _ => key ω), sum_prod_pi g,

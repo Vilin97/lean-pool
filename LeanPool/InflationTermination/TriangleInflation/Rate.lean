@@ -84,11 +84,11 @@ private theorem tensorPow_marg_two {n : ℕ} {P : ThreeBit → ℝ} (hP : ∑ w,
     intro i
     by_cases hi : i = l
     · subst hi
-      simp only [if_neg hlm, mul_one]
+      simp only [ite_eq_right hlm, mul_one]
       simp
     · by_cases hj : i = m
       · subst hj
-        simp only [if_neg hi, one_mul]
+        simp only [ite_eq_right hi, one_mul]
         simp
       · simp [hi, hj, hP]
   calc ∑ v : Fin n → ThreeBit, tensorPow n P v * φ (v l) * ψ (v m)
@@ -117,7 +117,7 @@ theorem sum_ind_eq (a b : ThreeBit) :
       = if a = b then (1:ℝ) else 0 := by
   rcases eq_or_ne a b with rfl | hne
   · simp
-  · rw [if_neg hne]
+  · rw [ite_eq_right hne]
     refine Finset.sum_eq_zero fun c _ => ?_
     rcases eq_or_ne a c with rfl | h
     · simp [Ne.symm hne]
@@ -530,9 +530,9 @@ private theorem expect_sq_le {n : ℕ} (hn : 1 ≤ n) {P : ThreeBit → ℝ} (hP
         ≤ (if p.1.1 ≠ p.2.1 ∧ p.1.2.1 ≠ p.2.2.1 ∧ p.1.2.2 ≠ p.2.2.2 then sqNorm P else 1) := by
     intro p
     by_cases hp : p.1.1 ≠ p.2.1 ∧ p.1.2.1 ≠ p.2.2.1 ∧ p.1.2.2 ≠ p.2.2.2
-    · rw [if_pos hp]
+    · rw [ite_eq_left hp]
       exact le_of_eq (marg_two hP hsym hdiag hp.1 hp.2.1 hp.2.2)
-    · rw [if_neg hp]
+    · rw [ite_eq_right hp]
       calc (∑ ω : Assign n, Γ ω
               * (if readTriangle p.1.1 p.1.2.1 p.1.2.2 ω = readTriangle p.2.1 p.2.2.1 p.2.2.2 ω
                   then (1:ℝ) else 0))

@@ -129,11 +129,13 @@ noncomputable def fam (t : ℕ) (q : ℝ) (s : κ × Fin t → Bool) (g : κ) : 
 noncomputable def sqW (t : ℕ) (q : ℝ) (s : κ × Fin t → Bool) : ℝ :=
   (∏ g, fam t q s g).re + 5 * ∑ g, (1 - (fam t q s g).re)
 
+omit [Fintype κ] [DecidableEq κ] in
 theorem fam_norm (q : ℝ) (hq : 0 ≤ q) (s : κ × Fin t → Bool) (g : κ) :
     ‖fam t q s g‖ = Real.sqrt (1 + q) ^ t := by
   rw [fam, norm_prod]
   simp [triAtom_norm q hq]
 
+omit [DecidableEq κ] in
 theorem prod_fam (q : ℝ) (s : κ × Fin t → Bool) :
     ∏ g, fam t q s g = ∏ v : κ × Fin t, triAtom q (s v) := by
   rw [Fintype.prod_prod_type]
@@ -154,8 +156,8 @@ theorem sum_walsh_prodFam (q : ℝ) (S : Finset (κ × Fin t)) :
   rw [sum_walsh_mul_prod S (fun _ b => triAtom q b), ← prod_two_zeta' q S]
   refine Finset.prod_congr rfl (fun v _ => ?_)
   by_cases hv : v ∈ S
-  · simp only [if_pos hv, triAtom_sub]
-  · simp only [if_neg hv, triAtom_add]
+  · simp only [ite_eq_left hv, triAtom_sub]
+  · simp only [ite_eq_right hv, triAtom_add]
 
 theorem fam_as_prod (q : ℝ) (s : κ × Fin t → Bool) (g : κ) :
     fam t q s g = ∏ v : κ × Fin t, (if v.1 = g then triAtom q (s v) else 1) := by
@@ -169,7 +171,7 @@ theorem fam_as_prod (q : ℝ) (s : κ × Fin t → Bool) (g : κ) :
     · simp [h]
   rw [Finset.prod_congr rfl (fun g' (_ : g' ∈ (Finset.univ : Finset κ)) => hstep g'),
     Finset.prod_ite_eq' (Finset.univ : Finset κ) g
-      (fun g' => ∏ i : Fin t, triAtom q (s (g', i))), if_pos (Finset.mem_univ g)]
+      (fun g' => ∏ i : Fin t, triAtom q (s (g', i))), ite_eq_left (Finset.mem_univ g)]
   rfl
 
 theorem sum_walsh_fam (q : ℝ) (S : Finset (κ × Fin t)) (g : κ) :
@@ -179,22 +181,22 @@ theorem sum_walsh_fam (q : ℝ) (S : Finset (κ × Fin t)) (g : κ) :
   simp only [fam_as_prod]
   rw [sum_walsh_mul_prod S (fun v b => if v.1 = g then triAtom q b else 1)]
   by_cases hS : ∀ v ∈ S, v.1 = g
-  · rw [if_pos hS, ← prod_two_zeta' q S]
+  · rw [ite_eq_left hS, ← prod_two_zeta' q S]
     refine Finset.prod_congr rfl (fun v _ => ?_)
     by_cases hv : v ∈ S
-    · simp only [if_pos hv, if_pos (hS v hv), triAtom_sub]
-    · simp only [if_neg hv]
+    · simp only [ite_eq_left hv, ite_eq_left (hS v hv), triAtom_sub]
+    · simp only [ite_eq_right hv]
       by_cases hg : v.1 = g
-      · simp only [if_pos hg, triAtom_add]
-      · simp only [if_neg hg]; norm_num
-  · rw [if_neg hS]
+      · simp only [ite_eq_left hg, triAtom_add]
+      · simp only [ite_eq_right hg]; norm_num
+  · rw [ite_eq_right hS]
     obtain ⟨v, hvS, hvg⟩ : ∃ v ∈ S, v.1 ≠ g := by
       by_contra hc
       exact hS (fun v hv => by
         by_contra h
         exact hc ⟨v, hv, h⟩)
     refine Finset.prod_eq_zero (Finset.mem_univ v) ?_
-    simp only [if_pos hvS, if_neg hvg]
+    simp only [ite_eq_left hvS, ite_eq_right hvg]
     ring
 
 /-- A set of signs is *spread* when it is empty or meets at least two families. -/
@@ -211,17 +213,17 @@ theorem fam_term_zero (q : ℝ) (S : Finset (κ × Fin t)) (hS : Spread S) (g : 
   · subst h0
     have htriv : ∀ v ∈ (∅ : Finset (κ × Fin t)), v.1 = g := by
       intro v hv; exact absurd hv (Finset.notMem_empty v)
-    rw [if_pos rfl, if_pos htriv]
+    rw [ite_eq_left rfl, ite_eq_left htriv]
     simp only [Finset.card_empty, pow_zero, mul_one]
     norm_cast
     simp
-  · rw [if_neg h0]
+  · rw [ite_eq_right h0]
     have hn : ¬ ∀ v ∈ S, v.1 = g := by
       intro hall
       obtain ⟨l, hl⟩ := Finset.nonempty_iff_ne_empty.2 h0
       obtain ⟨l', hl', hne⟩ := hS l hl
       exact hne (by rw [hall l hl, hall l' hl'])
-    rw [if_neg hn]
+    rw [ite_eq_right hn]
     simp
 
 theorem sqW_moment (q : ℝ) (hq : 0 ≤ q) (S : Finset (κ × Fin t)) (hS : Spread S) :
@@ -256,8 +258,8 @@ theorem sqDensity_moment (q : ℝ) (hq : 0 ≤ q) (S : Finset (κ × Fin t)) (hS
   have h2 : (2 : ℝ) ^ Fintype.card (κ × Fin t) ≠ 0 := by positivity
   rw [one_div_mul_cancel h2, one_mul, triMom]
   by_cases he : Even S.card
-  · rw [if_pos he, if_pos (Nat.even_iff.1 he)]
-  · rw [if_neg he, if_neg (fun h => he (Nat.even_iff.2 h))]
+  · rw [ite_eq_left he, ite_eq_left (Nat.even_iff.1 he)]
+  · rw [ite_eq_right he, ite_eq_right (fun h => he (Nat.even_iff.2 h))]
 
 theorem sqDensity_sum (q : ℝ) (hq : 0 ≤ q) :
     (∑ s : κ × Fin t → Bool, sqDensity t q s) = 1 := by
@@ -289,6 +291,7 @@ theorem sqDensity_nonneg (e : κ ≃ Fin 4) (q : ℝ) (hq0 : 0 ≤ q) (hq : (t :
   have : 0 ≤ sqW t q s := le_trans (by norm_num) this
   positivity
 
+omit [DecidableEq κ] in
 theorem sqDensity_perm (q : ℝ) (π : κ → Equiv.Perm (Fin t)) (s : κ × Fin t → Bool) :
     sqDensity t q (fun l => s (l.1, π l.1 l.2)) = sqDensity t q s := by
   have hf : ∀ g, fam t q (fun l => s (l.1, π l.1 l.2)) g = fam t q s g := fun g =>
@@ -356,8 +359,8 @@ theorem sqWit_isLaw (hm : 3 ≤ m) (e : (cycle m hm).Edge ≃ Fin 4) (q : ℝ) (
     (hq : (t : ℝ) * q ≤ 1 / 16) : IsLaw (sqWit hm t q) := by
   refine ⟨fun ω => Finset.sum_nonneg fun s _ => ?_, ?_⟩
   · by_cases h : parityRead s = ω
-    · rw [if_pos h]; exact sqDensity_nonneg e q hq0 hq s
-    · rw [if_neg h]
+    · rw [ite_eq_left h]; exact sqDensity_nonneg e q hq0 hq s
+    · rw [ite_eq_right h]
   · rw [sqWit, Sound.sum_pushforward]
     exact sqDensity_sum q hq0
 
@@ -374,8 +377,8 @@ theorem sqWit_symmetric (hm : 3 ≤ m) (q : ℝ) : GSymmetric t (sqWit hm t q) :
         = sqDensity t q s := sqDensity_perm q π s
     rw [parityRead_gLatentPerm, hd]
     by_cases h : parityRead s = ω
-    · rw [if_pos h, if_pos (congrArg _ h)]
-    · rw [if_neg h, if_neg (fun hc => h (gRelabel_injective π hc))]
+    · rw [ite_eq_left h, ite_eq_left (congrArg _ h)]
+    · rw [ite_eq_right h, ite_eq_right (fun hc => h (gRelabel_injective π hc))]
 
 theorem sqWit_diag_eq (hm : 3 ≤ m) (q : ℝ) (hq0 : 0 ≤ q) :
     pushforward (sqWit hm t q) readDiag = pushforward (parWit (cycle m hm) t q) readDiag := by
@@ -476,7 +479,7 @@ theorem square_linear_witness (t : ℕ) (ht : 1 ≤ t) (q : ℝ) (hq : q = 1 / (
   have htq : (t : ℝ) * q ≤ 1 / 16 := by
     rw [hq]; field_simp; norm_num
   have e : (cycle 4 h4).Edge ≃ Fin 4 := Fintype.equivFinOfCardEq (card_cycle_edge h4)
-  show GAIFeasible (cycle 4 h4) t (cycleTarget 4 q)
+  change GAIFeasible (cycle 4 h4) t (cycleTarget 4 q)
   exact ⟨sqWit h4 t q, sqWit_isLaw h4 e q hq0 htq, sqWit_symmetric h4 q,
     by rw [sqWit_diag_eq h4 q hq0]; exact parWit_diag h4 q,
     fun S hS => by rw [sqWit_inj_eq h4 q hq0 S hS]; exact parWit_injectable h4 q S hS,

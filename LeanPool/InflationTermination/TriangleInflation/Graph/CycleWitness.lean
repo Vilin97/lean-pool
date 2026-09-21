@@ -50,7 +50,7 @@ theorem fourier_moment (c : Finset ι → ℝ) (F : Finset ι) :
     rw [← Finset.mul_sum, sum_prod_sgn]
   simp_rw [e2, ← Finset.bot_eq_empty, symmDiff_eq_bot, mul_ite, mul_zero]
   rw [Finset.sum_ite_eq' Finset.univ F (fun F' => c F' * (2 : ℝ) ^ Fintype.card ι)]
-  rw [if_pos (Finset.mem_univ _)]
+  rw [ite_eq_left (Finset.mem_univ _)]
   have h2 : ((1 : ℝ) / 2) ^ Fintype.card ι * (2 : ℝ) ^ Fintype.card ι = 1 := by
     rw [← mul_pow]; norm_num
   linear_combination (c F) * h2
@@ -158,7 +158,7 @@ theorem auxH_nonneg (q : ℝ) (hq0 : 0 ≤ q)
   refine fourier_nonneg _ ρ hρ0 (by simp) ?_ (one_add_pow_le_two hρ0 hNρ) s
   intro S _
   by_cases hS : Even S.card
-  · rw [if_pos hS]
+  · rw [ite_eq_left hS]
     obtain ⟨j, hj⟩ := hS
     have hcard : S.card / 2 = j := by omega
     rw [hcard, hj]
@@ -167,7 +167,7 @@ theorem auxH_nonneg (q : ℝ) (hq0 : 0 ≤ q)
     rw [this, ← hρsq]
     have hpow : ρ ^ (j + j) = (ρ * ρ) ^ j := by ring
     rw [hpow]
-  · rw [if_neg hS, abs_zero]
+  · rw [ite_eq_right hS, abs_zero]
     positivity
 
 end AuxH
@@ -243,18 +243,18 @@ theorem prod_sgn_parityRead (A : Finset (GObs Γ t)) (s : GLatent Γ t → Bool)
         rcases Nat.even_or_odd k with h | h
         · obtain ⟨j, hj⟩ := h
           have : k % 2 = 0 := Nat.even_iff.1 ⟨j, hj⟩
-          rw [if_neg (by omega), hj, ← two_mul, pow_mul]
+          rw [ite_eq_right (by omega), hj, ← two_mul, pow_mul]
           have : sgn (s l) ^ 2 = 1 := by rw [pow_two]; exact hsq
           rw [this, one_pow]
         · obtain ⟨j, hj⟩ := h
           have hmod : k % 2 = 1 := Nat.odd_iff.1 ⟨j, hj⟩
-          rw [if_pos hmod, hj, pow_add, pow_mul]
+          rw [ite_eq_left hmod, hj, pow_add, pow_mul]
           have : sgn (s l) ^ 2 = 1 := by rw [pow_two]; exact hsq
           rw [this, one_pow, one_mul, pow_one]
       rw [hpow]
       by_cases h : l ∈ latBd A
-      · rw [if_pos h, if_pos (mem_latBd.1 h)]
-      · rw [if_neg h, if_neg (fun hc => h (mem_latBd.2 hc))]
+      · rw [ite_eq_left h, ite_eq_left (mem_latBd.1 h)]
+      · rw [ite_eq_right h, ite_eq_right (fun hc => h (mem_latBd.2 hc))]
   rw [Finset.prod_congr rfl fun l _ => e2 l, ← prod_sgn_eq_prod_univ]
 
 
@@ -290,8 +290,8 @@ theorem parWit_nonneg (q : ℝ) (hq0 : 0 ≤ q)
     0 ≤ parWit Γ t q ω := by
   refine Finset.sum_nonneg fun s _ => ?_
   by_cases h : parityRead s = ω
-  · rw [if_pos h]; exact auxH_nonneg q hq0 hq s
-  · rw [if_neg h]
+  · rw [ite_eq_left h]; exact auxH_nonneg q hq0 hq s
+  · rw [ite_eq_right h]
 
 theorem parWit_sum (q : ℝ) : (∑ ω : GAssign Γ t, parWit Γ t q ω) = 1 := by
   rw [parWit, Sound.sum_pushforward]
@@ -317,7 +317,7 @@ theorem parityRead_gLatentPerm (π : Γ.Edge → Equiv.Perm (Fin t)) (s : GLaten
       = ((gAncestors o).filter (fun l => s (Sound.gLatentPerm π l) = true)).card := by
     rw [gAncestors_gPerm, Finset.filter_image]
     exact Finset.card_image_of_injective _ hinj
-  show decide (_ % 2 = 1) = parityRead s (gPerm π o)
+  change decide (_ % 2 = 1) = parityRead s (gPerm π o)
   rw [parityRead]
   simp only
   rw [hkey]
@@ -343,8 +343,8 @@ theorem parWit_symmetric (q : ℝ) : GSymmetric t (parWit Γ t q) := by
     · funext l; simp
   · rw [parityRead_gLatentPerm, auxH_perm]
     by_cases h : parityRead s = ω
-    · rw [if_pos h, if_pos (congrArg _ h)]
-    · rw [if_neg h, if_neg (fun hc => h (gRelabel_injective π hc))]
+    · rw [ite_eq_left h, ite_eq_left (congrArg _ h)]
+    · rw [ite_eq_right h, ite_eq_right (fun hc => h (gRelabel_injective π hc))]
 
 /-! ### The latent boundary of an ancestrally disjoint family -/
 
@@ -424,7 +424,7 @@ def cyclePrev (v : Fin m) : Fin m := ⟨(v.val + (m - 1)) % m, Nat.mod_lt _ v.po
 theorem cycleNext_cyclePrev (v : Fin m) : cycleNext (cyclePrev v) = v := by
   have hm : 0 < m := v.pos
   refine Fin.ext ?_
-  show ((v.val + (m - 1)) % m + 1) % m = v.val
+  change ((v.val + (m - 1)) % m + 1) % m = v.val
   rw [Nat.mod_add_mod]
   have h : v.val + (m - 1) + 1 = v.val + m := by omega
   rw [h, Nat.add_mod_right, Nat.mod_eq_of_lt v.isLt]
@@ -432,7 +432,7 @@ theorem cycleNext_cyclePrev (v : Fin m) : cycleNext (cyclePrev v) = v := by
 theorem cyclePrev_cycleNext (v : Fin m) : cyclePrev (cycleNext v) = v := by
   have hm : 0 < m := v.pos
   refine Fin.ext ?_
-  show ((v.val + 1) % m + (m - 1)) % m = v.val
+  change ((v.val + 1) % m + (m - 1)) % m = v.val
   rw [Nat.mod_add_mod]
   have h : v.val + 1 + (m - 1) = v.val + m := by omega
   rw [h, Nat.add_mod_right, Nat.mod_eq_of_lt v.isLt]
@@ -471,7 +471,7 @@ theorem cycleAdj_next (hm : 2 ≤ m) (v : Fin m) : (cycleAdj m).Adj v (cycleNext
 /-- The source of the cycle recorded by its lower endpoint: the edge `{j, j+1}`. -/
 def ce (hm : 3 ≤ m) (j : Fin m) : (cycle m hm).Edge :=
   ⟨s(j, cycleNext j), by
-    show s(j, cycleNext j) ∈ (cycleAdj m).edgeFinset
+    change s(j, cycleNext j) ∈ (cycleAdj m).edgeFinset
     simp only [SimpleGraph.mem_edgeFinset, SimpleGraph.mem_edgeSet]
     exact cycleAdj_next (by omega) j⟩
 
@@ -505,7 +505,7 @@ theorem ce_surjective (hm : 3 ≤ m) (e : (cycle m hm).Edge) : ∃ j, e = ce hm 
     · refine ⟨b, Subtype.ext ?_⟩
       have ha : a = cycleNext b := Fin.ext h.symm
       subst ha
-      show s(cycleNext b, b) = s(b, cycleNext b)
+      change s(cycleNext b, b) = s(b, cycleNext b)
       exact Sym2.eq_swap
 
 theorem mem_inc_iff {Γ : PairGraph} (v : Γ.V) (e : Γ.Edge) :
@@ -564,14 +564,14 @@ theorem mem_gAncestors_copyObs (hm : 3 ≤ m) {t : ℕ} (ι : (cycle m hm).Edge 
   · rintro ⟨hr, hv | hv⟩
     · refine ⟨incPrev hm v, Finset.mem_univ _, ?_⟩
       have hfst : (incPrev hm v).1 = ce hm j := by
-        show ce hm (cyclePrev v) = ce hm j
+        change ce hm (cyclePrev v) = ce hm j
         rw [hv, cyclePrev_cycleNext]
       have hval : (copyObs ι v).2 (incPrev hm v) = ι (incPrev hm v).1 := rfl
       rw [Prod.ext_iff]
       exact ⟨hfst, by rw [hval, hfst, hr]⟩
     · refine ⟨incSelf hm v, Finset.mem_univ _, ?_⟩
       have hfst : (incSelf hm v).1 = ce hm j := by
-        show ce hm v = ce hm j
+        change ce hm v = ce hm j
         rw [hv]
       have hval : (copyObs ι v).2 (incSelf hm v) = ι (incSelf hm v).1 := rfl
       rw [Prod.ext_iff]
@@ -642,12 +642,12 @@ theorem count_copy (hm : 3 ≤ m) (ι : (cycle m hm).Edge → Fin t)
     exact h
   rw [hcongr]
   by_cases hr : r = ι (ce hm j)
-  · rw [if_pos hr]
+  · rw [ite_eq_left hr]
     simp only [vertSet]
     rw [card_filter_image A _ (fst_injOn hm hA)]
     refine congrArg Finset.card (Finset.filter_congr fun o _ => ?_)
     simp [hr]
-  · rw [if_neg hr, Finset.card_eq_zero, Finset.filter_eq_empty_iff]
+  · rw [ite_eq_right hr, Finset.card_eq_zero, Finset.filter_eq_empty_iff]
     intro o _ hc
     exact hr hc.1
 
@@ -662,28 +662,28 @@ theorem latBd_copy (hm : 3 ≤ m) (ι : (cycle m hm).Edge → Fin t)
   · intro h
     have hr : l.2 = ι (ce hm j) := by
       by_contra hc
-      rw [if_neg hc] at h
+      rw [ite_eq_right hc] at h
       omega
-    rw [if_pos hr, card_filter_pair (vertSet hm A) (cycleNext j) j (cycleNext_ne (by omega) j)]
+    rw [ite_eq_left hr, card_filter_pair (vertSet hm A) (cycleNext j) j (cycleNext_ne (by omega) j)]
       at h
     refine ⟨j, ?_, by rw [hr]⟩
     rw [mem_cycleBoundary]
     by_cases h1 : j ∈ vertSet hm A <;> by_cases h2 : cycleNext j ∈ vertSet hm A
-    · rw [if_pos h2, if_pos h1] at h; omega
+    · rw [ite_eq_left h2, ite_eq_left h1] at h; omega
     · exact fun hiff => h2 (hiff.1 h1)
     · exact fun hiff => h1 (hiff.2 h2)
-    · rw [if_neg h2, if_neg h1] at h; omega
+    · rw [ite_eq_right h2, ite_eq_right h1] at h; omega
   · rintro ⟨j', hj', heq⟩
     have hjj : j' = j := ce_injective hm (congrArg Prod.fst heq)
     subst hjj
     have hr : l.2 = ι (ce hm j') := (congrArg Prod.snd heq).symm
-    rw [if_pos hr, card_filter_pair (vertSet hm A) (cycleNext j') j'
+    rw [ite_eq_left hr, card_filter_pair (vertSet hm A) (cycleNext j') j'
       (cycleNext_ne (by omega) j')]
     rw [mem_cycleBoundary] at hj'
     by_cases h1 : j' ∈ vertSet hm A <;> by_cases h2 : cycleNext j' ∈ vertSet hm A
     · exact absurd (Iff.intro (fun _ => h2) (fun _ => h1)) hj'
-    · rw [if_neg h2, if_pos h1]
-    · rw [if_pos h2, if_neg h1]
+    · rw [ite_eq_right h2, ite_eq_left h1]
+    · rw [ite_eq_left h2, ite_eq_right h1]
     · exact absurd (Iff.intro (fun hc => absurd hc h1) (fun hc => absurd hc h2)) hj'
 
 theorem latBd_copy_card (hm : 3 ≤ m) (ι : (cycle m hm).Edge → Fin t)
@@ -725,7 +725,7 @@ theorem parWit_block_moment (hm : 3 ≤ m) (q : ℝ) (ι : (cycle m hm).Edge →
     {A : Finset (GObs (cycle m hm) t)} (hA : A ⊆ copySet ι) :
     (∑ ω : GAssign (cycle m hm) t, parWit (cycle m hm) t q ω * ∏ o ∈ A, sgn (ω o))
       = (-q) ^ ((cycleBoundary m (vertSet hm A)).card / 2) := by
-  rw [parWit_moment, latBd_copy_card hm ι hA, if_pos (cycleBoundary_card_even _)]
+  rw [parWit_moment, latBd_copy_card hm ι hA, ite_eq_left (cycleBoundary_card_even _)]
 
 theorem parWit_family_moment (hm : 3 ≤ m) (q : ℝ) {n : Type*} [Fintype n] [DecidableEq n]
     (A : n → Finset (GObs (cycle m hm) t)) (ιf : n → (cycle m hm).Edge → Fin t)
@@ -741,7 +741,7 @@ theorem parWit_family_moment (hm : 3 ≤ m) (q : ℝ) {n : Type*} [Fintype n] [D
   have hsum : (∑ k : n, b k) = 2 * ∑ k : n, b k / 2 := by
     rw [Finset.mul_sum]
     exact Finset.sum_congr rfl fun k _ => by have := heven k; omega
-  rw [if_pos (by rw [hsum]; exact even_two_mul _), hsum,
+  rw [ite_eq_left (by rw [hsum]; exact even_two_mul _), hsum,
     show 2 * (∑ k : n, b k / 2) / 2 = ∑ k : n, b k / 2 by omega,
     ← Finset.prod_pow_eq_pow_sum]
 
@@ -782,7 +782,7 @@ theorem image_val_subset (hm : 3 ≤ m) {S : Finset (GObs (cycle m hm) t)} (B : 
   rw [← hp]
   exact p.2
 
-theorem val_inj_on {S : Finset (GObs (cycle m hm) t)} (B : Finset ↥S) :
+theorem val_inj_on {hm : 3 ≤ m} {S : Finset (GObs (cycle m hm) t)} (B : Finset ↥S) :
     ∀ _x ∈ B, ∀ _y ∈ B, (_x : ↥S).1 = (_y : ↥S).1 → _x = _y :=
   fun _ _ _ _ h => Subtype.ext h
 
@@ -980,7 +980,7 @@ theorem parWit_diag (hm : 3 ≤ m) (q : ℝ) :
       refine Finset.prod_congr rfl fun r _ => ?_
       rw [hFrowdef, Finset.prod_image (hfibinj r)]
       refine Finset.prod_congr rfl fun p hp => ?_
-      show sgn (u p.1 p.2) = _
+      change sgn (u p.1 p.2) = _
       rw [(Finset.mem_filter.1 hp).2]
       rfl
     have hstep : (∑ u : Fin t → (cycle m hm).V → Bool,

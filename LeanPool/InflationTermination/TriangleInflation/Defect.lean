@@ -98,7 +98,7 @@ theorem sum_prodLaw_mul_mul {w : ι → Bool → ℝ} (hw : ∀ i, IsLaw (w i))
     have hψm : ψ (mixOn I q.1 q.2) = ψ q.2 :=
       hψ _ _ fun i hi => mixOn_not_mem (Finset.disjoint_right.mp hIJ hi)
     have hp := prodLaw_mixOn_mul (w := w) I q.1 q.2
-    show (prodLaw w q.1 * φ q.1) * (prodLaw w q.2 * ψ q.2)
+    change (prodLaw w q.1 * φ q.1) * (prodLaw w q.2 * ψ q.2)
       = (prodLaw w (mixOn I q.1 q.2) * (φ (mixOn I q.1 q.2) * ψ (mixOn I q.1 q.2)))
           * prodLaw w (mixOn I q.2 q.1)
     rw [hφm, hψm]
@@ -201,9 +201,9 @@ theorem prod_ite_eq_ite_funext {n : ℕ} {β : Fin n → Type*} [∀ m, Decidabl
     (∏ m, if f m = g m then (1 : ℝ) else 0) = if f = g then 1 else 0 := by
   by_cases h : f = g
   · subst h; simp
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     obtain ⟨m, hm⟩ := Function.ne_iff.mp h
-    exact Finset.prod_eq_zero (mem_univ m) (if_neg hm)
+    exact Finset.prod_eq_zero (mem_univ m) (ite_eq_right hm)
 
 /-- The finite-family form: functions of pairwise disjoint coordinate sets are mutually
 independent under a product weight. -/

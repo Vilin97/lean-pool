@@ -93,19 +93,19 @@ private theorem pushforward_allFalse_true {ι : Type*} [Fintype ι] [DecidableEq
         = ∏ i, (if i ∈ S then (if x i = true then 0 else w i (x i)) else w i (x i)) := by
     intro x
     by_cases h : ∀ u ∈ S, x u = false
-    · rw [if_pos ((allFalse_eq_true S x).mpr h)]
+    · rw [ite_eq_left ((allFalse_eq_true S x).mpr h)]
       refine Finset.prod_congr rfl (fun i _ => ?_)
       by_cases hi : i ∈ S
-      · rw [if_pos hi, if_neg (by rw [h i hi]; simp)]
-      · rw [if_neg hi]
-    · rw [if_neg (fun hc => h ((allFalse_eq_true S x).mp hc))]
+      · rw [ite_eq_left hi, ite_eq_right (by rw [h i hi]; simp)]
+      · rw [ite_eq_right hi]
+    · rw [ite_eq_right (fun hc => h ((allFalse_eq_true S x).mp hc))]
       obtain ⟨u, hu, hxu⟩ : ∃ u ∈ S, x u ≠ false := by
         by_contra hc
         exact h (fun u hu => by
           by_contra hd
           exact hc ⟨u, hu, hd⟩)
       refine (Finset.prod_eq_zero (Finset.mem_univ u) ?_).symm
-      rw [if_pos hu, if_pos (by simpa using hxu)]
+      rw [ite_eq_left hu, ite_eq_left (by simpa using hxu)]
   rw [Finset.sum_congr rfl (fun x _ => key x),
     sum_prod_bool (fun i b => if i ∈ S then (if b = true then 0 else w i b) else w i b)]
   rw [show (∏ u ∈ S, w u false) = ∏ i ∈ Finset.univ, (if i ∈ S then w i false else 1) by
@@ -113,7 +113,7 @@ private theorem pushforward_allFalse_true {ι : Type*} [Fintype ι] [DecidableEq
   refine Finset.prod_congr rfl (fun i _ => ?_)
   by_cases hi : i ∈ S
   · simp [hi]
-  · simp only [hi, if_false, Fintype.sum_bool]
+  · simp only [hi, ite_false, Fintype.sum_bool]
     simpa [Fintype.sum_bool] using (hw i).2
 
 private theorem pushforward_allFalse {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -604,13 +604,13 @@ theorem defect_symmetric {t : ℕ} (ε s : ℝ) : SymmetricLaw t (defectLaw t ε
     (fun y => if outputsOf y = ω then prodLaw (rootWeight t ε s) y else 0)
     (fun x => if outputsOf x = relabel π ω then prodLaw (rootWeight t ε s) x else 0)
     (fun y => ?_)).symm
-  show (if outputsOf y = ω then prodLaw (rootWeight t ε s) y else 0)
+  change (if outputsOf y = ω then prodLaw (rootWeight t ε s) y else 0)
     = if outputsOf (fun u => y (rootPermEquiv π u)) = relabel π ω then
         prodLaw (rootWeight t ε s) (fun u => y (rootPermEquiv π u)) else 0
   rw [outputsOf_perm, prodLaw_perm]
   by_cases h : outputsOf y = ω
-  · rw [if_pos h, if_pos (by rw [h])]
-  · rw [if_neg h, if_neg (fun hc => h (relabel_injective π hc))]
+  · rw [ite_eq_left h, ite_eq_left (by rw [h])]
+  · rw [ite_eq_right h, ite_eq_right (fun hc => h (relabel_injective π hc))]
 
 /-! ## The diagonal (Lemma 5.9) -/
 

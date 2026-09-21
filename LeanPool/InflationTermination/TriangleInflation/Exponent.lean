@@ -71,7 +71,7 @@ private theorem sigmaEps_lt_half {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1) : sigmaE
 private theorem Peps_isLaw {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1) : IsLaw (Peps ε) := by
   have hσ0 := sigmaEps_pos h0
   have hσ1 := sigmaEps_lt_half h0 h1
-  show IsLaw (Q ε (1 - sigmaEps ε))
+  change IsLaw (Q ε (1 - sigmaEps ε))
   exact Q_isLaw h0.le h1.le (by linarith) (by linarith)
 
 /-- A downward parabola is positive strictly between its roots: if `m > 0`, `s ≥ 0` and
@@ -210,7 +210,7 @@ theorem Peps_aiFeasible {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) (t : ℕ) (ht
     calc 1 - ((t : ℝ) - 1) * ε = 1 + ((t : ℝ) - 1) * -ε := by ring
       _ ≤ (1 + -ε) ^ (t - 1) := h
       _ = (1 - ε) ^ (t - 1) := by ring_nf
-  show AIFeasible t (Q ε (1 - sigmaEps ε))
+  change AIFeasible t (Q ε (1 - sigmaEps ε))
   exact membership_AI t ht h0 hε1 (by linarith) (by linarith)
 
 /-- The Navascués–Wolfe form of the same lower bound. -/

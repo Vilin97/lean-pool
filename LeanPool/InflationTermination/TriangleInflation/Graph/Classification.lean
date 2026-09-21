@@ -147,8 +147,8 @@ private theorem flipKernel_nonneg {ι : Type} [Fintype ι] [DecidableEq ι] {η 
     (h0 : 0 ≤ η) (h1 : η ≤ 1) (x y : ι → Bool) : 0 ≤ flipKernel η x y :=
   Finset.prod_nonneg fun i _ => by
     rcases eq_or_ne (x i) (y i) with h | h
-    · rw [if_pos h]; linarith
-    · rw [if_neg h]; linarith
+    · rw [ite_eq_left h]; linarith
+    · rw [ite_eq_right h]; linarith
 
 private theorem sum_flipKernel {ι : Type} [Fintype ι] [DecidableEq ι] (η : ℝ) (x : ι → Bool) :
     ∑ y : ι → Bool, flipKernel η x y = 1 := by
@@ -190,10 +190,10 @@ theorem dTV_flipLaw_le {ι : Type} [Fintype ι] [DecidableEq ι] (η : ℝ) (h0 
         = |1 - flipKernel η x x| + ∑ y ∈ Finset.univ.erase x, flipKernel η x y := by
       rw [← Finset.add_sum_erase _ _ (Finset.mem_univ x)]
       congr 1
-      · rw [if_pos rfl]
+      · rw [ite_eq_left rfl]
       · refine Finset.sum_congr rfl fun y hy => ?_
         have hne : ¬ x = y := fun h => (Finset.ne_of_mem_erase hy) h.symm
-        rw [if_neg hne, zero_sub, abs_neg, abs_of_nonneg (hK0 x y)]
+        rw [ite_eq_right hne, zero_sub, abs_neg, abs_of_nonneg (hK0 x y)]
     have herase : ∑ y ∈ Finset.univ.erase x, flipKernel η x y = 1 - flipKernel η x x := by
       have := Finset.add_sum_erase Finset.univ (flipKernel η x) (Finset.mem_univ x)
       rw [sum_flipKernel] at this

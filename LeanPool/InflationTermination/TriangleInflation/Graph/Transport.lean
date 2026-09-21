@@ -64,7 +64,7 @@ theorem respMass_affine {ι : Type*} [Fintype ι] (w : ι → ℝ) (q : ι → �
     ∑ i, w i * respMass (q i) b = respMass (∑ i, w i * q i) b := by
   cases b
   · simp [respMass]
-  · simp only [respMass, if_true]
+  · simp only [respMass, ite_true]
     have h : ∀ i ∈ (Finset.univ : Finset ι), w i * (1 - q i) = w i - w i * q i :=
       fun i _ => by ring
     rw [Finset.sum_congr rfl h, Finset.sum_sub_distrib, hw]
@@ -349,30 +349,30 @@ noncomputable def vtxEquiv (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.
     refine ⟨?_, ?_⟩
     · funext u
       have h : ∃ u', φ u' = φ u := ⟨u, rfl⟩
-      rw [dif_pos h, hφ h.choose_spec]
+      rw [dite_eq_left h, hφ h.choose_spec]
     · funext v
-      rw [dif_neg v.2]
+      rw [dite_eq_right v.2]
   right_inv := by
     intro w
     funext v
     dsimp only
     by_cases h : ∃ u, φ u = v
-    · rw [dif_pos h]; exact congrArg w h.choose_spec
-    · rw [dif_neg h]
+    · rw [dite_eq_left h]; exact congrArg w h.choose_spec
+    · rw [dite_eq_right h]
 
 theorem vtxEquiv_phi (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Injective φ)
     (a : H.V → Bool) (b : {v : G.V // ¬ ∃ u, φ u = v} → Bool) (u : H.V) :
     vtxEquiv G H φ hφ (a, b) (φ u) = a u := by
   have h : ∃ u', φ u' = φ u := ⟨u, rfl⟩
-  show (if h : ∃ u', φ u' = φ u then a h.choose else _) = a u
-  rw [dif_pos h, hφ h.choose_spec]
+  change (if h : ∃ u', φ u' = φ u then a h.choose else _) = a u
+  rw [dite_eq_left h, hφ h.choose_spec]
 
 theorem vtxEquiv_out (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Injective φ)
     (a : H.V → Bool) (b : {v : G.V // ¬ ∃ u, φ u = v} → Bool)
     (v : {v : G.V // ¬ ∃ u, φ u = v}) :
     vtxEquiv G H φ hφ (a, b) v.1 = b v := by
-  show (if h : ∃ u', φ u' = v.1 then a h.choose else b ⟨v.1, h⟩) = b v
-  rw [dif_neg v.2]
+  change (if h : ∃ u', φ u' = v.1 then a h.choose else b ⟨v.1, h⟩) = b v
+  rw [dite_eq_right v.2]
 
 /-- Marginalizing a product over the vertices of `G` down to the vertices of `H`. -/
 theorem vtx_marginal (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Injective φ)
@@ -415,17 +415,17 @@ noncomputable def edgeValEquiv (G H : PairGraph) (φ : H.V → G.V) (hφ : Funct
     refine ⟨?_, ?_⟩
     · funext f
       have h : ∃ f' : H.Edge, edgeMap G H φ hind f' = edgeMap G H φ hind f := ⟨f, rfl⟩
-      rw [dif_pos h]
+      rw [dite_eq_left h]
       exact cast_inj_apply (edgeMap G H φ hind) (edgeMap_injective G H φ hφ hind) x h.choose_spec
     · funext r
-      rw [dif_neg r.2]
+      rw [dite_eq_right r.2]
   right_inv := by
     intro X
     funext g
     dsimp only
     by_cases h : ∃ f : H.Edge, edgeMap G H φ hind f = g
-    · rw [dif_pos h]; exact cast_pi_apply X h.choose_spec
-    · rw [dif_neg h]
+    · rw [dite_eq_left h]; exact cast_pi_apply X h.choose_spec
+    · rw [dite_eq_right h]
 
 theorem edgeValEquiv_left (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Injective φ)
     (hind : ∀ u v : H.V, H.G.Adj u v ↔ G.G.Adj (φ u) (φ v)) (M : GModel G)
@@ -433,9 +433,9 @@ theorem edgeValEquiv_left (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.I
     (f : H.Edge) :
     edgeValEquiv G H φ hφ hind M (x, z) (edgeMap G H φ hind f) = x f := by
   have h : ∃ f' : H.Edge, edgeMap G H φ hind f' = edgeMap G H φ hind f := ⟨f, rfl⟩
-  show (if h : ∃ f' : H.Edge, edgeMap G H φ hind f' = edgeMap G H φ hind f then
+  change (if h : ∃ f' : H.Edge, edgeMap G H φ hind f' = edgeMap G H φ hind f then
       cast (congrArg M.L h.choose_spec) (x h.choose) else _) = x f
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact cast_inj_apply (edgeMap G H φ hind) (edgeMap_injective G H φ hφ hind) x h.choose_spec
 
 theorem edgeValEquiv_right (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Injective φ)
@@ -443,9 +443,9 @@ theorem edgeValEquiv_right (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.
     (x : ∀ f : H.Edge, M.L (edgeMap G H φ hind f)) (z : ∀ r : Rest G H φ hind, M.L r.1)
     (r : Rest G H φ hind) :
     edgeValEquiv G H φ hφ hind M (x, z) r.1 = z r := by
-  show (if h : ∃ f' : H.Edge, edgeMap G H φ hind f' = r.1 then
+  change (if h : ∃ f' : H.Edge, edgeMap G H φ hind f' = r.1 then
       cast (congrArg M.L h.choose_spec) (x h.choose) else z ⟨r.1, h⟩) = z r
-  rw [dif_neg r.2]
+  rw [dite_eq_right r.2]
 
 theorem edgeValEquiv_prod (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Injective φ)
     (hind : ∀ u v : H.V, H.G.Adj u v ↔ G.G.Adj (φ u) (φ v)) (M : GModel G)
@@ -500,7 +500,7 @@ theorem restrictModel_law (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.I
       have hfun : (fun u => vtxEquiv G H φ hφ (wH, b) (φ u)) = wH :=
         funext (fun u => vtxEquiv_phi G H φ hφ wH b u)
       rw [hlaw]
-      show P (fun u => vtxEquiv G H φ hφ (wH, b) (φ u))
+      change P (fun u => vtxEquiv G H φ hφ (wH, b) (φ u))
           * (1/2 : ℝ) ^ (Fintype.card G.V - Fintype.card H.V)
         = P wH * (1/2 : ℝ) ^ (Fintype.card G.V - Fintype.card H.V)
       rw [hfun]
@@ -544,7 +544,7 @@ theorem restrictModel_law (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.I
         * ∏ u : H.V, respMass (M.resp (φ u) (fun e => X e.1)) (wH u)),
     Fintype.sum_prod_type,
     Finset.sum_congr rfl (fun x _ => Finset.sum_congr rfl (fun z _ => hterm x z))]
-  show (∑ x : (∀ f : H.Edge, M.L (edgeMap G H φ hind f)),
+  change (∑ x : (∀ f : H.Edge, M.L (edgeMap G H φ hind f)),
       (∏ f : H.Edge, M.μ (edgeMap G H φ hind f) (x f))
         * ∏ u : H.V, respMass ((restrictModel G H φ hφ hind M).resp u (fun e => x e.1)) (wH u))
     = _
@@ -612,7 +612,7 @@ theorem isLaw_pushforward {α β : Type*} [Fintype α] [Fintype β] [DecidableEq
   · by_cases hh : F a = b <;> simp [hh, h.1 a]
   · simp only [pushforward]
     rw [Finset.sum_comm]
-    simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact h.2
 
 /-- A product of laws is a law. -/
@@ -632,7 +632,7 @@ theorem pushforward_prod_apply {A B C D : Type*} [Fintype A] [Fintype B]
   simp only [pushforward, Fintype.sum_prod_type, ite_and, Finset.sum_mul]
   refine Finset.sum_congr rfl fun a _ => ?_
   by_cases h : K₁ a = c
-  · simp only [h, if_true, Finset.mul_sum]
+  · simp only [h, ite_true, Finset.mul_sum]
     exact Finset.sum_congr rfl fun b _ => by by_cases h2 : K₂ b = d <;> simp [h2]
   · simp [h]
 
@@ -671,8 +671,8 @@ theorem unifLaw_restrict {A B : Type*} [Fintype A] [DecidableEq A] [Fintype B] [
     have hiff : (∀ b ∈ (Finset.univ : Finset B), ξ (ρ b) = η b) ↔ ((fun b => ξ (ρ b)) = η) := by
       simp [funext_iff]
     by_cases hc : (fun b => ξ (ρ b)) = η
-    · rw [if_pos hc, if_pos (hiff.2 hc), mul_one]
-    · rw [if_neg hc, if_neg (fun h => hc (hiff.1 h)), mul_zero]
+    · rw [ite_eq_left hc, ite_eq_left (hiff.2 hc), mul_one]
+    · rw [ite_eq_right hc, ite_eq_right (fun h => hc (hiff.1 h)), mul_zero]
   rw [Finset.sum_congr rfl (fun ξ _ => key ξ),
     sum_prod_pi (ι := A) (α := fun _ => Bool)
       (fun a x => (1 / 2 : ℝ) * ∏ b : B, (if ρ b = a then (if x = η b then (1:ℝ) else 0) else 1))]
@@ -692,7 +692,7 @@ theorem unifLaw_restrict {A B : Type*} [Fintype A] [DecidableEq A] [Fintype B] [
             intro hc; exact hb (hρ (hc.trans hb₀.symm))
           simp [this]) (by simp)]
         simp [hb₀]
-      rw [if_pos ha]
+      rw [ite_eq_left ha]
       simp only [hp, Fintype.sum_bool]
       cases η b₀ <;> norm_num
     · have hp : ∀ x : Bool,
@@ -701,7 +701,7 @@ theorem unifLaw_restrict {A B : Type*} [Fintype A] [DecidableEq A] [Fintype B] [
         refine Finset.prod_eq_one fun b _ => ?_
         have : ρ b ≠ a := fun hc => ha (Finset.mem_image.2 ⟨b, Finset.mem_univ b, hc⟩)
         simp [this]
-      rw [if_neg ha]
+      rw [ite_eq_right ha]
       simp only [hp, Fintype.sum_bool]
       norm_num
   rw [Finset.prod_congr rfl (fun a _ => h3 a), ← Finset.prod_filter, Finset.prod_const]
@@ -773,7 +773,7 @@ theorem extAssign_in (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Inject
     (p : GAssign H t × (OutObs G H φ t → Bool)) (o : GObs G t) (u : H.V) (h : φ u = o.1) :
     extAssign G H φ hind t p o = p.1 (pullObs G H φ hind t o u h) := by
   have hr : InRange G H φ o.1 := ⟨u, h⟩
-  rw [extAssign, dif_pos hr]
+  rw [extAssign, dite_eq_left hr]
   exact congrArg p.1
     (pullObs_congr G H φ hind t o _ u hr.choose_spec h (hφ (hr.choose_spec.trans h.symm)))
 
@@ -781,7 +781,7 @@ theorem extAssign_out (G H : PairGraph) (φ : H.V → G.V)
     (hind : ∀ u v : H.V, H.G.Adj u v ↔ G.G.Adj (φ u) (φ v)) (t : ℕ)
     (p : GAssign H t × (OutObs G H φ t → Bool)) (o : GObs G t) (h : ¬ InRange G H φ o.1) :
     extAssign G H φ hind t p o = p.2 ⟨o, h⟩ := by
-  rw [extAssign, dif_neg h]
+  rw [extAssign, dite_eq_right h]
 
 
 /-! ## The transported witness -/
@@ -859,10 +859,10 @@ theorem readDiag_extAssign_iff (G H : PairGraph) (φ : H.V → G.V) (hφ : Funct
     funext r w
     by_cases hw : InRange G H φ w
     · obtain ⟨u, rfl⟩ := hw
-      show extAssign G H φ hind t p (copyObs (fun _ => r) (φ u)) = v r (φ u)
+      change extAssign G H φ hind t p (copyObs (fun _ => r) (φ u)) = v r (φ u)
       rw [extAssign_diag_in G H φ hφ hind t p r u]
       exact congrFun (congrFun h1 r) u
-    · show extAssign G H φ hind t p (copyObs (fun _ => r) w) = v r w
+    · change extAssign G H φ hind t p (copyObs (fun _ => r) w) = v r w
       rw [extAssign_diag_out G H φ hind t p r ⟨w, hw⟩]
       exact congrFun h2 (r, ⟨w, hw⟩)
 
@@ -966,7 +966,7 @@ theorem transport_symmetric (G H : PairGraph) (φ : H.V → G.V) (hφ : Function
   refine Finset.sum_congr rfl fun p _ => ?_
   have hν : transportSource G H φ t ΔH (srcPermEquiv G H φ hind t π p)
       = transportSource G H φ t ΔH p := by
-    show ΔH (gRelabel (fun f : H.Edge => π (edgeMap G H φ hind f)) p.1)
+    change ΔH (gRelabel (fun f : H.Edge => π (edgeMap G H φ hind f)) p.1)
         * unifLaw (OutObs G H φ t) _ = ΔH p.1 * unifLaw (OutObs G H φ t) p.2
     rw [hsym]
     rfl
@@ -989,13 +989,13 @@ theorem mergeVert_in (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Inject
     (q : (H.V → Bool) × (OutVert G H φ → Bool)) (u : H.V) :
     mergeVert G H φ q (φ u) = q.1 u := by
   have hr : InRange G H φ (φ u) := ⟨u, rfl⟩
-  rw [mergeVert, dif_pos hr]
+  rw [mergeVert, dite_eq_left hr]
   exact congrArg q.1 (hφ hr.choose_spec)
 
 theorem mergeVert_out (G H : PairGraph) (φ : H.V → G.V)
     (q : (H.V → Bool) × (OutVert G H φ → Bool)) (v : G.V) (h : ¬ InRange G H φ v) :
     mergeVert G H φ q v = q.2 ⟨v, h⟩ := by
-  rw [mergeVert, dif_neg h]
+  rw [mergeVert, dite_eq_right h]
 
 /-- Outcomes of `G` split as an `H`-outcome together with an outcome on the outside vertices. -/
 noncomputable def vertEquiv (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Injective φ) :
@@ -1073,8 +1073,8 @@ theorem readInjPart_apply (G H : PairGraph) (φ : H.V → G.V)
     (u : H.V) (hu : copyObs ι (φ u) ∈ S)
     (hy : copyObs (fun f : H.Edge => ι (edgeMap G H φ hind f)) u ∈ injPart G H φ hind t S ι) :
     readInjPart G H φ hind t S ι ψ ⟨_, hy⟩ = ψ ⟨copyObs ι (φ u), hu⟩ := by
-  show (if h : copyObs ι (φ u) ∈ S then ψ ⟨copyObs ι (φ u), h⟩ else false) = _
-  rw [dif_pos hu]
+  change (if h : copyObs ι (φ u) ∈ S then ψ ⟨copyObs ι (φ u), h⟩ else false) = _
+  rw [dite_eq_left hu]
 
 theorem injPart_injectable (G H : PairGraph) (φ : H.V → G.V)
     (hind : ∀ u v : H.V, H.G.Adj u v ↔ G.G.Adj (φ u) (φ v)) (t : ℕ)
@@ -1125,7 +1125,7 @@ theorem gRestrict_extAssign_iff (G H : PairGraph) (φ : H.V → G.V) (hφ : Func
       have hval : extAssign G H φ hind t p (copyObs ι (φ u)) = ψ ⟨copyObs ι (φ u), hu⟩ :=
         congrFun h ⟨copyObs ι (φ u), hu⟩
       rw [extAssign_copy_in G H φ hφ hind t ι p u] at hval
-      show p.1 (copyObs (fun f : H.Edge => ι (edgeMap G H φ hind f)) u) = _
+      change p.1 (copyObs (fun f : H.Edge => ι (edgeMap G H φ hind f)) u) = _
       rw [readInjPart_apply G H φ hind t S ι ψ u hu]
       exact hval
     · funext x
@@ -1133,15 +1133,15 @@ theorem gRestrict_extAssign_iff (G H : PairGraph) (φ : H.V → G.V) (hφ : Func
       have hmem : x.1 ∈ S := (Finset.mem_filter.1 hx).2
       have hval : extAssign G H φ hind t p x.1 = ψ ⟨x.1, hmem⟩ := congrFun h ⟨x.1, hmem⟩
       rw [extAssign_out G H φ hind t p x.1 x.2] at hval
-      show p.2 x = _
+      change p.2 x = _
       simp only [readOutPart]
-      rw [dif_pos hmem]
+      rw [dite_eq_left hmem]
       exact hval
   · rintro ⟨h1, h2⟩
     funext o
     obtain ⟨o, ho⟩ := o
     have hoc : o = copyObs ι o.1 := mem_copySet_self ι o (hS ho)
-    show extAssign G H φ hind t p o = ψ ⟨o, ho⟩
+    change extAssign G H φ hind t p o = ψ ⟨o, ho⟩
     by_cases hr : InRange G H φ o.1
     · obtain ⟨u, hu⟩ := hr
       have hou : o = copyObs ι (φ u) := by rw [hu]; exact hoc
@@ -1165,7 +1165,7 @@ theorem gRestrict_extAssign_iff (G H : PairGraph) (φ : H.V → G.V) (hφ : Func
       have h2' : p.2 ⟨o, hr⟩ = readOutPart G H φ t S ψ ⟨⟨o, hr⟩, hxmem⟩ :=
         congrFun h2 ⟨⟨o, hr⟩, hxmem⟩
       simp only [readOutPart] at h2'
-      rw [dif_pos ho] at h2'
+      rw [dite_eq_left ho] at h2'
       rw [extAssign_out G H φ hind t p o hr]
       exact h2'
 
@@ -1187,7 +1187,7 @@ theorem gPartyRead_mergeVert_iff (G H : PairGraph) (φ : H.V → G.V) (hφ : Fun
       have hval : mergeVert G H φ q (φ u) = ψ ⟨copyObs ι (φ u), hu⟩ :=
         congrFun h ⟨copyObs ι (φ u), hu⟩
       rw [mergeVert_in G H φ hφ q u] at hval
-      show q.1 u = _
+      change q.1 u = _
       rw [readInjPart_apply G H φ hind t S ι ψ u hu]
       exact hval
     · funext x
@@ -1196,15 +1196,15 @@ theorem gPartyRead_mergeVert_iff (G H : PairGraph) (φ : H.V → G.V) (hφ : Fun
       have hval : mergeVert G H φ q x.1 = ψ ⟨copyObs ι x.1, hmem⟩ :=
         congrFun h ⟨copyObs ι x.1, hmem⟩
       rw [mergeVert_out G H φ q x.1 x.2] at hval
-      show q.2 x = _
+      change q.2 x = _
       simp only [readOutVertPart]
-      rw [dif_pos hmem]
+      rw [dite_eq_left hmem]
       exact hval
   · rintro ⟨h1, h2⟩
     funext o
     obtain ⟨o, ho⟩ := o
     have hoc : o = copyObs ι o.1 := mem_copySet_self ι o (hS ho)
-    show mergeVert G H φ q o.1 = ψ ⟨o, ho⟩
+    change mergeVert G H φ q o.1 = ψ ⟨o, ho⟩
     by_cases hr : InRange G H φ o.1
     · obtain ⟨u, hu⟩ := hr
       have hou : o = copyObs ι (φ u) := by rw [hu]; exact hoc
@@ -1225,7 +1225,7 @@ theorem gPartyRead_mergeVert_iff (G H : PairGraph) (φ : H.V → G.V) (hφ : Fun
       have h2' : q.2 ⟨o.1, hr⟩ = readOutVertPart G H φ t S ι ψ ⟨⟨o.1, hr⟩, hxmem⟩ :=
         congrFun h2 ⟨⟨o.1, hr⟩, hxmem⟩
       simp only [readOutVertPart] at h2'
-      rw [dif_pos (by rw [← hoc]; exact ho : copyObs ι o.1 ∈ S)] at h2'
+      rw [dite_eq_left (by rw [← hoc]; exact ho : copyObs ι o.1 ∈ S)] at h2'
       rw [mergeVert_out G H φ q o.1 hr, h2']
       exact congrArg ψ (Subtype.ext hoc.symm)
 

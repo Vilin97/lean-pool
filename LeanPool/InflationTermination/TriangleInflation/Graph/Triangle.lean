@@ -70,19 +70,19 @@ def triEquiv (t : ℕ) : GObs triangleGraph t ≃ Obs t where
   left_inv := by
     rintro ⟨v, f⟩
     fin_cases v
-    · show (⟨(0 : Fin 3), fun e => if e = triInc0X then f triInc0X else f triInc0Z⟩ :
+    · change (⟨(0 : Fin 3), fun e => if e = triInc0X then f triInc0X else f triInc0Z⟩ :
         GObs triangleGraph t) = ⟨_, f⟩
       congr 1
       funext e
       rcases triInc0_cases e with h | h <;> subst h <;>
         simp [show ¬ (triInc0Z = triInc0X) by decide]
-    · show (⟨(1 : Fin 3), fun e => if e = triInc1X then f triInc1X else f triInc1Y⟩ :
+    · change (⟨(1 : Fin 3), fun e => if e = triInc1X then f triInc1X else f triInc1Y⟩ :
         GObs triangleGraph t) = ⟨_, f⟩
       congr 1
       funext e
       rcases triInc1_cases e with h | h <;> subst h <;>
         simp [show ¬ (triInc1Y = triInc1X) by decide]
-    · show (⟨(2 : Fin 3), fun e => if e = triInc2Z then f triInc2Z else f triInc2Y⟩ :
+    · change (⟨(2 : Fin 3), fun e => if e = triInc2Z then f triInc2Z else f triInc2Y⟩ :
         GObs triangleGraph t) = ⟨_, f⟩
       congr 1
       funext e
@@ -155,8 +155,8 @@ theorem tri_pushforward_equiv {α β γ δ : Type*} [Fintype α] [Fintype β] [D
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Equiv.symm_apply_apply, h a]
   by_cases hh : F a = ecd.symm d
-  · rw [if_pos (by rw [hh, Equiv.apply_symm_apply]), if_pos hh]
-  · rw [if_neg (fun hc => hh (by rw [← hc, Equiv.symm_apply_apply])), if_neg hh]
+  · rw [ite_eq_left (by rw [hh, Equiv.apply_symm_apply]), ite_eq_left hh]
+  · rw [ite_eq_right (fun hc => hh (by rw [← hc, Equiv.symm_apply_apply])), ite_eq_right hh]
 
 theorem tri_sum_transport {t : ℕ} (Δ : GAssign triangleGraph t → ℝ) :
     ∑ ω : Assign t, Δ ((triAssignEquiv t).symm ω) = ∑ ω : GAssign triangleGraph t, Δ ω :=
@@ -177,7 +177,7 @@ theorem tri_assign_symm_relabel {t : ℕ} (π : triangleGraph.Edge → Equiv.Per
     (triAssignEquiv t).symm (relabel (triPermEquiv t π) ω)
       = gRelabel π ((triAssignEquiv t).symm ω) := by
   funext o
-  show ω (Obs.perm (triPermEquiv t π) (triObs o)) = ω (triObs (gPerm π o))
+  change ω (Obs.perm (triPermEquiv t π) (triObs o)) = ω (triObs (gPerm π o))
   rw [triObs_gPerm]
 
 theorem tri_sym_transport {t : ℕ} (Δ : GAssign triangleGraph t → ℝ) :
@@ -191,7 +191,7 @@ theorem tri_sym_transport {t : ℕ} (Δ : GAssign triangleGraph t → ℝ) :
     exact hh
   · intro h π' ω'
     have hh := h ((triPermEquiv t).symm π') ((triAssignEquiv t).symm ω')
-    show Δ ((triAssignEquiv t).symm (relabel π' ω')) = Δ ((triAssignEquiv t).symm ω')
+    change Δ ((triAssignEquiv t).symm (relabel π' ω')) = Δ ((triAssignEquiv t).symm ω')
     rw [show π' = triPermEquiv t ((triPermEquiv t).symm π') from
       (Equiv.apply_symm_apply _ _).symm, tri_assign_symm_relabel]
     exact hh
@@ -213,7 +213,7 @@ theorem tri_symm_diag_C {t : ℕ} (r : Fin t) :
 theorem tri_readDiagonal_map {t : ℕ} (ω : GAssign triangleGraph t) :
     readDiagonal ((triAssignEquiv t) ω) = triDiagEquiv t (readDiag ω) := by
   funext r
-  show (ω ((triEquiv t).symm (Obs.A r r)), ω ((triEquiv t).symm (Obs.B r r)),
+  change (ω ((triEquiv t).symm (Obs.A r r)), ω ((triEquiv t).symm (Obs.B r r)),
     ω ((triEquiv t).symm (Obs.C r r))) = _
   rw [tri_symm_diag_A, tri_symm_diag_B, tri_symm_diag_C]
   rfl
@@ -263,7 +263,7 @@ theorem tri_restrictAssign_map {t : ℕ} (S : Finset (GObs triangleGraph t))
 theorem tri_partyRead_map {t : ℕ} (S : Finset (GObs triangleGraph t)) (w : Fin 3 → Bool) :
     partyRead ((triFinsetEquiv t) S) (threeBitEquiv w) = (triBoolEquiv S) (gPartyRead S w) := by
   funext v
-  show partyBit v.1.party (threeBitEquiv w) = w ((triEquiv t).symm v.1).1
+  change partyBit v.1.party (threeBitEquiv w) = w ((triEquiv t).symm v.1).1
   have h1 := tri_partyBit ((triEquiv t).symm v.1) (threeBitEquiv w)
   have h2 : triObs ((triEquiv t).symm v.1) = v.1 := (triEquiv t).apply_symm_apply v.1
   rw [h2, Equiv.symm_apply_apply] at h1
@@ -430,7 +430,7 @@ theorem tri_ancProd_transport {t : ℕ} (Δ : GAssign triangleGraph t → ℝ)
     rw [h2]
     refine Finset.prod_congr rfl fun m _ => ?_
     rw [tri_partyRead_pushforward]
-    show pushforward (fun w => P (threeBitEquiv w)) (gPartyRead (S m))
+    change pushforward (fun w => P (threeBitEquiv w)) (gPartyRead (S m))
       ((triBoolEquiv (S m)).symm ((triBoolEquiv (S m)) (φ m))) = _
     rw [Equiv.symm_apply_apply]
     rfl
@@ -630,7 +630,7 @@ theorem triOfModel_law (N : TriangleModel) (w : Fin 3 → Bool) :
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun b _ => ?_
-  show N.μX a * N.μZ b * N.μY c * respMass (N.f (a, b)) (w 0) * respMass (N.g (a, c)) (w 1) *
+  change N.μX a * N.μZ b * N.μY c * respMass (N.f (a, b)) (w 0) * respMass (N.g (a, c)) (w 1) *
       respMass (N.h (b, c)) (w 2) = _
   ring
 

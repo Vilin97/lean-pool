@@ -9986,7 +9986,6 @@ projects:
     provenance: AI
     main_declarations:
     - TriangleInflation.Graph.classification_NW
-    - TriangleInflation.no_finite_characterizing_order
     main_results:
     - declaration: TriangleInflation.Graph.classification_NW
       informal: A finite order of the Navascués–Wolfe hierarchy characterizes compatibility

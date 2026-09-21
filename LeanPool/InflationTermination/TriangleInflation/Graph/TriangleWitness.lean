@@ -200,13 +200,13 @@ theorem block_boundary (q : ℝ) (i j k : Fin t) (U : Finset (Obs t))
       triMom q B.card = tgt q U := by
   classical
   have hxz : ((0 : Fin 3), i).1 ≠ ((1 : Fin 3), j).1 := by
-    show (0 : Fin 3) ≠ 1
+    change (0 : Fin 3) ≠ 1
     decide
   have hxy : ((0 : Fin 3), i).1 ≠ ((2 : Fin 3), k).1 := by
-    show (0 : Fin 3) ≠ 2
+    change (0 : Fin 3) ≠ 2
     decide
   have hzy : ((1 : Fin 3), j).1 ≠ ((2 : Fin 3), k).1 := by
-    show (1 : Fin 3) ≠ 2
+    change (1 : Fin 3) ≠ 2
     decide
   rcases subset_triple (a := Obs.A i j) (b := Obs.B i k) (c := Obs.C j k) hU with
     rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
@@ -319,7 +319,7 @@ theorem triCoeff_eq_one (B : Finset (TriSign t))
     have hno : ¬ ∃ g : Fin 3, ∀ v ∈ B, v.1 = g := by
       rintro ⟨g, hg⟩
       exact hne ((hg a ha).trans (hg b hb).symm)
-    rw [triCoeff, if_neg hB, if_neg hno]
+    rw [triCoeff, ite_eq_right hB, ite_eq_right hno]
 
 /-- The witness law on the copied observations: the pushforward of the corrected density
 along `A^{ij} = x_i z_j`, `B^{ik} = x_i y_k`, `C^{jk} = z_j y_k`. -/
@@ -455,18 +455,18 @@ theorem triGamma_isLaw (t : ℕ) (q : ℝ) (hq0 : 0 ≤ q) (hq : (t : ℝ) * q �
 
 theorem triGamma_symmetric (t : ℕ) (q : ℝ) : SymmetricLaw t (triGamma t q) := by
   intro π ω
-  show ∑ s : TriSign t → Bool, (if triObs s = relabel π ω then triDensity t q s else 0)
+  change ∑ s : TriSign t → Bool, (if triObs s = relabel π ω then triDensity t q s else 0)
       = ∑ s : TriSign t → Bool, (if triObs s = ω then triDensity t q s else 0)
   rw [← Equiv.sum_comp (signPermFun π)
     (fun s => if triObs s = relabel π ω then triDensity t q s else 0)]
   refine Finset.sum_congr rfl (fun s _ => ?_)
-  show (if triObs (fun v => s (signPerm π v)) = relabel π ω then
+  change (if triObs (fun v => s (signPerm π v)) = relabel π ω then
       triDensity t q (fun v => s (signPerm π v)) else 0)
     = if triObs s = ω then triDensity t q s else 0
   rw [triObs_perm, triDensity_perm]
   by_cases h : triObs s = ω
-  · rw [if_pos h, if_pos (by rw [h])]
-  · rw [if_neg h, if_neg (fun hh => h (relabel_injective π hh))]
+  · rw [ite_eq_left h, ite_eq_left (by rw [h])]
+  · rw [ite_eq_right h, ite_eq_right (fun hh => h (relabel_injective π hh))]
 
 /-! ### The injectable marginals -/
 

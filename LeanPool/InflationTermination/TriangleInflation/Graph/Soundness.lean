@@ -54,9 +54,9 @@ theorem ite_funext_prod {B : κ → Type*} [∀ k, DecidableEq (B k)] (f g : ∀
     (if f = g then (1 : ℝ) else 0) = ∏ k, (if f k = g k then (1 : ℝ) else 0) := by
   by_cases h : f = g
   · subst h; simp
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     obtain ⟨k, hk⟩ := Function.ne_iff.mp h
-    exact (Finset.prod_eq_zero (mem_univ k) (if_neg hk)).symm
+    exact (Finset.prod_eq_zero (mem_univ k) (ite_eq_right hk)).symm
 
 /-- A dependent product weight pushed forward along a coordinatewise map. -/
 theorem sum_dprod_sel {A B : κ → Type*} [∀ k, Fintype (A k)] [∀ k, DecidableEq (B k)]
@@ -80,7 +80,7 @@ theorem sum_pushforward (w : α → ℝ) (F : α → β) : ∑ b, pushforward w 
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Finset.sum_eq_single (F a)]
   · simp
-  · exact fun b _ hb => if_neg (Ne.symm hb)
+  · exact fun b _ hb => ite_eq_right (Ne.symm hb)
   · intro h; exact absurd (mem_univ (F a)) h
 
 /-- Integrating against a pushforward is integrating the pullback. -/
@@ -91,7 +91,7 @@ theorem sum_mul_comp (w : α → ℝ) (F : α → β) (G : β → ℝ) :
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Finset.sum_eq_single (F a)]
   · simp
-  · exact fun b _ hb => by rw [if_neg (Ne.symm hb), zero_mul]
+  · exact fun b _ hb => by rw [ite_eq_right (Ne.symm hb), zero_mul]
   · intro h; exact absurd (mem_univ (F a)) h
 
 omit [Fintype β] in
@@ -128,7 +128,7 @@ theorem pushforward_prodLaw_sel {ι κ : Type*} [Fintype ι] [DecidableEq ι] [F
     intro k
     have hex : ∃ k', ν k' = ν k := ⟨k, rfl⟩
     have hb : c' (ν k) = if h : ∃ k', ν k' = ν k then c h.choose else false := rfl
-    rw [hb, dif_pos hex]
+    rw [hb, dite_eq_left hex]
     exact congrArg c (hν hex.choose_spec)
   set I : Finset ι := univ.image ν with hI
   have hind : ∀ x : ι → Bool,
@@ -144,8 +144,8 @@ theorem pushforward_prodLaw_sel {ι κ : Type*} [Fintype ι] [DecidableEq ι] [F
     intro x
     rw [Finset.prod_mul_distrib, Finset.prod_ite_mem, Finset.univ_inter, ← hind x]
     by_cases h : (fun k => x (ν k)) = c
-    · rw [if_pos h, if_pos h, mul_one]; rfl
-    · rw [if_neg h, if_neg h, mul_zero]
+    · rw [ite_eq_left h, ite_eq_left h, mul_one]; rfl
+    · rw [ite_eq_right h, ite_eq_right h, mul_zero]
   simp only [pushforward]
   rw [Finset.sum_congr rfl (fun x _ => hstep x),
     sum_pi_prod (fun (i : ι) (b : Bool) =>
@@ -154,12 +154,12 @@ theorem pushforward_prodLaw_sel {ι κ : Type*} [Fintype ι] [DecidableEq ι] [F
       = if i ∈ I then w i (c' i) else 1 := by
     intro i
     by_cases hi : i ∈ I
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       rw [Finset.sum_eq_single (c' i)]
       · simp
-      · exact fun b _ hb => by rw [if_neg hb, mul_zero]
+      · exact fun b _ hb => by rw [ite_eq_right hb, mul_zero]
       · intro h; exact absurd (mem_univ _) h
-    · simp only [hi, if_false, mul_one]
+    · simp only [hi, ite_false, mul_one]
       exact hw i
   rw [Finset.prod_congr rfl (fun i _ => hsum i), Finset.prod_ite_mem, Finset.univ_inter, hI,
     Finset.prod_image (fun a _ b _ h => hν h)]
@@ -232,7 +232,7 @@ theorem sum_dprod_mul_mul (hw : ∀ i, ∑ a, w i a = 1) {I J : Finset ι} (hIJ 
     have hψm : ψ (dmix I q.1 q.2) = ψ q.2 :=
       hψ _ _ fun i hi => dmix_not_mem (Finset.disjoint_right.mp hIJ hi)
     have hp := dprod_dmix_mul (w := w) I q.1 q.2
-    show (dprod w q.1 * φ q.1) * (dprod w q.2 * ψ q.2)
+    change (dprod w q.1 * φ q.1) * (dprod w q.2 * ψ q.2)
       = (dprod w (dmix I q.1 q.2) * (φ (dmix I q.1 q.2) * ψ (dmix I q.1 q.2)))
           * dprod w (dmix I q.2 q.1)
     rw [hφm, hψm]
@@ -308,12 +308,12 @@ theorem sum_sel_coord {B : Type*} [Fintype B] [DecidableEq B] {n : Type*} [Finty
       = if r = r₀ then ρ b₀ else 1 := by
     intro r
     by_cases hr : r = r₀
-    · simp only [hr, if_true]
+    · simp only [hr, ite_true]
       rw [Finset.sum_eq_single b₀]
       · simp
-      · exact fun b _ hb => by rw [if_neg hb, mul_zero]
+      · exact fun b _ hb => by rw [ite_eq_right hb, mul_zero]
       · intro h; exact absurd (mem_univ _) h
-    · simp only [hr, if_false, mul_one]; exact hρ
+    · simp only [hr, ite_false, mul_one]; exact hρ
   rw [Finset.prod_congr rfl (fun r _ => hcol r), Finset.prod_ite_eq' univ r₀ (fun _ => ρ b₀)]
   simp
 
@@ -472,11 +472,11 @@ def gCfgPerm (M : GModel Γ) (π : Γ.Edge → Equiv.Perm (Fin t)) : GCfg M t �
   invFun y := fun l => y (l.1, (π l.1).symm l.2)
   left_inv x := by
     funext l; obtain ⟨e, r⟩ := l
-    show x (e, (π e) ((π e).symm r)) = x (e, r)
+    change x (e, (π e) ((π e).symm r)) = x (e, r)
     rw [Equiv.apply_symm_apply]
   right_inv x := by
     funext l; obtain ⟨e, r⟩ := l
-    show x (e, (π e).symm ((π e) r)) = x (e, r)
+    change x (e, (π e).symm ((π e) r)) = x (e, r)
     rw [Equiv.symm_apply_apply]
 
 /-- The witness is a law. -/
@@ -698,7 +698,7 @@ theorem pushforward_id {α : Type*} [Fintype α] [DecidableEq α] (w : α → �
   simp only [pushforward, id]
   rw [Finset.sum_eq_single a]
   · simp
-  · exact fun b _ hb => if_neg hb
+  · exact fun b _ hb => ite_eq_right hb
   · intro h; exact absurd (mem_univ a) h
 
 theorem pushforward_prod {α β α' β' : Type*} [Fintype α] [Fintype β] [DecidableEq α']
@@ -727,7 +727,7 @@ theorem pushforward_subRestrict_self {A B : Finset (GObs Γ t)} (hAB : A ⊆ B) 
   rw [Finset.sum_eq_single b]
   · simp
   · intro χ _ hχ
-    exact if_neg fun h => hχ (subRestrict_injective hAB hBA h)
+    exact ite_eq_right fun h => hχ (subRestrict_injective hAB hBA h)
   · intro h; exact absurd (mem_univ b) h
 
 theorem empty_fun_eq (f g : ↥(∅ : Finset (GObs Γ t)) → Bool) : f = g :=
@@ -783,9 +783,9 @@ theorem pairSel_bijective {X Y : Finset (GObs Γ t)} (hXY : Disjoint X Y) :
       exact hm.resolve_left h
     · refine Prod.ext ?_ ?_
       · funext o
-        exact dif_pos o.2
+        exact dite_eq_left o.2
       · funext o
-        exact dif_neg (Finset.disjoint_right.mp hXY o.2)
+        exact dite_eq_right (Finset.disjoint_right.mp hXY o.2)
 
 /-- The two halves of a Bool-valued function on a disjoint union determine it. -/
 noncomputable def pairEquiv {X Y : Finset (GObs Γ t)} (hXY : Disjoint X Y) :
@@ -869,7 +869,7 @@ theorem glue_pair (hPsum : ∑ w, P w = 1)
       (subRestrict (sub_mid_union X Y ∅) ((pairEquiv hXY).symm (a, b))) = 1 := by
     simp only [pushforward]
     rw [Finset.sum_congr rfl (fun ψ _ =>
-      if_pos (empty_fun_eq (subRestrict (sub_mid_left X ∅) ψ)
+      ite_eq_left (empty_fun_eq (subRestrict (sub_mid_left X ∅) ψ)
         (subRestrict (sub_mid_union X Y ∅) ((pairEquiv hXY).symm (a, b)))))]
     exact hmass
   have hμ₁ : pushforward P (gPartyRead (X ∪ ∅)) (subRestrict (union_empty_sub X) a)
@@ -884,7 +884,7 @@ theorem glue_pair (hPsum : ∑ w, P w = 1)
     pushforward_subRestrict_self (union_empty_sub Y) (sub_union_empty Y) _ b
   rw [hW]
   simp only [glueLaw]
-  rw [hra, hrb, hmz, if_pos one_pos, div_one, hμ₁, hμ₂, hμYΔ]
+  rw [hra, hrb, hmz, ite_eq_left one_pos, div_one, hμ₁, hμ₂, hμYΔ]
 
 /-- With no blocks the ancestral-independence prescription is the total mass. -/
 theorem ancestral_zero (hlaw : IsLaw Δ) (S : Fin 0 → Finset (GObs Γ t)) :
@@ -894,7 +894,7 @@ theorem ancestral_zero (hlaw : IsLaw Δ) (S : Fin 0 → Finset (GObs Γ t)) :
   have h0 : ∀ ψ : (∀ m : Fin 0, ↥(S m) → Bool), ψ = φ := fun ψ => funext fun m => m.elim0
   have hsum : pushforward Δ (fun ω m => gRestrict (S m) ω) φ = ∑ ω, Δ ω := by
     simp only [pushforward]
-    exact Finset.sum_congr rfl fun ω _ => if_pos (h0 _)
+    exact Finset.sum_congr rfl fun ω _ => ite_eq_left (h0 _)
   rw [hsum, hlaw.2]
   simp
 

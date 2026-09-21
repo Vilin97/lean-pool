@@ -77,10 +77,10 @@ private theorem expect_diagCount {n : ℕ} {P : ThreeBit → ℝ} (hP : IsLaw P)
           Γ ω * (if readTriangle p.1 p.1 p.1 ω = readTriangle p.2 p.2 p.2 ω then (1:ℝ) else 0)
             = Γ ω := by
         intro ω
-        rw [h, if_pos rfl, mul_one]
-      rw [Finset.sum_congr rfl fun ω _ => h1 ω, hΓ.2, if_neg (by simpa using h)]
+        rw [h, ite_eq_left rfl, mul_one]
+      rw [Finset.sum_congr rfl fun ω _ => h1 ω, hΓ.2, ite_eq_right (by simpa using h)]
       ring
-    · rw [marg_two hP hsym hdiag h h h, if_pos h]
+    · rw [marg_two hP hsym hdiag h h h, ite_eq_left h]
       ring
   have hconst : (∑ _p : Fin n × Fin n, (1:ℝ)) = (n:ℝ) ^ 2 := by
     rw [Finset.sum_const, Finset.card_univ, Fintype.card_prod, Fintype.card_fin, nsmul_eq_mul]

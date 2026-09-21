@@ -285,24 +285,24 @@ theorem quant_rigidity (μX : X → ℝ) (μY : Y → ℝ) (μZ : Z → ℝ)
     rw [hυdef]
     dsimp only
     by_cases h : 0 ≤ u y + w y
-    · simp only [if_pos h, one_mul, abs_of_nonneg h]
-    · rw [if_neg h, abs_of_neg (not_le.1 h)]; ring
+    · simp only [ite_eq_left h, one_mul, abs_of_nonneg h]
+    · rw [ite_eq_right h, abs_of_neg (not_le.1 h)]; ring
   have hnn1 : ∀ y, 0 ≤ 1 - υ y * u y := by
     intro y
     have h1 := abs_le.1 (hu1 y)
     rw [hυdef]
     dsimp only
     by_cases h : 0 ≤ u y + w y
-    · simp only [if_pos h, one_mul]; linarith [h1.2]
-    · rw [if_neg h]; nlinarith [h1.1]
+    · simp only [ite_eq_left h, one_mul]; linarith [h1.2]
+    · rw [ite_eq_right h]; nlinarith [h1.1]
   have hnn2 : ∀ y, 0 ≤ 1 - υ y * w y := by
     intro y
     have h1 := abs_le.1 (hw1 y)
     rw [hυdef]
     dsimp only
     by_cases h : 0 ≤ u y + w y
-    · simp only [if_pos h, one_mul]; linarith [h1.2]
-    · rw [if_neg h]; nlinarith [h1.1]
+    · simp only [ite_eq_left h, one_mul]; linarith [h1.2]
+    · rw [ite_eq_right h]; nlinarith [h1.1]
   have hsum : av μY (fun y => (1 - υ y * u y) + (1 - υ y * w y)) ≤ 2 * ε + 2 * D := by
     have e1 : ∀ y, (1 - υ y * u y) + (1 - υ y * w y) ≤ 2 - 2 * (u y * w y) := by
       intro y
@@ -513,10 +513,10 @@ variable {m : ℕ}
 
 theorem cycleNext_val' (v : Fin m) :
     (cycleNext v).val = if v.val + 1 = m then 0 else v.val + 1 := by
-  show (v.val + 1) % m = _
+  change (v.val + 1) % m = _
   by_cases h : v.val + 1 = m
-  · rw [if_pos h, h, Nat.mod_self]
-  · rw [if_neg h, Nat.mod_eq_of_lt (by omega : v.val + 1 < m)]
+  · rw [ite_eq_left h, h, Nat.mod_self]
+  · rw [ite_eq_right h, Nat.mod_eq_of_lt (by omega : v.val + 1 < m)]
 
 theorem cycleNext_ne (hm : 2 ≤ m) (v : Fin m) : v ≠ cycleNext v := by
   intro h
@@ -589,16 +589,16 @@ variable {m}
 
 theorem cycleNext_cv0 (hm : 3 ≤ m) : cycleNext (cv0 m hm) = cv1 m hm := by
   refine Fin.ext ?_
-  show (0 + 1) % m = 1
+  change (0 + 1) % m = 1
   exact Nat.mod_eq_of_lt (by omega)
 
 theorem cycleNext_cv1 (hm : 3 ≤ m) : (cycleNext (cv1 m hm)).val = 2 := by
-  show (1 + 1) % m = 2
+  change (1 + 1) % m = 2
   exact Nat.mod_eq_of_lt (by omega)
 
 theorem cycleNext_cvl (hm : 3 ≤ m) : cycleNext (cvl m hm) = cv0 m hm := by
   refine Fin.ext ?_
-  show (m - 1 + 1) % m = 0
+  change (m - 1 + 1) % m = 0
   rw [show m - 1 + 1 = m by omega, Nat.mod_self]
 
 /-- Membership in the incidence set of the source recorded by `i`. -/
@@ -619,7 +619,7 @@ theorem inc_cv0 (hm : 3 ≤ m) (e : (cycle m hm).Edge) (h : e ∈ (cycle m hm).i
     rw [hcv] at hval
     have hpv : p = cvl m hm := by
       refine Fin.ext ?_
-      show p.val = m - 1
+      change p.val = m - 1
       split_ifs at hval with hif
       omega
     rw [h1, hpv]
@@ -637,7 +637,7 @@ theorem inc_cv1 (hm : 3 ≤ m) (e : (cycle m hm).Edge) (h : e ∈ (cycle m hm).i
     rw [hcv] at hval
     have hpv : p = cv0 m hm := by
       refine Fin.ext ?_
-      show p.val = 0
+      change p.val = 0
       split_ifs at hval with hif
       omega
     rw [h1, hpv]
@@ -698,39 +698,39 @@ theorem mem_pair01 (hm : 3 ≤ m) (u : Fin m) :
   exact or_congr Fin.val_inj.symm Fin.val_inj.symm
 
 theorem boundary_arcA (hm : 3 ≤ m) : (cycleBoundary m {cv0 m hm}).card = 2 := by
-  refine boundary_card_two hm _ (cv0 m hm) (cvl m hm) (by show (0:ℕ) ≠ m - 1; omega) ?_
+  refine boundary_card_two hm _ (cv0 m hm) (cvl m hm) (by change (0:ℕ) ≠ m - 1; omega) ?_
   intro v
   have hv := v.isLt
   have hnv := cycleNext_val' v
   rw [mem_arcA hm v, mem_arcA hm (cycleNext v)]
-  show _ ↔ (v.val = 0 ∨ v.val = m - 1)
+  change _ ↔ (v.val = 0 ∨ v.val = m - 1)
   by_cases hif : v.val + 1 = m
-  · rw [if_pos hif] at hnv; rw [hnv]; omega
-  · rw [if_neg hif] at hnv; rw [hnv]; omega
+  · rw [ite_eq_left hif] at hnv; rw [hnv]; omega
+  · rw [ite_eq_right hif] at hnv; rw [hnv]; omega
 
 theorem boundary_arcB (hm : 3 ≤ m) : (cycleBoundary m {cv1 m hm}).card = 2 := by
-  refine boundary_card_two hm _ (cv0 m hm) (cv1 m hm) (by show (0:ℕ) ≠ 1; omega) ?_
+  refine boundary_card_two hm _ (cv0 m hm) (cv1 m hm) (by change (0:ℕ) ≠ 1; omega) ?_
   intro v
   have hv := v.isLt
   have hnv := cycleNext_val' v
   rw [mem_arcB hm v, mem_arcB hm (cycleNext v)]
-  show _ ↔ (v.val = 0 ∨ v.val = 1)
+  change _ ↔ (v.val = 0 ∨ v.val = 1)
   by_cases hif : v.val + 1 = m
-  · rw [if_pos hif] at hnv; rw [hnv]; omega
-  · rw [if_neg hif] at hnv; rw [hnv]; omega
+  · rw [ite_eq_left hif] at hnv; rw [hnv]; omega
+  · rw [ite_eq_right hif] at hnv; rw [hnv]; omega
 
 theorem boundary_arcC (hm : 3 ≤ m) :
     (cycleBoundary m ({cv0 m hm, cv1 m hm} : Finset (Fin m))ᶜ).card = 2 := by
   rw [cycleBoundary_compl]
-  refine boundary_card_two hm _ (cv1 m hm) (cvl m hm) (by show (1:ℕ) ≠ m - 1; omega) ?_
+  refine boundary_card_two hm _ (cv1 m hm) (cvl m hm) (by change (1:ℕ) ≠ m - 1; omega) ?_
   intro v
   have hv := v.isLt
   have hnv := cycleNext_val' v
   rw [mem_pair01 hm v, mem_pair01 hm (cycleNext v)]
-  show _ ↔ (v.val = 1 ∨ v.val = m - 1)
+  change _ ↔ (v.val = 1 ∨ v.val = m - 1)
   by_cases hif : v.val + 1 = m
-  · rw [if_pos hif] at hnv; rw [hnv]; omega
-  · rw [if_neg hif] at hnv; rw [hnv]; omega
+  · rw [ite_eq_left hif] at hnv; rw [hnv]; omega
+  · rw [ite_eq_right hif] at hnv; rw [hnv]; omega
 
 end CycleGraph
 
@@ -908,7 +908,7 @@ theorem tri_reduction (M : GModel Γ) (hM : M.Valid)
     (fun s x => hbnd _ _) (fun s t => hbnd _ _)
     (fun x t => by
       rw [Finset.abs_prod]
-      exact Finset.prod_le_one (fun v _ => abs_nonneg _) (fun v _ => hbnd _ _))
+      exact Finset.prod_le_one₀ (fun v _ => abs_nonneg _) (fun v _ => hbnd _ _))
     r hAr hBr hCr
   rwa [hWeq] at key
 
@@ -964,7 +964,7 @@ theorem moment_transfer {α : Type*} [Fintype α] (P Q f : α → ℝ) (hf : ∀
 theorem abs_prod_sgn {α : Type*} [Fintype α] (F : Finset α) (w : α → Bool) :
     |∏ v ∈ F, sgn (w v)| ≤ 1 := by
   rw [Finset.abs_prod]
-  refine Finset.prod_le_one (fun v _ => abs_nonneg _) (fun v _ => ?_)
+  refine Finset.prod_le_one₀ (fun v _ => abs_nonneg _) (fun v _ => ?_)
   cases w v <;> simp [sgn]
 
 /-! ### The compatible set is nonempty -/

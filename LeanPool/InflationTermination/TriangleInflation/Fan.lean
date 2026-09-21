@@ -398,7 +398,7 @@ private lemma fan_abstract {t : ℕ} (ht : 1 ≤ t) {Γ : Assign t → ℝ} (hΓ
     intro k l
     by_cases hkl : k = l
     · simp [hkl]
-    · simp only [if_neg hkl]; exact h3 k l hkl
+    · simp only [ite_eq_right hkl]; exact h3 k l hkl
   have hoffsum : (∑ k : Fin t, ∑ l : Fin t, if k = l then (0 : ℝ) else mS * mT)
       = ((t : ℝ) * t - t) * (mS * mT) := by
     have inner : ∀ k : Fin t, (∑ l : Fin t, if k = l then (0 : ℝ) else mS * mT)
@@ -450,7 +450,7 @@ private lemma fan_abstract {t : ℕ} (ht : 1 ≤ t) {Γ : Assign t → ℝ} (hΓ
         intro k l
         by_cases hkl : k = l
         · subst hkl
-          rw [if_pos rfl]
+          rw [ite_eq_left rfl]
           have e : ∀ ω : Assign t,
               (fanInd root ω * fanInd (S k) ω * fanInd (T k) ω)
                   * (fanInd root ω * fanInd (S k) ω * fanInd (T k) ω)
@@ -458,7 +458,7 @@ private lemma fan_abstract {t : ℕ} (ht : 1 ≤ t) {Γ : Assign t → ℝ} (hΓ
             fun ω => fanInd_tri_sq _ _ _ _
           simp only [e]
           exact le_of_eq (h2 k)
-        · rw [if_neg hkl]
+        · rw [ite_eq_right hkl]
           calc (∑ ω, Γ ω * ((fanInd root ω * fanInd (S k) ω * fanInd (T k) ω)
                   * (fanInd root ω * fanInd (S l) ω * fanInd (T l) ω)))
               ≤ ∑ ω, Γ ω * (fanInd (S k) ω * fanInd (T l) ω) :=
@@ -481,7 +481,7 @@ private lemma fan_abstract {t : ℕ} (ht : 1 ≤ t) {Γ : Assign t → ℝ} (hΓ
           simp only [e]
           rw [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
             nsmul_eq_mul, Finset.sum_ite_eq]
-          simp only [Finset.mem_univ, if_true]
+          simp only [Finset.mem_univ, ite_true]
           ring
         simp only [inner2]
         rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
@@ -673,7 +673,7 @@ private lemma symmetric_one {P : ThreeBit → ℝ} :
   have e1 : π.1 0 = (0 : Fin 1) := Subsingleton.elim _ _
   have e2 : π.2.1 0 = (0 : Fin 1) := Subsingleton.elim _ _
   have e3 : π.2.2 0 = (0 : Fin 1) := Subsingleton.elim _ _
-  show P (readTriangle 0 0 0 (relabel π ω)) = P (readTriangle 0 0 0 ω)
+  change P (readTriangle 0 0 0 (relabel π ω)) = P (readTriangle 0 0 0 ω)
   simp only [readTriangle, relabel, Obs.perm, e1, e2, e3]
 
 private lemma isLaw_one {P : ThreeBit → ℝ} (hP : IsLaw P) :
@@ -685,7 +685,7 @@ private lemma isLaw_one {P : ThreeBit → ℝ} (hP : IsLaw P) :
 private lemma diagonal_one {P : ThreeBit → ℝ} :
     pushforward (fun ω : Assign 1 => P (assignOneEquiv ω)) readDiagonal = tensorPow 1 P := by
   funext v
-  show ∑ ω : Assign 1, (if readDiagonal ω = v then P (assignOneEquiv ω) else 0) = tensorPow 1 P v
+  change ∑ ω : Assign 1, (if readDiagonal ω = v then P (assignOneEquiv ω) else 0) = tensorPow 1 P v
   have hcond : ∀ ω : Assign 1, (readDiagonal ω = v) ↔ (assignOneEquiv ω = v 0) := by
     intro ω
     constructor
@@ -721,7 +721,7 @@ theorem aiFeasible_one {P : ThreeBit → ℝ} (hP : IsLaw P) : AIFeasible 1 P :=
   have hone : ∀ m : Fin n, S m = ∅ → pushforward P (partyRead (S m)) (φ m) = 1 := by
     intro m hm
     have e : ∀ w : ThreeBit, (if partyRead (S m) w = φ m then P w else 0) = P w := by
-      intro w; rw [if_pos (hempty (S m) hm _ _)]
+      intro w; rw [ite_eq_left (hempty (S m) hm _ _)]
     simp only [pushforward, e]
     exact hP.2
   have hshare : ∀ m m' : Fin n, m ≠ m' → S m = ∅ ∨ S m' = ∅ := by
@@ -738,8 +738,8 @@ theorem aiFeasible_one {P : ThreeBit → ℝ} (hP : IsLaw P) : AIFeasible 1 P :=
       funext fun m => hempty (S m) (hall m) _ _
     have e : ∀ ω : Assign 1,
         (if (fun m => restrictAssign (S m) ω) = φ then P (assignOneEquiv ω) else 0)
-          = P (assignOneEquiv ω) := fun ω => if_pos (h1 ω)
-    show (∑ ω : Assign 1,
+          = P (assignOneEquiv ω) := fun ω => ite_eq_left (h1 ω)
+    change (∑ ω : Assign 1,
         (if (fun m => restrictAssign (S m) ω) = φ then P (assignOneEquiv ω) else 0)) = _
     rw [Finset.sum_congr rfl (fun ω _ => e ω), Equiv.sum_comp assignOneEquiv P, hP.2]
     exact (Finset.prod_eq_one (fun m _ => hone m (hall m))).symm
@@ -762,10 +762,10 @@ theorem aiFeasible_one {P : ThreeBit → ℝ} (hP : IsLaw P) : AIFeasible 1 P :=
         = ∑ ω : Assign 1,
             (if restrictAssign (S m₀) ω = φ m₀ then P (assignOneEquiv ω) else 0) :=
       Finset.sum_congr rfl fun ω _ => by simp only [hcond ω]
-    show (∑ ω : Assign 1,
+    change (∑ ω : Assign 1,
         (if (fun m => restrictAssign (S m) ω) = φ then P (assignOneEquiv ω) else 0)) = _
     rw [hL]
-    show pushforward (fun ω : Assign 1 => P (assignOneEquiv ω)) (restrictAssign (S m₀)) (φ m₀) = _
+    change pushforward (fun ω : Assign 1 => P (assignOneEquiv ω)) (restrictAssign (S m₀)) (φ m₀) = _
     rw [congrFun (hIM (S m₀) (hinj m₀)) (φ m₀)]
     exact (Finset.prod_eq_single_of_mem m₀ (Finset.mem_univ _)
       (fun m _ hm => hone m (hother m hm))).symm

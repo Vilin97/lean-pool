@@ -289,8 +289,8 @@ theorem cell_step (x z : Bool) :
             (∏ e, M.μ e (X e)) * ∏ v, respMass (M.resp v fun e => X e.1) (w v) else 0) := by
     intro w
     by_cases hcond : w 0 = x ∧ w 4 = z
-    · simp only [if_pos hcond]; rfl
-    · simp only [if_neg hcond, Finset.sum_const_zero]
+    · simp only [ite_eq_left hcond]; rfl
+    · simp only [ite_eq_right hcond, Finset.sum_const_zero]
   simp only [hstep]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun X _ => ?_
@@ -321,11 +321,11 @@ theorem num_step (x z : Bool) :
             ((∏ e, M.μ e (X e)) * ∏ v, respMass (M.resp v fun e => X e.1) (w v)) else 0) := by
     intro w
     by_cases hcond : w 0 = x ∧ w 4 = z
-    · simp only [if_pos hcond]
+    · simp only [ite_eq_left hcond]
       have hl : M.law w = ∑ X : (∀ e : fivePathGraph.Edge, M.L e), (∏ e, M.μ e (X e)) *
           ∏ v, respMass (M.resp v fun e => X e.1) (w v) := rfl
       rw [hl, Finset.mul_sum]
-    · simp only [if_neg hcond, Finset.sum_const_zero]
+    · simp only [ite_eq_right hcond, Finset.sum_const_zero]
   simp only [hstep]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun X _ => ?_
@@ -531,7 +531,7 @@ theorem model_isLaw (hM : M.Valid) : IsLaw M.law := by
   · refine Finset.sum_nonneg fun X _ =>
       mul_nonneg (Finset.prod_nonneg fun e _ => (hM.1 e).1 _)
         (Finset.prod_nonneg fun v _ => respMass_nonneg (hM.2 _ _).1 (hM.2 _ _).2 _)
-  · show (∑ w : Fin 5 → Bool, M.law w) = 1
+  · change (∑ w : Fin 5 → Bool, M.law w) = 1
     have hstep : ∀ w : Fin 5 → Bool, M.law w
         = ∑ X : (∀ e : fivePathGraph.Edge, M.L e), (∏ e, M.μ e (X e)) *
             ∏ v, respMass (M.resp v fun e => X e.1) (w v) := fun w => rfl
@@ -558,9 +558,9 @@ noncomputable def trivModel : GModel fivePathGraph where
 
 theorem trivModel_valid : trivModel.Valid := by
   refine ⟨fun e => ⟨fun a => ?_, ?_⟩, fun v c => ?_⟩
-  · show (0 : ℝ) ≤ 1; norm_num
-  · show (∑ _a : Unit, (1 : ℝ)) = 1; simp
-  · show (0 : ℝ) ≤ 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1; norm_num
+  · change (0 : ℝ) ≤ 1; norm_num
+  · change (∑ _a : Unit, (1 : ℝ)) = 1; simp
+  · change (0 : ℝ) ≤ 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1; norm_num
 
 theorem exists_compatible : ∃ Q : GTarget fivePathGraph, GCompatible fivePathGraph Q :=
   ⟨trivModel.law, trivModel, trivModel_valid, rfl⟩
@@ -581,9 +581,9 @@ theorem tv_bound (P Q G : (Fin 5 → Bool) → ℝ) (hG : ∀ w, |G w| ≤ 1) (x
       |if w 0 = x ∧ w 4 = z then G w * (Q w - P w) else 0| ≤ |P w - Q w| := by
     intro w
     by_cases hcond : w 0 = x ∧ w 4 = z
-    · rw [if_pos hcond, abs_mul, ← abs_neg (Q w - P w), neg_sub]
+    · rw [ite_eq_left hcond, abs_mul, ← abs_neg (Q w - P w), neg_sub]
       nlinarith [abs_nonneg (G w), abs_nonneg (P w - Q w), hG w]
-    · rw [if_neg hcond, abs_zero]; exact abs_nonneg _
+    · rw [ite_eq_right hcond, abs_zero]; exact abs_nonneg _
   refine le_trans (Finset.sum_le_sum fun w _ => hbd w) ?_
   rw [dTV]
   ring_nf
@@ -727,10 +727,10 @@ otherwise, so `I = J = (1+h)/4`. -/
 theorem fivePathTarget_corr (h : ℝ) (h0 : 0 ≤ h) (h1 : h < 1) :
     fivePathI (fivePathTarget h) = (1 + h) / 4 ∧ fivePathJ (fivePathTarget h) = (1 + h) / 4 := by
   constructor
-  · show (1 / 4 : ℝ) * ∑ x : Bool, ∑ z : Bool, fivePathCorr (fivePathTarget h) x z = _
+  · change (1 / 4 : ℝ) * ∑ x : Bool, ∑ z : Bool, fivePathCorr (fivePathTarget h) x z = _
     simp [target_corr, sgn]
     ring
-  · show (1 / 4 : ℝ) * ∑ x : Bool, ∑ z : Bool,
+  · change (1 / 4 : ℝ) * ∑ x : Bool, ∑ z : Bool,
       sgn x * sgn z * fivePathCorr (fivePathTarget h) x z = _
     simp [target_corr, sgn]
     ring
@@ -758,7 +758,7 @@ as written gives `|I_R − I_P|, |J_R − J_P| ≤ 24 d` for `d < 1/8`, so the s
 `h/96`. At `h_t = 1/(16t²)` this is `1/(1536 t²)`. -/
 theorem fivePath_distance (h : ℝ) (h0 : 0 < h) (h1 : h < 1) :
     h / 96 ≤ distToCompatible fivePathGraph (fivePathTarget h) := by
-  show h / 96 ≤ sInf {d : ℝ | ∃ Q : GTarget fivePathGraph,
+  change h / 96 ≤ sInf {d : ℝ | ∃ Q : GTarget fivePathGraph,
     GCompatible fivePathGraph Q ∧ d = dTV (fivePathTarget h) Q}
   refine le_csInf ?_ ?_
   · obtain ⟨Q, hQ⟩ := exists_compatible

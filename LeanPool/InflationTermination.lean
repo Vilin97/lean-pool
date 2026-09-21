@@ -43,7 +43,7 @@ import LeanPool.InflationTermination.TriangleInflation.Rate
 Source: url:https://github.com/williamjblair/inflation-termination
 Authors: William Blair
 Status: verified
-Main declarations: `TriangleInflation.Graph.classification_NW`, `TriangleInflation.no_finite_characterizing_order`
+Main declarations: `TriangleInflation.Graph.classification_NW`
 Tags: causal-inference, probability, inflation-hierarchy, graph-theory
 MSC: 60A05, 05C05
 -/

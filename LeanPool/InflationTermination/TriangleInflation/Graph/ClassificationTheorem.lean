@@ -38,7 +38,7 @@ theorem nontermination_of_not_doubleStar (Γ : PairGraph) (hnot : ¬ IsDoubleSta
     refine ⟨transportTarget Γ H φ Q, isLaw_of_gAIFeasible Γ t ht _ hai, fun w => ?_,
       (gExpFeasible_iff_gAIFeasible Γ t _).mpr hai, hinc⟩
     have hp : (0:ℝ) < (1 / 2 : ℝ) ^ (Fintype.card Γ.V - Fintype.card H.V) := by positivity
-    show (0:ℝ) < Q (fun u => w (φ u)) * (1 / 2 : ℝ) ^ (Fintype.card Γ.V - Fintype.card H.V)
+    change (0:ℝ) < Q (fun u => w (φ u)) * (1 / 2 : ℝ) ^ (Fintype.card Γ.V - Fintype.card H.V)
     exact mul_pos (hQpos _) hp
   -- Some component is not a double star; it is connected, so exhaustion applies to it.
   obtain ⟨C, hC⟩ := exists_bad_component Γ hnot

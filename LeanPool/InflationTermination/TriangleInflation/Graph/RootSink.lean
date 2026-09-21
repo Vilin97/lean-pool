@@ -375,7 +375,7 @@ theorem mem_copySet_iff {ι : Γ.Edge → Fin t} {o : GObs Γ t} :
     rfl
   · intro h
     refine Finset.mem_image.2 ⟨o.1, Finset.mem_univ _, ?_⟩
-    show (⟨o.1, fun e => ι e.1⟩ : GObs Γ t) = o
+    change (⟨o.1, fun e => ι e.1⟩ : GObs Γ t) = o
     have hf : (fun e : Γ.inc o.1 => ι e.1) = o.2 := by funext e; exact (h e).symm
     rw [hf]
 
@@ -405,7 +405,7 @@ theorem gInjectable_iff_raw_of_one_le (ht : 1 ≤ t) (S : Finset (GObs Γ t)) :
     intro o ho
     refine mem_copySet_iff.2 (fun e => ?_)
     have hex : ∃ p : GObs Γ t, p ∈ S ∧ (e : Γ.Edge) ∈ Γ.inc p.1 := ⟨o, ho, e.2⟩
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
     exact hshare o ho _ hex.choose_spec.1 e.1 e.2 hex.choose_spec.2
 
 /-! ### Pushforward helpers -/
@@ -431,7 +431,7 @@ private theorem pushforward_injective {α β : Type*} [Fintype α] [DecidableEq 
     intro x
     by_cases h : x = a
     · simp [h]
-    · rw [if_neg (fun hh => h (hF hh)), if_neg h]
+    · rw [ite_eq_right (fun hh => h (hF hh)), ite_eq_right h]
   simp only [pushforward, hkey]
   simp
 
@@ -460,25 +460,25 @@ theorem pushforward_mono_of_subset {S T : Finset (GObs Γ t)} (hST : S ⊆ T)
       funext o
       have := congrFun h ⟨o.1, hST o.2⟩
       exact this
-    rw [if_pos h, if_pos h']
-  · rw [if_neg h]
+    rw [ite_eq_left h, ite_eq_left h']
+  · rw [ite_eq_right h]
     by_cases h' : gRestrict S ω = subRestrict hST φ
-    · rw [if_pos h']; exact hΔ ω
-    · rw [if_neg h']
+    · rw [ite_eq_left h']; exact hΔ ω
+    · rw [ite_eq_right h']
 
 /-! ### The marginal of an AI set -/
 
 theorem readOnBlock_self {S : Finset (GObs Γ t)} (φ : S → Bool) :
     readOnBlock S S φ = φ := by
   funext o
-  simp only [readOnBlock, dif_pos o.2]
+  simp only [readOnBlock, dite_eq_left o.2]
 
 theorem readOnBlock_sub {B A W : Finset (GObs Γ t)} (hBA : B ⊆ A) (hAW : A ⊆ W)
     (φ : W → Bool) :
     readOnBlock B A (subRestrict hAW φ) = readOnBlock B W φ := by
   funext o
   have ho : o.1 ∈ A := hBA o.2
-  simp only [readOnBlock, dif_pos ho, dif_pos (hAW ho), subRestrict]
+  simp only [readOnBlock, dite_eq_left ho, dite_eq_left (hAW ho), subRestrict]
 
 /-- Under a witness satisfying the ancestral-independence prescriptions, the marginal on a
 set with an AI decomposition is the product of the injectable marginals of its blocks. -/
@@ -493,7 +493,7 @@ theorem marginal_eq_aiProduct {Δ : GAssign Γ t → ℝ} {P : GTarget Γ}
     fun φ m => readOnBlock (D.block m) S φ with hΦ
   have hfac : (fun ω m => gRestrict (D.block m) ω) = fun ω => Φ (gRestrict S ω) := by
     funext ω m o
-    simp only [hΦ, readOnBlock, dif_pos (hbs m o.2), gRestrict]
+    simp only [hΦ, readOnBlock, dite_eq_left (hbs m o.2), gRestrict]
   have hinjΦ : Function.Injective Φ := by
     intro φ φ' h
     funext o
@@ -501,7 +501,7 @@ theorem marginal_eq_aiProduct {Δ : GAssign Γ t → ℝ} {P : GTarget Γ}
       rw [← D.cover]; exact o.2
     obtain ⟨m, -, hm⟩ := Finset.mem_biUnion.1 hmem
     have := congrFun (congrFun h m) ⟨o.1, hm⟩
-    simpa only [hΦ, readOnBlock, dif_pos o.2] using this
+    simpa only [hΦ, readOnBlock, dite_eq_left o.2] using this
   funext φ
   have h1 : pushforward Δ (fun ω m => gRestrict (D.block m) ω) (Φ φ)
       = pushforward (pushforward Δ (gRestrict S)) Φ (Φ φ) := by
@@ -751,9 +751,9 @@ theorem expPrescriptions_of_ai {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (hla
       have hnn := pushforward_nonneg hlaw.1 (gRestrict Z) (subRestrict hZW φ)
       simp only [glueLaw, hmz]
       rcases lt_or_ge 0 (pushforward Δ (gRestrict Z) (subRestrict hZW φ)) with hpos | hle
-      · rw [if_pos hpos, hprodid, mul_div_assoc, div_self (ne_of_gt hpos), mul_one]
+      · rw [ite_eq_left hpos, hprodid, mul_div_assoc, div_self (ne_of_gt hpos), mul_one]
       · have hz : pushforward Δ (gRestrict Z) (subRestrict hZW φ) = 0 := le_antisymm hle hnn
-        rw [if_neg (by rw [hz]; exact lt_irrefl 0)]
+        rw [ite_eq_right (by rw [hz]; exact lt_irrefl 0)]
         refine le_antisymm ?_ (pushforward_nonneg hlaw.1 _ _)
         rw [← hz]
         exact pushforward_mono_of_subset hZW hlaw.1 φ
@@ -763,7 +763,7 @@ theorem expPrescriptions_of_ai {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (hla
 theorem readOnBlock_eq_subRestrict {B W : Finset (GObs Γ t)} (h : B ⊆ W) (φ : W → Bool) :
     readOnBlock B W φ = subRestrict h φ := by
   funext o
-  simp only [readOnBlock, dif_pos (h o.2), subRestrict]
+  simp only [readOnBlock, dite_eq_left (h o.2), subRestrict]
 
 /-- Transport of membership along an equality of sets. -/
 theorem castMem {S T : Finset (GObs Γ t)} (h : S = T) {p : GObs Γ t} (hp : p ∈ S) : p ∈ T := by
@@ -791,7 +791,7 @@ theorem pushforward_to_empty {S : Finset (GObs Γ t)} (ν : (S → Bool) → ℝ
     (h : (∅ : Finset (GObs Γ t)) ⊆ S) (χ : (∅ : Finset (GObs Γ t)) → Bool) :
     pushforward ν (subRestrict h) χ = ∑ ψ, ν ψ := by
   simp only [pushforward]
-  exact Finset.sum_congr rfl (fun ψ _ => if_pos (eq_of_empty_fun _ _))
+  exact Finset.sum_congr rfl (fun ψ _ => ite_eq_left (eq_of_empty_fun _ _))
 
 /-- Ancestrally independent sets are `d`-separated by the empty set: a trail between them
 would need an interior vertex, which the empty conditioning set cannot supply. -/
@@ -848,7 +848,7 @@ theorem marginal_union_of_ai {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (hlaw 
     rw [sum_pushforward']
     exact hlaw.2
   simp only [glueLaw, hmass]
-  rw [if_pos one_pos, div_one, hexp A νA hA, hexp B νB hB]
+  rw [ite_eq_left one_pos, div_one, hexp A νA hA, hexp B νB hB]
   rfl
 
 /-- Iterated gluing with `Z = ∅`: the marginal on a union of pairwise ancestrally
@@ -872,7 +872,7 @@ theorem marginal_biUnion_prod {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (hlaw
       refine ⟨⟨_, Expressible.inj (P := P) hempty⟩, fun φ => ?_⟩
       rw [Finset.prod_empty]
       simp only [pushforward]
-      rw [Finset.sum_congr rfl (fun ω _ => if_pos (eq_of_empty_fun _ _))]
+      rw [Finset.sum_congr rfl (fun ω _ => ite_eq_left (eq_of_empty_fun _ _))]
       exact hlaw.2
   | @insert m₀ I' hm₀ ih =>
       intro V hV
@@ -909,7 +909,7 @@ theorem gAncestralProducts_of_exp {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (
   · have hsub : ∀ a b : (∀ m : Fin 0, (S m) → Bool), a = b := by
       intro a b; funext m; exact m.elim0
     simp only [pushforward]
-    rw [Finset.sum_congr rfl (fun ω _ => if_pos (hsub _ _))]
+    rw [Finset.sum_congr rfl (fun ω _ => ite_eq_left (hsub _ _))]
     rw [hlaw.2]
     simp
   · have hempty : GInjectable (∅ : Finset (GObs Γ t)) := by
@@ -924,13 +924,13 @@ theorem gAncestralProducts_of_exp {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (
       exact Finset.mem_biUnion.2 ⟨m, Finset.mem_univ _, hp⟩
     have hfac : (fun ω (m : Fin n) => gRestrict (S m) ω) = fun ω => Φ (gRestrict U ω) := by
       funext ω m o
-      simp only [hΦ, readOnBlock, dif_pos (hmem m o.1 o.2), gRestrict]
+      simp only [hΦ, readOnBlock, dite_eq_left (hmem m o.1 o.2), gRestrict]
     have hinjΦ : Function.Injective Φ := by
       intro φ φ' h
       funext o
       obtain ⟨m, -, hm⟩ := Finset.mem_biUnion.1 o.2
       have := congrFun (congrFun h m) ⟨o.1, hm⟩
-      simpa only [hΦ, readOnBlock, dif_pos o.2] using this
+      simpa only [hΦ, readOnBlock, dite_eq_left o.2] using this
     -- every tuple comes from a function on the union
     obtain ⟨φ, hφ⟩ : ∃ φ : U → Bool, Φ φ = ψ := by
       refine ⟨fun o => ψ (Finset.mem_biUnion.1 o.2).choose
@@ -943,7 +943,7 @@ theorem gAncestralProducts_of_exp {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (
         · exact absurd h₂ (Finset.disjoint_left.1 (disjoint_of_ai (hai m₁ m₂ hmm)) h₁)
       funext m p
       have hpU : p.1 ∈ U := hmem m p.1 p.2
-      simp only [hΦ, readOnBlock, dif_pos hpU]
+      simp only [hΦ, readOnBlock, dite_eq_left hpU]
       exact key p.1 _ m (Finset.mem_biUnion.1 (⟨p.1, hpU⟩ : U).2).choose_spec.2 p.2
     rw [hfac, ← pushforward_comp' Δ (gRestrict U) Φ, ← hφ,
       pushforward_injective _ hinjΦ φ, hmain.2 φ]

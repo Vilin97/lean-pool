@@ -148,7 +148,7 @@ theorem gTwist_apply_eq_readDiag {π : Γ.Edge → Equiv.Perm (Fin t)} {ω : GAs
     gTwist π ω r v = readDiag ω s v := by
   have hf : (fun e : Γ.inc v => π e.1 r) = (fun _ : Γ.inc v => s) := by
     funext e; exact h e.1 e.2
-  show ω ⟨v, fun e => π e.1 r⟩ = ω ⟨v, fun _ => s⟩
+  change ω ⟨v, fun e => π e.1 r⟩ = ω ⟨v, fun _ => s⟩
   rw [hf]
 
 /-- **The two-row identity at order two.**  Twisting by `π` and reading the two rows gives a
@@ -210,13 +210,13 @@ theorem blockMarg_union_of_sourceDisjoint {Δ : GAssign Γ 2 → ℝ} {P : GTarg
     refine gTwist_apply_eq_readDiag fun e he => ?_
     have hmem : e ∈ A.biUnion Γ.inc := Finset.mem_biUnion.2 ⟨v, hv, he⟩
     have hnot : e ∉ B.biUnion Γ.inc := fun hB => (Finset.disjoint_left.1 hAB hmem) hB
-    have : π e = Equiv.refl (Fin 2) := by rw [hπ]; exact if_neg hnot
+    have : π e = Equiv.refl (Fin 2) := by rw [hπ]; exact ite_eq_right hnot
     rw [this]; rfl
   have hB : ∀ (ω : GAssign Γ 2) (v : Γ.V), v ∈ B → gTwist π ω 0 v = readDiag ω 1 v := by
     intro ω v hv
     refine gTwist_apply_eq_readDiag fun e he => ?_
     have hmem : e ∈ B.biUnion Γ.inc := Finset.mem_biUnion.2 ⟨v, hv, he⟩
-    have : π e = Equiv.swap 0 1 := by rw [hπ]; exact if_pos hmem
+    have : π e = Equiv.swap 0 1 := by rw [hπ]; exact ite_eq_left hmem
     rw [this]; exact Equiv.swap_apply_left 0 1
   set g : (Γ.V → Bool) → (Γ.V → Bool) → ℝ :=
     fun a _ => if ∀ v ∈ A ∪ B, a v = w v then 1 else 0 with hg
@@ -239,13 +239,13 @@ theorem blockMarg_union_of_sourceDisjoint {Δ : GAssign Γ 2 → ℝ} {P : GTarg
     simp only [hg, hg']
     by_cases h : ∀ v ∈ A ∪ B, gTwist π ω 0 v = w v
     · obtain ⟨h1, h2⟩ := hiff.1 h
-      rw [if_pos h, if_pos h1, if_pos h2, one_mul]
-    · rw [if_neg h]
+      rw [ite_eq_left h, ite_eq_left h1, ite_eq_left h2, one_mul]
+    · rw [ite_eq_right h]
       have hn := (not_iff_not.2 hiff).1 h
       rw [not_and_or] at hn
       rcases hn with h1 | h1
-      · rw [if_neg h1, zero_mul]
-      · rw [if_neg h1, mul_zero]
+      · rw [ite_eq_right h1, zero_mul]
+      · rw [ite_eq_right h1, mul_zero]
   -- evaluate the same expectation in two ways
   have e1 : ∑ ω : GAssign Γ 2, g (gTwist π ω 0) (gTwist π ω 1) * Δ ω
       = blockMarg (A ∪ B) P w := by
@@ -253,11 +253,11 @@ theorem blockMarg_union_of_sourceDisjoint {Δ : GAssign Γ 2 → ℝ} {P : GTarg
     simp only [hg, blockMarg]
     refine Finset.sum_congr rfl fun a _ => ?_
     by_cases h : ∀ v ∈ A ∪ B, a v = w v
-    · rw [if_pos h, if_pos h]
+    · rw [ite_eq_left h, ite_eq_left h]
       rw [show (∑ b : Γ.V → Bool, (1 : ℝ) * (P a * P b)) = P a * ∑ b : Γ.V → Bool, P b from by
         rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun b _ => by ring]
       rw [hP.2, mul_one]
-    · rw [if_neg h, if_neg h]; simp
+    · rw [ite_eq_right h, ite_eq_right h]; simp
   have e2 : ∑ ω : GAssign Γ 2, g' (readDiag ω 0) (readDiag ω 1) * Δ ω
       = blockMarg A P w * blockMarg B P w := by
     have hr : ∀ ω : GAssign Γ 2, readDiag ω = gTwist (fun _ => Equiv.refl (Fin 2)) ω :=
@@ -268,9 +268,9 @@ theorem blockMarg_union_of_sourceDisjoint {Δ : GAssign Γ 2 → ℝ} {P : GTarg
     refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
     by_cases h1 : ∀ v ∈ A, a v = w v
     · by_cases h2 : ∀ v ∈ B, b v = w v
-      · rw [if_pos h1, if_pos h2, if_pos h1, if_pos h2]; ring
-      · rw [if_neg h2, if_neg h2]; ring
-    · rw [if_neg h1, if_neg h1]; ring
+      · rw [ite_eq_left h1, ite_eq_left h2, ite_eq_left h1, ite_eq_left h2]; ring
+      · rw [ite_eq_right h2, ite_eq_right h2]; ring
+    · rw [ite_eq_right h1, ite_eq_right h1]; ring
   calc blockMarg (A ∪ B) P w
       = ∑ ω : GAssign Γ 2, g (gTwist π ω 0) (gTwist π ω 1) * Δ ω := e1.symm
     _ = ∑ ω : GAssign Γ 2, g' (readDiag ω 0) (readDiag ω 1) * Δ ω :=
@@ -343,9 +343,9 @@ theorem twoRow_blockMass {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hsym : GS
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ => ?_
   by_cases h1 : ∀ v ∈ A₀, a v = w₀ v
   · by_cases h2 : ∀ v ∈ A₁, b v = w₁ v
-    · rw [if_pos h1, if_pos h2, if_pos h1, if_pos h2]; ring
-    · rw [if_neg h2, if_neg h2]; ring
-  · rw [if_neg h1, if_neg h1]; ring
+    · rw [ite_eq_left h1, ite_eq_left h2, ite_eq_left h1, ite_eq_left h2]; ring
+    · rw [ite_eq_right h2, ite_eq_right h2]; ring
+  · rw [ite_eq_right h1, ite_eq_right h1]; ring
 
 
 theorem ind_mul_ind (p q : Prop) [Decidable p] [Decidable q] :
@@ -404,9 +404,9 @@ theorem centreLeaf_mass {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hsym : GSy
     refine ⟨fun v hv => ?_, fun ℓ hℓ => ?_⟩
     · rcases Finset.mem_union.1 hv with hv | hv
       · have hvL : v ∉ Lf := Finset.disjoint_left.1 hC hv
-        rw [hw₀]; simp only [hvL, if_false]; exact h1 v hv
+        rw [hw₀]; simp only [hvL, ite_false]; exact h1 v hv
       · rw [gTwist_leaf_zero (hinc v hv), hw₀]
-        simp only [hv, if_true]
+        simp only [hv, ite_true]
         exact h2 v hv _
     · rw [gTwist_leaf_one (hinc ℓ hℓ), hw₁]
       exact h2 ℓ hℓ _
@@ -453,7 +453,7 @@ theorem gCompatible_of_localDecoder {A : Type} [Fintype A] [DecidableEq A] [Inha
     ⟨hν, fun v c => ?_⟩, ?_⟩
   · by_cases h : dec (fun e => if h : e ∈ Γ.inc v then c ⟨e, h⟩ else default) v <;> simp [h]
   · funext w
-    show (∑ z : Γ.Edge → A, (∏ e : Γ.Edge, ν e (z e)) *
+    change (∑ z : Γ.Edge → A, (∏ e : Γ.Edge, ν e (z e)) *
       ∏ v : Γ.V, respMass
         (if dec (fun e => if h : e ∈ Γ.inc v then (fun e' : Γ.inc v => z e'.1) ⟨e, h⟩
           else default) v then 0 else 1) (w v)) = P w
@@ -476,8 +476,8 @@ theorem gCompatible_of_localDecoder {A : Type} [Fintype A] [DecidableEq A] [Inha
       simp only [hiff]
     rw [hb]
     by_cases h : dec z = w
-    · rw [if_pos h, if_pos h, mul_one]
-    · rw [if_neg h, if_neg h, mul_zero]
+    · rw [ite_eq_left h, ite_eq_left h, mul_one]
+    · rw [ite_eq_right h, ite_eq_right h, mul_zero]
 
 
 /-- A sum over a function space of a product of per-coordinate weights is the product of the
@@ -536,8 +536,8 @@ theorem gCompatible_of_fibre_sourceDisjoint {Δ : GAssign Γ 2 → ℝ} {P : GTa
       · intro h v _; exact congrFun h v
     simp only [hiff]
     by_cases h : (fun v => z (edgeAt v) v) = w
-    · rw [if_pos h, if_pos h, mul_one]
-    · rw [if_neg h, if_neg h, mul_zero]
+    · rw [ite_eq_left h, ite_eq_left h, mul_one]
+    · rw [ite_eq_right h, ite_eq_right h, mul_zero]
   simp only [key]
   rw [sum_prod_pi (fun e a => P a *
     ∏ v ∈ Finset.univ.filter (fun v => edgeAt v = e), (if a v = w v then (1 : ℝ) else 0))]
@@ -549,8 +549,8 @@ theorem gCompatible_of_fibre_sourceDisjoint {Δ : GAssign Γ 2 → ℝ} {P : GTa
     simp only [blockMarg, Finset.prod_boole]
     refine Finset.sum_congr rfl fun a _ => ?_
     by_cases h : ∀ v ∈ Finset.univ.filter (fun v => edgeAt v = e), a v = w v
-    · rw [if_pos h, if_pos h, mul_one]
-    · rw [if_neg h, if_neg h, mul_zero]
+    · rw [ite_eq_left h, ite_eq_left h, mul_one]
+    · rw [ite_eq_right h, ite_eq_right h, mul_zero]
   simp only [hfac]
   have hcov : (Finset.univ : Finset Γ.Edge).biUnion
       (fun e => Finset.univ.filter fun v => edgeAt v = e) = Finset.univ := by
@@ -706,8 +706,8 @@ theorem vMarg_nonneg {P : GTarget Γ} (hP : IsLaw P) (v : Γ.V) (β : Bool) :
   rw [vMarg_eq]
   refine Finset.sum_nonneg fun u _ => ?_
   by_cases h : u v = β
-  · rw [if_pos h]; exact hP.1 u
-  · rw [if_neg h]
+  · rw [ite_eq_left h]; exact hP.1 u
+  · rw [ite_eq_right h]
 
 theorem vMarg_sum {P : GTarget Γ} (hP : IsLaw P) (v : Γ.V) :
     vMarg P v false + vMarg P v true = 1 := by
@@ -722,13 +722,13 @@ theorem vMarg_xarr_pos {P : GTarget Γ} (hP : IsLaw P) (ℓ : Γ.V) (m : Fin 2) 
   have hs := vMarg_sum hP ℓ
   unfold xarr
   by_cases hf : vMarg P ℓ false = 0
-  · rw [if_pos hf]; linarith
-  · rw [if_neg hf]
+  · rw [ite_eq_left hf]; linarith
+  · rw [ite_eq_right hf]
     by_cases ht : vMarg P ℓ true = 0
-    · rw [if_pos ht]; rcases lt_or_eq_of_le h0 with h | h
+    · rw [ite_eq_left ht]; rcases lt_or_eq_of_le h0 with h | h
       · exact h
       · exact absurd h.symm hf
-    · rw [if_neg ht]
+    · rw [ite_eq_right ht]
       cases hm : (decide (m = 1)) with
       | false => exact lt_of_le_of_ne h0 (Ne.symm hf)
       | true => exact lt_of_le_of_ne h1 (Ne.symm ht)
@@ -737,21 +737,21 @@ theorem xarr_pick {P : GTarget Γ} (ℓ : Γ.V) (β : Bool) (h : 0 < vMarg P ℓ
     xarr P ℓ (pick P ℓ β) = β := by
   unfold pick
   by_cases hb : xarr P ℓ 0 = β
-  · rw [if_pos hb]; exact hb
-  · rw [if_neg hb]
+  · rw [ite_eq_left hb]; exact hb
+  · rw [ite_eq_right hb]
     unfold xarr at hb ⊢
     by_cases hf : vMarg P ℓ false = 0
-    · rw [if_pos hf] at hb ⊢
+    · rw [ite_eq_left hf] at hb ⊢
       rcases Bool.eq_false_or_eq_true β with hβ | hβ
       · exact absurd hβ.symm hb
       · subst hβ; rw [hf] at h; exact absurd h (lt_irrefl 0)
-    · rw [if_neg hf] at hb ⊢
+    · rw [ite_eq_right hf] at hb ⊢
       by_cases ht : vMarg P ℓ true = 0
-      · rw [if_pos ht] at hb ⊢
+      · rw [ite_eq_left ht] at hb ⊢
         rcases Bool.eq_false_or_eq_true β with hβ | hβ
         · subst hβ; rw [ht] at h; exact absurd h (lt_irrefl 0)
         · exact absurd hβ.symm hb
-      · rw [if_neg ht] at hb ⊢
+      · rw [ite_eq_right ht] at hb ⊢
         have h0 : decide ((0 : Fin 2) = 1) = false := by decide
         have h1 : decide ((1 : Fin 2) = 1) = true := by decide
         rw [h0] at hb
@@ -768,19 +768,19 @@ theorem blockMarg_nonneg {P : GTarget Γ} (hP : IsLaw P) (A : Finset Γ.V) (w : 
   unfold blockMarg
   refine Finset.sum_nonneg fun u _ => ?_
   by_cases h : ∀ v ∈ A, u v = w v
-  · rw [if_pos h]; exact hP.1 u
-  · rw [if_neg h]
+  · rw [ite_eq_left h]; exact hP.1 u
+  · rw [ite_eq_right h]
 
 theorem blockMarg_le {P : GTarget Γ} (hP : IsLaw P) {A B : Finset Γ.V} (h : A ⊆ B)
     (w : Γ.V → Bool) : blockMarg B P w ≤ blockMarg A P w := by
   unfold blockMarg
   refine Finset.sum_le_sum fun u _ => ?_
   by_cases hb : ∀ v ∈ B, u v = w v
-  · rw [if_pos hb, if_pos (fun v hv => hb v (h hv))]
-  · rw [if_neg hb]
+  · rw [ite_eq_left hb, ite_eq_left (fun v hv => hb v (h hv))]
+  · rw [ite_eq_right hb]
     by_cases ha : ∀ v ∈ A, u v = w v
-    · rw [if_pos ha]; exact hP.1 u
-    · rw [if_neg ha]
+    · rw [ite_eq_left ha]; exact hP.1 u
+    · rw [ite_eq_right ha]
 
 namespace DSStruct
 
@@ -810,7 +810,7 @@ theorem blockMarg_leaves {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLa
     intro i j hij
     by_cases hi : D.leaf i = true
     · by_cases hj : D.leaf j = true
-      · simp only [hA, if_pos hi, if_pos hj, Finset.singleton_biUnion]
+      · simp only [hA, ite_eq_left hi, ite_eq_left hj, Finset.singleton_biUnion]
         exact D.leaf_inc_disjoint hi hj hij
       · simp [hA, hj]
     · simp [hA, hi]
@@ -820,15 +820,15 @@ theorem blockMarg_leaves {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLa
     constructor
     · rintro ⟨u, hu, hv⟩
       by_cases h : D.leaf u = true
-      · rw [if_pos h, Finset.mem_singleton] at hv; exact hv ▸ hu
-      · rw [if_neg h] at hv; simp at hv
+      · rw [ite_eq_left h, Finset.mem_singleton] at hv; exact hv ▸ hu
+      · rw [ite_eq_right h] at hv; simp at hv
     · intro hv
-      exact ⟨v, hv, by rw [if_pos (hS v hv)]; exact Finset.mem_singleton_self v⟩
+      exact ⟨v, hv, by rw [ite_eq_left (hS v hv)]; exact Finset.mem_singleton_self v⟩
   have hkey := blockMarg_biUnion_of_sourceDisjoint hP hsym hdiag A hdisj S w
   rw [hcov] at hkey
   rw [hkey]
   refine Finset.prod_congr rfl fun ℓ hℓ => ?_
-  simp only [hA, if_pos (hS ℓ hℓ)]
+  simp only [hA, ite_eq_left (hS ℓ hℓ)]
   exact blockMarg_singleton P ℓ w
 
 end DSStruct
@@ -889,7 +889,7 @@ theorem comp_eq {y : Γ.Edge} (hy : D.leaf (D.vtx y) = false) :
 theorem jOf_edgeAt {P : GTarget Γ} {ℓ : Γ.V} (h : D.leaf ℓ = true) (ξ : Γ.V → Bool) :
     D.jOf P ξ (D.edgeAt ℓ) = pick P ℓ (ξ ℓ) := by
   unfold DSStruct.jOf
-  rw [D.vtx_of_leaf h, if_pos h]
+  rw [D.vtx_of_leaf h, ite_eq_left h]
 
 end DSStruct
 
@@ -912,7 +912,7 @@ theorem evtMass_eq {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hsym : GSymmetr
   rw [← h]
   unfold DSStruct.evtMass
   refine Finset.sum_congr rfl fun ω _ => ?_
-  rw [if_pos (show ∀ v ∈ (∅ : Finset Γ.V), gTwist (swapTwist j) ω 0 v = w v by simp), one_mul]
+  rw [ite_eq_left (show ∀ v ∈ (∅ : Finset Γ.V), gTwist (swapTwist j) ω 0 v = w v by simp), one_mul]
   exact congrArg (· * Δ ω) (ind_congr Iff.rfl)
 
 theorem evtMass_pos {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLaw P)
@@ -922,7 +922,7 @@ theorem evtMass_pos {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLaw P)
   have hl : ∀ v ∈ D.leaves y, D.leaf v = true := fun v hv => D.leaf_of_mem_leaves hv
   rw [D.blockMarg_leaves hP hsym hdiag _ hl, D.blockMarg_leaves hP hsym hdiag _ hl]
   refine mul_pos (Finset.prod_pos fun ℓ hℓ => ?_) (Finset.prod_pos fun ℓ hℓ => ?_)
-  · rw [if_pos hℓ]
+  · rw [ite_eq_left hℓ]
     exact vMarg_xarr_pos hP ℓ _
   · exact vMarg_xarr_pos hP ℓ _
 
@@ -954,7 +954,7 @@ theorem tabLaw_isLaw {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLaw P)
       rw [← Finset.sum_mul, ← Finset.mul_sum]
       congr 1
       rw [Finset.sum_ite_eq (Finset.univ : Finset ((Γ.V → Bool) → (Γ.V → Bool)))
-        (D.tableOf P ω) (fun _ => (1 : ℝ)), if_pos (Finset.mem_univ (D.tableOf P ω)), mul_one]
+        (D.tableOf P ω) (fun _ => (1 : ℝ)), ite_eq_left (Finset.mem_univ (D.tableOf P ω)), mul_one]
     rw [hnum]
     exact div_self (ne_of_gt hpos)
 
@@ -964,9 +964,9 @@ theorem lat_isLaw {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLaw P) (h
   have htab := D.tabLaw_isLaw hP hΔ hsym hdiag e
   unfold DSStruct.lat
   by_cases h : D.leaf (D.vtx e) = true
-  · simp only [if_pos h]
+  · simp only [ite_eq_left h]
     refine ⟨fun a => ?_, ?_⟩
-    · show (0 : ℝ) ≤ if a.1 = dfltTable Γ then vMarg P (D.vtx e) a.2 else 0
+    · change (0 : ℝ) ≤ if a.1 = dfltTable Γ then vMarg P (D.vtx e) a.2 else 0
       split_ifs with ha
       · exact vMarg_nonneg hP _ _
       · exact le_refl 0
@@ -976,7 +976,7 @@ theorem lat_isLaw {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLaw P) (h
             = if T = dfltTable Γ then (1 : ℝ) else 0 := by
         intro T
         by_cases hT : T = dfltTable Γ
-        · simp only [if_pos hT]
+        · simp only [ite_eq_left hT]
           rw [Fintype.sum_bool]
           rw [add_comm]
           exact vMarg_sum hP _
@@ -984,10 +984,10 @@ theorem lat_isLaw {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLaw P) (h
       simp only [hinner]
       rw [Finset.sum_ite_eq' (Finset.univ : Finset ((Γ.V → Bool) → (Γ.V → Bool)))
         (dfltTable Γ) (fun _ => (1 : ℝ))]
-      exact if_pos (Finset.mem_univ (dfltTable Γ))
-  · simp only [if_neg h]
+      exact ite_eq_left (Finset.mem_univ (dfltTable Γ))
+  · simp only [ite_eq_right h]
     refine ⟨fun a => ?_, ?_⟩
-    · show (0 : ℝ) ≤ if a.2 = false then D.tabLaw P Δ e a.1 else 0
+    · change (0 : ℝ) ≤ if a.2 = false then D.tabLaw P Δ e a.1 else 0
       split_ifs with ha
       · exact htab.1 _
       · exact le_refl 0
@@ -1064,9 +1064,9 @@ theorem ctrFactor_mul {Δ : GAssign Γ 2 → ℝ} {P : GTarget Γ} (hP : IsLaw P
         = w := by
       funext v
       by_cases hv : v ∈ D.leaves y
-      · rw [if_pos hv, D.jOf_edgeAt (hlf v hv) w]
+      · rw [ite_eq_left hv, D.jOf_edgeAt (hlf v hv) w]
         exact xarr_pick v (w v) (hfac v hv)
-      · rw [if_neg hv]
+      · rw [ite_eq_right hv]
     rw [hw0] at hmass hnum
     rw [D.comp_eq hy]
     unfold DSStruct.ctrFactor
@@ -1081,7 +1081,7 @@ theorem gTwist_congr {π π' : Γ.Edge → Equiv.Perm (Fin t)} {ω : GAssign Γ 
     {v : Γ.V} (h : ∀ e ∈ Γ.inc v, π e = π' e) : gTwist π ω r v = gTwist π' ω r v := by
   have hf : (fun e : Γ.inc v => π e.1 r) = (fun e : Γ.inc v => π' e.1 r) := by
     funext e; rw [h e.1 e.2]
-  show ω ⟨v, fun e => π e.1 r⟩ = ω ⟨v, fun e => π' e.1 r⟩
+  change ω ⟨v, fun e => π e.1 r⟩ = ω ⟨v, fun e => π' e.1 r⟩
   rw [hf]
 
 namespace DSStruct
@@ -1131,8 +1131,8 @@ theorem dec_local (z z' : Γ.Edge → DSLat Γ) (v : Γ.V)
     funext u
     unfold DSStruct.locVec
     by_cases hu : D.leaf u = true ∧ D.mate u = v
-    · rw [if_pos hu, if_pos hu, h (D.edgeAt u) (by rw [← hu.2]; exact D.edgeAt_inc_mate u)]
-    · rw [if_neg hu, if_neg hu]
+    · rw [ite_eq_left hu, ite_eq_left hu, h (D.edgeAt u) (by rw [← hu.2]; exact D.edgeAt_inc_mate u)]
+    · rw [ite_eq_right hu, ite_eq_right hu]
   unfold DSStruct.dec
   rw [hv, hloc]
 
@@ -1147,7 +1147,7 @@ theorem tableOf_ctr (P : GTarget Γ) (ω : GAssign Γ 2) {v : Γ.V} (hv : D.leaf
   congr 1
   unfold DSStruct.jOf
   by_cases hl : D.leaf (D.vtx e) = true
-  · rw [if_pos hl, if_pos hl]
+  · rw [ite_eq_left hl, ite_eq_left hl]
     have hmem := D.edgeAt_mem (D.vtx e) v (by rw [D.vtx_edgeAt e]; exact he)
     have hne : v ≠ D.vtx e := by
       intro hvv; rw [hvv, hl] at hv; simp at hv
@@ -1156,8 +1156,8 @@ theorem tableOf_ctr (P : GTarget Γ) (ω : GAssign Γ 2) {v : Γ.V} (hv : D.leaf
       · exact absurd h hne
       · exact h.symm
     unfold DSStruct.locOut
-    rw [if_pos ⟨hl, hmate⟩]
-  · rw [if_neg hl, if_neg hl]
+    rw [ite_eq_left ⟨hl, hmate⟩]
+  · rw [ite_eq_right hl, ite_eq_right hl]
 
 end DSStruct
 
@@ -1172,21 +1172,21 @@ def condw (w : Γ.V → Bool) (v : Γ.V) (a : DSLat Γ) : ℝ :=
   else (if a.1 (D.locOut w v) v = w v then 1 else 0)
 
 theorem condw_leaf {w : Γ.V → Bool} {v : Γ.V} (h : D.leaf v = true) (a : DSLat Γ) :
-    D.condw w v a = if a.2 = w v then 1 else 0 := by unfold DSStruct.condw; rw [if_pos h]
+    D.condw w v a = if a.2 = w v then 1 else 0 := by unfold DSStruct.condw; rw [ite_eq_left h]
 
 theorem condw_ctr {w : Γ.V → Bool} {v : Γ.V} (h : D.leaf v = false) (a : DSLat Γ) :
     D.condw w v a = if a.1 (D.locOut w v) v = w v then 1 else 0 := by
-  unfold DSStruct.condw; rw [if_neg (by simp [h])]
+  unfold DSStruct.condw; rw [ite_eq_right (by simp [h])]
 
 theorem lat_leaf {P : GTarget Γ} {Δ : GAssign Γ 2 → ℝ} {e : Γ.Edge}
     (h : D.leaf (D.vtx e) = true) (a : DSLat Γ) :
     D.lat P Δ e a = if a.1 = dfltTable Γ then vMarg P (D.vtx e) a.2 else 0 := by
-  unfold DSStruct.lat; rw [if_pos h]
+  unfold DSStruct.lat; rw [ite_eq_left h]
 
 theorem lat_ctr {P : GTarget Γ} {Δ : GAssign Γ 2 → ℝ} {e : Γ.Edge}
     (h : D.leaf (D.vtx e) = false) (a : DSLat Γ) :
     D.lat P Δ e a = if a.2 = false then D.tabLaw P Δ e a.1 else 0 := by
-  unfold DSStruct.lat; rw [if_neg (by simp [h])]
+  unfold DSStruct.lat; rw [ite_eq_right (by simp [h])]
 
 /-- The per-source factor of the reconstructed model at a leaf source. -/
 theorem factor_leaf {P : GTarget Γ} {Δ : GAssign Γ 2 → ℝ} {e : Γ.Edge}
@@ -1206,14 +1206,14 @@ theorem factor_leaf {P : GTarget Γ} {Δ : GAssign Γ 2 → ℝ} {e : Γ.Edge}
         = if T = dfltTable Γ then vMarg P (D.vtx e) (w (D.vtx e)) else 0 := by
     intro T
     by_cases hT : T = dfltTable Γ
-    · simp only [if_pos hT]
+    · simp only [ite_eq_left hT]
       rw [Fintype.sum_bool]
       cases w (D.vtx e) <;> simp
     · simp [hT]
   simp only [hinner]
   rw [Finset.sum_ite_eq' (Finset.univ : Finset ((Γ.V → Bool) → (Γ.V → Bool)))
     (dfltTable Γ) (fun _ => vMarg P (D.vtx e) (w (D.vtx e))),
-    if_pos (Finset.mem_univ (dfltTable Γ))]
+    ite_eq_left (Finset.mem_univ (dfltTable Γ))]
 
 end DSStruct
 
@@ -1287,7 +1287,7 @@ theorem factor_ctr {P : GTarget Γ} {Δ : GAssign Γ 2 → ℝ} (hP : IsLaw P)
     intro T; by_cases h : D.tableOf P ω = T <;> simp [h]
   rw [Finset.sum_congr rfl fun T _ => this T, ← Finset.mul_sum,
     Finset.sum_ite_eq (Finset.univ : Finset ((Γ.V → Bool) → (Γ.V → Bool))) (D.tableOf P ω) G,
-    if_pos (Finset.mem_univ (D.tableOf P ω))]
+    ite_eq_left (Finset.mem_univ (D.tableOf P ω))]
   ring
 
 end DSStruct
@@ -1317,15 +1317,15 @@ theorem dec_indicator (P : GTarget Γ) (Δ : GAssign Γ 2 → ℝ) (w : Γ.V →
         funext u
         unfold DSStruct.locVec DSStruct.locOut
         by_cases hu : D.leaf u = true ∧ D.mate u = v
-        · rw [if_pos hu, if_pos hu, hlf u hu.1]
-        · rw [if_neg hu, if_neg hu]
+        · rw [ite_eq_left hu, ite_eq_left hu, hlf u hu.1]
+        · rw [ite_eq_right hu, ite_eq_right hu]
       have hv : ∀ v : Γ.V,
           D.condw w v (z (D.edgeAt v)) = if D.dec z v = w v then (1 : ℝ) else 0 := by
         intro v
         unfold DSStruct.condw DSStruct.dec
         by_cases hl : D.leaf v = true
-        · rw [if_pos hl, if_pos hl]
-        · rw [if_neg hl, if_neg hl, hloc v]
+        · rw [ite_eq_left hl, ite_eq_left hl]
+        · rw [ite_eq_right hl, ite_eq_right hl, hloc v]
       have hiff : (∀ v ∈ (Finset.univ : Finset Γ.V), D.dec z v = w v) ↔ D.dec z = w := by
         constructor
         · intro h; funext v; exact h v (Finset.mem_univ v)
@@ -1335,20 +1335,20 @@ theorem dec_indicator (P : GTarget Γ) (Δ : GAssign Γ 2 → ℝ) (w : Γ.V →
     · push Not at hlf
       obtain ⟨ℓ, hl, hne⟩ := hlf
       have hz : D.condw w ℓ (z (D.edgeAt ℓ)) = 0 := by
-        rw [D.condw_leaf hl, if_neg hne]
+        rw [D.condw_leaf hl, ite_eq_right hne]
       rw [Finset.prod_eq_zero (Finset.mem_univ ℓ) hz]
       have hdz : D.dec z ≠ w := by
         intro h
         refine hne ?_
         have hcf := congrFun h ℓ
         unfold DSStruct.dec at hcf
-        rw [if_pos hl] at hcf
+        rw [ite_eq_left hl] at hcf
         exact hcf
-      rw [if_neg hdz]
+      rw [ite_eq_right hdz]
   rw [h2, h3]
   by_cases h : D.dec z = w
-  · rw [if_pos h, if_pos h, mul_one]
-  · rw [if_neg h, if_neg h, mul_zero]
+  · rw [ite_eq_left h, ite_eq_left h, mul_one]
+  · rw [ite_eq_right h, ite_eq_right h, mul_zero]
 
 /-- **The double-star reconstruction.**  A target passing the order-two Navascués–Wolfe test on
 a pair graph carrying a double-star structure is compatible. -/
@@ -1369,9 +1369,9 @@ theorem gCompatible_of_dsStruct (D : DSStruct Γ) {Δ : GAssign Γ 2 → ℝ} {P
         (if D.leaf (D.vtx e) = true then vMarg P (D.vtx e) (w (D.vtx e)) else 1) := by
     intro e
     by_cases he : D.leaf (D.vtx e) = true
-    · rw [if_pos he, if_pos he, one_mul, D.factor_leaf he]
+    · rw [ite_eq_left he, ite_eq_left he, one_mul, D.factor_leaf he]
     · have he' : D.leaf (D.vtx e) = false := by simpa using he
-      rw [if_neg he, if_neg he, mul_one, D.factor_ctr hP hsym hdiag he']
+      rw [ite_eq_right he, ite_eq_right he, mul_one, D.factor_ctr hP hsym hdiag he']
   rw [Finset.prod_congr rfl fun e _ => hK e, Finset.prod_mul_distrib]
   -- the target, decomposed over the components
   have hcov : (Finset.univ : Finset Γ.Edge).biUnion D.comp = Finset.univ := by
@@ -1386,9 +1386,9 @@ theorem gCompatible_of_dsStruct (D : DSStruct Γ) {Δ : GAssign Γ 2 → ℝ} {P
         * blockMarg (D.leaves e) P w := by
     intro e
     by_cases he : D.leaf (D.vtx e) = true
-    · rw [if_pos he, one_mul, D.comp_of_leaf he, D.leaves_of_leafEdge he]
+    · rw [ite_eq_left he, one_mul, D.comp_of_leaf he, D.leaves_of_leafEdge he]
     · have he' : D.leaf (D.vtx e) = false := by simpa using he
-      rw [if_neg he]
+      rw [ite_eq_right he]
       exact (D.ctrFactor_mul hP hsym hdiag he' w).symm
   have hleaves : (∏ e : Γ.Edge, blockMarg (D.leaves e) P w)
       = ∏ ℓ ∈ D.allLeaves, vMarg P ℓ (w ℓ) := by

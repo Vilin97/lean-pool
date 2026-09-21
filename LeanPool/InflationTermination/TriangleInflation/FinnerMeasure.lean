@@ -376,7 +376,7 @@ private lemma law_margC (μX : Measure X) (μY : Measure Y) (μZ : Measure Z)
   have hqi : Integrable (fun q : Y × Z => h (q.2, q.1)) (μY.prod μZ) :=
     integrable_of_unit (by fun_prop) (fun q => (hh _).1) fun q => (hh _).2
   rw [integral_prod _ hFi]
-  show (∫ _ : X, (∫ q : Y × Z, h (q.2, q.1) ∂(μY.prod μZ)) ∂μX) = _
+  change (∫ _ : X, (∫ q : Y × Z, h (q.2, q.1) ∂(μY.prod μZ)) ∂μX) = _
   rw [integral_prod_symm _ hqi, ← integral_prod _ hhi]
   simp
 
@@ -422,7 +422,7 @@ private lemma law_atom (μX : Measure X) (μY : Measure Y) (μZ : Measure Z)
         fun q => (unit_mul (unit_mul (hf _) (hg _)) (hh _)).2
     rw [integral_prod_symm _ hqi]
     refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
-    show (∫ y : Y, f (x, z) * g (x, y) * h (z, y) ∂μY)
+    change (∫ y : Y, f (x, z) * g (x, y) * h (z, y) ∂μY)
       = f (x, z) * ∫ y, g (x, y) * h (z, y) ∂μY
     rw [← integral_const_mul]
     exact integral_congr_ae (Filter.Eventually.of_forall fun y => by ring)

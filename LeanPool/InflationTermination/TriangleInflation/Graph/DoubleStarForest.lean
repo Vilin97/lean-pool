@@ -292,10 +292,10 @@ def mate (v : Γ.V) : Γ.V :=
     if Γ.G.Adj v (C.A v) then C.A v else C.B v
 
 theorem mate_ctrA (v : Γ.V) : C.mate (C.A v) = C.B v := by
-  rw [mate, if_pos (C.A_A v).symm, B_A]
+  rw [mate, ite_eq_left (C.A_A v).symm, B_A]
 
 theorem mate_ctrB (v : Γ.V) : C.mate (C.B v) = C.A v := by
-  rw [mate, if_neg, if_pos (C.B_B v).symm, A_B]
+  rw [mate, ite_eq_right, ite_eq_left (C.B_B v).symm, A_B]
   rw [A_B]
   exact fun h => C.A_ne_B v h.symm
 
@@ -306,11 +306,11 @@ theorem mate_of_leaf {v : Γ.V} (h1 : v ≠ C.A v) (h2 : v ≠ C.B v) :
   · exact absurd h h1
   · exact absurd h h2
   · have hm : C.mate v = c := by
-      rw [mate, if_neg h1, if_neg h2]
+      rw [mate, ite_eq_right h1, ite_eq_right h2]
       by_cases h3 : Γ.G.Adj v (C.A v)
-      · rw [if_pos h3]
+      · rw [ite_eq_left h3]
         exact huniq _ h3
-      · rw [if_neg h3]
+      · rw [ite_eq_right h3]
         rcases hcAB with hc | hc
         · exact absurd (hc ▸ hadj) h3
         · exact hc.symm
@@ -348,10 +348,10 @@ theorem B_mate (v : Γ.V) : C.B (C.mate v) = C.B v :=
 
 theorem mate_mate {v : Γ.V} (h : v = C.A v ∨ v = C.B v) : C.mate (C.mate v) = v := by
   rcases h with h | h
-  · have hm : C.mate v = C.B v := by rw [mate, if_pos h]
+  · have hm : C.mate v = C.B v := by rw [mate, ite_eq_left h]
     rw [hm, C.mate_ctrB v, ← h]
   · have h1 : v ≠ C.A v := fun h1 => C.A_ne_B v (by rw [← h1, ← h])
-    have hm : C.mate v = C.A v := by rw [mate, if_neg h1, if_pos h]
+    have hm : C.mate v = C.A v := by rw [mate, ite_eq_right h1, ite_eq_left h]
     rw [hm, C.mate_ctrA v, ← h]
 
 /-- The edge that carries a vertex: its unique source when it is a leaf, the centre source of
@@ -447,7 +447,7 @@ theorem fib_ctr {v : Γ.V} (h : C.leafB v = false) :
 theorem root_leaf {v : Γ.V} (_h : C.leafB v = true) : C.root v = C.edgeAt (C.mate v) := by
   apply Subtype.ext
   rw [edgeAt_val]
-  show s(C.A v, C.B v) = s(C.mate v, C.mate (C.mate v))
+  change s(C.A v, C.B v) = s(C.mate v, C.mate (C.mate v))
   rcases C.mate_mem v with hm | hm
   · rw [hm, C.mate_ctrA v]
   · rw [hm, C.mate_ctrB v, Sym2.eq_swap]
@@ -455,17 +455,17 @@ theorem root_leaf {v : Γ.V} (_h : C.leafB v = true) : C.root v = C.edgeAt (C.ma
 theorem root_ctr {v : Γ.V} (h : C.leafB v = false) : C.root v = C.edgeAt v := by
   apply Subtype.ext
   rw [edgeAt_val]
-  show s(C.A v, C.B v) = s(v, C.mate v)
+  change s(C.A v, C.B v) = s(v, C.mate v)
   rcases C.leafB_false.mp h with hv | hv
-  · have hm : C.mate v = C.B v := by rw [mate, if_pos hv]
+  · have hm : C.mate v = C.B v := by rw [mate, ite_eq_left hv]
     rw [hm, ← hv]
   · have h1 : v ≠ C.A v := fun h1 => C.A_ne_B v (by rw [← h1, ← hv])
-    have hm : C.mate v = C.A v := by rw [mate, if_neg h1, if_pos hv]
+    have hm : C.mate v = C.A v := by rw [mate, ite_eq_right h1, ite_eq_left hv]
     rw [hm, ← hv, Sym2.eq_swap]
 
 theorem root_eq_of_reach {u v : Γ.V} (h : Γ.G.Reachable u v) : C.root u = C.root v := by
   apply Subtype.ext
-  show s(C.A u, C.B u) = s(C.A v, C.B v)
+  change s(C.A u, C.B u) = s(C.A v, C.B v)
   rw [C.constA u v h, C.constB u v h]
 
 theorem comp_sourceDisjoint (y y' : Γ.Edge) (hy : y ≠ y') :
@@ -496,13 +496,13 @@ theorem edgeAt_surj (e : Γ.Edge) : ∃ v, C.edgeAt v = e := by
               rcases hq with hq | hq
               · exact absurd (hq.trans (hA.trans hp.symm)) hadj.ne'
               · rw [hq, hB]
-            rw [mate, if_pos hp, hqB]
+            rw [mate, ite_eq_left hp, hqB]
           · have hp1 : p ≠ C.A p := fun h1 => C.A_ne_B p (by rw [← h1, ← hp])
             have hqA : q = C.A p := by
               rcases hq with hq | hq
               · rw [hq, hA]
               · exact absurd (hq.trans (hB.trans hp.symm)) hadj.ne'
-            rw [mate, if_neg hp1, if_pos hp, hqA]
+            rw [mate, ite_eq_right hp1, ite_eq_left hp, hqA]
         · rw [not_or] at hq
           exact Or.inr (C.mate_uniq hq.1 hq.2 p hadj.symm).symm
       · rw [not_or] at hp

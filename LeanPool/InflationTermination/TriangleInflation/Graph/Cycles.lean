@@ -60,7 +60,7 @@ theorem sum_prod_sgn (F : Finset ι) :
   by_cases hF : F = ∅
   · subst hF
     simp
-  · rw [if_neg hF]
+  · rw [ite_eq_right hF]
     obtain ⟨v, hv⟩ := Finset.nonempty_iff_ne_empty.2 hF
     refine Finset.prod_eq_zero (Finset.mem_univ v) ?_
     simp [hv, sgn]
@@ -74,11 +74,11 @@ theorem sum_prod_sgn_mul (u w : ι → Bool) :
   rw [← h]
   by_cases huw : u = w
   · subst huw
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     rw [Finset.prod_congr rfl (fun v _ => by rw [sgn_mul_self]), Finset.prod_const,
       Finset.card_univ]
     norm_num
-  · rw [if_neg huw]
+  · rw [ite_eq_right huw]
     obtain ⟨v, hv⟩ : ∃ v, u v ≠ w v := by
       by_contra hc
       exact huw (funext fun v => by simpa using not_exists.1 hc v)
@@ -242,7 +242,7 @@ theorem cycleTarget_sum (m : ℕ) (q : ℝ) :
   simp_rw [h1, mul_ite, mul_zero]
   rw [Finset.sum_ite_eq' Finset.univ (∅ : Finset (Fin m))
     (fun F => (-q) ^ ((cycleBoundary m F).card / 2) * (2 : ℝ) ^ m)]
-  rw [if_pos (Finset.mem_univ _), cycleBoundary_empty]
+  rw [ite_eq_left (Finset.mem_univ _), cycleBoundary_empty]
   simp only [Finset.card_empty, Nat.zero_div, pow_zero, one_mul]
   rw [← mul_pow]
   norm_num
@@ -345,14 +345,14 @@ theorem cycleTarget_nonneg (m : ℕ) (hm : 0 < m) (q : ℝ) (hq0 : 0 ≤ q)
           intro E
           by_cases hE : E = ∅
           · subst hE
-            rw [if_pos rfl]
+            rw [ite_eq_left rfl]
             have : D.filter (fun F => cycleBoundary m F = ∅) = ∅ := by
               refine Finset.filter_eq_empty_iff.2 ?_
               intro F hF
               exact hDmem F hF
             rw [this]
             simp
-          · rw [if_neg hE, Finset.sum_const, nsmul_eq_mul]
+          · rw [ite_eq_right hE, Finset.sum_const, nsmul_eq_mul]
             have hcard := hfib E
             have hpos : (0 : ℝ) ≤ ρ ^ E.card := pow_nonneg hρ0 _
             have : ((D.filter (fun F => cycleBoundary m F = E)).card : ℝ) ≤ 2 := by
@@ -373,7 +373,7 @@ theorem cycleTarget_nonneg (m : ℕ) (hm : 0 < m) (q : ℝ) (hq0 : 0 ≤ q)
             rw [← this]
             simp [add_comm]
           rw [← Finset.mul_sum, hgeom]
-          simp only [Finset.mem_univ, if_true, Finset.card_empty, pow_zero, mul_one]
+          simp only [Finset.mem_univ, ite_true, Finset.card_empty, pow_zero, mul_one]
           ring
         calc (∑ F ∈ D, |T F|) = ∑ F ∈ D, ρ ^ (cycleBoundary m F).card := e1
           _ = ∑ E : Finset (Fin m), ∑ F ∈ D.filter (fun F => cycleBoundary m F = E),
@@ -431,7 +431,7 @@ theorem cycleTarget_moment (m : ℕ) (q : ℝ) (F : Finset (Fin m)) :
   simp_rw [e2, ← Finset.bot_eq_empty, symmDiff_eq_bot, mul_ite, mul_zero]
   rw [Finset.sum_ite_eq' Finset.univ F
     (fun F' => (-q) ^ ((cycleBoundary m F').card / 2) * (2 : ℝ) ^ m)]
-  rw [if_pos (Finset.mem_univ _)]
+  rw [ite_eq_left (Finset.mem_univ _)]
   have h2 : ((1 : ℝ) / 2) ^ m * (2 : ℝ) ^ m = 1 := by rw [← mul_pow]; norm_num
   linear_combination ((-q) ^ ((cycleBoundary m F).card / 2)) * h2
 
