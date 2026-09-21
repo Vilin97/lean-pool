@@ -196,7 +196,7 @@ theorem modulus_residual_le_of_gram_residual
   · simp only [w, hw, norm_zero, hδ]
   have hwpos : 0 < ‖w‖ := norm_pos_iff.mpr hw
   have hmodpos : 0 ≤ RCLike.re ⟪X.modulus w, w⟫_ℂ :=
-    ((ContinuousLinearMap.nonneg_iff_isPositive X.modulus).mp X.modulus_nonneg).2 w
+    ((ContinuousLinearMap.nonneg_iff_isPositive (f := X.modulus)).mp X.modulus_nonneg).2 w
   have hfactor :
       X.modulus w + (lam : ℂ) • w =
         gramOperator X x - ((lam ^ 2 : ℝ) : ℂ) • x := by

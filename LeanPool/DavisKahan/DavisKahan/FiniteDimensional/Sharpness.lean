@@ -865,8 +865,10 @@ theorem sinTwoTheta_model_operatorNorm_equality
     (b - a) * ‖(sinTwoAngleOperator (modelSubspace (𝕜 := 𝕜))
         (rotatedModelSubspace (𝕜 := 𝕜) θ)).toContinuousLinearMap‖ =
       2 * ‖(modelSinTwoThetaPerturbation (𝕜 := 𝕜) a b θ).toContinuousLinearMap‖ := by
-  rw [opNorm_eq_singularValues_zero _ finrank_euclideanSpace_fin (by norm_num),
-    opNorm_eq_singularValues_zero _ finrank_euclideanSpace_fin (by norm_num),
+  rw [opNorm_eq_singularValues_zero (sinTwoAngleOperator (modelSubspace (𝕜 := 𝕜))
+      (rotatedModelSubspace (𝕜 := 𝕜) θ)) finrank_euclideanSpace_fin (by norm_num),
+    opNorm_eq_singularValues_zero (modelSinTwoThetaPerturbation (𝕜 := 𝕜) a b θ)
+      finrank_euclideanSpace_fin (by norm_num),
     singularValues_sinTwoAngle_model hθ0 hθ1,
     singularValues_modelSinTwoThetaPerturbation hab hθ0 hθ1]
   simp only [pairSingularValues_zero]
@@ -974,8 +976,10 @@ theorem norm_sinTwoAngle_model_eq_norm_sinAngle_doubled
         (rotatedModelSubspace (𝕜 := 𝕜) θ)).toContinuousLinearMap‖ =
       ‖(sinAngleOperator (modelSubspace (𝕜 := 𝕜))
         (rotatedModelSubspace (𝕜 := 𝕜) (2 * θ))).toContinuousLinearMap‖ := by
-  rw [opNorm_eq_singularValues_zero _ finrank_euclideanSpace_fin (by norm_num),
-    opNorm_eq_singularValues_zero _ finrank_euclideanSpace_fin (by norm_num),
+  rw [opNorm_eq_singularValues_zero (sinTwoAngleOperator (modelSubspace (𝕜 := 𝕜))
+      (rotatedModelSubspace (𝕜 := 𝕜) θ)) finrank_euclideanSpace_fin (by norm_num),
+    opNorm_eq_singularValues_zero (sinAngleOperator (modelSubspace (𝕜 := 𝕜))
+      (rotatedModelSubspace (𝕜 := 𝕜) (2 * θ))) finrank_euclideanSpace_fin (by norm_num),
     singularValues_sinTwoAngle_model hθ0 hθ1,
     singularValues_sinAngle_model (𝕜 := 𝕜) (by linarith) (by linarith)]
   simp only [pairSingularValues_zero]

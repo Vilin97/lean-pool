@@ -486,7 +486,7 @@ theorem denseRange_beamEmbed : DenseRange beamEmbed := by
             · rw [abs_sub_comm]
               exact him.le
         _ = 2 * (ε / 4) := by ring
-    have hb := eLpNorm_le_of_ae_bound (p := 2) hbound
+    have hb := eLpNorm_le_of_ae_bound (p := 2) (Lp.aestronglyMeasurable _) hbound
     rw [measure_univ, ENNReal.one_rpow, one_mul] at hb
     rw [Lp.norm_def]
     calc (eLpNorm (⇑(G - _)) 2 unitIocMeasure).toReal
@@ -655,7 +655,8 @@ theorem isCompactOperator_beamEmbed : IsCompactOperator beamEmbed := by
       Submodule.finiteDimensional_of_le hle
     exact ContinuousLinearMap.isCompactOperator_of_finiteDimensional_range _
   have hKcompact : IsCompactOperator (secondPrimitiveCLM.comp beamSnd) :=
-    isCompactOperator_secondPrimitiveCLM.comp_clm beamSnd
+    IsCompactOperator.comp_clm (f := secondPrimitiveCLM)
+      isCompactOperator_secondPrimitiveCLM beamSnd
   have hsum := hAcompact.add hKcompact
   have hfun : ⇑beamEmbed
       = ⇑(beamEmbed - secondPrimitiveCLM.comp beamSnd)

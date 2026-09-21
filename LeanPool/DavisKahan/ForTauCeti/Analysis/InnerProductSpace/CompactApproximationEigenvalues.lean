@@ -324,7 +324,7 @@ theorem norm_comp_subtypeL_orthogonal_le (hAc : IsCompactOperator A)
     have hsr : spectralRadius 𝕜 S = ‖S‖₊ := S.spectralRadius_eq_nnnorm hSsa
     have hle : (‖S‖₊ : ℝ≥0∞) ≤ (cn : ℝ≥0∞) := by
       rw [← hsr]
-      simp only [spectralRadius]
+      simp only [spectralRadius_eq_of_unital]
       refine iSup₂_le fun k hk => ?_
       rcases eq_or_ne k 0 with rfl | hk0
       · simp
@@ -593,7 +593,7 @@ theorem finrank_eigenspace_eq_card_approximationNumber_eq (hAc : IsCompactOperat
       exact le_antisymm (not_lt.mp hle) hge
   have hcard : Nat.card {n : ℕ // A.approximationNumber n = μ} = N - M := by
     have hcongr : Nat.card {n : ℕ // A.approximationNumber n = μ} =
-        Nat.card (Set.Ico M N : Set ℕ) := Nat.card_congr (Equiv.setCongr hset)
+        Nat.card (Set.Ico M N : Set ℕ) := Nat.card_congr (Set.equivOfEq hset)
     rw [hcongr, Nat.card_eq_fintype_card, Fintype.card_Ico, Nat.card_Ico]
   rw [hcard, hN, hM, finrank_eigenSpan_Ici hAc hAs hμ]
   omega

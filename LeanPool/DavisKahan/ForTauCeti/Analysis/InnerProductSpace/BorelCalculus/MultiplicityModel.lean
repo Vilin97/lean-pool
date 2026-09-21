@@ -157,11 +157,12 @@ theorem memLp_two_mul_field (ρ : Measure α) {g : α → 𝕜} (hg : Measurable
 
 /-- The `L²` seminorm estimate for multiplication by a bounded `𝕜`-valued symbol. -/
 theorem eLpNorm_two_mul_field_le (ρ : Measure α) {g : α → 𝕜} {C : ℝ}
-    (hgC : ∀ x, ‖g x‖ ≤ C) (f : α → 𝕜) :
+    (hgC : ∀ x, ‖g x‖ ≤ C) (f : α → 𝕜)
+    (hgf : AEStronglyMeasurable (fun x => g x * f x) ρ) :
     eLpNorm (fun x => g x * f x) 2 ρ ≤ ENNReal.ofReal |C| * eLpNorm f 2 ρ := by
   have hle : eLpNorm (fun x => g x * f x) 2 ρ ≤
       eLpNorm (((|C| : ℝ) : 𝕜) • f) 2 ρ := by
-    refine eLpNorm_mono_ae (Filter.Eventually.of_forall fun x => ?_)
+    refine eLpNorm_mono_ae hgf (Filter.Eventually.of_forall fun x => ?_)
     simp only [Pi.smul_apply, smul_eq_mul, norm_mul, RCLike.norm_ofReal, abs_abs]
     exact mul_le_mul_of_nonneg_right ((hgC x).trans (le_abs_self C)) (norm_nonneg _)
   rw [eLpNorm_const_smul] at hle
@@ -174,7 +175,8 @@ theorem norm_toLp_mul_field_le (ρ : Measure α) {g : α → 𝕜} (hg : Measura
     (hgC : ∀ x, ‖g x‖ ≤ C) (F : Lp 𝕜 2 ρ) :
     ‖MemLp.toLp (fun x => g x * F x) (memLp_two_mul_field ρ hg hgC F)‖ ≤ |C| * ‖F‖ := by
   rw [Lp.norm_toLp, Lp.norm_def, ← ENNReal.toReal_ofReal (abs_nonneg C), ← ENNReal.toReal_mul]
-  refine ENNReal.toReal_mono ?_ (eLpNorm_two_mul_field_le ρ hgC _)
+  refine ENNReal.toReal_mono ?_ (eLpNorm_two_mul_field_le ρ hgC _
+    (hg.aestronglyMeasurable.mul (Lp.aestronglyMeasurable F)))
   exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top (Lp.eLpNorm_ne_top F)
 
 /-- Multiplication by a bounded measurable `𝕜`-valued function on `L²(𝕜)`. -/

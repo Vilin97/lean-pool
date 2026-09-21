@@ -440,7 +440,7 @@ theorem complex_inResolventSet_and_norm_resolvent_le_inv_distance
       rw [← hAsa.spectrumRestricts.algebraMap_image]
       exact ⟨lam, hlam, rfl⟩
     have hdist : delta ≤ ‖z - algebraMap ℝ ℂ lam‖ := by
-      (convert hsep lam (by exact hlamC) using 1; simp)
+      exact hsep lam hlamC
     have hdist' : delta ≤ ‖algebraMap ℝ ℂ lam - z‖ := by
       simpa only [norm_sub_rev] using hdist
     change ‖(algebraMap ℝ ℂ lam - z)⁻¹‖ ≤ delta⁻¹

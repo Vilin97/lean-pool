@@ -163,7 +163,7 @@ theorem isPositive_smul_one_sub_of_upperFormBoundOn_top {R : E →L[𝕜] E}
 theorem le_smul_one_of_upperFormBoundOn_top {R : E →L[𝕜] E}
     (hsym : R.IsSymmetric) {c : ℝ} (h : R.UpperFormBoundOn ⊤ c) :
     R ≤ ((c : ℝ) : 𝕜) • (1 : E →L[𝕜] E) :=
-  (_root_.ContinuousLinearMap.le_def _ _).mpr
+  _root_.ContinuousLinearMap.le_def.mpr
     (isPositive_smul_one_sub_of_upperFormBoundOn_top hsym h)
 
 /-! ### The carrier-free core
@@ -509,7 +509,7 @@ theorem adjoint_conj_neg_resolvent_le_of_lowerFormBound (hA : IsSelfAdjoint A)
     simp only [ContinuousLinearMap.comp_apply, _root_.sub_apply, _root_.smul_apply,
       _root_.one_apply_eq_self, map_sub, map_smul]
   rw [hexp] at hpos
-  exact (_root_.ContinuousLinearMap.le_def _ _).mpr hpos
+  exact _root_.ContinuousLinearMap.le_def.mpr hpos
 
 end Conjugate
 

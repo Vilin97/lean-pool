@@ -208,7 +208,8 @@ theorem gauge_isometricRangeCrossBlock_le
   let := rangeHasOrthogonalProjection X hX
   let V : Submodule ℂ H := LinearMap.range X.toLinearMap
   rw [isometricRangeCrossBlock_eq_projectedResidual_comp_adjoint A X M hX]
-  refine N.gaugeReal_comp_le_of_contractions (E := F) (F := H) (G := H) (H := H)
+  exact N.gaugeReal_comp_le_of_contractions (E := F) (F := H) (G := H) (H := H)
+    (A := residual A X M)
     Vᗮ.starProjection X.adjoint hR
     Vᗮ.starProjection_norm_le (isometry_and_adjoint_norm_le_one X hX).2
 

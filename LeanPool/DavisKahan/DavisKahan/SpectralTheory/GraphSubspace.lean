@@ -284,10 +284,98 @@ theorem projection_graphSubspace_formula
       simpa using h
     rw [happ, sub_self, inner_zero_right]
 
--- Measured after the extractions below: 400000 fails, 800000 succeeds.  The
--- previous value was 1600000; heartbeats count allocations and are
--- deterministic, so this is a reproducible bound rather than a machine-
--- dependent one.
+/-- Equal norms of the two complementary projection blocks determine the projection gap. -/
+private theorem norm_projection_sub_of_block_norms
+    (U V : Submodule 𝕜 E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
+    {g : ℝ} (hg0 : 0 ≤ g)
+    (hT1norm : ‖U.starProjection * (1 - V.starProjection)‖ = g)
+    (hT2norm : ‖(1 - U.starProjection) * V.starProjection‖ = g) :
+    ‖U.starProjection - V.starProjection‖ = g := by
+  let P : E →L[𝕜] E := U.starProjection
+  let Q : E →L[𝕜] E := V.starProjection
+  have hQQ : ∀ x, Q (Q x) = Q x := fun x =>
+    Submodule.starProjection_eq_self_iff.mpr
+      (V.starProjection_apply_mem x)
+  have hQmem : ∀ x, Q x ∈ V := fun x =>
+    V.starProjection_apply_mem x
+  -- Pythagoras upper bound
+  have hbound : ∀ x, ‖(P - Q) x‖ ≤ g * ‖x‖ := by
+    intro x
+    have hu1mem : P (x - Q x) ∈ U := U.starProjection_apply_mem _
+    have hu2mem : Q x - P (Q x) ∈ Uᗮ :=
+      Submodule.sub_starProjection_mem_orthogonal (K := U) (Q x)
+    have hdec : (P - Q) x = P (x - Q x) - (Q x - P (Q x)) := by
+      simp only [sub_apply, map_sub]
+      abel
+    have horth : ⟪P (x - Q x), Q x - P (Q x)⟫_𝕜 = 0 :=
+      Submodule.inner_right_of_mem_orthogonal hu1mem hu2mem
+    have hpyth : ‖(P - Q) x‖ ^ 2
+        = ‖P (x - Q x)‖ ^ 2 + ‖Q x - P (Q x)‖ ^ 2 := by
+      rw [hdec, norm_sub_sq (𝕜 := 𝕜), horth]
+      simp
+    have hb1 : ‖P (x - Q x)‖ ≤ g * ‖x - Q x‖ := by
+      have hQw : Q (x - Q x) = 0 := by
+        rw [map_sub, hQQ x, sub_self]
+      have h1 : (1 - Q) (x - Q x) = x - Q x := by
+        show (x - Q x) - Q (x - Q x) = x - Q x
+        rw [hQw, sub_zero]
+      have happ : (P * (1 - Q)) (x - Q x) = P (x - Q x) := by
+        calc (P * (1 - Q)) (x - Q x) = P ((1 - Q) (x - Q x)) := rfl
+          _ = P (x - Q x) := by rw [h1]
+      calc ‖P (x - Q x)‖ = ‖(P * (1 - Q)) (x - Q x)‖ := by rw [happ]
+        _ ≤ ‖P * (1 - Q)‖ * ‖x - Q x‖ := ContinuousLinearMap.le_opNorm _ _
+        _ = g * ‖x - Q x‖ := by rw [hT1norm]
+    have hb2 : ‖Q x - P (Q x)‖ ≤ g * ‖Q x‖ := by
+      have happ : ((1 - P) * Q) (Q x) = Q x - P (Q x) := by
+        show (1 - P) (Q (Q x)) = Q x - P (Q x)
+        rw [hQQ x]
+        rfl
+      calc ‖Q x - P (Q x)‖ = ‖((1 - P) * Q) (Q x)‖ := by rw [happ]
+        _ ≤ ‖(1 - P) * Q‖ * ‖Q x‖ := ContinuousLinearMap.le_opNorm _ _
+        _ = g * ‖Q x‖ := by rw [hT2norm]
+    have hQorth : ⟪Q x, x - Q x⟫_𝕜 = 0 :=
+      Submodule.inner_right_of_mem_orthogonal (hQmem x)
+        (Submodule.sub_starProjection_mem_orthogonal
+          (K := V) x)
+    have hxsq : ‖x‖ ^ 2 = ‖Q x‖ ^ 2 + ‖x - Q x‖ ^ 2 := by
+      have hx : x = Q x + (x - Q x) := by abel
+      calc ‖x‖ ^ 2 = ‖Q x + (x - Q x)‖ ^ 2 := by rw [← hx]
+        _ = ‖Q x‖ ^ 2 + 2 * RCLike.re ⟪Q x, x - Q x⟫_𝕜 + ‖x - Q x‖ ^ 2 :=
+            norm_add_sq (𝕜 := 𝕜) _ _
+        _ = ‖Q x‖ ^ 2 + ‖x - Q x‖ ^ 2 := by
+            rw [hQorth]
+            simp
+    have hfin : ‖(P - Q) x‖ ^ 2 ≤ (g * ‖x‖) ^ 2 := by
+      have e1 : ‖P (x - Q x)‖ ^ 2 ≤ (g * ‖x - Q x‖) ^ 2 := by
+        nlinarith [norm_nonneg (P (x - Q x)), hb1]
+      have e2 : ‖Q x - P (Q x)‖ ^ 2 ≤ (g * ‖Q x‖) ^ 2 := by
+        nlinarith [norm_nonneg (Q x - P (Q x)), hb2]
+      calc ‖(P - Q) x‖ ^ 2
+          = ‖P (x - Q x)‖ ^ 2 + ‖Q x - P (Q x)‖ ^ 2 := hpyth
+        _ ≤ (g * ‖x - Q x‖) ^ 2 + (g * ‖Q x‖) ^ 2 := by linarith
+        _ = g ^ 2 * (‖Q x‖ ^ 2 + ‖x - Q x‖ ^ 2) := by ring
+        _ = g ^ 2 * ‖x‖ ^ 2 := by rw [← hxsq]
+        _ = (g * ‖x‖) ^ 2 := by ring
+    nlinarith [hfin, norm_nonneg ((P - Q) x), mul_nonneg hg0 (norm_nonneg x)]
+  have hupper : ‖P - Q‖ ≤ g :=
+    ContinuousLinearMap.opNorm_le_bound _ hg0 hbound
+  -- lower bound through the factorization `P (1 - Q) = (P - Q)(1 - Q)`
+  have hQQop : Q * Q = Q :=
+    (V.isIdempotentElem_starProjection).eq
+  have hfactor : (P - Q) * (1 - Q) = P * (1 - Q) := by
+    rw [sub_mul, mul_sub, mul_sub, mul_one, mul_one, hQQop]
+    abel
+  have h1Qnorm : ‖(1 : E →L[𝕜] E) - Q‖ ≤ 1 := by
+    have h := Vᗮ.starProjection_norm_le
+    rwa [Submodule.starProjection_orthogonal'] at h
+  have hlower : g ≤ ‖P - Q‖ := by
+    calc g = ‖P * (1 - Q)‖ := by rw [hT1norm]
+      _ = ‖(P - Q) * (1 - Q)‖ := by rw [hfactor]
+      _ ≤ ‖P - Q‖ * ‖1 - Q‖ := norm_mul_le _ _
+      _ ≤ ‖P - Q‖ * 1 := mul_le_mul_of_nonneg_left h1Qnorm (norm_nonneg _)
+      _ = ‖P - Q‖ := mul_one _
+  exact le_antisymm hupper hlower
+
 /-- The operator-norm gap between a base subspace and the graph of an
 angular operator has the exact value `‖X‖ / √(1 + ‖X‖ ^ 2)`.
 
@@ -485,92 +573,12 @@ theorem norm_projection_sub_projection_graphSubspace
     exact (sq_eq_sq₀ (norm_nonneg _) hg0).mp hsq
   -- identify the blocks with `P (1 - Q)` and `(1 - P) Q`
   set Q : E →L[𝕜] E := Submodule.starProjection (graphSubspace U X) with hQdef
-  have hQQ : ∀ x, Q (Q x) = Q x := fun x =>
-    Submodule.starProjection_eq_self_iff.mpr
-      ((graphSubspace U X).starProjection_apply_mem x)
-  have hQmem : ∀ x, Q x ∈ graphSubspace U X := fun x =>
-    (graphSubspace U X).starProjection_apply_mem x
   have hT1opQ : P * (1 - Q) = P - R * star A := by
     rw [mul_sub, mul_one, hQF, hPQ]
   have hT2opQ : (1 - P) * Q = X * R * star A := by
     rw [hQF, hT2]
-  -- Pythagoras upper bound
-  have hbound : ∀ x, ‖(P - Q) x‖ ≤ g * ‖x‖ := by
-    intro x
-    have hu1mem : P (x - Q x) ∈ U := U.starProjection_apply_mem _
-    have hu2mem : Q x - P (Q x) ∈ Uᗮ :=
-      Submodule.sub_starProjection_mem_orthogonal (K := U) (Q x)
-    have hdec : (P - Q) x = P (x - Q x) - (Q x - P (Q x)) := by
-      simp only [sub_apply, map_sub]
-      abel
-    have horth : ⟪P (x - Q x), Q x - P (Q x)⟫_𝕜 = 0 :=
-      Submodule.inner_right_of_mem_orthogonal hu1mem hu2mem
-    have hpyth : ‖(P - Q) x‖ ^ 2
-        = ‖P (x - Q x)‖ ^ 2 + ‖Q x - P (Q x)‖ ^ 2 := by
-      rw [hdec, norm_sub_sq (𝕜 := 𝕜), horth]
-      simp
-    have hb1 : ‖P (x - Q x)‖ ≤ g * ‖x - Q x‖ := by
-      have hQw : Q (x - Q x) = 0 := by
-        rw [map_sub, hQQ x, sub_self]
-      have h1 : (1 - Q) (x - Q x) = x - Q x := by
-        show (x - Q x) - Q (x - Q x) = x - Q x
-        rw [hQw, sub_zero]
-      have happ : (P * (1 - Q)) (x - Q x) = P (x - Q x) := by
-        calc (P * (1 - Q)) (x - Q x) = P ((1 - Q) (x - Q x)) := rfl
-          _ = P (x - Q x) := by rw [h1]
-      calc ‖P (x - Q x)‖ = ‖(P * (1 - Q)) (x - Q x)‖ := by rw [happ]
-        _ ≤ ‖P * (1 - Q)‖ * ‖x - Q x‖ := ContinuousLinearMap.le_opNorm _ _
-        _ = g * ‖x - Q x‖ := by rw [hT1opQ, hT1norm]
-    have hb2 : ‖Q x - P (Q x)‖ ≤ g * ‖Q x‖ := by
-      have happ : ((1 - P) * Q) (Q x) = Q x - P (Q x) := by
-        show (1 - P) (Q (Q x)) = Q x - P (Q x)
-        rw [hQQ x]
-        rfl
-      calc ‖Q x - P (Q x)‖ = ‖((1 - P) * Q) (Q x)‖ := by rw [happ]
-        _ ≤ ‖(1 - P) * Q‖ * ‖Q x‖ := ContinuousLinearMap.le_opNorm _ _
-        _ = g * ‖Q x‖ := by rw [hT2opQ, hT2norm]
-    have hQorth : ⟪Q x, x - Q x⟫_𝕜 = 0 :=
-      Submodule.inner_right_of_mem_orthogonal (hQmem x)
-        (Submodule.sub_starProjection_mem_orthogonal
-          (K := graphSubspace U X) x)
-    have hxsq : ‖x‖ ^ 2 = ‖Q x‖ ^ 2 + ‖x - Q x‖ ^ 2 := by
-      have hx : x = Q x + (x - Q x) := by abel
-      calc ‖x‖ ^ 2 = ‖Q x + (x - Q x)‖ ^ 2 := by rw [← hx]
-        _ = ‖Q x‖ ^ 2 + 2 * RCLike.re ⟪Q x, x - Q x⟫_𝕜 + ‖x - Q x‖ ^ 2 :=
-            norm_add_sq (𝕜 := 𝕜) _ _
-        _ = ‖Q x‖ ^ 2 + ‖x - Q x‖ ^ 2 := by
-            rw [hQorth]
-            simp
-    have hfin : ‖(P - Q) x‖ ^ 2 ≤ (g * ‖x‖) ^ 2 := by
-      have e1 : ‖P (x - Q x)‖ ^ 2 ≤ (g * ‖x - Q x‖) ^ 2 := by
-        nlinarith [norm_nonneg (P (x - Q x)), hb1]
-      have e2 : ‖Q x - P (Q x)‖ ^ 2 ≤ (g * ‖Q x‖) ^ 2 := by
-        nlinarith [norm_nonneg (Q x - P (Q x)), hb2]
-      calc ‖(P - Q) x‖ ^ 2
-          = ‖P (x - Q x)‖ ^ 2 + ‖Q x - P (Q x)‖ ^ 2 := hpyth
-        _ ≤ (g * ‖x - Q x‖) ^ 2 + (g * ‖Q x‖) ^ 2 := by linarith
-        _ = g ^ 2 * (‖Q x‖ ^ 2 + ‖x - Q x‖ ^ 2) := by ring
-        _ = g ^ 2 * ‖x‖ ^ 2 := by rw [← hxsq]
-        _ = (g * ‖x‖) ^ 2 := by ring
-    nlinarith [hfin, norm_nonneg ((P - Q) x), mul_nonneg hg0 (norm_nonneg x)]
-  have hupper : ‖P - Q‖ ≤ g :=
-    ContinuousLinearMap.opNorm_le_bound _ hg0 hbound
-  -- lower bound through the factorization `P (1 - Q) = (P - Q)(1 - Q)`
-  have hQQop : Q * Q = Q :=
-    ((graphSubspace U X).isIdempotentElem_starProjection).eq
-  have hfactor : (P - Q) * (1 - Q) = P * (1 - Q) := by
-    rw [sub_mul, mul_sub, mul_sub, mul_one, mul_one, hQQop]
-    abel
-  have h1Qnorm : ‖(1 : E →L[𝕜] E) - Q‖ ≤ 1 := by
-    have h := (graphSubspace U X)ᗮ.starProjection_norm_le
-    rwa [Submodule.starProjection_orthogonal'] at h
-  have hlower : g ≤ ‖P - Q‖ := by
-    calc g = ‖P * (1 - Q)‖ := by rw [hT1opQ, hT1norm]
-      _ = ‖(P - Q) * (1 - Q)‖ := by rw [hfactor]
-      _ ≤ ‖P - Q‖ * ‖1 - Q‖ := norm_mul_le _ _
-      _ ≤ ‖P - Q‖ * 1 := mul_le_mul_of_nonneg_left h1Qnorm (norm_nonneg _)
-      _ = ‖P - Q‖ := mul_one _
-  exact le_antisymm hupper hlower
+  exact norm_projection_sub_of_block_norms U (graphSubspace U X) hg0
+    (by rw [hT1opQ, hT1norm]) (by rw [hT2opQ, hT2norm])
 
 /-- The subspace gap between a base subspace and the graph of an angular
 operator is `‖X‖ / √(1 + ‖X‖ ^ 2)`. -/

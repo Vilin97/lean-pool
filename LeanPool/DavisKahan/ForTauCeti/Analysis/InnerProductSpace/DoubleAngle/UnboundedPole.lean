@@ -555,9 +555,37 @@ theorem sylvester_pairing_le (Ω : BoundedCutoff A U τ) {x : H}
   have hq1 : q * b ≤ q * (⟪A ⟨y, hydom⟩, y⟫_ℂ).re :=
     mul_le_mul_of_nonneg_left hlow hq.le
   nlinarith [hpair, hq1, h2, h4, hterm3]
--- The proof carries the near-maximiser construction, the two error budgets and
--- the closing radical arithmetic in one context; splitting it would duplicate
--- the whole hypothesis block rather than shorten anything.
+omit hred hB hZsa hZ2 hZdom hZcomm hUa hUb in
+/-- The scalar inequality behind the uniform cutoff bound. -/
+private theorem le_crossBlockBound_of_mul_le {δ m t : ℝ}
+    (hδ : 0 < δ) (hm0 : 0 ≤ m) (hm1 : m ≤ 1) (ht : 0 ≤ t)
+    (hmain : δ * m ≤ 2 * t * √(1 - m ^ 2)) :
+    m ≤ crossBlockBound δ t := by
+  -- close the algebra
+  have h1m2 : 0 ≤ 1 - m ^ 2 := by nlinarith [hm1, hm0]
+  have hlhs0 : 0 ≤ δ * m := by positivity
+  have hrhs : (2 * t * √(1 - m ^ 2)) ^ 2 = 4 * t ^ 2 * (1 - m ^ 2) := by
+    rw [mul_pow, Real.sq_sqrt h1m2]
+    ring
+  have hsq : (δ * m) ^ 2 ≤ 4 * t ^ 2 * (1 - m ^ 2) := by
+    rw [← hrhs]
+    gcongr
+  set D : ℝ := √(δ ^ 2 + 4 * t ^ 2) with hDdef
+  have hDpos : 0 < D := Real.sqrt_pos.mpr (by positivity)
+  have hD2 : D ^ 2 = δ ^ 2 + 4 * t ^ 2 := Real.sq_sqrt (by positivity)
+  have hmDeq : (m * D) ^ 2 = (δ * m) ^ 2 + 4 * t ^ 2 * m ^ 2 := by
+    rw [mul_pow, hD2]
+    ring
+  have hmD : (m * D) ^ 2 ≤ (2 * t) ^ 2 := by
+    rw [hmDeq]
+    nlinarith [hsq]
+  have hfin : m * D ≤ 2 * t :=
+    calc m * D = √((m * D) ^ 2) := (Real.sqrt_sq (by positivity)).symm
+      _ ≤ √((2 * t) ^ 2) := Real.sqrt_le_sqrt hmD
+      _ = 2 * t := Real.sqrt_sq (by positivity)
+  rw [crossBlockBound_eq, ← hDdef, le_div_iff₀ hDpos]
+  exact hfin
+
 /-- **Pole exclusion on a bounded cutoff.**
 
 `‖S Ω‖ ≤ 2‖B‖ / √(δ² + 4‖B‖²) < 1` with `δ = b - a`.  The bound is uniform in
@@ -697,30 +725,7 @@ theorem opNorm_offDiagonalPart_comp_le (Ω : BoundedCutoff A U τ) (hτ : 0 ≤ 
         _ ≤ η / 2 * 1 := mul_le_mul_of_nonneg_left hle (by linarith)
         _ = η / 2 := mul_one _
     linarith [hstep, herr1, herr2]
-  -- close the algebra
-  have h1m2 : 0 ≤ 1 - m ^ 2 := by nlinarith [hm1, hm0]
-  have hlhs0 : 0 ≤ (b - a) * m := by positivity
-  have hrhs : (2 * ‖B‖ * √(1 - m ^ 2)) ^ 2 = 4 * ‖B‖ ^ 2 * (1 - m ^ 2) := by
-    rw [mul_pow, Real.sq_sqrt h1m2]
-    ring
-  have hsq : ((b - a) * m) ^ 2 ≤ 4 * ‖B‖ ^ 2 * (1 - m ^ 2) := by
-    rw [← hrhs]
-    gcongr
-  set D : ℝ := √((b - a) ^ 2 + 4 * ‖B‖ ^ 2) with hDdef
-  have hDpos : 0 < D := Real.sqrt_pos.mpr (by positivity)
-  have hD2 : D ^ 2 = (b - a) ^ 2 + 4 * ‖B‖ ^ 2 := Real.sq_sqrt (by positivity)
-  have hmDeq : (m * D) ^ 2 = ((b - a) * m) ^ 2 + 4 * ‖B‖ ^ 2 * m ^ 2 := by
-    rw [mul_pow, hD2]
-    ring
-  have hmD : (m * D) ^ 2 ≤ (2 * ‖B‖) ^ 2 := by
-    rw [hmDeq]
-    nlinarith [hsq]
-  have hfin : m * D ≤ 2 * ‖B‖ :=
-    calc m * D = √((m * D) ^ 2) := (Real.sqrt_sq (by positivity)).symm
-      _ ≤ √((2 * ‖B‖) ^ 2) := Real.sqrt_le_sqrt hmD
-      _ = 2 * ‖B‖ := Real.sqrt_sq (by positivity)
-  rw [crossBlockBound_eq, ← hDdef, le_div_iff₀ hDpos]
-  exact hfin
+  exact le_crossBlockBound_of_mul_le hδ hm0 hm1 (norm_nonneg B) hmain
 
 /-- **The pole is excluded on the cutoff range**, with the explicit constant
 `κ = δ / √(δ² + 4‖B‖²) > 0`: `|cos 2Θ₀| ≥ κ`. -/

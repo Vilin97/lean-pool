@@ -88,7 +88,8 @@ functions. -/
 theorem lintegral_enorm_sq_lt_top (F : Lp ℂ 2 ρ) :
     ∫⁻ x, ‖(F : α → ℂ) x‖ₑ ^ 2 ∂ρ < ∞ := by
   have h : eLpNorm (F : α → ℂ) 2 ρ < ∞ := (Lp.eLpNorm_ne_top F).lt_top
-  rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num)] at h
+  rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num)
+    (Lp.aestronglyMeasurable F)] at h
   simpa [ENNReal.rpow_natCast] using h
 
 /-- The squared-modulus density makes a finite measure. -/

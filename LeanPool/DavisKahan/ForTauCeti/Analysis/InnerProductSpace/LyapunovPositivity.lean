@@ -189,7 +189,7 @@ theorem eq_zero_of_anticommutator_nonpos {A K : H →L[ℂ] H}
     have : r = 0 := le_antisymm hrle hrnn
     simp [this]
   have hrad : spectralRadius ℂ K = 0 := by
-    rw [spectralRadius, ENNReal.iSup_eq_zero]
+    rw [spectralRadius_eq_of_unital, ENNReal.iSup_eq_zero]
     intro z
     rw [ENNReal.iSup_eq_zero]
     intro hz
