@@ -9966,3 +9966,39 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+
+  - slug: inflation-termination
+    title: Inflation termination for classical pair-source networks
+    summary: 'Classifies binary pair-source networks whose inflation hierarchy terminates:
+      precisely forests of double stars, where order two suffices. Includes triangle
+      nontermination, quantitative obstructions, finite and measurable Finner inequalities,
+      and graph witnesses.'
+    branch: causal inference and probability
+    entry_module: LeanPool.InflationTermination
+    authors:
+    - William Blair
+    source:
+      url: https://github.com/williamjblair/inflation-termination
+      github_repo: williamjblair/inflation-termination
+      commit: 2aa1f05ce932fdeef3896c83d287abd77cd8befb
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+    - TriangleInflation.Graph.classification_NW
+    - TriangleInflation.no_finite_characterizing_order
+    main_results:
+    - declaration: TriangleInflation.Graph.classification_NW
+      informal: A finite order of the Navascués–Wolfe hierarchy characterizes compatibility
+        exactly for double-star forests, and order two suffices there.
+    - declaration: TriangleInflation.no_finite_characterizing_order
+      informal: At every positive inflation order, a triangle law passes the test but
+        has no compatible latent-variable model.
+    tags:
+    - causal-inference
+    - probability
+    - inflation-hierarchy
+    - graph-theory
+    msc:
+    - 60A05
+    - 05C05
