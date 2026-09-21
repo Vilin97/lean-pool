@@ -9966,3 +9966,44 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+
+  - slug: parameter_free_gradient_p
+    title: Parameter-Free Gradient Minimization in l_p Geometry
+    summary: 'A Lean 4 formalization of three results about exact value-gradient oracle
+      complexity in finite-dimensional l_p geometry: strict-local scale-identification
+      impossibility at fixed LR/epsilon = 4, the known-parameter p > 2 upper/lower exponent
+      p/(p+2) with its stated horizon and dimension qualifications, and a post-secant-initialization
+      parameter-free runtime family with the three p regimes. The Comparator surface
+      contains exactly these three declarations; the other certified results remain
+      supporting proof infrastructure.'
+    branch: optimization
+    entry_module: LeanPool.ParameterFreeGradient
+    authors:
+    - Yuning Yang
+    source:
+      url: https://github.com/yuningyang19/parameter_free_gradient_p
+      github_repo: yuningyang19/parameter_free_gradient_p
+      commit: f71215fa936fe01aff8a765c62b399e131df963b
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - V7.scaleIdentificationImpossibility
+    - V7.knownParameterAboveTwoOptimality
+    - V7.main
+    main_results:
+    - declaration: V7.scaleIdentificationImpossibility
+      informal: Strict local exact value-gradient methods cannot identify the missing
+        scale within a fixed finite horizon, even at fixed LR/epsilon = 4.
+    - declaration: V7.knownParameterAboveTwoOptimality
+      informal: For finite p > 2, known-parameter optimization has matching upper and
+        lower polynomial exponent p/(p+2), with the stated horizon and dimension qualifications.
+    - declaration: V7.main
+      informal: A deterministic post-secant-initialization method family achieves the
+        three parameter-free runtime regimes, including its additive calibration cost.
+    tags:
+    - optimization
+    - oracle-complexity
+    - gradient-methods
+    msc:
+    - 90C25
