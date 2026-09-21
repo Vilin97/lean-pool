@@ -38,6 +38,8 @@ Nothing here asserts relative compactness of a family of laws, and no convergenc
 of semigroups is treated.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped BoundedContinuousFunction ENNReal NNReal
 
@@ -82,7 +84,7 @@ end TruncationError
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -201,3 +203,5 @@ end
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

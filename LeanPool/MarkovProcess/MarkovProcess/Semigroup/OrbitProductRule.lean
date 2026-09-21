@@ -78,7 +78,7 @@ theorem hasDerivWithinAt_operator_apply {v : ℝ → E} {v' : E} {s : ℝ} (hs :
   have hshift : S (Real.toNNReal s) (S (Real.toNNReal (y - s)) (v s)) =
       S (Real.toNNReal y) (v s) := by
     rw [← S.add_apply, hsum]
-  show S (Real.toNNReal y) (slope v s y) +
+  change S (Real.toNNReal y) (slope v s y) +
       S (Real.toNNReal s) (S.differenceQuotient (v s) (Real.toNNReal (y - s))) =
     slope (fun y : ℝ ↦ S (Real.toNNReal y) (v y)) s y
   rw [slope_def_module, slope_def_module, S.differenceQuotient_apply, hk, map_smul, map_smul,

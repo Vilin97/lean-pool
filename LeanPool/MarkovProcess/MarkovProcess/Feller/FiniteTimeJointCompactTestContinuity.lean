@@ -161,6 +161,7 @@ private theorem stronglyMeasurable_compactlySupported_fin_joint
   rw [Real.dist_eq, sub_zero, abs_of_pos (by positivity)] at hm
   exact (hterms m x).trans_le hm.le
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 private theorem tendsto_integral_coordinateProductTerm_joint
     {P : SubMarkovKernelSemigroup alpha} (hFeller : P.IsFellerKernelSemigroup)
     (hP : P.IsConservative) {X : Type*} {l : Filter X} {n : ℕ}
@@ -239,6 +240,7 @@ private theorem tendsto_integral_coordinateProductTerm_joint
     exact tendsto_c0_apply_of_tendsto
       (hFeller.tendsto_backwardC0 htimes factors) hx
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 private theorem tendsto_integral_coordinatePolynomial_joint
     {P : SubMarkovKernelSemigroup alpha} (hFeller : P.IsFellerKernelSemigroup)
     (hP : P.IsConservative) {X : Type*} {l : Filter X} {n : ℕ}

@@ -16,12 +16,14 @@ infrastructure: the deterministic-time restart identity is a hypothesis here, pr
 continuous-path process in `Trajectory/FellerRestrictedRestart.lean`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace ContinuousPath
 
-noncomputable section
+section
 
 variable {alpha E : Type*} [TopologicalSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha]
@@ -187,3 +189,5 @@ theorem condExp_shift_stoppingTime_ae_eq_integral_pathKernel
 end
 end ContinuousPath
 end MarkovProcess
+
+end PortComputability

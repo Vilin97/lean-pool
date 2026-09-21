@@ -17,10 +17,12 @@ No parameter family is selected here, and no concrete coefficient, domain, Felle
 or stochastic-process assertion is made.
 -/
 
+noncomputable section PortComputability
+
 open Set
 open scoped ENNReal ProbabilityTheory
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -154,3 +156,7 @@ theorem measure_le_one (theta : Theta) (t : NNReal) (x : alpha) (s : Set alpha) 
 end ParameterizedSubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end
+
+end PortComputability

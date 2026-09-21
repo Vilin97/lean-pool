@@ -48,9 +48,11 @@ private theorem stronglyMeasurable_coordinatePolynomial
       exact hprod.const_mul term.coefficient
 
 private theorem stronglyMeasurable_compactlySupported_pi
-    {I alpha : Type*} [Fintype I] [TopologicalSpace alpha] [MeasurableSpace alpha]
+    {I alpha : Type*} [Finite I] [TopologicalSpace alpha] [MeasurableSpace alpha]
     [BorelSpace alpha] [T3Space alpha] [LocallyCompactSpace alpha]
     (f : C_c(I → alpha, ℝ)) : StronglyMeasurable f := by
+  classical
+  let := Fintype.ofFinite I
   have hexists (m : ℕ) :
       ∃ terms : List (PiContinuousMap.CoordinateProductTerm I alpha),
         ∀ x, ‖PiContinuousMap.coordinatePolynomial terms x - f x‖ <
@@ -98,16 +100,14 @@ theorem pullbackPhysicalSetHomeomorph_apply
 
 /-- Pull a compactly supported test on dense-time labels back to physical-time labels. -/
 noncomputable def pullbackPhysicalSetCompactTest
-    {alpha : Type*} [TopologicalSpace alpha] 
-    (J : Finset DenseTime) (f : C_c(J → alpha, ℝ)) :
+    {alpha : Type*} [TopologicalSpace alpha] (J : Finset DenseTime) (f : C_c(J → alpha, ℝ)) :
     C_c(denseTimePhysicalSet J → alpha, ℝ) :=
   f.comp (pullbackPhysicalSetHomeomorph J).toCocompactMap
 
 /-- Evaluation of a compact test pulled back to physical-time labels. -/
 @[simp]
 theorem pullbackPhysicalSetCompactTest_apply
-    {alpha : Type*} [TopologicalSpace alpha] [T2Space alpha]
-    (J : Finset DenseTime) (f : C_c(J → alpha, ℝ))
+    {alpha : Type*} [TopologicalSpace alpha] (J : Finset DenseTime) (f : C_c(J → alpha, ℝ))
     (path : denseTimePhysicalSet J → alpha) :
     pullbackPhysicalSetCompactTest J f path = f (pullbackPhysicalSet J path) := by
   rw [pullbackPhysicalSetCompactTest]

@@ -34,6 +34,8 @@ Nothing here asserts a Hunt-process property, and no statement covers a stopping
 infinite.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
@@ -56,7 +58,7 @@ end FinsetEvaluation
 
 namespace Kernel
 
-noncomputable section DenseFiniteEvaluation
+section DenseFiniteEvaluation
 
 variable {alpha beta : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha]
   [BorelSpace alpha] [MeasurableSpace beta]
@@ -111,7 +113,7 @@ end Kernel
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -397,9 +399,22 @@ theorem IsFellerKernelSemigroup.existsUnique_continuousProcess_of_hasKolmogorovM
         Q.map (ContinuousPath.finsetEvaluation I) = finiteSetKernel P I :=
   hFeller.existsUnique_continuousProcess P hP (KolmogorovRegular.of_hasKolmogorovMoments P hP hmom)
 
+include hP in
+/-- A conservative Feller semigroup satisfying the Kolmogorov moment criterion has a unique
+continuous-path Markov kernel realizing all of its finite-dimensional distributions. -/
+theorem _root_.MarkovProcess.existsUnique_continuousProcess
+    (hFeller : P.IsFellerKernelSemigroup) {p q : ℝ} {M : ℝ≥0}
+    (hmom : P.HasKolmogorovMoments p q M) :
+    ∃! Q : Kernel alpha (ContinuousPath alpha), IsMarkovKernel Q ∧
+      ∀ I : Finset NNReal,
+        Q.map (ContinuousPath.finsetEvaluation I) = finiteSetKernel P I :=
+  hFeller.existsUnique_continuousProcess_of_hasKolmogorovMoments P hP hmom
+
 end
 
 
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

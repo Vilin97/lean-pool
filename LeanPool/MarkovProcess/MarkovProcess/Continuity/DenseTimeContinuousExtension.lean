@@ -19,11 +19,13 @@ No probability law is shown to be supported on this image, and no continuous mod
 stochastic-process association, or path-regularity claim is made here.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Set
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace ContinuousPath
 
@@ -114,3 +116,5 @@ end Measurable
 end ContinuousPath
 end
 end MarkovProcess
+
+end PortComputability

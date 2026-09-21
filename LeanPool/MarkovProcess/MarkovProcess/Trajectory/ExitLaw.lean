@@ -213,7 +213,8 @@ theorem IsFellerKernelSemigroup.integral_exitLawTrunc_eq_of_generator_eq_zero
     (hFeller : P.IsFellerKernelSemigroup) (hK : P.KolmogorovRegular hP)
     (f : hFeller.c0Semigroup.generatorDomain)
     (hLf : ∀ y ∈ U, (hFeller.c0Semigroup.generator f) y = 0) (K : NNReal) (x : alpha) :
-    ∫ y, (f : C₀(alpha, ℝ)) y ∂(IsConservative.exitLawTrunc hP U hU K x) = (f : C₀(alpha, ℝ)) x := by
+    ∫ y, (f : C₀(alpha, ℝ)) y ∂(IsConservative.exitLawTrunc hP U hU K x) = (f : C₀(alpha, ℝ)) x
+        := by
   rw [IsConservative.integral_exitLawTrunc hP U hU K x (fun y ↦ (f : C₀(alpha, ℝ)) y)
     (f : C₀(alpha, ℝ)).continuous.stronglyMeasurable]
   exact hFeller.integral_eval_exitTimeTrunc_eq_of_generator_eq_zero hP hK f U hU hLf K x

@@ -82,6 +82,7 @@ private theorem integrable_coordinatePolynomial
       rw [PiContinuousMap.coordinatePolynomial_cons]
       exact (integrable_coordinateProductTerm term mu).add ih
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- Finite-time integrals of an explicit coordinate polynomial vary continuously under
 coordinatewise convergence of the ordered observation times. -/
 theorem IsFellerKernelSemigroup.tendsto_integral_coordinatePolynomial_finiteTimeKernel

@@ -16,12 +16,14 @@ factorization remains an explicit input; proving it from the finite-dimensional 
 next process-construction step.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace ContinuousPath
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha]
@@ -92,3 +94,5 @@ theorem restrict_map_shift_eq_pathKernel_comp_of_rational_joint
 end
 end ContinuousPath
 end MarkovProcess
+
+end PortComputability

@@ -21,12 +21,14 @@ Main results: `IsConservative.lintegral_exp_neg_exitTime` and
 No moment bound or almost-sure finiteness of the exit time is asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 /-- The integral of a decaying exponential over a finite interval. -/
 private theorem integral_exp_neg_mul_Ioc_zero (lam : ℝ) (hlam : 0 < lam) (A : ℝ)
@@ -88,7 +90,7 @@ private theorem ofReal_mul_lintegral_exp_neg_mul_indicator (lam : ℝ) (hlam : 0
     · simp only [neg_mul, Set.indicator_of_notMem ht, mul_zero]
   rw [hfun, setLIntegral_indicator hS]
   by_cases htau : tau = ⊤
-  · rw [ContinuousPath.survivalSet tau, if_pos htau,
+  · rw [ContinuousPath.survivalSet tau, ite_eq_left htau,
       lintegral_exp_neg_mul_Ioi_zero lam hlam]
     subst tau
     have hnot : (⊤ : ℝ≥0∞) ∉ {tau | tau < ⊤} := by
@@ -96,7 +98,7 @@ private theorem ofReal_mul_lintegral_exp_neg_mul_indicator (lam : ℝ) (hlam : 0
     rw [Set.indicator_of_notMem hnot, tsub_zero]
     rw [← ENNReal.ofReal_mul hlam.le]
     simp only [mul_inv_cancel₀ hlam.ne', ENNReal.ofReal_one]
-  · rw [ContinuousPath.survivalSet tau, if_neg htau]
+  · rw [ContinuousPath.survivalSet tau, ite_eq_right htau]
     rw [show volume.restrict (Set.Ioo (0 : ℝ) tau.toReal) =
         volume.restrict (Set.Ioc 0 tau.toReal) from
       Measure.restrict_congr_set Ioo_ae_eq_Ioc]
@@ -251,3 +253,5 @@ theorem IsConservative.measure_exitTime_le_le (lam : ℝ) (hlam : 0 ≤ lam)
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

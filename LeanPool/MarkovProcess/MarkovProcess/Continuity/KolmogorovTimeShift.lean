@@ -18,6 +18,8 @@ No global path is glued here, and no measurability of the canonical limit or mod
 assertion is made.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
@@ -65,7 +67,7 @@ theorem timeShift_unitDyadicFloorValue_apply
       X (shiftedUnitDyadicFloorValue k n t) ω :=
   rfl
 
-noncomputable section
+section
 
 variable [PseudoMetricSpace E]
 
@@ -97,3 +99,5 @@ theorem tendsto_shiftedUnitDyadicFloorLimit_of_cauchySeq
 end
 
 end MarkovProcess
+
+end PortComputability

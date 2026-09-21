@@ -16,12 +16,14 @@ joint-law factorization.  It does not assert that any particular stochastic proc
 finite-dimensional identities.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace Kernel
 
-noncomputable section
+section
 
 variable {index alpha beta : Type*} [TopologicalSpace alpha] [T2Space alpha]
   [MeasurableSpace alpha] [BorelSpace alpha] [MeasurableSpace beta]
@@ -110,3 +112,5 @@ theorem eq_of_map_finitePastDenseFutureRestriction_eq
 end
 end Kernel
 end MarkovProcess
+
+end PortComputability

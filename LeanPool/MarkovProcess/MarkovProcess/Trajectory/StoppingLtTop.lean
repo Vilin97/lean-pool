@@ -34,6 +34,8 @@ Nothing is asserted about the event `{tau = ⊤}`: on it the shifted path is the
 neither statement constrains it.  No Hunt-process property is claimed.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal Function
 
@@ -275,10 +277,10 @@ theorem iUnion_stoppingTimeSlice (A : Set Omega) :
       exact ⟨K, by exact_mod_cast hK⟩
     refine Set.mem_iUnion.mpr ⟨Nat.find hex, ⟨hA, ?_⟩, ?_⟩
     · refine Set.mem_iInter₂.mpr fun j hj ↦ ?_
-      show ((j : NNReal) : WithTop NNReal) < tau omega
+      change ((j : NNReal) : WithTop NNReal) < tau omega
       rw [← ht, WithTop.coe_lt_coe]
       exact lt_of_not_ge (Nat.find_min hex (Set.mem_Iio.mp hj))
-    · show tau omega ≤ ((Nat.find hex : NNReal) : WithTop NNReal)
+    · change tau omega ≤ ((Nat.find hex : NNReal) : WithTop NNReal)
       rw [← ht, WithTop.coe_le_coe]
       exact Nat.find_spec hex
 
@@ -480,7 +482,7 @@ end StoppingTime
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -588,3 +590,5 @@ end
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

@@ -75,7 +75,8 @@ theorem coordinatePolynomial_cons (t : CoordinateProductTerm I α)
 
 @[simp]
 theorem coordinatePolynomial_append (left right : List (CoordinateProductTerm I α)) :
-    coordinatePolynomial (left ++ right) = coordinatePolynomial left + coordinatePolynomial right := by
+    coordinatePolynomial (left ++ right) = coordinatePolynomial left + coordinatePolynomial
+        right := by
   simp only [coordinatePolynomial, List.map_append, List.sum_append]
 
 /-- Multiply two terms by multiplying coefficients and concatenating their factor lists. -/
@@ -150,11 +151,13 @@ theorem exists_coordinateProductTerms_of_mem_coordinateC0Subalgebra
 /-- Every compactly supported continuous finite-product test is uniformly approximable on the
 whole product by an explicit finite sum of scalar multiples of coordinate products. -/
 theorem exists_coordinateProductTerms_near_compactlySupported
-    [Fintype I] [T3Space α] [LocallyCompactSpace α]
+    [Finite I] [T3Space α] [LocallyCompactSpace α]
     (f : C_c(I → α, ℝ)) {epsilon : ℝ} (hepsilon : 0 < epsilon) :
     ∃ terms : List (CoordinateProductTerm I α),
       ∀ x, ‖(terms.map fun t ↦
         t.coefficient * (t.factors.map fun p ↦ p.2 (x p.1)).prod).sum - f x‖ < epsilon := by
+  classical
+  let := Fintype.ofFinite I
   obtain ⟨h, hh, hnear⟩ :=
     exists_coordinateC0Subalgebra_near_compactlySupported f hepsilon
   obtain ⟨terms, rfl⟩ := exists_coordinateProductTerms_of_mem_coordinateC0Subalgebra hh

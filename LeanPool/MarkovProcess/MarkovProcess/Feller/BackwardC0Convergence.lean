@@ -48,6 +48,7 @@ variable {alpha : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha]
   [BorelSpace alpha] [LocallyCompactSpace alpha] [T2Space alpha]
 variable {iota : Type*} {l : Filter iota}
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- **Strong convergence of the `C₀` semigroups propagates through the backward recursion.**
 For a fixed nonempty ordered family of times and fixed one-coordinate factors, the backward
 recursions of a family of Feller kernel semigroups converge in the `C₀` norm to the backward
@@ -72,6 +73,7 @@ theorem tendsto_backwardC0_of_tendsto_c0Semigroup
         (fun i ↦ ((hP i).c0Semigroup).norm_operator_le_one _) (hconv (times 0) _)
         (tendsto_const_nhds.mul (ih times.relativeTail (Fin.tail factors)))
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- **Uniform convergence of the coordinate-product integrals.**  Strong convergence of the `C₀`
 semigroups makes the finite-time integral of a product of one-coordinate `C₀` functions converge
 uniformly in the starting point. -/

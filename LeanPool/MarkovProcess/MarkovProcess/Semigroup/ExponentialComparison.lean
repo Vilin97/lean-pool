@@ -21,11 +21,13 @@ Public declarations:
 No comparison for indicators of arbitrary measurable sets is asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter Set Topology
 open scoped NNReal ZeroAtInfty
 open NormedSpace
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -227,3 +229,7 @@ end Kernel
 end PositiveC0ContractiveResolvent
 
 end MarkovProcess
+
+end
+
+end PortComputability

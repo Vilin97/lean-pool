@@ -16,8 +16,11 @@ This file merges the following former modules, one section each:
 
 * `MixedPastFutureCoordinates`: Finite coordinates mixing a rational past and shifted future
 * `MixedPastFutureCutCoordinates`: Finite mixed coordinates split at their rational terminal time
-* `MixedPastFutureCutFactorization`: Factoring finite mixed past/future coordinates at a rational cut
+* `MixedPastFutureCutFactorization`: Factoring finite mixed past/future coordinates at a
+    rational cut
 -/
+
+noncomputable section PortComputability
 
 namespace MarkovProcess
 
@@ -26,7 +29,7 @@ section MixedPastFutureCoordinates
 open MeasureTheory
 
 
-noncomputable section
+section
 
 namespace MixedPastFuture
 
@@ -242,7 +245,7 @@ open scoped ProbabilityTheory
 
 namespace MixedPastFuture
 
-noncomputable section
+section
 
 private theorem sort_union_eq_append {beta : Type*} [LinearOrder beta]
     (A B : Finset beta) (hAB : ∀ a ∈ A, ∀ b ∈ B, a < b) :
@@ -1120,3 +1123,5 @@ end SubMarkovKernelSemigroup
 end MixedPastFutureCutFactorization
 
 end MarkovProcess
+
+end PortComputability

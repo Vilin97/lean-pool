@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
 import Mathlib.Data.NNRat.Defs
-import Mathlib.Data.NNReal.Defs
+import Mathlib.Basic.NNReal.Defs
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Data.Rat.Encodable
 import Mathlib.Basic.Denumerable
@@ -19,9 +19,11 @@ not increasing. No probability law, projective limit, stochastic process, contin
 regularity is constructed here.
 -/
 
+noncomputable section PortComputability
+
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace CountableEnumeration
 
@@ -144,3 +146,5 @@ noncomputable def enumeration : ℕ ≃ DenseTime :=
 end DenseTime
 end
 end MarkovProcess
+
+end PortComputability

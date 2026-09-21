@@ -41,7 +41,7 @@ theorem edist_unitDyadicGrid_le_natCast_mul_of_adjacent_le
     else X (unitDyadicGrid n i) ω
   have hf (k : ℕ) (hk : k < 2 ^ n + 1) :
       f k = X (unitDyadicGrid n ⟨k, hk⟩) ω := by
-    simp only [f, dif_pos hk]
+    simp only [f, dite_eq_left hk]
   calc
     edist (X (unitDyadicGrid n i) ω) (X (unitDyadicGrid n j) ω) =
         edist (f i) (f j) := by rw [hf i i.isLt, hf j j.isLt]

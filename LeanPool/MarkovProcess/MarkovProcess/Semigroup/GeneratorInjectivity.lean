@@ -21,12 +21,14 @@ Since `S` is contractive, an eigenvalue `μ > 0` therefore forces `f = 0`
 `(μ - L)⁻¹` is a well-defined operator.
 -/
 
+noncomputable section PortComputability
+
 open Filter Set Topology
 open scoped NNReal
 
 namespace MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
 
-noncomputable section
+section
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable (S : StronglyContinuousContractionSemigroup E)
@@ -115,3 +117,5 @@ theorem eq_of_smul_sub_generator_eq {μ : ℝ} (hμ : 0 < μ) (f g : S.generator
 end
 
 end MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
+
+end PortComputability

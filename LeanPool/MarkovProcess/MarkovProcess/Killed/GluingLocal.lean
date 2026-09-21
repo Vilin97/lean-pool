@@ -27,10 +27,12 @@ The regularity data are an explicit hypothesis: positivity, contractivity and th
 identity do not by themselves give the compactified semigroup a continuous-path process.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess.PositiveC0ContractiveResolvent
 
@@ -68,6 +70,7 @@ namespace OnePointRegular
 variable {R : PositiveC0ContractiveResolvent X}
 
 /-- The metric on the compactification determined by the exhaustion function. -/
+@[implicit_reducible]
 noncomputable def metricSpace (h : R.OnePointRegular) : MetricSpace (OnePoint X) :=
   OnePoint.exhaustionMetricSpace h.rho h.continuous_rho h.rho_pos h.lipschitz_rho
     h.isCompact_superlevel
@@ -77,7 +80,8 @@ noncomputable def metricSpace (h : R.OnePointRegular) : MetricSpace (OnePoint X)
 exhaustion metric's topology coincides with the canonical one-point topology, which is always
 compact). -/
 private instance instCompactSpaceMetricSpace (h : R.OnePointRegular) :
-    @CompactSpace (OnePoint X) h.metricSpace.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace := by
+    @CompactSpace (OnePoint X)
+        h.metricSpace.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace := by
   unfold OnePointRegular.metricSpace
   rw [OnePoint.exhaustionMetricSpace_toTopologicalSpace]
   infer_instance
@@ -285,3 +289,7 @@ theorem kernelResolvent_le_of_partProcess (R₀ : PositiveC0ContractiveResolvent
 end Comparison
 
 end MarkovProcess.PositiveC0ContractiveResolvent
+
+end
+
+end PortComputability

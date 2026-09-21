@@ -79,8 +79,8 @@ theorem IsConservative.lintegral_annealedProcess (x : alpha) {g : ContinuousPath
 /-- Annealed expectations of bounded strongly measurable functionals are the averages of the
 quenched expectations: `∫ F d(annealed x) = ∫ (∫ F dQ(theta, x)) mu(dtheta)`. -/
 theorem IsConservative.integral_annealedProcess [IsProbabilityMeasure mu] (x : alpha)
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] 
-    (F : ContinuousPath alpha → E) (hF : StronglyMeasurable F) (C : ℝ)
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] (F : ContinuousPath alpha → E)
+    (hF : StronglyMeasurable F) (C : ℝ)
     (hFC : ∀ eta, ‖F eta‖ ≤ C) :
     ∫ omega, F omega ∂(IsConservative.annealedProcess P hP mu x) =
       ∫ theta, ∫ omega, F omega ∂(IsConservative.continuousProcess P hP (theta, x)) ∂mu := by
@@ -109,7 +109,8 @@ theorem IsConservative.annealedProcess_map_finiteEvaluation_apply
   have hphi : Measurable (ContinuousPath.finsetEvaluation (alpha := alpha) I) :=
     ContinuousPath.measurable_finsetEvaluation I
   rw [Measure.map_apply hphi hs, IsConservative.annealedProcess_apply,
-    Measure.bind_apply (hphi hs) (IsConservative.measurable_continuousProcess_prodMk P hP x).aemeasurable]
+    Measure.bind_apply (hphi hs) (IsConservative.measurable_continuousProcess_prodMk P hP
+        x).aemeasurable]
   refine lintegral_congr fun theta ↦ ?_
   rw [← Measure.map_apply hphi hs,
     IsConservative.continuousProcess_map_finiteEvaluation P hP hFeller hK theta x I]

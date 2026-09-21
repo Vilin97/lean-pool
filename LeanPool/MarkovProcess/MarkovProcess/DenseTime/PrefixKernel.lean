@@ -14,12 +14,14 @@ enumeration, with coordinates retained in enumeration order. The enumeration nee
 the order of physical time.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {D α : Type*} [MeasurableSpace α]
 
@@ -117,3 +119,5 @@ end IsConservative
 end
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

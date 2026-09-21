@@ -158,6 +158,7 @@ private theorem integral_coordinateProductTerm_eq_coefficient
   rw [integral_congr_ae (ae_of_all _ hTerm)]
   simp only [integral_const, probReal_univ, one_smul]
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- A coordinate-product term with active coordinates integrates to its coefficient times the
 backward `C₀` recursion at the active times. -/
 private theorem integral_coordinateProductTerm_eq_backwardC0
@@ -215,6 +216,7 @@ end ActiveReduction
 
 variable {P : iota → SubMarkovKernelSemigroup alpha} {Q : SubMarkovKernelSemigroup alpha}
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- **Uniform convergence of the finite-time integral of a coordinate-product term.** -/
 theorem tendstoUniformly_integral_coordinateProductTerm_finiteTimeKernel
     (hP : ∀ i, (P i).IsFellerKernelSemigroup) (hPc : ∀ i, (P i).IsConservative)
@@ -255,6 +257,7 @@ theorem tendstoUniformly_integral_coordinateProductTerm_finiteTimeKernel
         (times.restrict (activeEmbedding term.factors hk))
         (activeFactor term.factors hk))) term.coefficient
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- **Uniform convergence of the finite-time integral of a coordinate polynomial.** -/
 theorem tendstoUniformly_integral_coordinatePolynomial_finiteTimeKernel
     (hP : ∀ i, (P i).IsFellerKernelSemigroup) (hPc : ∀ i, (P i).IsConservative)

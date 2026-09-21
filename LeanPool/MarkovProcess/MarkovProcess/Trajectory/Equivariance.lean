@@ -35,6 +35,8 @@ No scaling limit is asserted: `c` is a fixed positive factor and both semigroups
 advance.  The two state spaces may coincide; the degenerate corollaries are stated on one space.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
@@ -116,7 +118,7 @@ end ContinuousPath
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -157,7 +159,7 @@ theorem IsFellerKernelSemigroup.continuousProcess_map_finiteEvaluation_ordered
   have htimes : (finiteSetTimes I).restrict emb = times := by
     apply DFunLike.ext _ _
     intro i
-    show finiteSetTimes I ((I.orderIsoOfFin rfl).symm (phi i)) = times i
+    change finiteSetTimes I ((I.orderIsoOfFin rfl).symm (phi i)) = times i
     rw [finiteSetTimes_orderIsoOfFin_symm_apply, hphi i]
   rw [hcomp, Kernel.map_comp_right _ hfinset hsel,
     hFeller.continuousProcess_map_finiteEvaluation P hP hK I, finiteSetKernel_eq_map,
@@ -207,7 +209,7 @@ theorem IsConservative.continuousProcess_eq_map_rescale
         ContinuousPath.finiteEvaluation (α := alpha)
           (fun i ↦ ((finiteSetTimes I).rescale c hc) i) := by
     funext omega t
-    show e (omega (c * (t : NNReal))) =
+    change e (omega (c * (t : NNReal))) =
       e (omega (c * finiteSetTimes I ((I.orderIsoOfFin rfl).symm t)))
     rw [finiteSetTimes_orderIsoOfFin_symm_apply]
   rw [← Kernel.map_comp_right _ (ContinuousPath.measurable_rescale e c)
@@ -292,3 +294,5 @@ end
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

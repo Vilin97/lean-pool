@@ -21,11 +21,13 @@ infinite is covered, on the event where it is finite, in `Trajectory/StoppingLtT
 Hunt-process property is asserted.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
-noncomputable section
+section
 open IsConservative
 
 variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
@@ -71,3 +73,5 @@ theorem IsFellerKernelSemigroup.continuousPathTrajectory_condExp_shift_stoppingT
 
 end
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

@@ -38,6 +38,7 @@ noncomputable def IsFellerKernelSemigroup.backwardC0
       hP.c0Semigroup (times 0)
         (factors 0 * hP.backwardC0 times.relativeTail (Fin.tail factors))
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- The backward recursion for a singleton family is one Feller-semigroup application. -/
 @[simp]
 theorem IsFellerKernelSemigroup.backwardC0_zero
@@ -46,6 +47,7 @@ theorem IsFellerKernelSemigroup.backwardC0_zero
     hP.backwardC0 times factors = hP.c0Semigroup (times 0) (factors 0) :=
   rfl
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- At a successor length, the backward recursion multiplies the first factor by the recursively
 evolved relative tail before applying the first transition. -/
 @[simp]
@@ -57,6 +59,7 @@ theorem IsFellerKernelSemigroup.backwardC0_succ
       (factors 0 * hP.backwardC0 times.relativeTail (Fin.tail factors)) :=
   rfl
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- The backward recursion is continuous in the `C₀` norm under coordinatewise convergence of a
 nonempty ordered time family. -/
 theorem IsFellerKernelSemigroup.tendsto_backwardC0

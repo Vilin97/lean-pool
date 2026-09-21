@@ -25,12 +25,14 @@ and the two difference quotients on the right converge to the common value of th
 and `T t f`.  Density of the generator domain extends the identity to the whole space.
 -/
 
+noncomputable section PortComputability
+
 open Filter Set Topology
 open scoped NNReal
 
 namespace MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
 
-noncomputable section
+section
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable (S T : StronglyContinuousContractionSemigroup E)
@@ -146,3 +148,5 @@ theorem ext_of_generator (hdom : S.generatorDomain = T.generatorDomain)
 end
 
 end MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
+
+end PortComputability

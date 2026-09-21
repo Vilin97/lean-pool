@@ -22,12 +22,14 @@ and Feller `C₀`-orbit continuity on the other.
 No continuous-time Markov, strong Markov, or Hunt-process assertion is made here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 /-- Nonnegative rational times admit a sequence converging to every nonnegative real time. -/
 theorem exists_denseTime_seq_tendsto (t : NNReal) :
@@ -138,3 +140,5 @@ end SubMarkovKernelSemigroup
 
 end
 end MarkovProcess
+
+end PortComputability

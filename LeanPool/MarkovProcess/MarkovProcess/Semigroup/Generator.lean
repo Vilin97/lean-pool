@@ -34,12 +34,14 @@ Times are `NNReal` throughout the library; the real-variable statements read the
 `Real.toNNReal s`.  The fundamental identity is what Dynkin's formula consumes.
 -/
 
+noncomputable section PortComputability
+
 open Filter Topology
 open scoped NNReal
 
 namespace MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
 
-noncomputable section
+section
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable (S : StronglyContinuousContractionSemigroup E)
@@ -182,7 +184,7 @@ theorem tendsto_differenceQuotient_add (f : S.generatorDomain) (t : NNReal) :
     Tendsto (fun h : NNReal ↦ (h : ℝ)⁻¹ • (S (t + h) f - S t f)) (𝓝[>] 0)
       (𝓝 (S t (S.generator f))) := by
   refine (((S t).continuous.tendsto _).comp (S.tendsto_generator f)).congr fun h ↦ ?_
-  show S t ((h : ℝ)⁻¹ • (S h f - f)) = (h : ℝ)⁻¹ • (S (t + h) f - S t f)
+  change S t ((h : ℝ)⁻¹ • (S h f - f)) = (h : ℝ)⁻¹ • (S (t + h) f - S t f)
   rw [map_smul, map_sub, S.add_apply]
 
 end Invariance
@@ -242,7 +244,7 @@ theorem hasDerivWithinAt_Ioi (f : S.generatorDomain) (t : NNReal) :
     apply NNReal.coe_injective
     rw [NNReal.coe_add, hcoe, Real.coe_toNNReal y hy0]
     ring
-  show ((Real.toNNReal (y - t) : NNReal) : ℝ)⁻¹ •
+  change ((Real.toNNReal (y - t) : NNReal) : ℝ)⁻¹ •
       (S (t + Real.toNNReal (y - t)) f - S t f) =
     slope (fun s : ℝ ↦ S (Real.toNNReal s) f) (t : ℝ) y
   rw [slope_def_module, hcoe, Real.toNNReal_coe, htoNN]
@@ -287,7 +289,7 @@ theorem hasDerivWithinAt_Iic (f : S.generatorDomain) {t : ℝ} (ht : 0 < t) :
       Real.coe_toNNReal t (hy.1.trans hy.2).le]
     ring
   have hinv : (y - t)⁻¹ = -(t - y)⁻¹ := by rw [neg_inv, neg_sub]
-  show S (Real.toNNReal y) (S.differenceQuotient f (Real.toNNReal (t - y)))
+  change S (Real.toNNReal y) (S.differenceQuotient f (Real.toNNReal (t - y)))
     = slope (fun s : ℝ ↦ S (Real.toNNReal s) f) t y
   rw [S.differenceQuotient_apply, map_smul, map_sub, ← S.add_apply, hsum, hcoe,
     slope_def_module, hinv, neg_smul, ← smul_neg, neg_sub]
@@ -381,7 +383,7 @@ private theorem tendsto_slope_add_of_hasDerivAt {F : ℝ → E} {F' : E} {u : �
       have hpos : (0 : ℝ) < h := NNReal.coe_pos.mpr hh
       exact ne_of_gt (lt_add_of_pos_right u hpos)
   refine (hslope.comp hmap).congr fun h ↦ ?_
-  show slope F u (u + h) = (h : ℝ)⁻¹ • (F (u + h) - F u)
+  change slope F u (u + h) = (h : ℝ)⁻¹ • (F (u + h) - F u)
   rw [slope_def_module, add_sub_cancel_left]
 
 /-- The orbit integral `∫₀ᵘ S s f ds` of a vector `f`, as a function of the real upper limit
@@ -417,9 +419,10 @@ theorem operator_orbitIntegral (f : E) (t h : NNReal) :
       exact hs.1
     have hcoe : Real.toNNReal (s + h) = h + Real.toNNReal s := by
       apply NNReal.coe_injective
-      rw [NNReal.coe_add, Real.coe_toNNReal s hs0, Real.coe_toNNReal _ (add_nonneg hs0 h.coe_nonneg),
+      rw [NNReal.coe_add, Real.coe_toNNReal s hs0, Real.coe_toNNReal _ (add_nonneg hs0
+          h.coe_nonneg),
         add_comm]
-    show S h (S (Real.toNNReal s) f) = S (Real.toNNReal (s + h)) f
+    change S h (S (Real.toNNReal s) f) = S (Real.toNNReal (s + h)) f
     rw [hcoe, S.add_apply]
   rw [orbitIntegral, ← ContinuousLinearMap.intervalIntegral_comp_comm _ (hint 0 t),
     intervalIntegral.integral_congr hshift,
@@ -469,3 +472,5 @@ end OrbitIntegral
 end
 
 end MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
+
+end PortComputability

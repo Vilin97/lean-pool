@@ -14,13 +14,15 @@ Mathlib's Ionescu--Tulcea construction, starts the resulting trajectory at a det
 and reindexes its positive coordinates by a countable dense-time enumeration.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 namespace IsConservative
 
-noncomputable section
+section
 
 variable {D α : Type*} [MeasurableSpace α] [StandardBorelSpace α] [Nonempty α]
 
@@ -143,7 +145,7 @@ private theorem denseTimeHistoryMeasurableEquiv_rawTrajAppend (n : ℕ) :
       let j : Set.Iic n := ⟨i, hil⟩
       simp only [rawTrajAppend, Function.comp_apply, IicProdIoc_def,
         MeasurableEquiv.piSingleton]
-      rw [dif_pos hil]
+      rw [dite_eq_left hil]
       rw [DenseTimeHistory.append_apply_castSucc n
         (denseTimeHistoryMeasurableEquiv n z.1) z.2 j]
       rfl
@@ -151,8 +153,7 @@ private theorem denseTimeHistoryMeasurableEquiv_rawTrajAppend (n : ℕ) :
 private theorem transport_traj_step {X H Z Y T : Type*}
     [MeasurableSpace X] [MeasurableSpace H] [MeasurableSpace Z]
     [MeasurableSpace Y] [MeasurableSpace T]
-    (κ : Kernel X Z) 
-    (η : Kernel Z Y) [IsSFiniteKernel η] (E : H ≃ᵐ Z)
+    (κ : Kernel X Z) (η : Kernel Z Y) [IsSFiniteKernel η] (E : H ≃ᵐ Z)
     (g : H × Y → T) (hg : Measurable g) (q : Z × Y → T)
     (hcompat : g ∘ Prod.map E.symm id = q) :
     (((Kernel.id ×ₖ η.comap E E.measurable) ∘ₖ κ.map E.symm).map g) =
@@ -168,8 +169,8 @@ private theorem transport_traj_step {X H Z Y T : Type*}
     rw [E.apply_symm_apply]
   rw [hcomap, ← Kernel.map_id' η, Kernel.map_prod_map,
     ← Kernel.map_comp, ← Kernel.map_comp_right, Kernel.map_id']
-  change (Kernel.id ×ₖ η ∘ₖ κ).map (g ∘ Prod.map E.symm id) = _
-  rw [hcompat]
+  · change (Kernel.id ×ₖ η ∘ₖ κ).map (g ∘ Prod.map E.symm id) = _
+    rw [hcompat]
   all_goals first | exact hg | fun_prop
 
 omit [StandardBorelSpace α] [Nonempty α] in
@@ -209,12 +210,12 @@ theorem partialTraj_map_denseTimeHistoryMeasurableEquiv
       rw [initialTrajHistoryKernel, Kernel.deterministic_map, hconst, Kernel.id,
         Kernel.deterministic_prod_deterministic, Kernel.mapOfMeasurable_eq_map,
         Kernel.deterministic_map]
-      apply Kernel.deterministic_congr
-      funext x i
-      rcases i with ⟨i, hi⟩
-      have hi0 : i = 0 := Nat.eq_zero_of_le_zero hi
-      subst i
-      rfl
+      · apply Kernel.deterministic_congr
+        funext x i
+        rcases i with ⟨i, hi⟩
+        have hi0 : i = 0 := Nat.eq_zero_of_le_zero hi
+        subst i
+        rfl
       all_goals fun_prop
   | succ n ih =>
       let : IsMarkovKernel (denseStep P hP e ι n) :=
@@ -351,3 +352,5 @@ end
 end IsConservative
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

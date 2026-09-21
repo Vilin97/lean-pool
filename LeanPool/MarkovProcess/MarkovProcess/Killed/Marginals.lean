@@ -169,6 +169,46 @@ theorem IsConservative.killedProcess_map_coordinates {iota : Type*} (tau : iota 
   rfl
 
 variable [LocallyCompactSpace alpha]
+omit [CompleteSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
+  [SecondCountableTopology alpha] [Nonempty alpha] [LocallyCompactSpace alpha] in
+private theorem killed_coordinate_survival_event {n : ℕ}
+    (times : FiniteOrderedTimes (n + 1)) (B : Fin (n + 1) → Set (Cemetery U)) :
+(fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
+    LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹'
+        Set.univ.pi B ∩ {omega : ContinuousPath alpha |
+    ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega} =
+    ContinuousPath.killedEvent U (times 0) (Subtype.val '' (Cemetery.alive ⁻¹' (B 0) :
+        Set U)) ∩
+      ContinuousPath.shift (times 0) ⁻¹' ((fun omega : ContinuousPath alpha ↦ fun i :
+          Fin n ↦
+      LifetimePath.coordinate (times.relativeTail i)
+        (ContinuousPath.killAtExit U omega)) ⁻¹' (Set.univ.pi fun i : Fin n ↦ B i.succ)) := by
+  ext omega
+  simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_univ_pi, Set.mem_ofPred_eq,
+    ContinuousPath.mem_killedEvent_iff]
+  constructor
+  · rintro ⟨hmem, hsurv⟩
+    refine ⟨⟨hsurv, ?_⟩, fun i ↦ ?_⟩
+    · have h0 := hmem 0
+      rw [ContinuousPath.coordinate_killAtExit_of_lt U omega (times 0) hsurv] at h0
+      exact (mem_image_val_iff U
+        (ContinuousPath.mem_of_lt_exitTime U omega (times 0) hsurv)).mpr h0
+    · have hi := hmem i.succ
+      rw [← FiniteOrderedTimes.add_relativeTail times i,
+        ← ContinuousPath.coordinate_killAtExit_shift U omega (times 0)
+          (times.relativeTail i) hsurv] at hi
+      exact hi
+  · rintro ⟨⟨hsurv, h0⟩, htail⟩
+    refine ⟨fun i ↦ ?_, hsurv⟩
+    refine Fin.cases ?_ (fun j ↦ ?_) i
+    · rw [ContinuousPath.coordinate_killAtExit_of_lt U omega (times 0) hsurv]
+      exact (mem_image_val_iff U
+        (ContinuousPath.mem_of_lt_exitTime U omega (times 0) hsurv)).mp h0
+    · rw [← FiniteOrderedTimes.add_relativeTail times j,
+        ← ContinuousPath.coordinate_killAtExit_shift U omega (times 0)
+          (times.relativeTail j) hsurv]
+      exact htail j
+
 variable (hFeller : P.IsFellerKernelSemigroup) (hK : P.KolmogorovRegular hP)
 
 /-- **Finite-dimensional distributions of the killed process, at ordered times.**  Read at a
@@ -200,15 +240,20 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
                 (ContinuousPath.killAtExit U omega)) :=
         Measurable.of_eval fun i ↦
           ContinuousPath.measurable_coordinate_killAtExit U hU (times.relativeTail i)
-      have hRcons : (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)).IsConservative := isConservative_cemeterySemigroup _
-      let : IsMarkovKernel (finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times) :=
+      have hRcons : (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller
+          hK)).IsConservative := isConservative_cemeterySemigroup _
+      let : IsMarkovKernel (finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup
+          P hP U hU hFeller hK)) times) :=
         hRcons.isMarkovKernel_finiteTimeKernel _ times
-      let : IsMarkovKernel (finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail) :=
+      let : IsMarkovKernel (finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup
+          P hP U hU hFeller hK)) times.relativeTail) :=
         hRcons.isMarkovKernel_finiteTimeKernel _ _
-      let : IsMarkovKernel ((cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) (times 0)) := hRcons.isMarkovKernel (times 0)
+      let : IsMarkovKernel ((cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller
+          hK)) (times 0)) := hRcons.isMarkovKernel (times 0)
       rw [IsConservative.killedProcess_map_coordinates P hP U hU _ x]
       have : IsProbabilityMeasure
-          ((IsConservative.continuousProcess P hP (x : alpha)).map (fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
+          ((IsConservative.continuousProcess P hP (x : alpha)).map (fun omega : ContinuousPath
+              alpha ↦ fun i : Fin (n + 1) ↦
             LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega))) :=
         inferInstance
       refine MeasureTheory.ext_of_generate_finite _ generateFrom_pi.symm isPiSystem_pi ?_ ?_
@@ -222,8 +267,10 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
             ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega} :=
           ContinuousPath.measurableSet_lt_exitTime U hU (times 0)
         have hg : Measurable fun z : Cemetery U ↦
-            finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail z (Set.univ.pi fun i : Fin n ↦ B i.succ) :=
-          (finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail).measurable_coe hbox'
+            finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU
+                hFeller hK)) times.relativeTail z (Set.univ.pi fun i : Fin n ↦ B i.succ) :=
+          (finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller
+              hK)) times.relativeTail).measurable_coe hbox'
         have hinl : Measurable (Cemetery.alive : U → Cemetery U) := measurable_inl
         have hcoorddead : ∀ omega : ContinuousPath alpha,
             omega ∉ {omega : ContinuousPath alpha |
@@ -232,44 +279,16 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
               (ContinuousPath.killAtExit U omega) = Cemetery.delta := fun omega homega i ↦
           ContinuousPath.coordinate_killAtExit_of_exitTime_le U omega
             (not_lt.mp homega) (times.monotone (Fin.zero_le i))
-        have hliveset : (fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
-            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹' Set.univ.pi B ∩ {omega : ContinuousPath alpha |
-            ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega} =
-            ContinuousPath.killedEvent U (times 0) (Subtype.val '' (Cemetery.alive ⁻¹' (B 0) : Set U)) ∩
-              ContinuousPath.shift (times 0) ⁻¹' ((fun omega : ContinuousPath alpha ↦ fun i : Fin n ↦
-              LifetimePath.coordinate (times.relativeTail i)
-                (ContinuousPath.killAtExit U omega)) ⁻¹' (Set.univ.pi fun i : Fin n ↦ B i.succ)) := by
-          ext omega
-          simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_univ_pi, Set.mem_ofPred_eq,
-            ContinuousPath.mem_killedEvent_iff]
-          constructor
-          · rintro ⟨hmem, hsurv⟩
-            refine ⟨⟨hsurv, ?_⟩, fun i ↦ ?_⟩
-            · have h0 := hmem 0
-              rw [ContinuousPath.coordinate_killAtExit_of_lt U omega (times 0) hsurv] at h0
-              exact (mem_image_val_iff U
-                (ContinuousPath.mem_of_lt_exitTime U omega (times 0) hsurv)).mpr h0
-            · have hi := hmem i.succ
-              rw [← FiniteOrderedTimes.add_relativeTail times i,
-                ← ContinuousPath.coordinate_killAtExit_shift U omega (times 0)
-                  (times.relativeTail i) hsurv] at hi
-              exact hi
-          · rintro ⟨⟨hsurv, h0⟩, htail⟩
-            refine ⟨fun i ↦ ?_, hsurv⟩
-            refine Fin.cases ?_ (fun j ↦ ?_) i
-            · rw [ContinuousPath.coordinate_killAtExit_of_lt U omega (times 0) hsurv]
-              exact (mem_image_val_iff U
-                (ContinuousPath.mem_of_lt_exitTime U omega (times 0) hsurv)).mp h0
-            · rw [← FiniteOrderedTimes.add_relativeTail times j,
-                ← ContinuousPath.coordinate_killAtExit_shift U omega (times 0)
-                  (times.relativeTail j) hsurv]
-              exact htail j
+        have hliveset := killed_coordinate_survival_event U times B
         have hliveval : IsConservative.continuousProcess P hP (x : alpha)
             ((fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
-            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹' Set.univ.pi B ∩ {omega : ContinuousPath alpha |
+            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹'
+                Set.univ.pi B ∩ {omega : ContinuousPath alpha |
             ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega}) =
-            ∫⁻ y in (Cemetery.alive ⁻¹' (B 0) : Set U), finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail
-              (Cemetery.alive y) (Set.univ.pi fun i : Fin n ↦ B i.succ) ∂(IsConservative.killedKernelOn P hP U hU (times 0) x) := by
+            ∫⁻ y in (Cemetery.alive ⁻¹' (B 0) : Set U), finiteTimeKernel (cemeterySemigroup
+                (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail
+              (Cemetery.alive y) (Set.univ.pi fun i : Fin n ↦ B i.succ)
+                  ∂(IsConservative.killedKernelOn P hP U hU (times 0) x) := by
           rw [hliveset, IsConservative.continuousProcess_killedEvent_inter_shift P hP U hU
             hFeller hK (times 0) x hC0 (hmeasTail hbox')]
           refine lintegral_congr fun y ↦ ?_
@@ -278,20 +297,25 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
             ih times.relativeTail y]
         have hdeadval : IsConservative.continuousProcess P hP (x : alpha)
             ((fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
-            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹' Set.univ.pi B \ {omega : ContinuousPath alpha |
+            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹'
+                Set.univ.pi B \ {omega : ContinuousPath alpha |
             ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega}) =
             (1 - IsConservative.killedKernelOn P hP U hU (times 0) x Set.univ) *
-              (B 0).indicator (fun z ↦ finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail z
+              (B 0).indicator (fun z ↦ finiteTimeKernel (cemeterySemigroup
+                  (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail z
                 (Set.univ.pi fun i : Fin n ↦ B i.succ)) Cemetery.delta := by
-          have hQA : IsConservative.continuousProcess P hP (x : alpha) ({omega : ContinuousPath alpha |
+          have hQA : IsConservative.continuousProcess P hP (x : alpha) ({omega : ContinuousPath
+              alpha |
             ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega})ᶜ =
               1 - IsConservative.killedKernelOn P hP U hU (times 0) x Set.univ := by
             rw [IsConservative.killedKernelOn_univ_eq_continuousProcess P hP U hU (times 0) x]
             exact prob_compl_eq_one_sub hA
           by_cases hdelta : ∀ i : Fin (n + 1), (Cemetery.delta : Cemetery U) ∈ B i
           · have hset : (fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
-            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹' Set.univ.pi B \ {omega : ContinuousPath alpha |
-            ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega} = ({omega : ContinuousPath alpha |
+            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹'
+                Set.univ.pi B \ {omega : ContinuousPath alpha |
+            ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega} = ({omega :
+                ContinuousPath alpha |
             ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega})ᶜ := by
               refine Set.eq_of_subset_of_subset (fun omega homega ↦ homega.2) fun omega homega ↦ ?_
               refine ⟨fun i _ ↦ ?_, homega⟩
@@ -308,7 +332,8 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
               Pi.one_apply, mul_one]
           · obtain ⟨i, hi⟩ := not_forall.mp hdelta
             have hset : (fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
-            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹' Set.univ.pi B \ {omega : ContinuousPath alpha |
+            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹'
+                Set.univ.pi B \ {omega : ContinuousPath alpha |
             ((times 0 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega} = ∅ := by
               refine Set.eq_empty_iff_forall_notMem.mpr fun omega homega ↦ ?_
               have h1 : LifetimePath.coordinate (times i)
@@ -317,17 +342,20 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
               exact hi h1
             rw [hset, measure_empty]
             by_cases h0 : (Cemetery.delta : Cemetery U) ∈ B 0
-            · have hnotbox : (fun _ ↦ Cemetery.delta : Fin n → Cemetery U) ∉ (Set.univ.pi fun i : Fin n ↦ B i.succ) := by
+            · have hnotbox : (fun _ ↦ Cemetery.delta : Fin n → Cemetery U) ∉ (Set.univ.pi fun i
+                : Fin n ↦ B i.succ) := by
                 intro hmem
                 exact hdelta fun k ↦ Fin.cases h0 (fun j ↦ hmem j (Set.mem_univ j)) k
               rw [Set.indicator_of_mem h0, finiteTimeKernel_cemeterySemigroup_delta,
                 Measure.dirac_apply' _ hbox', Set.indicator_of_notMem hnotbox, mul_zero]
             · rw [Set.indicator_of_notMem h0, mul_zero]
         have hintegrand : ∀ z : Cemetery U,
-            finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail z
+            finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU
+                hFeller hK)) times.relativeTail z
               (Prod.mk z ⁻¹' ((fun w : Cemetery U × (Fin n → Cemetery U) ↦
                 @Fin.cons n (fun _ : Fin (n + 1) ↦ Cemetery U) w.1 w.2) ⁻¹' Set.univ.pi B)) =
-            (B 0).indicator (fun z ↦ finiteTimeKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail z
+            (B 0).indicator (fun z ↦ finiteTimeKernel (cemeterySemigroup
+                (IsConservative.killedSemigroup P hP U hU hFeller hK)) times.relativeTail z
               (Set.univ.pi fun i : Fin n ↦ B i.succ)) z := by
           intro z
           by_cases hz : z ∈ B 0
@@ -358,7 +386,8 @@ theorem IsConservative.killedProcess_map_coordinates_ordered {n : ℕ}
         rw [Measure.map_apply hmeasTimes hbox,
           ← measure_inter_add_sdiff (μ := IsConservative.continuousProcess P hP (x : alpha))
             ((fun omega : ContinuousPath alpha ↦ fun i : Fin (n + 1) ↦
-            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹' Set.univ.pi B) hA,
+            LifetimePath.coordinate (times i) (ContinuousPath.killAtExit U omega)) ⁻¹'
+                Set.univ.pi B) hA,
           hliveval, hdeadval, finiteTimeKernel_succ, Kernel.mapOfMeasurable_eq_map,
           Kernel.map_apply _ measurable_finCons, Measure.map_apply measurable_finCons hbox,
           Kernel.compProd_apply (measurable_finCons hbox)]
@@ -381,13 +410,14 @@ the cemetery recording the time at which the path leaves `U`. -/
 theorem IsConservative.killedProcess_map_finiteEvaluation (I : Finset NNReal) (x : U) :
     (IsConservative.killedProcess P hP U hU x).map
         (fun omega ↦ fun i : I ↦ LifetimePath.coordinate (i : NNReal) omega) =
-      finiteSetKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK)) I (Cemetery.alive x) := by
+      finiteSetKernel (cemeterySemigroup (IsConservative.killedSemigroup P hP U hU hFeller hK))
+          I (Cemetery.alive x) := by
   have hfun : orderedPathToFiniteSet (α := Cemetery U) I ∘
       (fun omega : LifetimePath U ↦ fun j : Fin I.card ↦
         LifetimePath.coordinate (finiteSetTimes I j) omega) =
       fun omega : LifetimePath U ↦ fun t : I ↦ LifetimePath.coordinate (t : NNReal) omega := by
     funext omega t
-    show LifetimePath.coordinate (finiteSetTimes I ((I.orderIsoOfFin rfl).symm t)) omega =
+    change LifetimePath.coordinate (finiteSetTimes I ((I.orderIsoOfFin rfl).symm t)) omega =
       LifetimePath.coordinate (t : NNReal) omega
     rw [finiteSetTimes_orderIsoOfFin_symm_apply]
   rw [finiteSetKernel_eq_map, Kernel.map_apply _ (measurable_orderedPathToFiniteSet I),

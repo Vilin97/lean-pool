@@ -12,12 +12,14 @@ This file shifts a lifetime path forward by a fixed finite time. A shift beyond 
 lifetime produces a path with zero lifetime, hence with cemetery state at every coordinate.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory
 open scoped ENNReal
 
 namespace MarkovProcess.LifetimePath
 
-noncomputable section
+section
 
 variable {α : Type*} [TopologicalSpace α]
 
@@ -134,3 +136,5 @@ end Measurable
 
 end
 end MarkovProcess.LifetimePath
+
+end PortComputability

@@ -28,6 +28,7 @@ namespace MarkovProcess.SubMarkovKernelSemigroup
 variable {alpha : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha]
   [BorelSpace alpha] [LocallyCompactSpace alpha] [T2Space alpha]
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- The finite-time integral of a coordinate-product term varies continuously when every
 ordered time coordinate varies continuously. -/
 theorem IsFellerKernelSemigroup.tendsto_integral_coordinateProductTerm_finiteTimeKernel

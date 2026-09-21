@@ -16,12 +16,14 @@ Only deterministic order properties are proved here. No measurability or stoppin
 made.
 -/
 
+noncomputable section PortComputability
+
 open Set
 open scoped ENNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace LifetimePath
 
@@ -108,3 +110,5 @@ end LifetimePath
 
 end
 end MarkovProcess
+
+end PortComputability

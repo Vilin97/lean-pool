@@ -16,7 +16,8 @@ of starting points satisfy both hypotheses of the Arzelà--Ascoli tightness crit
 
 Tightness is asserted for the starting points ranging over a *compact* set.  Over all starting
 points at once it is false in general already at time zero: the time-zero laws are the Dirac
-measures `delta_x`, and `{delta_x : x ∈ alpha}` is tight exactly when `alpha` is compact.  A compact set of starting points is also all that weak continuity in the
+measures `delta_x`, and `{delta_x : x ∈ alpha}` is tight exactly when `alpha` is compact.  A
+    compact set of starting points is also all that weak continuity in the
 starting point needs, since continuity at a point only sees a neighbourhood of it.
 
 The state space is assumed *proper* (closed balls are compact).  This is what discharges the
@@ -36,6 +37,8 @@ No compactness theorem for measures (Prokhorov's theorem) is proved or used, and
 convergence statement is made here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
@@ -43,7 +46,7 @@ namespace MarkovProcess
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -106,3 +109,5 @@ end
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

@@ -33,10 +33,12 @@ homogeneous on measurable observables (`SubMarkovKernelSemigroup.kernelResolvent
 No resolvent identity and no topology on the state space are used here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -279,3 +281,7 @@ end Killed
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end
+
+end PortComputability

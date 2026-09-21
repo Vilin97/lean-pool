@@ -211,7 +211,8 @@ variable [LocallyCompactSpace alpha]
 
 /-- **Chapman--Kolmogorov law for the killed kernels**: `killedKernel (s + t) = killedKernel t ∘ₖ
 killedKernel s`.  It follows from the Markov property of the process at the deterministic time `s`
-on the `𝓕_s`-event `{s < τ_U}`, and the path identity `{s + t < τ_U} = {s < τ_U} ∩ {t < τ_U ∘ θ_s}`. -/
+on the `𝓕_s`-event `{s < τ_U}`, and the path identity `{s + t < τ_U} = {s < τ_U} ∩ {t < τ_U ∘
+    θ_s}`. -/
 theorem IsConservative.killedKernel_add (hFeller : P.IsFellerKernelSemigroup)
     (hK : P.KolmogorovRegular hP) (s t : NNReal) :
     IsConservative.killedKernel P hP U hU (s + t) =

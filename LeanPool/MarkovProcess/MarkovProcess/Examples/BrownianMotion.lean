@@ -34,16 +34,19 @@ the form that Mathlib's `Mathlib/Probability/BrownianMotion/Basic.lean` proves e
 own definition of `IsBrownianReal` (`HasIndepIncrements.isPreBrownianReal_of_hasLaw` and the
 converse lemmas `IsPreBrownianReal.hasLaw_eval`, `IsPreBrownianReal.hasIndepIncrements`).
 Neither is available at the pinned revision, and `IsBrownianReal` here is stated through Gaussian
-marginals and independent increments, not through a projective family.  Only one space dimension is treated, and no
+marginals and independent increments, not through a projective family.  Only one space dimension
+    is treated, and no
 Levy characterization, quadratic variation, or stochastic integral is asserted.
 -/
+
+noncomputable section PortComputability
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 section MarkovProperty
 
@@ -205,7 +208,11 @@ theorem brownianMotion_map_incrementsMap : ∀ {n : ℕ} {s : Fin n → NNReal},
     have : IsProbabilityMeasure ((brownianMotion x).map
         (fun omega ↦ incrementsMap x (fun i ↦ omega (s i)))) :=
       inferInstance
-    exact (Measure.pi_eq fun A _ ↦ by simp).symm
+    exact (Measure.pi_eq fun A _ ↦ by
+      have hpi : Set.univ.pi A = Set.univ := by
+        ext p
+        simp [Set.mem_pi]
+      simp [hpi]).symm
   | succ n ih =>
     intro s hs x
     have hs' : Monotone (fun i : Fin n ↦ s i.succ - s 0) := fun a b hab ↦
@@ -230,9 +237,9 @@ theorem brownianMotion_map_incrementsMap : ∀ {n : ℕ} {s : Fin n → NNReal},
       have harg : (fun i : Fin n ↦ (ContinuousPath.shift (s 0) omega) (s i.succ - s 0)) =
           Fin.tail (fun i ↦ omega (s i)) := by
         funext i
-        show omega (s 0 + (s i.succ - s 0)) = omega (s i.succ)
+        change omega (s 0 + (s i.succ - s 0)) = omega (s i.succ)
         rw [add_tsub_cancel_of_le (hs (Fin.zero_le _))]
-      show incrementsMap x (fun i ↦ omega (s i)) =
+      change incrementsMap x (fun i ↦ omega (s i)) =
         Fin.cons (omega (s 0) - x)
           (incrementsMap (omega (s 0))
             (fun i : Fin n ↦ (ContinuousPath.shift (s 0) omega) (s i.succ - s 0)))
@@ -372,7 +379,7 @@ theorem hasIndepIncrements_brownianMotion (x : ℝ) :
       fun (i : Fin n) (omega : ContinuousPath ℝ) ↦ omega (t i.succ) - omega (t i.castSucc) := by
     funext i omega
     ring
-  show iIndepFun (fun (i : Fin n) (omega : ContinuousPath ℝ) ↦
+  change iIndepFun (fun (i : Fin n) (omega : ContinuousPath ℝ) ↦
     (omega (t i.succ) - x) - (omega (t i.castSucc) - x)) (brownianMotion x)
   rw [hsimp]
   have hmeasi : ∀ i : Fin n, Measurable (fun omega : ContinuousPath ℝ ↦
@@ -427,3 +434,5 @@ end Identification
 end
 
 end MarkovProcess
+
+end PortComputability

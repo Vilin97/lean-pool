@@ -20,6 +20,8 @@ This file merges the following former modules, one section each:
 * `RationalJointLaw`: Rational-time joint restart law
 -/
 
+noncomputable section PortComputability
+
 namespace MarkovProcess
 
 section RationalJointKernel
@@ -29,7 +31,7 @@ open scoped ProbabilityTheory
 
 namespace ContinuousPath
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha]
@@ -100,7 +102,7 @@ open scoped ProbabilityTheory
 open scoped NNReal
 
 
-noncomputable section
+section
 
 namespace MixedPastFuture
 
@@ -320,18 +322,16 @@ private theorem rationalRestart_map_restrict_eq_cutPullback
     Kernel.compProd_apply (hA.preimage hH)]
   congr with history
   rw [Kernel.prodMkLeft_apply', Kernel.prodMkLeft_apply']
-  apply Filter.EventuallyEq.measure_eq
+  apply Filter.EventuallyEqSet.measure_eq
   filter_upwards [hzero (ContinuousPath.densePastTerminal S history)] with path hpath
   apply congrArg (fun z ↦ z ∈ A)
   funext i
   rcases i with ⟨i, hi⟩
   rcases i with r | t
-  ·
-      simp [F, H, Function.comp_apply, Kernel.finitePastDenseFuture,
+  ·   simp [F, H, Function.comp_apply, Kernel.finitePastDenseFuture,
         MixedPastFuture.pullbackCutCoordinates, MixedPastFuture.cutCoordinateIndex,
         MixedPastFuture.restrictPastWithTerminal, Prod.map_apply]
-  ·
-      by_cases ht : t = 0
+  ·   by_cases ht : t = 0
       · subst t
         have hpath' : path (DenseTime.castOrderEmbedding (0 : DenseTime)) =
             ContinuousPath.densePastTerminal S history := by
@@ -480,7 +480,7 @@ open scoped NNReal
 namespace SubMarkovKernelSemigroup
 namespace IsConservative
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha] [SecondCountableTopology alpha]
@@ -533,3 +533,5 @@ end SubMarkovKernelSemigroup
 end RationalJointLaw
 
 end MarkovProcess
+
+end PortComputability

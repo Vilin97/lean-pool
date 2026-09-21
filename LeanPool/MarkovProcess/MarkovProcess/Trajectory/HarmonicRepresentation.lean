@@ -124,7 +124,8 @@ theorem IsFellerKernelSemigroup.integral_eval_exitTimeTrunc_eq_of_generator_eq_z
       ∫ s in (0 : ℝ)..(ContinuousPath.exitTimeTrunc U K omega : ℝ),
         (hFeller.c0Semigroup.generator f) (omega (Real.toNNReal s)) = 0 := by
     intro omega
-    rw [ContinuousPath.integral_exitTimeTrunc_congr U K (g₂ := fun _ ↦ 0) (fun y hy ↦ hLf y hy) omega,
+    rw [ContinuousPath.integral_exitTimeTrunc_congr U K (g₂ := fun _ ↦ 0) (fun y hy ↦ hLf y hy)
+        omega,
       intervalIntegral.integral_zero]
   simp only [hzero, integral_zero] at hdynkin
   exact sub_eq_zero.mp hdynkin
@@ -150,7 +151,8 @@ theorem IsFellerKernelSemigroup.integral_eval_exitTimeTrunc_add_eq_of_generator_
       -∫ s in (0 : ℝ)..(ContinuousPath.exitTimeTrunc U K omega : ℝ),
         g (omega (Real.toNNReal s)) := by
     intro omega
-    rw [ContinuousPath.integral_exitTimeTrunc_congr U K (g₂ := fun y ↦ -g y) (fun y hy ↦ hLf y hy) omega,
+    rw [ContinuousPath.integral_exitTimeTrunc_congr U K (g₂ := fun y ↦ -g y) (fun y hy ↦ hLf y
+        hy) omega,
       intervalIntegral.integral_neg]
   simp only [hneg, integral_neg] at hdynkin
   linarith only [hdynkin]

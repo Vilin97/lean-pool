@@ -13,9 +13,11 @@ file records the induced measurable path reindexing and its compatibility with c
 evaluation.  No probability-law or Markov claim is made.
 -/
 
+noncomputable section PortComputability
+
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace DenseTime
 
@@ -84,3 +86,5 @@ theorem pullbackPhysicalSet_evaluation (I : Finset DenseTime)
 end DenseTimePath
 end
 end MarkovProcess
+
+end PortComputability

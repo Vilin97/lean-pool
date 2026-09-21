@@ -27,9 +27,11 @@ This construction does not assert a Kolmogorov moment bound or construct a conti
 process.
 -/
 
+noncomputable section PortComputability
+
 open Filter Set Topology TopologicalSpace
 
-noncomputable section
+section
 
 namespace OnePoint
 
@@ -591,3 +593,7 @@ theorem onePointKernelSemigroup_absorbing (t : NNReal) :
 
 
 end MarkovProcess.PositiveC0ContractiveResolvent
+
+end
+
+end PortComputability

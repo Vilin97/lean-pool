@@ -29,12 +29,14 @@ Convergence of the finite-dimensional distributions is not convergence on path s
 in addition a tightness estimate for the family of laws; that is not asserted here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped BoundedContinuousFunction NNReal ZeroAtInfty
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -94,3 +96,5 @@ theorem tendsto_integral_eval_continuousProcess
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

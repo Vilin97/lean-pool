@@ -41,12 +41,14 @@ The exponentially discounted extension is developed in `Trajectory/DiscountedDyn
 its zero-discount process is identified with this one by `discountedDynkinProcess_zero`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal ZeroAtInfty
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 section C0Bound
 
@@ -75,6 +77,7 @@ def IsFellerKernelSemigroup.dynkinProcess (hFeller : P.IsFellerKernelSemigroup)
   (f : C₀(alpha, ℝ)) (omega t) -
     ∫ s in (0 : ℝ)..t, (hFeller.c0Semigroup.generator f) (omega (Real.toNNReal s))
 
+omit [LocallyCompactSpace alpha] in
 /-- The Dynkin process, written out. -/
 theorem IsFellerKernelSemigroup.dynkinProcess_apply (hFeller : P.IsFellerKernelSemigroup)
     (f : hFeller.c0Semigroup.generatorDomain) (t : NNReal) (omega : ContinuousPath alpha) :
@@ -83,6 +86,7 @@ theorem IsFellerKernelSemigroup.dynkinProcess_apply (hFeller : P.IsFellerKernelS
         ∫ s in (0 : ℝ)..t, (hFeller.c0Semigroup.generator f) (omega (Real.toNNReal s)) :=
   rfl
 
+omit [LocallyCompactSpace alpha] in
 /-- The integrand of the Dynkin correction term is continuous in the time variable. -/
 private theorem continuous_generator_path (hFeller : P.IsFellerKernelSemigroup)
     (f : hFeller.c0Semigroup.generatorDomain) (omega : ContinuousPath alpha) :
@@ -90,6 +94,7 @@ private theorem continuous_generator_path (hFeller : P.IsFellerKernelSemigroup)
   (hFeller.c0Semigroup.generator f).continuous.comp
     (omega.continuous.comp continuous_real_toNNReal)
 
+omit [LocallyCompactSpace alpha] in
 /-- **The Dynkin process is bounded on bounded time intervals**: at time `t` it is bounded by
 `‖f‖ + t ‖L f‖`, uniformly in the path. -/
 theorem IsFellerKernelSemigroup.norm_dynkinProcess_le (hFeller : P.IsFellerKernelSemigroup)
@@ -107,6 +112,7 @@ theorem IsFellerKernelSemigroup.norm_dynkinProcess_le (hFeller : P.IsFellerKerne
   rw [hFeller.dynkinProcess_apply]
   exact (norm_sub_le _ _).trans (add_le_add (norm_c0_apply_le _ _) hint)
 
+omit [LocallyCompactSpace alpha] in
 /-- The Dynkin process is continuous in time along every path: the position term is continuous
 because paths and `f` are, and the correction term is continuous because it is the integral of a
 continuous integrand over `[0, t]`. -/
@@ -128,6 +134,7 @@ section Adapted
 
 variable [SecondCountableTopology alpha]
 
+omit [LocallyCompactSpace alpha] in
 /-- The coordinate at a time clamped to `[0, t]`, read jointly in the time and the path, is
 strongly measurable for the product of the Borel structure of the time variable with the
 canonical filtration at time `t`.  This is progressive measurability of the coordinate process,
@@ -148,6 +155,7 @@ theorem stronglyMeasurable_integral_prod {Omega : Type*} {mOmega : MeasurableSpa
     StronglyMeasurable[mOmega] fun omega : Omega ↦ ∫ s, phi (s, omega) ∂mu :=
   hphi.integral_prod_left'
 
+omit [LocallyCompactSpace alpha] in
 /-- The Dynkin correction term at time `t` is strongly measurable for the canonical filtration at
 time `t`: it is a Bochner integral over `[0, t]` of a jointly measurable integrand. -/
 theorem IsFellerKernelSemigroup.stronglyMeasurable_integral_generator
@@ -169,6 +177,7 @@ theorem IsFellerKernelSemigroup.stronglyMeasurable_integral_generator
   rw [hfun]
   exact hprod
 
+omit [LocallyCompactSpace alpha] in
 /-- The Dynkin process at time `t` is strongly measurable for the canonical filtration at time
 `t`. -/
 theorem IsFellerKernelSemigroup.stronglyMeasurable_dynkinProcess_canonicalFiltration
@@ -180,6 +189,7 @@ theorem IsFellerKernelSemigroup.stronglyMeasurable_dynkinProcess_canonicalFiltra
         (alpha := alpha) t).stronglyMeasurable).sub
     (hFeller.stronglyMeasurable_integral_generator f t)
 
+omit [LocallyCompactSpace alpha] in
 /-- The Dynkin process at time `t` is Borel measurable on path space. -/
 theorem IsFellerKernelSemigroup.stronglyMeasurable_dynkinProcess
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain) (t : NNReal) :
@@ -187,6 +197,7 @@ theorem IsFellerKernelSemigroup.stronglyMeasurable_dynkinProcess
   (hFeller.stronglyMeasurable_dynkinProcess_canonicalFiltration f t).mono
     ((ContinuousPath.canonicalFiltration (alpha := alpha)).le t)
 
+omit [LocallyCompactSpace alpha] in
 /-- **The Dynkin process is adapted** to the canonical filtration. -/
 theorem IsFellerKernelSemigroup.adapted_dynkinProcess (hFeller : P.IsFellerKernelSemigroup)
     (f : hFeller.c0Semigroup.generatorDomain) :
@@ -198,6 +209,7 @@ end Adapted
 
 section Decomposition
 
+omit [LocallyCompactSpace alpha] in
 /-- **Additive decomposition of the Dynkin process at an intermediate time.**  For `s ≤ t` the
 Dynkin process at time `t` is the Dynkin process at time `s`, corrected by the position at time
 `s`, plus the Dynkin process at time `t - s` of the path shifted by `s`. -/
@@ -255,6 +267,7 @@ variable (hP : P.IsConservative)
 
 section Expectation
 
+omit [LocallyCompactSpace alpha] in
 /-- Integrability of the Dynkin process under the continuous-path process: it is Borel measurable
 and bounded, and the law of the process is a probability measure. -/
 theorem IsFellerKernelSemigroup.integrable_dynkinProcess (hFeller : P.IsFellerKernelSemigroup)
@@ -363,7 +376,7 @@ theorem IsFellerKernelSemigroup.martingale_dynkinProcess (hFeller : P.IsFellerKe
   rw [hcondA]
   refine (EventuallyEq.add (EventuallyEq.refl _ _) hcondB').trans
     (Eventually.of_forall fun omega ↦ ?_)
-  show hFeller.dynkinProcess f s omega - (f : C₀(alpha, ℝ)) (omega s) +
+  change hFeller.dynkinProcess f s omega - (f : C₀(alpha, ℝ)) (omega s) +
     (f : C₀(alpha, ℝ)) (omega s) = hFeller.dynkinProcess f s omega
   ring
 
@@ -374,3 +387,5 @@ end Process
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

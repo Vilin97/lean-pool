@@ -15,12 +15,14 @@ deterministic property of continuous paths; it makes no stochastic-process, Mark
 claim.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace Kernel
 
-noncomputable section
+section
 
 variable {alpha beta : Type*} [TopologicalSpace alpha] [T2Space alpha]
   [MeasurableSpace alpha] [BorelSpace alpha] [MeasurableSpace beta]
@@ -77,3 +79,5 @@ theorem map_denseRestriction_eq_iff {kappa eta : Kernel beta (ContinuousPath alp
 end
 end Kernel
 end MarkovProcess
+
+end PortComputability

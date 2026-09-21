@@ -26,12 +26,14 @@ Feynman--Kac resolvent among bounded measurable resolvent families solving the s
 equation at all sufficiently large shifts.  No model-specific realization is assumed.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
   [SecondCountableTopology alpha] [CompleteSpace alpha] [Nonempty alpha]
@@ -748,3 +750,5 @@ end
 
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

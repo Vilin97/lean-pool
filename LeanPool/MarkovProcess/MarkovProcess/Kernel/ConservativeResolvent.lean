@@ -27,10 +27,12 @@ equivalence and not merely a sufficient condition.
 No topology on the state space is used.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
 
-noncomputable section
+section
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
@@ -153,3 +155,7 @@ theorem IsConservative.ofReal_mul_kernelResolvent_one {P : SubMarkovKernelSemigr
     mul_inv_cancel₀ hlam.ne', ENNReal.ofReal_one]
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end
+
+end PortComputability

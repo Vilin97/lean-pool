@@ -24,10 +24,12 @@ The tail bounds and their scalar integral budget remain hypotheses for the consu
 estimate for a particular semigroup is asserted here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace OnePoint
 
@@ -220,6 +222,7 @@ private theorem isOpen_iff_exhaustionDist {rho : X → ℝ} (hrho_cont : Continu
 
 /-- The explicit metric on the one-point compactification determined by a positive Lipschitz
 exhaustion function with compact positive superlevel sets. -/
+@[implicit_reducible]
 noncomputable def exhaustionMetricSpace (rho : X → ℝ) (hrho_cont : Continuous rho)
     (hrho_pos : ∀ x, 0 < rho x) (hrho_lipschitz : LipschitzWith 1 rho)
     (hrho_compact : ∀ epsilon > 0, IsCompact {x | epsilon ≤ rho x}) :
@@ -535,3 +538,7 @@ theorem kolmogorovRegular_onePointKernelSemigroup
     R.onePointKernelSemigroup_absorbing
 
 end MarkovProcess.PositiveC0ContractiveResolvent
+
+end
+
+end PortComputability

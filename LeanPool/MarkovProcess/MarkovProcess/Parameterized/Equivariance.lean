@@ -32,13 +32,15 @@ No scaling limit and no ergodic statement is asserted: the environment map `g`, 
 and both families are given in advance, and nothing is claimed about the law of the environment.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
 namespace MarkovProcess
 namespace ParameterizedSubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 section Measurability
 
@@ -193,3 +195,5 @@ end
 
 end ParameterizedSubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

@@ -49,20 +49,21 @@ variable {beta : Type*} [PseudoMetricSpace beta]
 /-- The coordinate at time `t` of a lifetime path killed once more at the exit of `W`: the
 coordinate of the path strictly before the first time it is not a live point of `W`, and the
 cemetery state from that time on. -/
-noncomputable def killedCoordinate (W : Set beta) (t : NNReal) (eta : LifetimePath beta) : Cemetery beta :=
+noncomputable def killedCoordinate (W : Set beta) (t : NNReal) (eta : LifetimePath beta) :
+    Cemetery beta :=
   if (t : ℝ≥0∞) < exitTime W eta then coordinate t eta else Cemetery.delta
 
 /-- Before the exit time of `W`, killing again at the exit of `W` changes no coordinate. -/
 theorem killedCoordinate_of_lt (W : Set beta) (t : NNReal) (eta : LifetimePath beta)
     (ht : (t : ℝ≥0∞) < exitTime W eta) :
     killedCoordinate W t eta = coordinate t eta :=
-  if_pos ht
+  ite_eq_left ht
 
 /-- From the exit time of `W` on, the path killed again at the exit of `W` is at the cemetery. -/
 theorem killedCoordinate_of_le (W : Set beta) (t : NNReal) (eta : LifetimePath beta)
     (ht : exitTime W eta ≤ (t : ℝ≥0∞)) :
     killedCoordinate W t eta = Cemetery.delta :=
-  if_neg (not_lt.mpr ht)
+  ite_eq_right (not_lt.mpr ht)
 
 end Killing
 
@@ -99,9 +100,9 @@ theorem measurable_killedCoordinate (W : Set beta) (hW : IsOpen W) (t : NNReal) 
       simp only [Set.mem_preimage, Set.mem_union, Set.mem_inter_iff, Set.mem_ofPred_eq,
         Set.mem_compl_iff, killedCoordinate]
       by_cases hlt : (t : ℝ≥0∞) < exitTime W eta
-      · rw [if_pos hlt]
+      · rw [ite_eq_left hlt]
         exact ⟨fun h ↦ Or.inl ⟨hlt, h⟩, fun h ↦ h.elim (fun h ↦ h.2) fun h ↦ absurd hlt h⟩
-      · rw [if_neg hlt]
+      · rw [ite_eq_right hlt]
         exact ⟨fun _ ↦ Or.inr hlt, fun _ ↦ hdelta⟩
     rw [hpre]
     exact (hA.inter (measurable_coordinate t hS)).union hA.compl
@@ -110,9 +111,9 @@ theorem measurable_killedCoordinate (W : Set beta) (hW : IsOpen W) (t : NNReal) 
       ext eta
       simp only [Set.mem_preimage, Set.mem_inter_iff, Set.mem_ofPred_eq, killedCoordinate]
       by_cases hlt : (t : ℝ≥0∞) < exitTime W eta
-      · rw [if_pos hlt]
+      · rw [ite_eq_left hlt]
         exact ⟨fun h ↦ ⟨hlt, h⟩, fun h ↦ h.2⟩
-      · rw [if_neg hlt]
+      · rw [ite_eq_right hlt]
         exact ⟨fun h ↦ absurd h hdelta, fun h ↦ absurd h.1 hlt⟩
     rw [hpre]
     exact hA.inter (measurable_coordinate t hS)
@@ -168,10 +169,10 @@ theorem killedCoordinate_killAtExit (hUV : U ⊆ V) (omega : ContinuousPath alph
       Sum.map (Set.inclusion hUV) id (LifetimePath.coordinate t (killAtExit U omega)) := by
   rw [LifetimePath.killedCoordinate, lifetimePath_exitTime_killAtExit hUV omega]
   by_cases hlt : (t : ℝ≥0∞) < exitTime U omega
-  · rw [if_pos hlt, coordinate_killAtExit_inclusion hUV omega t hlt,
+  · rw [ite_eq_left hlt, coordinate_killAtExit_inclusion hUV omega t hlt,
       coordinate_killAtExit_of_lt U omega t hlt]
     rfl
-  · rw [if_neg hlt, coordinate_killAtExit_of_le U omega t (not_lt.mp hlt)]
+  · rw [ite_eq_right hlt, coordinate_killAtExit_of_le U omega t (not_lt.mp hlt)]
     rfl
 
 end Nested

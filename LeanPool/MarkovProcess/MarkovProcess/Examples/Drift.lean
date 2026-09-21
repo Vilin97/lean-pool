@@ -19,12 +19,14 @@ theorem are satisfiable by a semigroup that genuinely moves.  Nothing here is cl
 semigroup with a nonzero diffusion part; for that see `MarkovProcess.Examples.HeatSemigroup`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal ZeroAtInfty
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [MeasurableSpace E] [BorelSpace E]
@@ -122,7 +124,7 @@ theorem hasContinuousC0Orbits_driftSemigroup (v : E) :
       ((driftSemigroup v).c0Operator (mapsC0_driftSemigroup v) b f) ≤ eps / 2 := by
     rw [← ZeroAtInftyContinuousMap.dist_toBCF_eq_dist]
     refine (BoundedContinuousFunction.dist_le (le_of_lt (half_pos heps))).2 fun x ↦ ?_
-    show dist ((driftSemigroup v).c0Operator (mapsC0_driftSemigroup v) a f x)
+    change dist ((driftSemigroup v).c0Operator (mapsC0_driftSemigroup v) a f x)
       ((driftSemigroup v).c0Operator (mapsC0_driftSemigroup v) b f x) ≤ eps / 2
     rw [SubMarkovKernelSemigroup.c0Operator_apply, SubMarkovKernelSemigroup.c0Operator_apply,
       kernelIntegral_driftSemigroup_apply, kernelIntegral_driftSemigroup_apply]
@@ -208,7 +210,7 @@ private theorem ae_eq_driftPath (v : E) (x : E) :
     set y := driftPath v x (DenseTime.castOrderEmbedding q) with hy
     have hsingleton : MeasurableSet ({y}ᶜ : Set E) :=
       (isClosed_singleton (x := y)).measurableSet.compl
-    show mu ((fun omega : ContinuousPath E ↦
+    change mu ((fun omega : ContinuousPath E ↦
       omega (DenseTime.castOrderEmbedding q)) ⁻¹' ({y}ᶜ : Set E)) = 0
     rw [← Measure.map_apply hmeas hsingleton, hmapx, Measure.dirac_apply' y hsingleton,
       Set.indicator_of_notMem (by simp only [Set.mem_compl_iff, Set.mem_singleton_iff,
@@ -242,3 +244,5 @@ end Process
 end
 
 end MarkovProcess
+
+end PortComputability

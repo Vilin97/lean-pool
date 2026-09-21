@@ -28,6 +28,8 @@ This file constructs no probability law and proves no probabilistic statement; i
 does not claim that the exit time is almost surely finite for any process.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology
 
@@ -35,7 +37,7 @@ namespace MarkovProcess
 
 namespace ContinuousPath
 
-noncomputable section
+section
 
 section SurvivalSets
 
@@ -69,9 +71,9 @@ theorem survivalSet (tau : ℝ≥0∞) :
     {t : ℝ | ((Real.toNNReal t : NNReal) : ℝ≥0∞) < tau} ∩ Set.Ioi 0 =
       if tau = ⊤ then Set.Ioi 0 else Set.Ioo 0 tau.toReal := by
   by_cases htau : tau = ⊤
-  · rw [if_pos htau, htau]
+  · rw [ite_eq_left htau, htau]
     exact survivalSet_top
-  · rw [if_neg htau]
+  · rw [ite_eq_right htau]
     exact survivalSet_ne_top tau htau
 
 end SurvivalSets
@@ -261,7 +263,7 @@ theorem isStoppingTime_exitTime (U : Set alpha) (hU : IsOpen U) :
     ext omega
     simp only [Set.mem_ofPred_eq]
     exact exitTime_le_iff_mem_hitsSetBy U hU t omega
-  show MeasurableSet[canonicalFiltration (alpha := alpha) t]
+  change MeasurableSet[canonicalFiltration (alpha := alpha) t]
     {omega : ContinuousPath alpha | exitTimeTop U omega ≤ (t : WithTop NNReal)}
   rw [hevent]
   exact measurableSet_hitsSetBy t Uᶜ hU.isClosed_compl
@@ -282,3 +284,5 @@ end
 end ContinuousPath
 
 end MarkovProcess
+
+end PortComputability

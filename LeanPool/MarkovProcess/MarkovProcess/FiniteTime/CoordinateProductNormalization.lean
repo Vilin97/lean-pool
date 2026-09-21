@@ -50,8 +50,8 @@ private theorem prod_update_mul (i : Fin n) (a : ℝ) (v : Fin n → ℝ) :
     funext j
     by_cases h : i = j
     · subst j
-      simp only [Function.update_self, if_pos]
-    · simp only [Function.update, h, Ne.symm h, dite_false, if_false, one_mul]
+      simp only [Function.update_self, ite_eq_left]
+    · simp only [Function.update, h, Ne.symm h, dite_false, ite_false, one_mul]
   rw [hfun, Finset.prod_mul_distrib, Fintype.prod_ite_eq]
 
 private theorem evalOptionalFactor_merge (f : C₀(alpha, ℝ))

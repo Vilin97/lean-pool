@@ -13,12 +13,14 @@ This file identifies every coordinate marginal of the jointly measurable paramet
 trajectory kernel.  No standard-Borel assumption is imposed on the parameter space.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace ParameterizedSubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {Theta D alpha : Type*} [MeasurableSpace Theta] [MeasurableSpace alpha]
   [StandardBorelSpace alpha] [Nonempty alpha]
@@ -70,3 +72,5 @@ theorem parameterizedDenseTimeTrajectory_map_eval
 end
 end ParameterizedSubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

@@ -22,12 +22,14 @@ Main results: `intervalIntegral.integral_mul_exp_primitive`,
 No probabilistic structure is used or asserted.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Set
 open scoped ENNReal
 
 namespace intervalIntegral
 
-noncomputable section
+section
 
 -- The namespace placement is upstream-facing: this is a pure companion to interval integrals.
 /-- Tonelli's theorem on the time triangle, followed by the volume-preserving shear
@@ -238,6 +240,40 @@ private theorem sub_exp_le_exp_mul_sub {x y : ℝ} :
       simpa only [add_comm] using add_le_add_right h' (Real.exp y * (y - x))
     _ = Real.exp y * (y - x) + Real.exp x := add_comm _ _
 
+private theorem eq_of_two_sided_nat_error {x y B : ℝ} (hB : 0 ≤ B)
+    (hApprox : ∀ N : ℕ, 0 < N → x ≤ y + B / N ∧ y ≤ x + B / N) : x = y := by
+  apply le_antisymm
+  · refine le_of_forall_pos_le_add fun epsilon hepsilon ↦ ?_
+    obtain ⟨N, hN⟩ := exists_nat_gt (B / epsilon)
+    have hNposReal : (0 : ℝ) < N := (div_nonneg hB hepsilon.le).trans_lt hN
+    have hNpos : 0 < N := by exact_mod_cast hNposReal
+    have hBN : B / N < epsilon := by
+      rw [div_lt_iff₀ hNposReal]
+      have := (div_lt_iff₀ hepsilon).mp hN
+      nlinarith only [this]
+    exact (hApprox N hNpos).1.trans (add_le_add_right hBN.le _)
+  · refine le_of_forall_pos_le_add fun epsilon hepsilon ↦ ?_
+    obtain ⟨N, hN⟩ := exists_nat_gt (B / epsilon)
+    have hNposReal : (0 : ℝ) < N := (div_nonneg hB hepsilon.le).trans_lt hN
+    have hNpos : 0 < N := by exact_mod_cast hNposReal
+    have hBN : B / N < epsilon := by
+      rw [div_lt_iff₀ hNposReal]
+      have := (div_lt_iff₀ hepsilon).mp hN
+      nlinarith only [this]
+    exact (hApprox N hNpos).2.trans (add_le_add_right hBN.le _)
+
+private theorem intervalIntegrable_between {a : ℝ → ℝ} {T u v : ℝ}
+    (hT : 0 ≤ T) (hInt0T : IntervalIntegrable a volume (0 : ℝ) T)
+    (hu : u ∈ Icc (0 : ℝ) T) (hv : v ∈ Icc (0 : ℝ) T) :
+    IntervalIntegrable a volume u v := by
+  apply hInt0T.mono_set
+  rw [uIcc_of_le hT]
+  intro z hz
+  rw [mem_uIcc] at hz
+  rcases hz with hz | hz
+  · exact ⟨hu.1.trans hz.1, hz.2.trans hv.2⟩
+  · exact ⟨hv.1.trans hz.1, hz.2.trans hu.2⟩
+
 /-- For a bounded nonnegative integrable function on `[0, T]`, integrating the function times the
 exponential of its integral primitive gives the exponential increment.  The upper bound is used
 only to control the mesh error in the derivative-free uniform-partition proof. -/
@@ -255,14 +291,7 @@ theorem integral_mul_exp_primitive {a : ℝ → ℝ} {C T t : ℝ}
     rw [intervalIntegrable_iff, uIoc_of_le hT]
     exact ha.mono_set Ioc_subset_Icc_self
   have hInt (u v : ℝ) (hu : u ∈ Icc (0 : ℝ) T) (hv : v ∈ Icc (0 : ℝ) T) :
-      IntervalIntegrable a volume u v := by
-    apply hInt0T.mono_set
-    rw [uIcc_of_le hT]
-    intro z hz
-    rw [mem_uIcc] at hz
-    rcases hz with hz | hz
-    · exact ⟨hu.1.trans hz.1, hz.2.trans hv.2⟩
-    · exact ⟨hv.1.trans hz.1, hz.2.trans hu.2⟩
+      IntervalIntegrable a volume u v := intervalIntegrable_between hT hInt0T hu hv
   have hA_sub (u v : ℝ) (hu : u ∈ Icc (0 : ℝ) T) (hv : v ∈ Icc (0 : ℝ) T) :
       A v - A u = ∫ r in u..v, a r := by
     exact integral_interval_sub_left (hInt 0 v ⟨le_rfl, hT⟩ hv)
@@ -447,26 +476,10 @@ theorem integral_mul_exp_primitive {a : ℝ → ℝ} {C T t : ℝ}
         _ ≤ (∫ s in (0 : ℝ)..t, a s * Real.exp (A s)) + B / N := by
           simpa only [add_comm] using add_le_add_right hL_target (B / N)
   change (∫ s in (0 : ℝ)..t, a s * Real.exp (A s)) = Real.exp (A t) - 1
-  apply le_antisymm
-  · refine le_of_forall_pos_le_add fun epsilon hepsilon ↦ ?_
-    obtain ⟨N, hN⟩ := exists_nat_gt (B / epsilon)
-    have hNposReal : (0 : ℝ) < N := (div_nonneg hB hepsilon.le).trans_lt hN
-    have hNpos : 0 < N := by exact_mod_cast hNposReal
-    have hBN : B / N < epsilon := by
-      rw [div_lt_iff₀ hNposReal]
-      have := (div_lt_iff₀ hepsilon).mp hN
-      nlinarith only [this]
-    exact (hApprox N hNpos).1.trans (add_le_add_right hBN.le _)
-  · refine le_of_forall_pos_le_add fun epsilon hepsilon ↦ ?_
-    obtain ⟨N, hN⟩ := exists_nat_gt (B / epsilon)
-    have hNposReal : (0 : ℝ) < N := (div_nonneg hB hepsilon.le).trans_lt hN
-    have hNpos : 0 < N := by exact_mod_cast hNposReal
-    have hBN : B / N < epsilon := by
-      rw [div_lt_iff₀ hNposReal]
-      have := (div_lt_iff₀ hepsilon).mp hN
-      nlinarith only [this]
-    exact (hApprox N hNpos).2.trans (add_le_add_right hBN.le _)
+  exact eq_of_two_sided_nat_error hB hApprox
 
 end
 
 end intervalIntegral
+
+end PortComputability

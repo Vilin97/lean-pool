@@ -20,12 +20,14 @@ No measurability of the path-valued map, path-space law, Markov property, or Hun
 asserted here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {Ω E : Type*} {mΩ : MeasurableSpace Ω} [MetricSpace E] [CompleteSpace E]
   [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
@@ -181,8 +183,8 @@ theorem continuous_continuousGlobalDyadicFloorLimit
     (X : NNRat → Ω → E) (ω : Ω) :
     Continuous (continuousGlobalDyadicFloorLimit X ω) := by
   by_cases h : Continuous (globalDyadicFloorLimit X ω)
-  · simpa only [continuousGlobalDyadicFloorLimit, if_pos h] using h
-  · simp only [continuousGlobalDyadicFloorLimit, if_neg h]
+  · simpa only [continuousGlobalDyadicFloorLimit, ite_eq_left h] using h
+  · simp only [continuousGlobalDyadicFloorLimit, ite_eq_right h]
     exact continuous_const
 
 /-- At a fixed rational time written as a natural shift plus a local time in `[0,1]`, the
@@ -216,7 +218,7 @@ theorem IsKolmogorovProcess.ae_eq_continuousGlobalDyadicFloorLimit_nat_add
       (IsKolmogorovProcess.timeShift hX n) hγ hγq t ht,
       IsKolmogorovProcess.ae_continuous_globalDyadicFloorLimit hX hγ hγq]
       with ω hident hcont
-  rw [continuousGlobalDyadicFloorLimit, if_pos hcont]
+  rw [continuousGlobalDyadicFloorLimit, ite_eq_left hcont]
   rw [show (↑((n : NNRat) + t) : ℝ≥0) = x by rfl,
     globalDyadicFloorLimit_coe X ω n ⟨x, hx⟩, globalDyadicFloorPiece, hcoord]
   simpa only [timeShift_apply] using! hident
@@ -257,3 +259,5 @@ theorem IsKolmogorovProcess.ae_eq_continuousGlobalDyadicFloorLimit
 end
 
 end MarkovProcess
+
+end PortComputability

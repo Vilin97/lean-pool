@@ -13,12 +13,14 @@ This file transports the finite-set kernel translation law from physical nonnega
 to finite sets of dense times, using the canonical coordinate reindexings.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 namespace IsConservative
 
@@ -70,3 +72,5 @@ end IsConservative
 end
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

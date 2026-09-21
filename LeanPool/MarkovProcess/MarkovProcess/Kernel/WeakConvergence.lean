@@ -47,7 +47,7 @@ theorem exists_compactlySupported_one_sub_lt_integral [PseudoEMetricSpace X]
   obtain ⟨g, hgK, -, hgsupp, hg01⟩ :=
     exists_continuous_one_zero_of_isCompact hK isClosed_empty (Set.disjoint_empty K)
   refine ⟨⟨g, hgsupp⟩, hg01, ?_⟩
-  show (1 : ℝ) - eps < ∫ y, g y ∂mu
+  change (1 : ℝ) - eps < ∫ y, g y ∂mu
   have hKmeas : MeasurableSet K := hK.isClosed.measurableSet
   have hKcompl : mu.real Kᶜ ≤ eps / 2 := by
     have h := ENNReal.toReal_mono (by simp) hKmu

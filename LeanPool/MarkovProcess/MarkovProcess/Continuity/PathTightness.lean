@@ -66,7 +66,7 @@ theorem edist_le_of_modulus {T d : ℝ≥0} (hd : 0 < d) {rho : ℝ≥0∞} {f :
   set u : ℕ → ℝ≥0 := fun k ↦ t * k / K with hu
   have hu0 : u 0 = 0 := by simp [hu]
   have huK : u K = t := by
-    show t * (K : ℝ≥0) / (K : ℝ≥0) = t
+    change t * (K : ℝ≥0) / (K : ℝ≥0) = t
     rw [mul_div_assoc, div_self hKne, mul_one]
   have hule : ∀ k, k ≤ K → u k ≤ T := by
     intro k hk

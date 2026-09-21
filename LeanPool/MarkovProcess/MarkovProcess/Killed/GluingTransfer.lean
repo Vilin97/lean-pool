@@ -27,10 +27,12 @@ No topology on the target space is used, and no relation between the two measure
 tested identity is assumed.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty CompactlySupported
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -131,3 +133,7 @@ theorem lintegral_extend_eq_of_forall_zeroAtInfty {i : X → Y} (hi : Measurable
 end Transfer
 
 end MarkovProcess
+
+end
+
+end PortComputability

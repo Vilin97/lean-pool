@@ -21,13 +21,15 @@ This is an unconditional kernel-law identity. The conditional form is in
 `Trajectory/FellerStoppingRestart.lean`; no Hunt-process property is asserted.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
 namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -114,3 +116,5 @@ theorem IsFellerKernelSemigroup.continuousPathTrajectory_map_shift
 end
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

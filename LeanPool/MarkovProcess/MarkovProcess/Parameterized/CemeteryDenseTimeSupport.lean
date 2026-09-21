@@ -15,11 +15,13 @@ This is only a statement about the countable trajectory. It makes no continuous-
 lifetime-path, or spatial support claim.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 /-- A cemetery-valued path is live at every point of its index set. -/
 def IsLiveAtEveryTime {D alpha : Type*} (path : D → Cemetery alpha) : Prop :=
@@ -62,3 +64,5 @@ end ParameterizedSubMarkovKernelSemigroup
 
 end
 end MarkovProcess
+
+end PortComputability

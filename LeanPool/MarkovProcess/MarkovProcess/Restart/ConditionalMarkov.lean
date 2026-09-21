@@ -18,12 +18,14 @@ The theorem is a conditional API: it does not prove its restricted restart-law h
 not by itself associate a Markov or Hunt process with a transition semigroup.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace ContinuousPath
 
-noncomputable section
+section
 
 variable {alpha E : Type*} [TopologicalSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha]
@@ -65,3 +67,5 @@ theorem condExp_shift_ae_eq_integral_pathKernel_of_restrict_map
 end
 end ContinuousPath
 end MarkovProcess
+
+end PortComputability

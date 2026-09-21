@@ -14,12 +14,14 @@ enumeration. Coordinates remain in enumeration order; the enumeration need not b
 physical time. Fiberwise conservativity is used only for Markovness and prefix consistency.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace ParameterizedSubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {Theta D alpha : Type*} [MeasurableSpace Theta] [MeasurableSpace alpha]
 
@@ -100,3 +102,5 @@ theorem parameterizedDenseTimePrefixKernel_map_restrictPath
 end
 end ParameterizedSubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

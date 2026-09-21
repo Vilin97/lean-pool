@@ -25,10 +25,12 @@ Additivity, and with it the resolvent equation, is available exactly when the tr
 resolvents are monotone in the index; that monotonicity is a bare hypothesis here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -283,7 +285,7 @@ theorem minimalResolventReal_sub (hemb : ∀ m, MeasurableEmbedding (emb m))
       minimalResolventReal R emb lam f x - minimalResolventReal R emb lam g x := by
   have hrewrite : (fun y ↦ f y - g y) = fun y ↦ f y + (-g) y := by
     funext y
-    show f y - g y = f y + -g y
+    change f y - g y = f y + -g y
     ring
   have hneg : minimalResolventReal R emb lam (-g) x =
       - minimalResolventReal R emb lam g x := by
@@ -404,3 +406,7 @@ theorem minimalResolventReal_resolventEquation (hemb : ∀ m, MeasurableEmbeddin
 end ResolventEquation
 
 end MarkovProcess
+
+end
+
+end PortComputability

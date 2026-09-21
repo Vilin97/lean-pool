@@ -25,10 +25,12 @@ process started at a live point almost surely never reaches the added point
 (`ae_exitTime_eq_top_heatResolvent`).
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -97,6 +99,7 @@ theorem hasLocalKolmogorovMoments_onePointKernelSemigroup_heatResolvent :
       heatExhaustion_pos lipschitzWith_one_heatExhaustion isCompact_heatExhaustion_superlevel
     heatResolvent.onePointKernelSemigroup.HasLocalKolmogorovMoments 4 2
       gaussianFourthMoment 16 := by
+  have : MeasurableSingletonClass (OnePoint ℝ) := inferInstance
   let := OnePoint.exhaustionMetricSpace heatExhaustion continuous_heatExhaustion
     heatExhaustion_pos lipschitzWith_one_heatExhaustion isCompact_heatExhaustion_superlevel
   refine ⟨by norm_num, by norm_num, ?_, ?_⟩
@@ -167,3 +170,7 @@ theorem ae_exitTime_eq_top_heatResolvent (x : ℝ) :
     exact isConservative_heatSemigroup.ofReal_mul_kernelResolvent_one one_pos x)
 
 end MarkovProcess
+
+end
+
+end PortComputability

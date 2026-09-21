@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Armstrong
 -/
 import Mathlib.Algebra.Order.Sub.Basic
-import Mathlib.Data.NNReal.Defs
+import Mathlib.Basic.NNReal.Defs
 import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 import Mathlib.Order.Fin.Basic
 
@@ -130,7 +130,6 @@ def emptyPath (α : Type*) : Fin 0 → α :=
   Fin.elim0
 
 /-- Every path on the empty finite index type is the canonical empty path. -/
-@[simp]
 theorem eq_emptyPath {α : Type*} (path : Fin 0 → α) : path = emptyPath α :=
   Subsingleton.elim _ _
 

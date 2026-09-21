@@ -33,12 +33,14 @@ Both semigroups are read at the same shift `μ`; nothing is asserted when the tw
 taken at different shifts, and no relation between the two generators is assumed.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory Topology
 open scoped NNReal
 
 namespace MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
 
-noncomputable section
+section
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
@@ -138,3 +140,5 @@ theorem norm_operator_resolvent_sub_resolvent_operator_le
 end
 
 end MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
+
+end PortComputability

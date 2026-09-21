@@ -15,10 +15,12 @@ For a contractive resolvent `R`, this file defines the bounded generator
 records commutation and the exact formula on the range of a fixed resolvent.
 -/
 
+noncomputable section PortComputability
+
 open Filter Topology
 open NormedSpace
 
-noncomputable section
+section
 
 namespace MarkovProcess.Semigroup
 
@@ -150,3 +152,7 @@ theorem tendsto_yosidaGenerator_apply_operator (R : ContractiveResolvent E)
 end ContractiveResolvent
 
 end MarkovProcess.Semigroup
+
+end
+
+end PortComputability

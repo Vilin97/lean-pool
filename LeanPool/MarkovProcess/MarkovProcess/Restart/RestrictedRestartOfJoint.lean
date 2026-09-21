@@ -16,11 +16,13 @@ restriction to any event measurable with respect to the conditioning variable.
 No stochastic process or Markov property is asserted here.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {Omega beta gamma : Type*} {mOmega : MeasurableSpace Omega}
   {mBeta : MeasurableSpace beta} {mGamma : MeasurableSpace gamma}
@@ -52,3 +54,5 @@ theorem restrict_map_eq_comap_comp_of_map_prodMk_eq_compProd
 
 end
 end MarkovProcess
+
+end PortComputability

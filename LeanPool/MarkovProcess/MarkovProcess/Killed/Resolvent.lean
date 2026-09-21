@@ -51,7 +51,8 @@ noncomputable def IsConservative.killedResolvent (lam : ℝ) (f : alpha → ℝ�
 theorem IsConservative.lintegral_killedKernel (t : NNReal) (x : alpha) {f : alpha → ℝ≥0∞}
     (hf : Measurable f) :
     ∫⁻ y, f y ∂(IsConservative.killedKernel P hP U hU t x) =
-      ∫⁻ omega, {omega : ContinuousPath alpha | (t : ℝ≥0∞) < ContinuousPath.exitTime U omega}.indicator
+      ∫⁻ omega, {omega : ContinuousPath alpha | (t : ℝ≥0∞) < ContinuousPath.exitTime U
+          omega}.indicator
         (fun omega ↦ f (omega t)) omega ∂(IsConservative.continuousProcess P hP x) := by
   have hmeas : Measurable (fun omega : ContinuousPath alpha ↦ omega t) :=
     ContinuousPath.measurable_coordinateProcess (alpha := alpha) t
@@ -74,7 +75,8 @@ theorem IsConservative.killedResolvent_eq_lintegral (lam : ℝ) {f : alpha → �
       ((measurable_real_toNNReal.comp measurable_fst).prodMk measurable_snd)
   have hS : MeasurableSet {p : ℝ × ContinuousPath alpha |
       ((Real.toNNReal p.1 : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U p.2} :=
-    measurableSet_lt (measurable_coe_nnreal_ennreal.comp (measurable_real_toNNReal.comp measurable_fst))
+    measurableSet_lt (measurable_coe_nnreal_ennreal.comp (measurable_real_toNNReal.comp
+        measurable_fst))
       ((ContinuousPath.measurable_exitTime U hU).comp measurable_snd)
   have hjoint : Measurable (Function.uncurry fun (t : ℝ) (omega : ContinuousPath alpha) ↦
       ENNReal.ofReal (Real.exp (-lam * t)) *
@@ -102,12 +104,14 @@ theorem IsConservative.killedResolvent_eq_lintegral (lam : ℝ) {f : alpha → �
       ∫⁻ omega, ENNReal.ofReal (Real.exp (-lam * t)) *
         {omega : ContinuousPath alpha |
           ((Real.toNNReal t : NNReal) : ℝ≥0∞) < ContinuousPath.exitTime U omega}.indicator
-          (fun omega ↦ f (omega (Real.toNNReal t))) omega ∂(IsConservative.continuousProcess P hP x) := by
+          (fun omega ↦ f (omega (Real.toNNReal t))) omega ∂(IsConservative.continuousProcess P
+              hP x) := by
     intro t
     have hg : Measurable (fun omega : ContinuousPath alpha ↦ f (omega (Real.toNNReal t))) :=
       hf.comp (ContinuousPath.measurable_coordinateProcess (alpha := alpha) _)
     rw [IsConservative.lintegral_killedKernel P hP U hU _ x hf]
-    exact (lintegral_const_mul _ (hg.indicator (ContinuousPath.measurableSet_lt_exitTime U hU _))).symm
+    exact (lintegral_const_mul _ (hg.indicator (ContinuousPath.measurableSet_lt_exitTime U hU
+        _))).symm
   unfold IsConservative.killedResolvent
   simp_rw [hinner]
   rw [lintegral_lintegral_swap hjoint.aemeasurable]

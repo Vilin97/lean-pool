@@ -14,12 +14,14 @@ almost-sure coordinate statements. This is the measure-theoretic reduction later
 conservativity of transition laws into nonexplosion.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory
 open scoped ENNReal NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace LifetimePath
 
@@ -92,3 +94,5 @@ theorem isNonexplosive_iff_map_coordinate_nat_delta
 end Kernel
 end
 end MarkovProcess
+
+end PortComputability

@@ -13,12 +13,14 @@ This file proves a one-time marginal identity.  It makes no simultaneous path-su
 lifetime claim.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace ParameterizedSubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {Theta D alpha : Type*} [MeasurableSpace Theta] [MeasurableSpace alpha]
   [StandardBorelSpace (Cemetery alpha)]
@@ -42,3 +44,5 @@ theorem parameterizedCemeteryDenseTimeTrajectory_map_eval_singleton_delta
 end
 end ParameterizedSubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

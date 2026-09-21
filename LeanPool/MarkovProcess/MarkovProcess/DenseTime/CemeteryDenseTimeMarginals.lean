@@ -14,6 +14,8 @@ at any dense-time coordinate when started from a live state.  This is a finite-c
 it does not assert that a dense-time path has a continuous lifetime-path extension.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
@@ -21,7 +23,7 @@ namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 namespace IsConservative
 
-noncomputable section
+section
 
 variable {D alpha : Type*} [MeasurableSpace alpha] [StandardBorelSpace (Cemetery alpha)]
 
@@ -40,3 +42,5 @@ end
 end IsConservative
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

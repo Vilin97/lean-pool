@@ -31,10 +31,12 @@ canonical shifts by dominated convergence gives `S t x - x = ∫₀ᵗ S s (μ x
 `R_μ`, and time averages of the orbit then produce the difference quotient at `t = 0`.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory NormedSpace Set Topology
 open scoped NNReal
 
-noncomputable section
+section
 
 namespace MarkovProcess.Semigroup
 
@@ -177,3 +179,5 @@ end ContractiveResolvent
 end MarkovProcess.Semigroup
 
 end
+
+end PortComputability

@@ -13,11 +13,13 @@ This file transports a kernel on dense-time trajectories to ordinary continuous 
 explicit support-on-the-continuous-range hypothesis. It does not prove that support hypothesis.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory Set
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace Kernel
 
@@ -93,3 +95,5 @@ theorem IsSupportedOnContinuousPaths.map_denseRestriction
 end Kernel
 end
 end MarkovProcess
+
+end PortComputability

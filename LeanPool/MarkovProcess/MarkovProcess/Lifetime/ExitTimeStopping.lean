@@ -9,12 +9,14 @@ import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Filtration
 
 /-! # Exit times as stopping times -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Set
 open scoped ENNReal
 
 namespace MarkovProcess.LifetimePath
 
-noncomputable section
+section
 
 variable {alpha : Type*} [PseudoMetricSpace alpha]
 
@@ -218,12 +220,12 @@ private theorem measurableSet_detectsLiveClosedSetBy (t : NNReal) (F : Set alpha
       {omega | DetectsLiveClosedSetBy t F omega} := by
   by_cases hFnonempty : F.Nonempty
   swap
-  have hevent : {omega | DetectsLiveClosedSetBy t F omega} = ∅ := by
-    ext omega
-    change DetectsLiveClosedSetBy t F omega ↔ False
-    simp only [DetectsLiveClosedSetBy, hFnonempty, false_and]
-  rw [hevent]
-  exact @MeasurableSet.empty _ (canonicalFiltration (alpha := alpha) t)
+  · have hevent : {omega | DetectsLiveClosedSetBy t F omega} = ∅ := by
+      ext omega
+      change DetectsLiveClosedSetBy t F omega ↔ False
+      simp only [DetectsLiveClosedSetBy, hFnonempty, false_and]
+    rw [hevent]
+    exact @MeasurableSet.empty _ (canonicalFiltration (alpha := alpha) t)
   have hmeas (n : ℕ) : MeasurableSet[canonicalFiltration (alpha := alpha) t]
       ({omega | liveInfDist F (coordinate t omega) < detectionThreshold n} ∪
         ⋃ k : ℕ, if h : DenseTime.castOrderEmbedding (DenseTime.enumeration k) < t then
@@ -253,13 +255,13 @@ private theorem measurableSet_detectsLiveClosedSetBy (t : NNReal) (F : Set alpha
     · intro h n
       rcases h n with hendpoint | ⟨k, hkt, hk⟩
       · exact Or.inl hendpoint
-      · exact Or.inr ⟨k, by rw [dif_pos hkt]; exact hk⟩
+      · exact Or.inr ⟨k, by rw [dite_eq_left hkt]; exact hk⟩
     · intro h n
       rcases h n with hendpoint | ⟨k, hk⟩
       · exact Or.inl hendpoint
       · by_cases hkt : DenseTime.castOrderEmbedding (DenseTime.enumeration k) < t
-        · exact Or.inr ⟨k, hkt, by simpa only [dif_pos hkt] using! hk⟩
-        · simp only [dif_neg hkt, Set.notMem_empty] at hk
+        · exact Or.inr ⟨k, hkt, by simpa only [dite_eq_left hkt] using! hk⟩
+        · simp only [dite_eq_right hkt, Set.notMem_empty] at hk
   rw [hevent]
   exact MeasurableSet.iInter hmeas
 
@@ -305,3 +307,5 @@ end Measurable
 
 end
 end MarkovProcess.LifetimePath
+
+end PortComputability

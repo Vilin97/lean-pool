@@ -24,6 +24,7 @@ namespace SubMarkovKernelSemigroup
 variable {alpha X : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha]
   [BorelSpace alpha] [LocallyCompactSpace alpha] [T2Space alpha]
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- Kernel integrals of `C₀` tests against singleton finite-time laws vary continuously with the
 unique observation time. -/
 theorem IsFellerKernelSemigroup.tendsto_kernelIntegral_finiteTimeKernel_one_map_eval

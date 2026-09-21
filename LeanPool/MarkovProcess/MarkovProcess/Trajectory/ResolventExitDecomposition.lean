@@ -23,6 +23,8 @@ Main definitions and results: `ContinuousPath.pathResolvent`,
 No integrability or almost-sure finiteness of the exit time is asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
 
@@ -30,7 +32,7 @@ namespace MarkovProcess
 
 namespace ContinuousPath
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha] [SecondCountableTopology alpha] [Nonempty alpha]
@@ -62,7 +64,7 @@ end ContinuousPath
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha] [SecondCountableTopology alpha] [Nonempty alpha]
@@ -306,3 +308,5 @@ end
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

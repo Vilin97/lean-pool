@@ -16,9 +16,11 @@ orbits is proved in `Semigroup/Generation.lean`, from the criterion of
 `Semigroup/OrbitContinuity.lean`.
 -/
 
+noncomputable section PortComputability
+
 open Filter NormedSpace Set Topology
 
-noncomputable section
+section
 
 namespace MarkovProcess.Semigroup
 
@@ -172,3 +174,7 @@ end CompleteSpace
 end ContractiveResolvent
 
 end MarkovProcess.Semigroup
+
+end
+
+end PortComputability

@@ -13,10 +13,12 @@ This file extends a jointly measurable family of sub-Markov semigroups by one ab
 cemetery state.  The construction is jointly measurable in the parameter, time, and state.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
-noncomputable section
+section
 
 namespace MarkovProcess
 namespace ParameterizedSubMarkovKernelSemigroup
@@ -83,3 +85,7 @@ theorem isConservative_cemeterySemigroup (theta : Theta) :
 
 end ParameterizedSubMarkovKernelSemigroup
 end MarkovProcess
+
+end
+
+end PortComputability

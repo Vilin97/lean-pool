@@ -17,12 +17,14 @@ Polish space.
 Main result: `IsFellerKernelSemigroup.killedResolvent_le_of_perturbed_resolventFamily`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Set
 open scoped ENNReal
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
   [SecondCountableTopology alpha] [CompleteSpace alpha] [Nonempty alpha]
@@ -107,3 +109,5 @@ theorem IsFellerKernelSemigroup.killedResolvent_le_of_perturbed_resolventFamily
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

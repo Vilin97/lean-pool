@@ -40,6 +40,8 @@ space; that needs tightness on path space itself, which is not proved here.  No 
 a stopping time that can be infinite.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory
 open scoped BoundedContinuousFunction CompactlySupported NNReal
 
@@ -109,7 +111,7 @@ theorem IsFellerKernelSemigroup.continuous_integral_boundedContinuous_finiteSetK
 
 end BoundedContinuousTest
 
-noncomputable section Process
+section Process
 
 open IsConservative
 
@@ -209,3 +211,5 @@ end Process
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

@@ -81,7 +81,7 @@ theorem isStoppingTime_lifetime :
     ext omega
     simpa only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_singleton_iff] using
       (coordinate_eq_delta_iff omega t).symm
-  show MeasurableSet[canonicalFiltration (alpha := alpha) t]
+  change MeasurableSet[canonicalFiltration (alpha := alpha) t]
     {omega : LifetimePath alpha | omega.lifetime ≤ (t : ENNReal)}
   rw [hevent]
   exact (measurable_coordinate_canonicalFiltration t) hdelta

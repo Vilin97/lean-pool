@@ -15,11 +15,13 @@ extension at every time turns any sub-Markov kernel semigroup into a
 conservative semigroup on the cemetery state space.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory
 open ProbabilityTheory
 open scoped ENNReal
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -194,7 +196,8 @@ theorem cemeterySemigroup_apply (t : NNReal) :
 theorem isConservative_cemeterySemigroup : (cemeterySemigroup P).IsConservative := by
   intro t z
   rw [cemeterySemigroup_apply]
-  exact (Kernel.isMarkovKernel_cemeteryExtension (P t) (P.isSubMarkovKernel t)).isProbabilityMeasure z |>.measure_univ
+  exact (Kernel.isMarkovKernel_cemeteryExtension (P t) (P.isSubMarkovKernel
+      t)).isProbabilityMeasure z |>.measure_univ
 
 /-- The cemetery state is absorbing at every time in the extension semigroup. -/
 theorem cemeterySemigroup_absorbing (t : NNReal) :
@@ -204,3 +207,7 @@ theorem cemeterySemigroup_absorbing (t : NNReal) :
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end
+
+end PortComputability

@@ -15,12 +15,14 @@ unequal mass cannot satisfy the hypothesis.
 This is generic measure-theoretic infrastructure and requires no topology.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory
 
 namespace MarkovProcess
 namespace Measure
 
-noncomputable section
+section
 
 variable {index alpha : Type*} [MeasurableSpace alpha]
 
@@ -45,3 +47,5 @@ theorem eq_of_map_finiteRestriction_eq
 end
 end Measure
 end MarkovProcess
+
+end PortComputability

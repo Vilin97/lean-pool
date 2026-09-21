@@ -20,6 +20,8 @@ in `Trajectory/FellerStoppingConditional.lean`, and a stopping time that may be 
 `Trajectory/StoppingLtTop.lean`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
@@ -27,7 +29,7 @@ namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 namespace IsConservative
 
-noncomputable section
+section
 
 variable {alpha E : Type*} [MetricSpace alpha] [CompleteSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha] [SecondCountableTopology alpha]
@@ -76,3 +78,5 @@ end
 end IsConservative
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

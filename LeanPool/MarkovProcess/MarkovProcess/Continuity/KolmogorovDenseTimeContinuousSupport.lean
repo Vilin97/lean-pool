@@ -18,12 +18,14 @@ No measurability of the totalized modification as a path-valued map, PDE increme
 Markov property of the resulting paths, or Hunt-process assertion is made here.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace Kernel
 
@@ -72,3 +74,5 @@ end ContinuousPathKernel
 end Kernel
 end
 end MarkovProcess
+
+end PortComputability

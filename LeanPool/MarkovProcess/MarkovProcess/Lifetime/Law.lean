@@ -14,12 +14,14 @@ embedding. It records the resulting nonexplosion and coordinate identities witho
 that any particular dense-time or PDE law has continuous paths.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace Kernel
 
@@ -78,3 +80,5 @@ theorem toLifetimePathKernel_map_coordinate
 end Kernel
 end
 end MarkovProcess
+
+end PortComputability

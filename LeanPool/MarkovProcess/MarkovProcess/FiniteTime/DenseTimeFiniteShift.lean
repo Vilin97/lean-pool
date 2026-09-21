@@ -13,9 +13,11 @@ provides the resulting coordinate equivalence and relates restriction after shif
 path to restriction on the translated finite set.  It makes no probability-law or Markov claim.
 -/
 
+noncomputable section PortComputability
+
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace DenseTime
 
@@ -89,3 +91,5 @@ theorem restrict_shift (s : DenseTime) (I : Finset DenseTime) (path : DenseTime 
 end DenseTimePath
 end
 end MarkovProcess
+
+end PortComputability

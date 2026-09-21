@@ -15,9 +15,11 @@ as a strongly continuous contraction semigroup.  Strong continuity at zero is
 first proved on the range of one resolvent and then extended by density.
 -/
 
+noncomputable section PortComputability
+
 open Filter NormedSpace Set Topology
 
-noncomputable section
+section
 
 namespace MarkovProcess.Semigroup
 
@@ -97,3 +99,7 @@ theorem tendsto_yosidaSemigroup_naturalShift_apply_generatedSemigroup
 end ContractiveResolvent
 
 end MarkovProcess.Semigroup
+
+end
+
+end PortComputability

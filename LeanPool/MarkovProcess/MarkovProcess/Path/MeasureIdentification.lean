@@ -13,12 +13,14 @@ carrier. This is the measure-level counterpart of continuous-path kernel identif
 deterministic property of continuous paths.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory
 
 namespace MarkovProcess
 namespace Measure
 
-noncomputable section
+section
 
 variable {alpha : Type*} [TopologicalSpace alpha] [T2Space alpha]
   [MeasurableSpace alpha] [BorelSpace alpha]
@@ -61,3 +63,5 @@ theorem map_denseRestriction_eq_iff
 end
 end Measure
 end MarkovProcess
+
+end PortComputability

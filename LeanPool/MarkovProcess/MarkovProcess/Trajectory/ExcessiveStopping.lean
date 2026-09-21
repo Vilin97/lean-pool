@@ -28,12 +28,14 @@ Main results: `IsFellerKernelSemigroup.resolvent_isLambdaExcessive`,
 No converse characterization of excessive functions is asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 section Supermedian
 
@@ -72,6 +74,7 @@ variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
 variable {P : SubMarkovKernelSemigroup alpha}
 
 omit [CompleteSpace alpha] [SecondCountableTopology alpha] [Nonempty alpha] in
+omit [LocallyCompactSpace alpha] in
 /-- For a Feller semigroup, every exponentially discounted `C₀` orbit converges in `C₀` norm to
 its initial function at time zero.  Thus `IsLambdaExcessive` includes the usual excessive
 zero-time condition automatically. -/
@@ -91,6 +94,7 @@ theorem IsFellerKernelSemigroup.tendsto_exp_neg_mul_c0Semigroup_zero
     Semigroup.StronglyContinuousContractionSemigroup.zero_apply] using hzero
 
 omit [CompleteSpace alpha] [SecondCountableTopology alpha] [Nonempty alpha] in
+omit [LocallyCompactSpace alpha] in
 /-- The resolvent of a nonnegative `C₀` function at a positive shift is excessive at that shift. -/
 theorem IsFellerKernelSemigroup.resolvent_isLambdaExcessive
     (hFeller : P.IsFellerKernelSemigroup) (lam : ℝ) (hlam : 0 < lam)
@@ -422,3 +426,5 @@ theorem IsLambdaExcessive.lintegral_ofReal_discountedValue_exitTime_le
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

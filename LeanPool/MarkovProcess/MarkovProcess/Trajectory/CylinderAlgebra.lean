@@ -129,13 +129,14 @@ theorem coordinateSubalgebra_separatesPoints [T3Space alpha] [LocallyCompactSpac
     exact homega (ContinuousPath.ext fun t ↦ not_ne_iff.mp (not_exists.mp hcon t))
   obtain ⟨t, ht⟩ := hexists
   obtain ⟨f, hfone, hfzero, hfcompact, -⟩ :=
-    exists_continuous_one_zero_of_isCompact (isCompact_singleton : IsCompact ({omega t} : Set alpha))
+    exists_continuous_one_zero_of_isCompact (isCompact_singleton : IsCompact ({omega t} : Set
+        alpha))
       (isClosed_singleton : IsClosed ({eta t} : Set alpha)) (Set.disjoint_singleton.mpr ht)
   let f0 : C₀(alpha, ℝ) := ⟨f, HasCompactSupport.is_zero_at_infty hfcompact⟩
   let G : C(ContinuousPath alpha, ℝ) :=
     (f0 : C(alpha, ℝ)).comp ⟨fun path ↦ path t, continuous_eval t⟩
   refine ⟨G, ⟨G, ⟨Algebra.subset_adjoin ⟨t, f0, rfl⟩, rfl⟩⟩, ?_⟩
-  show f (omega t) ≠ f (eta t)
+  change f (omega t) ≠ f (eta t)
   rw [hfone (Set.mem_singleton _), hfzero (Set.mem_singleton _)]
   exact one_ne_zero
 
@@ -181,7 +182,7 @@ theorem exists_boundedCylinder_approx (F : ContinuousPath alpha →ᵇ ℝ)
   have hGapply : ∀ omega : ContinuousPath alpha, G omega = clampC (G0 omega) := by
     intro omega
     rw [hGdef]
-    show clampC (g0 (finsetEvaluation I omega)) = clampC (G0 omega)
+    change clampC (g0 (finsetEvaluation I omega)) = clampC (G0 omega)
     congr 1
     exact (hg0 omega).symm
   refine ⟨G, ⟨I, g, fun omega ↦ rfl⟩, ?_, ?_⟩

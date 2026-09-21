@@ -30,12 +30,14 @@ Main results: `IsFellerKernelSemigroup.discountedDynkinProcess`,
 No assertion is made at an unbounded stopping time or about passage to an infinite horizon.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal ZeroAtInfty
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
   [LocallyCompactSpace alpha]
@@ -53,6 +55,7 @@ def IsFellerKernelSemigroup.discountedDynkinProcess
       (hFeller.c0Semigroup.generator f - lam • (f : C₀(alpha, ℝ)))
         (omega (Real.toNNReal s))
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process, unfolded. -/
 theorem IsFellerKernelSemigroup.discountedDynkinProcess_apply
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -64,6 +67,7 @@ theorem IsFellerKernelSemigroup.discountedDynkinProcess_apply
             (omega (Real.toNNReal s)) :=
   rfl
 
+omit [LocallyCompactSpace alpha] in
 /-- At zero discount, the discounted Dynkin process is the ordinary Dynkin process. -/
 theorem IsFellerKernelSemigroup.discountedDynkinProcess_zero
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain) :
@@ -82,6 +86,7 @@ private theorem exp_neg_mul_le_exp_abs_mul {lam s v : ℝ} (hs : 0 ≤ s) (hsv :
       mul_le_mul_of_nonneg_right (neg_le_abs lam) hs
     _ ≤ |lam| * v := mul_le_mul_of_nonneg_left hsv (abs_nonneg lam)
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process is bounded uniformly in the path on bounded time intervals. -/
 theorem IsFellerKernelSemigroup.norm_discountedDynkinProcess_le
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -120,6 +125,7 @@ theorem IsFellerKernelSemigroup.norm_discountedDynkinProcess_le
     _ = Real.exp (|lam| * (t : ℝ)) *
           (‖(f : C₀(alpha, ℝ))‖ + (t : ℝ) * ‖g‖) := by ring
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process is continuous in time along every path. -/
 theorem IsFellerKernelSemigroup.continuous_discountedDynkinProcess
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -146,6 +152,7 @@ section Adapted
 
 variable [SecondCountableTopology alpha]
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted generator integrand, clamped to a deterministic horizon, is jointly strongly
 measurable for time and the canonical filtration at that horizon. -/
 private theorem stronglyMeasurable_discountedGenerator_min
@@ -160,6 +167,7 @@ private theorem stronglyMeasurable_discountedGenerator_min
     ((hFeller.c0Semigroup.generator f - lam • (f : C₀(alpha, ℝ))).continuous.comp_stronglyMeasurable
       (ContinuousPath.measurable_clampedCoordinate (alpha := alpha) t).stronglyMeasurable)
 
+omit [LocallyCompactSpace alpha] in
 /-- The correction term of the discounted Dynkin process is strongly measurable at its horizon. -/
 theorem IsFellerKernelSemigroup.stronglyMeasurable_integral_discountedGenerator
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -185,6 +193,7 @@ theorem IsFellerKernelSemigroup.stronglyMeasurable_integral_discountedGenerator
   rw [hfun]
   exact hprod
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process is strongly measurable for the canonical filtration at time
 `t`. -/
 theorem IsFellerKernelSemigroup.stronglyMeasurable_discountedDynkinProcess_canonicalFiltration
@@ -198,6 +207,7 @@ theorem IsFellerKernelSemigroup.stronglyMeasurable_discountedDynkinProcess_canon
           (Real.exp (-lam * (t : ℝ)))).sub
     (hFeller.stronglyMeasurable_integral_discountedGenerator f lam t)
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process at a deterministic time is Borel strongly measurable. -/
 theorem IsFellerKernelSemigroup.stronglyMeasurable_discountedDynkinProcess
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -206,6 +216,7 @@ theorem IsFellerKernelSemigroup.stronglyMeasurable_discountedDynkinProcess
   (hFeller.stronglyMeasurable_discountedDynkinProcess_canonicalFiltration f lam t).mono
     ((ContinuousPath.canonicalFiltration (alpha := alpha)).le t)
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process is adapted to the canonical filtration. -/
 theorem IsFellerKernelSemigroup.adapted_discountedDynkinProcess
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -221,6 +232,7 @@ section Expectation
 variable [CompleteSpace alpha] [SecondCountableTopology alpha] [Nonempty alpha]
 variable (hP : P.IsConservative)
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process is integrable under the continuous-path process. -/
 theorem IsFellerKernelSemigroup.integrable_discountedDynkinProcess
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -341,6 +353,7 @@ end Expectation
 
 section Decomposition
 
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process decomposes at an intermediate deterministic time. -/
 theorem IsFellerKernelSemigroup.discountedDynkinProcess_eq_add_shift
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -488,6 +501,7 @@ variable [CompleteSpace alpha] [SecondCountableTopology alpha] [Nonempty alpha]
 variable (hP : P.IsConservative)
 
 omit [CompleteSpace alpha] [Nonempty alpha] in
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process is progressively measurable. -/
 theorem IsFellerKernelSemigroup.progMeasurable_discountedDynkinProcess
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -498,6 +512,7 @@ theorem IsFellerKernelSemigroup.progMeasurable_discountedDynkinProcess
     hFeller.continuous_discountedDynkinProcess f lam omega
 
 omit [CompleteSpace alpha] [Nonempty alpha] in
+omit [LocallyCompactSpace alpha] in
 /-- The discounted Dynkin process evaluated at a finite stopping time is Borel measurable. -/
 theorem IsFellerKernelSemigroup.measurable_discountedDynkinProcess_stoppingTime
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -626,3 +641,5 @@ end OptionalStopping
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

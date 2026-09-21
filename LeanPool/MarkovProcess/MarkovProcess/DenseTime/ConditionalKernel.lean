@@ -14,12 +14,14 @@ This file augments finite prefix laws by their starting point and disintegrates 
 a prefix and its next observation. It makes no infinite-process or path-regularity claim.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {D α : Type*} [MeasurableSpace α]
 
@@ -137,3 +139,5 @@ end IsConservative
 end
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

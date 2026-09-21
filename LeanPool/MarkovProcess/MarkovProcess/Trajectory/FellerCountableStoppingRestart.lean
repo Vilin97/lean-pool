@@ -20,11 +20,13 @@ The stopping time here has countable range.  An arbitrary finite stopping time i
 `Trajectory/StoppingLtTop.lean`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
-noncomputable section
+section
 open IsConservative
 
 variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
@@ -65,3 +67,5 @@ theorem IsFellerKernelSemigroup.continuousPathTrajectory_condExp_shift_countable
 
 end
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

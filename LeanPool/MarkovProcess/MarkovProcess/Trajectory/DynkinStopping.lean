@@ -36,12 +36,14 @@ The progressive-measurability and optional-stopping statements below are the zer
 specializations of the corresponding results in `Trajectory/DiscountedDynkin.lean`.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal ZeroAtInfty
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
   [LocallyCompactSpace alpha]
@@ -52,6 +54,7 @@ section ProgressiveMeasurability
 
 variable [SecondCountableTopology alpha]
 
+omit [LocallyCompactSpace alpha] in
 /-- The Dynkin process is progressively measurable: it is adapted and continuous in time. -/
 theorem IsFellerKernelSemigroup.progMeasurable_dynkinProcess (hFeller : P.IsFellerKernelSemigroup)
     (f : hFeller.c0Semigroup.generatorDomain) :
@@ -60,6 +63,7 @@ theorem IsFellerKernelSemigroup.progMeasurable_dynkinProcess (hFeller : P.IsFell
   simpa only [hFeller.discountedDynkinProcess_zero f] using!
     hFeller.progMeasurable_discountedDynkinProcess f 0
 
+omit [LocallyCompactSpace alpha] in
 /-- The Dynkin process evaluated at a finite stopping time is Borel measurable. -/
 theorem IsFellerKernelSemigroup.measurable_dynkinProcess_stoppingTime
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
@@ -93,6 +97,7 @@ theorem IsFellerKernelSemigroup.integral_dynkinProcess_stoppingTime
   simpa only [hFeller.discountedDynkinProcess_zero f] using
     hFeller.integral_discountedDynkinProcess_stoppingTime hP hK f 0 T hT hTK x
 
+omit [LocallyCompactSpace alpha] in
 /-- The position at a finite stopping time is integrable: it is Borel measurable and bounded by
 the `C₀` norm of `f`. -/
 theorem IsFellerKernelSemigroup.integrable_eval_stoppingTime
@@ -109,6 +114,7 @@ theorem IsFellerKernelSemigroup.integrable_eval_stoppingTime
   rw [← ZeroAtInftyContinuousMap.norm_toBCF_eq_norm]
   exact BoundedContinuousFunction.norm_coe_le_norm (f : C₀(alpha, ℝ)).toBCF _
 
+omit [LocallyCompactSpace alpha] in
 /-- The Dynkin correction term at a finite stopping time bounded by `K` is integrable: it is
 Borel measurable, being the difference of the position at the stopping time and the Dynkin
 process there, and bounded by `K ‖L f‖`. -/
@@ -216,6 +222,7 @@ private theorem integrable_exitTimeTrunc (U : Set alpha) (hU : IsOpen U) (K : NN
   exact NNReal.coe_le_coe.mpr (ContinuousPath.exitTimeTrunc_le U K omega)
 
 omit [CompleteSpace alpha] [SecondCountableTopology alpha] [Nonempty alpha] in
+omit [LocallyCompactSpace alpha] in
 /-- Along a path, the Dynkin integrand is at most `-1` almost everywhere on `[0, T]`, where `T`
 is the truncated exit time: strictly before `T` the path is inside `U`, and the endpoint is a
 null set. -/
@@ -288,3 +295,5 @@ end ExitTime
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

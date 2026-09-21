@@ -41,12 +41,14 @@ about convergence in the operator norm, nor about families that are merely unifo
 rather than contractive.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory Topology
 open scoped NNReal
 
 namespace MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
 
-noncomputable section
+section
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 variable {ι : Type*} {l : Filter ι}
@@ -222,3 +224,5 @@ theorem tendsto_resolvent_of_tendsto_resolvent [l.IsCountablyGenerated]
 end
 
 end MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
+
+end PortComputability

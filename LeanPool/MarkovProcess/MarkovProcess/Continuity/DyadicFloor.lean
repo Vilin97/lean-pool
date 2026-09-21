@@ -24,12 +24,14 @@ This file merges the following former modules, one section each:
 * `DyadicFloorUnitModification`: A continuous modification on the unit interval
 -/
 
+noncomputable section PortComputability
+
 namespace MarkovProcess
 
 section DyadicFloorApproximation
 
 
-noncomputable section
+section
 
 /-- The index of the left endpoint of the level-`n` dyadic cell containing `t ∈ [0, 1]`. -/
 def unitDyadicFloorIndex (n : ℕ) (t : Set.Icc (0 : ℝ) 1) : Fin (2 ^ n + 1) :=
@@ -113,7 +115,7 @@ open Filter MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal
 
 
-noncomputable section
+section
 
 /-- Dyadic floor indices preserve the order of their represented times. -/
 theorem unitDyadicFloorIndex_mono (n : ℕ) {s t : Set.Icc (0 : ℝ) 1}
@@ -284,7 +286,7 @@ end DyadicFloorSampleCauchy
 section DyadicFloorDenseTime
 
 
-noncomputable section
+section
 
 /-- A point of the level-`n` unit dyadic grid, regarded as a real time in `[0, 1]`. -/
 def unitDyadicGridTime (n : ℕ) (i : Fin (2 ^ n + 1)) : Set.Icc (0 : ℝ) 1 :=
@@ -396,7 +398,7 @@ open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
 
-noncomputable section
+section
 
 variable {Ω E : Type*} {mΩ : MeasurableSpace Ω} [PseudoEMetricSpace E]
 
@@ -510,7 +512,7 @@ open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
 
-noncomputable section
+section
 
 variable {Ω E : Type*} {mΩ : MeasurableSpace Ω}
   [PseudoMetricSpace E] [CompleteSpace E]
@@ -711,7 +713,7 @@ open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
 
-noncomputable section
+section
 
 variable {Ω E : Type*} {mΩ : MeasurableSpace Ω} [MetricSpace E] [CompleteSpace E]
   [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
@@ -756,8 +758,8 @@ theorem continuous_continuousUnitDyadicFloorLimit
     (X : NNRat → Ω → E) (ω : Ω) :
     Continuous (continuousUnitDyadicFloorLimit X ω) := by
   by_cases h : Continuous (unitDyadicFloorLimit X ω)
-  · simpa only [continuousUnitDyadicFloorLimit, if_pos h] using h
-  · simp only [continuousUnitDyadicFloorLimit, if_neg h]
+  · simpa only [continuousUnitDyadicFloorLimit, ite_eq_left h] using h
+  · simp only [continuousUnitDyadicFloorLimit, ite_eq_right h]
     exact continuous_const
 
 /-- At each fixed unit-interval rational time, the totalized continuous path remains a
@@ -772,10 +774,12 @@ theorem IsKolmogorovProcess.ae_eq_continuousUnitDyadicFloorLimit
     [IsKolmogorovProcess.ae_eq_unitDyadicFloorLimit hX hγ hγq t ht,
       IsKolmogorovProcess.ae_continuous_unitDyadicFloorLimit hX hγ hγq]
       with ω hident hcont
-  simpa only [continuousUnitDyadicFloorLimit, if_pos hcont] using hident
+  simpa only [continuousUnitDyadicFloorLimit, ite_eq_left hcont] using hident
 
 end
 
 end DyadicFloorUnitModification
 
 end MarkovProcess
+
+end PortComputability

@@ -23,10 +23,12 @@ The regularity data of the compactification are an explicit hypothesis, as every
 continuous-path process is formed.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess.PositiveC0ContractiveResolvent
 
@@ -80,3 +82,7 @@ theorem OnePointRegular.ae_exitTime_eq_top (h : R.OnePointRegular) {lam : ℝ} (
     exact Real.exp_pos _)
 
 end MarkovProcess.PositiveC0ContractiveResolvent
+
+end
+
+end PortComputability

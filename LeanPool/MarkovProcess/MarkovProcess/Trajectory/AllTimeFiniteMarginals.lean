@@ -21,12 +21,14 @@ their strictly ordered time coordinates.  No continuous-time Markov or Hunt prop
 or asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 /-- Every finite linearly ordered family embedded in nonnegative real time admits strictly
 ordered rational approximations converging coordinatewise.  A common tail shift makes the
@@ -86,8 +88,7 @@ def finiteEvaluation {ι α : Type*} [TopologicalSpace α]
   fun path i ↦ path (τ i)
 
 /-- Simultaneous evaluation at finitely many fixed times is continuous in the path. -/
-theorem continuous_finiteEvaluation {ι α : Type*} 
-    [TopologicalSpace α] (τ : ι → NNReal) :
+theorem continuous_finiteEvaluation {ι α : Type*} [TopologicalSpace α] (τ : ι → NNReal) :
     Continuous (finiteEvaluation (α := α) τ) := by
   apply continuous_pi
   intro i
@@ -95,8 +96,8 @@ theorem continuous_finiteEvaluation {ι α : Type*}
 
 /-- If each time in a finite family converges, then simultaneous evaluation along any
 continuous path converges in the finite product topology. -/
-theorem tendsto_finiteEvaluation {ι α : Type*} 
-    [TopologicalSpace α] (τ : ι → NNReal) (q : ℕ → ι → NNReal)
+theorem tendsto_finiteEvaluation {ι α : Type*} [TopologicalSpace α]
+    (τ : ι → NNReal) (q : ℕ → ι → NNReal)
     (hq : ∀ i, Tendsto (fun k ↦ q k i) atTop (nhds (τ i)))
     (path : ContinuousPath α) :
     Tendsto (fun k ↦ finiteEvaluation (α := α) (q k) path) atTop
@@ -114,8 +115,8 @@ variable {α : Type*} [MetricSpace α] [MeasurableSpace α] [BorelSpace α]
 
 omit [SecondCountableTopology α] [LocallyCompactSpace α] in
 /-- Simultaneous evaluation at finitely many fixed times is Borel measurable. -/
-theorem ContinuousPath.measurable_finiteEvaluation {ι : Type*} 
-    (τ : ι → NNReal) : Measurable (finiteEvaluation (α := α) τ) := by
+theorem ContinuousPath.measurable_finiteEvaluation {ι : Type*} (τ : ι → NNReal) :
+    Measurable (finiteEvaluation (α := α) τ) := by
   rw [measurable_pi_iff]
   intro i
   exact measurable_coordinateProcess (alpha := α) (τ i)
@@ -126,8 +127,7 @@ omit [MeasurableSpace α] [BorelSpace α] [SecondCountableTopology α]
 finite family of times along a continuous-path probability kernel.  This is the path-side limit
 needed in every finite-dimensional rational approximation argument. -/
 theorem tendsto_integral_continuousPath_finiteEvaluation
-    {β ι : Type*} [MeasurableSpace β] [Fintype ι]
-    (K : Kernel β (ContinuousPath α)) (hK : IsMarkovKernel K)
+    {β ι : Type*} [MeasurableSpace β] (K : Kernel β (ContinuousPath α)) (hK : IsMarkovKernel K)
     (x : β) (f : CompactlySupportedContinuousMap (ι → α) ℝ)
     (τ : ι → NNReal)
     (q : ℕ → ι → NNReal)
@@ -159,7 +159,7 @@ The convergence premise is deliberately stated at precisely the analytic seam: i
 about a Markov property and is exactly the weak/vague continuity of the candidate finite-time
 laws needed by the proof. -/
 theorem Kernel.map_finiteEvaluation_eq_of_integral_tendsto
-    {β ι : Type*} [MeasurableSpace β] [Fintype ι]
+    {β ι : Type*} [MeasurableSpace β] [Finite ι]
     (K : Kernel β (ContinuousPath α)) (hK : IsMarkovKernel K)
     (Lseq : ℕ → Kernel β (ι → α)) (L : Kernel β (ι → α))
     (hL : IsMarkovKernel L) (τ : ι → NNReal) (q : ℕ → ι → NNReal)
@@ -168,6 +168,8 @@ theorem Kernel.map_finiteEvaluation_eq_of_integral_tendsto
     (hfinite : ∀ (x : β) (f : CompactlySupportedContinuousMap (ι → α) ℝ),
       Tendsto (fun k ↦ ∫ y, f y ∂Lseq k x) atTop (nhds (∫ y, f y ∂L x))) :
     K.map (ContinuousPath.finiteEvaluation τ) = L := by
+  classical
+  let := Fintype.ofFinite ι
   let : IsMarkovKernel K := hK
   let : IsMarkovKernel L := hL
   apply Kernel.ext
@@ -340,3 +342,5 @@ end KernelLimits
 
 end
 end MarkovProcess
+
+end PortComputability

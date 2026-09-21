@@ -43,12 +43,14 @@ contained), and nothing is claimed in dimension greater than one or for a functi
 stated smoothness class.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 section Taylor
 
@@ -424,3 +426,5 @@ end C0
 end
 
 end MarkovProcess
+
+end PortComputability

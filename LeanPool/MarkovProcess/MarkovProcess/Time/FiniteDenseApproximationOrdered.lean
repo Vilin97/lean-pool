@@ -16,12 +16,14 @@ The construction also covers `I = ∅`. In that case the ordered time family and
 coordinate types are empty.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory Topology Filter
 open scoped NNReal
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 /-- The physical times of a finite dense approximation, listed in the increasing order inherited
 from the original finite set. For an empty finite set this is the empty ordered family. -/
@@ -116,3 +118,5 @@ theorem tendsto_finiteDenseApproximationOrderedTimes
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

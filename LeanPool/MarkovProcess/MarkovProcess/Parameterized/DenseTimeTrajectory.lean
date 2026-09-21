@@ -9,12 +9,14 @@ import Mathlib.Probability.Kernel.IonescuTulcea.Traj
 
 /-! # Parameterized trajectories on countable dense time -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace ParameterizedSubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 universe uTheta uAlpha
 
@@ -178,7 +180,7 @@ private theorem rawTrajAppend_apply_cast (n : ℕ) (z) (i : ↑(Finset.Iic n)) :
     rawTrajAppend (Theta := Theta) (alpha := alpha) n z
       ⟨i, Finset.mem_Iic.mpr ((Finset.mem_Iic.mp i.2).trans n.le_succ)⟩ = z.1 i := by
   simp only [rawTrajAppend, Function.comp_apply, IicProdIoc_def]
-  rw [dif_pos (Finset.mem_Iic.mp i.2)]
+  rw [dite_eq_left (Finset.mem_Iic.mp i.2)]
   rfl
 
 omit [StandardBorelSpace alpha] [Nonempty alpha] in
@@ -186,7 +188,7 @@ private theorem rawTrajAppend_apply_last (n : ℕ) (z) :
     rawTrajAppend (Theta := Theta) (alpha := alpha) n z
       ⟨n + 1, Finset.mem_Iic.mpr (Nat.le_refl (n + 1))⟩ = z.2 := by
   simp only [rawTrajAppend, Function.comp_apply, IicProdIoc_def]
-  rw [dif_neg (Nat.not_succ_le_self n)]
+  rw [dite_eq_right (Nat.not_succ_le_self n)]
   change (MeasurableEquiv.piSingleton
     (X := trajectoryCoordinate (Theta := Theta) (alpha := alpha)) n).symm
       (MeasurableEquiv.piSingleton n z.2) = z.2
@@ -251,8 +253,7 @@ private theorem historyEquiv_rawTrajAppend (n : ℕ)
 private theorem transport_traj_step {X H Z Y T : Type*}
     [MeasurableSpace X] [MeasurableSpace H] [MeasurableSpace Z]
     [MeasurableSpace Y] [MeasurableSpace T]
-    (kappa : Kernel X Z) 
-    (eta : Kernel Z Y) [IsSFiniteKernel eta] (E : H ≃ᵐ Z)
+    (kappa : Kernel X Z) (eta : Kernel Z Y) [IsSFiniteKernel eta] (E : H ≃ᵐ Z)
     (g : H × Y → T) (hg : Measurable g) (q : Z × Y → T)
     (hcompat : g ∘ Prod.map E.symm id = q) :
     (((Kernel.id ×ₖ eta.comap E E.measurable) ∘ₖ kappa.map E.symm).map g) =
@@ -268,8 +269,8 @@ private theorem transport_traj_step {X H Z Y T : Type*}
     rw [E.apply_symm_apply]
   rw [hcomap, ← Kernel.map_id' eta, Kernel.map_prod_map,
     ← Kernel.map_comp, ← Kernel.map_comp_right, Kernel.map_id']
-  change (Kernel.id ×ₖ eta ∘ₖ kappa).map (g ∘ Prod.map E.symm id) = _
-  rw [hcompat]
+  · change (Kernel.id ×ₖ eta ∘ₖ kappa).map (g ∘ Prod.map E.symm id) = _
+    rw [hcompat]
   all_goals first | exact hg | fun_prop
 
 private theorem prod_comp_prod_map_prodAssoc {X A B : Type*}
@@ -345,24 +346,24 @@ private theorem partialTraj_map_historyEquiv
   | zero =>
       rw [Kernel.partialTraj_self, Kernel.id_comp, initialHistoryKernel,
         Kernel.deterministic_map]
-      let _ : IsMarkovKernel (P.parameterizedDenseTimePrefixKernel e iota 0) :=
-        P.isMarkovKernel_parameterizedDenseTimePrefixKernel hP e iota 0
-      rw [markovKernel_finZero (P.parameterizedDenseTimePrefixKernel e iota 0)]
-      have hconst : Kernel.const (Theta × alpha)
-          (Measure.dirac (FiniteOrderedTimes.emptyPath alpha)) =
-          Kernel.deterministic (fun _ : Theta × alpha ↦ FiniteOrderedTimes.emptyPath alpha)
-            measurable_const := by
-        ext q s hs
-        simp only [Kernel.const_apply, Kernel.deterministic_apply,
-          Measure.dirac_apply' _ hs]
-      rw [hconst, Kernel.id, Kernel.deterministic_prod_deterministic]
-      apply Kernel.deterministic_congr
-      funext q
-      apply Prod.ext
-      · change (historyEquiv 0 (initialHistory q)).1 = q
-        rw [historyEquiv_fst]
-        rfl
-      · exact Subsingleton.elim _ _
+      · let _ : IsMarkovKernel (P.parameterizedDenseTimePrefixKernel e iota 0) :=
+          P.isMarkovKernel_parameterizedDenseTimePrefixKernel hP e iota 0
+        rw [markovKernel_finZero (P.parameterizedDenseTimePrefixKernel e iota 0)]
+        have hconst : Kernel.const (Theta × alpha)
+            (Measure.dirac (FiniteOrderedTimes.emptyPath alpha)) =
+            Kernel.deterministic (fun _ : Theta × alpha ↦ FiniteOrderedTimes.emptyPath alpha)
+              measurable_const := by
+          ext q s hs
+          simp only [Kernel.const_apply, Kernel.deterministic_apply,
+            Measure.dirac_apply' _ hs]
+        rw [hconst, Kernel.id, Kernel.deterministic_prod_deterministic]
+        apply Kernel.deterministic_congr
+        funext q
+        apply Prod.ext
+        · change (historyEquiv 0 (initialHistory q)).1 = q
+          rw [historyEquiv_fst]
+          rfl
+        · exact Subsingleton.elim _ _
       all_goals fun_prop
   | succ n ih =>
       let _ : IsMarkovKernel (P.parameterizedDenseTimePrefixKernel e iota n) :=
@@ -546,3 +547,5 @@ theorem parameterizedDenseTimeTrajectory_map_prefix
 end
 end ParameterizedSubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

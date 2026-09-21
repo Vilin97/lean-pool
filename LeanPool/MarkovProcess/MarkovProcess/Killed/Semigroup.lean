@@ -124,7 +124,8 @@ theorem IsConservative.killedKernelOn_zero (hK : P.KolmogorovRegular hP) :
   refine Kernel.ext fun x ↦ Measure.ext fun B hB ↦ ?_
   have hB' : MeasurableSet (Subtype.val '' B) :=
     (MeasurableEmbedding.subtype_coe hU.measurableSet).measurableSet_image.mpr hB
-  rw [IsConservative.killedKernelOn_apply P hP U hU 0 x hB, IsConservative.killedKernel_zero P hP U hU hK,
+  rw [IsConservative.killedKernelOn_apply P hP U hU 0 x hB, IsConservative.killedKernel_zero P
+      hP U hU hK,
     Kernel.restrict_apply' _ _ _ hB', Kernel.id_apply, Kernel.id_apply,
     Measure.dirac_apply' _ (hB'.inter hU.measurableSet), Measure.dirac_apply' _ hB]
   rw [Set.inter_eq_left.mpr (Subtype.coe_image_subset U B),

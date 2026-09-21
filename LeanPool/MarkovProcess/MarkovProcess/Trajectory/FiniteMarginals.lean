@@ -16,13 +16,15 @@ No assertion is made at irrational times or about a Markov, strong Markov, or Hu
 the continuous-path law.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
 namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 /-- The finite set of physical nonnegative-real times represented by rational times in `I`. -/
 def denseTimePhysicalSet (I : Finset DenseTime) : Finset NNReal :=
@@ -192,3 +194,5 @@ end IsConservative
 end
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

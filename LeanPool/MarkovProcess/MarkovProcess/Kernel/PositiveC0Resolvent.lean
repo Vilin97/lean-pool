@@ -17,10 +17,12 @@ The package in this file starts from the resolvent identity, the Hille--Yosida b
 and positivity of the actual shifted resolvents.  It assumes neither a semigroup nor a kernel.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory Set
 open scoped ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -122,3 +124,7 @@ end Kernel
 end PositiveC0ContractiveResolvent
 
 end MarkovProcess
+
+end
+
+end PortComputability

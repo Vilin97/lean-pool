@@ -20,6 +20,8 @@ stopping-time statement is proved here; those are in `Trajectory/FellerCondition
 `Trajectory/FellerStoppingConditional.lean`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal CompactlySupported
 
@@ -27,7 +29,7 @@ namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 namespace IsConservative
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha] [SecondCountableTopology alpha]
@@ -83,3 +85,5 @@ end
 end IsConservative
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

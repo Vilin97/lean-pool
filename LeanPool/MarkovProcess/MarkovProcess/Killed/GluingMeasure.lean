@@ -20,10 +20,12 @@ to all nonnegative measurable observables through the two potential measures.
 Monotonicity of the transported resolvents in the index is a bare hypothesis throughout.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -155,3 +157,7 @@ theorem isFiniteMeasure_minimalPotential (hemb : ∀ m, MeasurableEmbedding (emb
     (minimalResolvent_one_le R emb (fun m ↦ (hemb m).injective) hlam x) ENNReal.ofReal_lt_top
 
 end MarkovProcess
+
+end
+
+end PortComputability

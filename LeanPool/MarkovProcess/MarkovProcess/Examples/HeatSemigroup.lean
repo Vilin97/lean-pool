@@ -34,12 +34,14 @@ Nothing in this file asserts independence of increments; that is proved in
 `MarkovProcess.Examples.BrownianMotion`.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 section Gaussian
 
@@ -264,7 +266,7 @@ theorem exists_norm_c0Operator_sub_le_heatSemigroup (f : C₀(ℝ, ℝ)) {eps : 
       _ = delta0 := div_mul_cancel₀ delta0 (ne_of_gt hR)
   rw [← ZeroAtInftyContinuousMap.norm_toBCF_eq_norm]
   refine (BoundedContinuousFunction.norm_le (le_of_lt heps)).2 fun x ↦ ?_
-  show ‖heatSemigroup.c0Operator mapsC0_heatSemigroup h f x - f x‖ ≤ eps
+  change ‖heatSemigroup.c0Operator mapsC0_heatSemigroup h f x - f x‖ ≤ eps
   rw [SubMarkovKernelSemigroup.c0Operator_apply, kernelIntegral_heatSemigroup]
   have hsub : (∫ z, f (x + Real.sqrt h * z) ∂(gaussianReal 0 1)) - f x =
       ∫ z, (f (x + Real.sqrt h * z) - f x) ∂(gaussianReal 0 1) := by
@@ -537,3 +539,5 @@ end Process
 end
 
 end MarkovProcess
+
+end PortComputability

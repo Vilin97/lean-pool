@@ -9,11 +9,13 @@ import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-! # Detecting closed sets from countably many path coordinates -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Set
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace ContinuousPath
 
@@ -308,13 +310,13 @@ theorem measurableSet_hitsSetBy (t : NNReal) (F : Set alpha) (hF : IsClosed F) :
     · intro hdetect n
       rcases hdetect n with hendpoint | ⟨k, hkt, hk⟩
       · exact Or.inl hendpoint
-      · exact Or.inr ⟨k, by rw [dif_pos hkt]; exact hk⟩
+      · exact Or.inr ⟨k, by rw [dite_eq_left hkt]; exact hk⟩
     · intro h n
       rcases h n with hendpoint | ⟨k, hk⟩
       · exact Or.inl hendpoint
       · by_cases hkt : DenseTime.castOrderEmbedding (DenseTime.enumeration k) < t
-        · exact Or.inr ⟨k, hkt, by simpa only [dif_pos hkt] using! hk⟩
-        · simp only [dif_neg hkt, Set.notMem_empty] at hk
+        · exact Or.inr ⟨k, hkt, by simpa only [dite_eq_left hkt] using! hk⟩
+        · simp only [dite_eq_right hkt, Set.notMem_empty] at hk
   rw [hevent]
   exact MeasurableSet.iInter fun n ↦ (hA n).union (MeasurableSet.iUnion (hB n))
 
@@ -322,3 +324,5 @@ end ContinuousPath
 
 end
 end MarkovProcess
+
+end PortComputability

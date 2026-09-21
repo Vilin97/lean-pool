@@ -20,6 +20,8 @@ The times here are rational.  The strong Markov property at an arbitrary finite 
 is in `Trajectory/FellerStoppingRestart.lean`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
@@ -27,7 +29,7 @@ namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 namespace IsConservative
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
   [MeasurableSpace alpha] [BorelSpace alpha] [SecondCountableTopology alpha]
@@ -123,3 +125,5 @@ end
 end IsConservative
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

@@ -17,12 +17,14 @@ The theorem is stated for an arbitrary such semigroup; no particular semigroup i
 and no Hunt-process property is asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
   [SecondCountableTopology alpha] [LocallyCompactSpace alpha]
@@ -59,3 +61,5 @@ end SubMarkovKernelSemigroup
 end
 
 end MarkovProcess
+
+end PortComputability

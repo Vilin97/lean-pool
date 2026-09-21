@@ -17,11 +17,13 @@ only an unconditional distributional identity and is not enough for this conclus
 No stochastic process, Markov property, or path-space construction is asserted here.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {Omega beta E : Type*} {m : MeasurableSpace Omega}
   {mOmega : MeasurableSpace Omega} {mBeta : MeasurableSpace beta}
@@ -79,3 +81,5 @@ theorem condExp_comp_ae_eq_integral_kernel_of_restrict_map
 
 end
 end MarkovProcess
+
+end PortComputability

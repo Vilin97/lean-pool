@@ -49,6 +49,7 @@ variable {α : Type*} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
   [LocallyCompactSpace α] [T2Space α]
 variable {P : SubMarkovKernelSemigroup α} (hP : P.IsFellerKernelSemigroup)
 
+omit [LocallyCompactSpace α] [T2Space α] in
 /-- **The resolvent of the `C₀` semigroup, evaluated at a point**: the Laplace transform of the
 transition integrals. -/
 theorem IsFellerKernelSemigroup.resolvent_apply_apply (μ : Semigroup.PositiveShift)
@@ -73,6 +74,7 @@ noncomputable def IsFellerKernelSemigroup.positiveC0ContractiveResolvent :
       hP.resolvent_apply_apply]
     exact integral_nonneg fun t ↦ mul_nonneg (Real.exp_pos _).le (integral_nonneg hf)
 
+omit [LocallyCompactSpace α] [T2Space α] in
 /-- Generating a semigroup from the positive resolvent of a Feller semigroup recovers its
 original `C₀` semigroup. -/
 theorem IsFellerKernelSemigroup.generatedSemigroup_positiveC0ContractiveResolvent :
@@ -80,6 +82,7 @@ theorem IsFellerKernelSemigroup.generatedSemigroup_positiveC0ContractiveResolven
       hP.c0Semigroup :=
   hP.c0Semigroup.generatedSemigroup_toContractiveResolvent
 
+omit [LocallyCompactSpace α] [T2Space α] in
 /-- The real kernel resolvent of a `C₀` observable is the pointwise resolvent of the associated
 `C₀` semigroup. -/
 theorem IsFellerKernelSemigroup.kernelResolventReal_eq_resolvent
@@ -89,6 +92,7 @@ theorem IsFellerKernelSemigroup.kernelResolventReal_eq_resolvent
       hP.c0Semigroup.resolvent μ f x := by
   exact (hP.resolvent_apply_apply μ f x).symm
 
+omit [LocallyCompactSpace α] [T2Space α] in
 /-- The extended-real kernel resolvent of a nonnegative `C₀` observable agrees with the
 pointwise `C₀`-semigroup resolvent after applying `ENNReal.ofReal`. -/
 theorem IsFellerKernelSemigroup.kernelResolvent_ofReal_eq_resolvent
@@ -146,6 +150,7 @@ theorem IsFellerKernelSemigroup.kernelSemigroup_positiveC0ContractiveResolvent
     hP.generatedSemigroup_positiveC0ContractiveResolvent, hP.c0Semigroup_apply_apply t g x]
   rfl
 
+omit [LocallyCompactSpace α] [T2Space α] in
 /-- **The generator domain of the `C₀` semigroup is the range of its resolvent**, at every
 positive shift. -/
 theorem IsFellerKernelSemigroup.mem_generatorDomain_iff_exists_resolvent

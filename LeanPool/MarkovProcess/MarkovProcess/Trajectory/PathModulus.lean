@@ -34,6 +34,8 @@ Main results:
 No tightness, weak continuity, or Hölder-path statement is proved here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
@@ -41,7 +43,7 @@ namespace MarkovProcess
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -173,3 +175,5 @@ end
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

@@ -13,13 +13,15 @@ Lifetime and the coordinates at the fixed countable dense time set separate cont
 paths.  Their measurable coding therefore gives a countable separating family.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Set
 open scoped ENNReal
 
 namespace MarkovProcess
 namespace LifetimePath
 
-noncomputable section
+section
 
 variable {alpha : Type*} [TopologicalSpace alpha] [T2Space alpha]
   [MeasurableSpace alpha]
@@ -124,3 +126,5 @@ instance instCountablySeparated
 end
 end LifetimePath
 end MarkovProcess
+
+end PortComputability

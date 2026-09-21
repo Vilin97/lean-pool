@@ -18,11 +18,13 @@ argument of `Continuity/GlobalDyadicFloorModification.lean`, applied to dense-ti
 kernels in `Continuity/KolmogorovDenseTimeContinuousSupport.lean`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory Set
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace Kernel
 
@@ -55,3 +57,5 @@ theorem IsSupportedOnContinuousPaths.of_continuousModification
 end Kernel
 end
 end MarkovProcess
+
+end PortComputability

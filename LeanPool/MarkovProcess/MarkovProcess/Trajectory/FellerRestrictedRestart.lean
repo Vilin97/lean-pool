@@ -24,11 +24,13 @@ The time here is deterministic. The strong Markov property at a finite stopping 
 `Trajectory/FellerStoppingRestart.lean`.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal CompactlySupported ZeroAtInfty
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
-noncomputable section
+section
 open IsConservative
 
 variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
@@ -194,3 +196,5 @@ theorem IsFellerKernelSemigroup.continuousPathTrajectory_restrict_map_shift
 
 end
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

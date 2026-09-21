@@ -13,12 +13,14 @@ dense times. The measure is any finite measure on continuous-path space; no Mark
 assumption is used.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory Topology
 open scoped NNReal ZeroAtInfty CompactlySupported
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
   [SecondCountableTopology alpha] [LocallyCompactSpace alpha]
@@ -84,3 +86,5 @@ theorem tendsto_integral_continuousPath_finiteDenseEvaluation_shift
 
 end
 end MarkovProcess
+
+end PortComputability

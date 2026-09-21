@@ -38,10 +38,12 @@ No transition semigroup, no process on the ambient space, and no conservativity 
 here.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -341,3 +343,7 @@ theorem minimalResolvent_resolventEquation (hemb : ∀ m, MeasurableEmbedding (e
 end ResolventEquation
 
 end MarkovProcess
+
+end
+
+end PortComputability

@@ -17,12 +17,14 @@ No global path is glued here, and no path-space measurability, law, or Hunt-proc
 asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {Ω E : Type*} {mΩ : MeasurableSpace Ω} [MetricSpace E] [CompleteSpace E]
   [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
@@ -102,3 +104,5 @@ theorem shiftedUnitDyadicFloorLimit_one
 end
 
 end MarkovProcess
+
+end PortComputability

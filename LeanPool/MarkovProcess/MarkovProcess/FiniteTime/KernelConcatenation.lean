@@ -220,8 +220,7 @@ private theorem map_compProd_prodMkLeft_right
 private theorem compProd_prodMkLeft_assoc
     {X A B C : Type*} [MeasurableSpace X] [MeasurableSpace A]
     [MeasurableSpace B] [MeasurableSpace C]
-    (kappa : Kernel X A) 
-    (eta : Kernel A B) [IsSFiniteKernel eta]
+    (kappa : Kernel X A) (eta : Kernel A B) [IsSFiniteKernel eta]
     (xi : Kernel (A × B) C) [IsSFiniteKernel xi] :
     (kappa ⊗ₖ Kernel.prodMkLeft X (eta ⊗ₖ xi)).map
         MeasurableEquiv.prodAssoc.symm =

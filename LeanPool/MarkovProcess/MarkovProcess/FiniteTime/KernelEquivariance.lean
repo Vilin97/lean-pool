@@ -12,7 +12,8 @@ import Mathlib.MeasureTheory.Function.SpecialFunctions.Basic
 # Rescaled conjugation of finite-time kernels
 
 A sub-Markov kernel semigroup `P'` on a state space `beta` is the *rescaled conjugate* of `P` on
-`alpha` when it is obtained from `P` by conjugating the state with a homeomorphism `e : alpha ≃ₜ beta`
+`alpha` when it is obtained from `P` by conjugating the state with a homeomorphism `e : alpha ≃ₜ
+    beta`
 and speeding time up by a positive factor `c`, that is `P' t x = ((P (c * t)) (e.symm x)).map e`.
 
 This file transfers the finite-dimensional laws across such a relation.  The main result is
@@ -116,7 +117,7 @@ namespace SubMarkovKernelSemigroup
 elements, returns that element. -/
 theorem finiteSetTimes_orderIsoOfFin_symm_apply (I : Finset NNReal) (t : I) :
     finiteSetTimes I ((I.orderIsoOfFin rfl).symm t) = (t : NNReal) := by
-  show I.orderEmbOfFin rfl ((I.orderIsoOfFin rfl).symm t) = (t : NNReal)
+  change I.orderEmbOfFin rfl ((I.orderIsoOfFin rfl).symm t) = (t : NNReal)
   rw [← Finset.coe_orderIsoOfFin_apply, OrderIso.apply_symm_apply]
 
 section CompProd
@@ -156,7 +157,7 @@ theorem map_compProd_prodMkLeft_conjugate (kappa : Kernel X Y) [IsSFiniteKernel 
     MeasureTheory.lintegral_map_equiv _ F]
   refine lintegral_congr fun y ↦ ?_
   have hsection : MeasurableSet (Prod.mk (f y) ⁻¹' s) := measurable_prodMk_left hs
-  show eta y (Prod.mk y ⁻¹' ((fun z : Y × Z ↦ (f z.1, g z.2)) ⁻¹' s)) =
+  change eta y (Prod.mk y ⁻¹' ((fun z : Y × Z ↦ (f z.1, g z.2)) ⁻¹' s)) =
       ((Kernel.comap eta f' hf').map g) (f y) (Prod.mk (f y) ⁻¹' s)
   rw [Kernel.map_apply' _ hg _ hsection, Kernel.comap_apply, hleft y]
   rfl
@@ -178,7 +179,8 @@ def IsRescaledConjugate (P : SubMarkovKernelSemigroup alpha) (P' : SubMarkovKern
 
 namespace IsRescaledConjugate
 
-variable {P : SubMarkovKernelSemigroup alpha} {P' : SubMarkovKernelSemigroup beta} {e : alpha ≃ₜ beta}
+variable {P : SubMarkovKernelSemigroup alpha} {P' : SubMarkovKernelSemigroup beta} {e : alpha ≃ₜ
+    beta}
   {c : NNReal}
 
 /-- The rescaled-conjugacy relation in kernel form: at every time the transition kernel of `P'` is
@@ -270,7 +272,8 @@ section Moments
 
 variable {alpha beta : Type*} [PseudoEMetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
   [PseudoEMetricSpace beta] [MeasurableSpace beta] [BorelSpace beta]
-variable {P : SubMarkovKernelSemigroup alpha} {P' : SubMarkovKernelSemigroup beta} {e : alpha ≃ₜ beta}
+variable {P : SubMarkovKernelSemigroup alpha} {P' : SubMarkovKernelSemigroup beta} {e : alpha ≃ₜ
+    beta}
   {c : NNReal}
 
 /-- **Transfer of the Kolmogorov moment criterion.**  If the state map `e` is an isometry, then

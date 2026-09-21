@@ -16,12 +16,14 @@ infrastructure and proves no restart identity; the restart identity obtained fro
 approximation is in `Trajectory/FellerStoppingRestart.lean`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Filter Topology
 open scoped NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 /-- The level-`n` dyadic ceiling of a nonnegative real time. -/
 def dyadicCeiling (n : ℕ) (t : NNReal) : NNReal :=
@@ -175,3 +177,5 @@ theorem isStoppingTime_dyadicCeiling {f : Filtration NNReal m} {T : Omega → NN
 end
 
 end MarkovProcess
+
+end PortComputability

@@ -13,12 +13,14 @@ killing time itself is the cemetery state, so this operation is distinct from en
 stopping.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory
 open scoped ENNReal
 
 namespace MarkovProcess.LifetimePath
 
-noncomputable section
+section
 
 variable {α : Type*} [TopologicalSpace α]
 
@@ -108,3 +110,5 @@ end Measurable
 
 end
 end MarkovProcess.LifetimePath
+
+end PortComputability

@@ -18,10 +18,12 @@ This file identifies the continuous process of the one-point extension of a posi
 `C₀`-contractive resolvent with the process killed on leaving its live part.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
@@ -497,15 +499,16 @@ theorem killedSemigroup_onePointLive_image
     filter_upwards [hevent] with omega homega
     exact propext homega
   rw [hmeasure]
-  show (IsConservative.continuousProcess R.onePointKernelSemigroup
+  change (IsConservative.continuousProcess R.onePointKernelSemigroup
       R.isConservative_onePointKernelSemigroup (x : OnePoint X))
       (ContinuousPath.coordinateProcess t ⁻¹' (((↑) : X → OnePoint X) '' B)) =
     R.kernelSemigroup t x B
   rw [← Kernel.map_apply'
     (IsConservative.continuousProcess R.onePointKernelSemigroup
-      R.isConservative_onePointKernelSemigroup) (hf := ContinuousPath.measurable_coordinateProcess t)
+      R.isConservative_onePointKernelSemigroup) (hf :=
+          ContinuousPath.measurable_coordinateProcess t)
     (x : OnePoint X) hcoeB]
-  show ((IsConservative.continuousProcess R.onePointKernelSemigroup
+  change ((IsConservative.continuousProcess R.onePointKernelSemigroup
       R.isConservative_onePointKernelSemigroup).map (fun omega => omega t) (x : OnePoint X))
       (((↑) : X → OnePoint X) '' B) =
     R.kernelSemigroup t x B
@@ -571,15 +574,16 @@ theorem killedKernel_onePointLive_eq_map
     filter_upwards [hevent] with omega homega
     exact propext homega
   rw [hmeasure]
-  show (IsConservative.continuousProcess R.onePointKernelSemigroup
+  change (IsConservative.continuousProcess R.onePointKernelSemigroup
       R.isConservative_onePointKernelSemigroup (x : OnePoint X))
       (ContinuousPath.coordinateProcess t ⁻¹' (A ∩ live)) =
     (R.kernelSemigroup t x).map ((↑) : X → OnePoint X) A
   rw [← Kernel.map_apply'
     (IsConservative.continuousProcess R.onePointKernelSemigroup
-      R.isConservative_onePointKernelSemigroup) (hf := ContinuousPath.measurable_coordinateProcess t)
+      R.isConservative_onePointKernelSemigroup) (hf :=
+          ContinuousPath.measurable_coordinateProcess t)
     (x : OnePoint X) hAlive]
-  show ((IsConservative.continuousProcess R.onePointKernelSemigroup
+  change ((IsConservative.continuousProcess R.onePointKernelSemigroup
       R.isConservative_onePointKernelSemigroup).map (fun omega => omega t) (x : OnePoint X))
       (A ∩ live) =
     (R.kernelSemigroup t x).map ((↑) : X → OnePoint X) A
@@ -782,3 +786,7 @@ theorem lintegral_exp_neg_onePoint_exitTime
     lintegral_map measurable_const OnePoint.continuous_coe.measurable]
 
 end MarkovProcess.PositiveC0ContractiveResolvent
+
+end
+
+end PortComputability

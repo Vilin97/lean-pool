@@ -19,11 +19,13 @@ Main results: `perturbed_unique`, `resolventFamily_eq_of_eventually`, and
 The operators are plain maps on functions; no Banach-space carrier or continuity is asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 private theorem function_eq_zero_of_geometric_bound {alpha : Type*} {d : alpha → ℝ}
     {r D : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (hD0 : 0 ≤ D)
@@ -349,3 +351,5 @@ theorem perturbed_eq_of_resolventFamilies
 end
 
 end MarkovProcess
+
+end PortComputability

@@ -61,6 +61,7 @@ private theorem isFiniteKernel_finiteTimeKernel
       rw [finiteTimeKernel_succ, Kernel.mapOfMeasurable_eq_map]
       infer_instance
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- Evaluation of the backward `C₀` recursion is the coordinate-product integral against the
 finite-time kernel. -/
 theorem IsFellerKernelSemigroup.backwardC0_apply_eq_integral_finiteTimeKernel

@@ -276,7 +276,7 @@ import LeanPool.MarkovProcess.MarkovProcess.Trajectory.WeakConvergence
 Source: url:https://github.com/scottnarmstrong/markovprocess
 Authors: Scott Armstrong
 Status: verified
-Main declarations: `MarkovProcess.SubMarkovKernelSemigroup.IsFellerKernelSemigroup.existsUnique_continuousProcess_of_hasKolmogorovMoments`
+Main declarations: `MarkovProcess.existsUnique_continuousProcess`
 Tags: probability
 MSC: 60J25, 60J35, 60G17
 -/

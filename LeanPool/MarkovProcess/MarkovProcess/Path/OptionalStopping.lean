@@ -35,12 +35,14 @@ a filtration indexed by `ℝ≥0`.  No optional-stopping result for unbounded st
 asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory Topology
 open scoped NNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {Omega : Type*} {m : MeasurableSpace Omega} {mu : Measure Omega}
   {ℱ : Filtration NNReal m} {M : NNReal → Omega → ℝ}
@@ -77,7 +79,8 @@ theorem measurableSet_eq_of_finite_range {S : Omega → NNReal}
   exact hS.measurableSet_eq_of_countable_range hcount v
 
 /-- The value of an adapted process at a stopping time with finite range is measurable. -/
-theorem stronglyMeasurable_apply_of_finite_range (hadapted : StronglyAdapted ℱ M) {S : Omega → NNReal}
+theorem stronglyMeasurable_apply_of_finite_range (hadapted : StronglyAdapted ℱ M) {S : Omega →
+    NNReal}
     (hS : IsStoppingTime ℱ fun omega ↦ ((S omega : NNReal) : WithTop NNReal))
     (hfin : (Set.range S).Finite) :
     StronglyMeasurable fun omega ↦ M (S omega) omega := by
@@ -309,3 +312,5 @@ end OptionalStopping
 end
 
 end MarkovProcess
+
+end PortComputability

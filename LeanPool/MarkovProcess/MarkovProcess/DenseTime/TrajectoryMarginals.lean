@@ -12,13 +12,15 @@ This file identifies every coordinate marginal of the dense-time trajectory kern
 corresponding transition kernel.  The result is derived from the exact finite-prefix identity.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 namespace IsConservative
 
-noncomputable section
+section
 
 variable {D α : Type*} [MeasurableSpace α] [StandardBorelSpace α] [Nonempty α]
 
@@ -108,3 +110,5 @@ end
 end IsConservative
 end SubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

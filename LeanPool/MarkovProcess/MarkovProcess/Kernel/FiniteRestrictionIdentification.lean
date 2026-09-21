@@ -14,12 +14,14 @@ pushforwards.  The proof applies uniqueness of finite projective limits pointwis
 parameter.  No topology, time order, path regularity, or Markov property is used.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace Kernel
 
-noncomputable section
+section
 
 variable {index alpha beta : Type*} [MeasurableSpace alpha] [MeasurableSpace beta]
 
@@ -48,3 +50,5 @@ theorem eq_of_map_finiteRestriction_eq
 end
 end Kernel
 end MarkovProcess
+
+end PortComputability

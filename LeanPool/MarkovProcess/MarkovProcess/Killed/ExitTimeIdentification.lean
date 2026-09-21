@@ -32,12 +32,14 @@ The consumer-supplied resolvent and its limit are `ℝ≥0∞`-valued, so no int
 hypothesis appears; a consumer working with real-valued solutions bridges with `ENNReal.ofReal`.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal Topology
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 /-- The exponential discounts at the shifts `1 / (n + 1)` increase to one on the nonnegative
 half-line. -/
@@ -95,8 +97,8 @@ theorem IsConservative.lintegral_exitTime_eq_killedResolvent_zero (U : Set alpha
       Measure.restrict_apply hS]
   rw [hinner, ContinuousPath.survivalSet tau]
   by_cases htop : tau = ⊤
-  · rw [if_pos htop, htop, Real.volume_Ioi]
-  · rw [if_neg htop, Real.volume_Ioo, sub_zero, ENNReal.ofReal_toReal htop]
+  · rw [ite_eq_left htop, htop, Real.volume_Ioi]
+  · rw [ite_eq_right htop, Real.volume_Ioo, sub_zero, ENNReal.ofReal_toReal htop]
 
 /-- The killed resolvent at the shift zero is the increasing limit of the killed resolvents at the
 positive shifts `1 / (n + 1)`. -/
@@ -208,3 +210,5 @@ theorem IsConservative.le_lintegral_exitTime_of_killedResolvent_eq (U : Set alph
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

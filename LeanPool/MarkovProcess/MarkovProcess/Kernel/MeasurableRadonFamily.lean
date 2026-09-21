@@ -135,7 +135,7 @@ theorem measurable_measure_of_measurable_integral_compactlySupported
     {Q X : Type*} [MeasurableSpace Q]
     [TopologicalSpace X] [T2Space X] [LocallyCompactSpace X]
     [SecondCountableTopology X] [MeasurableSpace X] [BorelSpace X]
-    (μ : Q → Measure X) [∀ q, (μ q).Regular] [∀ q, IsFiniteMeasure (μ q)]
+    (μ : Q → Measure X) [∀ q, IsFiniteMeasure (μ q)]
     (hμ : ∀ f : C_c(X, ℝ), Measurable fun q ↦ ∫ x, f x ∂μ q) :
     Measurable μ := by
   refine Measurable.measure_of_isPiSystem (S := generatePiSystem (countableBasis X))

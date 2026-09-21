@@ -14,9 +14,11 @@ induced shift of dense-time paths.  Restriction of a continuous path commutes wi
 No probability law or Markov property is asserted.
 -/
 
+noncomputable section PortComputability
+
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace DenseTime
 
@@ -87,3 +89,5 @@ theorem denseRestriction_shift (s : DenseTime) (omega : ContinuousPath alpha) :
 end ContinuousPath
 end
 end MarkovProcess
+
+end PortComputability

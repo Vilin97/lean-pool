@@ -50,7 +50,7 @@ theorem eLpNorm_one_le_of_measure_univ_le_one {ν : Measure α} {f : α → ℝ}
 /-- Jensen's power estimate for a finite subprobability measure.  This form is
 well suited to fibrewise use because both sides take values in `ℝ≥0∞`. -/
 theorem enorm_integral_rpow_le_lintegral_enorm_rpow
-    {ν : Measure α} [IsFiniteMeasure ν] {f : α → ℝ} {p : NNReal}
+    {ν : Measure α} {f : α → ℝ} {p : NNReal}
     (hp : 1 ≤ p) (hν : ν Set.univ ≤ 1) (hf : MemLp f p ν) :
     ‖∫ y, f y ∂ν‖ₑ ^ (p : ℝ) ≤ ∫⁻ y, ‖f y‖ₑ ^ (p : ℝ) ∂ν := by
   have hp0 : p ≠ 0 := ne_of_gt (zero_lt_one.trans_le hp)
@@ -105,7 +105,8 @@ theorem eLpNorm_kernelIntegral_le
     (hp : 1 ≤ p) (hf : MemLp f p μ) :
     eLpNorm (kernelIntegral κ f) p μ ≤ eLpNorm f p μ := by
   have hp0 : p ≠ 0 := ne_of_gt (zero_lt_one.trans_le hp)
-  rw [eLpNorm_nnreal_eq_lintegral hp0 (AEStronglyMeasurable.kernelIntegral hf.aestronglyMeasurable hκμ),
+  rw [eLpNorm_nnreal_eq_lintegral hp0 (AEStronglyMeasurable.kernelIntegral
+      hf.aestronglyMeasurable hκμ),
     eLpNorm_nnreal_eq_lintegral hp0 hf.aestronglyMeasurable]
   apply ENNReal.rpow_le_rpow
   · exact lintegral_enorm_kernelIntegral_rpow_le hκ hκμ hp hf

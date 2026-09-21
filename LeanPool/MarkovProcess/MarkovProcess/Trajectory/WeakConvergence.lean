@@ -40,6 +40,8 @@ when the constants are allowed to vary, nor for a family whose limit is not itse
 a Feller semigroup.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped BoundedContinuousFunction ENNReal NNReal ZeroAtInfty
 
@@ -48,7 +50,7 @@ namespace MarkovProcess
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 open IsConservative
 
@@ -221,3 +223,5 @@ end
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

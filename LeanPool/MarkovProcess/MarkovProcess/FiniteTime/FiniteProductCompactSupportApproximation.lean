@@ -52,7 +52,7 @@ theorem exists_coordinate_cutoffs_of_hasCompactSupport
     exact hφone i ⟨x, hx, rfl⟩
   · intro x hx i hi
     apply subset_tsupport
-    show φ i (x i) ≠ 0
+    change φ i (x i) ≠ 0
     rw [hφone i ⟨x, hx, rfl⟩]
     exact one_ne_zero
   · intro x hx
@@ -61,13 +61,16 @@ theorem exists_coordinate_cutoffs_of_hasCompactSupport
     obtain ⟨i, hi⟩ := hx
     exact Finset.prod_eq_zero (Finset.mem_univ i) (image_eq_zero_of_notMem_tsupport hi)
 
+omit [Fintype I] in
 /-- A compactly supported continuous function on a finite product can be approximated uniformly on
 the whole product by the coordinate `C₀` algebra. -/
-theorem exists_coordinateC0Subalgebra_near_compactlySupported
+theorem exists_coordinateC0Subalgebra_near_compactlySupported [Finite I]
     [T3Space α] [LocallyCompactSpace α]
     (f : C_c(I → α, ℝ)) {epsilon : ℝ} (hepsilon : 0 < epsilon) :
     ∃ h ∈ coordinateC0Subalgebra (I := I) (α := α),
       ∀ x, ‖h x - f x‖ < epsilon := by
+  classical
+  let := Fintype.ofFinite I
   classical
   obtain ⟨φ, B, hBcompact, hφrange, hcutoff_one, hsupport_subset, hcutoff_zero⟩ :=
     exists_coordinate_cutoffs_of_hasCompactSupport f

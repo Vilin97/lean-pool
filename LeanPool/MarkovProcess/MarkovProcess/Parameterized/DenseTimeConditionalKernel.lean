@@ -15,12 +15,14 @@ observation. The resulting conditional kernel is one jointly measurable version.
 with separately chosen fixed-parameter conditional versions is asserted.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace ParameterizedSubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {Theta D alpha : Type*} [MeasurableSpace Theta] [MeasurableSpace alpha]
 
@@ -101,3 +103,5 @@ theorem compProd_parameterizedObservationCondKernel
 end
 end ParameterizedSubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

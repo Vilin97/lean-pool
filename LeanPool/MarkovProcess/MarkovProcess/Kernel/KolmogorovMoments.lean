@@ -31,7 +31,8 @@ variable {alpha : Type*} [PseudoEMetricSpace alpha] [MeasurableSpace alpha]
 /-- A uniform `p`-th moment bound on the displacement of `P` over time `h`, of order `h ^ q`.
 
 The exponents are constrained by `0 < p` and `1 < q`, exactly the range in which the
-Kolmogorov--Chentsov threshold `(q - 1) / p` is a positive Hölder exponent.  The bound is demanded for every time `h ≥ 0`, not only
+Kolmogorov--Chentsov threshold `(q - 1) / p` is a positive Hölder exponent.
+The bound is demanded for every time `h ≥ 0`, not only
 for small `h`; this is stronger than the local criterion the Kolmogorov--Chentsov theorem
 needs, and it is what the bridge to `KolmogorovRegular` consumes. -/
 def HasKolmogorovMoments (P : SubMarkovKernelSemigroup alpha) (p q : ℝ) (M : ℝ≥0) : Prop :=

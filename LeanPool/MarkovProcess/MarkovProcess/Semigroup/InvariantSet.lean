@@ -16,9 +16,11 @@ Poisson-series argument transferring the latter invariance to each exponential
 approximant is in `Semigroup/PoissonInvariant.lean`.
 -/
 
+noncomputable section PortComputability
+
 open Filter Set Topology
 
-noncomputable section
+section
 
 namespace MarkovProcess.Semigroup
 
@@ -40,7 +42,7 @@ theorem comp {S : F → G} {T : E → F}
 
 /-- A closed set is preserved by the pointwise limit of preserving maps. -/
 theorem of_tendsto {ι : Type*} {l : Filter ι} [l.NeBot]
-    [TopologicalSpace F]  {T : ι → E → F} {S : E → F}
+    [TopologicalSpace F] {T : ι → E → F} {S : E → F}
     (hD : IsClosed D) (hT : ∀ i, PreservesSet (T i) C D)
     (hlim : ∀ x, Tendsto (fun i ↦ T i x) l (nhds (S x))) :
     PreservesSet S C D := by
@@ -162,3 +164,7 @@ end CompleteSpace
 end ContractiveResolvent
 
 end MarkovProcess.Semigroup
+
+end
+
+end PortComputability

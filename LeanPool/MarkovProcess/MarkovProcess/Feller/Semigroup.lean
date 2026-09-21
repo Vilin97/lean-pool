@@ -68,11 +68,13 @@ section Feller
 
 variable [LocallyCompactSpace α] [T2Space α]
 
+omit [LocallyCompactSpace α] [T2Space α] in
 /-- A combined Feller predicate supplies its spatial `C₀` property. -/
 theorem IsFellerKernelSemigroup.mapsC0 {P : SubMarkovKernelSemigroup α}
     (hP : P.IsFellerKernelSemigroup) : P.MapsC0 :=
   hP.choose
 
+omit [LocallyCompactSpace α] [T2Space α] in
 /-- A combined Feller predicate supplies continuity of the corresponding `C₀` orbits. -/
 theorem IsFellerKernelSemigroup.hasContinuousC0Orbits {P : SubMarkovKernelSemigroup α}
     (hP : P.IsFellerKernelSemigroup) : P.HasContinuousC0Orbits hP.mapsC0 :=
@@ -84,6 +86,7 @@ noncomputable def IsFellerKernelSemigroup.c0Semigroup {P : SubMarkovKernelSemigr
     Semigroup.StronglyContinuousContractionSemigroup C₀(α, ℝ) :=
   P.c0Semigroup hP.mapsC0 hP.hasContinuousC0Orbits
 
+omit [LocallyCompactSpace α] [T2Space α] in
 @[simp]
 theorem IsFellerKernelSemigroup.c0Semigroup_apply_apply
     {P : SubMarkovKernelSemigroup α} (hP : P.IsFellerKernelSemigroup)

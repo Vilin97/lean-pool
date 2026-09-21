@@ -68,6 +68,7 @@ namespace SubMarkovKernelSemigroup
 variable {alpha : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha]
   [BorelSpace alpha] [LocallyCompactSpace alpha] [T2Space alpha]
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- Feller continuity permits both the time and the `C₀` integrand to vary. -/
 theorem IsFellerKernelSemigroup.tendsto_kernelIntegral_c0
     {P : SubMarkovKernelSemigroup alpha} (hP : P.IsFellerKernelSemigroup)
@@ -83,6 +84,7 @@ theorem IsFellerKernelSemigroup.tendsto_kernelIntegral_c0
   simpa only [IsFellerKernelSemigroup.c0Semigroup_apply_apply] using!
     heval.continuousAt.tendsto.comp haction
 
+omit [LocallyCompactSpace alpha] [T2Space alpha] in
 /-- The two-transition backward recursion is continuous for product `C₀` tests.  The inner
 transition acts on `g`; multiplication by the first-coordinate test `f` gives the varying `C₀`
 test seen by the outer transition.  This is the successor-step analytic mechanism in the

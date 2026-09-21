@@ -26,10 +26,12 @@ suprema once the family is monotone in the index (`minimalResolvent_comm`).
 Nothing here uses the part-process identity; monotonicity in the index is a bare hypothesis.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -150,3 +152,7 @@ theorem minimalResolvent_zero (hemb : ∀ m, MeasurableEmbedding (emb m)) {lam :
     (f := fun _ : alpha ↦ (0 : ℝ≥0∞)) (c := 0) (fun _ ↦ le_rfl) x
 
 end MarkovProcess
+
+end
+
+end PortComputability

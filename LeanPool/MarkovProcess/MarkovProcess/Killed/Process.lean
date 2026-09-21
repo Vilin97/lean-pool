@@ -123,7 +123,8 @@ theorem IsConservative.killedProcess_map_coordinate (t : NNReal) (x : U) :
   rw [IsConservative.killedProcess_map_coordinate_eq P hP U hU t x]
   refine Measure.ext fun S hS ↦ ?_
   have hC : MeasurableSet (Cemetery.alive ⁻¹' S : Set U) := measurable_inl hS
-  have hlive : IsConservative.continuousProcess P hP (x : alpha) {omega : ContinuousPath alpha | (t : ℝ≥0∞) < ContinuousPath.exitTime U omega ∧
+  have hlive : IsConservative.continuousProcess P hP (x : alpha) {omega : ContinuousPath alpha |
+      (t : ℝ≥0∞) < ContinuousPath.exitTime U omega ∧
       omega t ∈ Subtype.val '' (Cemetery.alive ⁻¹' S)} =
       IsConservative.killedKernelOn P hP U hU t x (Cemetery.alive ⁻¹' S) :=
     (IsConservative.killedKernelOn_apply_eq_continuousProcess P hP U hU t x hC).symm

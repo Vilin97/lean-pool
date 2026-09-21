@@ -19,12 +19,14 @@ nothing about any other semigroup, and it makes no claim about a semigroup that 
 (see `MarkovProcess.Examples.Drift` for that).
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal ZeroAtInfty
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 section Definition
 
@@ -72,6 +74,7 @@ theorem mapsC0_idSemigroup : (idSemigroup (alpha := alpha)).MapsC0 := by
 
 variable [LocallyCompactSpace alpha]
 
+omit [LocallyCompactSpace alpha] in
 /-- The identity semigroup is a Feller semigroup: its `C₀` operators are all the identity, so
 they map `C₀` into itself and have constant, hence continuous, time orbits. -/
 theorem isFellerKernelSemigroup_idSemigroup :
@@ -122,9 +125,7 @@ theorem kolmogorovRegular_idSemigroup :
 
 /-- **The main theorem, applied to the identity semigroup.**  There is exactly one Markov kernel
 from the state space to continuous paths whose finite-dimensional distributions are those of the
-identity semigroup.  In particular the hypotheses of
-`SubMarkovKernelSemigroup.IsFellerKernelSemigroup.existsUnique_continuousProcess_of_hasKolmogorovMoments`
-are jointly satisfiable. -/
+identity semigroup. This supplies a model of the main existence theorem’s hypotheses. -/
 theorem existsUnique_continuousProcess_idSemigroup :
     ∃! Q : Kernel alpha (ContinuousPath alpha), IsMarkovKernel Q ∧
       ∀ I : Finset NNReal,
@@ -192,3 +193,5 @@ end Process
 end
 
 end MarkovProcess
+
+end PortComputability

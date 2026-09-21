@@ -13,6 +13,8 @@ This file identifies the result of adjoining one conditionally sampled observati
 augmented finite history. It makes no infinite-process or path-regularity claim.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace ProbabilityTheory.Kernel
@@ -20,8 +22,7 @@ namespace ProbabilityTheory.Kernel
 private theorem step_transport {X H Z Y T : Type*}
     [MeasurableSpace X] [MeasurableSpace H] [MeasurableSpace Z]
     [MeasurableSpace Y] [MeasurableSpace T]
-    (κ : Kernel X Z) 
-    (η : Kernel Z Y) [IsSFiniteKernel η] (E : H ≃ᵐ Z)
+    (κ : Kernel X Z) (η : Kernel Z Y) [IsSFiniteKernel η] (E : H ≃ᵐ Z)
     (g : H × Y → T) (hg : Measurable g) (q : Z × Y → T)
     (hcompat : g ∘ Prod.map E.symm id = q) :
     (((Kernel.id ×ₖ η.comap E E.measurable) ∘ₖ κ.map E.symm).map g) =
@@ -40,11 +41,12 @@ private theorem step_transport {X H Z Y T : Type*}
   rw [hcomap]
   rw [← Kernel.map_id' η]
   rw [Kernel.map_prod_map]
-  rw [← Kernel.map_comp]
-  rw [← Kernel.map_comp_right]
-  rw [Kernel.map_id']
-  change (Kernel.id ×ₖ η ∘ₖ κ).map (g ∘ Prod.map E.symm id) = _
-  rw [hcompat]
+  · rw [← Kernel.map_comp]
+    · rw [← Kernel.map_comp_right]
+      · rw [Kernel.map_id']
+        change (Kernel.id ×ₖ η ∘ₖ κ).map (g ∘ Prod.map E.symm id) = _
+        rw [hcompat]
+      all_goals first | exact hg | fun_prop
   all_goals first | exact hg | fun_prop
 
 private theorem prod_comp_prod_map_prodAssoc {X A B : Type*}
@@ -117,7 +119,7 @@ end DenseTimeHistory
 
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {D α : Type*} [MeasurableSpace α]
 
@@ -161,23 +163,25 @@ theorem augmentedPrefixKernel_step (P : SubMarkovKernelSemigroup α)
   have hq : q = r ∘ MeasurableEquiv.prodAssoc := by
     rfl
   rw [hq, Kernel.map_comp_right]
-  rw [Kernel.prod_comp_prod_map_prodAssoc]
-  rw [compProd_observationCondKernel P hP e ι n]
-  rw [nextObservationJoint]
-  rw [Kernel.mapOfMeasurable_eq_map]
-  rw [← Kernel.map_id' Kernel.id]
-  rw [Kernel.map_prod_map]
-  rw [← Kernel.map_comp_right]
-  change (Kernel.id ×ₖ denseTimePrefixKernel P e ι (n + 1)).map
-    (r ∘ Prod.map id (DenseTimeHistory.splitLast n)) = _
-  have hr : r ∘ Prod.map id (DenseTimeHistory.splitLast n) =
-      (DenseTimeHistory.historyEquiv (n + 1)).symm := by
-    funext z
-    dsimp only [r, Function.comp_apply, Prod.map_apply, id_eq]
-    change (DenseTimeHistory.historyEquiv (n + 1)).symm
-      (z.1, (DenseTimeHistory.splitLast n).symm (DenseTimeHistory.splitLast n z.2)) = _
-    rw [MeasurableEquiv.symm_apply_apply]
-  rw [hr, augmentedPrefixKernel, Kernel.mapOfMeasurable_eq_map]
+  · rw [Kernel.prod_comp_prod_map_prodAssoc]
+    rw [compProd_observationCondKernel P hP e ι n]
+    rw [nextObservationJoint]
+    rw [Kernel.mapOfMeasurable_eq_map]
+    rw [← Kernel.map_id' Kernel.id]
+    rw [Kernel.map_prod_map]
+    · rw [← Kernel.map_comp_right]
+      · change (Kernel.id ×ₖ denseTimePrefixKernel P e ι (n + 1)).map
+          (r ∘ Prod.map id (DenseTimeHistory.splitLast n)) = _
+        have hr : r ∘ Prod.map id (DenseTimeHistory.splitLast n) =
+            (DenseTimeHistory.historyEquiv (n + 1)).symm := by
+          funext z
+          dsimp only [r, Function.comp_apply, Prod.map_apply, id_eq]
+          change (DenseTimeHistory.historyEquiv (n + 1)).symm
+            (z.1, (DenseTimeHistory.splitLast n).symm (DenseTimeHistory.splitLast n z.2)) = _
+          rw [MeasurableEquiv.symm_apply_apply]
+        rw [hr, augmentedPrefixKernel, Kernel.mapOfMeasurable_eq_map]
+      all_goals fun_prop
+    all_goals fun_prop
   all_goals fun_prop
 
 end IsConservative
@@ -185,3 +189,5 @@ end
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end PortComputability

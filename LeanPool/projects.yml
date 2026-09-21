@@ -9986,9 +9986,9 @@ projects:
     license: Apache-2.0
     status: verified
     main_declarations:
-    - MarkovProcess.SubMarkovKernelSemigroup.IsFellerKernelSemigroup.existsUnique_continuousProcess_of_hasKolmogorovMoments
+    - MarkovProcess.existsUnique_continuousProcess
     main_results:
-    - declaration: MarkovProcess.SubMarkovKernelSemigroup.IsFellerKernelSemigroup.existsUnique_continuousProcess_of_hasKolmogorovMoments
+    - declaration: MarkovProcess.existsUnique_continuousProcess
       informal: A conservative Feller transition semigroup on a nonempty locally compact Polish
         space satisfying the Kolmogorov moment criterion determines a unique continuous-path
         Markov kernel with its prescribed finite-dimensional distributions.

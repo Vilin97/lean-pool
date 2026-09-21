@@ -16,12 +16,14 @@ continuous-path space; no Markov or kernel assumption is used.  The deterministi
 versions are in `ContinuousPathShiftCompactTestConvergence.lean`.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory Topology
 open scoped NNReal ZeroAtInfty CompactlySupported
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 variable {alpha : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
 
@@ -84,3 +86,5 @@ theorem tendsto_integral_continuousPath_finiteDenseEvaluation_shift_randomTime_o
 end
 
 end MarkovProcess
+
+end PortComputability

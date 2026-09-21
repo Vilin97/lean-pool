@@ -12,10 +12,12 @@ This file proves the uniformization argument: a normalized resolvent preserving
 a closed convex set containing zero has Yosida exponentials preserving that set.
 -/
 
+noncomputable section PortComputability
+
 open Filter Set Topology
 open NormedSpace
 
-noncomputable section
+section
 
 namespace MarkovProcess.Semigroup
 
@@ -192,3 +194,7 @@ theorem preservesSet_generatedSemigroup_of_scaledOperator
 end ContractiveResolvent
 
 end MarkovProcess.Semigroup
+
+end
+
+end PortComputability

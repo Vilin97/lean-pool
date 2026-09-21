@@ -26,12 +26,14 @@ Main results: `IsConservative.feynmanKacResolvent`,
 No uniqueness statement for the associated resolvent equation is asserted.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
 
 namespace MarkovProcess.SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 variable {alpha : Type*} [MetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
   [SecondCountableTopology alpha] [CompleteSpace alpha] [Nonempty alpha]
@@ -746,3 +748,5 @@ theorem IsFellerKernelSemigroup.feynmanKacResolvent_eq_kernelResolvent_sub
 end
 
 end MarkovProcess.SubMarkovKernelSemigroup
+
+end PortComputability

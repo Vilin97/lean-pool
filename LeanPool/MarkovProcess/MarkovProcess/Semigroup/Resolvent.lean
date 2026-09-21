@@ -41,6 +41,8 @@ The shift `μ` is a positive real; nothing is asserted for complex shifts or for
 generator beyond the half-line `(0, ∞)`.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory Filter Topology Set
 open scoped NNReal
 
@@ -49,7 +51,7 @@ namespace MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 variable (S : StronglyContinuousContractionSemigroup E)
 
-noncomputable section
+section
 
 section Integrand
 
@@ -145,12 +147,12 @@ def resolvent (μ : PositiveShift) : E →L[ℝ] E :=
     { toFun := fun x ↦ ∫ t in Ioi (0 : ℝ), S.laplaceIntegrand μ x t
       map_add' := fun x y ↦ by
         rw [laplaceIntegrand_add]
-        show ∫ t in Ioi (0 : ℝ), (S.laplaceIntegrand μ x t + S.laplaceIntegrand μ y t) = _
+        change ∫ t in Ioi (0 : ℝ), (S.laplaceIntegrand μ x t + S.laplaceIntegrand μ y t) = _
         exact integral_add (S.integrableOn_laplaceIntegrand μ.2 x)
           (S.integrableOn_laplaceIntegrand μ.2 y)
       map_smul' := fun c x ↦ by
         rw [laplaceIntegrand_smul, RingHom.id_apply]
-        show ∫ t in Ioi (0 : ℝ), c • S.laplaceIntegrand μ x t = _
+        change ∫ t in Ioi (0 : ℝ), c • S.laplaceIntegrand μ x t = _
         exact integral_smul c _ }
     (μ : ℝ)⁻¹ (fun x ↦ S.norm_integral_laplaceIntegrand_le μ.2 x)
 
@@ -290,7 +292,7 @@ theorem resolvent_sub_resolvent (α β : PositiveShift) :
 
 /-- The resolvent has dense range. -/
 theorem denseRange_resolvent (μ : PositiveShift) : DenseRange (S.resolvent μ) := by
-  show Dense (Set.range (S.resolvent μ))
+  change Dense (Set.range (S.resolvent μ))
   rw [← S.generatorDomain_eq_range_resolvent μ]
   exact S.dense_generatorDomain
 
@@ -312,3 +314,5 @@ end Resolvent
 end
 
 end MarkovProcess.Semigroup.StronglyContinuousContractionSemigroup
+
+end PortComputability

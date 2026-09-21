@@ -16,12 +16,14 @@ for conservative transition-kernel semigroups.  It is finite-dimensional kernel 
 it does not assert a path-space Markov property.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 
 namespace MarkovProcess
 namespace SubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 /-- The image of a finite set of nonnegative times under translation by `s`. -/
 def finiteSetTranslate (s : NNReal) (I : Finset NNReal) : Finset NNReal :=
@@ -181,3 +183,5 @@ theorem map_castOrderEmbedding_addFinset (s : DenseTime) (I : Finset DenseTime) 
 
 end DenseTime
 end MarkovProcess
+
+end PortComputability

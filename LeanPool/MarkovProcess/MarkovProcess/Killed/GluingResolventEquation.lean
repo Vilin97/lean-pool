@@ -33,10 +33,12 @@ Main results: `expWeight_convolution`,
 `SubMarkovKernelSemigroup.kernelResolvent_resolventEquation`.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -278,3 +280,7 @@ theorem kernelResolvent_resolventEquation {lam mu : ℝ} (hlt : lam < mu)
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end
+
+end PortComputability

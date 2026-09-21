@@ -31,10 +31,12 @@ the compactified process started at any point almost surely never reaches the ad
 space is produced from that statement.
 -/
 
+noncomputable section PortComputability
+
 open Filter MeasureTheory ProbabilityTheory Set Topology
 open scoped ENNReal NNReal ZeroAtInfty
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -264,3 +266,7 @@ theorem ae_exitTime_eq_top_minimalC0Resolvent
 end Conservativity
 
 end MarkovProcess
+
+end
+
+end PortComputability

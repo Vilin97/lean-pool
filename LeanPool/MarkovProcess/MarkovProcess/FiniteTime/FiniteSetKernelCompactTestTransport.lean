@@ -51,9 +51,11 @@ private theorem stronglyMeasurable_coordinatePolynomial
       exact hprod.const_mul term.coefficient
 
 private theorem stronglyMeasurable_compactlySupported_pi
-    {I alpha : Type*} [Fintype I] [TopologicalSpace alpha] [MeasurableSpace alpha]
+    {I alpha : Type*} [Finite I] [TopologicalSpace alpha] [MeasurableSpace alpha]
     [BorelSpace alpha] [T3Space alpha] [LocallyCompactSpace alpha]
     (f : C_c(I → alpha, ℝ)) : StronglyMeasurable f := by
+  classical
+  let := Fintype.ofFinite I
   have hexists (m : ℕ) :
       ∃ terms : List (PiContinuousMap.CoordinateProductTerm I alpha),
         ∀ x, ‖PiContinuousMap.coordinatePolynomial terms x - f x‖ <
@@ -99,15 +101,15 @@ theorem orderedPathToFiniteSetHomeomorph_apply
 
 /-- Pull a compactly supported test on finite-set coordinates back to increasing coordinates. -/
 noncomputable def pullbackFiniteSetCompactTest
-    {alpha : Type*} [TopologicalSpace alpha] 
-    (I : Finset NNReal) (f : C_c(I → alpha, ℝ)) : C_c(Fin I.card → alpha, ℝ) :=
+    {alpha : Type*} [TopologicalSpace alpha] (I : Finset NNReal)
+    (f : C_c(I → alpha, ℝ)) : C_c(Fin I.card → alpha, ℝ) :=
   f.comp (orderedPathToFiniteSetHomeomorph I).toCocompactMap
 
 /-- Evaluation of a compact test pulled back to increasing coordinates. -/
 @[simp]
 theorem pullbackFiniteSetCompactTest_apply
-    {alpha : Type*} [TopologicalSpace alpha] [T2Space alpha]
-    (I : Finset NNReal) (f : C_c(I → alpha, ℝ)) (path : Fin I.card → alpha) :
+    {alpha : Type*} [TopologicalSpace alpha] (I : Finset NNReal)
+    (f : C_c(I → alpha, ℝ)) (path : Fin I.card → alpha) :
     pullbackFiniteSetCompactTest I f path = f (orderedPathToFiniteSet I path) := by
   rw [pullbackFiniteSetCompactTest]
   exact congr_arg f (orderedPathToFiniteSetHomeomorph_apply I path)

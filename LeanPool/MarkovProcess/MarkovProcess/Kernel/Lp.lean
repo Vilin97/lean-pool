@@ -31,11 +31,11 @@ and burns a failing search for `SeminormedAddCommGroup (α →ₘ[μ] ℝ)`. -/
 private noncomputable instance cacheSeminormedLp (p : ℝ≥0∞) [Fact (1 ≤ p)]
     (μ : Measure α) : SeminormedAddCommGroup (Lp ℝ p μ) := inferInstance
 
-private noncomputable instance cacheAddCommMonoidLp (p : ℝ≥0∞) 
-    (μ : Measure α) : AddCommMonoid (Lp ℝ p μ) := inferInstance
+private noncomputable instance cacheAddCommMonoidLp (p : ℝ≥0∞) (μ : Measure α) :
+    AddCommMonoid (Lp ℝ p μ) := inferInstance
 
-private noncomputable instance cacheModuleLp (p : ℝ≥0∞) [Fact (1 ≤ p)]
-    (μ : Measure α) : Module ℝ (Lp ℝ p μ) := inferInstance
+private noncomputable instance cacheModuleLp (p : ℝ≥0∞) (μ : Measure α) :
+    Module ℝ (Lp ℝ p μ) := inferInstance
 
 private noncomputable instance cacheTopologicalSpaceLp (p : ℝ≥0∞) [Fact (1 ≤ p)]
     (μ : Measure α) : TopologicalSpace (Lp ℝ p μ) := inferInstance

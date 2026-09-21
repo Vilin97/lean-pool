@@ -30,13 +30,15 @@ No Markov, strong Markov, Feller, equivariance, annealed or killed statement is 
 of those is a separate transport through the fibre identity.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory
 open scoped NNReal
 
 namespace MarkovProcess
 namespace ParameterizedSubMarkovKernelSemigroup
 
-noncomputable section
+section
 
 section Conservativity
 
@@ -271,3 +273,5 @@ end ContinuousProcess
 end
 end ParameterizedSubMarkovKernelSemigroup
 end MarkovProcess
+
+end PortComputability

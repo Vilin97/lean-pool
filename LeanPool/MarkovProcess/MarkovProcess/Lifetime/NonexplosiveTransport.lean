@@ -13,12 +13,14 @@ lifetime paths whose lifetime is almost surely infinite therefore gives a canoni
 ordinary continuous paths, independent of the off-support default.
 -/
 
+noncomputable section PortComputability
+
 open MeasureTheory ProbabilityTheory Set
 open scoped ENNReal
 
 namespace MarkovProcess
 
-noncomputable section
+section
 
 namespace LifetimePath
 
@@ -157,3 +159,5 @@ theorem fromLifetimePathKernel_toLifetimePathKernel
 end Kernel
 end
 end MarkovProcess
+
+end PortComputability

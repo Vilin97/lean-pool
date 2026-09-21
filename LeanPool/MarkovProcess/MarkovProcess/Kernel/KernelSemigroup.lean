@@ -16,10 +16,12 @@ Conservativity is deliberately a separate predicate.  A killed transition
 family has mass at most one, while a conservative family has mass exactly one.
 -/
 
+noncomputable section PortComputability
+
 open Set
 open scoped ENNReal ProbabilityTheory
 
-noncomputable section
+section
 
 namespace MarkovProcess
 
@@ -125,3 +127,7 @@ end IsConservative
 end SubMarkovKernelSemigroup
 
 end MarkovProcess
+
+end
+
+end PortComputability

@@ -59,7 +59,8 @@ theorem IsConservative.measurable_killedKernelOn_family :
       (p.1.2.1 : ℝ≥0∞) < ContinuousPath.exitTime U p.2 ∧ p.2 p.1.2.1 ∈ Subtype.val '' B} := by
     refine MeasurableSet.inter ?_ ?_
     · exact measurableSet_lt
-        (measurable_coe_nnreal_ennreal.comp (measurable_fst.comp (measurable_snd.comp measurable_fst)))
+        (measurable_coe_nnreal_ennreal.comp (measurable_fst.comp (measurable_snd.comp
+            measurable_fst)))
         ((ContinuousPath.measurable_exitTime U hU).comp measurable_snd)
     · exact (heval.comp ((measurable_fst.comp (measurable_snd.comp measurable_fst)).prodMk
         measurable_snd)) hB'
@@ -86,7 +87,7 @@ noncomputable def IsConservative.killedFamily
     SubMarkovKernelSemigroup.IsConservative.isSubMarkovKernel_killedKernelOn
       (P.toSubMarkovKernelSemigroup theta) (hP theta) U hU t
 
-/-- The fibre of the killed family at `theta` is the killed semigroup of the semigroup at `theta`. -/
+/-- The fibre at `theta` is the killed semigroup of the semigroup at that parameter. -/
 theorem IsConservative.killedFamily_toSubMarkovKernelSemigroup
     (hFeller : ∀ theta, (P.toSubMarkovKernelSemigroup theta).IsFellerKernelSemigroup)
     (hK : P.KolmogorovRegular hP) (theta : Theta) :
