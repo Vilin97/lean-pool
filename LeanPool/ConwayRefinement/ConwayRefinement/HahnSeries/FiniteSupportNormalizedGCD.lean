@@ -70,8 +70,9 @@ private noncomputable def normalizedAssociateRepresentativeMonoidHom :
 private noncomputable def finiteSupportNormalizationMonoid :
     NormalizationMonoid (finiteSupportSubring (G := G) (K := K)) := by
   classical
-  exact normalizationMonoidOfMonoidHomRightInverse normalizedAssociateRepresentativeMonoidHom
-    normalizedAssociateRepresentative_mk
+  exact (strongNormalizationMonoidOfMonoidHomRightInverse
+    (α := finiteSupportSubring (G := G) (K := K))
+    normalizedAssociateRepresentativeMonoidHom normalizedAssociateRepresentative_mk).toNormalizationMonoid
 
 /-- The nonpositive finite-support Hahn-series ring over a field is a normalized GCD domain. -/
 theorem nonemptyNormalizedGCDMonoid_finiteSupport :

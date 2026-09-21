@@ -40,12 +40,11 @@ namespace Berarducci
 
 public noncomputable section
 
-variable {K : Type v} [Field K] [CharZero K]
+variable {K : Type v} [Field K]
 
 abbrev FiniteSupportRing :=
   HahnSeries.Nonpositive.FiniteSupportRing (G := ℝ) (K := K)
 
-omit [CharZero K] in
 private theorem coe_translatedTruncation_translate (p : Series K) (h g : ℝ) :
     ((translatedTruncation (HahnSeries.translate h (p : K⟦ℝ⟧)) g : Series K) :
         K⟦ℝ⟧) =
@@ -90,7 +89,6 @@ private def degreeLayerTruncationAtRepresentative (alpha : NatOrdinal) (g : ℝ)
     exact translatedTruncation_add
       ((b : Series K) : K⟦ℝ⟧) ((c : Series K) : K⟦ℝ⟧) g
 
-omit [CharZero K] in
 variable (K) in
 private theorem degreeLayerTruncationAt_lower_le_ker (alpha : NatOrdinal) (g : ℝ) :
     (HahnSeries.Nonpositive.degreeValuation K).lowerFiltration alpha ≤
@@ -118,7 +116,6 @@ private def degreeLayerTruncationAt (alpha : NatOrdinal) (g : ℝ) :
     (degreeLayerTruncationAtRepresentative K alpha g)
     (degreeLayerTruncationAt_lower_le_ker K alpha g)
 
-omit [CharZero K] in
 /-- On the degree-`α` homogeneous class of `b`, the map is the class of `b^{|γ}` in `P_α`. -/
 private theorem degreeLayerTruncationAt_mk (alpha : NatOrdinal) (g : ℝ)
     (b : Series K) (hb : (b : K⟦ℝ⟧).degree ≤
@@ -135,7 +132,6 @@ private theorem degreeLayerTruncationAt_mk (alpha : NatOrdinal) (g : ℝ)
   rw [principalComponentMk_eq_componentMk]
   rfl
 
-omit [CharZero K] in
 /-- The finite-support residue equivalence sends a constant series to its canonical
 degree-zero homogeneous class. -/
 theorem degreeFiniteSupportResidueEquiv_scalar (k : K) :
@@ -154,7 +150,6 @@ theorem degreeFiniteSupportResidueEquiv_scalar (k : K) :
   exact (HahnSeries.Nonpositive.coe_finiteSupportScalarHom
     (G := ℝ) (K := K) k).trans (HahnSeries.Nonpositive.coe_C k).symm
 
-omit [CharZero K] in
 /-- Successive scalar actions by degree-zero residue classes agree with multiplication in the
 residue ring. -/
 theorem degreeResidue_smul_smul (alpha : NatOrdinal)
@@ -167,7 +162,6 @@ theorem degreeResidue_smul_smul (alpha : NatOrdinal)
     DirectSum.of_zero_smul, DirectSum.of_zero_mul]
   rw [mul_assoc]
 
-omit [CharZero K] in
 /-- The unit residue class acts identically on every degree component. -/
 theorem degreeResidue_one_smul (alpha : NatOrdinal)
     (x : (HahnSeries.Nonpositive.degreeValuation K).Component alpha) :
@@ -177,7 +171,6 @@ theorem degreeResidue_one_smul (alpha : NatOrdinal)
   apply DirectSum.of_injective (β := w.Component) alpha
   rw [DirectSum.of_zero_smul, DirectSum.of_zero_one, one_mul]
 
-omit [CharZero K] in
 private theorem residue_smul_comm (alpha : NatOrdinal)
     (a b : (HahnSeries.Nonpositive.degreeValuation K).ResidueRing)
     (x : (HahnSeries.Nonpositive.degreeValuation K).Component alpha) :
@@ -185,7 +178,6 @@ private theorem residue_smul_comm (alpha : NatOrdinal)
   rw [← degreeResidue_smul_smul alpha,
     ← degreeResidue_smul_smul alpha, mul_comm]
 
-omit [CharZero K] in
 private theorem residueEquiv_eq_degreeLayerMk (p : FiniteSupportRing (K := K)) :
     HahnSeries.Nonpositive.degreeFiniteSupportResidueEquiv K p =
       degreeLayerMk 0 (p : Series K) (by
@@ -208,7 +200,7 @@ theorem degreeFiniteSupportResidueEquiv_smul_degreeLayerMk (alpha : NatOrdinal)
     HahnSeries.Nonpositive.degreeFiniteSupportResidueEquiv K p •
         degreeLayerMk alpha b hb =
       degreeLayerMk alpha ((p : Series K) * b) (by
-        rw [HahnSeries.Nonpositive.degree_mul]
+        apply (HahnSeries.degree_mul_le _ _).trans
         exact (add_le_add (by
           simpa using (HahnSeries.degree_le_zero_iff.mpr
             ((HahnSeries.Nonpositive.mem_finiteSupportSubring_iff
@@ -226,7 +218,6 @@ theorem degreeFiniteSupportResidueEquiv_smul_degreeLayerMk (alpha : NatOrdinal)
   rw [degreeLayerMk_eq_componentMk, degreeLayerMk_eq_componentMk]
   exact w.componentMk_heq_of_grade_eq_of_coe_eq (zero_add alpha) _ _ rfl
 
-omit [CharZero K] in
 theorem principalComponentToHahnDegreeLayer_mk (alpha : NatOrdinal)
     (p : Series K) (hp : HahnSeries.Nonpositive.IsPrincipal p)
     (hpDegree : (p : K⟦ℝ⟧).degree = (alpha : WithBot NatOrdinal))
@@ -275,7 +266,6 @@ def principalComponentFiniteSupportMul (alpha : NatOrdinal) :
       rw [degreeLayer_smul_eq_residue_smul]
       exact degreeResidue_smul_smul alpha _ _ _)
 
-omit [CharZero K] in
 @[simp]
 theorem principalComponentFiniteSupportMul_apply (alpha : NatOrdinal)
     (x : PrincipalComponent K alpha) (p : FiniteSupportRing (K := K)) :
@@ -290,7 +280,6 @@ def principalComponentTensorMap (alpha : NatOrdinal) :
       (HahnSeries.Nonpositive.degreeValuation K).Component alpha :=
   TensorProduct.lift (principalComponentFiniteSupportMul K alpha)
 
-omit [CharZero K] in
 @[simp]
 theorem principalComponentTensorMap_tmul (alpha : NatOrdinal)
     (x : PrincipalComponent K alpha) (p : FiniteSupportRing (K := K)) :
@@ -304,14 +293,14 @@ theorem principalComponentTensorMap_principal_monomial (alpha : NatOrdinal)
     (p : Series K) (hp : HahnSeries.Nonpositive.IsPrincipal p)
     (hpDegree : (p : K⟦ℝ⟧).degree = (alpha : WithBot NatOrdinal))
     (hpBound : ordinalValue p < ω^ (alpha + 1))
-    (g : {g : ℝ // g ≤ 0}) :
+    (g : HahnSeries.Nonpositive.exponentMonoid ℝ) :
     principalComponentTensorMap K alpha
         (principalComponentMk alpha p hpBound ⊗ₜ
           HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g) =
       degreeLayerMk alpha
         (((HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g :
           FiniteSupportRing (K := K)) : Series K) * p) (by
-            rw [HahnSeries.Nonpositive.degree_mul]
+            apply (HahnSeries.degree_mul_le _ _).trans
             exact (add_le_add (by
               exact HahnSeries.degree_le_zero_iff.mpr
                 ((HahnSeries.Nonpositive.mem_finiteSupportSubring_iff
@@ -323,8 +312,7 @@ theorem principalComponentTensorMap_principal_monomial (alpha : NatOrdinal)
     principalComponentToHahnDegreeLayer_mk alpha p hp hpDegree hpBound]
   rw [degreeFiniteSupportResidueEquiv_smul_degreeLayerMk]
 
-omit [CharZero K] in
-private theorem finiteSupportMonomial_degree (g : {g : ℝ // g ≤ 0}) :
+private theorem finiteSupportMonomial_degree (g : HahnSeries.Nonpositive.exponentMonoid ℝ) :
     ((((HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g :
       FiniteSupportRing (K := K)) : Series K) : K⟦ℝ⟧).degree) = 0 := by
   apply HahnSeries.degree_eq_zero.mpr
@@ -336,8 +324,7 @@ private theorem finiteSupportMonomial_degree (g : {g : ℝ // g ≤ 0}) :
         FiniteSupportRing (K := K)) : Series K)).mp
         (HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g).2
 
-omit [CharZero K] in
-private theorem coe_finiteSupportMonomial_mul (g : {g : ℝ // g ≤ 0}) (p : Series K) :
+private theorem coe_finiteSupportMonomial_mul (g : HahnSeries.Nonpositive.exponentMonoid ℝ) (p : Series K) :
     ((((HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g :
         FiniteSupportRing (K := K)) : Series K) * p : Series K) : K⟦ℝ⟧) =
       HahnSeries.translate (g : ℝ) (p : K⟦ℝ⟧) := by
@@ -347,28 +334,26 @@ private theorem coe_finiteSupportMonomial_mul (g : {g : ℝ // g ≤ 0}) (p : Se
   rw [HahnSeries.Nonpositive.coe_finiteSupportMonomial,
     HahnSeries.single_one_mul_eq_translate]
 
-private def shiftedSeries (g : {g : ℝ // g ≤ 0}) (p : Series K) : Series K :=
+private def shiftedSeries (g : HahnSeries.Nonpositive.exponentMonoid ℝ) (p : Series K) : Series K :=
   ⟨HahnSeries.translate (g : ℝ) (p : K⟦ℝ⟧), by
     rw [HahnSeries.mem_nonpositiveSubring, HahnSeries.support_translate]
     rintro _ ⟨x, hx, rfl⟩
     exact add_nonpos g.2 (HahnSeries.Nonpositive.support_subset p hx)⟩
 
-omit [CharZero K] in
 @[simp]
-private theorem coe_shiftedSeries (g : {g : ℝ // g ≤ 0}) (p : Series K) :
+private theorem coe_shiftedSeries (g : HahnSeries.Nonpositive.exponentMonoid ℝ) (p : Series K) :
     ((shiftedSeries g p : Series K) : K⟦ℝ⟧) =
       HahnSeries.translate (g : ℝ) (p : K⟦ℝ⟧) :=
   (rfl)
 
-omit [CharZero K] in
-private theorem finiteSupportMonomial_mul_eq_shiftedSeries (g : {g : ℝ // g ≤ 0}) (p : Series K) :
+private theorem finiteSupportMonomial_mul_eq_shiftedSeries (g : HahnSeries.Nonpositive.exponentMonoid ℝ) (p : Series K) :
     ((HahnSeries.Nonpositive.finiteSupportMonomial (K := K) g :
         FiniteSupportRing (K := K)) : Series K) * p = shiftedSeries g p := by
   apply Subtype.ext
   exact coe_finiteSupportMonomial_mul g p
 
 private abbrev PrincipalMonomialTerm (K : Type v) [Field K] :=
-  Series K × {g : ℝ // g ≤ 0}
+  Series K × HahnSeries.Nonpositive.exponentMonoid ℝ
 
 private def principalMonomialTermSeries (t : PrincipalMonomialTerm K) : Series K :=
   (HahnSeries.Nonpositive.finiteSupportMonomial (K := K) t.2 :
@@ -377,8 +362,7 @@ private def principalMonomialTermSeries (t : PrincipalMonomialTerm K) : Series K
 private theorem principalMonomialTermSeries_degree (t : PrincipalMonomialTerm K) :
     ((principalMonomialTermSeries t : Series K) : K⟦ℝ⟧).degree =
       (t.1 : K⟦ℝ⟧).degree := by
-  rw [principalMonomialTermSeries, HahnSeries.Nonpositive.degree_mul,
-    finiteSupportMonomial_degree, zero_add]
+  rw [principalMonomialTermSeries, coe_finiteSupportMonomial_mul, HahnSeries.degree_translate]
 
 private def normalTermSeries (t : HahnSeries.NormalForm.Term K)
     (ht : t.exponent ≤ 0) : Series K :=
@@ -388,7 +372,6 @@ private def normalTermSeries (t : HahnSeries.NormalForm.Term K)
     rintro _ ⟨g, hg, rfl⟩
     exact add_nonpos ht (HahnSeries.Nonpositive.support_subset t.coefficient hg))⟩
 
-omit [CharZero K] in
 private theorem principalMonomialTerm_series_eq_normalTermSeries
     (t : HahnSeries.NormalForm.Term K) (ht : t.exponent ≤ 0) :
     principalMonomialTermSeries
@@ -592,7 +575,7 @@ private theorem principalComponentTensorMap_surjective (alpha : NatOrdinal) :
 
 private theorem degreeLayerTruncationAt_principalComponentTensorMap_tmul_monomial
     (alpha : NatOrdinal) (x : PrincipalComponent K alpha)
-    (h g : {x : ℝ // x ≤ 0}) :
+    (h g : HahnSeries.Nonpositive.exponentMonoid ℝ) :
     degreeLayerTruncationAt K alpha g
         (principalComponentTensorMap K alpha
           (x ⊗ₜ HahnSeries.Nonpositive.finiteSupportMonomial (K := K) h)) =
@@ -697,7 +680,7 @@ private theorem degreeLayerTruncationAt_principalComponentTensorMap_tmul_monomia
 
 private theorem degreeLayerTruncationAt_principalComponentTensorMap (alpha : NatOrdinal)
     (z : PrincipalComponent K alpha ⊗[K] FiniteSupportRing (K := K))
-    (g : {x : ℝ // x ≤ 0}) :
+    (g : HahnSeries.Nonpositive.exponentMonoid ℝ) :
     degreeLayerTruncationAt K alpha g
         (principalComponentTensorMap K alpha z) =
       TensorProduct.equivFinsuppOfBasisRight
@@ -715,9 +698,7 @@ private theorem degreeLayerTruncationAt_principalComponentTensorMap (alpha : Nat
         TensorProduct.equivFinsuppOfBasisRight_symm_apply basis f
   rw [hz]
   induction f using Finsupp.induction with
-  | zero =>
-      simp
-      rfl
+  | zero => simp
   | single_add a b f ha hb ih =>
       have hzero : ∀ i,
           (0 : PrincipalComponent K alpha) ⊗ₜ[K] basis i = 0 :=
@@ -732,7 +713,6 @@ private theorem degreeLayerTruncationAt_principalComponentTensorMap (alpha : Nat
       rw [HahnSeries.Nonpositive.finiteSupportBasis_apply]
       rw [degreeLayerTruncationAt_principalComponentTensorMap_tmul_monomial]
       rw [Finsupp.add_apply, Finsupp.single_apply]
-      rfl
 
 variable (K) in
 private theorem principalComponentTensorMap_injective (alpha : NatOrdinal) :

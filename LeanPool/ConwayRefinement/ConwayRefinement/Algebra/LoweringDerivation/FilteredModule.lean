@@ -316,8 +316,7 @@ theorem gradeSectionMul_tmul (s : Fibre 𝒜 →ₗ[E] R) (j : ℕ) (a : 𝒜 (j
 theorem muOfSection_rTensor_natInclusion (s : Fibre 𝒜 →ₗ[E] R) (j : ℕ)
     (T : 𝒜 (j : NatOrdinal) ⊗[E] Fibre 𝒜) :
     muOfSection 𝒜 s ((natInclusion 𝒜 j).rTensor _ T) = gradeSectionMul 𝒜 s j T := by
-  induction T with
-  | zero => rw [map_zero, map_zero, map_zero]
+  induction T using TensorProduct.inductionOn with
   | tmul a c =>
     rw [LinearMap.rTensor_tmul, muOfSection_tmul, gradeSectionMul_tmul, coe_natInclusion]
   | add x y hx hy => rw [map_add, map_add, hx, hy, map_add]
@@ -325,8 +324,7 @@ theorem muOfSection_rTensor_natInclusion (s : Fibre 𝒜 →ₗ[E] R) (j : ℕ)
 omit [GradedAlgebra 𝒜] in
 theorem gradeSectionMul_mem_idealGE (s : Fibre 𝒜 →ₗ[E] R) (j : ℕ)
     (T : 𝒜 (j : NatOrdinal) ⊗[E] Fibre 𝒜) : gradeSectionMul 𝒜 s j T ∈ idealGE 𝒜 j := by
-  induction T with
-  | zero => rw [map_zero]; exact zero_mem _
+  induction T using TensorProduct.inductionOn with
   | tmul a c =>
     rw [gradeSectionMul_tmul]
     exact Ideal.mul_mem_right _ _ (mem_idealGE_of_mem 𝒜 le_rfl a.2)
@@ -338,8 +336,7 @@ theorem mk_gradeSectionMul {s : Fibre 𝒜 →ₗ[E] R} (hs : IsGradedFibreSecti
     (T : 𝒜 (j : NatOrdinal) ⊗[E] Fibre 𝒜) :
     (Submodule.Quotient.mk (gradeSectionMul 𝒜 s j T) : R ⧸ idealGE 𝒜 (j + 1)) =
       mu 𝒜 j T := by
-  induction T with
-  | zero => rw [map_zero, map_zero, Submodule.Quotient.mk_zero]
+  induction T using TensorProduct.inductionOn with
   | tmul a c =>
     rw [gradeSectionMul_tmul, ← hs.fibreMap_apply c, mu_tmul, hs.fibreMap_apply]
   | add x y hx hy => rw [map_add, map_add, Submodule.Quotient.mk_add, hx, hy]
@@ -348,8 +345,7 @@ theorem mk_gradeSectionMul {s : Fibre 𝒜 →ₗ[E] R} (hs : IsGradedFibreSecti
 theorem gradeSectionMul_lTensor_mem {s : Fibre 𝒜 →ₗ[E] R} (hs : IsGradedFibreSection 𝒜 s)
     (j : ℕ) (β : NatOrdinal) (T : 𝒜 (j : NatOrdinal) ⊗[E] fibreGrade 𝒜 β) :
     gradeSectionMul 𝒜 s j ((fibreGrade 𝒜 β).subtype.lTensor _ T) ∈ 𝒜 ((j : NatOrdinal) + β) := by
-  induction T with
-  | zero => rw [map_zero, map_zero]; exact zero_mem _
+  induction T using TensorProduct.inductionOn with
   | tmul a c =>
     rw [LinearMap.lTensor_tmul, gradeSectionMul_tmul, Submodule.subtype_apply]
     exact SetLike.mul_mem_graded a.2 (hs.mem c.2)

@@ -37,7 +37,7 @@ abbrev IntegerFiniteSupportRing :=
 
 /-- The nonpositive exponent `-1`. -/
 def negativeExponent : HahnSeries.Nonpositive.exponentMonoid ℤ :=
-  ⟨-1, by norm_num⟩
+  ⟨-1, show (-1 : ℤ) ≤ 0 by norm_num⟩
 
 /-- The monomial `t⁻¹` in the nonpositive finite-support ring. -/
 def nonpositiveNegativeMonomial : IntegerNonpositiveFiniteSupportRing :=

@@ -31,39 +31,39 @@ variable (H : AddSubgroup ℝ) {K : Type v} [Field K]
 
 /-- Regard a nonpositive Hahn series over `H ⊆ ℝ` as a real-exponent Hahn series. -/
 def mapDomainToReal : Nonpositive H K →+* Nonpositive ℝ K :=
-  mapDomain H.subtype Subtype.val_injective fun _ _ ↦ Iff.rfl
+  mapDomain H.subtype H.subtype_injective fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩
 
 /-- The underlying series of `mapDomainToReal` is Mathlib's exponent-domain embedding. -/
 @[simp]
 theorem coe_mapDomainToReal (b : Nonpositive H K) :
     (mapDomainToReal H b : K⟦ℝ⟧) = HahnSeries.embDomain
-      (⟨⟨H.subtype, Subtype.val_injective⟩, by
+      (⟨⟨H.subtype, H.subtype_injective⟩, by
         intro a b
         exact Subtype.coe_le_coe⟩ : H ↪o ℝ)
         (b : K⟦H⟧) :=
-  coe_mapDomain H.subtype Subtype.val_injective (fun _ _ ↦ Iff.rfl) b
+  coe_mapDomain H.subtype H.subtype_injective (fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩) b
 
 /-- The real-domain embedding maps support by the subgroup inclusion. -/
 theorem support_mapDomainToReal (b : Nonpositive H K) :
     (mapDomainToReal H b : K⟦ℝ⟧).support =
       ((fun h : H ↦ (h : ℝ)) '' (b : K⟦H⟧).support) :=
-  support_mapDomain H.subtype Subtype.val_injective (fun _ _ ↦ Iff.rfl) b
+  support_mapDomain H.subtype H.subtype_injective (fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩) b
 
 /-- The real-domain embedding is injective. -/
 theorem mapDomainToReal_injective :
     Function.Injective (mapDomainToReal (K := K) H) :=
-  mapDomain_injective H.subtype Subtype.val_injective fun _ _ ↦ Iff.rfl
+  mapDomain_injective H.subtype H.subtype_injective fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩
 
 /-- The real-domain embedding preserves the constant coefficient. -/
 theorem constantCoeff_mapDomainToReal (b : Nonpositive H K) :
     constantCoeff (mapDomainToReal H b) = constantCoeff b := by
   have hmap : mapDomainToReal H b =
-      mapDomain H.subtype Subtype.val_injective (fun _ _ ↦ Iff.rfl) b := by
+      mapDomain H.subtype H.subtype_injective (fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩) b := by
     apply Subtype.ext
     rw [coe_mapDomainToReal, coe_mapDomain]
   rw [hmap]
-  exact constantCoeff_mapDomain H.subtype Subtype.val_injective
-    (fun _ _ ↦ Iff.rfl) b
+  exact constantCoeff_mapDomain H.subtype H.subtype_injective
+    (fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩) b
 
 /-- The supremum in `ℝ` of the support of a nonpositive series with exponents in `H`. -/
 def realSupportSup (b : Nonpositive H K) : WithBot ℝ :=

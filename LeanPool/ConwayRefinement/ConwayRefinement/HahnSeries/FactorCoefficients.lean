@@ -85,7 +85,7 @@ theorem exists_scalar_of_hahn_mul_eq_map
     (HahnSeries.exists_addEquiv_fin S) hclosed hp₁0 hq₁0 hrel₁
   refine ⟨c, hc, fun x ↦ ?_⟩
   by_cases hx : x ∈ H
-  · have : p.coeff x = p₁ ⟨x, hx⟩ := by
+  · have : p.coeff x = p₁.coeff ⟨x, hx⟩ := by
       rw [← hp₁, HahnSeries.coeff_subgroupAlgebraHom, dite_eq_left hx]
     rw [this]
     exact hcoeff _

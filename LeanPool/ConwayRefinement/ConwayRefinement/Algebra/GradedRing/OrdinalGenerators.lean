@@ -119,8 +119,11 @@ theorem decompose_aeval (hmem : ∀ i, x i ∈ 𝒜 (wt i)) (F : MvPolynomial ι
     DirectSum.sum_apply, Submodule.coe_sum]
   rw [Finset.sum_eq_single β (fun m _ hne ↦ DirectSum.decompose_of_mem_ne 𝒜 (hmem' m) hne)
     fun hn ↦ ?_, DirectSum.decompose_of_mem_same 𝒜 (hmem' β)]
-  rw [Set.Finite.mem_toFinset, Function.mem_support, not_not] at hn
-  rw [hn, map_zero, DirectSum.decompose_zero, DirectSum.zero_apply, Submodule.coe_zero]
+  have hz : weightedHomogeneousComponent wt β F = 0 := by
+    apply not_not.mp
+    intro hz
+    exact hn ((weightedHomogeneousComponent_finsupp F).mem_toFinset.mpr hz)
+  rw [hz, map_zero, DirectSum.decompose_zero, DirectSum.zero_apply, Submodule.coe_zero]
 
 /-- A linear combination of the generators is the evaluation of the same combination of the
 variables. -/
@@ -313,7 +316,7 @@ end IsMinimalSystem
 omit [GradedAlgebra 𝒜] in
 /-- For degrees `wt i ≠ 0`, a polynomial homogeneous of degree zero is a constant. -/
 theorem eq_C_of_isWeightedHomogeneous_zero (hwt : ∀ i, wt i ≠ 0) {p : MvPolynomial ι E}
-    (hp : IsWeightedHomogeneous wt p 0) : p = C (coeff 0 p) := by
+    (hp : IsWeightedHomogeneous wt p 0) : p = C (p.coeff 0) := by
   classical
   ext m
   rw [coeff_C]
@@ -416,7 +419,7 @@ theorem exists_linear_part (hwt : ∀ i, wt i ≠ 0) (hmem : ∀ i, x i ∈ 𝒜
     {F : MvPolynomial ι E} {β : NatOrdinal.{o}} (hβ : β ≠ 0) (hF : IsWeightedHomogeneous wt F β) :
     ∃ c : ι →₀ E, (∀ i ∈ c.support, wt i = β) ∧
       aeval x F - Finsupp.linearCombination E x c ∈ decomposableAt 𝒜 β ∧
-      ∀ i, c i = coeff (Finsupp.single i 1) F := by
+      ∀ i, c i = F.coeff (Finsupp.single i 1) := by
   classical
   induction hF using IsWeightedHomogeneous.induction_on with
   | zero => exact ⟨0, by simp, by simp, fun i ↦ by simp⟩
@@ -424,7 +427,7 @@ theorem exists_linear_part (hwt : ∀ i, wt i ≠ 0) (hmem : ∀ i, x i ∈ 𝒜
     obtain ⟨c, hcw, hc, hcoeff⟩ := ihp
     obtain ⟨c', hcw', hc', hcoeff'⟩ := ihq
     refine ⟨c + c', fun i hi ↦ ?_, ?_, fun i ↦ by
-      rw [Finsupp.add_apply, hcoeff, hcoeff', coeff_add]⟩
+      rw [Finsupp.add_apply, hcoeff, hcoeff', AddMonoidAlgebra.coeff_add, Finsupp.add_apply]⟩
     · rcases Finset.mem_union.mp (Finsupp.support_add hi) with h | h
       · exact hcw i h
       · exact hcw' i h
@@ -535,7 +538,7 @@ a combination of the generators of degree `β` lying in `(A_+)² ∩ A_β`. -/
 theorem coeff_single_eq_zero_of_aeval_eq_zero
     {F : MvPolynomial ι E} {β : NatOrdinal.{o}} (hβ : β ≠ 0)
     (hF : IsWeightedHomogeneous wt F β) (h0 : aeval x F = 0) (i : ι) :
-    coeff (Finsupp.single i 1) F = 0 := by
+    F.coeff (Finsupp.single i 1) = 0 := by
   obtain ⟨c, hcw, hc, hcoeff⟩ := exists_linear_part hx.ne_zero hx.mem hβ hF
   rw [h0, zero_sub, neg_mem_iff] at hc
   have := hx.independent β c hcw hc

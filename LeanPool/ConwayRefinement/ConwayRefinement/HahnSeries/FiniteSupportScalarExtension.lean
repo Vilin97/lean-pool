@@ -71,9 +71,9 @@ theorem finiteSupportMap_coeff (f : K →+* L)
     _ = f (finiteSupportCoefficients b g) := by
       rw [finiteSupportAddMonoidAlgebraEquiv_map]
       change
-        AddMonoidAlgebra.mapRingHom (exponentMonoid G) f
-            (finiteSupportAddMonoidAlgebraEquiv b) g = _
-      rw [AddMonoidAlgebra.mapRingHom_apply]
+        (AddMonoidAlgebra.mapRingHom (exponentMonoid G) f
+            (finiteSupportAddMonoidAlgebraEquiv b)).coeff g = _
+      rw [AddMonoidAlgebra.coeff_mapRingHom]
       exact congrArg f (congrArg (fun q : exponentMonoid G →₀ K ↦ q g)
         (coeff_finiteSupportAddMonoidAlgebraEquiv (G := G) (K := K) b))
 

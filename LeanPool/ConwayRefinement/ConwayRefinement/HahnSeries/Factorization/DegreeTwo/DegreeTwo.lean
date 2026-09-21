@@ -252,7 +252,6 @@ theorem ordinalValue_eq_wpow_two
     rw [translatedTruncation_zero] at hordinary
     rw [NatOrdinal.of_omega0_opow] at hordinary
     convert hordinary using 1
-    congr 1
   have hdegree : (a : K⟦ℝ⟧).degree = (2 : WithBot NatOrdinal) :=
     degree_eq_two haNear haType
   have hvalueDegreeGe : (2 : WithBot NatOrdinal) ≤ ordinalValueDegree a := by

@@ -163,7 +163,7 @@ theorem CardSuppLTTruncationIntegerPart.coeff_zero_convexQuotientSplitRingEquiv
         (cardSuppLTTruncationIntegerPartConvexQuotientSplitRingEquiv P Z x).2).2⟩ :
       cardSuppLTTruncationIntegerPart (G := P) (R := R) (κ := κ) Z) =
       CardSuppLTTruncationIntegerPart.restrictDomain
-        P.toAddSubgroup.subtype Subtype.val_injective (fun _ _ ↦ Iff.rfl) Z x := by
+        P.toAddSubgroup.subtype P.toAddSubgroup.subtype_injective (fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩) Z x := by
   apply Subtype.ext
   apply Subtype.ext
   rw [coe_restrictDomain]

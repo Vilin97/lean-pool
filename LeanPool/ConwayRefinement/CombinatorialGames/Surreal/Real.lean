@@ -32,8 +32,16 @@ theorem exists_dyadic_btwn {K : Type*} [Field K] [LinearOrder K] [IsStrictOrdere
   obtain ⟨n, nh⟩ := exists_nat_gt (y - x)⁻¹
   have := nh.trans (Nat.cast_lt.2 Nat.lt_two_pow_self)
   obtain ⟨z, hz, hz'⟩ := exists_div_btwn h (nh.trans (Nat.cast_lt.2 Nat.lt_two_pow_self))
-  use .mkRat z ⟨n, rfl⟩
-  simp_all [Rat.mkRat_eq_div]
+  have hnPower : 2 ^ n ∈ Submonoid.powers (2 : ℕ) :=
+    Submonoid.pow_mem _ (Submonoid.mem_powers _) _
+  have hcast : ((Dyadic.mkRat z (n := 2 ^ n) hnPower).toRat : K) =
+      (z : K) / (2 ^ n : ℕ) := by
+    rw [Dyadic.coe_mkRat]
+    simp only [Rat.mkRat_eq_div, Rat.cast_div, Rat.cast_intCast,
+      Rat.cast_pow, Rat.cast_ofNat, Nat.cast_pow, Nat.cast_ofNat]
+  refine ⟨.mkRat z (n := 2 ^ n) hnPower, ?_⟩
+  rw [hcast]
+  exact ⟨hz, hz'⟩
 
 namespace Real
 
