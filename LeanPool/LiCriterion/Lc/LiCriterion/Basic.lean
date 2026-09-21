@@ -109,14 +109,14 @@ lemma NontrivialZero.ne_one (ρ : NontrivialZero) : ρ.val ≠ 1 := by
   exact (ne_of_lt ρ.property.2.2) (by simp [h])
 
 /-
-████████████████████████████████████████████████████████████████████████████████
-█                                                                              █
-█  PART I: PREREQUISITES (External to Li's paper)                             █
-█                                                                              █
-█  These are facts that Li (1997) ASSUMES from the literature.                █
-█  They are NOT proven in the Li paper itself.                                █
-█                                                                              █
-████████████████████████████████████████████████████████████████████████████████
+================================================================================
+=                                                                              =
+=  PART I: PREREQUISITES (External to Li's paper)                             =
+=                                                                              =
+=  These are facts that Li (1997) ASSUMES from the literature.                =
+=  They are NOT proven in the Li paper itself.                                =
+=                                                                              =
+================================================================================
 -/
 
 /-! ### Geometry behind the criterion
@@ -1453,12 +1453,12 @@ lemma xi_functional_equation (s : ℂ) : riemannXi s = riemannXi (1 - s) := by
 
 
 /-
-████████████████████████████████████████████████████████████████████████████████
-█                                                                              █
-█  PART II: LI'S PROOF (Following the original paper exactly)                 █
-█                                                                              █
-█                                                                              █
-████████████████████████████████████████████████████████████████████████████████
+================================================================================
+=                                                                              =
+=  PART II: LI'S PROOF (Following the original paper exactly)                 =
+=                                                                              =
+=                                                                              =
+================================================================================
 -/
 
 /-! ## Setup and Statement
@@ -1466,7 +1466,7 @@ lemma xi_functional_equation (s : ℂ) : riemannXi s = riemannXi (1 - s) := by
 Title and Introduction
 Definition of λ_n = (1/(n-1)!) d^n/ds^n [s^(n-1) log ξ(s)]|_{s=1}
 Theorem 1 statement
-Main result: RH ⟺ λ_n ≥ 0 for all n
+Main result: RH ↔ λ_n ≥ 0 for all n
 Definition of θ(x) = ∑ e^(-πn²x)
 -/
 
@@ -1485,7 +1485,7 @@ See PART I (Prerequisites) for the ax_ioms encoding these external results.
 
 /-! ## Key Identity
 
-Define φ(z) = ξ(1/(1-z)), then RH ⟺ φ'/φ analytic in unit disk
+Define φ(z) = ξ(1/(1-z)), then RH ↔ φ'/φ analytic in unit disk
 Generating function: φ'/φ = ∑_{n=0}^∞ λ_{n+1} z^n
 Explicit formula: λ_n = ∑_ρ (1 - 1 / ρ)^n
 
@@ -3971,7 +3971,7 @@ lemma xi_nonzero_away_from_nontrivial_zeros (w : ℂ)
   -- If ξ(w) = 0, then by the zeros characterization, w equals some nontrivial zero ρ.
   -- This contradicts the hypothesis h.
   intro hzero
-  -- By xi_zeros_are_nontrivial_zeros: ξ(w) = 0 ⟺ ∃ ρ, w = ρ.val
+  -- By xi_zeros_are_nontrivial_zeros: ξ(w) = 0 ↔ ∃ ρ, w = ρ.val
   obtain ⟨ρ, hw_eq⟩ := (xi_zeros_are_nontrivial_zeros w).mp hzero
   -- But h says w ≠ ρ.val for all ρ
   exact (h ρ) hw_eq

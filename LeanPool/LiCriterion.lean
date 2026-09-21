@@ -40,8 +40,8 @@ import LeanPool.LiCriterion.Lc.LiCriterion.ReverseDirection
 import LeanPool.LiCriterion.Lc.LiCriterion.XiGrowth
 import LeanPool.LiCriterion.Lc.LiCriterion.XiOrderBridge
 import LeanPool.LiCriterion.Lc.XiZeros
-import LeanPool.LiCriterion.comparator.ChallengeDeps
-import LeanPool.LiCriterion.comparator.Solution
+import LeanPool.LiCriterion.Comparator.ChallengeDeps
+import LeanPool.LiCriterion.Comparator.Solution
 
 /-!
 # Li's criterion for the Riemann Hypothesis

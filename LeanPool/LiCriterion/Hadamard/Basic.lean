@@ -1112,7 +1112,7 @@ suppose that a₁,...,aₙ are the zeros of f in B(0;r) repeated according to
 multiplicity. If f(0) ≠ 0 then
   log|f(0)| = -∑_{j=1}^n log(r/|aⱼ|) + (1 / 2π) ∫₀^{2π} log|f(re^{iθ})| dθ
 
-Proof. If |b| < 1 then the map (z-b)(1-b̄z)^{-1} takes the disk B(0;1) onto
+Proof. If |b| < 1 then the map (z-b)(1-bz)^{-1} takes the disk B(0;1) onto
 itself. Therefore (r²-āⱼz)/(r(z-aⱼ)) maps B(0;1) onto itself and takes the
 boundary to the boundary.
 

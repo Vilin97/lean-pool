@@ -10,7 +10,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 SPDX-License-Identifier: Apache-2.0
 Authors: Nicholas Bulka
 -/
-import LeanPool.LiCriterion.comparator.ChallengeDeps
+import LeanPool.LiCriterion.Comparator.ChallengeDeps
 import LeanPool.LiCriterion.Lc.LiCriterion.Fidelity
 
 /-!

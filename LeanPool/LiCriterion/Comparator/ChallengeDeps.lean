@@ -10,7 +10,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 SPDX-License-Identifier: Apache-2.0
 Authors: Nicholas Bulka
 -/
-import Mathlib
+import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 /-!
 ChallengeDeps.lean — the solution-side mirror of the Li-criterion definitions

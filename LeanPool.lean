@@ -3439,6 +3439,8 @@ import LeanPool.Lentil.Utils.MetaUtil
 import LeanPool.Lentil.Utils.MiscLemmas
 import LeanPool.Lentil.Utils.SyntaxUtil
 import LeanPool.LiCriterion
+import LeanPool.LiCriterion.Comparator.ChallengeDeps
+import LeanPool.LiCriterion.Comparator.Solution
 import LeanPool.LiCriterion.FunctionsOfOneComplexVariable
 import LeanPool.LiCriterion.FunctionsOfOneComplexVariable.BorelCaratheodory
 import LeanPool.LiCriterion.FunctionsOfOneComplexVariable.EntireLog
@@ -3475,8 +3477,6 @@ import LeanPool.LiCriterion.Lc.LiCriterion.ReverseDirection
 import LeanPool.LiCriterion.Lc.LiCriterion.XiGrowth
 import LeanPool.LiCriterion.Lc.LiCriterion.XiOrderBridge
 import LeanPool.LiCriterion.Lc.XiZeros
-import LeanPool.LiCriterion.comparator.ChallengeDeps
-import LeanPool.LiCriterion.comparator.Solution
 import LeanPool.LocalComplexGeometry
 import LeanPool.LocalComplexGeometry.Algebra.NoetherianByRemainder
 import LeanPool.LocalComplexGeometry.Analytic.ConstantRank

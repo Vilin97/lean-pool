@@ -3183,7 +3183,7 @@ theorem order_Q_le_lam_of_factorization
     have hr_rpow_pos : 0 < r ^ (lam + ε / 3) :=
       Real.rpow_pos_of_pos hr_pos _
     -- (1+C₀) · 2^{λ+ε/3} · r^{λ+ε/3} ≤ r^{λ+ε/3} · r^{2ε/3}
-    -- ⟺ (1+C₀) · 2^{λ+ε/3} ≤ r^{2ε/3}
+    -- ↔ (1+C₀) · 2^{λ+ε/3} ≤ r^{2ε/3}
     calc (1 + C₀) * (2 ^ (lam + ε / 3) * r ^ (lam + ε / 3))
         = (1 + C₀) * 2 ^ (lam + ε / 3) * r ^ (lam + ε / 3) := by ring
       _ ≤ r ^ (2 * ε / 3) * r ^ (lam + ε / 3) := by

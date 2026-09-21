@@ -87,13 +87,13 @@ lemma xi_ne_zero_at_trivial_points :
 
 In the critical strip 0 < Re(s) < 1:
 - s ≠ 0 and s ≠ 1, so s(s-1) ≠ 0
-- ξ(s) = (1/2) s(s-1) Λ(s), so ξ(s) = 0 ⟺ Λ(s) = 0
+- ξ(s) = (1/2) s(s-1) Λ(s), so ξ(s) = 0 ↔ Λ(s) = 0
 
 And Λ(s) = π^(-s/2) Γ(s/2) ζ(s) where:
 - π^(-s/2) ≠ 0 always (exponential)
 - Γ(s/2) ≠ 0 for Re(s/2) > 0, i.e., Re(s) > 0 (Γ has no zeros, only poles at ≤ 0)
 
-Therefore: ξ(s) = 0 ⟺ ζ(s) = 0 in the critical strip.
+Therefore: ξ(s) = 0 ↔ ζ(s) = 0 in the critical strip.
 -/
 
 /-- In the critical strip, ζ(s) = 0 implies Λ(s) = 0. -/
