@@ -39,7 +39,6 @@ theorem real_sub {n : ℕ} (x y : IntCoord n) : (x - y).real = x.real - y.real :
   ext i
   simp [real]
 
-@[simp]
 theorem real_zsmul {n : ℕ} (c : ℤ) (x : IntCoord n) : (c • x).real = c • x.real := by
   ext i
   simp [real]

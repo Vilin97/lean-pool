@@ -22,6 +22,7 @@ namespace EGZ.FlagDecomposition.Iteration
 variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
     (s : State p d f) {R : ℕ}
 
+/-- The iteration state produced by a normalized face refinement step. -/
 noncomputable abbrev faceState {anchor : s.decomposition.flag.Node}
     {Γ : (s.decomposition.flag.polytope anchor).Face}
     (D : NormalizedFaceStep s.decomposition anchor Γ s.radius R) : State p d f where
@@ -32,6 +33,7 @@ noncomputable abbrev faceState {anchor : s.decomposition.flag.Node}
   reduced := D.isReduced
   bounded := D.bounded
 
+/-- The iteration state produced by a normalized completion step. -/
 noncomputable abbrev completeState {anchor : s.decomposition.flag.Node}
     {g : ℕ → ℕ} {δ : ℝ} {hδ : 0 ≤ δ} {hsmall : (3 : ℝ) ^ (d + 1) * δ < 1}
     (D : NormalizedCompleteStep s.decomposition anchor g s.radius R δ hδ hsmall) : State p d f where

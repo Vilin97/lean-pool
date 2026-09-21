@@ -153,7 +153,9 @@ variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 joins, transitions, and proper points suffices to preserve realized faces;
 neither injectivity nor equal coordinate ranks are required. -/
 structure SubdivisionMap (Φ Ψ : FlagDecomposition p d f) where
+  /-- Supremum-preserving map from refined nodes to original nodes. -/
   node : SupHom Ψ.flag.Node Φ.flag.Node
+  /-- Affine map from each refined polytope to its original-node coordinates. -/
   fibre : (x : Ψ.flag.Node) →
     RealCoord (Ψ.flag.rank x) →ᵃ[ℝ] RealCoord (Φ.flag.rank (node x))
   polytope_mem : ∀ x, Set.MapsTo (fibre x)
@@ -172,7 +174,7 @@ variable {Φ Ψ : FlagDecomposition p d f} (M : SubdivisionMap Φ Ψ)
 /-- To construct a subdivision map it suffices to send local generators to
 old local generators. Convex-combination preservation then gives inclusion
 of the entire proper-point sets. -/
-def of_local_generators
+def ofLocalGenerators
     (node : SupHom Ψ.flag.Node Φ.flag.Node)
     (fibre : (x : Ψ.flag.Node) →
       RealCoord (Ψ.flag.rank x) →ᵃ[ℝ] RealCoord (Φ.flag.rank (node x)))

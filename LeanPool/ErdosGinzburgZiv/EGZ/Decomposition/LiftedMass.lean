@@ -34,7 +34,8 @@ theorem liftedMassOn_eq_natMassOn (hp : Odd p) (x : Φ.flag.Node)
     calc
       (∑ q ∈ Φ.liftedSupport x, if q.real ∈ S then Φ.hat x q else 0) =
           ∑ q ∈ Φ.liftedSupport x, ∑ v,
-            if q.real ∈ S ∧ Φ.representation.map x v = q.mod p then Φ.cumulativeWeight x v else 0 := by
+            if q.real ∈ S ∧ Φ.representation.map x v = q.mod p then
+              Φ.cumulativeWeight x v else 0 := by
         apply Finset.sum_congr rfl
         intro q hq
         have hc : IsCenteredLift p q :=

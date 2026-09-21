@@ -16,6 +16,8 @@ namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
+/-- The stable node map identifying a node of the reduced decomposition with its original
+node. -/
 noncomputable def reducedStableNodeMap (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : (Φ.reduced hp).flag.Node) : StableNodeMap Φ (Φ.reduced hp) x.val x where
   coord := IntegralAffineMap.id _
@@ -30,6 +32,7 @@ namespace PrunedWeights
 
 variable {Φ : FlagDecomposition p d f} (D : Φ.PrunedWeights) (hp : Odd p)
 
+/-- The stable node map from an original node to its rebuilt pruned counterpart. -/
 noncomputable def rebuiltStableNodeMap (x : (D.rebuilt hp).flag.Node) :
     StableNodeMap Φ (D.rebuilt hp) x.val x where
   coord := IntegralAffineMap.id _
@@ -48,6 +51,7 @@ noncomputable def rebuiltStableNodeMap (x : (D.rebuilt hp).flag.Node) :
     rw [hret]
     exact FlagDecompositionRaw.cumulativeWeight_mass_loss_le_real D.weight_le x.val
 
+/-- The stable node map obtained by rebuilding pruned weights and then reducing the result. -/
 noncomputable def cleanedStableNodeMap (x : (D.cleaned hp).flag.Node) :
     StableNodeMap Φ (D.cleaned hp) x.val.val x :=
   (D.rebuiltStableNodeMap hp x.val).comp ((D.rebuilt hp).reducedStableNodeMap hp x)
@@ -62,6 +66,7 @@ variable (Φ : FlagDecomposition p d f)
     (hinj : ∀ x, Function.Injective ((chart Φ C x).modp p))
     (hcenter : ∀ x q, q ∈ (C x).coordinateSupport → IsCenteredLift p q)
 
+/-- The stable node map induced by the chosen change of integral affine coordinates. -/
 noncomputable def stableNodeMap (x : Φ.flag.Node) :
     StableNodeMap Φ (decomposition Φ C hp hinj hcenter) x x where
   coord := chart Φ C x
@@ -79,6 +84,7 @@ namespace FaceRefinement
 variable (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node)
     (selected : FpCoord p d → Prop) (hp : Odd p)
 
+/-- The stable node map from an original node to its upper copy in the face refinement. -/
 noncomputable def upperStableNodeMap (x : Φ.flag.Node) :
     StableNodeMap Φ (decomposition Φ anchor selected hp) x (upper Φ anchor selected hp x) where
   coord := IntegralAffineMap.id _
@@ -98,10 +104,12 @@ namespace LowerTransfer
 
 variable (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node) (hp : Odd p)
 
+/-- The stable node map from the original node underlying a node of the lower transfer. -/
 noncomputable def stableNodeMap (x : (decomposition Φ anchor hp).flag.Node) :
     StableNodeMap Φ (decomposition Φ anchor hp) x.val.val.1 x where
   coord := IntegralAffineMap.id _
-  polytope_mem := fun _ h ↦ (FaceRefinement.subdivisionMap Φ anchor (fun _ ↦ True) hp).polytope_mem x h
+  polytope_mem := fun _ h ↦
+    (FaceRefinement.subdivisionMap Φ anchor (fun _ ↦ True) hp).polytope_mem x h
   cumulative_le := by rw [cumulativeWeight_projection]
   map_eq := fun _ _ ↦ rfl
   mass_loss_le := by rw [cumulativeWeight_projection, FaceRefinement.retainedMass]; simp
@@ -117,6 +125,8 @@ variable (Φ : FlagDecomposition p d f) (e : Φ.flag.Node → ℕ)
     (hmod : ∀ x, Function.Injective ((IntegralAffineMap.ofIntAffineMap (C x).map).modp p))
     (hcenter : ∀ x q, q ∈ (C x).coordinateSupport → IsCenteredLift p q)
 
+/-- The stable node map for augmentation, using the coordinate map that forgets the added
+directions. -/
 noncomputable def stableNodeMap (x : Φ.flag.Node) :
     StableNodeMap Φ (decomposition Φ e ξ hp he C hmod hcenter) x x where
   coord := forget Φ e ξ hp he C x

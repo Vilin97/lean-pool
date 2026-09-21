@@ -72,7 +72,8 @@ theorem sampleWeight_massOn (P : β → Prop) :
       ∑ i, finiteProb (fun x : A i ↦ valid i x ∧ P (value i x)) := by
   classical
   simp only [sampleWeight]
-  have heq (v : β) : (if P v then ∑ i, finiteProb (fun x : A i ↦ valid i x ∧ value i x = v) else 0) =
+  have heq (v : β) :
+      (if P v then ∑ i, finiteProb (fun x : A i ↦ valid i x ∧ value i x = v) else 0) =
       ∑ i, if P v then finiteProb (fun x : A i ↦ valid i x ∧ value i x = v) else 0 := by
     by_cases hv : P v <;> simp [hv]
   simp_rw [heq]
@@ -159,6 +160,7 @@ theorem sampleWeight_mass_pos : 0 < ∑ v, sampleWeight A value valid v := by
   have : 0 < (Fintype.card I : ℝ) * (1 - η / 2) := mul_pos hI (by linarith)
   linarith
 
+omit hηone in
 open Classical in
 theorem sampleWeight_centrallyThick
     (hout : ∀ ξ : FpCoord p d →ₗ[ZMod p] ZMod p, ξ ≠ 0 →

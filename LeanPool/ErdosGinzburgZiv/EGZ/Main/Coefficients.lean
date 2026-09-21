@@ -44,7 +44,9 @@ def RoundingBound (d K : ℕ) (C γ η μ : ℝ) (N : ℕ) : Prop :=
 /-- The radius-dependent parameters used before choosing the flag lemma's
 driving function. Radius zero receives harmless positive default data. -/
 structure CoefficientParameters (d : ℕ) (δ ζ : ℝ) where
+  /-- The positive retained fraction used in the rounding bound at each radius. -/
   fraction : ℕ → ℝ
+  /-- The size threshold required for the rounding bound at each radius. -/
   threshold : ℕ → ℕ
   fraction_pos : ∀ K, 0 < fraction K
   bound : ∀ K, 1 ≤ K → RoundingBound d K ((hollowBound d : ℝ) + 2)
@@ -69,6 +71,7 @@ theorem exists_coefficientParameters (hBalanced : BalancedCombinationLemma)
   choose μ N hμ hbound using hall
   exact ⟨⟨μ, N, hμ, hbound⟩⟩
 
+/-- Choose radius-dependent rounding parameters from the balanced combination lemma. -/
 noncomputable def coefficientParameters (hBalanced : BalancedCombinationLemma)
     (d : ℕ) {δ ζ : ℝ} (hδ : 0 < δ) (hζ : 0 < ζ) (hζone : ζ ≤ 1) :
     CoefficientParameters d δ ζ :=

@@ -64,9 +64,11 @@ theorem rebuildData (hp : Odd p) :
     (D.mem_support _ _).mp (D.transition_mem_support h ((D.mem_support _ _).mpr hz))
   hat_exists_local x z hz := D.exists_localLift_of_hat_ne_zero hp x z hz
 
+/-- Rebuild the flag decomposition from the pruned weights. -/
 noncomputable abbrev rebuilt (hp : Odd p) : FlagDecomposition p d f :=
   (D.rebuildData hp).decomposition
 
+/-- Reduced decomposition obtained after rebuilding the pruned weights. -/
 noncomputable abbrev cleaned (hp : Odd p) : FlagDecomposition p d f :=
   (D.rebuilt hp).reduced hp
 
@@ -83,17 +85,14 @@ theorem rebuilt_polytope_subset (x : (D.rebuilt hp).flag.Node) :
 theorem cleaned_localWeight (x : (D.cleaned hp).flag.Node) :
     (D.cleaned hp).localWeight x = D.weight x.1.1 := rfl
 
-@[simp]
 theorem cleaned_cumulativeWeight (x : (D.cleaned hp).flag.Node) :
     (D.cleaned hp).cumulativeWeight x = D.cumulative x.1.1 := by
   rw [reduced_cumulativeWeight, (D.rebuildData hp).decomposition_cumulativeWeight]
 
-@[simp]
 theorem cleaned_hat (x : (D.cleaned hp).flag.Node) :
     (D.cleaned hp).hat x = D.hat x.1.1 := by
   rw [reduced_hat, (D.rebuildData hp).decomposition_hat]
 
-@[simp]
 theorem cleaned_retainedMass : (D.cleaned hp).retainedMass =
     natMass (FlagDecompositionRaw.retainedWeight D.weight) := by
   rw [reduced_retainedMass, retainedMass,
@@ -116,8 +115,9 @@ theorem cleaned_isKBounded {K : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K) :
     (D.cleaned hp).IsKBounded (fun x ↦ K x.1.1) :=
   fun x z hz ↦ hK x.1.1 z (D.cleaned_polytope_subset hp x hz)
 
+/-- Subdivision map from the rebuilt decomposition to the original one. -/
 noncomputable def rebuiltSubdivisionMap : SubdivisionMap Φ (D.rebuilt hp) :=
-  SubdivisionMap.of_local_generators
+  SubdivisionMap.ofLocalGenerators
     { toFun := Subtype.val, map_sup' := fun _ _ ↦ rfl }
     (fun _ ↦ AffineMap.id ℝ _)
     (fun x ↦ D.rebuilt_polytope_subset hp x)
@@ -128,6 +128,7 @@ noncomputable def rebuiltSubdivisionMap : SubdivisionMap Φ (D.rebuilt hp) :=
       change D.localLift q.base.1 z ≠ 0 at hmass
       exact ne_of_gt ((Nat.pos_of_ne_zero hmass).trans_le (D.localLift_le_old _ _)))
 
+/-- Subdivision map from the cleaned decomposition to the original one. -/
 noncomputable def cleanedSubdivisionMap : SubdivisionMap Φ (D.cleaned hp) :=
   (D.rebuiltSubdivisionMap hp).comp ((D.rebuilt hp).reducedSubdivisionMap hp)
 

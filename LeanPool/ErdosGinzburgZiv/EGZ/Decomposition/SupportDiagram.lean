@@ -23,13 +23,17 @@ universe u
 
 /-- The discrete data needed to construct a flag of finite support hulls. -/
 structure LatticeSupportDiagram where
+  /-- The finite ordered indexing type of the lattice support diagram. -/
   Node : Type u
   [nodeFintype : Fintype Node]
   [nodeSemilatticeSup : SemilatticeSup Node]
   [nodeOrderTop : OrderTop Node]
+  /-- The number of integral coordinates attached to each node. -/
   rank : Node → ℕ
+  /-- The nonempty finite lattice support attached to each node. -/
   support : (x : Node) → Finset (IntCoord (rank x))
   support_nonempty : ∀ x, (support x).Nonempty
+  /-- The integral affine map transporting coordinates along an order relation between nodes. -/
   transition : {x y : Node} → x ≤ y → IntegralAffineMap (rank x) (rank y)
   transition_support : ∀ {x y : Node} (h : x ≤ y) {q},
     q ∈ support x → (transition h).integer q ∈ support y
@@ -185,7 +189,6 @@ theorem chart_image_polytope (x : D.Node) :
     change ((C x).map ((C x).coordinates z)).real = z.real
     rw [(C x).map_coordinates_of_mem hz]
 
-@[simp]
 theorem chart_mem_polytope_iff (x : D.Node) (q : RealCoord (C x).rank) :
     (D.chart C x).real q ∈ (D.polytope x).carrier ↔ q ∈ ((D.rechart C).polytope x).carrier := by
   rw [← D.chart_image_polytope C x]

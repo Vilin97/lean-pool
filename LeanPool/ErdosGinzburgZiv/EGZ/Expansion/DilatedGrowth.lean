@@ -40,7 +40,7 @@ theorem exists_boundary_of_dilated_characters {p d K m : ℕ} [NeZero p]
   let w' : FpCoord p d × Fin m → ℝ := fun i ↦ w i.1
   let a' : FpCoord p d × Fin m → FpCoord p d := fun i ↦ (i.2 : ℕ) • i.1
   have hmass : (∑ i, w' i) = (m : ℝ) * ∑ v, w v := by
-    simp [w', Fintype.sum_prod_type, Finset.sum_const, smul_eq_mul, Finset.mul_sum]
+    simp [w', Fintype.sum_prod_type, Finset.sum_const, Finset.mul_sum]
   have hgap (χ : AddChar (FpCoord p d) ℂ) (hχ : χ ≠ 0) :
       (∑ i, w' i * (χ (-a' i)).re) ≤ (1 - δ / 2) * ∑ i, w' i := by
     let ψ := -χ

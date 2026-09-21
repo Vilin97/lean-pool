@@ -22,9 +22,10 @@ namespace EGZ.BalancedCombination
 
 /-- A common denominator for any finite rational family, expressed using
 real casts for later quantitative estimates. -/
-theorem exists_common_denominator {I : Type*} [Fintype I] (β : I → ℚ) :
+theorem exists_common_denominator {I : Type*} [Finite I] (β : I → ℚ) :
     ∃ m : ℕ, 0 < m ∧ ∃ b : I → ℤ,
       ∀ i, (b i : ℝ) = (m : ℝ) * (β i : ℝ) := by
+  let := Fintype.ofFinite I
   classical
   let m : ℕ := ∏ i, (β i).den
   let b : I → ℤ := fun i ↦ (β i).num *

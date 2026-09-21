@@ -38,8 +38,11 @@ theorem faceAtNode_rfl (Φ : FlagDecomposition p d f) {x : Φ.flag.Node}
 
 namespace Iteration
 
+/-- A minimal flag decomposition equipped with a positive radius for the iteration. -/
 structure State (p d : ℕ) [NeZero p] (f : FpCoord p d → ℕ) where
+  /-- The flag decomposition at the current stage. -/
   decomposition : FlagDecomposition p d f
+  /-- The positive radius controlling the current decomposition. -/
   radius : ℕ
   radius_pos : 1 ≤ radius
   minimal : decomposition.IsMinimal
@@ -50,13 +53,16 @@ namespace State
 
 variable (s : State p d f)
 
+/-- Every node gap exceeds the prescribed scale relative to the total input mass. -/
 def GapCondition (δ : ℝ) : Prop :=
   ∀ x, δ ^ 3 * (s.radius : ℝ)⁻¹ ^ d * (natMass f : ℝ) ≤
     (s.decomposition.gap x : ℝ)
 
+/-- The state satisfies the gap bound and the required completeness condition. -/
 def Finished (ε δ : ℝ) (g : ℕ → ℕ) : Prop :=
   s.GapCondition δ ∧ s.decomposition.IsComplete (fun _ ↦ g s.radius) ε δ
 
+/-- The three possible reasons for refining a state: a gap, a face, or an incomplete node. -/
 inductive Event
   | gap
   | face (x : s.decomposition.flag.Node) (Γ : (s.decomposition.flag.polytope x).Face)
@@ -66,17 +72,20 @@ namespace Event
 
 variable {s}
 
+/-- The chosen event witnesses a failure of the corresponding termination condition. -/
 def Valid (ε δ : ℝ) (g : ℕ → ℕ) : s.Event → Prop
   | .gap => ¬ s.GapCondition δ
   | .face x Γ => s.decomposition.IsLargeFace ε x Γ ∧ ¬ s.decomposition.IsRealizedFace x Γ
   | .complete x => s.decomposition.IsLargeElement ε x ∧
       ¬ s.decomposition.IsCompleteElement x (g s.radius) δ
 
+/-- The largest level required to remain stable during this event. -/
 noncomputable def cutoff : s.Event → ℕ
   | .gap => (d + 1) ^ 2
   | .face x _ => s.decomposition.level x
   | .complete x => s.decomposition.level x
 
+/-- Encode the event type and its level as a natural number for the stopping argument. -/
 noncomputable def color : s.Event → ℕ
   | .gap => 2 * (d + 1) ^ 2
   | .face x _ => 2 * s.decomposition.level x + 1
@@ -148,10 +157,13 @@ def Resolves (S : SubdivisionMap s.decomposition t.decomposition) (δ : ℝ) : s
 normalized operation. Stable mass transport is required only below the
 event's cutoff. -/
 structure Progress (s t : State p d f) (ε δ : ℝ) (g : ℕ → ℕ) where
+  /-- The event triggering the transition between the two states. -/
   event : s.Event
   valid : event.Valid ε δ g
+  /-- The subdivision map relating the new decomposition to the preceding one. -/
   subdivision : SubdivisionMap s.decomposition t.decomposition
   level_parent : ∀ y, s.decomposition.level (subdivision.node y) ≤ t.decomposition.level y
+  /-- Stable node maps for all new nodes at or below the event cutoff. -/
   stable : ∀ y, t.decomposition.level y ≤ event.cutoff →
     StableNodeMap s.decomposition t.decomposition (subdivision.node y) y
   stable_real : ∀ y h, (stable y h).coord.real = subdivision.fibre y

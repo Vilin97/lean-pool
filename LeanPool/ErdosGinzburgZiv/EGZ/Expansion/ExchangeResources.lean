@@ -40,15 +40,20 @@ namespace Exchange
 variable {point : A → FpCoord p (r + t)} {B : ℕ}
 
 open Classical in
+/-- The finite set of atoms on the left side of an exchange. -/
 def left (E : Exchange point B) : Finset A := E.val.1
 open Classical in
+/-- The finite set of atoms on the right side of an exchange. -/
 def right (E : Exchange point B) : Finset A := E.val.2
 open Classical in
+/-- The atoms used by either side of an exchange. -/
 noncomputable def support (E : Exchange point B) : Finset A := E.left ∪ E.right
 open Classical in
+/-- The difference between the vector sums of the left and right sides of an exchange. -/
 noncomputable def difference (E : Exchange point B) : FpCoord p (r + t) :=
   (∑ x ∈ E.left, point x) - ∑ x ∈ E.right, point x
 open Classical in
+/-- The final coordinate block of the exchange difference. -/
 noncomputable def shift (E : Exchange point B) : FpCoord p t := Coord.last r t E.difference
 
 omit [Fintype A] in
@@ -66,17 +71,20 @@ omit [Fintype A] in
 open Classical in
 theorem size_le (E : Exchange point B) : E.left.card + E.right.card ≤ B := E.property.2.2.2
 
+omit [Fintype A] in
 open Classical in
 theorem support_card_le (E : Exchange point B) : E.support.card ≤ B :=
   (Finset.card_union_le _ _).trans E.size_le
 
+omit [Fintype A] in
 open Classical in
 theorem first_difference (E : Exchange point B) : Coord.first r t E.difference = 0 := by
   simp only [difference, map_sub, map_sum, E.first_sum_eq, sub_self]
 
 omit [Fintype A] in
 open Classical in
-theorem shift_eq_zero_of_support_eq_empty (E : Exchange point B) (h : E.support = ∅) : E.shift = 0 := by
+theorem shift_eq_zero_of_support_eq_empty (E : Exchange point B) (h : E.support = ∅) :
+    E.shift = 0 := by
   have hh : E.left = ∅ ∧ E.right = ∅ := Finset.union_eq_empty.mp h
   simp [shift, difference, hh.1, hh.2]
 
@@ -117,10 +125,12 @@ variable {S : Type*} [Fintype S] [DecidableEq S]
   (atom : P.Position → A) (hinj : Function.Injective atom)
 
 open Classical in
+/-- The atoms chosen at the positive positions of the exchange pattern. -/
 noncomputable def positiveAtoms : Finset A :=
   Finset.univ.image (fun i : Σ q, Fin (P.positive q) ↦ atom (Sum.inl i))
 
 open Classical in
+/-- The atoms chosen at the negative positions of the exchange pattern. -/
 noncomputable def negativeAtoms : Finset A :=
   Finset.univ.image (fun i : Σ q, Fin (P.negative q) ↦ atom (Sum.inr i))
 
@@ -188,6 +198,7 @@ noncomputable def ofPattern (label : S → FpCoord p r)
   · rw [positiveAtoms_card P atom hinj, negativeAtoms_card P atom hinj]
     exact hsize
 
+omit [Fintype A] [DecidableEq S] in
 open Classical in
 theorem ofPattern_shift (label : S → FpCoord p r)
     (hatom : ∀ i, Coord.first r t (point (atom i)) = label (P.label i))
@@ -201,6 +212,7 @@ theorem ofPattern_shift (label : S → FpCoord p r)
   change _ = ∑ i : (Σ q, Fin (P.positive q)) ⊕ (Σ q, Fin (P.negative q)), _
   simp [Fintype.sum_sum_type, ExchangePattern.sign, sub_eq_add_neg, Finset.sum_neg_distrib]
 
+omit [Fintype A] [DecidableEq S] in
 open Classical in
 theorem ofPattern_support_avoids (label : S → FpCoord p r)
     (hatom : ∀ i, Coord.first r t (point (atom i)) = label (P.label i))
@@ -223,21 +235,25 @@ section Relation
 
 variable {S : Type*} [Fintype S] [DecidableEq S]
 
+omit [DecidableEq S] in
 open Classical in
 theorem relation_mass_eq (b : S → ℤ) (hb : ∑ q, b q = 0) :
     (∑ q, (ExchangePattern.ofRelation b).positive q) =
       ∑ q, (ExchangePattern.ofRelation b).negative q := by
+  classical
   have hh := ExchangePattern.ofRelation_sum b (fun _ ↦ (1 : ℤ))
   rw [ExchangePattern.sum_sign_smul (ExchangePattern.ofRelation b) (fun _ ↦ (1 : ℤ))] at hh
   simp only [nsmul_eq_mul, mul_one, zsmul_eq_mul, Int.cast_id, hb] at hh
   have heq := sub_eq_zero.mp hh
   exact_mod_cast heq
 
+omit [DecidableEq S] in
 open Classical in
 theorem relation_label_eq {G : Type*} [AddCommGroup G]
     (b : S → ℤ) (label : S → G) (hb : ∑ q, b q • label q = 0) :
     (∑ q, (ExchangePattern.ofRelation b).positive q • label q) =
       ∑ q, (ExchangePattern.ofRelation b).negative q • label q := by
+  classical
   have hh := ExchangePattern.ofRelation_sum b label
   rw [ExchangePattern.sum_sign_smul, hb] at hh
   exact sub_eq_zero.mp hh
@@ -266,8 +282,10 @@ noncomputable def ofRelation (point : A → FpCoord p (r + t))
     (relation_label_eq b _ (relation_mod_sum b label hlabel))
     ((ExchangePattern.ofRelation_size b).trans_le hsize)
 
+omit [DecidableEq S] [Fintype A] in
+omit [Fintype A] [DecidableEq S] in
 open Classical in
-theorem ofRelation_shift (point : A → FpCoord p (r + t))
+theorem ofRelation_shift [Finite A] (point : A → FpCoord p (r + t))
     (b : S → ℤ) (label : S → IntCoord r)
     (atom : (ExchangePattern.ofRelation b).Position → A)
     (hinj : Function.Injective atom)
@@ -277,11 +295,16 @@ theorem ofRelation_shift (point : A → FpCoord p (r + t))
     {B : ℕ} (hsize : (∑ q, (b q).natAbs) ≤ B) :
     (ofRelation point b label atom hinj hb hlabel hatom hsize).shift =
       ∑ i : (ExchangePattern.ofRelation b).Position,
-        (ExchangePattern.ofRelation b).sign i • Coord.last r t (point (atom i)) :=
-  ofPattern_shift _ _ _ _ _ _ _ _ _
+        (ExchangePattern.ofRelation b).sign i • Coord.last r t (point (atom i)) := by
+  classical
+  let := Fintype.ofFinite A
+  exact
+    ofPattern_shift _ _ _ _ _ _ _ _ _
 
+omit [DecidableEq S] [Fintype A] in
+omit [Fintype A] [DecidableEq S] in
 open Classical in
-theorem ofRelation_support_avoids (point : A → FpCoord p (r + t))
+theorem ofRelation_support_avoids [Finite A] (point : A → FpCoord p (r + t))
     (b : S → ℤ) (label : S → IntCoord r)
     (atom : (ExchangePattern.ofRelation b).Position → A)
     (hinj : Function.Injective atom)
@@ -290,8 +313,11 @@ theorem ofRelation_support_avoids (point : A → FpCoord p (r + t))
       (label ((ExchangePattern.ofRelation b).label i)).mod p)
     {B : ℕ} (hsize : (∑ q, (b q).natAbs) ≤ B)
     (U : Finset A) (hU : ∀ i, atom i ∉ U) :
-    Disjoint (ofRelation point b label atom hinj hb hlabel hatom hsize).support U :=
-  ofPattern_support_avoids _ _ _ _ _ _ _ _ _ U hU
+    Disjoint (ofRelation point b label atom hinj hb hlabel hatom hsize).support U := by
+  classical
+  let := Fintype.ofFinite A
+  exact
+    ofPattern_support_avoids _ _ _ _ _ _ _ _ _ U hU
 
 end Relation
 

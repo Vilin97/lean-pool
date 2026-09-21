@@ -57,6 +57,7 @@ theorem binarySums_insert (shift : E → G) (F : Finset E) {e : E} (he : e ∉ F
     rw [hx]
     abel
 
+omit [DecidableEq E] in
 /-- Subset sums can be expressed as Boolean choices indexed by the selected
 family, the form used by the exchange-completion argument. -/
 theorem exists_bool_choice_of_mem_binarySums (shift : E → G) (F : Finset E)
@@ -80,7 +81,8 @@ def usedAtoms (support : E → Finset A) (F : Finset E) : Finset A := F.biUnion 
 omit [DecidableEq E] in
 theorem card_usedAtoms_le (support : E → Finset A) (F : Finset E) {B : ℕ}
     (hB : ∀ e, (support e).card ≤ B) : (usedAtoms support F).card ≤ B * F.card := by
-  simpa only [usedAtoms, Nat.mul_comm] using Finset.card_biUnion_le_card_mul F support B (fun e _ ↦ hB e)
+  simpa only [usedAtoms, Nat.mul_comm] using
+    Finset.card_biUnion_le_card_mul F support B (fun e _ ↦ hB e)
 
 @[simp] theorem usedAtoms_insert (support : E → Finset A) (F : Finset E) (e : E) :
     usedAtoms support (insert e F) = support e ∪ usedAtoms support F := by
@@ -189,7 +191,8 @@ theorem polynomial_growth_step {d : ℕ} (hd : 0 < d) {x : ℝ} (hx : 1 ≤ x) :
     push_cast
     field_simp
   calc
-    (x + H⁻¹) ^ d ≤ x ^ d + |(x + H⁻¹) ^ d - x ^ d| := by linarith [le_abs_self ((x + H⁻¹) ^ d - x ^ d)]
+    (x + H⁻¹) ^ d ≤ x ^ d + |(x + H⁻¹) ^ d - x ^ d| := by
+      linarith [le_abs_self ((x + H⁻¹) ^ d - x ^ d)]
     _ ≤ x ^ d + H⁻¹ * d * (x + H⁻¹) ^ (d - 1) := add_le_add_right hdiff _
     _ ≤ x ^ d + H⁻¹ * d * (2 * x) ^ (d - 1) := by gcongr
     _ ≤ x ^ d + H⁻¹ * d * 2 ^ d * x ^ (d - 1) := by
@@ -206,6 +209,8 @@ variable {E A : Type*} [DecidableEq E] [DecidableEq A]
   {p d B budget : ℕ} [NeZero p] [Fact p.Prime]
   (support : E → Finset A) (shift : E → FpCoord p d)
 
+omit [DecidableEq E] in
+omit [NeZero p] in
 theorem exists_polynomial_growth (hd : 0 < d)
     (hB : ∀ e, (support e).card ≤ B)
     (hzero : ∀ e, support e = ∅ → shift e = 0)
@@ -240,11 +245,15 @@ theorem exists_polynomial_growth (hd : 0 < d)
         Real.rpow_inv_natCast_pow (Nat.cast_nonneg _) (by omega)
       have hone : (1 : ℝ) ≤ Y.card := by
         exact_mod_cast Finset.card_pos.mpr ⟨0, zero_mem_binarySums shift F⟩
-      have hx : 1 ≤ x := (pow_le_pow_iff_left₀ (n := d) (by norm_num) hx0 (by omega)).mp (by simpa [hxpow] using hone)
+      have hx : 1 ≤ x :=
+        (pow_le_pow_iff_left₀ (n := d) (by norm_num) hx0 (by omega)).mp
+          (by simpa [hxpow] using hone)
       have hix : 1 + (i : ℝ) / H ≤ x :=
-        (pow_le_pow_iff_left₀ (n := d) (by positivity) hx0 (by omega)).mp (by simpa only [target, hxpow] using hsize)
+        (pow_le_pow_iff_left₀ (n := d) (by positivity) hx0 (by omega)).mp
+          (by simpa only [target, hxpow] using hsize)
       have hxnext : x < 1 + ((i + 1 : ℕ) : ℝ) / H :=
-        (pow_lt_pow_iff_left₀ (n := d) hx0 (by positivity) (by omega)).mp (by simpa only [target, hxpow] using hnext)
+        (pow_lt_pow_iff_left₀ (n := d) hx0 (by positivity) (by omega)).mp
+          (by simpa only [target, hxpow] using hnext)
       have hnextN : 1 + ((i + 1 : ℕ) : ℝ) / H ≤ 1 + (N : ℝ) / H := by
         apply add_le_add_right
         exact div_le_div_of_nonneg_right (by exact_mod_cast hi) hH.le
@@ -278,6 +287,7 @@ theorem exists_polynomial_growth (hd : 0 < d)
       simpa only [hxpow, add_comm] using hh)
   exact ⟨F, hF, by simpa using hcard, hsize.resolve_left id⟩
 
+omit [DecidableEq E] in
 theorem exists_multiplicative_growth
     (hB : ∀ e, (support e).card ≤ B)
     (hzero : ∀ e, support e = ∅ → shift e = 0)
@@ -306,7 +316,9 @@ theorem exists_multiplicative_growth
       let Y := binarySums shift F
       obtain ⟨e, heU, he⟩ := hgrowth (U ∪ usedAtoms support F) hused Y (le_of_not_gt hstop)
       have hseedY : seed ≤ (Y.card : ℝ) :=
-        (show seed ≤ target i by dsimp [target]; nlinarith [div_nonneg (mul_nonneg (Nat.cast_nonneg i) ha.le) hp.le]).trans hsize
+        (show seed ≤ target i by
+          dsimp [target]
+          nlinarith [div_nonneg (mul_nonneg (Nat.cast_nonneg i) ha.le) hp.le]).trans hsize
       have hbdpos : 0 < boundary Y (shift e) := by
         have hpos : 0 < a * (Y.card : ℝ) := mul_pos ha (hseed.trans_le hseedY)
         by_contra hn
@@ -377,7 +389,8 @@ theorem add_mem_binarySums_union (support : E → Finset A) (shift : E → G)
     exact disjoint_self.mp (hdis.mono
       (Finset.subset_biUnion_of_mem support (hLF heL))
       (Finset.subset_biUnion_of_mem support (hMJ heM)))
-  refine Finset.mem_image.mpr ⟨L ∪ M, Finset.mem_powerset.mpr (Finset.union_subset_union hLF hMJ), ?_⟩
+  refine Finset.mem_image.mpr
+    ⟨L ∪ M, Finset.mem_powerset.mpr (Finset.union_subset_union hLF hMJ), ?_⟩
   have h := Finset.sum_union_inter (s₁ := L) (s₂ := M) (f := shift)
   simpa only [hsum, add_zero] using h
 
@@ -413,6 +426,7 @@ variable {E A : Type*} [DecidableEq E] [DecidableEq A]
   {p d B budget : ℕ} [NeZero p] [Fact p.Prime]
   (support : E → Finset A) (shift : E → FpCoord p d)
 
+omit [DecidableEq E] in
 theorem exists_half_binarySums (hd : 0 < d)
     (hB : ∀ e, (support e).card ≤ B)
     (hzero : ∀ e, support e = ∅ → shift e = 0)
@@ -429,14 +443,17 @@ theorem exists_half_binarySums (hd : 0 < d)
       2 * ((1 + n / (growthDenominator d : ℝ)) ^ d * (1 + m * a / p))) :
     ∃ F : Finset E, Admissible support U F ∧ F.card ≤ n + m ∧
       p ^ d < 2 * (binarySums shift F).card := by
+  classical
   obtain ⟨F₀, hF₀, hcard₀, hsize₀⟩ := exists_polynomial_growth support shift hd hB hzero hbasis U n
     ((Nat.add_le_add_left (Nat.mul_le_mul_left B (Nat.le_add_right n m)) _).trans hbudget) hsmall
   have hseed : 0 < (1 + n / (growthDenominator d : ℝ)) ^ d := by positivity
   obtain ⟨F, _, hF, hcard, hsize⟩ := exists_multiplicative_growth support shift hB hzero ha hgrowth
     U F₀ hF₀ hseed hsize₀ m
-    ((Nat.add_le_add_left (Nat.mul_le_mul_left B (Nat.add_le_add_right hcard₀ m)) _).trans hbudget) hlarge
+    ((Nat.add_le_add_left (Nat.mul_le_mul_left B (Nat.add_le_add_right hcard₀ m)) _).trans
+      hbudget) hlarge
   exact ⟨F, hF, hcard.trans (Nat.add_le_add_right hcard₀ m), hsize⟩
 
+omit [DecidableEq E] in
 /-- Explicit finite criterion for complete binary-sum coverage using
 pairwise disjoint exchange supports. -/
 theorem exists_binarySums_cover_finite (hd : 0 < d)
@@ -455,15 +472,18 @@ theorem exists_binarySums_cover_finite (hd : 0 < d)
       2 * ((1 + n / (growthDenominator d : ℝ)) ^ d * (1 + m * a / p))) :
     ∃ F : Finset E, Admissible support ∅ F ∧ F.card ≤ 2 * (n + m) ∧
       (usedAtoms support F).card ≤ budget ∧ binarySums shift F = Finset.univ := by
+  classical
   have hbudget₁ : (∅ : Finset A).card + B * (n + m) ≤ budget := by
     simp only [Finset.card_empty, zero_add]
     exact (Nat.mul_le_mul_left B (by omega)).trans hbudget
-  obtain ⟨F, hF, hcardF, hsizeF⟩ := exists_half_binarySums support shift hd hB hzero hbasis ha hgrowth
+  obtain ⟨F, hF, hcardF, hsizeF⟩ :=
+    exists_half_binarySums support shift hd hB hzero hbasis ha hgrowth
     ∅ n m hbudget₁ hsmall hlarge
   have hbudget₂ : (usedAtoms support F).card + B * (n + m) ≤ budget := by
     have hh := (card_usedAtoms_le support F hB).trans (Nat.mul_le_mul_left B hcardF)
     nlinarith [hbudget]
-  obtain ⟨J, hJ, hcardJ, hsizeJ⟩ := exists_half_binarySums support shift hd hB hzero hbasis ha hgrowth
+  obtain ⟨J, hJ, hcardJ, hsizeJ⟩ :=
+    exists_half_binarySums support shift hd hB hzero hbasis ha hgrowth
     (usedAtoms support F) n m hbudget₂ hsmall hlarge
   have hJ' : Admissible support (∅ ∪ usedAtoms support F) J := by simpa using hJ
   have hcard : (F ∪ J).card ≤ 2 * (n + m) :=

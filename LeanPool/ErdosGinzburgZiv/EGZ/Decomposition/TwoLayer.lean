@@ -92,12 +92,14 @@ def lower (anchor : α) (a : α) (ha : a ≤ anchor) : Node anchor := ⟨(a, 0),
   simp
 
 open Classical in
+/-- The order embedding of the original poset into the upper layer. -/
 def upperEmbedding (anchor : α) : α ↪o Node anchor where
   toFun := upper anchor
   inj' _ _ h := congrArg (projection anchor) h
   map_rel_iff' := upper_le_upper anchor _ _
 
 open Classical in
+/-- The order embedding of the principal lower set of the anchor into the lower layer. -/
 def lowerEmbedding (anchor : α) : {a : α // a ≤ anchor} ↪o Node anchor where
   toFun a := lower anchor a.1 a.2
   inj' _ _ h := Subtype.ext (congrArg (projection anchor) h)

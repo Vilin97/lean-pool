@@ -47,10 +47,12 @@ paper's final passage from a face of `working` to the minimal containing face
 of `P`. -/
 structure SupportHullFaceFlagAdapter {d : ℕ} (P : RationalPolytope d)
     (w : RealCoord d → NNReal) where
+  /-- Rational polytope given by the convex hull of the weighted support. -/
   working : RationalPolytope d
   working_carrier_eq :
     working.carrier = convexHull ℝ (Function.support w)
   working_subset_original : working.carrier ⊆ P.carrier
+  /-- Face-flag model of the working support polytope. -/
   model : FaceFlagModel working
   laws : FaceFlagCombinationLaws model
   supportLift_integral : ∀ x (_hx : x ∈ Function.support w)
@@ -59,6 +61,7 @@ structure SupportHullFaceFlagAdapter {d : ℕ} (P : RationalPolytope d)
   integralPhysical_rational : ∀ (q : model.flag.Point)
       (hq : q ∈ model.proper),
     q.IsIntegral → IsRational (model.physical q hq)
+  /-- Face of the original polytope assigned to each proper flag point. -/
   outputFace : {q : model.flag.Point // q ∈ model.proper} → P.Face
   physical_mem_output_relInterior : ∀
       (q : {q : model.flag.Point // q ∈ model.proper}),
@@ -68,6 +71,7 @@ structure SupportHullFaceFlagAdapter {d : ℕ} (P : RationalPolytope d)
     q.1.IsIntegral →
       model.physical q.1 q.2 ∈
         affineIntSpan (Function.support w ∩ (outputFace q).carrier)
+  /-- Lift a physical affine functional to a linear function at the top flag node. -/
   topFunctional : (RealCoord d →ᵃ[ℝ] ℝ) → model.flag.LinearFunction
   topFunctional_base : ∀ xi, (topFunctional xi).base = ⊤
   topFunctional_eval : ∀ xi
@@ -426,6 +430,7 @@ the global hollow-polytope geometry and the construction of the canonical
 support-hull face flag from the hypotheses of the theorem. -/
 structure TheoremOneTwelveSetup (d : ℕ) where
   hollowGeometry : HollowPolytopeGeometry d
+  /-- Construct a support-hull face-flag adapter for each admissible weighted polytope. -/
   supportHullFaceFlag : ∀ (P : RationalPolytope d)
       (w : RealCoord d → NNReal),
     (Function.support w).Finite →

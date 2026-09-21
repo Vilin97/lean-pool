@@ -86,7 +86,9 @@ map on an affine subspace of this finite-dimensional space extends to the
 ambient space, while this representation avoids dependent subtype maps in
 all fibre sums below. -/
 structure FpRepresentation (p d : ℕ) (F : ConvexFlag) where
+  /-- Affine subspace over the finite field represented at each flag node. -/
   space : F.Node → AffineSubspace (ZMod p) (FpCoord p d)
+  /-- Affine coordinate map for each represented flag node. -/
   map : (x : F.Node) → FpCoord p d →ᵃ[ZMod p] FpCoord p (F.rank x)
   space_mono : ∀ {x y : F.Node}, x ≤ y → space x ≤ space y
   map_surjective : ∀ x, Set.SurjOn (map x) (space x : Set (FpCoord p d)) Set.univ
@@ -201,11 +203,15 @@ mass and gap definitions computationally finite, the accompanying fields
 record the support/polytope invariant and rule out inactive nodes with empty
 cumulative support. -/
 structure FlagDecomposition (p d : ℕ) [NeZero p] (f : FpCoord p d → ℕ) where
+  /-- Convex flag supporting the decomposition. -/
   flag : ConvexFlag
+  /-- Finite-field representation of the decomposition flag. -/
   representation : FpRepresentation p d flag
+  /-- Natural-valued weight assigned locally at each flag node. -/
   localWeight : flag.Node → FpCoord p d → ℕ
   local_supported : ∀ x v, localWeight x v ≠ 0 → v ∈ representation.space x
   retained_le : ∀ v, FlagDecompositionRaw.retainedWeight localWeight v ≤ f v
+  /-- Finite integral support of the lifted weight at each node. -/
   liftedSupport : (x : flag.Node) → Finset (IntCoord (flag.rank x))
   liftedSupport_spec : ∀ x q,
     q ∈ liftedSupport x ↔ FlagDecompositionRaw.hat representation localWeight x q ≠ 0

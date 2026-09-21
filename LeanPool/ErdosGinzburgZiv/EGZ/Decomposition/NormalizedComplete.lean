@@ -24,9 +24,11 @@ variable {p d : ℕ} [Fact p.Prime] {f : FpCoord p d → ℕ}
     (hmod : ∀ x, Function.Injective ((IntegralAffineMap.ofIntAffineMap (C x).map).modp p))
     (hcenter : ∀ x q, q ∈ (C x).coordinateSupport → IsCenteredLift p q)
 
+/-- The completed refinement after recharting and reduction. -/
 noncomputable abbrev normalized : FlagDecomposition p d f :=
   (D.refined hp hδ hsmall C hmod hcenter).reduced hp
 
+/-- The distinguished complete node retained in the normalized decomposition. -/
 noncomputable abbrev normalizedCompleteNode :
     (D.normalized hp hδ hsmall C hmod hcenter).flag.Node :=
   ⟨D.completeNode hp hδ hsmall C hmod hcenter,
@@ -39,7 +41,6 @@ theorem normalized_isMinimal : (D.normalized hp hδ hsmall C hmod hcenter).IsMin
 theorem normalized_isReduced : (D.normalized hp hδ hsmall C hmod hcenter).IsReduced :=
   (D.refined hp hδ hsmall C hmod hcenter).reduced_isReduced hp
 
-@[simp]
 theorem normalized_retainedMass :
     (D.normalized hp hδ hsmall C hmod hcenter).retainedMass =
       (D.refined hp hδ hsmall C hmod hcenter).retainedMass :=
@@ -84,6 +85,7 @@ theorem normalized_node_ne_upperAnchor
   exact D.refined_upperAnchor_not_isReducedElement hp hδ hsmall C hmod hcenter
     (heq ▸ x.property)
 
+/-- The subdivision map from the original decomposition to its normalized completion. -/
 noncomputable def normalizedSubdivisionMap :
     SubdivisionMap Φ (D.normalized hp hδ hsmall C hmod hcenter) :=
   (D.refinedSubdivisionMap hp hδ hsmall C hmod hcenter).comp

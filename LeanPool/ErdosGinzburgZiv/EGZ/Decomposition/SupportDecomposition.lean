@@ -78,6 +78,8 @@ open Classical in
 /-- Exact support data on the nodes of a prescribed flag. -/
 structure SupportData (R : FpRepresentation p d F)
     (pieces : F.Node → FpCoord p d → ℕ) where
+  /-- The finite set of integral coordinates where the node's cumulative centered lift is
+  nonzero. -/
   support : (x : F.Node) → Finset (IntCoord (F.rank x))
   support_spec : ∀ x q, q ∈ support x ↔ hat R pieces x q ≠ 0
   support_nonempty : ∀ x, (support x).Nonempty

@@ -135,7 +135,9 @@ open Classical in
 /-- The concrete cumulative fibre selected for the balanced-combination
 and relative-expansion arguments. All bounds use its own node radius. -/
 structure CumulativeSelection (T K : Φ.flag.Node → ℕ) (δ : ℝ) where
+  /-- The flag node at which the cumulative selection is made. -/
   node : Φ.flag.Node
+  /-- The integral center of the selected node's lifted support. -/
   center : IntCoord (Φ.flag.rank node)
   center_mem_span : center ∈ affineSpan ℤ
     (↑(Φ.liftedSupport node) : Set (IntCoord (Φ.flag.rank node)))
@@ -153,6 +155,7 @@ namespace CumulativeSelection
 variable {Φ} {T K : Φ.flag.Node → ℕ} {δ : ℝ}
 
 open Classical in
+/-- The balanced combination data supplied by a cumulative selection. -/
 noncomputable def data (D : Φ.CumulativeSelection T K δ) :
     BalancedCombination.Data (Φ.flag.rank D.node) where
   support := Φ.liftedSupport D.node

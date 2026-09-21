@@ -28,7 +28,9 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
 
 /-- One actual progress step, together with the uniform radius estimate. -/
 structure NextProgress (s : State p d f) (ε δ : ℝ) (g H : ℕ → ℕ) where
+  /-- State produced by the next certified refinement step. -/
   target : State p d f
+  /-- Certificate of progress from the current state to the target. -/
   progress : Progress s target ε δ g
   radius_le : target.radius ≤ H s.radius
 
@@ -66,6 +68,7 @@ theorem exists_nextProgress (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 
     exact ⟨⟨completeState s.toState D,
       completeProgress s.toState D hE hε.le hg, D.radius_le⟩⟩
 
+/-- Choose a certified next refinement step within the prescribed radius bound. -/
 noncomputable def nextProgress (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2)
     (hg : Monotone g) {i : ℕ} (s : BoundedState (f := f) P ε i)
     (hprime : P.primeThreshold s.radius < p)
@@ -76,6 +79,7 @@ noncomputable def nextProgress (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1
 /-- A transition either makes certified progress or keeps the old state.
 Before the horizon it must progress whenever the state is unfinished. -/
 structure BoundedTransition {i : ℕ} (s : BoundedState (f := f) P ε i) (N : ℕ) where
+  /-- Bounded state at the next iteration index. -/
   target : BoundedState (f := f) P ε (i + 1)
   radius_le : target.radius ≤ P.radiusGrowth s.radius
   progress_or_eq : Nonempty (Progress s.toState target.toState ε (stageScale d ε i) g) ∨
@@ -84,6 +88,7 @@ structure BoundedTransition {i : ℕ} (s : BoundedState (f := f) P ε i) (N : �
     Nonempty (Progress s.toState target.toState ε (stageScale d ε i) g)
   after_horizon : N ≤ i → target.toState = s.toState
 
+/-- Advance the bounded iteration, retaining a finished state when appropriate. -/
 noncomputable def boundedTransition (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2)
     (hg : Monotone g) (N : ℕ) (hprime : P.primeHorizon 1 N < p)
     {i : ℕ} (s : BoundedState (f := f) P ε i) : BoundedTransition P s N := by
@@ -126,6 +131,7 @@ namespace boundedRun
 variable (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2)
     (hg : Monotone g) (hf : f ≠ 0) (N : ℕ) (hprime : P.primeHorizon 1 N < p)
 
+/-- Underlying unbounded state at a given index of the bounded run. -/
 noncomputable abbrev state (i : ℕ) : State p d f :=
   (boundedRun P hd hε hεhalf hg hf N hprime i).toState
 

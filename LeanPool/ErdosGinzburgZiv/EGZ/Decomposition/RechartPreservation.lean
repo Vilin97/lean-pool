@@ -144,7 +144,7 @@ theorem inversePoint_mem_omega {q : Φ.flag.Point} (hq : q ∈ Φ.omega) :
 coordinate charts. -/
 noncomputable def subdivisionMap :
     SubdivisionMap Φ (decomposition Φ C hp hinj hcenter) :=
-  SubdivisionMap.of_local_generators (SupHom.id _) (fun x ↦ (chart Φ C x).real)
+  SubdivisionMap.ofLocalGenerators (SupHom.id _) (fun x ↦ (chart Φ C x).real)
     (chart_mem_polytope Φ C) (chart_transition_real Φ C)
     (fun _ hq ↦ forwardPoint_mem_omegaZero Φ C hp hinj hcenter hq)
 

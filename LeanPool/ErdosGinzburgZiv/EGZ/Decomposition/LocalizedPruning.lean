@@ -24,6 +24,7 @@ variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node) (S : Set (FpCoord p d))
 
 open Classical in
+/-- Restrict local weights below the anchor to `S`, retaining all other local weights. -/
 noncomputable def weight (y : Φ.flag.Node) (v : FpCoord p d) : ℕ :=
   if y ≤ anchor then restrictWeight (Φ.localWeight y) S v else Φ.localWeight y v
 
@@ -82,7 +83,8 @@ theorem retainedWeight_loss (v : FpCoord p d) :
 open Classical in
 theorem retainedMass_loss :
     Φ.retainedMass - natMass (FlagDecompositionRaw.retainedWeight (weight Φ anchor S)) =
-      natMass (Φ.cumulativeWeight anchor) - natMass (restrictWeight (Φ.cumulativeWeight anchor) S) := by
+      natMass (Φ.cumulativeWeight anchor) -
+        natMass (restrictWeight (Φ.cumulativeWeight anchor) S) := by
   unfold FlagDecomposition.retainedMass
   rw [← natMass_sub (retainedWeight_le Φ anchor S)]
   simp_rw [retainedWeight_loss Φ anchor S]
@@ -111,6 +113,7 @@ noncomputable abbrev prunedWeights : Φ.PrunedWeights where
 variable (hp : Odd p)
 
 open Classical in
+/-- The flag decomposition rebuilt from the locally pruned weights. -/
 noncomputable abbrev decomposition : FlagDecomposition p d f :=
   (prunedWeights Φ anchor S hne).rebuilt hp
 
@@ -125,11 +128,11 @@ theorem active_anchor :
   exact ⟨y, hy, v, hw⟩
 
 open Classical in
+/-- The surviving anchor as a node of the rebuilt decomposition. -/
 def anchorNode : (decomposition Φ anchor S hne hp).flag.Node :=
   ⟨anchor, active_anchor Φ anchor S hne hp⟩
 
 open Classical in
-@[simp]
 theorem cumulativeWeight_anchorNode :
     (decomposition Φ anchor S hne hp).cumulativeWeight (anchorNode Φ anchor S hne hp) =
       restrictWeight (Φ.cumulativeWeight anchor) S := by
@@ -150,7 +153,8 @@ theorem decomposition_retainedMass_loss :
       (natMass (Φ.cumulativeWeight anchor) : ℝ) -
         natMass (restrictWeight (Φ.cumulativeWeight anchor) S) := by
   have hmass := retainedMass_loss Φ anchor S
-  have htotal : natMass (FlagDecompositionRaw.retainedWeight (weight Φ anchor S)) ≤ Φ.retainedMass :=
+  have htotal :
+      natMass (FlagDecompositionRaw.retainedWeight (weight Φ anchor S)) ≤ Φ.retainedMass :=
     natMass_mono (retainedWeight_le Φ anchor S)
   have hselected := natMass_mono (restrictWeight_le (Φ.cumulativeWeight anchor) S)
   have hreal := congrArg (fun n : ℕ ↦ (n : ℝ)) hmass

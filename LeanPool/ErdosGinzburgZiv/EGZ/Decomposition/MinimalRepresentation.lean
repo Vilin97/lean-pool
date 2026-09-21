@@ -19,6 +19,7 @@ open scoped BigOperators
 
 namespace EGZ
 
+/-- An affine retraction that is a left inverse when the original affine map is injective. -/
 noncomputable def affineLeftInverse {k : Type*} [Field k] {m n : ℕ}
     (A : (Fin m → k) →ᵃ[k] (Fin n → k)) : (Fin n → k) →ᵃ[k] (Fin m → k) :=
   A.linear.leftInverse.toAffineMap.comp
@@ -62,7 +63,7 @@ theorem surjOn_affineSpan_of_image_span_eq_top {k : Type*} [Field k] {m n : ℕ}
 
 /-- Integer affine generators generate the full finite-field affine space
 after reduction modulo a prime. -/
-theorem FlagDecomposition.AffineIntSpans.affineSpan_mod_eq_top {p n : ℕ} [NeZero p]
+theorem FlagDecomposition.AffineIntSpans.affineSpan_mod_eq_top {p n : ℕ}
     [Fact p.Prime]
     {S : Finset (IntCoord n)} (hS : FlagDecomposition.AffineIntSpans S) :
     affineSpan (ZMod p) (IntCoord.mod p '' (S : Set (IntCoord n))) = ⊤ := by

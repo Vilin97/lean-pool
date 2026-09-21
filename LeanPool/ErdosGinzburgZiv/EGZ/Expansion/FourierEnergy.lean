@@ -104,14 +104,17 @@ section Indicator
 
 variable {G : Type*} [AddCommGroup G] [Fintype G] [DecidableEq G]
 
+/-- The complex-valued indicator of a finite subset of the group. -/
 noncomputable def setIndicator (Y : Finset G) (x : G) : ℂ := if x ∈ Y then 1 else 0
 
+/-- The proportion of group elements belonging to the finite subset. -/
 noncomputable def density (Y : Finset G) : ℝ := Y.card / Fintype.card G
 
 omit [AddCommGroup G] in
 theorem sum_setIndicator (Y : Finset G) : (∑ x, setIndicator Y x) = (Y.card : ℂ) := by
   simp [setIndicator]
 
+omit [AddCommGroup G] in
 theorem inner_setIndicator_self (Y : Finset G) :
     ⟪setIndicator Y, setIndicator Y⟫ₙ_[ℂ] = (density Y : ℂ) := by
   rw [RCLike.wInner_cWeight_eq_expect, Fintype.expect_eq_sum_div_card]
@@ -235,7 +238,8 @@ theorem spectral_boundary_average (Y : Finset G) (w : ι → ℝ) (a : ι → G)
           exact le_rfl
         · rw [ite_eq_right hχ, add_zero]
           have hh := mul_le_mul_of_nonneg_left (hgap χ hχ) (hn χ)
-          convert hh using 1 <;> ring
+          convert hh using 1
+          ring
       _ = _ := by
         rw [Finset.sum_add_distrib, ← Finset.mul_sum, hns]
         simp only [Fintype.sum_ite_eq', hnzero]

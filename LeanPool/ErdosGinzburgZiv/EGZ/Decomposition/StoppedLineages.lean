@@ -20,15 +20,21 @@ variable {p d : ℕ} [Fact p.Prime] {f : FpCoord p d → ℕ}
 
 /-- The comparison data of one step, independently of its event. -/
 structure LineageStep (Φ Ψ : FlagDecomposition p d f) where
+  /-- The subdivision map sending each descendant node to its parent in the previous
+  decomposition. -/
   subdivision : SubdivisionMap Φ Ψ
+  /-- The largest level up to which the lineage step supplies stable and injective node
+  transport. -/
   cutoff : ℕ
   level_parent : ∀ y, Φ.level (subdivision.node y) ≤ Ψ.level y
+  /-- The stable node maps for descendants whose levels do not exceed the cutoff. -/
   stable : ∀ y, Ψ.level y ≤ cutoff → StableNodeMap Φ Ψ (subdivision.node y) y
   stable_real : ∀ y h, (stable y h).coord.real = subdivision.fibre y
   injective_below : Set.InjOn subdivision.node {y | Ψ.level y ≤ cutoff}
 
 namespace LineageStep
 
+/-- The identity lineage step with an arbitrary prescribed cutoff. -/
 def refl (Φ : FlagDecomposition p d f) (K : ℕ) : LineageStep Φ Φ where
   subdivision := SubdivisionMap.refl Φ
   cutoff := K
@@ -37,6 +43,7 @@ def refl (Φ : FlagDecomposition p d f) (K : ℕ) : LineageStep Φ Φ where
   stable_real _ _ := rfl
   injective_below := fun _ _ _ _ h ↦ h
 
+/-- The identity lineage step transported across an equality of decompositions. -/
 def ofEq {Φ Ψ : FlagDecomposition p d f} (h : Ψ = Φ) (K : ℕ) :
     LineageStep Φ Ψ := h.symm ▸ refl Φ K
 
@@ -44,6 +51,7 @@ def ofEq {Φ Ψ : FlagDecomposition p d f} (h : Ψ = Φ) (K : ℕ) :
 theorem ofEq_cutoff {Φ Ψ : FlagDecomposition p d f} (h : Ψ = Φ) (K : ℕ) :
     (ofEq h K).cutoff = K := by subst Ψ; rfl
 
+/-- The lineage step supplied by an iteration progress certificate. -/
 noncomputable def ofProgress {s t : Iteration.State p d f} {ε δ : ℝ} {g : ℕ → ℕ}
     (P : Iteration.Progress s t ε δ g) : LineageStep s.decomposition t.decomposition where
   subdivision := P.subdivision
@@ -59,6 +67,7 @@ namespace LineageMassMaps
 
 variable {Φ : ℕ → FlagDecomposition p d f}
 
+/-- The lineage mass maps assembled from consecutive lineage steps of minimal decompositions. -/
 def ofSteps (hminimal : ∀ i, (Φ i).IsMinimal)
     (D : ∀ i, LineageStep (Φ i) (Φ (i + 1))) : LineageMassMaps Φ where
   minimal := hminimal
@@ -144,6 +153,7 @@ theorem stoppedLineageMassMaps_cutoff_ge (n : ℕ)
 
 variable {N : ℕ} (P : ∀ i, i < N → Progress (s i) (s (i + 1)) ε (δ i) g)
 
+/-- Transport a progress certificate across equalities of its source and target states. -/
 def Progress.castStates {s t s' t' : State p d f} {ε δ : ℝ} {g : ℕ → ℕ}
     (Q : Progress s t ε δ g) (hs : s' = s) (ht : t' = t) : Progress s' t' ε δ g :=
   hs.symm ▸ ht.symm ▸ Q
@@ -167,6 +177,8 @@ theorem intervalProgress_event_color (a n : ℕ) (h : a + n ≤ N) (i : ℕ) (hi
     (intervalProgress P a n h i hi).event.color = (P (a + i) (by omega)).event.color := by
   exact Progress.castStates_event_color _ _ _
 
+/-- The lineage mass maps for a finite interval of an iteration, held constant after its
+endpoint. -/
 noncomputable def intervalLineageMassMaps (a n : ℕ) (h : a + n ≤ N) :
     LineageMassMaps (fun i ↦ (intervalState s a n i).decomposition) :=
   stoppedLineageMassMaps n (intervalState_succ_eq s a n) (intervalProgress P a n h)

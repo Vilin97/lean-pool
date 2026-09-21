@@ -40,6 +40,7 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
 noncomputable abbrev normalized : FlagDecomposition p d f :=
   Rechart.decomposition (D.cleaned hp) C hp hmod hcenter
 
+/-- Embed surviving nodes of the normalized pruning into the original node set. -/
 noncomputable def normalizedNodeEmbedding :
     (D.normalized hp C hmod hcenter).flag.Node ↪ Φ.flag.Node where
   toFun x := x.val.val
@@ -49,7 +50,6 @@ noncomputable def normalizedNodeEmbedding :
 theorem normalized_localWeight (x : (D.cleaned hp).flag.Node) :
     (D.normalized hp C hmod hcenter).localWeight x = D.weight x.val.val := rfl
 
-@[simp]
 theorem normalized_cumulativeWeight (x : (D.cleaned hp).flag.Node) :
     (D.normalized hp C hmod hcenter).cumulativeWeight x = D.cumulative x.val.val :=
   D.cleaned_cumulativeWeight hp x
@@ -64,7 +64,6 @@ theorem normalized_cumulativeWeight_le (x : (D.cleaned hp).flag.Node) (v : FpCoo
   rw [D.normalized_cumulativeWeight]
   exact FlagDecompositionRaw.cumulativeWeight_mono D.weight_le x.val.val v
 
-@[simp]
 theorem normalized_retainedWeight : (D.normalized hp C hmod hcenter).retainedWeight =
     FlagDecompositionRaw.retainedWeight D.weight := by
   change (D.cleaned hp).retainedWeight = _
@@ -84,12 +83,10 @@ theorem normalized_gap (x : (D.cleaned hp).flag.Node) :
     (D.normalized hp C hmod hcenter).gap x = (D.cleaned hp).gap x :=
   Rechart.decomposition_gap (D.cleaned hp) C hp hmod hcenter x
 
-@[simp]
 theorem normalized_hat (x : (D.cleaned hp).flag.Node) (q : IntCoord (C x).rank) :
     (D.normalized hp C hmod hcenter).hat x q = D.hat x.val.val ((C x).map q) := by
   rw [Rechart.decomposition_hat, D.cleaned_hat]
 
-@[simp]
 theorem normalized_localLift (x : (D.cleaned hp).flag.Node) (q : IntCoord (C x).rank) :
     (D.normalized hp C hmod hcenter).localLift x q = D.localLift x.val.val ((C x).map q) := by
   rw [Rechart.decomposition_localLift]
@@ -143,6 +140,7 @@ theorem normalized_gap_bound {K : Φ.flag.Node → ℕ}
   exact (gapThreshold_antitone_radius (mul_nonneg hα (Nat.cast_nonneg _))
     Fintype.card_pos (hKB x) d).trans (hgap x)
 
+/-- The subdivision map obtained by cleaning and normalizing the pruned weights. -/
 noncomputable def normalizedSubdivisionMap :
     SubdivisionMap Φ (D.normalized hp C hmod hcenter) :=
   (D.cleanedSubdivisionMap hp).comp (Rechart.subdivisionMap (D.cleaned hp) C hp hmod hcenter)

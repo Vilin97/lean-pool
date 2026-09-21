@@ -23,8 +23,11 @@ namespace EGZ.FlagDecomposition
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
 open Classical in
+/-- A compatible integral affine node map whose cumulative weight does not increase. -/
 structure NodeMassMap (Φ Ψ : FlagDecomposition p d f)
     (x : Φ.flag.Node) (y : Ψ.flag.Node) where
+  /-- The integral affine map from the new node's coordinates to the original node's
+  coordinates. -/
   coord : IntegralAffineMap (Ψ.flag.rank y) (Φ.flag.rank x)
   polytope_mem : Set.MapsTo coord.real (Ψ.flag.polytope y).carrier
     (Φ.flag.polytope x).carrier
@@ -38,6 +41,7 @@ variable {Φ Ψ Ω : FlagDecomposition p d f}
     {x : Φ.flag.Node} {y : Ψ.flag.Node} {z : Ω.flag.Node}
 
 open Classical in
+/-- The identity map on a node and its cumulative weight. -/
 def refl (Φ : FlagDecomposition p d f) (x : Φ.flag.Node) : NodeMassMap Φ Φ x x where
   coord := IntegralAffineMap.id _
   polytope_mem := fun _ h ↦ h
@@ -45,6 +49,7 @@ def refl (Φ : FlagDecomposition p d f) (x : Φ.flag.Node) : NodeMassMap Φ Φ x
   map_eq := fun _ _ ↦ rfl
 
 open Classical in
+/-- Compose compatible coordinate and cumulative-weight maps between three nodes. -/
 def comp (M : NodeMassMap Φ Ψ x y) (N : NodeMassMap Ψ Ω y z) :
     NodeMassMap Φ Ω x z where
   coord := M.coord.comp N.coord
@@ -116,6 +121,8 @@ theorem liftedMassOn_loss_le (M : NodeMassMap Φ Ψ x y) (hp : Odd p)
 end NodeMassMap
 
 open Classical in
+/-- A node mass map whose mass loss is bounded by the decomposition's total retained-mass
+loss. -/
 structure StableNodeMap (Φ Ψ : FlagDecomposition p d f)
     (x : Φ.flag.Node) (y : Ψ.flag.Node) extends NodeMassMap Φ Ψ x y where
   mass_loss_le : (natMass (Φ.cumulativeWeight x) : ℝ) -
@@ -127,11 +134,13 @@ variable {Φ Ψ Ω : FlagDecomposition p d f}
     {x : Φ.flag.Node} {y : Ψ.flag.Node} {z : Ω.flag.Node}
 
 open Classical in
+/-- The identity stable node map, with zero mass loss. -/
 def refl (Φ : FlagDecomposition p d f) (x : Φ.flag.Node) : StableNodeMap Φ Φ x x where
   toNodeMassMap := NodeMassMap.refl Φ x
   mass_loss_le := by simp
 
 open Classical in
+/-- Compose stable node maps, adding their bounds on mass loss. -/
 def comp (M : StableNodeMap Φ Ψ x y) (N : StableNodeMap Ψ Ω y z) :
     StableNodeMap Φ Ω x z where
   toNodeMassMap := M.toNodeMassMap.comp N.toNodeMassMap

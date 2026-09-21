@@ -45,6 +45,7 @@ theorem flag_decomposition_lemma_posdim {d : ℕ} (hd : 1 ≤ d)
       exact (boundedRun P hd hε hεhalf hg.1 hf (stoppingBound d ε) hprime i).card_bound
     · intro i j hij _
       simpa only [Nat.sub_add_cancel hij] using
-        boundedRun.mass_loss_tail_relative P hd hε hεhalf hg.1 hf (stoppingBound d ε) hprime i (j - i)
+        boundedRun.mass_loss_tail_relative P hd hε hεhalf hg.1 hf
+          (stoppingBound d ε) hprime i (j - i)
 
 end EGZ

@@ -120,6 +120,7 @@ theorem affineImage_carrier (Γ : P.Face) (A : RealCoord m →ᵃ[ℝ] RealCoord
     (hAq : ∀ q, IsRational q → IsRational (A q)) (hA : Function.Injective A) :
     (Γ.affineImage A hAq hA).carrier = A '' Γ.carrier := rfl
 
+/-- Image of a face under an injective integral affine map. -/
 noncomputable abbrev image (Γ : P.Face) (A : IntegralAffineMap m n)
     (hA : Function.Injective A.real) : (P.image A).Face :=
   Γ.affineImage A.real (fun _ ↦ A.real_isRational) hA
@@ -189,6 +190,7 @@ noncomputable def faceAffineImageEquiv (P : RationalPolytope m)
   right_inv Δ := Δ.affineImage_affineImagePullback A hAq hA
   map_rel_iff' := Set.image_subset_image_iff hA
 
+/-- Order isomorphism between faces of a polytope and its injective affine image. -/
 noncomputable abbrev faceImageEquiv (P : RationalPolytope m) (A : IntegralAffineMap m n)
     (hA : Function.Injective A.real) : P.Face ≃o (P.image A).Face :=
   P.faceAffineImageEquiv A.real (fun _ ↦ A.real_isRational) hA

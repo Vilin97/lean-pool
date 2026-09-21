@@ -18,6 +18,7 @@ open scoped BigOperators
 namespace EGZ.Expansion
 
 open Classical in
+/-- The multiplicity of each point among the atoms of a finite selection. -/
 noncomputable def selectionWeight {A G : Type*} [Fintype A]
     (point : A → G) (J : Finset A) : G → ℕ := by
   classical
@@ -38,7 +39,7 @@ theorem vectorSum_selectionWeight {A G : Type*} [Fintype A] [Fintype G] [AddComm
   simp
 
 open Classical in
-theorem exchange_position_capacity {A : Type*} [Fintype A]
+theorem exchange_position_capacity {A : Type*} [Finite A]
     {p r t B : ℕ} (point : A → FpCoord p (r + t))
     (F : Finset (Exchange point B))
     (hF : (F : Set (Exchange point B)).Pairwise
@@ -46,6 +47,8 @@ theorem exchange_position_capacity {A : Type*} [Fintype A]
     (∑ e : F, fun a ↦ if a ∈ e.val.left then (1 : ℕ) else 0) +
         (∑ e : F, fun a ↦ if a ∈ e.val.right then (1 : ℕ) else 0) ≤
       fun a ↦ if a ∈ usedAtoms Exchange.support F then 1 else 0 := by
+  classical
+  let := Fintype.ofFinite A
   classical
   intro a
   simp only [Pi.add_apply, Finset.sum_apply, ← Finset.sum_add_distrib]
@@ -75,7 +78,7 @@ theorem exchange_position_capacity {A : Type*} [Fintype A]
 
 open Classical in
 theorem exchange_weight_capacity {A : Type*} [Fintype A]
-    {p r t B : ℕ} [NeZero p] (point : A → FpCoord p (r + t))
+    {p r t B : ℕ} (point : A → FpCoord p (r + t))
     (F : Finset (Exchange point B))
     (hF : (F : Set (Exchange point B)).Pairwise
       (fun e f ↦ Disjoint e.support f.support)) :
@@ -106,7 +109,8 @@ theorem exchange_difference_coverage {A : Type*} [Fintype A]
   change (∑ e : F, if c e then e.val.difference else 0) = v
   have heq : (∑ e : F, if c e then e.val.difference else 0) = ∑ e ∈ J, e.difference := by
     simp only [c, decide_eq_true_eq]
-    have hcoe := Finset.sum_coe_sort F (fun e : Exchange point B ↦ if e ∈ J then e.difference else 0)
+    have hcoe := Finset.sum_coe_sort F
+      (fun e : Exchange point B ↦ if e ∈ J then e.difference else 0)
     rw [hcoe]
     rw [← Finset.sum_filter]
     congr 1
@@ -195,7 +199,8 @@ theorem complete_exchange_resources {A : Type*} [Fintype A]
     · have hh : (pushWeight (Coord.first r t) Q q : ℝ) ≤ R :=
         (Nat.cast_le.mpr (pushWeight_le_natMass _ Q q)).trans hQmass
       have ha := (hmargin q hq).2
-      have h : (a q : ℝ) + pushWeight (Coord.first r t) Q q ≤ pushWeight (Coord.first r t) w q := by linarith
+      have h : (a q : ℝ) + pushWeight (Coord.first r t) Q q ≤
+          pushWeight (Coord.first r t) w q := by linarith
       exact_mod_cast h
   obtain ⟨u, hu, hum, huz⟩ := complete_exchange_family_of_differences
     (Coord.first r t).toAddMonoidHom w a left right

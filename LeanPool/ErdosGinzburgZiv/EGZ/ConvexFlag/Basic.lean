@@ -31,13 +31,18 @@ universe u
 The transition attached to `x ≤ y` goes from the fibre at `x` to the fibre
 at `y`; it is the paper's map `ψ_{y,x}`. -/
 structure ConvexFlag where
+  /-- Finite ordered set indexing the flag. -/
   Node : Type u
   [nodeFintype : Fintype Node]
   [nodeSemilatticeSup : SemilatticeSup Node]
   [nodeOrderTop : OrderTop Node]
+  /-- Coordinate dimension at each flag node. -/
   rank : Node → ℕ
+  /-- Rational polytope at each flag node. -/
   polytope : (x : Node) → RationalPolytope (rank x)
+  /-- Affine lattice at each flag node. -/
   lattice : (x : Node) → AffineLattice (rank x)
+  /-- Integral affine transition along an order relation between flag nodes. -/
   transition : {x y : Node} → x ≤ y → IntegralAffineMap (rank x) (rank y)
   transition_mem : ∀ {x y : Node} (h : x ≤ y) {q},
     q ∈ (polytope x).carrier → (transition h).real q ∈ (polytope y).carrier
@@ -54,7 +59,9 @@ attribute [instance] nodeFintype nodeSemilatticeSup nodeOrderTop
 /-- The points of a flag are dependent pairs of a base and a point of that
 base polytope. -/
 structure Point (F : ConvexFlag) where
+  /-- Flag node carrying this point. -/
   base : F.Node
+  /-- Real coordinates of the point at its base node. -/
   val : RealCoord (F.rank base)
   val_mem : val ∈ (F.polytope base).carrier
 
@@ -114,7 +121,9 @@ end Point
 /-- A "linear function" in the paper: an affine functional based at one
 node, with constant terms allowed. -/
 structure LinearFunction (F : ConvexFlag) where
+  /-- Flag node on which the affine functional is defined. -/
   base : F.Node
+  /-- Affine functional in the coordinates of its base node. -/
   toAffine : RealCoord (F.rank base) →ᵃ[ℝ] ℝ
 
 namespace LinearFunction
@@ -279,6 +288,7 @@ def convexHull (F : ConvexFlag) (S : Set F.Point) : Set F.Point :=
 /-- A designated set of proper points: it is closed under flag convex
 combinations. -/
 structure ProperPointSet (F : ConvexFlag) where
+  /-- Underlying set of flag points, closed under the flag convex hull. -/
   carrier : Set F.Point
   convex_closed : F.convexHull carrier ⊆ carrier
 

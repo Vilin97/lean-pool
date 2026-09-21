@@ -47,13 +47,11 @@ def AdmitsPHollowLength (p d s : ℕ) : Prop :=
 namespace FpVec
 
 /-- The cardinality of `𝔽_p^d` (when `p` is nonzero, as it is for primes). -/
-@[simp]
 theorem card (p d : ℕ) [NeZero p] : Fintype.card (FpVec p d) = p ^ d := by
   simp [FpVec, ZMod.card]
 
 /-- Every vector in `𝔽_p^d` is killed by `p`.  This also holds for the
 degenerate value `p = 0`, for which `ZMod 0` is represented by the integers. -/
-@[simp]
 theorem characteristic_nsmul (p : ℕ) {d : ℕ} (x : FpVec p d) : p • x = 0 := by
   funext j
   simp [nsmul_eq_mul]

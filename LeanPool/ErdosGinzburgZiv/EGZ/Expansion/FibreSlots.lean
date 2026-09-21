@@ -20,18 +20,22 @@ namespace EGZ.Expansion.FibreSlots
 
 variable {G H S : Type*} [Fintype G]
 
+/-- A labelled copy of a group element, with one copy for each unit of its multiplicity. -/
 abbrev Atom (w : G → ℕ) := Σ v, Fin (w v)
 
+/-- The multiplicity function remaining after the selected atoms are removed. -/
 noncomputable def remaining (w : G → ℕ) (U : Finset (Atom w)) : G → ℕ := by
   classical
   exact pushWeight Sigma.fst (fun a : Atom w ↦ if a ∉ U then 1 else 0)
 
+/-- The retained atoms whose group elements project to the specified fibre label. -/
 abbrev Fibre (w : G → ℕ) (U : Finset (Atom w)) (π : G → H) (q : H) :=
   {a : Atom w // π a.1 = q ∧ a ∉ U}
 
 noncomputable instance fibreFintype (w : G → ℕ) (U : Finset (Atom w))
     (π : G → H) (q : H) : Fintype (Fibre w U π q) := Fintype.ofFinite _
 
+/-- The subtype of atoms that have not been removed. -/
 abbrev Retained (w : G → ℕ) (U : Finset (Atom w)) := {a : Atom w // a ∉ U}
 
 noncomputable instance retainedFintype (w : G → ℕ) (U : Finset (Atom w)) :
@@ -83,7 +87,7 @@ theorem mass_loss (w : G → ℕ) (U : Finset (Atom w)) :
   have h := mass_remaining_add_card w U
   omega
 
-theorem card_fibre_eq [Fintype H] (w : G → ℕ) (U : Finset (Atom w))
+theorem card_fibre_eq (w : G → ℕ) (U : Finset (Atom w))
     (π : G → H) (q : H) :
     Fintype.card (Fibre w U π q) = pushWeight π (remaining w U) q := by
   classical
@@ -96,12 +100,13 @@ theorem card_fibre_eq [Fintype H] (w : G → ℕ) (U : Finset (Atom w))
   intro a _
   by_cases hq : π a.1 = q <;> by_cases hU : a ∈ U <;> simp [hq, hU]
 
+/-- The number of removed atoms lying over a specified fibre label. -/
 noncomputable def removedInFibre (w : G → ℕ) (U : Finset (Atom w))
     (π : G → H) (q : H) : ℕ := by
   classical
   exact (U.filter (fun a ↦ π a.1 = q)).card
 
-theorem card_fibre_eq_sub_removed [Fintype H] (w : G → ℕ) (U : Finset (Atom w))
+theorem card_fibre_eq_sub_removed (w : G → ℕ) (U : Finset (Atom w))
     (π : G → H) (q : H) :
     Fintype.card (Fibre w U π q) = pushWeight π w q - removedInFibre w U π q := by
   classical
@@ -122,17 +127,12 @@ theorem card_fibre_eq_sub_removed [Fintype H] (w : G → ℕ) (U : Finset (Atom 
   rw [hfilter, Finset.card_sdiff, hinter, ← hall]
   rfl
 
-theorem card_fibre_lower [Fintype H] (w : G → ℕ) (U : Finset (Atom w))
+theorem card_fibre_lower (w : G → ℕ) (U : Finset (Atom w))
     (π : G → H) (q : H) :
     pushWeight π w q - U.card ≤ Fintype.card (Fibre w U π q) := by
   classical
-  rw [card_fibre_eq]
-  have hle : pushWeight π (remaining w U) ≤ pushWeight π w :=
-    pushWeight_mono π (remaining_le w U)
-  have h := natMassOn_loss_le (pushWeight_mono π (remaining_le w U)) ({q} : Set H)
-  simp only [natMass_pushWeight, mass_loss] at h
-  have h' : pushWeight π w q - pushWeight π (remaining w U) q ≤ U.card := by
-    simpa [natMassOn] using h
+  rw [card_fibre_eq_sub_removed]
+  have h : removedInFibre w U π q ≤ U.card := Finset.card_filter_le _ _
   omega
 
 theorem sum_retained [DecidableEq G] {M : Type*} [AddCommMonoid M]
@@ -143,7 +143,8 @@ theorem sum_retained [DecidableEq G] {M : Type*} [AddCommMonoid M]
   symm
   exact Finset.sum_subtype _ (by simp) f
 
-noncomputable def labelledEquiv [Fintype S]
+/-- The equivalence reassembling disjoint labelled fibres into all retained atoms. -/
+noncomputable def labelledEquiv
     (w : G → ℕ) (U : Finset (Atom w)) (π : G → H) (label : S → H)
     (hinj : Function.Injective label)
     (hcover : ∀ v, w v ≠ 0 → ∃ s, π v = label s) :

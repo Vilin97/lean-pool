@@ -124,7 +124,7 @@ theorem RelativeExpansionStatement.affine_thresholds
 /-- The expansion interface applies directly to a complete decomposition
 node.  Its conclusion is a zero sum in the original multiplicity function. -/
 theorem AffineExpansionAt.decomposition {p d K T : ℕ}
-    [NeZero p] [Fact p.Prime] {δ δ₀ : ℝ}
+    [NeZero p] {δ δ₀ : ℝ}
     (h : AffineExpansionAt d K δ T p)
     {f : FpCoord p d → ℕ} (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : Φ.flag.Node) (hr : Φ.flag.rank x ≤ d)

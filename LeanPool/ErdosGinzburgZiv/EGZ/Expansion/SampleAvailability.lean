@@ -31,7 +31,7 @@ theorem finiteProb_pair_eq {A : Type*} [Fintype A] [Nonempty A] :
 theorem exists_thick_exchange_weight {p r t N B W : ℕ} [Fact p.Prime]
     (S : Finset (IntCoord r)) [Nonempty S]
     (X : S → Type*) [∀ q, Fintype (X q)] [∀ q, Nonempty (X q)]
-    {A : Type*} [Fintype A] (point : A → FpCoord p (r + t))
+    {A : Type*} [Finite A] (point : A → FpCoord p (r + t))
     (encode : ∀ q, X q → A) (hinj : ∀ q, Function.Injective (encode q))
     (hlabel : ∀ q x, Coord.first r t (point (encode q x)) = q.val.mod p)
     (U : Finset A) (hU : ∀ q x, encode q x ∉ U)
@@ -50,6 +50,8 @@ theorem exists_thick_exchange_weight {p r t N B W : ℕ} [Fact p.Prime]
     ∃ ν : FpCoord p t → ℝ, (∀ v, 0 ≤ ν v) ∧ 0 < ∑ v, ν v ∧
       IsCentrallyThick ν W (η / (4 * S.card)) ∧
       ∀ v, 0 < ν v → ∃ e : Exchange point B, Disjoint e.support U ∧ e.shift = v := by
+  classical
+  let := Fintype.ofFinite A
   classical
   let P : S → ExchangePattern S := fun q ↦ ExchangePattern.ofRelation (fun z ↦ Q z q)
   let C : S ⊕ S → Type _ := Sum.elim (fun q ↦ X q × X q) (fun q ↦ (P q).Sample X)
@@ -95,20 +97,21 @@ theorem exists_thick_exchange_weight {p r t N B W : ℕ} [Fact p.Prime]
         ¬ HasBoundedRepresentative p W
           (ξ (Coord.last r t (point (encode q x.2))) -
             ξ (Coord.last r t (point (encode q x.1))))) ≤ η := by
-      convert (hn (.inl q)).le using 1 <;> try simp only [value, map_sub]
+      convert (hn (.inl q)).le using 1
+      simp only [value, map_sub]
       all_goals rfl
     have hsum (q : S) : finiteProb (fun x : (P q).Sample X ↦
         ¬ HasBoundedRepresentative p W ((P q).sampleSum
           (fun z a ↦ ξ (Coord.last r t (point (encode z a)))) x)) ≤ η := by
-      convert (hn (.inr q)).le using 1 <;>
-        try simp only [value, ExchangePattern.sampleSum, map_sum, map_zsmul]
+      convert (hn (.inr q)).le using 1
+      simp only [value, ExchangePattern.sampleSum, map_sum, map_zsmul]
       all_goals rfl
     obtain ⟨ψ, hψ, hprob⟩ := relative_concentration S X (fun q x ↦ point (encode q x))
       hlabel D Q hQ hsize hN hNp ξ hξ hη.le hsmall hpair hsum
     exact hthick ψ hψ ((isThinAlong_pushWeight_of_finiteProb
       (fun z : Σ q, X q ↦ point (encode z.1 z.2)) ψ hprob).mono_error hηδ)
   let ν := sampleWeight C value valid
-  have hνthick := sampleWeight_centrallyThick C value valid hη hηone hbad hout
+  have hνthick := sampleWeight_centrallyThick C value valid hη hbad hout
   refine ⟨ν, sampleWeight_nonneg C value valid,
     sampleWeight_mass_pos C value valid hηone hbad, ?_, ?_⟩
   · convert hνthick using 1

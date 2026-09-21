@@ -262,6 +262,7 @@ combinations.  `finite_inter_compact` is the operational discreteness property
 used to make the population of integral points in a bounded flag fibre finite.
 -/
 structure AffineLattice (d : ℕ) where
+  /-- Underlying set of points in the affine lattice. -/
   carrier : Set (RealCoord d)
   nonempty : carrier.Nonempty
   affineIntSpan_closed : affineIntSpan carrier ⊆ carrier

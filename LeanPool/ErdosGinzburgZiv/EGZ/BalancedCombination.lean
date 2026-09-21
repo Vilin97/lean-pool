@@ -37,10 +37,13 @@ def IsCentral {d : ℕ} (S : Finset (IntCoord d)) (w : S → ℝ)
 /-- A finite positive weight and an interior point of its generated affine
 integer lattice. All coordinates are taken in a chosen ambient lattice. -/
 structure Data (d : ℕ) where
+  /-- Finite set of lattice points to be combined. -/
   support : Finset (IntCoord d)
   support_nonempty : support.Nonempty
+  /-- Positive real weight assigned to each support point. -/
   weight : support → ℝ
   weight_pos : ∀ q, 0 < weight q
+  /-- Integral center of the balanced combination. -/
   center : IntCoord d
   center_mem_span : center ∈ affineSpan ℤ (↑support : Set (IntCoord d))
   center_mem_interior : center.real ∈ intrinsicInterior ℝ
@@ -48,6 +51,7 @@ structure Data (d : ℕ) where
 
 /-- The integer coefficients and all bounds supplied by the lemma. -/
 structure Coefficients {d : ℕ} (D : Data d) (ε θ μ : ℝ) (n : ℕ) where
+  /-- Multiplicity of each support point in the integer combination. -/
   coeff : D.support → ℕ
   sum_eq : ∑ q, coeff q = n
   weighted_sum_eq : ∑ q, coeff q • q.val = n • D.center
@@ -74,7 +78,7 @@ end Data
 namespace Coefficients
 
 /-- The lower fraction can be decreased without changing any coefficient. -/
-def mono_lower {d : ℕ} {D : Data d} {ε θ μ μ' : ℝ} {n : ℕ}
+def monoLower {d : ℕ} {D : Data d} {ε θ μ μ' : ℝ} {n : ℕ}
     (A : Coefficients D ε θ μ n) (hμ : μ' ≤ μ) : Coefficients D ε θ μ' n where
   coeff := A.coeff
   sum_eq := A.sum_eq
@@ -121,11 +125,14 @@ namespace BoundedConfiguration
 
 variable {d K W : ℕ}
 
+/-- Underlying finite lattice support of the bounded configuration. -/
 def support (Q : BoundedConfiguration d K W) : Finset (IntCoord d) := Q.1.val
 
+/-- Real weights obtained from the bounded integer weights. -/
 def weight (Q : BoundedConfiguration d K W) : Q.support → ℝ :=
   fun q ↦ (Q.2.1 q).val
 
+/-- Integral center encoded by the bounded configuration. -/
 def center (Q : BoundedConfiguration d K W) : IntCoord d := Q.2.2.val
 
 /-- Geometric validity and positivity are checked before applying the
@@ -136,6 +143,7 @@ def Valid (Q : BoundedConfiguration d K W) : Prop :=
       Q.center.real ∈ intrinsicInterior ℝ
         (convexHull ℝ (IntCoord.real '' (↑Q.support : Set (IntCoord d))))
 
+/-- Construct balanced-combination data from a valid bounded configuration. -/
 def data (Q : BoundedConfiguration d K W) (h : Q.Valid) : Data d where
   support := Q.support
   support_nonempty := h.1
@@ -170,12 +178,13 @@ namespace BalancedCombinationLemma
 /-- A finite family admits common constants. Their dependence on centrality
 and on the eventual integer length remains absent. -/
 theorem uniform_finite_family (h : BalancedCombinationLemma)
-    {I : Type*} [Fintype I] (d : I → ℕ) (D : ∀ i, BalancedCombination.Data (d i))
+    {I : Type*} [Finite I] (d : I → ℕ) (D : ∀ i, BalancedCombination.Data (d i))
     (ε : ℝ) (hε : 0 < ε) :
     ∃ (μ : ℝ) (N : ℕ), 0 < μ ∧
       ∀ i (θ : ℝ), 0 < θ →
         BalancedCombination.IsCentral (D i).support (D i).weight θ (D i).center.real →
           ∀ n : ℕ, N < n → Nonempty (BalancedCombination.Coefficients (D i) ε θ μ n) := by
+  let := Fintype.ofFinite I
   classical
   cases isEmpty_or_nonempty I with
   | inl hI =>
@@ -191,7 +200,7 @@ theorem uniform_finite_family (h : BalancedCombinationLemma)
     · intro i θ hθ hc n hn
       have hNi : N i ≤ N₀ := Finset.le_sup (Finset.mem_univ i)
       obtain ⟨A⟩ := hcoeff i θ hθ hc n (hNi.trans_lt hn)
-      exact ⟨A.mono_lower (Finset.inf'_le _ (Finset.mem_univ i))⟩
+      exact ⟨A.monoLower (Finset.inf'_le _ (Finset.mem_univ i))⟩
 
 /-- Bounded supports, bounded positive integer weights, and bounded lattice
 centers have common constants. No centrality parameter or length enters the

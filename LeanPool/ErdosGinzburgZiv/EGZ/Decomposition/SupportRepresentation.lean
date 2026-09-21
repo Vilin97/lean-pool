@@ -89,7 +89,7 @@ open Classical in
 /-- Construct a representation from its cumulative support images. Integer
 affine generation supplies surjectivity, and compatibility is needed only on
 the nonzero cumulative atoms. -/
-noncomputable def ofCumulativeSupport [NeZero p] [Fact p.Prime]
+noncomputable def ofCumulativeSupport [Fact p.Prime]
     (w : F.Node → FpCoord p d → ℕ)
     (ψ : (x : F.Node) → FpCoord p d →ᵃ[ZMod p] FpCoord p (F.rank x))
     (S : (x : F.Node) → Finset (IntCoord (F.rank x)))

@@ -20,6 +20,7 @@ open scoped BigOperators
 
 namespace EGZ.BalancedCombination
 
+/-- Round each weight down after division by the common scale. -/
 noncomputable def roundedWeight {I : Type*} (m : I → ℕ) (H : ℝ) (q : I) : ℕ :=
   ⌊(m q : ℝ) / H⌋₊
 

@@ -27,6 +27,7 @@ variable {p d : ℕ} [Fact p.Prime] {f : FpCoord p d → ℕ}
     (hmod : ∀ x, Function.Injective ((IntegralAffineMap.ofIntAffineMap (C x).map).modp p))
     (hcenter : ∀ x q, q ∈ (C x).coordinateSupport → IsCenteredLift p q)
 
+/-- Augmented refinement in the chosen integral charts. -/
 noncomputable abbrev refined : FlagDecomposition p d f :=
   Augmented.decomposition (D.split hp hδ hsmall) (D.extra hp hδ hsmall) D.chain.direction hp
     (D.extra_antitone hp hδ hsmall) C hmod hcenter
@@ -129,6 +130,7 @@ theorem refined_isKBounded {B : ℕ}
         latticeSupNorm q ≤ B) :
     (D.refined hp hδ hsmall C hmod hcenter).IsKBounded (fun _ ↦ B) := hB
 
+/-- Subdivision map from the augmented refinement back to the original decomposition. -/
 noncomputable def refinedSubdivisionMap :
     SubdivisionMap Φ (D.refined hp hδ hsmall C hmod hcenter) :=
   (D.subdivisionMap hp hδ hsmall).comp

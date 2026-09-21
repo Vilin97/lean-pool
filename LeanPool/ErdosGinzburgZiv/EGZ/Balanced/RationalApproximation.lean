@@ -42,11 +42,12 @@ theorem exists_matrix_generalized_inverse {I J : Type*} [Fintype I] [Fintype J]
 /-- Rational solutions of a rational linear system are dense in its real
 solution set. In particular, any open inequalities valid at a real solution
 remain valid at some rational solution. -/
-theorem exists_rational_solution_mem_open {I J : Type*} [Fintype I] [Fintype J]
+theorem exists_rational_solution_mem_open {I J : Type*} [Finite I] [Fintype J]
     (A : Matrix I J ℚ) (b : I → ℚ) (x : J → ℝ)
     (hx : (A.map (Rat.castHom ℝ)) *ᵥ x = fun i ↦ (b i : ℝ))
     (U : Set (J → ℝ)) (hU : IsOpen U) (hxU : x ∈ U) :
     ∃ y : J → ℚ, A *ᵥ y = b ∧ (fun j ↦ (y j : ℝ)) ∈ U := by
+  let := Fintype.ofFinite I
   classical
   obtain ⟨B, hB⟩ := exists_matrix_generalized_inverse A
   let AR : Matrix I J ℝ := A.map (Rat.castHom ℝ)
@@ -73,7 +74,8 @@ theorem exists_rational_solution_mem_open {I J : Type*} [Fintype I] [Fintype J]
     simp only [P, show AR *ᵥ x = bR from hx, sub_self, Matrix.mulVec_zero, add_zero]
   have hdense : DenseRange (fun y : J → ℚ ↦ fun j ↦ (y j : ℝ)) :=
     DenseRange.piMap (fun _ ↦ Rat.denseRange_cast)
-  obtain ⟨y, hy⟩ := hdense.exists_mem_open (hU.preimage hP) ⟨x, by simpa only [Set.mem_preimage, hPx] using hxU⟩
+  obtain ⟨y, hy⟩ := hdense.exists_mem_open (hU.preimage hP)
+    ⟨x, by simpa only [Set.mem_preimage, hPx] using hxU⟩
   let z : J → ℚ := y + B *ᵥ (b - A *ᵥ y)
   have hz : A *ᵥ z = b := by
     dsimp only [z]

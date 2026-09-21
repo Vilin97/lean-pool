@@ -61,6 +61,7 @@ theorem active_top : D.Active ⊤ := by
   exact ⟨x, le_top, v, hv⟩
 
 open Classical in
+/-- The subtype of nodes whose cumulative lifted support survives rebuilding. -/
 abbrev ActiveNode := {x : F.Node // D.Active x}
 
 open Classical in
@@ -158,7 +159,8 @@ theorem mem_polytope_of_localLift_ne_zero (x : D.ActiveNode)
   rw [D.polytope_carrier]
   apply subset_convexHull ℝ
   exact ⟨z, (mem_hatSupport R pieces x.1 z).mpr
-    (ne_of_gt ((Nat.pos_of_ne_zero hz).trans_le (localLift_le_hat (R := R) (pieces := pieces) x.1 z))), rfl⟩
+    (ne_of_gt ((Nat.pos_of_ne_zero hz).trans_le
+      (localLift_le_hat (R := R) (pieces := pieces) x.1 z))), rfl⟩
 
 open Classical in
 theorem transition_mem {x y : D.ActiveNode} (h : x ≤ y) {q : RealCoord (F.rank x.1)}
@@ -188,6 +190,7 @@ noncomputable abbrev flag : ConvexFlag where
   transition_trans hxy hyz := F.transition_trans hxy hyz
 
 open Classical in
+/-- The finite-field representation restricted to the active nodes of the rebuilt flag. -/
 noncomputable def representation : FpRepresentation p d D.flag where
   space x := R.space x.1
   map x := R.map x.1

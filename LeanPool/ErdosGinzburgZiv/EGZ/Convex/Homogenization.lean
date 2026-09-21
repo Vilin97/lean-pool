@@ -44,8 +44,10 @@ namespace RationalPolytope
 `P`.  Positivity of `denominator` is recorded so that scaling can be
 cancelled over the reals. -/
 structure VertexHomogenization {d : ℕ} (P : RationalPolytope d) where
+  /-- Common positive denominator used to scale the rational vertices. -/
   denominator : ℕ
   denominator_pos : 0 < denominator
+  /-- Integer coordinates of the vertices after scaling by the common denominator. -/
   scaledVertex : P.vertexSet → IntCoord d
   scaledVertex_real : ∀ q,
     (scaledVertex q).real = (denominator : ℝ) • (q : RealCoord d)

@@ -130,6 +130,8 @@ variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
 /-- Local weights distributed over a new poset with their old bases recorded. -/
 structure SplitWeights (node : N →o Φ.flag.Node) where
+  /-- The local multiplicities assigned to the new nodes, bounded by their original node
+  weights. -/
   weight : N → FpCoord p d → ℕ
   weight_le : ∀ x v, weight x v ≤ Φ.localWeight (node x) v
   nonzero : ∃ x v, weight x v ≠ 0
@@ -139,10 +141,14 @@ namespace SplitWeights
 
 variable {Φ} {node : N →o Φ.flag.Node} (D : Φ.SplitWeights node)
 
+/-- The original finite-field representation reindexed by the split-node map. -/
 noncomputable abbrev representation (_D : Φ.SplitWeights node) := Φ.representation.reindex node
+/-- The split weights accumulated over the lower nodes of the reindexed flag. -/
 noncomputable abbrev cumulative :=
   FlagDecompositionRaw.cumulativeWeight (F := Φ.flag.reindex node) D.weight
+/-- The cumulative centered lift for the split weights and their reindexed representation. -/
 noncomputable abbrev hat := FlagDecompositionRaw.hat D.representation D.weight
+/-- The centered lift of each split node's local weight. -/
 noncomputable abbrev localLift := FlagDecompositionRaw.localLift D.representation D.weight
 
 theorem weight_supported (x : N) (v : FpCoord p d) (hv : D.weight x v ≠ 0) :
@@ -208,6 +214,7 @@ theorem rebuildData (hp : Odd p) :
       · exact (hz (ite_eq_right heq)).elim
     · exact (hy (dite_eq_right hyx)).elim
 
+/-- The flag decomposition rebuilt from the split weights when the characteristic is odd. -/
 noncomputable abbrev decomposition (hp : Odd p) : FlagDecomposition p d f :=
   (D.rebuildData hp).decomposition
 
@@ -216,13 +223,11 @@ theorem decomposition_retainedWeight (hp : Odd p) (v : FpCoord p d) :
     (D.decomposition hp).retainedWeight v = ∑ x, D.weight x v :=
   congrFun (D.rebuildData hp).decomposition_retainedWeight v
 
-@[simp]
 theorem decomposition_cumulativeWeight (hp : Odd p)
     (x : (D.decomposition hp).flag.Node) :
     (D.decomposition hp).cumulativeWeight x = D.cumulative x.1 :=
   (D.rebuildData hp).decomposition_cumulativeWeight x
 
-@[simp]
 theorem decomposition_hat (hp : Odd p) (x : (D.decomposition hp).flag.Node) :
     (D.decomposition hp).hat x = D.hat x.1 :=
   (D.rebuildData hp).decomposition_hat x
@@ -255,7 +260,7 @@ noncomputable def subdivisionMap (hp : Odd p)
     SubdivisionMap Φ (D.decomposition hp) := by
   letI : SemilatticeSup (D.decomposition hp).flag.Node :=
     (D.decomposition hp).flag.nodeSemilatticeSup
-  exact SubdivisionMap.of_local_generators
+  exact SubdivisionMap.ofLocalGenerators
     { toFun := fun x ↦ node x.1, map_sup' := fun x y ↦ hsup x.1 y.1 }
     (fun _ ↦ AffineMap.id ℝ _)
     (fun x ↦ D.decomposition_polytope_subset hp x)

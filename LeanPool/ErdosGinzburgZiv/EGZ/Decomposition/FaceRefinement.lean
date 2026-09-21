@@ -185,7 +185,6 @@ noncomputable def upperOrderEmbedding :
     exact TwoLayer.upper_le_upper anchor x y
 
 open Classical in
-@[simp]
 theorem upper_cumulativeWeight (x : Φ.flag.Node) :
     (decomposition Φ anchor selected hp).cumulativeWeight (upper Φ anchor selected hp x) =
       Φ.cumulativeWeight x := by
@@ -237,7 +236,6 @@ theorem upper_gap (x : Φ.flag.Node) :
 
 open Classical in
 /-- The upper copy retains its original polytope. -/
-@[simp]
 theorem upper_polytope (x : Φ.flag.Node) :
     ((decomposition Φ anchor selected hp).flag.polytope (upper Φ anchor selected hp x)).carrier =
       (Φ.flag.polytope x).carrier := by
@@ -265,7 +263,6 @@ theorem upperFace_carrier (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face) :
     (upperFace Φ anchor selected hp x Γ).carrier = Γ.carrier := rfl
 
 open Classical in
-@[simp]
 theorem retainedWeight :
     (decomposition Φ anchor selected hp).retainedWeight = Φ.retainedWeight := by
   funext v
@@ -437,7 +434,6 @@ theorem lowerAnchor_liftedSupport (Γ : (Φ.flag.polytope anchor).Face) :
 
 open Classical in
 /-- The new lower anchor polytope is exactly the selected old face. -/
-@[simp]
 theorem lowerAnchor_polytope (Γ : (Φ.flag.polytope anchor).Face) :
     ((decomposition Φ anchor (Φ.faceSelector anchor Γ) hp).flag.polytope
       (lowerAnchor Φ anchor hp Γ)).carrier = Γ.carrier := by

@@ -69,7 +69,7 @@ theorem boundary_add_card (Y : Finset G) (a : G) :
 
 theorem boundary_add_overlap (Y : Finset G) (a : G) :
     boundary Y a + (translate Y a ∩ Y).card = Y.card := by
-  simpa [boundary] using Finset.card_sdiff_add_card_inter (translate Y a) Y
+  simp [boundary, Finset.card_sdiff_add_card_inter]
 
 theorem boundary_le_card (Y : Finset G) (a : G) : boundary Y a ≤ Y.card := by
   have := boundary_add_overlap Y a
@@ -179,6 +179,7 @@ theorem basisBox_injective (E : Basis (Fin d) (ZMod p) (FpCoord p d))
   simpa only [ZMod.val_natCast, Nat.mod_eq_of_lt ((a i).isLt.trans_le hm),
     Nat.mod_eq_of_lt ((b i).isLt.trans_le hm)] using hi
 
+omit [NeZero p] in
 theorem card_basisBox (E : Basis (Fin d) (ZMod p) (FpCoord p d))
     {m : ℕ} (hm : m ≤ p) : (basisBox E m).card = m ^ d := by
   classical
@@ -217,6 +218,7 @@ theorem boundary_basisBox_le (E : Basis (Fin d) (ZMod p) (FpCoord p d))
         (Nat.mul_le_mul_right _ (a i).isLt.le)
     _ = m * ∑ i, boundary Y (E i) := (Finset.mul_sum _ _ _).symm
 
+omit [NeZero p] in
 /-- Integer form of the basis growth estimate.  Taking
 `m = ceil (2 * |Y|^(1/d))` yields the usual power-size increment. -/
 theorem exists_basis_boundary (E : Basis (Fin d) (ZMod p) (FpCoord p d))
@@ -246,7 +248,7 @@ theorem exists_basis_boundary (E : Basis (Fin d) (ZMod p) (FpCoord p d))
 
 end Basis
 
-theorem exists_basis_boundary_real {p d : ℕ} [NeZero p] [Fact p.Prime]
+theorem exists_basis_boundary_real {p d : ℕ} [Fact p.Prime]
     (E : Basis (Fin d) (ZMod p) (FpCoord p d)) (hd : 0 < d)
     (Y : Finset (FpCoord p d)) (x : ℝ) (hx : 1 ≤ x)
     (hcard : (Y.card : ℝ) = x ^ d) (hxp : 2 * x ≤ p) :

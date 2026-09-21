@@ -45,7 +45,6 @@ theorem intervalState_mass_tail {s : ℕ → State p d f} {ε : ℝ} {a n N : �
     ((Nat.add_le_add_left (min_le_right j n) a).trans hbound)
 
 open Classical in
-@[simp]
 theorem intervalState_zero (s : ℕ → State p d f) (a n : ℕ) :
     intervalState s a n 0 = s a := by simp [intervalState]
 

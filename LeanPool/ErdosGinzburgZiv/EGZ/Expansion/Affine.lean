@@ -27,12 +27,13 @@ projection followed by translation by `c`. -/
 structure AffineModel {p d r : ℕ}
     (V : AffineSubspace (ZMod p) (FpCoord p d))
     (φ : FpCoord p d →ᵃ[ZMod p] FpCoord p r) (c : FpCoord p r) (t : ℕ) where
+  /-- The injective affine chart from model coordinates onto the ambient affine set. -/
   chart : FpCoord p (r + t) →ᵃ[ZMod p] FpCoord p d
   injective : Function.Injective chart
   range_chart : Set.range chart = V
   projection : ∀ q, φ (chart q) = Coord.first r t q + c
 
-theorem exists_affineModel {p d r : ℕ} [NeZero p] [Fact p.Prime]
+theorem exists_affineModel {p d r : ℕ} [Fact p.Prime]
     (V : AffineSubspace (ZMod p) (FpCoord p d))
     (φ : FpCoord p d →ᵃ[ZMod p] FpCoord p r)
     (hφ : Set.SurjOn φ V Set.univ) (c : FpCoord p r) :

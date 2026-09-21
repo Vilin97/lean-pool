@@ -97,8 +97,11 @@ from it by scalar extension and reduction.  In particular, the target modulo
 `p` is an affine space: no canonical origin for the original affine lattice is
 being assumed. -/
 structure IntegralAffineMap (m n : ℕ) where
+  /-- Affine map on the real coordinate spaces. -/
   real : RealCoord m →ᵃ[ℝ] RealCoord n
+  /-- Map induced on integer coordinates. -/
   integer : IntCoord m → IntCoord n
+  /-- Affine map induced on coordinates modulo each natural modulus. -/
   modp : (p : ℕ) → FpCoord p m →ᵃ[ZMod p] FpCoord p n
   real_integer : ∀ z, real z.real = (integer z).real
   mod_integer : ∀ p z, modp p (z.mod p) = (integer z).mod p
@@ -141,7 +144,9 @@ finitely many lattice points), but recording it here keeps the Helly-constant
 API independent of analytic boundedness infrastructure.  It can later be
 discharged once, by the constructor for a finite rational vertex set. -/
 structure RationalPolytope (n : ℕ) where
+  /-- Underlying convex set of the rational polytope. -/
   carrier : Set (RealCoord n)
+  /-- Finite rational generating set of the polytope. -/
   generators : Finset (RealCoord n)
   generators_nonempty : generators.Nonempty
   generators_rational : ∀ q ∈ generators, IsRational q
@@ -345,6 +350,7 @@ theorem rational_of_mem_vertexSet {n : ℕ} (P : RationalPolytope n)
 /-- A (nonempty) face, represented as an exposed face.  Every face of a
 polytope has such a presentation. -/
 structure Face {n : ℕ} (P : RationalPolytope n) where
+  /-- Underlying set of points in the exposed face. -/
   carrier : Set (RealCoord n)
   is_exposed : ∃ (functional : RealCoord n →ᵃ[ℝ] ℝ) (level : ℝ),
     (∀ q ∈ P.carrier, functional q ≤ level) ∧

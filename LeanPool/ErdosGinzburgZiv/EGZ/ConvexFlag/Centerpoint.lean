@@ -67,7 +67,7 @@ theorem hellyConstant_pos_of_weighted_points {F : ConvexFlag}
 index.  This is the finite weighted union-bound step in the centerpoint
 argument. -/
 private theorem exists_common_of_large
-    {ι κ : Type*} [Fintype ι] [DecidableEq ι] [DecidableEq κ]
+    {ι κ : Type*} [Fintype ι]
     (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i)
     (H : ℕ) (hH : 0 < H) (G : Finset κ) (hG : G.Nonempty)
     (A : κ → Finset ι)

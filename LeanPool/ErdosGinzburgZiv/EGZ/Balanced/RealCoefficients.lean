@@ -53,7 +53,10 @@ theorem exists_positive_centrality :
     _ = (if ξ D.center.real ≤ ξ q.val.real then D.weight q else 0) := by simp [hq]
     _ ≤ ∑ r, if ξ D.center.real ≤ ξ r.val.real then D.weight r else 0 :=
       Finset.single_le_sum (f := fun r ↦ if ξ D.center.real ≤ ξ r.val.real then D.weight r else 0)
-        (fun r _ ↦ by split_ifs; exact (D.weight_pos r).le; exact le_rfl) (Finset.mem_univ q)
+        (fun r _ ↦ by
+          split_ifs
+          · exact (D.weight_pos r).le
+          · exact le_rfl) (Finset.mem_univ q)
 
 /-- The largest admissible centrality depends only on the weighted data. -/
 noncomputable def maxCentrality : ℝ :=

@@ -33,7 +33,10 @@ theorem mass_natCast (w : α → ℕ) (S : Set α) :
   simp [mass, natMassOn]
 
 theorem mass_nonneg (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (S : Set α) :
-    0 ≤ mass w S := Finset.sum_nonneg (fun a _ ↦ by split_ifs; exact hw a; exact le_rfl)
+    0 ≤ mass w S := Finset.sum_nonneg (fun a _ ↦ by
+      split_ifs
+      · exact hw a
+      · exact le_rfl)
 
 theorem mass_mono (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) {S T : Set α}
     (hST : S ⊆ T) : mass w S ≤ mass w T := by

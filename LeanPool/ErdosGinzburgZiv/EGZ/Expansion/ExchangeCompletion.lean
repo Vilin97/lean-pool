@@ -18,6 +18,7 @@ open scoped BigOperators
 
 namespace EGZ.Expansion
 
+/-- The sum of the group elements counted with their natural-number multiplicities. -/
 noncomputable def vectorSum {G : Type*} [AddCommMonoid G] [Fintype G]
     (u : G → ℕ) : G := ∑ v, u v • v
 
@@ -37,6 +38,7 @@ theorem map_vectorSum {G H : Type*} [AddCommMonoid G] [AddCommMonoid H]
   simp only [map_nsmul]
   exact (sum_pushWeight π u id).symm
 
+/-- The total weight obtained by choosing the left or right weight at each index. -/
 noncomputable def choiceWeight {I G : Type*} [Fintype I]
     (left right : I → G → ℕ) (choice : I → Bool) : G → ℕ :=
   ∑ i, if choice i then left i else right i

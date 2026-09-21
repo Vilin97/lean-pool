@@ -27,8 +27,11 @@ namespace EGZ
 
 /-- The face flag as a presentation of the points of a working polytope. -/
 structure FaceFlagModel {d : ℕ} (P : RationalPolytope d) where
+  /-- Convex flag modeling the faces of the original polytope. -/
   flag : ConvexFlag
+  /-- Proper point set of the face-flag model. -/
   proper : flag.ProperPointSet
+  /-- Identify proper flag points with points of the original polytope. -/
   properEquiv :
     {q : flag.Point // q ∈ proper} ≃ {x : RealCoord d // x ∈ P.carrier}
 
@@ -180,7 +183,6 @@ noncomputable abbrev faceFlag {d : ℕ} (P : RationalPolytope d) : ConvexFlag :=
 theorem faceFlag_rank {d : ℕ} {P : RationalPolytope d} (F : P.Face) :
     (faceFlag P).rank F = d := rfl
 
-@[simp]
 theorem faceFlag_polytope_carrier {d : ℕ} {P : RationalPolytope d}
     (F : P.Face) : ((faceFlag P).polytope F).carrier = F.carrier := by
   exact F.asPolytope_carrier

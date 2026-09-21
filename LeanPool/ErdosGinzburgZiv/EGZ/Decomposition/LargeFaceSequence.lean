@@ -38,8 +38,11 @@ omit [Fintype α] in
 theorem rank_le (q : α → RealCoord d) (S : Finset α) : rank q S ≤ d := by
   simpa [rank] using (affineSpan ℝ (q '' (S : Set α))).direction.finrank_le
 
-theorem rank_insert_lt (q : α → RealCoord d) (S : Finset α) (hS : S.Nonempty)
+omit [Fintype α] in
+theorem rank_insert_lt [Finite α] (q : α → RealCoord d) (S : Finset α) (hS : S.Nonempty)
     (a : α) (ha : a ∉ closure q S) : rank q S < rank q (insert a S) := by
+  classical
+  let := Fintype.ofFinite α
   classical
   have hspan : affineSpan ℝ (q '' (S : Set α)) <
       affineSpan ℝ (q '' (↑(insert a S) : Set α)) := by

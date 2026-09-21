@@ -82,6 +82,7 @@ theorem split_isKBounded {K : ℕ} (hK : Φ.IsKBounded (fun _ ↦ K)) :
   exact hK _ q hold
 
 open Classical in
+/-- Augmented lattice-support diagram associated with the preparation. -/
 noncomputable abbrev diagram : LatticeSupportDiagram :=
   Augmented.diagram (D.split hp hδ hsmall) (D.extra hp hδ hsmall) D.chain.direction hp
     (D.extra_antitone hp hδ hsmall)

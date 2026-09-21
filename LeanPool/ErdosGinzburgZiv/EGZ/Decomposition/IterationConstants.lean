@@ -24,6 +24,7 @@ theorem le_faceCapacity_of_real_le {d n : ℕ} {ε : ℝ}
     exact_mod_cast h.trans (Nat.le_ceil _)
   exact hn.trans (le_max_right _ _)
 
+/-- Capacity of the interval beginning at a given iteration index. -/
 noncomputable def intervalCapacity (d : ℕ) (ε : ℝ) (a : ℕ) : ℕ :=
   2 ^ a * faceCapacity d ε
 
@@ -36,6 +37,7 @@ theorem one_le_intervalCapacity (d : ℕ) (ε : ℝ) (a : ℕ) :
     1 ≤ intervalCapacity d ε a :=
   (Nat.one_le_two_pow).trans (pow_le_intervalCapacity d ε a)
 
+/-- Uniform stopping bound derived from the interval capacities. -/
 noncomputable def stoppingBound (d : ℕ) (ε : ℝ) : ℕ :=
   intervalCapacityBound (2 * (d + 1) ^ 2 + 1) (intervalCapacity d ε)
 
@@ -46,6 +48,7 @@ theorem stoppingBound_pos (d : ℕ) (ε : ℝ) : 0 < stoppingBound d ε := by
   · intro a b l _ hb
     omega
 
+/-- The scale at the uniform stopping bound of the decomposition iteration. -/
 noncomputable def finalScale (d : ℕ) (ε : ℝ) : ℝ :=
   stageScale d ε (stoppingBound d ε)
 

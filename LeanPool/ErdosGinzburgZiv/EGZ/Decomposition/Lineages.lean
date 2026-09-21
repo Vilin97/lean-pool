@@ -29,9 +29,12 @@ universe u
 /-- The abstract data needed for lineage bookkeeping. No geometric
 properties of the nodes or parent maps are assumed. -/
 structure System where
+  /-- The finite node type at each stage of the lineage system. -/
   Node : ℕ → Type u
   finiteNode : ∀ i, Fintype (Node i)
+  /-- The level assigned to each node at its stage. -/
   level : ∀ i, Node i → ℕ
+  /-- The predecessor of a node in the preceding stage. -/
   parent : ∀ i, Node (i + 1) → Node i
   level_parent : ∀ i x, level i (parent i x) ≤ level (i + 1) x
 

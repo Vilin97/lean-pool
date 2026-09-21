@@ -20,6 +20,8 @@ namespace EGZ.Expansion
 
 variable {p d : ℕ} [NeZero p]
 
+/-- The scalar additive character obtained by restricting a vector-space character to
+multiples of `a`. -/
 noncomputable def scalarCharacter (χ : AddChar (FpCoord p d) ℂ) (a : FpCoord p d) :
     AddChar (ZMod p) ℂ :=
   χ.compAddMonoidHom (LinearMap.toSpanSingleton (ZMod p) (FpCoord p d) a).toAddMonoidHom
@@ -28,6 +30,7 @@ omit [NeZero p] in
 @[simp] theorem scalarCharacter_apply (χ : AddChar (FpCoord p d) ℂ)
     (a : FpCoord p d) (z : ZMod p) : scalarCharacter χ a z = χ (z • a) := rfl
 
+/-- The additive finite-field logarithm of a complex additive character. -/
 noncomputable def characterLog (χ : AddChar (FpCoord p d) ℂ) :
     FpCoord p d →+ ZMod p where
   toFun a := AddChar.zmodAddEquiv.symm (scalarCharacter χ a)
@@ -42,6 +45,7 @@ noncomputable def characterLog (χ : AddChar (FpCoord p d) ℂ) :
     ext z
     simp [smul_add, AddChar.map_add_eq_mul]
 
+/-- The finite-field linear functional corresponding to a complex additive character. -/
 noncomputable def characterLinear (χ : AddChar (FpCoord p d) ℂ) :
     FpCoord p d →ₗ[ZMod p] ZMod p := (characterLog χ).toZModLinearMap p
 

@@ -22,6 +22,7 @@ variable {p d : ℕ} [Fact p.Prime] {f : FpCoord p d → ℕ}
 
 namespace SubdivisionMap
 
+/-- The identity subdivision of a flag decomposition. -/
 def refl (Φ : FlagDecomposition p d f) : SubdivisionMap Φ Φ where
   node := SupHom.id _
   fibre _ := AffineMap.id ℝ _
@@ -48,9 +49,12 @@ decompositions. Stability and parent injectivity are required only below
 the cutoff at that step. -/
 structure LineageMassMaps (Φ : ℕ → FlagDecomposition p d f) where
   minimal : ∀ i, (Φ i).IsMinimal
+  /-- The subdivision map for each successive pair of decompositions. -/
   step : ∀ i, SubdivisionMap (Φ i) (Φ (i + 1))
+  /-- The level up to which node maps must be stable at each step. -/
   cutoff : ℕ → ℕ
   level_parent : ∀ i x, (Φ i).level ((step i).node x) ≤ (Φ (i + 1)).level x
+  /-- Stable node maps below the cutoff of each successive subdivision. -/
   stable : ∀ i y, (Φ (i + 1)).level y ≤ cutoff i →
     StableNodeMap (Φ i) (Φ (i + 1)) ((step i).node y) y
   stable_real : ∀ i y h, (stable i y h).coord.real = (step i).fibre y
@@ -63,8 +67,10 @@ variable {Φ : ℕ → FlagDecomposition p d f}
 
 /-- All comparisons needed between two times at a fixed level cutoff. -/
 structure Transport (Φ : ℕ → FlagDecomposition p d f) (L i j : ℕ) where
+  /-- The subdivision map transporting nodes across the interval of stages. -/
   subdivision : SubdivisionMap (Φ i) (Φ j)
   level_parent : ∀ y, (Φ i).level (subdivision.node y) ≤ (Φ j).level y
+  /-- Stable node maps for transported nodes of level at most `L`. -/
   stable : ∀ y : {y : (Φ j).flag.Node // (Φ j).level y ≤ L},
     StableNodeMap (Φ i) (Φ j) (subdivision.node y) y
   stable_real : ∀ y, (stable y).coord.real = subdivision.fibre y
@@ -73,6 +79,7 @@ namespace Transport
 
 variable {L i j k l : ℕ}
 
+/-- Identity transport at a single stage. -/
 def refl (Φ : ℕ → FlagDecomposition p d f) (L i : ℕ) : Transport Φ L i i where
   subdivision := SubdivisionMap.refl (Φ i)
   level_parent _ := le_rfl
@@ -85,6 +92,7 @@ def lowParent (M : Transport Φ L i j)
     {x : (Φ i).flag.Node // (Φ i).level x ≤ L} :=
   ⟨M.subdivision.node y, (M.level_parent y).trans y.property⟩
 
+/-- Compose transports across two consecutive intervals of stages. -/
 def comp (M : Transport Φ L i j) (N : Transport Φ L j k) : Transport Φ L i k where
   subdivision := M.subdivision.comp N.subdivision
   level_parent y := (M.level_parent (N.subdivision.node y)).trans (N.level_parent y)

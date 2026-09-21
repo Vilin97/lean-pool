@@ -44,8 +44,10 @@ namespace EGZ
 /-- A physical convex combination with no coefficient equal to one. -/
 structure PhysicalNontrivialCombination {d n : ℕ} (P : RationalPolytope d)
     (points : Fin n → RealCoord d) where
+  /-- Point represented by the convex combination. -/
   result : RealCoord d
   result_mem : result ∈ P.carrier
+  /-- Nonnegative coefficients of the convex combination. -/
   weight : Fin n → ℝ
   nonnegative : ∀ i, 0 ≤ weight i
   sum_eq_one : (∑ i, weight i) = 1

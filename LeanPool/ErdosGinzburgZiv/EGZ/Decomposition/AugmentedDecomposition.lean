@@ -341,7 +341,7 @@ open Classical in
 /-- Forgetting the slab block is a subdivision map to the original flag. -/
 noncomputable def subdivisionMap :
     SubdivisionMap Φ (decomposition Φ e ξ hp he C hmod hcenter) :=
-  SubdivisionMap.of_local_generators (SupHom.id _)
+  SubdivisionMap.ofLocalGenerators (SupHom.id _)
     (fun x ↦ (forget Φ e ξ hp he C x).real)
     (forget_mem_polytope Φ e ξ hp he C) (forget_transition Φ e ξ hp he C)
     (fun _ hq ↦ forwardPoint_mem_omegaZero Φ e ξ hp he C hmod hcenter hq)

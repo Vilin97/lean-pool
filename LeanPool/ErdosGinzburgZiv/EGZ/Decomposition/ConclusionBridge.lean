@@ -13,6 +13,7 @@ namespace EGZ.FlagDecomposition.Iteration
 
 variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
 
+omit [Fact p.Prime] in
 theorem State.hasConclusion (s : State p d f) (hp : p.Prime)
     {ε δ : ℝ} {g : ℕ → ℕ} {Bcard BK : ℕ}
     (h : s.Finished ε δ g)
@@ -24,6 +25,8 @@ theorem State.hasConclusion (s : State p d f) (hp : p.Prime)
     hcard, antitone_const, fun _ ↦ ⟨s.radius_pos, hK⟩, s.bounded,
     h.2, fun _ ↦ le_rfl, h.1, hmass⟩
 
+omit [Fact p.Prime] in
+omit [Fact (Nat.Prime p)] in
 theorem BoundedState.hasConclusion {g : ℕ → ℕ} {P : NormalizedOperationParameters d g}
     {ε : ℝ} {i : ℕ} (s : BoundedState (f := f) P ε i) (hp : p.Prime)
     (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2)

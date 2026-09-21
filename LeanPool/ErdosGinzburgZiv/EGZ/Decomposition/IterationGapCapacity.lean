@@ -14,6 +14,7 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
 
 namespace State
 
+omit [Fact (Nat.Prime p)] in
 theorem GapCondition.mono_delta {s : State p d f} {δ δ' : ℝ}
     (h : s.GapCondition δ) (hδ' : 0 ≤ δ') (hδ : δ' ≤ δ) : s.GapCondition δ' := by
   intro x

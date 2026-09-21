@@ -17,6 +17,8 @@ number of added directions up to the ambient dimension.
 
 namespace EGZ
 
+/-- The next refinement bound, chosen above both the current index and the prescribed growth
+at `A n`. -/
 def refinementGrowth (A g : ℕ → ℕ) (n : ℕ) : ℕ := max (n + 1) (g (A n))
 
 theorem refinementGrowth_isGrowing {A g : ℕ → ℕ} (hA : Monotone A) (hg : Monotone g) :
@@ -27,6 +29,7 @@ theorem refinementGrowth_isGrowing {A g : ℕ → ℕ} (hA : Monotone A) (hg : M
   · intro n
     exact (Nat.lt_succ_self n).trans_le (le_max_left _ _)
 
+/-- The width after `i` iterations of the refinement growth function starting at `K`. -/
 def refinementWidth (A g : ℕ → ℕ) (K i : ℕ) : ℕ := (refinementGrowth A g)^[i] K
 
 @[simp]

@@ -22,10 +22,12 @@ variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
     (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node) (hp : Odd p)
 
 open Classical in
+/-- The decomposition obtained by applying the full lower-transfer refinement at the anchor. -/
 noncomputable abbrev decomposition : FlagDecomposition p d f :=
   FaceRefinement.decomposition Φ anchor (fun _ ↦ True) hp
 
 open Classical in
+/-- The upper-layer copy of a node in the lower-transfer decomposition. -/
 noncomputable abbrev upper (x : Φ.flag.Node) :=
   FaceRefinement.upper Φ anchor (fun _ ↦ True) hp x
 
@@ -39,6 +41,7 @@ theorem active_lowerAnchor :
   exact FaceRefinement.active_lower Φ anchor (fun _ ↦ True) hp anchor le_rfl v hv trivial
 
 open Classical in
+/-- The active lower-layer copy of the anchor after lower transfer. -/
 def lowerAnchor : (decomposition Φ anchor hp).flag.Node :=
   ⟨TwoLayer.lower anchor anchor le_rfl, active_lowerAnchor Φ anchor hp⟩
 
@@ -47,7 +50,6 @@ theorem lowerAnchor_le_upper : lowerAnchor Φ anchor hp ≤ upper Φ anchor hp a
   exact (TwoLayer.lower_le_upper anchor anchor anchor le_rfl).mpr le_rfl
 
 open Classical in
-@[simp]
 theorem lowerAnchor_cumulativeWeight :
     (decomposition Φ anchor hp).cumulativeWeight (lowerAnchor Φ anchor hp) =
       Φ.cumulativeWeight anchor := by

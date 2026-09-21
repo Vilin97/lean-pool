@@ -26,17 +26,20 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
 structure NormalizedFaceStep (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node)
     (Γ : (Φ.flag.polytope anchor).Face) (K R : ℕ) where
   odd : Odd p
+  /-- Integer lattice charts for the lifted supports of the face-refined decomposition. -/
   charts : ∀ x, IntegerLatticeChart
     ((FaceRefinement.decomposition Φ anchor (Φ.faceSelector anchor Γ) odd).liftedSupport x)
   modInjective : ∀ x, Function.Injective ((Rechart.chart
     (FaceRefinement.decomposition Φ anchor (Φ.faceSelector anchor Γ) odd) charts x).modp p)
   centered : ∀ x q, q ∈ (charts x).coordinateSupport → IsCenteredLift p q
+  /-- The radius of the normalized face step, bounded between `K` and `R`. -/
   radius : ℕ
   radius_ge : K ≤ radius
   radius_le : radius ≤ R
   bounded : (FaceRefinement.normalized Φ anchor Γ odd charts modInjective centered).IsKBounded
     (fun _ ↦ radius)
 
+/-- The normalized decomposition supplied by a face step. -/
 noncomputable abbrev NormalizedFaceStep.decomposition
     {Φ : FlagDecomposition p d f} {anchor : Φ.flag.Node}
     {Γ : (Φ.flag.polytope anchor).Face} {K R : ℕ} (D : NormalizedFaceStep Φ anchor Γ K R) :=
@@ -44,11 +47,14 @@ noncomputable abbrev NormalizedFaceStep.decomposition
 
 /-- Concrete deletion and chart data for normalized gap cleanup. -/
 structure NormalizedGapStep (Φ : FlagDecomposition p d f) (K R : ℕ) (α : ℝ) where
+  /-- The pruned weights used to correct the gap condition. -/
   weights : PrunedWeights Φ
   odd : Odd p
+  /-- Integer lattice charts for the supports remaining after cleaning the pruned weights. -/
   charts : ∀ x, IntegerLatticeChart ((weights.cleaned odd).liftedSupport x)
   modInjective : ∀ x, Function.Injective ((Rechart.chart (weights.cleaned odd) charts x).modp p)
   centered : ∀ x q, q ∈ (charts x).coordinateSupport → IsCenteredLift p q
+  /-- The radius of the normalized gap step, bounded between `K` and `R`. -/
   radius : ℕ
   radius_ge : K ≤ radius
   radius_le : radius ≤ R
@@ -60,6 +66,7 @@ structure NormalizedGapStep (Φ : FlagDecomposition p d f) (K R : ℕ) (α : ℝ
     ((Fintype.card Φ.flag.Node : ℝ) * (2 * (radius : ℝ) + 1) ^ d) ≤
       ((weights.normalized odd charts modInjective centered).gap x : ℝ)
 
+/-- The normalized decomposition supplied by a gap step. -/
 noncomputable abbrev NormalizedGapStep.decomposition
     {Φ : FlagDecomposition p d f} {K R : ℕ} {α : ℝ} (D : NormalizedGapStep Φ K R α) :=
   D.weights.normalized D.odd D.charts D.modInjective D.centered
@@ -70,11 +77,15 @@ structure NormalizedCompleteStep (Φ : FlagDecomposition p d f) (anchor : Φ.fla
     (g : ℕ → ℕ) (K R : ℕ) (δ : ℝ) (hδ : 0 ≤ δ)
     (hsmall : (3 : ℝ) ^ (d + 1) * δ < 1) where
   odd : Odd p
+  /-- The width bound chosen for each dimension during complete preparation. -/
   widths : ℕ → ℕ
+  /-- The data preparing the anchor for the completeness refinement. -/
   preparation : CompletePreparation Φ anchor widths δ
+  /-- Integer lattice charts for the supports in the prepared completion diagram. -/
   charts : ∀ x, IntegerLatticeChart ((preparation.diagram odd hδ hsmall).support x)
   modInjective : ∀ x, Function.Injective ((IntegralAffineMap.ofIntAffineMap (charts x).map).modp p)
   centered : ∀ x q, q ∈ (charts x).coordinateSupport → IsCenteredLift p q
+  /-- The radius of the normalized completion step, bounded between `K` and `R`. -/
   radius : ℕ
   radius_ge : K ≤ radius
   radius_le : radius ≤ R
@@ -84,6 +95,7 @@ structure NormalizedCompleteStep (Φ : FlagDecomposition p d f) (anchor : Φ.fla
   bounded : (preparation.normalized odd hδ hsmall charts modInjective centered).IsKBounded
     (fun _ ↦ radius)
 
+/-- The normalized decomposition supplied by a completion step. -/
 noncomputable abbrev NormalizedCompleteStep.decomposition
     {Φ : FlagDecomposition p d f} {anchor : Φ.flag.Node}
     {g : ℕ → ℕ} {K R : ℕ} {δ : ℝ} {hδ : 0 ≤ δ}
@@ -109,13 +121,16 @@ theorem card_le : @Fintype.card D.decomposition.flag.Node D.decomposition.flag.n
     2 * Fintype.card Φ.flag.Node :=
   FaceRefinement.normalized_card_le Φ anchor Γ D.odd D.charts D.modInjective D.centered
 
+/-- The subdivision map carried by the normalized face step. -/
 noncomputable def subdivisionMap : SubdivisionMap Φ D.decomposition :=
   FaceRefinement.normalizedSubdivisionMap Φ anchor Γ D.odd D.charts D.modInjective D.centered
 
+/-- The retained target node of the normalized face step. -/
 noncomputable abbrev targetNode (hΓ : Γ ≠ ⊤) (hred : Φ.IsReducedElement anchor) :
     D.decomposition.flag.Node :=
   FaceRefinement.normalizedTargetNode Φ anchor Γ D.odd D.charts D.modInjective D.centered hΓ hred
 
+/-- The target face of the normalized face step in its new coordinates. -/
 noncomputable def targetFace (hΓ : Γ ≠ ⊤) (hred : Φ.IsReducedElement anchor) :
     (D.decomposition.flag.polytope (D.targetNode hΓ hred)).Face :=
   FaceRefinement.normalizedTargetFace Φ anchor Γ D.odd D.charts D.modInjective D.centered hΓ hred
@@ -149,6 +164,7 @@ theorem card_le : @Fintype.card D.decomposition.flag.Node D.decomposition.flag.n
     Fintype.card Φ.flag.Node :=
   D.weights.normalized_card_le D.odd D.charts D.modInjective D.centered
 
+/-- The subdivision map carried by the normalized gap step. -/
 noncomputable def subdivisionMap : SubdivisionMap Φ D.decomposition :=
   D.weights.normalizedSubdivisionMap D.odd D.charts D.modInjective D.centered
 
@@ -175,9 +191,11 @@ theorem card_le : @Fintype.card D.decomposition.flag.Node D.decomposition.flag.n
     2 * Fintype.card Φ.flag.Node :=
   D.preparation.normalized_card_le D.odd hδ hsmall D.charts D.modInjective D.centered
 
+/-- The subdivision map carried by the normalized completion step. -/
 noncomputable def subdivisionMap : SubdivisionMap Φ D.decomposition :=
   D.preparation.normalizedSubdivisionMap D.odd hδ hsmall D.charts D.modInjective D.centered
 
+/-- The distinguished complete node of the normalized completion step. -/
 noncomputable abbrev targetNode : D.decomposition.flag.Node :=
   D.preparation.normalizedCompleteNode D.odd hδ hsmall D.charts D.modInjective D.centered
 
@@ -199,8 +217,10 @@ end NormalizedCompleteStep
 /-- Uniform numerical parameters together with providers of all three
 concrete normalized operations. -/
 structure NormalizedOperationParameters (d : ℕ) (g : ℕ → ℕ) where
+  /-- A uniform bound on the radius after one normalized operation. -/
   radiusGrowth : ℕ → ℕ
   radiusGrowth_growing : IsGrowing radiusGrowth
+  /-- The prime threshold ensuring normalized operations exist at the specified radius. -/
   primeThreshold : ℕ → ℕ
   primeThreshold_monotone : Monotone primeThreshold
   primeThreshold_ge_two : ∀ K, 2 ≤ primeThreshold K
@@ -284,8 +304,11 @@ theorem exists_normalizedOperationParameters (d : ℕ) (g : ℕ → ℕ) (hg : M
       (hC K).choose_spec.2 p ((hCQ K).trans_lt hp) f Φ anchor δ hδ hsmall hΦ
     exact ⟨⟨hp', t, D, charts, hmod, hcenter, b, hKb, hbC.trans (hCH K), ht, ht0, hgb, hbound⟩⟩
 
+/-- Choose uniform radius and prime bounds together with providers of the normalized
+operations. -/
 noncomputable def normalizedOperationParameters (d : ℕ) (g : ℕ → ℕ) (hg : Monotone g) :
-    NormalizedOperationParameters d g := Classical.choice (exists_normalizedOperationParameters d g hg)
+    NormalizedOperationParameters d g :=
+  Classical.choice (exists_normalizedOperationParameters d g hg)
 
 namespace NormalizedOperationParameters
 
@@ -293,8 +316,10 @@ variable {d : ℕ} {g : ℕ → ℕ} (P : NormalizedOperationParameters d g)
 
 theorem radiusGrowth_ge (K : ℕ) : K ≤ P.radiusGrowth K := (P.radiusGrowth_growing.2 K).le
 
+/-- The radius bound obtained after `N` successive applications of the growth function. -/
 def radiusHorizon (K N : ℕ) : ℕ := P.radiusGrowth^[N] K
 
+/-- The prime threshold at the radius bound after `N` normalized operations. -/
 def primeHorizon (K N : ℕ) : ℕ := P.primeThreshold (P.radiusHorizon K N)
 
 theorem radius_sequence_le (r : ℕ → ℕ) {K : ℕ} (hstart : r 0 ≤ K)

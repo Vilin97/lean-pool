@@ -81,7 +81,7 @@ theorem generatorFinset_nonempty {n : ℕ} {P : RationalPolytope n}
   rw [Finset.not_nonempty_iff_eq_empty] at h
   have hface := F.nonempty
   rw [F.carrier_eq_convexHull_generatorFinset, h] at hface
-  simpa using hface
+  simp at hface
 
 theorem generatorFinset_injective {n : ℕ} {P : RationalPolytope n} :
     Function.Injective (@generatorFinset n P) := by

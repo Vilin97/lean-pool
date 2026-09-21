@@ -227,6 +227,7 @@ theorem exists_openSegment_of_mem_intrinsicInterior {d : ℕ}
 /-- A finite convex hull together with the vertex identification needed in
 the hollow-polytope branch. -/
 structure FiniteHullModel {d n : ℕ} (points : Fin n → RealCoord d) where
+  /-- Rational polytope realizing the finite hull. -/
   polytope : RationalPolytope d
   carrier_eq : polytope.carrier = convexHull ℝ (Set.range points)
   vertexSet_eq : polytope.vertexSet = Set.range points

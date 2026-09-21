@@ -22,7 +22,10 @@ namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
+/-- A nonzero family of local weights obtained by decreasing the weights of a flag
+decomposition. -/
 structure PrunedWeights (Φ : FlagDecomposition p d f) where
+  /-- The retained local multiplicity at each node and ambient point. -/
   weight : Φ.flag.Node → FpCoord p d → ℕ
   weight_le : ∀ x v, weight x v ≤ Φ.localWeight x v
   nonzero : ∃ x v, weight x v ≠ 0
@@ -31,12 +34,15 @@ namespace PrunedWeights
 
 variable {Φ : FlagDecomposition p d f} (D : PrunedWeights Φ)
 
+/-- The pruned weight accumulated over all nodes below a given node. -/
 noncomputable abbrev cumulative := FlagDecompositionRaw.cumulativeWeight D.weight
+/-- The centered integral lift of the cumulative pruned weight. -/
 noncomputable abbrev hat := FlagDecompositionRaw.hat Φ.representation D.weight
+/-- The centered integral lift of the pruned weight at a single node. -/
 noncomputable abbrev localLift := FlagDecompositionRaw.localLift Φ.representation D.weight
+/-- The finite support of the cumulative centered lift of the pruned weights. -/
 noncomputable abbrev support := FlagDecompositionRaw.hatSupport Φ.representation D.weight
 
-@[simp]
 theorem mem_support (x : Φ.flag.Node) (q : IntCoord (Φ.flag.rank x)) :
     q ∈ D.support x ↔ D.hat x q ≠ 0 := FlagDecompositionRaw.mem_hatSupport _ _ _ _
 
@@ -55,7 +61,8 @@ theorem cumulative_ne_zero_iff (x : Φ.flag.Node) (v : FpCoord p d) :
     · exact (hy (ite_eq_right hyx)).elim
   · rintro ⟨y, hyx, hy⟩
     have hle : D.weight y v ≤ D.cumulative x v := by
-      simpa only [cumulative, FlagDecompositionRaw.cumulativeWeight, ite_eq_left hyx] using Finset.single_le_sum
+      simpa only [cumulative, FlagDecompositionRaw.cumulativeWeight, ite_eq_left hyx] using
+        Finset.single_le_sum
         (f := fun z ↦ if z ≤ x then D.weight z v else 0)
         (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ y)
     exact ne_of_gt ((Nat.pos_of_ne_zero hy).trans_le hle)
@@ -108,7 +115,8 @@ theorem hat_ne_zero_iff (x : Φ.flag.Node) (q : IntCoord (Φ.flag.rank x)) :
       have hle : D.cumulative x v ≤
           FlagDecompositionRaw.affineFibreMass (D.cumulative x) (Φ.representation.map x)
             (q.mod p) := by
-        simpa only [FlagDecompositionRaw.affineFibreMass, ite_eq_left heq] using Finset.single_le_sum
+        simpa only [FlagDecompositionRaw.affineFibreMass, ite_eq_left heq] using
+        Finset.single_le_sum
           (f := fun w ↦ if Φ.representation.map x w = q.mod p then D.cumulative x w else 0)
           (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ v)
       exact ne_of_gt ((Nat.pos_of_ne_zero hv).trans_le hle)

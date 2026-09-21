@@ -137,7 +137,8 @@ theorem face_no_repeat (P : Iteration.Progress s t ε δ g)
   subst y
   intro heq
   have hne : ((u.decomposition.flag.polytope z).carrier ∩
-      (P.subdivision.comp T).fibre z ⁻¹' (s.decomposition.faceAtNode Γ hnode).carrier).Nonempty := by
+      (P.subdivision.comp T).fibre z ⁻¹'
+        (s.decomposition.faceAtNode Γ hnode).carrier).Nonempty := by
     rw [heq]
     exact Δ.nonempty
   have hreal := P.subdivision.comp_isRealizedFace T z
@@ -168,8 +169,11 @@ variable {s : ℕ → State p d f} (D : LineageMassMaps (fun i ↦ (s i).decompo
 /-- One actual face event, matching the comparison system at its selected
 time. Progress is required only at these event times. -/
 structure FaceOccurrence (i : ℕ) where
+  /-- The transition in which the specified face event occurs. -/
   progress : Progress (s i) (s (i + 1)) ε (δ i) g
+  /-- The node at level `L` supporting this face event. -/
   node : (s i).decomposition.flag.Node
+  /-- The face selected by this occurrence of the event. -/
   face : ((s i).decomposition.flag.polytope node).Face
   level_eq : (s i).decomposition.level node = L
   event_eq : progress.event = .face node face
@@ -179,6 +183,7 @@ namespace FaceOccurrence
 
 variable {D L ε δ g}
 
+/-- Regard the occurrence's node as a node of level at most `L`. -/
 abbrev lowNode {i : ℕ} (E : FaceOccurrence D L ε δ g i) : D.system.LowNode L i :=
   ⟨E.node, E.level_eq.le⟩
 

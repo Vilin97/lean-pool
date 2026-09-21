@@ -20,14 +20,19 @@ open scoped BigOperators
 
 namespace EGZ.Expansion
 
+/-- The positive and negative multiplicities specifying a signed exchange pattern. -/
 structure ExchangePattern (S : Type*) where
+  /-- The number of positive positions carrying each label. -/
   positive : S → ℕ
+  /-- The number of negative positions carrying each label. -/
   negative : S → ℕ
 
 namespace ExchangePattern
 
 variable {S : Type*} [Fintype S] [DecidableEq S]
 
+/-- The labelled positions of an exchange pattern, separated into positive and negative
+copies. -/
 def Position (P : ExchangePattern S) :=
   (Σ q, Fin (P.positive q)) ⊕ (Σ q, Fin (P.negative q))
 
@@ -37,12 +42,16 @@ instance (P : ExchangePattern S) : Fintype P.Position :=
 instance (P : ExchangePattern S) : DecidableEq P.Position :=
   inferInstanceAs (DecidableEq ((Σ q, Fin (P.positive q)) ⊕ (Σ q, Fin (P.negative q))))
 
+/-- The label carried by a position of the exchange pattern. -/
 def label (P : ExchangePattern S) : P.Position → S := Sum.elim Sigma.fst Sigma.fst
 
+/-- The integer sign of a position: one for a positive copy and minus one for a negative copy. -/
 def sign (P : ExchangePattern S) : P.Position → ℤ := Sum.elim (fun _ ↦ 1) (fun _ ↦ -1)
 
+/-- A choice of a sample from the prescribed fibre at every labelled position. -/
 abbrev Sample (P : ExchangePattern S) (X : S → Type*) := ∀ i : P.Position, X (P.label i)
 
+/-- The total number of positive and negative positions in the pattern. -/
 def size (P : ExchangePattern S) : ℕ := (∑ q, P.positive q) + ∑ q, P.negative q
 
 omit [DecidableEq S] in
@@ -64,12 +73,16 @@ theorem sum_sign_smul {G : Type*} [AddCommGroup G] (P : ExchangePattern S) (r : 
       r (Sum.elim Sigma.fst Sigma.fst i)) = _
   simp [Fintype.sum_sum_type, Fintype.sum_sigma, ← Finset.sum_neg_distrib, sub_eq_add_neg]
 
+/-- The signed sum of the vectors selected by a sample of the exchange pattern. -/
 noncomputable def sampleSum {G : Type*} [AddCommGroup G]
     (P : ExchangePattern S) {X : S → Type*} (v : ∀ q, X q → G) (x : P.Sample X) : G :=
   ∑ i, P.sign i • v (P.label i) (x i)
 
+/-- The exchange pattern obtained by separating an integral relation into positive and
+negative parts. -/
 def ofRelation (b : S → ℤ) : ExchangePattern S := ⟨fun q ↦ (b q).toNat, fun q ↦ (-b q).toNat⟩
 
+omit [DecidableEq S] in
 theorem ofRelation_sum {G : Type*} [AddCommGroup G] (b : S → ℤ) (r : S → G) :
     (∑ i : (ofRelation b).Position, (ofRelation b).sign i • r ((ofRelation b).label i)) =
       ∑ q, b q • r q := by

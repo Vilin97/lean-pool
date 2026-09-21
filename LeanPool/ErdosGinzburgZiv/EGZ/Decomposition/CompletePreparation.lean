@@ -23,10 +23,13 @@ namespace EGZ.FlagDecomposition
 
 variable {p d : ℕ} [Fact p.Prime] {f : FpCoord p d → ℕ}
 
+/-- A bounded chain of thin directions used to prepare a complete refinement. -/
 structure CompletePreparation (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node)
     (t : ℕ → ℕ) (δ : ℝ) where
+  /-- Number of selected thin directions. -/
   count : ℕ
   count_le : count ≤ d
+  /-- Chain witnessing thinness in the selected directions at their prescribed scales. -/
   chain : DirectionChain (Φ.representation.fiberConstantSubmodule anchor)
     (fun i ξ ↦ IsThinAlong (Φ.cumulativeWeight anchor) ξ (t (i + 1))
       ((3 : ℝ) ^ (i + 1) * δ)) count
@@ -45,6 +48,7 @@ namespace CompletePreparation
 variable {Φ : FlagDecomposition p d f} {anchor : Φ.flag.Node} {t : ℕ → ℕ} {δ : ℝ}
     (D : CompletePreparation Φ anchor t δ)
 
+/-- Intersection of the slabs selected by the direction chain. -/
 def selectedSet : Set (FpCoord p d) := slabIntersection D.count D.chain.direction t
 
 theorem selected_nonzero (_hp : Odd p) (hδ : 0 ≤ δ) (hsmall : (3 : ℝ) ^ (d + 1) * δ < 1) :
@@ -57,23 +61,27 @@ theorem selected_nonzero (_hp : Odd p) (hδ : 0 ≤ δ) (hsmall : (3 : ℝ) ^ (d
 
 variable (hp : Odd p) (hδ : 0 ≤ δ) (hsmall : (3 : ℝ) ^ (d + 1) * δ < 1)
 
+/-- Decomposition obtained by pruning to the selected slab intersection. -/
 noncomputable abbrev pruned : FlagDecomposition p d f :=
   LocalizedPruning.decomposition Φ anchor D.selectedSet (D.selected_nonzero hp hδ hsmall) hp
 
+/-- Distinguished anchor in the pruned decomposition. -/
 noncomputable abbrev prunedAnchor : (D.pruned hp hδ hsmall).flag.Node :=
   LocalizedPruning.anchorNode Φ anchor D.selectedSet (D.selected_nonzero hp hδ hsmall) hp
 
+/-- Two-layer decomposition obtained by splitting the pruned anchor. -/
 noncomputable abbrev split : FlagDecomposition p d f :=
   LowerTransfer.decomposition (D.pruned hp hδ hsmall) (D.prunedAnchor hp hδ hsmall) hp
 
+/-- Lower copy of the anchor after splitting. -/
 noncomputable abbrev lowerAnchor : (D.split hp hδ hsmall).flag.Node :=
   LowerTransfer.lowerAnchor (D.pruned hp hδ hsmall) (D.prunedAnchor hp hδ hsmall) hp
 
+/-- Upper copy of the anchor after splitting. -/
 noncomputable abbrev upperAnchor : (D.split hp hδ hsmall).flag.Node :=
   LowerTransfer.upper (D.pruned hp hδ hsmall) (D.prunedAnchor hp hδ hsmall) hp
     (D.prunedAnchor hp hδ hsmall)
 
-@[simp]
 theorem lowerAnchor_cumulativeWeight :
     (D.split hp hδ hsmall).cumulativeWeight (D.lowerAnchor hp hδ hsmall) =
       restrictWeight (Φ.cumulativeWeight anchor) D.selectedSet := by
@@ -122,17 +130,16 @@ noncomputable def subdivisionMap : SubdivisionMap Φ (D.split hp hδ hsmall) :=
       (FaceRefinement.subdivisionMap (D.pruned hp hδ hsmall) (D.prunedAnchor hp hδ hsmall)
         (fun _ ↦ True) hp)
 
+/-- Number of additional coordinates assigned to each split node. -/
 noncomputable abbrev extra : (D.split hp hδ hsmall).flag.Node → ℕ :=
   LowerTransfer.extra (D.pruned hp hδ hsmall) (D.prunedAnchor hp hδ hsmall) hp D.count
 
 theorem extra_antitone : Antitone (D.extra hp hδ hsmall) :=
   LowerTransfer.extra_antitone _ _ _ _
 
-@[simp]
 theorem extra_lowerAnchor : D.extra hp hδ hsmall (D.lowerAnchor hp hδ hsmall) = D.count :=
   LowerTransfer.extra_lowerAnchor _ _ _ _
 
-@[simp]
 theorem extra_upperAnchor : D.extra hp hδ hsmall (D.upperAnchor hp hδ hsmall) = 0 :=
   LowerTransfer.extra_upper _ _ _ _ _
 

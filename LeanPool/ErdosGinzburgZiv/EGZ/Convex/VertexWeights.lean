@@ -54,6 +54,7 @@ supplies coefficients vertex by vertex.  Only its values on `vertexFinset`
 enter the data. -/
 structure VertexWeights {d : ℕ} (P : RationalPolytope d)
     (q : RealCoord d) where
+  /-- Barycentric weight assigned to each vertex. -/
   weight : RealCoord d → ℝ
   nonnegative : ∀ v ∈ P.vertexFinset, 0 ≤ weight v
   sum_eq_one : ∑ v ∈ P.vertexFinset, weight v = 1

@@ -22,9 +22,11 @@ namespace Coord
 
 variable {R : Type*} [CommRing R]
 
+/-- Linear projection onto the first block of coordinates. -/
 def first (m k : ℕ) : (Fin (m + k) → R) →ₗ[R] (Fin m → R) :=
   LinearMap.pi fun i ↦ LinearMap.proj (Fin.castAdd k i)
 
+/-- Linear projection onto the last block of coordinates. -/
 def last (m k : ℕ) : (Fin (m + k) → R) →ₗ[R] (Fin k → R) :=
   LinearMap.pi fun i ↦ LinearMap.proj (Fin.natAdd m i)
 

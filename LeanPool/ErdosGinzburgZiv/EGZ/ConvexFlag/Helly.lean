@@ -281,7 +281,7 @@ private theorem exists_strictSeparator_of_not_mem_weakConvexHull
     ∃ (xi : F.LinearFunction) (hq : xi.EvaluableAt q),
       ∀ s ∈ S, ∀ hs : xi.EvaluableAt s, xi.eval s hs < xi.eval q hq := by
   unfold weakConvexHull at h
-  simp only [Set.mem_setOf_eq] at h
+  simp only [Set.mem_ofPred_eq] at h
   push Not at h
   obtain ⟨xi, hq, hxi⟩ := h
   refine ⟨xi, hq, ?_⟩
@@ -299,7 +299,7 @@ private theorem LinearFunction.eval_congr_point {F : ConvexFlag}
 the weak hull of all the other inputs.  This is the normalization calculation
 in the first paragraph of the flagged Doignon argument. -/
 private theorem mem_weakConvexHull_deletion_of_combination_projection
-    {F : ConvexFlag} {I : Type*} [Fintype I] [DecidableEq I]
+    {F : ConvexFlag} {I : Type*} [Fintype I]
     {points : I → F.Point} {weight : I → ℝ} {result : F.Point}
     (c : ConvexCombination points weight result) (j : I)
     (hjlt : weight j < 1) (hproj : result.IsProjectionOf (points j)) :
@@ -351,7 +351,7 @@ private theorem mem_weakConvexHull_deletion_of_combination_projection
         symm
         apply Finset.sum_subtype
         intro i
-        simp only [Finset.mem_erase, Finset.mem_univ, and_true, B]
+        simp only [Finset.mem_erase, Finset.mem_univ, and_true]
       have herase := Finset.sum_erase_add (Finset.univ : Finset A)
         (fun i : A ↦ weight i.1) (Finset.mem_univ jj)
       rw [← hsub, c.sum_active] at herase
@@ -380,7 +380,7 @@ private theorem mem_weakConvexHull_deletion_of_combination_projection
         symm
         apply Finset.sum_subtype
         intro i
-        simp only [Finset.mem_erase, Finset.mem_univ, and_true, B]
+        simp only [Finset.mem_erase, Finset.mem_univ, and_true]
       have hsplit := Finset.sum_erase_add (Finset.univ : Finset A)
         (fun i : A ↦ weight i.1 • v i) (Finset.mem_univ jj)
       have horiginal : result.val = ∑ i : A, weight i.1 • v i := by
@@ -664,7 +664,7 @@ private theorem flaggedDoignon {F : ConvexFlag} (Ω : F.ProperPointSet)
         apply Finset.ssubset_iff_subset_ne.mpr
         constructor
         · intro q hq
-          simp only [hullScore, Finset.mem_filter, Finset.mem_univ, true_and] at hq ⊢
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hq ⊢
           exact ⟨hq.1, hclosureSubset hq.2⟩
         · intro heq
           let qi : {q : F.Point // q.IsIntegral} := ⟨p i, hp.2.2.1 i⟩

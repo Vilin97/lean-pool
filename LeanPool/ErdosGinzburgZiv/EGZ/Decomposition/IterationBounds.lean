@@ -21,9 +21,11 @@ namespace EGZ.FlagDecomposition.Iteration
 
 open DecompositionParameters
 
+/-- Scale assigned to a given stage of the bounded iteration. -/
 noncomputable def stageScale (d : ℕ) (ε : ℝ) (i : ℕ) : ℝ :=
   scale d (initialScale d ε) (i + 1)
 
+/-- Accumulated mass-loss budget before a given iteration index. -/
 noncomputable def prefixBudget (d : ℕ) (ε : ℝ) (i : ℕ) : ℝ :=
   ∑ j ∈ Finset.range i, lossBudget d ε (initialScale d ε) (j + 1)
 
@@ -63,6 +65,7 @@ theorem stageScale_small {d : ℕ} (hd : 1 ≤ d) {ε : ℝ}
 variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
     {g : ℕ → ℕ} (P : NormalizedOperationParameters d g) (ε : ℝ)
 
+/-- Iteration state with bounds on node count, radius, and accumulated mass loss. -/
 structure BoundedState (i : ℕ) extends State p d f where
   card_bound : Fintype.card decomposition.flag.Node ≤ 2 ^ i
   radius_bound : radius ≤ P.radiusHorizon 1 i
@@ -73,9 +76,11 @@ namespace BoundedState
 
 variable {P ε} {i : ℕ} (s : BoundedState (f := f) P ε i)
 
+omit [Fact (Nat.Prime p)] in
 theorem mass_le_input : s.decomposition.retainedMass ≤ natMass f :=
   natMass_mono s.decomposition.retained_le
 
+omit [Fact (Nat.Prime p)] in
 theorem mass_bounds (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2) :
     (natMass f : ℝ) / 2 ≤ s.decomposition.retainedMass ∧
       (1 - ε) * (natMass f : ℝ) ≤ s.decomposition.retainedMass := by
@@ -87,6 +92,7 @@ theorem mass_bounds (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2) :
   have hepsM := mul_le_mul_of_nonneg_right heps hM
   constructor <;> nlinarith [s.mass_loss_bound]
 
+/-- Initial bounded state for a nonzero input weight. -/
 noncomputable def initial (hf : f ≠ 0) : BoundedState (f := f) P ε 0 where
   decomposition := FlagDecomposition.initial f hf
   radius := 1
@@ -98,11 +104,13 @@ noncomputable def initial (hf : f ≠ 0) : BoundedState (f := f) P ε 0 where
   radius_bound := le_rfl
   mass_loss_bound := by rw [initial_retainedMass, prefixBudget_zero]; simp
 
+/-- Advance a bounded state using a certified progress step and a radius bound. -/
 noncomputable def advance {t : State p d f} (hε : 0 < ε)
     (D : Progress s.toState t ε (stageScale d ε i) g)
     (hR : t.radius ≤ P.radiusGrowth s.radius) : BoundedState (f := f) P ε (i + 1) where
   toState := t
-  card_bound := D.card_le.trans (by simpa [pow_succ, Nat.mul_comm] using Nat.mul_le_mul_left 2 s.card_bound)
+  card_bound := D.card_le.trans
+    (by simpa [pow_succ, Nat.mul_comm] using Nat.mul_le_mul_left 2 s.card_bound)
   radius_bound := by
     change t.radius ≤ P.radiusGrowth^[i + 1] 1
     rw [Function.iterate_succ_apply']
@@ -118,6 +126,7 @@ noncomputable def advance {t : State p d f} (hε : 0 < ε)
     change (s.decomposition.retainedMass : ℝ) - t.decomposition.retainedMass ≤ _ at hl
     nlinarith [s.mass_loss_bound]
 
+/-- Retain the same underlying state at the next iteration index. -/
 noncomputable def keep (hε : 0 < ε) : BoundedState (f := f) P ε (i + 1) where
   toState := s.toState
   card_bound := s.card_bound.trans (Nat.pow_le_pow_right (by omega) (Nat.le_succ i))

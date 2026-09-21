@@ -74,6 +74,7 @@ theorem localLift_centeredLift_ne_zero (hp : Odd p) (x : Φ.flag.Node)
     (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ v)
 
 open Classical in
+/-- The flag point associated with a local atom through its centered integral lift. -/
 def localAtomPoint (hp : Odd p) (a : Φ.LocalAtom) : Φ.flag.Point where
   base := a.1.1
   val := (FpCoord.centeredLift (Φ.representation.map a.1.1 a.1.2)).real
@@ -215,7 +216,7 @@ theorem cumulativeMass_lower_of_halfspace_lower (hodd : Odd p)
       a ≤ (Φ.liftedMassOn q.base {z | ξ q.val ≤ ξ z} : ℝ)) :
     a ≤ natMass (Φ.cumulativeWeight q.base) := by
   have hz := h (AffineMap.const ℝ _ (0 : ℝ))
-  simp only [AffineMap.const_apply, le_refl, Set.setOf_true] at hz
+  simp only [AffineMap.const_apply, le_refl, Set.ofPred_true] at hz
   rw [Φ.liftedMassOn_eq_natMassOn hodd] at hz
   simpa only [natMassOn, Set.mem_ofPred_eq, Set.mem_univ, ite_true, natMass] using hz
 

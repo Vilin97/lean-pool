@@ -40,9 +40,11 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
       ((Rechart.chart (decomposition Φ anchor (Φ.faceSelector anchor Γ) hp) C x).modp p))
     (hcenter : ∀ x q, q ∈ (C x).coordinateSupport → IsCenteredLift p q)
 
+/-- The face refinement expressed in minimal integer lattice charts. -/
 noncomputable abbrev minimalized : FlagDecomposition p d f :=
   Rechart.decomposition (decomposition Φ anchor (Φ.faceSelector anchor Γ) hp) C hp hmod hcenter
 
+/-- The minimalized face refinement after reduction. -/
 noncomputable abbrev normalized : FlagDecomposition p d f :=
   (minimalized Φ anchor Γ hp C hmod hcenter).reduced hp
 
@@ -52,11 +54,13 @@ theorem minimalized_upperAnchor_isReduced (hΓ : Γ ≠ ⊤) (hred : Φ.IsReduce
   (Rechart.decomposition_isReducedElement_iff _ _ _ _ _ _).mpr
     (face_upperAnchor_isReduced Φ anchor hp Γ hΓ hred)
 
+/-- The retained upper copy of the anchor in the normalized face refinement. -/
 noncomputable abbrev normalizedTargetNode (hΓ : Γ ≠ ⊤) (hred : Φ.IsReducedElement anchor) :
     (normalized Φ anchor Γ hp C hmod hcenter).flag.Node :=
   ⟨upper Φ anchor (Φ.faceSelector anchor Γ) hp anchor,
     minimalized_upperAnchor_isReduced Φ anchor Γ hp C hmod hcenter hΓ hred⟩
 
+/-- The face corresponding to the original target face in normalized coordinates. -/
 noncomputable def normalizedTargetFace (hΓ : Γ ≠ ⊤) (hred : Φ.IsReducedElement anchor) :
     ((normalized Φ anchor Γ hp C hmod hcenter).flag.polytope
       (normalizedTargetNode Φ anchor Γ hp C hmod hcenter hΓ hred)).Face :=
@@ -81,7 +85,6 @@ theorem normalized_isMinimal : (normalized Φ anchor Γ hp C hmod hcenter).IsMin
 theorem normalized_isReduced : (normalized Φ anchor Γ hp C hmod hcenter).IsReduced :=
   (minimalized Φ anchor Γ hp C hmod hcenter).reduced_isReduced hp
 
-@[simp]
 theorem normalized_retainedMass :
     (normalized Φ anchor Γ hp C hmod hcenter).retainedMass = Φ.retainedMass := by
   rw [(minimalized Φ anchor Γ hp C hmod hcenter).reduced_retainedMass,
@@ -103,6 +106,7 @@ theorem normalized_isKBounded {K B : ℕ} (hK : Φ.IsKBounded (fun _ ↦ K))
     (Rechart.decomposition_isKBounded _ _ _ _ _
       (isKBounded Φ anchor (Φ.faceSelector anchor Γ) hp hK) hC)
 
+/-- The subdivision map from the original decomposition to the normalized face refinement. -/
 noncomputable def normalizedSubdivisionMap :
     SubdivisionMap Φ (normalized Φ anchor Γ hp C hmod hcenter) :=
   (subdivisionMap Φ anchor (Φ.faceSelector anchor Γ) hp).comp
@@ -152,7 +156,8 @@ theorem normalized_face_refinement_lemma (d : ℕ) :
             Φ.IsKBounded (fun _ ↦ K) →
             ∃ (hp : Odd p)
               (C : ∀ x, IntegerLatticeChart
-                ((FaceRefinement.decomposition Φ anchor (Φ.faceSelector anchor Γ) hp).liftedSupport x))
+                ((FaceRefinement.decomposition Φ anchor
+                  (Φ.faceSelector anchor Γ) hp).liftedSupport x))
               (hmod : ∀ x, Function.Injective ((Rechart.chart
                 (FaceRefinement.decomposition Φ anchor (Φ.faceSelector anchor Γ) hp) C x).modp p))
               (hcenter : ∀ x q, q ∈ (C x).coordinateSupport → IsCenteredLift p q),
