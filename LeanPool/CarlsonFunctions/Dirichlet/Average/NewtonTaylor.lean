@@ -274,7 +274,7 @@ def newtonBasis (z : Fin n → ℂ) (x : ℂ) : ℂ :=
   simp [newtonBasis, prependNewtonNode, Fin.prod_univ_succ]
 
 /-- Appending a node adds its linear factor to the Newton basis. -/
-@[simp] theorem newtonBasis_snoc (z : Fin n → ℂ) (a x : ℂ) :
+theorem newtonBasis_snoc (z : Fin n → ℂ) (a x : ℂ) :
     newtonBasis (Fin.snoc z a) x = newtonBasis z x * (x - a) := by
   simp [newtonBasis, Fin.prod_univ_castSucc]
 
