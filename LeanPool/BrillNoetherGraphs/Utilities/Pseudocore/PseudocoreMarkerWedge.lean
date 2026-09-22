@@ -205,7 +205,8 @@ theorem wedgeEquiv_apply_factor {G : CFGraph} (marker : Fin core.loopCount)
         (cut split spec marker hCore hCompatible).swap.leftGlue
         (cut split spec marker hCore hCompatible).swap.rightGlue
         ⟨presentation z, hz⟩)
-  rw [VertexWedgePresentation.graphIso_apply_wedgeRightVertex]
+  rw [VertexWedgePresentation.graphIso_apply_wedgeRightVertex
+    (cut split spec marker hCore hCompatible).swap.presentation ⟨presentation z, hz⟩]
   rfl
 
 /-- The second of two distinct marker cuts restricts to the complementary
