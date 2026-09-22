@@ -70,7 +70,7 @@ theorem tensorCopair_point
       interchangeDesc A N₁ N₁' N₂ N₂' =
       (d₁.copair ⊗ₘ d₂.copair) ≫
         interchange A N₁ N₁' N₂ N₂' := by
-    rw [← Category.assoc, hmap, Category.assoc]
+    erw [← Category.assoc, hmap, Category.assoc]
     exact congrArg (fun t : (modTensorMod A N₁ N₁').X ⊗
           (modTensorMod A N₂ N₂').X ⟶
           modTensor A (modTensorMod A N₁ N₂)
@@ -198,7 +198,7 @@ theorem interchange_zigContract
         regPairFold A := by
     rw [hpair, ← Category.assoc, modTensorπ_interchangeDesc]
     rfl
-  conv_lhs => rw [← whisker_exchange_assoc,
+  conv_lhs => erw [← whisker_exchange_assoc,
     ← comp_whiskerRight_assoc, tensorHom_π_interchange,
     rawInterchangeπ, rawInterchange]
   have hzdef : (MonoidalCategory.whiskerRight
@@ -218,7 +218,10 @@ theorem interchange_zigContract
     whiskerRight_modTensorπ_zigContract A
       (tensorDatum A d₁ d₂).pair
       (tensorDatum A d₁ d₂).pair_linear
-  conv_lhs => rw [comp_whiskerRight, comp_whiskerRight,
+  conv_lhs => erw [
+    comp_whiskerRight (tensorμ N₁.X N₁'.X N₂.X N₂'.X)
+      ((modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') ≫ (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂'))) _,
+    comp_whiskerRight (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂')) _,
     Category.assoc, Category.assoc, hzdef]
   -- The inner contraction word, fully reduced at the fold.
   have hfold : modTensorπ A (regularMod A) (regularMod A) ≫
@@ -260,18 +263,18 @@ theorem interchange_zigContract
           (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫ t)
         t2).trans (by
           rw [← MonoidalCategory.tensorHom_comp_tensorHom_assoc])
-    rw [← Category.assoc, tensorHom_π_interchange,
-      rawInterchangeπ, rawInterchange, Category.assoc,
-      Category.assoc]
-    exact congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
+    erw [← Category.assoc, tensorHom_π_interchange,
+      rawInterchangeπ, rawInterchange]
+    conv_lhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
+    simpa only [Category.assoc] using congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
         A => tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫ t) htail
   conv_lhs => rw [hinner]
-  conv_lhs => rw [whisker_exchange_assoc
+  conv_lhs => erw [whisker_exchange_assoc
       (tensorμ N₁.X N₁'.X N₂.X N₂'.X) (modTensorπ A N₁ N₂),
     whisker_exchange_assoc
       (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂')
       (modTensorπ A N₁ N₂)]
-  conv_lhs => rw [← reassoc_of% (MonoidalCategory.tensorHom_def
+  conv_lhs => erw [← reassoc_of% (MonoidalCategory.tensorHom_def
       (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂')
       (modTensorπ A N₁ N₂))]
   have hα : ((modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') ⊗ₘ
@@ -518,7 +521,7 @@ theorem interchange_zagContract
         regPairFold A := by
     rw [hpair, ← Category.assoc, modTensorπ_interchangeDesc]
     rfl
-  conv_lhs => rw [whisker_exchange_assoc
+  conv_lhs => erw [whisker_exchange_assoc
       (modTensorπ A N₁' N₂')
       (modTensorπ A N₁ N₁' ⊗ₘ modTensorπ A N₂ N₂'),
     ← MonoidalCategory.whiskerLeft_comp_assoc,
@@ -539,8 +542,10 @@ theorem interchange_zagContract
     whiskerLeft_modTensorπ_zagContract A
       (tensorDatum A d₁ d₂).pair
       (tensorDatum A d₁ d₂).pair_linear
-  conv_lhs => rw [MonoidalCategory.whiskerLeft_comp,
-    MonoidalCategory.whiskerLeft_comp,
+  conv_lhs => erw [
+    MonoidalCategory.whiskerLeft_comp _ (tensorμ N₁.X N₁'.X N₂.X N₂'.X)
+      ((modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') ≫ (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂'))),
+    MonoidalCategory.whiskerLeft_comp _ (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂') (modTensorπ A (modTensorMod A N₁ N₂) (modTensorMod A N₁' N₂')),
     Category.assoc, Category.assoc]
   refine Eq.trans (congrArg
     (fun t : modTensor A N₁' N₂' ⊗
@@ -554,7 +559,7 @@ theorem interchange_zagContract
           (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂')) ≫
           t))) hzagdef) ?_
   conv_lhs => rw [hinner]
-  conv_lhs => rw [← whisker_exchange_assoc
+  conv_lhs => erw [← whisker_exchange_assoc
       (modTensorπ A N₁' N₂')
       (tensorμ N₁.X N₁'.X N₂.X N₂'.X),
     ← whisker_exchange_assoc (modTensorπ A N₁' N₂')
@@ -599,12 +604,12 @@ theorem interchange_zagContract
           (modTensorπ A N₁' N₁ ⊗ₘ modTensorπ A N₂' N₂) ≫ t)
         t2).trans (by
           rw [← MonoidalCategory.tensorHom_comp_tensorHom_assoc])
-    rw [← Category.assoc, tensorHom_π_interchange,
-      rawInterchangeπ, rawInterchange, Category.assoc,
-      Category.assoc]
-    exact congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
+    erw [← Category.assoc, tensorHom_π_interchange,
+      rawInterchangeπ, rawInterchange]
+    conv_lhs => erw [Category.assoc]; arg 2; erw [Category.assoc]
+    simpa only [Category.assoc] using congrArg (fun t : (N₁'.X ⊗ N₁.X) ⊗ (N₂'.X ⊗ N₂.X) ⟶
         A => tensorμ N₁'.X N₂'.X N₁.X N₂.X ≫ t) htail
-  conv_lhs => rw [← reassoc_of% (MonoidalCategory.tensorHom_def'
+  conv_lhs => erw [← reassoc_of% (MonoidalCategory.tensorHom_def'
       (modTensorπ A N₁' N₂')
       (modTensorπ A N₁ N₂ ⊗ₘ modTensorπ A N₁' N₂'))]
   have hα : (modTensorπ A N₁' N₂' ⊗ₘ
@@ -843,7 +848,7 @@ theorem tensorDatum_carrier_zig
     rw [leftUnitor_inv_naturality_assoc, whisker_exchange]
   have hcop : (tensorDatum A d₁ d₂).copair =
       tensorCopair A d₁ d₂ := rfl
-  rw [← Category.assoc, ← Category.assoc, Category.assoc
+  erw [← Category.assoc, ← Category.assoc, Category.assoc
     (modTensorπ A N₁ N₂), hslide, hcop, tensorCopair_point,
     Category.assoc, Category.assoc]
   have hμnat : ((η[A] ≫ d₁.copair ⊗ₘ η[A] ≫ d₂.copair) ▷
@@ -864,7 +869,7 @@ theorem tensorDatum_carrier_zig
   rw [comp_whiskerRight]
   rw [comp_whiskerRight]
   rw [Category.assoc, Category.assoc]
-  rw [← whisker_exchange_assoc
+  erw [← whisker_exchange_assoc
       (interchange A N₁ N₁' N₂ N₂') (modTensorπ A N₁ N₂)]
   rw [interchange_zigContract A d₁ d₂]
   have hfinal : (λ_ (N₁.X ⊗ N₂.X)).inv ≫
@@ -926,7 +931,7 @@ theorem tensorDatum_carrier_zag
     rw [rightUnitor_inv_naturality_assoc, ← whisker_exchange]
   have hcop : (tensorDatum A d₁ d₂).copair =
       tensorCopair A d₁ d₂ := rfl
-  rw [← Category.assoc, ← Category.assoc, Category.assoc
+  erw [← Category.assoc, ← Category.assoc, Category.assoc
     (modTensorπ A N₁' N₂'), hslide, hcop, tensorCopair_point,
     Category.assoc, Category.assoc]
   have hμnat : ((N₁'.X ⊗ N₂'.X) ◁
@@ -948,7 +953,7 @@ theorem tensorDatum_carrier_zag
   rw [MonoidalCategory.whiskerLeft_comp]
   rw [MonoidalCategory.whiskerLeft_comp]
   rw [Category.assoc, Category.assoc]
-  rw [whisker_exchange_assoc
+  erw [whisker_exchange_assoc
       (modTensorπ A N₁' N₂') (interchange A N₁ N₁' N₂ N₂')]
   rw [interchange_zagContract A d₁ d₂]
   have hfinal : (ρ_ (N₁'.X ⊗ N₂'.X)).inv ≫

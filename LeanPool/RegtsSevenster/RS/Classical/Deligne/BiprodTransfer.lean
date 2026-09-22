@@ -159,7 +159,8 @@ theorem SchurKilled.biprod
     have := shape_e_central P (⟨lam, rfl⟩ : Shape lam.card) y
     rwa [show Shape.e P (⟨lam, rfl⟩ : Shape lam.card) =
       P.e lam from by
-        rw [Shape.e, symCast_le_refl]] at this
+        unfold Shape.e
+        erw [symCast_le_refl]] at this
   have hfactor : mixedInto X Y n w ≫ permAlg (X ⊞ Y) n (P.e lam) =
       (sortIso X Y n w).hom ≫
         ((tensorPowMap biprod.inl a ⊗ₘ tensorPowMap biprod.inr b) ≫

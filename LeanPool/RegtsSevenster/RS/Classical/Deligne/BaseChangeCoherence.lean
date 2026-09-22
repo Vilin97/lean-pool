@@ -132,7 +132,7 @@ theorem modTensorAssocMid_unitRight
     intro Z h
     rw [← Category.assoc, whiskerRight_modTensorπ_assocMid,
       modTensorAssocCover]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have tail : modTensorπ A P (modTensorMod A N (regularMod A)) ≫
       modTensorMap A (𝟙 P) (modTensorUnitRightMod A N).hom =
     (P.X ◁ (modTensorUnitRight A N).hom) ≫ modTensorπ A P N := by
@@ -283,7 +283,7 @@ theorem modTensorAssocMid_unitLeft
     intro Z h
     rw [← Category.assoc, whiskerRight_modTensorπ_assocMid,
       modTensorAssocCover]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have tail : modTensorπ A P
       (modTensorMod A (regularMod A) N) ≫
       modTensorMap A (𝟙 P) (modTensorUnitLeftMod A N).hom =
@@ -648,7 +648,7 @@ theorem projFormula_assoc_core
     simp only [Category.assoc]
     rw [reassoc_of%
       (baseMul_natural_left B (modTensorπ A M N) P.X)]
-    rw [← MonoidalCategory.whiskerLeft_comp, hcov,
+    erw [← MonoidalCategory.whiskerLeft_comp, hcov,
       MonoidalCategory.whiskerLeft_comp,
       MonoidalCategory.whiskerLeft_comp]
     simp only [Category.assoc]
@@ -732,7 +732,7 @@ theorem modTensorAssocMid_natural_right
     intro Z h
     rw [← Category.assoc, whiskerRight_modTensorπ_assocMid,
       modTensorAssocCover]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have key' : (modTensorπ A P M ▷ N'.X) ≫
       modTensorAssocMid A P M N' =
     (α_ P.X M.X N'.X).hom ≫ (P.X ◁ modTensorπ A M N') ≫
@@ -756,6 +756,7 @@ theorem modTensorAssocMid_natural_right
     (associator_naturality_right P.X M.X g.hom) _) ?_
   simp only [Category.assoc,
     MonoidalCategory.whiskerLeft_comp]
+  repeat' erw [Category.assoc]
 
 /-- The half-descended associator is natural in the second
 slot. -/
@@ -794,7 +795,7 @@ theorem modTensorAssocMid_natural_mid
     intro Z h
     rw [← Category.assoc, whiskerRight_modTensorπ_assocMid,
       modTensorAssocCover]
-    simp only [Category.assoc]
+    repeat' erw [Category.assoc]
   have key' : (modTensorπ A P M' ▷ N.X) ≫
       modTensorAssocMid A P M' N =
     (α_ P.X M'.X N.X).hom ≫ (P.X ◁ modTensorπ A M' N) ≫
@@ -821,6 +822,7 @@ theorem modTensorAssocMid_natural_mid
     (associator_naturality_middle P.X f.hom N.X) _) ?_
   simp only [Category.assoc,
     MonoidalCategory.whiskerLeft_comp]
+  repeat' erw [Category.assoc]
 
 end AssocMidNatural
 

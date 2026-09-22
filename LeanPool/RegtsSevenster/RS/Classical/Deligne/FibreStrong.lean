@@ -63,7 +63,7 @@ noncomputable def fibreOverMonoidal
   haveI : IsIso (CategoryTheory.Functor.LaxMonoidal.ε
       (fibreOver L R)) := by
     rw [fibreOver_ε]
-    infer_instance
+    exact (fibreEpsIso L R).isIso_hom
   haveI : ∀ V W : D, IsIso (CategoryTheory.Functor.LaxMonoidal.μ
       (fibreOver L R) V W) := fun V W => by
     rw [fibreOver_μ]

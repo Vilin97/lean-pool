@@ -218,7 +218,7 @@ theorem twistShuffleInvCover_cond
       from rfl]
   simp only [MonoidalCategory.comp_whiskerRight,
     MonoidalCategory.whiskerLeft_comp, Category.assoc]
-  rw [reassoc_of% (tensorδ_slide_fst A V W R S),
+  erw [reassoc_of% (tensorδ_slide_fst A V W R S),
     reassoc_of% (tensorδ_slide_snd A V W R S)]
   have hcond := modTensor_condition A (tensorLeftMod A V R)
     (tensorLeftMod A W S)
@@ -253,9 +253,10 @@ theorem twistShuffleInvCover_cond
             (W ◁ actLeft A S.X)))) ≫
           modTensorπ A (tensorLeftMod A V R)
             (tensorLeftMod A W S) := hcond
-    simpa only [MonoidalCategory.comp_whiskerRight,
-      MonoidalCategory.whiskerLeft_comp, Category.assoc]
-      using h'
+    simp only [MonoidalCategory.comp_whiskerRight,
+      MonoidalCategory.whiskerLeft_comp] at h'
+    repeat' erw [Category.assoc] at h'
+    exact h'
   have htail : (V ◁ actLeft A R.X) ▷ (W ⊗ S.X) ≫
       modTensorπ A (tensorLeftMod A V R)
         (tensorLeftMod A W S) =
@@ -341,7 +342,7 @@ theorem twistShuffleHom_twistShuffleInv
       ((V ⊗ W) ◁ modTensorπ A R S)) ≫
       twistShuffleInv A V W R S =
     modTensorπ A (tensorLeftMod A V R) (tensorLeftMod A W S)
-  rw [Category.assoc, whiskerLeft_π_twistShuffleInv,
+  erw [Category.assoc, whiskerLeft_π_twistShuffleInv,
     twistShuffleInvCover, ← Category.assoc, tensorμ_tensorδ,
     Category.id_comp]
 
@@ -362,7 +363,7 @@ theorem twistShuffleInv_twistShuffleHom
         (tensorLeftMod A W S)) ≫
       twistShuffleHom A V W R S =
     (V ⊗ W) ◁ modTensorπ A R S
-  rw [Category.assoc]
+  erw [Category.assoc]
   erw [modTensorπ_twistShuffleHom]
   rw [twistShuffleCover, ← Category.assoc, tensorδ_tensorμ,
     Category.id_comp]

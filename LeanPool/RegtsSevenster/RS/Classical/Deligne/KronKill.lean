@@ -25,12 +25,10 @@ namespace RS
 open Finset
 
 private theorem ma_add_apply {G : Type*} (f g : MonoidAlgebra ℂ G)
-    (x : G) : (f + g) x = f x + g x :=
-  Finsupp.add_apply f g x
+    (x : G) : (f + g).coeff x = f.coeff x + g.coeff x := rfl
 
 private theorem ma_smul_apply {G : Type*} (r : ℂ)
-    (f : MonoidAlgebra ℂ G) (x : G) : (r • f) x = r * f x :=
-  (Finsupp.smul_apply r f x).trans (smul_eq_mul _ _)
+    (f : MonoidAlgebra ℂ G) (x : G) : (r • f).coeff x = r * f.coeff x := rfl
 
 universe u
 
@@ -197,7 +195,7 @@ theorem extProd_smul_snd {n : ℕ} (r : ℂ)
 the coefficients. -/
 theorem extProd_apply_pair {n : ℕ} (x y : SymGroupAlgebra n)
     (σ τ : Equiv.Perm (Fin n)) :
-    extProd x y (σ, τ) = x σ * y τ := by
+    (extProd x y).coeff (σ, τ) = x.coeff σ * y.coeff τ := by
   classical
   induction x using MonoidAlgebra.induction_on with
   | of σ₀ =>
@@ -213,8 +211,8 @@ theorem extProd_apply_pair {n : ℕ} (x y : SymGroupAlgebra n)
           intro he
           exact hcase ⟨congrArg Prod.fst he, congrArg Prod.snd he⟩
         rcases not_and_or.mp hcase with hσ | hτ
-        · simp [MonoidAlgebra.single_apply, hne, hσ]
-        · simp [MonoidAlgebra.single_apply, hne, hτ]
+        · simp [MonoidAlgebra.coeff_single_apply, hne, hσ]
+        · simp [MonoidAlgebra.coeff_single_apply, hne, hτ]
     | add y y' hy hy' =>
       rw [extProd_add_snd, ma_add_apply, hy, hy', ma_add_apply,
         mul_add]
@@ -233,11 +231,11 @@ invariant coefficients. -/
 theorem extProd_shape_e_coeff_conj (P : SchurPackage.{u}) {n : ℕ}
     (μ ν : Shape n)
     (g k : Equiv.Perm (Fin n) × Equiv.Perm (Fin n)) :
-    extProd (Shape.e P μ) (Shape.e P ν) (g⁻¹ * k * g) =
-      extProd (Shape.e P μ) (Shape.e P ν) k := by
-  show extProd (Shape.e P μ) (Shape.e P ν)
+    (extProd (Shape.e P μ) (Shape.e P ν)).coeff (g⁻¹ * k * g) =
+      (extProd (Shape.e P μ) (Shape.e P ν)).coeff k := by
+  show (extProd (Shape.e P μ) (Shape.e P ν)).coeff
       (g.1⁻¹ * k.1 * g.1, g.2⁻¹ * k.2 * g.2) =
-    extProd (Shape.e P μ) (Shape.e P ν) (k.1, k.2)
+    (extProd (Shape.e P μ) (Shape.e P ν)).coeff (k.1, k.2)
   rw [extProd_apply_pair, extProd_apply_pair, shape_e_coeff_conj,
     shape_e_coeff_conj]
 
@@ -256,22 +254,14 @@ theorem extProd_shape_e_central (P : SchurPackage.{u}) {n : ℕ}
           MonoidAlgebra.single g c =
         MonoidAlgebra.single g c *
           extProd (Shape.e P μ) (Shape.e P ν) by
-    conv_lhs => rw [← Finsupp.sum_single z]
-    conv_rhs => rw [← Finsupp.sum_single z]
-    show extProd (Shape.e P μ) (Shape.e P ν) *
-        (∑ g ∈ z.support, Finsupp.single g (z g) :
-          MonoidAlgebra ℂ
-            (Equiv.Perm (Fin n) × Equiv.Perm (Fin n))) =
-      (∑ g ∈ z.support, Finsupp.single g (z g) :
-          MonoidAlgebra ℂ
-            (Equiv.Perm (Fin n) × Equiv.Perm (Fin n))) *
-        extProd (Shape.e P μ) (Shape.e P ν)
-    rw [Finset.mul_sum, Finset.sum_mul]
-    exact Finset.sum_congr rfl fun g _ => hsingle g _
+    induction z using MonoidAlgebra.induction_on with
+    | of g => exact hsingle g 1
+    | add y z hy hz => rw [mul_add, add_mul, hy, hz]
+    | smul r y hy => rw [mul_smul_comm, smul_mul_assoc, hy]
   intro g c
   ext k
-  rw [MonoidAlgebra.mul_single_apply,
-    MonoidAlgebra.single_mul_apply]
+  rw [MonoidAlgebra.coeff_mul_single_apply,
+    MonoidAlgebra.coeff_single_mul_apply]
   have hconj := extProd_shape_e_coeff_conj P μ ν g (k * g⁻¹)
   have harg : g⁻¹ * (k * g⁻¹) * g = g⁻¹ * k := by
     group
@@ -286,16 +276,16 @@ theorem diagHom_injective (n : ℕ) :
 
 /-- The diagonal image's coefficient on the diagonal. -/
 theorem diagEmbed_apply_diag {n : ℕ} (x : SymGroupAlgebra n)
-    (σ : Equiv.Perm (Fin n)) : diagEmbed x (σ, σ) = x σ := by
-  show Finsupp.mapDomain (diagHom n) x (σ, σ) = x σ
-  exact Finsupp.mapDomain_apply (diagHom_injective n) x σ
+    (σ : Equiv.Perm (Fin n)) : (diagEmbed x).coeff (σ, σ) = x.coeff σ := by
+  show Finsupp.mapDomain (diagHom n) x.coeff (σ, σ) = x.coeff σ
+  exact Finsupp.mapDomain_apply_of_injective (diagHom_injective n) x.coeff σ
 
 /-- The diagonal image vanishes off the diagonal. -/
 theorem diagEmbed_apply_off_diag {n : ℕ} (x : SymGroupAlgebra n)
     {p : Equiv.Perm (Fin n) × Equiv.Perm (Fin n)}
-    (h : p.1 ≠ p.2) : diagEmbed x p = 0 := by
-  show Finsupp.mapDomain (diagHom n) x p = 0
-  refine Finsupp.mapDomain_notin_range x p ?_
+    (h : p.1 ≠ p.2) : (diagEmbed x).coeff p = 0 := by
+  show Finsupp.mapDomain (diagHom n) x.coeff p = 0
+  refine Finsupp.mapDomain_of_notMem_range x.coeff p ?_
   rintro ⟨σ, hσ⟩
   rw [← hσ] at h
   exact h rfl
@@ -305,22 +295,22 @@ multiple of the Kronecker multiplicity. -/
 theorem extProd_mul_diagEmbed_apply_one (P : SchurPackage.{u})
     {n : ℕ} (lam μ ν : Shape n) :
     (extProd (Shape.e P μ) (Shape.e P ν) *
-        diagEmbed (Shape.e P lam)) (1, 1) =
+        diagEmbed (Shape.e P lam)).coeff (1, 1) =
       (P.dim μ.val : ℂ) * (P.dim ν.val : ℂ) *
         (P.dim lam.val : ℂ) /
         ((n.factorial : ℂ) * (n.factorial : ℂ)) *
         kronMult lam μ ν := by
   classical
   show (extProd (Shape.e P μ) (Shape.e P ν) *
-      diagEmbed (Shape.e P lam)) 1 = _
+      diagEmbed (Shape.e P lam)).coeff 1 = _
   rw [mul_apply_one]
   have hoff : ∀ p ∈ (Finset.univ :
         Finset (Equiv.Perm (Fin n) × Equiv.Perm (Fin n))),
       p ∉ (Finset.univ : Finset (Equiv.Perm (Fin n))).image
         (fun σ =>
           ((σ, σ) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))) →
-      extProd (Shape.e P μ) (Shape.e P ν) p *
-        diagEmbed (Shape.e P lam) p⁻¹ = 0 := by
+      (extProd (Shape.e P μ) (Shape.e P ν)).coeff p *
+        (diagEmbed (Shape.e P lam)).coeff p⁻¹ = 0 := by
     intro p _ hp
     have hne : p.1 ≠ p.2 := by
       intro he
@@ -333,8 +323,8 @@ theorem extProd_mul_diagEmbed_apply_one (P : SchurPackage.{u})
   rw [← Finset.sum_subset (Finset.subset_univ _) hoff]
   rw [Finset.sum_image (fun _ _ _ _ h => congrArg Prod.fst h)]
   have hterm : ∀ σ : Equiv.Perm (Fin n),
-      extProd (Shape.e P μ) (Shape.e P ν) (σ, σ) *
-        diagEmbed (Shape.e P lam) ((σ, σ)⁻¹) =
+      (extProd (Shape.e P μ) (Shape.e P ν)).coeff (σ, σ) *
+        (diagEmbed (Shape.e P lam)).coeff ((σ, σ)⁻¹) =
       ((P.dim μ.val : ℂ) / (n.factorial : ℂ)) *
         ((P.dim ν.val : ℂ) / (n.factorial : ℂ)) *
         ((P.dim lam.val : ℂ) / (n.factorial : ℂ)) *
@@ -342,20 +332,20 @@ theorem extProd_mul_diagEmbed_apply_one (P : SchurPackage.{u})
           jtChar μ.val (permCast μ.prop.symm σ) *
           jtChar ν.val (permCast ν.prop.symm σ)) := by
     intro σ
-    have h2 : diagEmbed (Shape.e P lam) ((σ, σ)⁻¹) =
-        Shape.e P lam σ⁻¹ :=
+    have h2 : (diagEmbed (Shape.e P lam)).coeff ((σ, σ)⁻¹) =
+        (Shape.e P lam).coeff σ⁻¹ :=
       diagEmbed_apply_diag (Shape.e P lam) σ⁻¹
     have hc := shape_e_coeff P lam σ⁻¹
     rw [permCast_inv, jtChar_inv] at hc
     rw [extProd_apply_pair, h2,
-      show Shape.e P lam σ⁻¹ =
+      show (Shape.e P lam).coeff σ⁻¹ =
         ((P.dim lam.val : ℂ) / (n.factorial : ℂ)) *
           jtChar lam.val (permCast lam.prop.symm σ) from hc,
-      show (Shape.e P μ) σ =
+      show (Shape.e P μ).coeff σ =
         ((P.dim μ.val : ℂ) / (n.factorial : ℂ)) *
           jtChar μ.val (permCast μ.prop.symm σ) from
         shape_e_coeff P μ σ,
-      show (Shape.e P ν) σ =
+      show (Shape.e P ν).coeff σ =
         ((P.dim ν.val : ℂ) / (n.factorial : ℂ)) *
           jtChar ν.val (permCast ν.prop.symm σ) from
         shape_e_coeff P ν σ]

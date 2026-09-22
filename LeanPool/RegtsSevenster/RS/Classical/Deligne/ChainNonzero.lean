@@ -54,7 +54,7 @@ theorem chainUnitStage_eq_symCopair
     rw [projStage]
     exact (modTensorMap_swap A (symPowπMod A n)
       (symPowπMod A n)).symm
-  rw [h1, Category.assoc, ← powUnitStage_projStage A M M' d n,
+  erw [h1, Category.assoc, ← powUnitStage_projStage A M M' d n,
     hproj, reassoc_of% (powCopairA_unit A M M' d n)]
   rfl
 

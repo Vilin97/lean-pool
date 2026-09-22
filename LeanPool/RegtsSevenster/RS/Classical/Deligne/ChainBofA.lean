@@ -95,7 +95,7 @@ theorem chainBofA_unit
     η[A] ≫ chainBofA A M M' d = chainBUnit A M M' d := by
   have h := act_on_point_unit A (chainStageAct A M M' 0)
     (chainStageAct_one A M M' 0) (chainSeed A M M' d)
-  rw [chainBofA, reassoc_of% h]
+  erw [chainBofA, reassoc_of% h]
   rfl
 
 /-- The chain multiplication is left linear over the base, at the

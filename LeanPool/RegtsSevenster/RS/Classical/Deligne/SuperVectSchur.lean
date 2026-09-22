@@ -345,7 +345,6 @@ theorem tot_associator (V W Z : SuperVect) :
         SuperVect.assocAux V.even V.odd W.even W.odd Z.odd Z.even
         from rfl]
       dsimp only
-      simp only [LinearMap.fst_apply, LinearMap.snd_apply]
       exact congrArg₂ Prod.mk
         (assocAux_pure x.1 x.2 y.1 y.2 z.1 z.2)
         (assocAux_pure x.1 x.2 y.1 y.2 z.2 z.1)
@@ -815,7 +814,7 @@ theorem sTr_insertTop_full (X : SuperVect) :
   induction n with
   | zero =>
       intro h
-      rw [show insertTop X 0 0 = 𝟙 _ from insertTop_zero X 0,
+      erw [show insertTop X 0 0 = 𝟙 _ from insertTop_zero X 0,
         Category.id_comp]
       show sTr (𝟙 (tensorPow SuperVect X 0) ⊗ₘ h) = _
       rw [sTr_tensorHom, sTr_id, parPow, Category.id_comp]
