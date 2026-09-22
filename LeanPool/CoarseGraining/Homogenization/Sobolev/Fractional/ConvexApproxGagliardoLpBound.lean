@@ -112,8 +112,11 @@ theorem map_gagliardoCubeMeasure_diagonalConvexApproxSample_le {d : ℕ}
       (volume.restrict U).prod (volume.restrict U) := by
     rw [Measure.prod_restrict, Measure.prod_restrict]
     exact Measure.restrict_mono_set volume (Set.prod_mono himage himage)
+  have hmeas : Measurable (diagonalConvexApproxSample x0 z r ε) :=
+    ((measurableEmbedding_convexApproxSample x0 z r ε hε).prodMap
+      (measurableEmbedding_convexApproxSample x0 z r ε hε)).measurable
   rw [gagliardoCubeMeasure_eq_openCubeProduct Q,
-    Measure.map_smul,
+    Measure.map_smul _ hmeas.aemeasurable,
     map_prod_restrict_diagonalConvexApproxSample
       (isOpen_openCubeSet Q).measurableSet x0 z r ε hε]
   change c • (J •
@@ -164,7 +167,7 @@ theorem eLpNorm_comp_diagonalConvexApproxSample_le {d : ℕ} {E : Type*}
       eLpNorm_mono_measure K hmap
     _ = J ^ (1 / p.exponent).toReal *
         eLpNorm K p.exponent (Gagliardo.gagliardoCubeMeasure Q) := by
-      rw [eLpNorm_smul_measure_of_ne_top p.lt_top.ne]
+      rw [eLpNorm_smul_measure_of_ne_top p.lt_top.ne K J hK.aestronglyMeasurable]
       rfl
 
 /-- The joint diagonal sampling map is quasi-measure-preserving with exactly
@@ -317,6 +320,44 @@ theorem lintegral_diagonalConvexApproxAverage_rpow_le_of_memLp
     _ = J * ∫⁻ xy, ‖K xy‖ₑ ^ p.exponent.toReal ∂μ := by
       rw [lintegral_smul_measure, smul_eq_mul]
 
+private theorem diagonalConvexApproxAverage_aestronglyMeasurable
+    {d : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    (Q : TriadicCube d) (p : FiniteLpExponent) (K : Vec d × Vec d → E)
+    (hK : MemLp K p.exponent (Gagliardo.gagliardoCubeMeasure Q))
+    {ρ : Vec d → ℝ} (hρ : IsConvexApproxKernel ρ)
+    {x0 : Vec d} {r ε : ℝ} (hε : ε < 1)
+    (hball : Metric.closedBall x0 r ⊆ openCubeSet Q) (hr : 0 ≤ r)
+    (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1) :
+    AEStronglyMeasurable (diagonalConvexApproxAverage ρ K x0 r ε)
+      (Gagliardo.gagliardoCubeMeasure Q) := by
+  let μ := Gagliardo.gagliardoCubeMeasure Q
+  let ν := convexApproxKernelMeasure ρ
+  let J : ℝ≥0∞ := ENNReal.ofReal (((1 - ε) ^ d)⁻¹) ^ 2
+  let T := diagonalConvexApproxJointSample x0 r ε
+  let : IsProbabilityMeasure ν := by
+    simpa only [ν] using isProbabilityMeasure_convexApproxKernelMeasure hρ
+  let : SFinite ν := inferInstance
+  let : IsFiniteMeasure ν := inferInstance
+  let : IsFiniteMeasure μ := inferInstance
+  let : IsFiniteMeasure (μ.prod ν) := inferInstance
+  have hT : Measurable T := measurable_diagonalConvexApproxJointSample x0 r ε
+  have hmap : Measure.map T (μ.prod ν) ≤ J • μ := by
+    simpa only [μ, ν, J, T] using
+      (map_diagonalConvexApproxJointSample_le Q hρ hε hball hr hε0 hε1)
+  have hJtop : J ≠ ⊤ := by
+    dsimp only [J]
+    exact ENNReal.pow_ne_top ENNReal.ofReal_ne_top
+  have hKmap : MemLp K p.exponent (Measure.map T (μ.prod ν)) :=
+    MemLp.of_measure_le_smul hJtop hmap hK
+  have hKT : MemLp (K ∘ T) p.exponent (μ.prod ν) :=
+    (memLp_map_measure_iff hKmap.aestronglyMeasurable hT.aemeasurable).mp hKmap
+  have haverage : diagonalConvexApproxAverage ρ K x0 r ε =
+      fun xy => ∫ z, (K ∘ T) (xy, z) ∂ν := by
+    funext xy
+    exact diagonalConvexApproxAverage_eq_integral_kernelMeasure hρ K x0 r ε xy
+  rw [haverage]
+  exact hKT.aestronglyMeasurable.integral_prod_right'
+
 /-- The unconditional finite-`L^p` norm form of the diagonal Gagliardo
 average bound. -/
 theorem eLpNorm_diagonalConvexApproxAverage_le_of_memLp
@@ -338,9 +379,10 @@ theorem eLpNorm_diagonalConvexApproxAverage_le_of_memLp
   have hp_inv : (1 / p.exponent).toReal = 1 / p.exponent.toReal := by
     simpa only [one_div] using ENNReal.toReal_inv p.exponent
   rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (finiteLpExponent_ne_zero p)
-      (finiteLpExponent_ne_top p),
+      (finiteLpExponent_ne_top p)
+      (diagonalConvexApproxAverage_aestronglyMeasurable Q p K hK hρ hε hball hr hε0 hε1),
     eLpNorm_eq_lintegral_rpow_enorm_toReal (finiteLpExponent_ne_zero p)
-      (finiteLpExponent_ne_top p)]
+      (finiteLpExponent_ne_top p) hK.aestronglyMeasurable]
   rw [← hp_inv, ← ENNReal.mul_rpow_of_nonneg _ _ (by positivity)]
   exact ENNReal.rpow_le_rpow hpow (by positivity)
 

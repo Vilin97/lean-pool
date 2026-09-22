@@ -145,12 +145,15 @@ private theorem negativeLocalization_normalizedLp_smul {d : ℕ}
         (cubeBoundedMeasurableDomain Q).normalizedEuclideanLpENorm p.exponent f := by
   unfold BoundedMeasurableDomain.normalizedEuclideanLpENorm
   unfold BoundedMeasurableDomain.normalizedLpENorm
-  change eLpNorm (fun x => euclideanNorm (c • f x)) p.exponent
+  simp only [ite_eq_right (ne_of_gt (lt_trans zero_lt_one p.one_lt)),
+    ite_eq_right p.lt_top.ne]
+  change eLpNorm' (fun x => euclideanNorm (c • f x)) p.exponent.toReal
       (cubeBoundedMeasurableDomain Q).normalizedVolume = _
   simp_rw [euclideanNorm_smul]
-  change eLpNorm ((|c| : ℝ) • fun x => euclideanNorm (f x)) p.exponent
+  change eLpNorm' ((|c| : ℝ) • fun x => euclideanNorm (f x)) p.exponent.toReal
       (cubeBoundedMeasurableDomain Q).normalizedVolume = _
-  rw [eLpNorm_const_smul]
+  rw [eLpNorm'_const_smul _ (ENNReal.toReal_pos
+    (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne)]
   simp
 
 private theorem negativeLocalization_eSeminorm_smul {d : ℕ}
@@ -160,7 +163,8 @@ private theorem negativeLocalization_eSeminorm_smul {d : ℕ}
       ‖c‖ₑ * cubeEuclideanWspESeminorm Q s p f := by
   unfold cubeEuclideanWspESeminorm
   rw [negativeLocalization_kernel_smul]
-  exact eLpNorm_const_smul c _ _ _
+  exact eLpNorm'_const_smul c (ENNReal.toReal_pos
+    (ne_of_gt (lt_trans zero_lt_one p.one_lt)) p.lt_top.ne)
 
 private theorem negativeLocalization_fullENorm_smul {d : ℕ}
     (Q : TriadicCube d) (s : FractionalOrder) (p : FiniteLpExponent)
@@ -236,20 +240,23 @@ private theorem negativeLocalization_pairing_eq_zero_of_full_eq_zero {d : ℕ}
   have hLp : (cubeBoundedMeasurableDomain Q).normalizedEuclideanLpENorm
       p.exponent h.toField = 0 :=
     negativeLocalization_normalizedLp_eq_zero_of_full_eq_zero Q s p h.toField hh
-  have hLp' : eLpNorm (fun x => euclideanNorm (h.toField x))
-      p.exponent (normalizedCubeMeasure Q) = 0 := by
-    rw [← cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
-    exact hLp
   have hmeas : AEStronglyMeasurable (fun x => euclideanNorm (h.toField x))
       (normalizedCubeMeasure Q) := by
     simpa only [euclideanNorm_eq_norm_ofVec] using
       (CubeEuclideanWspSmoothTest.euclideanMemLp_of_continuous Q
-        p.exponent h.contDiff.continuous).1.norm
+        p.exponent h.contDiff.continuous).aestronglyMeasurable.norm
+  have hLp' : eLpNorm (fun x => euclideanNorm (h.toField x))
+      p.exponent (normalizedCubeMeasure Q) = 0 := by
+    rw [← cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
+    rw [BoundedMeasurableDomain.normalizedEuclideanLpENorm,
+      BoundedMeasurableDomain.normalizedLpENorm_eq_eLpNorm _ _ _ (by
+        rwa [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure])] at hLp
+    exact hLp
   have hp_ne_zero : p.exponent ≠ 0 :=
     ne_of_gt (lt_trans zero_lt_one p.one_lt)
   have hnorm_zero : (fun x => euclideanNorm (h.toField x)) =ᵐ[
       normalizedCubeMeasure Q] 0 :=
-    (eLpNorm_eq_zero_iff hmeas hp_ne_zero).mp hLp'
+    (eLpNorm_eq_zero_iff hp_ne_zero).mp hLp'
   have hfield_zero : h.toField =ᵐ[normalizedCubeMeasure Q] 0 := by
     filter_upwards [hnorm_zero] with x hx
     exact euclideanNorm_eq_zero_iff.mp hx

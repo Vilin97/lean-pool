@@ -249,14 +249,23 @@ private theorem enorm_graphFieldComponent {d : ℕ} {Q : TriadicCube d}
     Lp.enorm_toLp h.toCubeEuclideanWspField.euclideanMemLp
   rw [hLp]
   unfold BoundedMeasurableDomain.normalizedEuclideanLpENorm
-  unfold BoundedMeasurableDomain.normalizedLpENorm
-  rw [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
-  simp only [euclideanNorm_eq_norm_ofVec, eLpNorm_norm]
+  have hmeas : AEStronglyMeasurable (fun x => euclideanNorm (h.toField x))
+      (cubeBoundedMeasurableDomain Q).normalizedVolume := by
+    rw [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
+    simpa only [euclideanNorm_eq_norm_ofVec] using!
+      h.toCubeEuclideanWspField.euclideanMemLp.aestronglyMeasurable.norm
+  rw [BoundedMeasurableDomain.normalizedLpENorm_eq_eLpNorm _ _ _ hmeas,
+    cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
+  simpa only [euclideanNorm_eq_norm_ofVec] using!
+    (eLpNorm_norm (fun x => HilbertVec.ofVec (h.toField x))
+      h.toCubeEuclideanWspField.euclideanMemLp.aestronglyMeasurable).symm
 
 private theorem enorm_graphKernelComponent {d : ℕ} {Q : TriadicCube d}
     {s : FractionalOrder} {p : FiniteLpExponent}
     (h : CubeEuclideanWspSmoothTest Q s p) :
     ‖graphKernelComponent h‖ₑ = cubeEuclideanWspESeminorm Q s p h.toField := by
+  rw [cubeEuclideanWspESeminorm_eq_eLpNorm Q s p h.toField
+    h.toCubeEuclideanWspField.euclideanMemWsp.aestronglyMeasurable]
   exact Lp.enorm_toLp h.toCubeEuclideanWspField.euclideanMemWsp
 
 private theorem enorm_graphFieldScale_rpow_eq_wspScalePowerWeight {d : ℕ}

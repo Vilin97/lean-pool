@@ -79,17 +79,23 @@ private theorem exactOverlapRootMean_enorm_le_normalizedEuclideanLp
     _ ≤ ∫⁻ x, ‖F.toField x i‖ₑ ∂μ :=
       enorm_integral_le_lintegral_enorm _
     _ = eLpNorm (fun x => F.toField x i) 1 μ := by
-      rw [eLpNorm_one_eq_lintegral_enorm]
+      rw [eLpNorm_one_eq_lintegral_enorm hcoord_meas]
     _ ≤ eLpNorm (fun x => F.toField x i) p.exponent μ :=
-      eLpNorm_le_eLpNorm_of_exponent_le p.one_lt.le hcoord_meas
+      eLpNorm_le_eLpNorm_of_exponent_le p.one_lt.le
     _ ≤ eLpNorm (fun x => HilbertVec.ofVec (F.toField x)) p.exponent μ :=
       coordinate_eLpNorm_le_euclidean μ p F.toField i
     _ = (cubeBoundedMeasurableDomain Q).normalizedEuclideanLpENorm p.exponent
         F.toField := by
-      simp only [μ, cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure,
-        BoundedMeasurableDomain.normalizedEuclideanLpENorm,
-        BoundedMeasurableDomain.normalizedLpENorm, euclideanNorm_eq_norm_ofVec,
-        eLpNorm_norm]
+      unfold BoundedMeasurableDomain.normalizedEuclideanLpENorm
+      have hmeas : AEStronglyMeasurable (fun x => euclideanNorm (F.toField x))
+          (cubeBoundedMeasurableDomain Q).normalizedVolume := by
+        rw [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
+        simpa only [euclideanNorm_eq_norm_ofVec] using F.euclideanMemLp.aestronglyMeasurable.norm
+      rw [BoundedMeasurableDomain.normalizedLpENorm_eq_eLpNorm _ _ _ hmeas,
+        cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
+      simpa only [euclideanNorm_eq_norm_ofVec] using
+        (eLpNorm_norm (fun x => HilbertVec.ofVec (F.toField x))
+          F.euclideanMemLp.aestronglyMeasurable).symm
 
 private theorem exactOverlapRootWeight_rpow_eq_wspScalePowerWeight
     {d : ℕ} (Q : TriadicCube d) (s : FractionalOrder) (p : FiniteLpExponent) :
