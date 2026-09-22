@@ -197,7 +197,6 @@ variable {a : H →L[ℂ] H} (ha : IsStarNormal a)
 /-- The norm of a continuous-calculus image, as an integral against the diagonal
 measure.  This is the only measure-theoretic interface the Rosenblum argument
 needs: everything is a *diagonal* matrix element, so no polarisation appears. -/
-
 theorem norm_sq_cfcHom_apply (g : C(_root_.spectrum ℂ a, ℂ)) (v : H) :
     ((‖cfcHom ha g v‖ ^ 2 : ℝ) : ℂ)
       = ∫ w, (starRingEnd ℂ) (g w) * g w ∂(BorelCalculus.diagMeasure ha v) := by

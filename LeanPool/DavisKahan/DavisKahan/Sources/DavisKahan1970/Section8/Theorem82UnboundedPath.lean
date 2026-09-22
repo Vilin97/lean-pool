@@ -158,7 +158,6 @@ Stated with the perturbed operator as a variable linked by an equation, which is
 what lets `subst` put it in the shape
 `norm_sinTwoAngleOperator_le_of_perturbedGap_unbounded_complex` consumes. -/
 theorem norm_sinTwoAngle_path_le
-
     {B0 Bt : Hc →ₗ.[ℂ] Hc} (hBt : IsSelfAdjoint Bt)
     (K : Hc →L[ℂ] Hc) (hK : K.IsSymmetric)
     (hlink : B0 = TauCeti.LinearPMap.addBounded Bt K)
@@ -232,7 +231,6 @@ needs is derived from the two block placements by
 `realSpectrum_subset_union_of_reduces`, and the separation `hQgap` is the two
 block placements read as an interval/exterior gap. -/
 theorem theorem8_2_perturbationHalfGap_unbounded_complex
-
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -460,7 +458,6 @@ perturbation alternative.**
 The directed bound above, converted by Section 3's standing assumption (3.5) in
 its constructive form.  No finite-dimensionality and no rank hypothesis. -/
 theorem theorem8_2_perturbationHalfGap_maximalAngle_lt_unbounded_complex
-
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -510,7 +507,6 @@ hypothesis transfers and the perturbation branch applies to `(A', H')`.
 
 The public type carries `‖R‖ < δ/2` and does **not** acquire `‖H‖ < δ/2`. -/
 theorem theorem8_2_residualHalfGap_unbounded_complex
-
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -604,7 +600,6 @@ theorem theorem8_2_residualHalfGap_unbounded_complex
 /-- **Theorem 8.2's printed conclusion `Θ < π/4` at unbounded ambient scope,
 residual alternative.** -/
 theorem theorem8_2_residualHalfGap_maximalAngle_lt_unbounded_complex
-
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -878,7 +873,6 @@ The printed statement: add to the `sin 2Θ` theorem's hypotheses *either*
 conclude `Θ < π/4`.  Section 3's standing assumption (3.5) is what turns the
 directed conclusion into the printed symmetric one. -/
 theorem theorem8_2_branch_maximalAngle_lt_unbounded_source_complex
-
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

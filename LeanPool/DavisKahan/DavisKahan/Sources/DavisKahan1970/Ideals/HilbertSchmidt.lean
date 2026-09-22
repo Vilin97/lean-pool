@@ -52,7 +52,7 @@ theorem approximationNumberEnergy_zero
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type vE} {F : Type vF}
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]  :
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] :
     approximationNumberEnergy (0 : E →L[𝕜] F) = 0 := by
   unfold approximationNumberEnergy
   simp

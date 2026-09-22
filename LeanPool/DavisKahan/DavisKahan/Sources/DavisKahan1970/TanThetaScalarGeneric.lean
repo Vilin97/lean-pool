@@ -43,13 +43,13 @@ variable {H : Type v} [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [Complet
 
 /-- The directed sine block entering Theorem 6.3, at an arbitrary `RCLike` field. -/
 noncomputable def directedSineBlock
-    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection] :
+    (Z V : Submodule 𝕜 H) [V.HasOrthogonalProjection] :
     Z →L[𝕜] H :=
   Vᗮ.starProjection ∘L Z.subtypeL
 
 /-- A directed tangent representative has exactly the singular values `tan θⱼ`. -/
 noncomputable def HasDirectedTangentApproximationNumbers
-    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection]
+    (Z V : Submodule 𝕜 H) [V.HasOrthogonalProjection]
     (tanTheta0 : Z →L[𝕜] H) : Prop :=
   ∀ n, tanTheta0.approximationNumber n =
     Real.tan (Real.arcsin ((directedSineBlock Z V).approximationNumber n))
@@ -63,7 +63,7 @@ omit [CompleteSpace H] in
 /-- Scalar transport carries the directed sine block into the canonical transported
 subspace coordinates. -/
 theorem scalarTransport_directedSineBlock
-    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection]
+    (Z V : Submodule 𝕜 H) [V.HasOrthogonalProjection]
      :
     scalarTransportSubspaceCLM (e := e) Z (directedSineBlock Z V) =
       directedSineBlock (ScalarTransport.submodule (e := e) Z)
@@ -87,7 +87,7 @@ theorem scalarTransport_directedSineBlock
 omit [CompleteSpace H] in
 /-- Approximation numbers of the directed sine block are scalar invariant. -/
 theorem approximationNumber_directedSineBlock_transport
-    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection]
+    (Z V : Submodule 𝕜 H) [V.HasOrthogonalProjection]
      (n : ℕ) :
     (directedSineBlock (ScalarTransport.submodule (e := e) Z)
       (ScalarTransport.submodule (e := e) V)).approximationNumber n =
@@ -99,7 +99,7 @@ theorem approximationNumber_directedSineBlock_transport
 omit [CompleteSpace H] in
 /-- Legacy Appendix spelling of the same scalar-invariance fact. -/
 theorem approximationSingularValue_directedSineBlock_transport
-    (Z V : Submodule 𝕜 H)  [V.HasOrthogonalProjection]
+    (Z V : Submodule 𝕜 H) [V.HasOrthogonalProjection]
      (n : ℕ) :
     approximationSingularValue n
         (directedSineBlock (ScalarTransport.submodule (e := e) Z)

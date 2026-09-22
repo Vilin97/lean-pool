@@ -66,7 +66,6 @@ theorem two_smul_diagonalPair_eq_add_reflections
 /-- Ideal membership for the diagonal pair. -/
 theorem diagonalPair_mem
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-
     (U V : Submodule 𝕜 E)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     {K : E →L[𝕜] E} (hK : N.Mem K) :
@@ -78,7 +77,6 @@ theorem diagonalPair_mem
 /-- **Davis--Kahan Lemma 6.2 for an arbitrary rectangular symmetric ideal.** -/
 theorem diagonalPair_gauge_le
     (N : TauCeti.SymmetricOperatorIdealFamily.{u, v} 𝕜)
-
     (U V : Submodule 𝕜 E)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     {K : E →L[𝕜] E} (hK : N.Mem K) :

@@ -233,7 +233,6 @@ theorem lt_approximationNumber_competitor_of_lt_direct
     dsimp [c₁, c₂]
     have hsquares : s₁ ^ 2 < s₂ ^ 2 := (sq_lt_sq₀ hs₁0 hs₂0).2 hs₁s₂
     linarith
-
   have hCsa : IsSelfAdjoint C :=
     ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr D.cosine_selfAdjoint
   let PVM : TauCeti.ProjValMeasure E :=
@@ -244,7 +243,6 @@ theorem lt_approximationNumber_competitor_of_lt_direct
     have h := PVM.proj_compl (Set.Iic c₂) measurableSet_Iic
     rw [PVM.proj_congr Set.compl_Iic measurableSet_Iic.compl measurableSet_Ioi] at h
     exact h
-
   have htailNorm : ‖A ∘L Q‖ ≤ s₂ := by
     refine (A ∘L Q).opNorm_le_bound hs₂0 ?_
     intro x
@@ -282,7 +280,6 @@ theorem lt_approximationNumber_competitor_of_lt_direct
       _ ≤ s₂ * ‖x‖ :=
         mul_le_mul_of_nonneg_left
           (PVM.norm_proj_apply_le (Set.Ioi c₂) measurableSet_Ioi x) hs₂0
-
   have hPrank : ¬ P.rank ≤ (n : Cardinal) := by
     intro hP
     let R : E →L[ℂ] F := A ∘L P
@@ -300,7 +297,6 @@ theorem lt_approximationNumber_competitor_of_lt_direct
         _ = ‖A ∘L Q‖ := by rw [herr]
         _ ≤ s₂ := htailNorm
     exact (not_le_of_gt hs₂a) has₂
-
   let L : Submodule ℂ E :=
     pvmRangeSubspace PVM (Set.Iic c₂) measurableSet_Iic
   have hnrank : ((n + 1 : ℕ) : Cardinal) ≤ Module.rank ℂ L := by
@@ -379,7 +375,6 @@ private theorem cosineCutoff_not_lt_sine
     have h := PVM.proj_compl (Set.Iic c) measurableSet_Iic
     rw [PVM.proj_congr Set.compl_Iic measurableSet_Iic.compl measurableSet_Ioi] at h
     exact h
-
   have hPrank : P.rank <= (n : Cardinal) := by
     by_contra hnot
     have hnlt : (n : Cardinal) < P.rank := lt_of_not_ge hnot
@@ -433,7 +428,6 @@ private theorem cosineCutoff_not_lt_sine
       simpa only [hxNorm, mul_one] using hlower
     have htLeS : t <= s := htNN
     exact (not_le_of_gt hsT) htLeS
-
   let r : Real := Real.sqrt (2 * (1 - c))
   have hr0 : 0 <= r := Real.sqrt_nonneg _
   have hrSq : r ^ 2 = 2 * (1 - c) := by
@@ -521,7 +515,6 @@ private theorem sineCutoff_not_lt_cosine
     exact h
   have hCsa : IsSelfAdjoint C :=
     ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric.mpr D.cosine_selfAdjoint
-
   have hPrank : ¬ P.rank <= (n : Cardinal) := by
     intro hP
     let t : Real := Real.sqrt (1 - c ^ 2)
@@ -590,7 +583,6 @@ private theorem sineCutoff_not_lt_cosine
         _ = ‖S ∘L Q‖ := by rw [herr]
         _ <= t := htailNorm
     exact (not_le_of_gt htS) hsT
-
   let L : Submodule ℂ E := pvmRangeSubspace PVM (Set.Iic c) measurableSet_Iic
   have hnrank : (((n + 1 : ℕ) : Cardinal) <= Module.rank ℂ L) := by
     change ((n + 1 : ℕ) : Cardinal) <= P.rank
@@ -671,7 +663,6 @@ theorem approximationNumber_direct_cosineCutoff_eq_sine
     rwa [Real.sq_sqrt (by norm_num : (0 : Real) <= 2)] at h
   have hca0 : 0 <= ca := by dsimp only [ca]; linarith
   have hca1 : ca <= 1 := by dsimp only [ca]; nlinarith [sq_nonneg a]
-
   have hSnorm : ‖S‖ <= 1 := by
     refine S.opNorm_le_bound (by norm_num) ?_
     intro x
@@ -690,7 +681,6 @@ theorem approximationNumber_direct_cosineCutoff_eq_sine
     linarith
   have hcs0 : 0 <= cs := Real.sqrt_nonneg _
   have hcs1 : cs <= 1 := by nlinarith [hcsSq]
-
   have hcaCs : ca = cs := by
     rcases lt_trichotomy ca cs with hlt | heq | hgt
     · exact (cosineCutoff_not_lt_sine D hSsq n rfl hcsSq hca0 hcs0 hcs1 hlt).elim

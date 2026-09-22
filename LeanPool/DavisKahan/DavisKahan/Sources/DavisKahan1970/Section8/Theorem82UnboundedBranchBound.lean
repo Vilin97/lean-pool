@@ -63,7 +63,6 @@ directed bound into the symmetric one; the module docstring records why the rest
 of the printed range needs the paper's connectedness argument. -/
 theorem theorem8_2_branch_maximalAngle_lt_unbounded_smallPerturbation_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

@@ -291,7 +291,6 @@ theorem sinTwoTheta_commonDomain_block_kyFan
 /-- Source-oriented common-domain directed residual bound. Both displayed norms are finite.
 There is no bounded trial operator and no global bounded perturbation in the hypotheses. -/
 theorem sinTwoTheta_directed_commonDomain_whereDefinedUIN_rclike
-
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} K)
     (hA : IsSelfAdjoint A) (hT : IsSelfAdjoint T)
     (hdom : T.domain = A.domain)
@@ -337,7 +336,6 @@ residual on the common domain. The ambient clause asks separately for a bounded
 self-adjoint perturbation. A residual is not required to use the ambient clause.
 -/
 theorem sinTwoTheta_commonDomain_whereDefinedUIN_rclike
-
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} K)
     {A T : E →ₗ.[K] E} (hA : IsSelfAdjoint A) (hT : IsSelfAdjoint T)
     (hdom : T.domain = A.domain)

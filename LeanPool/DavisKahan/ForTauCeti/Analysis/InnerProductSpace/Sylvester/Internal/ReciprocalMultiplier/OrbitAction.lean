@@ -259,7 +259,6 @@ theorem complexFourierPhase_coe (x : ℝ) :
 
 /-- Fourier phases multiply by adding arguments -- the group law of the circle, in the coerced
 complex form the estimates use. -/
-
 theorem complexFourierPhase_mul (x y : ℝ) :
     (complexFourierPhase x : ℂ) * (complexFourierPhase y : ℂ) =
       (complexFourierPhase (x + y) : ℂ) := by
@@ -847,9 +846,7 @@ right phase angles on a doubled coordinate matrix unit. -/
 theorem basisDoubledRealRotation_comp_basisMatrixUnit
     {ER FR : Type*}
     [NormedAddCommGroup ER] [InnerProductSpace ℝ ER]
-
     [NormedAddCommGroup FR] [InnerProductSpace ℝ FR]
-
     (eF : OrthonormalBasis (Fin (Module.finrank ℝ FR)) ℝ FR)
     (eE : OrthonormalBasis (Fin (Module.finrank ℝ ER)) ℝ ER)
     (thetaF : Fin (Module.finrank ℝ FR) → ℝ)
@@ -899,9 +896,7 @@ used after obtaining a scalar reciprocal Fourier representation. -/
 theorem complexUnitaryOrbitAction_basisMatrixUnit_exp_sub
     {EC FC : Type*}
     [NormedAddCommGroup EC] [InnerProductSpace ℂ EC]
-
     [NormedAddCommGroup FC] [InnerProductSpace ℂ FC]
-
     (eF : OrthonormalBasis (Fin (Module.finrank ℂ FC)) ℂ FC)
     (eE : OrthonormalBasis (Fin (Module.finrank ℂ EC)) ℂ EC)
     (α : Fin (Module.finrank ℂ FC) → ℝ)

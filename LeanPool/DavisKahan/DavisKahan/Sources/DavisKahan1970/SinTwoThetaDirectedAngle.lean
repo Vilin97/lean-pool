@@ -137,7 +137,6 @@ theorem sinTwoTheta_directed_unboundedResidual_reducing_symmetricNorming_complex
 This stronger API concludes ideal membership from residual membership.  The result ledger
 selects the where-defined wrapper below instead. -/
 theorem sinTwoTheta_directed_unboundedResidual_normalizedUIN_complex
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)
@@ -162,7 +161,6 @@ This is the fixed-field production form of the norm-layer construction validated
 It does not claim ideal-membership transfer: the numerical estimate is asserted when both
 `N(sin 2Θ₀)` and `N(R)` are defined. -/
 theorem sinTwoTheta_directed_unboundedResidual_whereDefinedUIN_complex
-
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℂ)
     (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)
@@ -252,7 +250,6 @@ theorem sinTwoTheta_directed_unboundedResidual_reducing_symmetricNorming_real
 This is the real stronger membership-transfer API; the result ledger selects the
 where-defined wrapper below instead. -/
 theorem sinTwoTheta_directed_unboundedResidual_normalizedUIN_real
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)
@@ -273,7 +270,6 @@ theorem sinTwoTheta_directed_unboundedResidual_normalizedUIN_real
 
 /-- Real fixed-field where-defined norm boundary for the directed `sin 2Θ₀` clause. -/
 theorem sinTwoTheta_directed_unboundedResidual_whereDefinedUIN_real
-
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℝ)
     (hA : IsSelfAdjoint A)
     (B : Set ℝ) (hB : MeasurableSet B)

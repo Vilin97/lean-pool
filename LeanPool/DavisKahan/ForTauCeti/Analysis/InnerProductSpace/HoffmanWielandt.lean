@@ -193,7 +193,6 @@ Frobenius norm of the perturbation:
 Expanding both sides: the `∑ λᵢ(T)²` and `∑ λᵢ(S)²` pieces match (the latter via
 basis independence of the Frobenius norm), and the cross terms reduce the claim
 to the von Neumann trace inequality `sum_eigenvalues_mul_re_inner_self_le`. -/
-
 theorem sum_sq_eigenvalues_sub_le_sum_sq_norm_apply
     (hT : T.IsSymmetric) (hS : S.IsSymmetric) (hn : finrank 𝕜 E = n) :
     ∑ i, (hT.eigenvalues hn i - hS.eigenvalues hn i) ^ 2

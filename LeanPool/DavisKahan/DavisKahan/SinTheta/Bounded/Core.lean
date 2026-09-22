@@ -43,7 +43,6 @@ def generalResidual
   A ∘L X - X ∘L A₀
 
 omit [CompleteSpace G] in
-
 /-- Adjoint residual block identity used by the generalized theorem. -/
 theorem adjoint_residual_block_identity
     {A : E →L[𝕜] E} {A₀ : F →L[𝕜] F}
@@ -88,7 +87,6 @@ theorem adjoint_residual_block_identity
           simp only [ContinuousLinearMap.comp_apply, sub_apply, inner_sub_left]
 
 omit [CompleteSpace G] in
-
 /-- The same residual identity in the orientation consumed by the
 Sylvester estimate. -/
 theorem complementary_sylvester_equation

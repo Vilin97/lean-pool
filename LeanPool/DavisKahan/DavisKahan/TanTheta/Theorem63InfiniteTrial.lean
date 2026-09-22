@@ -634,7 +634,7 @@ end CoreAssembly
 trial dimension: the tangent representative's approximation numbers are the tangents of
 the arcsines of the directed sine block's approximation numbers. -/
 def HasTheorem63DirectedTangentApproximationNumbersInfinite
-    (Z V : Submodule ℂ H)  [V.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H) [V.HasOrthogonalProjection]
     (tanTheta0 : Z →L[ℂ] H) : Prop :=
   ∀ n, approximationSingularValue n tanTheta0 =
     Real.tan (Real.arcsin
@@ -783,7 +783,7 @@ finite-dimensional trial hypothesis is not part of what the source condition *sa
 only restricts where the condition can be *stated*.  This is what lets
 `theorem6_3_infiniteTrial_ideal` below subsume the finite-trial source facade. -/
 theorem hasTheorem63DirectedTangentApproximationNumbers_iff_infinite
-    (Z V : Submodule ℂ H)  [V.HasOrthogonalProjection]
+    (Z V : Submodule ℂ H) [V.HasOrthogonalProjection]
      (tanTheta0 : Z →L[ℂ] H) :
     HasTheorem63DirectedTangentApproximationNumbers Z V tanTheta0 ↔
       HasTheorem63DirectedTangentApproximationNumbersInfinite Z V tanTheta0 :=

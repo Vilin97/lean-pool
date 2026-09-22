@@ -145,7 +145,6 @@ theorem kyFanFiniteNorm_zeroPad (k n : ℕ) (x : Fin n → ℝ) :
     FiniteVector.antitone_zeroPadRight hyanti hy0
   have hpady0 : ∀ i, 0 ≤ FiniteVector.zeroPadRight (m := 1) y i :=
     FiniteVector.zeroPadRight_nonneg hy0
-
   have hsmall :
       (kyFanFiniteNorm k n).gauge
           (EuclideanSpace.basisFun (Fin n) ℂ) y =
@@ -162,20 +161,17 @@ theorem kyFanFiniteNorm_zeroPad (k n : ℕ) (x : Fin n → ℝ) :
             (EuclideanSpace.basisFun (Fin n) ℂ) x := by
         exact uinGauge_abs (kyFanFiniteNorm k n)
           (EuclideanSpace.basisFun (Fin n) ℂ) x
-
   have habspad :
       (fun i : Fin (n + 1) => |FiniteVector.zeroPadRight (m := 1) x i|) =
         FiniteVector.zeroPadRight (m := 1) absx := by
     funext i
     unfold FiniteVector.zeroPadRight absx
     split_ifs <;> simp
-
   have hpermPad :
       (fun i : Fin (n + 1) => |FiniteVector.zeroPadRight (m := 1) x i|) ∘
           zeroPadPerm pi =
         FiniteVector.zeroPadRight (m := 1) y := by
     rw [habspad, zeroPadRight_comp_zeroPadPerm]
-
   rw [SymmetricIdeal.zeroPad_eq_zeroPadRight]
   calc
     (kyFanFiniteNorm k (n + 1)).gauge

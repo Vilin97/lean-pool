@@ -334,7 +334,6 @@ theorem sum_sq_singularValueVector_eq_sum_domain (A : E →ₗ[𝕜] F) :
   sum_pow_singularValueVector_eq_sum_domain A 2 (by norm_num)
 
 /-- The `S₁` norm is the nuclear norm. -/
-
 theorem schattenNorm_one_apply (A : E →ₗ[𝕜] F) :
     schattenNorm (𝕜 := 𝕜) (E := E) (F := F) 1 le_rfl A = nuclear A := by
   rw [schattenNorm_apply]
@@ -348,7 +347,6 @@ theorem schattenNorm_one_apply (A : E →ₗ[𝕜] F) :
     (min_le_left _ _)).symm
 
 /-- The `S₂` norm is the existing rectangular Frobenius norm. -/
-
 theorem schattenNorm_two_apply (A : E →ₗ[𝕜] F) :
     schattenNorm (𝕜 := 𝕜) (E := E) (F := F) 2 (by norm_num) A =
       frobenius A := by

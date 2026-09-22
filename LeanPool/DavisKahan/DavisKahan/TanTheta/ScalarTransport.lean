@@ -143,7 +143,7 @@ noncomputable def scalarTransportSubspaceBlockCLM
 
 /-- Scalar transport is a bijection on bounded maps between closed subspaces. -/
 noncomputable def scalarTransportSubspaceBlockCLMEquiv
-    (Z W : Submodule 𝕜 H)  :
+    (Z W : Submodule 𝕜 H) :
     (Z →L[𝕜] W) ≃
       (ScalarTransport.submodule (e := e) Z →L[𝕂]
         ScalarTransport.submodule (e := e) W) where
@@ -348,7 +348,6 @@ omit [CompleteSpace H] in
 /-- The extended source gauge is unchanged by two-sided subspace transport. -/
 theorem extendedGauge_scalarTransportSubspaceBlockCLM
     (N : SymmetricNormingFunction) (Z W : Submodule 𝕜 H)
-
     (T : Z →L[𝕜] W) :
     N.extendedGauge (scalarTransportSubspaceBlockCLM (e := e) Z W T) =
       N.extendedGauge T := by
@@ -364,7 +363,6 @@ omit [CompleteSpace H] in
 /-- Symmetric-norm ideal membership is unchanged by two-sided subspace transport. -/
 theorem mem_scalarTransportSubspaceBlockCLM_iff
     (N : SymmetricNormingFunction) (Z W : Submodule 𝕜 H)
-
     (T : Z →L[𝕜] W) :
     N.Mem (scalarTransportSubspaceBlockCLM (e := e) Z W T) ↔ N.Mem T := by
   unfold SymmetricNormingFunction.Mem
@@ -374,7 +372,6 @@ omit [CompleteSpace H] in
 /-- Symmetric-norm gauges are unchanged by two-sided subspace transport. -/
 theorem gauge_scalarTransportSubspaceBlockCLM
     (N : SymmetricNormingFunction) (Z W : Submodule 𝕜 H)
-
     (T : Z →L[𝕜] W) :
     N.gauge (scalarTransportSubspaceBlockCLM (e := e) Z W T) = N.gauge T := by
   unfold SymmetricNormingFunction.gauge

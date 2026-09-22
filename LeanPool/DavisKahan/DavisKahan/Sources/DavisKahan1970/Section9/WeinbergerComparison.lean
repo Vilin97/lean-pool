@@ -359,7 +359,6 @@ theorem printed_weinberger_low_shift_inequality_reversed
   set e := b - r
   set A := 500 - a
   set q := ε ^ 2 / 30
-
   have hc0 : 0 < ritzLowCoefficient := ritzLowCoefficient_pos
   have hapos : 0 < a := by
     rw [show a = ritzLow ε from rfl, ritzLow]
@@ -387,13 +386,11 @@ theorem printed_weinberger_low_shift_inequality_reversed
   have he : 0 < e := by
     dsimp [e]
     linarith
-
   have hroot := (weinbergerLowerRoots ε hε hε100).lower₀_is_root
   rw [weinbergerComparisonMatrix_charAt] at hroot
   have hroot' : d * e * (A + d) - q * e - q * d = 0 := by
     dsimp [d, e, A, q, a, b, r, C] at ⊢
     (convert hroot using 1; ring)
-
   have hd : 0 < d := by
     have hd0 : 0 ≤ d := by
       dsimp [d]
@@ -405,7 +402,6 @@ theorem printed_weinberger_low_shift_inequality_reversed
       have hqe : 0 < q * e := mul_pos hq he
       linarith
     · exact hdpos
-
   have hclose : d ≤ ε ^ 2 / 7500 := by
     dsimp [d, a, r, C]
     exact ritzLow_sub_weinbergerLowerRoots_le ε hε hε100
@@ -418,7 +414,6 @@ theorem printed_weinberger_low_shift_inequality_reversed
   have heA : e < A := by
     dsimp [e, A, d] at hcloseSmall ⊢
     linarith
-
   have heqd : q * (e + d) = d * e * (A + d) := by
     nlinarith [hroot']
   have hpositiveRemainder : 0 < d ^ 2 * (A - e) := by positivity
@@ -438,7 +433,6 @@ theorem printed_weinberger_low_shift_inequality_reversed
     · exact hpos.1
     · linarith [hneg.2, hsumPos]
   have hq_lt : q < d * A := by linarith
-
   apply (div_lt_iff₀ hA).2
   simpa [d, A, q, a, r, C] using hq_lt
 

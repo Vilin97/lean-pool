@@ -174,23 +174,19 @@ theorem proposition3_4_full_real
   let WC := complexify W
   let R := reflectedSubspace U V
   let CR := reflectedSubspace CU CV
-
   have hproj : complexify R.starProjection = CR.starProjection := by
     dsimp only [R, CR, CU, CV]
     exact complexify_reflectedProjection U V
   have hprojc : complexify Rᗮ.starProjection = CRᗮ.starProjection := by
     dsimp only [R, CR, CU, CV]
     exact complexify_reflectedComplementaryProjection U V
-
   have hunitaryC :
       WC ∈ unitary (RealComplexification E →L[ℂ] RealComplexification E) :=
     DavisKahan.complexify_mem_unitary hunitary
-
   have hintertwinesC : WC * CU.starProjection = CV.starProjection * WC := by
     dsimp only [WC, CU, CV]
     have h := congrArg (fun A : E →L[ℝ] E => complexify A) hintertwines
     simpa only [DavisKahan.complexify_mul, starProjection_complexifySubmodule] using h
-
   have hcrossedC : CUᗮ.starProjection * WC * CU.starProjection =
       -star (CU.starProjection * WC * CUᗮ.starProjection) := by
     dsimp only [WC, CU]
@@ -198,18 +194,15 @@ theorem proposition3_4_full_real
     simpa only [DavisKahan.complexify_mul, DavisKahan.complexify_star,
       complexify_neg, starProjection_complexifySubmodule,
       starProjection_complexifySubmodule_orthogonal] using h
-
   have hsource_posC : (CU.starProjection * WC * CU.starProjection).IsPositive := by
     dsimp only [WC, CU]
     rw [← complexify_sourceCompression U W]
     exact isPositive_complexify hsource_pos
-
   have hcomplement_posC :
       (CUᗮ.starProjection * WC * CUᗮ.starProjection).IsPositive := by
     dsimp only [WC, CU]
     rw [← complexify_complementCompression U W]
     exact isPositive_complexify hcomplement_pos
-
   have hsource_nonnegC :
       (0 : RealComplexification E →L[ℂ] RealComplexification E) ≤
         CU.starProjection * WC * CU.starProjection :=
@@ -218,34 +211,27 @@ theorem proposition3_4_full_real
       (0 : RealComplexification E →L[ℂ] RealComplexification E) ≤
         CUᗮ.starProjection * WC * CUᗮ.starProjection :=
     (ContinuousLinearMap.nonneg_iff_isPositive (f := _)).mpr hcomplement_posC
-
   have hcosC : ∀ z ∈ CU, ‖z‖ ^ 2 / 2 ≤ ‖CV.starProjection z‖ ^ 2 := by
     intro z hz
     exact halfAngle_complexify U V hcos z hz
-
   have hC : IsDirectRotation CR CV (WC * WC) := by
     dsimp only [CR]
     exact proposition3_4_isDirectRotation_complex
       CU CV WC hunitaryC hintertwinesC hcrossedC
         hsource_nonnegC hcomplement_nonnegC hcosC
-
   have hWsq : WC * WC = spectraReflectionProduct CU CV :=
     sq_eq_spectraReflectionProduct CU CV WC hunitaryC hintertwinesC
       hsource_posC.isSelfAdjoint hcomplement_posC.isSelfAdjoint hcrossedC
-
   have hrefl : CR.reflectionOperator =
       CU.reflectionOperator * CV.reflectionOperator * CU.reflectionOperator := by
     dsimp only [CR]
     exact reflectionOperator_reflectedSubspace CV CU
-
   have hRU : CU.reflectionOperator * CU.reflectionOperator = 1 :=
     reflectionOperator_mul_self_complex CU
-
   have hsqC : (WC * WC) * (WC * WC) = spectraReflectionProduct CR CV := by
     change (WC * WC) * (WC * WC) = CV.reflectionOperator * CR.reflectionOperator
     rw [hrefl, hWsq]
     noncomm_ring
-
   have hpositiveC := positiveDiagonalBlocks_of_sq CR CV (WC * WC) hC hsqC
   have hC_intertwines :
       (WC * WC) * CR.starProjection = CV.starProjection * (WC * WC) :=
@@ -254,7 +240,6 @@ theorem proposition3_4_full_real
       CRᗮ.starProjection * (WC * WC) * CR.starProjection =
         -star (CR.starProjection * (WC * WC) * CRᗮ.starProjection) :=
     hC.crossed_blocks
-
   have hintertwinesR :
       (W * W) * (reflectedSubspace U V).starProjection =
         V.starProjection * (W * W) := by
@@ -263,7 +248,6 @@ theorem proposition3_4_full_real
     simp only [DavisKahan.complexify_mul]
     rw [hproj, ← starProjection_complexifySubmodule V]
     exact hC_intertwines
-
   have hsource_posR :
       ((reflectedSubspace U V).starProjection * (W * W) *
         (reflectedSubspace U V).starProjection).IsPositive := by
@@ -272,7 +256,6 @@ theorem proposition3_4_full_real
     simp only [DavisKahan.complexify_mul]
     rw [hproj]
     exact hpositiveC.1
-
   have hcomplement_posR :
       ((reflectedSubspace U V)ᗮ.starProjection * (W * W) *
         (reflectedSubspace U V)ᗮ.starProjection).IsPositive := by
@@ -281,7 +264,6 @@ theorem proposition3_4_full_real
     simp only [DavisKahan.complexify_mul]
     rw [hprojc]
     exact hpositiveC.2
-
   have hcrossedR :
       (reflectedSubspace U V)ᗮ.starProjection * (W * W) *
           (reflectedSubspace U V).starProjection =
@@ -293,7 +275,6 @@ theorem proposition3_4_full_real
     simp only [DavisKahan.complexify_mul, complexify_neg, DavisKahan.complexify_star]
     rw [hproj, hprojc]
     exact hC_crossed
-
   exact ⟨mul_mem hunitary hunitary, hintertwinesR,
     hsource_posR, hcomplement_posR, hcrossedR⟩
 

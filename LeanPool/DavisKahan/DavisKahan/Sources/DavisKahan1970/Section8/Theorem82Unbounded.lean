@@ -114,7 +114,6 @@ The operator norm is the first Ky Fan norm, hence a member of the source norm
 class, so the printed universal-norm estimate specializes to it. -/
 theorem norm_sinTwoAngleOperator_le_of_perturbedGap_unbounded_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -192,7 +191,6 @@ the module docstring for what it would take to discharge it, and for why
 Theorem 8.1 is not what discharges it. -/
 theorem theorem8_2_branch_maximalAngle_lt_of_small_perturbation_unbounded_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

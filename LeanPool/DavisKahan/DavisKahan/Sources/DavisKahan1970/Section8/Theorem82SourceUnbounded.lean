@@ -88,7 +88,7 @@ omit [CompleteSpace H] in
 /-- `sourceResidual` is the printed residual: `R = (A + H)|_P − A₀`, for any
 bounded realization `M` of the Ritz block `A₀ = A|_P`. -/
 theorem sourceResidual_eq_sub_ritzBlock {A : H →ₗ.[𝕜] H} {Hop : H →L[𝕜] H}
-    {P : Submodule 𝕜 H}  {M : P →L[𝕜] P}
+    {P : Submodule 𝕜 H} {M : P →L[𝕜] P}
     (hPdom : ∀ v : P, (v : H) ∈ A.domain)
     (hRitz : ∀ v : P, ((M v : P) : H) = A ⟨(v : H), hPdom v⟩) (v : P) :
     sourceResidual Hop P v
@@ -197,7 +197,6 @@ lies in the central band `[β − δ/2, α + δ/2]`, and `‖H‖ < δ/2`.  Then
 double-angle estimate is retained and the comparison is on the acute branch. -/
 theorem theorem8_2_perturbation_sourceExact_unbounded_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
@@ -270,7 +269,6 @@ The smallness hypothesis is the printed `‖R‖ < δ/2` on the residual itself,
 does not become `‖H‖ < δ/2`. -/
 theorem theorem8_2_residual_sourceExact_unbounded_complex
     {Hc : Type v} [NormedAddCommGroup Hc] [InnerProductSpace ℂ Hc] [CompleteSpace Hc]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)

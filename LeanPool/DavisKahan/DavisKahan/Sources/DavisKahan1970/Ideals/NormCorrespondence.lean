@@ -383,7 +383,6 @@ noncomputable def toNormingFunction (Φ : SymmetricNormingFunction.Axiomatic) :
     exact Φ.zero_pad x
 
 /-- The transported paper norm has finite gauge, so it lands in the ideal. -/
-
 theorem toNormingFunction_finiteGauge (Φ : SymmetricNormingFunction.Axiomatic) (n : ℕ)
     (x : Fin n → ℝ) :
     Φ.toNormingFunction.finiteGauge n x = Φ.gauge n x :=

@@ -54,7 +54,7 @@ abbrev FiniteMultiplicitySpace (𝕜 : Type u)  (m : ℕ) :=
   EuclideanSpace 𝕜 (Fin m)
 
 /-- Ambient orthogonal sum of the exact and complementary coordinate spaces. -/
-abbrev FiniteMultiplicityAmbient (𝕜 : Type u)  (m : ℕ) :=
+abbrev FiniteMultiplicityAmbient (𝕜 : Type u) (m : ℕ) :=
   WithLp 2
     (FiniteMultiplicitySpace 𝕜 m × FiniteMultiplicitySpace 𝕜 m)
 

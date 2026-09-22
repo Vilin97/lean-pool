@@ -61,7 +61,6 @@ variable {E : Type v}
 /-- **Lemma 6.1 at the paper's separable ambient scope, over `ℂ`.** -/
 theorem lemma6_1_separable_complex
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (Ω Γ : Submodule ℂ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K Ktilde L Ltilde : E →L[ℂ] E)
@@ -83,7 +82,6 @@ theorem lemma6_1_separable_complex
 /-- **Lemma 6.1 at the paper's separable ambient scope, over `ℝ`.** -/
 theorem lemma6_1_separable_real
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (Ω Γ : Submodule ℝ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K Ktilde L Ltilde : E →L[ℝ] E)
@@ -105,7 +103,6 @@ theorem lemma6_1_separable_real
 /-- **Lemma 6.1's converse at the paper's separable ambient scope, over `ℂ`.** -/
 theorem lemma6_1_converse_separable_complex
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (Ω Γ : Submodule ℂ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K Ktilde L Ltilde : E →L[ℂ] E)
@@ -126,7 +123,6 @@ theorem lemma6_1_converse_separable_complex
 /-- **Lemma 6.1's converse at the paper's separable ambient scope, over `ℝ`.** -/
 theorem lemma6_1_converse_separable_real
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (Ω Γ : Submodule ℝ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K Ktilde L Ltilde : E →L[ℝ] E)
@@ -147,7 +143,6 @@ theorem lemma6_1_converse_separable_real
 /-- **Lemma 6.2 at the paper's separable ambient scope.** -/
 theorem lemma6_2_separable {𝕜 : Type} [RCLike 𝕜]
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} 𝕜)
     (U V : Submodule 𝕜 E) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     {K : E →L[𝕜] E} (hK : N.Mem K) :
@@ -166,7 +161,6 @@ The separation is the `sin Θ` theorem's own interval/exterior hypothesis, taken
 twice as the source takes it, and the ambient space is separable. -/
 theorem proposition6_1_printedGap_sourceExact_complex
     {E : Type v} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     {A B : E →L[ℂ] E} (hA : A.IsSymmetric) (hB : B.IsSymmetric)
     {U V : Submodule ℂ E} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
@@ -188,7 +182,6 @@ theorem proposition6_1_printedGap_sourceExact_complex
 /-- **Davis--Kahan 1970, Proposition 6.1 at the printed source scope, over `ℝ`.** -/
 theorem proposition6_1_printedGap_sourceExact_real
     {E : Type v} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     {A B : E →L[ℝ] E} (hA : A.IsSymmetric) (hB : B.IsSymmetric)
     {U V : Submodule ℝ E} [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
@@ -224,7 +217,6 @@ theorem theorem6_1_printedGap_sourceExact_complex
     [NormedAddCommGroup E₀'] [InnerProductSpace ℂ E₀'] [CompleteSpace E₀']
     [NormedAddCommGroup F₀'] [InnerProductSpace ℂ F₀'] [CompleteSpace F₀']
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -249,7 +241,6 @@ theorem theorem6_1_printedGap_sourceExact_real
     [NormedAddCommGroup E₀'] [InnerProductSpace ℝ E₀'] [CompleteSpace E₀']
     [NormedAddCommGroup F₀'] [InnerProductSpace ℝ F₀'] [CompleteSpace F₀']
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -321,7 +312,6 @@ theorem theorem6_2_vacuity_sourceExact_complex
     [NormedAddCommGroup E₀'] [InnerProductSpace ℂ E₀'] [CompleteSpace E₀']
     [NormedAddCommGroup F₀'] [InnerProductSpace ℂ F₀'] [CompleteSpace F₀']
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -348,7 +338,6 @@ theorem theorem6_2_vacuity_sourceExact_real
     [NormedAddCommGroup E₀'] [InnerProductSpace ℝ E₀'] [CompleteSpace E₀']
     [NormedAddCommGroup F₀'] [InnerProductSpace ℝ F₀'] [CompleteSpace F₀']
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -380,9 +369,7 @@ section Lemma63
 /-- **Lemma 6.3 at the paper's separable ambient scope, over `ℂ`.** -/
 theorem lemma6_3_leakage_separable_complex {E' F' : Type v}
     [NormedAddCommGroup E'] [InnerProductSpace ℂ E'] [CompleteSpace E']
-
     [NormedAddCommGroup F'] [InnerProductSpace ℂ F'] [CompleteSpace F']
-
     (K : E' →L[ℂ] F')
     (P : Submodule ℂ E') [P.HasOrthogonalProjection]
     (Q : Submodule ℂ F') [Q.HasOrthogonalProjection]
@@ -399,9 +386,7 @@ theorem lemma6_3_leakage_separable_complex {E' F' : Type v}
 /-- **Lemma 6.3 at the paper's separable ambient scope, over `ℝ`.** -/
 theorem lemma6_3_leakage_separable_real {E' F' : Type v}
     [NormedAddCommGroup E'] [InnerProductSpace ℝ E'] [CompleteSpace E']
-
     [NormedAddCommGroup F'] [InnerProductSpace ℝ F'] [CompleteSpace F']
-
     (K : E' →L[ℝ] F')
     (P : Submodule ℝ E') [P.HasOrthogonalProjection]
     (Q : Submodule ℝ F') [Q.HasOrthogonalProjection]
@@ -433,7 +418,6 @@ variable {E : Type v}
 /-- **Davis--Kahan 1970, Lemma 6.1 on the source's two operators, over `ℂ`.** -/
 theorem lemma6_1_sourceOperators_separable_complex
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (Ω Γ : Submodule ℂ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K L : E →L[ℂ] E)
@@ -454,7 +438,6 @@ theorem lemma6_1_sourceOperators_separable_complex
 /-- **Davis--Kahan 1970, Lemma 6.1 on the source's two operators, over `ℝ`.** -/
 theorem lemma6_1_sourceOperators_separable_real
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (Ω Γ : Submodule ℝ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K L : E →L[ℝ] E)
@@ -478,7 +461,6 @@ The printed converse compares the two diagonal blocks *of `K`* and *of `L`*: eac
 operator's two blocks are equisingular, and the sum inequality is assumed. -/
 theorem lemma6_1_converse_sourceOperators_separable_complex
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℂ)
     (Ω Γ : Submodule ℂ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K L : E →L[ℂ] E)
@@ -499,7 +481,6 @@ theorem lemma6_1_converse_sourceOperators_separable_complex
 /-- **Lemma 6.1's converse on the source's two operators, over `ℝ`.** -/
 theorem lemma6_1_converse_sourceOperators_separable_real
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
     (N : NormalizedUnitaryInvariantNorm.{0, v} ℝ)
     (Ω Γ : Submodule ℝ E) [Ω.HasOrthogonalProjection] [Γ.HasOrthogonalProjection]
     (K L : E →L[ℝ] E)

@@ -284,7 +284,6 @@ The body of this gauge is the same expression named by `hSinTheta₀` in
 Both norms are assumed finite. The norm record supplies the where-defined
 Ky Fan comparison; the conclusion makes no ideal-membership transfer claim. -/
 theorem sinTheta_unbounded_formGap_whereDefinedUIN_rclike
-
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     (A : E →ₗ.[𝕜] E) (A₀ : F →ₗ.[𝕜] F) (Λ₁ : G →ₗ.[𝕜] G)
     (E₀ : F →L[𝕜] E) (F₀ : H →L[𝕜] E) (F₁ : G →L[𝕜] E) (R : F →L[𝕜] E)
@@ -460,7 +459,6 @@ at this source-facing boundary.  The two `N.Mem` arrows are written literally
 after the colon: they are the logical form of the paper's vacuity convention,
 not hypotheses required to invoke the theorem. -/
 theorem sinTheta_unbounded_formGap_whereDefinedUIN_complex
-
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℂ)
     (A : E →ₗ.[ℂ] E) (A₀ : F →ₗ.[ℂ] F) (Λ₁ : G →ₗ.[ℂ] G)
     (E₀ : F →L[ℂ] E) (F₀ : H →L[ℂ] E) (F₁ : G →L[ℂ] E) (R : F →L[ℂ] E)
@@ -594,7 +592,6 @@ The real sibling of `sinTheta_unbounded_formGap_whereDefinedUIN_complex`, with t
 same partial-norm/vacuity boundary and the same explicit `Mem → Mem →`
 conclusion shape. -/
 theorem sinTheta_unbounded_formGap_whereDefinedUIN_real
-
     (N : NormalizedSymmetricOperatorIdealFamily.{0, v} ℝ)
     (A : E →ₗ.[ℝ] E) (A₀ : F →ₗ.[ℝ] F) (Λ₁ : G →ₗ.[ℝ] G)
     (E₀ : F →L[ℝ] E) (F₀ : H →L[ℝ] E) (F₁ : G →L[ℝ] E) (R : F →L[ℝ] E)

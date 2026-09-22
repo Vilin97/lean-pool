@@ -363,7 +363,6 @@ The exact subspace is required only to reduce the (possibly unbounded) self-adjo
 operator.  The inequality is asserted when both displayed norms are defined; no
 ideal-membership transfer is added to the source statement. -/
 theorem sinTwoTheta_directed_unboundedResidual_reducing_whereDefinedUIN_rclike
-
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     (hA : IsSelfAdjoint A)
     {U : Submodule 𝕜 H} [U.HasOrthogonalProjection]
@@ -407,7 +406,6 @@ is retained for compatibility, not as full source-scope certification. The
 separate ambient theorem needs no such trial data. See the common-domain
 replacement candidate and the 2026-09-09 source review. -/
 theorem sinTwoTheta_unbounded_perturbedGap_whereDefinedUIN_rclike
-
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     {A : H →ₗ.[𝕜] H} (hA : IsSelfAdjoint A)
     (Hop : H →L[𝕜] H) (hHop : Hop.IsSymmetric)

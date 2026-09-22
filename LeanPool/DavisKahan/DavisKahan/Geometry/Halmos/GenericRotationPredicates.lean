@@ -76,7 +76,6 @@ both by `inf_comm`.  So an identification in one orientation transports to the
 other, and a consumer may state the hypothesis in whichever orientation its
 conclusion is written. -/
 theorem CrossedDefectsEquivalent.symm {U V : Submodule 𝕜 H}
-
     (h : CrossedDefectsEquivalent U V) : CrossedDefectsEquivalent V U := by
   obtain ⟨e⟩ := h
   refine ⟨((LinearIsometryEquiv.ofEq (V ⊓ Uᗮ) (Uᗮ ⊓ V) (inf_comm _ _)).trans

@@ -900,7 +900,6 @@ by a pair of subspaces of the paper's separable ambient space, up to isometric
 equivalence with the model pair carrying exactly those angle data. -/
 theorem theorem3_1_realization_sourceExact_complex
     [InnerProductSpace ℂ A₀] [InnerProductSpace ℂ A₁] [InnerProductSpace ℂ H]
-
     {Θ₀ : A₀ →L[ℂ] A₀} {Θ₁ : A₁ →L[ℂ] A₁}
     (hΘ₀ : IsSelfAdjoint Θ₀) (hΘ₁ : IsSelfAdjoint Θ₁)
     (hspec₀ : spectrum ℝ Θ₀ ⊆ Set.Icc 0 (Real.pi / 2))
@@ -922,7 +921,6 @@ omit [CompleteSpace H] in
 scope over `ℝ`.** -/
 theorem theorem3_1_realization_sourceExact_real
     [InnerProductSpace ℝ A₀] [InnerProductSpace ℝ A₁] [InnerProductSpace ℝ H]
-
     {Θ₀ : A₀ →L[ℝ] A₀} {Θ₁ : A₁ →L[ℝ] A₁}
     (hΘ₀ : IsSelfAdjoint Θ₀) (hΘ₁ : IsSelfAdjoint Θ₁)
     (hspec₀ : spectrum ℝ Θ₀ ⊆ Set.Icc 0 (Real.pi / 2))

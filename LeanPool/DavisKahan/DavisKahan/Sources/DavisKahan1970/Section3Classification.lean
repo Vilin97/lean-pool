@@ -465,7 +465,7 @@ invertible on the spectrum of `cos²Θ`, which is
 The only separability hypotheses are the source's own, on the two ambient
 spaces. -/
 theorem theorem3_1_spectralMultiplicity_classification_sourceAngle_real
-    [TopologicalSpace.SeparableSpace H₁]  :
+    [TopologicalSpace.SeparableSpace H₁] :
     PairOfSubspacesUnitaryEquivalent U₁ V₁ U₂ V₂ ↔
       SameHalmosTrivialDimensions U₁ V₁ U₂ V₂ ∧
       SameSpectralMultiplicity

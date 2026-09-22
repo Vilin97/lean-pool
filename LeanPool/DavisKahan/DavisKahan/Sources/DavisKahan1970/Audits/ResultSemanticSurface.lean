@@ -208,7 +208,6 @@ theorem sinTwoTheta_directed_orientation_sourceAudit_complex
     (N : TauCeti.DavisKahan.ExactSinTheta.SymmetricNormingFunction)
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     {trial : Submodule ℂ Hc} [trial.HasOrthogonalProjection]
-
     {ritz : trial →L[ℂ] trial} {residual : trial →L[ℂ] Hc}
     {gapCarrier : Submodule ℂ Hc} [gapCarrier.HasOrthogonalProjection]
     (hred : TauCeti.LinearPMap.ReducesSubspace A gapCarrier)
@@ -233,7 +232,6 @@ theorem sinTwoTheta_directed_orientation_sourceAudit_real
     (N : TauCeti.DavisKahan.ExactSinTheta.SymmetricNormingFunction)
     {A : Er →ₗ.[ℝ] Er} (hA : IsSelfAdjoint A)
     {trial : Submodule ℝ Er} [trial.HasOrthogonalProjection]
-
     {ritz : trial →L[ℝ] trial} {residual : trial →L[ℝ] Er}
     {gapCarrier : Submodule ℝ Er} [gapCarrier.HasOrthogonalProjection]
     (hred : TauCeti.LinearPMap.ReducesSubspace A gapCarrier)

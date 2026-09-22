@@ -53,7 +53,6 @@ universe v w
 Ranks of maps between spaces in different universes are not directly
 comparable, but every bound used by the approximation-number API is a natural
 number, and natural numbers are fixed by `Cardinal.lift`. -/
-
 theorem lift_le_natCast {c : Cardinal.{v}} {n : ℕ} :
     Cardinal.lift.{w} c ≤ (n : Cardinal.{max v w}) ↔ c ≤ (n : Cardinal.{v}) := by
   conv_lhs => rw [← Cardinal.lift_natCast.{w} n]

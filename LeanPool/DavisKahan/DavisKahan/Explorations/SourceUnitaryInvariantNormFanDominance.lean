@@ -1705,7 +1705,7 @@ If `H` is infinite-dimensional, then `E ⊕₂ H` is infinite-dimensional for ev
 private theorem blockInr_injective_stabilization
     {E H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E]
-    [NormedAddCommGroup H] [InnerProductSpace ℂ H]  :
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] :
     Function.Injective
       (blockInr (𝕜 := ℂ) (E₀ := E) (E₁ := H) :
         H → WithLp 2 (E × H)) := by
@@ -3169,7 +3169,6 @@ semantics rather than rebuilding the Davis--Kahan argument. -/
 theorem sinTheta_unbounded_formGap_sourceVacuous_complex_probe
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -3327,7 +3326,6 @@ constructed there.  It is enough to witness the theorem-signature distinction. -
 theorem sinTheta_unbounded_formGap_finiteRankSourceVacuous_complex_probe
     {E F G H : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -3355,7 +3353,6 @@ membership or a membership-transfer conclusion. -/
 theorem sinTheta_unbounded_formGap_normalizedAsSourceVacuous_complex_probe
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -3403,7 +3400,6 @@ source-facing Davis--Kahan statement. -/
 theorem everySourceSinThetaEstimateWithVacuity_of_whereDefinedFanClass
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace ℂ G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -3486,7 +3482,6 @@ theorem sinTheta_unbounded_formGap_whereDefinedUIN_rclike_probe
     {𝕜 : Type u} [RCLike 𝕜]
     {E F G H : Type v}
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-
     [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
     [NormedAddCommGroup G] [InnerProductSpace 𝕜 G] [CompleteSpace G]
     [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [CompleteSpace H]
@@ -3514,7 +3509,6 @@ The factor two is handled by proving the equivalent `(δ / 2)` estimate first. -
 theorem sinTwoTheta_ambient_unbounded_perturbedGap_whereDefinedUIN_rclike_probe
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     {A : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A)
     (Hop : E →L[𝕜] E) (hHop : Hop.IsSymmetric)
@@ -3543,7 +3537,6 @@ boundary over arbitrary `RCLike`. -/
 theorem sinTwoTheta_directed_whereDefinedUIN_rclike_production_probe
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     {A : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A)
     {trial gapCarrier : Submodule 𝕜 E}
@@ -3572,7 +3565,6 @@ gap on the two perturbed reducing restrictions. -/
 theorem sinTwoTheta_complete_whereDefinedUIN_rclike_production_probe
     {𝕜 : Type u} [RCLike 𝕜]
     {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-
     (N : NormalizedSymmetricOperatorIdealFamily.{u, v} 𝕜)
     {A : E →ₗ.[𝕜] E} (hA : IsSelfAdjoint A)
     (Hop : E →L[𝕜] E) (hHop : Hop.IsSymmetric)

@@ -75,7 +75,6 @@ theorem stableSingularPair_doubleAngleTangent_le
     rw [he1]
     abel
   have hden : 0 < 1 - s ^ 2 := by nlinarith
-
   have hA1err : |RCLike.re ⟪B.A1 e0, y⟫_ℂ| ≤ ‖B.A1‖ * ε := by
     calc
       |RCLike.re ⟪B.A1 e0, y⟫_ℂ| ≤ ‖⟪B.A1 e0, y⟫_ℂ‖ :=
@@ -87,7 +86,6 @@ theorem stableSingularPair_doubleAngleTangent_le
       _ ≤ (‖B.A1‖ * ε) * ‖y‖ := by
         gcongr
       _ = ‖B.A1‖ * ε := by rw [hynorm, mul_one]
-
   have hA0err : |RCLike.re ⟪B.A0 x, e1⟫_ℂ| ≤ ‖B.A0‖ * ε := by
     calc
       |RCLike.re ⟪B.A0 x, e1⟫_ℂ| ≤ ‖⟪B.A0 x, e1⟫_ℂ‖ :=
@@ -99,7 +97,6 @@ theorem stableSingularPair_doubleAngleTangent_le
       _ ≤ (‖B.A0‖ * ‖x‖) * ε := by
         gcongr
       _ = ‖B.A0‖ * ε := by rw [hxnorm, mul_one]
-
   have hA1lower :
       d * s - ‖B.A1‖ * ε ≤ RCLike.re ⟪B.A1 (X x), y⟫_ℂ := by
     have hy := hA1 y
@@ -115,7 +112,6 @@ theorem stableSingularPair_doubleAngleTangent_le
     have herrlower : -‖B.A1‖ * ε ≤ RCLike.re ⟪B.A1 e0, y⟫_ℂ := by
       simpa only [neg_mul] using neg_le_of_abs_le hA1err
     nlinarith [mul_le_mul_of_nonneg_left hy hs0]
-
   have hA0upper :
       RCLike.re ⟪X (B.A0 x), y⟫_ℂ ≤ ‖B.A0‖ * ε := by
     have hA0expand :
@@ -131,13 +127,11 @@ theorem stableSingularPair_doubleAngleTangent_le
     have herr : RCLike.re ⟪B.A0 x, e1⟫_ℂ ≤ ‖B.A0‖ * ε :=
       (le_abs_self _).trans hA0err
     linarith
-
   have hleftLower :
       d * s - (‖B.A0‖ + ‖B.A1‖) * ε ≤
         RCLike.re ⟪B.A1 (X x) - X (B.A0 x), y⟫_ℂ := by
     rw [inner_sub_left, map_sub]
     linarith
-
   have hpoint := (solvesRiccati_iff_pointwise B X).1 hX x
   have heq : B.A1 (X x) - X (B.A0 x) =
       X (B.B01 (X x)) - B.B10 x := by
@@ -149,13 +143,11 @@ theorem stableSingularPair_doubleAngleTangent_le
       _ = (X (B.A0 x) + X (B.B01 (X x))) -
             (B.B10 x + X (B.A0 x)) := by rw [hpoint]
       _ = X (B.B01 (X x)) - B.B10 x := by abel
-
   have hB10real :
       RCLike.re ⟪B.B10 x, y⟫_ℂ =
         RCLike.re ⟪B.B01 y, x⟫_ℂ := by
     rw [← RCLike.conj_re ⟪B.B10 x, y⟫_ℂ, inner_conj_symm,
       ← B.offDiagonalAdjoint x y]
-
   have hBlin1 : |RCLike.re ⟪B.B01 y, e1⟫_ℂ| ≤ ‖B.B01‖ * ε := by
     calc
       |RCLike.re ⟪B.B01 y, e1⟫_ℂ| ≤ ‖⟪B.B01 y, e1⟫_ℂ‖ :=
@@ -186,7 +178,6 @@ theorem stableSingularPair_doubleAngleTangent_le
         exact B.B01.le_opNorm e0
       _ ≤ (‖B.B01‖ * ε) * ε := by gcongr
       _ = ‖B.B01‖ * ε ^ 2 := by ring
-
   have hBexpand :
       RCLike.re ⟪X (B.B01 (X x)) - B.B10 x, y⟫_ℂ =
         (s ^ 2 - 1) * RCLike.re ⟪B.B01 y, x⟫_ℂ +
@@ -215,7 +206,6 @@ theorem stableSingularPair_doubleAngleTangent_le
               ring
     rw [inner_sub_left, map_sub, hXterm, hB10real]
     ring
-
   have hrightUpper :
       RCLike.re ⟪X (B.B01 (X x)) - B.B10 x, y⟫_ℂ ≤
         (s ^ 2 - 1) * RCLike.re ⟪B.B01 y, x⟫_ℂ +
@@ -230,7 +220,6 @@ theorem stableSingularPair_doubleAngleTangent_le
     have hq : RCLike.re ⟪B.B01 e0, e1⟫_ℂ ≤ ‖B.B01‖ * ε ^ 2 :=
       (le_abs_self _).trans hBquad
     linarith
-
   rw [heq] at hleftLower
   have hraw :
       d * s ≤ -(1 - s ^ 2) * RCLike.re ⟪B.B01 y, x⟫_ℂ +

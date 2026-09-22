@@ -99,7 +99,6 @@ omit [CompleteSpace H] in
 restricted perturbation. -/
 theorem approximationSingularValue_theorem63Residual_le_of_invariant
     (T E : H →L[ℂ] H) (Z : Submodule ℂ H) [Z.HasOrthogonalProjection]
-
     (hinv : ∀ x ∈ Z, (T + E) x ∈ Z) (n : ℕ) :
     approximationSingularValue n (theorem63Residual T Z) ≤
       approximationSingularValue n (E ∘L Z.subtypeL) := by

@@ -56,7 +56,7 @@ omit [CompleteSpace H] in
 lifted Ritz compression. -/
 theorem trialResidualCore_eq_ritzDifference
     (T : H →L[ℂ] H) (Z : Submodule ℂ H)
-    [Z.HasOrthogonalProjection]  :
+    [Z.HasOrthogonalProjection] :
     trialResidualCore T Z =
       T ∘L Z.subtypeL - Z.subtypeL ∘L compressOperator Z T := by
   apply ContinuousLinearMap.ext

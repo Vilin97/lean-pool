@@ -118,7 +118,6 @@ normalization at `0` to an arbitrary index.
 
 This is the first place the `symm` axiom does real work, and it is why
 `normalized` may be stated at the single index `0` rather than for all of them. -/
-
 theorem single_one (i : ℕ) : Φ (Finsupp.single i 1) = 1 := by
   classical
   -- The transposition swapping `0` and `i` carries `single 0 1` to `single i 1`.

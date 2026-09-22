@@ -611,7 +611,6 @@ end ComplexKyFanTriangle
 
 omit [CompleteSpace E] [CompleteSpace F] in
 /-- The zero-term Ky Fan gauge vanishes. -/
-
 theorem kyFanApproximationGauge_zero :
     kyFanApproximationGauge 0 (0 : E →L[𝕜] F) = 0 :=
   (0 : E →L[𝕜] F).kyFanGauge_zero_index

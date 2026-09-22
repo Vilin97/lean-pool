@@ -248,7 +248,7 @@ theorem approximationSingularValue_sineBlock_lt_one_infiniteTrial_real
 /-- A real tangent representative has exactly the approximation numbers
 prescribed by the paper's directed angle. -/
 def HasTheorem63DirectedTangentApproximationNumbersInfiniteReal
-    (Z V : Submodule ℝ E)  [V.HasOrthogonalProjection]
+    (Z V : Submodule ℝ E) [V.HasOrthogonalProjection]
     (tanTheta0 : Z →L[ℝ] E) : Prop :=
   ∀ n, approximationSingularValue n tanTheta0 =
     Real.tan (Real.arcsin
@@ -315,7 +315,7 @@ two cases together cover every real trial subspace. -/
 /-- Diagonal entries of the real directed tangent on a finite-dimensional trial
 space: tangents of the directed angles, read off the sine block. -/
 noncomputable def theorem63DirectedTangentDiagonalReal
-    (Z V : Submodule ℝ E)  [V.HasOrthogonalProjection]
+    (Z V : Submodule ℝ E) [V.HasOrthogonalProjection]
     (i : Fin (Module.finrank ℝ Z)) : ℝ :=
   Real.tan (Real.arcsin
     (approximationSingularValue (i : Nat) (theorem63DirectedSineBlockReal Z V)))
@@ -323,7 +323,7 @@ noncomputable def theorem63DirectedTangentDiagonalReal
 /-- A real directed tangent representative on a finite-dimensional trial space,
 diagonal in an arbitrary orthonormal basis of that space. -/
 noncomputable def theorem63DirectedTangentReal
-    (Z V : Submodule ℝ E)  [V.HasOrthogonalProjection]
+    (Z V : Submodule ℝ E) [V.HasOrthogonalProjection]
     [FiniteDimensional ℝ Z] : Z →L[ℝ] E :=
   Z.subtypeL ∘L
     (TauCeti.diagOp (stdOrthonormalBasis ℝ Z)
