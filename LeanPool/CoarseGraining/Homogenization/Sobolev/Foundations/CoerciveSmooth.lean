@@ -100,9 +100,11 @@ private theorem eLpNorm_basisVec_apply_eq_gradCoordToScalarL2_norm
     ENNReal.toReal (MeasureTheory.eLpNorm (fun x => ‖(fderiv ℝ f x) (basisVec i)‖)
         2 MeasureTheory.volume)
       = ENNReal.toReal (MeasureTheory.eLpNorm dg 2 MeasureTheory.volume) := by
-          rw [MeasureTheory.eLpNorm_norm]
+          rw [MeasureTheory.eLpNorm_norm _
+            ((hf1.continuous_fderiv (by simp)).clm_apply continuous_const).aestronglyMeasurable]
     _ = ENNReal.toReal (MeasureTheory.eLpNorm dg 2 (volumeMeasureOn U)) := by
-          rw [← MeasureTheory.eLpNorm_restrict_eq_of_support_subset hsupport]
+          rw [← MeasureTheory.eLpNorm_restrict_eq_of_support_subset
+            ((hf1.continuous_fderiv (by simp)).clm_apply continuous_const).aestronglyMeasurable hsupport]
     _ = ENNReal.toReal (MeasureTheory.eLpNorm (fun x => u.grad x i) 2 (volumeMeasureOn U)) := by
           simp [u, dg, H1Function.ofContDiff]
     _ = ‖u.gradCoordToScalarL2 i‖ := by
@@ -168,16 +170,16 @@ theorem fderivL2Norm_le_gradientCoordL2NormSum_ofContDiff
           (μ := MeasureTheory.volume)
           (s := Finset.univ)
           (f := di)
-          (fun i _ => (hdi_mem i).1)
+
           (by norm_num : (1 : ℝ≥0∞) ≤ 2))
     calc
       ‖dCoordLp‖ = ENNReal.toReal (MeasureTheory.eLpNorm D 2 MeasureTheory.volume) := by
             simp [dCoordLp]
       _ ≤ ENNReal.toReal (∑ i : Fin d, MeasureTheory.eLpNorm (di i) 2 MeasureTheory.volume) := by
             refine ENNReal.toReal_mono ?_ hsum_eLp
-            exact ENNReal.sum_ne_top.2 fun i _ => (hdi_mem i).2.ne
+            exact ENNReal.sum_ne_top.2 fun i _ => (hdi_mem i).eLpNorm_lt_top.ne
       _ = ∑ i : Fin d, ‖u.gradCoordToScalarL2 i‖ := by
-            rw [ENNReal.toReal_sum (fun i hi => (hdi_mem i).2.ne)]
+            rw [ENNReal.toReal_sum (fun i hi => (hdi_mem i).eLpNorm_lt_top.ne)]
             refine Finset.sum_congr rfl ?_
             intro i hi
             simpa [di, hf1] using
@@ -236,11 +238,11 @@ theorem valueL2Norm_le_sobolevConst_mul_gradientCoordL2NormSum_ofContDiff
       _ = ENNReal.toReal (MeasureTheory.eLpNorm f 2 (volumeMeasureOn U)) := by
         simp [u, H1Function.ofContDiff]
       _ = ENNReal.toReal (MeasureTheory.eLpNorm f 2 MeasureTheory.volume) := by
-        rw [MeasureTheory.eLpNorm_restrict_eq_of_support_subset hsupp]
+        rw [MeasureTheory.eLpNorm_restrict_eq_of_support_subset hf.continuous.aestronglyMeasurable hsupp]
   calc
     ‖u.toScalarL2‖ = ENNReal.toReal (MeasureTheory.eLpNorm f 2 MeasureTheory.volume) := hvalue
     _ ≤ ENNReal.toReal ((C : ℝ≥0∞) * MeasureTheory.eLpNorm (fderiv ℝ f) 2 MeasureTheory.volume) := by
-          exact ENNReal.toReal_mono (ENNReal.mul_ne_top (by simp) hfderiv_mem.2.ne) hsob
+          exact ENNReal.toReal_mono (ENNReal.mul_ne_top (by simp) hfderiv_mem.eLpNorm_lt_top.ne) hsob
     _ = (C : ℝ) * ENNReal.toReal (MeasureTheory.eLpNorm (fderiv ℝ f) 2 MeasureTheory.volume) := by
           rw [ENNReal.toReal_mul]
           simp

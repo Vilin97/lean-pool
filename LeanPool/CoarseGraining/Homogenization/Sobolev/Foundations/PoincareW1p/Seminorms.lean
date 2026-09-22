@@ -173,7 +173,8 @@ private theorem eLpNorm_basisVec_apply_eq_gradCoordLpSeminorm
         (MeasureTheory.eLpNorm (fun x => ‖(fderiv ℝ f x) (basisVec i)‖) p
           (volumeMeasureOn U))
       = ENNReal.toReal (MeasureTheory.eLpNorm dg p (volumeMeasureOn U)) := by
-          rw [MeasureTheory.eLpNorm_norm]
+          rw [MeasureTheory.eLpNorm_norm _
+            ((hf1.continuous_fderiv (by simp)).clm_apply continuous_const).aestronglyMeasurable]
     _ = ENNReal.toReal (MeasureTheory.eLpNorm (fun x => u.grad x i) p
           (volumeMeasureOn U)) := by
           simp [u, dg, W1pFunction.ofContDiffOnIsOpenBoundedConvexDomain,
@@ -247,16 +248,16 @@ theorem fderivLpNorm_le_gradientCoordLpSeminormSum_ofContDiffOnIsOpenBoundedConv
           (μ := μ)
           (s := Finset.univ)
           (f := di)
-          (fun i _ => (hdi_mem i).1)
+
           hp1)
     calc
       ‖dCoordLp‖ = ENNReal.toReal (MeasureTheory.eLpNorm D p μ) := by
             simp [dCoordLp]
       _ ≤ ENNReal.toReal (∑ i : Fin d, MeasureTheory.eLpNorm (di i) p μ) := by
             refine ENNReal.toReal_mono ?_ hsum_eLp
-            exact ENNReal.sum_ne_top.2 fun i _ => (hdi_mem i).2.ne
+            exact ENNReal.sum_ne_top.2 fun i _ => (hdi_mem i).eLpNorm_lt_top.ne
       _ = ∑ i : Fin d, u.gradCoordLpSeminorm i := by
-            rw [ENNReal.toReal_sum (fun i hi => (hdi_mem i).2.ne)]
+            rw [ENNReal.toReal_sum (fun i hi => (hdi_mem i).eLpNorm_lt_top.ne)]
             refine Finset.sum_congr rfl ?_
             intro i hi
             simpa [di, hf1, μ] using

@@ -85,7 +85,8 @@ private theorem eLpNorm_basisVec_apply_eq_gradCoordToScalarL2_norm
         (MeasureTheory.eLpNorm (fun x => ‖(fderiv ℝ f x) (basisVec i)‖) 2
           (volumeMeasureOn U))
       = ENNReal.toReal (MeasureTheory.eLpNorm dg 2 (volumeMeasureOn U)) := by
-          rw [MeasureTheory.eLpNorm_norm]
+          rw [MeasureTheory.eLpNorm_norm _
+            ((hf1.continuous_fderiv (by simp)).clm_apply continuous_const).aestronglyMeasurable]
     _ = ENNReal.toReal (MeasureTheory.eLpNorm (fun x => u.grad x i) 2
           (volumeMeasureOn U)) := by
           simp [u, dg, H1Function.ofContDiffOnIsOpenBoundedConvexDomain,
@@ -206,16 +207,16 @@ theorem fderivL2Norm_le_gradientCoordL2NormSum_ofContDiffOnIsOpenBoundedConvexDo
           (μ := μ)
           (s := Finset.univ)
           (f := di)
-          (fun i _ => (hdi_mem i).1)
+
           (by norm_num : (1 : ℝ≥0∞) ≤ 2))
     calc
       ‖dCoordLp‖ = ENNReal.toReal (MeasureTheory.eLpNorm D 2 μ) := by
             simp [dCoordLp]
       _ ≤ ENNReal.toReal (∑ i : Fin d, MeasureTheory.eLpNorm (di i) 2 μ) := by
             refine ENNReal.toReal_mono ?_ hsum_eLp
-            exact ENNReal.sum_ne_top.2 fun i _ => (hdi_mem i).2.ne
+            exact ENNReal.sum_ne_top.2 fun i _ => (hdi_mem i).eLpNorm_lt_top.ne
       _ = ∑ i : Fin d, ‖u.gradCoordToScalarL2 i‖ := by
-            rw [ENNReal.toReal_sum (fun i hi => (hdi_mem i).2.ne)]
+            rw [ENNReal.toReal_sum (fun i hi => (hdi_mem i).eLpNorm_lt_top.ne)]
             refine Finset.sum_congr rfl ?_
             intro i hi
             simpa [di, hf1, μ] using
@@ -539,7 +540,7 @@ theorem tendsto_convexApproxSmoothH1_toScalarL2
     rw [show (ψ n).toFun x =
       convexApproxSmoothRepresentative U ρ u x0 r (unitConvexApproxScale n) x by
         simpa [ρ] using congrFun hψ_toFun x]
-  exact (ENNReal.tendsto_toReal_zero_iff (fun n => (hmem n).2.ne)).2 hrep
+  exact (ENNReal.tendsto_toReal_zero_iff (fun n => (hmem n).eLpNorm_lt_top.ne)).2 hrep
 
 theorem tendsto_convexApproxSmoothH1_gradCoordToScalarL2
     (hU : IsOpenBoundedConvexDomain U) (u : H1Function U)
@@ -661,7 +662,7 @@ theorem tendsto_convexApproxSmoothH1_gradCoordToScalarL2
         (convexApproxSmoothRepresentative U ρ u x0 r (unitConvexApproxScale n)) x)
           (basisVec i) by
         simpa [ρ] using congrFun (congrFun hψ_grad x) i]
-  exact (ENNReal.tendsto_toReal_zero_iff (fun n => (hmem n).2.ne)).2 hrep
+  exact (ENNReal.tendsto_toReal_zero_iff (fun n => (hmem n).eLpNorm_lt_top.ne)).2 hrep
 
 /-- The smooth Poincare estimate passes to arbitrary `H¹` functions by the
 convex smoothing approximation. -/

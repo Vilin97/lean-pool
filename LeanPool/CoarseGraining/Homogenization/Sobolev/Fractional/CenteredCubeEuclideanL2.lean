@@ -88,7 +88,7 @@ theorem map_centeredCubeDilation_normalizedVolume {d : ℕ} (m : ℤ) :
   rw [cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure,
     cubeBoundedMeasurableDomain_normalizedVolume_eq_normalizedCubeMeasure]
   unfold normalizedCubeMeasure
-  rw [Measure.map_smul]
+  rw [Measure.map_smul _ (measurable_centeredCubeDilation m).aemeasurable]
   have hmap :
       Measure.map (centeredCubeDilation (d := d) m) (cubeMeasure (originCube d 0)) =
         ENNReal.ofReal (((centeredCubeScale m) ^ d)⁻¹) •
@@ -181,6 +181,10 @@ theorem normalizedEuclideanLpENorm_pullbackToUnit {d : ℕ} {m : ℤ}
         F.pullbackToUnit =
       (centeredCubeDomain d m).normalizedEuclideanLpENorm (2 : ℝ≥0∞) F := by
   unfold BoundedMeasurableDomain.normalizedEuclideanLpENorm
+  rw [BoundedMeasurableDomain.normalizedLpENorm_eq_eLpNorm _ _ _
+      F.pullbackToUnit.euclideanMagnitudeMemL2.aestronglyMeasurable,
+    BoundedMeasurableDomain.normalizedLpENorm_eq_eLpNorm _ _ _
+      F.euclideanMagnitudeMemL2.aestronglyMeasurable]
   change eLpNorm
       ((fun x => euclideanNorm (F x)) ∘ centeredCubeDilation (d := d) m)
         (2 : ℝ≥0∞) (unitCenteredCubeDomain d).normalizedVolume = _

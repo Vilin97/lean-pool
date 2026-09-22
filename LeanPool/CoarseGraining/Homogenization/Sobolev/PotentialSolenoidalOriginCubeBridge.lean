@@ -266,7 +266,6 @@ theorem IsPotentialZeroTraceOn.integral_eq_zero_openCubeSet_originCube
     MeasureTheory.tendsto_integral_of_L1'
       (μ := μ)
       (f := fun x => u.toH1Function.grad x i)
-      hfi.aestronglyMeasurable
       hD_integrable_restrict
       hL1
   have hEq : (fun m => ∫ x, D m x ∂μ) = fun _ => (0 : ℝ) := by
