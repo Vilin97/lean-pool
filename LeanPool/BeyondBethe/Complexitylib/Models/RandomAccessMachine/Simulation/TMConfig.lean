@@ -26,6 +26,8 @@ namespace RAM
 
 namespace TMConfig
 
+variable {n bound : ℕ}
+
 /-- The state field is register zero. -/
 @[simp] theorem fieldReg_state :
     fieldReg (stateField (n := n) (bound := bound)) = 0 :=

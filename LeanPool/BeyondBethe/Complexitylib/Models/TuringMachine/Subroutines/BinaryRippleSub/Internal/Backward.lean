@@ -90,7 +90,7 @@ private theorem binaryRippleSubCoreTM_step_erase
       simp only [↓reduceIte, Function.update_self]
       simp [moveLeftDir, hread]
     · rw [Function.update_of_ne hi]
-      simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
+      simpa only [ite_eq_right hi] using! transitionTape_eq_self (hother i hi)
   · exact transitionTape_eq_self houtput
 
 private theorem binaryRippleSubCoreTM_step_trim_false_zero
@@ -116,7 +116,7 @@ private theorem binaryRippleSubCoreTM_step_trim_false_zero
     simp only [↓reduceIte, Function.update_self]
     simp [moveLeftDir]
   · rw [Function.update_of_ne hi]
-    simpa only [ite_eq_right hi] using transitionTape_eq_self (hother i hi)
+    simpa only [ite_eq_right hi] using! transitionTape_eq_self (hother i hi)
 
 private theorem binaryRippleSubCoreTM_step_trim_false_one
     (c : Cfg n (binaryRippleSubCoreTM lhsIdx rhsIdx resultIdx).Q)

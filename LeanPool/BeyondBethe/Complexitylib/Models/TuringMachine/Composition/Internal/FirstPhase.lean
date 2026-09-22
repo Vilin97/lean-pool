@@ -120,9 +120,11 @@ theorem compositionFirstTM_boundary_internal (tmF : TM nf) (ng : ℕ)
       cases hreachR
       cases hreachC
       simpa [compositionFirstTM, compositionRawOutputIdx, Cfg.init] using hrawR
-    · rw [hC, compositionRawOutputIdx_eq_firstPlacedLast,
-        placeWorkParkedCfg, placeWorkCfg_work_middle]
-      exact hrawR
+    · rw [hC, compositionRawOutputIdx_eq_firstPlacedLast]
+      have hmiddle := placeWorkCfg_work_middle tmF.retargetOutput 0 (ng + 1)
+        (fun _ => (Tape.init []).move Dir3.right) cR (Fin.last nf)
+      have houtput := hmiddle ▸ hrawR
+      simpa only [placeWorkParkedCfg] using! houtput
   have hvirtual : transitionTape (C.work (compositionVirtualInputIdx nf ng)) =
       (Tape.init []).move Dir3.right := by
     rcases hshapeC with ht0 | hC
@@ -137,9 +139,10 @@ theorem compositionFirstTM_boundary_internal (tmF : TM nf) (ng : ℕ)
         ((placeWorkCfg tmF.retargetOutput 0 (ng + 1)
           (fun _ => (Tape.init []).move Dir3.right) cR).work
             (compositionVirtualInputIdx nf ng)) = _
-      rw [placeWorkCfg_work_extra _ _ _ _ _ _ hnot]
-      exact transitionTape_eq_self
-        (t := (Tape.init []).move Dir3.right) (by decide)
+      have hextra := placeWorkCfg_work_extra tmF.retargetOutput 0 (ng + 1)
+        (fun _ => (Tape.init []).move Dir3.right) cR _ hnot
+      exact (congrArg transitionTape hextra).trans
+        (transitionTape_eq_self (t := (Tape.init []).move Dir3.right) (by decide))
   have hscratch : ∀ j : Fin ng,
       transitionTape (C.work (compositionSecondWorkIdx nf ng j)) =
         (Tape.init []).move Dir3.right := by
@@ -156,9 +159,10 @@ theorem compositionFirstTM_boundary_internal (tmF : TM nf) (ng : ℕ)
       change transitionTape
         ((placeWorkCfg tmF.retargetOutput 0 (ng + 1)
           (fun _ => (Tape.init []).move Dir3.right) cR).work idx) = _
-      rw [placeWorkCfg_work_extra _ _ _ _ _ _ hnot]
-      exact transitionTape_eq_self
-        (t := (Tape.init []).move Dir3.right) (by decide)
+      have hextra := placeWorkCfg_work_extra tmF.retargetOutput 0 (ng + 1)
+        (fun _ => (Tape.init []).move Dir3.right) cR _ hnot
+      exact (congrArg transitionTape hextra).trans
+        (transitionTape_eq_self (t := (Tape.init []).move Dir3.right) (by decide))
   have hinvariants := reachesIn_startInvariant hreachFirst
     (Tape.StartInvariant.init_ofBool x)
     (fun _ => Tape.StartInvariant.init_nil)

@@ -1054,7 +1054,7 @@ theorem routine_exec_internal {gateStart base : ℕ}
           (max marshalSpace (max gateSpace restoreSpace)))))), ?_⟩
     rw [← hsteps]
     simpa [routine, setupStore, headerStore, saveRestartStore, marshaled,
-      final, restoreStore] using hrun
+      final, restoreStore] using! hrun
   obtain ⟨cost, space, hexec⟩ := hexec
   exact ⟨final, cost, space, hexec, hfinalPointer, hfinalRemaining,
     hfinalBase, hfinalCount, hfinalAppended, hfinalWires, hfinalCode⟩

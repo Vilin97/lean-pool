@@ -57,7 +57,7 @@ theorem seqTM_hoareTime (tm₁ tm₂ : TM n)
   obtain ⟨c₂, t₂, ht₂, hreach₂, hhalt₂, hpost⟩ := h₂ _ _ _ hmid'
   refine ⟨phase2Wrap tm₁ tm₂ c₂, t₁ + 1 + t₂, ?_, ?_, ?_, ?_⟩
   · omega
-  · convert seqTM_reachesIn_of_reachesIn tm₁ tm₂ hreach₁ hhalt₁ hreach₂ using 1
+  · convert! seqTM_reachesIn_of_reachesIn tm₁ tm₂ hreach₁ hhalt₁ hreach₂ using 1
   · rw [phase2Wrap_halted_iff]; exact hhalt₂
   · exact hpost
 

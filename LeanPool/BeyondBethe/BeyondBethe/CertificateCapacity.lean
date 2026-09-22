@@ -165,7 +165,7 @@ theorem selectorCapacityValue_le_ratio
       (columnSelector κ ι).eval z / realMonomial z α := by
   rw [le_div_iff₀ (realMonomial_pos hz α), columnSelector_eval,
     selectorCapacityValue_mul_realMonomial hα hz]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro j _
     exact mul_nonneg
       (Finset.prod_nonneg fun c _ ↦ Real.rpow_nonneg
@@ -239,7 +239,7 @@ theorem clusterProductCapacityValue_le_ratio
   rw [clusterProductCapacityValue,
     rowClusterProduct_eval_eq_prod_injection,
     realMonomial_eq_prod_clusters, ← Finset.prod_div_distrib]
-  apply Finset.prod_le_prod
+  apply Finset.prod_le_prod₀
   · intro c _
     exact polynomialCapacity_nonneg
       (injectionPolynomial_nonnegativeCoefficients

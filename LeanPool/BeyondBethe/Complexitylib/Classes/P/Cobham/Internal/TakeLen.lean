@@ -297,7 +297,7 @@ private theorem takeLenTM_copy_loop :
                 rfl
           obtain ⟨c', t, ht, hreach, hhalt, hfin⟩ :=
             ih (h + 1) m (by omega) (by omega) y (acc ++ [b]) c1 rfl
-              (by rw [hc1]; simpa using hcells)
+              (by rw [hc1]; simpa using! hcells)
               (by rw [hc1]; simp [Tape.move, hhead])
               (by rw [hc1]; exact hsuf.move_right_cons)
               (by rw [hc1]; exact Tape.hasBinaryPrefix_write_bit b hpre)

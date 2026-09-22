@@ -294,13 +294,13 @@ private theorem mulLenTM_emit_loop :
         rfl
       obtain ⟨c', hreach, hst, hcl, hhd, hin, hout⟩ :=
         ih (k + 1) m (by omega) (acc ++ [false]) c1 rfl
-          (by rw [hc1]; simpa using hcells)
+          (by rw [hc1]; simpa using! hcells)
           (by rw [hc1]; simp [Tape.move, hhead])
           (by rw [hc1]; simpa using hinp)
           (by rw [hc1]; exact Tape.hasBinaryPrefix_write_bit false hpre)
       refine ⟨c', .step hstep hreach, hst, hcl, hhd, by rw [hin, hc1], ?_⟩
       rw [List.append_assoc] at hout
-      simpa using hout
+      simpa using! hout
 
 /-- The rewind pass: from `rew` with the work head at cell `h`, the machine walks
 back to the left-end marker and re-enters `outer` with the work head at cell one,

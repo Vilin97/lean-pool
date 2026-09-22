@@ -248,7 +248,7 @@ theorem marshalLoopOps_control_internal (n : ℕ) (store : Structured.Store)
     · simp [stateReg, cellReg, inputTape, cellBase]
   simpa [marshalLoopOps, sourceAddressed, sourceLoaded, sourceCleared,
     zeroed, oned, counted, based, encoded, multiplied, destinationAddressed,
-    destinationStored, final] using
+    destinationStored, final] using!
     And.intro hfinalState (And.intro hfinalZero
       (And.intro hfinalOne
         (And.intro hfinalCount (And.intro hfinalBase hfinalDestination))))
@@ -678,7 +678,7 @@ theorem marshalLoop_exec_internal (n cursor : ℕ)
         max bodySpace loopSpace, ?_, hfinalCursor, hfinalZero, hfinalOne,
         hfinalCount, hfinalBase⟩
       have hexec := Structured.Exec.whileNonzero hnonzero hbody hloop
-      convert hexec using 1
+      convert! hexec using 1
       simp [marshalLoopSteps, Nat.succ_mul]
       omega
 

@@ -406,7 +406,7 @@ private theorem binaryForCompareCfg_step_scan_blank
     limitIdx hne equalSoFar c rfl hcounterRead hlimitRead hinp hwork hout
   dsimp only [c, binaryForCompareCfg] at hstep
   rw [binaryForWorkAt_move_left work hne] at hstep
-  simpa using hstep
+  simpa using! hstep
 
 private theorem binaryForCompareCfg_step_rewind
     (body : TM n) (work : Fin n → Tape)
@@ -434,7 +434,7 @@ private theorem binaryForCompareCfg_step_rewind
     hne equalSoFar c rfl hinp hwork hout
   dsimp only [c, binaryForCompareCfg] at hstep
   rw [binaryForWorkAt_move_left work hne] at hstep
-  simpa using hstep
+  simpa using! hstep
 
 private theorem binaryForCompareCfg_rewind_reachesIn
     (body : TM n) (work : Fin n → Tape)
@@ -582,7 +582,7 @@ private theorem binaryForCompareCfg_reachesIn_rewind_zero
     (paddedBinaryPrefixEq counterBits limitBits width) width
   have hrun := reachesIn_trans (binaryForTM body counterIdx limitIdx)
     hscanRewind hrewind
-  convert hrun using 1
+  convert! hrun using 1
   omega
 
 /-- At equality, the full-width comparison preserves every tape exactly and
@@ -709,12 +709,14 @@ theorem binaryForTM_compare_reachesIn_frame_internal
     refine ⟨_, hrun, rfl, rfl, rfl, ?_, ?_⟩
     · simp
     · simp
+      rfl
   · have hlt : value < limitValue := by omega
     have hrun := binaryForTM_compare_reachesIn_frame_of_lt_internal
       body counterIdx limitIdx hne value limitValue hlt inp₀ work₀ out₀
       hcounter hlimit hinp hother hout
     refine ⟨_, hrun, rfl, rfl, rfl, ?_, ?_⟩
     · simp [hlt]
+      rfl
     · simp [heq]
 
 end TM

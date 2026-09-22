@@ -242,7 +242,7 @@ theorem decode_of_represents_internal (tm : TM n)
     rw [hstate]
     exact stateDecode_code_internal tm cfg.state
   · apply Tape.ext
-    · simpa [decode, decodeTape, tapeAt_input_internal] using
+    · simpa [decode, decodeTape, tapeAt_input_internal] using!
         hrepresents (Sum.inr (Sum.inl ⟨0, by omega⟩))
     · funext position
       simp only [decode, decodeTape]

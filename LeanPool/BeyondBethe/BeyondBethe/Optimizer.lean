@@ -559,7 +559,7 @@ theorem regularizedGradient_rectangle_identity
     hX hXint hmax
     (rectangleDirection_row_sum hjl)
     (rectangleDirection_col_sum hik)
-  rw [sum_mul_rectangleDirection _ hik hjl] at htangent
+  rw [sum_mul_rectangleDirection (regularizedBetheGradient τ A X) hik hjl] at htangent
   exact htangent
 
 /-- Any matrix with zero alternating sum on every rectangle is a sum of a

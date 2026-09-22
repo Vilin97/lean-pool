@@ -25,6 +25,8 @@ namespace Complexity
 
 namespace TM
 
+variable {nf : ℕ}
+
 /-- Work-tape count of `pairWithInputTM`. One extra tape beyond the redirected
 output is kept as a stable phase-composition frame. -/
 abbrev pairWithInputTapeCount (nf : ℕ) := compositionTapeCount nf 0
