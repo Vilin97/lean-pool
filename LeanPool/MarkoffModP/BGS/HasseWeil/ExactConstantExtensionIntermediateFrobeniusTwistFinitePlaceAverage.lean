@@ -247,6 +247,9 @@ theorem finiteDimensional_intermediateFrobeniusTwistField_over_ratFunc
     intermediateFrobeniusTwistField_ratFunc_tower C S N hExact L g
   letI : FiniteDimensional (RatFunc C) T :=
     finiteDimensional_exactConstantExtension_over_baseRatFunc C S N hExact
+  let : Module.IsTorsionFree F T := by
+    rw [Module.isTorsionFree_iff_algebraMap_injective]
+    exact (algebraMap F T).injective
   exact Module.Finite.left (RatFunc C) F T
 
 /-- Separability of the exact constant extension descends to every
@@ -608,10 +611,8 @@ theorem intermediateFrobeniusTwistField_finitePlace_ramificationIdx_eq_one
           (h.1 : T ≃ₐ[L] T) = sigma ^ k := hk.symm
           _ = 1 := hsigma
       have hh : h = 1 := Subtype.ext hambient
-      calc
-        tau = e h := (e.apply_symm_apply tau).symm
-        _ = e 1 := congrArg e hh
-        _ = 1 := map_one e
+      exact (e.apply_symm_apply tau).symm.trans
+        ((congrArg e hh).trans (map_one e))
     · intro htau
       rw [Subgroup.mem_bot] at htau
       simp [htau]

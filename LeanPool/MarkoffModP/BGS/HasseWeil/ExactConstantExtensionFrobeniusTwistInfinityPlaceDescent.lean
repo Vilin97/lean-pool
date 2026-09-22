@@ -782,10 +782,8 @@ theorem frobeniusTwistField_infinityPlace_ramificationIdx_eq_one
           (h.1 : T ≃ₐ[RatFunc C] T) = sigma ^ k := hk.symm
           _ = 1 := hsigma
       have hh : h = 1 := Subtype.ext hambient
-      calc
-        tau = e h := (e.apply_symm_apply tau).symm
-        _ = e 1 := congrArg e hh
-        _ = 1 := map_one e
+      exact (e.apply_symm_apply tau).symm.trans
+        ((congrArg e hh).trans (map_one e))
     · intro htau
       rw [Subgroup.mem_bot] at htau
       simp [htau]
