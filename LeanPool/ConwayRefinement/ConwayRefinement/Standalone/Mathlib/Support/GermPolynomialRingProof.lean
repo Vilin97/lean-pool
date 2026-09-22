@@ -47,8 +47,10 @@ theorem J_eq : J K = HahnSeries.Nonpositive.negativeMonomialIdeal K := by
 
 variable (K) in
 /-- The standalone ring of germs is ring-equivalent to Berarducci's germ ring. -/
-def germRingEquiv : Germ K ≃+* Berarducci.Germ K :=
-  Ideal.quotEquivOfEq J_eq
+def germRingEquiv : Germ K ≃+* Berarducci.Germ K := by
+  exact @Ideal.quotEquivOfEq (nonpos K) inferInstance (J K)
+    (HahnSeries.Nonpositive.negativeMonomialIdeal K) inferInstance
+    ⟨fun b ha ↦ mul_comm b _ ▸ Ideal.mul_mem_left _ b ha⟩ J_eq
 
 namespace GermIsPolynomialRing
 

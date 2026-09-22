@@ -287,10 +287,10 @@ theorem evalAtLifts_injective : Function.Injective (evalAtLifts σ) :=
 /-- A polynomial `G` whose value `G(b)` has degree at most zero is constant: its weighted total
 degree is zero, and every generator has positive degree. -/
 theorem eq_C_of_degree_evalAtLifts_le_zero {G : MvPolynomial ι (FiniteSupportRing (K := K))}
-    (hG : degreeValuation K (evalAtLifts σ G) ≤ 0) : G = C (coeff 0 G) := by
+    (hG : degreeValuation K (evalAtLifts σ G) ≤ 0) : G = C (G.coeff 0) := by
   classical
   by_cases hzero : G = 0
-  · rw [hzero, MvPolynomial.coeff_zero, C_0]
+  · rw [hzero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, C_0]
   rw [degree_evalAtLifts_eq hx σ hzero, ← WithBot.coe_zero, WithBot.coe_le_coe] at hG
   refine MvPolynomial.ext _ _ fun d ↦ ?_
   rw [coeff_C]

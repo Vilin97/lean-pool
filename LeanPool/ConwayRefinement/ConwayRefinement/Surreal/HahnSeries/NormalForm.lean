@@ -786,8 +786,7 @@ theorem length_bot : length (⊥ : PartialSum x) = 0 := by
 instance : Preorder (PartialSum x) :=
   .lift length
 
-instance : WellFoundedLT (PartialSum x) where
-  wf := InvImage.wf length wellFounded_lt
+instance : WellFoundedLT (PartialSum x) := InvImage.wf length wellFounded_lt
 
 instance : WellFoundedRelation (PartialSum x) :=
   ⟨_, wellFounded_lt⟩
@@ -910,7 +909,7 @@ theorem birthday_le (y : PartialSum x) : birthday y.carrier ≤ birthday x := by
 instance : Small.{u} (PartialSum x) := by
   refine small_of_injective (β := Iic x.birthday) (f := fun y ↦ ⟨_, birthday_le y⟩) fun y z h ↦
     birthday_strictMono.injective ?_
-  simpa using h
+  exact congrArg Subtype.val h
 
 /-- The term sequence obtained as the supremum of a set of partial Hahn-series expansions. -/
 @[expose]

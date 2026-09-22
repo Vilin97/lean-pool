@@ -239,12 +239,12 @@ theorem IsPrincipal.ordinalValue_translatedTruncation_aeval_lt (hwt : ∀ i, wt 
     ordinalValue (translatedTruncation ((aeval σ.lift q : Series K) : K⟦ℝ⟧) ζ) < ω^ c := by
   classical
   have hsplit : translatedTruncation ((aeval σ.lift q : Series K) : K⟦ℝ⟧) ζ =
-      ∑ d ∈ q.support, (HahnSeries.Nonpositive.C : K →+* Series K) (coeff d q) *
+      ∑ d ∈ q.support, (HahnSeries.Nonpositive.C : K →+* Series K) (q.coeff d) *
         translatedTruncation ((aeval σ.lift (monomial d (1 : K)) : Series K) : K⟦ℝ⟧) ζ := by
     conv_lhs => rw [q.as_sum, map_sum]
     rw [AddSubmonoidClass.coe_finsetSum, ← translatedTruncationAddMonoidHom_apply, map_sum]
     refine Finset.sum_congr rfl fun d _ ↦ ?_
-    have hmon : monomial d (coeff d q) = C (coeff d q) * monomial d (1 : K) := by
+    have hmon : monomial d (q.coeff d) = C (q.coeff d) * monomial d (1 : K) := by
       rw [C_mul_monomial, mul_one]
     rw [translatedTruncationAddMonoidHom_apply, hmon, map_mul, aeval_C,
       HahnSeries.Nonpositive.algebraMap_apply, Subring.coe_mul, HahnSeries.Nonpositive.coe_C,

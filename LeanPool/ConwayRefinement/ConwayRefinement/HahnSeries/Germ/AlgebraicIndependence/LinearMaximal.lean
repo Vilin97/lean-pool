@@ -205,7 +205,7 @@ theorem degreeOf_eq_one
       rw [weightedTotalDegree, hsup]
       by_contra hnot
       have hle : τ ≤ Finsupp.weight wt d := not_lt.mp hnot
-      have hcoeff := congrArg (MvPolynomial.coeff d) (hzero γ hγ hγ0)
+      have hcoeff := congrArg (fun p : MvPolynomial ι K ↦ p.coeff d) (hzero γ hγ hγ0)
       rw [coeff_componentsGE, ite_eq_left hle, MvPolynomial.coeff_zero] at hcoeff
       exact mem_support_iff.mp hd hcoeff
     simpa only [add_zero] using hdeglt

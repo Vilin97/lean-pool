@@ -51,8 +51,8 @@ theorem of_gcds (K : Type u) [Field K] : SeriesIsPrimal K := by
   intro hK
   letI := hK
   letI : DecidableEq (nonpos K) := Classical.decEq _
-  letI : Nonempty (GCDMonoid (nonpos K)) :=
-    ⟨gcdMonoidOfExistsGCD (SeriesHasGCDs.of_polynomiality K inferInstance)⟩
+  letI : GCDMonoid (nonpos K) :=
+    gcdMonoidOfExistsGCD (SeriesHasGCDs.of_polynomiality K inferInstance)
   intro a
   exact DecompositionMonoid.primal a
 

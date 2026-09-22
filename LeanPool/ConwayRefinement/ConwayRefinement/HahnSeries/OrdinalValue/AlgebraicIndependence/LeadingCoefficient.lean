@@ -296,7 +296,7 @@ theorem freeOfVariable_aeval (hg : wt B₀ < α) {F : MvPolynomial ι K} {β : N
   rw [map_sum]
   refine σ.freeOfVariable_sum hx hinj B₀ hβ _ _ fun d hd ↦ ?_
   have hdw : Finsupp.weight wt d = β := hF (mem_support_iff.mp hd)
-  have hmono : (monomial d (coeff d F) : MvPolynomial ι K) = C (coeff d F) * monomial d 1 := by
+  have hmono : (monomial d (F.coeff d) : MvPolynomial ι K) = C (F.coeff d) * monomial d 1 := by
     rw [C_mul_monomial, mul_one]
   rw [hmono, map_mul, aeval_C, HahnSeries.Nonpositive.algebraMap_apply, aeval_monomial, map_one,
     one_mul, Finsupp.prod]

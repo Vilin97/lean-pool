@@ -625,10 +625,16 @@ theorem toCG_mul (x y : SupportGame.{u}) : toCG (x * y) = toCG x * toCG y := by
         _ = z := hmul
 termination_by (x, y)
 decreasing_by
-  all_goals
-    aesop (add safe
-      [ConwayRefinement.Standalone.InlineSurreal.IGame.Subposition.of_mem_moves, Prod.Lex.left,
-        Prod.Lex.right])
+  · obtain ⟨q, hq⟩ := ha
+    exact Prod.Lex.left _ _
+      (ConwayRefinement.Standalone.InlineSurreal.IGame.Subposition.of_mem_moves hq)
+  · obtain ⟨q, hq⟩ := hb
+    exact Prod.Lex.right _
+      (ConwayRefinement.Standalone.InlineSurreal.IGame.Subposition.of_mem_moves hq)
+  · obtain ⟨q, hq⟩ := ha
+    exact Prod.Lex.left _ _
+      (ConwayRefinement.Standalone.InlineSurreal.IGame.Subposition.of_mem_moves hq)
+
 
 theorem toCG_numeric {x : SupportGame.{u}}
     (h : ConwayRefinement.Standalone.InlineSurreal.IGame.Numeric x) :

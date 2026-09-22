@@ -129,7 +129,7 @@ theorem principalInvariantGraded_components_ne_zero :
 /-- The strictly negative exponent used by the nonconstant finite-support fixture. -/
 def principalInvariantNegativeExponent :
     HahnSeries.Nonpositive.exponentMonoid ℝ :=
-  ⟨-1, by norm_num⟩
+  ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 /-- The nonconstant finite-support monomial `t⁻¹`. -/
 def principalInvariantFiniteMonomial : Berarducci.FiniteSupportRing (K := ℚ) :=

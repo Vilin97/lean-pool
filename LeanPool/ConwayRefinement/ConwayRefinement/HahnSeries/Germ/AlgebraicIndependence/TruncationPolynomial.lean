@@ -113,7 +113,7 @@ theorem pol_eq_of_degree_sub_aeval_eq_bot {α : NatOrdinal.{u}}
     exact hinj β hβα
   apply eq_zero_of_forall_weight_lt_of_degree_aeval_eq_bot xg σ.represents
     (fun β P hβα hP hP0 ↦ hinj' β hβα P hP hP0) (fun d hd ↦ by
-      have hdne : MvPolynomial.coeff d (σ.pol hx α u - F) ≠ 0 := mem_support_iff.mp hd
+      have hdne : (σ.pol hx α u - F).coeff d ≠ 0 := mem_support_iff.mp hd
       rw [MvPolynomial.coeff_sub ι] at hdne
       by_cases hdpol : d ∈ (σ.pol hx α u).support
       · exact σ.pol_weight_lt hx α u d hdpol
@@ -157,7 +157,7 @@ theorem pol_add {α : NatOrdinal.{u}}
   have huv : ν (u + v) < (α : WithBot NatOrdinal) :=
     ((ν).map_add_le_max u v).trans_lt (max_lt hu hv)
   apply σ.pol_eq_of_degree_sub_aeval_eq_bot hx hinj huv (fun d hd ↦ by
-    have hdne : MvPolynomial.coeff d (σ.pol hx α u + σ.pol hx α v) ≠ 0 :=
+    have hdne : (σ.pol hx α u + σ.pol hx α v).coeff d ≠ 0 :=
       mem_support_iff.mp hd
     rw [MvPolynomial.coeff_add] at hdne
     by_cases hdu : d ∈ (σ.pol hx α u).support
@@ -205,7 +205,7 @@ theorem pol_smul {α : NatOrdinal.{u}}
     (degree_smul_le k u).trans_lt hu
   apply σ.pol_eq_of_degree_sub_aeval_eq_bot hx hinj hku
   · intro d hd
-    have hdne : MvPolynomial.coeff d (k • σ.pol hx α u) ≠ 0 :=
+    have hdne : (k • σ.pol hx α u).coeff d ≠ 0 :=
       mem_support_iff.mp hd
     rw [MvPolynomial.coeff_smul] at hdne
     exact σ.pol_weight_lt hx α u d
@@ -620,7 +620,7 @@ theorem one {α : NatOrdinal.{u}} {B₀ : ι} (hα : 0 < α)
       rw [← map_one (MvPolynomial.aeval (R := K) σ.lift)]
       exact σ.pol_aeval hx hinj (F := 1) (by
         intro d hd
-        have hdne : MvPolynomial.coeff d (1 : MvPolynomial ι K) ≠ 0 :=
+        have hdne : (1 : MvPolynomial ι K).coeff d ≠ 0 :=
           mem_support_iff.mp hd
         rw [MvPolynomial.coeff_one] at hdne
         split_ifs at hdne with hd0
@@ -731,7 +731,7 @@ theorem pow {α : NatOrdinal.{u}} {B₀ : ι} {a : Nonpositive G K} {m : NatOrdi
           rw [← map_one (aeval (R := K) σ.lift)]
           exact σ.pol_aeval hx hinj (F := 1) (by
             intro d hd
-            have hdne : MvPolynomial.coeff d (1 : MvPolynomial ι K) ≠ 0 :=
+            have hdne : (1 : MvPolynomial ι K).coeff d ≠ 0 :=
               mem_support_iff.mp hd
             rw [MvPolynomial.coeff_one] at hdne
             split_ifs at hdne with hd0
@@ -780,7 +780,7 @@ theorem prod {α : NatOrdinal.{u}} {B₀ : ι} {κ : Type*} (hα : 0 < α)
             rw [← map_one (aeval (R := K) σ.lift)]
             exact σ.pol_aeval hx hinj (F := 1) (by
               intro d hd
-              have hdne : MvPolynomial.coeff d (1 : MvPolynomial ι K) ≠ 0 :=
+              have hdne : (1 : MvPolynomial ι K).coeff d ≠ 0 :=
                 mem_support_iff.mp hd
               rw [MvPolynomial.coeff_one] at hdne
               split_ifs at hdne with hd0
@@ -851,13 +851,13 @@ theorem aeval (hσ : HasLowerTruncationDegrees σ) {α : NatOrdinal.{u}} {B₀ :
     exact (mem_supported.mp hmem) hv rfl
   have hwt : ∀ i ∈ d.support, wt i ≤ wt B₀ := fun i hi ↦
     hle i ((mem_vars_iff_mem_support i).mpr ⟨d, hd, hi⟩)
-  have hmono : (monomial d (MvPolynomial.coeff d F) : MvPolynomial ι K) =
-      MvPolynomial.C (MvPolynomial.coeff d F) * monomial d 1 := by
+  have hmono : (monomial d (F.coeff d) : MvPolynomial ι K) =
+      MvPolynomial.C (F.coeff d) * monomial d 1 := by
     rw [C_mul_monomial, mul_one]
   rw [hmono, map_mul, aeval_C, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul]
   rw [← hdw]
   exact (aeval_monomial (σ := σ) (hx := hx) hσ hinj hB₀ d hd0 hwt
-    (hdw ▸ hm)).smul (MvPolynomial.coeff d F) hinj
+    (hdw ▸ hm)).smul (F.coeff d) hinj
 
 /-- Multiplying a free series by a power of the distinguished lift is represented by the
 corresponding variable power. -/
@@ -1035,7 +1035,7 @@ theorem pol_translatedTruncLE_aeval_mem_supported
   have hα0 : α ≠ 0 := ne_of_gt ((zero_le : (0 : NatOrdinal) ≤ wt B₀).trans_lt hB₀)
   have hterm : ∀ d ∈ F.support,
       σ.pol hx α (translatedTruncLE γ
-        (MvPolynomial.aeval σ.lift (monomial d (MvPolynomial.coeff d F)))) ∈
+        (MvPolynomial.aeval σ.lift (monomial d (F.coeff d)))) ∈
           supported K {B₀}ᶜ := by
     intro d hd
     have hdw : Finsupp.weight wt d = α := hF (mem_support_iff.mp hd)
@@ -1096,8 +1096,8 @@ theorem pol_translatedTruncLE_aeval_mem_supported
               ((MvPolynomial.aeval σ.lift (monomial d' (1 : K)) : Nonpositive G K) :
                 HahnSeries G K) γ q).mp
                 hq).2.1))
-    have hmono : (monomial d (MvPolynomial.coeff d F) : MvPolynomial ι K) =
-        MvPolynomial.C (MvPolynomial.coeff d F) * monomial d (1 : K) := by
+    have hmono : (monomial d (F.coeff d) : MvPolynomial ι K) =
+        MvPolynomial.C (F.coeff d) * monomial d (1 : K) := by
       rw [C_mul_monomial, mul_one]
     rw [hmono, map_mul, aeval_C, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
       translatedTruncLE_smul, σ.pol_smul hx hinj]
@@ -1105,12 +1105,12 @@ theorem pol_translatedTruncLE_aeval_mem_supported
     · exact (σ.hasLowerTruncationDegree_aeval hσ
         (isWeightedHomogeneous_monomial wt d (1 : K) hdw)).degree_translatedTruncLE_lt hγ
   have hexp : MvPolynomial.aeval σ.lift F = ∑ d ∈ F.support,
-      MvPolynomial.aeval σ.lift (monomial d (MvPolynomial.coeff d F)) := by
+      MvPolynomial.aeval σ.lift (monomial d (F.coeff d)) := by
     conv_lhs => rw [F.as_sum]
     rw [map_sum]
   rw [hexp, map_sum, σ.pol_sum hx hinj _ _ (fun d hd ↦ by
     have hp := σ.hasLowerTruncationDegree_aeval hσ (isWeightedHomogeneous_monomial wt d
-      (MvPolynomial.coeff d F) (hF (mem_support_iff.mp hd)))
+      (F.coeff d) (hF (mem_support_iff.mp hd)))
     exact hp.degree_translatedTruncLE_lt hγ)]
   exact Subalgebra.sum_mem _ fun d hd ↦ hterm d hd
 

@@ -233,8 +233,8 @@ theorem isPrimal_restrictDomain_tailSubmodule_of_ambient_finiteClasses
     (hxclasses : ArchimedeanClass.mk '' (x : HahnSeries G R).support ⊆ T₀ ∪ T₁) :
     let P := FiniteArchimedeanClass.tailSubmodule ℚ
       {c : FiniteArchimedeanClass G | c.1 ∈ T₀}
-    IsPrimal (restrictDomain P.toAddSubgroup.subtype Subtype.val_injective
-      (fun _ _ ↦ Iff.rfl) Z x) := by
+    IsPrimal (restrictDomain P.toAddSubgroup.subtype P.toAddSubgroup.subtype_injective
+      (fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩) Z x) := by
   let P := FiniteArchimedeanClass.tailSubmodule ℚ
     {c : FiniteArchimedeanClass G | c.1 ∈ T₀}
   apply isPrimal_addSubgroup_of_ambient_finiteClasses Z hfinite P.toAddSubgroup
@@ -243,8 +243,8 @@ theorem isPrimal_restrictDomain_tailSubmodule_of_ambient_finiteClasses
     HahnSeries.supportArchimedeanClasses_coeff_zero_convexQuotientSplitRingEquiv_finite
       (K := ℚ) T₀ T₁ hT₀gt hT₁ (x : HahnSeries G R) hxclasses
   rw [HahnSeries.coeff_zero_convexQuotientSplitRingEquiv] at hfinite'
-  have hre : ((restrictDomain P.toAddSubgroup.subtype Subtype.val_injective
-      (fun _ _ ↦ Iff.rfl) Z x :
+  have hre : ((restrictDomain P.toAddSubgroup.subtype P.toAddSubgroup.subtype_injective
+      (fun _ _ ↦ ⟨fun h ↦ h, fun h ↦ h⟩) Z x :
       cardSuppLTTruncationIntegerPart (G := P) (R := R) (κ := κ) Z) : HahnSeries P R) =
       HahnSeries.restrictDomain (HahnSeries.submoduleOrderEmbedding P)
         (x : HahnSeries G R) := by

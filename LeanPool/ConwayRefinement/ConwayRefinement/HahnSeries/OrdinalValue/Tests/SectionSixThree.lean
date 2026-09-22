@@ -131,7 +131,7 @@ theorem sectionSixThree_zeroSeriesFactorWitness (b c : Berarducci.Series K) (hbc
 
 /-- The finite-support monomial `t⁻¹` used in the nonconstant multiplicativity fixture. -/
 def sectionSixThreeNegativeMonomial : Berarducci.FiniteSupportRing (K := ℚ) :=
-  finiteSupportMonomial (K := ℚ) ⟨-1, by norm_num⟩
+  finiteSupportMonomial (K := ℚ) ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 /-- The first nonconstant factor `t⁻¹ + 1`. -/
 def sectionSixThreeLeftSeries : Berarducci.Series ℚ :=

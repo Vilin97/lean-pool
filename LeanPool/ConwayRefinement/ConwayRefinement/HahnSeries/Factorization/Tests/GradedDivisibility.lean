@@ -43,7 +43,7 @@ public noncomputable section
 /-- The strictly negative exponent used in the finite-support divisibility separator. -/
 def gradedDivisibilityNegativeExponent :
     HahnSeries.Nonpositive.exponentMonoid ℝ :=
-  ⟨-1, by norm_num⟩
+  ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 /-- The finite-support Hahn monomial at exponent `-1`. -/
 def gradedDivisibilityNegativeMonomial :
@@ -104,7 +104,7 @@ theorem gradedDivisibilityNegativeMonomial_not_dvd_one :
       her hProduct
   have hcoeff := congrArg
     (fun f : AddMonoidAlgebra ℚ (HahnSeries.Nonpositive.exponentMonoid ℝ) ↦
-      f gradedDivisibilityNegativeExponent) ha
+      f.coeff gradedDivisibilityNegativeExponent) ha
   simp [gradedDivisibilityNegativeExponent_ne_zero] at hcoeff
 
 /-- The graded image of the negative monomial does not divide the graded image of one. -/
@@ -117,7 +117,83 @@ theorem gradedDivisibilityNegativeMonomialGraded_not_dvd_one :
     ((Berarducci.finiteSupportGradedEmbedding_dvd_iff
       gradedDivisibilityNegativeMonomial 1).mp hDvd)
 
-variable {K : Type v} [Field K] [CharZero K]
+variable {K : Type v} [Field K]
+
+/-- A graded element supported in the two distinct grades zero and one. -/
+def gradedDivisibilityTwoComponent (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
+    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1) :
+    Berarducci.DegreeGraded K :=
+  DirectSum.of _ 0 a₀ + DirectSum.of _ 1 a₁
+
+/-- The two-component fixture retains its prescribed grade-zero and grade-one components. -/
+theorem gradedDivisibilityTwoComponent_components
+    (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
+    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1) :
+    gradedDivisibilityTwoComponent a₀ a₁ 0 = a₀ ∧
+      gradedDivisibilityTwoComponent a₀ a₁ 1 = a₁ := by
+  simp [gradedDivisibilityTwoComponent, DirectSum.of_apply]
+
+/-- With a nonzero grade-zero component, the fixture's trailing grade is zero. -/
+theorem gradedDivisibilityTwoComponent_trailingValue
+    (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
+    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1)
+    (ha₀ : a₀ ≠ 0) :
+    MaxAddDegree.associatedGradedTrailingValue
+        (HahnSeries.Nonpositive.degreeValuation K)
+        (gradedDivisibilityTwoComponent a₀ a₁) = 0 := by
+  let w := HahnSeries.Nonpositive.degreeValuation K
+  apply (w.associatedGradedTrailingValue_eq_coe_iff
+    (gradedDivisibilityTwoComponent a₀ a₁) 0).mpr
+  exact ⟨by simpa [gradedDivisibilityTwoComponent, DirectSum.of_apply] using ha₀,
+    fun _ _ ↦ bot_le⟩
+
+/-- With a nonzero grade-one component, the fixture's leading grade is one. -/
+theorem gradedDivisibilityTwoComponent_leadingValue
+    (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
+    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1)
+    (ha₁ : a₁ ≠ 0) :
+    (HahnSeries.Nonpositive.degreeValuation K).associatedGradedValue
+        (gradedDivisibilityTwoComponent a₀ a₁) = 1 := by
+  let w := HahnSeries.Nonpositive.degreeValuation K
+  apply (w.associatedGradedValue_eq_coe_iff
+    (gradedDivisibilityTwoComponent a₀ a₁) 1).mpr
+  constructor
+  · simpa [gradedDivisibilityTwoComponent, DirectSum.of_apply] using ha₁
+  · intro i hi
+    by_cases hi₀ : i = 0
+    · subst i
+      exact zero_le_one
+    by_cases hi₁ : i = 1
+    · subst i
+      exact le_rfl
+    have hzero : gradedDivisibilityTwoComponent a₀ a₁ i = 0 := by
+      simp [gradedDivisibilityTwoComponent, DirectSum.of_apply, Ne.symm hi₀, Ne.symm hi₁]
+    exact (hi hzero).elim
+
+/-- With both displayed components nonzero, the two-component fixture is not in degree RV. -/
+theorem gradedDivisibilityTwoComponent_not_homogeneous
+    (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
+    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1)
+    (ha₀ : a₀ ≠ 0) (ha₁ : a₁ ≠ 0) :
+    gradedDivisibilityTwoComponent a₀ a₁ ∉
+      (HahnSeries.Nonpositive.degreeValuation K).homogeneousClasses := by
+  let w := HahnSeries.Nonpositive.degreeValuation K
+  intro hHomogeneous
+  rcases (w.mem_homogeneousClasses_iff_extremeGrades
+    (gradedDivisibilityTwoComponent a₀ a₁)).mp hHomogeneous with
+      hzero | ⟨m, htrail, hlead⟩
+  · apply ha₀
+    rw [← (gradedDivisibilityTwoComponent_components a₀ a₁).1, hzero]
+    rfl
+  · have htrailZero := gradedDivisibilityTwoComponent_trailingValue a₀ a₁ ha₀
+    have hleadOne := gradedDivisibilityTwoComponent_leadingValue a₀ a₁ ha₁
+    have hzeroM : (0 : NatOrdinal) = m :=
+      WithTop.coe_injective (htrailZero.symm.trans htrail)
+    have honeM : (1 : NatOrdinal) = m :=
+      WithBot.coe_injective (hleadOne.symm.trans hlead)
+    exact zero_ne_one (hzeroM.trans honeM.symm)
+
+variable [CharZero K]
 
 variable (K) in
 /-- The degree-RV class of one, used as a nonzero principal-image boundary case. -/
@@ -148,88 +224,10 @@ theorem gradedDivisibilityPrincipalRVImage_zero_false :
   intro hzero
   exact (Berarducci.isPrincipalRVImage_iff _).mp hzero |>.1 rfl
 
-/-- A graded element supported in the two distinct grades zero and one. -/
-def gradedDivisibilityTwoComponent (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
-    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1) :
-    Berarducci.DegreeGraded K :=
-  DirectSum.of _ 0 a₀ + DirectSum.of _ 1 a₁
-
-omit [CharZero K] in
-/-- The two-component fixture retains its prescribed grade-zero and grade-one components. -/
-theorem gradedDivisibilityTwoComponent_components
-    (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
-    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1) :
-    gradedDivisibilityTwoComponent a₀ a₁ 0 = a₀ ∧
-      gradedDivisibilityTwoComponent a₀ a₁ 1 = a₁ := by
-  simp [gradedDivisibilityTwoComponent, DirectSum.of_apply]
-
-omit [CharZero K] in
-/-- With a nonzero grade-zero component, the fixture's trailing grade is zero. -/
-theorem gradedDivisibilityTwoComponent_trailingValue
-    (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
-    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1)
-    (ha₀ : a₀ ≠ 0) :
-    MaxAddDegree.associatedGradedTrailingValue
-        (HahnSeries.Nonpositive.degreeValuation K)
-        (gradedDivisibilityTwoComponent a₀ a₁) = 0 := by
-  let w := HahnSeries.Nonpositive.degreeValuation K
-  apply (w.associatedGradedTrailingValue_eq_coe_iff
-    (gradedDivisibilityTwoComponent a₀ a₁) 0).mpr
-  exact ⟨by simpa [gradedDivisibilityTwoComponent, DirectSum.of_apply] using ha₀,
-    fun _ _ ↦ bot_le⟩
-
-omit [CharZero K] in
-/-- With a nonzero grade-one component, the fixture's leading grade is one. -/
-theorem gradedDivisibilityTwoComponent_leadingValue
-    (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
-    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1)
-    (ha₁ : a₁ ≠ 0) :
-    (HahnSeries.Nonpositive.degreeValuation K).associatedGradedValue
-        (gradedDivisibilityTwoComponent a₀ a₁) = 1 := by
-  let w := HahnSeries.Nonpositive.degreeValuation K
-  apply (w.associatedGradedValue_eq_coe_iff
-    (gradedDivisibilityTwoComponent a₀ a₁) 1).mpr
-  constructor
-  · simpa [gradedDivisibilityTwoComponent, DirectSum.of_apply] using ha₁
-  · intro i hi
-    by_cases hi₀ : i = 0
-    · subst i
-      exact zero_le_one
-    by_cases hi₁ : i = 1
-    · subst i
-      exact le_rfl
-    have hzero : gradedDivisibilityTwoComponent a₀ a₁ i = 0 := by
-      simp [gradedDivisibilityTwoComponent, DirectSum.of_apply, Ne.symm hi₀, Ne.symm hi₁]
-    exact (hi hzero).elim
-
-omit [CharZero K] in
-/-- With both displayed components nonzero, the two-component fixture is not in degree RV. -/
-theorem gradedDivisibilityTwoComponent_not_homogeneous
-    (a₀ : (HahnSeries.Nonpositive.degreeValuation K).Component 0)
-    (a₁ : (HahnSeries.Nonpositive.degreeValuation K).Component 1)
-    (ha₀ : a₀ ≠ 0) (ha₁ : a₁ ≠ 0) :
-    gradedDivisibilityTwoComponent a₀ a₁ ∉
-      (HahnSeries.Nonpositive.degreeValuation K).homogeneousClasses := by
-  let w := HahnSeries.Nonpositive.degreeValuation K
-  intro hHomogeneous
-  rcases (w.mem_homogeneousClasses_iff_extremeGrades
-    (gradedDivisibilityTwoComponent a₀ a₁)).mp hHomogeneous with
-      hzero | ⟨m, htrail, hlead⟩
-  · apply ha₀
-    rw [← (gradedDivisibilityTwoComponent_components a₀ a₁).1, hzero]
-    rfl
-  · have htrailZero := gradedDivisibilityTwoComponent_trailingValue a₀ a₁ ha₀
-    have hleadOne := gradedDivisibilityTwoComponent_leadingValue a₀ a₁ ha₁
-    have hzeroM : (0 : NatOrdinal) = m :=
-      WithTop.coe_injective (htrailZero.symm.trans htrail)
-    have honeM : (1 : NatOrdinal) = m :=
-      WithBot.coe_injective (hleadOne.symm.trans hlead)
-    exact zero_ne_one (hzeroM.trans honeM.symm)
-
 /-- The strictly negative exponent used to separate `P̂` from `RV̂`. -/
 def gradedDivisibilityNonprincipalExponent :
     HahnSeries.Nonpositive.exponentMonoid ℝ :=
-  ⟨-1, by norm_num⟩
+  ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 variable (K) in
 /-- A principal coefficient multiplied by a strictly negative finite-support monomial. -/
@@ -275,13 +273,13 @@ theorem gradedDivisibilityNonprincipalElement_not_mem :
   have hcoeff := congrArg
     (fun f : AddMonoidAlgebra (Berarducci.PrincipalSubring K)
         (HahnSeries.Nonpositive.exponentMonoid ℝ) ↦
-      f gradedDivisibilityNonprincipalExponent) hcoordinates
+      f.coeff gradedDivisibilityNonprincipalExponent) hcoordinates
   have hne : gradedDivisibilityNonprincipalExponent ≠ 0 := by
     intro h
     have := congrArg Subtype.val h
     norm_num [gradedDivisibilityNonprincipalExponent] at this
-  rw [AddMonoidAlgebra.single_apply, ite_eq_right (Ne.symm hne),
-    AddMonoidAlgebra.single_apply, ite_eq_left rfl] at hcoeff
+  rw [AddMonoidAlgebra.coeff_single, Finsupp.single_apply, ite_eq_right (Ne.symm hne),
+    AddMonoidAlgebra.coeff_single, Finsupp.single_apply, ite_eq_left rfl] at hcoeff
   have hgraded :
       (0 : Berarducci.DegreeGraded K) = 1 := by
     simpa using congrArg

@@ -32,7 +32,7 @@ public noncomputable section
 
 /-- The finite-support monomial `x = t⁻¹` used in LM24, Example 5.5.4. -/
 def seriesMaximalExampleMonomial : Berarducci.FiniteSupportRing (K := ℚ) :=
-  HahnSeries.Nonpositive.finiteSupportMonomial (K := ℚ) ⟨-1, by norm_num⟩
+  HahnSeries.Nonpositive.finiteSupportMonomial (K := ℚ) ⟨-1, show (-1 : ℝ) ≤ 0 by norm_num⟩
 
 /-- The leading-RV maximal divisor `p₀ = 1 - t⁻²` from LM24, Example 5.5.4. -/
 def seriesMaximalExampleRVDivisor : Berarducci.FiniteSupportRing (K := ℚ) :=

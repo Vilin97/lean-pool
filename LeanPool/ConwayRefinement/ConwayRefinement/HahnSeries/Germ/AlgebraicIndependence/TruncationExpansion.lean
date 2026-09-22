@@ -377,7 +377,7 @@ theorem exists_pol_translatedTruncLE_aeval
         (α : WithBot NatOrdinal) := fun d hd ↦
     (hmonomialBounds d hd).degree_translatedTruncLE_lt hγ |>.trans_le
       (WithBot.coe_le_coe.mpr (hH d hd))
-  refine ⟨∑ d ∈ H.support.attach, MvPolynomial.C (MvPolynomial.coeff d.1 H) * E d.1 d.2,
+  refine ⟨∑ d ∈ H.support.attach, MvPolynomial.C (H.coeff d.1) * E d.1 d.2,
     ?_, ?_⟩
   · intro d' hd'
     obtain ⟨d, _, hd'd⟩ := Finset.mem_biUnion.mp (support_sum hd')
@@ -386,19 +386,19 @@ theorem exists_pol_translatedTruncLE_aeval
       exact support_smul hd'd
     obtain ⟨k, hk, hterm⟩ := hE d.1 d.2 d' hd'E
     exact ⟨d.1, d.2, k, hk, hterm⟩
-  have hmonomial : ∀ d, monomial d (MvPolynomial.coeff d H) =
-      MvPolynomial.C (MvPolynomial.coeff d H) * monomial d (1 : K) := fun d ↦ by
+  have hmonomial : ∀ d, monomial d (H.coeff d) =
+      MvPolynomial.C (H.coeff d) * monomial d (1 : K) := fun d ↦ by
     rw [C_mul_monomial, mul_one]
   have hleft : σ.pol hx α (translatedTruncLE γ (aeval σ.lift H)) =
       ∑ d ∈ H.support.attach,
-        MvPolynomial.C (MvPolynomial.coeff d.1 H) *
+        MvPolynomial.C (H.coeff d.1) *
           σ.pol hx α (translatedTruncLE γ (aeval σ.lift (monomial d.1 (1 : K)))) := by
     conv_lhs => rw [H.as_sum]
     rw [map_sum, map_sum, ← Finset.sum_attach H.support]
     have hterm : ∀ d ∈ H.support.attach,
         translatedTruncLE γ (aeval σ.lift
-          (monomial d.1 (MvPolynomial.coeff d.1 H))) =
-          MvPolynomial.coeff d.1 H • translatedTruncLE γ
+          (monomial d.1 (H.coeff d.1))) =
+          H.coeff d.1 • translatedTruncLE γ
             (aeval σ.lift (monomial d.1 (1 : K))) := by
       intro d _
       rw [hmonomial, map_mul, aeval_C, ← Algebra.smul_def, translatedTruncLE_smul]
@@ -415,12 +415,12 @@ theorem exists_pol_translatedTruncLE_aeval
     rw [pderiv_monomial, Finsupp.notMem_support_iff.mp hj, Nat.cast_zero, mul_zero,
       monomial_zero]
   have hpd : ∀ j, pderiv j H =
-      ∑ d ∈ H.support.attach, MvPolynomial.C (MvPolynomial.coeff d.1 H) *
+      ∑ d ∈ H.support.attach, MvPolynomial.C (H.coeff d.1) *
         pderiv j (monomial d.1 1) := fun j ↦ by
     conv_lhs => rw [H.as_sum, map_sum, ← Finset.sum_attach H.support]
     exact Finset.sum_congr rfl fun d _ ↦ by rw [hmonomial, pderiv_C_mul]
   rw [Finset.sum_congr rfl (fun d _ ↦ congrArg
-      (MvPolynomial.C (MvPolynomial.coeff d.1 H) * ·) (hEq d.1 d.2))]
+      (MvPolynomial.C (H.coeff d.1) * ·) (hEq d.1 d.2))]
   simp only [mul_add, Finset.sum_add_distrib]
   congr 1
   simp only [hpd, Finset.mul_sum]
@@ -437,7 +437,7 @@ theorem exists_pol_translatedTruncLE_aeval
   rw [Finset.mul_sum]
   exact Finset.sum_congr rfl fun j _ ↦ by
     exact mul_left_comm
-      (MvPolynomial.C (MvPolynomial.coeff d.1 H))
+      (MvPolynomial.C (H.coeff d.1))
       (σ.pol hx α (translatedTruncLE γ (σ.lift j))) _
 
 include hx in

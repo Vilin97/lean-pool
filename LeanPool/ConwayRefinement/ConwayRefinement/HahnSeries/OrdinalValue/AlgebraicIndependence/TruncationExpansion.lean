@@ -436,14 +436,14 @@ theorem exists_forall_pol_translatedTruncation_aeval (H : MvPolynomial ι K)
       fun i hi ↦ hvars i ((mem_vars_iff_mem_support i).mpr ⟨d, hd, hi⟩)
   refine ⟨ε, hε, fun γ hγε hγ0 ↦ ?_⟩
   -- the translated truncation of `H(b_𝓑)` as a sum over the monomials of `H`
-  have hmon : ∀ d, monomial d (coeff d H) = C (coeff d H) * monomial d (1 : K) := fun d ↦ by
+  have hmon : ∀ d, monomial d (H.coeff d) = C (H.coeff d) * monomial d (1 : K) := fun d ↦ by
     rw [C_mul_monomial, mul_one]
-  have hcoe : ∀ d, aeval σ.lift (monomial d (coeff d H)) =
-      (HahnSeries.Nonpositive.C : K →+* Series K) (coeff d H) *
+  have hcoe : ∀ d, aeval σ.lift (monomial d (H.coeff d)) =
+      (HahnSeries.Nonpositive.C : K →+* Series K) (H.coeff d) *
         aeval σ.lift (monomial d (1 : K)) := fun d ↦ by
     rw [hmon, map_mul, aeval_C, HahnSeries.Nonpositive.algebraMap_apply]
   have hsplit : translatedTruncation ((aeval σ.lift H : Series K) : K⟦ℝ⟧) γ =
-      ∑ d ∈ H.support, (HahnSeries.Nonpositive.C : K →+* Series K) (coeff d H) *
+      ∑ d ∈ H.support, (HahnSeries.Nonpositive.C : K →+* Series K) (H.coeff d) *
         translatedTruncation ((aeval σ.lift (monomial d (1 : K)) : Series K) : K⟦ℝ⟧) γ := by
     conv_lhs => rw [H.as_sum, map_sum]
     rw [AddSubmonoidClass.coe_finsetSum, ← translatedTruncationAddMonoidHom_apply, map_sum]
@@ -451,7 +451,7 @@ theorem exists_forall_pol_translatedTruncation_aeval (H : MvPolynomial ι K)
     rw [translatedTruncationAddMonoidHom_apply, hcoe, Subring.coe_mul,
       HahnSeries.Nonpositive.coe_C, translatedTruncation_C_mul]
   have hval : ∀ d ∈ H.support,
-      ordinalValue ((HahnSeries.Nonpositive.C : K →+* Series K) (coeff d H) *
+      ordinalValue ((HahnSeries.Nonpositive.C : K →+* Series K) (H.coeff d) *
         translatedTruncation ((aeval σ.lift (monomial d (1 : K)) : Series K) : K⟦ℝ⟧) γ) < ω^ α :=
     fun d hd ↦ ordinalValue_C_mul_lt _ (hmono γ hγε hγ0 d hd).1
   refine ⟨?_, ?_⟩
@@ -459,7 +459,7 @@ theorem exists_forall_pol_translatedTruncation_aeval (H : MvPolynomial ι K)
     exact ordinalValue_sum_lt _ _ (NatOrdinal.wpow_pos α) hval
   -- the expansions of the monomials
   choose E hE hexp using fun d (hd : d ∈ H.support) ↦ (hmono γ hγε hγ0 d hd).2
-  refine ⟨∑ d ∈ H.support.attach, C (coeff d.1 H) * E d.1 d.2, fun d' hd' ↦ ?_, ?_⟩
+  refine ⟨∑ d ∈ H.support.attach, C (H.coeff d.1) * E d.1 d.2, fun d' hd' ↦ ?_, ?_⟩
   · obtain ⟨d, _, hd'd⟩ := Finset.mem_biUnion.mp (support_sum hd')
     have hd'E : d' ∈ (E d.1 d.2).support := by
       rw [C_mul'] at hd'd
@@ -476,8 +476,8 @@ theorem exists_forall_pol_translatedTruncation_aeval (H : MvPolynomial ι K)
     (mem_vars_iff_mem_support j).mpr ⟨d, hd, hj⟩
   -- the left-hand side
   have hlhs : σ.pol hx α (translatedTruncation ((aeval σ.lift H : Series K) : K⟦ℝ⟧) γ) =
-      ∑ d ∈ H.support.attach, (C (coeff d.1 H) * ∑ j ∈ H.vars, T j * pderiv j (monomial d.1 1) +
-        C (coeff d.1 H) * E d.1 d.2) := by
+      ∑ d ∈ H.support.attach, (C (H.coeff d.1) * ∑ j ∈ H.vars, T j * pderiv j (monomial d.1 1) +
+        C (H.coeff d.1) * E d.1 d.2) := by
     rw [hsplit, σ.pol_sum hx hinj _ _ hval, ← Finset.sum_attach H.support]
     refine Finset.sum_congr rfl fun d _ ↦ ?_
     rw [σ.pol_C_mul hx hinj _ (hmono γ hγε hγ0 _ d.2).1, hexp d.1 d.2, mul_add]
@@ -485,7 +485,7 @@ theorem exists_forall_pol_translatedTruncation_aeval (H : MvPolynomial ι K)
     exact Finset.sum_subset (hsub d.1 d.2) fun j _ hj ↦ by rw [hsupp d.1 j hj, mul_zero]
   -- the right-hand side
   have hpd : ∀ j, pderiv j H =
-      ∑ d ∈ H.support.attach, C (coeff d.1 H) * pderiv j (monomial d.1 1) := fun j ↦ by
+      ∑ d ∈ H.support.attach, C (H.coeff d.1) * pderiv j (monomial d.1 1) := fun j ↦ by
       conv_lhs => rw [H.as_sum, map_sum, ← Finset.sum_attach H.support]
       exact Finset.sum_congr rfl fun d _ ↦ by rw [hmon, pderiv_C_mul]
   rw [hlhs, Finset.sum_add_distrib]

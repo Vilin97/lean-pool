@@ -91,7 +91,7 @@ theorem toSeries_aeval {ι : Type*} (b : ι → nonpos K) (F : MvPolynomial ι K
 /-! ### The ordinal value -/
 
 theorem ot_eq (x : HahnSeries ℝ K) : ot x = HahnSeries.supportOrderType x := by
-  haveI : WellFoundedLT x.support := ⟨(supportIsWellOrder x).wf⟩
+  haveI : WellFoundedLT x.support := (supportIsWellOrder x).wf
   exact (HahnSeries.supportOrderType_eq_typeLT (OrderIso.refl _)).symm
 
 theorem memJ_iff (a : nonpos K) :

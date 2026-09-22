@@ -87,9 +87,9 @@ theorem false_of_aeval_eq_zero_of_leadingCoefficientDegree_eq_zero
     have h := hFkhom (D' + 1) le_rfl
     rwa [Nat.sub_self, zero_smul] at h
   have hFDC : xCoeff B₀ (D' + 1) F =
-      MvPolynomial.C (MvPolynomial.coeff 0 (xCoeff B₀ (D' + 1) F)) :=
+      MvPolynomial.C ((xCoeff B₀ (D' + 1) F).coeff 0) :=
     OrdinalGraded.eq_C_of_isWeightedHomogeneous_zero hx.ne_zero hFDhom
-  let c := MvPolynomial.coeff 0 (xCoeff B₀ (D' + 1) F)
+  let c := (xCoeff B₀ (D' + 1) F).coeff 0
   have hc0 : c ≠ 0 := fun hc ↦ hFD (by
     rw [hFDC]
     change MvPolynomial.C c = 0
@@ -108,10 +108,10 @@ theorem false_of_aeval_eq_zero_of_leadingCoefficientDegree_eq_zero
     rwa [zero_add] at h
   have hhne : hpoly ≠ 0 := by
     intro h
-    have hc := congrArg (MvPolynomial.coeff (Finsupp.single B₀ 1)) h
+    have hc := congrArg (fun p : MvPolynomial ι K ↦ p.coeff (Finsupp.single B₀ 1)) h
     rw [MvPolynomial.coeff_add, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X,
       ite_eq_left rfl, mul_one, MvPolynomial.coeff_zero] at hc
-    have hleft : MvPolynomial.coeff (Finsupp.single B₀ 1) (xCoeff B₀ D' F) = 0 := by
+    have hleft : (xCoeff B₀ D' F).coeff (Finsupp.single B₀ 1) = 0 := by
       by_contra hne
       exact (mem_supported.mp (hFkmem D'))
         ((mem_vars_iff_mem_support B₀).mpr

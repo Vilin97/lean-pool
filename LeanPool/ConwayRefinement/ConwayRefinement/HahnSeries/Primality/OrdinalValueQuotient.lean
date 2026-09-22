@@ -158,8 +158,11 @@ def ordinalValueQuotientAlgEquiv : Germ K ≃ₐ[K] MvPolynomial ι K :=
 
 theorem ordinalValueQuotientAlgEquiv_symm_apply (F : MvPolynomial ι K) :
     (σ.ordinalValueQuotientAlgEquiv hx).symm F = toGerm (aeval σ.lift F) := by
-  simp only [ordinalValueQuotientAlgEquiv, AlgEquiv.symm_symm, AlgEquiv.ofBijective_apply,
-    ordinalValueQuotientAlgHom_apply]
+  have h := (AlgEquiv.ofBijective_apply σ.ordinalValueQuotientAlgHom
+    ⟨σ.ordinalValueQuotientAlgHom_injective hx,
+      σ.ordinalValueQuotientAlgHom_surjective hx⟩ F).trans
+        (σ.ordinalValueQuotientAlgHom_apply F)
+  simpa only [ordinalValueQuotientAlgEquiv, AlgEquiv.symm_symm] using h
 
 theorem ordinalValueQuotientAlgEquiv_toGerm_aeval (F : MvPolynomial ι K) :
     σ.ordinalValueQuotientAlgEquiv hx (toGerm (aeval σ.lift F)) = F := by

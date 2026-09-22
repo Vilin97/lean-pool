@@ -272,9 +272,9 @@ theorem weightedHomogeneousComponent_weightedTotalDegree_ne_zero {F : MvPolynomi
   obtain ⟨d, hd, hsup⟩ := Finset.exists_mem_eq_sup _ (support_nonempty.mpr hF0)
     (Finsupp.weight wt)
   intro h
-  have := congrArg (coeff d) h
+  have := congrArg (fun p : MvPolynomial ι K ↦ p.coeff d) h
   rw [coeff_weightedHomogeneousComponent, ite_eq_left (by rw [weightedTotalDegree, hsup]),
-    coeff_zero] at this
+    AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at this
   exact mem_support_iff.mp hd this
 
 /-- Removing the top homogeneous component leaves a polynomial of degree below the top degree. -/

@@ -148,7 +148,7 @@ structure IsPolynomialPresentation (b : ι → Nonpositive ℝ K) : Prop where
       Nonpositive ℝ K)
   /-- A polynomial whose value has degree at most zero is a constant. -/
   eq_C_of_degree_le_zero : ∀ G : MvPolynomial ι (Berarducci.FiniteSupportRing (K := K)),
-    degreeValuation K (MvPolynomial.aeval b G) ≤ 0 → G = MvPolynomial.C (MvPolynomial.coeff 0 G)
+    degreeValuation K (MvPolynomial.aeval b G) ≤ 0 → G = MvPolynomial.C (G.coeff 0)
   /-- `K_fin[b_i]` is saturated under the nonzero scalars of `K_fin`. -/
   mem_range_of_mul_mem_range : ∀ (u : Berarducci.FiniteSupportRing (K := K)) (t : Nonpositive ℝ K),
     u ≠ 0 → (u : Nonpositive ℝ K) * t ∈ (MvPolynomial.aeval b : MvPolynomial ι
@@ -176,13 +176,13 @@ theorem isUnit_of_C_mul_eq_coordinatePolynomialMap
       (FiniteSupportFractionField (K := K)) u) * G = coordinatePolynomialMap K ι G')
     (hdeg : degreeValuation K (MvPolynomial.aeval b G') ≤ 0) : IsUnit G := by
   rw [hb.eq_C_of_degree_le_zero G' hdeg, coordinatePolynomialMap, MvPolynomial.map_C] at hGG'
-  have hc : MvPolynomial.coeff 0 G' ≠ 0 := by
+  have hc : G'.coeff 0 ≠ 0 := by
     intro hc
     rw [hc, map_zero, MvPolynomial.C_0, mul_eq_zero, MvPolynomial.C_eq_zero,
       map_eq_zero_iff _ (IsFractionRing.injective _ _)] at hGG'
     exact hGG'.elim hu hG
   have hunit : IsUnit (MvPolynomial.C (algebraMap (Berarducci.FiniteSupportRing (K := K))
-      (FiniteSupportFractionField (K := K)) (MvPolynomial.coeff 0 G')) :
+      (FiniteSupportFractionField (K := K)) (G'.coeff 0)) :
         MvPolynomial ι (FiniteSupportFractionField (K := K))) :=
     (isUnit_iff_ne_zero.mpr ((map_ne_zero_iff _ (IsFractionRing.injective _ _)).mpr hc)).map
       MvPolynomial.C
