@@ -120,6 +120,7 @@ theorem SymmetricNormingFunction.evalSeq_eq_of_approximationNumber
   change s (i : ℕ) = T.approximationNumber (i : ℕ)
   exact (h (i : ℕ)).symm
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Operator evaluation agrees with production evaluation. -/
 theorem SymmetricNormingFunction.eval_eq
     (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :

@@ -59,6 +59,7 @@ theorem extendedGauge_zero (N : SymmetricNormingFunction) :
     simp only [prefixGauge, hx, N.finiteGauge_zero n]
   simp only [extendedGauge, hzero, ENNReal.ofReal_zero, iSup_const]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Absolute homogeneity of the extended source norm. -/
 theorem extendedGauge_smul (N : SymmetricNormingFunction)
     (c : 𝕜) (A : E →L[𝕜] F) :
@@ -245,6 +246,7 @@ theorem extendedGauge_le_of_all_kyFan_le_hetero
       (N.prefixGauge_le_of_all_kyFan_le_hetero h n))
     (le_iSup (fun m : ℕ => ENNReal.ofReal (N.prefixGauge m B)) n)
 
+omit [CompleteSpace G] in
 /-- The two-sided ideal estimate at the extended-value level. -/
 theorem extendedGauge_comp_le (N : SymmetricNormingFunction)
     (L : F →L[𝕜] G) (A : E →L[𝕜] F) (R : E →L[𝕜] E) :

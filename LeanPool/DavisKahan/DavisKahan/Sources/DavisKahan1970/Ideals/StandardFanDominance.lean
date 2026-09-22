@@ -63,6 +63,7 @@ def MinimalFullySymmetricMem
     FiniteRankGaugeClosure N B ∧
       ∀ k : ℕ, kyFanApproximationGauge k A ≤ kyFanApproximationGauge k B
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Every member of the raw finite-rank closure belongs to its fully symmetric
 envelope. -/
 theorem minimalFullySymmetricMem_of_finiteRankGaugeClosure

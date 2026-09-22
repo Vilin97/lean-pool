@@ -460,7 +460,7 @@ perturbation alternative.**
 The directed bound above, converted by Section 3's standing assumption (3.5) in
 its constructive form.  No finite-dimensionality and no rank hypothesis. -/
 theorem theorem8_2_perturbationHalfGap_maximalAngle_lt_unbounded_complex
-    [TopologicalSpace.SeparableSpace Hc]
+
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]
@@ -510,7 +510,7 @@ hypothesis transfers and the perturbation branch applies to `(A', H')`.
 
 The public type carries `‖R‖ < δ/2` and does **not** acquire `‖H‖ < δ/2`. -/
 theorem theorem8_2_residualHalfGap_unbounded_complex
-    [TopologicalSpace.SeparableSpace Hc]
+
     {A : Hc →ₗ.[ℂ] Hc} (hA : IsSelfAdjoint A)
     (Hop : Hc →L[ℂ] Hc) (hHop : Hop.IsSymmetric)
     {P Q : Submodule ℂ Hc} [P.HasOrthogonalProjection] [Q.HasOrthogonalProjection]

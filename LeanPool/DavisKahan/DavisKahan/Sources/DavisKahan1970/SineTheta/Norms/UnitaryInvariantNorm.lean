@@ -330,8 +330,8 @@ theorem mul_extendedGauge_le_of_all_mul_kyFan_le
 theorem mem_of_all_mul_kyFan_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (N : SymmetricNormingFunction) {A B : E →L[𝕜] F}
     {c : ℝ} (hc : 0 < c) (hB : N.Mem B)
     (h : ∀ k : ℕ, c * kyFanApproximationGauge k A ≤
@@ -411,8 +411,8 @@ for every paper-defined norm, including simultaneous ideal membership. -/
 theorem gauge_eq_of_sameApproximationSingularValues
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (N : SymmetricNormingFunction) {A B : E →L[𝕜] F}
     (h : SameApproximationSingularValues A B) :
     N.extendedGauge A = N.extendedGauge B := by

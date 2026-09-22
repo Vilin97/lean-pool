@@ -195,6 +195,7 @@ noncomputable def toOpL :
       rw [one_mul]
       exact norm_toOp_le N A)
 
+omit [N.IsComplete] in
 /-- The contractive inclusion acts by forgetting the membership witness. -/
 @[simp] theorem toOpL_apply
     (A : IdealOperator (E := E) (F := F) N) :
@@ -223,6 +224,7 @@ noncomputable def compLeftL
     change N.gaugeReal (L ∘L A.toOp) ≤ ‖L‖ * N.gaugeReal A.toOp
     exact N.gaugeReal_comp_left_le_mul L A.mem
 
+omit [N.IsComplete] in
 /-- Left composition acts on the underlying operator by left composition. -/
 @[simp] theorem compLeftL_toOp
     {G : Type v}
@@ -255,6 +257,7 @@ noncomputable def compRightL
     have h := N.gaugeReal_comp_right_le_mul R A.mem
     simpa [mul_comm] using h
 
+omit [N.IsComplete] in
 /-- Right composition acts on the underlying operator by right composition. -/
 @[simp] theorem compRightL_toOp
     {H : Type v}
@@ -291,6 +294,7 @@ noncomputable def compBothL
           ≤ ‖L‖ * N.gaugeReal A.toOp * ‖R‖ := N.gaugeReal_comp_le L R A.mem
       _ = (‖L‖ * ‖R‖) * N.gaugeReal A.toOp := by ring
 
+omit [N.IsComplete] in
 /-- Two-sided composition acts on the underlying operator on both sides. -/
 @[simp] theorem compBothL_toOp
     {G H : Type v}

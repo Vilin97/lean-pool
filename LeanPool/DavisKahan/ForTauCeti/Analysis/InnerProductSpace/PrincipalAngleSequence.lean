@@ -67,7 +67,7 @@ theorem sin_principalAngleSequence (U V : Submodule 𝕜 H)
 squared principal-sine energy.  The equality is in `ℝ≥0∞`, so it includes a
 divergent infinite sum. -/
 theorem tsum_sq_sin_principalAngleSequence_eq_tsum_sq_principalSineSequence
-    (U V : Submodule 𝕜 H) [U.HasOrthogonalProjection] [V.HasOrthogonalProjection] :
+    (U V : Submodule 𝕜 H)  [V.HasOrthogonalProjection] :
     (∑' n : ℕ, ENNReal.ofReal (Real.sin (principalAngleSequence U V n)) ^ 2) =
       ∑' n : ℕ, ENNReal.ofReal (principalSineSequence U V n) ^ 2 := by
   refine tsum_congr fun n => ?_

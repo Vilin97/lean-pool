@@ -100,9 +100,10 @@ theorem prefixGauge_scalarTransportSubspaceCLM
   funext i
   exact approximationNumber_scalarTransportSubspaceCLM (e := e) Z T i
 
+omit [CompleteSpace H] in
 /-- The extended source gauge is unchanged for a transported subspace-domain map. -/
 theorem extendedGauge_scalarTransportSubspaceCLM
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] H) :
     N.extendedGauge (scalarTransportSubspaceCLM (e := e) Z T) =
       N.extendedGauge T := by
@@ -270,17 +271,19 @@ theorem extendedGauge_scalarTransportOrthogonalSubspaceBlockCLM
     funext i
     exact approximationNumber_scalarTransportOrthogonalSubspaceBlockCLM (e := e) Z T i
 
+omit [CompleteSpace H] in
 /-- Symmetric-norm ideal membership is unchanged by orthogonal-corner transport. -/
 theorem mem_scalarTransportOrthogonalSubspaceBlockCLM_iff
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] Zᗮ) :
     N.Mem (scalarTransportOrthogonalSubspaceBlockCLM (e := e) Z T) ↔ N.Mem T := by
   unfold SymmetricNormingFunction.Mem
   rw [extendedGauge_scalarTransportOrthogonalSubspaceBlockCLM]
 
+omit [CompleteSpace H] in
 /-- Symmetric-norm gauges are unchanged by orthogonal-corner transport. -/
 theorem gauge_scalarTransportOrthogonalSubspaceBlockCLM
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : Z →L[𝕜] Zᗮ) :
     N.gauge (scalarTransportOrthogonalSubspaceBlockCLM (e := e) Z T) = N.gauge T := by
   unfold SymmetricNormingFunction.gauge
@@ -303,18 +306,20 @@ theorem extendedGauge_scalarTransportOrthogonalSubspaceBlockCLMInv
     funext i
     exact approximationNumber_scalarTransportOrthogonalSubspaceBlockCLMInv (e := e) Z T i
 
+omit [CompleteSpace H] in
 /-- Symmetric-norm ideal membership is unchanged by inverse orthogonal-corner transport. -/
 theorem mem_scalarTransportOrthogonalSubspaceBlockCLMInv_iff
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : ScalarTransport.submodule (e := e) Z →L[𝕂]
       (ScalarTransport.submodule (e := e) Z)ᗮ) :
     N.Mem (scalarTransportOrthogonalSubspaceBlockCLMInv (e := e) Z T) ↔ N.Mem T := by
   unfold SymmetricNormingFunction.Mem
   rw [extendedGauge_scalarTransportOrthogonalSubspaceBlockCLMInv]
 
+omit [CompleteSpace H] in
 /-- Symmetric-norm gauges are unchanged by inverse orthogonal-corner transport. -/
 theorem gauge_scalarTransportOrthogonalSubspaceBlockCLMInv
-    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H) [Z.HasOrthogonalProjection]
+    (N : SymmetricNormingFunction) (Z : Submodule 𝕜 H)
     (T : ScalarTransport.submodule (e := e) Z →L[𝕂]
       (ScalarTransport.submodule (e := e) Z)ᗮ) :
     N.gauge (scalarTransportOrthogonalSubspaceBlockCLMInv (e := e) Z T) = N.gauge T := by
@@ -353,19 +358,21 @@ theorem extendedGauge_scalarTransportSubspaceBlockCLM
     funext i
     exact approximationNumber_scalarTransportSubspaceBlockCLM (e := e) Z W T i
 
+omit [CompleteSpace H] in
 /-- Symmetric-norm ideal membership is unchanged by two-sided subspace transport. -/
 theorem mem_scalarTransportSubspaceBlockCLM_iff
     (N : SymmetricNormingFunction) (Z W : Submodule 𝕜 H)
-    [Z.HasOrthogonalProjection] [W.HasOrthogonalProjection]
+
     (T : Z →L[𝕜] W) :
     N.Mem (scalarTransportSubspaceBlockCLM (e := e) Z W T) ↔ N.Mem T := by
   unfold SymmetricNormingFunction.Mem
   rw [extendedGauge_scalarTransportSubspaceBlockCLM]
 
+omit [CompleteSpace H] in
 /-- Symmetric-norm gauges are unchanged by two-sided subspace transport. -/
 theorem gauge_scalarTransportSubspaceBlockCLM
     (N : SymmetricNormingFunction) (Z W : Submodule 𝕜 H)
-    [Z.HasOrthogonalProjection] [W.HasOrthogonalProjection]
+
     (T : Z →L[𝕜] W) :
     N.gauge (scalarTransportSubspaceBlockCLM (e := e) Z W T) = N.gauge T := by
   unfold SymmetricNormingFunction.gauge

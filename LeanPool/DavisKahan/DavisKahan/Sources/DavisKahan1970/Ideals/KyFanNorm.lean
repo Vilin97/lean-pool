@@ -296,8 +296,8 @@ Fan prefix is always finite. -/
 theorem kyFanNormingFunction_mem
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (k : ℕ) (hk : 0 < k) (A : E →L[𝕜] F) :
     (kyFanNormingFunction k hk).Mem A := by
   rw [SymmetricNormingFunction.Mem, kyFanNormingFunction_extendedGauge]
@@ -308,8 +308,8 @@ approximation gauge. -/
 theorem kyFanNormingFunction_gauge
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     (k : ℕ) (hk : 0 < k) (A : E →L[𝕜] F) :
     (kyFanNormingFunction k hk).gauge A = kyFanApproximationGauge k A := by
   rw [SymmetricNormingFunction.gauge, kyFanNormingFunction_extendedGauge,
@@ -324,8 +324,8 @@ shows that the universal source-norm order is exactly weak Ky Fan majorization. 
 theorem all_kyFan_le_of_every_ext_finiteGaugeendedGauge_le
     {𝕜 : Type u} [RCLike 𝕜]
     {E F : Type v}
-    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E]
-    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
     {A B : E →L[𝕜] F}
     (h : ∀ N : SymmetricNormingFunction, N.extendedGauge A ≤ N.extendedGauge B) :
     ∀ k : ℕ, kyFanApproximationGauge k A ≤ kyFanApproximationGauge k B := by

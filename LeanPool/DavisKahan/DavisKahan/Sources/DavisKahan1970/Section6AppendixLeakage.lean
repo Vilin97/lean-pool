@@ -236,6 +236,7 @@ theorem leftCompressed_comp_source_eq
       K ∘L P.starProjection := by
   simpa only [ContinuousLinearMap.comp_assoc] using hKP.symm
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- **The scalar-generic engine of Lemma 6.3.**
 
 Everything in the proof of the lemma except the Pythagorean splitting of the

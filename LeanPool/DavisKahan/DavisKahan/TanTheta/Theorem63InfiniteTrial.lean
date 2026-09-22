@@ -698,6 +698,7 @@ theorem approximationSingularValue_subtypeL_comp_infinite
         (Z.subtypeL ∘L A) hmem k).symm
     _ = approximationSingularValue k A := by rw [hcomp]
 
+omit [CompleteSpace H] in
 /-- **The directed tangent representative exists at every trial dimension.**  Under the
 no-pole condition — every sine value strictly below one — some bounded operator from the
 trial space has exactly the tangent approximation numbers the paper prescribes.

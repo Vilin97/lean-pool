@@ -56,12 +56,14 @@ theorem extendedGauge_clm (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :
   unfold extendedGauge
   exact iSup_congr fun n => by rw [prefixGauge_clm]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Membership in the source norm ideal is unchanged by scalar transport. -/
 theorem mem_clm_iff (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :
     N.Mem (clm (e := e) T) ↔ N.Mem T := by
   unfold Mem
   rw [extendedGauge_clm]
 
+omit [CompleteSpace E] [CompleteSpace F] in
 /-- Every source unitarily invariant gauge is unchanged by scalar transport. -/
 theorem gauge_clm (N : SymmetricNormingFunction) (T : E →L[𝕜] F) :
     N.gauge (clm (e := e) T) = N.gauge T := by
