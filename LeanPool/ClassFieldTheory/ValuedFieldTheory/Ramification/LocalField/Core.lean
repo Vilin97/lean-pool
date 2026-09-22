@@ -380,24 +380,12 @@ private theorem fixedFieldUpperRamificationGroup_map_autCongr
           exact
             (_root_.Valuation.mem_valuationSubring_iff
               targetM.valuation (a : M)).1 a.property⟩
-      left_inv := by
-        intro a
-        apply Subtype.ext
-        exact e.symm_apply_apply (a : IntermediateField.fixedField H)
-      right_inv := by
-        intro a
-        apply Subtype.ext
-        exact e.apply_symm_apply (a : M)
-      map_mul' := by
-        intro a b
-        apply Subtype.ext
-        exact e.map_mul (a : IntermediateField.fixedField H)
-          (b : IntermediateField.fixedField H)
-      map_add' := by
-        intro a b
-        apply Subtype.ext
-        exact e.map_add (a : IntermediateField.fixedField H)
-          (b : IntermediateField.fixedField H) }
+      left_inv a := Subtype.ext (e.symm_apply_apply (a : IntermediateField.fixedField H))
+      right_inv a := Subtype.ext (e.apply_symm_apply (a : M))
+      map_mul' a b := Subtype.ext (e.map_mul (a : IntermediateField.fixedField H)
+        (b : IntermediateField.fixedField H))
+      map_add' a b := Subtype.ext (e.map_add (a : IntermediateField.fixedField H)
+        (b : IntermediateField.fixedField H)) }
   have hmapMaximalIdeal :
       Ideal.map (r : B →+* targetM.valuationSubring)
           (IsLocalRing.maximalIdeal B) =

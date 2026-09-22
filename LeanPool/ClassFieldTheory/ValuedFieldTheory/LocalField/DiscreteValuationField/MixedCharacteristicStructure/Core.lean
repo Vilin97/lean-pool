@@ -412,6 +412,28 @@ noncomputable def mixedFirstPrincipalUnitFiniteQuotientSetup
       kernelFinrank := hrankN
       quotientTorsion := hqTorsion }
 
+/-- Finite torsion in a module on principal units is cyclic, since it embeds in the field. -/
+private theorem isAddCyclic_principalUnit_torsion
+    (F : ValuationTheory.DiscreteValuationField.CompleteDVF.{u, 0} K) (R : Type*) [CommRing R]
+    [Module R (Additive (CompleteDVF.higherPrincipalUnitGroup F 1))]
+    [Finite (Submodule.torsion R (Additive (CompleteDVF.higherPrincipalUnitGroup F 1)))] :
+    IsAddCyclic (Submodule.torsion R (Additive (CompleteDVF.higherPrincipalUnitGroup F 1))) := by
+  let U1 := CompleteDVF.higherPrincipalUnitGroup F 1
+  let T := Submodule.torsion R (Additive U1)
+  let valuationUnitsToFieldUnits := CompleteDVF.valuationSubringUnitsToFieldUnits F
+  let principalToField : U1 →* K :=
+    (Units.coeHom K).comp (valuationUnitsToFieldUnits.comp U1.subtype)
+  have hvaluationUnitsToFieldUnits : Function.Injective valuationUnitsToFieldUnits := by
+    intro x y hxy
+    apply Units.ext
+    apply Subtype.ext
+    have hxy' := congrArg (fun z : Kˣ => (z : K)) hxy
+    simpa [valuationUnitsToFieldUnits] using hxy'
+  have hprincipalToField : Function.Injective principalToField :=
+    Units.val_injective.comp (hvaluationUnitsToFieldUnits.comp Subtype.val_injective)
+  exact isAddCyclic_of_injective_multiplicative_map (A := T) (U := U1)
+    T.subtype.toAddMonoidHom principalToField T.subtype_injective hprincipalToField
+
 /-- Algebraic data for the first principal units in the mixed-characteristic field-unit
 structure theorem.
 The deep logarithmic lattice supplies the free kernel; the finite-level
@@ -466,28 +488,8 @@ noncomputable def chosenMixedFirstPrincipalUnitAlgebraicData
   letI hTModule : Module R T := Submodule.module T
   letI : Finite T := exactData.finiteTorsion
   letI hqAddGroup : AddGroup q := inferInstance
-  let U1 := LocalFieldTheory.DiscreteValuationField.CompleteDVF.higherPrincipalUnitGroup
-    (F.toCompleteDVF) 1
-  let valuationUnitsToFieldUnits :=
-    _root_.LocalFieldTheory.DiscreteValuationField.CompleteDVF.valuationSubringUnitsToFieldUnits
-      F.toCompleteDVF
-  let principalToField : U1 →* K :=
-    (Units.coeHom K).comp
-      (valuationUnitsToFieldUnits.comp U1.subtype)
-  have hvaluationUnitsToFieldUnits :
-      Function.Injective valuationUnitsToFieldUnits := by
-    intro x y hxy
-    apply Units.ext
-    apply Subtype.ext
-    have hxy' := congrArg (fun z : Kˣ => (z : K)) hxy
-    simpa [valuationUnitsToFieldUnits] using hxy'
-  have hprincipalToField : Function.Injective principalToField := by
-    exact Units.val_injective.comp
-      (hvaluationUnitsToFieldUnits.comp Subtype.val_injective)
   have hcyclic : IsAddCyclic T :=
-    isAddCyclic_of_injective_multiplicative_map
-      T.subtype.toAddMonoidHom principalToField
-      T.subtype_injective hprincipalToField
+    isAddCyclic_principalUnit_torsion F.toCompleteDVF R
   let tproj : T →ₗ[R] q := exactData.torsionProjection
   have hqP : IsPGroup p (Multiplicative q) :=
     F.discretePrincipalUnitQuotient_isPGroup n

@@ -322,11 +322,8 @@ noncomputable def padicCompletedChangedFieldResidueEmbedding
     localCompleteDVFValuation_hasExtension_of_padicLocalField
       p ambient.valuation
   let inclusion : D →+* E := D.val.toRingHom
-  have inclusion_comp :
-      inclusion.comp (algebraMap ℚ_[p] D) =
-        algebraMap ℚ_[p] E := by
-    ext x
-    exact D.val.commutes x
+  have inclusion_comp : inclusion.comp (algebraMap ℚ_[p] D) = algebraMap ℚ_[p] E :=
+    RingHom.ext fun x => D.val.commutes x
   let :
       canonicalBase.valuation.HasExtension
         (ambient.valuation.comap inclusion) :=
@@ -393,11 +390,8 @@ noncomputable def
     localCompleteDVFValuation_hasExtension_of_padicLocalField
       p ambient.valuation
   let inclusion : M →+* E := M.val.toRingHom
-  have inclusion_comp :
-      inclusion.comp (algebraMap ℚ_[p] M) =
-        algebraMap ℚ_[p] E := by
-    ext x
-    exact M.val.commutes x
+  have inclusion_comp : inclusion.comp (algebraMap ℚ_[p] M) = algebraMap ℚ_[p] E :=
+    RingHom.ext fun x => M.val.commutes x
   let :
       canonicalBase.valuation.HasExtension
         (ambient.valuation.comap inclusion) :=
@@ -637,11 +631,8 @@ theorem
     localCompleteDVFValuation_hasExtension_of_padicLocalField
       p ambient.valuation
   let inclusion : M →+* E := M.val.toRingHom
-  have inclusion_comp :
-      inclusion.comp (algebraMap ℚ_[p] M) =
-        algebraMap ℚ_[p] E := by
-    ext x
-    exact M.val.commutes x
+  have inclusion_comp : inclusion.comp (algebraMap ℚ_[p] M) = algebraMap ℚ_[p] E :=
+    RingHom.ext fun x => M.val.commutes x
   let :
       canonicalBase.valuation.HasExtension
         (ambient.valuation.comap inclusion) :=

@@ -915,13 +915,11 @@ private theorem
         PEmbedded =
       P.toFiniteGaloisExtension := by
   dsimp only
-  let F :=
-    abstractFixedField ℚ (SeparableClosure ℚ) H.field
+  let F := abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
     abstractRelativeFixedField
       ℚ (SeparableClosure ℚ) P.below
-  let j : E →ₐ[ℚ] SeparableClosure ℚ :=
-    E.val.restrictScalars ℚ
+  let j : E →ₐ[ℚ] SeparableClosure ℚ := E.val.restrictScalars ℚ
   let HEmbedded :=
     numberFieldEmbeddedFiniteAbstractField F E j
   let PEmbedded : FiniteGaloisSubextension HEmbedded.field :=
@@ -945,13 +943,11 @@ private noncomputable def
         (abstractRelativeFixedField
           ℚ (SeparableClosure ℚ) P.below) /
         (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
-  let F :=
-    abstractFixedField ℚ (SeparableClosure ℚ) H.field
+  let F := abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
     abstractRelativeFixedField
       ℚ (SeparableClosure ℚ) P.below
-  let j : E →ₐ[ℚ] SeparableClosure ℚ :=
-    E.val.restrictScalars ℚ
+  let j : E →ₐ[ℚ] SeparableClosure ℚ := E.val.restrictScalars ℚ
   have hBase :
       numberFieldEmbeddedBaseSubgroup F E j = H.field :=
     numberFieldEmbeddedBaseSubgroup_abstractFixedFieldInclusion H P
@@ -1056,13 +1052,11 @@ private noncomputable def
       (abstractRelativeFixedField
         ℚ (SeparableClosure ℚ) P.below) /
       (abstractFixedField ℚ (SeparableClosure ℚ) H.field)) := by
-  let F :=
-    abstractFixedField ℚ (SeparableClosure ℚ) H.field
+  let F := abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
     abstractRelativeFixedField
       ℚ (SeparableClosure ℚ) P.below
-  let j : E →ₐ[ℚ] SeparableClosure ℚ :=
-    E.val.restrictScalars ℚ
+  let j : E →ₐ[ℚ] SeparableClosure ℚ := E.val.restrictScalars ℚ
   have hBase :
       numberFieldEmbeddedBaseSubgroup F E j = H.field :=
     numberFieldEmbeddedBaseSubgroup_abstractFixedFieldInclusion H P
@@ -1106,13 +1100,11 @@ private noncomputable def
     (σ : H.field.toSubgroup)
     (x : abstractRelativeFixedField
       ℚ (SeparableClosure ℚ) P.below) : SeparableClosure ℚ := by
-  let F :=
-    abstractFixedField ℚ (SeparableClosure ℚ) H.field
+  let F := abstractFixedField ℚ (SeparableClosure ℚ) H.field
   let E :=
     abstractRelativeFixedField
       ℚ (SeparableClosure ℚ) P.below
-  let j : E →ₐ[ℚ] SeparableClosure ℚ :=
-    E.val.restrictScalars ℚ
+  let j : E →ₐ[ℚ] SeparableClosure ℚ := E.val.restrictScalars ℚ
   have hBase :
       numberFieldEmbeddedBaseSubgroup F E j = H.field :=
     numberFieldEmbeddedBaseSubgroup_abstractFixedFieldInclusion H P

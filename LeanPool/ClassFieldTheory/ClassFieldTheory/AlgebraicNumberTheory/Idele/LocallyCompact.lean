@@ -54,9 +54,8 @@ theorem exists_ringOfIntegers_approximation
   have hdval : v.valuation K (algebraMap (𝓞 K) K d.1) = 1 := by
     exact le_antisymm (v.valuation_le_one d.1)
       (not_lt.mp ((v.valuation_lt_one_iff_mem (K := K) d.1).not.mpr hd))
-  have hadK :
-      y * algebraMap (𝓞 K) K d.1 = algebraMap (𝓞 K) K a := by
-    exact congrArg Subtype.val had
+  have hadK : y * algebraMap (𝓞 K) K d.1 = algebraMap (𝓞 K) K a :=
+    congrArg Subtype.val had
   rw [← mul_lt_mul_iff_right₀ (show
     0 < v.valuation K (algebraMap (𝓞 K) K d.1) by simp [hdval])]
   rw [← map_mul, mul_sub, mul_comm _ y, hadK, mul_comm _ (algebraMap (𝓞 K) K r),

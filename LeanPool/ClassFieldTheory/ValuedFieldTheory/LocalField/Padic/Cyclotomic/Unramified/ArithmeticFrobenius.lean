@@ -1274,6 +1274,87 @@ theorem padicCyclotomicUnramifiedArithmeticFrobenius_generates
     rw [map_pow, heφ]
     exact hj
 
+/-- Nakayama lifts generation modulo the maximal ideal to a finite algebra. -/
+private theorem subalgebra_eq_top_of_residue_approximation
+    {R S : Type*} [CommRing R] [CommRing S] [IsLocalRing R] [IsLocalRing S]
+    [Algebra R S] [Module.Finite R S] (A : Subalgebra R S)
+    (hmap : Ideal.map (algebraMap R S) (IsLocalRing.maximalIdeal R) =
+      IsLocalRing.maximalIdeal S)
+    (hcongr : ∀ b : S, ∃ z : S, z ∈ A ∧ b - z ∈ IsLocalRing.maximalIdeal S) :
+    A = ⊤ := by
+  have htop : (⊤ : Submodule R S) ≤
+      A.toSubmodule ⊔ IsLocalRing.maximalIdeal R • (⊤ : Submodule R S) := by
+    intro b _
+    obtain ⟨z, hz, hdiff⟩ := hcongr b
+    have hdiffMap : b - z ∈ Ideal.map (algebraMap R S) (IsLocalRing.maximalIdeal R) := by
+      simpa only [hmap] using hdiff
+    have hdiffSmul : b - z ∈ IsLocalRing.maximalIdeal R • (⊤ : Submodule R S) := by
+      simpa [Ideal.smul_top_eq_map] using hdiffMap
+    have hsum : z + (b - z) ∈
+        A.toSubmodule ⊔ IsLocalRing.maximalIdeal R • (⊤ : Submodule R S) :=
+      Submodule.add_mem_sup hz hdiffSmul
+    have hsum_eq : z + (b - z) = b := by ring
+    simpa only [hsum_eq] using hsum
+  have hle : (⊤ : Submodule R S) ≤ A.toSubmodule :=
+    Submodule.le_of_le_smul_of_le_jacobson_bot
+      (I := IsLocalRing.maximalIdeal R) (N := A.toSubmodule)
+      (N' := (⊤ : Submodule R S)) Module.Finite.fg_top
+      (IsLocalRing.maximalIdeal_le_jacobson (⊥ : Ideal R)) htop
+  exact Algebra.toSubmodule_eq_top.mp (le_antisymm le_top hle)
+
+/-- A primitive root whose residue degree exhausts a finite extension generates its algebra. -/
+private theorem primitive_root_adjoin_eq_top_of_degree
+    {A B : Type*} [Field A] [Fintype A] [Field B] [Algebra A B]
+    [FiniteDimensional A B] {p r n : ℕ} [Fact p.Prime]
+    (hk : Fintype.card A = p ^ r) (hpn : p.Coprime n)
+    (alpha : B) (ha : IsPrimitiveRoot alpha n)
+    (hdegree : Module.finrank A B =
+      padicCyclotomicUnramifiedResidueDegree n (p ^ r) (hpn.pow_left r)) :
+    Algebra.adjoin A ({alpha} : Set B) = ⊤ := by
+  have hsub := padicCyclotomicUnramified_residue_adjoin_finrank hk hpn ha
+  have htop : IntermediateField.adjoin A ({alpha} : Set B) = ⊤ :=
+    IntermediateField.eq_of_le_of_finrank_eq le_top (by
+      simpa using hsub.trans hdegree.symm)
+  exact Algebra.adjoin_eq_top_of_primitive_element
+    (Algebra.IsAlgebraic.isAlgebraic alpha) htop
+
+omit [FiniteDimensional K L] in
+/-- Extending a discrete exponential valuation gives a valuation ring that is not a field. -/
+private theorem exponential_extension_valuationRing_not_isField
+    (vK : LubinTate.Valuations.ExponentialValuation K)
+    (vL : LubinTate.Valuations.ExponentialValuation L)
+    (hExt : ∀ x : K, vL (algebraMap K L x) = vK x)
+    (hvdisc : LubinTate.Valuations.DiscreteExponentialValuation vK) :
+    ¬ IsField (LubinTate.Valuations.exponentialValuationSubring vL) := by
+  let V := LubinTate.Valuations.exponentialValuationSubring vK
+  let W := LubinTate.Valuations.exponentialValuationSubring vL
+  let i := unramifiedValuationRingValuationRingMap vK vL hExt
+  intro hfield
+  let : Field W := hfield.toField
+  obtain ⟨s, hs, _hvalues, pi, hpival⟩ := hvdisc
+  have hpi0 : pi ≠ 0 :=
+    LubinTate.Valuations.discretePrimeElement_ne_zero_of_value vK hpival
+  let piV : V :=
+    LubinTate.Valuations.discretePrimeElementInValuationSubring vK hs.le hpival
+  have hpiV0 : piV ≠ 0 := by
+    intro hzero
+    exact hpi0 (congrArg Subtype.val hzero)
+  have hi : Function.Injective i := by
+    intro x y hxy
+    apply Subtype.ext
+    exact (algebraMap K L).injective (congrArg Subtype.val hxy)
+  have hiPi0 : i piV ≠ 0 := by simpa using hi.ne hpiV0
+  have hiPiUnit : IsUnit (i piV) := isUnit_iff_ne_zero.mpr hiPi0
+  have hzero :=
+    LubinTate.Valuations.exponentialValuation_eq_zero_of_isUnit vL hiPiUnit
+  have hvalue : vL ((((i piV : W)) : L)) = (s : WithTop ℝ) := by
+    change vL (algebraMap K L pi) = (s : WithTop ℝ)
+    rw [hExt, hpival]
+  rw [hvalue] at hzero
+  have hs0 : s = 0 :=
+    WithTop.coe_eq_coe.mp (by simpa using hzero)
+  exact (ne_of_gt hs) hs0
+
 /-- the unramified cyclotomic theorem(iii), valuation-ring generation by the specified root.
 
 The residue of `ζ` is again primitive of order `n`; its residue-field degree
@@ -1323,31 +1404,16 @@ theorem padicCyclotomicUnramified_valuationSubring_adjoin_eq_top
   let : IsScalarTower V W L := IsScalarTower.of_algebraMap_eq
     (R := V) (S := W) (A := L) (by intro; rfl)
   let : Algebra.IsAlgebraic K L := Algebra.IsAlgebraic.of_finite K L
-  let : IsFractionRing V K := by
-    change IsFractionRing Vv K
-    have hfr : IsFractionRing Vv.valuation.valuationSubring K :=
-      (Valuation.valuationSubring.integers
-        (v := Vv.valuation)).isFractionRing
-    rw [Vv.valuationSubring_valuation] at hfr
-    exact hfr
-  have hclosureVv :
-      Wv.toSubring = (integralClosure Vv L).toSubring :=
-    exponentialValuationSubring_eq_integralClosure_of_henselian
-      vK vL hExt hhens
-  have hclosure : W = (integralClosure V L).toSubring := by
-    change Wv.toSubring = (integralClosure Vv L).toSubring
-    exact hclosureVv
+  let : IsFractionRing V K :=
+    inferInstanceAs (IsFractionRing Vv K)
+  have hclosure : W = (integralClosure V L).toSubring :=
+    exponentialValuationSubring_eq_integralClosure_of_henselian vK vL hExt hhens
   let : IsIntegralClosure W V L :=
     padicCyclotomicUnramified_isIntegralClosure_of_subring_eq V W hclosure
   let : IsDiscreteValuationRing V :=
     LubinTate.Valuations.discreteExponentialValuationSubring_isDiscreteValuationRing hvdisc
-  let : IsFractionRing W L := by
-    change IsFractionRing Wv L
-    have hfr : IsFractionRing Wv.valuation.valuationSubring L :=
-      (Valuation.valuationSubring.integers
-        (v := Wv.valuation)).isFractionRing
-    rw [Wv.valuationSubring_valuation] at hfr
-    exact hfr
+  let : IsFractionRing W L :=
+    inferInstanceAs (IsFractionRing Wv L)
   have hUnramified : FiniteUnramifiedExtension vK vL hExt :=
     padicCyclotomicUnramified_finiteUnramifiedExtension
       vK vL hExt hhens hk hpn hζ hζgen
@@ -1358,32 +1424,8 @@ theorem padicCyclotomicUnramified_valuationSubring_adjoin_eq_top
   let : Module.Finite V W := IsIntegralClosure.finite V K L W
   let : IsDedekindDomain W :=
     IsIntegralClosure.isDedekindDomain V K L W
-  have hWnotField : ¬ IsField W := by
-    intro hfield
-    let : Field W := hfield.toField
-    obtain ⟨s, hs, _hvalues, pi, hpival⟩ := hvdisc
-    have hpi0 : pi ≠ 0 :=
-      LubinTate.Valuations.discretePrimeElement_ne_zero_of_value vK hpival
-    let piV : V :=
-      LubinTate.Valuations.discretePrimeElementInValuationSubring vK hs.le hpival
-    have hpiV0 : piV ≠ 0 := by
-      intro hzero
-      exact hpi0 (congrArg Subtype.val hzero)
-    have hi : Function.Injective i := by
-      intro x y hxy
-      apply Subtype.ext
-      exact (algebraMap K L).injective (congrArg Subtype.val hxy)
-    have hiPi0 : i piV ≠ 0 := by simpa using hi.ne hpiV0
-    have hiPiUnit : IsUnit (i piV) := isUnit_iff_ne_zero.mpr hiPi0
-    have hzero :=
-      LubinTate.Valuations.exponentialValuation_eq_zero_of_isUnit vL hiPiUnit
-    have hvalue : vL ((((i piV : W)) : L)) = (s : WithTop ℝ) := by
-      change vL (algebraMap K L pi) = (s : WithTop ℝ)
-      rw [hExt, hpival]
-    rw [hvalue] at hzero
-    have hs0 : s = 0 :=
-      WithTop.coe_eq_coe.mp (by simpa using hzero)
-    exact (ne_of_gt hs) hs0
+  have hWnotField : ¬ IsField W :=
+    exponential_extension_valuationRing_not_isField vK vL hExt hvdisc
   let : IsNoetherianRing W := inferInstance
   let : IsDiscreteValuationRing W :=
     ((IsDiscreteValuationRing.TFAE W hWnotField).out 3 1).mp
@@ -1410,10 +1452,6 @@ theorem padicCyclotomicUnramified_valuationSubring_adjoin_eq_top
     exact hresfin
   let : Algebra.IsAlgebraic k ell :=
     @Algebra.IsAlgebraic.of_finite k ell _ _ _ _ hresfinAlgebra
-  have hfinTopAlgebra :
-      FiniteDimensional k (⊤ : IntermediateField k ell) :=
-    @IntermediateField.finiteDimensional_left
-      k ell _ _ _ (⊤ : IntermediateField k ell) hresfinAlgebra
   have hn : 0 < n := padicCyclotomicUnramified_order_pos hpn
   have hζIntegralV : IsIntegral V ζ :=
     padicCyclotomicUnramified_primitiveRoot_isIntegral hn hζ
@@ -1446,15 +1484,9 @@ theorem padicCyclotomicUnramified_valuationSubring_adjoin_eq_top
     exact (hp.out.coprime_iff_not_dvd.mp hpn)
       ((CharP.cast_eq_zero_iff k p n).mp hzero)
   let : NeZero (n : k) := ⟨hnCastK⟩
-  let : NeZero (n : ell) := by
-    refine ⟨?_⟩
-    intro hzero
-    apply hnCastK
-    apply (algebraMap k ell).injective
-    calc
-      algebraMap k ell (n : k) = (n : ell) := map_natCast _ n
-      _ = 0 := hzero
-      _ = algebraMap k ell 0 := (map_zero _).symm
+  let : NeZero (n : ell) := ⟨fun hzero => hnCastK
+    ((algebraMap k ell).injective
+      ((_root_.map_natCast _ n).trans (hzero.trans (_root_.map_zero _).symm)))⟩
   have halphaRoot : IsRoot (cyclotomic n ell) alpha := by
     have hres :=
       unramifiedValuationRing_polynomial_aeval_residue_eq
@@ -1476,51 +1508,14 @@ theorem padicCyclotomicUnramified_valuationSubring_adjoin_eq_top
         padicCyclotomicUnramifiedResidueDegree n (p ^ r) (hpn.pow_left r) :=
     padicCyclotomicUnramified_finrank_eq_residueDegree
       vK hhens hk hpn hζ hζgen
-  have hfullResidueDegree :
-      @Module.finrank k ell _ _ residueModule =
-        padicCyclotomicUnramifiedResidueDegree n (p ^ r) (hpn.pow_left r) := by
-    have hdegree :
-        Module.finrank K L =
-          @Module.finrank k ell _ _ residueModule := by
-      change Module.finrank K L = exponentialResidueDegree vK vL hExt
-      exact hUnramified.2
-    rw [← hdegree]
-    exact hfieldDegree
   have hfullResidueDegreeAlgebra :
       @Module.finrank k ell _ _ algebraModule =
         padicCyclotomicUnramifiedResidueDegree n (p ^ r) (hpn.pow_left r) := by
-    calc
-      @Module.finrank k ell _ _ algebraModule =
-          @Module.finrank k ell _ _ residueModule := by
-        rw [hresidueModule]
-      _ = padicCyclotomicUnramifiedResidueDegree n (p ^ r) (hpn.pow_left r) :=
-        hfullResidueDegree
-  have halphaSubDegree :
-      Module.finrank k
-          (IntermediateField.adjoin k ({alpha} : Set ell)) =
-        padicCyclotomicUnramifiedResidueDegree n (p ^ r) (hpn.pow_left r) :=
-    padicCyclotomicUnramified_residue_adjoin_finrank hk hpn halphaPrimitive
-  have halphaTop :
-      IntermediateField.adjoin k ({alpha} : Set ell) =
-        (⊤ : IntermediateField k ell) := by
-    refine @IntermediateField.eq_of_le_of_finrank_eq
-      k ell _ _ _
-      (IntermediateField.adjoin k ({alpha} : Set ell))
-      (⊤ : IntermediateField k ell) hfinTopAlgebra le_top ?_
-    calc
-      Module.finrank k
-          (IntermediateField.adjoin k ({alpha} : Set ell)) =
-          padicCyclotomicUnramifiedResidueDegree n (p ^ r) (hpn.pow_left r) :=
-        halphaSubDegree
-      _ = @Module.finrank k ell _ _ algebraModule :=
-        hfullResidueDegreeAlgebra.symm
-      _ = Module.finrank k (⊤ : IntermediateField k ell) := by
-        simp
-  have halphaAlgTop :
-      Algebra.adjoin k ({alpha} : Set ell) =
-        (⊤ : Subalgebra k ell) :=
-    Algebra.adjoin_eq_top_of_primitive_element
-      (Algebra.IsAlgebraic.isAlgebraic alpha) halphaTop
+    rw [← hresidueModule]
+    exact hUnramified.2.symm.trans hfieldDegree
+  have halphaAlgTop : Algebra.adjoin k ({alpha} : Set ell) = ⊤ :=
+    @primitive_root_adjoin_eq_top_of_degree k ell _ _ _ _ hresfinAlgebra
+      p r n hp hk hpn alpha halphaPrimitive hfullResidueDegreeAlgebra
   have hIdentity :=
     ramificationInvariants_fundamental_identity_of_discrete_of_separable
       vK vL hExt hvdisc hhens
@@ -1578,42 +1573,8 @@ theorem padicCyclotomicUnramified_valuationSubring_adjoin_eq_top
       rw [hres, hP]
       rw [sub_eq_zero]
       simpa [alpha, Polynomial.aeval_def] using hfbar.symm
-  have htop :
-      (⊤ : Submodule V W) ≤
-        A.toSubmodule ⊔
-          IsLocalRing.maximalIdeal V • (⊤ : Submodule V W) := by
-    intro b _hb
-    rcases hcongr b with ⟨z, hzA, hdiff⟩
-    have hdiffMap :
-        b - z ∈ Ideal.map i (IsLocalRing.maximalIdeal V) := by
-      simpa [hmapMaximal] using hdiff
-    have hdiffSmul :
-        b - z ∈
-          IsLocalRing.maximalIdeal V • (⊤ : Submodule V W) := by
-      have hdiffMap' :
-          b - z ∈ Ideal.map (algebraMap V W)
-            (IsLocalRing.maximalIdeal V) := by
-        change b - z ∈ Ideal.map i (IsLocalRing.maximalIdeal V)
-        exact hdiffMap
-      simpa [Ideal.smul_top_eq_map] using hdiffMap'
-    have hsum :
-        z + (b - z) ∈
-          A.toSubmodule ⊔
-            IsLocalRing.maximalIdeal V • (⊤ : Submodule V W) :=
-      Submodule.add_mem_sup hzA hdiffSmul
-    have hsum_eq : z + (b - z) = b := by ring
-    simpa [hsum_eq] using hsum
-  have hjac :
-      IsLocalRing.maximalIdeal V ≤
-        Ideal.jacobson (⊥ : Ideal V) := by
-    exact IsLocalRing.maximalIdeal_le_jacobson (⊥ : Ideal V)
-  have hle : (⊤ : Submodule V W) ≤ A.toSubmodule :=
-    Submodule.le_of_le_smul_of_le_jacobson_bot
-      (I := IsLocalRing.maximalIdeal V) (N := A.toSubmodule)
-      (N' := (⊤ : Submodule V W)) Module.Finite.fg_top hjac htop
-  have hA : A.toSubmodule = ⊤ := le_antisymm le_top hle
   refine ⟨a, rfl, ?_⟩
-  exact Algebra.toSubmodule_eq_top.mp hA
+  exact subalgebra_eq_top_of_residue_approximation A hmapMaximal hcongr
 
 /-- Finite-dimensional core of the complete the unramified cyclotomic theorem endpoint.
 The public endpoint below derives finite-dimensionality from `L = K(ζ)`. -/
