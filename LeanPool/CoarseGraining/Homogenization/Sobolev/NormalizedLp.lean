@@ -26,7 +26,18 @@ namespace BoundedMeasurableDomain
 /-- The extended normalized `L^p` seminorm, with respect to normalized volume. -/
 noncomputable def normalizedLpENorm {d : ℕ} (U : BoundedMeasurableDomain d)
     {E : Type*} [ENorm E] (p : ℝ≥0∞) (f : Vec d → E) : ℝ≥0∞ :=
-  MeasureTheory.eLpNorm f p U.normalizedVolume
+  if p = 0 then 0 else if p = ∞ then
+    MeasureTheory.eLpNormEssSup f U.normalizedVolume
+  else MeasureTheory.eLpNorm' f p.toReal U.normalizedVolume
+
+/-- On measurable representatives the manuscript seminorm agrees with Mathlib's
+`eLpNorm`. The explicit moment definition also preserves the manuscript's essential
+supremum for arbitrary representatives, without imposing a measurability convention. -/
+theorem normalizedLpENorm_eq_eLpNorm {d : ℕ} (U : BoundedMeasurableDomain d)
+    {E : Type*} [TopologicalSpace E] [ENorm E] (p : ℝ≥0∞) (f : Vec d → E)
+    (hf : MeasureTheory.AEStronglyMeasurable f U.normalizedVolume) :
+    U.normalizedLpENorm p f = MeasureTheory.eLpNorm f p U.normalizedVolume := by
+  simp only [normalizedLpENorm, MeasureTheory.eLpNorm, hf, ite_true]
 
 /-- Membership in `L^p` is unchanged by the strictly positive finite volume normalization. -/
 theorem memLp_normalizedVolume_iff {d : ℕ} (U : BoundedMeasurableDomain d)
@@ -50,7 +61,9 @@ noncomputable def normalizedLpFiniteENorm {d : ℕ} (U : BoundedMeasurableDomain
     {E : Type*} [TopologicalSpace E] [ContinuousENorm E] (p : ℝ≥0∞) (f : Vec d → E)
     (hf : MeasureTheory.MemLp f p U.normalizedVolume) :
     {q : ℝ≥0∞ // q ≠ ∞} :=
-  ⟨U.normalizedLpENorm p f, hf.eLpNorm_ne_top⟩
+  ⟨U.normalizedLpENorm p f, by
+    rw [U.normalizedLpENorm_eq_eLpNorm p f hf.aestronglyMeasurable]
+    exact hf.eLpNorm_ne_top⟩
 
 /-- The finite real normalized `L^p` value certified by a `MemLp` witness. -/
 noncomputable def normalizedLpNorm {d : ℕ} (U : BoundedMeasurableDomain d)
@@ -63,8 +76,9 @@ almost-everywhere representative. -/
 theorem normalizedLpENorm_congr_ae {d : ℕ} (U : BoundedMeasurableDomain d)
     {E : Type*} [ENorm E] (p : ℝ≥0∞) {f g : Vec d → E}
     (hfg : f =ᵐ[U.normalizedVolume] g) :
-    U.normalizedLpENorm p f = U.normalizedLpENorm p g :=
-  MeasureTheory.eLpNorm_congr_ae hfg
+    U.normalizedLpENorm p f = U.normalizedLpENorm p g := by
+  unfold normalizedLpENorm
+  rw [MeasureTheory.eLpNormEssSup_congr_ae hfg, MeasureTheory.eLpNorm'_congr_ae hfg]
 
 /-- A proof-carrying finite normalized `L^p` value depends only on the
 normalized-volume almost-everywhere representative. -/
@@ -74,10 +88,7 @@ theorem normalizedLpNorm_congr_ae {d : ℕ} (U : BoundedMeasurableDomain d)
     (hg : MeasureTheory.MemLp g p U.normalizedVolume)
     (hfg : f =ᵐ[U.normalizedVolume] g) :
     U.normalizedLpNorm p f hf = U.normalizedLpNorm p g hg := by
-  unfold normalizedLpNorm normalizedLpFiniteENorm normalizedLpENorm
-  change ENNReal.toReal (MeasureTheory.eLpNorm f p U.normalizedVolume) =
-    ENNReal.toReal (MeasureTheory.eLpNorm g p U.normalizedVolume)
-  exact congrArg ENNReal.toReal (MeasureTheory.eLpNorm_congr_ae hfg)
+  exact congrArg ENNReal.toReal (U.normalizedLpENorm_congr_ae p hfg)
 
 theorem normalizedLpFiniteENorm_value {d : ℕ} (U : BoundedMeasurableDomain d)
     {E : Type*} [TopologicalSpace E] [ContinuousENorm E] (p : ℝ≥0∞) (f : Vec d → E)
@@ -117,8 +128,8 @@ theorem normalizedLpNorm_eq_normalizedLpMoment_rpow {d : ℕ}
     U.normalizedLpNorm p f hf = (U.normalizedLpMoment p f) ^ p.toReal⁻¹ := by
   have hp_zero : p ≠ 0 := by
     exact ne_of_gt (lt_of_lt_of_le zero_lt_one hp_one)
-  change (MeasureTheory.eLpNorm f p U.normalizedVolume).toReal =
-    (U.normalizedLpMoment p f) ^ p.toReal⁻¹
+  change (U.normalizedLpENorm p f).toReal = (U.normalizedLpMoment p f) ^ p.toReal⁻¹
+  rw [U.normalizedLpENorm_eq_eLpNorm p f hf.aestronglyMeasurable]
   rw [hf.eLpNorm_eq_integral_rpow_norm hp_zero hp_top]
   change
     (ENNReal.ofReal ((∫ x, ‖f x‖ ^ p.toReal ∂U.normalizedVolume) ^ p.toReal⁻¹)).toReal =
@@ -131,8 +142,7 @@ theorem normalizedLpENorm_top_eq_essSup {d : ℕ} (U : BoundedMeasurableDomain d
     {E : Type*} [ENorm E] (f : Vec d → E) :
     U.normalizedLpENorm ∞ f =
       essSup (fun x => ‖f x‖ₑ) U.normalizedVolume := by
-  simp [normalizedLpENorm, MeasureTheory.eLpNorm_exponent_top,
-    MeasureTheory.eLpNormEssSup_eq_essSup_enorm]
+  simp [normalizedLpENorm, MeasureTheory.eLpNormEssSup_eq_essSup_enorm]
 
 /-- The explicit Euclidean extended `L^p` value of a vector-valued function.
 This does not change the global norm instance on `Vec d`. -/

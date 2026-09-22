@@ -165,7 +165,7 @@ theorem cubeLpNorm_one_eq_integral_norm {d : ℕ} {E : Type*} [NormedAddCommGrou
     (hf : MeasureTheory.AEStronglyMeasurable f (normalizedCubeMeasure Q)) :
     cubeLpNorm Q 1 f = ∫ x, ‖f x‖ ∂ normalizedCubeMeasure Q := by
   unfold cubeLpNorm
-  rw [MeasureTheory.eLpNorm_one_eq_lintegral_enorm,
+  rw [MeasureTheory.eLpNorm_one_eq_lintegral_enorm hf,
     ← MeasureTheory.integral_norm_eq_lintegral_enorm hf]
 
 theorem cubeLpNorm_rpow_eq_cubeAverage_norm_rpow {d : ℕ} {E : Type*}
@@ -181,13 +181,13 @@ theorem cubeLpNorm_rpow_eq_cubeAverage_norm_rpow {d : ℕ} {E : Type*}
   have hmeas :
       MeasureTheory.AEStronglyMeasurable (fun x => ‖f x‖ ^ p.toReal)
         (normalizedCubeMeasure Q) :=
-    (hf.1.norm.aemeasurable.pow aemeasurable_const).aestronglyMeasurable
+    (hf.aestronglyMeasurable.norm.aemeasurable.pow aemeasurable_const).aestronglyMeasurable
   calc
     (cubeLpNorm Q p f) ^ p.toReal
         = ((MeasureTheory.eLpNorm f p (normalizedCubeMeasure Q)) ^ p.toReal).toReal := by
             rw [cubeLpNorm, ← ENNReal.toReal_rpow]
     _ = (∫⁻ x, ‖f x‖ₑ ^ p.toReal ∂ normalizedCubeMeasure Q).toReal := by
-          rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpTop]
+          rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal hp0 hpTop hf.aestronglyMeasurable]
           let A : ℝ≥0∞ := ∫⁻ x, ‖f x‖ₑ ^ p.toReal ∂ normalizedCubeMeasure Q
           change ((A ^ (1 / p.toReal)) ^ p.toReal).toReal = A.toReal
           rw [← ENNReal.rpow_mul, one_div, inv_mul_cancel₀ hpPos.ne', ENNReal.rpow_one]
@@ -216,12 +216,13 @@ theorem cubeLpNorm_mul_le_mul_cubeLpNorm_of_holderConjugate {d : ℕ}
           MeasureTheory.eLpNorm g q (normalizedCubeMeasure Q) := by
     simpa using
       (MeasureTheory.eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm
-        hf.1 hg.1 (fun a b => a * b) 1
+        (fun a b : ℝ => a * b) 1 (continuous_fst.mul continuous_snd)
+        hf.aestronglyMeasurable hg.aestronglyMeasurable
         (Filter.Eventually.of_forall fun x => by
           simp))
-  have hf_top : MeasureTheory.eLpNorm f p (normalizedCubeMeasure Q) ≠ ∞ := ne_of_lt hf.2
+  have hf_top : MeasureTheory.eLpNorm f p (normalizedCubeMeasure Q) ≠ ∞ := ne_of_lt hf.eLpNorm_lt_top
   have hg_top : MeasureTheory.eLpNorm g q (normalizedCubeMeasure Q) ≠ ∞ :=
-    ne_of_lt hg.2
+    ne_of_lt hg.eLpNorm_lt_top
   have hmul_top :
       1 * MeasureTheory.eLpNorm f p (normalizedCubeMeasure Q) *
         MeasureTheory.eLpNorm g q (normalizedCubeMeasure Q) ≠ ∞ := by
@@ -253,7 +254,7 @@ theorem abs_cubeAverage_mul_le_mul_cubeLpNorm_of_holderConjugate {d : ℕ}
     |cubeAverage Q (fun x => f x * g x)| ≤
       cubeLpNorm Q p f * cubeLpNorm Q q g := by
   have hfg_meas : MeasureTheory.AEStronglyMeasurable (fun x => f x * g x) (normalizedCubeMeasure Q) :=
-    hf.1.mul hg.1
+    hf.aestronglyMeasurable.mul hg.aestronglyMeasurable
   calc
     |cubeAverage Q (fun x => f x * g x)|
       = |∫ x, f x * g x ∂ normalizedCubeMeasure Q| := by
