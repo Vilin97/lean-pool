@@ -7,6 +7,13 @@ Authors: Yuma Mizuno
 import Mathlib.Data.Nat.Totient
 import Mathlib.Data.Nat.GCD.Basic
 
+/-!
+# Arithmetic bounds for three torsion orders
+
+Bound the least common multiple of three orders by the cube of their maximum and transfer the
+resulting modulus estimate.
+-/
+
 namespace BGS.Markoff
 
 /-- The totient exponent is no larger than the conductor exponent. -/

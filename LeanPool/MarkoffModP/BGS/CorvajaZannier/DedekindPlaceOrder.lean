@@ -9,6 +9,13 @@ import Mathlib.RingTheory.DiscreteValuationRing.Basic
 import Mathlib.RingTheory.Derivation.Basic
 import Mathlib.Tactic
 
+/-!
+# Orders at Dedekind places
+
+Extend local orders to zero using a top value and prove their arithmetic and derivation
+estimates through uniformizers.
+-/
+
 open scoped nonZeroDivisors
 open IsDedekindDomain Multiplicative WithZero
 

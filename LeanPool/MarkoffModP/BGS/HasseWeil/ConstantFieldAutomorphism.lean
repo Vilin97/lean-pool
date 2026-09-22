@@ -58,15 +58,13 @@ noncomputable def tensorConstantAutHom :
   map_one' := by
     apply AlgEquiv.ext
     intro z
-    induction z using TensorProduct.induction_on with
-    | zero => simp
+    induction z using TensorProduct.inductionOn with
     | tmul e x => simp
     | add x y hx hy => simp [hx, hy]
   map_mul' σ τ := by
     apply AlgEquiv.ext
     intro z
-    induction z using TensorProduct.induction_on with
-    | zero => simp
+    induction z using TensorProduct.inductionOn with
     | tmul e x => simp
     | add x y hx hy => simp [hx, hy]
 
@@ -210,8 +208,7 @@ noncomputable def planeCurveFunctionFieldBaseChangeLinearEquiv :
       map_add' := map_add ψ
       map_smul' := by
         intro x z
-        induction z using TensorProduct.induction_on with
-        | zero => simp
+        induction z using TensorProduct.inductionOn with
         | tmul y e =>
             change φ (e ⊗ₜ[K] (x * y)) =
               φ (1 ⊗ₜ[K] x) * φ (e ⊗ₜ[K] y)

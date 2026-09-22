@@ -77,10 +77,7 @@ theorem constantTensorResidueAlgHom_surjective
       (R := C) (A := S) (B := R)).toRingHom
   intro z
   obtain ⟨a, rfl⟩ := q.algebraMap_residueField_surjective z
-  induction a using TensorProduct.induction_on with
-  | zero =>
-      refine ⟨0, ?_⟩
-      rw [map_zero, map_zero]
+  induction a using TensorProduct.inductionOn with
   | tmul s r =>
       refine ⟨s ⊗ₜ[C] algebraMap R p.ResidueField r, ?_⟩
       simp only [constantTensorResidueAlgHom,

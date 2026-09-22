@@ -6,6 +6,13 @@ Authors: Yuma Mizuno
 
 import LeanPool.MarkoffModP.BGS.Markoff.MiddleGame.CorvajaZannierStep
 
+/-!
+# Divisor estimates in the middle-game range
+
+Choose eventual thresholds where divisor counts satisfy the real-power bounds required by the
+middle-game argument.
+-/
+
 namespace BGS.Markoff
 
 open Filter

@@ -6,6 +6,13 @@ Authors: Yuma Mizuno
 
 import LeanPool.MarkoffModP.BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
 
+/-!
+# Certificates for neighboring Rankin profiles
+
+Define rational weight caps and finite profile checks, and connect the Boolean checks with their
+mathematical validity predicates.
+-/
+
 namespace BGS.NumberTheory
 
 structure RationalPrimeWeightCap where

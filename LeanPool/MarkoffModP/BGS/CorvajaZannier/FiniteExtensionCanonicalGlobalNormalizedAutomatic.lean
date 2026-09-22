@@ -10,6 +10,13 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalDerivationExtension
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.PerfectConstants
 import Mathlib.Tactic
 
+/-!
+# Normalized global derivations for the canonical argument
+
+Construct the rational-function derivations and reciprocal-chart estimates used to normalize the
+global canonical Wronskian argument.
+-/
+
 namespace BGS.CorvajaZannier
 
 noncomputable section

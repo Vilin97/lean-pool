@@ -18,6 +18,12 @@ uniform aggregate error independent of the auxiliary constant extension.
 
 namespace BGS.HasseWeil
 
+private theorem finrank_mul_finrank_of_fields
+    (K F E : Type*) [Field K] [Field F] [Field E]
+    [Algebra K F] [Algebra K E] [Algebra F E] [IsScalarTower K F E] :
+    Module.finrank K F * Module.finrank F E = Module.finrank K E :=
+  Module.finrank_mul_finrank K F E
+
 noncomputable section
 
 open BGS.CorvajaZannier
@@ -205,11 +211,11 @@ theorem intermediateFrobeniusTwistFieldRationalInfinityPlaceCount_le_original_fi
         Module.finrank (RatFunc C) Fₗ :=
       rationalInfinityPlace_card_le_finrank C Fₗ
     _ = Module.finrank (RatFunc C) L * Module.finrank L Fₗ :=
-      (Module.finrank_mul_finrank (RatFunc C) L Fₗ).symm
+      (finrank_mul_finrank_of_fields (RatFunc C) L Fₗ).symm
     _ = Module.finrank (RatFunc C) L * Module.finrank L N := by
       rw [finrank_frobeniusTwistField_over_base C L N S hExact g hdivL]
     _ = Module.finrank (RatFunc C) N :=
-      Module.finrank_mul_finrank (RatFunc C) L N
+      finrank_mul_finrank_of_fields (RatFunc C) L N
 
 /-- Rational infinity places of the intermediate field itself are bounded by
 the original degree. -/
@@ -221,7 +227,7 @@ theorem intermediateBaseRationalInfinityPlaceCount_le_original_finrank :
         Module.finrank (RatFunc C) L := rationalInfinityPlace_card_le_finrank C L
     _ ≤ Module.finrank (RatFunc C) N := by
       apply Nat.le_of_dvd Module.finrank_pos
-      rw [← Module.finrank_mul_finrank (RatFunc C) L N]
+      rw [← finrank_mul_finrank_of_fields (RatFunc C) L N]
       exact dvd_mul_right _ _
 
 /-- The total infinity contribution of the twists is bounded by the group
@@ -306,7 +312,7 @@ theorem abs_sum_intermediateFrobeniusTwistFieldRationalPlaceCount_sub_card_mul_b
     dsimp only [G, D]
     rw [IsGalois.card_aut_eq_finrank]
     apply Nat.le_of_dvd Module.finrank_pos
-    rw [← Module.finrank_mul_finrank (RatFunc C) L N]
+    rw [← finrank_mul_finrank_of_fields (RatFunc C) L N]
     exact dvd_mul_left _ _
   rw [herr]
   have hIₗ' : (Iₗ : ℝ) ≤ (G : ℝ) * D := by exact_mod_cast hIₗ

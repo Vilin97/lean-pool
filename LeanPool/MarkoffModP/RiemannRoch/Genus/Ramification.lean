@@ -7,7 +7,8 @@ Authors: Guanghao Li
 module
 
 public import LeanPool.MarkoffModP.RiemannRoch.Genus.Polar
-public import Mathlib.NumberTheory.RamificationInertia.Basic
+public import Mathlib.RingTheory.RamificationInertia.Basic
+public import Mathlib.LinearAlgebra.Dimension.Localization
 public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
 public import Mathlib.RingTheory.Valuation.Discrete.Basic
 public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
@@ -28,6 +29,30 @@ open Polynomial BigOperators Submodule IntermediateField Ideal FunctionField
 noncomputable section
 
 namespace FunctionField.Chart
+
+private theorem ramificationSum_eq_fractionField_finrank
+    (R S K L : Type*) [CommRing R] [IsDomain R] [CommRing S]
+    [IsDedekindDomain S] [Field K] [Field L]
+    [Algebra R S] [Module.Finite R S] [Module.Flat R S] [Module.IsTorsionFree R S]
+    [Algebra R K] [Algebra S L] [Algebra R L] [Algebra K L]
+    [IsScalarTower R K L] [IsScalarTower R S L]
+    [IsFractionRing R K] [IsFractionRing S L]
+    (p : Ideal R) [p.IsMaximal] (hp : p ≠ ⊥) :
+    (∑ q ∈ IsDedekindDomain.primesOverFinset p S,
+      p.ramificationIdx' q * q.inertiaDeg R) = Module.finrank K L := by
+  classical
+  rw [Finset.sum_subtype _ (fun q => IsDedekindDomain.mem_primesOverFinset_iff hp S)]
+  calc
+    (∑ q : p.primesOver S, p.ramificationIdx' q.1 * q.1.inertiaDeg R) =
+        ∑ q : p.primesOver S, q.1.ramificationIdx R * q.1.inertiaDeg R := by
+      apply Finset.sum_congr rfl
+      intro q _
+      let : q.1.IsPrime := q.2.1
+      let : q.1.LiesOver p := q.2.2
+      rw [Ideal.ramificationIdx'_eq_ramificationIdx p q.1 hp]
+    _ = Module.finrank R S := Ideal.sum_ramification_inertia_eq_finrank p S
+    _ = Module.finrank K L := (IsFractionRing.finrank_eq R K S L).symm
+
 
 variable (k K : Type*) [Field k] [Field K]
 
@@ -292,8 +317,7 @@ theorem deg_polarDivisor_XK_eq_primesOverFinset_sum :
       ∑ P ∈ IsDedekindDomain.primesOverFinset
           (IsLocalRing.maximalIdeal (inftyValuationSubring k)) (infiniteIntegers k K),
         (ramIdxInfty k K P : ℤ) *
-          (Ideal.inertiaDeg'
-            (IsLocalRing.maximalIdeal (inftyValuationSubring k)) P : ℤ) := by
+          (P.inertiaDeg (inftyValuationSubring k) : ℤ) := by
   classical
   rw [deg, Finsupp.sum]
   let A := inftyValuationSubring k
@@ -351,18 +375,8 @@ theorem deg_polarDivisor_XK_eq_primesOverFinset_sum :
     simp only [Finset.mem_filter, pred, inftyIdealOfPlace] at hv ⊢
     rcases v with v | v
     · simp at hv
-    · have hpw : v.asIdeal.under A = p :=
-        IsLocalRing.eq_maximalIdeal (Ideal.IsMaximal.under A v.asIdeal)
-      let : v.asIdeal.IsMaximal := v.isPrime.isMaximal v.ne_bot
-      let : p.IsMaximal := by
-        rw [← hpw]
-        exact Ideal.IsMaximal.under A v.asIdeal
-      let : v.asIdeal.LiesOver p := ⟨hpw.symm⟩
-      have hinertia :
-          Ideal.inertiaDeg' p v.asIdeal = v.asIdeal.inertiaDeg A :=
-        Ideal.inertiaDeg'_eq_inertiaDeg (p := p) (P := v.asIdeal)
-      rw [polarDivisor_XK_at_infinite k K v, ramIdxInfty,
-        placeDegree_infinite_eq_inertiaDeg, ← hinertia]
+    · rw [polarDivisor_XK_at_infinite k K v, ramIdxInfty,
+        placeDegree_infinite_eq_inertiaDeg]
 
 omit [IsFullConstantField k K] in
 /-- Stichtenoth 1.4.11 ramification half for the chart variable: `deg (X_K)_∞ ≤ [K : k(X)]`. -/
@@ -376,13 +390,13 @@ theorem deg_polarX_le_finrank :
     Ring.ne_bot_of_isMaximal_of_not_isField (IsLocalRing.maximalIdeal.isMaximal A)
       (IsDiscreteValuationRing.not_isField A)
   let : p.IsMaximal := IsLocalRing.maximalIdeal.isMaximal A
-  have hsum := Ideal.sum_ramification_inertia (R := A) (S := S) (K := k⟮X⟯) (L := K) hp
+  have hsum := ramificationSum_eq_fractionField_finrank A S k⟮X⟯ K p hp
   have heq :
       (∑ P ∈ IsDedekindDomain.primesOverFinset p S,
-          (ramIdxInfty k K P : ℤ) * (Ideal.inertiaDeg' p P : ℤ)) =
+          (ramIdxInfty k K P : ℤ) * (P.inertiaDeg A : ℤ)) =
         Module.finrank k⟮X⟯ K := by
     dsimp [ramIdxInfty]
-    norm_cast
+    exact_mod_cast hsum
   exact le_of_eq heq
 
 end FunctionField.Chart

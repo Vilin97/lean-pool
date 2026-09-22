@@ -135,6 +135,156 @@ private theorem degree_le_theoremFour_bound_of_sq_le_cube
       mul_le_mul_of_nonneg_left hsqrtTCoefficient hroot
     _ = (4 / t + t ^ 2 / 2) * root := mul_comm _ _
 
+private theorem propositionTwo_numerical_bound
+    {a b chi : ℕ} {t G : ℝ}
+    (ha : 0 < a) (hb : 0 < b) (hchi : 0 < chi) (ht : 0 < t) :
+  let A : ℝ := a
+  let B : ℝ := b
+  let C : ℝ := chi
+  let base : ℝ := A * B * C
+  let baseRoot : ℝ := base ^ ((1 : ℝ) / 3)
+  let hScale : ℝ := (B ^ 2 / (A * C)) ^ ((1 : ℝ) / 3)
+  let kScale : ℝ := (A ^ 2 / (B * C)) ^ ((1 : ℝ) / 3)
+  let xH : ℝ := t * hScale
+  let xK : ℝ := t * kScale
+  let h : ℕ := ⌊xH⌋₊ - 1
+  let k : ℕ := ⌊xK⌋₊ - 1
+
+  0 < k → k ≤ h →
+    G ≤ (((h + 2 * k : ℕ) : ℝ) / ((h * k + h + k : ℕ) : ℝ)) * A +
+      ((k : ℝ) / ((h * k + h + k : ℕ) : ℝ)) * B +
+      ((((h * k + h + k : ℕ) : ℝ) - 1) / 2) * C →
+    G ≤ (4 / t + t ^ 2 / 2) * baseRoot := by
+  intro A B C base baseRoot hScale kScale xH xK h k hkPos hkh hNumerical
+  have hAPos : 0 < A := by dsimp [A]; exact_mod_cast ha
+  have hBPos : 0 < B := by
+    dsimp [B]
+    exact_mod_cast hb
+  have hCPos : 0 < C := by dsimp [C]; exact_mod_cast hchi
+  have hbasePos : 0 < base := by dsimp [base]; positivity
+  have hbaseRootPos : 0 < baseRoot := by dsimp [baseRoot]; positivity
+  have hbaseRootCube : baseRoot ^ 3 = base := by
+    simpa [baseRoot] using rpow_one_third_cube hbasePos.le
+  have hhRadicandPos : 0 < B ^ 2 / (A * C) := by positivity
+  have hkRadicandPos : 0 < A ^ 2 / (B * C) := by positivity
+  have hhScalePos : 0 < hScale := by dsimp [hScale]; positivity
+  have hkScalePos : 0 < kScale := by dsimp [kScale]; positivity
+  have hhScaleCube : hScale ^ 3 = B ^ 2 / (A * C) := by
+    simpa [hScale] using rpow_one_third_cube hhRadicandPos.le
+  have hkScaleCube : kScale ^ 3 = A ^ 2 / (B * C) := by
+    simpa [kScale] using rpow_one_third_cube hkRadicandPos.le
+  have hxHPos : 0 < xH := by dsimp [xH]; positivity
+  have hxKPos : 0 < xK := by dsimp [xK]; positivity
+
+  have hAdivKScale : A / kScale = baseRoot := by
+    apply (pow_left_inj₀ (by positivity) hbaseRootPos.le
+      (by norm_num : (3 : ℕ) ≠ 0)).mp
+    rw [div_pow, hkScaleCube, hbaseRootCube]
+    dsimp [base]
+    field_simp [hAPos.ne', hBPos.ne', hCPos.ne']
+  have hBdivHScale : B / hScale = baseRoot := by
+    apply (pow_left_inj₀ (by positivity) hbaseRootPos.le
+      (by norm_num : (3 : ℕ) ≠ 0)).mp
+    rw [div_pow, hhScaleCube, hbaseRootCube]
+    dsimp [base]
+    field_simp [hAPos.ne', hBPos.ne', hCPos.ne']
+  have hscaleProduct : hScale * kScale * C = baseRoot := by
+    apply (pow_left_inj₀ (by positivity) hbaseRootPos.le
+      (by norm_num : (3 : ℕ) ≠ 0)).mp
+    rw [mul_pow, mul_pow, hhScaleCube, hkScaleCube, hbaseRootCube]
+    dsimp [base]
+    field_simp [hAPos.ne', hBPos.ne', hCPos.ne']
+
+  have hhPos : 0 < h := lt_of_lt_of_le hkPos hkh
+  have hkFloorOne : 1 ≤ ⌊xK⌋₊ := by
+    dsimp [k] at hkPos
+    omega
+  have hhFloorOne : 1 ≤ ⌊xH⌋₊ := by
+    dsimp [h] at hhPos
+    omega
+  have hkFloorUpper : ((k : ℝ) + 1) ≤ xK := by
+    simpa [k] using natFloor_sub_one_add_one_le hxKPos.le hkFloorOne
+  have hhFloorUpper : ((h : ℝ) + 1) ≤ xH := by
+    simpa [h] using natFloor_sub_one_add_one_le hxHPos.le hhFloorOne
+  have hnPos : 0 < h * k + h + k := by omega
+  let H : ℝ := h
+  let K : ℝ := k
+  let N : ℝ := h * k + h + k
+  have hKPos : 0 < K := by dsimp [K]; exact_mod_cast hkPos
+  have hKLeH : K ≤ H := by dsimp [K, H]; exact_mod_cast hkh
+  have hNPos : 0 < N := by dsimp [N]; exact_mod_cast hnPos
+  have hFirstCoefficient : (H + 2 * K) / N ≤ 3 / (K + 2) := by
+    simpa [H, K, N, Nat.cast_add, Nat.cast_mul] using
+      propositionTwo_first_coefficient_le hKPos hKLeH
+  have hSecondCoefficient : K / N ≤ 1 / (H + 2) := by
+    simpa [H, K, N, Nat.cast_add, Nat.cast_mul] using
+      propositionTwo_second_coefficient_le hKPos hKLeH
+  have hxKDenominator : xK ≤ K + 2 := by
+    simpa [K, k] using (lt_natFloor_sub_one_add_two xK).le
+  have hxHDenominator : xH ≤ H + 2 := by
+    simpa [H, h] using (lt_natFloor_sub_one_add_two xH).le
+  have hADiv : A / (K + 2) ≤ baseRoot / t := by
+    calc
+      A / (K + 2) ≤ A / xK :=
+        div_le_div_of_nonneg_left hAPos.le hxKPos hxKDenominator
+      _ = baseRoot / t := by
+        dsimp [xK]
+        rw [show A / (t * kScale) = (A / kScale) / t by
+          field_simp [ht.ne', hkScalePos.ne']]
+        rw [hAdivKScale]
+  have hBDiv : B / (H + 2) ≤ baseRoot / t := by
+    calc
+      B / (H + 2) ≤ B / xH :=
+        div_le_div_of_nonneg_left hBPos.le hxHPos hxHDenominator
+      _ = baseRoot / t := by
+        dsimp [xH]
+        rw [show B / (t * hScale) = (B / hScale) / t by
+          field_simp [ht.ne', hhScalePos.ne']]
+        rw [hBdivHScale]
+  have hFirstTerm : ((H + 2 * K) / N) * A ≤ (3 / t) * baseRoot := by
+    calc
+      ((H + 2 * K) / N) * A ≤ (3 / (K + 2)) * A :=
+        mul_le_mul_of_nonneg_right hFirstCoefficient hAPos.le
+      _ = 3 * (A / (K + 2)) := by ring
+      _ ≤ 3 * (baseRoot / t) :=
+        mul_le_mul_of_nonneg_left hADiv (by norm_num)
+      _ = (3 / t) * baseRoot := by ring
+  have hSecondTerm : (K / N) * B ≤ (1 / t) * baseRoot := by
+    calc
+      (K / N) * B ≤ (1 / (H + 2)) * B :=
+        mul_le_mul_of_nonneg_right hSecondCoefficient hBPos.le
+      _ = B / (H + 2) := by ring
+      _ ≤ baseRoot / t := hBDiv
+      _ = (1 / t) * baseRoot := by ring
+  have hFloorProduct : (H + 1) * (K + 1) ≤ xH * xK := by
+    have hhFloorUpper' : H + 1 ≤ xH := by simpa [H] using hhFloorUpper
+    have hkFloorUpper' : K + 1 ≤ xK := by simpa [K] using hkFloorUpper
+    exact mul_le_mul hhFloorUpper' hkFloorUpper' (by positivity) (by positivity)
+  have hThirdNumerator : N - 1 ≤ (H + 1) * (K + 1) := by
+    dsimp [N, H, K]
+    ring_nf
+    norm_num
+  have hThirdTerm : ((N - 1) / 2) * C ≤ (t ^ 2 / 2) * baseRoot := by
+    calc
+      ((N - 1) / 2) * C ≤ (((H + 1) * (K + 1)) / 2) * C := by
+        gcongr
+      _ ≤ ((xH * xK) / 2) * C := by
+        gcongr
+      _ = (t ^ 2 / 2) * baseRoot := by
+        dsimp [xH, xK]
+        rw [← hscaleProduct]
+        ring
+  have hNumerical' :
+      G ≤ ((H + 2 * K) / N) * A + (K / N) * B + ((N - 1) / 2) * C := by
+    simpa only [H, K, N, A, B, C, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat] using hNumerical
+  calc
+    G ≤ ((H + 2 * K) / N) * A + (K / N) * B + ((N - 1) / 2) * C :=
+      hNumerical'
+    _ ≤ (3 / t) * baseRoot + (1 / t) * baseRoot +
+        (t ^ 2 / 2) * baseRoot :=
+      add_le_add (add_le_add hFirstTerm hSecondTerm) hThirdTerm
+    _ = (4 / t + t ^ 2 / 2) * baseRoot := by ring
+
 /-- The floor-parameter optimization in Corvaja--Zannier Theorem 4.
 
 The hypothesis `hPropositionTwo` is exactly the numerical alternative of
@@ -175,9 +325,8 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
   have hPPos : 0 < P := by dsimp [P]; exact_mod_cast hp
   have hAB : A ≤ B := by dsimp [A, B]; exact_mod_cast hab
   have hCOne : 1 ≤ C := by
-    have hchiOne : 1 ≤ chi := by omega
     dsimp [C]
-    exact_mod_cast hchiOne
+    exact_mod_cast (show 1 ≤ chi by omega)
   have hbasePos : 0 < base := by dsimp [base]; positivity
   have hbaseRootPos : 0 < baseRoot := by dsimp [baseRoot]; positivity
   have hbaseRootCube : baseRoot ^ 3 = base := by
@@ -200,25 +349,12 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
   have hAhScaleCube : (A * hScale) ^ 3 = (A * B) ^ 2 / C := by
     rw [mul_pow, hhScaleCube]
     field_simp [hAPos.ne', hCPos.ne']
-  have hAdivKScale : A / kScale = baseRoot := by
-    apply (pow_left_inj₀ (by positivity) hbaseRootPos.le
-      (by norm_num : (3 : ℕ) ≠ 0)).mp
-    rw [div_pow, hkScaleCube, hbaseRootCube]
-    dsimp [base]
-    field_simp [hAPos.ne', hBPos.ne', hCPos.ne']
   have hBdivHScale : B / hScale = baseRoot := by
     apply (pow_left_inj₀ (by positivity) hbaseRootPos.le
       (by norm_num : (3 : ℕ) ≠ 0)).mp
     rw [div_pow, hhScaleCube, hbaseRootCube]
     dsimp [base]
     field_simp [hAPos.ne', hBPos.ne', hCPos.ne']
-  have hscaleProduct : hScale * kScale * C = baseRoot := by
-    apply (pow_left_inj₀ (by positivity) hbaseRootPos.le
-      (by norm_num : (3 : ℕ) ≠ 0)).mp
-    rw [mul_pow, mul_pow, hhScaleCube, hkScaleCube, hbaseRootCube]
-    dsimp [base]
-    field_simp [hAPos.ne', hBPos.ne', hCPos.ne']
-
   have hkScaleLeHScale : kScale ≤ hScale := by
     apply le_of_pow_le_pow_left₀ (by norm_num : (3 : ℕ) ≠ 0) hhScalePos.le
     rw [hkScaleCube, hhScaleCube]
@@ -226,9 +362,8 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
       (by positivity : 0 < A * C)).2
     nlinarith [mul_nonneg (sub_nonneg.mpr hAB)
       (by positivity : 0 ≤ A ^ 2 + A * B + B ^ 2)]
-  have hxKLeXH : xK ≤ xH := by
-    dsimp [xK, xH]
-    exact mul_le_mul_of_nonneg_left hkScaleLeHScale ht.le
+  have hxKLeXH : xK ≤ xH :=
+    mul_le_mul_of_nonneg_left hkScaleLeHScale ht.le
   have hkh : k ≤ h := by
     dsimp [h, k]
     exact Nat.sub_le_sub_right (Nat.floor_mono hxKLeXH) 1
@@ -248,8 +383,8 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
         norm_num
         ring
       _ < (P + A + B) ^ 3 := hdiv
-  have hCommonLt : 2 * t * (A * hScale) < P + A + B := by
-    exact lt_of_pow_lt_pow_left₀ 3 (by positivity) hCommonCubeLt
+  have hCommonLt : 2 * t * (A * hScale) < P + A + B :=
+    lt_of_pow_lt_pow_left₀ 3 (by positivity) hCommonCubeLt
 
   by_cases hkSmall : k < 1
   · have hkZero : k = 0 := by omega
@@ -347,19 +482,15 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
         apply (div_lt_iff₀ hhScalePos).2
         simpa [xH, mul_comm] using hBLtXH
       have hASqLeBase : A ^ 2 ≤ base := by
-        have hAASq : A ^ 2 ≤ A * B := by
-          rw [pow_two]
-          exact mul_le_mul_of_nonneg_left hAB hAPos.le
-        have hABNonneg : 0 ≤ A * B := by positivity
-        have hABLe : A * B ≤ A * B * C := by
-          calc
-            A * B = (A * B) * 1 := (mul_one _).symm
-            _ ≤ (A * B) * C := mul_le_mul_of_nonneg_left hCOne hABNonneg
-        exact hAASq.trans hABLe
-      have hASqLeRootCube : A ^ 2 ≤ baseRoot ^ 3 := by
+        dsimp [base]
         calc
-          A ^ 2 ≤ base := hASqLeBase
-          _ = baseRoot ^ 3 := hbaseRootCube.symm
+          A ^ 2 ≤ A * B := by
+            rw [pow_two]
+            exact mul_le_mul_of_nonneg_left hAB hAPos.le
+          _ = A * B * 1 := (mul_one _).symm
+          _ ≤ A * B * C := mul_le_mul_of_nonneg_left hCOne (by positivity)
+      have hASqLeRootCube : A ^ 2 ≤ baseRoot ^ 3 :=
+        hASqLeBase.trans_eq hbaseRootCube.symm
       have hADegreeBound :
           A ≤ (4 / t + t ^ 2 / 2) * baseRoot :=
         degree_le_theoremFour_bound_of_sq_le_cube (degree := A) (root := baseRoot) (t := t)
@@ -370,86 +501,8 @@ theorem theoremFour_parameterizedBound_of_propositionTwo
         _ = (4 / t + t ^ 2 / 2) *
             ((a : ℝ) * (b : ℝ) * (chi : ℝ)) ^ ((1 : ℝ) / 3) := by
           rfl
-    · let H : ℝ := h
-      let K : ℝ := k
-      let N : ℝ := h * k + h + k
-      have hKPos : 0 < K := by dsimp [K]; exact_mod_cast hkPos
-      have hKLeH : K ≤ H := by dsimp [K, H]; exact_mod_cast hkh
-      have hNPos : 0 < N := by dsimp [N]; exact_mod_cast hnPos
-      have hFirstCoefficient : (H + 2 * K) / N ≤ 3 / (K + 2) := by
-        simpa [H, K, N, Nat.cast_add, Nat.cast_mul] using
-          propositionTwo_first_coefficient_le hKPos hKLeH
-      have hSecondCoefficient : K / N ≤ 1 / (H + 2) := by
-        simpa [H, K, N, Nat.cast_add, Nat.cast_mul] using
-          propositionTwo_second_coefficient_le hKPos hKLeH
-      have hxKDenominator : xK ≤ K + 2 := by
-        simpa [K, k] using (lt_natFloor_sub_one_add_two xK).le
-      have hxHDenominator : xH ≤ H + 2 := by
-        simpa [H, h] using (lt_natFloor_sub_one_add_two xH).le
-      have hADiv : A / (K + 2) ≤ baseRoot / t := by
-        calc
-          A / (K + 2) ≤ A / xK :=
-            div_le_div_of_nonneg_left hAPos.le hxKPos hxKDenominator
-          _ = baseRoot / t := by
-            dsimp [xK]
-            rw [show A / (t * kScale) = (A / kScale) / t by
-              field_simp [ht.ne', hkScalePos.ne']]
-            rw [hAdivKScale]
-      have hBDiv : B / (H + 2) ≤ baseRoot / t := by
-        calc
-          B / (H + 2) ≤ B / xH :=
-            div_le_div_of_nonneg_left hBPos.le hxHPos hxHDenominator
-          _ = baseRoot / t := by
-            dsimp [xH]
-            rw [show B / (t * hScale) = (B / hScale) / t by
-              field_simp [ht.ne', hhScalePos.ne']]
-            rw [hBdivHScale]
-      have hFirstTerm : ((H + 2 * K) / N) * A ≤ (3 / t) * baseRoot := by
-        calc
-          ((H + 2 * K) / N) * A ≤ (3 / (K + 2)) * A :=
-            mul_le_mul_of_nonneg_right hFirstCoefficient hAPos.le
-          _ = 3 * (A / (K + 2)) := by ring
-          _ ≤ 3 * (baseRoot / t) :=
-            mul_le_mul_of_nonneg_left hADiv (by norm_num)
-          _ = (3 / t) * baseRoot := by ring
-      have hSecondTerm : (K / N) * B ≤ (1 / t) * baseRoot := by
-        calc
-          (K / N) * B ≤ (1 / (H + 2)) * B :=
-            mul_le_mul_of_nonneg_right hSecondCoefficient hBPos.le
-          _ = B / (H + 2) := by ring
-          _ ≤ baseRoot / t := hBDiv
-          _ = (1 / t) * baseRoot := by ring
-      have hFloorProduct : (H + 1) * (K + 1) ≤ xH * xK := by
-        have hhFloorUpper' : H + 1 ≤ xH := by simpa [H] using hhFloorUpper
-        have hkFloorUpper' : K + 1 ≤ xK := by simpa [K] using hkFloorUpper
-        exact mul_le_mul hhFloorUpper' hkFloorUpper' (by positivity) (by positivity)
-      have hThirdNumerator : N - 1 ≤ (H + 1) * (K + 1) := by
-        dsimp [N, H, K]
-        ring_nf
-        norm_num
-      have hThirdTerm : ((N - 1) / 2) * C ≤ (t ^ 2 / 2) * baseRoot := by
-        calc
-          ((N - 1) / 2) * C ≤ (((H + 1) * (K + 1)) / 2) * C := by
-            gcongr
-          _ ≤ ((xH * xK) / 2) * C := by
-            gcongr
-          _ = (t ^ 2 / 2) * baseRoot := by
-            dsimp [xH, xK]
-            rw [← hscaleProduct]
-            ring
-      have hNumerical' :
-          G ≤ ((H + 2 * K) / N) * A + (K / N) * B + ((N - 1) / 2) * C := by
-        simpa only [H, K, N, A, B, C, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat] using hNumerical
-      calc
-        G ≤ ((H + 2 * K) / N) * A + (K / N) * B + ((N - 1) / 2) * C :=
-          hNumerical'
-        _ ≤ (3 / t) * baseRoot + (1 / t) * baseRoot +
-            (t ^ 2 / 2) * baseRoot :=
-          add_le_add (add_le_add hFirstTerm hSecondTerm) hThirdTerm
-        _ = (4 / t + t ^ 2 / 2) * baseRoot := by ring
-        _ = (4 / t + t ^ 2 / 2) *
-            ((a : ℝ) * (b : ℝ) * (chi : ℝ)) ^ ((1 : ℝ) / 3) := by
-          simp [baseRoot, base, A, B, C]
+    · exact propositionTwo_numerical_bound ha (lt_of_lt_of_le ha hab) hchi ht
+        hkPos hkh hNumerical
 
 end
 

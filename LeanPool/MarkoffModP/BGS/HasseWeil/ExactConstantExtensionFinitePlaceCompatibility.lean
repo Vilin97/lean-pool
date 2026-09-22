@@ -91,8 +91,7 @@ private theorem finiteFieldConstantExtensionIntegralClosureAlgEquiv_apply_eq_pol
     (z : S ⊗[C] integralClosure C[X] N) :
     finiteFieldConstantExtensionIntegralClosureAlgEquiv C S N z =
       finiteFieldConstantExtensionIntegralClosurePolynomialAlgEquiv C S N z := by
-  induction z using TensorProduct.induction_on with
-  | zero => exact map_zero _
+  induction z using TensorProduct.inductionOn with
   | tmul s a =>
       apply Subtype.ext
       rw [finiteFieldConstantExtensionIntegralClosureAlgEquiv_tmul,

@@ -11,6 +11,13 @@ import Mathlib.RingTheory.PowerSeries.Inverse
 import Mathlib.RingTheory.PowerSeries.Substitution
 import Mathlib.RingTheory.PowerSeries.WellKnown
 
+/-!
+# Formal logarithmic derivatives of zeta functions
+
+Recover point-count coefficients from logarithmic derivatives of formal zeta series and their
+linear factors.
+-/
+
 namespace BGS.HasseWeil
 
 open Polynomial

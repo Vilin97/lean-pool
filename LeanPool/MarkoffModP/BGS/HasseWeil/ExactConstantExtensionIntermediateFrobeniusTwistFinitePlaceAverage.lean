@@ -1634,8 +1634,7 @@ theorem exactConstantExtensionFrobeniusTwist_restrictScalars_apply
     exactConstantExtensionBaseAlgebra C L N S
   let : SMul L (ExactConstantExtension C N S) := Algebra.toSMul
   let : Module L (ExactConstantExtension C N S) := Algebra.toModule
-  induction x using TensorProduct.induction_on with
-  | zero => simp
+  induction x using TensorProduct.inductionOn with
   | tmul s n =>
       simp [exactConstantExtensionFrobeniusTwist,
         exactConstantExtensionCombinedAutHom,

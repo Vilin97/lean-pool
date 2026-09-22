@@ -6,6 +6,13 @@ Authors: Yuma Mizuno
 
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveInfinityDifferentBound
 
+/-!
+# The degree of the different at infinity
+
+Bound the different at infinity using a primitive element, its discriminant, and the normalized
+reciprocal polynomial.
+-/
+
 open Polynomial
 
 namespace BGS.CorvajaZannier

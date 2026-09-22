@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
+import Mathlib.Data.Nat.GCD.Prime
 import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
 import LeanPool.MarkoffModP.BGS.Markoff.Opening.AlgebraicClosureTransport
 import LeanPool.MarkoffModP.BGS.Markoff.Opening.CyclotomicBound

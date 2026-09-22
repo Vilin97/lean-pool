@@ -479,10 +479,8 @@ private theorem exists_directionalPolynomial_representation
     ∑ s ∈ F.support, Polynomial.monomial (index s) (F.coeff s)
   have coeff_finset_sum (n : ℕ) (S : Finset (Fin 2 →₀ ℕ))
       (g : (Fin 2 →₀ ℕ) → Polynomial A) :
-      (∑ s ∈ S, g s).coeff n = ∑ s ∈ S, (g s).coeff n := by
-    induction S using Finset.induction_on with
-    | empty => simp
-    | @insert a S ha ih => simp [ha, ih, Polynomial.coeff_add]
+      (∑ s ∈ S, g s).coeff n = ∑ s ∈ S, (g s).coeff n :=
+    Polynomial.finsetSum_coeff S g n
   have coeff_q_index : ∀ s ∈ F.support,
       q.coeff (index s) = F.coeff s := by
     intro s hs
@@ -543,13 +541,6 @@ private theorem exists_directionalPolynomial_representation
           ((s i : ℤ) - (r i : ℤ)) - ((slo i : ℤ) - (r i : ℤ)) := by ring
       _ = parameter s * v i - lo * v i := by rw [hs_eq, hlo_eq]
       _ = (parameter s - lo) * v i := by ring
-  have positive_sub_negative (i : Fin 2) :
-      (intVectorPositive v i : ℤ) - (intVectorNegative v i : ℤ) = v i := by
-    simp only [intVectorPositive_apply, intVectorNegative_apply]
-    rw [Int.ofNat_toNat, Int.ofNat_toNat]
-    rcases le_total 0 (v i) with hvi | hvi
-    · simp [hvi, neg_nonpos.mpr hvi]
-    · simp [hvi]
   have negative_le_slo (i : Fin 2) :
       N * intVectorNegative v i ≤ slo i := by
     by_cases hvi : 0 ≤ v i
@@ -587,7 +578,7 @@ private theorem exists_directionalPolynomial_representation
       push_cast
       rfl
     have hcoord := support_coordinate s hs i
-    have hpn := positive_sub_negative i
+    have hpn := intVectorPositive_sub_negative v i
     have hcast : (s i : ℤ) =
         (w i : ℤ) + (index s : ℤ) * (intVectorPositive v i : ℤ) +
           ((N - index s : ℕ) : ℤ) * (intVectorNegative v i : ℤ) := by

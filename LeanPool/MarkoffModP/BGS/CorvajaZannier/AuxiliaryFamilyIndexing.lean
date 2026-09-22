@@ -9,6 +9,13 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.FrobeniusWronskian
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.AuxiliaryFamily
 import Mathlib.Tactic
 
+/-!
+# Indexing the auxiliary Wronskian family
+
+Enumerate the auxiliary family and its derivative orders, then transport determinant
+nonvanishing through that indexing.
+-/
+
 namespace BGS.CorvajaZannier
 
 noncomputable section

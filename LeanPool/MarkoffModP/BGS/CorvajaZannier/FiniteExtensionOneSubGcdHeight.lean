@@ -8,6 +8,13 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionGcdOutsideHeight
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
 import Mathlib.Tactic
 
+/-!
+# The gcd height of a function and its complement
+
+Control the common divisor of a function and one minus that function using local orders,
+exceptional places, and outside height.
+-/
+
 namespace BGS.CorvajaZannier
 
 noncomputable section

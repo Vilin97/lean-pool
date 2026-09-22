@@ -8,6 +8,12 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionOneSubGcdHeight
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianSummation
 import Mathlib.Tactic
 
+/-!
+# A gcd bound from the canonical Wronskian inequality
+
+Deduce the finite-extension gcd estimate from the residue-weighted canonical Wronskian bound.
+-/
+
 namespace BGS.CorvajaZannier
 
 noncomputable section

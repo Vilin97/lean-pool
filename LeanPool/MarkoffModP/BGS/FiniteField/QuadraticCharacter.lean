@@ -7,6 +7,13 @@ Authors: Yuma Mizuno
 import Mathlib.NumberTheory.JacobiSum.Basic
 import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 
+/-!
+# Quadratic character sums and conic points
+
+Evaluate quadratic character sums and use them to find conic points avoiding a prescribed small
+exceptional set.
+-/
+
 namespace BGS.FiniteField
 
 open Finset

@@ -8,6 +8,13 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.GlobalWronskianWeightedPlaceSum
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionCanonicalWronskian
 import Mathlib.Tactic
 
+/-!
+# Canonical Wronskian sums over all places
+
+Sum the local Wronskian inequalities with residue-degree weights, separating exceptional places
+from the outside pole height.
+-/
+
 open scoped BigOperators
 
 namespace BGS.CorvajaZannier

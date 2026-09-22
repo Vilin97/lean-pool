@@ -10,6 +10,13 @@ import LeanPool.MarkoffModP.BGS.External.GeneralCurveTheorems
 import Mathlib.RingTheory.Ideal.GoingUp
 import Mathlib.RingTheory.Localization.Integral
 
+/-!
+# Affine centers and normalization of torsion points
+
+Construct coordinate-ring evaluations and their maximal ideals, and compare affine torsion
+points with normalization places.
+-/
+
 namespace BGS.CorvajaZannier
 
 noncomputable section

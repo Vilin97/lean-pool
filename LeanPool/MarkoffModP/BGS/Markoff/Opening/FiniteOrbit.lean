@@ -11,6 +11,13 @@ import LeanPool.MarkoffModP.BGS.Markoff.Opening.ParabolicPeriodicity
 import LeanPool.MarkoffModP.BGS.Markoff.Opening.PeriodicSemisimple
 import LeanPool.MarkoffModP.BGS.Markoff.Opening.TorsionTraces
 
+/-!
+# Torsion traces forced by finite Markoff orbits
+
+Use returns of coordinate rotations to obtain torsion traces and rule out finite complex orbits
+away from the origin.
+-/
+
 namespace BGS.Markoff
 
 universe u

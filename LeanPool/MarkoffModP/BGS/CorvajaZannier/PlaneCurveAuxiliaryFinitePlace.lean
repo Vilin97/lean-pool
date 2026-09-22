@@ -46,7 +46,7 @@ theorem dedekindLocal_ambientDerivation_preserves_of_not_dvd_different
     [Algebra.IsSeparable (FractionRing A) (FractionRing B)]
     (p : Ideal A) (Q : Ideal B) [p.IsPrime] [Q.IsPrime] [Q.LiesOver p]
     [Algebra (Localization.AtPrime p) (Localization.AtPrime Q)]
-    [Localization.AtPrime.IsLiesOverAlgebra p Q]
+    [IsScalarTower A (Localization.AtPrime p) (Localization.AtPrime Q)]
     [Algebra C (Localization.AtPrime p)]
     [Algebra C (Localization.AtPrime Q)]
     [Algebra C U]

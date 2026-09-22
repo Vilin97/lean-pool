@@ -11,6 +11,13 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveAuxiliaryFinitePlacePri
 import Mathlib.RingTheory.Finiteness.Finsupp
 import Mathlib.Tactic
 
+/-!
+# Riemann-space increments at finite places
+
+Use a normalized local lift and its leading residue to bound the dimension increase when one
+finite place is added to a divisor.
+-/
+
 namespace BGS.HasseWeil
 
 open BGS.CorvajaZannier
@@ -92,6 +99,35 @@ theorem mem_heightOneSpectrum_of_one_le_finitePlaceOrder_algebraMap
     omega
 
 end LocalLift
+
+/-- A normalized lift has zero residue exactly when its local order is positive. -/
+theorem localNormalizedLift_mem_maximalIdeal_iff
+    {K R L : Type*} [Field K] [CommRing R]
+  [IsDedekindDomain R] [IsDiscreteValuationRing R]
+  [Field L] [Algebra K R] [Algebra R L] [Algebra K L]
+  [IsScalarTower K R L] [IsFractionRing R L]
+    (T : Submodule K L) (a : L)
+    (hregular : ∀ x : T, ∃ r : R, a * x.1 = algebraMap R L r) (x : T) :
+    localNormalizedLift T a hregular x ∈ IsLocalRing.maximalIdeal R ↔
+      (1 : WithTop ℤ) ≤ finitePlaceOrderTop
+        (IsDiscreteValuationRing.maximalIdeal R) (a * x.1) := by
+  rw [localNormalizedLift_spec (R := R) T a hregular x]
+  let r := localNormalizedLift (R := R) T a hregular x
+  by_cases hr : r = 0
+  · simp only [show localNormalizedLift T a hregular x = 0 from hr,
+      map_zero, Submodule.zero_mem, true_iff]
+    simp [finitePlaceOrderTop]
+  · have hrMap : algebraMap R L r ≠ 0 :=
+      by simpa using (IsFractionRing.injective R L).ne hr
+    rw [finitePlaceOrderTop_eq_coe _ _ hrMap]
+    constructor
+    · intro hmem
+      exact_mod_cast one_le_finitePlaceOrder_algebraMap_of_mem (R := R) (L := L)
+        (IsDiscreteValuationRing.maximalIdeal R) r hmem hr
+    · intro horder
+      exact mem_heightOneSpectrum_of_one_le_finitePlaceOrder_algebraMap (R := R) (L := L)
+        (IsDiscreteValuationRing.maximalIdeal R) r (by exact_mod_cast horder)
+
 
 section PlaceDegree
 
@@ -208,9 +244,6 @@ theorem finiteExtensionRiemannSpace_finitePlace_increment
       (IsDiscreteValuationRing.maximalIdeal R).asIdeal = Ideal.span {π} :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer π).mp hπ
   let πL : L := algebraMap R L π
-  have hπLNe : πL ≠ 0 := by
-    dsimp [πL]
-    simpa using (IsFractionRing.injective R L).ne hπ.ne_zero
   have hπOrder :
       finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q πL =
         (1 : WithTop ℤ) := by
@@ -265,39 +298,15 @@ theorem finiteExtensionRiemannSpace_finitePlace_increment
     by_cases hv : v = Q <;> simp [hv]
   have hkerPoint (x : T) : f x = 0 ↔ x.1 ∈ S := by
     rw [localLeadingResidueLinearMap_eq_zero_iff
-      (K := K) (R := R) (L := L) T a hregular]
+      (K := K) (R := R) (L := L) T a hregular,
+      localNormalizedLift_mem_maximalIdeal_iff]
     constructor
-    · intro hrMem
+    · intro haxOrder
+      change (1 : WithTop ℤ) ≤
+        finiteExtensionFinitePlaceLocalOrderTop (K := K) (L := L) q (a * x.1) at haxOrder
       by_cases hx0 : x.1 = 0
       · simpa [hx0] using S.zero_mem
-      · have hrNe : localNormalizedLift (R := R) T a hregular x ≠ 0 := by
-          intro hr0
-          have hax0 : a * x.1 = 0 := by
-            rw [localNormalizedLift_spec (R := R) T a hregular x,
-              hr0, map_zero]
-          exact hx0 ((mul_eq_zero.mp hax0).resolve_left (pow_ne_zero _ hπLNe))
-        have hrOrder :
-            (1 : ℤ) ≤ finitePlaceOrder
-              (IsDiscreteValuationRing.maximalIdeal R)
-              (algebraMap R L (localNormalizedLift (R := R) T a hregular x)) :=
-          one_le_finitePlaceOrder_algebraMap_of_mem
-            (R := R) (L := L)
-            (IsDiscreteValuationRing.maximalIdeal R)
-            (localNormalizedLift (R := R) T a hregular x) hrMem hrNe
-        have hrMapNe :
-            algebraMap R L (localNormalizedLift (R := R) T a hregular x) ≠ 0 :=
-          by simpa using (IsFractionRing.injective R L).ne hrNe
-        have haxOrder :
-            (1 : WithTop ℤ) ≤
-              finiteExtensionFinitePlaceLocalOrderTop
-                (K := K) (L := L) q (a * x.1) := by
-          rw [localNormalizedLift_spec (R := R) T a hregular x]
-          change (1 : WithTop ℤ) ≤ finitePlaceOrderTop
-            (IsDiscreteValuationRing.maximalIdeal R)
-            (algebraMap R L (localNormalizedLift (R := R) T a hregular x))
-          rw [finitePlaceOrderTop_eq_coe _ _ hrMapNe]
-          exact_mod_cast hrOrder
-        have hxQ :
+      · have hxQ :
             0 ≤ finiteExtensionPrincipalDivisor K L x.1 Q + D Q := by
           rw [finiteExtensionFinitePlaceLocalOrderTop_mul,
             show a = πL ^ (m + 1) by rfl,
@@ -327,12 +336,7 @@ theorem finiteExtensionRiemannSpace_finitePlace_increment
             simpa using hxv
     · intro hxS
       by_cases hx0 : x.1 = 0
-      · have hlift0 : localNormalizedLift (R := R) T a hregular x = 0 := by
-          apply IsFractionRing.injective R L
-          rw [map_zero,
-            ← localNormalizedLift_spec (R := R) T a hregular x]
-          simp [hx0]
-        simpa [hlift0]
+      · simp [hx0, finitePlaceOrderTop]
       · have hxmem :=
           (mem_finiteExtensionRiemannSpace (K := K) (L := L)).mp hxS
         rcases hxmem with hxmem | ⟨_, hxorders⟩
@@ -354,21 +358,7 @@ theorem finiteExtensionRiemannSpace_finitePlace_increment
               finiteExtensionPrincipalDivisor K L x.1 Q by
                 rw [hm]
                 omega)
-          rw [localNormalizedLift_spec (R := R) T a hregular x] at haxOrder
-          by_cases hr0 : localNormalizedLift (R := R) T a hregular x = 0
-          · simpa [hr0]
-          · apply mem_heightOneSpectrum_of_one_le_finitePlaceOrder_algebraMap
-              (R := R) (L := L)
-              (IsDiscreteValuationRing.maximalIdeal R)
-              (localNormalizedLift (R := R) T a hregular x)
-            have hrMapNe :
-                algebraMap R L (localNormalizedLift (R := R) T a hregular x) ≠ 0 :=
-              by simpa using (IsFractionRing.injective R L).ne hr0
-            change (1 : WithTop ℤ) ≤ finitePlaceOrderTop
-              (IsDiscreteValuationRing.maximalIdeal R)
-              (algebraMap R L (localNormalizedLift (R := R) T a hregular x)) at haxOrder
-            rw [finitePlaceOrderTop_eq_coe _ _ hrMapNe] at haxOrder
-            exact_mod_cast haxOrder
+          exact haxOrder
   have hker : f.ker = Submodule.comap T.subtype S := by
     ext x
     rw [LinearMap.mem_ker, Submodule.mem_comap]

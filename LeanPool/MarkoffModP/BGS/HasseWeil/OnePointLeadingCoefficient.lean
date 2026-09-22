@@ -11,6 +11,13 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.DedekindLocalizationOrder
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionResidueSurjectivity
 import Mathlib.FieldTheory.Finiteness
 
+/-!
+# Leading coefficients at a single place
+
+Compare residue-field degrees and lift constant residues through the local rings of finite and
+infinite places.
+-/
+
 namespace BGS.CorvajaZannier
 
 noncomputable section

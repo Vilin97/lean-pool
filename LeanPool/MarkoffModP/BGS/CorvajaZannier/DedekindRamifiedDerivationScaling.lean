@@ -67,8 +67,7 @@ theorem kaehler_baseChange_evaluation_naturality
       E.liftKaehlerDifferential
         (KaehlerDifferential.map C C T U
           (KaehlerDifferential.mapBaseChange C S T z)) := by
-  induction z using TensorProduct.induction_on with
-  | zero => simp
+  induction z using TensorProduct.inductionOn with
   | tmul t ω =>
       rw [LinearMap.liftBaseChange_tmul,
         KaehlerDifferential.mapBaseChange_tmul]

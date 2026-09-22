@@ -229,8 +229,7 @@ theorem exactConstantExtension_rationalFunctionRanges_linearDisjoint :
   have hsup : F₁ ⊔ F₂ = ⊤ := by
     apply top_unique
     intro z _
-    induction z using TensorProduct.induction_on with
-    | zero => exact (F₁ ⊔ F₂).zero_mem
+    induction z using TensorProduct.inductionOn with
     | tmul s n =>
         rw [show s ⊗ₜ[C] n = (s ⊗ₜ[C] 1) * (1 ⊗ₜ[C] n) by simp]
         apply (F₁ ⊔ F₂).mul_mem

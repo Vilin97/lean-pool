@@ -6,6 +6,13 @@ Authors: Yuma Mizuno
 
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 
+/-!
+# Compatible powers of a common primitive root
+
+Represent several torsion elements as powers of one primitive root under the required order
+divisibility conditions.
+-/
+
 namespace BGS.Markoff
 
 variable {K : Type*} [Field K] [IsAlgClosed K] [CharZero K]

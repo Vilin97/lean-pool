@@ -8,6 +8,13 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorusCharacterKernelBound
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.PlaneCurveLogarithmicGauss
 import Mathlib.Tactic
 
+/-!
+# Diagonal stabilizers of plane curves
+
+Describe diagonal scaling through polynomial coefficients and relate curve stabilizers to
+characters of the support.
+-/
+
 namespace BGS.CorvajaZannier
 noncomputable section
 

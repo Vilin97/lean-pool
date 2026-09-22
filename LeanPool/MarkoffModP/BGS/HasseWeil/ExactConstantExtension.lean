@@ -198,8 +198,8 @@ noncomputable def exactConstantExtensionLinearEquiv :
       map_add' := map_add e
       map_smul' := by
         intro x z
-        refine TensorProduct.induction_on (motive := fun z ↦ e (x • z) = x • e z) z
-          (by rw [smul_zero, map_zero, smul_zero]) (fun y s => ?_)
+        refine TensorProduct.inductionOn (motive := fun z ↦ e (x • z) = x • e z) z
+          (fun y s => ?_)
           (fun z w hz hw => ?_)
         · change e ((x * y) ⊗ₜ[C] s) =
             e (x ⊗ₜ[C] (1 : S)) * e (y ⊗ₜ[C] s)

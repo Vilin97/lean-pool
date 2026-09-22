@@ -119,16 +119,14 @@ noncomputable def exactConstantExtensionConstantAutHom :
       map_one' := by
         apply AlgEquiv.ext
         intro z
-        induction z using TensorProduct.induction_on with
-        | zero => simp
+        induction z using TensorProduct.inductionOn with
         | tmul s n => simp [exactConstantExtensionConstantAlgEquivOverBase]
         | add x y hx hy => simp [hx, hy]
       map_mul' := by
         intro σ τ
         apply AlgEquiv.ext
         intro z
-        induction z using TensorProduct.induction_on with
-        | zero => simp
+        induction z using TensorProduct.inductionOn with
         | tmul s n => simp [exactConstantExtensionConstantAlgEquivOverBase]
         | add x y hx hy => simp [hx, hy] }
 
@@ -144,16 +142,14 @@ noncomputable def exactConstantExtensionFunctionAutHom :
       map_one' := by
         apply AlgEquiv.ext
         intro z
-        induction z using TensorProduct.induction_on with
-        | zero => simp
+        induction z using TensorProduct.inductionOn with
         | tmul s n => simp [exactConstantExtensionFunctionAlgEquivOverBase]
         | add x y hx hy => simp [hx, hy]
       map_mul' := by
         intro g h
         apply AlgEquiv.ext
         intro z
-        induction z using TensorProduct.induction_on with
-        | zero => simp
+        induction z using TensorProduct.inductionOn with
         | tmul s n => simp [exactConstantExtensionFunctionAlgEquivOverBase]
         | add x y hx hy => simp [hx, hy] }
 
@@ -169,8 +165,7 @@ theorem exactConstantExtension_constant_function_commute
   rw [Commute]
   apply AlgEquiv.ext
   intro z
-  induction z using TensorProduct.induction_on with
-  | zero => simp
+  induction z using TensorProduct.inductionOn with
   | tmul s n => simp [exactConstantExtensionConstantAutHom,
       exactConstantExtensionFunctionAutHom,
       exactConstantExtensionConstantAlgEquivOverBase,

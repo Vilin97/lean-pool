@@ -10,6 +10,13 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Tactic
 
+/-!
+# Rankin factorization of weighted totient sums
+
+Express the multiplicative weighted totient sum as a product over prime powers and bound its
+local Rankin factors.
+-/
+
 namespace BGS.NumberTheory
 
 open ArithmeticFunction

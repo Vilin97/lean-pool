@@ -11,6 +11,13 @@ import LeanPool.MarkoffModP.BGS.CorvajaZannier.FiniteExtensionExceptionalSupport
 import LeanPool.MarkoffModP.BGS.CorvajaZannier.TorsionExhaustiveGcdDivisorBound
 import Mathlib.Tactic
 
+/-!
+# Finite-place cases for the canonical auxiliary family
+
+Prove the local auxiliary-family inequalities at finite places, including the grid-order and
+derivative-order sums.
+-/
+
 namespace BGS.CorvajaZannier
 
 noncomputable section

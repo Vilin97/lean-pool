@@ -97,8 +97,7 @@ theorem tensorFractionLocalizationEquiv_algebraMap (z : TensorBase K E A) :
     tensorFractionLocalizationEquiv K E A
         (algebraMap (TensorBase K E A) (TensorFraction K E A) z) =
       algebraMap (TensorBase K E A) (TensorBaseLocalization K E A) z := by
-  induction z using TensorProduct.induction_on with
-  | zero => simp
+  induction z using TensorProduct.inductionOn with
   | tmul e a =>
       exact IsLocalization.tensorProductEquivOfMapIncludeRight_tmul
         A A⁰ (FractionRing A) (TensorBaseLocalization K E A) e a

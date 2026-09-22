@@ -9,6 +9,13 @@ import Mathlib.RingTheory.DedekindDomain.Different
 import Mathlib.RingTheory.Flat.TorsionFree
 import Mathlib.RingTheory.Smooth.Fiber
 
+/-!
+# Extending derivations through local Dedekind rings
+
+Lift derivations uniquely through formally etale maps and apply this to unramified localizations
+and primes away from the different.
+-/
+
 namespace BGS.CorvajaZannier
 
 noncomputable section
@@ -155,7 +162,7 @@ theorem dedekindLocal_formallyEtale_of_isUnramifiedAt
     [Algebra A B] [Module.IsTorsionFree A B] [Module.Finite A B]
     (p : Ideal A) (Q : Ideal B) [p.IsPrime] [Q.IsPrime] [Q.LiesOver p]
     [Algebra (Localization.AtPrime p) (Localization.AtPrime Q)]
-    [Localization.AtPrime.IsLiesOverAlgebra p Q]
+    [IsScalarTower A (Localization.AtPrime p) (Localization.AtPrime Q)]
     [Algebra.IsUnramifiedAt A Q] :
     Algebra.FormallyEtale (Localization.AtPrime p)
       (Localization.AtPrime Q) := by
@@ -175,7 +182,7 @@ theorem dedekindLocal_formallyEtale_of_not_dvd_different
     [Algebra.IsSeparable (FractionRing A) (FractionRing B)]
     (p : Ideal A) (Q : Ideal B) [p.IsPrime] [Q.IsPrime] [Q.LiesOver p]
     [Algebra (Localization.AtPrime p) (Localization.AtPrime Q)]
-    [Localization.AtPrime.IsLiesOverAlgebra p Q]
+    [IsScalarTower A (Localization.AtPrime p) (Localization.AtPrime Q)]
     (hQ : ¬ Q ∣ differentIdeal A B) :
     Algebra.FormallyEtale (Localization.AtPrime p)
       (Localization.AtPrime Q) := by
@@ -192,7 +199,7 @@ theorem dedekindLocal_derivation_preserves_of_isUnramifiedAt
     [Algebra A B] [Module.IsTorsionFree A B] [Module.Finite A B]
     (p : Ideal A) (Q : Ideal B) [p.IsPrime] [Q.IsPrime] [Q.LiesOver p]
     [Algebra (Localization.AtPrime p) (Localization.AtPrime Q)]
-    [Localization.AtPrime.IsLiesOverAlgebra p Q]
+    [IsScalarTower A (Localization.AtPrime p) (Localization.AtPrime Q)]
     [Algebra C (Localization.AtPrime p)]
     [Algebra C (Localization.AtPrime Q)]
     [Algebra C U]
@@ -231,7 +238,7 @@ theorem dedekindLocal_derivation_preserves_of_not_dvd_different
     [Algebra.IsSeparable (FractionRing A) (FractionRing B)]
     (p : Ideal A) (Q : Ideal B) [p.IsPrime] [Q.IsPrime] [Q.LiesOver p]
     [Algebra (Localization.AtPrime p) (Localization.AtPrime Q)]
-    [Localization.AtPrime.IsLiesOverAlgebra p Q]
+    [IsScalarTower A (Localization.AtPrime p) (Localization.AtPrime Q)]
     [Algebra C (Localization.AtPrime p)]
     [Algebra C (Localization.AtPrime Q)]
     [Algebra C U]

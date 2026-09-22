@@ -8,6 +8,13 @@ import Mathlib.Logic.Relation
 import Mathlib.Data.Nat.Order.Lemmas
 import Mathlib.Tactic
 
+/-!
+# Escape by a strictly increasing measure
+
+Iterate admissible transitions to reach a prescribed lower bound for a strictly increasing
+measure.
+-/
+
 namespace BGS
 
 universe u

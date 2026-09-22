@@ -252,11 +252,7 @@ theorem exists_planeCurve_onePointStepanovAuxiliary_of_degree_one
     have hPoleNat : 0 < (finiteExtensionPoleDivisor K L x Q).toNat := by
       have hPole : 0 < finiteExtensionPoleDivisor K L x Q := by
         simpa only [L, x, Q] using hPpole
-      have hcast : (0 : ℤ) <
-          (((finiteExtensionPoleDivisor K L x Q).toNat : ℕ) : ℤ) := by
-        rw [Int.toNat_of_nonneg hPole.le]
-        exact hPole
-      exact_mod_cast hcast
+      omega
     have hNM : N ≤ M := by
       rw [hMformula']
       have hbase : N ≤

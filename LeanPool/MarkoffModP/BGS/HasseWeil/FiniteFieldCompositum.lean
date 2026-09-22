@@ -72,8 +72,7 @@ theorem finiteField_finrank_eq_lcm_of_tensorLift_surjective
   have hTensor (y : S ⊗[C] K) :
       φ (Algebra.TensorProduct.lift f g hfg y) =
         Algebra.TensorProduct.lift f g hfg y := by
-    induction y using TensorProduct.induction_on with
-    | zero => simp
+    induction y using TensorProduct.inductionOn with
     | tmul s k =>
         rw [Algebra.TensorProduct.lift_tmul, map_mul, hφ, hφ]
         have hs : (f s) ^ (q ^ l) = f s := by

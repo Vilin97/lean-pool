@@ -8,6 +8,13 @@ import Mathlib.RingTheory.DedekindDomain.Different
 import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.RingTheory.DedekindDomain.AdicValuation
 
+/-!
+# Local traces and the different
+
+Relate different multiplicities to the trace-dual lattice and clear the finitely many bad
+valuation bounds by a base multiplier.
+-/
+
 open scoped nonZeroDivisors
 
 open Set Function UniqueFactorizationMonoid IsDedekindDomain

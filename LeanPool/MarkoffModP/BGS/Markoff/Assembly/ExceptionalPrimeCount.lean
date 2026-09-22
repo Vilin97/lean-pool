@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
+import Mathlib.Order.Interval.Set.Nat
 import LeanPool.MarkoffModP.BGS.Markoff.Assembly.DivisibleOrbitTransitivity
 import LeanPool.MarkoffModP.BGS.Markoff.Assembly.GiantOrbit
 import LeanPool.MarkoffModP.BGS.Markoff.Assembly.TransitivitySurjectivity

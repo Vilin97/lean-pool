@@ -7,6 +7,13 @@ Authors: Yuma Mizuno
 import LeanPool.MarkoffModP.BGS.Markoff.Opening.FiniteOrbit
 import LeanPool.MarkoffModP.BGS.Markoff.Core.ConicParametrization
 
+/-!
+# Cardinality of coordinate-rotation orbits
+
+Embed coordinate-rotation cycles in the full normalized Markoff orbit and compare their
+cardinalities.
+-/
+
 namespace BGS.Markoff
 
 universe u

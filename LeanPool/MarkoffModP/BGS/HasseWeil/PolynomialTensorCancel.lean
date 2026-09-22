@@ -232,8 +232,7 @@ private theorem constantTensorToPolynomialTensor_leftInverse :
       AlgHom.id S (PolynomialTensor C S A) := by
   apply AlgHom.ext
   intro z
-  induction z using TensorProduct.induction_on with
-  | zero => simp
+  induction z using TensorProduct.inductionOn with
   | add x y hx hy => simp only [map_add, hx, hy]
   | tmul p a =>
       change constantTensorToPolynomialTensor C S A

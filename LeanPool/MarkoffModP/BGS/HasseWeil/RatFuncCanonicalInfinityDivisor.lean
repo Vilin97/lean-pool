@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 -/
 
+import Mathlib.RingTheory.RamificationInertia.Basic
+import Mathlib.LinearAlgebra.Dimension.Localization
 import LeanPool.MarkoffModP.BGS.HasseWeil.FiniteExtensionRiemannRoch
 
 /-!
@@ -64,6 +66,27 @@ noncomputable def ratFuncIdentityInfinityPlace :
     FiniteExtensionInfinityPlace K (RatFunc K) :=
   Classical.choice inferInstance
 
+private theorem inertiaDegree_le_fractionField_finrank
+    (R S K L : Type*) [CommRing R] [IsDomain R] [CommRing S]
+    [Field K] [Field L] [Algebra R S] [Module.Finite R S] [Module.Flat R S]
+    [Algebra R K] [Algebra S L] [Algebra R L] [Algebra K L]
+    [IsScalarTower R K L] [IsScalarTower R S L]
+    [IsFractionRing R K] [IsFractionRing S L]
+    (p : Ideal R) [p.IsPrime] [Finite (p.primesOver S)]
+    (q : Ideal S) [q.IsPrime] [q.LiesOver p] :
+    q.inertiaDeg R ≤ Module.finrank K L := by
+  let : Fintype (p.primesOver S) := Fintype.ofFinite _
+  let Q : p.primesOver S := ⟨q, inferInstance, inferInstance⟩
+  calc
+    q.inertiaDeg R ≤ q.ramificationIdx R * q.inertiaDeg R :=
+      Nat.le_mul_of_pos_left _ (Ideal.ramificationIdx_pos q R)
+    _ ≤ ∑ Q : p.primesOver S, Q.1.ramificationIdx R * Q.1.inertiaDeg R :=
+      Finset.single_le_sum
+        (f := fun Q : p.primesOver S => Q.1.ramificationIdx R * Q.1.inertiaDeg R)
+        (fun _ _ => Nat.zero_le _) (Finset.mem_univ Q)
+    _ = Module.finrank R S := Ideal.sum_ramification_inertia_eq_finrank p S
+    _ = Module.finrank K L := (IsFractionRing.finrank_eq R K S L).symm
+
 omit [Fintype K] in
 /-- The chosen identity-extension infinity place has residue degree one. -/
 theorem ratFuncIdentityInfinityPlace_degree_eq_one :
@@ -75,14 +98,13 @@ theorem ratFuncIdentityInfinityPlace_degree_eq_one :
     Ideal.inertiaDeg_pos P.1 (RatFuncInfinityIntegers K)
   let : P.1.IsPrime := P.2.1
   let : P.1.LiesOver (ratFuncInfinityPlace K).asIdeal := P.2.2
-  let : (ratFuncInfinityPlace K).asIdeal.IsMaximal :=
-    (ratFuncInfinityPlace K).isPrime.isMaximal (ratFuncInfinityPlace K).ne_bot
-  have hle : (ratFuncInfinityPlace K).asIdeal.inertiaDeg' P.1 ≤
-      Module.finrank (RatFunc K) (RatFunc K) := by
-    exact Ideal.inertiaDeg_le_finrank
-      (RatFuncInfinityIntegralClosure K (RatFunc K))
-      (RatFunc K) (RatFunc K) P.1 (ratFuncInfinityPlace K).ne_bot
-  rw [inertiaDeg_eq_of_isMaximal, Module.finrank_self] at hle
+  let : Fintype (FiniteExtensionInfinityPlace K (RatFunc K)) :=
+    Set.Finite.fintype (IsDedekindDomain.primesOver_finite
+      (ratFuncInfinityPlace K).asIdeal (RatFuncInfinityIntegralClosure K (RatFunc K)))
+  have hle := inertiaDegree_le_fractionField_finrank
+    (RatFuncInfinityIntegers K) (RatFuncInfinityIntegralClosure K (RatFunc K))
+    (RatFunc K) (RatFunc K) (ratFuncInfinityPlace K).asIdeal P.1
+  rw [Module.finrank_self] at hle
   omega
 
 /-- The chosen infinity place in the Riemann--Roch two-chart place model. -/
