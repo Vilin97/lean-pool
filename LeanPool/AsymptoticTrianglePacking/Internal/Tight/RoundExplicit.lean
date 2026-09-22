@@ -3,10 +3,15 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.ResidualBandCheb
+import LeanPool.AsymptoticTrianglePacking.Internal.BernoulliSpace
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — a nibble round with FULLY EXPLICIT parameters
 
-`LeanPool.AsymptoticTrianglePacking.Internal.exists_round_residual_band_cheb` produces a good round outcome under one smallness
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_round_residual_band_cheb` produces a good round
+outcome under one smallness
 hypothesis relating the tolerances `t, s`, the exceptional budget `a` and the moment data.  Here
 that hypothesis is DISCHARGED for a concrete parameter choice, giving an unconditional round.
 
@@ -26,17 +31,15 @@ while covering more than `Nγ/(8r)` vertices (`exists_round_explicit`).
 The point is that BOTH tolerances are of second order in `γ` (`γ²Δ`, up to the constant `16/θ`),
 whereas the first-order drop is `≍ γΔ`.  That is what makes the round iterable: over the
 `≍ γ^{-1}log(1/β)` rounds of a nibble the tolerances accumulate to `≍ γ·log(1/β)/θ → 0`, while with
-the Markov-coverage round (`LeanPool.AsymptoticTrianglePacking.Internal.exists_round_residual_band`) the tolerance `s` is necessarily
+the Markov-coverage round (`LeanPool.AsymptoticTrianglePacking.Internal.exists_round_residual_band`)
+the tolerance `s` is necessarily
 first order in `γ` and the accumulation does not vanish.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.ResidualBandCheb
-import LeanPool.AsymptoticTrianglePacking.Internal.BernoulliSpace
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -93,7 +96,8 @@ private theorem auxNum2 {R D k γ : ℝ} (hR : 2 ≤ R) (hD : 1 ≤ D) (hγ0 : 0
   have hRpos : (0:ℝ) < R := by linarith
   have hDpos : (0:ℝ) < D := by linarith
   rw [div_le_div_iff₀ (by positivity) (by positivity)]
-  nlinarith only [mul_nonneg (mul_nonneg hγ0.le hRpos.le) (by linarith : (0:ℝ) ≤ γ * D - 512 * k * R)]
+  nlinarith only [mul_nonneg (mul_nonneg hγ0.le hRpos.le)
+    (by linarith : (0 : ℝ) ≤ γ * D - 512 * k * R)]
 
 private theorem auxkR {R D k γ θ : ℝ} (hR : 2 ≤ R) (hD : 1 ≤ D) (hk0 : 0 ≤ k) (hγ0 : 0 < γ)
     (hγ1 : γ ≤ 1 / 2) (hθ1 : θ ≤ 1)
@@ -287,8 +291,8 @@ theorem exists_round_explicit {V : Type u} [Fintype V] [DecidableEq V]
     hR hD hdd1 hΔδ (Nat.cast_nonneg _) hγ0 hγ1 hθ0 hθ1 hL0 hκsmall hNbig hpdef rfl rfl rfl
   -- the round
   obtain ⟨Ω, mΩ, hprob, ⟨ρ⟩⟩ := exists_bernoulliRetention (V := V) H hppos.le hplt.le
-  letI : MeasureSpace Ω := mΩ
-  haveI : IsProbabilityMeasure (ℙ : Measure Ω) := hprob
+  let _ : MeasureSpace Ω := mΩ
+  have _ : IsProbabilityMeasure (ℙ : Measure Ω) := hprob
   obtain ⟨R', hR'H, B, hBcard, hband, hcov⟩ :=
     exists_round_residual_band_cheb (H := H) (p := p) (r := r) (Δ := Δ) (δ := δ) (κ := κ) ρ
       hppos hplt (by omega) hr hΔ hδ hδ0 hκ (by positivity) (by positivity) (by positivity)

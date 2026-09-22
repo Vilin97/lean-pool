@@ -4,14 +4,22 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRoundProof
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — assembling the sharp round
 
-`LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundFor` (`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound`) is proved here in the regime `2γ ≤ ε`, from
+`LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundFor`
+(`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound`) is proved here in the regime `2γ ≤
+ε`, from
 
-* `LeanPool.AsymptoticTrianglePacking.Internal.exists_sharp_round_band` — the probabilistic content (sharp Efron–Stein variance +
+* `LeanPool.AsymptoticTrianglePacking.Internal.exists_sharp_round_band` — the probabilistic content
+  (sharp Efron–Stein variance +
   Chebyshev on the safe degree, cover variance on the active set), and
-* `LeanPool.AsymptoticTrianglePacking.Internal.Exp_safeDegCube_ge` / `LeanPool.AsymptoticTrianglePacking.Internal.Exp_safeDegCube_le` — the two deterministic estimates of the
+* `LeanPool.AsymptoticTrianglePacking.Internal.Exp_safeDegCube_ge` /
+  `LeanPool.AsymptoticTrianglePacking.Internal.Exp_safeDegCube_le` — the two deterministic estimates
+  of the
   MEAN safe degree (union bound and second Bonferroni inequality).
 
 The retention is `p = γ/(r⌊Δ⌋₊)`, the tolerance `t = εγ⌊Δ⌋₊/16`, the exceptional budget `a = θ|V|`,
@@ -27,18 +35,18 @@ The CONSTANT, however, is not: the exact requirement is that the residue
 together with the Chebyshev tolerance `t`, the codegree term `rκγ`, and the rounding/`(1−p)^{rΔ}`
 discrepancy `γ³Δ + O(1)` fit inside `εγΔ`.  Charging `γ²Δ ≤ εγΔ/2`, `γ³Δ ≤ εγΔ/4`,
 `t ≤ εγΔ/16` and the two `O(1)`-terms `εγΔ/32` each leaves `28/32` of the budget used, so `2γ ≤ ε`
-suffices.  This is exactly the regime the tight-band schedule uses: `LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams`
+suffices. This is exactly the regime the tight-band schedule uses:
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams`
 sets `ε = 4aγ` with `a = (r−1)/r ≥ 1/2`, hence `ε ≥ 2γ`.
 
 The discrepancy `γ³Δ + O(1)` (rather than the `γ²Δ + O(1)` of the earlier bookkeeping) comes from
-the sharp upper bound `(1−p)^{rΔ} ≤ 1 − γ + γ²/2` (`LeanPool.AsymptoticTrianglePacking.Internal.one_sub_pow_le_quadratic`), which cancels
+the sharp upper bound `(1−p)^{rΔ} ≤ 1 − γ + γ²/2`
+(`LeanPool.AsymptoticTrianglePacking.Internal.one_sub_pow_le_quadratic`), which cancels
 the `(1−γ)` factor carried by the ceiling drop that `SharpRoundFor` requests.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRoundProof
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -101,7 +109,8 @@ theorem sharp_drop_ratio_le (γ δ Δ Dn dn L : ℝ)
   linarith only [hs2, hs3]
 
 /-- **The survival factor of one round.**  For `m·p = γ` with `0 ≤ p ≤ 1`, Bernoulli and
-`LeanPool.AsymptoticTrianglePacking.Internal.one_sub_pow_le_quadratic` pin `(1 − p)^m` between `1 − γ` and `1 − γ + γ²/2`. -/
+`LeanPool.AsymptoticTrianglePacking.Internal.one_sub_pow_le_quadratic` pin `(1 − p)^m` between `1 −
+γ` and `1 − γ + γ²/2`. -/
 theorem sharp_survival_bounds {p γ : ℝ} {m : ℕ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1)
     (hpγ : (m : ℝ) * p = γ) :
     1 - γ ≤ (1 - p) ^ m ∧ (1 - p) ^ m ≤ 1 - γ + γ ^ 2 / 2 := by
@@ -179,7 +188,7 @@ theorem sharp_codegree_tolerance_le {rr γ ε θ α Δ Dn kn : ℝ} (hR0 : 0 < r
     mul_le_mul c1 hDn_le hDn0 (by positivity)
   linarith only [s1, b1, hεγΔ]
 
-/-- **The ceiling clause of the round, in arithmetic form.**  The mean ceiling `Dn − Sγ(dn−l)d + Err`
+/-- **The ceiling clause of the round, in arithmetic form.** The mean ceiling `Dn − Sγ(dn−l)d + Err`
 produced by the Chebyshev band, plus the tolerance `t`, still fits below the requested ceiling
 `Δ − Sγ(δ−l)c + εγΔ`, where `c = δ(1−γ)/Δ` is the requested relative drop and `d = dn·L/Dn` the
 achieved one: the five error terms use `1/2 + 1/4 + 1/16 + 1/32 + 1/32 < 1` of the budget. -/
@@ -212,8 +221,10 @@ theorem sharp_ceiling_clause_arith {S γ ε δ dn Δ Dn l c d Err t x e : ℝ}
         mul_nonneg hγ0.le hγΔ3]
   linarith only [hb2, hSbr, hErrle, ht2, hg2, hg3, hg4, he, hDn_le, hεγΔ]
 
-/-- The numeric smallness condition consumed by `LeanPool.AsymptoticTrianglePacking.Internal.exists_sharp_round_band`, at the
-parameters of `LeanPool.AsymptoticTrianglePacking.Internal.sharpRoundFor_of_two_gamma_le_eps` (tolerance `t = εγDn/16`, codegree
+/-- The numeric smallness condition consumed by
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_sharp_round_band`, at the
+parameters of `LeanPool.AsymptoticTrianglePacking.Internal.sharpRoundFor_of_two_gamma_le_eps`
+(tolerance `t = εγDn/16`, codegree
 `kn ≤ θε²γα²Dn/(8192r)`). -/
 theorem sharp_smallness_numeric (r : ℕ) (hr2 : 2 ≤ r) (γ ε θ α N Dn dn kn Ac p L t : ℝ)
     (hγ0 : 0 < γ) (hγ1 : γ ≤ 1 / 2) (hε0 : 0 < ε) (hε1 : ε ≤ 1)
@@ -327,8 +338,10 @@ theorem sharp_smallness_numeric (r : ℕ) (hr2 : 2 ≤ r) (γ ε θ α N Dn dn k
     linarith only [hnum, hQ2sq, hd]
   linarith only [hT1, hT2]
 
-/-- **The sharp LeanPool.AsymptoticTrianglePacking.Internal round, assembled**, in the regime `2γ ≤ ε` — the regime the tight-band
-schedule `LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams` actually uses (`ε = 4((r−1)/r)γ ≥ 2γ`). -/
+/-- **The sharp LeanPool.AsymptoticTrianglePacking.Internal round, assembled**, in the regime `2γ ≤
+ε` — the regime the tight-band
+schedule `LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams` actually uses (`ε =
+4((r−1)/r)γ ≥ 2γ`). -/
 theorem sharpRoundFor_of_two_gamma_le_eps (r : ℕ) (hr2 : 2 ≤ r) (γ ε θ α : ℝ)
     (hγ0 : 0 < γ) (hγ1 : γ ≤ 1 / 2) (hε1 : ε ≤ 1) (hγε : 2 * γ ≤ ε)
     (hθ0 : 0 < θ) (hθ1 : θ ≤ 1) (hα0 : 0 < α) (hα1 : α ≤ 1) :
@@ -534,14 +547,16 @@ theorem sharpRoundFor_of_two_gamma_le_eps (r : ℕ) (hr2 : 2 ≤ r) (γ ε θ α
 
 /-- **`LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundHyp` in the regime `2γ ≤ ε`.**
 
-This is exactly the body of `LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundHyp` with the extra hypothesis `2 * γ ≤ ε`; the
+This is exactly the body of `LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundHyp` with the
+extra hypothesis `2 * γ ≤ ε`; the
 witnesses are `D₀ = 256r/(α²γ) + 96/ε + 4` and `c₀ = θε²γα²/(16384r)`.
 
 The restriction is not an artefact of the bookkeeping: the mean safe degree of a vertex genuinely
 carries a second-order term of size `Θ(γ²Δ)` (the pairs of neighbours of `v` inside a single edge
 that are covered simultaneously), while `SharpRoundFor` allows an absolute error of only `εγΔ`.  So
 some hypothesis of the form `γ = O(ε)` is necessary for a round built from the uniform retention
-`p = γ/(rΔ)`.  The constant `2` is below the schedule's own ratio: `LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams`
+`p = γ/(rΔ)`. The constant `2` is below the schedule's own ratio:
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams`
 sets `ε = 4((r−1)/r)γ ≥ 2γ`. -/
 theorem sharpRoundHyp_of_two_gamma_le_eps (r : ℕ) (hr2 : 2 ≤ r) (γ ε θ α : ℝ)
     (hγ0 : 0 < γ) (hγ1 : γ ≤ 1 / 2) (hε1 : ε ≤ 1) (hγε : 2 * γ ≤ ε)
@@ -555,7 +570,8 @@ theorem sharpRoundHyp_of_two_gamma_le_eps (r : ℕ) (hr2 : 2 ≤ r) (γ ε θ α
     θ * ε ^ 2 * γ * α ^ 2 / (16384 * r), by positivity,
     sharpRoundFor_of_two_gamma_le_eps r hr2 γ ε θ α hγ0 hγ1 hε1 hγε hθ0 hθ1 hα0 hα1⟩
 
-/-- **`LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundHyp` in the regime `8γ ≤ ε`**, a special case of
+/-- **`LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundHyp` in the regime `8γ ≤ ε`**, a
+special case of
 `LeanPool.AsymptoticTrianglePacking.Internal.sharpRoundHyp_of_two_gamma_le_eps`. -/
 theorem sharpRoundHyp_of_gamma_le_eps (r : ℕ) (hr2 : 2 ≤ r) (γ ε θ α : ℝ)
     (hγ0 : 0 < γ) (hγ1 : γ ≤ 1 / 2) (hε1 : ε ≤ 1) (hγε : 8 * γ ≤ ε)

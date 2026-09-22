@@ -3,7 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TwoEdgeMatch
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.ConflictCount
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the CODEGREE-tightened pair excess and loss variance
 
 `LeanPool.AsymptoticTrianglePacking.Internal.pair_excess_le` bounds the pair excess
@@ -11,7 +16,8 @@ Authors: Juan Pablo Traverso Gianini, Aristotle
   `ℙ(u, u' covered) − q_u q_{u'}  ≤  2 r Δ³ p³ + κ p`
 
 by trading the crude product bound `deg(u)·deg(u')·p²` against the exact rates.  Its `Δ³p³` term is
-too lossy for the nibble: fed into `LeanPool.AsymptoticTrianglePacking.Internal.centered_second_moment_le` it contributes
+too lossy for the nibble: fed into
+`LeanPool.AsymptoticTrianglePacking.Internal.centered_second_moment_le` it contributes
 `(r−1)²Δ² · 2rΔ³p³ ≈ Δ² γ³` to the variance of the loss weight (with `p = γ/((r−1)Δ)`), i.e. a
 standard deviation of order `γ^{3/2}Δ`, whose Chebyshev failure probability at the natural scale
 `t = ξγΔ` is `≈ γ/ξ²` — of the same order as the per-round covering rate `≈ γ`, hence useless for
@@ -26,9 +32,11 @@ for distinct `u, u'`.  The proof is the exact edge-pair decomposition, not a uni
 * `{u covered} ∩ {u' covered} = ⋃_{f ∋ u} ⋃_{g ∋ u'} (M_f ∩ M_g)` with `M_f` the event that `f`
   enters the round matching;
 * for `f ≠ g` the joint matching probability differs from the product `q_f q_g` by at most
-  `|conflicts f ∩ conflicts g|·p³` (`LeanPool.AsymptoticTrianglePacking.Internal.prob_two_matched_le` — zero when `f` and `g` meet);
+  `|conflicts f ∩ conflicts g|·p³`
+  (`LeanPool.AsymptoticTrianglePacking.Internal.prob_two_matched_le` — zero when `f` and `g` meet);
 * the diagonal `f = g` occurs for at most `codeg(u,u') ≤ κ` edges, each contributing at most `p`;
-* `LeanPool.AsymptoticTrianglePacking.Internal.sum_conflicts_inter_card_le` sums the conflict overlaps to `4 r² κ Δ²`.
+* `LeanPool.AsymptoticTrianglePacking.Internal.sum_conflicts_inter_card_le` sums the conflict
+  overlaps to `4 r² κ Δ²`.
 
 Consequently (`centered_second_moment_le_codegree`)
 
@@ -41,13 +49,9 @@ codegree, which the nibble hypothesis lets us choose as small as we like) below 
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TwoEdgeMatch
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.ConflictCount
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -75,7 +79,7 @@ theorem twoCovered_eq_biUnion {H : Finset (Finset V)} {p : ℝ}
             ∩ {ω | g ∈ roundMatching (retainedSet H ρ ω)}) := by
   rw [vertexCovered_eq_biUnion ρ u, vertexCovered_eq_biUnion ρ u']
   ext ω
-  simp only [Set.mem_inter_iff, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+  simp only [Set.mem_inter_iff, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
   constructor
   · rintro ⟨⟨f, hf, hfω⟩, ⟨g, hg, hgω⟩⟩
     exact ⟨f, hf, g, hg, hfω, hgω⟩
@@ -110,7 +114,7 @@ theorem prob_two_vertices_covered_le_sum {H : Finset (Finset V)} {p : ℝ}
       have hself : ({ω | f ∈ roundMatching (retainedSet H ρ ω)}
           ∩ {ω | f ∈ roundMatching (retainedSet H ρ ω)})
           = {ω | f ∈ roundMatching (retainedSet H ρ ω)} := Set.inter_self _
-      rw [hself, prob_matchingEvent ρ hp0 hp1 hfH, if_pos rfl]
+      rw [hself, prob_matchingEvent ρ hp0 hp1 hfH, ite_eq_left rfl]
       have h1 : p * (1 - p) ^ (conflicts H f).card ≤ p := by
         have : (1 - p) ^ (conflicts H f).card ≤ 1 :=
           pow_le_one₀ (by linarith) (by linarith)
@@ -121,7 +125,7 @@ theorem prob_two_vertices_covered_le_sum {H : Finset (Finset V)} {p : ℝ}
       have h3 : 0 ≤ ((conflicts H f ∩ conflicts H f).card : ℝ) * p ^ 3 :=
         mul_nonneg (Nat.cast_nonneg _) (pow_nonneg hp0 3)
       linarith
-    · rw [if_neg hfg]
+    · rw [ite_eq_right hfg]
       have := prob_two_matched_le ρ hp0 hp1 hfH hgH hfg
       linarith
   -- sum the bounds
@@ -158,10 +162,10 @@ theorem prob_two_vertices_covered_le_sum {H : Finset (Finset V)} {p : ℝ}
         = if f ∈ Su' then p else 0 := by
       intro f _
       by_cases hf' : f ∈ Su'
-      · rw [Finset.sum_ite_eq Su' f (fun _ => p), if_pos hf']
-      · rw [if_neg hf']
+      · rw [Finset.sum_ite_eq Su' f (fun _ => p), ite_eq_left hf']
+      · rw [ite_eq_right hf']
         refine Finset.sum_eq_zero (fun g hg => ?_)
-        rw [if_neg (fun h => hf' (by rw [h]; exact hg))]
+        rw [ite_eq_right (fun h => hf' (by rw [h]; exact hg))]
     rw [Finset.sum_congr rfl hin, Finset.sum_ite_mem, Finset.sum_const, nsmul_eq_mul]
     congr 1
     have hcard : (Su ∩ Su').card = codegree H u u' := by
@@ -184,7 +188,8 @@ omit [Fintype V] in
   `ℙ(u,u' covered) − q_u q_{u'} ≤ κ p + 4 r² κ Δ² p³`.
 
 Both summands carry the codegree bound `κ`; in the nibble regime `κ = μΔ`, `p = γ/((r−1)Δ)` this is
-`O(rμγ/(r−1))`, whereas `LeanPool.AsymptoticTrianglePacking.Internal.pair_excess_le` gives only `O(rγ³/(r−1)³ + μγ/(r−1))`. -/
+`O(rμγ/(r−1))`, whereas `LeanPool.AsymptoticTrianglePacking.Internal.pair_excess_le` gives only
+`O(rγ³/(r−1)³ + μγ/(r−1))`. -/
 theorem pair_excess_le_codegree {H : Finset (Finset V)} {p : ℝ} {r Δ κ : ℕ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (hp0 : 0 ≤ p) (hp1 : p ≤ 1)
     (hr : IsUniform H r) (hr1 : 1 ≤ r) (hΔ : ∀ y, degree H y ≤ Δ)
@@ -220,7 +225,8 @@ theorem pair_excess_le_codegree {H : Finset (Finset V)} {p : ℝ} {r Δ κ : ℕ
 
   `𝔼[(loss − 𝔼loss)²] ≤ κ·(r−1)Δ·(Δp) + (κp + 4r²κΔ²p³)·((r−1)Δ)²`.
 
-Compare `LeanPool.AsymptoticTrianglePacking.Internal.centered_second_moment_le_params`, whose second factor is `Δ²p² + κp`: the term
+Compare `LeanPool.AsymptoticTrianglePacking.Internal.centered_second_moment_le_params`, whose second
+factor is `Δ²p² + κp`: the term
 `Δ²p²` (of order `γ²` with `p = γ/((r−1)Δ)`) is replaced by `4r²κΔ²p³` (of order `r²μγ³`), so the
 whole bound acquires the codegree factor `κ`. -/
 theorem centered_second_moment_le_codegree {H : Finset (Finset V)} {p : ℝ} {r Δ κ : ℕ}

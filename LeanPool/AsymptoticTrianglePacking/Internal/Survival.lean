@@ -3,8 +3,13 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-1 : probability that an edge survives a nibble round
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-1 : probability that an edge survives a
+nibble round
 
 Standalone, Mathlib-only. Foundation for the Rödl-nibble project.
 
@@ -14,12 +19,10 @@ C2/C3/C4a, which only recorded the mean). An edge `e` ends up in the round's mat
 it is retained and none of its conflicting edges is retained. By independence, that probability
 factors as `p · (1-p)^{c(e)}`, where `c(e) = |conflicts H e|`.
 
-`conflicts` comes from `LeanPool.AsymptoticTrianglePacking.Internal.Conflict`. Must be placeholder-free and axiom-clean
+`conflicts` comes from `LeanPool.AsymptoticTrianglePacking.Internal.Conflict`. Must be
+placeholder-free and axiom-clean
 `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 
@@ -68,62 +71,63 @@ theorem edge_survives_prob {H : Finset (Finset V)} {p : ℝ} (ρ : BernoulliRete
     intro f hf
     dsimp [g]
     by_cases hfe : f = e
-    · simp [hfe]; exact ρ.meas e
-    · rw [if_neg hfe]; exact (ρ.meas f).compl
+    · rw [ite_eq_left hfe]
+      exact ρ.meas e
+    · rw [ite_eq_right hfe]; exact (ρ.meas f).compl
   -- The intersection ⋂ f ∈ S, g f equals our target set
   have hinter : ⋂ f ∈ S, g f = ρ.A e ∩ ⋂ f ∈ conflicts H e, (ρ.A f)ᶜ := by
     ext ω
-    simp [S, g]
-    intro he
+    simp only [S, g, Set.mem_iInter, Set.mem_inter_iff, Set.mem_compl_iff]
     constructor
-    · intro hconf f hf
-      have := hconf f hf
-      have hne : f ≠ e := (Finset.mem_filter.mp hf).2.1
-      simp [hne] at this
-      exact this
-    · intro hconf f hf
-      by_cases hfe : f = e
-      · simp [hfe]
-        exact he
-      · -- hf is already f ∈ conflicts H e after simp at line 71
+    · intro h
+      constructor
+      · simpa using h e (Finset.mem_union_left _ (Finset.mem_singleton_self e))
+      · intro f hf
         have hne : f ≠ e := (Finset.mem_filter.mp hf).2.1
-        have : f ≠ e := hne
-        rw [if_neg this]
-        exact hconf f hf
+        simpa [ite_eq_right hne] using h f (Finset.mem_union_right _ hf)
+    · rintro ⟨hevent, hconf⟩ f hf
+      rcases Finset.mem_union.mp hf with hfe | hcf
+      · have hfe' : f = e := Finset.mem_singleton.mp hfe
+        subst f
+        simpa using hevent
+      · have hne : f ≠ e := (Finset.mem_filter.mp hcf).2.1
+        simpa [ite_eq_right hne] using hconf f hcf
   -- Use independence to factor the measure
   rw [← hinter]
   have hindeps := ρ.indep S (f := fun i => g i) (by
     intro i hi
     dsimp [g]
     by_cases hfe : i = e
-    · subst hfe; simp
+    · subst i
+      rw [ite_eq_left rfl]
       exact MeasurableSpace.measurableSet_generateFrom (Set.mem_singleton _)
-    · rw [if_neg hfe]
+    · rw [ite_eq_right hfe]
       -- Goal: MeasurableSet (ρ.A i)ᶜ in generateFrom {ρ.A i}
       exact MeasurableSet.compl (MeasurableSpace.measurableSet_generateFrom (Set.mem_singleton _)))
   -- Extract the equality from the a.e. statement
   rw [ae_iff] at hindeps
-  simp at hindeps
-  -- Now hindeps : ℙ (⋂ i ∈ S, g i) = ∏ i ∈ S, ℙ (g i)
-  rw [hindeps]
+  have hindeps' : ℙ (⋂ i ∈ S, g i) = ∏ i ∈ S, ℙ (g i) := by
+    simpa using hindeps
+  rw [hindeps']
   -- Compute the product: ℙ (g e) = p and ℙ (g f) = 1 - p for f ∈ conflicts H e
   have hprod : ∏ x ∈ S, ℙ (g x) = ℙ (g e) * ∏ f ∈ conflicts H e, ℙ (g f) := by
-    rw [show S = {e} ∪ conflicts H e from rfl]
+    have hS : S = {e} ∪ conflicts H e := rfl
+    rw [hS]
     rw [Finset.prod_union (by
       rw [Finset.disjoint_singleton_left]
-      exact fun h => (Finset.mem_filter.mp h).2.1 rfl : Disjoint ({e} : Finset (Finset V)) (conflicts H e))]
+      exact fun h => (Finset.mem_filter.mp h).2.1 rfl :
+        Disjoint ({e} : Finset (Finset V)) (conflicts H e))]
     simp [g]
   rw [hprod]
   -- Compute ℙ (g e) and ℙ (g f) for f ∈ conflicts H e
-  have hge : ℙ (g e) = ENNReal.ofReal p := by simp [g]; exact hpe
+  have hge : ℙ (g e) = ENNReal.ofReal p := by simpa [g] using hpe
   have hgfc : ∀ f ∈ conflicts H e, ℙ (g f) = ENNReal.ofReal (1 - p) := by
     intro f hf
     have hne : f ≠ e := (Finset.mem_filter.mp hf).2.1
-    simp [g, hne]
-    exact hpcf f hf
+    simpa [g, hne] using hpcf f hf
   rw [hge]
   rw [Finset.prod_congr rfl hgfc]
-  simp
+  simp only [prod_const]
   rw [← ENNReal.ofReal_pow (by linarith : 0 ≤ 1 - p)]
   rw [← ENNReal.ofReal_mul (by positivity : 0 ≤ p)]
 

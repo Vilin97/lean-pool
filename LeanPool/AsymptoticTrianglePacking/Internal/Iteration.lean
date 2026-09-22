@@ -3,8 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — Module D1 : iteration of nibble rounds (deterministic scaffolding)
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — Module D1 : iteration of nibble rounds
+(deterministic scaffolding)
 
 Standalone, Mathlib-only. Foundation for the Rödl-nibble project.
 
@@ -20,11 +24,10 @@ Deterministic invariants proved here (they hold for *any* strategy `R`):
 The probabilistic per-round shrinkage of the uncovered set (C4b-2 / C4) and the final assembly of
 the accumulated matching (D2 / D3) build on top of this scaffolding.
 
-Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` / `LeanPool.AsymptoticTrianglePacking.Internal.Round`. Must be placeholder-free and axiom-clean
+Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` /
+`LeanPool.AsymptoticTrianglePacking.Internal.Round`. Must be placeholder-free and axiom-clean
 `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
 
 open Finset
 
@@ -53,9 +56,9 @@ def nibbleMatching (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Fi
 theorem nibbleResidual_subset (R : Finset (Finset V) → Finset (Finset V))
     (H : Finset (Finset V)) (k : ℕ) : nibbleResidual R H k ⊆ H := by
   induction k with
-  | zero => show H ⊆ H; exact Finset.Subset.refl H
+  | zero => exact Finset.Subset.refl H
   | succ k ih =>
-      show residual (nibbleIter R H k).2 (R (nibbleIter R H k).2) ⊆ H
+      change residual (nibbleIter R H k).2 (R (nibbleIter R H k).2) ⊆ H
       exact (residual_subset _ _).trans ih
 
 /-- **D1b — the residual stays `r`-uniform.** -/
@@ -65,7 +68,7 @@ theorem nibbleResidual_uniform {H : Finset (Finset V)} {r : ℕ} (hr : IsUniform
   induction k with
   | zero => exact hr
   | succ k ih =>
-      show IsUniform (residual (nibbleIter R H k).2 (R (nibbleIter R H k).2)) r
+      change IsUniform (residual (nibbleIter R H k).2 (R (nibbleIter R H k).2)) r
       exact residual_uniform ih (R (nibbleIter R H k).2)
 
 end Hypergraph

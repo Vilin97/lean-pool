@@ -3,7 +3,13 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeight
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeightMoments
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.PairWeightMean
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Selection
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the TIGHT round
 
 This is the analytic heart of the classical (tight-band) nibble: a SINGLE outcome of one nibble
@@ -14,7 +20,8 @@ round which simultaneously
   `2t + s` around the SAME centre `deg(v) − 𝔼[loss(v)]`.
 
 The two bounds are centred at the same value — that is what "tight band" means, and it is what the
-8:1-band single-round peeling (`LeanPool.AsymptoticTrianglePacking.Internal.CeilRoundInv`, refuted through `LeanPool.AsymptoticTrianglePacking.Internal.NibbleRoundProb`)
+8:1-band single-round peeling (`LeanPool.AsymptoticTrianglePacking.Internal.CeilRoundInv`, refuted
+through `LeanPool.AsymptoticTrianglePacking.Internal.NibbleRoundProb`)
 cannot deliver.
 
 The proof avoids any union bound over the vertex set.  Instead the two failure modes are aggregated
@@ -24,14 +31,9 @@ coverage).  The two failure probabilities add up to `< 1`, so a good outcome exi
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeight
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeightMoments
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.PairWeightMean
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Selection
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -63,7 +65,7 @@ theorem integrable_sq_centered_lossWeight {H : Finset (Finset V)} {p : ℝ}
     rw [lossWeight_sub_mean, sq, Finset.sum_mul_sum]
     exact Finset.sum_congr rfl (fun u _ => Finset.sum_congr rfl (fun u' _ => by ring))
   rw [hexp]
-  exact integrable_finset_sum _ (fun u _ => integrable_finset_sum _
+  exact integrable_finsetSum _ (fun u _ => integrable_finsetSum _
     (fun u' _ => (integrable_coverIndC_mul ρ u u').const_mul _))
 
 /-! ## The covered count -/
@@ -82,13 +84,16 @@ theorem coveredCount_eq_sum {H : Finset (Finset V)} {p : ℝ}
   ext v
   simp
 
-theorem integrable_coveredCount {H : Finset (Finset V)} {p : ℝ}
+omit [Fintype V] in
+theorem integrable_coveredCount [Finite V] {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) :
     Integrable (fun ω => ((covered (retainedSet H ρ ω)).card : ℝ)) (ℙ : Measure Ω) := by
+  classical
+  let _ : Fintype V := Fintype.ofFinite V
   have h : (fun ω => ((covered (retainedSet H ρ ω)).card : ℝ))
       = fun ω => ∑ v : V, coverInd ρ v ω := funext (coveredCount_eq_sum ρ)
   rw [h]
-  exact integrable_finset_sum _ (fun v _ => integrable_coverInd ρ v)
+  exact integrable_finsetSum _ (fun v _ => integrable_coverInd ρ v)
 
 theorem integral_coveredCount {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
@@ -96,7 +101,7 @@ theorem integral_coveredCount {H : Finset (Finset V)} {p : ℝ}
       = ∑ v : V, coverRate H p v := by
   have h : (fun ω => ((covered (retainedSet H ρ ω)).card : ℝ))
       = fun ω => ∑ v : V, coverInd ρ v ω := funext (coveredCount_eq_sum ρ)
-  rw [h, integral_finset_sum _ (fun v _ => integrable_coverInd ρ v)]
+  rw [h, integral_finsetSum _ (fun v _ => integrable_coverInd ρ v)]
   exact Finset.sum_congr rfl (fun v _ => integral_coverInd ρ hp0 hp1 v)
 
 /-! ## The aggregated bad functional -/
@@ -121,7 +126,7 @@ theorem integrable_tightBad {H : Finset (Finset V)} {p : ℝ}
   have h : tightBad ρ t s = fun ω => ∑ v : V,
       ((lossWeight ρ v ω - lossWeightMean H p v) ^ 2 / t ^ 2 + pairCount ρ v ω / s) := rfl
   rw [h]
-  refine integrable_finset_sum _ (fun v _ => ?_)
+  refine integrable_finsetSum _ (fun v _ => ?_)
   exact ((integrable_sq_centered_lossWeight ρ v).div_const _).add
     ((integrable_pairCount ρ v).div_const _)
 
@@ -177,7 +182,7 @@ theorem integral_tightBad_le {H : Finset (Finset V)} {p : ℝ}
     ((integrable_sq_centered_lossWeight ρ v).div_const _).add
       ((integrable_pairCount ρ v).div_const _)
   simp only [tightBad]
-  rw [integral_finset_sum _ (fun v _ => hint v)]
+  rw [integral_finsetSum _ (fun v _ => hint v)]
   calc ∑ v : V, ∫ ω, ((lossWeight ρ v ω - lossWeightMean H p v) ^ 2 / t ^ 2
         + pairCount ρ v ω / s) ∂(ℙ : Measure Ω)
       ≤ ∑ _v : V, (Vb / t ^ 2 + Pb / s) := by
@@ -236,7 +241,7 @@ theorem exists_tight_round_on {H : Finset (Finset V)} {p : ℝ}
   -- positivity of the coverage rate is forced by the smallness hypothesis
   have hgq : 0 < (G.card : ℝ) * qlo := by
     by_contra hc
-    push_neg at hc
+    push Not at hc
     have h1 : 0 ≤ 2 * (Fintype.card V : ℝ) - (G.card : ℝ) * qlo := by linarith only [hc]
     nlinarith [hΦ0, ha, hsmall]
   -- Markov for the badness event
@@ -301,14 +306,14 @@ theorem exists_tight_round_on {H : Finset (Finset V)} {p : ℝ}
   · have h1 := card_tightBadSet_le ρ ht hs ω
     have h2 : tightBad ρ t s ω < a := by
       by_contra hc
-      push_neg at hc
+      push Not at hc
       exact hω1 hc
     linarith only [h1, h2]
   · intro v hv
     have hnot : ¬ (t ≤ |lossWeight ρ v ω - lossWeightMean H p v| ∨ s ≤ pairCount ρ v ω) := by
       intro h
       exact hv (Finset.mem_filter.mpr ⟨Finset.mem_univ v, h⟩)
-    push_neg at hnot
+    push Not at hnot
     obtain ⟨hloss, hpair⟩ := hnot
     have habs := abs_lt.mp hloss
     have hlow := degree_le_safeDegree_add_coverWeight H v (covered (retainedSet H ρ ω))
@@ -328,7 +333,7 @@ theorem exists_tight_round_on {H : Finset (Finset V)} {p : ℝ}
     exact ⟨by linarith [habs.2], by linarith [habs.1]⟩
   · have h2 : ¬ ((Fintype.card V : ℝ) - (G.card : ℝ) * qlo / 2
         ≤ (Fintype.card V : ℝ) - ((covered (retainedSet H ρ ω)).card : ℝ)) := hω2
-    push_neg at h2
+    push Not at h2
     linarith only [h2]
 
 /-- **The tight round.**  There is an outcome of the nibble round which covers more than a

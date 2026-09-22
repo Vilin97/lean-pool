@@ -3,12 +3,19 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance
+import LeanPool.AsymptoticTrianglePacking.Internal.Covered
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the Bernoulli retention carried by the finite cube
 
-`LeanPool.AsymptoticTrianglePacking.Internal.exists_bernoulliRetention` produces *some* probability space carrying a Bernoulli retention.
-For the sharp variance bound of `LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpVariance` we need a space on which the
-Efron–Stein inequality of `LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance` is available, i.e. an honest product of
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_bernoulliRetention` produces *some* probability
+space carrying a Bernoulli retention.
+For the sharp variance bound of `LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpVariance` we
+need a space on which the
+Efron–Stein inequality of `LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance` is
+available, i.e. an honest product of
 independent coordinates.  This file provides it: the cube `ι → Bool` with the explicit weighted
 counting measure
 
@@ -16,14 +23,15 @@ counting measure
 
 for which
 
-* integrals are the elementary sums `LeanPool.AsymptoticTrianglePacking.Internal.Cube.Exp` (`LeanPool.AsymptoticTrianglePacking.Internal.integral_cubeMeasure`),
-* the coordinate events are independent with probability `p` (`LeanPool.AsymptoticTrianglePacking.Internal.iIndepSet_cubeCoord`), hence
-  the cube carries a `LeanPool.AsymptoticTrianglePacking.Internal.BernoulliRetention` (`LeanPool.AsymptoticTrianglePacking.Internal.cubeRetention`), and
-* the Efron–Stein bound holds in integral form (`LeanPool.AsymptoticTrianglePacking.Internal.cube_centred_sq_le`).
+* integrals are the elementary sums `LeanPool.AsymptoticTrianglePacking.Internal.Cube.Exp`
+  (`LeanPool.AsymptoticTrianglePacking.Internal.integral_cubeMeasure`),
+* the coordinate events are independent with probability `p`
+  (`LeanPool.AsymptoticTrianglePacking.Internal.iIndepSet_cubeCoord`), hence
+  the cube carries a `LeanPool.AsymptoticTrianglePacking.Internal.BernoulliRetention`
+  (`LeanPool.AsymptoticTrianglePacking.Internal.cubeRetention`), and
+* the Efron–Stein bound holds in integral form
+  (`LeanPool.AsymptoticTrianglePacking.Internal.cube_centred_sq_le`).
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Covered
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset
 
@@ -38,6 +46,7 @@ noncomputable def cubeMeasure (p : ℝ) : Measure (ι → Bool) :=
   ∑ ω : ι → Bool, ENNReal.ofReal (wt p ω) • Measure.dirac ω
 
 /-- The finite cube as a measure space. -/
+@[instance_reducible]
 noncomputable def cubeSpace (p : ℝ) : MeasureSpace (ι → Bool) := ⟨cubeMeasure p⟩
 
 theorem cubeMeasure_apply {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) (A : Set (ι → Bool)) :
@@ -45,7 +54,7 @@ theorem cubeMeasure_apply {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) (A : Set (ι
   classical
   have hind : ∀ ω : ι → Bool, (0 : ℝ) ≤ Set.indicator A (1 : (ι → Bool) → ℝ) ω := by
     intro ω; by_cases h : ω ∈ A <;> simp [h]
-  rw [cubeMeasure, Measure.coe_finset_sum]
+  rw [cubeMeasure, Measure.coe_finsetSum]
   simp only [Finset.sum_apply, Measure.smul_apply, smul_eq_mul, MeasureTheory.Measure.dirac_apply]
   rw [ENNReal.ofReal_sum_of_nonneg (fun ω _ => mul_nonneg (wt_nonneg hp0 hp1 ω) (hind ω))]
   refine Finset.sum_congr rfl fun ω _ => ?_
@@ -64,7 +73,7 @@ theorem isProbabilityMeasure_cubeMeasure {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 
 /-- Integrals against the cube measure are the elementary sums `Exp`. -/
 theorem integral_cubeMeasure {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) (f : (ι → Bool) → ℝ) :
     ∫ ω, f ω ∂(cubeMeasure p) = Exp p f := by
-  rw [cubeMeasure, integral_finset_sum_measure]
+  rw [cubeMeasure, integral_finsetSum_measure]
   · rw [Exp]
     refine Finset.sum_congr rfl fun ω _ => ?_
     rw [integral_smul_measure, integral_dirac, smul_eq_mul,
@@ -85,11 +94,11 @@ theorem indicator_biInter_eq (S : Finset ι) (ω : ι → Bool) :
     by_cases hi : i ∈ S
     · simp [hi, h i hi]
     · simp [hi]
-  · push_neg at h
+  · push Not at h
     obtain ⟨e, heS, he⟩ := h
     have hnot : ω ∉ (⋂ e ∈ S, {ω : ι → Bool | ω e = true}) := by
       intro hmem
-      simp only [Set.mem_iInter, Set.mem_setOf_eq] at hmem
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq] at hmem
       exact he (hmem e heS)
     rw [Set.indicator_of_notMem hnot]
     refine (Finset.prod_eq_zero (Finset.mem_univ e) ?_).symm
@@ -157,6 +166,8 @@ theorem retainedSet_cubeRetention (H : Finset (Finset V)) {p : ℝ} (hp0 : 0 ≤
     @retainedSet V _ (Finset V → Bool) (cubeSpace p) H p (cubeRetention H hp0 hp1) ω
       = H.filter (fun e => ω e = true) := by
   ext e
-  simp only [retainedSet, cubeRetention, Finset.mem_filter, Set.mem_setOf_eq]
+  unfold retainedSet cubeRetention
+  simp only [Finset.mem_filter]
+  rfl
 
 end LeanPool.AsymptoticTrianglePacking.Internal

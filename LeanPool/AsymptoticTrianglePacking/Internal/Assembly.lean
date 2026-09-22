@@ -3,7 +3,10 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — Module D2 : assembling the per-round matchings
 
 Standalone, Mathlib-only. Foundation for the Rödl-nibble project.
@@ -17,11 +20,10 @@ pairwise-disjoint *supports*. This module proves the deterministic assembly fact
 * `biUnion_card` — if additionally all edges are nonempty (true for `r ≥ 1`), the union's size is
   the sum of the per-round sizes.
 
-Definitions (`IsMatching`, `support`) come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` / `LeanPool.AsymptoticTrianglePacking.Internal.Greedy`.
+Definitions (`IsMatching`, `support`) come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic`
+/ `LeanPool.AsymptoticTrianglePacking.Internal.Greedy`.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
 
 open Finset
 
@@ -36,6 +38,7 @@ theorem subset_support {M : Finset (Finset V)} {e : Finset V} (he : e ∈ M) :
   rw [support, Finset.mem_biUnion]
   exact ⟨e, he, hx⟩
 
+omit [DecidableEq ι] in
 /-- **D2a — union of disjoint-support matchings is a matching.** -/
 theorem biUnion_isMatching {H : Finset (Finset V)} (T : Finset ι) (M : ι → Finset (Finset V))
     (hM : ∀ i ∈ T, IsMatching H (M i))

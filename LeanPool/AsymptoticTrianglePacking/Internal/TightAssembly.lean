@@ -4,22 +4,36 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — the tight-band assembly: from one sharp round to the LeanPool.AsymptoticTrianglePacking.Internal theorem
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
+import LeanPool.AsymptoticTrianglePacking.Internal.CeilingOracle
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
 
-This file performs the ASSEMBLY of the LeanPool.AsymptoticTrianglePacking.Internal out of the iterable single round
-`LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundHyp` (`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound`):
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — the tight-band assembly: from one sharp round to the
+LeanPool.AsymptoticTrianglePacking.Internal theorem
 
-* `LeanPool.AsymptoticTrianglePacking.Internal.TightParams` — the schedule: the round rate `γ`, the relative tolerance `ε`, the per-round
+This file performs the ASSEMBLY of the LeanPool.AsymptoticTrianglePacking.Internal out of the
+iterable single round
+`LeanPool.AsymptoticTrianglePacking.Internal.SharpRoundHyp`
+(`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound`):
+
+* `LeanPool.AsymptoticTrianglePacking.Internal.TightParams` — the schedule: the round rate `γ`, the
+  relative tolerance `ε`, the per-round
   exceptional fraction `θ`, the initial exceptional fraction `η`, the number of rounds `T`, the
   degree band `[d·lo k, d·hi k]` after `k` rounds and the exceptional budget `sig k`, together with
   every inequality the iteration consumes.
-* `LeanPool.AsymptoticTrianglePacking.Internal.roundOracle_of_sharpRound_params` — one round of the schedule: the tight-band invariant is
-  re-established (band, global ceiling, codegree, exceptional budget) and a `γ/(16r)` fraction of the
-  uncovered vertices is covered; iterated by `LeanPool.AsymptoticTrianglePacking.Internal.hasRoundOracle_of_scheduled_invariant`.
-* `LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams` — the schedule exists for every `r ≥ 2` and `β ∈ (0,1)`.
-* `LeanPool.AsymptoticTrianglePacking.Internal.roundOracleExistsCeil_of_sharpRound`, `LeanPool.AsymptoticTrianglePacking.Internal.nibbleTheoremMostCeil_of_sharpRound`,
-  `LeanPool.AsymptoticTrianglePacking.Internal.nibbleTheoremMostCeilSized_of_sharpRound`, `LeanPool.AsymptoticTrianglePacking.Internal.nibbleTheorem_of_sharpRound` — the
+* `LeanPool.AsymptoticTrianglePacking.Internal.roundOracle_of_sharpRound_params` — one round of the
+  schedule: the tight-band invariant is
+  re-established (band, global ceiling, codegree, exceptional budget) and a `γ/(16r)` fraction of
+  the
+  uncovered vertices is covered; iterated by
+  `LeanPool.AsymptoticTrianglePacking.Internal.hasRoundOracle_of_scheduled_invariant`.
+* `LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams` — the schedule exists for every
+  `r ≥ 2` and `β ∈ (0,1)`.
+* `LeanPool.AsymptoticTrianglePacking.Internal.roundOracleExistsCeil_of_sharpRound`,
+  `LeanPool.AsymptoticTrianglePacking.Internal.nibbleTheoremMostCeil_of_sharpRound`,
+  `LeanPool.AsymptoticTrianglePacking.Internal.nibbleTheoremMostCeilSized_of_sharpRound`,
+  `LeanPool.AsymptoticTrianglePacking.Internal.nibbleTheorem_of_sharpRound` — the
   packaged conclusions.
 
 The three mechanisms of the assembly are:
@@ -30,16 +44,14 @@ The three mechanisms of the assembly are:
 * **the exceptional bookkeeping** — the vertices that leave the band (`B`), the vertices with too
   many edges into the exceptional set (`heavy`), the vertices that break the new ceiling (`Hi`,
   contained in `E ∪ B ∪ heavy`) and the vertices damaged by pruning `Hi` (`Dam`) are all counted by
-  the deterministic estimate `LeanPool.AsymptoticTrianglePacking.Internal.card_heavyLoss_le`; the exceptional set therefore grows by a
+  the deterministic estimate `LeanPool.AsymptoticTrianglePacking.Internal.card_heavyLoss_le`; the
+  exceptional set therefore grows by a
   bounded factor `(2 + r/(εγ))²` per round, which the choice of `θ` absorbs;
 * **the covering count** — the round covers a `γ/(8r)` fraction of the live set, which is at least
   half of the uncovered set as long as the exceptional set stays below `β|V|/2`.
 
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound
-import LeanPool.AsymptoticTrianglePacking.Internal.CeilingOracle
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
 
 open Finset Hypergraph
 
@@ -47,7 +59,8 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 
 /-! ## The schedule -/
 
-/-- **The tight-band schedule.**  All parameters of the `T`-round LeanPool.AsymptoticTrianglePacking.Internal at uniformity `r` and target
+/-- **The tight-band schedule.** All parameters of the `T`-round
+LeanPool.AsymptoticTrianglePacking.Internal at uniformity `r` and target
 `β`, with the inequalities the iteration consumes.  `lo k`, `hi k` are the degree band after `k`
 rounds RELATIVE to the regular degree `d`, and `sig k` is the exceptional budget as a fraction of
 `|V|`. -/
@@ -210,7 +223,8 @@ theorem card_heavyLoss_le_real {K : Finset (Finset V)} {r : ℕ} (hr : IsUniform
         Finset.sum_const, smul_eq_mul]
     rw [this]; push_cast; ring
   have hstep5 : ((K.filter (fun e => ¬ Disjoint e B)).card : ℝ) ≤ (B.card : ℝ) * Δ := by
-    have h1 : ((K.filter (fun e => ¬ Disjoint e B)).card : ℝ) ≤ ((∑ x ∈ B, degree K x : ℕ) : ℝ) := by
+    have h1 : ((K.filter (fun e => ¬ Disjoint e B)).card : ℝ) ≤
+        ((∑ x ∈ B, degree K x : ℕ) : ℝ) := by
       exact_mod_cast card_edges_meeting_le_sum B
     have h2 : ((∑ x ∈ B, degree K x : ℕ) : ℝ) ≤ (B.card : ℝ) * Δ := by
       push_cast
@@ -260,7 +274,8 @@ theorem card_compl_union_ge (S E : Finset V) :
   rw [hcompl]
   linarith
 
-/-- **The ceiling of the next round.**  The drop requested by `LeanPool.AsymptoticTrianglePacking.Internal.TightParams.step_hi`, at the
+/-- **The ceiling of the next round.** The drop requested by
+`LeanPool.AsymptoticTrianglePacking.Internal.TightParams.step_hi`, at the
 absolute scale `d` and with an actual loss `l` below the tolerance `εγ·d·hi`, still lands below
 `d·hi₁`. -/
 theorem tight_ceiling_step_bound {a gam eps lo hi hi1 d l : ℝ}
@@ -396,7 +411,7 @@ theorem tight_round_step {r : ℕ} (hr : 2 ≤ r) {β : ℝ} (Pm : TightParams r
   have hlo' : ∀ v ∈ A, d * Pm.lo j ≤ (degree K v : ℝ) := by
     intro v hv
     rw [hAdef, Finset.mem_compl, Finset.mem_union] at hv
-    push_neg at hv
+    push Not at hv
     exact hlo v hv.1 hv.2
   have hlomin_le_hi : Pm.lomin ≤ Pm.hi j := le_trans (Pm.lomin_le j hjT) (Pm.lo_le_hi j hjT)
   have hDΔ : D₀ ≤ d * Pm.hi j :=
@@ -466,7 +481,7 @@ theorem tight_round_step {r : ℕ} (hr : 2 ≤ r) {β : ℝ} (Pm : TightParams r
       linarith
     have hvA : v ∈ A := by
       rw [hAdef, Finset.mem_compl, Finset.mem_union]
-      push_neg
+      push Not
       exact ⟨hvS, hvE⟩
     obtain ⟨_, hup⟩ := hband v hvA hvB hvcov
     have hlostA : (lostDegree K Aᶜ v : ℝ) = (lostDegree K E v : ℝ) := by
@@ -474,7 +489,7 @@ theorem tight_round_step {r : ℕ} (hr : 2 ≤ r) {β : ℝ} (Pm : TightParams r
     rw [hlostA] at hup
     have hlostle : (lostDegree K E v : ℝ) ≤ Pm.eps * Pm.gam * (d * Pm.hi j) := by
       by_contra hcc
-      push_neg at hcc
+      push Not at hcc
       exact hvheavy (Finset.mem_filter.mpr ⟨Finset.mem_univ v, by rw [hζdef]; exact hcc⟩)
     have hbound := tight_ceiling_step_bound (a := ((r : ℝ) - 1) / r) hd hhi_pos
       (div_nonneg hr1' hrpos.le) hgam.le hg1 hlo_pos.le hlostle (Pm.step_hi j hj)
@@ -497,7 +512,7 @@ theorem tight_round_step {r : ℕ} (hr : 2 ≤ r) {β : ℝ} (Pm : TightParams r
       have h2 : ¬ (d * Pm.hi (j + 1) < (degree Kres v : ℝ)) := by
         intro hlt
         exact hv (Finset.mem_filter.mpr ⟨Finset.mem_univ v, hlt⟩)
-      push_neg at h2
+      push Not at h2
       linarith
   · -- the new floor
     intro v hvS hvE'
@@ -505,14 +520,14 @@ theorem tight_round_step {r : ℕ} (hr : 2 ≤ r) {β : ℝ} (Pm : TightParams r
     obtain ⟨⟨⟨⟨hvE, hvB⟩, hvheavy⟩, _hvHi⟩, hvDam⟩ := hvE'
     have hvA : v ∈ A := by
       rw [hAdef, Finset.mem_compl, Finset.mem_union]
-      push_neg
+      push Not
       exact ⟨hvS.1, hvE⟩
     obtain ⟨hlow, _⟩ := hband v hvA hvB hvS.2
     have hdrop : (degree Kres v : ℝ) ≤ (degree K' v : ℝ) + (lostDegree Kres Hi v : ℝ) := by
       exact_mod_cast degree_prune_ge Hi v
     have hlost : (lostDegree Kres Hi v : ℝ) ≤ ζ := by
       by_contra hc
-      push_neg at hc
+      push Not at hc
       exact hvDam (Finset.mem_filter.mpr ⟨Finset.mem_univ v, hc⟩)
     have hstep := Pm.step_lo j hj
     have hkey : d * Pm.lo (j + 1)

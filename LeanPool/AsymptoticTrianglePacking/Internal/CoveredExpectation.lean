@@ -3,19 +3,6 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — covered-whp : expected covered-vertex count per round
-
-Standalone, Mathlib-only. Turns the expected-matching-size bound (`matching_expectation_lower`,
-C4b-2) into a statement about the actual matching-size random variable, and links it to the covered
-set via `|covered| = r · |matching|` (the round matching is a matching of an `r`-uniform hypergraph).
-
-* `matchingIndicator` / `matchingSize` — the round matching size as a sum of `{0,1}` indicators.
-* `matchingSize_expectation_lower` — `E[|matching|] ≥ |H| · p·(1-p)^{rΔ}`.
-* `covered_card_eq` — `|covered R| = r · |roundMatching R|`.
-
-Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
--/
 import LeanPool.AsymptoticTrianglePacking.Internal.Basic
 import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
 import LeanPool.AsymptoticTrianglePacking.Internal.Round
@@ -26,8 +13,24 @@ import LeanPool.AsymptoticTrianglePacking.Internal.Covered
 import LeanPool.AsymptoticTrianglePacking.Internal.Measurable
 import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — covered-whp : expected covered-vertex count per
+round
+
+Standalone, Mathlib-only. Turns the expected-matching-size bound (`matching_expectation_lower`,
+C4b-2) into a statement about the actual matching-size random variable, and links it to the covered
+set via `|covered| = r · |matching|` (the round matching is a matching of an `r`-uniform
+hypergraph).
+
+* `matchingIndicator` / `matchingSize` — the round matching size as a sum of `{0,1}` indicators.
+* `matchingSize_expectation_lower` — `E[|matching|] ≥ |H| · p·(1-p)^{rΔ}`.
+* `covered_card_eq` — `|covered R| = r · |roundMatching R|`.
+
+Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
+-/
+
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -55,7 +58,7 @@ theorem matchingEvent_eq {H : Finset (Finset V)} {p : ℝ}
       = ρ.A e ∩ ⋂ g ∈ conflicts H e, (ρ.A g)ᶜ := by
   ext ω
   have hRsub : retainedSet H ρ ω ⊆ H := Finset.filter_subset _ _
-  rw [Set.mem_setOf_eq, mem_roundMatching_iff_conflicts hRsub]
+  rw [Set.mem_ofPred_eq, mem_roundMatching_iff_conflicts hRsub]
   simp only [retainedSet, Finset.mem_filter, Set.mem_inter_iff, Set.mem_iInter, Set.mem_compl_iff]
   constructor
   · rintro ⟨⟨_, hA⟩, hcon⟩
@@ -112,7 +115,7 @@ theorem matchingSize_expectation_lower {H : Finset (Finset V)} {p : ℝ} {r Δ :
     have hsub : roundMatching (retainedSet H ρ ω) ⊆ H :=
       (roundMatching_subset _).trans (Finset.filter_subset _ _)
     rw [Finset.filter_mem_eq_inter, Finset.inter_eq_right.mpr hsub]
-  rw [hcard, integral_finset_sum H (fun e he => matchingIndicator_integrable ρ he),
+  rw [hcard, integral_finsetSum H (fun e he => matchingIndicator_integrable ρ he),
     Finset.sum_congr rfl (fun e he => integral_matchingIndicator ρ hp0 hp1 he)]
   calc (H.card : ℝ) * (p * (1 - p) ^ (r * Δ))
       = ∑ _e ∈ H, p * (1 - p) ^ (r * Δ) := by rw [Finset.sum_const, nsmul_eq_mul]
@@ -135,7 +138,7 @@ theorem integrable_matchingSize {H : Finset (Finset V)} {p : ℝ}
       (roundMatching_subset _).trans (Finset.filter_subset _ _)
     rw [Finset.filter_mem_eq_inter, Finset.inter_eq_right.mpr hsub]
   rw [hcard]
-  exact integrable_finset_sum H (fun e he => matchingIndicator_integrable ρ he)
+  exact integrable_finsetSum H (fun e he => matchingIndicator_integrable ρ he)
 
 /-- **D3 (one-round existence) — probabilistic method.** There is an outcome whose round matching
 has at least `|H|·p·(1-p)^{rΔ}` edges; hence a covered set of `≥ r·|H|·p·(1-p)^{rΔ}` vertices. This

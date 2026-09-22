@@ -3,8 +3,13 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — near-regularity for the majority of vertices, and the adapted nibble interface
+import LeanPool.AsymptoticTrianglePacking.Internal.Regular
+import LeanPool.AsymptoticTrianglePacking.Internal.Interface
+import Mathlib.Tactic.Bound
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — near-regularity for the majority of vertices, and
+the adapted nibble interface
 
 This file introduces the majority notion `NearlyRegularMost H d μ η`: regularity outside an
 exceptional set of at most an `η`-fraction of the vertices. It also records the matching interfaces
@@ -18,9 +23,6 @@ that consume this hypothesis.
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Regular
-import LeanPool.AsymptoticTrianglePacking.Internal.Interface
-import Mathlib.Tactic.Bound
 
 open Finset
 
@@ -34,7 +36,8 @@ def NearlyRegularMost (H : Finset (Finset V)) (d μ η : ℝ) : Prop :=
   ∃ Exc : Finset V, (Exc.card : ℝ) ≤ η * (Fintype.card V : ℝ) ∧
     ∀ v ∉ Exc, (1 - μ) * d ≤ (degree H v : ℝ) ∧ (degree H v : ℝ) ≤ (1 + μ) * d
 
-/-- Strict near-regularity is majority near-regularity with an empty exceptional set (any `η ≥ 0`). -/
+/-- Strict near-regularity is majority near-regularity with an empty exceptional set (any `η ≥ 0`).
+-/
 theorem NearlyRegular.nearlyRegularMost {H : Finset (Finset V)} {d μ η : ℝ} (hη : 0 ≤ η)
     (h : NearlyRegular H d μ) : NearlyRegularMost H d μ η :=
   ⟨∅, by rw [Finset.card_empty, Nat.cast_zero]; exact mul_nonneg hη (Nat.cast_nonneg _),
@@ -46,7 +49,8 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 
 open Hypergraph
 
-/-- **T3 interface (majority form).** For `r ≥ 2` and target `β > 0`, there are tolerances `μ, η > 0`
+/-- **T3 interface (majority form).** For `r ≥ 2` and target `β > 0`, there are tolerances `μ, η >
+0`
 such that every `r`-uniform hypergraph that is `(1±μ)`-nearly `d`-regular OUTSIDE an `η`-fraction
 exceptional set, with codegree `≤ μd`, has a matching covering `≥ (1-β)·(|V|/r)`. The nibble absorbs
 the small exceptional set into the target slack `β`. -/
@@ -58,7 +62,8 @@ def NibbleTheoremMost : Prop :=
         (1 - β) * ((Fintype.card V : ℝ) / r) ≤ (M.card : ℝ)
 
 /-- **T3 interface with global degree ceiling.** This is the form consumed by the corrected
-Freedman assembly: in addition to majority near-regularity and codegree boundedness, every vertex has
+Freedman assembly: in addition to majority near-regularity and codegree boundedness, every vertex
+has
 degree at most `(1+μ)d`. -/
 def NibbleTheoremMostCeil : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β → ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧ ∃ d₀ : ℝ, 0 < d₀ ∧
@@ -82,9 +87,11 @@ def NibbleTheoremMostCeilSized : Prop :=
       ∃ M : Finset (Finset V), IsMatching H M ∧
         (1 - β) * ((Fintype.card V : ℝ) / r) ≤ (M.card : ℝ)
 
-/-- **The majority interface implies the strict one.** Since strict `NearlyRegular` is a special case
+/-- **The majority interface implies the strict one.** Since strict `NearlyRegular` is a special
+case
 of `NearlyRegularMost` (empty exceptional set), `NibbleTheoremMost` implies `NibbleTheorem` — so
-discharging the majority form suffices for the entire Layer E chain that consumes `NibbleTheorem`. -/
+discharging the majority form suffices for the entire Layer E chain that consumes `NibbleTheorem`.
+-/
 theorem NibbleTheoremMost.nibbleTheorem (h : NibbleTheoremMost) : NibbleTheorem := by
   intro r hr β hβ
   obtain ⟨μ, hμ, η, hη, d₀, hd₀, hmain⟩ := h r hr β hβ

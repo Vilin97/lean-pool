@@ -3,7 +3,9 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — generic selection tools
 
 Two elementary tools used to extract a single good outcome of a nibble round.
@@ -17,7 +19,6 @@ Two elementary tools used to extract a single good outcome of a nibble round.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory Finset
 open scoped ProbabilityTheory
@@ -31,7 +32,7 @@ theorem exists_notMem_of_measureReal_add_lt_one {A B : Set Ω}
     (h : (ℙ : Measure Ω).real A + (ℙ : Measure Ω).real B < 1) :
     ∃ ω : Ω, ω ∉ A ∧ ω ∉ B := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   have huniv : A ∪ B = Set.univ := by
     ext ω
     simp only [Set.mem_union, Set.mem_univ, iff_true]
@@ -54,7 +55,7 @@ theorem measureReal_ge_le_integral_div {f : Ω → ℝ} (hf : ∀ ω, 0 ≤ f ω
   exact h
 
 /-- **Counting Markov.**  At most `(∑ᵢ gᵢ)/t` indices satisfy `t ≤ gᵢ`. -/
-theorem card_filter_mul_le_sum {ι : Type*} [Fintype ι] [DecidableEq ι] (g : ι → ℝ)
+theorem card_filter_mul_le_sum {ι : Type*} [Fintype ι] (g : ι → ℝ)
     (hg : ∀ i, 0 ≤ g i) (t : ℝ) :
     ((Finset.univ.filter (fun i => t ≤ g i)).card : ℝ) * t ≤ ∑ i, g i := by
   classical

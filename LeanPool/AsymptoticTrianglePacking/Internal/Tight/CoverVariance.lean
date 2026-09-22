@@ -3,10 +3,16 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — the VARIANCE of the covered count, and Chebyshev for the coverage
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.PairExcessCodegree
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
-`LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_on` controls the coverage of a nibble round by MARKOV applied to the
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — the VARIANCE of the covered count, and Chebyshev for
+the coverage
+
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_on` controls the coverage of a
+nibble round by MARKOV applied to the
 number of *uncovered* vertices.  That is extremely lossy: it only gives
 
   `ℙ(covered ≤ N·q/2) ≤ 1 − q/2`,
@@ -30,12 +36,9 @@ i.e. `≤ 1/2` as soon as `N ≥ 16/γ` and `μ ≤ γ/16` — INDEPENDENTLY of 
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.PairExcessCodegree
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -62,8 +65,8 @@ theorem integrable_sq_centered_coveredCount {H : Finset (Finset V)} {p : ℝ}
     funext ω
     rw [coveredCount_sub_mean_eq ρ ω, sq, Finset.sum_mul_sum]
   rw [hexp]
-  exact integrable_finset_sum _
-    (fun u _ => integrable_finset_sum _ (fun u' _ => integrable_coverIndC_mul ρ u u'))
+  exact integrable_finsetSum _
+    (fun u _ => integrable_finsetSum _ (fun u' _ => integrable_coverIndC_mul ρ u u'))
 
 /-- **The variance of the covered count, as an exact double sum of pair excesses.** -/
 theorem integral_sq_centered_coveredCount {H : Finset (Finset V)} {p : ℝ}
@@ -79,10 +82,10 @@ theorem integral_sq_centered_coveredCount {H : Finset (Finset V)} {p : ℝ}
     intro ω
     rw [coveredCount_sub_mean_eq ρ ω, sq, Finset.sum_mul_sum]
   simp only [hexp]
-  rw [integral_finset_sum _
-    (fun u _ => integrable_finset_sum _ (fun u' _ => integrable_coverIndC_mul ρ u u'))]
+  rw [integral_finsetSum _
+    (fun u _ => integrable_finsetSum _ (fun u' _ => integrable_coverIndC_mul ρ u u'))]
   refine Finset.sum_congr rfl (fun u _ => ?_)
-  rw [integral_finset_sum _ (fun u' _ => integrable_coverIndC_mul ρ u u')]
+  rw [integral_finsetSum _ (fun u' _ => integrable_coverIndC_mul ρ u u')]
   exact Finset.sum_congr rfl (fun u' _ => integral_coverIndC_mul ρ hp0 hp1 u u')
 
 /-- **The variance bound for the covered count.**  With covering rates at most `q_hi` and pair
@@ -110,10 +113,10 @@ theorem coveredCount_variance_le {H : Finset (Finset V)} {p : ℝ}
       have hself : ({ω | u ∈ covered (retainedSet H ρ ω)}
           ∩ {ω | u ∈ covered (retainedSet H ρ ω)}) = {ω | u ∈ covered (retainedSet H ρ ω)} :=
         Set.inter_self _
-      rw [hself, prob_vertex_covered_eq ρ hp0 hp1 u, if_pos rfl]
+      rw [hself, prob_vertex_covered_eq ρ hp0 hp1 u, ite_eq_left rfl]
       have hqu0 : 0 ≤ coverRate H p u := coverRate_nonneg hp0 hp1 u
       nlinarith [hq u, mul_nonneg hqu0 hqu0]
-    · rw [if_neg huu']
+    · rw [ite_eq_right huu']
       linarith only [hpair u u' huu']
   calc ∑ u : V, ∑ u' : V,
         ((ℙ : Measure Ω).real ({ω | u ∈ covered (retainedSet H ρ ω)}
@@ -127,7 +130,8 @@ theorem coveredCount_variance_le {H : Finset (Finset V)} {p : ℝ}
           intro u
           rw [Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
           congr 1
-          rw [Finset.sum_ite_eq (Finset.univ : Finset V) u (fun _ => qhi), if_pos (Finset.mem_univ u)]
+          rw [Finset.sum_ite_eq (Finset.univ : Finset V) u (fun _ => qhi),
+            ite_eq_left (Finset.mem_univ u)]
         rw [Finset.sum_congr rfl (fun u _ => hinner u), Finset.sum_const, nsmul_eq_mul,
           Finset.card_univ]
         ring

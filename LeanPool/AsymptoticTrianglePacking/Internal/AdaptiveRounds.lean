@@ -3,12 +3,18 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — from a per-round covering oracle to the adaptive strategy sequence
+import LeanPool.AsymptoticTrianglePacking.Internal.IterationSeq
+import LeanPool.AsymptoticTrianglePacking.Internal.DischargeSeq
 
-Standalone (imports only `LeanPool.AsymptoticTrianglePacking.Internal.IterationSeq` / `LeanPool.AsymptoticTrianglePacking.Internal.DischargeSeq` and Mathlib).
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — from a per-round covering oracle to the adaptive
+strategy sequence
 
-The corrected outer interface of the nibble (`LeanPool.AsymptoticTrianglePacking.Internal.AdaptiveOracleExistsCeil`) asks for a *strategy
+Standalone (imports only `LeanPool.AsymptoticTrianglePacking.Internal.IterationSeq` /
+`LeanPool.AsymptoticTrianglePacking.Internal.DischargeSeq` and Mathlib).
+
+The corrected outer interface of the nibble
+(`LeanPool.AsymptoticTrianglePacking.Internal.AdaptiveOracleExistsCeil`) asks for a *strategy
 sequence* `R : ℕ → Finset (Finset V) → Finset (Finset V)`, per-round rates `lam : ℕ → ℝ` with
 `∏_{k<T} lam k ≤ β`, and the per-round covering demand
 
@@ -23,7 +29,8 @@ This file performs the two *architectural* reductions of that demand, both place
   `u T ≤ β · |V|` — "after `T` rounds at most a `β`-fraction of the vertices is still uncovered".
 
 * `exists_uncovered_le_of_roundOracle` — that scalar statement follows from a purely *one-round*
-  oracle `HasRoundOracle H c β`: an invariant `Inv` on (residual hypergraph, covered set) pairs which
+  oracle `HasRoundOracle H c β`: an invariant `Inv` on (residual hypergraph, covered set) pairs
+  which
   holds initially and, as long as more than a `β`-fraction of the vertices is uncovered, can be
   advanced by one round that covers at least a `c`-fraction of the still-uncovered vertices.  The
   strategy sequence is built explicitly (`oracleStrategy`, `oracleStateSeq`) so that no
@@ -31,12 +38,11 @@ This file performs the two *architectural* reductions of that demand, both place
 
 Combining the two gives `exists_adaptive_strategy_of_roundOracle`, which is exactly the per-instance
 conclusion of `AdaptiveOracleExistsCeil`.  The converse `hasRoundOracle_of_matching` shows the
-one-round oracle is not a strengthening: it already follows from the existence of one large matching.
+one-round oracle is not a strengthening: it already follows from the existence of one large
+matching.
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.IterationSeq
-import LeanPool.AsymptoticTrianglePacking.Internal.DischargeSeq
 
 open Finset Hypergraph
 
@@ -158,7 +164,7 @@ theorem canonicalRate_cover {R : ℕ → Finset (Finset V) → Finset (Finset V)
       field_simp
     rw [this]; linarith only [hsucc]
 
-/-- **The rate sequence is never an obstruction.**  If after `T` rounds at most a `β`-fraction of the
+/-- **The rate sequence is never an obstruction.** If after `T` rounds at most a `β`-fraction of the
 vertices is uncovered, then the canonical rates witness the full per-round demand of
 `AdaptiveOracleExistsCeil`. -/
 theorem exists_adaptive_rates_of_uncovered_le
@@ -225,7 +231,7 @@ theorem nibbleIterSeq_oracleStrategy (G : Finset (Finset V) → Finset V → Fin
   induction k with
   | zero => rfl
   | succ k ih =>
-      show ((nibbleIterSeq (oracleStrategy G H) H k).1
+      change ((nibbleIterSeq (oracleStrategy G H) H k).1
               ∪ roundMatching (oracleStrategy G H k (nibbleIterSeq (oracleStrategy G H) H k).2),
             Hypergraph.residual (nibbleIterSeq (oracleStrategy G H) H k).2
               (oracleStrategy G H k (nibbleIterSeq (oracleStrategy G H) H k).2))
@@ -311,7 +317,7 @@ theorem exists_uncovered_le_of_roundOracle (H : Finset (Finset V)) {c β : ℝ}
         · exact Or.inl (le_trans (uncoveredCount_antitone hRsub H k) hdone)
         · by_cases hstop : uncoveredCount R H k ≤ β * (Fintype.card V : ℝ)
           · exact Or.inl (le_trans (uncoveredCount_antitone hRsub H k) hstop)
-          · push_neg at hstop
+          · push Not at hstop
             have hlt : β * (Fintype.card V : ℝ)
                 < (Fintype.card V : ℝ) - ((support (nibbleMatchingSeq R H k)).card : ℝ) := hstop
             have hgs := hgsub _ _ hInv hlt
@@ -328,7 +334,7 @@ theorem exists_uncovered_le_of_roundOracle (H : Finset (Finset V)) {c β : ℝ}
               have hmat : support (nibbleMatchingSeq R H (k + 1))
                   = support (nibbleMatchingSeq R H k)
                     ∪ support (roundMatching (R k (nibbleResidualSeq R H k))) := by
-                show support (nibbleMatchingSeq R H k
+                change support (nibbleMatchingSeq R H k
                     ∪ roundMatching (R k (nibbleResidualSeq R H k))) = _
                 exact support_union _ _
               rw [hres, hmat, heq]
@@ -355,7 +361,8 @@ theorem exists_uncovered_le_of_roundOracle (H : Finset (Finset V)) {c β : ℝ}
     linarith
 
 /-- **The per-round oracle produces the full adaptive strategy sequence.**  This is exactly the
-per-instance conclusion demanded by `LeanPool.AsymptoticTrianglePacking.Internal.AdaptiveOracleExistsCeil`. -/
+per-instance conclusion demanded by
+`LeanPool.AsymptoticTrianglePacking.Internal.AdaptiveOracleExistsCeil`. -/
 theorem exists_adaptive_strategy_of_roundOracle (H : Finset (Finset V)) {c β : ℝ}
     (hc0 : 0 < c) (hc1 : c ≤ 1) (hβ0 : 0 < β) (hO : HasRoundOracle H c β) :
     ∃ (R : ℕ → Finset (Finset V) → Finset (Finset V)) (lam : ℕ → ℝ) (T : ℕ),
@@ -398,7 +405,7 @@ theorem hasRoundOracle_of_scheduled_invariant (H : Finset (Finset V)) {c β : �
   · rintro H' S ⟨j, hPj, hdec⟩ hlt
     have hjT : j < T := by
       by_contra hge
-      push_neg at hge
+      push Not at hge
       have hpow : (1 - c) ^ j ≤ (1 - c) ^ T :=
         pow_le_pow_of_le_one (by linarith) (by linarith) hge
       have : (Fintype.card V : ℝ) - (S.card : ℝ) ≤ β * (Fintype.card V : ℝ) :=
@@ -448,12 +455,14 @@ theorem round_cover_of_matching_card {H' R' : Finset (Finset V)} {r : ℕ} {c U 
     exact_mod_cast matching_support_card huni hM
   rw [hsc]; exact h
 
+omit [Fintype V] in
 /-- **Handshake lower bound on the edge count.**  Any set `A` of vertices of degree at least `δ`
 forces `δ · |A| ≤ r · |H|`. -/
-theorem card_mul_le_of_degree_ge {H : Finset (Finset V)} {r : ℕ} (huni : IsUniform H r)
+theorem card_mul_le_of_degree_ge [Finite V] {H : Finset (Finset V)} {r : ℕ} (huni : IsUniform H r)
     (A : Finset V) {δ : ℝ} (hA : ∀ v ∈ A, δ ≤ (degree H v : ℝ)) :
     δ * (A.card : ℝ) ≤ (r : ℝ) * (H.card : ℝ) := by
   classical
+  let _ : Fintype V := Fintype.ofFinite V
   have hsum : (∑ v : V, (degree H v : ℝ)) = (r : ℝ) * (H.card : ℝ) := by
     exact_mod_cast congrArg (fun n : ℕ => (n : ℝ)) (sum_degree H huni)
   have h1 : δ * (A.card : ℝ) ≤ ∑ v ∈ A, (degree H v : ℝ) := by
@@ -465,13 +474,14 @@ theorem card_mul_le_of_degree_ge {H : Finset (Finset V)} {r : ℕ} (huni : IsUni
   rw [← hsum]
   linarith
 
+omit [Fintype V] in
 /-- **The covering demand of `HasRoundOracle`, from the standard one-round output.**  This is the
 last bridge a concrete round oracle has to cross.  The nibble bricks deliver a round matching of
 cardinality at least `γ·|H'|` (with `γ = p·(1-p)^{rΔ}` minus the bad-event penalty); the residual
 near-regularity delivers a set `A` of vertices of degree at least `δ` in `H'`; and the exceptional
-(dead) vertices are at most `m`.  Then the round covers at least `γ·δ·(U - m)` vertices, where `U` is
+(dead) vertices are at most `m`. Then the round covers at least `γ·δ·(U - m)` vertices, where `U` is
 the number of still-uncovered vertices.  Handshake plus `r`-uniformity, nothing else. -/
-theorem round_cover_demand_of_gain {H' R' : Finset (Finset V)} {r : ℕ} {γ δ U m : ℝ}
+theorem round_cover_demand_of_gain [Finite V] {H' R' : Finset (Finset V)} {r : ℕ} {γ δ U m : ℝ}
     (huni : IsUniform H' r) (hR' : R' ⊆ H') (A : Finset V)
     (hA : ∀ v ∈ A, δ ≤ (degree H' v : ℝ)) (hδ : 0 ≤ δ) (hγ : 0 ≤ γ)
     (hgain : γ * (H'.card : ℝ) ≤ ((roundMatching R').card : ℝ))

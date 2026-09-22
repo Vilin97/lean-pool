@@ -3,10 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeightMoments
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the mean of the Bonferroni correction
 
-The upper half of the safe-degree sandwich (`LeanPool.AsymptoticTrianglePacking.Internal.safeDegree_add_coverWeight_le`) pays the
+The upper half of the safe-degree sandwich
+(`LeanPool.AsymptoticTrianglePacking.Internal.safeDegree_add_coverWeight_le`) pays the
 Bonferroni correction `pairWeight H v C = ∑_{e ∋ v} C(|(e∖v) ∩ C|, 2)`.  This file bounds its mean.
 
 * `sum_pair_ind_nat` — the ordered-pair count `∑_{u ∈ D} ∑_{u' ∈ D∖u} 1[u ∈ C]1[u' ∈ C]` equals
@@ -23,11 +27,9 @@ of the vertices.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeightMoments
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -102,8 +104,8 @@ theorem integrable_pairCount {H : Finset (Finset V)} {p : ℝ}
   have h : pairCount ρ v = fun ω => ∑ e ∈ H.filter (fun e => v ∈ e),
       ∑ u ∈ e.erase v, ∑ u' ∈ (e.erase v).erase u, coverInd ρ u ω * coverInd ρ u' ω := rfl
   rw [h]
-  exact integrable_finset_sum _ (fun e _ => integrable_finset_sum _ (fun u _ =>
-    integrable_finset_sum _ (fun u' _ => integrable_coverInd_mul ρ u u')))
+  exact integrable_finsetSum _ (fun e _ => integrable_finsetSum _ (fun u _ =>
+    integrable_finsetSum _ (fun u' _ => integrable_coverInd_mul ρ u u')))
 
 /-- **The mean of the pair count.** -/
 theorem integral_pairCount_le {H : Finset (Finset V)} {p : ℝ} {r : ℕ} {εpair : ℝ}
@@ -115,8 +117,8 @@ theorem integral_pairCount_le {H : Finset (Finset V)} {p : ℝ} {r : ℕ} {εpai
   classical
   have h : pairCount ρ v = fun ω => ∑ e ∈ H.filter (fun e => v ∈ e),
       ∑ u ∈ e.erase v, ∑ u' ∈ (e.erase v).erase u, coverInd ρ u ω * coverInd ρ u' ω := rfl
-  rw [h, integral_finset_sum _ (fun e _ => integrable_finset_sum _ (fun u _ =>
-    integrable_finset_sum _ (fun u' _ => integrable_coverInd_mul ρ u u')))]
+  rw [h, integral_finsetSum _ (fun e _ => integrable_finsetSum _ (fun u _ =>
+    integrable_finsetSum _ (fun u' _ => integrable_coverInd_mul ρ u u')))]
   have hterm : ∀ e ∈ H.filter (fun e => v ∈ e),
       ∫ ω, (∑ u ∈ e.erase v, ∑ u' ∈ (e.erase v).erase u,
           coverInd ρ u ω * coverInd ρ u' ω) ∂(ℙ : Measure Ω)
@@ -127,13 +129,13 @@ theorem integral_pairCount_le {H : Finset (Finset V)} {p : ℝ} {r : ℕ} {εpai
       rw [Finset.card_erase_of_mem hve, hr e (Finset.mem_filter.mp he).1]
     have hcastc : ((e.erase v).card : ℝ) = (r : ℝ) - 1 := by
       rw [hcard, Nat.cast_sub hr1, Nat.cast_one]
-    rw [integral_finset_sum _ (fun u _ => integrable_finset_sum _
+    rw [integral_finsetSum _ (fun u _ => integrable_finsetSum _
       (fun u' _ => integrable_coverInd_mul ρ u u'))]
     calc ∑ u ∈ e.erase v, ∫ ω, (∑ u' ∈ (e.erase v).erase u,
             coverInd ρ u ω * coverInd ρ u' ω) ∂(ℙ : Measure Ω)
         ≤ ∑ _u ∈ e.erase v, (((e.erase v).card : ℝ) * εpair) := by
           refine Finset.sum_le_sum (fun u hu => ?_)
-          rw [integral_finset_sum _ (fun u' _ => integrable_coverInd_mul ρ u u')]
+          rw [integral_finsetSum _ (fun u' _ => integrable_coverInd_mul ρ u u')]
           calc ∑ u' ∈ (e.erase v).erase u,
                 ∫ ω, coverInd ρ u ω * coverInd ρ u' ω ∂(ℙ : Measure Ω)
               ≤ ∑ _u' ∈ (e.erase v).erase u, εpair := by

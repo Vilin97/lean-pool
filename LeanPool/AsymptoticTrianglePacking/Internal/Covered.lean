@@ -3,8 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-3b (part 1) : probability a vertex is covered
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-3b (part 1) : probability a vertex is
+covered
 
 Standalone, Mathlib-only. Foundation for the Rödl-nibble project.
 
@@ -21,13 +27,8 @@ This union-bound estimate deliberately sidesteps the delicate correlation struct
 `retainedSet ρ ω` is the (classically decidable) set of retained edges at outcome `ω`.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Survival
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -35,8 +36,9 @@ variable {V : Type*} [DecidableEq V] {Ω : Type*} [MeasureSpace Ω]
 
 /-- The set of retained edges at outcome `ω` (classically decidable membership in the events). -/
 noncomputable def retainedSet (H : Finset (Finset V)) {p : ℝ}
-    (ρ : BernoulliRetention (Ω := Ω) H p) (ω : Ω) : Finset (Finset V) :=
-  H.filter (fun e => ω ∈ ρ.A e)
+    (ρ : BernoulliRetention (Ω := Ω) H p) (ω : Ω) : Finset (Finset V) := by
+  classical
+  exact H.filter (fun e => ω ∈ ρ.A e)
 
 /-- **C4b-3b(1) — vertex-covered probability bound.** The probability that a vertex `x` is covered
 by the round's matching is at most `deg(x) · p`. -/
@@ -44,10 +46,11 @@ theorem prob_vertex_covered {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (x : V) :
     (ℙ : Measure Ω) {ω | x ∈ support (roundMatching (retainedSet H ρ ω))}
       ≤ (degree H x : ENNReal) * ENNReal.ofReal p := by
+  classical
   have hsub : {ω | x ∈ support (roundMatching (retainedSet H ρ ω))}
       ⊆ ⋃ e ∈ H.filter (fun e => x ∈ e), ρ.A e := by
     intro ω hω
-    simp only [Set.mem_setOf_eq, support, Finset.mem_biUnion, id_eq] at hω
+    simp only [Set.mem_ofPred_eq, support, Finset.mem_biUnion, id_eq] at hω
     obtain ⟨e, hem, hxe⟩ := hω
     have heR : e ∈ retainedSet H ρ ω := roundMatching_subset _ hem
     rw [retainedSet, Finset.mem_filter] at heR
@@ -72,7 +75,7 @@ theorem prob_edge_hit {H : Finset (Finset V)} {p : ℝ}
   have hsub : {ω | ∃ x ∈ e, x ∈ support (roundMatching (retainedSet H ρ ω))}
       ⊆ ⋃ x ∈ e, {ω | x ∈ support (roundMatching (retainedSet H ρ ω))} := by
     intro ω hω
-    simp only [Set.mem_setOf_eq] at hω
+    simp only [Set.mem_ofPred_eq] at hω
     obtain ⟨x, hxe, hx⟩ := hω
     rw [Set.mem_iUnion₂]
     exact ⟨x, hxe, hx⟩

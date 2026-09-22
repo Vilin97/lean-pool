@@ -3,11 +3,19 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+import LeanPool.AsymptoticTrianglePacking.Internal.Iteration
+import LeanPool.AsymptoticTrianglePacking.Internal.Assemble
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — round-dependent iteration of nibble rounds
 
-Standalone, Mathlib-only.  `LeanPool.AsymptoticTrianglePacking.Internal.Iteration` iterates ONE fixed retention strategy `R`.  The
-obstruction `LeanPool.AsymptoticTrianglePacking.Internal.total_gain_le` shows that a fixed strategy — in particular a fixed retention
+Standalone, Mathlib-only. `LeanPool.AsymptoticTrianglePacking.Internal.Iteration` iterates ONE fixed
+retention strategy `R`. The
+obstruction `LeanPool.AsymptoticTrianglePacking.Internal.total_gain_le` shows that a fixed strategy
+— in particular a fixed retention
 probability `p` — can never cover more than a `(1-μ)d/(rΔ) ≤ 1/r` fraction of the vertex set, no
 matter how many rounds are run: with `p` fixed, the residual degree decays like `(1-rΔp)^k` and so
 does the per-round covering fraction, whose total is a convergent geometric series.
@@ -15,21 +23,18 @@ does the per-round covering fraction, whose total is a convergent geometric seri
 The nibble therefore has to re-tune its retention probability from round to round
 (`p_k ≈ x / (r·d_k)`, tracking the shrinking residual degree `d_k`).  This file provides the
 corresponding deterministic scaffolding: iteration along a *sequence* `R : ℕ → strategy` of
-retention strategies, with all the round-to-round invariants of `LeanPool.AsymptoticTrianglePacking.Internal.Iteration` and
+retention strategies, with all the round-to-round invariants of
+`LeanPool.AsymptoticTrianglePacking.Internal.Iteration` and
 `LeanPool.AsymptoticTrianglePacking.Internal.Assemble` re-established.
 
 * `nibbleIterSeq`, `nibbleResidualSeq`, `nibbleMatchingSeq` — the sequence-indexed iteration.
 * `nibbleResidualSeq_subset`, `nibbleResidualSeq_uniform` — residual invariants.
 * `nibbleResidualSeq_disjoint_support`, `nibbleMatchingSeq_isMatching` — the assembly invariants.
-* `nibbleIterSeq_const` — the constant sequence recovers `LeanPool.AsymptoticTrianglePacking.Internal.Iteration`.
+* `nibbleIterSeq_const` — the constant sequence recovers
+  `LeanPool.AsymptoticTrianglePacking.Internal.Iteration`.
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Iteration
-import LeanPool.AsymptoticTrianglePacking.Internal.Assemble
 
 open Finset
 
@@ -61,7 +66,8 @@ theorem nibbleIterSeq_const (R : Finset (Finset V) → Finset (Finset V)) (H : F
   induction k with
   | zero => rfl
   | succ k ih =>
-      show ((nibbleIterSeq (fun _ => R) H k).1 ∪ roundMatching (R (nibbleIterSeq (fun _ => R) H k).2),
+      change ((nibbleIterSeq (fun _ => R) H k).1 ∪
+        roundMatching (R (nibbleIterSeq (fun _ => R) H k).2),
         residual (nibbleIterSeq (fun _ => R) H k).2 (R (nibbleIterSeq (fun _ => R) H k).2))
         = ((nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2),
         residual (nibbleIter R H k).2 (R (nibbleIter R H k).2))
@@ -73,7 +79,7 @@ theorem nibbleResidualSeq_subset (R : ℕ → Finset (Finset V) → Finset (Fins
   induction k with
   | zero => exact Finset.Subset.refl H
   | succ k ih =>
-      show residual (nibbleIterSeq R H k).2 (R k (nibbleIterSeq R H k).2) ⊆ H
+      change residual (nibbleIterSeq R H k).2 (R k (nibbleIterSeq R H k).2) ⊆ H
       exact (residual_subset _ _).trans ih
 
 /-- The residual stays `r`-uniform. -/
@@ -83,7 +89,7 @@ theorem nibbleResidualSeq_uniform {H : Finset (Finset V)} {r : ℕ} (hr : IsUnif
   induction k with
   | zero => exact hr
   | succ k ih =>
-      show IsUniform (residual (nibbleIterSeq R H k).2 (R k (nibbleIterSeq R H k).2)) r
+      change IsUniform (residual (nibbleIterSeq R H k).2 (R k (nibbleIterSeq R H k).2)) r
       exact residual_uniform ih (R k (nibbleIterSeq R H k).2)
 
 /-- The accumulated matching stays inside `H`. -/
@@ -93,7 +99,7 @@ theorem nibbleMatchingSeq_subset {R : ℕ → Finset (Finset V) → Finset (Fins
   induction k with
   | zero => exact Finset.empty_subset H
   | succ k ih =>
-      show (nibbleIterSeq R H k).1 ∪ roundMatching (R k (nibbleIterSeq R H k).2) ⊆ H
+      change (nibbleIterSeq R H k).1 ∪ roundMatching (R k (nibbleIterSeq R H k).2) ⊆ H
       refine Finset.union_subset ih ?_
       exact (roundMatching_subset _).trans
         ((hR _ _).trans (nibbleResidualSeq_subset R H k))
@@ -106,12 +112,12 @@ theorem nibbleResidualSeq_disjoint_support {R : ℕ → Finset (Finset V) → Fi
   induction k with
   | zero =>
       intro e _
-      show Disjoint e (support (∅ : Finset (Finset V)))
+      change Disjoint e (support (∅ : Finset (Finset V)))
       rw [support, Finset.biUnion_empty]
       exact Finset.disjoint_empty_right e
   | succ k ih =>
       intro e he
-      show Disjoint e
+      change Disjoint e
         (support ((nibbleIterSeq R H k).1 ∪ roundMatching (R k (nibbleIterSeq R H k).2)))
       rw [support_union, Finset.disjoint_union_right]
       have he' : e ∈ nibbleResidualSeq R H k :=
@@ -133,7 +139,7 @@ theorem nibbleMatchingSeq_isMatching {R : ℕ → Finset (Finset V) → Finset (
         rw [show nibbleMatchingSeq R H 0 = (∅ : Finset (Finset V)) from rfl] at he
         exact absurd he (Finset.notMem_empty e)
     | succ k ih =>
-        show ∀ e ∈ (nibbleIterSeq R H k).1 ∪ roundMatching (R k (nibbleIterSeq R H k).2),
+        change ∀ e ∈ (nibbleIterSeq R H k).1 ∪ roundMatching (R k (nibbleIterSeq R H k).2),
           ∀ f ∈ (nibbleIterSeq R H k).1 ∪ roundMatching (R k (nibbleIterSeq R H k).2),
             e ≠ f → Disjoint e f
         intro e he f hf hef

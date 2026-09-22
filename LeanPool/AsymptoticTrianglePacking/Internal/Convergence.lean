@@ -3,8 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — T3 convergence core : geometric decay of the uncovered set
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+import Mathlib.Tactic.Bound
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — T3 convergence core : geometric decay of the
+uncovered set
 
 Standalone, Mathlib-only. The mathematical heart of the iterated nibble (T3): if each round covers a
 definite fraction of the remaining vertices — so the uncovered count `a k` shrinks by a factor
@@ -19,9 +25,6 @@ This is the deterministic convergence mechanism into which the per-round coverin
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import Mathlib.Analysis.Normed.Ring.Basic
-import Mathlib.Data.Real.StarOrdered
-import Mathlib.Tactic.Bound
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 

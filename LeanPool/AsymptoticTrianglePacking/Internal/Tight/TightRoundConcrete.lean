@@ -3,10 +3,16 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the tight round with CONCRETE parameters
 
-`LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round` (in `LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound`) is stated with abstract moment bounds
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round` (in
+`LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound`) is stated with abstract moment
+bounds
 `Vb`, `Pb` and an abstract coverage rate `qlo`.  Here those abstract data are instantiated in terms
 of the hypergraph parameters only:
 
@@ -16,18 +22,16 @@ of the hypergraph parameters only:
 * `κ`   — a codegree ceiling,
 * `p`   — the retention probability.
 
-The resulting statement `LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_of_params` is the tight nibble round in the form
+The resulting statement `LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_of_params`
+is the tight nibble round in the form
 in which the iteration consumes it: one round, one outcome, a two-sided band around the SAME centre
 for all but `a` vertices, and a guaranteed coverage fraction.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 

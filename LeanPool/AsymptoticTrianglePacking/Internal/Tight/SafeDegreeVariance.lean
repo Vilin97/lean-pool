@@ -3,10 +3,15 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegree
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the VARIANCE of the safe degree
 
-The tight round of `LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound` controls the safe degree through the LOSS WEIGHT
+The tight round of `LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRound` controls the safe
+degree through the LOSS WEIGHT
 `∑_{u} codeg(v,u)·1[u covered]` and the PAIR COUNT correction.  The pair count has mean `≍ Δγ²` and
 is handled by Markov, which forces the upper tolerance `s ≳ Δγ²/θ` — first order in `γ` once the
 exceptional fraction `θ` is pushed down to the `≍ γ` demanded by a `γ^{-1}log(1/β)`-round schedule,
@@ -42,12 +47,9 @@ for the round to be iterated, and removing it requires a third-order Bonferroni 
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegree
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -63,7 +65,7 @@ theorem safeIndicator_mul_eq {H : Finset (Finset V)} {p : ℝ}
     safeIndicator ρ v e ω * safeIndicator ρ v e' ω
       = if ω ∈ {ω | Disjoint (e.erase v) (covered (retainedSet H ρ ω))}
             ∩ {ω | Disjoint (e'.erase v) (covered (retainedSet H ρ ω))} then 1 else 0 := by
-  simp only [safeIndicator, Set.mem_inter_iff, Set.mem_setOf_eq]
+  simp only [safeIndicator, Set.mem_inter_iff, Set.mem_ofPred_eq]
   split_ifs with h1 h2 h3 <;> simp_all
 
 theorem integrable_safeIndicator_mul {H : Finset (Finset V)} {p : ℝ}
@@ -250,7 +252,8 @@ theorem safeIndicator_covariance_le {H : Finset (Finset V)} {p : ℝ}
   have hBc'le : Bc' ≤ (n : ℝ) ^ 2 * (qhi ^ 2 + ε₂) := hBcBound S' hn'
   -- lower bounds on ℙ(A), ℙ(B) via Bonferroni
   have hAlo : Q - Bc ≤ (ℙ : Measure Ω).real A := by
-    have := measureReal_biUnion_ge_bonferroni (Ω := Ω) S C (fun u => measurableSet_vertex_covered ρ u)
+    have := measureReal_biUnion_ge_bonferroni (Ω := Ω) S C
+      (fun u => measurableSet_vertex_covered ρ u)
     have hQeq : ∑ u ∈ S, (ℙ : Measure Ω).real (C u) = Q :=
       Finset.sum_congr rfl fun u _ => prob_vertex_covered_eq ρ hp0 hp1 u
     rw [hQeq] at this
@@ -268,11 +271,11 @@ theorem safeIndicator_covariance_le {H : Finset (Finset V)} {p : ℝ}
     intro u u'
     by_cases huu' : u = u'
     · subst huu'
-      rw [Set.inter_self, prob_vertex_covered_eq ρ hp0 hp1 u, if_pos rfl]
+      rw [Set.inter_self, prob_vertex_covered_eq ρ hp0 hp1 u, ite_eq_left rfl]
       have h0 : 0 ≤ coverRate H p u * coverRate H p u :=
         mul_nonneg (coverRate_nonneg hp0 hp1 u) (coverRate_nonneg hp0 hp1 u)
       linarith [hq u]
-    · rw [if_neg huu']
+    · rw [ite_eq_right huu']
       linarith only [hpair u u' huu']
   have hInterCard : S ∩ S' = (e ∩ e').erase v := by
     ext u
@@ -346,7 +349,7 @@ theorem integrable_sq_centered_safeDegree {H : Finset (Finset V)} {p : ℝ}
     funext ω
     rw [safeDegree_sub_mean_eq ρ v ω, sq, Finset.sum_mul_sum]
   rw [hfun]
-  refine integrable_finset_sum _ fun e _ => integrable_finset_sum _ fun e' _ => ?_
+  refine integrable_finsetSum _ fun e _ => integrable_finsetSum _ fun e' _ => ?_
   have hprod : (fun ω => (safeIndicator ρ v e ω - c e) * (safeIndicator ρ v e' ω - c e'))
       = fun ω => safeIndicator ρ v e ω * safeIndicator ρ v e' ω
         - c e' * safeIndicator ρ v e ω - c e * safeIndicator ρ v e' ω + c e * c e' := by
@@ -415,9 +418,9 @@ theorem integral_sq_centered_safeDegree {H : Finset (Finset V)} {p : ℝ}
     intro ω
     rw [safeDegree_sub_mean_eq ρ v ω, sq, Finset.sum_mul_sum]
   simp only [hexp]
-  rw [integral_finset_sum _ (fun e _ => integrable_finset_sum _ (fun e' _ => hint e e'))]
+  rw [integral_finsetSum _ (fun e _ => integrable_finsetSum _ (fun e' _ => hint e e'))]
   refine Finset.sum_congr rfl fun e _ => ?_
-  rw [integral_finset_sum _ (fun e' _ => hint e e')]
+  rw [integral_finsetSum _ (fun e' _ => hint e e')]
   exact Finset.sum_congr rfl fun e' _ => hone e e'
 
 /-- **The variance bound for the safe degree.**  With `deg(v) ≤ Δ` edges at `v`, at most `n`

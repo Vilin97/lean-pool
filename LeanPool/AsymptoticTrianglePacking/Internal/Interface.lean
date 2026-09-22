@@ -3,17 +3,19 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Regular
+
+/-!
 # Near-regular hypergraph nibble interface
 
 The interface records the finite matching statement established by the nibble construction:
 near-regular, low-codegree uniform hypergraphs have near-perfect matchings.
 
-Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` (`IsUniform`, `IsMatching`) and `LeanPool.AsymptoticTrianglePacking.Internal.Regular`
+Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` (`IsUniform`,
+`IsMatching`) and `LeanPool.AsymptoticTrianglePacking.Internal.Regular`
 (`NearlyRegular`, `CodegreeBounded`).
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Regular
 
 open Hypergraph
 

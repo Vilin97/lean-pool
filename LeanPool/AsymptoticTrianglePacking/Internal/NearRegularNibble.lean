@@ -18,8 +18,8 @@ open Finset Hypergraph
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 /-- **The one-round covering oracle from the sharp round.**  Running the tight-band schedule
-`LeanPool.AsymptoticTrianglePacking.Internal.TightParams r β` gives, for every majority near-regular input with a global degree ceiling
-and low codegree, a `HasRoundOracle H (γ/(16r)) β`. -/
+`LeanPool.AsymptoticTrianglePacking.Internal.TightParams r β` gives a one-round oracle for every
+majority near-regular input with a global degree ceiling and low codegree. -/
 theorem roundOracleExistsCeil_holds : RoundOracleExistsCeil := by
   classical
   intro r hr β hβ
@@ -79,7 +79,7 @@ theorem roundOracleExistsCeil_holds : RoundOracleExistsCeil := by
     have hExclt : (Exc.card : ℝ) < (Fintype.card V : ℝ) := by nlinarith
     obtain ⟨v, hv⟩ : ∃ v : V, v ∉ Exc := by
       by_contra hcon
-      push_neg at hcon
+      push Not at hcon
       have : Exc = Finset.univ := Finset.eq_univ_of_forall hcon
       rw [this, Finset.card_univ] at hExclt
       exact absurd hExclt (lt_irrefl _)
@@ -87,7 +87,7 @@ theorem roundOracleExistsCeil_holds : RoundOracleExistsCeil := by
     have hcg := card_ge_of_codegree huni hr1 hcodeg v
     have hdegnn : (0 : ℝ) ≤ (degree H v : ℝ) := Nat.cast_nonneg _
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     have hmu_D' : mu * (2 * (D₀ + 1)) ≤ 1 := by
       rw [le_div_iff₀ hD1] at hmu_D
       linarith
@@ -156,4 +156,6 @@ theorem nibbleTheoremMostCeilSized_holds : NibbleTheoremMostCeilSized := by
 /-- **`NibbleTheorem`, unconditionally.** -/
 theorem nibbleTheorem_holds : NibbleTheorem :=
   nibbleTheoremMostCeil_holds.nibbleTheorem
+
+end LeanPool.AsymptoticTrianglePacking.Internal
 

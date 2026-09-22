@@ -3,14 +3,19 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegree
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the LINEAR sandwich for the safe degree
 
-The safe degree `safeDegree H C v` (`LeanPool.AsymptoticTrianglePacking.Internal.SafeDegree`) is a nonlinear functional of the covered
-set `C` — it counts the edges at `v` *none* of whose other vertices is covered.  Its concentration is
+The safe degree `safeDegree H C v` (`LeanPool.AsymptoticTrianglePacking.Internal.SafeDegree`) is a
+nonlinear functional of the covered
+set `C` — it counts the edges at `v` *none* of whose other vertices is covered. Its concentration is
 obtained here by sandwiching it between two quantities that are LINEAR (resp. quadratic) in the
 covering indicators, which are the objects whose moments the exact one-round covering law
-(`LeanPool.AsymptoticTrianglePacking.Internal.prob_vertex_covered_eq`, `LeanPool.AsymptoticTrianglePacking.Internal.prob_two_vertices_covered_le`) controls:
+(`LeanPool.AsymptoticTrianglePacking.Internal.prob_vertex_covered_eq`,
+`LeanPool.AsymptoticTrianglePacking.Internal.prob_two_vertices_covered_le`) controls:
 
 * `coverWeight H v C = ∑_{u ∈ C, u ≠ v} codeg(v,u) = ∑_{e ∋ v} |(e∖v) ∩ C|` — the *loss weight*;
 * `pairWeight H v C = ∑_{e ∋ v} C(|(e∖v) ∩ C|, 2)` — the Bonferroni correction.
@@ -20,15 +25,15 @@ The sandwich reads
   `deg(v) ≤ safeDeg(v) + coverWeight`   (`degree_le_safeDegree_add_coverWeight`),
   `safeDeg(v) + coverWeight ≤ deg(v) + pairWeight`   (`safeDegree_add_coverWeight_le`),
 
-i.e. the loss `deg(v) − safeDeg(v)` is squeezed between `coverWeight − pairWeight` and `coverWeight`.
+i.e. the loss `deg(v) − safeDeg(v)` is squeezed between `coverWeight − pairWeight` and
+`coverWeight`.
 Since `coverWeight` is a nonnegative combination `∑_u codeg(v,u)·1[u covered]` of the covering
-indicators, its mean and variance are directly computable, and `pairWeight` has a small mean; this is
+indicators, its mean and variance are directly computable, and `pairWeight` has a small mean; this
+is
 what makes the SAFE degree concentrate where the residual degree cannot.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegree
 
 open Finset Hypergraph
 
@@ -104,7 +109,7 @@ theorem nat_le_indicator_add_choose_two (m : ℕ) :
       have hp : Nat.choose (k + 2) 2 = Nat.choose (k + 1) 1 + Nat.choose (k + 1) 2 :=
         Nat.choose_succ_succ (k + 1) 1
       rw [Nat.choose_one_right] at hp
-      simp only [if_pos (Nat.succ_pos (k + 1))]
+      simp only [ite_eq_left (Nat.succ_pos (k + 1))]
       omega
 
 /-- **Sandwich, upper half.**  `safeDeg(v) + coverWeight ≤ deg(v) + pairWeight`. -/
@@ -120,8 +125,8 @@ theorem safeDegree_add_coverWeight_le (H : Finset (Finset V)) (v : V) (C : Finse
   have heq : (if ¬ Disjoint (e.erase v) C then (1 : ℕ) else 0)
       = (if 0 < (e.erase v ∩ C).card then 1 else 0) := by
     by_cases h : 0 < (e.erase v ∩ C).card
-    · rw [if_pos (unsafe_iff_inter_nonempty.mpr h), if_pos h]
-    · rw [if_neg (fun hc => h (unsafe_iff_inter_nonempty.mp hc)), if_neg h]
+    · rw [ite_eq_left (unsafe_iff_inter_nonempty.mpr h), ite_eq_left h]
+    · rw [ite_eq_right (fun hc => h (unsafe_iff_inter_nonempty.mp hc)), ite_eq_right h]
   rw [heq]
   exact hb
 

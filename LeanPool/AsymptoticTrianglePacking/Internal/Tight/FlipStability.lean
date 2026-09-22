@@ -3,16 +3,23 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — stability of the covered set under a single-edge flip
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegree
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
 
-The one remaining analytic input of the tight-band nibble (see `LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound`) is the
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — stability of the covered set under a single-edge
+flip
+
+The one remaining analytic input of the tight-band nibble (see
+`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpRound`) is the
 SHARP per-vertex safe-degree variance bound
 
   `Var(safeDeg(v)) ≤ C(r)·(γΔ + κγΔ)`,
 
 i.e. a bound with NO term of the shape `c·γ^a·Δ²`.  The Bonferroni route of
-`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegreeVariance` leaves a residue `Θ(γ³Δ²)`, which is a constant factor (depending
+`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegreeVariance` leaves a residue `Θ(γ³Δ²)`,
+which is a constant factor (depending
 on the target `β`) too large to iterate.
 
 This file provides the key COMBINATORIAL input of the bounded-differences (Efron–Stein) route to
@@ -23,13 +30,17 @@ Concretely, with
 
   `flipInfluence R e = insert e (R.filter (fun f => ¬ Disjoint f e))`,
 
-`LeanPool.AsymptoticTrianglePacking.Internal.mem_roundMatching_insert_iff_erase` says that every edge outside `flipInfluence R e` belongs
+`LeanPool.AsymptoticTrianglePacking.Internal.mem_roundMatching_insert_iff_erase` says that every
+edge outside `flipInfluence R e` belongs
 to `roundMatching (insert e R)` exactly when it belongs to `roundMatching (R.erase e)`, and hence
-`LeanPool.AsymptoticTrianglePacking.Internal.covered_insert_sdiff_subset` / `LeanPool.AsymptoticTrianglePacking.Internal.covered_erase_sdiff_subset` bound the symmetric
+`LeanPool.AsymptoticTrianglePacking.Internal.covered_insert_sdiff_subset` /
+`LeanPool.AsymptoticTrianglePacking.Internal.covered_erase_sdiff_subset` bound the symmetric
 difference of the two covered sets by `⋃ (flipInfluence R e)`.  For an `r`-uniform hypergraph this
 has at most `r·(1 + #{f ∈ R : f meets e})` vertices
-(`LeanPool.AsymptoticTrianglePacking.Internal.card_biUnion_flipInfluence_le`), so the safe degree at `v` moves by at most
-`∑_{u} codeg(v,u)` over that set (`LeanPool.AsymptoticTrianglePacking.Internal.abs_safeDegree_sub_le_codegree_sum`).
+(`LeanPool.AsymptoticTrianglePacking.Internal.card_biUnion_flipInfluence_le`), so the safe degree at
+`v` moves by at most
+`∑_{u} codeg(v,u)` over that set
+(`LeanPool.AsymptoticTrianglePacking.Internal.abs_safeDegree_sub_le_codegree_sum`).
 
 Summing `p·𝔼[(ΔsafeDeg)²]` over the edges `e` and using `∑_{u ≠ v} codeg(v,u)² ≤ κ(r−1)deg(v)`
 gives exactly `O_r(γΔ(1 + κ))`, the sharp bound — the arithmetic is recorded in the header of
@@ -37,9 +48,6 @@ gives exactly `O_r(γΔ(1 + κ))`, the sharp bound — the arithmetic is recorde
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegree
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.LossVariance
 
 open Finset Hypergraph
 
@@ -161,7 +169,7 @@ theorem abs_safeDegree_sub_le_card_meeting {H : Finset (Finset V)} {C C' D : Fin
   omega
 
 /-- The number of edges at `v` meeting a set `D` away from `v` is at most `∑_{u ∈ D} codeg(v,u)`. -/
-theorem card_meeting_le_codegree_sum [Fintype V] {H : Finset (Finset V)} {D : Finset V} {v : V} :
+theorem card_meeting_le_codegree_sum {H : Finset (Finset V)} {D : Finset V} {v : V} :
     (H.filter (fun e => v ∈ e ∧ ¬ Disjoint (e.erase v) D)).card
       ≤ ∑ u ∈ D.erase v, codegree H v u := by
   classical
@@ -179,7 +187,7 @@ theorem card_meeting_le_codegree_sum [Fintype V] {H : Finset (Finset V)} {D : Fi
 
 /-- **The bounded-differences estimate for the safe degree.**  If the covered sets `C`, `C'` differ
 only inside `D`, then the safe degrees at `v` differ by at most `∑_{u ∈ D \ {v}} codeg(v,u)`. -/
-theorem abs_safeDegree_sub_le_codegree_sum [Fintype V] {H : Finset (Finset V)} {C C' D : Finset V}
+theorem abs_safeDegree_sub_le_codegree_sum {H : Finset (Finset V)} {C C' D : Finset V}
     {v : V} (hCC' : C \ C' ⊆ D) (hC'C : C' \ C ⊆ D) :
     ((safeDegree H C v : ℤ) - (safeDegree H C' v : ℤ)).natAbs
       ≤ ∑ u ∈ D.erase v, codegree H v u :=
@@ -188,7 +196,7 @@ theorem abs_safeDegree_sub_le_codegree_sum [Fintype V] {H : Finset (Finset V)} {
 /-- **The safe degree is stable under a single-edge flip.**  Flipping the retention status of `e`
 changes the safe degree at `v` by at most the codegree sum over the vertices spanned by the
 influence set of `e`. -/
-theorem abs_safeDegree_flip_le [Fintype V] (H : Finset (Finset V)) (R : Finset (Finset V))
+theorem abs_safeDegree_flip_le (H : Finset (Finset V)) (R : Finset (Finset V))
     (e : Finset V) (v : V) :
     ((safeDegree H (covered (insert e R)) v : ℤ)
         - (safeDegree H (covered (R.erase e)) v : ℤ)).natAbs

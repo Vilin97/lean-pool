@@ -3,10 +3,15 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — one round preserves a TIGHT degree band on the residual
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRoundConcrete
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
-`LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_of_params` produces, for one Bernoulli round, an outcome whose SAFE
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — one round preserves a TIGHT degree band on the
+residual
+
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_of_params` produces, for one
+Bernoulli round, an outcome whose SAFE
 degrees sit in a two-sided band around `deg(v) − 𝔼[loss(v)]`.  Here that is converted into the form
 the iteration needs: a bound on the DEGREES OF THE RESIDUAL HYPERGRAPH, valid for every uncovered
 vertex outside a small exceptional set, with the band expressed purely in the parameters
@@ -14,9 +19,12 @@ vertex outside a small exceptional set, with the band expressed purely in the pa
 
 The two ingredients are
 
-* `LeanPool.AsymptoticTrianglePacking.Internal.lossWeightMean_le` / `LeanPool.AsymptoticTrianglePacking.Internal.lossWeightMean_ge` — the mean loss is squeezed between
+* `LeanPool.AsymptoticTrianglePacking.Internal.lossWeightMean_le` /
+  `LeanPool.AsymptoticTrianglePacking.Internal.lossWeightMean_ge` — the mean loss is squeezed
+  between
   `(r−1)·δ·q_lo` and `(r−1)·Δ·q_hi`, so the centre of the band is itself pinned down; and
-* `LeanPool.AsymptoticTrianglePacking.Internal.safeDegree_eq_residual_degree_of_not_covered` — on the event that `v` survives the round,
+* `LeanPool.AsymptoticTrianglePacking.Internal.safeDegree_eq_residual_degree_of_not_covered` — on
+  the event that `v` survives the round,
   its safe degree IS its residual degree.
 
 The resulting band has width `(Δ − δ) + ((r−1)Δq_hi − (r−1)δq_lo) + 2t + s`.  In the nibble regime
@@ -26,11 +34,9 @@ cannot do.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRoundConcrete
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 

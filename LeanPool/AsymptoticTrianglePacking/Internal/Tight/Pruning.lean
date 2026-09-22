@@ -3,7 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+import Mathlib.Algebra.Group.Action.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — deterministic pruning counts
 
 Each nibble round produces a small set `B` of vertices whose safe degree left the target band; the
@@ -17,10 +22,6 @@ every other vertex the edges it shares with `B`, and this file bounds that cost:
 Pure `Finset` combinatorics, no probability.  placeholder-free and axiom-clean
 `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Algebra.Group.Action.Defs
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 open Finset Hypergraph
 
@@ -41,7 +42,8 @@ omit [Fintype V] in
 theorem card_edges_meeting_le {H : Finset (Finset V)} {Δ : ℕ} (hΔ : ∀ x, degree H x ≤ Δ)
     (B : Finset V) : (H.filter (fun e => ¬ Disjoint e B)).card ≤ B.card * Δ := by
   classical
-  have hsub : H.filter (fun e => ¬ Disjoint e B) ⊆ B.biUnion (fun x => H.filter (fun e => x ∈ e)) := by
+  have hsub : H.filter (fun e => ¬ Disjoint e B) ⊆
+      B.biUnion (fun x => H.filter (fun e => x ∈ e)) := by
     intro e he
     rw [Finset.mem_filter] at he
     obtain ⟨x, hxe, hxB⟩ := Finset.not_disjoint_iff.mp he.2

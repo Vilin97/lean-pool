@@ -4,10 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
 
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.TightAssembly
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — existence of the tight-band schedule
 
-`LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams`: for every uniformity `r ≥ 2` and every target `β ∈ (0,1)` there is a
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_tightParams`: for every uniformity `r ≥ 2` and
+every target `β ∈ (0,1)` there is a
 `LeanPool.AsymptoticTrianglePacking.Internal.TightParams r β`, i.e. a complete choice of
 
 * the round rate `γ`, the relative tolerance `ε`, the exceptional fractions `θ` (per round) and `η`
@@ -28,11 +31,11 @@ The schedule is the classical one.  With `a = (r−1)/r ∈ [1/2, 1)`:
   `η = θ = β/(8(2G)^T)`, so `sig k ≤ β/4`.
 
 The two per-round band inequalities reduce to the polynomial cores
-`LeanPool.AsymptoticTrianglePacking.Internal.tight_band_step_lo_core` and `LeanPool.AsymptoticTrianglePacking.Internal.tight_band_step_hi_core`.
+`LeanPool.AsymptoticTrianglePacking.Internal.tight_band_step_lo_core` and
+`LeanPool.AsymptoticTrianglePacking.Internal.tight_band_step_hi_core`.
 
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.TightAssembly
 
 open Finset
 
@@ -67,7 +70,9 @@ theorem tight_band_step_hi_core {a gam n : ℝ} (ha1 : 1 / 2 ≤ a) (ha2 : a ≤
       _ = a * n / 8 := by ring
   have h2 : 8 * a ^ 2 * gam * n * (1 + n) ≤ a * n / 2 := by
     have hb : 8 * a * gam * (1 + n) ≤ 1 / 2 := by
-      calc 8 * a * gam * (1 + n) ≤ 8 * 1 * (1 / 32) * (1 + 1 / 4) := by gcongr; linarith only [hn4, hgn]
+      calc
+        8 * a * gam * (1 + n) ≤ 8 * 1 * (1 / 32) * (1 + 1 / 4) :=
+          by gcongr; linarith only [hn4, hgn]
         _ ≤ 1 / 2 := by norm_num
     calc 8 * a ^ 2 * gam * n * (1 + n) = (a * n) * (8 * a * gam * (1 + n)) := by ring
       _ ≤ (a * n) * (1 / 2) := mul_le_mul_of_nonneg_left hb han
@@ -82,7 +87,8 @@ theorem tight_band_step_hi_core {a gam n : ℝ} (ha1 : 1 / 2 ≤ a) (ha2 : a ≤
       _ ≤ a * n / 8 := by nlinarith only [ha1, hgam, hn, hn4]
   nlinarith [mul_nonneg ha0 (mul_nonneg hn0 hn0)]
 
-/-- **Floor step (scaled).**  The polynomial core `LeanPool.AsymptoticTrianglePacking.Internal.tight_band_step_lo_core`, multiplied by
+/-- **Floor step (scaled).** The polynomial core
+`LeanPool.AsymptoticTrianglePacking.Internal.tight_band_step_lo_core`, multiplied by
 the common factor `q^k` carried by both ends of the band. -/
 theorem tight_band_step_lo_scaled {a gam eps q qk n : ℝ} (ha0 : 0 ≤ a) (ha2 : a ≤ 1)
     (hgam : 0 < gam) (hgam8 : gam ≤ 1 / 8) (hn : 8 * gam ≤ n) (hn4 : n ≤ 1 / 4)
@@ -100,7 +106,8 @@ theorem tight_band_step_lo_scaled {a gam eps q qk n : ℝ} (ha0 : 0 ≤ a) (ha2 
     mul_le_mul_of_nonneg_left hscal hqk.le
   linarith only [hmul]
 
-/-- **Ceiling step (scaled).**  The polynomial core `LeanPool.AsymptoticTrianglePacking.Internal.tight_band_step_hi_core`, after clearing
+/-- **Ceiling step (scaled).** The polynomial core
+`LeanPool.AsymptoticTrianglePacking.Internal.tight_band_step_hi_core`, after clearing
 the denominator `1 + n` and multiplying by the common factor `q^k` carried by both ends of the
 band. -/
 theorem tight_band_step_hi_scaled {a gam eps q qk n : ℝ} (ha1 : 1 / 2 ≤ a) (ha2 : a ≤ 1)

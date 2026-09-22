@@ -3,11 +3,16 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.FlipStability
+import Mathlib.Algebra.Order.Chebyshev
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the SHARP per-vertex safe-degree variance
 
 This is the one analytic input the iterable nibble round was missing.  The Bonferroni route of
-`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegreeVariance` bounds the variance of `safeDeg(v)` by
+`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeDegreeVariance` bounds the variance of
+`safeDeg(v)` by
 `Δ²((r−1)²ε₂ + 2(r−1)³q_hi(q_hi²+ε₂)) + q_hi κ(r−1)Δ ≈ 2γ³Δ²`; the `Θ(γ³Δ²)` residue is a constant
 factor too large to iterate.  Here we prove the sharp bound
 
@@ -16,18 +21,18 @@ factor too large to iterate.  Here we prove the sharp bound
 i.e. `≈ 2rγκΔ` at the nibble retention `p = γ/(rΔ)` — with NO `Δ²` term.
 
 The route is bounded differences (Efron–Stein).  Everything happens on the explicit Bernoulli cube
-`Finset V → Bool` of `LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance`, where the Efron–Stein inequality
-`LeanPool.AsymptoticTrianglePacking.Internal.Cube.centred_sq_le_sum_sq_diff` is available.  The combinatorial input is
-`LeanPool.AsymptoticTrianglePacking.Internal.Tight.FlipStability`: flipping the retention of a single edge `k` moves the covered set only
+`Finset V → Bool` of `LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance`, where the
+Efron–Stein inequality
+`LeanPool.AsymptoticTrianglePacking.Internal.Cube.centred_sq_le_sum_sq_diff` is available. The
+combinatorial input is
+`LeanPool.AsymptoticTrianglePacking.Internal.Tight.FlipStability`: flipping the retention of a
+single edge `k` moves the covered set only
 inside `k ∪ ⋃ {f ∈ R : f meets k}`, so the safe degree at `v` moves by at most
 
   `edgeWeight k + ∑_{f ∈ R, f meets k} edgeWeight f`,  `edgeWeight f = ∑_{u ∈ f∖v} codeg(v,u)`.
 
 Squaring, taking expectations and summing over `k` produces exactly the three terms above.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.FlipStability
-import Mathlib.Algebra.Order.Chebyshev
 
 open Finset Hypergraph LeanPool.AsymptoticTrianglePacking.Internal.Cube
 
@@ -99,10 +104,12 @@ theorem sum_edgeWeight_eq (H : Finset (Finset V)) (v : V) :
   rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul, degree]
   ring
 
-theorem sum_edgeWeight_le {H : Finset (Finset V)} {r Δ : ℕ} (hr : IsUniform H r)
+omit [Fintype V] in
+theorem sum_edgeWeight_le [Finite V] {H : Finset (Finset V)} {r Δ : ℕ} (hr : IsUniform H r)
     (hΔ : ∀ y : V, degree H y ≤ Δ) (v : V) :
     ∑ f ∈ H, edgeWeight H v f ≤ (r : ℝ) * (Δ : ℝ) ^ 2 := by
   classical
+  let _ : Fintype V := Fintype.ofFinite V
   rw [sum_edgeWeight_eq]
   have h1 : ∑ u ∈ (Finset.univ : Finset V).erase v, (codegree H v u : ℝ) * (degree H u : ℝ)
       ≤ ∑ u ∈ (Finset.univ : Finset V).erase v, (codegree H v u : ℝ) * (Δ : ℝ) := by
@@ -121,9 +128,11 @@ theorem sum_edgeWeight_le {H : Finset (Finset V)} {r Δ : ℕ} (hr : IsUniform H
       ≤ ((r : ℝ) * (Δ : ℝ)) * (Δ : ℝ) := by rw [h2] at h1; linarith only [h1, h4]
     _ = (r : ℝ) * (Δ : ℝ) ^ 2 := by ring
 
-theorem sum_edgeWeight_sq_le {H : Finset (Finset V)} {r Δ κ : ℕ} (hr : IsUniform H r)
+omit [Fintype V] in
+theorem sum_edgeWeight_sq_le [Finite V] {H : Finset (Finset V)} {r Δ κ : ℕ} (hr : IsUniform H r)
     (hΔ : ∀ y : V, degree H y ≤ Δ) (hκ : ∀ y z : V, y ≠ z → codegree H y z ≤ κ) (v : V) :
     ∑ f ∈ H, edgeWeight H v f ^ 2 ≤ (r : ℝ) ^ 2 * (κ : ℝ) * (Δ : ℝ) ^ 2 := by
+  let _ : Fintype V := Fintype.ofFinite V
   have hstep : ∀ f ∈ H, edgeWeight H v f ^ 2 ≤ ((r : ℝ) * (κ : ℝ)) * edgeWeight H v f := by
     intro f hf
     have h1 := edgeWeight_le_of_mem hr hκ v hf
@@ -166,7 +175,7 @@ theorem meets_comm (H : Finset (Finset V)) (f : Finset V) :
   · intro h hd; exact h (Disjoint.symm hd)
 
 /-- A sum over a `biUnion` is at most the sum of the sums, for a nonnegative summand. -/
-theorem sum_biUnion_le_of_nonneg {α β : Type*} [DecidableEq α] [DecidableEq β] (B : Finset β)
+theorem sum_biUnion_le_of_nonneg {α β : Type*} [DecidableEq α] (B : Finset β)
     (t : β → Finset α) (g : α → ℝ) (hg : ∀ a, 0 ≤ g a) :
     ∑ u ∈ B.biUnion t, g u ≤ ∑ f ∈ B, ∑ u ∈ t f, g u := by
   classical
@@ -253,8 +262,9 @@ theorem D_safeDegCube_of_notMem {H : Finset (Finset V)} {k : Finset V} (hk : k �
     (ω : Finset V → Bool) : Cube.D k (safeDegCube H v) ω = 0 := by
   simp [Cube.D, safeDegCube, retSet_update_of_notMem hk]
 
-/-- **The bounded-differences bound.**  Flipping the retention of `k` moves the safe degree at `v`
+/-! **The bounded-differences bound.**  Flipping the retention of `k` moves the safe degree at `v`
 by at most `edgeWeight k + flipWeight k`. -/
+omit [Fintype V] in
 theorem abs_D_safeDegCube_le (H : Finset (Finset V)) (v : V) (k : Finset V)
     (ω : Finset V → Bool) :
     |Cube.D k (safeDegCube H v) ω| ≤ edgeWeight H v k + flipWeight H v k ω := by

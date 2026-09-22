@@ -3,7 +3,13 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+import LeanPool.AsymptoticTrianglePacking.Internal.Iteration
+import LeanPool.AsymptoticTrianglePacking.Internal.Assembly
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — D3 assembly : the accumulated matching is a matching
 
 Standalone, Mathlib-only. The accumulated matching after `k` nibble rounds (`nibbleMatching`, D1) is
@@ -12,14 +18,12 @@ rounds is disjoint from the support of the accumulated matching (each round only
 avoid all previously covered vertices). Hence the round matchings have pairwise-disjoint supports
 and their union is a matching — the assembly step of T3.
 
-Definitions from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` / `LeanPool.AsymptoticTrianglePacking.Internal.Greedy` / `LeanPool.AsymptoticTrianglePacking.Internal.Round` / `LeanPool.AsymptoticTrianglePacking.Internal.Iteration`.
+Definitions from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` /
+`LeanPool.AsymptoticTrianglePacking.Internal.Greedy` /
+`LeanPool.AsymptoticTrianglePacking.Internal.Round` /
+`LeanPool.AsymptoticTrianglePacking.Internal.Iteration`.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Iteration
-import LeanPool.AsymptoticTrianglePacking.Internal.Assembly
 
 open Finset
 
@@ -47,7 +51,7 @@ theorem nibbleMatching_subset {R : Finset (Finset V) → Finset (Finset V)}
   induction k with
   | zero => exact Finset.empty_subset H
   | succ k ih =>
-      show (nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2) ⊆ H
+      change (nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2) ⊆ H
       refine Finset.union_subset ih ?_
       exact (roundMatching_subset _).trans
         ((hR _).trans (nibbleResidual_subset R H k))
@@ -60,12 +64,12 @@ theorem nibbleResidual_disjoint_support {R : Finset (Finset V) → Finset (Finse
   induction k with
   | zero =>
       intro e _
-      show Disjoint e (support (∅ : Finset (Finset V)))
+      change Disjoint e (support (∅ : Finset (Finset V)))
       rw [support, Finset.biUnion_empty]
       exact Finset.disjoint_empty_right e
   | succ k ih =>
       intro e he
-      show Disjoint e (support ((nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2)))
+      change Disjoint e (support ((nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2)))
       rw [support_union, Finset.disjoint_union_right]
       have he' : e ∈ nibbleResidual R H k :=
         residual_subset (nibbleResidual R H k) (R (nibbleResidual R H k)) he
@@ -87,7 +91,7 @@ theorem nibbleMatching_isMatching {R : Finset (Finset V) → Finset (Finset V)}
         rw [show nibbleMatching R H 0 = (∅ : Finset (Finset V)) from rfl] at he
         exact absurd he (Finset.notMem_empty e)
     | succ k ih =>
-        show ∀ e ∈ (nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2),
+        change ∀ e ∈ (nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2),
           ∀ f ∈ (nibbleIter R H k).1 ∪ roundMatching (R (nibbleIter R H k).2), e ≠ f → Disjoint e f
         intro e he f hf hef
         have hM : IsMatching (nibbleResidual R H k) (roundMatching (R (nibbleResidual R H k))) :=

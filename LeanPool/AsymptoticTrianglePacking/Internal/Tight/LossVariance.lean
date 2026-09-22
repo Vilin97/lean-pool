@@ -3,10 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeightMoments
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the variance of the loss weight
 
-Quantitative form of `LeanPool.AsymptoticTrianglePacking.Internal.integral_sq_centered_lossWeight`.  Two ingredients:
+Quantitative form of `LeanPool.AsymptoticTrianglePacking.Internal.integral_sq_centered_lossWeight`.
+Two ingredients:
 
 * `pair_excess_le` — the *pair excess* `ℙ(u,u' covered) − q_u q_{u'}` is at most
   `2rΔ³p³ + κp`.  Both summands are genuinely of higher order than `q ≈ Δp`: the first because it
@@ -26,11 +30,9 @@ the concentration that the residual degree does not have.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeightMoments
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -133,7 +135,8 @@ theorem sum_codegree_erase_eq {H : Finset (Finset V)} {r : ℕ} (hr : IsUniform 
   have h := coverWeight_eq_sum H v (Finset.univ : Finset V)
   rw [coverWeight] at h
   rw [h]
-  have hall : ∀ e ∈ H.filter (fun e => v ∈ e), (e.erase v ∩ (Finset.univ : Finset V)).card = r - 1 :=
+  have hall : ∀ e ∈ H.filter (fun e => v ∈ e),
+      (e.erase v ∩ (Finset.univ : Finset V)).card = r - 1 :=
     fun e he => by
       rw [Finset.inter_univ, Finset.card_erase_of_mem (Finset.mem_filter.mp he).2,
         hr e (Finset.mem_filter.mp he).1]
@@ -173,7 +176,7 @@ theorem centered_second_moment_le {H : Finset (Finset V)} {p : ℝ}
       have hself : ({ω | u ∈ covered (retainedSet H ρ ω)}
           ∩ {ω | u ∈ covered (retainedSet H ρ ω)}) = {ω | u ∈ covered (retainedSet H ρ ω)} :=
         Set.inter_self _
-      rw [hself, prob_vertex_covered_eq ρ hp0 hp1 u, if_pos rfl]
+      rw [hself, prob_vertex_covered_eq ρ hp0 hp1 u, ite_eq_left rfl]
       have hqu0 : 0 ≤ coverRate H p u := coverRate_nonneg hp0 hp1 u
       have haκ : (codegree H v u : ℝ) ≤ (κ : ℝ) := by
         exact_mod_cast hκ u (Finset.mem_erase.mp hu).1
@@ -194,7 +197,7 @@ theorem centered_second_moment_le {H : Finset (Finset V)} {p : ℝ}
                 nlinarith only [mul_nonneg (mul_nonneg ha0 hκ0) (sub_nonneg.mpr (hq u))]
         linarith
       linarith [mul_nonneg (mul_nonneg ha0 ha0) hε0]
-    · rw [if_neg huu']
+    · rw [ite_eq_right huu']
       have hp2 := hpair u u' huu'
       nlinarith only [mul_nonneg (mul_nonneg ha0 hb0) (sub_nonneg.mpr hp2)]
   calc ∑ u ∈ S, ∑ u' ∈ S,
@@ -213,7 +216,7 @@ theorem centered_second_moment_le {H : Finset (Finset V)} {p : ℝ}
               + (codegree H v u : ℝ) * ε₂ * (∑ u' ∈ S, (codegree H v u' : ℝ)) := by
           intro u hu
           rw [Finset.sum_add_distrib,
-            Finset.sum_ite_eq S u (fun _ => (codegree H v u : ℝ) * (κ : ℝ) * qhi), if_pos hu]
+            Finset.sum_ite_eq S u (fun _ => (codegree H v u : ℝ) * (κ : ℝ) * qhi), ite_eq_left hu]
           congr 1
           rw [Finset.mul_sum]
           exact Finset.sum_congr rfl (fun u' _ => by ring)

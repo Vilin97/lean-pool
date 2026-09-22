@@ -3,8 +3,13 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — the Efron–Stein (bounded-differences) variance inequality on a finite Bernoulli cube
+import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Tactic.ContinuousFunctionalCalculus
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — the Efron–Stein (bounded-differences) variance
+inequality on a finite Bernoulli cube
 
 This file is elementary and self-contained: no measure theory, only `Finset` sums.  For a finite
 index type `ι` and `p ∈ [0,1]` the *Bernoulli cube* is the finite set `ι → Bool` weighted by
@@ -30,8 +35,6 @@ The proof is the usual one-coordinate-at-a-time argument, organised through the 
 Averaging over a duplicate-free list exhausting `ι` turns `f` into the constant `Exp p f`, and the
 telescoping sum of the second bullet is exactly the statement.
 -/
-import Mathlib.Analysis.Normed.Ring.Basic
-import Mathlib.Data.Real.StarOrdered
 
 open Finset
 
@@ -59,7 +62,7 @@ theorem wtc_nonneg {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) (i : ι) (ω : ι �
   Finset.prod_nonneg fun j _ => by split_ifs <;> linarith
 
 theorem sum_wt {p : ℝ} : ∑ ω : ι → Bool, wt p ω = 1 := by
-  show ∑ ω : ι → Bool, ∏ i, (if ω i then p else 1 - p) = 1
+  change ∑ ω : ι → Bool, ∏ i, (if ω i then p else 1 - p) = 1
   rw [← Fintype.prod_sum (fun (_ : ι) (b : Bool) => if b then p else 1 - p)]
   simp
 
@@ -311,7 +314,7 @@ theorem Exp_centred_sq (p : ℝ) (f : (ι → Bool) → ℝ) :
   rw [Exp, Finset.sum_congr rfl (fun ω _ => hexp ω), Finset.sum_add_distrib,
     Finset.sum_sub_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
   rw [sum_wt]
-  show Exp p (fun ω => f ω ^ 2) - 2 * c * Exp p f + c ^ 2 * 1 = _
+  change Exp p (fun ω => f ω ^ 2) - 2 * c * Exp p f + c ^ 2 * 1 = _
   rw [← hc]; ring
 
 /-- **Efron–Stein, in centred form.** -/
@@ -376,12 +379,12 @@ theorem Exp_coord_mul {p : ℝ} (f g : ι) :
   rw [heq, Exp_prod]
   by_cases hfg : f = g
   · subst hfg
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have hi2 : ∀ i : ι, p * h i true + (1 - p) * h i false = if i = f then p else 1 := by
       intro i; rw [hh]; by_cases hi : i = f <;> simp [hi]
     rw [Finset.prod_congr rfl (fun i _ => hi2 i), Finset.prod_ite_eq' Finset.univ f (fun _ => p)]
     simp
-  · rw [if_neg hfg]
+  · rw [ite_eq_right hfg]
     have hi2 : ∀ i : ι, p * h i true + (1 - p) * h i false
         = (if i = f then p else 1) * (if i = g then p else 1) := by
       intro i; rw [hh]
@@ -420,7 +423,7 @@ theorem Exp_weighted_sum_sq_le {p : ℝ} (M : Finset ι) (w : ι → ℝ) :
     refine Finset.sum_le_sum fun g _ => ?_
     by_cases hfg : f = g
     · subst hfg
-      rw [if_pos rfl, if_pos rfl]
+      rw [ite_eq_left rfl, ite_eq_left rfl]
       nlinarith only [sq_nonneg (w f * p)]
     · simp [hfg]
   have h3 : ∀ f ∈ M, ∑ g ∈ M, ((w f * w g) * p ^ 2 + (if f = g then w f * w g * p else 0))
@@ -430,7 +433,7 @@ theorem Exp_weighted_sum_sq_le {p : ℝ} (M : Finset ι) (w : ι → ℝ) :
     congr 1
     · simp only [Finset.mul_sum]
       exact Finset.sum_congr rfl fun g _ => by ring
-    · rw [Finset.sum_ite_eq (b := fun g => w f * w g * p), if_pos hf]
+    · rw [Finset.sum_ite_eq (b := fun g => w f * w g * p), ite_eq_left hf]
       ring
   calc ∑ f ∈ M, ∑ g ∈ M, (w f * w g) * (if f = g then p else p ^ 2)
       ≤ ∑ f ∈ M, ∑ g ∈ M, ((w f * w g) * p ^ 2 + (if f = g then w f * w g * p else 0)) :=

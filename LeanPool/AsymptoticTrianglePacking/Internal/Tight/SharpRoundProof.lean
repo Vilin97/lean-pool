@@ -3,22 +3,26 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — the sharp round: transporting the Efron–Stein variance to the cube retention
-
-`LeanPool.AsymptoticTrianglePacking.Internal.safeDegCube_variance_le` (`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpVariance`) is the sharp per-vertex
-safe-degree variance bound on the elementary Bernoulli cube.  Here it is transported to the
-`LeanPool.AsymptoticTrianglePacking.Internal.BernoulliRetention` carried by that cube (`LeanPool.AsymptoticTrianglePacking.Internal.cubeRetention`), which is the form the
-Chebyshev round `LeanPool.AsymptoticTrianglePacking.Internal.exists_safe_round_cheb` consumes.
--/
 import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpVariance
 import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CubeRetention
 import LeanPool.AsymptoticTrianglePacking.Internal.Tight.SafeRoundCheb
 import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Pruning
 import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — the sharp round: transporting the Efron–Stein
+variance to the cube retention
+
+`LeanPool.AsymptoticTrianglePacking.Internal.safeDegCube_variance_le`
+(`LeanPool.AsymptoticTrianglePacking.Internal.Tight.SharpVariance`) is the sharp per-vertex
+safe-degree variance bound on the elementary Bernoulli cube.  Here it is transported to the
+`LeanPool.AsymptoticTrianglePacking.Internal.BernoulliRetention` carried by that cube
+(`LeanPool.AsymptoticTrianglePacking.Internal.cubeRetention`), which is the form the
+Chebyshev round `LeanPool.AsymptoticTrianglePacking.Internal.exists_safe_round_cheb` consumes.
+-/
+
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -35,8 +39,8 @@ theorem integral_centered_safeDegree_cube_le
         ∂(Cube.cubeMeasure p)
       ≤ 2 * p * ((r : ℝ) ^ 2 * (κ : ℝ) * (Δ : ℝ) ^ 2)
           * (1 + p * (r : ℝ) * (Δ : ℝ) + (p * (r : ℝ) * (Δ : ℝ)) ^ 2) := by
-  letI : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
-  haveI : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
+  let _ : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
+  have _ : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
     Cube.isProbabilityMeasure_cubeMeasure hp0 hp1
   have hret : ∀ ω : Finset V → Bool,
       (safeDegree K (covered (retainedSet K (cubeRetention K hp0 hp1) ω)) v : ℝ)
@@ -46,7 +50,7 @@ theorem integral_centered_safeDegree_cube_le
     rfl
   have hmean : safeDegMean (cubeRetention K hp0 hp1) v = Cube.Exp p (safeDegCube K v) := by
     rw [← integral_safeDegree_eq (cubeRetention K hp0 hp1) v]
-    show ∫ ω, (safeDegree K (covered (retainedSet K (cubeRetention K hp0 hp1) ω)) v : ℝ)
+    change ∫ ω, (safeDegree K (covered (retainedSet K (cubeRetention K hp0 hp1) ω)) v : ℝ)
         ∂(Cube.cubeMeasure p) = _
     rw [Cube.integral_cubeMeasure hp0 hp1]
     exact congrArg _ (funext hret)
@@ -63,11 +67,11 @@ theorem safeDegMean_cubeRetention (K : Finset (Finset V)) {p : ℝ} (hp0 : 0 ≤
     (v : V) :
     @safeDegMean V _ (Finset V → Bool) (Cube.cubeSpace p) K p (cubeRetention K hp0 hp1) v
       = Cube.Exp p (safeDegCube K v) := by
-  letI : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
-  haveI : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
+  let _ : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
+  have _ : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
     Cube.isProbabilityMeasure_cubeMeasure hp0 hp1
   rw [← integral_safeDegree_eq (cubeRetention K hp0 hp1) v]
-  show ∫ ω, (safeDegree K (covered (retainedSet K (cubeRetention K hp0 hp1) ω)) v : ℝ)
+  change ∫ ω, (safeDegree K (covered (retainedSet K (cubeRetention K hp0 hp1) ω)) v : ℝ)
       ∂(Cube.cubeMeasure p) = _
   rw [Cube.integral_cubeMeasure hp0 hp1]
   refine congrArg _ (funext fun ω => ?_)
@@ -86,7 +90,8 @@ for the mean safe degree on `A`, and the smallness condition, one round leaves e
 uncovered vertex outside an exceptional set of size `< a` with residual degree in
 `[mlo − t, mhi + t]`, and covers more than `Q/2` vertices.
 
-The variance input is the SHARP Efron–Stein bound `LeanPool.AsymptoticTrianglePacking.Internal.safeDegCube_variance_le`:
+The variance input is the SHARP Efron–Stein bound
+`LeanPool.AsymptoticTrianglePacking.Internal.safeDegCube_variance_le`:
 `Vs = 2p·r²κΔ²(1 + prΔ + (prΔ)²)`, which carries NO `Δ²` term at `p = γ/(rΔ)`. -/
 theorem exists_sharp_round_band {K : Finset (Finset V)} (A : Finset V) {r Δ δ κ : ℕ}
     {p t a mlo : ℝ} {mhi : V → ℝ}
@@ -110,8 +115,8 @@ theorem exists_sharp_round_band {K : Finset (Finset V)} (A : Finset V) {r Δ δ 
         ∧ (degree (Hypergraph.residual K R') v : ℝ) ≤ mhi v + t) ∧
       (A.card : ℝ) * ((δ : ℝ) * (p * (1 - p) ^ (r * Δ))) / 2 < ((covered R').card : ℝ) := by
   classical
-  letI : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
-  haveI : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
+  let _ : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
+  have _ : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
     Cube.isProbabilityMeasure_cubeMeasure hp0.le hp1.le
   set ρ := cubeRetention K hp0.le hp1.le with hρ
   have hqlo : ∀ v ∈ A, (δ : ℝ) * (p * (1 - p) ^ (r * Δ)) ≤ coverRate K p v := by
@@ -176,8 +181,8 @@ theorem Exp_safeDegCube_ge {K : Finset (Finset V)} {r Δ : ℕ} {p : ℝ}
     (hΔ : ∀ y : V, degree K y ≤ Δ) (v : V) :
     (degree K v : ℝ) * (1 - ((r : ℝ) - 1) * ((Δ : ℝ) * p)) ≤ Cube.Exp p (safeDegCube K v) := by
   classical
-  letI : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
-  haveI : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
+  let _ : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
+  have _ : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
     Cube.isProbabilityMeasure_cubeMeasure hp0 hp1
   rw [← safeDegMean_cubeRetention K hp0 hp1 v, ← integral_safeDegree_eq (cubeRetention K hp0 hp1) v]
   refine le_trans ?_ (safeDegree_expectation_ge (cubeRetention K hp0 hp1) hp0 hp1 v)
@@ -225,8 +230,8 @@ theorem Exp_safeDegCube_le {K : Finset (Finset V)} (A : Finset V) {r Δ δ κ : 
         + (degree K v : ℝ) * (((r : ℝ) - 1) * ((r : ℝ) - 2))
             * ((Δ : ℝ) ^ 2 * p ^ 2 + (κ : ℝ) * p) := by
   classical
-  letI : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
-  haveI : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
+  let _ : MeasureSpace (Finset V → Bool) := Cube.cubeSpace p
+  have _ : IsProbabilityMeasure (ℙ : Measure (Finset V → Bool)) :=
     Cube.isProbabilityMeasure_cubeMeasure hp0 hp1
   rw [← safeDegMean_cubeRetention K hp0 hp1 v, ← integral_safeDegree_eq (cubeRetention K hp0 hp1) v]
   refine le_trans (safeDegree_expectation_le (cubeRetention K hp0 hp1) hp0 hp1 v) ?_
@@ -318,8 +323,8 @@ theorem Exp_safeDegCube_le {K : Finset (Finset V)} (A : Finset V) {r Δ δ κ : 
     have h1 := hpair e he
     by_cases hd : Disjoint e Aᶜ
     · have h2 := hgood e (by rw [hG, Finset.mem_filter]; exact ⟨he, hd⟩)
-      rw [if_pos hd]; linarith
-    · rw [if_neg hd]; linarith [hnonneg e he]
+      rw [ite_eq_left hd]; linarith
+    · rw [ite_eq_right hd]; linarith [hnonneg e he]
   have hsum : ∑ e ∈ S, (1 - (if Disjoint e Aᶜ then W else 0) + E)
       = (degree K v : ℝ) - (G.card : ℝ) * W + (degree K v : ℝ) * E := by
     rw [Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.sum_const, Finset.sum_const,

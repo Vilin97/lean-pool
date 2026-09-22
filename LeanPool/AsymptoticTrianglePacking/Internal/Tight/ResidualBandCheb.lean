@@ -3,11 +3,19 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — the Chebyshev tight round in explicit hypergraph parameters
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRoundCheb
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRoundConcrete
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.ResidualBand
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
-This file instantiates `LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_cheb` with the codegree-tightened moment data of
-`LeanPool.AsymptoticTrianglePacking.Internal.Tight.PairExcessCodegree` and converts it into the form the iteration consumes: a bound on
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — the Chebyshev tight round in explicit hypergraph
+parameters
+
+This file instantiates `LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_cheb` with
+the codegree-tightened moment data of
+`LeanPool.AsymptoticTrianglePacking.Internal.Tight.PairExcessCodegree` and converts it into the form
+the iteration consumes: a bound on
 the DEGREES OF THE RESIDUAL hypergraph for every uncovered vertex outside a small exceptional set,
 together with a coverage guarantee.
 
@@ -30,18 +38,15 @@ In the nibble regime `p = γ/((r−1)Δ)`, `κ = μΔ`, `Δ ≍ δ ≍ d`, `a = 
 
 All four terms are `< 1/4` once `μ ≤ c(r)θγ³`, `d ≥ d₀(r, θ)` and `N ≥ 16/γ` — and the tolerances
 `t = s = γ²d` are SECOND order in `γ`, hence summable over the `≍ γ^{-1}log(1/β)` rounds of a
-nibble.  This is exactly what the Markov-coverage round `LeanPool.AsymptoticTrianglePacking.Internal.exists_round_residual_band` cannot
+nibble. This is exactly what the Markov-coverage round
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_round_residual_band` cannot
 provide (there `s ≳ γd/θ`, first order in `γ`).
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRoundCheb
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.TightRoundConcrete
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.ResidualBand
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 

@@ -3,10 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverVariance
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the tight round with a CHEBYSHEV coverage guarantee
 
-`LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_on` extracts a good outcome by making two failure probabilities add up to
+`LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_on` extracts a good outcome by
+making two failure probabilities add up to
 less than one:
 
 * "too many bad vertices", controlled by Markov, probability `≤ N(Vb/t² + Pb/s)/a`;
@@ -19,7 +23,8 @@ iterated: over the `≍ γ^{-1}log(1/β)` rounds of a nibble it accumulates to a
 `≍ log(1/β)/θ ≫ 1`.
 
 Here the coverage is instead controlled by CHEBYSHEV, using the variance bound
-`LeanPool.AsymptoticTrianglePacking.Internal.coveredCount_variance_le`.  The coverage failure probability becomes `4·Var/Q²`, which is
+`LeanPool.AsymptoticTrianglePacking.Internal.coveredCount_variance_le`. The coverage failure
+probability becomes `4·Var/Q²`, which is
 `≤ 1/2` under hypotheses on the vertex count and the codegree ALONE.  The badness budget is then a
 constant rather than `γ`, so `Vb/t² + Pb/s ≤ θ/2` suffices and one may take
 
@@ -30,11 +35,9 @@ i.e. deviations of relative size `γ²`, whose accumulation over `γ^{-1}log(1/�
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverVariance
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -81,7 +84,8 @@ There is an outcome of the nibble round which
 provided the Markov badness bound `N(Vb/t² + Pb/s)/a` and the Chebyshev coverage bound
 `Cvar/(Q/2)²` add up to less than `1`.
 
-Compared with `LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_on`, the coverage failure probability is `Cvar/(Q/2)²`
+Compared with `LeanPool.AsymptoticTrianglePacking.Internal.exists_tight_round_on`, the coverage
+failure probability is `Cvar/(Q/2)²`
 instead of `1 − q/2`: the badness budget is a constant instead of `O(q)`. -/
 theorem exists_tight_round_cheb {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p)
@@ -119,20 +123,20 @@ theorem exists_tight_round_cheb {H : Finset (Finset V)} {p : ℝ}
   · have h1 := card_tightBadSet_le ρ ht hs ω
     have h2 : tightBad ρ t s ω < a := by
       by_contra hc
-      push_neg at hc
+      push Not at hc
       exact hω1 hc
     linarith
   · intro v hv
     have hnot : ¬ (t ≤ |lossWeight ρ v ω - lossWeightMean H p v| ∨ s ≤ pairCount ρ v ω) := by
       intro h
       exact hv (Finset.mem_filter.mpr ⟨Finset.mem_univ v, h⟩)
-    push_neg at hnot
+    push Not at hnot
     exact safeDegree_band_of_tolerances ρ v ω hnot.1 hnot.2
   · have h2 : ¬ ((Q / 2) ^ 2
         ≤ (((covered (retainedSet H ρ ω)).card : ℝ) - ∑ v : V, coverRate H p v) ^ 2) := hω2
-    push_neg at h2
+    push Not at h2
     by_contra hc
-    push_neg at hc
+    push Not at hc
     nlinarith only [h2, hmean, hc, hQ]
 
 end LeanPool.AsymptoticTrianglePacking.Internal

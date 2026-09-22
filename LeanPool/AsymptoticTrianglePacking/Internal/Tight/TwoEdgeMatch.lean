@@ -3,10 +3,20 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
+import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+import LeanPool.AsymptoticTrianglePacking.Internal.Covered
+import LeanPool.AsymptoticTrianglePacking.Internal.CoveredExpectation
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the joint matching probability of TWO edges
 
-The variance of the safe degree (`LeanPool.AsymptoticTrianglePacking.Internal.safeDegree`) is controlled by the *covariance* of the
+The variance of the safe degree (`LeanPool.AsymptoticTrianglePacking.Internal.safeDegree`) is
+controlled by the *covariance* of the
 covering events of two vertices, and the cancellation that makes that covariance small requires the
 exact joint law of two edges entering the round matching:
 
@@ -19,22 +29,15 @@ exact joint law of two edges entering the round matching:
   `|conflicts f ∩ conflicts g|·p³` (`prob_two_matched_le`).
 
 The last statement is the quantitative brick: summed over the edges at two distinct vertices, the
-error carries a factor of the CODEGREE (`LeanPool.AsymptoticTrianglePacking.Internal.sum_conflicts_inter_card_le`), which is what makes
+error carries a factor of the CODEGREE
+(`LeanPool.AsymptoticTrianglePacking.Internal.sum_conflicts_inter_card_le`), which is what makes
 the nibble's residual degrees concentrate.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
-import LeanPool.AsymptoticTrianglePacking.Internal.Survival
-import LeanPool.AsymptoticTrianglePacking.Internal.Covered
-import LeanPool.AsymptoticTrianglePacking.Internal.CoveredExpectation
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -71,7 +74,7 @@ theorem prob_retain_avoid {H : Finset (Finset V)} {p : ℝ}
     · rintro ⟨h1, h2⟩ e he
       by_cases hT' : e ∈ T
       · simpa [hT'] using h1 e hT'
-      · simp only [hT', if_false]
+      · simp only [hT', ite_false]
         exact h2 e (he.resolve_left hT')
   rw [← hinter]
   have hindeps := ρ.indep S (f := fun i => G i) (by
@@ -80,11 +83,12 @@ theorem prob_retain_avoid {H : Finset (Finset V)} {p : ℝ}
     by_cases hi : i ∈ T
     · simp only [hi, ite_true]
       exact MeasurableSpace.measurableSet_generateFrom (Set.mem_singleton _)
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       exact (MeasurableSpace.measurableSet_generateFrom (Set.mem_singleton _)).compl)
   rw [ae_iff] at hindeps
-  simp at hindeps
-  rw [hindeps, hS, Finset.prod_union hTC]
+  have hindeps' : (ℙ : Measure Ω) (⋂ e ∈ S, G e) = ∏ e ∈ S, (ℙ : Measure Ω) (G e) := by
+    simpa using hindeps
+  rw [hindeps', hS, Finset.prod_union hTC]
   have h1 : ∏ e ∈ T, (ℙ : Measure Ω) (G e) = ENNReal.ofReal p ^ T.card := by
     rw [Finset.prod_congr rfl (fun e he => by
       simp only [hG, he, ite_true]; exact ρ.prob e (hT he))]
@@ -92,7 +96,7 @@ theorem prob_retain_avoid {H : Finset (Finset V)} {p : ℝ}
   have h2 : ∏ e ∈ C, (ℙ : Measure Ω) (G e) = ENNReal.ofReal (1 - p) ^ C.card := by
     rw [Finset.prod_congr rfl (fun e he => by
       have hnT : e ∉ T := fun hx => (Finset.disjoint_left.mp hTC hx) he
-      simp only [hG, hnT, if_false]; exact hpc e he)]
+      simp only [hG, hnT, ite_false]; exact hpc e he)]
     simp
   rw [h1, h2, ← ENNReal.ofReal_pow hp0, ← ENNReal.ofReal_pow (by linarith : (0:ℝ) ≤ 1 - p),
     ← ENNReal.ofReal_mul (by positivity)]
@@ -105,7 +109,7 @@ theorem prob_two_matched_of_not_disjoint {H : Finset (Finset V)} {p : ℝ}
     ({ω | f ∈ roundMatching (retainedSet H ρ ω)}
         ∩ {ω | g ∈ roundMatching (retainedSet H ρ ω)}) = (∅ : Set Ω) := by
   ext ω
-  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+  simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
   intro hf hg
   exact hmeet ((roundMatching_isMatching (subset_refl (retainedSet H ρ ω))).disjoint f hf g hg hne)
 

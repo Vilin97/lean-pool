@@ -3,8 +3,13 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-0' : round-matching membership via conflicts (deterministic bridge)
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-0' : round-matching membership via
+conflicts (deterministic bridge)
 
 Standalone, Mathlib-only. Foundation for the Rödl-nibble project.
 
@@ -13,12 +18,11 @@ C4b-0): an edge is in the round's matching exactly when it is retained and none 
 edges is retained. This is the deterministic identity that lets the survival probability
 `p·(1-p)^{c(e)}` (module C4b-1) be attached to actual matching membership.
 
-Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic`, `LeanPool.AsymptoticTrianglePacking.Internal.Round`, `LeanPool.AsymptoticTrianglePacking.Internal.Conflict`. Must be placeholder-free and
+Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic`,
+`LeanPool.AsymptoticTrianglePacking.Internal.Round`,
+`LeanPool.AsymptoticTrianglePacking.Internal.Conflict`. Must be placeholder-free and
 axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
 
 open Finset
 

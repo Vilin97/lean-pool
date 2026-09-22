@@ -3,16 +3,17 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.RoundExplicit
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Pruning
+
+/-!
 # Iterable tight-band round
 
 This module establishes the one-round estimates used by the finite near-regular hypergraph nibble.
 It packages retention, concentration, degree-band, codegree, and cover-rate bounds in a form that
 can be iterated by the schedule.
 -/
-
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.RoundExplicit
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.Pruning
 
 open Finset Hypergraph
 

@@ -3,7 +3,15 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
+import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+import LeanPool.AsymptoticTrianglePacking.Internal.Covered
+import LeanPool.AsymptoticTrianglePacking.Internal.CoveredExpectation
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the SHARP one-round covering probabilities
 
 Standalone, Mathlib-only.  This file supplies the *sharp* first-moment brick of one nibble round,
@@ -19,21 +27,15 @@ expressions that agree to second order.
 * `measureReal_biUnion_ge_bonferroni` — the second Bonferroni inequality for a `Finset`-indexed
   family (not in Mathlib): `ℙ(⋃ᵢ Aᵢ) ≥ ∑ᵢ ℙ(Aᵢ) − ∑ᵢ∑_{j≠i} ℙ(Aᵢ ∩ Aⱼ)`.
 * `prob_two_vertices_covered_le` — `ℙ(x covered ∧ y covered) ≤ deg(x)·deg(y)·p² + codeg(x,y)·p`
-  for `x ≠ y`: the second-order term is quadratically small in the nibble regime `p ≈ γ/(rd)` as soon
+  for `x ≠ y`: the second-order term is quadratically small in the nibble regime `p ≈ γ/(rd)` as
+  soon
   as the codegree is `o(d)`.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
-import LeanPool.AsymptoticTrianglePacking.Internal.Survival
-import LeanPool.AsymptoticTrianglePacking.Internal.Covered
-import LeanPool.AsymptoticTrianglePacking.Internal.CoveredExpectation
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -73,7 +75,7 @@ theorem vertexCovered_eq_biUnion {H : Finset (Finset V)} {p : ℝ}
     {ω | x ∈ covered (retainedSet H ρ ω)}
       = ⋃ f ∈ H.filter (fun f => x ∈ f), {ω | f ∈ roundMatching (retainedSet H ρ ω)} := by
   ext ω
-  simp only [Set.mem_setOf_eq, Set.mem_iUnion, Finset.mem_filter, covered, support,
+  simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Finset.mem_filter, covered, support,
     Finset.mem_biUnion, id_eq, exists_prop]
   constructor
   · rintro ⟨f, hf, hxf⟩
@@ -91,7 +93,7 @@ theorem prob_vertex_covered_eq {H : Finset (Finset V)} {p : ℝ}
   have hdisj : (↑(H.filter (fun f => x ∈ f)) : Set (Finset V)).PairwiseDisjoint
       (fun f => {ω | f ∈ roundMatching (retainedSet H ρ ω)}) := by
     intro f hf g hg hfg
-    simp only [Function.onFun, Set.disjoint_left, Set.mem_setOf_eq]
+    simp only [Function.onFun, Set.disjoint_left, Set.mem_ofPred_eq]
     intro ω hωf hωg
     have hxf : x ∈ f := (Finset.mem_filter.mp (Finset.mem_coe.mp hf)).2
     have hxg : x ∈ g := (Finset.mem_filter.mp (Finset.mem_coe.mp hg)).2
@@ -191,7 +193,7 @@ theorem prob_two_vertices_covered_le {H : Finset (Finset V)} {p : ℝ}
   have hsub : ({ω | x ∈ covered (retainedSet H ρ ω)} ∩ {ω | y ∈ covered (retainedSet H ρ ω)})
       ⊆ (⋃ f ∈ Sx, ⋃ g ∈ Sy.erase f, (ρ.A f ∩ ρ.A g)) ∪ (⋃ f ∈ Sx ∩ Sy, ρ.A f) := by
     rintro ω ⟨hx, hy⟩
-    simp only [Set.mem_setOf_eq, covered, support, Finset.mem_biUnion, id_eq] at hx hy
+    simp only [Set.mem_ofPred_eq, covered, support, Finset.mem_biUnion, id_eq] at hx hy
     obtain ⟨f, hfM, hxf⟩ := hx
     obtain ⟨g, hgM, hyg⟩ := hy
     have hfR : f ∈ retainedSet H ρ ω := roundMatching_subset _ hfM

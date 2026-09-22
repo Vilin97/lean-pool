@@ -3,17 +3,25 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Ring.Lemmas
+import Mathlib.Data.Int.Star
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the conflict-overlap count at two distinct vertices
 
 Pure `Finset` combinatorics, no probability.  The variance estimate for the safe degree needs the
-following triple count: summing, over the edges `f` through `u` and the edges `g` through a DIFFERENT
+following triple count: summing, over the edges `f` through `u` and the edges `g` through a
+DIFFERENT
 vertex `u'`, the number of edges conflicting with both, one gets a bound carrying a factor of the
 CODEGREE `κ`:
 
   `∑_{f ∋ u} ∑_{g ∋ u'} |conflicts f ∩ conflicts g| ≤ 4 r² κ Δ²`.
 
-(The corresponding statement at `u = u'` is false — there the sum is of order `Δ³` — which is exactly
+(The corresponding statement at `u = u'` is false — there the sum is of order `Δ³` — which is
+exactly
 why the residual degree of a vertex does not concentrate while its SAFE degree does.)
 
 Proof.  Writing `S = ∑_{h ∈ H} a(h)·b(h)` with `a(h) = #{f ∋ u : h ∈ conflicts f}` and
@@ -26,11 +34,6 @@ Proof.  Writing `S = ∑_{h ∈ H} a(h)·b(h)` with `a(h) = #{f ∋ u : h ∈ co
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Conflict
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.Data.Int.Star
 
 open Finset Hypergraph
 
@@ -129,7 +132,7 @@ theorem sum_sum_conflicts_inter_eq (H : Finset (Finset V)) (u u' : V) :
   rw [conflictCountAt, conflictCountAt, Finset.card_filter, Finset.card_filter,
     ← Finset.sum_mul_sum]
 
-/-- **The conflict-overlap count at two DISTINCT vertices.**  `∑_{f ∋ u} ∑_{g ∋ u'} |conf f ∩ conf g|
+/-- **The conflict-overlap count at two DISTINCT vertices.** `∑_{f ∋ u} ∑_{g ∋ u'} |conf f ∩ conf g|
 ≤ 4 r² κ Δ²`, where `Δ` bounds the degrees and `κ` the codegrees of distinct pairs. -/
 theorem sum_conflicts_inter_card_le {H : Finset (Finset V)} {r Δ κ : ℕ}
     (hr : IsUniform H r) (hr1 : 1 ≤ r) (hΔ : ∀ x, degree H x ≤ Δ)

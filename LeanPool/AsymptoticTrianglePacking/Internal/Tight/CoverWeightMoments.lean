@@ -3,10 +3,16 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeight
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
+import LeanPool.AsymptoticTrianglePacking.Internal.Measurable
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the first two moments of the loss weight
 
-`coverWeight H v C = ∑_{u ≠ v} codeg(v,u)·1[u ∈ C]` (`LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeight`) is a NONNEGATIVE
+`coverWeight H v C = ∑_{u ≠ v} codeg(v,u)·1[u ∈ C]`
+(`LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeight`) is a NONNEGATIVE
 LINEAR combination of the one-round covering indicators.  Consequently its mean and its centred
 second moment are exactly computable from the two covering laws already established:
 
@@ -27,13 +33,9 @@ regime, which is precisely the concentration the residual degree cannot have.
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverWeight
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
-import LeanPool.AsymptoticTrianglePacking.Internal.Measurable
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -197,7 +199,7 @@ theorem integral_lossWeight {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (hp0 : 0 ≤ p) (hp1 : p ≤ 1) (v : V) :
     ∫ ω, lossWeight ρ v ω ∂(ℙ : Measure Ω) = lossWeightMean H p v := by
   simp only [lossWeight, lossWeightMean]
-  rw [integral_finset_sum _ (fun u _ => (integrable_coverInd ρ u).const_mul _)]
+  rw [integral_finsetSum _ (fun u _ => (integrable_coverInd ρ u).const_mul _)]
   exact Finset.sum_congr rfl (fun u _ => by
     rw [integral_const_mul, integral_coverInd ρ hp0 hp1 u])
 
@@ -227,10 +229,10 @@ theorem integral_sq_centered_lossWeight {H : Finset (Finset V)} {p : ℝ}
     rw [lossWeight_sub_mean, sq, Finset.sum_mul_sum]
     exact Finset.sum_congr rfl (fun u _ => Finset.sum_congr rfl (fun u' _ => by ring))
   simp only [hexp]
-  rw [integral_finset_sum _ (fun u _ => integrable_finset_sum _
+  rw [integral_finsetSum _ (fun u _ => integrable_finsetSum _
     (fun u' _ => (integrable_coverIndC_mul ρ u u').const_mul _))]
   refine Finset.sum_congr rfl (fun u _ => ?_)
-  rw [integral_finset_sum _ (fun u' _ => (integrable_coverIndC_mul ρ u u').const_mul _)]
+  rw [integral_finsetSum _ (fun u' _ => (integrable_coverIndC_mul ρ u u').const_mul _)]
   exact Finset.sum_congr rfl (fun u' _ => by
     rw [integral_const_mul, integral_coverIndC_mul ρ hp0 hp1 u u'])
 

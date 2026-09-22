@@ -3,8 +3,12 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — Module C1 : one nibble round (deterministic scaffolding)
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — Module C1 : one nibble round (deterministic
+scaffolding)
 
 Standalone, Mathlib-only. Foundation for the Rödl-nibble project.
 
@@ -25,11 +29,11 @@ Results:
   the iteration invariant).
 
 The probabilistic content (expected sizes, concentration) is Layer C2/C3 and consumes Layer B.
-Definitions (`degree`, `IsUniform`, `IsMatching`, `support`) come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` /
-`LeanPool.AsymptoticTrianglePacking.Internal.Greedy`. Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
+Definitions (`degree`, `IsUniform`, `IsMatching`, `support`) come from
+`LeanPool.AsymptoticTrianglePacking.Internal.Basic` /
+`LeanPool.AsymptoticTrianglePacking.Internal.Greedy`. Must be placeholder-free and axiom-clean
+`[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Greedy
 
 open Finset
 

@@ -3,8 +3,15 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-3b (measurability) : the covered event is measurable
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import LeanPool.AsymptoticTrianglePacking.Internal.Round
+import LeanPool.AsymptoticTrianglePacking.Internal.Survival
+import LeanPool.AsymptoticTrianglePacking.Internal.Covered
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-3b (measurability) : the covered event is
+measurable
 
 Standalone, Mathlib-only. Foundation for the Rödl-nibble project.
 
@@ -15,14 +22,9 @@ and the round's matching / covered set are finite Boolean combinations of the re
 
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import LeanPool.AsymptoticTrianglePacking.Internal.Round
-import LeanPool.AsymptoticTrianglePacking.Internal.Survival
-import LeanPool.AsymptoticTrianglePacking.Internal.Covered
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -47,7 +49,7 @@ theorem measurableSet_vertex_covered {H : Finset (Finset V)} {p : ℝ}
           (ρ.A e ∩ ⋂ f ∈ H.filter (fun f => f ≠ e ∧ ¬ Disjoint e f), (ρ.A f)ᶜ) := by
     ext ω
     simp only [support, Finset.mem_biUnion, id_eq, roundMatching,
-      Finset.mem_filter, retainedSet, Set.mem_setOf_eq, Set.mem_iUnion,
+      Finset.mem_filter, retainedSet, Set.mem_ofPred_eq, Set.mem_iUnion,
       Set.mem_inter_iff, Set.mem_iInter]
     constructor
     · rintro ⟨e, ⟨⟨heH, heA⟩, hisolated⟩, hxe⟩

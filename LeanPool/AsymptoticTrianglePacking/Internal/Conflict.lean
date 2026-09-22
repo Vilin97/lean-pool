@@ -3,8 +3,14 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
-# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-0 : the conflict count of an edge (deterministic)
+import LeanPool.AsymptoticTrianglePacking.Internal.Basic
+import Mathlib.Algebra.Group.Action.Defs
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Tactic.Bound
+
+/-!
+# LeanPool.AsymptoticTrianglePacking.Internal — Module C4b-0 : the conflict count of an edge
+(deterministic)
 
 Standalone, Mathlib-only. Foundation for the Rödl-nibble project.
 
@@ -20,10 +26,6 @@ edges controls the correlation between "e survives" events; this module bounds i
 Definitions (`degree`, `IsUniform`) come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic`.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Basic
-import Mathlib.Algebra.Group.Action.Defs
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Tactic.Bound
 
 open Finset
 

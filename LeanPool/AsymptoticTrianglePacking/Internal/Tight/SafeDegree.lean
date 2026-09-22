@@ -3,12 +3,17 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini, Aristotle
 -/
-/-
+import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
+import LeanPool.AsymptoticTrianglePacking.Internal.Measurable
+import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
+
+/-!
 # LeanPool.AsymptoticTrianglePacking.Internal — the SAFE degree and its SHARP expectation
 
 The residual degree `deg_res(v)` of a vertex is *not* the right random variable for the nibble
-invariant: it collapses to `0` on the event "`v` itself is covered", an event of constant probability
-`≈ γ`, so `deg_res(v)` has standard deviation of order `d` and cannot concentrate.  The classical fix
+invariant: it collapses to `0` on the event "`v` itself is covered", an event of constant
+probability
+`≈ γ`, so `deg_res(v)` has standard deviation of order `d` and cannot concentrate. The classical fix
 is to track instead the **safe degree**
 
   `safeDegree H C v = #{e ∈ H : v ∈ e, (e \ {v}) ∩ C = ∅}`,
@@ -29,12 +34,9 @@ agree to second order, which is exactly what the loose brackets
 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
-import LeanPool.AsymptoticTrianglePacking.Internal.Tight.CoverProb
-import LeanPool.AsymptoticTrianglePacking.Internal.Measurable
-import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
-open scoped Classical
+attribute [local instance] Classical.propDecidable
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -89,7 +91,7 @@ theorem safeEvent_eq_compl {H : Finset (Finset V)} {p : ℝ}
     {ω | Disjoint (e.erase v) (covered (retainedSet H ρ ω))}
       = (⋃ u ∈ e.erase v, {ω | u ∈ covered (retainedSet H ρ ω)})ᶜ := by
   ext ω
-  simp only [Set.mem_setOf_eq, Set.mem_compl_iff, Set.mem_iUnion, not_exists, exists_prop,
+  simp only [Set.mem_ofPred_eq, Set.mem_compl_iff, Set.mem_iUnion, not_exists, exists_prop,
     not_and, Finset.disjoint_left]
 
 omit [IsProbabilityMeasure (ℙ : Measure Ω)] in
@@ -144,7 +146,7 @@ theorem integrable_safeDegree {H : Finset (Finset V)} {p : ℝ}
       = fun ω => ∑ e ∈ H.filter (fun e => v ∈ e), safeIndicator ρ v e ω :=
     funext (fun ω => safeDegree_eq_sum ρ v ω)
   rw [h]
-  exact integrable_finset_sum _ (fun e _ => integrable_safeIndicator ρ v e)
+  exact integrable_finsetSum _ (fun e _ => integrable_safeIndicator ρ v e)
 
 /-- The expectation of the safe degree, as a sum over the edges at `v`. -/
 theorem safeDegree_expectation_eq {H : Finset (Finset V)} {p : ℝ}
@@ -156,7 +158,7 @@ theorem safeDegree_expectation_eq {H : Finset (Finset V)} {p : ℝ}
   have h : (fun ω => (safeDegree H (covered (retainedSet H ρ ω)) v : ℝ))
       = fun ω => ∑ e ∈ H.filter (fun e => v ∈ e), safeIndicator ρ v e ω :=
     funext (fun ω => safeDegree_eq_sum ρ v ω)
-  rw [h, integral_finset_sum _ (fun e _ => integrable_safeIndicator ρ v e)]
+  rw [h, integral_finsetSum _ (fun e _ => integrable_safeIndicator ρ v e)]
   exact Finset.sum_congr rfl (fun e _ => integral_safeIndicator ρ v e)
 
 /-! ## The sharp two-sided expectation -/
