@@ -674,8 +674,8 @@ theorem baseNuEven_muRaw_inl :
           (N.tensor (pointMod P))
           (tmulEE M (pointMod P) m a ⊗ₜ[ℂ]
             tmulEE N (pointMod P) n b, 0))) = _
-      rw [gradedTensorEven_ee, pointBaseMu_evenMap_ee,
-        baseNuEven_tmulEE, baseNuInnerEven_tmulEE, baseNuFee_apply]
+      rw [gradedTensorEven_ee, pointBaseMu_evenMap_ee]
+      erw [baseNuEven_tmulEE, baseNuInnerEven_tmulEE, baseNuFee_apply]
       show (a.down * b.down) • _ = _
       rw [tmulEE_point_eq_smul P m a, tmulEE_point_eq_smul P n b]
       exact smulPairInl _ _ _ _
@@ -703,8 +703,8 @@ theorem baseNuEven_muRaw_inr :
           (N.tensor (pointMod P))
           (0, tmulOE M (pointMod P) m a ⊗ₜ[ℂ]
             tmulOE N (pointMod P) n b))) = _
-      rw [gradedTensorEven_oo, pointBaseMu_evenMap_oo,
-        baseNuEven_tmulEE, baseNuInnerEven_tmulOO, baseNuFoo_apply]
+      rw [gradedTensorEven_oo, pointBaseMu_evenMap_oo]
+      erw [baseNuEven_tmulEE, baseNuInnerEven_tmulOO, baseNuFoo_apply]
       show (a.down * b.down) • _ = _
       rw [tmulOE_point_eq_smul P m a, tmulOE_point_eq_smul P n b]
       exact smulPairInr _ _ _ _
@@ -729,8 +729,8 @@ theorem baseNuOdd_muRaw_inl :
           (N.tensor (pointMod P))
           (tmulEE M (pointMod P) m a ⊗ₜ[ℂ]
             tmulOE N (pointMod P) n b, 0))) = _
-      rw [gradedTensorOdd_eo, pointBaseMu_oddMap_eo,
-        baseNuOdd_tmulOE, baseNuInnerOdd_tmulEO, baseNuFeo_apply]
+      rw [gradedTensorOdd_eo, pointBaseMu_oddMap_eo]
+      erw [baseNuOdd_tmulOE, baseNuInnerOdd_tmulEO, baseNuFeo_apply]
       show (a.down * b.down) • _ = _
       rw [tmulEE_point_eq_smul P m a, tmulOE_point_eq_smul P n b]
       exact smulPairInl _ _ _ _
@@ -756,8 +756,8 @@ theorem baseNuOdd_muRaw_inr :
           (N.tensor (pointMod P))
           (0, tmulOE M (pointMod P) m a ⊗ₜ[ℂ]
             tmulEE N (pointMod P) n b))) = _
-      rw [gradedTensorOdd_oe, pointBaseMu_oddMap_oe,
-        baseNuOdd_tmulOE, baseNuInnerOdd_tmulOE, baseNuFoe_apply]
+      rw [gradedTensorOdd_oe, pointBaseMu_oddMap_oe]
+      erw [baseNuOdd_tmulOE, baseNuInnerOdd_tmulOE, baseNuFoe_apply]
       show (a.down * b.down) • _ = _
       rw [tmulOE_point_eq_smul P m a, tmulEE_point_eq_smul P n b]
       exact smulPairInr _ _ _ _
